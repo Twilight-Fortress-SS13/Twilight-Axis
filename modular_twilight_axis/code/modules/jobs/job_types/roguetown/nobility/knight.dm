@@ -3,6 +3,29 @@
 	var/knight_holdfasttext = "Hold fast!"
 	var/knight_noretreattext = "Not one step back!"
 
+/datum/job/roguetown/knight/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
+	..()
+	if(ishuman(L))
+		var/mob/living/carbon/human/H = L
+		if(istype(H.cloak, /obj/item/clothing/cloak/stabard) || istype(H.cloak, /obj/item/clothing/cloak/tabard))
+			var/obj/item/clothing/S = H.cloak
+			var/index1 = findtext(H.real_name, " ")
+			var/index2 = findlasttext(H.real_name, " ")
+			if(index1 && index2)
+				index1 = copytext(H.real_name, index1 + 1,index2)
+			if(!index1 || !index2)
+				index1 = H.real_name
+			S.name = "knight's tabard ([index1])"
+		else if(istype(H.cloak, /obj/item/clothing/cloak))
+			var/obj/item/clothing/S = H.cloak
+			var/index1 = findtext(H.real_name, " ")
+			var/index2 = findlasttext(H.real_name, " ")
+			if(index1 && index2)
+				index1 = copytext(H.real_name, index1 + 1,index2)
+			if(!index1 || !index2)
+				index1 = H.real_name
+			S.name = "champion's cloak ([index1])"
+
 /datum/outfit/job/roguetown/knight
 	cloak = null
 
