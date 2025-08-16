@@ -158,7 +158,7 @@
 			to_chat(user, span_alert("I must say something to give an order!"))
 			return
 		if(user.job == "Knight")
-			if(!target.job in list("Man at Arms", "Squire"))
+			if(!(target.job in list("Man at Arms", "Squire")))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				return
 		if(target == user)
@@ -184,7 +184,7 @@
 			to_chat(user, span_alert("I must say something to give an order!"))
 			return
 		if(user.job == "Knight")
-			if(!target.job in list("Man at Arms", "Squire"))
+			if(!(target.job in list("Man at Arms", "Squire")))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				return
 		if(target == user)
@@ -218,7 +218,7 @@
 			to_chat(user, span_alert("I must say something to give an order!"))
 			return
 		if(user.job == "Knight")
-			if(!target.job in list("Man at Arms", "Squire"))
+			if(!(target.job in list("Man at Arms", "Squire")))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				return
 		if(target == user)
