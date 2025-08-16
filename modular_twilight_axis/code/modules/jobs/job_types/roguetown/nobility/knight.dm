@@ -1,3 +1,8 @@
+/datum/mind
+	var/knight_advancetext = "Advance!"
+	var/knight_holdfasttext = "Hold fast!"
+	var/knight_noretreattext = "Not one step back!"
+
 /datum/outfit/job/roguetown/knight
 	cloak = null
 
@@ -126,16 +131,16 @@
 /mob/living/carbon/human/mind/proc/knight_setorders()
 	set name = "Rehearse Orders"
 	set category = "Voice of Command"
-	mind.knight_advance = input("Send a message.", "Advance!") as text|null
-	if(!mind.knight_advance)
+	mind.knight_advancetext = input("Send a message.", "Advance!") as text|null
+	if(!mind.knight_advancetext)
 		to_chat(src, "I must rehearse something for this order...")
 		return
-	mind.knight_holdfast = input("Send a message.", "Hold fast!") as text|null
-	if(!mind.knight_holdfast)
+	mind.knight_holdfasttext = input("Send a message.", "Hold fast!") as text|null
+	if(!mind.knight_holdfasttext)
 		to_chat(src, "I must rehearse something for this order...")
 		return
-	mind.knight_noretreat = input("Send a message.", "Not one step back!") as text|null
-	if(!mind.knight_noretreat)
+	mind.knight_noretreattext = input("Send a message.", "Not one step back!") as text|null
+	if(!mind.knight_noretreattext)
 		to_chat(src, "I must rehearse something for this order...")
 		return
 
@@ -148,12 +153,12 @@
 	. = ..()
 	if(isliving(targets[1]))
 		var/mob/living/target = targets[1]
-		var/msg = user.mind.movemovemovetext
+		var/msg = user.mind.knight_advancetext
 		if(!msg)
 			to_chat(user, span_alert("I must say something to give an order!"))
 			return
 		if(user.job == "Knight")
-			if(!target.job == "Man at Arms", "Squire")
+			if(!target.job in list("Man at Arms", "Squire"))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				return
 		if(target == user)
@@ -174,12 +179,12 @@
 	. = ..()
 	if(isliving(targets[1]))
 		var/mob/living/target = targets[1]
-		var/msg = user.mind.onfeettext
+		var/msg = user.mind.knight_holdfasttext
 		if(!msg)
 			to_chat(user, span_alert("I must say something to give an order!"))
 			return
 		if(user.job == "Knight")
-			if(!target.job == "Man at Arms", "Squire")
+			if(!target.job in list("Man at Arms", "Squire"))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				return
 		if(target == user)
@@ -208,12 +213,12 @@
 	. = ..()
 	if(isliving(targets[1]))
 		var/mob/living/target = targets[1]
-		var/msg = user.mind.holdtext
+		var/msg = user.mind.knight_noretreattext
 		if(!msg)
 			to_chat(user, span_alert("I must say something to give an order!"))
 			return
 		if(user.job == "Knight")
-			if(!target.job == "Man at Arms", "Squire")
+			if(!target.job in list("Man at Arms", "Squire"))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				return
 		if(target == user)
