@@ -408,8 +408,8 @@
 		hud_used.action_intent.switch_intent(r_index,l_index,oactive)
 
 /mob/proc/update_a_intents()
-	possible_a_intents.Cut()
-	possible_offhand_intents.Cut()
+	QDEL_LIST(possible_a_intents)
+	QDEL_LIST(possible_offhand_intents)
 	var/list/intents = list()
 	var/obj/item/Masteritem = get_active_held_item()
 	if(Masteritem)

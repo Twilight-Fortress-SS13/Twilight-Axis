@@ -93,8 +93,9 @@
 
 	handle_gas_mask_sound()
 
-	if(sexcon)
-		sexcon.process_sexcon(1 SECONDS)
+	if(mode == NPC_AI_OFF)
+		if(sexcon)
+			sexcon.process_sexcon(1 SECONDS)
 
 	if(stat != DEAD)
 		return 1

@@ -609,13 +609,12 @@ Inquisitorial armory down here
 
 /obj/item/inqarticles/indexer/attack_right(mob/user) 
 	if(HAS_TRAIT(user, TRAIT_INQUISITION))	
-		if(subject || cursedblood)
-			if(alert(user, "EMPTY THE INDEXER?", "INDEXING...", "YES", "NO") != "NO")
-				playsound(src, 'sound/items/indexer_empty.ogg', 75, FALSE, 3)
-				visible_message(span_warning("[src] boils its contents away!"))
-				fullreset(user)
-			else
-				return	
+		if(alert(user, "EMPTY THE INDEXER?", "INDEXING...", "YES", "NO") != "NO")
+			playsound(src, 'sound/items/indexer_empty.ogg', 75, FALSE, 3)
+			visible_message(span_warning("[src] boils its contents away!"))
+			fullreset(user)
+		else
+			return	
 	else
 		return				
 
@@ -848,7 +847,7 @@ Inquisitorial armory down here
 	var/mob/living/lastcarrier
 	var/active = FALSE
 	intdamage_factor = 0
-	var/choke_damage = 8
+	var/choke_damage = 10
 	integrity_failure = 0.01
 	embedding = null
 	sellprice = 0
@@ -959,7 +958,7 @@ Inquisitorial armory down here
 	. = ..()
 	if(istype(I, /obj/item/rope/inqarticles/inquirycord))
 		user.visible_message(span_warning("[user] starts to rethread the [src] using the [I]."))
-		if(do_after(user, 12 SECONDS))
+		if(do_after(user, 8 SECONDS))
 			qdel(I)
 			obj_broken = FALSE
 			obj_integrity = max_integrity
@@ -988,6 +987,9 @@ Inquisitorial armory down here
 		if(user.zone_selected != "neck")
 			to_chat(user, span_warning("I need to wrap it around their throat."))
 			return
+		if(HAS_TRAIT(target, TRAIT_GARROTED))
+			to_chat(user, span_warning("They already have one wrapped around their throat."))
+			return	
 		victim = target	
 		playsound(loc, 'sound/items/garrotegrab.ogg', 100, TRUE)
 		ADD_TRAIT(user, TRAIT_NOTIGHTGRABMESSAGE, TRAIT_GENERIC)

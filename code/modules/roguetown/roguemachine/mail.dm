@@ -258,6 +258,9 @@
 			if(I.signee && I.signed)
 				var/no
 				var/accused
+				var/stopfarming
+				var/bonuses = 2
+				var/cursedblood
 				var/indexed
 				var/selfreport
 				var/correct
@@ -270,28 +273,35 @@
 				if(I.paired)	
 					if(HAS_TRAIT(I.paired.subject, TRAIT_INQUISITION))
 						selfreport = TRUE
-						indexed = TRUE
-					if(I.paired.subject && I.paired.full && GLOB.indexed && !selfreport)
-						if(", [I.signee]" in GLOB.indexed)
-							indexed = TRUE
-						if("[I.signee]" in GLOB.indexed)
-							indexed = TRUE
-						if(!indexed)
-							if(GLOB.indexed.len)
-								GLOB.indexed += ", [I.signee]"
+						indexed = TRUE	
+					if(I.paired.subject && I.paired.full && !selfreport)
+						if(I.paired.cursedblood)
+							if(HAS_TRAIT(I.paired.subject, TRAIT_CBLOOD))
+								stopfarming = TRUE
 							else
-								GLOB.indexed += "[I.signee]"
+								ADD_TRAIT(I.paired.subject, TRAIT_CBLOOD, "mail")
+								cursedblood = TRUE
+								if(GLOB.cursedsamples.len)
+									GLOB.cursedsamples += ", [I.paired.subject.mind]"
+								else
+									GLOB.cursedsamples += "[I.paired.subject.mind]"			
+						if(GLOB.indexed)
+							if(HAS_TRAIT(I.paired.subject, TRAIT_INDEXED))
+								indexed = TRUE
+							if(!indexed)
+								ADD_TRAIT(I.paired.subject, TRAIT_INDEXED, "mail")
+								if(GLOB.indexed.len)
+									GLOB.indexed += ", [I.signee]"
+								else
+									GLOB.indexed += "[I.signee]"
 				if(GLOB.accused && !selfreport)
-					if(", [I.signee]" in GLOB.accused)
-						accused = TRUE
-					if("[I.signee]" in GLOB.accused)
+					if(HAS_TRAIT(I.signee, TRAIT_ACCUSED))
 						accused = TRUE
 				if(GLOB.confessors && !selfreport)
-					if(", [I.signee]" in GLOB.confessors)
-						no = TRUE
-					if("[I.signee]" in GLOB.confessors)
+					if(HAS_TRAIT(I.signee, TRAIT_CONFESSED))
 						no = TRUE
 					if(!no)
+						ADD_TRAIT(I.signee, TRAIT_CONFESSED, "mail")
 						if(GLOB.confessors.len)
 							GLOB.confessors += ", [I.signee]"
 						else
@@ -304,28 +314,41 @@
 					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
 					if(no)
 						to_chat(user, span_notice("They've already confessed."))
+					else if(stopfarming)
+						to_chat(user, span_notice("We already have a sample of their accursed blood."))
 					if(selfreport)
 						to_chat(user, span_notice("Why was that confession signed by an inquisition member? What?"))
-						if(indexed)
-							visible_message(span_warning("[user] recieves something."))
-							var/obj/item/inqarticles/indexer/replacement = new /obj/item/inqarticles/indexer/
-							user.put_in_hands(replacement)
+					if(indexed)
+						visible_message(span_warning("[user] recieves something."))
+						var/obj/item/inqarticles/indexer/replacement = new /obj/item/inqarticles/indexer/
+						user.put_in_hands(replacement)
 					return		
 				else
 					if(I.paired)
-						if(!indexed && !correct)
-							budget2change(2, user, "MARQUE")
-							GLOB.azure_round_stats[STATS_MARQUES_MADE] += 2
-					else if(correct)	
-						if(I.paired)
-							if(!indexed)
-								I.marquevalue += 2
-						if(accused)	
-							I.marquevalue -= 4
-						budget2change(I.marquevalue, user, "MARQUE")
-						GLOB.azure_round_stats[STATS_MARQUES_MADE] += I.marquevalue
-					if(I.paired)	
-						qdel(I.paired)
+						if(!correct)
+							if(cursedblood)
+								bonuses = bonuses + bonuses * I.paired.cursedblood
+								if(I.waxed)
+									bonuses += 2
+								budget2change(bonuses, user, "MARQUE")
+								GLOB.azure_round_stats[STATS_MARQUES_MADE] += bonuses
+							if(!indexed && !correct && !cursedblood)
+								if(I.waxed)
+									bonuses += 2
+								budget2change(bonuses, user, "MARQUE")
+								GLOB.azure_round_stats[STATS_MARQUES_MADE] += bonuses
+						else
+							if(!indexed && !cursedblood)
+								I.marquevalue += bonuses
+							if(cursedblood)
+								bonuses = bonuses + bonuses * I.paired.cursedblood	
+								I.marquevalue += bonuses
+							if(accused)	
+								I.marquevalue -= 4
+							if(I.paired)	
+								qdel(I.paired)
+							budget2change(I.marquevalue, user, "MARQUE")
+							GLOB.azure_round_stats[STATS_MARQUES_MADE] += I.marquevalue
 					qdel(I)
 					visible_message(span_warning("[user] sends something."))
 					playsound(loc, 'sound/misc/otavanlament.ogg', 100, FALSE, -1)
@@ -334,68 +357,7 @@
 
 	if(istype(P, /obj/item/inqarticles/indexer))
 		if((HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_PURITAN)))	
-			var/obj/item/inqarticles/indexer/I = P
-			if(I.cursedblood)
-				var/stopfarming
-				if(GLOB.cursedsamples)
-					if(", [I.subject.mind]" in GLOB.cursedsamples)
-						stopfarming = TRUE
-					if("[I.subject.mind]" in GLOB.cursedsamples)
-						stopfarming = TRUE
-					if(!stopfarming)
-						if(GLOB.cursedsamples.len)
-							GLOB.cursedsamples += ", [I.subject.mind]"
-						else
-							GLOB.cursedsamples += "[I.subject.mind]"
-				if(stopfarming)		
-					qdel(I)
-					visible_message(span_warning("[user] sends something."))
-					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-					visible_message(span_warning("[user] recieves something."))
-					to_chat(user, span_notice("We've already collected a sample of their accursed blood."))
-					var/obj/item/inqarticles/indexer/replacement = new /obj/item/inqarticles/indexer/
-					user.put_in_hands(replacement)
-				else
-					var/yummers = I.cursedblood * 2	+ 2
-					budget2change(yummers, user, "MARQUE")
-					GLOB.azure_round_stats[STATS_MARQUES_MADE] += yummers
-					qdel(I)
-					visible_message(span_warning("[user] sends something."))
-					playsound(loc, 'sound/misc/otavanlament.ogg', 100, FALSE, -1)
-					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-			else if(I.subject && I.full)
-				var/no
-				var/selfreport
-				if(HAS_TRAIT(I.subject, TRAIT_INQUISITION))
-					selfreport = TRUE
-				if(GLOB.indexed && !selfreport)
-					if(", [I.subject]" in GLOB.indexed)
-						no = TRUE
-					if("[I.subject]" in GLOB.indexed)
-						no = TRUE
-					if(!no)
-						if(GLOB.indexed.len)
-							GLOB.indexed += ", [I.subject]"
-						else
-							GLOB.indexed += "[I.subject]"
-				if(no || selfreport)		
-					qdel(I)
-					visible_message(span_warning("[user] sends something."))
-					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-					visible_message(span_warning("[user] recieves something."))
-					if(selfreport)
-						to_chat(user, span_notice("Why did that INDEXER contain Inquisitional blood? What am I doing?"))
-					else
-						to_chat(user, span_notice("It appears we already had them INDEXED. I've been issued a replacement."))
-					var/obj/item/inqarticles/indexer/replacement = new /obj/item/inqarticles/indexer/
-					user.put_in_hands(replacement)
-				else	
-					budget2change(2, user, "MARQUE")
-					GLOB.azure_round_stats[STATS_MARQUES_MADE] += 2
-					qdel(I)
-					visible_message(span_warning("[user] sends something."))
-					playsound(loc, 'sound/misc/otavasent.ogg', 100, FALSE, -1)
-					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
+			to_chat(user, span_warning("It needs to be paired with a slip or confession."))
 			return
 
 	if(istype(P, /obj/item/paper/inqslip/arrival))
@@ -419,8 +381,11 @@
 				if(I.signee && I.paired.full && I.paired.subject)
 					var/no
 					var/specialno
+					var/stopfarming
 					var/indexed
+					var/bonuses = 2
 					var/correct
+					var/cursedblood
 					var/selfreport
 					if(HAS_TRAIT(I.paired.subject, TRAIT_INQUISITION))
 						selfreport = TRUE
@@ -429,51 +394,69 @@
 					if(I.paired.subject.name in GLOB.excommunicated_players)	
 						correct = TRUE
 					if(GLOB.indexed && !selfreport)
-						if(", [I.paired.subject]" in GLOB.indexed)
-							indexed = TRUE
-						if("[I.paired.subject]" in GLOB.indexed)
+						if(HAS_TRAIT(I.paired.subject, TRAIT_INDEXED))
 							indexed = TRUE
 						if(!indexed && !selfreport)
+							ADD_TRAIT(I.paired.subject, TRAIT_INDEXED, "mail")
 							if(GLOB.indexed.len)
 								GLOB.indexed += ", [I.paired.subject]"
 							else
 								GLOB.indexed += "[I.paired.subject]"
+					if(I.paired.cursedblood)		
+						if(HAS_TRAIT(I.paired.subject, TRAIT_CBLOOD))
+							stopfarming = TRUE
+						if(!stopfarming)
+							cursedblood = TRUE
+							ADD_TRAIT(I.paired.subject, TRAIT_CBLOOD, "mail")
+							if(GLOB.cursedsamples.len)
+								GLOB.cursedsamples += ", [I.paired.subject.mind]"
+							else
+								GLOB.cursedsamples += "[I.paired.subject.mind]"								
 					if(GLOB.accused && !selfreport)
-						if(", [I.paired.subject]" in GLOB.accused)
-							no = TRUE
-						if("[I.paired.subject]" in GLOB.accused)
+						if(HAS_TRAIT(I.paired.subject, TRAIT_ACCUSED))
 							no = TRUE
 						if(!no)
+							ADD_TRAIT(I.paired.subject, TRAIT_ACCUSED, "mail")
 							if(GLOB.accused.len)
 								GLOB.accused += ", [I.paired.subject]"
 							else
 								GLOB.accused += "[I.paired.subject]"
 					if(GLOB.confessors && !selfreport)
-						if(", [I.paired.subject]" in GLOB.confessors)
+						if(HAS_TRAIT(I.paired.subject, TRAIT_CONFESSED))
 							no = TRUE
-							specialno = TRUE
-						if("[I.paired.subject]" in GLOB.confessors)
-							no = TRUE
-							specialno = TRUE		
-					if(no || selfreport)		
+							specialno = TRUE	
+					if(cursedblood)	
+						bonuses = bonuses + bonuses * I.paired.cursedblood
+						if(I.waxed)
+							bonuses += 2
+						budget2change(bonuses, user, "MARQUE")
+						GLOB.azure_round_stats[STATS_MARQUES_MADE] += bonuses
+					if(no || selfreport || stopfarming)		
 						qdel(I.paired)
 						qdel(I)
 						visible_message(span_warning("[user] sends something."))
 						playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-						if(specialno)
-							to_chat(user, span_notice("They've confessed."))
-						else if(selfreport)
-							to_chat(user, span_notice("Why are we accusing our own? What have we come to?"))
+						if(!cursedblood)
 							visible_message(span_warning("[user] recieves something."))
 							var/obj/item/inqarticles/indexer/replacement = new /obj/item/inqarticles/indexer/
 							user.put_in_hands(replacement)
-						else
-							to_chat(user, span_notice("They've already been accused."))
+							if(specialno)
+								to_chat(user, span_notice("They've confessed."))
+							else if(selfreport)
+								to_chat(user, span_notice("Why are we accusing our own? What have we come to?"))
+							else if(stopfarming)
+								to_chat(user, span_notice("We've already collected a sample of their accursed blood."))
+							else
+								to_chat(user, span_notice("They've already been accused."))	
 						return
 					else
+						if(!indexed && !correct && !cursedblood)
+							(I.marquevalue -= 4) += bonuses 
+							budget2change(I.marquevalue, user, "MARQUE")
+							GLOB.azure_round_stats[STATS_MARQUES_MADE] += I.marquevalue
 						if(correct)	
 							if(!indexed)
-								I.marquevalue += 2
+								I.marquevalue += bonuses
 							budget2change(I.marquevalue, user, "MARQUE")
 							GLOB.azure_round_stats[STATS_MARQUES_MADE] += I.marquevalue
 						qdel(I.paired)
@@ -493,7 +476,7 @@
 				to_chat(user, span_warning("[I] is missing an INDEXER."))
 				return							
 		
-	if(istype(P, /obj/item/paper))
+	if(istype(P, /obj/item/paper) || istype(P, /obj/item/smallDelivery))
 		if(inqcoins)
 			to_chat(user, span_warning("The machine doesn't respond."))
 			return	

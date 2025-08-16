@@ -214,12 +214,12 @@
 /obj/item/reagent_containers/food/snacks/fish/creepy_squid/examine(mob/user)
 	. = ..()
 	var/mob/living/carbon/human/H = user
-	if(ishuman(H) && !HAS_TRAIT(H, TRAIT_NOMOOD) && H.patron != /datum/patron/divine/abyssor)
+	if(ishuman(H) && !HAS_TRAIT(H, TRAIT_NOMOOD) && H.patron.type != /datum/patron/divine/abyssor)
 		. += span_danger("As I behold the squid closely, I can see its body extend into the spectral shape of a vicious, horrific creature. Countless tentacles lead into innumerable spiny limbs with vicious looking spikes. A singular, gigantic eye stares back at me. The image fades...")
 		H.add_stress(/datum/stressevent/creepy_squid)
 		H.emote("scream")
 		H.Knockdown(1)
-	else if(H.patron == /datum/patron/divine/abyssor)
+	else if(H.patron.type == /datum/patron/divine/abyssor)
 		. += span_notice("It's the most beautiful creature I have ever laid my eyes upon.")
 		user.add_stress(/datum/stressevent/creepy_squid_happy)
 
@@ -272,3 +272,12 @@
 
 	loot_spawn_cooldown = world.time + 30 MINUTES
 	return TRUE
+
+/obj/item/reagent_containers/food/snacks/fish/creepy_shark/examine(mob/user)
+	. = ..()
+	if(loot_spawn_cooldown && world.time < loot_spawn_cooldown)
+		var/time_left = (loot_spawn_cooldown - world.time) / (1 MINUTES)
+		var/minutes_left = round(time_left, 0.1)
+		. += span_notice("It feels inert and cannot be squeezed yet. About [minutes_left] more minutes required.")
+	else
+		. += span_notice("You swear you can hear it demand you squeeze it in your hand.")

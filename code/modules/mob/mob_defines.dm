@@ -309,3 +309,6 @@
 	var/typing_indicator_timerid
 	/// Current state of our typing indicator. Used for cut overlay, DO NOT RUNTIME ASSIGN OTHER THAN FROM SHOW/CLEAR. Used to absolutely ensure we do not get stuck overlays.
 	var/mutable_appearance/typing_indicator_current
+
+	// The last tick where we manually moved, or clicked on something in-world. Useful for preventing abuse of mobs with AFK players.
+	var/last_client_interact = 0

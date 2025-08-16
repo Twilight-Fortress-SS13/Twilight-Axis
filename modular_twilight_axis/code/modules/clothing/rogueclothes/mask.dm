@@ -1,6 +1,10 @@
 /obj/item/clothing/mask/rogue/lordmask/naledi
 	flags_inv = HIDEFACE|HIDESNOUT
 
+/obj/item/clothing/mask/rogue/lordmask/naledi/decorated
+	armor = null
+	prevent_crits = null
+
 /obj/item/clothing/mask/rogue/facemask/xylixmask
 	name = "xylixian mask"
 	desc = "A ceramic mask, forever stuck with the joyful smile its patron god favors. While it will shatter easily from blows, its smug countenance shall taunt its foes."

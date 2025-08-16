@@ -246,8 +246,8 @@
 	blade_dulling = DULLING_SHAFT_METAL
 
 /obj/item/rogueweapon/shield/tower/metal/psy/ComponentInitialize()
-	. = ..()							//+0 force, +100 int, +1 def, make silver
-	AddComponent(/datum/component/psyblessed, TRUE, 0, FALSE, 100, 1, TRUE)	
+	. = ..()
+	add_psyblessed_component(is_preblessed = TRUE, bonus_force = 0, bonus_sharpness = 0, bonus_integrity = 100, bonus_wdef = 1, make_silver = TRUE)
 
 /obj/item/rogueweapon/shield/tower/metal/alloy
 	name = "decrepit shield"

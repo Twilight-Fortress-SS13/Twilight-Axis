@@ -309,7 +309,7 @@
 /datum/anvil_recipe/tools/headhook
 	name = "Headhook, Iron (+2 Fibers)"
 	req_bar = /obj/item/ingot/iron
-	additional_items = list(/obj/item/natural/fibers = 2)
+	additional_items = list(/obj/item/natural/fibers, /obj/item/natural/fibers)
 	created_item = /obj/item/storage/hip/headhook
 	craftdiff = 3
 	i_type = "Tools"

@@ -287,12 +287,10 @@
 				return
 			else if(alert(user, "SIGN THE CONFESSION?", "CONFIRM OR DENY", "YES", "NO") != "NO")
 				signed = TRUE
-				marquevalue += 2
 				signee = user
 				update_icon()
 		else if(alert(user, "SIGN THE CONFESSION?", "CONFIRM OR DENY", "YES", "NO") != "NO")
 			signed = TRUE
-			marquevalue += 2
 			signee = user
 			update_icon()
 		else
@@ -362,6 +360,8 @@
 				icon_state = "[base_icon_state]_indexer"
 			else
 				icon_state = "[base_icon_state]_indexer[signed ? "_signed" : "_blood"]"
+				if(paired.cursedblood)
+					icon_state = "[icon_state]_c"
 		else
 			icon_state = "[base_icon_state][signed ? "_signed" : ""]"
 	else
@@ -425,48 +425,6 @@
 
 /obj/item/paper/inqslip/attack_right(mob/user)
 	. = ..()
-
-/obj/item/paper/confession
-	name = "confession"
-	icon_state = "confession"
-	info = "THE GUILTY PARTY ADMITS THEIR SIN AND THE WEAKENING OF PSYDON'S HOLY FLOCK. THEY WILL REPENT AND SUBMIT TO ANY PUNISHMENT THE CLERGY DEEMS APPROPRIATE, OR BE RELEASED IMMEDIATELY. LET THIS RECORD OF THEIR SIN WEIGH ON THE ANGEL GABRIEL'S JUDGEMENT AT THE MANY-SPIKED GATES OF HEAVEN.<br/><br/>SIGNED,"
-	var/signed = FALSE
-	textper = 150
-
-/obj/item/paper/confession/update_icon_state()
-	if(mailer)
-		icon_state = "paper_prep"
-		name = "letter"
-		throw_range = 7
-		return
-	name = initial(name)
-	throw_range = initial(throw_range)
-	if(signed)
-		icon_state = "confessionsigned"
-		return
-	icon_state = "confession"
-
-/obj/item/paper/confession/attack(mob/living/carbon/human/M, mob/user)
-	if(signed)
-		return ..()
-	if(!M.get_bleed_rate())
-		to_chat(user, span_warning("No. The sinner must be bleeding."))
-		return
-	if(!M.stat)
-		to_chat(user, span_info("I courteously offer the confession to [M]."))
-		if(alert(M, "Sign the confession with your blood?", "CONFESSION OF SIN", "Yes", "No") != "Yes")
-			return
-		if(M.stat)
-			return
-		if(signed)
-			return
-		if(M.has_flaw(/datum/charflaw/addiction/godfearing))
-			M.add_stress(/datum/stressevent/confessedgood)
-		else
-			M.add_stress(/datum/stressevent/confessed)
-		M.add_stress(/datum/stressevent/confessed)
-		signed = M.real_name
-		info = "THE GUILTY PARTY ADMITS THEIR SIN AND THE WEAKENING OF PSYDON'S HOLY FLOCK. THEY WILL REPENT AND SUBMIT TO ANY PUNISHMENT THE CLERGY DEEMS APPROPRIATE, OR BE RELEASED IMMEDIATELY. LET THIS RECORD OF THEIR SIN WEIGH ON THE ANGEL GABRIEL'S JUDGEMENT AT THE MANY-SPIKED GATES OF HEAVEN.<br/><br/>SIGNED,<br/><font color='red'>[signed]</font>"
 
 /obj/item/paper/scroll/sell_price_changes
 	name = "updated purchasing prices"

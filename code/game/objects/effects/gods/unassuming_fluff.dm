@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(players_in_dream)
+
 /obj/effect/dream_horror
 	name = "Dream Horror"
 	desc = "?????"
@@ -10,6 +12,13 @@
 		name = "Dad"
 		desc = "Dad is back! He even brought the milk!"
 
+/obj/effect/dream_horror/examine(mob/user)
+	. = ..()
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(H.patron.type == /datum/patron/divine/abyssor)
+			. += span_danger("One of the greatest and eldest of the dreamfiends. It's said creatures of the dream take ages to grow in size... And this one is a true leviathan.")
+
 /datum/stressevent/dream_horror
 	timer = 999 MINUTES
 	stressadd = 20
@@ -19,7 +28,7 @@
 	if(!ishuman(user))
 		return
 
-	if(user.patron == /datum/patron/divine/abyssor)
+	if(user.patron.type == /datum/patron/divine/abyssor)
 		probability *= 5
 
 	if(!prob(probability))
@@ -54,6 +63,7 @@
 	if(!do_teleport(user, destination))
 		return
 
+	GLOB.players_in_dream |= user
 	original_turf.visible_message(span_danger("[user] seems to vanish into thin air completely."))
 	playsound(original_turf, 'sound/misc/area.ogg')
 	user.add_stress(/datum/stressevent/dream_horror)
@@ -74,11 +84,30 @@
 	if(!user || QDELETED(user) || !original_turf)
 		return
 
+	GLOB.players_in_dream -= user
 	user.remove_stress(/datum/stressevent/dream_horror)
 	REMOVE_TRAIT(user, TRAIT_DARKVISION, CULT_TRAIT)
 	user.blind_eyes(2)
 	do_teleport(user, original_turf)
 	qdel(user.GetComponent(/datum/component/dream_echo))
+	if(!length(GLOB.players_in_dream))
+		clean_dream_area(original_turf)
+
+/proc/clean_dream_area(turf/target_turf)
+	var/area/dream_area = GLOB.areas_by_type[/area/rogue/underworld/dream]
+	if(!dream_area || !target_turf)
+		return
+
+	var/list/items_to_return = list()
+
+	for(var/turf/T in dream_area)
+		for(var/obj/item/I in T)
+			//If you build a statue in here, MORE POWER TO YOU...
+			if(!I.anchored)
+				items_to_return += I
+
+	for(var/obj/item/I in items_to_return)
+		do_teleport(I, target_turf)
 
 /obj/effect/spawner/lootdrop/roguetown/abyssor
 	icon_state = "cot"

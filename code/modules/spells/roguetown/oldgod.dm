@@ -1,11 +1,12 @@
 /obj/effect/proc_holder/spell/invoked/psydonlux_tamper
 	name = "WEEP"
-	overlay_state = "psydonweeps"
+	overlay_state = "WEEP"
 	releasedrain = 20
 	chargedrain = 0
 	chargetime = 0
 	range = 2
 	warnie = "sydwarning"
+	desc = "Bleed for the target, taking their wounds and refilling their blood level."
 	movement_interrupt = FALSE
 	sound = 'sound/magic/psydonbleeds.ogg'
 	invocation = "I BLEED, SO THAT YOU MIGHT ENDURE!"
@@ -62,6 +63,14 @@
 			var/obj/item/bodypart/t_BP = C_target.get_bodypart(targetwound.bodypart_owner.body_zone)
 			t_BP.remove_wound(targetwound.type)
 
+	// Transfer blood
+	var/blood_transfer = 0
+	if(H.blood_volume < BLOOD_VOLUME_NORMAL)
+		blood_transfer = BLOOD_VOLUME_NORMAL - H.blood_volume
+		H.blood_volume = BLOOD_VOLUME_NORMAL
+		user.blood_volume -= blood_transfer
+		to_chat(user, span_warning("You feel your blood drain into [H]!"))
+		to_chat(H, span_notice("You feel your blood replenish!"))
 
 	// Visual effects
 	user.visible_message(span_danger("[user] purifies [H]'s wounds!"))
@@ -175,17 +184,124 @@
 		H.adjustFireLoss(burnhealval)
 		if (conditional_buff)
 			to_chat(user, span_info("My pain gives way to a sense of furthered clarity before returning again, dulled."))
-		user.devotion?.update_devotion(-25)
-		to_chat(user, "<font color='purple'>I lose 25 devotion!</font>")
+		user.devotion?.update_devotion(-20)
+		to_chat(user, "<font color='purple'>I lose 20 devotion!</font>")
 		cast(user)	
 		return TRUE
 	else
 		to_chat(H, span_warning("My thoughts and sense of quiet escape me."))	
 		return FALSE					
 
+
+/obj/effect/proc_holder/spell/self/psydonpersist
+	name = "PERSIST"
+	desc = "Stand still to focus on mending your injuries. You shall PERSIST."
+	overlay_state = "PERSIST"
+	releasedrain = 20
+	chargedrain = 0
+	chargetime = 0
+	range = 2
+	warnie = "sydwarning"
+	movement_interrupt = FALSE
+	sound = null
+	invocation = ". . ."
+	invocation_type = "none"
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = FALSE
+	recharge_time = 5 SECONDS
+	miracle = TRUE
+	devotion_cost = 0
+
+/obj/effect/proc_holder/spell/self/psydonpersist/cast(mob/living/carbon/human/user) // It's a very tame self-heal. Nothing too special.
+	. = ..()
+	if(!ishuman(user))
+		revert_cast()
+		return FALSE
+		
+	var/mob/living/carbon/human/H = user
+	var/brute = H.getBruteLoss()
+	var/burn = H.getFireLoss()
+	var/conditional_buff = FALSE
+	var/zcross_trigger = FALSE
+	var/sit_bonus1 = 0
+	var/sit_bonus2 = 0
+	var/psicross_bonus = 0
+
+	for(var/obj/item/clothing/neck/current_item in H.get_equipped_items(TRUE))
+		if(current_item.type in list(/obj/item/clothing/neck/roguetown/zcross/aalloy, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/aalloy, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
+			switch(current_item.type) // Worn Psicross Piety bonus. For fun.
+				if(/obj/item/clothing/neck/roguetown/psicross/wood)
+					psicross_bonus = -2				
+				if(/obj/item/clothing/neck/roguetown/psicross/aalloy)
+					psicross_bonus = -4
+				if(/obj/item/clothing/neck/roguetown/psicross)
+					psicross_bonus = -5
+				if(/obj/item/clothing/neck/roguetown/psicross/silver)
+					psicross_bonus = -7
+				if(/obj/item/clothing/neck/roguetown/psicross/g) // PURITY AFLOAT.
+					psicross_bonus = -7
+				if(/obj/item/clothing/neck/roguetown/zcross/aalloy)
+					zcross_trigger = TRUE		
+	if(brute > 100)
+		sit_bonus1 = -2
+	if(brute > 150)
+		sit_bonus1 = -4
+	if(brute > 200)
+		sit_bonus1 = -6	
+	if(brute > 300)
+		sit_bonus1 = -8		
+	if(brute > 350)
+		sit_bonus1 = -10
+	if(brute > 400)
+		sit_bonus1 = -14	
+		
+	if(burn > 100)
+		sit_bonus2 = -2
+	if(burn > 150)
+		sit_bonus2 = -4
+	if(burn > 200)
+		sit_bonus2 = -6	
+	if(burn > 300)
+		sit_bonus2 = -8		
+	if(burn > 350)
+		sit_bonus2 = -10
+	if(burn > 400)
+		sit_bonus2 = -14									
+
+	if(sit_bonus1 || sit_bonus2)				
+		conditional_buff = TRUE
+
+	var/bruthealval = -14 + psicross_bonus + sit_bonus1
+	var/burnhealval = -14 + psicross_bonus + sit_bonus2
+
+	to_chat(H, span_info("I take a moment to collect myself..."))
+	if(zcross_trigger)
+		user.visible_message(span_warning("[user] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine. Something laughs at me for trying."))
+		user.playsound_local(user, 'sound/misc/zizo.ogg', 25, FALSE)
+		user.adjustBruteLoss(25)		
+		return FALSE
+
+	if(do_after(H, 50))
+		playsound(H, 'sound/magic/psydonrespite.ogg', 100, TRUE)
+		new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#e4e4e4") 
+		new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#e4e4e4") 
+		H.adjustBruteLoss(bruthealval)
+		H.adjustFireLoss(burnhealval)
+		if (conditional_buff)
+			to_chat(user, span_info("My pain gives way to a sense of furthered clarity before returning again, dulled."))
+		user.devotion?.update_devotion(-60)
+		to_chat(user, "<font color='purple'>I lose 60 devotion!</font>")
+		cast(user)	
+		return TRUE
+	else
+		to_chat(H, span_warning("My thoughts and sense of quiet escape me."))	
+		return FALSE					
+
+
 /obj/effect/proc_holder/spell/invoked/psydonabsolve	
 	name = "ABSOLVE"
-	overlay_state = "psydonabsolves"
+	overlay_state = "ABSOLVE"
+	desc = "Absolve the target, taking their damage as your own, potentially even shouldering their death at the cost of your Lyfe."
 	releasedrain = 20
 	chargedrain = 0
 	chargetime = 0
@@ -287,15 +403,6 @@
 	user.adjustToxLoss(tox_transfer)
 	user.adjustOxyLoss(oxy_transfer)
 	user.adjustCloneLoss(clone_transfer)
-	
-	// Transfer blood
-	var/blood_transfer = 0
-	if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-		blood_transfer = BLOOD_VOLUME_NORMAL - H.blood_volume
-		H.blood_volume = BLOOD_VOLUME_NORMAL
-		user.blood_volume -= blood_transfer
-		to_chat(user, span_warning("You feel your blood drain into [H]!"))
-		to_chat(H, span_notice("You feel your blood replenish!"))
 
 	// Visual effects
 	user.visible_message(span_danger("[user] absolves [H]'s suffering!"))
