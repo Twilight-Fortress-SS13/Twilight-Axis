@@ -108,6 +108,7 @@
 				"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/half,				
 				"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/half/fluted,
 				"Scalemail"		= /obj/item/clothing/suit/roguetown/armor/plate/scale,
+				"Full Plate Armor"		= /obj/item/clothing/suit/roguetown/armor/plate/full,	//TA EDIT
 			)
 			var/armorchoice = input("Choose your armor.", "TAKE UP ARMOR") as anything in armors
 			armor = armors[armorchoice]
@@ -131,6 +132,26 @@
 				/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = 1,	//Small health vial
 				)
 
+			switch(weapon_choice) //TA EDIT
+				if("Estoc")
+					H.adjust_skillrank_up_to(/datum/skill/combat/swords, 5, TRUE)
+				if("Longsword + Shield")
+					H.adjust_skillrank_up_to(/datum/skill/combat/swords, 5, TRUE)
+					H.adjust_skillrank_up_to(/datum/skill/combat/shields, 5, TRUE)
+				if("Mace + Shield")
+					H.adjust_skillrank_up_to(/datum/skill/combat/maces, 5, TRUE)
+					H.adjust_skillrank_up_to(/datum/skill/combat/shields, 5, TRUE)
+				if("Flail + Shield")
+					H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, 5, TRUE)
+					H.adjust_skillrank_up_to(/datum/skill/combat/shields, 5, TRUE)
+				if("Lucerne")
+					H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 5, TRUE)
+				if("Battle Axe")
+					H.adjust_skillrank_up_to(/datum/skill/combat/axes, 5, TRUE)
+				if("Lance + Kite Shield")
+					H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 5, TRUE)
+				if("Samshir")
+					H.adjust_skillrank_up_to(/datum/skill/combat/swords, 5, TRUE)
 
 			wretch_select_bounty(H)
 
