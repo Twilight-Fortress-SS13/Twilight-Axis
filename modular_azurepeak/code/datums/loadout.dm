@@ -42,7 +42,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_name)
 	name = "Tricorn Hat"
 	path = /obj/item/clothing/head/roguetown/helmet/tricorn
 
-/datum/loadout_item/archercap
+/datum/loadout_item/archercapc
 	name = "Archer cap"
 	path = /obj/item/clothing/head/roguetown/archercap
 
@@ -82,7 +82,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_name)
 	name = "Folded Hat"
 	path = /obj/item/clothing/head/roguetown/bucklehat
 
-/datum/loadout_item/duelist_hat
+/datum/loadout_item/duelist_hatc
 	name = "Duelist Hat"
 	path = /obj/item/clothing/head/roguetown/duelhat
 
@@ -155,7 +155,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_name)
 	name = "Leather Cloak"
 	path = /obj/item/clothing/cloak/eastcloak2
 
-/datum/loadout_item/thief_cloak
+/datum/loadout_item/thief_cloakc
 	name = "Rapscallion Shawl"
 	path = /obj/item/clothing/cloak/thief_cloak
 
@@ -379,7 +379,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_name)
 	name = "Exotic Silk Mask"
 	path = /obj/item/clothing/mask/rogue/exoticsilkmask
 
-/datum/loadout_item/duelmask
+/datum/loadout_item/duelmaskc
 	name = "Duelist Mask"
 	path = /obj/item/clothing/mask/rogue/duelmask
 
@@ -467,19 +467,19 @@ GLOBAL_LIST_EMPTY(loadout_items_by_name)
     name = "Chaperon (Alt)"
     path = /obj/item/clothing/head/roguetown/chaperon/greyscale
 
-/datum/loadout_item/chaperon/burgher
+/datum/loadout_item/chaperon/burgherc
     name = "Noble Chaperon"
     path = /obj/item/clothing/head/roguetown/chaperon/noble
 
-/datum/loadout_item/jesterhat
+/datum/loadout_item/jesterhatc
     name = "Jester Hat"
     path = /obj/item/clothing/head/roguetown/jester
 
-/datum/loadout_item/jestertunick
+/datum/loadout_item/jestertunickc
     name = "Jester Tunick"
     path = /obj/item/clothing/suit/roguetown/shirt/jester
 
-/datum/loadout_item/jestershoes
+/datum/loadout_item/jestershoess
     name = "Jester Shoes"
     path = /obj/item/clothing/shoes/roguetown/jester
 

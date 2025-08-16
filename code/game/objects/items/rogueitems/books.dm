@@ -205,6 +205,7 @@
 
 /obj/item/book/rogue/bibble/psy
 	name = "Of Psydon"
+	desc = "And HE WEEPS. Not for you, not for me, but for it all."
 	icon_state = "psyble_0"
 	base_icon_state = "psyble"
 	title = "psyble"

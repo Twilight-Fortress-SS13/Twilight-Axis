@@ -2564,6 +2564,8 @@
 #include "modular_twilight_axis\code\game\objects\items\rogueitems\instruments.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\knives.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\swords.dm"
+#include "modular_twilight_axis\code\modules\admin\adminhelp.dm"
+#include "modular_twilight_axis\code\modules\admin\ticket_ss.dm"
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\alcohols.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\wretch\lunacyembracer.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\church\templar.dm"

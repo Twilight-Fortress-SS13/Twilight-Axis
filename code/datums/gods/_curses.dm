@@ -6,6 +6,7 @@
 	COOLDOWN_DECLARE(priest_apostasy)
 	COOLDOWN_DECLARE(priest_excommunicate)
 	COOLDOWN_DECLARE(priest_curse)
+	COOLDOWN_DECLARE(priest_change_miracles)
 
 /mob/living/carbon/human/proc/handle_curses()
 	for(var/curse in curses)

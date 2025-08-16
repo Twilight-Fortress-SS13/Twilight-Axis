@@ -522,3 +522,6 @@ DEFAULT_VIEW_SQUARE 15x15
 ## 1 Puts Border Control into 'learning mode' and will have it automatically whitelist new connections
 ## 2 Puts Border Control into 'enforcing mode' and will have it deny connections that are not already whitelisted.
 BORDER_CONTROL 0
+
+## Ticket ping frequency. Set 0 for disable that subsystem. 3000 - 5 minutes, 600 - 1 minute.
+TICKET_PING_FREQUENCY 1200
