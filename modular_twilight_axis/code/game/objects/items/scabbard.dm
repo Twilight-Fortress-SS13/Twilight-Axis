@@ -507,32 +507,13 @@
 
 
 /obj/item/rogueweapon/scabbard/sword/kazengun
-	name = "simple kazengun scabbard"
-	desc = "A piece of steel lined with wood. Great for batting away blows."
-	icon_state = "kazscab"
-	item_state = "kazscab"
-
-	valid_blade = /obj/item/rogueweapon/sword/sabre/mulyeog
-	associated_skill = /datum/skill/combat/shields
-	possible_item_intents = list(SHIELD_BASH, SHIELD_BLOCK)
-	can_parry = TRUE
-	wdefense = 9
-
-	max_integrity = 100
+	max_integrity = 150
 
 
 /obj/item/rogueweapon/scabbard/sword/kazengun/steel
-	name = "hwang scabbard"
-	desc = "A cloud-patterned scabbard with a cloth sash. Used for blocking."
-	icon_state = "kazscab_steel"
-	item_state = "kazscab_steel"
-	valid_blade = /obj/item/rogueweapon/sword/sabre/mulyeog/rumahench
+	max_integrity = 200 // higher than buckler
 
 
 /obj/item/rogueweapon/scabbard/sword/kazengun/gold
-	name = "gold-stained Xinyi scabbard"
-	desc = "An ornate, wooden scabbard with a sash. Great for parrying."
-	icon_state = "kazscab_gold"
-	item_state = "kazscab_gold"
-	valid_blade = /obj/item/rogueweapon/sword/sabre/mulyeog/rumacaptain
-	sellprice = 10
+	max_integrity = 250 // lower than kite
+
