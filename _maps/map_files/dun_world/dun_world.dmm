@@ -7589,10 +7589,6 @@
 /obj/machinery/light/rogue/wallfire/candle/l,
 /turf/open/floor/carpet/stellar,
 /area/rogue/indoors/town/magician)
-"cbL" = (
-/obj/structure/stairs,
-/turf/open/water/swamp,
-/area/rogue/outdoors/rtfield)
 "cbR" = (
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/dwarfin)
@@ -32472,10 +32468,6 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf,
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/under/cavewet/bogcaves/south)
-"iAv" = (
-/obj/structure/fluff/railing/border,
-/turf/open/water/swamp,
-/area/rogue/outdoors/rtfield)
 "iAw" = (
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 4
@@ -86675,10 +86667,6 @@
 /obj/structure/flora/roguetree/pine,
 /turf/closed/mineral/random/rogue/high,
 /area/rogue/outdoors/mountains)
-"wPi" = (
-/obj/structure/stairs,
-/turf/open/floor/rogue/dirt,
-/area/rogue/outdoors/rtfield)
 "wPn" = (
 /obj/structure/boatbell,
 /turf/closed/wall/mineral/rogue/wooddark,
@@ -271434,7 +271422,7 @@ nYk
 bsL
 quW
 bsL
-wPi
+aDh
 nQO
 rDz
 gtr
@@ -271885,8 +271873,8 @@ xZb
 sPF
 bsL
 bsL
-bsL
-iAv
+rZO
+hNm
 qUK
 rDz
 gtr
@@ -272336,9 +272324,9 @@ nYk
 wZw
 nYk
 asY
-bsL
-bsL
-iAv
+rZO
+rZO
+hNm
 eXh
 uQw
 knr
@@ -272789,8 +272777,8 @@ jpd
 nYk
 yjt
 asY
-bsL
-cbL
+rZO
+aDh
 rQY
 jJF
 sTw
@@ -273241,7 +273229,7 @@ xZb
 sPF
 asY
 asY
-bsL
+rZO
 hNm
 sPF
 rDz
