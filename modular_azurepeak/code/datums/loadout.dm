@@ -567,6 +567,16 @@ GLOBAL_LIST_EMPTY(loadout_items_by_name)
 	path = /obj/item/enchantingkit/zydras
 	donatitem = TRUE
 
+/datum/loadout_item/donator_eiren
+	name = "Donator Kit - Regret - Required: Zweihander"
+	path = /obj/item/enchantingkit/eiren
+	donatitem = TRUE
+
+/datum/loadout_item/donator_waff
+	name = "Donator Kit - Weeper's Lathe - Required: Any Greatsword"
+	path = /obj/item/enchantingkit/waff
+	donatitem = TRUE
+
 // Разное
 /datum/loadout_item/donat
 	name = "Музыкальная коробка"

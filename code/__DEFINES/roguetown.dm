@@ -202,6 +202,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/halforc,\
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
+	/datum/species/dullahan,\
 	/datum/species/aura, \
 )
 
@@ -225,23 +226,26 @@ Balloon Alert / Floating Text defines
 	/datum/species/akula,\
 	/datum/species/anthromorph,\
 	/datum/species/demihuman,\
+	/datum/species/halforc,\
 	/datum/species/aura, \
 
 
 #define RACES_SHUNNED \
-	/datum/species/halforc,\
 	/datum/species/anthromorphsmall,\
 	/datum/species/kobold,\
+	/datum/species/goblinp,\
 
 #define RACES_DESPISED \
-	/datum/species/goblinp,\
+	/datum/species/dullahan,\
 
 #define RACES_CONSTRUCT \
 	/datum/species/construct/metal,\
 
-#define RACES_ALL_KINDS list(RACES_DESPISED, RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED, RACES_CONSTRUCT)
+#define RACES_ALL_KINDS list(RACES_DESPISED, RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED, RACES_CONSTRUCT)	//Truely no restrictions
 
-#define RACES_NO_CONSTRUCT list(RACES_DESPISED, RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED)
+#define ACCEPTED_RACES list(RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED, RACES_CONSTRUCT)	//Allows all races except dallahun
+
+#define RACES_NO_CONSTRUCT list(RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED)
 
 #define RACES_SHUNNED_UP list(RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED)
 
@@ -294,6 +298,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
 	/datum/species/construct/metal,\
+	/datum/species/dullahan,\
 	/datum/species/aura, \
 )
 // Non-dwarf non-kobold non-goblin mostly
@@ -315,6 +320,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/demihuman,\
 	/datum/species/halforc,\
 	/datum/species/construct/metal,\
+	/datum/species/dullahan,\
 	/datum/species/aura, \
 )
 // Non-elf non-dwarf non-kobold non-goblin mostly
@@ -332,6 +338,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/anthromorph,\
 	/datum/species/demihuman,\
 	/datum/species/construct/metal,\
+	/datum/species/dullahan,\
 	/datum/species/aura, \
 )
 #define ALL_CLERIC_PATRONS list(/datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/necra, /datum/patron/divine/pestra, /datum/patron/divine/ravox, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/divine/undivided) // Currently unused.

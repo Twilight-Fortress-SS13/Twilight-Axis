@@ -27,6 +27,8 @@
 	var/last_ejaculation_time = 0
 	var/last_moan = 0
 	var/last_pain = 0
+	/// Which zones we are using in the current action.
+	var/using_zones = list()
 	var/knotted_status = KNOTTED_NULL // knotted state and used to prevent multiple knottings when we do not handle that case
 	var/tugging_knot = FALSE
 	var/tugging_knot_check = 0
@@ -48,6 +50,44 @@
 	if(charge < CHARGE_FOR_CLIMAX)
 		return TRUE
 	return FALSE
+
+/datum/sex_action/proc/check_location_accessible(mob/living/carbon/human/user, mob/living/carbon/human/target, location = BODY_ZONE_CHEST, grabs = FALSE, skipundies = TRUE)
+	var/obj/item/bodypart/bodypart = target.get_bodypart(location)
+
+	var/self_target = FALSE
+	var/datum/sex_controller/user_controller = user.sexcon
+	if(user_controller.target == user)
+		self_target = TRUE
+
+	var/signalargs = list(src, bodypart, self_target)
+	signalargs += args
+
+	var/sigbitflags = SEND_SIGNAL(target, COMSIG_ERP_LOCATION_ACCESSIBLE, signalargs)
+	bodypart = signalargs[ERP_BODYPART]
+
+	if(sigbitflags & SIG_CHECK_FAIL)
+		return FALSE
+
+	if(!user.Adjacent(target) && !(sigbitflags & SKIP_ADJACENCY_CHECK))
+		return FALSE
+
+	if(!bodypart)
+		return FALSE
+
+	if(src.check_same_tile && (user != target || self_target) && !(sigbitflags & SKIP_TILE_CHECK))
+		var/same_tile = (get_turf(user) == get_turf(target))
+		var/grab_bypass = (src.aggro_grab_instead_same_tile && user.get_highest_grab_state_on(target) == GRAB_AGGRESSIVE)
+		if(!same_tile && !grab_bypass)
+			return FALSE
+
+	if(src.require_grab && (user != target || self_target) && !(sigbitflags & SKIP_GRAB_CHECK))
+		var/grabstate = user.get_highest_grab_state_on(target)
+		if((grabstate == null || grabstate < src.required_grab_state))
+			return FALSE
+
+	var/result = get_location_accessible(target, location = location, grabs = grabs, skipundies = skipundies)
+	if(result && user == target && !(bodypart in user_controller.using_zones) && user_controller.current_action == SEX_ACTION(src))
+		user_controller.using_zones += location
 
 /datum/sex_controller/proc/finished_check()
 	if(!do_until_finished)
@@ -794,6 +834,7 @@
 	desire_stop = FALSE
 	user.doing = FALSE
 	current_action = null
+	using_zones = list()
 
 /datum/sex_controller/proc/try_start_action(action_type)
 	if(action_type == current_action)

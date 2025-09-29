@@ -166,7 +166,7 @@
 			head = helmets[helmchoice]
     
 		var/armors = list(
-			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine,
+			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
 			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/half,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/half/fluted,
@@ -260,7 +260,7 @@
 			head = helmets[helmchoice]
 
 		var/armors = list(
-			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine,
+			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
 			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/half,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/half/fluted,
@@ -378,7 +378,7 @@
 			head = helmets[helmchoice]
 
 		var/armors = list(
-			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine,
+			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
 			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/half,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/half/fluted,
@@ -491,7 +491,7 @@
 			if("Medium Armor")
 				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail
 				pants = /obj/item/clothing/under/roguetown/chainlegs
-				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light
+				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light/retinue
 			if("Medium Cuirass")
 				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail
 				pants = /obj/item/clothing/under/roguetown/chainlegs
