@@ -6749,6 +6749,9 @@
 /area/rogue/indoors/town/church/chapel)
 "bMX" = (
 /obj/item/reagent_containers/glass/bucket,
+/obj/machinery/light/rogue/wallfire/candle{
+	pixel_y = -32
+	},
 /turf/open/floor/rogue/tile/bath,
 /area/rogue/indoors/town/magician)
 "bNd" = (
@@ -10864,9 +10867,6 @@
 /area/rogue/indoors)
 "cPJ" = (
 /obj/structure/closet/crate/chest/crate,
-/obj/machinery/light/rogue/wallfire/candle{
-	pixel_y = -32
-	},
 /obj/machinery/light/rogue/wallfire/candle/r,
 /obj/item/ash,
 /obj/item/ash,
@@ -23073,6 +23073,12 @@
 /obj/machinery/light/rogue/torchholder/l,
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cave/dragonden)
+"fZi" = (
+/obj/structure/roguemachine/potionseller{
+	keycontrol = "tower"
+	},
+/turf/closed/wall/mineral/rogue/stonebrick,
+/area/rogue/indoors/town/magician)
 "fZm" = (
 /obj/structure/fermentation_keg/random/water,
 /turf/open/floor/rogue/church,
@@ -32854,7 +32860,9 @@
 /area/rogue/indoors/town/bath)
 "iuB" = (
 /obj/machinery/light/rogue/torchholder/r,
-/obj/structure/roguemachine/scomm,
+/obj/structure/roguemachine/scomm{
+	pixel_y = -32;
+	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/town/magician)
 "iuM" = (
@@ -269064,12 +269072,12 @@ twm
 cWw
 fSi
 aYv
-iSm
-iuB
-ukG
-ukG
-ukG
+fZi
 oeh
+ukG
+ukG
+ukG
+iuB
 iSm
 aYv
 ukG
