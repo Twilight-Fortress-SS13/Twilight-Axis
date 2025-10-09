@@ -53,17 +53,19 @@
 /datum/outfit/job/roguetown/apothecary/basic/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_blindness(-3)
-	head = /obj/item/clothing/head/roguetown/roguehood/black
+	//head = /obj/item/clothing/head/roguetown/roguehood/black //TA edit: remove hood
+	mask = /obj/item/clothing/mask/rogue/physician/apothecary //TA edit: apothecary mask
 	pants = /obj/item/clothing/under/roguetown/trou/apothecary
 	shirt = /obj/item/clothing/suit/roguetown/shirt/apothshirt
-	armor = /obj/item/clothing/suit/roguetown/shirt/robe/black
+	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/apothecary //TA edit: apothecary gambeson
+	gloves = /obj/item/clothing/gloves/roguetown/leather/apothecary //TA edit: apothecary gloves
 	belt = /obj/item/storage/belt/rogue/leather/rope
 	neck = /obj/item/storage/belt/rogue/pouch/coins/poor
 	beltl = /obj/item/storage/belt/rogue/surgery_bag/full/physician
 	beltr = /obj/item/roguekey/physician
 	id = /obj/item/scomstone/bad
-	r_hand = /obj/item/rogueweapon/woodstaff/
-	shoes = /obj/item/clothing/shoes/roguetown/boots/leather
+	r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff //TA edit: quarterstaff
+	shoes = /obj/item/clothing/shoes/roguetown/apothboots //TA edit: apothecary boots
 	backr = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
 		/obj/item/natural/worms/leech/cheele = 1,

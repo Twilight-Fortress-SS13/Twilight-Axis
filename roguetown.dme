@@ -2702,6 +2702,8 @@
 #include "modular_twilight_axis\code\modules\client\customizer\customizers\organ\tail.dm"
 #include "modular_twilight_axis\code\modules\client\customizer\customizers\organ\wings.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\cloaks.dm"
+#include "modular_twilight_axis\code\modules\clothing\rogueclothes\feet.dm"
+#include "modular_twilight_axis\code\modules\clothing\rogueclothes\gloves.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\mask.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\neck.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\shirts.dm"

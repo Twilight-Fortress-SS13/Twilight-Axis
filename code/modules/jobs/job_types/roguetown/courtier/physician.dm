@@ -67,7 +67,7 @@
 	..()
 	H.adjust_blindness(-3)
 	head = /obj/item/clothing/head/roguetown/physician
-	mask = /obj/item/clothing/mask/rogue/physician
+	mask = /obj/item/clothing/mask/rogue/physician/head //TA edit: physician mask
 	neck = /obj/item/storage/belt/rogue/pouch/coins/mid            //coin to hire mercenaries or adventurers with
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/physician
 	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/black
@@ -78,7 +78,7 @@
 	beltl = /obj/item/storage/belt/rogue/surgery_bag/full/physician
 	beltr = /obj/item/storage/keyring/physician
 	id = /obj/item/scomstone/bad
-	r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/
+	r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/iron //TA edit: iron quarterstaff
 	backl = /obj/item/storage/backpack/rogue/satchel/black
 	backpack_contents = list(
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 2,

@@ -41,3 +41,19 @@
 		if(get_altdetail_color())
 			pic2.color = get_altdetail_color()
 		add_overlay(pic2)
+
+/obj/item/clothing/mask/rogue/physician/apothecary
+	name = "apothecary mask"
+	desc = "Packed with herbs to conceal the rot?"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
+	icon_state = "apothmask"
+	item_state = "apothmask"
+
+/obj/item/clothing/mask/rogue/physician/head
+	name = "physician mask"
+	desc = "This one is made with actual bone! Don't ask whose."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
+	icon_state = "courtmask"
+	item_state = "courtmask"
