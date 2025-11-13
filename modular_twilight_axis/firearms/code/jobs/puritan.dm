@@ -9,7 +9,7 @@
 /datum/outfit/job/roguetown/inspector/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
 	var/ranged = list("Runelock (powderless pistol)", "Crossbow + Throwing Knives", "Slurbow + Throwing Knives")
-	var/ranged_choice = input(H,"Choose your HELMET.", "TAKE UP PSYDON'S HELMS.") as anything in helmets
+	var/ranged_choice = input(H,"Choose your RANGED WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in helmets
 	switch(ranged_choice)
 		if("Runelock (powderless pistol)")
 			H.equip_to_slot_or_del(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/runelock, SLOT_BELT, TRUE)
