@@ -1,9 +1,50 @@
 /datum/outfit/job/roguetown/puritan/inspector/pre_equip(mob/living/carbon/human/H)
 	. = ..()
 	H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 3, TRUE)
-	belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/runelock
-	beltr = /obj/item/quiver/twilight_bullet/runed
+	belt = null
+	beltr = null
 	backl = null
+	cloak = /obj/item/storage/backpack/rogue/satchel/beltpack // вместо пояса даем подсумок как у confessor, чтобы ничего не пропало из инвентаря из-за меньших слотов
+
+/datum/outfit/job/roguetown/inspector/choose_loadout(mob/living/carbon/human/H)
+	. = ..()
+	var/ranged = list("Runelock (powderless pistol)", "Crossbow + Throwing Knives", "Slurbow + Throwing Knives")
+	var/ranged_choice = input(H,"Choose your HELMET.", "TAKE UP PSYDON'S HELMS.") as anything in helmets
+	switch(ranged_choice)
+		if("Runelock (powderless pistol)")
+			H.equip_to_slot_or_del(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/runelock, SLOT_BELT, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/twilight_bullet/runed, SLOT_BELT_R, TRUE)
+		if("Crossbow + Throwing Knives")
+			H.equip_to_slot_or_del(new /obj/item/storage/belt/rogue/leather/knifebelt/black/psydon, SLOT_BELT, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolts, SLOT_BELT_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow, SLOT_BACK_L, TRUE)
+		if("Slurbow + Throwing Knives")
+			H.equip_to_slot_or_del(new /obj/item/storage/belt/rogue/leather/knifebelt/black/psydon, SLOT_BELT, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolts, SLOT_BELT_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow, SLOT_BACK_L, TRUE)
+	switch(weapon_choice) // выдаем оружие только после выдачи пояса, чтобы было куда повесить ножны... Возможно сделать как-то проще, чем коммент в ориг. файле
+	var/weapons = list("Psydonic Longsword", "Psydonic Rapier", "Daybreak (Whip)", "Stigmata (Halberd)", "Eucharist (Rapier)")
+	var/weapon_choice = input(H,"FLOURISH YOUR SILVER.", "WIELD THEM IN HIS NAME.") as anything in weapons
+	switch(weapon_choice)
+		if("Psydonic Longsword")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/long/psysword/preblessed(H), TRUE)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword, SLOT_BELT_L, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
+		if("Psydonic Rapier")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/rapier/psy/preblessed(H), TRUE)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword, SLOT_BELT_L, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
+		if("Daybreak (Whip)")
+			H.put_in_hands(new /obj/item/rogueweapon/whip/antique/psywhip(H), TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, 4, TRUE)
+		if("Stigmata (Halberd)")
+			H.put_in_hands(new /obj/item/rogueweapon/halberd/psyhalberd/relic(H), TRUE)
+			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H), TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
+		if("Eucharist (Rapier)")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/rapier/psy/relic(H), TRUE)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword, SLOT_BELT_L, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
 
 /datum/advclass/puritan/blackpowder
 	name = "Black Vanguard"
