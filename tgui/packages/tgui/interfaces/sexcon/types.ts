@@ -15,6 +15,7 @@ export interface SexSessionData {
   actions: SexAction[];
   speed_names: string[];
   force_names: string[];
+  erect_state_names: string[];
   has_penis: boolean;
   has_knotted_penis: boolean;
 
@@ -24,7 +25,7 @@ export interface SexSessionData {
   current_action: string | null;
   speed: number;
   force: number;
-  manual_arousal: number;
+  erect_state: number;
   do_until_finished: boolean;
   do_knot_action: boolean;
 

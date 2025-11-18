@@ -15,6 +15,7 @@ export const SexSession = () => {
   // Color mapping for speed and force (matching old sexcon)
   const speedColors = ['#eac8de', '#e9a8d1', '#f05ee1', '#d146f5'];
   const forceColors = ['#eac8de', '#e9a8d1', '#f05ee1', '#d146f5'];
+  const erect_stateColors = ['#eac8de', '#f05ee1', '#d146f5'];
 
   // Split actions into two columns
   const filteredActions = data.actions.filter((action) =>
@@ -68,6 +69,36 @@ export const SexSession = () => {
                     <Button
                       inline
                       compact
+                      onClick={() => act('cycle_arousal', { value: Math.max(1, data.erect_state - 1) })}
+                    >
+                      &lt;
+                    </Button>
+                    {' '}
+                    <Box
+                      as="span"
+                      bold
+                      style={{
+                        color: erect_stateColors[data.erect_state - 1],
+                        display: 'inline-block',
+                        minWidth: '110px',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {data.erect_state_names[data.erect_state - 1]}
+                    </Box>
+                    {' '}
+                    <Button
+                      inline
+                      compact
+                      onClick={() => act('cycle_arousal', { value: Math.min(4, data.erect_state + 1) })}
+                    >
+                      &gt;
+                    </Button>
+                  </Box>
+                  <Box textAlign="center">
+                    <Button
+                      inline
+                      compact
                       onClick={() => act('set_speed', { value: Math.max(1, data.speed - 1) })}
                     >
                       &lt;
@@ -93,7 +124,7 @@ export const SexSession = () => {
                     >
                       &gt;
                     </Button>
-                    {` -- | -- `}
+                    {` - | - `}
                     <Button
                       inline
                       compact

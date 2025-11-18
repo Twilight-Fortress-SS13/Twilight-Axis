@@ -14,6 +14,8 @@
 	/// Makes genital arousal automatic by default
 	var/manual_arousal = SEX_MANUAL_AROUSAL_DEFAULT
 	/// Whether we want to screw until finished, or non stop
+	var/erect_state = ERECT_STATE_NONE
+	/// Я НЕ ЗНАЮ БЛЯТЬ КАК ЭТО РАБОТАЕТ
 	var/do_until_finished = TRUE
 	///inactivity bumps
 	var/inactivity = 0
@@ -244,6 +246,9 @@
 /datum/sex_session/proc/adjust_force(amt)
 	force = clamp(force + amt, SEX_FORCE_MIN, SEX_FORCE_MAX)
 
+/datum/sex_session/proc/adjust_erect_state()
+	erect_state = clamp(erect_state + 1, ERECT_STATE_NONE, ERECT_STATE_HARD)
+
 /datum/sex_session/proc/finished_check()
 	if(!do_until_finished)
 		return FALSE
@@ -280,16 +285,15 @@
 		if(SEX_SPEED_EXTREME)
 			return "<font color='#d146f5'>НЕУМОЛИМО</font>"
 
-/datum/sex_session/proc/get_manual_arousal_string()
-	switch(manual_arousal)
-		if(SEX_MANUAL_AROUSAL_DEFAULT)
+/datum/sex_session/proc/get_erect_state_string()
+	switch(erect_state)
+		if(ERECT_STATE_NONE)
 			return "<font color='#eac8de'>ПЕРЕМЕННАЯ ЭРЕКЦИЯ</font>"
-		if(SEX_MANUAL_AROUSAL_UNAROUSED)
-			return "<font color='#e9a8d1'>СЛАБАЯ ЭРЕКЦИЯ</font>"
-		if(SEX_MANUAL_AROUSAL_PARTIAL)
+		if(ERECT_STATE_PARTIAL)
 			return "<font color='#f05ee1'>НОРМАЛЬНАЯ ЭРЕКЦИЯ</font>"
-		if(SEX_MANUAL_AROUSAL_FULL)
+		if(ERECT_STATE_HARD)
 			return "<font color='#d146f5'>СИЛЬНАЯ ЭРЕКЦИЯ</font>"
+
 /datum/sex_session/proc/get_generic_force_adjective()
 	switch(force)
 		if(SEX_FORCE_LOW)
@@ -348,6 +352,7 @@
 	// Static UI strings
 	data["speed_names"] = list("МЕДЛЕННО", "ПОСТЕПЕННО", "БЫСТРО", "НЕУМОЛИМО")
 	data["force_names"] = list("НЕЖНО", "НАСТОЙЧИВО", "ГРУБО", "ЖЕСТОКО")
+	data["erect_state_names"] = list("ПЕРЕМЕННАЯ ЭРЕКЦИЯ", "НОРМАЛЬНАЯ ЭРЕКЦИЯ", "СИЛЬНАЯ ЭРЕКЦИЯ")
 	data["has_penis"] = user.getorganslot(ORGAN_SLOT_PENIS) ? TRUE : FALSE
 
 	// Check if user has knotted penis
@@ -373,7 +378,7 @@
 	data["current_action"] = current_action
 	data["speed"] = get_current_speed()
 	data["force"] = get_current_force()
-	data["manual_arousal"] = manual_arousal || SEX_MANUAL_AROUSAL_DEFAULT
+	data["erect_state"] = get_current_cycle_arousal()
 	data["do_until_finished"] = do_until_finished
 	data["do_knot_action"] = do_knot_action
 
@@ -427,7 +432,7 @@
 			set_current_force(params["value"])
 			. = TRUE
 		if("cycle_arousal")
-			manual_arousal = (manual_arousal % SEX_MANUAL_AROUSAL_MAX) + 1
+			set_current_cycle_arousal(params["value"]) //cycle_arousal = (manual_arousal % SEX_MANUAL_AROUSAL_MAX) + 1
 			. = TRUE
 		if("toggle_finished")
 			do_until_finished = !do_until_finished
@@ -488,8 +493,14 @@
 /datum/sex_session/proc/get_current_force()
 	return force || SEX_FORCE_LOW
 
+/datum/sex_session/proc/get_current_cycle_arousal()
+	return erect_state || ERECT_STATE_NONE
+
 /datum/sex_session/proc/set_current_speed(new_speed)
 	speed = clamp(new_speed, SEX_SPEED_MIN, SEX_SPEED_MAX)
 
 /datum/sex_session/proc/set_current_force(new_force)
 	force = clamp(new_force, SEX_FORCE_MIN, SEX_FORCE_MAX)
+
+/datum/sex_session/proc/set_current_cycle_arousal(new_erect_state)
+	erect_state = clamp(new_erect_state, ERECT_STATE_NONE, ERECT_STATE_HARD)

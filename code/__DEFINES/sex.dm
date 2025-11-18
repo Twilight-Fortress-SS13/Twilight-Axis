@@ -14,6 +14,7 @@ GLOBAL_LIST_EMPTY(locked_sex_objects)
 #define COMSIG_SEX_GET_AROUSAL "sex_get_arousal"                        // () - Get current arousal info
 #define COMSIG_SEX_CLIMAX "sex_climax"                                  // (type, target) - Handle climax event
 #define COMSIG_SEX_RECEIVE_ACTION "sex_receive_action"                  // (arousal_amt, pain_amt, giving, force, speed) - Receive action effects
+#define COMSIG_SEX_ERECT_STATE "sex_erect_state"                        // () - Toggle erect state
 
 // Knotting Component Signals
 /// Attempts to knot a target. Args: (target, force_level)
@@ -110,9 +111,15 @@ GLOBAL_LIST_EMPTY(locked_sex_objects)
 #define SHEATH_TYPE_NORMAL 1
 #define SHEATH_TYPE_SLIT 2
 
-#define ERECT_STATE_NONE 0
-#define ERECT_STATE_PARTIAL 1
-#define ERECT_STATE_HARD 2
+#define ERECT_STATE_NONE 1
+#define ERECT_STATE_PARTIAL 2
+#define ERECT_STATE_HARD 3
+
+#define ERECT_STATES list (\
+	ERECT_STATE_NONE,\
+	ERECT_STATE_PARTIAL,\
+	ERECT_STATE_HARD,\
+	)
 
 #define MIN_TESTICLES_SIZE 1
 #define DEFAULT_TESTICLES_SIZE 2
