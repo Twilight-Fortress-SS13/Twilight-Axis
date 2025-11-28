@@ -187,7 +187,6 @@
 	unequip_delay_self = 1.5 SECONDS
 	inv_storage_delay = 1.5 SECONDS
 	edelay_type = 1
-	special = /datum/special_intent/shin_swipe
 
 /obj/item/rogueweapon/sword/Initialize()
 	. = ..()
@@ -299,7 +298,6 @@
 	max_blade_int = 280
 	wdefense_wbonus = 4
 	smeltresult = /obj/item/ingot/steel
-	special = /datum/special_intent/side_sweep
 
 /obj/item/rogueweapon/sword/long/training
 	name = "training sword"
@@ -1081,7 +1079,6 @@
 	minstr = 5
 	wdefense = 7		//Same as rapier
 	wbalance = WBALANCE_SWIFT
-	special = /datum/special_intent/shin_swipe
 
 /datum/intent/sword/cut/sabre
 	clickcd = 8		//Faster than sword by 4

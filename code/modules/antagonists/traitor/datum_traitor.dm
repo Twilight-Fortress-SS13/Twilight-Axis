@@ -233,6 +233,3 @@
 
 	return message
 
-#undef TRAITOR_HUMAN
-#undef TRAITOR_AI
-

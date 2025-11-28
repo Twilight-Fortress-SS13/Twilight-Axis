@@ -1,6 +1,3 @@
-#define SDQL2_VALID_OPTION_TYPES list("proccall", "select", "priority", "autogc" , "sequential")
-#define SDQL2_VALID_OPTION_VALUES list("async", "blocking", "force_nulls", "skip_nulls", "high", "normal", "keep_alive" , "true")
-
 //I'm pretty sure that this is a recursive [s]descent[/s] ascent parser.
 
 
@@ -632,6 +629,3 @@
 		i = variable(i, node)
 
 	return i
-
-#undef SDQL2_VALID_OPTION_TYPES
-#undef SDQL2_VALID_OPTION_VALUES

@@ -5,9 +5,10 @@
 	ask_verb = "inquires"
 	exclaim_verb = "asserts"
 	key = "g"
+	flags = LANGUAGE_HIDE_ICON_IF_UNDERSTOOD | LANGUAGE_HIDE_ICON_IF_NOT_UNDERSTOOD
 	space_chance = 66
 	default_priority = 90
-	icon_state = "imperial"
+	icon_state = "asse"
 	spans = list(SPAN_GRENZELHOFTIAN)
 	syllables = list(
 		"auf", "aum", "ach", "an", "auch", "ans", "bech", "bus", "baum", "bauf", "bom",

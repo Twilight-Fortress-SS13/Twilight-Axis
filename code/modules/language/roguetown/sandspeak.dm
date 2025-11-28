@@ -5,9 +5,10 @@
 	ask_verb = "asks"
 	exclaim_verb = "yells"
 	key = "c"
+	flags = LANGUAGE_HIDE_ICON_IF_UNDERSTOOD | LANGUAGE_HIDE_ICON_IF_NOT_UNDERSTOOD
 	space_chance = 60
 	default_priority = 80
-	icon_state = "celestial"
+	icon_state = "asse"
 	spans = list(SPAN_SAND)
 	syllables = list(
 		"ak", "al", "am", "an", "ar", "bi", "da", "de", "di", "ek", "el",

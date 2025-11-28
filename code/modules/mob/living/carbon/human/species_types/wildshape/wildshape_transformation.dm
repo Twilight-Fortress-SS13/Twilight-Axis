@@ -163,5 +163,3 @@
 	to_chat(W, span_userdanger("I return to my old form."))
 
 	qdel(src)
-
-#undef TRAIT_SOURCE_WILDSHAPE

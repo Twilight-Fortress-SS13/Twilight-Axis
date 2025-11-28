@@ -1,3 +1,6 @@
+
+#define CURSE_MASTER_LIST list("brokedick")
+
 /proc/curse2trait(curse)
 	if(!curse)
 		return

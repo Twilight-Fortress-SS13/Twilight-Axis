@@ -193,7 +193,3 @@ GLOBAL_VAR_INIT(whitelistLoaded, 0)
 		return 0
 
 	GLOB.borderControlFile["whitelistedCkeys"] << GLOB.whitelistedCkeys
-
-#undef BORDER_CONTROL_DISABLED
-#undef BORDER_CONTROL_LEARNING
-#undef BORDER_CONTROL_ENFORCED

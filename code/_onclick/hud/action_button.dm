@@ -1,4 +1,4 @@
-#define AB_MAX_COLUMNS 12
+#define ACTION_BUTTON_DEFAULT_BACKGROUND "default"
 
 /atom/movable/screen/movable/action_button
 	var/datum/action/linked_action
@@ -223,6 +223,21 @@
 			if(reload_screen)
 				client.screen += B
 
+//		if(!button_number)
+//			hud_used.hide_actions_toggle.screen_loc = null
+//			return
+
+//	if(!hud_used.hide_actions_toggle.moved)
+//		hud_used.hide_actions_toggle.screen_loc = hud_used.ButtonNumberToScreenCoords(button_number+1)
+//	else
+//		hud_used.hide_actions_toggle.screen_loc = hud_used.hide_actions_toggle.moved
+//	if(reload_screen)
+//		client.screen += hud_used.hide_actions_toggle
+
+
+
+#define AB_MAX_COLUMNS 12
+
 /datum/hud/proc/ButtonNumberToScreenCoords(number) // TODO : Make this zero-indexed for readabilty
 	var/row = round((number - 1)/AB_MAX_COLUMNS)
 	var/col = ((number - 1)%(AB_MAX_COLUMNS)) + 1
@@ -272,5 +287,3 @@
 			animate(maptext = displaytext, color = color_neutral, 1)
 		else
 			animate(maptext = displaytext, 1)
-
-#undef AB_MAX_COLUMNS

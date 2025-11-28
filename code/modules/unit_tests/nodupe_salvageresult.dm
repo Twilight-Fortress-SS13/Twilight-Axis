@@ -7,7 +7,7 @@
 /datum/unit_test/nodupe_salvageresult/Run()
 	// Material equivalence mapping - treat these materials as equivalent for transmutation checking
 	// Empty for now
-	var/list/material_equivalents = alist()
+	var/list/material_equivalents = list()
 	
 	for(var/datum/crafting_recipe/recipe as anything in GLOB.crafting_recipes)
 		var/list/required_items = recipe.reqs
@@ -28,6 +28,7 @@
 			if(!salvage_result || !salvage_amount)
 				continue
 			
+			// Get canonical material type (handle equivalents)
 			var/canonical_salvage = material_equivalents[salvage_result] || salvage_result
 			
 			result_salvage_totals[canonical_salvage] = (result_salvage_totals[canonical_salvage] || 0) + salvage_amount

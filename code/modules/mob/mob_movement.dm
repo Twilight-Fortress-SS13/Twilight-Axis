@@ -779,12 +779,11 @@
 
 /mob/proc/toggle_eye_intent(mob/user) //clicking the fixeye button either makes you fixeye or clears your target
 	if(fixedeye)
-		fixedeye = FALSE
-		tempfixeye = FALSE
+		fixedeye = 0
 		if(!tempfixeye)
 			nodirchange = FALSE
-	else if(!fixedeye)
-		fixedeye = TRUE
+	else
+		fixedeye = 1
 		nodirchange = TRUE
 	for(var/atom/movable/screen/eye_intent/eyet in hud_used.static_inventory)
 		eyet.update_icon(src)
@@ -839,6 +838,3 @@
 // for mobs that are floating, flying, intangible, etc.
 /mob/proc/is_floor_hazard_immune()
 	return throwing || (movement_type & (FLYING|FLOATING))
-
-#undef MOVEMENT_DELAY_BUFFER
-#undef MOVEMENT_DELAY_BUFFER_DELTA

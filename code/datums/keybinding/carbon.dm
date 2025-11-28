@@ -143,18 +143,18 @@
 	C.mmb_intent_change(QINTENT_KICK)
 	return TRUE
 
-/datum/keybinding/carbon/special_intent
+/datum/keybinding/carbon/steal_intent
 	hotkey_keys = list("L")
-	name = "intent_special"
-	full_name = "Select Special Intent"
+	name = "intent_steal"
+	full_name = "Select Steal Intent"
 	description = ""
 	category = CATEGORY_CARBON
 
-/datum/keybinding/carbon/special_intent/down(client/user)
+/datum/keybinding/carbon/steal_intent/down(client/user)
 	if (!iscarbon(user.mob))
 		return FALSE
 	var/mob/living/carbon/C = user.mob
-	C.mmb_intent_change(QINTENT_SPECIAL)
+	C.mmb_intent_change(QINTENT_STEAL)
 	return TRUE
 
 /*

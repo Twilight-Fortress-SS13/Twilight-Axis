@@ -3,7 +3,7 @@
 	desc = ""
 	key = "14"
 	default_priority = 0
-	flags = TONGUELESS_SPEECH
+	flags = TONGUELESS_SPEECH | LANGUAGE_HIDE_ICON_IF_NOT_UNDERSTOOD
 	icon_state = "codespeak"
 
 /datum/language/codespeak/scramble(input)

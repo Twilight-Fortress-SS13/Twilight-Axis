@@ -115,5 +115,3 @@
 		else
 			to_chat(src, span_warning("Your announcement was interrupted!"))
 			return FALSE
-
-#undef CRIER_ANNOUNCEMENT_COOLDOWN

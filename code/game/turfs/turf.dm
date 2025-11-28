@@ -143,6 +143,9 @@
 	flags_1 &= ~INITIALIZED_1
 	..()
 
+#define SEE_SKY_YES 1
+#define SEE_SKY_NO 2
+
 /turf
 	var/can_see_sky //1, 2
 	var/primary_area
@@ -672,3 +675,4 @@
 //Should return new turf
 /turf/proc/Melt()
 	return ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
+

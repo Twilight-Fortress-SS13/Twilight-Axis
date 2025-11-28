@@ -114,6 +114,3 @@
 	if(. & EMP_PROTECT_SELF)
 		return
 	damage += 100/severity
-
-#undef LIVER_DEFAULT_TOX_TOLERANCE
-#undef LIVER_DEFAULT_TOX_LETHALITY

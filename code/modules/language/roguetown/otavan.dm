@@ -5,9 +5,10 @@
 	ask_verb = "inquires"
 	exclaim_verb = "asserts"
 	key = "v"
+	flags = LANGUAGE_HIDE_ICON_IF_UNDERSTOOD | LANGUAGE_HIDE_ICON_IF_NOT_UNDERSTOOD
 	space_chance = 75
 	default_priority = 90
-	icon_state = "psydon"
+	icon_state = "asse"
 	spans = list(SPAN_OTAVAN)
 	syllables = list(
 		"ent", "que", "ait", "les", "lle", "our", "oui", "men", "ais", "est", "tre",

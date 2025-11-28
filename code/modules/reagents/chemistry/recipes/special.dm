@@ -124,7 +124,3 @@
 		return FALSE
 	required_container =  containerpath
 	return TRUE
-
-#undef RNGCHEM_INPUT
-#undef RNGCHEM_CATALYSTS
-#undef RNGCHEM_OUTPUT

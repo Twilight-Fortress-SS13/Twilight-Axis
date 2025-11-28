@@ -118,6 +118,3 @@
 				budgie = 0
 		if(play_sound)
 			playsound(src.loc, 'sound/misc/hiss.ogg', 100, FALSE, -1)
-
-#undef EXPORT_TIME
-#undef EXPORT_TIME_TESTING

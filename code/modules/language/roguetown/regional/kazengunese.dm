@@ -5,9 +5,10 @@
 	whisper_verb = "whispers"
 	exclaim_verb = "yells"
 	key = "k"
+	flags = LANGUAGE_HIDE_ICON_IF_UNDERSTOOD | LANGUAGE_HIDE_ICON_IF_NOT_UNDERSTOOD
 	space_chance = 30
 	default_priority = 90
-	icon_state = "galcom"
+	icon_state = "asse"
 	spans = list(SPAN_KAZENGUNESE)
 	syllables = list(
 		"ka", "ki", "ku", "ke", "ko", "sa", "shi", "su", "se", "so", "ta", "chi", "tsu",

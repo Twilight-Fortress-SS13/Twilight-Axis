@@ -240,6 +240,3 @@
 			to_chat(owner, span_greentext("Your ruler retained the throne! SUCCESS!"))
 		else
 			to_chat(owner, span_redtext("Your ruler was deposed! FAIL!"))
-
-#undef CHOICE_POISON_BLADE
-#undef CHOICE_SKILLS

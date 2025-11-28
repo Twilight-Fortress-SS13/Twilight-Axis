@@ -1,1 +1,0 @@
-#define EXPLOSION_THROW_SPEED 4

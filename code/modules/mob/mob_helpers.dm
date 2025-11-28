@@ -559,13 +559,13 @@
 				mmb_intent = null
 			else
 				mmb_intent = new INTENT_KICK(src)
-		if(QINTENT_SPECIAL)
-			if(mmb_intent?.type == INTENT_SPECIAL)
+		if(QINTENT_STEAL)
+			if(mmb_intent?.type == INTENT_STEAL)
 				qdel(mmb_intent)
 				input = null
 				mmb_intent = null
 			else
-				mmb_intent = new INTENT_SPECIAL(src)
+				mmb_intent = new INTENT_STEAL(src)
 		if(QINTENT_BITE)
 			if(mmb_intent?.type == INTENT_BITE)
 				qdel(mmb_intent)

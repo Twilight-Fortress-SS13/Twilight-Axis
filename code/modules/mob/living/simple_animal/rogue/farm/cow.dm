@@ -41,11 +41,6 @@
 	childtype = list(/mob/living/simple_animal/hostile/retaliate/rogue/cow/cowlet = 95, /mob/living/simple_animal/hostile/retaliate/rogue/cow/bullet = 5)
 	remains_type = /obj/effect/decal/remains/cow
 
-//new ai, old ai off
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	ai_controller = /datum/ai_controller/generic
-
 /obj/effect/decal/remains/cow
 	name = "remains"
 	gender = PLURAL
@@ -181,11 +176,6 @@
 	STASPD = 2
 	remains_type = /obj/effect/decal/remains/cow
 
-	//new ai, old ai off
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	ai_controller = /datum/ai_controller/generic
-
 /mob/living/simple_animal/hostile/retaliate/rogue/bull/get_sound(input)
 	switch(input)
 		if("aggro")
@@ -248,11 +238,6 @@
 	GiveTarget(user)
 	return
 
-/mob/living/simple_animal/hostile/retaliate/rogue/bull/Initialize()
-	. = ..()
-	AddElement(/datum/element/ai_retaliate)
-	ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type)
-
 /mob/living/simple_animal/hostile/retaliate/rogue/cow/bullet
 	name = "calf"
 	desc = ""
@@ -275,7 +260,7 @@
 	STASPD = 5
 	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/bull
 
-/mob/living/simple_animal/hostile/retaliate/rogue/cow/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/cow/test/Initialize()
 	. = ..()
 	AddElement(/datum/element/ai_retaliate)
 	ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type)

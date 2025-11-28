@@ -64,10 +64,10 @@
 		},
 		{
 			"type": "dreammaker",
-			"dme": "roguetown.dme",
+			"dme": "tgstation.dme",
 			"problemMatcher": ["$dreammaker"],
 			"group": "build",
-			"label": "dm: build - roguetown.dme"
+			"label": "dm: build - tgstation.dme"
 		},
 		{
 			"command": "${command:dreammaker.reparse}",

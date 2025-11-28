@@ -1,3 +1,5 @@
+#define EXPLOSION_THROW_SPEED 4
+
 GLOBAL_LIST_EMPTY(explosions)
 //Against my better judgement, I will return the explosion datum
 //If I see any GC errors for it I will find you

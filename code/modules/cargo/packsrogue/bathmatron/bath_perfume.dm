@@ -72,31 +72,28 @@
 	contains = list(/obj/item/perfume/myrrh)
 
 /*
-	held_items[/obj/item/lipstick] = list("PRICE" = rand(33,50),"NAME" = "red lipstick")
-	held_items[/obj/item/lipstick/jade] = list("PRICE" = rand(33,50),"NAME" = "jade lipstick")
-	held_items[/obj/item/lipstick/purple] = list("PRICE" = rand(33,50),"NAME" = "purple lipstick")
-	held_items[/obj/item/lipstick/black] = list("PRICE" = rand(33,50),"NAME" = "black lipstick")
+	held_items[/obj/item/azure_lipstick] = list("PRICE" = rand(33,50),"NAME" = "red lipstick")
+	held_items[/obj/item/azure_lipstick/jade] = list("PRICE" = rand(33,50),"NAME" = "jade lipstick")
+	held_items[/obj/item/azure_lipstick/purple] = list("PRICE" = rand(33,50),"NAME" = "purple lipstick")
+	held_items[/obj/item/azure_lipstick/black] = list("PRICE" = rand(33,50),"NAME" = "black lipstick")
 */
 
 /datum/supply_pack/rogue/bath_perfume/red_lipstik
 	name = "Red Lipstick"
 	cost = 33
-	contains = list(/obj/item/lipstick)
+	contains = list(/obj/item/azure_lipstick)
 
 /datum/supply_pack/rogue/bath_perfume/jade_lipstik
 	name = "Jade Lipstick"
 	cost = 33
-	contains = list(/obj/item/lipstick/jade)
+	contains = list(/obj/item/azure_lipstick/jade)
 
 /datum/supply_pack/rogue/bath_perfume/purple_lipstik
 	name = "Purple Lipstick"
 	cost = 33
-	contains = list(/obj/item/lipstick/purple)
+	contains = list(/obj/item/azure_lipstick/purple)
 
 /datum/supply_pack/rogue/bath_perfume/black_lipstik
 	name = "Black Lipstick"
 	cost = 33
-	contains = list(/obj/item/lipstick/black)
-
-#undef CHEAP_PERFUME_PRICE
-#undef EXPENSIVE_PERFUME_PRICE
+	contains = list(/obj/item/azure_lipstick/black)

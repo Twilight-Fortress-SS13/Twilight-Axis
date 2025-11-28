@@ -381,7 +381,3 @@
 	..()
 	default_unfasten_wrench(user, I, 40)
 	return TRUE
-
-#undef MUSICIAN_HEARCHECK_MINDELAY
-#undef MUSIC_MAXLINES
-#undef MUSIC_MAXLINECHARS
