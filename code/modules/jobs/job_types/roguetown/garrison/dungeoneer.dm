@@ -76,6 +76,7 @@
 	H.verbs |= /mob/living/carbon/human/proc/torture_victim
 	pants = /obj/item/clothing/under/roguetown/trou/leather/mourning
 	shoes = /obj/item/clothing/shoes/roguetown/boots
+	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/councillor//Just so I don't have to make another subtype just for it to start black.
 	armor = /obj/item/clothing/suit/roguetown/armor/leather
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
@@ -97,7 +98,7 @@
 			head = /obj/item/clothing/head/roguetown/necrahood
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/necra
 		else
-			cloak = /obj/item/clothing/cloak/stabard/dungeon
+			cloak = /obj/item/clothing/cloak/tabard/stabard/dungeon
 			head = /obj/item/clothing/head/roguetown/menacing
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")

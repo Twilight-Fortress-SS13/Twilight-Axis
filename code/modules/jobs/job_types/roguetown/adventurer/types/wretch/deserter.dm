@@ -220,7 +220,7 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk	
 	pants = /obj/item/clothing/under/roguetown/chainlegs
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
-	cloak = /obj/item/clothing/cloak/stabard/surcoat 
+	cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat 
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	gloves = /obj/item/clothing/gloves/roguetown/chain 
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron 

@@ -249,6 +249,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 	var/no_use_cd = FALSE //if true, no cooldown when interacting with it
 
+	/// Makes this item impossible to enchant, for temporary item
+	var/unenchantable = FALSE
+
 /obj/item/Initialize()
 	. = ..()
 	if(!pixel_x && !pixel_y && !bigboy)
@@ -586,6 +589,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			if(W.special)
 				inspec +="\n<b>SPECIAL:</b> [W.special.name]"
 				inspec +="\n<i>[W.special.desc]</i>"
+				inspec +="\n<i>This ability can be used by right clicking while in STRONG stance.</i>"
 
 		if(intdamage_factor != 1 && force >= 5)
 			inspec += "\n<b>INTEGRITY DAMAGE:</b> [intdamage_factor * 100]% <span class='info'><a href='?src=[REF(src)];explainintdamage=1'>{?}</a></span>"

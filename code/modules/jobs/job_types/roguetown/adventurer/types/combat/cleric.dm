@@ -92,13 +92,13 @@
 	H.cmode_music = 'sound/music/combat_holy.ogg' // left in bc i feel like monk players want their darktide TRAIT_DODGEEXPERT
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
-			cloak = /obj/item/clothing/cloak/psydontabard
+			cloak = /obj/item/clothing/cloak/tabard/psydontabard
 			mask = /obj/item/clothing/head/roguetown/roguehood/psydon
 		if(/datum/patron/divine/astrata)
 			mask = /obj/item/clothing/head/roguetown/roguehood/astrata
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/astrata
 		if(/datum/patron/divine/noc)
-			mask =  /obj/item/clothing/head/roguetown/nochood
+			mask =  /obj/item/clothing/head/roguetown/roguehood/nochood
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc
 		if(/datum/patron/divine/abyssor)
 			mask = /obj/item/clothing/head/roguetown/roguehood/abyssor
@@ -212,7 +212,7 @@
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
-			cloak = /obj/item/clothing/cloak/psydontabard
+			cloak = /obj/item/clothing/cloak/tabard/psydontabard
 			if(H.mind)
 				var/helmets = list("Armet","Buckethelm")
 				var/helmet_choice = input(H, "Choose your HELMET.", "WALK IN HIS LIGHT.") as anything in helmets
@@ -229,27 +229,27 @@
 					if("Cuirass")
 						armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate
 		if(/datum/patron/divine/astrata)
-			cloak = /obj/item/clothing/cloak/templar/astrata
+			cloak = /obj/item/clothing/cloak/tabard/devotee/astrata
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/astratan
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if(/datum/patron/divine/noc)
-			cloak = /obj/item/clothing/cloak/templar/noc
+			cloak = /obj/item/clothing/cloak/tabard/devotee/noc
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/nochelm
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if(/datum/patron/divine/abyssor)
-			cloak = /obj/item/clothing/cloak/abyssortabard
+			cloak = /obj/item/clothing/cloak/tabard/abyssortabard
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/abyssorgreathelm
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if(/datum/patron/divine/dendor)
-			cloak = /obj/item/clothing/cloak/templar/dendor
+			cloak = /obj/item/clothing/cloak/tabard/devotee/dendor
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/dendorhelm
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if(/datum/patron/divine/necra)
-			cloak = /obj/item/clothing/cloak/templar/necra
+			cloak = /obj/item/clothing/cloak/tabard/devotee/necra
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/necrahelm
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if (/datum/patron/divine/malum)
-			cloak = /obj/item/clothing/cloak/templar/malum
+			cloak = /obj/item/clothing/cloak/tabard/devotee/malum
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/malum
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if (/datum/patron/divine/eora)
@@ -416,19 +416,19 @@
 	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/mockery)
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
-			cloak = /obj/item/clothing/cloak/templar/psydon
+			cloak = /obj/item/clothing/cloak/tabard/devotee/psydon
 		if(/datum/patron/divine/astrata)
-			cloak = /obj/item/clothing/cloak/templar/astrata
+			cloak = /obj/item/clothing/cloak/tabard/devotee/astrata
 		if(/datum/patron/divine/noc)
-			cloak = /obj/item/clothing/cloak/templar/noc
+			cloak = /obj/item/clothing/cloak/tabard/devotee/noc
 		if(/datum/patron/divine/abyssor)
-			cloak = /obj/item/clothing/cloak/templar/abyssor
+			cloak = /obj/item/clothing/cloak/tabard/devotee/abyssor
 		if(/datum/patron/divine/dendor)
-			cloak = /obj/item/clothing/cloak/templar/dendor
+			cloak = /obj/item/clothing/cloak/tabard/devotee/dendor
 		if(/datum/patron/divine/necra)
-			cloak = /obj/item/clothing/cloak/templar/necra
+			cloak = /obj/item/clothing/cloak/tabard/devotee/necra
 		if (/datum/patron/divine/malum)
-			cloak = /obj/item/clothing/cloak/templar/malum
+			cloak = /obj/item/clothing/cloak/tabard/devotee/malum
 		if (/datum/patron/divine/eora)
 			cloak = /obj/item/clothing/cloak/templar/eora
 		if (/datum/patron/divine/ravox)
@@ -552,13 +552,13 @@
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
-			cloak = /obj/item/clothing/cloak/psydontabard
+			cloak = /obj/item/clothing/cloak/tabard/psydontabard
 			head = /obj/item/clothing/head/roguetown/roguehood/psydon
 		if(/datum/patron/divine/astrata)
 			head = /obj/item/clothing/head/roguetown/roguehood/astrata
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/astrata
 		if(/datum/patron/divine/noc)
-			head =  /obj/item/clothing/head/roguetown/nochood
+			head =  /obj/item/clothing/head/roguetown/roguehood/nochood
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc
 		if(/datum/patron/divine/abyssor)
 			head = /obj/item/clothing/head/roguetown/roguehood/abyssor

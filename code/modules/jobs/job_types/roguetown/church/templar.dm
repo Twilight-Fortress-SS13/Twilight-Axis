@@ -90,7 +90,7 @@
 			cloak = /obj/item/clothing/cloak/tabard/crusader/astrata
 		if(/datum/patron/divine/abyssor)
 			neck = /obj/item/clothing/neck/roguetown/psicross/abyssor
-			cloak = /obj/item/clothing/cloak/abyssortabard
+			cloak = /obj/item/clothing/cloak/tabard/abyssortabard
 		if(/datum/patron/divine/xylix)
 			neck = /obj/item/clothing/neck/roguetown/luckcharm
 			cloak = /obj/item/clothing/cloak/templar/xylixian
@@ -282,7 +282,7 @@
 		if(/datum/patron/divine/abyssor)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/abyssor
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/abyssorgreathelm
-			cloak = /obj/item/clothing/cloak/abyssortabard
+			cloak = /obj/item/clothing/cloak/tabard/abyssortabard
 		if(/datum/patron/divine/xylix)
 			cloak = /obj/item/clothing/cloak/templar/xylixian
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/xylixhelm

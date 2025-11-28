@@ -108,7 +108,7 @@
 			wrists = /obj/item/clothing/neck/roguetown/psicross/eora
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/eora
 		if(/datum/patron/divine/noc)
-			head = /obj/item/clothing/head/roguetown/nochood
+			head = /obj/item/clothing/head/roguetown/roguehood/nochood
 			wrists = /obj/item/clothing/neck/roguetown/psicross/noc
 			cloak = /obj/item/clothing/cloak/tabard/crusader/noc
 			mask = /obj/item/clothing/mask/rogue/facemask/steel

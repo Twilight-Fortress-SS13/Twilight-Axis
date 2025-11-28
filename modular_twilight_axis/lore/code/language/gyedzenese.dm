@@ -5,10 +5,10 @@
 	ask_verb = "inquires"
 	exclaim_verb = "asserts"
 	key = "z"
-	flags = LANGUAGE_HIDE_ICON_IF_UNDERSTOOD | LANGUAGE_HIDE_ICON_IF_NOT_UNDERSTOOD
 	space_chance = 50
 	default_priority = 90
-	icon_state = "asse"
+	icon = 'modular_twilight_axis/icons/misc/language.dmi'
+	icon_state = "gyedzese"
 	spans = list("gyedzenese")
 	syllables = list(
     "ba", "bo", "bai", "bei", "bao", "ban", "ben", "bang", "beng", "bi", "bian", "biao", "bie", "bin", "bing", "bu",

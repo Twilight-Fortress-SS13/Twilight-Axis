@@ -41,7 +41,7 @@
 	..()
 	has_loadout = TRUE
 	wrists = /obj/item/clothing/neck/roguetown/psicross/silver
-	cloak = /obj/item/clothing/cloak/psydontabard
+	cloak = /obj/item/clothing/cloak/tabard/psydontabard
 	backr = /obj/item/rogueweapon/shield/tower/metal
 	gloves = /obj/item/clothing/gloves/roguetown/chain/psydon
 	neck = /obj/item/clothing/neck/roguetown/chaincoif

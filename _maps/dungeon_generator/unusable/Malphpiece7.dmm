@@ -37,7 +37,7 @@
 /area/rogue/under/tomb/sewer)
 "x" = (
 /obj/item/rogueweapon/shield/tower,
-/obj/item/clothing/cloak/templar/dendor,
+/obj/item/clothing/cloak/tabard/devotee/dendor,
 /obj/effect/decal/remains/human,
 /turf/open/floor/rogue/blocks/paving,
 /area/rogue/under/tomb/sewer)

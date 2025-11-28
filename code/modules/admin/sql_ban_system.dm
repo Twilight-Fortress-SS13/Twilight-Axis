@@ -240,7 +240,7 @@
 							"Church" = GLOB.church_positions,
 							"Inquisition" = GLOB.inquisition_positions,
 							"WANDERERS" = GLOB.wanderer_positions,
-							"Abstract" = list("Appearance", "Emote", "Deadchat", "OOC", "LOOC"))
+							"Abstract" = list("Appearance", "Emote", "Deadchat", "OOC", "LOOC", "MENTORHELP"))
 		for(var/department in headless_job_lists)
 			output += "<div class='column'><label class='rolegroup [ckey(department)]'><input type='checkbox' name='[department]' class='hidden' onClick='toggle_checkboxes(this, \"_com\")'>[department]</label><div class='content'>"
 			break_counter = 0
@@ -260,7 +260,7 @@
 									"Antagonist Positions" = list(ROLE_MANIAC, ROLE_WEREWOLF,
 									ROLE_VAMPIRE, ROLE_NBEAST, ROLE_BANDIT,
 									ROLE_DELF, ROLE_PREBEL, ROLE_ASPIRANT,
-									ROLE_LICH, ROLE_ASCENDANT, ROLE_WRETCH, ROLE_UNBOUND_DEATHKNIGHT))
+									ROLE_LICH, ROLE_ASCENDANT, ROLE_WRETCH, ROLE_UNBOUND_DEATHKNIGHT, ROLE_DREAMWALKER))
 		for(var/department in long_job_lists)
 			output += "<div class='column'><label class='rolegroup long [ckey(department)]'><input type='checkbox' name='[department]' class='hidden' onClick='toggle_checkboxes(this, \"_com\")'>[department]</label><div class='content'>"
 			break_counter = 0
@@ -872,3 +872,6 @@
 		else
 			. += "NULL"
 	. = jointext(., "/")
+
+#undef MAX_ADMINBANS_PER_ADMIN
+#undef MAX_ADMINBANS_PER_HEADMIN

@@ -42,7 +42,7 @@
 	..()
 	head = /obj/item/clothing/head/roguetown/circlet
 	neck = /obj/item/clothing/neck/roguetown/gorget
-	cloak = /obj/item/clothing/cloak/stabard/surcoat/bailiff
+	cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/bailiff
 	armor = /obj/item/clothing/suit/roguetown/armor/leather
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves

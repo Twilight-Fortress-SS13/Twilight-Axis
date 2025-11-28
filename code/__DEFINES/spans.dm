@@ -170,3 +170,8 @@
 /// Displays a tooltip. Accepts HTML. For the love of all that is holy, ensure input is trusted.
 /// * SPAN_LINKIFY doesn't work here.
 #define SPAN_TOOLTIP_DANGEROUS_HTML(tip, str) ("<span data-component=\"TooltipHTML\" data-html=\"[html_encode(tip)]\" class=\"tooltip\">[str]</span>")
+
+/* Complex Spans */
+// Ones where span_X isn't just the class
+
+#define span_admin_log(str) ("<span class='admin'><span class='prefix'>ADMIN LOG: </span><span class='message linkify'>" + str + "</span></span>")

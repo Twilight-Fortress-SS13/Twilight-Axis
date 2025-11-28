@@ -34,7 +34,7 @@
 
 	if(success)
 		convert_mammon_to_coins(withdrawal_amount, beast)
-		next_theft = world.time + theft_cooldown
+		next_theft = world.time + (theft_cooldown * beast.language_tier)
 		// Might satisfy itself when stealing
 		if(prob(5 * beast.language_tier))
 			beast.satisfied = TRUE

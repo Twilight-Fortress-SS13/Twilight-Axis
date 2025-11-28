@@ -27,7 +27,7 @@
 	icon_state = "coif"
 	item_state = "coif"
 	color = CLOTHING_BROWN
-	flags_inv = HIDEHAIR
+	flags_inv = HIDEEARS|HIDEHAIR
 	slot_flags = ITEM_SLOT_NECK|ITEM_SLOT_HEAD
 	blocksound = SOFTHIT
 	body_parts_covered = NECK|HAIR|EARS|HEAD
@@ -43,7 +43,7 @@
 	icon_state = "ccoif"
 	item_state = "ccoif"
 	color = "#ad977d"
-	flags_inv = HIDEHAIR
+	flags_inv = HIDEEARS|HIDEHAIR
 	slot_flags = ITEM_SLOT_NECK|ITEM_SLOT_HEAD
 	blocksound = SOFTHIT
 	body_parts_covered = NECK|HAIR|EARS|HEAD
@@ -78,7 +78,7 @@
 			adjustable = CADJUSTED
 			if(toggle_icon_state)
 				icon_state = "fullpadded_down"
-			flags_inv = HIDEHAIR
+			flags_inv = HIDEEARS|HIDEHAIR
 			body_parts_covered = NECK|HAIR|EARS|HEAD
 			if(ishuman(user))
 				var/mob/living/carbon/H = user
@@ -128,7 +128,7 @@
 	drop_sound = 'sound/foley/dropsound/chain_drop.ogg'
 	pickup_sound = 'sound/foley/equip/equip_armor_chain.ogg'
 	equip_sound = 'sound/foley/equip/equip_armor_chain.ogg'
-	flags_inv = HIDEHAIR
+	flags_inv = HIDEEARS|HIDEHAIR
 	armor = ARMOR_MAILLE
 	max_integrity = ARMOR_INT_SIDE_STEEL
 	resistance_flags = FIRE_PROOF
@@ -196,7 +196,7 @@
 			adjustable = CADJUSTED
 			if(toggle_icon_state)
 				icon_state = "chaincoif"
-			flags_inv = HIDEHAIR
+			flags_inv = HIDEEARS|HIDEHAIR
 			body_parts_covered = NECK|HAIR|EARS|HEAD
 			if(ishuman(user))
 				var/mob/living/carbon/H = user
@@ -708,7 +708,7 @@
 	grid_height = 32
 	var/goodluckactivated = FALSE
 	salvage_result = /obj/item/natural/fibers
-	salvage_result = 1
+	salvage_amount = 1
 
 /obj/item/clothing/neck/roguetown/luckcharm/equipped(mob/living/carbon/human/user, slot)
 	. = ..()

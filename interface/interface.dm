@@ -67,6 +67,12 @@
 	else
 		to_chat(src, span_danger("You can't currently use Mentorhelp in the main menu."))
 
+/client/verb/mentor_stats()
+	set name = "Mentor Statistics"
+	set desc = ""
+	set category = "-Admin-"
+	check_mentor_stats_menu(src.ckey)
+
 /client/verb/reportissue()
 	set name = "report-issue"
 	set desc = ""
@@ -98,14 +104,6 @@
 		prefs.lastchangelog = GLOB.changelog_hash
 		prefs.save_preferences()
 		winset(src, "infowindow.changelog", "font-style=;")
-
-/client/verb/recent_changelog()
-	set name = "Recent Changes"
-	set category = "OOC"
-	if(GLOB.changelog.len)
-		to_chat(src, "Recent Changes:")
-		for(var/change in GLOB.changelog)
-			to_chat(src, span_info("- [change]"))
 
 /client/verb/hotkeys_help()
 	set name = "_Help-Controls"

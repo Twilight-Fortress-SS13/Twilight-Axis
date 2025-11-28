@@ -193,3 +193,5 @@
 	W.Stun(30)
 
 	qdel(src)
+
+#undef TRAIT_SOURCE_WEREWOLF

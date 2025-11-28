@@ -451,17 +451,13 @@
 	created_item = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/iron/goblin
 	craftdiff = 2
 
+/datum/anvil_recipe/armor/iron/horseshoes
+	name = "Horseshoes, Iron"
+	req_bar = /obj/item/ingot/iron
+	req_blade = /obj/item/blade/iron_plate
+	created_item = /obj/item/clothing/shoes/roguetown/horseshoes
+
 // --------- STEEL RECIPES -----------
-
-/datum/anvil_recipe/armor/steel/lbrigandine
-	name = "Light Brigandine (+1 Cured Leather)"
-	req_bar = /obj/item/ingot/steel
-	req_blade = /obj/item/blade/steel_plate
-	additional_items = list(/obj/item/natural/hide/cured)
-	created_item = /obj/item/clothing/suit/roguetown/armor/brigandine/light
-	i_type = "Armor"
-	craftdiff = 2 //not any random can make it
-
 /datum/anvil_recipe/armor/steel/haubergeon
 	name = "Haubergeon, Steel"
 	req_bar = /obj/item/ingot/steel
@@ -865,6 +861,12 @@
 	additional_items = list(/obj/item/clothing/under/roguetown/trou/leather)//basically you just add a lot of iron bits to the pants
 	created_item = /obj/item/clothing/under/roguetown/splintlegs
 
+/datum/anvil_recipe/armor/steel/horseshoes
+	name = "Horseshoes, Steel"
+	req_bar = /obj/item/ingot/steel
+	req_blade = /obj/item/blade/steel_plate
+	created_item = /obj/item/clothing/shoes/roguetown/horseshoes/steel
+
 // HOLY STEEL
 
 /datum/anvil_recipe/armor/holysteel/astratahelmtemplar
@@ -952,6 +954,11 @@
 	req_bar = /obj/item/ingot/silver
 	created_item = /obj/item/storage/belt/rogue/leather/plaquesilver
 
+/datum/anvil_recipe/armor/silver/horseshoes
+	name = "Horseshoes, Silver"
+	req_bar = /obj/item/ingot/silver
+	created_item = /obj/item/clothing/shoes/roguetown/horseshoes/silver
+
 
 // BLESSED SILVER
 
@@ -1018,6 +1025,10 @@
 	req_bar = /obj/item/ingot/gold
 	created_item = /obj/item/clothing/mask/rogue/facemask/goldmask
 
+/datum/anvil_recipe/armor/gold/horseshoes
+	name = "Horseshoes, Gold"
+	req_bar = /obj/item/ingot/gold
+	created_item = /obj/item/clothing/shoes/roguetown/horseshoes/gold
 
 // BLACKSTEEL
 

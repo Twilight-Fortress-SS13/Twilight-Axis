@@ -252,13 +252,14 @@
 		scom_announce("[H.real_name] the [used_title] arrives to Twilight Axis.")
 
 	if(give_bank_account)
-		if(give_bank_account > 1)
+		if(give_bank_account > TRUE)
 			SStreasury.create_bank_account(H, give_bank_account)
-			if(noble_income)
-				SStreasury.noble_incomes[H] = noble_income
-
 		else
 			SStreasury.create_bank_account(H)
+
+		if(noble_income)
+			SStreasury.noble_incomes[H] = noble_income
+			SStreasury.give_money_account(noble_income, H, "Noble Estate")
 
 	if(show_in_credits)
 		SScrediticons.processing += H

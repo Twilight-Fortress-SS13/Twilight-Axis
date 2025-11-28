@@ -456,11 +456,15 @@
 				. += "There's \a [attachment.name] on it, it is boiling." // This is common shorthand for the contents don't nitpick
 			else
 				. += "There's \a [attachment.name] on it. It is not boiling"
-		. += span_notice("Right click to start fanning the flame and make it cook faster.")
+		if(on)
+			. += span_notice("Right click to start fanning the flame and make it cook faster.")
 
 /obj/machinery/light/rogue/hearth/attack_right(mob/user)
 	var/datum/skill/craft/cooking/cs = user?.get_skill_level(/datum/skill/craft/cooking)
 	var/cooktime_divisor = get_cooktime_divisor(cs)
+	if(!on)
+		to_chat(user, span_notice("[src] is not lit."))
+		return
 	if(do_after(user, 2 SECONDS / cooktime_divisor, target = src))
 		to_chat(user, span_info("I fan the flame on [src].")) // Until line combine is on by default gotta do this to avoid spam
 		try_cook(cooktime_divisor)
@@ -650,7 +654,7 @@
 			else if(!on)
 				crucible.cool_down(crucible.cool_rate)
 		if(istype(attachment, /obj/item/cooking/pan))
-			if(food)
+			if(food && on)
 				var/obj/item/C = food.cooking(20 * cooktime_divisor, 20, src)
 				if(C)
 					qdel(food)
@@ -784,7 +788,7 @@
 	cookonme = TRUE
 	max_integrity = 30
 	soundloop = /datum/looping_sound/fireloop
-	var/healing_range = 2
+	var/healing_range = 1
 
 /obj/machinery/light/rogue/campfire/process()
 	..()
@@ -804,7 +808,7 @@
 			// Astrata followers get enhanced fire healing
 			var/buff_strength = 1
 			if(human.patron?.type == /datum/patron/divine/astrata || human.patron?.type == /datum/patron/inhumen/matthios) //Fire and the fire-stealer
-				buff_strength = 2
+				buff_strength = 1.5
 			human.apply_status_effect(/datum/status_effect/buff/healing/campfire, buff_strength)
 			human.add_stress(/datum/stressevent/campfire)
 
@@ -837,7 +841,7 @@
 	pass_flags = LETPASSTHROW
 	bulb_colour = "#eea96a"
 	max_integrity = 60
-	healing_range = 4
+	healing_range = 2
 
 /obj/machinery/light/rogue/campfire/densefire/CanPass(atom/movable/mover, turf/target)
 	if(istype(mover) && (mover.pass_flags & PASSTABLE))
@@ -882,3 +886,6 @@
 #undef MIN_STEW_TEMPERATURE
 #undef VOLUME_PER_STEW_COOK
 #undef VOLUME_PER_STEW_COOK_AFTER
+
+#undef DEEP_FRY_TIME
+#undef OIL_CONSUMED

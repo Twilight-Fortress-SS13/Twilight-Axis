@@ -45,17 +45,6 @@
 			if(prob(8))
 				C.emote("sexmoanlight", forced = TRUE)
 				to_chat(C, "<span class='love_high'>[high_message]</span>")
-				if(istype(C.wear_armor, /obj/item/clothing))
-					var/obj/item/clothing/CL = C.wear_armor
-					switch(CL.armor_class)
-						if(3)
-							C.Immobilize(30)
-							C.set_blurriness(5)
-							to_chat(C, "<span class='warning'>Your armor chaffs uncomfortably against your skin and makes it difficult to breathe.</span>")
-						if(2)
-							C.Immobilize(15)
-							C.set_blurriness(2)
-							to_chat(C, "<span class='warning'>Your armor chaffs uncomfortably against your skin.</span>")
 	return ..()
 
 /datum/reagent/consumable/ethanol/beer/emberwine/overdose_start(mob/living/carbon/human/C)
@@ -69,14 +58,10 @@
 	var/datum/component/arousal/arc = C.GetComponent(/datum/component/arousal)
 	if(arc)
 		arc.aphrodisiac++
-	C.Jitter(20)
-	C.Stun(15)
 
 /datum/reagent/consumable/ethanol/beer/emberwine/overdose_process(mob/living/carbon/human/C)
 	if(prob(5))
 		C.emote("sexmoanhvy", forced = TRUE)
-		C.Stun(15)
-		C.set_blurriness(5)
 
 /datum/reagent/consumable/ethanol/beer/emberwine/addiction_act_stage3(mob/living/carbon/human/C)
 	if(prob(20))

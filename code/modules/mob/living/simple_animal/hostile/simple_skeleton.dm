@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/rogue/skeleton
 	name = "Skeleton"
 	desc = ""
-	icon = 'modular_hearthstone/icons/mob/skeletons.dmi'
+	icon = 'icons/mob/skeletons.dmi'
 	icon_state = "skeleton"
 	icon_living = "skeleton"
 	icon_dead = "skeleton_dead"
@@ -52,7 +52,7 @@
 /mob/living/simple_animal/hostile/rogue/skeleton/axe
 	name = "Skeleton"
 	desc = ""
-	icon = 'modular_hearthstone/icons/mob/skeletons.dmi'
+	icon = 'icons/mob/skeletons.dmi'
 	base_intents = list(/datum/intent/simple/axe/skeleton)
 	icon_state = "skeleton_axe"
 	icon_living = "skeleton_axe"
@@ -62,7 +62,7 @@
 /mob/living/simple_animal/hostile/rogue/skeleton/spear
 	name = "Skeleton"
 	desc = ""
-	icon = 'modular_hearthstone/icons/mob/skeletons.dmi'
+	icon = 'icons/mob/skeletons.dmi'
 	base_intents = list(/datum/intent/simple/spear/skeleton)
 	icon_state = "skeleton_spear"
 	icon_living = "skeleton_spear"
@@ -74,7 +74,7 @@
 /mob/living/simple_animal/hostile/rogue/skeleton/guard
 	name = "Skeleton"
 	desc = ""
-	icon = 'modular_hearthstone/icons/mob/skeletons.dmi'
+	icon = 'icons/mob/skeletons.dmi'
 	base_intents = list(/datum/intent/simple/axe/skeleton)
 	icon_state = "skeleton_guard"
 	icon_living = "skeleton_guard"
@@ -86,7 +86,7 @@
 /mob/living/simple_animal/hostile/rogue/skeleton/bow
 	name = "Skeleton"
 	desc = ""
-	icon = 'modular_hearthstone/icons/mob/skeletons.dmi'
+	icon = 'icons/mob/skeletons.dmi'
 	icon_state = "skeleton_bow"
 	icon_living = "skeleton_bow"
 	icon_dead = ""
@@ -198,7 +198,7 @@
 /obj/item/skull
 	name = "skull"
 	desc = "A skull"
-	icon = 'modular_hearthstone/icons/mob/skeletons.dmi'
+	icon = 'icons/mob/skeletons.dmi'
 	icon_state = "skull"
 	w_class = WEIGHT_CLASS_SMALL
 

@@ -93,6 +93,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail
 	pants = /obj/item/clothing/under/roguetown/chainlegs
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor
+	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/steel
 	beltr = /obj/item/storage/keyring/guardcastle
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	cloak = /obj/item/clothing/cloak/half/vet
@@ -170,6 +171,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/plate
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor
+	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/steel
 	l_hand = /obj/item/rogueweapon/sword
 	beltl = /obj/item/rogueweapon/scabbard/sword
 	beltr = /obj/item/storage/keyring/guardcastle
@@ -240,6 +242,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/plate
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor
+	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/steel
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	belt = /obj/item/storage/belt/rogue/leather/black
 	cloak = /obj/item/clothing/cloak/half/vet
@@ -329,6 +332,7 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 	shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft
+	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/steel
 	gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
 	beltl = /obj/item/rogueweapon/sword/short
 	beltr = /obj/item/storage/keyring/guardcastle
@@ -416,6 +420,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather
+	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
 	beltl = /obj/item/quiver/arrows
 	beltr = /obj/item/flashlight/flare/torch/lantern
 	backr = /obj/item/storage/backpack/rogue/satchel/black
@@ -487,6 +492,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	shoes = /obj/item/clothing/shoes/roguetown/boots
+	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
 	beltl = /obj/item/rogueweapon/whip
 	beltr = /obj/item/flashlight/flare/torch/lantern
 	backr = /obj/item/storage/backpack/rogue/satchel/black

@@ -149,6 +149,9 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	owner.current.set_bloodpool(owner.current.maxbloodpool / 100 * INITIAL_BLOODPOOL_PERCENTAGE)
 	add_antag_hud(antag_hud_type, antag_hud_name, owner.current)
 
+	if(HAS_TRAIT(owner, TRAIT_CRITICAL_RESISTANCE))
+		REMOVE_TRAIT(owner, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
+
 /datum/antagonist/vampire/on_removal()
 	remove_antag_hud(antag_hud_type, owner.current)
 	if(ishuman(owner.current))
@@ -199,6 +202,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 /obj/effect/landmark/start/vampirespawn/Initialize()
 	. = ..()
 	GLOB.vspawn_starts += loc
+	GLOB.secondlife_respawns += loc
 
 /obj/effect/landmark/start/vampireknight
 	name = "Death Knight"
@@ -249,3 +253,5 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 
 
 
+
+#undef INITIAL_BLOODPOOL_PERCENTAGE

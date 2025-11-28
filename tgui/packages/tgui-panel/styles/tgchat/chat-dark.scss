@@ -855,3 +855,16 @@ h2.alert {
   margin: 0;
   padding: 0;
 }
+
+.chat_box {
+	display: inline-block;
+	width: calc(100% - 1em);
+	margin: 0.5em;
+	padding: 0.5em 0.75em;
+	box-sizing: border-box;
+}
+
+.mentor_block {
+	background: #3e263a;
+	border: 1px dotted #7f4274;
+}

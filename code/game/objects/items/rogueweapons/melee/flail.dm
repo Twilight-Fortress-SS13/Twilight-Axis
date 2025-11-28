@@ -23,6 +23,7 @@
 	minstr = 4
 	grid_width = 32
 	grid_height = 96
+	special = /datum/special_intent/flail_sweep
 
 /datum/intent/flail/strike
 	name = "strike"
@@ -189,6 +190,9 @@
 	is_silver = FALSE
 	smeltresult = /obj/item/ingot/steel
 	color = COLOR_FLOORTILE_GRAY
+
+/obj/item/rogueweapon/flail/sflail/psyflail/old/ComponentInitialize()
+	return
 
 /obj/item/rogueweapon/flail/sflail/psyflail/relic
 	name = "Consecratia"

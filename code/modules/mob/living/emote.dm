@@ -1607,6 +1607,25 @@
 		to_chat(usr, span_warning("Your tongue doesn't do that"))
 		return
 
+/datum/emote/living/psnort
+	key = "psnort"
+	key_third_person = "psnorts"
+	message = "lets out an elongated snort."
+	emote_type = EMOTE_AUDIBLE
+	message_muffled = "makes a muffled sound!"
+	vary = TRUE
+	show_runechat = FALSE
+	is_animal = TRUE
+
+/mob/living/carbon/human/verb/emote_snort()
+	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
+		set name = "Snort (Animal)"
+		set category = "Noises"
+		emote("psnort", intentional = TRUE, animal = TRUE)
+	else
+		to_chat(usr, span_warning("Your tongue doesn't do that"))
+		return
+
 /datum/emote/living/trill
 	key = "trill"
 	key_third_person = "trills!"

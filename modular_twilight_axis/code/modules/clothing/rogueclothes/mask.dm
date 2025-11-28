@@ -75,7 +75,7 @@
 /obj/item/clothing/mask/rogue/eyepatch
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
-	color = COLOR_BLACK
+	color = "#292929"
 
 /obj/item/clothing/mask/rogue/eyepatch/fake
 	desc = "An eyepatch, fitted for the right eye. It has an almost imperceptible gap so that you can see something."

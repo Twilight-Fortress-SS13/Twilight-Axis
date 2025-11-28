@@ -312,7 +312,7 @@ GLOBAL_LIST_INIT(hedgeknight_aggro, world.file2list("strings/rt/hedgeknightaggro
 	beltl = /obj/item/flashlight/flare/torch/lantern
 	beltr = /obj/item/rogueweapon/sword/long
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
-	cloak = /obj/item/clothing/cloak/stabard/black
+	cloak = /obj/item/clothing/cloak/tabard/stabard/black
 
 /*
  * Goon preset

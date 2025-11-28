@@ -35,6 +35,9 @@
 	/// Type path of item to go in shoes slot
 	var/shoes = null
 
+	/// Type path of item that goes in the shoes slot if the mob is a saiga taur
+	var/saiga_shoes = null
+
 	/// Type path of item to go in head slot
 	var/head = null
 
@@ -187,6 +190,10 @@
 		H.equip_to_slot_or_del(new belt(H),SLOT_BELT, TRUE)
 	if(gloves)
 		H.equip_to_slot_or_del(new gloves(H),SLOT_GLOVES, TRUE)
+	if(saiga_shoes)
+		var/obj/item/bodypart/taur/taur = H.get_taur_tail()
+		if(istype(taur, /obj/item/bodypart/taur/horse))
+			H.equip_to_slot_or_del(new saiga_shoes(H), SLOT_SHOES, TRUE)
 	if(shoes)
 		H.equip_to_slot_or_del(new shoes(H),SLOT_SHOES, TRUE)
 	if(head)
@@ -267,6 +274,9 @@
 								addtimer(CALLBACK(PROC_REF(move_storage), new_item, H.loc), 3 SECONDS)
 
 	post_equip(H, visualsOnly)
+
+	if(istype(H.patron))
+		H.patron.post_equip(H)
 
 	if(!visualsOnly)
 		apply_fingerprints(H)

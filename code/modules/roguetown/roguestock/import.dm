@@ -101,7 +101,7 @@
 	. = ..()
 	new /obj/item/clothing/head/roguetown/helmet/bascinet(src)
 	new /obj/item/clothing/under/roguetown/chainlegs(src)
-	new /obj/item/clothing/cloak/stabard/surcoat/guard(src)
+	new /obj/item/clothing/cloak/tabard/stabard/surcoat/guard(src)
 	new /obj/item/clothing/gloves/roguetown/plate(src)
 	new /obj/item/clothing/neck/roguetown/gorget(src)
 	new /obj/item/clothing/suit/roguetown/armor/chainmail(src)

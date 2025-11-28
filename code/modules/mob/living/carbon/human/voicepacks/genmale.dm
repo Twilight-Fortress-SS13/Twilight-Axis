@@ -126,6 +126,8 @@
 				used = list('sound/vo/mobs/hyena/cackle.ogg')
 			if("whine")
 				used = list('sound/vo/mobs/vw/whine.ogg')
+			if("psnort")
+				used = list('sound/vo/mobs/dog/pugsnort.ogg')
 			if("roar")
 				used = list('sound/vo/mobs/cat/roar1.ogg', 'sound/vo/mobs/cat/roar2.ogg', 'sound/vo/mobs/cat/roar3.ogg', 'sound/vo/mobs/cat/roar4.ogg')
 			if("howl")

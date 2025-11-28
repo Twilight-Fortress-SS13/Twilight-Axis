@@ -238,7 +238,7 @@
 	chargetime = 0
 	invocations = list(span_danger("begins to smell of saltwater. You can hear waves crashing nearby..."))
 	invocation_type = "emote"
-	sound = 'modular_azurepeak/sound/mobs/abyssal/abyssal_teleport.ogg'
+	sound = 'sound/mobs/abyssal/abyssal_teleport.ogg'
 	/// Type of dreamfiend to summon
 	var/dreamfiend_type
 	recharge_time = 600 SECONDS

@@ -32,6 +32,11 @@
 		if(con)
 			if(con.spillable)
 				if(con.reagents.total_volume > 0)
+					if(con.reagents.has_reagent(/datum/reagent/consumable/ethanol/beer/emberwine))
+						to_chat(user, "<span class='warning'>I can’t spray aphrodisiac!</span>")
+						revert_cast()
+						return
+
 					var/datum/reagents/R = con.reagents
 					var/datum/effect_system/smoke_spread/chem/smoke = new
 					smoke.set_up(R, 1, T, FALSE)

@@ -7,6 +7,7 @@
 #define MUTE_ADMINHELP	(1<<3)
 #define MUTE_DEADCHAT	(1<<4)
 #define MUTE_LOOC		(1<<5)
+#define MUTE_MEDITATE     (1<<6)
 #define MUTE_ALL		(~0)
 
 //Some constants for DB_Ban
@@ -102,3 +103,6 @@
 
 //How many things you can spawn at once with spawn verb/create panel
 #define ADMIN_SPAWN_CAP 100
+
+// List of curses
+#define CURSE_MASTER_LIST list("brokedick")

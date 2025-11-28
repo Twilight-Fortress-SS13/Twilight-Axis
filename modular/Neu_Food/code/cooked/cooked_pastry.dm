@@ -226,6 +226,20 @@
 	foodtype = GRAIN | FRUIT
 	tastes = list("apple" = 1)
 
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/handpieraw/potato
+	name = "raw potato handpie"
+	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/handpie/potato
+	fried_type = /obj/item/reagent_containers/food/snacks/rogue/handpie/potato
+	foodtype = GRAIN | VEGETABLES
+	tastes = list("potato" = 1)
+
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/handpieraw/cabbage//These two are classics no idea how it didn't already exist.
+	name = "raw cabbage handpie"
+	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/handpie/cabbage
+	fried_type = /obj/item/reagent_containers/food/snacks/rogue/handpie/cabbage
+	foodtype = GRAIN | VEGETABLES
+	tastes = list("cabbage" = 1)
+
 /obj/item/reagent_containers/food/snacks/rogue/handpie
 	name = "handpie"
 	desc = "The dwarves call this 'pierogi' in their dialect. It'll stay fresh for a good long while until the crust is bitten."
@@ -247,6 +261,12 @@
 
 /obj/item/reagent_containers/food/snacks/rogue/handpie/meat
 	name = "meat handpie"
+
+/obj/item/reagent_containers/food/snacks/rogue/handpie/potato
+	name = "potato handpie"
+
+/obj/item/reagent_containers/food/snacks/rogue/handpie/cabbage
+	name = "cabbage handpie"
 
 /obj/item/reagent_containers/food/snacks/rogue/handpie/crab
 	name = "crab handpie"

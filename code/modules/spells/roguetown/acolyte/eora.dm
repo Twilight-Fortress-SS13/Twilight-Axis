@@ -436,7 +436,7 @@
 /obj/structure/eoran_pomegranate_tree
 	name = "pomegranate tree"
 	desc = "A mystical tree blessed by Eora."
-	icon = 'modular_azurepeak/icons/obj/items/eora_tree.dmi'
+	icon = 'icons/obj/items/eora_tree.dmi'
 	icon_state = "sprout"
 	anchored = TRUE
 	density = TRUE
@@ -861,7 +861,7 @@
 /obj/item/fruit_of_eora
 	name = "pomegranate"
 	desc = "A mystical pomegranate glowing with inner light. It feels warm to the touch."
-	icon = 'modular_azurepeak/icons/obj/items/eora_pom.dmi'
+	icon = 'icons/obj/items/eora_pom.dmi'
 	icon_state = "pom"
 	var/fruit_tier = 1
 	var/list/aril_types = list()
@@ -970,7 +970,7 @@
 /obj/item/reagent_containers/food/snacks/eoran_aril
 	name = "eoran aril"
 	desc = "A glowing seed from the fruit of Eora. It pulses with divine energy."
-	icon = 'modular_azurepeak/icons/obj/items/eora_pom.dmi'
+	icon = 'icons/obj/items/eora_pom.dmi'
 	dropshrink = 0.7
 	icon_state = "auric"
 	bitesize = 1
@@ -1232,7 +1232,7 @@
 /obj/item/reagent_containers/lux/eoran_aril
 	name = "incandescent aril"
 	desc = "A blindingly bright seed that radiates pure life energy. It imitates lux, the essence of life."
-	icon = 'modular_azurepeak/icons/obj/items/eora_pom.dmi'
+	icon = 'icons/obj/items/eora_pom.dmi'
 	icon_state = "incandescent"
 	dropshrink = 0.7
 
@@ -1250,7 +1250,7 @@
 /obj/item/reagent_containers/eoran_seed
 	name = "Satin aril"
 	desc = "A silky soft seed from Eora's sacred tree. It can be used to propagate her gift in fertile soil."
-	icon = 'modular_azurepeak/icons/obj/items/eora_pom.dmi'
+	icon = 'icons/obj/items/eora_pom.dmi'
 	icon_state = "roseate"
 
 /obj/item/reagent_containers/eoran_seed/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
@@ -1355,3 +1355,6 @@
 	name = "Eora's Calm"
 	desc = "A refreshing calm. All your troubles have washed away. Why can't it always be like this?"
 	icon_state = "eora_bless"
+
+#undef HEARTWEAVE_FILTER
+#undef BLESSED_FOOD_FILTER

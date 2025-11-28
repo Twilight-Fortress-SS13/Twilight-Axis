@@ -159,7 +159,7 @@
 	You are a living example of what becomes of those who stand in defiance of the Otavan inquisition."))
 	mask = /obj/item/clothing/mask/rogue/facemask/steel/paalloy/mad_touched
 	wrists = /obj/item/clothing/neck/roguetown/psicross
-	shirt = /obj/item/clothing/cloak/psydontabard
+	shirt = /obj/item/clothing/cloak/tabard/psydontabard
 	gloves = /obj/item/clothing/gloves/roguetown/chain/psydon
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
