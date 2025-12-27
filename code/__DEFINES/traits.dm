@@ -21,6 +21,12 @@
 #define TRAIT_EXPLOSIVE_SUPPLY "Explosive Supply"
 #define TRAIT_BOMBER_EXPERT "Explosive Specialist"
 #define TRAIT_BREADY "Battleready"
+#define TRAIT_ARMOUR_LIKED "Fitting Armour"
+#define TRAIT_ARMOUR_DISLIKED "Misfitting Armour"
+#define TRAIT_FENCERDEXTERITY "Fencer's Dexterity"
+#define TRAIT_SKILLBLESSED "Skill Blessed"
+#define TRAIT_LONGSWORDSMAN "Master Longswordsman"
+#define TRAIT_SABRIST "Renowned Sabrist"
 #define TRAIT_MEDIUMARMOR "Maille Training"
 #define TRAIT_HEAVYARMOR "Plate Training"
 #define TRAIT_DODGEEXPERT "Expert Dodger"
@@ -64,6 +70,7 @@
 #define TRAIT_DEATHBARGAIN "Death Bargain" // Used by UNDERMAIDEN'S BARGAIN
 #define TRAIT_RITUALIST "Ritualist"  // Allows use of ritual chalk
 #define TRAIT_INQUISITION "Otavan Adherent"
+#define TRAIT_CLERGY "Clergy of the Azurian Church"
 #define TRAIT_GOODTRAINER "Good Trainer"
 #define TRAIT_BADTRAINER "Bad Trainer"
 #define TRAIT_OUTDOORSMAN "Outdoorsman"
@@ -88,6 +95,8 @@
 #define TRAIT_MOUNTABLE "Mount" //riding
 #define TRAIT_GOODWRITER "Great Writer"
 #define TRAIT_WAGES_SUSPENDED "Wages Suspended" //Stops nerve master daily pay for this guy
+#define TRAIT_NODEF "Recklessness"
+#define TRAIT_SHIRTLESS "Shirtless"
 
 //Hearthstone port (Tracking)
 #define TRAIT_PERFECT_TRACKER "Huntmaster" //Will always find any tracks and analyzes them perfectly.
@@ -112,6 +121,7 @@
 #define TRAIT_FORGEBLESSED "Blessing of Malum" //Reduces the fatigue cost of smithing a bit.
 #define TRAIT_APRICITY	"Apricity" //Decreased stamina regen time during "day" and less so during night
 #define TRAIT_SHARPER_BLADES "Sharper Blades" //Weapons lose less blade integrity
+#define TRAIT_BATTLEMASTER "Battlemaster" //You can use weapon specials no matter what
 #define TRAIT_JUSTICARSIGHT "Blessing of Ravox" //Allows seeing bounties and crimes when examining outlaws.
 #define TRAIT_EXTEROCEPTION	"Exteroception" //See others' hunger and thirst; pairs well with empath.
 #define TRAIT_BLACKLEG	"Blackleg" //Rig coin, dice, cards in your favor - UNUSED FOR NOW
@@ -250,7 +260,7 @@
 #define TRAIT_MASTER_MASON "Master Masonry"
 
 //TA TRAITS
-#define TRAIT_CLERGY "Decem Dii Vult"
+#define TRAIT_CLERGY_TA "Decem Dii Vult"
 #define TRAIT_FIREARMS_MARKSMAN "Expert Gunslinger" // They keep saying firearms are too easy to level up. Unlocks Master and Legendary Firearms.
 
 // If you want description to show up you gotta have the trait name defined BEFORE this lol
@@ -267,6 +277,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_RITUALIST = span_info("I am skilled in the holy arts. Using ritual chalk, I can more deftly channel my God's powers via runes."),
 	TRAIT_INSPIRING_MUSICIAN = span_info("The flow of battle dances to my song!"),
 	TRAIT_INQUISITION = span_info("I serve the Holy Otavan Inquisition. From a passing glance, I can recognize all other adherents within the local sect."),
+	TRAIT_CLERGY = span_info("I serve the Church of the Ten in Azuria. From a passing glance, I can recognize all other clergy of this Church."),
 	TRAIT_CHOSEN = "Astrata choose you to represent her glory.",
 	TRAIT_WEBWALK = "I can move freely between webs.",
 	TRAIT_NOSTINK = span_dead("My nose is numb to the smell of decay."),
@@ -293,6 +304,12 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_EMPATH = span_info("I can notice when people are in pain."),
 	TRAIT_EXPLOSIVE_SUPPLY = span_info("I have very good friends! I get explosives on my HERMES every day."),
 	TRAIT_BREADY = span_info("Defensive stance does not passively fatigue me. I regain energy slowly over time."),
+	TRAIT_ARMOUR_LIKED = span_greentext("I'm wearing something more suited to my style."),
+	TRAIT_ARMOUR_DISLIKED = span_warning("I'm wearing something that burdens me."),
+	TRAIT_FENCERDEXTERITY = span_info("I've trained my entire lyfe around the art of unarmoured fencing, affording myself unmatched speed when wearing very light armour. I'm very choosy otherwise."),
+	TRAIT_SKILLBLESSED = span_greentext("I've reunited with an old friend of mine. All is well."),
+	TRAIT_LONGSWORDSMAN = span_info("I am the sword, deadly against all weapons. When using any type of longsword, I fight at the level of a Master, and I can better defend against my opponents."),
+	TRAIT_SABRIST = span_info("I am the Aavnic sabre, shining arc of the Steppes. When using a shashka, I fight at the level of a Master, while swinging and thrusting faster with it."),
 	TRAIT_MEDIUMARMOR = span_info("I can move freely in medium armor."),
 	TRAIT_HEAVYARMOR = span_info("I can move freely in heavy armor."),
 	TRAIT_DODGEEXPERT = span_info("I am much better at dodging incoming strikes, when dressed in either light armor or nothing at all. Heavier armor, such as maille or plate, is too burdensome for me to quickly maneuver in."),
@@ -348,6 +365,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_XYLIX = span_info("I know how to speak in code that only fellow tricksters can understand."),
 	TRAIT_APRICITY = span_info("Astrata's light blesses and rejuvenates me, allowing me to regain my stamina quicker."),
 	TRAIT_SHARPER_BLADES = span_info("My blades go dull slower, ensuring they stay sharp longer."),
+	TRAIT_BATTLEMASTER = span_info("I can use special attacks of any weapon without needing to be trained in it."),
 	TRAIT_CABAL = span_info("In secret, I have studied the ways of Her ascension."),
 	TRAIT_HORDE = span_info("BY BLOOD AND BONE, I AM OF GRAGGAR'S ANOINTED!"),
 	TRAIT_PSYDONITE = span_info("I can gradually recover from most injuries, so long as I am not bled dry. Divine spite towards my faith leaves me unable to receive most miracles."),
@@ -456,7 +474,9 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_DUSTABLE = span_warning("If I die that is for the end for me, I will turn to dust."),
 	TRAIT_SECONDLIFE = span_warning("I may be granted another chance upon death, but who knows where I'll end up..."),
 	TRAIT_QUICKSILVERRESISTANT = span_warning("Quick silver won't work to cure me..."),
-	TRAIT_CLERGY = span_notice("I am a member of local clergy, sworn to defend the House of the Ten. My oath empowers me when within the Temple's walls, or near my spiritual guide, the Bishop."), //TA TRAITS FROM HERE
+	TRAIT_SHIRTLESS = span_warning("For one reason or another, I can't bear the idea of covering myself from the middle upwards."),
+	TRAIT_NODEF = span_warning("I expose myself in battle completely."),
+	TRAIT_CLERGY_TA = span_notice("My oath empowers me when I am within the Temple's walls, or near my spiritual guide, the Bishop."), //TA TRAITS FROM HERE
 	TRAIT_FIREARMS_MARKSMAN = span_greentext("I'm an experienced gunslinger, and have spent many years learning to shoot firearms accurately over great distances. Firearms can progress to Legendary levels."),
 ))
 

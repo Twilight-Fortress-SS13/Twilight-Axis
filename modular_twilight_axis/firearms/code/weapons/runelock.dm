@@ -25,7 +25,7 @@
 	var/misfire_chance = 0
 	/// Reload time, in SECONDS
 	var/reload_time = 8
-	damfactor = 0.7
+	damfactor = 0.8
 	var/critfactor = 0.7
 	var/npcdamfactor = 2
 

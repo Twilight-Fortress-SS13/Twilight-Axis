@@ -24,6 +24,7 @@
 	max_integrity = 100
 	anvilrepair = /datum/skill/craft/carpentry
 	COOLDOWN_DECLARE(shield_bang)
+	special = /datum/special_intent/limbguard
 
 
 /obj/item/rogueweapon/shield/attackby(obj/item/attackby_item, mob/user, params)
@@ -104,6 +105,13 @@
 	dropshrink = 0.8
 	anvilrepair = /datum/skill/craft/carpentry
 	coverage = 30
+
+/obj/item/rogueweapon/shield/wood/deprived
+	name = "ghastly shield"
+	desc = "A frail looking amalgamation of planks. Yet somehow, the very wood itself seem to be filling you with resolve."
+	icon_state = "deprived"
+	coverage = 40
+	max_integrity = 200
 
 /obj/item/rogueweapon/shield/attack_right(mob/user)
 	if(overlays.len)

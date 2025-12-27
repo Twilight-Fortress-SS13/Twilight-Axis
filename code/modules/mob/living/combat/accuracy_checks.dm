@@ -41,6 +41,8 @@
 			chance2hit += 6
 		if((used_intent.blade_class == BCLASS_BLUNT || used_intent.blade_class == BCLASS_SMASH) && check_zone(zone) != zone)	//A mace can't hit the eyes very well
 			chance2hit -= 10
+		if(used_intent.accuracy_modifier)
+			chance2hit += used_intent.accuracy_modifier
 
 	if(I)
 		if(I.wlength == WLENGTH_SHORT)

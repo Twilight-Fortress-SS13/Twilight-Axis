@@ -3,7 +3,6 @@
 	desc = "Plate gauntlets made out of steel. Good all-around protection for the hands."
 	icon_state = "gauntlets"
 	armor = ARMOR_PLATE
-	prevent_crits = list(BCLASS_CHOP, BCLASS_CUT, BCLASS_BLUNT, BCLASS_TWIST)
 	resistance_flags = FIRE_PROOF
 	blocksound = PLATEHIT
 	max_integrity = ARMOR_INT_SIDE_STEEL
@@ -18,6 +17,9 @@
 	grid_width = 64
 	grid_height = 32
 	unarmed_bonus = 1.2
+
+/obj/item/clothing/gloves/roguetown/plate/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 
 /obj/item/clothing/gloves/roguetown/plate/iron
 	name = "iron plate gauntlets"
@@ -35,6 +37,7 @@
 	chunkcolor = "#532e25"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
+	prevent_crits = PREVENT_CRITS_NONE
 
 /obj/item/clothing/gloves/roguetown/plate/paalloy
 	name = "ancient plate gauntlets"
@@ -107,8 +110,8 @@
 /obj/item/clothing/gloves/roguetown/plate/kote/attack_right(mob/user)
 	..()
 	if(!picked)
-		var/choice = input(user, "Choose a color.", "Uniform colors") as anything in colorlist
-		var/playerchoice = colorlist[choice]
+		var/choice = input(user, "Choose a color.", "Uniform colors") as anything in COLOR_MAP
+		var/playerchoice = COLOR_MAP[choice]
 		picked = TRUE
 		detail_color = playerchoice
 		detail_tag = "_detail"

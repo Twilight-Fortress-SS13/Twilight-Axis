@@ -12,25 +12,25 @@
 /obj/projectile/bullet/twilight_lead
 	name = "lead sphere"
 	desc = "Небольшая свинцовая сфера. Хорошо сочетается с порохом."
-	damage = 100	//higher damage than crossbow
+	damage = 70
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead
-	range = 25		
+	range = 12		
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
 	woundclass = BCLASS_STAB
-	flag = "piercing"
-	armor_penetration = 75
+	flag = "stab"
+	armor_penetration = 42
 	speed = 0.1
 
 /obj/projectile/bullet/twilight_lead/silver
 	name = "silver sphere"
 	desc = "Небольшая серебряная сфера. Мягче, чем свинцовая пуля, но крайне эффективна против нежити."
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/silver
-	damage = 75
-	armor_penetration = 60
+	damage = 60
+	armor_penetration = 35
 	silver = TRUE
 	critfactor = 0.8
 
@@ -42,12 +42,12 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball
-	range = 25		
+	range = 16		
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 0
 	woundclass = BCLASS_STAB
-	flag = "piercing"
-	armor_penetration = 105
+	flag = "blunt"
+	armor_penetration = 5
 	speed = 0.1
 
 /obj/projectile/bullet/twilight_grapeshot
@@ -58,12 +58,12 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball/grapeshot
-	range = 15
+	range = 10
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
 	woundclass = BCLASS_STAB
-	flag = "piercing"
-	armor_penetration = 75
+	flag = "stab"
+	armor_penetration = 42
 	speed = 0.1
 	critfactor = 0.67
 
@@ -112,7 +112,7 @@
 /datum/status_effect/debuff/corrosivesplash
 	id = "corrosive splash"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/corrosivesplash
-	duration = 20 SECONDS
+	duration = 10 SECONDS
 
 /datum/status_effect/debuff/corrosivesplash/on_apply()
 	. = ..()
@@ -127,7 +127,7 @@
 
 /datum/status_effect/debuff/corrosivesplash/tick()
 	var/mob/living/target = owner
-	target.adjustFireLoss(5)
+	target.adjustFireLoss(2)
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
 		var/list/armor = list()
@@ -139,7 +139,8 @@
 				armor += bp
 		if(armor)
 			var/obj/item/clothing/C = pick(armor)
-			C.take_damage(damage_amount = (C.max_integrity * 0.03), damage_type = BURN, damage_flag = "fire")
+			if(C.obj_integrity > (C.max_integrity * 0.03))
+				C.take_damage(damage_amount = (C.max_integrity * 0.03), damage_type = BURN, damage_flag = "fire")
 
 /obj/projectile/bullet/fire(angle, atom/direct_target)
 	if(istype(fired_from, /obj/item/gun/ballistic/twilight_firearm))
@@ -157,60 +158,68 @@
 /obj/projectile/bullet/on_hit(atom/target, blocked = FALSE)
 	if(isliving(target))
 		var/mob/living/T = target
-		if(!istype(T.get_inactive_held_item(), /obj/item/rogueweapon/shield) && !istype(T.get_active_held_item(), /obj/item/rogueweapon/shield) && (blocked == 0))
-			switch(gunpowder) //Hande gunpowder types that are BLOCKED by shields and armor
-				if("fyrepowder")
-					if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-						T.adjust_fire_stacks(2)
+		if(istype(fired_from, /obj/item/gun/ballistic/twilight_firearm)) //Double damage in close range
+			var/obj/item/gun/ballistic/twilight_firearm/G = fired_from
+			for(var/mob/M in range(G.effective_range, T))
+				if(M == firer)
+					damage *= 2
+					armor_penetration *= 2
+					if(!istype(T.get_inactive_held_item(), /obj/item/rogueweapon/shield) && !istype(T.get_active_held_item(), /obj/item/rogueweapon/shield) && (blocked == 0))
+						switch(gunpowder) //Hande gunpowder types that are BLOCKED by shields and armor
+							if("fyrepowder")
+								if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
+									T.adjust_fire_stacks(2)
+								else
+									T.adjust_fire_stacks(5)
+								T.ignite_mob()
+							if("holy fyrepowder")
+								if(HAS_TRAIT(T, TRAIT_SILVER_WEAK))
+									if(!T.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
+										if(T.patron)
+											to_chat(T, span_danger("The trice-cursed Otavan silver! By [T.patron.name], it hurts!!"))
+										else
+											to_chat(T, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
+									if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
+										T.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
+									else
+										T.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
+								else
+									if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
+										T.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/divine)
+									else
+										T.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/divine)
+								T.ignite_mob()
+							if("thunderpowder")
+								T.Immobilize(30)
+								T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
+							if("corrosive gunpowder")
+								playsound(src, 'sound/misc/drink_blood.ogg', 100)
+								T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
+								new /obj/effect/temp_visual/acidsplash(get_turf(T))
+							if("arcyne gunpowder")
+								if(ishuman(T))
+									var/mob/living/carbon/human/H = T
+									if(istype(H.wear_ring, /obj/item/clothing/ring/fate_weaver))
+										H.wear_ring.obj_break()
+									H.set_silence(5 SECONDS)
+							if("terrorpowder")
+								gunpowder_npc_critfactor += 1
 					else
-						T.adjust_fire_stacks(5)
-					T.ignite_mob()
-				if("holy fyrepowder")
-					if(HAS_TRAIT(T, TRAIT_SILVER_WEAK))
-						if(!T.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
-							if(T.patron)
-								to_chat(T, span_danger("The trice-cursed Otavan silver! By [T.patron.name], it hurts!!"))
-							else
-								to_chat(T, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
-						if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-							T.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-						else
-							T.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-					else
-						if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-							T.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/divine)
-						else
-							T.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/divine)
-					T.ignite_mob()
-				if("thunderpowder")
-					T.Immobilize(30)
-					T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
-				if("corrosive gunpowder")
-					playsound(src, 'sound/misc/drink_blood.ogg', 100)
-					T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
-					new /obj/effect/temp_visual/acidsplash(get_turf(T))
-				if("arcyne gunpowder")
-					if(ishuman(T))
-						var/mob/living/carbon/human/H = T
-						if(istype(H.wear_ring, /obj/item/clothing/ring/fate_weaver))
-							H.wear_ring.obj_break()
-						H.set_silence(5 SECONDS)
-				if("terrorpowder")
-					gunpowder_npc_critfactor += 1
-		else
-			switch(gunpowder) //Hande gunpowder types that are NOT BLOCKED by shields and armor
-				if("corrosive gunpowder")
-					playsound(src, 'sound/misc/drink_blood.ogg', 100)
-					T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
-					new /obj/effect/temp_visual/acidsplash(get_turf(T))
-				if("terrorpowder")
-					gunpowder_npc_critfactor += 1
-		if(!T.mind)
-			damage *= gunpowder_npc_critfactor
+						switch(gunpowder) //Hande gunpowder types that are NOT BLOCKED by shields and armor
+							if("corrosive gunpowder")
+								playsound(src, 'sound/misc/drink_blood.ogg', 100)
+								T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
+								new /obj/effect/temp_visual/acidsplash(get_turf(T))
+							if("terrorpowder")
+								gunpowder_npc_critfactor += 1
+					if(!T.mind)
+						damage *= gunpowder_npc_critfactor
+				else
+					T.visible_message(span_danger("The [src.name] misses [T] narrowly, grazing them!"), \
+									span_danger("The [src.name] misses me narrowly, grazing me!"), null, COMBAT_MESSAGE_RANGE)
 	. = ..()
 	if(isliving(firer) && (istype(fired_from, /obj/item/gun/ballistic/twilight_firearm) || istype(fired_from, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock)))
 		var/mob/living/M = firer
-		//var/obj/item/gun/G = fired_from
 		var/skill = (M?.mind ? M.get_skill_level(/datum/skill/combat/twilight_firearms) : 1)
 		if(isliving(target))
 			var/mob/living/T = target

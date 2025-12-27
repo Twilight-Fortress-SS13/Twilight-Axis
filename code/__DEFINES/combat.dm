@@ -286,6 +286,10 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 //We will round to this value in damage calculations.
 #define DAMAGE_PRECISION 0.1
 
+#define STRONG_STANCE_DMG_BONUS 0.1
+#define STRONG_SHP_BONUS 2
+#define STRONG_INTG_BONUS 2
+
 //bullet_act() return values
 #define BULLET_ACT_HIT				"HIT"		//It's a successful hit, whatever that means in the context of the thing it's hitting.
 #define BULLET_ACT_BLOCK			"BLOCK"		//It's a blocked hit, whatever that means in the context of the thing it's hitting.
@@ -343,6 +347,10 @@ Medical defines
 #define CRIT_RESISTANCE_STACKS_OP 1 // Noblood / Revenant etc.
 #define CRIT_RESISTANCE_EFFECTIVE_BLEEDRATE 0.5 // How much CR reduce bleedrate by
 #define CRIT_RESISTANCE_TIMER_CD 30 SECONDS // Cooldown between guaranteed CR procs. DOES NOT APPLY TO DISMEMBERMENT.
+
+#define PREVENT_CRITS_NONE	0
+#define PREVENT_CRITS_MOST	1
+#define PREVENT_CRITS_ALL	2
 
 /*
 	Dullfactor Defines. These should be removed at some point.

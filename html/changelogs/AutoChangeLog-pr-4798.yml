@@ -1,6 +1,0 @@
-author: "BurpleBineapple"
-delete-after: True
-changes:
-  - rscdel: "Removed unused \"Enduring\" weapons from code."
-  - balance: "Psydon Heretics spawn with Psydonic silver weapons."
-  - balance: "Rite of Silver-Blessing now only blesses silver weapons."

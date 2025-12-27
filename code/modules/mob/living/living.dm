@@ -185,6 +185,9 @@
 			var/self_points = FLOOR((STACON + STASTR)/2, 1)
 			var/target_points = FLOOR((L.STACON + L.STASTR)/2, 1)
 
+			src.log_message("charged into [key_name(M)]", LOG_ATTACK, color="red")  // TA edit
+			M.log_message("has been charged by [key_name(src)]", LOG_ATTACK, color="red") // TA edit
+
 			switch(sprint_distance)
 				// Point blank
 				if(0 to 1)
@@ -630,6 +633,8 @@
 	if(pulling)
 		if(ismob(pulling))
 			var/mob/living/M = pulling
+			if(pulledby && pulledby == pulling)
+				reset_offsets("pulledby")
 			M.reset_offsets("pulledby")
 			reset_pull_offsets(pulling)
 			if(HAS_TRAIT(M, TRAIT_GARROTED))
@@ -648,6 +653,7 @@
 				if(I.grabbed == pulling)
 					dropItemToGround(I, silent = FALSE)
 	reset_offsets("pulledby")
+	reset_pull_offsets(src)
 	. = ..()
 
 	update_pull_movespeed()
@@ -1839,7 +1845,6 @@
 			layer = initial(layer)
 	update_cone_show()
 	update_transform()
-	lying_prev = lying
 
 	// Movespeed mods based on arms/legs quantity
 	if(!get_leg_ignore())
@@ -2266,7 +2271,8 @@
 		if(ttime < 0)
 			ttime = 0
 
-	visible_message(span_info("[src] looks down through [T]."))
+	if(m_intent != MOVE_INTENT_SNEAK)
+		visible_message(span_info("[src] looks down through [T]."))
 
 	if(!do_after(src, ttime, target = src))
 		return

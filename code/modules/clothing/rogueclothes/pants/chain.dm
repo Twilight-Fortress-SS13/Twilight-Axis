@@ -6,7 +6,6 @@
 	item_state = "chain_legs"
 	sewrepair = FALSE
 	armor = ARMOR_MAILLE
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
 	blocksound = CHAINHIT
 	max_integrity = ARMOR_INT_LEG_STEEL_CHAIN
 	drop_sound = 'sound/foley/dropsound/chain_drop.ogg'
@@ -22,6 +21,7 @@
 /obj/item/clothing/under/roguetown/chainlegs/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_CHAIN_STEP, 7)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
 
 /obj/item/clothing/under/roguetown/splintlegs
 	name = "brigandine chausses"
@@ -30,7 +30,6 @@
 	item_state = "splintlegs"
 	max_integrity = ARMOR_INT_LEG_BRIGANDINE
 	armor = ARMOR_LEATHER_STUDDED
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
 	blocksound = SOFTHIT
 	drop_sound = 'sound/foley/dropsound/chain_drop.ogg'
 	pickup_sound = 'sound/foley/equip/equip_armor_chain.ogg'
@@ -57,7 +56,6 @@
 	item_state = "ironsplintlegs"
 	max_integrity = ARMOR_INT_LEG_IRON_CHAIN
 	armor = ARMOR_LEATHER_STUDDED
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
 	blocksound = SOFTHIT
 	anvilrepair = /datum/skill/craft/armorsmithing
 	smeltresult = /obj/item/ingot/iron
@@ -77,7 +75,6 @@
 	item_state = "chain_bootyshorts"
 	sewrepair = FALSE
 	armor = ARMOR_MAILLE
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
 	body_parts_covered = GROIN
 	blocksound = CHAINHIT
 	max_integrity = ARMOR_INT_LEG_STEEL_CHAIN
@@ -125,6 +122,7 @@
 	chunkcolor = "#532e25"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
+	prevent_crits = PREVENT_CRITS_NONE
 
 /obj/item/clothing/under/roguetown/chainlegs/kilt/paalloy
 	name = "ancient chain kilt"

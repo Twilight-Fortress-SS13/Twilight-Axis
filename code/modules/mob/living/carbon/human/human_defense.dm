@@ -40,7 +40,7 @@
 			intdamage = (damage + armor_penetration) - protection
 		if(intdamfactor != 1)
 			intdamage *= intdamfactor
-		if(d_type == "blunt")
+		if(d_type == "blunt" && mind)
 			if(used.armor?.getRating("blunt") > 0)
 				var/bluntrating = used.armor.getRating("blunt")
 				intdamage -= intdamage * ((bluntrating / 2) / 100)	//Half of the blunt rating reduces blunt damage taken by %-age.
@@ -55,9 +55,11 @@
 		protection += physiology.armor.getRating(d_type)
 	return protection
 
-/mob/living/carbon/human/proc/checkcritarmor(def_zone, d_type)
-	if(!d_type)
+/mob/living/carbon/human/proc/checkcritarmor(def_zone, bclass)
+	if(!bclass)
 		return FALSE
+	if(bclass == BCLASS_PIERCE)
+		return TRUE
 	if(isbodypart(def_zone))
 		var/obj/item/bodypart/CBP = def_zone
 		def_zone = CBP.body_zone
@@ -69,9 +71,14 @@
 			var/obj/item/clothing/C = bp
 			if(zone2covered(def_zone, C.body_parts_covered_dynamic))
 				if(C.obj_integrity > 1)
-					if(d_type in C.prevent_crits)
-						return TRUE
-
+					switch(C.prevent_crits)
+						if(PREVENT_CRITS_NONE)
+							return FALSE
+						if(PREVENT_CRITS_ALL)
+							return TRUE
+						if(PREVENT_CRITS_MOST)
+							if(bclass != BCLASS_PICK)
+								return TRUE
 /*
 /mob/proc/checkwornweight()
 	return 0

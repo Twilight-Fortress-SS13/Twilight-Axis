@@ -72,7 +72,11 @@
 	var/turf/TU = get_turf(H)
 	if(TU)
 		if(horse)
-			new horse(TU)
+			var/mob/horse_mob = new horse(TU)
+			if(istype(horse_mob, /mob/living/simple_animal/hostile/retaliate/rogue))
+				var/mob/living/simple_animal/hostile/retaliate/rogue/rogue_animal = horse_mob
+				rogue_animal.owner = H
+				rogue_animal.friends |= H
 
 	for(var/trait in traits_applied)
 		ADD_TRAIT(H, trait, ADVENTURER_TRAIT)
@@ -139,7 +143,7 @@
 	if(length(allowed_ages) && !(H.age in allowed_ages))
 		return FALSE
 
-	if(length(allowed_patrons) && !(H.patron in allowed_patrons))
+	if(length(allowed_patrons) && !(H.patron.type in allowed_patrons))
 		return FALSE
 
 	if(maximum_possible_slots > -1)

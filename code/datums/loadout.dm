@@ -572,6 +572,8 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/eorahood
 	name = "Opera Mask - Eoran Hood"
+	category = "Аксессуары"
+	donatitem = TRUE
 	path = /obj/item/clothing/head/roguetown/roguehood/eorahood
 
 /datum/loadout_item/exoticsilkmask
@@ -775,6 +777,24 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Одежда"
 	path = /obj/item/clothing/cloak/cotehardie
 
+// caparisons
+
+/datum/loadout_item/caparison
+	name = "Caparison"
+	path = /obj/item/caparison
+
+/datum/loadout_item/caparison/psy
+	name = "Psydonite Caparison"
+	path = /obj/item/caparison/psy
+
+/datum/loadout_item/caparison/astrata
+	name = "Astratan Caparison"
+	path = /obj/item/caparison/astrata
+
+/datum/loadout_item/caparison/eora
+	name = "Eoran Caparison"
+	path = /obj/item/caparison/eora
+
 //Donator Section
 //All these items are stored in the donator_fluff.dm in the azure modular folder for simplicity.
 //All should be subtypes of existing weapons/clothes/armor/gear, whatever, to avoid balance issues I guess. Idk, I'm not your boss.
@@ -889,9 +909,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donator_zoe_shovel
-	name = "Donator Kit - Silence"
+	name = "Donator Kit - Silence - Required: Shovel"
 	path = /obj/item/enchantingkit/zoe_shovel
-	ckeywhitelist = list("zoetheorc")
+	category = list("Разное", "Донат")
+	donatitem = TRUE
 
 /datum/loadout_item/donator_willmbrink
 	name = "Royal Gown"
@@ -1003,16 +1024,46 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/suit/roguetown/shirt/twilight_elven
 	donatitem = TRUE
 
+/datum/loadout_item/donat/hammerhold_shirt
+	name = "Хаммерхолдская рубашка"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold
+	donatitem = TRUE
+
+/datum/loadout_item/donat/hammerhold_dress
+	name = "Хаммерхолдское платье"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress
+	donatitem = TRUE
+
 /datum/loadout_item/donat/elven_coat
 	name = "Эльфийское пальто"
 	category = list("Одежда", "Донат")
 	path = /obj/item/clothing/suit/roguetown/shirt/twilight_elven/coat
 	donatitem = TRUE
 
+/datum/loadout_item/donat/hammerhold_coat
+	name = "Боярское пальто"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/coat
+	donatitem = TRUE
+
 /datum/loadout_item/donat/elven_coat_alt
 	name = "Эльфийское меховое пальто"
 	category = list("Одежда", "Донат")
 	path = /obj/item/clothing/suit/roguetown/shirt/twilight_elven/coat/alt
+	donatitem = TRUE
+
+/datum/loadout_item/donat/hammerhold_furcoat
+	name = "Одеяние хаммерхолдского мага"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat
+	donatitem = TRUE
+
+/datum/loadout_item/donat/hammerhold_robe
+	name = "Роба хаммерхолдского мага"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe
 	donatitem = TRUE
 
 /datum/loadout_item/donat/maid_dress
@@ -1131,6 +1182,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/cloak/poncho
 	donatitem = TRUE
 
+/datum/loadout_item/donat/hammerholdcape
+	name = "Хаммерхолдская накидка"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/twilight_cape
+	donatitem = TRUE
+
 /datum/loadout_item/donat/elvencloak
 	name = "Эльфийский плащ"
 	category = list("Плащи", "Донат")
@@ -1235,3 +1292,35 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/maidhead
 	donatitem = TRUE
+
+/datum/loadout_item/donat/kokoshnik
+	name = "Кокошник"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/twilight_hammerhold_hat
+	donatitem = TRUE
+
+/datum/loadout_item/donat/hammerhold_hat
+	name = "Хаммерхолдская шляпа"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/twilight_hammerhold_hat/peasant
+	donatitem = TRUE
+
+// Пояса
+
+/datum/loadout_item/donat/hammerhold_sash
+	name = "Хаммерхолдский кушак"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/storage/belt/rogue/leather/hammerhold_sash
+	donatitem = TRUE
+
+// Обувь
+
+/datum/loadout_item/hammerhold_shoes
+	name = "Хаммерхолдская обувка"
+	category = list("Обувь", "Донат")
+	path = /obj/item/clothing/shoes/roguetown/hammerhold_shoes
+
+/datum/loadout_item/hammerhold_boots
+	name = "Хаммерхолдские сапоги"
+	category = list("Обувь", "Донат")
+	path = /obj/item/clothing/shoes/roguetown/boots/hammerhold_boots

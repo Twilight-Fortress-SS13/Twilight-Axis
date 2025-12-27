@@ -1,3 +1,23 @@
+//Graggarite shrine
+/datum/crafting_recipe/roguetown/structure/zizo_shrine/graggar
+	name = "Shrine of Blood"
+	always_availible = FALSE	//Has unique assign for certain roles.
+	reqs = list(
+		/obj/item/bodypart = 2,
+		/obj/item/organ/stomach = 1,
+	)
+	result = /obj/structure/fluff/psycross/zizocross/graggar
+	verbage_simple = "construct"
+	verbage = "constructs"
+	craftsound = 'sound/foley/Building-01.ogg'
+
+/obj/structure/fluff/psycross/zizocross/graggar
+	name = "shrine of blood"
+	desc = "What a disgusting thing, what type of maniac would make this!?"
+	icon = 'icons/roguetown/maniac/creations.dmi'
+	icon_state = "creation1"
+	divine = FALSE
+
 /datum/faith/inhumen
 	name = "Ascendents"
 	translated_name = "Вознесенные"
@@ -79,7 +99,7 @@
 	domain = "Власть, сила, превосходство, завоевание."
 	desc = "Бог силы и власти, которая приходит с нею. Пока другие божества обрекают свою паству на жалкое существование в мире, где власть приходит через их благословение и по праву рождения, Граггар провозглашает, что править может каждый, кто достаточно силен, чтобы забрать желаемое. «Слабые унаследуют лишь грязь», предупреждает он, напоминая о судьбе тех, кто не стремится стать сильнее."
 	undead_hater = TRUE
-	//crafting_recipes = list(/datum/crafting_recipe/roguetown/structure/zizo_shrine/graggar)
+	crafting_recipes = list(/datum/crafting_recipe/roguetown/structure/zizo_shrine/graggar)
 	worshippers = "Племенные народы, безумцы, маньяки, жестокий люд."
 	confess_lines = list(
 		"ГРАГГАР - ЗВЕРЬ, КОТОРОМУ Я ПОКЛОНЯЮСЬ!",
@@ -146,3 +166,86 @@
 		"ЖИВИ, СМЕЙСЯ, ЛЮБИ!",
 		"БАОТА - МОЯ РАДОСТЬ!",
 	)
+
+/////////////////////////////////
+// Does God Hear Your Prayer ? //
+/////////////////////////////////
+
+/datum/patron/proc/can_pray_inhumen(mob/living/follower)
+	SHOULD_CALL_PARENT(TRUE)
+	// Allows death-bed prayers
+	if(follower.has_status_effect(STATUS_EFFECT_UNCONSCIOUS))
+		if(follower.has_status_effect(STATUS_EFFECT_SLEEPING))
+			to_chat(follower, span_danger("I mustn't be sleeping to pray!"))
+			return FALSE	//Stops praying just by sleeping.
+	. = TRUE
+
+// Graggar - When bleeding, near blood on ground, zchurch, bad-cross, or ritual chalk
+/datum/patron/inhumen/graggar/can_pray_inhumen(mob/living/follower)
+	. = ..()
+	// Allows prayer in the Zzzzzzzurch(!)
+	if(istype(get_area(follower), /area/rogue/indoors/shelter/mountains))
+		return TRUE
+	for(var/obj/structure/fluff/psycross/cross in view(4, get_turf(follower)))
+		if(cross.divine == TRUE)
+			to_chat(follower, span_danger("That acursed cross interupts my prayers!"))
+			return FALSE
+	for(var/obj/structure/fluff/psycross/zizocross/graggar/cross in view(4, get_turf(follower)))
+		if(cross.divine == TRUE)
+			to_chat(follower, span_danger("This altar has been corrupted by the Ten! It blocks my prayers!"))
+			return FALSE
+		return TRUE
+	// Allows prayer if actively bleeding.
+	if(follower.bleed_rate > 0)
+		return TRUE
+	// Allows prayer near blood.
+	for(var/obj/effect/decal/cleanable/blood in view(3, get_turf(follower)))
+		return TRUE
+	// Allows praying atop ritual chalk of the god.
+	for(var/obj/structure/ritualcircle/graggar in view(1, get_turf(follower)))
+		return TRUE
+	to_chat(follower, span_danger("For Graggar to hear my prayers I must either be in the church of the abandoned, near an altar dedicated to Him, near fresh blood or draw blood of my own!"))
+	return FALSE
+
+// Matthios - Basically any way you'd like really, so long as there are comrades with you
+/datum/patron/inhumen/matthios/can_pray_inhumen(mob/living/follower)
+	. = ..()
+	for(var/obj/structure/fluff/psycross/cross in view(4, get_turf(follower)))
+		if(cross.divine == TRUE)
+			to_chat(follower, span_danger("That acursed cross interupts my prayers!"))
+			return FALSE
+	for(var/mob/living/carbon/human/comrade in view(4, get_turf(follower)))
+		if(istype(comrade.patron, /datum/patron/inhumen/matthios))
+			return TRUE
+	to_chat(follower, span_danger("Matthios will hear any prayer I offer, so long as I have at least one comrade near me!"))
+	return FALSE
+
+// Baotha 
+/datum/patron/inhumen/baotha/can_pray_inhumen(mob/living/follower)
+	. = ..()
+	for(var/obj/structure/fluff/psycross/cross in view(4, get_turf(follower)))
+		if(cross.divine == TRUE)
+			to_chat(follower, span_danger("That acursed cross interupts my prayers!"))
+			return FALSE
+	// Allows prayers in the bath house - whore.
+	if(istype(get_area(follower), /area/rogue/indoors/town/bath))
+		return TRUE
+	// Allows prayers if actively high on drugs.
+	if(follower.has_status_effect(/datum/status_effect/buff/ozium) || follower.has_status_effect(/datum/status_effect/buff/moondust) || follower.has_status_effect(/datum/status_effect/buff/moondust_purest) || follower.has_status_effect(/datum/status_effect/buff/druqks) || follower.has_status_effect(/datum/status_effect/buff/starsugar))
+		return TRUE
+	// Allows prayers if the user is drunk.
+	if(follower.has_status_effect(/datum/status_effect/buff/drunk))
+		return TRUE
+	// Allows prayers if the user is generally happy.
+	if(follower.has_status_effect(/datum/status_effect/mood/vgood))
+		return TRUE
+	// Allows prayers during sex
+	var/list/arousal_data = list()
+	SEND_SIGNAL(follower, COMSIG_SEX_GET_AROUSAL, arousal_data)
+	if(arousal_data["arousal"] >= 10)
+		return TRUE
+	// Allows praying atop ritual chalk of the god.
+	for(var/obj/structure/ritualcircle/baotha in view(1, get_turf(follower)))
+		return TRUE
+	to_chat(follower, span_danger("For Baotha to hear my prayers I must either be in the church of the abandoned, within the town's bathhouse, or actively enjoying myself, be that through drugs, sex, or whatever it is that gets my blood pumpin'!"))
+	return FALSE

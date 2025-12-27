@@ -144,6 +144,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/no_autopunctuate = FALSE
 	var/no_language_fonts = FALSE
 	var/no_language_icon = FALSE
+	var/no_redflash = FALSE
 
 	var/lastclass
 
@@ -224,6 +225,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/tgui_pref = TRUE
 
 	var/race_bonus
+
+	var/preset_bounty_enabled = FALSE
+	var/preset_bounty_poster_key
+	var/preset_bounty_severity_key
+	var/preset_bounty_severity_b_key
+	var/preset_bounty_crime
 
 	var/datum/loadout_panel/loadoutpanel
 
@@ -1281,6 +1288,39 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	dat += "<BR><b>Quicksilver Resistant:</b> <a href='?_src_=prefs;preference=qsr;task=input'>[qsr_pref ? "Yes" : "No"]</a>"
 	dat += "</body>"
 
+	dat += "<br><br><br><b>Preset Bounty:</b> "
+	dat += "<a href='?_src_=prefs;preference=preset_bounty_toggle;task=input'>[preset_bounty_enabled ? "Enabled" : "Disabled"]</a>"
+	if(preset_bounty_enabled)
+		dat += "<br><b>Bounty Poster:</b> "
+		dat += "<a href='?_src_=prefs;preference=preset_bounty_poster_key;task=input'>\
+			[GLOB.bounty_posters[preset_bounty_poster_key] || "None"]\
+		</a>"
+
+		dat += "<br><b>Crime Severity:</b> "
+		dat += "<a href='?_src_=prefs;preference=preset_bounty_severity_key;task=input'>\
+			[GLOB.wretch_severities[preset_bounty_severity_key] || "None"]\
+		</a>"
+
+		dat += "<br><b>Crime Severity (Bandit):</b> "
+		dat += "<a href='?_src_=prefs;preference=preset_bounty_severity_b_key;task=input'>\
+			[GLOB.bandit_severities[preset_bounty_severity_b_key] || "None"]\
+		</a>"
+
+		dat += "<br><b>Crime:</b> "
+		dat += "<a href='?_src_=prefs;preference=preset_bounty_crime;task=input'>\
+			[preset_bounty_crime || "None"]\
+		</a>"
+	if(preset_bounty_severity_key && !GLOB.wretch_severities[preset_bounty_severity_key])
+		preset_bounty_severity_key = null
+
+	if(preset_bounty_severity_b_key && !GLOB.bandit_severities[preset_bounty_severity_b_key])
+		preset_bounty_severity_b_key = null
+
+	if(preset_bounty_poster_key && !GLOB.bounty_posters[preset_bounty_poster_key])
+		preset_bounty_poster_key = null
+
+
+
 	var/datum/browser/noclose/popup = new(user, "antag_setup", "<div align='center'>Special Role</div>", 400, 800) //no reason not to reuse the occupation window, as it's cleaner that way
 	popup.set_window_options("can_close=0")
 	popup.set_content(dat.Join())
@@ -2092,7 +2132,40 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 					if(result)
 						set_new_race(result, user)
+				if("preset_bounty_toggle")
+					preset_bounty_enabled = !preset_bounty_enabled
+					return
 
+				if("preset_bounty_poster_key")
+					var/list/poster_choices = list()
+					for(var/key in GLOB.bounty_posters)
+						poster_choices[GLOB.bounty_posters[key]] = key
+					var/choice = input(user, "Who placed a bounty on you?", "Bounty Poster") as null|anything in poster_choices
+					if(choice)
+						preset_bounty_poster_key = poster_choices[choice]
+
+				if("preset_bounty_severity_key")
+					var/list/sev_choices = list()
+					for(var/key in GLOB.wretch_severities)
+						sev_choices[GLOB.wretch_severities[key]] = key
+					var/choice = input(user, "How severe are your crimes?", "Bounty Amount") as null|anything in sev_choices
+					if(choice)
+						preset_bounty_severity_key = sev_choices[choice]
+					return
+				
+				if("preset_bounty_severity_b_key")
+					var/list/sev_choices = list()
+					for(var/key in GLOB.bandit_severities)
+						sev_choices[GLOB.bandit_severities[key]] = key
+					var/choice = input(user, "How notorious are you?", "Bounty Amount") as null|anything in sev_choices
+					if(choice)
+						preset_bounty_severity_b_key = sev_choices[choice]
+					return
+
+				if("preset_bounty_crime")
+					preset_bounty_crime = input(user, "What is your crime?", "Crime") as text|null
+					return
+					
 				if("update_mutant_colors")
 					update_mutant_colors = !update_mutant_colors
 

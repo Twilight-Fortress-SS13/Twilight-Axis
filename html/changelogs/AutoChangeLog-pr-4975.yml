@@ -1,0 +1,5 @@
+author: "Baneuus"
+delete-after: True
+changes:
+  - rscadd: "Now it's possible to determine your bounty as Wretch or Bandit at Villain Selection tab."
+  - bugfix: "New druidic forms are now lowercase."

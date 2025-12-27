@@ -22,7 +22,7 @@
 		STASPD = 6
 
 		AddSpell(new /obj/effect/proc_holder/spell/self/bearclaws)
-		real_name = "Direbear"
+		real_name = "direbear"
 		faction += "bears"
 
 /mob/living/carbon/human/species/wildshape/bear/buckle_mob(mob/living/target, force = TRUE, check_loc = TRUE, lying_buckle = FALSE, hands_needed = 0, target_hands_needed = 0)
@@ -92,7 +92,7 @@
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
 	armor = ARMOR_LEATHER
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_TWIST)
+	prevent_crits = PREVENT_CRITS_NONE
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	sewrepair = FALSE

@@ -128,11 +128,12 @@
 		/datum/skill/craft/blacksmithing = SKILL_LEVEL_APPRENTICE, // Artificer makes for a crappy substitute blacksmith but have the same spread
 		/datum/skill/craft/armorsmithing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/weaponsmithing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,	//For the Alchemical mortar only, which is required for explosives. Feel free to remove if the recipe changes.
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/smelting = SKILL_LEVEL_EXPERT,
-		/datum/skill/craft/traps = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/traps = SKILL_LEVEL_EXPERT, //setting to higher level to counter an antag trap maker
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/ceramics = SKILL_LEVEL_JOURNEYMAN,	//Just for basic pottery/glass stuff.
 	)

@@ -74,14 +74,14 @@
 
 /obj/item/quiver/twilight_bullet/runed/Initialize()
 	. = ..()
-	for(var/i in 1 to 6)
+	for(var/i in 1 to 10)
 		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/R = new()
 		arrows += R
 	update_icon()
 
 /obj/item/quiver/twilight_bullet/blessed/Initialize()
 	. = ..()
-	for(var/i in 1 to 4)
+	for(var/i in 1 to 7)
 		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/blessed/R = new()
 		arrows += R
 	update_icon()

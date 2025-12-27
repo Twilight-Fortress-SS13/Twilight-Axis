@@ -211,7 +211,7 @@
 	wdefense_wbonus = 8	//13 when wielded.
 	bigboy = TRUE
 	gripsprite = TRUE
-	associated_skill = /datum/skill/combat/polearms
+	associated_skill = /datum/skill/combat/staves
 	anvilrepair = /datum/skill/craft/carpentry
 	resistance_flags = FLAMMABLE
 
@@ -244,6 +244,11 @@
 	bigboy = FALSE
 	gripsprite = FALSE
 	gripped_intents = null
+
+/obj/item/rogueweapon/woodstaff/polearm
+	name = "shillelagh"
+	desc = "A particularly long and sturdy walking stick with a variety of uses. It's heavier at one end, making it a little unbalanced."
+	associated_skill = /datum/skill/combat/polearms
 
 /obj/item/rogueweapon/woodstaff/aries/getonmobprop(tag)
 	. = ..()

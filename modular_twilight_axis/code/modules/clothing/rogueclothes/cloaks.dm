@@ -153,3 +153,62 @@
 	if(get_detail_tag())
 		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
 		add_overlay(pic)
+
+/obj/item/clothing/cloak/twilight_cape
+	name = "hammerhold cape"
+	desc = ""
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "white_mage_neckwear"
+	item_state = "white_mage_neckwear"
+	inhand_mod = TRUE
+	var/hammerhold_colors = list("white", "blue")
+	var/picked = FALSE
+	var/hammerhold_final_icon = null
+
+/obj/item/clothing/cloak/twilight_cape/attack_right(mob/user)
+	..()
+	if(!picked)
+		var/choiceC = input(user, "Choose a color.", "Hammerhold colors") as anything in hammerhold_colors
+		if(choiceC == "white")
+			icon_state = "white_mage_neckwear"
+			item_state = "white_mage_neckwear"
+			hammerhold_final_icon = "white_mage_neckwear"
+		if(choiceC == "blue")
+			icon_state = "blue_mage_neckwear"
+			item_state = "blue_mage_neckwear"
+			hammerhold_final_icon = "blue_mage_neckwear"
+		update_icon()
+		if(loc == user && ishuman(user))
+			var/mob/living/carbon/H = user
+			H.update_inv_cloak()
+		if(alert("Are you pleased with your cape?", "Cape", "Yes", "No") != "Yes")
+			icon_state = "white_mage_neckwear"
+			item_state = "white_mage_neckwear"
+			hammerhold_final_icon = "white_mage_neckwear"
+			if(loc == user && ishuman(user))
+				var/mob/living/carbon/H = user
+				H.update_inv_cloak()
+			update_icon()
+			return
+		picked = TRUE
+
+/obj/item/clothing/cloak/twilight_cape/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		add_overlay(pic)
+
+/obj/item/clothing/cloak/twilight_cape/equipped(mob/user, slot)
+	. = ..()
+	if(hammerhold_final_icon)
+		icon_state = hammerhold_final_icon
+		item_state = hammerhold_final_icon
+		update_icon()
+
+/obj/item/clothing/cloak/twilight_cape/dropped(mob/user, slot)
+	. = ..()
+	if(hammerhold_final_icon)
+		icon_state = hammerhold_final_icon
+		item_state = hammerhold_final_icon
+		update_icon()

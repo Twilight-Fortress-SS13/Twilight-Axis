@@ -10,7 +10,6 @@
 	sleeved = null
 	resistance_flags = FIRE_PROOF
 	armor = ARMOR_PLATE
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT, BCLASS_TWIST)
 	clothing_flags = CANT_SLEEP_IN
 	dynamic_hair_suffix = "+generic"
 	bloody_icon_state = "helmetblood"
@@ -99,10 +98,10 @@
 /obj/item/clothing/head/roguetown/helmet/kettle/attackby(obj/item/W, mob/living/user, params)
 	..()
 	if(istype(W, /obj/item/natural/cloth) && !detail_tag)
-		var/choice = input(user, "Choose a color.", "Orle") as anything in colorlist + pridelist
+		var/choice = input(user, "Choose a color.", "Orle") as anything in COLOR_MAP + pridelist
 		user.visible_message(span_warning("[user] adds [W] to [src]."))
 		user.transferItemToLoc(W, src, FALSE, FALSE)
-		detail_color = colorlist[choice]
+		detail_color = COLOR_MAP[choice]
 		detail_tag = "_detail"
 		if(choice in pridelist)
 			detail_tag = "_detailp"
@@ -127,13 +126,16 @@
 	smeltresult = /obj/item/ingot/steel
 	body_parts_covered = HEAD|HAIR|EARS
 
+/obj/item/clothing/wrists/roguetown/bracers/jackchain/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
+
 /obj/item/clothing/head/roguetown/helmet/sallet/attackby(obj/item/W, mob/living/user, params)
 	..()
 	if(istype(W, /obj/item/natural/cloth) && !detail_tag)
-		var/choice = input(user, "Choose a color.", "Orle") as anything in colorlist + pridelist
+		var/choice = input(user, "Choose a color.", "Orle") as anything in COLOR_MAP + pridelist
 		user.visible_message(span_warning("[user] adds [W] to [src]."))
 		user.transferItemToLoc(W, src, FALSE, FALSE)
-		detail_color = colorlist[choice]
+		detail_color = COLOR_MAP[choice]
 		detail_tag = "_detail"
 		if(choice in pridelist)
 			detail_tag = "_detailp"
@@ -183,10 +185,10 @@
 /obj/item/clothing/head/roguetown/helmet/sallet/visored/attackby(obj/item/W, mob/living/user, params)
 	..()
 	if(istype(W, /obj/item/natural/cloth) && !detail_tag)
-		var/choice = input(user, "Choose a color.", "Orle") as anything in colorlist + pridelist
+		var/choice = input(user, "Choose a color.", "Orle") as anything in COLOR_MAP + pridelist
 		user.visible_message(span_warning("[user] adds [W] to [src]."))
 		user.transferItemToLoc(W, src, FALSE, FALSE)
-		detail_color = colorlist[choice]
+		detail_color = COLOR_MAP[choice]
 		detail_tag = "_detail"
 		if(choice in pridelist)
 			detail_tag = "_detailp"
@@ -275,7 +277,6 @@
 	icon_state = "elven_barbute_full"
 	item_state = "elven_barbute_full"
 	armor = ARMOR_PLATE
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT, BCLASS_TWIST)
 	clothing_flags = 0
 	block2add = FOV_BEHIND
 
@@ -315,8 +316,8 @@
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/attackby(obj/item/W, mob/living/user, params)
 	..()
 	if(istype(W, /obj/item/natural/feather) && !detail_tag)
-		var/choice = input(user, "Choose a color.", "Plume") as anything in colorlist + pridelist
-		detail_color = colorlist[choice]
+		var/choice = input(user, "Choose a color.", "Plume") as anything in COLOR_MAP + pridelist
+		detail_color = COLOR_MAP[choice]
 		detail_tag = "_detail"
 		user.visible_message(span_warning("[user] adds [W] to [src]."))
 		user.transferItemToLoc(W, src, FALSE, FALSE)
@@ -347,8 +348,8 @@
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/attackby(obj/item/W, mob/living/user, params)
 	..()
 	if(istype(W, /obj/item/natural/feather) && !detail_tag)
-		var/choice = input(user, "Choose a color.", "Plume") as anything in colorlist
-		detail_color = colorlist[choice]
+		var/choice = input(user, "Choose a color.", "Plume") as anything in COLOR_MAP
+		detail_color = COLOR_MAP[choice]
 		detail_tag = "_detail"
 		user.visible_message(span_warning("[user] adds [W] to [src]."))
 		user.transferItemToLoc(W, src, FALSE, FALSE)
@@ -357,10 +358,10 @@
 			var/mob/living/carbon/H = user
 			H.update_inv_head()
 	if(istype(W, /obj/item/natural/cloth) && !altdetail_tag)
-		var/choicealt = input(user, "Choose a color.", "Orle") as anything in colorlist + pridelist
+		var/choicealt = input(user, "Choose a color.", "Orle") as anything in COLOR_MAP + pridelist
 		user.visible_message(span_warning("[user] adds [W] to [src]."))
 		user.transferItemToLoc(W, src, FALSE, FALSE)
-		altdetail_color = colorlist[choicealt]
+		altdetail_color = COLOR_MAP[choicealt]
 		altdetail_tag = "_detailalt"
 		if(choicealt in pridelist)
 			detail_tag = "_detailp"
@@ -402,10 +403,10 @@
 /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan/attackby(obj/item/W, mob/living/user, params)
 	..()
 	if(istype(W, /obj/item/natural/cloth) && !detail_tag)
-		var/choice = input(user, "Choose a color.", "Orle") as anything in colorlist + pridelist
+		var/choice = input(user, "Choose a color.", "Orle") as anything in COLOR_MAP + pridelist
 		user.visible_message(span_warning("[user] adds [W] to [src]."))
 		user.transferItemToLoc(W, src, FALSE, FALSE)
-		detail_color = colorlist[choice]
+		detail_color = COLOR_MAP[choice]
 		detail_tag = "_detail"
 		if(choice in pridelist)
 			detail_tag = "_detailp"

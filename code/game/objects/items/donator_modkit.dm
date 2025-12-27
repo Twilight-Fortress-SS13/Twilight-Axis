@@ -11,7 +11,12 @@
 
 /obj/item/enchantingkit/pre_attack(obj/item/I, mob/user)
 	if(is_type_in_list(I, target_items))
-		var/obj/item/R = new result_item(get_turf(user))
+		var/obj/item/R
+		if(target_items[I.type] && !result_item)
+			R = target_items[I.type]
+		else
+			R = result_item
+		R = new R(get_turf(user))
 		to_chat(user, span_notice("You apply the [src] to [I], using the enchanting dust and tools to turn it into [R]."))
 		R.name += " <font size = 1>([I.name])</font>"
 		remove_item_from_storage(I)
@@ -29,9 +34,9 @@
 //Plexiant - Custom rapier type
 /obj/item/enchantingkit/plexiant
 	name = "'Rapier di Aliseo' morphing elixir"
-	target_items = list(/obj/item/rogueweapon/sword/rapier)		//Takes any subpated rapier and turns it into unique one.
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Rapier"
-	result_item = /obj/item/rogueweapon/sword/rapier/aliseo
+	target_items = list(/obj/item/rogueweapon/sword/rapier)		//Takes any subpated rapier and turns it into unique one.
+	result_item = /obj/item/rogueweapon/sword/rapier/aliseo 
 
 //Ryebread - Custom estoc type
 /obj/item/enchantingkit/ryebread
@@ -45,35 +50,32 @@
 	name = "'Emerald Dress' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Dress"
 	target_items = list(/obj/item/clothing/suit/roguetown/shirt/dress)	//Literally any type of dress
-	result_item = /obj/item/clothing/suit/roguetown/shirt/dress/emerald
+	result_item = /obj/item/clothing/suit/roguetown/shirt/dress/emerald 
 
 //Strudle - Custom leather vest type
 /obj/item/enchantingkit/strudle
 	name = "'Grenzelhoft Mage Vest' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Robe"
 	target_items = list(/obj/item/clothing/suit/roguetown/shirt/robe)
-	result_item = /obj/item/clothing/suit/roguetown/shirt/robe/sofiavest
+	result_item = /obj/item/clothing/suit/roguetown/shirt/robe/sofiavest 
 
 //Bat - Custom harp type
 /obj/item/enchantingkit/bat
 	name = "'Handcrafted Harp' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Harp"
-	target_items = list(/obj/item/rogue/instrument/harp)
-	result_item = /obj/item/rogue/instrument/harp/handcarved
+	target_items = list(/obj/item/rogue/instrument/harp = /obj/item/rogue/instrument/harp/handcarved)
 
 //Rebel - Custom visored sallet type
 /obj/item/enchantingkit/rebel
 	name = "'Gilded Sallet' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Visored Sallet"
-	target_items = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored)
-	result_item = /obj/item/clothing/head/roguetown/helmet/sallet/visored/gilded
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored = /obj/item/clothing/head/roguetown/helmet/sallet/visored/gilded) 
 
 //Bigfoot - Custom knight helm type
 /obj/item/enchantingkit/bigfoot
 	name = "'Gilded Knight Helm' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Knight Helmet"
-	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight)
-	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/knight/gilded
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight = /obj/item/clothing/head/roguetown/helmet/heavy/knight/gilded)
 
 //Bigfoot - Custom great axe type
 /obj/item/enchantingkit/bigfoot_axe
@@ -87,35 +89,18 @@
 	name = "'Gold-Black silky dress morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Silky Dress"
 	target_items = list(/obj/item/clothing/suit/roguetown/shirt/dress/silkydress)
-	result_item = /obj/item/clothing/suit/roguetown/shirt/dress/silkydress/zydrasdress
+	result_item = /obj/item/clothing/suit/roguetown/shirt/dress/silkydress/zydrasdress 
 
 //Eiren - Zweihander and sabres
 /obj/item/enchantingkit/eiren
 	name = "'Regret' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Zweihander"
-	target_items = list(/obj/item/rogueweapon/greatsword/zwei, /obj/item/rogueweapon/greatsword/grenz)		//now only takes the zwei and nothing else
-	result_item = /obj/item/rogueweapon/greatsword/zwei/eiren
-
-/obj/item/enchantingkit/eiren/pre_attack(obj/item/I, mob/user)
-	if(is_type_in_list(I, target_items))
-		var/result_type
-		if(istype(I, /obj/item/rogueweapon/greatsword/zwei))
-			result_type = /obj/item/rogueweapon/greatsword/zwei/eiren
-		else if(istype(I, /obj/item/rogueweapon/greatsword/grenz))
-			result_type = /obj/item/rogueweapon/greatsword/zwei/eiren/steel
-		else
-			return ..()
-		
-		var/obj/item/R = new result_type(get_turf(user))
-		to_chat(user, span_notice("You apply the [src] to [I], using the enchanting dust and tools to turn it into [R]."))
-		R.name += " <font size = 1>([I.name])</font>"
-		remove_item_from_storage(I)
-		qdel(I)
-		user.put_in_hands(R)
-		qdel(src)
-		return TRUE
-	else
-		return ..()
+	target_items = list(
+		/obj/item/rogueweapon/greatsword/zwei 				= /obj/item/rogueweapon/greatsword/zwei/eiren,
+		/obj/item/rogueweapon/greatsword/grenz 				= /obj/item/rogueweapon/greatsword/zwei/eiren/steel,
+		/obj/item/rogueweapon/greatsword	  				= /obj/item/rogueweapon/greatsword/eiren,
+		/obj/item/rogueweapon/greatsword/grenz/flamberge 	= /obj/item/rogueweapon/greatsword/grenz/flamberge/eiren
+		)
 
 /obj/item/enchantingkit/eirensabre
 	name = "'Lunae' morphing elixir"
@@ -134,35 +119,16 @@
 	name = "'Weeper's Lathe' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Greatsword"
 	target_items = list(/obj/item/rogueweapon/greatsword)		// i, uh. i really do promise i'm only gonna use it on steel greatswords.
-	result_item = /obj/item/rogueweapon/greatsword/weeperslathe
+	result_item = /obj/item/rogueweapon/greatsword/weeperslathe 
 
 //inverserun claymore
 /obj/item/enchantingkit/inverserun
 	name = "'Votive Thorns' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Zweihander"
-	target_items = list(/obj/item/rogueweapon/greatsword/zwei, /obj/item/rogueweapon/greatsword/grenz)
-	result_item = /obj/item/rogueweapon/greatsword/zwei/inverserun
+	target_items = list(
+		/obj/item/rogueweapon/greatsword/zwei = /obj/item/rogueweapon/greatsword/zwei/inverserun, 
+		/obj/item/rogueweapon/greatsword/grenz = /obj/item/rogueweapon/greatsword/zwei/inverserun/steel)
 
-/obj/item/enchantingkit/inverserun/pre_attack(obj/item/I, mob/user)
-	if(is_type_in_list(I, target_items))
-		var/result_type
-		if(istype(I, /obj/item/rogueweapon/greatsword/zwei))
-			result_type = /obj/item/rogueweapon/greatsword/zwei/inverserun
-		else if(istype(I, /obj/item/rogueweapon/greatsword/grenz))
-			result_type = /obj/item/rogueweapon/greatsword/zwei/inverserun/steel
-		else
-			return ..()
-		
-		var/obj/item/R = new result_type(get_turf(user))
-		to_chat(user, span_notice("You apply the [src] to [I], using the enchanting dust and tools to turn it into [R]."))
-		R.name += " <font size = 1>([I.name])</font>"
-		remove_item_from_storage(I)
-		qdel(I)
-		user.put_in_hands(R)
-		qdel(src)
-		return TRUE
-	else
-		return ..()
 
 //Zoe - Tytos Blackwood cloak
 /obj/item/enchantingkit/zoe

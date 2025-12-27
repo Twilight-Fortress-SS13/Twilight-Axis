@@ -126,7 +126,7 @@
 			to_chat(user,span_cultsmall("I begin inscribing His holy symbol."))
 			if(do_after(user, 30, src))
 				playsound(src, 'sound/foley/scribble.ogg', 40, TRUE)
-				new /obj/structure/ritualcircle/psydon(step_turf)
+				new /obj/effect/decal/cleanable/roguerune/god/psydon(step_turf)
 		if("Rune of the Pantheon")
 			to_chat(user,span_cultsmall("I begin inscribing the rune of the Ten Undivided"))
 			if(do_after(user, 30, src))

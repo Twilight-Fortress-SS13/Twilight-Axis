@@ -76,6 +76,10 @@
 	HT.apply_status_effect(/datum/status_effect/debuff/exposed)
 	HT.apply_status_effect(/datum/status_effect/debuff/clickcd, 5 SECONDS)
 	HT.bait_stacks++
+
+	if(HT.has_status_effect(/datum/status_effect/buff/clash/limbguard))
+		HT.bad_guard()
+
 	if(HT.bait_stacks <= 1)
 		HT.Immobilize(0.5 SECONDS)
 		HT.stamina_add(HT.max_stamina / fatiguemod)
@@ -107,7 +111,7 @@
 
 /datum/rmb_intent/strong
 	name = "strong"
-	desc = "Your attacks have +1 strength but use more stamina. Higher critrate with brutal attacks. Intentionally fails surgery steps."
+	desc = "Your attacks have +1 STR extra damage that ignores limits. Your attacks will cost the enemy more sharpness and integrity to defend against. Higher critrate with brutal attacks. Intentionally fails surgery steps.\nCosts more stamina per hit."
 	icon_state = "rmbstrong"
 	adjacency = FALSE
 	prioritize_turfs = TRUE
@@ -122,14 +126,17 @@
 	if(user.has_status_effect(/datum/status_effect/debuff/specialcd))
 		return
 
+	user.face_atom(target)
+
 	var/obj/item/rogueweapon/W = user.get_active_held_item()
 	if(istype(W, /obj/item/rogueweapon) && W.special)
 		var/skillreq = W.associated_skill
 		if(W.special.custom_skill)
 			skillreq = W.special.custom_skill
-		if(user.get_skill_level(skillreq) < SKILL_LEVEL_JOURNEYMAN)
-			to_chat(user, span_info("I'm not knowledgeable enough in the arts of this weapon to use this."))
-			return
+		if(!HAS_TRAIT(user, TRAIT_BATTLEMASTER))
+			if(user.get_skill_level(skillreq) < SKILL_LEVEL_JOURNEYMAN)
+				to_chat(user, span_info("I'm not knowledgeable enough in the arts of this weapon to use this."))
+				return
 		if(W.special.check_range(user, target))
 			if(W.special.apply_cost(user))
 				W.special.deploy(user, W, target)
@@ -226,7 +233,7 @@
 	bypasses_click_cd = TRUE
 
 /datum/rmb_intent/riposte/special_attack(mob/living/user, atom/target)	//Wish we could breakline these somehow.
-	if(!user.has_status_effect(/datum/status_effect/buff/clash) && !user.has_status_effect(/datum/status_effect/debuff/clashcd))
+	if(!user.has_status_effect(/datum/status_effect/buff/clash) && !user.has_status_effect(/datum/status_effect/debuff/clashcd) && !user.has_status_effect(/datum/status_effect/buff/clash/limbguard))
 		if(!user.get_active_held_item()) //Nothing in our hand to Guard with.
 			return 
 		if(user.r_grab || user.l_grab || length(user.grabbedby)) //Not usable while grabs are in play.

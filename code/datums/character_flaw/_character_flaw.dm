@@ -28,6 +28,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Random or No Flaw"=/datum/charflaw/randflaw,
 	"No Flaw (-3 TRIUMPHS)"=/datum/charflaw/noflaw,
 	"Leper (+1 TRIUMPHS)"=/datum/charflaw/leprosy,
+	/datum/charflaw/lawless::name + " (min pq: [/datum/charflaw/lawless::required_pq], exclusive for adventuring jobs)" = /datum/charflaw/lawless // TA EDIT
 	))
 
 /datum/charflaw

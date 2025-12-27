@@ -1,11 +1,11 @@
 /datum/outfit/job/roguetown/templar/monk/pre_equip(mob/living/carbon/human/H)
 	. = ..()
-	ADD_TRAIT(H, TRAIT_CLERGY, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 	H.change_stat(STATKEY_STR, -1)
 
 /datum/outfit/job/roguetown/templar/crusader/pre_equip(mob/living/carbon/human/H)
 	. = ..()
-	ADD_TRAIT(H, TRAIT_CLERGY, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 	H.change_stat(STATKEY_STR, -1)
 	H.change_stat(STATKEY_INT, 1)
 	H.change_stat(STATKEY_SPD, 1)
@@ -119,7 +119,7 @@
 			mask = /obj/item/clothing/head/roguetown/roguehood/ravoxgorget
 			wrists = /obj/item/clothing/neck/roguetown/psicross/ravox
 			cloak = /obj/item/clothing/cloak/templar/ravox
-			backpack_contents = list(/obj/item/ritechalk, /obj/item/book/rogue/law, /obj/item/clothing/mask/rogue/facemask/steel)
+			backpack_contents = list(/obj/item/ritechalk, /obj/item/book/rogue/law, /obj/item/clothing/mask/rogue/facemask/steel, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/storage/keyring/churchie)
 		if(/datum/patron/divine/malum)
 			head = /obj/item/clothing/head/roguetown/roguehood
 			wrists = /obj/item/clothing/neck/roguetown/psicross/malum
@@ -134,7 +134,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/angle
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 	// -- End of section for god specific bonuses --
-	ADD_TRAIT(H, TRAIT_CLERGY, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2)	//Capped to T2 miracles.

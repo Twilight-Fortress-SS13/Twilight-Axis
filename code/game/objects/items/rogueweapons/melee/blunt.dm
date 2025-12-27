@@ -214,6 +214,18 @@
 	hitsound = list('sound/combat/hits/blunt/woodblunt (1).ogg', 'sound/combat/hits/blunt/woodblunt (2).ogg')
 	penfactor = BLUNT_DEFAULT_PENFACTOR
 
+/obj/item/rogueweapon/mace/woodclub/deprived
+	name = "warped club"
+	desc = "It's a piece of wood marred by age and strife alike."
+	icon_state = "deprived"
+	force = 20
+	force_wielded = 22
+	wbalance = WBALANCE_HEAVY
+
+/obj/item/rogueweapon/mace/woodclub/deprived/New()
+	..()
+	icon_state = "deprived"
+
 /datum/intent/mace/smash/wood/ranged
 	reach = 2
 
@@ -633,8 +645,7 @@
 	slot_flags = null//No.
 	smelt_bar_num = 2
 	minstr = 14
-	wdefense = 2
-	wdefense_wbonus = 1 //3
+	wdefense = 3
 	demolition_mod = 1.25 //Oh, yes...
 	pixel_y = -16
 	pixel_x = -16
@@ -644,7 +655,6 @@
 	bigboy = TRUE
 	gripsprite = TRUE
 	minstr_req = TRUE //You MUST have the required strength. No exceptions.
-	max_integrity = 300
 
 /obj/item/rogueweapon/mace/maul/getonmobprop(tag)
 	. = ..()
@@ -665,7 +675,6 @@
 	minstr = 15
 	wdefense_wbonus = 4 // from 6
 	smelt_bar_num = 3
-	max_integrity = 350
 
 //Dwarvish mauls. Unobtanium outside of Grudgebearer. Do not change that.
 /obj/item/rogueweapon/mace/maul/steel
@@ -677,7 +686,7 @@
 	minstr = 11 // +2STR from Grudgebearer Soldier. Should cover this.
 	wdefense_wbonus = 3 // 5
 	smelt_bar_num = 3 // You'll break my heart.
-	max_integrity = 340
+	max_integrity = 390
 
 /obj/item/rogueweapon/mace/maul/spiked
 	name = "spiked maul"
@@ -688,7 +697,7 @@
 	wdefense_wbonus = 2 //4
 	minstr = 10 //+1 STR from Grudgebearer Smith. It should be fine.
 	smelt_bar_num = 3 //Please don't...
-	max_integrity = 320
+	max_integrity = 370
 
 //Intents for the mauls.
 /datum/intent/effect/hobble

@@ -19,7 +19,7 @@
 	same_job_respawn_delay = 30 MINUTES
 
 	give_bank_account = TRUE
-	job_traits = list(TRAIT_RITUALIST, TRAIT_STEELHEARTED)
+	job_traits = list(TRAIT_RITUALIST, TRAIT_STEELHEARTED, TRAIT_CLERGY)
 
 	//No nobility for you, being a member of the clergy means you gave UP your nobility. It says this in many of the church tutorial texts.
 	virtue_restrictions = list(/datum/virtue/utility/noble)
@@ -146,30 +146,30 @@
 	switch(weapon_choice)
 		if("Discipline - Unarmed")
 			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, 5, TRUE)
-			gloves = /obj/item/clothing/gloves/roguetown/bandages/pugilist
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/pugilist, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Katar")
 			H.put_in_hands(new /obj/item/rogueweapon/katar(H), TRUE)
-			gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Knuckledusters")
 			H.put_in_hands(new /obj/item/rogueweapon/knuckles(H), TRUE)
-			gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Quarterstaff")
 			H.adjust_skillrank_up_to(/datum/skill/combat/staves, 4, TRUE) //Tested with Disciples, first. Should hopefully be not too busted - reduce to Journeyman, otherwise.
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 3, TRUE)
-			gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/woodstaff/quarterstaff/steel(H), TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H), TRUE)
 			H.change_stat(STATKEY_PER, 1) //Matches the Disciple's balance; exchanges the 'dodge expert' trait for additional accuracy with the staff.
 		if("Close Caress")
 			H.put_in_hands(new /obj/item/rogueweapon/knuckles/eora(H), TRUE)
-			gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Barotrauma")
 			H.put_in_hands(new /obj/item/rogueweapon/katar/abyssor(H), TRUE)
-			gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 
 	// -- Start of section for god specific bonuses --
@@ -208,6 +208,7 @@
 		H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
 	if(H.patron?.type == /datum/patron/divine/ravox)
 		H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
+		ADD_TRAIT(H, TRAIT_BATTLEMASTER, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/xylix)
 		H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
@@ -477,6 +478,7 @@
 		H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
 	if(H.patron?.type == /datum/patron/divine/ravox)
 		H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
+		ADD_TRAIT(H, TRAIT_BATTLEMASTER, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/xylix)
 		H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)

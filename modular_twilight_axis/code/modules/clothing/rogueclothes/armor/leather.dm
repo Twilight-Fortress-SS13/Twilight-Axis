@@ -34,15 +34,6 @@
 
 // Elven reinforced clothes
 
-/obj/item/clothing/shoes/roguetown/boots/armor/iron/twilight_elven
-	name = "elven rider boots"
-	desc = "Comfortable leather boots, reinforced with metal plates for extra protection. Crafted by elven masters, based on a design lost to ages."
-	icon_state = "elven_boots"
-	item_state = "elven_boots"
-	allowed_race = NON_DWARVEN_RACE_TYPES
-	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
-
 /obj/item/clothing/gloves/roguetown/angle/twilight_elven
 	name = "elven rider gloves"
 	desc = "Comfortable leather gloves, reinforced with metal plates for extra protection. Crafted by elven masters, based on a design lost to ages."

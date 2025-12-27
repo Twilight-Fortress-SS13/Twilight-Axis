@@ -6,5 +6,5 @@
 	name = "Rune of Brotherhood"
 	desc = "A Holy Rune of Matthios. Freedom for all, no matter the cost."
 
-/obj/structure/ritualcircle/psydon
+/obj/effect/decal/cleanable/roguerune/god/psydon
 	name = "Rune of Sacrament"

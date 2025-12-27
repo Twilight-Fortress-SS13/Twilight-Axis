@@ -197,6 +197,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["no_autopunctuate"]	>> no_autopunctuate
 	S["no_language_fonts"]	>> no_language_fonts
 	S["no_language_icon"]	>> no_language_icon
+	S["no_redflash"]		>> no_redflash
 	S["crt"]				>> crt
 	S["grain"]				>> grain
 	S["sexable"]			>> sexable
@@ -320,6 +321,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["no_autopunctuate"], no_autopunctuate)
 	WRITE_FILE(S["no_language_fonts"], no_language_fonts)
 	WRITE_FILE(S["no_language_icon"], no_language_icon)
+	WRITE_FILE(S["no_redflash"], no_redflash)
 	WRITE_FILE(S["crt"], crt)
 	WRITE_FILE(S["sexable"], sexable)
 	WRITE_FILE(S["shake"], shake)
@@ -611,6 +613,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!valid_nsfw_headshot_link(null, nsfw_headshot_link, TRUE))
 		nsfw_headshot_link = null //TA edit end
 	S["erpprefs"]			>> erpprefs
+	S["preset_bounty_enabled"] >> preset_bounty_enabled
+	S["preset_bounty_poster_key"] >> preset_bounty_poster_key
+	S["preset_bounty_severity_key"] >> preset_bounty_severity_key
+	S["preset_bounty_severity_b_key"] >> preset_bounty_severity_b_key
+	S["preset_bounty_crime"] >> preset_bounty_crime
 
 	S["img_gallery"]	>> img_gallery
 	img_gallery = SANITIZE_LIST(img_gallery)
@@ -783,6 +790,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["werewolf_headshot_link"] , werewolf_headshot_link)
 	WRITE_FILE(S["lich_headshot_link"] , lich_headshot_link)
 	WRITE_FILE(S["qsr"] , qsr_pref)
+	WRITE_FILE(S["preset_bounty_enabled"] , preset_bounty_enabled)
+	WRITE_FILE(S["preset_bounty_poster_key"] , preset_bounty_poster_key)
+	WRITE_FILE(S["preset_bounty_severity_key"] , preset_bounty_severity_key)
+	WRITE_FILE(S["preset_bounty_severity_b_key"] , preset_bounty_severity_b_key)
+	WRITE_FILE(S["preset_bounty_crime"] , preset_bounty_crime)
 	WRITE_FILE(S["flavortext"] , html_decode(flavortext))
 	WRITE_FILE(S["ooc_notes"] , html_decode(ooc_notes))
 	WRITE_FILE(S["ooc_extra"] ,	ooc_extra)
