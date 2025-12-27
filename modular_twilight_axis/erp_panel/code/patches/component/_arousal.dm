@@ -177,14 +177,10 @@
 			action_object.try_knot_on_climax(source, partner)
 
 	if(return_type == "into")
-		var/receiving_organ_type = null
 
-		if(session_object.actor == source)
-			receiving_organ_type = session_tgui_object.node_organ_type(session_object.partner_node_id)
-		else
-			receiving_organ_type = session_tgui_object.node_organ_type(session_object.actor_node_id)
-
-		if(receiving_organ_type != SEX_ORGAN_VAGINA)
+		var/producing_organ_type = session_tgui_object.node_organ_type(session_object.actor_node_id)
+		var/receiving_organ_type = session_tgui_object.node_organ_type(session_object.partner_node_id)
+		if(receiving_organ_type != SEX_ORGAN_VAGINA || producing_organ_type != SEX_ORGAN_PENIS)
 			return
 
 		var/mob/living/carbon/human/mother = partner
