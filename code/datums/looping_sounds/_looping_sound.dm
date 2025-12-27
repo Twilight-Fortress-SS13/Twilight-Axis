@@ -6,8 +6,9 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 
 /datum/sound_group/New()
 	. = ..()
-	for(var/channel = 1 to channel_count)
-		reserved_channels |= SSsounds.reserve_sound_channel(src)
+    reserved_channels = list() //TA edit - fix mute loop
+    for(var/channel = 1 to channel_count)
+        reserved_channels += SSsounds.reserve_sound_channel(src) //TA edit - fix mute loop
 
 /datum/sound_group/torches
 	channel_count = 150
@@ -16,7 +17,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	channel_count = 150
 
 /datum/sound_group/instruments
-	channel_count = 10 //probably more than enough
+	channel_count = 32 //probably more than enough //TA edit - fix mute loop
 
 /*
 	parent	(the source of the sound)			The source the sound comes from
@@ -80,7 +81,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 		if(!group)
 			group = new sound_group
 			GLOB.created_sound_groups |= group
-		if(group.last_iter == group.channel_count)
+		if(group.last_iter >= group.channel_count) //TA edit - fix mute loop
 			group.last_iter = 1
 
 		var/picked_channel = group.reserved_channels[group.last_iter]
