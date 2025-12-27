@@ -162,9 +162,13 @@
 		if(!(L.mobility_flags & MOBILITY_STAND))
 			prob2defend *= 0.25
 
-		if(HAS_TRAIT(H, TRAIT_SENTINELOFWITS))
+		if(H && HAS_TRAIT(H, TRAIT_SENTINELOFWITS))
 			var/sentinel = H.calculate_sentinel_bonus()
 			prob2defend += sentinel
+
+		if(UH && HAS_TRAIT(UH, TRAIT_ARMOUR_LIKED))
+			if(HAS_TRAIT(UH, TRAIT_FENCERDEXTERITY))
+				prob2defend -= 10
 
 		prob2defend = clamp(prob2defend, 5, 90)
 

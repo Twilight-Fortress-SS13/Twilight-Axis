@@ -97,7 +97,7 @@
 /obj/item/proc/get_altdetail_color() //this is for extra layers on clothes
 	return altdetail_color
 
-/obj/item/clothing/MiddleClick(mob/user, params)
+/obj/item/clothing/ShiftRightClick(mob/user, params)
 	..()
 	var/mob/living/L = user
 	var/altheld //Is the user pressing alt?

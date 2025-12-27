@@ -1,6 +1,6 @@
 /obj/structure/closet/crate/chest
 	name = "chest"
-	desc = ""
+	desc = "A wooden chest with a lid held on metal hinges."
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "chest3s"
 	base_icon_state = "chest3s"
@@ -72,7 +72,7 @@
 
 /obj/structure/closet/crate/roguecloset
 	name = "closet"
-	desc = ""
+	desc = "A simple wooden closet, used to store whatever it is you would like out of sight."
 	icon = 'icons/roguetown/misc/structure.dmi'
 	base_icon_state = "closet"
 	icon_state = "closet"
@@ -105,6 +105,7 @@
 	icon_state = "closetdark"
 
 /obj/structure/closet/crate/roguecloset/lord
+	desc = "An unusually ornate closet, fit for a lord!"
 	keylock = TRUE
 	lockid = "lord"
 	locked = TRUE

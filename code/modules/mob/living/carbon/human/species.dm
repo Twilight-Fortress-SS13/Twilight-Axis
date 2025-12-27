@@ -1251,7 +1251,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		log_combat(user, target, "punched")
 		if(ishuman(user) && user.mind)
 			var/text = "[bodyzone2readablezone(selzone)]..."
-			user.filtered_balloon_alert(TRAIT_COMBAT_AWARE, text)
+			user.filtered_balloon_alert(TRAIT_COMBAT_AWARE, text, show_self = FALSE)
 
 		if(!nodmg)
 			if(user.limb_destroyer)
@@ -1735,8 +1735,9 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		if(HAS_TRAIT(user, TRAIT_DECEIVING_MEEKNESS))
 			if(prob(10))
 				text = "<i>I can't tell...</i>"
-				user.filtered_balloon_alert(TRAIT_COMBAT_AWARE, text, show_self = FALSE)
-		else
+			else
+				text = null
+		if(text)
 			user.filtered_balloon_alert(TRAIT_COMBAT_AWARE, text, show_self = FALSE)
 
 	if(H.client?.prefs.floating_text_toggles & HITZONE_TEXT)

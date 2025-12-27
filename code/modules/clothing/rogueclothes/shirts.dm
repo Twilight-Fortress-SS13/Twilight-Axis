@@ -183,16 +183,20 @@
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
-/obj/item/clothing/suit/roguetown/shirt/dress/royal/lordcolor(primary,secondary)
+/obj/item/clothing/suit/roguetown/shirt/dress/royal/lordcolor(primary, secondary)
 	detail_color = primary
+	color = secondary
 	update_icon()
+
+	if(ishuman(loc))
+		var/mob/living/carbon/human/H = loc
+		H.update_inv_armor()
 
 /obj/item/clothing/suit/roguetown/shirt/dress/royal/Initialize()
 	. = ..()
+	GLOB.lordcolor += src
 	if(GLOB.lordprimary)
-		lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
-	else
-		GLOB.lordcolor += src
+		lordcolor(GLOB.lordprimary, GLOB.lordsecondary)
 
 /obj/item/clothing/suit/roguetown/shirt/dress/royal/Destroy()
 	GLOB.lordcolor -= src

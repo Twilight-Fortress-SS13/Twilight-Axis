@@ -16,7 +16,8 @@
 	if(!user.cmode)
 		if(ishuman(user) && ishuman(target))
 			var/mob/living/carbon/human/H = user
-			H.attempt_steal(user, target)
+			if(target.Adjacent(H))
+				H.attempt_steal(user, target)
 			return
 	if(user.has_status_effect(/datum/status_effect/debuff/specialcd))
 		return

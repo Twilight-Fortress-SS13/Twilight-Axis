@@ -46,11 +46,11 @@
 	if((src.mind?.assigned_role == "Bishop") && !(world.time < priest_timer_check + 10 SECONDS))
 		priest_timer_check = world.time
 		for(var/mob/living/carbon/human/H in view(7, src))
-			if(HAS_TRAIT(H, TRAIT_CLERGY) && !H.has_status_effect(/datum/status_effect/buff/clergybuff))
+			if(HAS_TRAIT(H, TRAIT_CLERGY_TA) && !H.has_status_effect(/datum/status_effect/buff/clergybuff))
 				H.apply_status_effect(/datum/status_effect/buff/clergybuff)
 
 /area/rogue/Entered(mob/living/carbon/human/guy)
 
 	.=..()
-	if((src.holy_area == TRUE) && HAS_TRAIT(guy, TRAIT_CLERGY) && !guy.has_status_effect(/datum/status_effect/buff/clergybuff) && !HAS_TRAIT(guy, TRAIT_EXCOMMUNICATED) && !HAS_TRAIT(guy, TRAIT_HERESIARCH))
+	if((src.holy_area == TRUE) && HAS_TRAIT(guy, TRAIT_CLERGY_TA) && !guy.has_status_effect(/datum/status_effect/buff/clergybuff) && !HAS_TRAIT(guy, TRAIT_EXCOMMUNICATED) && !HAS_TRAIT(guy, TRAIT_HERESIARCH))
 		guy.apply_status_effect(/datum/status_effect/buff/clergybuff)

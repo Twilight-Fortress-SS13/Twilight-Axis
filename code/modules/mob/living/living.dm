@@ -185,6 +185,9 @@
 			var/self_points = FLOOR((STACON + STASTR)/2, 1)
 			var/target_points = FLOOR((L.STACON + L.STASTR)/2, 1)
 
+			src.log_message("charged into [key_name(M)]", LOG_ATTACK, color="red")  // TA edit
+			M.log_message("has been charged by [key_name(src)]", LOG_ATTACK, color="red") // TA edit
+
 			switch(sprint_distance)
 				// Point blank
 				if(0 to 1)

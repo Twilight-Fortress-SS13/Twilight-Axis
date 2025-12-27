@@ -1,11 +1,11 @@
 /datum/outfit/job/roguetown/templar/monk/pre_equip(mob/living/carbon/human/H)
 	. = ..()
-	ADD_TRAIT(H, TRAIT_CLERGY, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 	H.change_stat(STATKEY_STR, -1)
 
 /datum/outfit/job/roguetown/templar/crusader/pre_equip(mob/living/carbon/human/H)
 	. = ..()
-	ADD_TRAIT(H, TRAIT_CLERGY, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 	H.change_stat(STATKEY_STR, -1)
 	H.change_stat(STATKEY_INT, 1)
 	H.change_stat(STATKEY_SPD, 1)
@@ -134,7 +134,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/angle
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 	// -- End of section for god specific bonuses --
-	ADD_TRAIT(H, TRAIT_CLERGY, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2)	//Capped to T2 miracles.

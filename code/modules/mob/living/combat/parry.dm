@@ -124,6 +124,10 @@
 			var/sentinel = SH.calculate_sentinel_bonus()
 			prob2defend += sentinel
 
+	if(HAS_TRAIT(U, TRAIT_ARMOUR_LIKED))
+		if(HAS_TRAIT(U, TRAIT_FENCERDEXTERITY))
+			prob2defend -= 5
+
 	prob2defend = clamp(prob2defend, 5, 90)
 	if(HAS_TRAIT(user, TRAIT_HARDSHELL) && H.client)	//Dwarf-merc specific limitation w/ their armor on in pvp
 		prob2defend = clamp(prob2defend, 5, 70)

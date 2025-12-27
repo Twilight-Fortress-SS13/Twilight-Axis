@@ -74,6 +74,7 @@
 
 /obj/effect/decal/remains/fox
 	name = "remains"
+	desc = "A wily fox perished here. Never is a beast spry or clever enough, in the end."
 	gender = PLURAL
 	icon_state = "bones"
 	icon = 'icons/roguetown/mob/monster/fox.dmi'

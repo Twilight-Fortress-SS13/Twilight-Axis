@@ -909,9 +909,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donator_zoe_shovel
-	name = "Donator Kit - Silence"
+	name = "Donator Kit - Silence - Required: Shovel"
 	path = /obj/item/enchantingkit/zoe_shovel
-	ckeywhitelist = list("zoetheorc")
+	category = list("Разное", "Донат")
+	donatitem = TRUE
 
 /datum/loadout_item/donator_willmbrink
 	name = "Royal Gown"

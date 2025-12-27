@@ -7,6 +7,7 @@
 
 /obj/structure/stairs
 	name = "stairs"
+	desc = "You use these to go up or down! One of the more defining inventions of our time."
 	icon = 'icons/obj/stairs.dmi'
 	icon_state = "stairs"
 	anchored = TRUE

@@ -48,6 +48,7 @@
 	. = ..(dirin)
 
 /obj/structure/roguewindow/stained
+	desc = "A stained glass window bearing religious imagery."
 	icon_state = null
 	base_state = null
 	opacity = TRUE
@@ -63,6 +64,7 @@
 	base_state = "stained-yellow"
 	
 /obj/structure/roguewindow/stained/zizo
+	desc = "A stained glass window bearing an inverted cross of Psydon, widely considered a heretical symbol."
 	icon_state = "stained-zizo"
 	base_state = "stained-zizo"
 
@@ -72,6 +74,10 @@
 	opacity = TRUE
 	max_integrity = 200
 	integrity_failure = 0.5
+
+/obj/structure/roguewindow/openclose/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Right clicking on the window will open or close it.")
 
 /obj/structure/roguewindow/openclose/OnCrafted(dirin)
 	dir = turn(dirin, 180)

@@ -306,7 +306,7 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 ///Targets with no armor will always take damage, even if no_pen is set.
 ///!This proc is inherently tied to iparent as a rogueweapon type! 
 ///!Do NOT use this for generic "magic" type of damage or if it's called from an obj like a trap!
-/datum/special_intent/proc/apply_generic_weapon_damage(mob/living/target, dam, d_type, zone, bclass, no_pen = FALSE)
+/datum/special_intent/proc/apply_generic_weapon_damage(mob/living/target, dam, d_type, zone, bclass, no_pen = FALSE, full_pen = FALSE)
 	if(!istype(iparent, /obj/item/rogueweapon))
 		return
 	var/obj/item/rogueweapon/W = iparent
@@ -317,6 +317,8 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 		var/armor_block = HT.run_armor_check(zone, d_type, 0, damage = dam, used_weapon = W, armor_penetration = (no_pen ? -999 : 0))
 		if(no_pen && armor_block)
 			armor_block = 999
+		if(full_pen && armor_block)
+			armor_block = 0		//You block NOTHING, sir!
 		if(HT.apply_damage(dam, W.damtype, affecting, armor_block))
 			affecting.bodypart_attacked_by(bclass, dam, howner, armor = armor_block, crit_message = TRUE, weapon = W)
 			msg += "<b> It pierces through to their flesh!</b>"
@@ -434,7 +436,7 @@ SPECIALS START HERE
 /datum/special_intent/shin_swipe
 	name = "Shin Prod"
 	desc = "A hasty attack at the legs, extending ourselves. Slows down the opponent if hit."
-	tile_coordinates = list(list(0,0), list(0,1))
+	tile_coordinates = list(list(0,0), list(1,0), list(-1,0))
 	post_icon_state = "sweep_fx"
 	pre_icon_state = "trap"
 	sfx_post_delay = 'sound/combat/shin_swipe.ogg'
@@ -449,7 +451,6 @@ SPECIALS START HERE
 	dam = W.force_dynamic * max((1 + (((howner.STASPD - 10) + (howner.STAPER - 10)) / 10)), 0.1)
 	. = ..()
 
-
 /datum/special_intent/shin_swipe/apply_hit(turf/T)	//This is applied PER tile, so we don't need to do a big check.
 	for(var/mob/living/L in get_hearers_in_view(0, T))
 		if(L != howner)
@@ -457,6 +458,31 @@ SPECIALS START HERE
 			L.apply_status_effect(/datum/status_effect/debuff/hobbled)	//-2 SPD for 8 seconds
 			if(L.mobility_flags & MOBILITY_STAND)
 				apply_generic_weapon_damage(L, dam, "stab", pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG), bclass = BCLASS_CUT)
+	..()
+
+/datum/special_intent/piercing_lunge
+	name = "Piercing Lunge"
+	desc = "A planned attack at the chest, extending ourselves. Pierces our enemy's armor and knocks the wind from them."
+	tile_coordinates = list(list(0,0), list(0,1))
+	post_icon_state = "stab"
+	pre_icon_state = "trap"
+	sfx_post_delay = 'sound/combat/parry/bladed/bladedsmall (3).ogg'
+	delay = 0.5 SECONDS
+	cooldown = 25 SECONDS
+	stamcost = 20
+	var/dam
+
+/datum/special_intent/piercing_lunge/process_attack()
+	var/obj/item/rogueweapon/W = iparent
+	dam = W.force_dynamic * max((1 + (((howner.STASPD - 10) + (howner.STAPER - 10)) / 10)), 0.1)
+	. = ..()
+
+/datum/special_intent/piercing_lunge/apply_hit(turf/T)
+	for(var/mob/living/L in get_hearers_in_view(0, T))
+		if(L != howner)
+			L.stamina_add(30)	//Drains ~20 stamina from target; attrition warfare.
+			if(L.mobility_flags & MOBILITY_STAND)
+				apply_generic_weapon_damage(L, dam, "stab", BODY_ZONE_CHEST, bclass = BCLASS_STAB, full_pen = TRUE)	//Ignores armor, applies a stab wound with the weapon force.
 	..()
 
 //Hard to hit, freezes you in place. Offbalances & slows the targets hit. If they're already offbalanced they get knocked down.

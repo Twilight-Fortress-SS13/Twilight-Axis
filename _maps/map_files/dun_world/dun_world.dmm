@@ -12101,9 +12101,7 @@
 /area/rogue/indoors/shelter)
 "cZM" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/glass/cup/silver{
-	desc = "A pewter goblet, cheaper than silver, but with a similar shine!";
-	name = "pewter goblet";
+/obj/item/reagent_containers/glass/cup/silver/pewter{
 	pixel_x = 9;
 	pixel_y = 10
 	},
@@ -19655,9 +19653,7 @@
 /area/rogue/under/cave/orcdungeon)
 "eSD" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/glass/cup/silver{
-	desc = "A pewter goblet, cheaper than silver, but with a similar shine!";
-	name = "pewter goblet";
+/obj/item/reagent_containers/glass/cup/silver/pewter{
 	pixel_x = 9;
 	pixel_y = 10
 	},
@@ -29267,12 +29263,8 @@
 /obj/item/kitchen/fork/iron,
 /obj/item/reagent_containers/glass/cup/wooden,
 /obj/item/reagent_containers/glass/cup/wooden,
-/obj/item/reagent_containers/glass/cup/silver{
-	name = "pewter goblet"
-	},
-/obj/item/reagent_containers/glass/cup/silver{
-	name = "pewter goblet"
-	},
+/obj/item/reagent_containers/glass/cup/silver/pewter,
+/obj/item/reagent_containers/glass/cup/silver/pewter,
 /obj/item/reagent_containers/glass/cup,
 /obj/item/reagent_containers/glass/cup,
 /obj/structure/closet/crate/roguecloset/inn,
@@ -37995,9 +37987,7 @@
 /area/rogue/under/cave/peace)
 "jvx" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/glass/cup/silver{
-	desc = "A pewter goblet, cheaper than silver, but with a similar shine!";
-	name = "pewter goblet";
+/obj/item/reagent_containers/glass/cup/silver/pewter{
 	pixel_x = -10;
 	pixel_y = 4
 	},
@@ -42369,9 +42359,7 @@
 	pixel_x = -12;
 	pixel_y = 8
 	},
-/obj/item/reagent_containers/glass/cup/silver{
-	desc = "A pewter goblet, cheaper than silver, but with a similar shine!";
-	name = "pewter goblet";
+/obj/item/reagent_containers/glass/cup/silver/pewter{
 	pixel_x = -11
 	},
 /turf/open/floor/rogue/blocks,
@@ -43711,9 +43699,7 @@
 "kPx" = (
 /obj/structure/table/wood/map/three,
 /obj/item/candle/silver/lit,
-/obj/item/reagent_containers/glass/cup/silver{
-	desc = "A pewter goblet, cheaper than silver, but with a similar shine!";
-	name = "pewter goblet";
+/obj/item/reagent_containers/glass/cup/silver/pewter{
 	pixel_x = -11
 	},
 /turf/open/floor/carpet/royalblack,
@@ -72018,8 +72004,7 @@
 /area/rogue/outdoors/rtfield/abandonedhotsprings)
 "rSH" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/glass/cup/silver{
-	name = "pewter goblet";
+/obj/item/reagent_containers/glass/cup/silver/pewter{
 	pixel_x = -11
 	},
 /obj/item/kitchen/fork/gold{
@@ -82820,9 +82805,7 @@
 /area/rogue/outdoors/mountains/decap/gunduzirak)
 "uAp" = (
 /obj/structure/table/wood/map/six,
-/obj/item/reagent_containers/glass/cup/silver{
-	desc = "A pewter goblet, cheaper than silver, but with a similar shine!";
-	name = "pewter goblet";
+/obj/item/reagent_containers/glass/cup/silver/pewter{
 	pixel_x = -11
 	},
 /obj/item/candle/silver/lit,
@@ -88183,8 +88166,7 @@
 /obj/item/roguekey/church,
 /obj/item/roguekey/church,
 /obj/item/needle/thorn,
-/obj/item/reagent_containers/glass/cup/silver{
-	name = "pewter goblet";
+/obj/item/reagent_containers/glass/cup/silver/pewter{
 	pixel_x = -11
 	},
 /turf/open/floor/rogue/herringbone,
@@ -91406,8 +91388,7 @@
 /area/rogue/indoors/shelter/mountains/decap)
 "wFY" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/glass/cup/silver{
-	name = "pewter goblet";
+/obj/item/reagent_containers/glass/cup/silver/pewter{
 	pixel_x = -11
 	},
 /obj/item/kitchen/fork/silver{

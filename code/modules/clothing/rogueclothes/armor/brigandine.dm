@@ -172,8 +172,8 @@
 /obj/item/clothing/suit/roguetown/armor/brigandine/haraate/attack_right(mob/user)
 	..()
 	if(!picked)
-		var/choice = input(user, "Choose a color.", "Uniform colors") as anything in colorlist
-		var/playerchoice = colorlist[choice]
+		var/choice = input(user, "Choose a color.", "Uniform colors") as anything in COLOR_MAP
+		var/playerchoice = COLOR_MAP[choice]
 		picked = TRUE
 		detail_color = playerchoice
 		detail_tag = "_detail"

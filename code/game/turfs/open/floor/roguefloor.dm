@@ -208,7 +208,7 @@
 
 /turf/open/floor/rogue/AzureSand
 	name = "sand"
-	desc = "Warm sand that, sadly, have been mixed with dirt."
+	desc = "Warm sand that, sadly, has been mixed with dirt."
 	icon_state = "grimshart"
 	layer = MID_TURF_LAYER
 	footstep = FOOTSTEP_SAND

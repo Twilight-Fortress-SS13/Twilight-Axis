@@ -17,6 +17,9 @@
 	salvage_result = /obj/item/natural/hide/cured
 	chunkcolor = "#7e5d17"
 
+/obj/item/clothing/suit/roguetown/armor/leather/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
+
 /obj/item/clothing/suit/roguetown/armor/leather/vest/winterjacket
 	name = "winter jacket"
 	desc = "The most elegant of furs and vivid of royal dyes combined together into a most classy jacket."
@@ -96,7 +99,10 @@
 	smeltresult = /obj/item/ingot/iron
 	sellprice = 25
 	armor_class = ARMOR_CLASS_LIGHT
-	
+
+/obj/item/clothing/suit/roguetown/armor/leather/studded/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+
 /obj/item/clothing/suit/roguetown/armor/leather/studded/psyaltrist
 	name = "cuir-bouilli armor"
 	desc = "Treated, water-boiled and composite-layered leather armor of fine Otavan make."
