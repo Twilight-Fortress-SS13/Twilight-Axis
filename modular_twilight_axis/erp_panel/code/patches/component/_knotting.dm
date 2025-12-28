@@ -3,7 +3,7 @@
 
 /datum/component/knotting/apply_knot(mob/living/carbon/human/user, mob/living/carbon/human/target, force_level, knot_count_param = 1)
 	. = ..()
-	if(!islupian(target))
+	if(!islupian(user))
 		record_round_statistic(STATS_KNOTTED_NOT_LUPIANS)
 	record_round_statistic(STATS_KNOTTED)
 
