@@ -34,7 +34,7 @@
 	injection_amount = organ.penis_size
 
 	switch(organ.penis_type)
-		if(PENIS_TYPE_KNOTTED, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED, PENIS_TYPE_BARBED_KNOTTED)
+		if(PENIS_TYPE_KNOTTED, PENIS_TYPE_TAPERED, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED, PENIS_TYPE_BARBED_KNOTTED)
 			have_knot = TRUE
 		else
 			have_knot = FALSE
