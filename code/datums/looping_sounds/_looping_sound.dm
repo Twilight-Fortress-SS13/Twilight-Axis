@@ -6,9 +6,9 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 
 /datum/sound_group/New()
 	. = ..()
-    reserved_channels = list() //TA edit - fix mute loop
-    for(var/channel = 1 to channel_count)
-        reserved_channels += SSsounds.reserve_sound_channel(src) //TA edit - fix mute loop
+	reserved_channels = list() //TA edit - fix mute loop
+	for(var/channel = 1 to channel_count)
+		reserved_channels += SSsounds.reserve_sound_channel(src) //TA edit - fix mute loop
 
 /datum/sound_group/torches
 	channel_count = 150
