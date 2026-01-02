@@ -37,6 +37,7 @@
 	var/production_interval = 5 SECONDS
 	var/drain_interval = 5 MINUTES
 	var/block_drain = FALSE
+	var/production_blocked_until = 0
 
 /datum/sex_organ/body
 
@@ -116,12 +117,19 @@
 	if(!producing_reagent_id || producing_reagent_rate <= 0)
 		return FALSE
 
+	if(world.time < production_blocked_until)
+		return FALSE
+
 	if(!next_production_time)
 		next_production_time = world.time + production_interval
 
 	return TRUE
 
 /datum/sex_organ/proc/on_production_tick()
+	if(world.time < production_blocked_until)
+		next_production_time = world.time + production_interval
+		return
+
 	if(!has_storage())
 		next_production_time = 0
 		return
@@ -142,10 +150,10 @@
 			if(arousal_object)
 				arousal_object.on_sex_organ_produced(src, produced)
 
-	if(has_storage() && producing_reagent_id && producing_reagent_rate > 0)
-		next_production_time = world.time + production_interval
-	else
-		next_production_time = 0
+	next_production_time = world.time + production_interval
+
+/datum/sex_organ/proc/block_production(time)
+	production_blocked_until = max(production_blocked_until, world.time + time)
 
 /datum/sex_organ/proc/insert_organ(datum/sex_organ/organ)
 	if(!stuff_object)
@@ -331,6 +339,7 @@
 		if(active_target.can_receive_liquid(amount))
 			moved = stored_liquid.trans_to(active_target.stored_liquid, amount)
 			if(moved > 0)
+				block_production(10 SECONDS)
 				active_target.renew_timer(drain_interval)
 				mode = INJECT_MODE_ORGAN
 				on_after_inject(mode, moved, get_owner(), active_target, null, null)
@@ -339,6 +348,7 @@
 	if(container && is_valid_liquid_container(container) && !(container in blocked_containers))
 		moved = stored_liquid.trans_to(container.reagents, amount)
 		if(moved > 0)
+			block_production(10 SECONDS)
 			mode = INJECT_MODE_CONTAINER
 			on_after_inject(mode, moved, get_owner(), active_target, container, null)
 			return moved
@@ -347,6 +357,7 @@
 	if(user_cont && is_valid_liquid_container(user_cont) && !(user_cont in blocked_containers))
 		moved = stored_liquid.trans_to(user_cont.reagents, amount)
 		if(moved > 0)
+			block_production(10 SECONDS)
 			mode = INJECT_MODE_CONTAINER
 			on_after_inject(mode, moved, get_owner(), active_target, user_cont, null)
 			return moved
@@ -360,12 +371,14 @@
 			new /obj/effect/decal/cleanable/coom/milk(turf_object)
 		moved = drain_uniform(amount)
 		if(moved > 0)
+			block_production(10 SECONDS)
 			mode = INJECT_MODE_GROUND
 			on_after_inject(mode, moved, human_object, active_target, null, turf_object)
 			return moved
 
 	moved = drain_uniform(amount)
 	if(moved > 0)
+		block_production(10 SECONDS)
 		on_after_inject(mode, moved, human_object, active_target, null, turf_object)
 	return moved
 
