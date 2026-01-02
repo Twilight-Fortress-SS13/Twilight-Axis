@@ -1,12 +1,6 @@
 /datum/component/knotting
 	var/movement_timer_id
 
-/datum/component/knotting/apply_knot(mob/living/carbon/human/user, mob/living/carbon/human/target, force_level, knot_count_param = 1)
-	. = ..()
-	if(!islupian(user))
-		record_round_statistic(STATS_KNOTTED_NOT_LUPIANS)
-	record_round_statistic(STATS_KNOTTED)
-
 /datum/component/knotting/should_remove_knot_on_movement(mob/living/carbon/human/top, mob/living/carbon/human/btm)
 	var/list/arousal_data = list()
 	SEND_SIGNAL(top, COMSIG_SEX_GET_AROUSAL, arousal_data)
@@ -211,6 +205,10 @@
 	RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(knot_movement))
 
 	log_combat(user, target, "Started knot tugging")
+
+	if(!islupian(user))
+		record_round_statistic(STATS_KNOTTED_NOT_LUPIANS)
+	record_round_statistic(STATS_KNOTTED)
 
 /datum/component/knotting/knot_exit(keep_top_status = FALSE, keep_btm_status = FALSE)
 	var/mob/living/carbon/human/top = knotted_owner
