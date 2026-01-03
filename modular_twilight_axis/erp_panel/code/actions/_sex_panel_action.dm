@@ -244,6 +244,10 @@
 	if(!can_knot || !user || !target)
 		return FALSE
 
+	var/datum/component/knotting/K = user.GetComponent(/datum/component/knotting)
+	if(K && K.knotted_status == KNOTTED_AS_TOP)
+		return FALSE
+
 	var/datum/sex_session_tgui/session = get_or_create_sex_session_tgui(user, target)
 	if(!session)
 		return FALSE

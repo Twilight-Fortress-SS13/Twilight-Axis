@@ -1612,7 +1612,8 @@
 	if(a_type == SEX_ORGAN_PENIS && U)
 		var/datum/component/knotting/K = U.GetComponent(/datum/component/knotting)
 		if(K && K.knotted_status == KNOTTED_AS_TOP && K.knotted_recipient)
-			return FALSE
+			if(A.can_knot)
+				return FALSE
 
 	if(A.required_init && a_type && A.required_init != a_type)
 		return FALSE

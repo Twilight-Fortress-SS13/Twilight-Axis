@@ -157,10 +157,11 @@
 	var/self_pain_delta   = self_pain_base   * total_pain_mult
 	var/target_pain_delta = target_pain_base * total_pain_mult
 
+	var/block_knot = FALSE
 	if(A && T)
 		var/datum/component/knotting/K = A.GetComponent(/datum/component/knotting)
 		if(K && K.knotted_status == KNOTTED_AS_TOP && K.knotted_recipient == T)
-			return
+			block_knot = TRUE
 
 	if(src_org && self_pain_delta > 0)
 		src_org.adjust_pain(self_pain_delta)
