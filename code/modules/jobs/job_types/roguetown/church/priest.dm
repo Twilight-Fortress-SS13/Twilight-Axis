@@ -277,7 +277,6 @@ GLOBAL_LIST_EMPTY(heretical_players)
 		ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/ravox)
 		ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
-		ADD_TRAIT(H, TRAIT_BATTLEMASTER, TRAIT_GENERIC)
 
 /datum/job/priest/vice //just used to change the priest title
 	title = "Vice Priest"
@@ -679,6 +678,10 @@ code\modules\admin\verbs\divinewrath.dm has a variant with all the gods so keep 
 	var/mob/living/carbon/human/target = targets[1]
 
 	if(!ishuman(target))
+		revert_cast()
+		return FALSE
+
+	if(target.cmode)
 		revert_cast()
 		return FALSE
 

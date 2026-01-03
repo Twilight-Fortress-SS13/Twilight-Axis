@@ -883,6 +883,11 @@
 		if(flavortext || displayed_headshot || ooc_notes)
 			. += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a>"
 
+	/// Rumours & Gossip
+	if(length(rumour) || length(noble_gossip))
+		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
+
 	if(lip_style)
 		switch(lip_color)
 			if("red")
@@ -1036,6 +1041,8 @@
 				villain_text = span_notice("Free man!")
 			if(HAS_TRAIT(src,TRAIT_KNOWNCRIMINAL))
 				villain_text = span_userdanger("BANDIT!")
+		if(mind.special_role == "Deadite")
+			villain_text = span_userdanger("DEADITE!")
 		if(mind.special_role == "Vampire Lord")
 			var/datum/antagonist/vampire/VD = mind.has_antag_datum(/datum/antagonist/vampire)
 			if(!SEND_SIGNAL(VD.owner, COMSIG_DISGUISE_STATUS))

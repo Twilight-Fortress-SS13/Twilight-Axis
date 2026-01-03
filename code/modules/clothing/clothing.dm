@@ -28,6 +28,7 @@
 	var/emote_environment = -1
 	var/prevent_crits = PREVENT_CRITS_MOST
 	var/clothing_flags = NONE
+	var/stack_fovs = FALSE
 
 	salvage_result = /obj/item/natural/cloth
 	salvage_amount = 1

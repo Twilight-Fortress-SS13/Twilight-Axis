@@ -499,6 +499,7 @@
 	icon_state = "ravoxhammer"
 	gripped_intents = list(/datum/intent/mace/strike, /datum/intent/mace/smash, /datum/intent/effect/daze) // It loses the Goden stab so I give it daze
 	max_integrity = 400 // I am reluctant to give a steel goden more force as it breaks weapon so durability it is.
+	special = /datum/special_intent/ground_smash
 
 /obj/item/rogueweapon/mace/goden/psymace
 	name = "psydonic mace"

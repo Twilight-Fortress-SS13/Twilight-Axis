@@ -1,0 +1,4 @@
+author: "SpadesNeil"
+delete-after: True
+changes:
+  - qol: "Tree stumps and fallen ancient logs no longer block projectiles."

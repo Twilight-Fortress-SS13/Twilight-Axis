@@ -1,6 +1,0 @@
-author: "dopamiin0"
-delete-after: True
-changes:
-  - rscadd: "anything that can pick or pierce can be used to cook meat"
-  - bugfix: "pewter cups no longer burn the undead"
-  - bugfix: "crafting aragn essence properly consumes all ingredients"

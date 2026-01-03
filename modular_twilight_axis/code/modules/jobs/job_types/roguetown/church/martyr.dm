@@ -36,12 +36,12 @@
 
 /atom/movable/screen/alert/status_effect/buff/order/martyr_guidance
 	name = "Dictat of Noc"
-	desc = "My captain has blessed me with Noc's guidance!"
+	desc = "The Martyr has blessed me with Noc's guidance!"
 	icon_state = "buff"
 
 /datum/status_effect/buff/order/martyr_guidance/on_apply()
 	. = ..()
-	to_chat(owner, span_blue("My captain has blessed me with Noc's guidance!"))
+	to_chat(owner, span_blue("The Martyr has blessed me with Noc's guidance!"))
 
 /obj/effect/proc_holder/spell/invoked/order/martyr_guidance/cast(list/targets, mob/living/user)
 	. = ..()
@@ -96,12 +96,12 @@
 
 /atom/movable/screen/alert/status_effect/buff/order/martyr_expedite
 	name = "Dictat of Xylix"
-	desc = "My captain has blessed me with Xylix's guidance!"
+	desc = "The Martyr has blessed me with Xylix's guidance!"
 	icon_state = "buff"
 
 /datum/status_effect/buff/order/martyr_expedite/on_apply()
 	. = ..()
-	to_chat(owner, span_blue("My captain has blessed me with Xylix's guidance!"))
+	to_chat(owner, span_blue("The Martyr has blessed me with Xylix's guidance!"))
 
 /obj/effect/proc_holder/spell/invoked/order/martyr_expedite/cast(list/targets, mob/living/user)
 	. = ..()
@@ -154,12 +154,12 @@
 
 /atom/movable/screen/alert/status_effect/buff/order/martyr_onfeet
 	name = "Dictat of Ravox"
-	desc = "My captain has blessed me with Ravox's guidance!"
+	desc = "The Martyr has blessed me with Ravox's guidance!"
 	icon_state = "buff"
 
 /datum/status_effect/buff/order/martyr_onfeet/on_apply()
 	. = ..()
-	to_chat(owner, span_blue("My captain has blessed me with Ravox's guidance!"))
+	to_chat(owner, span_blue("The Martyr has blessed me with Ravox's guidance!"))
 
 /datum/status_effect/buff/order/martyr_onfeet/church/on_apply()
 	. = ..()
@@ -238,12 +238,12 @@
 
 /atom/movable/screen/alert/status_effect/buff/order/martyr_laststand
 	name = "Dictat of Malum"
-	desc = "My captain has blessed me with Malum's guidance!"
+	desc = "The Martyr has blessed me with Malum's guidance!"
 	icon_state = "buff"
 
 /datum/status_effect/buff/order/martyr_laststand/on_apply()
 	. = ..()
-	to_chat(owner, span_blue("My captain has blessed me with Malum's guidance!"))
+	to_chat(owner, span_blue("The Martyr has blessed me with Malum's guidance!"))
 
 /obj/effect/proc_holder/spell/invoked/order/martyr_laststand/cast(list/targets, mob/living/user)
 	. = ..()

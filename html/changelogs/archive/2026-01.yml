@@ -1,0 +1,70 @@
+2026-01-01:
+  Antoonij:
+  - bugfix: fixed rituos spellpoints stacking/speedrunning
+  FreeStylaLT:
+  - rscadd: Adds the functionality for Tempo -- a buff to an outnumbered fighter.
+      Only Jester has it at the moment.
+  - bugfix: Fixed Fated statpack second virtue not working correctly.
+  - sound: Two new Round End tracks to replace the old one.
+  - rscadd: New Polearm Special -- the Backstep.
+  - rscadd: New weapon feature -- effective range. Attacking a non-prone target outside
+      of it will do half damage and have no penetration.
+  - balance: Spear Stab now has an effective range of 2 tiles.
+  - balance: Spear Stab's penfactor has been increased (50 -> 55).
+  - balance: Spear Cut no longer has reduced damage.
+  - balance: Bardiche lost its thrust, replaced with a one-tile chop.
+  - balance: Bardiche is now heavy-balanced.
+  - balance: Halberd gained a one-tile chop.
+  Geevies:
+  - qol: SCOMM Machines, such as the Crownstone or the Crown itself will now show
+      you your own message when sent.
+  - rscadd: You can now select the keep colours when using a dye station or when choosing
+      tabard heraldry.
+  - bugfix: Using the dye station will now automatically update the UI.
+  - balance: Garrison line access is no longer inherent to your job, but rather whether
+      you're wearing the Crown, a Crownstone, or a Houndstone.
+  JustSomeGalSS13:
+  - rscadd: Spell for Absolvers that converts people to Psydonism
+  SillyMoff:
+  - bugfix: fixed mrro emote
+  ToasterStrudes:
+  - balance: Mages are now able to use RMB Defense intents, however if mage armor
+      is up it will be dropped and put on it's cooldown as if you were struck with
+      it up.
+  hazelrat:
+  - rscadd: Added several more descriptions to objects, structures, and mobs in the
+      game world.
+  - bugfix: Fixed a few typos in existing descriptions.
+  nauticall:
+  - rscadd: Added Eggplant, Madder, Wisteria, Wine Red, Gulf Blue, Burlap, Violet,
+      and Tan colors. Adjusted Gold Metallic to be more desaturated.
+  - code_imp: Cleaned up colors.dm to remove redundant variables and defines, as well
+      as some leftover brigandine color code still using the old system.
+2026-01-02:
+  Lamasmaster:
+  - rscadd: Seafood tab in stockpile
+  SillyMoff:
+  - balance: 'rebalanced direbear form
+
+      +Crit resist
+
+      +No pain stun
+
+      Defense of claws now 6 (was 2)
+
+      Penetration is 40 (was 10)
+
+      Force 25 (was 20)
+
+      CON now 14 (was 12)
+
+      WIL now 13 (was 12)
+
+      PER now 8 (was 10)
+
+      INT now 8 (was 10)'
+  SirSwagmeyer:
+  - rscadd: Added an aesthetic version of the steel half-plate to the Templars.
+  hazelrat:
+  - rscadd: Added a new longknife available to Wardens and Assassin Rangers.
+  - bugfix: Fireplaces now use the correct subtype on all maps.

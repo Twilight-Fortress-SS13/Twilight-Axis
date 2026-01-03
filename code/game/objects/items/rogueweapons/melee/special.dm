@@ -557,7 +557,7 @@
 /obj/item/rogueweapon/spear/militia
 	force = 18
 	force_wielded = 30
-	possible_item_intents = list(SPEAR_THRUST, SPEAR_BASH)
+	possible_item_intents = list(SPEAR_THRUST_1H, SPEAR_CUT_1H) 
 	gripped_intents = list(SPEAR_THRUST, SPEAR_CUT, SPEAR_BASH)
 	name = "militia spear"
 	desc = "Pitchforks and hoes traditionally till the soil. In tymes of peril, however, it isn't uncommon for a militiaman to pound them into polearms."
@@ -751,6 +751,13 @@
 	wdefense = 2
 	wdefense_wbonus = 4
 	wbalance = WBALANCE_NORMAL
+/obj/item/rogueweapon/pick/militia/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.6,"sx" = -11,"sy" = -10,"nx" = 13,"ny" = -9,"wx" = -7,"wy" = -9,"ex" = 7,"ey" = -11,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 90,"sturn" = -90,"wturn" = -90,"eturn" = 90,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+
 
 /obj/item/rogueweapon/pick/militia/steel
 	force = 25
@@ -766,6 +773,13 @@
 	wdefense = 3
 	wdefense_wbonus = 5
 	wbalance = WBALANCE_HEAVY
+/obj/item/rogueweapon/pick/militia/steel/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.6,"sx" = -11,"sy" = -10,"nx" = 13,"ny" = -9,"wx" = -7,"wy" = -9,"ex" = 7,"ey" = -11,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 90,"sturn" = -90,"wturn" = -90,"eturn" = 90,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+
 
 /obj/item/rogueweapon/sword/falchion/militia
 	name = "maciejowski"

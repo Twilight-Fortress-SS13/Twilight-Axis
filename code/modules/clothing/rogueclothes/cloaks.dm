@@ -81,12 +81,19 @@
 			return
 		design = "_[design]"
 		symbol_chosen = TRUE
-	var/colorone = input(user, "Select a primary color.","Tabard Design") as null|anything in COLOR_MAP
+	var/list/colors_to_pick = list()
+	if(GLOB.lordprimary)
+		colors_to_pick["Primary Keep Color"] = GLOB.lordprimary
+	if(GLOB.lordsecondary)
+		colors_to_pick["Secondary Keep Color"] = GLOB.lordsecondary
+	var/list/color_map_list = COLOR_MAP
+	colors_to_pick += color_map_list.Copy()
+	var/colorone = input(user, "Select a primary color.","Tabard Design") as null|anything in colors_to_pick
 	if(!colorone)
 		return
 	var/colortwo
 	if(design != "None")
-		colortwo = input(user, "Select a secondary color.","Tabard Design") as null|anything in COLOR_MAP
+		colortwo = input(user, "Select a secondary color.","Tabard Design") as null|anything in colors_to_pick
 		if(!colortwo)
 			return
 	if(world.time > (the_time + 30 SECONDS))
@@ -103,9 +110,9 @@
 		if("Diamonds")
 			detail_tag = "_dim"
 	boobed_detail = !symbol_chosen
-	color = COLOR_MAP[colorone]
+	color = colors_to_pick[colorone]
 	if(colortwo)
-		detail_color = COLOR_MAP[colortwo]
+		detail_color = colors_to_pick[colortwo]
 	update_icon()
 	if(ismob(loc))
 		var/mob/L = loc
@@ -197,7 +204,7 @@
 	alternate_worn_layer = TABARD_LAYER
 	boobed = FALSE
 	name = "astratan tabard"
-	desc = "The washed out golds of an asratan crusader adorn these fine robes."
+	desc = "The washed out golds of an Astratan crusader adorn these fine robes."
 	icon_state = "astratatabard"
 	resistance_flags = FIRE_PROOF
 
@@ -1066,6 +1073,18 @@
 	inhand_mod = TRUE
 	salvage_result = /obj/item/natural/fibers
 	salvage_amount = 2
+
+/obj/item/clothing/cloak/wickercloak/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/storage/concrete/roguetown/cloak)
+
+/obj/item/clothing/cloak/wickercloak/dropped(mob/living/carbon/human/user)
+	..()
+	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
+	if(STR)
+		var/list/things = STR.contents()
+		for(var/obj/item/I in things)
+			STR.remove_from_storage(I, get_turf(src))
 
 /obj/item/clothing/cloak/tribal
 	name = "tribal pelt"

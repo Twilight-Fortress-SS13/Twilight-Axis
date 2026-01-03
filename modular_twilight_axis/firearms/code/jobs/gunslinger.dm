@@ -1,6 +1,6 @@
 /datum/advclass/mercenary/twilight_gunslinger
 	name = "Gunslinger"
-	tutorial = "As gunpowder becomes more widespread accross Grimoria, so do the Gunslingers - those who earn their living through their skill with those advanced weapons. Excelling both with your pistol and your trusty saber, you count yourself as one of these fine gentlemen, travelling the land with but a gun in your hand."
+	tutorial = "As gunpowder becomes more widespread accross Psydonia, so do the Gunslingers - those who earn their living through their skill with those advanced weapons. Excelling both with your pistol and your trusty saber, you count yourself as one of these fine gentlemen, travelling the land with but a gun in your hand."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_gunslinger
@@ -16,13 +16,14 @@
 		STATKEY_STR = 1,
 		STATKEY_PER = 2,
 		STATKEY_CON = 1,
-		STATKEY_SPD = 1,
+		STATKEY_SPD = 2,
 		STATKEY_WIL = 2,
 	)
 	subclass_skills = list(
 		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
-		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
@@ -54,11 +55,11 @@
 			gloves = /obj/item/clothing/gloves/roguetown/leather
 			head = /obj/item/clothing/head/roguetown/bucklehat/gunslinger
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
-			backpack_contents = list(/obj/item/roguekey/mercenary = 1, /obj/item/twilight_powderflask = 1, /obj/item/rogueweapon/huntingknife = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
+			backpack_contents = list(/obj/item/roguekey/mercenary = 1, /obj/item/twilight_powderflask = 1, /obj/item/rogueweapon/huntingknife = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1, /obj/item/rogueweapon/scabbard/sheath = 1)
 		if("Otavan Dragoon")
 			H.set_blindness(0)
 			to_chat(H, span_warning("Having left the ranks of the Otavan militant orders, you set off into the wider world, selling your combat skills to the highest bidder. Your rare runelock firearm, once awarded to you for your service, is now your primary tool of the trade."))
-			if(istype(H.patron, /datum/patron/inhumen/zizo) || istype(H.patron, /datum/patron/inhumen/matthios) || istype(H.patron, /datum/patron/inhumen/graggar) || istype(H.patron, /datum/patron/inhumen/baotha))
+			if(!istype(H.patron, /datum/patron/old_god))
 				to_chat(H, span_warning("Even if Inhumen once watched over me, my loyalty to them did not survive the trials of Otava. Psydon is one true God!"))
 				H.set_patron(/datum/patron/old_god)
 			H.adjust_skillrank(/datum/skill/misc/riding, 3, TRUE)
@@ -70,12 +71,12 @@
 			gloves = /obj/item/clothing/gloves/roguetown/otavan
 			head = /obj/item/clothing/head/roguetown/duelhat/gunslinger
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
-			backpack_contents = list(/obj/item/roguekey/mercenary = 1, /obj/item/rogueweapon/huntingknife = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
+			backpack_contents = list(/obj/item/roguekey/mercenary = 1, /obj/item/rogueweapon/huntingknife = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1, /obj/item/rogueweapon/scabbard/sheath = 1)
 			H.merctype = 10
 			H.grant_language(/datum/language/otavan)
 
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
-	belt = /obj/item/storage/belt/rogue/leather/black
+	belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
 	neck = /obj/item/clothing/neck/roguetown/gorget
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass

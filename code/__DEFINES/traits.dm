@@ -63,6 +63,7 @@
 #define TRAIT_POLYTHEIST "Polytheist"
 #define TRAIT_MONOTHEIST "Monotheist"
 #define TRAIT_GUARDSMAN "Vigilant Guardsman"
+#define TRAIT_GUARDSMAN_DISGRACED "Disgraced Guardsman"
 #define TRAIT_TAVERN_FIGHTER "Tavern Fighter"
 #define TRAIT_FROZEN_STAMINA "Frozen Stamina"
 #define TRAIT_WOODSMAN "Talented Woodsman"
@@ -228,6 +229,7 @@
 #define TRAIT_PESTRAS_BLESSING "Pestra's blessing"
 #define TRAIT_ADRENALINE_RUSH "Adrenaline Rush"
 #define TRAIT_COMBAT_AWARE	"Combat Aware"
+#define TRAIT_TEMPO	"Tempo Capable"
 #define TRAIT_SILVER_WEAK "Silver Weakness"
 #define TRAIT_ASSASSIN	"Assassin"
 #define TRAIT_EQUESTRIAN "Equestrian"
@@ -237,6 +239,7 @@
 #define TRAIT_DUSTABLE "Dustable"
 #define TRAIT_SECONDLIFE "Second Life"
 #define TRAIT_QUICKSILVERRESISTANT "Quicksilver Resistance"
+#define TRAIT_GARRISON_ITEM "Garrison Item"
 
 // Economic Roles Traits
 // Most of these should NOT be given to any true combat roles (I.E. anything with Dexpert or Miracle / Good Magic) with very few exceptions
@@ -272,6 +275,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_UNDIVIDED = span_info("I have seen past petty squabbles, and am a true follower of the Ten Undivided. I feel most comfortable around churchmen."),
 	TRAIT_TAVERN_FIGHTER = span_info("I am vigilant in my duties. The Tavern is my home, none shall dare oppose me or skip out on payment."),
 	TRAIT_GUARDSMAN = span_info("I am vigilant in my duties. In the town of Twilight Axis, my abilities are sharper due to my routine and familiarity."),
+	TRAIT_GUARDSMAN_DISGRACED = span_warning("I have betrayed my oath. My vigilance falters in the town. I must beg forgiveness to restore my honor, or see my betrayal through to the end."),
 	TRAIT_WOODSMAN = span_info("I am vigilant in my duties. In the grove and coast of Twilight Axis, my abilities are sharper due to my routine and familiarity."),
 	TRAIT_DEATHBARGAIN = span_info("A horrible deal has been prepared in your name. May you never see it fulfilled..."),
 	TRAIT_RITUALIST = span_info("I am skilled in the holy arts. Using ritual chalk, I can more deftly channel my God's powers via runes."),
@@ -340,7 +344,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_NOSLEEP = span_warning("I can't sleep."),
 	TRAIT_ROT_EATER = span_necrosis("I can eat rotten food."),
 	TRAIT_ORGAN_EATER = span_bloody("I can eat organs and raw flesh."),
-	TRAIT_KNEESTINGER_IMMUNITY = "I am immune to the shock of kneestingers.",
+	TRAIT_KNEESTINGER_IMMUNITY = "I am immune to the shock of kneestingers and vines.",
 	TRAIT_SOUL_EXAMINE = span_deadsay("I know when someone's soul has departed."),
 	TRAIT_CRACKHEAD = span_love("I can use drugs as much as I want!"),
 	TRAIT_COMMIE = span_bloody("I can recognize other free men, and they can recognize me too."),
@@ -458,6 +462,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_SELF_SUSTENANCE = span_greentext("Yils of experience running from the law and living off the land have made me a jack of all trades. All crafting and labor skills can progress to Journeyman levels."),
 	TRAIT_SILVER_WEAK = span_warning("Silver is the greatest threat to my lyfe. Blows from silver weapons will set me alight, inhibit my ability to regenerate, and - if blessed - can outright destroy my vessel."),
 	TRAIT_COMBAT_AWARE = span_notice("My honed senses and intuition allow me to spot notable things in the midst of battle with ease."),
+	TRAIT_TEMPO	= span_greentext("I can keep up with multiple opponents at once."),
 	TRAIT_RACISMISBAD = span_warning("The Black Oaks can spot ANY Foreigners and Outsiders, no matter how long they've lived in Azuria. This is an easy skill to master, as it is simply identifying who isn't an elf."),
 	TRAIT_DREAMWALKER = span_warning("I walk the dream and reality at the same time. My mind frays, but my vision shall be reality."),
 	TRAIT_ENGINEERING_GOGGLES = span_warning("I can see structural details others can't."),
@@ -476,8 +481,11 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_QUICKSILVERRESISTANT = span_warning("Quick silver won't work to cure me..."),
 	TRAIT_SHIRTLESS = span_warning("For one reason or another, I can't bear the idea of covering myself from the middle upwards."),
 	TRAIT_NODEF = span_warning("I expose myself in battle completely."),
+	TRAIT_GARRISON_ITEM = span_notice("I'm wearing an item that marks me as part of, or in command of, the garrison. I am able to interact with certain garrison-only equipment."),
+
 	TRAIT_CLERGY_TA = span_notice("My oath empowers me when I am within the Temple's walls, or near my spiritual guide, the Bishop."), //TA TRAITS FROM HERE
 	TRAIT_FIREARMS_MARKSMAN = span_greentext("I'm an experienced gunslinger, and have spent many years learning to shoot firearms accurately over great distances. Firearms can progress to Legendary levels."),
+
 ))
 
 // trait accessor defines

@@ -33,6 +33,11 @@
 	damfactor = 1.2 //36 on battleaxe
 	penfactor = 40
 
+/datum/intent/axe/chop/battle/halberd
+	damfactor = 1.3
+	swingdelay = 12
+	penfactor = 20
+
 /datum/intent/axe/cut/battle
 	penfactor = 25
 
@@ -256,6 +261,8 @@
 	icon_state = "abyssoraxe"
 	icon = 'icons/roguetown/weapons/axes32.dmi'
 	max_integrity = 400 // higher int than usual
+	possible_item_intents = list(/datum/intent/axe/cut,/datum/intent/axe/chop, /datum/intent/mace/warhammer/pick, /datum/intent/axe/bash)
+	gripped_intents = list(/datum/intent/axe/cut,/datum/intent/axe/chop, /datum/intent/sword/peel, /datum/intent/axe/bash)
 
 //Pickaxe-axe ; Technically both a tool and a weapon, but it goes here due to weapon function. Subtype of woodcutter axe, mostly a weapon.
 /obj/item/rogueweapon/stoneaxe/woodcut/pick
@@ -289,6 +296,9 @@
 	max_integrity = 100 // Half of the norm
 	icon_state = "chatchet"
 	smeltresult = /obj/item/ingot/copper
+	throwforce = 20 //You ever had an axe thrown at you? 
+	throw_speed = 3 
+	armor_penetration = 20
 
 /obj/item/rogueweapon/stoneaxe/handaxe
 	force = 19
@@ -301,6 +311,10 @@
 	smeltresult = /obj/item/ingot/iron
 	gripped_intents = null
 	wdefense = 2
+	throwforce = 25 //You ever had an axe thrown at you? 
+	throw_speed = 3 
+	armor_penetration = 25
+	
 
 /obj/item/rogueweapon/stoneaxe/woodcut/bronze
 	name = "bronze axe"

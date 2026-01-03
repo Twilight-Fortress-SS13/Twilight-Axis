@@ -85,7 +85,7 @@
 	if(newdam <= 8)
 		return FALSE
 	if(prob(P.embedchance) && P.dropped)
-		BP.add_embedded_object(P.dropped, silent = FALSE, crit_message = TRUE)
+		BP.add_embedded_object(P.dropped, silent = FALSE, crit_message = TRUE, ranged = TRUE)
 		return TRUE
 	return FALSE
 

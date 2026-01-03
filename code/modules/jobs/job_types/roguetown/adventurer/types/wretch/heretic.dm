@@ -269,7 +269,7 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 	belt = /obj/item/storage/belt/rogue/leather
 	neck = /obj/item/clothing/neck/roguetown/gorget
-	mask = /obj/item/clothing/mask/rogue/ragmask/black
+	mask =  HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT)?/obj/item/clothing/mask/rogue/facemask/steel/confessor : /obj/item/clothing/mask/rogue/ragmask/black
 	backpack_contents = list(
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/lockpickring/mundane = 1,
@@ -426,6 +426,10 @@
 	var/mob/living/carbon/human/target = targets[1]
 
 	if(!ishuman(target))
+		revert_cast()
+		return FALSE
+	
+	if(target.cmode)
 		revert_cast()
 		return FALSE
 

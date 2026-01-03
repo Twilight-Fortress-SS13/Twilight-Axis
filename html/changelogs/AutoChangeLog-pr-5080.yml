@@ -1,0 +1,4 @@
+author: "Geevies"
+delete-after: True
+changes:
+  - balance: "Outfits now have a 50/50 chance of having their hands swapped. This means ambushing mobs can now wield their weapon in their right hand too."

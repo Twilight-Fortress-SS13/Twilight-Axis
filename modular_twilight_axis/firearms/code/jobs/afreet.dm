@@ -8,7 +8,7 @@
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_corsair.ogg'
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/grenzelhoftian)
-	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_DODGEEXPERT)
+	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_STR = 1,
 		STATKEY_WIL = 2,

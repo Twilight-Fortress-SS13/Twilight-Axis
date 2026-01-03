@@ -1,0 +1,4 @@
+author: "Geevies"
+delete-after: True
+changes:
+  - qol: "Examining a Deadite will now show big text that it's a deadite."

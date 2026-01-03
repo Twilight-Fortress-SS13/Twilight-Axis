@@ -17,7 +17,7 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_corsair
 	category_tags = list(CTAG_WRETCH)
-	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT, TRAIT_OUTLAW, TRAIT_HERESIARCH)
+	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_DODGEEXPERT)
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_corsair.ogg'

@@ -1,0 +1,4 @@
+author: "hazelrat"
+delete-after: True
+changes:
+  - rscadd: "Tunics no longer give chest-less characters using the feminine body type the appearance of having a chest."

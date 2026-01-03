@@ -402,7 +402,7 @@
 /datum/status_effect/buff/guardbuffone
 	id = "guardbuffone"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/guardbuffone
-	effectedstats = list(STATKEY_CON = 1,STATKEY_WIL = 1, STATKEY_SPD = 1, STATKEY_PER = 2)
+	effectedstats = list(STATKEY_CON = 1,STATKEY_WIL = 1, STATKEY_SPD = 1)
 
 /datum/status_effect/buff/guardbuffone/process()
 
@@ -1217,7 +1217,8 @@
 	guard_disrupted()
 
 /datum/status_effect/buff/clash/proc/apply_cooldown()
-	owner.apply_status_effect(/datum/status_effect/debuff/clashcd)
+	var/newcd = BASE_RCLICK_CD - owner.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS)
+	owner.apply_status_effect(/datum/status_effect/debuff/clashcd, newcd)
 
 //Our guard was disrupted by normal means.
 /datum/status_effect/buff/clash/proc/guard_disrupted()
@@ -1843,6 +1844,7 @@
 	. = ..()
 	to_chat(owner, span_warning("I fall back to the ground."))
 	owner.movement_type = GROUND
+
 /datum/status_effect/buff/ravox_vow
 	id = "ravox_vow"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/ravox_vow
@@ -1896,7 +1898,7 @@
 	if(target.fire_stacks >= 3)
 		return
 
-	target.adjust_fire_stacks(1)
+	target.adjust_fire_stacks(1, /datum/status_effect/fire_handler/fire_stacks/divine)
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living, ignite_mob))
 
 /datum/status_effect/buff/ravox_vow/on_remove()

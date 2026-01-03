@@ -143,7 +143,6 @@
 			neck = /obj/item/clothing/neck/roguetown/psicross/pestra
 		if(/datum/patron/divine/ravox)
 			neck = /obj/item/clothing/neck/roguetown/psicross/ravox
-			ADD_TRAIT(H, TRAIT_BATTLEMASTER, TRAIT_GENERIC) //This will have no reprecussions I'm sure
 		if(/datum/patron/divine/malum)
 			neck = /obj/item/clothing/neck/roguetown/psicross/malum
 		if(/datum/patron/divine/eora)
@@ -343,7 +342,6 @@
 			wrists = /obj/item/clothing/neck/roguetown/psicross/pestra
 		if(/datum/patron/divine/ravox)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/ravox
-			ADD_TRAIT(H, TRAIT_BATTLEMASTER, TRAIT_GENERIC)
 		if(/datum/patron/divine/malum)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/malum
 		if(/datum/patron/divine/eora)
@@ -488,7 +486,6 @@
 			neck = /obj/item/clothing/neck/roguetown/psicross/pestra
 		if(/datum/patron/divine/ravox)
 			neck = /obj/item/clothing/neck/roguetown/psicross/ravox
-			ADD_TRAIT(H, TRAIT_BATTLEMASTER, TRAIT_GENERIC)
 		if(/datum/patron/divine/malum)
 			neck = /obj/item/clothing/neck/roguetown/psicross/malum
 		if(/datum/patron/divine/eora)
@@ -570,6 +567,13 @@
 		if(/datum/patron/divine/dendor)
 			head = /obj/item/clothing/head/roguetown/dendormask
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/dendor
+			ADD_TRAIT(H, TRAIT_SEEDKNOW, TRAIT_GENERIC)
+			H.adjust_skillrank(/datum/skill/labor/farming, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/craft/crafting, SKILL_LEVEL_NOVICE, TRUE) // we are a litteral forest dweller, we should atleast not be cluess about such things, even abyssorites get badass combat stuff
+			H.adjust_skillrank(/datum/skill/craft/cooking, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/labor/fishing, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
 		if(/datum/patron/divine/necra)
 			head = /obj/item/clothing/head/roguetown/necrahood
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/necra
@@ -628,7 +632,6 @@
 			neck = /obj/item/clothing/neck/roguetown/psicross/pestra
 		if(/datum/patron/divine/ravox)
 			neck = /obj/item/clothing/neck/roguetown/psicross/ravox
-			ADD_TRAIT(H, TRAIT_BATTLEMASTER, TRAIT_GENERIC)
 		if(/datum/patron/divine/malum)
 			neck = /obj/item/clothing/neck/roguetown/psicross/malum
 		if(/datum/patron/divine/eora)

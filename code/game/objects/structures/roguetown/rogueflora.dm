@@ -206,6 +206,7 @@
 	desc = "Someone cut this tree down."
 	icon_state = "t1stump"
 	opacity = 0
+	pass_flags = LETPASSTHROW
 	max_integrity = 100
 	climbable = TRUE
 	climb_time = 0
@@ -605,7 +606,7 @@
 
 /obj/structure/flora/roguegrass/pyroclasticflowers/update_icon()
 	icon_state = "pyroflower[rand(1,3)]"
-	
+
 /obj/structure/flora/roguegrass/pyroclasticflowers/Initialize()
 	. = ..()
 	if(prob(88))
@@ -644,7 +645,8 @@
 // swarmpweed bush -- STONEKEEP PORT
 /obj/structure/flora/roguegrass/swampweed
 	name = "bunch of swampweed"
-	desc = "A green root good for smoking."
+	desc = "A green root known to, when smoked, elicit a strong euphoric response. A common alternative to alcohol \
+	for those who wish to escape their woes, or to simply have an enjoyable evening."
 	icon_state = "swampweed1"
 	layer = ABOVE_ALL_MOB_LAYER
 	max_integrity = 1
@@ -785,7 +787,8 @@
 /obj/structure/flora/roguetree/pine
 	name = "pine tree"
 	icon_state = "pine1"
-	desc = ""
+	desc = "A mighty conifer tree, standing proud. A familiar sight in cold and mountainous climates, \
+	and highly sought after for their resin."
 	icon = 'icons/obj/flora/pines.dmi'
 	pixel_w = -24
 	density = 0
@@ -803,6 +806,7 @@
 
 /obj/structure/flora/roguetree/pine/dead
 	name = "burnt pine tree"
+	desc = "Charred bark and ashen needles."
 	icon_state = "dead1"
 	max_integrity = 50
 	static_debris = list(/obj/item/rogueore/coal/charcoal = 1)
