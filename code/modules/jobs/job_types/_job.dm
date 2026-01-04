@@ -237,7 +237,7 @@
 
 	if(!H.islatejoin)
 		H.adjust_triumphs(1)
-		H.apply_status_effect(/datum/status_effect/buff/foodbuff)
+		H.apply_status_effect(/datum/status_effect/buff/mealbuff)
 		H.hydration = 1000 // Set higher hydration
 
 		if(H.mind)

@@ -52,12 +52,18 @@
 	target_items = list(/obj/item/clothing/suit/roguetown/shirt/dress)	//Literally any type of dress
 	result_item = /obj/item/clothing/suit/roguetown/shirt/dress/emerald 
 
-//Strudle - Custom leather vest type
-/obj/item/enchantingkit/strudle
+//Strudel - Custom leather vest type and xylix tabard
+/obj/item/enchantingkit/strudel1
 	name = "'Grenzelhoft Mage Vest' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Robe"
 	target_items = list(/obj/item/clothing/suit/roguetown/shirt/robe)
 	result_item = /obj/item/clothing/suit/roguetown/shirt/robe/sofiavest 
+
+/obj/item/enchantingkit/strudel2
+	name = "'Xylixian Fasching Leotard' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Xylixian Cloak"
+	target_items = list(/obj/item/clothing/cloak/templar/xylixian)
+	result_item = /obj/item/clothing/cloak/templar/xylixian/faux
 
 //Bat - Custom harp type
 /obj/item/enchantingkit/bat
@@ -140,5 +146,22 @@
 //Zoe - Shovel
 /obj/item/enchantingkit/zoe_shovel
 	name = "'Silence' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Shovel"
 	target_items = list(/obj/item/rogueweapon/shovel)
 	result_item = /obj/item/rogueweapon/shovel/zoe_silence
+
+//DasFox - Armet
+/obj/item/enchantingkit/dasfox_helm
+	name = "'archaic valkyrhelm' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Armet"
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet)
+	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/dasfox
+
+//DasFox - Cuirass
+/obj/item/enchantingkit/dasfox_cuirass
+	name = "'archaic cermonial cuirass' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Fluted Cuirass"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted)
+	result_item = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/dasfox
+
+

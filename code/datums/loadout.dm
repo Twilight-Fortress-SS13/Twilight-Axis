@@ -162,6 +162,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Salvia Crown"
 	path = /obj/item/flowercrown/salvia
 
+/datum/loadout_item/briarthorns
+	name = "Briar Thorns"
+	path = /obj/item/clothing/head/roguetown/briarthorns
+
 //CLOAKS
 /datum/loadout_item/tabard
 	name = "Tabard"
@@ -815,7 +819,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donator_strudel
 	name = "Donator Kit - Grenzelhoftian Mage Vest - Required: Robe(No Small Races)"
 	category = list("Разное", "Донат")
-	path = /obj/item/enchantingkit/strudle
+	path = /obj/item/enchantingkit/strudel1
+	donatitem = TRUE
+
+/datum/loadout_item/donator_strudel2
+	name = "Donator Kit - Xylixian Fasching Leotard - Required: Xylixian Cloak(Only woman, no small races)"
+	category = list("Разное", "Донат")
+	path = /obj/item/enchantingkit/strudel2
 	donatitem = TRUE
 
 /datum/loadout_item/donator_bat
@@ -918,6 +928,24 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Royal Gown"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal
 	category = list("Одежда", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_dasfox
+	name = "Donator Kit - Archaic Ceremonial Valkyrhelm - Required: Armet"
+	path = /obj/item/enchantingkit/dasfox_helm
+	category = list("Разное", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_dasfox/cuirass
+	name = "Donator Kit - Archaic Ceremonial Cuirass - Required: Fluted Cuirass(No Small Races)"
+	path = /obj/item/enchantingkit/dasfox_cuirass
+	category = list("Разное", "Донат")
+	donatitem = TRUE
+ 
+/datum/loadout_item/donator_dasfox/periapt
+	name = "Donator Item - Defiled Astratan Periapt"
+	path = /obj/item/clothing/neck/roguetown/psicross/astrata/dasfox
+	category = list("Разное", "Донат")
 	donatitem = TRUE
 
 /datum/loadout_item/donator_kumie

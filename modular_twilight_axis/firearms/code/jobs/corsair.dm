@@ -11,15 +11,23 @@
 	sellprice = 25
 
 /datum/advclass/wretch/twilight_corsair
-	name = "Corsair"
-	tutorial = "During the Twilight War, you served aboard a Reichsmarine warship, intercepting, boarding and ravaging Golden Empire's trade vessels on Kaiser's orders. After the war ended, your crew saw it fit to continue with the practice, flying a flag with a different shade of black."
+	name = "Sea Rogue"
+	tutorial = "You spent your entire lyfe making a living through piracy in the seas of Grimoria, where gunpowder and steel were always your loyal companions."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_corsair
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_DODGEEXPERT)
 	maximum_possible_slots = 2
-	subclass_languages = list(/datum/language/grenzelhoftian)
+	classes = list("Kaper" = "During the Twilight War, you served aboard a Reichsmarine warship, intercepting, \
+	boarding and ravaging Golden Empire's trade vessels on Kaiser's orders. \
+	After the war ended, your crew saw it fit to continue with the practice, flying a flag with a different shade of black.",
+	
+	"Wōkòu" = "For a long time you plundered ships of various flags and origins, \
+	burning through your lyfe on the islands of Kazengun. \
+	After your peak, you were smashed against the rocks of battles and had to flee further from your native seas \
+	to foreign lands to continue your trade.")
+
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_corsair.ogg'
 	subclass_stats = list(
 		STATKEY_WIL = 2,
@@ -48,31 +56,44 @@
 /datum/outfit/job/roguetown/wretch/twilight_corsair/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_blindness(-3)
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
-	belt = /obj/item/storage/belt/rogue/leather
-	beltl = /obj/item/quiver/twilight_bullet/lead
-	beltr = /obj/item/rogueweapon/scabbard/sword
-	backl = /obj/item/storage/backpack/rogue/satchel
-	neck = /obj/item/clothing/neck/roguetown/gorget
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
-	head = /obj/item/clothing/head/roguetown/helmet/tricorn/grenzel
-	armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/sailor/grenzelhoft
-	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
-	shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft
-	gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
-	backr = /obj/item/gun/ballistic/twilight_firearm/flintgonne
-	r_hand = /obj/item/rogueweapon/sword/cutlass
-	backpack_contents = list(/obj/item/twilight_powderflask = 1, /obj/item/natural/cloth = 1, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
-	
+	var/classes = list("Kaper", "Wōkòu")
+	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
 
-	var/masks = list(
-		"Steel Mask"		= /obj/item/clothing/mask/rogue/facemask/steel,
-		"Wildguard"			= /obj/item/clothing/mask/rogue/wildguard,
-		"None"
-		)
-	H.set_blindness(0)
-	var/maskchoice = input("Choose your Mask.", "MASK MASK MASK") as anything in masks // Run from it. MASK. MASK. MASK.
-	if(maskchoice != "None")
-		mask = masks[maskchoice]	
+	switch(classchoice)
+		if("Kaper")
+			H.set_blindness(0)
+			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
+			belt = /obj/item/storage/belt/rogue/leather
+			beltl = /obj/item/quiver/twilight_bullet/lead
+			beltr = /obj/item/rogueweapon/scabbard/sword
+			backl = /obj/item/storage/backpack/rogue/satchel
+			neck = /obj/item/clothing/neck/roguetown/gorget
+			shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
+			head = /obj/item/clothing/head/roguetown/helmet/tricorn/grenzel
+			armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/sailor/grenzelhoft
+			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
+			shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft
+			gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
+			backr = /obj/item/gun/ballistic/twilight_firearm/flintgonne
+			r_hand = /obj/item/rogueweapon/sword/cutlass
+			mask = /obj/item/clothing/mask/rogue/facemask/steel
+			backpack_contents = list(/obj/item/twilight_powderflask = 1, /obj/item/natural/cloth = 1, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
+			H.grant_language(/datum/language/grenzelhoftian)
 
+		if("Wōkòu")
+			H.set_blindness(0)
+			mask = /obj/item/clothing/mask/rogue/facemask/steel/kazengun
+			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants2
+			cloak = /obj/item/clothing/cloak/eastcloak1
+			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
+			head = /obj/item/clothing/head/roguetown/mentorhat
+			gloves = /obj/item/clothing/gloves/roguetown/eastgloves2
+			shoes = /obj/item/clothing/shoes/roguetown/boots
+			shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt1
+			belt = /obj/item/storage/belt/rogue/leather/black
+			beltl = /obj/item/quiver/twilight_bullet/lead
+			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
+			backl = /obj/item/storage/backpack/rogue/satchel
+			backpack_contents = list(/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = 1, /obj/item/twilight_powderflask = 1, /obj/item/natural/cloth = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
+			H.grant_language(/datum/language/kazengunese)
 	wretch_select_bounty(H)

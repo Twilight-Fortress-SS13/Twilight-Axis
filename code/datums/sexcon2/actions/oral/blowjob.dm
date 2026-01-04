@@ -32,6 +32,9 @@
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
 	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] сосет хер [target]..."))
 	user.make_sucking_noise()
+	// you want to know how i got these scars?
+	if(istype(user.head, /obj/item/clothing/head/roguetown/jester))
+		playsound(user, SFX_JINGLE_BELLS, 30, TRUE, -2, ignore_walls = FALSE)
 	do_thrust_animate(user, target)
 
 	sex_session.perform_sex_action(target, 2, 0, TRUE)
