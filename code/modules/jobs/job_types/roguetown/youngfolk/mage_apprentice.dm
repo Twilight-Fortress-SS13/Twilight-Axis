@@ -52,6 +52,7 @@
 		STATKEY_PER = 2,
 		STATKEY_SPD = 1
 	)
+	age_mod = /datum/class_age_mod/apprentice_associate
 	subclass_spellpoints = 21
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_APPRENTICE,
@@ -84,11 +85,6 @@
 		/obj/item/chalk = 1,
 		/obj/item/storage/keyring/mageapprentice,
 		)
-	if(H.age == AGE_OLD)
-		H.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
-		H.change_stat(STATKEY_SPD, -1)
-		H.change_stat(STATKEY_INT, 1)
-		H.mind?.adjust_spellpoints(6)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = 'sound/music/combat_heretic.ogg'
@@ -107,6 +103,7 @@
 		STATKEY_PER = 3,
 		STATKEY_WIL = 1
 	)
+	age_mod = /datum/class_age_mod/apprentice_alchemist
 	subclass_spellpoints = 18
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_NOVICE,
@@ -140,10 +137,6 @@
 		/obj/item/spellbook_unfinished/pre_arcyne = 1,
 		/obj/item/storage/keyring/mageapprentice,
 		)
-	if(H.age == AGE_OLD)
-		H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
-		H.change_stat(STATKEY_PER, -1)
-		H.change_stat(STATKEY_INT, 1)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = 'sound/music/combat_heretic.ogg'
@@ -162,6 +155,7 @@
 		STATKEY_SPD = 1,
 		STATKEY_LCK = 1 // this is just a carrot for the folk who are mad enough to take this role...
 	)
+	age_mod = /datum/class_age_mod/apprentice_apprentice
 	subclass_spellpoints = 18
 	subclass_skills = list(
 		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
@@ -184,12 +178,6 @@
 		/obj/item/chalk = 1,
 		/obj/item/storage/keyring/mageapprentice,
 		)
-	if(H.age == AGE_OLD)
-		H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
-		H.change_stat(STATKEY_SPD, -1)
-		H.change_stat(STATKEY_INT, 1)
-		H.mind?.adjust_spellpoints(3)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = 'sound/music/combat_heretic.ogg'

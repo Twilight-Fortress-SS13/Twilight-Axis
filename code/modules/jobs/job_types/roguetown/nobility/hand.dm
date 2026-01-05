@@ -60,6 +60,7 @@
 		STATKEY_STR = 2,
 		STATKEY_LCK = 1,
 	)
+	age_mod = /datum/class_age_mod/hand_blademaster
 	subclass_skills = list(
 		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,
@@ -91,9 +92,6 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/storage/keyring/hand = 1,
 	)
-	if(H.age == AGE_OLD)
-		H.adjust_skillrank_up_to(/datum/skill/combat/swords, 5, TRUE)
-		H.change_stat(STATKEY_LCK, 2)
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
 
@@ -114,6 +112,7 @@
 		STATKEY_INT = 2,
 		STATKEY_STR = -1,
 	)
+	age_mod = /datum/class_age_mod/hand_spymaster
 	subclass_skills = list(
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/bows = SKILL_LEVEL_EXPERT,
@@ -152,10 +151,6 @@
 		backr = /obj/item/storage/backpack/rogue/satchel/black
 		armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/hand
 		pants = /obj/item/clothing/under/roguetown/tights/black
-	if(H.age == AGE_OLD)
-		H.adjust_skillrank_up_to(/datum/skill/misc/sneaking, 6, TRUE)
-		H.adjust_skillrank_up_to(/datum/skill/misc/stealing, 6, TRUE)
-		H.adjust_skillrank_up_to(/datum/skill/misc/lockpicking, 6, TRUE)
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
 
@@ -173,6 +168,7 @@
 		STATKEY_WIL = 2,
 		STATKEY_LCK = 2,
 	)
+	age_mod = /datum/class_age_mod/hand_advisor
 	subclass_spellpoints = 15
 	subclass_skills = list(
 		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
@@ -210,12 +206,6 @@
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/poison = 1,//starts with a vial of poison, like all wizened evil advisors do!
 	)
-	if(H.age == AGE_OLD)
-		H.change_stat(STATKEY_SPD, -1)
-		H.change_stat(STATKEY_STR, -1)
-		H.change_stat(STATKEY_INT, 1)
-		H.change_stat(STATKEY_PER, 1)
-		H.mind?.adjust_spellpoints(3)
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
 

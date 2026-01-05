@@ -1,0 +1,7 @@
+author: "Ketrai"
+delete-after: True
+changes:
+  - balance: "All fishing sources are affected by skill, traits and abyssor patron choice."
+  - balance: "Fishing traps aren't guaranteed to lose their bait upon catching something."
+  - balance: "Fishing traps can now catch sticks."
+  - rscadd: "You can now use leechticks as fishing bait, do with this knowledge as you would, sire."

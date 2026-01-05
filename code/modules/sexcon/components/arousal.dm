@@ -187,6 +187,7 @@
 	user.emote("moan", forced = TRUE)
 	user.playsound_local(user, 'sound/misc/mat/end.ogg', 100)
 	last_ejaculation_time = world.time
+	record_round_statistic(STATS_PLEASURES)
 
 	if(user != target && !isnull(user.mind) && !isnull(target.mind))
 		if(user.has_flaw(/datum/charflaw/addiction/lovefiend))

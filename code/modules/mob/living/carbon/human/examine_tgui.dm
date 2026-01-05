@@ -57,7 +57,6 @@
 	headshot = fam_pref.familiar_headshot_link
 	char_name = fam_pref.familiar_name
 	song_url = prefs.ooc_extra
-	is_vet = viewing.check_agevet()
 	if(!headshot)
 		headshot = "headshot_red.png"
 	
