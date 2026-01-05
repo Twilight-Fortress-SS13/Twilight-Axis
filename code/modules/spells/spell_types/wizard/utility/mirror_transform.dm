@@ -45,13 +45,17 @@
 	if (!H)
 		return
 	var/should_update = FALSE
-	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Tail", "Tail Color One", "Tail Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color")
+	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Tail", "Tail Color One", "Tail Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color", "Nudeshot") //TA edit - new ERP SYSTEM
 	var/chosen = input(H, "Change what?", "Appearance") as null|anything in choices
 
 	if(!chosen)
 		return
 
 	switch(chosen)
+		//TA add start - new ERP SYSTEM
+		if("Nudeshot")
+			H.mirror_set_nudeshot_url()
+		//TA add end - new ERP SYSTEM
 		if("Hairstyle")
 			var/datum/customizer_choice/bodypart_feature/hair/head/humanoid/hair_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/hair/head/humanoid)
 			var/list/valid_hairstyles = list()

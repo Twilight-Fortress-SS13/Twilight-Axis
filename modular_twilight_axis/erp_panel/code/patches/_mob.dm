@@ -389,3 +389,25 @@
 	visible_message(span_notice("[src] сплёвывает что-то на пол."),	span_notice("Я сплёвываю содержимое рта."))
 
 	return TRUE
+
+/mob/living/carbon/human/proc/mirror_set_nudeshot_url()
+	var/url = input(src, "Paste a direct image URL (http/https).", "Nude Shot URL") as null|text
+	if(!url)
+		return FALSE
+
+	url = trimtext(url)
+	if(length(url) > 512)
+		to_chat(src, span_warning("That link is too long."))
+		return FALSE
+
+	var/lower = lowertext(url)
+	if(!(findtext(lower, "http://") == 1 || findtext(lower, "https://") == 1))
+		to_chat(src, span_warning("Only http/https links are allowed."))
+		return FALSE
+
+	nsfw_headshot_link = url
+	update_body()
+	update_body_parts()
+
+	to_chat(src, span_notice("Your reflection settles into a new… compromising portrait."))
+	return TRUE
