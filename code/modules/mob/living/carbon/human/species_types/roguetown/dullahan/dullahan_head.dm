@@ -28,7 +28,7 @@
 		to_chat(target, "<span class='warning'>[user] failed to touch you. (Your ERP preference, in the options)</span>")
 		log_combat(user, target, "tried unwanted ERP menu against")
 		return
-	user.start_sex_session_tgui(target) // TWILIGHT AXIS EDITION - new ERP SYSTEM
+	user.start_sex_session(target)
 
 // Attach head.
 /obj/item/bodypart/head/dullahan/melee_attack_chain(mob/living/carbon/human/user, mob/living/carbon/human/target, params)

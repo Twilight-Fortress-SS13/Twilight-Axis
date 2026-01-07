@@ -288,3 +288,285 @@
 		return FALSE
 
 	return M.has_flaw(/datum/charflaw/addiction/lovefiend)
+
+/datum/controller/subsystem/gamemode/refresh_alive_stats(roundstart = FALSE)
+	if(SSticker.current_state == GAME_STATE_FINISHED)
+		return
+
+	GLOB.patron_follower_counts.Cut()
+
+	var/list/statistics_to_clear = list(
+		STATS_TOTAL_POPULATION,
+        STATS_PSYCROSS_USERS,
+        STATS_ALIVE_NOBLES,
+        STATS_ALIVE_GARRISON,
+        STATS_ALIVE_CLERGY,
+        STATS_ALIVE_TRADESMEN,
+        STATS_WEREVOLVES,
+        STATS_BANDITS,
+        STATS_VAMPIRES,
+        STATS_DEADITES_ALIVE,
+        STATS_CLINGY_PEOPLE,
+        STATS_ALCOHOLICS,
+        STATS_JUNKIES,
+		STATS_KLEPTOMANIACS,
+        STATS_GREEDY_PEOPLE,
+        STATS_MALE_POPULATION,
+        STATS_FEMALE_POPULATION,
+        STATS_OTHER_GENDER,
+        STATS_ADULT_POPULATION,
+        STATS_MIDDLEAGED_POPULATION,
+        STATS_ELDERLY_POPULATION,
+        STATS_ALIVE_NORTHERN_HUMANS,
+        STATS_ALIVE_DWARVES,
+        STATS_ALIVE_DARK_ELVES,
+        STATS_ALIVE_WOOD_ELVES,
+        STATS_ALIVE_HALF_ELVES,
+        STATS_ALIVE_HALF_ORCS,
+        STATS_ALIVE_GOBLINS,
+        STATS_ALIVE_KOBOLDS,
+        STATS_ALIVE_LIZARDS,
+        STATS_ALIVE_AASIMAR,
+        STATS_ALIVE_TIEFLINGS,
+        STATS_ALIVE_HALFKIN,
+        STATS_ALIVE_WILDKIN,
+        STATS_ALIVE_CONSTRUCTS,
+        STATS_ALIVE_VERMINFOLK,
+        STATS_ALIVE_DRACON,
+        STATS_ALIVE_AXIAN,
+        STATS_ALIVE_TABAXI,
+        STATS_ALIVE_VULPS,
+        STATS_ALIVE_LUPIANS,
+        STATS_ALIVE_MOTHS,
+        STATS_ALIVE_AURA
+	)
+
+	for(var/stat_name in statistics_to_clear)
+		force_set_round_statistic(stat_name, 0)
+
+	var/total_wealth = 0
+
+	var/highest_strength = -1
+	var/highest_intelligence = -1
+	var/highest_wealth = -1
+	var/highest_luck = -1
+	var/highest_speed = -1
+
+	var/lowest_intelligence
+	var/lowest_speed
+	var/lowest_luck
+
+	for(var/client/client in GLOB.clients)
+		if(roundstart)
+			GLOB.patron_follower_counts[client.prefs.selected_patron.name]++
+		var/mob/living/living = client.mob
+		if(!istype(living))
+			continue
+		if(!living.mind)
+			continue
+		if(living.stat == DEAD)
+			continue
+		if(!roundstart)
+			if(living.patron)
+				GLOB.patron_follower_counts[living.patron.name]++
+				if(living.job == "Grand Duke")
+					force_set_round_statistic(STATS_MONARCH_PATRON, living.patron.name)
+		if(living.mind.has_antag_datum(/datum/antagonist/bandit))
+			record_round_statistic(STATS_BANDITS)
+		if(living.mind.has_antag_datum(/datum/antagonist/werewolf))
+			record_round_statistic(STATS_WEREVOLVES)
+		if(living.mind.has_antag_datum(/datum/antagonist/vampire))
+			record_round_statistic(STATS_VAMPIRES)
+		if(living.mind.has_antag_datum(/datum/antagonist/zombie) || living.mind.has_antag_datum(/datum/antagonist/skeleton) || living.mind.has_antag_datum(/datum/antagonist/lich))
+			record_round_statistic(STATS_DEADITES_ALIVE)
+		if(ishuman(living))
+			var/mob/living/carbon/human/human_mob = client.mob
+			record_round_statistic(STATS_TOTAL_POPULATION)
+			for(var/obj/item/clothing/neck/current_item in human_mob.get_equipped_items(TRUE))
+				if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/aalloy, /obj/item/clothing/neck/roguetown/psicross/silver,	/obj/item/clothing/neck/roguetown/psicross/g))
+					record_round_statistic(STATS_PSYCROSS_USERS)
+					break
+			switch(human_mob.pronouns)
+				if(HE_HIM)
+					record_round_statistic(STATS_MALE_POPULATION)
+				if(HE_HIM_F)
+					record_round_statistic(STATS_MALE_POPULATION)
+				if(SHE_HER)
+					record_round_statistic(STATS_FEMALE_POPULATION)
+				if(SHE_HER_M)
+					record_round_statistic(STATS_FEMALE_POPULATION)
+				else
+					record_round_statistic(STATS_OTHER_GENDER)
+			switch(human_mob.age)
+				if(AGE_ADULT)
+					record_round_statistic(STATS_ADULT_POPULATION)
+				if(AGE_MIDDLEAGED)
+					record_round_statistic(STATS_MIDDLEAGED_POPULATION)
+				if(AGE_OLD)
+					record_round_statistic(STATS_ELDERLY_POPULATION)
+			if(human_mob.is_noble())
+				record_round_statistic(STATS_ALIVE_NOBLES)
+			if(human_mob.mind.assigned_role in GLOB.garrison_positions)
+				record_round_statistic(STATS_ALIVE_GARRISON)
+			if(human_mob.mind.assigned_role in GLOB.church_positions)
+				record_round_statistic(STATS_ALIVE_CLERGY)
+			if((human_mob.mind.assigned_role in GLOB.yeoman_positions) || (human_mob.mind.assigned_role in GLOB.peasant_positions) || (human_mob.mind.assigned_role in GLOB.mercenary_positions))
+				record_round_statistic(STATS_ALIVE_TRADESMEN)
+			if(human_mob.has_flaw(/datum/charflaw/clingy))
+				record_round_statistic(STATS_CLINGY_PEOPLE)
+			if(human_mob.has_flaw(/datum/charflaw/addiction/alcoholic))
+				record_round_statistic(STATS_ALCOHOLICS)
+			if(human_mob.has_flaw(/datum/charflaw/addiction/junkie))
+				record_round_statistic(STATS_JUNKIES)
+			if(human_mob.has_flaw(/datum/charflaw/addiction/kleptomaniac))
+				record_round_statistic(STATS_KLEPTOMANIACS)
+			if(human_mob.has_flaw(/datum/charflaw/greedy))
+				record_round_statistic(STATS_GREEDY_PEOPLE)
+
+			// Races - proper alive checking (We have so fucking many, kill me..)
+			if(ishumannorthern(human_mob))
+				record_round_statistic(STATS_ALIVE_NORTHERN_HUMANS)
+			if(isdwarf(human_mob))
+				record_round_statistic(STATS_ALIVE_DWARVES)
+			if(isdarkelf(human_mob))
+				record_round_statistic(STATS_ALIVE_DARK_ELVES)
+			if(iswoodelf(human_mob))
+				record_round_statistic(STATS_ALIVE_WOOD_ELVES)
+			if(ishalfelf(human_mob))
+				record_round_statistic(STATS_ALIVE_HALF_ELVES)
+			if(ishalforc(human_mob))
+				record_round_statistic(STATS_ALIVE_HALF_ORCS)
+			if(isgoblinp(human_mob))
+				record_round_statistic(STATS_ALIVE_GOBLINS)
+			if(iskobold(human_mob))
+				record_round_statistic(STATS_ALIVE_KOBOLDS)
+			if(islizard(human_mob))
+				record_round_statistic(STATS_ALIVE_LIZARDS)
+			if(isaasimar(human_mob))
+				record_round_statistic(STATS_ALIVE_AASIMAR)
+			if(istiefling(human_mob))
+				record_round_statistic(STATS_ALIVE_TIEFLINGS)
+			if(ishalfkin(human_mob))
+				record_round_statistic(STATS_ALIVE_HALFKIN)
+			if(iswildkin(human_mob))
+				record_round_statistic(STATS_ALIVE_WILDKIN)
+			if(isconstruct(human_mob))
+				record_round_statistic(STATS_ALIVE_CONSTRUCTS)
+			if(isvermin(human_mob))
+				record_round_statistic(STATS_ALIVE_VERMINFOLK)
+			if(isdracon(human_mob))
+				record_round_statistic(STATS_ALIVE_DRACON)
+			if(isaxian(human_mob))
+				record_round_statistic(STATS_ALIVE_AXIAN)
+			if(istabaxi(human_mob))
+				record_round_statistic(STATS_ALIVE_TABAXI)
+			if(isvulp(human_mob))
+				record_round_statistic(STATS_ALIVE_VULPS)
+			if(islupian(human_mob))
+				record_round_statistic(STATS_ALIVE_LUPIANS)
+			if(ismoth(human_mob))
+				record_round_statistic(STATS_ALIVE_MOTHS)
+			if(isaura(human_mob))
+				record_round_statistic(STATS_ALIVE_AURA)
+
+			// Chronicle statistics
+			if(human_mob.STASTR > highest_strength)
+				highest_strength = human_mob.STASTR
+				set_chronicle_stat(CHRONICLE_STATS_STRONGEST_PERSON, human_mob)
+			if(human_mob.STAINT > highest_intelligence)
+				highest_intelligence = human_mob.STAINT
+				set_chronicle_stat(CHRONICLE_STATS_WISEST_PERSON, human_mob)
+			if(human_mob.STALUC > highest_luck)
+				highest_luck = human_mob.STALUC
+				set_chronicle_stat(CHRONICLE_STATS_LUCKIEST_PERSON, human_mob)
+			if(human_mob.STASPD > highest_speed)
+				highest_speed = human_mob.STASPD
+				set_chronicle_stat(CHRONICLE_STATS_FASTEST_PERSON, human_mob)
+
+			var/wealth = get_mammons_in_atom(human_mob)
+			total_wealth += wealth
+			if(wealth > highest_wealth)
+				highest_wealth = wealth
+				set_chronicle_stat(CHRONICLE_STATS_RICHEST_PERSON, human_mob)
+
+			if(!lowest_intelligence)
+				lowest_intelligence = human_mob.STAINT
+				set_chronicle_stat(CHRONICLE_STATS_DUMBEST_PERSON, human_mob)
+			else if(human_mob.STAINT < lowest_intelligence)
+				lowest_intelligence = human_mob.STAINT
+				set_chronicle_stat(CHRONICLE_STATS_DUMBEST_PERSON, human_mob)
+
+			if(!lowest_speed)
+				lowest_speed = human_mob.STASPD
+				set_chronicle_stat(CHRONICLE_STATS_SLOWEST_PERSON, human_mob)
+			else if(human_mob.STASPD < lowest_speed)
+				lowest_speed = human_mob.STASPD
+				set_chronicle_stat(CHRONICLE_STATS_SLOWEST_PERSON, human_mob)
+
+			if(!lowest_luck)
+				lowest_luck = human_mob.STALUC
+				set_chronicle_stat(CHRONICLE_STATS_UNLUCKIEST_PERSON, human_mob)
+			else if(human_mob.STALUC < lowest_luck)
+				lowest_luck = human_mob.STALUC
+				set_chronicle_stat(CHRONICLE_STATS_UNLUCKIEST_PERSON, human_mob)
+
+			force_set_round_statistic(STATS_MAMMONS_HELD, total_wealth)
+
+/mob/living/carbon/human/MiddleMouseDrop_T(atom/movable/dragged, mob/living/user)
+	var/mob/living/carbon/human/target = src
+	var/mob/living/carbon/human/human_user = user
+
+	if(!istype(human_user))
+		return
+	if(user.mmb_intent)
+		return ..()
+	if(!istype(dragged))
+		return
+	// Need to drag yourself to the target.
+	if(dragged != user)
+		return
+	if(!human_user.can_do_sex)
+		to_chat(user, "<span class='warning'>I can't do this.</span>")
+		return
+	var/may_bang = client && client.prefs && client.prefs.sexable == TRUE
+	#ifdef LOCALTEST
+		may_bang = TRUE
+	#endif
+
+	if(!may_bang) // Don't bang someone that dosn't want it.
+		to_chat(user, "<span class='warning'>[src] dosn't wish to be touched. (Their ERP preference under options)</span>")
+		to_chat(src, "<span class='warning'>[user] failed to touch you. (Your ERP preference under options)</span>")
+		return
+	
+	// TWILIGHT AXIS EDITION START - new ERP SYSTEM
+	if(!user.start_sex_session_tgui(target)) 
+		to_chat(user, "<span class='warning'>Blocked by Defiant settings or Leprosy.</span>")
+	// TWILIGHT AXIS EDITION END- new ERP SYSTEM
+		return
+
+/obj/item/bodypart/head/dullahan/MiddleMouseDrop_T(atom/movable/dragged, mob/living/user)
+	var/mob/living/carbon/human/target = src.original_owner
+	if(user.mmb_intent)
+		return ..()
+	// Maybe call target.MiddleMouseDrop_T() instead, may have side effects and so opted not to.
+
+	if(!istype(dragged))
+		return
+	if(dragged != user)
+		return
+	if(!user.can_do_sex())
+		to_chat(user, "<span class='warning'>I can't do this.</span>")
+		return
+	if(!user.client.prefs.sexable)
+		to_chat(user, "<span class='warning'>I don't want to touch [target]. (Your ERP preference, in the options)</span>")
+		return
+	if(!target.client || !target.client.prefs)
+		to_chat(user, span_warning("[target] is simply not there. I can't do this."))
+		log_combat(user, target, "tried ERP menu against d/ced")
+		return
+	if(!target.client.prefs.sexable) // Don't bang someone that doesn't want it.
+		to_chat(user, "<span class='warning'>[target] doesn't want to be touched. (Their ERP preference, in the options)</span>")
+		to_chat(target, "<span class='warning'>[user] failed to touch you. (Your ERP preference, in the options)</span>")
+		log_combat(user, target, "tried unwanted ERP menu against")
+		return
+	user.start_sex_session_tgui(target)
