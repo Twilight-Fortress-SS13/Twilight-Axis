@@ -122,56 +122,45 @@
 	if(IsSleeping())
 		reset_sex_organs_after_sleep()
 
-/mob/living/carbon/human/proc/is_sex_node_restrained(node_id)
-	if(!node_id)
+/mob/living/carbon/human/proc/is_sex_node_restrained(node_flags)
+	if(!node_flags)
 		return FALSE
 
-	var/id = node_id
-	if(istext(id))
-		switch(id)
-			if(SEX_ORGAN_FILTER_LHAND)  id = SEX_ORGAN_FILTER_LHAND
-			if(SEX_ORGAN_FILTER_RHAND)  id = SEX_ORGAN_FILTER_RHAND
-			if(SEX_ORGAN_FILTER_LEGS)        id = SEX_ORGAN_FILTER_LEGS
-			if(SEX_ORGAN_FILTER_MOUTH)       id = SEX_ORGAN_FILTER_MOUTH
+	if(istext(node_flags))
+		switch(node_flags)
+			if(SEX_ORGAN_FILTER_LHAND, SEX_ORGAN_FILTER_RHAND, SEX_ORGAN_FILTER_HANDS)
+				node_flags = SEX_ORGAN_HANDS
+			if(SEX_ORGAN_FILTER_LEGS)
+				node_flags = SEX_ORGAN_LEGS
+			if(SEX_ORGAN_FILTER_MOUTH)
+				node_flags = SEX_ORGAN_MOUTH
+			else
+				return FALSE
 
-	switch(id)
-		if(SEX_ORGAN_FILTER_LHAND)
-			if(handcuffed)
-				return TRUE
+	if(node_flags & SEX_ORGAN_HANDS)
+		if(handcuffed || HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
+			return TRUE
 
-			if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
-				return TRUE
+		var/obj/item/L = get_item_for_held_index(LEFT_HANDS)
+		var/obj/item/R = get_item_for_held_index(RIGHT_HANDS)
 
-			var/obj/item/item_object = get_item_for_held_index(LEFT_HANDS)
-			if(item_object && !is_sex_toy(item_object))
-				return TRUE
+		var/left_blocked  = (L && !is_sex_toy(L))
+		var/right_blocked = (R && !is_sex_toy(R))
 
-			return FALSE
+		if(left_blocked && right_blocked)
+			return TRUE
 
-		if(SEX_ORGAN_FILTER_RHAND)
-			if(handcuffed)
-				return TRUE
+		return FALSE
 
-			if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
-				return TRUE
+	if(node_flags & SEX_ORGAN_LEGS)
+		if(legcuffed)
+			return TRUE
+		return FALSE
 
-			var/obj/item/item_object = get_item_for_held_index(RIGHT_HANDS)
-			if(item_object && !is_sex_toy(item_object))
-				return TRUE
-
-			return FALSE
-
-		if(SEX_ORGAN_FILTER_LEGS)
-			if(legcuffed)
-				return TRUE
-
-			return FALSE
-
-		if(SEX_ORGAN_FILTER_MOUTH)
-			if(is_mouth_covered())
-				return TRUE
-
-			return FALSE
+	if(node_flags & SEX_ORGAN_MOUTH)
+		if(is_mouth_covered())
+			return TRUE
+		return FALSE
 
 	return FALSE
 
