@@ -7,6 +7,10 @@
 	if(!mind)
 		log_runtime("NO MIND ON [src.name] WHEN TRANSFORMING")
 	Paralyze(1, ignore_canstun = TRUE)
+	
+	if(istype(src, /mob/living/carbon/human/species/wildshape))
+		var/mob/living/carbon/human/species/wildshape/WA = src
+		WA.remove_form_sex_organs()
 	//before we shed our items, save our neck and ring, if we have any, so we can quickly rewear them
 	var/obj/item/stored_neck = wear_neck
 	var/obj/item/stored_ring = wear_ring
@@ -41,6 +45,7 @@
 	if (stored_neck)
 		W.equip_to_slot_if_possible(stored_neck, SLOT_NECK)
 	W.after_creation()
+	W.ensure_form_sex_organs_from_original(src) // TA edit - new ERP-SYSTEM
 	W.stored_language = new
 	W.stored_language.copy_known_languages_from(src)
 	W.stored_skills = ensure_skills().known_skills.Copy()

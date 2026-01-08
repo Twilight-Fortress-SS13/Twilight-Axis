@@ -400,3 +400,66 @@
 
 	to_chat(src, span_notice("Your reflection settles into a new… compromising portrait."))
 	return TRUE
+
+/mob/living/carbon/human/species/wildshape
+	var/tmp/added_penis = FALSE
+	var/tmp/added_vagina = FALSE
+	var/tmp/added_breasts = FALSE
+	var/tmp/added_testicles = FALSE
+
+/mob/living/carbon/human/species/wildshape/proc/ensure_form_sex_organs_from_original(mob/living/carbon/human/original)
+	if(!original)
+		return
+
+	// penis
+	if(original.getorganslot(ORGAN_SLOT_PENIS) && !getorganslot(ORGAN_SLOT_PENIS))
+		var/obj/item/organ/penis/knotted/big/P = new
+		P.Insert(src, TRUE, FALSE)
+		added_penis = TRUE
+
+	// testicles
+	if(original.getorganslot(ORGAN_SLOT_TESTICLES) && !getorganslot(ORGAN_SLOT_TESTICLES))
+		var/obj/item/organ/testicles/T = new
+		T.Insert(src, TRUE, FALSE)
+		added_testicles = TRUE
+
+	// breasts
+	if(original.getorganslot(ORGAN_SLOT_BREASTS) && !getorganslot(ORGAN_SLOT_BREASTS))
+		var/obj/item/organ/breasts/B = new
+		B.Insert(src, TRUE, FALSE)
+		added_breasts = TRUE
+
+	// vagina
+	if(original.getorganslot(ORGAN_SLOT_VAGINA) && !getorganslot(ORGAN_SLOT_VAGINA))
+		var/obj/item/organ/vagina/V = new
+		V.Insert(src, TRUE, FALSE)
+		added_vagina = TRUE
+
+/mob/living/carbon/human/species/wildshape/proc/remove_form_sex_organs()
+	if(added_penis)
+		var/obj/item/organ/penis/P = getorganslot(ORGAN_SLOT_PENIS)
+		if(P)
+			P.Remove(src)
+			qdel(P)
+		added_penis = FALSE
+
+	if(added_testicles)
+		var/obj/item/organ/testicles/T = getorganslot(ORGAN_SLOT_TESTICLES)
+		if(T)
+			T.Remove(src)
+			qdel(T)
+		added_testicles = FALSE
+
+	if(added_breasts)
+		var/obj/item/organ/breasts/B = getorganslot(ORGAN_SLOT_BREASTS)
+		if(B)
+			B.Remove(src)
+			qdel(B)
+		added_breasts = FALSE
+
+	if(added_vagina)
+		var/obj/item/organ/vagina/V = getorganslot(ORGAN_SLOT_VAGINA)
+		if(V)
+			V.Remove(src)
+			qdel(V)
+		added_vagina = FALSE

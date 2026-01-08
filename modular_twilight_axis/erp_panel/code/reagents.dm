@@ -35,46 +35,46 @@
 			to_chat(carbon, "<span class='love_mid'>Как же мне нравится этот вкус...</span>")
 			carbon.add_stress(/datum/stressevent/nympho_taste)
 
-// /obj/item/reagent_containers/attackby(obj/item/I, mob/living/user, params) // add cook time to containers & salted milk for butter churning
-// 	..()
-// 	update_cooktime(user)
+/obj/item/reagent_containers/attackby(obj/item/I, mob/living/user, params) // add cook time to containers & salted milk for butter churning
+	..()
+	update_cooktime(user)
 
-// 	if(istype(I, /obj/item/reagent_containers/powder/salt))
-// 		var/normal_milk = reagents.get_reagent_amount(/datum/reagent/consumable/milk)
-// 		var/erp_milk = reagents.get_reagent_amount(/datum/reagent/consumable/milk/erp)
-// 		var/total_milk = normal_milk + erp_milk
-// 		if(total_milk < 15)
-// 			to_chat(user, span_warning("Not enough milk."))
-// 			return
+	if(istype(I, /obj/item/reagent_containers/powder/salt))
+		var/normal_milk = reagents.get_reagent_amount(/datum/reagent/consumable/milk)
+		var/erp_milk = reagents.get_reagent_amount(/datum/reagent/consumable/milk/erp)
+		var/total_milk = normal_milk + erp_milk
+		if(total_milk < 15)
+			to_chat(user, span_warning("Not enough milk."))
+			return
 
-// 		to_chat(user, span_warning("Adding salt to the milk."))
-// 		playsound(src, pick('sound/foley/waterwash (1).ogg','sound/foley/waterwash (2).ogg'), 100, FALSE)
+		to_chat(user, span_warning("Adding salt to the milk."))
+		playsound(src, pick('sound/foley/waterwash (1).ogg','sound/foley/waterwash (2).ogg'), 100, FALSE)
 
-// 		if(do_after(user, short_cooktime, target = src))
-// 			add_sleep_experience(user, /datum/skill/craft/cooking, user.STAINT)
+		if(do_after(user, short_cooktime, target = src))
+			add_sleep_experience(user, /datum/skill/craft/cooking, user.STAINT)
 
-// 			var/remaining = 15
-// 			var/used_normal = 0
-// 			var/used_erp = 0
-// 			if(normal_milk > 0)
-// 				var/to_remove_normal = min(normal_milk, remaining)
-// 				if(to_remove_normal > 0)
-// 					reagents.remove_reagent(/datum/reagent/consumable/milk, to_remove_normal)
-// 					used_normal = to_remove_normal
-// 					remaining -= to_remove_normal
+			var/remaining = 15
+			var/used_normal = 0
+			var/used_erp = 0
+			if(normal_milk > 0)
+				var/to_remove_normal = min(normal_milk, remaining)
+				if(to_remove_normal > 0)
+					reagents.remove_reagent(/datum/reagent/consumable/milk, to_remove_normal)
+					used_normal = to_remove_normal
+					remaining -= to_remove_normal
 
-// 			if(remaining > 0 && erp_milk > 0)
-// 				var/to_remove_erp = min(erp_milk, remaining)
-// 				if(to_remove_erp > 0)
-// 					reagents.remove_reagent(/datum/reagent/consumable/milk/erp, to_remove_erp)
-// 					used_erp = to_remove_erp
-// 					remaining -= to_remove_erp
+			if(remaining > 0 && erp_milk > 0)
+				var/to_remove_erp = min(erp_milk, remaining)
+				if(to_remove_erp > 0)
+					reagents.remove_reagent(/datum/reagent/consumable/milk/erp, to_remove_erp)
+					used_erp = to_remove_erp
+					remaining -= to_remove_erp
 
-// 			var/yield_normal = used_normal
-// 			var/yield_erp = round(used_erp / 3)
-// 			var/total_yield = yield_normal + yield_erp
-// 			if(total_yield <= 0)
-// 				total_yield = 1
+			var/yield_normal = used_normal
+			var/yield_erp = round(used_erp / 3)
+			var/total_yield = yield_normal + yield_erp
+			if(total_yield <= 0)
+				total_yield = 1
 
-// 			reagents.add_reagent(/datum/reagent/consumable/milk/salted, total_yield)
-// 			qdel(I)
+			reagents.add_reagent(/datum/reagent/consumable/milk/salted, total_yield)
+			qdel(I)
