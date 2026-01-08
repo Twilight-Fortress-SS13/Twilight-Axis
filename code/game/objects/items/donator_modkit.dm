@@ -8,6 +8,7 @@
 	w_class = WEIGHT_CLASS_SMALL	//So can fit in a bag, we don't need these large. They're just used to apply to items.
 	var/list/target_items = list()
 	var/result_item = null
+	var/icon_loadout = null
 
 /obj/item/enchantingkit/pre_attack(obj/item/I, mob/user)
 	if(is_type_in_list(I, target_items))
@@ -69,19 +70,22 @@
 /obj/item/enchantingkit/bat
 	name = "'Handcrafted Harp' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Harp"
-	target_items = list(/obj/item/rogue/instrument/harp = /obj/item/rogue/instrument/harp/handcarved)
+	target_items = list(/obj/item/rogue/instrument/harp)
+	result_item = /obj/item/rogue/instrument/harp/handcarved
 
 //Rebel - Custom visored sallet type
 /obj/item/enchantingkit/rebel
 	name = "'Gilded Sallet' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Visored Sallet"
-	target_items = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored = /obj/item/clothing/head/roguetown/helmet/sallet/visored/gilded) 
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored) 
+	result_item = /obj/item/clothing/head/roguetown/helmet/sallet/visored/gilded
 
 //Bigfoot - Custom knight helm type
 /obj/item/enchantingkit/bigfoot
 	name = "'Gilded Knight Helm' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Knight Helmet"
-	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight = /obj/item/clothing/head/roguetown/helmet/heavy/knight/gilded)
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight)
+	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/knight/gilded
 
 //Bigfoot - Custom great axe type
 /obj/item/enchantingkit/bigfoot_axe
@@ -107,6 +111,7 @@
 		/obj/item/rogueweapon/greatsword	  				= /obj/item/rogueweapon/greatsword/eiren,
 		/obj/item/rogueweapon/greatsword/grenz/flamberge 	= /obj/item/rogueweapon/greatsword/grenz/flamberge/eiren
 		)
+	icon_loadout = /obj/item/rogueweapon/greatsword/eiren
 
 /obj/item/enchantingkit/eirensabre
 	name = "'Lunae' morphing elixir"
@@ -134,6 +139,7 @@
 	target_items = list(
 		/obj/item/rogueweapon/greatsword/zwei = /obj/item/rogueweapon/greatsword/zwei/inverserun, 
 		/obj/item/rogueweapon/greatsword/grenz = /obj/item/rogueweapon/greatsword/zwei/inverserun/steel)
+	icon_loadout = /obj/item/rogueweapon/greatsword/zwei/inverserun
 
 
 //Zoe - Tytos Blackwood cloak

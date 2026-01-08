@@ -371,3 +371,7 @@
 	desc = span_green("Astrata and her gaze may burn you now, but you distantly remember when it was pleasant to your skin.")
 	timer = 20 SECONDS
 
+/datum/stressevent/xylixian_fate
+	timer = 10 MINUTES
+	stressadd = -2
+	desc = span_green("Xylix spun the thread of fate in my favour! Truly, I am blessed!")

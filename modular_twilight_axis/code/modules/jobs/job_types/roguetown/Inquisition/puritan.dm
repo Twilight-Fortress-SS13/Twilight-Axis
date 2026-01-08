@@ -1,4 +1,4 @@
-/datum/job/roguetown/puritan/after_spawn(mob/living/H, mob/M, latejoin = TRUE)
+/datum/job/roguetown/inquisitor/after_spawn(mob/living/H, mob/M, latejoin = TRUE)
 	..()
 	if(ishuman(H))
 		var/prev_real_name = H.real_name

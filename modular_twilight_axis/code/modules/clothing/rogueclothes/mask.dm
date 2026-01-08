@@ -87,3 +87,18 @@
 
 /obj/item/clothing/mask/rogue/facemask/steel/kazengun
 	armor = ARMOR_PLATE
+
+/obj/item/clothing/mask/rogue/ragmask/bishop
+	name = "bishop mask"
+	icon_state = "bishop_mask"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
+	flags_inv = HIDEFACE|HIDEFACIALHAIR|HIDESNOUT
+	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP|ITEM_SLOT_HEAD
+	experimental_onhip = TRUE
+	sewrepair = TRUE
+	resistance_flags = FIRE_PROOF
+
+/obj/item/clothing/mask/rogue/ragmask/bishop/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CHOSEN, "VISAGE")

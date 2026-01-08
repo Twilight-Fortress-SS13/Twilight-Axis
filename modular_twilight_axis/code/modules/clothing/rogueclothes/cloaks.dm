@@ -212,3 +212,73 @@
 		icon_state = hammerhold_final_icon
 		item_state = hammerhold_final_icon
 		update_icon()
+
+/obj/item/clothing/cloak/bishop
+	name = "bishop cape"
+	desc = ""
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "bishop_cape"
+	item_state = "bishop_cape"
+	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
+	inhand_mod = TRUE
+
+/obj/item/clothing/cloak/bishop/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/storage/concrete/roguetown/cloak)
+
+/obj/item/clothing/cloak/templar/eoran/alt
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "tabard_blue"
+	item_state = "tabard_blue"
+	var/eora_colors = list("Blue Tabard", "Pink Tabard")
+	var/picked = FALSE
+	var/eora_final_icon = null
+
+/obj/item/clothing/cloak/templar/eoran/alt/attack_right(mob/user)
+	..()
+	if(!picked)
+		var/choiceC = input(user, "Choose a color.", "Eora colors") as anything in eora_colors
+		if(choiceC == "Blue Tabard")
+			icon_state = "tabard_blue"
+			item_state = "tabard_blue"
+			eora_final_icon = "tabard_blue"
+		if(choiceC == "Pink Tabard")
+			icon_state = "tabard_pink"
+			item_state = "tabard_pink"
+			eora_final_icon = "tabard_pink"
+		update_icon()
+		if(loc == user && ishuman(user))
+			var/mob/living/carbon/H = user
+			H.update_inv_cloak()
+		if(alert("Are you pleased with your tabard?", "Tabard", "Yes", "No") != "Yes")
+			icon_state = "tabard_blue"
+			item_state = "tabard_blue"
+			eora_final_icon = "tabard_blue"
+			if(loc == user && ishuman(user))
+				var/mob/living/carbon/H = user
+				H.update_inv_cloak()
+			update_icon()
+			return
+		picked = TRUE
+
+/obj/item/clothing/cloak/templar/eoran/alt/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		add_overlay(pic)
+
+/obj/item/clothing/cloak/templar/eoran/alt/equipped(mob/user, slot)
+	. = ..()
+	if(eora_final_icon)
+		icon_state = eora_final_icon
+		item_state = eora_final_icon
+		update_icon()
+
+/obj/item/clothing/cloak/templar/eoran/alt/dropped(mob/user, slot)
+	. = ..()
+	if(eora_final_icon)
+		icon_state = eora_final_icon
+		item_state = eora_final_icon
+		update_icon()

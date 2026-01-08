@@ -307,3 +307,172 @@
 				H.update_inv_armor()
 			return
 		picked = TRUE
+
+/obj/item/clothing/suit/roguetown/shirt/robe/bishop
+	name = "bishop robe"
+	desc = ""
+	icon_state = "bishop_robe"
+	item_state = "bishop_robe"
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	body_parts_covered = CHEST|GROIN|VITALS
+	flags_inv= HIDEBOOB|HIDECROTCH
+	resistance_flags = FIRE_PROOF // astratan
+	armor = ARMOR_PADDED	//Equal to gamby
+	color = null
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+
+/obj/item/clothing/suit/roguetown/shirt/robe/bishop/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CHOSEN, "VESTMENTS")
+
+/obj/item/clothing/suit/roguetown/shirt/robe/bishop/equipped(mob/living/user, slot)
+	..()
+	if(slot != SLOT_ARMOR|SLOT_SHIRT)
+		return
+	if(!HAS_TRAIT(user, TRAIT_CHOSEN))	//Requires this cus it's a priest-only thing.
+		return
+	ADD_TRAIT(user, TRAIT_MONK_ROBE, TRAIT_GENERIC)
+	to_chat(user, span_notice("With my vows to poverty and my vestments, I feel vigorous - empowered by my God!"))
+
+/obj/item/clothing/suit/roguetown/shirt/robe/bishop/dropped(mob/living/user)
+	..()
+	REMOVE_TRAIT(user, TRAIT_MONK_ROBE, TRAIT_GENERIC)
+	to_chat(user, span_notice("I must lay down my robes and rest; even God's chosen must rest.."))
+
+/obj/item/clothing/suit/roguetown/shirt/robe/nunTA
+	name = "nun dress"
+	desc = ""
+	icon_state = "nun_dress"
+	item_state = "nun_dress"
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	body_parts_covered = CHEST|GROIN|VITALS
+	flags_inv= HIDEBOOB|HIDECROTCH
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	allowed_sex = list(FEMALE)
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+
+/obj/item/clothing/suit/roguetown/shirt/kimono
+	name = "kimono"
+	desc = ""
+	icon_state = "white_kimono"
+	item_state = "white_kimono"
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	body_parts_covered = CHEST|GROIN|VITALS
+	flags_inv= HIDEBOOB|HIDECROTCH
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	allowed_sex = list(FEMALE)
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	var/kimono_colors = list("white", "blue", "black")
+	var/picked = FALSE
+	var/kimono_final_icon = null // eto pizdec blyat ia ebal
+
+/obj/item/clothing/suit/roguetown/shirt/kimono/attack_right(mob/user)
+	..()
+	if(!picked)
+		var/iconH = icon_state
+		var/choiceC = input(user, "Choose a color.", "Hammerhold colors") as anything in kimono_colors
+		if(choiceC == "white")
+			iconH = "white_kimono"
+		if(choiceC == "black")
+			iconH = "black_kimono"
+
+		if(choiceC == "red")
+			iconH = "red_kimono"
+		icon_state = iconH
+		item_state = iconH
+		base_icon_state = iconH
+		kimono_final_icon = iconH
+		update_icon()
+		if(alert("Are you pleased with your kimono?", "Kimono", "Yes", "No") != "Yes")
+			icon_state = "white_kimono"
+			item_state = "white_kimono"
+			base_icon_state = "white_kimono"
+			kimono_final_icon = "white_kimono"
+			update_icon()
+			return
+		picked = TRUE
+		if(loc == user && ishuman(user))
+			var/mob/living/carbon/H = user
+			H.update_inv_shirt()
+
+/obj/item/clothing/suit/roguetown/shirt/kimono/equipped(mob/user, slot)
+	. = ..()
+	if(kimono_final_icon)
+		icon_state = kimono_final_icon
+		item_state = kimono_final_icon
+		update_icon()
+
+/obj/item/clothing/suit/roguetown/shirt/kimono/dropped(mob/user, slot)
+	. = ..()
+	if(kimono_final_icon)
+		icon_state = kimono_final_icon
+		item_state = kimono_final_icon
+		update_icon()
+
+/obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite
+	name = "eoran robe"
+	desc = "Holy robes, intended for use by followers of Eora"
+	icon_state = "robe_blue"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+
+/obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite/attack_right(mob/user)
+	switch(fanatic_wear)
+		if(FALSE)
+			name = "open eoran robe"
+			desc = "Used by more radical followers of the Eoran Church"
+			body_parts_covered = null
+			icon_state = "straps_blue"
+			fanatic_wear = TRUE
+			flags_inv = HIDEBOOB
+			to_chat(usr, span_warning("Now wearing radically!"))
+		if(TRUE)
+			name = "eoran robe"
+			desc = "Holy robes, intended for use by followers of Eora"
+			body_parts_covered = CHEST|GROIN|ARMS|LEGS|VITALS
+			icon_state = "robe_blue"
+			fanatic_wear = FALSE
+			flags_inv = HIDEBOOB|HIDECROTCH
+			to_chat(usr, span_warning("Now wearing normally!"))
+	update_icon()
+	if(ismob(loc))
+		var/mob/L = loc
+		L.update_inv_armor()
+
+/obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite/pink
+	name = "eoran robe"
+	desc = "Holy robes, intended for use by followers of Eora"
+	icon_state = "robe_pink"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+
+/obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite/pink/attack_right(mob/user)
+	switch(fanatic_wear)
+		if(FALSE)
+			name = "open eoran robe"
+			desc = "Used by more radical followers of the Eoran Church"
+			body_parts_covered = null
+			icon_state = "straps_pink"
+			fanatic_wear = TRUE
+			flags_inv = HIDEBOOB
+			to_chat(usr, span_warning("Now wearing radically!"))
+		if(TRUE)
+			name = "eoran robe"
+			desc = "Holy robes, intended for use by followers of Eora"
+			body_parts_covered = CHEST|GROIN|ARMS|LEGS|VITALS
+			icon_state = "robe_pink"
+			fanatic_wear = FALSE
+			flags_inv = HIDEBOOB|HIDECROTCH
+			to_chat(usr, span_warning("Now wearing normally!"))
+	update_icon()
+	if(ismob(loc))
+		var/mob/L = loc
+		L.update_inv_armor()

@@ -1,17 +1,17 @@
-/datum/outfit/job/roguetown/puritan/inspector/pre_equip(mob/living/carbon/human/H)
+/datum/outfit/job/roguetown/inquisitor/inspector/pre_equip(mob/living/carbon/human/H)
 	. = ..()
 	H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 3, TRUE)
 	belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/runelock
 	beltr = /obj/item/quiver/twilight_bullet/runed
 	backl = null
 
-/datum/advclass/puritan/blackpowder
+/datum/advclass/inquisitor/blackpowder
 	name = "Blackpowder Vanguard"
 	tutorial = "A truly rare specimen among the ranks of the Inquisition - an agent of the Blackpowder Order now serving as an Ordinator, hunting down Psydon's many enemies, set upon this task by Marshal Inquisitionis himself. There are many mistakes a heretic can commit over their lifespan, but when facing a Blackpowder Vanguard, their final error tends to be the fact that they brought a sword to a gunfight."
-	outfit = /datum/outfit/job/roguetown/puritan/blackpowder
+	outfit = /datum/outfit/job/roguetown/inquisitor/blackpowder
 	subclass_languages = list(/datum/language/otavan)
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_blackpowder.ogg'
-	category_tags = list(CTAG_PURITAN)
+	category_tags = list(CTAG_INQUISITION)
 	traits_applied = list(
 		TRAIT_STEELHEARTED,
 		TRAIT_MEDIUMARMOR,
@@ -49,7 +49,7 @@
 	)
 	extra_context = "This subclass gets different skillsets depending on the chosen relic - a stealth-focused agent with the Umbra, an assassin's firearm, or a combat-focused sharpshooter with the Doomsdae, a runelock rifle."
 
-/datum/outfit/job/roguetown/puritan/blackpowder/pre_equip(mob/living/carbon/human/H)
+/datum/outfit/job/roguetown/inquisitor/blackpowder/pre_equip(mob/living/carbon/human/H)
 	..()
 	has_loadout = TRUE
 	H.verbs |= /mob/living/carbon/human/proc/faith_test
@@ -77,7 +77,7 @@
 		/obj/item/paper/inqslip/arrival/inq = 1
 		)
 
-/datum/outfit/job/roguetown/puritan/blackpowder/choose_loadout(mob/living/carbon/human/H)
+/datum/outfit/job/roguetown/inquisitor/blackpowder/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
 	var/weapons = list("Doomsdae (Runelock Rifle)", "Umbra (Assassin's Firearm)")
 	var/weapon_choice = input(H,"CHOOSE YOUR RELIQUARY PIECE.", "WIELD THEM IN HIS NAME.") as anything in weapons

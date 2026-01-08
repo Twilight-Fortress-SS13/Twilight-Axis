@@ -4,6 +4,7 @@
 	target_items = list(
 		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/aristocratic, 
 		/obj/item/clothing/shoes/roguetown/boots/nobleboot = /obj/item/clothing/shoes/roguetown/boots/nobleboot/aristocratic)
+	icon_loadout = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/aristocratic
 
 
 //Kumie donator item - Aristocratic gloves
@@ -13,6 +14,7 @@
 	target_items = list(
 		/obj/item/clothing/gloves/roguetown/fingerless_leather = /obj/item/clothing/gloves/roguetown/fingerless_leather/aristocratic, 
 		/obj/item/clothing/gloves/roguetown/angle = /obj/item/clothing/gloves/roguetown/angle/aristocratic)
+	icon_loadout = /obj/item/clothing/gloves/roguetown/fingerless_leather/aristocratic
 
 //Kumie donator item - Aristocratic shirt
 /obj/item/enchantingkit/kumie_shirt
@@ -21,6 +23,7 @@
 	target_items = list(
 		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/armor/gambeson/aristocratic, 
 		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/armor/gambeson/aristocratic/heavy)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/gambeson/aristocratic
 
 //Kumie donator item - Aristocratic coat
 /obj/item/enchantingkit/kumie_coat
@@ -47,6 +50,12 @@
 	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy)
 	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/astratan/oldrw
 
+/obj/item/enchantingkit/eoran_helm_resprite
+	name = "'Flower Eora Helmet' morphing elixer'"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Heavy Helmet"
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy)
+	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/eoran/resprite
+
 //Jägerbüchse - Arquebus
 /obj/item/enchantingkit/jagerrifle
 	name = "'Jägerbüchse' morphing elixir"
@@ -54,3 +63,4 @@
 	target_items = list(
 		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle, 
 		/obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet = /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/jagerrifle)
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle

@@ -85,3 +85,15 @@
 
 /obj/item/clothing/head/roguetown/helmet/heavy/astratan/oldrw/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
+
+/obj/item/clothing/head/roguetown/helmet/heavy/eoran/resprite
+	name = "eoran helmet"
+	desc = "A visage of beauty, this helm made in soft pink and beige reminds one of the grace of Eora."
+	icon_state = "helmet_eora"
+	item_state = "helmet_eora"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	adjustable = CAN_CADJUST
+
+/obj/item/clothing/head/roguetown/helmet/heavy/astratan/oldrw/ComponentInitialize()
+	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet

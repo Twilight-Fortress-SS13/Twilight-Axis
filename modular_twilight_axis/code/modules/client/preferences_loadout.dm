@@ -98,8 +98,13 @@
 				if(ispath(item.path, /obj/item/enchantingkit))
 					var/obj/item/enchantingkit/kit_typepath = item.path
 					var/obj/result_item = kit_typepath.result_item
-					icon = result_item::icon
-					icon_state = result_item::icon_state
+					var/obj/icon_loadout = kit_typepath.icon_loadout
+					if(result_item != null)
+						icon = result_item::icon
+						icon_state = result_item::icon_state
+					else
+						icon = icon_loadout::icon
+						icon_state = icon_loadout::icon_state						
 				
 				if(item.name in selected_loadout_items)
 					selected = TRUE

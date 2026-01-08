@@ -44,9 +44,6 @@
 	var/is_knotting = sex_session.do_knot_action
 	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [is_knotting ? "трахает узлом в глотку" : "трахает горло"] [target]."))
 	playsound(target, 'sound/misc/mat/segso.ogg', 50, TRUE, -2, ignore_walls = FALSE)
-	// thirty five yils...
-	if(istype(target.head, /obj/item/clothing/head/roguetown/jester))
-		playsound(target, SFX_JINGLE_BELLS, 30, TRUE, -2, ignore_walls = FALSE)
 	do_thrust_animate(user, target)
 
 	sex_session.perform_sex_action(user, 2, 0, TRUE)

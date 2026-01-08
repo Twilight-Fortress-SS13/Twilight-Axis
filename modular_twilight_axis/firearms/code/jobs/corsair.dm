@@ -77,23 +77,25 @@
 			backr = /obj/item/gun/ballistic/twilight_firearm/flintgonne
 			r_hand = /obj/item/rogueweapon/sword/cutlass
 			mask = /obj/item/clothing/mask/rogue/facemask/steel
-			backpack_contents = list(/obj/item/twilight_powderflask = 1, /obj/item/natural/cloth = 1, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
+			backpack_contents = list(/obj/item/twilight_powderflask = 1, /obj/item/bomb = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
 			H.grant_language(/datum/language/grenzelhoftian)
 
 		if("Wōkòu")
 			H.set_blindness(0)
 			mask = /obj/item/clothing/mask/rogue/facemask/steel/kazengun
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants2
+			armor = /obj/item/clothing/suit/roguetown/armor/basiceast/captainrobe
 			cloak = /obj/item/clothing/cloak/eastcloak1
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 			head = /obj/item/clothing/head/roguetown/mentorhat
 			gloves = /obj/item/clothing/gloves/roguetown/eastgloves2
 			shoes = /obj/item/clothing/shoes/roguetown/boots
+			neck = /obj/item/storage/belt/rogue/pouch/coins/poor
 			shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt1
 			belt = /obj/item/storage/belt/rogue/leather/black
 			beltl = /obj/item/quiver/twilight_bullet/lead
 			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 			backl = /obj/item/storage/backpack/rogue/satchel
-			backpack_contents = list(/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = 1, /obj/item/twilight_powderflask = 1, /obj/item/natural/cloth = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
+			backpack_contents = list(/obj/item/bomb/smoke = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = 1, /obj/item/twilight_powderflask = 1, /obj/item/rope/chain = 1)
 			H.grant_language(/datum/language/kazengunese)
 	wretch_select_bounty(H)

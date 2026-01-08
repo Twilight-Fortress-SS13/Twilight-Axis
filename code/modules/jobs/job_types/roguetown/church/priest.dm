@@ -11,7 +11,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 
 /datum/job/roguetown/priest
 	title = "Bishop"
-	flag = PRIEST
+	flag = BISHOP
 	department_flag = CHURCHMEN
 	faction = "Station"
 	total_positions = 1
@@ -27,7 +27,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 
 	spells = list(/obj/effect/proc_holder/spell/invoked/cure_rot, /obj/effect/proc_holder/spell/self/convertrole/templar, /obj/effect/proc_holder/spell/self/convertrole/monk, /obj/effect/proc_holder/spell/invoked/projectile/divineblast, /obj/effect/proc_holder/spell/invoked/wound_heal, /obj/effect/proc_holder/spell/invoked/takeapprentice)
 	outfit = /datum/outfit/job/roguetown/priest
-	display_order = JDO_PRIEST
+	display_order = JDO_BISHOP
 	give_bank_account = TRUE
 	min_pq = 12 // You should know the basics of things if you're going to lead the town's entire religious sector
 	max_pq = null
@@ -113,6 +113,10 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	H.verbs |= /mob/living/carbon/human/proc/completesermon
 	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/convert_heretic_priest)
 	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/revive)
+	H.mind.special_items["Bishop Cape"] = /obj/item/clothing/cloak/bishop
+	H.mind.special_items["Bishop Hood"] = /obj/item/clothing/head/roguetown/roguehood/bishop
+	H.mind.special_items["Bishop Mask"] = /obj/item/clothing/mask/rogue/ragmask/bishop
+	H.mind.special_items["Bishop Robe"] = /obj/item/clothing/suit/roguetown/shirt/robe/bishop
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_UPPER_CLASS, H, "Church Funding.")
 	switch(H.patron?.type)
@@ -279,7 +283,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 /datum/job/priest/vice //just used to change the priest title
 	title = "Vice Priest"
 	f_title = "Vice Priestess"
-	flag = PRIEST
+	flag = BISHOP
 	department_flag = CHURCHMEN
 	total_positions = 0
 	spawn_positions = 0
