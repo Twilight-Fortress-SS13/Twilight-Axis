@@ -15,6 +15,15 @@
 	if(!owner)
 		return
 
+	switch(organ.penis_type)
+		if(PENIS_TYPE_KNOTTED, PENIS_TYPE_TAPERED, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED, PENIS_TYPE_BARBED_KNOTTED)
+			have_knot = TRUE
+		else
+			have_knot = FALSE
+
+	if(have_knot && !owner.GetComponent(/datum/component/knotting))
+		owner.AddComponent(/datum/component/knotting)
+
 	var/datum/reagent/reagent_object = GLOB.chemical_reagents_list[producing_reagent_id]
 	if(!reagent_object)
 		return 
@@ -32,15 +41,6 @@
 		stored_liquid = new(stored_liquid_max)
 
 	injection_amount = organ.penis_size
-
-	switch(organ.penis_type)
-		if(PENIS_TYPE_KNOTTED, PENIS_TYPE_TAPERED, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED, PENIS_TYPE_BARBED_KNOTTED)
-			have_knot = TRUE
-		else
-			have_knot = FALSE
-
-	if(have_knot && !owner.GetComponent(/datum/component/knotting))
-		owner.AddComponent(/datum/component/knotting)
 
 	if(producing_reagent_id && producing_reagent_rate > 0 && stored_liquid)
 		start_production_timer()

@@ -411,25 +411,33 @@
 	if(!original)
 		return
 
-	// penis
-	if(original.getorganslot(ORGAN_SLOT_PENIS) && !getorganslot(ORGAN_SLOT_PENIS))
-		var/obj/item/organ/penis/knotted/big/P = new
-		P.Insert(src, TRUE, FALSE)
-		added_penis = TRUE
+	if(ispath(internal_organs_slot?[ORGAN_SLOT_PENIS]))
+		internal_organs_slot[ORGAN_SLOT_PENIS] = null
+	if(ispath(internal_organs_slot?[ORGAN_SLOT_TESTICLES]))
+		internal_organs_slot[ORGAN_SLOT_TESTICLES] = null
+	if(ispath(internal_organs_slot?[ORGAN_SLOT_BREASTS]))
+		internal_organs_slot[ORGAN_SLOT_BREASTS] = null
+	if(ispath(internal_organs_slot?[ORGAN_SLOT_VAGINA]))
+		internal_organs_slot[ORGAN_SLOT_VAGINA] = null
 
-	// testicles
 	if(original.getorganslot(ORGAN_SLOT_TESTICLES) && !getorganslot(ORGAN_SLOT_TESTICLES))
 		var/obj/item/organ/testicles/T = new
 		T.Insert(src, TRUE, FALSE)
 		added_testicles = TRUE
 
-	// breasts
+	if(original.getorganslot(ORGAN_SLOT_PENIS) && !getorganslot(ORGAN_SLOT_PENIS))
+		var/obj/item/organ/penis/knotted/big/P = new
+		P.Insert(src, TRUE, FALSE)
+		var/datum/sex_organ/penis/p_organ = P.sex_organ
+		if(p_organ)
+			p_organ.refresh_from_organ(P)
+		added_penis = TRUE
+
 	if(original.getorganslot(ORGAN_SLOT_BREASTS) && !getorganslot(ORGAN_SLOT_BREASTS))
 		var/obj/item/organ/breasts/B = new
 		B.Insert(src, TRUE, FALSE)
 		added_breasts = TRUE
 
-	// vagina
 	if(original.getorganslot(ORGAN_SLOT_VAGINA) && !getorganslot(ORGAN_SLOT_VAGINA))
 		var/obj/item/organ/vagina/V = new
 		V.Insert(src, TRUE, FALSE)

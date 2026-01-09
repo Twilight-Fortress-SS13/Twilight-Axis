@@ -18,6 +18,7 @@
 		PENIS_TYPE_KNOTTED,
 		PENIS_TYPE_TAPERED_DOUBLE_KNOTTED,
 		PENIS_TYPE_BARBED_KNOTTED,
+		PENIS_TYPE_TAPERED
 	))
 
 	var/datum/component/knotting/knoting_object = human_object.GetComponent(/datum/component/knotting)
