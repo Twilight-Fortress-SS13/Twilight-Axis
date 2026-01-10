@@ -268,7 +268,7 @@
 
 	try_do_pain_effect(final_pain, giving)
 	try_do_moan(arousal_amt, final_pain, applied_force, giving, can_moan)
-	try_do_maso_vice_moan(can_moan)
+	try_do_maso_vice_moan()
 
 /datum/component/arousal/damage_from_pain(pain_amt, organ_id, applied_force)
 	var/mob/living/carbon/human/user = parent
@@ -436,7 +436,9 @@
 		return
 
 	adjust_arousal(parent, dt * -1)
-	accumulated_pain_for_vice -=  (dt / 10)
+	if(!(is_in_sex_scene()))
+		accumulated_pain_for_vice -= dt / 10
+		accumulated_pain_for_vice = max(accumulated_pain_for_vice, 0)
 
 /datum/component/arousal/update_arousal_effects()
 	update_pink_screen()
@@ -622,15 +624,14 @@
 	last_moan = world.time
 	user.emote(chosen_emote)
 
-/datum/component/arousal/proc/try_do_maso_vice_moan(can_moan = TRUE)
+/datum/component/arousal/proc/try_do_maso_vice_moan()
 	var/mob/living/carbon/human/user = parent
 	if(!user)
 		return
-	if(!can_moan)
-		return
 	if(user.stat != CONSCIOUS)
 		return
-
+	if(!user.has_flaw(/datum/charflaw/addiction/masochist))
+		return
 	if(accumulated_pain_for_vice < 1)
 		return
 
@@ -639,10 +640,6 @@
 		return
 
 	accumulated_pain_for_vice = 0
-
-	if(!user.has_flaw(/datum/charflaw/addiction/masochist))
-		return
-
 	user.emote("painmoan", forced = TRUE)
 	last_moan = world.time
 
