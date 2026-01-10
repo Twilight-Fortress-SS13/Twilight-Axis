@@ -887,20 +887,35 @@
 	return FALSE
 
 /datum/sex_session_tgui/proc/update_partners_proximity()
+	// подтянуть proxy под текущую голову
 	if(partner_bodypart_override && istype(partner_bodypart_override, /obj/item/bodypart/head/dullahan))
 		for(var/mob/living/carbon/human/erp_proxy/proxy in world)
 			if(proxy.source_part == partner_bodypart_override && !(proxy in partners))
 				partners += proxy
-				
+
 	if(QDELETED(user))
 		return
 
 	var/list/new_partners = list()
+	var/atom/partner_anchor = null
+	if(partner_bodypart_override && istype(partner_bodypart_override, /obj/item/bodypart/head/dullahan))
+		partner_anchor = partner_bodypart_override
+
 	for(var/mob/living/carbon/human/M in partners)
 		if(QDELETED(M))
 			continue
+
+		if(istype(M, /mob/living/carbon/human/erp_proxy))
+			var/mob/living/carbon/human/erp_proxy/P = M
+			if(partner_anchor && P.source_part == partner_anchor)
+				if(get_dist(user, partner_anchor) > 2)
+					continue
+				new_partners += M
+				continue
+
 		if(get_dist(user, M) > 2)
 			continue
+
 		new_partners += M
 
 	var/old_len = partners.len
@@ -913,7 +928,6 @@
 		dirty_links = TRUE
 		dirty_custom_actions = TRUE
 
-	// текущий выбранный партнер должен быть валиден именно "рядом"
 	var/mob/living/carbon/human/cur = null
 	if(current_partner_ref)
 		cur = locate(current_partner_ref)

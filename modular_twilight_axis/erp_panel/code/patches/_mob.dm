@@ -239,7 +239,6 @@
 	session_object.ui_interact(src)
 	return session_object
 
-
 /mob/living/carbon/human/proc/apply_soft_arousal(delta = 0.25)
 	if(delta <= 0)
 		return
