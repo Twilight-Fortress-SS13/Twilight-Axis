@@ -11,7 +11,7 @@
 	outfit = /datum/outfit/job/roguetown/inquisitor/blackpowder
 	subclass_languages = list(/datum/language/otavan)
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_blackpowder.ogg'
-	category_tags = list(CTAG_INQUISITION)
+	category_tags =  list(CTAG_INQUSITOR)
 	traits_applied = list(
 		TRAIT_STEELHEARTED,
 		TRAIT_MEDIUMARMOR,

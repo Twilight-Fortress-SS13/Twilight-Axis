@@ -955,6 +955,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/neck/roguetown/psicross/astrata/dasfox
 	category = list("Разное", "Донат")
 	donatitem = TRUE
+ 
+/datum/loadout_item/donator_ryan
+	name = "Donator Item - Western Estates Caparison"
+	path = /obj/item/caparison/ryan
+	category = list("Разное", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_ryan/psy_helm
+	name = "Donator Kit - Unorthodoxist Psydonite Helm - Required: Psydonic Helmet(Armet,Barbute,Bucket Helmet or Sallet)"
+	path = /obj/item/enchantingkit/ryan_psyhelm
+	category = list("Разное", "Донат")
+	donatitem = TRUE
 
 /datum/loadout_item/donator_kumie
 	name = "Donator Kit - Aristocratic Boots - Required: Heavy Leather Boots or Noble Boots"

@@ -10,7 +10,7 @@
 	outfit = /datum/outfit/job/roguetown/blackpowder_legionnaire
 	subclass_languages = list(/datum/language/otavan)
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_blackpowder.ogg'
-	category_tags = list(CTAG_INQUISITION)
+	category_tags = list(CTAG_ORTHODOXIST)
 	traits_applied = list(TRAIT_PSYDONITE)
 	subclass_stats = list(
 		STATKEY_PER = 3,

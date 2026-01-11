@@ -182,7 +182,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/lich_headshot_link
 	var/vampire_headshot_link
 	var/werewolf_headshot_link //not used but setting up for the future
-	var/chatheadshot = FALSE
+	var/chatheadshot = TRUE
 	var/nsfw_headshot_link //Twilight Axis edit далее TA
 	var/list/violated = list() // ТА
 	var/ooc_extra

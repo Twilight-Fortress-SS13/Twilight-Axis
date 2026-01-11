@@ -815,6 +815,22 @@
 			if(-INFINITY to -5)
 				. += span_revennotice("[t_He] look[p_s()] as blunt-minded as a rock.")
 
+	var/showassess = FALSE
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(get_dist(src, H) <= ((2 + clamp(floor(((H.STAPER - 10))),-1, 4)) + HAS_TRAIT(user, TRAIT_INTELLECTUAL)))
+			showassess = TRUE
+
+	var/displayed_headshot
+	var/datum/antagonist/vampire/vampireplayer = src.mind?.has_antag_datum(/datum/antagonist/vampire)
+	var/datum/antagonist/lich/lichplayer = src.mind?.has_antag_datum(/datum/antagonist/lich)
+	if(vampireplayer && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS))&& !isnull(vampire_headshot_link)) //vampire with their disguise down and a valid headshot
+		displayed_headshot = src.vampire_headshot_link
+	else if (lichplayer && !isnull(src.lich_headshot_link))//Lich with a valid headshot
+		displayed_headshot = src.lich_headshot_link
+	else
+		displayed_headshot = src.headshot_link
+
 	if(maniac)
 		var/obj/item/organ/heart/heart = getorganslot(ORGAN_SLOT_HEART)
 		if(heart?.inscryption && (heart.inscryption_key in maniac.key_nums))
@@ -846,6 +862,17 @@
 
 	. += medical_text
 
+	if(!obscure_name || client?.prefs.masked_examine)
+		if(showassess)
+			. += "<a href='?src=[REF(src)];task=assess;'>Assess</a>"
+		if(flavortext || displayed_headshot || ooc_notes)
+			. += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a>"
+		if(length(rumour) || length(noble_gossip))
+			if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+				. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
+		if((user.client?.prefs.chatheadshot) && displayed_headshot)
+			. += "<span class='info'><img src=[displayed_headshot] width=100 height=100/></span>"
+
 	if(!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS) && user != src)
 		if(isliving(user))
 			var/mob/living/L = user
@@ -867,26 +894,11 @@
 							src_skill = I.associated_skill
 					var/skilldiff = user.get_skill_level(user_skill) - get_skill_level(src_skill)
 					. += "<font size = 3><i>[skilldiff_report(skilldiff)] in my wielded skill than they are in theirs.</i></font>"
-	var/displayed_headshot
-	var/datum/antagonist/vampire/vampireplayer = src.mind?.has_antag_datum(/datum/antagonist/vampire)
-	var/datum/antagonist/lich/lichplayer = src.mind?.has_antag_datum(/datum/antagonist/lich)
-	if(vampireplayer && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS))&& !isnull(vampire_headshot_link)) //vampire with their disguise down and a valid headshot
-		displayed_headshot = src.vampire_headshot_link
-	else if (lichplayer && !isnull(src.lich_headshot_link))//Lich with a valid headshot
-		displayed_headshot = src.lich_headshot_link
-	else
-		displayed_headshot = src.headshot_link
-
-	if(!obscure_name || client?.prefs.masked_examine)
-		if((user.client?.prefs.chatheadshot) && displayed_headshot)
-			. += "<span class='info'><img src=[displayed_headshot] width=100 height=100/></span>"
-		if(flavortext || displayed_headshot || ooc_notes)
-			. += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a>"
 
 	/// Rumours & Gossip
-	if(length(rumour) || length(noble_gossip))
-		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
-			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
+//	if(length(rumour) || length(noble_gossip)) TA EDIT START
+//		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+//			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>" TA EDIT END
 
 	if(lip_style)
 		switch(lip_color)
