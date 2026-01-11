@@ -53,7 +53,8 @@
 	sewrepair = TRUE
 	unarmed_bonus = 1.0
 	color = "#4b3a2c"
-	salvage_result = null
+	salvage_amount = 1
+	salvage_result = /obj/item/natural/hide/cured
 	cold_protection = 2
 	icon = 'modular_twilight_axis/erp_panel/icons/bondage.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/erp_panel/icons/onmob/bondage.dmi'
@@ -68,6 +69,8 @@
 	icon_state = "hbit"
 	item_state = "hbit"
 	sewrepair = TRUE
+	salvage_amount = 1
+	salvage_result = /obj/item/natural/hide/cured
 	icon = 'modular_twilight_axis/erp_panel/icons/bondage.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/erp_panel/icons/onmob/bondage.dmi'
 	propagade_kink = list(
@@ -97,6 +100,8 @@
 	body_parts_covered = EYES
 	sewrepair = TRUE
 	tint = 2
+	salvage_amount = 1
+	salvage_result = /obj/item/natural/hide/cured
 	icon = 'modular_twilight_axis/erp_panel/icons/bondage.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/erp_panel/icons/onmob/bondage.dmi'
 	propagade_kink = list(
