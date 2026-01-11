@@ -104,6 +104,7 @@ GLOBAL_VAR_INIT(sex_custom_action_seq, 0)
 GLOBAL_LIST_INIT(sex_panel_actions, build_sex_panel_actions())
 GLOBAL_LIST_INIT(erp_proxies_by_part, list())
 GLOBAL_LIST_INIT(sex_node_defs, build_sex_node_defs())
+GLOBAL_LIST_INIT(available_kinks, generate_kink_list())
 
 #define SEX_PANEL_ACTION(sex_action_type) (GLOB.sex_panel_actions[sex_action_type])
 
@@ -177,3 +178,11 @@ GLOBAL_LIST_INIT(sex_node_defs, build_sex_node_defs())
 		if(P && !QDELETED(P))
 			out += P
 	return out
+
+/proc/generate_kink_list()
+	var/list/kinks = list()
+	for(var/datum/kink/K as anything in subtypesof(/datum/kink))
+		if(is_abstract(K))
+			continue
+		kinks[initial(K.type)] = new K
+	return kinks

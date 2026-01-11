@@ -48,6 +48,59 @@ export type ActiveLink = {
   pain?: number;
 };
 
+export type SexCustomTemplate = {
+  type: string;
+  name: string;
+  stamina_cost: number;
+  affects_self_arousal: number;
+  affects_arousal: number;
+  affects_self_pain: number;
+  affects_pain: number;
+  can_knot?: boolean;
+  climax_liquid_mode_active?: string;
+  climax_liquid_mode_passive?: string;
+  required_init?: string;
+  required_target?: string;
+  reserve_target_for_session?: boolean;
+  base_kind?: 'self' | 'other';
+  check_same_tile?: boolean;
+  break_on_move?: boolean;
+
+  actor_sex_hearts?: boolean;
+  target_sex_hearts?: boolean;
+  actor_suck_sound?: boolean;
+  target_suck_sound?: boolean;
+  actor_make_sound?: boolean;
+  target_make_sound?: boolean;
+  actor_make_fingering_sound?: boolean;
+  target_make_fingering_sound?: boolean;
+  actor_do_onomatopoeia?: boolean;
+  target_do_onomatopoeia?: boolean;
+  actor_do_thrust?: boolean;
+  target_do_thrust?: boolean;
+
+  message_on_start?: string;
+  message_on_perform?: string;
+  message_on_finish?: string;
+  message_on_climax_actor?: string;
+  message_on_climax_target?: string;
+};
+
+export type SexCustomAction = SexCustomTemplate & {};
+
+export type KinkEntry = {
+  type: string;
+  name: string;
+  description?: string;
+  category?: string;
+  intensity?: number;
+  pref: number;
+};
+
+export type KinksPayload = {
+  entries: KinkEntry[];
+};
+
 export type SexSessionData = {
   title: string;
   session_name?: string;
@@ -101,12 +154,12 @@ export type SexSessionData = {
 
   climax_modes?: { id: string; name: string }[];
   organ_type_options?: { id: string; name: string }[];
+
+  kinks?: KinksPayload;
 };
 
 const fmt2 = (value?: number) =>
-  value === undefined || value === null
-    ? '0'
-    : Number(value).toFixed(2);
+  value === undefined || value === null ? '0' : Number(value).toFixed(2);
 
 const clampName = (name?: string, max = 10): string => {
   if (!name) return '';
@@ -131,14 +184,11 @@ const Pill: React.FC<{
     borderRadius: 9999,
     padding: '2px 10px',
     margin: 2,
-    // Чёткая разница между on/off
     background: isSelected
       ? 'var(--button-background-selected)'
       : 'rgba(255,255,255,0.05)',
     color: isSelected ? 'var(--color-text)' : 'var(--color-label)',
-    boxShadow: isSelected
-      ? '0 0 6px var(--button-background-selected)'
-      : 'none',
+    boxShadow: isSelected ? '0 0 6px var(--button-background-selected)' : 'none',
     border: isSelected
       ? '1px solid var(--button-border-color)'
       : '1px solid rgba(255,255,255,0.15)',
@@ -170,17 +220,13 @@ const OrganList: React.FC<{
       {organs.map((org) => {
         const isSelected = selectedId === org.id;
         const isBusy = !!org.busy;
-        const baseColor = isBusy
-          ? 'var(--color-bad)'
-          : 'var(--color-text)';
+        const baseColor = isBusy ? 'var(--color-bad)' : 'var(--color-text)';
 
         const style: CSSProperties = {
           border: isSelected
             ? '2px solid var(--color-border)'
             : '1px solid rgba(255,255,255,0.2)',
-          boxShadow: isSelected
-            ? '0 0 8px var(--button-background-selected)'
-            : undefined,
+          boxShadow: isSelected ? '0 0 8px var(--button-background-selected)' : undefined,
           background: isSelected
             ? 'var(--button-background-selected)'
             : 'rgba(255,255,255,0.05)',
@@ -222,8 +268,7 @@ const PartnerSelector: React.FC<{
 }> = ({ actorName, partners, currentRef, onChange }) => {
   const [open, setOpen] = useState(false);
 
-  const current =
-    partners.find((p) => p.ref === currentRef) || partners[0] || null;
+  const current = partners.find((p) => p.ref === currentRef) || partners[0] || null;
 
   return (
     <Section>
@@ -239,12 +284,7 @@ const PartnerSelector: React.FC<{
         <Box as="span" color="label">
           {' ↔ '}
         </Box>
-        <Button
-          inline
-          compact
-          onClick={() => setOpen((prev) => !prev)}
-          selected={open}
-        >
+        <Button inline compact onClick={() => setOpen((prev) => !prev)} selected={open}>
           {current ? current.name : '—'}
         </Button>
       </Box>
@@ -282,10 +322,7 @@ const BarRow: React.FC<{
   onClick?: () => void;
 }> = ({ label, valuePercent, clickable, onClick }) => {
   let v = Number(valuePercent);
-  if (!Number.isFinite(v)) {
-    v = 0;
-  }
-
+  if (!Number.isFinite(v)) v = 0;
   const clamped = Math.max(0, Math.min(100, v));
   const percentText = Math.round(clamped);
 
@@ -339,12 +376,7 @@ const BarRow: React.FC<{
 
   if (clickable && onClick) {
     return (
-      <Button
-        inline
-        color="transparent"
-        onClick={onClick}
-        style={{ width: '100%', padding: 0 }}
-      >
+      <Button inline color="transparent" onClick={onClick} style={{ width: '100%', padding: 0 }}>
         {bar}
       </Button>
     );
@@ -360,14 +392,7 @@ const ArousalBars: React.FC<{
   partnerArousal: number;
   showPartnerBar: boolean;
   onSetActor: () => void;
-}> = ({
-  actorName,
-  partnerLabel,
-  actorArousal,
-  partnerArousal,
-  showPartnerBar,
-  onSetActor,
-}) => (
+}> = ({ actorName, partnerLabel, actorArousal, partnerArousal, showPartnerBar, onSetActor }) => (
   <Section>
     <Stack vertical>
       <Stack.Item>
@@ -420,10 +445,7 @@ const StatusPanel: React.FC<{
   onSetErectState,
   viewAs = 'target',
 }) => {
-  const allLinks = [
-    ...(data.active_links || []),
-    ...(data.passive_links || []),
-  ];
+  const allLinks = [...(data.active_links || []), ...(data.passive_links || [])];
   const canEdit = editable !== false;
 
   const speedName = (v: number) => {
@@ -440,9 +462,7 @@ const StatusPanel: React.FC<{
     <Section title={`Состояние: ${actorName}`} fill scrollable>
       {actorOrgans.map((org) => {
         const affecting = allLinks.filter((l) => {
-          if (viewAs === 'actor') {
-            return l.actor_organ_id === org.id;
-          }
+          if (viewAs === 'actor') return l.actor_organ_id === org.id;
           return l.partner_organ_id === org.id;
         });
 
@@ -457,9 +477,7 @@ const StatusPanel: React.FC<{
           <Box key={org.id} mb={1.5}>
             <Stack justify="space-between" align="center">
               <Stack.Item>
-                <Box bold>
-                  {org ? org.name : '—'}
-                </Box>
+                <Box bold>{org ? org.name : '—'}</Box>
               </Stack.Item>
               <Stack.Item>
                 <Stack align="center">
@@ -469,11 +487,7 @@ const StatusPanel: React.FC<{
                       compact
                       color="transparent"
                       disabled={!canEdit}
-                      onClick={
-                        canEdit
-                          ? () => onEditOrgan(org.id, 'sensitivity')
-                          : undefined
-                      }
+                      onClick={canEdit ? () => onEditOrgan(org.id, 'sensitivity') : undefined}
                     >
                       Чувствительность:{' '}
                       <Box as="span" color="good">
@@ -482,9 +496,7 @@ const StatusPanel: React.FC<{
                     </Button>
                   </Stack.Item>
                   <Stack.Item>
-                    <Box color="bad">
-                      Боль: {fmt2(pain)}
-                    </Box>
+                    <Box color="bad">Боль: {fmt2(pain)}</Box>
                   </Stack.Item>
                 </Stack>
               </Stack.Item>
@@ -497,18 +509,12 @@ const StatusPanel: React.FC<{
                 </Box>
                 <Stack wrap align="center">
                   <Stack.Item>
-                    <Pill
-                      selected={erectMode === 'auto'}
-                      onClick={() => onSetErectState(org.id, 'auto')}
-                    >
+                    <Pill selected={erectMode === 'auto'} onClick={() => onSetErectState(org.id, 'auto')}>
                       АВТО
                     </Pill>
                   </Stack.Item>
                   <Stack.Item>
-                    <Pill
-                      selected={erectMode === 'none'}
-                      onClick={() => onSetErectState(org.id, 'none')}
-                    >
+                    <Pill selected={erectMode === 'none'} onClick={() => onSetErectState(org.id, 'none')}>
                       МЯГКИЙ
                     </Pill>
                   </Stack.Item>
@@ -521,10 +527,7 @@ const StatusPanel: React.FC<{
                     </Pill>
                   </Stack.Item>
                   <Stack.Item>
-                    <Pill
-                      selected={erectMode === 'hard'}
-                      onClick={() => onSetErectState(org.id, 'hard')}
-                    >
+                    <Pill selected={erectMode === 'hard'} onClick={() => onSetErectState(org.id, 'hard')}>
                       КРЕПКИЙ
                     </Pill>
                   </Stack.Item>
@@ -533,12 +536,7 @@ const StatusPanel: React.FC<{
             )}
 
             {fullness > 0 && (
-              <Box
-                mt={0.25}
-                textAlign="right"
-                style={{ fontSize: 10 }}
-                color="label"
-              >
+              <Box mt={0.25} textAlign="right" style={{ fontSize: 10 }} color="label">
                 Заполненность: {Math.round(fullness)}%
               </Box>
             )}
@@ -547,7 +545,6 @@ const StatusPanel: React.FC<{
               <Stack vertical mt={0.5}>
                 {affecting.map((l) => {
                   const whoLabel = partnerLabel || 'Партнёр';
-
                   return (
                     <Box key={l.id} ml={1}>
                       <Box as="span" color="label">
@@ -578,13 +575,7 @@ const SensitivityInline: React.FC<{
   disabled?: boolean;
   onEdit: () => void;
 }> = ({ sensitivity, disabled, onEdit }) => (
-  <Button
-    inline
-    compact
-    color="transparent"
-    disabled={disabled}
-    onClick={onEdit}
-  >
+  <Button inline compact color="transparent" disabled={disabled} onClick={onEdit}>
     ЧУВСТВИТЕЛЬН.: {disabled ? '—' : fmt2(sensitivity) ?? 0}
   </Button>
 );
@@ -621,19 +612,13 @@ const ActiveLinksPanel: React.FC<{
 
   const showKnotToggle = Boolean(hasKnottedPenis && canKnotNow && onToggleKnot);
 
-  const getOrg = (id: string, list: OrgNode[]) =>
-    list.find((o) => o.id === id);
+  const getOrg = (id: string, list: OrgNode[]) => list.find((o) => o.id === id);
 
   return (
     <Stack vertical>
       {showKnotToggle && (
         <Box mb={0.5} textAlign="center">
-          <Button
-            inline
-            compact
-            selected={!!doKnotAction}
-            onClick={onToggleKnot}
-          >
+          <Button inline compact selected={!!doKnotAction} onClick={onToggleKnot}>
             {doKnotAction ? 'ДО УЗЛА' : 'БЕЗ УЗЛА'}
           </Button>
         </Box>
@@ -646,27 +631,21 @@ const ActiveLinksPanel: React.FC<{
         const forceIdx = Math.max(1, Math.min(4, link.force)) - 1;
 
         return (
-          <Section 
+          <Section
             key={link.id}
             style={{
-            marginBottom: 1,
-            paddingTop: 1,
-            paddingBottom: 1,
-          }}  
+              marginBottom: 1,
+              paddingTop: 1,
+              paddingBottom: 1,
+            }}
           >
             <Stack align="center" justify="space-between">
               <Stack.Item shrink>
-                <Box bold>
-                  {actorOrg ? actorOrg.name : '—'}
-                </Box>
+                <Box bold>{actorOrg ? actorOrg.name : '—'}</Box>
               </Stack.Item>
 
               <Stack.Item>
-                <Button
-                  inline
-                  compact
-                  onClick={() => onSetSpeed(link.id, link.speed - 1)}
-                >
+                <Button inline compact onClick={() => onSetSpeed(link.id, link.speed - 1)}>
                   {'<'}
                 </Button>{' '}
                 <Box
@@ -681,35 +660,21 @@ const ActiveLinksPanel: React.FC<{
                 >
                   {data.speed_names[speedIdx]}
                 </Box>{' '}
-                <Button
-                  inline
-                  compact
-                  onClick={() => onSetSpeed(link.id, link.speed + 1)}
-                >
+                <Button inline compact onClick={() => onSetSpeed(link.id, link.speed + 1)}>
                   {'>'}
                 </Button>
               </Stack.Item>
 
               <Stack.Item grow>
                 <Box textAlign="center">
-                  <Button
-                    inline
-                    compact
-                    color="transparent"
-                    selected
-                    onClick={() => onStop(link.id)}
-                  >
+                  <Button inline compact color="transparent" selected onClick={() => onStop(link.id)}>
                     {link.action_name || 'ДЕЙСТВИЕ'}
                   </Button>
                 </Box>
               </Stack.Item>
 
               <Stack.Item>
-                <Button
-                  inline
-                  compact
-                  onClick={() => onSetForce(link.id, link.force - 1)}
-                >
+                <Button inline compact onClick={() => onSetForce(link.id, link.force - 1)}>
                   {'<'}
                 </Button>{' '}
                 <Box
@@ -724,33 +689,20 @@ const ActiveLinksPanel: React.FC<{
                 >
                   {data.force_names[forceIdx]}
                 </Box>{' '}
-                <Button
-                  inline
-                  compact
-                  onClick={() => onSetForce(link.id, link.force + 1)}
-                >
+                <Button inline compact onClick={() => onSetForce(link.id, link.force + 1)}>
                   {'>'}
                 </Button>
               </Stack.Item>
 
               <Stack.Item shrink>
-                <Box bold>
-                  {partnerOrg ? partnerOrg.name : '—'}
-                </Box>
+                <Box bold>{partnerOrg ? partnerOrg.name : '—'}</Box>
               </Stack.Item>
             </Stack>
             <Box mt={0.5} textAlign="center">
               <Stack justify="center" align="center">
                 <Stack.Item style={{ marginInline: 12 }}>
-                  <Button
-                    inline
-                    compact
-                    color="transparent"
-                    onClick={() => onToggleFinished(link.id)}
-                  >
-                    {link.do_until_finished
-                      ? 'ДО ЗАВЕРШЕНИЯ'
-                      : 'ПОКА НЕ ОСТАНОВЛЮСЬ'}
+                  <Button inline compact color="transparent" onClick={() => onToggleFinished(link.id)}>
+                    {link.do_until_finished ? 'ДО ЗАВЕРШЕНИЯ' : 'ПОКА НЕ ОСТАНОВЛЮСЬ'}
                   </Button>
                 </Stack.Item>
 
@@ -763,12 +715,7 @@ const ActiveLinksPanel: React.FC<{
                 </Stack.Item>
 
                 <Stack.Item style={{ marginInline: 12 }}>
-                  <Button
-                    inline
-                    compact
-                    color="transparent"
-                    onClick={() => onStop(link.id)}
-                  >
+                  <Button inline compact color="transparent" onClick={() => onStop(link.id)}>
                     ОСТАНОВИТЬСЯ
                   </Button>
                 </Stack.Item>
@@ -787,13 +734,7 @@ const ActionsFilter: React.FC<{
   availableTags: string[];
   activeTags: string[];
   onToggleTag: (tag: string) => void;
-}> = ({
-  searchText,
-  onSearchChange,
-  availableTags,
-  activeTags,
-  onToggleTag,
-}) => (
+}> = ({ searchText, onSearchChange, availableTags, activeTags, onToggleTag }) => (
   <Section title="ДОСТУПНЫЕ ДЕЙСТВИЯ">
     <Input
       fluid
@@ -806,10 +747,7 @@ const ActionsFilter: React.FC<{
         <Stack wrap>
           {availableTags.map((tag) => (
             <Stack.Item key={tag}>
-              <Pill
-                selected={activeTags.includes(tag)}
-                onClick={() => onToggleTag(tag)}
-              >
+              <Pill selected={activeTags.includes(tag)} onClick={() => onToggleTag(tag)}>
                 {tag}
               </Pill>
             </Stack.Item>
@@ -827,14 +765,7 @@ const ActionsList: React.FC<{
   currentActionTypes?: string[];
   canPerform: string[];
   onClickAction: (type: string) => void;
-}> = ({
-  actorSelected,
-  partnerSelected,
-  actions,
-  currentActionTypes,
-  canPerform,
-  onClickAction,
-}) => {
+}> = ({ actorSelected, partnerSelected, actions, currentActionTypes, canPerform, onClickAction }) => {
   const [singleColumn, setSingleColumn] = useState(false);
 
   useEffect(() => {
@@ -842,7 +773,6 @@ const ActionsList: React.FC<{
       if (typeof window === 'undefined') return;
       setSingleColumn(window.innerWidth < 500);
     };
-
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -868,12 +798,8 @@ const ActionsList: React.FC<{
         : isAvailable
           ? 'var(--button-background)'
           : 'rgba(0, 0, 0, 0.3)',
-      boxShadow: isCurrent
-        ? '0 0 8px var(--button-background-selected)'
-        : undefined,
-      color: !isAvailable
-        ? 'var(--color-label)'
-        : 'var(--color-text)',
+      boxShadow: isCurrent ? '0 0 8px var(--button-background-selected)' : undefined,
+      color: !isAvailable ? 'var(--color-label)' : 'var(--color-text)',
       textAlign: 'center',
     };
 
@@ -895,18 +821,13 @@ const ActionsList: React.FC<{
   return (
     <Section fill scrollable>
       {!actorSelected || !partnerSelected ? (
-        <NoticeBox info>
-          Выберите по одному органу слева и справа, чтобы увидеть доступные
-          действия.
-        </NoticeBox>
+        <NoticeBox info>Выберите по одному органу слева и справа, чтобы увидеть доступные действия.</NoticeBox>
       ) : singleColumn ? (
         <Stack fill>
           <Stack.Item basis="100%">
             <Stack vertical>
               {actions.map((action) => (
-                <Stack.Item key={action.type}>
-                  {renderButton(action)}
-                </Stack.Item>
+                <Stack.Item key={action.type}>{renderButton(action)}</Stack.Item>
               ))}
             </Stack>
           </Stack.Item>
@@ -916,18 +837,14 @@ const ActionsList: React.FC<{
           <Stack.Item basis="50%">
             <Stack vertical>
               {leftColumn.map((action) => (
-                <Stack.Item key={action.type}>
-                  {renderButton(action)}
-                </Stack.Item>
+                <Stack.Item key={action.type}>{renderButton(action)}</Stack.Item>
               ))}
             </Stack>
           </Stack.Item>
           <Stack.Item basis="50%">
             <Stack vertical>
               {rightColumn.map((action) => (
-                <Stack.Item key={action.type}>
-                  {renderButton(action)}
-                </Stack.Item>
+                <Stack.Item key={action.type}>{renderButton(action)}</Stack.Item>
               ))}
             </Stack>
           </Stack.Item>
@@ -948,7 +865,6 @@ const BottomControls: React.FC<{
   onToggleFreeze: () => void;
   onToggleMoans: () => void;
   onToggleHiddenMode: () => void;
-  compact?: boolean;
 }> = ({
   yieldToPartner,
   frozen,
@@ -965,18 +881,10 @@ const BottomControls: React.FC<{
     <Stack vertical align="center" justify="center">
       <Stack justify="center" wrap>
         <Stack.Item style={{ marginInline: 2, marginBlock: 1 }}>
-          <Button
-            onClick={onFlipPose}
-          >
-            ПЕРЕВЕРНУТЬСЯ
-          </Button>
+          <Button onClick={onFlipPose}>ПЕРЕВЕРНУТЬСЯ</Button>
         </Stack.Item>
         <Stack.Item style={{ marginInline: 2, marginBlock: 1 }}>
-          <Button
-            onClick={onStopAll}
-          >
-            ОСТАНОВИТЬСЯ
-          </Button>
+          <Button onClick={onStopAll}>ОСТАНОВИТЬСЯ</Button>
         </Stack.Item>
       </Stack>
 
@@ -1011,419 +919,198 @@ type EditContext =
   | { kind: 'link_sens'; id: string }
   | { kind: 'organ'; id: string; field: 'sensitivity' | 'pain' };
 
-export const EroticRolePlayPanel: React.FC = () => {
-  const { act, data } = useBackend<SexSessionData>();
+const KinkCard: React.FC<{
+  kink: KinkEntry;
+  onSet: (type: string, value: number) => void;
+}> = ({ kink, onSet }) => {
+  const pref = kink.pref ?? 0;
 
-  const partners = data.partners ?? [];
-  const actorOrgansBase = data.actor_organs ?? [];
-  const partnerOrgans = data.partner_organs ?? [];
-  const statusOrgans = data.status_organs ?? [];
+  const prefLabel = pref <= -1 ? 'НЕ НРАВИТСЯ' : pref >= 1 ? 'НРАВИТСЯ' : 'НЕЙТРАЛЬНО';
 
-  const actions = data.actions ?? [];
-  const canPerform = data.can_perform ?? [];
-  const availableTags = data.available_tags ?? [];
-  const organFilteredTypes = data.organ_filtered ?? [];
-  const actorCharge = data.actor_charge ?? 0;
-  const actorCharge_max = data.actor_charge_max ?? 0;
-  const actorCharge_for_climax = data.actor_charge_for_climax ?? 0;
-
-  const [searchText, setSearchText] = useState('');
-  const [activeTags, setActiveTags] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<'status' | 'actions' | 'editor'>('actions');
-
-  const [editContext, setEditContext] = useState<EditContext | null>(null);
-  const [editTitle, setEditTitle] = useState('');
-  const [editValue, setEditValue] = useState('');
-
-  const toggleTag = (tag: string) => {
-    setActiveTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
-    );
-  };
-
-  const actorSelected = useMemo(
-    () => actorOrgansBase.find((o) => o.id === data.selected_actor_organ),
-    [actorOrgansBase, data.selected_actor_organ],
-  );
-  const partnerSelected = useMemo(
-    () => partnerOrgans.find((o) => o.id === data.selected_partner_organ),
-    [partnerOrgans, data.selected_partner_organ],
-  );
-
-  const currentPartner = useMemo(() => {
-    if (!partners.length) return null;
-    return (
-      partners.find((p) => p.ref === data.current_partner_ref) || partners[0]
-    );
-  }, [partners, data.current_partner_ref]);
-
-  const filteredActions = useMemo(() => {
-    const q = searchText.trim().toLowerCase();
-
-    return actions.filter((a) => {
-      if (q && !a.name.toLowerCase().includes(q)) return false;
-
-      if (
-        activeTags.length &&
-        !(a.tags || []).some((t) => activeTags.includes(t))
-      ) {
-        return false;
-      }
-
-      if (
-        organFilteredTypes.length &&
-        !organFilteredTypes.includes(a.type)
-      ) {
-        return false;
-      }
-
-      if (!actorSelected || !partnerSelected) return false;
-
-      return true;
-    });
-  }, [
-    actions,
-    searchText,
-    activeTags,
-    organFilteredTypes,
-    actorSelected,
-    partnerSelected,
-  ]);
-
-  const onClickActionButton = (actionType: string) => {
-    act('start_action', { action_type: actionType });
-  };
-
-  const actorArousalWidth = Math.max(
-    0,
-    Math.min(100, data.actor_arousal ?? 0),
-  );
-  const partnerArousalWidth = Math.max(
-    0,
-    Math.min(100, data.partner_arousal ?? 0),
-  );
-
-  const showPartnerBar = !!(
-    typeof data.partner_arousal === 'number' &&
-    !data.partner_arousal_hidden
-  );
-
-  const openNumericModal = (
-    ctx: EditContext,
-    title: string,
-    initial: number,
-  ) => {
-    setEditContext(ctx);
-    setEditTitle(title);
-    setEditValue(String(Math.round(initial)));
-  };
-
-  const handleNumericConfirm = () => {
-    if (!editContext) return;
-    const num = Number(editValue);
-    if (Number.isNaN(num)) {
-      setEditContext(null);
-      return;
-    }
-
-    switch (editContext.kind) {
-      case 'arousal_actor':
-        act('set_arousal_value', { target: 'actor', amount: num });
-        break;
-
-      case 'link_sens':
-        act('set_link_tuning', {
-          id: editContext.id,
-          field: 'sensitivity',
-          value: num,
-        });
-        break;
-
-      case 'organ':
-        act('set_organ_tuning', {
-          id: editContext.id,
-          field: editContext.field,
-          value: num,
-        });
-        break;
-    }
-
-    setEditContext(null);
-  };
-
-  const handleNumericCancel = () => {
-    setEditContext(null);
-  };
-
-  const startEditArousalActor = () => {
-    openNumericModal(
-      { kind: 'arousal_actor' },
-      'Возбуждение 0–100',
-      data.actor_arousal ?? 0,
-    );
-  };
-
-  const editTuningForLink = (linkId: string) => {
-    const link = (data.active_links || []).find((l) => l.id === linkId);
-    openNumericModal(
-      { kind: 'link_sens', id: linkId },
-      'Чувствительность 0–2',
-      link?.sensitivity ?? 0,
-    );
-  };
-
-  const editOrganField = (id: string, field: 'sensitivity' | 'pain') => {
-    const org = statusOrgans.find((o) => o.id === id);
-    const current =
-      field === 'sensitivity' ? org?.sensitivity ?? 0 : org?.pain ?? 0;
-    const title =
-      field === 'sensitivity' ? 'Чувствительность 0–2' : 'Боль 0–2';
-
-    openNumericModal({ kind: 'organ', id, field }, title, current);
+  const badgeStyle: CSSProperties = {
+    display: 'inline-block',
+    padding: '2px 8px',
+    borderRadius: 9999,
+    border: '1px solid rgba(255,255,255,0.18)',
+    background: 'rgba(255,255,255,0.04)',
+    fontSize: 11,
   };
 
   return (
-    <Window title="Утолить Желания" width={650} height={900}>
-      <Window.Content scrollable>
-        <Stack vertical fill>
+    <Section
+      style={{
+        paddingTop: 6,
+        paddingBottom: 6,
+        marginBottom: 6,
+      }}
+      title={
+        <Stack align="center" justify="space-between">
           <Stack.Item>
-            <Section>
+            <Box bold>{kink.name}</Box>
+          </Stack.Item>
+          <Stack.Item>
+            <Box style={badgeStyle} color="label">
+              {kink.category || 'General'}
+              {typeof kink.intensity === 'number' ? <Box as="span" ml={1}>· {kink.intensity}/5</Box> : null}
+            </Box>
+          </Stack.Item>
+        </Stack>
+      }
+    >
+      {!!kink.description && (
+        <Box color="label" style={{ fontSize: 12, lineHeight: 1.4 }}>
+          {kink.description}
+        </Box>
+      )}
 
-              {!!partners.length && (
-                <Box mt={0.5}>
-                  <PartnerSelector
-                    actorName={data.actor_name}
-                    partners={partners}
-                    currentRef={data.current_partner_ref}
-                    onChange={(ref) => act('set_partner', { ref })}
-                  />
-                </Box>
-              )}
-
-              <ArousalBars
-                actorName={data.actor_name}
-                partnerLabel={currentPartner?.name || 'Партнёр'}
-                actorArousal={actorArousalWidth}
-                partnerArousal={partnerArousalWidth}
-                showPartnerBar={showPartnerBar}
-                onSetActor={startEditArousalActor}
-              />
-
-              <Box mt={0.5}>
-                <Stack justify="center">
-                  <Stack.Item style={{ marginInline: 4 }}>
-                    <Button
-                      selected={activeTab === 'status'}
-                      onClick={() => setActiveTab('status')}
-                    >
-                      СТАТУС
-                    </Button>
-                  </Stack.Item>
-                  <Stack.Item style={{ marginInline: 4 }}>
-                    <Button
-                      selected={activeTab === 'actions'}
-                      onClick={() => setActiveTab('actions')}
-                    >
-                      ДЕЙСТВИЯ
-                    </Button>
-                  </Stack.Item>
-                  <Stack.Item style={{ marginInline: 4 }}>
-                    <Button
-                      selected={activeTab === 'editor'}
-                      onClick={() => setActiveTab('editor')}
-                    >
-                      РЕДАКТОР
-                    </Button>
-                  </Stack.Item>
-                </Stack>
-              </Box>
-            </Section>
+      <Box mt={0.6}>
+        <Stack align="center" justify="space-between" wrap>
+          <Stack.Item>
+            <Stack align="center">
+              <Stack.Item>
+                <Pill selected={pref <= -1} onClick={() => onSet(kink.type, -1)}>
+                  -1
+                </Pill>
+              </Stack.Item>
+              <Stack.Item>
+                <Pill selected={pref === 0} onClick={() => onSet(kink.type, 0)}>
+                  0
+                </Pill>
+              </Stack.Item>
+              <Stack.Item>
+                <Pill selected={pref >= 1} onClick={() => onSet(kink.type, 1)}>
+                  +1
+                </Pill>
+              </Stack.Item>
+            </Stack>
           </Stack.Item>
 
-          {activeTab === 'status' && (
-            <Stack.Item grow>
-              <Stack.Item>
-                <Section>
-                  <Box textAlign="center" color="label">
-                    Заряд: {Math.round(actorCharge)} ({actorCharge_for_climax} для оргазма, {actorCharge_max} максимум)
-                  </Box>
-                </Section>
-              </Stack.Item>
-              <StatusPanel
-                data={data}
-                actorOrgans={statusOrgans}
-                actorName={data.actor_name}
-                partnerLabel={currentPartner?.name}
-                editable
-                onEditOrgan={editOrganField}
-                onSetErectState={(id, state) =>
-                  act('toggle_erect', { id, state })
-                }
-              />
-            </Stack.Item>
-          )}
-
-          {activeTab === 'actions' && (
-            <>
-              <Stack.Item style={{ marginTop: 4 }}>
-                <BottomControls
-                  yieldToPartner={data.yield_to_partner}
-                  frozen={data.frozen}
-                  suppressMoans={!data.allow_user_moan}
-                  hiddenMode={data.hidden_mode}
-                  onFlipPose={() => act('flip', { dir: 1 })}
-                  onStopAll={() => act('stop_all')}
-                  onToggleYield={() => act('quick', { op: 'yield' })}
-                  onToggleFreeze={() => act('freeze_arousal')}
-                  onToggleMoans={() => act('toggle_moan')}
-                  onToggleHiddenMode={() => act('toggle_hidden')}
-                />
-              </Stack.Item>
-
-              <Stack.Item style={{ marginTop: 4 }}>
-                <Section>
-                  <Stack fill align="stretch">
-                    <Stack.Item basis="18%">
-                      <OrganList
-                        title="Я"
-                        organs={actorOrgansBase}
-                        selectedId={data.selected_actor_organ}
-                        onSelect={(id) =>
-                          act('select_organ', { side: 'actor', id })
-                        }
-                      />
-                    </Stack.Item>
-
-                    <Stack.Item grow>
-                      <Stack vertical fill>
-                        <Stack.Item>
-                          <ActionsFilter
-                            searchText={searchText}
-                            onSearchChange={setSearchText}
-                            availableTags={availableTags}
-                            activeTags={activeTags}
-                            onToggleTag={toggleTag}
-                          />
-                        </Stack.Item>
-                        <Stack.Item grow>
-                          <ActionsList
-                            actorSelected={actorSelected}
-                            partnerSelected={partnerSelected}
-                            actions={filteredActions}
-                            currentActionTypes={data.current_actions ?? []}
-                            canPerform={canPerform}
-                            onClickAction={onClickActionButton}
-                          />
-                        </Stack.Item>
-                      </Stack>
-                    </Stack.Item>
-
-                    <Stack.Item basis="18%">
-                      <OrganList
-                        title={currentPartner ? 'Партнёр' : '—'}
-                        organs={partnerOrgans}
-                        selectedId={data.selected_partner_organ}
-                        onSelect={(id) =>
-                          act('select_organ', { side: 'partner', id })
-                        }
-                      />
-                    </Stack.Item>
-                  </Stack>
-                </Section>
-              </Stack.Item>
-
-              <Stack.Item style={{ marginTop: 4 }}>
-                <ActiveLinksPanel
-                  data={data}
-                  actorOrgans={actorOrgansBase}
-                  partnerOrgans={partnerOrgans}
-                  onSetSpeed={(id, value) =>
-                    act('set_link_speed', { id, value })
-                  }
-                  onSetForce={(id, value) =>
-                    act('set_link_force', { id, value })
-                  }
-                  onToggleFinished={(id) =>
-                    act('toggle_link_finished', { id })
-                  }
-                  onStop={(id) => act('stop_link', { id })}
-                  onEditSensitivity={editTuningForLink}
-                  hasKnottedPenis={data.has_knotted_penis}
-                  canKnotNow={data.can_knot_now}
-                  doKnotAction={data.do_knot_action}
-                  onToggleKnot={() => act('toggle_knot')}
-                />
-              </Stack.Item>
-            </>
-          )}
-
-          {activeTab === 'editor' && (
-            <Stack.Item grow>
-              <CustomActionsEditor data={data} act={act} />
-            </Stack.Item>
-          )}
-        </Stack>
-        <Divider />
-      </Window.Content>
-
-      {editContext && (
-        <Modal>
-          <Section title={editTitle}>
-            <Input
-              autoFocus
-              value={editValue}
-              onChange={(value) => setEditValue(value)}
-            />
-            <Box mt={1} textAlign="right">
-              <Button onClick={handleNumericCancel}>Отмена</Button>{' '}
-              <Button onClick={handleNumericConfirm}>OK</Button>
+          <Stack.Item>
+            <Box
+              color={pref <= -1 ? 'bad' : pref >= 1 ? 'good' : 'label'}
+              style={{ fontSize: 11, textTransform: 'uppercase' }}
+            >
+              {prefLabel}
             </Box>
-          </Section>
-        </Modal>
-      )}
-    </Window>
+          </Stack.Item>
+        </Stack>
+      </Box>
+    </Section>
   );
 };
 
-export type SexCustomTemplate = {
-  type: string;
-  name: string;
-  stamina_cost: number;
-  affects_self_arousal: number;
-  affects_arousal: number;
-  affects_self_pain: number;
-  affects_pain: number;
-  can_knot?: boolean;
-  climax_liquid_mode_active?: string;
-  climax_liquid_mode_passive?: string;
-  required_init?: string;
-  required_target?: string;
-  reserve_target_for_session?: boolean;
-  base_kind?: 'self' | 'other';
-  check_same_tile?: boolean;
-  break_on_move?: boolean;
+const KinksTab: React.FC<{
+  data: SexSessionData;
+  act: (verb: string, args?: any) => void;
+}> = ({ data, act }) => {
+  const entries = data.kinks?.entries ?? [];
 
-  actor_sex_hearts?: boolean;
-  target_sex_hearts?: boolean;
-  actor_suck_sound?: boolean;
-  target_suck_sound?: boolean;
-  actor_make_sound?: boolean;
-  target_make_sound?: boolean;
-  actor_make_fingering_sound?: boolean;
-  target_make_fingering_sound?: boolean;
-  actor_do_onomatopoeia?: boolean;
-  target_do_onomatopoeia?: boolean;
-  actor_do_thrust?: boolean;
-  target_do_thrust?: boolean;
+  const [q, setQ] = useState('');
+  const [cat, setCat] = useState<string>('ALL');
+  const [showOnly, setShowOnly] = useState<'all' | 'liked' | 'disliked'>('all');
 
-  message_on_start?: string;
-  message_on_perform?: string;
-  message_on_finish?: string;
-  message_on_climax_actor?: string;
-  message_on_climax_target?: string;
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    for (const k of entries) {
+      if (k.category) set.add(k.category);
+    }
+    return ['ALL', ...Array.from(set).sort((a, b) => a.localeCompare(b))];
+  }, [entries]);
+
+  const filtered = useMemo(() => {
+    const qq = q.trim().toLowerCase();
+    return entries
+      .filter((k) => {
+        const kc = k.category || 'General';
+        if (cat !== 'ALL' && kc !== cat) return false;
+        if (showOnly === 'liked' && !(k.pref >= 1)) return false;
+        if (showOnly === 'disliked' && !(k.pref <= -1)) return false;
+
+        if (!qq) return true;
+        const hay = `${k.name} ${k.description || ''} ${kc}`.toLowerCase();
+        return hay.includes(qq);
+      })
+      .sort((a, b) => {
+        const ac = a.category || 'General';
+        const bc = b.category || 'General';
+        if (ac !== bc) return ac.localeCompare(bc);
+        return a.name.localeCompare(b.name);
+      });
+  }, [entries, q, cat, showOnly]);
+
+  const onSet = (type: string, value: number) => {
+    act('set_kink_pref', { type, value });
+  };
+
+  if (!entries.length) {
+    return (
+      <Section title="Фетиши" fill>
+        <NoticeBox info>Фетиши не загрузились или список пуст.</NoticeBox>
+      </Section>
+    );
+  }
+
+  return (
+    <Stack vertical fill>
+      <Stack.Item>
+        <Section title="Фетиши">
+          <Stack vertical>
+            <Stack.Item>
+              <Input
+                fluid
+                placeholder="Поиск по кинкам..."
+                value={q}
+                onChange={(v) => setQ(v)}
+              />
+            </Stack.Item>
+
+            <Stack.Item mt={0.5}>
+              <Stack wrap>
+                {categories.map((c) => (
+                  <Stack.Item key={c} style={{ margin: 2 }}>
+                    <Pill selected={cat === c} onClick={() => setCat(c)}>
+                      {c}
+                    </Pill>
+                  </Stack.Item>
+                ))}
+              </Stack>
+            </Stack.Item>
+
+            <Stack.Item mt={0.25}>
+              <Stack justify="center" wrap>
+                <Stack.Item style={{ margin: 2 }}>
+                  <Pill selected={showOnly === 'all'} onClick={() => setShowOnly('all')}>
+                    ВСЕ
+                  </Pill>
+                </Stack.Item>
+                <Stack.Item style={{ margin: 2 }}>
+                  <Pill selected={showOnly === 'liked'} onClick={() => setShowOnly('liked')}>
+                    ТОЛЬКО +1
+                  </Pill>
+                </Stack.Item>
+                <Stack.Item style={{ margin: 2 }}>
+                  <Pill selected={showOnly === 'disliked'} onClick={() => setShowOnly('disliked')}>
+                    ТОЛЬКО -1
+                  </Pill>
+                </Stack.Item>
+              </Stack>
+            </Stack.Item>
+          </Stack>
+        </Section>
+      </Stack.Item>
+
+      <Stack.Item grow>
+        <Section fill scrollable title={`Настройки (${filtered.length}/${entries.length})`}>
+          {filtered.length ? (
+            filtered.map((k) => <KinkCard key={k.type} kink={k} onSet={onSet} />)
+          ) : (
+            <NoticeBox info>Ничего не найдено по фильтрам.</NoticeBox>
+          )}
+        </Section>
+      </Stack.Item>
+    </Stack>
+  );
 };
-
-export type SexCustomAction = SexCustomTemplate & {};
 
 type CustomActionsEditorProps = {
   data: SexSessionData;
@@ -1442,34 +1129,21 @@ const CustomActionsEditor: React.FC<CustomActionsEditorProps> = ({ data, act }) 
   const [form, setForm] = useState<Partial<SexCustomAction>>({});
 
   const applyTemplate = (tpl: SexCustomTemplate) => {
-    setForm({
-      ...tpl,
-    });
+    setForm({ ...tpl });
   };
 
   const currentKind = (() => {
     let src: SexCustomTemplate | SexCustomAction | undefined;
-
-    if (selectedCustom) {
-      src = customs.find((c) => c.type === selectedCustom);
-    } else if (selectedTemplate) {
-      src = templates.find((t) => t.type === selectedTemplate);
-    }
-
+    if (selectedCustom) src = customs.find((c) => c.type === selectedCustom);
+    else if (selectedTemplate) src = templates.find((t) => t.type === selectedTemplate);
     return src?.base_kind;
   })();
 
   const currentKindLabel =
-    currentKind === 'self'
-      ? 'Действие для себя'
-      : currentKind === 'other'
-        ? 'Действие для партнёра'
-        : null;
+    currentKind === 'self' ? 'Действие для себя' : currentKind === 'other' ? 'Действие для партнёра' : null;
 
   const applyCustom = (ca: SexCustomAction) => {
-    setForm({
-      ...ca,
-    });
+    setForm({ ...ca });
   };
 
   const onSelectTemplate = (type: string) => {
@@ -1487,10 +1161,7 @@ const CustomActionsEditor: React.FC<CustomActionsEditorProps> = ({ data, act }) 
   };
 
   const updateField = (field: keyof SexCustomAction, value: any) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const submitCreate = () => {
@@ -1625,458 +1296,701 @@ const CustomActionsEditor: React.FC<CustomActionsEditorProps> = ({ data, act }) 
 
         <Stack.Item grow basis="70%">
           <Section title="Параметры">
-          {!hasSource ? (
+            {!hasSource ? (
               <NoticeBox info>
-                Сначала выбери слева шаблон или одно из своих кастомных действий.
-                После этого здесь появятся настраиваемые поля.
+                Сначала выбери слева шаблон или одно из своих кастомных действий. После этого здесь появятся
+                настраиваемые поля.
               </NoticeBox>
             ) : (
-            <Stack vertical>
-              {currentKindLabel && (
+              <Stack vertical>
+                {currentKindLabel && (
+                  <Stack.Item>
+                    <Box
+                      mb={0.5}
+                      textAlign="center"
+                      color="label"
+                      style={{ fontSize: 11, textTransform: 'uppercase' }}
+                    >
+                      {currentKindLabel}
+                    </Box>
+                  </Stack.Item>
+                )}
+
                 <Stack.Item>
-                  <Box
-                    mb={0.5}
-                    textAlign="center"
-                    color="label"
-                    style={{ fontSize: 11, textTransform: 'uppercase' }}
-                  >
-                    {currentKindLabel}
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Название действия
+                  </Box>
+                  <Input
+                    fluid
+                    value={form.name ?? ''}
+                    placeholder="Например: Тереться щечкой"
+                    onChange={(value) => updateField('name', value)}
+                  />
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Орган инициатора (откуда)
+                  </Box>
+                  <Stack wrap>
+                    {organTypeOptions.map((opt) => (
+                      <Stack.Item key={`init-${opt.id}`} style={{ margin: 2 }}>
+                        <Pill
+                          selected={form.required_init === opt.id}
+                          onClick={() =>
+                            updateField(
+                              'required_init',
+                              opt.id === form.required_init ? undefined : opt.id,
+                            )
+                          }
+                        >
+                          {opt.name}
+                        </Pill>
+                      </Stack.Item>
+                    ))}
+                  </Stack>
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Орган партнёра (куда)
+                  </Box>
+                  <Stack wrap>
+                    {organTypeOptions.map((opt) => (
+                      <Stack.Item key={`tgt-${opt.id}`} style={{ margin: 2 }}>
+                        <Pill
+                          selected={form.required_target === opt.id}
+                          onClick={() =>
+                            updateField(
+                              'required_target',
+                              opt.id === form.required_target ? undefined : opt.id,
+                            )
+                          }
+                        >
+                          {opt.name}
+                        </Pill>
+                      </Stack.Item>
+                    ))}
+                  </Stack>
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Stack>
+                    <Stack.Item grow>
+                      <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                        Стоимость выносливости (0.1–5.0)
+                      </Box>
+                      <Input
+                        fluid
+                        value={String(form.stamina_cost ?? '')}
+                        placeholder="По умолчанию как у шаблона"
+                        onChange={(value) => updateField('stamina_cost', Number(value) || 0)}
+                      />
+                    </Stack.Item>
+                    <Stack.Item grow>
+                      <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                        Свое возбуждение
+                      </Box>
+                      <Input
+                        fluid
+                        value={String(form.affects_self_arousal ?? '')}
+                        placeholder="Сколько тебе добавит"
+                        onChange={(value) => updateField('affects_self_arousal', Number(value) || 0)}
+                      />
+                    </Stack.Item>
+                  </Stack>
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Stack>
+                    <Stack.Item grow>
+                      <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                        Возбуждение партнера
+                      </Box>
+                      <Input
+                        fluid
+                        placeholder="Возбуждение партнёра"
+                        value={String(form.affects_arousal ?? '')}
+                        onChange={(value) => updateField('affects_arousal', Number(value) || 0)}
+                      />
+                    </Stack.Item>
+                    <Stack.Item grow>
+                      <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                        Своя боль
+                      </Box>
+                      <Input
+                        fluid
+                        placeholder="Боль себе"
+                        value={String(form.affects_self_pain ?? '')}
+                        onChange={(value) => updateField('affects_self_pain', Number(value) || 0)}
+                      />
+                    </Stack.Item>
+                    <Stack.Item grow>
+                      <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                        Боль партнеру
+                      </Box>
+                      <Input
+                        fluid
+                        placeholder="Боль партнёру"
+                        value={String(form.affects_pain ?? '')}
+                        onChange={(value) => updateField('affects_pain', Number(value) || 0)}
+                      />
+                    </Stack.Item>
+                  </Stack>
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Режим климакса (куда летит жидкость) если оргазмирует актер
+                  </Box>
+                  <Stack wrap>
+                    {climaxModes.map((m) => (
+                      <Stack.Item key={m.id} style={{ margin: 2 }}>
+                        <Pill
+                          selected={form.climax_liquid_mode_active === m.id}
+                          onClick={() => updateField('climax_liquid_mode_active', m.id)}
+                        >
+                          {m.name}
+                        </Pill>
+                      </Stack.Item>
+                    ))}
+                  </Stack>
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Режим климакса (куда летит жидкость) если оргазмирует партнер
+                  </Box>
+                  <Stack wrap>
+                    {climaxModes.map((m) => (
+                      <Stack.Item key={m.id} style={{ margin: 2 }}>
+                        <Pill
+                          selected={form.climax_liquid_mode_passive === m.id}
+                          onClick={() => updateField('climax_liquid_mode_passive', m.id)}
+                        >
+                          {m.name}
+                        </Pill>
+                      </Stack.Item>
+                    ))}
+                  </Stack>
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box color="label">
+                    Сообщения (можно использовать: {'{actor}'}, {'{partner}'}, {'{pose}'}, {'{force}'},{' '}
+                    {'{speed}'}, {'{zone}'}, {'{knot}'}):
                   </Box>
                 </Stack.Item>
-              )}
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Название действия
-                </Box>
-                <Input
-                  fluid
-                  value={form.name ?? ''}
-                  placeholder="Например: Тереться щечкой"
-                  onChange={(value) => updateField('name', value)}
-                />
-              </Stack.Item>
-              
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Орган инициатора (откуда)
-                </Box>
-                <Stack wrap>
-                  {organTypeOptions.map((opt) => (
-                    <Stack.Item key={`init-${opt.id}`} style={{ margin: 2 }}>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    На старте действия
+                  </Box>
+                  <Input
+                    fluid
+                    value={form.message_on_start ?? ''}
+                    placeholder="Текст, который произойдёт при начале действия"
+                    onChange={(value) => updateField('message_on_start', value)}
+                  />
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Во время действия
+                  </Box>
+                  <Input
+                    fluid
+                    value={form.message_on_perform ?? ''}
+                    placeholder="Текст, который произойдёт при действии"
+                    onChange={(value) => updateField('message_on_perform', value)}
+                  />
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    На завершении действия
+                  </Box>
+                  <Input
+                    fluid
+                    value={form.message_on_finish ?? ''}
+                    placeholder="Текст, который произойдёт при завершении действия"
+                    onChange={(value) => updateField('message_on_finish', value)}
+                  />
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Оргазм актёра
+                  </Box>
+                  <Input
+                    fluid
+                    value={form.message_on_climax_actor ?? ''}
+                    placeholder="Текст, который произойдёт при оргазме инициатора"
+                    onChange={(value) => updateField('message_on_climax_actor', value)}
+                  />
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Оргазм партнёра
+                  </Box>
+                  <Input
+                    fluid
+                    value={form.message_on_climax_target ?? ''}
+                    placeholder="Текст, который произойдёт при оргазме партнера"
+                    onChange={(value) => updateField('message_on_climax_target', value)}
+                  />
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Особые эффекты:
+                  </Box>
+                  <Stack wrap>
+                    <Stack.Item style={{ margin: 2 }}>
                       <Pill
-                        selected={form.required_init === opt.id}
-                        onClick={() =>
-                          updateField('required_init', opt.id === form.required_init ? undefined : opt.id)
-                        }
+                        selected={!!form.reserve_target_for_session}
+                        onClick={() => updateField('reserve_target_for_session', !form.reserve_target_for_session)}
                       >
-                        {opt.name}
+                        БЛОКИРУЕТ ОРГАН ЦЕЛИ
                       </Pill>
                     </Stack.Item>
-                  ))}
-                </Stack>
-              </Stack.Item>
-
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Орган партнёра (куда)
-                </Box>
-                <Stack wrap>
-                  {organTypeOptions.map((opt) => (
-                    <Stack.Item key={`tgt-${opt.id}`} style={{ margin: 2 }}>
-                      <Pill
-                        selected={form.required_target === opt.id}
-                        onClick={() =>
-                          updateField('required_target', opt.id === form.required_target ? undefined : opt.id)
-                        }
-                      >
-                        {opt.name}
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.can_knot} onClick={() => updateField('can_knot', !form.can_knot)}>
+                        ВОЗМОЖЕН УЗЕЛ (АКТЕР)
                       </Pill>
                     </Stack.Item>
-                  ))}
-                </Stack>
-              </Stack.Item>
-
-              <Stack.Item>
-                <Stack>
-                  <Stack.Item grow>
-                    <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                      Стоимость выносливости (0.1–5.0)
-                    </Box>
-                    <Input
-                      fluid
-                      value={String(form.stamina_cost ?? '')}
-                      placeholder="По умолчанию как у шаблона"
-                      onChange={(value) =>
-                        updateField('stamina_cost', Number(value) || 0)
-                      }
-                    />
-                  </Stack.Item>
-                  <Stack.Item grow>
-                    <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                      Свое возбуждение
-                    </Box>
-                    <Input
-                      fluid
-                      value={String(form.affects_self_arousal ?? '')}
-                      placeholder="Сколько тебе добавит"
-                      onChange={(value) =>
-                        updateField('affects_self_arousal', Number(value) || 0)
-                      }
-                    />
-                  </Stack.Item>
-                </Stack>
-              </Stack.Item>
-
-              <Stack.Item>
-                <Stack>
-                  <Stack.Item grow>
-                    <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                      Возбуждение партнера
-                    </Box>
-                    <Input
-                      fluid
-                      placeholder="Возбуждение партнёра"
-                      value={String(form.affects_arousal ?? '')}
-                      onChange={(value) =>
-                        updateField('affects_arousal', Number(value) || 0)
-                      }
-                    />
-                  </Stack.Item>
-                  <Stack.Item grow>
-                    <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                      Своя боль
-                    </Box>
-                    <Input
-                      fluid
-                      placeholder="Боль себе"
-                      value={String(form.affects_self_pain ?? '')}
-                      onChange={(value) =>
-                        updateField('affects_self_pain', Number(value) || 0)
-                      }
-                    />
-                  </Stack.Item>
-                  <Stack.Item grow>
-                    <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                      Боль партнеру
-                    </Box>
-                    <Input
-                      fluid
-                      placeholder="Боль партнёру"
-                      value={String(form.affects_pain ?? '')}
-                      onChange={(value) =>
-                        updateField('affects_pain', Number(value) || 0)
-                      }
-                    />
-                  </Stack.Item>
-                </Stack>
-              </Stack.Item>
-
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Режим климакса (куда летит жидкость) если оргазмирует актер
-                </Box>
-                <Stack wrap>
-                  {climaxModes.map((m) => (
-                    <Stack.Item key={m.id} style={{ margin: 2 }}>
-                      <Pill
-                        selected={form.climax_liquid_mode_active === m.id}
-                        onClick={() => updateField('climax_liquid_mode_active', m.id)}
-                      >
-                        {m.name}
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.check_same_tile} onClick={() => updateField('check_same_tile', !form.check_same_tile)}>
+                        ТОЛЬКО С ОДНОГО ТАЙЛА
                       </Pill>
                     </Stack.Item>
-                  ))}
-                </Stack>
-              </Stack.Item>
-
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Режим климакса (куда летит жидкость) если оргазмирует партнер
-                </Box>
-                <Stack wrap>
-                  {climaxModes.map((m) => (
-                    <Stack.Item key={m.id} style={{ margin: 2 }}>
-                      <Pill
-                        selected={form.climax_liquid_mode_passive === m.id}
-                        onClick={() => updateField('climax_liquid_mode_passive', m.id)}
-                      >
-                        {m.name}
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.break_on_move} onClick={() => updateField('break_on_move', !form.break_on_move)}>
+                        ПРЕРЫВАЕТСЯ ПРИ ДВИЖЕНИИ
                       </Pill>
                     </Stack.Item>
-                  ))}
-                </Stack>
-              </Stack.Item>
+                  </Stack>
 
-              <Stack.Item>
-                <Box color="label">Сообщения (можно использовать: {`{actor}`}, {`{partner}`}, {`{pose}`}, {`{force}`}, {`{speed}`}, {`{zone}`}, {`{knot}`}):</Box>
-              </Stack.Item>
+                  <Box mt={0.5} mb={0.25} color="label" style={{ fontSize: 11 }}>
+                    Визуал и звуки
+                  </Box>
+                  <Stack wrap>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.actor_sex_hearts} onClick={() => updateField('actor_sex_hearts', !form.actor_sex_hearts)}>
+                        Pop-up Сердца (актер)
+                      </Pill>
+                    </Stack.Item>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.target_sex_hearts} onClick={() => updateField('target_sex_hearts', !form.target_sex_hearts)}>
+                        Pop-up Сердца (партнёр)
+                      </Pill>
+                    </Stack.Item>
+                  </Stack>
 
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  На старте действия
-                </Box>
-                <Input
-                  fluid
-                  value={form.message_on_start ?? ''}
-                  placeholder="Текст, который произойдёт при начале действия"
-                  onChange={(value) => updateField('message_on_start', value)}
-                />
-              </Stack.Item>
+                  <Stack wrap>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.actor_suck_sound} onClick={() => updateField('actor_suck_sound', !form.actor_suck_sound)}>
+                        Звук сосания (актер)
+                      </Pill>
+                    </Stack.Item>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.target_suck_sound} onClick={() => updateField('target_suck_sound', !form.target_suck_sound)}>
+                        Звук сосания (партнёр)
+                      </Pill>
+                    </Stack.Item>
+                  </Stack>
 
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Во время действия
-                </Box>
-                <Input
-                  fluid
-                  value={form.message_on_perform ?? ''}
-                  placeholder="Текст, который произойдёт при действии"
-                  onChange={(value) =>
-                    updateField('message_on_perform', value)
-                  }
-                />
-              </Stack.Item>
+                  <Stack wrap>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.actor_make_sound} onClick={() => updateField('actor_make_sound', !form.actor_make_sound)}>
+                        Звук стонов (актер)
+                      </Pill>
+                    </Stack.Item>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.target_make_sound} onClick={() => updateField('target_make_sound', !form.target_make_sound)}>
+                        Звук стонов (партнёр)
+                      </Pill>
+                    </Stack.Item>
+                  </Stack>
 
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  На завершении действия
-                </Box>
-                <Input
-                  fluid
-                  value={form.message_on_finish ?? ''}
-                  placeholder="Текст, который произойдёт при завершении действия"
-                  onChange={(value) =>
-                    updateField('message_on_finish', value)
-                  }
-                />
-              </Stack.Item>
+                  <Stack wrap>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill
+                        selected={!!form.actor_make_fingering_sound}
+                        onClick={() => updateField('actor_make_fingering_sound', !form.actor_make_fingering_sound)}
+                      >
+                        Звук хлюпов (актер)
+                      </Pill>
+                    </Stack.Item>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill
+                        selected={!!form.target_make_fingering_sound}
+                        onClick={() => updateField('target_make_fingering_sound', !form.target_make_fingering_sound)}
+                      >
+                        Звук хлюпов (партнёр)
+                      </Pill>
+                    </Stack.Item>
+                  </Stack>
 
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Оргазм актёра
-                </Box>
-                <Input
-                  fluid
-                  value={form.message_on_climax_actor ?? ''}
-                  placeholder="Текст, который произойдёт при оргазме инициатора"
-                  onChange={(value) =>
-                    updateField('message_on_climax_actor', value)
-                  }
-                />
-              </Stack.Item>
+                  <Stack wrap>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill
+                        selected={!!form.actor_do_onomatopoeia}
+                        onClick={() => updateField('actor_do_onomatopoeia', !form.actor_do_onomatopoeia)}
+                      >
+                        Pop-up текст (актер)
+                      </Pill>
+                    </Stack.Item>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill
+                        selected={!!form.target_do_onomatopoeia}
+                        onClick={() => updateField('target_do_onomatopoeia', !form.target_do_onomatopoeia)}
+                      >
+                        Pop-up текст (партнёр)
+                      </Pill>
+                    </Stack.Item>
+                  </Stack>
 
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Оргазм партнёра
-                </Box>
-                <Input
-                  fluid
-                  value={form.message_on_climax_target ?? ''}
-                  placeholder="Текст, который произойдёт при оргазме партнера"
-                  onChange={(value) =>
-                    updateField('message_on_climax_target', value)
-                  }
-                />
-              </Stack.Item>
-              <Stack.Item>
-                <Box mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Особые эффекты:
-                </Box>
-                <Stack wrap>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.reserve_target_for_session}
-                      onClick={() =>
-                        updateField('reserve_target_for_session', !form.reserve_target_for_session)
-                      }
-                    >
-                      БЛОКИРУЕТ ОРГАН ЦЕЛИ
-                    </Pill>
-                  </Stack.Item>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.can_knot}
-                      onClick={() => updateField('can_knot', !form.can_knot)}
-                    >
-                      ВОЗМОЖЕН УЗЕЛ (АКТЕР)
-                    </Pill>
-                  </Stack.Item>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.check_same_tile}
-                      onClick={() =>
-                        updateField('check_same_tile', !form.check_same_tile)
-                      }
-                    >
-                      ТОЛЬКО С ОДНОГО ТАЙЛА
-                    </Pill>
-                  </Stack.Item>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.break_on_move}
-                      onClick={() =>
-                        updateField('break_on_move', !form.break_on_move)
-                      }
-                    >
-                      ПРЕРЫВАЕТСЯ ПРИ ДВИЖЕНИИ
-                    </Pill>
-                  </Stack.Item>
-                </Stack>
+                  <Stack wrap>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.actor_do_thrust} onClick={() => updateField('actor_do_thrust', !form.actor_do_thrust)}>
+                        Толчки куклы (актер)
+                      </Pill>
+                    </Stack.Item>
+                    <Stack.Item style={{ margin: 2 }}>
+                      <Pill selected={!!form.target_do_thrust} onClick={() => updateField('target_do_thrust', !form.target_do_thrust)}>
+                        Толчки куклы (партнёр)
+                      </Pill>
+                    </Stack.Item>
+                  </Stack>
+                </Stack.Item>
 
-                <Box mt={0.5} mb={0.25} color="label" style={{ fontSize: 11 }}>
-                  Визуал и звуки
-                </Box>
-                <Stack wrap>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.actor_sex_hearts}
-                      onClick={() => updateField('actor_sex_hearts', !form.actor_sex_hearts)}
-                    >
-                      Pop-up Сердца (актер)
-                    </Pill>
-                  </Stack.Item>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.target_sex_hearts}
-                      onClick={() => updateField('target_sex_hearts', !form.target_sex_hearts)}
-                    >
-                      Pop-up Сердца (партнёр)
-                    </Pill>
-                  </Stack.Item>
-                </Stack>
-
-                <Stack wrap>          
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.actor_suck_sound}
-                      onClick={() => updateField('actor_suck_sound', !form.actor_suck_sound)}
-                    >
-                      Звук сосания (актер)
-                    </Pill>
-                  </Stack.Item>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.target_suck_sound}
-                      onClick={() => updateField('target_suck_sound', !form.target_suck_sound)}
-                    >
-                      Звук сосания (партнёр)
-                    </Pill>
-                  </Stack.Item>
-                </Stack>
-
-                <Stack wrap>  
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.actor_make_sound}
-                      onClick={() => updateField('actor_make_sound', !form.actor_make_sound)}
-                    >
-                      Звук стонов (актер)
-                    </Pill>
-                  </Stack.Item>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.target_make_sound}
-                      onClick={() => updateField('target_make_sound', !form.target_make_sound)}
-                    >
-                      Звук стонов (партнёр)
-                    </Pill>
-                  </Stack.Item>
-                </Stack>
-
-                <Stack wrap>  
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.actor_make_fingering_sound}
-                      onClick={() =>
-                        updateField('actor_make_fingering_sound', !form.actor_make_fingering_sound)
-                      }
-                    >
-                      Звук хлюпов (актер)
-                    </Pill>
-                  </Stack.Item>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.target_make_fingering_sound}
-                      onClick={() =>
-                        updateField('target_make_fingering_sound', !form.target_make_fingering_sound)
-                      }
-                    >
-                      Звук хлюпов (партнёр)
-                    </Pill>
-                  </Stack.Item>
-                </Stack>
-
-                <Stack wrap>  
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.actor_do_onomatopoeia}
-                      onClick={() =>
-                        updateField('actor_do_onomatopoeia', !form.actor_do_onomatopoeia)
-                      }
-                    >
-                      Pop-up текст (актер)
-                    </Pill>
-                  </Stack.Item>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.target_do_onomatopoeia}
-                      onClick={() =>
-                        updateField('target_do_onomatopoeia', !form.target_do_onomatopoeia)
-                      }
-                    >
-                      Pop-up текст (партнёр)
-                    </Pill>
-                  </Stack.Item>
-                </Stack>
-
-                <Stack wrap>  
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.actor_do_thrust}
-                      onClick={() => updateField('actor_do_thrust', !form.actor_do_thrust)}
-                    >
-                      Толчки куклы (актер)
-                    </Pill>
-                  </Stack.Item>
-                  <Stack.Item style={{ margin: 2 }}>
-                    <Pill
-                      selected={!!form.target_do_thrust}
-                      onClick={() => updateField('target_do_thrust', !form.target_do_thrust)}
-                    >
-                      Толчки куклы (партнёр)
-                    </Pill>
-                  </Stack.Item>
-                </Stack>
-              </Stack.Item>
-              <Stack.Item>
-                <Box mt={1} textAlign="right">
-                  <Button
-                    disabled={!selectedTemplate}
-                    onClick={submitCreate}
-                  >
-                    СОЗДАТЬ КАСТОМ
-                  </Button>{' '}
-                  <Button
-                    disabled={!selectedCustom}
-                    onClick={submitUpdate}
-                  >
-                    СОХРАНИТЬ ИЗМЕНЕНИЯ
-                  </Button>{' '}
-                  <Button
-                    disabled={!selectedCustom}
-                    color="bad"
-                    onClick={submitDelete}
-                  >
-                    УДАЛИТЬ
-                  </Button>
-                </Box>
-              </Stack.Item>
-            </Stack>
+                <Stack.Item>
+                  <Box mt={1} textAlign="right">
+                    <Button disabled={!selectedTemplate} onClick={submitCreate}>
+                      СОЗДАТЬ КАСТОМ
+                    </Button>{' '}
+                    <Button disabled={!selectedCustom} onClick={submitUpdate}>
+                      СОХРАНИТЬ ИЗМЕНЕНИЯ
+                    </Button>{' '}
+                    <Button disabled={!selectedCustom} color="bad" onClick={submitDelete}>
+                      УДАЛИТЬ
+                    </Button>
+                  </Box>
+                </Stack.Item>
+              </Stack>
             )}
           </Section>
         </Stack.Item>
       </Stack>
     </Section>
+  );
+};
+
+export const EroticRolePlayPanel: React.FC = () => {
+  const { act, data } = useBackend<SexSessionData>();
+
+  const partners = data.partners ?? [];
+  const actorOrgansBase = data.actor_organs ?? [];
+  const partnerOrgans = data.partner_organs ?? [];
+  const statusOrgans = data.status_organs ?? [];
+
+  const actions = data.actions ?? [];
+  const canPerform = data.can_perform ?? [];
+  const availableTags = data.available_tags ?? [];
+  const organFilteredTypes = data.organ_filtered ?? [];
+  const actorCharge = data.actor_charge ?? 0;
+  const actorCharge_max = data.actor_charge_max ?? 0;
+  const actorCharge_for_climax = data.actor_charge_for_climax ?? 0;
+
+  const [searchText, setSearchText] = useState('');
+  const [activeTags, setActiveTags] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<'status' | 'actions' | 'kinks' | 'editor'>('actions');
+
+  const [editContext, setEditContext] = useState<EditContext | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editValue, setEditValue] = useState('');
+
+  const toggleTag = (tag: string) => {
+    setActiveTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
+  };
+
+  const actorSelected = useMemo(
+    () => actorOrgansBase.find((o) => o.id === data.selected_actor_organ),
+    [actorOrgansBase, data.selected_actor_organ],
+  );
+
+  const partnerSelected = useMemo(
+    () => partnerOrgans.find((o) => o.id === data.selected_partner_organ),
+    [partnerOrgans, data.selected_partner_organ],
+  );
+
+  const currentPartner = useMemo(() => {
+    if (!partners.length) return null;
+    return partners.find((p) => p.ref === data.current_partner_ref) || partners[0];
+  }, [partners, data.current_partner_ref]);
+
+  const filteredActions = useMemo(() => {
+    const q = searchText.trim().toLowerCase();
+
+    return actions.filter((a) => {
+      if (q && !a.name.toLowerCase().includes(q)) return false;
+
+      if (activeTags.length && !(a.tags || []).some((t) => activeTags.includes(t))) return false;
+
+      if (organFilteredTypes.length && !organFilteredTypes.includes(a.type)) return false;
+
+      if (!actorSelected || !partnerSelected) return false;
+
+      return true;
+    });
+  }, [actions, searchText, activeTags, organFilteredTypes, actorSelected, partnerSelected]);
+
+  const onClickActionButton = (actionType: string) => {
+    act('start_action', { action_type: actionType });
+  };
+
+  const actorArousalWidth = Math.max(0, Math.min(100, data.actor_arousal ?? 0));
+  const partnerArousalWidth = Math.max(0, Math.min(100, data.partner_arousal ?? 0));
+
+  const showPartnerBar = !!(typeof data.partner_arousal === 'number' && !data.partner_arousal_hidden);
+
+  const openNumericModal = (ctx: EditContext, title: string, initial: number) => {
+    setEditContext(ctx);
+    setEditTitle(title);
+    setEditValue(String(Math.round(initial)));
+  };
+
+  const handleNumericConfirm = () => {
+    if (!editContext) return;
+    const num = Number(editValue);
+    if (Number.isNaN(num)) {
+      setEditContext(null);
+      return;
+    }
+
+    switch (editContext.kind) {
+      case 'arousal_actor':
+        act('set_arousal_value', { target: 'actor', amount: num });
+        break;
+      case 'link_sens':
+        act('set_link_tuning', { id: editContext.id, field: 'sensitivity', value: num });
+        break;
+      case 'organ':
+        act('set_organ_tuning', { id: editContext.id, field: editContext.field, value: num });
+        break;
+    }
+
+    setEditContext(null);
+  };
+
+  const handleNumericCancel = () => {
+    setEditContext(null);
+  };
+
+  const startEditArousalActor = () => {
+    openNumericModal({ kind: 'arousal_actor' }, 'Возбуждение 0–100', data.actor_arousal ?? 0);
+  };
+
+  const editTuningForLink = (linkId: string) => {
+    const link = (data.active_links || []).find((l) => l.id === linkId);
+    openNumericModal({ kind: 'link_sens', id: linkId }, 'Чувствительность 0–2', link?.sensitivity ?? 0);
+  };
+
+  const editOrganField = (id: string, field: 'sensitivity' | 'pain') => {
+    const org = statusOrgans.find((o) => o.id === id);
+    const current = field === 'sensitivity' ? org?.sensitivity ?? 0 : org?.pain ?? 0;
+    const title = field === 'sensitivity' ? 'Чувствительность 0–2' : 'Боль 0–2';
+    openNumericModal({ kind: 'organ', id, field }, title, current);
+  };
+
+  return (
+    <Window title="Утолить Желания" width={650} height={900}>
+      <Window.Content scrollable>
+        <Stack vertical fill>
+          <Stack.Item>
+            <Section>
+              {!!partners.length && (
+                <Box mt={0.5}>
+                  <PartnerSelector
+                    actorName={data.actor_name}
+                    partners={partners}
+                    currentRef={data.current_partner_ref}
+                    onChange={(ref) => act('set_partner', { ref })}
+                  />
+                </Box>
+              )}
+
+              <ArousalBars
+                actorName={data.actor_name}
+                partnerLabel={currentPartner?.name || 'Партнёр'}
+                actorArousal={actorArousalWidth}
+                partnerArousal={partnerArousalWidth}
+                showPartnerBar={showPartnerBar}
+                onSetActor={startEditArousalActor}
+              />
+
+              <Box mt={0.5}>
+                <Stack justify="center" wrap>
+                  <Stack.Item style={{ marginInline: 4 }}>
+                    <Button selected={activeTab === 'status'} onClick={() => setActiveTab('status')}>
+                      СТАТУС
+                    </Button>
+                  </Stack.Item>
+                  <Stack.Item style={{ marginInline: 4 }}>
+                    <Button selected={activeTab === 'actions'} onClick={() => setActiveTab('actions')}>
+                      ДЕЙСТВИЯ
+                    </Button>
+                  </Stack.Item>
+                  <Stack.Item style={{ marginInline: 4 }}>
+                    <Button selected={activeTab === 'kinks'} onClick={() => setActiveTab('kinks')}>
+                      ФЕТИШИ
+                    </Button>
+                  </Stack.Item>
+                  <Stack.Item style={{ marginInline: 4 }}>
+                    <Button selected={activeTab === 'editor'} onClick={() => setActiveTab('editor')}>
+                      РЕДАКТОР
+                    </Button>
+                  </Stack.Item>
+                </Stack>
+              </Box>
+            </Section>
+          </Stack.Item>
+
+          {activeTab === 'status' && (
+            <Stack.Item grow>
+              <Stack.Item>
+                <Section>
+                  <Box textAlign="center" color="label">
+                    Заряд: {Math.round(actorCharge)} ({actorCharge_for_climax} для оргазма, {actorCharge_max} максимум)
+                  </Box>
+                </Section>
+              </Stack.Item>
+              <StatusPanel
+                data={data}
+                actorOrgans={statusOrgans}
+                actorName={data.actor_name}
+                partnerLabel={currentPartner?.name}
+                editable
+                onEditOrgan={editOrganField}
+                onSetErectState={(id, state) => act('toggle_erect', { id, state })}
+              />
+            </Stack.Item>
+          )}
+
+          {activeTab === 'actions' && (
+            <>
+              <Stack.Item style={{ marginTop: 4 }}>
+                <BottomControls
+                  yieldToPartner={data.yield_to_partner}
+                  frozen={data.frozen}
+                  suppressMoans={!data.allow_user_moan}
+                  hiddenMode={data.hidden_mode}
+                  onFlipPose={() => act('flip', { dir: 1 })}
+                  onStopAll={() => act('stop_all')}
+                  onToggleYield={() => act('quick', { op: 'yield' })}
+                  onToggleFreeze={() => act('freeze_arousal')}
+                  onToggleMoans={() => act('toggle_moan')}
+                  onToggleHiddenMode={() => act('toggle_hidden')}
+                />
+              </Stack.Item>
+
+              <Stack.Item style={{ marginTop: 4 }}>
+                <Section>
+                  <Stack fill align="stretch">
+                    <Stack.Item basis="18%">
+                      <OrganList
+                        title="Я"
+                        organs={actorOrgansBase}
+                        selectedId={data.selected_actor_organ}
+                        onSelect={(id) => act('select_organ', { side: 'actor', id })}
+                      />
+                    </Stack.Item>
+
+                    <Stack.Item grow>
+                      <Stack vertical fill>
+                        <Stack.Item>
+                          <ActionsFilter
+                            searchText={searchText}
+                            onSearchChange={setSearchText}
+                            availableTags={availableTags}
+                            activeTags={activeTags}
+                            onToggleTag={toggleTag}
+                          />
+                        </Stack.Item>
+                        <Stack.Item grow>
+                          <ActionsList
+                            actorSelected={actorSelected}
+                            partnerSelected={partnerSelected}
+                            actions={filteredActions}
+                            currentActionTypes={data.current_actions ?? []}
+                            canPerform={canPerform}
+                            onClickAction={onClickActionButton}
+                          />
+                        </Stack.Item>
+                      </Stack>
+                    </Stack.Item>
+
+                    <Stack.Item basis="18%">
+                      <OrganList
+                        title={currentPartner ? 'Партнёр' : '—'}
+                        organs={partnerOrgans}
+                        selectedId={data.selected_partner_organ}
+                        onSelect={(id) => act('select_organ', { side: 'partner', id })}
+                      />
+                    </Stack.Item>
+                  </Stack>
+                </Section>
+              </Stack.Item>
+
+              <Stack.Item style={{ marginTop: 4 }}>
+                <ActiveLinksPanel
+                  data={data}
+                  actorOrgans={actorOrgansBase}
+                  partnerOrgans={partnerOrgans}
+                  onSetSpeed={(id, value) => act('set_link_speed', { id, value })}
+                  onSetForce={(id, value) => act('set_link_force', { id, value })}
+                  onToggleFinished={(id) => act('toggle_link_finished', { id })}
+                  onStop={(id) => act('stop_link', { id })}
+                  onEditSensitivity={editTuningForLink}
+                  hasKnottedPenis={data.has_knotted_penis}
+                  canKnotNow={data.can_knot_now}
+                  doKnotAction={data.do_knot_action}
+                  onToggleKnot={() => act('toggle_knot')}
+                />
+              </Stack.Item>
+            </>
+          )}
+
+          {activeTab === 'kinks' && (
+            <Stack.Item grow>
+              <KinksTab data={data} act={act} />
+            </Stack.Item>
+          )}
+
+          {activeTab === 'editor' && (
+            <Stack.Item grow>
+              <CustomActionsEditor data={data} act={act} />
+            </Stack.Item>
+          )}
+        </Stack>
+
+        <Divider />
+      </Window.Content>
+
+      {editContext && (
+        <Modal>
+          <Section title={editTitle}>
+            <Input autoFocus value={editValue} onChange={(value) => setEditValue(value)} />
+            <Box mt={1} textAlign="right">
+              <Button onClick={handleNumericCancel}>Отмена</Button>{' '}
+              <Button onClick={handleNumericConfirm}>OK</Button>
+            </Box>
+          </Section>
+        </Modal>
+      )}
+    </Window>
   );
 };
 

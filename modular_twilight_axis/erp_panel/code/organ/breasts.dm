@@ -37,6 +37,9 @@
 	if(!istype(H))
 		return 1.0
 
+	if(HAS_TRAIT(H, TRAIT_NOHUNGER))
+		return 0
+
 	var/nut = H.nutrition
 
 	if(nut <= NUTRITION_LEVEL_STARVING)

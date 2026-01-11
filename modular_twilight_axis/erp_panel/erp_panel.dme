@@ -1,12 +1,14 @@
 #include "code\_defenitions.dm"
 #include "code\sex_action_session.dm"
 #include "code\emotes.dm"
+#include "code\items.dm"
 #include "code\preferences.dm"
 #include "code\reagents.dm"
 #include "code\sex_session.dm"
 #include "code\stress.dm"
 #include "code\status_effects.dm"
 #include "code\subsystem.dm"
+#include "code\kinks.dm"
 #include "code\patches\_mob.dm"
 #include "code\patches\_procs.dm"
 #include "code\patches\component\_arousal.dm"
@@ -122,3 +124,12 @@
 #include "code\actions\interaction\body\_body.dm"
 #include "code\actions\interaction\body\rubbing.dm"
 #include "code\actions\interaction\body\grinding.dm"
+// BEGIN_INTERNALS
+// END_INTERNALS
+// BEGIN_FILE_DIR
+#define FILE_DIR .
+// END_FILE_DIR
+// BEGIN_PREFERENCES
+// END_PREFERENCES
+// BEGIN_INCLUDE
+// END_INCLUDE

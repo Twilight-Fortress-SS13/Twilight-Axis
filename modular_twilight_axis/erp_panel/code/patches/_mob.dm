@@ -492,3 +492,41 @@
 			V.Remove(src)
 			qdel(V)
 		added_vagina = FALSE
+
+/mob/living/carbon/human/proc/get_worn_kink_tags()
+	var/list/out = list()
+	for(var/obj/item/I in get_equipped_items())
+		if(!istype(I, /obj/item/clothing))
+			continue
+		var/obj/item/clothing/C = I
+		var/list/L = C.get_propagade_kinks()
+		if(!L || !L.len)
+			continue
+		for(var/k in L)
+			out[k] = TRUE
+	return out
+
+/mob/living/carbon/human/proc/has_kink_tag(kink_typepath)
+	if(!kink_typepath)
+		return FALSE
+	var/list/L = get_worn_kink_tags()
+	return !!L?[kink_typepath]
+
+/mob/living/carbon/human/proc/is_kink_restrained()
+	if(handcuffed || legcuffed)
+		return TRUE
+	if(is_mouth_covered())
+		return TRUE
+	if(is_sex_node_restrained(SEX_ORGAN_HANDS))
+		return TRUE
+	if(is_sex_node_restrained(SEX_ORGAN_LEGS))
+		return TRUE
+	if(is_sex_node_restrained(SEX_ORGAN_MOUTH))
+		return TRUE
+	return FALSE
+
+/mob/living/carbon/human/proc/ensure_kinks_component()
+	var/datum/component/kinks/K = GetComponent(/datum/component/kinks)
+	if(!K)
+		K = AddComponent(/datum/component/kinks)
+	return K

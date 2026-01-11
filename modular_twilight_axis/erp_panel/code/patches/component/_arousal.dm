@@ -246,6 +246,13 @@
 		if(!arousal_amt)
 			arousal_amt = 0.02
 
+	if(arousal_amt > 0 && istype(user, /mob/living/carbon/human) && istype(source, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = user
+		var/mob/living/carbon/human/P = source
+		var/datum/component/kinks/K = H.ensure_kinks_component()
+		if(K)
+			arousal_amt *= K.get_arousal_multiplier(H, P, giving, applied_force, applied_speed, organ_id)
+
 	if(!arousal_frozen)
 		adjust_arousal(source, arousal_amt)
 

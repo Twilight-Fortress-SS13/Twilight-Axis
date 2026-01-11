@@ -601,8 +601,35 @@
 
 	D["can_perform"] = can
 	D["organ_filtered"] = actions_matching_nodes()
+	if(istype(user, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = user
+		D["kinks"] = get_kink_ui_payload(H)
 
 	return D
+
+/datum/sex_session_tgui/proc/get_kink_ui_payload(mob/living/carbon/human/H)
+	if(!H)
+		return null
+
+	var/datum/component/kinks/K = H.ensure_kinks_component()
+	var/list/out = list()
+	var/list/entries = list()
+
+	for(var/kink_type in GLOB.available_kinks)
+		var/datum/kink/KD = GLOB.available_kinks[kink_type]
+		if(!KD)
+			continue
+		entries += list(list(
+			"type" = "[KD.type]",
+			"name" = KD.name,
+			"description" = KD.description,
+			"category" = KD.category,
+			"intensity" = KD.intensity,
+			"pref" = K ? K.get_pref(KD.type) : 0
+		))
+
+	out["entries"] = entries
+	return out
 
 /datum/sex_session_tgui/ui_act(action, list/params)
 	. = ..()
@@ -610,6 +637,24 @@
 		return
 
 	switch(action)
+		if("set_kink_pref")
+			if(!user || !istype(user, /mob/living/carbon/human))
+				return FALSE
+			var/mob/living/carbon/human/H = user
+			var/kink_type_txt = params["type"]
+			var/value = text2num(params["value"])
+			if(!kink_type_txt)
+				return FALSE
+			var/kink_type = text2path(kink_type_txt)
+			if(!ispath(kink_type, /datum/kink))
+				return FALSE
+			var/datum/component/kinks/K = H.ensure_kinks_component()
+			if(!K)
+				return FALSE
+			K.set_pref(kink_type, value)
+			SStgui.update_uis(src)
+			return TRUE
+
 		if("select_organ")
 			var/side = params["side"]
 			var/id = params["id"]
@@ -2059,3 +2104,4 @@
 	for(var/mob/living/carbon/human/H in receivers)
 		if(get_dist(user, H) <= 2)
 			to_chat(H, message)
+
