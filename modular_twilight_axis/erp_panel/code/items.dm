@@ -14,7 +14,7 @@
 	icon = 'modular_twilight_axis/erp_panel/icons/bondage.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/erp_panel/icons/onmob/bondage.dmi'
 	propagade_kink = list(
-		/datum/kink/submission = 1,
+		/datum/kink/submissive = 1,
 		/datum/kink/bondage = 1
 	)
 
@@ -32,7 +32,7 @@
 	icon = 'modular_twilight_axis/erp_panel/icons/bondage.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/erp_panel/icons/onmob/bondage.dmi'
 	propagade_kink = list(
-		/datum/kink/submission = 1,
+		/datum/kink/submissive = 1,
 		/datum/kink/bondage = 1
 	)
 
@@ -58,7 +58,7 @@
 	icon = 'modular_twilight_axis/erp_panel/icons/bondage.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/erp_panel/icons/onmob/bondage.dmi'
 	propagade_kink = list(
-		/datum/kink/submission = 1,
+		/datum/kink/submissive = 1,
 		/datum/kink/bondage = 1
 	)
 
@@ -71,7 +71,7 @@
 	icon = 'modular_twilight_axis/erp_panel/icons/bondage.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/erp_panel/icons/onmob/bondage.dmi'
 	propagade_kink = list(
-		/datum/kink/submission = 1,
+		/datum/kink/submissive = 1,
 		/datum/kink/bondage = 1
 	)
 
@@ -100,7 +100,7 @@
 	icon = 'modular_twilight_axis/erp_panel/icons/bondage.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/erp_panel/icons/onmob/bondage.dmi'
 	propagade_kink = list(
-		/datum/kink/submission = 1,
+		/datum/kink/submissive = 1,
 		/datum/kink/bondage = 1
 	)
 
