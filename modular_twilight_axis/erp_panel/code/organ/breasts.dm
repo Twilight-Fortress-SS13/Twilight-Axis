@@ -1,5 +1,5 @@
-#define BREAST_BASE_PROD_PER_SIZE		0.5
-#define BREAST_STORAGE_PER_SIZE			12
+#define BREAST_BASE_PROD_PER_SIZE		0.4
+#define BREAST_STORAGE_PER_SIZE			5
 #define BREAST_INJECTION_PER_SIZE		1
 #define BREAST_NUTRITION_COST_PER_UNIT	0.5
 
@@ -19,7 +19,7 @@
 	if(!reagent_object)
 		return 	
 
-	stored_liquid_max = 60 + size * BREAST_STORAGE_PER_SIZE
+	stored_liquid_max = 45 + (max(size,3) * BREAST_STORAGE_PER_SIZE)
 	producing_reagent_rate = size * BREAST_BASE_PROD_PER_SIZE
 	injection_amount = size * BREAST_INJECTION_PER_SIZE
 
