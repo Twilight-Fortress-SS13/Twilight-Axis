@@ -32,8 +32,8 @@
 	if(!testicles)
 		return
 
-	producing_reagent_rate = testicles.ball_size * 0.025
-	stored_liquid_max = 5 * testicles.ball_size
+	producing_reagent_rate = testicles.ball_size * 0.25
+	stored_liquid_max = 12 + (3 * testicles.ball_size)
 
 	if(stored_liquid)
 		stored_liquid.maximum_volume = stored_liquid_max

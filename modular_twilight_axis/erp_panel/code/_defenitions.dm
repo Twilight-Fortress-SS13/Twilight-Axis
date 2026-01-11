@@ -7,6 +7,8 @@
 #define SEX_ORGAN_VAGINA (1<<6)
 #define SEX_ORGAN_PENIS (1<<7)
 
+#define REAGENT_FLAG_ERP_SENSITIVE (1<<0)
+
 #define SEX_CHAT_FREQUENCY 3
 
 #define SEX_SENSITIVITY_MAX  2
@@ -95,6 +97,8 @@
 var/global/regex/SEX_REGEX_DULLAHAN  = regex(@"\{dullahan\?([^:}]*):([^}]*)\}", "g")
 var/global/regex/SEX_REGEX_AGGR      = regex(@"\{aggr\?([^:}]*):([^}]*)\}", "g")
 var/global/regex/SEX_REGEX_BIGBREAST = regex(@"\{bigbreast\?([^:}]*):([^}]*)\}", "g")
+var/global/list/GLOB_erp_recent_sensitive_turf_tick = list()
+var/global/list/GLOB_erp_recent_sensitive_mob_tick  = list()
 
 GLOBAL_VAR_INIT(sex_custom_action_seq, 0)
 GLOBAL_LIST_INIT(sex_panel_actions, build_sex_panel_actions())

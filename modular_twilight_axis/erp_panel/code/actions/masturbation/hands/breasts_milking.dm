@@ -50,22 +50,17 @@
 	if(!prob(MILKING_BREAST_PROBABILITY))
 		return
 
-	var/datum/sex_action_session/action_session = session
-	if(!action_session || QDELETED(action_session))
-		return
-
-	var/datum/sex_session_tgui/session_object = action_session.session
-	if(!session_object || QDELETED(session_object))
-		return
-
-	var/datum/sex_organ/organ_object = session_object.resolve_organ_datum(user, SEX_ORGAN_FILTER_BREASTS)
+	var/datum/sex_organ/organ_object = user.get_sex_organ_by_type(SEX_ORGAN_BREASTS)
 	if(!organ_object)
-		session_object.stop_instance(action_session.instance_id)
 		return
 
-	var/obj/item/container = organ_object.find_liquid_container()
+	var/obj/item/container = active_container
+	if(!container || QDELETED(container))
+		container = organ_object.find_liquid_container()
+		active_container = container
+
 	if(!container)
-		session_object.stop_instance(action_session.instance_id)
 		return
 
 	do_liquid_injection(user, target)
+

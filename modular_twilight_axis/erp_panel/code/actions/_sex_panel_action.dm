@@ -73,8 +73,6 @@
 	var/affects_pain = 0
 	/// Get pose of partners
 	var/pose_key = SEX_POSE_BOTH_STANDING
-	/// Link to session data
-	var/datum/sex_action_session/session
 	/// Is taregt organ reserverd for action
 	var/reserve_target_for_session = FALSE
 	/// Active for action container
