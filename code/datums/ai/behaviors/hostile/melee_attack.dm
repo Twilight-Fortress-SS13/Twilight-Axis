@@ -1,5 +1,5 @@
 /datum/ai_behavior/basic_melee_attack
-	action_cooldown = 0.2 SECONDS // We gotta check unfortunately often because we're in a race condition with nextmove
+	action_cooldown = 0 //0.2 SECONDS // We gotta check unfortunately often because we're in a race condition with nextmove // TA - Expermental Mob Melee Attack fix
 	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT | AI_BEHAVIOR_REQUIRE_REACH | AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 	var/sidesteps_after = FALSE
 
@@ -42,6 +42,14 @@
 		basic_mob.ClickOn(hiding_target, list())
 	else
 		basic_mob.ClickOn(target, list())
+
+	//TA add start - Expermental Mob Melee Attack fix
+	var/datum/intent/simple/I = basic_mob.a_intent
+	if(I?.clickcd)
+		basic_mob.melee_cooldown = max(basic_mob.melee_cooldown, world.time + I.clickcd)
+	else
+		basic_mob.melee_cooldown = max(basic_mob.melee_cooldown, world.time + CLICK_CD_MELEE)
+	//TA add end - Expermental Mob Melee Attack fix
 
 	if(sidesteps_after && prob(33)) //this is so fucking hacky, but going off og code this is exactly how it goes ignoring movetimers
 		if(!target || !isturf(target.loc) || !isturf(basic_mob.loc) || basic_mob.stat == DEAD)
