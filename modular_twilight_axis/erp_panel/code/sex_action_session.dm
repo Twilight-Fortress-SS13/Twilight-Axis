@@ -1,6 +1,11 @@
+/datum/sex_action_context
+	var/datum/sex_action_session/link
+	var/list/compiled_messages
+	var/compile_key
+	var/obj/item/active_container
+
 /datum/sex_action_session
 	var/action_type
-	var/datum/sex_panel_action/action
 	var/datum/sex_session_tgui/session
 
 	var/mob/living/carbon/human/actor
@@ -15,54 +20,20 @@
 
 	var/next_tick_time = 0
 
+	var/datum/sex_panel_action/action_proto
+	var/datum/sex_action_context/ctx
+
 /datum/sex_action_session/New(datum/sex_session_tgui/S, datum/sex_panel_action/A, actor_node, partner_node, action_key)
 	. = ..()
 	session = S
-
-	START_PROCESSING(SSerp_sytem, src)
 	action_type = action_key
+	action_proto = A
 
-	if(A)
-		var/datum/sex_panel_action/new_action = new A.type
-
-		new_action.name                   = A.name
-		new_action.stamina_cost           = A.stamina_cost
-		new_action.affects_self_arousal   = A.affects_self_arousal
-		new_action.affects_arousal        = A.affects_arousal
-		new_action.affects_self_pain      = A.affects_self_pain
-		new_action.affects_pain           = A.affects_pain
-
-		new_action.required_init          = A.required_init
-		new_action.required_target        = A.required_target
-		new_action.armor_slot_init        = A.armor_slot_init
-		new_action.armor_slot_target      = A.armor_slot_target
-		new_action.can_knot               = A.can_knot
-		new_action.reserve_target_for_session = A.reserve_target_for_session
-		new_action.climax_liquid_mode_active  = A.climax_liquid_mode_active
-		new_action.climax_liquid_mode_passive = A.climax_liquid_mode_passive
-
-		new_action.message_on_start         = A.message_on_start
-		new_action.message_on_perform       = A.message_on_perform
-		new_action.message_on_finish        = A.message_on_finish
-		new_action.message_on_climax_actor  = A.message_on_climax_actor
-		new_action.message_on_climax_target = A.message_on_climax_target
-
-		new_action.actor_sex_hearts            = A.actor_sex_hearts
-		new_action.target_sex_hearts           = A.target_sex_hearts
-		new_action.actor_suck_sound            = A.actor_suck_sound
-		new_action.target_suck_sound           = A.target_suck_sound
-		new_action.actor_make_sound            = A.actor_make_sound
-		new_action.target_make_sound           = A.target_make_sound
-		new_action.actor_make_fingering_sound  = A.actor_make_fingering_sound
-		new_action.target_make_fingering_sound = A.target_make_fingering_sound
-		new_action.actor_do_onomatopoeia       = A.actor_do_onomatopoeia
-		new_action.target_do_onomatopoeia      = A.target_do_onomatopoeia
-		new_action.actor_do_thrust             = A.actor_do_thrust
-		new_action.target_do_thrust            = A.target_do_thrust
-
-		new_action.session = src
-
-		action = new_action
+	ctx = new
+	ctx.link = src
+	ctx.compiled_messages = null
+	ctx.compile_key = null
+	ctx.active_container = null
 
 	instance_id = "[REF(src)]"
 	actor_node_id = actor_node
@@ -75,15 +46,12 @@
 	partner = p
 
 /datum/sex_action_session/Destroy()
-	STOP_PROCESSING(SSerp_sytem, src)
-
 	var/datum/sex_organ/src_org = session?.resolve_organ_datum(actor, actor_node_id)
 	if(src_org)
 		src_org.unbind()
 
-	qdel(action)
-	action = null
-
+	ctx = null
+	action_proto = null
 	return ..()
 
 /datum/sex_action_session/proc/start()
@@ -93,10 +61,14 @@
 	if(src_org)
 		src_org.bind_with(tgt_org)
 
-	action.on_start(actor, partner, src)
-	next_tick_time = world.time
+	if(action_proto)
+		action_proto.on_start(actor, partner, ctx)
 
-/datum/sex_action_session/process(delta_time)
+	next_tick_time = world.time
+	if(session)
+		session.recalc_next_actions_time()
+
+/datum/sex_action_session/proc/tick()
 	if(next_tick_time && world.time < next_tick_time)
 		return
 
@@ -119,15 +91,15 @@
 		session.stop_instance(instance_id)
 		return
 
-	var/do_time = action.interaction_timer / get_speed_multiplier(speed)
+	var/do_time = action_proto.interaction_timer / get_speed_multiplier(speed)
 	if(do_time < world.tick_lag)
 		do_time = world.tick_lag
 
-	if(action.stamina_cost)
+	if(action_proto.stamina_cost)
 		var/mob/living/carbon/human/U = actor
 		if(U)
 			U.sex_procs_active = TRUE
-			var/success = U.stamina_add(action.stamina_cost * get_stamina_cost_multiplier(force))
+			var/success = U.stamina_add(action_proto.stamina_cost * get_stamina_cost_multiplier(force))
 			U.sex_procs_active = FALSE
 			if(!success)
 				session.stop_instance(instance_id)
@@ -139,11 +111,10 @@
 	var/datum/sex_organ/src_org = session.resolve_organ_datum(A, actor_node_id)
 	var/datum/sex_organ/tgt_org = session.resolve_organ_datum(T, partner_node_id)
 
-	var/self_pleasure_base   = action.affects_self_arousal
-	var/target_pleasure_base = action.affects_arousal
-
-	var/self_pain_base   = action.affects_self_pain
-	var/target_pain_base = action.affects_pain
+	var/self_pleasure_base   = action_proto.affects_self_arousal
+	var/target_pleasure_base = action_proto.affects_arousal
+	var/self_pain_base       = action_proto.affects_self_pain
+	var/target_pain_base     = action_proto.affects_pain
 
 	var/list/force_mults = get_force_multipliers(force, A)
 	var/pain_mult     = force_mults["pain"]
@@ -230,14 +201,14 @@
 		var/datum/sex_action_session/S = session.current_actions[id]
 		if(!S || QDELETED(S))
 			continue
-		if(!S.action)
+		if(!S.action_proto)
 			continue
 
 		if(S.actor == M)
-			if(!S.action.affects_self_arousal)
+			if(!S.action_proto.affects_self_arousal)
 				continue
 		else if(S.partner == M)
-			if(!S.action.affects_arousal)
+			if(!S.action_proto.affects_arousal)
 				continue
 		else
 			continue
@@ -249,7 +220,7 @@
 	return count
 
 /datum/sex_action_session/proc/get_priority_for(mob/living/carbon/human/U)
-	if(!session || !action || !U)
+	if(!session || !action_proto || !U)
 		return -1
 
 	var/organ_priority = 0

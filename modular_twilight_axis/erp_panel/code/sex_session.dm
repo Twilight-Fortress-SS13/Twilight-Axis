@@ -53,6 +53,8 @@
 	var/list/cached_passive_links
 	var/list/cached_custom_actions
 
+	var/next_actions_time = 0
+
 /datum/sex_session_tgui/New(mob/living/carbon/human/U, mob/living/carbon/human/T)
 	. = ..()
 	if(U)
@@ -221,15 +223,13 @@
 			"side" = side,
 		))
 
-	if(M.getorganslot(ORGAN_SLOT_TAIL))
-		out += list(list(
-			"id"   = SEX_ORGAN_FILTER_TAIL,
-			"name" = "Хвост",
-			"busy" = BUSY_FOR(SEX_ORGAN_FILTER_TAIL),
-			"side" = side,
-		))
-
+	var/has_tail = FALSE
 	if(is_lamia)
+		has_tail = TRUE
+	else if(M.getorganslot(ORGAN_SLOT_TAIL))
+		has_tail = TRUE
+
+	if(has_tail)
 		out += list(list(
 			"id"   = SEX_ORGAN_FILTER_TAIL,
 			"name" = "Хвост",
@@ -287,26 +287,6 @@
 		))
 
 	return out
-
-/datum/sex_session_tgui/proc/category_of_actor_node(id)
-	switch(id)
-		if(SEX_ORGAN_FILTER_MOUTH)
-			return SEX_ORGAN_FILTER_MOUTH
-		if(SEX_ORGAN_FILTER_BREASTS)
-			return SEX_ORGAN_FILTER_BREASTS
-		if(SEX_ORGAN_FILTER_LHAND)
-			return SEX_ORGAN_FILTER_LHAND
-		if(SEX_ORGAN_FILTER_RHAND)
-			return SEX_ORGAN_FILTER_RHAND
-		if(SEX_ORGAN_FILTER_LEGS)
-			return SEX_ORGAN_FILTER_LEGS
-		if(SEX_ORGAN_FILTER_TAIL)
-			return SEX_ORGAN_FILTER_TAIL
-		if(SEX_ORGAN_FILTER_VAGINA, SEX_ORGAN_FILTER_PENIS, SEX_ORGAN_FILTER_ANUS)
-			return SEX_ORGAN_FILTER_GENITAL
-		if(SEX_ORGAN_FILTER_BODY)
-			return "body"
-	return null
 
 /datum/sex_session_tgui/proc/is_locked(category)
 	return (category in locked_actor_categories)
@@ -573,8 +553,8 @@
 				"id"                = I.instance_id,
 				"actor_organ_id"    = I.actor_node_id,
 				"partner_organ_id"  = I.partner_node_id,
-				"action_type"       = I.action_type,
-				"action_name"       = I.action?.name,
+				"action_type"       = I.action_proto,
+				"action_name"       = I.action_proto?.name,
 				"speed"             = I.speed,
 				"force"             = I.force,
 				"do_until_finished" = do_until_finished,
@@ -594,7 +574,7 @@
 		if(!I)
 			continue
 
-		if(I.action?.can_knot)
+		if(I.action_proto?.can_knot)
 			can_knot_now = TRUE
 			break
 
@@ -887,11 +867,12 @@
 	return FALSE
 
 /datum/sex_session_tgui/proc/update_partners_proximity()
-	// подтянуть proxy под текущую голову
 	if(partner_bodypart_override && istype(partner_bodypart_override, /obj/item/bodypart/head/dullahan))
-		for(var/mob/living/carbon/human/erp_proxy/proxy in world)
-			if(proxy.source_part == partner_bodypart_override && !(proxy in partners))
-				partners += proxy
+		var/list/proxies = get_erp_proxies_for_part(partner_bodypart_override)
+		if(proxies)
+			for(var/mob/living/carbon/human/erp_proxy/P in proxies)
+				if(!(P in partners))
+					partners += P
 
 	if(QDELETED(user))
 		return
@@ -1012,7 +993,7 @@
 	if(src_org)
 		src_org.unbind()
 
-	I.action.on_finish(I.actor, I.partner)
+	I.action_proto?.on_finish(I.actor, I.partner, I.ctx)
 	qdel(I)
 
 	if(!length(current_actions))
@@ -1140,24 +1121,10 @@
 	return null
 
 /datum/sex_session_tgui/proc/node_organ_type(id)
-	switch(id)
-		if(SEX_ORGAN_FILTER_MOUTH)
-			return SEX_ORGAN_MOUTH
-		if(SEX_ORGAN_FILTER_LHAND, SEX_ORGAN_FILTER_RHAND)
-			return SEX_ORGAN_HANDS
-		if(SEX_ORGAN_FILTER_LEGS)
-			return SEX_ORGAN_LEGS
-		if(SEX_ORGAN_FILTER_TAIL)
-			return SEX_ORGAN_TAIL
-		if(SEX_ORGAN_FILTER_BREASTS)
-			return SEX_ORGAN_BREASTS
-		if(SEX_ORGAN_FILTER_VAGINA)
-			return SEX_ORGAN_VAGINA
-		if(SEX_ORGAN_FILTER_PENIS)
-			return SEX_ORGAN_PENIS
-		if(SEX_ORGAN_FILTER_ANUS)
-			return SEX_ORGAN_ANUS
-	return null
+	return GLOB.sex_node_defs[id]?["organ_type"]
+
+/datum/sex_session_tgui/proc/category_of_actor_node(id)
+	return GLOB.sex_node_defs[id]?["category"]
 
 /datum/sex_session_tgui/proc/pick_actor_node_for_action(datum/sex_panel_action/A)
 	if(!A)
@@ -1232,14 +1199,37 @@
 /datum/sex_session_tgui/proc/stop_broadcast_loop()
 	next_broadcast_time = 0
 
+/datum/sex_session_tgui/proc/recalc_next_actions_time()
+	var/min = 0
+	for(var/id in current_actions)
+		var/datum/sex_action_session/I = current_actions[id]
+		if(!I || QDELETED(I))
+			continue
+		if(!min || I.next_tick_time < min)
+			min = I.next_tick_time
+	next_actions_time = min
+
 /datum/sex_session_tgui/process(delta_time)
-	if(!next_broadcast_time)
-		return
-	if(world.time < next_broadcast_time)
+	var/next = 0
+	if(next_broadcast_time) next = next_broadcast_time
+	if(next_actions_time && (!next || next_actions_time < next)) next = next_actions_time
+
+	if(!next || world.time < next)
 		return
 
-	update_partners_proximity()
-	broadcast_step()
+	if(next_broadcast_time && world.time >= next_broadcast_time)
+		update_partners_proximity()
+		broadcast_step()
+
+	if(next_actions_time && world.time >= next_actions_time)
+		for(var/id in current_actions)
+			var/datum/sex_action_session/I = current_actions[id]
+			if(!I || QDELETED(I))
+				continue
+			if(world.time >= I.next_tick_time)
+				I.tick()
+
+		recalc_next_actions_time()
 
 /datum/sex_session_tgui/proc/broadcast_step()
 	if(QDELETED(src))
@@ -1252,7 +1242,7 @@
 	
 	for(var/id in current_actions)
 		var/datum/sex_action_session/I = current_actions[id]
-		if(!I || QDELETED(I) || !I.action)
+		if(!I || QDELETED(I) || !I.action_proto)
 			continue
 
 		if(!I.should_hard_stop())
@@ -1284,7 +1274,7 @@
 		var/datum/sex_action_session/A = current_actions[id]
 		if(!A || QDELETED(A))
 			continue
-		if(!A.action)
+		if(!A.action_proto)
 			continue
 		if(A.session.user != user)
 			continue
@@ -1295,8 +1285,8 @@
 		return
 
 	var/datum/sex_action_session/choice = pick(candidates)
-	if(choice && choice.action)
-		choice.action.on_perform(choice.actor, choice.partner)
+	if(choice && choice.action_proto)
+		choice.action_proto.on_perform(choice.actor, choice.partner, choice.ctx)
 
 	var/total_mult = 0.0
 	var/count = 0
@@ -1319,7 +1309,7 @@
 	next_broadcast_time = world.time + next_delay
 
 /datum/sex_session_tgui/proc/can_continue_action_session(datum/sex_action_session/I)
-	if(!I || !I.action)
+	if(!I || !I.action_proto)
 		return FALSE
 
 	var/mob/living/carbon/human/U = I.actor
@@ -1328,10 +1318,10 @@
 	if(!U || !T)
 		return FALSE
 
-	if(!inherent_perform_check(I.action, U, T))
+	if(!inherent_perform_check(I.action_proto, U, T))
 		return FALSE
 
-	if(!I.action.can_perform(U, T))
+	if(!I.action_proto.can_perform(U, T))
 		return FALSE
 
 	var/datum/sex_organ/src_org = null
@@ -1342,18 +1332,18 @@
 	if(I.partner_node_id)
 		tgt_org = resolve_organ_datum(T, I.partner_node_id)
 
-	if(I.action.required_init && !src_org)
+	if(I.action_proto.required_init && !src_org)
 		return FALSE
 
-	if(I.action.required_target && !tgt_org)
+	if(I.action_proto.required_target && !tgt_org)
 		return FALSE
 
 	var/a_type = I.actor_node_id ? node_organ_type(I.actor_node_id) : null
 	var/p_type = I.partner_node_id ? node_organ_type(I.partner_node_id) : null
 
-	if(I.action.required_init && !a_type)
+	if(I.action_proto.required_init && !a_type)
 		return FALSE
-	if(I.action.required_target && !p_type)
+	if(I.action_proto.required_target && !p_type)
 		return FALSE
 
 	return TRUE
@@ -1427,13 +1417,13 @@
 
 	for(var/id in current_actions)
 		var/datum/sex_action_session/I = current_actions[id]
-		if(!I || !I.action)
+		if(!I || !I.action_proto)
 			continue
 		if(I.session.user != user)
 			continue
 		if(node_organ_type(I.actor_node_id) != SEX_ORGAN_PENIS)
 			continue
-		if(!I.action.can_knot)
+		if(!I.action_proto.can_knot)
 			continue
 		return TRUE
 
@@ -1454,7 +1444,7 @@
 
 	for(var/id in current_actions)
 		var/datum/sex_action_session/I = current_actions[id]
-		if(!I || QDELETED(I) || !I.action)
+		if(!I || QDELETED(I) || !I.action_proto)
 			continue
 
 		if(H != I.actor && H != I.partner)
@@ -1464,7 +1454,7 @@
 		if(!can_continue_action_session(I))
 			stop = TRUE
 		else
-			var/datum/sex_panel_action/A = I.action
+			var/datum/sex_panel_action/A = I.action_proto
 			if(A.break_on_move)
 				stop = TRUE
 				moved_breaks_any = TRUE
@@ -1557,7 +1547,7 @@
 
 	for(var/id in current_actions)
 		var/datum/sex_action_session/I = current_actions[id]
-		if(!I || QDELETED(I) || !I.action)
+		if(!I || QDELETED(I) || !I.action_proto)
 			continue
 
 		var/score = I.get_priority_for(U)
@@ -1592,16 +1582,16 @@
 
 	for(var/id in current_actions)
 		var/datum/sex_action_session/I = current_actions[id]
-		if(!I || QDELETED(I) || !I.action)
+		if(!I || QDELETED(I) || !I.action_proto)
 			continue
 
 		if(I.partner != P)
 			continue
 
-		if(!I.action.reserve_target_for_session)
+		if(!I.action_proto.reserve_target_for_session)
 			continue
 
-		var/list/reserved_types = I.action.get_reserved_target_organ_types()
+		var/list/reserved_types = I.action_proto.get_reserved_target_organ_types()
 		if(!islist(reserved_types) || !reserved_types.len)
 			continue
 
@@ -1665,7 +1655,7 @@
 
 	for(var/id in current_actions)
 		var/datum/sex_action_session/I = current_actions[id]
-		if(!I || QDELETED(I) || !I.action)
+		if(!I || QDELETED(I) || !I.action_proto)
 			continue
 
 		if(I.action_type != action_key)

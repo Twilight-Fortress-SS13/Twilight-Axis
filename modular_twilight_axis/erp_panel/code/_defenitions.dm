@@ -52,6 +52,18 @@
 #define SEX_ORGAN_FILTER_BODY "body"
 #define SEX_ORGAN_FILTER_ALL "all"
 
+#define SEX_NODE_ALL     "all"
+#define SEX_NODE_BODY    "body"
+#define SEX_NODE_MOUTH   "mouth"
+#define SEX_NODE_LHAND   "left_hand"
+#define SEX_NODE_RHAND   "right_hand"
+#define SEX_NODE_LEGS    "legs"
+#define SEX_NODE_TAIL    "tail"
+#define SEX_NODE_BREASTS "breasts"
+#define SEX_NODE_VAGINA  "genital_v"
+#define SEX_NODE_PENIS   "genital_p"
+#define SEX_NODE_ANUS    "genital_a"
+
 #define VAGINA_BASE_PREGNANCY_CHANCE 20
 #define VAGINA_KNOT_PREGNANCY_MAX_BONUS 90
 
@@ -86,6 +98,8 @@ var/global/regex/SEX_REGEX_BIGBREAST = regex(@"\{bigbreast\?([^:}]*):([^}]*)\}",
 
 GLOBAL_VAR_INIT(sex_custom_action_seq, 0)
 GLOBAL_LIST_INIT(sex_panel_actions, build_sex_panel_actions())
+GLOBAL_LIST_INIT(erp_proxies_by_part, list())
+GLOBAL_LIST_INIT(sex_node_defs, build_sex_node_defs())
 
 #define SEX_PANEL_ACTION(sex_action_type) (GLOB.sex_panel_actions[sex_action_type])
 
@@ -125,3 +139,37 @@ GLOBAL_LIST_INIT(sex_panel_actions, build_sex_panel_actions())
 		if(SEX_FORCE_HIGH) return 2.0
 		if(SEX_FORCE_EXTREME) return 2.5
 	return 1.0
+
+
+/proc/build_sex_node_defs()
+	var/list/L = list()
+	L[SEX_NODE_ALL]     = list("name"="Все",        "organ_type"=null, "category"="filter")
+	L[SEX_NODE_BODY]    = list("name"="Тело",       "organ_type"=null, "category"="body")
+	L[SEX_NODE_MOUTH]   = list("name"="Рот",        "organ_type"=SEX_ORGAN_MOUTH,   "category"=SEX_NODE_MOUTH)
+	L[SEX_NODE_LHAND]   = list("name"="Левая рука", "organ_type"=SEX_ORGAN_HANDS,  "category"=SEX_NODE_LHAND)
+	L[SEX_NODE_RHAND]   = list("name"="Правая рука","organ_type"=SEX_ORGAN_HANDS,  "category"=SEX_NODE_RHAND)
+	L[SEX_NODE_LEGS]    = list("name"="Ноги",       "organ_type"=SEX_ORGAN_LEGS,   "category"=SEX_NODE_LEGS)
+	L[SEX_NODE_TAIL]    = list("name"="Хвост",      "organ_type"=SEX_ORGAN_TAIL,   "category"=SEX_NODE_TAIL)
+	L[SEX_NODE_BREASTS] = list("name"="Грудь",      "organ_type"=SEX_ORGAN_BREASTS,"category"=SEX_NODE_BREASTS)
+	L[SEX_NODE_VAGINA]  = list("name"="Вагина",     "organ_type"=SEX_ORGAN_VAGINA, "category"=SEX_ORGAN_FILTER_GENITAL)
+	L[SEX_NODE_PENIS]   = list("name"="Член",       "organ_type"=SEX_ORGAN_PENIS,  "category"=SEX_ORGAN_FILTER_GENITAL)
+	L[SEX_NODE_ANUS]    = list("name"="Анус",       "organ_type"=SEX_ORGAN_ANUS,   "category"=SEX_ORGAN_FILTER_GENITAL)
+	return L
+
+/proc/sex_next_time(delay)
+	var/d = max(1, round(delay))
+	return world.time + d
+
+/proc/get_erp_proxies_for_part(obj/item/bodypart/part)
+	if(!part)
+		return null
+
+	var/list/L = GLOB.erp_proxies_by_part[REF(part)]
+	if(!islist(L) || !L.len)
+		return null
+
+	var/list/out = list()
+	for(var/mob/living/carbon/human/erp_proxy/P in L)
+		if(P && !QDELETED(P))
+			out += P
+	return out

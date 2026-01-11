@@ -212,21 +212,43 @@
 	var/obj/item/bodypart/source_part
 	
 /mob/living/carbon/human/erp_proxy/Initialize(mapload)
-	..()
-	invisibility = 101
-	density = FALSE
-	anchored = TRUE
-	return INITIALIZE_HINT_NORMAL
+	. = ..()
+	register_erp_proxy()
+	return .
+
+/mob/living/carbon/human/erp_proxy/Destroy()
+	unregister_erp_proxy()
+	return ..()
 
 /mob/living/carbon/human/erp_proxy/Life(seconds_per_tick)
 	return
 
-/obj/item/bodypart/head/dullahan/Destroy()
-	. = ..()
-	for(var/mob/living/carbon/human/erp_proxy/proxy_object in world)
-		if(proxy_object.source_part == src)
-			qdel(proxy_object)
+/mob/living/carbon/human/erp_proxy/proc/register_erp_proxy()
+	if(!source_part)
+		return
 
+	var/key = REF(source_part)
+	var/list/L = GLOB.erp_proxies_by_part[key]
+	if(!islist(L))
+		L = list()
+		GLOB.erp_proxies_by_part[key] = L
+
+	if(!(src in L))
+		L += src
+
+/mob/living/carbon/human/erp_proxy/proc/unregister_erp_proxy()
+	if(!source_part)
+		return
+
+	var/key = REF(source_part)
+	var/list/L = GLOB.erp_proxies_by_part[key]
+	if(!islist(L))
+		return
+
+	L -= src
+	if(!L.len)
+		GLOB.erp_proxies_by_part -= key
+		
 /mob/living/proc/start_sex_session_with_dullahan_head(obj/item/bodypart/head/dullahan/head_dullahan)
 	var/mob/living/carbon/human/erp_proxy/proxy_object = create_dullahan_head_partner(head_dullahan)
 

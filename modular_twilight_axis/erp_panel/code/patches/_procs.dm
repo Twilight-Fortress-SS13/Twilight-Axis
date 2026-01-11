@@ -203,7 +203,7 @@
 				"actor_organ_id"    = I.actor_node_id,
 				"partner_organ_id"  = I.partner_node_id,
 				"action_type"       = I.action_type,
-				"action_name"       = I.action?.name,
+				"action_name"       = I.action_proto?.name,
 				"speed"             = I.speed,
 				"force"             = I.force,
 				"do_until_finished" = session.do_until_finished,

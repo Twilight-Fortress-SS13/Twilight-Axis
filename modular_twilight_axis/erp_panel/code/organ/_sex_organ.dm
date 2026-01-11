@@ -367,7 +367,7 @@
 	if(turf_object)
 		if(organ_type == SEX_ORGAN_PENIS)
 			new /obj/effect/decal/cleanable/coom(turf_object)
-		if(organ_type == SEX_ORGAN_PENIS)
+		if(organ_type == SEX_ORGAN_BREASTS)
 			new /obj/effect/decal/cleanable/coom/milk(turf_object)
 		moved = drain_uniform(amount)
 		if(moved > 0)

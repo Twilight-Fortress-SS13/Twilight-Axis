@@ -34,7 +34,7 @@
 
 		for(var/id in session_object.current_actions)
 			var/datum/sex_action_session/action_object = session_object.current_actions[id]
-			if(!action_object || QDELETED(action_object) || !action_object.action)
+			if(!action_object || QDELETED(action_object) || !action_object.action_proto)
 				continue
 
 			var/mob/living/carbon/human/actor_object = action_object.actor
@@ -154,7 +154,7 @@
 		partner = null
 
 	do_ejac_inject_from_session(source, session_object)
-	var/datum/sex_panel_action/action_object = session_object.action
+	var/datum/sex_panel_action/action_object = session_object.action_proto
 	var/mob/living/carbon/human/link_actor = session_object.actor
 	var/mob/living/carbon/human/link_partner = session_object.partner
 	var/return_type = action_object.handle_climax_message(link_actor, link_partner, is_active)
@@ -505,13 +505,13 @@
 
 		for(var/id in session_object.current_actions)
 			var/datum/sex_action_session/action_session = session_object.current_actions[id]
-			if(!action_session || QDELETED(action_session) || !action_session.action)
+			if(!action_session || QDELETED(action_session) || !action_session.action_proto)
 				continue
 
 			if(action_session.actor != human_object && action_session.partner != human_object)
 				continue
 
-			var/datum/sex_panel_action/action_element = action_session.action
+			var/datum/sex_panel_action/action_element = action_session.action_proto
 			if(!action_element)
 				continue
 

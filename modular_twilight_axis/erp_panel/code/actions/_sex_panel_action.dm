@@ -161,77 +161,75 @@
 
 	return TRUE
 
-/datum/sex_panel_action/proc/on_start(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/sex_action_session/new_session)
+/datum/sex_panel_action/proc/on_start(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/sex_action_context/C)
 	SHOULD_CALL_PARENT(TRUE)
-	
-	if(message_on_start || message_on_perform || message_on_finish || message_on_climax_actor || message_on_climax_target)
-		compiled_messages = compile_templates(user, target)
-	else
-		compiled_messages = null
 
-	session = new_session
+	if(!C || !C.link)
+		return FALSE
 
-	var/message = span_warning(get_start_message(user, target))
+	ensure_compiled(user, target, C)
+
+	var/message = span_warning(get_start_message(user, target, C))
 	if(message)
-		if(session)
-			session.send_sex_message(user, target, message)
-		else if(user)
-			user.visible_message(message)
-	
+		C.link.send_sex_message(user, target, message)
+
 	var/list/orgs = connect_organs(user, target)
-	if(!orgs)
-		return FALSE	
+	if((required_init || required_target) && !orgs)
+		return FALSE
 
 	return TRUE
 
-/datum/sex_panel_action/proc/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	var/message = get_perform_message(user, target)
+/datum/sex_panel_action/proc/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/sex_action_context/C)
+	ensure_compiled(user, target, C)
+
+	var/message = get_perform_message(user, target, C)
 	if(message)
-		if(session)
-			session.send_sex_message(user, target, message)
-		else if(user)
-			user.visible_message(message)
+		C.link.send_sex_message(user, target, message)
 	return
 
-/datum/sex_panel_action/proc/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
+/datum/sex_panel_action/proc/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/sex_action_context/C)
 	SHOULD_CALL_PARENT(TRUE)
 
-	var/message = span_warning(get_finish_message(user, target))
-	if(message)
-		if(session)
-			session.send_sex_message(user, target, message)
-		else if(user)
-			user.visible_message(message)
+	if(C)
+		C.compiled_messages = null
+		C.compile_key = null
+		C.active_container = null
 
-	session = null
-	compiled_messages = null
+	var/message = span_warning(get_finish_message(user, target, C))
+	if(message)
+		C?.link?.send_sex_message(user, target, message)
+	else if(user)
+		user.visible_message(message)
 
 	return TRUE
 
-/datum/sex_panel_action/proc/get_start_message(user, target)
-	var/msg = compiled_messages?["start"]
+/datum/sex_panel_action/proc/get_start_message(user, target, datum/sex_action_context/C)
+	var/msg = C?.compiled_messages?["start"]
 	if(!msg) return null
-	return finalize_message(msg, user, target)
+	return finalize_message(msg, user, target, C)
 
-/datum/sex_panel_action/proc/get_perform_message(user, target)
-	var/msg = compiled_messages?["perform"]
+/datum/sex_panel_action/proc/get_perform_message(user, target, datum/sex_action_context/C)
+	var/msg = C?.compiled_messages?["perform"]
 	if(!msg) return null
-	apply_effects(user, target)
-	return spanify_force(finalize_message(msg, user, target))
+	apply_effects(user, target, C)
+	return spanify_force(finalize_message(msg, user, target, C), C)
 
-/datum/sex_panel_action/proc/get_finish_message(user, target)
-	var/msg = compiled_messages?["finish"]
+/datum/sex_panel_action/proc/get_finish_message(user, target, datum/sex_action_context/C)
+	var/msg = C?.compiled_messages?["finish"]
 	if(!msg) return null
-	return finalize_message(msg, user, target)
+	return finalize_message(msg, user, target, C)
 
-/datum/sex_panel_action/proc/handle_climax_message(mob/living/carbon/human/user, target, is_active = TRUE)
+/datum/sex_panel_action/proc/handle_climax_message(mob/living/carbon/human/user, target, is_active = TRUE, datum/sex_action_context/C)
 	var/key = is_active ? "climax_a" : "climax_t"
 	var/result_mode = is_active ? climax_liquid_mode_active : climax_liquid_mode_passive
-	var/msg_template = compiled_messages?[key]
+
+	ensure_compiled(user, target, C)
+
+	var/msg_template = C?.compiled_messages?[key]
 	if(!msg_template)
 		return result_mode
 
-	var/msg = finalize_message(msg_template, user, target)
+	var/msg = finalize_message(msg_template, user, target, C)
 	if(msg)
 		user.visible_message(span_love(msg))
 
@@ -265,13 +263,15 @@
 		else
 			new /obj/effect/temp_visual/heart/sex_effects/red_heart(get_turf(user))
 
-/datum/sex_panel_action/proc/do_sound_effect(mob/living/carbon/human/user)
+/datum/sex_panel_action/proc/do_sound_effect(mob/living/carbon/human/user, datum/sex_action_context/C)
+	var/datum/sex_action_session/L = _link(C)
+	var/action_force = L ? L.force : SEX_FORCE_MID
+
 	var/sound
-	switch(session.force)
-		if(SEX_FORCE_LOW, SEX_FORCE_MID)
-			sound = pick(SEX_SOUNDS_SLOW)
-		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME)
-			sound = pick(SEX_SOUNDS_HARD)
+	switch(action_force)
+		if(SEX_FORCE_LOW, SEX_FORCE_MID)         sound = pick(SEX_SOUNDS_SLOW)
+		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME)    sound = pick(SEX_SOUNDS_HARD)
+
 	playsound(user, sound, 30, TRUE, -2, ignore_walls = FALSE)
 
 /datum/sex_panel_action/proc/get_action_organs(mob/living/carbon/human/user, mob/living/carbon/human/target, only_free_init = TRUE, only_free_target = FALSE)
@@ -337,41 +337,37 @@
 		if(SEX_POSE_BOTH_LYING)
 			return "лежа"
 
-/datum/sex_panel_action/proc/get_force_text()
-	var/action_force = session.force
-	switch(action_force)
-		if(SEX_FORCE_LOW)
-			return pick(list("нежно", "заботливо", "ласково", "мягко", "осторожно"))
-		if(SEX_FORCE_MID)
-			return pick(list("решительно", "энергично", "страстно", "уверенно", "увлеченно"))
-		if(SEX_FORCE_HIGH)
-			return pick(list("грубо", "небрежно", "жестко", "пылко", "свирепо"))
-		if(SEX_FORCE_EXTREME)
-			return pick(list("жестоко", "неистово", "неумолимо", "свирепо", "безжалостно"))
+/datum/sex_panel_action/proc/get_force_text(datum/sex_action_context/C)
+	var/datum/sex_action_session/L = _link(C)
+	var/action_force = L ? L.force : SEX_FORCE_MID
 
-/datum/sex_panel_action/proc/get_speed_text()
-	var/action_speed = session.speed
+	switch(action_force)
+		if(SEX_FORCE_LOW)     return pick(list("нежно", "заботливо", "ласково", "мягко", "осторожно"))
+		if(SEX_FORCE_MID)     return pick(list("решительно", "энергично", "страстно", "уверенно", "увлеченно"))
+		if(SEX_FORCE_HIGH)    return pick(list("грубо", "небрежно", "жестко", "пылко", "свирепо"))
+		if(SEX_FORCE_EXTREME) return pick(list("жестоко", "неистово", "неумолимо", "свирепо", "безжалостно"))
+
+/datum/sex_panel_action/proc/get_speed_text(datum/sex_action_context/C)
+	var/datum/sex_action_session/L = _link(C)
+	var/action_speed = L ? L.speed : SEX_SPEED_MID
+
 	switch(action_speed)
-		if(SEX_SPEED_LOW)
-			return pick(list("медленно", "неторопливо", "бережно", "тягуче", "размеренно"))
-		if(SEX_SPEED_MID)
-			return pick(list("ритмично", "уверенно", "плавно", "напористо", "спокойно"))
-		if(SEX_SPEED_HIGH)
-			return pick(list("быстро", "часто", "торопливо", "резко", "интенсивно"))
-		if(SEX_SPEED_EXTREME)
-			return pick(list("агрессивно", "стремительно", "бурно", "яростно", "взахлеб"))
+		if(SEX_SPEED_LOW)     return pick(list("медленно", "неторопливо", "бережно", "тягуче", "размеренно"))
+		if(SEX_SPEED_MID)     return pick(list("ритмично", "уверенно", "плавно", "напористо", "спокойно"))
+		if(SEX_SPEED_HIGH)    return pick(list("быстро", "часто", "торопливо", "резко", "интенсивно"))
+		if(SEX_SPEED_EXTREME) return pick(list("агрессивно", "стремительно", "бурно", "яростно", "взахлеб"))
 
-/datum/sex_panel_action/proc/spanify_force(string)
-	var/action_force = session.force
+/datum/sex_panel_action/proc/spanify_force(string, datum/sex_action_context/C)
+	var/datum/sex_action_session/L = _link(C)
+	var/action_force = L ? L.force : SEX_FORCE_MID
+
 	switch(action_force)
-		if(SEX_FORCE_LOW)
-			return "<span class='love_low'>[string]</span>"
-		if(SEX_FORCE_MID)
-			return "<span class='love_mid'>[string]</span>"
-		if(SEX_FORCE_HIGH)
-			return "<span class='love_high'>[string]</span>"
-		if(SEX_FORCE_EXTREME)
-			return "<span class='love_extreme'>[string]</span>"
+		if(SEX_FORCE_LOW)     return "<span class='love_low'>[string]</span>"
+		if(SEX_FORCE_MID)     return "<span class='love_mid'>[string]</span>"
+		if(SEX_FORCE_HIGH)    return "<span class='love_high'>[string]</span>"
+		if(SEX_FORCE_EXTREME) return "<span class='love_extreme'>[string]</span>"
+
+	return string
 
 /datum/sex_panel_action/proc/get_target_zone(mob/living/user, mob/living/target)
 	var/list/zone_translations = list(
@@ -501,16 +497,16 @@
 		return list(required_target)
 	return null
 
-/datum/sex_panel_action/proc/is_agressive_tier()
-	if(!session)
+/datum/sex_panel_action/proc/is_agressive_tier(datum/sex_action_context/C)
+	var/datum/sex_action_session/L = _link(C)
+	if(!L)
 		return FALSE
 
-	switch(session.force)
-		if(SEX_FORCE_LOW, SEX_FORCE_MID)
+	switch(L.force)
+		if(SEX_FORCE_LOW, SEX_FORCE_MID) 
 			return FALSE
-		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME)
+		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME) 
 			return TRUE
-
 	return FALSE
 
 /datum/sex_panel_action/proc/is_big_boobs(mob/living/carbon/human/check_mob)
@@ -526,19 +522,17 @@
 
 	return breast_organ.breast_size >= BREAST_SIZE_LARGE
 
-/datum/sex_panel_action/proc/get_knot_action()
-	if(!session || !session.session)
+/datum/sex_panel_action/proc/get_knot_action(datum/sex_action_context/C)
+	var/datum/sex_session_tgui/S = _tgui(C)
+	if(!S)
 		return ""
-
-	var/datum/sex_session_tgui/S = session.session
 
 	if(!S.has_knotted_penis || !S.do_knot_action)
 		return ""
 
 	return " по самый узел"
 
-/datum/sex_panel_action/proc/apply_effects(mob/living/carbon/human/user, mob/living/carbon/human/target)
-
+/datum/sex_panel_action/proc/apply_effects(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/sex_action_context/C)
 	if(actor_do_onomatopoeia && user)
 		do_onomatopoeia(user)
 
@@ -546,7 +540,7 @@
 		show_sex_effects(user)
 
 	if(user && actor_make_sound)
-		do_sound_effect(user)
+		do_sound_effect(user, C)
 
 	if(actor_suck_sound && user)
 		user.make_sucking_noise()
@@ -564,7 +558,7 @@
 		show_sex_effects(target)
 
 	if(target && target_make_sound)
-		do_sound_effect(target)
+		do_sound_effect(target, C)
 
 	if(target && target_suck_sound)
 		target.make_sucking_noise()
@@ -583,18 +577,18 @@
 
 	return replacetext(text, regex_obj, replacement)
 
-/datum/sex_panel_action/proc/compile_templates(user, target)
-	var/compiled = list()
+/datum/sex_panel_action/proc/compile_templates(user, target, datum/sex_action_context/C)
+	var/list/compiled = list()
 
-	compiled["start"] = preprocess_template(message_on_start, user, target)
-	compiled["perform"] = preprocess_template(message_on_perform, user, target)
-	compiled["finish"] = preprocess_template(message_on_finish, user, target)
-	compiled["climax_a"] = preprocess_template(message_on_climax_actor, user, target)
-	compiled["climax_t"] = preprocess_template(message_on_climax_target, user, target)
+	compiled["start"]    = preprocess_template(message_on_start, user, target, C)
+	compiled["perform"]  = preprocess_template(message_on_perform, user, target, C)
+	compiled["finish"]   = preprocess_template(message_on_finish, user, target, C)
+	compiled["climax_a"] = preprocess_template(message_on_climax_actor, user, target, C)
+	compiled["climax_t"] = preprocess_template(message_on_climax_target, user, target, C)
 
 	return compiled
 
-/datum/sex_panel_action/proc/preprocess_template(template, user, target)
+/datum/sex_panel_action/proc/preprocess_template(template, user, target, datum/sex_action_context/C)
 	if(!template)
 		return null
 
@@ -604,7 +598,7 @@
 		if(H.is_dullahan_head_partner())
 			is_dullahan = TRUE
 
-	var/is_aggressive = is_agressive_tier()
+	var/is_aggressive = is_agressive_tier(C)
 	var/is_bigboobs = is_big_boobs(user)
 
 	var/T = "[template]"
@@ -614,15 +608,15 @@
 
 	return T
 
-/datum/sex_panel_action/proc/finalize_message(template, user, target)
+/datum/sex_panel_action/proc/finalize_message(template, user, target, datum/sex_action_context/C)
 	var/t = "[template]"
 
 	var/pose_state = get_pose_key(user, target)
 	var/pose_text  = get_pose_text(pose_state)
-	var/force_text = get_force_text()
-	var/speed_text = get_speed_text()
+	var/force_text = get_force_text(C)
+	var/speed_text = get_speed_text(C)
 	var/zone_text  = get_target_zone(user, target)
-	var/knot_text  = get_knot_action()
+	var/knot_text  = get_knot_action(C)
 
 	t = replacetext(t, "{actor}", "[user]")
 	t = replacetext(t, "{partner}", "[target]")
@@ -633,3 +627,84 @@
 	t = replacetext(t, "{knot}", "[knot_text]")
 
 	return t
+
+/datum/sex_panel_action/proc/copy_from(datum/sex_panel_action/A)
+	if(!A) return
+
+	var/list/fields = list(
+		"name",
+		"interaction_timer",
+		"stamina_cost",
+		"check_incapacitated",
+		"check_same_tile",
+		"require_grab",
+		"required_grab_state",
+		"affects_self_arousal",
+		"affects_arousal",
+		"affects_self_pain",
+		"affects_pain",
+		"required_init",
+		"required_target",
+		"armor_slot_init",
+		"armor_slot_target",
+		"can_knot",
+		"reserve_target_for_session",
+		"break_on_move",
+		"climax_liquid_mode_active",
+		"climax_liquid_mode_passive",
+		"message_on_start",
+		"message_on_perform",
+		"message_on_finish",
+		"message_on_climax_actor",
+		"message_on_climax_target",
+		"actor_sex_hearts",
+		"target_sex_hearts",
+		"actor_suck_sound",
+		"target_suck_sound",
+		"actor_make_sound",
+		"target_make_sound",
+		"actor_make_fingering_sound",
+		"target_make_fingering_sound",
+		"actor_do_onomatopoeia",
+		"target_do_onomatopoeia",
+		"actor_do_thrust",
+		"target_do_thrust"
+	)
+
+	for(var/f in fields)
+		src.vars[f] = A.vars[f]
+
+/datum/sex_panel_action/proc/_link(datum/sex_action_context/C)
+	return C?.link
+
+/datum/sex_panel_action/proc/_tgui(datum/sex_action_context/C)
+	var/datum/sex_action_session/L = _link(C)
+	return L?.session
+
+/datum/sex_panel_action/proc/get_compile_key(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/sex_action_context/C)
+	var/is_dullahan = FALSE
+	if(target && istype(target, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = target
+		if(H.is_dullahan_head_partner())
+			is_dullahan = TRUE
+
+	var/is_aggr = is_agressive_tier(C)
+	var/is_big  = is_big_boobs(user)
+
+	var/tpl_sig = "[message_on_start]|[message_on_perform]|[message_on_finish]|[message_on_climax_actor]|[message_on_climax_target]"
+	return "[tpl_sig]::d=[is_dullahan]::a=[is_aggr]::b=[is_big]"
+
+/datum/sex_panel_action/proc/ensure_compiled(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/sex_action_context/C)
+	if(!C)
+		return
+
+	var/key = get_compile_key(user, target, C)
+	if(C.compiled_messages && C.compile_key == key)
+		return
+
+	C.compile_key = key
+
+	if(message_on_start || message_on_perform || message_on_finish || message_on_climax_actor || message_on_climax_target)
+		C.compiled_messages = compile_templates(user, target, C)
+	else
+		C.compiled_messages = null
