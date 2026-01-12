@@ -180,36 +180,13 @@
 			best_pref = pref
 
 	return pref_to_mult(best_pref)
-
-/datum/sex_session_tgui/ui_data(mob/user)
-	. = ..()
-	if(istype(user, /mob/living/carbon/human))
-		var/mob/living/carbon/human/H = user
-		.["kinks"] = get_kink_ui_payload(H)
-
-/datum/sex_session_tgui/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
-	. = ..()
-	if(.)
-		return .
-	if(!ui || !ui.user)
-		return
-	if(action != "set_kink_pref")
-		return
-	if(!istype(ui.user, /mob/living/carbon/human))
-		return
-	var/mob/living/carbon/human/H = ui.user
-	var/kink_type_txt = params["type"]
-	var/value = text2num(params["value"])
-	if(!kink_type_txt)
-		return
-	var/kink_type = text2path(kink_type_txt)
-	if(!ispath(kink_type, /datum/kink))
-		return
-	var/datum/component/kinks/K = H.ensure_kinks_component()
-	if(!K)
-		return
-	K.set_pref(kink_type, value)
-	return TRUE
+	
+/datum/component/kinks/proc/has_pref(kink_typepath)
+	if(!kink_typepath)
+		return FALSE
+	if(!islist(prefs_by_type))
+		prefs_by_type = list()
+	return (kink_typepath in prefs_by_type) && isnum(prefs_by_type[kink_typepath])
 
 #undef KINK_PREF_DISLIKE
 #undef KINK_PREF_NEUTRAL

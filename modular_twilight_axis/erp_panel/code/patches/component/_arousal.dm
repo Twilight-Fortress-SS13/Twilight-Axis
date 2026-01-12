@@ -167,7 +167,7 @@
 
 	handle_climax(return_type, source, partner)
 
-	var/intimate = (return_type == "into" || return_type == "oral")
+	var/intimate = (return_type == "into" || return_type == "onto")
 	after_ejaculation(intimate, source, partner)
 
 	if(session_tgui_object.do_knot_action && action_object.can_knot && source)

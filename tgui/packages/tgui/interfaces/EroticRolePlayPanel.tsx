@@ -95,6 +95,8 @@ export type KinkEntry = {
   category?: string;
   intensity?: number;
   pref: number;
+  partner_pref?: number | null;
+  partner_pref_known?: boolean;
 };
 
 export type KinksPayload = {
@@ -919,13 +921,26 @@ type EditContext =
   | { kind: 'link_sens'; id: string }
   | { kind: 'organ'; id: string; field: 'sensitivity' | 'pain' };
 
+const prefText = (v?: number | null) => {
+  if (v === undefined || v === null) return '—';
+  if (v <= -1) return 'НЕ НРАВИТСЯ';
+  if (v >= 1) return 'НРАВИТСЯ';
+  return 'НЕЙТРАЛЬНО';
+};
+
+const prefColor = (v?: number | null) => {
+  if (v === undefined || v === null) return 'label';
+  if (v <= -1) return 'bad';
+  if (v >= 1) return 'good';
+  return 'label';
+};
+
 const KinkCard: React.FC<{
   kink: KinkEntry;
   onSet: (type: string, value: number) => void;
-}> = ({ kink, onSet }) => {
+  partnerLabel?: string;
+}> = ({ kink, onSet, partnerLabel }) => {
   const pref = kink.pref ?? 0;
-
-  const prefLabel = pref <= -1 ? 'НЕ НРАВИТСЯ' : pref >= 1 ? 'НРАВИТСЯ' : 'НЕЙТРАЛЬНО';
 
   const badgeStyle: CSSProperties = {
     display: 'inline-block',
@@ -933,68 +948,67 @@ const KinkCard: React.FC<{
     borderRadius: 9999,
     border: '1px solid rgba(255,255,255,0.18)',
     background: 'rgba(255,255,255,0.04)',
-    fontSize: 11,
+    fontSize: 10,
+    lineHeight: 1.2,
   };
+
+  const pp = (kink as any).partner_pref;
+  const known = pp !== null && pp !== undefined;
 
   return (
     <Section
-      style={{
-        paddingTop: 6,
-        paddingBottom: 6,
-        marginBottom: 6,
-      }}
+      style={{ paddingTop: 4, paddingBottom: 4, marginBottom: 6 }}
       title={
         <Stack align="center" justify="space-between">
           <Stack.Item>
-            <Box bold>{kink.name}</Box>
-          </Stack.Item>
-          <Stack.Item>
-            <Box style={badgeStyle} color="label">
-              {kink.category || 'General'}
-              {typeof kink.intensity === 'number' ? <Box as="span" ml={1}>· {kink.intensity}/5</Box> : null}
+            <Box bold style={{ fontSize: 13, lineHeight: 1.2 }}>
+              {kink.name}
             </Box>
           </Stack.Item>
         </Stack>
       }
     >
+      <Stack align="center" justify="space-between" wrap>
+        {/* LEFT: player settings */}
+        <Stack.Item>
+          <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }} mb={0.25}>
+            Мой выбор
+          </Box>
+          <Stack>
+            <Stack.Item>
+              <Pill selected={pref <= -1} onClick={() => onSet(kink.type, -1)}>
+                Не нравится
+              </Pill>
+            </Stack.Item>
+            <Stack.Item>
+              <Pill selected={pref === 0} onClick={() => onSet(kink.type, 0)}>
+                Нейтрально
+              </Pill>
+            </Stack.Item>
+            <Stack.Item>
+              <Pill selected={pref >= 1} onClick={() => onSet(kink.type, 1)}>
+                Нравится
+              </Pill>
+            </Stack.Item>
+          </Stack>
+        </Stack.Item>
+
+        {/* RIGHT: partner pref */}
+        <Stack.Item>
+          <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }} mb={0.25} textAlign="right">
+            {partnerLabel || 'Партнёр'}
+          </Box>
+          <Box textAlign="right" style={badgeStyle} color={known ? prefColor(pp) : 'label'}>
+            {known ? prefText(pp) : '—'}
+          </Box>
+        </Stack.Item>
+      </Stack>
+
       {!!kink.description && (
-        <Box color="label" style={{ fontSize: 12, lineHeight: 1.4 }}>
+        <Box mt={0.5} color="label" style={{ fontSize: 12, lineHeight: 1.35 }}>
           {kink.description}
         </Box>
       )}
-
-      <Box mt={0.6}>
-        <Stack align="center" justify="space-between" wrap>
-          <Stack.Item>
-            <Stack align="center">
-              <Stack.Item>
-                <Pill selected={pref <= -1} onClick={() => onSet(kink.type, -1)}>
-                  -1
-                </Pill>
-              </Stack.Item>
-              <Stack.Item>
-                <Pill selected={pref === 0} onClick={() => onSet(kink.type, 0)}>
-                  0
-                </Pill>
-              </Stack.Item>
-              <Stack.Item>
-                <Pill selected={pref >= 1} onClick={() => onSet(kink.type, 1)}>
-                  +1
-                </Pill>
-              </Stack.Item>
-            </Stack>
-          </Stack.Item>
-
-          <Stack.Item>
-            <Box
-              color={pref <= -1 ? 'bad' : pref >= 1 ? 'good' : 'label'}
-              style={{ fontSize: 11, textTransform: 'uppercase' }}
-            >
-              {prefLabel}
-            </Box>
-          </Stack.Item>
-        </Stack>
-      </Box>
     </Section>
   );
 };
@@ -1007,7 +1021,6 @@ const KinksTab: React.FC<{
 
   const [q, setQ] = useState('');
   const [cat, setCat] = useState<string>('ALL');
-  const [showOnly, setShowOnly] = useState<'all' | 'liked' | 'disliked'>('all');
 
   const categories = useMemo(() => {
     const set = new Set<string>();
@@ -1023,9 +1036,6 @@ const KinksTab: React.FC<{
       .filter((k) => {
         const kc = k.category || 'General';
         if (cat !== 'ALL' && kc !== cat) return false;
-        if (showOnly === 'liked' && !(k.pref >= 1)) return false;
-        if (showOnly === 'disliked' && !(k.pref <= -1)) return false;
-
         if (!qq) return true;
         const hay = `${k.name} ${k.description || ''} ${kc}`.toLowerCase();
         return hay.includes(qq);
@@ -1036,7 +1046,7 @@ const KinksTab: React.FC<{
         if (ac !== bc) return ac.localeCompare(bc);
         return a.name.localeCompare(b.name);
       });
-  }, [entries, q, cat, showOnly]);
+  }, [entries, q, cat]);
 
   const onSet = (type: string, value: number) => {
     act('set_kink_pref', { type, value });
@@ -1049,6 +1059,8 @@ const KinksTab: React.FC<{
       </Section>
     );
   }
+
+  const partnerLabel = data.partner_name || 'Партнёр';
 
   return (
     <Stack vertical fill>
@@ -1075,26 +1087,6 @@ const KinksTab: React.FC<{
                 ))}
               </Stack>
             </Stack.Item>
-
-            <Stack.Item mt={0.25}>
-              <Stack justify="center" wrap>
-                <Stack.Item style={{ margin: 2 }}>
-                  <Pill selected={showOnly === 'all'} onClick={() => setShowOnly('all')}>
-                    ВСЕ
-                  </Pill>
-                </Stack.Item>
-                <Stack.Item style={{ margin: 2 }}>
-                  <Pill selected={showOnly === 'liked'} onClick={() => setShowOnly('liked')}>
-                    ТОЛЬКО +1
-                  </Pill>
-                </Stack.Item>
-                <Stack.Item style={{ margin: 2 }}>
-                  <Pill selected={showOnly === 'disliked'} onClick={() => setShowOnly('disliked')}>
-                    ТОЛЬКО -1
-                  </Pill>
-                </Stack.Item>
-              </Stack>
-            </Stack.Item>
           </Stack>
         </Section>
       </Stack.Item>
@@ -1102,7 +1094,9 @@ const KinksTab: React.FC<{
       <Stack.Item grow>
         <Section fill scrollable title={`Настройки (${filtered.length}/${entries.length})`}>
           {filtered.length ? (
-            filtered.map((k) => <KinkCard key={k.type} kink={k} onSet={onSet} />)
+            filtered.map((k) => (
+              <KinkCard key={k.type} kink={k} onSet={onSet} partnerLabel={partnerLabel} />
+            ))
           ) : (
             <NoticeBox info>Ничего не найдено по фильтрам.</NoticeBox>
           )}

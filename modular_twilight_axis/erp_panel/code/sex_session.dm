@@ -453,6 +453,10 @@
 	update_knotted_penis_flag()
 	var/list/D = list()
 
+	var/datum/preferences/P = user.client?.prefs
+	if(P)
+		P.apply_erp_kinks_to_mob(user)
+
 	var/mob/living/carbon/human/active_partner = get_current_partner()
 	D["title"] = "Соитие с [get_partner_display_name(active_partner)]"
 	D["session_name"] = "Private Session"
@@ -603,29 +607,51 @@
 	D["organ_filtered"] = actions_matching_nodes()
 	if(istype(user, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = user
-		D["kinks"] = get_kink_ui_payload(H)
+		D["kinks"] = get_kink_ui_payload(H, active_partner)
 
 	return D
 
-/datum/sex_session_tgui/proc/get_kink_ui_payload(mob/living/carbon/human/H)
+/datum/sex_session_tgui/proc/get_kink_ui_payload(mob/living/carbon/human/H, mob/living/carbon/human/PH)
 	if(!H)
 		return null
 
 	var/datum/component/kinks/K = H.ensure_kinks_component()
+	var/datum/component/kinks/PK = null
+	if(PH)
+		if(PH == H)
+			PK = K
+		else
+			PK = PH.GetComponent(/datum/component/kinks)
+			if(!PK)
+				PK = PH.ensure_kinks_component()
+
 	var/list/out = list()
 	var/list/entries = list()
-
 	for(var/kink_type in GLOB.available_kinks)
 		var/datum/kink/KD = GLOB.available_kinks[kink_type]
 		if(!KD)
 			continue
+
+		var/self_pref = K ? K.get_pref(KD.type) : 0
+		var/partner_pref = null
+		var/partner_pref_known = FALSE
+		if(PH == H)
+			partner_pref = self_pref
+			partner_pref_known = TRUE
+		else if(PK)
+			partner_pref_known = PK.has_pref(KD.type)
+			if(partner_pref_known)
+				partner_pref = PK.get_pref(KD.type)
+
 		entries += list(list(
 			"type" = "[KD.type]",
 			"name" = KD.name,
 			"description" = KD.description,
 			"category" = KD.category,
 			"intensity" = KD.intensity,
-			"pref" = K ? K.get_pref(KD.type) : 0
+			"pref" = self_pref,
+			"partner_pref" = partner_pref_known ? partner_pref : null,
+			"partner_pref_known" = partner_pref_known,
 		))
 
 	out["entries"] = entries
@@ -652,6 +678,10 @@
 			if(!K)
 				return FALSE
 			K.set_pref(kink_type, value)
+			var/datum/preferences/P = H.client?.prefs
+			if(P)
+				P.capture_erp_kinks_from_mob(H)
+				P.save_preferences()
 			SStgui.update_uis(src)
 			return TRUE
 

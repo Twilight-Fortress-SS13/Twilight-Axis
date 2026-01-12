@@ -1,5 +1,66 @@
 /datum/preferences
 	var/list/erp_custom_actions = list()
+	var/list/erp_kink_prefs = list()
+
+/datum/preferences/proc/apply_erp_kinks_to_mob(mob/living/carbon/human/H)
+	if(!H || !islist(erp_kink_prefs) || !erp_kink_prefs.len)
+		return
+
+	var/datum/component/kinks/K = H.GetComponent(/datum/component/kinks)
+	if(!K)
+		K = H.AddComponent(/datum/component/kinks)
+
+	if(!islist(K.prefs_by_type))
+		K.prefs_by_type = list()
+
+	// Если хочешь НЕ перетирать уже существующие рантайм-настройки — раскомментируй:
+	// if(K.prefs_by_type.len) return
+
+	for(var/key in erp_kink_prefs)
+		var/path = text2path(key)
+		if(!ispath(path, /datum/kink))
+			continue
+		K.prefs_by_type[path] = clamp(round(erp_kink_prefs[key]), -1, 1)
+
+/datum/preferences/proc/capture_erp_kinks_from_mob(mob/living/carbon/human/H)
+	if(!H)
+		return
+
+	var/datum/component/kinks/K = H.GetComponent(/datum/component/kinks)
+	if(!K || !islist(K.prefs_by_type))
+		return
+
+	if(!islist(erp_kink_prefs))
+		erp_kink_prefs = list()
+	else
+		erp_kink_prefs.Cut()
+
+	for(var/typepath in K.prefs_by_type)
+		if(!ispath(typepath, /datum/kink))
+			continue
+		erp_kink_prefs["[typepath]"] = clamp(round(K.prefs_by_type[typepath]), -1, 1)
+
+/datum/preferences/proc/sanitize_erp_kink_prefs()
+	if(!islist(erp_kink_prefs))
+		erp_kink_prefs = list()
+		return
+
+	for(var/key in erp_kink_prefs)
+		if(!istext(key))
+			erp_kink_prefs -= key
+			continue
+
+		var/path = text2path(key)
+		if(!ispath(path, /datum/kink))
+			erp_kink_prefs -= key
+			continue
+
+		var/v = erp_kink_prefs[key]
+		if(!isnum(v))
+			erp_kink_prefs[key] = 0
+			continue
+
+		erp_kink_prefs[key] = clamp(round(v), -1, 1)
 
 /proc/erp_export_custom_action(datum/sex_panel_action/A)
 	if(!A) return null

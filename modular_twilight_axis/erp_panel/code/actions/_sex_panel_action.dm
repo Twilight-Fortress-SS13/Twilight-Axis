@@ -187,17 +187,16 @@
 
 /datum/sex_panel_action/proc/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/sex_action_context/C)
 	SHOULD_CALL_PARENT(TRUE)
-
-	if(C)
-		C.compiled_messages = null
-		C.compile_key = null
-		C.active_container = null
-
 	var/message = span_warning(get_finish_message(user, target, C))
 	if(message)
 		C?.link?.send_sex_message(user, target, message)
 	else if(user)
 		user.visible_message(message)
+
+	if(C)
+		C.compiled_messages = null
+		C.compile_key = null
+		C.active_container = null
 
 	return TRUE
 

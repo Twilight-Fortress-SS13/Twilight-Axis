@@ -52,10 +52,10 @@
 		return
 
 	switch(chosen)
-		//TA add start - new ERP SYSTEM
+		//TA addition start - new ERP SYSTEM
 		if("Nudeshot")
 			H.mirror_set_nudeshot_url()
-		//TA add end - new ERP SYSTEM
+		//TA addition end - new ERP SYSTEM
 		if("Hairstyle")
 			var/datum/customizer_choice/bodypart_feature/hair/head/humanoid/hair_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/hair/head/humanoid)
 			var/list/valid_hairstyles = list()
@@ -411,7 +411,6 @@
 					penis.sync_knotting_component()
 					H.update_body()
 					should_update = TRUE
-			// TWILIGHT AXIS EDITION END - new ERP SYSTEM
 
 		if("Testicles")
 			var/list/valid_testicle_types = list("none")
