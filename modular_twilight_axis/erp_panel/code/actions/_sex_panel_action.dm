@@ -202,18 +202,22 @@
 
 /datum/sex_panel_action/proc/get_start_message(user, target, datum/sex_action_context/C)
 	var/msg = C?.compiled_messages?["start"]
-	if(!msg) return null
+	if(!msg) 
+		return null
 	return finalize_message(msg, user, target, C)
 
 /datum/sex_panel_action/proc/get_perform_message(user, target, datum/sex_action_context/C)
 	var/msg = C?.compiled_messages?["perform"]
-	if(!msg) return null
-	apply_effects(user, target, C)
+	if(!msg) 
+		return null
+	if(!C?.link?.session?.hidden_mode)
+		apply_effects(user, target, C)
 	return spanify_force(finalize_message(msg, user, target, C), C)
 
 /datum/sex_panel_action/proc/get_finish_message(user, target, datum/sex_action_context/C)
 	var/msg = C?.compiled_messages?["finish"]
-	if(!msg) return null
+	if(!msg) 
+		return null
 	return finalize_message(msg, user, target, C)
 
 /datum/sex_panel_action/proc/handle_climax_message(mob/living/carbon/human/user, target, is_active = TRUE, datum/sex_action_context/C)
