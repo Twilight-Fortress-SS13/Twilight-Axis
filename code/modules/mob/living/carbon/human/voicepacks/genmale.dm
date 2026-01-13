@@ -154,6 +154,10 @@
 				used = 'sound/vo/moth/mothchitter.ogg'
 			if("strain")
 				used = 'sound/vo/male/gen/strain.ogg'
+			// TA Addition Start - new ERP SYSTEM
+			if("moan")
+				used = list('modular_twilight_axis/erp_panel/sound/sound_vo_male_gen_moan_1.ogg','modular_twilight_axis/erp_panel/sound/sound_vo_male_gen_moan_2.ogg','modular_twilight_axis/erp_panel/sound/sound_vo_male_gen_moan_3.ogg')
+			// TA Addition End - new ERP SYSTEM
 			if("yip")
 				used = list('sound/vo/yip.ogg', 'sound/vo/yip2.ogg', 'sound/vo/yip3.ogg')
 			if("oink")

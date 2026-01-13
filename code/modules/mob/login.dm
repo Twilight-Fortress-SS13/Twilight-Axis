@@ -91,6 +91,7 @@
 	SEND_SIGNAL(src, COMSIG_MOB_LOGIN)
 	log_message("Client [key_name(src)] has taken ownership of mob [src]([src.type])", LOG_OWNERSHIP)
 	enable_client_mobs_in_contents(client)
+	client.prefs.erp_apply_custom_actions_to_globals(client.ckey) // TA Addition - new ERP SYSTEM
 	SEND_SIGNAL(src, COMSIG_MOB_CLIENT_LOGIN, client)
 
 /**
