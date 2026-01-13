@@ -286,6 +286,7 @@
 //What we do after closing in
 /mob/living/simple_animal/hostile/proc/MeleeAction(patience = TRUE)
 	melee_cooled_down = world.time + melee_cooldown	//TA add - experimental fix
+	if(binded)	
 		return FALSE
 	if(rapid_melee > 1)
 		var/datum/callback/cb = CALLBACK(src, PROC_REF(CheckAndAttack))
