@@ -1,5 +1,5 @@
 /datum/ai_behavior/basic_melee_attack
-	action_cooldown = 0.2 SECONDS // We gotta check unfortunately often because we're in a race condition with nextmove
+	action_cooldown = 0 //0.2 SECONDS // We gotta check unfortunately often because we're in a race condition with nextmove // TA - Expermental Mob Melee Attack fix
 	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT | AI_BEHAVIOR_REQUIRE_REACH | AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 	var/sidesteps_after = FALSE
 
@@ -16,10 +16,25 @@
 	set_movement_target(controller, target)
 
 /datum/ai_behavior/basic_melee_attack/perform(delta_time, datum/ai_controller/controller, target_key, targetting_datum_key, hiding_location_key)
-	if (isliving(controller.pawn))
-		var/mob/living/pawn = controller.pawn
-		if (world.time < pawn.melee_cooldown)
-			return
+	//TA add start - Expermental Mob Melee Attack fix
+	if (!isliving(controller.pawn))
+		return
+	
+	var/mob/living/pawn = controller.pawn
+	if (world.time < pawn.melee_cooldown)
+		return
+
+	var/datum/intent/simple/I = pawn.a_intent
+	var/cd = I?.clickcd || CLICK_CD_MELEE
+	if(world.time < pawn.melee_cooldown)
+		return
+	if(world.time < pawn.next_move)
+		return
+
+	var/next = world.time + cd
+	pawn.melee_cooldown = max(pawn.melee_cooldown, next)
+	pawn.next_move = max(pawn.next_move, next)
+	//TA add end - Expermental Mob Melee Attack fix
 
 	. = ..()
 	var/mob/living/simple_animal/basic_mob = controller.pawn
@@ -42,6 +57,13 @@
 		basic_mob.ClickOn(hiding_target, list())
 	else
 		basic_mob.ClickOn(target, list())
+
+	//TA add start - Expermental Mob Melee Attack fix
+	if(I?.clickcd)
+		basic_mob.melee_cooldown = max(basic_mob.melee_cooldown, world.time + I.clickcd)
+	else
+		basic_mob.melee_cooldown = max(basic_mob.melee_cooldown, world.time + CLICK_CD_MELEE)
+	//TA add end - Expermental Mob Melee Attack fix
 
 	if(sidesteps_after && prob(33)) //this is so fucking hacky, but going off og code this is exactly how it goes ignoring movetimers
 		if(!target || !isturf(target.loc) || !isturf(basic_mob.loc) || basic_mob.stat == DEAD)
