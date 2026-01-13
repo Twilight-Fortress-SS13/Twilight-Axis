@@ -347,7 +347,7 @@
 
 	influence_sets = list(
 		"Set 1" = list(
-			STATS_KISSES_MADE = list("name" = "Kisses made:", "points" = 7, "capacity" = 70), // TA edit - new ERP SYSTEM
+			STATS_KISSES_MADE = list("points" = 7, "capacity" = 70),
 		),
 		"Set 2" = list(
 			STATS_PLEASURES = list("name" = "Pleasures had:", "points" = 5, "capacity" = 50),

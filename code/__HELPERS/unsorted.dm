@@ -724,8 +724,6 @@ will handle it, but:
 
 			if(H.cloak && wash_obj(H.cloak,clean))
 				H.update_inv_cloak()
-
-			H.wash_sex_organs_for_clean(clean) // TA edit - New ERP System
 		else
 			SEND_SIGNAL(M, COMSIG_COMPONENT_CLEAN_ACT, CLEAN_STRENGTH_BLOOD)
 	else

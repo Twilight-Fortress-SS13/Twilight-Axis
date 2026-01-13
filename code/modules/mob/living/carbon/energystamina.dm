@@ -112,10 +112,9 @@
 		added = 0
 
 	if(mind && true_added > 0)
-		if(!sex_procs_active) // TA edit - new ERP SYSTEM
-			// the amount of athletics skill gained is proportional to how much stamina is used
-			// using a tenth of the bar gives 1 XP point of athletics skill, multiplied by your constitution divided by 10
-			mind.add_sleep_experience(/datum/skill/misc/athletics, (STACON / 10) * ((true_added / max_stamina) * 10), show_xp = m_intent == MOVE_INTENT_RUN)
+		// the amount of athletics skill gained is proportional to how much stamina is used
+		// using a tenth of the bar gives 1 XP point of athletics skill, multiplied by your constitution divided by 10
+		mind.add_sleep_experience(/datum/skill/misc/athletics, (STACON / 10) * ((true_added / max_stamina) * 10), show_xp = m_intent == MOVE_INTENT_RUN)
 
 	stamina = CLAMP(stamina+added, 0, max_stamina)
 	if(added > 0)

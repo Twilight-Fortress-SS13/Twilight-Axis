@@ -45,17 +45,13 @@
 	if (!H)
 		return
 	var/should_update = FALSE
-	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Tail", "Tail Color One", "Tail Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color", "Nudeshot") //TA edit - new ERP SYSTEM
+	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Tail", "Tail Color One", "Tail Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color")
 	var/chosen = input(H, "Change what?", "Appearance") as null|anything in choices
 
 	if(!chosen)
 		return
 
 	switch(chosen)
-		//TA addition start - new ERP SYSTEM
-		if("Nudeshot")
-			H.mirror_set_nudeshot_url()
-		//TA addition end - new ERP SYSTEM
 		if("Hairstyle")
 			var/datum/customizer_choice/bodypart_feature/hair/head/humanoid/hair_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/hair/head/humanoid)
 			var/list/valid_hairstyles = list()
@@ -383,32 +379,20 @@
 			var/new_style = input(H, "Choose your penis type", "Penis Customization") as null|anything in valid_penis_types
 			if(new_style)
 				if(new_style == "none")
-					var/obj/item/organ/penis/old = H.getorganslot(ORGAN_SLOT_PENIS)
-					if(old)
-						old.Remove(H)
-						qdel(old)
+					var/obj/item/organ/penis/penis = H.getorganslot(ORGAN_SLOT_PENIS)
+					if(penis)
+						penis.Remove(H)
+						qdel(penis)
 						H.update_body()
 						should_update = TRUE
 				else
-					var/obj/item/organ/penis/old = H.getorganslot(ORGAN_SLOT_PENIS)
-					if(old)
-						old.Remove(H)
-						qdel(old)
-
-					var/penis_type_path = get_penis_organ_type_for_style(new_style)
-					var/obj/item/organ/penis/penis = new penis_type_path
-					penis.Insert(H, TRUE, FALSE)
+					var/obj/item/organ/penis/penis = H.getorganslot(ORGAN_SLOT_PENIS)
+					if(!penis)
+						penis = new()
+						penis.Insert(H, TRUE, FALSE)
 					penis.accessory_type = valid_penis_types[new_style]
 					var/datum/sprite_accessory/penis/penis_type = SPRITE_ACCESSORY(penis.accessory_type)
 					penis.accessory_colors = penis_type.get_default_colors(color_key_source_list_from_carbon(H))
-
-					if(penis.sex_organ)
-						var/datum/sex_organ/penis/SP = penis.sex_organ
-						SP.refresh_from_organ(penis)
-					else
-						penis.refresh_sex_organ()
-
-					penis.sync_knotting_component()
 					H.update_body()
 					should_update = TRUE
 

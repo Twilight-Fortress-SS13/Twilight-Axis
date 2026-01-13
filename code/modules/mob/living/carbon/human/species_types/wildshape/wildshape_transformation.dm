@@ -7,10 +7,6 @@
 	if(!mind)
 		log_runtime("NO MIND ON [src.name] WHEN TRANSFORMING")
 	Paralyze(1, ignore_canstun = TRUE)
-
-	if(istype(src, /mob/living/carbon/human/species/wildshape))
-		var/mob/living/carbon/human/species/wildshape/WA = src
-		WA.remove_form_sex_organs()
 	//before we shed our items, save our neck and ring, if we have any, so we can quickly rewear them
 	var/obj/item/stored_neck = wear_neck
 	var/obj/item/stored_ring = wear_ring
@@ -97,8 +93,6 @@
 	if(getorganslot(ORGAN_SLOT_VAGINA))
 		W.internal_organs_slot[ORGAN_SLOT_VAGINA] = /obj/item/organ/vagina
 
-	W.ensure_form_sex_organs_from_original(src) // TA edit - new ERP SYSTEM
-
 	// temporal traits so our body won't die or snore
 	ADD_TRAIT(src, TRAIT_NOSLEEP, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_SOURCE_WILDSHAPE)
@@ -128,12 +122,6 @@
 
 	var/mob/living/carbon/human/W = stored_mob
 	stored_mob = null
-
-	//TA addition start - new ERP SYSTEM
-	if(istype(src, /mob/living/carbon/human/species/wildshape))
-		var/mob/living/carbon/human/species/wildshape/WA_rm = src
-		WA_rm.remove_form_sex_organs()
-	//TA addition end - new ERP SYSTEM
 
 	REMOVE_TRAIT(W, TRAIT_NOSLEEP, TRAIT_SOURCE_WILDSHAPE)
 	REMOVE_TRAIT(W, TRAIT_NOBREATH, TRAIT_SOURCE_WILDSHAPE)

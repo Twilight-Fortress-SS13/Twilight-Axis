@@ -94,7 +94,7 @@
 		to_chat(user, "<span class='warning'>[src] dosn't wish to be touched. (Their ERP preference under options)</span>")
 		to_chat(src, "<span class='warning'>[user] failed to touch you. (Your ERP preference under options)</span>")
 		return
-	
+
 	if(!user.start_sex_session(target))
 		to_chat(user, "<span class='warning'>I'm already sexing.</span>")
 		return

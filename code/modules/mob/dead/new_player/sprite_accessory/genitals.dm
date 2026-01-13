@@ -22,7 +22,7 @@
 				else
 					return "slit_2"
 	if(pp.erect_state == ERECT_STATE_HARD)
-		return "[icon_state]_[pp.penis_size]_erect" // TA edit - new ERP SYSTEM
+		return "[icon_state]_[min(3,pp.penis_size+1)]"
 	else
 		return "[icon_state]_[pp.penis_size]"
 
