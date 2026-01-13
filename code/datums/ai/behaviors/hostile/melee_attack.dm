@@ -16,10 +16,25 @@
 	set_movement_target(controller, target)
 
 /datum/ai_behavior/basic_melee_attack/perform(delta_time, datum/ai_controller/controller, target_key, targetting_datum_key, hiding_location_key)
-	if (isliving(controller.pawn))
-		var/mob/living/pawn = controller.pawn
-		if (world.time < pawn.melee_cooldown)
-			return
+	//TA add start - Expermental Mob Melee Attack fix
+	if (!isliving(controller.pawn))
+		return
+	
+	var/mob/living/pawn = controller.pawn
+	if (world.time < pawn.melee_cooldown)
+		return
+
+	var/datum/intent/simple/I = pawn.a_intent
+	var/cd = I?.clickcd || CLICK_CD_MELEE
+	if(world.time < pawn.melee_cooldown)
+		return
+	if(world.time < pawn.next_move)
+		return
+
+	var/next = world.time + cd
+	pawn.melee_cooldown = max(pawn.melee_cooldown, next)
+	pawn.next_move = max(pawn.next_move, next)
+	//TA add end - Expermental Mob Melee Attack fix
 
 	. = ..()
 	var/mob/living/simple_animal/basic_mob = controller.pawn
@@ -44,7 +59,6 @@
 		basic_mob.ClickOn(target, list())
 
 	//TA add start - Expermental Mob Melee Attack fix
-	var/datum/intent/simple/I = basic_mob.a_intent
 	if(I?.clickcd)
 		basic_mob.melee_cooldown = max(basic_mob.melee_cooldown, world.time + I.clickcd)
 	else
