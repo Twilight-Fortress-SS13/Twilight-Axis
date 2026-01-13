@@ -24,6 +24,7 @@
 
 	var/rapid_melee = 1			 //Number of melee attacks between each npc pool tick. Spread evenly.
 	var/melee_queue_distance = 4 //If target is close enough start preparing to hit them if we have rapid_melee enabled
+	var/melee_cooled_down // TA add - experimental fix
 
 	var/ranged_message = "fires" //Fluff text for ranged mobs
 	var/ranged_cooldown = 0 //What the current cooldown on ranged attacks is, generally world.time + ranged_cooldown_time
@@ -284,7 +285,7 @@
 
 //What we do after closing in
 /mob/living/simple_animal/hostile/proc/MeleeAction(patience = TRUE)
-	if(binded)
+	melee_cooled_down = world.time + melee_cooldown	//TA add - experimental fix
 		return FALSE
 	if(rapid_melee > 1)
 		var/datum/callback/cb = CALLBACK(src, PROC_REF(CheckAndAttack))
@@ -328,10 +329,16 @@
 			Goto(target,move_to_delay,minimum_distance)
 		if(target)
 			if(targets_from && isturf(targets_from.loc) && target.Adjacent(targets_from)) //If they're next to us, attack
-				MeleeAction()
+				//TA add start - experimental fix
+				if (melee_cooled_down <= world.time)
+					MeleeAction()
+				//TA add end - experimental fix
 			else
 				if(rapid_melee > 1 && target_distance <= melee_queue_distance)
-					MeleeAction(FALSE)
+					//TA add start - experimental fix
+					if (melee_cooled_down <= world.time)
+						MeleeAction(FALSE)
+					//TA add end - experimental fix
 				in_melee = FALSE //If we're just preparing to strike do not enter sidestep mode
 			return 1
 		return 0
