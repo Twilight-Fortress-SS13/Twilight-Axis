@@ -1,6 +1,6 @@
 /datum/component/knotting
 	var/movement_timer_id
-
+	var/movement_signals_registered = FALSE
 /datum/component/knotting/should_remove_knot_on_movement(mob/living/carbon/human/top, mob/living/carbon/human/btm)
 	var/list/arousal_data = list()
 	SEND_SIGNAL(top, COMSIG_SEX_GET_AROUSAL, arousal_data)
@@ -200,32 +200,25 @@
 				to_chat(target, span_userdanger("You have been ultra-knotted!"))
 
 	apply_knot_status_effects(user, target)
-
-	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(knot_movement))
 	RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(knot_movement))
-
 	log_combat(user, target, "Started knot tugging")
 
 	if(!islupian(user))
 		record_round_statistic(STATS_KNOTTED_NOT_LUPIANS)
 	record_round_statistic(STATS_KNOTTED)
 
-/datum/component/knotting/knot_exit(keep_top_status = FALSE, keep_btm_status = FALSE)
+/datum/component/knotting/proc/knot_exit(keep_top_status = FALSE, keep_btm_status = FALSE)
 	var/mob/living/carbon/human/top = knotted_owner
 	var/mob/living/carbon/human/btm = knotted_recipient
 
 	if(istype(top))
 		if(!keep_top_status)
 			top.remove_status_effect(/datum/status_effect/knotted)
-		UnregisterSignal(top, COMSIG_MOVABLE_MOVED)
 		log_combat(top, top, "Stopped knot tugging")
 
 	if(istype(btm))
 		if(!keep_btm_status)
 			btm.remove_status_effect(/datum/status_effect/knot_tied)
-		for(var/obj/item/organ/O in btm.internal_organs)
-			if(O.sex_organ)
-				O.sex_organ.block_drain = FALSE
 		UnregisterSignal(btm, COMSIG_MOVABLE_MOVED)
 		log_combat(btm, btm, "Stopped knot tugging")
 
