@@ -207,7 +207,7 @@
 		record_round_statistic(STATS_KNOTTED_NOT_LUPIANS)
 	record_round_statistic(STATS_KNOTTED)
 
-/datum/component/knotting/proc/knot_exit(keep_top_status = FALSE, keep_btm_status = FALSE)
+/datum/component/knotting/knot_exit(keep_top_status = FALSE, keep_btm_status = FALSE)
 	var/mob/living/carbon/human/top = knotted_owner
 	var/mob/living/carbon/human/btm = knotted_recipient
 
