@@ -438,6 +438,12 @@
 					H.update_body()
 					should_update = TRUE
 
+					//TA add start - new ERP SYSTEM
+					var/obj/item/organ/penis/penis = H.getorganslot(ORGAN_SLOT_PENIS)
+					if(penis)
+						penis.refresh_sex_organ()
+					//TA add end - new ERP SYSTEM
+
 		if("Breast Quantity")
 			var/list/valid_breast_types = list("none")
 			for(var/breast_path in subtypesof(/datum/sprite_accessory/breasts))
