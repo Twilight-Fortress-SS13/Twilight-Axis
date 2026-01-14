@@ -46,26 +46,6 @@
 		start_production_timer()
 		stored_liquid.add_reagent(reagent_object.type, (stored_liquid_max/5))
 
-/datum/sex_organ/penis/on_production_tick()
-	var/obj/item/organ/penis/organ = organ_link
-	if(!organ)
-		return
-
-	var/mob/living/carbon/human/owner = organ.owner
-	if(!owner)
-		return
-	
-	var/obj/item/organ/testicles/testicles = owner.getorganslot(ORGAN_SLOT_TESTICLES)
-	if(!testicles)
-		producing_reagent_rate = 0
-		stored_liquid_max = 0
-		return
-
-	producing_reagent_rate = testicles.ball_size * 0.25
-	stored_liquid_max = 12 + (3 * testicles.ball_size)
-
-	. = ..()
-
 /datum/sex_organ/penis/inject_liquid(obj/item/container = null, mob/living/carbon/human/preferred_holder = null, list/blocked_containers = list())
 	if(!has_storage() || total_volume() <= 0)
 		return ..(container, preferred_holder)
