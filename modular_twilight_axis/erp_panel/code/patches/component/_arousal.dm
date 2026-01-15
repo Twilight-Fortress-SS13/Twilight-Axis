@@ -157,7 +157,8 @@
 	var/datum/sex_panel_action/action_object = session_object.action_proto
 	var/mob/living/carbon/human/link_actor = session_object.actor
 	var/mob/living/carbon/human/link_partner = session_object.partner
-	var/return_type = action_object.handle_climax_message(link_actor, link_partner, is_active)
+	var/datum/sex_action_context/ctx = session_object.ctx
+	var/return_type = action_object.handle_climax_message(link_actor, link_partner, is_active, ctx)
 	if(!return_type)
 		do_ejac_inject_from_session(source, null)
 		var/turf/turf2 = get_turf(mob)
