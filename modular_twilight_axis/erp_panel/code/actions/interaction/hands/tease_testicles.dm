@@ -18,7 +18,7 @@
 	message_on_perform = "{actor} {pose}, {force} и {speed} перебирает пальчиками тестикулы {partner}."
 	message_on_finish  = "{actor} убирает руки от яиц {partner}."
 
-/datum/sex_panel_action/other/penis/tea_bag/can_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
+/datum/sex_panel_action/other/penis/tease_testicles/can_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
 
 	if(!target)

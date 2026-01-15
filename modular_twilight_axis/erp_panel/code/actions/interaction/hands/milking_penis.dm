@@ -20,7 +20,7 @@
 	message_on_climax_target = "{partner} кончает в руках {actor}."
 	climax_liquid_mode_passive = "self"
 
-/datum/sex_panel_action/other/penis/vaginal_sex/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target, is_active = TRUE)
+/datum/sex_panel_action/other/hands/milking_penis/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target, is_active = TRUE)
 	var/datum/sex_session_tgui/SS = get_or_create_sex_session_tgui(user, target)
 	if(SS)
 		var/datum/sex_organ/organ_object = SS.resolve_organ_datum(target, SEX_ORGAN_FILTER_PENIS)
