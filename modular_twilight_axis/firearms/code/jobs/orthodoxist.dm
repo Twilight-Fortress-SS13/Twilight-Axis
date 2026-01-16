@@ -37,7 +37,7 @@
 	subclass_stashed_items = list(
 		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy
 	)
-	extra_context = "Legionaire subclass can choose between light and medium armor options, gaining Dodge Expert or Maille Training, respectively."
+	extra_context = "Legionnaire subclass can choose between light and medium armor options, gaining Dodge Expert or Maille Training, respectively."
 
 /datum/outfit/job/roguetown/blackpowder_legionnaire
 	job_bitflag = BITFLAG_HOLY_WARRIOR
