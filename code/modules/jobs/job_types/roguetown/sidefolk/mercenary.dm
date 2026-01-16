@@ -1,7 +1,7 @@
 /datum/job/roguetown/mercenary
 	title = "Mercenary"
 	flag = MERCENARY
-	department_flag = WANDERERS
+	department_flag = SIDEFOLK
 	faction = "Station"
 	total_positions = 4
 	spawn_positions = 4

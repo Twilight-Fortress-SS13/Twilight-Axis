@@ -53,6 +53,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/rogueweapon/huntingknife/throwingknife/bauernwehr
 	triumph_cost = 3
 
+/datum/loadout_item/paper_parasol
+	name = "Paper Parasol"
+	path = /obj/item/rogueweapon/mace/parasol
+
+/datum/loadout_item/fine_parasol
+	name = "Fine Parasol"
+	path = /obj/item/rogueweapon/mace/parasol/noble
+
 //HATS
 /datum/loadout_item/shalal
 	name = "Keffiyeh"
@@ -164,6 +172,22 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Головные уборы"
 	path = /obj/item/flowercrown/salvia
 
+/datum/loadout_item/matricaria_crown
+	name = "Matricaria Crown"
+	path = /obj/item/flowercrown/matricaria
+
+/datum/loadout_item/calendula_crown
+	name = "Calendula Crown"
+	path = /obj/item/flowercrown/calendula
+
+/datum/loadout_item/manabloom_crown
+	name = "Manabloom Crown"
+	path = /obj/item/flowercrown/manabloom
+
+/datum/loadout_item/briar_crown
+	name = "Briar Thorn Crown"
+	path = /obj/item/flowercrown/briar
+
 /datum/loadout_item/briarthorns
 	name = "Briar Thorns"
 	path = /obj/item/clothing/head/roguetown/briarthorns
@@ -258,6 +282,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Плащи"
 	path = /obj/item/clothing/head/roguetown/roguehood/shroudblack
 
+/datum/loadout_item/aproncook
+	name = "Apron, Cooking"
+	path = /obj/item/clothing/cloak/apron/cook
+
 //SHOES
 /datum/loadout_item/darkboots
 	name = "Dark Boots"
@@ -311,8 +339,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/rumaclanshoes
 	name = "Raised Sandals"
+	path = /obj/item/clothing/shoes/roguetown/armor/rumaclan/shitty
 	category = "Обувь"
-	path = /obj/item/clothing/shoes/roguetown/armor/rumaclan
+
+
 
 //SHIRTS
 /datum/loadout_item/longcoat
@@ -492,6 +522,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "White Foreign Shirt"
 	category = "Одежда"
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt2
+
 //PANTS
 /datum/loadout_item/tights
 	name = "Cloth Tights"
@@ -1288,6 +1319,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/clothing/neck/roguetown/loveamulet
 	donatitem = TRUE
+
+/datum/loadout_item/donat/matthios_moneta
+	name = "Амулет из проколотой монеты"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta
+	donatitem = TRUE
+	ckeywhitelist = list("imony", "uedhighcommand")
 
 // Маски
 
