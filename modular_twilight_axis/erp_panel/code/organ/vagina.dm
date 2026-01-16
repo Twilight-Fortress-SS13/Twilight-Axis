@@ -1,3 +1,6 @@
+#define VAGINA_BASE_PREGNANCY_CHANCE 20
+#define VAGINA_KNOT_PREGNANCY_MAX_BONUS 90
+
 /datum/sex_organ/vagina
 	organ_type = SEX_ORGAN_VAGINA
 	stored_liquid_max = VAGINA_MAX_UNITS
@@ -71,3 +74,6 @@
 
 	pregnant = TRUE
 	to_chat(owner, span_love("I feel a surge of warmth in my belly, I’m definitely pregnant!"))
+
+#undef VAGINA_BASE_PREGNANCY_CHANCE
+#undef VAGINA_KNOT_PREGNANCY_MAX_BONUS

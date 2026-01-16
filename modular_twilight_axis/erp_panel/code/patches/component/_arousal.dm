@@ -1,3 +1,26 @@
+#define SEX_PAIN_CHANCE_BOOST 20
+#define SEX_PAIN_CHANCE_MAX 25
+#define PAIN_BASE_SCALE 0.75
+#define FORCE_HIGH_PAIN_CRIT_CHANCE 20
+#define FORCE_EXTREME_PAIN_CRIT_CHANCE 40
+#define FORCE_PAIN_CRIT_MULT 2.0
+
+#define PENIS_CHARGE_PER_UNIT 3
+#define BREASTS_CHARGE_PER_UNIT 1.5
+#define SEX_AROUSAL_BASIC_CHARGE 4
+
+#define NYMPHO_AROUSAL_SOFT_CAP 20
+#define NYMPHO_ORGASM_MULT_GAIN 0.5
+#define BAOTHA_SEX_CHARGE_MAX 400
+#define NIMPHO_SEX_CHARGE_FOR_CLIMAX 75
+#define NYMPHO_ORGASM_MULT_MAX 1.2
+#define NYMPHO_BOOST_DURATION (10 MINUTES)
+
+#define SP_MAX 5
+#define SP_SATED_THRESHOLD 3
+#define SP_DECAY_INTERVAL (10 MINUTES)
+#define SELF_LOCK_DURATION (2 MINUTES)
+
 /datum/component/arousal
 	var/chain_orgasm_lock = FALSE
 	var/last_ejaculation_world_time = -1
@@ -6,6 +29,11 @@
 	charge = CHARGE_FOR_CLIMAX
 	var/charge_max = SEX_MAX_CHARGE
 	var/charge_for_climax = CHARGE_FOR_CLIMAX
+
+	var/satisfaction_points = 0
+	var/last_sp_decay_time = 0
+	var/self_gratification_lock = FALSE
+	var/self_gratification_lock_until = 0
 
 /datum/component/arousal/set_charge(amount)
 	var/empty = (charge < charge_for_climax)
@@ -79,13 +107,13 @@
 
 	user.add_stress(/datum/stressevent/cumok)
 	if(user.has_flaw(/datum/charflaw/addiction/lovefiend))
-		user.sate_addiction()
 		if(parent == user)
 			arousal_multiplier = clamp(arousal_multiplier + NYMPHO_ORGASM_MULT_GAIN, 1, NYMPHO_ORGASM_MULT_MAX)
 			last_nympho_boost_time = world.time
 
 		if(user == target)
-			if(user.has_flaw(/datum/charflaw/addiction/lovefiend))
+			var/datum/charflaw/addiction/lovefiend/link_flaw = user.get_flaw()
+			if(link_flaw)
 				link_flaw.time = rand(24 MINUTES, 48 MINUTES)
 
 	if(last_moan + MOAN_COOLDOWN < world.time)
@@ -126,12 +154,18 @@
 	if(!mob.getorganslot(ORGAN_SLOT_TESTICLES) && mob.getorganslot(ORGAN_SLOT_PENIS))
 		mob.visible_message(span_love("[mob] climaxes, yet nothing is released!"))
 		after_ejaculation(FALSE, mob, null)
+		var/sp_gain = handle_satisfaction_from_climax(mob, null, "self")
+		if(sp_gain > 0)
+			apply_climax_stress(mob, "self", sp_gain)
 		return
 
 	if(!highest_priority)
 		do_ejac_inject_from_session(mob, null)
 		var/turf/turf = get_turf(mob)
 		new /obj/effect/decal/cleanable/coom(turf)
+		var/sp_gain = handle_satisfaction_from_climax(mob, null, "self")
+		if(sp_gain > 0)
+			apply_climax_stress(mob, "self", sp_gain)
 		after_ejaculation(FALSE, mob, null)
 		return
 
@@ -162,10 +196,16 @@
 		do_ejac_inject_from_session(source, null)
 		var/turf/turf2 = get_turf(mob)
 		new /obj/effect/decal/cleanable/coom(turf2)
+		var/sp_gain = handle_satisfaction_from_climax(source, partner, "self")
+		if(sp_gain > 0)
+			apply_climax_stress(source, return_type, sp_gain)
 		after_ejaculation(FALSE, source, partner)
 		return
 
 	handle_climax(return_type, source, partner)
+	var/sp_gain = handle_satisfaction_from_climax(source, partner, return_type)
+	if(sp_gain > 0)
+		apply_climax_stress(source, return_type, sp_gain)
 
 	var/intimate = (return_type == "into" || return_type == "onto")
 	after_ejaculation(intimate, source, partner)
@@ -177,7 +217,6 @@
 			action_object.try_knot_on_climax(source, partner)
 
 	if(return_type == "into")
-
 		var/producing_organ_type = session_tgui_object.node_organ_type(session_object.actor_node_id)
 		var/receiving_organ_type = session_tgui_object.node_organ_type(session_object.partner_node_id)
 		if(receiving_organ_type != SEX_ORGAN_VAGINA || producing_organ_type != SEX_ORGAN_PENIS)
@@ -290,7 +329,7 @@
 	var/effective_pain = max(0, pain_amt)
 	if(effective_pain <= 0)
 		return
-	
+
 	var/effective_chance = effective_pain
 	effective_chance *= (applied_force == SEX_FORCE_EXTREME) ? (SEX_PAIN_CHANCE_BOOST * 2) : SEX_PAIN_CHANCE_BOOST
 	var/pain_chance_maximum = (applied_force == SEX_FORCE_EXTREME) ? (SEX_PAIN_CHANCE_MAX * 2) : SEX_PAIN_CHANCE_MAX
@@ -355,8 +394,10 @@
 	var/add_value = SEX_AROUSAL_BASIC_CHARGE
 	switch(org.organ_type)
 		if(SEX_ORGAN_PENIS)
-			add_value =  amount * PENIS_CHARGE_PER_UNIT
-		
+			add_value = amount * PENIS_CHARGE_PER_UNIT
+		if(SEX_ORGAN_BREASTS)
+			add_value = amount * BREASTS_CHARGE_PER_UNIT
+
 	adjust_charge(add_value)
 
 #define PENIS_VOLUME_CHARGE_RATE 0.5
@@ -378,10 +419,10 @@
 		if(penis_item && penis_item.sex_organ)
 			var/datum/sex_organ/penis/penis_object = penis_item.sex_organ
 			if(penis_object.has_storage())
-				var/min_needed = max(penis_object.stored_liquid_max * PENIS_MIN_EJAC_FRACTION, PENIS_MIN_EJAC_ABSOLUTE)
+				var/min_needed = min(penis_object.stored_liquid_max * PENIS_MIN_EJAC_FRACTION, PENIS_MIN_EJAC_ABSOLUTE)
 				var/vol = penis_object.total_volume()
 				if(vol >= min_needed && charge < charge_for_climax)
-					var/fullness = vol / max(1, penis_object.stored_liquid_max) // 0..1
+					var/fullness = vol / max(1, penis_object.stored_liquid_max)
 					var/gain = dt * PENIS_VOLUME_CHARGE_RATE * fullness
 					adjust_charge(gain)
 
@@ -420,6 +461,8 @@
 	return FALSE
 
 /datum/component/arousal/process(dt)
+	handle_satisfaction_decay()
+	handle_self_gratification_lock()
 	handle_charge(dt * 1)
 
 	var/mob/living/carbon/human/human_object = parent
@@ -662,3 +705,106 @@
 
 		if(H.get_flaw(/datum/charflaw/addiction/sadist))
 			H.sate_addiction()
+
+/datum/component/arousal/proc/adjust_satisfaction(delta)
+	satisfaction_points = clamp(satisfaction_points + delta, 0, SP_MAX)
+
+/datum/component/arousal/proc/handle_satisfaction_decay()
+	var/mob/living/carbon/human/H = parent
+	if(!istype(H))
+		return
+	if(!H.has_flaw(/datum/charflaw/addiction/lovefiend))
+		return
+	if(world.time < last_sp_decay_time + SP_DECAY_INTERVAL)
+		return
+	last_sp_decay_time = world.time
+	adjust_satisfaction(-1)
+
+/datum/component/arousal/proc/handle_self_gratification_lock()
+	if(self_gratification_lock && world.time >= self_gratification_lock_until)
+		self_gratification_lock = FALSE
+
+/datum/component/arousal/proc/apply_self_gratification_lock()
+	self_gratification_lock = TRUE
+	self_gratification_lock_until = world.time + SELF_LOCK_DURATION
+
+/datum/component/arousal/proc/handle_satisfaction_from_climax(mob/living/carbon/human/user, mob/living/carbon/human/target, climax_type)
+	if(!user || !climax_type)
+		return 0
+
+	var/sp_gain = 0
+	switch(climax_type)
+		if("self")
+			sp_gain = 1
+		if("onto")
+			sp_gain = 2
+		if("into")
+			sp_gain = 3
+		else
+			return 0
+
+	var/is_solo = (!target || target == user)
+
+	if(is_solo)
+		if(self_gratification_lock)
+			return 0
+		apply_self_gratification_lock()
+
+	adjust_satisfaction(sp_gain)
+
+	if(target && target != user)
+		var/datum/component/arousal/partner_arousal = target.GetComponent(/datum/component/arousal)
+		if(partner_arousal)
+			partner_arousal.adjust_satisfaction(sp_gain)
+
+	return sp_gain
+
+/datum/component/arousal/proc/apply_climax_stress(mob/living/carbon/human/user, climax_type, sp_gain)
+	if(!user)
+		return
+
+	if(user.has_flaw(/datum/charflaw/addiction/lovefiend))
+		if(satisfaction_points > SP_SATED_THRESHOLD )
+			user.sate_addiction()
+		user.add_stress(/datum/stressevent/cumlove)
+		return
+
+	if(climax_type == "self")
+		user.add_stress(/datum/stressevent/cumself)
+		return
+
+	switch(satisfaction_points)
+		if(1)
+			user.add_stress(/datum/stressevent/cumok)
+		if(2)
+			user.add_stress(/datum/stressevent/cummid)
+		if(3)
+			user.add_stress(/datum/stressevent/cumgood)
+		if(4)
+			user.add_stress(/datum/stressevent/cummax)
+		if(5)
+			user.add_stress(/datum/stressevent/cumlove)
+		else
+			user.add_stress(/datum/stressevent/cumok)
+
+#undef SEX_PAIN_CHANCE_BOOST
+#undef SEX_PAIN_CHANCE_MAX
+#undef PAIN_BASE_SCALE
+#undef FORCE_HIGH_PAIN_CRIT_CHANCE
+#undef FORCE_EXTREME_PAIN_CRIT_CHANCE
+#undef FORCE_PAIN_CRIT_MULT
+
+#undef PENIS_CHARGE_PER_UNIT
+#undef SEX_AROUSAL_BASIC_CHARGE
+
+#undef NYMPHO_AROUSAL_SOFT_CAP
+#undef NYMPHO_ORGASM_MULT_GAIN
+#undef BAOTHA_SEX_CHARGE_MAX
+#undef NIMPHO_SEX_CHARGE_FOR_CLIMAX
+#undef NYMPHO_ORGASM_MULT_MAX
+#undef NYMPHO_BOOST_DURATION
+
+#undef SP_MAX
+#undef SP_SATED_THRESHOLD
+#undef SP_DECAY_INTERVAL
+#undef SELF_LOCK_DURATION

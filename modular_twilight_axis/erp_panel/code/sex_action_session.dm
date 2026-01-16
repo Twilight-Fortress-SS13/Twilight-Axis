@@ -1,3 +1,5 @@
+#define ORG_PAIN_GAIN_RATE 0.05
+
 /datum/sex_action_context
 	var/datum/sex_action_session/link
 	var/list/compiled_messages
@@ -274,3 +276,5 @@
 		session.dispatch_sex_message(user, target, message)
 	else if(user)
 		user.visible_message(message)
+
+#undef ORG_PAIN_GAIN_RATE

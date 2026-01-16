@@ -1,3 +1,5 @@
+#define REAGENT_FLAG_ERP_SENSITIVE (1<<0)
+
 /proc/erp_note_sensitive_turf(turf/T)
 	if(!T)
 		return
@@ -359,3 +361,5 @@
 			return TRUE
 		update_icon()
 	return TRUE
+
+#undef REAGENT_FLAG_ERP_SENSITIVE

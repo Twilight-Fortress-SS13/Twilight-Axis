@@ -1,6 +1,15 @@
-#define MOUTH_MAX_UNITS 10
-#define VAGINA_MAX_UNITS 20
-#define ANUS_MAX_UNITS 30
+#define SEX_SENSITIVITY_MAX  	2
+#define SEX_PAIN_MAX         	2
+#define BREAST_SPENT_PROD_MULT 	1.5
+#define PENIS_SPENT_PROD_MULT 	0.25
+
+#define INJECT_MODE_NONE      0
+#define INJECT_MODE_ORGAN     1
+#define INJECT_MODE_CONTAINER 2
+#define INJECT_MODE_GROUND    3
+
+#define NYMPHO_PROD_MULT 1.25
+#define BAOTIST_PROD_MULT 1.1
 
 /datum/sex_organ
 	// Link to physical organ
@@ -10,9 +19,9 @@
 	// how painful organ is - negative multiplier to pleasure
 	var/pain = 0
 	// max sensitivity
-	var/sensivity_max = 2
+	var/sensivity_max = SEX_SENSITIVITY_MAX
 	// max pain
-	var/pain_max = 2
+	var/pain_max = SEX_PAIN_MAX
 	// object that currently this organ stuffed in
 	var/datum/sex_organ/active_target = null
 	// list of objects that use this organ
@@ -488,3 +497,16 @@
 	// спад боли
 	if(next_pain_decay_time && world.time >= next_pain_decay_time)
 		pain_decay_tick()
+
+#undef SEX_SENSITIVITY_MAX
+#undef SEX_PAIN_MAX
+#undef BREAST_SPENT_PROD_MULT
+#undef PENIS_SPENT_PROD_MULT
+
+#undef INJECT_MODE_NONE
+#undef INJECT_MODE_ORGAN
+#undef INJECT_MODE_CONTAINER
+#undef INJECT_MODE_GROUND
+
+#undef NYMPHO_PROD_MULT
+#undef BAOTIST_PROD_MULT
