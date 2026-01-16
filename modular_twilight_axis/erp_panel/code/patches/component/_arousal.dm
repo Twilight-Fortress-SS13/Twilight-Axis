@@ -123,9 +123,6 @@
 	user.playsound_local(user, 'sound/misc/mat/end.ogg', 100)
 	last_ejaculation_time = world.time
 
-	if(intimate)
-		after_intimate_climax(user, target)
-
 /datum/component/arousal/ejaculate()
 	if(world.time <= (last_ejaculation_world_time + 2 SECONDS))
 		return
@@ -752,12 +749,28 @@
 
 	adjust_satisfaction(sp_gain)
 
+	if(!is_solo && target)
+		if(HAS_TRAIT(target, TRAIT_GOODLOVER))
+			if(!user.mob_timers["cumtri"])
+				user.mob_timers["cumtri"] = world.time
+				user.adjust_triumphs(1)
+				to_chat(user, span_love("Наша любовь — истинный ТРИУМФ!"))
+				user.apply_status_effect(/datum/status_effect/buff/goodloving)
+
+		if(HAS_TRAIT(user, TRAIT_GOODLOVER))
+			if(!target.mob_timers["cumtri"])
+				target.mob_timers["cumtri"] = world.time
+				target.adjust_triumphs(1)
+				to_chat(user, span_love("Наша любовь — истинный ТРИУМФ!"))
+				target.apply_status_effect(/datum/status_effect/buff/goodloving)
+
 	if(target && target != user)
 		var/datum/component/arousal/partner_arousal = target.GetComponent(/datum/component/arousal)
 		if(partner_arousal)
 			partner_arousal.adjust_satisfaction(sp_gain)
 
 	return sp_gain
+
 
 /datum/component/arousal/proc/apply_climax_stress(mob/living/carbon/human/user, climax_type, sp_gain)
 	if(!user)
