@@ -22,7 +22,6 @@
 	)
 	subclass_skills = list(
 		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
-		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
@@ -98,20 +97,27 @@
 				cloak = /obj/item/clothing/cloak/tabard/psydontabard
 				head = /obj/item/clothing/head/roguetown/helmet/kettle
 				wrists = /obj/item/clothing/neck/roguetown/psicross/silver
+				beltl = /obj/item/rogueweapon/scabbard/sword
+				r_hand = /obj/item/rogueweapon/sword/short/psy
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
+
 			if ("Otavan volf")
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor
 				l_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra
 				head = /obj/item/clothing/head/roguetown/roguehood/psydon/confessor
-				wrists = /obj/item/inqarticles/garrote
+				wrists = /obj/item/clothing/neck/roguetown/psicross/silver
 				pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
 				beltr = /obj/item/quiver/twilight_bullet/lead_ten
+				beltl = /obj/item/rogueweapon/scabbard/sheath
+				r_hand = /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger
 				backpack_contents = list(/obj/item/roguekey/inquisition = 1,
 						/obj/item/paper/inqslip/arrival/ortho = 1,
 						/obj/item/twilight_powderflask/holyfyre = 1,
-						/obj/item/storage/belt/rogue/pouch/coins/mid = 1)
-				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
-				H.adjust_skillrank_up_to(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE)
+						/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
+						/obj/item/inqarticles/garrote = 1)
+				H.adjust_skillrank_up_to(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
 				var/arcane = list("Shadow step", "Fetch", "Invisible", "Blast", "Leap")
 				var/arcane_choice = input("TAKE YOUR RUNE", "PSYDON'S RUNE") as anything in arcane
 				switch(arcane_choice)
@@ -125,5 +131,3 @@
 						H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
 					if("Leap")
 						H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/leap)
-	beltl = /obj/item/rogueweapon/scabbard/sword
-	r_hand = /obj/item/rogueweapon/sword/short/psy
