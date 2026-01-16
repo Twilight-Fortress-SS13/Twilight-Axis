@@ -105,7 +105,7 @@
 				wrists = /obj/item/inqarticles/garrote
 				pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
-				beltr = /obj/item/quiver/twilight_bullet/lead
+				beltr = /obj/item/quiver/twilight_bullet/lead_ten
 				backpack_contents = list(/obj/item/roguekey/inquisition = 1,
 						/obj/item/paper/inqslip/arrival/ortho = 1,
 						/obj/item/twilight_powderflask/holyfyre = 1,
