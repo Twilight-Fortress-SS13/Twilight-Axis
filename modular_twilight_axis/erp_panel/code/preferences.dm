@@ -13,9 +13,6 @@
 	if(!islist(K.prefs_by_type))
 		K.prefs_by_type = list()
 
-	// Если хочешь НЕ перетирать уже существующие рантайм-настройки — раскомментируй:
-	// if(K.prefs_by_type.len) return
-
 	for(var/key in erp_kink_prefs)
 		var/path = text2path(key)
 		if(!ispath(path, /datum/kink))

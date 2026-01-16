@@ -1,6 +1,3 @@
-/global/var/list/GLOB_erp_recent_sensitive_turf_tick = list()
-/global/var/list/GLOB_erp_recent_sensitive_mob_tick = list()
-
 /proc/erp_note_sensitive_turf(turf/T)
 	if(!T)
 		return

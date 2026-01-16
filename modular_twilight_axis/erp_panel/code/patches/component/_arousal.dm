@@ -85,8 +85,7 @@
 			last_nympho_boost_time = world.time
 
 		if(user == target)
-			var/datum/charflaw/addiction/lovefiend/link_flaw = user.get_flaw()
-			if(link_flaw)
+			if(user.has_flaw(/datum/charflaw/addiction/lovefiend))
 				link_flaw.time = rand(24 MINUTES, 48 MINUTES)
 
 	if(last_moan + MOAN_COOLDOWN < world.time)
