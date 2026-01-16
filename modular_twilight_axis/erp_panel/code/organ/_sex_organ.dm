@@ -1,4 +1,3 @@
-#define SEX_SENSITIVITY_MAX  	2
 #define SEX_PAIN_MAX         	2
 #define BREAST_SPENT_PROD_MULT 	1.5
 #define PENIS_SPENT_PROD_MULT 	0.25
@@ -15,11 +14,11 @@
 	// Link to physical organ
 	var/atom/movable/organ_link
 	// how sensitive organ is - multiplier to pleasure
-	var/sensivity = 1
+	var/sensitivity = 1
 	// how painful organ is - negative multiplier to pleasure
 	var/pain = 0
 	// max sensitivity
-	var/sensivity_max = SEX_SENSITIVITY_MAX
+	var/sensitivity_max = SEX_SENSITIVITY_MAX
 	// max pain
 	var/pain_max = SEX_PAIN_MAX
 	// object that currently this organ stuffed in
@@ -494,11 +493,32 @@
 	if(next_deflation_time && world.time >= next_deflation_time)
 		on_timer_end()
 
-	// спад боли
 	if(next_pain_decay_time && world.time >= next_pain_decay_time)
 		pain_decay_tick()
 
-#undef SEX_SENSITIVITY_MAX
+/datum/sex_organ/proc/get_pref_key()
+	if(organ_type & SEX_ORGAN_PENIS)
+		return "penis"
+	if(organ_type & SEX_ORGAN_VAGINA)
+		return "vagina"
+	if(organ_type & SEX_ORGAN_BREASTS)
+		return "breasts"
+	if(organ_type & SEX_ORGAN_ANUS)
+		return "anus"
+	if(organ_type & SEX_ORGAN_MOUTH)
+		return "mouth"
+	if(organ_type & SEX_ORGAN_TAIL)
+		return "tail"
+	if(organ_type & SEX_ORGAN_LEGS)
+		return "legs"
+	if(organ_type & SEX_ORGAN_HANDS)
+		return "hands"
+	return null
+
+/datum/sex_organ/proc/set_sensitivity(new_value, save = TRUE)
+	sensitivity = clamp(new_value, 0, sensitivity_max)
+	return sensitivity
+
 #undef SEX_PAIN_MAX
 #undef BREAST_SPENT_PROD_MULT
 #undef PENIS_SPENT_PROD_MULT

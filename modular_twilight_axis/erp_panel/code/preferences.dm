@@ -1,6 +1,7 @@
 /datum/preferences
 	var/list/erp_custom_actions = list()
 	var/list/erp_kink_prefs = list()
+	var/list/erp_organ_sensitivity = list()
 
 /datum/preferences/proc/apply_erp_kinks_to_mob(mob/living/carbon/human/H)
 	if(!H || !islist(erp_kink_prefs) || !erp_kink_prefs.len)
@@ -58,6 +59,90 @@
 			continue
 
 		erp_kink_prefs[key] = clamp(round(v), -1, 1)
+
+/datum/preferences/proc/sanitize_erp_organ_sensitivity()
+	if(!islist(erp_organ_sensitivity))
+		erp_organ_sensitivity = list()
+		return
+
+	for(var/key in erp_organ_sensitivity)
+		if(!istext(key))
+			erp_organ_sensitivity -= key
+			continue
+
+		var/v = erp_organ_sensitivity[key]
+		if(!isnum(v))
+			erp_organ_sensitivity[key] = 1
+			continue
+
+		erp_organ_sensitivity[key] = clamp(v, 0, SEX_SENSITIVITY_MAX)
+
+/datum/preferences/proc/apply_erp_organ_sensitivity_to_mob(mob/living/carbon/human/H)
+	if(!H || !islist(erp_organ_sensitivity) || !erp_organ_sensitivity.len)
+		return
+
+	var/datum/sex_session_tgui/tmp_session = get_or_create_sex_session_tgui(H, H)
+	if(!tmp_session)
+		return
+
+	for(var/node_id in list(
+		SEX_ORGAN_FILTER_MOUTH,
+		SEX_ORGAN_FILTER_LHAND,
+		SEX_ORGAN_FILTER_RHAND,
+		SEX_ORGAN_FILTER_LEGS,
+		SEX_ORGAN_FILTER_TAIL,
+		SEX_ORGAN_FILTER_BREASTS,
+		SEX_ORGAN_FILTER_VAGINA,
+		SEX_ORGAN_FILTER_PENIS,
+		SEX_ORGAN_FILTER_ANUS,
+		SEX_ORGAN_FILTER_BODY
+	))
+		var/datum/sex_organ/O = tmp_session.resolve_organ_datum(H, node_id)
+		if(!O)
+			continue
+
+		var/key = O.get_pref_key()
+		if(!key)
+			continue
+
+		var/v = erp_organ_sensitivity[key]
+		if(isnum(v))
+			O.set_sensitivity(v, save = FALSE)
+
+/datum/preferences/proc/capture_erp_organ_sensitivity_from_mob(mob/living/carbon/human/H)
+	if(!H)
+		return
+
+	if(!islist(erp_organ_sensitivity))
+		erp_organ_sensitivity = list()
+	else
+		erp_organ_sensitivity.Cut()
+
+	var/datum/sex_session_tgui/tmp_session = get_or_create_sex_session_tgui(H, H)
+	if(!tmp_session)
+		return
+
+	for(var/node_id in list(
+		SEX_ORGAN_FILTER_MOUTH,
+		SEX_ORGAN_FILTER_LHAND,
+		SEX_ORGAN_FILTER_RHAND,
+		SEX_ORGAN_FILTER_LEGS,
+		SEX_ORGAN_FILTER_TAIL,
+		SEX_ORGAN_FILTER_BREASTS,
+		SEX_ORGAN_FILTER_VAGINA,
+		SEX_ORGAN_FILTER_PENIS,
+		SEX_ORGAN_FILTER_ANUS,
+		SEX_ORGAN_FILTER_BODY
+	))
+		var/datum/sex_organ/O = tmp_session.resolve_organ_datum(H, node_id)
+		if(!O)
+			continue
+
+		var/key = O.get_pref_key()
+		if(!key)
+			continue
+
+		erp_organ_sensitivity[key] = clamp(O.sensitivity, 0, O.sensitivity_max)
 
 /proc/erp_export_custom_action(datum/sex_panel_action/A)
 	if(!A) return null

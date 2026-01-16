@@ -185,6 +185,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	// TA Addition start - new ERP SYSTEM
 	S["erp_custom_actions"] >> erp_custom_actions	
 	S["erp_kink_prefs"] >> erp_kink_prefs
+	S["erp_organ_sensitivity"] >> erp_organ_sensitivity
 	// TA Addition end - new ERP SYSTEM
 
 	//try to fix any outdated data if necessary
@@ -231,6 +232,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	erp_custom_actions = sanitize_islist(erp_custom_actions, list())
 	erp_kink_prefs = sanitize_islist(erp_kink_prefs, list())
 	sanitize_erp_kink_prefs()
+	erp_organ_sensitivity = sanitize_islist(erp_organ_sensitivity, list()) // NEW
+	sanitize_erp_organ_sensitivity()
 	//TA Addition end - new ERP SYSTEM
 
 	//ROGUETOWN
@@ -327,6 +330,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	// TA Addition start - new ERP SYSTEM
 	WRITE_FILE(S["erp_custom_actions"], erp_custom_actions)
 	WRITE_FILE(S["erp_kink_prefs"], erp_kink_prefs)
+	WRITE_FILE(S["erp_organ_sensitivity"], erp_organ_sensitivity)
 	// TA Addition end - new ERP SYSTEM
 	return TRUE
 

@@ -195,7 +195,7 @@
 				continue
 
 			var/datum/sex_organ/tuned_org = session.resolve_organ_datum(I.partner, I.partner_node_id)
-			var/sens = tuned_org ? tuned_org.sensivity : 0
+			var/sens = tuned_org ? tuned_org.sensitivity : 0
 			var/pain = tuned_org ? tuned_org.pain : 0
 
 			passive_links += list(list(

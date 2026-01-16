@@ -456,6 +456,7 @@
 	var/datum/preferences/P = user.client?.prefs
 	if(P)
 		P.apply_erp_kinks_to_mob(user)
+		P.apply_erp_organ_sensitivity_to_mob(user)
 
 	var/mob/living/carbon/human/active_partner = get_current_partner()
 	D["title"] = "Соитие с [get_partner_display_name(active_partner)]"
@@ -551,7 +552,7 @@
 			if(!tuned_org)
 				tuned_org = resolve_organ_datum(I.partner, I.partner_node_id)
 
-			var/sens = tuned_org ? tuned_org.sensivity : 0
+			var/sens = tuned_org ? tuned_org.sensitivity : 0
 			var/pain = tuned_org ? tuned_org.pain : 0
 			links += list(list(
 				"id"                = I.instance_id,
@@ -820,7 +821,11 @@
 
 			switch(field)
 				if("sensitivity")
-					O.sensivity = clamp(value, 0, O.sensivity_max)
+					O.set_sensitivity(value)
+					var/datum/preferences/P = user.client?.prefs
+					if(P)
+						P.capture_erp_organ_sensitivity_from_mob(user)
+						P.save_preferences()
 
 			dirty_links = TRUE
 			SStgui.update_uis(src)
@@ -838,8 +843,11 @@
 			if(!user_org)
 				return FALSE
 
-			user_org.sensivity = clamp(value, 0, user_org.sensivity_max)
-
+			user_org.set_sensitivity(value)
+			var/datum/preferences/P = user.client?.prefs
+			if(P)
+				P.capture_erp_organ_sensitivity_from_mob(user)
+				P.save_preferences()
 			dirty_links = TRUE
 			SStgui.update_uis(src)
 			return TRUE
@@ -1443,7 +1451,7 @@
 			continue
 
 		var/datum/sex_organ/O = resolve_organ_datum(M, id)
-		var/sens = O ? O.sensivity : 0
+		var/sens = O ? O.sensitivity : 0
 		var/pain = O ? O.pain : 0
 
 		var/fullness = 0
