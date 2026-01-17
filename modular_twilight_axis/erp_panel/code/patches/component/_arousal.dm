@@ -458,9 +458,6 @@
 /datum/component/arousal/is_spent()
 	var/mob/living/carbon/human/human_object = parent
 
-	if(charge < charge_for_climax)
-		return TRUE
-
 	if(istype(human_object))
 		var/obj/item/organ/penis/penis_item = human_object.getorganslot(ORGAN_SLOT_PENIS)
 		var/obj/item/organ/testicles/testicles_item = human_object.getorganslot(ORGAN_SLOT_TESTICLES)
@@ -471,7 +468,10 @@
 				var/min_needed = max(penis_object.stored_liquid_max * PENIS_MIN_EJAC_FRACTION, PENIS_MIN_EJAC_ABSOLUTE)
 				var/current = penis_object.total_volume()
 				if(current >= min_needed)
-					return FALSE
+					return FALSE			
+
+	if(charge < charge_for_climax)
+		return TRUE
 
 	return FALSE
 
