@@ -824,8 +824,7 @@
 					L.sate_addiction()
 				continue
 			if(L.has_flaw(/datum/charflaw/addiction/sadist))
-				if(get_dist(L, user) <= 2 && L != user)
-					L.sate_addiction()
+				L.sate_addiction()
 
 /datum/emote/living/scream/strain
 	key = "strain"
@@ -849,7 +848,7 @@
 				if(L.has_flaw(/datum/charflaw/addiction/masochist))
 					L.sate_addiction()
 				continue // i hope this shit works.
-			if(get_dist(L, user) <= 2 && L != user)
+			if(L.has_flaw(/datum/charflaw/addiction/sadist))
 				L.sate_addiction()
 
 /datum/emote/living/scream/firescream
@@ -867,7 +866,7 @@
 				if(L.has_flaw(/datum/charflaw/addiction/masochist))
 					L.sate_addiction()
 				continue // i hope this shit works.
-			if(get_dist(L, user) <= 2 && L != user)
+			if(L.has_flaw(/datum/charflaw/addiction/sadist))
 				L.sate_addiction()
 
 /datum/emote/living/aggro

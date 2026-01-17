@@ -113,7 +113,7 @@
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/steel
 	backl = /obj/item/storage/backpack/rogue/satchel
 	belt = /obj/item/storage/belt/rogue/leather
-	beltl = /obj/item/roguekey/manor
+	beltl = /obj/item/storage/keyring/councillor
 	beltr = /obj/item/rogueweapon/huntingknife/idagger/steel
 	cloak = /obj/item/clothing/cloak/half/red
 	if(H.mind)
@@ -130,7 +130,7 @@
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/steel
 	backl = /obj/item/storage/backpack/rogue/satchel
 	belt = /obj/item/storage/belt/rogue/leather
-	beltl = /obj/item/roguekey/manor
+	beltl = /obj/item/storage/keyring/councillor
 	beltr = /obj/item/rogueweapon/huntingknife/idagger/steel
 	cloak = /obj/item/clothing/cloak/half/red
 	if(H.mind)
@@ -147,7 +147,7 @@
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/gold
 	backl = /obj/item/storage/backpack/rogue/satchel
 	belt = /obj/item/storage/belt/rogue/leather/plaquesilver
-	beltl = /obj/item/storage/keyring/steward
+	beltl = /obj/item/storage/keyring/councillor/cofferer
 	beltr = /obj/item/rogueweapon/huntingknife/idagger/steel
 	cloak = /obj/item/clothing/cloak/half/red
 	if(H.mind)

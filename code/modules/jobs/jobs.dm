@@ -172,7 +172,6 @@ GLOBAL_LIST_INIT(antagonist_positions, list( //Mostly lesser antagonists
 	"Assassin",
 	"Bandit",
 	"Wretch",
-	"Gnoll",
 ))
 
 GLOBAL_LIST_INIT(inquisition_positions, list( //Self explanatory

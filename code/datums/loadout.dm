@@ -987,7 +987,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Разное", "Донат")
 	donatitem = TRUE
  
-
 /datum/loadout_item/donator_ryan
 	name = "Donator Item - Western Estates Caparison"
 	path = /obj/item/caparison/ryan
