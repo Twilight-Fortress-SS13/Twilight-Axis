@@ -53,7 +53,7 @@
 	id = /obj/item/clothing/ring/signet/silver
 
 	if(H.mind)
-		var/classes = list("Legionaire", "Otavan volf")
+		var/classes = list("Legionaire", "Otavan Volf")
 		var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
 		switch(classchoice)
 			if("Legionaire")
@@ -101,7 +101,7 @@
 				r_hand = /obj/item/rogueweapon/sword/short/psy
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 
-			if ("Otavan volf")
+			if ("Otavan Volf")
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor
 				l_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra
 				head = /obj/item/clothing/head/roguetown/roguehood/psydon/confessor
@@ -118,10 +118,10 @@
 						/obj/item/inqarticles/garrote = 1)
 				H.adjust_skillrank_up_to(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
-				var/arcane = list("Shadow step", "Fetch", "Invisible", "Blast", "Leap")
+				var/arcane = list("Shadow Step", "Fetch", "Invisible", "Blast", "Leap")
 				var/arcane_choice = input("TAKE YOUR RUNE", "PSYDON'S RUNE") as anything in arcane
 				switch(arcane_choice)
-					if("Shadow step")
+					if("Shadow Step")
 						H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/shadowstep)
 					if("Fetch")
 						H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/fetch)
