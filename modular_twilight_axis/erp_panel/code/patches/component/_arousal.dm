@@ -208,10 +208,20 @@
 	after_ejaculation(intimate, source, partner)
 
 	if(session_tgui_object.do_knot_action && action_object.can_knot && source)
+		var/mob/living/carbon/human/knot_target = partner
+
 		var/obj/item/organ/penis/penis_item = source.getorganslot(ORGAN_SLOT_PENIS)
 		var/datum/sex_organ/penis/penis_object = penis_item ? penis_item.sex_organ : null
+
 		if(penis_object && penis_object.have_knot)
-			action_object.try_knot_on_climax(source, partner)
+			var/datum/sex_organ/target_org = penis_object.active_target
+			if(target_org)
+				var/mob/living/carbon/human/real_owner = target_org.get_owner()
+				if(istype(real_owner))
+					knot_target = real_owner
+
+			if(knot_target && knot_target != source)
+				action_object.try_knot_on_climax(source, knot_target)
 
 	if(return_type == "into")
 		var/producing_organ_type = session_tgui_object.node_organ_type(session_object.actor_node_id)
