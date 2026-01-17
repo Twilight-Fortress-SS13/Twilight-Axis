@@ -76,7 +76,7 @@
 		/obj/item/ritechalk = 1,
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/storage/keyring/churchie = 1
+		/obj/item/storage/keyring/acolyte = 1
 		)
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
@@ -136,7 +136,7 @@
 			mask = /obj/item/clothing/head/roguetown/roguehood/ravoxgorget
 			wrists = /obj/item/clothing/neck/roguetown/psicross/ravox
 			cloak = /obj/item/clothing/cloak/templar/ravox
-			backpack_contents = list(/obj/item/ritechalk, /obj/item/book/rogue/law, /obj/item/clothing/mask/rogue/facemask/steel, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/storage/keyring/churchie)
+			backpack_contents = list(/obj/item/ritechalk, /obj/item/book/rogue/law, /obj/item/clothing/mask/rogue/facemask/steel, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/storage/keyring/acolyte)
 		if(/datum/patron/divine/malum)
 			head = /obj/item/clothing/head/roguetown/roguehood
 			wrists = /obj/item/clothing/neck/roguetown/psicross/malum

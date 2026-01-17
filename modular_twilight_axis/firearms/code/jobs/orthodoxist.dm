@@ -55,81 +55,42 @@
 	id = /obj/item/clothing/ring/signet/silver
 
 	if(H.mind)
-		var/classes = list("Legionaire", "Otavan Volf")
-		var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
-		switch(classchoice)
-			if("Legionaire")
-				var/weapons = list("Purgatory (Handcannon)", "Runelock Pistol")
-				var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
-				switch(weapon_choice)
-					if("Purgatory (Handcannon)")
-						belt = /obj/item/storage/belt/rogue/leather/black
-						l_hand = /obj/item/gun/ballistic/twilight_firearm/handgonne/purgatory
-						backpack_contents = list(/obj/item/roguekey/inquisition = 1,
-						/obj/item/paper/inqslip/arrival/ortho = 1,
-						/obj/item/twilight_powderflask/holyfyre = 1,
-						/obj/item/natural/bundle/fibers/full = 1,
-						/obj/item/storage/belt/rogue/pouch/coins/mid = 1)
-						var/quivers = list("Grapeshot", "Cannonballs")
-						var/ammochoice = input(H,"Choose your MUNITIONS.", "TAKE UP PSYDON'S MISSILES.") as anything in quivers
-						switch(ammochoice)
-							if("Grapeshot")
-								beltr = /obj/item/quiver/twilight_bullet/cannonball/grapeshot
-							if("Cannonballs")
-								beltr = /obj/item/quiver/twilight_bullet/cannonball/lead
-					if("Runelock Pistol")
-						belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
-						beltr = /obj/item/quiver/twilight_bullet/runed
-						l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock
-						backpack_contents = list(/obj/item/roguekey/inquisition = 1,
-						/obj/item/paper/inqslip/arrival/ortho = 1,
-						/obj/item/storage/belt/rogue/pouch/coins/mid = 1)
-				var/armors = list("Medium Armor", "Light Armor")
-				var/armor_choice = input(H, "Choose your ARMOR.", "TAKE UP PSYDON'S MANTLE.") as anything in armors
-				switch(armor_choice)
-					if("Medium Armor")
-						armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate
-						pants = /obj/item/clothing/under/roguetown/chainlegs
-						ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
-					if("Light Armor")
-						armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon
-						pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
-						ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
-
-				cloak = /obj/item/clothing/cloak/tabard/psydontabard
-				head = /obj/item/clothing/head/roguetown/helmet/kettle
-				wrists = /obj/item/clothing/neck/roguetown/psicross/silver
-				beltl = /obj/item/rogueweapon/scabbard/sword
-				r_hand = /obj/item/rogueweapon/sword/short/psy
-				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
-
-			if ("Otavan Volf")
-				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor
-				l_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra
-				head = /obj/item/clothing/head/roguetown/roguehood/psydon/confessor
-				wrists = /obj/item/clothing/neck/roguetown/psicross/silver
-				pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
+		var/weapons = list("Purgatory (Handcannon)", "Runelock Pistol")
+		var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
+		switch(weapon_choice)
+			if("Purgatory (Handcannon)")
+				belt = /obj/item/storage/belt/rogue/leather/black
+				l_hand = /obj/item/gun/ballistic/twilight_firearm/handgonne/purgatory
+				backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
+				/obj/item/paper/inqslip/arrival/ortho = 1,
+				/obj/item/twilight_powderflask/holyfyre = 1,
+				/obj/item/natural/bundle/fibers/full = 1,
+				/obj/item/storage/belt/rogue/pouch/coins/mid = 1)
+				var/quivers = list("Grapeshot", "Cannonballs")
+				var/ammochoice = input(H,"Choose your MUNITIONS.", "TAKE UP PSYDON'S MISSILES.") as anything in quivers
+				switch(ammochoice)
+					if("Grapeshot")
+						beltr = /obj/item/quiver/twilight_bullet/cannonball/grapeshot
+					if("Cannonballs")
+						beltr = /obj/item/quiver/twilight_bullet/cannonball/lead
+			if("Runelock Pistol")
 				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
-				beltr = /obj/item/quiver/twilight_bullet/lead_ten
-				beltl = /obj/item/rogueweapon/scabbard/sheath
-				r_hand = /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger
-				backpack_contents = list(/obj/item/roguekey/inquisition = 1,
-						/obj/item/paper/inqslip/arrival/ortho = 1,
-						/obj/item/twilight_powderflask/holyfyre = 1,
-						/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
-						/obj/item/inqarticles/garrote = 1)
-				H.adjust_skillrank_up_to(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
-				var/arcane = list("Shadow Step", "Fetch", "Invisible", "Blast", "Leap")
-				var/arcane_choice = input("TAKE YOUR RUNE", "PSYDON'S RUNE") as anything in arcane
-				switch(arcane_choice)
-					if("Shadow Step")
-						H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/shadowstep)
-					if("Fetch")
-						H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/fetch)
-					if("Invisible")
-						H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/invisibility)
-					if("Blast")
-						H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
-					if("Leap")
-						H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/leap)
+				beltr = /obj/item/quiver/twilight_bullet/runed
+				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock
+				backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
+				/obj/item/paper/inqslip/arrival/ortho = 1,
+				/obj/item/storage/belt/rogue/pouch/coins/mid = 1)
+		var/armors = list("Medium Armor", "Light Armor")
+		var/armor_choice = input(H, "Choose your ARMOR.", "TAKE UP PSYDON'S MANTLE.") as anything in armors
+		switch(armor_choice)
+			if("Medium Armor")
+				armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate
+				pants = /obj/item/clothing/under/roguetown/chainlegs
+				ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
+			if("Light Armor")
+				armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon
+				pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
+				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
+
+	beltl = /obj/item/rogueweapon/scabbard/sword
+	r_hand = /obj/item/rogueweapon/sword/short/psy
