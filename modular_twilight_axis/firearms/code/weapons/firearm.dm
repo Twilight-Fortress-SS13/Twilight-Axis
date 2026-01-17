@@ -124,7 +124,7 @@
 /obj/item/gun/ballistic/twilight_firearm
 	name = "Gunpowder weapon"
 	desc = "IF YOU ARE SEEING THIS. REPORT THIS TO A DEV. "
-	icon = 'modular_twilight_axis/firearms/icons/arquebus.dmi'
+	icon = 'modular_twilight_axis/firearms/icons/arquebus/arquebus.dmi'
 	icon_state = "arquebus"
 	item_state = "arquebus"
 	force = 10
@@ -168,7 +168,7 @@
 	var/load_time = 50
 	var/gunpowder
 	var/powder_per_reload = 1
-	var/locktype = "Wheellock"
+	var/locktype = "Matchlock"
 	var/match_delay = 10
 	var/effective_range = 5
 	var/obj/item/twilight_ramrod/myrod = null
@@ -194,7 +194,7 @@
 
 /obj/item/gun/ballistic/twilight_firearm/Initialize()
 	. = ..()
-	if(locktype == "Wheellock")
+	if(locktype == "Matchlock" || locktype == "Wheellock")
 		myrod = new /obj/item/twilight_ramrod(src)
 
 
@@ -227,7 +227,7 @@
 	if(user.get_active_held_item())
 		return
 	else
-		if(locktype == "Wheellock")
+		if(locktype == "Matchlock" || locktype == "Wheellock")
 			if(myrod)
 				playsound(src, "sound/items/sharpen_short1.ogg",  100, FALSE)
 				to_chat(user, "<span class='warning'>I draw the ramrod from [src]!</span>")
@@ -364,7 +364,7 @@
 					user.put_in_hands(E)
 			return
 	if(istype(A, /obj/item/twilight_ramrod))
-		if(locktype == "Wheellock")
+		if(locktype == "Matchlock" || locktype == "Wheellock")
 			var/obj/item/twilight_ramrod/R=A
 			if(!reloaded)
 				if(chambered)
@@ -401,7 +401,7 @@
 				return
 	if(istype(A, /obj/item/natural/bundle/fibers))
 		var/obj/item/natural/bundle/fibers/W = A
-		if(locktype == "Matchlock")
+		if(locktype == "Fuse")
 			if(!reloaded)
 				if(chambered)
 					user.visible_message("<span class='notice'>[user] begins attaching the fuse to [src].</span>")
@@ -417,7 +417,7 @@
 							icon = advanced_icon_r
 					return
 	if(istype(A, /obj/item/natural/fibers))
-		if(locktype == "Matchlock")
+		if(locktype == "Fuse")
 			if(!reloaded)
 				if(chambered)
 					user.visible_message("<span class='notice'>[user] begins attaching the fuse to [src].</span>")
@@ -479,9 +479,11 @@
 	. = ..()
 	switch(locktype)
 		if("Wheellock")
-			. += span_info("Это оружие оснащено колесцовым замком — оно не требует фитиля, но перед выстрелом пороховой заряд необходимо уплотнить шомполом.")
+			. += span_info("Это оружие оснащено колесцовым замком. Перед выстрелом нужно засыпать порох, установить пулю и уплотнить заряд шомполом.")
 		if("Matchlock")
-			. += span_info("Это оружие оснащено фитильным замком — чтобы его взвести, необходимо установить фитиль.")
+			. += span_info("Это оружие оснащено фитильным замком. Перед выстрелом нужно засыпать порох, установить пулю и уплотнить заряд шомполом.")
+		if("Fuse")
+			. += span_info("Это оружие приводится в действие запальным фитилем. Перед выстрелом нужно засыпать порох, установить пулю и сам фитиль.")
 	. += span_info("Прицельная дальность стрельбы: [effective_range]0 метров.")
 	if(gunpowder)
 		if(chambered)
@@ -530,7 +532,7 @@
 		else
 			icon = advanced_icon
 	spark_act()
-	if(locktype == "Wheellock")
+	if(locktype == "Matchlock" || locktype == "Wheellock")
 		..()
 		if(!silenced)
 			switch(gunpowder)
@@ -601,7 +603,7 @@
 					var/def_zone = "[(user.active_hand_index == 2) ? "r" : "l" ]_arm"
 					var/obj/item/bodypart/BP = user.get_bodypart(def_zone)
 					BP.add_wound(/datum/wound/dislocation)
-	else if(locktype == "Matchlock")
+	else if(locktype == "Fuse")
 		if(advanced_icon_f)
 			icon = advanced_icon_f
 		playsound(src, "modular_twilight_axis/firearms/sound/fuse.ogg", 100, FALSE)
@@ -699,31 +701,43 @@
 /obj/item/gun/ballistic/twilight_firearm/arquebus
 	name = "arquebus rifle"
 	desc = "Пороховое оружие второго поколения, стреляющее бронебойными свинцовыми пулями."
-	icon = 'modular_twilight_axis/firearms/icons/arquebus.dmi'
+	icon = 'modular_twilight_axis/firearms/icons/arquebus/arquebus.dmi'
 	icon_state = "arquebus"
 	item_state = "arquebus"
+	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/arquebus.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/arquebus_norod.dmi'
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet
 	name = "arquebus rifle"
 	desc = "Пороховое оружие второго поколения, стреляющее бронебойными свинцовыми пулями. Оснащена штыком для использования в ближнем бою."
-	icon = 'modular_twilight_axis/firearms/icons/arquebusbaoynet.dmi'
+	icon = 'modular_twilight_axis/firearms/icons/arquebus/arquebusbaoynet.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/arquebusbaoynet.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/arquebusbayonet_norod.dmi'
 	gripped_intents = list(/datum/intent/shoot/twilight_firearm, /datum/intent/arc/twilight_firearm, INTENT_GENERIC, /datum/intent/spear/thrust/militia)
 	wdefense = 5
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/decorated
 	name = "decorated arquebus rifle"
 	desc = "Настоящее произведение искусства в обличии огнестрельного оружия. Приклад и цевье аркебузы украшены золотыми пластинами и инкрустированным рубином, а на стволе выбита надпись: «Взгляните на мои деянья и дрожите»."
-	icon = 'modular_twilight_axis/firearms/icons/decorated_arquebus.dmi'
+	icon = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus_norod.dmi'
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle
 	name = "Jägerbüchse"
 	desc = "Редкая разновидность колесцовой аркебузы, изготавливаемая мастерами Грензельхофта для егерей Фрейкорпс, отличившихся в ходе боевых действий. Легче и менее подвержена износу в сравнении с серийными образцами."
-	icon = 'modular_twilight_axis/firearms/icons/jagerrifle.dmi'
+	icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle_norod.dmi'
+	locktype = "Wheellock"
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/jagerrifle
 	name = "Jägerbüchse"
 	desc = "Редкая разновидность колесцовой аркебузы, изготавливаемая мастерами Грензельхофта для егерей Фрейкорпс, отличившихся в ходе боевых действий. Легче и менее подвержена износу в сравнении с серийными образцами. Оснащена штыком для использования в ближнем бою."
-	icon = 'modular_twilight_axis/firearms/icons/jagerriflebayonet.dmi'
+	icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerriflebayonet.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerriflebayonet.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle_bayonet_norod.dmi'
+	locktype = "Wheellock"
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 	name = "arquebus pistol"
@@ -748,6 +762,7 @@
 	advanced_icon_r = 'modular_twilight_axis/firearms/icons/pistol/pistol_r.dmi'
 	advanced_icon_norod	= 'modular_twilight_axis/firearms/icons/pistol/pistol_norod.dmi'
 	advanced_icon_r_norod = 'modular_twilight_axis/firearms/icons/pistol/pistol_r_norod.dmi'
+	locktype = "Wheellock"
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/getonmobprop(tag)
 	. = ..()
@@ -778,7 +793,7 @@
 	item_state = "handgonne"
 	mag_type = /obj/item/ammo_box/magazine/internal/twilight_firearm/handgonne
 	cartridge_wording = "cannonball"
-	locktype = "Matchlock"
+	locktype = "Fuse"
 	advanced_icon = 'modular_twilight_axis/firearms/icons/handgonne/handgonne.dmi'
 	advanced_icon_r = 'modular_twilight_axis/firearms/icons/handgonne/handgonne_r.dmi'
 	advanced_icon_f	= 'modular_twilight_axis/firearms/icons/handgonne/handgonne_f.dmi'
@@ -860,7 +875,7 @@
 	icon_state = "barker"
 	item_state = "barker"
 	gripped_intents = list(/datum/intent/shoot/twilight_firearm/flintgonne, /datum/intent/arc/twilight_firearm/flintgonne, INTENT_GENERIC)
-	locktype = "Matchlock"
+	locktype = "Fuse"
 	smeltresult = /obj/item/ingot/iron
 	damfactor = 0.7
 	critfactor = 0.3

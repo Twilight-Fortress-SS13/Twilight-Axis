@@ -1,5 +1,6 @@
 /datum/sex_action/scissoring
 	name = "Ножницы"
+	intensity = 4
 
 /datum/sex_action/scissoring/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(user == target)

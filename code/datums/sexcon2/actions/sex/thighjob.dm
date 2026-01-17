@@ -1,5 +1,6 @@
 /datum/sex_action/sex/thighjob
 	name = "Помочь бедрами"
+	intensity = 3
 
 /datum/sex_action/sex/thighjob/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(user == target)

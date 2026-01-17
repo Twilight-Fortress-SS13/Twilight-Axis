@@ -5,7 +5,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/lord
 	beltl = /obj/item/twilight_powderflask
 	beltr = /obj/item/quiver/twilight_bullet/lead
-	backpack_contents += list(/obj/item/storage/keyring/sheriff)
+	backpack_contents += list(/obj/item/storage/keyring/marshal)
 
 /datum/outfit/job/roguetown/marshal/kcommander/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -14,4 +14,4 @@
 	belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/lord
 	beltl = /obj/item/twilight_powderflask
 	beltr = /obj/item/quiver/twilight_bullet/lead
-	backpack_contents += list(/obj/item/storage/keyring/sheriff)
+	backpack_contents += list(/obj/item/storage/keyring/marshal)

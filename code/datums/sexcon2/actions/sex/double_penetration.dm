@@ -1,6 +1,7 @@
 /datum/sex_action/sex/double_penetration
 	name = "Трахнуть обе дырки"
 	stamina_cost = 1.0
+	intensity = 4
 
 /datum/sex_action/sex/double_penetration/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(user == target)

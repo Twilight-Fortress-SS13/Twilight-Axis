@@ -68,7 +68,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/otavan/psygloves
 	id = /obj/item/clothing/ring/signet/silver
 	backpack_contents = list(
-		/obj/item/storage/keyring/puritan = 1,
+		/obj/item/storage/keyring/inquisitor = 1,
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger,
 		/obj/item/grapplinghook = 1,

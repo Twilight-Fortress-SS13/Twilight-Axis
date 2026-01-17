@@ -1,6 +1,7 @@
 /datum/sex_action/sex/anal
 	name = "Трахнуть в анал"
 	stamina_cost = 1.0
+	intensity = 4
 
 /datum/sex_action/sex/anal/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(user == target)

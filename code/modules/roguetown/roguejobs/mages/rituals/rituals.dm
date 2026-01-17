@@ -26,7 +26,7 @@
 
 /datum/runeritual/teleport
 	name = "planar convergence"
-	tier = 3
+	tier = 2
 	required_atoms = list(/obj/item/magic/artifact = 1, /obj/item/magic/leyline = 1, /obj/item/magic/melded/t2 = 1) //adjust this later
 
 /datum/runeritual/teleport/on_finished_recipe(mob/living/user, list/selected_atoms, turf/loc)
