@@ -449,7 +449,7 @@
 	if(is_spent())
 		if(arousal > 60)
 			to_chat(parent, span_warning("I'm too spent!"))
-			adjust_arousal(parent, -20)
+			adjust_arousal(parent, -arousal)
 			return
 		adjust_arousal(parent, -dt * SPENT_AROUSAL_RATE)
 
@@ -457,6 +457,9 @@
 
 /datum/component/arousal/is_spent()
 	var/mob/living/carbon/human/human_object = parent
+
+	if(charge < charge_for_climax)
+		return TRUE
 
 	if(istype(human_object))
 		var/obj/item/organ/penis/penis_item = human_object.getorganslot(ORGAN_SLOT_PENIS)
@@ -469,14 +472,6 @@
 				var/current = penis_object.total_volume()
 				if(current >= min_needed)
 					return FALSE
-
-				if(charge < charge_for_climax)
-					return TRUE
-
-				return FALSE
-
-	if(charge < charge_for_climax)
-		return TRUE
 
 	return FALSE
 
