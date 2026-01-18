@@ -530,3 +530,31 @@
 	if(!K)
 		K = AddComponent(/datum/component/kinks)
 	return K
+
+/datum/species/gnoll/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+	. = ..()
+
+	if(!ishuman(C))
+		return
+
+	var/mob/living/carbon/human/H = C
+
+	if(H.gender == MALE)
+		if(!H.getorganslot(ORGAN_SLOT_PENIS))
+			var/obj/item/organ/penis/knotted/P = new
+			P.Insert(H, TRUE, FALSE)
+
+		if(!H.getorganslot(ORGAN_SLOT_TESTICLES))
+			var/obj/item/organ/testicles/T = new
+			T.Insert(H, TRUE, FALSE)
+
+	if(H.gender == FEMALE)
+		if(!H.getorganslot(ORGAN_SLOT_VAGINA))
+			var/obj/item/organ/vagina/V = new
+			V.Insert(H, TRUE, FALSE)
+
+		if(!H.getorganslot(ORGAN_SLOT_BREASTS))
+			var/obj/item/organ/breasts/B = new
+			B.Insert(H, TRUE, FALSE)
+
+	H.update_body()
