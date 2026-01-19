@@ -90,7 +90,6 @@
 		SEND_SIGNAL(mob_object, COMSIG_SEX_ADJUST_AROUSAL, bonus)
 
 /datum/component/arousal/after_ejaculation(intimate = FALSE, mob/living/carbon/human/user, mob/living/carbon/human/target)
-	record_round_statistic(STATS_PLEASURES)
 	var/do_spread = !chain_orgasm_lock
 	chain_orgasm_lock = FALSE
 
@@ -141,6 +140,10 @@
 	var/datum/sex_action_session/highest_priority = null
 	var/best_score = -1
 
+	if(mob.has_flaw(/datum/charflaw/addiction/thrillseeker))
+		after_ejaculation(FALSE, mob, mob)
+		return
+		
 	for(var/datum/sex_session_tgui/session_element in parent_sessions)
 		if(QDELETED(session_element))
 			continue
@@ -179,11 +182,6 @@
 
 	var/mob/living/carbon/human/source = mob
 	var/mob/living/carbon/human/partner = null
-
-	if(mob.has_flaw(/datum/charflaw/addiction/thrillseeker))
-		after_ejaculation(FALSE, source, partner)
-		return
-
 	var/is_active = TRUE
 
 	if(session_object.actor == source)
@@ -586,7 +584,7 @@
 
 	return blocked
 
-/datum/component/arousal/adjust_arousal(datum/source, amount)
+/datum/component/arousal/adjust_arousal(datum/source, amount, forced = FALSE)
 	if(arousal_frozen)
 		return arousal
 
@@ -595,7 +593,7 @@
 	if(final_amount > 0)
 		final_amount *= arousal_multiplier
 
-	return set_arousal(source, arousal + final_amount)
+	return set_arousal(source, arousal + final_amount, forced)
 
 /datum/component/arousal/proc/is_in_sex_scene()
 	var/mob/living/carbon/human/human_object = parent
