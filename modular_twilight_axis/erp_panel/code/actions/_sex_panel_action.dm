@@ -430,14 +430,26 @@
 
 /datum/sex_panel_action/proc/do_liquid_injection(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/list/orgs = get_action_organs(user, target, FALSE, FALSE)
-	if(!orgs) return 0
+	if(!orgs)
+		return 0
 
-	var/datum/sex_organ/target_organ = orgs["target"]
-	if(!target_organ) return 0
+	var/datum/sex_organ/init_org = orgs["init"]
+	var/datum/sex_organ/targ_org = orgs["target"]
 
-	var/moved = target_organ.inject_liquid()
+	var/datum/sex_organ/source = null
+	if(init_org && init_org.has_storage() && init_org.producing_reagent_id)
+		source = init_org
+	if(targ_org && targ_org.has_storage() && targ_org.producing_reagent_id)
+		if(!source)
+			source = targ_org
+
+	if(!source)
+		return 0
+
+	var/moved = source.inject_liquid(null, user)
 	if(moved > 0)
 		handle_injection_feedback(user, target, moved)
+
 	return moved
 
 /datum/sex_panel_action/proc/handle_injection_feedback(mob/living/carbon/human/user, mob/living/carbon/human/target, moved)

@@ -329,6 +329,19 @@
 
 	return null
 
+/datum/sex_organ/proc/get_contacted_organs()
+	var/list/L = list()
+
+	if(active_target)
+		L += active_target
+
+	if(stuff_object && length(stuff_object))
+		for(var/datum/sex_organ/O in stuff_object)
+			if(O && O != active_target)
+				L += O
+
+	return L
+
 /datum/sex_organ/proc/inject_liquid(obj/item/container = null, mob/living/carbon/human/preferred_holder = null, list/blocked_containers = list())
 	if(block_drain)
 		return 0
@@ -343,14 +356,15 @@
 	var/moved = 0
 	var/mode = INJECT_MODE_NONE
 
-	if(active_target && active_target.has_storage())
-		if(active_target.can_receive_liquid(amount))
-			moved = stored_liquid.trans_to(active_target.stored_liquid, amount)
+	var/list/contacts = get_contacted_organs()
+	for(var/datum/sex_organ/O in contacts)
+		if(O && O.has_storage() && O.can_receive_liquid(amount))
+			moved = stored_liquid.trans_to(O.stored_liquid, amount)
 			if(moved > 0)
 				block_production(10 SECONDS)
-				active_target.renew_timer(drain_interval)
+				O.renew_timer(drain_interval)
 				mode = INJECT_MODE_ORGAN
-				on_after_inject(mode, moved, get_owner(), active_target, null, null)
+				on_after_inject(mode, moved, get_owner(), O, null, null)
 				return moved
 
 	if(container && is_valid_liquid_container(container) && !(container in blocked_containers))

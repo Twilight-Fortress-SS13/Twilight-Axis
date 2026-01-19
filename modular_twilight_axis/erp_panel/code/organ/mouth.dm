@@ -10,6 +10,17 @@
 
 	var/mob/living/carbon/human/H = get_owner()
 	if(!H) return
+/datum/sex_organ/mouth/process_org()
+	..()
+
+	var/mob/living/carbon/human/H = get_owner()
+	if(!H)
+		return
+
+	var/milk_amt = stored_liquid.get_reagent_amount(/datum/reagent/consumable/milk/erp)
+	if(milk_amt > 0)
+		stored_liquid.remove_reagent(/datum/reagent/consumable/milk/erp, milk_amt)
+		H.reagents.add_reagent(/datum/reagent/consumable/milk/erp, milk_amt)
 
 	if(has_liquid())
 		if(!H.has_status_effect(/datum/status_effect/mouth_full))
