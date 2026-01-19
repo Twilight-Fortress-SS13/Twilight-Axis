@@ -104,8 +104,27 @@
 	if(has_zone_grab && has_enough_grab)
 		return TRUE
 
-	if(!get_location_accessible(target, zone, skipundies = TRUE))
+	if(erp_clothing_allows_groin(target, zone))
+		return TRUE
+
+	if(!get_location_accessible(target, zone))
 		return FALSE
+
+	return TRUE
+
+/proc/erp_clothing_allows_groin(mob/living/carbon/human/target, zone)
+	if(!target)
+		return FALSE
+
+	if(zone != BODY_ZONE_PRECISE_GROIN)
+		return FALSE
+
+	for(var/obj/item/clothing/C in target.get_equipped_items(include_pockets = FALSE))
+		if(!zone2covered(zone, C.body_parts_covered))
+			continue
+
+		if(!C.is_bra)
+			return FALSE
 
 	return TRUE
 

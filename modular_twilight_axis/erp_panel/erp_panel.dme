@@ -124,12 +124,3 @@
 #include "code\actions\interaction\body\_body.dm"
 #include "code\actions\interaction\body\rubbing.dm"
 #include "code\actions\interaction\body\grinding.dm"
-// BEGIN_INTERNALS
-// END_INTERNALS
-// BEGIN_FILE_DIR
-#define FILE_DIR .
-// END_FILE_DIR
-// BEGIN_PREFERENCES
-// END_PREFERENCES
-// BEGIN_INCLUDE
-// END_INCLUDE
