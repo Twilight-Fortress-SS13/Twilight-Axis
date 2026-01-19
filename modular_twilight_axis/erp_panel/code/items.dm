@@ -39,7 +39,7 @@
 
 /obj/item/clothing/gloves/roguetown/leather/ponyhooves
 	name = "pony hooves"
-	desc = "leather gloves shaped into hooves, awkward for work and perfect for play."
+	desc = "Leather gloves shaped into hooves, awkward for work and perfect for play."
 	icon_state = "harms"
 	item_state = "harms"
 	armor = ARMOR_LEATHER
