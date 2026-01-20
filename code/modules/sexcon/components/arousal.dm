@@ -192,7 +192,7 @@
 
 /datum/component/arousal/proc/after_ejaculation_special(mob/living/parent)
 	parent.add_stress(/datum/stressevent/thrill)
-	if(prob(10))
+	if(prob(1))
 		parent.emote("groan", forced = TRUE)
 
 

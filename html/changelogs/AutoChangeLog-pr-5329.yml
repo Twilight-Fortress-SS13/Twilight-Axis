@@ -1,0 +1,4 @@
+author: "PatapoIIIa"
+delete-after: True
+changes:
+  - bugfix: "Punish Minion now targets only clan hierarchy subordinates again, with the original guard messaging restored."

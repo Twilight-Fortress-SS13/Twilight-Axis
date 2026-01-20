@@ -679,7 +679,7 @@ GLOBAL_LIST_INIT(averse_factions, list(
 	var/check_interval = 15 SECONDS
 	var/active_since
 	var/next_check = 0
-	var/check_range
+	var/check_range = 5
 
 /datum/charflaw/averse/flaw_on_life(mob/user)
 	if(is_active && world.time > next_check)
@@ -688,15 +688,20 @@ GLOBAL_LIST_INIT(averse_factions, list(
 			return
 		var/count = 0
 		for(var/mob/living/L in get_hearers_in_LOS(check_range, user, RECURSIVE_CONTENTS_CLIENT_MOBS))
-			if(L != user && L.stat != DEAD)
-				var/datum/job/J = SSjob.GetJob(L.job)
-				if(chosen_group & J.department_flag)
-					count++
-					if(count >= 2)
-						user.add_stress(/datum/stressevent/averse)
-					if(paid_triumphs)
-						triumph_refund(user)
+			if(check_aversion(user, L))
+				count++
+				if(count >= 2)
+					user.add_stress(/datum/stressevent/averse)
+				if(paid_triumphs)
+					triumph_refund(user)
 
+
+/datum/charflaw/averse/proc/check_aversion(mob/user, mob/target)
+	if(target != user && target.stat != DEAD)
+		var/datum/job/J = SSjob.GetJob(target.job)
+		if(chosen_group & J.department_flag)
+			return TRUE
+	return FALSE
 
 /datum/charflaw/averse/proc/triumph_refund(mob/user)
 	var/time_since = world.time - active_since
@@ -726,13 +731,13 @@ GLOBAL_LIST_INIT(averse_factions, list(
 /datum/charflaw/averse/proc/check_for_candidates(mob/user)
 	if(user.mind)
 		var/averse_found = FALSE
-		for(var/player in GLOB.player_list)
-			if(ishuman(player))
-				var/mob/living/L = player
-				var/datum/job/J = SSjob.GetJob(L.job)
-				if(chosen_group & J.department_flag)
-					averse_found = TRUE
-					break
+		for(var/mob/living/player in GLOB.player_list)
+			if(player != user)
+				if(ishuman(player))
+					var/datum/job/J = SSjob.GetJob(player.job)
+					if(chosen_group & J.department_flag)
+						averse_found = TRUE
+						break
 		if(!averse_found)
 			var/list/options = list("Pick a Random Aversion", "Keep Current (-3 TRI)")
 			var/choice = input(user, "There are no viable candidates for your Aversion. What do you do?", "AVERSION ALERT") as anything in options
