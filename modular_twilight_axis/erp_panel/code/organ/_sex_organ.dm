@@ -89,6 +89,9 @@
 	if(total <= 0)
 		return 0
 
+	if(is_currently_knotted())
+		return 0
+
 	var/factor = min(1, amount / total)
 	var/removed = 0
 	var/list/L = stored_liquid.reagent_list.Copy()
@@ -532,6 +535,22 @@
 /datum/sex_organ/proc/set_sensitivity(new_value, save = TRUE)
 	sensitivity = clamp(new_value, 0, sensitivity_max)
 	return sensitivity
+
+/datum/sex_organ/proc/is_currently_knotted()
+	var/mob/living/carbon/human/H = get_owner()
+	if(!istype(H) || QDELETED(H))
+		return FALSE
+
+	for(var/mob/living/carbon/human/M in GLOB.mob_list)
+		if(!ishuman(M) || QDELETED(M))
+			continue
+		var/datum/component/knotting/K = M.GetComponent(/datum/component/knotting)
+		if(!K)
+			continue
+		if(K.knotted_status == KNOTTED_AS_TOP && K.knotted_recipient == H && K.knotted_receiving_org == src)
+			return TRUE
+
+	return FALSE
 
 #undef SEX_PAIN_MAX
 #undef BREAST_SPENT_PROD_MULT

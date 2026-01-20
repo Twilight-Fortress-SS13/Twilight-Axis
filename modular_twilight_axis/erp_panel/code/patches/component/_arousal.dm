@@ -316,7 +316,7 @@
 	var/do_damage = (applied_force == SEX_FORCE_HIGH || applied_force == SEX_FORCE_EXTREME)
 
 	if(do_damage && final_pain > 0)
-		damage_from_pain(final_pain, organ_id)
+		damage_from_pain(final_pain, organ_id, do_damage)
 
 	if(final_pain > 0)
 		accumulated_pain_for_vice += final_pain

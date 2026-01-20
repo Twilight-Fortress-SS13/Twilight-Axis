@@ -1,6 +1,8 @@
 /datum/component/knotting
 	var/movement_timer_id
 	var/movement_signals_registered = FALSE
+	var/datum/sex_organ/knotted_receiving_org
+
 /datum/component/knotting/should_remove_knot_on_movement(mob/living/carbon/human/top, mob/living/carbon/human/btm)
 	var/list/arousal_data = list()
 	SEND_SIGNAL(top, COMSIG_SEX_GET_AROUSAL, arousal_data)
@@ -167,13 +169,10 @@
 /datum/component/knotting/apply_knot(mob/living/carbon/human/user, mob/living/carbon/human/target, force_level, knot_count_param = 1)
 	knotted_owner = user
 	knotted_recipient = target
+	knotted_receiving_org = resolve_receiving_org(user, target)
 	knotted_status = KNOTTED_AS_TOP
 	tugging_knot_blocked = FALSE
 	knot_count = knot_count_param
-
-	for(var/obj/item/organ/O in target.internal_organs)
-		if(O.sex_organ && (O.sex_organ.organ_type in list(SEX_ORGAN_VAGINA, SEX_ORGAN_ANUS, SEX_ORGAN_MOUTH)))
-			O.sex_organ.block_drain = TRUE
 
 	handle_knot_force_effects(user, target, force_level)
 	var/knot_plural = knot_count > 1 ? "s" : ""
@@ -218,13 +217,15 @@
 
 	if(istype(btm))
 		if(!keep_btm_status)
-			btm.remove_status_effect(/datum/status_effect/knot_tied)
+			if(!has_other_active_knots(btm))
+				btm.remove_status_effect(/datum/status_effect/knot_tied)
 		UnregisterSignal(btm, COMSIG_MOVABLE_MOVED)
 		log_combat(btm, btm, "Stopped knot tugging")
 
 	knotted_owner = null
 	knotted_recipient = null
 	knotted_status = KNOTTED_NULL
+	knotted_receiving_org = null
 	knot_count = 0
 
 /datum/component/knotting/handle_existing_knots(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -235,14 +236,43 @@
 		var/user_was_top = (knotted_status == KNOTTED_AS_TOP)
 		var/user_was_bottom = (knotted_status == KNOTTED_AS_BTM)
 		knot_remove(keep_btm_status = user_was_bottom, keep_top_status = user_was_top)
+
 		if(user_was_top && !target.has_status_effect(/datum/status_effect/knot_fucked_stupid))
 			target.apply_status_effect(/datum/status_effect/knot_fucked_stupid)
 			to_chat(target, span_userdanger("You can't think straight!"))
 
-	var/mob/living/carbon/human/other_knotter = find_knotter_for_target(target)
-	if(other_knotter && other_knotter != user)
-		var/datum/component/knotting/other_knot = other_knotter.GetComponent(/datum/component/knotting)
-		if(other_knot?.knotted_recipient == target)
-			other_knot.knot_remove(forceful_removal = TRUE)
-			if(other_knot.knotted_status == KNOTTED_AS_BTM && !target.has_status_effect(/datum/status_effect/knot_fucked_stupid))
-				target.apply_status_effect(/datum/status_effect/knot_fucked_stupid)
+	return
+
+/datum/component/knotting/proc/has_other_active_knots(mob/living/carbon/human/btm)
+	if(!istype(btm))
+		return FALSE
+
+	for(var/mob/living/carbon/human/H in GLOB.mob_list)
+		if(!ishuman(H) || QDELETED(H))
+			continue
+		var/datum/component/knotting/K = H.GetComponent(/datum/component/knotting)
+		if(!K || K == src)
+			continue
+		if(K.knotted_status == KNOTTED_AS_TOP && K.knotted_recipient == btm)
+			return TRUE
+
+	return FALSE
+
+/datum/component/knotting/proc/resolve_receiving_org(mob/living/carbon/human/top, mob/living/carbon/human/btm)
+	if(!istype(top) || !istype(btm))
+		return null
+
+	var/obj/item/organ/penis/penis_item = top.getorganslot(ORGAN_SLOT_PENIS)
+	var/datum/sex_organ/penis/penis_object = penis_item ? penis_item.sex_organ : null
+	if(!penis_object)
+		return null
+
+	var/datum/sex_organ/target_org = penis_object.active_target
+	if(!target_org)
+		return null
+
+	var/mob/living/carbon/human/real_owner = target_org.get_owner()
+	if(real_owner != btm)
+		return null
+
+	return target_org
