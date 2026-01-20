@@ -84,7 +84,7 @@
 			target_y = oldy-1
 			animate(target, pixel_y = target_y, time = time)
 			animate(pixel_y = oldy, time = time)
-		//sex_session.bed.damage_bed(average_force > SEX_FORCE_HIGH ? 0.5 : 0.25)
+		sex_session.bed.damage_bed(average_force > SEX_FORCE_HIGH ? 0.5 : 0.25)
 	//TA add end - new ERP SYSTEM
 
 /mob/living/proc/start_sex_session(mob/living/target)
