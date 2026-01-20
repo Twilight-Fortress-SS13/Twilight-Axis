@@ -328,10 +328,10 @@
 	return istype(P.source_part, /obj/item/bodypart/head/dullahan)
 
 /mob/living/carbon/human/proc/is_erp_defiant_in_combat()
-	if(cmode && defiant)
-		return TRUE
+	return defiant && cmode
 
-	return FALSE
+/mob/living/carbon/human/proc/is_erp_defiant()
+	return defiant
 
 /mob/living/carbon/human/proc/has_erp_leprosy()
 	if(HAS_TRAIT(src, TRAIT_LEPROSY))

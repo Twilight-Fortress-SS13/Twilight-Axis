@@ -139,7 +139,7 @@
 	if(D.reagent_flags & REAGENT_FLAG_ERP_SENSITIVE)
 		if(ishuman(my_atom))
 			var/mob/living/carbon/human/H = my_atom
-			if(H.is_erp_defiant_in_combat())
+			if(H.is_erp_defiant())
 				to_chat(H, span_warning("Я не могу проглотить это сейчас."))
 				return FALSE
 	update_total()
@@ -204,7 +204,7 @@
 		return FALSE
 	if(ishuman(eater))
 		var/mob/living/carbon/human/H0 = eater
-		if(H0.is_erp_defiant_in_combat() && src.is_erp_sensitive_payload())
+		if(H0.is_erp_defiant() && src.is_erp_sensitive_payload())
 			if(!silent)
 				to_chat(user ? user : eater, span_warning("Сейчас нельзя употреблять это."))
 			return FALSE
