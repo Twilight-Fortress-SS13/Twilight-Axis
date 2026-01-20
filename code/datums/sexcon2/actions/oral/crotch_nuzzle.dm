@@ -1,6 +1,7 @@
 /datum/sex_action/crotch_nuzzle
 	name = "Прижаться к паху"
 	intensity = 2
+	flipped = TRUE
 
 /datum/sex_action/crotch_nuzzle/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(user == target)

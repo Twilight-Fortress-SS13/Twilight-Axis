@@ -997,6 +997,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donator_ryan/psy_helm
 	name = "Donator Kit - Unorthodoxist Psydonite Helm - Required: Psydonic Helmet(Armet,Barbute,Bucket Helmet or Sallet)"
 	path = /obj/item/enchantingkit/ryan_psyhelm
+
+/datum/loadout_item/donator_koruu/hat
+	name = "Donator Kit - Well-Worn Bamboo Hat"
+	path = /obj/item/clothing/head/roguetown/mentorhat/koruu
 	category = list("Разное", "Донат")
 	donatitem = TRUE
 

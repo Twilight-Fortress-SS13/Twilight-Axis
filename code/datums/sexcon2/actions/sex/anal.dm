@@ -37,7 +37,7 @@
 	var/is_knotting = sex_session.do_knot_action
 	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [is_knotting ? "долбит по самый узел задницу [target]" : "трахает [target] прямо в попу"]."))
 	playsound(target, sex_session.get_force_sound(), 50, TRUE, -2, ignore_walls = FALSE)
-	do_thrust_animate(user, target)
+	do_thrust_animate(user, target, sex_session)
 
 	do_onomatopoeia(user)
 
@@ -86,7 +86,7 @@
 	var/is_knotting = sex_session.do_knot_action
 	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [is_knotting ? "трахает попку [target] двумя членами разом по самый узел" : "трахает попку [target] двумя членами разом"]."))
 	playsound(target, sex_session.get_force_sound(), 50, TRUE, -2, ignore_walls = FALSE)
-	do_thrust_animate(user, target)
+	do_thrust_animate(user, target, sex_session)
 
 	do_onomatopoeia(user)
 

@@ -38,7 +38,7 @@
 	var/verbstring = pick(list("трется", "ерзает", "виляет"))
 	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [verbstring] своим задом на лице [target]."))
 	target.make_sucking_noise()
-	do_thrust_animate(user, target)
+	do_thrust_animate(user, target, sex_session)
 
 	sex_session.perform_sex_action(user, 1, 3, TRUE)
 	sex_session.handle_passive_ejaculation()

@@ -1,6 +1,7 @@
 /datum/sex_action/suck_balls
 	name = "Вылизать яйца"
 	intensity = 3
+	flipped = TRUE
 
 /datum/sex_action/suck_balls/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(user == target)

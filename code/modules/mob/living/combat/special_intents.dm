@@ -1080,15 +1080,18 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 	
 	howner.OffBalance(self_immob_dur)
 	howner.Immobilize(self_immob_dur)
-	animate(howner, pixel_z = pixel_z - 4, time = 3) // windup
 	dam = initial(dam)
 	playsound(howner, 'sound/combat/ground_smash_start.ogg', 100, TRUE)
+	if(HAS_TRAIT(howner, TRAIT_BIGGUY))
+		return // windup
+	else
+		animate(howner, pixel_z = pixel_z - 4, time = 3)
+	
 
 /datum/special_intent/upper_cut/apply_hit(turf/T)
 
-	animate(howner, pixel_z = pixel_z + 12, time = 2) //shoryuken
-	animate(pixel_z = prev_pixel_z, transform = turn(transform, pick(-12, 0, 12)), time=2)
-	animate(transform = prev_transform, time = 0)
+
+	
 
 	for(var/mob/living/L in get_hearers_in_view(0, T))
 		if(L != howner)
@@ -1108,4 +1111,11 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 			L.safe_throw_at(throwtarget, throwdist, 1, howner, force = MOVE_FORCE_EXTREMELY_STRONG) // small pushback and 50 damage on non exposed
 			
 			playsound(howner, 'sound/combat/hits/punch/punch_hard (2).ogg', 100, TRUE)
+	if(HAS_TRAIT(howner, TRAIT_BIGGUY))
+		return
+	else
+		animate(howner, pixel_z = pixel_z + 12, time = 2) //shoryuken
+		animate(pixel_z = prev_pixel_z, transform = turn(transform, pick(-12, 0, 12)), time=2)
+		animate(transform = prev_transform, time = 0)
+
 	..()

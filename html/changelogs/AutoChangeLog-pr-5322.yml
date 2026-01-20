@@ -1,0 +1,4 @@
+author: "RandomGooberCoder"
+delete-after: True
+changes:
+  - rscadd: "Bed interactions for the infamous verb panel. Beds now creak and take damage during action. Be careful, as too much action can cause the bed to break."

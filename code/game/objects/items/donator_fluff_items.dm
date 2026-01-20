@@ -260,3 +260,9 @@
 	icon_state = "ryan_maimedhelm"
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes64.dmi'
+
+//koruu
+/obj/item/clothing/head/roguetown/mentorhat/koruu
+	name = "well-worn bamboo hat"
+	desc = "A bamboo hat, made from shaven rice straw and woven into place alongside a coating of lacquer. This particular hat seems worn with age, yet well maintained. The phrase, '葉隠' can be seen stitched in gold in the inner lining of the hat."
+	armor = ARMOR_CLOTHING
