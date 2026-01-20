@@ -562,7 +562,7 @@
 		playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
 
 	if(actor_do_thrust && user)
-		do_thrust_animate(user, target)
+		do_thrust_animate(user, target, sex_session = C?.link?.session)
 
 	if(target && target_do_onomatopoeia)
 		do_onomatopoeia(target)
@@ -580,7 +580,7 @@
 		playsound(target, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
 
 	if(target && target_do_thrust)
-		do_thrust_animate(target, user)
+		do_thrust_animate(target, user, sex_session = C?.link?.session)
 
 /datum/sex_panel_action/proc/apply_conditional_block(text, regex/regex_obj, flag)
 	if(!text)

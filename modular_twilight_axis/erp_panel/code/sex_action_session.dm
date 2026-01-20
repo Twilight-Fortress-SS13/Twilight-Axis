@@ -140,6 +140,7 @@
 	session.sync_arousal_ui()
 	SStgui.update_uis(session)
 	next_tick_time = world.time + do_time
+	session.find_bed()
 
 /datum/sex_action_session/proc/apply_arousal_delta(self_delta, partner_delta, self_pain_delta, partner_pain_delta)
 	if(self_delta <= 0 && partner_delta <= 0 && self_pain_delta <= 0 && partner_pain_delta <= 0)

@@ -8,7 +8,7 @@
 			grabstate = l_grab.grab_state
 	return grabstate
 
-/proc/do_thrust_animate(atom/movable/user, atom/movable/target, pixels = 4, time = 2.7)
+/proc/do_thrust_animate(atom/movable/user, atom/movable/target, pixels = 4, time = 2.7, datum/sex_session_tgui/sex_session) //TA edit - new ERP SYSTEM
 	var/oldx = user.pixel_x
 	var/oldy = user.pixel_y
 	var/target_x = oldx
@@ -36,6 +36,40 @@
 	// thirty five yils without a jinglejob...
 	SEND_SIGNAL(user, COMSIG_SEX_JOSTLE, target)
 	SEND_SIGNAL(target, COMSIG_SEX_JOSTLE, user)
+
+	//TA add start - new ERP SYSTEM
+	var/total_force = 0
+	var/count = 0
+
+	for(var/id in sex_session.current_actions)
+		var/datum/sex_action_session/A = sex_session.current_actions[id]
+		if(!A || QDELETED(A))
+			continue
+		if(!A.action_proto)
+			continue
+		if(A.session.user != user && A.session.target != target)
+			continue
+		total_force += A.force
+		count++
+
+	var/average_force = (count > 0) ? (total_force / count) : 1.0
+	if(sex_session?.bed && average_force > SEX_FORCE_MID)
+		if(QDELETED(sex_session.bed))
+			sex_session.find_bed()
+		if(QDELETED(sex_session.bed))
+			return
+		oldy = sex_session.bed.pixel_y
+		target_y = oldy-1
+		time /= 2
+		animate(sex_session.bed, pixel_y = target_y, time = time)
+		animate(pixel_y = oldy, time = time)
+		if(sex_session.target_on_bed && target)
+			oldy = target.pixel_y
+			target_y = oldy-1
+			animate(target, pixel_y = target_y, time = time)
+			animate(pixel_y = oldy, time = time)
+		//sex_session.bed.damage_bed(average_force > SEX_FORCE_HIGH ? 0.5 : 0.25)
+	//TA add end - new ERP SYSTEM
 
 /mob/living/proc/start_sex_session(mob/living/target)
 	if(!target)

@@ -55,6 +55,9 @@
 
 	var/next_actions_time = 0
 
+	var/obj/structure/bed/rogue/bed = null
+	var/target_on_bed = FALSE
+
 /datum/sex_session_tgui/New(mob/living/carbon/human/U, mob/living/carbon/human/T)
 	. = ..()
 	if(U)
@@ -92,6 +95,7 @@
 		UnregisterSignal(target, list(COMSIG_SEX_AROUSAL_CHANGED, COMSIG_MOVABLE_MOVED))
 
 	partner_bodypart_override = null
+	bed = null
 
 	for(var/id in current_actions)
 		var/datum/sex_action_session/I = current_actions[id]
@@ -105,6 +109,23 @@
 	partners.Cut()
 	LAZYREMOVE(GLOB.sex_sessions, src)
 	return ..()
+
+/datum/sex_session_tgui/proc/find_bed()
+	if(bed)
+		if(target.loc == bed.loc)
+			target_on_bed = TRUE
+		else
+			target_on_bed = FALSE
+		return
+	if(target && !(target.mobility_flags & MOBILITY_STAND) && isturf(target.loc))
+		bed = locate(/obj/structure/bed/rogue) in target.loc
+		target_on_bed = TRUE
+	if(!bed && !(user.mobility_flags & MOBILITY_STAND) && isturf(user.loc))
+		bed = locate(/obj/structure/bed/rogue) in user.loc
+		target_on_bed = FALSE
+
+	if(!bed)
+		target_on_bed = FALSE
 
 /datum/sex_session_tgui/proc/update_knotted_penis_flag()
 	has_knotted_penis = FALSE
@@ -1056,6 +1077,7 @@
 	dirty_actions = TRUE
 	dirty_links = TRUE
 	dirty_org_nodes = TRUE
+	bed = null
 
 /datum/sex_session_tgui/proc/stop_instance(id)
 	var/datum/sex_action_session/I = current_actions[id]
@@ -1084,6 +1106,7 @@
 		stop_broadcast_loop()
 
 	SStgui.update_uis(src)
+	bed = null
 
 /datum/sex_session_tgui/proc/sync_arousal_ui()
 	var/list/ad_user = list()
@@ -1550,6 +1573,8 @@
 
 	if(moved_breaks_any)
 		to_chat(H, span_notice("Движение прерывает часть интимных действий."))
+
+	find_bed()
 
 /proc/get_or_create_sex_session_tgui(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	return get_or_create_sex_session_tgui_with_bodypart(user, target, null)
