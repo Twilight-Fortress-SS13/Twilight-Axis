@@ -32,6 +32,7 @@
 
 /datum/outfit/job/roguetown/mercenary/seonjang/pre_equip(mob/living/carbon/human/H)
 	..()
+	shoes = /obj/item/clothing/shoes/roguetown/armor/rumaclan
 	belt = /obj/item/storage/belt/rogue/leather
 	beltr = /obj/item/rogueweapon/sword/sabre/mulyeog/rumacaptain
 	beltl = /obj/item/rogueweapon/scabbard/sword/kazengun/gold
@@ -57,7 +58,6 @@
 		head = /obj/item/clothing/head/roguetown/eaststrawhat
 		armor = /obj/item/clothing/suit/roguetown/armor/basiceast/captainrobe
 		shirt = /obj/item/clothing/suit/roguetown/armor/regenerating/easttats
-	H.merctype = 9
 		gloves = /obj/item/clothing/gloves/roguetown/eastgloves2
 		cloak = /obj/item/clothing/cloak/eastcloak1
-		shoes = /obj/item/clothing/shoes/roguetown/armor/rumaclan
+	H.merctype = 9
