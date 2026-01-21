@@ -310,6 +310,10 @@
 		if(K)
 			arousal_amt *= K.get_arousal_multiplier(H, P, giving, applied_force, applied_speed, organ_id)
 
+	var/datum/component/relationships/R = user.GetComponent(/datum/component/relationships)
+	if(R)
+		arousal_amt *= R.get_sex_multiplier(source)
+
 	if(!arousal_frozen)
 		adjust_arousal(source, arousal_amt)
 
@@ -494,6 +498,13 @@
 					if(actual_loss > 0)
 						adjust_arousal(parent, -actual_loss)
 					return
+
+	var/datum/component/relationships/R = parent.GetComponent(/datum/component/relationships)
+	if(R)
+		var/min_obs = R.get_observe_min()
+		if(min_obs > 0 && arousal < min_obs && !(is_in_sex_scene()))
+			new /obj/effect/temp_visual/heart/sex_effects(get_turf(parent))
+			set_arousal(parent, min_obs, TRUE)
 
 	if(!can_lose_arousal())
 		return

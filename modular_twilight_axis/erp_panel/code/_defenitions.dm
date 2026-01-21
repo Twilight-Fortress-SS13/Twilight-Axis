@@ -7,6 +7,8 @@
 #define SEX_ORGAN_VAGINA (1<<6)
 #define SEX_ORGAN_PENIS (1<<7)
 
+#define REL_LOVE_POTION (1<<0)
+
 #define SEX_POSE_BOTH_STANDING "both_standing"
 #define SEX_POSE_USER_LYING    "user_lying"
 #define SEX_POSE_TARGET_LYING  "target_lying"
@@ -66,6 +68,12 @@ GLOBAL_LIST_INIT(sex_panel_actions, build_sex_panel_actions())
 GLOBAL_LIST_INIT(erp_proxies_by_part, list())
 GLOBAL_LIST_INIT(sex_node_defs, build_sex_node_defs())
 GLOBAL_LIST_INIT(available_kinks, generate_kink_list())
+GLOBAL_LIST_INIT(relationship_settings, list(
+	REL_LOVE_POTION = list(
+		"sex_mult" = 0.6,
+		"observe_min" = 20
+	)
+))
 
 #define SEX_PANEL_ACTION(sex_action_type) (GLOB.sex_panel_actions[sex_action_type])
 

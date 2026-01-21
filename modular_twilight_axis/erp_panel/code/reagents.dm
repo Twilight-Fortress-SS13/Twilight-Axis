@@ -362,4 +362,78 @@
 		update_icon()
 	return TRUE
 
+#define LOVE_POTION_DURATION (48 MINUTES)
+
+/datum/reagent/consumable/love_potion
+	name = "Love Potion"
+	reagent_flags = REAGENT_FLAG_ERP_SENSITIVE
+	metabolizing = TRUE
+
+/datum/reagent/consumable/love_potion/on_mob_add(mob/living/carbon/human/H)
+	. = ..()
+	if(!H)
+		return
+
+	var/datum/component/relationships/R = H.GetComponent(/datum/component/relationships)
+	if(!R)
+		R = H.AddComponent(/datum/component/relationships)
+
+	var/mob/living/carbon/human/target
+	var/best_dist = 100
+
+	for(var/mob/living/carbon/human/M in view(7, H))
+		if(M == H)
+			continue
+		var/d = get_dist(H, M)
+		if(d < best_dist)
+			best_dist = d
+			target = M
+
+	if(!target)
+		return
+
+	if(R.has_relation(target, REL_LOVE_POTION))
+		R.remove_relation(target, REL_LOVE_POTION)
+		H.remove_status_effect(/datum/status_effect/love_potion)
+		return
+
+	R.add_relation(target, REL_LOVE_POTION)
+	var/datum/status_effect/love_potion/SE = H.has_status_effect(/datum/status_effect/love_potion)
+	if(!SE)
+		SE = H.apply_status_effect(/datum/status_effect/love_potion)
+	if(SE)
+		SE.set_target(target)
+
+	addtimer(CALLBACK(R, /datum/component/relationships/proc/remove_relation, target, REL_LOVE_POTION), LOVE_POTION_DURATION)
+
+/obj/item/reagent_containers/glass/bottle/alchemical/love_potion
+	name = "love potion"
+	desc = "A shimmering draught sealed in glass."
+	volume = 30
+
+/obj/item/reagent_containers/glass/bottle/alchemical/love_potion/Initialize(mapload)
+	. = ..()
+	if(reagents)
+		reagents.add_reagent(/datum/reagent/consumable/love_potion, 30)
+
+/datum/crafting_recipe/roguetown/alchemy/love_potion
+	name = "love potion"
+	category = "Transmutation"
+	result = list(/obj/item/reagent_containers/glass/bottle/alchemical/love_potion = 1)
+
+	reqs = list(
+		/obj/item/reagent_containers/glass/bottle/alchemical = 1,
+		/obj/item/roguegem/ruby = 1,
+		/obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals = 3,
+		/obj/item/reagent_containers/food/snacks/rogue/honey = 2,
+		/obj/item/natural/head/troll = 1,
+		/datum/reagent/consumable/ethanol/beer/emberwine = 30,
+	)
+
+	craftdiff = 6
+
+/datum/reagent/consumable/ethanol/beer/emberwine
+	reagent_flags = REAGENT_FLAG_ERP_SENSITIVE
+
+#undef LOVE_POTION_DURATION
 #undef REAGENT_FLAG_ERP_SENSITIVE

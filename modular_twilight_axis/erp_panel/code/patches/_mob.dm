@@ -331,7 +331,7 @@
 	return defiant && cmode
 
 /mob/living/carbon/human/proc/is_erp_defiant()
-	return defiant
+	return defiant && client.prefs.sexable
 
 /mob/living/carbon/human/proc/has_erp_leprosy()
 	if(HAS_TRAIT(src, TRAIT_LEPROSY))
