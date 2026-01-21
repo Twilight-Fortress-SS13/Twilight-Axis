@@ -56,7 +56,7 @@
 		A.desc = "Вы чувствуете непреодолимую тягу к [target]."
 
 /atom/movable/screen/alert/status_effect/love_potion
-	name = "Любовная лихорадка"
+	name = "love sickness"
 	desc = "Непреодолимая тяга к тому, кого вы любите."
 
 
