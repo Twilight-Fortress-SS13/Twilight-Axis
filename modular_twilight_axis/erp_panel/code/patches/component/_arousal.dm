@@ -93,6 +93,16 @@
 	var/do_spread = !chain_orgasm_lock
 	chain_orgasm_lock = FALSE
 
+	if(user.has_flaw(/datum/charflaw/addiction/thrillseeker))
+		var/datum/charflaw/addiction/thrill = user.get_flaw(/datum/charflaw/addiction/thrillseeker)
+		user.playsound_local(user, 'sound/misc/mat/end.ogg', 100)
+		last_ejaculation_time = world.time
+		if(!thrill.sated)
+			user.add_stress(/datum/stressevent/thrillsex)
+		if(prob(10))
+			user.emote("groan", forced = TRUE)
+		return
+
 	if(do_spread)
 		spread_climax_to_partners(user)
 
@@ -113,15 +123,7 @@
 		if(user == target)
 			var/datum/charflaw/addiction/lovefiend/link_flaw = user.get_flaw()
 			if(link_flaw)
-				link_flaw.time = rand(24 MINUTES, 48 MINUTES)
-
-	if(user.has_flaw(/datum/charflaw/addiction/thrillseeker))
-		var/datum/charflaw/addiction/thrill = user.get_flaw(/datum/charflaw/addiction/thrillseeker)
-		user.playsound_local(user, 'sound/misc/mat/end.ogg', 100)
-		last_ejaculation_time = world.time
-		if(!thrill.sated)
-			user.add_stress(/datum/stressevent/thrillsex)
-		return	
+				link_flaw.time = rand(24 MINUTES, 48 MINUTES)	
 
 	if(last_moan + MOAN_COOLDOWN < world.time)
 		user.emote("moan", forced = TRUE)
