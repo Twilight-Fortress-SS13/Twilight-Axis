@@ -59,6 +59,7 @@ SUBSYSTEM_DEF(outdoor_effects)
 	                                                   new /datum/time_of_day/sunset(),
 	                                                   new /datum/time_of_day/dusk(),
 	                                                   new /datum/time_of_day/midnight())
+	var/alist/turf_weather_affectable_z_levels = alist()
 	var/next_day = FALSE // Resets when station_time is less than the next start time.
 
 /datum/controller/subsystem/outdoor_effects/proc/fullPlonk()
@@ -68,6 +69,10 @@ SUBSYSTEM_DEF(outdoor_effects)
 
 /datum/controller/subsystem/outdoor_effects/Initialize(timeofday)
 	if(!initialized)
+		for(var/zlevel in SSmapping.levels_by_trait(ZTRAIT_WEATHER_STUFF))
+			if(SSmapping.level_trait(zlevel, ZTRAIT_IGNORE_WEATHER_TRAIT))
+				continue
+			turf_weather_affectable_z_levels[zlevel] = TRUE
 		get_time_of_day()
 		InitializeTurfs()
 		initialized = TRUE
@@ -79,10 +84,14 @@ SUBSYSTEM_DEF(outdoor_effects)
 	return ..()
 
 /datum/controller/subsystem/outdoor_effects/proc/InitializeTurfs(list/targets)
-	for (var/z in SSmapping.levels_by_trait(ZTRAIT_STATION))
-		for (var/turf/T in block(locate(1,1,z), locate(world.maxx,world.maxy,z)))
-			GLOB.SUNLIGHT_QUEUE_WORK += T
-
+	for(var/z in SSmapping.levels_by_trait(ZTRAIT_STATION))
+		if(SSmapping.level_trait(z, ZTRAIT_IGNORE_WEATHER_TRAIT))
+			continue
+		GLOB.SUNLIGHT_QUEUE_WORK += Z_TURFS(z)
+	for(var/z in SSmapping.levels_by_trait(ZTRAIT_CENTCOM))
+		if(SSmapping.level_trait(z, ZTRAIT_IGNORE_WEATHER_TRAIT))
+			continue
+		GLOB.SUNLIGHT_QUEUE_WORK += Z_TURFS(z)
 
 /datum/controller/subsystem/outdoor_effects/proc/check_cycle()
 	if(!next_step_datum)
@@ -156,7 +165,7 @@ SUBSYSTEM_DEF(outdoor_effects)
 	for (i in 1 to GLOB.SUNLIGHT_QUEUE_WORK.len)
 		var/turf/T = GLOB.SUNLIGHT_QUEUE_WORK[i]
 		if(T)
-			T.get_sky_and_weather_states()
+			T.update_sky_and_weather_states()
 			if(T.outdoor_effect)
 				GLOB.SUNLIGHT_QUEUE_UPDATE += T.outdoor_effect
 
@@ -192,12 +201,13 @@ SUBSYSTEM_DEF(outdoor_effects)
 
 	for (i in 1 to GLOB.SUNLIGHT_QUEUE_CORNER.len)
 		var/turf/T = GLOB.SUNLIGHT_QUEUE_CORNER[i]
+		T.turf_flags &= ~TURF_SUNLIGHT_QUEUED
 		var/atom/movable/outdoor_effect/U = T.outdoor_effect
 
 		/* if we haven't initialized but we are affected, create new and check state */
 		if(!U)
 			T.outdoor_effect = new /atom/movable/outdoor_effect(T)
-			T.get_sky_and_weather_states()
+			T.update_sky_and_weather_states()
 			U = T.outdoor_effect
 
 			/* in case we aren't indoor somehow, wack us into the proc queue, we will be skipped on next indoor check */

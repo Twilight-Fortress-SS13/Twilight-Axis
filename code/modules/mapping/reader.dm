@@ -895,9 +895,24 @@ GLOBAL_LIST_EMPTY(map_model_default)
 	// Note, this would actually drop area vvs in the tile, but like, why tho
 	if(!crds)
 		return
+	// ==== HARD GUARDS ====
+	if(!islist(model))
+		return
+	if(model.len < 2)
+		return
+	if(!islist(model[1]) || !islist(model[2]))
+		return
+	
 	var/index
 	var/list/members = model[1]
 	var/list/members_attributes = model[2]
+	if(!members || !members_attributes)
+		return
+	if(members.len < 2)
+		return
+
+	if(!islist(members) || !islist(members_attributes))
+		return
 
 	// We use static lists here because it's cheaper then passing them around
 	var/static/list/default_list = GLOB.map_model_default

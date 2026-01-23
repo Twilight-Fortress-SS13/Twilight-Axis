@@ -30,62 +30,88 @@ SUBSYSTEM_DEF(lighting)
 
 /datum/controller/subsystem/lighting/fire(resumed, init_tick_checks)
 	MC_SPLIT_TICK_INIT(3)
+
+	var/list/queue
+	var/list/local_queue
+	var/processed
+
+	// -------- SOURCES --------
 	if(!init_tick_checks)
 		MC_SPLIT_TICK
-	var/list/queue = sources_queue
-	var/i = 0
-	for (i in 1 to length(queue))
-		var/datum/light_source/L = queue[i]
 
-		L.update_corners()
+	queue = sources_queue
+	if(length(queue))
+		local_queue = queue.Copy()
+		processed = 0
 
-		L.needs_update = LIGHTING_NO_UPDATE
+		for(var/datum/light_source/L in local_queue)
+			if(!L)
+				processed++
+				continue
 
-		if(init_tick_checks)
-			CHECK_TICK
-		else if (MC_TICK_CHECK)
-			break
-	if (i)
-		queue.Cut(1, i+1)
-		i = 0
+			L.update_corners()
+			L.needs_update = LIGHTING_NO_UPDATE
+			processed++
 
+			if(init_tick_checks)
+				CHECK_TICK
+			else if(MC_TICK_CHECK)
+				break
+
+		if(processed)
+			queue.Cut(1, min(processed + 1, length(queue) + 1))
+
+	// -------- CORNERS --------
 	if(!init_tick_checks)
 		MC_SPLIT_TICK
 
 	queue = corners_queue
-	for (i in 1 to length(queue))
-		var/datum/lighting_corner/C = queue[i]
+	if(length(queue))
+		local_queue = queue.Copy()
+		processed = 0
 
-		C.update_objects()
-		C.needs_update = FALSE
-		if(init_tick_checks)
-			CHECK_TICK
-		else if (MC_TICK_CHECK)
-			break
-	if (i)
-		queue.Cut(1, i+1)
-		i = 0
+		for(var/datum/lighting_corner/C in local_queue)
+			if(!C)
+				processed++
+				continue
 
+			C.update_objects()
+			C.needs_update = FALSE
+			processed++
 
+			if(init_tick_checks)
+				CHECK_TICK
+			else if(MC_TICK_CHECK)
+				break
+
+		if(processed)
+			queue.Cut(1, min(processed + 1, length(queue) + 1))
+
+	// -------- OBJECTS --------
 	if(!init_tick_checks)
 		MC_SPLIT_TICK
 
 	queue = objects_queue
-	for (i in 1 to length(queue))
-		var/atom/movable/lighting_object/O = queue[i]
+	if(length(queue))
+		local_queue = queue.Copy()
+		processed = 0
 
-		if (QDELETED(O))
-			continue
+		for(var/atom/movable/lighting_object/O in local_queue)
+			if(QDELETED(O))
+				processed++
+				continue
 
-		O.update()
-		O.needs_update = FALSE
-		if(init_tick_checks)
-			CHECK_TICK
-		else if (MC_TICK_CHECK)
-			break
-	if (i)
-		queue.Cut(1, i+1)
+			O.update()
+			O.needs_update = FALSE
+			processed++
 
+			if(init_tick_checks)
+				CHECK_TICK
+			else if(MC_TICK_CHECK)
+				break
+
+		if(processed)
+			queue.Cut(1, min(processed + 1, length(queue) + 1))
 
 /datum/controller/subsystem/lighting/Recover()
 	initialized = SSlighting.initialized

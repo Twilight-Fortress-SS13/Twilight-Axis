@@ -15,7 +15,7 @@
 
 /datum/particle_weather/snow_gentle
 	name = "Rain"
-	desc = "Gentle Rain, la la description."
+	desc = "Gentle Snow, la la description."
 	particleEffectType = /particles/weather/snow
 
 	scale_vol_with_severity = TRUE
@@ -39,8 +39,8 @@
 
 
 /datum/particle_weather/snow_storm
-	name = "Rain"
-	desc = "Gentle Rain, la la description."
+	name = "Snow Storm"
+	desc = "Gentle Snow, la la description."
 	particleEffectType = /particles/weather/snow
 
 	scale_vol_with_severity = TRUE

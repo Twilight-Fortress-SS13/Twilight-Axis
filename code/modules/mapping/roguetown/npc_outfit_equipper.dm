@@ -26,14 +26,18 @@
 
 
 /obj/effect/mapping_helpers/floor_clothing_equipper/LateInitialize()
+	if(!SSmapping || SSmapping.initialized)
+		return ..()
+
 	var/mob/living/carbon/human/located = locate(/mob/living/carbon/human) in get_turf(src)
 	if(!located)
 		qdel(src)
 		return
 
-	for(var/obj/item/clothing/clothing in get_turf(src))
-		located.equip_to_appropriate_slot(clothing)
+	for(var/obj/item/clothing/C in get_turf(src))
+		located.equip_to_appropriate_slot(C)
 
-	for(var/obj/item/rogueweapon/weapon in get_turf(src))
-		located.put_in_hands(weapon)
+	for(var/obj/item/rogueweapon/W in get_turf(src))
+		located.put_in_hands(W)
+
 	qdel(src)

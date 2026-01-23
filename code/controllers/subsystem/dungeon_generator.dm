@@ -18,13 +18,24 @@ SUBSYSTEM_DEF(dungeon_generator)
 	var/unlinked_dungeon_length = 0
 
 /datum/controller/subsystem/dungeon_generator/Initialize(start_timeofday)
+	// === START MASS MAP LOAD ===
+	GLOB.dungeon_loading = TRUE
+
 	unlinked_dungeon_length = length(GLOB.unlinked_dungeon_entries)
+
 	while(length(markers))
 		for(var/obj/effect/dungeon_directional_helper/helper as anything in markers)
 			if(!get_turf(helper))
 				continue
 			find_soulmate(helper.dir, get_turf(helper), helper)
 			markers -= helper
+
+	// === END MASS MAP LOAD ===
+	GLOB.dungeon_loading = FALSE
+
+	// Один нормальный пересчёт
+	SSmapping.reg_in_areas_in_z()
+
 	return ..()
 
 /datum/controller/subsystem/dungeon_generator/fire(resumed)

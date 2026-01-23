@@ -9,6 +9,7 @@ SUBSYSTEM_DEF(ParticleWeather)
 	// var/list/next_hit = list() //Used by barometers to know when the next storm is coming
 
 	var/particles/weather/particleEffect
+	var/list/weathered_turfs = list()
 	var/obj/weatherEffect
 
 /datum/controller/subsystem/ParticleWeather/fire()

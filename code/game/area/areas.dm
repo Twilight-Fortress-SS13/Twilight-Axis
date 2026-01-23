@@ -510,6 +510,8 @@ GLOBAL_LIST_EMPTY(teleportlocs)
   *
   */
 /area/proc/update_areasize()
+	if(GLOB.dungeon_loading)
+		return
 	if(outdoors)
 		return FALSE
 	areasize = 0
