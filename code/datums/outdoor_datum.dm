@@ -72,7 +72,7 @@ Sunlight System
 		LAZYREMOVE(C.globAffect, src)
 		C.get_sunlight_falloff()
 		for(var/turf/master in C.masters)
-			if(!(master.turf_flags & TURF_SUNLIGHT_QUEUED))
+			if(!QDELETED(master) && !(master.turf_flags & TURF_SUNLIGHT_QUEUED)) 
 				master.turf_flags |= TURF_SUNLIGHT_QUEUED
 				GLOB.SUNLIGHT_QUEUE_CORNER += master
 	if(!(source_turf.turf_flags & TURF_SUNLIGHT_QUEUED))
@@ -124,7 +124,7 @@ Sunlight System
 		if(C.globAffect[src] > C.sunFalloff) /* if are closer than current dist, update the corner */
 			C.sunFalloff = C.globAffect[src]
 			for(var/turf/master in C.masters)
-				if(!(master.turf_flags & TURF_SUNLIGHT_QUEUED))
+				if(!QDELETED(master) && !(master.turf_flags & TURF_SUNLIGHT_QUEUED)) 
 					master.turf_flags |= TURF_SUNLIGHT_QUEUED
 					GLOB.SUNLIGHT_QUEUE_CORNER += master
 
@@ -135,7 +135,7 @@ Sunlight System
 		LAZYREMOVE(C.globAffect, src)
 		C.get_sunlight_falloff()
 		for(var/turf/master in C.masters)
-			if(!(master.turf_flags & TURF_SUNLIGHT_QUEUED))
+			if(!QDELETED(master) && !(master.turf_flags & TURF_SUNLIGHT_QUEUED)) 
 				master.turf_flags |= TURF_SUNLIGHT_QUEUED
 				GLOB.SUNLIGHT_QUEUE_CORNER += master
 
@@ -259,6 +259,9 @@ Sunlight System
 	if(ceiling)
 		return ceiling.is_weatherproof_ceiling()
 	var/area/turf_area = loc
+	// Add this check to avoid runtime errors
+	if(!turf_area) 
+		return TRUE
 	return !turf_area.outdoors // if this runtimes because a turf isn't in an area i'll just die
 
 /turf/closed/is_weatherproof() // skip checks for this. refactor if you ever allow closed turfs to let weather through ig
@@ -272,7 +275,7 @@ Sunlight System
 		return TRUE
 	// not inherently weatherproof
 	for(var/obj/structure/thing in src) // check for weather blockers (tent walls, etc)
-		if(thing.weatherproof)
+		if(!QDELETED(thing) && thing.weatherproof)
 			return TRUE
 	return is_weatherproof() // check our own roof
 
