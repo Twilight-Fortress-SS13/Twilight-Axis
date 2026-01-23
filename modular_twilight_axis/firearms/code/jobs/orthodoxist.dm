@@ -62,7 +62,7 @@
 			if("Purgatory (Handcannon)")
 				belt = /obj/item/storage/belt/rogue/leather/black
 				l_hand = /obj/item/gun/ballistic/twilight_firearm/handgonne/purgatory
-				backpack_contents = list(/obj/item/roguekey/inquisition = 1,
+				backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
 				/obj/item/paper/inqslip/arrival/ortho = 1,
 				/obj/item/twilight_powderflask/holyfyre = 1,
 				/obj/item/natural/bundle/fibers/full = 1,
@@ -78,7 +78,7 @@
 				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
 				beltr = /obj/item/quiver/twilight_bullet/runed
 				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock
-				backpack_contents = list(/obj/item/roguekey/inquisition = 1,
+				backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
 				/obj/item/paper/inqslip/arrival/ortho = 1,
 				/obj/item/storage/belt/rogue/pouch/coins/mid = 1)
 		var/armors = list("Medium Armor", "Light Armor")

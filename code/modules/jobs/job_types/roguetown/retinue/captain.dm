@@ -100,16 +100,17 @@
 		/datum/skill/combat/bows = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 	)
-	extra_context = "This class gains Master skill in their weapon of choice."
+	subclass_stashed_items = list("Ducal Caparison" = /obj/item/caparison/azure)
+	extra_context = "This class gains Master skill in their weapon of choice. Recieves Azurean Caparison in it's stash."
 
 /datum/outfit/job/roguetown/captain/infantry/pre_equip(mob/living/carbon/human/H)
 	..()
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	backpack_contents = list(
-		/obj/item/storage/keyring/sheriff = 1,
+		/obj/item/storage/keyring/knight_captain = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
+		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1
 		)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/movemovemove)

@@ -172,6 +172,22 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Головные уборы"
 	path = /obj/item/flowercrown/salvia
 
+/datum/loadout_item/matricaria_crown
+	name = "Matricaria Crown"
+	path = /obj/item/flowercrown/matricaria
+
+/datum/loadout_item/calendula_crown
+	name = "Calendula Crown"
+	path = /obj/item/flowercrown/calendula
+
+/datum/loadout_item/manabloom_crown
+	name = "Manabloom Crown"
+	path = /obj/item/flowercrown/manabloom
+
+/datum/loadout_item/briar_crown
+	name = "Briar Thorn Crown"
+	path = /obj/item/flowercrown/briar
+
 /datum/loadout_item/briarthorns
 	name = "Briar Thorns"
 	path = /obj/item/clothing/head/roguetown/briarthorns
@@ -323,8 +339,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/rumaclanshoes
 	name = "Raised Sandals"
+	path = /obj/item/clothing/shoes/roguetown/armor/rumaclan/shitty
 	category = "Обувь"
-	path = /obj/item/clothing/shoes/roguetown/armor/rumaclan
+
+
 
 //SHIRTS
 /datum/loadout_item/longcoat
@@ -897,6 +915,25 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/bigfoot_axe
 	donatitem = TRUE
 
+
+/datum/loadout_item/donator_zydrasiconocrown
+	name = "Donator Kit - Iconoclast Crown - Required: Barred Helmet(Only men, no small races)"
+	path = /obj/item/enchantingkit/zydrasiconocrown
+	category = list("Разное", "Донат")
+	donatitem = TRUE
+	
+/datum/loadout_item/donator_zydrasiconopauldrons
+	name = "Donator Kit - Iconoclast Pauldrons - Required: Lightweight Brigandine(Only men, no small races)"
+	path = /obj/item/enchantingkit/zydrasiconopauldrons
+	category = list("Разное", "Донат")
+	donatitem = TRUE
+	
+/datum/loadout_item/donator_zydrasiconosash
+	name = "Donator Kit - Iconoclast Sash - Required: Hauberk(Only men, no small races)"
+	path = /obj/item/enchantingkit/zydrasiconosash
+	category = list("Разное", "Донат")
+	donatitem = TRUE
+	
 /datum/loadout_item/donator_zydras
 	name = "Donator Kit - Padded silky dress - Required: Silky Dress(No Small Races)"
 	category = list("Разное", "Донат")
@@ -968,7 +1005,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/neck/roguetown/psicross/astrata/dasfox
 	category = list("Разное", "Донат")
 	donatitem = TRUE
- 
+
 /datum/loadout_item/donator_ryan
 	name = "Donator Item - Western Estates Caparison"
 	path = /obj/item/caparison/ryan
@@ -977,7 +1014,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/donator_ryan/psy_helm
 	name = "Donator Kit - Unorthodoxist Psydonite Helm - Required: Psydonic Helmet(Armet,Barbute,Bucket Helmet or Sallet)"
+	category = list("Разное", "Донат")
 	path = /obj/item/enchantingkit/ryan_psyhelm
+	donatitem = TRUE
+
+/datum/loadout_item/donator_koruu
+	name = "Donator Kit - Well-Worn Bamboo Hat"
+	path = /obj/item/clothing/head/roguetown/mentorhat/koruu
 	category = list("Разное", "Донат")
 	donatitem = TRUE
 
@@ -1301,6 +1344,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/clothing/neck/roguetown/loveamulet
 	donatitem = TRUE
+
+/datum/loadout_item/donat/matthios_moneta
+	name = "Амулет из проколотой монеты"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta
+	donatitem = TRUE
+	ckeywhitelist = list("imony", "uedhighcommand")
 
 // Маски
 

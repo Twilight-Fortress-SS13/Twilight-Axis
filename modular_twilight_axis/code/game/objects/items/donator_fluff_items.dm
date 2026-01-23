@@ -73,3 +73,24 @@
 	wdefense = 4
 	force = 14
 	force_wielded = 35
+
+//Zydras donator item - merchant dress
+/obj/item/clothing/suit/roguetown/shirt/dress/silkydress/zydrasdress //Recolored silky dress
+	name = "Gold-Black silky dress"
+	desc = "A gorgeous black and gold dress. It seems the padding was removed."
+	icon_state = "zydrasdress"
+	item_state = "zydrasdress"
+	sleevetype = "zydrasdress"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/zydrasiconosash //who up icono they clast
+	name = "gilded cloth sash"
+	desc = "A ritual-acquired sash of purple cloth, lined with gold. Seemingly protects the gut, too."
+	icon_state = "zydras_iconosash"
+	item_state = "zydras_iconosash"
+	sleevetype = "zydras_iconosash"
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi' //No sleeves

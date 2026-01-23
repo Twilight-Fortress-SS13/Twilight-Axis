@@ -36,6 +36,7 @@
 	
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/magebag/associate
+
 	backl = /obj/item/storage/backpack/rogue/satchel
 
 	shoes = /obj/item/clothing/shoes/roguetown/gladiator // FANCY SANDALS
@@ -82,7 +83,7 @@
 		/obj/item/recipe_book/alchemy = 1,
 		/obj/item/recipe_book/magic = 1,
 		/obj/item/chalk = 1,
-		/obj/item/storage/keyring/mageapprentice,
+		/obj/item/storage/keyring/apprentice,
 		)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
@@ -134,7 +135,7 @@
 		/obj/item/recipe_book/magic = 1,
 		/obj/item/chalk = 1,
 		/obj/item/spellbook_unfinished/pre_arcyne = 1,
-		/obj/item/storage/keyring/mageapprentice,
+		/obj/item/storage/keyring/apprentice,
 		)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
@@ -175,7 +176,7 @@
 		/obj/item/recipe_book/magic = 1,
 		/obj/item/spellbook_unfinished/pre_arcyne = 1,
 		/obj/item/chalk = 1,
-		/obj/item/storage/keyring/mageapprentice,
+		/obj/item/storage/keyring/apprentice,
 		)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)

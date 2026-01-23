@@ -64,3 +64,10 @@
 		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle, 
 		/obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet = /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/jagerrifle)
 	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle
+
+//Zydras donator item - bathmatron padded dress
+/obj/item/enchantingkit/zydras
+	name = "'Gold-Black silky dress morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Silky Dress"
+	target_items = list(/obj/item/clothing/suit/roguetown/shirt/dress/silkydress)
+	result_item = /obj/item/clothing/suit/roguetown/shirt/dress/silkydress/zydrasdress 

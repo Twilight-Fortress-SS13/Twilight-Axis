@@ -346,6 +346,7 @@
 	result = list(/obj/item/natural/cloth/bandage)
 	reqs = list(/obj/item/natural/silk = 2,
 				/obj/item/natural/cloth = 1)
+	subtype_reqs = FALSE //so you cant continuously craft bandages from bandages
 
 /datum/crafting_recipe/roguetown/sewing/gweightedbandagesalt
 	name = "bandages into weighted bandages, gloved"
@@ -1620,6 +1621,60 @@
 /datum/crafting_recipe/roguetown/sewing/caparison/eora
 	name = "eoran caparison"
 	result = list(/obj/item/caparison/eora)
+
+/datum/crafting_recipe/roguetown/sewing/sanguinetrousers
+	name = "sanguine trousers"
+	result = /obj/item/clothing/under/roguetown/trou/leather/courtphysician
+	reqs = list(
+		/obj/item/natural/silk = 3
+	)
+	tools = list(/obj/item/needle)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/sanguinevest
+	name = "sanguine vest"
+	result = /obj/item/clothing/suit/roguetown/shirt/courtphysician
+	reqs = list(
+		/obj/item/natural/silk = 3
+	)
+	tools = list(/obj/item/needle)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/sanguineblouse
+	name = "sanguine blouse"
+	result = /obj/item/clothing/suit/roguetown/shirt/courtphysician/female
+	reqs = list(
+		/obj/item/natural/silk = 3
+	)
+	tools = list(/obj/item/needle)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/sanguineskirt
+	name = "sanguine skirt"
+	result = /obj/item/clothing/under/roguetown/skirt/courtphysician
+	reqs = list(
+		/obj/item/natural/silk = 3
+	)
+	tools = list(/obj/item/needle)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/sanguinehat
+	name = "sanguine hat"
+	result = /obj/item/clothing/head/roguetown/courtphysician
+	reqs = list(
+		/obj/item/natural/silk = 2
+	)
+	tools = list(/obj/item/needle)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/sanguinecap
+	name = "sanguine cap"
+	result = /obj/item/clothing/head/roguetown/courtphysician/female
+	reqs = list(
+		/obj/item/natural/silk = 2
+	)
+	tools = list(/obj/item/needle)
+	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/sewing/paperparasol
 	name = "paper parasol"

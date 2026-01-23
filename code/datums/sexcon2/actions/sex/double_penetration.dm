@@ -1,6 +1,7 @@
 /datum/sex_action/sex/double_penetration
 	name = "Трахнуть обе дырки"
 	stamina_cost = 1.0
+	intensity = 4
 
 /datum/sex_action/sex/double_penetration/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(user == target)
@@ -40,7 +41,7 @@
 	var/is_knotting = sex_session.do_knot_action
 	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [is_knotting ? "долбит во все щели [target] за раз по самый узел" : "долбит во все щели [target] за раз"]."))
 	playsound(target, sex_session.get_force_sound(), 50, TRUE, -2, ignore_walls = FALSE)
-	do_thrust_animate(user, target)
+	do_thrust_animate(user, target, sex_session)
 
 	do_onomatopoeia(user)
 

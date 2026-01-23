@@ -37,7 +37,7 @@
 	body_parts_covered = HEAD|HAIR|EARS
 
 /obj/item/clothing/head/roguetown/helmet/raneshi_jarhelmet
-	name = "Raneshi jar helmet"
+	name = "raneshi jar helmet"
 	desc = "a jar-shaped helmet used by Empire light warriors."
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/helmets.dmi'
