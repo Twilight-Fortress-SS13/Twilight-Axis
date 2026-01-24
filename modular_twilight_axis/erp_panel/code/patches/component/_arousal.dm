@@ -32,8 +32,6 @@
 
 	var/satisfaction_points = 0
 	var/last_sp_decay_time = 0
-	var/self_gratification_lock = FALSE
-	var/self_gratification_lock_until = 0
 
 /datum/component/arousal/set_charge(amount)
 	var/empty = (charge < charge_for_climax)
@@ -481,7 +479,6 @@
 
 /datum/component/arousal/process(dt)
 	handle_satisfaction_decay()
-	handle_self_gratification_lock()
 	handle_charge(dt * 1)
 
 	var/mob/living/carbon/human/human_object = parent
@@ -746,14 +743,6 @@
 	last_sp_decay_time = world.time
 	adjust_satisfaction(-1)
 
-/datum/component/arousal/proc/handle_self_gratification_lock()
-	if(self_gratification_lock && world.time >= self_gratification_lock_until)
-		self_gratification_lock = FALSE
-
-/datum/component/arousal/proc/apply_self_gratification_lock()
-	self_gratification_lock = TRUE
-	self_gratification_lock_until = world.time + SELF_LOCK_DURATION
-
 /datum/component/arousal/proc/handle_satisfaction_from_climax(mob/living/carbon/human/user, mob/living/carbon/human/target, climax_type)
 	if(!user || !climax_type)
 		return 0
@@ -768,16 +757,9 @@
 			sp_gain = 3
 		else
 			return 0
-
-	var/is_solo = (!target || target == user)
-
-	if(is_solo)
-		if(self_gratification_lock)
-			return 0
-		apply_self_gratification_lock()
-
 	adjust_satisfaction(sp_gain)
-
+	
+	var/is_solo = (!target || target == user)
 	if(!is_solo && target)
 		if(HAS_TRAIT(target, TRAIT_GOODLOVER))
 			if(!user.mob_timers["cumtri"])
@@ -799,7 +781,6 @@
 			partner_arousal.adjust_satisfaction(sp_gain)
 
 	return sp_gain
-
 
 /datum/component/arousal/proc/apply_climax_stress(mob/living/carbon/human/user, climax_type, sp_gain)
 	if(!user)
