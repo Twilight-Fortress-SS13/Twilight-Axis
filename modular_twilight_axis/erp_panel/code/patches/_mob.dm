@@ -250,7 +250,7 @@
 		GLOB.erp_proxies_by_part -= key
 		
 /mob/living/proc/start_sex_session_with_dullahan_head(obj/item/bodypart/head/dullahan/head_dullahan)
-	var/mob/living/carbon/human/erp_proxy/proxy_object = create_dullahan_head_partner(head_dullahan)
+	var/mob/living/carbon/human/erp_proxy/proxy_object = create_dullahan_head(head_dullahan)
 
 	var/datum/sex_session_tgui/session_object = get_or_create_sex_session_tgui_with_bodypart(src, head_dullahan.original_owner, head_dullahan)
 	session_object.add_partner(proxy_object)
@@ -558,3 +558,21 @@
 			B.Insert(H, TRUE, FALSE)
 
 	H.update_body()
+
+/mob/living/carbon/human/proc/start_sex_session_as_dullahan_head(mob/living/carbon/human/target_mob, obj/item/bodypart/head/dullahan/H)
+	if(!target_mob || !H)
+		return FALSE
+	if(!client)
+		return FALSE
+
+	var/datum/sex_session_tgui/S = get_or_create_sex_session_tgui_with_bodypart(src, target_mob, null)
+
+	S.set_actor_bodypart_override(H)
+	S.set_partner_bodypart_override(null)
+
+	S.add_partner(target_mob)
+	S.target = target_mob
+	S.current_partner_ref = REF(target_mob)
+
+	S.ui_interact(src)
+	return TRUE

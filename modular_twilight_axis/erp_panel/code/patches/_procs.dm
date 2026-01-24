@@ -49,7 +49,7 @@
 				sessions |= session_object
 	return sessions
 
-/proc/create_dullahan_head_partner(obj/item/bodypart/head/dullahan/head_dullahan)
+/proc/create_dullahan_head(obj/item/bodypart/head/dullahan/head_dullahan)
 	if(!head_dullahan)
 		return null
 
@@ -540,7 +540,7 @@
 	if(!istype(dragged))
 		return
 	// Need to drag yourself to the target.
-	if(dragged != user)
+	if(dragged != user && !(istype(dragged, /obj/item/bodypart/head/dullahan)))
 		return
 	if(!human_user.can_do_sex)
 		to_chat(user, "<span class='warning'>I can't do this.</span>")
@@ -555,35 +555,46 @@
 		to_chat(src, "<span class='warning'>[user] failed to touch you. (Your ERP preference under options)</span>")
 		return
 	
-	// TWILIGHT AXIS EDITION START - new ERP SYSTEM
-	if(!user.start_sex_session_tgui(target)) 
+	if(dragged && istype(dragged, /obj/item/bodypart/head/dullahan))
+		var/obj/item/bodypart/head/dullahan/H = dragged
+		if(!human_user.start_sex_session_as_dullahan_head(target, H))
+			to_chat(user, "<span class='warning'>Can't start head session.</span>")
+		return
+
+	if(!user.start_sex_session_tgui(target))
 		to_chat(user, "<span class='warning'>Blocked by Defiant settings or Leprosy.</span>")
-	// TWILIGHT AXIS EDITION END- new ERP SYSTEM
 		return
 
-/obj/item/bodypart/head/dullahan/MiddleMouseDrop_T(atom/movable/dragged, mob/living/user)
-	var/mob/living/carbon/human/target = src.original_owner
-	if(user.mmb_intent)
-		return ..()
-	// Maybe call target.MiddleMouseDrop_T() instead, may have side effects and so opted not to.
+/proc/get_or_create_sex_session_tgui(mob/living/carbon/human/user, mob/living/carbon/human/target)
+	return get_or_create_sex_session_tgui_with_bodypart(user, target, null)
 
-	if(!istype(dragged))
-		return
-	if(dragged != user)
-		return
-	if(!user.can_do_sex())
-		to_chat(user, "<span class='warning'>I can't do this.</span>")
-		return
-	if(!user.client.prefs.sexable)
-		to_chat(user, "<span class='warning'>I don't want to touch [target]. (Your ERP preference, in the options)</span>")
-		return
-	if(!target.client || !target.client.prefs)
-		to_chat(user, span_warning("[target] is simply not there. I can't do this."))
-		log_combat(user, target, "tried ERP menu against d/ced")
-		return
-	if(!target.client.prefs.sexable) // Don't bang someone that doesn't want it.
-		to_chat(user, "<span class='warning'>[target] doesn't want to be touched. (Their ERP preference, in the options)</span>")
-		to_chat(target, "<span class='warning'>[user] failed to touch you. (Your ERP preference, in the options)</span>")
-		log_combat(user, target, "tried unwanted ERP menu against")
-		return
-	user.start_sex_session_tgui(target)
+/proc/get_or_create_sex_session_tgui_with_bodypart(mob/living/carbon/human/user, mob/living/carbon/human/target, obj/item/bodypart/body_override)
+	if(!user)
+		return null
+
+	var/list/sessions = return_sessions_with_user_tgui(user)
+	var/datum/sex_session_tgui/session
+
+	if(length(sessions))
+		session = sessions[1]
+	else
+		session = new /datum/sex_session_tgui(user, target)
+
+	if(target && target != user)
+		session.add_partner(target)
+		if(!session.current_partner_ref || !locate(session.current_partner_ref))
+			session.current_partner_ref = REF(target)
+			session.target = target
+
+	if(body_override)
+		session.set_partner_bodypart_override(body_override)
+
+		if(istype(body_override, /obj/item/bodypart/head/dullahan))
+			for(var/mob/living/carbon/human/erp_proxy/proxy in world)
+				if(proxy.source_part == body_override)
+					session.add_partner(proxy)
+					session.current_partner_ref = REF(proxy)
+					session.target = proxy
+
+	session.update_knotted_penis_flag()
+	return session

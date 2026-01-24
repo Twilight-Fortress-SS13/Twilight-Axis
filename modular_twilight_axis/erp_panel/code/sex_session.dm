@@ -2,6 +2,7 @@
 	var/mob/living/carbon/human/user
 	var/mob/living/carbon/human/target
 
+	var/obj/item/bodypart/actor_bodypart_override
 	var/obj/item/bodypart/partner_bodypart_override
 
 	var/selected_actor_organ_id
@@ -60,8 +61,21 @@
 
 /datum/sex_session_tgui/New(mob/living/carbon/human/U, mob/living/carbon/human/T)
 	. = ..()
+	if(istype(U, /mob/living/carbon/human/erp_proxy))
+		var/mob/living/carbon/human/erp_proxy/P = U
+		if(P.source_part)
+			actor_bodypart_override = P.source_part
+			var/mob/living/carbon/human/real_owner = P.source_part.owner
+			if(!real_owner && istype(P.source_part, /obj/item/bodypart/head/dullahan))
+				var/obj/item/bodypart/head/dullahan/D = P.source_part
+				real_owner = D.original_owner
+
+			if(real_owner)
+				U = real_owner
+
 	if(U)
 		user = U
+
 	if(T && T != U)
 		target = T
 		if(!(T in partners))
@@ -152,6 +166,26 @@
 	if(!current_partner_ref)
 		current_partner_ref = REF(M)
 
+/datum/sex_session_tgui/proc/get_actor_display_name(mob/living/carbon/human/M)
+	if(actor_bodypart_override && M && M == user)
+		if(istype(actor_bodypart_override, /obj/item/bodypart/head/dullahan))
+			var/obj/item/bodypart/head/dullahan/D = actor_bodypart_override
+
+			var/name = D.original_owner?.real_name
+			if(!name)
+				name = D.original_owner?.name
+			if(!name)
+				name = D.name
+
+			return "[name]"
+
+		return "[actor_bodypart_override.name] ([M.name])"
+
+	return M?.name || "—"
+
+/datum/sex_session_tgui/proc/set_actor_bodypart_override(obj/item/bodypart/B)
+	actor_bodypart_override = B
+
 /datum/sex_session_tgui/proc/get_partner_display_name(mob/living/carbon/human/M)
 	if(partner_bodypart_override && M && M == target)
 		if(istype(partner_bodypart_override, /obj/item/bodypart/head/dullahan))
@@ -182,6 +216,14 @@
 	return user
 
 /datum/sex_session_tgui/proc/build_org_nodes(mob/living/carbon/human/M, side)
+	if(istype(M, /mob/living/carbon/human/erp_proxy))
+		var/mob/living/carbon/human/erp_proxy/P = M
+		if(P.source_part)
+			return build_org_nodes_for_bodypart(P.source_part, side)
+	
+	if(side == "actor" && actor_bodypart_override)
+		return build_org_nodes_for_bodypart(actor_bodypart_override, side)
+
 	if(side == "partner" && partner_bodypart_override && M == target)
 		return build_org_nodes_for_bodypart(partner_bodypart_override, side)
 
@@ -321,13 +363,13 @@
 /datum/sex_session_tgui/proc/actions_for_menu()
 	var/list/actions = list()
 
-	var/mob/living/carbon/human/U = user
+	var/mob/living/carbon/human/U = get_effective_actor()
 	var/mob/living/carbon/human/T = get_current_partner()
 
 	var/a_sel = selected_actor_organ_id
 	var/p_sel = selected_partner_organ_id
 
-	var/user_ckey = U?.client?.ckey
+	var/user_ckey = src.user?.client?.ckey
 
 	for(var/key in GLOB.sex_panel_actions)
 		var/datum/sex_panel_action/A = GLOB.sex_panel_actions[key]
@@ -344,9 +386,15 @@
 			if(!U)
 				continue
 
-			if(!(partner_bodypart_override && A.required_target == SEX_ORGAN_MOUTH))
-				var/list/orgs = A.get_action_organs(U, T, FALSE, FALSE)
-				if(!orgs)
+			var/skip_init = (actor_bodypart_override && A.required_init == SEX_ORGAN_MOUTH)
+			var/skip_tgt  = (partner_bodypart_override && A.required_target == SEX_ORGAN_MOUTH)
+
+			if(A.required_init && !skip_init)
+				if(!U.get_sex_organ_by_type(A.required_init, FALSE))
+					continue
+
+			if(A.required_target && !skip_tgt)
+				if(!T.get_sex_organ_by_type(A.required_target, FALSE))
 					continue
 
 			if(a_sel && a_sel != SEX_ORGAN_FILTER_ALL)
@@ -388,11 +436,15 @@
 	if(A.check_incapacitated && U.incapacitated())
 		return FALSE
 
+	var/atom/real_actor = U
+	if(actor_bodypart_override && istype(actor_bodypart_override, /obj/item/bodypart/head/dullahan))
+		real_actor = actor_bodypart_override
+	
 	var/atom/real_target = T
 	if(partner_bodypart_override && T == target)
 		real_target = partner_bodypart_override
 
-	var/dist = get_dist(U, real_target)
+	var/dist = get_dist(real_actor, real_target)
 	if(dist > 1)
 		return FALSE
 
@@ -428,6 +480,25 @@
 		p_id = selected_partner_organ_id
 
 	return can_execute_action(A, a_id, p_id, performing)
+
+/datum/sex_session_tgui/proc/get_effective_actor_proxy()
+	if(!actor_bodypart_override)
+		return null
+
+	var/list/proxies = get_erp_proxies_for_part(actor_bodypart_override)
+	if(length(proxies))
+		return proxies[1]
+
+	return null
+
+/datum/sex_session_tgui/proc/get_effective_actor()
+	var/mob/living/carbon/human/erp_proxy/P = get_effective_actor_proxy()
+	if(P)
+		return P
+
+	if(user?.client?.mob)
+		return user.client.mob
+	return user
 
 /datum/sex_session_tgui/proc/ui_key()
 	return "EroticRolePlayPanel"
@@ -482,7 +553,7 @@
 	var/mob/living/carbon/human/active_partner = get_current_partner()
 	D["title"] = "Соитие с [get_partner_display_name(active_partner)]"
 	D["session_name"] = "Private Session"
-	D["actor_name"] = src.user?.name || "—"
+	D["actor_name"] = get_actor_display_name(user) || "—"
 	D["partner_name"] = get_partner_display_name(active_partner)
 	D["selected_actor_organ"] = selected_actor_organ_id
 	D["selected_partner_organ"] = selected_partner_organ_id
@@ -522,7 +593,8 @@
 	D["actions"] = cached_actions_for_menu
 
 	if(dirty_org_nodes || !cached_actor_organs || !cached_partner_organs)
-		cached_actor_organs = build_org_nodes(src.user, "actor")
+		var/mob/living/carbon/human/A = get_effective_actor()
+		cached_actor_organs = build_org_nodes(A, "actor")
 		cached_partner_organs = build_org_nodes(active_partner, "partner")
 		dirty_org_nodes = FALSE
 
@@ -1178,6 +1250,18 @@
 /datum/sex_session_tgui/proc/resolve_organ_datum(mob/living/carbon/human/M, id)
 	if(!M || !id)
 		return null
+	
+	if(istype(M, /mob/living/carbon/human/erp_proxy))
+		var/mob/living/carbon/human/erp_proxy/P = M
+		if(P.source_part)
+			var/datum/sex_organ/proxy_org = resolve_organ_from_bodypart(P.source_part, id)
+			if(proxy_org)
+				return proxy_org
+
+	if(M == user && actor_bodypart_override)
+		var/datum/sex_organ/over_org = resolve_organ_from_bodypart(actor_bodypart_override, id)
+		if(over_org)
+			return over_org
 
 	if(M == target && partner_bodypart_override)
 		var/datum/sex_organ/over_org = resolve_organ_from_bodypart(partner_bodypart_override, id)
@@ -1576,40 +1660,6 @@
 
 	find_bed()
 
-/proc/get_or_create_sex_session_tgui(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	return get_or_create_sex_session_tgui_with_bodypart(user, target, null)
-
-/proc/get_or_create_sex_session_tgui_with_bodypart(mob/living/carbon/human/user, mob/living/carbon/human/target, obj/item/bodypart/body_override)
-	if(!user)
-		return null
-
-	var/list/sessions = return_sessions_with_user_tgui(user)
-	var/datum/sex_session_tgui/session
-
-	if(length(sessions))
-		session = sessions[1]
-	else
-		session = new /datum/sex_session_tgui(user, target)
-
-	if(target && target != user)
-		session.add_partner(target)
-		if(!session.current_partner_ref || !locate(session.current_partner_ref))
-			session.current_partner_ref = REF(target)
-			session.target = target
-
-	if(body_override)
-		session.set_partner_bodypart_override(body_override)
-
-		if(istype(body_override, /obj/item/bodypart/head/dullahan))
-			for(var/mob/living/carbon/human/erp_proxy/proxy in world)
-				if(proxy.source_part == body_override)
-					session.add_partner(proxy)
-					session.current_partner_ref = REF(proxy)
-					session.target = proxy
-
-	session.update_knotted_penis_flag()
-	return session
-
 /datum/sex_session_tgui/proc/actions_matching_nodes()
 	var/list/res = list()
 
@@ -1712,7 +1762,7 @@
 	if(!A)
 		return FALSE
 
-	var/mob/living/carbon/human/U = user
+	var/mob/living/carbon/human/U = get_effective_actor()
 	var/mob/living/carbon/human/T = get_current_partner()
 
 	var/a_id = actor_node_id
