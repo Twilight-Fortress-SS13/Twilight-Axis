@@ -10,28 +10,30 @@
 	var/prioritize_turfs = FALSE
 
 /mob/living/carbon/human/on_cmode()
-    if(QDELETED(src))
-        return
+	if(QDELETED(src))
+		return
 
-    if(!cmode)
-        timerid_purge_bait = addtimer(CALLBACK(src, PROC_REF(purge_bait)), 30 SECONDS, TIMER_STOPPABLE | TIMER_UNIQUE | TIMER_OVERRIDE)
-        timerid_expire_peel = addtimer(CALLBACK(src, PROC_REF(expire_peel)), 60 SECONDS, TIMER_STOPPABLE | TIMER_UNIQUE | TIMER_OVERRIDE)
-        timerid_clear_tempo = addtimer(CALLBACK(src, PROC_REF(clear_tempo_all)), 30 SECONDS, TIMER_STOPPABLE | TIMER_UNIQUE | TIMER_OVERRIDE)
-    else
-        if(timerid_purge_bait)
-            deltimer(timerid_purge_bait)
-            timerid_purge_bait = null
+	if(!cmode)
+		if(!timerid_purge_bait)
+			timerid_purge_bait = addtimer(CALLBACK(src, PROC_REF(purge_bait)), 30 SECONDS, TIMER_STOPPABLE)
+		if(!timerid_expire_peel)
+			timerid_expire_peel = addtimer(CALLBACK(src, PROC_REF(expire_peel)), 60 SECONDS, TIMER_STOPPABLE)
+		if(!timerid_clear_tempo)
+			timerid_clear_tempo = addtimer(CALLBACK(src, PROC_REF(clear_tempo_all)), 30 SECONDS, TIMER_STOPPABLE)
+	else
+		if(timerid_purge_bait)
+			deltimer(timerid_purge_bait)
+			timerid_purge_bait = null
+		if(timerid_expire_peel)
+			deltimer(timerid_expire_peel)
+			timerid_expire_peel = null
+		if(timerid_clear_tempo)
+			deltimer(timerid_clear_tempo)
+			timerid_clear_tempo = null
 
-        if(timerid_expire_peel)
-            deltimer(timerid_expire_peel)
-            timerid_expire_peel = null
+	if(!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
+		filtered_balloon_alert(TRAIT_COMBAT_AWARE, (cmode ? "<i><font color='#831414'>Tense</font></i>" : "<i><font color='#c7c6c6'>Relaxed</font></i>"), y_offset = 32)
 
-        if(timerid_clear_tempo)
-            deltimer(timerid_clear_tempo)
-            timerid_clear_tempo = null
-
-    if(!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
-        filtered_balloon_alert(TRAIT_COMBAT_AWARE, (cmode ? ("<i><font color = '#831414'>Tense</font></i>") : ("<i><font color = '#c7c6c6'>Relaxed</font></i>")), y_offset = 32)
 
 /datum/rmb_intent/proc/special_attack(mob/living/user, atom/target)
 	return

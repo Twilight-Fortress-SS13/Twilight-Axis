@@ -27,22 +27,30 @@
 	..()
 
 /obj/item/natural/dirtclod/Moved(oldLoc, dir)
-	..()
-	if(isturf(loc))
-		var/turf/T = loc
-		for(var/obj/structure/fluff/clodpile/C in T)
-			C.dirtamt = min(C.dirtamt+1, 5)
-			qdel(src)
-			return
-		var/dirtcount = 1
-		var/list/dirts = list()
-		for(var/obj/item/natural/dirtclod/D in T)
-			dirtcount++
-			dirts += D
-		if(dirtcount >= 5)
-			for(var/obj/item/I in dirts)
-				qdel(I)
-			new /obj/structure/fluff/clodpile(T)
+	. = ..()
+
+	if(QDELETED(src) || QDELING(src) || !isturf(loc))
+		return
+
+	var/turf/T = loc
+
+	for(var/obj/structure/fluff/clodpile/C in T)
+		C.dirtamt = min(C.dirtamt + 1, 5)
+		QDEL_IN(src, 0)
+		return
+
+	var/dirtcount = 0
+	var/list/dirts = list()
+
+	for(var/obj/item/natural/dirtclod/D in T)
+		dirtcount++
+		dirts += D
+
+	if(dirtcount >= 5)
+		for(var/obj/item/natural/dirtclod/D2 in dirts)
+			if(!QDELETED(D2) && !QDELING(D2))
+				QDEL_IN(D2, 0)
+		new /obj/structure/fluff/clodpile(T)
 
 /obj/item/natural/dirtclod/attack_self(mob/living/user)
 	user.visible_message(span_warning("[user] scatters [src]."))
