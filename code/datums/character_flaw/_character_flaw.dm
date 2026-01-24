@@ -303,6 +303,7 @@ GLOBAL_LIST_INIT(averse_factions, list(
 		if(world.time > next_check)
 			next_check = world.time + interval
 			var/cnt = 0
+			var/distfound = FALSE
 			for(var/mob/living/carbon/human/L in get_hearers_in_view(2, user))
 				if(L == user)
 					continue
@@ -310,13 +311,16 @@ GLOBAL_LIST_INIT(averse_factions, list(
 					continue
 				var/dist = get_dist(L, user)
 				if(dist <= 1)
+					distfound = TRUE
+					user.remove_stress(/datum/stressevent/nopeople)
 					break
 				if(L.dna.species)
 					cnt++
 				if(cnt >= 2)
+					user.remove_stress(/datum/stressevent/nopeople)
 					break
 			var/mob/living/carbon/P = user
-			if(cnt < 1)
+			if(cnt < 1 && !distfound)
 				P.add_stress(/datum/stressevent/nopeople)
 
 /datum/charflaw/clingy/apply_post_equipment(mob/user)
@@ -622,6 +626,8 @@ GLOBAL_LIST_INIT(averse_factions, list(
 	insane_fool.hallucination = INFINITY
 	ADD_TRAIT(insane_fool, TRAIT_PSYCHOSIS, TRAIT_GENERIC)
 	insane_fool.adjust_triumphs(1)
+	if(insane_fool.patron?.type == /datum/patron/divine/abyssor) 
+	 insane_fool.grant_language(/datum/language/abyssal)
 
 /datum/charflaw/indebted
 	name = "Indebted"

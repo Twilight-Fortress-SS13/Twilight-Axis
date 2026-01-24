@@ -7,6 +7,7 @@
 	icon_state = "rock"
 	var/smooth_icon = 'icons/turf/smoothrocks.dmi'
 	smooth = SMOOTH_MORE|SMOOTH_BORDER
+	flags_1 = CHECK_RICOCHET_1
 	canSmoothWith = null
 	baseturfs = list(/turf/open/floor/rogue/naturalstone)
 	opacity = 1
@@ -29,6 +30,7 @@
 	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	attacked_sound = list('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg')
 	neighborlay = "dirtedge"
+	explosion_block = 2
 
 /turf/closed/mineral/Initialize()
 	if (!canSmoothWith)

@@ -1,4 +1,0 @@
-author: "Onutsio"
-delete-after: True
-changes:
-  - balance: "Rogue mages now can only buy spellbooks or gem-staves, not gems. Kills a related exploit."
