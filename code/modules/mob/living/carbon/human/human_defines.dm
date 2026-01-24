@@ -199,3 +199,7 @@
 	var/can_do_sex = TRUE
 
 	fovangle = FOV_DEFAULT
+	var/char_accent = "No accent"
+	var/timerid_purge_bait
+	var/timerid_expire_peel
+	var/timerid_clear_tempo

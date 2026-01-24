@@ -81,6 +81,9 @@
 	AddComponent(/datum/component/personal_crafting)
 	AddComponent(/datum/component/footstep, footstep_type, 1, 2)
 	GLOB.human_list += src
+	our_cells = new(interesting_dist, interesting_dist, 1)
+	set_new_cells()
+	AddComponent(/datum/component/arousal)
 
 /mob/living/carbon/human/ZImpactDamage(turf/T, levels)
 	var/obj/item/bodypart/affecting
@@ -123,9 +126,19 @@
 
 /mob/living/carbon/human/Destroy()
 	STOP_PROCESSING(SShumannpc, src)
+	if(timerid_purge_bait)
+		deltimer(timerid_purge_bait)
+		timerid_purge_bait = null
+	if(timerid_expire_peel)
+		deltimer(timerid_expire_peel)
+		timerid_expire_peel = null
+	if(timerid_clear_tempo)
+		deltimer(timerid_clear_tempo)
+		timerid_clear_tempo = null
 	QDEL_NULL(physiology)
 	QDEL_NULL(sunder_light_obj)
 	GLOB.human_list -= src
+	our_cells = null
 	return ..()
 
 /mob/living/carbon/human/Stat()
