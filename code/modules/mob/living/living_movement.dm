@@ -16,15 +16,25 @@
 		unpixel_shift()
 
 /mob/living/CanPass(atom/movable/mover, turf/target)
-	if((mover.pass_flags & PASSMOB))
+	if(!mover)
 		return TRUE
+
+	if(!istype(mover, /obj/projectile) && !mover.throwing && passthroughable & get_dir(src, mover))
+		return TRUE
+
+	if(mover.pass_flags & PASSMOB)
+		return TRUE
+
 	if(istype(mover, /obj/projectile))
 		var/obj/projectile/P = mover
 		return !P.can_hit_target(src, P.permutated, src == P.original, TRUE)
+
 	if(mover.throwing)
 		return (!density || !(mobility_flags & MOBILITY_STAND) || wallpressed || (mover.throwing.thrower == src && !ismob(mover)))
+
 	if(buckled == mover)
 		return TRUE
+
 	if(ismob(mover))
 		if(mover in buckled_mobs)
 			return TRUE
@@ -32,6 +42,7 @@
 			var/mob/living/M = mover
 			if(M.wallpressed)
 				return !wallpressed
+
 	return (!density || wallpressed || !(mobility_flags & MOBILITY_STAND))
 
 /mob/living/toggle_move_intent()
