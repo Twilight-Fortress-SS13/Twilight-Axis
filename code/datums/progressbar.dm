@@ -64,8 +64,11 @@
 	. = ..()
 
 /datum/progressbar/proc/remove_from_client()
+	if(QDELETED(src) || !bar)
+		return
+
 	for (var/client/C in GLOB.clients)
-		C.images += bar
+		C.images -= bar
 
 #undef PROGRESSBAR_ANIMATION_TIME
 #undef PROGRESSBAR_HEIGHT
