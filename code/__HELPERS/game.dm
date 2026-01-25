@@ -535,7 +535,14 @@
 
 /// Removes an image from a client's `.images`. Useful as a callback.
 /proc/remove_image_from_client(image/image_to_remove, client/remove_from)
-	remove_from?.images -= image_to_remove
+	if(!image_to_remove || !remove_from)
+		return
+	if(!isimage(image_to_remove) || !isclient(remove_from))
+		return
+	if(QDELETED(image_to_remove) || QDELETED(remove_from))
+		return
+
+	remove_from.images -= image_to_remove
 
 /// Returns this user's display ckey, used in OOC contexts.
 /proc/get_display_ckey(key)

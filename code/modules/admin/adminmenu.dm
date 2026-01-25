@@ -14,7 +14,6 @@
 /datum/verbs/menu/admin/verb/purge_invalid_timers()
 	set name = "Purge Invalid Timers"
 	set category = "Debug"
-	set desc = "Deletes timers with QDELETED objects or invalid callbacks"
 
 	if(!SStimer)
 		to_chat(usr, "Timer subsystem not found.")
@@ -22,21 +21,34 @@
 
 	var/removed = 0
 
-	// clienttime timers
 	for(var/datum/timedevent/T in SStimer.clienttime_timers.Copy())
-		if(QDELETED(T) || !T.callBack || QDELETED(T.callBack.object))
-			SStimer.clienttime_timers -= T
-			if(!QDELETED(T))
-				qdel(T)
+		if(QDELETED(T))
+			continue
+
+		var/datum/callback/CB = T.callBack
+		if(!CB)
+			qdel(T)
+			removed++
+			continue
+
+		var/obj = CB.object
+		if(!isdatum(obj) || QDELETED(obj))
+			qdel(T)
 			removed++
 
-	// second queue
 	for(var/datum/timedevent/T in SStimer.second_queue.Copy())
-		if(QDELETED(T) || !T.callBack || QDELETED(T.callBack.object))
-			SStimer.second_queue -= T
-			if(!QDELETED(T))
-				qdel(T)
+		if(QDELETED(T))
+			continue
+
+		var/datum/callback/CB = T.callBack
+		if(!CB)
+			qdel(T)
+			removed++
+			continue
+
+		var/obj = CB.object
+		if(!isdatum(obj) || QDELETED(obj))
+			qdel(T)
 			removed++
 
-	to_chat(usr, "<span class='notice'>Purged [removed] invalid timers.</span>")
-	log_admin("[key_name(usr)] purged [removed] invalid timers.")
+	to_chat(usr, "Purged [removed] invalid timers.")
