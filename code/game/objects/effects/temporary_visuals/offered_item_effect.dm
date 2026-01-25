@@ -38,11 +38,14 @@
 	calculate_offset()
 
 /obj/effect/temp_visual/offered_item_effect/timed_out()
-	. = ..()
-	var/mob/living/offerer = offerer_weak_ref.resolve()
+	if(QDELETED(src))
+		return
 
+	var/mob/living/offerer = offerer_weak_ref.resolve()
 	if(offerer)
 		offerer.stop_offering_item()
+
+	..()
 
 /obj/effect/temp_visual/offered_item_effect/attackby(obj/item/I, mob/living/user, params)
 	. = ..()
