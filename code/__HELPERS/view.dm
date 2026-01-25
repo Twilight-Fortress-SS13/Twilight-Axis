@@ -1,22 +1,14 @@
 /proc/getviewsize(view)
 	var/viewX
 	var/viewY
-
 	if(isnum(view))
 		var/totalviewrange = 1 + 2 * view
 		viewX = totalviewrange
 		viewY = totalviewrange
-
-	else if(istext(view))
-		var/list/viewrangelist = splittext(view, "x")
-		if(viewrangelist.len >= 2)
-			viewX = text2num(viewrangelist[1])
-			viewY = text2num(viewrangelist[2])
-
-	if(!viewX || !viewY)
-		viewX = 15
-		viewY = 15
-
+	else
+		var/list/viewrangelist = splittext(view,"x")
+		viewX = text2num(viewrangelist[1])
+		viewY = text2num(viewrangelist[2])
 	return list(viewX, viewY)
 
 /proc/in_view_range(mob/user, atom/A)

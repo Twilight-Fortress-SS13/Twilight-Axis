@@ -351,19 +351,10 @@
 /mob/proc/show_cone()
 	if(!client)
 		return
-
 	if(hud_used?.fov)
 		hud_used.fov.alpha = 255
 		hud_used.fov_blocker.alpha = 255
-
-	if(!client.screen)
-		return
-
-	var/atom/movable/screen/plane_master/game_world_fov_hidden/PM =	locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in client.screen
-
-	if(!PM)
-		return
-
+	var/atom/movable/screen/plane_master/game_world_fov_hidden/PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in client.screen
 	PM.backdrop(src)
 
 /mob/proc/hide_cone()
