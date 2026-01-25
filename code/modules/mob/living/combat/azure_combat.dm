@@ -178,6 +178,9 @@
 
 ///Purges the singular possible bait stack after waiting for a bit out of combat.
 /mob/living/carbon/human/proc/purge_bait()
+	if(QDELETED(src))
+		return
+	timerid_purge_bait = null
 	if(!cmode)
 		if(bait_stacks > 0)
 			bait_stacks = 0
@@ -185,6 +188,9 @@
 
 ///Called by a timer after toggling cmode off.
 /mob/living/carbon/human/proc/expire_peel()
+	if(QDELETED(src))
+		return
+	timerid_expire_peel = null
 	if(!cmode)
 		purge_peel(99)
 
@@ -302,6 +308,9 @@
 	manage_tempo()
 
 /mob/living/carbon/human/proc/clear_tempo_all()
+	if(QDELETED(src))
+		return
+	timerid_clear_tempo = null
 	if(HAS_TRAIT(src, TRAIT_TEMPO))
 		var/tempo_amt = length(tempo_attackers)
 		if(tempo_amt)
