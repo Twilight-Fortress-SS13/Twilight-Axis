@@ -99,8 +99,6 @@
 	///Default pixel y shifting for the atom's icon.
 	var/base_pixel_y = 0
 
-	///Icon-smoothing behavior.
-	var/smoothing_flags = NONE
 	///Icon to use for smoothing, only required for secret doors
 	var/smoothing_icon
 	///What directions this is currently smoothing with. IMPORTANT: This uses the smoothing direction flags as defined in icon_smoothing.dm, instead of the BYOND flags.
@@ -1310,10 +1308,10 @@
 /atom/proc/smooth_icon()
 	if(QDELETED(src))
 		return
-	smoothing_flags &= ~SMOOTH_QUEUED
+	smooth &= ~SMOOTH_QUEUED
 	if (!z)
 		CRASH("[type] called smooth_icon() without being on a z-level")
-	if(smoothing_flags & USES_SMOOTHING)
+	if(smooth & USES_SMOOTHING)
 		smooth()
 	else
-		CRASH("[type] called smooth_icon() without valid flags: [smoothing_flags]")
+		CRASH("[type] called smooth_icon() without valid flags: [smooth]")

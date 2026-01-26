@@ -53,7 +53,7 @@
 #define USES_SMOOTHING (SMOOTH_BITMASK|SMOOTH_BITMASK_CARDINALS|SMOOTH_EDGE)
 #define USES_BITMASK_SMOOTHING (SMOOTH_BITMASK|SMOOTH_BITMASK_CARDINALS)
 
-#define QUEUE_SMOOTH(thing_to_queue) if(thing_to_queue.smoothing_flags & USES_SMOOTHING) {SSicon_smooth.add_to_queue(thing_to_queue)}
+#define QUEUE_SMOOTH(thing_to_queue) if(thing_to_queue.smooth & USES_SMOOTHING) {SSicon_smooth.add_to_queue(thing_to_queue)}
 #define QUEUE_SMOOTH_NEIGHBORS(thing_to_queue) for(var/atom/atom_neighbor as anything in orange(1, thing_to_queue)) {QUEUE_SMOOTH(atom_neighbor)}
 
 #define NULLTURF_BORDER 123456789

@@ -110,6 +110,9 @@
 
 	if (opacity)
 		has_opaque_atom = TRUE
+	
+	if(smooth & USES_SMOOTHING)  
+		QUEUE_SMOOTH(src) 
 
 	ComponentInitialize()
 
@@ -681,9 +684,9 @@
 	// cache for sanic speed
 	var/smoothing_list = src.smoothing_list
 
-	var/smooth_border = (smoothing_flags & SMOOTH_BORDER)
-	var/smooth_obj = (smoothing_flags & SMOOTH_OBJ)
-	var/smooth_edge = (smoothing_flags & SMOOTH_EDGE)
+	var/smooth_border = (smooth & SMOOTH_BORDER)
+	var/smooth_obj = (smooth & SMOOTH_OBJ)
+	var/smooth_edge = (smooth & SMOOTH_EDGE)
 
 	#define SET_ADJ_IN_DIR(direction, direction_flag) \
 		set_adj_in_dir: { \
@@ -751,7 +754,7 @@
 		T.set_neighborlays(new_junction)
 		return
 
-	if(smoothing_flags & SMOOTH_BITMASK_CARDINALS || !(new_junction & (NORTH|SOUTH)) || !(new_junction & (EAST|WEST)))
+	if(smooth & SMOOTH_BITMASK_CARDINALS || !(new_junction & (NORTH|SOUTH)) || !(new_junction & (EAST|WEST)))
 		set_smoothed_icon_state(new_junction)
 		return
 
