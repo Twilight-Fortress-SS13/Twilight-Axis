@@ -38,11 +38,7 @@
 	if(!istype(H))
 		return 1.0
 
-	if(HAS_TRAIT(H, TRAIT_NOHUNGER))
-		return 0
-
 	var/nut = H.nutrition
-
 	if(nut <= NUTRITION_LEVEL_STARVING)
 		return 0.1
 	if(nut <= NUTRITION_LEVEL_HUNGRY)
@@ -87,7 +83,7 @@
 	if(added > 0)
 		pending_production = max(0, pending_production - added)
 		renew_timer(drain_interval)
-		if(istype(human_object))
+		if(istype(human_object) && !(HAS_TRAIT(H, TRAIT_NOHUNGER)))
 			human_object.adjust_nutrition(-added * BREAST_NUTRITION_COST_PER_UNIT)
 
 	return added
