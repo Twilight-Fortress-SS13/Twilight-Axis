@@ -44,6 +44,9 @@
 	var/dirty_links = TRUE
 	var/dirty_partners = TRUE
 	var/dirty_custom_actions = TRUE
+	var/dirty_organ_filtered = TRUE
+	var/dirty_can_perform = TRUE
+	var/dirty_kinks = TRUE
 
 	var/list/cached_actions_for_menu
 	var/list/cached_actor_organs
@@ -53,12 +56,15 @@
 	var/list/cached_active_links
 	var/list/cached_passive_links
 	var/list/cached_custom_actions
+	var/list/cached_kinks
+	var/list/cached_can_perform
+	var/list/cached_organ_filtered
 
 	var/next_actions_time = 0
 
 	var/obj/structure/bed/rogue/bed = null
 	var/target_on_bed = FALSE
-
+	
 /datum/sex_session_tgui/New(mob/living/carbon/human/U, mob/living/carbon/human/T)
 	. = ..()
 	if(istype(U, /mob/living/carbon/human/erp_proxy))
@@ -541,7 +547,6 @@
 	return D
 
 /datum/sex_session_tgui/ui_data(mob/user)
-	update_partners_proximity()
 	update_knotted_penis_flag()
 	var/list/D = list()
 
@@ -697,12 +702,23 @@
 		if(can_start_action_now(key))
 			can += key
 
-	D["can_perform"] = can
-	D["organ_filtered"] = actions_matching_nodes()
+	D["can_perform"] = rebuild_can_perform()
+
+	if(dirty_organ_filtered || !cached_organ_filtered)
+		cached_organ_filtered = actions_matching_nodes()
+		dirty_organ_filtered = FALSE
+	D["organ_filtered"] = cached_organ_filtered
+
 	if(istype(user, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = user
-		D["kinks"] = get_kink_ui_payload(H, active_partner)
+		if(dirty_kinks || !cached_kinks)
+			cached_kinks = get_kink_ui_payload(H, active_partner)
+			dirty_kinks = FALSE
+	else
+		cached_kinks = null
+		dirty_kinks = TRUE
 
+	D["kinks"] = cached_kinks
 	return D
 
 /datum/sex_session_tgui/proc/get_kink_ui_payload(mob/living/carbon/human/H, mob/living/carbon/human/PH)
@@ -750,6 +766,22 @@
 
 	out["entries"] = entries
 	return out
+
+/datum/sex_session_tgui/proc/rebuild_can_perform()
+	var/list/can = list()
+	if(!selected_actor_organ_id || !selected_partner_organ_id)
+		return can
+
+	if(!cached_actions_for_menu)
+		cached_actions_for_menu = actions_for_menu()
+
+	for(var/i in 1 to cached_actions_for_menu.len)
+		var/list/entry = cached_actions_for_menu[i]
+		var/key = entry["type"]
+		if(can_start_action_now(key))
+			can += key
+
+	return can
 
 /datum/sex_session_tgui/ui_act(action, list/params)
 	. = ..()
