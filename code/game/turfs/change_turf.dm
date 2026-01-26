@@ -159,6 +159,11 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 			else
 				lighting_clear_overlay()
 
+	// only queue for smoothing if SSatom initialized us, and we'd be changing smoothing state
+	if(flags_1 & INITIALIZED_1)
+		QUEUE_SMOOTH_NEIGHBORS(src)
+		QUEUE_SMOOTH(src)
+
 	return W
 
 /turf/open/ChangeTurf(path, list/new_baseturfs, flags) //Resist the temptation to make this default to keeping air.
@@ -349,8 +354,6 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 		ImmediateCalculateAdjacentTurfs()
 	else
 		CALCULATE_ADJACENT_TURFS(src)
-
-	queue_smooth_neighbors(src)
 
 	HandleTurfChange(src)
 
