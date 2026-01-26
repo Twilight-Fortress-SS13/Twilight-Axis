@@ -83,7 +83,7 @@
 	if(added > 0)
 		pending_production = max(0, pending_production - added)
 		renew_timer(drain_interval)
-		if(istype(human_object) && !(HAS_TRAIT(H, TRAIT_NOHUNGER)))
+		if(istype(human_object) && !(HAS_TRAIT(human_object, TRAIT_NOHUNGER)))
 			human_object.adjust_nutrition(-added * BREAST_NUTRITION_COST_PER_UNIT)
 
 	return added
