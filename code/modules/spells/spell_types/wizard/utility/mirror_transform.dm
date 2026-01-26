@@ -400,7 +400,7 @@
 					penis.Insert(H, TRUE, FALSE)
 					penis.accessory_type = valid_penis_types[new_style]
 					var/datum/sprite_accessory/penis/penis_type = SPRITE_ACCESSORY(penis.accessory_type)
-					penis.accessory_colors = penis_type.get_default_colors(color_key_source_list_from_carbon(H))
+					penis.accessory_colors = mirror_pick_accessory_colors(H, penis_type, penis.accessory_colors)
 
 					if(penis.sex_organ)
 						var/datum/sex_organ/penis/SP = penis.sex_organ
@@ -468,7 +468,7 @@
 
 					breasts.accessory_type = valid_breast_types[new_style]
 					var/datum/sprite_accessory/breasts/breasts_type = SPRITE_ACCESSORY(breasts.accessory_type)
-					breasts.accessory_colors = breasts_type.get_default_colors(color_key_source_list_from_carbon(H))
+					breasts.accessory_colors = mirror_pick_accessory_colors(H, breasts_type, breasts.accessory_colors)
 					H.update_body()
 					should_update = TRUE
 
@@ -496,7 +496,7 @@
 						vagina.color = sanitize_hexcolor(new_color, 6, TRUE)
 					else
 						var/datum/sprite_accessory/vagina/vag_type = SPRITE_ACCESSORY(vagina.accessory_type)
-						vagina.color = vag_type.get_default_colors(color_key_source_list_from_carbon(H))
+						vagina.color = mirror_pick_accessory_colors(H, vag_type, vagina.color)
 
 					H.update_body()
 					should_update = TRUE
@@ -799,3 +799,40 @@
 		H.update_hair()
 		H.update_body()
 		H.update_body_parts()
+
+/proc/mirror_pick_accessory_colors(mob/living/carbon/human/H, datum/sprite_accessory/A, current_colors)
+	if(!H || !A)
+		return current_colors
+
+	var/list/src_color = color_key_source_list_from_carbon(H)
+	for(var/k in src_color)
+		if(istext(src_color[k]))
+			src_color[k] = sanitize_hexcolor(src_color[k], 6, TRUE)
+
+	var/list/colors = color_string_to_list(A.validate_color_keys_for_owner(H, current_colors))
+	if(!colors)
+		colors = list()
+	while(length(colors) < A.color_keys)
+		colors += "#FFFFFF"
+
+	for(var/i in 1 to A.color_keys)
+		var/label = "Color #[i]"
+		if(A.color_key_names && length(A.color_key_names) >= i)
+			label = "[A.color_key_names[i]]"
+
+		var/list/modes = list("Skin", "Mutant 1", "Mutant 2", "Mutant 3", "Custom")
+		var/mode = input(H, "Set [label] (current: [colors[i]])", "Colors") as null|anything in modes
+		if(!mode)
+			continue
+
+		switch(mode)
+			if("Skin")      colors[i] = src_color[KEY_SKIN_COLOR]
+			if("Mutant 1")  colors[i] = src_color[KEY_MUT_COLOR_ONE]
+			if("Mutant 2")  colors[i] = src_color[KEY_MUT_COLOR_TWO]
+			if("Mutant 3")  colors[i] = src_color[KEY_MUT_COLOR_THREE]
+			if("Custom")
+				var/c = color_pick_sanitized(H, "Pick custom color for [label]", "Colors", colors[i])
+				if(c)
+					colors[i] = sanitize_hexcolor(c, 6, TRUE)
+
+	return color_list_to_string(colors)
