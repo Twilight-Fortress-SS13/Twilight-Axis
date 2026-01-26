@@ -45,7 +45,6 @@
 	var/dirty_partners = TRUE
 	var/dirty_custom_actions = TRUE
 	var/dirty_organ_filtered = TRUE
-	var/dirty_can_perform = TRUE
 	var/dirty_kinks = TRUE
 
 	var/list/cached_actions_for_menu
@@ -550,11 +549,6 @@
 	update_knotted_penis_flag()
 	var/list/D = list()
 
-	var/datum/preferences/P = user.client?.prefs
-	if(P)
-		P.apply_erp_kinks_to_mob(user)
-		P.apply_erp_organ_sensitivity_to_mob(user)
-
 	var/mob/living/carbon/human/active_partner = get_current_partner()
 	D["title"] = "Соитие с [get_partner_display_name(active_partner)]"
 	D["session_name"] = "Private Session"
@@ -669,7 +663,9 @@
 		dirty_links = FALSE
 
 	D["active_links"] = cached_active_links
-	D["passive_links"] = collect_passive_links_for(user)
+	if(dirty_links || !cached_passive_links)
+		cached_passive_links = collect_passive_links_for(src.user)
+	D["passive_links"] = cached_passive_links
 
 	var/can_knot_now = FALSE
 	for(var/id in current_actions)
@@ -772,13 +768,16 @@
 	if(!selected_actor_organ_id || !selected_partner_organ_id)
 		return can
 
+	var/list/actor_nodes = cached_actor_organs
+	var/list/partner_nodes = cached_partner_organs
+
 	if(!cached_actions_for_menu)
 		cached_actions_for_menu = actions_for_menu()
 
 	for(var/i in 1 to cached_actions_for_menu.len)
 		var/list/entry = cached_actions_for_menu[i]
 		var/key = entry["type"]
-		if(can_start_action_now(key))
+		if(can_start_action_now(key, actor_nodes, partner_nodes))
 			can += key
 
 	return can
@@ -808,6 +807,7 @@
 			if(P)
 				P.capture_erp_kinks_from_mob(H)
 				P.save_preferences()
+				dirty_kinks = TRUE
 			SStgui.update_uis(src)
 			return TRUE
 
@@ -819,6 +819,7 @@
 			else if(side == "partner")
 				selected_partner_organ_id = id
 
+			dirty_organ_filtered = TRUE
 			dirty_actions = TRUE
 			SStgui.update_uis(src)
 			return TRUE
@@ -1173,7 +1174,7 @@
 /datum/sex_session_tgui/proc/stop_all_actions()
 	var/list/ids = current_actions.Copy()
 	for(var/id in ids)
-		stop_instance(id)
+		stop_instance(id, TRUE)
 
 	if(!length(current_actions))
 		clear_actor_locks()
@@ -1183,7 +1184,7 @@
 	dirty_org_nodes = TRUE
 	bed = null
 
-/datum/sex_session_tgui/proc/stop_instance(id)
+/datum/sex_session_tgui/proc/stop_instance(id, silent = FALSE)
 	var/datum/sex_action_session/I = current_actions[id]
 	if(!I)
 		return
@@ -1209,7 +1210,8 @@
 		clear_actor_locks()
 		stop_broadcast_loop()
 
-	SStgui.update_uis(src)
+	if(!silent)
+		SStgui.update_uis(src)
 	bed = null
 
 /datum/sex_session_tgui/proc/sync_arousal_ui()
@@ -1347,71 +1349,6 @@
 
 /datum/sex_session_tgui/proc/category_of_actor_node(id)
 	return GLOB.sex_node_defs[id]?["category"]
-
-/datum/sex_session_tgui/proc/pick_actor_node_for_action(datum/sex_panel_action/A)
-	if(!A)
-		return null
-
-	if(!A.required_init)
-		var/body_cat = category_of_actor_node(SEX_ORGAN_FILTER_BODY)
-		if(!is_locked(body_cat))
-			return SEX_ORGAN_FILTER_BODY
-		return null
-
-	if(selected_actor_organ_id)
-		var/sel_type = node_organ_type(selected_actor_organ_id)
-		if(sel_type && sel_type == A.required_init)
-			var/sel_cat = category_of_actor_node(selected_actor_organ_id)
-			if(!is_locked(sel_cat))
-				return selected_actor_organ_id
-
-	var/list/nodes = build_org_nodes(user, "actor")
-	for(var/i in 1 to nodes.len)
-		var/list/N = nodes[i]
-		var/id = N["id"]
-
-		if(id == SEX_ORGAN_FILTER_BODY)
-			continue
-
-		var/t = node_organ_type(id)
-		if(!t || t != A.required_init)
-			continue
-
-		var/cat = category_of_actor_node(id)
-		if(is_locked(cat))
-			continue
-
-		return id
-
-	return null
-
-/datum/sex_session_tgui/proc/pick_partner_node_for_action(datum/sex_panel_action/A)
-	var/mob/living/carbon/human/P = get_current_partner()
-	if(!P)
-		return null
-
-	if(!A.required_target)
-		return SEX_ORGAN_FILTER_BODY
-
-	if(selected_partner_organ_id)
-		var/t = node_organ_type(selected_partner_organ_id)
-		if(A.required_target == t)
-			return selected_partner_organ_id
-
-	var/list/nodes = build_org_nodes(P, "partner")
-	for(var/i in 1 to nodes.len)
-		var/list/N = nodes[i]
-		var/id = N["id"]
-		if(id == SEX_ORGAN_FILTER_BODY)
-			continue
-
-		var/t2 = node_organ_type(id)
-		if(A.required_target && A.required_target != t2)
-			continue
-
-		return id
-
-	return null
 
 /datum/sex_session_tgui/proc/start_broadcast_loop()
 	if(next_broadcast_time)
@@ -1684,8 +1621,14 @@
 		if(stop)
 			to_stop += id
 
+	var/stopped_any = FALSE
 	for(var/id in to_stop)
-		stop_instance(id)
+		if(current_actions[id])
+			stop_instance(id, TRUE)
+			stopped_any = TRUE
+
+	if(stopped_any)
+		SStgui.update_uis(src)
 
 	if(moved_breaks_any)
 		to_chat(H, span_notice("Движение прерывает часть интимных действий."))
@@ -1747,7 +1690,7 @@
 
 	return best
 
-/datum/sex_session_tgui/proc/can_start_action_now(action_type)
+/datum/sex_session_tgui/proc/can_start_action_now(action_type, list/actor_nodes = null, list/partner_nodes = null)
 	if(!action_type)
 		return FALSE
 
@@ -1755,10 +1698,81 @@
 	if(!A)
 		return FALSE
 
-	var/a_id = pick_actor_node_for_action(A)
-	var/p_id = pick_partner_node_for_action(A)
+	var/a_id = pick_actor_node_for_action(A, actor_nodes)
+	var/p_id = pick_partner_node_for_action(A, partner_nodes)
 
 	return can_execute_action(A, a_id, p_id, TRUE)
+
+/datum/sex_session_tgui/proc/pick_actor_node_for_action(datum/sex_panel_action/A, list/nodes_override = null)
+	if(!A)
+		return null
+
+	if(!A.required_init)
+		var/body_cat = category_of_actor_node(SEX_ORGAN_FILTER_BODY)
+		if(!is_locked(body_cat))
+			return SEX_ORGAN_FILTER_BODY
+		return null
+
+	if(selected_actor_organ_id)
+		var/sel_type = node_organ_type(selected_actor_organ_id)
+		if(sel_type && sel_type == A.required_init)
+			var/sel_cat = category_of_actor_node(selected_actor_organ_id)
+			if(!is_locked(sel_cat))
+				return selected_actor_organ_id
+
+	var/list/nodes = nodes_override
+	if(!nodes)
+		nodes = build_org_nodes(user, "actor")
+
+	for(var/i in 1 to nodes.len)
+		var/list/N = nodes[i]
+		var/id = N["id"]
+
+		if(id == SEX_ORGAN_FILTER_BODY)
+			continue
+
+		var/t = node_organ_type(id)
+		if(!t || t != A.required_init)
+			continue
+
+		var/cat = category_of_actor_node(id)
+		if(is_locked(cat))
+			continue
+
+		return id
+
+	return null
+
+/datum/sex_session_tgui/proc/pick_partner_node_for_action(datum/sex_panel_action/A, list/nodes_override = null)
+	var/mob/living/carbon/human/P = get_current_partner()
+	if(!P || !A)
+		return null
+
+	if(!A.required_target)
+		return SEX_ORGAN_FILTER_BODY
+
+	if(selected_partner_organ_id)
+		var/t = node_organ_type(selected_partner_organ_id)
+		if(A.required_target == t)
+			return selected_partner_organ_id
+
+	var/list/nodes = nodes_override
+	if(!nodes)
+		nodes = build_org_nodes(P, "partner")
+
+	for(var/i in 1 to nodes.len)
+		var/list/N = nodes[i]
+		var/id = N["id"]
+		if(id == SEX_ORGAN_FILTER_BODY)
+			continue
+
+		var/t2 = node_organ_type(id)
+		if(A.required_target && A.required_target != t2)
+			continue
+
+		return id
+
+	return null
 
 /datum/sex_session_tgui/proc/is_partner_node_reserved(node_id, mob/living/carbon/human/P)
 	if(!node_id || !P)
