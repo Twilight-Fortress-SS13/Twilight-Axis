@@ -13,3 +13,4 @@
 #include "code/modules/projectiles/soundbreaker_note.dm"
 #include "code/modules/spells/soundbreaker.dm"
 
+#include "erp_panel\erp_panel.dme"

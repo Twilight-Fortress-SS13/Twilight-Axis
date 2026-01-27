@@ -3058,5 +3058,4 @@
 #include "modular_twilight_axis\lore\code\species_types\roguetown_species.dm"
 #include "modular_twilight_axis\modules.dme"
 #include "modular_twilight_axis\lore\code\tips\time.dm"
-#include "modular_twilight_axis\erp_panel\erp_panel.dme"
 // END_INCLUDE
