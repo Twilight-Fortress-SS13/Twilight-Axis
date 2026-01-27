@@ -136,9 +136,7 @@ SUBSYSTEM_DEF(overlays)
 	var/a_len = add_overlays.len
 	var/r_len = remove_overlays.len
 	var/p_len = priority_overlays.len
-	for(var/O in overlays)
-		if(!(O in remove_overlays))
-			remove_overlays += O
+	remove_overlays |= overlays 
 	add_overlays -= overlays
 
 
@@ -166,16 +164,12 @@ SUBSYSTEM_DEF(overlays)
 	var/p_len = priority_overlays.len
 
 	if(priority)
-		for(var/O in overlays)
-			if(!(O in priority_overlays))
-				priority_overlays += O  //or in the image. Can we use [image] = image?
+		priority_overlays |= overlays  //or in the image. Can we use [image] = image?
 		var/fp_len = priority_overlays.len
 		if(NOT_QUEUED_ALREADY && fp_len != p_len)
 			QUEUE_FOR_COMPILE
 	else
-		for(var/O in overlays)
-			if(!(O in add_overlays))
-				add_overlays += O
+		add_overlays |= overlays
 		var/fa_len = add_overlays.len
 		if(NOT_QUEUED_ALREADY && fa_len != a_len)
 			QUEUE_FOR_COMPILE
