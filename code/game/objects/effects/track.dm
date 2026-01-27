@@ -21,9 +21,6 @@
 /turf/open/floor/rogue/snow
 	track_prob = 20
 
-/turf/open/floor/rogue/snowpatchy
-	track_prob = 10
-
 /turf/open/floor/rogue/AzureSand
 	track_prob = 20
 
@@ -33,16 +30,7 @@
 /turf/open/floor/carpet
 	track_prob = 10
 
-/turf/open/floor/rogue/twig
-	track_prob = 5
-
 /turf/open/floor/rogue/wood
-	track_prob = 5
-
-/turf/open/floor/rogue/woodturned
-	track_prob = 5
-
-/turf/open/floor/rogue/ruinedwood
 	track_prob = 5
 
 /turf/open/floor/rogue/dirt/road
@@ -57,9 +45,6 @@
 /turf/open/floor/rogue/cobble
 	track_prob = 3
 
-/turf/open/floor/rogue/cobble/mossy
-	track_prob = 10
-
 /turf/open/floor/rogue/blocks
 	track_prob = 10
 
@@ -72,25 +57,13 @@
 /turf/open/floor/rogue/hexstone
 	track_prob = 10
 
-/turf/open/floor/rogue/herringbone
-	track_prob = 10
-
 /turf/open/floor/rogue/churchmarble
 	track_prob = 5
-
-/turf/open/floor/rogue/church
-	track_prob = 5
-
-/turf/open/floor/rogue/churchrough
-	track_prob = 10
 
 /turf/open/floor/rogue/churchbrick
 	track_prob = 5
 
 /turf/open/floor/rogue/cobblerock
-	track_prob = 10
-
-/turf/open/floor/rogue/naturalstone
 	track_prob = 10
 
 //Probabilities end (albeit mud is handled seperately).

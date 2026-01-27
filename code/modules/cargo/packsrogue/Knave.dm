@@ -10,32 +10,32 @@
 
 /datum/supply_pack/rogue/Knave/leather/lhelmet
 	name = "Leather Helmet"
-	cost = 10
+	cost = 5
 	contains = list(/obj/item/clothing/head/roguetown/helmet/leather)
 
 /datum/supply_pack/rogue/Knave/leather/hlhelmet
 	name = "Hardened Leather Helmet"
-	cost = 20
+	cost = 10
 	contains = list(/obj/item/clothing/head/roguetown/helmet/leather/advanced)
 
 /datum/supply_pack/rogue/Knave/leather/khelmet
 	name = "Kettle Helmet"
-	cost = 30
+	cost = 20
 	contains = list(/obj/item/clothing/head/roguetown/helmet/kettle)
 
 //////////
 // NECK //
 //////////
 
-/datum/supply_pack/rogue/Knave/coif
-	name = "Padded Coif"
+/datum/supply_pack/rogue/Knave/gorget
+	name = "Gorget"
 	cost = 20
-	contains = list(/obj/item/clothing/neck/roguetown/coif/padded)
+	contains = list(/obj/item/clothing/neck/roguetown/gorget)
 
-/datum/supply_pack/rogue/Knave/coifheavy
-	name = "Padded Coif - Heavy"
-	cost = 40
-	contains = list(/obj/item/clothing/neck/roguetown/coif/heavypadding)
+/datum/supply_pack/rogue/Knave/gorget
+	name = "Steel Coif"
+	cost = 30
+	contains = list(/obj/item/clothing/neck/roguetown/chaincoif)
 
 ///////////
 // CHEST //
@@ -43,28 +43,33 @@
 
 /datum/supply_pack/rogue/Knave/gambeson
 	name = "Gambeson"
-	cost = 15
+	cost = 5
 	contains = list(/obj/item/clothing/suit/roguetown/armor/gambeson)
 
 /datum/supply_pack/rogue/Knave/hgambeson
-	name = "Padded Gambeson"
-	cost = 30
+	name = "Heavy Gambeson"
+	cost = 20
 	contains = list(/obj/item/clothing/suit/roguetown/armor/gambeson/heavy)
 
 /datum/supply_pack/rogue/Knave/leather
 	name = "Leather Armor"
-	cost = 20
+	cost = 10
 	contains = list(/obj/item/clothing/suit/roguetown/armor/leather)
+
+/datum/supply_pack/rogue/Knave/leather/studded
+	name = "Studded Leather Armor"
+	cost = 20
+	contains = list(/obj/item/clothing/suit/roguetown/armor/leather/studded)
 
 /datum/supply_pack/rogue/Knave/leather/heavy
 	name = "Hardened Leather Armor"
-	cost = 40
+	cost = 20
 	contains = list(/obj/item/clothing/suit/roguetown/armor/leather/heavy)
 
-/datum/supply_pack/rogue/Knave/brigandine
-	name = "Lightweight Brigandine"
-	cost = 80
-	contains = list(/obj/item/clothing/suit/roguetown/armor/brigandine/light)
+/datum/supply_pack/rogue/Knave/leather/hcoat
+	name = "Hardened Leather Coat"
+	cost = 30
+	contains = list(/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat)
 
 ///////////////////
 // WRISTS/GLOVES //
@@ -72,32 +77,27 @@
 
 /datum/supply_pack/rogue/Knave/leather/Lbracers
 	name = "Leather Bracers"
-	cost = 10
+	cost = 5
 	contains = list(/obj/item/clothing/wrists/roguetown/bracers/leather)
 
 /datum/supply_pack/rogue/Knave/leather/hbracers
 	name = "Hardened Leather Bracers"
-	cost = 20
+	cost = 10
 	contains = list(/obj/item/clothing/wrists/roguetown/bracers/leather/heavy)
-
-/datum/supply_pack/rogue/Knave/splintbracers
-	name = "Brigandine Rerebraces"
-	cost = 30
-	contains = list(/obj/item/clothing/wrists/roguetown/splintarms)
 
 /datum/supply_pack/rogue/Knave/leather/lgloves
 	name = "Leather Gloves"
-	cost = 10
+	cost = 5
 	contains = list(/obj/item/clothing/gloves/roguetown/leather)
 
 /datum/supply_pack/rogue/Knave/leather/hlgloves
 	name = "Heavy Leather Gloves"
-	cost = 20
+	cost = 10
 	contains = list(/obj/item/clothing/gloves/roguetown/angle)
 
 /datum/supply_pack/rogue/Knave/leather/flgloves
 	name = "Fingerless Leather Gloves"
-	cost = 20
+	cost = 10
 	contains = list(/obj/item/clothing/gloves/roguetown/fingerless_leather)
 
 ///////////////
@@ -113,11 +113,6 @@
 	name = "Hardened Leather Trousers"
 	cost = 20
 	contains = list(/obj/item/clothing/under/roguetown/heavy_leather_pants)
-
-/datum/supply_pack/rogue/Knave/splintlegs
-	name = "Brigandine Chausses"
-	cost = 30
-	contains = list(/obj/item/clothing/under/roguetown/splintlegs)
 
 /////////////////////
 // WEAPONS - MELEE //
@@ -135,46 +130,51 @@
 
 /datum/supply_pack/rogue/Knave/parrydag
 	name = "Parry Dagger"
-	cost = 30
+	cost = 20
 	contains = list(/obj/item/rogueweapon/huntingknife/idagger/steel/parrying)
 
 /datum/supply_pack/rogue/Knave/Navaja
 	name = "Navaja"
-	cost = 40
+	cost = 20
 	contains = list(/obj/item/rogueweapon/huntingknife/idagger/navaja)
 
 /datum/supply_pack/rogue/Knave/elfdagger
 	name = "Elven Dagger"
-	cost = 60
+	cost = 40
 	contains = list(/obj/item/rogueweapon/huntingknife/idagger/silver/elvish)
 
 //////////////////////
 // WEAPONS - RANGED //
 //////////////////////
 
+/datum/supply_pack/rogue/Knave/bow
+	name = "Bow"
+	cost = 10
+	contains = list(/obj/item/gun/ballistic/revolver/grenadelauncher/bow)
+
 /datum/supply_pack/rogue/Knave/crossbow
 	name = "Crossbow"
-	cost = 40
+	cost = 20
 	contains = list(/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow)
 
 /datum/supply_pack/rogue/Knave/slurbow
 	name = "Slurbow"
-	cost = 40
+	cost = 20
 	contains = list(/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow)
 
 /datum/supply_pack/rogue/Knave/recurvebow
 	name = "Recurve Bow"
-	cost = 40
+	cost = 20
 	contains = list(/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve)
 
 /datum/supply_pack/rogue/Knave/longbow
 	name = "Longbow"
-	cost = 80
+	cost = 40
 	contains = list(/obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow)
 
 /datum/supply_pack/rogue/Knave/steeltossblades
 	name = "Steel Tossblade Belt"
-	cost = 80
+	cost = 20
 	contains = list(/obj/item/storage/belt/rogue/leather/knifebelt/black/steel)
 
 /////////////////////////////
@@ -183,38 +183,49 @@
 
 /datum/supply_pack/rogue/Knave/quiver
 	name = "Empty Quiver"
-	cost = 10
+	cost = 5
 	contains = list(/obj/item/quiver)
 
 /datum/supply_pack/rogue/Knave/quivers/arrows
-	name = "Quiver of Arrows - Broadhead"
-	cost = 20
+	name = "Quiver of Arrows"
+	cost = 10
 	contains = list(/obj/item/quiver/arrows)
-
-/datum/supply_pack/rogue/Knave/quivers/arrows/steel
-	name = "Quiver of Arrows - Bodkin"
-	cost = 50
-	contains = list(/obj/item/quiver/bodkin)
-
-/datum/supply_pack/rogue/Knave/quivers/arrows/pyro
-	name = "Quiver of Arrows - Pyroclastic"
-	cost = 100
-	contains = list(/obj/item/quiver/pyroarrows)
-
-/datum/supply_pack/rogue/Knave/quivers/arrows/poison
-	name = "Quiver of Arrows - Poison"
-	cost = 100
-	contains = list(/obj/item/quiver/poisonarrows)
 
 /datum/supply_pack/rogue/Knave/quivers/bolts
 	name = "Quiver of Bolts"
-	cost = 30
+	cost = 20
 	contains = list(/obj/item/quiver/bolts)
 
-/datum/supply_pack/rogue/Knave/quivers/bolts/pyro
-	name = "Quiver of Bolts - Pyroclastic"
-	cost = 100
-	contains = list(/obj/item/quiver/pyrobolts)
+/datum/supply_pack/rogue/Knave/Sarrows
+	name = "Steel Bodkin Arrow"
+	cost = 3
+	contains = list(/obj/item/ammo_casing/caseless/rogue/arrow/steel)
+
+/datum/supply_pack/rogue/Knave/Warrows
+	name = "Water Arrows (x5)"
+	cost = 1
+	contains = list(
+	/obj/item/ammo_casing/caseless/rogue/arrow/water,
+	/obj/item/ammo_casing/caseless/rogue/arrow/water,
+	/obj/item/ammo_casing/caseless/rogue/arrow/water,
+	/obj/item/ammo_casing/caseless/rogue/arrow/water,
+	/obj/item/ammo_casing/caseless/rogue/arrow/water,
+	)
+
+/datum/supply_pack/rogue/Knave/Parrows
+	name = "Poisoned Arrow"
+	cost = 3
+	contains = list(/obj/item/ammo_casing/caseless/rogue/arrow/poison)
+
+/datum/supply_pack/rogue/Knave/pyroarrows
+	name = "Pyroclastic Arrow"
+	cost = 3
+	contains = list(/obj/item/ammo_casing/caseless/rogue/arrow/pyro)
+
+/datum/supply_pack/rogue/Knave/pyrobolts
+	name = "Pyroclastic bolt"
+	cost = 3
+	contains = list(/obj/item/ammo_casing/caseless/rogue/bolt/pyro)
 
 /////////////
 // UTILITY //
@@ -222,20 +233,10 @@
 
 /datum/supply_pack/rogue/Knave/Mancatcher
 	name = "Mancatcher"
-	cost = 30
+	cost = 10
 	contains = list(/obj/item/restraints/legcuffs/beartrap)
 
 /datum/supply_pack/rogue/Knave/lockpicks
 	name = "Lockpick ring"
 	cost = 10
 	contains = list(/obj/item/lockpickring/mundane)
-
-/datum/supply_pack/rogue/Knave/grappler
-	name = "Grappling Hook"
-	cost = 200
-	contains = list(/obj/item/grapplinghook)
-
-/datum/supply_pack/rogue/Knave/climbing_gear
-	name = "Climbing Gear"
-	cost = 150
-	contains = list(/obj/item/clothing/climbing_gear)
