@@ -1460,8 +1460,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Хаммерхолдская обувка"
 	category = list("Обувь", "Донат")
 	path = /obj/item/clothing/shoes/roguetown/hammerhold_shoes
+	donatitem = TRUE
+
 
 /datum/loadout_item/hammerhold_boots
 	name = "Хаммерхолдские сапоги"
 	category = list("Обувь", "Донат")
 	path = /obj/item/clothing/shoes/roguetown/boots/hammerhold_boots
+	donatitem = TRUE

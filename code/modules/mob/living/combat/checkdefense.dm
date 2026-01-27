@@ -20,9 +20,17 @@
 		if(CAR)
 			CAR.adjust_arousal_special(src, 2)
 
+	// TA Edit start - SOUNDBREAKER
+	var/success = FALSE
+
 	switch(d_intent)
 		if(INTENT_PARRY)
-			return attempt_parry(intenty, user)
+			success = attempt_parry(intenty, user)
 		if(INTENT_DODGE)
-			return attempt_dodge(intenty, user)
-			
+			success = attempt_dodge(intenty, user)
+
+	if(success)
+		soundbreaker_riff_defense_success(src)
+
+	return success
+	// TA Edit end - SOUNDBREAKER
