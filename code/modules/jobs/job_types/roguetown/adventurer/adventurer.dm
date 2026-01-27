@@ -49,6 +49,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/rogue/thief,
 		/datum/advclass/rogue/bard,
 		/datum/advclass/rogue/swashbuckler,
+		/datum/advclass/rogue/soundbreaker, // TA - Soundbreaker Class
 		/datum/advclass/mage,
 		/datum/advclass/mage/spellblade,
 		/datum/advclass/mage/spellsinger,
