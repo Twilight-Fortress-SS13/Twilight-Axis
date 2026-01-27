@@ -265,16 +265,6 @@
 	chargetime = 1
 	chargedrain = 0
 
-/datum/intent/arc/twilight_firearm/can_charge()
-	if(mastermob && masteritem.wielded)
-		if(!masteritem.wielded)
-			return FALSE
-/*		if(mastermob.get_num_arms(FALSE) < 2)
-			return FALSE
-		if(mastermob.get_inactive_held_item())
-			return FALSE*/
-		return TRUE
-
 /datum/intent/arc/twilight_firearm/get_chargetime()
 	if(mastermob && chargetime)
 		var/newtime = chargetime
