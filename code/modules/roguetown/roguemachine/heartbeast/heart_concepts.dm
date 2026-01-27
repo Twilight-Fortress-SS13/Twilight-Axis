@@ -6,50 +6,50 @@
 /datum/flesh_concept/pain
 	name = "pain"
 	tier_questions = alist(
-		1 = list("Hurt? Oww?", "Bad feel?", "Ouch?"),
-		2 = list("What is pain?", "Why we hurt?", "Pain good?"),
-		3 = list("Does suffering have purpose?", "Is pain a teacher?", "How does pain change us?"),
-		4 = list("What truths does agony reveal?", "Is suffering necessary for growth?", "How does pain shape consciousness?")
+		1 = list("Боль? Ай?", "Плохо чувство?", "Ой?"),
+		2 = list("Что есть боль?", "Почему нам больно?", "Боль хорошо?"),
+		3 = list("В страданиях есть смысл?", "Боль это учитель?", "Как боль меняет нас?"),
+		4 = list("Какую истину открывает агония?", "Необходимо ли страдание для развития?", "Как боль меняет сознание?")
 	)
-	answer_keywords = list("hurt", "pain", "suffering", "agony", "ache", "torment", "anguish")
+	answer_keywords = list("больно", "мук", "страда", "агони", "боль", "истязан", "мучен")
 
 /datum/flesh_concept/blood
 	name = "blood"
 	tier_questions = alist(
-		1 = list("Red wet?", "Life juice?", "Bleed?"),
-		2 = list("What is blood?", "Why blood red?", "Blood life?"),
-		3 = list("Does blood carry memory?", "Is blood sacred?", "What flows in veins?"),
-		4 = list("What ancestral knowledge flows in blood?", "Is blood the river of lineage?", "Does blood remember what the mind forgets?")
+		1 = list("Красная вода?", "Жизненный сок?", "Течь кровь?"),
+		2 = list("Что есть кровь?", "Почему кровь красная?", "Кровь - жизнь?"),
+		3 = list("Кровь несёт воспоминания?", "Кровь священная?", "Что течёт по венам?"),
+		4 = list("Какое знание предков содержится в крови?", "Является ли кровь рекой поколений?", "Помнит ли кровь то, что забыл разум?")
 	)
 	answer_keywords = list("blood", "bleed", "veins", "life", "red", "flow", "sacrifice")
 
 /datum/flesh_concept/fear
 	name = "fear"
 	tier_questions = alist(
-		1 = list("Scary?", "Run hide?", "Bad thing?"),
-		2 = list("What is fear?", "Fear good?", "Why afraid?"),
-		3 = list("Does fear protect or imprison?", "What lies beneath terror?", "Is fear a warning?"),
-		4 = list("What truths does dread unveil?", "Is fear the shadow of survival?", "Does terror reveal hidden realities?")
+		1 = list("Страшно?", "Бежать прятаться?", "Плохой вещь?"),
+		2 = list("Что такое страх?", "Страх это хорошо?", "Почему боимся?"),
+		3 = list("Страх сковывает или защищает?", "Что скрывается под ужасом?", "Страх это предупреждение?"),
+		4 = list("Какую истину открывает ужас?", "Является ли страх тенью выживания?", "Открывает ли ужас потайные знания о действительности?")
 	)
 	answer_keywords = list("fear", "scared", "afraid", "terror", "dread", "panic", "anxiety")
 
 /datum/flesh_concept/hunger
 	name = "hunger"
 	tier_questions = alist(
-		1 = list("Want food?", "Empty tummy?", "Eat now?"),
-		2 = list("What is hunger?", "Why we need food?", "Hunger pain?"),
-		3 = list("Is hunger more than physical?", "What do we truly crave?", "Does hunger drive creation?"),
-		4 = list("What existential void does hunger represent?", "Is craving flesh the engine of being?", "What hungers drive us?")
+		1 = list("Хотеть кушать?", "Пустой животик?", "Есть сейчас?"),
+		2 = list("Что есть голод?", "Зачем нам еда?", "Голод - боль?"),
+		3 = list("Голод выходит за рамки осязаемого?", "Чего мы на самом деле желаем?", "Голод толкает нас на созидание?"),
+		4 = list("Какую экзистенциальную пропасть олицетворяет голод?", "Жажда плоти это двигатель живого?", "Какой голод заставляет нас двигаться?")
 	)
 	answer_keywords = list("hunger", "food", "eat", "crave", "starve", "appetite", "desire")
 
 /datum/flesh_concept/love
 	name = "love"
 	tier_questions = alist(
-		1 = list("Good feel?", "Warm inside?", "Like person?"),
-		2 = list("What is love?", "Why love hurt?", "Love good?"),
-		3 = list("Is love a binding force?", "Does love transform?", "What sacrifices does love demand?"),
-		4 = list("Do we truly require love, or is it inner deceit?", "Is love the fabric binding souls?", "What divine madness is love?")
+		1 = list("Хорошо чувство?", "Тепло внутри?", "Нравиться человек?"),
+		2 = list("Что такое любовь?", "Почему от любви больно?", "Любовь - хорошо?"),
+		3 = list("Любовь это связывающая сила?", "Любовь преображает?", "Каких жертв требует любовь?"),
+		4 = list("На самом  ли деле нам нужна любовь, или это просто внутренний обман?", "Является ли любовь тканью, что связывает души??", "Какое божественное безумие есть любовь?")
 	)
 	answer_keywords = list("love", "care", "affection", "devotion", "passion", "connection", "bond")
 
