@@ -1,0 +1,27 @@
+//COMBO-CORE - BEGIN//
+#define COMPONENT_COMBO_ACCEPTED (1<<0)
+#define COMPONENT_COMBO_FIRED    (1<<1)
+//COMBO-CORE - END //
+
+//SOUNDBREAKER - BEGIN//
+#define SOUNDBREAKER_NOTE_BEND	1
+#define SOUNDBREAKER_NOTE_BARE	2
+#define SOUNDBREAKER_NOTE_SHED	3
+#define SOUNDBREAKER_NOTE_RIFF	4
+
+#define SB_COMBO_ICON_ECHO			"combo_echo"
+#define SB_COMBO_ICON_BASSDROP		"combo_bass"
+#define SB_COMBO_ICON_REVERBCUT		"combo_reverb"
+#define SB_COMBO_ICON_SYNCOPATION	"combo_sync"
+#define SB_COMBO_ICON_HARMONIC		"combo_harmonic"
+#define SB_COMBO_ICON_CRESCENDO		"combo_crescendo"
+#define SB_COMBO_ICON_OVERTURE		"combo_overture"
+
+#define SB_COMBO_WINDOW (8 SECONDS)
+#define SB_MAX_HISTORY 5
+#define SB_BASE_COOLDOWN 0
+#define SB_PREP_WINDOW (5 SECONDS)
+#define SB_CRESCENDO_STAM_DRAIN_PCT 0.10        
+
+#define SB_MAX_VISIBLE_NOTES 5
+//SOUNDBREAKER - END //
