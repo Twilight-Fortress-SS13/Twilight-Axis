@@ -38,27 +38,7 @@
 	var/last_sent_actor_arousal = -1
 	var/last_sent_partner_arousal = -1
 
-	var/dirty_heavy = TRUE
-	var/dirty_actions = TRUE
-	var/dirty_org_nodes = TRUE
-	var/dirty_links = TRUE
-	var/dirty_partners = TRUE
-	var/dirty_custom_actions = TRUE
-	var/dirty_organ_filtered = TRUE
-	var/dirty_kinks = TRUE
-
-	var/list/cached_actions_for_menu
-	var/list/cached_actor_organs
-	var/list/cached_partner_organs
-	var/list/cached_status_organs
-	var/list/cached_partners_data
-	var/list/cached_active_links
-	var/list/cached_passive_links
-	var/list/cached_custom_actions
-	var/list/cached_kinks
-	var/list/cached_can_perform
-	var/list/cached_organ_filtered
-
+	var/datum/sex_session_cache_worker/cache
 	var/next_actions_time = 0
 
 	var/obj/structure/bed/rogue/bed = null
@@ -103,6 +83,11 @@
 		RegisterSignal(target, COMSIG_SEX_AROUSAL_CHANGED, PROC_REF(on_arousal_changed))
 		RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
 
+	if(!cache)
+		cache = new(src)
+		cache.mark_dirty_all()
+		cache.flush_now(16)
+
 	START_PROCESSING(SSerp_sytem, src)
 
 /datum/sex_session_tgui/Destroy()
@@ -127,6 +112,7 @@
 			qdel(M)
 	partners.Cut()
 	LAZYREMOVE(GLOB.sex_sessions, src)
+	QDEL_NULL(cache)
 	return ..()
 
 /datum/sex_session_tgui/proc/find_bed()
@@ -165,8 +151,8 @@
 
 	if(!(M in partners))
 		partners += M
-		dirty_partners = TRUE
-		dirty_org_nodes = TRUE
+		if(cache)
+			cache.mark_dirty_partners()
 
 	if(!current_partner_ref)
 		current_partner_ref = REF(M)
@@ -547,12 +533,23 @@
 
 /datum/sex_session_tgui/ui_data(mob/user)
 	update_knotted_penis_flag()
+
+	if(!cache)
+		cache = new(src)
+
+	if(!cache.cached_actor_organs || !cache.cached_partner_organs || !cache.cached_actions_for_menu)
+		cache.mark_dirty_all()
+		cache.flush_now(16)
+	else
+		cache.mark_dirty_status()
+		cache.flush_now(2)
+
 	var/list/D = list()
 
 	var/mob/living/carbon/human/active_partner = get_current_partner()
 	D["title"] = "Соитие с [get_partner_display_name(active_partner)]"
 	D["session_name"] = "Private Session"
-	D["actor_name"] = get_actor_display_name(user) || "—"
+	D["actor_name"] = get_actor_display_name(src.user) || "—"
 	D["partner_name"] = get_partner_display_name(active_partner)
 	D["selected_actor_organ"] = selected_actor_organ_id
 	D["selected_partner_organ"] = selected_partner_organ_id
@@ -563,6 +560,7 @@
 	D["allow_user_moan"] = allow_user_moan
 	D["hidden_mode"] = hidden_mode
 
+	// Arousal — лёгкое, читаем сигналом как и раньше
 	var/list/ad_user = list()
 	if(src.user)
 		SEND_SIGNAL(src.user, COMSIG_SEX_GET_AROUSAL, ad_user)
@@ -586,21 +584,21 @@
 		D["partner_arousal"] = null
 		D["partner_arousal_hidden"] = TRUE
 
-	if(dirty_actions || !cached_actions_for_menu)
-		cached_actions_for_menu = actions_for_menu()
-		dirty_actions = FALSE
-	D["actions"] = cached_actions_for_menu
+	// Всё тяжёлое — только из кеша воркера
+	D["actions"]         = cache.cached_actions_for_menu
+	D["custom_actions"]  = cache.cached_custom_actions
+	D["actor_organs"]    = cache.cached_actor_organs
+	D["partner_organs"]  = cache.cached_partner_organs
+	D["status_organs"]   = cache.cached_status_organs
+	D["partners"]        = cache.cached_partners_data
+	D["current_partner_ref"] = current_partner_ref
+	D["active_links"]    = cache.cached_active_links
+	D["passive_links"]   = cache.cached_passive_links
+	D["can_perform"]     = cache.cached_can_perform
+	D["organ_filtered"]  = cache.cached_organ_filtered
+	D["kinks"]           = cache.cached_kinks
 
-	if(dirty_org_nodes || !cached_actor_organs || !cached_partner_organs)
-		var/mob/living/carbon/human/A = get_effective_actor()
-		cached_actor_organs = build_org_nodes(A, "actor")
-		cached_partner_organs = build_org_nodes(active_partner, "partner")
-		dirty_org_nodes = FALSE
-
-	D["actor_organs"] = cached_actor_organs
-	D["partner_organs"] = cached_partner_organs
-	D["status_organs"] = build_status_org_nodes(src.user)
-
+	// current_actions list — лёгкое (типы)
 	var/list/cur_types = list()
 	for(var/id in current_actions)
 		var/datum/sex_action_session/I = current_actions[id]
@@ -608,72 +606,13 @@
 			cur_types |= I.action_type
 	D["current_actions"] = cur_types
 
-	if(dirty_partners || !cached_partners_data)
-		var/list/partners_data = list()
-		if(src.user)
-			partners_data += list(list(
-				"ref" = REF(src.user),
-				"name" = "[src.user.name]",
-			))
-
-		for(var/mob/living/carbon/human/M in partners)
-			if(QDELETED(M))
-				continue
-			partners_data += list(list(
-				"ref" = REF(M),
-				"name" = M.name,
-			))
-
-		if(!current_partner_ref && src.user)
-			current_partner_ref = REF(src.user)
-
-		cached_partners_data = partners_data
-		dirty_partners = FALSE
-
-	D["partners"] = cached_partners_data
-	D["current_partner_ref"] = current_partner_ref
-
-	if(dirty_links || !cached_active_links)
-		var/list/links = list()
-		for(var/id in current_actions)
-			var/datum/sex_action_session/I = current_actions[id]
-			if(!I)
-				continue
-
-			var/datum/sex_organ/tuned_org = resolve_organ_datum(I.actor, I.actor_node_id)
-			if(!tuned_org)
-				tuned_org = resolve_organ_datum(I.partner, I.partner_node_id)
-
-			var/sens = tuned_org ? tuned_org.sensitivity : 0
-			var/pain = tuned_org ? tuned_org.pain : 0
-			links += list(list(
-				"id"                = I.instance_id,
-				"actor_organ_id"    = I.actor_node_id,
-				"partner_organ_id"  = I.partner_node_id,
-				"action_type"       = I.action_proto,
-				"action_name"       = I.action_proto?.name,
-				"speed"             = I.speed,
-				"force"             = I.force,
-				"do_until_finished" = do_until_finished,
-				"sensitivity"       = sens,
-				"pain"              = pain,
-			))
-
-		cached_active_links = links
-		dirty_links = FALSE
-
-	D["active_links"] = cached_active_links
-	if(dirty_links || !cached_passive_links)
-		cached_passive_links = collect_passive_links_for(src.user)
-	D["passive_links"] = cached_passive_links
-
+	// knot info — лёгкое
 	var/can_knot_now = FALSE
-	for(var/id in current_actions)
-		var/datum/sex_action_session/I = current_actions[id]
-		if(!I)
+	for(var/id2 in current_actions)
+		var/datum/sex_action_session/I2 = current_actions[id2]
+		if(!I2)
 			continue
-
-		if(I.action_proto?.can_knot)
+		if(I2.action_proto?.can_knot)
 			can_knot_now = TRUE
 			break
 
@@ -681,40 +620,6 @@
 	D["do_knot_action"] = do_knot_action
 	D["can_knot_now"] = can_knot_now
 
-	if(dirty_custom_actions || !cached_custom_actions)
-		cached_custom_actions = build_custom_actions_for_ui()
-		dirty_custom_actions = FALSE
-
-	D["custom_actions"] = cached_custom_actions
-
-	var/list/can = list()
-	var/user_ckey = src.user?.client?.ckey
-	for(var/key in GLOB.sex_panel_actions)
-		var/datum/sex_panel_action/A = GLOB.sex_panel_actions[key]
-		if(!A)
-			continue
-		if(A.ckey && A.ckey != user_ckey)
-			continue
-		if(can_start_action_now(key))
-			can += key
-
-	D["can_perform"] = rebuild_can_perform()
-
-	if(dirty_organ_filtered || !cached_organ_filtered)
-		cached_organ_filtered = actions_matching_nodes()
-		dirty_organ_filtered = FALSE
-	D["organ_filtered"] = cached_organ_filtered
-
-	if(istype(user, /mob/living/carbon/human))
-		var/mob/living/carbon/human/H = user
-		if(dirty_kinks || !cached_kinks)
-			cached_kinks = get_kink_ui_payload(H, active_partner)
-			dirty_kinks = FALSE
-	else
-		cached_kinks = null
-		dirty_kinks = TRUE
-
-	D["kinks"] = cached_kinks
 	return D
 
 /datum/sex_session_tgui/proc/get_kink_ui_payload(mob/living/carbon/human/H, mob/living/carbon/human/PH)
@@ -768,14 +673,15 @@
 	if(!selected_actor_organ_id || !selected_partner_organ_id)
 		return can
 
-	var/list/actor_nodes = cached_actor_organs
-	var/list/partner_nodes = cached_partner_organs
+	var/list/actor_nodes = cache ? cache.cached_actor_organs : null
+	var/list/partner_nodes = cache ? cache.cached_partner_organs : null
 
-	if(!cached_actions_for_menu)
-		cached_actions_for_menu = actions_for_menu()
+	var/list/menu = cache ? cache.cached_actions_for_menu : null
+	if(!menu)
+		menu = actions_for_menu()
 
-	for(var/i in 1 to cached_actions_for_menu.len)
-		var/list/entry = cached_actions_for_menu[i]
+	for(var/i in 1 to menu.len)
+		var/list/entry = menu[i]
 		var/key = entry["type"]
 		if(can_start_action_now(key, actor_nodes, partner_nodes))
 			can += key
@@ -807,7 +713,8 @@
 			if(P)
 				P.capture_erp_kinks_from_mob(H)
 				P.save_preferences()
-				dirty_kinks = TRUE
+				if(cache)
+					cache.dirty_kinks = TRUE
 			SStgui.update_uis(src)
 			return TRUE
 
@@ -819,16 +726,18 @@
 			else if(side == "partner")
 				selected_partner_organ_id = id
 
-			dirty_organ_filtered = TRUE
-			dirty_actions = TRUE
+			if(cache)
+				cache.dirty_menu = TRUE
+				cache.dirty_can_perform = TRUE
+				cache.dirty_filtered = TRUE
 			SStgui.update_uis(src)
 			return TRUE
 
 		if("start_action")
 			try_start_action(params["action_type"])
-			dirty_links = TRUE
-			dirty_org_nodes = TRUE
-			dirty_actions = TRUE
+			if(cache)
+				cache.mark_dirty_links()
+				cache.mark_dirty_org_nodes()
 			SStgui.update_uis(src)
 			return TRUE
 
@@ -854,9 +763,11 @@
 
 				if(yield_to_partner)
 					stop_all_actions()
-					dirty_links = TRUE
-					dirty_org_nodes = TRUE
-					dirty_actions = TRUE
+
+				if(cache)
+					cache.dirty_menu = TRUE
+					cache.dirty_can_perform = TRUE
+					cache.dirty_filtered = TRUE	
 
 			SStgui.update_uis(src)
 			return TRUE
@@ -873,17 +784,17 @@
 					if(!partner_bodypart_override || !istype(partner_bodypart_override, /obj/item/bodypart/head/dullahan))
 						partner_bodypart_override = null
 
-					dirty_org_nodes = TRUE
-					dirty_actions = TRUE
+					if(cache)
+						cache.mark_dirty_partners()
 
 					SStgui.update_uis(src)
 					return TRUE
 
 		if("stop_all")
 			stop_all_actions()
-			dirty_links = TRUE
-			dirty_org_nodes = TRUE
-			dirty_actions = TRUE
+			if(cache)
+				cache.mark_dirty_links()
+				cache.mark_dirty_org_nodes()
 			SStgui.update_uis(src)
 			return TRUE
 
@@ -891,9 +802,9 @@
 			var/id = params["id"]
 			if(id)
 				stop_instance(id)
-				dirty_links = TRUE
-				dirty_org_nodes = TRUE
-				dirty_actions = TRUE
+				if(cache)
+					cache.mark_dirty_links()
+					cache.mark_dirty_org_nodes()
 				SStgui.update_uis(src)
 				return TRUE
 
@@ -903,7 +814,8 @@
 			var/datum/sex_action_session/I = current_actions[id]
 			if(I)
 				I.speed = value
-				dirty_links = TRUE
+				if(cache)
+					cache.mark_dirty_links()
 				SStgui.update_uis(src)
 				return TRUE
 
@@ -913,13 +825,15 @@
 			var/datum/sex_action_session/I2 = current_actions[id2]
 			if(I2)
 				I2.force = value2
-				dirty_links = TRUE
+				if(cache)
+					cache.mark_dirty_links()
 				SStgui.update_uis(src)
 				return TRUE
 
 		if("toggle_link_finished")
 			do_until_finished = !do_until_finished
-			dirty_links = TRUE
+			if(cache)
+				cache.mark_dirty_links()
 			SStgui.update_uis(src)
 			return TRUE
 
@@ -953,7 +867,9 @@
 						P.capture_erp_organ_sensitivity_from_mob(user)
 						P.save_preferences()
 
-			dirty_links = TRUE
+			if(cache)
+				cache.mark_dirty_links()
+				cache.dirty_status = TRUE
 			SStgui.update_uis(src)
 			return TRUE
 
@@ -974,7 +890,8 @@
 			if(P)
 				P.capture_erp_organ_sensitivity_from_mob(user)
 				P.save_preferences()
-			dirty_links = TRUE
+			if(cache)
+				cache.mark_dirty_links()
 			SStgui.update_uis(src)
 			return TRUE
 
@@ -1027,39 +944,47 @@
 				P.set_manual_erect_state(ERECT_STATE_HARD)
 
 			update_knotted_penis_flag()
+			if(cache)
+				cache.dirty_status = TRUE
 			SStgui.update_uis(src)
 			return TRUE
 
 		if("custom_create")
 			handle_custom_create(params)
-			dirty_custom_actions = TRUE
-			dirty_actions = TRUE
 			var/datum/preferences/P = user.client?.prefs
 			if(P)
 				P.erp_sync_from_globals(user.client.ckey)
 				P.save_preferences()
+			if(cache)
+				cache.dirty_menu = TRUE
+				cache.dirty_can_perform = TRUE
+				cache.dirty_filtered = TRUE
 			SStgui.update_uis(src)
 			return TRUE
 
 		if("custom_update")
 			handle_custom_update(params)
-			dirty_custom_actions = TRUE
-			dirty_actions = TRUE
 			var/datum/preferences/P = user.client?.prefs
 			if(P)
 				P.erp_sync_from_globals(user.client.ckey)
 				P.save_preferences()
+			if(cache)
+				cache.dirty_menu = TRUE
+				cache.dirty_can_perform = TRUE
+				cache.dirty_filtered = TRUE
 			SStgui.update_uis(src)
 			return TRUE
 
 		if("custom_delete")
 			handle_custom_delete(params)
-			dirty_custom_actions = TRUE
-			dirty_actions = TRUE
 			var/datum/preferences/P = user.client?.prefs
 			if(P)
 				P.erp_sync_from_globals(user.client.ckey)
 				P.save_preferences()
+			if(cache)
+				cache.dirty_menu = TRUE
+				cache.dirty_can_perform = TRUE
+				cache.dirty_filtered = TRUE
 			SStgui.update_uis(src)
 			return TRUE
 
@@ -1112,11 +1037,8 @@
 	partners = new_partners
 
 	if(length(new_partners) != old_len)
-		dirty_partners = TRUE
-		dirty_org_nodes = TRUE
-		dirty_actions = TRUE
-		dirty_links = TRUE
-		dirty_custom_actions = TRUE
+		if(cache)
+			cache.mark_dirty_partners()
 
 	var/mob/living/carbon/human/cur = null
 	if(current_partner_ref)
@@ -1127,9 +1049,8 @@
 		target = user
 		partner_bodypart_override = null
 
-		dirty_partners = TRUE
-		dirty_org_nodes = TRUE
-		dirty_actions = TRUE
+		if(cache)
+			cache.mark_dirty_partners()
 
 /datum/sex_session_tgui/proc/try_start_action(action_type)
 	var/datum/sex_panel_action/A = SEX_PANEL_ACTION(action_type)
@@ -1166,9 +1087,9 @@
 	INVOKE_ASYNC(I, TYPE_PROC_REF(/datum/sex_action_session, start))
 
 	start_broadcast_loop()
-	dirty_actions = TRUE
-	dirty_links = TRUE
-	dirty_org_nodes = TRUE
+	if(cache)
+		cache.mark_dirty_links()
+		cache.mark_dirty_org_nodes()
 	SStgui.update_uis(src)
 
 /datum/sex_session_tgui/proc/stop_all_actions()
@@ -1179,10 +1100,11 @@
 	if(!length(current_actions))
 		clear_actor_locks()
 
-	dirty_actions = TRUE
-	dirty_links = TRUE
-	dirty_org_nodes = TRUE
 	bed = null
+
+	if(cache)
+		cache.mark_dirty_links()
+		cache.mark_dirty_org_nodes()
 
 /datum/sex_session_tgui/proc/stop_instance(id, silent = FALSE)
 	var/datum/sex_action_session/I = current_actions[id]
@@ -1190,11 +1112,6 @@
 		return
 
 	current_actions -= id
-
-	dirty_actions = TRUE
-	dirty_links = TRUE
-	dirty_org_nodes = TRUE
-
 	var/cat = category_of_actor_node(I.actor_node_id)
 	if(cat)
 		locked_actor_categories -= cat
@@ -1210,9 +1127,13 @@
 		clear_actor_locks()
 		stop_broadcast_loop()
 
+	bed = null
+	if(cache)
+		cache.mark_dirty_links()
+		cache.mark_dirty_org_nodes()
+	
 	if(!silent)
 		SStgui.update_uis(src)
-	bed = null
 
 /datum/sex_session_tgui/proc/sync_arousal_ui()
 	var/list/ad_user = list()
@@ -1369,6 +1290,9 @@
 	next_actions_time = min
 
 /datum/sex_session_tgui/process(delta_time)
+	if(cache)
+		cache.tick()
+	
 	var/next = 0
 	if(next_broadcast_time) next = next_broadcast_time
 	if(next_actions_time && (!next || next_actions_time < next)) next = next_actions_time
@@ -1634,6 +1558,10 @@
 		to_chat(H, span_notice("Движение прерывает часть интимных действий."))
 
 	find_bed()
+	if(stopped_any && cache)
+		cache.mark_dirty_links()
+		cache.mark_dirty_org_nodes()
+
 
 /datum/sex_session_tgui/proc/actions_matching_nodes()
 	var/list/res = list()
@@ -2126,8 +2054,7 @@
 	custom.message_on_climax_target = params["message_on_climax_target"] || base.message_on_climax_target
 
 	register_custom_sex_action(custom)
-	dirty_custom_actions = TRUE
-	dirty_actions = TRUE
+	cache.mark_dirty_links()
 
 /datum/sex_session_tgui/proc/handle_custom_update(list/params)
 	if(!user || !user.client)
@@ -2216,8 +2143,7 @@
 	if(params["message_on_climax_target"])
 		A.message_on_climax_target = params["message_on_climax_target"]
 
-	dirty_custom_actions = TRUE
-	dirty_actions = TRUE
+	cache.mark_dirty_links()
 
 /datum/sex_session_tgui/proc/handle_custom_delete(list/params)
 	if(!user || !user.client)
@@ -2234,8 +2160,7 @@
 	if(A.ckey != user.client.ckey)
 		return
 
-	dirty_custom_actions = TRUE
-	dirty_actions = TRUE
+	cache.mark_dirty_links()
 
 	unregister_custom_sex_action(A)
 	qdel(A)
@@ -2264,3 +2189,54 @@
 		if(get_dist(user, H) <= 2)
 			to_chat(H, message)
 
+/datum/sex_session_tgui/proc/build_partners_payload()
+	var/list/partners_data = list()
+
+	if(src.user)
+		partners_data += list(list(
+			"ref" = REF(src.user),
+			"name" = "[src.user.name]",
+		))
+
+	for(var/mob/living/carbon/human/M in partners)
+		if(QDELETED(M))
+			continue
+		partners_data += list(list(
+			"ref" = REF(M),
+			"name" = M.name,
+		))
+
+	if(!current_partner_ref && src.user)
+		current_partner_ref = REF(src.user)
+
+	return partners_data
+
+/datum/sex_session_tgui/proc/build_active_links_payload()
+	var/list/links = list()
+
+	for(var/id in current_actions)
+		var/datum/sex_action_session/I = current_actions[id]
+		if(!I)
+			continue
+
+		var/datum/sex_organ/tuned_org = resolve_organ_datum(I.actor, I.actor_node_id)
+		if(!tuned_org)
+			tuned_org = resolve_organ_datum(I.partner, I.partner_node_id)
+
+		var/sens = tuned_org ? tuned_org.sensitivity : 0
+		var/pain = tuned_org ? tuned_org.pain : 0
+
+		links += list(list(
+			"id"                = I.instance_id,
+			"actor_organ_id"    = I.actor_node_id,
+			"partner_organ_id"  = I.partner_node_id,
+			"action_type"       = I.action_proto,
+			"action_name"       = I.action_proto?.name,
+			"speed"             = I.speed,
+			"force"             = I.force,
+			"do_until_finished" = do_until_finished,
+			"sensitivity"       = sens,
+			"pain"              = pain,
+		))
+
+	return links

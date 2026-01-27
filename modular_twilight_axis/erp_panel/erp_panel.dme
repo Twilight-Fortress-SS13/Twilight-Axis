@@ -5,6 +5,7 @@
 #include "code\preferences.dm"
 #include "code\reagents.dm"
 #include "code\relations.dm"
+#include "code\cache.dm"
 #include "code\sex_session.dm"
 #include "code\stress.dm"
 #include "code\status_effects.dm"
