@@ -328,6 +328,7 @@
 							if(used_intent.miss_text)
 								visible_message(span_warning("[src] [used_intent.miss_text]!"), \
 												span_warning("I [used_intent.miss_text]!"))
+					try_consume_attack_effects(src, T, zone_selected) // TA Add - SOUNDBREAKER
 					aftermiss()
 					atkswinging = null
 					//update_warning()
@@ -351,6 +352,12 @@
 /mob/proc/resolveAdjacentClick(atom/A,obj/item/W,params,used_hand)
 	if(!A)
 		return
+	// TA Add start - SOUNDBREAKER
+	if(used_intent.is_attack_swing())
+		if(try_consume_attack_effects(src, A, zone_selected))
+			atkswinging = null
+			return
+	// TA Add end - SOUNDBREAKER
 	if(W)
 		W.melee_attack_chain(src, A, params)
 		if(isliving(src))

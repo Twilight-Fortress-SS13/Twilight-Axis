@@ -163,3 +163,8 @@
 	icon_state = "flower_crown_eora"
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+
+/obj/item/clothing/head/roguetown/bardhat/soundbreakerhat
+	name = "soundbreaker hat"
+	desc = "An oddly shaped hat made of tightly-sewn leather, commonly worn by soundbreakers."
+	color = CLOTHING_RED
