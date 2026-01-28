@@ -122,8 +122,11 @@
 
 		if(dirty_menu && now >= next_menu_time)
 			st_actions_for_menu = session.actions_for_menu()
+			st_custom_actions = session.build_custom_actions_for_ui()
 			cached_actions_for_menu = st_actions_for_menu
+			cached_custom_actions = st_custom_actions
 			st_actions_for_menu = null
+			st_custom_actions = null
 			dirty_menu = FALSE
 			next_menu_time = now + menu_interval
 			continue
