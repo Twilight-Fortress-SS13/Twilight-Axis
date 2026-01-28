@@ -785,7 +785,7 @@
 						partner_bodypart_override = null
 
 					if(cache)
-						cache.mark_dirty_partners()
+						cache.mark_dirty_all()
 
 					SStgui.update_uis(src)
 					return TRUE
