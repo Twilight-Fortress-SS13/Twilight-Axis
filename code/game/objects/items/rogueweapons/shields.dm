@@ -521,9 +521,11 @@
 	if(!icon_path)
 		return null
 
-	var/key = "[icon_path]"
-	if(!GLOB.IconStates_cache[key])
-		var/icon/I = new(icon_path)
-		GLOB.IconStates_cache[key] = I.IconStates()
+	if(!istext(icon_path))  
+		return null  
 
-	return GLOB.IconStates_cache[key]
+	if(!GLOB.IconStates_cache[icon_path])  
+		var/icon/I = icon(icon_path)  
+		GLOB.IconStates_cache[icon_path] = I.IconStates()  
+
+	return GLOB.IconStates_cache[icon_path] 

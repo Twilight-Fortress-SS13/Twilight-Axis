@@ -99,13 +99,16 @@ GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list
 	var/icon/returned = icon(used_mask, "blank")
 	var/icon/blended
 	var/skipoverlays = FALSE
-	if(behind)
-		if(!GLOB.IconStates_cache[icon])
-			var/list/istates = icon_states(icon)
-			GLOB.IconStates_cache[icon] = istates
-			GLOB.has_behind_cache[icon] = ("[icon_state]_behind" in istates)
 
-		if(GLOB.has_behind_cache[icon])
+	// --- behind handling + icon_states cache ---
+	if(behind)
+		var/icon_key = "[icon]"
+		if(!GLOB.IconStates_cache[icon_key])
+			var/list/istates = icon_states(icon)
+			GLOB.IconStates_cache[icon_key] = istates
+			GLOB.has_behind_cache[icon_key] = ("[icon_state]_behind" in istates)
+
+		if(GLOB.has_behind_cache[icon_key])
 			blended = icon(icon = icon, icon_state = "[icon_state]_behind")
 			skipoverlays = TRUE
 		else
@@ -119,70 +122,81 @@ GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list
 	if(!blended)
 		return
 
-	if(!skipoverlays)
+	// --- overlays ---
+	if(!skipoverlays && overlays.len)
+		var/static/list/plane_whitelist = list(FLOAT_PLANE, GAME_PLANE, FLOOR_PLANE)
+
 		for(var/mutable_appearance/overlay as anything in overlays)
-			var/static/list/plane_whitelist = list(FLOAT_PLANE, GAME_PLANE, FLOOR_PLANE)
 			if(!(overlay.plane in plane_whitelist))
 				continue
-			var/icon/image_overlay = new(overlay.icon, overlay.icon_state)
-			if(image_overlay)
-				if(overlay.color)
-					image_overlay.Blend(overlay.color, ICON_MULTIPLY)
+
+			if(!overlay.color)
+				blended.Blend(icon(overlay.icon, overlay.icon_state), ICON_OVERLAY)
+			else
+				var/icon/image_overlay = icon(overlay.icon, overlay.icon_state)
+				image_overlay.Blend(overlay.color, ICON_MULTIPLY)
 				blended.Blend(image_overlay, ICON_OVERLAY)
 
-	var/icon/holder
+	// --- size switch ---
 	if(blended.Height() == 32)
 		UW = 32
 		UH = 32
 		used_mask = 'icons/roguetown/helpers/inhand.dmi'
 
+	var/icon/holder
 	var/icon/masky
-	var/px = 0
-	var/py = 0
-	var/ax = 0
+	var/px
+	var/py
+	var/ax
 	var/usedtag
+	var/render_this_dir
 
-	//north
-	var/render_this_dir = FALSE
+	// ================= NORTH =================
+	render_this_dir = FALSE
 	if(!behind)
 		if(used_prop["northabove"] == 1)
 			render_this_dir = TRUE
 	else
 		if(used_prop["northabove"] == 0)
 			render_this_dir = TRUE
+
 	if(render_this_dir)
+		px = 0
+		py = 0
 		holder = icon(blended)
-		masky = icon(icon=used_mask, icon_state="north")
+		masky = icon(icon = used_mask, icon_state = "north")
 		holder.Blend(masky, ICON_MULTIPLY)
+
 		if(!isnull(used_prop["nflip"]))
 			holder.Flip(used_prop["nflip"])
 		if(!isnull(used_prop["nturn"]))
 			holder.Turn(used_prop["nturn"])
+
 		if(!isnull(used_prop["nx"]))
 			if(mirrored)
-				px += used_prop["nx"]*-1
-				var/biggu = FALSE
-				if(UH > 32)
-					biggu = TRUE
-				if(mirror_fix(used_prop["shrink"], biggu))
-					px += mirror_fix(used_prop["shrink"], biggu)
-//				if(UH == 64)
-//				else
+				px -= used_prop["nx"]
+				if(mirror_fix(used_prop["shrink"], UH > 32))
+					px += mirror_fix(used_prop["shrink"], UH > 32)
 			else
 				px += used_prop["nx"]
+
 		if(!isnull(used_prop["ny"]))
-			py = used_prop["ny"]
+			py += used_prop["ny"]
+
 		ax = 0
 		if(!isnull(used_prop["shrink"]))
-			holder.Scale(UW*used_prop["shrink"],UH*used_prop["shrink"])
-			ax = 32-(holder.Width()/2)
+			holder.Scale(UW * used_prop["shrink"], UH * used_prop["shrink"])
+			ax = 32 - (holder.Width() / 2)
+
 		px += ax
 		py += ax
+
 		if(mirrored)
 			holder.Flip(WEST)
-		returned.Blend(holder,ICON_OVERLAY,x=px,y=py)
 
-	//south
+		returned.Blend(holder, ICON_OVERLAY, x = px, y = py)
+
+	// ================= SOUTH =================
 	render_this_dir = FALSE
 	if(!behind)
 		if(used_prop["southabove"] == 1)
@@ -190,120 +204,128 @@ GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list
 	else
 		if(used_prop["southabove"] == 0)
 			render_this_dir = TRUE
+
 	if(render_this_dir)
 		px = 0
 		py = 0
 		holder = icon(blended)
-		masky = icon(icon=used_mask, icon_state="south")
+		masky = icon(icon = used_mask, icon_state = "south")
 		holder.Blend(masky, ICON_MULTIPLY)
+
 		if(!isnull(used_prop["sflip"]))
 			holder.Flip(used_prop["sflip"])
 		if(!isnull(used_prop["sturn"]))
 			holder.Turn(used_prop["sturn"])
+
 		if(!isnull(used_prop["sx"]))
 			if(mirrored)
-				px += used_prop["sx"]*-1
-				var/biggu = FALSE
-				if(UH > 32)
-					biggu = TRUE
-				if(mirror_fix(used_prop["shrink"], biggu))
-					px += mirror_fix(used_prop["shrink"], biggu)
-//				if(UH == 64)
-//				else
+				px -= used_prop["sx"]
+				if(mirror_fix(used_prop["shrink"], UH > 32))
+					px += mirror_fix(used_prop["shrink"], UH > 32)
 			else
 				px += used_prop["sx"]
+
 		if(!isnull(used_prop["sy"]))
 			py += used_prop["sy"]
+
 		ax = 0
 		if(!isnull(used_prop["shrink"]))
-			holder.Scale(UW*used_prop["shrink"],UH*used_prop["shrink"])
-			ax = 32-(holder.Width()/2)
+			holder.Scale(UW * used_prop["shrink"], UH * used_prop["shrink"])
+			ax = 32 - (holder.Width() / 2)
+
 		px += ax
 		py += ax
+
 		if(mirrored)
 			holder.Flip(EAST)
-		returned.Blend(holder,ICON_OVERLAY,x=px,y=py)
 
-	//east
+		returned.Blend(holder, ICON_OVERLAY, x = px, y = py)
+
+	// ================= EAST =================
 	render_this_dir = FALSE
-	var/t2us = "eastabove"
-	if(mirrored)
-		t2us = "westabove"
+	usedtag = mirrored ? "w" : "e"
 	if(!behind)
-		if(used_prop[t2us] == 1)
+		if(used_prop[mirrored ? "westabove" : "eastabove"] == 1)
 			render_this_dir = TRUE
 	else
-		if(used_prop[t2us] == 0)
+		if(used_prop[mirrored ? "westabove" : "eastabove"] == 0)
 			render_this_dir = TRUE
+
 	if(render_this_dir)
-		usedtag = "e"
-		if(mirrored)
-			usedtag = "w"
 		px = 0
 		py = 0
 		holder = icon(blended)
-		masky = icon(icon=used_mask, icon_state="east")
+		masky = icon(icon = used_mask, icon_state = "east")
 		holder.Blend(masky, ICON_MULTIPLY)
+
 		if(!isnull(used_prop["[usedtag]flip"]))
 			holder.Flip(used_prop["[usedtag]flip"])
 		if(!isnull(used_prop["[usedtag]turn"]))
 			holder.Turn(used_prop["[usedtag]turn"])
+
 		if(!isnull(used_prop["[usedtag]x"]))
 			px = used_prop["[usedtag]x"]
 			if(mirrored)
-				px = px*-1
+				px *= -1
+
 		if(!isnull(used_prop["[usedtag]y"]))
 			py = used_prop["[usedtag]y"]
+
 		ax = 0
 		if(!isnull(used_prop["shrink"]))
-			holder.Scale(UW*used_prop["shrink"],UH*used_prop["shrink"])
-			ax = 32-(holder.Width()/2)
+			holder.Scale(UW * used_prop["shrink"], UH * used_prop["shrink"])
+			ax = 32 - (holder.Width() / 2)
+
 		px += ax
 		py += ax
+
 		if(mirrored)
 			holder.Flip(EAST)
-		returned.Blend(holder,ICON_OVERLAY,x=px,y=py)
 
-	//west
+		returned.Blend(holder, ICON_OVERLAY, x = px, y = py)
+
+	// ================= WEST =================
 	render_this_dir = FALSE
-	t2us = "westabove"
-	if(mirrored)
-		t2us = "eastabove"
+	usedtag = mirrored ? "e" : "w"
 	if(!behind)
-		if(used_prop[t2us] == 1)
+		if(used_prop[mirrored ? "eastabove" : "westabove"] == 1)
 			render_this_dir = TRUE
 	else
-		if(used_prop[t2us] == 0)
+		if(used_prop[mirrored ? "eastabove" : "westabove"] == 0)
 			render_this_dir = TRUE
+
 	if(render_this_dir)
-		usedtag = "w"
-		if(mirrored)
-			usedtag = "e"
 		px = 0
 		py = 0
 		holder = icon(blended)
-		masky = icon(icon=used_mask, icon_state="west")
+		masky = icon(icon = used_mask, icon_state = "west")
 		holder.Blend(masky, ICON_MULTIPLY)
+
 		if(!isnull(used_prop["[usedtag]flip"]))
 			holder.Flip(used_prop["[usedtag]flip"])
 		if(!isnull(used_prop["[usedtag]turn"]))
 			holder.Turn(used_prop["[usedtag]turn"])
+
 		if(!isnull(used_prop["[usedtag]x"]))
 			px = used_prop["[usedtag]x"]
 			if(mirrored)
-				px = px*-1
+				px *= -1
+
 		if(!isnull(used_prop["[usedtag]y"]))
 			py = used_prop["[usedtag]y"]
+
 		ax = 0
 		if(!isnull(used_prop["shrink"]))
-			holder.Scale(UW*used_prop["shrink"],UH*used_prop["shrink"])
-			ax = 32-(holder.Width()/2)
+			holder.Scale(UW * used_prop["shrink"], UH * used_prop["shrink"])
+			ax = 32 - (holder.Width() / 2)
+
 		px += ax
 		py += ax
+
 		if(mirrored)
 			holder.Flip(EAST)
-		returned.Blend(holder,ICON_OVERLAY,x=px,y=py)
 
+		returned.Blend(holder, ICON_OVERLAY, x = px, y = py)
 
 	return returned
 
