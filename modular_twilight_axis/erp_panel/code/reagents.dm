@@ -134,4 +134,3 @@
 	craftdiff = 6
 
 #undef LOVE_POTION_DURATION
-#undef REAGENT_FLAG_ERP_SENSITIVE
