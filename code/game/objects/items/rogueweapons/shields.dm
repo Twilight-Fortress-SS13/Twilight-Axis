@@ -26,7 +26,6 @@
 	COOLDOWN_DECLARE(shield_bang)
 	special = /datum/special_intent/limbguard
 
-
 /obj/item/rogueweapon/shield/attackby(obj/item/attackby_item, mob/user, params)
 
 	// Shield banging
@@ -117,7 +116,7 @@
 		return
 
 	var/icon/J = new('icons/roguetown/weapons/shield_heraldry.dmi')
-	var/list/istates = J.IconStates()
+	var/list/istates = get_icon_states_cached(J)
 	for(var/icon_s in istates)
 		if(!findtext(icon_s, "[icon_state]_"))
 			istates.Remove(icon_s)
@@ -517,3 +516,14 @@
 				return list("shrink" = 0.6,"sx" = -5,"sy" = -1,"nx" = 6,"ny" = -1,"wx" = 0,"wy" = -2,"ex" = 0,"ey" = -2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0)
 			if("onback")
 				return list("shrink" = 0.6,"sx" = 1,"sy" = 4,"nx" = 1,"ny" = 2,"wx" = 3,"wy" = 3,"ex" = 0,"ey" = 2,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 8,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
+
+/proc/get_icon_states_cached(icon_path)
+	if(!icon_path)
+		return null
+
+	var/key = "[icon_path]"
+	if(!GLOB.IconStates_cache[key])
+		var/icon/I = new(icon_path)
+		GLOB.IconStates_cache[key] = I.IconStates()
+
+	return GLOB.IconStates_cache[key]
