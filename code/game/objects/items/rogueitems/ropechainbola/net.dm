@@ -12,13 +12,6 @@
 	throw_speed = 2
 
 	var/knockdown = 0
-	var/ensnare_applied = FALSE
-	var/broken_by_force = FALSE
-
-
-/obj/item/net/Initialize()
-	. = ..()
-	RegisterSignal(src, COMSIG_ITEM_DROPPED, PROC_REF(on_drop))
 
 
 /obj/item/net/throw_at(atom/target, range, speed, mob/thrower, spin = 1, diagonals_first = 0, datum/callback/callback)
@@ -28,18 +21,9 @@
 
 
 /obj/item/net/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
-	// 1) Предметная защита: блок, ловля, дефлект
-	if(..())
-		return
-
 	if(!iscarbon(hit_atom))
 		return
 
-	// Защита от повторного применения
-	if(ensnare_applied)
-		return
-
-	// 2) Интентная защита: парирование, додж
 	var/mob/living/carbon/target = hit_atom
 	var/mob/living/user = istype(throwingdatum?.thrower, /mob/living) ? throwingdatum.thrower : null
 	var/datum/intent/intenty = user?.used_intent
@@ -49,7 +33,6 @@
 
 	ensnare(target)
 
-	// Естественное спадание по таймеру
 	addtimer(
 		CALLBACK(src, PROC_REF(remove_effect)),
 		30 SECONDS,
@@ -58,12 +41,8 @@
 
 
 /obj/item/net/proc/ensnare(mob/living/carbon/C)
-	if(ensnare_applied)
-		return
 	if(C.legcuffed || C.get_num_legs(FALSE) < 2)
 		return
-
-	ensnare_applied = TRUE
 
 	visible_message(span_danger("\The [src] ensnares [C]!"))
 	to_chat(C, span_danger("\The [src] entraps you!"))
@@ -78,29 +57,14 @@
 
 
 /obj/item/net/proc/remove_effect()
-	if(!iscarbon(loc))
-		return
+	if(iscarbon(loc))
+		var/mob/living/carbon/M = loc
+		if(M.legcuffed == src)
+			M.legcuffed = null
+			M.remove_movespeed_modifier(MOVESPEED_ID_NET_SLOWDOWN, TRUE)
+			M.update_inv_legcuffed()
+			if(M.has_status_effect(/datum/status_effect/debuff/netted))
+				M.remove_status_effect(/datum/status_effect/debuff/netted)
 
-	var/mob/living/carbon/M = loc
-	if(M.legcuffed != src)
-		return
-
-	M.legcuffed = null
-	M.remove_movespeed_modifier(MOVESPEED_ID_NET_SLOWDOWN, TRUE)
-	M.update_inv_legcuffed()
-	if(M.has_status_effect(/datum/status_effect/debuff/netted))
-		M.remove_status_effect(/datum/status_effect/debuff/netted)
-
-	// Сообщение ТОЛЬКО при естественном спадании
-	for(var/mob/V in viewers(M))
-		to_chat(V, span_warning("The net slips off [M]."))
-
-	ensnare_applied = FALSE
-	forceMove(get_turf(M))
-
-
-/obj/item/net/proc/on_drop()
-	SIGNAL_HANDLER
-	// Если система cuffs пометила предмет как сломанный — уничтожаем
-	if(broken_by_force)
-		qdel(src)
+			var/turf/T = get_turf(M)
+			forceMove(T ? T : M.loc)
