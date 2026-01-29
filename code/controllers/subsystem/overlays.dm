@@ -143,9 +143,9 @@ SUBSYSTEM_DEF(overlays)
 			remove_overlays += O
 
 	for(var/O in overlays)  
-        if(is_protected_overlay(O))  
-            continue  
-        add_overlays -= O 
+		if(is_protected_overlay(O))  
+			continue  
+		add_overlays -= O 
 
 
 	if(priority)
