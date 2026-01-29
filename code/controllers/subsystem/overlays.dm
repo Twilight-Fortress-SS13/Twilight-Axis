@@ -166,21 +166,18 @@ SUBSYSTEM_DEF(overlays)
 
 	overlays = build_appearance_list(overlays)
 
-	LAZYINITLIST(add_overlays) //always initialized after this point
+	LAZYINITLIST(add_overlays)
 	LAZYINITLIST(priority_overlays)
 	var/a_len = add_overlays.len
 	var/p_len = priority_overlays.len
 
 	if(priority)
-		priority_overlays |= overlays  //or in the image. Can we use [image] = image?
-		priority_overlays |= overlays  //or in the image. Can we use [image] = image?
+		priority_overlays |= overlays
 		var/fp_len = priority_overlays.len
 		if(NOT_QUEUED_ALREADY && fp_len != p_len)
 			QUEUE_FOR_COMPILE
 	else
 		for(var/O in overlays)
-			if(is_protected_overlay(O))
-				continue
 			if(!(O in add_overlays))
 				add_overlays += O
 		var/fa_len = add_overlays.len
@@ -234,7 +231,17 @@ SUBSYSTEM_DEF(overlays)
 /proc/is_protected_overlay(var/mutable_appearance/O)
 	if(!O)
 		return FALSE
+
 	if(O.layer == MOB_LAYER)
+		return FALSE
+
+	if(O.layer >= EFFECTS_LAYER)
+		return TRUE
+
+	if(O.plane == FLOAT_PLANE)
+		return TRUE
+
+	if(O.appearance_flags & KEEP_APART)
 		return TRUE
 
 	return FALSE
