@@ -136,16 +136,8 @@ SUBSYSTEM_DEF(overlays)
 	var/a_len = add_overlays.len
 	var/r_len = remove_overlays.len
 	var/p_len = priority_overlays.len
-	for(var/O in overlays)
-		if(is_protected_overlay(O))
-			continue
-		if(!(O in remove_overlays))
-			remove_overlays += O
-
-	for(var/O in overlays)  
-		if(is_protected_overlay(O))  
-			continue  
-		add_overlays -= O 
+	remove_overlays |= overlays 
+	add_overlays -= overlays
 
 
 	if(priority)
@@ -173,16 +165,11 @@ SUBSYSTEM_DEF(overlays)
 
 	if(priority)
 		priority_overlays |= overlays  //or in the image. Can we use [image] = image?
-		priority_overlays |= overlays  //or in the image. Can we use [image] = image?
 		var/fp_len = priority_overlays.len
 		if(NOT_QUEUED_ALREADY && fp_len != p_len)
 			QUEUE_FOR_COMPILE
 	else
-		for(var/O in overlays)
-			if(is_protected_overlay(O))
-				continue
-			if(!(O in add_overlays))
-				add_overlays += O
+		add_overlays |= overlays
 		var/fa_len = add_overlays.len
 		if(NOT_QUEUED_ALREADY && fa_len != a_len)
 			QUEUE_FOR_COMPILE
@@ -230,11 +217,3 @@ SUBSYSTEM_DEF(overlays)
 			overlays |= cached_other
 	else if(cut_old)
 		cut_overlays()
-
-/proc/is_protected_overlay(var/mutable_appearance/O)
-	if(!O)
-		return FALSE
-	if(O.layer == MOB_LAYER)
-		return TRUE
-
-	return FALSE
