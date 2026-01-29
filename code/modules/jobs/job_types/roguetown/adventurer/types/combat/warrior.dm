@@ -226,7 +226,8 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 	)
-	extra_context = "This subclass has two disciplines to choose from: one provides Expert skills in fistfighting and the 'Expert Pugilist' trait, while the other provides unique equipment and a one-point exchange of Speed for Perception."
+	extra_context = "This subclass has three disciplines to choose from: one provides Expert skills in fistfighting and the 'Expert Pugilist' trait, the other provides unique equipment and a one-point exchange of Speed for Perception,\
+					 and the final one grants you a greatsword and a special form of armor while taking away three points of intelligence."
 
 /datum/outfit/job/roguetown/adventurer/barbarian/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	..()
@@ -235,7 +236,8 @@
 	H.set_blindness(0)
 	if(!H.mind)
 		return
-	var/weapons = list("Bronze Katar","Bronze Sword","Bronze Axe","Bronze Mace","Bronze Spear","Discipline - Whiphunter","Discipline - Unarmed")
+
+	var/weapons = list("Bronze Katar","Bronze Sword","Bronze Axe","Bronze Mace","Bronze Spear","Discipline - Whiphunter","Discipline - Unarmed","Discipline - Bodybuilder")
 	var/weapon_choice = input(H, "Choose your WEAPON.", "TAKE UP ARMS.") as anything in weapons
 	switch(weapon_choice)
 		if("Bronze Katar")
@@ -278,6 +280,12 @@
 			head = /obj/item/clothing/head/roguetown/helmet/leather/volfhelm
 			gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
 			armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
+		if ("Discipline - Bodybuilder")
+			H.adjust_skillrank_up_to(/datum/skill.combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
+			armor = /obj/item/clothing/suit/roguetown/armor/manual/pushups/leather
+			r_hand = /obj/item/rogueweapon/greatsword/iron
+			backr = /obj/item/rogueweapon/scabbard/gwstrap
+			H.change_stat(STATKEY_INT, -3) ///This is probably waaay too much and makes this subclass completely unviable, but admins are concerned the armor might be OP.
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt/barbarian
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/bronzeskirt
 	shoes = /obj/item/clothing/shoes/roguetown/boots/furlinedboots
@@ -285,7 +293,7 @@
 	if(should_wear_masc_clothes(H))
 		H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
 	if(should_wear_femme_clothes(H))
-		if(weapon_choice != "Discipline - Unarmed")
+		if(weapon_choice != "Discipline - Unarmed" && weapon_choice != "Discipline - Bodybuilder")
 			armor = /obj/item/clothing/suit/roguetown/armor/leather/bikini
 	backl = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
