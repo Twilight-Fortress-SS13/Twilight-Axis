@@ -942,6 +942,9 @@
 	var/filter = owner.get_filter(BLESSINGOFSUN_FILTER)
 	if (!filter)
 		owner.add_filter(BLESSINGOFSUN_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 60, "size" = 1))
+
+	QDEL_NULL(mob_light_obj)
+
 	mob_light_obj = owner.mob_light("#fdfbd3", 10, 10)
 	return TRUE
 
