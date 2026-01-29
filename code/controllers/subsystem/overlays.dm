@@ -142,8 +142,10 @@ SUBSYSTEM_DEF(overlays)
 		if(!(O in remove_overlays))
 			remove_overlays += O
 
-	for(var/O in overlays)
-		add_overlays -= O
+	for(var/O in overlays)  
+        if(is_protected_overlay(O))  
+            continue  
+        add_overlays -= O 
 
 
 	if(priority)
@@ -232,7 +234,7 @@ SUBSYSTEM_DEF(overlays)
 /proc/is_protected_overlay(var/mutable_appearance/O)
 	if(!O)
 		return FALSE
-	if(O.layer == MOB_LAYER || O.layer == BODY_LAYER)
+	if(O.layer == MOB_LAYER)
 		return TRUE
 
 	return FALSE
