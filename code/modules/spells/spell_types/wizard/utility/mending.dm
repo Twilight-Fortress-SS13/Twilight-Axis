@@ -69,6 +69,9 @@
 				I.repair_coverage()
 				to_chat(user, span_info("[I]'s shorn layers mend together, completely."))
 
+	if(mob_charge_effect)
+		QDEL_NULL(mob_charge_effect)
+
 	deactivate(user)
 
 /obj/effect/proc_holder/spell/invoked/mending/lesser
