@@ -34,7 +34,7 @@ SUBSYSTEM_DEF(ticket_ping)
 				SEND_SOUND(staff, sound('modular_twilight_axis/sound/adminpings/sirena.ogg'))
 			if(2)
 				SEND_SOUND(staff, sound('modular_twilight_axis/sound/adminpings/budilnik.ogg')) */
-		SEND_SOUND(staff, sound('modular_twilight_axis/sound/adminpings/soft_ping.ogg'))
+		//SEND_SOUND(staff, sound('modular_twilight_axis/sound/adminpings/soft_ping.ogg'))
 		window_flash(staff, ignorepref = TRUE) 
 
 /// Ticket ping frequency. Set 0 for disable that subsystem. 3000 - 5 minutes, 600 - 1 minute.

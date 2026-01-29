@@ -1,0 +1,5 @@
+author: "Risraivyn"
+delete-after: True
+changes:
+  - balance: "изменены цены на протезы и трюфели"
+  - bugfix: "исправлен путь к протезам"
