@@ -171,6 +171,7 @@ SUBSYSTEM_DEF(overlays)
 
 	if(priority)
 		priority_overlays |= overlays  //or in the image. Can we use [image] = image?
+		priority_overlays |= overlays  //or in the image. Can we use [image] = image?
 		var/fp_len = priority_overlays.len
 		if(NOT_QUEUED_ALREADY && fp_len != p_len)
 			QUEUE_FOR_COMPILE

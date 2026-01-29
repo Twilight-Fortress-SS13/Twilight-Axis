@@ -24,6 +24,7 @@
 		/datum/advclass/psydoniantemplar,
 		/datum/advclass/disciple,
 		/datum/advclass/confessor,
+		/datum/advclass/naledimage, //TA EDIT
 		/datum/advclass/psyaltrist
 	)
 	same_job_respawn_delay = 30 MINUTES
