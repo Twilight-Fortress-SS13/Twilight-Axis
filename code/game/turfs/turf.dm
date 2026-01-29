@@ -58,6 +58,9 @@
 	
 	vis_flags = VIS_INHERIT_PLANE|VIS_INHERIT_ID
 
+	/// If we were going to smooth with an Atom instead overlay this onto self
+	var/neighborlay_self
+
 /turf/vv_edit_var(var_name, new_value)
 	var/static/list/banned_edits = list("x", "y", "z")
 	if(var_name in banned_edits)
