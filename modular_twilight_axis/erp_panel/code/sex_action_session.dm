@@ -100,9 +100,7 @@
 	if(action_proto.stamina_cost)
 		var/mob/living/carbon/human/U = actor
 		if(U)
-			U.sex_procs_active = TRUE
 			var/success = U.stamina_add(action_proto.stamina_cost * get_stamina_cost_multiplier(force))
-			U.sex_procs_active = FALSE
 			if(!success)
 				session.stop_instance(instance_id)
 				return

@@ -1,7 +1,3 @@
-
-/mob/living
-	var/sex_procs_active = FALSE
-	
 /mob/living/carbon/human
 	var/datum/weakref/sex_surrender_ref
 	var/datum/sex_organ/body/body_organ
