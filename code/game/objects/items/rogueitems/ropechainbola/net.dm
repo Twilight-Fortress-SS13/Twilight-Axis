@@ -7,7 +7,7 @@
 	force = 10
 	throwforce = 5
 	w_class = WEIGHT_CLASS_SMALL
-	slipouttime = 5 SECONDS
+	slipouttime = 5 SECONDS //ideally you're using this to catch a dodger, not in the middle of combat
 	gender = NEUTER
 	throw_speed = 2
 
@@ -33,6 +33,8 @@
 
 	ensnare(target)
 
+	// Nets always fall off after 30 seconds resist or not, so that the advantage it brings you is limited
+	// Being hit by a net and instalossing isn't fun for anyone because removing can be interrupted
 	addtimer(
 		CALLBACK(src, PROC_REF(remove_effect)),
 		30 SECONDS,
@@ -68,3 +70,8 @@
 
 			var/turf/T = get_turf(M)
 			forceMove(T ? T : M.loc)
+
+// Failsafe in case the item somehow ends up being destroyed
+/obj/item/net/Destroy()
+	remove_effect()
+	return ..()
