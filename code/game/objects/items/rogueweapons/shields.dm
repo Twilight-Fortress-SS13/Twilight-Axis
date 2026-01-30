@@ -121,6 +121,8 @@
 
 	var/icon/J = new('icons/roguetown/weapons/shield_heraldry.dmi')
 	var/list/istates = J.IconStates()
+	if(!istates || !length(istates))
+		return
 	for(var/icon_s in istates)
 		if(!findtext(icon_s, "[icon_state]_"))
 			istates.Remove(icon_s)
