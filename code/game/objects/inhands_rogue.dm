@@ -6,6 +6,14 @@
 		inhand_x_dimension = 32
 		inhand_y_dimension = 32
 
+// Helper items for spriters so they can see how in-hands look in game.
+// They're basically red square sprites placed on the floor so spriters can adjust their sprites properly
+// Used on admin testing area only.
+
+GLOBAL_LIST_INIT(IconStates_cache, list())
+GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list searches
+
+// 32x32 in-hand helper item
 /obj/item/inhand_tester
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "inhand_test"
