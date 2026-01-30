@@ -26,6 +26,7 @@
 	COOLDOWN_DECLARE(shield_bang)
 	special = /datum/special_intent/limbguard
 
+
 /obj/item/rogueweapon/shield/attackby(obj/item/attackby_item, mob/user, params)
 
 	// Shield banging
@@ -119,7 +120,7 @@
 		return
 
 	var/icon/J = new('icons/roguetown/weapons/shield_heraldry.dmi')
-	var/list/istates = get_icon_states_cached(J)
+	var/list/istates = J.IconStates()
 	for(var/icon_s in istates)
 		if(!findtext(icon_s, "[icon_state]_"))
 			istates.Remove(icon_s)
@@ -622,16 +623,3 @@
 /obj/item/rogueweapon/shield/tower/metal/gold/king/proc/steamready(mob/user)
 	playsound(user, 'sound/items/steamcreation.ogg', 100, FALSE, -1)
 	to_chat(user, span_warning("[src] is ready to be used again!"))
-
-/proc/get_icon_states_cached(icon_path)
-	if(!icon_path)
-		return null
-
-	if(!istext(icon_path))  
-		return null  
-
-	if(!GLOB.IconStates_cache[icon_path])  
-		var/icon/I = icon(icon_path)  
-		GLOB.IconStates_cache[icon_path] = I.IconStates()  
-
-	return GLOB.IconStates_cache[icon_path] 
