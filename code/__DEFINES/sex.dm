@@ -99,6 +99,39 @@ GLOBAL_LIST_EMPTY(locked_sex_objects)
 	"Large" = MAX_PENIS_SIZE,\
 	)
 
+
+#define MIN_BUTT_SIZE 1
+#define DEFAULT_BUTT_SIZE 2
+#define MAX_BUTT_SIZE 3
+
+#define BUTT_SIZES list(\
+	MIN_PENIS_SIZE,\
+	DEFAULT_PENIS_SIZE,\
+	MAX_PENIS_SIZE,\
+	)
+
+#define BUTT_SIZES_BY_NAME list(\
+	"Small" = MIN_BUTT_SIZE,\
+	"Average" = DEFAULT_BUTT_SIZE,\
+	"Colossal" = MAX_BUTT_SIZE,\
+	)
+
+#define MIN_BELLY_SIZE 1
+#define DEFAULT_BELLY_SIZE 2
+#define MAX_BELLY_SIZE 3
+
+#define BELLY_SIZES list(\
+	MIN_BELLY_SIZE,\
+	DEFAULT_BELLY_SIZE,\
+	MAX_BELLY_SIZE,\
+	)
+
+#define BELLY_SIZES_BY_NAME list(\
+	"Little" = MIN_BELLY_SIZE,\
+	"Noticable" = DEFAULT_BELLY_SIZE,\
+	"Huge" = MAX_BELLY_SIZE,\
+	)
+
 #define PENIS_TYPE_PLAIN 1
 #define PENIS_TYPE_KNOTTED 2
 #define PENIS_TYPE_EQUINE 3
@@ -138,6 +171,8 @@ GLOBAL_LIST_EMPTY(locked_sex_objects)
 #define ORGAN_SLOT_BREASTS "breasts"
 #define ORGAN_SLOT_VAGINA "vagina"
 #define ORGAN_SLOT_ANUS "anus"///this is a fake organ used for sex_lock
+#define ORGAN_SLOT_BUTT "butt"
+#define ORGAN_SLOT_BELLY "belly"
 
 #define BREAST_SIZE_FLAT 0
 #define BREAST_SIZE_VERY_SMALL 1
