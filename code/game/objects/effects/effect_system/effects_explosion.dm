@@ -9,15 +9,16 @@
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/effect/particle_effect/expl_particles/LateInitialize()
-	var/direct = pick(GLOB.alldirs)
-	var/steps_amt = pick(1;25,2;50,3,4;200)
-	for(var/j in 1 to steps_amt)
-		step(src, direct)
-		stoplag(1)
-	qdel(src, 6)
+    var/direct = pick(GLOB.alldirs)
+    var/steps_amt = pick(1;25,2;50,3,4;200)
+
+    for(var/j in 1 to min(steps_amt, 5))
+        step(src, direct)
+
+    QDEL_IN(src, 6 SECONDS)
 
 /datum/effect_system/expl_particles
-	number = 10
+	number = 5
 
 /datum/effect_system/expl_particles/start()
 	for(var/i in 1 to number)
