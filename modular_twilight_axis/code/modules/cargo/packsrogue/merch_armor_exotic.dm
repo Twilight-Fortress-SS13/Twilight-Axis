@@ -10,7 +10,7 @@
 
 /datum/supply_pack/rogue/armor_exotic/raneshi_jarhelmet
 	name = "Raneshene jar helmet"
-	cost = 70
+	cost = 100
 	contains = list(/obj/item/clothing/head/roguetown/helmet/raneshi_jarhelmet)
 
 /datum/supply_pack/rogue/armor_exotic/raneshen_new_coat //Только в продаже, т.к. с точки зрения лора делается из специальных чешуек.

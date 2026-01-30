@@ -62,20 +62,20 @@
 		/obj/item/reagent_containers/food/snacks/tallow = 1,
 		/obj/item/natural/fibers = 1,
 		)
-	sellprice = 20
+	sellprice = 10 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/bandana
 	name = "leather bandana"
 	result = /obj/item/clothing/head/roguetown/helmet/bandana
 	reqs = list(/obj/item/natural/hide/cured = 1)
-	sellprice = 27
+	sellprice = 7 //TA EDIT
 	craftdiff = 0
 
 /datum/crafting_recipe/roguetown/leather/tricorn
 	name = "leather tricorn"
 	result = /obj/item/clothing/head/roguetown/helmet/tricorn
 	reqs = list(/obj/item/natural/hide/cured = 1)
-	sellprice = 27
+	sellprice = 7 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/vest
 	name = "leather vest"
@@ -86,14 +86,14 @@
 	name = "leather corslet"
 	result = /obj/item/clothing/suit/roguetown/armor/leather/bikini
 	reqs = list(/obj/item/natural/hide/cured = 2)
-	sellprice = 26
+	sellprice = 16 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/hidebikini
 	name = "hide corslet"
 	result = /obj/item/clothing/suit/roguetown/armor/leather/hide/bikini
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/natural/fur = 1)
-	sellprice = 26
+	sellprice = 16 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/cloak
 	name = "rain cloak"
@@ -131,7 +131,7 @@
 	name = "leather whip"
 	result = /obj/item/rogueweapon/whip
 	reqs = list(/obj/item/natural/hide/cured = 2,/obj/item/natural/stone = 1)
-	sellprice = 39
+	sellprice = 18 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/drum
 	name = "Drum"

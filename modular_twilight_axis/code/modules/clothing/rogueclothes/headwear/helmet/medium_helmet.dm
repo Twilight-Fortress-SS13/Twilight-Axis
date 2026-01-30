@@ -44,7 +44,7 @@
 	icon_state = "jar_helmet"
 	item_state = "jar_helmet"
 	smeltresult = /obj/item/ingot/steel
-	body_parts_covered = HEAD|EARS|HAIR|NOSE
+	body_parts_covered = HEAD|EARS|HAIR|NOSE|EYES
 	max_integrity = ARMOR_INT_HELMET_STEEL + 20 //В стандартном шлеме юзается ARMOR_INT_HELMET_STEEL, дающий 300 очков ХП, но поскольку тут крафт 1 сталь 1 бронза, то 20 интегрити сверху так же вряд-ли сильно повлияют на баланс.
 
 /obj/item/clothing/head/roguetown/helmet/raneshi_jarhelmet/attackby(obj/item/W, mob/living/user, params)

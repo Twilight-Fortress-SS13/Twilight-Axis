@@ -1,0 +1,4 @@
+author: "Risraivyn"
+delete-after: True
+changes:
+  - rscadd: "Added new class for Orthodoxist"
