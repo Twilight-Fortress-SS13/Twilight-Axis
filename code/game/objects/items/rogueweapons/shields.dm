@@ -115,7 +115,7 @@
 	max_integrity = 200
 
 /obj/item/rogueweapon/shield/attack_right(mob/user)
-	if(overlays.len)
+	if(length(overlays))
 		..()
 		return
 
