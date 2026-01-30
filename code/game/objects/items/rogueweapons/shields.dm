@@ -625,15 +625,25 @@
 	playsound(user, 'sound/items/steamcreation.ogg', 100, FALSE, -1)
 	to_chat(user, span_warning("[src] is ready to be used again!"))
 
-/proc/get_icon_states_cached(icon_path)
-	if(!icon_path)
+/proc/get_icon_states_cached(icon_or_path)
+	if(!icon_or_path)
 		return null
 
-	if(!istext(icon_path))  
-		return null  
+	var/cache_key
+	var/icon/I
 
-	if(!GLOB.IconStates_cache[icon_path])  
-		var/icon/I = icon(icon_path)  
-		GLOB.IconStates_cache[icon_path] = I.IconStates()  
+	if(istext(icon_or_path))
+		cache_key = icon_or_path
+		if(!GLOB.IconStates_cache[cache_key])
+			I = icon(icon_or_path)
+			GLOB.IconStates_cache[cache_key] = I.IconStates()
+		return GLOB.IconStates_cache[cache_key]
 
-	return GLOB.IconStates_cache[icon_path] 
+	if(isicon(icon_or_path))
+		I = icon_or_path
+		cache_key = "[I]"
+		if(!GLOB.IconStates_cache[cache_key])
+			GLOB.IconStates_cache[cache_key] = I.IconStates()
+		return GLOB.IconStates_cache[cache_key]
+
+	return null
