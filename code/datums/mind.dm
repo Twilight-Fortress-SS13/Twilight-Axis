@@ -55,6 +55,9 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	var/movemovemovetext = "Move!!"
 	var/takeaimtext = "Take aim!!"
 	var/holdtext = "Hold!!"
+	var/retreattext = "Fall back!!"
+	var/chargetext = "Charge!!"
+	var/bolstertext = "Hold the line!!"
 	var/onfeettext = "On your feet!!"
 
 	var/mob/living/carbon/champion = null
@@ -754,13 +757,13 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 		S.on_gain(user)
 
 /datum/mind/proc/check_learnspell()
-	if(!has_spell(/obj/effect/proc_holder/spell/self/learnspell)) //are we missing the learning spell?
+	if(!has_spell(/obj/effect/proc_holder/spell/self/library)) //are we missing the learning spell? TA EDIT Old vers: /obj/effect/proc_holder/spell/self/learnspell
 		if((spell_points - used_spell_points) > 0) //do we have points?
-			AddSpell(new /obj/effect/proc_holder/spell/self/learnspell(null)) //put it in
+			AddSpell(new /obj/effect/proc_holder/spell/self/library(null)) //put it in TA EDIT Old vers: /obj/effect/proc_holder/spell/self/learnspell
 			return
 
 	if((spell_points - used_spell_points) <= 0) //are we out of points?
-		RemoveSpell(/obj/effect/proc_holder/spell/self/learnspell) //bye bye spell
+		RemoveSpell(/obj/effect/proc_holder/spell/self/library) //bye bye spell TA EDIT Old vers: /obj/effect/proc_holder/spell/self/learnspell
 		return
 	return
 

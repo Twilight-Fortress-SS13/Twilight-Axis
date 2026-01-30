@@ -127,10 +127,20 @@
 			wrists = /obj/item/clothing/neck/roguetown/psicross/eora
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/eora
 		if(/datum/patron/divine/noc)
-			head = /obj/item/clothing/head/roguetown/roguehood/nochood
-			wrists = /obj/item/clothing/neck/roguetown/psicross/noc
-			cloak = /obj/item/clothing/cloak/tabard/crusader/noc
-			mask = /obj/item/clothing/mask/rogue/facemask/steel
+			var/clothestype = list("Classic", "Zybantian")
+			var/clothestypechoice = input(H,"Choose your covering", "TAKE UP FASHION") as anything in clothestype
+			switch(clothestypechoice)
+				if("Classic")
+					head = /obj/item/clothing/head/roguetown/roguehood/nochood
+					wrists = /obj/item/clothing/neck/roguetown/psicross/noc
+					cloak = /obj/item/clothing/cloak/tabard/crusader/noc
+					mask = /obj/item/clothing/mask/rogue/facemask/steel
+				if("Zybantian")
+					head = /obj/item/clothing/head/roguetown/roguehood/stargazer
+					wrists = /obj/item/clothing/neck/roguetown/psicross/noc
+					mask = /obj/item/clothing/mask/rogue/facemask/steel/owlmask
+					cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc/stargazer
+					H.cmode_music = 'sound/music/combat_desertrider.ogg'
 		if(/datum/patron/divine/ravox)
 			head = /obj/item/clothing/head/roguetown/roguehood
 			mask = /obj/item/clothing/head/roguetown/roguehood/ravoxgorget
@@ -355,3 +365,38 @@
 		H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/misc/music, 1, TRUE)
+
+//Кусок с зибантийской хней для темпларов
+/datum/outfit/job/roguetown/templar/monk/pre_equip(mob/living/carbon/human/H)
+	. = ..()
+	if(istype(H.patron, /datum/patron/divine/noc))
+		var/clothestype = list("Classic", "Zybantian")
+		var/clothestypechoice = input(H,"Choose your covering", "TAKE UP FASHION") as anything in clothestype
+		switch(clothestypechoice)
+			if("Classic")
+				neck = /obj/item/clothing/neck/roguetown/psicross/noc
+				cloak = /obj/item/clothing/cloak/tabard/crusader/noc
+				head = /obj/item/clothing/head/roguetown/headband/monk
+			if("Zybantian")
+				head = /obj/item/clothing/head/roguetown/roguehood/stargazer
+				neck = /obj/item/clothing/neck/roguetown/psicross/noc
+				mask = /obj/item/clothing/mask/rogue/facemask/steel/owlmask
+				cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc/stargazer
+				H.cmode_music = 'sound/music/combat_desertrider.ogg'
+
+/datum/outfit/job/roguetown/templar/crusader/pre_equip(mob/living/carbon/human/H)
+	. = ..()
+	if(istype(H.patron, /datum/patron/divine/noc))
+		var/clothestype = list("Classic", "Zybantian")
+		var/clothestypechoice = input(H,"Choose your covering", "TAKE UP FASHION") as anything in clothestype
+		switch(clothestypechoice)
+			if("Classic")
+				wrists = /obj/item/clothing/neck/roguetown/psicross/noc
+				head = /obj/item/clothing/head/roguetown/helmet/heavy/nochelm
+				cloak = /obj/item/clothing/cloak/tabard/crusader/noc
+			if("Zybantian")
+				head = /obj/item/clothing/head/roguetown/roguehood/stargazer
+				wrists = /obj/item/clothing/neck/roguetown/psicross/noc
+				mask = /obj/item/clothing/mask/rogue/facemask/steel/owlmask
+				cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc/stargazer
+				H.cmode_music = 'sound/music/combat_desertrider.ogg'

@@ -50,7 +50,7 @@
 	cooked_smell = /datum/pollutant/food/truffles
 	color = "#ab7d6f"
 	tastes = list("mushroom" = 1)
-	sellprice = 5
+	sellprice = 50 //TA EDIT
 
 /obj/item/reagent_containers/food/snacks/rogue/truffles/cooked
 	eat_effect = /datum/status_effect/buff/snackbuff
