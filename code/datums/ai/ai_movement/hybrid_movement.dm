@@ -12,10 +12,6 @@
 
 /datum/ai_movement/hybrid_pathing/process(delta_time)
 	for(var/datum/ai_controller/controller as anything in moving_controllers)
-		if(QDELETED(controller))
-			continue
-		if(!controller.blackboard)
-			continue
 		if(!(future_path_blackboard_key in controller.blackboard))
 			controller.add_blackboard_key(future_path_blackboard_key, null)
 		if(!COOLDOWN_FINISHED(controller, movement_cooldown))
@@ -73,8 +69,7 @@
 			var/current_loc = get_turf(movable_pawn)
 
 			if(!is_type_in_typecache(target_turf, GLOB.dangerous_turfs) && can_move)
-				var/min_move = controller.blackboard[BB_CURRENT_MIN_MOVE_DISTANCE]
-				step_to(movable_pawn, target_turf, min_move, controller.movement_delay)
+				step_to(movable_pawn, target_turf, controller.blackboard[BB_CURRENT_MIN_MOVE_DISTANCE], controller.movement_delay)
 
 				if(current_loc == get_turf(movable_pawn))
 					advanced = TRUE
