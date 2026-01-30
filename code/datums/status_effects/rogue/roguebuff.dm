@@ -1421,10 +1421,16 @@
 	QDEL_NULL(mob_effect)
 
 /datum/status_effect/buff/clash/limbguard/process()
-	if(owner)	//Avoids a runtime where this is called, apparently, before it has time to assign an owner via initialization (???)
+	if(!owner || QDELETED(owner))
+		qdel(src)
+		return
 
-		//Anti Sci main measures
-		var/datum/reagents/reag = owner.reagents
+	if(!owner.stamina)
+		remove_self()
+		return
+
+	var/datum/reagents/reag = owner.reagents
+	if(reag)
 		var/datum/reagent/medicine/stampot/stpot = reag.has_reagent(/datum/reagent/medicine/stampot)
 		var/datum/reagent/medicine/strongstam/stpotstrong = reag.has_reagent(/datum/reagent/medicine/strongstam)
 		if(stpot)
@@ -1432,13 +1438,16 @@
 		if(stpotstrong)
 			stpotstrong.metabolization_rate = 20 * REAGENTS_METABOLISM
 
-		if(!owner.cmode)
-			remove_self()
-		//We lost the shield we used this with from our hands.
-		if((owner.get_inactive_held_item() != shield_origin) && (owner.get_active_held_item() != shield_origin))
-			remove_self()
-		if(!owner.stamina_add(0.2))	//It essentially halts green regen. Token price so it can't be maintained forever.
-			remove_self()
+	if(!owner.cmode)
+		remove_self()
+		return
+
+	if((owner.get_inactive_held_item() != shield_origin) && (owner.get_active_held_item() != shield_origin))
+		remove_self()
+		return
+
+	if(!owner.stamina_add(0.2))
+		remove_self()
 
 /datum/status_effect/buff/clash/limbguard/proc/set_offsets()
 	switch(protected_zone)
@@ -1514,7 +1523,10 @@
 #undef LGUARD_INTEG_LOSS
 
 /datum/status_effect/buff/clash/limbguard/proc/remove_self()
-	owner.remove_status_effect(/datum/status_effect/buff/clash/limbguard)
+	if(owner)
+		owner.remove_status_effect(/datum/status_effect/buff/clash/limbguard)
+	else
+		qdel(src)
 
 //Projectile struck our protected limb. Unlike regular Riposte, this will deflect the projectile at no cost.
 /datum/status_effect/buff/clash/limbguard/guard_struck_by_projectile(mob/living/target, obj/P, hit_zone)
