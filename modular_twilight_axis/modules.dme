@@ -79,9 +79,11 @@
 #include "code\modules\mob\dead\new_player\body_markings\body_marking_sets.dm"
 #include "code\modules\mob\dead\new_player\living\carbon\human\species_types\furry\aura.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\bellies.dm"
+#include "code\modules\mob\dead\new_player\sprite_accessory\breasts.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\butts.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\horns.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\tails.dm"
+#include "code\modules\mob\dead\new_player\sprite_accessory\vagina.dm"
 #include "code\modules\roguetown\roguecrafting\ceramics.dm"
 #include "code\modules\roguetown\roguecrafting\items.dm"
 #include "code\modules\roguetown\roguecrafting\alchemy\alch_cauldron_recipes.dm"
@@ -104,3 +106,12 @@
 #include "awful_artillery\awful_artillery.dme"
 #include "firearms\firearms.dme"
 #include "lore\lore.dme"
+// BEGIN_INTERNALS
+// END_INTERNALS
+// BEGIN_FILE_DIR
+#define FILE_DIR .
+// END_FILE_DIR
+// BEGIN_PREFERENCES
+// END_PREFERENCES
+// BEGIN_INCLUDE
+// END_INCLUDE

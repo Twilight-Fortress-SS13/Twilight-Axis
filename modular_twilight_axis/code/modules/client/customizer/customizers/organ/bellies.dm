@@ -48,15 +48,8 @@
 
 /datum/customizer/organ/belly/human
 	customizer_choices = list(/datum/customizer_choice/organ/belly/human)
+	default_disabled = TRUE
 
 /datum/customizer_choice/organ/belly/human
 	sprite_accessories = list(/datum/sprite_accessory/belly)
 	allows_accessory_color_customization = FALSE
-
-/datum/customizer/organ/belly/animal
-	customizer_choices = list(/datum/customizer_choice/organ/belly/animal)
-
-/datum/customizer_choice/organ/belly/animal
-	sprite_accessories = list(
-		/datum/sprite_accessory/belly
-		)

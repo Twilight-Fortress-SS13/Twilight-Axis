@@ -183,6 +183,8 @@
 			return "FFRONT"
 		if(BODY_UNDER_LAYER)
 			return "UNDER"
+		if(FRONT_MUTATIONS_LAYER)
+			return "MUTANT"
 		else
 			CRASH("Tried to get an unimplemented layer suffix for sprite accessory of type [type]")
 

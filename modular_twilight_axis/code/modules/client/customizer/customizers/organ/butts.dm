@@ -5,8 +5,7 @@
 /datum/customizer/organ/butt
 	abstract_type = /datum/customizer/organ/butt
 	name = "Butt"
-	allows_disabling = TRUE
-	default_disabled = FALSE
+	allows_disabling = FALSE
 
 /datum/customizer_choice/organ/butt
 	abstract_type = /datum/customizer_choice/organ/butt
@@ -49,11 +48,3 @@
 /datum/customizer_choice/organ/butt/human
 	sprite_accessories = list(/datum/sprite_accessory/butt/pair)
 	allows_accessory_color_customization = FALSE
-
-/datum/customizer/organ/butt/animal
-	customizer_choices = list(/datum/customizer_choice/organ/butt/animal)
-
-/datum/customizer_choice/organ/butt/animal
-	sprite_accessories = list(
-		/datum/sprite_accessory/butt/pair
-		)

@@ -1,7 +1,7 @@
 /datum/sprite_accessory/belly
 	icon = 'modular_twilight_axis/icons/mob/sprite_accessory/belly/belly.dmi'
 	color_key_name = "Belly"
-	relevant_layers = list(BODY_ADJ_LAYER)
+	relevant_layers = list(FRONT_MUTATIONS_LAYER)
 
 /datum/sprite_accessory/belly/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/belly/belleh = organ
