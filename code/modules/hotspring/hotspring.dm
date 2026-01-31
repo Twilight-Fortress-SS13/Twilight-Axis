@@ -60,14 +60,6 @@
 	if(!edge)
 		playsound(AM, pick('sound/foley/watermove (1).ogg','sound/foley/watermove (2).ogg'), 40, FALSE)
 
-/obj/structure/hotspring/Uncrossed(atom/movable/AM)
-	. = ..()
-	if(edge)
-		return
-	var/turf/signaler = get_turf(src)
-	if(signaler)
-		SEND_SIGNAL(signaler, COMSIG_TURF_EXITED, AM)
-
 //Copying turf/water cleaning functionality here
 /obj/structure/hotspring/attack_right(mob/user)
 	if(isliving(user))
