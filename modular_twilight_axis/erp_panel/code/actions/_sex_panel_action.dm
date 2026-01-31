@@ -556,7 +556,7 @@
 		do_sound_effect(user, C)
 
 	if(actor_suck_sound && user)
-		user.make_sucking_noise()
+		make_sucking_noise(user, C)
 
 	if(actor_make_fingering_sound && user)
 		playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
@@ -574,7 +574,7 @@
 		do_sound_effect(target, C)
 
 	if(target && target_suck_sound)
-		target.make_sucking_noise()
+		make_sucking_noise(target, C)
 
 	if(target && target_make_fingering_sound)
 		playsound(target, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
@@ -721,3 +721,24 @@
 		C.compiled_messages = compile_templates(user, target, C)
 	else
 		C.compiled_messages = null
+
+/datum/sex_panel_action/proc/make_sucking_noise(mob/living/carbon/human/user, datum/sex_action_context/C)
+	var/datum/sex_action_session/L = _link(C)
+	if(!L)
+		return FALSE
+
+	if(!user || QDELETED(user) || !istype(user))
+		return
+	if(user.gender == FEMALE)
+		playsound(src, pick('sound/misc/mat/girlmouth (1).ogg','sound/misc/mat/girlmouth (2).ogg','sound/misc/mat/oral (1).ogg','sound/misc/mat/oral (2).ogg','sound/misc/mat/oral (3).ogg','sound/misc/mat/oral (4).ogg','sound/misc/mat/oral (5).ogg','sound/misc/mat/oral (6).ogg','sound/misc/mat/oral (7).ogg'), 25, TRUE, ignore_walls = FALSE)
+	else
+		playsound(src, pick('sound/misc/mat/guymouth (2).ogg','sound/misc/mat/guymouth (3).ogg','sound/misc/mat/guymouth (4).ogg','sound/misc/mat/guymouth (5).ogg','sound/misc/mat/oral (1).ogg','sound/misc/mat/oral (2).ogg','sound/misc/mat/oral (3).ogg','sound/misc/mat/oral (4).ogg','sound/misc/mat/oral (5).ogg','sound/misc/mat/oral (6).ogg','sound/misc/mat/oral (7).ogg'), 35, TRUE, ignore_walls = FALSE)
+	var/volume_layer = 12
+	switch(L.force)
+		if(SEX_FORCE_LOW)
+			return
+		if(SEX_FORCE_HIGH)
+			volume_layer = 14
+		if(SEX_FORCE_EXTREME)
+			volume_layer = 16
+	playsound(user, pick('sound/misc/mat/saliva (1).ogg','sound/misc/mat/saliva (2).ogg','sound/misc/mat/saliva (3).ogg'), volume_layer, TRUE, -2, ignore_walls = FALSE)
