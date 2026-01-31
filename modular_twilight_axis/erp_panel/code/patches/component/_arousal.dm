@@ -17,7 +17,7 @@
 #define NYMPHO_BOOST_DURATION (10 MINUTES)
 
 #define SP_MAX 5
-#define SP_SATED_THRESHOLD 3
+#define SP_SATED_THRESHOLD 1
 #define SP_DECAY_INTERVAL (10 MINUTES)
 #define SELF_LOCK_DURATION (2 MINUTES)
 
@@ -731,6 +731,7 @@
 
 /datum/component/arousal/proc/adjust_satisfaction(delta)
 	satisfaction_points = clamp(satisfaction_points + delta, 0, SP_MAX)
+	last_sp_decay_time = world.time
 
 /datum/component/arousal/proc/handle_satisfaction_decay()
 	var/mob/living/carbon/human/H = parent
@@ -740,7 +741,6 @@
 		return
 	if(world.time < last_sp_decay_time + SP_DECAY_INTERVAL)
 		return
-	last_sp_decay_time = world.time
 	adjust_satisfaction(-1)
 
 /datum/component/arousal/proc/handle_satisfaction_from_climax(mob/living/carbon/human/user, mob/living/carbon/human/target, climax_type)
@@ -789,7 +789,7 @@
 	if(user.has_flaw(/datum/charflaw/addiction/lovefiend))
 		if(satisfaction_points > SP_SATED_THRESHOLD )
 			user.sate_addiction()
-		user.add_stress(/datum/stressevent/cumlove)
+			user.add_stress(/datum/stressevent/cumlove)
 		return
 
 	if(climax_type == "self")
