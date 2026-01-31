@@ -240,29 +240,27 @@
 /// Returns the highest AC worn, or held in hands.
 /mob/living/carbon/human/proc/highest_ac_worn(check_hands)
 	var/list/slots = list(wear_armor, wear_pants, wear_wrists, wear_shirt, gloves, head, shoes, wear_neck, wear_mask, wear_ring)
-	for(var/slot in slots)
-		if(isnull(slot) || !istype(slot, /obj/item/clothing))
-			slots.Remove(slot)
-	
 	var/highest_ac = ARMOR_CLASS_NONE
 
 	for(var/obj/item/clothing/C in slots)
-		if(C.armor_class)
-			if(C.armor_class > highest_ac)
-				highest_ac = C.armor_class
-				if(highest_ac == ARMOR_CLASS_HEAVY)
-					return highest_ac
+		if(!C || !C.armor_class)
+			continue
+
+		if(C.armor_class > highest_ac)
+			highest_ac = C.armor_class
+			if(highest_ac == ARMOR_CLASS_HEAVY)
+				return highest_ac
+
 	if(check_hands)
-		var/mainh = get_active_held_item()
-		var/offh = get_inactive_held_item()
-		if(mainh && istype(mainh, /obj/item/clothing))
-			var/obj/item/clothing/CMH = mainh
-			if(CMH.armor_class > highest_ac)
-				highest_ac = CMH.armor_class 
-		if(offh && istype(offh, /obj/item/clothing))
-			var/obj/item/clothing/COH = offh
-			if(COH.armor_class > highest_ac)
-				highest_ac = COH.armor_class 
+		var/obj/item/clothing/C
+
+		C = get_active_held_item()
+		if(C && C.armor_class > highest_ac)
+			highest_ac = C.armor_class
+
+		C = get_inactive_held_item()
+		if(C && C.armor_class > highest_ac)
+			highest_ac = C.armor_class 
 	
 	return highest_ac
 
