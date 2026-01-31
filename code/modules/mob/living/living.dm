@@ -837,7 +837,7 @@
 		if(blood_volume <= 0)
 			health = 0
 	staminaloss = getStaminaLoss()
-	update_stat()
+	//update_stat()
 	SEND_SIGNAL(src, COMSIG_LIVING_HEALTH_UPDATE)
 
 /mob/living/proc/check_revive(mob/living/user)

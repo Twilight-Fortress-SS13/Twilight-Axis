@@ -745,95 +745,101 @@ GLOBAL_VAR_INIT(mobids, 1)
  * calculates client ping, round id, server time, time dilation and other data about the round
  * and puts it in the mob status panel on a regular loop
  */
-/mob/Stat()
-	..()
-	// && check_rights(R_ADMIN,0)
+
+/mob
+	var/last_stat_update = 0
+	var/last_stat_update_heavy = 0
+
+	var/cached_roundinfo_text
+	var/cached_timeofday_text
+	var/cached_ic_time_text
+	var/cached_listed_turf
+	var/list/cached_listed_turf_atoms
+
+/mob/proc/update_stat_cache()
+	last_stat_update = world.time
+
 	var/time_left = SSgamemode.round_ends_at - world.time
+
 	var/days = "TWILIGHT"
 	switch(GLOB.dayspassed)
-		if(1)
-			days = "MOON'S DAE"
-		if(2)
-			days = "TIW'S DAE"
-		if(3)
-			days = "WEDDING'S DAE"
-		if(4)
-			days = "TOLL'S DAE"
-		if(5)
-			days = "FREYJA'S DAE"
-		if(6)
-			days = "SATURN'S DAE"
-		if(7)
-			days = "SUN'S DAE"
+		if(1) days = "MOON'S DAE"
+		if(2) days = "TIW'S DAE"
+		if(3) days = "WEDDING'S DAE"
+		if(4) days = "TOLL'S DAE"
+		if(5) days = "FREYJA'S DAE"
+		if(6) days = "SATURN'S DAE"
+		if(7) days = "SUN'S DAE"
+
+	cached_roundinfo_text = list(
+		"MAP: [SSmapping.config?.map_name || "Loading..."]",
+		"ROUND ID: [GLOB.rogue_round_id || "NULL"]",
+		"ROUND TIME: [time2text(STATION_TIME_PASSED(), "hh:mm:ss", 0)]"
+	)
+
+	if(SSgamemode.roundvoteend)
+		cached_roundinfo_text += "ROUND END: [DisplayTimeText(time_left)]"
+
+	cached_timeofday_text = "TIMEOFDAY: [days] ᛉ [uppertext(GLOB.tod)] ᛉ [station_time_timestamp("hh:mm")]"
+	cached_ic_time_text = "IC Time: [station_time_timestamp()] [station_time()]"
+
+/mob/proc/update_stat_cache_heavy()
+	last_stat_update_heavy = world.time
+
+	if(Master)
+		Master.stat_entry(src)
+
+	if(Failsafe)
+		Failsafe.stat_entry(src)
+
+	if(cached_listed_turf)
+		cached_listed_turf_atoms = list()
+		for(var/atom/A in cached_listed_turf)
+			if(A.mouse_opacity && A.invisibility <= see_invisible)
+				cached_listed_turf_atoms += A
+
+/mob/Stat()
+	..()
 
 	if(client)
-		if(statpanel("RoundInfo"))
-			stat(null, "MAP: [SSmapping.config?.map_name || "Loading..."]")
-			var/datum/map_config/cached = SSmapping.next_map_config
-			if(cached)
-				stat(null, "Next Map: [cached.map_name]")
-			stat(null, "ROUND ID: [GLOB.rogue_round_id ? GLOB.rogue_round_id : "NULL"]")
-			stat(null, "ROUND TIME: [time2text(STATION_TIME_PASSED(), "hh:mm:ss", 0)] [world.time - SSticker.round_start_time]")
-			if(SSgamemode.roundvoteend)
-				stat("ROUND END: [DisplayTimeText(time_left)]")
-			if(client?.holder)
-				stat(null, "ROUND TrueTime: [worldtime2text()] [world.time]")
-			stat(null, "TIMEOFDAY: [days] ᛉ [uppertext(GLOB.tod)] ᛉ [station_time_timestamp("hh:mm")]")
-			stat(null, "IC Time: [station_time_timestamp()] [station_time()]")
-			stat(null, "PING: [round(client.lastping, 1)]ms (Average: [round(client.avgping, 1)]ms)")
-			if(check_rights(R_ADMIN,0))
-				stat(null, SSmigrants.get_status_line())
-				stat(null, "TIME DILATION: [round(SStime_track.time_dilation_current,1)]% AVG:([round(SStime_track.time_dilation_avg_fast,1)]%, [round(SStime_track.time_dilation_avg,1)]%, [round(SStime_track.time_dilation_avg_slow,1)]%)")
+		if(world.time - last_stat_update > 10)
+			update_stat_cache()
 
-	if(client && client.holder && check_rights(R_DEBUG,0))
-		if(statpanel("MC"))
-			var/turf/T = get_turf(client.eye)
-			stat("Location:", COORD(T))
-			stat("CPU:", "[world.cpu]")
-			stat("Instances:", "[num2text(world.contents.len, 10)]")
-			stat("World Time:", "[world.time]")
-			GLOB.stat_entry()
-			config.stat_entry()
-			stat(null)
-			if(Master)
-				Master.stat_entry()
-			else
-				stat("Master Controller:", "ERROR")
-			if(Failsafe)
-				Failsafe.stat_entry()
-			else
-				stat("Failsafe Controller:", "ERROR")
-			if(Master)
-				stat(null)
-				for(var/datum/controller/subsystem/SS in Master.subsystems)
-					SS.stat_entry()
-		if(statpanel("Tickets"))
-			GLOB.ahelp_tickets.stat_entry()
-		if(length(GLOB.sdql2_queries))
-			if(statpanel("SDQL2"))
-				stat("Access Global SDQL2 List", GLOB.sdql2_vv_statobj)
-				for(var/i in GLOB.sdql2_queries)
-					var/datum/SDQL2_query/Q = i
-					Q.generate_stat()
+		if(statpanel("RoundInfo"))
+			if(!cached_roundinfo_text)
+				update_stat_cache()
+			for(var/line in cached_roundinfo_text)
+				stat(null, line)
+
+			stat(null, cached_timeofday_text)
+			stat(null, cached_ic_time_text)
+			stat(null, "PING: [round(client.lastping,1)]ms (AVG: [round(client.avgping,1)]ms)")
+
+			if(client.holder && check_rights(R_ADMIN,0))
+				stat(null, SSmigrants.get_status_line())
+				stat(null, "TIME DILATION: [round(SStime_track.time_dilation_current,1)]%")
+
+		if(client.holder && check_rights(R_DEBUG,0))
+			if(statpanel("MC"))
+				if(world.time - last_stat_update_heavy > 50)
+					update_stat_cache_heavy()
+
+				stat("CPU:", "[world.cpu]")
+				stat("World Time:", "[world.time]")
 
 	if(listed_turf && client)
-		if(!TurfAdjacent(listed_turf))
+		if(listed_turf && !TurfAdjacent(listed_turf))
 			listed_turf = null
-		else
-			statpanel(listed_turf.name, null, listed_turf)
-			var/list/overrides = list()
-			for(var/image/I in client.images)
-				if(I.loc && I.loc.loc == listed_turf && I.override)
-					overrides += I.loc
-			for(var/atom/A in listed_turf)
-				if(!A.mouse_opacity)
-					continue
-				if(A.invisibility > see_invisible)
-					continue
-				if(overrides.len && (A in overrides))
-					continue
-				statpanel(listed_turf.name, null, A)
+			cached_listed_turf = null
+			cached_listed_turf_atoms = null
+		
+		if(listed_turf != cached_listed_turf)
+			cached_listed_turf = listed_turf
+			update_stat_cache_heavy()
 
+		if(statpanel(listed_turf.name))
+			for(var/atom/A in cached_listed_turf_atoms)
+				statpanel(listed_turf.name, null, A)
 
 //	if(mind)
 //		add_spells_to_statpanel(mind.spell_list)
