@@ -452,15 +452,15 @@ SUBSYSTEM_DEF(timer)
 	if (!callBack)
 		return "NO_CALLBACK"
 
-	var/obj = callBack.object
+	var/datum/obj = callBack.object
 	if (!obj)
-		return "NULL_OBJECT"
+		return "NULL"
 
 	if (obj == GLOBAL_PROC)
 		return "GLOBAL_PROC"
 
 	if (QDELETED(obj))
-		return "QDELETED([obj.type || "unknown"])"
+		return "QDELETED"
 
 	return "[obj.type]"
 
