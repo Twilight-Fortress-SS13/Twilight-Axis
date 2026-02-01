@@ -773,10 +773,20 @@ GLOBAL_VAR_INIT(mobids, 1)
 		if(statpanel("MC"))
 			var/turf/T = get_turf(client.eye)
 			stat("Location:", COORD(T))
-
 			for(var/line in SSstatpanel.mc_info_text)
 				stat(null, line)
 
+			GLOB.stat_entry()
+			config.stat_entry()
+			if(Master)
+				Master.stat_entry()
+			else
+				stat("Master Controller:", "ERROR")
+			if(Failsafe)
+				Failsafe.stat_entry()
+			else
+				stat("Failsafe Controller:", "ERROR")
+				
 			stat(null)
 
 			for(var/entry in SSstatpanel.mc_cache)
