@@ -9,6 +9,8 @@ SUBSYSTEM_DEF(statpanel)
 	var/list/base_roundinfo_text
 	var/list/admin_roundinfo_text
 	var/list/debug_roundinfo_text
+	var/list/mc_info_text
+	var/list/mc_cache
 
 	var/timeofday_text
 	var/ic_time_text
@@ -61,3 +63,19 @@ AVG:([round(SStime_track.time_dilation_avg_fast,1)]%, \
 [round(SStime_track.time_dilation_avg,1)]%, \
 [round(SStime_track.time_dilation_avg_slow,1)]%)"
 	)
+
+	mc_info_text = list()
+
+	mc_info_text += "CPU: [world.cpu]"
+	mc_info_text += "Instances: [num2text(world.contents.len, 10)]"
+	mc_info_text += "World Time: [world.time]"
+
+	mc_cache = list()
+
+	for(var/datum/controller/subsystem/SSsub in Master.subsystems)
+		SSsub.collecting_stat = TRUE
+		SSsub.collected_stat = null
+		SSsub.stat_entry("")
+		SSsub.collecting_stat = FALSE
+		if(SSsub.collected_stat)
+			mc_cache += list(SSsub.collected_stat)

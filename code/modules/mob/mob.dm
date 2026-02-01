@@ -769,29 +769,20 @@ GLOBAL_VAR_INIT(mobids, 1)
 			for(var/line in SS.admin_roundinfo_text)
 				stat(null, line)
 
-	if(client && client.holder && check_rights(R_DEBUG,0))
+	if(client?.holder && check_rights(R_DEBUG, 0))
 		if(statpanel("MC"))
 			var/turf/T = get_turf(client.eye)
 			stat("Location:", COORD(T))
-			stat("CPU:", "[world.cpu]")
-			stat("Instances:", "[num2text(world.contents.len, 10)]")
-			stat("World Time:", "[world.time]")
-			GLOB.stat_entry()
-			config.stat_entry()
-			stat(null)
-			if(Master)
-				Master.stat_entry()
-			else
-				stat("Master Controller:", "ERROR")
-			if(Failsafe)
-				Failsafe.stat_entry()
-			else
-				stat("Failsafe Controller:", "ERROR")
-			if(Master)
-				stat(null)
-				for(var/datum/controller/subsystem/SSsub in Master.subsystems)
-					SSsub.stat_entry()
 
+			for(var/line in SSstatpanel.mc_info_text)
+				stat(null, line)
+
+			stat(null)
+
+			for(var/entry in SSstatpanel.mc_cache)
+				var/datum/controller/subsystem/SSsub = entry["subsystem"]
+				stat(entry["title"], SSsub.statclick.update(entry["msg"]))
+				
 		if(statpanel("Tickets"))
 			GLOB.ahelp_tickets.stat_entry()
 
