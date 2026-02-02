@@ -43,6 +43,10 @@
 
 	var/obj/structure/bed/rogue/bed = null
 	var/target_on_bed = FALSE
+	var/active_tab = "actions"
+	var/list/_org_nodes_cache_actor
+	var/list/_org_nodes_cache_partner
+	var/org_nodes_dirty = TRUE
 	
 /datum/sex_session_tgui/New(mob/living/carbon/human/U, mob/living/carbon/human/T)
 	. = ..()
@@ -692,6 +696,11 @@
 	. = ..()
 	if(.)
 		return
+
+	if(action == "set_tab")
+		active_tab = params["tab"]
+		if(cache)
+			cache.mark_dirty_for_tab(active_tab)
 
 	switch(action)
 		if("set_kink_pref")
@@ -2240,3 +2249,26 @@
 		))
 
 	return links
+
+/datum/sex_session_tgui/proc/mark_org_nodes_dirty()
+	org_nodes_dirty = TRUE
+	if(cache)
+		cache.mark_dirty_org_nodes()
+
+/datum/sex_session_tgui/proc/get_org_nodes(mob/living/carbon/human/M, side)
+	if(!org_nodes_dirty)
+		return side == "actor" ? _org_nodes_cache_actor : _org_nodes_cache_partner
+
+	var/list/L = side == "actor" ? (_org_nodes_cache_actor ||= list()) : (_org_nodes_cache_partner ||= list())
+
+	L.Cut()
+	build_org_nodes_into(M, side, L)
+
+	org_nodes_dirty = FALSE
+	return L
+
+/datum/sex_session_tgui/proc/build_org_nodes_into(mob/M, side, list/out)
+	out.Cut()
+	var/list/tmp = build_org_nodes(M, side)
+	for(var/E in tmp)
+		out += E

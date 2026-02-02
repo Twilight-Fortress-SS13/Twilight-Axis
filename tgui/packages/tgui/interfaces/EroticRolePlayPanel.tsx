@@ -1828,22 +1828,46 @@ export const EroticRolePlayPanel: React.FC = () => {
               <Box mt={0.5}>
                 <Stack justify="center" wrap>
                   <Stack.Item style={{ marginInline: 4 }}>
-                    <Button selected={activeTab === 'status'} onClick={() => setActiveTab('status')}>
+                    <Button
+                      selected={activeTab === 'status'}
+                      onClick={() => {
+                        setActiveTab('status');
+                        act('set_tab', { tab: 'status' });
+                      }}
+                    >
                       СТАТУС
                     </Button>
                   </Stack.Item>
                   <Stack.Item style={{ marginInline: 4 }}>
-                    <Button selected={activeTab === 'actions'} onClick={() => setActiveTab('actions')}>
+                    <Button
+                      selected={activeTab === 'actions'}
+                      onClick={() => {
+                        setActiveTab('actions');
+                        act('set_tab', { tab: 'actions' });
+                      }}
+                    >
                       ДЕЙСТВИЯ
                     </Button>
                   </Stack.Item>
                   <Stack.Item style={{ marginInline: 4 }}>
-                    <Button selected={activeTab === 'kinks'} onClick={() => setActiveTab('kinks')}>
+                    <Button
+                      selected={activeTab === 'kinks'}
+                      onClick={() => {
+                        setActiveTab('kinks');
+                        act('set_tab', { tab: 'kinks' });
+                      }}
+                    >
                       ФЕТИШИ
                     </Button>
                   </Stack.Item>
                   <Stack.Item style={{ marginInline: 4 }}>
-                    <Button selected={activeTab === 'editor'} onClick={() => setActiveTab('editor')}>
+                    <Button
+                      selected={activeTab === 'editor'}
+                      onClick={() => {
+                        setActiveTab('editor');
+                        act('set_tab', { tab: 'editor' });
+                      }}
+                    >
                       РЕДАКТОР
                     </Button>
                   </Stack.Item>

@@ -9,11 +9,6 @@
 	..()
 
 	var/mob/living/carbon/human/H = get_owner()
-	if(!H) return
-/datum/sex_organ/mouth/process_org()
-	..()
-
-	var/mob/living/carbon/human/H = get_owner()
 	if(!H)
 		return
 
