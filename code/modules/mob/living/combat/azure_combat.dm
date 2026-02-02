@@ -256,21 +256,19 @@
 			if(highest_ac == ARMOR_CLASS_HEAVY)
 				return highest_ac
 
-	if(check_hands)
-		var/obj/item/C
+	if(!check_hands)
+		return highest_ac
 
-		C = get_active_held_item()
-		if(C && hasvar(C, "armor_class"))
-			var/ac = C.armor_class
-			if(ac > highest_ac)
-				highest_ac = ac
+	var/obj/item/held
 
-		C = get_inactive_held_item()
-		if(C && hasvar(C, "armor_class"))
-			var/ac = C.armor_class
-			if(ac > highest_ac)
-				highest_ac = ac
-	
+	held = get_active_held_item()
+	if(held && istype(held, /obj/item/clothing))
+		highest_ac = max(highest_ac, held.armor_class)
+
+	held = get_inactive_held_item()
+	if(held && istype(held, /obj/item/clothing))
+		highest_ac = max(highest_ac, held.armor_class)
+
 	return highest_ac
 
 /mob/living/carbon/human/proc/process_tempo_attack(mob/living/carbon/attacker)
