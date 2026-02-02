@@ -447,10 +447,10 @@
 	created_item = /obj/item/rogueweapon/greatsword/iron
 
 /datum/anvil_recipe/weapons/iron/claymore
-	name = "Claymore, Iron (+2 Iron)"
+	name = "Claymore, Iron (+4 Iron)"
 	req_bar = /obj/item/ingot/iron
 	req_blade = /obj/item/blade/iron_sword
-	additional_items = list(/obj/item/ingot/iron, /obj/item/ingot/iron)
+	additional_items = list(/obj/item/ingot/iron, /obj/item/ingot/iron, /obj/item/ingot/iron, /obj/item/ingot/iron)
 	created_item = /obj/item/rogueweapon/greatsword/zwei
 
 /datum/anvil_recipe/weapons/iron/axe
@@ -683,11 +683,17 @@
 	created_item = /obj/item/rogueweapon/stoneaxe/battle
 
 /datum/anvil_recipe/weapons/steel/combatknife
-	name = "Combat Knife, Steel (+1 Steel)"
+	name = "Combat Knife, Steel"
+	req_bar = /obj/item/ingot/steel
+	req_blade = /obj/item/blade/steel_knife
+	created_item = /obj/item/rogueweapon/huntingknife/combat
+
+/datum/anvil_recipe/weapons/steel/combatknifemesser
+	name = "Combat Knife, Messer, Steel (+1 Steel)"
 	req_bar = /obj/item/ingot/steel
 	req_blade = /obj/item/blade/steel_knife
 	additional_items = list(/obj/item/ingot/steel)
-	created_item = /obj/item/rogueweapon/huntingknife/combat
+	created_item = /obj/item/rogueweapon/huntingknife/combat/messser
 
 /datum/anvil_recipe/weapons/steel/mace
 	name = "Mace, Steel (+1 Steel)"
@@ -712,10 +718,10 @@
 	created_item = /obj/item/rogueweapon/greatsword
 
 /datum/anvil_recipe/weapons/steel/flamb
-	name = "Flamberge, Steel (+2 Steel)"
+	name = "Flamberge, Steel (+3 Steel)"
 	req_bar = /obj/item/ingot/steel
 	req_blade = /obj/item/blade/steel_sword
-	additional_items = list(/obj/item/ingot/steel, /obj/item/ingot/steel)
+	additional_items = list(/obj/item/ingot/steel, /obj/item/ingot/steel, /obj/item/ingot/steel)
 	created_item = /obj/item/rogueweapon/greatsword/grenz/flamberge
 
 /datum/anvil_recipe/weapons/steel/estoc
