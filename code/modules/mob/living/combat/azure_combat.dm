@@ -242,12 +242,10 @@
 	var/list/slots = list(wear_armor, wear_pants, wear_wrists, wear_shirt, gloves, head, shoes, wear_neck, wear_mask, wear_ring)
 	var/highest_ac = ARMOR_CLASS_NONE
 
-	for(var/obj/item/C in slots)
+	for(var/obj/item/clothing/C in slots)
 		if(!C)
 			continue
-		if(!istype(C, /obj/item/clothing))
-			continue
-		if(!hasvar(C, "armor_class"))
+		if(!C.armor_class)
 			continue
 
 		var/ac = C.armor_class
