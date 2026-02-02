@@ -259,10 +259,12 @@
 	if(check_hands)
 		var/list/hand_items = list(get_active_held_item(), get_inactive_held_item())
 		for(var/obj/item/clothing/C in hand_items)
+			if(!C)
+				continue
 			var/ac = C.armor_class
 			if(ac > highest_ac)
 				highest_ac = ac
-				
+
 	return highest_ac
 
 /mob/living/carbon/human/proc/process_tempo_attack(mob/living/carbon/attacker)
