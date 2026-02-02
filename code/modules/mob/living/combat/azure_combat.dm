@@ -262,7 +262,8 @@
 		if(offh && istype(offh, /obj/item/clothing))
 			var/obj/item/clothing/COH = offh
 			if(COH.armor_class > highest_ac)
-				highest_ac = COH.armor_class 
+				highest_ac = COH.armor_class
+
 	return highest_ac
 
 /mob/living/carbon/human/proc/process_tempo_attack(mob/living/carbon/attacker)
