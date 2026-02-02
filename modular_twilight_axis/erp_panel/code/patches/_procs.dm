@@ -328,7 +328,6 @@
         STATS_CLINGY_PEOPLE,
         STATS_ALCOHOLICS,
         STATS_JUNKIES,
-		STATS_KLEPTOMANIACS,
         STATS_GREEDY_PEOPLE,
         STATS_MALE_POPULATION,
         STATS_FEMALE_POPULATION,
@@ -435,8 +434,6 @@
 				record_round_statistic(STATS_ALCOHOLICS)
 			if(human_mob.has_flaw(/datum/charflaw/addiction/junkie))
 				record_round_statistic(STATS_JUNKIES)
-			if(human_mob.has_flaw(/datum/charflaw/addiction/kleptomaniac))
-				record_round_statistic(STATS_KLEPTOMANIACS)
 			if(human_mob.has_flaw(/datum/charflaw/greedy))
 				record_round_statistic(STATS_GREEDY_PEOPLE)
 
