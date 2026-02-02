@@ -259,7 +259,7 @@
 	if(!check_hands)
 		return highest_ac
 
-	var/obj/item/held
+	var/obj/item/clothing/held
 
 	held = get_active_held_item()
 	if(held && istype(held, /obj/item/clothing))
