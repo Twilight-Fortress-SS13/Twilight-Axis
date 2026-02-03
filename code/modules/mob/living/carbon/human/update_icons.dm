@@ -60,7 +60,7 @@ There are several things that need to be remembered:
 //HAIR OVERLAY
 /mob/living/carbon/human/update_hair()
 	rebuild_obscured_flags()
-	queue_icon_update(PENDING_UPDATE_BODY)
+	update_body_parts(TRUE)
 	return
 
 /mob/living/carbon/human/update_body()
@@ -959,7 +959,7 @@ There are several things that need to be remembered:
 
 /mob/living/carbon/human/update_inv_wear_mask()
 	..()
-	queue_icon_update(PENDING_UPDATE_BODY)
+	update_body_parts(TRUE)
 	var/mutable_appearance/mask_overlay = overlays_standing[MASK_LAYER]
 	if(mask_overlay)
 		rebuild_obscured_flags()
@@ -1372,9 +1372,9 @@ There are several things that need to be remembered:
 
 	rebuild_obscured_flags()
 	if(gender == FEMALE && dna?.species)
-		queue_icon_update(PENDING_UPDATE_BODY)
+		update_body_parts(redraw =TRUE)
 		dna.species.handle_body(src)
-	queue_icon_update(PENDING_UPDATE_HAIR)
+	update_hair()
 	update_inv_shirt() // fix boob
 
 	apply_overlay(ARMOR_LAYER)

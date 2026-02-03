@@ -56,6 +56,8 @@
 		playsound(get_turf(clothing_parent), toggle_sound, 50, TRUE, -1)
 	clothing_parent.update_icon()
 	update_inv(human_wearer)
+	human_wearer.update_inv_head_real()
+	human_wearer.update_hair()
 	human_wearer.update_fov_angles()
 
 //We force it closed to make sure we can't equip an opened item if one IS on the ground somehow.
