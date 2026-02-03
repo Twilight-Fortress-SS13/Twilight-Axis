@@ -161,7 +161,7 @@
 	HAPPINESS MUST BE FOUGHT FOR.'"
 	armor = list("blunt" = 30, "slash" = 50, "stab" = 50, "piercing" = 20, "fire" = 0, "acid" = 0) //Custom value; padded gambeson's slash- and stab- armor.
 	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT)
-	max_integrity = 300
+	max_integrity = 400
 	repair_time = 20 SECONDS
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/skin/iconoclast
@@ -187,3 +187,8 @@
 	name = "berserker's skin"
 	desc = "I've endured enough. The onslaught has lost its meaning."
 	armor = ARMOR_LEATHER
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/bailiff
+	name = "executioneer's skin"
+	desc = "Bearing scars of countless whips leaves a gnarly visage. Now it's your time to inflict the same fate upon others."
+	max_integrity = 250

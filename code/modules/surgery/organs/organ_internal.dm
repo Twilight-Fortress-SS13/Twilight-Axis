@@ -91,7 +91,7 @@
 	if(M)
 		if (visible_organ)
 			M.visible_organs -= src
-			
+
 		M.internal_organs -= src
 		if(M.internal_organs_slot[slot] == src)
 			M.internal_organs_slot.Remove(slot)
