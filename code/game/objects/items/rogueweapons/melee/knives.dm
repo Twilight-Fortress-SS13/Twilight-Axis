@@ -30,6 +30,11 @@
 	penfactor = 20
 	clickcd = 11
 
+// For thrusting-focused daggers. Thinner blade, less slashing damage.
+/datum/intent/dagger/cut/light
+	name = "light cut"
+	damfactor = 0.8
+
 /datum/intent/dagger/thrust
 	name = "thrust"
 	icon_state = "instab"
@@ -102,12 +107,7 @@
 
 /obj/item/rogueweapon/huntingknife
 	force = 12
-	possible_item_intents = list(
-		/datum/intent/dagger/thrust,
-		/datum/intent/dagger/cut,
-		/datum/intent/dagger/thrust/pick,
-		/datum/intent/dagger/sucker_punch,
-		)
+	possible_item_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/thrust, /datum/intent/dagger/chop)
 	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_MOUTH
 	name = "hunting knife"
 	desc = "A hunter's prized possession. Keep it sharp, and it might last you through the wild."
@@ -288,7 +288,9 @@
 	clickcd = 10
 	item_d_type = "slash"
 
-/obj/item/rogueweapon/huntingknife/cleaver
+//
+
+/obj/item/rogueweapon/huntingknife/cleaver //Now-unused variant. Avoid using this, going forward - you'll want to use the chefknife-forked variant instead.
 	force = 15
 	name = "cleaver"
 	desc = "Chop, chop, chop!"
@@ -302,6 +304,8 @@
 	thrown_bclass = BCLASS_CHOP
 	w_class = WEIGHT_CLASS_NORMAL
 	smeltresult = /obj/item/ingot/steel
+
+//
 
 /obj/item/rogueweapon/huntingknife/chefknife
 	force = 15
@@ -317,6 +321,26 @@
 	thrown_bclass = BCLASS_CUT
 	w_class = WEIGHT_CLASS_SMALL
 	smeltresult = /obj/item/ingot/steel
+
+/obj/item/rogueweapon/huntingknife/chefknife/cleaver
+	name = "cleaver"
+	desc = "Chop, chop, chop!"
+	possible_item_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/chop/cleaver)
+	icon_state = "cleaver"
+	parrysound = list('sound/combat/parry/bladed/bladedmedium (1).ogg','sound/combat/parry/bladed/bladedmedium (2).ogg','sound/combat/parry/bladed/bladedmedium (3).ogg')
+	swingsound = list('sound/combat/wooshes/bladed/wooshmed (1).ogg','sound/combat/wooshes/bladed/wooshmed (2).ogg','sound/combat/wooshes/bladed/wooshmed (3).ogg')
+	thrown_bclass = BCLASS_CHOP
+	w_class = WEIGHT_CLASS_NORMAL
+	smeltresult = /obj/item/ingot/steel
+
+/obj/item/rogueweapon/huntingknife/chefknife/cleaver/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.6,"sx" = -10,"sy" = -8,"nx" = 13,"ny" = -8,"wx" = -8,"wy" = -7,"ex" = 7,"ey" = -8,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 90,"sturn" = -90,"wturn" = -80,"eturn" = 81,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+			if("onbelt")
+				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 /obj/item/rogueweapon/huntingknife/combat //>Combat knife //>Literally never seen it used in combat
 	force = 22 //Hunting knife's bigger, meaner older brother. No pick intent, so it deserves a slight damage bump.
@@ -417,6 +441,16 @@
 	down men as it is foiliage, but not quite as durable as more modern steel tools. More suitable for cutting than for thrusting."
 	icon_state = "warden_machete"
 	sheathe_icon = "warden_machete"
+
+/obj/item/rogueweapon/huntingknife/combat/messser //Just as Grenzelhoft intended
+	name = "kampfmesser"
+	desc = "An undersized steel messer that barely fits into a conventional dagger sheath, the saving grace of any hunter. It lacks a tip for stabbing - yet the edge alone is sharp enough to hack most issues right away. \
+	While it was brought over by Grenzelhoftian migrants it is considered Azurean staple these daes - The right tool for the right job."
+	possible_item_intents = list(/datum/intent/dagger/cut/heavy, /datum/intent/dagger/cut/combat, /datum/intent/dagger/chop/cleaver, /datum/intent/dagger/sucker_punch)
+	icon_state = "minimesser"
+	sheathe_icon = "minimesser"
+	max_blade_int = 200
+	max_integrity = 150
 
 /obj/item/rogueweapon/huntingknife/idagger/virtue
 	possible_item_intents = list(/datum/intent/dagger/thrust,/datum/intent/dagger/cut, /datum/intent/dagger/thrust/pick, /datum/intent/dagger/sucker_punch)
@@ -545,9 +579,9 @@
 /obj/item/rogueweapon/huntingknife/idagger/steel/rondel
 	name = "rondel dagger"
 	desc = "This is the traditional sidearm of a knight: a lightweight dagger of solid steel, well-balanced for delivering rapid thrusts that can shuck grapplers like oysters."
-	icon_state = "rondeldagger"
+	icon_state = "rondel"
 	sheathe_icon = "dagger_trainer"
-	possible_item_intents = list(/datum/intent/dagger/thrust/quick, /datum/intent/dagger/thrust/pick, /datum/intent/dagger/sucker_punch, /datum/intent/dagger/cut)
+	possible_item_intents = list(/datum/intent/dagger/thrust/quick, /datum/intent/dagger/thrust/pick, /datum/intent/dagger/cut/light, /datum/intent/dagger/sucker_punch)
 	wdefense = 4 //Slightly more defense than a regular dagger. Intended to function as a tool for countering grapplers or finishing off armored opponents with broken pieces.
 	smeltresult = /obj/item/ingot/steel
 
@@ -580,6 +614,13 @@
 	icon_state = "eastdagger"
 	sheathe_icon = "tanto"
 
+/obj/item/rogueweapon/huntingknife/idagger/steel/bone
+	name = "bone dagger"
+	desc = "This is a tool that can be used to make more of itself."
+	icon_state = "bonedagger"
+	sheathe_icon = "bonedagger"
+	smeltresult = null
+
 /obj/item/rogueweapon/huntingknife/idagger/silver
 	name = "silver dagger"
 	desc = "A dagger of pure silver; the bane of vampyres, verevolves, deadites, and all other unsaintly nitecreechers. Errant light transforms into a blinding glare, when cast along the blade's edge."
@@ -607,7 +648,7 @@
 	name = "sharpened stake"
 	desc = "A branch that has been broken off of an azurielve tree, sharpened to a fine point. It can lay some unholy creechers to rest, but only by piercing their hearts."
 	icon_state = "stake"
-	possible_item_intents = list(/datum/intent/dagger/thrust, /datum/intent/dagger/thrust/pick, /datum/intent/dagger/sucker_punch, /datum/intent/dagger/thrust/quick)
+	possible_item_intents = list(/datum/intent/dagger/thrust/pick, /datum/intent/dagger/thrust/quick, /datum/intent/dagger/cut/light, /datum/intent/dagger/sucker_punch)
 	force = 12
 	throwforce = 12
 	wdefense = 0
@@ -624,7 +665,7 @@
 	name = "silver-tipped stake"
 	desc = "A branch that has been broken off of a boswellia tree, sharpened to a fine point and tipped with blessed silver. It can lay most unholy creechers to rest, but only by piercing their hearts."
 	icon_state = "stake_silver"
-	possible_item_intents = list(/datum/intent/dagger/thrust, /datum/intent/dagger/thrust/pick, /datum/intent/dagger/sucker_punch, /datum/intent/dagger/thrust/quick)
+	possible_item_intents = list(/datum/intent/dagger/thrust/pick, /datum/intent/dagger/thrust/quick, /datum/intent/dagger/cut/light, /datum/intent/dagger/sucker_punch)
 	force = 20
 	throwforce = 20
 	wdefense = 0
@@ -959,8 +1000,9 @@
 
 /datum/intent/dagger/thrust/quick
 	name = "quick thrust"
+	icon_state = "inthresh"
 	attack_verb = list("thrusts", "shanks")
-	penfactor = 20 //Counts as up to 30-35AP, when factoring in strength-modified damage. 
+	penfactor = 20 //Counts as up to 30-35AP, when factoring in strength-modified damage. Keep restricted to weapons that're meant to counter grapplers and wrestlers.
 	clickcd = 4 //Halved penetration, doubled attack speed. This is either going to be extremely funny, or extremely evil.
 
 /obj/item/rogueweapon/huntingknife/scissors

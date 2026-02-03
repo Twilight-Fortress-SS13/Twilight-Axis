@@ -735,12 +735,6 @@
 			draw_bodypart_features = FALSE
 
 	if(!skeletonized && draw_organ_features)
-		for(var/obj/item/organ/organ as anything in get_organs())
-			if(organ.is_visible())
-				var/mutable_appearance/organ_appearance = organ.get_bodypart_overlay(src)
-				if(organ_appearance)
-					. += organ_appearance
-
 		for(var/obj/item/organ/organ as anything in get_visible_organs())
 			var/mutable_appearance/organ_appearance = organ.get_bodypart_overlay(src)
 			if(organ_appearance)

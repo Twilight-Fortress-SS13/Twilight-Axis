@@ -161,7 +161,7 @@
 	HAPPINESS MUST BE FOUGHT FOR.'"
 	armor = list("blunt" = 30, "slash" = 50, "stab" = 50, "piercing" = 20, "fire" = 0, "acid" = 0) //Custom value; padded gambeson's slash- and stab- armor.
 	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT)
-	max_integrity = 400
+	max_integrity = 300
 	repair_time = 20 SECONDS
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/skin/iconoclast
@@ -174,7 +174,7 @@
 	You're face to face, with the man who sold the world."
 	armor = list("blunt" = 40, "slash" = 60, "stab" = 50, "piercing" = 40, "fire" = 50, "acid" = 0) //Fire resistance unlike the disciple one
 	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT)
-	max_integrity = 300
+	max_integrity = 450
 	repair_time = 20 SECONDS
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
