@@ -177,7 +177,7 @@
 	id = "net"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/netted
 	effectedstats = list(STATKEY_SPD = -5, STATKEY_WIL = -2)
-//	duration = 3 MINUTES // WHY?????
+	duration = 3 MINUTES
 
 /datum/status_effect/debuff/netted/on_apply()
 		. = ..()
@@ -541,6 +541,16 @@
 /atom/movable/screen/alert/status_effect/debuff/shamanhood
 	name = "Lost Hood"
 	desc = "The sacred hood is lost. I feel frail and sapped without it."
+
+/datum/status_effect/debuff/lost_dungeoneer_hood
+	id = "dungeoneerhood"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
+	effectedstats = list(STATKEY_STR = -3, STATKEY_LCK = -3)
+
+/atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
+	name = "Gnarly Visage"
+	desc = "I am a repulsive freek looked down upon by everyone else. I'd do best to hide my visage once more."
+	icon_state = "muscles"
 
 ///////////////////////
 /// CLIMBING STUFF ///

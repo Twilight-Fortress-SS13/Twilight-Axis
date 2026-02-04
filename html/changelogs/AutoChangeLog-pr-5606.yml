@@ -1,0 +1,4 @@
+author: "WeNeedMorePhoron"
+delete-after: True
+changes:
+  - rscadd: "Tome in Waiting (Spellbook before you put a magical stone / gem) is now menu craftable"

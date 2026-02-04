@@ -1,0 +1,6 @@
+author: "dopamiin0"
+delete-after: True
+changes:
+  - bugfix: "exorcist dodge experts actually get most of their gear again"
+  - bugfix: "egg related crafting recipes do less weird stuff. no more turning 2 valerian omellettes into just 2 eggs. egg + bacon + sausage can be made in both orders instead of just 1"
+  - bugfix: "master chef no longer runtimes and eats your entire backpack"

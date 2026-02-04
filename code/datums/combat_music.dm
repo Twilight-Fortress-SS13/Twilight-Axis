@@ -292,6 +292,13 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	credits = "Alias Conrad Coldwood - Pepper Steak (OFF OST)"
 	musicpath = list('sound/music/combat_jester.ogg')
 
+/datum/combat_music/BPHunter //TA mandated cmode music
+	name = "Blackpowder Hunter"
+	desc = ""
+	shortname = "Koseposha"
+	credits = "KCD 2, Tavern song"
+	musicpath = list('modular_twilight_axis/firearms/sound/music/combat_blackpowderhunter.ogg')
+
 /datum/combat_music/kazengite
 	name = "Kazengite"
 	desc = ""

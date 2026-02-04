@@ -33,7 +33,7 @@
 	H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
 	H.set_blindness(0)
 	if(H.mind)
-		var/weapons = list("Short Sword & Iron Shield","Arming Sword & Wood Shield","Longsword & +1 Wrestling","Battle Axe & Wood Shield","Mace & Iron Shield","Flail & Iron Shield","Billhook")
+		var/weapons = list("Short Sword & Iron Shield","Arming Sword & Wood Shield","Longsword & +1 Wrestling","Broadsword & +1 Wrestling","Battle Axe & Wood Shield","Mace & Iron Shield","Flail & Iron Shield","Billhook","Greatflail")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
 			if("Short Sword & Iron Shield")
@@ -53,6 +53,11 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				backr = /obj/item/rogueweapon/sword/long
 				beltr = /obj/item/rogueweapon/scabbard/sword
+			if("Broadsword & +1 Wrestling")
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				backr = /obj/item/rogueweapon/sword/long/broadsword/steel
+				beltr = /obj/item/rogueweapon/scabbard/sword
 			if("Battle Axe & Wood Shield")
 				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_JOURNEYMAN, TRUE)
@@ -71,6 +76,10 @@
 			if("Billhook")
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
 				r_hand = /obj/item/rogueweapon/spear/billhook
+				backr = /obj/item/rogueweapon/scabbard/gwstrap
+			if("Greatflail")
+				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
+				r_hand = /obj/item/rogueweapon/flail/peasantwarflail/iron
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
 		var/armors = list("Chainmaille Set","Iron Breastplate","Gambeson & Helmet","Light Raneshi Armor")
 		var/armor_choice = input(H, "Choose your armor.", "TAKE UP ARMOR") as anything in armors
@@ -142,7 +151,7 @@
 	to_chat(H, span_warning("You are an esteemed swordsman who foregoes armor in exchange for a more nimble fighting style."))
 	H.set_blindness(0)
 	if(H.mind)
-		var/weapons = list("Rapier & Parrying Dagger","Sabre & Buckler","Messer & Buckler","Dagger & Parrying Dagger","Dual Wield Shortswords")
+		var/weapons = list("Rapier & Parrying Dagger","Sabre & Buckler","Messer & Buckler","Dagger & Parrying Dagger","Dual Wield Shortswords","Heavy Dagger & +1 Unarmed")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
 			if("Rapier & Parrying Dagger")
@@ -165,6 +174,11 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
 				l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel
 				r_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/parrying
+				beltr = /obj/item/rogueweapon/scabbard/sheath
+			if("Heavy Dagger & +1 Unarmed")
+				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				l_hand = /obj/item/rogueweapon/huntingknife/combat
 				beltr = /obj/item/rogueweapon/scabbard/sheath
 			if("Dual Wield Shortswords")
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
@@ -208,7 +222,7 @@
 	tutorial = "You are a brutal warrior, who has foregone armor in favor of pure strength. Crush your enemies, see them driven before you, and hear the lamentations of their women! Oh, and you can specialize in unarmed combat and wrestling."
 	outfit = /datum/outfit/job/roguetown/adventurer/barbarian
 	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_BLOOD_RESISTANCE, TRAIT_NOPAINSTUN)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 2,
@@ -237,7 +251,7 @@
 	if(!H.mind)
 		return
 
-	var/weapons = list("Bronze Katar","Bronze Sword","Bronze Axe","Bronze Mace","Bronze Spear","Discipline - Whiphunter","Discipline - Unarmed","Discipline - Bodybuilder")
+	var/weapons = list("Bronze Katar","Bronze Sword","Bronze Axe","Bronze Mace","Bronze Spear","Bronze Flail","Discipline - Whiphunter","Discipline - Unarmed","Discipline - Bodybuilder")
 	var/weapon_choice = input(H, "Choose your WEAPON.", "TAKE UP ARMS.") as anything in weapons
 	switch(weapon_choice)
 		if("Bronze Katar")
@@ -265,6 +279,11 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			head = /obj/item/clothing/head/roguetown/helmet/leather/volfhelm
 			r_hand = /obj/item/rogueweapon/spear/bronze
+			gloves = /obj/item/clothing/gloves/roguetown/bandages
+		if("Bronze Flail")
+			H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, TRUE)
+			head = /obj/item/clothing/head/roguetown/helmet/leather/volfhelm
+			r_hand = /obj/item/rogueweapon/flail/bronze
 			gloves = /obj/item/clothing/gloves/roguetown/bandages
 		if("Discipline - Whiphunter")
 			H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, TRUE)
@@ -303,7 +322,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/rogueweapon/huntingknife/bronze = 1,
 		)
-
+   
 /datum/advclass/sfighter/ironclad
 	name = "Ironclad"
 	tutorial = "You are a warrior who puts their trust in durable armor. The best offense is a good defense."
@@ -380,7 +399,7 @@
 	H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
 	H.set_blindness(0)
 	if(H.mind)
-		var/weapons = list("Executioner's Sword","Warhammer + Shield","Flail + Shield","Lucerne","Greataxe")
+		var/weapons = list("Executioner's Sword","Warhammer + Shield","Flail + Shield","Studded Flail + Shield","Lucerne","Greataxe","Greatflail")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
 			if("Executioner's Sword")
@@ -396,6 +415,15 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				beltr = /obj/item/rogueweapon/flail
 				backr = /obj/item/rogueweapon/shield/iron
+			if("Studded Flail + Shield")
+				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				beltr = /obj/item/rogueweapon/flail/alt
+				backr = /obj/item/rogueweapon/shield/iron
+			if("Greatflail")
+				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				r_hand = /obj/item/rogueweapon/flail/peasantwarflail/iron
+				backr = /obj/item/rogueweapon/scabbard/gwstrap
 			if("Lucerne")
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				r_hand = /obj/item/rogueweapon/eaglebeak/lucerne
@@ -440,7 +468,7 @@
 	H.verbs |= /mob/living/carbon/human/proc/faith_test //Allows the Exorcist to interrogate others for their faith. Trait's agnostically worded, to allow more flexiable usage by Pantheoneers and Ascendants in this role.
 	H.verbs |= /mob/living/carbon/human/proc/torture_victim //Not as scary as it sounds. Mostly. Okay, just a little bit.
 	if(H.mind)
-		var/silver = list("Silver Dagger","Silver Shortsword","Silver Arming Sword","Silver Rapier","Silver Longsword","Silver Broadsword","Silver Mace","Silver Warhammer","Silver Morningstar","Silver Whip","Silver War Axe","Silver Poleaxe","Silver Spear","Silver Quarterstaff")
+		var/silver = list("Silver Dagger","Silver Shortsword","Silver Arming Sword","Silver Rapier","Silver Longsword","Silver Broadsword","Silver Mace","Silver Warhammer","Silver Morningstar","Silver Whip","Silver War Axe","Silver Poleaxe","Silver Spear","Silver Quarterstaff","Broadsword - Steel")
 		var/silver_choice = input(H, "Choose your WEAPON.", "PREPARE YOUR ARMS.") as anything in silver //Trim down to five or six choices, later? See what's the most popular, first. Gives people a chance to experiment with all of the new silver weapons.
 		switch(silver_choice)
 			if("Silver Dagger")
@@ -494,17 +522,21 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/silver
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
+			if("Broadsword - Steel")
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				r_hand = /obj/item/rogueweapon/sword/long/broadsword/steel
+				backr = /obj/item/rogueweapon/scabbard/gwstrap
 
-		var/sidearm = list("Dagger", "Parrying Dagger", "Seax", "Blessed Silver Stake", "Blessed Silver Shovel", "Greatshield")
+		var/sidearm = list("Dagger - Steel", "Parrying Dagger - Steel", "Heavy Dagger - Steel", "Greatshield", "Blessed Silver Stake", "Blessed Silver Shovel")
 		var/sidearm_choice = input(H, "Choose your SIDEARM.", "SAY YOUR PRAYERS.") as anything in sidearm
 		switch(sidearm_choice)
-			if("Dagger")
+			if("Dagger - Steel")
 				l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_JOURNEYMAN, TRUE)
-			if("Parrying Dagger")
+			if("Parrying Dagger - Steel")
 				l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/parrying
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_JOURNEYMAN, TRUE)
-			if("Seax")
+			if("Heavy Dagger - Steel")
 				l_hand = /obj/item/rogueweapon/huntingknife/combat
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			if("Blessed Silver Stake")
@@ -516,7 +548,7 @@
 				l_hand = /obj/item/rogueweapon/shield/tower/metal
 				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_JOURNEYMAN, TRUE)
 
-		var/discipline = list("Traditionalist - Bewitched Alchemics + Hauberk", "Reformist - Dodge Expert + Haubergeon", "Orthodoxist - Plate Training + Cuirass")
+		var/discipline = list("Traditionalist - Bewitched Alchemics + Hauberk", "Reformist - Dodge Expert + Light Haubergeon", "Orthodoxist - Plate Training + Cuirass")
 		var/discipline_choice = input(H, "Choose your DISCIPLINE.", "FACE YOUR NIGHTMARE.") as anything in discipline
 		switch(discipline_choice)
 			if("Traditionalist - Bewitched Alchemics + Hauberk")
@@ -537,13 +569,13 @@
 					/obj/item/reagent_containers/glass/bottle/alchemical/intpot,
 					/obj/item/reagent_containers/glass/bottle/alchemical/lucpot,
 					)
-			if("Reformist - Dodge Expert + Haubergeon")
+			if("Reformist - Dodge Expert + Light Haubergeon")
 				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC) //'Puritan' archetype. Closer to the Roguetown-era Inquisitor in portrayal. No armor training, but overprepared with silver throwing daggers and excellent evasive maneuvers.
 				H.change_stat(STATKEY_SPD, 1)
 				H.adjust_skillrank_up_to(/datum/skill/misc/sneaking, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				head = /obj/item/clothing/head/roguetown/puritan
 				armor = /obj/item/clothing/suit/roguetown/shirt/undershirt/puritan
-				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail
+				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/light
 				belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/silver
 			if("Orthodoxist - Plate Training + Cuirass")
 				ADD_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
@@ -565,20 +597,32 @@
 					if("Fluted Armet")
 						head = /obj/item/clothing/head/roguetown/helmet/heavy/knight/fluted
 
-	backl = /obj/item/storage/backpack/rogue/satchel
-	wrists = /obj/item/clothing/neck/roguetown/psicross/silver
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	pants = /obj/item/clothing/under/roguetown/tights/puritan
 	cloak = /obj/item/clothing/cloak/cape/puritan
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
 	gloves = /obj/item/clothing/gloves/roguetown/angle
+	backl = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch/metal = 1,
 		/obj/item/recipe_book/survival = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/rogueweapon/huntingknife = 1, //Ensures that Exorcists who take the Shovel can still butcher wildlife. Minor oversight on my part.
 		)
+
+	H.set_blindness(0)
+	switch(H.patron?.type)
+		if(/datum/patron/old_god)
+			wrists = /obj/item/clothing/neck/roguetown/psicross/silver
+		if(/datum/patron/divine/astrata)
+			wrists = /obj/item/clothing/neck/roguetown/psicross/silver/astrata
+		if(/datum/patron/divine/necra)
+			wrists = /obj/item/clothing/neck/roguetown/psicross/silver/necra
+		if(/datum/patron/divine/noc)
+			wrists = /obj/item/clothing/neck/roguetown/psicross/silver/noc 
+		else
+			wrists = /obj/item/clothing/neck/roguetown/psicross/silver/undivided
+
 	//Old people get the option to become glass cannons. Expert Knives + Expert in their chosen weapon, but a permenant -I STR, -I PER, -2 SPD and -2 CON debuff.
 
 /datum/advclass/sfighter/deprived

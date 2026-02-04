@@ -43,9 +43,18 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/helmets.dmi'
 	icon_state = "jar_helmet"
 	item_state = "jar_helmet"
-	smeltresult = /obj/item/ingot/steel
+	adjustable = CAN_CADJUST
+	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR
+	flags_cover = HEADCOVERSEYES
 	body_parts_covered = HEAD|EARS|HAIR|NOSE|EYES
+	block2add = FOV_BEHIND
+	armor = ARMOR_PLATE
+	stack_fovs = TRUE
+	smeltresult = /obj/item/ingot/steel
 	max_integrity = ARMOR_INT_HELMET_STEEL + 20 //В стандартном шлеме юзается ARMOR_INT_HELMET_STEEL, дающий 300 очков ХП, но поскольку тут крафт 1 сталь 1 бронза, то 20 интегрити сверху так же вряд-ли сильно повлияют на баланс.
+
+/obj/item/clothing/head/roguetown/helmet/raneshi_jarhelmet/ComponentInitialize()
+	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)
 
 /obj/item/clothing/head/roguetown/helmet/raneshi_jarhelmet/attackby(obj/item/W, mob/living/user, params)
 	..()

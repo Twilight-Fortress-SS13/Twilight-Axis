@@ -64,7 +64,8 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/foreigner/yoruku,
 		/datum/advclass/foreigner/repentant,
 		/datum/advclass/foreigner/refugee,
-		/datum/advclass/foreigner/slaver
+		/datum/advclass/foreigner/slaver,
+		/datum/advclass/twilight_hunter // TA - Firearm Class
 	)
 
 /mob/living/carbon/human/proc/adv_hugboxing_start()

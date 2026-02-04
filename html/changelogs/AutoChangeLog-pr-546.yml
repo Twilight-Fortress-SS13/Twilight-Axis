@@ -1,0 +1,4 @@
+author: "BOTEeshee"
+delete-after: True
+changes:
+  - rscadd: "Теперь у чурок-клириков есть подкласс Vigilant"

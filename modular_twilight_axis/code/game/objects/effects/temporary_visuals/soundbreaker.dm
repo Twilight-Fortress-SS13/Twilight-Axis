@@ -113,10 +113,6 @@
 	new /obj/effect/temp_visual/soundbreaker_afterimage(T, user, dur_ds, fade_ds)
 
 /proc/sb_fire_sound_note(mob/living/source, mob/living/target, damage_mult, damage_type, zone, dir_override)
-	var/turf/start = get_turf(source)
-	if(!start)
-		return
-
 	var/turf/end = get_turf(target)
 	if(!end)
 		return
@@ -125,7 +121,9 @@
 	if(!d)
 		d = SOUTH
 
-	var/obj/projectile/soundbreaker_note/P = new(start, source, damage_mult, damage_type, zone)
+	var/datum/component/combo_core/soundbreaker/C = soundbreaker_get_component(source)
+	var/obj/projectile/soundbreaker_note/P = new(get_turf(source), source, damage_mult, damage_type, zone)
+	P.component = C
 	P.setDir(d)
 	var/angle = Get_Angle(P, end)
 	P.fire(angle)

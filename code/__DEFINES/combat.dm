@@ -380,8 +380,6 @@ Medical defines
 #define PREVENT_CRITS_MOST	1
 #define PREVENT_CRITS_ALL	2
 
-#define BLOOD_RESISTANCE_EFFECTIVE_BLEEDRATE 0.5
-
 /*
 	Dullfactor Defines. These should be removed at some point.
 */
@@ -398,3 +396,6 @@ Medical defines
 #define VISMSG_ARMOR_INT_STAGEONE "<span class='armoralert'><i> Dented.</i></span>"
 #define VISMSG_ARMOR_INT_STAGETWO "<span class='armoralert'> Damaged.</span>"
 #define VISMSG_ARMOR_INT_STAGETHREE "<span class='armoralert'><b> Crumbling!</b></span>"
+
+#define PROB_ATTACK_EMOTE_PLAYER 10
+#define PROB_ATTACK_EMOTE_NPC 10

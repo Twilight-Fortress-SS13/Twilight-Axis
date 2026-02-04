@@ -116,8 +116,8 @@
 	name = "hardened leather armor"
 	desc = "A heavy steerhide jerkin with enough body to stand on its own. It forms a stiff, protective mantle \
 	for its wearer, shielding from blows and weather alike."
-	icon_state = "roguearmor_belt"
-	item_state = "roguearmor_belt"
+	icon_state = "leather_armor"
+	item_state = "leather_armor"
 	armor = ARMOR_LEATHER_GOOD
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
 	prevent_crits = PREVENT_CRITS_MOST
@@ -144,18 +144,21 @@
 	sleeved = 'icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
 	armor = ARMOR_LEATHER_STUDDED
 	max_integrity = ARMOR_INT_CHEST_LIGHT_BASE	
+	color = null
 
 /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen
 	name = "megarmach scale coat"
 	desc = "A set of lightweight armor fashioned from the scales of the Ranesheni \'megarmach\', an armored reptilian creacher that ambushes prey by the riverside, and drags them deep into Abyssor's domain."
 	icon_state = "pangolin"
 	item_state = "pangolin"
+	color = null
 
 /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/steppe
 	name = "fur-woven hatanga coat"
 	desc = "A finely woven hatagna coat, replacing much of its scaled armor with fine furs and reinforced padding for lighter rides."
 	icon_state = "hatangafur"
 	item_state = "hatangafur"
+	color = null
 
 /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket
 	name = "hardened leather jacket"

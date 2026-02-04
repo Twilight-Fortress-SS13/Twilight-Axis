@@ -102,7 +102,7 @@
 
 // ----------------- Registration helpers -----------------
 /datum/component/combo_core/proc/RegisterRule(rule_id, list/pattern, priority = 0, callback = null)
-	if(!rule_id || !islist(pattern) || !pattern.len)
+	if(!rule_id || !length(pattern))
 		return
 	var/datum/combo_rule/R = new
 	R.rule_id = rule_id
@@ -112,7 +112,7 @@
 	rules += R
 
 /datum/component/combo_core/proc/SortRules()
-	if(!rules || rules.len <= 1)
+	if(length(rules) <= 1)
 		return
 	rules = sortTim(rules, /proc/_combo_rule_cmp)
 
@@ -138,7 +138,7 @@
 /datum/component/combo_core/proc/LazyExpireIfNeeded()
 	if(!owner)
 		return
-	if(!history || !history.len)
+	if(!length(history))
 		return
 
 	if(world.time - last_input_time >= combo_window)
@@ -165,7 +165,7 @@
 	return CheckCombos()
 
 /datum/component/combo_core/proc/CleanupHistory()
-	if(!history || !history.len)
+	if(!length(history))
 		return
 
 	var/current_time = world.time
@@ -177,13 +177,13 @@
 		if(current_time - E.time <= combo_window)
 			new_history += E
 
-	while(new_history.len > max_history)
+	while(length(new_history) > max_history)
 		new_history.Cut(1, 2)
 
 	history = new_history
 
 /datum/component/combo_core/proc/CheckCombos()
-	if(!history || !history.len || !rules || !rules.len)
+	if(!length(history) || !length(rules))
 		return FALSE
 
 	var/list/skills_seq = list()
@@ -213,11 +213,11 @@
 /datum/component/combo_core/proc/MatchSuffix(list/seq, list/pattern)
 	if(!seq || !pattern)
 		return FALSE
-	if(pattern.len > seq.len)
+	if(length(pattern) > length(seq))
 		return FALSE
 
-	var/base = seq.len - pattern.len
-	for(var/i in 1 to pattern.len)
+	var/base = length(seq) - length(pattern)
+	for(var/i in 1 to length(pattern))
 		if(seq[base + i] != pattern[i])
 			return FALSE
 	return TRUE
@@ -249,10 +249,10 @@
 
 /datum/component/combo_core/proc/GetNextWakeTime()
 	var/next = 0
-	if(history?.len)
+	if(length(history))
 		next = last_input_time + combo_window
 
-	if(pending_actions?.len)
+	if(length(pending_actions))
 		var/soonest = 0
 		for(var/datum/combo_pending_action/A as anything in pending_actions)
 			if(!A) continue
@@ -265,10 +265,10 @@
 	return next
 
 /datum/component/combo_core/proc/ProcessTimers(now)
-	if(history?.len && (now >= last_input_time + combo_window))
+	if(length(history) && (now >= last_input_time + combo_window))
 		ClearHistory("expired")
 
-	if(pending_actions?.len)
+	if(length(pending_actions))
 		for(var/datum/combo_pending_action/A as anything in pending_actions.Copy())
 			if(!A || A.execute_at > now)
 				continue

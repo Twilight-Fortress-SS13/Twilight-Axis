@@ -168,3 +168,56 @@
 	name = "soundbreaker hat"
 	desc = "An oddly shaped hat made of tightly-sewn leather, commonly worn by soundbreakers."
 	color = CLOTHING_RED
+
+/obj/item/clothing/head/roguetown/antlers
+	name = "old antlers"
+	desc = "Old antlers which you can wear on helmet, hood....or straight on your head!"
+	icon_state = "antlers"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/64x64/head.dmi'
+	worn_x_dimension = 64
+	worn_y_dimension = 64
+	alternate_worn_layer  = 8.9
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK|ITEM_SLOT_NECK
+	resistance_flags = FIRE_PROOF
+	var/picked = FALSE
+	var/rogavid = list("halo", "knighty")
+	var/antlers_final_icon = null
+	
+/obj/item/clothing/head/roguetown/antlers/attack_right(mob/user)
+	..()
+	if(!picked)
+		var/chooseA = input(user, "What will you choose?", "Where you got it?") as anything in rogavid
+		if(chooseA == "halo")
+			icon_state = "antlers"
+			antlers_final_icon = "antlers"
+		if(chooseA == "knighty")
+			icon_state = "antlers_knighty"
+			antlers_final_icon = "antlers_knighty"
+		update_icon()
+		if(loc == user && ishuman(user))
+			var/mob/living/carbon/H = user
+			H.update_inv_head()
+		if(alert("Are you pleased with your antlers?", "Antlers", "Yes", "No") != "Yes")
+			icon_state = "antlers"
+			antlers_final_icon = "antlers"
+			update_icon()
+			if(loc == user && ishuman(user))
+				var/mob/living/carbon/H = user
+				H.update_inv_head()
+			return
+		picked = TRUE
+
+/obj/item/clothing/head/roguetown/antlers/equipped(mob/user, slot)
+	. = ..()
+	if(antlers_final_icon)
+		icon_state = antlers_final_icon
+		item_state = antlers_final_icon
+		update_icon()
+
+/obj/item/clothing/head/roguetown/antlers/dropped(mob/user, slot)
+	. = ..()
+	if(antlers_final_icon)
+		icon_state = antlers_final_icon
+		item_state = antlers_final_icon
+		update_icon()

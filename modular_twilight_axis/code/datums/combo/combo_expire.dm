@@ -18,7 +18,7 @@ SUBSYSTEM_DEF(combo_expire)
 	tracked -= C
 
 /datum/controller/subsystem/combo_expire/fire(resumed)
-	if(!tracked?.len)
+	if(!length(tracked))
 		return
 
 	var/now = world.time

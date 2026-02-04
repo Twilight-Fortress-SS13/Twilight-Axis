@@ -197,7 +197,7 @@
 //fae conversions
 
 /datum/crafting_recipe/roguetown/arcana/fairydust //T1 mage summon loot
-	name = "fairy dust)"
+	name = "fairy dust"
 	result = /obj/item/magic/fairydust
 	reqs = list(/obj/item/magic/manacrystal = 1,
 				/obj/item/reagent_containers/food/snacks/grown/berries/rogue = 2)
@@ -331,3 +331,10 @@
 				/obj/item/rogueore/cinnabar = 1)
 	craftdiff = 5
 
+// Menucrafting alternative to the slapcrafting method, because we're not moving toward slapcrafting here except for food
+/datum/crafting_recipe/roguetown/arcana/pre_arcyne_spellbook
+	name = "tome in waiting"
+	result = /obj/item/spellbook_unfinished/pre_arcyne
+	reqs = list(/obj/item/natural/hide = 1,
+	/obj/item/paper/scroll = 6)
+	craftdiff = 3
