@@ -21,7 +21,8 @@
 	zone = BODY_ZONE_PRECISE_STOMACH
 	slot = ORGAN_SLOT_BELLY
 	accessory_type = /datum/sprite_accessory/belly
-	var/belly_size = MIN_BELLY_SIZE
+	var/belly_size = BELLY_SIZE_MIN
+	var/allow_to_grow = FALSE
 
 /obj/item/organ/belly/internal
 	name = "internal belly"

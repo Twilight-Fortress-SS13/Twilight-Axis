@@ -5,7 +5,8 @@
 /datum/customizer/organ/butt
 	abstract_type = /datum/customizer/organ/butt
 	name = "Butt"
-	allows_disabling = FALSE
+	allows_disabling = TRUE
+	default_disabled = TRUE
 
 /datum/customizer_choice/organ/butt
 	abstract_type = /datum/customizer_choice/organ/butt
