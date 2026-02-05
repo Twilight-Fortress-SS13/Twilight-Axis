@@ -118,19 +118,19 @@ GLOBAL_LIST_EMPTY(locked_sex_objects)
 
 #define BELLY_SIZE_MIN 0
 #define BELLY_SIZE_LITTLE 1
-#define BELLY_SIZE_BIG 3
+#define BELLY_SIZE_BIG 2
 #define BELLY_SIZE_HUGE 3
 
 #define BELLY_SIZES list(\
 	BELLY_SIZE_MIN,\
-	BELLY_SIZE_BIG,\
+	BELLY_SIZE_LITTLE,\
 	BELLY_SIZE_BIG,\
 	BELLY_SIZE_HUGE,\
 	)
 
 #define BELLY_SIZES_BY_NAME list(\
-	"Little" = BELLY_SIZE_MIN,\
-	"Little" = BELLY_SIZE_BIG,\
+	"Flat" = BELLY_SIZE_MIN,\
+	"Little" = BELLY_SIZE_LITTLE,\
 	"Noticable" = BELLY_SIZE_BIG,\
 	"Huge" = BELLY_SIZE_HUGE,\
 	)
