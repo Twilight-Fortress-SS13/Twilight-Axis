@@ -92,6 +92,17 @@
 	desc = "Egg stuffed with a creamy cheese filling."
 	icon_state = "deviledegg"
 
+/*	.............   Tartar   ................ */
+//This doesn't really count as either cooked or egg recipe (it does contain an egg at least) so whatever.
+/obj/item/reagent_containers/food/snacks/rogue/tartar
+	name = "tartar"
+	desc = "Grounded meat covered over with uncooked egg, favorite of the steppesmen. Said to have been named after a famous brigand."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_egg.dmi'
+	icon_state = "tartar"
+	foodtype = MEAT
+	rotprocess = SHELFLIFE_DECENT
+	faretype = FARE_POOR //It's raw meat and egg... come now now
+
 /* * * * * * * * * * * **
  *						*
  *		 NeuFood		*	- Defined as edible food that can be plated and usually needs rare tools or ingridients. Typically based on a snack but not necessarily
@@ -197,6 +208,6 @@
 	desc = "A classic of the northern fortresses, peeled of it's more exotic ingredients for Azurean kitchens, a true staple of Dwarven diet."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_egg.dmi'
 	icon_state = "hammerbreak"
-	eat_effect = /datum/status_effect/buff/mealbuff
+	eat_effect = /datum/status_effect/buff/greatmealbuff
 	faretype = FARE_LAVISH
 	rotprocess = SHELFLIFE_DECENT

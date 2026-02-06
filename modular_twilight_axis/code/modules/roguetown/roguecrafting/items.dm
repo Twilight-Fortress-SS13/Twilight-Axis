@@ -17,71 +17,60 @@
 	category = "General"
 	always_availible = TRUE
 
-/datum/crafting_recipe/roguetown/survival/sallet_visor_grenzelhoft
-	name = "салад с забралом со шляпой Грензельхофта - (салад с забралом; грензельхофтская шляпа)"
-	result = /obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft
-	reqs = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored = 1,
-				/obj/item/clothing/head/roguetown/grenzelhofthat = 1)
+/datum/crafting_recipe/roguetown/sewing/grenzelhelm
+	subtype_reqs = FALSE
+
+/datum/crafting_recipe/roguetown/sewing/grenzelsallet_visor
+	name = "grenzelhoftian hat with steel visored sallet"
+	result = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft)
+	reqs = list(/obj/item/clothing/head/roguetown/grenzelhofthat = 1,
+				/obj/item/clothing/head/roguetown/helmet/sallet/visored = 1)
 	craftdiff = 0
 
-/datum/crafting_recipe/roguetown/survival/armet_grenzelhoft
-	name = "армет с шляпой Грензельхофта - (армет с шляпой; грензельхофтская шляпа)"
-	result = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/grenzelhoft
-	reqs = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet = 1,
-				/obj/item/clothing/head/roguetown/grenzelhofthat = 1)
+/datum/crafting_recipe/roguetown/sewing/grenzelsallet_visor/off
+	name = "take hat off steel visored sallet"
+	result = list(/obj/item/clothing/head/roguetown/grenzelhofthat = 1, /obj/item/clothing/head/roguetown/helmet/sallet/visored = 1)
+	reqs = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft = 1)
+	bypass_dupe_test = TRUE
 	craftdiff = 0
 
-/datum/crafting_recipe/roguetown/survival/etruscan_grenzelhoft
-	name = "этрусский бацинет с шляпой Грензельхофта - (этрусский бацинет с шляпой; грензельхофтская шляпа)"
-	result = /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan/grenzelhoft
-	reqs = list(/obj/item/clothing/head/roguetown/helmet/bascinet/etruscan = 1,
-				/obj/item/clothing/head/roguetown/grenzelhofthat = 1)
+/datum/crafting_recipe/roguetown/sewing/grenzelarmet
+	name = "grenzelhoftian hat with armet"
+	result = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/grenzelhoft)
+	reqs = list(/obj/item/clothing/head/roguetown/grenzelhofthat = 1,
+				/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet = 1)
 	craftdiff = 0
 
-/datum/crafting_recipe/roguetown/survival/sallet_visorgrenzelhoft
-	name = "салад с шляпой Грензельхофта - (салад с шляпой; грензельхофтская шляпа)"
-	result = /obj/item/clothing/head/roguetown/helmet/sallet/grenzelhoft
-	reqs = list(/obj/item/clothing/head/roguetown/helmet/sallet = 1,
-				/obj/item/clothing/head/roguetown/grenzelhofthat = 1)
+/datum/crafting_recipe/roguetown/sewing/grenzelarmet/off
+	name = "take hat off armet"
+	result = list(/obj/item/clothing/head/roguetown/grenzelhofthat = 1, /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet = 1)
+	reqs = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/grenzelhoft = 1)
+	bypass_dupe_test = TRUE
 	craftdiff = 0
 
-/datum/crafting_recipe/roguetown/survival/sallet_visor_grenzelhoft_decorated_hat
-	name = "салад с забралом с шляпой Грензельхофта - (салад с забралом; грензельхофтская шляпа)"
-	result = /obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft
-	reqs = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored = 1,
-				/obj/item/clothing/head/roguetown/grenzelhofthat/decorated = 1)
+/datum/crafting_recipe/roguetown/sewing/grenzelskettle
+	name = "grenzelhoftian hat with slitted kettle helm"
+	result = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle/grenzelhoft)
+	reqs = list(/obj/item/clothing/head/roguetown/grenzelhofthat = 1,
+				/obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle = 1)
 	craftdiff = 0
 
-/datum/crafting_recipe/roguetown/survival/armet_grenzelhoft_decorated_hat
-	name = "армет с шляпой Грензельхофта - (армет с шляпой; грензельхофтская шляпа)"
-	result = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/grenzelhoft
-	reqs = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet = 1,
-				/obj/item/clothing/head/roguetown/grenzelhofthat/decorated = 1)
+/datum/crafting_recipe/roguetown/sewing/grenzelskettle/off
+	name = "take hat off slitted kettle helm"
+	result = list(/obj/item/clothing/head/roguetown/grenzelhofthat = 1, /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle = 1)
+	reqs = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle/grenzelhoft = 1)
+	bypass_dupe_test = TRUE
 	craftdiff = 0
 
-/datum/crafting_recipe/roguetown/survival/etruscan_grenzelhoft_decorated_hat
-	name = "этрусский бацинет с шляпой Грензельхофта - (этрусский бацинет с шляпой; грензельхофтская шляпа)"
-	result = /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan/grenzelhoft
-	reqs = list(/obj/item/clothing/head/roguetown/helmet/bascinet/etruscan = 1,
-				/obj/item/clothing/head/roguetown/grenzelhofthat/decorated = 1)
-	craftdiff = 0
-
-/datum/crafting_recipe/roguetown/survival/sallet_visorgrenzelhoft_decorated_hat
-	name = "салад с шляпой Грензельхофта - (салад с шляпой; грензельхофтская шляпа)"
-	result = /obj/item/clothing/head/roguetown/helmet/sallet/grenzelhoft
-	reqs = list(/obj/item/clothing/head/roguetown/helmet/sallet = 1,
-				/obj/item/clothing/head/roguetown/grenzelhofthat/decorated = 1)
-	craftdiff = 0
-
-/datum/crafting_recipe/roguetown/survival/grenzelpants_chain
-	name = "грензельхофтские помперы с кольчугой - (грензельхофтские помперы; стальные кольчужные шоссы)"
+/datum/crafting_recipe/roguetown/sewing/grenzelpants_chain
+	name = "grenzelhoftian paumpers with chain chausses"
 	result = /obj/item/clothing/under/roguetown/chainlegs/grenzelpants
 	reqs = list(/obj/item/clothing/under/roguetown/chainlegs = 1,
 				/obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants = 1)
 	craftdiff = 0
 
-/datum/crafting_recipe/roguetown/survival/grenzelshirt_chain
-	name = "грензельхофтская рубашка с кольчугой - (грензельхофтская рубашка; хауберк)"
+/datum/crafting_recipe/roguetown/sewing/grenzelshirt_chain
+	name = "grenzelhoftian hip-shirt with hauberk"
 	result = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/grenzelhoft
 	reqs = list(/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk = 1,
 				/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft = 1)

@@ -192,3 +192,35 @@
       appears below the user instead of underneath the fountain.
   bearrrrrrrr:
   - rscadd: Adds new racial-exclusive Lirvan Tithebound mercenary class.
+2026-02-05:
+  FreeStylaLT:
+  - bugfix: Fixed churn wealthy cooldown
+  - bugfix: Fixed not having full energy on spawn.
+  Lamasmaster:
+  - rscadd: Lesser mending to Golden Serpent
+  Ollanius:
+  - balance: The Unarmed Discipline for Templar!Monks now gives Master Athletics,
+      instead of nothing at all.
+  - rscadd: Templar!Monks, like their adventuring counterparts, now properly spawn
+      with patron-specific robes and tabards.
+  - bugfix: Templar!Monks no longer spawn without their specialized gloves.
+  - code_imp: Note - this fix is mostly a bandaid, as I couldn't find any other way
+      to restore the glove-giving component without potentially rewriting the Templar!Monk's
+      loadout code. If you pick 'Unarmed Discipline', it'll give you the better gloves
+      as an item.
+  - code_imp: For Templar!Monks, the Ravox-specific buff has been changed to use 'H.adjust_skillrank_up_to'.
+      Everything'll still work exactly the same as before, but it'll prevent someone
+      from potentially getting Legendary Athletics. Do we want that for later? Maybe.
+  Ryan180602:
+  - code_imp: added min/max intent damages.
+  - bugfix: haubergeon no longer covers hands or feet
+  WeNeedMorePhoron:
+  - bugfix: Hammerfall no longer have no CD or devotion cost.
+  - rscadd: Tome in Waiting (Spellbook before you put a magical stone / gem) is now
+      menu craftable
+  dopamiin0:
+  - bugfix: exorcist dodge experts actually get most of their gear again
+  - bugfix: egg related crafting recipes do less weird stuff. no more turning 2 valerian
+      omellettes into just 2 eggs. egg + bacon + sausage can be made in both orders
+      instead of just 1
+  - bugfix: master chef no longer runtimes and eats your entire backpack

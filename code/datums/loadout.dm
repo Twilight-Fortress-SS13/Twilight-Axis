@@ -8,6 +8,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	var/atom/movable/path
 	var/donoritem			//autoset on new if null
 	var/donatitem = FALSE
+	var/donat_tier = 0
 	var/list/ckeywhitelist
 	var/triumph_cost = 0
 	var/category = "Разное"
@@ -17,7 +18,9 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 		if(ckeywhitelist)
 			donoritem = TRUE
 	if (triumph_cost)
-		desc += "<b>Costs [triumph_cost] TRIUMPHS.</b>"
+		desc += "<b>Стоит [triumph_cost] ТРИУМФОВ.</b>"
+	if(donat_tier > 0)
+		desc += "<b>Доступно для меценатов уровня: [donat_tier]</b>"
 
 /datum/loadout_item/proc/donator_ckey_check(key)
 	if(ckeywhitelist && ckeywhitelist.Find(key))
@@ -1075,6 +1078,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/srusu
 	donatitem = TRUE
 
+
 /datum/loadout_item/donator_strudel
 	name = "Donator Kit - Grenzelhoftian Mage Vest - Required: Robe(No Small Races)"
 	category = list("Одежда", "Донат")
@@ -1779,9 +1783,62 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/shoes/roguetown/hammerhold_shoes
 	donatitem = TRUE
 
-
 /datum/loadout_item/hammerhold_boots
 	name = "Хаммерхолдские сапоги"
 	category = list("Обувь", "Донат")
 	path = /obj/item/clothing/shoes/roguetown/boots/hammerhold_boots
 	donatitem = TRUE
+
+
+// Aria Mrix Start
+
+/datum/loadout_item/aria_bikini
+	name = "Aria bikini"
+	category = list("Донат")
+	path = /obj/item/clothing/suit/roguetown/armor/gambeson/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_pants
+	name = "Aria pants"
+	category = list("Донат")
+	path = /obj/item/clothing/under/roguetown/trou/leather/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_wrists
+	name = "Aria wrists"
+	category = list("Донат")
+	path = /obj/item/clothing/wrists/roguetown/bracers/cloth/monk/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_necklace
+	name = "Aria necklace"
+	category = list("Донат")
+	path = /obj/item/clothing/neck/roguetown/leather/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_gloves
+	name = "Aria bondaged gloves"
+	category = list("Донат")
+	path = /obj/item/clothing/gloves/roguetown/bandages/pugilist/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_belt
+	name = "Aria belt"
+	category = list("Донат")
+	path = /obj/item/storage/belt/rogue/leather/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_bondage
+	name = "Aria feet bondage"
+	category = list("Донат")
+	path = /obj/item/clothing/shoes/roguetown/boots/leather/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+// Aria Mrix End

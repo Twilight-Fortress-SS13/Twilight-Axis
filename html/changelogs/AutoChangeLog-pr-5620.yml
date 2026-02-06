@@ -1,0 +1,4 @@
+author: "WeNeedMorePhoron"
+delete-after: True
+changes:
+  - bugfix: "Arcane Mark no longer applies remotely on enchanted weapon."

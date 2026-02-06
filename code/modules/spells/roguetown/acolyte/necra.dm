@@ -117,6 +117,11 @@
 		to_chat(user, span_warning("A gate already stands here."))
 		return FALSE
 
+	// Ensure the caster has Necra's Sight so they can mark graves/psycrosses
+	if(user && user.mind && !user.mind?.has_spell(/obj/effect/proc_holder/spell/invoked/necras_sight))
+		user.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/necras_sight)
+		to_chat(user, span_notice("A cold clarity fills your vision as Necra opens your sight."))
+
 	new /obj/structure/deaths_door_portal(T, user)
 	return TRUE
 
