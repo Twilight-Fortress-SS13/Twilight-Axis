@@ -12,7 +12,7 @@
 	name = "Wortträger"
 	desc = "An imported Grenzelhoftian panzerstecher, a superbly crafted implement devoid of armory marks- merely bearing a maker's mark and the Zenitstadt seal. This one has a grip of walnut wood, and a pale saffira set within the crossguard. The ricasso is engraved with Ravoxian scripture."
 	icon_state = "mansa"
-	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
 
 //Srusu's donator item - dress
 /obj/item/clothing/suit/roguetown/shirt/dress/emerald
@@ -293,6 +293,15 @@
 	if(get_detail_color())
 		pic.color = get_detail_color()
 	add_overlay(pic)
+
+/obj/item/rogueweapon/spear/lance/dasfox
+	name = "La Rosa de la Chevalerie"
+	desc = "A jousting lance, designed to look much like the flower- a softness backed by steel. \
+		Handwoven silk is draped down the length and kept in place by steel vines, while heart-shaped ties keep silk on the grip from moving much even during proper jousts. \
+		The cup guard has been forged, in lieu of its natural shape, into a blooming rosa - genteel and pleasant in view for a weapon of war."
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	icon_state = "dasfox_lance"
+
 
 //RYAN180602
 /obj/item/caparison/ryan

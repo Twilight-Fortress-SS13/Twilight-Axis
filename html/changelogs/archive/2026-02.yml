@@ -224,3 +224,70 @@
       omellettes into just 2 eggs. egg + bacon + sausage can be made in both orders
       instead of just 1
   - bugfix: master chef no longer runtimes and eats your entire backpack
+2026-02-06:
+  FreeStylaLT:
+  - rscadd: New Baotha T0 Miracle -- Bless Drink
+  - rscadd: Voyeur Vice can now see other people's vices on examine, if they're compatible
+      with Voyeur.
+  - rscadd: Added a Hand Update!
+  - rscadd: Each Hand subclass gets a new armored jacket, a Handpin that acts like
+      a crownstone and a special pair of wrist bracelets.
+  - rscadd: Blademaster Hand now gets Azurefyre, a new sword.
+  - rscadd: Spymaster Hand now gets a new parrying dagger.
+  - rscadd: Advisor Hand gets a new staff that serves as both a scabbard and a Ruby-tier
+      mage staff.
+  - bugfix: Fixed Voice Attack preference not saving properly.
+  - refactor: Slightly changed how the Energy / Stamina bars work.
+  - rscadd: Baothans now have innate Cicerone.
+  - balance: Baothans now only get OD immunity at a certain Cleric tier.
+  Lamasmaster:
+  - balance: Studded recipes.
+  - balance: Tailoring/Skincraft recipes
+  - rscadd: More dishes
+  - balance: High tier dishes grant great meal buff
+  - image: Bacon Bread icon
+  N8-Toe:
+  - rscadd: Gives Necras sight if not already possessed by caster upon using Death's
+      Door
+  NewyearnewmeUwu:
+  - rscadd: Adds 3 unique magic weapons with special-move buffs.
+  Quinalion:
+  - bugfix: removes excess shutters at blacksmith's house
+  Ryan180602:
+  - code_imp: Armour Filter/Skill Blessed will give feedback on good/bad items.
+  WHERE IS CLOSED/TURF/MINERAL?! WHERE IS HE?!!:
+  - bugfix: the last of the dungeons of matthios tiles should have weird broken chairs
+      and stuff removed.
+  - balance: dungeons of matthios lava rooms have less high-tier rocks in them. sorry,
+      gamers.
+  WeNeedMorePhoron:
+  - bugfix: Arcane Mark no longer applies remotely on enchanted weapon.
+  - balance: Offensive spells are not usable in zadform anymore
+  - balance: Zadform / Batform now have low str / con, making them unable to charge
+      down someone.
+  - balance: Fetch & Repel no longer cross Z Level. It consumes 15 instead of 5 stamina.
+  - balance: Fetch CD is now 8 seconds instead of 3
+  - balance: Frost Bolt no longer consume full arcyne mark for a 5 seconds immobilize
+      and offbalance hard stun.
+  - balance: ' Meteor Storm now have 300 seconds instead of 100 seconds CD. Release
+      Drain is now 90 instead of 50 stamina.'
+  - bugfix: Stones display their force properly again
+  - rscadd: Mindlink and Message now use TGUI Input List for messaging
+  - bugfix: Shield heraldry should work again
+  - rscadd: You can now attack-self / interact with a glass bottle to toggle the cork
+      on and off.
+  bearrrrrrrr:
+  - qol: drider headscarf now unlayerable but works as normal armor
+  - rscadd: Ravox's Warrior Spirit has been replaced with Inner Fire, a skill that
+      instead summons one spirit tied to your soul.
+  hazelrat:
+  - rscadd: Added two training daggers and two training spears to the training storage
+      closet adjacent to the keep. Additionally, the same closet may now be opened
+      by any character with a walls key.
+  - rscadd: Slings may now be worn on your wrist slot, representing the act of wrapping
+      the sling around your forearm.
+  - rscadd: Added and modified several descriptions of various in-game objects and
+      structures.
+  mumblemancer:
+  - balance: blindness flaw now no longer sucks
+  - rscadd: potions of red now heal eye damage

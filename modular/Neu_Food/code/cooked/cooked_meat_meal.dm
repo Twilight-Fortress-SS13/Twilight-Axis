@@ -296,6 +296,7 @@
 /obj/item/reagent_containers/food/snacks/rogue/meat/rabbit/fried/garlick
 	name = "garlick cabbit"
 	desc = "A slab of cabbit, fried to a perfect crispy texture - coated over in glove of garlick."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_meal.dmi'
 	icon_state = "frycabbit_garlick"
 	tastes = list("warm cabbit" = 1, "garlick" = 1)
 
@@ -307,14 +308,14 @@
 			playsound(get_turf(user), 'sound/foley/dropsound/gen_drop.ogg', 30, TRUE, -1)
 			if(do_after(user,short_cooktime, target = src))
 				add_sleep_experience(user, /datum/skill/craft/cooking, user.STAINT * 0.5)
-				new /obj/item/reagent_containers/food/snacks/rogue/meat/rabbit/fried/garlickcucumber(loc)
+				new /obj/item/reagent_containers/food/snacks/rogue/meat/rabbit/fried/garlick/cucumber(loc)
 				qdel(I)
 				qdel(src)
 	else
 		return ..()
 
 /* .............   Fried Cabbit w/ Garlick & Cucumber ................ */
-/obj/item/reagent_containers/food/snacks/rogue/meat/rabbit/fried/garlickcucumber
+/obj/item/reagent_containers/food/snacks/rogue/meat/rabbit/fried/garlick/cucumber
 	name = "elven cabbit roast"
 	desc = "A slab of cabbit, fried to a perfect crispy texture - coated over in glove of garlick and served with side of cucumber. Thought to bring good luck by rangers!"
 	icon_state = "frycabbit_garlick_cucumber"
@@ -325,6 +326,7 @@
 /obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf/fried/garlick
 	name = "garlick volf"
 	desc = "A slab of volf, fried to a perfect medium rare. A bit gamey and chewy, but tasty. This piece has been coated over in glove of garlick."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_meal.dmi'
 	icon_state = "fryvolf_garlick"
 	tastes = list("gamey volf" = 1, "garlick" = 1)
 
@@ -336,14 +338,14 @@
 			playsound(get_turf(user), 'sound/foley/dropsound/gen_drop.ogg', 30, TRUE, -1)
 			if(do_after(user,short_cooktime, target = src))
 				add_sleep_experience(user, /datum/skill/craft/cooking, user.STAINT * 0.5)
-				new /obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf/fried/garlickcucumber(loc)
+				new /obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf/fried/garlick/cucumber(loc)
 				qdel(I)
 				qdel(src)
 	else
 		return ..()
 
 /* .............  Garlicked Fried Volf w/ Cucumber  ................ */
-/obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf/fried/garlickcucumber
+/obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf/fried/garlick/cucumber
 	name = "hunter's feast"
 	desc = "A slab of volf, fried to a perfect medium rare. A bit gamey and chewy, but tasty. This piece has been coated over in glove of garlick and served with side of cucumber."
 	icon_state = "fryvolf_garlick_cucumber"

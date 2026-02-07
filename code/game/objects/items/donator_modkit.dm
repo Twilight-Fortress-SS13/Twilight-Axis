@@ -183,6 +183,13 @@
 	target_items = list(/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted)
 	result_item = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/dasfox
 
+//DasFox - Lance
+/obj/item/enchantingkit/dasfox_lance
+	name = "'decorated jousting lance' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Lance"
+	target_items = list(/obj/item/rogueweapon/spear/lance)
+	result_item = /obj/item/rogueweapon/spear/lance/dasfox
+
 //Ryan180602 - Armet
 /obj/item/enchantingkit/ryan_psyhelm
 	name = "'maimed psydonic helm' morphing elixir"

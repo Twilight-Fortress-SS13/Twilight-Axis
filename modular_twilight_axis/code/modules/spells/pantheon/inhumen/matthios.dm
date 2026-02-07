@@ -856,6 +856,7 @@
 	animname = "cut"
 	hitsound = "genslash"
 	penfactor = 60
+	reach = 2
 	candodge = TRUE
 	canparry = TRUE
 	miss_text = "slashes the air!"

@@ -1265,7 +1265,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/dasfox_cuirass
 	category = list("Броня", "Донат")
 	donatitem = TRUE
- 
+
+/datum/loadout_item/donator_dasfox/lance
+	name = "Donator Item - Decorated Lance - Required: Lance"
+	path = /obj/item/enchantingkit/dasfox_lance
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
 /datum/loadout_item/donat_armorkit
 	name = "Donator Kit - 'Valorian Steel Armor' - Required: Steel Cuirass, Steel Halfplate, Steel Plate Armor or Fluted Plate Armor"
 	category = list("Броня", "Донат")
