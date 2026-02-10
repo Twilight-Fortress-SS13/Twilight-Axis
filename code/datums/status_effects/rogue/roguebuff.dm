@@ -1007,8 +1007,7 @@
 
 /atom/movable/screen/alert/status_effect/buff/moonlightdance
 	name = "Moonlight Dance"
-	desc = "Noc's stony touch lay upon my mind, bringing me wisdom."
-	icon_state = "moonlightdance"
+	desc = "Noc's stony touch lays upon my mind, bringing me wisdom."
 
 
 /datum/status_effect/buff/moonlightdance/on_apply()
@@ -1019,7 +1018,7 @@
 
 /datum/status_effect/buff/moonlightdance/on_remove()
 	. = ..()
-	to_chat(owner, span_warning("Noc's silver leaves my"))
+	to_chat(owner, span_warning("Noc's silver leaves my eyes."))
 	REMOVE_TRAIT(owner, TRAIT_DARKVISION, MAGIC_TRAIT)
 
 

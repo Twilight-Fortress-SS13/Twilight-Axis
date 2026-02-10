@@ -1,0 +1,4 @@
+author: "dopamiin0"
+delete-after: True
+changes:
+  - bugfix: "The Kabuto and Jingasa now properly hide the user's hair. The latter also now properly hides the user's ears."
