@@ -29,6 +29,8 @@
 /datum/antagonist/gnoll/on_gain()
 	greet()
 	owner.special_role = "Gnoll"
+	if(owner.current)
+		ADD_TRAIT(owner.current, TRAIT_VIRUSIMMUNE, "[type]")
 
 	return ..()
 
@@ -36,6 +38,8 @@
 	. = ..()
 	if(owner)
 		owner.special_role = null
+	if(owner?.current)
+		REMOVE_TRAIT(owner.current, TRAIT_VIRUSIMMUNE, "[type]")
 
 /datum/antagonist/gnoll/greet()
 	return ..()

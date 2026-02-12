@@ -73,6 +73,8 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	SSmapping.retainer.vampires |= owner
 	//move_to_spawnpoint()
 	owner.special_role = name
+	if(owner.current)
+		ADD_TRAIT(owner.current, TRAIT_VIRUSIMMUNE, "[type]")
 	owner.current.adjust_bloodpool()
 	max_thralls = initial(max_thralls)
 	if(ishuman(owner.current))
@@ -184,6 +186,8 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 		vampdude.set_clan(null)
 		if(HAS_TRAIT(vampdude, TRAIT_DUSTABLE)) //if you have DNR, we add dustable
 			REMOVE_TRAIT(vampdude, TRAIT_DUSTABLE, TRAIT_GENERIC)
+	if(owner.current)
+		REMOVE_TRAIT(owner.current, TRAIT_VIRUSIMMUNE, "[type]")
 	owner.current?.hud_used?.shutdown_bloodpool()
 	if(!silent && owner.current)
 		to_chat(owner.current, span_danger("I am no longer a [job_rank]!"))
