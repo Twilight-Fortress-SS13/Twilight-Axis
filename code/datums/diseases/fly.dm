@@ -3,7 +3,7 @@
 	desc = "A test illness that weakens the body."
 	max_stages = 1
 	stage_prob = 0
-	spread_flags = DISEASE_SPREAD_NON_CONTAGIOUS
+	spread_flags = DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN
 	disease_flags = CAN_CARRY | CAN_RESIST
 	severity = DISEASE_SEVERITY_MINOR
 	viable_mobtypes = list(/mob/living)
@@ -32,7 +32,8 @@
 	for(var/mob/living/carbon/human/target in oview(cough_range, H))
 		if(target == H)
 			continue
-		target.ForceContractDisease(src, TRUE, FALSE)
+		if(prob(10))
+			target.ForceContractDisease(src, TRUE, FALSE)
 	schedule_cough()
 
 /datum/disease/fly/proc/apply_stat_mods(mob/living/L, amt)

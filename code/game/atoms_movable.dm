@@ -173,6 +173,10 @@
 	if(ismob(AM))
 		var/mob/M = AM
 		log_combat(src, M, "grabbed", addition="passive grab")
+		if(state > 0 && isliving(src) && iscarbon(M))
+			var/mob/living/L = src
+			var/mob/living/carbon/C = M
+			L.SpreadContactDiseasesOnGrab(C)
 		if(M.doing)
 			M.doing = FALSE
 		if(!supress_message)

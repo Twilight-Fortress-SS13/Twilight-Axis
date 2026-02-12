@@ -44,6 +44,23 @@
 
 	D.try_infect(src)
 
+
+/mob/living/proc/SpreadContactDiseasesOnContact(mob/living/carbon/target, chance = 0)
+	if(!target || !length(diseases))
+		return FALSE
+	if(chance > 0 && !prob(chance))
+		return FALSE
+	var/contact_flags = (DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN)
+	for(var/thing in diseases)
+		var/datum/disease/D = thing
+		if(!(D.spread_flags & contact_flags))
+			continue
+		target.ForceContractDisease(D, TRUE, FALSE)
+	return TRUE
+
+/mob/living/proc/SpreadContactDiseasesOnGrab(mob/living/carbon/target, chance = 0)
+	return SpreadContactDiseasesOnContact(target, chance)
+
 /mob/living/proc/AirborneContractDisease(datum/disease/D, force_spread)
 	if( ((D.spread_flags & DISEASE_SPREAD_AIRBORNE) || force_spread) && prob((50*D.permeability_mod) - 1))
 		ForceContractDisease(D)

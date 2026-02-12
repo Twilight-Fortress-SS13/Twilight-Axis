@@ -1131,6 +1131,8 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 //	if(!((target.health < 0 || HAS_TRAIT(target, TRAIT_FAKEDEATH)) && !(target.mobility_flags & MOBILITY_STAND)))
 	if(!(target.mobility_flags & MOBILITY_STAND))
 		target.help_shake_act(user)
+		if(user != target)
+			user.SpreadContactDiseasesOnContact(target, 5)
 		if(target != user)
 			log_combat(user, target, "shaken")
 		return 1
@@ -1166,6 +1168,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 				user.visible_message(span_warning("[user] stole [target]'s [I.name]!"),
 								span_notice("I stole [target]'s [I.name]!"), null, null, target)
 				to_chat(target, span_danger("[user] stole my [I.name]!"))*/
+		user.SpreadContactDiseasesOnContact(target, 10)
 		var/def_zone = check_zone(user.zone_selected)
 		var/obj/item/bodypart/affecting = target.get_bodypart(def_zone)
 		if(length(affecting?.embedded_objects))
@@ -1211,6 +1214,8 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			return
 		if(user.incapacitated())
 			return
+
+		user.SpreadContactDiseasesOnContact(target, 10)
 
 		var/damage = user.get_punch_dmg()
 		if(target.has_status_effect(/datum/status_effect/buff/clash) && target.get_active_held_item() && ishuman(user))
@@ -1347,6 +1352,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(user.loc == target.loc)
 		return FALSE
 	else
+		user.SpreadContactDiseasesOnContact(target, 5)
 		user.do_attack_animation(target, ATTACK_EFFECT_DISARM)
 		playsound(target, 'sound/combat/shove.ogg', 100, TRUE, -1)
 
