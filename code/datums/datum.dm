@@ -417,7 +417,7 @@
 /datum/disease/proc/cure(add_resistance = TRUE)
 	if(affected_mob)
 		if(add_resistance && (disease_flags & CAN_RESIST))
-			LAZYOR(affected_mob.disease_resistances, GetDiseaseID())
+			affected_mob.add_disease_resistance(GetDiseaseID(), 5 MINUTES)
 	qdel(src)
 
 /datum/disease/proc/IsSame(datum/disease/D)
@@ -484,6 +484,21 @@
 		if(D.IsSame(DD))
 			return TRUE
 	return FALSE
+
+/mob/living/proc/add_disease_resistance(disease_id, duration)
+	if(!disease_id || !duration)
+		return
+	if(!disease_resistances)
+		disease_resistances = list()
+	var/expire_at = world.time + duration
+	disease_resistances[disease_id] = expire_at
+	addtimer(CALLBACK(src, PROC_REF(expire_disease_resistance), disease_id, expire_at), duration)
+
+/mob/living/proc/expire_disease_resistance(disease_id, expected_expire_at)
+	if(!disease_resistances)
+		return
+	if(disease_resistances[disease_id] == expected_expire_at)
+		disease_resistances.Remove(disease_id)
 
 /mob/living/proc/CanContractDisease(datum/disease/D)
 	if(stat == DEAD && !D.process_dead)

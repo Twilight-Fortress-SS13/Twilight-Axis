@@ -114,6 +114,7 @@
 #include "code\modules\spell\spell_types\runes.dm"
 #include "code\modules\surgery\organs\feature_organs\tails.dm"
 #include "code\modules\surgery\organs\feature_organs\wings.dm"
+#include "code\modules\surgery\surgeries_hearth\cure_ash_blight.dm"
 #include "code\modules\jobs\job_types\roguetown\adventurer\types\combat\cleric.dm"
 #include "code\modules\jobs\job_types\roguetown\adventurer\types\combat\rogue.dm"
 #include "code\modules\projectiles\soundbreaker_note.dm"
