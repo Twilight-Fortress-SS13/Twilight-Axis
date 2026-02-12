@@ -143,6 +143,27 @@
 	. = ..()
 	. += span_info("This can be locked by a physician's key")
 
+/obj/structure/roguemachine/goldface/public/wretch_cat
+	name = "Vile Vheslie"
+	desc = "A ferocious little beast that hoards a mountain of goods under its home. The dreaded creechur is willing to part waes with its lower quality items..for a price."
+	icon = 'icons/roguetown/misc/structure.dmi'
+	icon_state = "vheslie"
+	lockid = "Vheslie"
+	profit_id = list("Guildsman", "Guildmaster", "Tailor")
+	categories = list(
+		"Apparel",
+		"Adventuring Supplies",
+		"Armor (Iron)",
+		"Alcohols",
+		"Consumable",
+		"Drugs",
+		"Potions",
+		"Weapons (Ranged)",
+		"Weapons (Iron and Shields)",
+		"Wardrobe"
+	)
+	categories_gamer = list()
+
 /obj/structure/roguemachine/goldface/Initialize()
 	. = ..()
 	update_icon()
@@ -202,7 +223,7 @@
 		var/mob/M = usr
 		var/path = text2path(href_list["buy"])
 		if(!ispath(path, /datum/supply_pack))
-			message_admins("silly MOTHERFUCKER [usr.key] IS TRYING TO BUY A [path] WITH THE GOLDFACE")
+			message_admins("silly MOTHERFUCKER [usr.key] IS TRYING TO BUY A [path] WITH THE [src.name]")
 			return
 		var/datum/supply_pack/PA = SSmerchant.supply_packs[path]
 		var/cost = PA.cost + PA.cost * extra_fee
@@ -215,7 +236,7 @@
 			record_round_statistic(value_record_key, cost)
 			record_round_statistic(STATS_TRADE_VALUE_IMPORTED, cost)
 			if(!(upgrade_flags & UPGRADE_NOTAX) && !bypass_tax)
-				SStreasury.give_money_treasury(tax_amt, "goldface import tax")
+				SStreasury.give_money_treasury(tax_amt, "import tax - [src.name]")
 				record_featured_stat(FEATURED_STATS_TAX_PAYERS, human_mob, tax_amt)
 				record_round_statistic(STATS_TAXES_COLLECTED, tax_amt)
 			else

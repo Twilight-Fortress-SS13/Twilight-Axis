@@ -1,3 +1,44 @@
+/obj/item/book/rogue/bibble
+	name = "The Verses and Acts of the Ten"
+	desc = "'ДЕСЯТЬ направляют нас сквозь тьму. ДЕСЯТЬ БОГОВ превыше всего.' </br>Священная книга Церкви Десяти, распространяемая Святыми Престолами по всей Гримории. Разделена на три Завета в хронологическом порядке.</br>ЛЕВИТ - Первый Завет, повествующий о временах Становления и Первородной Эры. </br>ДЕКАНОМИКОН - Второй Завет, повествующий о Войне в Небесах, что сотрясла наш мир до основания. </br>НОВЫЙ РАССВЕТ - Третий Завет, повествующий о становлении Божественного Порядка и о Неделимом Пантеоне."
+	icon_state = "bibble_0"
+	base_icon_state = "bibble"
+	title = "The Verses and Acts of the Ten"
+	dat = "gott.json"
+	possible_item_intents = list(
+		/datum/intent/use,
+		/datum/intent/bless,
+	)
+
+/obj/item/book/rogue/bibble/read(mob/user)
+	if(!open)
+		to_chat(user, span_info("Open me first."))
+		return FALSE
+	if(!user.client || !user.hud_used)
+		return
+	if(!user.hud_used.reads)
+		return
+	if(!user.can_read(src))
+		return
+	if(in_range(user, src) || isobserver(user))
+		user.changeNext_move(CLICK_CD_MELEE)
+		var/list/choices = list("Левит", "Деканомикон", "Новый Рассвет")
+		var/section_choice = input(user,"Мудростью какого Завета я буду делиться?", "БОЖЕСТВЕННОЕ ПРОСВЕЩЕНИЕ") as anything in choices
+		var/chosentxt
+		switch(section_choice)
+			if("Левит")
+				chosentxt = 'modular_twilight_axis/lore/strings/visage.txt'
+			if("Деканомикон")
+				chosentxt = 'modular_twilight_axis/lore/strings/decanomicon.txt'
+			if("Новый Рассвет")
+				chosentxt = 'modular_twilight_axis/lore/strings/newdawn.txt'
+		var/m
+		var/list/verses = world.file2list(chosentxt)
+		m = pick(verses)
+		if(m)
+			user.say(m)
+
+
 /obj/item/book/rogue/bibble/psy
 	desc = "'И Он плачет. Не за тебя, не за себя, но за всех нас.' </br>Том в кожаном переплете, содержащий учения Церкви Всеотца. Книга разделена на четыре Завета, отражающих верования наиболее крупных и значимых конфессий псайдонитской веры. </br>ЗАВЕТ ПСАЙДОНА есть учение Старой Веры, что вело праведных во времена до Архипредательства. </br>ЖИТИЁ ПСАЙДОНА описывает сотворение Псайдонии такой, какой мы её знаем. </br>ЗАВЕТ ОТАВИКА есть истина новой эпохи, поведанная нам Великим Магистром Отавским. </br>ЗАВЕТ СУДЬБЫ есть учение жителей Наледи, союзников в борьбе со злом, что захватило наш грешный мир. "
 

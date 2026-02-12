@@ -1,9 +1,66 @@
-/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/grenzelhoft
-	name = "armet with Grenzelhoft hat"
-	desc = "Holy lamb, sacrificial hero, blessed idiot - Psydon endures. Will you endure alongside Him, as a knight of humenity, or crumble before temptation? This helmet with a Grenzelhoft hat"
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle/grenzelhoft
+	name = "slitted kettle helm w/plume hat"
+	desc = "A Grenzelhoftian plume hat placed atop a reinforced Eisenhut extended downwards to cover the face, staying fashionable while fully protecting the wearer at the cost of his field of view. Pairs well with a bevor."
+	icon_state = "grenzelskettle"
+	item_state = "grenzelskettle"
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
-	icon_state = "armetgrenzelhoft"
+	detail_tag = "_detail"
+	altdetail_tag = "_detailalt"
+	resistance_flags = FIRE_PROOF
+	var/picked = FALSE
+	color = "#FFFFFF"
+	detail_color = "#262927"
+	altdetail_color = "#FFFFFF"
+	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL + 10
+
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle/grenzelhoft/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+	if(get_altdetail_tag())
+		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[icon_state][altdetail_tag]"))
+		pic2.appearance_flags = RESET_COLOR
+		if(get_altdetail_color())
+			pic2.color = get_altdetail_color()
+		add_overlay(pic2)
+
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/grenzelhoft
+	name = "armet w/plume hat"
+	desc = "A Grenzelhoftian plume hat placed atop a steel armet, staying fashionable while protecting the wearer's head to a better degree. Will you endure alongside Him, as a knight of humenity, or crumble before temptation?"
+	icon_state = "grenzelarmet"
+	item_state = "grenzelarmet"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	detail_tag = "_detail"
+	altdetail_tag = "_detailalt"
+	resistance_flags = FIRE_PROOF
+	var/picked = FALSE
+	color = "#FFFFFF"
+	detail_color = "#262927"
+	altdetail_color = "#FFFFFF"
+	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL - ARMOR_INT_HELMET_HEAVY_ADJUSTABLE_PENALTY + 10
+
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/grenzelhoft/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+	if(get_altdetail_tag())
+		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[icon_state][altdetail_tag]"))
+		pic2.appearance_flags = RESET_COLOR
+		if(get_altdetail_color())
+			pic2.color = get_altdetail_color()
+		add_overlay(pic2)
 
 /obj/item/clothing/head/roguetown/helmet/heavy/knight/raneshi_hmamluk
 	name = "masked mamluk helmet"

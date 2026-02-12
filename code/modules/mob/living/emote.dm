@@ -1,3 +1,26 @@
+/* Twilight Axis Localisation */
+var/list/zone_translations = list(
+		BODY_ZONE_HEAD = "голову",
+		BODY_ZONE_CHEST = "туловище",
+		BODY_ZONE_R_ARM = "правую руку",
+		BODY_ZONE_L_ARM = "левую руку",
+		BODY_ZONE_R_LEG = "правую ногу",
+		BODY_ZONE_L_LEG = "левую ногу",
+		BODY_ZONE_PRECISE_R_INHAND = "правую ладонь",
+		BODY_ZONE_PRECISE_L_INHAND = "левую ладонь",
+		BODY_ZONE_PRECISE_R_FOOT = "правую ступню",
+		BODY_ZONE_PRECISE_L_FOOT = "левую ступню",
+		BODY_ZONE_PRECISE_SKULL = "череп",
+		BODY_ZONE_PRECISE_EARS = "уши",
+		BODY_ZONE_PRECISE_R_EYE = "правый глаз",
+		BODY_ZONE_PRECISE_L_EYE = "левый глаз",
+		BODY_ZONE_PRECISE_NOSE = "нос",
+		BODY_ZONE_PRECISE_MOUTH = "рот",
+		BODY_ZONE_PRECISE_NECK = "шею",
+		BODY_ZONE_PRECISE_STOMACH = "живот",
+		BODY_ZONE_PRECISE_GROIN = "пах"
+	)
+
 /* EMOTE DATUMS */
 /datum/emote/living
 	mob_type_allowed_typecache = /mob/living
@@ -18,7 +41,7 @@
 	stat_allowed = list(CONSCIOUS, UNCONSCIOUS)
 
 /mob/living/carbon/human/verb/emote_pray()
-	set name = "Pray"
+	set name = "Молиться"
 	set category = "Emotes"
 
 	emote("pray", intentional = TRUE)
@@ -63,7 +86,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_meditate()
-	set name = "Meditate"
+	set name = "Медитировать"
 	set category = "Emotes"
 
 	emote("meditate", intentional = TRUE)
@@ -94,7 +117,7 @@
 				H.add_stress(/datum/stressevent/noble_bowed_to)
 
 /mob/living/carbon/human/verb/emote_bow()
-	set name = "Bow"
+	set name = "Поклониться"
 	set category = "Emotes"
 
 	emote("bow", intentional = TRUE)
@@ -108,7 +131,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_burp()
-	set name = "Burp"
+	set name = "Рыгать"
 	set category = "Noises"
 
 	emote("burp", intentional = TRUE)
@@ -122,7 +145,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_choke()
-	set name = "Choke"
+	set name = "Задыхаться"
 	set category = "Noises"
 
 	emote("choke", intentional = TRUE)
@@ -135,7 +158,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_crossarms()
-	set name = "Cross Arms"
+	set name = "Скрестить руки"
 	set category = "Emotes"
 
 	emote("crossarms", intentional = TRUE)
@@ -178,7 +201,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_cough()
-	set name = "Cough"
+	set name = "Кашлять"
 	set category = "Noises"
 
 	emote("cough", intentional = TRUE)
@@ -192,7 +215,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_clearthroat()
-	set name = "Clear Throat"
+	set name = "Прочистить горло"
 	set category = "Noises"
 
 	emote("clearthroat", intentional = TRUE)
@@ -205,7 +228,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_dance()
-	set name = "Dance"
+	set name = "Танцевать"
 	set category = "Emotes"
 
 	emote("dance", intentional = TRUE)
@@ -238,7 +261,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_drool()
-	set name = "Drool"
+	set name = "Пускать слюни"
 	set category = "Emotes"
 
 	emote("drool", intentional = TRUE)
@@ -250,7 +273,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_faint()
-	set name = "Faint"
+	set name = "Свалиться с ног"
 	set category = "Emotes"
 
 	emote("faint", intentional = TRUE)
@@ -272,7 +295,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_frown()
-	set name = "Frown"
+	set name = "Хмуриться"
 	set category = "Emotes"
 
 	emote("frown", intentional = TRUE)
@@ -286,7 +309,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_gag()
-	set name = "Gag"
+	set name = "Подавиться"
 	set category = "Noises"
 
 	emote("gag", intentional = TRUE)
@@ -301,7 +324,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_gasp()
-	set name = "Gasp"
+	set name = "Вздохнуть!"
 	set category = "Noises"
 
 	emote("gasp", intentional = TRUE)
@@ -335,7 +358,7 @@
 				to_chat(H, span_info("The giggling brings a smile to my face, and fortune to my steps!"))
 
 /mob/living/carbon/human/verb/emote_giggle()
-	set name = "Giggle"
+	set name = "Хихикать"
 	set category = "Noises"
 
 	emote("giggle", intentional = TRUE)
@@ -361,7 +384,7 @@
 				to_chat(H, span_info("The chuckling brings a smile to my face, and fortune to my steps!"))
 
 /mob/living/carbon/human/verb/emote_chuckle()
-	set name = "Chuckle"
+	set name = "Усмехнуться"
 	set category = "Noises"
 
 	emote("chuckle", intentional = TRUE)
@@ -374,7 +397,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_glare()
-	set name = "Glare"
+	set name = "Сверлить взглядом"
 	set category = "Emotes"
 
 	emote("glare", intentional = TRUE)
@@ -385,7 +408,7 @@
 	message = "grins."
 	emote_type = EMOTE_VISIBLE
 /mob/living/carbon/human/verb/emote_grin()
-	set name = "Grin"
+	set name = "Ухмыльнуться"
 	set category = "Emotes"
 
 	emote("grin", intentional = TRUE)
@@ -398,8 +421,18 @@
 	emote_type = EMOTE_AUDIBLE
 	show_runechat = FALSE
 
+// Attack blip played randomly.
+/datum/emote/living/attack
+	key = "attack"
+	key_third_person = "attacks"
+	message = ""
+	nomsg = TRUE
+	message_muffled = "makes a muffled groan."
+	emote_type = EMOTE_AUDIBLE
+	show_runechat = FALSE
+
 /mob/living/carbon/human/verb/emote_groan()
-	set name = "Groan"
+	set name = "Тяжело вздохнуть"
 	set category = "Noises"
 
 	emote("groan", intentional = TRUE)
@@ -410,7 +443,7 @@
 	message = "grimaces."
 	emote_type = EMOTE_VISIBLE
 /mob/living/carbon/human/verb/emote_grimace()
-	set name = "Grimace"
+	set name = "Сморщиться"
 	set category = "Emotes"
 
 	emote("grimace", intentional = TRUE)
@@ -437,7 +470,7 @@
 	use_params_for_runechat = TRUE
 
 /mob/living/carbon/human/verb/emote_kiss()
-	set name = "Kiss"
+	set name = "Поцеловать"
 	set category = "Emotes"
 
 	emote("kiss", intentional = TRUE, targetted = TRUE)
@@ -457,27 +490,28 @@
 				do_change = TRUE
 		if(do_change)
 			if(H.zone_selected == BODY_ZONE_PRECISE_MOUTH)
-				message_param = "kisses %t deeply."
+				message_param = "страстно целует %t."
 			else if(H.zone_selected == BODY_ZONE_PRECISE_EARS)
-				message_param = "kisses %t on the ear."
+				message_param = "целует %t в ухо."
 				var/mob/living/carbon/human/E = target
 				if(iself(E) || ishalfelf(E) || isdarkelf(E))
 					if(!E.cmode)
-						to_chat(target, span_love("It tickles..."))
+						to_chat(target, span_love("Это щекотно..."))
 			else if(H.zone_selected == BODY_ZONE_PRECISE_R_EYE || H.zone_selected == BODY_ZONE_PRECISE_L_EYE)
-				message_param = "kisses %t on the brow."
+				message_param = "целует %t в бровь."
 			else if(H.zone_selected == BODY_ZONE_PRECISE_SKULL)
-				message_param = "kisses %t on the forehead."
+				message_param = "целует %t в лоб."
 			else if(H.zone_selected == BODY_ZONE_HEAD)
-				message_param = "kisses %t on the cheek."
+				message_param = "целует %t в щеку."
 			else if(H.zone_selected == BODY_ZONE_PRECISE_GROIN)
-				message_param = "kisses %t between the legs."
+				message_param = "целует %t между ног."
 				var/mob/living/carbon/human/L = target
 				if(isliving(L))
 					if(!L.cmode)
-						to_chat(target, span_love("It somewhat stimulating..."))
+						to_chat(target, span_love("Это приятно..."))
 			else
-				message_param = "kisses %t on \the [parse_zone(H.zone_selected)]."
+				var/ru_zone_selected = zone_translations[user.zone_selected]
+				message_param = "целует %t в [ru_zone_selected]."
 	playsound(target.loc, pick('sound/vo/kiss (1).ogg','sound/vo/kiss (2).ogg'), 100, FALSE, -1)
 	if(user.mind)
 		record_round_statistic(STATS_KISSES_MADE)
@@ -491,7 +525,7 @@
 	use_params_for_runechat = TRUE
 
 /mob/living/carbon/human/verb/emote_lick()
-	set name = "Lick"
+	set name = "Облизать"
 	set category = "Emotes"
 	emote("lick", intentional = TRUE, targetted = TRUE)
 
@@ -510,20 +544,21 @@
 				do_change = TRUE
 		if(do_change)
 			if(J.zone_selected == BODY_ZONE_PRECISE_MOUTH)
-				message_param = "licks %t lips."
+				message_param = "лижет губы %t."
 			else if(J.zone_selected == BODY_ZONE_PRECISE_EARS)
-				message_param = "licks the ear of %t."
+				message_param = "лижет ухо %t."
 				var/mob/living/carbon/human/O = target
 				if(iself(O) || ishalfelf(O) || isdarkelf(O))
 					if(!O.cmode)
-						to_chat(target, span_love("It tickles..."))
+						to_chat(target, span_love("Это щекотно..."))
 			else if(J.zone_selected == BODY_ZONE_PRECISE_GROIN)
-				message_param = "licks %t between the legs."
-				to_chat(target, span_love("That feels nice..."))
+				message_param = "лижет %t между ног."
+				to_chat(target, span_love("Это очень приятно..."))
 			else if(J.zone_selected == BODY_ZONE_HEAD)
-				message_param = "licks %t cheek"
+				message_param = "лижет щеку %t"
 			else
-				message_param = "licks %t [parse_zone(J.zone_selected)]."
+				var/ru_zone_selected = zone_translations[user.zone_selected]
+				message_param = "лижет [ru_zone_selected] %t."
 	playsound(target.loc, pick("sound/vo/lick.ogg"), 100, FALSE, -1)
 
 /datum/emote/living/spit
@@ -534,7 +569,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_spit()
-	set name = "Spit"
+	set name = "Плюнуть"
 	set category = "Emotes"
 
 	emote("spit", intentional = TRUE, targetted = TRUE)
@@ -570,7 +605,7 @@
 	restraint_check = TRUE
 
 /mob/living/carbon/human/verb/emote_hug()
-	set name = "Hug"
+	set name = "Обнять"
 	set category = "Emotes"
 
 	emote("hug", intentional = TRUE, targetted = TRUE)
@@ -640,7 +675,7 @@
 	..()
 
 /mob/living/carbon/human/verb/emote_slap()
-	set name = "Slap"
+	set name = "Шлепнуть"
 	set category = "Emotes"
 
 	emote("slap", intentional = TRUE, targetted = TRUE)
@@ -672,7 +707,7 @@
 		H.flash_fullscreen("redflash1")
 
 /mob/living/carbon/human/verb/emote_pinch()
-	set name = "Pinch"
+	set name = "Ущипнуть"
 	set category = "Emotes"
 
 	emote("pinch", intentional = TRUE, targetted = TRUE)
@@ -710,7 +745,7 @@
 				to_chat(H, span_info("The laughter brings a smile to my face, and fortune to my steps!"))
 
 /mob/living/carbon/human/verb/emote_laugh()
-	set name = "Laugh"
+	set name = "Смеяться"
 	set category = "Noises"
 
 	emote("laugh", intentional = TRUE)
@@ -728,7 +763,7 @@
 	message_param = "nods at %t."
 	emote_type = EMOTE_VISIBLE
 /mob/living/carbon/human/verb/emote_nod()
-	set name = "Nod"
+	set name = "Кивнуть"
 	set category = "Emotes"
 
 	emote("nod", intentional = TRUE)
@@ -770,7 +805,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_scream()
-	set name = "Scream"
+	set name = "Кричать"
 	set category = "Noises"
 
 	emote("scream", intentional = TRUE)
@@ -945,7 +980,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_rage()
-	set name = "Rage"
+	set name = "Ярость"
 	set category = "Noises"
 
 	emote("rage", intentional = TRUE)
@@ -963,7 +998,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_attnwhistle()
-	set name = "Attnwhistle"
+	set name = "Привлечь свистом"
 	set category = "Noises"
 
 	emote("attnwhistle", intentional = TRUE)
@@ -989,7 +1024,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_shakehead()
-	set name = "Shake Head"
+	set name = "Качать головой"
 	set category = "Emotes"
 
 	emote("shakehead", intentional = TRUE)
@@ -1002,7 +1037,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_shiver()
-	set name = "Shiver"
+	set name = "Дрожать"
 	set category = "Emotes"
 
 	emote("shiver", intentional = TRUE)
@@ -1017,7 +1052,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_sigh()
-	set name = "Sigh"
+	set name = "Вздохнуть"
 	set category = "Noises"
 
 	emote("sigh", intentional = TRUE)
@@ -1036,7 +1071,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_whistle()
-	set name = "Whistle"
+	set name = "Свистеть"
 	set category = "Noises"
 
 	emote("whistle", intentional = TRUE)
@@ -1050,7 +1085,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_hmm()
-	set name = "Hmm"
+	set name = "Хмм"
 	set category = "Noises"
 
 	emote("hmm", intentional = TRUE)
@@ -1064,7 +1099,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_huh()
-	set name = "Huh"
+	set name = "Хах?"
 	set category = "Noises"
 
 	emote("huh", intentional = TRUE)
@@ -1078,7 +1113,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_hum()
-	set name = "Hum"
+	set name = "Напевать"
 	set category = "Noises"
 
 	emote("hum", intentional = TRUE)
@@ -1089,7 +1124,7 @@
 	message = "smiles."
 	emote_type = EMOTE_VISIBLE
 /mob/living/carbon/human/verb/emote_smile()
-	set name = "Smile"
+	set name = "Улыбнуться"
 	set category = "Emotes"
 
 	emote("smile", intentional = TRUE)
@@ -1110,6 +1145,14 @@
 	emote_type = EMOTE_AUDIBLE
 	show_runechat = TRUE
 
+/datum/emote/living/pleased
+	key = "pleased"
+	key_third_person = "pleased"
+	message = "makes a pleased sound."
+	message_muffled = "makes a muffled sneeze."
+	emote_type = EMOTE_AUDIBLE
+	show_runechat = FALSE
+
 /datum/emote/living/shh
 	key = "shh"
 	key_third_person = "shhs"
@@ -1119,7 +1162,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_shh()
-	set name = "Shh"
+	set name = "Шикнуть"
 	set category = "Noises"
 
 	emote("shh", intentional = TRUE)
@@ -1197,7 +1240,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_warcry()
-	set name = "Warcry"
+	set name = "Боевой клич"
 	set category = "Noises"
 
 	emote("warcry", intentional = TRUE)
@@ -1217,7 +1260,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_whimper()
-	set name = "Whimper"
+	set name = "Хныкать"
 	set category = "Noises"
 
 	emote("whimper", intentional = TRUE)
@@ -1236,7 +1279,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_yawn()
-	set name = "Yawn"
+	set name = "Зевать"
 	set category = "Noises"
 
 	emote("yawn", intentional = TRUE)
@@ -1374,7 +1417,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_shake()
-	set name = "Shake Head"
+	set name = "Покачать головой"
 	set category = "Emotes"
 
 	emote("shake", intentional = TRUE)
@@ -1386,7 +1429,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_squint()
-	set name = "Squint"
+	set name = "Прищуриться"
 	set category = "Emotes"
 
 	emote("squint", intentional = TRUE)
@@ -1399,7 +1442,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_snap()
-	set name = "Snap"
+	set name = "Щелкнуть 1"
 	set category = "Noises"
 
 	emote("snap", intentional = TRUE)
@@ -1412,7 +1455,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_blink()
-	set name = "Blink"
+	set name = "Моргнуть"
 	set category = "Noises"
 
 	emote("blink", intentional = TRUE)
@@ -1425,7 +1468,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_stomp()
-	set name = "Stomp"
+	set name = "Топнуть"
 	set category = "Noises"
 
 	emote("stomp", intentional = TRUE)
@@ -1438,7 +1481,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_snap2()
-	set name = "Snap2"
+	set name = "Щелкнуть 2"
 	set category = "Noises"
 
 	emote("snap2", intentional = TRUE)
@@ -1451,7 +1494,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_snap3()
-	set name = "Snap3"
+	set name = "Щелкнуть 3"
 	set category = "Noises"
 
 	emote("snap3", intentional = TRUE)
@@ -1469,7 +1512,7 @@
 		user.play_overhead_indicator('icons/mob/overhead_effects.dmi', "stress", 15, MUTATIONS_LAYER, private = user.patron.type, soundin = 'sound/magic/holyshield.ogg', y_offset = 32)
 
 /mob/living/carbon/human/verb/emote_fsalute()
-	set name = "Faith Salute"
+	set name = "Знак веры"
 	set category = "Emotes"
 
 	emote("fsalute", intentional =  TRUE)
@@ -1486,7 +1529,7 @@
 		. = ..()
 
 /mob/living/carbon/human/proc/emote_ffsalute()
-	set name = "Fake Faith Salute"
+	set name = "Ложный знак веры"
 	set category = "Emotes"
 
 	emote("ffsalute", intentional =  TRUE)
@@ -1555,7 +1598,7 @@
 		chance -= modifier_sum
 		chance *= chance_per_point
 
-		var/msg = success ? span_green("SUCCEEDS and [pick(success_message_list)]") : span_danger("FAILS and [pick(failure_message_list)] [chance]%")
+		var/msg = success ? span_green("УСПЕШНО [pick(success_message_list)]") : span_danger("ПРОВАЛ: [pick(failure_message_list)] [chance]%")
 
 		msg = replace_pronoun(user, msg)
 
@@ -1609,25 +1652,25 @@
 	)
 
 	attempt_message_list = list(
-		"tests their strength...",
-		"puts their back into it...",
-		"begins to flex...",
+		"испытывает свою силу...",
+		"прикладывает усилие...",
+		"напрягает мышцы...",
 	)
 
 	success_message_list = list(
-		"is brimming with power!",
-		"is truly beefy!",
-		"shows off their muscle!",
+		"демонстрирует свою силу!",
+		"оправдывает наличие таких мышц!",
+		"доказывает, что силен!",
 	)
 
 	failure_message_list = list(
-		"is a little wet noodle...",
-		"would lose in an arm wrestling match against a rous...",
-		"should eat more sausage...",
+		"руки похожи на ветки",
+		"не сможет поднять даже стул",
+		"стоило есть больше мяса",
 	)
 
 /mob/living/carbon/human/verb/emote_strength_roll()
-	set name = "Roll Strength"
+	set name = "%Проверка силы"
 	set category = "Emotes"
 
 	emote("strength", intentional = TRUE)
@@ -1640,25 +1683,25 @@
 	)
 
 	attempt_message_list = list(
-		"takes a good, long look...",
-		"focuses in...",
-		"squints...",
+		"очень тщательно всматривается...",
+		"фокусирует взгляд...",
+		"прищуривается...",
 	)
 
 	success_message_list = list(
-		"has eyes like a hawk!",
-		"sees what others don't!",
-		"has perfect 20/20 vision!",
+		"может похвастаться орлиным зрением!",
+		"видит то, что не видят другие!",
+		"видит мельчайшую деталь!",
 	)
 
 	failure_message_list = list(
-		"is totally oblivious...",
-		"has cataracts in their eyes...",
-		"is blind...",
+		"видимо страдает близорукостью!",
+		"похоже обладает катарактой!",
+		"слеп....",
 	)
 
 /mob/living/carbon/human/verb/emote_perception_roll()
-	set name = "Roll Perception"
+	set name = "%Проверка восприятия"
 	set category = "Emotes"
 
 	emote("perception", intentional = TRUE)
@@ -1672,25 +1715,25 @@
 	)
 
 	attempt_message_list = list(
-		"thinks hard...",
-		"furrows their brows...",
-		"rubs their chin...",
+		"задумывается...",
+		"сводит свои брови...",
+		"задумчиво чешет подбородок...",
 	)
 
 	success_message_list = list(
-		"is a genius!",
-		"has a mind sharp as a whip!",
-		"knows what they're doing!",
+		"доказывает, что в рядах одних из умнейших!",
+		"доказывает остроту своего ума!",
+		"что знает, что делает!",
 	)
 
 	failure_message_list = list(
-		"is as dumb as a rock...",
-		"has an empty head...",
-		"couldn't put 2 and 2 together...",
+		"вообще не понимает где находиться...",
+		"голова, как кочерыжка",
+		"как сложить два плюс два - осталось загадкой...",
 	)
 
 /mob/living/carbon/human/verb/emote_intelligence_roll()
-	set name = "Roll Intelligence"
+	set name = "%Проверка интеллекта"
 	set category = "Emotes"
 
 	emote("intelligence", intentional = TRUE)
@@ -1703,25 +1746,25 @@
 	)
 
 	attempt_message_list = list(
-		"tests their toughness...",
-		"braces for impact...",
-		"prepares to endure...",
+		"испытывает свою крепость",
+		"готовится к удару...",
+		"готовится терпеть...",
 	)
 
 	success_message_list = list(
-		"doesn't even flinch!",
-		"is solid as an oak!",
-		"is one tough nut to crack!",
+		"даже не дрогнул!",
+		"крепок, как дуб!",
+		"даже не повел и бровью!",
 	)
 
 	failure_message_list = list(
-		"has paper skin...",
-		"would be torn to shreds by a light breeze...",
-		"has a glass jaw...",
+		"одни кожа, да кости...",
+		"покачивается, как травинка на ветру",
+		"кости хруки, как хрусталь",
 	)
 
 /mob/living/carbon/human/verb/emote_constitution_roll()
-	set name = "Roll Constitution"
+	set name = "%Проверка телосложения"
 	set category = "Emotes"
 
 	emote("constitution", intentional = TRUE)
@@ -1734,25 +1777,25 @@
 	)
 
 	attempt_message_list = list(
-		"tests their willpower...",
-		"gathers their courage...",
-		"prepares to use their determination...",
+		"испытывает свою силу воли...",
+		"собирается с мыслями...",
+		"готовиться доказать свою решимость...",
 	)
 
 	success_message_list = list(
-		"proves mighty!",
-		"never gives up!",
-		"persists through anything!",
+		"преодолевает это",
+		"никогда не сдается!",
+		"пройдет сквозь огонь и воду",
 	)
 
 	failure_message_list = list(
-		"is a weak willed chicken...",
-		"gives up trying...",
-		"faints when they get a splinter...",
+		"труслив как цыпленок",
+		"руки опускаются...",
+		"испугается, даже, если никто не крикнет",
 	)
 
 /mob/living/carbon/human/verb/emote_willpower_roll()
-	set name = "Roll Willpower"
+	set name = "%Проверка силы воли"
 	set category = "Emotes"
 
 	emote("willpower", intentional = TRUE)
@@ -1767,25 +1810,25 @@
 	)
 
 	attempt_message_list = list(
-		"prepares their moves...",
-		"starts to get limber...",
-		"tries to get speedy...",
+		"готовит свой лучшее движение...",
+		"демонстрирует свою гибкость...",
+		"пытается разогнаться...",
 	)
 
 	success_message_list = list(
-		"is in perfect control!",
-		"is as agile as a cat!",
-		"is very flexible!",
+		"показывает блестящий контроль своего тела",
+		"изгибается, словно кошка",
+		"невероятная гибкость",
 	)
 
 	failure_message_list = list(
-		"has two left feet...",
-		"trips over themselves...",
-		"is slower than a snail...",
+		"похоже владеет двумя левыми",
+		"переигрывает себя",
+		"медленнее улитки...",
 	)
 
 /mob/living/carbon/human/verb/emote_speed_roll()
-	set name = "Roll Speed"
+	set name = "%Проверка скорости"
 	set category = "Emotes"
 
 	emote("speed", intentional = TRUE)
@@ -1794,25 +1837,25 @@
 	key = "fortune"
 	key_third_person = "for"
 	attempt_message_list = list(
-		"tries their fortune...",
-		"takes a chance...",
-		"prepares to gamble...",
+		"испытывает свою удачу...",
+		"ловит момент...",
+		"взвешивает ставки...",
 	)
 
 	success_message_list = list(
-		"could make an arrow turn around and climb back into the bow!",
-		"has a rabbit's paw in their pocket!",
-		"persists through pure luck!",
+		"мог бы найти слиток в луже",
+		"будто бы, кроличья лапка в кармане!",
+		"светиться истинной удачей!",
 	)
 
 	failure_message_list = list(
-		"realizes the game was rigged from the start...",
-		"gets dealt a bad hand...",
-		"has the odds stacked against them...",
+		"понимает, что игра была проигрышной с самого начала...",
+		"удача явно не на твоей стороне",
+		"все ставки против...",
 	)
 
 /mob/living/carbon/human/verb/emote_fortune_roll()
-	set name = "Roll Fortune"
+	set name = "%Проверка удачи"
 	set category = "Emotes"
 
 	emote("fortune", intentional = TRUE)
@@ -1828,25 +1871,25 @@
 	)
 
 	attempt_message_list = list(
-		"tries to maintain their composure...",
-		"attempts to appear impressive...",
-		"contemplating their next move...",
+		"пытается сохранить самообладание...",
+		"пробует произвести впечатление...",
+		"обдумывает следующий шаг...",
 	)
 
 	success_message_list = list(
-		"is brimming with self-confidence!",
-		"has a true poker face!",
-		"is the first crack in the sheer face of god, from them it will spread!",
+		"переполнен непоколебимой уверенностью!",
+		"- лицо, подобно каменной маске",
+		"... лик подобен богу",
 	)
 
 	failure_message_list = list(
-		"is brimming with self-doubt...",
-		"can't quite sell it...",
-		"is holding it together with string and prayer...",
+		"кипит от неуверенности...",
+		"не очень-то убедительно...",
+		"собранность висит на честном слове...",
 	)
 
 /mob/living/carbon/human/verb/emote_charisma_roll()
-	set name = "Roll Charisma"
+	set name = "%Проверка харизмы"
 	set category = "Emotes"
 
 	emote("charisma", intentional = TRUE)

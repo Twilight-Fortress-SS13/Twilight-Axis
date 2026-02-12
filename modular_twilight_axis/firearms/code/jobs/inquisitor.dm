@@ -2,7 +2,7 @@
 	. = ..()
 	H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 3, TRUE)
 	belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/runelock
-	beltr = /obj/item/quiver/twilight_bullet/runed
+	beltr = /obj/item/quiver/twilight_bullet/runicbag/runed
 	backl = null
 
 /datum/advclass/inquisitor/blackpowder
@@ -81,7 +81,7 @@
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/tabard/psydontabard, SLOT_CLOAK, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/head/roguetown/inqhat, SLOT_HEAD, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/storage/belt/rogue/leather/steel/tasset, SLOT_BELT, TRUE)
-			H.equip_to_slot_or_del(new /obj/item/quiver/twilight_bullet/blessed, SLOT_BELT_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/twilight_bullet/runicbag/blessed, SLOT_BELT_R, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword, SLOT_BELT_L, TRUE)
 			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle(H), TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/sword/rapier/psyrapier(H), TRUE)

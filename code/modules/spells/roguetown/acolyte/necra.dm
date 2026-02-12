@@ -29,7 +29,7 @@
 		if(success)
 			user.visible_message("[user] consecrates [hole]!", "My funeral rites have been performed on [hole]!")
 			record_round_statistic(STATS_GRAVES_CONSECRATED)
-			return
+			return TRUE
 	to_chat(user, span_red("I failed to perform the rites."))
 
 /obj/effect/proc_holder/spell/targeted/churn
@@ -112,10 +112,20 @@
 	var/turf/T = get_turf(targets[1])
 	if(!isopenturf(T))
 		return FALSE
+	
+	if(istype(get_area(user), /area/rogue/indoors/ravoxarena))
+		to_chat(user, span_userdanger("I tried to escape, but something rebukes me! There's no escape until the end of the challenge!"))
+		revert_cast()
+		return FALSE
 
 	if(locate(/obj/structure/deaths_door_portal) in T)
 		to_chat(user, span_warning("A gate already stands here."))
 		return FALSE
+
+	// Ensure the caster has Necra's Sight so they can mark graves/psycrosses
+	if(user && user.mind && !user.mind?.has_spell(/obj/effect/proc_holder/spell/invoked/necras_sight))
+		user.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/necras_sight)
+		to_chat(user, span_notice("A cold clarity fills your vision as Necra opens your sight."))
 
 	new /obj/structure/deaths_door_portal(T, user)
 	return TRUE

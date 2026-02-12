@@ -14,7 +14,7 @@
 	whitelist_req = TRUE
 	outfit = /datum/outfit/job/roguetown/knight
 	advclass_cat_rolls = list(CTAG_ROYALGUARD = 20)
-	job_traits = list(TRAIT_NOBLE, TRAIT_STEELHEARTED, TRAIT_GOODTRAINER, TRAIT_GUARDSMAN)
+	job_traits = list(TRAIT_NOBLE, TRAIT_STEELHEARTED, TRAIT_GUARDSMAN)
 	give_bank_account = TRUE
 	noble_income = 10
 	min_pq = 10
@@ -81,11 +81,11 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor
 	belt = /obj/item/storage/belt/rogue/leather/steel
-	backr = /obj/item/storage/backpack/rogue/satchel/black
+	backr = /obj/item/storage/backpack/rogue/satchel
 	id = /obj/item/scomstone/bad/garrison
 	backpack_contents = list(
-		/obj/item/storage/keyring/knight = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
+		/obj/item/storage/keyring/knight = 1,
 	)
 
 /datum/advclass/knight/heavy
@@ -94,7 +94,7 @@
 	outfit = /datum/outfit/job/roguetown/knight/heavy
 
 	category_tags = list(CTAG_ROYALGUARD)
-	traits_applied = list(TRAIT_HEAVYARMOR)
+	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_GOODTRAINER)
 	subclass_stats = list(
 		STATKEY_STR = 3,//Heavy hitters. Less con/end, high strength.
 		STATKEY_INT = 3,
@@ -107,7 +107,7 @@
 		/datum/skill/combat/axes = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/maces = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/riding = SKILL_LEVEL_NOVICE,	//Too heavy for horses.
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
@@ -172,7 +172,7 @@
     
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
-			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates,
+			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/plate/scale/knight,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted,
 		)
@@ -201,7 +201,7 @@
 	outfit = /datum/outfit/job/roguetown/knight/footknight
 
 	category_tags = list(CTAG_ROYALGUARD)
-	traits_applied = list(TRAIT_HEAVYARMOR)
+	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_GOODTRAINER)
 	subclass_stats = list(
 		STATKEY_STR = 1,//Tanky, less strength, but high con/end.
 		STATKEY_INT = 1,
@@ -215,7 +215,7 @@
 		/datum/skill/combat/maces = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/shields = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
@@ -271,7 +271,7 @@
 
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
-			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates,
+			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/plate/scale/knight,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted,
 		)
@@ -303,7 +303,7 @@
 
 	category_tags = list(CTAG_ROYALGUARD)
 
-	traits_applied = list(TRAIT_HEAVYARMOR)
+	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_GOODTRAINER)
 	//Decent all-around stats. Nothing spectacular. Ranged/melee hybrid class on horseback.
 	subclass_stats = list(
 		STATKEY_STR = 2,
@@ -319,7 +319,7 @@
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/bows = SKILL_LEVEL_EXPERT,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
@@ -398,7 +398,7 @@
 
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
-			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates,
+			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/plate/scale/knight,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted,
 		)
@@ -427,7 +427,7 @@
 	tutorial = "Your skillset is abnormal for a knight. Your swift maneuvers and masterful technique impress both lords and ladies alike, and you have a preference for quicker, more elegant blades. While you are an effective fighting force in medium armor, your evasive skills will only truly shine if you don even lighter protection."
 	outfit = /datum/outfit/job/roguetown/knight/irregularknight
 
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_DODGEEXPERT)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_DODGEEXPERT, TRAIT_GOODTRAINER)
 	category_tags = list(CTAG_ROYALGUARD)
 	subclass_stats = list(
 		STATKEY_STR = 1,
@@ -607,7 +607,7 @@
 /datum/outfit/job/roguetown/knightchampion/pre_equip(mob/living/carbon/human/H)
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/rogueweapon/scabbard/sheath/royal = 1,
 		/obj/item/clothing/cloak/banneret = 1,
 		/obj/item/scomstone/garrison = 1
 		)
@@ -657,7 +657,7 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 			r_hand = /obj/item/rogueweapon/sword/sabre/banneret
 			l_hand = /obj/item/rogueweapon/shield/buckler/banneret
-			beltr = /obj/item/rogueweapon/scabbard/sword
+			beltr = /obj/item/rogueweapon/scabbard/sword/royal
 		if("Claymore")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 			r_hand = /obj/item/rogueweapon/greatsword/zwei
@@ -679,13 +679,13 @@
 		if("Longsword")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 			r_hand = /obj/item/rogueweapon/sword/long
-			beltr = /obj/item/rogueweapon/scabbard/sword
+			beltr = /obj/item/rogueweapon/scabbard/sword/royal
 		if("Flail")
 			H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_MASTER, TRUE)
 			beltr = /obj/item/rogueweapon/flail/sflail
 		if("Sabre")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
-			beltr = /obj/item/rogueweapon/scabbard/sword
+			beltr = /obj/item/rogueweapon/scabbard/sword/royal
 			r_hand = /obj/item/rogueweapon/sword/sabre
 		if("Lance")
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_MASTER, TRUE)
@@ -721,7 +721,7 @@
 			armor = /obj/item/clothing/suit/roguetown/armor/brigandine/retinue
 			pants = /obj/item/clothing/under/roguetown/chainlegs
 		if("Coat of Plates")
-			armor = /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates
+			armor = /obj/item/clothing/suit/roguetown/armor/plate/scale/knight
 			pants = /obj/item/clothing/under/roguetown/chainlegs
 		if("Fluted Cuirass")
 			armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted
@@ -739,7 +739,8 @@
 		"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 		"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 		"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
-		"Knight Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight,
+		"Knight's Armet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight,
+		"Knight's Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old,
 		"Froggemund Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/frogmouth,
 		"Visored Sallet"	= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
 		"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,

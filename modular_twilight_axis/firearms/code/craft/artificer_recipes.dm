@@ -170,6 +170,15 @@
 	created_item = /obj/item/gun/ballistic/twilight_firearm/handgonne
 	craftdiff = 4
 
+/datum/anvil_recipe/engineering/twilight_guns/mortar
+	name = "Hand mortar (+1 Simple Stock) (+1 Lock) (+1 Cured Leather)"
+	req_bar = /obj/item/ingot/bronze
+	additional_items = list(/obj/item/twilight_gunlock = 1,
+							/obj/item/twilight_simplestock = 1,
+							/obj/item/natural/hide/cured = 1)
+	created_item = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar
+	craftdiff = 4
+
 /datum/anvil_recipe/engineering/twilight_guns/flintgonne
 	name = "Hakenbüchse (+1 Simple Stock) (+1 Lock) (+1 Iron Barrel)"
 	req_bar = /obj/item/ingot/iron

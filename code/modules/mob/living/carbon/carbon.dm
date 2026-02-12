@@ -506,8 +506,18 @@
 		if(has_status_effect(/datum/status_effect/debuff/netted))
 			remove_status_effect(/datum/status_effect/debuff/netted)
 
-	if(cuff_break)
-		. = !((I == handcuffed) || (I == legcuffed))
+	if(cuff_break) //TA EDIT
+		if(I == handcuffed)
+			handcuffed = null
+			update_handcuffed()
+			
+		if(I == legcuffed)
+			legcuffed = null
+			update_inv_legcuffed()
+
+			if(has_status_effect(/datum/status_effect/debuff/netted))
+				remove_status_effect(/datum/status_effect/debuff/netted)
+		
 		qdel(I)
 		return TRUE
 

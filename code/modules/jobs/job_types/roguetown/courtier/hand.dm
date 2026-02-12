@@ -32,8 +32,9 @@
 /datum/outfit/job/roguetown/hand
 	backr = /obj/item/storage/backpack/rogue/satchel/short
 	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy/hand
 	belt = /obj/item/storage/belt/rogue/leather/steel
-	id = /obj/item/scomstone/garrison
+	id = /obj/item/scomstone/garrison/hand
 	job_bitflag = BITFLAG_ROYALTY
 
 /datum/outfit/job/roguetown/hand/pre_equip(mob/living/carbon/human/H)
@@ -73,7 +74,7 @@
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_APPRENTICE,
@@ -85,10 +86,10 @@
 	)
 
 /datum/outfit/job/roguetown/hand/blademaster/pre_equip(mob/living/carbon/human/H)
-	r_hand = /obj/item/rogueweapon/sword/long/dec //Gets STR so longsword instead of a rapier
-	beltr = /obj/item/rogueweapon/scabbard/sword
+	r_hand = /obj/item/rogueweapon/sword/long/oathkeeper/hand
+	beltr = /obj/item/rogueweapon/scabbard/sword/royal
 	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand
-	armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/hand
+	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand
 	pants = /obj/item/clothing/under/roguetown/tights/black
 	if(should_wear_femme_clothes(H))
 		shirt = /obj/item/clothing/suit/roguetown/shirt/dress/royal/hand_f
@@ -96,7 +97,7 @@
 		shirt = /obj/item/clothing/suit/roguetown/shirt/dress/royal/hand_m
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/dtace = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/rogueweapon/scabbard/sheath/royal = 1,
 		/obj/item/storage/keyring/lord = 1,
 		/obj/item/roguekey/skeleton = 1
 	)
@@ -138,12 +139,16 @@
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_MASTER, // not like they're gonna break into the vault.
 	)
 
+/datum/outfit/job/roguetown/hand/spymaster
+	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/spymaster
+
 //Spymaster start. More similar to the rogue adventurer - loses heavy armor and sword skills for more sneaky stuff.
 /datum/outfit/job/roguetown/hand/spymaster/pre_equip(mob/living/carbon/human/H)
 	r_hand = /obj/item/rogueweapon/sword/rapier/foldsword
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/dtace = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/parrying/hand = 1,
+		/obj/item/rogueweapon/scabbard/sheath/noble = 1,
 		/obj/item/storage/keyring/lord = 1,
 		/obj/item/roguekey/skeleton = 1,
 		/obj/item/lockpickring/mundane = 1,
@@ -158,7 +163,6 @@
 		cloak = /obj/item/clothing/cloak/raincloak/mortus //cool spymaster cloak
 		shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/guard
 		backr = /obj/item/storage/backpack/rogue/satchel/black
-		armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/hand
 		pants = /obj/item/clothing/under/roguetown/tights/black
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
@@ -181,7 +185,7 @@
 	subclass_spellpoints = 15
 	subclass_skills = list(
 		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
@@ -196,21 +200,22 @@
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_EXPERT,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 	)
+/datum/outfit/job/roguetown/hand/advisor
+	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/advisor
+	r_hand = /obj/item/rogueweapon/sword/rapier/hand
+	beltr = /obj/item/rogueweapon/scabbard/sheath/courtphysician/hand
+	beltl = /obj/item/rogueweapon/huntingknife/idagger/dtace
+	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand
+	pants = /obj/item/clothing/under/roguetown/tights/black
 
 //Advisor start. Trades combat skills for more knowledge and skills - for older hands, hands that don't do combat - people who wanna play wizened old advisors.
 /datum/outfit/job/roguetown/hand/advisor/pre_equip(mob/living/carbon/human/H)
-	r_hand = /obj/item/rogueweapon/sword/rapier/dec
-	beltr = /obj/item/rogueweapon/scabbard/sword
-	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand
-	armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/hand
-	pants = /obj/item/clothing/under/roguetown/tights/black
 	if(should_wear_femme_clothes(H))
 		shirt = /obj/item/clothing/suit/roguetown/shirt/dress/royal/hand_f
 	else if(should_wear_masc_clothes(H))
 		shirt = /obj/item/clothing/suit/roguetown/shirt/dress/royal/hand_m
 	backpack_contents = list(
-		/obj/item/rogueweapon/huntingknife/idagger/dtace = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/rogueweapon/scabbard/sheath/noble = 1,
 		/obj/item/storage/keyring/lord = 1,
 		/obj/item/roguekey/skeleton = 1,
 		/obj/item/lockpickring/mundane = 1,

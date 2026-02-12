@@ -44,7 +44,7 @@
 		/datum/skill/misc/riding = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/bows = SKILL_LEVEL_EXPERT,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
@@ -140,7 +140,7 @@
 
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
-			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates,
+			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/plate/scale/knight,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted,
 		)

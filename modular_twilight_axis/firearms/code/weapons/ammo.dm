@@ -1,7 +1,6 @@
 /obj/projectile/bullet
 	var/silver = FALSE
 	var/blessed = FALSE
-	var/always_drop = FALSE
 	var/critfactor = 1
 	var/gunpowder_npc_critfactor = 1
 	var/gunpowder
@@ -87,7 +86,7 @@
 	embedchance = 100
 	woundclass = BCLASS_STAB
 	flag = "piercing"
-	always_drop = TRUE
+	var/linked_bag
 
 /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	name = "blessed sphere"
@@ -270,9 +269,16 @@
 						to_chat(T, span_danger("Silver rebukes my presence! These fires are lashing at my very soul!"))
 					T.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/sunder)
 				T.ignite_mob()
-		if(always_drop)
-			var/turf/T = get_turf(src)
-			dropped = new ammo_type(T)
+
+/obj/projectile/bullet/twilight_lead/twilight_runelock/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+	if(isliving(firer) && istype(fired_from, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock))
+		var/turf/T = get_turf(src)
+		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/new_boolet = new ammo_type(T)
+		if(istype(linked_bag, /obj/item/quiver/twilight_bullet/runicbag))
+			var/obj/item/quiver/twilight_bullet/runicbag/bag = linked_bag
+			new_boolet.linked_bag = bag
+			bag.linked_ammo += new_boolet
 
 /*/mob/living/carbon/check_projectile_wounding(obj/projectile/P, def_zone, blocked)
 	if(isliving(P.firer) && (istype(P.fired_from, /obj/item/gun/ballistic/twilight_firearm) || istype(P.fired_from, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock)))
@@ -359,6 +365,7 @@
 	possible_item_intents = list(/datum/intent/use)
 	max_integrity = 0
 	w_class = WEIGHT_CLASS_TINY
+	var/linked_bag
 
 /obj/item/ammo_casing/caseless/twilight_lead/runelock/Initialize()
 	. = ..()
@@ -379,6 +386,16 @@
 		user.apply_damage(rand(5,15), BURN)
 		src.forceMove(get_turf(user))
 	..()
+
+/obj/item/ammo_casing/caseless/twilight_lead/runelock/ready_proj(atom/target, mob/living/user, quiet, zone_override = "", atom/fired_from)
+	. = ..()
+	if(istype(linked_bag, /obj/item/quiver/twilight_bullet/runicbag) && istype(BB, /obj/projectile/bullet/twilight_lead/twilight_runelock))
+		var/obj/item/quiver/twilight_bullet/runicbag/bag = linked_bag
+		var/obj/projectile/bullet/twilight_lead/twilight_runelock/new_BB = BB
+		new_BB.linked_bag = bag
+		bag.linked_ammo -= src
+		linked_bag = null
+
 
 /obj/item/ammo_casing/caseless/twilight_lead/silver
 	name = "silver sphere"

@@ -19,6 +19,7 @@
 	l_sleeve_status = SLEEVE_NORMAL
 	armor_class = ARMOR_CLASS_LIGHT
 	chunkcolor = "#978151"
+	material_category = ARMOR_MAT_LEATHER
 	cold_protection = 10
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/ComponentInitialize()
@@ -61,6 +62,13 @@
 	armor = ARMOR_PADDED_GOOD
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
 	prevent_crits = PREVENT_CRITS_MOST
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/lord/heavy/silkjacket
+	name = "besilked jacket"
+	desc = "A lightweight jacket, who's besilked stitchwork allows it to catch thrusts-and-arrows alike without compromise. For reasons that needn't be spoken, such traits make it coveted among lesser nobility."
+	icon = 'icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/shirts.dmi'
+	icon_state = "puritan_shirt"
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
 	name = "padded gambeson"
@@ -228,7 +236,7 @@
 	color = null
 	armor = ARMOR_PADDED
 	shiftable = FALSE
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+	body_parts_covered = COVERAGE_ALL_BUT_LEGS
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/shadowrobe
 	name = "stalker robe"
@@ -238,3 +246,26 @@
 	armor = ARMOR_PADDED_GOOD
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM + 30 //280
 
+//Special Hand armor. More defense, low integrity, similar logic to Ruma Clan tattoos. Can't be worn in shirt slot.
+/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand
+	name = "hand's gambeson"
+	desc = "Sturdy leather, fine silks and ornaments of gold, opulent and imperial, for any one who must say <i>\"I am in charge.\"</i> holds no power at all."
+	icon = 'icons/roguetown/clothing/special/hand.dmi'
+	icon_state = "handgambeson"
+	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/hand.dmi'
+	sleeved = 'icons/roguetown/clothing/special/onmob/hand.dmi'
+	detail_tag = "_detail"
+	detail_color = "#6e423a"
+	armor = ARMOR_HANDGAMB
+	slot_flags = ITEM_SLOT_ARMOR
+	max_integrity = ARMOR_INT_CHEST_LIGHT_STEEL
+	prevent_crits = PREVENT_CRITS_MOST
+	sellprice = 250
+	shiftable = FALSE
+	unenchantable = TRUE
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/advisor
+	detail_color = "#6678c9"
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/spymaster
+	detail_color = "#742277"

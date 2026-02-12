@@ -141,7 +141,7 @@
 
 /obj/item/clothing/cloak/tabard/abyssortabard
 	name = "abyssorite tabard"
-	desc = "A tabard worn by Abyssorite devouts."
+	desc = "A tabard worn by Abyssorite devouts. It reeks of brine."
 	color = null
 	icon_state = "abyssortabard"
 	item_state = "abyssortabard"
@@ -744,7 +744,6 @@
 /obj/item/clothing/cloak/apron/waist/bar
 	color = "#251f1d"
 
-
 /obj/item/clothing/cloak/apron/cook
 	name = "cook apron"
 	desc = "An apron meant to show how clean the cook is."
@@ -1294,6 +1293,7 @@
 			user.change_stat(STATKEY_LCK, 1)
 		else
 			to_chat(user, span_suicide("As I don the necklace, I feel my very worth draining away.."))
+			ADD_TRAIT(user, TRAIT_CURSE_MATTHIOS, TRAIT_GENERIC)
 
 /obj/item/clothing/neck/roguetown/blkknight/dropped(mob/living/user)
 	..()
@@ -1311,6 +1311,7 @@
 		user.change_stat(STATKEY_LCK, -1)
 	else
 		to_chat(user, span_suicide("..dripping down from the heavens, I feel my worth returning once more.."))
+		REMOVE_TRAIT(user, TRAIT_CURSE_MATTHIOS, TRAIT_GENERIC)
 
 /obj/item/clothing/suit/roguetown/armor/plate/blkknight
 	slot_flags = ITEM_SLOT_ARMOR
@@ -1416,7 +1417,8 @@
 
 /obj/item/clothing/cloak/wardencloak
 	name = "warden cloak"
-	desc = "A cloak worn by the Wardens of Azuria's Forests"
+	desc = "A cloak of dense, thick wool worn by the Wardens of Azuria's Forests. Incredibly warm, \
+	and doubles as a blanket in a pinch."
 	icon_state = "wardencloak"
 	alternate_worn_layer = CLOAK_BEHIND_LAYER
 	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
@@ -1450,6 +1452,7 @@
 	sleevetype = "shirt"
 	nodismemsleeves = TRUE
 	inhand_mod = TRUE
+	resistance_flags = FIRE_PROOF
 
 /obj/item/clothing/cloak/forrestercloak/snow
 	name = "snow cloak"
@@ -1535,6 +1538,13 @@
 	sleevetype = "shirt"
 	nodismemsleeves = TRUE
 	inhand_mod = TRUE
+
+/obj/item/clothing/cloak/ordinatorcape/lirvas
+	name = "lirvan silks"
+	desc = "Fine silks. Only the best for me, of course. You need to look good while beating someone to death. </br> </br> ...In Lirvasi society, this isn't even a well-off fellow's shirt; truth be told, this is the sort a yeoman would wear. How terrible to be the wretched 'mongst wealthy; but how glorious that the wretched look so glorious, here."
+	icon_state = "lirvastabard"
+	item_state = "lirvastabard"
+	sellprice = 25
 
 /obj/item/clothing/cloak/absolutionistrobe
 	name = "absolver's robe"

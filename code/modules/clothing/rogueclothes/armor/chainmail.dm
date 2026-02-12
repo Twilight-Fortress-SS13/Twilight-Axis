@@ -1,9 +1,9 @@
-//LIGHT ARMOR//
+//HAUBERGEON//
 /obj/item/clothing/suit/roguetown/armor/chainmail
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
 	name = "haubergeon"
-	desc = "A maille shirt fashioned from hundreds of interlinked steel rings. Though fragile, it is a coveted article of nobility. When worn beneath a silk blouse, it can thwart an unsuspecting assassin's blow."
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS
+	desc = "A maille shirt fashioned from hundreds of interlinked steel rings. This blouse covers all the little nooks-and-crannies that're neglected by a standard cuirass, and - when paired with a gambeson - offers superb protection from most worldly strikes."
+	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
 	icon_state = "haubergeon"
 	armor = ARMOR_MAILLE
 	max_integrity = ARMOR_INT_CHEST_MEDIUM_STEEL
@@ -13,7 +13,8 @@
 	equip_sound = 'sound/foley/equip/equip_armor_chain.ogg'
 	anvilrepair = /datum/skill/craft/armorsmithing
 	smeltresult = /obj/item/ingot/steel
-	armor_class = ARMOR_CLASS_LIGHT //Experimental change; leave unlisted for now? Offers a weight-class advantage over the otherwise-superior hauberk. We'll see how it goes.
+	armor_class = ARMOR_CLASS_MEDIUM
+	material_category = ARMOR_MAT_CHAINMAIL
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/ComponentInitialize()
 	. = ..()
@@ -37,6 +38,7 @@
 	max_integrity = ARMOR_INT_CHEST_MEDIUM_DECREPIT
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_CHAINMAIL
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
 	prevent_crits = PREVENT_CRITS_NONE
@@ -47,7 +49,21 @@
 	icon_state = "ancientchain"
 	smeltresult = /obj/item/ingot/aaslag
 
-//MEDIUM ARMOR//
+/obj/item/clothing/suit/roguetown/armor/chainmail/light
+	name = "besilked haubergeon"
+	desc = "A maille shirt fashioned from hundreds of interlinked steel rings; lighter than its compatriots, yet reinforced with the presence of a besilked underjacket. Though fragile, it is a coveted article of nobility. When worn beneath a silk blouse, it can thwart an unsuspecting assassin's blow."
+	armor_class = ARMOR_CLASS_LIGHT //Why the hell didn't I just do this in the first place? This makes a lot more sense, in hindsight.
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/light/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/light/fencer
+	name = "besilked haubergeon"
+	max_integrity = ARMOR_INT_CHEST_LIGHT_STEEL //Matching the Fencer Cuirass.
+
+//HAUBERK//
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
@@ -76,6 +92,7 @@
 	max_integrity = ARMOR_INT_CHEST_MEDIUM_DECREPIT
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_CHAINMAIL
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
 	prevent_crits = PREVENT_CRITS_NONE
@@ -215,6 +232,7 @@
 	desc = "The rings crackle with unkempt magicka, yearning to enamor the enlightened with avantynic might."
 	color = "#c1b18d"
 	chunkcolor = "#363030"
+	material_category = ARMOR_MAT_CHAINMAIL
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/zizo/Initialize()
 	. = ..()

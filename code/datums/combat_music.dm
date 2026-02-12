@@ -223,13 +223,6 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	credits = "Helbrede - Sons of Tyr"
 	musicpath = list('sound/music/combat_grenzelhoft.ogg')
 
-/datum/combat_music/grenzelhoft_mage //TA mandated cmode music
-	name = "Grenzelhoft Gefechtsgelehrter"
-	desc = ""
-	shortname = "Gefechtsgelehrter"
-	credits = "Helbrede - Helheim"
-	musicpath = list('modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg')
-
 /datum/combat_music/heretic_zizo
 	name = "Heretic - Zizo (Lich)"
 	desc = ""
@@ -278,19 +271,19 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	shortname = "Ordinator"
 	musicpath = list('sound/music/combat_inqordinator.ogg')
 
-/datum/combat_music/inquis_blackpowder //TA mandated cmode music
-	name = "Inquisition - Blackpowder Order"
-	desc = ""
-	shortname = "Blackpowder"
-	credits = "Warhammer 40,000: Darktide - Disposal Unit"
-	musicpath = list('modular_twilight_axis/firearms/sound/music/combat_blackpowder.ogg')
-
 /datum/combat_music/jester
 	name = "Jester"
 	desc = ""
 	shortname = "Jester"
 	credits = "Alias Conrad Coldwood - Pepper Steak (OFF OST)"
 	musicpath = list('sound/music/combat_jester.ogg')
+
+/datum/combat_music/BPHunter //TA mandated cmode music
+	name = "Blackpowder Hunter"
+	desc = ""
+	shortname = "Koseposha"
+	credits = "KCD 2, Tavern song"
+	musicpath = list('modular_twilight_axis/firearms/sound/music/combat_blackpowderhunter.ogg')
 
 /datum/combat_music/kazengite
 	name = "Kazengite"
