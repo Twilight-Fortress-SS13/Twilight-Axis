@@ -517,6 +517,8 @@
 		return FALSE
 	if(chance > 0 && !prob(chance))
 		return FALSE
+	if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
+		return FALSE
 	var/contact_flags = (DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN)
 	for(var/thing in diseases)
 		var/datum/disease/D = thing
@@ -597,6 +599,8 @@
 	H.emote("cough", intentional = TRUE)
 	for(var/mob/living/carbon/human/target in oview(cough_range, H))
 		if(target == H)
+			continue
+		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
 		if(prob(10))
 			target.ForceContractDisease(src, TRUE, FALSE)
