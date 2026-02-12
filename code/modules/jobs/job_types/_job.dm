@@ -452,6 +452,22 @@
 	if(!J)
 		J = SSjob.GetJob(H.job)
 
+	// --- FOG HIJACK START ---
+	// Basically fog protection on spawn
+	if(SSevent_scheduler.fog_scheduled)
+		H.apply_status_effect(/datum/status_effect/buff/fog_grace)
+
+		// Pity Lantern Logic
+		var/lantern_prob = 10
+		var/mob_rank = H.job
+		if(SSevent_scheduler.fog_active)
+			lantern_prob = (mob_rank in GLOB.antagonist_positions) ? 50 : 15
+		else
+			lantern_prob = (mob_rank in GLOB.antagonist_positions) ? 25 : 8
+		if(prob(lantern_prob))
+			new /obj/item/lantern/fog_repelling(H.loc)
+	// --- FOG HIJACK END ---
+
 //Warden and regular officers add this result to their get_access()
 /datum/job/proc/check_config_for_sec_maint()
 	if(CONFIG_GET(flag/security_has_maint_access))
@@ -474,10 +490,10 @@
 
 // LETHALSTONE EDIT: Helper functions for pronoun-based clothing selection
 /proc/should_wear_masc_clothes(mob/living/carbon/human/H)
-	return (H.pronouns == HE_HIM || H.pronouns == THEY_THEM || H.pronouns == SHE_HER_M || (H.pronouns == IT_ITS && H.gender == MALE))
+	return (H.pronouns == HE_HIM || H.pronouns == THEY_THEM || H.pronouns == SHE_HER_M || (H.pronouns == IT_ITS_M && H.gender == MALE) || (H.pronouns == IT_ITS && H.gender == MALE))
 
 /proc/should_wear_femme_clothes(mob/living/carbon/human/H)
-	return (H.pronouns == SHE_HER || H.pronouns == THEY_THEM_F || H.pronouns == HE_HIM_F || (H.pronouns == IT_ITS && H.gender == FEMALE))
+	return (H.pronouns == SHE_HER || H.pronouns == THEY_THEM_F || H.pronouns == HE_HIM_F || (H.pronouns == IT_ITS && H.gender == FEMALE) || (H.pronouns == IT_ITS_M && H.gender == FEMALE))
 // LETHALSTONE EDIT END
 
 /datum/job/proc/get_informed_title(mob/mob)

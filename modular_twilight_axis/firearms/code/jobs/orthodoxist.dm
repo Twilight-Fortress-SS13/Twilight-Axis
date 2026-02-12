@@ -80,7 +80,7 @@
 								beltr = /obj/item/quiver/twilight_bullet/cannonball/lead
 					if("Runelock Pistol")
 						belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
-						beltr = /obj/item/quiver/twilight_bullet/runed
+						beltr = /obj/item/quiver/twilight_bullet/runicbag/runed
 						l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock
 						backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
 						/obj/item/paper/inqslip/arrival/ortho = 1,

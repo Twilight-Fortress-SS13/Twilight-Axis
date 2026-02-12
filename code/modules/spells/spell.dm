@@ -20,7 +20,6 @@
 	var/action_icon_state = "spell_default"
 	var/action_background_icon_state = "bg_spell"
 	var/base_action = /datum/action/spell_action
-	var/mmb = TRUE
 	var/releasedrain = 0
 	var/chargedrain = 0
 	var/chargetime = 0
@@ -44,6 +43,8 @@
 
 	/// This "spell" (miracle) is excluded from Priest's round-start selection.
 	var/priest_excluded = FALSE
+
+	var/skipcharge = FALSE
 
 /obj/effect/proc_holder/Initialize()
 	. = ..()
@@ -90,6 +91,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	return ..()
 
 /obj/effect/proc_holder/proc/InterceptClickOn(mob/living/caller, params, atom/A)
+	var/list/modifiers = params2list(params)
+	if(!modifiers["middle"])
+		return TRUE
+
 	if(caller.ranged_ability != src || ranged_ability_user != caller) //I'm not actually sure how these would trigger, but, uh, safety, I guess?
 		to_chat(caller, span_info("<b>[caller.ranged_ability.name]</b> has been disabled."))
 		caller.ranged_ability.remove_ranged_ability()
@@ -112,11 +117,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			return
 	user.ranged_ability = src
 	ranged_ability_user = user
-	if(!mmb)
-		user.click_intercept = src
-		user.update_mouse_pointer()
-	else
-		user.mmb_intent_change(QINTENT_SPELL)
+	user.click_intercept = src
+	user.update_mouse_pointer()
+	user.mmb_intent_change(QINTENT_SPELL)
+
 	if(msg)
 		to_chat(ranged_ability_user, msg)
 	update_icon()
@@ -125,11 +129,11 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	if(!ranged_ability_user || !ranged_ability_user.client || (ranged_ability_user.ranged_ability && ranged_ability_user.ranged_ability != src)) //To avoid removing the wrong ability
 		return
 	ranged_ability_user.ranged_ability = null
-	if(!mmb)
-		ranged_ability_user.click_intercept = null
-		ranged_ability_user.update_mouse_pointer()
-	else
-		ranged_ability_user.mmb_intent_change(null)
+
+	ranged_ability_user.click_intercept = null
+	ranged_ability_user.update_mouse_pointer()
+	ranged_ability_user.mmb_intent_change(null)
+
 	if(msg)
 		to_chat(ranged_ability_user, msg)
 	ranged_ability_user = null
@@ -199,6 +203,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	var/miracle = FALSE
 	var/devotion_cost = 0
 	var/ignore_cockblock = FALSE //whether or not to ignore TRAIT_SPELLCOCKBLOCK
+	var/next_recharge_time = 0
 
 	action_icon_state = "spell0"
 	action_icon = 'icons/mob/actions/roguespells.dmi'
@@ -215,8 +220,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		if(sbook && sbook?.open)
 			newtime = newtime - (chargetime * (sbook.get_castred()))
 		//staff cast time reduction
-		var/obj/item/rogueweapon/woodstaff/staff = ranged_ability_user.is_holding_item_of_type(/obj/item/rogueweapon/woodstaff/)
-		if(staff)
+		var/obj/item/rogueweapon/staff = ranged_ability_user.is_holding_item_of_type(/obj/item/rogueweapon/)
+		if(staff && staff.cast_time_reduction)
 			newtime = newtime - (chargetime * (staff.cast_time_reduction))
 		if(newtime > 0)
 			return newtime
@@ -245,14 +250,13 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	return releasedrain
 
 
-/obj/effect/proc_holder/spell/proc/cast_check(skipcharge = 0, mob/user = usr) //checks if the spell can be cast based on its settings; skipcharge is used when an additional cast_check is called inside the spell
+/obj/effect/proc_holder/spell/proc/cast_check(skipcharge, mob/user = usr) //checks if the spell can be cast based on its settings; skipcharge is used when an additional cast_check is called inside the spell
 	if(player_lock)
 		if(!user.mind || !(src in user.mind.spell_list) && !(src in user.mob_spell_list))
 			to_chat(user, span_warning("I shouldn't have this spell! Something's wrong..."))
 			return FALSE
 	else
 		if(!(src in user.mob_spell_list))
-
 			return FALSE
 
 	var/turf/T = get_turf(user)
@@ -260,10 +264,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		to_chat(user, span_warning("I can't cast this spell here!"))
 		return FALSE
 
-	if(!skipcharge)
-		if(!charge_check(user))
-
-			return FALSE
+	if(!charge_check(user))
+		return FALSE
 
 	if(user.stat && !stat_allowed)
 		to_chat(user, span_warning("Not when I am incapacitated!"))
@@ -356,17 +358,17 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	record_featured_stat(FEATURED_STATS_MAGES, user)
 	return TRUE
 
-/obj/effect/proc_holder/spell/proc/charge_check(mob/user, silent = FALSE)
+/obj/effect/proc_holder/spell/proc/charge_check(mob/user)
+	if(skipcharge)
+		return TRUE
 	switch(charge_type)
 		if("recharge")
-			if(charge_counter < recharge_time)
-				if(!silent)
-					to_chat(user, still_recharging_msg)
+			if(world.time < next_recharge_time)
+				to_chat(user, still_recharging_msg)
 				return FALSE
 		if("charges")
 			if(!charge_counter)
-				if(!silent)
-					to_chat(user, span_warning("[name] has no charges left!"))
+				to_chat(user, span_warning("[name] has no charges left!"))
 				return FALSE
 	return TRUE
 
@@ -397,20 +399,21 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 /obj/effect/proc_holder/spell/Initialize()
 	. = ..()
-	START_PROCESSING(SSfastprocess, src)
 
 	still_recharging_msg = span_warning("[name] is still recharging!")
 	charge_counter = recharge_time
+	next_recharge_time = world.time
 
 /obj/effect/proc_holder/spell/Destroy()
-	STOP_PROCESSING(SSfastprocess, src)
 	qdel(action)
 	return ..()
 
 /obj/effect/proc_holder/spell/Click()
-	if(cast_check())
-		choose_targets()
-	return 1
+	if(!cast_check())
+		revert_cast()
+		return FALSE
+	choose_targets()
+	return TRUE
 
 /obj/effect/proc_holder/spell/proc/choose_targets(mob/user = usr) //depends on subtype - /targeted or /aoe_turf
 	return
@@ -418,24 +421,30 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 /obj/effect/proc_holder/spell/proc/can_target(mob/living/target)
 	return TRUE
 
+/obj/effect/proc_holder/spell/proc/calculate_recharge_time()
+	var/final_time = initial(recharge_time)
+	var/mob/living/user = ranged_ability_user || action?.owner
+
+	if(user && !is_cdr_exempt)
+		var/stain_diff = user.STAINT - SPELL_SCALING_THRESHOLD
+		if(stain_diff > 0)
+			stain_diff = min(stain_diff, SPELL_POSITIVE_SCALING_THRESHOLD - SPELL_SCALING_THRESHOLD)
+		
+		final_time -= initial(recharge_time) * stain_diff * COOLDOWN_REDUCTION_PER_INT
+
+	return max(cooldown_min, round(final_time))
+
 /obj/effect/proc_holder/spell/proc/start_recharge()
-	if(ranged_ability_user && !is_cdr_exempt)
-		if(ranged_ability_user.STAINT > SPELL_SCALING_THRESHOLD)
-			var/diff = min(ranged_ability_user.STAINT, SPELL_POSITIVE_SCALING_THRESHOLD) - SPELL_SCALING_THRESHOLD
-			recharge_time = initial(recharge_time) - (initial(recharge_time) * diff * COOLDOWN_REDUCTION_PER_INT)
-		else if(ranged_ability_user.STAINT < SPELL_SCALING_THRESHOLD)
-			var/diff2 = SPELL_SCALING_THRESHOLD - ranged_ability_user.STAINT
-			recharge_time = initial(recharge_time) + (initial(recharge_time) * (diff2 * COOLDOWN_REDUCTION_PER_INT))
+    var/final_time = calculate_recharge_time()
+    
+    next_recharge_time = world.time + final_time
+    addtimer(CALLBACK(src, .proc/finish_recharge), final_time)
 
-	START_PROCESSING(SSfastprocess, src)
+/obj/effect/proc_holder/spell/proc/finish_recharge()
+	charge_counter = recharge_time
 
-/obj/effect/proc_holder/spell/process()
-	if(charge_counter <= recharge_time) // Edge case when charge counter is set
-		charge_counter += 2	//processes 5 times per second instead of 10.
-		if(charge_counter >= recharge_time)
-			action.UpdateButtonIcon()
-			charge_counter = recharge_time
-			STOP_PROCESSING(SSfastprocess, src)
+	if(action)
+		action.UpdateButtonIcon()
 
 /obj/effect/proc_holder/spell/proc/perform(list/targets, recharge = TRUE, mob/user = usr) //if recharge is started is important for the trigger spells
 	if(!ignore_los)
@@ -535,9 +544,11 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		var/mob/living/carbon/human/devotee = user
 		devotee.devotion?.update_devotion(-devotion_cost)
 		to_chat(devotee, "<font color='purple'>I [devotion_cost > 0 ? "lost" : "gained"] [abs(devotion_cost)] devotion.</font>")
-	//Add xp based on the fatigue used -- AZURE EDIT: REMOVED!! THIS SHIT WAS TINY AND SUUUUCKED
-	/* if(xp_gain)
-		adjust_experience(usr, associated_skill, round(get_fatigue_drain() * MAGIC_XP_MULTIPLIER)) */
+
+	if(user.mmb_intent && user.mmb_intent.mob_light)
+		QDEL_NULL(user.mmb_intent.mob_light)
+	if(mob_charge_effect)
+		QDEL_NULL(mob_charge_effect)
 
 	START_PROCESSING(SSfastprocess, src) // ensure we always end up reprocessing after casting
 
@@ -552,6 +563,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	start_recharge()
 	switch(charge_type)
 		if("recharge")
+			next_recharge_time = world.time
 			charge_counter = recharge_time
 		if("charges")
 			charge_counter++
@@ -560,6 +572,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	START_PROCESSING(SSfastprocess, src)
 	if(action)
 		action.UpdateButtonIcon()
+	if(user.mmb_intent && user.mmb_intent.mob_light)
+		QDEL_NULL(user.mmb_intent.mob_light)
 
 /obj/effect/proc_holder/spell/proc/adjust_var(mob/living/target = usr, type, amount) //handles the adjustment of the var when the spell is used. has some hardcoded types
 	if (!istype(target))
@@ -703,7 +717,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	if(((!user.mind) || !(src in user.mind.spell_list)) && !(src in user.mob_spell_list))
 		return FALSE
 
-	if(!charge_check(user,TRUE))
+	if(!charge_check(user))
 		return FALSE
 
 	if(user.stat && !stat_allowed)

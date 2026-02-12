@@ -1,0 +1,5 @@
+author: "UEDCommander"
+delete-after: True
+changes:
+  - rscadd: "Библия Десяти приведена в соответствие с лором ТА"
+  - rscadd: "Новые строки для Лексикона Её Истины"

@@ -4,7 +4,7 @@
 	outfit = /datum/outfit/job/roguetown/manorguard/twilight_grenadier
 	maximum_possible_slots = 2
 	category_tags = list(CTAG_MENATARMS)
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_FIREARMS_MARKSMAN)
+	traits_applied = list(TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_WIL = 2,// seems kinda lame but remember guardsman bonus!!
 		STATKEY_PER = 2,
@@ -15,7 +15,7 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
+		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
@@ -61,11 +61,11 @@
 		var/armor_choice = input(H, "Choose your armor.", "TAKE UP ARMS") as anything in armor_options
 
 		switch(armor_choice)
-			if("Brigandine Set")
+			if("Light Brigandine Set")
 				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light/retinue
 				shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
-				wrists = /obj/item/clothing/wrists/roguetown/splintarms
-				pants = /obj/item/clothing/under/roguetown/splintlegs
+				wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine
+				pants = /obj/item/clothing/under/roguetown/brigandinelegs
 
 			if("Maille Set")
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/scale

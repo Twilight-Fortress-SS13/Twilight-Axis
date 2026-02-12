@@ -5,6 +5,13 @@
 					/obj/item/gun/ballistic/twilight_firearm/flintgonne,
 				)
 
+/datum/supply_pack/rogue/ranged_weapons/mortar
+	name = "Hand mortar"
+	cost = 110
+	contains = list(
+					/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar,
+				)
+
 /datum/supply_pack/rogue/ranged_weapons/twilight_barker
 	name = "Barker"
 	cost = 50
@@ -216,6 +223,11 @@
 	name = "Hakenbüchse"
 	cost = 100
 	contains = list(/obj/item/gun/ballistic/twilight_firearm/flintgonne)
+
+/datum/supply_pack/rogue/Afreet/mortar
+	name = "Hand mortar"
+	cost = 120
+	contains = list(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar)
 
 /datum/supply_pack/rogue/Afreet/culverin
 	name = "Culverin"

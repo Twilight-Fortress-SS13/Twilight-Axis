@@ -75,8 +75,11 @@
 		UnregisterSignal(owner, COMSIG_SOUNDBREAKER_COMBO_CLEARED)
 		RevokeSpells()
 
-	if(proxy && !QDELETED(proxy))
-		qdel(proxy)
+	if(proxy)
+		if(!QDELETED(proxy))
+			proxy.force = 0
+			proxy.last_attack_target = null
+			qdel(proxy)
 	proxy = null
 
 	note_history = null
@@ -160,12 +163,18 @@
 
 /datum/component/combo_core/soundbreaker/proc/_sig_note_projectile_hit(datum/source, mob/living/target, damage_mult, damage_type, zone)
 	SIGNAL_HANDLER
-	INVOKE_ASYNC(src, PROC_REF(_async_note_projectile_hit), target, damage_mult, damage_type, zone)
+	if(!owner || QDELETED(owner))
+		return 0
+
+	var/mob/living/local_owner = owner
+	INVOKE_ASYNC(src, PROC_REF(_async_note_projectile_hit), local_owner, target, damage_mult, damage_type, zone)
 	return 0
 
-/datum/component/combo_core/soundbreaker/proc/_async_note_projectile_hit(mob/living/target, damage_mult, damage_type, zone)
-	if(!owner || !target)
+
+/datum/component/combo_core/soundbreaker/proc/_async_note_projectile_hit(mob/living/local_owner, mob/living/target, damage_mult, damage_type, zone)
+	if(!local_owner || QDELETED(local_owner) || !target)
 		return
+
 	ApplyDamage(target, damage_mult, BCLASS_PUNCH, zone, damage_type)
 	OnHit(target, SOUNDBREAKER_NOTE_BARE, zone)
 
@@ -201,7 +210,7 @@
 	if(!owner)
 		return
 
-	if(!granted_spells || !granted_spells.len)
+	if(!length(granted_spells))
 		spells_granted = FALSE
 		return
 
@@ -225,8 +234,12 @@
 /datum/component/combo_core/soundbreaker/proc/GetProxy()
 	if(!owner)
 		return null
-	if(!proxy || QDELETED(proxy))
+	if(proxy && QDELETED(proxy))
+		proxy = null
+
+	if(!proxy)
 		proxy = new /obj/item/soundbreaker_proxy(owner)
+
 	return proxy
 
 /datum/component/combo_core/soundbreaker/proc/OnHit(mob/living/target, note_id, zone = BODY_ZONE_CHEST)
@@ -273,7 +286,13 @@
 	var/obj/item/L = owner.get_item_for_held_index(1)
 	var/obj/item/R = owner.get_item_for_held_index(2)
 
-	return (istype(L, /obj/item/rogue/instrument) || istype(R, /obj/item/rogue/instrument))
+	if(istype(L, /obj/item/rogue/instrument) || istype(R, /obj/item/rogue/instrument))
+		return TRUE
+
+	if(owner.has_stress_event(/datum/stressevent/music))
+		return TRUE
+
+	return FALSE
 
 /datum/component/combo_core/soundbreaker/proc/GetTargetTurf(atom/target_atom)
 	if(!target_atom)
@@ -337,6 +356,9 @@
 
 /// Consume prepared note on swing attempt.
 /datum/component/combo_core/soundbreaker/proc/TryConsumePreparedAttack(atom/target_atom, zone = BODY_ZONE_CHEST)
+	if(QDELETED(src))
+		return
+
 	if(!owner)
 		return FALSE
 
@@ -445,7 +467,7 @@
 			continue
 		candidates += L
 
-	if(!candidates.len)
+	if(!length(candidates))
 		return null
 
 	var/mob/living/target = pick(candidates)
@@ -517,6 +539,9 @@
 
 	if(P.loc != owner)
 		P.forceMove(owner)
+
+	if(!islist(params))
+		params = list()
 
 	P.force = damage
 	P.force_dynamic = damage
@@ -810,10 +835,10 @@
 	return FALSE
 
 /datum/component/combo_core/proc/IsPrefix(list/seq, list/pattern)
-	if(seq.len > pattern.len)
+	if(length(seq) > length(pattern))
 		return FALSE
 
-	for(var/i in 1 to seq.len)
+	for(var/i in 1 to length(seq))
 		if(seq[i] != pattern[i])
 			return FALSE
 
@@ -836,7 +861,7 @@
 		note_history = list()
 	note_history += note_id
 
-	while(note_history.len > SB_MAX_VISIBLE_NOTES)
+	while(length(note_history) > SB_MAX_VISIBLE_NOTES)
 		note_history.Cut(1, 2)
 
 	UpdateNoteOverlays()
@@ -845,14 +870,14 @@
 	if(!owner)
 		return
 
-	if(islist(note_mas) && note_mas.len)
+	if(islist(note_mas) && length(note_mas))
 		for(var/mutable_appearance/ma in note_mas)
 			owner.overlays -= ma
 		note_mas.Cut()
 	else
 		note_mas = list()
 
-	if(!islist(note_history) || !note_history.len)
+	if(!length(note_history))
 		return
 
 	var/base_y = 18
@@ -860,7 +885,7 @@
 	var/start_x = 8
 	var/idx = 0
 
-	for(var/i = note_history.len, i >= 1, i--)
+	for(var/i = length(note_history), i >= 1, i--)
 		var/note_id = note_history[i]
 		var/state = GetNoteIconState(note_id)
 		if(!state)
@@ -884,7 +909,7 @@
 	if(!owner)
 		return
 
-	if(islist(note_mas) && note_mas.len)
+	if(length(note_mas))
 		for(var/mutable_appearance/ma in note_mas)
 			owner.overlays -= ma
 		note_mas.Cut()
@@ -1167,8 +1192,8 @@
 	var/d = last_input_dir || owner.dir
 	if(d)
 		owner.setDir(d)
-
-	sb_fire_sound_note(owner, target, 1.5, BRUTE, BODY_ZONE_CHEST, d)
+	var/zone = accuracy_check(owner.zone_selected, owner, target, /datum/skill/combat/unarmed, owner.used_intent)
+	sb_fire_sound_note(owner, target, 1.5, BRUTE, zone, d)
 	ResetRhythm()
 
 /datum/component/combo_core/soundbreaker/proc/ComboBassDrop(mob/living/target)
@@ -1403,3 +1428,9 @@
 
 	ShowComboIcon(target, SB_COMBO_ICON_OVERTURE)
 	ResetRhythm()
+
+/datum/component/combo_core/soundbreaker/proc/OnNoteProjectileHit(mob/living/local_owner, mob/living/target, damage_mult, damage_type, zone)
+	if(!local_owner || QDELETED(local_owner) || !target)
+		return
+
+	ApplyDamage(target, damage_mult, BCLASS_PUNCH, zone, damage_type)

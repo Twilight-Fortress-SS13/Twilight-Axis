@@ -8,3 +8,11 @@
 	)
 	max_untraited_level = SKILL_LEVEL_EXPERT
 	trait_uncap = list(TRAIT_FIREARMS_MARKSMAN = SKILL_LEVEL_LEGENDARY)
+
+/obj/effect/proc_holder/spell/invoked/takeapprentice/Initialize()
+	. = ..()
+	traits_to_skills += list(
+		TRAIT_FIREARMS_MARKSMAN = list(
+			/datum/skill/combat/twilight_firearms
+		)
+	)

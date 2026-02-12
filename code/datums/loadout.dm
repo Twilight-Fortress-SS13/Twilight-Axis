@@ -8,6 +8,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	var/atom/movable/path
 	var/donoritem			//autoset on new if null
 	var/donatitem = FALSE
+	var/donat_tier = 0
 	var/list/ckeywhitelist
 	var/triumph_cost = 0
 	var/category = "Разное"
@@ -16,8 +17,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	if(isnull(donoritem))
 		if(ckeywhitelist)
 			donoritem = TRUE
+	var/obj/targetitem = path
+	desc = targetitem.desc
 	if (triumph_cost)
-		desc += "<b>Costs [triumph_cost] TRIUMPHS.</b>"
+		desc += "<b>Стоит [triumph_cost] ТРИУМФОВ.</b>"
+	if(donat_tier > 0)
+		desc += "<b>Доступно для меценатов уровня: [donat_tier]</b>"
 
 /datum/loadout_item/proc/donator_ckey_check(key)
 	if(ckeywhitelist && ckeywhitelist.Find(key))
@@ -85,6 +90,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Worn rice hat"
 	category = "Головные уборы"
 	path = /obj/item/clothing/head/roguetown/eaststrawhat
+
+/datum/loadout_item/antlers
+	name = "Old antlers"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/antlers
 
 /datum/loadout_item/witchhat
 	name = "Witch Hat"
@@ -856,6 +866,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Eoran Caparison"
 	path = /obj/item/caparison/eora
 
+
 //////////////////
 //  TRIUMPHS !  //
 //////////////////
@@ -874,34 +885,34 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	triumph_cost = 3
 
 /datum/loadout_item/triumph_heavygloves
-	name = "Heavy Leather Gloves (-3 TRI)"
+	name = "Heavy Leather Gloves (-6 TRI)"
 	path = /obj/item/clothing/gloves/roguetown/angle
 	category = list("Триумфы")
-	triumph_cost = 3
+	triumph_cost = 6
 
 /datum/loadout_item/triumph_heavyboots
-	name = "Heavy Leather Boots (-3 TRI)"
+	name = "Heavy Leather Boots (-6 TRI)"
 	path = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	category = list("Триумфы")
-	triumph_cost = 3
+	triumph_cost = 6
 
 /datum/loadout_item/triumph_necklace
-	name = "Golden Necklace, Ornate (-3 TRI)"
+	name = "Golden Necklace, Ornate (-6 TRI)"
 	path = /obj/item/clothing/neck/roguetown/ornateamulet/noble/triumph
 	category = list("Триумфы")
-	triumph_cost = 3
+	triumph_cost = 6
 
 /datum/loadout_item/triumph_ring
-	name = "Golden Ring, Ornate (-3 TRI)"
+	name = "Golden Ring, Ornate (-6 TRI)"
 	path = /obj/item/clothing/ring/gold/triumph
 	category = list("Триумфы")
-	triumph_cost = 3
+	triumph_cost = 6
 
 /datum/loadout_item/triumph_circlet
-	name = "Golden Circlet, Ornate (-3 TRI)"
+	name = "Golden Circlet, Ornate (-6 TRI)"
 	path = /obj/item/clothing/head/roguetown/circlet/triumph
 	category = list("Триумфы")
-	triumph_cost = 3
+	triumph_cost = 6
 
 // -5 TRI Minisection.
 
@@ -936,40 +947,40 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	triumph_cost = 5
 
 /datum/loadout_item/triumph_scabbardnoble
-	name = "Decorated Scabbard, Silver (-5 TRI)"
+	name = "Decorated Scabbard, Silver (-10 TRI)"
 	path = /obj/item/rogueweapon/scabbard/sword/noble
 	category = list("Триумфы")
-	triumph_cost = 5
+	triumph_cost = 10
 
 /datum/loadout_item/triumph_sheathnoble
-	name = "Decorated Sheath, Silver (-5 TRI)"
+	name = "Decorated Sheath, Silver (-10 TRI)"
 	path = /obj/item/rogueweapon/scabbard/sheath/noble
 	category = list("Триумфы")
-	triumph_cost = 5
+	triumph_cost = 10
 
 /datum/loadout_item/triumph_psycross
-	name = "Golden Psycross, Ornate (-5 TRI)"
+	name = "Golden Psycross, Ornate (-10 TRI)"
 	path = /obj/item/clothing/neck/roguetown/psicross/g/triumph
 	category = list("Триумфы")
-	triumph_cost = 5
+	triumph_cost = 10
 
 /datum/loadout_item/triumph_zcross
-	name = "Golden Zizote Amulet, Ornate (-5 TRI)"
+	name = "Golden Zizote Amulet, Ornate (-10 TRI)"
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/g/triumph
 	category = list("Триумфы")
-	triumph_cost = 5
+	triumph_cost = 10
 
 /datum/loadout_item/triumph_astcross
-	name = "Golden Astratan Amulet, Ornate (-5 TRI)"
+	name = "Golden Astratan Amulet, Ornate (-10 TRI)"
 	path = /obj/item/clothing/neck/roguetown/psicross/astrata/g/triumph
 	category = list("Триумфы")
-	triumph_cost = 5
+	triumph_cost = 10
 
 /datum/loadout_item/triumph_signet
-	name = "Golden Signet Ring, Ornate (-5 TRI)"
+	name = "Golden Signet Ring, Ornate (-10 TRI)"
 	path = /obj/item/clothing/ring/signet/triumph
 	category = list("Триумфы")
-	triumph_cost = 5
+	triumph_cost = 10
 
 /datum/loadout_item/triumph_gildedshirt
 	name = "Gilded Dress Shirt (-5 TRI)"
@@ -990,31 +1001,31 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	triumph_cost = 5
 
 /datum/loadout_item/triumph_goldhalfmask
-	name = "Golden Halfmask, Ornate (-5 TRI)"
+	name = "Golden Halfmask, Ornate (-10 TRI)"
 	path = /obj/item/clothing/mask/rogue/lordmask/triumph
 	category = list("Триумфы")
-	triumph_cost = 5
+	triumph_cost = 10
 
 /datum/loadout_item/triumph_goldfullmask
-	name = "Golden Mask, Ornate (-5 TRI)"
+	name = "Golden Mask, Ornate (-10 TRI)"
 	path = /obj/item/clothing/mask/rogue/facemask/goldmask/triumph
 	category = list("Триумфы")
-	triumph_cost = 5
+	triumph_cost = 10
 
 /datum/loadout_item/triumph_goldfullmaskc
-	name = "Crestless Golden Mask, Ornate (-5 TRI)"
+	name = "Crestless Golden Mask, Ornate (-10 TRI)"
 	path = /obj/item/clothing/mask/rogue/facemask/goldmaskc/triumph
 	category = list("Триумфы")
-	triumph_cost = 5
+	triumph_cost = 10
 
 // -7 TRI Minisection.
-
+/*
 /datum/loadout_item/triumph_buttpack
 	name = "Belted Satchel (-7 TRI)"
 	path = /obj/item/storage/backpack/rogue/satchel/beltpack
 	category = list("Триумфы")
 	triumph_cost = 7
-
+*/
 /datum/loadout_item/triumph_lunchpouch
 	name = "Pouch of Luncheons (-7 TRI)"
 	path = /obj/item/storage/belt/rogue/pouch/triumphlunch
@@ -1034,36 +1045,24 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	triumph_cost = 7
 
 /datum/loadout_item/triumph_ladycloak
-	name = "Ladylike Cloak (-7 TRI)"
+	name = "Ladylike Cloak (-15 TRI)"
 	path = /obj/item/clothing/cloak/lordcloak/ladycloak
 	category = list("Триумфы")
-	triumph_cost = 7
-
-/datum/loadout_item/triumph_scabbardroyal
-	name = "Decorated Scabbard, Golden (-7 TRI)"
-	path = /obj/item/rogueweapon/scabbard/sword/royal
-	category = list("Триумфы")
-	triumph_cost = 7
-
-/datum/loadout_item/triumph_sheathroyal
-	name = "Decorated Sheath, Golden (-7 TRI)"
-	path = /obj/item/rogueweapon/scabbard/sheath/royal
-	category = list("Триумфы")
-	triumph_cost = 7
+	triumph_cost = 15
 
 /datum/loadout_item/triumph_gdorpelring
-	name = "Golden Dorpel Ring, Ornate (-7 TRI)"
+	name = "Golden Dorpel Ring, Ornate (-15 TRI)"
 	path = /obj/item/clothing/ring/diamond/triumph
 	category = list("Триумфы")
-	triumph_cost = 7
+	triumph_cost = 15
 
 // Beyond.
 
 /datum/loadout_item/triumph_buffpot
-	name = "Vial of Distilled Triumphance (-70 TRI)"
+	name = "Vial of Distilled Triumphance (-100 TRI)"
 	path = /obj/item/reagent_containers/glass/bottle/alchemical/tripot
 	category = list("Триумфы")
-	triumph_cost = 70
+	triumph_cost = 100
 
 //Donator Section
 //All these items are stored in the donator_fluff.dm in the azure modular folder for simplicity.
@@ -1081,6 +1080,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Одежда", "Донат")
 	path = /obj/item/enchantingkit/srusu
 	donatitem = TRUE
+
 
 /datum/loadout_item/donator_strudel
 	name = "Donator Kit - Grenzelhoftian Mage Vest - Required: Robe(No Small Races)"
@@ -1142,6 +1142,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/astratanhelm_oldrw
 	donatitem = TRUE
 
+/datum/loadout_item/donator_dakken
+	name = "Donator Kit - Armoured Avantyne Barbute - Required: Armet or Hounskull Bascinet"
+	path = /obj/item/enchantingkit/dakken_zizhelm
+	category = list("Броня", "Донат")
+	donatitem = TRUE
+ 
 /datum/loadout_item/donator_bigfoot_axe
 	name = "Donator Kit - Gilded GreatAxe - Required: Steel Greataxe"
 	category = list("Оружие", "Донат")
@@ -1161,6 +1167,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Броня", "Донат")
 	donatitem = TRUE
 	
+/datum/loadout_item/donator_eiren4
+	name = "Donator Kit - Darkwood's Embrace"
+	path = /obj/item/clothing/suit/roguetown/armor/longcoat/eiren
+	category = list("Одежда", "Донат")
+	donatitem = TRUE
+
 /datum/loadout_item/donator_zydrasiconosash
 	name = "Donator Kit - Iconoclast Sash - Required: Hauberk(Only men, no small races)"
 	path = /obj/item/enchantingkit/zydrasiconosash
@@ -1215,6 +1227,30 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Разное", "Донат")
 	donatitem = TRUE
 
+/datum/loadout_item/donat_scabbardroyal
+	name = "Decorated Scabbard, Golden"
+	path = /obj/item/rogueweapon/scabbard/sword/royal/donat
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donat_sheathroyal
+	name = "Decorated Sheath, Golden"
+	path = /obj/item/rogueweapon/scabbard/sheath/royal/donat
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donat_gildedshirt
+	name = "Gilded Dress Shirt"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal/prince
+	category = list("Одежда", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donat_pristinedress
+	name = "Pristine Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal/princess
+	category = list("Одежда", "Донат")
+	donatitem = TRUE
+
 /datum/loadout_item/donator_willmbrink
 	name = "Royal Gown"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal
@@ -1238,7 +1274,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/dasfox_cuirass
 	category = list("Броня", "Донат")
 	donatitem = TRUE
- 
+
+/datum/loadout_item/donator_dasfox/lance
+	name = "Donator Item - Decorated Lance - Required: Lance"
+	path = /obj/item/enchantingkit/dasfox_lance
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
 /datum/loadout_item/donat_armorkit
 	name = "Donator Kit - 'Valorian Steel Armor' - Required: Steel Cuirass, Steel Halfplate, Steel Plate Armor or Fluted Plate Armor"
 	category = list("Броня", "Донат")
@@ -1756,9 +1798,62 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/shoes/roguetown/hammerhold_shoes
 	donatitem = TRUE
 
-
 /datum/loadout_item/hammerhold_boots
 	name = "Хаммерхолдские сапоги"
 	category = list("Обувь", "Донат")
 	path = /obj/item/clothing/shoes/roguetown/boots/hammerhold_boots
 	donatitem = TRUE
+
+
+// Aria Mrix Start
+
+/datum/loadout_item/aria_bikini
+	name = "Aria bikini"
+	category = list("Донат")
+	path = /obj/item/clothing/suit/roguetown/armor/gambeson/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_pants
+	name = "Aria pants"
+	category = list("Донат")
+	path = /obj/item/clothing/under/roguetown/trou/leather/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_wrists
+	name = "Aria wrists"
+	category = list("Донат")
+	path = /obj/item/clothing/wrists/roguetown/bracers/cloth/monk/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_necklace
+	name = "Aria necklace"
+	category = list("Донат")
+	path = /obj/item/clothing/neck/roguetown/leather/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_gloves
+	name = "Aria bondaged gloves"
+	category = list("Донат")
+	path = /obj/item/clothing/gloves/roguetown/bandages/pugilist/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_belt
+	name = "Aria belt"
+	category = list("Донат")
+	path = /obj/item/storage/belt/rogue/leather/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+/datum/loadout_item/aria_bondage
+	name = "Aria feet bondage"
+	category = list("Донат")
+	path = /obj/item/clothing/shoes/roguetown/boots/leather/aria
+	donatitem = TRUE
+	ckeywhitelist = list("mrix")
+
+// Aria Mrix End

@@ -192,6 +192,7 @@
 	minstr = 11
 	sellprice = 300
 	smeltresult = /obj/item/ingot/gold
+	unenchantable = TRUE
 
 /obj/item/rogueweapon/mace/gold/lordscepter
 	name = "\"Morningstar\""
@@ -203,6 +204,7 @@
 	anvilrepair = /datum/skill/craft/weaponsmithing
 	minstr = 7
 	sellprice = 363
+	unenchantable = TRUE
 	COOLDOWN_DECLARE(sceptermace)
 
 /obj/item/rogueweapon/mace/gold/lordscepter/afterattack(atom/target, mob/user, flag)
@@ -530,7 +532,7 @@
 	smeltresult = /obj/item/ingot/steel
 	smelt_bar_num = 2
 	wdefense_wbonus = 5
-	special = null
+//	special = null // TA EDIT
 	max_integrity = 300
 
 /obj/item/rogueweapon/mace/goden/steel/paalloy

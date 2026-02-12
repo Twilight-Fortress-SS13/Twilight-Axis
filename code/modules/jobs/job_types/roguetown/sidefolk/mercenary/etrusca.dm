@@ -20,7 +20,7 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
@@ -44,7 +44,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/shirt/shadowshirt //padded is too strong I guess.
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
-	wrists = /obj/item/clothing/wrists/roguetown/splintarms
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/flashlight/flare/torch/lantern = 1,

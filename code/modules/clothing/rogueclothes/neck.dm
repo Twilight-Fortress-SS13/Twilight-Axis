@@ -172,6 +172,7 @@
 	max_integrity = ARMOR_INT_SIDE_DECREPIT
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_CHAINMAIL
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
 	prevent_crits = PREVENT_CRITS_NONE
@@ -310,6 +311,7 @@
 	max_integrity = ARMOR_INT_SIDE_DECREPIT
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_PLATE
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
 	prevent_crits = PREVENT_CRITS_NONE
@@ -395,11 +397,13 @@
 	grid_height = 96
 	grid_width = 96
 	sellprice = 200
+	unenchantable = TRUE
 
 /obj/item/clothing/neck/roguetown/gorget/gold/king
 	name = "royal golden gorget"
 	max_integrity = ARMOR_INT_SIDE_GOLDPLUS // Doubled integrity.
 	sellprice = 300
+	unenchantable = TRUE
 
 /obj/item/clothing/neck/roguetown/gorget/steel/kazengun
 	name = "kazengunite gorget"
@@ -452,23 +456,38 @@
 	anvilrepair = /datum/skill/craft/armorsmithing
 	grid_width = 32
 	grid_height = 32
+	/// Used to see whether or not we display the wrist icon or the neck icon regardless.
+	var/wrist_display = FALSE
 
 /obj/item/clothing/neck/roguetown/psicross/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
 	..()
 
-	if(slot == SLOT_WRISTS)
+	if(slot == SLOT_WRISTS || (wrist_display && slot != SLOT_NECK))
 		mob_overlay_icon = 'icons/roguetown/clothing/onmob/wrists.dmi'
 		sleeved = 'icons/roguetown/clothing/onmob/wrists.dmi'
-	if(slot == SLOT_NECK)
+	else
 		mob_overlay_icon = initial(mob_overlay_icon)
 		sleeved = initial(sleeved)
 
 	return TRUE
 
 /obj/item/clothing/neck/roguetown/psicross/attack_right(mob/user)
-	..()
-	user.emote("pray")
-	return
+	if(!ismob(loc))
+		return ..()
+
+	wrist_display = !wrist_display
+	to_chat(user, span_info("You adjust \the [src] to [wrist_display ? "display on your wrists" : "display around your neck"]."))
+	if(wrist_display)
+		mob_overlay_icon = 'icons/roguetown/clothing/onmob/wrists.dmi'
+		sleeved = 'icons/roguetown/clothing/onmob/wrists.dmi'
+	else
+		mob_overlay_icon = initial(mob_overlay_icon)
+		sleeved = initial(sleeved)
+
+	if(isliving(loc))
+		var/mob/living/L = loc
+		L.regenerate_clothes()
+	return ..()
 
 /obj/item/clothing/neck/roguetown/psicross/aalloy
 	name = "decrepit psicross"
@@ -476,6 +495,7 @@
 	icon_state = "psycross_a"
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_PLATE
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy
 	name = "decrepit zcross"
@@ -483,6 +503,7 @@
 	icon_state = "zcross_a"
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_PLATE
 	resistance_flags = FIRE_PROOF
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/iron
@@ -938,6 +959,7 @@
 	desc = "The edge of reality, though unknown to many, favors Her acolytes above all else. This avantyne neckguard wards off the unenlightened's flailing."
 	color = "#c1b18d"
 	chunkcolor = "#363030"
+	material_category = ARMOR_MAT_PLATE
 
 /obj/item/clothing/neck/roguetown/bevor/zizo/Initialize()
 	. = ..()
@@ -1041,3 +1063,72 @@
 		REMOVE_TRAIT(user, TRAIT_STRENGTH_UNCAPPED, TRAIT_GENERIC)
 		active_item = FALSE
 	return
+
+/obj/item/clothing/neck/roguetown/collar/prisoner
+	name = "castifico collar"
+	icon_state = "castifico_collar"
+	item_state = "castifico_collar"
+	desc = "A metal collar that seals around the neck, making it impossible to remove. It seems to be enchanted with some kind of vile magic..."
+	var/active_item
+	var/bounty_amount
+	resistance_flags = FIRE_PROOF
+	slot_flags = ITEM_SLOT_NECK
+	body_parts_covered = NONE //it's not armor
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("This cursed collar enforces pacifism and blocks spellcasting.")
+	. += span_info("It will automatically release after a period of penance (5-20 minutes based on bounty amount).")
+	. += span_info("It can only be removed early by a LIBERTAS machine.")
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/dropped(mob/living/carbon/human/user)
+	. = ..()
+	REMOVE_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
+	REMOVE_TRAIT(user, TRAIT_SPELLCOCKBLOCK, "castificocollar")
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/proc/timerup(mob/living/carbon/human/user)
+	REMOVE_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
+	REMOVE_TRAIT(user, TRAIT_SPELLCOCKBLOCK, "castificocollar")
+	visible_message(span_warning("The castifico collar opens with a click, falling off of [user]'s neck and clambering apart on the ground, their penance complete."))
+	say("YOUR PENANCE IS COMPLETE.")
+	for(var/name in GLOB.outlawed_players)
+		if(user.real_name == name)
+			GLOB.outlawed_players -= user.real_name
+			priority_announce("[user.real_name] has completed their penance. Justice has been served in the eyes of Ravox.", "PENANCE", 'sound/misc/bell.ogg')
+	playsound(src.loc, pick('sound/items/pickgood1.ogg','sound/items/pickgood2.ogg'), 5, TRUE)
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/equipped(mob/living/user, slot)
+	. = ..()
+	if(active_item)
+		return
+	else if(slot == SLOT_NECK)
+		active_item = TRUE
+		to_chat(user, span_warning("This accursed collar pacifies me!"))
+		ADD_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
+		ADD_TRAIT(user, TRAIT_SPELLCOCKBLOCK, "castificocollar")
+		if(HAS_TRAIT(user, TRAIT_RITUALIST))
+			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		var/timer = 5 MINUTES //Base timer is 5 minutes, additional time added per bounty amount
+
+		if(bounty_amount >= 10)
+			var/additional_time = bounty_amount * 0.1 // 10 mammon = 1 minute
+			additional_time = round(additional_time)
+			timer += additional_time MINUTES
+			timer = clamp(timer, 0 MINUTES, 20 MINUTES)
+
+		var/timer_minutes = timer / 600
+
+		addtimer(CALLBACK(src, PROC_REF(timerup), user), timer)
+		say("YOUR PENANCE WILL BE COMPLETE IN [timer_minutes] MINUTES.")
+	return
+

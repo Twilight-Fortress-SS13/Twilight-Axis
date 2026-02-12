@@ -142,6 +142,20 @@
 	undead_hater = TRUE
 	crafting_recipes = list()
 	worshippers = "Разбойники, наёмники, революционеры, свободолюбивый люд."
+	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison									= CLERIC_ORI,
+					/obj/effect/proc_holder/spell/invoked/appraise										= CLERIC_ORI,
+					/obj/effect/proc_holder/spell/self/twilight_shacklebreaker							= CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/twilight_weightofchains						= CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/transact										= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/twilight_equalize								= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/lesser_heal 									= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/blood_heal									= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/twilight_churnwealthy							= CLERIC_T2,
+					/obj/effect/proc_holder/spell/self/twilight_amongus									= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/projectile/twilight_crownfortheking			= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/twilight_commieflag							= CLERIC_T3,
+					/obj/effect/proc_holder/spell/self/wildshape_twilight_wingsoffreedom				= CLERIC_T4,
+	)
 	confess_lines = list(
 		"ВСЕ ТИРАНЫ УМРУТ В ОДИНОЧЕСТВЕ!",
 		"ПУТЬ К ПРОЦВЕТАНИЮ ЛЕЖИТ ЧЕРЕЗ РАЗДОР!",
@@ -225,8 +239,10 @@
 			to_chat(follower, span_danger("That acursed cross interupts my prayers!"))
 			return FALSE
 	for(var/mob/living/carbon/human/comrade in view(4, get_turf(follower)))
-		if(istype(comrade.patron, /datum/patron/inhumen/matthios))
+		if(istype(comrade.patron, /datum/patron/inhumen/matthios) && comrade != follower)
 			return TRUE
+	for(var/obj/structure/ritualcircle/matthios in view(1, get_turf(follower)))
+		return TRUE
 	to_chat(follower, span_danger("Matthios will hear any prayer I offer, so long as I have at least one comrade near me!"))
 	return FALSE
 

@@ -1,0 +1,6 @@
+author: "UEDCommander"
+delete-after: True
+changes:
+  - rscadd: "Полностью обновлен набор чудес для Маттиоса"
+  - image: "Новые иконки для всех чудес Маттиоса, старых и новых"
+  - bugfix: "Исправлены ограничения молитв маттиоситов с Devout Follower"

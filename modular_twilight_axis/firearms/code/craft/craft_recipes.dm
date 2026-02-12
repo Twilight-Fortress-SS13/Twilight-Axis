@@ -52,6 +52,14 @@
 	verbage = "fixes"
 	craftdiff = 0
 
+/datum/crafting_recipe/roguetown/survival/twilight_barker_light
+	name = "barker with lamptern"
+	reqs = list(/obj/item/gun/ballistic/twilight_firearm/barker = 1, /obj/item/flashlight/flare/torch/lantern = 1)
+	result = /obj/item/gun/ballistic/twilight_firearm/barker/barker_light
+	verbage_simple = "fix"
+	verbage = "fixes"
+	craftdiff = 0
+
 /datum/crafting_recipe/roguetown/leather/container/belt/twilight_holsterbelt
     name = "holster belt (2 leather, 2 fibers; APPRENTICE)"
     result = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt

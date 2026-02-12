@@ -600,15 +600,15 @@
 		if(1)
 			day = "Moon's dae."
 		if(2)
-			day = "Tiw's dae."
+			day = "Truce's dae."
 		if(3)
 			day = "Wedding's dae."
 		if(4)
-			day = "Toll's dae."
+			day = "Thunder's dae."
 		if(5)
-			day = "Freyja's dae."
+			day = "Feast's dae."
 		if(6)
-			day = "Saturn's dae."
+			day = "Psydon's dae."
 		if(7)
 			day = "Sun's dae."
 	. += "Oh no, it's [station_time_timestamp("hh:mm")] on a [day]"
@@ -676,15 +676,15 @@
 		if(1)
 			day = "Moon's dae."
 		if(2)
-			day = "Tiw's dae."
+			day = "Truce's dae."
 		if(3)
 			day = "Wedding's dae."
 		if(4)
-			day = "Toll's dae."
+			day = "Thunder's dae."
 		if(5)
-			day = "Freyja's dae."
+			day = "Feast's dae."
 		if(6)
-			day = "Saturn's dae."
+			day = "Psydon's dae."
 		if(7)
 			day = "Sun's dae."
 	. += "Oh no, it's [station_time_timestamp("hh:mm")] on a [day]"
@@ -1355,6 +1355,7 @@
 						thebride.adjust_triumphs(1)
 						//Bite the apple first if you want to be the groom.
 						priority_announce("[thegroom.real_name] has married [bridefirst]!", title = "Holy Union!", sound = 'sound/misc/bell.ogg')
+						record_round_statistic(STATS_MARRIAGES_MADE)
 						marriage = TRUE
 						qdel(A)
 

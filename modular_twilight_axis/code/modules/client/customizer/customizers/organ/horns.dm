@@ -4,8 +4,8 @@
 
 /datum/customizer_choice/organ/horns/humanoid/aura
 	name = "Horns"
-	organ_type = /obj/item/organ/horns
-	generic_random_pick = TRUE
+	organ_type = /obj/item/organ/horns/aura
 	sprite_accessories = list(
 		/datum/sprite_accessory/horns/dragonhorn,
+		/datum/sprite_accessory/horns/dragonfaceguard
 		)

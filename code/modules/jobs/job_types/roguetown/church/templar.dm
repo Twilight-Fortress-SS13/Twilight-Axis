@@ -71,6 +71,7 @@
 	neck = /obj/item/clothing/neck/roguetown/psicross/undivided
 	cloak = /obj/item/clothing/cloak/tabard/crusader/tief
 	id = /obj/item/clothing/ring/silver
+	gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
 	backl = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
 		/obj/item/ritechalk = 1,
@@ -89,21 +90,21 @@
 						cloak = /obj/item/clothing/cloak/templar/undivided
 		if(/datum/patron/divine/astrata)
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata
-			cloak = /obj/item/clothing/cloak/tabard/crusader/astrata
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/astrata
 		if(/datum/patron/divine/abyssor)
 			neck = /obj/item/clothing/neck/roguetown/psicross/abyssor
-			cloak = /obj/item/clothing/cloak/tabard/abyssortabard
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/abyssor
 		if(/datum/patron/divine/xylix)
 			neck = /obj/item/clothing/neck/roguetown/psicross/xylix
 			cloak = /obj/item/clothing/cloak/templar/xylixian
 			H.cmode_music = 'sound/music/combat_jester.ogg'
 		if(/datum/patron/divine/dendor)
 			neck = /obj/item/clothing/neck/roguetown/psicross/dendor
-			cloak = /obj/item/clothing/cloak/tabard/devotee/dendor // There's no unique templar-tabard for dendorite templar
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/dendor
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
 		if(/datum/patron/divine/necra)
 			neck = /obj/item/clothing/neck/roguetown/psicross/necra
-			cloak = /obj/item/clothing/cloak/templar/necran
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/necra
 		if(/datum/patron/divine/pestra)
 			neck = /obj/item/clothing/neck/roguetown/psicross/pestra
 			cloak = /obj/item/clothing/cloak/templar/pestran
@@ -112,7 +113,7 @@
 			cloak = /obj/item/clothing/cloak/templar/eoran
 		if(/datum/patron/divine/noc)
 			neck = /obj/item/clothing/neck/roguetown/psicross/noc
-			cloak = /obj/item/clothing/cloak/tabard/crusader/noc
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc
 		if(/datum/patron/divine/ravox)
 			neck = /obj/item/clothing/neck/roguetown/psicross/ravox
 			cloak = /obj/item/clothing/cloak/templar/ravox
@@ -147,7 +148,7 @@
 	var/weapon_choice = input(H,"Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 	switch(weapon_choice)
 		if("Discipline - Unarmed")
-			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_EXPERT, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, 5, TRUE)
 			gloves = /obj/item/clothing/gloves/roguetown/bandages/pugilist
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Katar")
@@ -210,12 +211,12 @@
 		H.adjust_skillrank(/datum/skill/craft/armorsmithing, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/craft/weaponsmithing, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
-	if(H.patron?.type == /datum/patron/divine/ravox)
-		H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
 	if(H.patron?.type == /datum/patron/divine/xylix)
 		H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/misc/music, 1, TRUE)
+	if(H.patron?.type == /datum/patron/divine/ravox)
+		H.adjust_skillrank_up_to(/datum/skill/misc/athletics, 5, TRUE)
 	// -- End of section for god specific bonuses --
 
 /datum/advclass/templar/crusader
@@ -313,7 +314,7 @@
 		if(/datum/patron/divine/noc)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/noc
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/nochelm
-			cloak = /obj/item/clothing/cloak/tabard/crusader/noc
+			cloak = /obj/item/clothing/cloak/tabard/devotee/noc
 		if(/datum/patron/divine/ravox)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/ravox
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/ravoxhelm
@@ -354,6 +355,8 @@
 			weapons += "Swift End"
 		if(/datum/patron/divine/pestra)
 			weapons += "Plaguebringer Sickles"
+			weapons += "Lance of Boils"
+			weapons += "Cleansing Edge"
 		if(/datum/patron/divine/malum)
 			weapons += "Forgefiend"
 			weapons += "Kargrund Maul"
@@ -420,6 +423,15 @@
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle(H))
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle(H))
 			H.adjust_skillrank_up_to(/datum/skill/combat/knives, 4, TRUE) // actually makes them usable for the templar.
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
+		if("Lance of Boils")
+			H.put_in_hands(new /obj/item/rogueweapon/halberd/pestran(H))
+			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
+		if("Cleansing Edge")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/long/kriegmesser/pestran(H))
+			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Forgefiend")
 			H.put_in_hands(new /obj/item/rogueweapon/greatsword/grenz/flamberge/malum(H))

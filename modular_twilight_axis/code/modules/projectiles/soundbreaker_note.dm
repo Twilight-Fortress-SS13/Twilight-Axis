@@ -13,9 +13,14 @@
 	damage_type = BRUTE
 	var/zone = BODY_ZONE_CHEST
 	var/hit_processed = FALSE
+	var/datum/component/combo_core/soundbreaker/component
 
 /obj/projectile/soundbreaker_note/Initialize(mapload, mob/living/source, _dmg_mult, _dmg_type, _zone)
 	. = ..()
+	if(!source || QDELETED(source))
+		qdel(src)
+		return
+
 	owner = source
 	if(_dmg_mult)
 		damage_mult = _dmg_mult
@@ -24,16 +29,14 @@
 	if(_zone)
 		zone = _zone
 
-/obj/projectile/soundbreaker_note/Bump(atom/A)
-	if(hit_processed)
-		return
-	return ..()
-
 /obj/projectile/soundbreaker_note/on_hit(atom/target, blocked = FALSE)
+	if(!isliving(target) || !owner || QDELETED(owner))
+		return
+
 	if(hit_processed)
 		return
-	hit_processed = TRUE
 
+	hit_processed = TRUE
 	. = ..()
 
 	if(blocked)
@@ -46,6 +49,14 @@
 	STOP_PROCESSING(SSprojectiles, src)
 
 	var/mob/living/L = target
-	SEND_SIGNAL(owner, COMSIG_SOUNDBREAKER_NOTE_PROJECTILE_HIT, L, damage_mult, damage_type, zone)
+	if(component && !QDELETED(component))
+		component.OnNoteProjectileHit(owner, L, damage_mult, damage_type, zone)
 
 	qdel(src)
+
+/obj/projectile/soundbreaker_note/Destroy()
+	hit_processed = TRUE
+	paused = TRUE
+	fired = FALSE
+	STOP_PROCESSING(SSprojectiles, src)
+	return ..()

@@ -12,3 +12,9 @@
 
 /obj/item/rogueweapon/greatsword/bsword/psy/relic
 	desc = "Psydonian prayers and Tennite smiths, working as one to craft a weapon fit for a Golden Crusader. A heavy and large blade, favored by Archangel Uriel, to lay waste to those who threaten His flock. The crossguard's psycross reflects even the faintest of Noc's light. You're the light - show them the way."
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/easttats
+	desc = "A mystic style of tattoos adopted by the Ruma Clan, emulating a practice performed by warrior monks that once made the Clan so valuable to the Shogunate. They are your way of identifying fellow clan members, an sign of companionship and secretive brotherhood. These are styled into the shape of clouds, created by a mystical ink which shifts and moves in ripples like a pond to harden where your skin is struck. It's movement causes you to shudder."
+
+/obj/item/rogueweapon/greatsword/bsword/psy/unforgotten
+	desc = "It is said that this weapon once belonged to one Magister Laruelle, an Ordinator who led an expedition into the Underdark, intending to root out the Archenemy's evil. It is said that he held on for seven daes and seven nights against darksteel-clad heretics before Psydon acknowledged his endurance. Nothing but his blade remained - his psycross wrapped around its hilt in rememberance."

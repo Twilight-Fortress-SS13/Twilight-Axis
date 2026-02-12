@@ -243,6 +243,7 @@
 		hitpush = FALSE
 		skipcatch = TRUE
 		blocked = TRUE
+		return TRUE
 
 	//Thrown item deflection -- this RETURNS if successful!
 	var/obj/item/W = get_active_held_item()
@@ -257,7 +258,7 @@
 				I.get_deflected(src)
 				do_sparks(2, TRUE, current_turf)
 				visible_message(span_warning("[src] deflects \the [I]!"))
-				return
+				return TRUE
 
 	if(I && !blocked)
 		if(((throwingdatum ? throwingdatum.speed : I.throw_speed) >= EMBED_THROWSPEED_THRESHOLD) || I.embedding.embedded_ignore_throwspeed_threshold)
@@ -270,7 +271,10 @@
 //					visible_message("<span class='danger'>[I] embeds itself in [src]'s [L.name]!</span>","<span class='danger'>[I] embeds itself in my [L.name]!</span>")
 				hitpush = FALSE
 				skipcatch = TRUE //can't catch the now embedded item
-
+				return TRUE
+	if(blocked)
+		return TRUE
+	
 	return ..()
 
 /mob/living/carbon/human/grippedby(mob/living/user, instant = FALSE)
