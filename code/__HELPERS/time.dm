@@ -4,6 +4,15 @@ GLOBAL_LIST_INIT(time_change_tips, world.file2list("strings/rt/timechangetips.tx
 /proc/worldtime2text()
 	return gameTimestamp("hh:mm:ss", world.time)
 
+/// Probability helper for tick-based effects using delta_time in seconds.
+/proc/DT_PROB(chance, delta_time)
+	if(chance <= 0 || delta_time <= 0)
+		return FALSE
+	var/adjusted = chance * delta_time
+	if(adjusted >= 100)
+		return TRUE
+	return prob(adjusted)
+
 /proc/time_stamp(format = "hh:mm:ss", show_ds)
 	var/time_string = time2text(world.timeofday, format)
 	return show_ds ? "[time_string]:[world.timeofday % 10]" : time_string

@@ -19,6 +19,27 @@
 /mob/proc/Dizzy(amount)
 	dizziness = max(dizziness,amount,0)
 
+/// Add confusion to a mob, clamped to zero minimum.
+/mob/proc/add_confusion(amount)
+	if(!isliving(src))
+		return
+	var/mob/living/L = src
+	L.confused = max(L.confused + amount, 0)
+
+/// Set the confusion of a mob to a passed in amount.
+/mob/proc/set_confusion(amount)
+	if(!isliving(src))
+		return
+	var/mob/living/L = src
+	L.confused = max(amount, 0)
+
+/// Get the current confusion amount.
+/mob/proc/get_confusion()
+	if(!isliving(src))
+		return 0
+	var/mob/living/L = src
+	return L.confused
+
 ///FOrce set the dizzyness of a mob
 /mob/proc/set_dizziness(amount)
 	dizziness = max(amount, 0)

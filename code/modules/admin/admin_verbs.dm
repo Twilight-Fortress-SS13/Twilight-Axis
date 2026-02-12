@@ -137,6 +137,8 @@ GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/drop_bomb,
 	/client/proc/set_dynex_scale,
 	/client/proc/drop_dynex_bomb,
+	/client/proc/infect,
+	/client/proc/infect_target,
 	/client/proc/cinematic,
 //	/client/proc/cmd_admin_add_freeform_ai_law,
 	/client/proc/object_say,
