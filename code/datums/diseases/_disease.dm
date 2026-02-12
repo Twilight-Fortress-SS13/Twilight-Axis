@@ -206,3 +206,5 @@
 			return 6
 		if(DISEASE_SEVERITY_BIOHAZARD)
 			return 7
+
+#include "fluroguetest.dm"

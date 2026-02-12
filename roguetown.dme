@@ -489,7 +489,6 @@
 #include "code\datums\dna.dm"
 #include "code\datums\diseases\_disease.dm"
 #include "code\datums\diseases\_MobProcs.dm"
-#include "code\datums\diseases\fluroguetest.dm"
 #include "code\datums\dog_fashion.dm"
 #include "code\datums\embedding_behavior.dm"
 #include "code\datums\emotes.dm"
