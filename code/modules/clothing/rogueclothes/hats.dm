@@ -44,17 +44,6 @@
 	smeltresult = /obj/item/ingot/steel
 	smelt_bar_num = 2
 
-/obj/item/clothing/head/roguetown/helmet/heavy/pestran/equipped(mob/user, slot)
-	..()
-	if(slot == SLOT_HEAD)
-		ADD_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
-		to_chat(user, span_notice("The pestran helmet protects me from plague contact transmission."))
-
-/obj/item/clothing/head/roguetown/helmet/heavy/pestran/dropped(mob/user, slot)
-	..()
-	if(slot == SLOT_HEAD)
-		REMOVE_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
-		to_chat(user, span_notice("I remove the pestran helmet's protection."))
 
 /obj/item/clothing/head/roguetown/helmet/heavy/eoran
 	name = "eoran helmet"

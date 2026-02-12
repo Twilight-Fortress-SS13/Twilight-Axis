@@ -496,16 +496,6 @@
 	salvage_result = /obj/item/natural/hide/cured
 	salvage_amount = 1
 
-/obj/item/clothing/mask/rogue/physician/equipped(mob/user, slot)
-	..()
-	if(slot == SLOT_WEAR_MASK)
-		ADD_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
-		to_chat(user, span_notice("The physician's mask protects me from plague contact transmission."))
-
-/obj/item/clothing/mask/rogue/physician/dropped(mob/user)
-	..()
-	REMOVE_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
-	to_chat(user, span_notice("I remove the physician's mask protection."))
 
 /obj/item/clothing/mask/rogue/skullmask
 	name = "skull mask"
@@ -620,14 +610,3 @@
 	icon_state = "docmask"
 	item_state = "docmask"
 	salvage_result = /obj/item/natural/bone
-
-/obj/item/clothing/mask/rogue/courtphysician/equipped(mob/user, slot)
-	..()
-	if(slot == SLOT_WEAR_MASK)
-		ADD_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
-		to_chat(user, span_notice("The head physician's mask protects me from plague contact transmission."))
-
-/obj/item/clothing/mask/rogue/courtphysician/dropped(mob/user)
-	..()
-	REMOVE_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
-	to_chat(user, span_notice("I remove the head physician's mask protection."))

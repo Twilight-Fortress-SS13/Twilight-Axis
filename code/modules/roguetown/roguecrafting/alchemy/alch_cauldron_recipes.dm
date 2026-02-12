@@ -115,8 +115,4 @@
 	skill_required = SKILL_LEVEL_MASTER
 	output_reagents =list(/datum/reagent/fire_resist = 30)
 
-/datum/alch_cauldron_recipe/plague_cure
-	name = "Flu Cure"
-	smells_like = "clean rain"
-	skill_required = SKILL_LEVEL_MASTER
-	output_reagents = list(/datum/reagent/medicine/flu_cure = 20)
+// Flu cure recipe moved to modular_twilight_axis/code/modules/roguetown/roguecrafting/alchemy/flu_cure_recipe.dm
