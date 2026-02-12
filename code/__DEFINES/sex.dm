@@ -135,6 +135,12 @@ GLOBAL_LIST_EMPTY(locked_sex_objects)
 	"Huge" = BELLY_SIZE_HUGE,\
 	)
 
+#define BELLY_SIZES_BY_NAME_CUSTOMIZER list(\
+	"Flat" = BELLY_SIZE_MIN,\
+	"Little" = BELLY_SIZE_LITTLE,\
+	"Noticable" = BELLY_SIZE_BIG,\
+	)
+
 #define PENIS_TYPE_PLAIN 1
 #define PENIS_TYPE_KNOTTED 2
 #define PENIS_TYPE_EQUINE 3
