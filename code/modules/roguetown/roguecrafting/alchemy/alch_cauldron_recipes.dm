@@ -114,3 +114,9 @@
 	smells_like = "authority"
 	skill_required = SKILL_LEVEL_MASTER
 	output_reagents =list(/datum/reagent/fire_resist = 30)
+
+/datum/alch_cauldron_recipe/plague_cure
+	name = "Plague Cure"
+	smells_like = "clean rain"
+	skill_required = SKILL_LEVEL_MASTER
+	output_reagents = list(/datum/reagent/medicine/fluroguetest_cure = 20)

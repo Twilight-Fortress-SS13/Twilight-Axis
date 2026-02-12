@@ -228,6 +228,7 @@
 	name = "sui dust"
 	desc = "A long mix of herbs resulting in a special dust. For you. Use it while held."
 	icon_state = "transisdust"
+	major_pot = /datum/alch_cauldron_recipe/plague_cure
 
 /obj/item/alch/transisdust/attack_self(mob/living/user)
 	..()
@@ -451,6 +452,7 @@
 	muteinmouth = FALSE
 	alternate_worn_layer  = 8.9 //On top of helmet
 	mill_result = /obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals
+	med_pot = /datum/alch_cauldron_recipe/plague_cure
 
 /obj/item/alch/rosa/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
