@@ -36,8 +36,60 @@
 	max_integrity = 200
 	var/mob/living/last_bleed_target
 	var/last_bleed_rate = 0
+	var/selected_disease_type = /datum/disease/fluroguetest
+	var/selected_disease_name = "Fluroguetest"
+	COOLDOWN_DECLARE(disease_select_cooldown)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/verb/select_disease()
+	set name = "Select Disease"
+	set category = null
+	set src in usr
+	if(usr?.get_active_held_item() != src)
+		to_chat(usr, span_warning("I need to be holding [src] to set its disease."))
+		return
+	choose_disease(usr)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/rmb_self(mob/user)
+	if(user?.get_active_held_item() != src)
+		return
+	choose_disease(user)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/proc/choose_disease(mob/user)
+	if(!user || !isliving(user))
+		return
+	if(!HAS_TRAIT(user, TRAIT_PLAGUEBRINGER_WHISPER))
+		to_chat(user, span_warning("The blade does not respond to me."))
+		return
+	if(COOLDOWN_STARTED(src, disease_select_cooldown) && !COOLDOWN_FINISHED(src, disease_select_cooldown))
+		var/time_left = COOLDOWN_TIMELEFT(src, disease_select_cooldown)
+		var/seconds_left = round(time_left / 10)
+		to_chat(user, span_warning("The blade is silent. Try again in [seconds_left] seconds."))
+		return
+	var/list/choices = list()
+	for(var/disease_path in subtypesof(/datum/disease))
+		if(disease_path == /datum/disease)
+			continue
+		var/datum/disease/D = new disease_path()
+		var/display_name = D.name
+		qdel(D)
+		if(!display_name || display_name == "No disease")
+			continue
+		choices[display_name] = disease_path
+	if(!length(choices))
+		to_chat(user, span_warning("No diseases available."))
+		return
+	var/choice = input(user, "Choose a disease", "Ritual Plague Dagger") as null|anything in sortList(choices)
+	if(!choice)
+		return
+	selected_disease_name = "[choice]"
+	selected_disease_type = choices[choice]
+	COOLDOWN_START(src, disease_select_cooldown, 10 MINUTES)
+	to_chat(user, span_notice("The dagger will now infect with [selected_disease_name]."))
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/pre_attack(atom/target, mob/living/user, params)
+	if(user && !HAS_TRAIT(user, TRAIT_PLAGUEBRINGER_WHISPER))
+		to_chat(user, span_warning("The blade refuses my grip."))
+		return TRUE
 	if(istype(target, /mob/living))
 		var/mob/living/L = target
 		last_bleed_target = L
@@ -47,20 +99,19 @@
 		last_bleed_rate = 0
 	return ..()
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+/obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/afterattack(atom/target, mob/user, proximity, click_parameters)
 	. = ..()
-	if(!proximity_flag)
+	if(!user)
 		return
-	if(!istype(target, /mob/living))
+	var/disease_path = selected_disease_type ? selected_disease_type : /datum/disease/fluroguetest
+	if(!disease_path)
+		return
+	if(!isliving(target))
 		return
 	var/mob/living/L = target
-	if(L != last_bleed_target)
-		return
-	var/after_rate = L.get_bleed_rate()
-	if(after_rate > last_bleed_rate)
-		L.ForceContractDisease(new /datum/disease/fluroguetest(), FALSE, TRUE)
-	last_bleed_target = null
-	last_bleed_rate = 0
+	if(rand(1, 100) <= 30)
+		to_chat(user, span_notice("The blade spreads [selected_disease_name]!"))
+		L.ForceContractDisease(new disease_path(), FALSE, TRUE)
 
 /obj/item/rogueweapon/huntingknife/throwingknife/steel/noc
 	name = "twilight fang"
