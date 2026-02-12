@@ -27,6 +27,41 @@
 	force = 22 // 10% - This is a 8 clickCD weapon
 	max_integrity = 200
 
+/obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague
+	name = "Ritual Plague Dagger"
+	desc = "A jagged, ceremonial blade wrapped in tattered purple ribbons. The steel has a sickly, iridescent sheen, and the edge drips with a faint, viscous residue. Merely holding it makes your skin crawl with an unnatural itch."
+	icon_state = "devilsknife"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	force = 22
+	max_integrity = 200
+	var/mob/living/last_bleed_target
+	var/last_bleed_rate = 0
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/pre_attack(atom/target, mob/living/user, params)
+	if(istype(target, /mob/living))
+		var/mob/living/L = target
+		last_bleed_target = L
+		last_bleed_rate = L.get_bleed_rate()
+	else
+		last_bleed_target = null
+		last_bleed_rate = 0
+	return ..()
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+	. = ..()
+	if(!proximity_flag)
+		return
+	if(!istype(target, /mob/living))
+		return
+	var/mob/living/L = target
+	if(L != last_bleed_target)
+		return
+	var/after_rate = L.get_bleed_rate()
+	if(after_rate > last_bleed_rate)
+		L.ForceContractDisease(new /datum/disease/fluroguetest(), FALSE, TRUE)
+	last_bleed_target = null
+	last_bleed_rate = 0
+
 /obj/item/rogueweapon/huntingknife/throwingknife/steel/noc
 	name = "twilight fang"
 	desc = "Large tossblade meant for both fighting and throwing. Perfect for striking from the shadows of Noc."
