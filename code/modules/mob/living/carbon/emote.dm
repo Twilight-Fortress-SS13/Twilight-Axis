@@ -65,7 +65,7 @@
 	key = "scratch"
 	key_third_person = "scratches"
 	message = "scratches."
-	mob_type_allowed_typecache = list(/mob/living/carbon/monkey, /mob/living/carbon/alien)
+	mob_type_allowed_typecache = list(/mob/living/carbon/monkey, /mob/living/carbon/alien, /mob/living/carbon/human)
 	restraint_check = TRUE
 
 /datum/emote/living/carbon/screech

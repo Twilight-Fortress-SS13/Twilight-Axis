@@ -48,12 +48,18 @@
 /mob/living/proc/SpreadContactDiseasesOnContact(mob/living/carbon/target, chance = 0)
 	if(!target || !length(diseases))
 		return FALSE
-	if(chance > 0 && !prob(chance))
-		return FALSE
 	var/contact_flags = (DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN)
 	for(var/thing in diseases)
 		var/datum/disease/D = thing
 		if(!(D.spread_flags & contact_flags))
+			continue
+		var/spread_chance = chance
+		// Per-disease contact spread chances
+		if(istype(D, /datum/disease/flu))
+			spread_chance = 30
+		if(istype(D, /datum/disease/ash_blight))
+			spread_chance = 50
+		if(spread_chance > 0 && !prob(spread_chance))
 			continue
 		target.ForceContractDisease(D, TRUE, FALSE)
 	return TRUE

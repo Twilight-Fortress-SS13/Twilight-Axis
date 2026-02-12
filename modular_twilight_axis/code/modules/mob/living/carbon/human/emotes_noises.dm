@@ -148,3 +148,7 @@
 /datum/emote/living/emote_lizard_thump
 	key_third_person = "топает!"
 	message = "топает!"
+
+/datum/emote/living/carbon/scratch
+	key_third_person = "чешется"
+	message = "чешется."

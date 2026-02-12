@@ -207,4 +207,4 @@
 		if(DISEASE_SEVERITY_BIOHAZARD)
 			return 7
 
-#include "fluroguetest.dm"
+// Flu disease is now defined in code/datums/datum.dm
