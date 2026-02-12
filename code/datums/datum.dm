@@ -265,3 +265,358 @@
 /// Returns whether a type is an abstract type.
 /proc/is_abstract(datum/datum_type)
 	return (initial(datum_type.abstract_type) == datum_type)
+
+// ============================================================================ //
+// DISEASE SYSTEM - Contact-based transmission with probabilistic infection   //
+// ============================================================================ //
+// Disease System Defines (from code/__DEFINES/diseases.dm)
+#define DISEASE_LIMIT 1
+#define VIRUS_SYMPTOM_LIMIT 6
+
+//Visibility Flags
+#define HIDDEN_SCANNER (1<<0)
+#define HIDDEN_PANDEMIC (1<<1)
+
+//Disease Flags
+#define CURABLE (1<<0)
+#define CAN_CARRY (1<<1)
+#define CAN_RESIST (1<<2)
+
+//Spread Flags
+#define DISEASE_SPREAD_SPECIAL (1<<0)
+#define DISEASE_SPREAD_NON_CONTAGIOUS (1<<1)
+#define DISEASE_SPREAD_BLOOD (1<<2)
+#define DISEASE_SPREAD_CONTACT_FLUIDS (1<<3)
+#define DISEASE_SPREAD_CONTACT_SKIN (1<<4)
+#define DISEASE_SPREAD_AIRBORNE (1<<5)
+
+//Severity Defines
+/// Diseases that buff, heal, or at least do nothing at all
+#define DISEASE_SEVERITY_POSITIVE "Positive"
+/// Diseases that may have annoying effects, but nothing disruptive (sneezing)
+#define DISEASE_SEVERITY_NONTHREAT "Harmless"
+/// Diseases that can annoy in concrete ways (dizziness)
+#define DISEASE_SEVERITY_MINOR "Minor"
+/// Diseases that can do minor harm, or severe annoyance (vomit)
+#define DISEASE_SEVERITY_MEDIUM "Medium"
+/// Diseases that can do significant harm, or severe disruption (brainrot)
+#define DISEASE_SEVERITY_HARMFUL "Harmful"
+/// Diseases that can kill or maim if left untreated (flesh eating, blindness)
+#define DISEASE_SEVERITY_DANGEROUS "Dangerous"
+/// Diseases that can quickly kill an unprepared victim (fungal tb, gbs)
+#define DISEASE_SEVERITY_BIOHAZARD "BIOHAZARD"
+
+/datum/disease
+	//Flags
+	var/visibility_flags = 0
+	var/disease_flags = CURABLE|CAN_CARRY|CAN_RESIST
+	var/spread_flags = DISEASE_SPREAD_AIRBORNE | DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN
+
+	//Fluff
+	var/form = "Virus"
+	var/name = "No disease"
+	var/desc = ""
+	var/agent = "some microbes"
+	var/spread_text = ""
+	var/cure_text = ""
+
+	//Stages
+	var/stage = 1
+	var/max_stages = 0
+	var/stage_prob = 2
+
+	//Other
+	var/list/viable_mobtypes = list()
+	var/mob/living/carbon/affected_mob = null
+	var/list/cures = list()
+	var/infectivity = 41
+	var/cure_chance = 4
+	var/carrier = FALSE
+	var/bypasses_immunity = FALSE
+	var/permeability_mod = 1
+	var/severity = DISEASE_SEVERITY_NONTHREAT
+	var/list/required_organs = list()
+	var/needs_all_cures = TRUE
+	var/list/strain_data = list()
+	var/infectable_biotypes = MOB_ORGANIC
+	var/process_dead = FALSE
+	var/copy_type = null
+
+/datum/disease/Destroy()
+	. = ..()
+	if(affected_mob)
+		remove_disease()
+	// Note: SSdisease tracking removed due to compile-time ordering
+
+/datum/disease/proc/try_infect(mob/living/infectee, make_copy = TRUE)
+	infect(infectee, make_copy)
+	return TRUE
+
+/datum/disease/proc/infect(mob/living/infectee, make_copy = TRUE)
+	var/datum/disease/D = make_copy ? Copy() : src
+	LAZYADD(infectee.diseases, D)
+	D.affected_mob = infectee
+	// Note: SSdisease tracking removed due to compile-time ordering
+	D.after_add()
+	var/turf/source_turf = get_turf(infectee)
+	log_virus("[key_name(infectee)] was infected by virus: [src.admin_details()] at [loc_name(source_turf)]")
+
+/datum/disease/proc/admin_details()
+	return "[src.name] : [src.type]"
+
+/datum/disease/proc/stage_act(delta_time, times_fired)
+	if(has_cure())
+		if(DT_PROB(cure_chance, delta_time))
+			update_stage(max(stage - 1, 1))
+		if(disease_flags & CURABLE && DT_PROB(cure_chance, delta_time))
+			cure()
+			return FALSE
+	else if(DT_PROB(stage_prob, delta_time))
+		update_stage(min(stage + 1, max_stages))
+	return !carrier
+
+/datum/disease/proc/update_stage(new_stage)
+	stage = new_stage
+
+/datum/disease/proc/has_cure()
+	if(!(disease_flags & CURABLE))
+		return FALSE
+	. = cures.len
+	for(var/C_id in cures)
+		if(!affected_mob.reagents.has_reagent(C_id))
+			.--
+	if(!. || (needs_all_cures && . < cures.len))
+		return FALSE
+
+/datum/disease/proc/spread(force_spread = 0)
+	if(!affected_mob)
+		return
+	if(!(spread_flags & DISEASE_SPREAD_AIRBORNE) && !force_spread)
+		return
+	if(affected_mob.satiety > 0 && prob(affected_mob.satiety/10))
+		return
+	var/spread_range = 2
+	if(force_spread)
+		spread_range = force_spread
+	var/turf/T = affected_mob.loc
+	if(istype(T))
+		for(var/mob/living/carbon/C in oview(spread_range, affected_mob))
+			var/turf/V = get_turf(C)
+			if(disease_air_spread_walk(T, V))
+				C.AirborneContractDisease(src, force_spread)
+
+/proc/disease_air_spread_walk(turf/start, turf/end)
+	if(!start || !end)
+		return FALSE
+	while(TRUE)
+		if(end == start)
+			return TRUE
+		var/turf/Temp = get_step_towards(end, start)
+		end = Temp
+
+/datum/disease/proc/cure(add_resistance = TRUE)
+	if(affected_mob)
+		if(add_resistance && (disease_flags & CAN_RESIST))
+			LAZYOR(affected_mob.disease_resistances, GetDiseaseID())
+	qdel(src)
+
+/datum/disease/proc/IsSame(datum/disease/D)
+	if(istype(D, type))
+		return TRUE
+	return FALSE
+
+/datum/disease/proc/Copy()
+	var/static/list/copy_vars = list("name", "visibility_flags", "disease_flags", "spread_flags", "form", "desc", "agent", "spread_text",
+									"cure_text", "max_stages", "stage_prob", "viable_mobtypes", "cures", "infectivity", "cure_chance",
+									"bypasses_immunity", "permeability_mod", "severity", "required_organs", "needs_all_cures", "strain_data",
+									"infectable_biotypes", "process_dead")
+	var/datum/disease/D = copy_type ? new copy_type() : new type()
+	for(var/V in copy_vars)
+		var/val = vars[V]
+		if(islist(val))
+			var/list/L = val
+			val = L.Copy()
+		D.vars[V] = val
+	return D
+
+/datum/disease/proc/after_add()
+	return
+
+/datum/disease/proc/GetDiseaseID()
+	return "[type]"
+
+/datum/disease/proc/remove_disease()
+	LAZYREMOVE(affected_mob.diseases, src)
+	affected_mob = null
+
+/datum/disease/proc/is_viable_mobtype(mob_type)
+	if(!length(viable_mobtypes))
+		return TRUE
+	for(var/viable_type in viable_mobtypes)
+		if(ispath(mob_type, viable_type))
+			return TRUE
+	if(!ispath(mob_type))
+		stack_trace("Non-path argument passed to mob_type variable: [mob_type]")
+	return FALSE
+
+/proc/get_disease_severity_value(severity)
+	switch(severity)
+		if(DISEASE_SEVERITY_POSITIVE)
+			return 1
+		if(DISEASE_SEVERITY_NONTHREAT)
+			return 2
+		if(DISEASE_SEVERITY_MINOR)
+			return 3
+		if(DISEASE_SEVERITY_MEDIUM)
+			return 4
+		if(DISEASE_SEVERITY_HARMFUL)
+			return 5
+		if(DISEASE_SEVERITY_DANGEROUS)
+			return 6
+		if(DISEASE_SEVERITY_BIOHAZARD)
+			return 7
+
+// MOB PROCS FOR DISEASE INFECTION AND TRANSMISSION
+
+/mob/living/proc/HasDisease(datum/disease/D)
+	for(var/thing in diseases)
+		var/datum/disease/DD = thing
+		if(D.IsSame(DD))
+			return TRUE
+	return FALSE
+
+/mob/living/proc/CanContractDisease(datum/disease/D)
+	if(stat == DEAD && !D.process_dead)
+		return FALSE
+	if(D.GetDiseaseID() in disease_resistances)
+		return FALSE
+	if(HasDisease(D))
+		return FALSE
+	if(!(D.infectable_biotypes & mob_biotypes))
+		return FALSE
+	if(!D.is_viable_mobtype(type))
+		return FALSE
+	return TRUE
+
+/mob/living/proc/ContactContractDisease(datum/disease/D)
+	if(!CanContractDisease(D))
+		return FALSE
+	D.try_infect(src)
+
+/mob/living/carbon/ContactContractDisease(datum/disease/D, target_zone)
+	if(!CanContractDisease(D))
+		return FALSE
+	if(prob(15/D.permeability_mod))
+		return
+	if(satiety > 0 && prob(satiety / 10))
+		return
+	D.try_infect(src)
+
+/mob/living/proc/SpreadContactDiseasesOnContact(mob/living/carbon/target, chance = 0)
+	if(!target || !length(diseases))
+		return FALSE
+	if(chance > 0 && !prob(chance))
+		return FALSE
+	var/contact_flags = (DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN)
+	for(var/thing in diseases)
+		var/datum/disease/D = thing
+		if(!(D.spread_flags & contact_flags))
+			continue
+		target.ForceContractDisease(D, TRUE, FALSE)
+	return TRUE
+
+/mob/living/proc/SpreadContactDiseasesOnGrab(mob/living/carbon/target, chance = 0)
+	return SpreadContactDiseasesOnContact(target, chance)
+
+/mob/living/proc/AirborneContractDisease(datum/disease/D, force_spread)
+	if(((D.spread_flags & DISEASE_SPREAD_AIRBORNE) || force_spread) && prob((50*D.permeability_mod) - 1))
+		ForceContractDisease(D)
+
+/mob/living/carbon/AirborneContractDisease(datum/disease/D, force_spread)
+	if(HAS_TRAIT(src, TRAIT_NOBREATH))
+		return
+	..()
+
+/mob/living/proc/ForceContractDisease(datum/disease/D, make_copy = TRUE, del_on_fail = FALSE)
+	if(!CanContractDisease(D))
+		if(del_on_fail)
+			qdel(D)
+		return FALSE
+	if(!D.try_infect(src, make_copy))
+		if(del_on_fail)
+			qdel(D)
+		return FALSE
+	return TRUE
+
+/mob/living/carbon/human/CanContractDisease(datum/disease/D)
+	if(dna)
+		if(HAS_TRAIT(src, TRAIT_VIRUSIMMUNE) && !D.bypasses_immunity)
+			return FALSE
+	for(var/thing in D.required_organs)
+		if(!((locate(thing) in bodyparts) || (locate(thing) in internal_organs)))
+			return FALSE
+	return ..()
+
+/mob/living/proc/CanSpreadAirborneDisease()
+	return !is_mouth_covered()
+
+/mob/living/carbon/CanSpreadAirborneDisease()
+	return !is_mouth_covered()
+
+// FLUROGUETEST DISEASE - Test disease with contact transmission
+
+/datum/disease/fluroguetest
+	name = "Fluroguetest"
+	desc = "A test illness that weakens the body."
+	max_stages = 1
+	stage_prob = 0
+	spread_flags = DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN
+	disease_flags = CAN_CARRY | CAN_RESIST
+	severity = DISEASE_SEVERITY_MINOR
+	viable_mobtypes = list(/mob/living)
+	var/list/stat_mod_keys = null
+	var/cough_range = 3
+
+/datum/disease/fluroguetest/after_add()
+	. = ..()
+	var/mob/living/L = affected_mob
+	if(!istype(L))
+		return
+	ADD_TRAIT(L, TRAIT_CRITICAL_WEAKNESS, src)
+	apply_stat_mods(L, -2)
+	if(ishuman(L))
+		schedule_cough()
+
+/datum/disease/fluroguetest/proc/schedule_cough()
+	addtimer(CALLBACK(src, PROC_REF(cough_tick)), rand(20, 40) SECONDS)
+
+/datum/disease/fluroguetest/proc/cough_tick()
+	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
+		return
+	var/mob/living/carbon/human/H = affected_mob
+	H.emote("cough", intentional = TRUE)
+	for(var/mob/living/carbon/human/target in oview(cough_range, H))
+		if(target == H)
+			continue
+		if(prob(10))
+			target.ForceContractDisease(src, TRUE, FALSE)
+	schedule_cough()
+
+/datum/disease/fluroguetest/proc/apply_stat_mods(mob/living/L, amt)
+	if(!stat_mod_keys)
+		stat_mod_keys = list()
+	var/list/stats = list(STATKEY_STR, STATKEY_PER, STATKEY_INT, STATKEY_CON, STATKEY_WIL, STATKEY_SPD, STATKEY_LCK)
+	for(var/stat in stats)
+		var/key = "fluroguetest_[stat]_\ref[src]"
+		stat_mod_keys[stat] = key
+		L.change_stat(stat, amt, key)
+
+/datum/disease/fluroguetest/remove_disease()
+	var/mob/living/L = affected_mob
+	if(istype(L))
+		REMOVE_TRAIT(L, TRAIT_CRITICAL_WEAKNESS, src)
+		if(stat_mod_keys)
+			for(var/stat in stat_mod_keys)
+				L.change_stat(stat, 0, stat_mod_keys[stat])
+	return ..()
+
