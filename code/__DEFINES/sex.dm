@@ -105,9 +105,9 @@ GLOBAL_LIST_EMPTY(locked_sex_objects)
 #define MAX_BUTT_SIZE 3
 
 #define BUTT_SIZES list(\
-	MIN_PENIS_SIZE,\
-	DEFAULT_PENIS_SIZE,\
-	MAX_PENIS_SIZE,\
+	MIN_BUTT_SIZE,\
+	DEFAULT_BUTT_SIZE,\
+	MAX_BUTT_SIZE,\
 	)
 
 #define BUTT_SIZES_BY_NAME list(\
@@ -131,7 +131,7 @@ GLOBAL_LIST_EMPTY(locked_sex_objects)
 #define BELLY_SIZES_BY_NAME list(\
 	"Flat" = BELLY_SIZE_MIN,\
 	"Little" = BELLY_SIZE_LITTLE,\
-	"Noticable" = BELLY_SIZE_BIG,\
+	"Noticeable" = BELLY_SIZE_BIG,\
 	"Huge" = BELLY_SIZE_HUGE,\
 	)
 

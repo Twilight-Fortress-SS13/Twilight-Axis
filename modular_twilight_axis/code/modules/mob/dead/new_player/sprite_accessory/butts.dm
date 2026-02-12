@@ -11,9 +11,8 @@
 	return "[icon_state]_[(buttie.butt_size - 1)]"
 
 /datum/sprite_accessory/butt/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	if(owner)
-		if(owner.underwear)
-			return FALSE
+	if(owner && owner.underwear)
+		return FALSE
 	return is_human_part_visible(owner, HIDEBOOB|HIDEJUMPSUIT)
 
 /datum/sprite_accessory/butt/pair

@@ -46,9 +46,17 @@
 	return TRUE
 
 /datum/mob_descriptor/butt/get_description(mob/living/described)
+	if(!ishuman(described))
+		return FALSE
 	var/mob/living/carbon/human/H = described
 	var/obj/item/organ/butt/buttie = H.getorganslot(ORGAN_SLOT_BUTT)
 	var/adjective
+	if(!buttie)
+		return FALSE
+	if(H.underwear)
+		return FALSE
+	if(!get_location_accessible(H, BODY_ZONE_PRECISE_GROIN))
+		return FALSE
 	switch(buttie.butt_size)
 		if(1)
 			adjective = "a small"
