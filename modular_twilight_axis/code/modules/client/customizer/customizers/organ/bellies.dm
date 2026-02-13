@@ -23,7 +23,7 @@
 /datum/customizer_choice/organ/belly/validate_entry(datum/preferences/prefs, datum/customizer_entry/entry)
 	..()
 	var/datum/customizer_entry/organ/belly/belly_entry = entry
-	belly_entry.belly_size = sanitize_integer(belly_entry.belly_size, BELLY_SIZE_MIN, BELLY_SIZE_BIG, BELLY_SIZE_MIN)
+	belly_entry.belly_size = sanitize_integer(belly_entry.belly_size, BELLY_SIZE_MIN, BELLY_SIZE_BIG, BELLY_SIZE_LITTLE)
 
 /datum/customizer_choice/organ/belly/imprint_organ_dna(datum/organ_dna/organ_dna, datum/customizer_entry/entry, datum/preferences/prefs)
 	..()
@@ -46,8 +46,8 @@
 			var/named_size = input(user, "Choose your belly size:", "Character Preference", find_key_by_value(BELLY_SIZES_BY_NAME_CUSTOMIZER, belly_entry.belly_size)) as anything in BELLY_SIZES_BY_NAME_CUSTOMIZER
 			if(isnull(named_size))
 				return
-			var/new_size = BELLY_SIZES_BY_NAME[named_size]
-			belly_entry.belly_size = sanitize_integer(new_size, BELLY_SIZE_MIN, BELLY_SIZE_BIG, BELLY_SIZE_MIN)
+			var/new_size = BELLY_SIZES_BY_NAME_CUSTOMIZER[named_size]
+			belly_entry.belly_size = sanitize_integer(new_size, BELLY_SIZE_MIN, BELLY_SIZE_BIG, BELLY_SIZE_LITTLE)
 		if("allow_to_grow")
 			belly_entry.allow_to_grow = !belly_entry.allow_to_grow
 
