@@ -375,7 +375,7 @@
 
 	major_pot = /datum/alch_cauldron_recipe/per_potion
 	med_pot = /datum/alch_cauldron_recipe/int_potion
-	minor_pot = /datum/alch_cauldron_recipe/stamina_potion
+	minor_pot = /datum/alch_cauldron_recipe/plague_cure
 
 /obj/item/alch/urtica
 	name = "urtica"
@@ -404,7 +404,7 @@
 
 	major_pot = /datum/alch_cauldron_recipe/stamina_potion
 	med_pot = /datum/alch_cauldron_recipe/big_mana_potion
-	minor_pot = /datum/alch_cauldron_recipe/antidote
+	minor_pot = /datum/alch_cauldron_recipe/plague_cure
 
 /obj/item/alch/benedictus
 	name = "benedictus"
