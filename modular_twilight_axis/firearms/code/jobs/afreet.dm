@@ -89,7 +89,7 @@
 		if("Veteran")
 			mask = /obj/item/clothing/mask/rogue/ragmask/red
 			armor = /obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/bandit
-			shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/freifechter
+			shirt = /obj/item/clothing/suit/roguetown/shirt/freifechter
 			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 			backl = /obj/item/storage/backpack/rogue/satchel
 			wrists = /obj/item/rogueweapon/katar/punchdagger

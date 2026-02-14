@@ -245,6 +245,20 @@
 	hammerhold_colors = list("white", "blue")
 	hammerhold_variants = null
 
+/obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat/heavy 
+	prevent_crits = PREVENT_CRITS_MOST
+	body_parts_covered = COVERAGE_ALL_BUT_ARMS
+	armor = ARMOR_LEATHER_GOOD
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
+	blocksound = SOFTHIT
+	blade_dulling = DULLING_BASHCHOP
+	sewrepair = TRUE
+	sellprice = 25
+	slot_flags = ITEM_SLOT_ARMOR
+	material_category = ARMOR_MAT_LEATHER
+	salvage_result = /obj/item/natural/hide/cured
+	chunkcolor = "#7e5d17"
+
 /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat/attack_right(mob/user)
 	if(!picked)
 		var/choiceC = input(user, "Choose a color.", "Hammerhold colors") as anything in hammerhold_colors
@@ -279,6 +293,35 @@
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
 	hammerhold_colors = list("white", "blue")
 	hammerhold_variants = null
+
+/obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/heavy
+	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_CHOP)
+	armor = ARMOR_PADDED_GOOD
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+	blocksound = SOFTUNDERHIT
+	blade_dulling = DULLING_BASHCHOP
+	break_sound = 'sound/foley/cloth_rip.ogg'
+	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
+	sewrepair = TRUE
+	armor_class = ARMOR_CLASS_LIGHT
+	material_category = ARMOR_MAT_LEATHER
+	sellprice = 25
+	cold_protection = 10
+
+/obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/light
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+	armor = ARMOR_PADDED
+	prevent_crits = PREVENT_CRITS_NONE
+	blocksound = SOFTUNDERHIT
+	blade_dulling = DULLING_BASHCHOP
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM
+	break_sound = 'sound/foley/cloth_rip.ogg'
+	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
+	sewrepair = TRUE
+	chunkcolor = "#978151"
+	material_category = ARMOR_MAT_LEATHER
+	cold_protection = 10
 
 /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/attack_right(mob/user)
 	if(!picked)

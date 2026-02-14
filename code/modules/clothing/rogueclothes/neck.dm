@@ -172,6 +172,7 @@
 	max_integrity = ARMOR_INT_SIDE_DECREPIT
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_CHAINMAIL
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
 	prevent_crits = PREVENT_CRITS_NONE
@@ -310,6 +311,7 @@
 	max_integrity = ARMOR_INT_SIDE_DECREPIT
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_PLATE
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
 	prevent_crits = PREVENT_CRITS_NONE
@@ -367,6 +369,10 @@
 /obj/item/clothing/neck/roguetown/fencerguard/Initialize()
 	. = ..()
 	update_icon()
+
+/obj/item/clothing/neck/roguetown/fencerguard/generic
+	color = "#503630"
+	detail_color = "#503630"
 
 /obj/item/clothing/neck/roguetown/gorget/forlorncollar
 	name = "forlorn collar"
@@ -487,12 +493,19 @@
 		L.regenerate_clothes()
 	return ..()
 
+/obj/item/clothing/neck/roguetown/psicross/reform
+	name = "reformist psycross"
+	desc = "'It occured to me that our God had left us, but not our ability to endure hardship. We shall make something out of this world, I said, before we pass onto the next.'"
+	sellprice = 0	//Heresy of the highest order. Unless...
+	icon_state = "reformistcross"
+
 /obj/item/clothing/neck/roguetown/psicross/aalloy
 	name = "decrepit psicross"
 	desc = "'A comet capable of rending all the enemies of humanity apart; oh, how graceful His power was! And His sacrifice, ever so noble! Yet now He slumbers, unaware of the fruits His efforts came to give. And He sighs. And He weeps.'"
 	icon_state = "psycross_a"
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_PLATE
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy
 	name = "decrepit zcross"
@@ -500,6 +513,7 @@
 	icon_state = "zcross_a"
 	color = "#bb9696"
 	chunkcolor = "#532e25"
+	material_category = ARMOR_MAT_PLATE
 	resistance_flags = FIRE_PROOF
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/iron
@@ -955,6 +969,7 @@
 	desc = "The edge of reality, though unknown to many, favors Her acolytes above all else. This avantyne neckguard wards off the unenlightened's flailing."
 	color = "#c1b18d"
 	chunkcolor = "#363030"
+	material_category = ARMOR_MAT_PLATE
 
 /obj/item/clothing/neck/roguetown/bevor/zizo/Initialize()
 	. = ..()
@@ -1058,3 +1073,138 @@
 		REMOVE_TRAIT(user, TRAIT_STRENGTH_UNCAPPED, TRAIT_GENERIC)
 		active_item = FALSE
 	return
+
+/obj/item/clothing/neck/roguetown/carved
+	name = "carved amulet"
+	desc = "You shouldn't be seeing this."
+	icon_state = "psycross_w"
+	item_state = "psycross_w"
+	slot_flags = ITEM_SLOT_NECK
+	sellprice = 0
+	salvage_result = null
+	smeltresult = null
+
+/obj/item/clothing/neck/roguetown/carved/jadeamulet
+	name = "jade amulet"
+	desc = "An amulet carved from jade."
+	icon_state = "amulet_jade"
+	slot_flags = ITEM_SLOT_NECK
+	sellprice = 60
+
+/obj/item/clothing/neck/roguetown/carved/turqamulet
+	name = "cerulite amulet"
+	desc = "An amulet carved from cerulite."
+	icon_state = "amulet_turq"
+	slot_flags = ITEM_SLOT_NECK
+	sellprice = 85
+
+/obj/item/clothing/neck/roguetown/carved/onyxaamulet
+	name = "onyxa amulet"
+	desc = "An amulet carved from onyxa."
+	icon_state = "amulet_onyxa"
+	slot_flags = ITEM_SLOT_NECK
+	sellprice = 40
+
+/obj/item/clothing/neck/roguetown/carved/coralamulet
+	name = "heartstone amulet"
+	desc = "An amulet carved from heartstone."
+	icon_state = "amulet_coral"
+	slot_flags = ITEM_SLOT_NECK
+	sellprice = 70
+
+/obj/item/clothing/neck/roguetown/carved/amberamulet
+	name = "amber amulet"
+	desc = "An amulet carved from amber."
+	icon_state = "amulet_amber"
+	slot_flags = ITEM_SLOT_NECK
+	sellprice = 60
+
+/obj/item/clothing/neck/roguetown/carved/opalamulet
+	name = "opal amulet"
+	desc = "An amulet carved from opal."
+	icon_state = "amulet_opal"
+	slot_flags = ITEM_SLOT_NECK
+	sellprice = 90
+
+/obj/item/clothing/neck/roguetown/carved/roseamulet
+	name = "rosestone amulet"
+	desc = "An amulet carved from rosestone."
+	icon_state = "amulet_rose"
+	slot_flags = ITEM_SLOT_NECK
+	sellprice = 25
+
+/obj/item/clothing/neck/roguetown/carved/shellamulet
+	name = "shell amulet"
+	desc = "An amulet carved from shells."
+	icon_state = "amulet_shell"
+	slot_flags = ITEM_SLOT_NECK
+	sellprice = 25
+
+/obj/item/clothing/neck/roguetown/collar/prisoner
+	name = "castifico collar"
+	icon_state = "castifico_collar"
+	item_state = "castifico_collar"
+	desc = "A metal collar that seals around the neck, making it impossible to remove. It seems to be enchanted with some kind of vile magic..."
+	var/active_item
+	var/bounty_amount
+	resistance_flags = FIRE_PROOF
+	slot_flags = ITEM_SLOT_NECK
+	body_parts_covered = NONE //it's not armor
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("This cursed collar enforces pacifism and blocks spellcasting.")
+	. += span_info("It will automatically release after a period of penance (5-20 minutes based on bounty amount).")
+	. += span_info("It can only be removed early by a LIBERTAS machine.")
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/dropped(mob/living/carbon/human/user)
+	. = ..()
+	REMOVE_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
+	REMOVE_TRAIT(user, TRAIT_SPELLCOCKBLOCK, "castificocollar")
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/proc/timerup(mob/living/carbon/human/user)
+	REMOVE_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
+	REMOVE_TRAIT(user, TRAIT_SPELLCOCKBLOCK, "castificocollar")
+	visible_message(span_warning("The castifico collar opens with a click, falling off of [user]'s neck and clambering apart on the ground, their penance complete."))
+	say("YOUR PENANCE IS COMPLETE.")
+	for(var/name in GLOB.outlawed_players)
+		if(user.real_name == name)
+			GLOB.outlawed_players -= user.real_name
+			priority_announce("[user.real_name] has completed their penance. Justice has been served in the eyes of Ravox.", "PENANCE", 'sound/misc/bell.ogg')
+	playsound(src.loc, pick('sound/items/pickgood1.ogg','sound/items/pickgood2.ogg'), 5, TRUE)
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/neck/roguetown/collar/prisoner/equipped(mob/living/user, slot)
+	. = ..()
+	if(active_item)
+		return
+	else if(slot == SLOT_NECK)
+		active_item = TRUE
+		to_chat(user, span_warning("This accursed collar pacifies me!"))
+		ADD_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
+		ADD_TRAIT(user, TRAIT_SPELLCOCKBLOCK, "castificocollar")
+		if(HAS_TRAIT(user, TRAIT_RITUALIST))
+			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		var/timer = 5 MINUTES //Base timer is 5 minutes, additional time added per bounty amount
+
+		if(bounty_amount >= 10)
+			var/additional_time = bounty_amount * 0.1 // 10 mammon = 1 minute
+			additional_time = round(additional_time)
+			timer += additional_time MINUTES
+			timer = clamp(timer, 0 MINUTES, 20 MINUTES)
+
+		var/timer_minutes = timer / 600
+
+		addtimer(CALLBACK(src, PROC_REF(timerup), user), timer)
+		say("YOUR PENANCE WILL BE COMPLETE IN [timer_minutes] MINUTES.")
+	return
+

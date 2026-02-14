@@ -1,8 +1,9 @@
 
 /datum/advclass/heartfelt/retinue/physician
-	name = "Heartfeltian Physician"
+	name = "Heartfelt Physician"
 	tutorial = "You are the Physician of Heartfelt, celebrated for your steady hands and healing wisdom. \
-	However, with the increase in banditry, necromancy, deadite risings, and increasing sea raider raids, there are rumors abound that Heartfelt is not what it used to be."
+	However, with the increase in banditry, necromancy, deadite risings, and increasing sea raider raids, there are rumors abound that Heartfelt is not what it used to be. \
+	Travellers often warn of Heartfelt having fallen already, and words of secretive cultists isn't unheard of."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_NO_CONSTRUCT
 	outfit = /datum/outfit/job/roguetown/heartfelt/retinue/physician
@@ -14,10 +15,9 @@
 	traits_applied = list(TRAIT_HEARTFELT, TRAIT_NOSTINK, TRAIT_EMPATH)
 
 	subclass_stats = list(
-		STATKEY_INT = 4,
-		STATKEY_WIL = 1,
-		STATKEY_LCK = 1,
-		STATKEY_SPD = 2,
+		STATKEY_INT = 3,
+		STATKEY_SPD = 1,
+		STATKEY_LCK = 2,
 	)
 
 	subclass_skills = list(
@@ -25,12 +25,12 @@
 		/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/craft/alchemy = SKILL_LEVEL_MASTER,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/sewing = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/medicine = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/medicine = SKILL_LEVEL_MASTER,
 	)
 // HIGH COURT - /ONE SLOT/ Roles that were previously in the Court, but moved here.
 
@@ -47,9 +47,9 @@
 	backpack_contents = list(
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpotnew = 2,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 2,
-		/obj/item/natural/worms/leech/cheele = 1, //little buddy
+		/obj/item/natural/worms/leech/cheele = 1,
 		/obj/item/reagent_containers/glass/bottle/waterskin = 1,
-		/obj/item/storage/belt/rogue/pouch/coins/rich = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
 		/obj/item/recipe_book/alchemy = 1,
 		/obj/item/bedroll = 1,
 	)

@@ -34,6 +34,7 @@
 		/datum/advclass/mercenary/vaquero,
 		/datum/advclass/mercenary/freelancer,
 		/datum/advclass/mercenary/freelancer/lancer,
+		/datum/advclass/mercenary/freelancer/sabrist,
 		/datum/advclass/mercenary/grenzelhoft,
 		/datum/advclass/mercenary/grenzelhoft/halberdier,
 		/datum/advclass/mercenary/grenzelhoft/crossbowman,
@@ -56,9 +57,10 @@
 		/datum/advclass/mercenary/trollslayer,
 		/datum/advclass/mercenary/lirvanmerc,
     /datum/advclass/mercenary/twilight_gunslinger,
-    /datum/advclass/mercenary/twilight_grenzelhoft_jager
+    /datum/advclass/mercenary/twilight_grenzelhoft_jager,
+	/datum/advclass/mercenary/twilight_heishi,
+	/datum/advclass/mercenary/twilight_yohei
 	)
- 
 
 /datum/job/roguetown/mercenary/after_spawn(mob/living/L, mob/M, latejoin = FALSE)
 	..()
@@ -78,7 +80,6 @@
 
 			// Store the registration request
 			statue.pending_registrations[H.key] = H
-
 
 /proc/update_mercenary_slots()
 	var/datum/job/mercenary_job = SSjob.GetJob("Mercenary")

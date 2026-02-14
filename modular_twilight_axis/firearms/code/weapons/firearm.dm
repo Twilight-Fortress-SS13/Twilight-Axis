@@ -696,6 +696,7 @@
 	item_state = "arquebus"
 	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/arquebus.dmi'
 	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/arquebus_norod.dmi'
+	effective_range = 7
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet
 	name = "arquebus rifle"
@@ -806,7 +807,7 @@
 	gripped_intents = list(/datum/intent/shoot/twilight_firearm/flintgonne, /datum/intent/arc/twilight_firearm/flintgonne, INTENT_GENERIC)
 	smeltresult = /obj/item/ingot/iron
 	damfactor = 0.9
-	effective_range = 4
+	effective_range = 5
 
 /obj/item/gun/ballistic/twilight_firearm/axtgonne
 	name = "axtbüchse"

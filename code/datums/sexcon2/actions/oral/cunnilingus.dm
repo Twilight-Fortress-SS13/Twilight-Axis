@@ -1,5 +1,5 @@
 /datum/sex_action/cunnilingus
-	name = "Отлизать"
+	name = "Suck their cunt off"
 	target_priority = 100
 	intensity = 4
 	flipped = TRUE
@@ -31,11 +31,11 @@
 
 /datum/sex_action/cunnilingus/on_start(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
-	user.visible_message(span_warning("[user] прижимается губами к киске [target]..."))
+	user.visible_message(span_warning("[user] starts sucking [target]'s clit..."))
 
 /datum/sex_action/cunnilingus/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
-	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] проходит языком по киске [target]..."))
+	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] sucks [target]'s clit..."))
 	user.make_sucking_noise()
 	// my father. birthed me into the class of yeoman.
 	if(istype(user.head, /obj/item/clothing/head/roguetown/jester))
@@ -45,12 +45,12 @@
 	sex_session.perform_sex_action(target, 2, 3, TRUE)
 
 /datum/sex_action/cunnilingus/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	target.visible_message(span_love("[target] кончает в рот [user]!"))
+	user.visible_message(span_love("[user] cums into [target]'s mouth!"))
 	return "into"
 
 /datum/sex_action/cunnilingus/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
-	user.visible_message(span_warning("[user] отрывается от киски [target]..."))
+	user.visible_message(span_warning("[user] stops sucking [target]'s clit ..."))
 
 /datum/sex_action/cunnilingus/lock_sex_object(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	sex_locks |= new /datum/sex_session_lock(target, ORGAN_SLOT_VAGINA)

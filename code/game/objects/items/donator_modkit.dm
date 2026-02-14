@@ -200,6 +200,16 @@
 	/obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute = /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm/ryan)
 	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm/ryan
 
+//Dakken12 - Armet/Hounskull
+/obj/item/enchantingkit/dakken_zizhelm
+	name = "'armoured avantyne barbute' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Armet or Hounskull Bascinet"
+	target_items = list(
+		/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet, 
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull
+	)
+	result_item = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken
+
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //

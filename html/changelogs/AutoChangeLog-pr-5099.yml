@@ -1,8 +1,0 @@
-author: "THE HOLY SEE OF AZURIA"
-delete-after: True
-changes:
-  - balance: "blindness no longer inflicts a black screen, it instead clouds vision and inflicts a per malus."
-  - rscadd: "noccites spell-choice, which allows t2 spell casters to choose between new blindness or silence"
-  - rscadd: "noccite silence, which is just silence but a miracle and w/ a different invocation"
-  - code_imp: "removed comment that has not been true for idk how long cause the invis sound plays now"
-  - bugfix: "acolytes of noc now start w/ their robes in their cloak slot. this is just better. also the armor slot robes are kinda broken. trust in me on this. please."

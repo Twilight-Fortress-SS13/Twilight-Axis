@@ -21,6 +21,10 @@
 	remove_effect()
 
 /obj/item/net/proc/remove_effect()
+
+	if(QDELETED(src)) //TA EDIT
+		return
+
 	if(iscarbon(loc))
 		var/mob/living/carbon/M = loc
 		if(M.legcuffed == src)
@@ -29,7 +33,10 @@
 			M.update_inv_legcuffed()
 			if(M.has_status_effect(/datum/status_effect/debuff/netted))
 				M.remove_status_effect(/datum/status_effect/debuff/netted)
-		forceMove(M.loc)
+
+		var/turf/T = get_turf(M)
+		if(T && !QDELETED(src)) //TA EDIT
+			forceMove(M.loc)
 
 /obj/item/net/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback)
 	if(!..())

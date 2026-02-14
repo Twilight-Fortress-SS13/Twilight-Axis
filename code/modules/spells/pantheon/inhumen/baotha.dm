@@ -40,7 +40,7 @@
 	name = "Enrapturing Powder"
 	desc = "Blows dust of a potent painkilling drug at the target."
 	clothes_req = FALSE
-	range = 3	//It's literally blowing coke in their face, basically.
+	range = 3	//POCKET OPIUM!
 	associated_skill = /datum/skill/magic/holy
 	projectile_type = /obj/projectile/magic/blowingdust
 	chargedloop = /datum/looping_sound/invokeholy
@@ -48,8 +48,8 @@
 	chargedrain = 0
 	chargetime = 15
 	recharge_time = 10 SECONDS
-	invocation_type = "whisper"
-	invocations = list("Have a taste of the maiden's pure-bliss...")
+	invocation_type = "emote"
+	invocations = list("flicks their wrist, filling the air in front of them with a fine powder.")
 	devotion_cost = 30
 
 /obj/projectile/magic/blowingdust
@@ -80,8 +80,7 @@
 	range = 7
 	warnie = "sydwarning"
 	sound = 'sound/magic/timestop.ogg'
-	invocations = list("May you find bliss through your pain!")
-	invocation_type = "shout"
+	invocation_type = "none"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
 	recharge_time = 90 SECONDS
@@ -95,7 +94,7 @@
 		var/datum/physiology/phy = human_target.physiology
 		if(target.mob_biotypes & MOB_UNDEAD)
 			return FALSE	//No, you don't get to feel good. You're a undead mob. Feel bad.
-		target.visible_message(span_info("[target] begins to twitch as warmth radiates from them!"), span_notice("The pain from my wounds fade, every new one being a mere, pleasent warmth!"))
+		target.visible_message(span_info("[target] twitches and shivers as a strange warmth radiates from them!"), span_notice("The pain from my wounds melts into sweet suffering. This feels... right."))
 		phy.pain_mod *= 0.5	//Literally halves your pain modifier.
 		addtimer(CALLBACK(src, PROC_REF(restore_pain_mod), phy), 1 MINUTES)
 		target.apply_status_effect(/datum/status_effect/buff/vitae)					//+2 Fortune and mood buff
@@ -226,13 +225,13 @@
 
 /datum/reagent/medicine/loversruin/on_mob_life(mob/living/carbon/M)
 	if(HAS_TRAIT(M, TRAIT_CRACKHEAD))
-		if(volume >= 60)
+		if(volume >= 10)
 			M.reagents.remove_reagent(/datum/reagent/medicine/loversruin, 2)
 		if(M.blood_volume < BLOOD_VOLUME_NORMAL)
-			M.blood_volume = min(M.blood_volume+40, BLOOD_VOLUME_MAXIMUM)
+			M.blood_volume = min(M.blood_volume+5, BLOOD_VOLUME_NORMAL)
 		var/list/wCount = M.get_wounds()
 		if(wCount.len > 0)
-			M.heal_wounds(4.5)
+			M.heal_wounds(2, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise, /datum/wound/dynamic))
 		if(volume > 0.99)
 			M.adjustBruteLoss(-2  * REAGENTS_EFFECT_MULTIPLIER, 0)
 			M.adjustFireLoss(-2  * REAGENTS_EFFECT_MULTIPLIER, 0)
@@ -255,7 +254,7 @@
 			to_chat(user, span_warning("[thing] is full."))
 			return
 		
-		user.visible_message(span_info("[user] closes [user.p_their()] eyes in prayer and extends a hand over [thing] as a sweet smelling ichor begins to stream from [user.p_their()] fingertips..."), span_notice("I call forth [user.patron.name], to fill [thing] with Her blessings..."))
+		user.visible_message(span_info("[user] extends a hand over [thing]. Sweet-smelling ichor drips from [user.p_their()] fingertips, like blood."), span_notice("I call forth [user.patron.name], to fill [thing] with Her blessings..."))
 
 		var/holy_skill = user.get_skill_level(attached_spell.associated_skill)
 		var/drip_speed = 56 - (holy_skill * 8)
@@ -334,7 +333,8 @@
 	overlay_state = "bliss"
 	range = 2
 	chargetime = 0.5 SECONDS
-	invocations = list("By Baotha's mercy, an ecstasy trance for two!")
+	invocation_type = "emote"
+	invocations = list("exhales. A deep-purple mist dances through the air...")		//apparently you can't get targets in the invocation
 	sound = 'sound/magic/magnet.ogg'
 	recharge_time = 60 SECONDS
 	miracle = TRUE
@@ -364,7 +364,7 @@
 	target.AddComponent(/datum/component/baotha_joyride/partner, target, user, holy_skill)
 
 	user.visible_message(
-		span_notice("[user] and [target] inhale a magenta mist. A shudder, a smile, and the taste of hysteria sweetens their blood."),
+		span_notice("[user] and [target] inhale a magenta mist. A strange aching feeling pounds in your chest."),			//baotha, goddess of combat-cuckolding
 	)
 	return TRUE
 
@@ -379,8 +379,8 @@
 	range = 7
 	warnie = "sydwarning"
 	sound = 'sound/magic/timestop.ogg'
-	invocations = list("May you find bliss through your pain!")
-	invocation_type = "shout"
+	invocations = list("completely clouds the air around them in a purple smog!")	//useful against any men in the mirror
+	invocation_type = "emote"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
 	recharge_time = 5 MINUTES
@@ -394,8 +394,8 @@
 			return FALSE
 
 		target.visible_message(
-			span_info("[target] is forced to inhale deeply a sweet smelling mist. They twist in pain, yet a smile decorates their face!"), 
-			span_notice("The world starts to fade around me. My throat melts, my stomach churns, and my pulse quickens. Oblivion never tasted better.")
+			span_info("[target] is forced to deeply inhale a sweet smelling mist. They twist and choke as spittle runs down the corner of their mouth, yet an eerie calm passes over them."), 
+			span_notice("The world fades around me. My throat melts, my stomach churns, and the pounding in my chest feels relentless. I can barely move, but it doesn't matter. Oblivion melts into love in front of my glossed-over eyes.")
 		)
 		target.adjustToxLoss(3)
 		target.add_stress(/datum/stressevent/lasthigh)
@@ -404,4 +404,4 @@
 /datum/stressevent/lasthigh
 	timer = 10 MINUTES
 	stressadd = -99
-	desc = span_hypnophrase("The world starts to fade around me. My throat melts, my stomach churns, and my pulse quickens. Oblivion never tasted better.") 
+	desc = span_hypnophrase("The world fades around me. My throat melts, my stomach churns, and the pounding in my chest feels relentless. I can barely move, but it doesn't matter. Oblivion melts into love in front of my glossed-over eyes.") 

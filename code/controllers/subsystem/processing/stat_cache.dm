@@ -13,7 +13,7 @@ SUBSYSTEM_DEF(statpanel)
 	var/list/mc_cache
 
 	var/timeofday_text
-	var/ic_time_text
+	var/ic_date_text
 	var/td_info_text
 
 /datum/controller/subsystem/statpanel/Initialize()
@@ -25,16 +25,6 @@ SUBSYSTEM_DEF(statpanel)
 
 /datum/controller/subsystem/statpanel/proc/update_cache()
 	var/time_left = SSgamemode.round_ends_at - world.time
-
-	var/days = "TWILIGHT"
-	switch(GLOB.dayspassed)
-		if(1) days = "MOON'S DAE"
-		if(2) days = "TIW'S DAE"
-		if(3) days = "WEDDING'S DAE"
-		if(4) days = "TOLL'S DAE"
-		if(5) days = "FREYJA'S DAE"
-		if(6) days = "SATURN'S DAE"
-		if(7) days = "SUN'S DAE"
 
 	base_roundinfo_text = list(
 		"MAP: [SSmapping.config?.map_name || "Loading..."]"
@@ -54,8 +44,8 @@ SUBSYSTEM_DEF(statpanel)
 	if(SSgamemode.roundvoteend)
 		base_roundinfo_text += "ROUND END: [DisplayTimeText(time_left)]"
 
-	timeofday_text = "TIMEOFDAY: [days] ᛉ [uppertext(GLOB.tod)] ᛉ [station_time_timestamp("hh:mm")]"
-	ic_time_text = "IC Time: [station_time_timestamp()] [station_time()]"
+	timeofday_text = "TIME: [get_current_ic_time_as_string()]"
+	ic_date_text = "IC DATE: [get_current_ic_date_as_string()]"
 
 	admin_roundinfo_text = list(
 		SSmigrants.get_status_line(),

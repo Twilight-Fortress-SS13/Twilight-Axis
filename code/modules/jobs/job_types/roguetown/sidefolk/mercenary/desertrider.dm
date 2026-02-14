@@ -39,9 +39,9 @@
 	neck = /obj/item/clothing/neck/roguetown/bevor
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/scale
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
-	wrists = /obj/item/clothing/wrists/roguetown/splintarms
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine
 	gloves = /obj/item/clothing/gloves/roguetown/chain
-	pants = /obj/item/clothing/under/roguetown/splintlegs
+	pants = /obj/item/clothing/under/roguetown/brigandinelegs
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary,
@@ -112,7 +112,7 @@
 	mask = /obj/item/clothing/mask/rogue/facemask/steel/paalloy
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
-	wrists = /obj/item/clothing/wrists/roguetown/splintarms
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine
 	gloves = /obj/item/clothing/gloves/roguetown/angle
 	pants = /obj/item/clothing/under/roguetown/trou/leather/pontifex/raneshen
 	backr = /obj/item/storage/backpack/rogue/satchel/black

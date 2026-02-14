@@ -49,7 +49,7 @@
 /datum/supply_pack/rogue/armor_iron/rearbraces
 	name = "Bracers, Splinted"
 	cost = 30 //1 Iron 1 Leather
-	contains = list(/obj/item/clothing/wrists/roguetown/splintarms/iron)
+	contains = list(/obj/item/clothing/wrists/roguetown/bracers/splint)
 
 /datum/supply_pack/rogue/armor_iron/bracers
 	name = "Bracers, Plate"
@@ -79,7 +79,7 @@
 /datum/supply_pack/rogue/armor_iron/chausses_brigandine
 	name = "Chausses, Splinted"
 	cost = 35 // 1 Iron 2 Leather
-	contains = list(/obj/item/clothing/under/roguetown/splintlegs/iron)
+	contains = list(/obj/item/clothing/under/roguetown/splintlegs)
 
 /datum/supply_pack/rogue/armor_iron/chausses_plate
 	name = "Chausses, Plate"

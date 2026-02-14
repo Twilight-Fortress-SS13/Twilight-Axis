@@ -179,3 +179,21 @@
 	return list(
 		get_asset_datum(/datum/asset/spritesheet/loadout_icons)
 	)
+
+/datum/preferences/proc/get_max_save_slots(plevel)
+	var/base_slots = 20
+	var/modifiers = 0
+
+	switch(plevel)
+		if(1)
+			modifiers = 2
+		if(2)
+			modifiers = 3
+		if(3)
+			modifiers = 4
+		if(4)
+			modifiers = 5
+		if(5)
+			modifiers = 6
+
+	return modifiers ? max(base_slots * modifiers, base_slots) : base_slots

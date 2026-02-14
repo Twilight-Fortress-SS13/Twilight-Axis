@@ -1,5 +1,5 @@
 /datum/sex_action/frotting
-	name = "Фехтование"
+	name = "Frot them"
 	intensity = 3
 
 /datum/sex_action/frotting/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -33,11 +33,11 @@
 
 /datum/sex_action/frotting/on_start(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
-	user.visible_message(span_warning("[user] толкается своим хером о ствол [target]!"))
+	user.visible_message(span_warning("[user] shoves [user.p_their()] cock against [target]'s own!"))
 
 /datum/sex_action/frotting/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
-	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] скрещивает пенисы вместе с [target]."))
+	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] frots cocks together with [target]."))
 	playsound(user, 'sound/misc/mat/fingering.ogg', 20, TRUE, -2, ignore_walls = FALSE)
 
 	sex_session.perform_sex_action(user, 1, 4, TRUE)
@@ -48,7 +48,7 @@
 
 /datum/sex_action/frotting/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
-	user.visible_message(span_warning("[user] уводит свой хер в сторону."))
+	user.visible_message(span_warning("[user] lets go of both their cocks."))
 
 /datum/sex_action/frotting/lock_sex_object(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	sex_locks |= new /datum/sex_session_lock(user, ORGAN_SLOT_PENIS)

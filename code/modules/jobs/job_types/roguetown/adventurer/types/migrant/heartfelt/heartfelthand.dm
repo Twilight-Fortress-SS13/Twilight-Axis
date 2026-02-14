@@ -2,6 +2,7 @@
 	title = "Hand of Heartfelt"
 	tutorial = "You are the Hand of Heartfelt, burdened by the perception in protecting your Lord's domain. \
 	However, with the increase in banditry, necromancy, deadite risings, and increasing sea raider raids, there are rumors abound that Heartfelt is not what it used to be. \
+	Travellers often warn of Heartfelt having fallen already, and words of secretive cultists isn't unheard of. \
 	Despite doubts from others, your loyalty remains steadfast as you journey to the Peaks, determined to fulfill your duties."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = ACCEPTED_RACES
@@ -44,8 +45,6 @@
 		STATKEY_STR = 2,
 		STATKEY_PER = 2,
 		STATKEY_INT = 2,
-		STATKEY_CON = 1,
-		STATKEY_WIL = 1,
 	)
 
 	subclass_stashed_items = list("Heartfelt Caparison" = /obj/item/caparison/heartfelt)
@@ -55,13 +54,14 @@
 
 	subclass_skills = list(
 	/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
-	/datum/skill/combat/polearms = SKILL_LEVEL_EXPERT,
-	/datum/skill/misc/medicine = SKILL_LEVEL_EXPERT,
+	/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,
+	/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
+	/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 	/datum/skill/craft/cooking = SKILL_LEVEL_EXPERT,
 	/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
-	/datum/skill/misc/riding = SKILL_LEVEL_EXPERT,
-	/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
-	/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
+	/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
+	/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
+	/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 	/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 	/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 	/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
@@ -72,25 +72,22 @@
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel
 	armor = /obj/item/clothing/suit/roguetown/armor/heartfelt/hand
 	r_hand = /obj/item/rogueweapon/sword/long/dec
-	//l_hand = banner-pike for when I add it
+	l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 	beltl = /obj/item/rogueweapon/scabbard/sword/noble
+	backr = /obj/item/quiver/bolts
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rogueweapon/scabbard/sheath/noble = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
-		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
-		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 2,
+		/obj/item/storage/belt/rogue/pouch/coins/rich = 1,
+		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 		/obj/item/natural/feather = 1,
 		/obj/item/paper/scroll = 1,
 		)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/heartfelt)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/heartfelt/retreat)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/heartfelt/bolster)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/heartfelt/charge)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/heartfelt/forheartfelt)
-		// H.mind.AddSpell(new/obj/effect/proc_holder/spell/invoked/order/heartfelt/focustarget)
 		H.verbs |= list(/mob/living/carbon/human/mind/proc/setordersheartfelt)
+
 	var/helmet = list("Etruscan Bascinet","Volf Plate Helmet","Beak Helmet","Visored Sallet",)
 	var/helmet_choice = input("Choose your Helm.", "TAKE UP HELMS") as anything in helmet
 	switch(helmet_choice)
@@ -116,12 +113,10 @@
 	Pressed once more into service by tragedy, you climb towards the Peaks."
 	outfit = /datum/outfit/job/roguetown/heartfelt/hand/steward
 	category_tags = list(CTAG_HFT_HAND)
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_SEEPRICES, TRAIT_HEARTFELT)
+	traits_applied = list(TRAIT_SEEPRICES, TRAIT_HEARTFELT)
 	subclass_stats = list(
-		STATKEY_STR = 1,
 		STATKEY_SPD = 2,
 		STATKEY_INT = 2,
-		STATKEY_CON = 1,
 		STATKEY_WIL = 2,
 	)
 
@@ -131,7 +126,7 @@
 	)
 
 	subclass_skills = list(
-	/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
+	/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
 	/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
 	/datum/skill/misc/medicine = SKILL_LEVEL_EXPERT,
 	/datum/skill/craft/cooking = SKILL_LEVEL_EXPERT,
@@ -146,7 +141,7 @@
 
 /datum/outfit/job/roguetown/heartfelt/hand/steward/pre_equip(mob/living/carbon/human/H)
 	..()
-	armor = /obj/item/clothing/suit/roguetown/armor/brigandine
+	armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light
 	gloves = /obj/item/clothing/gloves/roguetown/leather/black
 	r_hand = /obj/item/rogueweapon/sword/sabre/dec
 	beltl = /obj/item/rogueweapon/scabbard/sword/noble
@@ -157,7 +152,7 @@
 		/obj/item/rogueweapon/scabbard/sheath/noble = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 2,
-		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
+		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 2,
 		/obj/item/natural/feather = 1,
 		/obj/item/paper/scroll = 1,
 		)
@@ -178,7 +173,7 @@
 	category_tags = list(CTAG_HFT_HAND)
 	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T2, TRAIT_INTELLECTUAL, TRAIT_SEEPRICES_SHITTY, TRAIT_HEARTFELT)
 	subclass_stats = list(
-		STATKEY_INT = 4,
+		STATKEY_INT = 3,
 		STATKEY_PER = 3,
 		STATKEY_SPD = 1
 	)
@@ -191,8 +186,7 @@
 	subclass_spellpoints = 15
 
 	subclass_skills = list(
-		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
@@ -212,14 +206,12 @@
 /datum/outfit/job/roguetown/heartfelt/hand/advisor/pre_equip(mob/living/carbon/human/H)
 	..()
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/guard
-	r_hand = /obj/item/rogueweapon/sword/sabre/dec
-	beltl = /obj/item/rogueweapon/scabbard/sword/noble
 	mask = /obj/item/clothing/mask/rogue/spectacles/golden
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rogueweapon/scabbard/sheath/noble = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
-		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/rich = 1,
 		/obj/item/lockpickring/mundane = 1, 
 		/obj/item/reagent_containers/glass/bottle/rogue/poison = 1,
 		/obj/item/natural/feather = 1,

@@ -428,7 +428,7 @@
 	req_bar = /obj/item/ingot/iron
 	req_blade = /obj/item/blade/iron_plate
 	additional_items = list(/obj/item/clothing/under/roguetown/trou/leather)//basically you just add a lot of iron bits to the pants
-	created_item = /obj/item/clothing/under/roguetown/splintlegs/iron
+	created_item = /obj/item/clothing/under/roguetown/splintlegs
 
 /datum/anvil_recipe/armor/iron/platelegs
 	name = "Plate Chausses, Iron (+1 Bar)"
@@ -456,7 +456,7 @@
 	req_bar = /obj/item/ingot/iron
 	req_blade = /obj/item/blade/iron_plate
 	additional_items = list(/obj/item/clothing/wrists/roguetown/bracers/leather)
-	created_item = /obj/item/clothing/wrists/roguetown/splintarms/iron
+	created_item = /obj/item/clothing/wrists/roguetown/bracers/splint
 
 /datum/anvil_recipe/armor/iron/bracers
 	name = "Plate Bracers, Iron"
@@ -640,7 +640,7 @@
 	req_bar = /obj/item/ingot/steel
 	req_blade = /obj/item/blade/steel_plate
 	additional_items = list(/obj/item/ingot/steel,/obj/item/natural/hide/cured)
-	created_item = /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates
+	created_item = /obj/item/clothing/suit/roguetown/armor/plate/scale/knight
 
 /datum/anvil_recipe/armor/steel/steel/brigandine
 	name = "Brigandine, Steel (+1 Steel, +2 Cloth)"
@@ -945,14 +945,14 @@
 	req_bar = /obj/item/ingot/steel
 	req_blade = /obj/item/blade/steel_plate
 	additional_items = list(/obj/item/clothing/wrists/roguetown/bracers/leather)
-	created_item = /obj/item/clothing/wrists/roguetown/splintarms
+	created_item = /obj/item/clothing/wrists/roguetown/bracers/brigandine
 
 /datum/anvil_recipe/armor/steel/splintlegs
 	name = "Brigandine Chausses (+1 leather pants)"
 	req_bar = /obj/item/ingot/steel
 	req_blade = /obj/item/blade/steel_plate
 	additional_items = list(/obj/item/clothing/under/roguetown/trou/leather)//basically you just add a lot of iron bits to the pants
-	created_item = /obj/item/clothing/under/roguetown/splintlegs
+	created_item = /obj/item/clothing/under/roguetown/brigandinelegs
 
 /datum/anvil_recipe/armor/steel/horseshoes
 	name = "Horseshoes, Steel"

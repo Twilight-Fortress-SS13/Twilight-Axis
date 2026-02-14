@@ -17,6 +17,8 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	if(isnull(donoritem))
 		if(ckeywhitelist)
 			donoritem = TRUE
+	var/obj/targetitem = path
+	desc = targetitem.desc
 	if (triumph_cost)
 		desc += "<b>Стоит [triumph_cost] ТРИУМФОВ.</b>"
 	if(donat_tier > 0)
@@ -732,6 +734,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Аксессуары"
 	path = /obj/item/clothing/neck/roguetown/psicross
 
+/datum/loadout_item/psicross/reform
+	name = "Reformist Psydonian Cross"
+	path = /obj/item/clothing/neck/roguetown/psicross/reform
+
 /datum/loadout_item/psicross/astrata
 	name = "Amulet of Astrata"
 	category = "Аксессуары"
@@ -1139,6 +1145,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/astratanhelm_oldrw
 	donatitem = TRUE
 
+/datum/loadout_item/donator_dakken
+	name = "Donator Kit - Armoured Avantyne Barbute - Required: Armet or Hounskull Bascinet"
+	path = /obj/item/enchantingkit/dakken_zizhelm
+	category = list("Броня", "Донат")
+	donatitem = TRUE
+ 
 /datum/loadout_item/donator_bigfoot_axe
 	name = "Donator Kit - Gilded GreatAxe - Required: Steel Greataxe"
 	category = list("Оружие", "Донат")
@@ -1351,9 +1363,21 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donator_kumie4
-	name = "Donator Kit - Aristocratic Coat - Required: Hardened Leather Coat(No Small Races)"
+	name = "Donator Kit - Aristocratic Coat - Required: Hardened Leather Coat or Lightweight Brigandine(No Small Races)"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/kumie_coat
+	donatitem = TRUE
+
+/datum/loadout_item/donator_hammerhold_robe
+	name = "Donator Kit - Hammerhold Robe - Required: Gambeson or Padded Gambeson(No Small Races)"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/hammerhold_robe
+	donatitem = TRUE
+
+/datum/loadout_item/donator_hammerhold_coat
+	name = "Donator Kit - Hammerhold Mage Coat - Required: Hardened Leather Coat(No Small Races)"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/hammerhold_coat
 	donatitem = TRUE
 
 /datum/loadout_item/donator_jagerrifle

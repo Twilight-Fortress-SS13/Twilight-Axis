@@ -5,6 +5,7 @@
 		"Hand",\
 		"Court Magician",\
 		"Marshal",\
+		"Knight",\
 		"Bishop",\
 		"Martyr",\
 		"Keeper",\
@@ -15,6 +16,7 @@
 		"Bandit",\
 		"Wretch",\
 		"Gnoll",\
+		"Veteran",\
 		"Guildmaster",\
 		"Court Magician",\
 		"Keeper",\

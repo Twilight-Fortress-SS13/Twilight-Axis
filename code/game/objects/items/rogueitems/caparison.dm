@@ -64,7 +64,7 @@
 	female_caparison_state = "azure_caparison-f"
 
 /obj/item/caparison/heartfelt
-	name = "heartfeltian caparison"
-	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with heartfeltian colours. This one fits on a Saiga."
+	name = "Heartfelt caparison"
+	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with the colours of Heartfelt. This one fits on a Saiga."
 	caparison_state = "heartfelt_caparison"
 	female_caparison_state = "heartfelt_caparison-f"

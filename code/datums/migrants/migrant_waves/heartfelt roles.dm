@@ -48,7 +48,7 @@
 		H.name = "[honorary] [prev_name]"
 
 /datum/migrant_role/heartfelt/retinue
-	name = "Heartfeltian Retinue"
+	name = "Heartfelt Retinue"
 	advclass_cat_rolls = list(CTAG_HFT_RETINUE = 20)
 	allowed_races = ACCEPTED_RACES
 	grant_lit_torch = FALSE

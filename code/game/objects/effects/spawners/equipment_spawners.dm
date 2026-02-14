@@ -55,7 +55,7 @@
 		/obj/item/clothing/suit/roguetown/armor/plate/full = 2,
 		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted = 1,
 		/obj/item/clothing/suit/roguetown/armor/brigandine = 6,
-		/obj/item/clothing/suit/roguetown/armor/brigandine/coatplates = 4,
+		/obj/item/clothing/suit/roguetown/armor/plate/scale/knight = 4,
 		/obj/item/clothing/under/roguetown/platelegs = 6, //how is there only one nonunique heavy leg armor
 	)
 
@@ -121,7 +121,7 @@
 		/obj/item/clothing/wrists/roguetown/bracers/leather = 8,
 		/obj/item/clothing/wrists/roguetown/bracers/leather/heavy = 6,
 		/obj/item/clothing/wrists/roguetown/bracers/copper = 10,
-		/obj/item/clothing/wrists/roguetown/splintarms = 1,
+		/obj/item/clothing/wrists/roguetown/bracers/brigandine = 1,
 	)
 
 /obj/effect/spawner/lootdrop/horny_armor_spawner

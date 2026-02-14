@@ -10,22 +10,23 @@
 	cmode_music = 'sound/music/combat_grenzelhoft.ogg'
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY)
-	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_SURVIVAL_EXPERT)
+	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_PERFECT_TRACKER, TRAIT_DODGEEXPERT)
 	subclass_stats = list(
-		STATKEY_WIL = 2,
+		STATKEY_WIL = 1,
 		STATKEY_SPD = 2,
-		STATKEY_PER = 2,
-		STATKEY_LCK = 1,
+		STATKEY_PER = 3,
+		STATKEY_STR = 1,
 		STATKEY_CON = -1
 	)
 	subclass_skills = list(
 		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/labor/butchering = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/tanning = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/traps = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_NOVICE,
@@ -37,6 +38,7 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/labor/lumberjacking = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
 	)
 
 /datum/outfit/job/roguetown/mercenary/twilight_grenzelhoft_jager/pre_equip(mob/living/carbon/human/H)
@@ -44,7 +46,7 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/quiver/twilight_bullet/lead
-	beltr = /obj/item/rogueweapon/stoneaxe/woodcut
+	beltr = /obj/item/rogueweapon/stoneaxe/woodcut/wardenpick/jager
 	backl = /obj/item/storage/backpack/rogue/backpack
 	neck = /obj/item/clothing/neck/roguetown/gorget
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
@@ -64,4 +66,5 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1)
 
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/takeapprentice)
 	H.merctype = 7
