@@ -75,6 +75,14 @@
 	sellprice = 6
 	craftdiff = 0
 
+/datum/crafting_recipe/roguetown/leather/container/twilight_ammoholder_cannonball
+	name = "cannonball bag (2 cured leather, 3 fibers)"
+	result = /obj/item/quiver/twilight_bullet/cannonball
+	reqs = list(/obj/item/natural/hide/cured = 2,
+				/obj/item/natural/fibers = 3)
+	sellprice = 6
+	craftdiff = 0
+
 //Silverdust blessing related stuff, for Inq funny gunpowder
 /obj/item/alch/silverdust/examine(mob/user)
 	. = ..()

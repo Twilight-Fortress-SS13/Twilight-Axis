@@ -573,6 +573,10 @@
 /mob/living/attacked_by(obj/item/I, mob/living/user)
 	var/hitlim = simple_limb_hit(user.zone_selected)
 
+	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
+		user.visible_message(span_warning("The [I] passes harmlessly through [src]'s misty form!"))
+		return FALSE
+	
 	I.funny_attack_effects(src, user)
 	if(I.force_dynamic)
 		var/newforce = get_complex_damage(I, user)

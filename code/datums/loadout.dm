@@ -96,6 +96,31 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Головные уборы"
 	path = /obj/item/clothing/head/roguetown/antlers
 
+/datum/loadout_item/tengai
+	name = "tengai"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/tengai
+
+/datum/loadout_item/burgerhood
+	name = "Noble Hood"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/roguehood/burgerhood
+
+/datum/loadout_item/gasa
+	name = "gasa"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/gasa
+
+/datum/loadout_item/torioigasa
+	name = "torioigasa"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/torioigasa
+
+/datum/loadout_item/roningasa
+	name = "roningasa"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/roningasa
+
 /datum/loadout_item/witchhat
 	name = "Witch Hat"
 	category = "Головные уборы"
@@ -426,6 +451,31 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Одежда"
 	path = /obj/item/clothing/suit/roguetown/shirt/desertbra
 
+/datum/loadout_item/kimono2
+	name = "Long Sleeved Kimono"
+	category = "Одежда"
+	path = /obj/item/clothing/suit/roguetown/shirt/kimono2
+
+/datum/loadout_item/haori
+	name = "Haori"
+	category = "Одежда"
+	path = /obj/item/clothing/suit/roguetown/shirt/haori
+
+/datum/loadout_item/yoroihitatare
+	name = "Yoroihitatare"
+	category = "Одежда"
+	path = /obj/item/clothing/suit/roguetown/shirt/yoroihitatare
+
+/datum/loadout_item/kamishimo
+	name = "Kamishimo"
+	category = "Одежда"
+	path = /obj/item/clothing/suit/roguetown/shirt/kamishimo
+
+/datum/loadout_item/kazengun_jacket
+	name = "Kazengun Jacket"
+	category = "Одежда"
+	path = /obj/item/clothing/suit/roguetown/shirt/kazengun_jacket
+
 /datum/loadout_item/deserthood
 	name = "Desert Hood"
 	category = "Головные уборы"
@@ -561,6 +611,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Leather Tights"
 	category = "Одежда"
 	path = /obj/item/clothing/under/roguetown/trou/leathertights
+
+/datum/loadout_item/hakama
+	name = "Hakama Pants"
+	category = "Одежда"
+	path = /obj/item/clothing/under/roguetown/trou/leather/hakama
 
 /datum/loadout_item/trou
 	name = "Work Trousers"
@@ -812,6 +867,30 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Аксессуары"
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar
 
+/datum/loadout_item/psicross/gronnzizo
+	name = "Wolf Talisman"
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+
+/datum/loadout_item/psicross/gronnbaotha
+	name = "Leopard Talisman"
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/baothagronn
+
+/datum/loadout_item/psicross/gronnmatthios
+	name = "Bear Talisman"
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn
+
+/datum/loadout_item/psicross/gronngraggar
+	name = "Moose Talisman"
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
+
+/datum/loadout_item/psicross/gronndendor
+	name = "Volfskinned Talisman"
+	path = /obj/item/clothing/neck/roguetown/psicross/dendor/gronn
+
+/datum/loadout_item/psicross/gronnabyssor
+	name = "Hadal Talisman"
+	path = /obj/item/clothing/neck/roguetown/psicross/abyssor/gronn
+
 /datum/loadout_item/wedding_band
 	name = "silver wedding band"
 	category = "Аксессуары"
@@ -916,6 +995,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/head/roguetown/circlet/triumph
 	category = list("Триумфы")
 	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkitaxe
+	name = "Morphing Elixir, 'Valorian Axe' (-3 TRI)"
+	path = /obj/item/enchantingkit/triumph_weaponkit_axe
+	triumph_cost = 3
 
 // -5 TRI Minisection.
 

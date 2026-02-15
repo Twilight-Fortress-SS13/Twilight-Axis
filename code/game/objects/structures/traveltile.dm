@@ -229,3 +229,7 @@
 	opacity = FALSE
 
 /obj/structure/fluff/traveltile/eventarea
+
+/obj/structure/fluff/traveltile/eventarea/multiz
+	aportalgoesto = "MultizEventOut"
+	aportalid = "MultizEventIn"

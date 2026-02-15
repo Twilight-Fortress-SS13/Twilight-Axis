@@ -47,6 +47,44 @@
 	return BULLET_ACT_HIT
 
 /mob/living/bullet_act(obj/projectile/P, def_zone = BODY_ZONE_CHEST)
+
+	if(HAS_TRAIT(src, "ethereal"))//TA EDIT START
+		return BULLET_ACT_FORCE_PIERCE
+
+	if(HAS_TRAIT(src, TRAIT_MAGIC_SHIELD) && P.firer && P.firer != src)
+		var/obj/effect/proc_holder/spell/self/magic_shield/S
+		if(src.status_traits && src.status_traits[TRAIT_MAGIC_SHIELD])
+			for(var/source in src.status_traits[TRAIT_MAGIC_SHIELD])
+				if(istype(source, /obj/effect/proc_holder/spell/self/magic_shield))
+					S = source
+					break
+	
+		if(S && S.active)
+		
+			var/damage_cost = P.damage * S.stamina_damage_ratio
+		
+		
+			if(!src.stamina_add(damage_cost))
+				S.deactivate_shield(src, shattered = TRUE)
+			
+				return ..() 
+		
+		
+			src.visible_message(span_danger("[src.name]'s shield flares, reflecting [P.name] back at [P.firer]!"))
+			playsound(src.loc, 'sound/combat/parry/shield/magicshield (1).ogg', 50, TRUE)
+		
+		
+			var/new_angle = Get_Angle(src, P.firer)
+			new_angle += rand(-10, 10) 
+			P.setAngle(new_angle)
+
+			P.decayedRange = max(0, P.decayedRange - P.reflect_range_decrease)
+			P.range = P.decayedRange
+			P.permutated = list()
+			P.firer = src 
+
+			return BULLET_ACT_FORCE_PIERCE //TA EDIT END
+	
 	if(SEND_SIGNAL(src, COMSIG_ATOM_BULLET_ACT, P, def_zone) & COMPONENT_ATOM_BLOCK_BULLET)
 		return
 	def_zone = bullet_hit_accuracy_check(P.accuracy + P.bonus_accuracy, def_zone)
@@ -116,6 +154,10 @@
 		return 0
 
 /mob/living/hitby(atom/movable/AM, skipcatch, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum, damage_flag = "blunt")
+	
+	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
+		return FALSE 
+	
 	if(istype(AM, /obj/item))
 		var/obj/item/I = AM
 		// Hit the selected zone, or else a random zone centered on the chest

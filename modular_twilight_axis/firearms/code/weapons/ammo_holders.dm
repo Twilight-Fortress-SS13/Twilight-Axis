@@ -105,9 +105,18 @@
 
 /obj/item/quiver/twilight_bullet/cannonball
 	name = "cannonball bag"
-	desc = "Небольшой мешочек, в котором можно хранить выстрелы для кулеврины."
+	desc = "Небольшой мешочек, в котором можно хранить ядра и картечь."
+	icon_state = "cpouch1"
+	item_state = "cpouch1"
+	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_CLOAK|ITEM_SLOT_BELT
 	max_storage = 20
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball
+
+/obj/item/quiver/twilight_bullet/cannonball/update_icon()
+	if(arrows.len)
+		icon_state = "cpouch1"
+	else
+		icon_state = "cpouch0"
 
 /obj/item/quiver/twilight_bullet/cannonball/attack_turf(turf/T, mob/living/user)
 	if(arrows.len >= max_storage)
