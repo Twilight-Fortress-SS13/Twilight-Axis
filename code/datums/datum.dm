@@ -557,6 +557,8 @@
 				spread_chance = 50
 		if(istype(D, /datum/disease/ash_blight))
 			spread_chance = 50
+		if(istype(D, /datum/disease/derma_tick))
+			spread_chance = 50
 		if(spread_chance > 0 && !prob(spread_chance))
 			continue
 		target.ForceContractDisease(D, TRUE, FALSE)
