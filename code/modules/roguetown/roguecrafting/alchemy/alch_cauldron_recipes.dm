@@ -115,4 +115,4 @@
 	skill_required = SKILL_LEVEL_MASTER
 	output_reagents =list(/datum/reagent/fire_resist = 30)
 
-// Flu cure recipe moved to modular_twilight_axis/code/modules/roguetown/roguecrafting/alchemy/flu_cure_recipe.dm
+// The Grime-Flu cure recipe moved to modular_twilight_axis/code/modules/roguetown/roguecrafting/alchemy/grime_flu_cure_craft.dm

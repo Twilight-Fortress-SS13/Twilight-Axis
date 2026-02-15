@@ -228,7 +228,7 @@
 	name = "sui dust"
 	desc = "A long mix of herbs resulting in a special dust. For you. Use it while held."
 	icon_state = "transisdust"
-	major_pot = /datum/alch_cauldron_recipe/plague_cure
+	major_pot = /datum/alch_cauldron_recipe/antidote
 
 /obj/item/alch/transisdust/attack_self(mob/living/user)
 	..()
@@ -375,7 +375,7 @@
 
 	major_pot = /datum/alch_cauldron_recipe/per_potion
 	med_pot = /datum/alch_cauldron_recipe/int_potion
-	minor_pot = /datum/alch_cauldron_recipe/plague_cure
+	minor_pot = /datum/alch_cauldron_recipe/stamina_potion
 
 /obj/item/alch/urtica
 	name = "urtica"
@@ -404,7 +404,7 @@
 
 	major_pot = /datum/alch_cauldron_recipe/stamina_potion
 	med_pot = /datum/alch_cauldron_recipe/big_mana_potion
-	minor_pot = /datum/alch_cauldron_recipe/plague_cure
+	minor_pot = /datum/alch_cauldron_recipe/antidote
 
 /obj/item/alch/benedictus
 	name = "benedictus"
@@ -452,7 +452,7 @@
 	muteinmouth = FALSE
 	alternate_worn_layer  = 8.9 //On top of helmet
 	mill_result = /obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals
-	med_pot = /datum/alch_cauldron_recipe/plague_cure
+	med_pot = /datum/alch_cauldron_recipe/antidote
 
 /obj/item/alch/rosa/equipped(mob/living/carbon/human/user, slot)
 	. = ..()

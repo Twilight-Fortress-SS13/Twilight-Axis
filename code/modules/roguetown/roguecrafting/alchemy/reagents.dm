@@ -162,7 +162,7 @@
 	..()
 	. = 1
 
-// Flu cure moved to modular_twilight_axis/code/modules/roguetown/roguecrafting/alchemy/flu_cure_reagent.dm
+// The Grime-Flu cure moved to modular_twilight_axis/code/modules/roguetown/roguecrafting/alchemy/grime_flu_cure_reagent.dm
 
 /* Buff potions
 	Previously, it would apply a status effect to the mob lasting for 93 / 300 seconds and remove everything

@@ -101,6 +101,12 @@
 /mob/living/proc/MobBump(mob/M)
 	//Even if we don't push/swap places, we "touched" them, so spread fire
 	spreadFire(M)
+	if(isliving(M))
+		var/mob/living/L = M
+		if(iscarbon(L))
+			SpreadContactDiseasesOnContact(L)
+			if(iscarbon(src))
+				L.SpreadContactDiseasesOnContact(src)
 
 	if(now_pushing)
 		return TRUE

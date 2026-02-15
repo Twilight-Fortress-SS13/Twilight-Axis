@@ -417,7 +417,7 @@
 /datum/disease/proc/cure(add_resistance = TRUE)
 	if(affected_mob)
 		if(add_resistance && (disease_flags & CAN_RESIST))
-			affected_mob.add_disease_resistance(GetDiseaseID(), 5 MINUTES)
+			affected_mob.add_disease_resistance(GetDiseaseID(), 10 MINUTES)
 	qdel(src)
 
 /datum/disease/proc/IsSame(datum/disease/D)
@@ -492,7 +492,6 @@
 		disease_resistances = list()
 	var/expire_at = world.time + duration
 	disease_resistances[disease_id] = expire_at
-	addtimer(CALLBACK(src, PROC_REF(expire_disease_resistance), disease_id, expire_at), duration)
 
 /mob/living/proc/expire_disease_resistance(disease_id, expected_expire_at)
 	if(!disease_resistances)
@@ -503,8 +502,15 @@
 /mob/living/proc/CanContractDisease(datum/disease/D)
 	if(stat == DEAD && !D.process_dead)
 		return FALSE
-	if(D.GetDiseaseID() in disease_resistances)
+	if(!mind)
 		return FALSE
+	var/disease_id = D.GetDiseaseID()
+	if(disease_id in disease_resistances)
+		var/expire_at = disease_resistances[disease_id]
+		if(isnum(expire_at) && expire_at <= world.time)
+			disease_resistances.Remove(disease_id)
+		else
+			return FALSE
 	if(HasDisease(D))
 		return FALSE
 	if(!(D.infectable_biotypes & mob_biotypes))
@@ -539,8 +545,11 @@
 			continue
 		var/spread_chance = chance
 		// Per-disease contact spread chances
-		if(istype(D, /datum/disease/flu))
-			spread_chance = 50
+		if(istype(D, /datum/disease/grime_flu))
+			if(D.stage == 1)
+				spread_chance = 100
+			else
+				spread_chance = 50
 		if(istype(D, /datum/disease/ash_blight))
 			spread_chance = 50
 		if(spread_chance > 0 && !prob(spread_chance))
@@ -587,4 +596,4 @@
 	return !is_mouth_covered()
 
 // Custom diseases moved to modular_twilight_axis/code/datums/diseases/
-// This includes: flu.dm, ash_blight.dm
+// This includes: grime_flu.dm, ash_blight.dm

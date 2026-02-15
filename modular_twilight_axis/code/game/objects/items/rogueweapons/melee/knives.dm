@@ -36,8 +36,8 @@
 	max_integrity = 200
 	var/mob/living/last_bleed_target
 	var/last_bleed_rate = 0
-	var/selected_disease_type = /datum/disease/flu
-	var/selected_disease_name = "Flu"
+	var/selected_disease_type = /datum/disease/grime_flu
+	var/selected_disease_name = "The Grime-Flu"
 	COOLDOWN_DECLARE(disease_select_cooldown)
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/verb/select_disease()
@@ -103,7 +103,7 @@
 	. = ..()
 	if(!user)
 		return
-	var/disease_path = selected_disease_type ? selected_disease_type : /datum/disease/flu
+	var/disease_path = selected_disease_type ? selected_disease_type : /datum/disease/grime_flu
 	if(!disease_path)
 		return
 	if(!isliving(target))
