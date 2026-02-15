@@ -4,6 +4,7 @@
 #include "code\datums\combo\combo_expire.dm"
 #include "code\datums\combo\soundbreaker\combo_soundbreaker.dm"
 #include "code\datums\diseases\grime_flu.dm"
+#include "code\datums\diseases\flu.dm"
 #include "code\datums\diseases\ash_blight.dm"
 #include "code\datums\flaws\lawless.dm"
 #include "code\datums\combat_music.dm"

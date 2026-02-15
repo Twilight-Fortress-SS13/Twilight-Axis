@@ -550,6 +550,11 @@
 				spread_chance = 100
 			else
 				spread_chance = 50
+		if(istype(D, /datum/disease/flu))
+			if(D.stage == 1)
+				spread_chance = 100
+			else
+				spread_chance = 50
 		if(istype(D, /datum/disease/ash_blight))
 			spread_chance = 50
 		if(spread_chance > 0 && !prob(spread_chance))
@@ -596,4 +601,4 @@
 	return !is_mouth_covered()
 
 // Custom diseases moved to modular_twilight_axis/code/datums/diseases/
-// This includes: grime_flu.dm, ash_blight.dm
+// This includes: grime_flu.dm, flu.dm, ash_blight.dm
