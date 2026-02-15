@@ -103,6 +103,10 @@
 	if(notransform)
 		return
 
+	// Block all player input during Flash-Frenzy episodes
+	if(HAS_TRAIT(src, TRAIT_FLASH_FRENZY_CONTROL_LOSS))
+		return
+
 	if(SEND_SIGNAL(src, COMSIG_MOB_CLICKON, A, params) & COMSIG_MOB_CANCEL_CLICKON)
 		return
 
@@ -115,7 +119,7 @@
 
 	if(modifiers["middle"] && atkswinging == "middle")
 		if(mmb_intent)
-			if(mmb_intent.get_chargetime())
+			if(!QDELETED(mmb_intent) && mmb_intent.get_chargetime())
 				if(mmb_intent.no_early_release && client?.chargedprog < 100)
 					changeNext_move(mmb_intent.clickcd)
 					return
@@ -128,7 +132,7 @@
 			used_hand = 2
 			if(next_rmove > world.time)
 				return
-		if(used_intent.get_chargetime())
+		if(!QDELETED(used_intent) && used_intent.get_chargetime())
 			if(used_intent.no_early_release && client?.chargedprog < 100)
 				var/adf = used_intent.clickcd
 				if(istype(rmb_intent, /datum/rmb_intent/aimed))
@@ -146,7 +150,7 @@
 			used_hand = 1
 			if(next_lmove > world.time)
 				return
-		if(used_intent.get_chargetime())
+		if(!QDELETED(used_intent) && used_intent.get_chargetime())
 			if(used_intent.no_early_release && client?.chargedprog < 100)
 				changeNext_move(used_intent.clickcd,used_hand)
 				return
@@ -353,7 +357,7 @@
 	if(!A)
 		return
 	// TA Add start - SOUNDBREAKER
-	if(used_intent.is_attack_swing())
+	if(!QDELETED(used_intent) && used_intent.is_attack_swing())
 		if(try_consume_attack_effects(src, A, zone_selected))
 			atkswinging = null
 			return
@@ -894,7 +898,7 @@ GLOBAL_LIST_EMPTY(reach_dummy_pool)
 			A.rmb_self(src)
 		else
 			rmb_on(A, params)
-	else if(used_intent.rmb_ranged)
+	else if(!QDELETED(used_intent) && used_intent.rmb_ranged)
 		used_intent.rmb_ranged(A, src) //get the message from the intent
 	changeNext_move(CLICK_CD_RAPID)
 	if(isturf(A.loc))

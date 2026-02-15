@@ -94,6 +94,10 @@
 	charge_was_blocked_by_cooldown = FALSE
 	var/list/modifiers = params2list(params)
 
+	// Block all input during Flash-Frenzy episodes
+	if(HAS_TRAIT(mob, TRAIT_FLASH_FRENZY_CONTROL_LOSS))
+		return
+
 	if(mob.incapacitated())
 		return
 
@@ -113,7 +117,7 @@
 
 	var/was_charging = charging
 
-	if(was_charging && mob.used_intent)
+	if(was_charging && !QDELETED(mob.used_intent))
 		mob.used_intent.on_mouse_up()
 
 	mob.atkswinging = null
@@ -159,7 +163,7 @@
 			charge_was_blocked_by_cooldown = TRUE
 			return
 		mob.used_intent = mob.o_intent
-		if(mob.used_intent.get_chargetime() && !object.blockscharging && !mob.in_throw_mode)
+		if(!QDELETED(mob.used_intent) && mob.used_intent.get_chargetime() && !object.blockscharging && !mob.in_throw_mode)
 			mob.face_atom(object, location, control, params)
 			updateprogbar(object)
 		else
@@ -183,7 +187,7 @@
 	if(!mob.mmb_intent)
 		mouse_pointer_icon = 'icons/effects/mousemice/human_looking.dmi'
 	else
-		if(mob.mmb_intent.get_chargetime() && !object.blockscharging)
+		if(!QDELETED(mob.mmb_intent) && mob.mmb_intent.get_chargetime() && !object.blockscharging)
 			updateprogbar(object)
 		else
 			mouse_pointer_icon = mob.mmb_intent.pointer
@@ -201,7 +205,7 @@
 
 	mob.atkswinging = "left"
 	mob.used_intent = mob.a_intent
-	if(mob.used_intent.get_chargetime() && !object.blockscharging && !mob.in_throw_mode)
+	if(!QDELETED(mob.used_intent) && mob.used_intent.get_chargetime() && !object.blockscharging && !mob.in_throw_mode)
 		updateprogbar(object)
 	else
 		mouse_pointer_icon = 'icons/effects/mousemice/human_attack.dmi'
@@ -213,6 +217,10 @@
 	return TRUE
 
 /client/MouseUp(object, location, control, params)
+	// Block all input during Flash-Frenzy episodes
+	if(HAS_TRAIT(mob, TRAIT_FLASH_FRENZY_CONTROL_LOSS))
+		return
+
 	if(charging && isliving(mob))
 		update_to_mob(mob, 0)
 
@@ -276,7 +284,7 @@
 	if(!isliving(mob))
 		return
 	var/mob/living/L = mob
-	if(!L.used_intent.can_charge(clicked_object))
+	if(QDELETED(L.used_intent) || !L.used_intent.can_charge(clicked_object))
 		return
 	L.used_intent.prewarning()
 
@@ -381,6 +389,10 @@
 	. = 1
 
 /client/MouseDrag(src_object,atom/over_object,src_location,over_location,src_control,over_control,params)
+
+	// Block all input during Flash-Frenzy episodes
+	if(HAS_TRAIT(mob, TRAIT_FLASH_FRENZY_CONTROL_LOSS))
+		return
 
 	if(mob.incapacitated())
 		return
