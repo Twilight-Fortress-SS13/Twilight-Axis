@@ -9,6 +9,7 @@
 #include "code\datums\diseases\derma_tick.dm"
 #include "code\datums\diseases\flash_frenzy.dm"
 #include "code\datums\diseases\blood_rot.dm"
+#include "code\datums\diseases\plague.dm"
 #include "code\datums\flaws\lawless.dm"
 #include "code\datums\combat_music.dm"
 #include "code\datums\mob_descriptors\descriptors\other.dm"
