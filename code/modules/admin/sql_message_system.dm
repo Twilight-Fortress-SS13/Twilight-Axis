@@ -104,6 +104,7 @@
 		message_admins("[header]:<br>[text]")
 		admin_ticket_log(target_ckey, "<font color='blue'>[header]</font>")
 		admin_ticket_log(target_ckey, text)
+		world.TgsAnnounceAdminMessageEntry(admin_ckey, target_key, type, text, secret, expiry)
 		if(browse)
 			browse_messages("[type]")
 		else

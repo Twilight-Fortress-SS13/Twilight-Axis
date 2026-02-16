@@ -302,8 +302,6 @@
 		var/mob/living/carbon/C = user
 		if(C.domhand)
 			used_str = C.get_str_arms(C.used_hand)
-	if(istype(user.rmb_intent, /datum/rmb_intent/weak))
-		used_str--
 	if(ishuman(user))
 		var/mob/living/carbon/human/user_human = user
 		if(user_human.clan) // For each level of potence user gains 0.5 STR, at 5 Potence their STR buff is 2.5
@@ -435,6 +433,9 @@
 
 	if(istype(user.rmb_intent, /datum/rmb_intent/strong))
 		newforce += (I.force_dynamic * STRONG_STANCE_DMG_BONUS)
+
+	if(istype(user.rmb_intent, /datum/rmb_intent/weak))
+		newforce = (newforce * 0.2)
 
 	newforce = CLAMP(newforce, user.used_intent.min_intent_damage, user.used_intent.max_intent_damage)
 
@@ -572,6 +573,10 @@
 /mob/living/attacked_by(obj/item/I, mob/living/user)
 	var/hitlim = simple_limb_hit(user.zone_selected)
 
+	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
+		user.visible_message(span_warning("The [I] passes harmlessly through [src]'s misty form!"))
+		return FALSE
+	
 	I.funny_attack_effects(src, user)
 	if(I.force_dynamic)
 		var/newforce = get_complex_damage(I, user)

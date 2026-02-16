@@ -174,9 +174,7 @@
 	desc = "Old antlers which you can wear on helmet, hood....or straight on your head!"
 	icon_state = "antlers"
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/64x64/head.dmi'
-	worn_x_dimension = 64
-	worn_y_dimension = 64
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head_48.dmi'
 	alternate_worn_layer  = 8.9
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK|ITEM_SLOT_NECK
 	resistance_flags = FIRE_PROOF
@@ -221,3 +219,82 @@
 		icon_state = antlers_final_icon
 		item_state = antlers_final_icon
 		update_icon()
+
+/obj/item/clothing/head/roguetown/tengai
+	name = "tengai"
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	flags_inv = HIDEEARS
+	icon_state = "tengai"
+	item_state = "tengai"
+	icon = 'modular_twilight_axis/icons/clothing/kazengun_n_burger.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/64x64/head.dmi'
+	worn_x_dimension = 64
+	worn_y_dimension = 64
+
+/obj/item/clothing/head/roguetown/gasa
+	name = "gasa"
+	flags_inv = HIDEEARS
+	icon_state = "gasa"
+	item_state = "gasa"
+	icon = 'modular_twilight_axis/icons/clothing/kazengun_n_burger.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/64x64/head.dmi'
+	worn_x_dimension = 64
+	worn_y_dimension = 64
+
+/obj/item/clothing/head/roguetown/torioigasa
+	name = "torioigasa"
+	flags_inv = HIDEEARS
+	icon_state = "torioigasa"
+	item_state = "torioigasa"
+	icon = 'modular_twilight_axis/icons/clothing/kazengun_n_burger.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/64x64/head.dmi'
+	worn_x_dimension = 64
+	worn_y_dimension = 64
+
+/obj/item/clothing/head/roguetown/roningasa
+	name = "roningasa"
+	flags_inv = HIDEEARS
+	icon_state = "roningasa"
+	item_state = "roningasa"
+	icon = 'modular_twilight_axis/icons/clothing/kazengun_n_burger.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/64x64/head.dmi'
+	worn_x_dimension = 64
+	worn_y_dimension = 64
+
+/obj/item/clothing/head/roguetown/sandogasa
+	name = "sandogasa"
+	flags_inv = HIDEEARS
+	icon_state = "sandogasa"
+	item_state = "sandogasa"
+	icon = 'modular_twilight_axis/icons/clothing/kazengun_n_burger.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/64x64/head.dmi'
+	worn_x_dimension = 64
+	worn_y_dimension = 64
+
+/obj/item/clothing/head/roguetown/roguehood/burgerhood
+	name = "noble hood"
+	desc = "Почувствуй себя молчаливым психопатом, что подливает отраву в еду соседа."
+	color = null
+	icon_state = "burgerhood"
+	item_state = "burgerhood"
+	icon = 'modular_twilight_axis/icons/clothing/kazengun_n_burger.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/kazengun_n_burger.dmi'
+	body_parts_covered = NECK
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	dynamic_hair_suffix = ""
+	edelay_type = 1
+	adjustable = CAN_CADJUST
+	toggle_icon_state = TRUE
+	max_integrity = 180
+	salvage_result = /obj/item/natural/cloth
+	salvage_amount = 1
+
+/datum/crafting_recipe/roguetown/survival/burgerhood //i dunno where to place it helpppp
+	name = "noble hood"
+	category = "Hoods"
+	result = list(/obj/item/clothing/head/roguetown/roguehood/burgerhood)
+	reqs = list(/obj/item/natural/cloth = 2,
+	            /obj/item/natural/fibers = 1)
+	tools = list(/obj/item/needle)
+	craftdiff = 2
+	sellprice = 15

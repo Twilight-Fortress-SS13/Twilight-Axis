@@ -1,5 +1,5 @@
 /datum/sex_action/sex/throat
-	name = "Трахнуть глотку"
+	name = "Fuck their throat"
 	stamina_cost = 1.0
 	intensity = 4
 
@@ -8,10 +8,6 @@
 		return FALSE
 	if(!user.getorganslot(ORGAN_SLOT_PENIS))
 		return FALSE
-	if(isdullahan(target) && knot_on_finish)
-		var/datum/species/dullahan/dullahan = target.dna.species
-		if(dullahan.headless)
-			return FALSE
 	return TRUE
 
 /datum/sex_action/sex/throat/can_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -28,14 +24,10 @@
 		return FALSE
 	if(check_sex_lock(user, ORGAN_SLOT_PENIS))
 		return FALSE
-	if(isdullahan(target) && knot_on_finish)
-		var/datum/species/dullahan/dullahan = target.dna.species
-		if(dullahan.headless)
-			return FALSE
 	return TRUE
 
 /datum/sex_action/sex/throat/get_start_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	return span_warning("[user] проникает хером прямиком в глотку [target]!")
+	return span_warning("[user] slides [user.p_their()] cock into [target]'s throat!")
 
 /datum/sex_action/sex/throat/get_start_sound(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	return list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg')
@@ -43,7 +35,7 @@
 /datum/sex_action/sex/throat/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
 	var/is_knotting = sex_session.do_knot_action
-	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [is_knotting ? "трахает узлом в глотку" : "трахает горло"] [target]."))
+	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [is_knotting ? "knot-fucks" : "fucks"] [target]'s throat."))
 	playsound(target, 'sound/misc/mat/segso.ogg', 50, TRUE, -2, ignore_walls = FALSE)
 	do_thrust_animate(user, target, sex_session)
 
@@ -57,19 +49,19 @@
 	sex_session.handle_passive_ejaculation()
 
 /datum/sex_action/sex/throat/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	user.visible_message(span_love("[user] кончает в глотку [target]!"))
+	user.visible_message(span_love("[user] cums into [target]'s throat!"))
 	user.virginity = FALSE
 	return "into"
 
 
 /datum/sex_action/sex/throat/get_finish_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	return span_warning("[user] вынимает обслюнявленный хер из глотки [target].")
+	return span_warning("[user] pulls [user.p_their()] cock out of [target]'s throat.")
 
 /datum/sex_action/sex/throat/get_knot_count()
 	return 1
 
 /datum/sex_action/sex/throat/double
-	name = "Трахнуть глотку двумя членами"
+	name = "Fuck their throat with both cocks"
 
 /datum/sex_action/sex/throat/double/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(!has_double_penis(user))
@@ -82,7 +74,7 @@
 	return ..()
 
 /datum/sex_action/sex/throat/double/get_start_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	return span_warning("[user] проникает членами в глотку [target]!") 
+	return span_warning("[user] slides [user.p_their()] cocks into [target]'s throat!")
 
 /datum/sex_action/sex/throat/double/get_start_sound(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	return list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg')
@@ -90,7 +82,7 @@
 /datum/sex_action/sex/throat/double/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
 	var/is_knotting = sex_session.do_knot_action
-	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [is_knotting ? "трахает двумя членами глотку [target] по самый узел" : "трахает двумя членами глотку [target]"]."))
+	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [is_knotting ? "double-knots" : "double-fucks"] [target]'s throat."))
 	playsound(target, 'sound/misc/mat/segso.ogg', 50, TRUE, -2, ignore_walls = FALSE)
 	do_thrust_animate(user, target, sex_session)
 
@@ -106,7 +98,7 @@
 	sex_session.handle_passive_ejaculation()
 
 /datum/sex_action/sex/throat/double/get_finish_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	return span_warning("вынимает обслюнявленные члены из глотки [target].")
+	return span_warning("[user] pulls [user.p_their()] cocks out of [target]'s throat.")
 
 /datum/sex_action/sex/throat/double/get_knot_count()
 	return 2

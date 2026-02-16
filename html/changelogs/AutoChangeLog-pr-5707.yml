@@ -1,4 +1,0 @@
-author: "FreeStylaLT"
-delete-after: True
-changes:
-  - bugfix: "Fixed Scrying not notifying the target properly."

@@ -353,6 +353,7 @@
 			weapons += "Moonlight Khopesh"
 		if(/datum/patron/divine/necra)
 			weapons += "Swift End"
+			weapons += "The Equipoise" //TA EDIT
 		if(/datum/patron/divine/pestra)
 			weapons += "Plaguebringer Sickles"
 			weapons += "Lance of Boils"
@@ -418,6 +419,11 @@
 		if("Swift End")
 			H.put_in_hands(new /obj/item/rogueweapon/flail/sflail/necraflail(H))
 			H.adjust_skillrank(/datum/skill/combat/whipsflails, 1, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
+		if("The Equipoise") //TA EDIT
+			H.put_in_hands(new /obj/item/rogueweapon/halberd/bardiche/twilight_necrascythe/preblessed(H), TRUE)
+			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Plaguebringer Sickles")
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle(H))

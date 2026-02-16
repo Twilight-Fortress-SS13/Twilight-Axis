@@ -1,5 +1,5 @@
 /datum/sex_action/sex/boobjob
-	name = "Вздрочнуть сиськами"
+	name = "Use their tits to get off"
 	intensity = 3
 
 /datum/sex_action/sex/boobjob/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -30,14 +30,19 @@
 	return TRUE
 
 /datum/sex_action/sex/boobjob/get_start_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	return span_warning("[user] хватает сиськи [target] и погружает свой хер в ложбинку!")
+	return span_warning("[user] grabs [target]'s tits and shoves [user.p_their()] cock inbetween!")
+
+/datum/sex_action/sex/boobjob/get_finish_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
+	return span_warning("[user] pulls [user.p_their()] cock out from inbetween [target]'s tits.")
 
 /datum/sex_action/sex/boobjob/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
-	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] трахает сиськи [target]."))
+	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] fucks [target]'s tits."))
 	playsound(user, 'sound/misc/mat/fingering.ogg', 20, TRUE, -2, ignore_walls = FALSE)
 
 	sex_session.perform_sex_action(user, 2, 4, TRUE)
+	sex_session.handle_passive_ejaculation(target)
 
-/datum/sex_action/sex/boobjob/get_finish_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	return span_warning("[user] поднимает хер из ложбинки меж грудей [target].")
+/datum/sex_action/sex/boobjob/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
+	user.visible_message(span_love("[user] cums over [target]'s tits!"))
+	return "onto"

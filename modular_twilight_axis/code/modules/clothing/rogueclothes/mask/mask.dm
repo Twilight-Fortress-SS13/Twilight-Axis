@@ -1,3 +1,7 @@
+/obj/item/clothing/mask/rogue/Initialize()
+	. = ..()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_INQUISITION)
+
 /obj/item/clothing/mask/rogue/lordmask/naledi/decorated
 	armor = null
 	prevent_crits = null
@@ -102,3 +106,18 @@
 /obj/item/clothing/mask/rogue/ragmask/bishop/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CHOSEN, "VISAGE")
+
+/obj/item/clothing/mask/rogue/facemask/steel/psythorns
+	name = "mask of psydonian thorns"
+	desc = "Expressionless steel mask, decorated with a set of blacksteel thorns. Never forget you are why Psydon wept."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
+	icon_state = "psybarbsmask"
+	item_state = "psybarbsmask"
+	smeltresult = /obj/item/ingot/blacksteel
+	armor = ARMOR_PLATE_BSTEEL
+	prevent_crits = PREVENT_CRITS_ALL
+	blocksound = PLATEHIT
+	resistance_flags = FIRE_PROOF
+	max_integrity = ARMOR_INT_SIDE_BLACKSTEEL
+	body_parts_covered = FACE|HAIR|HEAD

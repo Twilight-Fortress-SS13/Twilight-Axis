@@ -25,3 +25,17 @@
 	shortname = "Heishi"
 	credits = "Rapid As Wildfires - Yu-peng Chen"
 	musicpath = list('modular_twilight_axis/sound/music/combat_heishi.ogg')
+
+/datum/combat_music/BPHunter
+	name = "Blackpowder Hunter"
+	desc = ""
+	shortname = "Koseposha"
+	credits = "KCD 2, Tavern song"
+	musicpath = list('modular_twilight_axis/firearms/sound/music/combat_blackpowderhunter.ogg')
+
+/datum/combat_music/Northvibes
+	name = "Norsian hymn"
+	desc = ""
+	shortname = "North"
+	credits = "Hakkerskaldyr"
+	musicpath = list('modular_twilight_axis/sound/music/combat_hakkerskaldyr.ogg')

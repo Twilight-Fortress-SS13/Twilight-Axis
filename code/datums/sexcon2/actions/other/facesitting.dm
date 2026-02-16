@@ -1,5 +1,5 @@
 /datum/sex_action/facesitting
-	name = "Сесть на лицо"
+	name = "Sit on their face"
 	intensity = 3
 
 /datum/sex_action/facesitting/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -31,12 +31,12 @@
 
 /datum/sex_action/facesitting/on_start(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
-	user.visible_message(span_warning("[user] присаживается на лицо [target]!"))
+	user.visible_message(span_warning("[user] sits [user.p_their()] butt on [target]'s face!"))
 
 /datum/sex_action/facesitting/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
-	var/verbstring = pick(list("трется", "ерзает", "виляет"))
-	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [verbstring] своим задом на лице [target]."))
+	var/verbstring = pick(list("rubs", "smushes", "forces"))
+	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] [verbstring] [user.p_their()] butt against [target] face."))
 	target.make_sucking_noise()
 	do_thrust_animate(user, target, sex_session)
 
@@ -48,7 +48,7 @@
 
 /datum/sex_action/facesitting/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
-	user.visible_message(span_warning("[user] поднимается с лица [target]."))
+	user.visible_message(span_warning("[user] gets off [target]'s face."))
 
 /datum/sex_action/facesitting/lock_sex_object(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	sex_locks |= new /datum/sex_session_lock(target, BODY_ZONE_PRECISE_MOUTH)

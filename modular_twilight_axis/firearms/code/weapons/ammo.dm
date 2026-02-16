@@ -81,7 +81,7 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_runed"
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
-	range = 20
+	range = 100
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	embedchance = 100
 	woundclass = BCLASS_STAB
@@ -245,6 +245,14 @@
 			else
 				T.visible_message(span_danger("The [src.name] misses [T] narrowly, grazing them!"), \
 								span_danger("The [src.name] misses me narrowly, grazing me!"), null, COMBAT_MESSAGE_RANGE)
+	if(istype(src, /obj/projectile/bullet/twilight_lead/twilight_runelock))
+		var/turf/T = get_turf(src)
+		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/new_boolet = new ammo_type(T)
+		var/obj/projectile/bullet/twilight_lead/twilight_runelock/R = src
+		if(istype(R.linked_bag, /obj/item/quiver/twilight_bullet/runicbag))
+			var/obj/item/quiver/twilight_bullet/runicbag/bag = R.linked_bag
+			new_boolet.linked_bag = bag
+			bag.linked_ammo += new_boolet
 	. = ..()
 	if(isliving(firer) && (istype(fired_from, /obj/item/gun/ballistic/twilight_firearm) || istype(fired_from, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock)))
 		var/mob/living/M = firer
@@ -269,16 +277,6 @@
 						to_chat(T, span_danger("Silver rebukes my presence! These fires are lashing at my very soul!"))
 					T.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/sunder)
 				T.ignite_mob()
-
-/obj/projectile/bullet/twilight_lead/twilight_runelock/on_hit(atom/target, blocked = FALSE)
-	. = ..()
-	if(isliving(firer) && istype(fired_from, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock))
-		var/turf/T = get_turf(src)
-		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/new_boolet = new ammo_type(T)
-		if(istype(linked_bag, /obj/item/quiver/twilight_bullet/runicbag))
-			var/obj/item/quiver/twilight_bullet/runicbag/bag = linked_bag
-			new_boolet.linked_bag = bag
-			bag.linked_ammo += new_boolet
 
 /*/mob/living/carbon/check_projectile_wounding(obj/projectile/P, def_zone, blocked)
 	if(isliving(P.firer) && (istype(P.fired_from, /obj/item/gun/ballistic/twilight_firearm) || istype(P.fired_from, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock)))

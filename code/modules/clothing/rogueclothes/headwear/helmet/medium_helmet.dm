@@ -46,6 +46,12 @@
 /obj/item/clothing/suit/roguetown/head/helmet/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 
+/obj/item/clothing/head/roguetown/helmet/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Shift-click to open up the helmet's inventory. This can be used to wear additional cosmetics over the helmet, or to store smaller items.")
+	. += span_info("Visored helmets can be articulated by right-clicking them. Lifted visors offer a wider field of view, but expose your face to precise strikes.")
+	. += span_info("Certain helmets can be further decorated by left-clicking them with a feather, cloth, or both.")
+
 /obj/item/clothing/head/roguetown/helmet/skullcap
 	name = "skull cap"
 	desc = "An iron helmet which covers the top of the head."
@@ -436,7 +442,6 @@
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
 
-
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/attackby(obj/item/W, mob/living/user, params)
 	..()
 	if(istype(W, /obj/item/natural/feather) && !detail_tag)
@@ -461,7 +466,6 @@
 		if(loc == user && ishuman(user))
 			var/mob/living/carbon/H = user
 			H.update_inv_head()
-
 
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/update_icon()
 	cut_overlays()

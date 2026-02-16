@@ -5,3 +5,12 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/pants.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/pants.dmi'
 	salvage_result = null
+
+/obj/item/clothing/under/roguetown/trou/leather/hakama
+	name = "hakama"
+	desc = ""
+	icon_state = "hakama"
+	item_state = "hakama"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/pants.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/pants.dmi'
+	salvage_result = null
