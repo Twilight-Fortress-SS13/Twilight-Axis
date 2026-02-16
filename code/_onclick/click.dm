@@ -248,8 +248,8 @@
 		if(ismob(A))
 			if(CanReach(A,W))
 				var/turf/target_turf = get_turf(A)
-				if(get_dist(my_turf, target_turf) <= used_intent.reach)
-					if(!used_intent.noaa)
+				if(used_intent && get_dist(my_turf, target_turf) <= used_intent.reach)
+					if(used_intent && !used_intent.noaa)
 						do_attack_animation(target_turf, used_intent.animname, W, used_intent = src.used_intent)
 				resolveAdjacentClick(A,W,params)
 				return
@@ -296,7 +296,7 @@
 		if(CanReach(A) || CanReach(A, W))
 			if(isopenturf(A))
 				var/turf/T = A
-				if(used_intent.noaa)
+				if(used_intent && used_intent.noaa)
 					resolveAdjacentClick(A,W,params,used_hand)
 					return
 				if(T)
@@ -315,7 +315,7 @@
 							return
 					if(cmode)
 						resolveAdjacentClick(T,W,params,used_hand) //hit the turf
-					if(!used_intent.noaa)
+					if(used_intent && !used_intent.noaa)
 						changeNext_move(CLICK_CD_RAPID)
 						if(get_dist(my_turf, T) <= used_intent.reach)
 							do_attack_animation(T, used_intent.animname, used_intent.masteritem, used_intent = src.used_intent)

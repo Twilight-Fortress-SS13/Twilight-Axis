@@ -33,7 +33,7 @@
 		rmb_stam_penalty = 1.5	//Uses a modifer instead of a flat addition, less than weapons no matter what rn. 50% extra stam cost basically.
 	if(isliving(A))
 		var/mob/living/L = A
-		if(!used_intent.noaa)
+		if(used_intent && !used_intent.noaa)
 			playsound(get_turf(src), pick(GLOB.unarmed_swingmiss), 100, FALSE)
 //			src.emote("attackgrunt")
 		if(used_intent.releasedrain)
@@ -240,7 +240,7 @@
 		var/obj/item/clothing/gloves/G = gloves
 		if(istype(G) && G.Touch(A,0)) // for magic gloves
 			return
-	if(!used_intent.noaa && ismob(A))
+	if(used_intent && !used_intent.noaa && ismob(A))
 //		playsound(src, pick(GLOB.unarmed_swingmiss), 100, FALSE)
 		do_attack_animation(A, visual_effect_icon = used_intent.animname)
 		changeNext_move(used_intent.clickcd)

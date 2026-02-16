@@ -34,7 +34,7 @@
 		. += span_smallnotice("I could cut it open to reach inside, chop it into slices or squash it for seeds.")
 
 /obj/item/natural/shellplant/pumpkin/attackby(obj/item/I, mob/living/user, params)
-	if((user.used_intent.blade_class == BCLASS_CUT) && (I.wlength == WLENGTH_SHORT) && (!user.used_intent.noaa))
+	if(user.used_intent && (user.used_intent.blade_class == BCLASS_CUT) && (I.wlength == WLENGTH_SHORT) && (!user.used_intent.noaa))
 		if(!open)
 			if(do_after(user, 0.5 SECONDS))
 				playsound(get_turf(user), 'modular/Neu_Food/sound/slicing.ogg', 60, TRUE, -1)
@@ -42,14 +42,14 @@
 				open = TRUE
 				return
 		return
-	if((user.used_intent.blade_class == BCLASS_CHOP) && (!user.used_intent.noaa))
+	if(user.used_intent && (user.used_intent.blade_class == BCLASS_CHOP) && (!user.used_intent.noaa))
 		if(do_after(user, 0.5 SECONDS))
 			playsound(get_turf(user), 'modular/Neu_Food/sound/chopping_block.ogg', 60, TRUE, -1)
 			while(foodamt-- > 0)
 				new foodextracted(get_turf(loc))
 			qdel(src)
 			return
-	if((user.used_intent.blade_class == BCLASS_BLUNT) && (!user.used_intent.noaa))
+	if(user.used_intent && (user.used_intent.blade_class == BCLASS_BLUNT) && (!user.used_intent.noaa))
 		if(seed)
 			playsound(src,'sound/items/seedextract.ogg', 100, FALSE)
 			if(prob(5))
@@ -104,7 +104,7 @@
 	. += span_smallnotice("Using a small blade, I could stab or cut it into a variety of decorations.")
 
 /obj/item/pumpkinshell/attackby(obj/item/I, mob/living/user, params)
-	if((user.used_intent.blade_class == BCLASS_CUT || user.used_intent.blade_class == BCLASS_STAB) && (I.wlength == WLENGTH_SHORT) && (!user.used_intent.noaa))
+	if(user.used_intent && (user.used_intent.blade_class == BCLASS_CUT || user.used_intent.blade_class == BCLASS_STAB) && (I.wlength == WLENGTH_SHORT) && (!user.used_intent.noaa))
 		ui_interact(user)
 		return
 

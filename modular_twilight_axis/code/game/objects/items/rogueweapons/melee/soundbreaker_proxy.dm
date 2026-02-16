@@ -72,7 +72,7 @@
 
 	var/datum/intent/cached_intent = user.used_intent
 	if(swingdelay)
-		if(!user.used_intent.noaa && isnull(user.mind))
+		if(user.used_intent && !user.used_intent.noaa && isnull(user.mind))
 			if(get_dist(get_turf(user), get_turf(M)) <= user.used_intent.reach)
 				user.do_attack_animation(M, user.used_intent.animname, user.used_intent.masteritem, used_intent = user.used_intent, simplified = TRUE)
 		sleep(swingdelay)

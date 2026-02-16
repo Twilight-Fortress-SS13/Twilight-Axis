@@ -52,12 +52,28 @@
 		schedule_frenzy()
 		return
 	C.enter_frenzymod()
-	ADD_TRAIT(C, TRAIT_FLASH_FRENZY_CONTROL_LOSS, "flash_frenzy_disease")
-	// Stop any ongoing attack and reset intents to prevent errors
+	// Stop any ongoing attack and clear client state BEFORE adding control loss trait
 	if(C.client)
 		C.stop_attack(FALSE)
 		C.client.charging = 0
 		C.client.chargedprog = 0
+		C.client.selected_target[1] = null
+		C.client.active_mousedown_item = null
+	// Clear MMB intent and playing state
+	if(C.mmb_intent)
+		qdel(C.mmb_intent)
+		C.mmb_intent = null
+	if(C.curplaying)
+		C.curplaying = null
+	// Properly reset intents using the built-in system instead of setting to null
+	C.update_a_intents()
+	// NOW add the control loss trait - all state is clean
+	ADD_TRAIT(C, TRAIT_FLASH_FRENZY_CONTROL_LOSS, "flash_frenzy_disease")
+	// Visual message for everyone
+	C.visible_message(
+		span_danger("[C] впадает в ярость! Глаза наливаются кровью!"),
+		span_userdanger("Я чувствую бесконтрольную ярость!")
+	)
 	playsound(get_turf(C), pick('sound/vo/male/gen/agony (11).ogg', 'sound/vo/male/gen/agony (13).ogg', 'sound/vo/male/gen/agony (4).ogg'), 80, FALSE)
 	restore_cmode = FALSE
 	if(!C.cmode)
@@ -116,7 +132,21 @@
 		return
 	if(iscarbon(affected_mob))
 		var/mob/living/carbon/C = affected_mob
+		// Clean up attack state FIRST, before removing control loss trait
+		if(C.client)
+			C.stop_attack(FALSE)
+			C.client.selected_target[1] = null
+			C.client.active_mousedown_item = null
+		// Clear MMB intent and playing state
+		if(C.mmb_intent)
+			qdel(C.mmb_intent)
+			C.mmb_intent = null
+		if(C.curplaying)
+			C.curplaying = null
+		// NOW remove the control loss trait FIRST
 		REMOVE_TRAIT(C, TRAIT_FLASH_FRENZY_CONTROL_LOSS, "flash_frenzy_disease")
+		// THEN properly restore intents using the built-in system
+		C.update_a_intents()
 		C.exit_frenzymod()
 		if(restore_cmode && C.cmode)
 			C.toggle_cmode()
@@ -132,7 +162,21 @@
 		frenzy_exit_timer = null
 	if(iscarbon(affected_mob))
 		var/mob/living/carbon/C = affected_mob
+		// Clean up attack state FIRST, before removing traits
+		if(C.client)
+			C.stop_attack(FALSE)
+			C.client.selected_target[1] = null
+			C.client.active_mousedown_item = null
+		// Clear MMB intent and playing state
+		if(C.mmb_intent)
+			qdel(C.mmb_intent)
+			C.mmb_intent = null
+		if(C.curplaying)
+			C.curplaying = null
+		// NOW remove traits and exit frenzy
 		REMOVE_TRAIT(C, TRAIT_FLASH_FRENZY_CONTROL_LOSS, "flash_frenzy_disease")
+		// THEN properly restore intents using the built-in system
+		C.update_a_intents()
 		if(HAS_TRAIT(C, TRAIT_IN_FRENZY))
 			C.exit_frenzymod()
 		if(restore_cmode && C.cmode)
