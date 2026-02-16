@@ -561,6 +561,21 @@
 			spread_chance = 50
 		if(istype(D, /datum/disease/flash_frenzy))
 			spread_chance = 2
+		if(istype(D, /datum/disease/blood_rot))
+			// Only spreads if source is bleeding
+			if(ishuman(src))
+				var/mob/living/carbon/human/H = src
+				var/is_bleeding = FALSE
+				for(var/obj/item/bodypart/BP in H.bodyparts)
+					if(BP.get_bleed_rate() > 0)
+						is_bleeding = TRUE
+						break
+				if(is_bleeding)
+					spread_chance = 10
+				else
+					spread_chance = 0
+			else
+				spread_chance = 0
 		if(spread_chance > 0 && !prob(spread_chance))
 			continue
 		target.ForceContractDisease(D, TRUE, FALSE)
