@@ -42,15 +42,12 @@
 #include "code\modules\admin\adminhelp.dm"
 #include "code\modules\admin\discord.dm"
 #include "code\modules\admin\ticket_ss.dm"
-<<<<<<< HEAD
 #include "code\modules\admin\verbs\infect.dm"
 #include "code\modules\jobs\job_types\roguetown\burghers\apothecary_override.dm"
 #include "code\modules\events\minor\disease_sickness.dm"
 #include "code\modules\events\moderate\disease_outbreak.dm"
-=======
 #include "code\modules\admin\verbs\debug_admin_dress_full.dm"
 #include "code\controllers\subsystem\rogue\role_class_handler\role_class_handler_admin_full_dress.dm"
->>>>>>> upstream/main
 #include "code\modules\cargo\packsrogue\adventure_supplies.dm"
 #include "code\modules\cargo\packsrogue\alcohols.dm"
 #include "code\modules\cargo\packsrogue\Brigand.dm"
