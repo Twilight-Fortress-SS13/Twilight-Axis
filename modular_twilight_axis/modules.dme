@@ -114,6 +114,7 @@
 #include "code\modules\mob\dead\new_player\sprite_accessory\horns.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\tails.dm"
 #include "code\modules\mob\living\carbon\human\emotes_noises.dm"
+#include "code\modules\mob\living\carbon\vv_cure_diseases.dm"
 #include "code\modules\mob\living\emote.dm"
 #include "code\modules\roguetown\roguecrafting\ceramics.dm"
 #include "code\modules\roguetown\roguecrafting\items.dm"
