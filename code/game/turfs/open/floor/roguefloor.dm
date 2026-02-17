@@ -531,12 +531,7 @@
 	..()
 	if(ishuman(O))
 		var/mob/living/carbon/human/H = O
-		var/bleed_amount = H.bleed_rate
-		if(!bleed_amount)
-			bleed_amount = H.get_bleed_rate()
-		var/is_crawling = H.resting || !(H.mobility_flags & MOBILITY_STAND)
-		if(is_crawling && bleed_amount > 0 && prob(30))
-			H.ForceContractDisease(new /datum/disease/derma_tick(), TRUE, TRUE)
+		try_spread_derma_tick(H)
 		if(H.shoes && !HAS_TRAIT(H, TRAIT_LIGHT_STEP))
 			var/obj/item/clothing/shoes/S = H.shoes
 			if(!istype(S) || !S.can_be_bloody)
@@ -558,6 +553,9 @@
 	if(!ishuman(AM))
 		return
 	var/mob/living/carbon/human/H = AM
+	try_spread_derma_tick(H)
+
+/turf/open/floor/rogue/dirt/proc/try_spread_derma_tick(mob/living/carbon/human/H)
 	var/bleed_amount = H.bleed_rate
 	if(!bleed_amount)
 		bleed_amount = H.get_bleed_rate()

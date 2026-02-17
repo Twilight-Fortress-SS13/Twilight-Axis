@@ -269,7 +269,7 @@
 // ============================================================================ //
 // DISEASE SYSTEM - Contact-based transmission with probabilistic infection   //
 // ============================================================================ //
-// Disease System Defines (from code/__DEFINES/diseases.dm)
+// Disease System Defines
 #define DISEASE_LIMIT 1
 #define VIRUS_SYMPTOM_LIMIT 6
 
@@ -408,11 +408,13 @@
 /proc/disease_air_spread_walk(turf/start, turf/end)
 	if(!start || !end)
 		return FALSE
-	while(TRUE)
-		if(end == start)
-			return TRUE
+	var/limit = 100
+	while(end != start && limit-- > 0)
 		var/turf/Temp = get_step_towards(end, start)
+		if(!Temp || Temp == end)
+			return FALSE
 		end = Temp
+	return (end == start)
 
 /datum/disease/proc/cure(add_resistance = TRUE)
 	if(affected_mob)

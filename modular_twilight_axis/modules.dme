@@ -1,5 +1,6 @@
 #include "code\_defines.dm"
 #include "code\_signals.dm"
+#include "..\code\__DEFINES\diseases.dm"
 #include "code\datums\combo\combo_core.dm"
 #include "code\datums\combo\combo_expire.dm"
 #include "code\datums\combo\soundbreaker\combo_soundbreaker.dm"

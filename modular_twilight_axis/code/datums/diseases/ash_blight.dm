@@ -57,6 +57,7 @@
 	
 	// Damage and message to player
 	H.adjustBruteLoss(2)
+	H.Stun(5) // 0.5 секунд stun
 	var/list/scratch_messages = list(
 		span_warning("Кожа нестерпимо зудит, и я сдираю струпья своими ногтями."),
 		span_warning("Язвы на коже разрываются под моими пальцами, выделяя мерзкую жидкость."),
