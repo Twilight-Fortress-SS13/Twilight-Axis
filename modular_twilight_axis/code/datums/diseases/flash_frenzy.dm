@@ -24,15 +24,7 @@
 /datum/disease/flash_frenzy/stage_act(delta_time, times_fired)
 	if(!affected_mob || QDELETED(src))
 		return ..()
-	var/mob/living/L = affected_mob
-	if(L.IsSleeping() && L.reagents?.has_reagent(/datum/reagent/medicine/flash_frenzy_sedative))
-		if(!sleep_start_time)
-			sleep_start_time = world.time
-		else if(world.time - sleep_start_time >= 40 SECONDS)
-			cure()
-			return ..()
-	else
-		sleep_start_time = 0
+
 	return ..()
 
 /datum/disease/flash_frenzy/proc/schedule_frenzy()
@@ -74,7 +66,10 @@
 		span_danger("[C] впадает в ярость! Глаза наливаются кровью!"),
 		span_userdanger("Я чувствую бесконтрольную ярость!")
 	)
-	playsound(get_turf(C), pick('sound/vo/male/gen/agony (11).ogg', 'sound/vo/male/gen/agony (13).ogg', 'sound/vo/male/gen/agony (4).ogg'), 80, FALSE)
+	if(C.gender == FEMALE)
+		playsound(get_turf(C), pick('sound/vo/female/dainty/painscream (1).ogg', 'sound/vo/female/dainty/painscream (2).ogg'), 80, FALSE)
+	else
+		playsound(get_turf(C), pick('sound/vo/male/gen/agony (11).ogg', 'sound/vo/male/gen/agony (13).ogg', 'sound/vo/male/gen/agony (4).ogg'), 80, FALSE)
 	restore_cmode = FALSE
 	if(!C.cmode)
 		C.toggle_cmode()

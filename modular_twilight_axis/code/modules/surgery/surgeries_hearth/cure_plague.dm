@@ -95,6 +95,9 @@
 		span_notice("[user] successfully cauterizes the plague from [target]!"),
 		span_notice("[user] sears [target]'s plague-ridden tissue with [tool]."))
 	to_chat(target, span_notice("Операция завершена, чума устранена, но я получил сильные ожоги!"))
-	playsound(target, pick('sound/vo/male/gen/agony (11).ogg', 'sound/vo/male/gen/agony (13).ogg', 'sound/vo/male/gen/agony (4).ogg'), 80, FALSE)
+	if(target.gender == FEMALE)
+		playsound(target, pick('sound/vo/female/dainty/painscream (1).ogg', 'sound/vo/female/dainty/painscream (2).ogg'), 80, FALSE)
+	else
+		playsound(target, pick('sound/vo/male/gen/agony (11).ogg', 'sound/vo/male/gen/agony (13).ogg', 'sound/vo/male/gen/agony (4).ogg'), 80, FALSE)
 	return TRUE
 

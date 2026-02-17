@@ -50,13 +50,18 @@
 	if(world.time - infected_time >= 10 MINUTES)
 		cure()
 		return .
+	// Natural cure after 10 minutes
+	if(world.time - infected_time >= 10 MINUTES)
+		cure()
+		return .
+	// Sleep-based cure (25 seconds sleep + no thirst)
 	if(L.IsSleeping())
 		if(L.hydration < HYDRATION_LEVEL_SMALLTHIRST)
 			sleep_start_time = 0
 		else
 			if(!sleep_start_time)
 				sleep_start_time = world.time
-			else if(world.time - sleep_start_time >= 1 MINUTES)
+			else if(world.time - sleep_start_time >= 25 SECONDS)
 				cure()
 				return .
 	else

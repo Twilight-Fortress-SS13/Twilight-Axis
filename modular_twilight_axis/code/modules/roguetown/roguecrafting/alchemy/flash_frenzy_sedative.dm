@@ -12,11 +12,15 @@
 	color = "#6b7d8a"
 	taste_description = "bitter herbs"
 	scent_description = "damp roots"
-	metabolization_rate = 0.417 * REAGENTS_METABOLISM
+	metabolization_rate = 0.42 * REAGENTS_METABOLISM
 
 /datum/reagent/medicine/flash_frenzy_sedative/on_mob_life(mob/living/carbon/M)
 	if(volume > 0.99)
 		M.Sleeping(2 SECONDS)
+	// Cure Flash Frenzy disease when sedative is consumed
+	if(M.mind)
+		for(var/datum/disease/flash_frenzy/disease in M.diseases)
+			disease.cure()
 	..()
 	. = 1
 

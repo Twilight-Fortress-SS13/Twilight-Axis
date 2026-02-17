@@ -11,17 +11,32 @@
 	viable_mobtypes = list(/mob/living)
 	var/itch_timer = null
 	var/infected_time = 0
+	var/sleep_start_time = 0
 
 /datum/disease/derma_tick/after_add()
 	. = ..()
 	infected_time = world.time
+	sleep_start_time = 0
 	if(ishuman(affected_mob))
 		schedule_itch()
 
 /datum/disease/derma_tick/stage_act(delta_time, times_fired)
+	var/mob/living/L = affected_mob
+	if(!istype(L))
+		return ..()
+	// Natural cure after 10 minutes
 	if(infected_time && world.time - infected_time >= 10 MINUTES)
 		cure(FALSE)
 		return
+	// Sleep-based cure (25 seconds)
+	if(L.IsSleeping())
+		if(!sleep_start_time)
+			sleep_start_time = world.time
+		else if(world.time - sleep_start_time >= 25 SECONDS)
+			cure(FALSE)
+			return
+	else
+		sleep_start_time = 0
 	return ..()
 
 /datum/disease/derma_tick/proc/schedule_itch()

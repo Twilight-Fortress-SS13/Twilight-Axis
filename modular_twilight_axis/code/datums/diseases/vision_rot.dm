@@ -31,12 +31,12 @@
 /datum/disease/vision_rot/proc/schedule_blur()
 	if(blur_timer)
 		deltimer(blur_timer)
-	blur_timer = addtimer(CALLBACK(src, PROC_REF(blur_tick)), rand(12, 22) SECONDS, TIMER_STOPPABLE)
+	blur_timer = addtimer(CALLBACK(src, PROC_REF(blur_tick)), rand(25, 35) SECONDS, TIMER_STOPPABLE)
 
 /datum/disease/vision_rot/proc/blur_tick()
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
 		return
-	// Check for auto-cure after 8 minutes
+	// Check for natural cure after 8 minutes
 	if(infected_time && world.time - infected_time >= 8 MINUTES)
 		cure(FALSE) // No immunity after natural cure
 		to_chat(affected_mob, span_notice("Моё зрение начинает восстанавливаться..."))
@@ -49,7 +49,7 @@
 /datum/disease/vision_rot/proc/schedule_colorblind()
 	if(colorblind_timer)
 		deltimer(colorblind_timer)
-	colorblind_timer = addtimer(CALLBACK(src, PROC_REF(colorblind_tick)), rand(18, 32) SECONDS, TIMER_STOPPABLE)
+	colorblind_timer = addtimer(CALLBACK(src, PROC_REF(colorblind_tick)), rand(30, 45) SECONDS, TIMER_STOPPABLE)
 
 /datum/disease/vision_rot/proc/colorblind_tick()
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
@@ -71,7 +71,7 @@
 /datum/disease/vision_rot/proc/schedule_blind()
 	if(blind_timer)
 		deltimer(blind_timer)
-	blind_timer = addtimer(CALLBACK(src, PROC_REF(blind_tick)), rand(20, 30) SECONDS, TIMER_STOPPABLE)
+	blind_timer = addtimer(CALLBACK(src, PROC_REF(blind_tick)), rand(35, 50) SECONDS, TIMER_STOPPABLE)
 
 /datum/disease/vision_rot/proc/blind_tick()
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
