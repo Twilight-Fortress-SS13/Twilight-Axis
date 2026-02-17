@@ -192,6 +192,7 @@
 			weapons += "Madenning Thorns"
 		if(/datum/patron/divine/necra)
 			weapons += "Osteotomes"
+			weapons += "The Equipoise"
 		if(/datum/patron/divine/malum)
 			weapons += "Embertongues"
 
@@ -319,6 +320,12 @@
 			ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
 			H.change_stat(STATKEY_SPD, 2)
 			H.change_stat(STATKEY_INT, 2)
+		if("The Equipoise")
+			H.put_in_hands(new /obj/item/rogueweapon/halberd/bardiche/twilight_necrascythe/preblessed(H), TRUE)
+			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
+			H.change_stat(STATKEY_STR, 2)
+			H.change_stat(STATKEY_SPD, 1)
 		if("Embertongues")
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/malum(H), TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/malum(H), TRUE)

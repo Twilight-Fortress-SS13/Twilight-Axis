@@ -278,13 +278,6 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	credits = "Alias Conrad Coldwood - Pepper Steak (OFF OST)"
 	musicpath = list('sound/music/combat_jester.ogg')
 
-/datum/combat_music/BPHunter //TA mandated cmode music
-	name = "Blackpowder Hunter"
-	desc = ""
-	shortname = "Koseposha"
-	credits = "KCD 2, Tavern song"
-	musicpath = list('modular_twilight_axis/firearms/sound/music/combat_blackpowderhunter.ogg')
-
 /datum/combat_music/kazengite
 	name = "Kazengite"
 	desc = ""
@@ -422,7 +415,7 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	name = "Steppesman"
 	desc = ""
 	shortname = "Steppe"
-	credits = "Tatar Theme (Hellish Quart OST)"
+	credits = "MusicImaginary - Tatars"
 	musicpath = list('sound/music/combat_steppe.ogg')
 
 /datum/combat_music/town_dirt
@@ -495,3 +488,32 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	shortname = "Warscholar"
 	credits = "Butcher's Boulevard - Kristjan Thomas Haaristo"
 	musicpath = list('sound/music/warscholar.ogg')
+
+/datum/combat_music/freifencer
+	name = "Freifechter, Fencer"
+	desc = "God is dead, yet I follow his word! No fire made by any man will snuff out the Reformation! Paradise awaits!"
+	shortname = "Fencer"
+	credits = "MusicImaginary - Old Church"
+	musicpath = list('sound/music/frei_fencer.ogg')
+
+/datum/combat_music/freilancer
+	name = "Freifechter, Lancer"
+	desc = "Etruscan pike companies are some of Psydonia's most sought-after mercenaries - but you're not one of those. You're a master."
+	shortname = "Lancer"
+	credits = "Lucas Gitano - The Mask of Zorro (Fingerstyle Acoustic Cover)"
+	musicpath = list('sound/music/frei_lancer.ogg')
+
+/datum/combat_music/freisabrist
+	name = "Freifechter, Sabrist"
+	desc = "So long as we still lyve, what the foreign powers have seized from us, we shall recapture with a sabre in hand."
+	shortname = "Sabrist"
+	credits = "MusicImaginary - Lyra"
+	musicpath = list('sound/music/frei_sabre.ogg')
+
+/datum/combat_music/aavshepherd
+	name = "Aavnic Shepherd"
+	desc = "\"No saber in hand, they crush bones with their fokos!\""
+	shortname = "Shepherd"
+	credits = "MusicImaginary - Yendrek"
+	musicpath = list('sound/music/frei_shepherd.ogg')
+

@@ -105,17 +105,16 @@
 	var/skeleton_roll
 
 	var/list/turf/target_turfs = list(T)
-	if(usr.dir == NORTH || usr.dir == SOUTH)
-		target_turfs += get_step(T, EAST)
-		target_turfs += get_step(T, WEST)
-	else
-		target_turfs += get_step(T, NORTH)
-		target_turfs += get_step(T, SOUTH)
+	target_turfs += get_step(T, EAST)
+	target_turfs += get_step(T, WEST)
+	target_turfs += get_step(T, NORTH)
+	target_turfs += get_step(T, SOUTH)
+	target_turfs += get_step(T, NORTHEAST)
+	target_turfs += get_step(T, NORTHWEST)
+	target_turfs += get_step(T, SOUTHEAST)
+	target_turfs += get_step(T, SOUTHWEST)
 
 	for(var/i = 1 to to_spawn)
-		if(i > to_spawn)
-			i = 1
-
 		var/t_turf = target_turfs[i]
 
 		if(!isopenturf(t_turf))

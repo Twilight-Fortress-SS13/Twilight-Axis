@@ -9,6 +9,7 @@
 
 /datum/outfit/job/heartfelt/lord/lord/pre_equip(mob/living/carbon/human/H)
 	. = ..()
+	change_origin(H, /datum/virtue/origin/heartfelt, "Heartfelt")
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rogueweapon/scabbard/sheath/noble = 1,
@@ -24,6 +25,7 @@
 
 /datum/outfit/job/heartfelt/lord/archmage/pre_equip(mob/living/carbon/human/H)
 	. = ..()
+	change_origin(H, /datum/virtue/origin/heartfelt, "Heartfelt")
 	neck = /obj/item/storage/belt/rogue/pouch/kronas/veryrich
 
 /datum/advclass/heartfelt/lord/chief
@@ -33,6 +35,7 @@
 
 /datum/outfit/job/heartfelt/lord/chief/pre_equip(mob/living/carbon/human/H)
 	. = ..()
+	change_origin(H, /datum/virtue/origin/heartfelt, "Heartfelt")
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rogueweapon/scabbard/sheath/noble = 1,
@@ -52,6 +55,7 @@
 
 /datum/outfit/job/heartfelt/knight/pre_equip(mob/living/carbon/human/H)
 	. = ..()
+	change_origin(H, /datum/virtue/origin/heartfelt, "Heartfelt")
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rope/chain = 1,

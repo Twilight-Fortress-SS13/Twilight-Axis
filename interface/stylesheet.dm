@@ -130,8 +130,11 @@ h1.alert, h2.alert	{color: #c9c1ba;font-family: Mookmania, TrueType;}
 .papyrus				{font-family: "Papyrus", cursive, sans-serif;}
 .robot					{font-family: "Courier New", cursive, sans-serif;}
 
-.human					{font-family: "Honoka Mincho", Mookmania;}
+.orator					{font-family: "Project Sans", Pterra; font-size: 100%;}
+.sandwauk				{font-family: "Almalik", Pterra; font-size: 100%;}
+.human					{font-family: "Honoka Mincho", Pterra;}
 .elf					{font-family: "MarkScript-Regular", cursive, Mookmania;}
+.oldazure				{font-family: "BaggageMasterText79 ttcon", Pterra; font-size: 110%;}
 .dwarf					{font-family: "Celtes SP", Mookmania;}
 .sandspeak				{font-family: "Kamelia", Mookmania;}
 .delf					{font-family: "MarkScript-Regular", Mookmania;}

@@ -71,7 +71,7 @@
 			// This neatly split the year into two half of rise and fall of Psydon.
 			// It also happens to be the start of "Fall" / Autumn.
 			// And it matches the "Psydonia is a minecraft world" joke quite well with Psydon going back to school
-			return "Syonfall"
+			return "Heavenfall" //TA EDIT
 		if(8)
 			// Middle / End of harvesting seasons for some crops. It make sense that the goddess of rot / decay follows
 			// And after Syonfall comes the gradual move to winter

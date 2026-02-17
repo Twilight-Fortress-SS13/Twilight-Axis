@@ -1,0 +1,21 @@
+#include "spell_types\wizard\invoked_aoe\shroudtrap.dm"
+#include "spell_types\wizard\invoked_aoe\magicshield.dm"
+#include "spell_types\wizard\invoked_aoe\watertrap.dm"
+#include "spell_types\wizard\invoked_aoe\rotting_cloud.dm"
+#include "spell_types\wizard\projectiles_aoe\snowball.toss.dm"
+#include "spell_types\wizard\invoked_aoe\meteor.dm"
+#include "spell_types\wizard\projectiles_single\magic_icicle.dm"
+#include "spell_types\wizard\projectiles_aoe\rockytrown.dm"
+#include "spell_types\wizard\projectiles_aoe\ballistic_mortar.dm"
+#include "spell_types\wizard\newspell.dm"	
+#include "spell_types\wizard\misc\swap.dm"
+#include "spell_types\wizard\misc\vampiric_drain.dm"
+#include "spell_types\wizard\misc\mist_form.dm"
+#include "spell_types\wizard\misc\arctic_breath.dm"
+#include "spell_types\wizard\misc\frost_walker.dm"
+#include "spell_types\wizard\misc\arcane_announcement.dm"
+#include "spell_types\runes.dm"
+
+
+
+

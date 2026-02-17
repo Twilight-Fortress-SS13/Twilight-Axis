@@ -68,6 +68,8 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/foreigner/repentant,
 		/datum/advclass/foreigner/refugee,
 		/datum/advclass/foreigner/slaver,
+		/datum/advclass/foreigner/shepherd,
+		/datum/advclass/foreigner/fencerguy,
     /datum/advclass/rogue/soundbreaker, // TA - Soundbreaker Class
     /datum/advclass/twilight_hunter // TA - Firearm Class
 	)

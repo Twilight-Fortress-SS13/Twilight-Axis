@@ -136,6 +136,10 @@
 
 
 /mob/living/carbon/human/bullet_act(obj/projectile/P, def_zone = BODY_ZONE_CHEST)
+
+	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
+		return BULLET_ACT_FORCE_PIERCE
+	
 	if(dna && dna.species)
 		var/spec_return = dna.species.bullet_act(P, src, def_zone)
 		if(spec_return)
@@ -287,6 +291,12 @@
 /mob/living/carbon/human/attacked_by(obj/item/I, mob/living/user)
 	if(!I || !user)
 		return 0
+	
+	if(HAS_TRAIT(src, "ethereal"))//TA EDIT
+		user.visible_message(span_danger("[user] tries to strike [src], but the weapon passes right through the mist!"), \
+							 span_warning("My weapon passes right through [src]!"))
+		return FALSE
+	
 	var/obj/item/bodypart/affecting
 	var/useder = user.zone_selected
 	if(!lying_attack_check(user,I))
@@ -313,6 +323,10 @@
 	return dna.species.spec_attacked_by(I, user, affecting, used_intent, src, useder)
 
 /mob/living/carbon/human/attack_hand(mob/user)
+
+	if(HAS_TRAIT(src, "ethereal"))//TA EDIT
+		return FALSE
+
 	if(..())	//to allow surgery to return properly.
 		return
 	retaliate(user)

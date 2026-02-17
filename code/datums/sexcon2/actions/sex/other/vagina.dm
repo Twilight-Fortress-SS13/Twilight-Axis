@@ -1,5 +1,5 @@
 /datum/sex_action/sex/other/vagina
-	name = "Оседлать (вагина)"
+	name = "Ride them"
 	stamina_cost = 1.0
 	aggro_grab_instead_same_tile = FALSE
 	intensity = 4
@@ -32,14 +32,14 @@
 	return TRUE
 
 /datum/sex_action/sex/other/vagina/get_start_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	return span_warning("[user] занимает верхнюю позицию над [target] и направляет головку члена в свое лоно!")
+	return span_warning("[user] gets on top of [target] and begins riding [target.p_them()] with [user.p_their()] cunt!")
 
 /datum/sex_action/sex/other/vagina/get_start_sound(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	return list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg')
 
 /datum/sex_action/sex/other/vagina/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
-	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] скачет на [target]."))
+	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] rides [target]."))
 	playsound(target, sex_session.get_force_sound(), 50, TRUE, -2, ignore_walls = FALSE)
 	// i became a man at arms to get access to the keep...
 	if(istype(user.head, /obj/item/clothing/head/roguetown/jester))
@@ -57,11 +57,11 @@
 	sex_session.perform_sex_action(target, 2, 4, FALSE)
 
 /datum/sex_action/sex/other/vagina/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	target.visible_message(span_love("[target] наполняет лоно [user] своим горячим семенем!"))
+	target.visible_message(span_love("[user] cums into [target]'s cunt!"))
 	target.virginity = FALSE
 	user.virginity = FALSE
 	user.try_impregnate(target)
 	return "into"
 
 /datum/sex_action/sex/other/vagina/get_finish_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	return span_warning("[user] поднимается с [target].")
+	return span_warning("[user] gets off [target].")

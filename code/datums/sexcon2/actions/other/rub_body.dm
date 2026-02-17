@@ -1,5 +1,5 @@
 /datum/sex_action/rub_body
-	name = "Облапать"
+	name = "Rub their body"
 	check_same_tile = FALSE
 	intensity = 2
 
@@ -23,11 +23,11 @@
 
 /datum/sex_action/rub_body/on_start(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
-	user.visible_message(span_warning("[user] размещает ладони на теле [target]..."))
+	user.visible_message(span_warning("[user] places [user.p_their()] hands onto [target]..."))
 
 /datum/sex_action/rub_body/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
-	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] лапает тело [target]..."))
+	user.visible_message(sex_session.spanify_force("[user] [sex_session.get_generic_force_adjective()] rubs [target]'s body..."))
 	user.make_sucking_noise()
 
 	sex_session.perform_sex_action(target, 0.5, 0, TRUE)
@@ -35,7 +35,7 @@
 
 /datum/sex_action/rub_body/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
-	user.visible_message(span_warning("[user] убирает ручки от [target]..."))
+	user.visible_message(span_warning("[user] stops rubbing [target]'s body ..."))
 
 /datum/sex_action/rub_body/lock_sex_object(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/locked = user.get_active_precise_hand()

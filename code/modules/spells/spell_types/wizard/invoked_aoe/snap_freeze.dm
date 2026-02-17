@@ -75,6 +75,7 @@
 			play_cleave = TRUE
 			if(ishuman(L))
 				L.adjustFireLoss(damage)
+				L.apply_status_effect(/datum/status_effect/stacking/hypothermia, 1) //TA EDIT
 			else
 				L.adjustFireLoss(damage + 20)
 			if(L.has_status_effect(/datum/status_effect/buff/frostbite))

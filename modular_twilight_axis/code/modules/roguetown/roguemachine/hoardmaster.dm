@@ -17,12 +17,10 @@
 	switch(usr.advjob)
 		if("Brigand")
 			unlocked_cats+="Brigand"
-		if("Demolisher")
-			unlocked_cats+="Demolisher"
 		if("Sellsword")
 			unlocked_cats+="Sellsword"
-		if("Sawbones")
-			unlocked_cats+="Sawbones"
+		if("Hedge Alchemist")
+			unlocked_cats+="Alchemist"
 		if("Hedge Knight")
 			unlocked_cats+="Knight"
 		if("Hedge Mage")

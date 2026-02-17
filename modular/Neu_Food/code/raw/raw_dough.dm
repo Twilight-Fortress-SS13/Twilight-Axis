@@ -147,7 +147,7 @@
 			to_chat(user, span_notice("Kneading the dough into an elongated shape..."))
 			if(do_after(user,short_cooktime, target = src))
 				add_sleep_experience(user, /datum/skill/craft/cooking, user.STAINT)
-				new /obj/item/reagent_containers/food/snacks/rogue/rbread_half(loc)
+				new /obj/item/reagent_containers/food/snacks/rogue/strudeldough(loc)
 				qdel(I)
 				qdel(src)
 		else

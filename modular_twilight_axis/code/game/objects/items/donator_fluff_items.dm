@@ -54,6 +54,15 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
 	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
 
+/obj/item/clothing/suit/roguetown/armor/brigandine/light/aristocratic
+	name = "aristocratic coat"
+	desc = ""
+	icon_state = "kumiecoat"
+	item_state = "kumiecoat"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+
 /obj/item/rogueweapon/greatsword/zwei/inverserun/steel
 	name = "Votive Thorns"
 	desc = "Promises hurt, but so does plucking rosa. Hoping hurts, but so does looking at the beauty of Astrata's light. Pick yourself back up. Remember your promise, despite the thorns."
