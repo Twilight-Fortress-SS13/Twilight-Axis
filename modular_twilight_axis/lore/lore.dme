@@ -1,5 +1,6 @@
 #include "code\datums\armour_filtering.dm"
 #include "code\datums\debuff.dm"
+#include "code\datums\origin.dm"
 #include "code\gods\cult_of_salvation.dm"
 #include "code\gods\divine_pantheon.dm"
 #include "code\gods\inhumen_pantheon.dm"

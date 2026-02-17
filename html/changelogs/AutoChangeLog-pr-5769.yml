@@ -1,0 +1,4 @@
+author: "mumblemancer"
+delete-after: True
+changes:
+  - bugfix: "0 armor clothing will now no longer prevent crits"

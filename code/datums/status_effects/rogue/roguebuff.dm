@@ -438,7 +438,7 @@
 /atom/movable/screen/alert/status_effect/buff/longstrider
 	name = "Longstrider"
 	desc = "I can easily walk through rough terrain."
-	icon_state = "buff"
+	icon_state = "longstrider"
 
 /datum/status_effect/buff/longstrider
 	id = "longstrider"

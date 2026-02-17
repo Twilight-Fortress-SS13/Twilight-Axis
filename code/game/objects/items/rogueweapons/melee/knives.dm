@@ -598,6 +598,11 @@
 	wdefense = 4 //Slightly more defense than a regular dagger. Intended to function as a tool for countering grapplers or finishing off armored opponents with broken pieces.
 	smeltresult = /obj/item/ingot/steel
 
+/obj/item/rogueweapon/huntingknife/idagger/steel/parrying
+	name = "steel parrying dagger"
+	desc = "A dagger with an enlongated crossguard, curved upwards on both ends to catch oncoming strikes."
+	wdefense = 9
+
 /obj/item/rogueweapon/huntingknife/idagger/steel/parrying/hand
 	name = "'Repeta'"
 	desc = "The left hand of the right hand, this sturdy length of steel serves as a perfect counterpart to any offense."

@@ -1,0 +1,4 @@
+author: "ADONAI"
+delete-after: True
+changes:
+  - bugfix: "priest and guildmasters should have less lowercase announcements"

@@ -1,0 +1,5 @@
+author: "FreeStylaLT"
+delete-after: True
+changes:
+  - rscadd: "Added Origins & Subraces."
+  - rscadd: "Added Old Azurian language, available exclusively to Azurian origin."

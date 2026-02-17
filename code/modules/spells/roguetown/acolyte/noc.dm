@@ -375,6 +375,7 @@ Somewhat fitting, considering the broadness of their domains. I also just think 
 /atom/movable/screen/alert/status_effect/buff/wise_moon
 	name = "Enlightenment"
 	desc = "Divine magic is boosting my intelligence."
+	icon_state = "enlightenment"
 
 /datum/status_effect/buff/wise_moon
 	id = "wise_moon"

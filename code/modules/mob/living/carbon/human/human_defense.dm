@@ -105,7 +105,7 @@
 		if(bp && istype(bp , /obj/item/clothing))
 			var/obj/item/clothing/C = bp
 			if(zone2covered(def_zone, C.body_parts_covered_dynamic))
-				if(C.obj_integrity > 1)
+				if(C.obj_integrity > 1 && C.armor_class != ARMOR_CLASS_NONE) 
 					switch(C.prevent_crits)
 						if(PREVENT_CRITS_NONE)
 							return FALSE

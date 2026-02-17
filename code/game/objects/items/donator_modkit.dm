@@ -210,6 +210,31 @@
 	)
 	result_item = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken
 
+//StinkethStonketh - Shashka & pike
+/obj/item/enchantingkit/stinketh_shashka
+	name = "'fencer's shashka' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Szöréndnížine Sabre Or Aavnic Shashka"
+	target_items = list(
+		/obj/item/rogueweapon/sword/sabre/freifechter	= /obj/item/rogueweapon/sword/sabre/freifechter/stinketh,
+		/obj/item/rogueweapon/sword/sabre/steppesman	= /obj/item/rogueweapon/sword/sabre/steppesman/stinketh
+		)
+	icon_loadout = /obj/item/rogueweapon/sword/sabre/steppesman/stinketh
+
+/obj/item/enchantingkit/stinketh_pike
+	name = "'Kindness of Ravens Standard' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Banner Of Szöréndnížina"
+	target_items = list(/obj/item/rogueweapon/spear/boar/frei/pike)
+	result_item = /obj/item/rogueweapon/spear/boar/frei/pike/stinketh
+
+//Koruu - Glaive
+/obj/item/enchantingkit/koruu_glaive
+	name = "'Sixty Five Yils' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Glaive Or Naginata"
+	target_items = list(
+		/obj/item/rogueweapon/spear/naginata	= /obj/item/rogueweapon/spear/naginata/koruu,
+		/obj/item/rogueweapon/halberd/glaive	= /obj/item/rogueweapon/halberd/glaive/koruu
+		)
+	icon_loadout = /obj/item/rogueweapon/halberd/glaive/koruu
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
