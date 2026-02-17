@@ -1,0 +1,9 @@
+This is a placeholder for the background image file for the disease compendium UI.
+
+Expected usage:
+- Custom background for the recipe book HTML browser window
+- Dimensions: typically 800x600 or larger for full coverage
+- Format: PNG or other web-compatible format
+
+You can replace this with your own custom diseased/alchemical theme background image.
+The book UI will display this as the book's background when opened.

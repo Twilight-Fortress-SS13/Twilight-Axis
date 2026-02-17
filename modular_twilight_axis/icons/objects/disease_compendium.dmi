@@ -1,0 +1,13 @@
+This is a placeholder for the DMI (BYOND Dream Maker Image) file.
+Replace this file with your actual disease_compendium.dmi icon using BYOND's icon editor or any DMI editor.
+
+Expected icon states:
+- book3_0 (closed book icon)
+- book3_1 (open book page 1)
+- book3_2 (open book page 2)
+etc.
+
+You can create DMI files using:
+1. BYOND Dream Maker (built-in icon editor)
+2. Online DMI editors
+3. Tools like Pistonwhip or other community DMI editors

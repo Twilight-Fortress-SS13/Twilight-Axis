@@ -1,0 +1,5 @@
+/datum/advclass/wretch/plaguebearer/New()
+	. = ..()
+	if(!traits_applied)
+		traits_applied = list()
+	traits_applied |= list(TRAIT_PLAGUEBRINGER_WHISPER)

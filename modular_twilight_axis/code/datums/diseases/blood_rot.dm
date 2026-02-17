@@ -129,6 +129,10 @@
 		stat_mod_keys[stat] = key
 		L.change_stat(stat, stats[stat], key)
 
+	if(new_stage >= 2)
+		schedule_cough()
+		schedule_bleed()
+
 /datum/disease/blood_rot/proc/on_examine(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
 	
@@ -145,7 +149,7 @@
 	if(stage == 1)
 		vomit_delay = rand(40, 80) SECONDS
 	else if(stage == 2)
-		vomit_delay = rand(20, 40) SECONDS
+		vomit_delay = rand(15, 30) SECONDS
 	else if(stage == 3)
 		vomit_delay = rand(15, 30) SECONDS
 	
@@ -171,7 +175,7 @@
 		// Blood vomit
 		H.vomit(lost_nutrition = 30, blood = TRUE, stun = TRUE, distance = 2, message = FALSE)
 		H.blood_volume = max(0, H.blood_volume - 50)
-		to_chat(H, span_danger("Меня рвет кровью!"))
+		H.visible_message(span_danger("[H] вырвало кровью!"), span_danger("Меня рвет кровью!"))
 		spread_on_vomit(1, 30)
 	else if(stage == 3)
 		// Fountaining blood vomit
@@ -192,6 +196,10 @@
 		return
 	
 	var/cough_delay = rand(40, 80) SECONDS
+	if(stage == 2)
+		cough_delay = rand(25, 50) SECONDS
+	else if(stage == 3)
+		cough_delay = rand(30, 60) SECONDS
 	cough_timer = addtimer(CALLBACK(src, PROC_REF(do_cough)), cough_delay, TIMER_STOPPABLE)
 
 /datum/disease/blood_rot/proc/do_cough()

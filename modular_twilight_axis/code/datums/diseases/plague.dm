@@ -1,6 +1,6 @@
 // THE PLAGUE - Devastating 4-stage pandemic disease combining ash blight and grime flu
 // Stage 1: Incubation (3-4 min) - Mild symptoms
-// Stage 2: Early Plague (5-6 min) - CRITICAL_WEAKNESS & LEAPER traits, moderate symptoms
+// Stage 2: Early Plague (5-6 min) - CRITICAL_WEAKNESS & LEPROSY traits, moderate symptoms
 // Stage 3: Advanced Plague (8-10 min) - Severe symptoms, blackening skin, heavy bleeding
 // Stage 4: Terminal Stage (15-20 min from stage 3!) - LETHAL, septic shock, organ failure
 
@@ -130,7 +130,7 @@
 			
 			// Add terrifying traits
 			ADD_TRAIT(H, TRAIT_CRITICAL_WEAKNESS, "plague_disease")
-			ADD_TRAIT(H, TRAIT_LEAPER, "plague_disease")
+			ADD_TRAIT(H, TRAIT_LEPROSY, "plague_disease")
 			
 			to_chat(H, span_userdanger("Чума прогрессирует! Моё тело становится слабым, кости хрупкими... Но что-то странное происходит с моими ногами!"))
 			H.visible_message(
@@ -154,7 +154,7 @@
 			
 			// Keep stage 2 traits and add new one
 			ADD_TRAIT(H, TRAIT_CRITICAL_WEAKNESS, "plague_disease")
-			ADD_TRAIT(H, TRAIT_LEAPER, "plague_disease")
+			ADD_TRAIT(H, TRAIT_LEPROSY, "plague_disease")
 			ADD_TRAIT(H, TRAIT_NORUN, "plague_disease")
 			
 			to_chat(H, span_userdanger("ЧУМА ПОЖИРАЕТ МЕНЯ! Кожа чернеет, язвы гноятся, я едва держусь на ногах!"))
@@ -179,7 +179,7 @@
 			
 			// Keep all previous traits
 			ADD_TRAIT(H, TRAIT_CRITICAL_WEAKNESS, "plague_disease")
-			ADD_TRAIT(H, TRAIT_LEAPER, "plague_disease")
+			ADD_TRAIT(H, TRAIT_LEPROSY, "plague_disease")
 			ADD_TRAIT(H, TRAIT_NORUN, "plague_disease")
 			
 			to_chat(H, span_userdanger("МОЁ ТЕЛО УМИРАЕТ! Органы отказывают, кровь превращается в яд! Я УМИРАЮ!!!"))
@@ -523,7 +523,7 @@
 		
 		// Remove traits
 		REMOVE_TRAIT(H, TRAIT_CRITICAL_WEAKNESS, "plague_disease")
-		REMOVE_TRAIT(H, TRAIT_LEAPER, "plague_disease")
+		REMOVE_TRAIT(H, TRAIT_LEPROSY, "plague_disease")
 		REMOVE_TRAIT(H, TRAIT_NORUN, "plague_disease")
 		
 		// Clear colorblind

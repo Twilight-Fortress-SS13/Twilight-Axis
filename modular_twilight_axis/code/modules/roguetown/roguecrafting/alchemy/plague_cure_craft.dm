@@ -17,8 +17,8 @@
 	category = "Alchemy"
 	result = list(/obj/item/reagent_containers/glass/bottle/alchemical/plague_cure = 1)
 	reqs = list(
-		/obj/item/reagent_containers/glass/bottle/alchemical = 1,
-		/obj/item/ingot/gold = 5,
+		/obj/item/reagent_containers/glass/bottle/rogue = 1,
+		/obj/item/rogueore/gold = 5,
 		/obj/item/alch/hypericum = 1,
 		/datum/reagent/water = 50,
 		/obj/item/organ/heart = 1
