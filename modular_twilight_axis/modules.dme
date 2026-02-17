@@ -27,6 +27,7 @@
 #include "code\game\objects\items\donator_modkit.dm"
 #include "code\game\objects\items\scabbard.dm"
 #include "code\game\objects\items\rogueitems\books.dm"
+#include "code\game\objects\items\rogueitems\whisper_of_fever.dm"
 #include "code\game\objects\items\rogueitems\ceramics.dm"
 #include "code\game\objects\items\rogueitems\instruments.dm"
 #include "code\game\objects\items\rogueitems\leash.dm"

@@ -68,7 +68,8 @@
 	backpack_contents = list(
 		/obj/item/natural/worms/leech/cheele = 1,
 		/obj/item/recipe_book/alchemy = 1,
-		/obj/item/clothing/mask/rogue/physician = 1,
+		/obj/item/clothing/mask/rogue/physician = 2,
+		/obj/item/book/rogue/disease_compendium = 1,
 		/obj/item/storage/keyring = 1,
 		/obj/item/roguekey/keeper = 1
 	)

@@ -36,8 +36,8 @@
 	max_integrity = 200
 	var/mob/living/last_bleed_target
 	var/last_bleed_rate = 0
-	var/selected_disease_type = /datum/disease/grime_flu
-	var/selected_disease_name = "The Grime-Flu"
+	var/selected_disease_type = /datum/disease/ash_blight
+	var/selected_disease_name = "Ash Blight"
 	COOLDOWN_DECLARE(disease_select_cooldown)
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/verb/select_disease()
@@ -65,10 +65,14 @@
 		var/seconds_left = round(time_left / 10)
 		to_chat(user, span_warning("The blade is silent. Try again in [seconds_left] seconds."))
 		return
+	// Limited disease selection for Ritual Plague Dagger
+	var/list/allowed_diseases = list(
+		/datum/disease/ash_blight,
+		/datum/disease/vision_rot,
+		/datum/disease/blood_rot
+	)
 	var/list/choices = list()
-	for(var/disease_path in subtypesof(/datum/disease))
-		if(disease_path == /datum/disease)
-			continue
+	for(var/disease_path in allowed_diseases)
 		var/datum/disease/D = new disease_path()
 		var/display_name = D.name
 		qdel(D)

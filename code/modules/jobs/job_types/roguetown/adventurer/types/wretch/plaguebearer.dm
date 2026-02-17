@@ -51,6 +51,7 @@
 		/obj/item/reagent_containers/glass/bottle/rogue/strongpoison = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = 1,	//Small health vial
 		/obj/item/rogueweapon/huntingknife/idagger/steel/corroded = 1,
+		/obj/item/book/rogue/disease_compendium = 1,
 		)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
 	H.dna.species.soundpack_m = new /datum/voicepack/male/wizard()
@@ -66,6 +67,7 @@
 			if("LET THERE BE PLAGUE!!!")
 				H.adjust_skillrank_up_to(/datum/skill/magic/arcane, 4, TRUE)
 				backr = /obj/item/rogueweapon/woodstaff/toper
+				beltl = /obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/acidsplash)
 		wretch_select_bounty(H)
