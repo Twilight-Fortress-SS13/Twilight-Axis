@@ -42,6 +42,7 @@
 		TRAIT_HERESIARCH, //Just because I'm putting their spawns here, that's all.
 		TRAIT_ZURCH,
 		TRAIT_VIRUSIMMUNE,
+		TRAIT_UNLYCKERABLE, //Just stop
 	)
 	inherent_biotypes = MOB_HUMANOID
 	armor = 30
