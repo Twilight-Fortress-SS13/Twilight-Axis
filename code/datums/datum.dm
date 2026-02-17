@@ -269,7 +269,7 @@
 // ============================================================================ //
 // DISEASE SYSTEM - Contact-based transmission with probabilistic infection   //
 // ============================================================================ //
-// Disease System Defines
+/// Disease System Defines
 #define DISEASE_LIMIT 1
 #define VIRUS_SYMPTOM_LIMIT 6
 
