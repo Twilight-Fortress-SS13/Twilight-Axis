@@ -115,7 +115,6 @@
 			stats[STATKEY_PER] = -2
 			stats[STATKEY_SPD] = -2
 			stats[STATKEY_CON] = -2
-			to_chat(H, span_warning("Чувствую себя нездорово... Тело ломит, и кожа начинает зудеть."))
 			// Stage 1 symptoms: кашель
 			schedule_cough()
 			
@@ -132,9 +131,9 @@
 			ADD_TRAIT(H, TRAIT_CRITICAL_WEAKNESS, "plague_disease")
 			ADD_TRAIT(H, TRAIT_LEPROSY, "plague_disease")
 			
-			to_chat(H, span_userdanger("Чума прогрессирует! Моё тело становится слабым, кости хрупкими... Но что-то странное происходит с моими ногами!"))
+			to_chat(H, span_danger("Тело становится очень слабым... Кости будто хрупкие, а ноги странно дёргаются."))
 			H.visible_message(
-				span_danger("[H] покрывается болезненными бубонами и начинает странно подёргиваться!"),
+				span_danger("[H] покрывается болезненными наростами и начинает подёргиваться!"),
 				ignored_mobs = list(H)
 			)
 			// Stage 2 symptoms: кашель + чесание
@@ -157,9 +156,9 @@
 			ADD_TRAIT(H, TRAIT_LEPROSY, "plague_disease")
 			ADD_TRAIT(H, TRAIT_NORUN, "plague_disease")
 			
-			to_chat(H, span_userdanger("ЧУМА ПОЖИРАЕТ МЕНЯ! Кожа чернеет, язвы гноятся, я едва держусь на ногах!"))
+			to_chat(H, span_userdanger("Кожа чернеет и покрывается гниющими язвами! Едва держусь на ногах!"))
 			H.visible_message(
-				span_userdanger("[H] кожа чернеет и гниёт! Зловоние ужасно!"),
+				span_userdanger("Кожа [H] чернеет и гниёт, источая зловоние!"),
 				ignored_mobs = list(H)
 			)
 			// Stage 3 symptoms: кашель + чесание (более частые и тяжёлые)
@@ -182,9 +181,9 @@
 			ADD_TRAIT(H, TRAIT_LEPROSY, "plague_disease")
 			ADD_TRAIT(H, TRAIT_NORUN, "plague_disease")
 			
-			to_chat(H, span_userdanger("МОЁ ТЕЛО УМИРАЕТ! Органы отказывают, кровь превращается в яд! Я УМИРАЮ!!!"))
+			to_chat(H, span_userdanger("Органы отказывают! Кровь превращается в яд! Не могу дышать!"))
 			H.visible_message(
-				span_userdanger("[H] впадает в септический шок! [H.p_theyre(TRUE)] умирает от чумы!"),
+				span_userdanger("[H] корчится в агонии, тело покрыто чёрным некрозом!"),
 				ignored_mobs = list(H)
 			)
 			// Stage 4 symptoms: кашель + чесание + септический шок
@@ -233,7 +232,7 @@
 	if(stage >= 3)
 		if(DT_PROB(10, delta_time))
 			H.adjustBruteLoss(rand(2, 4))
-			H.bleed(rand(10, 20))
+			H.bleed(rand(3, 6))
 			to_chat(H, span_danger("Язвы разрываются, истекая кровью и гноем!"))
 		if(DT_PROB(6, delta_time))
 			H.Knockdown(rand(20, 40))
@@ -258,8 +257,9 @@
 			H.adjustOxyLoss(rand(10, 20))
 			to_chat(H, span_userdanger("Лёгкие заполняются жидкостью! Не могу дышать!"))
 		if(DT_PROB(6, delta_time))
-			H.vomit(rand(30, 50), blood = TRUE, stun = TRUE)
-			H.bleed(rand(30, 50))
+			H.vomit(rand(30, 50), blood = TRUE, stun = 0)
+			H.Stun(20)
+			H.bleed(rand(20, 35))
 			to_chat(H, span_userdanger("Изрыгаю сгустки крови и чёрной желчи!"))
 
 // ============== COUGH SYMPTOM ==============
@@ -269,6 +269,8 @@
 	cough_scheduled = TRUE
 	// Make cough slightly less frequent than before
 	var/delay = rand(12, 25) SECONDS
+	if(stage == 1)
+		delay = rand(25, 40) SECONDS
 	if(stage >= 3)
 		delay = rand(6, 12) SECONDS
 	if(stage >= 4)
@@ -280,23 +282,21 @@
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
 		return
 	var/mob/living/carbon/human/H = affected_mob
-	// If not yet at stage 2, just reschedule and do a light cough
-	if(stage < 2)
-		schedule_cough()
-		return
-
+	
 	// Slightly reduce the chances for violent cough events
 	if(stage >= 4 && prob(45))
 		H.emote("cough", intentional = FALSE)
-		H.vomit(rand(10,20), blood = TRUE, stun = TRUE)
-		H.bleed(rand(15, 25))
+		H.vomit(rand(10,20), blood = TRUE, stun = 0)
+		H.Stun(20)
+		H.bleed(rand(10, 20))
 		to_chat(H, span_userdanger("Кашляю кровью! Не могу остановить это!"))
 	else if(stage >= 3 && prob(30))
 		H.emote("cough", intentional = FALSE)
-		H.bleed(rand(8, 15))
-		H.vomit(rand(5, 10), blood = TRUE, stun = FALSE)
+		H.bleed(rand(2, 5))
+		H.vomit(rand(5, 10), blood = TRUE, stun = 0)
 		to_chat(H, span_danger("Кровавый кашель разрывает горло!"))
 	else
+		// Stage 1 and 2: light cough without blood
 		H.emote("cough", intentional = FALSE)
 	
 	// Spread disease through cough
@@ -421,11 +421,12 @@
 		return
 	var/mob/living/carbon/human/H = affected_mob
 	if(stage >= 3)
-		H.vomit(rand(10, 20), blood = TRUE, stun = TRUE)
-		H.bleed(rand(10, 20))
+		H.vomit(rand(10, 20), blood = TRUE, stun = 0)
+		H.Stun(20)
+		H.bleed(rand(3, 6))
 		to_chat(H, span_danger("Изрыгаю сгустки крови и гноя!"))
 	else
-		H.vomit(rand(5, 10), blood = FALSE, stun = FALSE)
+		H.vomit(rand(5, 10), blood = FALSE, stun = 0)
 		to_chat(H, span_warning("Меня тошнит!"))
 	schedule_vomit()
 
