@@ -61,7 +61,7 @@
 		if(3)
 			examine_list += span_danger("[affected_mob.p_their(TRUE)] кожа чернеет и отмирает, покрытая гниющими ранами и зловонными нарывами!")
 		if(4)
-			examine_list += span_bolddanger("[affected_mob.p_their(TRUE)] тело почернело от некроза, источая запах смерти! [affected_mob.p_theyre(TRUE)] явно при смерти!")
+			examine_list += span_userdanger("[affected_mob.p_their(TRUE)] тело почернело от некроза, источая запах смерти! [affected_mob.p_theyre(TRUE)] явно при смерти!")
 
 /datum/disease/plague/proc/schedule_stage_tick()
 	if(stage_tick_scheduled)
@@ -106,7 +106,6 @@
 		STATKEY_PER = 0,
 		STATKEY_INT = 0,
 		STATKEY_CON = 0,
-		STATKEY_END = 0,
 		STATKEY_SPD = 0,
 		STATKEY_WIL = 0
 	)
@@ -115,8 +114,7 @@
 		if(1) // Incubation - Mild debuffs
 			stats[STATKEY_PER] = -2
 			stats[STATKEY_SPD] = -2
-			stats[STATKEY_CON] = -1
-			stats[STATKEY_END] = -1
+			stats[STATKEY_CON] = -2
 			to_chat(H, span_warning("Чувствую себя нездорово... Тело ломит, и кожа начинает зудеть."))
 			// Stage 1 symptoms: кашель
 			schedule_cough()
@@ -125,8 +123,7 @@
 			stats[STATKEY_STR] = -3
 			stats[STATKEY_PER] = -4
 			stats[STATKEY_INT] = -2
-			stats[STATKEY_CON] = -3
-			stats[STATKEY_END] = -3
+			stats[STATKEY_CON] = -6
 			stats[STATKEY_SPD] = -4
 			stats[STATKEY_WIL] = -3
 			stage2_time = world.time
@@ -135,7 +132,7 @@
 			ADD_TRAIT(H, TRAIT_CRITICAL_WEAKNESS, "plague_disease")
 			ADD_TRAIT(H, TRAIT_LEAPER, "plague_disease")
 			
-			to_chat(H, span_bolddanger("Чума прогрессирует! Моё тело становится слабым, кости хрупкими... Но что-то странное происходит с моими ногами!"))
+			to_chat(H, span_userdanger("Чума прогрессирует! Моё тело становится слабым, кости хрупкими... Но что-то странное происходит с моими ногами!"))
 			H.visible_message(
 				span_danger("[H] покрывается болезненными бубонами и начинает странно подёргиваться!"),
 				ignored_mobs = list(H)
@@ -149,8 +146,7 @@
 			stats[STATKEY_STR] = -6
 			stats[STATKEY_PER] = -7
 			stats[STATKEY_INT] = -4
-			stats[STATKEY_CON] = -6
-			stats[STATKEY_END] = -6
+			stats[STATKEY_CON] = -12
 			stats[STATKEY_SPD] = -8
 			stats[STATKEY_WIL] = -6
 			stage3_time = world.time
@@ -161,9 +157,9 @@
 			ADD_TRAIT(H, TRAIT_LEAPER, "plague_disease")
 			ADD_TRAIT(H, TRAIT_NORUN, "plague_disease")
 			
-			to_chat(H, span_bolddanger("ЧУМА ПОЖИРАЕТ МЕНЯ! Кожа чернеет, язвы гноятся, я едва держусь на ногах!"))
+			to_chat(H, span_userdanger("ЧУМА ПОЖИРАЕТ МЕНЯ! Кожа чернеет, язвы гноятся, я едва держусь на ногах!"))
 			H.visible_message(
-				span_bolddanger("[H] кожа чернеет и гниёт! Зловоние ужасно!"),
+				span_userdanger("[H] кожа чернеет и гниёт! Зловоние ужасно!"),
 				ignored_mobs = list(H)
 			)
 			// Stage 3 symptoms: кашель + чесание (более частые и тяжёлые)
@@ -175,8 +171,7 @@
 			stats[STATKEY_STR] = -10
 			stats[STATKEY_PER] = -10
 			stats[STATKEY_INT] = -8
-			stats[STATKEY_CON] = -10
-			stats[STATKEY_END] = -10
+			stats[STATKEY_CON] = -20
 			stats[STATKEY_SPD] = -12
 			stats[STATKEY_WIL] = -10
 			stage4_time = world.time
@@ -220,7 +215,7 @@
 		if(DT_PROB(5, delta_time))
 			H.adjust_hydration(-3)
 		if(DT_PROB(3, delta_time))
-			H.adjustBruteLoss(rand(1, 3))
+			H.adjustBruteLoss(rand(1, 2))
 			to_chat(H, span_warning("Суставы ломит от непонятной боли."))
 	
 	// Stage 2 symptoms - Moderate
@@ -231,13 +226,13 @@
 			H.blur_eyes(8)
 			to_chat(H, span_warning("Голова кружится, зрение плывёт."))
 		if(DT_PROB(4, delta_time))
-			H.adjustBruteLoss(rand(3, 6))
+			H.adjustBruteLoss(rand(2, 4))
 			to_chat(H, span_warning("Бубоны на теле пульсируют болью!"))
 	
 	// Stage 3 symptoms - Severe
 	if(stage >= 3)
 		if(DT_PROB(10, delta_time))
-			H.adjustBruteLoss(rand(5, 10))
+			H.adjustBruteLoss(rand(2, 4))
 			H.bleed(rand(10, 20))
 			to_chat(H, span_danger("Язвы разрываются, истекая кровью и гноем!"))
 		if(DT_PROB(6, delta_time))
@@ -257,13 +252,13 @@
 	// Stage 4 symptoms - LETHAL
 	if(stage >= 4)
 		if(DT_PROB(15, delta_time)) // Frequent damage ticks
-			H.adjustBruteLoss(rand(8, 15))
-			H.adjustToxLoss(rand(5, 10))
+			H.adjustBruteLoss(rand(2, 4))
+			H.adjustToxLoss(rand(2, 4))
 		if(DT_PROB(8, delta_time))
 			H.adjustOxyLoss(rand(10, 20))
 			to_chat(H, span_userdanger("Лёгкие заполняются жидкостью! Не могу дышать!"))
 		if(DT_PROB(6, delta_time))
-			H.vomit(rand(30, 50), blood = TRUE, stun = TRUE, purge_ratio = 0.1)
+			H.vomit(rand(30, 50), blood = TRUE, stun = TRUE)
 			H.bleed(rand(30, 50))
 			to_chat(H, span_userdanger("Изрыгаю сгустки крови и чёрной желчи!"))
 
@@ -272,11 +267,12 @@
 	if(cough_scheduled)
 		return
 	cough_scheduled = TRUE
-	var/delay = rand(10, 20) SECONDS
+	// Make cough slightly less frequent than before
+	var/delay = rand(12, 25) SECONDS
 	if(stage >= 3)
-		delay = rand(5, 10) SECONDS
+		delay = rand(6, 12) SECONDS
 	if(stage >= 4)
-		delay = rand(3, 6) SECONDS
+		delay = rand(4, 8) SECONDS
 	cough_timer = addtimer(CALLBACK(src, PROC_REF(cough_tick)), delay, TIMER_STOPPABLE)
 
 /datum/disease/plague/proc/cough_tick()
@@ -284,13 +280,18 @@
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
 		return
 	var/mob/living/carbon/human/H = affected_mob
-	
-	if(stage >= 4 && prob(60))
+	// If not yet at stage 2, just reschedule and do a light cough
+	if(stage < 2)
+		schedule_cough()
+		return
+
+	// Slightly reduce the chances for violent cough events
+	if(stage >= 4 && prob(45))
 		H.emote("cough", intentional = FALSE)
-		H.vomit(rand(10, 20), blood = TRUE, stun = FALSE)
+		H.vomit(rand(10,20), blood = TRUE, stun = TRUE)
 		H.bleed(rand(15, 25))
 		to_chat(H, span_userdanger("Кашляю кровью! Не могу остановить это!"))
-	else if(stage >= 3 && prob(40))
+	else if(stage >= 3 && prob(30))
 		H.emote("cough", intentional = FALSE)
 		H.bleed(rand(8, 15))
 		H.vomit(rand(5, 10), blood = TRUE, stun = FALSE)
@@ -321,7 +322,7 @@
 		if(prob(spread_chance))
 			target.ForceContractDisease(src, TRUE, FALSE)
 			to_chat(target, span_warning("Вдыхаю заражённые миазмы от [H]..."))
-	
+
 	schedule_cough()
 
 // ============== SCRATCH SYMPTOM ==============
@@ -331,9 +332,12 @@
 	if(stage < 2)
 		return
 	scratch_scheduled = TRUE
-	var/delay = rand(8, 15) SECONDS
+	// Similar to ash_blight but rarer at stage 2
+	var/delay = rand(8, 18) SECONDS
 	if(stage >= 3)
-		delay = rand(5, 10) SECONDS
+		delay = rand(6, 12) SECONDS
+	if(stage >= 4)
+		delay = rand(4, 8) SECONDS
 	scratch_timer = addtimer(CALLBACK(src, PROC_REF(scratch_tick)), delay, TIMER_STOPPABLE)
 
 /datum/disease/plague/proc/scratch_tick()
@@ -362,17 +366,18 @@
 	to_chat(H, pick(scratch_messages))
 	
 	// Chance to cause wound from scratching
-	var/wound_chance = 30
+	// Make bleeding from scratching rarer than before, especially at stage 2/3
+	var/wound_chance = 15
 	if(stage >= 3)
-		wound_chance = 50
+		wound_chance = 35
 	if(stage >= 4)
-		wound_chance = 70
+		wound_chance = 60
 	
 	if(prob(wound_chance) && length(H.bodyparts))
 		var/obj/item/bodypart/BP = pick(H.bodyparts)
 		if(BP)
 			if(stage >= 3)
-				BP.add_wound(/datum/wound/slash/moderate)
+				BP.add_wound(/datum/wound/slash)
 			else
 				BP.add_wound(/datum/wound/slash/small)
 			to_chat(H, span_danger("Царапины открыли кровоточащую рану!"))
@@ -404,9 +409,10 @@
 	if(stage < 2)
 		return
 	vomit_scheduled = TRUE
+	// Make stage 3 vomiting with stun and blood rarer
 	var/delay = rand(30, 50) SECONDS
 	if(stage >= 3)
-		delay = rand(15, 25) SECONDS
+		delay = rand(25, 45) SECONDS
 	vomit_timer = addtimer(CALLBACK(src, PROC_REF(vomit_tick)), delay, TIMER_STOPPABLE)
 
 /datum/disease/plague/proc/vomit_tick()
@@ -442,10 +448,10 @@
 	var/mob/living/carbon/human/H = affected_mob
 	
 	// Massive damage from organ failure and sepsis
-	H.adjustBruteLoss(rand(10, 20))
-	H.adjustToxLoss(rand(8, 15))
-	H.adjustOxyLoss(rand(5, 10))
-	H.bleed(rand(20, 40))
+	H.adjustBruteLoss(rand(3, 5))
+	H.adjustToxLoss(rand(2, 4))
+	H.adjustOxyLoss(rand(2, 4))
+	H.bleed(rand(3, 5))
 	
 	if(prob(30))
 		var/list/septic_messages = list(
@@ -500,6 +506,9 @@
 		if(scratch_timer)
 			deltimer(scratch_timer)
 			scratch_timer = null
+		if(vomit_timer)
+			deltimer(vomit_timer)
+			vomit_timer = null
 		if(septic_timer)
 			deltimer(septic_timer)
 			septic_timer = null
@@ -528,3 +537,10 @@
 				H.change_stat(stat, 0, stat_mod_keys[stat])
 	
 	return ..()
+
+// Override cure to grant 30 minutes immunity instead of default 10
+/datum/disease/plague/cure(add_resistance = TRUE)
+	if(affected_mob && add_resistance && (disease_flags & CAN_RESIST))
+		affected_mob.add_disease_resistance(GetDiseaseID(), 30 MINUTES)
+		to_chat(affected_mob, span_notice("Моё тело выработало временный иммунитет к чуме."))
+	return ..(FALSE) // Pass FALSE to parent to prevent double immunity

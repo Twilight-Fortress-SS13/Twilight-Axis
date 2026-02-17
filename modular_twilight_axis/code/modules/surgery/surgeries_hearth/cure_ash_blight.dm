@@ -71,4 +71,6 @@
 		span_notice("You burn away the ash blight infecting [target]."),
 		span_notice("[user] burns away the ash blight on [target]."),
 		span_notice("[user] sears [target]'s lesions with [tool]."))
+	// patient screams in agony after the cauterization
+	playsound(target, pick('sound/vo/male/gen/agony (11).ogg', 'sound/vo/male/gen/agony (13).ogg', 'sound/vo/male/gen/agony (4).ogg'), 80, FALSE)
 	return TRUE
