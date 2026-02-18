@@ -54,7 +54,7 @@
 	var/list/strip_chars = list("<",">")
 	var/list/text_parts = list()
 	var/last_pos = 1
-	
+
 	for(var/char in strip_chars)
 		var/index = findtext(t, char, last_pos)
 		while(index)
@@ -67,7 +67,7 @@
 	// Add any remaining text after the last stripped character
 	if(last_pos <= length(t))
 		text_parts += copytext_char(t, last_pos)
-		
+
 	return jointext(text_parts, "")
 
 
@@ -154,7 +154,7 @@
 /proc/stripped_input(mob/user, message = "", title = "", default = "", max_length=MAX_MESSAGE_LEN, no_trim=FALSE)
 	var/name = input(user, message, title, default) as text|null
 	if(no_trim)
-		return copytext(html_encode(name), 1, max_length)
+		return copytext_char(html_encode(name), 1, max_length)
 	else
 		return trim(html_encode(name), max_length) //trim is "outside" because html_encode can expand single symbols into multiple symbols (such as turning < into &lt;)
 
@@ -162,7 +162,7 @@
 /proc/stripped_multiline_input(mob/user, message = "", title = "", default = "", max_length=MAX_MESSAGE_LEN, no_trim=FALSE)
 	var/name = input(user, message, title, default) as message|null
 	if(no_trim)
-		return copytext(html_encode(name), 1, max_length)
+		return copytext_char(html_encode(name), 1, max_length)
 	else
 		return trim(html_encode(name), max_length)
 

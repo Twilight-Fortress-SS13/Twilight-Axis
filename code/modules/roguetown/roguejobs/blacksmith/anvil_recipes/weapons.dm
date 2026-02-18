@@ -318,7 +318,7 @@
 	created_item = /obj/item/rogueweapon/sword/falchion/militia/bronze
 
 /datum/anvil_recipe/weapons/bronze/battleaxe
-	name = "Waraxe, Bronze (+1 Bronze)"
+	name = "War Axe, Bronze (+1 Bronze)"
 	req_bar = /obj/item/ingot/bronze
 	req_blade = /obj/item/blade/bronze_axe
 	additional_items = list(/obj/item/ingot/bronze)
@@ -419,6 +419,11 @@
 	req_bar = /obj/item/ingot/iron
 	created_item = /obj/item/rogueweapon/flail
 
+/datum/anvil_recipe/weapons/iron/flailalt
+	name = "Flail, Studded, Iron"
+	req_bar = /obj/item/ingot/iron
+	created_item = /obj/item/rogueweapon/flail/alt
+
 /datum/anvil_recipe/weapons/iron/huntknife
 	name = "Hunting Knife, Iron"
 	req_bar = /obj/item/ingot/iron
@@ -459,6 +464,20 @@
 	req_blade = /obj/item/blade/iron_axe
 	additional_items = list(/obj/item/grown/log/tree/stick)
 	created_item = /obj/item/rogueweapon/stoneaxe/woodcut
+
+/datum/anvil_recipe/weapons/iron/hatchet
+	name = "Hatchet, Iron (+1 Stick)"
+	req_bar = /obj/item/ingot/iron
+	req_blade = /obj/item/blade/iron_axe
+	additional_items = list(/obj/item/grown/log/tree/stick)
+	created_item = /obj/item/rogueweapon/stoneaxe/handaxe
+
+/datum/anvil_recipe/weapons/iron/axelegacy
+	name = "Woodcutting Handaxe, Iron (+1 Small Log)"
+	req_bar = /obj/item/ingot/iron
+	req_blade = /obj/item/blade/iron_axe
+	additional_items = list(/obj/item/grown/log/tree/small)
+	created_item = /obj/item/rogueweapon/stoneaxe/woodcut/woodcutter
 
 /datum/anvil_recipe/weapons/iron/greataxe
 	name = "Greataxe, Iron (+1 Iron, +1 Small Log)"
@@ -708,6 +727,14 @@
 	req_blade = /obj/item/blade/steel_mace
 	additional_items = list(/obj/item/ingot/steel)
 	created_item = /obj/item/rogueweapon/mace/warhammer/steel
+	i_type = "Weapons"
+
+/datum/anvil_recipe/weapons/steel/sflangedmace
+	name = "Flanged Mace, Steel (+1 Steel)"
+	req_bar = /obj/item/ingot/steel
+	req_blade = /obj/item/blade/steel_mace
+	additional_items = list(/obj/item/ingot/steel)
+	created_item = /obj/item/rogueweapon/mace/cudgel/flanged
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/steel/greatsword
@@ -1008,6 +1035,12 @@
 	req_bar = /obj/item/ingot/silver
 	additional_items = list(/obj/item/ingot/silver, /obj/item/ingot/silver, /obj/item/grown/log/tree/small)
 	created_item = /obj/item/rogueweapon/mace/steel/silver
+
+/datum/anvil_recipe/weapons/silver/flangedmace
+	name = "Flanged Mace, Silver (+2 Silver, +1 Small Log)"
+	req_bar = /obj/item/ingot/silver
+	additional_items = list(/obj/item/ingot/silver, /obj/item/ingot/silver, /obj/item/grown/log/tree/small)
+	created_item = /obj/item/rogueweapon/mace/cudgel/flanged/silver
 
 /datum/anvil_recipe/weapons/silver/warhammer
 	name = "Warhammer, Silver (+2 Silver, +1 Small Log)"
@@ -1372,10 +1405,11 @@
 	created_item = /obj/item/rogueweapon/knuckles/psydon
 	i_type = "Weapons"
 
-/datum/anvil_recipe/weapons/psy/cudgel
-	name = "Psydonic Handmace"
+/datum/anvil_recipe/weapons/psy/cudgelmace
+	name = "Psydonic Handmace (+1 Small Log)"
 	req_bar = /obj/item/ingot/silverblessed
-	created_item = /obj/item/rogueweapon/mace/cudgel/psy
+	created_item = /obj/item/rogueweapon/mace/cudgel/psyclassic
+	additional_items = list(/obj/item/grown/log/tree/small)
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/halberd
@@ -1422,6 +1456,13 @@
 	additional_items = list(/obj/item/ingot/silverblessed/bullion, /obj/item/grown/log/tree/stick)
 	i_type = "Weapons"
 
+/datum/anvil_recipe/weapons/psy/cudgelmace/inq
+	name = "Psydonic Handmace (+1 Small Log)"
+	req_bar = /obj/item/ingot/silverblessed/bullion
+	created_item = /obj/item/rogueweapon/mace/cudgel/psyclassic
+	additional_items = list(/obj/item/grown/log/tree/small)
+	i_type = "Weapons"
+
 /datum/anvil_recipe/weapons/psy/spear/inq
 	name = "Psydonic Spear (+1 Blessed Silver, +1 Small Log)"
 	req_bar = /obj/item/ingot/silverblessed/bullion
@@ -1451,12 +1492,6 @@
 	name = "Psydonic Knuckles"
 	req_bar = /obj/item/ingot/silverblessed/bullion
 	created_item = /obj/item/rogueweapon/knuckles/psydon
-	i_type = "Weapons"
-
-/datum/anvil_recipe/weapons/psy/cudgel/inq
-	name = "Psydonic Handmace"
-	req_bar = /obj/item/ingot/silverblessed/bullion
-	created_item = /obj/item/rogueweapon/mace/cudgel/psy
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/halberd/inq

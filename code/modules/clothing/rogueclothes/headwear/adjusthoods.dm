@@ -31,7 +31,7 @@
 	. = ..()
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/equip/cloak (3).ogg', null, (UPD_HEAD|UPD_MASK))	//Standard hood
 
-/obj/item/clothing/head/roguetown/roguehood/MiddleClick(mob/user) 
+/obj/item/clothing/head/roguetown/roguehood/MiddleClick(mob/user)
 	overarmor = !overarmor
 	to_chat(user, span_info("I [overarmor ? "wear \the [src] under my hair" : "wear \the [src] over my hair"]."))
 	if(overarmor)
@@ -40,6 +40,10 @@
 		alternate_worn_layer = BACK_LAYER //Above Hair Layer
 	user.update_inv_wear_mask()
 	user.update_inv_head()
+
+/obj/item/clothing/head/roguetown/roguehood/get_mechanics_examine(mob/user)
+    . = ..()
+    . += span_info("Right click to adjust the hood's coverage. Most fully-drawn hoods will hide the wearer's identity.")
 
 /obj/item/clothing/head/roguetown/roguehood/red
 	color = CLOTHING_RED
@@ -72,7 +76,6 @@
 	alternate_worn_layer  = 8.9 //On top of helmet
 	body_parts_covered = HEAD|HAIR|EARS|NECK
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
-	armor = ARMOR_CLOTHING
 	dynamic_hair_suffix = ""
 	edelay_type = 1
 	adjustable = CAN_CADJUST
@@ -104,7 +107,8 @@
 /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/raneshen
 	name = "padded headscarf"
 	desc = "A common sight amongst those travelling the long desert routes, it offers protection from the heat and a modicum of it against the beasts that prowl its more comfortable nites."
-	max_integrity = 100
+	slot_flags = ITEM_SLOT_HEAD
+	max_integrity = 200
 	armor = ARMOR_SPELLSINGER //basically the same as a warscholar hood
 	item_state = "hijab"
 	icon_state = "hijab"
@@ -224,12 +228,12 @@
 /obj/item/clothing/head/roguetown/roguehood/unholy/lich
 	name = "ominous hood"
 	desc = "An otherworldly veil, whispering the constant ponderances of a runic enigma. She watches over you; and Her grin is crooked into one of eternal malice."
-	max_integrity = ARMOR_INT_HELMET_ANTAG 
+	max_integrity = ARMOR_INT_HELMET_ANTAG
 
 /obj/item/clothing/head/roguetown/roguehood/unholy/enchanted
 	name = "ominously enchanted hood"
 	desc = "An otherworldly veil, amythortz-woven and crackling with the unignorable truths of a runic enigma. She watches over you; and Her grin is crooked into one of eternal malice."
-	max_integrity = ARMOR_INT_HELMET_ANTAG 
+	max_integrity = ARMOR_INT_HELMET_ANTAG
 	armor = ARMOR_SPELLSINGER
 	item_state = "ewarlockhood"
 	icon_state = "ewarlockhood"
@@ -321,7 +325,7 @@
 	body_parts_covered = NECK | HEAD | HAIR
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR
-	prevent_crits = PREVENT_CRITS_NONE
+	prevent_crits = PREVENT_CRITS_MOST
 	armor = ARMOR_SPELLSINGER
 	dynamic_hair_suffix = ""
 	edelay_type = 1

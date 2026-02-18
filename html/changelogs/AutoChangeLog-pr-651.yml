@@ -1,0 +1,4 @@
+author: "mykokonfq"
+delete-after: True
+changes:
+  - code_imp: "перевод Select equipment (full) в модуль"

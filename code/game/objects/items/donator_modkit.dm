@@ -183,6 +183,13 @@
 	target_items = list(/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted)
 	result_item = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/dasfox
 
+//DasFox - Lance
+/obj/item/enchantingkit/dasfox_lance
+	name = "'decorated jousting lance' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Lance"
+	target_items = list(/obj/item/rogueweapon/spear/lance)
+	result_item = /obj/item/rogueweapon/spear/lance/dasfox
+
 //Ryan180602 - Armet
 /obj/item/enchantingkit/ryan_psyhelm
 	name = "'maimed psydonic helm' morphing elixir"
@@ -193,6 +200,48 @@
 	/obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute = /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm/ryan)
 	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm/ryan
 
+//Dakken12 - Armet/Hounskull
+/obj/item/enchantingkit/dakken_zizhelm
+	name = "'armoured avantyne barbute' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Armet or Hounskull Bascinet"
+	target_items = list(
+		/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet, 
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull
+	)
+	result_item = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken
+
+//StinkethStonketh - Shashka & pike
+/obj/item/enchantingkit/stinketh_shashka
+	name = "'fencer's shashka' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Szöréndnížine Sabre Or Aavnic Shashka"
+	target_items = list(
+		/obj/item/rogueweapon/sword/sabre/freifechter	= /obj/item/rogueweapon/sword/sabre/freifechter/stinketh,
+		/obj/item/rogueweapon/sword/sabre/steppesman	= /obj/item/rogueweapon/sword/sabre/steppesman/stinketh
+		)
+	icon_loadout = /obj/item/rogueweapon/sword/sabre/steppesman/stinketh
+
+/obj/item/enchantingkit/stinketh_pike
+	name = "'Kindness of Ravens Standard' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Banner Of Szöréndnížina"
+	target_items = list(/obj/item/rogueweapon/spear/boar/frei/pike)
+	result_item = /obj/item/rogueweapon/spear/boar/frei/pike/stinketh
+
+//Koruu - Glaive
+/obj/item/enchantingkit/koruu_glaive
+	name = "'Sixty Five Yils' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Glaive Or Naginata"
+	target_items = list(
+		/obj/item/rogueweapon/spear/naginata	= /obj/item/rogueweapon/spear/naginata/koruu,
+		/obj/item/rogueweapon/halberd/glaive	= /obj/item/rogueweapon/halberd/glaive/koruu
+		)
+	icon_loadout = /obj/item/rogueweapon/halberd/glaive/koruu
+
+//DRD21 - Longsword
+/obj/item/enchantingkit/drd_lsword
+	name = "'ornate basket-hilt longsword' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword"
+	target_items = list(/obj/item/rogueweapon/sword/long)
+	result_item = /obj/item/rogueweapon/sword/long/drd
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
@@ -210,6 +259,15 @@
 	result_item = null
 	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy
 
+/obj/item/enchantingkit/triumph_weaponkit_axe
+	name = "'Valorian' axe morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..an Iron Axe.. </br>..or an Iron Hatchet."
+	target_items = list(
+		/obj/item/rogueweapon/stoneaxe/handaxe							= /obj/item/rogueweapon/stoneaxe/handaxe/triumph,
+		/obj/item/rogueweapon/stoneaxe/woodcut	  						= /obj/item/rogueweapon/stoneaxe/woodcut/triumph
+		)
+	result_item = null
+
 /obj/item/enchantingkit/triumph_weaponkit_tri
 	name = "'Valorian' longsword morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..a Steel Longsword."
@@ -219,9 +277,6 @@
 /obj/item/enchantingkit/triumph_weaponkit_wide
 	name = "'Wideguard' longsword morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..a Steel Longsword </br>..or a Rapier."
-	target_items = list(/obj/item/rogueweapon/sword/long)
-	result_item = /obj/item/rogueweapon/sword/long/triumph/wideguard
-
 	target_items = list(
 		/obj/item/rogueweapon/sword/long					= /obj/item/rogueweapon/sword/long/triumph/wideguard,
 		/obj/item/rogueweapon/sword/rapier	  			= /obj/item/rogueweapon/sword/rapier/wideguard
@@ -253,8 +308,6 @@
 /obj/item/enchantingkit/triumph_weaponkit_psy
 	name = "'Psycrucifix' longsword morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..a Steel Longsword.. </br>..or a Psydonic Longsword."
-	target_items = list(/obj/item/rogueweapon/sword/long)
-	result_item = /obj/item/rogueweapon/sword/long/triumph/psycrucifix
 	target_items = list(
 		/obj/item/rogueweapon/sword/long						= /obj/item/rogueweapon/sword/long/triumph/psycrucifix,
 		/obj/item/rogueweapon/sword/long/psysword	  			= /obj/item/rogueweapon/sword/long/psysword/psycrucifix

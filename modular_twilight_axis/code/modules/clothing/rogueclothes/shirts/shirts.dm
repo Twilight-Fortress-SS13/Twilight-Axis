@@ -245,6 +245,20 @@
 	hammerhold_colors = list("white", "blue")
 	hammerhold_variants = null
 
+/obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat/heavy 
+	prevent_crits = PREVENT_CRITS_MOST
+	body_parts_covered = COVERAGE_ALL_BUT_ARMS
+	armor = ARMOR_LEATHER_GOOD
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
+	blocksound = SOFTHIT
+	blade_dulling = DULLING_BASHCHOP
+	sewrepair = TRUE
+	sellprice = 25
+	slot_flags = ITEM_SLOT_ARMOR
+	material_category = ARMOR_MAT_LEATHER
+	salvage_result = /obj/item/natural/hide/cured
+	chunkcolor = "#7e5d17"
+
 /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat/attack_right(mob/user)
 	if(!picked)
 		var/choiceC = input(user, "Choose a color.", "Hammerhold colors") as anything in hammerhold_colors
@@ -279,6 +293,35 @@
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
 	hammerhold_colors = list("white", "blue")
 	hammerhold_variants = null
+
+/obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/heavy
+	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_CHOP)
+	armor = ARMOR_PADDED_GOOD
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+	blocksound = SOFTUNDERHIT
+	blade_dulling = DULLING_BASHCHOP
+	break_sound = 'sound/foley/cloth_rip.ogg'
+	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
+	sewrepair = TRUE
+	armor_class = ARMOR_CLASS_LIGHT
+	material_category = ARMOR_MAT_LEATHER
+	sellprice = 25
+	cold_protection = 10
+
+/obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/light
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+	armor = ARMOR_PADDED
+	prevent_crits = PREVENT_CRITS_NONE
+	blocksound = SOFTUNDERHIT
+	blade_dulling = DULLING_BASHCHOP
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM
+	break_sound = 'sound/foley/cloth_rip.ogg'
+	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
+	sewrepair = TRUE
+	chunkcolor = "#978151"
+	material_category = ARMOR_MAT_LEATHER
+	cold_protection = 10
 
 /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/attack_right(mob/user)
 	if(!picked)
@@ -476,3 +519,74 @@
 	if(ismob(loc))
 		var/mob/L = loc
 		L.update_inv_armor()
+
+/obj/item/clothing/suit/roguetown/shirt/kimono2
+	name = "long sleeved kimono"
+	desc = "Classic kimono from Kazengun islands."
+	icon_state = "kimono"
+	item_state = "kimono"
+	r_sleeve_status = SLEEVE_NORMAL
+	l_sleeve_status = SLEEVE_NORMAL
+	boobed = TRUE
+	flags_inv = HIDEBOOB|HIDECROTCH
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	body_parts_covered = CHEST|GROIN|ARMS|LEGS|VITALS
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
+
+/obj/item/clothing/suit/roguetown/shirt/haori
+	name = "haori"
+	desc = "A traditional Kazengun outer garment in the form of a short, straight jacket with wide sleeves and side slits."
+	icon_state = "haori"
+	item_state = "haori"
+	r_sleeve_status = SLEEVE_NORMAL
+	l_sleeve_status = SLEEVE_NORMAL
+	flags_inv = HIDEBOOB
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	body_parts_covered = CHEST|VITALS
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
+
+/obj/item/clothing/suit/roguetown/shirt/yoroihitatare
+	name = "yoroihitatare"
+	desc = "Traditional Kazengun samurai ceremonial attire, worn under armor or for official ceremonies."
+	icon_state = "yoroihitatare"
+	item_state = "yoroihitatare"
+	r_sleeve_status = SLEEVE_NORMAL
+	l_sleeve_status = SLEEVE_NORMAL
+	boobed = TRUE
+	flags_inv = HIDEBOOB|HIDECROTCH
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	body_parts_covered = CHEST|GROIN|ARMS|LEGS|VITALS
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
+
+/obj/item/clothing/suit/roguetown/shirt/kamishimo
+	name = "kamishimo"
+	desc = "A sleeveless vest-jacket with wide shoulders, worn over a kimono."
+	icon_state = "kamishimo"
+	item_state = "kamishimo"
+	flags_inv = HIDEBOOB
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
+	body_parts_covered = CHEST|VITALS
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
+
+/obj/item/clothing/suit/roguetown/shirt/kazengun_jacket
+	name = "kazengun jacket"
+	desc = "Classical Kazengun jacket."
+	icon_state = "kazengun_jacket"
+	item_state = "kazengun_jacket"
+	r_sleeve_status = SLEEVE_NORMAL
+	l_sleeve_status = SLEEVE_NORMAL
+	boobed = TRUE
+	flags_inv = HIDEBOOB
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	body_parts_covered = CHEST|VITALS
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'

@@ -54,6 +54,15 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
 	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
 
+/obj/item/clothing/suit/roguetown/armor/brigandine/light/aristocratic
+	name = "aristocratic coat"
+	desc = ""
+	icon_state = "kumiecoat"
+	item_state = "kumiecoat"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+
 /obj/item/rogueweapon/greatsword/zwei/inverserun/steel
 	name = "Votive Thorns"
 	desc = "Promises hurt, but so does plucking rosa. Hoping hurts, but so does looking at the beauty of Astrata's light. Pick yourself back up. Remember your promise, despite the thorns."
@@ -131,3 +140,84 @@
 	icon = 'modular_twilight_axis/icons/clothing/onmob/stargazer_outfit.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/stargazer_outfit.dmi'
 
+
+// Aria - Mrix Start
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/aria
+	name = "aria bikini"
+	desc = "A pair of golden red silks to cover breasts"
+	icon_state = "ariabikini"
+	item_state = "ariabikini"
+	salvage_result = /obj/item/natural/silk
+	salvage_amount = 1
+	icon = 'modular_twilight_axis/icons/clothing/aria.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/aria.dmi'
+	resistance_flags = FIRE_PROOF
+
+/obj/item/clothing/under/roguetown/trou/leather/aria
+	name = "aria pants"
+	desc = "A pair of golden red silks to cover groind"
+	icon_state = "ariapants"
+	item_state = "ariapants"
+	salvage_result = /obj/item/natural/silk
+	salvage_amount = 1
+	icon = 'modular_twilight_axis/icons/clothing/aria.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/aria.dmi'
+	resistance_flags = FIRE_PROOF
+
+/obj/item/clothing/wrists/roguetown/bracers/cloth/monk/aria
+	name = "aria wrists"
+	desc = "A pair of golden red silks to cover arms"
+	icon_state = "ariawrists"
+	item_state = "ariawrists"
+	salvage_result = /obj/item/natural/silk
+	salvage_amount = 1
+	icon = 'modular_twilight_axis/icons/clothing/aria.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/aria.dmi'
+	resistance_flags = FIRE_PROOF
+
+/obj/item/clothing/neck/roguetown/leather/aria
+	name = "aria necklace"
+	desc = "A pair of golden red silks to cover neck"
+	icon_state = "arianeck"
+	item_state = "arianeck"
+	salvage_result = /obj/item/natural/silk
+	salvage_amount = 1
+	icon = 'modular_twilight_axis/icons/clothing/aria.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/aria.dmi'
+	resistance_flags = FIRE_PROOF
+	
+/obj/item/clothing/gloves/roguetown/bandages/pugilist/aria
+	name = "aria bondaged gloves"
+	desc = "A pair of golden black silks to cover hands"
+	icon_state = "ariagloves"
+	item_state = "ariagloves"
+	salvage_result = /obj/item/natural/silk
+	salvage_amount = 1
+	icon = 'modular_twilight_axis/icons/clothing/aria.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/aria.dmi'
+	resistance_flags = FIRE_PROOF
+
+/obj/item/storage/belt/rogue/leather/aria
+	name = "aria belt"
+	desc = "A pair of golden black silks to cover legs"
+	icon_state = "ariabelt"
+	item_state = "ariabelt"
+	salvage_result = /obj/item/natural/silk
+	salvage_amount = 1
+	icon = 'modular_twilight_axis/icons/clothing/aria.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/aria.dmi'
+	resistance_flags = FIRE_PROOF
+
+/obj/item/clothing/shoes/roguetown/boots/leather/aria
+	name = "aria feet bondage"
+	desc = "A pair of golden black silks to cover feet"
+	icon_state = "ariafeet"
+	item_state = "ariafeet"
+	salvage_result = /obj/item/natural/silk
+	salvage_amount = 1
+	icon = 'modular_twilight_axis/icons/clothing/aria.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/aria.dmi'
+	resistance_flags = FIRE_PROOF
+
+// Aria Mrix End

@@ -21,6 +21,8 @@ interface Item {
   icon: string;
   icon_state: string;
   isSelected: boolean;
+  unavailable?: boolean;
+  requiredTier?: number;
 }
 
 export const LoadoutPanel = (props) => {
@@ -137,7 +139,7 @@ export const LoadoutPanel = (props) => {
                 {confirmReset ? 'Точно?' : 'Сбросить все'}
               </span>
             </Button>
-          </Stack.Item>          
+          </Stack.Item>
           <Stack.Item>
             <Tabs>
               {categoriesArray.map((cat, i) => (
@@ -187,31 +189,37 @@ export const LoadoutPanel = (props) => {
                   }}
                 />
                 <blockquote style={{ margin: 0, flexGrow: 1, fontSize: '18px', color: '#e4e4e4', textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>{item?.name || 'Без названия'}</blockquote>
-                <Box
-                  style={{
-                    width: 96,
-                    height: 96,
-                    backgroundColor: (item?.isDonatorItem && data.isDonator === 0) ? "#a75818ff" : item?.isSelected ? "#a71818" : "#24a718",
-                    borderRadius: 8,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: '#000',
-                  }}
-                  onClick={() => {
-                    if (item?.isDonatorItem && data.isDonator === 0) {
-                      return;
-                    }
+                {item?.unavailable ? (
+                  <Box style={{ color: 'red' }}>
+                    Недоступно. Требуется уровень: {item?.requiredTier}
+                  </Box>
+                ) : (
+                  <Box
+                    style={{
+                      width: 96,
+                      height: 96,
+                      backgroundColor: (item?.isDonatorItem && data.isDonator === 0) ? "#a75818ff" : item?.isSelected ? "#a71818" : "#24a718",
+                      borderRadius: 8,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: '#000',
+                    }}
+                    onClick={() => {
+                      if (item?.isDonatorItem && data.isDonator === 0) {
+                        return;
+                      }
 
-                    if (item?.isSelected) {
-                      act('remove', { item: item?.name || item?.path });
-                    } else {
-                      act('add', { item: item?.name || item?.path });
-                    }
-                  }}
-                >
-                  <b>{(item?.isDonatorItem && data.isDonator === 0) ? 'Недоступно' : item?.isSelected ? 'Убрать' : 'Взять'}</b>
-                </Box>
+                      if (item?.isSelected) {
+                        act('remove', { item: item?.name || item?.path });
+                      } else {
+                        act('add', { item: item?.name || item?.path });
+                      }
+                    }}
+                  >
+                    <b>{(item?.isDonatorItem && data.isDonator === 0) ? 'Недоступно' : item?.isSelected ? 'Убрать' : 'Взять'}</b>
+                  </Box>
+                )}
               </div>
             ))}
           </Stack.Item>

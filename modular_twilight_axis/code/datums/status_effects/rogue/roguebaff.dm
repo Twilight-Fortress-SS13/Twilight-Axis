@@ -62,3 +62,55 @@
 	.=..()
 	if((src.holy_area == TRUE) && HAS_TRAIT(guy, TRAIT_CLERGY_TA) && !guy.has_status_effect(/datum/status_effect/buff/clergybuff) && !HAS_TRAIT(guy, TRAIT_EXCOMMUNICATED) && !HAS_TRAIT(guy, TRAIT_HERESIARCH))
 		guy.apply_status_effect(/datum/status_effect/buff/clergybuff)
+
+/datum/status_effect/buff/mist_form //TA EDIT
+	id = "mist_form"
+	duration = 120
+	alert_type = /atom/movable/screen/alert/status_effect/buff/dagger_dash
+
+/datum/status_effect/buff/mist_form/on_apply()
+	if(!isliving(owner)) return FALSE
+	var/mob/living/L = owner
+	
+	L.alpha = 100 
+
+	ADD_TRAIT(L, "ethereal", MAGIC_TRAIT)
+	ADD_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
+	ADD_TRAIT(L, TRAIT_GRABIMMUNE, MAGIC_TRAIT)
+	ADD_TRAIT(L, TRAIT_PUSHIMMUNE, MAGIC_TRAIT)
+	ADD_TRAIT(L, TRAIT_NOSLIPALL, MAGIC_TRAIT)
+
+
+	L.status_flags |= GODMODE
+
+
+	L.density = FALSE 
+	
+
+	L.pass_flags |= LETPASSTHROW
+
+	L.pass_flags |= PASSMOB
+	
+	return ..()
+
+/datum/status_effect/buff/mist_form/on_remove()
+	var/mob/living/L = owner
+	if(!L) return
+	
+	L.alpha = 255
+	
+
+	L.density = TRUE
+	
+
+	REMOVE_TRAIT(L, "ethereal", MAGIC_TRAIT)
+	REMOVE_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
+	REMOVE_TRAIT(L, TRAIT_GRABIMMUNE, MAGIC_TRAIT)
+	REMOVE_TRAIT(L, TRAIT_PUSHIMMUNE, MAGIC_TRAIT)
+	REMOVE_TRAIT(L, TRAIT_NOSLIPALL, MAGIC_TRAIT)
+
+	L.status_flags &= ~GODMODE
+	L.pass_flags &= ~LETPASSTHROW
+	L.pass_flags &= ~PASSMOB
+	
+	..()

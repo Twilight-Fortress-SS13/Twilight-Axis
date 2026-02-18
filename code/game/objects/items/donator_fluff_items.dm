@@ -12,7 +12,7 @@
 	name = "Wortträger"
 	desc = "An imported Grenzelhoftian panzerstecher, a superbly crafted implement devoid of armory marks- merely bearing a maker's mark and the Zenitstadt seal. This one has a grip of walnut wood, and a pale saffira set within the crossguard. The ricasso is engraved with Ravoxian scripture."
 	icon_state = "mansa"
-	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
 
 //Srusu's donator item - dress
 /obj/item/clothing/suit/roguetown/shirt/dress/emerald
@@ -294,6 +294,15 @@
 		pic.color = get_detail_color()
 	add_overlay(pic)
 
+/obj/item/rogueweapon/spear/lance/dasfox
+	name = "La Rosa de la Chevalerie"
+	desc = "A jousting lance, designed to look much like the flower- a softness backed by steel. \
+		Handwoven silk is draped down the length and kept in place by steel vines, while heart-shaped ties keep silk on the grip from moving much even during proper jousts. \
+		The cup guard has been forged, in lieu of its natural shape, into a blooming rosa - genteel and pleasant in view for a weapon of war."
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	icon_state = "dasfox_lance"
+
+
 //RYAN180602
 /obj/item/caparison/ryan
 	name = "western estates caparison"
@@ -311,8 +320,54 @@
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes64.dmi'
 
-//koruu
+//KORUU
 /obj/item/clothing/head/roguetown/mentorhat/koruu
 	name = "well-worn bamboo hat"
 	desc = "A bamboo hat, made from shaven rice straw and woven into place alongside a coating of lacquer. This particular hat seems worn with age, yet well maintained. The phrase, '葉隠' can be seen stitched in gold in the inner lining of the hat."
 	armor = ARMOR_CLOTHING
+
+/obj/item/rogueweapon/spear/naginata/koruu
+	name = "Sixty Five Yils"
+	desc = "A beautiful guandao forged out of steel and interlocked with blacksteel, much like few blades before. The inscription, 'At fifteen, I went to join the army; only at eighty was I finally able to return home.' is inscribed in gold into the haft of the guandao."
+	icon_state = "koruu_naginata"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/halberd/glaive/koruu
+	name = "Sixty Five Yils"
+	desc = "A beautiful guandao forged out of steel and interlocked with blacksteel, much like few blades before. The inscription, 'At fifteen, I went to join the army; only at eighty was I finally able to return home.' is inscribed in gold into the haft of the guandao."
+	icon_state = "koruu_glaive"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+//DAKKEN12
+/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken
+	name = "armoured avantyne barbute"
+	desc = "A heavy-metal barbute that seems to be more avantyne than steel. It carries a tormented lustre about it, glinting under the sun as threads of the dark metal wind through its visor."
+	icon_state = "dakken_zizbarb"
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+
+//STINKETHSTONKETH
+/obj/item/rogueweapon/sword/sabre/steppesman/stinketh
+	name = "fencer's shashka"
+	desc = "A heirloom shashka with guardless hilt plated in silver and adorned  with a Mamuk hide grip. A sabre's blade has been added in place of the old one, affording it lethality and reach whilst dismounted."
+	icon_state = "stinketh_shashka"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/sword/sabre/freifechter/stinketh
+	name = "fencer's shashka"
+	desc = "A heirloom shashka with guardless hilt plated in silver and adorned  with a Mamuk hide grip. A sabre's blade has been added in place of the old one, affording it lethality and reach whilst dismounted."
+	icon_state = "stinketh_shashka"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/spear/boar/frei/pike/stinketh
+	name = "Kindness of Ravens Standard"
+	desc = "A Freifechter's steel pike with a reinforced spruce shaft sporting a black banner with a strange blend of religious symbols."
+	icon_state = "stinkethbanner"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+//DRD21
+/obj/item/rogueweapon/sword/long/drd
+	name = "ornate basket-hilted longsword"
+	desc = "A longsword, fitten with a basket-hilt. The grip is made out of a fine green-stained leather, with a piece of spiral-cared walnut connecting it to a lion-shaped pommel. A purple glowing rune sits atop the blade."
+	icon_state = "drd_lsword"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'

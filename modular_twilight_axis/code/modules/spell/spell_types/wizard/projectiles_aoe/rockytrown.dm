@@ -1,8 +1,8 @@
-/obj/effect/proc_holder/spell/invoked/projectile/gientrock
+/obj/effect/proc_holder/spell/invoked/projectile/giantrock
 	name = "Giant Rock"
 	desc = "Flying piece of stone. "
 	clothes_req = FALSE
-	projectile_type = /obj/projectile/gientrock
+	projectile_type = /obj/projectile/giantrock
 	overlay_state = "meteor_storm"
 	sound = list('sound/magic/xylix_slip_fail.ogg')
 	active = FALSE
@@ -14,17 +14,17 @@
 	warnie = "spellwarning"
 	no_early_release = TRUE
 	movement_interrupt = FALSE
-	spell_tier = 4
-	invocations = list("ROCK!")
+	spell_tier = 3
+	invocations = list("SAXUM!")
 	invocation_type = "shout"
 	glow_color = GLOW_COLOR_ARCANE
 	glow_intensity = GLOW_INTENSITY_LOW
 	charging_slowdown = 3
 	chargedloop = /datum/looping_sound/invokegen
 	associated_skill = /datum/skill/magic/arcane
-	cost = 9
+	cost = 6
 
-/obj/projectile/gientrock
+/obj/projectile/giantrock
 	name = "elemental rock"
 	icon_state = "rock"
 	damage = 30
@@ -40,7 +40,7 @@
 		L.adjustBruteLoss(20)
 		to_chat(L, span_warning("You've been hit the [src]!"))
 
-/obj/projectile/gientrock/on_hit(target)
+/obj/projectile/giantrock/on_hit(target)
 	. = ..()
 	var/turf/center = get_turf(target)
 	if(!center)

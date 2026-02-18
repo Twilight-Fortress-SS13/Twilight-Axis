@@ -156,6 +156,7 @@
 #define BCLASS_PUNISH		"punish"
 #define BCLASS_EFFECT		"effect"
 #define BCLASS_SUNDER       "sunder"
+#define BCLASS_HALFSWORD	"stab"
 
 //Material class (what material is striking)
 #define MCLASS_GENERIC		1
@@ -329,7 +330,10 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define BAD_GUARD_FATIGUE_DRAIN 20 //Percentage of your green bar lost on letting a guard expire.
 #define GUARD_PEEL_REDUCTION 2	//How many Peel stacks to lose if a Guard is hit.
 #define BAIT_PEEL_REDUCTION 1	//How many Peel stacks to lose if we perfectly bait.
+#define EXPOSED_INTEG_MOD 2.5	//Multiplier for integrity damage if we hit an Exposed target.
+#define VULN_INTEG_MOD 1.3		//Multiplier for integrity damage if we hit a Vulnerable target.
 #define BASE_RCLICK_CD 30 SECONDS
+#define FEINT_RCLICK_CD 20 SECONDS
 
 /* TEMPO DEFINES */
 #define TEMPO_CULL_DELAY 	12 SECONDS	//Interval for checking our tempo lists. Only relevant to player mobs with TRAIT_TEMPO
@@ -396,3 +400,15 @@ Medical defines
 #define VISMSG_ARMOR_INT_STAGEONE "<span class='armoralert'><i> Dented.</i></span>"
 #define VISMSG_ARMOR_INT_STAGETWO "<span class='armoralert'> Damaged.</span>"
 #define VISMSG_ARMOR_INT_STAGETHREE "<span class='armoralert'><b> Crumbling!</b></span>"
+
+//Cast time reduction
+#define TOPER_CAST_TIME_REDUCTION 0.1
+#define EMERALD_CAST_TIME_REDUCTION 0.15
+#define SAPPHIRE_CAST_TIME_REDUCTION 0.2
+#define QUARTZ_CAST_TIME_REDUCTION 0.25
+#define RUBY_CAST_TIME_REDUCTION 0.3
+#define DIAMOND_CAST_TIME_REDUCTION 0.35
+#define RIDDLE_OF_STEEL_CAST_TIME_REDUCTION 0.4
+
+#define PROB_ATTACK_EMOTE_PLAYER 10
+#define PROB_ATTACK_EMOTE_NPC 10

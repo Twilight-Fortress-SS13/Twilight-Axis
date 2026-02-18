@@ -111,7 +111,9 @@
 		var/explo_mineral_amount = mineralAmt
 		var/obj/item/natural/rock/explo_rock = rockType
 		ScrapeAway()
-		GLOB.mined_resource_loc |= get_turf(src)
+		var/turf/T = get_turf(src)
+		if(T)
+			GLOB.mined_resource_loc |= T
 		queue_smooth_neighbors(src)
 		new /obj/item/natural/stone(src)
 		if(prob(30))
@@ -223,6 +225,7 @@
 		/turf/closed/mineral/rogue/salt = 5,
 		/turf/closed/mineral/rogue/iron = 15,
 		/turf/closed/mineral/rogue/copper = 10,
+		/turf/closed/mineral/rogue/tin = 7,
 		/turf/closed/mineral/rogue/coal = 25)
 	mineralChance = 23
 
@@ -253,7 +256,7 @@
 		/turf/closed/mineral/rogue/silver = 5,
 		/turf/closed/mineral/rogue/iron = 33,
 		/turf/closed/mineral/rogue/copper = 20,
-		/turf/closed/mineral/rogue/tin = 12,
+		/turf/closed/mineral/rogue/tin = 14,
 		/turf/closed/mineral/rogue/coal = 19,
 		/turf/closed/mineral/rogue/gem = 3)
 

@@ -44,6 +44,8 @@
 	. = ..()
 	. += span_info("Left click to sheath a weapon, or to draw a sheathed weapon. Will only draw if held in hand, belt, or back.")
 	. += span_info("Right click to draw a sheathed weapon.")
+	. += span_info("Middle click to transform it into a strap, which allows for a weapon to be openly carried without any delays to drawing or sheathing.")
+	. += span_info("Straps cannot be transformed back into scabbards or sheaths.")
 
 /obj/item/rogueweapon/scabbard/ComponentInitialize()
 	. = ..()
@@ -148,7 +150,7 @@
 
 /obj/item/rogueweapon/scabbard/sheath
 	name = "dagger sheath"
-	desc = "A slingable sheath made of leather, meant to host surprises in smaller sizes. </br>By middle-clicking the sheath while it's unoccupied, I can strip off the coverings and turn it into a light weapon strap."
+	desc = "A slingable sheath made of leather, meant to host surprises in smaller sizes."
 	sewrepair = TRUE
 
 	icon_state = "sheath"
@@ -389,7 +391,7 @@
 
 /obj/item/rogueweapon/scabbard/sword
 	name = "simple scabbard"
-	desc = "The natural evolution to the advent of longblades. </br>By middle-clicking the scabbard while it's unoccupied, I can strip off the coverings and turn it into a weapon strap."
+	desc = "The natural evolution to the advent of longblades."
 
 	icon_state = "scabbard"
 	item_state = "scabbard"
@@ -655,6 +657,21 @@
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
+/obj/item/rogueweapon/scabbard/sheath/courtphysician/hand
+	name = "velvet sister"
+	desc = "Sleek, fashionable and deadly. Traits shared by both staff and the one holding it. Never let yourself be outdone, never rely on merely one trick.\
+	The rontz embedded in the handle serves as focus for arcyne arts."
+	icon = 'icons/roguetown/weapons/special/hand32.dmi'
+	icon_state = "staffsheath"
+	item_state = "staffsheath"
+	valid_blade = /obj/item/rogueweapon/sword/rapier/hand
+	sellprice = 100
+	cast_time_reduction = null //The component alters this. 
+
+/obj/item/rogueweapon/scabbard/sheath/courtphysician/hand/ComponentInitialize()
+	AddComponent(/datum/component/holster/handstaff, valid_blade, null, null, sheathe_time)
+	
+
 ///////////////////////
 //	GREATWEP. STRAPS //
 ///////////////////////
@@ -694,7 +711,7 @@
 /obj/item/rogueweapon/scabbard/gwstrap/getonmobprop(tag)
 	..()
 	var/datum/component/holster/HC = GetComponent(/datum/component/holster)
-	if(!HC.sheathed)
+	if(!HC?.sheathed)
 		return
 	if(istype(HC.sheathed, /obj/item/rogueweapon/estoc) || istype(HC.sheathed, /obj/item/rogueweapon/greatsword))
 		switch(tag)

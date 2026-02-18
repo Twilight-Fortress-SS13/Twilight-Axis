@@ -101,7 +101,7 @@
 
 /obj/item/roguekey/lord
 	name = "master key"
-	desc = "The Lord's key."
+	desc = "A magical key that molds itself to fit any lock. Can always be recalled by the Crown."
 	icon_state = "bosskey"
 	lockid = "lord"
 	visual_replacement = /obj/item/roguekey/royal
@@ -132,7 +132,7 @@
 /obj/item/roguekey/skeleton //Think of it less FOR skeletons and more just master key but can't be recalled and can be lost.
 	name = "skeleton key"
 	desc = "A moldable key able to fit anywhere. Marvel of engineering."
-	icon_state = "bosskey"
+	icon_state = "skeletonkey"
 	lockid = "lord"
 	visual_replacement = /obj/item/roguekey/royal
 
@@ -169,6 +169,14 @@
 	icon_state = "hornkey"
 	lockid = "heir"
 
+/obj/item/roguekey/heir/one
+	name = "heir room I key"
+	lockid = "heir1"
+
+/obj/item/roguekey/heir/two
+	name = "heir room II key"
+	lockid = "heir2"
+
 /obj/item/roguekey/vault
 	name = "vault key"
 	desc = "This key opens the mighty vault."
@@ -198,6 +206,90 @@
 	desc = "This is the court wizard's key. It watches you..."
 	icon_state = "eyekey"
 	lockid = "mage"
+
+/obj/item/roguekey/manor/knight
+	name = "retinue bedroom I key"
+	lockid = "manor_knight_one"
+
+/obj/item/roguekey/manor/knight/two
+	name = "retinue bedroom II key"
+	lockid = "manor_knight_two"
+
+/obj/item/roguekey/manor/knight/three
+	name = "retinue bedroom III key"
+	lockid = "manor_knight_three"
+
+/obj/item/roguekey/manor/knight/four
+	name = "retinue bedroom IV key"
+	lockid = "manor_knight_four"
+
+/obj/item/roguekey/manor/councillor
+	name = "councillor bedroom I key"
+	lockid = "manor_councillor_one"
+
+/obj/item/roguekey/manor/councillor/two
+	name = "councillor bedroom II key"
+	lockid = "manor_councillor_two"
+
+/obj/item/roguekey/manor/councillor/three
+	name = "councillor bedroom III key"
+	lockid = "manor_councillor_three"
+
+/obj/item/roguekey/manor/guest
+	name = "guest bedroom I key"
+	lockid = "guest_knight_one"
+
+/obj/item/roguekey/manor/guest/two
+	name = "guest bedroom II key"
+	lockid = "guest_knight_two"
+
+/obj/item/roguekey/manor/guest/three
+	name = "guest bedroom III key"
+	lockid = "guest_knight_three"
+
+/obj/item/roguekey/manor/guest/four
+	name = "guest bedroom IV key"
+	lockid = "guest_knight_four"
+
+/obj/item/roguekey/manor/squire
+	name = "squire bedroom I key"
+	lockid = "squire_room_one"
+
+/obj/item/roguekey/manor/squire/two
+	name = "squire bedroom II key"
+	lockid = "squire_room_two"
+
+/obj/item/roguekey/manor/squire/three
+	name = "squire bedroom III key"
+	lockid = "squire_room_three"
+
+/obj/item/roguekey/manor/squire/four
+	name = "squire bedroom IV key"
+	lockid = "squire_room_four"
+
+/obj/item/roguekey/manor/servant
+	name = "servant bedroom I key"
+	lockid = "servant_room_one"
+
+/obj/item/roguekey/manor/servant/two
+	name = "servant bedroom II key"
+	lockid = "servant_room_two"
+
+/obj/item/roguekey/manor/servant/three
+	name = "servant bedroom III key"
+	lockid = "servant_room_three"
+
+/obj/item/roguekey/manor/servant/four
+	name = "servant bedroom IV key"
+	lockid = "servant_room_four"
+
+/obj/item/roguekey/manor/servant/five
+	name = "servant bedroom V key"
+	lockid = "servant_room_five"
+
+/obj/item/roguekey/manor/servant/six
+	name = "servant bedroom VI key"
+	lockid = "servant_room_six"
 
 ////////////////////////
 // RETINUE / GARRISON //
@@ -284,6 +376,90 @@
 	desc = "This rusty key opens the crypt."
 	icon_state = "rustkey"
 	lockid = "graveyard"
+
+/obj/item/roguekey/church/roomi
+	name = "church bedroom I key"
+	desc = "The key to the first room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_1"
+
+/obj/item/roguekey/church/roomii
+	name = "church bedroom II key"
+	desc = "The key to the second room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_2"
+
+/obj/item/roguekey/church/roomiii
+	name = "church bedroom III key"
+	desc = "The key to the third room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_3"
+
+/obj/item/roguekey/church/roomiv
+	name = "church bedroom IV key"
+	desc = "The key to the fourth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_4"
+
+/obj/item/roguekey/church/roomv
+	name = "church bedroom V key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_5"
+
+/obj/item/roguekey/church/roomvi
+	name = "church bedroom VI key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_6"
+
+/obj/item/roguekey/church/roomvii
+	name = "church bedroom VII key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_7"
+
+/obj/item/roguekey/church/roomviii
+	name = "church bedroom VIII key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_8"
+
+/obj/item/roguekey/church/roomix
+	name = "church bedroom IX key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_9"
+
+/obj/item/roguekey/church/roomx
+	name = "church bedroom X key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_10"
+
+/obj/item/roguekey/church/roomxi
+	name = "church bedroom XI key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_11"
+	
+/obj/item/roguekey/church/roomxii
+	name = "church bedroom XII key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_12"
+
+/obj/item/roguekey/church/roomxiii
+	name = "church bedroom XIII key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_13"
+
+/obj/item/roguekey/church/roomxiv
+	name = "church bedroom XIV key"
+	desc = "The key to the fifth room."
+	icon_state = "brownkey"
+	lockid = "church_bedroom_up_14"
 
 //////////////
 // BURGHERS //
@@ -611,11 +787,126 @@
 	icon_state = "rustkey"
 	lockid = "bandit"
 
+//Zurch
+
 /obj/item/roguekey/inhumen
 	name = "old cell key"
 	desc = "A ancient, rusty key. Seems like it goes to some kind of cell."
 	icon_state = "rustkey"
 	lockid = "inhumen"
+
+/obj/item/roguekey/inhumen/one
+	name = "cell key one"
+	desc = "A ancient, rusty key. Seems like it goes to some kind of cell."
+	icon_state = "rustkey"
+	lockid = "inhumen1"
+
+/obj/item/roguekey/inhumen/two
+	name = "cell key two"
+	desc = "A ancient, rusty key. Seems like it goes to some kind of cell."
+	icon_state = "rustkey"
+	lockid = "inhumen2"
+
+/obj/item/roguekey/inhumen/three
+	name = "cell key three"
+	desc = "A ancient, rusty key. Seems like it goes to some kind of cell."
+	icon_state = "rustkey"
+	lockid = "inhumen3"
+
+/obj/item/roguekey/inhumen/four
+	name = "cell key four"
+	desc = "A ancient, rusty key. Seems like it goes to some kind of cell."
+	icon_state = "rustkey"
+	lockid = "inhumen4"
+
+/obj/item/roguekey/zurch_bedroom
+	name = "bedroom i key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_1"
+
+/obj/item/roguekey/zurch_bedroom/two
+	name = "bedroom ii key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_2"
+
+/obj/item/roguekey/zurch_bedroom/three
+	name = "bedroom iii key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_3"
+
+/obj/item/roguekey/zurch_bedroom/four
+	name = "bedroom iv key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_4"
+
+/obj/item/roguekey/zurch_bedroom/five
+	name = "bedroom v key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_5"
+
+/obj/item/roguekey/zurch_bedroom/six
+	name = "bedroom vi key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_6"
+
+/obj/item/roguekey/zurch_bedroom/seven
+	name = "bedroom vii key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_7"
+
+/obj/item/roguekey/zurch_bedroom/eight
+	name = "bedroom viii key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_8"
+
+/obj/item/roguekey/zurch_bedroom/nine
+	name = "bedroom ix key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_9"
+
+/obj/item/roguekey/zurch_bedroom/ten
+	name = "bedroom x key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_10"
+
+/obj/item/roguekey/zurch_bedroom/eleven
+	name = "bedroom xi key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_11"
+
+/obj/item/roguekey/zurch_bedroom/twelve
+	name = "bedroom xii key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "zurch_bedroom_12"
+
+/obj/item/roguekey/zurch_bedroom/admin
+	name = "ancient key"
+	desc = "A ancient, rusty key."
+	icon_state = "rustkey"
+	lockid = "admin_event_door"
+
+//////////////
+// SIDEFOLK //
+//////////////
+
+/obj/item/roguekey/veteran
+	name = "veteran's keys"
+	desc = "A key to the private residence of the town's grumpy battlemaster."
+	icon_state = "greenkey"
+	lockid = "veteran"
+
 
 ///////////////////////////////////////
 // ABSOLUTELY ZERO CLUE WHAT THIS IS //

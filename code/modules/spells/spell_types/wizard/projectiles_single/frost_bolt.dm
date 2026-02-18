@@ -29,11 +29,6 @@
 	xp_gain = TRUE
 	miracle = FALSE
 
-/obj/effect/proc_holder/spell/self/frostbolt/cast(mob/user = usr)
-	var/mob/living/target = user
-	target.visible_message(span_warning("[target] hurls a frosty beam!"), span_notice("You hurl a frosty beam!"))
-	. = ..()
-
 /obj/projectile/magic/frostbolt
 	name = "Frost Dart"
 	icon_state = "ice_2"
@@ -44,8 +39,6 @@
 	range = 10
 	speed = 1
 	nodamage = FALSE
-	var/freeze_duration = 5 SECONDS
-	var/aoe_range = 0
 
 /obj/projectile/magic/frostbolt/on_hit(target)
 	. = ..()
@@ -58,14 +51,6 @@
 			return BULLET_ACT_BLOCK
 		if(isliving(target))
 			var/mob/living/L = target
-			var/datum/status_effect/debuff/arcanemark/mark = L.has_status_effect(/datum/status_effect/debuff/arcanemark)
-
-			if(mark && mark.stacks == mark.max_stacks)
-				L.Immobilize(freeze_duration)
-				L.OffBalance(freeze_duration)
-				L.visible_message("<span class='warning'>[L]'s movements are halted by arcyne frost!</span>")
-				consume_arcane_mark_stacks(M)
-
 			if(L.has_status_effect(/datum/status_effect/buff/frostbite))
 				return
 			else
@@ -76,4 +61,5 @@
 				else
 					L.apply_status_effect(/datum/status_effect/buff/frost)
 			new /obj/effect/temp_visual/snap_freeze(get_turf(L))
+			L.apply_status_effect(/datum/status_effect/stacking/hypothermia, 1) //TA EDIT
 	qdel(src)

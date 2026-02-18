@@ -22,6 +22,7 @@
 	glow_color = GLOW_COLOR_ICE
 	glow_intensity = GLOW_INTENSITY_HIGH
 	ignore_los = FALSE
+	human_req = TRUE // Combat spell
 	var/delay = 14
 	var/damage = 60
 	var/area_of_effect = 2
@@ -74,6 +75,7 @@
 			play_cleave = TRUE
 			if(ishuman(L))
 				L.adjustFireLoss(damage)
+				L.apply_status_effect(/datum/status_effect/stacking/hypothermia, 1) //TA EDIT
 			else
 				L.adjustFireLoss(damage + 20)
 			if(L.has_status_effect(/datum/status_effect/buff/frostbite))

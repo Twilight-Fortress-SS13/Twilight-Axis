@@ -132,6 +132,7 @@ GLOBAL_LIST_INIT(admin_verbs_sounds, list(
 GLOBAL_PROTECT(admin_verbs_sounds)
 GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/cmd_admin_dress,
+	/client/proc/cmd_admin_dress_full,
 	/client/proc/cmd_admin_gib_self,
 	/client/proc/drop_bomb,
 	/client/proc/set_dynex_scale,

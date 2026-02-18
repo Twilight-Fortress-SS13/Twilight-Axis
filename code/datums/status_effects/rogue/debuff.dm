@@ -192,6 +192,9 @@
 		C.update_inv_legcuffed()
 		C.remove_movespeed_modifier(MOVESPEED_ID_NET_SLOWDOWN)
 
+/datum/status_effect/debuff/netted/vile
+	duration = 10 SECONDS
+
 /atom/movable/screen/alert/status_effect/debuff/sleepytime
 	name = "Tired"
 	desc = "I should get some rest."
@@ -298,7 +301,6 @@
 /atom/movable/screen/alert/status_effect/debuff/ritesexpended
 	name = "Rites Complete"
 	desc = "It will take time before I can next perform a rite."
-	icon_state = "ritesexpended"
 
 /datum/status_effect/debuff/ritesexpended_heavy
 	id = "ritesexpended_heavy"
@@ -308,7 +310,6 @@
 /atom/movable/screen/alert/status_effect/debuff/ritesexpended_heavy
 	name = "Rites Complete"
 	desc = "It will take a lot of time before I can perform a next rite. I am drained."
-	icon_state = "ritesexpended"
 
 /datum/status_effect/debuff/call_to_arms
 	id = "call_to_arms"
@@ -320,6 +321,29 @@
 	name = "Ravox's Call to Arms"
 	desc = "His voice keeps ringing in your ears, rocking your soul.."
 	icon_state = "call_to_arms_negative"
+
+/datum/status_effect/debuff/ravox_spirit_backlash
+	id = "ravox_spirit_backlash"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/ravox_spirit_backlash
+	effectedstats = list(STATKEY_WIL = -1, STATKEY_CON = -1, STATKEY_STR = -1)
+	duration = 60 SECONDS
+
+/atom/movable/screen/alert/status_effect/debuff/ravox_spirit_backlash
+	name = "Spiritual Backlash"
+	desc = "Myne body weak, myne muscles burn- but I must fight on."
+	icon_state = "call_to_arms_negative"
+
+/atom/movable/screen/alert/status_effect/debuff/ravox_warrior_spirit
+	name = "Lux-strain"
+	desc = "My spirit is momentarily stretched thin."
+	icon_state = "astrata_gaze"
+
+/datum/status_effect/debuff/ravox_warrior_spirit
+	id = "ravox_warrior_spirit"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/ravox_warrior_spirit
+	duration = 1 MINUTES
+	effectedstats = list(STATKEY_STR = -1, STATKEY_WIL = -1, STATKEY_SPD = -1)
+
 
 /datum/status_effect/debuff/ravox_burden
 	id = "ravox_burden"
@@ -412,6 +436,55 @@
 	name = "Cold"
 	desc = "Something has chilled me to the bone! It's hard to move."
 	icon_state = "muscles"
+
+///// Freifechter Daze Variants /////
+/datum/status_effect/debuff/dazed/longsword
+	id = "durchlauffen"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed/longsword
+	effectedstats = list(STATKEY_SPD = -3, STATKEY_INT = -1)
+	duration = 10 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+
+/atom/movable/screen/alert/status_effect/debuff/dazed/longsword
+	name = "Master Strike"
+	desc = "How the fuck did they do that!? My ears are ringing!"
+	icon_state = "mstrike"
+
+/datum/status_effect/debuff/dazed/longsword2h
+	id = "zorn ort"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed/longsword2h
+	effectedstats = list(STATKEY_PER = -4, STATKEY_LCK = -3)
+	duration = 8 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+
+/atom/movable/screen/alert/status_effect/debuff/dazed/longsword2h
+	name = "Master Strike"
+	desc = "How the fuck did they do that!? My eye!"
+	icon_state = "mstrike"
+
+/datum/status_effect/debuff/dazed/freisabre
+	id = "uszkodzić"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed/freisabre
+	effectedstats = list(STATKEY_STR = -2, STATKEY_SPD = -3)
+	duration = 10 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+
+/atom/movable/screen/alert/status_effect/debuff/dazed/freisabre
+	name = "Master Strike"
+	desc = "How the fuck did they do that!? My wrist!"
+	icon_state = "mstrike"
+
+/datum/status_effect/debuff/dazed/swipe
+	id = "clinch & swipe"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed/swipe
+	effectedstats = list(STATKEY_CON = -4, STATKEY_STR = -1)
+	duration = 1.5 SECONDS	//Should last BARELY ENOUGH for someone who's actively grappling and swiping you to get a constant refresh of the dedbuff, otherwise it's useless.
+	status_type = STATUS_EFFECT_REFRESH
+
+/atom/movable/screen/alert/status_effect/debuff/dazed/swipe
+	name = "Clinched and Swiped!"
+	desc = "Urgh! My face! My grip is weakened!"
+	icon_state = "swiped"
 
 /*/atom/movable/screen/alert/status_effect/debuff/dazed/shield
 	name = "Dazed by fencer's wrap"
@@ -542,6 +615,16 @@
 	name = "Lost Hood"
 	desc = "The sacred hood is lost. I feel frail and sapped without it."
 
+/datum/status_effect/debuff/lost_dungeoneer_hood
+	id = "dungeoneerhood"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
+	effectedstats = list(STATKEY_STR = -3, STATKEY_LCK = -3)
+
+/atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
+	name = "Gnarly Visage"
+	desc = "I am a repulsive freek looked down upon by everyone else. I'd do best to hide my visage once more."
+	icon_state = "muscles"
+
 ///////////////////////
 /// CLIMBING STUFF ///
 /////////////////////
@@ -671,7 +754,7 @@
 			PM.backdrop(owner)
 			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
 			PM.backdrop(owner)
-	
+
 /datum/status_effect/debuff/vampbite/on_remove()
 	. = ..()
 	REMOVE_TRAIT(owner, TRAIT_DRUQK, id)
@@ -838,6 +921,7 @@
 	desc = "I am on the edge of Death's realm. It is hard to feel motivated with such deathly tranquility."
 	icon_state = "debuff"
 	color ="#af9f9f"
+
 /datum/status_effect/debuff/no_coom_cheating //Gets triggered when someone sets their arousal, prevents orgasms from sating vice/giving mood boosts
 	id = "nocoomcheating"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/no_coom_cheating
@@ -855,3 +939,63 @@
 /datum/status_effect/debuff/no_coom_cheating/on_remove()
 	. = ..()
 	REMOVE_TRAIT(owner, TRAIT_UNSATISFIED, id)
+
+/datum/status_effect/debuff/bloody_mess
+	id = "bloodymess"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/bloody_mess
+	duration = 20 SECONDS // this is EASILY enough time to kill someone w/ the effect.
+
+/datum/status_effect/debuff/bloody_mess/on_apply()
+	. = ..()
+	if(!ishuman(owner))
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+	var/datum/physiology/phy = H.physiology 
+	var/bleed_mod = phy.bleed_mod
+	phy.bleed_mod = bleed_mod * 1.75 // this then gets reduced by con, among other things. change as needed.
+	H.visible_message(span_warning("[src] blood runs thin and begins GUSHING out of their wounds!"), span_danger("A FOUL SPELL IS CAUSING ME TO BLEED EN MASSE!"))
+
+/datum/status_effect/debuff/bloody_mess/on_remove()
+	. = ..()
+	if(!ishuman(owner))
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+	var/datum/physiology/phy = H.physiology 
+	var/bleed_mod = phy.bleed_mod
+	phy.bleed_mod = bleed_mod / 1.75 // this then gets reduced by con, among other things. change as needed.
+	H.visible_message(span_warning("[src] has their wounds calm..."), span_warning("My wounds stop bleeding so heavily!"))
+
+
+/atom/movable/screen/alert/status_effect/debuff/bloody_mess
+	name = "Bloody Mess"
+	desc = "My bleeding is quickened! I must grip my wounds, or I will lose myself steadfast!"
+
+/datum/status_effect/debuff/sensitive_nerves
+	id = "sensitivenerves"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/sensitive_nerves
+	duration = 20 SECONDS // this is EASILY enough time to kill someone w/ the effect.
+
+/datum/status_effect/debuff/sensitive_nerves/on_apply()
+	. = ..()
+	if(!ishuman(owner))
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+	var/datum/physiology/phy = H.physiology 
+	var/pain_mod = phy.pain_mod
+	phy.pain_mod = pain_mod * 1.75 // this then gets reduced by con, among other things. change as needed.
+	H.visible_message(span_warning("[src] looks to be in great pain, their wounds BLACKENING!"), span_danger("EVERYTHING HURTS!! MY WOUNDS PAIN HAS INCREASED!!"))
+
+/datum/status_effect/debuff/sensitive_nerves/on_remove()
+	. = ..()
+	if(!ishuman(owner))
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+	var/datum/physiology/phy = H.physiology 
+	var/pain_mod = phy.pain_mod
+	phy.pain_mod = pain_mod / 1.75 // this then gets reduced by con, among other things. change as needed.
+	H.visible_message(span_warning("[src]'s wounds suddenly return to normal!"), span_warning("My magickally induced pain subsides!"))
+
+
+/atom/movable/screen/alert/status_effect/debuff/sensitive_nerves
+	name = "Sensitive Nerves"
+	desc = "IT HURTS!!! MY WOUNDS BITE INTO MY FLESH WITH SUCH RABID FEROCITY!"

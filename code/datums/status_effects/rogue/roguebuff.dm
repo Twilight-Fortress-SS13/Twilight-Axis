@@ -438,7 +438,7 @@
 /atom/movable/screen/alert/status_effect/buff/longstrider
 	name = "Longstrider"
 	desc = "I can easily walk through rough terrain."
-	icon_state = "buff"
+	icon_state = "longstrider"
 
 /datum/status_effect/buff/longstrider
 	id = "longstrider"
@@ -982,7 +982,12 @@
 	var/filter = owner.get_filter(BLESSINGOFSUN_FILTER)
 	if (!filter)
 		owner.add_filter(BLESSINGOFSUN_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 60, "size" = 1))
-	mob_light_obj = owner.mob_light("#fdfbd3", 10, 10)
+
+	if(!mob_light_obj || QDELETED(mob_light_obj))
+		mob_light_obj = owner.mob_light("#fdfbd3", 10, 10)
+	else
+		mob_light_obj.set_light(10, null, 10, l_color = "#fdfbd3")
+
 	return TRUE
 
 
@@ -1002,8 +1007,7 @@
 
 /atom/movable/screen/alert/status_effect/buff/moonlightdance
 	name = "Moonlight Dance"
-	desc = "Noc's stony touch lay upon my mind, bringing me wisdom."
-	icon_state = "moonlightdance"
+	desc = "Noc's stony touch lays upon my mind, bringing me wisdom."
 
 
 /datum/status_effect/buff/moonlightdance/on_apply()
@@ -1014,7 +1018,7 @@
 
 /datum/status_effect/buff/moonlightdance/on_remove()
 	. = ..()
-	to_chat(owner, span_warning("Noc's silver leaves my"))
+	to_chat(owner, span_warning("Noc's silver leaves my eyes."))
 	REMOVE_TRAIT(owner, TRAIT_DARKVISION, MAGIC_TRAIT)
 
 
@@ -1458,10 +1462,16 @@
 	QDEL_NULL(mob_effect)
 
 /datum/status_effect/buff/clash/limbguard/process()
-	if(owner)	//Avoids a runtime where this is called, apparently, before it has time to assign an owner via initialization (???)
+	if(!owner || QDELETED(owner))
+		qdel(src)
+		return
 
-		//Anti Sci main measures
-		var/datum/reagents/reag = owner.reagents
+	if(!owner.stamina)
+		remove_self()
+		return
+
+	var/datum/reagents/reag = owner.reagents
+	if(reag)
 		var/datum/reagent/medicine/stampot/stpot = reag.has_reagent(/datum/reagent/medicine/stampot)
 		var/datum/reagent/medicine/strongstam/stpotstrong = reag.has_reagent(/datum/reagent/medicine/strongstam)
 		if(stpot)
@@ -1469,13 +1479,16 @@
 		if(stpotstrong)
 			stpotstrong.metabolization_rate = 20 * REAGENTS_METABOLISM
 
-		if(!owner.cmode)
-			remove_self()
-		//We lost the shield we used this with from our hands.
-		if((owner.get_inactive_held_item() != shield_origin) && (owner.get_active_held_item() != shield_origin))
-			remove_self()
-		if(!owner.stamina_add(0.2))	//It essentially halts green regen. Token price so it can't be maintained forever.
-			remove_self()
+	if(!owner.cmode)
+		remove_self()
+		return
+
+	if((owner.get_inactive_held_item() != shield_origin) && (owner.get_active_held_item() != shield_origin))
+		remove_self()
+		return
+
+	if(!owner.stamina_add(0.2))
+		remove_self()
 
 /datum/status_effect/buff/clash/limbguard/proc/set_offsets()
 	switch(protected_zone)
@@ -1551,7 +1564,10 @@
 #undef LGUARD_INTEG_LOSS
 
 /datum/status_effect/buff/clash/limbguard/proc/remove_self()
-	owner.remove_status_effect(/datum/status_effect/buff/clash/limbguard)
+	if(owner)
+		owner.remove_status_effect(/datum/status_effect/buff/clash/limbguard)
+	else
+		qdel(src)
 
 //Projectile struck our protected limb. Unlike regular Riposte, this will deflect the projectile at no cost.
 /datum/status_effect/buff/clash/limbguard/guard_struck_by_projectile(mob/living/target, obj/P, hit_zone)
@@ -1719,167 +1735,6 @@
 /atom/movable/screen/alert/status_effect/buff/magic/knowledge
 	name = "runic cunning"
 	desc = "I am magically astute."
-	icon_state = "buff"
-
-/datum/status_effect/buff/magic/strength
-	id = "strength"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/strength
-	effectedstats = list("strength" = 3)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/strength/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/strength_lesser))
-		owner.remove_status_effect(/datum/status_effect/buff/magic/strength_lesser)
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/strength
-	name = "arcane reinforced strength"
-	desc = "I am magically strengthened."
-	icon_state = "buff"
-
-/datum/status_effect/buff/magic/strength_lesser
-	id = "lesser strength"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/strength/lesser
-	effectedstats = list("strength" = 1)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/strength_lesser/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/strength))
-		return FALSE
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/strength/lesser
-	name = "lesser arcane strength"
-	desc = "I am magically strengthened."
-	icon_state = "buff"
-
-
-/datum/status_effect/buff/magic/speed
-	id = "speed"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/speed
-	effectedstats = list("speed" = 3)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/speed/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/speed_lesser))
-		owner.remove_status_effect(/datum/status_effect/buff/magic/speed_lesser)
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/speed
-	name = "arcane swiftness"
-	desc = "I am magically swift."
-	icon_state = "buff"
-
-/datum/status_effect/buff/magic/speed_lesser
-	id = "lesser speed"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/speed/lesser
-	effectedstats = list("speed" = 1)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/speed_lesser/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/speed))
-		return FALSE
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/speed/lesser
-	name = "arcane swiftness"
-	desc = "I am magically swift."
-	icon_state = "buff"
-
-/datum/status_effect/buff/magic/willpower
-	id = "willpower"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/willpower
-	effectedstats = list("willpower" = 3)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/willpower/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/willpower_lesser))
-		owner.remove_status_effect(/datum/status_effect/buff/magic/willpower_lesser)
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/willpower
-	name = "arcane willpower"
-	desc = "I am magically resilient."
-	icon_state = "buff"
-
-/datum/status_effect/buff/magic/willpower_lesser
-	id = "lesser willpower"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/willpower/lesser
-	effectedstats = list("willpower" = 1)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/willpower_lesser/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/willpower))
-		return FALSE
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/willpower/lesser
-	name = "lesser arcane willpower"
-	desc = "I am magically resilient."
-	icon_state = "buff"
-
-/datum/status_effect/buff/magic/constitution
-	id = "constitution"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/constitution
-	effectedstats = list("constitution" = 3)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/constitution/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/constitution_lesser))
-		owner.remove_status_effect(/datum/status_effect/buff/magic/constitution_lesser)
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/constitution
-	name = "arcane constitution"
-	desc = "I feel reinforced by magick."
-	icon_state = "buff"
-
-/datum/status_effect/buff/magic/constitution_lesser
-	id = "lesser constitution"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/constitution/lesser
-	effectedstats = list("constitution" = 1)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/constitution_lesser/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/constitution))
-		return FALSE
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/constitution/lesser
-	name = "lesser arcane constitution"
-	desc = "I feel reinforced by magick."
-	icon_state = "buff"
-
-/datum/status_effect/buff/magic/perception
-	id = "perception"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/perception
-	effectedstats = list("perception" = 3)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/perception/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/perception_lesser))
-		owner.remove_status_effect(/datum/status_effect/buff/magic/perception_lesser)
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/perception
-	name = "arcane perception"
-	desc = "I can see everything."
-	icon_state = "buff"
-
-/datum/status_effect/buff/magic/perception_lesser
-	id = "lesser perception"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/perception/lesser
-	effectedstats = list("perception" = 1)
-	duration = 20 MINUTES
-
-/datum/status_effect/buff/magic/perception_lesser/on_apply()
-	if(owner.has_status_effect(/datum/status_effect/buff/magic/perception))
-		return FALSE
-	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/magic/perception/lesser
-	name = "lesser arcane perception"
-	desc = "I can see somethings."
 	icon_state = "buff"
 
 /datum/status_effect/buff/nocblessing
@@ -2163,3 +2018,15 @@
 	. = ..()
 	if(!istype(owner.get_active_held_item(), held_dagger))
 		owner.remove_status_effect(/datum/status_effect/buff/dagger_boost)
+
+// special lirvas dragonskin buffs
+/datum/status_effect/buff/lirvan_broken_scales
+	id = "lirvan_broken_scales"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/lirvan_broken_scales
+	effectedstats = list(STATKEY_SPD = 4, STATKEY_STR = -4)
+	duration = -1
+
+/atom/movable/screen/alert/status_effect/buff/lirvan_broken_scales
+	name = "Broken Scales"
+	desc = "My natural defenses are gone! I am lighter, but far weaker."
+	icon_state = "buff"

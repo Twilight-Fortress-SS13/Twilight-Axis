@@ -14,10 +14,11 @@
 	no_early_release = TRUE
 	charging_slowdown = 2
 	chargedloop = /datum/looping_sound/invokegen
-	invocations = list("C'SC'D.")
+	invocations = list("Ignis Cataracta.")
 	invocation_type = "whisper"
 	xp_gain = TRUE
 	associated_skill = /datum/skill/magic/arcane
+	human_req = TRUE // Combat spell
 
 	var/flame_radius = 2
 	var/hotspot_lifetime = 3

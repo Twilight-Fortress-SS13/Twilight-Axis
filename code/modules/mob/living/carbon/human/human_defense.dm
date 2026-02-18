@@ -23,6 +23,7 @@
 	var/obj/item/clothing/used
 	var/protection = 0
 	var/intdamage = damage
+	var/consume_debuff = TRUE
 	if(d_type != "blunt")
 		used = get_best_worn_armor(def_zone, d_type)
 		if(used)
@@ -39,6 +40,7 @@
         
 			// Penetrative damage deals significantly less to the armor. Tentative.
 			if((damage + armor_penetration) > protection)
+				consume_debuff = FALSE
 				intdamage = (damage + armor_penetration) - protection
         
 			if(intdamfactor != 1)
@@ -54,7 +56,22 @@
 			var/tempo_bonus = get_tempo_bonus(TEMPO_TAG_ARMOR_INTEGFACTOR)
 			if(tempo_bonus)
 				intdamage *= tempo_bonus
-				
+
+
+			if(consume_debuff)	//If this is FALSE, then this is a penetrative hit -- we consume these in bodypart_attacked_by.
+				if(has_status_effect(/datum/status_effect/debuff/exposed))
+					intdamage *= EXPOSED_INTEG_MOD
+					playsound(src, 'sound/combat/exposed_pop.ogg', 100, TRUE)
+					visible_message("<span class = 'combatsecondarybodypart'>[src] suffers a savage hit to their armor while exposed!</span>")
+					remove_status_effect(/datum/status_effect/debuff/exposed)
+					emote("pain", forced = TRUE)
+				else if(has_status_effect(/datum/status_effect/debuff/vulnerable))
+					intdamage *= VULN_INTEG_MOD
+					playsound(src, 'sound/combat/vulnerable_pop.ogg', 100, TRUE)
+					visible_message(span_biginfo("[src] is struck into their armor while vulnerable!"))
+					remove_status_effect(/datum/status_effect/debuff/vulnerable)
+					emote("groan", forced = TRUE)
+
 			used.take_damage(intdamage, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
 	else
 		var/list/layers = get_best_worn_armor_layered(def_zone, d_type)
@@ -72,11 +89,25 @@
 			if(tempo_bonus)
 				intdamage *= tempo_bonus
         
+			var/full_dmg
+			if(has_status_effect(/datum/status_effect/debuff/exposed))
+				full_dmg = TRUE
+				playsound(src, 'sound/combat/exposed_pop.ogg', 100, TRUE)
+				visible_message("<span class = 'combatsecondarybodypart'>[src] suffers a savage hit to their armor while exposed!</span>")
+				remove_status_effect(/datum/status_effect/debuff/exposed)
+				emote("pain", forced = TRUE)
+			else if(has_status_effect(/datum/status_effect/debuff/vulnerable))
+				playsound(src, 'sound/combat/vulnerable_pop.ogg', 100, TRUE)
+				visible_message(span_biginfo("[src] is struck into their armor while vulnerable!"))
+				remove_status_effect(/datum/status_effect/debuff/vulnerable)
+				emote("groan", forced = TRUE)
+
 			var/layers_deep = 1
 			var/played_sound = FALSE
 			for(var/obj/item/clothing/C in layers)
 				var/actualdmg = intdamage
-				actualdmg /= layers_deep
+				if(!full_dmg)
+					actualdmg /= layers_deep
 				C.take_damage(actualdmg, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
 				if(C.blocksound && !played_sound)
 					playsound(loc, get_armor_sound(C.blocksound, blade_dulling), 100)
@@ -136,6 +167,10 @@
 
 
 /mob/living/carbon/human/bullet_act(obj/projectile/P, def_zone = BODY_ZONE_CHEST)
+
+	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
+		return BULLET_ACT_FORCE_PIERCE
+	
 	if(dna && dna.species)
 		var/spec_return = dna.species.bullet_act(P, src, def_zone)
 		if(spec_return)
@@ -243,6 +278,7 @@
 		hitpush = FALSE
 		skipcatch = TRUE
 		blocked = TRUE
+		return TRUE
 
 	//Thrown item deflection -- this RETURNS if successful!
 	var/obj/item/W = get_active_held_item()
@@ -257,7 +293,7 @@
 				I.get_deflected(src)
 				do_sparks(2, TRUE, current_turf)
 				visible_message(span_warning("[src] deflects \the [I]!"))
-				return
+				return TRUE
 
 	if(I && !blocked)
 		if(((throwingdatum ? throwingdatum.speed : I.throw_speed) >= EMBED_THROWSPEED_THRESHOLD) || I.embedding.embedded_ignore_throwspeed_threshold)
@@ -270,7 +306,10 @@
 //					visible_message("<span class='danger'>[I] embeds itself in [src]'s [L.name]!</span>","<span class='danger'>[I] embeds itself in my [L.name]!</span>")
 				hitpush = FALSE
 				skipcatch = TRUE //can't catch the now embedded item
-
+				return TRUE
+	if(blocked)
+		return TRUE
+	
 	return ..()
 
 /mob/living/carbon/human/grippedby(mob/living/user, instant = FALSE)
@@ -283,6 +322,12 @@
 /mob/living/carbon/human/attacked_by(obj/item/I, mob/living/user)
 	if(!I || !user)
 		return 0
+	
+	if(HAS_TRAIT(src, "ethereal"))//TA EDIT
+		user.visible_message(span_danger("[user] tries to strike [src], but the weapon passes right through the mist!"), \
+							 span_warning("My weapon passes right through [src]!"))
+		return FALSE
+	
 	var/obj/item/bodypart/affecting
 	var/useder = user.zone_selected
 	if(!lying_attack_check(user,I))
@@ -309,6 +354,10 @@
 	return dna.species.spec_attacked_by(I, user, affecting, used_intent, src, useder)
 
 /mob/living/carbon/human/attack_hand(mob/user)
+
+	if(HAS_TRAIT(src, "ethereal"))//TA EDIT
+		return FALSE
+
 	if(..())	//to allow surgery to return properly.
 		return
 	retaliate(user)

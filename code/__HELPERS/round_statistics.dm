@@ -3,6 +3,7 @@
 #define STATS_ALIVE_DWARVES "alive_dwarves"
 #define STATS_ALIVE_DARK_ELVES "alive_dark_elves"
 #define STATS_ALIVE_WOOD_ELVES "alive_wood_elves"
+#define STATS_ALIVE_SUN_ELVES "alive_sun_elves"
 #define STATS_ALIVE_HALF_ELVES "alive_half_elves"
 #define STATS_ALIVE_HALF_ORCS "alive_half_orcs"
 #define STATS_ALIVE_GOBLINS "alive_goblins"
@@ -65,6 +66,7 @@
 #define STATS_PURITY_VALUE_SPENT "purity_spent"
 #define STATS_TAXES_EVADED "taxes_evaded"
 #define STATS_NOBLE_INCOME_TOTAL "noble_income_total"
+#define STATS_BANK_INTEREST_CREATED "bank_interest_created"
 #define STATS_DIRECT_TREASURY_TRANSFERS "direct_treasury_transfers"
 #define STATS_STOCKPILE_EXPORTS_VALUE "stockpile_exports_value"
 #define STATS_STOCKPILE_IMPORTS_VALUE "stockpile_imports_value"
@@ -254,6 +256,7 @@ GLOBAL_LIST_INIT(azure_round_stats, list(
 	STATS_ALIVE_DWARVES = 0,
 	STATS_ALIVE_DARK_ELVES = 0,
 	STATS_ALIVE_HALF_ELVES = 0,
+	STATS_ALIVE_SUN_ELVES = 0,
 	STATS_ALIVE_HALF_ORCS = 0,
 	STATS_ALIVE_GOBLINS = 0,
 	STATS_ALIVE_KOBOLDS = 0,
@@ -342,6 +345,8 @@ GLOBAL_LIST_INIT(azure_round_stats, list(
 	STATS_MAMMONS_DEPOSITED = 0,
 	STATS_MAMMONS_WITHDRAWN = 0,
 	STATS_STARTING_TREASURY = 0,
+	STATS_RURAL_TAXES_COLLECTED = 0,
+	STATS_BANK_INTEREST_CREATED = 0,
 ))
 
 GLOBAL_LIST_EMPTY(patron_follower_counts)
@@ -364,6 +369,7 @@ GLOBAL_LIST_EMPTY(patron_follower_counts)
 #define FEATURED_STATS_FARMERS "farmers"
 #define FEATURED_STATS_STORYTELLERS "storytellers"
 #define FEATURED_STATS_VIRTUES	"virtues"
+#define FEATURED_STATS_ORIGINS	"origins"
 #define FEATURED_STATS_STATPACKS "statpacks"
 #define FEATURED_STATS_VICES	"vices"
 
@@ -471,15 +477,22 @@ GLOBAL_LIST_INIT(featured_stats, list(
 		"color" = "#6375c5",
 		"entries" = list(),
 		"object_stat" = TRUE
-	),	FEATURED_STATS_VIRTUES = list(
-		"name" = "TOP 10 Virtues",
+	),	
+	FEATURED_STATS_ORIGINS = list(
+		"name" = "TOP Origins",
+		"color" = "#602d91",
+		"entries" = list(),
+		"object_stat" = TRUE,
+	),
+	FEATURED_STATS_VIRTUES = list(
+		"name" = "TOP Virtues",
 		"color" = "#df5cb8",
 		"entries" = list(),
 		"object_stat" = TRUE,
 		"admin_only" = TRUE
 	),
 	FEATURED_STATS_STATPACKS = list(
-		"name" = "TOP 10 Statpacks",
+		"name" = "TOP Statpacks",
 		"color" = "#3aa4e2",
 		"entries" = list(),
 		"object_stat" = TRUE,

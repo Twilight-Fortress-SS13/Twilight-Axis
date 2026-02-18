@@ -12,6 +12,7 @@
 		TRAIT_ARCYNE_T3,
 		TRAIT_MAGEARMOR,
 		TRAIT_INTELLECTUAL, 
+		TRAIT_NALEDI,
 		TRAIT_ALCHEMY_EXPERT,
 	)
 	subclass_stats = list(
@@ -58,7 +59,7 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/generic
-	mask = /obj/item/clothing/mask/rogue/facemask/psydonmask
+	mask = /obj/item/clothing/mask/rogue/lordmask/naledi
 	wrists = /obj/item/clothing/neck/roguetown/psicross
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/flashlight/flare/torch/lantern

@@ -27,7 +27,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	display_order = JDO_LORD
 	tutorial = "Elevated upon your throne through a web of intrigue and political upheaval, you are the absolute authority of these lands and at the center of every plot within it. Every man, woman and child is envious of your position and would replace you in less than a heartbeat: Show them the error of their ways."
 	whitelist_req = FALSE
-	min_pq = 10
+	min_pq = 50 //staff request
 	max_pq = null
 	round_contrib_points = 4
 	give_bank_account = 1000
@@ -47,6 +47,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 
 /datum/outfit/job/roguetown/lord
 	job_bitflag = BITFLAG_ROYALTY
+	has_loadout = TRUE
 
 /datum/job/roguetown/lord/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
@@ -105,6 +106,24 @@ GLOBAL_LIST_EMPTY(lord_titles)
 			qdel(H.wear_mask)
 			mask = /obj/item/clothing/mask/rogue/lordmask/l
 	ADD_TRAIT(H, TRAIT_NOBLE, TRAIT_GENERIC)
+
+/datum/outfit/job/roguetown/lord/choose_loadout(mob/living/carbon/human/H)
+	. = ..()
+	var/client/player = H?.client
+	if(player.prefs)
+		if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/azuria) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/grenzelhoft) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/otava) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/etrusca))
+			var/list/new_origins = list("Azuria" = /datum/virtue/origin/azuria, 
+			"Grenzelhoft" = /datum/virtue/origin/grenzelhoft,
+			"Otava" = /datum/virtue/origin/otava,
+			"Etrusca" = /datum/virtue/origin/etrusca)
+			var/new_origin
+			var/choice = input(player, "Your origins are not compatible with the Duchy. Where do you hail from?", "ANCESTRY") as anything in new_origins
+			if(choice)
+				new_origin = new_origins[choice]
+			else
+				to_chat(player, span_notice("No choice detected. Picking a random compatible origin."))
+				new_origin = pick(/datum/virtue/origin/grenzelhoft, /datum/virtue/origin/otava, /datum/virtue/origin/etrusca)
+			change_origin(H, new_origin, "Royal line")
 
 //	SSticker.rulermob = H
 /**

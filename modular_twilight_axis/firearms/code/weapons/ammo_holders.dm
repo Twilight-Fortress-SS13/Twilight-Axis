@@ -21,13 +21,17 @@
 	to_chat(user, span_notice("I begin to gather the ammunition..."))
 	for(var/obj/item/ammo_casing/caseless/twilight_lead/arrow in T.contents)
 		if(do_after(user, 5))
-			if(!eatarrow(arrow))
+			if(!eatarrow(arrow, T))
 				break
 
-/obj/item/quiver/twilight_bullet/eatarrow(obj/A)
+/obj/item/quiver/twilight_bullet/eatarrow(obj/A, loc)
 	if(A.type in typesof(ammo_type))
 		if(arrows.len < max_storage)
-			A.forceMove(src)
+			if(ismob(loc))
+				var/mob/M = loc
+				M.doUnEquip(A, TRUE, src, TRUE, silent = TRUE)
+			else
+				A.forceMove(src)
 			arrows += A
 			update_icon()
 			return TRUE
@@ -50,15 +54,7 @@
 
 /obj/item/quiver/twilight_bullet/attackby(obj/A, loc, params)
 	if(A.type in typesof(ammo_type))
-		if(arrows.len < max_storage)
-			if(ismob(loc))
-				var/mob/M = loc
-				M.doUnEquip(A, TRUE, src, TRUE, silent = TRUE)
-			else
-				A.forceMove(src)
-			arrows += A
-			update_icon()
-		else
+		if(!eatarrow(A, loc))
 			to_chat(loc, span_warning("Full!"))
 		return
 	if(istype(A, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock))
@@ -109,9 +105,18 @@
 
 /obj/item/quiver/twilight_bullet/cannonball
 	name = "cannonball bag"
-	desc = "Небольшой мешочек, в котором можно хранить выстрелы для кулеврины."
+	desc = "Небольшой мешочек, в котором можно хранить ядра и картечь."
+	icon_state = "cpouch1"
+	item_state = "cpouch1"
+	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_CLOAK|ITEM_SLOT_BELT
 	max_storage = 20
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball
+
+/obj/item/quiver/twilight_bullet/cannonball/update_icon()
+	if(arrows.len)
+		icon_state = "cpouch1"
+	else
+		icon_state = "cpouch0"
 
 /obj/item/quiver/twilight_bullet/cannonball/attack_turf(turf/T, mob/living/user)
 	if(arrows.len >= max_storage)
@@ -136,3 +141,72 @@
 		var/obj/item/ammo_casing/caseless/twilight_cannonball/grapeshot/B = new()
 		arrows += B
 	update_icon()
+
+/obj/item/quiver/twilight_bullet/runicbag
+	name = "pharetra"
+	desc = "Кожаный подсумок, предназначенный для хранения рунических пуль. Нанесенная на металл замка руна привязывается к хранящимся внутри боеприпасам, и при активации возвращает уже отстреленные рунические пули в хранилище для повторного использования."
+	icon_state = "runebag"
+	item_state = "runebag"
+	max_storage = 10
+	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
+	var/list/linked_ammo = list()
+
+/obj/item/quiver/twilight_bullet/runicbag/update_icon()
+	icon_state = "runebag"
+
+/obj/item/quiver/twilight_bullet/runicbag/attack_self(mob/living/user)
+	var/list/ammo_to_recall = list()
+	for(var/obj/item/ammo_casing/caseless/twilight_lead/runelock/A in linked_ammo)
+		if(!QDELETED(A) && A.linked_bag == src)
+			ammo_to_recall += A
+	if(ammo_to_recall)
+		to_chat(user, span_notice("I begin recalling my ammunition..."))
+		if(do_after(user, 3 SECONDS, src))
+			playsound(src, 'sound/magic/blink.ogg', 80)
+			for(var/obj/B in ammo_to_recall)
+				if(!(B in arrows))
+					if(!eatarrow(B, B.loc))
+						to_chat(user, span_notice("The [src.name] is full and can accept no more ammunition!"))
+						break
+			linked_ammo = ammo_to_recall
+	else
+		to_chat(user, span_notice("There is no linked ammunition to recall!"))
+
+/obj/item/quiver/twilight_bullet/runicbag/eatarrow(obj/A, loc)
+	if(istype(A, /obj/item/ammo_casing/caseless/twilight_lead/runelock))
+		if(istype(loc, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock))
+			return TRUE
+		if(arrows.len < max_storage)
+			if(ismob(loc))
+				var/mob/M = loc
+				M.doUnEquip(A, TRUE, src, TRUE, silent = TRUE)
+			else
+				A.forceMove(src)
+			arrows += A
+			var/obj/item/ammo_casing/caseless/twilight_lead/runelock/R = A
+			if(!(R in linked_ammo))
+				linked_ammo += R
+			R.linked_bag = src
+			update_icon()
+			return TRUE
+		else
+			return FALSE
+
+/obj/item/quiver/twilight_bullet/runicbag/runed/Initialize()
+	. = ..()
+	for(var/i in 1 to 8)
+		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/R = new()
+		arrows += R
+		linked_ammo += R
+		R.linked_bag = src
+	update_icon()
+
+/obj/item/quiver/twilight_bullet/runicbag/blessed/Initialize()
+	. = ..()
+	for(var/i in 1 to 5)
+		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/blessed/R = new()
+		arrows += R
+		linked_ammo += R
+		R.linked_bag = src
+	update_icon()
+

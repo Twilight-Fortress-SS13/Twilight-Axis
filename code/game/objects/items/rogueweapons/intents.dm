@@ -48,6 +48,10 @@
 	var/penfactor = 0
 	/// Whether the intent itself has integrity damage modifier. Used for rend.
 	var/intent_intdamage_factor = 1
+	/// Minimum damage from the intent.
+	var/min_intent_damage = 0
+	/// Maximum damage from the intent.
+	var/max_intent_damage = 200
 	/// Changes the item's attack type ("blunt" - area-pressure attack, "slash" - line-pressure attack, "stab" - point-pressure attack)
 	var/item_d_type = "blunt"
 	var/charging_slowdown = 0
@@ -82,6 +86,10 @@
 	var/effective_range_type = EFF_RANGE_NONE
 	/// Extra sharpness drain per successful & parried hit.
 	var/sharpness_penalty = 0
+
+	///Effect stuff.
+	var/datum/status_effect/intent_effect	//Status effect this intent will apply on a successful hit (damage not needed)
+	var/list/target_parts					//Targeted bodyparts which will apply the effect. Leave blank for anywhere on the body.
 
 
 	var/list/static/bonk_animation_types = list(
@@ -334,6 +342,12 @@
 	volume = 100
 	extra_range = 5
 
+/datum/looping_sound/invokeevil // extra ancient sound loop we have
+	mid_sounds = list('sound/magic/chargingold2.ogg')
+	mid_length = 320
+	volume = 100
+	extra_range = 5
+
 /datum/looping_sound/flailswing
 	mid_sounds = list('sound/combat/wooshes/flail_swing.ogg')
 	mid_length = 7
@@ -376,6 +390,7 @@
 	chargetime = 0
 	clickcd = 14 // Just like knife pick!
 	swingdelay = 12
+	max_intent_damage = 9999
 
 /datum/intent/pick/bad	//One-handed intents
 	name = "sluggish pick"
@@ -389,6 +404,22 @@
 	chargetime = 0
 	clickcd = 16 // Just like knife pick!
 	swingdelay = 16
+	max_intent_damage = 9999
+
+/datum/intent/pick/good //Blacksteel-exclusive. Mine a little better, a little faster, and a little harder.
+	name = "mastered pick"
+	desc = "This intent strikes faster than its standard variant, without any loss to performance."
+	icon_state = "inpick"
+	attack_verb = list("masterfully picks","deftly impales")
+	hitsound = list('sound/combat/hits/pick/genpick (1).ogg', 'sound/combat/hits/pick/genpick (2).ogg')
+	penfactor = 80
+	animname = "strike"
+	item_d_type = "stab"
+	blade_class = BCLASS_PICK
+	chargetime = 0
+	clickcd = 12 // Just like knife pick.. but not!
+	swingdelay = 10
+	max_intent_damage = 9999
 
 /datum/intent/pick/ranged
 	name = "ranged pick"
@@ -402,6 +433,7 @@
 	reach = 2
 	no_early_release = TRUE
 	blade_class = BCLASS_PICK
+	max_intent_damage = 9999
 
 /datum/intent/shoot //shooting crossbows or other guns, no parrydrain
 	name = "shoot"
@@ -678,8 +710,6 @@
 
 /datum/intent/effect
 	blade_class = BCLASS_EFFECT
-	var/datum/status_effect/intent_effect	//Status effect this intent will apply on a successful hit (damage not needed)
-	var/list/target_parts					//Targeted bodyparts which will apply the effect. Leave blank for anywhere on the body.
 
 /datum/intent/effect/daze
 	name = "dazing strike"

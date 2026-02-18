@@ -24,6 +24,11 @@
 
 /// Performs a kick. Used by the kick MMB intent. Returns TRUE if a kick was performed.
 /mob/living/proc/try_kick(atom/A)
+
+	if(ismob(A) && HAS_TRAIT(A, "ethereal"))//TA EDIT
+		to_chat(src, span_warning("My foot passes right through the mist!"))
+		return FALSE
+
 	if(!can_kick(A))
 		return FALSE
 	changeNext_move(mmb_intent.clickcd)
@@ -47,7 +52,7 @@
 			return FALSE
 		if(!M.Adjacent(src))
 			return FALSE
-		if(incapacitated())
+		if(incapacitated(ignore_restraints = TRUE))
 			return FALSE
 		if(M.checkmiss(src))
 			return FALSE

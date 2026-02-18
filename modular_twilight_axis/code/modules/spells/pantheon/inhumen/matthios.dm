@@ -32,6 +32,8 @@
 		revert_cast()
 		return FALSE
 	var/mob/living/carbon/human/H = user
+	if(H.buckled)
+		H.buckled.unbuckle_mob(H, TRUE)
 	if(H.handcuffed)
 		var/obj/item/I = H.handcuffed
 		H.clear_cuffs(I, cuff_break = TRUE)
@@ -187,25 +189,26 @@
 	recharge_time = 2 MINUTES
 	range = 4
 
-
 /obj/effect/proc_holder/spell/invoked/twilight_equalize/cast(list/targets, mob/living/user)
 	var/stat_to_change = STATKEY_STR
-	var/boons = list("Strength","Perception","Willpower","Constitution")
-	var/boon_choice = input("Choose your boon.", "IN FATHER'S NAME") as anything in boons
-	switch(boon_choice)
-		if("Strength")
-			stat_to_change = STATKEY_STR
-		if("Perception")
-			stat_to_change = STATKEY_PER
-		if("Willpower")
-			stat_to_change = STATKEY_WIL
-		if("Constitution")
-			stat_to_change = STATKEY_CON
-		else
-			stat_to_change = STATKEY_STR
 	if(ishuman(targets[1]))
 		var/mob/living/target = targets[1]
 		var/statchange = target.STASTR - user.STASTR
+		var/boons = list("Strength","Perception","Willpower","Constitution")
+		var/boon_choice = input("Choose your boon.", "IN FATHER'S NAME") as anything in boons
+		switch(boon_choice)
+			if("Strength")
+				stat_to_change = STATKEY_STR
+				statchange = target.STASTR - user.STASTR
+			if("Perception")
+				stat_to_change = STATKEY_PER
+				statchange = target.STAPER - user.STAPER
+			if("Willpower")
+				stat_to_change = STATKEY_WIL
+				statchange = target.STAWIL - user.STAWIL
+			if("Constitution")
+				stat_to_change = STATKEY_CON
+				statchange = target.STACON - user.STACON
 		user.apply_status_effect(/datum/status_effect/buff/twilight_equalizebuff, statchange, stat_to_change)
 		return TRUE
 	revert_cast()
@@ -268,7 +271,7 @@
 		if(user.z != target.z) //Stopping no-interaction snipes
 			to_chat(user, "<font color='yellow'>The Free-God compels me to face [target] on level ground before I transact.</font>")
 			revert_cast()
-			return
+			return FALSE
 		var/mammonsonperson = get_mammons_in_atom(target)
 		var/mammonsinbank = SStreasury.bank_accounts[target]
 		var/totalvalue = mammonsinbank + mammonsonperson
@@ -277,26 +280,26 @@
 		if(totalvalue <=10)
 			to_chat(user, "<font color='yellow'>[target] one has no wealth to hold against them.</font>")
 			revert_cast()
-			return
+			return FALSE
 		if(totalvalue <=30)
 			user.say("Жадность есть препятствие для свободы!")
 			target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I feel the weight of my wealth burning at my soul!"))
 			target.adjustFireLoss(30)
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
-			return
+			return TRUE
 		if(totalvalue <=60)
 			user.say("Жадность есть препятствие для свободы!")
 			target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I feel the weight of my wealth burning at my soul!"))
 			target.adjustFireLoss(60)
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
-			return
+			return TRUE
 		if(totalvalue <=100)
 			user.say("Жадность есть препятствие для свободы!")
 			target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I feel the weight of my wealth burning at my soul!"))
 			target.adjustFireLoss(80)
 			target.Stun(20)
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
-			return
+			return TRUE
 		if(totalvalue <=200)
 			user.say("Бог Свободы отвергает тебя!")
 			target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I feel the weight of my wealth tearing at my soul!"))
@@ -305,7 +308,7 @@
 			target.Stun(20)
 			target.ignite_mob()
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
-			return
+			return TRUE
 		if(totalvalue <=500)
 			user.say("Бог Свободы отвергает тебя!")
 			target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I feel the weight of my wealth tearing at my soul!"))
@@ -314,7 +317,7 @@
 			target.ignite_mob()
 			target.Stun(40)
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
-			return
+			return TRUE
 		if(totalvalue <= 2500)
 			target.visible_message(span_danger("[target] is smited with holy light!"), span_userdanger("I feel the weight of my wealth rend my soul apart!"))
 			user.say("Твоя последняя транзакция! Бог Свободы отвергает тебя!!")
@@ -325,7 +328,7 @@
 			target.ignite_mob()
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
 			explosion(get_turf(target), light_impact_range = 1, flame_range = 1, smoke = FALSE)
-			return
+			return TRUE
 		if(totalvalue >=2501) //THE POWER OF MY STAND: 'EXPLODE AND DIE INSTANTLY'
 			target.visible_message(span_danger("[target]'s skin begins to SLOUGH AND BURN HORRIFICALLY, glowing like molten metal!"), span_userdanger("MY LIMBS BURN IN AGONY..."))
 			user.say("Богатство сверх всякой меры - ТВОЯ ПОСЛЕДНЯЯ ТРАНЗАКЦИЯ!!")
@@ -362,7 +365,7 @@
 							new /obj/effect/decal/cleanable/blood/gibs/limb(limb_turf)
 
 			target.death()
-			return
+			return TRUE
 
 /obj/effect/proc_holder/spell/self/twilight_amongus
 	name = "No Gods Among Us"
@@ -581,6 +584,7 @@
 		R.force = 5 * skill
 	else
 		R.force = 20
+	R.update_force_dynamic()
 	src.conjured_weapon = R
 	return TRUE
 
@@ -854,6 +858,7 @@
 	animname = "cut"
 	hitsound = "genslash"
 	penfactor = 60
+	reach = 2
 	candodge = TRUE
 	canparry = TRUE
 	miss_text = "slashes the air!"
@@ -989,7 +994,9 @@
 	W.cmode_music_override = cmode_music_override
 	W.cmode_music_override_name = cmode_music_override_name
 
-
+	W.bleedsuppress = bleedsuppress
+	bleed_rate = 0
+	bleedsuppress = TRUE
 	W.set_nutrition(nutrition)
 	W.set_hydration(hydration)
 
@@ -1062,7 +1069,7 @@
 	W.status_flags &= ~GODMODE
 	// re-equip our stored neck and ring items, if we have them
 
-
+	W.bleedsuppress = bleedsuppress
 	W.set_nutrition(nutrition)
 	W.set_hydration(hydration)
 
