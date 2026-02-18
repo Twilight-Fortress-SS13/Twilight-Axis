@@ -1,6 +1,0 @@
-author: "Ryan180602"
-delete-after: True
-changes:
-  - balance: "1h lancing is now: 2x damfactor, 1 reach, 6s charge."
-  - balance: "2h thrust is now 1.25x damfactor (down from 1.5x)"
-  - balance: "2h lance has an effective range of 3 tiles."

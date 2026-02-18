@@ -755,7 +755,7 @@ GLOBAL_LIST_INIT(noc_scrolls, (list(/obj/item/book/granter/spell/blackstone/fire
 		/obj/item/book/granter/spell/blackstone/spitfire,
 		/obj/item/book/granter/spell/blackstone/lesserknock,
 		/obj/item/book/granter/spell/blackstone/repel,
-		/obj/item/book/granter/spell/blackstone/aerosolize,
+
 		/obj/item/book/granter/spell/blackstone/guidance,
 		/obj/item/book/granter/spell/blackstone/frostbolt,
 		/obj/item/book/granter/spell/blackstone/fortitude,

@@ -1,7 +1,4 @@
 // Race list means RESTRICTED from the LISTED races.
-/datum/virtue/origin
-	var/origin_name = "Unknown"
-
 /datum/virtue/origin/unknown
 	name = "Nowhere"
 	origin_name = "Unknown"
@@ -91,8 +88,20 @@
 	name = "Kazengunese"
 	origin_name = "Kazengun"
 	added_languages = list(/datum/language/kazengunese)
-	desc = "I originate from the temperate forests of Kazengun, a region poorly known to the West. Its people worship a syncretic variation of the Divine Pantheon, often percieved as heretical.<br>"
-	origin_desc = "PLEASE PING THE LORE TEAM TO ADD LORE FOR THIS"
+	desc = "I originate from the Kazengun Shogunate- a vast, foreign land from across the sea, culturally divided between the Islands and Lingyue, yet held under one banner. The people worship a separate Pantheon to the ways of the Holy See, often seen as heretical by outsiders.<br>"
+	origin_desc = "The Islands of Kazengun are a warm, subtropical region surrounded by sparkling, clear seas with lots of rain, mild winters, \
+	and occasional typhoons. The mainland of Kazengun, known as Lingyue, has a similar climate along the coastlines, with matching amounts of rainfall, \
+	but as one travels further inland, the abundant rain and tropical warmth gives way to cooler, and colder, steppe grasslands, with \
+	sprawling ‘grass seas’ and rolling hills like waves. \
+	\
+	<br>The islands of Kazengun are the seat of power of the Shogunate, a land of \
+	Astratan Order and divine fervour and reverence often compared to that seen in Otava. This Pantheon is larger than that of the Holy See, \
+	but its tenants are all but heretical in the domain of the See.  All of Kazengun reveres Order, as ordained by Astrata, the mother goddess, \
+	and by extension, the social stratification and aristocracy entwined within it, but the Pantheon also openly embraces ‘heretical’ beliefs and Ascendant gods as a simple facet of divinity.\
+	\
+	<br>A land divided, the Kazengun Shogunate also encompasses the lands of Lingyue- the former Empire across the mainland of Kazengun, \
+	occupied after conquest several centuries ago, yet never fully pacified. The current Shogun, Oishi Juro, has recently taken the throne after \
+	the passing of the previous Shogun, with Lingyue being closer than ever to entering full open rebellion against their Kazengun overlords."
 
 /datum/virtue/origin/hammerhold
 	name = "Hammerholdian"
@@ -105,8 +114,14 @@
 	name = "Aavnic"
 	origin_name = "Avar"
 	added_languages = list(/datum/language/aavnic)
-	desc = "I originate from the open plains of Avar, a nomadic people residing the Aavnic steppes. The only settled land consists of small, independent city-states, often engulfed in war with eachother.<br>"
-	origin_desc = "PLEASE PING THE LORE TEAM TO ADD LORE FOR THIS"
+	desc = "I originate from the open plains of Avar, a diverse people residing the Aavnic semi-nomadic steppes, sparely settled coasts, or Orcish heartlands. A land of brutality, freedom, and rife with contradictions.<br>"
+	origin_desc = "The wind blows freely through the Aavnic steppes, its grass flowing with the breeze and guiding the Saiga that freely roam. \
+	Aavnr is both a free land and a savage land, mighty yet disorganized; barely even holding onto any concept of nobility or governance. \
+	Once populated by various Orcish tribes and bands, the land was destroyed by centuries of conflict. Internal strife, foreign invasion, \
+	revolution, and the infamous rise of Graggar. Now though? The land sits still, finally finding some level of peace. It has left its mark on all it's \
+	inhabitants. Those hailing from this land bear those scars of centuries of war, murder, and bloodshed. Though still find pride in a few things. \
+	Their saiga, their sabre, their cattle, and their freedom. For while coin remains the main currency even in the wild steppes, it means nothing \
+	without the freedom to spend it as you wish. As the saying goes, 'a man can earn coin, but a man cannot earn freedom. It must be taken, it must be constantly achieved."
 
 /datum/virtue/origin/racial/underdark
 	name = "Underdweller"

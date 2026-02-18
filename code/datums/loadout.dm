@@ -949,6 +949,9 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Eoran Caparison"
 	path = /obj/item/caparison/eora
 
+/datum/loadout_item/caparison/fogbeast
+	name = "Fogbeast Caparison"
+	path = /obj/item/caparison/fogbeast
 
 //////////////////
 //  TRIUMPHS !  //
@@ -1487,6 +1490,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Donator Kit - Sixty Five Yils - Required: Glaive Or Naginata"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/koruu_glaive
+	donatitem = TRUE
+
+/datum/loadout_item/donator_drd_lsword
+	name = "Donator Kit - Ornate Longsword - Required: Longsword"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/drd_lsword
 	donatitem = TRUE
 
 // Разное
