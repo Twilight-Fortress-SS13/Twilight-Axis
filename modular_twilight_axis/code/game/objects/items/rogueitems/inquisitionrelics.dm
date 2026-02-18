@@ -62,9 +62,11 @@
 							H.add_stress(/datum/stressevent/soulchurnerpsydon)
 							to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 							to_chat(H, (span_cultsmall(pick(psydonianlines_empowered))))
-							H.apply_damage(2, BRUTE, null, FALSE, TRUE, TRUE)
 						if(HAS_TRAIT(H, TRAIT_INQUISITION))
 							H.apply_status_effect(/datum/status_effect/buff/churnerprotection)
+							H.apply_damage(2, BRUTE, null, FALSE, TRUE, TRUE)
+						else
+							H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 					if(/datum/patron/inhumen/matthios)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(matthioslines_empowered))))
