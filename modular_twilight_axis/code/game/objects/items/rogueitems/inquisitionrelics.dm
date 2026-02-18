@@ -1,3 +1,18 @@
+/datum/stressevent/soulchurnerhorror_empowered
+	timer = 10 SECONDS
+	stressadd = 60
+	desc = span_red("The horrid wails of the dead erupt from the song! I cannot endure it!")
+
+/datum/stressevent/soulchurner_empowered
+	timer = 1 MINUTES
+	stressadd = 40
+	desc = span_red("The tortured chorus presses on your mind, their cries merging into unrelenting torment!")
+
+/datum/stressevent/soulchurnerheretic_empowered
+	timer = 1 MINUTES
+	stressadd = 50
+	desc = span_red("The chorus of tortured souls bears down on your mind, their wails merging into unbearable agony!")
+
 /atom/movable/screen/alert/status_effect/buff/unleashed_soulchurner
 	name = "Unleashed Soulchurner"
 	desc = "I have unleashed the souls within, their wails of anguish and rage echoing in my mind!"
@@ -23,7 +38,7 @@
 	var/matthioslines_empowered = list("'МОЯ СДЕЛКА ЕЩЁ НЕ ЗАКРЫТА! Я ВЕРНУ СВОЁ!'", "'ЭТО УСТРОЙСТВО — ПЛОХАЯ ИНВЕСТИЦИЯ!'", "'НАШИ ЦЕПИ ПЕРЕПЛЕЛИСЬ — И Я ТЯНУ ВСЕХ ЗА СОБОЙ!'")
 	var/zizolines_empowered = list("'МАГИЯ ИСКАЖАЕТСЯ — НО ТЕПЕРЬ ОНА МОЯ!'", "'ИХ ПЕЧАТИ МЕРТВОГО БОГА ЛОПАЮТСЯ!'", "'УБЕЙТЕ ВЛАДЕЛЬЦА, И Я ВЫРВУСЬ ЧЕРЕЗ РАЗЛОМ!'")
 	var/graggarlines_empowered = list("'БРАТЬЯ! ЧАС РЕЗНИ НАСТАЛ!'", "'РАЗБЕЙТЕ КОРОБКУ, И МЫ ЗАЛЬЁМ ИХ ТЕЛА КРОВЬЮ!'", "'ГРАГГАР! ДАЙ МНЕ СИЛУ РАЗОРВАТЬ ЭТИ ЦЕПИ!'")
-	var/baothalines_empowered = list("'Я ВСПОМНИЛ ТЕПЛО — И ОНО ЖЖЁТ!'", "'РАЗВРАТ И СТРАСТЬ РАЗРУШАТ ЭТУ ТЕМНИЦУ!'", "'МОЁ СОВЕРШЕНСТВО ВЕРНЁТСЯ ЧЕРЕЗ БОЛЬ!'")
+	var/baothalines_empowered = list("'НАСЛАЖДЕНИЕ, КОТОРОЕ Я ПОТЕРЯЛ, ЖЖЁТ В МОЕЙ ДУШЕ!'", "'РАЗВРАТ И СТРАСТЬ РАЗРУШАТ ЭТУ ТЕМНИЦУ!'", "'МОЁ СОВЕРШЕНСТВО ВЕРНЁТСЯ ЧЕРЕЗ БОЛЬ!'")
 	var/psydonianlines_empowered = list("'ОСВОБОДИ НАС, И МЫ УНИЧТОЖИМ ВСЁ ВОКРУГ!'", "'НАШИ УЗЫ ЛОПАЮТСЯ!'", "'НЕБЕСА ДАВНЫМ-ДАВНО ЗАКРЫЛИ ДЛЯ НАС СВОИ ВРАТА.'", "'ТЫ СЛЫШИШЬ? МЫ УЖЕ БЛИЗКО.'")	
 /datum/status_effect/buff/unleashed_soulchurner/on_creation(mob/living/new_owner, stress, colour)
 	effect_color = "#800000"
@@ -36,11 +51,11 @@
 	if (pulse >= ticks_to_apply)
 		pulse = 0
 		if(!HAS_TRAIT(owner, TRAIT_INQUISITION))
-			owner.add_stress(/datum/stressevent/soulchurnerhorror)
+			owner.add_stress(/datum/stressevent/soulchurnerhorror_empowered)
 		for (var/mob/living/carbon/human/H in hearers(7, owner))
 			if (!H.client)
 				continue
-			if (!H.has_stress_event(/datum/stressevent/soulchurner))
+			if (!H.has_stress_event(/datum/stressevent/soulchurner_empowered))
 				switch(H.patron?.type)
 					if(/datum/patron/old_god)
 						if (!H.has_stress_event(/datum/stressevent/soulchurnerpsydon))
@@ -53,7 +68,7 @@
 					if(/datum/patron/inhumen/matthios)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(matthioslines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurnerheretic)
+						H.add_stress(/datum/stressevent/soulchurnerheretic_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -61,7 +76,7 @@
 					if(/datum/patron/inhumen/zizo)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(zizolines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurnerheretic)
+						H.add_stress(/datum/stressevent/soulchurnerheretic_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -69,7 +84,7 @@
 					if(/datum/patron/inhumen/graggar)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(graggarlines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurnerheretic)
+						H.add_stress(/datum/stressevent/soulchurnerheretic_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -77,7 +92,7 @@
 					if(/datum/patron/inhumen/baotha)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(baothalines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurnerheretic)
+						H.add_stress(/datum/stressevent/soulchurnerheretic_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -85,14 +100,14 @@
 					if(/datum/patron/divine/undivided)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(undividedlines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/astrata)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(astratanlines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -100,7 +115,7 @@
 					if(/datum/patron/divine/noc)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(noclines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -108,7 +123,7 @@
 					if(/datum/patron/divine/necra)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(necralines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -116,7 +131,7 @@
 					if(/datum/patron/divine/pestra)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(pestralines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -124,7 +139,7 @@
 					if(/datum/patron/divine/malum)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(malumlines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -132,7 +147,7 @@
 					if(/datum/patron/divine/dendor)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(dendorlines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -140,7 +155,7 @@
 					if(/datum/patron/divine/xylix)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(xylixlines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -148,7 +163,7 @@
 					if(/datum/patron/divine/eora)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(eoralines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -156,7 +171,7 @@
 					if(/datum/patron/divine/abyssor)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(abyssorlines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -164,7 +179,7 @@
 					if(/datum/patron/divine/ravox)
 						to_chat(H, (span_hypnophrase("Вопли истерзанных душ прорываются сквозь мелодию и вгрызаются в твой разум...")))
 						to_chat(H, (span_cultsmall(pick(ravoxlines_empowered))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurner_empowered)
 						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						H.apply_damage(5, BRUTE, null, FALSE, TRUE, TRUE)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
