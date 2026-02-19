@@ -129,10 +129,13 @@ LICH SKELETONS
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/studded
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
 	shoes = /obj/item/clothing/shoes/roguetown/sandals/aalloy
-
 	beltr = /obj/item/rogueweapon/huntingknife/idagger/steel/padagger
+	backl = /obj/item/storage/backpack/rogue/satchel
+	backpack_contents = list(
+		/obj/item/ammo_casing/caseless/rogue/heavy_bolt = 1
+	)
 	H.adjust_blindness(-3)
-	var/weapons = list("Bow & 20 Arrows", "Heavy Longbow & 20 Arrows", "Crossbow & 16 Bolts", "Sling")
+	var/weapons = list("Bow & 20 Arrows", "Longbow & 20 Arrows", "Crossbow & 16 Bolts", "Sling")
 	var/weapon_choice = input(H, "Choose your MISSILE.", "CONDEMN THE LYVING FROM AFAR.") as anything in weapons
 	H.set_blindness(0)
 	switch(weapon_choice)
@@ -140,7 +143,7 @@ LICH SKELETONS
 			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
 			beltl = /obj/item/quiver/paalloy
 			H.adjust_skillrank(/datum/skill/combat/bows, 1, TRUE)
-		if("Heavy Longbow & 20 Arrows")
+		if("Longbow & 20 Arrows")
 			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow
 			beltl = /obj/item/quiver/paalloy
 			H.adjust_skillrank(/datum/skill/combat/bows, 1, TRUE)
@@ -148,6 +151,8 @@ LICH SKELETONS
 			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 			beltl = /obj/item/quiver/bolt/paalloy
 			H.adjust_skillrank(/datum/skill/combat/crossbows, 1, TRUE)
+			if(prob(30))
+				r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy/paalloy
 		if("Sling")
 			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
 			beltl = /obj/item/quiver/sling/paalloy
