@@ -336,8 +336,9 @@
 /datum/virtue/utility/painter
 	name = "Painter"
 	desc = "You've always been passionate about drawing. And despite the fact that you didn't manage to become a great artist, you have stashed everything you need to become one."
-	added_stashed_items = list(
+/datum/virtue/utility/painter/proc/get_stashed_items()
+	return list(
 		"Canvas" = /obj/item/canvas,
 		"Paint Brush" = /obj/item/paint_brush,
 		"Paint Palette" = /obj/item/paint_palette
-    )
+	)
