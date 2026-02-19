@@ -160,14 +160,13 @@
 			H.change_stat(STATKEY_INT, 1)
 			H.change_stat(STATKEY_STR, -1)
 			to_chat(H, span_notice("Years of hard trade have sharpened your mind."))
-			to_chat(H, span_warning("But the road has begun to wear your body down."))
+			to_chat(H, span_danger("But the road has begun to wear your body down."))
 
 		if(AGE_OLD)
 			for(var/skill_type in age_skill_list)
 				H.adjust_skillrank_up_to(skill_type, SKILL_LEVEL_EXPERT, TRUE)
 
 			H.change_stat(STATKEY_STR, -1)
-			H.change_stat(STATKEY_INT, 2)
 			H.change_stat(STATKEY_SPD, -1)
 			to_chat(H, span_notice("Decades among ruins have made you cunning beyond skilled."))
 			to_chat(H, span_danger("But time takes its toll on flesh and sinew."))
