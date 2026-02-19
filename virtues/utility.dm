@@ -332,3 +332,12 @@
 	name = "Mountable"
 	desc = "You have trained and become fit enough to function as a suitable mount. People may ride you as they would a saiga."
 	added_traits = list(TRAIT_MOUNTABLE)
+
+/datum/virtue/utility/painter
+	name = "Painter"
+    desc = "You've always been passionate about drawing. And despite the fact that you didn't manage to become a great artist, you have stashed everything you need to become one."
+	added_stashed_items = list(
+		"Canvas" = /obj/item/canvas,
+		"Paint Brush" = /obj/item/paint_brush,
+		"Paint Palette" = /obj/item/paint_palette
+    )
