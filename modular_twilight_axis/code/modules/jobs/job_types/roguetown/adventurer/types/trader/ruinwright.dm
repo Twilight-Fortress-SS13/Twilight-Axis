@@ -1,6 +1,6 @@
-/datum/advclass/trader/gomesteader
-	name = "Gomesteader"
-	tutorial = "World population's tendency to take up arms and become unwashed beastslayers had forced you to take up jobs, small and large of most professions.\n A jack of all trades, what will you be known as this week?"
+/datum/advclass/trader/ruinwright
+	name = "Grim Ruinwright"
+	tutorial = "When markets burned and cities fell, you did not. You trade in salvage, rebuild from rot, and survive where others starve. Hope is a luxury. Skill is currency."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/homesteader
@@ -55,7 +55,7 @@
 		/datum/skill/labor/fishing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
 	)
-	maximum_possible_slots = 2 // Should not fill, just a hack to make it shows what types of traders are in round
+	maximum_possible_slots = 4 // Should not fill, just a hack to make it shows what types of traders are in round
 
 /datum/outfit/job/roguetown/homesteader/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -167,7 +167,7 @@
 
 /datum/job/roguetown/trader/New()
 	. = ..()
-	job_subclasses |= list(/datum/advclass/trader/gomesteader)
+	job_subclasses |= list(/datum/advclass/trader/ruinwright)
 
 
 
