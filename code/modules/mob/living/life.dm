@@ -52,7 +52,9 @@
 			for(var/datum/wound/wound as anything in get_wounds())
 				if(wound?.severity <= WOUND_SEVERITY_MODERATE)
 					wound.heal_wound(0.4)
-
+	if(HAS_TRAIT(src, TRAIT_WOUNDREGEN))
+		for(var/datum/wound/wound as anything in get_wounds())
+			wound.heal_wound(10)
 	if(!stat && HAS_TRAIT(src, TRAIT_LYCANRESILENCE) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
 		if(src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed))
 			return

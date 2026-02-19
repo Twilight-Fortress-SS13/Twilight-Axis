@@ -6,20 +6,21 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/mystic
 	class_select_category = CLASS_CAT_MYSTIC
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_SEEDKNOW, TRAIT_ARCYNE_T1)
+	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T2)
 	subclass_stats = list( // stat spread of 6 points, lower than the 7 adventurer gets on average
 			STATKEY_INT = 2,
 			STATKEY_CON = 2,
 			STATKEY_WIL = 2,
+			STATKEY_PER = 2,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 6
+	subclass_spellpoints = 12
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/alchemy = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
@@ -45,7 +46,7 @@
 		/obj/item/recipe_book/survival = 1,
 		)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1)
+	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
 	switch(H.patron?.type)
@@ -100,24 +101,24 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/resilient
 	class_select_category = CLASS_CAT_MYSTIC
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_SEEDKNOW, TRAIT_ARCYNE_T1)
+	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T2)
 	subclass_stats = list(
 			STATKEY_INT = 1,
 			STATKEY_CON = 3,
 			STATKEY_WIL = 2,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 2
+	subclass_spellpoints = 9
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/alchemy = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
-		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE, // lower weapon profficiency because of specialization/unique spell pack
+		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
 	)
 
 /datum/outfit/job/roguetown/adventurer/resilient/pre_equip(mob/living/carbon/human/H)
@@ -141,9 +142,18 @@
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stoneskin)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/fortitude)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_1)
+	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_2)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
+		var/weapons = list("Goedendag", "Quarterstaff")
+		var/weapon_choice = input("Choose your weapon.", "TAKE UP ARMS") as anything in weapons
+		switch(weapon_choice)
+			if("Goedendag")
+				beltr = /obj/item/rogueweapon/mace/goden
+				H.adjust_skillrank_up_to(/datum/skill/combat/maces, 3, TRUE)
+			if("Quarterstaff")
+				r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/iron
+				H.adjust_skillrank_up_to(/datum/skill/combat/staves, 3, TRUE)
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			neck = /obj/item/clothing/neck/roguetown/psicross
@@ -196,7 +206,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/holyblade
 	class_select_category = CLASS_CAT_MYSTIC
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_SEEDKNOW, TRAIT_ARCYNE_T1)
+	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T2)
 	subclass_stats = list(
 			STATKEY_STR = 1,
 			STATKEY_PER = 1,
@@ -205,7 +215,7 @@
 			STATKEY_WIL = 1,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 1
+	subclass_spellpoints = 8
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -215,8 +225,8 @@
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
-		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE, // lower weapon profficiency because of specialization/unique spell pack
-		/datum/skill/combat/shields = SKILL_LEVEL_NOVICE, // trainable on a target dummy/with other players/simple mobs, slight time sink
+		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/shields = SKILL_LEVEL_APPRENTICE,
 	)
 
 /datum/outfit/job/roguetown/adventurer/holyblade/pre_equip(mob/living/carbon/human/H)
@@ -230,9 +240,6 @@
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
 	backl = /obj/item/storage/backpack/rogue/satchel
-	backr = /obj/item/rogueweapon/shield/wood
-	beltr = /obj/item/rogueweapon/scabbard/sword
-	r_hand = /obj/item/rogueweapon/sword/iron
 	H.dna.species.soundpack_m = new /datum/voicepack/male/wizard()
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
@@ -241,9 +248,28 @@
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/enchant_weapon)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/airblade)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)
+	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
+		var/weapons = list("Sword & Shield", "Axe & Shield", "Warhammer & Shield", "Spear")
+		var/weapon_choice = input("Choose your weapon.", "TAKE UP ARMS") as anything in weapons
+		switch(weapon_choice)
+			if("Sword & Shield")
+				beltr = /obj/item/rogueweapon/scabbard/sword
+				backr = /obj/item/rogueweapon/shield/wood
+				r_hand = /obj/item/rogueweapon/sword/iron
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, 3, TRUE)
+			if("Axe & Shield")
+				beltr = /obj/item/rogueweapon/stoneaxe/woodcut
+				backr = /obj/item/rogueweapon/shield/wood
+				H.adjust_skillrank_up_to(/datum/skill/combat/axes, 3, TRUE)
+			if("Warhammer & Shield")
+				beltr = /obj/item/rogueweapon/mace/warhammer
+				backr = /obj/item/rogueweapon/shield/wood
+				H.adjust_skillrank_up_to(/datum/skill/combat/maces, 3, TRUE)
+			if("Spear")
+				r_hand = /obj/item/rogueweapon/spear
+				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 3, TRUE)
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			neck = /obj/item/clothing/neck/roguetown/psicross
@@ -287,7 +313,8 @@
 		if(/datum/patron/divine/xylix)
 			neck = /obj/item/clothing/neck/roguetown/luckcharm
 			H.cmode_music = 'sound/music/combat_jester.ogg'
-
+		
+/*
 /datum/advclass/mystic/theurgist
 	name = "Theurgist"
 	tutorial = "I have spent my youth deepening my faith among Noctite acolytes and where shown the wonders of the Arcynes, one day i decided to begins my studies of the arcyne art"
@@ -296,7 +323,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/theurgist
 	class_select_category = CLASS_CAT_MYSTIC
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_SEEDKNOW, TRAIT_ARCYNE_T1)
+	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T2)
 	subclass_stats = list(
 			STATKEY_INT = 3,
 			STATKEY_CON = 1,
@@ -337,7 +364,7 @@
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynebolt)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)
+	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
 	switch(H.patron?.type)
@@ -383,3 +410,4 @@
 		if(/datum/patron/divine/xylix)
 			neck = /obj/item/clothing/neck/roguetown/luckcharm
 			H.cmode_music = 'sound/music/combat_jester.ogg'
+*/

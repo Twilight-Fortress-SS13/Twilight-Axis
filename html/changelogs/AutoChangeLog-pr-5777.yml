@@ -1,8 +1,0 @@
-author: "Ollanius"
-delete-after: True
-changes:
-  - rscadd: "New sprites for the Sharpened Stake and Silver-Tipped Stake."
-  - rscadd: "Daggerpunching now has new sounds."
-  - bugfix: "Importing a Silver-Tipped Stake from the Marquette should provide one that's made for Psydonic blessings, now."
-  - rscadd: "Inhands for ammunition has been slightly tewaked."
-  - code_imp: "The original stake sprites are still in the code, via daggers32.dmi, and can be reused if desired."
