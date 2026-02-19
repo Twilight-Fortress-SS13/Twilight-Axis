@@ -903,3 +903,21 @@ h2.alert {
 	background: #3e263a;
 	border: 1px dotted #7f4274;
 }
+
+/* TA EDIT */
+
+.reallybigredtext {
+	font-size: 24px !important;
+	font-weight: bold !important;
+	color: #ff0000 !important;
+	text-shadow: 0 0 8px #ff0000, 0 0 16px #ff0000;
+	display: block;
+	text-align: center;
+	margin: 10px 0;
+	animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+	from { opacity: 0.7; }
+	to { opacity: 1; }
+}
