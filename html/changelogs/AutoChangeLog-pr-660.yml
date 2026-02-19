@@ -1,0 +1,5 @@
+author: "Oni328"
+delete-after: True
+changes:
+  - rscadd: "New Tabaxi mercenary."
+  - rscadd: "New cloak to donate loadout"

@@ -1,5 +1,0 @@
-author: "Ollanius"
-delete-after: True
-changes:
-  - rscadd: "Ironclad Adventurers can now opt to take a Broadsword in their loadout."
-  - code_imp: "Loadout options that alter stats - namely, with the Barbarian and Exorcist's disciplines - now list the altered stats in the option-menu."

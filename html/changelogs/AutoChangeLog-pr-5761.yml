@@ -1,4 +1,0 @@
-author: "hazelrat"
-delete-after: True
-changes:
-  - rscadd: "The Wardens' seax now has a small demolition modifier, and its CHOP intent has been replaced with REND."

@@ -1,5 +1,0 @@
-author: "Geevies"
-delete-after: True
-changes:
-  - rscadd: "Fogbeasts now come in different colors. Wild-spawned have randomly selected colours. Saddleborn can choose their colours."
-  - rscadd: "Added Fogbeast Caparisons, right-clicking the caparison lets you change its color and type."
