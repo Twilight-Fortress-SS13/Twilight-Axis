@@ -4,6 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/homesteader
+	age_mod = /datum/class_age_mod/ruinwright
 	traits_applied = list(TRAIT_JACKOFALLTRADES,
 		TRAIT_ALCHEMY_EXPERT,
 		TRAIT_SMITHING_EXPERT,
@@ -55,7 +56,7 @@
 		/datum/skill/labor/fishing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
 	)
-	maximum_possible_slots = 4 // Should not fill, just a hack to make it shows what types of traders are in round
+	maximum_possible_slots = 3 // Should not fill, just a hack to make it shows what types of traders are in round
 
 /datum/outfit/job/roguetown/homesteader/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -125,6 +126,11 @@
 
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
 
+/datum/job/roguetown/trader/New()
+	. = ..()
+	job_subclasses |= list(/datum/advclass/trader/ruinwright)
+
+/datum/class_age_mod/ruinwright/apply_age_mod(mob/living/carbon/human/H)
 	if(!H)
 		return
 
@@ -157,20 +163,63 @@
 			for(var/skill_type in age_skill_list)
 				H.adjust_skillrank(skill_type, 1, TRUE)
 			H.change_stat(STATKEY_INT, 1)
+			H.change_stat(STATKEY_STR, -1)
+			to_chat(H, span_notice("Years of hard trade have sharpened your mind."))
+			to_chat(H, span_warning("But the road has begun to wear your body down."))
+
 		if(AGE_OLD)
 			for(var/skill_type in age_skill_list)
 				H.adjust_skillrank(skill_type, 2, TRUE)
 
-			H.change_stat(STATKEY_STR, -1)
+			H.change_stat(STATKEY_STR, -2)
 			H.change_stat(STATKEY_INT, 2)
 			H.change_stat(STATKEY_SPD, -1)
+			to_chat(H, span_notice("Decades among ruins have made you cunning beyond skilled."))
+			to_chat(H, span_danger("But time takes its toll on flesh and sinew."))
 
-/datum/job/roguetown/trader/New()
+/datum/job/roguetown/trader/after_spawn(mob/living/H, mob/M, latejoin = FALSE)
 	. = ..()
-	job_subclasses |= list(/datum/advclass/trader/ruinwright)
 
+	if(!ishuman(H))
+		return
 
+	if(SSmapping?.config?.map_file != "dun_world")
+		return
 
+	var/datum/advclass/AC = SSrole_class_handler.get_advclass_by_name(H.advjob)
+
+	if(istype(AC, /datum/advclass/trader/ruinwright))
+		handle_ruinwright_spawn(H)
+
+/proc/handle_ruinwright_spawn(mob/living/carbon/human/H)
+	if(!H)
+		return
+
+	var/roll = rand(1, 100)
+
+	if(roll <= 25)
+		return
+
+	var/turf/T
+	var/message
+
+	if(roll <= 50)
+		T = locate(23, 326, 4)
+		message = span_danger("You awaken where death walks openly.")
+
+	else if(roll <= 75)
+		T = locate(151, 331, 3)
+		message = span_warning("The air here carries the scent of trouble.")
+
+	else
+		T = locate(137, 258, 2)
+		message = span_notice("This place feels uneasy, but survivable.")
+
+	if(!T)
+		return
+
+	H.forceMove(T)
+	to_chat(H, message)
 
 
 
