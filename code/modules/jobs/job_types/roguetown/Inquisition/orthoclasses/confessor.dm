@@ -111,4 +111,5 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 	
-	change_origin(H, /datum/virtue/origin/otava, "Holy order")
+	if(!isdarkelf(H)) //TA EDIT
+		change_origin(H, /datum/virtue/origin/otava, "Holy order")
