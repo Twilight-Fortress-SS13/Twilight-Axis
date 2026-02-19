@@ -94,8 +94,9 @@
 	L.cmode_music = 'sound/music/combat_heretic.ogg'
 	L.faction = list("undead")
 
-	if (L.charflaw)
-		QDEL_NULL(L.charflaw)
+	for(var/datum/charflaw/cf in L.charflaws)
+		L.charflaws.Remove(cf)
+		QDEL_NULL(cf)
 
 	L.mob_biotypes |= MOB_UNDEAD
 	replace_eyes(L)
@@ -239,8 +240,9 @@
 
 	old_body.mind.transfer_to(new_body)
 
-	if (new_body.charflaw)
-		QDEL_NULL(new_body.charflaw)
+	for(var/datum/charflaw/cf in new_body.charflaws)
+		new_body.charflaws.Remove(cf)
+		QDEL_NULL(cf)
 
 	new_body.real_name = old_body.name
 	new_body.dna.real_name = old_body.real_name

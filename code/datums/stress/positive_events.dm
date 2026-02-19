@@ -417,3 +417,12 @@
 	desc = span_aiprivradio("The standard calls out to me! It knows we're to see victory!")
 	timer = 3 MINUTES
 
+/datum/stressevent/lovezizo
+	timer = 666 MINUTES
+	stressadd = -666 // :)
+	desc = list(span_green("ZIZOZIZOZIZO"))
+
+/datum/stressevent/leechcult
+	timer = 1 MINUTES
+	stressadd = 3
+	desc = list("<span class='red'>There's a little goblin in my head telling me to do things and I don't like it!</span>","<span class='red'>\"Kill your friends.\"</span>","<span class='red'>\"Make them bleed.\"</span>","<span class='red'>\"Give them no time to squeal.\"</span>","<span class='red'>\"Praise Zizo.\"</span>","<span class='red'>\"Death to the Ten.\"</span>","<span class='red'>\"We will recycle them.\"</span>")

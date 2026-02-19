@@ -283,7 +283,10 @@
 //TA TRAITS
 #define TRAIT_CLERGY_TA "Decem Dii Vult"
 #define TRAIT_FIREARMS_MARKSMAN "Expert Gunslinger" // They keep saying firearms are too easy to level up. Unlocks Master and Legendary Firearms.
-
+#define TRAIT_VILLAIN "Villain"
+#define TRAIT_ZIZOID_HUNTED "zizoidhunted" // Used to signal character has been marked by death by the Zizoid cult
+#define TRAIT_WOUNDREGEN "Wound Regeneration"
+#define TRAIT_ZIZOEYES "Zizo eyes"
 // If you want description to show up you gotta have the trait name defined BEFORE this lol
 
 GLOBAL_LIST_INIT(roguetraits, list(
@@ -517,8 +520,13 @@ GLOBAL_LIST_INIT(roguetraits, list(
 
 	TRAIT_CLERGY_TA = span_notice("My oath empowers me when I am within the Temple's walls, or near my spiritual guide, the Bishop."), //TA TRAITS FROM HERE
 	TRAIT_FIREARMS_MARKSMAN = span_greentext("I'm an experienced gunslinger, and have spent many years learning to shoot firearms accurately over great distances. Firearms can progress to Legendary levels."),
+	TRAIT_VILLAIN = span_warning("I am a devious, conniving villain!"),
+	TRAIT_WOUNDREGEN = span_info("My wounds and bones mend on their own, my bleeding clots quickly.."),
 
 	TRAIT_ARTILLERY_EXPERT = span_greentext("Я ранее обращался с артиллерией и разбираюсь в тонкостях её наводки."),
+	TRAIT_VILLAIN = span_warning("I am a devious, conniving villain!"),
+	TRAIT_WOUNDREGEN = span_info("My wounds and bones mend on their own, my bleeding clots quickly.."),
+	TRAIT_ZIZOEYES = span_notice("You no longer fear a veil of the darkness, yet your eyes are glimmering lights in it..")
 ))
 
 // trait accessor defines

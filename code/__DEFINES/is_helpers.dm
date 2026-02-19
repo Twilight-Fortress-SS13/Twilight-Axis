@@ -195,3 +195,7 @@ GLOBAL_VAR_INIT(magic_appearance_detecting_image, new /image) // appearances are
 #define isimage(thing) (istype(thing, /image))
 #define isappearance(thing) (!isimage(thing) && !ispath(thing) && istype(GLOB.magic_appearance_detecting_image, thing))
 #define isappearance_or_image(thing) (isimage(thing) || (!ispath(thing) && istype(GLOB.magic_appearance_detecting_image, thing)))
+
+// TA
+#define is_zizolackey(mind) (mind.has_antag_datum(/datum/antagonist/zizocultist))
+#define is_zizocultist(mind) (mind.has_antag_datum(/datum/antagonist/zizocultist/leader))

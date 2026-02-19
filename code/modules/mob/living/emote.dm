@@ -57,12 +57,11 @@ var/list/zone_translations = list(
 
 	//If God can hear your prayer (long enough, no bad words, etc.)
 	if(patron.hear_prayer(follower, prayer))
-		if(follower.has_flaw(/datum/charflaw/addiction/godfearing))
-			// Stops prayers if you don't meet your patron's requirements to pray.
-			if(!patron?.can_pray(follower))
-				return
-			else
-				follower.sate_addiction()
+		// Stops prayers if you don't meet your patron's requirements to pray.
+		if(!patron?.can_pray(follower))
+			return
+		else
+			follower.sate_addiction(/datum/charflaw/addiction/godfearing)
 
 	/* admin stuff - tells you the followers name, key, and what patron they follow */
 	var/follower_ident = "[follower.key]/([follower.real_name]) (follower of [patron])"
@@ -836,12 +835,11 @@ var/list/zone_translations = list(
 	if(.)
 		for(var/mob/living/carbon/human/L in viewers(7,user))
 			if(L == user)
-				if(L.has_flaw(/datum/charflaw/addiction/masochist))
-					L.sate_addiction()
+				L.sate_addiction(/datum/charflaw/addiction/masochist)
 				continue
 			if(L.has_flaw(/datum/charflaw/addiction/sadist))
 				if(get_dist(L, user) <= 2 && L != user)
-					L.sate_addiction()
+					L.sate_addiction(/datum/charflaw/addiction/sadist)
 
 /datum/emote/living/scream/strain
 	key = "strain"
@@ -862,11 +860,10 @@ var/list/zone_translations = list(
 	if(.)
 		for(var/mob/living/carbon/human/L in viewers(7,user))
 			if(L == user)
-				if(L.has_flaw(/datum/charflaw/addiction/masochist))
-					L.sate_addiction()
-				continue // i hope this shit works.
+				L.sate_addiction(/datum/charflaw/addiction/masochist)
+				continue
 			if(get_dist(L, user) <= 2 && L != user)
-				L.sate_addiction()
+				L.sate_addiction(/datum/charflaw/addiction/sadist)
 
 /datum/emote/living/scream/firescream
 	key = "firescream"
@@ -880,11 +877,10 @@ var/list/zone_translations = list(
 	if(.)
 		for(var/mob/living/carbon/human/L in viewers(7,user))
 			if(L == user)
-				if(L.has_flaw(/datum/charflaw/addiction/masochist))
-					L.sate_addiction()
-				continue // i hope this shit works.
+				L.sate_addiction(/datum/charflaw/addiction/masochist)
+				continue
 			if(get_dist(L, user) <= 2 && L != user)
-				L.sate_addiction()
+				L.sate_addiction(/datum/charflaw/addiction/sadist)
 
 /datum/emote/living/aggro
 	key = "aggro"

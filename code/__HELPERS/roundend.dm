@@ -238,6 +238,8 @@
 	if(SSmapping.retainer.head_rebel_decree)
 		end_reason = "The peasant rebels took control of the throne, hail the new community!"
 
+	if(SSmapping.retainer.cult_ascended)
+		end_reason = "ZIZOZIZOZIZOZIZO"
 
 	if(end_reason)
 		to_chat(world, span_bigbold("[end_reason]."))

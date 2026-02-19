@@ -1803,6 +1803,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	ckeywhitelist = list("imony", "uedhighcommand")
 
+/datum/loadout_item/donat/cloak_twilight_desert
+	name = "Зибантийская накидка"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/twilight_desert
+	donatitem = TRUE
+
 // Маски
 
 /datum/loadout_item/donat/naledimask

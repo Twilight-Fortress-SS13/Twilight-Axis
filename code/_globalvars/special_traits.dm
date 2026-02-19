@@ -175,9 +175,9 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	return FALSE
 
 /proc/apply_charflaw_equipment(mob/living/carbon/human/character, client/player)
-	if(character.charflaw)
-		character.charflaw.apply_post_equipment(character)
-		record_featured_object_stat(FEATURED_STATS_VICES, character.charflaw.name)
+	for(var/datum/charflaw/cf in character.charflaws)
+		cf.apply_post_equipment(character)
+		record_featured_object_stat(FEATURED_STATS_VICES, cf.name)
 
 /proc/apply_dnr_trait(mob/living/carbon/human/character, client/player)
 	ADD_TRAIT(player.mob, TRAIT_DNR, TRAIT_GENERIC)

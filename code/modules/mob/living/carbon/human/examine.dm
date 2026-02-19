@@ -244,10 +244,10 @@
 				if(ishuman(user))
 					if(has_flaw(/datum/charflaw/addiction/paranoid))
 						. += span_nicegreen("[m1] is the kind who sticks to their own. I understand.")
-						user.sate_addiction()
+						user.sate_addiction(/datum/charflaw/addiction/paranoid)
 					else if(pflaw.check_faction(src))
 						. += span_nicegreen("One of my own.")
-						user.sate_addiction()
+						user.sate_addiction(/datum/charflaw/addiction/paranoid)
 					else
 						user.add_stress(/datum/stressevent/paracrowd)
 
@@ -266,9 +266,12 @@
 					user.add_stress(/datum/stressevent/averse)
 					. += span_secradio("One of <b>them...</b>")
 
-			if(user.has_flaw(/datum/charflaw/addiction/voyeur) && has_flaw(/datum/charflaw/addiction) && get_dist(src, user) <= 3)
-				var/flawname = charflaw?.voyeur_descriptor ? charflaw?.voyeur_descriptor : charflaw?.name
-				. += span_voyeurvice("[m1] [flawname]...")
+			if(user.has_flaw(/datum/charflaw/addiction/voyeur) && get_dist(src, user) <= 3)
+				if(charflaws.len)
+					var/list/vice_desc = list()
+					for(var/datum/charflaw/cf in charflaws)
+						vice_desc.Add(cf.voyeur_descriptor)
+					. += span_voyeurvice("[m1][english_list(vice_desc)]...")
 
 			if(HAS_TRAIT(user, TRAIT_EMPATH) && HAS_TRAIT(src, TRAIT_PERMAMUTE))
 				. += span_notice("[m1] lacks a voice. [m1] is a mute!")
@@ -1053,12 +1056,12 @@
 	if(HAS_TRAIT(src, TRAIT_COMMIE) && HAS_TRAIT(examiner, TRAIT_COMMIE))
 		heretic_text += "♠"
 	//Defunct as of *fsalute changes, leaving here as a symbol reference.
-	/*else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
+	else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
 		heretic_text += "♦"
 	else if(HAS_TRAIT(src, TRAIT_HORDE) && HAS_TRAIT(examiner, TRAIT_HORDE))
 		heretic_text += "♠"
 	else if(HAS_TRAIT(src, TRAIT_DEPRAVED) && HAS_TRAIT(examiner, TRAIT_DEPRAVED))
-		heretic_text += "♥"*/
+		heretic_text += "♥"
 
 	return heretic_text
 
@@ -1112,7 +1115,8 @@
 				villain_text += span_userdanger("A MONSTER!")
 		if(mind.assigned_role == "Lunatic")
 			villain_text += span_userdanger("LUNATIC!")
-
+	if(HAS_TRAIT(src, TRAIT_ZIZOEYES))
+		villain_text += span_userdanger("Their eyes send chills down your spine...")
 	return villain_text
 
 /proc/get_blade_dulling_text(obj/item/rogueweapon/I, verbose = FALSE)
