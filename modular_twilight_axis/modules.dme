@@ -73,6 +73,7 @@
 #include "code\modules\clothing\rogueclothes\wrists\wrists.dm"
 #include "code\modules\hairstyles\hairstyles.dm"
 #include "code\modules\jobs\job_types\roguetown\adventurer\types\wretch\lunacyembracer.dm"
+#include "code\modules\jobs\job_types\roguetown\adventurer\types\trader\ruinwright.dm"
 #include "code\modules\jobs\job_types\roguetown\burghers\mage_apprentice.dm"
 #include "code\modules\jobs\job_types\roguetown\sidefolk\mercenary\grenzelhoft.dm"
 #include "code\modules\jobs\job_types\roguetown\courtier\steward.dm"
