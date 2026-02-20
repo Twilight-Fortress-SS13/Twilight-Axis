@@ -419,7 +419,7 @@
 /datum/disease/proc/cure(add_resistance = TRUE)
 	if(affected_mob)
 		if(add_resistance && (disease_flags & CAN_RESIST))
-			affected_mob.add_disease_resistance(GetDiseaseID(), 10 MINUTES)
+			affected_mob.add_disease_resistance(GetDiseaseID(), 20 MINUTES)
 	qdel(src)
 
 /datum/disease/proc/IsSame(datum/disease/D)
