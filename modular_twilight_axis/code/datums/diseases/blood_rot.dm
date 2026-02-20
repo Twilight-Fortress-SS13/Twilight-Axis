@@ -276,8 +276,8 @@
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
 		var/actual_chance = 10
-		if(HAS_TRAIT(target, TRAIT_RAG_MASK_WORN))
-			actual_chance = 5
+		if(target.get_item_by_slot(SLOT_WEAR_MASK))
+			actual_chance = max(1, round(actual_chance * 0.7))
 		if(prob(actual_chance))
 			target.ForceContractDisease(src, TRUE, FALSE)
 

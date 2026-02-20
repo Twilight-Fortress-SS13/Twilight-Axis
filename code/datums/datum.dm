@@ -578,9 +578,9 @@
 					spread_chance = 0
 			else
 				spread_chance = 0
-		// Rag mask reduces transmission chance by 50%
-		if(HAS_TRAIT(target, TRAIT_RAG_MASK_WORN))
-			spread_chance = spread_chance / 2
+		// Any mask in SLOT_WEAR_MASK reduces transmission chance by 30%
+		if(spread_chance > 0 && target.get_item_by_slot(SLOT_WEAR_MASK))
+			spread_chance = max(1, round(spread_chance * 0.7))
 		if(spread_chance > 0 && !prob(spread_chance))
 			continue
 		target.ForceContractDisease(D, TRUE, FALSE)

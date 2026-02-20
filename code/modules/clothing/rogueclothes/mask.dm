@@ -535,18 +535,6 @@
 	experimental_onhip = TRUE
 	sewrepair = TRUE
 
-/obj/item/clothing/mask/rogue/ragmask/equipped(mob/user, slot)
-	..()
-	if(slot == ITEM_SLOT_MASK)
-		ADD_TRAIT(user, TRAIT_RAG_MASK_WORN, "[type]")
-		to_chat(user, span_notice("The rag mask provides some protection from disease transmission."))
-
-/obj/item/clothing/mask/rogue/ragmask/dropped(mob/user, slot)
-	..()
-	if(slot == ITEM_SLOT_MASK)
-		REMOVE_TRAIT(user, TRAIT_RAG_MASK_WORN, "[type]")
-		to_chat(user, span_notice("I remove the rag mask's protection."))
-
 /obj/item/clothing/mask/rogue/ragmask/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/equip/rummaging-03.ogg', null, (UPD_HEAD|UPD_MASK))	//Standard mask
 

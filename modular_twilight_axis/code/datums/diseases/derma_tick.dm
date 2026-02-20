@@ -70,8 +70,8 @@
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
 		var/disease_chance = 2
-		if(HAS_TRAIT(target, TRAIT_RAG_MASK_WORN))
-			disease_chance = 1
+		if(target.get_item_by_slot(SLOT_WEAR_MASK))
+			disease_chance = max(1, round(disease_chance * 0.7))
 		if(prob(disease_chance))
 			target.ForceContractDisease(src, TRUE, FALSE)
 	schedule_itch()
