@@ -47,7 +47,7 @@
 	examine_list += span_warning("Кожа изуродована пепельными пятнами и сочащейся язвой, образующей отвратительную корку.")
 
 /datum/disease/ash_blight/proc/schedule_scratch()
-	addtimer(CALLBACK(src, PROC_REF(scratch_tick)), rand(5, 15) SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(scratch_tick)), rand(15, 25) SECONDS)
 
 /datum/disease/ash_blight/proc/scratch_tick()
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
