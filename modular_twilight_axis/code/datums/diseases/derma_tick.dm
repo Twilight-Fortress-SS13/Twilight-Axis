@@ -42,7 +42,7 @@
 /datum/disease/derma_tick/proc/schedule_itch()
 	if(itch_timer)
 		return
-	itch_timer = addtimer(CALLBACK(src, PROC_REF(itch_tick)), rand(12, 25) SECONDS, TIMER_STOPPABLE)
+	itch_timer = addtimer(CALLBACK(src, PROC_REF(itch_tick)), rand(20, 25) SECONDS, TIMER_STOPPABLE)
 
 /datum/disease/derma_tick/proc/itch_tick()
 	itch_timer = null
