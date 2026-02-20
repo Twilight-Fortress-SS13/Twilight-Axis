@@ -64,9 +64,9 @@
 	var/mob/living/carbon/human/H = affected_mob
 
 	// Stage 2+ symptoms
-	if(DT_PROB(15, delta_time))
+	if(DT_PROB(8, delta_time))
 		H.adjust_hydration(-5)
-	if(DT_PROB(3, delta_time))
+	if(DT_PROB(1.5, delta_time))
 		H.blur_eyes(5)
 		to_chat(H, span_warning("Голова пульсирует болью, зрение мутнеет."))
 	// Hand weakness - drops item every 2-3 minutes
@@ -81,13 +81,13 @@
 
 	// Stage 3 additional symptoms
 	if(stage >= 3)
-		if(DT_PROB(6, delta_time))
+		if(DT_PROB(3, delta_time))
 			H.adjustBruteLoss(rand(1, 2))
 			to_chat(H, span_danger("Тело ломит, и меня пробивает сильная слабость."))
-		if(DT_PROB(5, delta_time))
+		if(DT_PROB(2, delta_time))
 			H.Knockdown(rand(10, 20))
 			to_chat(H, span_warning("Ноги подкашиваются, и я падаю."))
-		if(DT_PROB(4, delta_time) && !colorblind_active)
+		if(DT_PROB(2, delta_time) && !colorblind_active)
 			colorblind_active = TRUE
 			H.add_client_colour(/datum/client_colour/monochrome)
 			if(colorblind_timer)
@@ -96,7 +96,7 @@
 
 	// Stage 4 additional symptoms
 	if(stage >= 4)
-		if(DT_PROB(3, delta_time))
+		if(DT_PROB(1.5, delta_time))
 			H.adjustBruteLoss(rand(1, 3))
 			to_chat(H, span_danger("Меня ломит, и кажется, что тело вот-вот сдастся."))
 
@@ -125,7 +125,7 @@
 	if(cough_scheduled)
 		return
 	cough_scheduled = TRUE
-	cough_timer = addtimer(CALLBACK(src, PROC_REF(cough_tick)), rand(10, 30) SECONDS, TIMER_STOPPABLE)
+	cough_timer = addtimer(CALLBACK(src, PROC_REF(cough_tick)), rand(20, 45) SECONDS, TIMER_STOPPABLE)
 
 /datum/disease/grime_flu/proc/cough_tick()
 	cough_scheduled = FALSE
@@ -136,7 +136,7 @@
 		schedule_cough()
 		return
 	H.emote("cough", intentional = TRUE)
-	if(stage >= 4 && prob(70))
+	if(stage >= 4 && prob(40))
 		H.vomit(1, blood = TRUE, stun = FALSE)
 		H.bleed(9)
 		H.adjustOxyLoss(2)
