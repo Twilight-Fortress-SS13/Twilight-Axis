@@ -29,7 +29,7 @@
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague
 	name = "Ritual Plague Dagger"
-	desc = "A jagged, ceremonial blade wrapped in tattered purple ribbons. The steel has a sickly, iridescent sheen, and the edge drips with a faint, viscous residue. Merely holding it makes your skin crawl with an unnatural itch."
+	desc = "A jagged, ceremonial blade wrapped in tattered purple ribbons. The steel has a sickly, iridescent sheen, and the edge drips with a faint, viscous residue. Merely holding it makes your skin crawl with an unnatural itch. (RMB to select disease)"
 	icon_state = "devilsknife"
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
 	force = 22
@@ -39,6 +39,7 @@
 	var/selected_disease_type = /datum/disease/ash_blight
 	var/selected_disease_name = "Ash Blight"
 	COOLDOWN_DECLARE(disease_select_cooldown)
+	COOLDOWN_DECLARE(disease_spread_cooldown)
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/verb/select_disease()
 	set name = "Select Disease"
@@ -53,6 +54,20 @@
 	if(user?.get_active_held_item() != src)
 		return
 	choose_disease(user)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/examine(mob/user)
+	. = ..()
+	if(!HAS_TRAIT(user, TRAIT_PLAGUEBRINGER_WHISPER))
+		. += span_warning("The blade's secrets are beyond my understanding.")
+		return
+	. += span_notice("Currently attuned to spread: <b>[selected_disease_name]</b>")
+	if(COOLDOWN_STARTED(src, disease_spread_cooldown) && !COOLDOWN_FINISHED(src, disease_spread_cooldown))
+		var/time_left = COOLDOWN_TIMELEFT(src, disease_spread_cooldown)
+		var/minutes_left = round(time_left / 600)
+		var/seconds_left = round((time_left % 600) / 10)
+		. += span_warning("Plague dormancy: <b>[minutes_left]m [seconds_left]s</b> remaining.")
+	else
+		. += span_notice("The blade is <b>ready</b> to spread plague.")
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/ritual_plague/proc/choose_disease(mob/user)
 	if(!user || !isliving(user))
@@ -114,8 +129,16 @@
 		return
 	var/mob/living/L = target
 	if(rand(1, 100) <= 30)
+		// Check disease spread cooldown
+		if(COOLDOWN_STARTED(src, disease_spread_cooldown) && !COOLDOWN_FINISHED(src, disease_spread_cooldown))
+			var/time_left = COOLDOWN_TIMELEFT(src, disease_spread_cooldown)
+			var/minutes_left = round(time_left / 600)
+			var/seconds_left = round((time_left % 600) / 10)
+			to_chat(user, span_warning("The blade's plague is dormant. It will be ready in [minutes_left]m [seconds_left]s."))
+			return
 		to_chat(user, span_notice("The blade spreads [selected_disease_name]!"))
 		L.ForceContractDisease(new disease_path(), FALSE, TRUE)
+		COOLDOWN_START(src, disease_spread_cooldown, 5 MINUTES)
 
 /obj/item/rogueweapon/huntingknife/throwingknife/steel/noc
 	name = "twilight fang"
