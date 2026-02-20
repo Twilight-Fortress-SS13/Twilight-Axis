@@ -7,7 +7,7 @@
 	stage_prob = 2
 	spread_flags = DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN
 	disease_flags = CAN_CARRY | CAN_RESIST
-	infectivity = 20
+	infectivity = 10
 	severity = DISEASE_SEVERITY_MINOR
 	viable_mobtypes = list(/mob/living)
 	var/list/stat_mod_keys = null
@@ -130,12 +130,12 @@
 		H.vomit(1, blood = TRUE, stun = FALSE)
 		H.bleed(9)
 		H.adjustOxyLoss(2)
-	for(var/mob/living/carbon/human/target in oview(cough_range, H))
+	for(var/mob/living/carbon/human/target in oview(2, H))
 		if(target == H)
 			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
-		if(prob(20))
+		if(prob(10))
 			target.ForceContractDisease(src, TRUE, FALSE)
 	schedule_cough()
 

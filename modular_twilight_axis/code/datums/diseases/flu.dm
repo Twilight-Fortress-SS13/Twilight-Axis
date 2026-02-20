@@ -7,6 +7,7 @@
 	stage_prob = 2
 	spread_flags = DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN
 	disease_flags = CAN_CARRY | CAN_RESIST
+	infectivity = 10
 	severity = DISEASE_SEVERITY_MINOR
 	viable_mobtypes = list(/mob/living)
 	var/list/stat_mod_keys = null
@@ -129,7 +130,7 @@
 			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
-		if(prob(40))
+		if(prob(10))
 			target.ForceContractDisease(src, TRUE, FALSE)
 	schedule_cough()
 

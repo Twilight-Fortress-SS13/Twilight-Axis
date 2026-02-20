@@ -7,7 +7,7 @@
 	desc = "A degenerative disease that slowly rots away the patient's sight. Victims suffer from periodic blurring, color loss, and complete blindness."
 	max_stages = 1
 	stage_prob = 0
-	spread_flags = DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN
+	spread_flags = 0
 	disease_flags = CAN_CARRY | CAN_RESIST
 	severity = DISEASE_SEVERITY_MEDIUM
 	viable_mobtypes = list(/mob/living/carbon/human)

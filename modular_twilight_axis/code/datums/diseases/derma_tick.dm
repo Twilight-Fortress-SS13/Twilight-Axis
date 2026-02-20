@@ -67,7 +67,7 @@
 			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
-		if(prob(50))
+		if(prob(10))
 			target.ForceContractDisease(src, TRUE, FALSE)
 	schedule_itch()
 

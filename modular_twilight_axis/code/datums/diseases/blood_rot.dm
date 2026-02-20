@@ -275,7 +275,7 @@
 			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
-		if(prob(chance))
+		if(prob(10))
 			target.ForceContractDisease(src, TRUE, FALSE)
 
 /datum/disease/blood_rot/remove_disease()
