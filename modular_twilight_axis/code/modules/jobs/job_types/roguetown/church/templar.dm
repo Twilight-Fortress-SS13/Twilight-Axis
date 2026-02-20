@@ -19,6 +19,9 @@
 	. = ..()
 	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 	H.change_stat(STATKEY_STR, -1)
+	if(H.patron?.type == /datum/patron/divine/pestra)
+		mask = /obj/item/clothing/mask/rogue/physician
+		backpack_contents += list(/obj/item/book/rogue/disease_compendium)
 
 /datum/outfit/job/roguetown/templar/crusader/pre_equip(mob/living/carbon/human/H)
 	. = ..()
@@ -27,6 +30,9 @@
 	H.change_stat(STATKEY_INT, 1)
 	H.change_stat(STATKEY_SPD, 1)
 	H.change_stat(STATKEY_CON, 1)
+	if(H.patron?.type == /datum/patron/divine/pestra)
+		mask = /obj/item/clothing/mask/rogue/physician
+		backpack_contents += list(/obj/item/book/rogue/disease_compendium)
 
 /datum/advclass/templar/vigilant
 	name = "Vigilant"
@@ -121,7 +127,8 @@
 			head = /obj/item/clothing/head/roguetown/roguehood/phys
 			wrists = /obj/item/clothing/neck/roguetown/psicross/pestra
 			cloak = /obj/item/clothing/cloak/templar/pestran
-			mask = /obj/item/clothing/mask/rogue/facemask/steel
+			mask = /obj/item/clothing/mask/rogue/physician
+			backpack_contents += list(/obj/item/book/rogue/disease_compendium)
 		if(/datum/patron/divine/eora) //Eora content from stonekeep
 			head = /obj/item/clothing/head/roguetown/eoramask
 			wrists = /obj/item/clothing/neck/roguetown/psicross/eora

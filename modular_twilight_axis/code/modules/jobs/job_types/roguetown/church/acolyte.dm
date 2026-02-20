@@ -23,3 +23,6 @@
 				pants = /obj/item/clothing/under/roguetown/tights/black
 				belt = /obj/item/storage/belt/rogue/leather/cloth/lady
 				H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	if(H.patron?.type == /datum/patron/divine/pestra)
+		mask = /obj/item/clothing/mask/rogue/physician
+		backpack_contents += list(/obj/item/book/rogue/disease_compendium)
