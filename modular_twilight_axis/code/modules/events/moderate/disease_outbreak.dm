@@ -2,7 +2,7 @@
 	name = "Disease Outbreak"
 	track = EVENT_TRACK_MODERATE
 	typepath = /datum/round_event/disease_outbreak
-	weight = 6
+	weight = 4
 	max_occurrences = 4
 	min_players = 50
 	earliest_start = 12 MINUTES
