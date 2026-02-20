@@ -34,6 +34,7 @@ GLOBAL_LIST_EMPTY(prayers)
 	var/list/traits_tier = list()
 
 	var/datum/storyteller/storyteller
+	var/list/added_verbs
 
 /datum/patron/proc/on_gain(mob/living/pious)
 	for(var/trait in mob_traits)
@@ -43,14 +44,20 @@ GLOBAL_LIST_EMPTY(prayers)
 		pious.verbs += /mob/living/carbon/human/proc/emote_ffsalute
 	if (HAS_TRAIT(pious, TRAIT_CABAL))
 		pious.faction |= "cabal"
+		pious.grant_language(/datum/language/undead)
+	for(var/verb in added_verbs)
+		pious.verbs |= verb
 
 /datum/patron/proc/on_loss(mob/living/pious)
 	if (HAS_TRAIT(pious, TRAIT_CABAL))
 		pious.faction -= "cabal"
+		pious.remove_language(/datum/language/undead)
 	if(HAS_TRAIT(pious, TRAIT_XYLIX))
 		pious.remove_language(/datum/language/thievescant)
 	for(var/trait in mob_traits)
 		REMOVE_TRAIT(pious, trait, "[type]")
+	for(var/verb in added_verbs)
+		pious.verbs -= verb
 
 /datum/patron/proc/post_equip(mob/living/pious)
 	return

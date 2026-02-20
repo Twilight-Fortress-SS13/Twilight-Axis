@@ -65,7 +65,11 @@
 			usr.client.prefs.action_buttons_screen_locs["[name]_[id]"] = locked ? moved : null
 		return TRUE
 	if(modifiers["shift"])
-		examine_ui(usr)
+		var/datum/action/spell_action/SA = linked_action
+		if(istype(SA))
+			SA.examine(usr)
+		else
+			examine_ui(usr)
 		return TRUE
 	if(usr.next_click > world.time)
 		return
@@ -257,20 +261,17 @@
 	maptext_y = 4
 
 /atom/movable/screen/maptext_holder/proc/update_maptext(cd_time_deciseconds, color_cd = "#800000", color_neutral = "#ffffff")
-	animate(src, flags = ANIMATION_END_NOW)
-
-	// queue an animate for each decisecond remaining in click cooldown + 1
-	for(var/i in 1 to cd_time_deciseconds + 1)
-		var/decisceonds_left_this_iter = cd_time_deciseconds - i
-		var/displaytext = null
-		if(decisceonds_left_this_iter > 0)
-			displaytext = MAPTEXT("[round(decisceonds_left_this_iter / (1 SECONDS), 0.1)]s")
-
-		if(i == 1)
-			animate(src, maptext = displaytext, color = color_cd, 1)
-		else if(i == cd_time_deciseconds + 1)
-			animate(maptext = displaytext, color = color_neutral, 1)
-		else
-			animate(maptext = displaytext, 1)
+	if(cd_time_deciseconds <= 0)
+		maptext = null
+		color = color_neutral
+		return
+	var/seconds_left = round(cd_time_deciseconds / (1 SECONDS), 0.1)
+	if(seconds_left >= 60)
+		var/mins = round(seconds_left / 60)
+		var/secs = round(seconds_left) % 60
+		maptext = MAPTEXT("[mins]:[secs < 10 ? "0[secs]" : "[secs]"]")
+	else
+		maptext = MAPTEXT("[seconds_left]s")
+	color = color_cd
 
 #undef AB_MAX_COLUMNS

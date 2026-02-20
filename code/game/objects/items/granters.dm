@@ -96,6 +96,17 @@
 	user.log_message("learned the spell [spellname] ([S])", LOG_ATTACK, color="orange")
 	onlearned(user)
 
+/obj/item/book/granter/spell/attack_self(mob/living/user)
+	if(
+		!HAS_TRAIT(user, TRAIT_ARCYNE_T1) \
+		&& !HAS_TRAIT(user, TRAIT_ARCYNE_T2) \
+		&& !HAS_TRAIT(user, TRAIT_ARCYNE_T3) \
+		&& !HAS_TRAIT(user, TRAIT_ARCYNE_T4)
+	)
+		to_chat(user, span_danger("I don't know how to parse [src]. It hurts my head."))
+		return FALSE
+	..()
+
 /obj/item/book/granter/spell/random
 	icon_state = "random_book"
 
@@ -332,14 +343,6 @@ UNDER NO CIRCUMSTANCE SHOULD ANY OF THE BOOKS BE GIVEN OUT INTO SPAWNERS OR TO B
 	spellname = "Repel"
 	icon_state ="scrolldarkred"
 	remarks = list("Ventos adversos..", "Terra sibilat..", "Lapides vetusti..")
-	dreamcost = 6
-
-/obj/item/book/granter/spell/blackstone/aerosolize
-	name = "Scroll of Aerosolize"
-	spell = /obj/effect/proc_holder/spell/invoked/aerosolize
-	spellname = "Aerosolize"
-	icon_state ="scrolldarkred"
-	remarks = list("Lapides corrodunt..", "Spuma venenosa..", "Guttae flavescentes..")
 	dreamcost = 6
 
 /obj/item/book/granter/spell/blackstone/guidance

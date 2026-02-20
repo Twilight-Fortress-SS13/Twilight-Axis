@@ -39,3 +39,10 @@
 	shortname = "North"
 	credits = "Hakkerskaldyr"
 	musicpath = list('modular_twilight_axis/sound/music/combat_hakkerskaldyr.ogg')
+
+/datum/combat_music/tabaxi
+	name = "Desert Surfer"
+	desc = "Let the swift one win."
+	shortname = "Tabaxi"
+	credits = "La Caution Thé à la Menthe Instrumentale HQ Oceans Twelve"
+	musicpath = list('modular_twilight_axis/sound/music/combat_tabaxi.ogg')
