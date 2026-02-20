@@ -82,10 +82,10 @@
 	if(stage == 1 && world.time - infected_time >= rand(3 MINUTES, 4 MINUTES))
 		update_stage(2)
 		apply_stage_effects(H, 2)
-	else if(stage == 2 && stage2_time && world.time - stage2_time >= rand(5 MINUTES, 6 MINUTES))
+	else if(stage == 2 && stage2_time && world.time - stage2_time >= rand(15 MINUTES, 25 MINUTES))
 		update_stage(3)
 		apply_stage_effects(H, 3)
-	else if(stage == 3 && stage3_time && world.time - stage3_time >= rand(15 MINUTES, 20 MINUTES))
+	else if(stage == 3 && stage3_time && world.time - stage3_time >= rand(30 MINUTES, 40 MINUTES))
 		update_stage(4)
 		apply_stage_effects(H, 4)
 	
