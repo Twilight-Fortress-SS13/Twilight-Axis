@@ -22,10 +22,13 @@
 //		objectives += escape_objective
 //		return
 	ADD_TRAIT(owner.current, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
+	ADD_TRAIT(owner.current, TRAIT_VIRUSIMMUNE, "[type]")
+	owner.current.cure_all_diseases(FALSE)
 	return ..()
 
 /datum/antagonist/skeleton/on_removal()
 	REMOVE_TRAIT(owner.current, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
+	REMOVE_TRAIT(owner.current, TRAIT_VIRUSIMMUNE, "[type]")
 	return ..()
 
 /datum/antagonist/skeleton/greet()

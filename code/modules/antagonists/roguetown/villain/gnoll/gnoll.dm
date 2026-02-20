@@ -31,6 +31,7 @@
 	owner.special_role = "Gnoll"
 	if(owner.current)
 		ADD_TRAIT(owner.current, TRAIT_VIRUSIMMUNE, "[type]")
+		owner.current.cure_all_diseases(FALSE)
 
 	return ..()
 

@@ -597,6 +597,8 @@
 
 /mob/living/proc/ForceContractDisease(datum/disease/D, make_copy = TRUE, del_on_fail = FALSE)
 	if(!CanContractDisease(D))
+		if(HAS_TRAIT(src, TRAIT_VIRUSIMMUNE) && length(diseases))
+			cure_all_diseases(FALSE)
 		if(del_on_fail)
 			qdel(D)
 		return FALSE
@@ -606,9 +608,18 @@
 		return FALSE
 	return TRUE
 
+/mob/living/proc/cure_all_diseases(add_resistance = FALSE)
+	if(!length(diseases))
+		return 0
+	var/cured_count = 0
+	for(var/datum/disease/D in diseases.Copy())
+		cured_count++
+		D.cure(add_resistance)
+	return cured_count
+
 /mob/living/carbon/human/CanContractDisease(datum/disease/D)
 	if(dna)
-		if(HAS_TRAIT(src, TRAIT_VIRUSIMMUNE) && !D.bypasses_immunity)
+		if(HAS_TRAIT(src, TRAIT_VIRUSIMMUNE))
 			return FALSE
 	for(var/thing in D.required_organs)
 		if(!((locate(thing) in bodyparts) || (locate(thing) in internal_organs)))

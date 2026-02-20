@@ -107,6 +107,7 @@
 
 /datum/species/werewolf/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
+	C.cure_all_diseases(FALSE)
 	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 
 /datum/species/werewolf/update_damage_overlays(mob/living/carbon/human/H)

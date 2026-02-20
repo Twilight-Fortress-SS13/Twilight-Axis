@@ -28,7 +28,8 @@
 		TRAIT_NOHUNGER,
 		TRAIT_BLOODLOSS_IMMUNE,
 		TRAIT_NOBREATH,
-		TRAIT_ZOMBIE_IMMUNE
+		TRAIT_ZOMBIE_IMMUNE,
+		TRAIT_VIRUSIMMUNE
 		)
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | SLIME_EXTRACT
 	limbs_icon_m = 'icons/roguetown/mob/bodies/m/mcom.dmi'
@@ -99,6 +100,10 @@
 
 /datum/species/construct/metal/check_roundstart_eligible()
 	return TRUE
+
+/datum/species/construct/metal/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+	. = ..()
+	C.cure_all_diseases(FALSE)
 	
 /datum/species/construct/metal/get_skin_list()
 	return list(

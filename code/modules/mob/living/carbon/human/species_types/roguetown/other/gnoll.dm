@@ -83,6 +83,7 @@
 
 /datum/species/gnoll/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
+	C.cure_all_diseases(FALSE)
 	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 	C.icon_state = "firepelt"
 	C.base_pixel_x = -8

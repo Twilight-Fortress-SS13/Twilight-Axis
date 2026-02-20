@@ -52,6 +52,7 @@
 	SSmapping.retainer.liches |= owner
 	. = ..()
 	owner.special_role = name
+	owner.current.cure_all_diseases(FALSE)
 	skele_look()
 	equip_lich()
 	greet()
@@ -230,6 +231,8 @@
 
 	for (var/trait in traits_lich)
 		ADD_TRAIT(body, trait, "[type]")
+
+	body.cure_all_diseases(FALSE)
 
 /datum/antagonist/lich/proc/rise_anew()
 	if (!owner.current.mind)

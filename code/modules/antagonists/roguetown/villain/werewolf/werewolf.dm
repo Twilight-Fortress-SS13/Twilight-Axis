@@ -68,6 +68,7 @@
 	owner.special_role = name
 	if(owner.current)
 		ADD_TRAIT(owner.current, TRAIT_VIRUSIMMUNE, "[type]")
+		owner.current.cure_all_diseases(FALSE)
 	if(increase_votepwr)
 		forge_werewolf_objectives()
 	

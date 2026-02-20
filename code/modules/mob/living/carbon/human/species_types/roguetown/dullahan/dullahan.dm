@@ -26,7 +26,7 @@
 	is_subrace = TRUE
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,STUBBLE,OLDGREY,MUTCOLORS)
 	default_features = MANDATORY_FEATURE_LIST
-	inherent_traits = list(TRAIT_EASYDECAPITATION, TRAIT_NOHUNGER, TRAIT_NOBREATH, TRAIT_ZOMBIE_IMMUNE) //Given the deathless traits inherently as part of their nature as pseudo-undead.
+	inherent_traits = list(TRAIT_EASYDECAPITATION, TRAIT_NOHUNGER, TRAIT_NOBREATH, TRAIT_ZOMBIE_IMMUNE, TRAIT_VIRUSIMMUNE) //Given the deathless traits inherently as part of their nature as pseudo-undead.
 	use_skintones = TRUE
 	disliked_food = NONE
 	liked_food = NONE
@@ -251,6 +251,7 @@
 // I don't know if that is possible, may have some cases relating to eye signals.
 /datum/species/dullahan/on_species_gain(mob/living/carbon/user, datum/species/old_species)
 	..()
+	user.cure_all_diseases(FALSE)
 	RegisterSignal(user, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 	RegisterSignal(user, COMSIG_MOB_SAY_POSTPROCESS, PROC_REF(on_say_postprocess))
 	// TODO SEXCON2: Re-enable Dullahan detached head ERP support

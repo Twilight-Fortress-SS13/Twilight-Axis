@@ -75,6 +75,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	owner.special_role = name
 	if(owner.current)
 		ADD_TRAIT(owner.current, TRAIT_VIRUSIMMUNE, "[type]")
+		owner.current.cure_all_diseases(FALSE)
 	owner.current.adjust_bloodpool()
 	max_thralls = initial(max_thralls)
 	if(ishuman(owner.current))
