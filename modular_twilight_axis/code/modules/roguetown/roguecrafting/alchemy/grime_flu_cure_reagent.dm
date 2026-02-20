@@ -12,10 +12,12 @@
 /datum/reagent/medicine/grime_flu_cure/on_mob_life(mob/living/carbon/M)
 	if(volume > 0.99)
 		for(var/thing in M.diseases)
-			var/datum/disease/D = thing
-			if(istype(D, /datum/disease/grime_flu) && prob(10))
+			var/datum/disease/grime_flu/D = thing
+			if(istype(D) && prob(10))
 				if(D.stage > 1)
-					D.update_stage(max(D.stage - 1, 1))
+					var/target_stage = max(D.stage - 1, 1)
+					D.update_stage(target_stage)
+					D.apply_stage_effects(M, D.stage)
 					to_chat(M, span_notice("My fever eases, but I still feel ill."))
 				else
 					D.cure()

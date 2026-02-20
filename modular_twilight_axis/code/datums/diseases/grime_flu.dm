@@ -7,6 +7,7 @@
 	stage_prob = 2
 	spread_flags = DISEASE_SPREAD_CONTACT_FLUIDS | DISEASE_SPREAD_CONTACT_SKIN
 	disease_flags = CAN_CARRY | CAN_RESIST
+	infectivity = 20
 	severity = DISEASE_SEVERITY_MINOR
 	viable_mobtypes = list(/mob/living)
 	var/list/stat_mod_keys = null
@@ -39,11 +40,11 @@
 			update_stage(2)
 	else if(stage == 2)
 		stage_prob = 0
-		if(stage2_time && world.time - stage2_time >= 4 MINUTES)
+		if(stage2_time && world.time - stage2_time >= 10 MINUTES)
 			update_stage(3)
 	else if(stage == 3)
 		stage_prob = 0
-		if(stage3_time && world.time - stage3_time >= 6 MINUTES)
+		if(stage3_time && world.time - stage3_time >= 15 MINUTES)
 			stage_prob = 0.5
 	else
 		stage_prob = 1
@@ -69,7 +70,7 @@
 	// Stage 3 additional symptoms
 	if(stage >= 3)
 		if(DT_PROB(6, delta_time))
-			H.adjustBruteLoss(rand(10, 15))
+			H.adjustBruteLoss(rand(1, 2))
 			to_chat(H, span_danger("Тело ломит, и меня пробивает сильная слабость."))
 		if(DT_PROB(5, delta_time))
 			H.Knockdown(rand(10, 20))
@@ -112,7 +113,7 @@
 	if(cough_scheduled)
 		return
 	cough_scheduled = TRUE
-	cough_timer = addtimer(CALLBACK(src, PROC_REF(cough_tick)), rand(5, 15) SECONDS, TIMER_STOPPABLE)
+	cough_timer = addtimer(CALLBACK(src, PROC_REF(cough_tick)), rand(10, 30) SECONDS, TIMER_STOPPABLE)
 
 /datum/disease/grime_flu/proc/cough_tick()
 	cough_scheduled = FALSE
@@ -132,7 +133,7 @@
 			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
-		if(prob(40))
+		if(prob(20))
 			target.ForceContractDisease(src, TRUE, FALSE)
 	schedule_cough()
 
@@ -153,12 +154,16 @@
 			stats[STATKEY_SPD] = -1
 			stats[STATKEY_CON] = -1
 			stats[STATKEY_WIL] = -2
+			infected_time = world.time
+			stage2_time = 0
+			stage3_time = 0
 		if(2)
 			stats[STATKEY_PER] = -2
 			stats[STATKEY_SPD] = -3
 			stats[STATKEY_CON] = -2
 			stats[STATKEY_WIL] = -4
 			stage2_time = world.time
+			stage3_time = 0
 		if(3)
 			stats[STATKEY_STR] = -3
 			stats[STATKEY_SPD] = -8
