@@ -87,6 +87,16 @@ body {
 }
 
 @font-face {
+	font-family: "ZCOOL XiaoWei";
+	src: url("lingyuese.ttf");
+}
+
+@font-face {
+	font-family: "ArkansasDB";
+	src: url("otavan.ttf");
+}
+
+@font-face {
 	font-family: "Sangha Kali";
 	src: url("gyedzai.otf");
 }
@@ -825,6 +835,10 @@ h2.alert {
 .elf {
 	font-family: "MarkScript-Regular", cursive, "Mookmania";
 }
+.oldazure{
+	font-family: "BaggageMasterText79 ttcon", "Pterra";
+	font-size: 110%;
+}
 .dwarf {
 	font-family: "Celtes SP", "Mookmania";
 }
@@ -860,6 +874,9 @@ h2.alert {
 }
 .gyedzenese {
 	font-family: "Sangha Kali", Mookmania;
+}
+.lingyuese {
+	font-family: "ZCOOL XiaoWei", Pterra;
 }
 .orc {
 	font-family: "VizaviTYGRA", "Mookmania";

@@ -194,12 +194,23 @@
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
-//pretzel's special sword
+//pretzel's special things
 /obj/item/rogueweapon/greatsword/weeperslathe
 	name = "Weeper's Lathe"
 	desc = "A recreation of a gilbronze greatsword, wrought in steel. Inscribed on the blade is a declaration: \"I HAVE ONLY A SHORT TYME TO LYVE, BUT I AM NOT AFRAID TO DIE.\""
 	icon_state = "weeperslathe"
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/clothing/head/roguetown/duelhat/pretzel
+	name = "rethrifted gravedigger's hat" 
+	desc = "A gravetender's dark leather slouch, refitted with a golden dragon-sigil. Who needs a steel skullcap when you have dumb luck? <br> \
+	\"You ever feel like nothin' good was ever gonna happen to you?\" <br> \
+	\"Yeah, and nothin' did. So what?\""
+	color = null
+	icon_state = "pretzel_stolenhat"
+	item_state = "pretzel_stolenhat"
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 
 //inverserun's claymore
 /obj/item/rogueweapon/greatsword/zwei/inverserun
@@ -326,6 +337,29 @@
 	desc = "A bamboo hat, made from shaven rice straw and woven into place alongside a coating of lacquer. This particular hat seems worn with age, yet well maintained. The phrase, '葉隠' can be seen stitched in gold in the inner lining of the hat."
 	armor = ARMOR_CLOTHING
 
+/obj/item/rogueweapon/spear/naginata/koruu
+	name = "Sixty Five Yils"
+	desc = "A beautiful guandao forged out of steel and interlocked with blacksteel, much like few blades before. The inscription, 'At fifteen, I went to join the army; only at eighty was I finally able to return home.' is inscribed in gold into the haft of the guandao."
+	icon_state = "koruu_naginata"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/spear/naginata/koruu/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.6,"sx" = -7,"sy" = 2,"nx" = 7,"ny" = 3,"wx" = -2,"wy" = 1,"ex" = 1,"ey" = 1,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -38,"sturn" = 37,"wturn" = 30,"eturn" = -30,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+			if("wielded")
+				return list("shrink" = 0.6,"sx" = 3,"sy" = 4,"nx" = -1,"ny" = 4,"wx" = -8,"wy" = 3,"ex" = 7,"ey" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 15,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
+			if("onback")
+				return list("shrink" = 0.5,"sx" = -1,"sy" = 2,"nx" = 0,"ny" = 2,"wx" = 2,"wy" = 1,"ex" = 0,"ey" = 1,"nturn" = 0,"sturn" = 0,"wturn" = 70,"eturn" = 15,"nflip" = 1,"sflip" = 1,"wflip" = 1,"eflip" = 1,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
+
+/obj/item/rogueweapon/halberd/glaive/koruu
+	name = "Sixty Five Yils"
+	desc = "A beautiful guandao forged out of steel and interlocked with blacksteel, much like few blades before. The inscription, 'At fifteen, I went to join the army; only at eighty was I finally able to return home.' is inscribed in gold into the haft of the guandao."
+	icon_state = "koruu_glaive"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
 //DAKKEN12
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken
 	name = "armoured avantyne barbute"
@@ -333,3 +367,29 @@
 	icon_state = "dakken_zizbarb"
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+
+//STINKETHSTONKETH
+/obj/item/rogueweapon/sword/sabre/steppesman/stinketh
+	name = "fencer's shashka"
+	desc = "A heirloom shashka with guardless hilt plated in silver and adorned  with a Mamuk hide grip. A sabre's blade has been added in place of the old one, affording it lethality and reach whilst dismounted."
+	icon_state = "stinketh_shashka"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/sword/sabre/freifechter/stinketh
+	name = "fencer's shashka"
+	desc = "A heirloom shashka with guardless hilt plated in silver and adorned  with a Mamuk hide grip. A sabre's blade has been added in place of the old one, affording it lethality and reach whilst dismounted."
+	icon_state = "stinketh_shashka"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/spear/boar/frei/pike/stinketh
+	name = "Kindness of Ravens Standard"
+	desc = "A Freifechter's steel pike with a reinforced spruce shaft sporting a black banner with a strange blend of religious symbols."
+	icon_state = "stinkethbanner"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+//DRD21
+/obj/item/rogueweapon/sword/long/drd
+	name = "ornate basket-hilted longsword"
+	desc = "A longsword, fitten with a basket-hilt. The grip is made out of a fine green-stained leather, with a piece of spiral-cared walnut connecting it to a lion-shaped pommel. A purple glowing rune sits atop the blade."
+	icon_state = "drd_lsword"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'

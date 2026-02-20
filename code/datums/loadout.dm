@@ -949,6 +949,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Eoran Caparison"
 	path = /obj/item/caparison/eora
 
+/datum/loadout_item/caparison/fogbeast
+	name = "Fogbeast Caparison"
+	path = /obj/item/caparison/fogbeast
+
 //////////////////
 //  TRIUMPHS !  //
 //////////////////
@@ -1470,6 +1474,30 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/jagerrifle
 	donatitem = TRUE
 
+/datum/loadout_item/donator_stinketh_shashka
+	name = "Donator Kit - Fencer's Shashka - Required: Szöréndnížine Sabre Or Aavnic Shashka"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/stinketh_shashka
+	donatitem = TRUE
+
+/datum/loadout_item/donator_stinketh_pike
+	name = "Donator Kit - Kindness of Ravens Standard - Required: Banner Of Szöréndnížina"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/stinketh_pike
+	donatitem = TRUE
+
+/datum/loadout_item/donator_koruu_glaive
+	name = "Donator Kit - Sixty Five Yils - Required: Glaive Or Naginata"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/koruu_glaive
+	donatitem = TRUE
+
+/datum/loadout_item/donator_drd_lsword
+	name = "Donator Kit - Ornate Longsword - Required: Longsword"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/drd_lsword
+	donatitem = TRUE
+
 // Разное
 /datum/loadout_item/donat
 	name = "Музыкальная коробка"
@@ -1775,6 +1803,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	ckeywhitelist = list("imony", "uedhighcommand")
 
+/datum/loadout_item/donat/cloak_twilight_desert
+	name = "Зибантийская накидка"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/twilight_desert
+	donatitem = TRUE
+
 // Маски
 
 /datum/loadout_item/donat/naledimask
@@ -1930,7 +1964,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/aria_necklace
 	name = "Aria necklace"
 	category = list("Донат")
-	path = /obj/item/clothing/neck/roguetown/leather/aria
+	path = /obj/item/clothing/mask/rogue/facemask/aria
 	donatitem = TRUE
 	ckeywhitelist = list("mrix")
 

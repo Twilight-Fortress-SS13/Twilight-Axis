@@ -3,7 +3,8 @@
 	domain = "Progress, Undeath, Hubris, Left Hand Magicks"
 	desc = "A once-mortal snow elf turned god. Her hubris in thinking she could harvest lux from the planet itself led to the elimination of her entire race. Her works are still used to this dae in some cases."
 	worshippers = "Necromancers, Researchers, Warlocks, and the Undead"
-	mob_traits = list(TRAIT_CABAL, TRAIT_ZIZOSIGHT)
+	traits_tier = list(TRAIT_ZIZOSIGHT = CLERIC_T1)
+	mob_traits = list(TRAIT_CABAL, TRAIT_GRAVEROBBER)
 	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison					= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/self/zizo_snuff						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/lesser_heal 					= CLERIC_T1,
@@ -21,6 +22,10 @@
 		"ZIZO IS QUEEN!",
 	)
 	storyteller = /datum/storyteller/zizo
+	added_verbs = list(
+		/mob/living/carbon/human/proc/draw_sigil,
+		/mob/living/carbon/human/proc/praise,
+	)
 
 /datum/patron/inhumen/zizo/post_equip(mob/living/pious)
 	. = ..()
@@ -33,6 +38,7 @@
 // When the sun is blotted out, zchurch, bad-cross, or ritual chalk
 /datum/patron/inhumen/zizo/can_pray(mob/living/follower)
 	. = ..()
+	var/turf/T = get_turf(follower)
 	// Allows prayer in the Zzzzzzzurch(!)
 	if(istype(get_area(follower), /area/rogue/under/cave/inhumen))
 		return TRUE
@@ -51,7 +57,11 @@
 	// Allows praying atop ritual chalk of the god.
 	for(var/obj/structure/ritualcircle/zizo in view(1, get_turf(follower)))
 		return TRUE
-	to_chat(follower, span_danger("For Zizo to hear my prayers I must either be in the church of the abandoned, near an inverted psycross, atop a drawn Zizite symbol, or while the sun is blotted from the sky!"))
+	
+	if(locate(/obj/effect/decal/cleanable/sigil) in T)
+		return TRUE
+	
+	to_chat(follower, span_danger("For Zizo to hear my prayers I must either be in the church of the abandoned, near an inverted psycross, atop a drawn Zizite symbol, stand in sigil, or while the sun is blotted from the sky!"))
 	return FALSE
 
 /datum/patron/inhumen/zizo/on_lesser_heal(

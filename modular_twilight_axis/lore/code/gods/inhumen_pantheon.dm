@@ -86,6 +86,7 @@
 		var/mob/living/carbon/human/human = pious
 		if(human.mind)
 			human.mind.special_items["Lexicon of Her Truth"] = /obj/item/book/rogue/bibble/zizo
+			human.mind.special_items["Ritual's guide book"] = /obj/item/recipe_book/zizo
 
 /datum/patron/inhumen/graggar
 	name = "Graggar"

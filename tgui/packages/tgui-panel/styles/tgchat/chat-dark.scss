@@ -631,6 +631,10 @@ h2.alert {
 .elf {
   font-family: 'MarkScript-Regular', cursive, 'Mookmania';
 }
+.oldazure{
+	font-family: "BaggageMasterText79 ttcon", "Pterra";
+  font-size: 110%;
+}
 .dwarf {
   font-family: 'Celtes SP', 'Mookmania';
 }
@@ -663,6 +667,9 @@ h2.alert {
 }
 .kazengunese {
   font-family: 'Ganesha Type', Mookmania;
+}
+.lingyuese {
+  font-family: 'ZCOOL XiaoWei', Pterra;
 }
 .orc {
   font-family: 'VizaviTYGRA', 'Mookmania';
@@ -898,4 +905,22 @@ h2.alert {
 .mentor_block {
 	background: #3e263a;
 	border: 1px dotted #7f4274;
+}
+
+/* TA EDIT */
+
+.reallybigredtext {
+	font-size: 24px !important;
+	font-weight: bold !important;
+	color: #ff0000 !important;
+	text-shadow: 0 0 8px #ff0000, 0 0 16px #ff0000;
+	display: block;
+	text-align: center;
+	margin: 10px 0;
+	animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+	from { opacity: 0.7; }
+	to { opacity: 1; }
 }

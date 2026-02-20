@@ -208,10 +208,16 @@
 		new_player.ready = PLAYER_READY_TO_PLAY
 		base_icon_state = "ready"
 		log_game("([usr ? usr.key : "NO KEY"]) readied as ([usr.client?.prefs?.real_name])")
+		GLOB.ready_player_list += new_player.ckey
 	else
 		new_player.ready = PLAYER_NOT_READY
 		base_icon_state = "not_ready"
+		GLOB.ready_player_list -= new_player.ckey
 	//update_appearance(UPDATE_ICON)
+	update_bandits_slots()
+	update_wretch_slots()
+	update_mercenary_slots()
+	update_adventurer_slots()
 	vand_update_appearance(UPDATE_ICON)
 	SEND_SIGNAL(hud, COMSIG_HUD_PLAYER_READY_TOGGLE)
 

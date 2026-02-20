@@ -7,6 +7,8 @@
 	var/mergeable_decal = TRUE //when two of these are on a same tile or do we need to merge them into just one?
 	var/beauty = 0
 	obj_flags = CAN_BE_HIT
+	///The type of cleaning required to clean the decal. See __DEFINES/cleaning.dm for the options
+	var/clean_type = CLEAN_TYPE_LIGHT_DECAL
 
 /obj/effect/decal/cleanable/Initialize(mapload)
 	. = ..()

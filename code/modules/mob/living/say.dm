@@ -170,7 +170,6 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	if(!language)
 		language = get_default_language()
-
 	// Detection of language needs to be before inherent channels, because
 	// AIs use inherent channels for the holopad. Most inherent channels
 	// ignore the language argument however.
@@ -524,7 +523,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 				if(Zs_all)
 					chance += 20
 				if(prob(chance))
-					H.sate_addiction()
+					H.sate_addiction(/datum/charflaw/addiction/clamorous)
 		var/atom/movable/tocheck = AM
 		if(isdullahan(AM))
 			var/mob/living/carbon/human/target = AM

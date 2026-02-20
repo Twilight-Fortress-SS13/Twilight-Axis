@@ -135,6 +135,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["be_special"] 		>> be_special
 	S["triumphs"]			>> triumphs
 	S["musicvol"]			>> musicvol
+	S["lobbymusicvol"]		>> lobbymusicvol
+	S["ambiencevol"]		>> ambiencevol
 	S["anonymize"]			>> anonymize
 	S["masked_examine"]		>> masked_examine
 	S["full_examine"]		>> full_examine
@@ -261,6 +263,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["asaycolor"], asaycolor)
 	WRITE_FILE(S["triumphs"], triumphs)
 	WRITE_FILE(S["musicvol"], musicvol)
+	WRITE_FILE(S["lobbymusicvol"], lobbymusicvol)
+	WRITE_FILE(S["ambiencevol"], ambiencevol)
 	WRITE_FILE(S["anonymize"], anonymize)
 	WRITE_FILE(S["masked_examine"], masked_examine)
 	WRITE_FILE(S["full_examine"], full_examine)
@@ -343,14 +347,19 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		S["race_bonus"] >> race_bonus
 
 /datum/preferences/proc/_load_flaw(S)
-	var/charflaw_type
-	S["charflaw"]			>> charflaw_type
-	if(charflaw_type)
-		charflaw = new charflaw_type()
+	charflaws = list()
+	var/list/charflaw_types
+	S["charflaws"] >> charflaw_types
+	if(charflaw_types && length(charflaw_types))
+		for(var/flaw_type in charflaw_types)
+			if(flaw_type)
+				charflaws.Add(new flaw_type())
+	// Backwards compatibility: load old single charflaw format
 	else
-		charflaw = pick(GLOB.character_flaws)
-		charflaw = GLOB.character_flaws[charflaw]
-		charflaw = new charflaw()
+		var/charflaw_type
+		S["charflaw"] >> charflaw_type
+		if(charflaw_type)
+			charflaws.Add(new charflaw_type())
 
 /datum/preferences/proc/_load_culinary_preferences(S)
 	var/list/loaded_culinary_preferences
@@ -374,8 +383,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 /datum/preferences/proc/_load_virtue(S)
 	var/virtue_type
 	var/virtuetwo_type
+	var/origin_type
 	S["virtue"] >> virtue_type
 	S["virtuetwo"] >> virtuetwo_type
+	S["virtue_origin"] >> origin_type
 	if (virtue_type)
 		virtue = new virtue_type()
 	else
@@ -385,6 +396,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		virtuetwo = new virtuetwo_type
 	else
 		virtuetwo = new /datum/virtue/none
+	
+	if(origin_type)
+		virtue_origin = new origin_type
+	else
+		virtue_origin = new /datum/virtue/none
 
 /datum/preferences/proc/_load_loadout(S)
 	S["selected_loadout_items"] >> selected_loadout_items
@@ -709,7 +725,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["uplink_loc"]			, uplink_spawn_loc)
 	WRITE_FILE(S["randomise"]			, randomise)
 	WRITE_FILE(S["species"]				, pref_species.name)
-	WRITE_FILE(S["charflaw"]			, charflaw.type)
+	var/list/charflaw_types = list()
+	for(var/datum/charflaw/cf in charflaws)
+		charflaw_types.Add(cf.type)
+	WRITE_FILE(S["charflaws"]			, charflaw_types)
 	WRITE_FILE(S["feature_mcolor"]		, features["mcolor"])
 	WRITE_FILE(S["feature_mcolor2"]		, features["mcolor2"])
 	WRITE_FILE(S["feature_mcolor3"]		, features["mcolor3"])
@@ -774,6 +793,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["statpack"] , statpack.type)
 	WRITE_FILE(S["virtue"] , virtue.type)
 	WRITE_FILE(S["virtuetwo"], virtuetwo.type)
+	WRITE_FILE(S["virtue_origin"], virtue_origin.type)
 	WRITE_FILE(S["race_bonus"], race_bonus)
 	WRITE_FILE(S["combat_music"], combat_music.type)
 	WRITE_FILE(S["body_size"] , features["body_size"])

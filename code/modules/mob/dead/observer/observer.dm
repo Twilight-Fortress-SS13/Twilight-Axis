@@ -65,7 +65,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 /mob/dead/observer/rogue
 //	see_invisible = SEE_INVISIBLE_LIVING
 	sight = 0
-	see_in_dark = 2
+	see_in_dark = 10
 	var/next_gmove
 	var/misting = 0
 	draw_icon = TRUE
@@ -82,7 +82,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 /mob/dead/observer/rogue/Move(n, direct)
 	if(world.time < next_gmove)
 		return
-	next_gmove = world.time + 2
+	next_gmove = world.time + 1
 
 	setDir(direct)
 
@@ -105,6 +105,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 
 /mob/dead/observer/Initialize()
 	set_invisibility(GLOB.observer_default_invisibility)
+	set_glide_size(DELAY_TO_GLIDE_SIZE(3)) // 6 is atom/movable animation speed TA EDIT
 
 	verbs += list(
 		/mob/dead/observer/proc/dead_tele,
@@ -586,8 +587,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	set name = "Teleport"
 	set desc= "Teleport to a location"
 	set hidden = 1
-	if(!check_rights(R_WATCH))
-		return
 	if(!isobserver(usr))
 		to_chat(usr, span_warning("Not when you're not dead!"))
 		return
@@ -669,8 +668,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	set name = "Jump to Mob"
 	set desc = ""
 	set hidden = 1
-	if(!check_rights(R_WATCH))
-		return
+
 	if(isobserver(usr)) //Make sure they're an observer!
 
 

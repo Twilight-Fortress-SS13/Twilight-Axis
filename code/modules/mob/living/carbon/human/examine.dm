@@ -32,6 +32,7 @@
 	var/t_is = p_are()
 	var/obscure_name = FALSE
 	var/race_name = "<a href='?src=[REF(src)];species_lore=1'><u>[dna.species.name]</u></A> "
+	var/origin_name = "<a href='?src=[REF(src)];origin_lore=1'><u>[dna.species.origin]</u></A>"
 	var/datum/antagonist/maniac/maniac = user.mind?.has_antag_datum(/datum/antagonist/maniac)
 	var/datum/antagonist/skeleton/skeleton = user.mind?.has_antag_datum(/datum/antagonist/skeleton)
 	if(maniac && (user != src))
@@ -91,6 +92,36 @@
 			. = list(span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
 		else
 			. = list(span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
+
+		//Origins
+		var/pronoun	//They / Their
+		if(!dna.species.use_skin_tone_wording_for_examine)
+			if(user == src)
+				pronoun = "I"
+			else
+				pronoun = capitalize(p_they(TRUE))
+		else
+			pronoun = capitalize(m2)
+		var/wording = (dna.species.use_skin_tone_wording_for_examine ? "[lowertext(dna.species.skin_tone_wording)]" : "hail[(user == src) ? "" : "s"] from")	//Ancestry / Tribe or hails from
+		var/origin
+		if(dna.species.use_skin_tone_wording_for_examine)
+			if(dna.species.origin == "Unknown")
+				origin = span_bold("is implacable..")
+			else
+				origin = "originates in [origin_name]"
+		else
+			if(dna.species.origin == "Unknown")
+				origin = span_bold("nowhere..")
+			else
+				origin = dna.species.origin
+		var/astratan_symbol
+		var/astratan_tooltip
+		if(HAS_TRAIT(user, TRAIT_ASTRATAN_AFFINITY) && get_dist(user, src) <= 2)
+			if(!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))	//Guarded virtue protects from this
+				if(issunelf(src) || patron?.type == /datum/patron/divine/astrata)
+					astratan_symbol = icon2html('icons/misc/language.dmi', world, "celestial")
+					astratan_tooltip = SPAN_TOOLTIP("One of Astrata's [issunelf(src) ? "chosen" : "followers"]", astratan_symbol)
+		. += span_info("[pronoun] [wording] [origin]. [astratan_tooltip]")	//"He hails from [X / Nowhere]" || "His [word] originates from [X]" || "His [word] is implacable..."
 
 		if(HAS_TRAIT(src, TRAIT_WITCH))
 			if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_WITCH))
@@ -213,10 +244,10 @@
 				if(ishuman(user))
 					if(has_flaw(/datum/charflaw/addiction/paranoid))
 						. += span_nicegreen("[m1] is the kind who sticks to their own. I understand.")
-						user.sate_addiction()
+						user.sate_addiction(/datum/charflaw/addiction/paranoid)
 					else if(pflaw.check_faction(src))
 						. += span_nicegreen("One of my own.")
-						user.sate_addiction()
+						user.sate_addiction(/datum/charflaw/addiction/paranoid)
 					else
 						user.add_stress(/datum/stressevent/paracrowd)
 
@@ -235,9 +266,12 @@
 					user.add_stress(/datum/stressevent/averse)
 					. += span_secradio("One of <b>them...</b>")
 
-			if(user.has_flaw(/datum/charflaw/addiction/voyeur) && has_flaw(/datum/charflaw/addiction) && get_dist(src, user) <= 3)
-				var/flawname = charflaw?.voyeur_descriptor ? charflaw?.voyeur_descriptor : charflaw?.name
-				. += span_voyeurvice("[m1] [flawname]...")
+			if(user.has_flaw(/datum/charflaw/addiction/voyeur) && get_dist(src, user) <= 3)
+				if(charflaws.len)
+					var/list/vice_desc = list()
+					for(var/datum/charflaw/cf in charflaws)
+						vice_desc.Add(cf.voyeur_descriptor)
+					. += span_voyeurvice("[m1][english_list(vice_desc)]...")
 
 			if(HAS_TRAIT(user, TRAIT_EMPATH) && HAS_TRAIT(src, TRAIT_PERMAMUTE))
 				. += span_notice("[m1] lacks a voice. [m1] is a mute!")
@@ -258,7 +292,7 @@
 		if (HAS_TRAIT(src, TRAIT_LEPROSY))
 			. += span_necrosis("A LEPER...")
 
-		if (HAS_TRAIT(src, TRAIT_BEAUTIFUL))
+		if (HAS_TRAIT(src, TRAIT_BEAUTIFUL) || (issunelf(src) && issunelf(user)))
 			switch (pronouns)
 				if (HE_HIM, SHE_HER_M)
 					. += span_beautiful_masc("[m1] handsome!")
@@ -1022,12 +1056,12 @@
 	if(HAS_TRAIT(src, TRAIT_COMMIE) && HAS_TRAIT(examiner, TRAIT_COMMIE))
 		heretic_text += "♠"
 	//Defunct as of *fsalute changes, leaving here as a symbol reference.
-	/*else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
+	else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
 		heretic_text += "♦"
 	else if(HAS_TRAIT(src, TRAIT_HORDE) && HAS_TRAIT(examiner, TRAIT_HORDE))
 		heretic_text += "♠"
 	else if(HAS_TRAIT(src, TRAIT_DEPRAVED) && HAS_TRAIT(examiner, TRAIT_DEPRAVED))
-		heretic_text += "♥"*/
+		heretic_text += "♥"
 
 	return heretic_text
 
@@ -1081,7 +1115,8 @@
 				villain_text += span_userdanger("A MONSTER!")
 		if(mind.assigned_role == "Lunatic")
 			villain_text += span_userdanger("LUNATIC!")
-
+	if(HAS_TRAIT(src, TRAIT_ZIZOEYES))
+		villain_text += span_userdanger("Their eyes send chills down your spine...")
 	return villain_text
 
 /proc/get_blade_dulling_text(obj/item/rogueweapon/I, verbose = FALSE)
