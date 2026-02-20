@@ -270,11 +270,15 @@
 	. = ..()
 	if(user.wear_mask == src)
 		worn = TRUE
+		ADD_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
+		to_chat(user, span_notice("The confessor mask protects me from plague contact transmission."))
 
 /obj/item/clothing/mask/rogue/facemask/steel/confessor/dropped(mob/user)
 	. = ..()
 	if(worn)
 		playsound(user, 'sound/items/confessormaskoff.ogg', 80)
+		REMOVE_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
+		to_chat(user, span_notice("I remove the confessor mask's protection."))
 		worn = FALSE
 
 /obj/item/clothing/mask/rogue/facemask/steel/confessor/attackby(obj/item/I, mob/user, params)
@@ -302,6 +306,8 @@
 /obj/item/clothing/mask/rogue/facemask/steel/confessor/lensed/equipped(mob/user, slot)
 	..()
 	if(slot == SLOT_WEAR_MASK || slot == SLOT_HEAD)
+		ADD_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
+		to_chat(user, span_notice("The confessor mask protects me from plague contact transmission."))
 		if(!lensmoved)
 			ADD_TRAIT(user, TRAIT_NOCSHADES, "redlens")
 			return
@@ -318,7 +324,9 @@
 	lensmoved = FALSE
 
 /obj/item/clothing/mask/rogue/facemask/steel/confessor/lensed/dropped(mob/user, slot)
-	..()		
+	..()
+	REMOVE_TRAIT(user, TRAIT_PLAGUE_MASK_WORN, "[type]")
+	to_chat(user, span_notice("I remove the confessor mask's protection."))
 	if(slot != SLOT_WEAR_MASK || slot == SLOT_HEAD)
 		if(!lensmoved)
 			REMOVE_TRAIT(user, TRAIT_NOCSHADES, "redlens")
