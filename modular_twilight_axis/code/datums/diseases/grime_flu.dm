@@ -22,6 +22,7 @@
 	var/cough_scheduled = FALSE
 	var/stage_tick_timer = null
 	var/cough_timer = null
+	var/last_weakness_time = 0
 
 /datum/disease/grime_flu/after_add()
 	. = ..()
@@ -68,6 +69,15 @@
 	if(DT_PROB(3, delta_time))
 		H.blur_eyes(5)
 		to_chat(H, span_warning("Голова пульсирует болью, зрение мутнеет."))
+	// Hand weakness - drops item every 2-3 minutes
+	if(world.time - last_weakness_time >= rand(2 MINUTES, 3 MINUTES))
+		last_weakness_time = world.time
+		var/obj/item/held_item = H.get_active_held_item()
+		if(held_item)
+			to_chat(H, span_warning("Руки ослабевают от болезни, и я роняю [held_item]!"))
+			H.dropItemToGround(held_item)
+		else
+			to_chat(H, span_warning("Руки внезапно дрожат и ослабевают."))
 
 	// Stage 3 additional symptoms
 	if(stage >= 3)
