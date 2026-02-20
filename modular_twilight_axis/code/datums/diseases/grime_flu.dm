@@ -37,15 +37,15 @@
 	var/old_stage_prob = stage_prob
 	if(stage == 1)
 		stage_prob = 0
-		if(world.time - infected_time >= 2 MINUTES)
+		if(world.time - infected_time >= 5 MINUTES)
 			update_stage(2)
 	else if(stage == 2)
 		stage_prob = 0
-		if(stage2_time && world.time - stage2_time >= 10 MINUTES)
+		if(stage2_time && world.time - stage2_time >= 15 MINUTES)
 			update_stage(3)
 	else if(stage == 3)
 		stage_prob = 0
-		if(stage3_time && world.time - stage3_time >= 15 MINUTES)
+		if(stage3_time && world.time - stage3_time >= 20 MINUTES)
 			stage_prob = 0.5
 	else
 		stage_prob = 1
@@ -142,6 +142,8 @@
 		H.adjustOxyLoss(2)
 	for(var/mob/living/carbon/human/target in oview(2, H))
 		if(target == H)
+			continue
+		if(!inLineOfTravel(H, target))
 			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue

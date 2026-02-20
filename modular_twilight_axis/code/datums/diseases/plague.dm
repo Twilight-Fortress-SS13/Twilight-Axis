@@ -319,6 +319,8 @@
 	for(var/mob/living/carbon/human/target in oview(cough_range, H))
 		if(target == H)
 			continue
+		if(!inLineOfTravel(H, target))
+			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
 		var/actual_chance = spread_chance
@@ -394,6 +396,8 @@
 	
 	for(var/mob/living/carbon/human/target in oview(spread_range, H))
 		if(target == H)
+			continue
+		if(!inLineOfTravel(H, target))
 			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
