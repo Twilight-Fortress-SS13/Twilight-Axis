@@ -236,6 +236,13 @@
 		)
 	icon_loadout = /obj/item/rogueweapon/halberd/glaive/koruu
 
+//DRD21 - Longsword
+/obj/item/enchantingkit/drd_lsword
+	name = "'ornate basket-hilt longsword' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword"
+	target_items = list(/obj/item/rogueweapon/sword/long)
+	result_item = /obj/item/rogueweapon/sword/long/drd
+
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
 /////////////////////////////

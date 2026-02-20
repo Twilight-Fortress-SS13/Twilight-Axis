@@ -72,8 +72,10 @@
 			SEND_SIGNAL(C, COMSIG_SEX_ADJUST_AROUSAL, 3)
 	if(istype(C, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = C
-		if(!istype(H.charflaw, /datum/charflaw/addiction/lovefiend))
-			H.charflaw = new /datum/charflaw/addiction/lovefiend(H)
+		if(!H.has_flaw(/datum/charflaw/addiction/lovefiend))
+			var/datum/charflaw/addiction/lovefiend/F = new
+			H.charflaws += F
+			F.on_mob_creation(H)
 	return
 
 /datum/reagent/consumable/ethanol/beer/emberwine/addiction_act_stage4(mob/living/carbon/human/C)

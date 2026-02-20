@@ -1,5 +1,6 @@
-#define CTYPE_GOLD "g"
-#define CTYPE_KAZEN "e"
+#define CTYPE_GOLD "tg"
+#define CTYPE_COPPER "tc"
+#define CTYPE_KAZEN "te"
 #define MAX_COIN_STACK_SIZE 20
 
 //OTAVAN MARQUE - WORTHLESS TO ANYONE BUT INQ.
@@ -14,7 +15,7 @@
 /obj/item/roguecoin/goldkrona
 	name = "krona"
 	desc = "The krona, or 'crown' in simplified Imperial, is a gold coin minted in the Valorian capital of Eterna, serving as the national currency of Valoria and several neighbouring realms. The coin bears the Crown of Most Serene Doge and the symbol of Ten Undivided."
-	icon_state = "g1"
+	icon_state = "tg1"
 	sellprice = 14
 	base_type = CTYPE_GOLD
 	plural_name = "kronas"
@@ -101,11 +102,22 @@
 		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
 			SSwardrobe.recycle_object(H)
 
+/obj/item/roguecoin/copper/Initialize(mapload)
+	. = ..()
+	if(SSmapping.config.map_name == "Rockhill_TA")
+		name = "shilling"
+		desc = "The shilling is a small copper coin minted by the Valorian Treasury. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided."
+		icon_state = "tc1"
+		sellprice = 1
+		base_type = CTYPE_COPPER
+		plural_name = "shillings"
+		icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
+
 //KAZENGUNESE MONIES
 /obj/item/roguecoin/shucoin
 	name = "shu"
 	desc = "The Shu coin, minted from an alloy of gold and silver, has been increasingly used in the Kazen Shogunate economy in recent decades, allowing the Clans to move away from direct barter. The coin has a hole in the middle, allowing for it to be carried on a string."
-	icon_state = "e1"
+	icon_state = "te1"
 	sellprice = 7
 	base_type = CTYPE_KAZEN
 	plural_name = "shu"
@@ -155,10 +167,10 @@
 	if(istype(H))
 		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
 			SSwardrobe.recycle_object(H)
-	H = SSwardrobe.provide_type(/obj/item/roguecoin/shucoin/poor_pile, loc)
-	if(istype(H))
-		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
-			SSwardrobe.recycle_object(H)
+	var/obj/item/roguecoin/shucoin/poor_pile/C = SSwardrobe.provide_type(/obj/item/roguecoin/shucoin/poor_pile, loc)
+	if(istype(C))
+		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, C, null, TRUE, TRUE))
+			SSwardrobe.recycle_object(C)
 
 /obj/item/storage/belt/rogue/pouch/shucoin/poor/get_types_to_preload()
 	var/list/to_preload = list() 
@@ -188,10 +200,10 @@
 	if(istype(H))
 		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
 			SSwardrobe.recycle_object(H)
-	H = SSwardrobe.provide_type(/obj/item/roguecoin/shucoin/mid_pile, loc)
-	if(istype(H))
-		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
-			SSwardrobe.recycle_object(H)
+	var/obj/item/roguecoin/shucoin/mid_pile/C = SSwardrobe.provide_type(/obj/item/roguecoin/shucoin/mid_pile, loc)
+	if(istype(C))
+		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, C, null, TRUE, TRUE))
+			SSwardrobe.recycle_object(C)
 
 /obj/item/storage/belt/rogue/pouch/shucoin/veryrich/get_types_to_preload()
 	var/list/to_preload = list() 
@@ -205,11 +217,12 @@
 	if(istype(H))
 		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
 			SSwardrobe.recycle_object(H)
-	H = SSwardrobe.provide_type(/obj/item/roguecoin/shucoin/rich_pile, loc)
-	if(istype(H))
-		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
-			SSwardrobe.recycle_object(H)
+	var/obj/item/roguecoin/shucoin/rich_pile/C = SSwardrobe.provide_type(/obj/item/roguecoin/shucoin/rich_pile, loc)
+	if(istype(C))
+		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, C, null, TRUE, TRUE))
+			SSwardrobe.recycle_object(C)
 
 #undef CTYPE_GOLD
+#undef CTYPE_COPPER
 #undef CTYPE_KAZEN
 #undef MAX_COIN_STACK_SIZE

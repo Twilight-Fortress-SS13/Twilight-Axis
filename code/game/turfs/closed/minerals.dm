@@ -225,6 +225,7 @@
 		/turf/closed/mineral/rogue/salt = 5,
 		/turf/closed/mineral/rogue/iron = 15,
 		/turf/closed/mineral/rogue/copper = 10,
+		/turf/closed/mineral/rogue/tin = 7,
 		/turf/closed/mineral/rogue/coal = 25)
 	mineralChance = 23
 
@@ -255,7 +256,7 @@
 		/turf/closed/mineral/rogue/silver = 5,
 		/turf/closed/mineral/rogue/iron = 33,
 		/turf/closed/mineral/rogue/copper = 20,
-		/turf/closed/mineral/rogue/tin = 12,
+		/turf/closed/mineral/rogue/tin = 14,
 		/turf/closed/mineral/rogue/coal = 19,
 		/turf/closed/mineral/rogue/gem = 3)
 
