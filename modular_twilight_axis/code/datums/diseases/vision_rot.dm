@@ -36,6 +36,9 @@
 /datum/disease/vision_rot/proc/blur_tick()
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
 		return
+	if(affected_mob.stat == DEAD)
+		schedule_blur()
+		return
 	// Check for natural cure after 8 minutes
 	if(infected_time && world.time - infected_time >= 8 MINUTES)
 		cure(FALSE) // No immunity after natural cure
@@ -53,6 +56,9 @@
 
 /datum/disease/vision_rot/proc/colorblind_tick()
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
+		return
+	if(affected_mob.stat == DEAD)
+		schedule_colorblind()
 		return
 	var/mob/living/carbon/human/H = affected_mob
 	H.add_client_colour(/datum/client_colour/monochrome)
@@ -75,6 +81,9 @@
 
 /datum/disease/vision_rot/proc/blind_tick()
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
+		return
+	if(affected_mob.stat == DEAD)
+		schedule_blind()
 		return
 	var/mob/living/carbon/human/H = affected_mob
 	H.adjust_blindness(rand(8, 12))

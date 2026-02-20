@@ -71,6 +71,8 @@
 		return .
 	if(!ishuman(affected_mob))
 		return .
+	if(affected_mob.stat == DEAD)
+		return .
 	var/mob/living/carbon/human/H = affected_mob
 
 	// Stage 2 symptoms
@@ -113,6 +115,9 @@
 /datum/disease/flu/proc/cough_tick()
 	cough_scheduled = FALSE
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
+		return
+	if(affected_mob.stat == DEAD)
+		schedule_cough()
 		return
 	var/mob/living/carbon/human/H = affected_mob
 	if(stage < 2)

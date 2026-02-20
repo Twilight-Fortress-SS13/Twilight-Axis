@@ -52,6 +52,9 @@
 /datum/disease/ash_blight/proc/scratch_tick()
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
 		return
+	if(affected_mob.stat == DEAD)
+		schedule_scratch()
+		return
 	var/mob/living/carbon/human/H = affected_mob
 	H.emote("scratch", intentional = FALSE)
 	

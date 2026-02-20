@@ -48,6 +48,9 @@
 	itch_timer = null
 	if(QDELETED(src) || !affected_mob || !ishuman(affected_mob))
 		return
+	if(affected_mob.stat == DEAD)
+		schedule_itch()
+		return
 	var/mob/living/carbon/human/H = affected_mob
 	H.emote("scratch", intentional = FALSE)
 	H.adjustBruteLoss(1)

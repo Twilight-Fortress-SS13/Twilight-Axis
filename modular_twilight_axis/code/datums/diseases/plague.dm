@@ -207,6 +207,8 @@
 		return
 	if(!ishuman(affected_mob))
 		return
+	if(affected_mob.stat == DEAD)
+		return
 	var/mob/living/carbon/human/H = affected_mob
 	
 	// Stage 1 symptoms - Mild

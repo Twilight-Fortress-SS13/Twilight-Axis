@@ -36,6 +36,9 @@
 	frenzy_timer = null
 	if(QDELETED(src) || !affected_mob)
 		return
+	if(affected_mob.stat == DEAD)
+		schedule_frenzy()
+		return
 	if(!iscarbon(affected_mob))
 		schedule_frenzy()
 		return

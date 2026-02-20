@@ -38,6 +38,9 @@
 	if(!affected_mob || QDELETED(src))
 		return ..()
 	
+	if(affected_mob.stat == DEAD)
+		return ..()
+	
 	var/mob/living/carbon/human/H = affected_mob
 	if(!istype(H))
 		return ..()
@@ -159,6 +162,10 @@
 	vomit_timer = null
 	
 	if(QDELETED(src) || !affected_mob)
+		return
+	
+	if(affected_mob.stat == DEAD)
+		schedule_vomit()
 		return
 	
 	var/mob/living/carbon/human/H = affected_mob

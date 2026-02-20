@@ -95,6 +95,16 @@
 /obj/item/natural/worms/leech/on_embed_life(mob/living/user, obj/item/bodypart/bodypart)
 	if(!user)
 		return
+	
+	// Check if patient has blood_rot and low blood - if so, cure the disease
+	if(!giving && user.blood_volume <= 50)
+		for(var/datum/disease/blood_rot/disease in user.diseases)
+			if(istype(disease, /datum/disease/blood_rot))
+				to_chat(user, span_notice("Пиявка высосала испорченную кровь. Я чувствую облегчение."))
+				user.visible_message(span_notice("[user] выглядит лучше!"))
+				disease.cure(TRUE)
+				return TRUE
+	
 	user.adjustToxLoss(toxin_healing)
 	if(giving)
 		var/blood_given = min(BLOOD_VOLUME_MAXIMUM - user.blood_volume, blood_storage, blood_sucking)
