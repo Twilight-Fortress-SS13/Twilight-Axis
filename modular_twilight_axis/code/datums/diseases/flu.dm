@@ -130,7 +130,10 @@
 			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
-		if(prob(10))
+		var/disease_chance = 10
+		if(HAS_TRAIT(target, TRAIT_RAG_MASK_WORN))
+			disease_chance = 5
+		if(prob(disease_chance))
 			target.ForceContractDisease(src, TRUE, FALSE)
 	schedule_cough()
 

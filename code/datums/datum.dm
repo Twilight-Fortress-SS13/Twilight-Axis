@@ -578,6 +578,9 @@
 					spread_chance = 0
 			else
 				spread_chance = 0
+		// Rag mask reduces transmission chance by 50%
+		if(HAS_TRAIT(target, TRAIT_RAG_MASK_WORN))
+			spread_chance = spread_chance / 2
 		if(spread_chance > 0 && !prob(spread_chance))
 			continue
 		target.ForceContractDisease(D, TRUE, FALSE)

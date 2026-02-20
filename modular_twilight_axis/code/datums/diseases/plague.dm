@@ -321,7 +321,10 @@
 			continue
 		if(HAS_TRAIT(target, TRAIT_PLAGUE_MASK_WORN))
 			continue
-		if(prob(spread_chance))
+		var/actual_chance = spread_chance
+		if(HAS_TRAIT(target, TRAIT_RAG_MASK_WORN))
+			actual_chance = spread_chance / 2
+		if(prob(actual_chance))
 			target.ForceContractDisease(src, TRUE, FALSE)
 			to_chat(target, span_warning("Вдыхаю заражённые миазмы от [H]..."))
 
@@ -399,7 +402,10 @@
 			spread_chance = 50
 		if(stage >= 4)
 			spread_chance = 70
-		if(prob(spread_chance))
+		var/actual_chance = spread_chance
+		if(HAS_TRAIT(target, TRAIT_RAG_MASK_WORN))
+			actual_chance = spread_chance / 2
+		if(prob(actual_chance))
 			target.ForceContractDisease(src, TRUE, FALSE)
 	
 	schedule_scratch()
