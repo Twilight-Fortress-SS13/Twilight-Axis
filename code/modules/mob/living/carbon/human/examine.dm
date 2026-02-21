@@ -131,13 +131,15 @@
 			else
 				. += span_notice("Something about them seems... different.")
 
-		// Leashed pet status effect message
+		if(SSticker.rulermob == src)
+			. += span_notice("<b>The ruler of this land.</b>")
+		else if(GLOB.lord_titles[name])
+			. += span_notice("[m3] been granted the title of \"[GLOB.lord_titles[name]]\".")
+    
+    		// Leashed pet status effect message
 		if(has_status_effect(/datum/status_effect/leash_pet))
 			. += span_warning("A leash is hooked to their collar. They are being led like a pet.")
-
-		if(GLOB.lord_titles[name])
-			. += span_notice("[m3] been granted the title of \"[GLOB.lord_titles[name]]\".")
-
+ 
 		if(HAS_TRAIT(src, TRAIT_NOBLE) || HAS_TRAIT(src, TRAIT_DEFILED_NOBLE))
 			if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_DEFILED_NOBLE))
 				. += span_notice("A fellow noble.")

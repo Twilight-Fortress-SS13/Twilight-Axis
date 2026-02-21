@@ -1964,7 +1964,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/aria_necklace
 	name = "Aria necklace"
 	category = list("Донат")
-	path = /obj/item/clothing/neck/roguetown/leather/aria
+	path = /obj/item/clothing/mask/rogue/facemask/aria
 	donatitem = TRUE
 	ckeywhitelist = list("mrix")
 

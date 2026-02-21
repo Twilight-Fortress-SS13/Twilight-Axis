@@ -10,7 +10,7 @@
 	icon = 'modular_twilight_axis/icons/misc/language.dmi'
 	icon_state = "gyedzese"
 	spans = list("gyedzenese")
-    mutually_intelligible = list(/datum/language/lingyuese)
+	mutually_intelligible = list(/datum/language/lingyuese)
 	syllables = list(
     "ba", "bo", "bai", "bei", "bao", "ban", "ben", "bang", "beng", "bi", "bian", "biao", "bie", "bin", "bing", "bu",
     "pa", "po", "pai", "pei", "pao", "pou", "pan", "pen", "pang", "peng", "pi", "pian", "piao", "pie", "pin", "ping", "pu",
