@@ -1,45 +1,33 @@
-// code/__HELPERS/icon_morph.dm
-// Core для "BASE vs FULL -> DELTA -> apply to clothing" (Axis/Azure fork)
-//
-// Требования:
-// - ReadRGB() должен существовать (обычно в icons.dm)
-// - 'icons/blanks/32x32.dmi' state "nothing" должен существовать
-//
-// Важно: relies on /icon.GetPixel() and DrawBox().
+// code/modules/icon_morph/icon_morph.dm
+// Core helpers for "FULL vs BASE -> DELTA -> apply to clothing"
+// Minimal, self-contained.
 
-/// Возвращает alpha (0..255) из строки цвета, которую отдаёт GetPixel().
-/// GetPixel() обычно даёт "#rrggbb" или "#rrggbbaa" (иногда null).
+/// Returns alpha (0..255) from GetPixel() color string.
+/// GetPixel() usually returns "#rrggbb" or "#rrggbbaa" or null.
 /proc/icon_pixel_alpha(pixel)
 	if(!pixel)
 		return 0
-
 	var/list/rgba = ReadRGB(pixel)
-	if(!rgba || !length(rgba))
+	if(!islist(rgba) || !rgba.len)
 		return 0
-
 	if(rgba.len >= 4)
 		return rgba[4]
-
-	// если без альфы — считаем полностью непрозрачным
 	return 255
 
-/// Быстро рисует 1 пиксель (с альфой) в иконку.
-/// color_str должен быть rgb(...) или "#rrggbbaa" (любой формат, который понимает DrawBox).
+/// Draw a 1x1 pixel via DrawBox.
+/// color_str should be rgb(...) or "#rrggbbaa" - anything DrawBox accepts.
 /proc/icon_set_pixel(icon/I, x, y, color_str)
-	// DrawBox рисует inclusive box; 1x1 = пиксель
 	I.DrawBox(color_str, x, y, x, y)
 	return
 
-/// Строит DELTA_MASK: альфа есть в full, но нет в base.
-/// Результат: белая маска с альфой (удобно применять/читать).
+/// Build delta mask: alpha exists in full but not in base.
+/// Output: white mask with alpha from full.
 /proc/icon_build_delta_mask(icon/full, icon/base)
 	if(!full || !base)
 		return null
 
 	var/w = full.Width()
 	var/h = full.Height()
-	if(!w || !h)
-		return null
 
 	if(base.Width() != w || base.Height() != h)
 		base = icon(base)
@@ -53,28 +41,21 @@
 			var/a_full = icon_pixel_alpha(full.GetPixel(x, y))
 			if(a_full <= 0)
 				continue
-
 			var/a_base = icon_pixel_alpha(base.GetPixel(x, y))
 			if(a_base > 0)
 				continue
-
-			// белый пиксель с альфой full
 			icon_set_pixel(delta, x, y, rgb(255, 255, 255, a_full))
 
 	return delta
 
-/// Находит "ближайший" пиксель одежды вокруг (x,y) в радиусе R.
-/// Возвращает строку цвета (как GetPixel), или null если не найдено.
-/// Поиск по кольцам: 1..R. 8-соседство.
-proc/icon_find_nearest_nontransparent(icon/I, x, y, R)
+/// Find nearest nontransparent pixel around (x,y) within radius R.
+/// Returns color string (GetPixel format) or null.
+/proc/icon_find_nearest_nontransparent(icon/I, x, y, R)
 	var/w = I.Width()
 	var/h = I.Height()
 
-	if(!w || !h)
-		return null
-
 	for(var/r in 1 to R)
-		// верх/низ
+		// top/bottom edges
 		for(var/dx in -r to r)
 			var/tx = x + dx
 			if(tx < 1 || tx > w)
@@ -92,7 +73,7 @@ proc/icon_find_nearest_nontransparent(icon/I, x, y, R)
 				if(icon_pixel_alpha(p2) > 0)
 					return p2
 
-		// лево/право (без углов, чтобы не повторять)
+		// left/right edges (no corners)
 		for(var/dy in (-r + 1) to (r - 1))
 			var/ty = y + dy
 			if(ty < 1 || ty > h)
@@ -112,26 +93,22 @@ proc/icon_find_nearest_nontransparent(icon/I, x, y, R)
 
 	return null
 
-/// Применяет DELTA_MASK к одежде: там где delta непрозрачна, а одежда прозрачна — "дорастить"
-/// цветом ближайшего пикселя одежды (nearest fill).
-///
-/// radius: насколько далеко искать "донорный" пиксель одежды.
-/// keep_alpha_from_delta: если TRUE — альфа нового пикселя берётся из delta, иначе — из донора.
-/// debug_red: если TRUE — рисуем красным в местах применения (для проверки пайплайна).
-/proc/icon_apply_delta_to_clothing(icon/clothing, icon/delta, radius = 3, keep_alpha_from_delta = TRUE, debug_red = FALSE)
+/// Apply delta mask to clothing: where delta is opaque and clothing pixel is transparent,
+/// "grow" clothing color using nearest fill.
+/// radius: search radius for donor pixel.
+/// keep_alpha_from_delta: if TRUE, alpha is taken from delta pixel, else from donor.
+/// debug_red: if TRUE, paints delta pixels red (for visual verification).
+/proc/icon_apply_delta_to_clothing(icon/clothing, icon/delta, radius = 3, keep_alpha_from_delta = TRUE, debug_red = FALSE, debug_paint_over = FALSE)
 	if(!clothing || !delta)
 		return clothing
 
 	var/w = clothing.Width()
 	var/h = clothing.Height()
-	if(!w || !h)
-		return clothing
 
 	if(delta.Width() != w || delta.Height() != h)
 		delta = icon(delta)
 		delta.Scale(w, h)
 
-	// копия, чтобы не портить оригинал
 	var/icon/out = icon(clothing)
 
 	for(var/y in 1 to h)
@@ -141,23 +118,48 @@ proc/icon_find_nearest_nontransparent(icon/I, x, y, R)
 				continue
 
 			var/p_cl = out.GetPixel(x, y)
-			if(icon_pixel_alpha(p_cl) > 0)
-				continue // уже есть одежда
+			if(!debug_paint_over && icon_pixel_alpha(p_cl) > 0)
+				continue
 
 			if(debug_red)
 				icon_set_pixel(out, x, y, rgb(255, 0, 0, 200))
 				continue
 
-			// важно: ищем донорный пиксель в out (учитывая уже дорисованное)
 			var/p_src = icon_find_nearest_nontransparent(out, x, y, radius)
 			if(!p_src)
 				continue
 
 			var/list/src_rgba = ReadRGB(p_src)
-			if(!src_rgba || src_rgba.len < 3)
+			if(!islist(src_rgba) || src_rgba.len < 3)
 				continue
 
 			var/new_a = keep_alpha_from_delta ? a_delta : (src_rgba.len >= 4 ? src_rgba[4] : 255)
 			icon_set_pixel(out, x, y, rgb(src_rgba[1], src_rgba[2], src_rgba[3], new_a))
 
 	return out
+
+/proc/morph_add_forced_breasts(list/full_overlays, mob/living/carbon/human/H)
+	if(!H || !islist(full_overlays))
+		return
+
+	var/obj/item/organ/breasts/B = H.getorganslot(ORGAN_SLOT_BREASTS)
+	if(!B || B.breast_size <= 0)
+		return
+
+	var/datum/sprite_accessory/breasts/SA = new B.accessory_type
+	if(!SA)
+		return
+
+	var/obj/item/bodypart/chest = H.get_bodypart(BODY_ZONE_CHEST)
+	var/state = SA.get_icon_state(B, chest, H)
+
+	var/forced_layer = BODY_FRONT_LAYER
+	if(islist(SA.relevant_layers) && length(SA.relevant_layers))
+		forced_layer = SA.relevant_layers[1]
+
+	var/mutable_appearance/MA = mutable_appearance(SA.icon, state, -forced_layer)
+
+	var/list/tmp = list(MA)
+	SA.adjust_appearance_list(tmp, B, chest, H)
+
+	full_overlays += tmp
