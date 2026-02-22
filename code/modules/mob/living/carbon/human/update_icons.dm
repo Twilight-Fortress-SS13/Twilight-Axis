@@ -1972,6 +1972,7 @@ generate/load female uniform sprites matching all previously decided variables
 		overlays_standing[BODYPARTS_LAYER] = new_limbs
 		limb_icon_cache[icon_render_key] = new_limbs
 
+	rebuild_morph_cache_from_current()
 	apply_overlay(BODYPARTS_LAYER)
 	update_damage_overlays()
 
