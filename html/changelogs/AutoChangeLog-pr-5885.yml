@@ -1,4 +1,0 @@
-author: "Draganfrukts"
-delete-after: True
-changes:
-  - bugfix: "padded fencing shirt respects fencer's dexterity"

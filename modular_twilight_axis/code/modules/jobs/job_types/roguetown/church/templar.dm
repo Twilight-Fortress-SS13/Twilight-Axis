@@ -361,6 +361,8 @@
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
 		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
 		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt
+		H.mind.special_items["Pink Robe"] = /obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite/pink
+		H.mind.special_items["Blue Robe"] = /obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite
 	if(H.patron?.type == /datum/patron/divine/malum)
 		H.adjust_skillrank(/datum/skill/craft/blacksmithing, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/craft/armorsmithing, 1, TRUE)

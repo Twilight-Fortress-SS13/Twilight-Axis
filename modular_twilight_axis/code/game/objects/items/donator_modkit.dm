@@ -63,8 +63,8 @@
 	name = "'Jägerbüchse' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Arquebus"
 	target_items = list(
-		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle, 
-		/obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet = /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/jagerrifle)
+		/obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet = /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/jagerrifle,
+		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle)
 	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle
 
 //Zydras donator item - bathmatron padded dress

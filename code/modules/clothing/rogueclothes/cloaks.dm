@@ -494,9 +494,6 @@
 	icon_state = "stabard"
 	boobed = TRUE
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/detailed/tabards.dmi'
-	sleeved = 'icons/roguetown/clothing/onmob/detailed/tabards.dmi'
-	sleevetype = "shirt"
-	nodismemsleeves = TRUE
 
 /obj/item/clothing/cloak/tabard/stabard/guard
 	name = "guard tabard"
@@ -573,6 +570,9 @@
 /obj/item/clothing/cloak/tabard/stabard/surcoat
 	name = "jupon"
 	icon_state = "surcoat"
+	sleeved = 'icons/roguetown/clothing/onmob/detailed/tabards.dmi'
+	sleevetype = "shirt"
+	nodismemsleeves = TRUE
 
 /obj/item/clothing/cloak/tabard/stabard/surcoat/bailiff
 	color = "#641E16"
@@ -786,6 +786,9 @@
 
 /obj/item/clothing/cloak/raincloak/blue
 	color = CLOTHING_BLUE
+
+/obj/item/clothing/cloak/raincloak/mageblue
+	color = CLOTHING_MAGE_BLUE
 
 /obj/item/clothing/cloak/raincloak/purple
 	color = CLOTHING_PURPLE
@@ -1056,6 +1059,9 @@
 
 /obj/item/clothing/cloak/thief_cloak/yoruku
 	color = CLOTHING_BLACK
+
+/obj/item/clothing/cloak/thief_cloak/mageblue
+	color = CLOTHING_MAGE_BLUE
 
 /obj/item/clothing/cloak/volfmantle
 	name = "volf mantle"
@@ -1491,6 +1497,10 @@
 	detail_tag = "_detail"
 	detail_color = CLOTHING_WHITE
 
+/obj/item/clothing/cloak/poncho/mageblue
+	color = CLOTHING_MAGE_BLUE
+	detail_color = CLOTHING_MAGE_BLUE
+
 /obj/item/clothing/cloak/eastcloak1
 	name = "cloud-cutter's cloak"
 	desc = "A brown cloak with white swirls. Some Kazengites may recognize it as an old militaristic symbol."
@@ -1597,6 +1607,9 @@
 		alternate_worn_layer = UNDER_ARMOR_LAYER
 	user.update_inv_cloak()
 	user.update_inv_armor()
+
+/obj/item/clothing/cloak/cotehardie/mageblue
+	color = CLOTHING_MAGE_BLUE
 
 /obj/item/clothing/cloak/banneret
 	name = "knight banneret's cape"

@@ -866,3 +866,157 @@
   zoktiik:
   - server: Linux TGS PreCompile script was fixed and now works properly. Specifically,
       it uses the same method as in build.sh.
+2026-02-21:
+  Draganfrukts:
+  - bugfix: padded fencing shirt respects fencer's dexterity
+  FreeStylaLT:
+  - rscdel: Removed the scroll-making Noc T3
+  - bugfix: Fixed being able to join as a Duke without meetin the PQ requirement.
+  - rscadd: Added piercings and gradients to Sun Elves.
+  Lamasmaster:
+  - rscadd: God influences to dendor and malum
+  - refactor: God objectives folder
+  - rscdel: Half Elf base elf ears
+  - balance: Transact (again)
+  Ollanius:
+  - rscadd: Chairs, stools, and bedrolls now have proper inhands.
+  - balance: Chairs and stools now scale off of Unarmed skills, when calculating accuracy
+      and parrying chances.
+  Randall:
+  - rscadd: Added the Shin Swipe special to the Kampfmesser
+  WeNeedMorePhoron:
+  - rscadd: Gave drow iron mask and heavy padding coif instead of chain mantle with
+      a half mask
+  WrongEnd:
+  - bugfix: Bodybuilders can be women again.
+  crunchypretzels:
+  - balance: Matthios now gains influence from transmuting gold, not graverobbing.
+  kano-dot:
+  - rscadd: Added back the hood layer adjustment, it now uses Alt + Right Click.
+2026-02-22:
+  FreeStylaLT:
+  - bugfix: Fixed not being able to use wielded Specials if the weapon cannot be wielded.
+  - balance: Greatsword Special now has a delayed first hit.
+  - balance: Various Specials now require wielding.
+  Lamasmaster:
+  - rscadd: Sovl to Wall Alarm
+  - qol: Chew on MMB
+  - bugfix: SCOMstones/Crown not using your pronouns for text
+  - balance: Malum and Zizo influences
+  - bugfix: Pickpocket not respecting the state of the victim.
+  - image: Matthios Known People panel icon
+  - bugfix: Wrong number
+  Ollanius:
+  - balance: Siegebolts deal a little less damage, now.
+  - rscadd: Introduces the 'Thespian-Errant' to the Adventurer's roster of Nomads;
+      a bronze-clad warrior that specializes in staying in the fight for as long as
+      possible, and warring with ancient equipment.
+  - rscadd: Adds a wide variety of new bronze amulets for Graggar, Malum, and Astrata.
+  - rscadd: Adds a wide variety of new bronze armorpieces. Chest protectors are light,
+      but only cover the chest. Panoply armor is exceedingly heavy, but provides a
+      minor bonus to defensive stats when worn. Murmillos, Illyrias, death masks and
+      more are included.
+  - rscadd: Adds a wide variety of new bronze weapons. Greatkhopeshes, winged spears,
+      axegauntlets, messers, and more.
+  - rscadd: Adds 'Zarum', a unique type of medicinal fish vinegar.
+  - rscadd: Adds the 'Bow', a simple and less-crude variant of the Selfbow that can
+      be crafted with Journeyman-level skills. Performance is relatively close, with
+      the added bonus of a minor 1.15x accuracy bonus.
+  - rscadd: Adds two new combat tracks - 'combat_thespian.ogg' for the titular class,
+      and a menu-exclusive alternative to 'combat_ascendant.ogg'.
+  - rscadd: Adds snout support to bronze, ancient, and silver masks.
+  - rscadd: Adds parity checks from the 'Breechcloth', 'Clarity', and 'Berserker'
+      PRs.
+  - balance: Shields now emit a visible message and audio cue when using the 'BLOCK'
+      intent.
+  - balance: The Berserker Sword now uses a completely unique recipe with three(!!!)
+      components to assemble together.
+  - balance: Adjusts the crafting recipes for bronze items. Armor requires a little
+      less leather, certain weapons/armor now require Apprentice-tier skills to make,
+      and amulets are now slightly less difficult to craft. Bronze cutlery and lesser
+      items now appropriately require no skill, but dedicated tools and fancier cutlery
+      - like Copper - requires Novice skills.
+  - code_imp: The .dmi with all 64x64 helmet sprites now has a greyscaled version
+      of the Ordinator's greatplume. This could look quite nice on other helmets -
+      feel free to use it!
+  - balance: The Berserker's Sword now has a far more fittingly difficult - but still
+      accomplishable - recipe.
+  - bugfix: The Profane Dagger now properly inherits the 'Pick' intent, and its 'Peculate'
+      intent should now render.
+  - rscadd: Adds 'components', a subtype for ingots that're used to mimic the forging
+      of rarer (or unique-tier) items. Kudos to Ketrai for the original concepts and
+      ideas!
+  - rscadd: Adds 'crystalline glut', a unique component for a unique recipe. Can be
+      smelted back down into regular 'glut', as needed.
+  - rscadd: Adds 'the grip-' and 'the blade of the berserker', components for its
+      namesake.
+  - rscadd: Adds 'a raw heap of iron.'
+  - rscadd: Adds unique sprites to the Profane dagger.
+  - rscadd: Examining both types of 'glut' with the right patron will provide more
+      detailed information on how to use them.
+  - code_imp: Components are essentially fancier ingots that're disguised as unique
+      components for a greater recipe. Allows you to make a recipe that only uses
+      components (such as a handle with a blade) without the need to add an ingot
+      as the starter.
+  - balance: The Axegauntlet now has increased durability, but reduced sharpness.
+  - rscadd: Adds the Bronze Gorgette, a bevor-analogue.
+  - bugfix: Fixes missing icons for snouted masks in the inventory.
+  - bugfix: Fixes greaves not totally covering the feet.
+  - bugfix: Fixes a Thespian-Errant's weapon choice not giving the correct weapon.
+  - balance: Silver and bronze whips now have a flat minimum strength requirement
+      of 11, instead of 12 and 13.
+  - rscadd: Whipping intents now explain their unique gimmicks and damage types, upon
+      examination.
+  - code_imp: Cleaned up whip.dm just a little bit, and further organized it.
+  - code_imp: Renamed 'holy lash' to 'lash with dismembering force'. Same as before,
+      otherwise.
+  - rscadd: Adds the 'Absolver's Greathelm', a unique helmet variant with a lighter
+      AC threshold and an improved field of view.
+  - code_imp: Only the Absolver gets the special helmet variant. Any other instance
+      which normally allowed for the creation of more Conical Greathelms (through
+      smithing or importing via the Marquette) will spawn the regular, old, heavy,
+      and hard-to-see-through greathelm instead. Use 'the /unblessed' suffix for that,
+      going forward.
+  Shuckonga:
+  - bugfix: astratagrasp is now properly called on Heretic spy.
+  SpartanBobby:
+  - rscadd: Added Border Reiver NPCs for event runner
+  - rscadd: Added Zizo Cultist NPCs for event runners, (they are not good at combat
+      and exist purely to be set piece enemies)
+  WeNeedMorePhoron:
+  - rscadd: Bathhouse now have access to a secret room to help them actually smuggle
+      goods
+  - rscadd: A nice little boat to the lighthouse
+  - rscadd: You can now peek through fast travel tile with shift right click
+  - rscadd: HERMES now charge from your bank account if you have no coins loaded for
+      more convenient letter sending.
+  - rscadd: Usurpation mechanics has been added - with eight thematic rites for you
+      to usurp the throne based on your status. This can only be done when there's
+      a Regent or Grand Duke in round.
+  - rscadd: Added a backup refresh button to ERP panel
+  - rscadd: Redid Magicians Associate description
+  - rscadd: Guard / Clash now can deflects nearly all magical projectiles (Don't try
+      to deflect sun strike) or negate / mitigate the effects of most offensive spells.
+      Git Gud.
+  babamandaa:
+  - rscadd: whips can now hit feet
+  eirenxiv:
+  - bugfix: properly adjusts silkcoat coverage to not include feet
+  - bugfix: adjusts hardened leather coat coverage to not include feet either
+  - rscadd: a static consort slot
+  - balance: adjusted consort PQ to 10
+  - balance: adjusted consort skills and abilities
+  - balance: adjusted consort loadout for both fem and masc
+  - balance: buffed consort dress (for now)
+  - balance: reduced suitor slots to 2 max
+  - balance: added and expanded hand stat weights to be equal accross subclasses
+  - balance: replaced the bandaid drip with fragile light maille
+  - balance: lets the evil advisor hand use their sword
+  - bugfix: coverage excluding feet for silk shirt and vl shirt
+  hazelrat:
+  - rscadd: Integrated a remap of the city harbour. The Wardens' Barracks are now
+      located on the walls at the north-eastern extreme of the city, and there is
+      now a gate directly connecting the druids' grove to the church courtyard.
+  zydras:
+  - rscadd: Adds a new Sexton subclass, the Gravetender!
+  - balance: adjusted the Sexton's stat pack and skills around

@@ -50,7 +50,7 @@
 	slot_flags = ITEM_SLOT_ARMOR
 	name = "blacksteel half-plate"
 	desc = "A padded blacksteel cuirass, fitted with sloped pauldrons and tassets. Mysterious and elegant, but most-certainly not sleek."
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS
+	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
 	icon = 'icons/roguetown/clothing/special/blkknight.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/blkknight.dmi'
 	icon_state = "bs_halfplate"

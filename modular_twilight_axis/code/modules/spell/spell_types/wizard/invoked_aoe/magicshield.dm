@@ -43,6 +43,17 @@
 	
 	return TRUE
 
+/obj/effect/proc_holder/spell/self/magic_shield/charge_check(mob/user) //заглушка для оффкода
+
+
+	if(active)
+		return TRUE
+	
+	if(charge_counter < recharge_time)
+		return FALSE
+		
+	return TRUE
+
 /obj/effect/proc_holder/spell/self/magic_shield/proc/activate_shield(mob/living/user)
 	active = TRUE
 	ranged_ability_user = user

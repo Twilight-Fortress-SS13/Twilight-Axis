@@ -145,7 +145,7 @@ TRAIT UNIQUE PROCS
 			if(!HAS_TRAIT(user, TRAIT_ARMOUR_DISLIKED))
 				return
 			REMOVE_TRAIT(user, TRAIT_ARMOUR_DISLIKED, TRAIT_GENERIC)
-		return
+		//TA EDIT
 
 	if(HAS_TRAIT(user, TRAIT_HONORBOUND))
 		if(!positive)
@@ -153,24 +153,24 @@ TRAIT UNIQUE PROCS
 			if(!HAS_TRAIT(user, TRAIT_ARMOUR_DISLIKED))
 				return
 			REMOVE_TRAIT(user, TRAIT_ARMOUR_DISLIKED, TRAIT_GENERIC)
-		return
+		//TA EDIT
 
 	if(HAS_TRAIT(user, TRAIT_PSYDONIAN_GRIT) && id == "ornate_plate")
 		if(positive)
 			user.apply_status_effect(/datum/status_effect/buff/psydonic_endurance)
-		return
+		//TA EDIT
 
 	if(HAS_TRAIT(user, TRAIT_NALEDI) && id == "naledi_mask")
 		if(positive)
 			user.remove_status_effect(/datum/status_effect/debuff/lost_naledi_mask)
 			user.remove_stress(/datum/stressevent/naledimasklost)
-		return
+		//TA EDIT
 
 	if(HAS_TRAIT(user, TRAIT_JAILOR) && id == "dungeoneer")
 		if(positive)
 			user.remove_status_effect(/datum/status_effect/debuff/lost_dungeoneer_hood)
 			user.remove_stress(/datum/stressevent/dungeoneerhoodlost)
-		return
+		//TA EDIT
 
 	return
 

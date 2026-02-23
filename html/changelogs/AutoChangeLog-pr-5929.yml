@@ -1,0 +1,4 @@
+author: "eirenxiv"
+delete-after: True
+changes:
+  - bugfix: "fixed coverage to no longer include hands on: arming jacket, padded arming jacket, blacksteel half-plate, grenzel shirt, fencer shirt, gronn plate and kazengun cuirass"

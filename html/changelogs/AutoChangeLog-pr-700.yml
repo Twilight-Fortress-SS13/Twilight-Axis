@@ -1,0 +1,4 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - code_imp: "переходим обратно в roguetown.dme, вместо modules.dme"

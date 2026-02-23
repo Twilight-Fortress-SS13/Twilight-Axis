@@ -1,4 +1,4 @@
-//////////////////
+/*//////////////////
 //  TRIUMPHS !  //
 //////////////////
 
@@ -250,3 +250,4 @@
 	path = /obj/item/reagent_containers/glass/bottle/alchemical/tripot
 	triumph_cost = 70
 	sort_category = "Triumphs"
+*/

@@ -161,7 +161,7 @@
 	</br>Heaven's gate closed to us long ago, yet His children persist; as as long as they do, so must I. \
 	</br>Happiness must be fought for."
 	armor = list("blunt" = 30, "slash" = 50, "stab" = 50, "piercing" = 20, "fire" = 0, "acid" = 0) //Custom value; padded gambeson's slash- and stab- armor.
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT)
+	prevent_crits = PREVENT_CRITS_ALL 
 	max_integrity = 400
 	repair_time = 20 SECONDS
 
@@ -174,7 +174,7 @@
 	Oh no, not me, I never lost control.</br> \
 	You're face to face, with the man who sold the world."
 	armor = list("blunt" = 40, "slash" = 60, "stab" = 50, "piercing" = 40, "fire" = 50, "acid" = 0) //Fire resistance unlike the disciple one
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT)
+	prevent_crits = PREVENT_CRITS_ALL 
 	max_integrity = 450
 	repair_time = 20 SECONDS
 

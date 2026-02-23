@@ -5,6 +5,7 @@ GLOBAL_LIST_INIT(admin_verbs_default, world.AVerbsDefault())
 GLOBAL_PROTECT(admin_verbs_default)
 /world/proc/AVerbsDefault()
 	return list(
+	/client/proc/debug_below_turf,
 	/client/proc/check_pq,
 	/client/proc/adjust_pq,
 	/client/proc/hearallasghost,
@@ -114,6 +115,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/datum/admins/proc/sleep_view,
 	/datum/admins/proc/wake_view,
 	/datum/admins/proc/extend_round,
+	/client/proc/cmd_admin_set_ic_date, /* Set custom IC date for events */
 	)
 GLOBAL_LIST_INIT(admin_verbs_ban, list(
 	/client/proc/unban_panel,

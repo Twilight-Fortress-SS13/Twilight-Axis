@@ -168,11 +168,18 @@ SUBSYSTEM_DEF(mapping)
 		add_new_zlevel("[name][i ? " [i + 1]" : ""]", level)
 		++i
 
+	SSautomapper.preload_templates_from_toml(files)
+	var/turf_blacklist = SSautomapper.get_turf_blacklists(files)
+
 	// load the maps
 	for (var/P in parsed_maps)
 		var/datum/parsed_map/pm = P
+		pm.turf_blacklist = turf_blacklist
 		if (!pm.load(1, 1, start_z + parsed_maps[P], no_changeturf = TRUE))
 			errorList |= pm.original_path
+
+	if(!LAZYLEN(errorList))
+		SSautomapper.load_templates_from_cache(files)
 
 	log_game("Loaded [name] in [(REALTIMEOFDAY - start_time)/10]s!")
 
