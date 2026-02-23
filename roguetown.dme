@@ -3010,7 +3010,6 @@
 #include "modular\piercing\piercing.dm"
 #include "modular\piercing\piercings.dm"
 #include "modular\piercing\supply.dm"
-#include "modular_twilight_axis\code\modules\icon_morph\icon_morph_filters.dm"
 #include "modular_twilight_axis\code\modules\icon_morph\icon_morph_mob.dm"
 #include "modular_twilight_axis\code\modules\icon_morph\icon_morph.dm"
 #include "statpacks\agile.dm"

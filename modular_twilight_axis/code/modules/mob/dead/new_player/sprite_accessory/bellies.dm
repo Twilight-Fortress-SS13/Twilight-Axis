@@ -3,7 +3,7 @@
 	icon = 'modular_twilight_axis/icons/mob/sprite_accessory/belly/belly.dmi'
 	color_key_name = "Belly"
 	icon_state = "pair"
-	relevant_layers = list(FRONT_MUTATIONS_LAYER)
+	relevant_layers = list(BODY_LAYER)
 	color_key_defaults = list(KEY_CHEST_COLOR)
 
 /datum/sprite_accessory/belly/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)

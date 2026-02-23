@@ -19,12 +19,23 @@
 	var/w = full.Width()
 	var/h = full.Height()
 
+	if(!w || !h)
+		return null
+
 	if(base.Width() != w || base.Height() != h)
 		base = icon(base)
+		if(!base)
+			return null
+		if(!base.Width() || !base.Height())
+			return null
 		base.Scale(w, h)
 
 	var/icon/delta = icon('icons/blanks/32x32.dmi', "nothing")
-	delta.Scale(w, h)
+	if(!delta)
+		return null
+
+	if(delta.Width() != w || delta.Height() != h)
+		delta.Scale(w, h)
 
 	for(var/y in 1 to h)
 		for(var/x in 1 to w)
