@@ -1,0 +1,5 @@
+author: "PatapoIIIa"
+delete-after: True
+changes:
+  - qol: "Phantom Speaker now allows manual language selection instead of using a random understood language."
+  - code_imp: "Improved language handling logic for Phantom Speaker ability."

@@ -79,6 +79,17 @@
 	
 	freeze_radius(user)
 
+/obj/effect/proc_holder/spell/self/frost_walker/charge_check(mob/user) //заглушка для оффкода
+
+	if(active)
+		return TRUE
+	
+
+	if(charge_counter < recharge_time)
+		return FALSE
+		
+	return TRUE
+
 /obj/effect/proc_holder/spell/self/frost_walker/proc/deactivate_frost(mob/living/user)
 	if(!active) return
 	active = FALSE

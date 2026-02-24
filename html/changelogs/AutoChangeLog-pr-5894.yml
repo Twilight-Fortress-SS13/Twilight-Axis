@@ -1,0 +1,11 @@
+author: "Ollanius"
+delete-after: True
+changes:
+  - rscadd: "New inventory sprites for most rings in the game. Credit to Spooky and Chaoko for providing the original assets for said-rings, and giving permission to further modify them for this particular use; you guys rock!"
+  - rscadd: "New onmob sprites for most rings in the game. These are worn on the left hand - in comparison to the amulets, which are always worn on the right hand. Mix and match!"
+  - rscadd: "Three new flavors of the wedding band, exclusively available in the loadout: gold, bronze, and ancient."
+  - rscadd: "MMBing a ring while it's worn outside of the ring slot'll let you overlay it atop sleeves. Not perfect, but it works."
+  - balance: "While very minor, rings can now be worn on the Gloves slot as well."
+  - bugfix: "Wearing a ring will now properly show it being worn on your character."
+  - code_imp: "Similar to the wrist-sprites for amulets, rings - as it turns out - need a dedicated sleeve sprite to properly render. Going forward, anyone adding an onmob-ring sprite should make sure to create a variant with the 'l_' prefix, too."
+  - code_imp: "All original rings are preserved in the .dmi, and can be freely accessed for use."

@@ -1,0 +1,5 @@
+author: "hazelrat"
+delete-after: True
+changes:
+  - rscadd: "Implemented a few small bugfixes and QoL changes to the new city harbor. Importantly, a MEISTER is now accessible just within the east gate!"
+  - rscadd: "Implemented a remap of the pirate ship in the city harbor, courtesy of _vol."

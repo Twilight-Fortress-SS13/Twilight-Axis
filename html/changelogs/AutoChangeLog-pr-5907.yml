@@ -1,0 +1,5 @@
+author: "WeNeedMorePhoron"
+delete-after: True
+changes:
+  - rscadd: "Shield heraldry preview interface for the four shields you can paint heraldry into"
+  - rscadd: "One generic white saltire heraldry (Proof of concept it will be removed later by better artist)"

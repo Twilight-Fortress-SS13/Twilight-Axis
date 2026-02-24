@@ -1,0 +1,5 @@
+author: "Ryan180602"
+delete-after: True
+changes:
+  - bugfix: "made a few sheath checks matter."
+  - code_imp: "let sheaths be interacted with on cmode."

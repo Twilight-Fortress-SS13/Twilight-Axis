@@ -3,7 +3,6 @@
 		if(positive)
 			user.remove_status_effect(/datum/status_effect/debuff/lost_drow_inq_mask)
 			user.remove_stress(/datum/stressevent/lost_drow_inq_mask)
-		return
 	. = ..()
 
 /datum/component/armour_filtering/trait_boon_drop(mob/living/carbon/human/user, id)
@@ -15,6 +14,5 @@
 				return
 			user.apply_status_effect(/datum/status_effect/debuff/lost_drow_inq_mask)
 			user.add_stress(/datum/stressevent/lost_drow_inq_mask)
-		return
 
 	. = ..()

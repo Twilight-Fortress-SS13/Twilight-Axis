@@ -48,7 +48,8 @@
 		/datum/advclass/wretch/munitioneer,
 
 		/datum/advclass/wretch/twilight_corsair,
-		/datum/advclass/wretch/lunacyembracer
+		/datum/advclass/wretch/lunacyembracer,
+		/datum/advclass/wretch/rogueshaman
 
 	)
 

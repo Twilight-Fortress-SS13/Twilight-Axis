@@ -1,0 +1,8 @@
+author: "PatapoIIIa"
+delete-after: True
+changes:
+  - rscadd: "Added Tent Kit deployable shelter system"
+  - rscadd: "Added support for multi-tile tent structures"
+  - qol: "Added detailed examine feedback showing assembly state and structural condition"
+  - qol: "Added visible feedback when tent assembles, collapses, or packs away"
+  - balance: "Tent now requires material investment to restore after destruction"

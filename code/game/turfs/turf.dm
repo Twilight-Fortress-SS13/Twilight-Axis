@@ -99,14 +99,16 @@
 	if(turf_integrity == null)
 		turf_integrity = max_integrity
 
-	var/turf/T = GET_TURF_ABOVE(src)
+	var/turf/T = get_turf_above_ztraits(src)
 	if(T)
 		T.multiz_turf_new(src, DOWN)
 		SEND_SIGNAL(T, COMSIG_TURF_MULTIZ_NEW, src, DOWN)
-	T = GET_TURF_BELOW(src)
+
+	T = get_turf_below_ztraits(src)
 	if(T)
 		T.multiz_turf_new(src, UP)
 		SEND_SIGNAL(T, COMSIG_TURF_MULTIZ_NEW, src, UP)
+
 	if(!mapload)
 		reassess_stack()
 
@@ -128,12 +130,14 @@
 	if(!changing_turf)
 		stack_trace("Incorrect turf deletion")
 	changing_turf = FALSE
-	var/turf/T = GET_TURF_ABOVE(src)
+	var/turf/T = get_turf_above_ztraits(src)
 	if(T)
 		T.multiz_turf_del(src, DOWN)
-	T = GET_TURF_BELOW(src)
+
+	T = get_turf_below_ztraits(src)
 	if(T)
 		T.multiz_turf_del(src, UP)
+		
 	STOP_PROCESSING(SSweather,src)
 	if(force)
 		..()
@@ -240,6 +244,33 @@
 
 /turf/proc/multiz_turf_new(turf/T, dir)
 	reassess_stack()
+
+/proc/get_turf_below_ztraits(turf/T)
+	if(!T)
+		return null
+
+	// если таблица ещё не готова — не падаем
+	if(!length(SSmapping.multiz_levels))
+		return (T.z > 1) ? locate(T.x, T.y, T.z - 1) : null
+
+	var/list/zinfo = (T.z <= length(SSmapping.multiz_levels)) ? SSmapping.multiz_levels[T.z] : null
+	if(!islist(zinfo) || !zinfo[Z_LEVEL_DOWN])
+		return null
+
+	return get_step(T, DOWN)
+
+/proc/get_turf_above_ztraits(turf/T)
+	if(!T)
+		return null
+
+	if(!length(SSmapping.multiz_levels))
+		return (T.z < world.maxz) ? locate(T.x, T.y, T.z + 1) : null
+
+	var/list/zinfo = (T.z <= length(SSmapping.multiz_levels)) ? SSmapping.multiz_levels[T.z] : null
+	if(!islist(zinfo) || !zinfo[Z_LEVEL_UP])
+		return null
+
+	return get_step(T, UP)
 
 /**
  * Check whether the specified turf is blocked by something dense inside it with respect to a specific atom.

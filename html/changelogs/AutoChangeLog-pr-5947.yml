@@ -1,0 +1,4 @@
+author: "hazelrat"
+delete-after: True
+changes:
+  - bugfix: "Re-adds the food crate in the wardens' barracks, which was accidentally removed."

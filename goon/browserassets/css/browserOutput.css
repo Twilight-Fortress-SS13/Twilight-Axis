@@ -92,6 +92,11 @@ body {
 }
 
 @font-face {
+	font-family: "Evil Bible";
+	src: url("undercommon.ttf");
+}
+
+@font-face {
 	font-family: "ArkansasDB";
 	src: url("otavan.ttf");
 }
@@ -99,6 +104,11 @@ body {
 @font-face {
 	font-family: "Sangha Kali";
 	src: url("gyedzai.otf");
+}
+
+@font-face {
+	font-family: "Gatchina";
+	src: url("valorian.ttf");
 }
 
 @font-face { 
@@ -874,6 +884,9 @@ h2.alert {
 }
 .gyedzenese {
 	font-family: "Sangha Kali", Mookmania;
+}
+.valorian {
+	font-family: "Gatchina", Mookmania;
 }
 .lingyuese {
 	font-family: "ZCOOL XiaoWei", Pterra;

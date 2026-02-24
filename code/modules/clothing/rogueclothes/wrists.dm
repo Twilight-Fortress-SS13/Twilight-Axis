@@ -204,6 +204,9 @@
 	item_state = "nocwrappings"
 	sewrepair = TRUE
 
+/obj/item/clothing/wrists/roguetown/allwrappings/scarlet
+	color = CLOTHING_SCARLET
+
 /obj/item/clothing/wrists/roguetown/bracers/cloth
 	name = "cloth bracers"
 	desc = "This shouldn't be used in code."

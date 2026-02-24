@@ -51,7 +51,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/tgui_theme = "azure_default"
 	var/windowflashing = TRUE
 	var/toggles = TOGGLES_DEFAULT
-	var/floating_text_toggles = TOGGLES_TEXT_DEFAULT
+	var/ghost_toggles
+	var/combat_toggles = TOGGLES_TEXT_DEFAULT
 	var/admin_chat_toggles = TOGGLES_DEFAULT_CHAT_ADMIN
 	var/db_flags
 	var/chat_toggles = TOGGLES_DEFAULT_CHAT
@@ -1912,11 +1913,12 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						/datum/language/grenzelhoftian,
 						/datum/language/kazengunese,
 						/datum/language/lingyuese,
-						/datum/language/gyedzenese,
+						/datum/language/gyedzenese, //TA EDIT
+						/datum/language/valorian, //TA EDIT
 						/datum/language/etruscan,
 						/datum/language/gronnic,
 						/datum/language/otavan,
-						/datum/language/aavnic
+						/datum/language/aavnic,
 					)
 					var/list/choices = list("None")
 					for(var/language in selectable_languages)

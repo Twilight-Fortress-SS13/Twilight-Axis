@@ -1,0 +1,4 @@
+author: "Ryan180602"
+delete-after: True
+changes:
+  - rscadd: "antighost. toggle on (off by default) to be unorbitable by ghosts."

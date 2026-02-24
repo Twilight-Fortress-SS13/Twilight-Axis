@@ -670,6 +670,29 @@
 			if("onbelt")
 				return list("shrink" = 0.4,"sx" = -4,"sy" = -6,"nx" = 5,"ny" = -6,"wx" = 0,"wy" = -6,"ex" = -1,"ey" = -6,"nturn" = 100,"sturn" = 156,"wturn" = 90,"eturn" = 180,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
+/obj/item/rogueweapon/sword/iron/triumph
+	name = "valorian arming sword"
+	desc = "A modest take on a mythical design, hailing from the blood-splattered crossroads \
+	between Valoria and Rockhill. It feels right at home, in the palm of your hand."
+	icon_state = "iswordalt"
+	sheathe_icon = "iswordalt"
+
+/obj/item/rogueweapon/sword/short/messer/iron/virtue/triumph
+	name = "valorian sword"
+	desc = "A modest take on a mythical design, hailing from the blood-splattered crossroads \
+	between Valoria and Rockhill. The flangs along its crossguard excel at catching the strikes \
+	of another, leaving them unable to persist against the following riposte."
+	icon_state = "iswordalt"
+	sheathe_icon = "iswordalt"
+
+/obj/item/rogueweapon/sword/falchion/militia/triumph
+	name = "valorian messer"
+	desc = "A modest take on a mythical design, hailing from the blood-splattered crossroads \
+	between Valoria and Rockhill. Rumors purport that mercenaries would intentionally chip the \
+	edge of these blades, as the crude serrations left behind could rend goblin-flesh with far more potency."
+	icon_state = "iswordalt"
+	sheathe_icon = "iswordalt"
+
 ////////////////////////
 
 /obj/item/rogueweapon/sword/long/training
@@ -685,7 +708,7 @@
 	thrown_bclass = BCLASS_BLUNT
 
 /obj/item/rogueweapon/sword/long/church
-	name = "holy longsword"
+	name = "see longsword"
 	desc = "A blessed longsword, wielded by the Holy See's templars in their stalwart defense against evil. Originating in the wake of the Celestial Empire's collapse, legends say that it is the grandfather to longswords all across Psydonia: the triumph of an ancient Malumite priest, stricken with divine inspiration in humenity's darkest hour. Centuries later, it still remains the ideal choice for skewering infidels and monsters alike. </br>'I am the holder of light, in the dark abyss..' </br>'..I am the holder of order and ward against vileness..' </br>'..let the Gods guide my hand, and let the Inhumen cower before me.'"
 	icon_state = "churchsword"
 	max_blade_int = 250
@@ -1409,6 +1432,7 @@
 	desc = "A \"Großesmesser\" of disputed Grenzel origin, meaning greatknife. It's a basic single-edge sword for civilian and military use. It excels at slicing and chopping, and it's made of steel. \
 	It can fill the exact function of a hunting sword, this one is more durable."
 	icon_state = "smesser"
+	sheathe_icon = "smesser"
 	force = 22	//Same damage as the iron messer
 	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust, /datum/intent/axe/chop, /datum/intent/sword/peel)
 	minstr = 5
@@ -1416,6 +1440,7 @@
 
 /obj/item/rogueweapon/sword/short/messer/duelist
 	name = "dueling messer"
+	sheathe_icon = "smesser"
 	swingsound = BLADEWOOSH_SMALL
 	wbalance = WBALANCE_SWIFT
 
@@ -1424,6 +1449,7 @@
 	desc = "A basic single-edge sword that is usually used to finish off hunted game. It excels at slicing and chopping, and it's made of iron. \
 	It's a fairly reliable and affordable self-defense weapon."
 	icon_state = "imesser"
+	sheathe_icon = "imesser"
 	minstr = 4
 	wdefense = 2
 	wlength = WLENGTH_NORMAL
@@ -1431,21 +1457,30 @@
 	smeltresult = /obj/item/ingot/iron
 	max_integrity = 100
 	sellprice = 10
-	sheathe_icon = "isword"
 
 /obj/item/rogueweapon/sword/short/messer/iron/virtue
 	name = "iron dueling messer"
 	desc = "A basic single-edge iron hunting sword that has been modified for the express purpose of dueling, with an added guard and a leaner grip for comfort and speed."
 	icon_state = "dmesser"
+	sheathe_icon = "dmesser"
 	swingsound = BLADEWOOSH_SMALL
 	wdefense = 3
 	wbalance = WBALANCE_SWIFT
+
+/obj/item/rogueweapon/sword/short/messer/alt
+	name = "steel hunting sword"
+	desc = "A noble single-edge sword that can hack through a saiga's neck like timberwood. It excels at slicing and chopping, and it's made of steel. \
+	It's a reliable self-defense weapon, and a status symbol amongst the peasantry; if a yeoman has this upon their hip, they mean business."
+	icon_state = "smesseralt"
+	sheathe_icon = "smesseralt"
+	wdefense = 3
 
 /obj/item/rogueweapon/sword/short/messer/copper
 	name = "copper messer"
 	desc = "A copper hunting sword. Less lethal than its iron counterpart."
 	force = 20 // Worse force. This weapon has steel integ instead of iron integ. Don't ask me why, it was that way before too.
 	icon_state = "cmesser"
+	sheathe_icon = "cmesser"
 	minstr = 4
 	wdefense = 2
 	smeltresult = /obj/item/ingot/copper
