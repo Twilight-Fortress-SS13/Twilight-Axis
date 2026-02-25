@@ -15,7 +15,7 @@
 /datum/runeritual/buff/on_finished_recipe(mob/living/user, list/selected_atoms, turf/loc)
 	return TRUE
 
-/datum/runeritual/buff/strength
+/datum/runeritual/buff/strength //TA EDIT START
 	name = "arcane augmentation of strength"
 	buff = /datum/status_effect/buff/magic/strength
 	tier = 2
@@ -85,3 +85,4 @@
 	buff = /datum/status_effect/buff/darkvision
 	blacklisted = FALSE
 	required_atoms = list(/obj/item/magic/manacrystal = 2, /obj/item/magic/iridescentscale = 1, /obj/item/magic/elemental/shard = 1)
+	//TA EDIT END

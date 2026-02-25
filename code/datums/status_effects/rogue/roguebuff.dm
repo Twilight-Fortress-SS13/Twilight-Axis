@@ -1763,7 +1763,7 @@
 	desc = "I am magically astute."
 	icon_state = "buff"
 
-/datum/status_effect/buff/magic/strength
+/datum/status_effect/buff/magic/strength //TA EDIT START
 	id = "strength"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/magic/strength
 	effectedstats = list("strength" = 3)
@@ -1922,7 +1922,7 @@
 /atom/movable/screen/alert/status_effect/buff/magic/perception/lesser
 	name = "lesser arcane perception"
 	desc = "I can see somethings."
-	icon_state = "buff"
+	icon_state = "buff" //TA EDIT END
 
 /datum/status_effect/buff/nocblessing
 	id = "nocblessing"
