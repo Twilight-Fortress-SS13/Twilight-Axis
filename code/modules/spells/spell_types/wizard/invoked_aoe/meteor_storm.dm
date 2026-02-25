@@ -24,6 +24,7 @@
 	T.visible_message(span_boldwarning("Fire rains from the sky!"))
 	sleep(30)
 	create_meteors(T)
+	return TRUE
 
 //meteor storm and lightstorm.
 /obj/effect/proc_holder/spell/invoked/meteor_storm/proc/create_meteors(atom/target)

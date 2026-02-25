@@ -239,8 +239,9 @@
 							"Retinue" = GLOB.retinue_positions,
 							"Garrison" = GLOB.garrison_positions,
 							"Church" = GLOB.church_positions,
+              "Inquisition" = GLOB.inquisition_positions,
 							"Wanderers" = GLOB.wanderer_positions,
-							"Abstract" = list("Appearance", "Emote", "Deadchat", "OOC", "LOOC"))
+							"Abstract" = list("Appearance", "Emote", "Deadchat", "OOC", "LOOC", "MENTORHELP"))
 		for(var/department in headless_job_lists)
 			output += "<div class='column'><label class='rolegroup [ckey(department)]'><input type='checkbox' name='[department]' class='hidden' onClick='toggle_checkboxes(this, \"_com\")'>[department]</label><div class='content'>"
 			break_counter = 0
@@ -500,6 +501,7 @@
 	var/msg = "has created a [isnull(duration) ? "permanent" : "temporary [time_message]"] [applies_to_admins ? "admin " : ""][roles_to_ban[1] == "Server" ? "server ban" : "role ban from [roles_to_ban.len] roles"] for [target]."
 	log_admin_private("[kn] [msg][roles_to_ban[1] == "Server" ? "" : " Roles: [roles_to_ban.Join(", ")]"] Reason: [reason]")
 	message_admins("[kna] [msg][roles_to_ban[1] == "Server" ? "" : " Roles: [roles_to_ban.Join("\n")]"]\nReason: [reason]")
+	world.TgsAnnounceBan(player_key, admin_ckey, duration, time_message, roles_to_ban, reason, severity, applies_to_admins)
 	if(applies_to_admins)
 		send2irc("BAN ALERT","[kn] [msg]")
 	if(player_ckey)
@@ -696,6 +698,7 @@
 	qdel(query_unban)
 	log_admin_private("[kn] has unbanned [target] from [role].")
 	message_admins("[kna] has unbanned [target] from [role].")
+	world.TgsAnnounceUnban(target, admin_key, role)
 	var/client/C = GLOB.directory[player_key]
 	if(C)
 		build_ban_cache(C)

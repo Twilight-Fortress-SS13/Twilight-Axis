@@ -1,4 +1,4 @@
-//Miscellaneous
+/*//Miscellaneous
 
 /datum/loadout_item/card_deck
 	name = "Card Deck"
@@ -19,3 +19,4 @@
 	name = "Custom Book"
 	path = /obj/item/book/rogue/loadoutbook
 	sort_category = "Miscellaneous"
+*/

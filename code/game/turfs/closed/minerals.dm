@@ -30,6 +30,7 @@
 	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	attacked_sound = list('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg')
 	neighborlay = "dirtedge"
+	explosion_block = 2
 
 /turf/closed/mineral/Initialize()
 	if (!canSmoothWith)

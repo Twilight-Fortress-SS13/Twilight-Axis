@@ -206,7 +206,7 @@ body {
   overflow-y: scroll;
   color: #c9c1ba;
   font-size: 19px;
-  font-family: 'Pterra';
+  font-family: 'Mookmania';
   text-shadow:
     -1px -1px 0 #000,
     1px -1px 0 #000,
@@ -221,13 +221,13 @@ h4,
 h5,
 h6 {
   color: #c9c1ba;
-  font-family: Pterra;
+  font-family: Mookmania;
 }
 
 em {
   font-style: normal;
   font-weight: bold;
-  font-family: Pterra;
+  font-family: Mookmania;
 }
 
 a:link {
@@ -237,7 +237,7 @@ a:link {
 
 .motd {
   color: #638500;
-  font-family: Pterra;
+  font-family: Mookmania;
 }
 .motd h1,
 .motd h2,
@@ -258,7 +258,7 @@ a:link {
 h1.alert,
 h2.alert {
   color: #c9c1ba;
-  font-family: Pterra, TrueType;
+  font-family: Mookmania, TrueType;
 }
 .italics {
   font-style: italic;
@@ -275,12 +275,12 @@ h2.alert {
 .ooc {
   color: #c5c5c5;
   font-weight: bold;
-  font-family: Pterra;
+  font-family: Mookmania;
 }
 .adminobserverooc {
   color: #cca300;
   font-weight: bold;
-  font-family: Pterra;
+  font-family: Mookmania;
 }
 .adminooc {
   color: #4972bc;
@@ -301,7 +301,7 @@ h2.alert {
 }
 
 .say {
-  font-family: Pterra;
+  font-family: Mookmania;
 }
 .deadsay {
   color: #e2c1ff;
@@ -626,48 +626,47 @@ h2.alert {
 }
 
 .human {
-  font-family: 'Honoka Mincho', 'Pterra';
+  font-family: 'Honoka Mincho', 'Mookmania';
 }
 .elf {
-  font-family: 'Dauphin', cursive, 'Pterra';
+  font-family: 'MarkScript-Regular', cursive, 'Mookmania';
 }
 .oldazure{
 	font-family: "BaggageMasterText79 ttcon", "Pterra";
   font-size: 110%;
 }
 .dwarf {
-  font-family: 'MasonAlternate', 'Pterra';
+  font-family: 'Celtes SP', 'Mookmania';
 }
 .sandspeak {
-  font-family: 'Furqan', 'Pterra';
+  font-family: 'Kamelia', 'Mookmania';
 }
 .delf {
-  font-family: 'Dauphin', cursive, 'Pterra';
-  font-style: italic;
+  font-family: 'MarkScript-Regular', 'Mookmania';
 }
 .hellspeak {
-  font-family: 'Xaphan', 'Pterra';
+  font-family: 'Comforter Brush', 'Mookmania';
   font-size: 110%;
 }
 .undead {
-  font-family: 'FriskyVampire', 'Pterra';
+  font-family: 'FDMedian', 'Mookmania';
 }
 .orc {
-  font-family: 'Thief by The Riddler', Pterra;
+  font-family: 'VizaviTYGRA', Mookmania;
 }
 .beast {
-  font-family: 'Thief by The Riddler', Pterra;
+  font-family: 'VizaviTYGRA', Mookmania;
 }
 .reptile {
-  font-family: 'Kingthings Petrock', Pterra;
+  font-family: 'Kautiva Cyrillic Black', Mookmania;
   font-size: 120%;
 }
 .grenzelhoftian {
-  font-family: 'Emperialisme', 'Pterra';
+  font-family: 'ALOT Gutenberg B Normal', 'Mookmania';
   font-size: 120%;
 }
 .kazengunese {
-  font-family: 'Yuji Boku', Pterra;
+  font-family: 'Ganesha Type', Mookmania;
 }
 .lingyuese {
   font-family: 'ZCOOL XiaoWei', Pterra;
@@ -677,31 +676,41 @@ h2.alert {
   font-size: 100%;
 }
 .orc {
-  font-family: 'Thief by The Riddler', 'Pterra';
+  font-family: 'VizaviTYGRA', 'Mookmania';
 }
 .beast {
-  font-family: 'Thief by The Riddler', 'Pterra';
+  font-family: 'VizaviTYGRA', 'Mookmania';
 }
 .reptile {
-  font-family: 'Kingthings Petrock', 'Pterra';
+  font-family: 'Kautiva Cyrillic Black', 'Mookmania';
   font-size: 120%;
 }
 .otavan {
-  font-family: 'ArkansasDB', 'Pterra';
-  font-size: 120%;
+  font-family: 'Deutsch Gothic', 'Mookmania';
 }
 .etruscan {
-  font-family: 'Feronia', 'Pterra';
+  font-family: 'TolkienCyr', 'Mookmania';
   font-size: 100%;
 }
 .gronnic {
-  font-family: 'Jorvik Informal', 'Pterra';
+  font-family: 'RUSNeverwinter', 'Mookmania';
   font-size: 100%;
 }
 .aavnic {
-  font-family: 'Romeodn', 'Pterra';
+  font-family: 'Arabic Cyr (kerning fixed)', 'Mookmania';
   font-size: 100%;
 }
+
+//TA EDIT START
+.valorian {
+  font-family: 'Gatchina', 'Mookmania';
+  font-size: 100%;
+}
+.gyedzenese {
+  font-family: 'Sangha Kali', 'Mookmania';
+  font-size: 100%;
+}
+//TA EDIT END
 
 .torture {
   color: #42ff20;
@@ -716,7 +725,7 @@ h2.alert {
 }
 .smallyell {
   font-size: 70%;
-  font-family: Pterra;
+  font-family: Mookmania;
 }
 .big {
   font-size: 120%;
@@ -849,6 +858,11 @@ h2.alert {
   color: #6f5977;
 }
 
+.lovebold	{
+  color: #e7bed8;	
+  font-weight: bold;
+}
+
 @keyframes deathcolor {
   0% {
     color: #cc0f0f;
@@ -893,4 +907,35 @@ h2.alert {
   height: 1.5em;
   margin: 0;
   padding: 0;
+}
+
+.chat_box {
+	display: inline-block;
+	width: calc(100% - 1em);
+	margin: 0.5em;
+	padding: 0.5em 0.75em;
+	box-sizing: border-box;
+}
+
+.mentor_block {
+	background: #3e263a;
+	border: 1px dotted #7f4274;
+}
+
+/* TA EDIT */
+
+.reallybigredtext {
+	font-size: 24px !important;
+	font-weight: bold !important;
+	color: #ff0000 !important;
+	text-shadow: 0 0 8px #ff0000, 0 0 16px #ff0000;
+	display: block;
+	text-align: center;
+	margin: 10px 0;
+	animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+	from { opacity: 0.7; }
+	to { opacity: 1; }
 }

@@ -579,8 +579,17 @@
 	..()
 
 /obj/structure/fluff/clock/attack_right(mob/user)
-	handle_special_items_retrieval(user, src)
-	return
+	if(user.mind && isliving(user))
+		if(user.mind.special_items && user.mind.special_items.len)
+			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
+			if(item)
+				if(user.Adjacent(src))
+					if(user.mind.special_items[item])
+						var/path2item = user.mind.special_items[item]
+						user.mind.special_items -= item
+						var/obj/item/I = new path2item(user.loc)
+						user.put_in_hands(I)
+			return
 
 /obj/structure/fluff/clock/examine(mob/user)
 	. = ..()
@@ -626,8 +635,17 @@
 	pixel_y = 32
 
 /obj/structure/fluff/wallclock/attack_right(mob/user)
-	handle_special_items_retrieval(user, src)
-	return
+	if(user.mind && isliving(user))
+		if(user.mind.special_items && user.mind.special_items.len)
+			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
+			if(item)
+				if(user.Adjacent(src))
+					if(user.mind.special_items[item])
+						var/path2item = user.mind.special_items[item]
+						user.mind.special_items -= item
+						var/obj/item/I = new path2item(user.loc)
+						user.put_in_hands(I)
+			return
 
 /obj/structure/fluff/wallclock/Destroy()
 	if(soundloop)
@@ -699,7 +717,7 @@
 	if(!user.is_literate())
 		. += "I have no idea what it says."
 	else
-		. += "It says \"AZURE PEAK\""
+		. += "It says \"Twilight Axis\""
 
 /obj/structure/fluff/buysign
 	icon_state = "signwrote"
@@ -820,7 +838,17 @@
 	. = ..()
 
 /obj/structure/fluff/statue/attack_right(mob/user)
-	handle_special_items_retrieval(user, src)
+	if(user.mind && isliving(user))
+		if(user.mind.special_items && user.mind.special_items.len)
+			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
+			if(item)
+				if(user.Adjacent(src))
+					if(user.mind.special_items[item])
+						var/path2item = user.mind.special_items[item]
+						user.mind.special_items -= item
+						var/obj/item/I = new path2item(user.loc)
+						user.put_in_hands(I)
+			return
 
 /obj/structure/fluff/statue/CanPass(atom/movable/mover, turf/target)
 	if(get_dir(loc, mover) == dir)
@@ -1360,10 +1388,10 @@
 		return
 
 	var/list/weapon_choices = list(
-		"Sword" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/sword/long/martyr),
-		"Axe" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/greataxe/steel/doublehead/martyr),
-		"Mace" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/mace/goden/martyr),
-		"Trident" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/spear/partizan/martyr)
+		"Sword" = CALLBACK(src, PROC_REF(summon_and_equip_sword), user),
+		"Axe" = CALLBACK(src, PROC_REF(summon_and_equip_axe), user),
+		"Mace" = CALLBACK(src, PROC_REF(summon_and_equip_mace), user),
+		"Trident" = CALLBACK(src, PROC_REF(summon_and_equip_spear), user)
 	)
 
 	var/result = tgui_input_list(user, "Choose a martyr weapon to summon:", "Martyr Weapon", weapon_choices)
@@ -1374,26 +1402,69 @@
 	else
 		to_chat(user, span_warning("No weapon was chosen."))
 
-/obj/structure/fluff/psycross/proc/summon_and_equip(mob/user, var/obj/item/rogueweapon/weapontype)
-	var/obj/item/rogueweapon/old_weapon = SSroguemachine.martyrweapon
-	var/integrity
+/obj/structure/fluff/psycross/proc/summon_and_equip_sword(mob/user)
+	var/obj/item/rogueweapon/sword/long/martyr/I = SSroguemachine.martyrweapon
 
-	if(old_weapon)
-		integrity = old_weapon.obj_integrity
-		old_weapon.visible_message(span_danger("[old_weapon] dissolves into mere dust, and flitters away - unbound."))
-		SSroguemachine.martyrweapon = null
-		qdel(old_weapon)
+	if(I)
+		I.anti_stall()
 
-	var/obj/item/rogueweapon/new_weapon = new weapontype(src.loc)
-	new_weapon.obj_integrity = integrity
-	SSroguemachine.martyrweapon = new_weapon
+	I = new /obj/item/rogueweapon/sword/long/martyr(src.loc)
+	SSroguemachine.martyrweapon = I
 
-	if(user.put_in_hands(new_weapon))
-		to_chat(user, span_notice("[new_weapon] appears in your hand."))
+	if(user.put_in_hands(I))
+		to_chat(user, span_notice("The martyr sword appears in your hand."))
 	else
-		to_chat(user, span_warning("Your hands are full! [new_weapon] falls to your feet."))
+		to_chat(user, span_warning("Your hands are full! The sword falls to the ground."))
 
-	return new_weapon
+	return I
+
+/obj/structure/fluff/psycross/proc/summon_and_equip_axe(mob/user)
+	var/obj/item/rogueweapon/greataxe/steel/doublehead/martyr/I = SSroguemachine.martyrweapon
+
+	if(I)
+		I.anti_stall()
+
+	I = new /obj/item/rogueweapon/greataxe/steel/doublehead/martyr(src.loc)
+	SSroguemachine.martyrweapon = I
+
+	if(user.put_in_hands(I))
+		to_chat(user, span_notice("The martyr axe appears in your hand."))
+	else
+		to_chat(user, span_warning("Your hands are full! The axe falls to the ground."))
+
+	return I
+
+/obj/structure/fluff/psycross/proc/summon_and_equip_mace(mob/user)
+	var/obj/item/rogueweapon/mace/goden/martyr/I = SSroguemachine.martyrweapon
+
+	if(I)
+		I.anti_stall()
+
+	I = new /obj/item/rogueweapon/mace/goden/martyr(src.loc)
+	SSroguemachine.martyrweapon = I
+
+	if(user.put_in_hands(I))
+		to_chat(user, span_notice("The martyr mace appears in your hand."))
+	else
+		to_chat(user, span_warning("Your hands are full! The mace falls to the ground."))
+
+	return I
+
+/obj/structure/fluff/psycross/proc/summon_and_equip_spear(mob/user)
+	var/obj/item/rogueweapon/spear/partizan/martyr/I = SSroguemachine.martyrweapon
+
+	if(I)
+		I.anti_stall()
+
+	I = new /obj/item/rogueweapon/spear/partizan/martyr(src.loc)
+	SSroguemachine.martyrweapon = I
+
+	if(user.put_in_hands(I))
+		to_chat(user, span_notice("The martyr trident appears in your hand."))
+	else
+		to_chat(user, span_warning("Your hands are full! The spear falls to the ground."))
+
+	return I
 
 /obj/structure/fluff/psycross/attack_hand(mob/user)
 	. = ..()

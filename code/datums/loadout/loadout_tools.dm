@@ -1,4 +1,4 @@
-//TOOLS
+/*//TOOLS
 /datum/loadout_item/paper_parasol
 	name = "Paper Parasol"
 	path = /obj/item/rogueweapon/mace/parasol
@@ -8,3 +8,4 @@
 	name = "Fine Parasol"
 	path = /obj/item/rogueweapon/mace/parasol/noble
 	sort_category = "Tools"
+*/

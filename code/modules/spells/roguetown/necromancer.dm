@@ -104,38 +104,35 @@
 
 	var/skeleton_roll
 
+	var/list/turf/target_turfs = list(T)
+	target_turfs += get_step(T, EAST)
+	target_turfs += get_step(T, WEST)
+	target_turfs += get_step(T, NORTH)
+	target_turfs += get_step(T, SOUTH)
+	target_turfs += get_step(T, NORTHEAST)
+	target_turfs += get_step(T, NORTHWEST)
+	target_turfs += get_step(T, SOUTHEAST)
+	target_turfs += get_step(T, SOUTHWEST)
+
 	for(var/i = 1 to to_spawn)
-		if(i > to_spawn)
-			i = 1
+		var/t_turf = target_turfs[i]
 
-		if(i > 1)
-			if(user.dir == NORTH || user.dir == SOUTH)
-				if(prob(50))
-					T = get_step(T, EAST)
-				else
-					T = get_step(T, WEST)
-			else
-				if(prob(50))
-					T = get_step(T, NORTH)
-				else
-					T = get_step(T, SOUTH)
-
-		if(!isopenturf(T))
+		if(!isopenturf(t_turf))
 			continue
 
-		new /obj/effect/temp_visual/bluespace_fissure(T)
+		new /obj/effect/temp_visual/bluespace_fissure(t_turf)
 		skeleton_roll = rand(1,100)
 		switch(skeleton_roll)
 			if(1 to 20)
-				new /mob/living/simple_animal/hostile/rogue/skeleton/axe(T, user, cabal_affine)
+				new /mob/living/simple_animal/hostile/rogue/skeleton/axe(t_turf, user, cabal_affine)
 			if(21 to 40)
-				new /mob/living/simple_animal/hostile/rogue/skeleton/spear(T, user, cabal_affine)
+				new /mob/living/simple_animal/hostile/rogue/skeleton/spear(t_turf, user, cabal_affine)
 			if(41 to 60)
-				new /mob/living/simple_animal/hostile/rogue/skeleton/guard(T, user, cabal_affine)
+				new /mob/living/simple_animal/hostile/rogue/skeleton/guard(t_turf, user, cabal_affine)
 			if(61 to 80)
-				new /mob/living/simple_animal/hostile/rogue/skeleton/bow(T, user, cabal_affine)
+				new /mob/living/simple_animal/hostile/rogue/skeleton/bow(t_turf, user, cabal_affine)
 			if(81 to 100)
-				new /mob/living/simple_animal/hostile/rogue/skeleton(T, user, cabal_affine)
+				new /mob/living/simple_animal/hostile/rogue/skeleton(t_turf, user, cabal_affine)
 	return TRUE
 
 /obj/effect/proc_holder/spell/invoked/raise_undead_formation/necromancer

@@ -378,6 +378,9 @@
 	var/mob/living/L = firer
 	if(!L || !L.mind)
 		return
+	
+	if(HAS_TRAIT(L, TRAIT_MAGIC_SHIELD)) //TA EDIT
+		return
 	var/skill_multiplier = 0
 	if(isliving(target)) // If the target theyre shooting at is a mob/living
 		var/mob/living/T = target

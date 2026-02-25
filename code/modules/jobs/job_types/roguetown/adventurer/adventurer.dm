@@ -30,8 +30,8 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 	wanderer_examine = TRUE
 	advjob_examine = TRUE
 	always_show_on_latechoices = TRUE
-	job_reopens_slots_on_death = TRUE
-	same_job_respawn_delay = 1 MINUTES
+	job_reopens_slots_on_death = FALSE
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
 
@@ -52,7 +52,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/mystic,
 		/datum/advclass/mystic/resilientsoul,
 		/datum/advclass/mystic/holyblade,
-		/datum/advclass/mystic/theurgist,
+	//	/datum/advclass/mystic/theurgist, // TA EDIT
 		/datum/advclass/mage,
 		/datum/advclass/mage/spellblade,
 		/datum/advclass/mage/spellsinger,
@@ -70,7 +70,11 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/foreigner/slaver,
 		/datum/advclass/foreigner/shepherd,
 		/datum/advclass/foreigner/fencerguy,
-		/datum/advclass/foreigner/bronzeclad
+		/datum/advclass/foreigner/bronzeclad,
+
+		/datum/advclass/rogue/soundbreaker, // TA - Soundbreaker Class
+		/datum/advclass/ranger/twilight_hunter, // TA - Firearm Class
+		/datum/advclass/foreigner/gronnadv // TA - Gronn Nomad
 	)
 
 /mob/living/carbon/human/proc/adv_hugboxing_start()
@@ -96,3 +100,21 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 	status_flags &= ~GODMODE
 	REMOVE_TRAIT(src, TRAIT_PACIFISM, HUGBOX_TRAIT)
 	to_chat(src, span_danger("My joy is gone! Danger surrounds me."))
+
+/proc/update_adventurer_slots()
+	var/datum/job/adventurer_job = SSjob.GetJob("Adventurer")
+	if(!adventurer_job)
+		return
+
+	var/player_count = length(GLOB.joined_player_list)
+	var/ready_player_count = length(GLOB.ready_player_list)
+	var/slots = 20
+
+	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+	if(current_players > 70)
+		var/extra = floor((current_players - 70) / 5)
+		slots += extra
+	slots = min(slots, 30)
+
+	adventurer_job.total_positions = slots
+	adventurer_job.spawn_positions = slots

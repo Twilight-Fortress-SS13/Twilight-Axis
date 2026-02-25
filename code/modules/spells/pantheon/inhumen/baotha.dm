@@ -126,24 +126,24 @@
 
 /obj/effect/proc_holder/spell/self/bless_drink/cast(list/targets, mob/living/user)
 	. = ..()
+
 	if(!ishuman(user))
 		revert_cast()
 		return FALSE
-	var/held = user.get_active_held_item()
-	if(!istype(held, /obj/item/reagent_containers/glass))
+
+	var/obj/item/reagent_containers/glass/held = user.get_active_held_item()
+	if(!istype(held))
 		revert_cast()
 		to_chat(user, span_info("This is not a suitable container for this!"))
 		return FALSE
-	
-	var/obj/item/reagent_containers/glass/target_container = held
+
 	var/dur = duration * user.get_skill_level(associated_skill)
 	var/printed_dur = round(dur / 600)
-	if(target_container.set_infinite(user, dur))
-		user.playsound_local(get_turf(user), 'sound/magic/baotha_blessdrink.ogg', 100, TRUE)
-		to_chat(user, span_notice("The drink swirls for a mote. This will last around [printed_dur] minute[(printed_dur > 1) ? "s" : ""]."))
-	else
-		revert_cast()
-		return FALSE
+
+	held.AddElement(/datum/element/infinite_reagents, list(/datum/reagent/water, /datum/reagent/consumable/ethanol))
+	addtimer(CALLBACK(held, TYPE_PROC_REF(/datum, _RemoveElement), list(/datum/element/infinite_reagents)), dur)
+
+	to_chat(user, span_notice("The drink swirls for a mote. This will last around [printed_dur] minute[(printed_dur > 1) ? "s" : ""]."))
 	return TRUE
 
 //T0 that tells the user the person's vice.

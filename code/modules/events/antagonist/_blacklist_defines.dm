@@ -17,4 +17,12 @@
 		"Wretch",\
 		"Gnoll",\
 		"Veteran",\
+		"Guildmaster",\
+		"Court Magician",\
+		"Keeper",\
+		"Orthodoxist",\
+		"Druid",\
+		"Acolyte",\
+		"Man at Arms",\
+		"Squire",\
 	)

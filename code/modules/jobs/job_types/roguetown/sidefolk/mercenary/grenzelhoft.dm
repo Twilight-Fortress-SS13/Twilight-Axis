@@ -132,7 +132,7 @@
 	name = "Armbrustschutze"
 	tutorial = "You're a proved marksman with a crossbow, and learned how to set up camp and defenses in the wild. The guild needs you."
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_crossbowman
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_SURVIVAL_EXPERT, TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_SPD = 2,
 		STATKEY_WIL = 2,
@@ -191,12 +191,14 @@
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 	shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft
 	gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
-	backr = /obj/item/storage/backpack/rogue/satchel/black
+	backl = /obj/item/storage/backpack/rogue/backpack
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
+		/obj/item/flint = 1,
+		/obj/item/bedroll = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 	H.merctype = 7
@@ -209,7 +211,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_mage
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY)
-	cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	cmode_music = 'modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg' //TA EDIT
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_INTELLECTUAL, TRAIT_STEELHEARTED, TRAIT_ALCHEMY_EXPERT)
 	subclass_stats = list(

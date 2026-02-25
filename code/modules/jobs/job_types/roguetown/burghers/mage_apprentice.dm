@@ -9,6 +9,7 @@
 	allowed_races = ACCEPTED_RACES
 	spells = list(/obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
 	advclass_cat_rolls = list(CTAG_WAPPRENTICE = 20)
+	same_job_respawn_delay = 30 MINUTES
 
 	tutorial = "Yils of study have led you to the University of Azuria. The Divine heals and protects. The arcyne arts, though useful, are far more suited to death and destruction. The Crown knows this, and provides a stipend to fund your studies and just as much your complacency, to not turn your magicks against the Crown. A comfortable tenure, a stipend, and a place to undergo your study. What more could a Mage ask for?"
 
@@ -27,17 +28,18 @@
 	job_subclasses = list(
 		/datum/advclass/wapprentice/associate,
 		/datum/advclass/wapprentice/alchemist,
-		/datum/advclass/wapprentice/apprentice
+		/datum/advclass/wapprentice/apprentice,
+		/datum/advclass/wapprentice/practice
 	)
 
 /datum/outfit/job/roguetown/wapprentice
-	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
-	pants = /obj/item/clothing/under/roguetown/tights/random
+
+	
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/magebag/associate
-	beltr = /obj/item/storage/keyring/apprentice
+
 	backl = /obj/item/storage/backpack/rogue/satchel
-	backr = /obj/item/rogueweapon/woodstaff
+
 	shoes = /obj/item/clothing/shoes/roguetown/gladiator // FANCY SANDALS
 
 /datum/advclass/wapprentice/associate
@@ -73,12 +75,16 @@
 /datum/outfit/job/roguetown/wapprentice/associate/pre_equip(mob/living/carbon/human/H)
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
 	head = /obj/item/clothing/head/roguetown/roguehood/mage
+	backr = /obj/item/rogueweapon/woodstaff
+	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
+	pants = /obj/item/clothing/under/roguetown/tights/random
 	backpack_contents = list(
 		/obj/item/roguegem/amethyst = 1,
 		/obj/item/spellbook_unfinished/pre_arcyne = 1,
 		/obj/item/recipe_book/alchemy = 1,
 		/obj/item/recipe_book/magic = 1,
 		/obj/item/chalk = 1,
+		/obj/item/storage/keyring/apprentice,
 		)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
@@ -119,6 +125,9 @@
 	)
 
 /datum/outfit/job/roguetown/wapprentice/alchemist/pre_equip(mob/living/carbon/human/H)
+	backr = /obj/item/rogueweapon/woodstaff
+	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
+	pants = /obj/item/clothing/under/roguetown/tights/random
 	backpack_contents = list(
 		/obj/item/roguegem/amethyst = 1,
 		/obj/item/seeds/swampweed = 1,
@@ -126,7 +135,8 @@
 		/obj/item/recipe_book/alchemy = 1,
 		/obj/item/recipe_book/magic = 1,
 		/obj/item/chalk = 1,
-		/obj/item/spellbook_unfinished/pre_arcyne = 1
+		/obj/item/spellbook_unfinished/pre_arcyne = 1,
+		/obj/item/storage/keyring/apprentice,
 		)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
@@ -158,12 +168,16 @@
 	)
 
 /datum/outfit/job/roguetown/wapprentice/apprentice/pre_equip(mob/living/carbon/human/H)
+	backr = /obj/item/rogueweapon/woodstaff
+	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
+	pants = /obj/item/clothing/under/roguetown/tights/random
 	backpack_contents = list(
 		/obj/item/roguegem/amethyst = 1,
 		/obj/item/recipe_book/alchemy = 1,
 		/obj/item/recipe_book/magic = 1,
 		/obj/item/spellbook_unfinished/pre_arcyne = 1,
 		/obj/item/chalk = 1,
+		/obj/item/storage/keyring/apprentice,
 		)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)

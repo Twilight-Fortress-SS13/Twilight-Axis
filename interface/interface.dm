@@ -67,6 +67,12 @@
 	else
 		to_chat(src, span_danger("You can't currently use Mentorhelp in the main menu."))
 
+/client/verb/mentor_stats()
+	set name = "Mentor Statistics"
+	set desc = ""
+	set category = "-Admin-"
+	check_mentor_stats_menu(src.ckey)
+
 /client/verb/reportissue()
 	set name = "report-issue"
 	set desc = ""

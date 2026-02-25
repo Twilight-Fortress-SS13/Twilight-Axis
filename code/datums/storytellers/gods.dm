@@ -527,6 +527,9 @@
 		"Set 6" = list(
 			STATS_PLEASURES = list("name" = "Pleasures had:", "points" = 5, "capacity" = 50),
 		),
+		"Set 5" = list(
+			STATS_KNOTTED_NOT_LUPIANS = list("name" = "Non-Lupian knottings:", "points" = 5, "capacity" = 50),
+		),
 	)
 
 /datum/storyteller/graggar

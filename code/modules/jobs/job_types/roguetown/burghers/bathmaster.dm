@@ -12,7 +12,7 @@
 	outfit = /datum/outfit/job/roguetown/bathmaster
 	display_order = JDO_BATHMASTER
 	give_bank_account = 20
-	min_pq = 1
+	min_pq = 3
 	max_pq = null
 	bypass_lastclass = TRUE
 	round_contrib_points = 3
@@ -42,8 +42,8 @@
 		STATKEY_INT = -1
 	)
 	subclass_skills = list(
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_EXPERT,

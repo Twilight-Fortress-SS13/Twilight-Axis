@@ -27,11 +27,12 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	display_order = JDO_LORD
 	tutorial = "Elevated upon your throne through a web of intrigue and political upheaval, you are the absolute authority of these lands and at the center of every plot within it. Every man, woman and child is envious of your position and would replace you in less than a heartbeat: Show them the error of their ways."
 	whitelist_req = FALSE
-	min_pq = 50 //staff request
+	min_pq = 10
 	max_pq = null
 	round_contrib_points = 4
 	give_bank_account = 1000
 	cmode_music = 'sound/music/combat_noble.ogg'
+	same_job_respawn_delay = 30 MINUTES
 
 	// Can't use the Throat when you can't talk properly or.. at all for that matter.
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible)
@@ -65,8 +66,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		SSticker.regentmob = null //Time for regent to give up the position.
 
 		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_marriage_choice)), 50)
-		if(STATION_TIME_PASSED() <= 30 MINUTES) //Late to the party? Stuck with default colors, sorry!
-			addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_color_choice)), 50)
+		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_color_choice)), 50)
 
 /datum/outfit/job/roguetown/lord
 	neck = /obj/item/storage/belt/rogue/pouch/coins/rich
@@ -133,7 +133,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	tutorial = "You're a noble warrior. You rose to your rank through your own strength and skill, whether by leading your men or by fighting alongside them. Or perhaps you are none of that, but simply a well-trained heir elevated to the position of Lord. You're trained in the usage of heavy armor, and knows swordsmanship well."
 	outfit = /datum/outfit/job/roguetown/lord/warrior
 	category_tags = list(CTAG_LORD)
-	traits_applied = list(TRAIT_NOBLE, TRAIT_HEAVYARMOR, TRAIT_DNR)
+	traits_applied = list(TRAIT_NOBLE, TRAIT_HEAVYARMOR)
 	subclass_stats = list(
 		STATKEY_LCK = 5,
 		STATKEY_INT = 3,
@@ -171,12 +171,12 @@ GLOBAL_LIST_EMPTY(lord_titles)
 */
 /datum/advclass/lord/merchant
 	name = "Merchant Lord"
-	tutorial = "You were always talented with coins and trade. And your talents have brought you to the position of the Lord of Azure Peak. You could be a merchant who bought his way into nobility and power, or an exceptionally talented noble who were inclined to be good with coins. Fighting directly is not your forte\
+	tutorial = "You were always talented with coins and trade. And your talents have brought you to the position of the Lord of Twilight Axis. You could be a merchant who bought his way into nobility and power, or an exceptionally talented noble who were inclined to be good with coins. Fighting directly is not your forte\
 	But you have plenty of wealth, keen ears, and know a good deal from a bad one."
 	outfit = /datum/outfit/job/roguetown/lord/merchant
 	category_tags = list(CTAG_LORD)
 	noble_income = 400 // Let's go crazy. This is +400 per day for a total of 2400 per round at the end of a day. This is probably equal to doubling passive incomes of the keep.
-	traits_applied = list(TRAIT_NOBLE, TRAIT_SEEPRICES, TRAIT_CICERONE, TRAIT_KEENEARS, TRAIT_MEDIUMARMOR, TRAIT_DNR)
+	traits_applied = list(TRAIT_NOBLE, TRAIT_SEEPRICES, TRAIT_CICERONE, TRAIT_KEENEARS, TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_LCK = 5,
 		STATKEY_INT = 5,
@@ -219,7 +219,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	tutorial = "Despite spending your younger years focused on reading and the wonders of the arcyne, it came the time for you to take the throne. Now you rule not only by crown and steel, but by spell and wit, show those who doubted your time buried in books was well spent how wrong they were."
 	outfit = /datum/outfit/job/roguetown/lord/mage
 	category_tags = list(CTAG_LORD)
-	traits_applied = list(TRAIT_NOBLE, TRAIT_MAGEARMOR, TRAIT_ARCYNE_T3, TRAIT_DNR)
+	traits_applied = list(TRAIT_NOBLE, TRAIT_MAGEARMOR, TRAIT_ARCYNE_T3)
 	subclass_stats = list(
 		STATKEY_LCK = 5,
 		STATKEY_INT = 4,
@@ -255,10 +255,10 @@ GLOBAL_LIST_EMPTY(lord_titles)
 */
 /datum/advclass/lord/inbred
 	name = "Inbred Lord"
-	tutorial = "Psydon and Astrata smiles upon you. For despite your inbred and weak body, and your family's conspiracies to remove you from succession, you have somehow become the Lord of Azure Peak. May your reign lasts a hundred years."
+	tutorial = "Psydon and Astrata smiles upon you. For despite your inbred and weak body, and your family's conspiracies to remove you from succession, you have somehow become the Lord of Twilight Axis. May your reign lasts a hundred years."
 	outfit = /datum/outfit/job/roguetown/lord/inbred
 	category_tags = list(CTAG_LORD)
-	traits_applied = list(TRAIT_NOBLE, TRAIT_CRITICAL_WEAKNESS, TRAIT_NORUN, TRAIT_HEAVYARMOR, TRAIT_GOODLOVER, TRAIT_DNR)
+	traits_applied = list(TRAIT_NOBLE, TRAIT_CRITICAL_WEAKNESS, TRAIT_NORUN, TRAIT_HEAVYARMOR, TRAIT_GOODLOVER)
 	subclass_stats = list(
 		STATKEY_LCK = 10,
 		STATKEY_INT = -2,

@@ -235,6 +235,7 @@
 #define TRAIT_ARCYNE_T2 "Arcyne Training (Apprentice)"
 #define TRAIT_ARCYNE_T3 "Arcyne Training (Expert)"
 #define TRAIT_ARCYNE_T4 "Arcyne Training (Master)"
+#define TRAIT_MAGIC_SHIELD "Projectile Reflection" //TA EDIT
 #define TRAIT_BITERHELM "Helmetbiter" // just use this to get helmets which are bitey.
 #define TRAIT_STRENGTH_UNCAPPED "Strength Unbound"	//ignores the STR softcap.
 #define TRAIT_EORAN_CALM "Eoran Calm"
@@ -256,6 +257,8 @@
 #define TRAIT_GARRISON_ITEM "Garrison Item"
 #define TRAIT_WEATHER_PROTECTED "Weather Protected"
 #define TRAIT_VAMPIRE_SPAWN_PROTECTION "Vampire Spawn Protection"
+
+#define TRAIT_ARTILLERY_EXPERT "Artillery Expert"
 
 // Economic Roles Traits
 // Most of these should NOT be given to any true combat roles (I.E. anything with Dexpert or Miracle / Good Magic) with very few exceptions
@@ -279,6 +282,14 @@
 #define TRAIT_MASTER_MASON "Master Masonry"
 #define TRAIT_FOOD_STIPEND "Vomitorium-known"
 
+//TA TRAITS
+#define TRAIT_CLERGY_TA "Decem Dii Vult"
+#define TRAIT_FIREARMS_MARKSMAN "Expert Gunslinger" // They keep saying firearms are too easy to level up. Unlocks Master and Legendary Firearms.
+#define TRAIT_VILLAIN "Villain"
+#define TRAIT_ZIZOID_HUNTED "zizoidhunted" // Used to signal character has been marked by death by the Zizoid cult
+#define TRAIT_WOUNDREGEN "Wound Regeneration"
+#define TRAIT_ZIZOEYES "Zizo eyes"
+#define TRAIT_NOC_LIGHT_BLESSING "Noc Blessing"
 // If you want description to show up you gotta have the trait name defined BEFORE this lol
 
 GLOBAL_LIST_INIT(roguetraits, list(
@@ -287,9 +298,9 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_LEPROSY = span_necrosis("I'm a disgusting leper..."),
 	TRAIT_UNDIVIDED = span_info("I have seen past petty squabbles, and am a true follower of the Ten Undivided. I feel most comfortable around churchmen."),
 	TRAIT_TAVERN_FIGHTER = span_info("I am vigilant in my duties. The Tavern is my home, none shall dare oppose me or skip out on payment."),
-	TRAIT_GUARDSMAN = span_info("I am vigilant in my duties. In the town of Azure Peak, my abilities are sharper due to my routine and familiarity."),
+	TRAIT_GUARDSMAN = span_info("I am vigilant in my duties. In the town of Twilight Axis, my abilities are sharper due to my routine and familiarity."),
 	TRAIT_GUARDSMAN_DISGRACED = span_warning("I have betrayed my oath. My vigilance falters in the town. I must beg forgiveness to restore my honor, or see my betrayal through to the end."),
-	TRAIT_WOODSMAN = span_info("I am vigilant in my duties. In the grove and coast of Azure Peak, my abilities are sharper due to my routine and familiarity."),
+	TRAIT_WOODSMAN = span_info("I am vigilant in my duties. In the grove and coast of Twilight Axis, my abilities are sharper due to my routine and familiarity."),
 	TRAIT_ANTHRAXI = span_info("I am the deadliest being in the underdark. No beast or foe can ever hope to match me in the caves."),
 	TRAIT_DEATHBARGAIN = span_info("A horrible deal has been prepared in your name. May you never see it fulfilled..."),
 	TRAIT_RITUALIST = span_info("I am skilled in the holy arts. Using ritual chalk, I can more deftly channel my God's powers via runes."),
@@ -327,6 +338,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_FENCERDEXTERITY = span_info("I've trained my entire lyfe around the art of unarmoured fencing, affording myself unmatched speed when wearing very light armour. I'm very choosy otherwise."),
 	TRAIT_HONORBOUND = span_info("The Tattoos of this Clan bind me to a lyfestyle of bare-skinned battle and swordsmanship. I refuse to wear armor that do not compliment my traditional garb and tattoos."),
 	TRAIT_NALEDI = span_info("I hail from the lands of Naledi. My blood and knowledge storied in yils of texts and techniques. My birthright is my pride."),
+	TRAIT_BLOOD_RESISTANCE = span_info("My body is taut, and my blood runs slower. I bleed far less than others."),
 	TRAIT_JAILOR = span_info("I am the ducal torturer and executioneer. Society looks down upon me and I will never be graced by loving touch of the Gods."),
 	TRAIT_SKILLBLESSED = span_greentext("I've reunited with an old friend of mine. All is well."),
 	TRAIT_LONGSWORDSMAN = span_info("\"I will crush anyone who opposes me. I am of royal blood. I dispense justice, advance the cause of good and destroy evil. To those who learn my crossings I will grant great fame and renown in the art of armed fighting.\" - I fight like a Master when I wield any longsword, though I can only perform master strikes with a perfectly balanced basket-hilted or reformist longsword."),
@@ -337,7 +349,6 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_MAGEARMOR = span_info("My magics can protect me from a blow every so often."),
 	TRAIT_DECEIVING_MEEKNESS = span_info("People look at me and think I am a weakling. They are mistaken. I've learned how to hide my vices and true beliefs from others."),
 	TRAIT_CRITICAL_RESISTANCE = span_info("My constitution is iron-clad. My lifeblood flows slowly, I can resist the first few critical wounds that would fell others, but repeated punishment will overwhelm my defenses."),
-	TRAIT_BLOOD_RESISTANCE = span_info("My body is taut, and my blood runs slower. I bleed far less than others."),
 	TRAIT_CRITICAL_WEAKNESS = span_danger("I am weak to wounds that others could survive."),
 	TRAIT_DNR = span_danger("My lux' vigor is weak. There is no hope for me. This lyfe is all I have."),
 	TRAIT_MANIAC_AWOKEN = span_danger("I am <b>WAKING UP</b> and the sheeple know this. They will resist."),
@@ -406,6 +417,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_BIGGUY = span_info("My immense frame and size allows me to smash through wooden doors, and throw people more easily."),
 	TRAIT_OUTDOORSMAN = span_info("My experience in the wilds allows me to fall asleep on surfaces like treebranches as if they were beds."),
 	TRAIT_STUDENT =  span_info("I am overwhelmed by all this knowledge!"),
+	TRAIT_MAGIC_SHIELD = span_info("My magic protect me from range weapon."), //TA EDIT
 	TRAIT_LEGENDARY_ALCHEMIST = span_info("An expert in the art of finding herbs in the wild."),
 	TRAIT_INTELLECTUAL = span_info("I have a keen eye and can assess a person's prowess in wit and blade."),
 	TRAIT_COUNTERCOUNTERSPELL = span_info("I automatically know when to counter Counterspells, and can do so without even thinking about it."),
@@ -434,7 +446,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_NOHUNGER = span_info("I do not hunger, or thirst."),
 	TRAIT_DARKVISION = span_info("I can see better in the dark."),
 	TRAIT_NOCSHADES = span_info("The lens I look through allows me to see in the dark clear as dae, at the cost of greater vision."),
-	TRAIT_RESIDENT = span_info("I've been granted a Meister account, and the ownership of a house in Azure Peak."),
+	TRAIT_RESIDENT = span_info("I've been granted a Meister account, and the ownership of a house in Twilight Axis."),
 	TRAIT_LIGHT_STEP = span_info("My steps are light and swift. I make less noise while sneaking, and can sneak much quicker."),
 	TRAIT_NOMOOD = span_info("I feel no sorrow, no joy, and no stress."),
 	TRAIT_AZURENATIVE = span_info("I've grown up and lived all my lyfe in these lands. I can only trigger ambushes if I sprint through them."),
@@ -510,6 +522,17 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_FOOD_STIPEND = span_notice("The creachers of the vomitorium know my touch, and will pull costs for their products directly from the treasury for me."),
 	TRAIT_STANDARD_BEARER = span_info("The banner is my lifeline. Just as I am to it. The retinue know to rally around me, so long as I keep it safe."),
 	TRAIT_FOG_WARDED = span_info("I am protected from Necra's deadly fog. The revenants won't find me... for now."),
+
+	TRAIT_CLERGY_TA = span_notice("My oath empowers me when I am within the Temple's walls, or near my spiritual guide, the Bishop."), //TA TRAITS FROM HERE
+	TRAIT_FIREARMS_MARKSMAN = span_greentext("I'm an experienced gunslinger, and have spent many years learning to shoot firearms accurately over great distances. Firearms can progress to Legendary levels."),
+	TRAIT_VILLAIN = span_warning("I am a devious, conniving villain!"),
+	TRAIT_WOUNDREGEN = span_info("My wounds and bones mend on their own, my bleeding clots quickly.."),
+
+	TRAIT_ARTILLERY_EXPERT = span_greentext("Я ранее обращался с артиллерией и разбираюсь в тонкостях её наводки."),
+	TRAIT_VILLAIN = span_warning("I am a devious, conniving villain!"),
+	TRAIT_WOUNDREGEN = span_info("My wounds and bones mend on their own, my bleeding clots quickly.."),
+	TRAIT_ZIZOEYES = span_notice("You no longer fear a veil of the darkness, yet your eyes are glimmering lights in it.."),
+	TRAIT_NOC_LIGHT_BLESSING = span_notice("Нок благославила меня на существование под её светом."),
 ))
 
 // trait accessor defines
@@ -758,6 +781,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define VEHICLE_TRAIT "vehicle" // inherited from riding vehicles
 #define INNATE_TRAIT "innate"
 #define POULTICE_TRAIT "poultice"
+#define XYLIX_LUCK_TRAIT "xylixluck"
+#define NOCTITE_SPELLBLADE_TRAIT "noctitespellblade"
 
 // unique trait sources, still defines
 #define TRAIT_GUIDANCE "Guidance"

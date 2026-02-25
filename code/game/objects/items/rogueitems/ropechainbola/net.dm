@@ -8,7 +8,7 @@
 	throwforce = 5
 	w_class = WEIGHT_CLASS_SMALL
 	icon_state = "net"
-	slipouttime = 5 SECONDS //ideally you're using this to catch a dodger, not in the middle of combat
+	slipouttime = 2 SECONDS //ideally you're using this to catch a dodger, not in the middle of combat
 	gender = NEUTER
 	throw_speed = 2
 	var/knockdown = 0
@@ -21,6 +21,10 @@
 	remove_effect()
 
 /obj/item/net/proc/remove_effect()
+
+	if(QDELETED(src)) //TA EDIT
+		return
+
 	if(iscarbon(loc))
 		var/mob/living/carbon/M = loc
 		if(M.legcuffed == src)
@@ -29,7 +33,10 @@
 			M.update_inv_legcuffed()
 			if(M.has_status_effect(/datum/status_effect/debuff/netted))
 				M.remove_status_effect(/datum/status_effect/debuff/netted)
-		forceMove(M.loc)
+
+		var/turf/T = get_turf(M)
+		if(T && !QDELETED(src)) //TA EDIT
+			forceMove(M.loc)
 
 /obj/item/net/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback)
 	if(!..())
@@ -40,9 +47,9 @@
 	if(..() || !iscarbon(hit_atom))//if it gets caught or the target can't be cuffed,
 		return//abort
 	ensnare(hit_atom)
-	// Nets always fall off after 30 seconds resist or not, so that the advantage it brings you is limited
+	// Nets always fall off after 10 seconds resist or not, so that the advantage it brings you is limited
 	// Being hit by a net and instalossing isn't fun for anyone because removing can be interrupted
-	addtimer(CALLBACK(src, PROC_REF(remove_effect)), 30 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE)
+	addtimer(CALLBACK(src, PROC_REF(remove_effect)), 10 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE)
 
 /obj/item/net/proc/ensnare(mob/living/carbon/C)
 	if(!C.legcuffed && C.get_num_legs(FALSE) >= 2)

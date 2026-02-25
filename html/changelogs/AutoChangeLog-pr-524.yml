@@ -1,0 +1,4 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - rscdel: "Убран ПР на бафф сетей"

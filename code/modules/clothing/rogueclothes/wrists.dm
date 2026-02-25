@@ -11,6 +11,8 @@
 	grid_width = 32
 	grid_height = 64
 	var/overarmor
+	equip_delay_self = 2.5 SECONDS
+	unequip_delay_self = 2.5 SECONDS
 
 /obj/item/clothing/wrists/roguetown/MiddleClick(mob/user, params)
 	. = ..()

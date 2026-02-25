@@ -44,7 +44,7 @@
 		/datum/skill/misc/riding = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/bows = SKILL_LEVEL_EXPERT,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
@@ -152,4 +152,5 @@
 		/obj/item/rope/chain = 1, 
 		/obj/item/rogueweapon/scabbard/sheath = 1
 	)
+	H.grant_language(/datum/language/common)
 #undef CTAG_VAMPIRE_SPAWN

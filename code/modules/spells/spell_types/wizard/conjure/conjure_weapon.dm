@@ -36,6 +36,7 @@
 		"Axe" = /obj/item/rogueweapon/stoneaxe/woodcut,
 		"Flail" = /obj/item/rogueweapon/flail,
 		"Whip" = /obj/item/rogueweapon/whip,
+		"Steel Greataxe" = /obj/item/rogueweapon/greataxe/steel,
 	)
 
 /obj/effect/proc_holder/spell/invoked/conjure_weapon/cast(list/targets, mob/living/user = usr)

@@ -163,6 +163,7 @@ SUBSYSTEM_DEF(vote)
 					to_chat(world, "\n<font color='purple'>[ROUND_END_TIME_VERBAL]</font>")
 					SSgamemode.roundvoteend = TRUE
 					SSgamemode.round_ends_at = world.time + ROUND_END_TIME
+					world.TgsAnnounceVoteEndRound()
 			if("storyteller")
 				SSgamemode.storyteller_vote_result(.)
 
@@ -264,7 +265,10 @@ SUBSYSTEM_DEF(vote)
 						break
 					choices.Add(option)
 			if("endround")
-				initiator_key = pick("Psydon", "Zizo")
+				if(SSmapping.retainer.cult_ascended == TRUE)
+					initiator_key = "AHAHAHAHAHAHAHAHAHHA"
+				else
+					initiator_key = pick("Psydon", "Zizo")
 				choices.Add("Continue Playing","End Round")
 				vote_alert.file = 'sound/roundend/roundend-vote-sound.ogg'
 			if("storyteller")
@@ -305,7 +309,7 @@ SUBSYSTEM_DEF(vote)
 		return 1
 	return 0
 
-// Helper for sending an active vote to someone who has just logged in 
+// Helper for sending an active vote to someone who has just logged in
 /datum/controller/subsystem/vote/proc/send_vote(client/C)
 	if(!mode || !C)
 		return

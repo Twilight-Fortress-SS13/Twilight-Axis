@@ -16,11 +16,12 @@
 	outfit = /datum/outfit/job/roguetown/magician
 	whitelist_req = TRUE
 	give_bank_account = TRUE
-	min_pq = 4 //High potential for abuse, lovepotion/killersice/greater fireball is not for the faint of heart
+	min_pq = 14 //High potential for abuse, lovepotion/killersice/greater fireball is not for the faint of heart
 	max_pq = null
 	round_contrib_points = 2
 	cmode_music = 'sound/music/cmode/nobility/combat_courtmage.ogg'
 	advclass_cat_rolls = list(CTAG_COURTMAGE = 2)
+	same_job_respawn_delay = 30 MINUTES
 
 	// Can't get very far as a magician if you can't chant spells now can you?
 	vice_restrictions = list(/datum/charflaw/mute)
@@ -119,3 +120,4 @@
 	)
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/arcane_announcement) //TA EDIT

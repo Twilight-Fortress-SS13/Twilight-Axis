@@ -19,9 +19,10 @@
 	advclass_cat_rolls = list(CTAG_WARDEN = 20)
 
 	give_bank_account = TRUE
-	min_pq = 0
+	min_pq = 3
 	max_pq = null
 	round_contrib_points = 2
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
 	job_traits = list(TRAIT_OUTDOORSMAN, TRAIT_WOODSMAN, TRAIT_SURVIVAL_EXPERT)
@@ -136,7 +137,7 @@
 		/datum/skill/combat/slings = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/bows = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/crossbows = SKILL_LEVEL_NOVICE,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,

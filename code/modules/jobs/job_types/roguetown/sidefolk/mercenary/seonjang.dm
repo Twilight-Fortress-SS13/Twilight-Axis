@@ -46,6 +46,7 @@
 
 	if(should_wear_masc_clothes(H))
 		shirt = /obj/item/clothing/suit/roguetown/armor/regenerating/easttats
+		head = /obj/item/clothing/head/roguetown/eaststrawhat
 		cloak = /obj/item/clothing/cloak/eastcloak1
 		pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants1
 		gloves = /obj/item/clothing/gloves/roguetown/eastgloves2
@@ -54,6 +55,9 @@
 		H.change_stat(STATKEY_CON, 1) //to compensate for the permanent lack of armor
 		H.dna.species.soundpack_m = new /datum/voicepack/male/evil()
 	else if(should_wear_femme_clothes(H))
+		head = /obj/item/clothing/head/roguetown/eaststrawhat
 		armor = /obj/item/clothing/suit/roguetown/armor/basiceast/captainrobe
 		shirt = /obj/item/clothing/suit/roguetown/armor/regenerating/easttats
+		gloves = /obj/item/clothing/gloves/roguetown/eastgloves2
+		cloak = /obj/item/clothing/cloak/eastcloak1
 	H.merctype = 9

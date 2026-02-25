@@ -11,7 +11,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 	layer = GHOST_LAYER
 	stat = DEAD
 	density = FALSE
-	sight = SEE_TURFS | SEE_MOBS | SEE_OBJS
+//	sight = SEE_TURFS | SEE_MOBS | SEE_OBJS
 	see_invisible = SEE_INVISIBLE_OBSERVER
 	see_in_dark = 100
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
@@ -79,6 +79,15 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 	icon_state = "hollow"
 	alpha = 150
 
+/mob/dead/observer/rogue/Move(n, direct)
+	if(world.time < next_gmove)
+		return
+	next_gmove = world.time + 1
+
+	setDir(direct)
+
+	. = ..()
+
 /mob/dead/observer/screye
 //	see_invisible = SEE_INVISIBLE_LIVING
 	sight = 0
@@ -96,6 +105,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 
 /mob/dead/observer/Initialize()
 	set_invisibility(GLOB.observer_default_invisibility)
+	set_glide_size(DELAY_TO_GLIDE_SIZE(3)) // 6 is atom/movable animation speed TA EDIT
 
 	verbs += list(
 		/mob/dead/observer/proc/dead_tele,

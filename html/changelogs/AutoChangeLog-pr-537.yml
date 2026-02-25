@@ -1,0 +1,5 @@
+author: "msw7007"
+delete-after: True
+changes:
+  - rscadd: "Автомаппер системс"
+  - rscadd: "Спавн ареа системс"

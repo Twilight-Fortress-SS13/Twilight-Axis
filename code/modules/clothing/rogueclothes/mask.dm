@@ -16,6 +16,8 @@
 	experimental_inhand = FALSE
 	experimental_onhip = FALSE
 	var/overarmor = TRUE
+	equip_delay_self = 1.5 SECONDS
+	unequip_delay_self = 1.5 SECONDS
 
 /obj/item/clothing/mask/rogue/attack_right(mob/user)
 	. = ..()
@@ -555,6 +557,8 @@
 	armor = ARMOR_PLATE
 	flags_inv = HIDEFACE|HIDESNOUT
 	sellprice = 0
+	equip_delay_self = 3.5 SECONDS
+	unequip_delay_self = 3.5 SECONDS
 
 /obj/item/clothing/mask/rogue/exoticsilkmask
 	name = "exotic silk mask"

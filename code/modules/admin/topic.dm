@@ -959,6 +959,8 @@
 		for(var/datum/job/job in SSjob.occupations)
 			if(job.title == Add)
 				job.total_positions += 1
+				log_admin("[key_name(usr)] added slot to [job.title].")
+				message_admins("[key_name(usr)] added slot to [job.title].")
 				break
 
 		src.manage_free_slots()
@@ -979,7 +981,8 @@
 					job.total_positions = job.current_positions
 					break
 				job.total_positions = newtime
-
+				log_admin("[key_name(usr)] made custom [newtime] slots to [job.title].")
+				message_admins("[key_name(usr)] made custom [newtime] slots to [job.title].")
 		src.manage_free_slots()
 
 	else if(href_list["removejobslot"])
@@ -991,6 +994,8 @@
 		for(var/datum/job/job in SSjob.occupations)
 			if(job.title == Remove && job.total_positions - job.current_positions > 0)
 				job.total_positions -= 1
+				log_admin("[key_name(usr)] removed job slot from [job.title].")
+				message_admins("[key_name(usr)] removed job slot from [job.title].")
 				break
 
 		src.manage_free_slots()
@@ -1004,6 +1009,8 @@
 		for(var/datum/job/job in SSjob.occupations)
 			if(job.title == Unlimit)
 				job.total_positions = -1
+				log_admin("[key_name(usr)] removed the limit from [job.title] slots.")
+				message_admins("[key_name(usr)] removed the limit from [job.title] slots.")
 				break
 
 		src.manage_free_slots()
@@ -1017,6 +1024,8 @@
 		for(var/datum/job/job in SSjob.occupations)
 			if(job.title == Limit)
 				job.total_positions = job.current_positions
+				log_admin("[key_name(usr)] added the limit to [job.title] slots.")
+				message_admins("[key_name(usr)] added the limit to [job.title] slots.")
 				break
 
 		src.manage_free_slots()
@@ -1590,6 +1599,9 @@
 			amt2change = CLAMP(amt2change, -20, 20)
 		var/raisin = stripped_input("State a short reason for this change", "Game Master", "", null)
 		if((!isnull(amt2change) && amt2change != 0) && !raisin)
+			return
+		if(mob_client.ckey == usr.ckey)
+			to_chat(src, span_boldwarning("Самому себе PQ менять нельзя."))
 			return
 		adjust_playerquality(amt2change, mob_client.ckey, usr.ckey, raisin)
 		for(var/client/C in GLOB.clients) // I hate this, but I'm not refactoring the cancer above this point.

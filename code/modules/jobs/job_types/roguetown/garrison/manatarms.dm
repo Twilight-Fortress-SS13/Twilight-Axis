@@ -20,9 +20,10 @@
 	advclass_cat_rolls = list(CTAG_MENATARMS = 20)
 
 	give_bank_account = TRUE
-	min_pq = 3
+	min_pq = 5
 	max_pq = null
 	round_contrib_points = 2
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'sound/music/combat_ManAtArms.ogg'
 	job_subclasses = list(
@@ -30,7 +31,11 @@
 		/datum/advclass/manorguard/skirmisher,
 		/datum/advclass/manorguard/cavalry,
 		/datum/advclass/manorguard/bailiff,
-		/datum/advclass/manorguard/standard_bearer
+
+		/datum/advclass/manorguard/standard_bearer,
+
+		/datum/advclass/manorguard/twilight_grenadier
+
 	)
 
 /datum/outfit/job/roguetown/manorguard
@@ -81,7 +86,7 @@
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/slings = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
@@ -190,7 +195,7 @@
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT, // A little better; run fast, weak boy.
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/riding = SKILL_LEVEL_NOVICE,
@@ -278,7 +283,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN, 		// Like the other horselords.
@@ -349,7 +354,7 @@
 	maximum_possible_slots = 1 //Had one dungeoneer before, this is how many we get to keep still.
 
 	category_tags = list(CTAG_MENATARMS)
-	traits_applied = list(TRAIT_JAILOR, TRAIT_CIVILIZEDBARBARIAN)//This is surely going to be funny
+	traits_applied = list(TRAIT_JAILOR, TRAIT_CIVILIZEDBARBARIAN, TRAIT_CRITICAL_RESISTANCE, TRAIT_IGNOREDAMAGESLOWDOWN)//This is surely going to be funny
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 2,
@@ -358,7 +363,7 @@
 	)
 	subclass_skills = list(
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_EXPERT,//Primary way they are meant to dispose of ppl
-		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT, //hilarious
+		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER, //hilarious
 		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/swords = SKILL_LEVEL_NOVICE, //You are not actually meant to use this in combat.
 		/datum/skill/combat/slings = SKILL_LEVEL_JOURNEYMAN,//Funny
@@ -373,6 +378,10 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,//Since they are MAA now I guess
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE
+	)
+	subclass_stashed_items = list(
+		"Branding letters" = /obj/item/branding_letters,
+		"Branding iron" = /obj/item/branding_iron
 	)
 
 /datum/outfit/job/roguetown/manorguard/bailiff/pre_equip(mob/living/carbon/human/H)

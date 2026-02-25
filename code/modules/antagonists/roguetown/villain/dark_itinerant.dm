@@ -125,6 +125,25 @@
 		/obj/item/ritechalk = 1,
 	)
 
+	var/onhelm = list(
+		"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
+		"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
+		"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
+		"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
+		"Graggar!!" = /obj/item/clothing/head/roguetown/tw_d_graggar,
+		"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
+		"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
+		"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
+		"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
+		"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
+		"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
+		"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
+		"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
+		"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+		)
+	var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+	r_hand = onhelm[onhelmchoice]
+
 	if(H.mind)
 		H.adjust_skillrank(/datum/skill/combat/polearms, 3, TRUE)
 		H.adjust_skillrank(/datum/skill/combat/knives, 3, TRUE)

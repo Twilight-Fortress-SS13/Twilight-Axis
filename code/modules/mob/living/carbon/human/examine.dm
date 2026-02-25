@@ -85,31 +85,18 @@
 			var/datum/job/J = SSjob.GetJob(job)
 			if(!J || J.wanderer_examine)
 				display_as_wanderer = TRUE
-		var/displayed_headshot
-		var/datum/antagonist/vampire/vampireplayer = src.mind?.has_antag_datum(/datum/antagonist/vampire)
-		var/datum/antagonist/lich/lichplayer = src.mind?.has_antag_datum(/datum/antagonist/lich)
-		if(vampireplayer && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS))&& !isnull(vampire_headshot_link)) //vampire with their disguise down and a valid headshot
-			displayed_headshot = src.vampire_headshot_link
-		else if (lichplayer && !isnull(src.lich_headshot_link))//Lich with a valid headshot
-			displayed_headshot = src.lich_headshot_link
-		else
-			displayed_headshot = src.headshot_link
 
-		if ((valid_headshot_link(src, displayed_headshot, TRUE)) && (user.client?.prefs.chatheadshot))
-			if(display_as_wanderer)
-				. = list(span_info("ø ------------ ø\n<img src=[displayed_headshot] width=100 height=100/>\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
-			else if(used_title)
-				. = list(span_info("ø ------------ ø\n<img src=[displayed_headshot] width=100 height=100/>\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
-			else
-				. = list(span_info("ø ------------ ø\n<img src=[displayed_headshot] width=100 height=100/>\nThis is the <EM>[used_name]</EM>, the [race_name]."))
+		if(display_as_wanderer)
+			. = list(span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
+		else if(used_title)
+			. = list(span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
 		else
-			if(display_as_wanderer)
-				. = list(span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
-			else if(used_title)
-				. = list(span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
-			else
-				. = list(span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
+			. = list(span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
 
+		for(var/obj/item/bodypart/BP in bodyparts)
+			if(BP.brand_text)
+				if(observer_privilege || get_location_accessible(src, BP.body_zone))
+					. += "<span class='userdanger' style='font-size: 1.2em'>BRAND ON [uppertext(BP.name)]: \"[BP.brand_text]\"</span>"
 		//Origins
 		var/pronoun	//They / Their
 		if(!dna.species.use_skin_tone_wording_for_examine)
@@ -152,7 +139,11 @@
 			. += span_notice("<b>The ruler of this land.</b>")
 		else if(GLOB.lord_titles[name])
 			. += span_notice("[m3] been granted the title of \"[GLOB.lord_titles[name]]\".")
-
+    
+    		// Leashed pet status effect message
+		if(has_status_effect(/datum/status_effect/leash_pet))
+			. += span_warning("A leash is hooked to their collar. They are being led like a pet.")
+ 
 		if(HAS_TRAIT(src, TRAIT_NOBLE) || HAS_TRAIT(src, TRAIT_DEFILED_NOBLE))
 			if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_DEFILED_NOBLE))
 				. += span_notice("A fellow noble.")
@@ -161,6 +152,39 @@
 
 		if((HAS_TRAIT(user, TRAIT_BLACKOAK) && !(src.dna.species.name == "Elf" || src.dna.species.name == "Dark Elf" || src.dna.species.name == "Half-Elf")))
 			. += span_phobia("An invader...")
+
+		// Knotted effect message
+		if(has_status_effect(/datum/status_effect/knot_tied))
+			. += span_warning("A knot is locked inside them. They're being pulled around like a pet.")
+
+		// Facial/Creampie effect message
+		var/datum/status_effect/facial/facial = has_status_effect(/datum/status_effect/facial)
+		var/datum/status_effect/facial/internal/creampie = null
+		if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
+			creampie = has_status_effect(/datum/status_effect/facial/internal)
+		if(facial && creampie)
+			var/facial_wet_or_dry = !facial?.has_dried_up ? "glazed" : "plastered"
+			var/creampie_wet_or_dry = !creampie?.has_dried_up ? "dripping out" : "stained with"
+			var/we_wet_or_dry = facial?.has_dried_up && creampie?.has_dried_up ? "dried cum" : "cum" // only show dried if both status are set to dry
+			if(user != src && isliving(user))
+				var/mob/living/L = user
+				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!") : span_warning("[m1] covered in something glossy!")
+			else
+				. += span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!")
+		else if(facial)
+			var/wet_or_dry = !facial?.has_dried_up ? "glazed with cum" : "plastered with dried cum"
+			if(user != src && isliving(user))
+				var/mob/living/L = user
+				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] smeared with something glossy!")
+			else
+				. += span_aiprivradio("[m1] [wet_or_dry]!")
+		else if(creampie)
+			var/wet_or_dry = !creampie?.has_dried_up ? "dripping out cum" : "stained with dried cum"
+			if(user != src && isliving(user))
+				var/mob/living/L = user
+				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] letting out some glossy stuff!")
+			else
+				. += span_aiprivradio("[m1] [wet_or_dry]!")
 
 		//For tennite schism god-event
 		if(length(GLOB.tennite_schisms))
@@ -784,7 +808,7 @@
 			msg += span_warning("[m1] barely conscious.")
 		else
 			if(stat >= UNCONSCIOUS)
-				msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"]."
+				msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"].[client && ((world.time - disconnected_at) > 120 SECONDS) ? "" : " <b>[m1] won't be able to wake up soon. [m1] been like this for about [ceil(((world.time - disconnected_at)/10)/60)] minutes.</b>"]"
 			else if(eyesclosed)
 				msg += "[capitalize(m2)] eyes are closed."
 			else if(has_status_effect(/datum/status_effect/debuff/sleepytime))
@@ -848,6 +872,22 @@
 			if(-INFINITY to -5)
 				. += span_revennotice("[t_He] look[p_s()] as blunt-minded as a rock.")
 
+	var/showassess = FALSE
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(get_dist(src, H) <= ((2 + clamp(floor(((H.STAPER - 10))),-1, 4)) + HAS_TRAIT(user, TRAIT_INTELLECTUAL)))
+			showassess = TRUE
+
+	var/displayed_headshot
+	var/datum/antagonist/vampire/vampireplayer = src.mind?.has_antag_datum(/datum/antagonist/vampire)
+	var/datum/antagonist/lich/lichplayer = src.mind?.has_antag_datum(/datum/antagonist/lich)
+	if(vampireplayer && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS))&& !isnull(vampire_headshot_link)) //vampire with their disguise down and a valid headshot
+		displayed_headshot = src.vampire_headshot_link
+	else if (lichplayer && !isnull(src.lich_headshot_link))//Lich with a valid headshot
+		displayed_headshot = src.lich_headshot_link
+	else
+		displayed_headshot = src.headshot_link
+
 	if(maniac)
 		var/obj/item/organ/heart/heart = getorganslot(ORGAN_SLOT_HEART)
 		if(heart?.inscryption && (heart.inscryption_key in maniac.key_nums))
@@ -879,6 +919,17 @@
 
 	. += medical_text
 
+	if(!obscure_name || client?.prefs.masked_examine)
+		if(showassess)
+			. += "<a href='?src=[REF(src)];task=assess;'>Assess</a>"
+		if(flavortext || displayed_headshot || ooc_notes)
+			. += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a>"
+		if(length(rumour) || length(noble_gossip))
+			if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+				. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
+		if((user.client?.prefs.chatheadshot) && displayed_headshot)
+			. += "<span class='info'><img src=[displayed_headshot] width=100 height=100/></span>"
+
 	if(!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS) && user != src)
 		if(isliving(user))
 			var/mob/living/L = user
@@ -901,19 +952,10 @@
 					var/skilldiff = user.get_skill_level(user_skill) - get_skill_level(src_skill)
 					. += "<font size = 3><i>[skilldiff_report(skilldiff)] in my wielded skill than they are in theirs.</i></font>"
 
-	var/showassess = FALSE
-	if(ishuman(user))
-		var/mob/living/carbon/human/H = user
-		if(get_dist(src, H) <= ((2 + clamp(floor(((H.STAPER - 10))),-1, 4)) + HAS_TRAIT(user, TRAIT_INTELLECTUAL)))
-			showassess = TRUE
-
-	if((!obscure_name || client?.prefs.masked_examine) && (flavortext || headshot_link || ooc_notes))
-		. += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a> [showassess ? " | <a href='?src=[REF(src)];task=assess;'>Assess</a>" : ""]"
-
 	/// Rumours & Gossip
-	if(length(rumour) || length(noble_gossip))
-		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
-			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
+//	if(length(rumour) || length(noble_gossip)) TA EDIT START
+//		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+//			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>" TA EDIT END
 
 	if(lip_style)
 		switch(lip_color)
@@ -1020,12 +1062,12 @@
 	if(HAS_TRAIT(src, TRAIT_COMMIE) && HAS_TRAIT(examiner, TRAIT_COMMIE))
 		heretic_text += "⚖️" //♠ is the original
 	//Defunct as of *fsalute changes, leaving here as a symbol reference.
-	/*else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
+	else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
 		heretic_text += "♦"
 	else if(HAS_TRAIT(src, TRAIT_HORDE) && HAS_TRAIT(examiner, TRAIT_HORDE))
 		heretic_text += "♠"
 	else if(HAS_TRAIT(src, TRAIT_DEPRAVED) && HAS_TRAIT(examiner, TRAIT_DEPRAVED))
-		heretic_text += "♥"*/
+		heretic_text += "♥"
 
 	return heretic_text
 
@@ -1079,7 +1121,8 @@
 				villain_text += span_userdanger("A MONSTER!")
 		if(mind.assigned_role == "Lunatic")
 			villain_text += span_userdanger("LUNATIC!")
-
+	if(HAS_TRAIT(src, TRAIT_ZIZOEYES))
+		villain_text += span_userdanger("Their eyes send chills down your spine...")
 	return villain_text
 
 /proc/get_blade_dulling_text(obj/item/rogueweapon/I, verbose = FALSE)

@@ -6,7 +6,7 @@
 	faction = "Station"
 	total_positions = 0
 	spawn_positions = 0
-	min_pq = 10		// was going to put this higher but realized bandit's only 3 pq and wretch is fucking 10 so whatever
+	min_pq = 20		// was going to put this higher but realized bandit's only 3 pq and wretch is fucking 10 so whatever
 	max_pq = null
 	antag_job = TRUE
 	allowed_races = RACES_ALL_KINDS
@@ -20,7 +20,8 @@
 
 	display_order = JDO_ASSASSIN
 	announce_latejoin = FALSE
-	round_contrib_points = 5
+	round_contrib_points = null
+	same_job_respawn_delay = 30 MINUTES
 
 	advclass_cat_rolls = list(CTAG_ASSASSIN = 20)
 	PQ_boost_divider = 10

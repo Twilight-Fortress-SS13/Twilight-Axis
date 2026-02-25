@@ -10,13 +10,14 @@
 	allowed_races = ACCEPTED_RACES
 	allowed_patrons = ALL_DIVINE_PATRONS
 	outfit = /datum/outfit/job/roguetown/templar
-	min_pq = 3 //Deus vult, but only according to the proper escalation rules
+	min_pq = 10 //Deus vult, but only according to the proper escalation rules
 	max_pq = null
 	round_contrib_points = 2
 	total_positions = 4
 	spawn_positions = 4
 	advclass_cat_rolls = list(CTAG_TEMPLAR = 20)
 	display_order = JDO_TEMPLAR
+	same_job_respawn_delay = 30 MINUTES
 
 	give_bank_account = TRUE
 	job_traits = list(TRAIT_RITUALIST, TRAIT_STEELHEARTED, TRAIT_CLERGY)
@@ -25,7 +26,9 @@
 	virtue_restrictions = list(/datum/virtue/utility/noble)
 	job_subclasses = list(
 		/datum/advclass/templar/monk,
-		/datum/advclass/templar/crusader
+		/datum/advclass/templar/crusader,
+		/datum/advclass/templar/vigilant,
+		/datum/advclass/noctite_spellblade //TA EDIT
 	)
 
 /datum/outfit/job/roguetown/templar
@@ -146,26 +149,31 @@
 	var/weapon_choice = input(H,"Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 	switch(weapon_choice)
 		if("Discipline - Unarmed")
-			H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_MASTER, TRUE)
-			H.put_in_hands(new /obj/item/clothing/gloves/roguetown/bandages/pugilist(H))
+			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, 5, TRUE)
+			gloves = /obj/item/clothing/gloves/roguetown/bandages/pugilist
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Katar")
 			H.put_in_hands(new /obj/item/rogueweapon/katar(H))
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Knuckledusters")
 			H.put_in_hands(new /obj/item/rogueweapon/knuckles(H))
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Quarterstaff")
 			H.adjust_skillrank_up_to(/datum/skill/combat/staves, 4, TRUE) //Tested with Disciples, first. Should hopefully be not too busted - reduce to Journeyman, otherwise.
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 3, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/woodstaff/quarterstaff/steel(H))
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
 			H.change_stat(STATKEY_PER, 1) //Matches the Disciple's balance; exchanges the 'dodge expert' trait for additional accuracy with the staff.
 		if("Close Caress")
 			H.put_in_hands(new /obj/item/rogueweapon/knuckles/eora(H))
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Barotrauma")
 			H.put_in_hands(new /obj/item/rogueweapon/katar/abyssor(H))
+			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 
 	// -- Start of section for god specific bonuses --
@@ -197,6 +205,7 @@
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
 		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt
 	if(H.patron?.type == /datum/patron/divine/malum)
 		ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC) // ONE exception for the "no combat role get this" rules
 		H.adjust_skillrank(/datum/skill/craft/blacksmithing, 1, TRUE)
@@ -345,6 +354,7 @@
 			weapons += "Moonlight Khopesh"
 		if(/datum/patron/divine/necra)
 			weapons += "Swift End"
+			weapons += "The Equipoise" //TA EDIT
 		if(/datum/patron/divine/pestra)
 			weapons += "Plaguebringer Sickles"
 			weapons += "Lance of Boils"
@@ -410,6 +420,11 @@
 		if("Swift End")
 			H.put_in_hands(new /obj/item/rogueweapon/flail/sflail/necraflail(H))
 			H.adjust_skillrank(/datum/skill/combat/whipsflails, 1, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
+		if("The Equipoise") //TA EDIT
+			H.put_in_hands(new /obj/item/rogueweapon/halberd/bardiche/twilight_necrascythe/preblessed(H), TRUE)
+			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Plaguebringer Sickles")
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle(H))
@@ -491,6 +506,8 @@
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
 		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt
+		H.mind.special_items["Helmet Morphing Elixer"] = /obj/item/enchantingkit/eoran_helm_resprite
 	if(H.patron?.type == /datum/patron/divine/malum)
 		H.adjust_skillrank(/datum/skill/craft/blacksmithing, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/craft/armorsmithing, 1, TRUE)

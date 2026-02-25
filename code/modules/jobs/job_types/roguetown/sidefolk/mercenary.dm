@@ -3,22 +3,23 @@
 	flag = MERCENARY
 	department_flag = SIDEFOLK
 	faction = "Station"
-	total_positions = 8
-	spawn_positions = 8
+	total_positions = 4
+	spawn_positions = 4
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	tutorial = "Blood stains your hands and the coins you hold. You are a sell-sword, a mercenary, a contractor of war. Where you come from, what you are, who you serve.. none of it matters. What matters is that the mammon flows to your pocket."
 	display_order = JDO_MERCENARY
 	selection_color = JCOLOR_WANDERER
-	min_pq = 2		//Will be handled by classes if PQ limiting is needed. --But Until then, learn escalation, mercs.
+	min_pq = 25		//Will be handled by classes if PQ limiting is needed. --But Until then, learn escalation, mercs.
 	max_pq = null
-	round_contrib_points = 1
+	round_contrib_points = null
 	outfit = null	//Handled by classes
 	outfit_female = null
 	advclass_cat_rolls = list(CTAG_MERCENARY = 20)
 	job_traits = list(TRAIT_STEELHEARTED)
 	always_show_on_latechoices = TRUE
 	class_categories = TRUE
+	same_job_respawn_delay = 30 MINUTES
 	job_subclasses = list(
 		/datum/advclass/mercenary/anthrax,
 		/datum/advclass/mercenary/anthrax/assasin,
@@ -54,7 +55,11 @@
 		/datum/advclass/mercenary/grudgebearer,
 		/datum/advclass/mercenary/grudgebearer/soldier,
 		/datum/advclass/mercenary/trollslayer,
-		/datum/advclass/mercenary/lirvanmerc
+		/datum/advclass/mercenary/lirvanmerc,
+    /datum/advclass/mercenary/twilight_gunslinger,
+    /datum/advclass/mercenary/twilight_grenzelhoft_jager,
+	/datum/advclass/mercenary/twilight_heishi,
+	/datum/advclass/mercenary/twilight_yohei
 	)
 
 /datum/job/roguetown/mercenary/after_spawn(mob/living/L, mob/M, latejoin = FALSE)
@@ -75,3 +80,23 @@
 
 			// Store the registration request
 			statue.pending_registrations[H.key] = H
+
+/proc/update_mercenary_slots()
+	var/datum/job/mercenary_job = SSjob.GetJob("Mercenary")
+	if(!mercenary_job)
+		return
+
+	var/player_count = length(GLOB.joined_player_list)
+	var/ready_player_count = length(GLOB.ready_player_list)
+	var/slots = 4
+	
+	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+	if(current_players > 50)
+		var/extra = floor((current_players - 50) / 10)
+		slots += extra
+
+	//4 slots minimum, 8 maximum.
+	slots = min(slots, 8)
+
+	mercenary_job.total_positions = slots
+	mercenary_job.spawn_positions = slots

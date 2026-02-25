@@ -17,13 +17,15 @@
 	display_order = JDO_INQUISITOR
 	advclass_cat_rolls = list(CTAG_INQUSITOR = 20)
 	give_bank_account = 30
-	min_pq = 10
+	min_pq = 18
 	max_pq = null
 	round_contrib_points = 2
 	job_subclasses = list(
 		/datum/advclass/inquisitor/inspector,
-		/datum/advclass/inquisitor/ordinator
+		/datum/advclass/inquisitor/ordinator,
+    	/datum/advclass/inquisitor/blackpowder
 	)
+	same_job_respawn_delay = 30 MINUTES
 
 /datum/outfit/job/roguetown/inquisitor
 	name = "Inquisitor"
@@ -72,7 +74,9 @@
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
 	)
 	subclass_stashed_items = list(
-		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy
+		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy,
+		"Branding letters" = /obj/item/branding_letters,
+		"Branding iron" = /obj/item/branding_iron
 	)
 
 /datum/outfit/job/roguetown/inquisitor/inspector/pre_equip(mob/living/carbon/human/H)
@@ -112,6 +116,8 @@
 
 /datum/outfit/job/roguetown/inquisitor/inspector/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
+	if(!isdarkelf(H)) //TA EDIT
+		change_origin(H, /datum/virtue/origin/otava, "Holy order")
 	var/weapons = list("Psydonic Longsword", "Psydonic Rapier", "Daybreak (Whip)", "Stigmata (Halberd)", "Eucharist (Rapier)")
 	var/weapon_choice = input(H,"FLOURISH YOUR SILVER.", "WIELD THEM IN HIS NAME.") as anything in weapons
 	switch(weapon_choice)
@@ -163,15 +169,17 @@
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/tracking = SKILL_LEVEL_MASTER,
 	)
 	subclass_stashed_items = list(
-		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy
+		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy,
+		"Branding letters" = /obj/item/branding_letters,
+		"Branding iron" = /obj/item/branding_iron
 	)
 
 /datum/outfit/job/roguetown/inquisitor/ordinator/pre_equip(mob/living/carbon/human/H)
@@ -201,7 +209,8 @@
 
 /datum/outfit/job/roguetown/inquisitor/ordinator/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
-	change_origin(H, /datum/virtue/origin/otava, "Holy order")
+	if(!isdarkelf(H)) //TA EDIT
+		change_origin(H, /datum/virtue/origin/otava, "Holy order")
 	var/weapons = list("Psydonic Broadsword + Dagger", "Psydonic Poleaxe + Dagger", "Apocrypha (Greatsword) + Dagger", "Covenant And Creed (Broadsword + Shield)", "Covenant and Consecratia (Flail + Shield)")
 	var/weapon_choice = input(H,"CHOOSE YOUR RELIQUARY PIECE.", "WIELD THEM IN HIS NAME.") as anything in weapons
 	switch(weapon_choice)

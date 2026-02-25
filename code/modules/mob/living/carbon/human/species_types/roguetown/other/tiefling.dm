@@ -144,7 +144,9 @@
 		"Tosiz" = SKIN_COLOR_TOSIZ,
 		"Velothel" = SKIN_COLOR_VELOTHEL,
 		"Xir" = SKIN_COLOR_XIR,
-		"Esse" = SKIN_COLOR_ESSE
+		"Esse" = SKIN_COLOR_ESSE,
+		"Glasya"	= SKIN_COLOR_GLASYA,
+		"Asmodeus"	= SKIN_COLOR_ASMODEUS
 	)
 
 /datum/species/tieberian/get_hairc_list()

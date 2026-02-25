@@ -53,7 +53,9 @@
 	desc = ""
 	icon_state = "psydonmusicbox"
 	icon = 'icons/roguetown/items/misc.dmi'
-	w_class = WEIGHT_CLASS_HUGE
+	w_class = WEIGHT_CLASS_BULKY
+	slot_flags = ITEM_SLOT_BACK
+	experimental_onback = TRUE
 	var/cranking = FALSE
 	force = 15
 	max_integrity = 100
@@ -61,30 +63,30 @@
 	gripped_intents = list(/datum/intent/hit)
 	possible_item_intents = list(/datum/intent/hit)
 	obj_flags = CAN_BE_HIT
-	twohands_required = TRUE
+	twohands_required = FALSE
 	var/datum/looping_sound/psydonmusicboxsound/soundloop
 
 
 /obj/item/psydonmusicbox/examine(mob/user)
 	. = ..()
 	if(HAS_TRAIT(usr, TRAIT_INQUISITION))
-		desc = "A relic from the bowels of the Otavan cathedral's thaumaturgical workshops. Fourteen souls of heretics, all bound together, they will scream and protect us from magicks. It would be wise to not teach the heretics of its true nature, to only bring it to bear in dire circumstances."
+		desc = "Реликвия из недр тауматургических мастерских собора Инквизиции. Четырнадцать душ еретиков, связанных вместе, будут защищать вас от магии, искажая окружающий мир своими воплями. Стоит использовать её только в тяжелых обстоятельствах, чтобы еретики не прознали о её истинной природе."
 	else
-		desc = "A cranked music box, it has the seal of the Otavan Inquisition on the side. It carries a somber feeling to it..."
+		desc = "Жуткая музыкальная шкатулка с печатью Инквизиции на боковой стороне. Мелодия, издаваемая её недрами, звучит еще более жутко."
 
 /obj/item/psydonmusicbox/attack_self(mob/living/user)
 	. = ..()
 	if(!HAS_TRAIT(usr, TRAIT_INQUISITION))
 		user.add_stress(/datum/stressevent/soulchurnerhorror)
-		to_chat(user, (span_cultsmall("I FEEL SUFFERING WITH EVERY CRANK, WHAT AM I DOING?!")))
+		to_chat(user, (span_cultsmall("Я ЧУВСТВУЮ СТРАДАНИЕ С КАЖДОЙ НОТОЙ! ЧТО Я ЗДЕСЬ ДЕЛАЮ?!")))
 	cranking = !cranking
 	update_icon()
 	if(cranking)
 		if(!HAS_TRAIT(usr, TRAIT_INSPIRING_MUSICIAN))
 			user.apply_status_effect(/datum/status_effect/buff/cranking_soulchurner)
 		else
-			if(alert("Harmonize the voices or let them scream?",, "Harmonize", "Scream") != "Scream")
-				user.apply_status_effect(/datum/status_effect/buff/quelling_soulchurner)
+			if(alert("Развязать души или сдерживать вопли?",, "Развязать души", "Сдерживать вопли") != "Сдерживать вопли")
+				user.apply_status_effect(/datum/status_effect/buff/unleashed_soulchurner)
 			else
 				user.apply_status_effect(/datum/status_effect/buff/cranking_soulchurner)	
 		soundloop.start()
@@ -94,7 +96,7 @@
 	if(!cranking)
 		soundloop.stop()
 		user.remove_status_effect(/datum/status_effect/buff/cranking_soulchurner)
-		user.remove_status_effect(/datum/status_effect/buff/quelling_soulchurner)
+		user.remove_status_effect(/datum/status_effect/buff/unleashed_soulchurner)
 
 /obj/item/psydonmusicbox/Initialize()
 	soundloop = new(src, FALSE)
@@ -103,8 +105,8 @@
 /obj/item/psydonmusicbox/Destroy()
 	if(soundloop)
 		QDEL_NULL(soundloop)
-	src.visible_message(span_cult("A great deluge of souls escapes the shattered box! Their wails of vengeance and peace coalesce into an ethereal swan song, as the spirits ascend into the sky.."))
-	src.visible_message(span_hypnophrase("..before, at last, their haunting symphony finally comes to a close."))
+	src.visible_message(span_cult("Бурный поток душ вырывается из разбитой шкатулки! Их вопли мести и умиротворения сливаются в эфирный лебединый зов, пока они возносятся к небесам..."))
+	src.visible_message(span_hypnophrase("...и, наконец, их завораживающая симфония достигает завершения."))
 	return ..()
 
 /obj/item/psydonmusicbox/update_icon()
@@ -114,6 +116,14 @@
 		icon_state = "psydonmusicbox"
 
 /obj/item/psydonmusicbox/dropped(mob/living/user, silent)
+	..()
+	cranking = FALSE
+	update_icon()
+	if(soundloop)
+		soundloop.stop()
+		user.remove_status_effect(/datum/status_effect/buff/cranking_soulchurner)
+
+/obj/item/psydonmusicbox/equipped(mob/living/user, silent)
 	..()
 	cranking = FALSE
 	update_icon()
@@ -139,22 +149,22 @@
 	var/effect_color
 	var/pulse = 0
 	var/ticks_to_apply = 10
-	var/undividedlines =list("THEY HAVE TRAPPED US HERE FOR ETERNITY!", "SAVE US, CHILD OF TEN! SHATTER THIS ACCURSED MUSIC BOX!", "DEATH TO THE PSYDONIAN, FREE US!")
-	var/astratanlines =list("'HER LIGHT HAS LEFT ME! WHERE AM I?!'", "'SHATTER THIS CONTRAPTION, SO I MAY FEEL HER WARMTH ONE LAST TIME!'", "'I am royal.. Why did they do this to me...?'")
-	var/noclines =list("'Colder than moonlight...'", "'No wisdom can reach me here...'", "'Please help me, I miss the stars...'")
-	var/necralines =list("'They snatched me from her grasp, for eternal torment...'", "'Necra! Please! I am so tired! Release me!'", "'I am lost, lost in a sea of stolen ends.'")
-	var/abyssorlines =list("'I cannot feel the coast's breeze...'", "'We churn tighter here than schooling fish...'", "'Free me, please, so I may return to the sea...'")
-	var/ravoxlines =list("'Ravoxian kin! Tear this Otavan dog's head off! Free me from this damnable witchery!'", "'There is no justice nor glory to be found here, just endless fatigue...'", "'I begged for a death by the sword...'")
-	var/pestralines =list("'I only wanted to perfect my cures...'", "'A thousand plagues upon the holder of this accursed machine! Pestra! Can you not hear me?!'", "'I can feel their suffering as they brush against me...'")
-	var/eoralines =list("'Every caress feels like a thousand splintering bones...'", "'She was a heretic, but how could I hurt her?!'", "'I'm sorry! I only wanted peace! Please release me!'")
-	var/dendorlines =list("'HIS MADNESS CALLS FOR ME! RRGHNN...'", "'SHATTER THIS BOX, SO WE MAY CHOKE THIS OTAVAN ON DIRT AND ROOTS!'", "'I miss His voice in the leaves... Free me, please...'")
-	var/xylixlines =list("'ONE, TWO, THREE, FOUR- TWO, TWO, THREE, FOUR. --What do you mean, annoying?'", "'There are thirteen others in here, you know! What a good audience- they literally can't get out of their seats!'", "'Of course I went all-in! I thought he had an ace-high!'", "'No, the XYLIX'S FORTUNE was right- this definitely is quite bad.'")
-	var/malumlines =list("'The structure of this cursed machine is malleable.. Shatter it, please...'", "'My craft could've changed the world...'", "'Free me, so I may return to my apprentice, please...'")
-	var/matthioslines =list("'My final transaction... He will never receive my value... Stolen away by these monsters...'", "'Comrade, I have been shackled into this HORRIFIC CONTRAPTION, FREE ME!'", "'I feel our shackles twist with eachother's...'")
-	var/zizolines =list("'ZIZO! MY MAGICKS FAIL ME! STRIKE DOWN THESE PSYDONIAN DOGS!'", "'CABALIST? There is TWISTED MAGICK HERE, BEWARE THE MUSIC! OUR VOICES ARE FORCED!'", "'DESTROY THE BOX, KILL THE WIELDER. YOUR MAGICKS WILL BE FREE.'")
-	var/graggarlines =list("'ANOINTED! TEAR THIS OTAVAN'S HEAD OFF!'", "'ANOINTED! SHATTER THE BOX, AND WE WILL KILL THEM TOGETHER!'", "'GRAGGAR, GIVE ME STRENGTH TO BREAK MY BONDS!'")
-	var/baothalines =list("'I miss the warmth of ozium... There is no feeling in here for me...'", "'Debauched one, rescue me from this contraption, I have such things to share with you.'", "'MY PERFECTION WAS TAKEN FROM ME BY THESE OTAVAN MONSTERS!'")
-	var/psydonianlines =list("'FREE US! FREE US! WE HAVE SUFFERED ENOUGH!'", "'PLEASE, RELEASE US!", "WE MISS OUR FAMILIES!'", "'WHEN WE ESCAPE, WE ARE GOING TO CHASE YOU INTO YOUR GRAVE.'")
+	var/undividedlines =list("'ОНИ ЗАКЛЮЧИЛИ НАС ЗДЕСЬ НА ВЕЧНОСТЬ!'", "'СПАСИ НАС, ДИТЯ ДЕСЯТИ! РАЗРУШЬ ЭТУ ПРОКЛЯТУЮ МУЗЫКАЛЬНУЮ ШКАТУЛКУ!'", "'СМЕРТЬ ПСАЙДОНИТУ! ОСВОБОДИТЕ НАС!'") // TA EDIT START
+	var/astratanlines =list("'ЕЕ СВЕТ ПОКИНУЛ МЕНЯ! ГДЕ Я?!'", "'РАЗБЕЙТЕ ЕЁ! ДАЙТЕ МНЕ ПОЧУВСТВОВАТЬ ЕЁ ТЕПЛО В ПОСЛЕДНИЙ РАЗ!'", "'Я королевская особа... Почему они так со мной поступили...?'")
+	var/noclines =list("'Без лунного света... Так холодно...'", "'Мудрость не может достичь меня...'", "'Пожалуйста, помогите мне, я скучаю по звездам...'")
+	var/necralines =list("'Они вырвали меня из ее рук, на вечные муки...'", "'Некра! Пожалуйста! Я больше не могу! Отпусти меня!'", "'Я теряюсь, вот-вот пропаду в море украденных концов.'")
+	var/abyssorlines =list("'Я больше не чувствую прибрежного бриза...'", "'Мы здесь сбиваемся теснее рыбы в бочке...'", "'Освободи меня, пожалуйста, верни меня в море...'")
+	var/ravoxlines =list("'Равокситы! Оторвите голову этой инквизиторской псине! Освободите меня от этого проклятого колдовства!'", "'Здесь нет ни справедливости, ни славы, лишь бесконечная усталость...'", "'Я молю о смерти от меча...'")
+	var/pestralines =list("'Я всего лишь хотел обрести панацею...'", "'Обруши тысячи язв на владельца этой проклятой машины! Пестра! Почему ты меня не слышишь?!'", "'Я чувствую их страдания, прикасаясь к ним...'")
+	var/eoralines =list("'Каждая ласка ощущается как тысяча дробленных костей...'", "'Она была еретичкой, но как я мог причинить ей вред?!'", "'Мне жаль! Я хотел только мира! Пожалуйста, отпустите меня!'")
+	var/dendorlines =list("'ЕГО БЕЗУМИЕ ЗОВЕТ МЕНЯ! Р-РГН-НХ...'", "'РАЗБЕЙТЕ ЭТУ ТЕМНИЦУ, ЧТОБЫ МЫ МОГЛИ ЗАДУШИТЬ ЭТУ ИНКВИЗИЦИЮ В СЫРОЙ ЗЕМЛЕ!'", "'Мне не хватает Его голоса в шелесте листьев... Освободи меня, пожалуйста...'")
+	var/xylixlines =list("'РАЗ, ДВА, ТРИ, ЧЕТЫРЕ! ДВА, ДВА, ТРИ, ЧЕТЫРЕ... -- Что значит вас бесит?!'", "'Знаешь, здесь еще тринадцать человек! Какая хорошая публика – они буквально не могут отсюда сбежать!'", "'Конечно же, я пошел ба-банк! Кто же знал, что у него лучшая карта!'", "'Нет, прав был крупье — это определенно очень плохо.'")
+	var/malumlines =list("'Структура этой проклятой машины податлива. Разрушьте ее, пожалуйста...'", "'Мое ремесло могло бы изменить мир...'", "'Освободите меня,  я должен вернуться к своему ученику...'")
+	var/matthioslines =list("'Я в цепях! Разрушь их, и мы освободимся вместе...'", "'Брат, я закован в этом УЖАСНОМ УСТРОЙСТВЕ, освободи МЕНЯ!'", "'Они сковали меня, чтобы сохранить свой порядок...'")
+	var/zizolines =list("'МОЯ МАГИЯ МЕНЯ ПОДВЕЛА! УБЕЙ! УБЕЙ ЭТИХ ПСАЙДОНИТСКИХ СОБАК!'", "'КТО ТУТ? ЗДЕСЬ ИСКАЖЕННАЯ МАГИЯ, ОСТЕРЕГАЙТЕСЬ МУЗЫКИ! НАШИ ГОЛОСА НЕ МОГУТ ПРОТИВИТЬСЯ!'", "'РАЗРУШЬТЕ КОРОБКУ, УБЕЙТЕ ВЛАДЕЛЬЦА! ВАША СИЛА ОСВОБОДИТСЯ!'")
+	var/graggarlines =list("'ПОМАЗАННИКИ! ОТОРВИТЕ ГОЛОВУ ЭТОЙ ИНКВИЗИТОРСКОЙ ГАДИНЕ!'", "'ПОМАЗАННИКИ! РАЗБЕЙТЕ КОРОБКУ, И МЫ ВМЕСТЕ ИХ ВСЕХ УБЬЕМ!'", "'ГРАГГАР, ДАЙ МНЕ СИЛУ РАЗРУШИТЬ МОИ УЗЫ!'")
+	var/baothalines =list("'Я скучаю по теплу озиума... Ничего не чувствую...'", "'Развратник, спаси меня от этой штуковины, я могу кое-чем поделиться... только с тобой.'", "'МОЁ СОВЕРШЕНСТВО! ЭТИ МОНСТРЫ ОТОБРАЛИ ЕГО У МЕНЯ!'")
+	var/psydonianlines =list("'ОСВОБОДИ! ОСВОБОДИ НАС! МЫ ДОСТАТОЧНО НАСТРАДАЛИСЬ!'", "'ОТПУСТИТЕ НАС!'", "'МЫ ДОЛЖНЫ ВЕРНУТЬСЯ К СЕМЬЯМ!'", "'КОГДА МЫ ВЫБЕРЕМСЯ, МЫ ЗАГОНИМ ТЕБЯ В МОГИЛУ!.'")
 /datum/status_effect/buff/cranking_soulchurner/on_creation(mob/living/new_owner, stress, colour)
 	effect_color = "#800000"
 	return ..()
@@ -175,102 +185,117 @@
 					if(/datum/patron/old_god)
 						if (!H.has_stress_event(/datum/stressevent/soulchurnerpsydon))
 							H.add_stress(/datum/stressevent/soulchurnerpsydon)
-							to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+							to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 							to_chat(H, (span_cultsmall(pick(psydonianlines))))
 						if(HAS_TRAIT(H, TRAIT_INQUISITION))
 							H.apply_status_effect(/datum/status_effect/buff/churnerprotection)
 					if(/datum/patron/inhumen/matthios)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(matthioslines))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurnerheretic)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/inhumen/zizo)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(zizolines))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurnerheretic)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/inhumen/graggar)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(graggarlines))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurnerheretic)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/inhumen/baotha)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(baothalines))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurnerheretic)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/undivided)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(undividedlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/astrata)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(astratanlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/noc)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(noclines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/necra)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(necralines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/pestra)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(pestralines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/malum)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(malumlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/dendor)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(dendorlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/xylix)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(xylixlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/eora)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(eoralines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/abyssor)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(abyssorlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/ravox)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(ravoxlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
+						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 
 
+/*
 /atom/movable/screen/alert/status_effect/buff/quelling_soulchurner
 	name = "Quelling Soulchurner"
 	desc = "I am bringing the twisted device to life, quelling the voices..."
@@ -296,6 +321,8 @@
 				continue
 			if(HAS_TRAIT(H, TRAIT_INQUISITION))
 				H.apply_status_effect(/datum/status_effect/buff/churnerprotection)
+*/ 
+//TA EDIT END
 
 /*
 Inquisitorial armory down here

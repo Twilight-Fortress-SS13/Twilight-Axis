@@ -1,0 +1,6 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - rscadd: "Arquebus can now have a bayonet attached by using any knife on it"
+  - rscadd: "Colorable Arbeitsklinge"
+  - rscdel: "Bayonet craft recipes"

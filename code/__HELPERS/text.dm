@@ -46,15 +46,29 @@
  */
 
 //Simply removes < and > and limits the length of the message
-/proc/strip_html_simple(t,limit=MAX_MESSAGE_LEN)
+/proc/strip_html_simple(t, limit=MAX_MESSAGE_LEN)
+	if(!t || !istext(t))
+		return ""
+
+	t = copytext_char(t, 1, limit)
 	var/list/strip_chars = list("<",">")
-	t = copytext(t,1,limit)
+	var/list/text_parts = list()
+	var/last_pos = 1
+
 	for(var/char in strip_chars)
-		var/index = findtext(t, char)
+		var/index = findtext(t, char, last_pos)
 		while(index)
-			t = copytext(t, 1, index) + copytext(t, index+1)
-			index = findtext(t, char)
-	return t
+			// Add the text before this character
+			if(index > last_pos)
+				text_parts += copytext_char(t, last_pos, index)
+			last_pos = index + 1
+			index = findtext(t, char, last_pos)
+
+	// Add any remaining text after the last stripped character
+	if(last_pos <= length(t))
+		text_parts += copytext_char(t, last_pos)
+
+	return jointext(text_parts, "")
 
 
 // Removes punctuation
@@ -140,7 +154,7 @@
 /proc/stripped_input(mob/user, message = "", title = "", default = "", max_length=MAX_MESSAGE_LEN, no_trim=FALSE)
 	var/name = input(user, message, title, default) as text|null
 	if(no_trim)
-		return copytext(html_encode(name), 1, max_length)
+		return copytext_char(html_encode(name), 1, max_length)
 	else
 		return trim(html_encode(name), max_length) //trim is "outside" because html_encode can expand single symbols into multiple symbols (such as turning < into &lt;)
 
@@ -148,7 +162,7 @@
 /proc/stripped_multiline_input(mob/user, message = "", title = "", default = "", max_length=MAX_MESSAGE_LEN, no_trim=FALSE)
 	var/name = input(user, message, title, default) as message|null
 	if(no_trim)
-		return copytext(html_encode(name), 1, max_length)
+		return copytext_char(html_encode(name), 1, max_length)
 	else
 		return trim(html_encode(name), max_length)
 
@@ -317,7 +331,7 @@
 
 //Returns a string with the first element of the string capitalized.
 /proc/capitalize(t as text)
-	return uppertext(copytext(t, 1, 2)) + copytext(t, 2)
+	return uppertext(copytext_char(t, 1, 2)) + copytext_char(t, 2)
 
 //Centers text by adding spaces to either side of the string.
 /proc/dd_centertext(message, length)

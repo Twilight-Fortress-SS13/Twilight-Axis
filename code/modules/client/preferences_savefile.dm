@@ -7,7 +7,7 @@
 //	where you would want the updater procs below to run
 
 //	This also works with decimals.
-#define SAVEFILE_VERSION_MAX	35
+#define SAVEFILE_VERSION_MAX	33.9
 
 /*
 SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Carn
@@ -95,29 +95,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 						species_name = "Venardine"
 		_load_species(S, species_name)
-	if(current_version < 35) // Migrate old 3-slot loadout to gear_list
-		gear_list = list()
-		var/list/old_keys = list(
-			list("loadout", "loadout_1_hex"),
-			list("loadout2", "loadout_2_hex"),
-			list("loadout3", "loadout_3_hex"),
-		)
-		for(var/list/pair in old_keys)
-			var/loadout_type
-			S[pair[1]] >> loadout_type
-			if(!loadout_type || !ispath(loadout_type))
-				continue
-			var/datum/loadout_item/LI = GLOB.loadout_items[loadout_type]
-			if(!LI || LI.name == "Parent loadout datum")
-				continue
-			var/list/meta = list()
-			var/old_hex
-			S[pair[2]] >> old_hex
-			if(old_hex)
-				if(old_hex[1] != "#")
-					old_hex = "#[old_hex]"
-				meta["color"] = old_hex
-			gear_list[LI.name] = meta
 
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)
@@ -208,6 +185,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	// Custom hotkeys
 	S["key_bindings"]		>> key_bindings
 
+	S["defiant"]			>> defiant
+
 	//try to fix any outdated data if necessary
 	if(needs_update >= 0)
 		update_preferences(needs_update, S)		//needs_update = savefile_version if we need an update (positive integer)
@@ -249,6 +228,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	pda_style		= sanitize_inlist(pda_style, GLOB.pda_styles, initial(pda_style))
 	pda_color		= sanitize_hexcolor(pda_color, 6, 1, initial(pda_color))
 	key_bindings 	= sanitize_islist(key_bindings, list())
+	defiant	= sanitize_integer(defiant, FALSE, TRUE, TRUE)
 
 	//ROGUETOWN
 	parallax = PARALLAX_INSANE
@@ -344,6 +324,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["pda_color"], pda_color)
 	WRITE_FILE(S["key_bindings"], key_bindings)
 	WRITE_FILE(S["attack_blip_frequency"] , attack_blip_frequency)
+	WRITE_FILE(S["defiant"], defiant)
 	return TRUE
 
 
@@ -424,14 +405,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	else
 		virtue_origin = new /datum/virtue/none
 
-/datum/preferences/proc/_load_gear_list(savefile/S)
-	S["gear_list"] >> gear_list
-	if(!islist(gear_list))
-		gear_list = list()
-	// Validate: remove items that no longer exist
-	for(var/item_name in gear_list)
-		if(!(item_name in GLOB.loadout_items_by_name))
-			gear_list -= item_name
+/datum/preferences/proc/_load_loadout(S)
+	S["selected_loadout_items"] >> selected_loadout_items
+	selected_loadout_items = SANITIZE_LIST(selected_loadout_items)
+
+/datum/preferences/proc/_load_loadout_colours(S)
+	S["loadout_1_hex"] >> loadout_1_hex
+	S["loadout_2_hex"] >> loadout_2_hex
+	S["loadout_3_hex"] >> loadout_3_hex
 
 /datum/preferences/proc/_load_height(S)
 	var/preview_height
@@ -529,7 +510,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	// LETHALSTONE edit: jank-ass load our statpack choice
 	_load_statpack(S)
 
-	_load_gear_list(S)
+	_load_loadout(S)
 
 	_load_combat_music(S)
 
@@ -603,6 +584,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["song_artist"]		>> song_artist
 	S["song_title"]			>> song_title
 	S["nsfwflavortext"]	>> nsfwflavortext
+	S["nsfw_headshot_link"]		>> nsfw_headshot_link //TA edit
+	if(!valid_nsfw_headshot_link(null, nsfw_headshot_link, TRUE))
+		nsfw_headshot_link = null //TA edit end
 	S["erpprefs"]			>> erpprefs
 	S["preset_bounty_enabled"] >> preset_bounty_enabled
 	S["preset_bounty_poster_key"] >> preset_bounty_poster_key
@@ -817,10 +801,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["combat_music"], combat_music.type)
 	WRITE_FILE(S["body_size"] , features["body_size"])
 	WRITE_FILE(S["nsfwflavortext"] , html_decode(nsfwflavortext))
+	WRITE_FILE(S["nsfw_headshot_link"] , nsfw_headshot_link) //TA edit
 	WRITE_FILE(S["erpprefs"] , html_decode(erpprefs))
 	WRITE_FILE(S["img_gallery"] , img_gallery)
-
-	WRITE_FILE(S["gear_list"], gear_list)
+	
+	WRITE_FILE(S["selected_loadout_items"], selected_loadout_items)
 
 	//Familiar Files
 	WRITE_FILE(S["familiar_name"] , familiar_prefs.familiar_name)
@@ -831,6 +816,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["familiar_ooc_notes"] , familiar_prefs.familiar_ooc_notes)
 	WRITE_FILE(S["familiar_ooc_extra"] , familiar_prefs.familiar_ooc_extra)
 	WRITE_FILE(S["familiar_ooc_extra_link"] , familiar_prefs.familiar_ooc_extra_link)
+
+	WRITE_FILE(S["loadout_1_hex"], loadout_1_hex)
+	WRITE_FILE(S["loadout_2_hex"], loadout_2_hex)
+	WRITE_FILE(S["loadout_3_hex"], loadout_3_hex)
 
 	return TRUE
 

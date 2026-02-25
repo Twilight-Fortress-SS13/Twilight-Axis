@@ -23,7 +23,8 @@
 	experimental_onhip = TRUE
 	experimental_inhand = TRUE
 	chunkcolor = "#8c9599"
-	material_category = ARMOR_MAT_LEATHER
+	equip_delay_self = 1.5 SECONDS
+	unequip_delay_self = 1.5 SECONDS
 
 /obj/item/clothing/head/roguetown/helmet/MiddleClick(mob/user)
 	if(!ishuman(user))

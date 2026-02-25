@@ -12,21 +12,21 @@
 	outfit_female = null
 	display_order = JDO_WRETCH
 	show_in_credits = FALSE
-	min_pq = 10
+	min_pq = 20
 	max_pq = null
 
 	obsfuscated_job = TRUE
 
 	advclass_cat_rolls = list(CTAG_WRETCH = 20)
 	PQ_boost_divider = 10
-	round_contrib_points = 2
+	round_contrib_points = null
 
 	announce_latejoin = FALSE
 	wanderer_examine = TRUE
 	advjob_examine = TRUE
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE
-	same_job_respawn_delay = 1 MINUTES
+	same_job_respawn_delay = 30 MINUTES
 	virtue_restrictions = list(/datum/virtue/heretic/zchurch_keyholder) //all wretch classes automatically get this
 	job_traits = list(TRAIT_STEELHEARTED, TRAIT_OUTLAW, TRAIT_HERESIARCH, TRAIT_SELF_SUSTENANCE, TRAIT_ZURCH)
 	job_subclasses = list(
@@ -44,7 +44,13 @@
 		/datum/advclass/wretch/pyromaniac,
 		/datum/advclass/wretch/vigilante,
 		/datum/advclass/wretch/blackoakwyrm,
-		/datum/advclass/wretch/munitioneer
+
+		/datum/advclass/wretch/munitioneer,
+
+		/datum/advclass/wretch/twilight_corsair,
+		/datum/advclass/wretch/lunacyembracer,
+		/datum/advclass/wretch/rogueshaman
+
 	)
 
 /datum/job/roguetown/wretch/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
@@ -124,15 +130,16 @@
 		return
 
 	var/player_count = length(GLOB.joined_player_list)
+	var/ready_player_count = length(GLOB.ready_player_list)
 	var/slots = 5
 	
 	//Add 1 slot for every 10 players over 30. Less than 40 players, 5 slots. 40 or more players, 6 slots. 50 or more players, 7 slots - etc.
-	if(player_count > 40)
-		var/extra = floor((player_count - 40) / 10)
+	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+	if(current_players > 40)
+		var/extra = floor((current_players - 40) / 10)
 		slots += extra
-
-	//5 slots minimum, 10 maximum.
-	slots = min(slots, 10)
+	//5 slots minimum, 8 maximum.
+	slots = min(slots, 8)
 
 	wretch_job.total_positions = slots
 	wretch_job.spawn_positions = slots

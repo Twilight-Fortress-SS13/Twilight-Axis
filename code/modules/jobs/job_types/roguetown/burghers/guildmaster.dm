@@ -11,14 +11,14 @@
 
 	allowed_races = ACCEPTED_RACES
 
-	tutorial = "You are the leader of the Azure Peak Guild of Crafts. You represents the interests of all of the craftsmen underneath you - including the Tailor\
+	tutorial = "You are the leader of the Twilight Axis Guild of Crafts. You represents the interests of all of the craftsmen underneath you - including the Tailor\
 	the Blacksmiths, the Artificers and the Architects. Other townspeople may look to you for guidance, but they are not under your control. You are an experienced smith and artificer, and can do their work easily. Protect the craftsmen's interests."
 
 	outfit = /datum/outfit/job/roguetown/guildmaster
 	selection_color = JCOLOR_BURGHER
 	display_order = JDO_GUILDMASTER
 	give_bank_account = TRUE
-	min_pq = 5 // Higher PQ requirement as it is a leadership role. Not for total newbie.
+	min_pq = 7 // Higher PQ requirement as it is a leadership role. Not for total newbie.
 	max_pq = null
 	round_contrib_points = 3
 	cmode_music = 'sound/music/cmode/towner/combat_retired.ogg'

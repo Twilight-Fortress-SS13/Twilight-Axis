@@ -99,6 +99,7 @@ GLOBAL_LIST_INIT(our_forest_sex, typecacheof(list(
 #define isdracon(A) (is_species(A, /datum/species/dracon))
 #define islupian(A) (is_species(A, /datum/species/lupian))
 #define ismoth(A) (is_species(A, /datum/species/moth))
+#define isaura(A) (is_species(A, /datum/species/aura))
 #define istabaxi(A) (is_species(A, /datum/species/tabaxi))
 #define isvulp(A) (is_species(A, /datum/species/vulpkanin))
 
@@ -194,3 +195,7 @@ GLOBAL_VAR_INIT(magic_appearance_detecting_image, new /image) // appearances are
 #define isimage(thing) (istype(thing, /image))
 #define isappearance(thing) (!isimage(thing) && !ispath(thing) && istype(GLOB.magic_appearance_detecting_image, thing))
 #define isappearance_or_image(thing) (isimage(thing) || (!ispath(thing) && istype(GLOB.magic_appearance_detecting_image, thing)))
+
+// TA
+#define is_zizolackey(mind) (mind.has_antag_datum(/datum/antagonist/zizocultist))
+#define is_zizocultist(mind) (mind.has_antag_datum(/datum/antagonist/zizocultist/leader))

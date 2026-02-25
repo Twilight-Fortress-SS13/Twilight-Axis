@@ -67,7 +67,7 @@
 	new /obj/item/magic/fae/fairydust(deathspot)
 	new /obj/item/magic/fae/fairydust(deathspot)
 	update_icon()
-	sleep(1)
+	stoplag(1)
 	qdel(src)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite/taunted(mob/user)

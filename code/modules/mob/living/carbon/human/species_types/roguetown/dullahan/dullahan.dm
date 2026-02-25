@@ -138,6 +138,7 @@
 	)
 	languages = list(
 		/datum/language/common,
+		/datum/language/hellspeak,
 	)
 
 	restricted_virtues = list(/datum/virtue/utility/noble, /datum/virtue/utility/deathless, /datum/virtue/utility/resident)
