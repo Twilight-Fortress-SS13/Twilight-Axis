@@ -93,6 +93,10 @@
 		else
 			. = list(span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
 
+		for(var/obj/item/bodypart/BP in bodyparts)
+			if(BP.brand_text)
+				if(observer_privilege || get_location_accessible(src, BP.body_zone))
+					. += "<span class='userdanger' style='font-size: 1.2em'>BRAND ON [uppertext(BP.name)]: \"[BP.brand_text]\"</span>"
 		//Origins
 		var/pronoun	//They / Their
 		if(!dna.species.use_skin_tone_wording_for_examine)
@@ -327,7 +331,7 @@
 		if(HAS_TRAIT(src, TRAIT_DNR) && src != user && !HAS_TRAIT(user, TRAIT_DEATHSIGHT)) // A lot of conditional to avoid a redundant message, but we also want unknown DNRs to be covered.
 			. += span_danger("Their body holds not even a glimmer of life. No medicine can bring them back.")
 
-	if (HAS_TRAIT(src, TRAIT_CRITICAL_WEAKNESS) && (!HAS_TRAIT(src, TRAIT_VAMP_DREAMS)))
+	if (HAS_TRAIT(src, TRAIT_CRITICAL_WEAKNESS) && (!HAS_TRAIT(src, TRAIT_VAMP_DREAMS)) && (!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS)))
 		if(isliving(user))
 			var/mob/living/L = user
 			if(L.STAINT > 9 && L.STAPER > 9)

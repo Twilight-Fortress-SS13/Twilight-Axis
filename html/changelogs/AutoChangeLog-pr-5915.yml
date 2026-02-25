@@ -1,9 +1,0 @@
-author: "Ollanius"
-delete-after: True
-changes:
-  - code_imp: "Triumph-costing morphing elixirs now cost 3 TRI per instance, instead of 5 TRI. Spend freely for fashion!"
-  - rscadd: "Two new morphing elixers; one for iron smallswords, and another to add a cosmetic double-axhead to most axes."
-  - bugfix: "Undoes errant spelling."
-  - rscadd: "Adds a steel hunting sword, alongside a bunch of missing scabbards for messer-analogous weapons."
-  - rscadd: "Adds new sprites to iron smallswords."
-  - rscadd: "Minor highlights added to various swords."

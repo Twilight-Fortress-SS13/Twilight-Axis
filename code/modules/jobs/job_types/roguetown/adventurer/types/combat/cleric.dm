@@ -626,7 +626,8 @@
 		switch(weapon_choice)
 			if("Iron Spear")
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE) //TA edit
-				backr = /obj/item/rogueweapon/spear
+				r_hand = /obj/item/rogueweapon/spear
+				l_hand = /obj/item/rogueweapon/scabbard/gwstrap
 			if("Iron Quarterstaff")
 				H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_JOURNEYMAN, TRUE) //TA edit
 				r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/iron

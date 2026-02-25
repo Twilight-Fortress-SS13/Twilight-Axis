@@ -33,7 +33,7 @@
 	var/season = get_season_from_month(month_number)
 	var/season_phase = get_season_phase(month_number)
 
-	return "[day_of_month] [month_name] [year_number] (Month [month_number] [season_phase] [season]), Cycle [current_cycle]"
+	return "[day_of_month] [month_name] [year_number] AP (Month [month_number] [season_phase] [season]), Cycle [current_cycle]"
 
 // Returns the current IC time as a string in the format [DAYS] ᛉ HH:MM ([Time Of Day])
 /proc/get_current_ic_time_as_string()

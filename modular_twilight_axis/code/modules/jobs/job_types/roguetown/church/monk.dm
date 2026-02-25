@@ -14,3 +14,6 @@
 				if(MF.known_people)
 					MF.known_people -= prev_real_name
 					H.mind.person_knows_me(MF)
+
+/datum/advclass/acolyte
+	subclass_languages = list(/datum/language/valorian)

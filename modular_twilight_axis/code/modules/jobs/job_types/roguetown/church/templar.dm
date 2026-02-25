@@ -15,10 +15,16 @@
 					MF.known_people -= prev_real_name
 					H.mind.person_knows_me(MF)
 
+/datum/advclass/templar/monk
+	subclass_languages = list(/datum/language/valorian)
+
 /datum/outfit/job/roguetown/templar/monk/pre_equip(mob/living/carbon/human/H)
 	. = ..()
 	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 	H.change_stat(STATKEY_STR, -1)
+
+/datum/advclass/templar/crusader
+	subclass_languages = list(/datum/language/valorian)
 
 /datum/outfit/job/roguetown/templar/crusader/pre_equip(mob/living/carbon/human/H)
 	. = ..()
@@ -32,7 +38,7 @@
 	name = "Vigilant"
 	tutorial = "You are a vigilant of the Church, the secretive counterspies of the Holy See. Your underhanded methods earn you the scorn of some of your brothers, but they know not of the wars you fight away from their gaze."
 	outfit = /datum/outfit/job/roguetown/templar/vigilant
-	subclass_languages = list(/datum/language/grenzelhoftian)
+	subclass_languages = list(/datum/language/valorian)
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_WIL = 2,

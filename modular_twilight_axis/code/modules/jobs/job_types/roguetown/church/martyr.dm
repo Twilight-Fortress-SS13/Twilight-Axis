@@ -15,6 +15,9 @@
 					MF.known_people -= prev_real_name
 					H.mind.person_knows_me(MF)
 
+/datum/advclass/martyr
+	subclass_languages = list(/datum/language/valorian)
+
 /datum/outfit/job/roguetown/martyr/basic/pre_equip(mob/living/carbon/human/H)
 	..()
 	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
