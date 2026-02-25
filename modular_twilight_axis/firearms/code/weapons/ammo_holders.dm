@@ -149,43 +149,48 @@
 	item_state = "runebag"
 	max_storage = 10
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
-	var/list/linked_ammo = list()
+	var/list/linked_ammo_types = list()
+
+/obj/item/quiver/twilight_bullet/runicbag/attack_right(mob/user)
+	if(arrows.len)
+		var/obj/O = arrows[arrows.len]
+		arrows -= O
+		linked_ammo_types += O.type
+		O.forceMove(user.loc)
+		user.put_in_hands(O)
+		update_icon()
+		return TRUE
 
 /obj/item/quiver/twilight_bullet/runicbag/update_icon()
 	icon_state = "runebag"
 
 /obj/item/quiver/twilight_bullet/runicbag/attack_self(mob/living/user)
-	var/list/ammo_to_recall = list()
-	for(var/obj/item/ammo_casing/caseless/twilight_lead/runelock/A in linked_ammo)
-		if(!QDELETED(A) && A.linked_bag == src)
-			ammo_to_recall += A
-	if(ammo_to_recall)
+	if(linked_ammo_types)
 		to_chat(user, span_notice("I begin recalling my ammunition..."))
 		if(do_after(user, 3 SECONDS, src))
 			playsound(src, 'sound/magic/blink.ogg', 80)
-			for(var/obj/B in ammo_to_recall)
-				if(!(B in arrows))
-					if(!eatarrow(B, B.loc))
-						to_chat(user, span_notice("The [src.name] is full and can accept no more ammunition!"))
-						break
-			linked_ammo = ammo_to_recall
+			for(var/B in linked_ammo_types)
+				if(arrows.len < max_storage)
+					var/obj/item/ammo_casing/new_boolet = new B()
+					arrows += new_boolet
+					linked_ammo_types -= B
+					new_boolet.linked_bag = src
+				else
+					to_chat(user, span_notice("The [src.name] is full and can accept no more ammunition!"))
+					break
 	else
 		to_chat(user, span_notice("There is no linked ammunition to recall!"))
 
 /obj/item/quiver/twilight_bullet/runicbag/eatarrow(obj/A, loc)
 	if(istype(A, /obj/item/ammo_casing/caseless/twilight_lead/runelock))
-		if(istype(loc, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock))
-			return TRUE
+		var/obj/item/ammo_casing/R = A
 		if(arrows.len < max_storage)
 			if(ismob(loc))
 				var/mob/M = loc
-				M.doUnEquip(A, TRUE, src, TRUE, silent = TRUE)
+				M.doUnEquip(R, TRUE, src, TRUE, silent = TRUE)
 			else
-				A.forceMove(src)
-			arrows += A
-			var/obj/item/ammo_casing/caseless/twilight_lead/runelock/R = A
-			if(!(R in linked_ammo))
-				linked_ammo += R
+				R.forceMove(src)
+			arrows += R
 			R.linked_bag = src
 			update_icon()
 			return TRUE
@@ -197,7 +202,6 @@
 	for(var/i in 1 to 8)
 		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/R = new()
 		arrows += R
-		linked_ammo += R
 		R.linked_bag = src
 	update_icon()
 
@@ -206,7 +210,5 @@
 	for(var/i in 1 to 5)
 		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/blessed/R = new()
 		arrows += R
-		linked_ammo += R
 		R.linked_bag = src
 	update_icon()
-

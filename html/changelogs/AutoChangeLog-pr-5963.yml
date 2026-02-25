@@ -1,0 +1,4 @@
+author: "UEDCommander"
+delete-after: True
+changes:
+  - rscadd: "Adds lizd dual-color snouts to Wildkin customization"

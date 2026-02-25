@@ -1,4 +1,0 @@
-author: "Baneuus"
-delete-after: True
-changes:
-  - code_imp: "Scabbards now flip correctly at every direction."

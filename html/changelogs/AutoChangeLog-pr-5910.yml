@@ -1,5 +1,0 @@
-author: "Quinalion"
-delete-after: True
-changes:
-  - refactor: "Cleaned up blacksteel armor paths."
-  - balance: "Blacksteel helmets now uses medium armor class."

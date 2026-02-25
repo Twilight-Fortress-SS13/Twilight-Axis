@@ -1,7 +1,0 @@
-author: "Ollanius"
-delete-after: True
-changes:
-  - bugfix: "Reworded the Thespian-Errant's 'Duelist' blurb to clarify that picking it resets your statblock to Duelist-levels, rather than starting you off with VII CON / XIII SPD."
-  - balance: "Picking a sidearm (either in the form of a sword, axe, or bottle) as a Thespian-Errant now provides a fitting Apprentice-level skill (in swords, axes, or medicine.)"
-  - balance: "Thespian-Errants now start with Novice-level medicine skills, as they're likely going to bleed a bit more than their compatriots."
-  - balance: "Hoplon Greatshields have had their +3 DEF restored."
