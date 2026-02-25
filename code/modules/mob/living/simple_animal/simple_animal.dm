@@ -794,9 +794,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	if(be_close && !in_range(M, src))
 		to_chat(src, span_warning("I are too far away!"))
 		return FALSE
-	if(!(no_dexterity || dextrous))
-		to_chat(src, span_warning("I don't have the dexterity to do this!"))
-		return FALSE
+	// if(!(no_dexterity || dextrous))
+	// 	to_chat(src, span_warning("I don't have the dexterity to do this!"))
+	// 	return FALSE
 	return TRUE
 
 /mob/living/simple_animal/stripPanelUnequip(obj/item/what, mob/who, where)

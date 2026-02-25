@@ -158,33 +158,85 @@
 			. += span_warning("A knot is locked inside them. They're being pulled around like a pet.")
 
 		// Facial/Creampie effect message
-		var/datum/status_effect/facial/facial = has_status_effect(/datum/status_effect/facial)
-		var/datum/status_effect/facial/internal/creampie = null
-		if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
-			creampie = has_status_effect(/datum/status_effect/facial/internal)
-		if(facial && creampie)
-			var/facial_wet_or_dry = !facial?.has_dried_up ? "glazed" : "plastered"
-			var/creampie_wet_or_dry = !creampie?.has_dried_up ? "dripping out" : "stained with"
-			var/we_wet_or_dry = facial?.has_dried_up && creampie?.has_dried_up ? "dried cum" : "cum" // only show dried if both status are set to dry
-			if(user != src && isliving(user))
-				var/mob/living/L = user
-				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!") : span_warning("[m1] covered in something glossy!")
-			else
-				. += span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!")
-		else if(facial)
-			var/wet_or_dry = !facial?.has_dried_up ? "glazed with cum" : "plastered with dried cum"
-			if(user != src && isliving(user))
-				var/mob/living/L = user
-				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] smeared with something glossy!")
-			else
-				. += span_aiprivradio("[m1] [wet_or_dry]!")
-		else if(creampie)
-			var/wet_or_dry = !creampie?.has_dried_up ? "dripping out cum" : "stained with dried cum"
-			if(user != src && isliving(user))
-				var/mob/living/L = user
-				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] letting out some glossy stuff!")
-			else
-				. += span_aiprivradio("[m1] [wet_or_dry]!")
+		// var/datum/status_effect/facial/facial = has_status_effect(/datum/status_effect/facial)
+		// var/datum/status_effect/facial/internal/creampie = null
+		// if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
+		// 	creampie = has_status_effect(/datum/status_effect/facial/internal)
+		// if(facial && creampie)
+		// 	var/facial_wet_or_dry = !facial?.has_dried_up ? "glazed" : "plastered"
+		// 	var/creampie_wet_or_dry = !creampie?.has_dried_up ? "dripping out" : "stained with"
+		// 	var/we_wet_or_dry = facial?.has_dried_up && creampie?.has_dried_up ? "dried cum" : "cum" // only show dried if both status are set to dry
+		// 	if(user != src && isliving(user))
+		// 		var/mob/living/L = user
+		// 		. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!") : span_warning("[m1] covered in something glossy!")
+		// 	else
+		// 		. += span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!")
+		// else if(facial)
+		// 	var/wet_or_dry = !facial?.has_dried_up ? "glazed with cum" : "plastered with dried cum"
+		// 	if(user != src && isliving(user))
+		// 		var/mob/living/L = user
+		// 		. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] smeared with something glossy!")
+		// 	else
+		// 		. += span_aiprivradio("[m1] [wet_or_dry]!")
+		// else if(creampie)
+		// 	var/wet_or_dry = !creampie?.has_dried_up ? "dripping out cum" : "stained with dried cum"
+		// 	if(user != src && isliving(user))
+		// 		var/mob/living/L = user
+		// 		. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] letting out some glossy stuff!")
+		// 	else
+		// 		. += span_aiprivradio("[m1] [wet_or_dry]!")
+		
+		// ERP: coating + active partner (hidden-mode aware)
+		var/datum/erp_controller/erpC = SSerp?.get_controller_for(src)
+		var/erp_hidden = erpC?.hidden_mode
+		var/close_enough = Adjacent(user)
+		var/can_see_hidden = observer_privilege || close_enough || (user == src)
+		if(erpC)
+			var/mob/living/partner_mob = erpC._get_partner_effect_mob()
+			if(partner_mob && partner_mob != src && erpC.has_active_actions())
+				if(erp_hidden)
+					if(can_see_hidden)
+						. += span_warning("[m1] сплетается с [partner_mob].")
+				else
+					if(user != src && isliving(user))
+						var/mob/living/L = user
+						. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] сплетается с [partner_mob].") : span_warning("[m1] сплетается с кем-то...")
+					else
+						. += span_aiprivradio("[m1] сплетается с [partner_mob].")
+
+		if(!erp_hidden || can_see_hidden)
+			var/datum/status_effect/erp_coating/groin/G = null
+			if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
+				G = has_status_effect(/datum/status_effect/erp_coating/groin)
+
+			var/datum/status_effect/erp_coating/chest/CH = null
+			if(observer_privilege || get_location_accessible(src, BODY_ZONE_CHEST, skipundies = TRUE))
+				CH = has_status_effect(/datum/status_effect/erp_coating/chest)
+
+			var/datum/status_effect/erp_coating/face/B = has_status_effect(/datum/status_effect/erp_coating/face)
+			if(G)
+				var/txt = !G.has_dried_up ? "имеет влажные стекающие следы выделений на паху" : "имеет влажные подсхощие следы выделений на паху"
+				if(user != src && isliving(user))
+					var/mob/living/L = user
+					. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] выглядит грязно в районе паха.")
+				else
+					. += span_aiprivradio("[m1] [txt].")
+
+			if(CH)
+				var/txt = !CH.has_dried_up ? "имеет влажные следы выделений на груди" : "имеет подсхохшие выделения на груди"
+				if(user != src && isliving(user))
+					var/mob/living/L = user
+					. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] имеет чем-то запачканную грудь.")
+				else
+					. += span_aiprivradio("[m1] [txt].")
+
+			if(B)
+				var/txt = !B.has_dried_up ? "блестит влажными выделениями" : "имеет сухие следы выделений на лице"
+				if(user != src && isliving(user))
+					var/mob/living/L = user
+					. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] выглядит грязно.")
+				else
+					. += span_aiprivradio("[m1] [txt].")
 
 		//For tennite schism god-event
 		if(length(GLOB.tennite_schisms))

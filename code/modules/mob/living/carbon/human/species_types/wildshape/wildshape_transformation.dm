@@ -7,6 +7,13 @@
 	if(!mind)
 		log_runtime("NO MIND ON [src.name] WHEN TRANSFORMING")
 	Paralyze(1, ignore_canstun = TRUE)
+
+	// TA edit start - new ERP SYSTEM
+	if(istype(src, /mob/living/carbon/human/species/wildshape))
+		var/mob/living/carbon/human/species/wildshape/WA = src
+		WA.remove_form_sex_organs()
+	// TA edit end - new ERP SYSTEM
+
 	//before we shed our items, save our neck and ring, if we have any, so we can quickly rewear them
 	var/obj/item/stored_neck = wear_neck
 	var/obj/item/stored_ring = wear_ring
@@ -84,14 +91,17 @@
 	W.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
 	W.update_a_intents()
 	
-	if(getorganslot(ORGAN_SLOT_PENIS))
-		W.internal_organs_slot[ORGAN_SLOT_PENIS] = /obj/item/organ/penis/knotted/big
-	if(getorganslot(ORGAN_SLOT_TESTICLES))
-		W.internal_organs_slot[ORGAN_SLOT_TESTICLES] = /obj/item/organ/testicles
-	if(getorganslot(ORGAN_SLOT_BREASTS))
-		W.internal_organs_slot[ORGAN_SLOT_BREASTS] = /obj/item/organ/breasts
-	if(getorganslot(ORGAN_SLOT_VAGINA))
-		W.internal_organs_slot[ORGAN_SLOT_VAGINA] = /obj/item/organ/vagina
+	// TA edit start - new ERP SYSTEM
+	// if(getorganslot(ORGAN_SLOT_PENIS))
+	// 	W.internal_organs_slot[ORGAN_SLOT_PENIS] = /obj/item/organ/penis/knotted/big
+	// if(getorganslot(ORGAN_SLOT_TESTICLES))
+	// 	W.internal_organs_slot[ORGAN_SLOT_TESTICLES] = /obj/item/organ/testicles
+	// if(getorganslot(ORGAN_SLOT_BREASTS))
+	// 	W.internal_organs_slot[ORGAN_SLOT_BREASTS] = /obj/item/organ/breasts
+	// if(getorganslot(ORGAN_SLOT_VAGINA))
+	// 	W.internal_organs_slot[ORGAN_SLOT_VAGINA] = /obj/item/organ/vagina
+	W.ensure_form_sex_organs_from_original(src)
+	// TA edit end - new ERP SYSTEM
 
 	// temporal traits so our body won't die or snore
 	ADD_TRAIT(src, TRAIT_NOSLEEP, TRAIT_SOURCE_WILDSHAPE)
@@ -119,6 +129,12 @@
 		dropItemToGround(W)
 	icon = null
 	invisibility = INVISIBILITY_MAXIMUM
+
+	//TA addition start - new ERP SYSTEM
+	if(istype(src, /mob/living/carbon/human/species/wildshape))
+		var/mob/living/carbon/human/species/wildshape/WA_rm = src
+		WA_rm.remove_form_sex_organs()
+	//TA addition end - new ERP SYSTEM
 
 	var/mob/living/carbon/human/W = stored_mob
 	stored_mob = null

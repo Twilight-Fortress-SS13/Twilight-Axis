@@ -186,6 +186,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["key_bindings"]		>> key_bindings
 
 	S["defiant"]			>> defiant
+	// TA Addition start - new ERP SYSTEM
+	S["erp_custom_actions"] >> erp_custom_actions	
+	S["erp_kink_prefs"] >> erp_kink_prefs
+	S["erp_organ_sensitivity"] >> erp_organ_prefs
+	// TA Addition end - new ERP SYSTEM
 
 	//try to fix any outdated data if necessary
 	if(needs_update >= 0)
@@ -229,7 +234,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	pda_color		= sanitize_hexcolor(pda_color, 6, 1, initial(pda_color))
 	key_bindings 	= sanitize_islist(key_bindings, list())
 	defiant	= sanitize_integer(defiant, FALSE, TRUE, TRUE)
-
+	//TA Addition start - new ERP SYSTEM
+	erp_custom_actions = sanitize_islist(erp_custom_actions, list())
+	sanitize_erp_custom_actions()
+	erp_kink_prefs = sanitize_islist(erp_kink_prefs, list())
+	sanitize_erp_kink_prefs()
+	erp_organ_prefs = sanitize_islist(erp_organ_prefs, list())
+	sanitize_erp_organ_prefs()
+	//TA Addition end - new ERP SYSTEM
+	
 	//ROGUETOWN
 	parallax = PARALLAX_INSANE
 
@@ -325,6 +338,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["key_bindings"], key_bindings)
 	WRITE_FILE(S["attack_blip_frequency"] , attack_blip_frequency)
 	WRITE_FILE(S["defiant"], defiant)
+	// TA Addition start - new ERP SYSTEM
+	WRITE_FILE(S["erp_custom_actions"], erp_custom_actions)
+	WRITE_FILE(S["erp_kink_prefs"], erp_kink_prefs)
+	WRITE_FILE(S["erp_organ_sensitivity"], erp_organ_prefs)
+	// TA Addition end - new ERP SYSTEM
 	return TRUE
 
 
