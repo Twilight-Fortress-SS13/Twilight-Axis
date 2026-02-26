@@ -109,27 +109,6 @@ GLOBAL_LIST_INIT(t4enchantmentrunerituallist,generate_t4enchantment_rituallist()
 	return runerituals
 //TA EDIT END
 
-/proc/generate_buff_rituallist()	//list of all rituals for player use
-	RETURN_TYPE(/list)
-	var/list/runerituals = list()
-	for(var/datum/runeritual/runeritual as anything in subtypesof(/datum/runeritual/buff))
-		if(runeritual.tier > 1)
-			continue
-		if(runeritual.blacklisted)
-			continue
-		runerituals[initial(runeritual.name)] = runeritual
-	return runerituals
-
-/proc/generate_t2buff_rituallist()	//list of all rituals for player use
-	RETURN_TYPE(/list)
-	var/list/runerituals = list()
-	for(var/datum/runeritual/runeritual as anything in subtypesof(/datum/runeritual/buff))
-		if(runeritual.blacklisted)
-			continue
-		runerituals[initial(runeritual.name)] = runeritual
-	return runerituals
-
-
 /proc/generate_t2enchantment_rituallist()	//list of all rituals for player use
 	RETURN_TYPE(/list)
 	var/list/runerituals = list()
