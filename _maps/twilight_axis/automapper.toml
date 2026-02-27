@@ -10,8 +10,15 @@
 # More can be found in code\__DEFINES\maps.dm
 
 # roguetest test lavafort
-#[templates.test_map]
-#map_files = ["lavafort.dmm"]
-#directory = "_maps/twilight_axis/templates/test/"
-#required_map = "roguetest.dmm"
-#coordinates = [1, 1, 1]
+# [templates.test_map]
+# map_files = ["lavafort.dmm"]
+# directory = "_maps/twilight_axis/templates/test/"
+# required_map = "roguetest.dmm"
+# coordinates = [1, 1, 1]
+
+# dunworld witch huts
+[templates.witch_hut]
+map_files = ["witch_hut_1.dmm","witch_hut_2.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/witch_hut/"
+required_map = "dun_world.dmm"
+coordinates = [194, 240, 1]
