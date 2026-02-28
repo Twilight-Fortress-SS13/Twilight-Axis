@@ -1130,3 +1130,22 @@
       Decapitation.
   mumblemancer:
   - rscadd: '*snore now in noises menu'
+2026-02-25:
+  Draganfrukts:
+  - balance: Miners now get +2 WIL instead of +2 CON. Their +1 is swapped.
+  FreeStylaLT:
+  - balance: Guarded virtue now properly obscures Critical Weakness vice.
+  Maggotbait:
+  - image: Resprited the witch hat
+  - image: A brand new set of clothing and belt, the slitted dress, woolen collar
+      and paired belts
+  NewyearnewmeUwu:
+  - bugfix: women or men who wear masc/femme clothes will be called properly by their
+      titles
+  UEDCommander:
+  - rscadd: Adds lizd dual-color snouts to Wildkin customization
+  WeNeedMorePhoron:
+  - rscadd: Appended AP to Calendar Year number (After Psydon)
+  - rscadd: Martial Supercession now allows for an Outlaw to give assent - but not
+      invoke it themselves.
+  - rscadd: Add caffiend vice.

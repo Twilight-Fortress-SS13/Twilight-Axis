@@ -62,6 +62,8 @@
 			bodypart_status += "Obscured by clothing."
 	var/owner_ref = owner ? REF(owner) : REF(src)
 	if(observer_privilege || location_accessible)
+		if(brand_text)
+			bodypart_status += span_danger("The rough leather is branded with the words <B>\"[brand_text]\"</B>.")
 		if(skeletonized)
 			bodypart_status += "[src] is skeletonized."
 		else if(rotted)
