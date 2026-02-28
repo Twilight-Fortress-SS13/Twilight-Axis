@@ -784,12 +784,13 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 /client/proc/togglebuildmodeself()
 	set name = "Toggle Build Mode"
 	set category = "-Special Verbs-"
-	if (!(holder.rank.rights & R_BUILD))
+	if(!holder || !(holder.rank.rights & R_BUILD))
 		return
+
 	if(src.mob)
 		togglebuildmode(src.mob)
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Toggle Build Mode") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Toggle Build Mode")
 
 /client/proc/deadmin()
 	set name = "Deadmin"
