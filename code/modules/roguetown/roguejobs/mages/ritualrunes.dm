@@ -735,7 +735,7 @@ GLOBAL_LIST(teleport_runes)
 			return
 
 		var/mob/living/simple_animal/S = summoned_mob
-		if(!S || !istype(S) || QDELETED(S))
+		if(!S || QDELETED(S))
 			to_chat(user, span_warning("The containment has already faded."))
 			summoned_mob = null
 			summoning = FALSE
@@ -746,25 +746,27 @@ GLOBAL_LIST(teleport_runes)
 		summoning = FALSE
 		summoned_mob = null
 
-		to_chat(user, span_warning("You release the summon from it's containment!"))
+		to_chat(user, span_warning("You release the summon from its containment!"))
 		playsound(user, 'sound/magic/teleport_diss.ogg', 75, TRUE)
 		do_invoke_glow()
 		clear_obstacles(user)
-		sleep(20)
-
-		if(S && !QDELETED(S))
-			animate(S, color = null, time = 5)
-			REMOVE_TRAIT(S, TRAIT_PACIFISM, TRAIT_GENERIC)
-			S.status_flags &= ~GODMODE
-			S.candodge = TRUE
-			S.binded = FALSE
-			S.move_resist = MOVE_RESIST_DEFAULT
-			S.SetParalyzed(0)
-
-		releasing_summon = FALSE
+		addtimer(CALLBACK(src, PROC_REF(release_summon_finish), S), 20)
 		return
 
 	. = ..()
+
+/obj/effect/decal/cleanable/roguerune/arcyne/summoning/proc/release_summon_finish(mob/living/simple_animal/S)
+	if(S && !QDELETED(S))
+		animate(S, color = null, time = 5)
+		REMOVE_TRAIT(S, TRAIT_PACIFISM, TRAIT_GENERIC)
+		S.status_flags &= ~GODMODE
+		S.candodge = TRUE
+		S.binded = FALSE
+		S.move_resist = MOVE_RESIST_DEFAULT
+		S.SetParalyzed(0)
+
+	if(!QDELETED(src))
+		releasing_summon = FALSE
 
 /obj/effect/decal/cleanable/roguerune/arcyne/summoning/invoke(list/invokers, datum/runeritual/runeritual)
 	if(!..())	//VERY important. Calls parent and checks if it fails. parent/invoke has all the checks for ingredients
