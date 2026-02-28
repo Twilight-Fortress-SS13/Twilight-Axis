@@ -462,6 +462,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 /obj/effect/proc_holder/spell/Destroy()
 	STOP_PROCESSING(SSfastprocess, src)
+	var/mob/owner = action?.owner
+	if(owner)
+		owner.mob_spell_list -= src
+		owner.mind?.spell_list -= src
 	qdel(action)
 	return ..()
 
