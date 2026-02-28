@@ -645,6 +645,9 @@
 		for(var/adv in job_subclasses)
 			var/datum/advclass/advpath = adv
 			var/datum/advclass/subclass = SSrole_class_handler.get_advclass_by_name(initial(advpath.name))
+			if(!subclass)
+				continue
+
 			if(subclass.maximum_possible_slots != -1)
 				dat += "[subclass.name] — <b>"
 				if(subclass.total_slots_occupied >= subclass.maximum_possible_slots)
@@ -652,6 +655,7 @@
 				else
 					dat += "[subclass.total_slots_occupied] / [subclass.maximum_possible_slots]"
 				dat += "</b><br>"
+
 		var/datum/browser/popup = new(usr, "subclassslots", "<div style='text-align: center'>[title]</div>", nwidth = 200, nheight = 300)
 		popup.set_content(dat.Join())
 		popup.open(FALSE)
