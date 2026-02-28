@@ -980,20 +980,30 @@
 	consider_wakeup()
 
 /mob/living/carbon/human/proc/set_new_cells()
-	if(QDELETED(src)) // Move to nullspace causes move and causes this.
+	if(QDELETED(src))
 		return
+
 	var/turf/our_turf = get_turf(src)
 	if(isnull(our_turf))
 		return
 
-	var/list/cell_collections = our_cells?.recalculate_cells(our_turf)
+	if(!our_cells)
+		return
+
+	var/list/cell_collections = our_cells.recalculate_cells(our_turf)
+	if(!islist(cell_collections) || length(cell_collections) < 2)
+		return
 
 	for(var/datum/old_grid as anything in cell_collections[2])
-		UnregisterSignal(old_grid, list(SPATIAL_GRID_CELL_ENTERED(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS), SPATIAL_GRID_CELL_EXITED(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS)))
+		UnregisterSignal(old_grid, list(
+			SPATIAL_GRID_CELL_ENTERED(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS),
+			SPATIAL_GRID_CELL_EXITED(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS),
+		))
 
 	for(var/datum/spatial_grid_cell/new_grid as anything in cell_collections[1])
 		RegisterSignal(new_grid, SPATIAL_GRID_CELL_ENTERED(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS), PROC_REF(on_client_enter))
 		RegisterSignal(new_grid, SPATIAL_GRID_CELL_EXITED(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS), PROC_REF(on_client_exit))
+
 	consider_wakeup()
 
 /mob/living/carbon/human/proc/update_grid()
