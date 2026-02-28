@@ -49,13 +49,14 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 
 
 /mob/dead/new_player/proc/lobby_refresh()
-	set waitfor = 0
-//	src << browse(null, "window=lobby_window")
-
-	if(!client)
+	if(QDELETED(src))
 		return
 
-	if(client.is_new_player())
+	var/client/C = client
+	if(!C)
+		return
+
+	if(C.mob != src)
 		return
 
 	if(SSticker.HasRoundStarted())
@@ -66,62 +67,92 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 
 	var/time_remaining = SSticker.GetTimeLeft()
 	if(time_remaining > 0)
-		dat += "Time To Start: [round(time_remaining/10)]s<br>"
+		dat += "Time To Start: [round(time_remaining / 10)]s<br>"
 	else if(time_remaining == -10)
 		dat += "Time To Start: DELAYED<br>"
 	else
 		dat += "Time To Start: SOON<br>"
 
 	dat += "Total players ready: [SSticker.totalPlayersReady]<br>"
-	if(src.ready)
-		dat += (span_good("Ready Bonus!") + "<a href='?src=[REF(src)];explainreadyupbonus=1'>(?)</a><br>")
+	if(ready == PLAYER_READY_TO_PLAY)
+		dat += "[span_good("Ready Bonus!")]<a href='?src=[REF(src)];explainreadyupbonus=1'>(?)</a><br>"
 	else
-		dat += (span_highlight("No bonus! Ready up!") + "<a href='?src=[REF(src)];explainreadyupbonus=1'>(?)</a><br>")
-	dat += "<B>Classes:</B><br>"
+		dat += "[span_highlight("No bonus! Ready up!")]<a href='?src=[REF(src)];explainreadyupbonus=1'>(?)</a><br>"
 
+	dat += "<b>Classes:</b><br>"
 	dat += "</center>"
 
 	var/list/job_list = list()
 	var/list/ready_players_by_job = list()
-	var/list/wanderer_jobs = list(
+	var/static/list/wanderer_jobs = list(
 		"Adventurer",
 		"Wretch",
-		"Court Agent"
+		"Court Agent",
 	)
 
-	for (var/mob/dead/new_player/player in GLOB.player_list)
-		if (player.client?.ckey in GLOB.hiderole)
+	for(var/mob/dead/new_player/player as anything in GLOB.player_list)
+		if(QDELETED(player))
 			continue
-		var/job_choice = player.client?.prefs?.job_preferences
-		if (job_choice)
-			for (var/job_name in job_choice)
-				if (job_choice[job_name] == JP_HIGH)
-					if (job_name in wanderer_jobs)
-						job_name = "Wanderer"
-					if (player.ready == PLAYER_READY_TO_PLAY)
-						if (!ready_players_by_job[job_name])
-							ready_players_by_job[job_name] = list()
-						ready_players_by_job[job_name] += player.client.prefs.real_name
-						break
 
-	for (var/job_name in ready_players_by_job)
+		var/client/player_client = player.client
+		if(!player_client)
+			continue
+
+		if(player_client.ckey in GLOB.hiderole)
+			continue
+
+		if(player.ready != PLAYER_READY_TO_PLAY)
+			continue
+
+		var/datum/preferences/prefs = player_client.prefs
+		if(!prefs)
+			continue
+
+		var/list/job_choice = prefs.job_preferences
+		if(!job_choice)
+			continue
+
+		for(var/job_name as anything in job_choice)
+			if(job_choice[job_name] != JP_HIGH)
+				continue
+
+			if(job_name in wanderer_jobs)
+				job_name = "Wanderer"
+
+			if(!ready_players_by_job[job_name])
+				ready_players_by_job[job_name] = list()
+
+			ready_players_by_job[job_name] += prefs.real_name
+			break
+
+	for(var/job_name as anything in ready_players_by_job)
 		var/list/job_players = ready_players_by_job[job_name]
-		job_list += "<B>[job_name]</B> ([job_players.len]) - [job_players.Join(", ")]<br>"
-	
-	sortTim(job_list, cmp = GLOBAL_PROC_REF(cmp_text_asc))
+		job_list += "<b>[job_name]</b> ([job_players.len]) - [job_players.Join(", ")]<br>"
 
+	sortTim(job_list, cmp = GLOBAL_PROC_REF(cmp_text_asc))
 	dat += job_list
+
+	if(QDELETED(src))
+		return
+	if(client != C)
+		return
+	if(C.mob != src)
+		return
+
 	var/datum/browser/popup = new(src, "lobby_window", "<div align='center'>LOBBY</div>", 330, 430)
 	popup.set_window_options("can_close=1;can_minimize=0;can_maximize=0;can_resize=1;")
 	popup.set_content(dat.Join())
-	if(!client)
-		return
-	if(winexists(src, "lobby_window"))
-		src << browse(popup.get_content(), "window=lobby_window") //dont update the size or annoyingly refresh
+
+	if(QDELETED(src) || client != C || C.mob != src)
 		qdel(popup)
 		return
-	else
-		popup.open(FALSE)
+
+	if(winexists(src, "lobby_window"))
+		src << browse(popup.get_content(), "window=lobby_window")
+		qdel(popup)
+		return
+
+	popup.open(FALSE)
 
 /mob/dead/proc/server_hop()
 	set category = "OOC"

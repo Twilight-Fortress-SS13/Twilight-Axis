@@ -277,14 +277,6 @@ GLOBAL_VAR(last_connection)
 		deltimer(GLOB.stickbanadminexemptiontimerid)
 	GLOB.stickbanadminexemptiontimerid = null
 
-/client/proc/is_new_player()
-#ifdef ALLOWPLAY
-	return FALSE
-#endif
-#ifdef TESTSERVER
-	return FALSE
-#endif
-
 #undef STICKYBAN_MAX_MATCHES
 #undef STICKYBAN_MAX_EXISTING_USER_MATCHES
 #undef STICKYBAN_MAX_ADMIN_MATCHES

@@ -918,10 +918,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	dat += "</table>"
 //	dat += "<a href='?_src_=prefs;preference=reset_all'>Reset Setup</a>"
 
-
-	if(user.client?.is_new_player())
-		dat = list("<center>REGISTER!</center>")
-
 	winshow(user, "preferencess_window", TRUE)
 	winset(user, "preferencess_window", "size=820x850")
 	winset(user, "preferencess_window", "pos=280,80")

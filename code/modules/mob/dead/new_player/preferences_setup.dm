@@ -38,17 +38,19 @@
 
 /datum/preferences/proc/update_preview_icon()
 	set waitfor = 0
-	if(!parent)
-		return
-	if(parent.is_new_player())
+	var/client/C = parent
+	if(!C)
 		return
 
-	// Set up the dummy for its photoshoot
 	var/mob/living/carbon/human/dummy/mannequin = generate_or_wait_for_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
-	copy_to(mannequin, 1, TRUE, TRUE)
+	if(!mannequin)
+		return
 
+	copy_to(mannequin, 1, TRUE, TRUE)
 	COMPILE_OVERLAYS(mannequin)
-	parent.show_character_previews(new /mutable_appearance(mannequin))
+	if(parent == C)
+		C.show_character_previews(new /mutable_appearance(mannequin))
+
 	unset_busy_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
 
 /datum/preferences/proc/spec_check(mob/user)
