@@ -749,7 +749,7 @@ GLOBAL_LIST(teleport_runes)
 
 		animate(S, color = null, time = 5)
 		REMOVE_TRAIT(S, TRAIT_PACIFISM, TRAIT_GENERIC) // can't kill while planar bound.
-		S.status_flags -= GODMODE
+		S.status_flags &= ~GODMODE
 		S.candodge = TRUE
 		S.binded = FALSE
 		S.move_resist = MOVE_RESIST_DEFAULT
