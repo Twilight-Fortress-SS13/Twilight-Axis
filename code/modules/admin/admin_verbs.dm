@@ -784,11 +784,14 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 /client/proc/togglebuildmodeself()
 	set name = "Toggle Build Mode"
 	set category = "-Special Verbs-"
-	if(!holder || !(holder.rank.rights & R_BUILD))
+	if(!holder)
 		return
 
-	if(src.mob)
-		togglebuildmode(src.mob)
+	if(!(holder.rank.rights & R_BUILD))
+		return
+
+	if(mob)
+		togglebuildmode(mob)
 
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Toggle Build Mode")
 
