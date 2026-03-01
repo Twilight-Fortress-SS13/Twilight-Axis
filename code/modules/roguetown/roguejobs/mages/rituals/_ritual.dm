@@ -6,8 +6,6 @@ GLOBAL_LIST_INIT(t3summoningrunerituallist, generate_t3summoning_rituallist())
 GLOBAL_LIST_INIT(t4summoningrunerituallist, generate_t4summoning_rituallist())
 GLOBAL_LIST_INIT(t2wallrunerituallist, generate_t2wall_rituallist())
 GLOBAL_LIST_INIT(t4wallrunerituallist, generate_t4wall_rituallist())
-GLOBAL_LIST_INIT(buffrunerituallist, generate_buff_rituallist()) // TA EDIT START
-GLOBAL_LIST_INIT(t2buffrunerituallist, generate_t2buff_rituallist()) // TA EDIT END
 GLOBAL_LIST_INIT(t2enchantmentrunerituallist,generate_t2enchantment_rituallist())
 GLOBAL_LIST_INIT(t4enchantmentrunerituallist,generate_t4enchantment_rituallist())
 
@@ -87,27 +85,6 @@ GLOBAL_LIST_INIT(t4enchantmentrunerituallist,generate_t4enchantment_rituallist()
 			continue
 		runerituals[initial(runeritual.name)] = runeritual
 	return runerituals
-// TA EDIT START
-/proc/generate_buff_rituallist()	//list of all rituals for player use
-	RETURN_TYPE(/list)
-	var/list/runerituals = list()
-	for(var/datum/runeritual/runeritual as anything in subtypesof(/datum/runeritual/buff))
-		if(runeritual.tier > 1)
-			continue
-		if(runeritual.blacklisted)
-			continue
-		runerituals[initial(runeritual.name)] = runeritual
-	return runerituals
-
-/proc/generate_t2buff_rituallist()	//list of all rituals for player use
-	RETURN_TYPE(/list)
-	var/list/runerituals = list()
-	for(var/datum/runeritual/runeritual as anything in subtypesof(/datum/runeritual/buff))
-		if(runeritual.blacklisted)
-			continue
-		runerituals[initial(runeritual.name)] = runeritual
-	return runerituals
-//TA EDIT END
 
 /proc/generate_t2enchantment_rituallist()	//list of all rituals for player use
 	RETURN_TYPE(/list)

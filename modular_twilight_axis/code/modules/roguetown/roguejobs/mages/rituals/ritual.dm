@@ -1,3 +1,26 @@
+GLOBAL_LIST_INIT(buffrunerituallist, generate_buff_rituallist())
+GLOBAL_LIST_INIT(t2buffrunerituallist, generate_t2buff_rituallist())
+
+/proc/generate_buff_rituallist()	//list of all rituals for player use
+	RETURN_TYPE(/list)
+	var/list/runerituals = list()
+	for(var/datum/runeritual/runeritual as anything in subtypesof(/datum/runeritual/buff))
+		if(runeritual.tier > 1)
+			continue
+		if(runeritual.blacklisted)
+			continue
+		runerituals[initial(runeritual.name)] = runeritual
+	return runerituals
+
+/proc/generate_t2buff_rituallist()	//list of all rituals for player use
+	RETURN_TYPE(/list)
+	var/list/runerituals = list()
+	for(var/datum/runeritual/runeritual as anything in subtypesof(/datum/runeritual/buff))
+		if(runeritual.blacklisted)
+			continue
+		runerituals[initial(runeritual.name)] = runeritual
+	return runerituals
+
 /obj/effect/decal/cleanable/roguerune/arcyne/empowerment
 	name = "Empowerment Array"
 	desc = "arcane symbols pulse upon the ground..."

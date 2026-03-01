@@ -3449,7 +3449,7 @@
 #include "modular_twilight_axis\code\modules\erp_system\ui\erp_sex_ui_status.dm"
 #include "modular_twilight_axis\code\game\objects\items\granters.dm"
 #include "modular_twilight_axis\code\modules\roguetown\roguejobs\mages\rituals\buffs.dm"
-#include "modular_twilight_axis\code\modules\roguetown\roguejobs\mages\ritualrunes.dm"
+#include "modular_twilight_axis\code\modules\roguetown\roguejobs\mages\rituals\ritual.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\invoked_aoe\aerosolize.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\invoked_aoe\shroudtrap.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\invoked_aoe\magicshield.dm"
@@ -3468,4 +3468,3 @@
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\misc\frost_walker.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\misc\arcane_announcement.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\runes.dm"
-// END_INCLUDE
