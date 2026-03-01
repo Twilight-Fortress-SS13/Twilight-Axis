@@ -416,19 +416,19 @@
 				return 0.8
 		if(SEX_FORCE_MID)
 			if(giving)
-				return 1.2
+				return 1.0
 			else
-				return 1.2
+				return 1.0
 		if(SEX_FORCE_HIGH)
 			if(giving)
-				return 1.6
+				return 1.25
 			else
 				return 1.2
 		if(SEX_FORCE_EXTREME)
 			if(giving)
-				return 2.0
+				return 1.55
 			else
-				return 0.8
+				return 1.5
 
 /datum/component/arousal/proc/get_force_pain_multiplier(passed_force)
 	switch(passed_force)

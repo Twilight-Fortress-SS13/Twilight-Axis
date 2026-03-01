@@ -5,7 +5,7 @@
 	icon_state = ""
 	obj_flags = CAN_BE_HIT
 	w_class = WEIGHT_CLASS_NORMAL
-	experimental_inhand = FALSE
+	experimental_inhand = TRUE
 	smeltresult = null
 	grid_width = 32
 	grid_height = 64

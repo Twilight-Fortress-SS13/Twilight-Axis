@@ -1,5 +1,5 @@
 /obj/structure/roguemachine/Hoardmaster/attack_hand(mob/living/user)
-	if(!HAS_TRAIT(user, TRAIT_COMMIE))
+	if(!HAS_TRAIT(user, TRAIT_FREEMAN))
 		return
 	var/datum/antagonist/bandit/B = usr.mind.has_antag_datum(/datum/antagonist/bandit)
 	. = ..()

@@ -6,4 +6,6 @@
 	This file separation can support different servers using their own maps, especially supporting downstreams
 */
 
+#include "..\..\_maps\map_files\rockhill\map_adjustment_rockhill.dm"
 #include "..\..\_maps\map_files\roguetest\map_adjustment_roguetest.dm"
+#include "..\..\_maps\map_files\dun_world\map_adjustment_dun_world.dm"

@@ -109,7 +109,7 @@
 	color = "#ecaf86"
 	sellprice = 25
 	smeltresult = /obj/item/artillery_barrel_assembly
-
+/*
 GLOBAL_VAR_INIT(has_mortar_spawned, FALSE)
 /datum/job/roguetown/marshal/after_spawn(mob/living/H, mob/M, latejoin = FALSE)
 	. = ..()
@@ -118,6 +118,6 @@ GLOBAL_VAR_INIT(has_mortar_spawned, FALSE)
 		var/obj/structure/artillery/mortar/mortar = new /obj/structure/artillery/mortar(H.loc)
 		H.start_pulling(mortar)
 		to_chat(H, span_danger("Со мной моя трофейная мортира, замечательно."))
-
+*/
 #undef PROJECTILE_NUM 
 #undef PROJECTILE_DEGREES_DIV

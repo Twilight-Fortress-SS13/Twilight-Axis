@@ -6,6 +6,7 @@
 		"Court Magician",\
 		"Marshal",\
 		"Knight",\
+		"Royal Knight", \
 		"Bishop",\
 		"Martyr",\
 		"Keeper",\
@@ -24,5 +25,10 @@
 		"Druid",\
 		"Acolyte",\
 		"Man at Arms",\
+		"Royal Guard",\
+		"Vanguard", \
+		"Overseer",\
+		"Watchman", \
+		"Town Watch", \
 		"Squire",\
 	)

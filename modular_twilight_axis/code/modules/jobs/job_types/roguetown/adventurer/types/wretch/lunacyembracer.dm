@@ -2,7 +2,7 @@
 	name = "Lunacy Embracer"
 	tutorial = "You have rejected and terrorized civilization in the name of nature. \
 	You run wild under the moon, a terror to the townsfolk and a champion of Dendor's wild domain. \
-	Clergy of Azuria assume you are a radical dendorite and rejected you, now you're a part of beasts circle, now you're a predator"
+	Clergy of Azuria assume you are a radical dendorite and rejected you, your connection with Treefather is weaken but you will serve him whatever it takes."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_NO_CONSTRUCT
 	min_pq = 30
@@ -10,7 +10,7 @@
 
 	outfit = /datum/outfit/job/roguetown/wretch/lunacyembracer
 	category_tags = list(CTAG_WRETCH)
-	extra_context = "Minimum PQ Required: 30" //SHIIIIT
+	extra_context = "Minimum PQ Required: 30"
 	subclass_languages = list(/datum/language/beast)
 
 	traits_applied = list(
@@ -25,17 +25,17 @@
 		TRAIT_NASTY_EATER,
 		TRAIT_OUTDOORSMAN,
 		TRAIT_NOFALLDAMAGE1,
-		TRAIT_SLEUTH 												//doggy
+		TRAIT_SLEUTH
 	)
 
 	subclass_skills = list(
 		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER,
-		/datum/skill/combat/unarmed = SKILL_LEVEL_MASTER,		//unarmed is dead
+		/datum/skill/combat/unarmed = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/labor/farming = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT, 
+		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,			//doggyx2
+		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 	)

@@ -75,7 +75,7 @@
 
 	var/spell
 	var/spellname = "conjure bugs"
-
+	
 /obj/item/book/granter/spell/already_known(mob/user)
 	if(!spell)
 		return TRUE
@@ -561,7 +561,7 @@ UNDER NO CIRCUMSTANCE SHOULD ANY OF THE BOOKS BE GIVEN OUT INTO SPAWNERS OR TO B
 			REMOVE_TRAIT(user, TRAIT_ARCYNE_T1, TRAIT_GENERIC)
 		onlearned(user)
 
-/obj/item/book/granter/arcynetyr/onlearned(mob/living/carbon/user)
+/obj/item/book/granter/arcynetyr/onlearned(mob/living/carbon/user) 
 	..()
 	if(oneuse == TRUE)
 		name = "siphoned scroll"

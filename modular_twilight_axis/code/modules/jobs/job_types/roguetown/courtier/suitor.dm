@@ -1,3 +1,6 @@
+/datum/job/roguetown/suitor
+	job_traits = list(TRAIT_NOBLE, TRAIT_OUTLANDER)
+
 /datum/job/roguetown/suitor/after_spawn(mob/living/H, mob/M, latejoin = TRUE)
 	..()
 	if(ishuman(H))

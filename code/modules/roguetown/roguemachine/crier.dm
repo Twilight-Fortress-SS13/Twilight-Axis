@@ -59,9 +59,14 @@
 		var/amount = total_payments
 		total_payments = 0
 
-		while(amount >= 5)
-			new /obj/item/roguecoin/silver(get_turf(src))
-			amount -= 5
+		if(SSmapping.config.map_name == "Rockhill")
+			while(amount >= 14)
+				new /obj/item/roguecoin/goldkrona(get_turf(src))
+				amount -= 14
+		else
+			while(amount >= 5)
+				new /obj/item/roguecoin/silver(get_turf(src))
+				amount -= 5
 		while(amount >= 1)
 			new /obj/item/roguecoin/copper(get_turf(src))
 			amount -= 1
