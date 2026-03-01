@@ -73,3 +73,21 @@
 
 /obj/item/clothing/suit/roguetown/armor/heartfelt/hand
 	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
+
+/obj/item/clothing/suit/roguetown/armor/plate/scale/townguard
+	name = "watchman's armor"
+	desc = "Тяжелая броня, что выдается городскому Дозору."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/citywatch_armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/citywatch_armor.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/helpers/citywatch_sleeves_armor.dmi'
+	icon_state = "citywatch"
+	item_state = "citywatch"
+
+/obj/item/clothing/suit/roguetown/armor/plate/scale/townguard/sheriff
+	name = "sheriff's armor"
+	desc = "Тяжелая броня, которая принадлежит Шерифу Дозора."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/citywatch_armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/citywatch_armor.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/helpers/citywatch_sleeves_armor.dmi'
+	icon_state = "sheriffarmor"
+	item_state = "sheriffarmor"

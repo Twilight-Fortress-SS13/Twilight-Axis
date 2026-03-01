@@ -8,7 +8,7 @@
 	class_select_category = CLASS_CAT_RACIAL
 	maximum_possible_slots = 3
 	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'
-	subclass_languages = list(/datum/language/celestial)
+	subclass_languages = list(/datum/language/raneshi)
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_SPD = 3,

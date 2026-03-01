@@ -1,22 +1,44 @@
 /datum/map_template/automap_template
 	name = "Automap Template"
-	keep_cached_map = FALSE
-	/// The map for which we load on
+	keep_cached_map = TRUE
 	var/required_map
-	/// Touches builtin map. Clears the area manually instead of blacklisting
 	var/affects_builtin_map
-	/// Our load turf
 	var/turf/load_turf
+	var/load_x
+	var/load_y
+	var/load_z
 
-/datum/map_template/automap_template/New(path, rename, incoming_required_map, incoming_load_turf)
+/datum/map_template/automap_template/New(path, rename, incoming_required_map, incoming_coordinates)
 	. = ..(path, rename, cache = TRUE)
 
-	if(!incoming_required_map || !incoming_load_turf)
+	if(!incoming_required_map || !islist(incoming_coordinates) || (length(incoming_coordinates) != 3))
 		return
 
 	required_map = incoming_required_map
-	load_turf = incoming_load_turf
 	affects_builtin_map = incoming_required_map == AUTOMAPPER_MAP_BUILTIN
+
+	load_x = text2num("[incoming_coordinates[1]]")
+	load_y = text2num("[incoming_coordinates[2]]")
+	load_z = text2num("[incoming_coordinates[3]]")
+
+/datum/map_template/automap_template/proc/resolve_load_turf()
+	if(load_turf)
+		return load_turf
+
+	var/real_z = load_z
+	if(required_map && !affects_builtin_map)
+		if(!islist(SSautomapper.map_start_z) || !SSautomapper.map_start_z[required_map])
+			CRASH("Automapper: missing map context for required_map='[required_map]' (template='[name]')")
+
+		var/start_z = SSautomapper.map_start_z[required_map]
+		var/depth = SSautomapper.map_depth?[required_map] || 1
+		if(load_z < 1 || load_z > depth)
+			CRASH("Automapper: template '[name]' has z=[load_z] out of bounds (required_map='[required_map]', depth=[depth])")
+
+		real_z = start_z + load_z - 1
+
+	load_turf = locate(load_x, load_y, real_z)
+	return load_turf
 
 /datum/map_template
 	var/depth = 1
@@ -60,34 +82,3 @@
 			bt = bt[1]
 
 		iter.ChangeTurf(empty_type, bt, CHANGETURF_FORCEOP)
-
-/datum/map_template/proc/get_footprint_turfs(turf/load_turf, centered = FALSE)
-	// Требует cache = TRUE при new(...) чтобы cached_map был
-	if(!cached_map)
-		return list()
-
-	var/turf/placement = load_turf
-	if(centered)
-		var/turf/corner = locate(placement.x - round(width/2), placement.y - round(height/2), placement.z)
-		if(corner)
-			placement = corner
-
-	var/list/out = list()
-
-	// base в world-координатах
-	var/base_x = placement.x
-	var/base_y = placement.y
-	var/base_z = placement.z
-
-	// x/y внутри шаблона: 0..width-1, 0..height-1
-	for(var/x = 0 to width - 1)
-		for(var/y = 0 to height - 1)
-			// пропускаем noop-клетки (не трогаем то, что под ними)
-			if(SSautomapper.has_turf_noop(src, x, y)) // если proc у SS
-				continue
-
-			var/turf/T = locate(base_x + x, base_y + y, base_z)
-			if(T)
-				out += T
-
-	return out

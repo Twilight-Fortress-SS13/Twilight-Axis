@@ -214,7 +214,7 @@
 	world.TgsAnnounceRoundEnd()
 
 	sleep(10 SECONDS)
-	SSvote.initiate_vote("map", "Actors")
+//	SSvote.initiate_vote("map", "Actors") // TA EDIT
 	ready_for_reboot = TRUE
 	standard_reboot()
 

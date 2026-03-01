@@ -184,7 +184,7 @@
 				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
 				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
 				)
-		var/heraldychoice = input("Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
+		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
 		cloak = heraldy[heraldychoice]
 
 		var/onhelm = list(
@@ -202,7 +202,7 @@
 			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
 			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 			)
-		var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
 		l_hand = onhelm[onhelmchoice]
  
 	backpack_contents = list(
@@ -301,7 +301,7 @@
 				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
 				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
 				)
-		var/heraldychoice = input("Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
+		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
 		cloak = heraldy[heraldychoice]
 
 		var/onhelm = list(
@@ -319,7 +319,7 @@
 			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
 			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 			)
-		var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		var/onhelmchoice = input(H,"Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
 		r_hand = onhelm[onhelmchoice]
 
 	backpack_contents = list(
@@ -446,7 +446,7 @@
 				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
 				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
 				)
-		var/heraldychoice = input("Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
+		var/heraldychoice = input(H,"Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
 		cloak = heraldy[heraldychoice]
 
 		var/onhelm = list(
@@ -464,7 +464,7 @@
 			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
 			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull,
 			)
-		var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		var/onhelmchoice = input(H,"Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
 		l_hand = onhelm[onhelmchoice]
 
 	backpack_contents = list(
@@ -610,7 +610,7 @@
 				"Halfcloak" = /obj/item/clothing/cloak/half/knight,
 				"Fur Cloak" = /obj/item/clothing/cloak/raincloak/furcloak/knight,
 				)
-		var/heraldychoice = input("Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
+		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
 		cloak = heraldy[heraldychoice]
 
 		var/onhelm = list(
@@ -628,7 +628,7 @@
 			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
 			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 			)
-		var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
 		l_hand = onhelm[onhelmchoice]
 
 	if(H.mind)
@@ -845,7 +845,7 @@
 		"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
 		"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 		)
-	var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+	var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
 	l_hand = onhelm[onhelmchoice]
 
 	if(HAS_TRAIT(H, TRAIT_GOODTRAINER))

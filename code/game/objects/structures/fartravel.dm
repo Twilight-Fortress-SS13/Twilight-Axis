@@ -64,7 +64,7 @@
 	if(SSticker.regentmob == departing_mob)
 		SSticker.regentmob = null
 	GLOB.chosen_names -= departing_mob.real_name
-	LAZYREMOVE(GLOB.actors_list, departing_mob.mobid)
+	LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(mob_job.department_flag, mob_job.obsfuscated_job)], departing_mob.mobid)
 	LAZYREMOVE(GLOB.roleplay_ads, departing_mob.mobid)
 	message_admins(dat)
 	log_admin(dat)

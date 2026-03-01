@@ -1,29 +1,28 @@
 /proc/get_step_multiz(ref, dir)
-	if(!istype(ref, /atom))
-		return null
+    if(!istype(ref, /atom))
+        return null
 
-	var/turf/base = ref
-	if(!istype(base, /turf))
-		base = get_turf(ref)
+    var/turf/base = ref
+    if(!istype(base, /turf))
+        base = get_turf(ref)
+    if(!istype(base, /turf))
+        return null
 
-	if(!istype(base, /turf))
-		return null
+    if(dir & UP)
+        dir &= ~UP
+        var/turf/above = GET_TURF_ABOVE(base)
+        if(!above)
+            return null
+        return get_step(above, dir)
 
-	if(dir & UP)
-		dir &= ~UP
-		var/turf/above = locate(base.x, base.y, base.z + 1)
-		if(!istype(above))
-			return null
-		return get_step(above, dir)
+    if(dir & DOWN)
+        dir &= ~DOWN
+        var/turf/below = GET_TURF_BELOW(base)
+        if(!below)
+            return null
+        return get_step(below, dir)
 
-	if(dir & DOWN)
-		dir &= ~DOWN
-		var/turf/below = locate(base.x, base.y, base.z - 1)
-		if(!istype(below))
-			return null
-		return get_step(below, dir)
-
-	return get_step(base, dir)
+    return get_step(base, dir)
 
 /proc/get_multiz_accessible_levels(center_z)
 	. = list(center_z)

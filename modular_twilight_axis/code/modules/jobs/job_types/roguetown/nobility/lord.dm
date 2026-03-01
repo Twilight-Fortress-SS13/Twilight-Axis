@@ -4,8 +4,14 @@
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
 		var/nobility = "Duke"
-		if(should_wear_femme_clothes(H))
-			nobility = "Duchess"
+		if(SSmapping.config.map_name == "Rockhill")
+			nobility = "King"
+			if(should_wear_femme_clothes(H))
+				nobility = "Queen"
+		else
+			nobility = "Duke"
+			if(should_wear_femme_clothes(H))
+				nobility = "Duchess"
 		H.real_name = "[nobility] [prev_real_name]"
 		H.name = "[nobility] [prev_name]"
 
