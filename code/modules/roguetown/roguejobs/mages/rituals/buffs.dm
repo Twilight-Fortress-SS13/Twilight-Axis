@@ -6,11 +6,3 @@
 
 /datum/runeritual/knowledge/on_finished_recipe(mob/living/user, list/selected_atoms, turf/loc)
 	return TRUE
-
-/datum/runeritual/buff
-	blacklisted = TRUE
-	tier = 1
-	var/buff
-
-/datum/runeritual/buff/on_finished_recipe(mob/living/user, list/selected_atoms, turf/loc)
-	return TRUE
