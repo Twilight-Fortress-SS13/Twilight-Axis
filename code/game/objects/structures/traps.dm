@@ -520,7 +520,7 @@
 	if(special == "lich" || special == "vampire lord")
 		return TRUE
 
-	if(assigned == "bogguard")
+	if(assigned == "Overseer" || assigned == "Vanguard")
 		return TRUE
 
 	return FALSE
@@ -549,8 +549,9 @@
 	var/special  = lowertext("[H.mind.special_role]")
 
 	return (assigned == "bandit" || special == "bandit" \
-		|| assigned == "bogguard" \
-		|| assigned == "warden" || special == "warden")
+		|| assigned == "vanguard" \
+		|| assigned == "warden" || special == "warden" \
+		|| assigned == "overseer" || special == "overseer")
 
 /obj/structure/trap/bogtrap/proc/show_personal_reveal(mob/user)
 	if(!user || !user.client)
@@ -593,14 +594,14 @@
 	. = ..()
 
 /obj/structure/trap/bogtrap/freeze
-    name = "trapbog (frost)"
-    checks_antimagic = FALSE
+	name = "trapbog (frost)"
+	checks_antimagic = FALSE
 
 /obj/structure/trap/bogtrap/freeze/trap_effect(mob/living/L)
-    to_chat(L, span_danger("<B>You're frozen solid!</B>"))
-    L.Paralyze(50)
-    L.adjust_bodytemperature(-300)
-    playsound(src, 'sound/misc/explode/bottlebomb (1).ogg', 60, TRUE)
+	to_chat(L, span_danger("<B>You're frozen solid!</B>"))
+	L.Paralyze(50)
+	L.adjust_bodytemperature(-300)
+	playsound(src, 'sound/misc/explode/bottlebomb (1).ogg', 60, TRUE)
 
 
 /obj/structure/trap/bogtrap/bomb

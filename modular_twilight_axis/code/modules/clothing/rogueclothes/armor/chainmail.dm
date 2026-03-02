@@ -9,3 +9,5 @@
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ornate // Heavy armour NECK coverage buff
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
+
+/obj/item/clothing/suit/roguetown/armor/citywatch

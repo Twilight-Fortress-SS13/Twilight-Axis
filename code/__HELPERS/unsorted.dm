@@ -1566,7 +1566,8 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 	/area/rogue/outdoors/woods, \
 	/area/rogue/outdoors/bog, \
 	/area/rogue/outdoors/mountains, \
-	/area/rogue/outdoors/rtfield \
+	/area/rogue/outdoors/rtfield, \
+	/area/rogue/outdoors/bograt \
 )
 
 /proc/is_valid_hunting_area(area/A)
@@ -1593,6 +1594,8 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 		"Courtiers" = GLOB.courtier_positions,
 		"Retinue" = GLOB.retinue_positions,
 		"Garrison" = GLOB.garrison_positions,
+		"City Watch" = GLOB.citywatch_positions,
+		"Vanguard" = GLOB.vanguard_positions,
 		"Church" = GLOB.church_positions,
 		"Burgher" = GLOB.burgher_positions,
 		"Peasant" = GLOB.peasant_positions,

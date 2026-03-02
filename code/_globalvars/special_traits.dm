@@ -111,6 +111,12 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		else
 			to_chat(character, "Incorrect Second Virtue parameters! It will not be applied.")
 	if(origin_type)
+		if(istype(origin_type, /datum/virtue/origin/azuria) && SSmapping.config.map_name == "Rockhill")
+			var/pick = alert(character, "Ваш персонаж имеет азурийское происхождение. Хотели бы Вы изменить его на происхождение с Энигмы?", "ПРОШЛОЕ", "Да", "Нет")
+			if(!pick)
+				pick = "Нет"
+			if(pick == "Да")
+				origin_type = new /datum/virtue/origin/enigma
 		if((language_type && language_type != "None"))
 			character.grant_language(language_type)
 		if(origin_type.job_origin == TRUE)

@@ -282,3 +282,12 @@
 		icon_state = eora_final_icon
 		item_state = eora_final_icon
 		update_icon()
+
+/obj/item/clothing/cloak/sheriff
+	name = "sheriff's cloak"
+	desc = "Плащ-накидка с вышитой серебряной геральдикой дозора."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/citywatch_armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/citywatch_armor.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/citywatch_armor.dmi'
+	icon_state = "sheriffcloak"
+	alternate_worn_layer = CLOAK_BEHIND_LAYER

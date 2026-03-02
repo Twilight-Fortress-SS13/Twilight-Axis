@@ -43,7 +43,7 @@ GLOBAL_LIST_INIT(averse_factions, list(
 	"Inquisition" = INQUISITION,
 	"Burghers" = BURGHERS,
 	"Retinue" = RETINUE,
-	"Garrison" = GARRISON,
+	"Garrison" = (GARRISON | VANGUARD | CITYWATCH),
 	"Churchmen" = CHURCHMEN,
 	"Peasants" = PEASANTS,
 	"Wanderers" = WANDERERS,

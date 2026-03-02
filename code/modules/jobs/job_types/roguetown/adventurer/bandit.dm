@@ -128,10 +128,18 @@
 
 	var/player_count = length(GLOB.joined_player_list)
 	var/ready_player_count = length(GLOB.ready_player_list)
+	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+
 	var/slots = 0
 
-	if((SSticker.current_state == GAME_STATE_PREGAME && ready_player_count > 60) || (player_count > 60))
-		slots = 5
+	if(SSmapping.config.map_name == "Rockhill")
+		if(current_players > 60)
+			// На Рокхилле - 5 бандитов с 60 онлайна и +1 слот за каждые 40 сверху
+			slots = 5 + round((current_players - 60) / 40)
+	else
+		// Дун ворлд - всегда 5 бандитов
+		if(current_players > 60)
+			slots = 5
 
 	bandit_job.total_positions = slots
 	bandit_job.spawn_positions = slots

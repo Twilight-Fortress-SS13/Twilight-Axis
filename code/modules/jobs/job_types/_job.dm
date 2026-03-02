@@ -256,8 +256,7 @@
 		var/used_title = display_title || title
 		if((H.titles_pref == TITLES_F) && f_title)
 			used_title = f_title
-		scom_announce("[H.real_name] the [used_title] arrives to Twilight Axis.")
-
+		scom_announce("[H.real_name] the [used_title] arrives to [SSticker.realm_name].")
 	if(give_bank_account)
 		if(give_bank_account > TRUE)
 			SStreasury.create_bank_account(H, give_bank_account)
@@ -273,15 +272,19 @@
 
 	if(cmode_music)
 		H.cmode_music = cmode_music
-
+	var/department = SSjob.bitflag_to_department(department_flag, obsfuscated_job)
 	if (!hidden_job)
-		var/mob_name = H.real_name
-		var/mob_rank
-		if (obsfuscated_job)
-			mob_rank = "Adventurer"
+		var/mob/living/carbon/human/Hu = H
+		if (istype(H, /mob/living/carbon/human))
+			if (obsfuscated_job) // WANDERER
+				GLOB.actors_list[department] += list("[H.mobid]" = "[H.real_name] as the [Hu.dna.species.name] Adventurer<BR>")
+			else
+				GLOB.actors_list[department] += list("[H.mobid]" = "[H.real_name] as the [Hu.dna.species.name] [H.mind.assigned_role]<BR>")
 		else
-			mob_rank = H.mind.assigned_role
-		GLOB.actors_list[H.mobid] = list("name" = mob_name, "rank" = mob_rank)
+			if (obsfuscated_job)
+				GLOB.actors_list[department] += list("[H.mobid]" = "[H.real_name] as Adventurer<BR>")
+			else
+				GLOB.actors_list[department] += list("[H.mobid]" = "[H.real_name] as [H.mind.assigned_role]<BR>")
 
 	if(islist(advclass_cat_rolls))
 		hugboxify_for_class_selection(H)

@@ -592,6 +592,7 @@
 	data["ref"] = "[REF(R)]"
 	data["path"] = R.type
 	data["sellprice"] = R.sellprice
+	data["aliases"] = R.aliases
 	var/req_text = ""
 	var/tool_text = ""
 	var/catalyst_text = ""
@@ -621,6 +622,14 @@
 
 	data["craftingdifficulty"] = skill_to_string(R.craftdiff)
 
+	if(islist(R.result))
+		for(var/a in R.result)
+			var/atom/A = a 
+			if(!(findtext(data["aliases"],A.name)))
+				data["aliases"] += A.name + " "
+	else
+		var/atom/A = R.result
+		data["aliases"] += A.name
 
 	return data
 

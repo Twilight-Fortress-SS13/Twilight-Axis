@@ -337,6 +337,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Плащи"
 	path = /obj/item/clothing/cloak/raincloak/furcloak
 
+/datum/loadout_item/wickercloak
+	name = "Wicker Cloak"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/wickercloak
+
 /datum/loadout_item/direcloak
 	name = "direbear cloak"
 	category = "Плащи"

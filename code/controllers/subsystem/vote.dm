@@ -47,6 +47,7 @@ SUBSYSTEM_DEF(vote)
 	custom_vote_period = 0
 	vote_width = initial(vote_width)
 	vote_height = initial(vote_height)
+	started_time = null // TA EDIT
 	mode = null
 	question = null
 	choices.Cut()
@@ -164,6 +165,7 @@ SUBSYSTEM_DEF(vote)
 					SSgamemode.roundvoteend = TRUE
 					SSgamemode.round_ends_at = world.time + ROUND_END_TIME
 					world.TgsAnnounceVoteEndRound()
+					addtimer(CALLBACK(src, PROC_REF(initiate_vote), "map", "Psydon"), 10) // TA EDIT
 			if("storyteller")
 				SSgamemode.storyteller_vote_result(.)
 
@@ -255,6 +257,7 @@ SUBSYSTEM_DEF(vote)
 					if(VM.config_min_users > 0 && player_count <= VM.config_min_users)
 						continue
 					choices.Add(VM.map_name)
+				vote_alert.file = 'sound/misc/levelup2.ogg' // TA EDIT
 			if("custom")
 				question = stripped_input(usr,"What is the vote for?")
 				if(!question)

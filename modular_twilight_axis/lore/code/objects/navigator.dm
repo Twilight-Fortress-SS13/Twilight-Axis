@@ -6,52 +6,85 @@
 	var/type_to_put
 	var/zenars_to_put
 	var/highest_found = FALSE
-	if(prob(20))
-		switch(rand(1,2))
-			if(1)
-				var/kronas = floor(budget/35)
-				if(kronas)
-					budget -= kronas * 14
-					highest_found = TRUE
-					type_to_put = /obj/item/roguecoin/goldkrona
-					zenars_to_put = kronas
-			if(2)
-				var/shu = floor(budget/18)
-				if(shu)
-					budget -= shu * 7
-					highest_found = TRUE
-					type_to_put = /obj/item/roguecoin/shucoin
-					zenars_to_put = shu
-	var/zenars = floor(budget/10)
-	if(zenars)
-		budget -= zenars * 10
-		if(!highest_found)
-			highest_found = TRUE
-			type_to_put = /obj/item/roguecoin/gold
-			zenars_to_put = zenars
-		else
-			// Create multiple stacks if needed
-			while(zenars > 0)
-				var/stack_size = min(zenars, 20)
-				var/obj/item/roguecoin/gold_stack = new /obj/item/roguecoin/gold(T, stack_size)
-				if(user && zenars == stack_size) // Only put first stack in hands
-					user.put_in_hands(gold_stack)
-				zenars -= stack_size
-	zenars = floor(budget/5)
-	if(zenars)
-		budget -= zenars * 5
-		if(!highest_found)
-			highest_found = TRUE
-			type_to_put = /obj/item/roguecoin/silver
-			zenars_to_put = zenars
-		else
-			// Create multiple stacks if needed
-			while(zenars > 0)
-				var/stack_size = min(zenars, 20)
-				var/obj/item/roguecoin/silver_stack = new /obj/item/roguecoin/silver(T, stack_size)
-				if(user && zenars == stack_size) // Only put first stack in hands
-					user.put_in_hands(silver_stack)
-				zenars -= stack_size
+	if(SSmapping.config.map_name == "Rockhill")
+		if(prob(20))
+			switch(rand(1,2))
+				if(1)
+					var/kronas = floor(budget/30)
+					if(kronas)
+						budget -= kronas * 10
+						highest_found = TRUE
+						type_to_put = /obj/item/roguecoin/gold
+						zenars_to_put = kronas
+				if(2)
+					var/shu = floor(budget/18)
+					if(shu)
+						budget -= shu * 7
+						highest_found = TRUE
+						type_to_put = /obj/item/roguecoin/shucoin
+						zenars_to_put = shu
+		var/zenars = floor(budget/14)
+		if(zenars)
+			budget -= zenars * 14
+			if(!highest_found)
+				highest_found = TRUE
+				type_to_put = /obj/item/roguecoin/goldkrona
+				zenars_to_put = zenars
+			else
+				// Create multiple stacks if needed
+				while(zenars > 0)
+					var/stack_size = min(zenars, 20)
+					var/obj/item/roguecoin/gold_stack = new /obj/item/roguecoin/goldkrona(T, stack_size)
+					if(user && zenars == stack_size) // Only put first stack in hands
+						user.put_in_hands(gold_stack)
+					zenars -= stack_size
+	else
+		if(prob(20))
+			switch(rand(1,2))
+				if(1)
+					var/kronas = floor(budget/35)
+					if(kronas)
+						budget -= kronas * 14
+						highest_found = TRUE
+						type_to_put = /obj/item/roguecoin/goldkrona
+						zenars_to_put = kronas
+				if(2)
+					var/shu = floor(budget/18)
+					if(shu)
+						budget -= shu * 7
+						highest_found = TRUE
+						type_to_put = /obj/item/roguecoin/shucoin
+						zenars_to_put = shu
+		var/zenars = floor(budget/10)
+		if(zenars)
+			budget -= zenars * 10
+			if(!highest_found)
+				highest_found = TRUE
+				type_to_put = /obj/item/roguecoin/gold
+				zenars_to_put = zenars
+			else
+				// Create multiple stacks if needed
+				while(zenars > 0)
+					var/stack_size = min(zenars, 20)
+					var/obj/item/roguecoin/gold_stack = new /obj/item/roguecoin/gold(T, stack_size)
+					if(user && zenars == stack_size) // Only put first stack in hands
+						user.put_in_hands(gold_stack)
+					zenars -= stack_size
+		zenars = floor(budget/5)
+		if(zenars)
+			budget -= zenars * 5
+			if(!highest_found)
+				highest_found = TRUE
+				type_to_put = /obj/item/roguecoin/silver
+				zenars_to_put = zenars
+			else
+				// Create multiple stacks if needed
+				while(zenars > 0)
+					var/stack_size = min(zenars, 20)
+					var/obj/item/roguecoin/silver_stack = new /obj/item/roguecoin/silver(T, stack_size)
+					if(user && zenars == stack_size) // Only put first stack in hands
+						user.put_in_hands(silver_stack)
+					zenars -= stack_size
 	if(budget >= 1)
 		if(!highest_found)
 			type_to_put = /obj/item/roguecoin/copper
