@@ -1,0 +1,5 @@
+author: "Risraivyn"
+delete-after: True
+changes:
+  - balance: "понерфлена мист форма"
+  - bugfix: "пофикшен баг с маской у инквизиции"

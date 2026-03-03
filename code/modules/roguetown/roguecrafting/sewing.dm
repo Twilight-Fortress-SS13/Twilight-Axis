@@ -93,6 +93,18 @@
 				/obj/item/natural/bone = 1)
 	craftdiff = 0
 
+/datum/crafting_recipe/roguetown/sewing/nurseveil
+	name = "nurse's veil, improvised"
+	category = "Hats"
+	result = list(/obj/item/clothing/head/roguetown/veiled)
+	tools = list(/obj/item/rogueweapon/huntingknife)
+	reqs = list(
+		/obj/item/tablecloth/silk = 1
+	)
+	craftdiff = 1
+	sellprice = 5
+	bypass_dupe_test = TRUE // Uses the tablecloth, a much rarer and valuable article, in lieu of cloth.
+
 /* craftdif of 1 */
 
 /datum/crafting_recipe/roguetown/sewing/clothgloves
@@ -295,11 +307,60 @@
 				/obj/item/natural/fibers = 1)
 	craftdiff = 1
 
+/datum/crafting_recipe/roguetown/sewing/woolencollar
+	name = "wool collar"
+	category = "Coifs"
+	result = list(/obj/item/clothing/neck/roguetown/collar/woolen)
+	reqs = list(/obj/item/natural/cloth = 1)
+	craftdiff = 0
+
 /datum/crafting_recipe/roguetown/sewing/gbandages
 	name = "bandages, gloved"
 	category = "Gloves"
 	result = list(/obj/item/clothing/gloves/roguetown/bandages)
 	reqs = list(/obj/item/natural/cloth = 3)
+	craftdiff = 1
+
+/datum/crafting_recipe/roguetown/sewing/breechclothbelt
+	name = "belt with breechcloth"
+	category = "Misc"
+	result = list(/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth)
+	reqs = list(
+		/obj/item/natural/cloth = 3,
+		/obj/item/natural/hide/cured = 1
+	)
+	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/sewing/breechclothbeltalt
+	name = "belt with breechcloth, black"
+	category = "Misc"
+	result = list(/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/blackbelt)
+	reqs = list(
+		/obj/item/natural/cloth = 3,
+		/obj/item/natural/hide/cured = 1
+	)
+	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/sewing/breechclothbeltimprovised
+	name = "belt with breechcloth, improvised"
+	category = "Misc"
+	result = list(/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth)
+	tools = list(/obj/item/rogueweapon/huntingknife)
+	reqs = list(
+		/obj/item/clothing/cloak/tabard = 1,
+		/obj/item/storage/belt/rogue/leather = 1
+	)
+	craftdiff = 1
+
+/datum/crafting_recipe/roguetown/sewing/breechclothbeltaltimprovised
+	name = "belt with breechcloth, black, improvised"
+	category = "Misc"
+	result = list(/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/blackbelt)
+	tools = list(/obj/item/rogueweapon/huntingknife)
+	reqs = list(
+		/obj/item/clothing/cloak/tabard = 1,
+		/obj/item/storage/belt/rogue/leather/black = 1
+	)
 	craftdiff = 1
 
 /* craftdif of 2+ */
@@ -386,6 +447,14 @@
 	result = list(/obj/item/clothing/cloak/tabard/stabard)
 	reqs = list(/obj/item/natural/cloth = 3,
 				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/stabardheavy
+	name = "surcoat, overvestments"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader/heavy)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 2)
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/sewing/abyssortemplartabard
@@ -533,6 +602,83 @@
 				/obj/item/natural/fibers = 1)
 	craftdiff = 3
 
+//
+
+/datum/crafting_recipe/roguetown/sewing/surcoatgold
+	name = "surcoat of the golden order"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/surcoatsilver
+	name = "surcoat of the silver order"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader/t)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/surcoatgoldast
+	name = "surcoat of the golden order, astratan"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader/astrata)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/surcoatsilverast
+	name = "surcoat of the silver order, astratan"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader/t/astrata)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/surcoatgolduni
+	name = "surcoat of the golden order, undivided"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader/undivided)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/surcoatsilveruni
+	name = "surcoat of the silver order, undivided"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader/t/undivided)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/surcoatblacksteel
+	name = "surcoat of the blacksteel order"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader/bsteel)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+	tools = list(/obj/item/needle, /obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader/blacksteel)
+
+/datum/crafting_recipe/roguetown/sewing/surcoatgoldlegacy
+	name = "ancient surcoat of the golden order"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader/legacy)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/surcoatsilverlegacy
+	name = "ancient surcoat of the silver order"
+	category = "Tabards"
+	result = list(/obj/item/clothing/cloak/tabard/stabard/crusader/t/legacy)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
+//
+
 /datum/crafting_recipe/roguetown/sewing/ravoxgorget
 	name = "ravox gorget"
 	category = "Misc"
@@ -658,6 +804,14 @@
 //				/obj/item/natural/fibers = 1)
 //	craftdiff = 4
 
+/datum/crafting_recipe/roguetown/sewing/slitdress
+	name = "slitted dress"
+	category = "Dresses"
+	result = list(/obj/item/clothing/suit/roguetown/shirt/dress/slit)
+	reqs = list(/obj/item/natural/cloth = 3,
+				/obj/item/natural/fibers = 1)
+	craftdiff = 3
+
 /datum/crafting_recipe/roguetown/sewing/fancyhat
 	name = "fancy hat"
 	category = "Hats"
@@ -739,6 +893,18 @@
 	)
 	craftdiff = 2
 	sellprice = 5
+
+/datum/crafting_recipe/roguetown/sewing/nurseveil
+	name = "nurse's veil, improvised"
+	category = "Hats"
+	result = list(/obj/item/clothing/head/roguetown/veiled)
+	tools = list(/obj/item/rogueweapon/huntingknife)
+	reqs = list(
+		/obj/item/tablecloth/silk = 1
+	)
+	craftdiff = 1
+	sellprice = 5
+	bypass_dupe_test = TRUE // Uses the tablecloth, a much rarer and valuable article, in lieu of cloth.
 
 /datum/crafting_recipe/roguetown/sewing/archer
 	name = "archer cap"
@@ -1161,6 +1327,16 @@
 	craftdiff = 4
 	sellprice = 10
 
+/datum/crafting_recipe/roguetown/sewing/desert_skirt
+	name = "desert skirt"
+	category = "Misc"
+	result = list(/obj/item/clothing/under/roguetown/skirt/desert)
+	reqs = list(/obj/item/natural/cloth = 1,
+				/obj/item/natural/fibers = 2)
+	tools = list(/obj/item/needle)
+	craftdiff = 4
+	sellprice = 5
+
 /datum/crafting_recipe/roguetown/sewing/sailorspants
 	name = "sailor's pants"
 	category = "Pants"
@@ -1526,6 +1702,48 @@
 		/obj/item/natural/hide/cured = 1
 	)
 	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/sewing/breechclothbelt
+	name = "belt with breechcloth"
+	category = "Misc"
+	result = list(/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth)
+	reqs = list(
+		/obj/item/natural/cloth = 3,
+		/obj/item/natural/hide/cured = 1
+	)
+	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/sewing/breechclothbeltalt
+	name = "belt with breechcloth, black"
+	category = "Misc"
+	result = list(/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/blackbelt)
+	reqs = list(
+		/obj/item/natural/cloth = 3,
+		/obj/item/natural/hide/cured = 1
+	)
+	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/sewing/breechclothbeltimprovised
+	name = "belt with breechcloth, improvised"
+	category = "Misc"
+	result = list(/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth)
+	tools = list(/obj/item/rogueweapon/huntingknife)
+	reqs = list(
+		/obj/item/clothing/cloak/tabard = 1,
+		/obj/item/storage/belt/rogue/leather = 1
+	)
+	craftdiff = 1
+
+/datum/crafting_recipe/roguetown/sewing/breechclothbeltaltimprovised
+	name = "belt with breechcloth, black, improvised"
+	category = "Misc"
+	result = list(/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/blackbelt)
+	tools = list(/obj/item/rogueweapon/huntingknife)
+	reqs = list(
+		/obj/item/clothing/cloak/tabard = 1,
+		/obj/item/storage/belt/rogue/leather/black = 1
+	)
+	craftdiff = 1
 
 /datum/crafting_recipe/roguetown/sewing/maiddress
 	name = "maid dress (1 fibers, 3 cloth)"

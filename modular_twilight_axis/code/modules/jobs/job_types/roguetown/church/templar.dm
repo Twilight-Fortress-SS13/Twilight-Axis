@@ -4,7 +4,7 @@
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
 		var/churchiny = "Brother"
-		if(should_wear_femme_clothes(H))
+		if(H.titles_pref == TITLES_F)
 			churchiny = "Sister"
 		H.real_name = "[churchiny] [prev_real_name]"
 		H.name = "[churchiny] [prev_name]"
@@ -15,10 +15,16 @@
 					MF.known_people -= prev_real_name
 					H.mind.person_knows_me(MF)
 
+/datum/advclass/templar/monk
+	subclass_languages = list(/datum/language/valorian)
+
 /datum/outfit/job/roguetown/templar/monk/pre_equip(mob/living/carbon/human/H)
 	. = ..()
 	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 	H.change_stat(STATKEY_STR, -1)
+
+/datum/advclass/templar/crusader
+	subclass_languages = list(/datum/language/valorian)
 
 /datum/outfit/job/roguetown/templar/crusader/pre_equip(mob/living/carbon/human/H)
 	. = ..()
@@ -32,7 +38,7 @@
 	name = "Vigilant"
 	tutorial = "You are a vigilant of the Church, the secretive counterspies of the Holy See. Your underhanded methods earn you the scorn of some of your brothers, but they know not of the wars you fight away from their gaze."
 	outfit = /datum/outfit/job/roguetown/templar/vigilant
-	subclass_languages = list(/datum/language/grenzelhoftian)
+	subclass_languages = list(/datum/language/valorian)
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_WIL = 2,
@@ -112,6 +118,7 @@
 			cloak = /obj/item/clothing/cloak/tabard/crusader/dendor
 			mask = /obj/item/clothing/head/roguetown/dendormask/armored
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
+			H.AddSpell(new /obj/effect/proc_holder/spell/self/conjure_armor/vines)
 		if(/datum/patron/divine/necra)
 			head = /obj/item/clothing/head/roguetown/necrahood
 			wrists = /obj/item/clothing/neck/roguetown/psicross/necra
@@ -226,7 +233,7 @@
 		if("Slurbow + Dagger")
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/special(H), TRUE)
 			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow(H), TRUE)
-			H.equip_to_slot_or_del(new /obj/item/quiver/bolts, SLOT_BELT_L, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/light, SLOT_BELT_L, TRUE)
 			H.change_stat(STATKEY_PER, 3)
 			H.change_stat(STATKEY_SPD, 1)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
@@ -258,7 +265,7 @@
 		if("Slurbow + Cackle Lash")
 			H.put_in_hands(new /obj/item/rogueweapon/whip/xylix(H), TRUE)
 			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow(H), TRUE)
-			H.equip_to_slot_or_del(new /obj/item/quiver/bolts, SLOT_BELT_L, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/light, SLOT_BELT_L, TRUE)
 			H.change_stat(STATKEY_PER, 3)
 			H.change_stat(STATKEY_SPD, 1)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
@@ -361,6 +368,8 @@
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
 		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
 		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt
+		H.mind.special_items["Pink Robe"] = /obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite/pink
+		H.mind.special_items["Blue Robe"] = /obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite
 	if(H.patron?.type == /datum/patron/divine/malum)
 		H.adjust_skillrank(/datum/skill/craft/blacksmithing, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/craft/armorsmithing, 1, TRUE)

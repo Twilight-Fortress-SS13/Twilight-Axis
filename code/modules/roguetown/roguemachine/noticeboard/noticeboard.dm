@@ -12,6 +12,13 @@
 	var/current_category = "Postings"
 	var/list/categories = list("Postings", "Premium Postings", "Scout Report", "Mercenary Roster")
 
+/obj/structure/roguemachine/noticeboard/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Left-click the noticeboard to take a better look at it.")
+	. += span_info("'Postings' and 'Premium Postings' can host messages of any kind. The zads will audibly notify everyone that a new message has been added to the noticeboard, whenever one is posted.")
+	. += span_info("'Scout Reports' detail how dangerous the ambushes in Azuria's many regions might be. The more dangerous a region is, the more numerous and lethal its ambushers will be.")
+	. += span_info("'Mercenary Rosters' list the names and detailings of all Mercenaries currently registered to Azuria's Mercenary Guild.")
+
 /obj/structure/roguemachine/noticeboard/Initialize()
 	. = ..()
 	SSroguemachine.noticeboards += src
@@ -73,9 +80,9 @@
 		return
 	var/can_remove = FALSE
 	var/can_premium = FALSE
-	if(user.job in list("Man at Arms","Inquisitor", "Knight", "Sergeant", "Orthodoxist", "Absolver", "Marshal", "Hand", "Grand Duke")) //why was KC here but not marshal ?
+	if(user.job in list("Man at Arms", "Royal Guard", "Town Sheriff", "Town Watch", "Inquisitor", "Knight", "Royal Knight", "Sergeant", "Royal Guard Sergeant", "Orthodoxist", "Absolver", "Marshal", "Hand", "Grand Duke", "Mayor", "Bailiff")) //why was KC here but not marshal ?
 		can_remove = TRUE
-	if(user.job in list("Bathmaster","Merchant", "Innkeeper", "Steward", "Court Magician", "Town Crier", "Keeper", "Grand Duke"))
+	if(user.job in list("Bathmaster","Merchant", "Innkeeper", "Steward", "Court Magician", "Town Crier", "Keeper", "Grand Duke", "Mayor"))
 		can_premium = TRUE
 	var/contents
 	contents += "<center>NOTICEBOARD<BR>"

@@ -37,22 +37,24 @@
 	SEND_SIGNAL(user, COMSIG_SEX_JOSTLE, target)
 	SEND_SIGNAL(target, COMSIG_SEX_JOSTLE, user)
 
-	if(sex_session?.bed && sex_session?.force > SEX_FORCE_MID)
-		if(QDELETED(sex_session.bed))
-			sex_session.find_bed()
-		if(QDELETED(sex_session.bed))
-			return
-		oldy = sex_session.bed.pixel_y
-		target_y = oldy-1
-		time /= 2
-		animate(sex_session.bed, pixel_y = target_y, time = time)
-		animate(pixel_y = oldy, time = time)
-		if(sex_session.target_on_bed && target)
-			oldy = target.pixel_y
-			target_y = oldy-1
-			animate(target, pixel_y = target_y, time = time)
-			animate(pixel_y = oldy, time = time)
-		sex_session.bed.damage_bed(sex_session.force > SEX_FORCE_HIGH ? 0.5 : 0.25)
+	// TA edit start - NEW ERP SYSTEM
+	// if(sex_session?.bed && sex_session?.force > SEX_FORCE_MID)
+	// 	if(QDELETED(sex_session.bed))
+	// 		sex_session.find_bed()
+	// 	if(QDELETED(sex_session.bed))
+	// 		return
+	// 	oldy = sex_session.bed.pixel_y
+	// 	target_y = oldy-1
+	// 	time /= 2
+	// 	animate(sex_session.bed, pixel_y = target_y, time = time)
+	// 	animate(pixel_y = oldy, time = time)
+	// 	if(sex_session.target_on_bed && target)
+	// 		oldy = target.pixel_y
+	// 		target_y = oldy-1
+	// 		animate(target, pixel_y = target_y, time = time)
+	// 		animate(pixel_y = oldy, time = time)
+	// 	sex_session.bed.damage_bed(sex_session.force > SEX_FORCE_HIGH ? 0.5 : 0.25)
+	// TA edit end - NEW ERP SYSTEM
 
 /mob/living/proc/start_sex_session(mob/living/target)
 	if(!target)
@@ -92,29 +94,35 @@
 
 	if(!istype(human_user))
 		return
+
 	if(user.mmb_intent)
 		return ..()
+
 	if(!istype(dragged))
 		return
-	// Need to drag yourself to the target.
-	if(dragged != user)
+
+	if(dragged != user && !(istype(dragged, /obj/item/bodypart/head/dullahan)))
 		return
+
 	if(!human_user.can_do_sex)
 		to_chat(user, "<span class='warning'>I can't do this.</span>")
 		return
+
 	var/may_bang = client && client.prefs && client.prefs.sexable == TRUE
 	#ifdef LOCALTEST
 		may_bang = TRUE
 	#endif
 
-	if(!may_bang) // Don't bang someone that doesn't want it.
-		to_chat(user, "<span class='warning'>[src] doesn't wish to be touched. (Their ERP preference under options)</span>")
-		to_chat(src, "<span class='warning'>[user] failed to touch you. (Your ERP preference under options)</span>")
+	if(!may_bang)
+		to_chat(user, "<span class='warning'>[src] dosn't wish to be touched.</span>")
+		to_chat(src, "<span class='warning'>[user] failed to touch you.</span>")
 		return
 
-	if(!user.start_sex_session(target))
-		to_chat(user, "<span class='warning'>I'm already sexing.</span>")
-		return
+	var/datum/erp_controller/C = SSerp.get_or_create_controller(human_user)
+	C.add_partner_atom(target, TRUE)
+	C.open_ui(human_user)
+
+	return C
 
 /proc/get_sex_session(mob/giver, mob/taker)
 	for(var/datum/sex_session/session as anything in GLOB.sex_sessions)

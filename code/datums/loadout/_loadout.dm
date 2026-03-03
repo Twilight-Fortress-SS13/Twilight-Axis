@@ -1,4 +1,4 @@
-GLOBAL_LIST_EMPTY(loadout_items)
+/*GLOBAL_LIST_EMPTY(loadout_items)
 GLOBAL_LIST_EMPTY(loadout_items_by_name)
 GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
@@ -28,3 +28,4 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	if(ckeywhitelist && ckeywhitelist.Find(key))
 		return TRUE
 	return
+*/

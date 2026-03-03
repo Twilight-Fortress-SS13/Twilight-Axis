@@ -595,22 +595,7 @@
 	. = ..()
 	if(obj_broken)
 		return
-	var/day = "... actually, WHAT dae is it?"
-	switch(GLOB.dayspassed)
-		if(1)
-			day = "Moon's dae."
-		if(2)
-			day = "Truce's dae."
-		if(3)
-			day = "Wedding's dae."
-		if(4)
-			day = "Thunder's dae."
-		if(5)
-			day = "Feast's dae."
-		if(6)
-			day = "Psydon's dae."
-		if(7)
-			day = "Sun's dae."
+	var/day = lowertext(get_current_day_of_week_name())
 	. += "Oh no, it's [station_time_timestamp("hh:mm")] on a [day]"
 //		if(SSshuttle.emergency.mode == SHUTTLE_DOCKED)
 //			if(SSshuttle.emergency.timeLeft() < 30 MINUTES)
@@ -671,22 +656,7 @@
 	. = ..()
 	if(obj_broken)
 		return
-	var/day = "... actually, WHAT dae is it?"
-	switch(GLOB.dayspassed)
-		if(1)
-			day = "Moon's dae."
-		if(2)
-			day = "Truce's dae."
-		if(3)
-			day = "Wedding's dae."
-		if(4)
-			day = "Thunder's dae."
-		if(5)
-			day = "Feast's dae."
-		if(6)
-			day = "Psydon's dae."
-		if(7)
-			day = "Sun's dae."
+	var/day = lowertext(get_current_day_of_week_name())
 	. += "Oh no, it's [station_time_timestamp("hh:mm")] on a [day]"
 
 /obj/structure/fluff/wallclock/Initialize()
@@ -858,6 +828,10 @@
 	max_integrity = 300
 	dir = SOUTH
 
+/obj/structure/fluff/statue/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Right-click to access your personal stash. This not only contains the loadout you might've asseembled in the character creation menu, but virtue- and role-specific items as well.")
+
 /obj/structure/fluff/statue/Initialize()
 	. = ..()
 	var/static/list/loc_connections = list(COMSIG_ATOM_EXIT = PROC_REF(on_exit))
@@ -942,7 +916,9 @@
 
 /obj/structure/fluff/statue/abyssor/dolomite
 	name = "abyssor statue"
-	desc = "A rare dolomite statue of the ancient god Abyssor. Hewn from bleached rock as if the shimmer makes his faceless gaze any less terrifying."
+	desc = "A rare dolomite statue of the ancient god Abyssor, the Dreamer, He Who Slumbers, \
+	patron of the seas and all those that travel by them. He is asleep, and his followers pray \
+	fervently that he remains so for a very long time yet."
 	icon_state = "abyssor_dolomite"
 
 /obj/structure/fluff/statue/knight/r
@@ -1144,7 +1120,7 @@
 	)
 
 /obj/structure/fluff/statue/evil/attackby(obj/item/W, mob/user, params)
-	if(!HAS_TRAIT(user, TRAIT_COMMIE))
+	if(!HAS_TRAIT(user, TRAIT_FREEMAN))
 		return
 	var/donatedamnt = W.get_real_price()
 	if(user.mind)

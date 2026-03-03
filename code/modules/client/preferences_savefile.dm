@@ -153,12 +153,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["shake"]				>> shake
 	S["mastervol"]			>> mastervol
 	S["lastclass"]			>> lastclass
+	S["compliance_notifs"]  >> compliance_notifs
 
 
 	S["default_slot"]		>> default_slot
 	S["chat_toggles"]		>> chat_toggles
 	S["toggles"]			>> toggles
-	S["floating_text_toggles"]>> floating_text_toggles
+	S["combat_toggles"]		>> combat_toggles
+	S["ghost_toggles"]		>> ghost_toggles
 	S["admin_chat_toggles"]	>> admin_chat_toggles
 	S["ghost_form"]			>> ghost_form
 	S["ghost_orbit"]		>> ghost_orbit
@@ -185,6 +187,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["key_bindings"]		>> key_bindings
 
 	S["defiant"]			>> defiant
+	// TA Addition start - new ERP SYSTEM
+	S["erp_custom_actions"] >> erp_custom_actions	
+	S["erp_kink_prefs"] >> erp_kink_prefs
+	S["erp_organ_sensitivity"] >> erp_organ_prefs
+	// TA Addition end - new ERP SYSTEM
 
 	//try to fix any outdated data if necessary
 	if(needs_update >= 0)
@@ -208,7 +215,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	windowflashing	= sanitize_integer(windowflashing, 0, 1, initial(windowflashing))
 	default_slot	= sanitize_integer(default_slot, 1, max_save_slots, initial(default_slot))
 	toggles			= sanitize_integer(toggles, 0, INFINITY, initial(toggles))
-	floating_text_toggles = sanitize_integer(floating_text_toggles, 0, INFINITY, initial(floating_text_toggles))
+	combat_toggles = sanitize_integer(combat_toggles, 0, INFINITY, initial(combat_toggles))
+	ghost_toggles = sanitize_integer(ghost_toggles, 0, INFINITY, initial(ghost_toggles))
 	admin_chat_toggles = sanitize_integer(admin_chat_toggles, 0, INFINITY, initial(admin_chat_toggles))
 	chat_toggles = sanitize_integer(chat_toggles, 0, INFINITY, initial(chat_toggles))
 	clientfps		= sanitize_integer(clientfps, 0, 1000, 0)
@@ -227,7 +235,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	pda_color		= sanitize_hexcolor(pda_color, 6, 1, initial(pda_color))
 	key_bindings 	= sanitize_islist(key_bindings, list())
 	defiant	= sanitize_integer(defiant, FALSE, TRUE, TRUE)
-
+	//TA Addition start - new ERP SYSTEM
+	erp_custom_actions = sanitize_islist(erp_custom_actions, list())
+	sanitize_erp_custom_actions()
+	erp_kink_prefs = sanitize_islist(erp_kink_prefs, list())
+	sanitize_erp_kink_prefs()
+	erp_organ_prefs = sanitize_islist(erp_organ_prefs, list())
+	sanitize_erp_organ_prefs()
+	//TA Addition end - new ERP SYSTEM
+	
 	//ROGUETOWN
 	parallax = PARALLAX_INSANE
 
@@ -298,7 +314,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["default_slot"], default_slot)
 	WRITE_FILE(S["toggles"], toggles)
 	WRITE_FILE(S["chat_toggles"], chat_toggles)
-	WRITE_FILE(S["floating_text_toggles"], floating_text_toggles)
+	WRITE_FILE(S["combat_toggles"], combat_toggles)
+	WRITE_FILE(S["ghost_toggles"], ghost_toggles)
 	WRITE_FILE(S["admin_chat_toggles"], admin_chat_toggles)
 	WRITE_FILE(S["ghost_form"], ghost_form)
 	WRITE_FILE(S["ghost_orbit"], ghost_orbit)
@@ -321,7 +338,13 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["pda_color"], pda_color)
 	WRITE_FILE(S["key_bindings"], key_bindings)
 	WRITE_FILE(S["attack_blip_frequency"] , attack_blip_frequency)
+	WRITE_FILE(S["compliance_notifs"], compliance_notifs)
 	WRITE_FILE(S["defiant"], defiant)
+	// TA Addition start - new ERP SYSTEM
+	WRITE_FILE(S["erp_custom_actions"], erp_custom_actions)
+	WRITE_FILE(S["erp_kink_prefs"], erp_kink_prefs)
+	WRITE_FILE(S["erp_organ_sensitivity"], erp_organ_prefs)
+	// TA Addition end - new ERP SYSTEM
 	return TRUE
 
 
@@ -437,6 +460,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["vampire_skin"]		>> vampire_skin
 	S["vampire_hair"]		>> vampire_hair
 	S["vampire_eyes"]		>> vampire_eyes
+	S["vampire_ears"]		>> vampire_ears
 	S["extra_language"]		>> extra_language
 	S["voice_color"]		>> voice_color
 	S["voice_pitch"]		>> voice_pitch
@@ -456,6 +480,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["feature_mcolor3"]	>> features["mcolor3"]
 	S["feature_ethcolor"]	>> features["ethcolor"]
 	S["pronouns"]			>> pronouns
+	S["titles_pref"]		>> titles_pref
+	S["clothes_pref"]		>> clothes_pref
 	S["voice_type"]			>> voice_type
 	S["voice_pack"]			>> voice_pack
 	S["nickname"]			>> nickname
@@ -649,7 +675,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	backpack		= sanitize_inlist(backpack, GLOB.backpacklist, initial(backpack))
 	jumpsuit_style	= sanitize_inlist(jumpsuit_style, GLOB.jumpsuitlist, initial(jumpsuit_style))
 	uplink_spawn_loc = sanitize_inlist(uplink_spawn_loc, GLOB.uplink_spawn_loc_list, initial(uplink_spawn_loc))
-	pronouns = sanitize_text(pronouns, THEY_THEM)
+	if(pronouns in GLOB.pronouns_list)	//In case we have an invalid one after pronoun changes. - Feb. 2026
+		pronouns = sanitize_text(pronouns, THEY_THEM)
+	else
+		pronouns = THEY_THEM
+	titles_pref = sanitize_text(titles_pref, TITLES_M)
+	clothes_pref = sanitize_text(clothes_pref, CLOTHES_M)
 	voice_type = sanitize_text(voice_type, VOICE_TYPE_MASC)
 	features["mcolor"]	= sanitize_hexcolor(features["mcolor"], 6, 0)
 	features["mcolor2"]	= sanitize_hexcolor(features["mcolor2"], 6, 0)
@@ -712,6 +743,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["vampire_skin"]		, vampire_skin)
 	WRITE_FILE(S["vampire_hair"]		, vampire_hair)
 	WRITE_FILE(S["vampire_eyes"]		, vampire_eyes)
+	WRITE_FILE(S["vampire_ears"]		, vampire_ears)
 	WRITE_FILE(S["extra_language"]		, extra_language)
 	WRITE_FILE(S["voice_color"]			, voice_color)
 	WRITE_FILE(S["voice_pitch"]			, voice_pitch)
@@ -790,6 +822,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["voice_type"] , voice_type)
 	WRITE_FILE(S["voice_pack"] , voice_pack)
 	WRITE_FILE(S["pronouns"] , pronouns)
+	WRITE_FILE(S["titles_pref"] , titles_pref)
+	WRITE_FILE(S["clothes_pref"] , clothes_pref)
 	WRITE_FILE(S["statpack"] , statpack.type)
 	WRITE_FILE(S["virtue"] , virtue.type)
 	WRITE_FILE(S["virtuetwo"], virtuetwo.type)

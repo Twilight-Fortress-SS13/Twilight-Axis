@@ -27,7 +27,8 @@
 	job_subclasses = list(
 		/datum/advclass/templar/monk,
 		/datum/advclass/templar/crusader,
-		/datum/advclass/templar/vigilant
+		/datum/advclass/templar/vigilant,
+		/datum/advclass/noctite_spellblade //TA EDIT
 	)
 
 /datum/outfit/job/roguetown/templar
@@ -102,6 +103,7 @@
 			neck = /obj/item/clothing/neck/roguetown/psicross/dendor
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/dendor
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
+			H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
 		if(/datum/patron/divine/necra)
 			neck = /obj/item/clothing/neck/roguetown/psicross/necra
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/necra
@@ -184,6 +186,7 @@
 	if(H.patron?.type == /datum/patron/divine/dendor)
 		H.adjust_skillrank(/datum/skill/labor/farming, 1, TRUE)
 		H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
+		H.AddSpell(new /obj/effect/proc_holder/spell/self/conjure_armor/vines)
 	if(H.patron?.type == /datum/patron/divine/noc)
 		H.adjust_skillrank(/datum/skill/misc/reading, 3, TRUE) // Really good at reading... does this really do anything? No. BUT it's soulful.
 		H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
@@ -396,7 +399,7 @@
 			H.adjust_skillrank(/datum/skill/combat/axes, 1, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Crossbow + Shortsword")
-			H.equip_to_slot_or_del(new /obj/item/quiver/bolts, SLOT_BELT_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/standard, SLOT_BELT_R, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/cuirass, SLOT_ARMOR, TRUE) //Cuirass, not halfplate. Slightly reduced starting armor.
 			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow(H))
 			H.put_in_hands(new /obj/item/rogueweapon/sword/short(H), TRUE)

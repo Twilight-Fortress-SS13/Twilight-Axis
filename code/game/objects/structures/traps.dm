@@ -24,6 +24,11 @@
 	var/datum/effect_system/spark_spread/spark_system
 	var/scraptype = /obj/item/scrap
 
+/obj/structure/trap/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Right-clicking the eye on your HUD allows you to check your surroundings for hidden threats, traps, and ambushes. The chance to spot each instance scales with your character's Perception.")
+	. += span_info("Most traps are almost completely invisible. Examining an adjacent trap by shift-clicking it will momentarily dispell the invisiblity, and temporarily disables it.")
+
 /obj/structure/trap/Initialize(mapload)
 	. = ..()
 	flare_message = span_warning("[src] flares brightly!")
@@ -520,7 +525,7 @@
 	if(special == "lich" || special == "vampire lord")
 		return TRUE
 
-	if(assigned == "bogguard")
+	if(assigned == "Overseer" || assigned == "Vanguard")
 		return TRUE
 
 	return FALSE
@@ -549,8 +554,9 @@
 	var/special  = lowertext("[H.mind.special_role]")
 
 	return (assigned == "bandit" || special == "bandit" \
-		|| assigned == "bogguard" \
-		|| assigned == "warden" || special == "warden")
+		|| assigned == "vanguard" \
+		|| assigned == "warden" || special == "warden" \
+		|| assigned == "overseer" || special == "overseer")
 
 /obj/structure/trap/bogtrap/proc/show_personal_reveal(mob/user)
 	if(!user || !user.client)
@@ -593,14 +599,14 @@
 	. = ..()
 
 /obj/structure/trap/bogtrap/freeze
-    name = "trapbog (frost)"
-    checks_antimagic = FALSE
+	name = "trapbog (frost)"
+	checks_antimagic = FALSE
 
 /obj/structure/trap/bogtrap/freeze/trap_effect(mob/living/L)
-    to_chat(L, span_danger("<B>You're frozen solid!</B>"))
-    L.Paralyze(50)
-    L.adjust_bodytemperature(-300)
-    playsound(src, 'sound/misc/explode/bottlebomb (1).ogg', 60, TRUE)
+	to_chat(L, span_danger("<B>You're frozen solid!</B>"))
+	L.Paralyze(50)
+	L.adjust_bodytemperature(-300)
+	playsound(src, 'sound/misc/explode/bottlebomb (1).ogg', 60, TRUE)
 
 
 /obj/structure/trap/bogtrap/bomb

@@ -1,6 +1,7 @@
 /obj/structure/roguemachine/vendor
 	name = "PEDDLER"
-	desc = "A half-alive magitech vending machine. The stomach of this thing can be stuffed with fun things to buy."
+	desc = "A half-alive magitech vending machine. The stomach of this thing can be stuffed with fun things to buy. Be mindful, however; for while its favorite snack is coinage, the limits of \
+	its diet is set by another."
 	icon = 'icons/roguetown/misc/machines.dmi'
 	icon_state = "streetvendor1"
 	density = TRUE
@@ -17,6 +18,11 @@
 	var/next_hawk = 0
 	var/will_hawk = TRUE
 	var/max_items = 30
+
+/obj/structure/roguemachine/vendor/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Owners of the storefront's PEDDLER can unlock it, allowing them both restock wares and vend whatever coinage might've been earned from completed sales.")
+	. += span_info("Left-clicking a PEDDLER with an open land allows you to browse and purchase its wares. Click on the 'Stored Mammons' option to retrieve any coinage or change left behind.")
 
 /obj/structure/roguemachine/vendor/proc/get_group_items(var/param)
 	// Accepts either:
@@ -379,8 +385,14 @@
 /obj/structure/roguemachine/vendor/inn/Initialize()
 	. = ..()
 
+	var/list/key_list
+
+	if(SSmapping.config.map_name == "Rockhill")
+		key_list = list(/obj/item/roguekey/roomi, /obj/item/roguekey/roomii, /obj/item/roguekey/roomiii, /obj/item/roguekey/roomiv, /obj/item/roguekey/roomv, /obj/item/roguekey/roomvi, /obj/item/roguekey/roomvii, /obj/item/roguekey/roomviii)
+	else
+		key_list = list(/obj/item/roguekey/roomi, /obj/item/roguekey/roomii, /obj/item/roguekey/roomiii, /obj/item/roguekey/roomiv, /obj/item/roguekey/roomv, /obj/item/roguekey/roomvi)
 	// Add room keys with a price of 20
-	for (var/X in list(/obj/item/roguekey/roomi, /obj/item/roguekey/roomii, /obj/item/roguekey/roomiii, /obj/item/roguekey/roomiv, /obj/item/roguekey/roomv, /obj/item/roguekey/roomvi))
+	for (var/X in key_list)
 		var/obj/P = new X(src)
 		held_items[P] = list()
 		held_items[P]["NAME"] = P.name
@@ -401,6 +413,20 @@
 		held_items[F]["PRICE"] = 200
 
 	update_icon()
+
+// TA EDIT START - ROCKHILL MANSION
+/obj/structure/roguemachine/vendor/mansion
+	keycontrol = "steward"
+
+/obj/structure/roguemachine/vendor/mansion/Initialize()
+	. = ..()
+	for (var/Z in list(/obj/item/storage/keyring/rockhillmansion))
+		var/obj/F = new Z(src)
+		held_items[F] = list()
+		held_items[F]["NAME"] = F.name
+		held_items[F]["PRICE"] = 1000
+	update_icon()
+// TA EDIT END - ROCKHILL MANSION
 
 /obj/structure/roguemachine/vendor/merchant
 	keycontrol = "merchant"
@@ -498,7 +524,7 @@
 /obj/structure/roguemachine/vendor/keep_guests/Initialize()
 	. = ..()
 
-	for (var/X in list(/obj/item/roguekey/manor/guest, /obj/item/roguekey/manor/guest/two, /obj/item/roguekey/manor/guest/three, /obj/item/roguekey/manor/guest/four))
+	for (var/X in list(/obj/item/storage/keyring/manor/guest/one, /obj/item/storage/keyring/manor/guest/two, /obj/item/storage/keyring/manor/guest/three, /obj/item/storage/keyring/manor/guest/four))
 		var/obj/P = new X(src)
 		held_items[P] = list()
 		held_items[P]["NAME"] = P.name

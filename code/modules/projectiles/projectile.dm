@@ -118,6 +118,8 @@
 	var/decayedRange			//stores original range
 	var/reflect_range_decrease = 5			//amount of original range that falls off when reflecting, so it doesn't go forever
 	var/reflectable = NONE // Can it be reflected or not?
+	/// Whether this projectile can be deflected by Guard (clash status). Opt-in per subtype.
+	var/guard_deflectable = FALSE
 		//Effects
 	var/stun = 0
 	var/knockdown = 0
@@ -154,6 +156,15 @@
 	var/bonus_accuracy = 0 //bonus accuracy that cannot be affected by range drop off.
 
 	var/target_z = 0
+
+	/// Min tile distance for full damage/AP.
+	var/min_range = 0
+	/// Max tile distance for full damage/AP.
+	var/max_range = 0
+	/// Falloff factor for damage. Multiplicative.
+	var/dam_falloff_factor = 1
+	/// Falloff factor for AP. Multiplicative.
+	var/ap_falloff_factor = 1
 
 /obj/projectile/proc/handle_drop()
 	return
@@ -199,6 +210,19 @@
 		accuracy -= 10
 	if(range <= 0 && loc)
 		on_range()
+
+/obj/projectile/proc/check_range(turf/T)
+	if(!starting)
+		return FALSE
+	if(!istype(T))
+		T = get_turf(src)
+	if(!istype(T))
+		return FALSE
+	if(T.z != starting.z)
+		return FALSE
+	var/distance = get_dist(T, starting)
+	if((min_range && distance < min_range) || (max_range && distance > max_range))
+		return TRUE
 
 /obj/projectile/proc/on_range() //if we want there to be effects when they reach the end of their range
 //	on_hit(get_turf(src))
@@ -308,6 +332,55 @@
 	if(unlucky_sob)
 		setAngle(Get_Angle(src, unlucky_sob.loc))
 
+/// Redirects this projectile back toward its origin point with slight scatter.
+/// Sets firer to the reflector so the projectile won't re-hit them.
+/// Returns TRUE if reflection succeeded, FALSE if conditions weren't met (no starting turf, reflector not on turf).
+/obj/projectile/proc/reflect_back(mob/living/reflector)
+	if(!starting || !isturf(reflector.loc))
+		return FALSE
+	var/new_x = starting.x + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
+	var/new_y = starting.y + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
+	var/turf/curloc = get_turf(reflector)
+	original = locate(new_x, new_y, z)
+	starting = curloc
+	firer = reflector
+	yo = new_y - curloc.y
+	xo = new_x - curloc.x
+	var/new_angle_s = Angle + rand(120, 240)
+	while(new_angle_s > 180)
+		new_angle_s -= 360
+	setAngle(new_angle_s)
+	return TRUE
+
+/// Called when a guarding mob deflects this projectile.
+/// Return TRUE for successful deflection (guard consumed cleanly, projectile reflected).
+/// Return FALSE if the projectile overpowers the guard (guard disrupted with bad_guard penalty).
+/// Override on subtypes for custom behavior.
+/// silent: if TRUE, skip chat messages (used by parry buffer for multi-projectile spells).
+/obj/projectile/proc/on_guard_deflect(mob/living/defender, silent = FALSE)
+	if(!silent)
+		var/verb_text = hitscan ? "dispels" : "deflects"
+		if(isarcyne(defender))
+			defender.visible_message(span_danger("[defender] [verb_text] [src] with a reactive ward!"))
+			to_chat(defender, span_notice("My ward [verb_text] the incoming spell!"))
+			playsound(get_turf(defender), pick('sound/combat/parry/shield/magicshield (1).ogg', 'sound/combat/parry/shield/magicshield (2).ogg', 'sound/combat/parry/shield/magicshield (3).ogg'), 100)
+		else
+			var/martial_msg = hitscan ? "[defender] [verb_text] [src]!" : "[defender] [verb_text] [src] back at its caster!"
+			defender.visible_message(span_danger("[martial_msg]"))
+			to_chat(defender, span_notice("My guard [verb_text] the incoming spell!"))
+			var/obj/item/held = defender.get_active_held_item()
+			if(held?.parrysound)
+				playsound(get_turf(defender), pick(held.parrysound), 100)
+			else
+				playsound(get_turf(defender), pick(defender.parry_sound), 100)
+	if(hitscan || !reflect_back(defender))
+		qdel(src) // Hitscan can't visually reflect; also fallback if reflect_back fails
+	else
+		// Keep projectile alive through process_hit's qdel check
+		temporary_unstoppable_movement = TRUE
+		ENABLE_BITFIELD(movement_type, UNSTOPPABLE)
+	return TRUE
+
 /obj/projectile/proc/store_hitscan_collision(datum/point/pcache)
 	beam_segments[beam_index] = pcache
 	beam_index = pcache
@@ -354,7 +427,13 @@
 #define DO_NOT_QDEL 2		//Pass through.
 #define FORCE_QDEL 3		//Force deletion.
 
-/obj/projectile/proc/process_hit(turf/T, atom/target, qdel_self, hit_something = FALSE)		//probably needs to be reworked entirely when pixel movement is done.
+/obj/projectile/proc/process_hit(turf/T, atom/target, qdel_self, hit_something = FALSE) 	//probably needs to be reworked entirely when pixel movement is done.
+	if(check_range(T))
+		if(damage)
+			damage = round(damage * dam_falloff_factor)
+		if(armor_penetration)
+			armor_penetration = round(armor_penetration * ap_falloff_factor)
+
 	if(QDELETED(src) || !T || !target)		//We're done, nothing's left.
 		if((qdel_self == FORCE_QDEL) || ((qdel_self == QDEL_SELF) && !temporary_unstoppable_movement && !CHECK_BITFIELD(movement_type, UNSTOPPABLE)))
 			qdel(src)
@@ -363,7 +442,9 @@
 	if(!prehit(target))
 		return process_hit(T, select_target(T), qdel_self, hit_something)		//Hit whatever else we can since that didn't work.
 	SEND_SIGNAL(target, COMSIG_PROJECTILE_PREHIT, args)
+
 	var/result = target.bullet_act(src, def_zone)
+
 	if(result == BULLET_ACT_FORCE_PIERCE)
 		if(!CHECK_BITFIELD(movement_type, UNSTOPPABLE))
 			temporary_unstoppable_movement = TRUE
@@ -444,6 +525,7 @@
 	last_process = world.time
 	if(!loc || !fired || !trajectory)
 		fired = FALSE
+		qdel(src)
 		return PROCESS_KILL
 	if(paused || !isturf(loc))
 		last_projectile_move += world.time - last_process		//Compensates for pausing, so it doesn't become a hitscan projectile when unpaused from charged up ticks.
@@ -684,6 +766,8 @@
 				return FALSE
 	return TRUE
 
+#define BUCKLE_PENALTY 0.5
+
 //Spread is FORCED!
 /obj/projectile/proc/preparePixelProjectile(atom/target, atom/source, params, spread = 0)
 	var/turf/curloc = get_turf(source)
@@ -709,6 +793,14 @@
 	trajectory_ignore_forcemove = FALSE
 	starting = start_loc
 	original = target
+
+	// mounted penalty
+	if(isliving(source))
+		var/mob/living/shooter = source
+		if(shooter.buckled)
+			accuracy = max(5, accuracy * BUCKLE_PENALTY)
+			bonus_accuracy = max(0, bonus_accuracy * BUCKLE_PENALTY)
+
 	if(targloc || !params)
 		yo = targloc.y - curloc.y
 		xo = targloc.x - curloc.x
@@ -727,6 +819,8 @@
 	else
 		stack_trace("WARNING: Projectile [type] fired without either mouse parameters, or a target atom to aim at!")
 		qdel(src)
+
+#undef BUCKLE_PENALTY
 
 /proc/calculate_projectile_angle_and_pixel_offsets(mob/user, params)
 	var/list/mouse_control = params2list(params)
@@ -778,15 +872,20 @@
 /obj/projectile/Destroy()
 	if(hitscan)
 		finalize_hitscan_and_generate_tracers()
+	permutated = null
+	firer = null
+	fired_from = null
+	original = null
+	starting = null
 	STOP_PROCESSING(SSprojectiles, src)
 	cleanup_beam_segments()
-	qdel(trajectory)
+	QDEL_NULL(trajectory)
 	return ..()
 
 /obj/projectile/proc/cleanup_beam_segments()
 	QDEL_LIST_ASSOC(beam_segments)
 	beam_segments = list()
-	qdel(beam_index)
+	QDEL_NULL(beam_index)
 
 /obj/projectile/proc/finalize_hitscan_and_generate_tracers(impacting = TRUE)
 	if(trajectory && beam_index)

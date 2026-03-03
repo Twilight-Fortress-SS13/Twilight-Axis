@@ -63,7 +63,7 @@
 	if((src.holy_area == TRUE) && HAS_TRAIT(guy, TRAIT_CLERGY_TA) && !guy.has_status_effect(/datum/status_effect/buff/clergybuff) && !HAS_TRAIT(guy, TRAIT_EXCOMMUNICATED) && !HAS_TRAIT(guy, TRAIT_HERESIARCH))
 		guy.apply_status_effect(/datum/status_effect/buff/clergybuff)
 
-/datum/status_effect/buff/mist_form //TA EDIT
+/datum/status_effect/buff/mist_form 
 	id = "mist_form"
 	duration = 120
 	alert_type = /atom/movable/screen/alert/status_effect/buff/dagger_dash
@@ -79,6 +79,7 @@
 	ADD_TRAIT(L, TRAIT_GRABIMMUNE, MAGIC_TRAIT)
 	ADD_TRAIT(L, TRAIT_PUSHIMMUNE, MAGIC_TRAIT)
 	ADD_TRAIT(L, TRAIT_NOSLIPALL, MAGIC_TRAIT)
+	ADD_TRAIT(L, TRAIT_SPELLCOCKBLOCK, MAGIC_TRAIT)
 
 
 	L.status_flags |= GODMODE
@@ -108,6 +109,7 @@
 	REMOVE_TRAIT(L, TRAIT_GRABIMMUNE, MAGIC_TRAIT)
 	REMOVE_TRAIT(L, TRAIT_PUSHIMMUNE, MAGIC_TRAIT)
 	REMOVE_TRAIT(L, TRAIT_NOSLIPALL, MAGIC_TRAIT)
+	REMOVE_TRAIT(L, TRAIT_SPELLCOCKBLOCK, MAGIC_TRAIT)
 
 	L.status_flags &= ~GODMODE
 	L.pass_flags &= ~LETPASSTHROW

@@ -1,12 +1,9 @@
-/datum/advclass/twilight_hunter
+/datum/advclass/ranger/twilight_hunter
 	name = "Blackpowder Hunter"
 	tutorial = "As gunpowder becomes more widespread accross Grimmoria, so do the Gunslingers - those who earn their living through their skill with those advanced weapons. But you are not one of 'em, you are just a wanderer with the weapon of new times. You are too young or too old to learn properly how to use effectively"
-	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
-	outfit = /datum/outfit/job/roguetown/twilight_hunter
+	outfit = /datum/outfit/job/roguetown/adventurer/twilight_hunter
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_blackpowderhunter.ogg'
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
-	class_select_category = CLASS_CAT_RANGER
 	traits_applied = list(TRAIT_STEELHEARTED)
 	subclass_stats = list(
 		STATKEY_PER = 2,
@@ -31,7 +28,7 @@
 		/datum/skill/craft/traps = SKILL_LEVEL_APPRENTICE,
 	)
 
-/datum/outfit/job/roguetown/twilight_hunter/pre_equip(mob/living/carbon/human/H)
+/datum/outfit/job/roguetown/adventurer/twilight_hunter/pre_equip(mob/living/carbon/human/H)
 	..()
 	beltl = /obj/item/rogueweapon/scabbard/sheath
 	beltr = /obj/item/quiver/twilight_bullet/lead
@@ -69,7 +66,7 @@
 			pants = /obj/item/clothing/under/roguetown/chainlegs/iron/kilt
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/iron
 			shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
-			gloves = /obj/item/clothing/gloves/roguetown/chain/iron
+			gloves = /obj/item/clothing/gloves/roguetown/angle
 			backl = /obj/item/gun/ballistic/twilight_firearm/hunt_arquebus
 			H.put_in_hands(new /obj/item/natural/feather(H), TRUE)			//customizieee
 			H.put_in_hands(new /obj/item/natural/cloth(H), TRUE)

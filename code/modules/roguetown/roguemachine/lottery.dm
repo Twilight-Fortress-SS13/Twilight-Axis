@@ -134,19 +134,27 @@
 			say("Your peasant's tithe is NEGATIVE.")
 			return
 		var/list/choicez = list()
-		if(gamblingprice > 10)
-			choicez += "GOLD"
-		if(gamblingprice > 5)
-			choicez += "SILVER"
+		if(SSmapping.config.map_name == "Rockhill")
+			if(gamblingprice > 14)
+				choicez += "GOLD"
+		else
+			if(gamblingprice > 10)
+				choicez += "GOLD"
+			if(gamblingprice > 5)
+				choicez += "SILVER"
 		choicez += "BRONZE"
 		var/selection = input(user, "Make a Selection", src) as null|anything in choicez
 		if(!selection)
 			return
 		var/mod = 1
-		if(selection == "GOLD")
-			mod = 10
-		if(selection == "SILVER")
-			mod = 5
+		if(SSmapping.config.map_name == "Rockhill")
+			if(selection == "GOLD")
+				mod = 14
+		else
+			if(selection == "GOLD")
+				mod = 10
+			if(selection == "SILVER")
+				mod = 5
 		var/coin_amt = input(user, "Sayyid, you have [src.gamblingprice] mammon in tithes. You may withdraw [floor(gamblingprice/mod)] [selection] COINS.", src) as null|num
 		coin_amt = round(coin_amt)
 		if(coin_amt < 1)

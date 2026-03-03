@@ -5,6 +5,9 @@
 	var/gunpowder_npc_critfactor = 1
 	var/gunpowder
 
+/obj/item/ammo_casing
+	var/obj/item/quiver/twilight_bullet/runicbag/linked_bag = null
+
 /**
  * Generic ammo used by handgonnes and arquebuses
  */
@@ -81,12 +84,11 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_runed"
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
-	range = 100
+	range = 20
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	embedchance = 100
 	woundclass = BCLASS_STAB
 	flag = "piercing"
-	var/linked_bag
 
 /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	name = "blessed sphere"
@@ -245,14 +247,6 @@
 			else
 				T.visible_message(span_danger("The [src.name] misses [T] narrowly, grazing them!"), \
 								span_danger("The [src.name] misses me narrowly, grazing me!"), null, COMBAT_MESSAGE_RANGE)
-	if(istype(src, /obj/projectile/bullet/twilight_lead/twilight_runelock))
-		var/turf/T = get_turf(src)
-		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/new_boolet = new ammo_type(T)
-		var/obj/projectile/bullet/twilight_lead/twilight_runelock/R = src
-		if(istype(R.linked_bag, /obj/item/quiver/twilight_bullet/runicbag))
-			var/obj/item/quiver/twilight_bullet/runicbag/bag = R.linked_bag
-			new_boolet.linked_bag = bag
-			bag.linked_ammo += new_boolet
 	. = ..()
 	if(isliving(firer) && (istype(fired_from, /obj/item/gun/ballistic/twilight_firearm) || istype(fired_from, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock)))
 		var/mob/living/M = firer
@@ -363,13 +357,17 @@
 	possible_item_intents = list(/datum/intent/use)
 	max_integrity = 0
 	w_class = WEIGHT_CLASS_TINY
-	var/linked_bag
 
 /obj/item/ammo_casing/caseless/twilight_lead/runelock/Initialize()
 	. = ..()
 	var/filter = src.get_filter("rune_filter")
 	if(!filter)
 		src.add_filter("rune_filter", 2, list("type" = "outline", "color" = rgb(112, 28, 28, 1), "alpha" = 200, "size" = 2))
+
+/obj/item/ammo_casing/caseless/twilight_lead/runelock/ready_proj(atom/target, mob/living/user, quiet, zone_override = "", atom/fired_from)
+	. = ..()
+	if(linked_bag)
+		linked_bag.linked_ammo_types += type
 
 /obj/item/ammo_casing/caseless/twilight_lead/runelock/equipped(mob/living/user)
 	if(ishuman(user))
@@ -384,16 +382,6 @@
 		user.apply_damage(rand(5,15), BURN)
 		src.forceMove(get_turf(user))
 	..()
-
-/obj/item/ammo_casing/caseless/twilight_lead/runelock/ready_proj(atom/target, mob/living/user, quiet, zone_override = "", atom/fired_from)
-	. = ..()
-	if(istype(linked_bag, /obj/item/quiver/twilight_bullet/runicbag) && istype(BB, /obj/projectile/bullet/twilight_lead/twilight_runelock))
-		var/obj/item/quiver/twilight_bullet/runicbag/bag = linked_bag
-		var/obj/projectile/bullet/twilight_lead/twilight_runelock/new_BB = BB
-		new_BB.linked_bag = bag
-		bag.linked_ammo -= src
-		linked_bag = null
-
 
 /obj/item/ammo_casing/caseless/twilight_lead/silver
 	name = "silver sphere"

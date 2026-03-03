@@ -315,7 +315,7 @@
 
 /datum/inqports/supplies/blessedbolts
 	name = "1 Quiver of Sunderbolts"
-	item_type = /obj/item/quiver/holybolts
+	item_type = /obj/item/quiver/bolt/holy
 	marquescost = 6
 
 /datum/inqports/equipment/nocshades
@@ -445,7 +445,7 @@
 	new /obj/item/clothing/head/roguetown/helmet/heavy/psysallet(src)
 	new /obj/item/clothing/head/roguetown/helmet/heavy/psybucket(src)
 	new /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm(src)
-	new /obj/item/clothing/head/roguetown/helmet/heavy/absolver(src)
+	new /obj/item/clothing/head/roguetown/helmet/heavy/absolver/unblessed(src)
 
 /datum/inqports/wardrobe/fencerset
 	name = "The 'Otavan Fencer's Padded Wardrobe' Crate"

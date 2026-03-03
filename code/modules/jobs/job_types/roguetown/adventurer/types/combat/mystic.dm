@@ -246,7 +246,7 @@
 		/obj/item/recipe_book/survival = 1,
 		)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/enchant_weapon)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/airblade)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynestrike)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
 	if(H.mind)
@@ -330,7 +330,7 @@
 			STATKEY_WIL = 2,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 1
+	subclass_spellpoints = 3 // +2 spellpoints, you focused on offensive training and loose on utility
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -361,8 +361,37 @@
 		/obj/item/recipe_book/survival = 1,
 		/obj/item/roguegem/amethyst = 1,
 		)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynebolt)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
+
+	var/options = list("Arcyne bolt and Repulse", "Arcyne bolt and Blink", "Frost bolt and Repulse", "Frost bolt and Blink", "Spitfire and Repulse", "Spitfire and Blink", "Lightning bolt and Repulse", "Lightning bolt and Blink")
+	var/option_choice = input("Shape your offense", "Rain Destruction!") as anything in options
+	switch(option_choice)
+		if("Arcyne bolt and Repulse")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynebolt)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
+		if("Arcyne bolt and Blink")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynebolt)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/blink)
+		if("Frost bolt and Repulse")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/frostbolt)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
+		if("Frost bolt and Blink")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/frostbolt)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/blink)
+		if("Spitfire and Repulse")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/spitfire)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
+		if("Spitfire and Blink")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/spitfire)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/blink)
+		if("Lightning bolt and Repulse")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/lightningbolt)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
+		if("Lightning bolt and Blink")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/lightningbolt)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/blink)
+
+
+
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
 	if(H.mind)

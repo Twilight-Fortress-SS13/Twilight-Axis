@@ -62,10 +62,23 @@ SUBSYSTEM_DEF(mapping)
 	HACK_LoadMapConfig()
 	// After assigning a config datum to var/config, we check which map ajudstment fits the current config
 	for(var/datum/map_adjustment/each_adjust as anything in subtypesof(/datum/map_adjustment))
-		if(config.map_file && initial(each_adjust.map_file_name) != config.map_file)
+		var/adj_name = initial(each_adjust.map_file_name) //TA EDIT
+		
+		if(!config.map_file)
 			continue
-		map_adjustment = new each_adjust() // map_adjustment has multiple procs that'll be called from needed places (i.e. job_change)
-		log_world("Loaded '[config.map_file]' map adjustment.")
+
+		
+		if(islist(config.map_file))
+			
+			if(!(adj_name in config.map_file))
+				continue
+		else
+			
+			if(adj_name != config.map_file)
+				continue
+
+		map_adjustment = new each_adjust() 
+		log_world("Loaded '[adj_name]' map adjustment.") //TA EDIT END
 		break
 	return ..()
 
@@ -91,6 +104,14 @@ SUBSYSTEM_DEF(mapping)
 	repopulate_sorted_areas()
 	initialize_reserved_level(transit.z_value)
 	generate_z_level_linkages()
+	if(config?.map_name == "Rockhill") // TA EDIT START
+		var/list/posters = GLOB.bounty_posters
+		if("AZURIA" in posters)
+			posters -= "AZURIA"
+			posters["ENIGMA"] = "The Justiciary of Enigma"
+		if("GRENZELHOFT" in posters)
+			posters -= "GRENZELHOFT"
+			posters["VALORIA"] = "The Valorian Holy See" // TA EDIT END
 	return ..()
 
 /datum/controller/subsystem/mapping/proc/generate_z_level_linkages()
@@ -135,10 +156,9 @@ SUBSYSTEM_DEF(mapping)
 	. = list()
 	var/start_time = REALTIMEOFDAY
 
-	if (!islist(files))  // handle single-level maps
+	if (!islist(files))
 		files = list(files)
 
-	// check that the total z count of all maps matches the list of traits
 	var/total_z = 0
 	var/list/parsed_maps = list()
 	for (var/file in files)
@@ -148,34 +168,54 @@ SUBSYSTEM_DEF(mapping)
 		if (!bounds)
 			errorList |= full_path
 			continue
-		parsed_maps[pm] = total_z  // save the start Z of this file
+		parsed_maps[pm] = total_z
 		total_z += bounds[MAP_MAXZ] - bounds[MAP_MINZ] + 1
 
-	if (!length(traits))  // null or empty - default
+	if (!length(traits))
 		for (var/i in 1 to total_z)
 			traits += list(default_traits)
-	else if (total_z != traits.len)  // mismatch
+	else if (total_z != traits.len)
 		INIT_ANNOUNCE("WARNING: [traits.len] trait sets specified for [total_z] z-levels in [path]!")
-		if (total_z < traits.len)  // ignore extra traits
+		if (total_z < traits.len)
 			traits.Cut(total_z + 1)
-		while (total_z > traits.len)  // fall back to defaults on extra levels
+		while (total_z > traits.len)
 			traits += list(default_traits)
 
-	// preload the relevant space_level datums
 	var/start_z = world.maxz + 1
 	var/i = 0
 	for (var/level in traits)
 		add_new_zlevel("[name][i ? " [i + 1]" : ""]", level)
 		++i
 
-	// load the maps
+	var/list/map_start_z = list()
+	var/list/map_depth = list()
+	for (var/P0 in parsed_maps)
+		var/datum/parsed_map/pm0 = P0
+
+		var/filename = pm0.original_path
+		var/slash = findlasttext(filename, "/")
+		if (slash)
+			filename = copytext(filename, slash + 1)
+
+		map_start_z[filename] = start_z + parsed_maps[P0]
+		map_depth[filename] = pm0.bounds[MAP_MAXZ] - pm0.bounds[MAP_MINZ] + 1
+
+	SSautomapper.set_map_context(map_start_z, map_depth)
+	SSautomapper.preload_templates_from_toml(files)
+	var/turf_blacklist = SSautomapper.get_turf_blacklists(files)
 	for (var/P in parsed_maps)
 		var/datum/parsed_map/pm = P
+		pm.turf_blacklist = turf_blacklist
 		if (!pm.load(1, 1, start_z + parsed_maps[P], no_changeturf = TRUE))
 			errorList |= pm.original_path
 
-	log_game("Loaded [name] in [(REALTIMEOFDAY - start_time)/10]s!")
+	if(!LAZYLEN(errorList))
+		SSautomapper.load_templates_from_cache(files)
 
+	if(LAZYLEN(turf_blacklist))
+		LAZYOR(GLOB.automapper_blacklisted_turfs, turf_blacklist)
+
+	log_game("Loaded [name] in [(REALTIMEOFDAY - start_time)/10]s!")
 	return parsed_maps
 
 /datum/controller/subsystem/mapping/proc/loadWorld()

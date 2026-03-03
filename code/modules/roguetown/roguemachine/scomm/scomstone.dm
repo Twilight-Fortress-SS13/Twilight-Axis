@@ -13,7 +13,7 @@
 	obj_flags = null
 	icon = 'icons/roguetown/items/misc.dmi'
 	w_class = WEIGHT_CLASS_SMALL
-	experimental_inhand = FALSE
+	experimental_inhand = TRUE
 	muteinmouth = TRUE
 	var/cooldown = 60 SECONDS
 	var/on_cooldown = FALSE
@@ -28,13 +28,21 @@
 	grid_width = 32
 	grid_height = 32
 
+/obj/item/scomstone/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Most SCOMSTONEs function as handheld SCOMs. The only exception are HOUNDSTONES, which have access to an exclusive SCOMline for the Keep's royalty and guards.")
+	. += span_info("SCOMSTONEs, like their immobile forefathers, have a unique number attached to them. If someone knows this number, they can directly open a private SCOMline with the SCOMSTONE-in-question.")
+	. += span_info("Right-click a SCOMSTONE or CROWNSTONE to prepare a message. This message will be heard through every SCOM in the kingdom-and-abroad, but comes with a minor cooldown.")
+	. += span_info("Middle-click a SCOMSTONE to mute or unmute it.")
+	. += span_info("Activate a CROWNSTONE in your hand to swap between the general SCOMline and the royal SCOMline. The latter is denoted by crimson lettering, and is exclusively heard by those with either a HOUNDSTONE or retuned SCOM.")
+
 /obj/item/scomstone/attack_right(mob/living/carbon/human/user)
 	if(on_cooldown)
 		to_chat(user, span_warning("The gemstone inside the ring radiates heat. It's still cooling down from its last use."))
 		playsound(loc, 'sound/misc/machineno.ogg', 100, FALSE, -1)
 		return
 	user.changeNext_move(CLICK_CD_INTENTCAP)
-	visible_message(span_notice ("[user] presses their ring against their mouth."))
+	visible_message(span_notice ("[user] presses [user.p_their()] [src] against [user.p_their()] mouth."))
 	var/input_text = input(user, "Enter your message:", "Message")
 	if(!input_text)
 		return
@@ -147,7 +155,7 @@
 
 /obj/item/scomstone/garrison/hand
 	name = "handpin"
-	desc = " unique crownstone, perfect for long days and short lives, both honor and burden."
+	desc = "A unique crownstone, perfect for long days and short lives, both honor and burden."
 	icon = 'icons/roguetown/clothing/special/hand.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/hand.dmi'
 	icon_state = "handpin"
@@ -170,7 +178,7 @@
 	if(!get_location_accessible(user, BODY_ZONE_PRECISE_MOUTH, grabs = TRUE))
 		to_chat(user, span_warning("My mouth is covered!"))
 		return
-	visible_message(span_notice ("[user] presses their [src] against their mouth."))
+	visible_message(span_notice ("[user] presses [user.p_their()] [src] against [user.p_their()] mouth."))
 	var/input_text = input(user, "Enter your message:", "Message")
 	if(!input_text)
 		return

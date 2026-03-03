@@ -1,0 +1,4 @@
+author: "Risraivyn"
+delete-after: True
+changes:
+  - rscadd: "портирован онагр с ТФа и переработан под новые реалии"

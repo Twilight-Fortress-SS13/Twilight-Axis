@@ -218,7 +218,7 @@
 		H.set_blindness(0)
 		switch(weapon_choice)
 			if("Crossbow")
-				beltr = /obj/item/quiver/bolts
+				beltr = /obj/item/quiver/bolt/standard
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 			if("Bow") // They can head down to the armory to sideshift into one of the other bows.
 				beltr = /obj/item/quiver/arrows
@@ -312,7 +312,7 @@
 				l_hand = /obj/item/rogueweapon/sword/sabre
 				r_hand = /obj/item/rogueweapon/scabbard/sword
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
-				beltr = /obj/item/quiver/bolts
+				beltr = /obj/item/quiver/bolt/standard
 			if("Flail & Shield")
 				beltr = /obj/item/rogueweapon/flail/sflail
 				backl = /obj/item/rogueweapon/shield/tower
@@ -354,7 +354,7 @@
 	maximum_possible_slots = 1 //Had one dungeoneer before, this is how many we get to keep still.
 
 	category_tags = list(CTAG_MENATARMS)
-	traits_applied = list(TRAIT_JAILOR, TRAIT_CIVILIZEDBARBARIAN)//This is surely going to be funny
+	traits_applied = list(TRAIT_JAILOR, TRAIT_CIVILIZEDBARBARIAN, TRAIT_CRITICAL_RESISTANCE, TRAIT_IGNOREDAMAGESLOWDOWN)//This is surely going to be funny
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 2,
@@ -363,7 +363,7 @@
 	)
 	subclass_skills = list(
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_EXPERT,//Primary way they are meant to dispose of ppl
-		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT, //hilarious
+		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER, //hilarious
 		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/swords = SKILL_LEVEL_NOVICE, //You are not actually meant to use this in combat.
 		/datum/skill/combat/slings = SKILL_LEVEL_JOURNEYMAN,//Funny
@@ -378,6 +378,10 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,//Since they are MAA now I guess
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE
+	)
+	subclass_stashed_items = list(
+		"Branding letters" = /obj/item/branding_letters,
+		"Branding iron" = /obj/item/branding_iron
 	)
 
 /datum/outfit/job/roguetown/manorguard/bailiff/pre_equip(mob/living/carbon/human/H)
@@ -503,6 +507,8 @@
 		if(.)
 			// gives them a rallying message, but doesn't reveal a location. gives antags some leeway
 			var/input_text = "<big><span style='color: [CLOTHING_WOAD_BLUE]'>THE DUCAL STANDARD CALLS FOR ALL GUARDSMEN TO RALLY AT [uppertext(get_area_name(user))]!</span></big>" // non-specific rallying call
+			if(SSmapping.config.map_name == "Rockhill")
+				input_text = "<big><span style='color: [CLOTHING_WOAD_BLUE]'>THE ROYAL STANDARD CALLS FOR ALL GUARDSMEN TO RALLY AT [uppertext(get_area_name(user))]!</span></big>" // non-specific rallying call
 			for(var/obj/item/scomstone/bad/garrison/S in SSroguemachine.scomm_machines)
 				S.repeat_message(input_text, src, CLOTHING_WOAD_BLUE)
 			for(var/obj/item/scomstone/garrison/S in SSroguemachine.scomm_machines)

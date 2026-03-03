@@ -31,7 +31,6 @@
 		return FALSE
 	var/user_distance = clamp(in_dist, 0, 50)
 
-
 	var/obj/item/starting_item = user.get_active_held_item()
 	var/starting_next_move = user.next_move
 	var/turf/starting_loc = user.loc
@@ -43,7 +42,6 @@
 	MA.Scale(0.1, 0.1)
 	AUR.transform = MA
 	
-
 	animate(AUR, transform = matrix().Scale(2.25, 2.25), time = prepare_time, easing = LINEAR_EASING)
 
 	var/datum/progressbar/prog_bar = new(user, prepare_time, user)
@@ -54,7 +52,6 @@
 	var/failure_msg = ""
 
 	for(var/i in 1 to prepare_time)
-
 		if(user.stat != CONSCIOUS || QDELETED(user))
 			success = FALSE
 			break
@@ -75,7 +72,6 @@
 			failure_msg = "Preparation failed!"
 			break
 
-
 		var/frequency = 5 + ((i / prepare_time) * 45) 
 		var/pulse_val = abs(sin(i * frequency)) 
 		
@@ -83,7 +79,6 @@
 		AUR.alpha = 150 + (pulse_val * 105) 
 
 		if(i % 40 == 0) do_sparks(2, FALSE, user)
-
 		prog_bar.update(i)
 		sleep(1)
 
@@ -115,6 +110,10 @@
 
 /obj/effect/proc_holder/spell/invoked/ballistic_mortar/proc/perform_ballistic_launch(mob/living/carbon/human/user, azimuth, distance)
 	var/turf/origin = get_turf(user)
+	
+	
+	var/flight_height = get_free_z_height(user)
+
 	var/obj/effect/temp_visual/fireball_anim/LA = new(origin)
 	animate(LA, pixel_z = 450, alpha = 0, time = 10, easing = SINE_EASING)
 	playsound(user, 'modular_twilight_axis/awful_artillery/sound/launch.ogg', 100, TRUE)
@@ -127,10 +126,11 @@
 
 	var/obj/item/artillery_shell/magic_fireball/S = new(target_turf)
 	S.safe_z = origin.z
+	
+	S.stored_flight_height = flight_height
+
 	var/air_time = 10 + round(distance * 0.6)
 	addtimer(CALLBACK(S, TYPE_PROC_REF(/obj/item/artillery_shell/magic_fireball, start_impact_sequence)), air_time)
-
-
 
 /obj/item/artillery_shell/magic_fireball
 	name = "arcane fireball"
@@ -138,6 +138,7 @@
 	icon_state = "fireball"
 	invisibility = 101
 	var/safe_z
+	var/stored_flight_height = 0 
 
 /obj/item/artillery_shell/magic_fireball/proc/start_impact_sequence()
 	var/turf/T = get_turf(src)
@@ -151,20 +152,29 @@
 /obj/item/artillery_shell/magic_fireball/proc/execute_explosion(obj/effect/temp_visual/fireball_anim/F)
 	var/turf/T = get_turf(src)
 	if(F) qdel(F) 
+	
+	
 	var/turf/final_T = T
-	var/turf/above = get_step_multiz(final_T, UP)
-	while(above)
-		final_T = above
-		above = get_step_multiz(final_T, UP)
+	for(var/i in 1 to stored_flight_height)
+		var/turf/above = get_step_multiz(final_T, UP)
+		if(above)
+			final_T = above
+		else
+			break
+
+	
 	var/turf/below = get_step_multiz(final_T, DOWN)
 	while(below && istransparentturf(final_T))
 		final_T = below
 		below = get_step_multiz(final_T, DOWN)
+
 	if(!final_T)
 		qdel(src)
 		return
+
 	for(var/mob/M in GLOB.player_list)
 		M.playsound_local(final_T, 'modular_twilight_axis/awful_artillery/sound/far_explosion.ogg', 60, FALSE)
+
 	if(isclosedturf(final_T))
 		explosion(final_T, 0, 1, 2, 3) 
 	else 

@@ -1,3 +1,4 @@
+
 /obj/item/storage/belt/rogue
 	name = ""
 	desc = ""
@@ -12,7 +13,7 @@
 	equip_sound = 'sound/blank.ogg'
 	content_overlays = FALSE
 	bloody_icon_state = "bodyblood"
-	experimental_inhand = FALSE
+	experimental_inhand = TRUE
 	component_type = /datum/component/storage/concrete/roguetown/belt
 	grid_width = 64
 	grid_height = 64
@@ -36,6 +37,7 @@
 
 /obj/item/storage/belt/rogue/leather/plaquegold
 	name = "plaque belt"
+	desc = "An exquisite belt, decorated with studdings of gold."
 	icon_state = "goldplaque"
 	sellprice = 50
 	sewrepair = FALSE
@@ -52,8 +54,15 @@
 	item_state = "blackbelt"
 	sellprice = 10
 
+/obj/item/storage/belt/rogue/leather/double
+	name = "pair of belts"
+	desc = "A pair of slim black belts worn around the waist."
+	icon_state = "belt_double"
+	item_state = "belt_double"
+
 /obj/item/storage/belt/rogue/leather/plaquesilver
 	name = "plaque belt"
+	desc = "An exquisite belt, decorated with studdings of silver."
 	icon_state = "silverplaque"
 	sellprice = 30
 	sewrepair = FALSE
@@ -61,6 +70,7 @@
 
 /obj/item/storage/belt/rogue/leather/battleskirt
 	name = "cloth military skirt"
+	desc = "A fine leather strap notched with holes for a buckle to secure itself, notched above a flared military skirt."
 	icon_state = "battleskirt"
 	sewrepair = FALSE
 	detail_tag = "_belt"
@@ -82,12 +92,30 @@
 
 /obj/item/storage/belt/rogue/leather/battleskirt/faulds
 	name = "belt with faulds"
+	desc = "A fine leather strap notched with holes for a buckle to secure itself, notched above a halved military skirt."
 	icon_state = "faulds"
+	sewrepair = FALSE
+	detail_tag = "_belt"
+
+/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth
+	name = "belt with breechcloth"
+	desc = "A fine leather strap notched with holes for a buckle to secure itself, and nestled above a halved tabard's coverings."
+	icon_state = "breechcloth"
+	flags_inv = HIDECROTCH
+	sewrepair = FALSE
+	detail_tag = "_belt"
+
+/obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/blackbelt
+	name = "black belt with breechcloth"
+	desc = "A fine black-leather strap notched with holes for a buckle to secure itself, and nestled above a halved tabard's coverings."
+	icon_state = "breechclothalt"
+	flags_inv = HIDECROTCH
 	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/steel
 	name = "steel belt"
+	desc = "A fine leather belt that's been sleeved within many segments of steel, protecting its delicate innards from prying hands-and-blades."
 	icon_state = "steelplaque"
 	sellprice = 30
 	sewrepair = FALSE
@@ -95,11 +123,11 @@
 
 /obj/item/storage/belt/rogue/leather/steel/tasset
 	name = "tasseted belt"
+	desc = "A fine leather belt that's been sleeved within many segments of steel, and further reinforced with the tassets of a fluted cuirass."
 	icon_state = "steeltasset"
 	sellprice = 35
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/armorsmithing
-
 
 /obj/item/storage/belt/rogue/leather/rope
 	name = "rope belt"
@@ -161,7 +189,7 @@
 
 /obj/item/storage/backpack/rogue/satchel/otavan
 	name = "otavan leather satchel"
-	desc = "A made to last leather bag from the Psydonian heart of Otava. It's Otava's finest."
+	desc = "A sleek, stylish, and surprisingly sturdy satchel that hails straight from the Sovereignty of Otava. It is made to endure, first and foremost."
 	icon_state = "osatchel"
 	item_state = "osatchel"
 
@@ -468,6 +496,7 @@
 	item_flags = ABSTRACT
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	no_effect = TRUE
+	experimental_inhand = FALSE
 
 /obj/item/clothing/wall_grab/dropped(mob/living/carbon/human/user)
 	. = ..()

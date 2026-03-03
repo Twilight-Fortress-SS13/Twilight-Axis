@@ -42,6 +42,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/human/northern,\
 	/datum/species/human/halfelf,\
 	/datum/species/elf/dark,\
+	/datum/species/elf/dark/raider,\
 	/datum/species/elf/wood,\
 	/datum/species/elf/sun,\
 	/datum/species/dwarf/mountain,\
@@ -141,6 +142,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/human/northern,\
 	/datum/species/human/halfelf,\
 	/datum/species/elf/dark,\
+	/datum/species/elf/dark/raider,\
 	/datum/species/elf/wood,\
 	/datum/species/elf/sun,\
 	/datum/species/dwarf/mountain,\
@@ -170,6 +172,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/human/northern,\
 	/datum/species/human/halfelf,\
 	/datum/species/elf/dark,\
+	/datum/species/elf/dark/raider,\
 	/datum/species/elf/wood,\
 	/datum/species/elf/sun,\
 	/datum/species/tieberian,\
@@ -319,6 +322,7 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_MERCENARY		"CAT_MERCENARY"		// Mercenary class - Handles Mercenary class selector
 #define CTAG_HAND			"CAT_HAND"			// Hand class - Handles Hand class selector
 #define CTAG_TEMPLAR		"CAT_TEMPLAR"		// Templar class - Handles Templar class selector
+#define CTAG_SEXTON			"CAT_SEXTON"		// Sexton class - Handles Sexton class selector
 #define CTAG_HEIR			"CAT_HEIR"			// Prince(cess) class - Handles Heir class selector
 #define CTAG_LORD			"CAT_LORD"			// Lord class - Handles Lord class selector
 #define CTAG_SQUIRE			"CAT_SQUIRE"		// Squire class - Handles Squire class selector
@@ -341,7 +345,6 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_BISHOP			"CAT_BISHOP"
 #define CTAG_MARTYR			"CAT_MARTYR"
 #define CTAG_ACOLYTE		"CAT_ACOLYTE"
-#define CTAG_SEXTON			"CAT_SEXTON"
 #define CTAG_DRUID			"CAT_DRUID"
 
 #define CTAG_STEWARD		"CAT_STEWARD"
@@ -413,3 +416,22 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define ARMOR_MAT_PLATE 1
 #define ARMOR_MAT_LEATHER 2
 #define ARMOR_MAT_CHAINMAIL 3
+
+/*
+	Formerly bitflags, now we are strings
+	Currently used for classes
+*/
+
+// ENIGMA - ROCKHILL ROLES
+
+#define CTAG_ROYALGUARD_ENIGMA "CAT_ROYALGUARD_ENIGMA"
+#define CTAG_ROYALKNIGHT "CAT_ROYALKNIGHT"
+#define CTAG_ROYALSERGEANT "CAT_ROYALSERGEANT"
+#define CTAG_SHERIFF "CAT_SHERIFF"			
+#define CTAG_TOWN_WATCH "CAT_TOWN_WATCH"
+#define CTAG_VANGUARD "CAT_VANGUARD"
+#define CTAG_OVERSEER "CAT_OVERSEER"
+#define CTAG_DUNGEONEER "DUNGEONEER"
+#define CTAG_COURTPHYSICIAN "COURTPHYSICIAN"
+#define CTAG_MAYOR "MAYOR"
+#define CTAG_BAILIFF "BAILIFF"

@@ -2,6 +2,9 @@
 	keep_local_name = TRUE
 	assets = list(
 		"Mookmania.otf" = 'interface/fonts/Mookmania.otf', // Основной
+		"pterra.ttf" = 'interface/fonts/pterra.ttf',
+		"newrocker.ttf" = 'interface/fonts/newrocker.ttf',
+		"nosfer.ttf" = 'interface/fonts/nosfer.ttf',
 		"chiseld.ttf" = 'interface/fonts/chiseld.ttf',
 		"blackmoor.ttf" = 'interface/fonts/blackmoor.ttf',
 		"handwrite.ttf" = 'interface/fonts/handwrite.ttf',
@@ -18,7 +21,9 @@
 		"Kautiva Cyrillic Black.ttf" = 'interface/fonts/languages/Kautiva Cyrillic Black.ttf', // Ящерский
 		"ALOT Gutenberg B Normal.ttf" = 'interface/fonts/languages/ALOT Gutenberg B Normal.ttf', // Грензели
 		"gyedzai.otf" = 'interface/fonts/languages/gyedzai.otf', // Китай
+		"valorian.ttf" = 'interface/fonts/languages/valorian.ttf', // Валория
 		"Ganesha Type.ttf" = 'interface/fonts/languages/Ganesha Type.ttf', // Казенгунский Не работает
+    "lingyuese.ttf" = 'interface/fonts/languages/lingyuese.ttf',
 		"Deutsch Gothic.ttf" = 'interface/fonts/languages/Deutsch Gothic.ttf', // Отава
 		"TolkienCyr.ttf" = 'interface/fonts/languages/TolkienCyr.ttf', // Этрусский 
 		"RUSNeverwinter.ttf" = 'interface/fonts/languages/RUSNeverwinter.ttf', // Гронновский

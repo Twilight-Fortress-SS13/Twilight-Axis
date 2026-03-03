@@ -1,4 +1,4 @@
-//SHOES
+/*//SHOES
 /datum/loadout_item/darkboots
 	name = "Dark Boots"
 	path = /obj/item/clothing/shoes/roguetown/boots
@@ -54,3 +54,4 @@
 	name = "Raised Sandals"
 	path = /obj/item/clothing/shoes/roguetown/armor/rumaclan/shitty
 	sort_category = "Shoes"
+*/

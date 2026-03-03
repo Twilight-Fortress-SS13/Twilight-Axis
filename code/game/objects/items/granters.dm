@@ -75,7 +75,7 @@
 
 	var/spell
 	var/spellname = "conjure bugs"
-
+	
 /obj/item/book/granter/spell/already_known(mob/user)
 	if(!spell)
 		return TRUE
@@ -95,6 +95,17 @@
 	user.mind.AddSpell(S)
 	user.log_message("learned the spell [spellname] ([S])", LOG_ATTACK, color="orange")
 	onlearned(user)
+
+/obj/item/book/granter/spell/attack_self(mob/living/user)
+	if(
+		!HAS_TRAIT(user, TRAIT_ARCYNE_T1) \
+		&& !HAS_TRAIT(user, TRAIT_ARCYNE_T2) \
+		&& !HAS_TRAIT(user, TRAIT_ARCYNE_T3) \
+		&& !HAS_TRAIT(user, TRAIT_ARCYNE_T4)
+	)
+		to_chat(user, span_danger("I don't know how to parse [src]. It hurts my head."))
+		return FALSE
+	..()
 
 /obj/item/book/granter/spell/random
 	icon_state = "random_book"
@@ -502,6 +513,12 @@ UNDER NO CIRCUMSTANCE SHOULD ANY OF THE BOOKS BE GIVEN OUT INTO SPAWNERS OR TO B
 	var/spellpoints = 3
 	dreamcost = 12
 
+/obj/item/book/granter/spell_points/already_known(mob/user)
+	if(LAZYLEN(user.mind?.spell_point_pools))
+		to_chat(user, span_warning("My specialized training prevents me from absorbing this kind of knowledge."))
+		return TRUE
+	return ..()
+
 /obj/item/book/granter/spell_points/on_reading_finished(mob/user)
 	var/arcaneskill = user.get_skill_level(/datum/skill/magic/arcane)
 	if(arcaneskill >= SKILL_LEVEL_NOVICE) //Required arcane skill of NOVICE or higher to use the granter
@@ -534,6 +551,12 @@ UNDER NO CIRCUMSTANCE SHOULD ANY OF THE BOOKS BE GIVEN OUT INTO SPAWNERS OR TO B
 	var/spellpoints = 3
 	dreamcost = 15
 
+/obj/item/book/granter/arcynetyr/already_known(mob/user)
+	if(LAZYLEN(user.mind?.spell_point_pools))
+		to_chat(user, span_warning("My specialized training prevents me from absorbing this kind of knowledge."))
+		return TRUE
+	return ..()
+
 /obj/item/book/granter/arcynetyr/on_reading_finished(mob/user)
 	var/arcaneskill = user.get_skill_level(/datum/skill/magic/arcane)
 	if(arcaneskill >= SKILL_LEVEL_NOVICE) //Required arcane skill of NOVICE or higher to use the granter
@@ -550,7 +573,7 @@ UNDER NO CIRCUMSTANCE SHOULD ANY OF THE BOOKS BE GIVEN OUT INTO SPAWNERS OR TO B
 			REMOVE_TRAIT(user, TRAIT_ARCYNE_T1, TRAIT_GENERIC)
 		onlearned(user)
 
-/obj/item/book/granter/arcynetyr/onlearned(mob/living/carbon/user)
+/obj/item/book/granter/arcynetyr/onlearned(mob/living/carbon/user) 
 	..()
 	if(oneuse == TRUE)
 		name = "siphoned scroll"

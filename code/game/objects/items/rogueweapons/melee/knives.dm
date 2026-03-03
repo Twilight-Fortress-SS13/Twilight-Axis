@@ -450,11 +450,10 @@
 // Standard dagger for wardens, or for any other forester-styled class. While a pick-dagger penetrates
 // armour, this is more focused on breaking *through* it and then dealing a lot of damage via REND.
 /obj/item/rogueweapon/huntingknife/idagger/warden_machete
-	possible_item_intents = list(/datum/intent/dagger/cut/heavy, /datum/intent/dagger/thrust/weak,
-	/datum/intent/dagger/cut/rend, /datum/intent/dagger/sucker_punch)
+	possible_item_intents = list(/datum/intent/dagger/cut/heavy, /datum/intent/dagger/thrust/weak, /datum/intent/dagger/cut/rend, /datum/intent/dagger/sucker_punch)
 	force = 22 // Slightly more damage than a steel dagger.
 	max_integrity = 130 // Slightly less integrity than a steel dagger.
-	name = "Wardens' seax"
+	name = "warden's seax"
 	desc = "A well-worn seax utilised by the Fraternity of Wardens both as a tool and weapon. Nearly as effective for hacking \
 	down men as it is foiliage, but not quite as durable as more modern steel tools. More suitable for cutting than for thrusting."
 	icon_state = "warden_machete"
@@ -469,6 +468,7 @@
 	sheathe_icon = "minimesser"
 	max_blade_int = 200
 	max_integrity = 150
+	special = /datum/special_intent/shin_swipe
 
 /obj/item/rogueweapon/huntingknife/idagger/virtue
 	possible_item_intents = list(/datum/intent/dagger/thrust,/datum/intent/dagger/cut, /datum/intent/dagger/thrust/pick, /datum/intent/dagger/sucker_punch)
@@ -1176,6 +1176,7 @@
 
 /datum/intent/snip // The salvaging intent!
 	name = "snip"
+	desc = "Target a piece of clothing to sheer it apart. Sheered clothing is destroyed in the process, but provides some salvaged materials in turn. The amount of salvaged materials gained from sheered clothing scales with your Sewing skill. </br>Target the head-or-skull of someone else to begin grooming their hair. This can be used to give someone a completely new hairstyle, or to shave away whatever hair they have."
 	icon_state = "insnip"
 	chargetime = 0
 	noaa = TRUE

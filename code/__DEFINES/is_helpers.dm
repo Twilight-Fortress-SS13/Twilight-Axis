@@ -102,6 +102,7 @@ GLOBAL_LIST_INIT(our_forest_sex, typecacheof(list(
 #define isaura(A) (is_species(A, /datum/species/aura))
 #define istabaxi(A) (is_species(A, /datum/species/tabaxi))
 #define isvulp(A) (is_species(A, /datum/species/vulpkanin))
+#define isgnoll(A) (is_species(A, /datum/species/gnoll))
 
 
 //more carbon mobs

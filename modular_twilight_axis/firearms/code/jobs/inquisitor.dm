@@ -18,7 +18,8 @@
 		TRAIT_SILVER_BLESSED,
 		TRAIT_INQUISITION,
 		TRAIT_FIREARMS_MARKSMAN,
-		TRAIT_PURITAN
+		TRAIT_PURITAN,
+		TRAIT_ARTILLERY_EXPERT
 		)
 	subclass_stats = list(
 		STATKEY_STR = 1,
@@ -45,7 +46,9 @@
 		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
 	)
 	subclass_stashed_items = list(
-		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy
+		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy,
+		"Branding letters" = /obj/item/branding_letters,
+		"Branding iron" = /obj/item/branding_iron
 	)
 	extra_context = "Choose between Vanguard with Doomsdae, dreadfull rifle and medium armor trait, and Runed Volf with Umbra, silent arquebus pistol and rune magyck"
 

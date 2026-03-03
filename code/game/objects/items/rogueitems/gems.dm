@@ -3,7 +3,7 @@
 	name = "mother of all gems"
 	icon_state = "ruby_cut"
 	icon = 'icons/roguetown/items/gems.dmi'
-	desc = "A debug tool to help us later"
+	desc = "A debug tool to help us later."
 	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/misc/food_righthand.dmi'
 	w_class = WEIGHT_CLASS_TINY
@@ -26,6 +26,11 @@
 /obj/item/roguegem/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	playsound(loc, pick('sound/items/gems (1).ogg','sound/items/gems (2).ogg'), 100, TRUE, -2)
 	..()
+
+/obj/item/roguegem/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Most gemstomes are extremely valuable, and are chiefly used to create bejeweled rings and weaponry.")
+	. += span_info("Certain gemstones can be carved into ornate treasures, cutlery, and armor with the right skills and tools.")
 
 /obj/item/roguegem/green
 	name = "gemerald"
@@ -172,13 +177,19 @@
 	icon_state = "blood"
 	sellprice = 188
 	desc = "Something about this gem just doesn't sit right with you. Holding it makes the blood leave your fingertips."
+	smeltresult = /obj/item/ingot/component/glutcrystal
+	dropshrink = 1
 
 /obj/item/roguegem/blood_diamond/examine(mob/user)
 	. = ..()
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.patron.type == /datum/patron/inhumen/graggar)
-			. += span_danger("You know this gem well. They are born out of great violence, but only if it involves the mightiest of warriors.")
+			. += span_danger("You know this gem well. They are born out of great violence, but only if it involves the mightiest of warriors. </br>Fleshcrafting it with the meat of whatever warrior birthed this gem will allow me to summon another of their kind into this world.")
+
+/obj/item/roguegem/blood_diamond/Initialize()
+  ..()
+  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 188, "size" = 1))
 
 /obj/item/roguegem/amethyst
 	name = "amythortz"
@@ -201,7 +212,8 @@
 /obj/item/roguegem/random
 	name = "random gem"
 	desc = "You shouldn't be seeing this."
-	icon_state = null
+	icon = 'icons/roguetown/helpers/spawnerhelpers.dmi'
+	icon_state = "roguegem"
 
 /obj/item/roguegem/random/Initialize()
 	..()
@@ -220,6 +232,28 @@
 		/obj/item/roguegem/amber = 3,
 		/obj/item/roguegem/opal = 3,
 		/obj/item/roguegem/blood_diamond = 1)
+	var/pickgem = pickweight(newgem)
+	new pickgem(get_turf(src))
+	qdel(src)
+
+
+/obj/item/roguegem/random_gemcraft
+	name = "random gemcrafting gem"
+	desc = "You shouldn't be seeing this."
+	icon = 'icons/roguetown/helpers/spawnerhelpers.dmi'
+	icon_state = "gemcraft"
+
+/obj/item/roguegem/random_gemcraft/Initialize()
+	..()
+	var/newgem = list(
+		/obj/item/roguegem/onyxa = 9, // 25%
+		/obj/item/roguegem/jade = 7, // 20%
+		/obj/item/roguegem/amber = 7, // 20%
+		/obj/item/roguegem/coral = 5, // ~15%
+		/obj/item/roguegem/turq = 4, // 11%
+		/obj/item/roguegem/opal = 3, // 8%
+		/obj/item/roguegem/oyster = 1 // it sucks and this is supposed 2 be loot. 2% chance.
+	) // 36 total
 	var/pickgem = pickweight(newgem)
 	new pickgem(get_turf(src))
 	qdel(src)

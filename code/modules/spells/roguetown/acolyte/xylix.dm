@@ -105,6 +105,9 @@
 		var/mob/living/target = targets[1]
 		if(target.anti_magic_check(TRUE, TRUE))
 			return FALSE
+		if(spell_guard_check(target, TRUE))
+			target.visible_message(span_warning("[target] shrugs off the mockery!"))
+			return TRUE
 		if(!target.can_hear()) // Vicious mockery requires people to be able to hear you.
 			revert_cast()
 			return FALSE
@@ -553,7 +556,7 @@
 
 /obj/effect/proc_holder/spell/invoked/vendetta
 	name = "Vendetta"
-	desc = "Cast upon your foe a Vendetta, your battle will be dramatic. Both you and your opponent will clash more dramaically for the next two minutes."
+	desc = "Cast upon your foe a Vendetta, your battle will be dramatic. Both you and your opponent will clash more dramatically for the next two minutes."
 	overlay_icon = 'icons/mob/actions/xylixmiracles.dmi'
 	action_icon = 'icons/mob/actions/xylixmiracles.dmi'
 	overlay_state = "vendetta"
