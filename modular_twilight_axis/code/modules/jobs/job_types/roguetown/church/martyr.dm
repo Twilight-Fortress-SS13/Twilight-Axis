@@ -4,7 +4,7 @@
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
 		var/churchiny = "Brother"
-		if(should_wear_femme_clothes(H))
+		if(H.titles_pref == TITLES_F)
 			churchiny = "Sister"
 		H.real_name = "[churchiny] [prev_real_name]"
 		H.name = "[churchiny] [prev_name]"
@@ -14,6 +14,9 @@
 				if(MF.known_people)
 					MF.known_people -= prev_real_name
 					H.mind.person_knows_me(MF)
+
+/datum/advclass/martyr
+	subclass_languages = list(/datum/language/valorian)
 
 /datum/outfit/job/roguetown/martyr/basic/pre_equip(mob/living/carbon/human/H)
 	..()

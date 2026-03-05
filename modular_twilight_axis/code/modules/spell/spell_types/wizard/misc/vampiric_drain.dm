@@ -23,7 +23,7 @@
 	var/drain_duration = 18 SECONDS 
 	var/tick_delay = 10 
 	var/base_damage = 2 
-	var/ramp_multiplier = 2.5 
+	var/ramp_multiplier = 3.5 
 	var/heal_ratio = 1.5 
 
 /obj/effect/proc_holder/spell/invoked/vampiric_drain/cast(list/targets, mob/living/user = usr)
@@ -91,7 +91,7 @@
 			var/mob/living/carbon/C_target = target
 			var/mob/living/carbon/C_user = user
 			if(!(NOBLOOD in C_target.dna?.species?.species_traits))
-				var/drain = 5 + (tick_count * 2)
+				var/drain = 5 + (tick_count * 1.1)
 				C_target.blood_volume -= drain
 				C_user.blood_volume = min(C_user.blood_volume + drain, BLOOD_VOLUME_NORMAL)
 

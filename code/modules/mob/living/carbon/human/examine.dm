@@ -126,7 +126,7 @@
 		if(HAS_TRAIT(src, TRAIT_WITCH))
 			if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_WITCH))
 				. += span_warning("A witch! Their presence brings an unsettling aura.")
-			else if(HAS_TRAIT(user, TRAIT_COMMIE) || HAS_TRAIT(user, TRAIT_CABAL) || HAS_TRAIT(user, TRAIT_HORDE) || HAS_TRAIT(user, TRAIT_DEPRAVED))
+			else if(HAS_TRAIT(user, TRAIT_FREEMAN) || HAS_TRAIT(user, TRAIT_CABAL) || HAS_TRAIT(user, TRAIT_HORDE) || HAS_TRAIT(user, TRAIT_DEPRAVED))
 				. += span_notice("A practitioner of the old ways.")
 			else
 				. += span_notice("Something about them seems... different.")
@@ -146,41 +146,93 @@
 			else
 				. += span_notice("A noble!")
 
-		if((HAS_TRAIT(user, TRAIT_BLACKOAK) && !(src.dna.species.name == "Elf" || src.dna.species.name == "Dark Elf" || src.dna.species.name == "Half-Elf")))
-			. += span_phobia("An invader...")
+		if((HAS_TRAIT(src, TRAIT_OUTLANDER) && !HAS_TRAIT(user, TRAIT_OUTLANDER)) || (HAS_TRAIT(user, TRAIT_BLACKOAK) && !(src.dna.species.name == "Elf" || src.dna.species.name == "Dark Elf" || src.dna.species.name == "Half Elf"))) //TA EDIT
+			. += span_phobia("A foreigner...") //TA EDIT
 
 		// Knotted effect message
 		if(has_status_effect(/datum/status_effect/knot_tied))
 			. += span_warning("A knot is locked inside them. They're being pulled around like a pet.")
 
 		// Facial/Creampie effect message
-		var/datum/status_effect/facial/facial = has_status_effect(/datum/status_effect/facial)
-		var/datum/status_effect/facial/internal/creampie = null
-		if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
-			creampie = has_status_effect(/datum/status_effect/facial/internal)
-		if(facial && creampie)
-			var/facial_wet_or_dry = !facial?.has_dried_up ? "glazed" : "plastered"
-			var/creampie_wet_or_dry = !creampie?.has_dried_up ? "dripping out" : "stained with"
-			var/we_wet_or_dry = facial?.has_dried_up && creampie?.has_dried_up ? "dried cum" : "cum" // only show dried if both status are set to dry
-			if(user != src && isliving(user))
-				var/mob/living/L = user
-				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!") : span_warning("[m1] covered in something glossy!")
-			else
-				. += span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!")
-		else if(facial)
-			var/wet_or_dry = !facial?.has_dried_up ? "glazed with cum" : "plastered with dried cum"
-			if(user != src && isliving(user))
-				var/mob/living/L = user
-				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] smeared with something glossy!")
-			else
-				. += span_aiprivradio("[m1] [wet_or_dry]!")
-		else if(creampie)
-			var/wet_or_dry = !creampie?.has_dried_up ? "dripping out cum" : "stained with dried cum"
-			if(user != src && isliving(user))
-				var/mob/living/L = user
-				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] letting out some glossy stuff!")
-			else
-				. += span_aiprivradio("[m1] [wet_or_dry]!")
+		// var/datum/status_effect/facial/facial = has_status_effect(/datum/status_effect/facial)
+		// var/datum/status_effect/facial/internal/creampie = null
+		// if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
+		// 	creampie = has_status_effect(/datum/status_effect/facial/internal)
+		// if(facial && creampie)
+		// 	var/facial_wet_or_dry = !facial?.has_dried_up ? "glazed" : "plastered"
+		// 	var/creampie_wet_or_dry = !creampie?.has_dried_up ? "dripping out" : "stained with"
+		// 	var/we_wet_or_dry = facial?.has_dried_up && creampie?.has_dried_up ? "dried cum" : "cum" // only show dried if both status are set to dry
+		// 	if(user != src && isliving(user))
+		// 		var/mob/living/L = user
+		// 		. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!") : span_warning("[m1] covered in something glossy!")
+		// 	else
+		// 		. += span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!")
+		// else if(facial)
+		// 	var/wet_or_dry = !facial?.has_dried_up ? "glazed with cum" : "plastered with dried cum"
+		// 	if(user != src && isliving(user))
+		// 		var/mob/living/L = user
+		// 		. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] smeared with something glossy!")
+		// 	else
+		// 		. += span_aiprivradio("[m1] [wet_or_dry]!")
+		// else if(creampie)
+		// 	var/wet_or_dry = !creampie?.has_dried_up ? "dripping out cum" : "stained with dried cum"
+		// 	if(user != src && isliving(user))
+		// 		var/mob/living/L = user
+		// 		. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] letting out some glossy stuff!")
+		// 	else
+		// 		. += span_aiprivradio("[m1] [wet_or_dry]!")
+		
+		// ERP: coating + active partner (hidden-mode aware)
+		var/datum/erp_controller/erpC = SSerp?.get_controller_for(src)
+		var/erp_hidden = erpC?.hidden_mode
+		var/close_enough = Adjacent(user)
+		var/can_see_hidden = observer_privilege || close_enough || (user == src)
+		if(erpC)
+			var/mob/living/partner_mob = erpC._get_partner_effect_mob()
+			if(partner_mob && partner_mob != src && erpC.has_active_actions())
+				if(erp_hidden)
+					if(can_see_hidden)
+						. += span_warning("[m1] сплетается с [partner_mob].")
+				else
+					if(user != src && isliving(user))
+						var/mob/living/L = user
+						. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] сплетается с [partner_mob].") : span_warning("[m1] сплетается с кем-то...")
+					else
+						. += span_aiprivradio("[m1] сплетается с [partner_mob].")
+
+		if(!erp_hidden || can_see_hidden)
+			var/datum/status_effect/erp_coating/groin/G = null
+			if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
+				G = has_status_effect(/datum/status_effect/erp_coating/groin)
+
+			var/datum/status_effect/erp_coating/chest/CH = null
+			if(observer_privilege || get_location_accessible(src, BODY_ZONE_CHEST, skipundies = TRUE))
+				CH = has_status_effect(/datum/status_effect/erp_coating/chest)
+
+			var/datum/status_effect/erp_coating/face/B = has_status_effect(/datum/status_effect/erp_coating/face)
+			if(G)
+				var/txt = !G.has_dried_up ? "имеет влажные стекающие следы выделений на паху" : "имеет влажные подсхощие следы выделений на паху"
+				if(user != src && isliving(user))
+					var/mob/living/L = user
+					. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] выглядит грязно в районе паха.")
+				else
+					. += span_aiprivradio("[m1] [txt].")
+
+			if(CH)
+				var/txt = !CH.has_dried_up ? "имеет влажные следы выделений на груди" : "имеет подсхохшие выделения на груди"
+				if(user != src && isliving(user))
+					var/mob/living/L = user
+					. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] имеет чем-то запачканную грудь.")
+				else
+					. += span_aiprivradio("[m1] [txt].")
+
+			if(B)
+				var/txt = !B.has_dried_up ? "блестит влажными выделениями" : "имеет сухие следы выделений на лице"
+				if(user != src && isliving(user))
+					var/mob/living/L = user
+					. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] выглядит грязно.")
+				else
+					. += span_aiprivradio("[m1] [txt].")
 
 		//For tennite schism god-event
 		if(length(GLOB.tennite_schisms))
@@ -296,11 +348,11 @@
 
 		if (HAS_TRAIT(src, TRAIT_BEAUTIFUL) || (issunelf(src) && issunelf(user)))
 			switch (pronouns)
-				if (HE_HIM, SHE_HER_M)
+				if (HE_HIM)
 					. += span_beautiful_masc("[m1] handsome!")
-				if (SHE_HER, HE_HIM_F)
+				if (SHE_HER)
 					. += span_beautiful_fem("[m1] beautiful!")
-				if (THEY_THEM, THEY_THEM_F, IT_ITS, IT_ITS_M)
+				if (THEY_THEM, IT_ITS)
 					. += span_beautiful_nb("[m1] good-looking!")
 
 		if (HAS_TRAIT(src, TRAIT_UNSEEMLY))
@@ -309,7 +361,7 @@
 					. += span_redtext("[m1] revolting!")
 				if (SHE_HER)
 					. += span_redtext("[m1] repugnant!")
-				if (THEY_THEM, THEY_THEM_F, IT_ITS, IT_ITS_M)
+				if (THEY_THEM, IT_ITS)
 					. += span_redtext("[m1] repulsive!")
 
 		var/datum/antagonist/vampire/vamp_inspect = src.mind?.has_antag_datum(/datum/antagonist/vampire)
@@ -327,7 +379,7 @@
 		if(HAS_TRAIT(src, TRAIT_DNR) && src != user && !HAS_TRAIT(user, TRAIT_DEATHSIGHT)) // A lot of conditional to avoid a redundant message, but we also want unknown DNRs to be covered.
 			. += span_danger("Their body holds not even a glimmer of life. No medicine can bring them back.")
 
-	if (HAS_TRAIT(src, TRAIT_CRITICAL_WEAKNESS) && (!HAS_TRAIT(src, TRAIT_VAMP_DREAMS)))
+	if (HAS_TRAIT(src, TRAIT_CRITICAL_WEAKNESS) && (!HAS_TRAIT(src, TRAIT_VAMP_DREAMS)) && (!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS)))
 		if(isliving(user))
 			var/mob/living/L = user
 			if(L.STAINT > 9 && L.STAPER > 9)
@@ -698,6 +750,11 @@
 			missing_limb_message = span_danger("[missing_limb_message]")
 		msg += missing_limb_message
 
+	for(var/obj/item/bodypart/BP in bodyparts) //TA EDIT
+		if(BP.brand_text)
+			if(observer_privilege || get_location_accessible(src, BP.body_zone))
+				msg += "<span class='warning' style='font-size: 1.15em;'>[m1] branded on [m2] [BP.name]: <b style='font-size: 1.3em; color: #c48e42;'>\"[uppertext(BP.brand_text)]\"</b></span>"
+	
 	//Grabbing
 	if(pulledby && pulledby.grab_state)
 		msg += "[m1] being grabbed by [pulledby]."
@@ -990,14 +1047,18 @@
 			user.add_stress(/datum/stressevent/hunted)
 
 	if(dna?.species?.type == /datum/species/gnoll)
-		var/mob/living/carbon/human/H = user
-		if(H.dna?.species?.type == /datum/species/gnoll)
-			if(user.advjob)
-				. += span_notice("<i>They are a [advjob] of the pack.</i>")
+		if(istype(user, /mob/living/carbon/human)) //Submitting this one upstream because not our shitcode for once
+			var/mob/living/carbon/human/H = user
+			if(H.dna?.species?.type == /datum/species/gnoll)
+				if(user.advjob)
+					. += span_notice("<i>They are a [advjob] of the pack.</i>")
 
 	var/trait_exam = common_trait_examine()
 	if(!isnull(trait_exam))
 		. += trait_exam
+
+	if(pose_text)
+		. += fieldset_block("Pose", pose_text, "pose_block")
 
 	SEND_SIGNAL(src, COMSIG_PARENT_EXAMINE, user, .)
 
@@ -1025,13 +1086,13 @@
 	if(HAS_TRAIT(examiner, TRAIT_HERETIC_SEER))
 		seer = TRUE
 
-	if(HAS_TRAIT(src, TRAIT_COMMIE))
+	if(HAS_TRAIT(src, TRAIT_FREEMAN))
 		if(seer)
-			heretic_text += "Matthiosan."
-			if(HAS_TRAIT(examiner, TRAIT_COMMIE))
+			heretic_text += "Matthiosian."
+			if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
 				heretic_text += " To share with. To take with. For all, and us."
-		else if(HAS_TRAIT(examiner, TRAIT_COMMIE))
-			heretic_text += "Comrade!"
+		else if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
+			heretic_text += "Fellow Free Man!"
 	else if((HAS_TRAIT(src, TRAIT_CABAL)))
 		if(seer)
 			heretic_text += "A member of Zizo's cabal."
@@ -1055,7 +1116,7 @@
 	var/heretic_text
 	if(HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
 		return
-	if(HAS_TRAIT(src, TRAIT_COMMIE) && HAS_TRAIT(examiner, TRAIT_COMMIE))
+	if(HAS_TRAIT(src, TRAIT_FREEMAN) && HAS_TRAIT(examiner, TRAIT_FREEMAN))
 		heretic_text += "⚖️" //♠ is the original
 	//Defunct as of *fsalute changes, leaving here as a symbol reference.
 	else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
@@ -1105,7 +1166,7 @@
 	var/villain_text
 	if(mind)
 		if(mind.special_role == "Bandit")
-			if(HAS_TRAIT(examiner, TRAIT_COMMIE))
+			if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
 				villain_text = span_notice("Free man!")
 			if(HAS_TRAIT(src,TRAIT_KNOWNCRIMINAL))
 				villain_text = span_userdanger("BANDIT!")

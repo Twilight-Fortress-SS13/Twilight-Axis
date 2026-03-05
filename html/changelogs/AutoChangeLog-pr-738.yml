@@ -1,0 +1,5 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - image: "Resprited Grenzelhoftian clothing-and-armor combinations and added dye variants."
+  - code_imp: "Updated Grenzelhoftian crafting recipes."

@@ -52,6 +52,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 
 	var/spell_points
 	var/used_spell_points
+	var/list/spell_point_pools
+	var/list/spell_points_used_by_pool
 	var/movemovemovetext = "Move!!"
 	var/takeaimtext = "Take aim!!"
 	var/holdtext = "Hold!!"
@@ -139,6 +141,11 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 
 /datum/mind/Destroy()
 	SSticker.minds -= src
+	soulOwner = null
+	if(current)
+		current.mind = null
+		current = null
+	enslaved_to = null
 	QDEL_NULL(sleep_adv)
 	if(islist(antag_datums))
 		QDEL_LIST(antag_datums)
@@ -358,16 +365,25 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	spell_points += points
 	if(!has_spell(/obj/effect/proc_holder/spell/targeted/touch/prestidigitation))
 		AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
-	check_learnspell() //check if we need to add or remove the learning spell
+	check_learnspell()
+
+/datum/mind/proc/set_spell_point_pools(list/pools)
+	spell_point_pools = pools.Copy()
+	spell_points_used_by_pool = list()
+	for(var/pool_name in pools)
+		spell_points_used_by_pool[pool_name] = 0
+	if(!has_spell(/obj/effect/proc_holder/spell/targeted/touch/prestidigitation))
+		AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
+	check_learnspell()
 
 /datum/mind/proc/set_death_time()
 	last_death = world.time
 
 /datum/mind/proc/store_memory(new_text)
-	var/newlength = length(memory) + length(new_text)
-	if (newlength > MAX_MESSAGE_LEN * 100)
-		memory = copytext(memory, -newlength-MAX_MESSAGE_LEN * 100)
 	memory += "[new_text]<BR>"
+	var/limit = MAX_MESSAGE_LEN * 100
+	if (length_char(memory) > limit)
+		memory = copytext_char(memory, -limit)
 
 /datum/mind/proc/wipe_memory()
 	memory = null
@@ -460,7 +476,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 /datum/mind/proc/show_memory(mob/recipient, window=1)
 	if(!recipient)
 		recipient = current
-	var/output = "<B>[current.real_name]'s Memories:</B><br>"
+	var/output = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body>"
+	output += "<B>[current.real_name]'s Memories:</B><br>"
 	output += memory
 
 	if(personal_objectives.len)
@@ -484,6 +501,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 			antag_obj_count++
 
 	if(window)
+		output += "</body></html>"
 		recipient << browse(output,"window=memory")
 	else if(all_objectives.len || memory || personal_objectives.len)
 		to_chat(recipient, "<i>[output]</i>")
@@ -758,15 +776,35 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	S.action.Grant(current)
 	if(user)
 		S.on_gain(user)
+	if(length(spell_list) == 1 && current)
+		addtimer(CALLBACK(src, PROC_REF(show_spell_tip)), 3 SECONDS)
+
+/datum/mind/proc/show_spell_tip()
+	if(current)
+		to_chat(current, span_nicegreen("Tip: You can Ctrl-Click your hotkey bar to unlock it, then drag to rearrange your spells. Re-arranging them change which hotkeys they are bound to in order from left to right (Alt 1 to Alt 9 default). You can shift click your spells to learn more about them."))
 
 /datum/mind/proc/check_learnspell()
-	if(!has_spell(/obj/effect/proc_holder/spell/self/library)) //are we missing the learning spell? TA EDIT Old vers: /obj/effect/proc_holder/spell/self/learnspell
-		if((spell_points - used_spell_points) > 0) //do we have points?
-			AddSpell(new /obj/effect/proc_holder/spell/self/library(null)) //put it in TA EDIT Old vers: /obj/effect/proc_holder/spell/self/learnspell
+	// Pool-based system always takes priority over flat spellpoints to prevent unexpected spell point sources from bypassing pool restrictions
+	if(LAZYLEN(spell_point_pools))
+		var/has_remaining = FALSE
+		for(var/pool_name in spell_point_pools)
+			var/used = spell_points_used_by_pool?[pool_name] || 0
+			if(used < spell_point_pools[pool_name])
+				has_remaining = TRUE
+				break
+		if(has_remaining && !has_spell(/obj/effect/proc_holder/spell/self/library))
+			AddSpell(new /obj/effect/proc_holder/spell/self/library(null))
+		else if(!has_remaining)
+			RemoveSpell(/obj/effect/proc_holder/spell/self/library)
+		return
+
+	if(!has_spell(/obj/effect/proc_holder/spell/self/learnspell))
+		if((spell_points - used_spell_points) > 0)
+			AddSpell(new /obj/effect/proc_holder/spell/self/library(null))
 			return
 
-	if((spell_points - used_spell_points) <= 0) //are we out of points?
-		RemoveSpell(/obj/effect/proc_holder/spell/self/library) //bye bye spell TA EDIT Old vers: /obj/effect/proc_holder/spell/self/learnspell
+	if((spell_points - used_spell_points) <= 0)
+		RemoveSpell(/obj/effect/proc_holder/spell/self/library)
 		return
 	return
 
@@ -897,6 +935,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	if(!mind.name)
 		mind.name = real_name
 	mind.current = src
+	AddComponent(/datum/component/area_ambience)
 
 /mob/living/carbon/mind_initialize()
 	..()

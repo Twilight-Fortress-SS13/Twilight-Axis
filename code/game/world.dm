@@ -120,7 +120,7 @@ GLOBAL_VAR(restart_counter)
 #else
 	cb = VARSET_CALLBACK(SSticker, force_ending, TRUE)
 #endif
-	SSticker.OnRoundstart(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(addtimer), cb, 10 SECONDS))
+	SSticker.OnRoundstart(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_addtimer), cb, 10 SECONDS))
 
 /world/proc/SetupLogs()
 	var/override_dir = params[OVERRIDE_LOG_DIRECTORY_PARAMETER]
@@ -270,6 +270,7 @@ GLOBAL_VAR(restart_counter)
 		'sound/roundend/rest.ogg',
 		'sound/roundend/gather.ogg',
 		'sound/roundend/dwarfs.ogg',
+		'sound/roundend/happiness.ogg',
 	)
 	for(var/client/thing in GLOB.clients)
 		if(!thing)
@@ -329,9 +330,9 @@ GLOBAL_VAR(restart_counter)
 	new_status += " ("
 	new_status += "<a href=\"[CONFIG_GET(string/discordurl)]\">"
 	new_status += "Discord"
-	new_status += ")\]"
+	new_status += "</a>)"
 	new_status += "<br>[CONFIG_GET(string/servertagline)]"
-
+	new_status += "<br>MAP: <b>[SSmapping.config?.map_name || "Loading..."]</b>"
 	var/players = GLOB.clients.len
 
 	if(SSticker.current_state <= GAME_STATE_PREGAME)
@@ -579,10 +580,16 @@ GLOBAL_VAR(restart_counter)
 		return
 
 	var/round_duration_timestamp = gameTimestamp("hh:mm:ss", world.time - SSticker.round_start_time)
+	
+	var/next_map_name = "Неизвестно"
+	if(SSmapping && SSmapping.next_map_config)
+		next_map_name = SSmapping.next_map_config.map_name
 
 	var/datum/tgs_chat_embed/structure/embed = new()
 	embed.title = "Конец!"
-	embed.description = "История длилась [round_duration_timestamp]."
+
+	embed.description = "Выбранная следующая карта: **[next_map_name]**\n\nИстория длилась [round_duration_timestamp]."
+	
 	embed.colour = "#9f5255"
 	embed.footer = new(GLOB.rogue_round_id)
 
@@ -590,7 +597,7 @@ GLOBAL_VAR(restart_counter)
 	message.embed = embed
 
 	send2chat(
-		message,
+		message, 
 		announce_channel
 	)
 

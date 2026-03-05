@@ -9,7 +9,7 @@
 	releasedrain = 33
 	chargedrain = 0
 	chargetime = 0
-	range = 2
+	range = 2 // psydon miracles should be worse than regular ones.
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	sound = 'sound/magic/ENDVRE.ogg'
@@ -204,7 +204,7 @@
 	releasedrain = 50
 	chargedrain = 0
 	chargetime = 0
-	range = 1
+	range = 3 // i got a request to up this. tbh it could be 4.
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	sound = 'sound/magic/psyabsolution.ogg'
@@ -323,7 +323,6 @@
 	recharge_time = 10 MINUTES
 	miracle = TRUE
 	devotion_cost = 30
-	range = 1
 	var/static/list/lootpool = list(/obj/item/flowercrown/rosa,
 	/obj/item/bouquet/rosa,
 	/obj/item/jingle_bells,
@@ -371,21 +370,32 @@
 	if(!ishuman(user))
 		revert_cast()
 		return FALSE
+
 	var/mob/living/carbon/human/H = user
+	var/turf/T = get_turf(H)
+	if(!T)
+		revert_cast()
+		return FALSE
+
 	var/obj/item/found_thing
 	if(H.get_stress_amount() < 0 && H.STALUC > 10)
-		found_thing = new /obj/item/roguecoin/gold
+		found_thing = new /obj/item/roguecoin/gold(T)
 	else if(H.STALUC == 10)
-		found_thing = new /obj/item/roguecoin/silver
+		found_thing = new /obj/item/roguecoin/silver(T)
 	else
-		found_thing = new /obj/item/roguecoin/copper
+		found_thing = new /obj/item/roguecoin/copper(T)
+
 	to_chat(H, span_info("A coin in my boot? Psydon smiles upon me!"))
-	H.put_in_hands(found_thing, FALSE)
+	if(!H.put_in_hands(found_thing, FALSE))
+		found_thing.forceMove(T)
+
 	if(prob(H.STALUC + H.get_skill_level(associated_skill)))
-		var/obj/item/extra_thing = pick(lootpool)
-		new extra_thing(get_turf(user))
+		var/path = pick(lootpool)
+		var/obj/item/extra = new path(T)
 		to_chat(H, span_info("Ah, of course! I almost forgot I had this stashed away for a perfect occasion."))
-		H.put_in_hands(extra_thing, FALSE)
+		if(!H.put_in_hands(extra, FALSE))
+			extra.forceMove(T)
+
 	return TRUE
 
 //
@@ -397,7 +407,6 @@
 	releasedrain = 15
 	chargedrain = 0
 	chargetime = 0
-	range = 2
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	sound = null
@@ -505,7 +514,6 @@
 	releasedrain = 25
 	chargedrain = 0
 	chargetime = 0
-	range = 2
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	sound = null
@@ -613,7 +621,6 @@
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 0
-	range = 2
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	invocations = list(span_blue("quietly recites a greater psalm, soothing their pains."))

@@ -3,6 +3,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	/datum/charflaw/addiction/alcoholic::name = /datum/charflaw/addiction/alcoholic,
 	/datum/charflaw/averse::name = /datum/charflaw/averse,
 	/datum/charflaw/addiction/godfearing::name = /datum/charflaw/addiction/godfearing,
+	/datum/charflaw/addiction/caffiend::name = /datum/charflaw/addiction/caffiend,
 	/datum/charflaw/colorblind::name = /datum/charflaw/colorblind,
 	/datum/charflaw/addiction/smoker::name = /datum/charflaw/addiction/smoker,
 	/datum/charflaw/addiction/junkie::name = /datum/charflaw/addiction/junkie,
@@ -42,7 +43,7 @@ GLOBAL_LIST_INIT(averse_factions, list(
 	"Inquisition" = INQUISITION,
 	"Burghers" = BURGHERS,
 	"Retinue" = RETINUE,
-	"Garrison" = GARRISON,
+	"Garrison" = (GARRISON | VANGUARD | CITYWATCH),
 	"Churchmen" = CHURCHMEN,
 	"Peasants" = PEASANTS,
 	"Wanderers" = WANDERERS,
@@ -431,7 +432,7 @@ GLOBAL_LIST_INIT(averse_factions, list(
 		return
 	var/datum/job/gnoll_job = SSjob.GetJob("Gnoll")
 	var/total_gnoll_positions = gnoll_job.total_positions
-	var/gnoll_increase = get_gnoll_slot_increase(total_gnoll_positions)
+	var/gnoll_increase = SSgnoll_scaling.get_gnoll_slot_increase(total_gnoll_positions)
 
 	if(gnoll_increase >= 1)
 		to_chat(user, span_notice("I have offended graggarite agents, and they may be tracking my scent."))

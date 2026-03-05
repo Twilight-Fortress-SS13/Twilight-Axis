@@ -41,6 +41,7 @@
 	var/aportalgoesto = "REPLACETHIS"
 	var/aallmig
 	var/required_trait = null
+	var/grants_access_on_use = TRUE // 16.02.2026 TA edit for Corde50 shitportals. Adds proverku daet li traveltile trait dlya zritelya
 	var/list/required_jobs = null
 	var/travel_time = 5 SECONDS
 	var/travel_message = "I begin to travel..."
@@ -145,7 +146,7 @@
 	return FALSE
 
 /obj/structure/fluff/traveltile/proc/perform_travel(obj/structure/fluff/traveltile/T, mob/living/L)
-	if(watchable && !L.restrained(ignore_grab = TRUE)) // heavy-handedly prevents using prisoners to metagame camp locations. pulledby would stop this but prisoners can also be kicked/thrown into the tile repeatedly
+	if(watchable && grants_access_on_use && !L.restrained(ignore_grab = TRUE)) // 16.02.2026 TA Edit for Corde50 shitportals. Heavy-handedly prevents using prisoners to metagame camp locations. pulledby would stop this but prisoners can also be kicked/thrown into the tile repeatedly 
 		for(var/mob/living/carbon/human/H in hearers(6,src))
 			if(H == L)
 				continue
@@ -287,7 +288,7 @@
 	aportalgoesto = "MultizEventOut"
 	aportalid = "MultizEventIn"
 
-/obj/structure/fluff/traveltile/bathhouse_passage
+/obj/structure/fluff/traveltile/bathhouse_passage // this is IN the bathhouse
 	name = "suspicious passage"
 	desc = "A crevice in the wall. It looks like it leads somewhere."
 	required_trait = "bathhouse_passage_seen"
@@ -297,3 +298,9 @@
 	travel_deny_message = "You're not supple enough to use this passage."
 	watchable = FALSE
 	travel_access_hint = "A tight passage that leads between the bathhouse and the northern coast, with many twists and turns - only a bathhouse staff member can fit through it. It takes a while to travel through, and is a popular route for smuggling goods in and out of town."
+	aportalid = "smuggler_bathhouse"
+	aportalgoesto = "smuggler_cove"
+
+/obj/structure/fluff/traveltile/bathhouse_passage/cave // this is ON THE COAST in the ne
+	aportalid = "smuggler_cove"
+	aportalgoesto = "smuggler_bathhouse"

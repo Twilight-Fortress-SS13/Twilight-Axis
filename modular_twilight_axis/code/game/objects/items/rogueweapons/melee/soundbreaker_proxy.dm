@@ -132,7 +132,7 @@
 							span_boldwarning("I'm disarmed by [user]!"))
 			return
 
-	var/selzone = accuracy_check(sb_zone, user, M, /datum/skill/combat/unarmed, user.used_intent)
+	var/selzone = melee_accuracy_check(sb_zone, user, M, /datum/skill/combat/unarmed, user.used_intent)
 	if(!isliving(M))
 		return FALSE
 

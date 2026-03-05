@@ -731,7 +731,7 @@ SUBSYSTEM_DEF(gamemode)
 		var/datum/storyteller/storyboy = storytellers[storyteller_type]
 		if(findtext(html_contaminated, storyboy.name))
 			selected_storyteller = storyboy.type
-			get_gnoll_scaling() // Calling this here as to make sure scaling holds true as per the roundstart vote, not a latejoin hunted character joining.
+			SSgnoll_scaling.get_gnoll_scaling() // Calling this here as to make sure scaling holds true as per the roundstart vote, not a latejoin hunted character joining.
 			break
 
 	var/datum/storyteller/storytypecasted = selected_storyteller
@@ -1172,7 +1172,7 @@ SUBSYSTEM_DEF(gamemode)
 		STATS_INDEBTED,
 		STATS_THRILLSEEKERS,
         STATS_GREEDY_PEOPLE,
-        STATS_PLEASURES,
+        //STATS_PLEASURES, TA addition - New ERP SYSTEM
         STATS_MALE_POPULATION,
         STATS_FEMALE_POPULATION,
         STATS_OTHER_GENDER,
@@ -1252,11 +1252,7 @@ SUBSYSTEM_DEF(gamemode)
 			switch(human_mob.pronouns)
 				if(HE_HIM)
 					record_round_statistic(STATS_MALE_POPULATION)
-				if(HE_HIM_F)
-					record_round_statistic(STATS_MALE_POPULATION)
 				if(SHE_HER)
-					record_round_statistic(STATS_FEMALE_POPULATION)
-				if(SHE_HER_M)
 					record_round_statistic(STATS_FEMALE_POPULATION)
 				else
 					record_round_statistic(STATS_OTHER_GENDER)
@@ -1269,7 +1265,7 @@ SUBSYSTEM_DEF(gamemode)
 					record_round_statistic(STATS_ELDERLY_POPULATION)
 			if(human_mob.is_noble())
 				record_round_statistic(STATS_ALIVE_NOBLES)
-			if((human_mob.mind.assigned_role in GLOB.garrison_positions) || (human_mob.mind.assigned_role in GLOB.retinue_positions))
+			if((human_mob.mind.assigned_role in GLOB.garrison_positions) || (human_mob.mind.assigned_role in GLOB.retinue_positions) || (human_mob.mind.assigned_role in GLOB.citywatch_positions) || (human_mob.mind.assigned_role in GLOB.vanguard_positions))
 				record_round_statistic(STATS_ALIVE_GARRISON)
 			if(human_mob.mind.assigned_role in GLOB.church_positions)
 				record_round_statistic(STATS_ALIVE_CLERGY)

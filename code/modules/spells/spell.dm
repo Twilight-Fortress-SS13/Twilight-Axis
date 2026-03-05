@@ -33,7 +33,7 @@
 	var/obj/inhand_requirement = null
 	var/overlay_state = null
 	var/overlay_alpha = 255
-	var/ignore_los = TRUE
+	var/ignore_los = FALSE
 	var/glow_intensity = 0 // How much does the user glow when using the ability
 	var/glow_color = null // The color of the glow
 	var/hide_charge_effect = FALSE // If true, will not show the spell's icon when charging 
@@ -86,6 +86,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 /obj/effect/proc_holder/Destroy()
 	if (action)
 		qdel(action)
+	if(mob_charge_effect)
+		QDEL_NULL(mob_charge_effect)
 	if(ranged_ability_user)
 		remove_ranged_ability()
 	return ..()
@@ -175,7 +177,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	var/list/invocations = list() //what is uttered when the wizard casts the spell
 	var/invocation_emote_self = null
 	var/invocation_type = "none" //can be none, whisper, emote and shout
-	var/range = 7 //the range of the spell; outer radius for aoe spells
+	var/range = 7 	// the range of the spell; outer radius for aoe spells. set to 0 for self.
 	var/message = "" //whatever it says to the guy affected by it
 	var/selection_type = "view" //can be "range" or "view"
 	var/cooldown_min = 0 //This defines what spell quickened four times has as a cooldown. Make sure to set this for every spell
@@ -183,6 +185,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	var/gesture_required = FALSE // Can it be cast while cuffed? Rule of thumb: Offensive spells + Mobility cannot be cast
 	var/spell_tier = 1 // Tier of the spell, used to determine whether you can learn it based on your spell. Starts at 1.
 	var/refundable = FALSE // If true, the spell can be refunded. This is modified at the point it is added to the user's mind by learnspell.
+	var/learned_from_pool // If set, the spell was learned from a pool-based system and should refund to this pool name.
 	var/zizo_spell = FALSE // If this spell is fucked up & evil and can only be learned by heretics.
 
 	var/overlay = 0
@@ -271,7 +274,12 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 /obj/effect/proc_holder/spell/proc/get_spell_statistics(mob/living/user)
 	var/list/stats = list()
 	if(range)
-		stats += span_info("Range: [range] tiles")
+		if(range == -1) // "touch" spells are -1, which need special consideration
+			stats += span_info("Range: Touch")
+		else
+			stats += span_info("Range: [range] tiles")
+	else if(range == 0) // as do spells that only affect the user
+		stats += span_info("Range: Self")
 	var/base_ct = chargetime
 	if(base_ct > 0)
 		var/dynamic_ct = user ? calculate_chargetime(user) : base_ct
@@ -339,6 +347,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		to_chat(user, span_warning("[name] cannot be cast unless I am completely manifested in the material plane!"))
 		return FALSE
 
+	if(istype(user, /mob/living/carbon/human/species/wildshape)) //TA EDIT
+		if(is_type_in_list(src, GLOB.learnable_spells))
+			return FALSE
+	
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if((invocation_type == "whisper" || invocation_type == "shout") && (!H.can_speak_vocal() || !H.getorganslot(ORGAN_SLOT_TONGUE)))
@@ -421,8 +433,13 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	return TRUE
 
 /obj/effect/proc_holder/spell/proc/invocation(mob/user = usr)
-	if(!invocations || !invocations.len)
+	if(!invocations)
 		return
+	if(istext(invocations))
+		invocations = list(invocations)
+	if(!islist(invocations) || !invocations.len)
+		return
+
 	var/chosen_invocation = pick(invocations)
 	switch(invocation_type)
 		if("shout")
@@ -455,6 +472,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 /obj/effect/proc_holder/spell/Destroy()
 	STOP_PROCESSING(SSfastprocess, src)
+	var/mob/owner = action?.owner
+	if(owner)
+		owner.mob_spell_list -= src
+		owner.mind?.spell_list -= src
 	qdel(action)
 	return ..()
 
@@ -473,12 +494,14 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 /obj/effect/proc_holder/spell/proc/start_recharge()
 	var/old_recharge = recharge_time
-	if(ranged_ability_user && !is_cdr_exempt)
-		if(ranged_ability_user.STAINT > SPELL_SCALING_THRESHOLD)
-			var/diff = min(ranged_ability_user.STAINT, SPELL_POSITIVE_SCALING_THRESHOLD) - SPELL_SCALING_THRESHOLD
+	var/mob/living/user = ranged_ability_user || action?.owner
+
+	if(user && !is_cdr_exempt)
+		if(user.STAINT > SPELL_SCALING_THRESHOLD)
+			var/diff = min(user.STAINT, SPELL_POSITIVE_SCALING_THRESHOLD) - SPELL_SCALING_THRESHOLD
 			recharge_time = initial(recharge_time) - (initial(recharge_time) * diff * COOLDOWN_REDUCTION_PER_INT)
-		else if(ranged_ability_user.STAINT < SPELL_SCALING_THRESHOLD)
-			var/diff2 = SPELL_SCALING_THRESHOLD - ranged_ability_user.STAINT
+		else if(user.STAINT < SPELL_SCALING_THRESHOLD)
+			var/diff2 = SPELL_SCALING_THRESHOLD - user.STAINT
 			recharge_time = initial(recharge_time) + (initial(recharge_time) * (diff2 * COOLDOWN_REDUCTION_PER_INT))
 
 	// If the spell was fully charged before recalculation, keep it fully charged
@@ -608,8 +631,6 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 	if(user.mmb_intent && user.mmb_intent.mob_light)
 		QDEL_NULL(user.mmb_intent.mob_light)
-	if(mob_charge_effect)
-		QDEL_NULL(mob_charge_effect)
 
 	START_PROCESSING(SSfastprocess, src) // ensure we always end up reprocessing after casting
 
@@ -778,12 +799,20 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	if(((!user.mind) || !(src in user.mind.spell_list)) && !(src in user.mob_spell_list))
 		return FALSE
 
+	// deny horsespellers
+	if(user.client && user.buckled)
+		return FALSE
+
 	if(!charge_check(user))
 		return FALSE
 
 	if(user.stat && !stat_allowed)
 		return FALSE
 
+	if(istype(user, /mob/living/carbon/human/species/wildshape)) //TA EDIT
+		if(is_type_in_list(src, GLOB.learnable_spells))
+			return FALSE
+	
 	if(!ignore_cockblock && HAS_TRAIT(user, TRAIT_SPELLCOCKBLOCK))
 		return FALSE
 
@@ -817,6 +846,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	return TRUE
 
 /obj/effect/proc_holder/spell/self //Targets only the caster. Good for buffs and heals, but probably not wise for fireballs (although they usually fireball themselves anyway, honke)
+	ignore_los = 1
+	range = 0
 
 /obj/effect/proc_holder/spell/self/choose_targets(mob/user = usr)
 	if(!user)
@@ -844,8 +875,9 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 /// Helper for non-projectile spells. Call before applying effects to a target.
 /// Returns TRUE if the target's Guard or parry buffer deflected the spell (skip this target).
 /// Returns FALSE if the spell should proceed normally.
+/// If attacker is provided, they get Exposed when guard deflects (pseudo-melee punishment).
 /// Usage in cast(): if(spell_guard_check(L)) continue
-/obj/effect/proc_holder/spell/proc/spell_guard_check(mob/living/target, no_message = FALSE)
+/obj/effect/proc_holder/spell/proc/spell_guard_check(mob/living/target, no_message = FALSE, mob/living/attacker)
 	if(!isliving(target))
 		return FALSE
 	// Check for active guard
@@ -865,11 +897,37 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 				playsound(get_turf(target), pick(held.parrysound), 100)
 			else
 				playsound(get_turf(target), pick(target.parry_sound), 100)
-		target.apply_status_effect(/datum/status_effect/buff/spell_parry_buffer)
+		target.apply_status_effect(/datum/status_effect/buff/parry_buffer)
+		target.apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
 		target.remove_status_effect(/datum/status_effect/buff/clash)
+		// Pseudo-melee punishment: expose the attacker if provided
+		if(attacker && ishuman(attacker))
+			// Parry sound at attacker so they hear they got deflected
+			var/obj/item/attacker_weapon = arcyne_get_weapon(attacker)
+			if(attacker_weapon?.parrysound)
+				playsound(get_turf(attacker), pick(attacker_weapon.parrysound), 100)
+			else
+				playsound(get_turf(attacker), pick(attacker.parry_sound), 100)
+			// Weapon durability damage — riposte-level punishment
+			if(attacker_weapon)
+				if(attacker_weapon.max_blade_int)
+					attacker_weapon.remove_bintegrity((attacker_weapon.blade_int * RIPOSTE_SHARPNESS_FACTOR), attacker)
+				else
+					var/integdam = max((attacker_weapon.max_integrity / RIPOSTE_INTEG_DIVISOR), (INTEG_PARRY_DECAY_NOSHARP * 5))
+					attacker_weapon.take_damage(integdam, BRUTE, attacker_weapon.d_type)
+			// Remove first so chain-deflections replay the overhead visual and reset the timer
+			attacker.remove_status_effect(/datum/status_effect/debuff/exposed)
+			attacker.apply_status_effect(/datum/status_effect/debuff/exposed, 5 SECONDS)
+			// Dump all momentum — you swung into a guard, you lose your edge
+			var/datum/status_effect/buff/arcyne_momentum/momentum = attacker.has_status_effect(/datum/status_effect/buff/arcyne_momentum)
+			if(momentum && momentum.stacks > 0)
+				momentum.consume_all_stacks()
+				to_chat(attacker, span_danger("My arcyne strike was deflected — I'm exposed and my momentum is gone!"))
+			else
+				to_chat(attacker, span_danger("My arcyne strike was deflected — I'm exposed!"))
 		return TRUE
 	// Check for parry buffer (from a recent deflection) — silent, no chat spam for multi-hit spells
-	if(target.has_status_effect(/datum/status_effect/buff/spell_parry_buffer))
+	if(target.has_status_effect(/datum/status_effect/buff/parry_buffer))
 		return TRUE
 	return FALSE
 

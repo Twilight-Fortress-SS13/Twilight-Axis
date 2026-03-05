@@ -1,0 +1,6 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - rscadd: "Crankbox translation"
+  - rscadd: "Empowered crankbox mode"
+  - rscdel: "Harmonized crankbox mode"

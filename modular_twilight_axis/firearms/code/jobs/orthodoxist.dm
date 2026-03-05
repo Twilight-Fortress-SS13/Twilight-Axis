@@ -11,7 +11,7 @@
 	subclass_languages = list(/datum/language/otavan)
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_blackpowder.ogg'
 	category_tags = list(CTAG_ORTHODOXIST)
-	traits_applied = list(TRAIT_PSYDONITE)
+	traits_applied = list(TRAIT_PSYDONITE, TRAIT_ARTILLERY_EXPERT)
 	classes = list("Legionnaire" = "Soldier of the Last War. Bring your deadly weapon of blackpowder to the battlefield", 
 	"Otavan Volf" = "No matter who you were before. Now you are a bloodhound of Inquisition enchanted with rune magyck. \
 	No doors can stop you and no heretic can escape your silent bullet.")

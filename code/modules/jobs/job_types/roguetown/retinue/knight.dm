@@ -157,13 +157,17 @@
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
+			"Sugarloaf Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader,
 			"Knight's Armet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight,
 			"Knight's Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old,
+			"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/greatplume,
 			"Visored Sallet"	= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
 			"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,
 			"Hounskull Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
 			"Klappvisier Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 			"Slitted Kettle" = /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
+			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
+			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 			"None"
 		)
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
@@ -184,8 +188,26 @@
 				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
 				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
 				)
-		var/heraldychoice = input("Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
+		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
 		cloak = heraldy[heraldychoice]
+
+		var/onhelm = list(
+			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
+			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
+			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
+			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
+			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
+			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
+			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
+			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
+			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
+			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
+			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
+			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+			)
+		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		l_hand = onhelm[onhelmchoice]
  
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
@@ -256,13 +278,17 @@
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
+			"Sugarloaf Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader,
 			"Knight's Armet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight,
 			"Knight's Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old,
+			"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/greatplume,
 			"Visored Sallet"	= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
 			"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,
 			"Hounskull Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
 			"Klappvisier Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 			"Slitted Kettle"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
+			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
+			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 			"None"
 		)
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
@@ -283,8 +309,26 @@
 				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
 				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
 				)
-		var/heraldychoice = input("Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
+		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
 		cloak = heraldy[heraldychoice]
+
+		var/onhelm = list(
+			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
+			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
+			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
+			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
+			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
+			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
+			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
+			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
+			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
+			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
+			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
+			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+			)
+		var/onhelmchoice = input(H,"Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		r_hand = onhelm[onhelmchoice]
 
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
@@ -352,7 +396,7 @@
 			if("Longsword + Crossbow")
 				beltl = /obj/item/rogueweapon/scabbard/sword/noble
 				r_hand = /obj/item/rogueweapon/sword/long
-				beltr = /obj/item/quiver/bolts
+				beltr = /obj/item/quiver/bolt/standard
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 			if("Billhook + Recurve Bow")
 				r_hand = /obj/item/rogueweapon/spear/billhook
@@ -364,7 +408,7 @@
 				beltr = /obj/item/quiver/arrows
 				beltl = /obj/item/rogueweapon/mace/goden/steel
 			if("Sabre + Recurve Bow")
-				l_hand = /obj/item/rogueweapon/scabbard/sword/noble
+				backl = /obj/item/rogueweapon/scabbard/sword/noble
 				r_hand = /obj/item/rogueweapon/sword/sabre
 				beltr = /obj/item/quiver/arrows
 				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
@@ -382,14 +426,19 @@
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
+			"Sugarloaf Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader,
 			"Knight's Armet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight,
 			"Knight's Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old,
+			"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/greatplume,
 			"Froggemund Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/frogmouth,
+			"Froggemund Helmet With Greatplume" = /obj/item/clothing/head/roguetown/helmet/heavy/frogmouth/greatplume,
 			"Visored Sallet"	= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
 			"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,
 			"Hounskull Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
 			"Klappvisier Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 			"Slitted Kettle"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
+			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
+			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 			"None"
 		)
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
@@ -410,8 +459,26 @@
 				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
 				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
 				)
-		var/heraldychoice = input("Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
+		var/heraldychoice = input(H,"Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
 		cloak = heraldy[heraldychoice]
+
+		var/onhelm = list(
+			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
+			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
+			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
+			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
+			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
+			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
+			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
+			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
+			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
+			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
+			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
+			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull,
+			)
+		var/onhelmchoice = input(H,"Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		l_hand = onhelm[onhelmchoice]
 
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
@@ -460,6 +527,11 @@
 	..()
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
 	H.verbs |= /mob/proc/haltyell
+	backpack_contents = list(
+		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
+		/obj/item/rope/chain = 1,
+		/obj/item/rogueweapon/scabbard/sheath/noble = 1
+	)
 
 	H.adjust_blindness(-3)
 	if(H.mind)
@@ -489,7 +561,7 @@
 			if("Whip + Crossbow")
 				beltl = /obj/item/rogueweapon/whip
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
-				beltr = /obj/item/quiver/bolts
+				beltr = /obj/item/quiver/bolt/standard
 
 			if("Poleaxe + Sling")
 				H.adjust_skillrank(/datum/skill/combat/slings, 4, TRUE)
@@ -500,12 +572,16 @@
 				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
 
 			if("Shamshir + Pistol")
-				l_hand = /obj/item/twilight_powderflask
 				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir
 				backl = /obj/item/rogueweapon/scabbard/sword
 				beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 				beltl = /obj/item/quiver/twilight_bullet/lead
 				H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 4, TRUE)
+				backpack_contents = list(
+					/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
+					/obj/item/rope/chain = 1,
+					/obj/item/rogueweapon/scabbard/sheath/noble = 1,
+					/obj/item/twilight_powderflask = 1)
 
 		switch(armor_choice)
 			if("Light Armor")
@@ -526,13 +602,17 @@
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
+			"Sugarloaf Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader,
 			"Knight's Armet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight,
 			"Knight's Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old,
+			"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/greatplume,
 			"Visored Sallet"	= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
 			"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,
 			"Hounskull Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
 			"Klappvisier Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 			"Slitted Kettle" = /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
+			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
+			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 			"None"
 		)
 
@@ -547,14 +627,27 @@
 				"Halfcloak" = /obj/item/clothing/cloak/half/knight,
 				"Fur Cloak" = /obj/item/clothing/cloak/raincloak/furcloak/knight,
 				)
-		var/heraldychoice = input("Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
+		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
 		cloak = heraldy[heraldychoice]
- 
-	backpack_contents = list(
-		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
-		/obj/item/rope/chain = 1,
-		/obj/item/rogueweapon/scabbard/sheath/noble = 1
-	)
+
+		var/onhelm = list(
+			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
+			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
+			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
+			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
+			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
+			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
+			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
+			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
+			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
+			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
+			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
+			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+			)
+		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		l_hand = onhelm[onhelmchoice]
+
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_UPPER_CLASS, H, "Savings.")
 
@@ -656,7 +749,7 @@
 		if("Edict & Aegis (Sabre & Buckler)")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 			r_hand = /obj/item/rogueweapon/sword/sabre/banneret
-			l_hand = /obj/item/rogueweapon/shield/buckler/banneret
+			beltl = /obj/item/rogueweapon/shield/buckler/banneret
 			beltr = /obj/item/rogueweapon/scabbard/sword/royal
 		if("Claymore")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
@@ -703,7 +796,7 @@
 			if("Crossbow")
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 4, TRUE)
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
-				beltl = /obj/item/quiver/bolts
+				beltl = /obj/item/quiver/bolt/standard
 			if("Recurve Bow")
 				H.adjust_skillrank_up_to(/datum/skill/combat/bows, 4, TRUE)
 				beltl = /obj/item/quiver/arrows
@@ -739,20 +832,43 @@
 		"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 		"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 		"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
+		"Sugarloaf Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader,
 		"Knight's Armet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight,
 		"Knight's Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old,
+		"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/greatplume,
 		"Froggemund Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/frogmouth,
+		"Froggemund Helmet With Greatplume" = /obj/item/clothing/head/roguetown/helmet/heavy/frogmouth/greatplume,
 		"Visored Sallet"	= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
 		"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,
 		"Hounskull Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
 		"Klappvisier Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 		"Etruscan Bascinet" = /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 		"Slitted Kettle"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
+		"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
+		"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 		"None"
 	)
 	var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
 	if(helmchoice != "None")
 		head = helmets[helmchoice]
+
+	var/onhelm = list(
+		"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
+		"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
+		"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
+		"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
+		"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
+		"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
+		"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
+		"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
+		"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
+		"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
+		"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
+		"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
+		"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+		)
+	var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+	l_hand = onhelm[onhelmchoice]
 
 	if(HAS_TRAIT(H, TRAIT_GOODTRAINER))
 		REMOVE_TRAIT(H, TRAIT_GOODTRAINER, JOB_TRAIT)

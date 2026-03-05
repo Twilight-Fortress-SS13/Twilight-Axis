@@ -4,7 +4,7 @@
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
 		var/nobility = "First Lord"
-		if(should_wear_femme_clothes(H))
+		if(H.titles_pref == TITLES_F)
 			nobility = "First Lady"
 		H.real_name = "[nobility] [prev_real_name]"
 		H.name = "[nobility] [prev_name]"

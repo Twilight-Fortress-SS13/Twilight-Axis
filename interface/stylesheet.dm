@@ -144,13 +144,16 @@ h1.alert, h2.alert	{color: #c9c1ba;font-family: Mookmania, TrueType;}
 .beast					{font-family: "VizaviTYGRA", Mookmania;}
 .reptile				{font-family: "Kautiva Cyrillic Black", Mookmania; font-size: 120%;}
 .grenzelhoftian			{font-family: "ALOT Gutenberg B Normal", Mookmania; font-size: 120%;}
-.gyedzenese 			{font-family: "Sangha Kali", Mookmania;}
 .kazengunese 			{font-family: "Ganesha Type", Mookmania;}
 .lingyuese				{font-family: "ZCOOL XiaoWei", Pterra;}
 .otavan					{font-family: "Deutsch Gothic", "Mookmania";}
 .etruscan				{font-family: "TolkienCyr", "Mookmania"; font-size: 100%;}
 .gronnic				{font-family: "RUSNeverwinter", "Mookmania"; font-size: 150%;}
 .aavnic					{font-family: "Arabic Cyr (kerning fixed)", "Mookmania"; font-size: 100%;}
+.undercommon			{font-family: "Evil Bible", "Pterra"; font-size: 100%;}
+
+.gyedzenese 			{font-family: "Sangha Kali", Mookmania;} //TA EDIT
+.valorian				{font-family: "Gatchina", Mookmania;} //TA EDIT
 
 .torture				{color: #42ff20}
 

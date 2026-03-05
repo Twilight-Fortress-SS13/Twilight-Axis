@@ -238,6 +238,8 @@
 							"Courtiers" = GLOB.courtier_positions,
 							"Retinue" = GLOB.retinue_positions,
 							"Garrison" = GLOB.garrison_positions,
+							"City Watch" = GLOB.citywatch_positions,
+							"Vanguard" = GLOB.vanguard_positions,
 							"Church" = GLOB.church_positions,
               "Inquisition" = GLOB.inquisition_positions,
 							"Wanderers" = GLOB.wanderer_positions,

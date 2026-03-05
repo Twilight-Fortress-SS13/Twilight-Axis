@@ -36,21 +36,36 @@
 #define ARCHIVIST	(1<<7)
 #define SENESCHAL	(1<<8)
 #define SUITOR		(1<<9)
+#define COURTPHYSICIAN	(1<<10) //TA EDIT
 
 #define RETINUE				(1<<2)
 
 #define MARSHAL		(1<<0)
 #define KNIGHT		(1<<2)
-#define SQUIRE		(1<<3)
+#define ROYALKNIGHT (1<<3)
+#define SQUIRE		(1<<4)
 
 #define GARRISON			(1<<3)
 
 #define SERGEANT	(1<<0)
-#define MANATARMS	(1<<1)
-#define WARDEN		(1<<2)
-#define WATCHMAN	(1<<3)
+#define ROYALSERGEANT	(1<<1)
+#define MANATARMS	(1<<2)
+#define WARDEN		(1<<3)
+#define WATCHMAN	(1<<4)
+#define ROYALGUARD	(1<<5)
+#define DUNGEONEER		(1<<6)
 
-#define CHURCHMEN			(1<<4)
+#define CITYWATCH			(1<<4)
+
+#define SHERIFF			(1<<0)
+#define TOWNWATCH			(1<<1)
+
+#define VANGUARD			(1<<5)
+
+#define OVERSEER		(1<<0)
+#define VANGUARDS 	(1<<1)
+
+#define CHURCHMEN			(1<<6)
 
 #define BISHOP		(1<<0)
 #define MARTYR		(1<<1)
@@ -60,7 +75,7 @@
 #define ACOLYTE		(1<<5)
 #define SEXTON		(1<<6)
 
-#define BURGHERS			(1<<5)
+#define BURGHERS			(1<<7)
 
 #define MERCHANT	(1<<0)
 #define GUILDMASTER (1<<1)
@@ -72,8 +87,10 @@
 #define BATHMASTER	(1<<7)
 #define CRIER		(1<<8)
 #define APPRENTICE	(1<<9) //Readd the mage part if you are going to add any other role that uses this tag or use ASSOCIATE to avoid weird spacing.
+#define MAYOR	(1<<10) //TA_EDIT
+#define BAILIFF	(1<<11) //TA_EDIT
 
-#define PEASANTS			(1<<6)
+#define PEASANTS			(1<<8)
 
 #define BATHWORKER	(1<<0)
 #define COOK		(1<<1)
@@ -83,7 +100,7 @@
 #define SOILSON		(1<<5)
 #define VILLAGER	(1<<6)
 
-#define SIDEFOLK			(1<<7)
+#define SIDEFOLK			(1<<9)
 
 #define LUNATIC		(1<<0)
 #define VAGABOND	(1<<1)
@@ -92,19 +109,19 @@
 #define MERCENARY	(1<<4)
 #define VETERAN		(1<<5)
 
-#define WANDERERS			(1<<8)
+#define WANDERERS			(1<<10)
 
 #define ADVENTURER	(1<<0)
 #define COURTAGENT	(1<<1)
 #define TRADER		(1<<2)
 
-#define INQUISITION			(1<<9)
+#define INQUISITION			(1<<11)
 
 #define INQUISITOR	(1<<0)
 #define ABSOLVER	(1<<1)
 #define ORTHODOXIST	(1<<2)
 
-#define ANTAGONIST			(1<<10)
+#define ANTAGONIST			(1<<12)
 
 #define ASSASSIN		(1<<0)
 #define BANDIT			(1<<1)
@@ -117,7 +134,7 @@
 #define VAMPIRE_SPAWN 	(1<<8)
 #define GNOLL			(1<<9)
 
-#define SLOP				(1<<11)
+#define SLOP				(1<<13)
 
 #define TESTER		(1<<0)
 
@@ -125,6 +142,8 @@
 #define JCOLOR_COURTIER "#aa83b9"
 #define JCOLOR_RETINUE "#597fb9"
 #define JCOLOR_GARRISON "#173266"
+#define JCOLOR_CITYWATCH "#263154"
+#define JCOLOR_VANGUARD "#790f73"
 #define JCOLOR_CHURCH "#b0955d"
 #define JCOLOR_BURGHER "#759259"
 #define JCOLOR_PEASANT "#685542"
@@ -134,6 +153,22 @@
 #define JCOLOR_ANTAGONIST  "#b8252c"
 // PUT THESE ON THE FIRST ROLE IN THE LIST BELOW (IE NOBLE ON LORD) TO GET DESIRED COLOUR OF THE DEPARTMENT SELECT
 // job display orders //
+	
+/// Key value for taking the department's string and getting a color back
+#define JCOLOR_BY_DEPARTMENT list(\
+	"Noblemen" = JCOLOR_NOBLE,\
+	"Courtiers" = JCOLOR_COURTIER,\
+	"RETINUE" = JCOLOR_RETINUE, \
+	"Garrison" = JCOLOR_GARRISON,\
+	"City Watch" = JCOLOR_CITYWATCH,\
+	"Vanguard" = JCOLOR_VANGUARD,\
+	"Church" = JCOLOR_CHURCH,\
+	"Burghres" = JCOLOR_BURGHER,\
+	"Peasants" = JCOLOR_PEASANT,\
+	"Inquisition" = JCOLOR_INQUISITION,\
+	"Sidefolk" = JCOLOR_SIDEFOLK,\
+	"Wanderers" = JCOLOR_WANDERER,\
+)
 
 // Ducal Family
 #define JDO_LORD 1
@@ -150,17 +185,26 @@
 #define JDO_ARCHIVIST 2.6
 #define JDO_SENESCHAL 2.8
 #define JDO_SUITOR 2.9
+#define JDO_COURTPHYSICIAN 2.10 //TA EDIT
 
 // Retinue - Manor
 #define JDO_MARSHAL 3
 #define JDO_KNIGHT 3.2
-#define JDO_SQUIRE 3.3
+#define JDO_ROYALKNIGHT 3.3
+#define JDO_SQUIRE 3.4
 
 // Garrison - Town/Outside
 #define JDO_SERGEANT 4
-#define JDO_GUARD 4.1
-#define JDO_WARDEN 4.2
-#define JDO_WATCHMAN 4.3
+#define JDO_ROYALSERGEANT 4.1
+#define JDO_GUARD 4.2
+#define JDO_WARDEN 4.3
+#define JDO_WATCHMAN 4.4
+#define JDO_ROYALGUARD 4.5 // TA EDIT
+#define JDO_SHERIFF 4.6 // TA EDIT
+#define JDO_TOWNWATCH 4.7 // TA EDIT
+#define JDO_OVERSEER 4.8 // TA EDIT
+#define JDO_VANGUARD 4.9 // TA EDIT
+#define JDO_DUNGEONEER 4.10 // TA EDIT
 
 // Pantheon Church
 #define JDO_BISHOP 5
@@ -182,6 +226,8 @@
 #define JDO_BATHMASTER 6.7
 #define JDO_CRIER 6.8
 #define JDO_APPRENTICE 6.9
+#define JDO_MAYOR 7.0 //TA_EDIT
+#define JDO_BAILIFF 7.1 //TA_EDIT
 
 // Town Serfs - Peasants
 #define JDO_BATHWORKER 7
@@ -220,6 +266,8 @@
 #define BITFLAG_ROYALTY (1<<1)
 #define BITFLAG_CONSTRUCTOR (1<<2)
 #define BITFLAG_GARRISON (1<<3)
+#define BITFLAG_CITYWATCH (1<<4)
+#define BITFLAG_VANGUARD (1<<5)
 
 // START OF THE ECONOMY SECTION 
 #define ECONOMIC_RICH rand(120, 140)

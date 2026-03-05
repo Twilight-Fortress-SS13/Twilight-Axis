@@ -229,7 +229,7 @@ Turf and target are separate in case you want to teleport some distance from a t
 
 
 //Returns a list of all items of interest with their name
-/proc/getpois(mobs_only=0,skip_mindless=0,team=null)
+/proc/getpois(mobs_only=FALSE,skip_mindless=FALSE,team=null,skip_antighost=TRUE)
 	var/list/mobs = sortmobs()
 	var/list/namecounts = list()
 	var/list/pois = list()
@@ -237,6 +237,8 @@ Turf and target are separate in case you want to teleport some distance from a t
 		if(skip_mindless && (!M.mind || !M.ckey))
 			continue
 		if(M.client && M.client.holder && M.client.holder.fakekey) //stealthmins
+			continue
+		if(skip_mindless && skip_antighost && (M.client?.prefs.ghost_toggles & TOGGLE_ANTIGHOST))
 			continue
 		var/name = avoid_assoc_duplicate_keys(M.real_name, namecounts)
 
@@ -1564,7 +1566,8 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 	/area/rogue/outdoors/woods, \
 	/area/rogue/outdoors/bog, \
 	/area/rogue/outdoors/mountains, \
-	/area/rogue/outdoors/rtfield \
+	/area/rogue/outdoors/rtfield, \
+	/area/rogue/outdoors/bograt \
 )
 
 /proc/is_valid_hunting_area(area/A)
@@ -1591,6 +1594,8 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 		"Courtiers" = GLOB.courtier_positions,
 		"Retinue" = GLOB.retinue_positions,
 		"Garrison" = GLOB.garrison_positions,
+		"City Watch" = GLOB.citywatch_positions,
+		"Vanguard" = GLOB.vanguard_positions,
 		"Church" = GLOB.church_positions,
 		"Burgher" = GLOB.burgher_positions,
 		"Peasant" = GLOB.peasant_positions,

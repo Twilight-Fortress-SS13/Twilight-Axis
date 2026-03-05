@@ -1,6 +1,0 @@
-author: "WeNeedMorePhoron"
-delete-after: True
-changes:
-  - rscadd: "Admin now can override the IC canon date with set date"
-  - rscadd: "Rounds now start at 8 AM by resetting the time to 8 AM to account for lobby time drift"
-  - rscadd: "Lycker now gains 5 minutes of sun protection on spawn"

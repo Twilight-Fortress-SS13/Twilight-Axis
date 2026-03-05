@@ -648,6 +648,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	return ..()
 
 /client/Destroy()
+	SSmouse_entered.hovers -= src
 	. = ..() //Even though we're going to be hard deleted there are still some things that want to know the destroy is happening
 	STOP_PROCESSING(SSmousecharge, src)
 	QDEL_NULL(droning_sound)

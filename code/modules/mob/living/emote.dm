@@ -96,6 +96,7 @@ var/list/zone_translations = list(
 		user.add_stress(/datum/stressevent/meditation)
 		to_chat(user, span_green("My meditations were rewarding."))
 
+
 /datum/emote/living/bow
 	key = "bow"
 	key_third_person = "bows"
@@ -103,13 +104,11 @@ var/list/zone_translations = list(
 	message_param = "bows to %t."
 	restraint_check = TRUE
 	emote_type = EMOTE_VISIBLE
+	targetrange = 4
 
-/datum/emote/living/bow/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/bow/adjacentaction(mob/user, mob/target)
 	. = ..()
-	if(. && params && isliving(user))
-		var/mob/living/L = user
-		var/list/split_params = splittext(params, " ")
-		var/mob/target = get_target(L, split_params)
+	if(isliving(user))
 		if(target && ishuman(target))
 			var/mob/living/carbon/human/H = target
 			if(HAS_TRAIT(H, TRAIT_NOBLE))
@@ -119,7 +118,7 @@ var/list/zone_translations = list(
 	set name = "Поклониться"
 	set category = "Emotes"
 
-	emote("bow", intentional = TRUE)
+	emote("bow", intentional = TRUE, targetted = TRUE)
 
 /datum/emote/living/burp
 	key = "burp"
@@ -927,6 +926,17 @@ var/list/zone_translations = list(
 	only_forced_audio = TRUE
 	show_runechat = FALSE
 
+/datum/emote/living/paincrit/run_emote(mob/user, params, type_override, intentional)
+	. = ..()
+	if(.)
+		for(var/mob/living/carbon/human/L in viewers(4,user))//Theoretically less lag, also you need to hear someone whimper so why not have to be close to them
+			if(L == user)
+				if(L.has_flaw(/datum/charflaw/addiction/masochist))
+					L.sate_addiction(/datum/charflaw/addiction/masochist)
+				continue
+			if(L.has_flaw(/datum/charflaw/addiction/sadist))
+				L.sate_addiction(/datum/charflaw/addiction/sadist)
+
 /datum/emote/living/embed
 	key = "embed"
 	emote_type = EMOTE_AUDIBLE
@@ -1184,6 +1194,11 @@ var/list/zone_translations = list(
 	stat_allowed = UNCONSCIOUS
 	snd_range = -4
 	show_runechat = FALSE
+
+/mob/living/carbon/human/verb/emote_snore()
+	set name = "Snore"
+	set category = "Noises"
+	emote("snore", intentional = TRUE)
 
 /datum/emote/living/stare
 	key = "stare"

@@ -67,8 +67,12 @@ GLOBAL_LIST_INIT(leadership_positions, list( // Used for boldening text primaril
 	"Grand Duke",
 	"Hand",
 	"Court Magician",
+	"Court Physician",
 	"Marshal",
 	"Sergeant",
+	"Royal Guard Sergeant",
+	"Town Sheriff",
+	"Overseer",
 	"Bishop",
 	"Martyr",
 	"Merchant",
@@ -76,7 +80,8 @@ GLOBAL_LIST_INIT(leadership_positions, list( // Used for boldening text primaril
 	"Head Physician",
 	"Innkeeper",
 	"Bathmaster",
-	"Inquisitor"
+	"Inquisitor",
+	"Mayor",
 ))
 
 GLOBAL_LIST_INIT(regency_positions, list( // Used to determine elligibility for Regency
@@ -101,6 +106,7 @@ GLOBAL_LIST_INIT(courtier_positions, list( //Anyone that is officially part of t
 	"Clerk",
 	"Jester",
 	"Court Magician",
+	"Court Physician",
 	"Archivist",
 	"Seneschal",
 	"Suitor",
@@ -109,14 +115,28 @@ GLOBAL_LIST_INIT(courtier_positions, list( //Anyone that is officially part of t
 GLOBAL_LIST_INIT(retinue_positions, list( //Manorites
 	"Marshal",
 	"Knight",
+	"Royal Knight",
 	"Squire",
 ))
 
 GLOBAL_LIST_INIT(garrison_positions, list( //Guards
 	"Sergeant",
+	"Royal Guard Sergeant",	
 	"Man at Arms",
+	"Royal Guard",
 	"Warden",
 	"Watchman",
+))
+
+GLOBAL_LIST_INIT(citywatch_positions, list( //Guards
+	"Town Sheriff",
+	"Town Watch",
+	"Dungeoneer",
+))
+
+GLOBAL_LIST_INIT(vanguard_positions, list( //Guards
+	"Overseer",
+	"Vanguard",
 ))
 
 GLOBAL_LIST_INIT(church_positions, list( //Church of the Ten
@@ -140,6 +160,8 @@ GLOBAL_LIST_INIT(burgher_positions, list( //Artisans, store owners what have you
 	"Bathmaster",
 	"Town Crier",
 	"Magicians Associate",
+	"Mayor", //TA_EDIT
+	"Bailiff", //TA_EDIT
 ))
 
 GLOBAL_LIST_INIT(bathhouse_positions, list(
@@ -196,13 +218,16 @@ GLOBAL_LIST_INIT(rogueoverthrow_positions, list( //Used for Aspirant / Peasant R
 	"Suitor",
 	"Marshal",
 	"Knight",
+	"Royal Knight",
 	"Inquisitor",
 	"Absolver",
 	"Orthodoxist",
 	"Assassin",
 	"Bandit",
 	"Wretch",
-	"Gnoll"
+	"Gnoll",
+	"Mayor",
+	"Bailiff",
 ))
 
 GLOBAL_LIST_INIT(roguewar_positions, list(
@@ -244,6 +269,8 @@ GLOBAL_LIST_INIT(job_assignment_order, get_job_assignment_order())
 	sorting_order += GLOB.courtier_positions
 	sorting_order += GLOB.retinue_positions
 	sorting_order += GLOB.garrison_positions
+	sorting_order += GLOB.citywatch_positions
+	sorting_order += GLOB.vanguard_positions
 	sorting_order += GLOB.church_positions
 	sorting_order += GLOB.burgher_positions
 	sorting_order += GLOB.peasant_positions

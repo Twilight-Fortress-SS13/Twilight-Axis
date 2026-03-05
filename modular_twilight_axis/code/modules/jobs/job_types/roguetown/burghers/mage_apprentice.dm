@@ -1,3 +1,4 @@
+/*
 /datum/advclass/wapprentice/practice
 	name = "Magician Practice"
 	tutorial = "You are a magician who has chosen the path of the blade and magic. You still have a lot to learn, both swordsmanship and magic."
@@ -80,3 +81,4 @@
 			if(/datum/patron/inhumen/zizo)
 				H.cmode_music = 'sound/music/combat_heretic.ogg'
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")
+*/

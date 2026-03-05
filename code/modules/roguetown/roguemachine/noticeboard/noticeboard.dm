@@ -12,6 +12,13 @@
 	var/current_category = "Postings"
 	var/list/categories = list("Postings", "Premium Postings", "Scout Report", "Mercenary Roster")
 
+/obj/structure/roguemachine/noticeboard/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Left-click the noticeboard to take a better look at it.")
+	. += span_info("'Postings' and 'Premium Postings' can host messages of any kind. The zads will audibly notify everyone that a new message has been added to the noticeboard, whenever one is posted.")
+	. += span_info("'Scout Reports' detail how dangerous the ambushes in Azuria's many regions might be. The more dangerous a region is, the more numerous and lethal its ambushers will be.")
+	. += span_info("'Mercenary Rosters' list the names and detailings of all Mercenaries currently registered to Azuria's Mercenary Guild.")
+
 /obj/structure/roguemachine/noticeboard/Initialize()
 	. = ..()
 	SSroguemachine.noticeboards += src
@@ -73,9 +80,9 @@
 		return
 	var/can_remove = FALSE
 	var/can_premium = FALSE
-	if(user.job in list("Man at Arms","Inquisitor", "Knight", "Sergeant", "Orthodoxist", "Absolver", "Marshal", "Hand", "Grand Duke")) //why was KC here but not marshal ?
+	if(user.job in list("Man at Arms", "Royal Guard", "Town Sheriff", "Town Watch", "Inquisitor", "Knight", "Royal Knight", "Sergeant", "Royal Guard Sergeant", "Orthodoxist", "Absolver", "Marshal", "Hand", "Grand Duke", "Mayor", "Bailiff")) //why was KC here but not marshal ?
 		can_remove = TRUE
-	if(user.job in list("Bathmaster","Merchant", "Innkeeper", "Steward", "Court Magician", "Town Crier", "Keeper", "Grand Duke"))
+	if(user.job in list("Bathmaster","Merchant", "Innkeeper", "Steward", "Court Magician", "Town Crier", "Keeper", "Grand Duke", "Mayor"))
 		can_premium = TRUE
 	var/contents
 	contents += "<center>NOTICEBOARD<BR>"
@@ -122,9 +129,17 @@
 		contents += "Scouts rate how dangerous a region is from Safe -> Low -> Moderate -> Dangerous -> Bleak <br>"
 		contents += "A safe region is safe and travelers are unlikely to be ambushed by common creechurs and brigands <br>"
 		contents += "A low threat region is unlikely to manifest any great threat and brigands and creechurs are often found alone.<br>"
-		contents += "Only Azure Basin, Azure Grove and the Terrorbog can be rendered safe entirely. <br>"
-		contents += "Regions not listed are beyond the charge of the wardens. Danger will be constant in these regions.<br>"
-		contents += "Danger is reduced by luring villains and creechurs and killing them when they ambush you. The signal horns wardens have been issued can help with this. Take care with using it."
+		contents += "Accordings to scouts, the following regions do not have a villain foothold and thus can potentially be rendered safe entirely: <br>" //TA EDIT START
+		for(var/TR in regional_threats)
+			var/datum/threat_region_display/TRS = TR
+			if(TRS && TRS.can_be_cleared)
+				contents += ("[TRS.region_name] <br>")
+		if(SSmapping.config.map_name == "Rockhill")
+			contents += "Regions not listed are beyond the charge of the Vanguard. Danger will be constant in these regions.<br>"
+			contents += "Danger is reduced by luring villains and creechurs and killing them when they ambush you. The battle horns Vanguard has been issued can help with this. Take care with using it."
+		else
+			contents += "Regions not listed are beyond the charge of the wardens. Danger will be constant in these regions.<br>"
+			contents += "Danger is reduced by luring villains and creechurs and killing them when they ambush you. The signal horns wardens have been issued can help with this. Take care with using it." //TA EDIT END
 	else if(current_category == "Mercenary Roster")
 		if(SSroguemachine.mercenary_statue)
 			contents += SSroguemachine.mercenary_statue.get_readonly_roster_html()

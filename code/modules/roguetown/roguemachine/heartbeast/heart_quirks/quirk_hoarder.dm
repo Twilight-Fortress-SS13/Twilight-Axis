@@ -77,15 +77,21 @@
 	var/remaining_mammon = amt
 	var/list/coins_to_spawn = list()
 
-	if(remaining_mammon > 100)
-		var/gold_count = floor(remaining_mammon / 10)
-		coins_to_spawn[ /obj/item/roguecoin/gold ] = gold_count
-		remaining_mammon -= gold_count * 10
+	if(SSmapping.config.map_name == "Rockhill")
+		if(remaining_mammon > 140)
+			var/gold_count = floor(remaining_mammon / 14)
+			coins_to_spawn[ /obj/item/roguecoin/goldkrona ] = gold_count
+			remaining_mammon -= gold_count * 14
+	else
+		if(remaining_mammon > 100)
+			var/gold_count = floor(remaining_mammon / 10)
+			coins_to_spawn[ /obj/item/roguecoin/gold ] = gold_count
+			remaining_mammon -= gold_count * 10
 
-	if(remaining_mammon > 20)
-		var/silver_count = floor(remaining_mammon / 5)
-		coins_to_spawn[ /obj/item/roguecoin/silver ] = silver_count
-		remaining_mammon -= silver_count * 5
+		if(remaining_mammon > 20)
+			var/silver_count = floor(remaining_mammon / 5)
+			coins_to_spawn[ /obj/item/roguecoin/silver ] = silver_count
+			remaining_mammon -= silver_count * 5
 
 	if(remaining_mammon >= 1)
 		coins_to_spawn[ /obj/item/roguecoin/copper ] = remaining_mammon

@@ -14,12 +14,12 @@
 				if(!patron?.can_pray_inhumen(follower))
 					return
 				else
-					follower.sate_addiction()
+					follower.sate_addiction(/datum/charflaw/addiction/godfearing)
 			else
 				if(!patron?.can_pray(follower))
 					return
 				else
-					follower.sate_addiction()
+					follower.sate_addiction(/datum/charflaw/addiction/godfearing)
 
 	/* admin stuff - tells you the followers name, key, and what patron they follow */
 	var/follower_ident = "[follower.key]/([follower.real_name]) (follower of [patron])"

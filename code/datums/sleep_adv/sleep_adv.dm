@@ -72,7 +72,7 @@
 /datum/sleep_adv/proc/add_sleep_experience(skill, amt, silent = FALSE, _show_xp = TRUE)
 	var/mob/living/L = mind.current
 	var/show_xp = _show_xp
-	if(!(L.client?.prefs.floating_text_toggles & XP_TEXT))
+	if(!(L.client?.prefs.combat_toggles & XP_TEXT))
 		show_xp = FALSE
 	if((L.get_skill_level(skill) < SKILL_LEVEL_APPRENTICE) && (!is_considered_sleeping()|| HAS_TRAIT(mind.current, TRAIT_VAMP_DREAMS)))
 		var/org_lvl = L.get_skill_level(skill)
@@ -100,6 +100,16 @@
 	if(trait_capped_level && enough_sleep_xp_to_advance(skill, trait_capped_level - mind.current.get_skill_level(skill)))
 		amt = 0
 
+		// Notifying you on a cooldown if you actually hit the cap
+		var/skillname = skillref.name ? skillref.name : "ERROR"
+		var/captimer = LAZYACCESS(L.mob_timers, "skillcap_[skillname]")
+
+		if(!captimer || world.time > (captimer + SKILLCAP_NOTIF_COOLDOWN))
+			L.mob_timers["skillcap_[skillname]"] = world.time
+			to_chat(L, span_warning("I can't learn anything more about [skillname]."))
+			if(show_xp)
+				L.balloon_alert(L, "<font color = '#bb2b2b'>Skill cap!</font>")
+
 	var/capped_pre = enough_sleep_xp_to_advance(skill, 2)
 	var/can_advance_pre = enough_sleep_xp_to_advance(skill, 1)
 
@@ -116,7 +126,7 @@
 			"[skillref.name] starts making more sense to me...",
 		))))
 		if(!COOLDOWN_FINISHED(src, level_up))
-			if((L.client?.prefs.floating_text_toggles & XP_TEXT))
+			if((L.client?.prefs.combat_toggles & XP_TEXT))
 				L.balloon_alert(L, "<font color = '#9BCCD0'>Level up...</font>")
 			L.playsound_local(L, pick(LEVEL_UP_SOUNDS), 100, TRUE)
 			COOLDOWN_START(src, level_up, XP_SHOW_COOLDOWN)
@@ -126,13 +136,13 @@
 			"My [lowertext(skillref.name)] can no longer improve without some rest and meditation...",
 		))))
 		if(!COOLDOWN_FINISHED(src, level_up))
-			if((L.client?.prefs.floating_text_toggles & XP_TEXT))
+			if((L.client?.prefs.combat_toggles & XP_TEXT))
 				L.balloon_alert(L, "<font color = '#9BCCD0'>Level up...</font>")
 			L.playsound_local(L, pick(LEVEL_UP_SOUNDS), 100, TRUE)
 			COOLDOWN_START(src, level_up, XP_SHOW_COOLDOWN)
 		show_xp = FALSE
 	if(COOLDOWN_FINISHED(src, xp_show))
-		if(amt && show_xp && (L.client?.prefs.floating_text_toggles & XP_TEXT))
+		if(amt && show_xp && (L.client?.prefs.combat_toggles & XP_TEXT))
 			L.balloon_alert(L, "[round(amt, 0.1)] XP")
 			COOLDOWN_START(src, xp_show, XP_SHOW_COOLDOWN)
 

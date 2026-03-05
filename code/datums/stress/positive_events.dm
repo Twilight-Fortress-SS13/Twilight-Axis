@@ -426,3 +426,14 @@
 	timer = 1 MINUTES
 	stressadd = 3
 	desc = list("<span class='red'>There's a little goblin in my head telling me to do things and I don't like it!</span>","<span class='red'>\"Kill your friends.\"</span>","<span class='red'>\"Make them bleed.\"</span>","<span class='red'>\"Give them no time to squeal.\"</span>","<span class='red'>\"Praise Zizo.\"</span>","<span class='red'>\"Death to the Ten.\"</span>","<span class='red'>\"We will recycle them.\"</span>")
+
+/atom/movable/screen/alert/status_effect/buff/noc_light_blessing
+	name = "Noc light blessing"
+	desc = "Свет Нок дает мне сил!"
+	icon_state = "holybuff"
+
+/datum/status_effect/buff/noc_light_blessing
+	id = "noc_light_blessing"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/noc_light_blessing
+	effectedstats = list(STATKEY_INT = 1, STATKEY_SPD = 2, STATKEY_LCK = 3, STATKEY_WIL = 1)
+	duration = 40 MINUTES
