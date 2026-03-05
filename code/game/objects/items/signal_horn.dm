@@ -14,13 +14,16 @@
 /obj/item/signal_horn/examine()
 	. = ..()
 	. += span_notice("Using the horn will make you stand still and induce several ambushes to happen at once, enabling you to clear out an area. It cannot be used in rapid succession.")
-	. += span_notice("Using it will leave you exhausted for a moment. Bring friends!")
+	//. += span_notice("Using it will leave you exhausted for a moment. Bring friends!") //TA EDIT
 	var/area/AR = get_area(src)
 	var/datum/threat_region/TR = SSregionthreat.get_region(AR.threat_region)
 	if(TR)
 		. += span_notice("This area is a part of the " + TR.region_name + " threat region.")
 	else
-		. += span_notice("This area is not part of the warden's charge")
+		if(SSmapping.config.map_name == "Rockhill")
+			. += span_notice("This area is not part of the Vanguard's charge")
+		else
+			. += span_notice("This area is not part of the warden's charge")
 
 /obj/item/signal_horn/attack_self(mob/living/user)
 	. = ..()
@@ -41,7 +44,7 @@
 	user.visible_message(span_userdanger("[user] is about to sound [src]!"))
 	user.apply_status_effect(/datum/status_effect/debuff/clickcd, 5 SECONDS) // We don't want them to spam the message.
 	if(do_after(user, 30 SECONDS)) // Enough time for any antag to kick or interrupt third party, me think
-		user.Immobilize(30) // A very crude solution to kill any solo gamer
+		//user.Immobilize(30) // A very crude solution to kill any solo gamer - TA EDIT, thanks but no thanks
 		if(sound_horn(user))
 			TR.last_induced_ambush_time = world.time
 

@@ -93,10 +93,6 @@
 		else
 			. = list(span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
 
-		for(var/obj/item/bodypart/BP in bodyparts)
-			if(BP.brand_text)
-				if(observer_privilege || get_location_accessible(src, BP.body_zone))
-					. += "<span class='userdanger' style='font-size: 1.2em'>BRAND ON [uppertext(BP.name)]: \"[BP.brand_text]\"</span>"
 		//Origins
 		var/pronoun	//They / Their
 		if(!dna.species.use_skin_tone_wording_for_examine)
@@ -754,6 +750,11 @@
 			missing_limb_message = span_danger("[missing_limb_message]")
 		msg += missing_limb_message
 
+	for(var/obj/item/bodypart/BP in bodyparts) //TA EDIT
+		if(BP.brand_text)
+			if(observer_privilege || get_location_accessible(src, BP.body_zone))
+				msg += "<span class='warning' style='font-size: 1.15em;'>[m1] branded on [m2] [BP.name]: <b style='font-size: 1.3em; color: #c48e42;'>\"[uppertext(BP.brand_text)]\"</b></span>"
+	
 	//Grabbing
 	if(pulledby && pulledby.grab_state)
 		msg += "[m1] being grabbed by [pulledby]."

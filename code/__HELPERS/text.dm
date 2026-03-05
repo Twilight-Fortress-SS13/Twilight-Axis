@@ -586,7 +586,7 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 		t = replacetext(t, regex("\\|(\[^\\|\]+)\\|", "g"), "<center>$1</center>")
 		t = replacetext(t, "!", "</i><i>")
 	else
-		t = replacetext(t, regex("\[№\](\[^№\]+)\[№\]", "g"), "<b>$1</b>")
+		t = replacetext(t, regex("\\+(\[^\\+\]+)\\+", "g"), "<b>$1</b>")
 		t = replacetext(t, regex("\\|(\[^\\|\]+)\\|", "g"), "<i>$1</i>")
 		t = replacetext(t, regex("\\_(\[^\\_\]+)\\_", "g"), "<u>$1</u>")
 

@@ -74,6 +74,10 @@
 
 			used.take_damage(intdamage, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
 	else
+		//TA EDIT
+		if(def_zone == BODY_ZONE_PRECISE_R_EYE || def_zone == BODY_ZONE_PRECISE_L_EYE)
+			def_zone = BODY_ZONE_HEAD
+		//TA EDIT, basically lore-wise eyes are just too hard to precisely hit with blunt weapon, OOC-sided we got no armour for eyes
 		var/list/layers = get_best_worn_armor_layered(def_zone, d_type)
 		if(length(layers))
 			for(var/C in layers)
@@ -418,7 +422,7 @@
 		var/obj/item/bodypart/affecting = get_bodypart(ran_zone(dam_zone))
 		if(!affecting)
 			affecting = get_bodypart(BODY_ZONE_CHEST)
-		var/ap = (M.d_type == "blunt") ? BLUNT_DEFAULT_PENFACTOR : M.armor_penetration
+		var/ap = (M.d_type == "blunt") ? BLUNT_NO_PENFACTOR : M.armor_penetration // TA EDIT, BLUNT_NO_PENFACTOR
 		var/armor = run_armor_check(affecting, M.d_type, armor_penetration = ap, damage = damage)
 		next_attack_msg.Cut()
 

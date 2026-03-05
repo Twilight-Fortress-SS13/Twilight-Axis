@@ -111,11 +111,11 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	var/in_critical = InCritical()
 
 	if(one_character_prefix[message_mode])
-		message = copytext_char(message, 2)
+		message = copytext(message, 2)
 	else if(message_mode || saymode)
-		message = copytext_char(message, 3)
+		message = copytext(message, 3)
 	if(findtext_char(message, " ", 1, 2))
-		message = copytext_char(message, 2)
+		message = copytext(message, 2)
 
 	if(message_mode == MODE_ADMIN)
 		if(client)
@@ -162,11 +162,11 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		// No, you cannot speak in xenocommon just because you know the key
 		if(can_speak_in_language(message_language))
 			language = message_language
-		message = copytext_char(message, 3)
+		message = copytext(message, 3)
 
 		// Trim the space if they said ",0 I LOVE LANGUAGES"
 		if(findtext_char(message, " ", 1, 2))
-			message = copytext_char(message, 2)
+			message = copytext(message, 2)
 
 	if(!language)
 		language = get_default_language()
@@ -247,7 +247,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	// autopunctuation
 	if(!client?.prefs?.no_autopunctuate)
-		var/ending = copytext_char(message, length(message), (length(message) + 1))
+		var/ending = copytext(message, length(message), (length(message) + 1))
 		if(ending && !GLOB.correct_punctuation[ending])
 			message += "."
 
@@ -578,13 +578,13 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	return TRUE
 
 /mob/living/proc/get_key(message)
-	var/key = copytext_char(message, 1, 2)
+	var/key = copytext(message, 1, 2)
 	if(key in GLOB.department_radio_prefixes)
-		return lowertext(copytext_char(message, 2, 3))
+		return lowertext(copytext(message, 2, 3))
 
 /mob/living/proc/get_message_language(message)
-	if(copytext_char(message, 1, 2) == ",")
-		var/key = copytext_char(message, 2, 3)
+	if(copytext(message, 1, 2) == ",")
+		var/key = copytext(message, 2, 3)
 		for(var/ld in GLOB.all_languages)
 			var/datum/language/LD = ld
 			if(initial(LD.key) == key)

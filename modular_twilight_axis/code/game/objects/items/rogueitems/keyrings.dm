@@ -24,3 +24,6 @@
 
 /obj/item/storage/keyring/rockhillmansion
 	keys = list(/obj/item/roguekey/mansion, /obj/item/roguekey/mansion, /obj/item/roguekey/mansion)
+
+/obj/item/storage/keyring/knightenigma
+	keys = list(/obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/knight, /obj/item/roguekey/armory)

@@ -600,7 +600,7 @@
 				var/min = round(total_seconds / 60)
 				var/sec = total_seconds % 60
 
-				contents += "Осталось времени: [min] минут [sec < 10 ? "0[sec]" : "[sec]"] секунд<BR>"
+				contents += "Осталось времени: [max(min,0)] минут [max(sec,0) < 10 ? "0[sec]" : "[sec]"] секунд<BR>"
 				contents += "</div>"
 
 			contents += "------ДОСТУПНЫЕ------<BR>"

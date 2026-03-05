@@ -134,16 +134,23 @@
 	to_chat(world, "<BR><BR><BR><span class='reallybig'>So ends this tale on [realm_name].</span>")
 	get_end_reason()
 
+	var/round_end_music
+	if(prob(1)) 
+		round_end_music = 2
+	else
+		round_end_music = rand(0, 1)
+
 	var/list/key_list = list()
 	for(var/client/C in GLOB.clients)
 		if(C.mob)
 			SSdroning.kill_droning(C)
-			var/round_end_music = rand(0, 1)
 			switch(round_end_music)
 				if(0)
 					C.mob.playsound_local(C.mob, 'sound/music/roundend.ogg', 100, FALSE)
 				if(1)
 					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend.ogg', 100, FALSE)
+				if(2)
+					C.mob.playsound_local(C.mob, 'sound/music/roundend_mirthful.ogg', 100, FALSE) //Hildegard Von Blingin and Whitney Avalon's transformative cover of 'Manchild' by Sabrina Carpenter, circa 2026.
 		if(isliving(C.mob) && C.ckey)
 			key_list += C.ckey
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
@@ -222,24 +229,38 @@
 	var/end_reason
 
 	if(!check_for_lord(forced = TRUE))
-		end_reason = pick("Without a Monarch, they were doomed to become slaves of Zizo.",
-						"Without a Monarch, they were doomed to be eaten by nite creachers.",
-						"Without a Monarch, they were doomed to become victims of Gehenna.",
-						"Without a Monarch, they were doomed to wander the wilderness as exiles.",
-						"Without a Monarch, the Lich made them his playthings.",
-						"Without a Monarch, some jealous rival reigned in tyranny.",
-						"Without a Monarch, the gnomes eventually destroyed the town with explosives.",
-						"Without a Monarch, the courtesans sucked the town dry and moved on to the next one.",
-						"Without a Monarch, the town was abandoned.")
+		end_reason = pick("So concluded another chapter of the story. Another begins shortly.",
+						"A blank page is filled; a new canvas presented.",
+						"Our actors hang up their masks, and a new cast begins to rehearse.",
+						"Thus the week's events have taken place. Eventful or mundane, lyfe continues.",
+						"Pawns of gods, preachers of nite, all come together to recite this tale.",
+						"Whether with loss or life, kingdom survives... for now.",
+						"The people of Azuria prepare to look forward; their actions locked in the impermeable past.")
 
 	if(vampire_werewolf() == "vampire")
-		end_reason = "When the Vampires finished sucking the town dry, they moved on to the next one."
-	if(vampire_werewolf() == "werewolf")
+		end_reason = pick("None can attest to what truly happened this nite; they can only have faith that they did the right thing.",
+						"And so, another legend of the nite has chiseled itself into the annals of Azuria's history..",
+						"The morning's light shines upon a new week, driving away the darkness that threatened Azuria.. for now.",
+						"A blank page is filled; a new canvas presented.",
+						"Our actors hang up their masks, and a new cast begins to rehearse.",
+						"Thus the week's events have taken place. Eventful or mundane, lyfe continues.",
+						"Pawns of gods, preachers of nite, all come together to recite this tale.",
+						"Whether with loss or life, kingdom survives... for now.",
+						"The people of Azuria prepare to look forward; their actions locked in the impermeable past.")
 
-		end_reason = "The Werevolves formed an unholy clan, marauding [realm_name] until the end of its daes."
+	if(vampire_werewolf() == "werewolf")
+		end_reason = pick("None can attest to what truly happened this nite; they can only have faith that they did the right thing.",
+						"And so, another legend of the nite has chiseled itself into the annals of [realm_name]'s history..",
+						"The morning's light shines upon a new week, driving away the darkness that threatened Azuria.. for now.",
+						"A blank page is filled; a new canvas presented.",
+						"Our actors hang up their masks, and a new cast begins to rehearse.",
+						"Thus the week's events have taken place. Eventful or mundane, lyfe continues.",
+						"Pawns of gods, preachers of nite, all come together to recite this tale.",
+						"Whether with loss or life, kingdom survives... for now.",
+						"The people of [realm_name] prepare to look forward; their actions locked in the impermeable past.")
 
 	if(SSmapping.retainer.head_rebel_decree)
-		end_reason = "The peasant rebels took control of the throne, hail the new community!"
+		end_reason = "The rebellious peasants have taken control of Azuria's throne, shepherding forth the beginning of a new community!"
 
 	if(SSmapping.retainer.cult_ascended)
 		end_reason = "ZIZOZIZOZIZOZIZO"
@@ -688,3 +709,13 @@
 				return
 			qdel(query_update_everything_ranks)
 		qdel(query_check_everything_ranks)
+
+////////////////////////
+// CUTTING ROOM FLOOR //
+////////////////////////
+//Legacy versions of the original prompts, listed at the end of each round. Kept below for posterity, and - for creative minds - repurposement.
+//"Without a Monarch, they were doomed to become slaves of Zizo." //"Without a Monarch, they were doomed to be eaten by nite creachers." //"Without a Monarch, they were doomed to become victims of Gehenna."
+//"Without a Monarch, they were doomed to wander the wilderness as exiles." //"Without a Monarch, the Lich made them his playthings." //"Without a Monarch, some jealous rival reigned in tyranny."
+//"Without a Monarch, the gnomes eventually destroyed the town with explosives." //"Without a Monarch, the courtesans sucked the town dry and moved on to the next one." 
+//"Without a Monarch, the town was abandoned." //"The peasant rebels took control of the throne, hail the new community!" //"When the Vampires finished sucking the town dry, they moved on to the next one."
+//"The Werevolves formed an unholy clan, marauding [realm_name] until the end of its daes."

@@ -4,7 +4,7 @@
 	outfit = /datum/outfit/job/roguetown/manorguard/twilight_grenadier
 	maximum_possible_slots = 2
 	category_tags = list(CTAG_MENATARMS)
-	traits_applied = list(TRAIT_MEDIUMARMOR)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_FIREARMS_MARKSMAN)
 	subclass_stats = list(
 		STATKEY_WIL = 2,// seems kinda lame but remember guardsman bonus!!
 		STATKEY_PER = 2,
@@ -15,7 +15,7 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,

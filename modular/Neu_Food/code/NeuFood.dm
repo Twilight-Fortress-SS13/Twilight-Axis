@@ -311,11 +311,12 @@
 	else ..()
 
 /* -------------- PUMPKIN SPICE ----------------- */
-/obj/item/reagent_containers/powder/pumpkin
+/obj/item/reagent_containers/food/snacks/pumpkinspice
 	name = "pumpkin spice"
 	desc = "Rich flavors from a humble origin."
 	gender = PLURAL
 	icon_state = "pumpkinspice"
+	icon = 'icons/roguetown/items/produce.dmi'
 	list_reagents = list(/datum/reagent/consumable/pumpkinspice = 1)
 	grind_results = list(/datum/reagent/consumable/pumpkinspice = 10)
 	volume = 1
@@ -323,5 +324,5 @@
 
 /datum/reagent/consumable/pumpkinspice
 	name = "pumpkin spice"
-	description = ""
+	description = "Spiced delight."
 	color = "#ffffff"

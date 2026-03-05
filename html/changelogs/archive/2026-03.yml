@@ -193,3 +193,61 @@
   - rscadd: werewolves now cry for dendor on gaining antag datum (local)
   - rscadd: xylix now has a ritual
   - balance: revel in death now only applies a 1.25* pain mod thru sensitive nerves
+2026-03-04:
+  Daburuu:
+  - bugfix: Heretic spy now spawns with dagger, if choosing ranged weapons
+  FreeStylaLT:
+  - balance: Restricted gnolls from taking the dual wielder virtue.
+  Ketrai:
+  - rscadd: delayed gnoll deployment into rounds. gnolls cannot appear in groups on
+      lowpop rounds
+  - balance: gnoll stalk is now indefinite until action is taken by the gnoll
+  - balance: abduct can now be broken by damaging gnolls attempting to abduct, or
+      before they attempt to do so
+  - balance: gnolls no longer have z-leap, they have higher stats instead
+  Lamasmaster:
+  - image: Ascendant Miracle Icons
+  - balance: Seed planting timer
+  Ldip999:
+  - code_imp: Makes health updated mandatory on loss adjusts, even if the final damage
+      of a certain value is zero.
+  Ollanius:
+  - rscadd: Adds more detailed tutorials to most basic miracles, revivals, necromantics,
+      and butcherings.
+  - bugfix: Minor spelling mistake with the Washbin's gone. My bad.
+  - bugfix: Spiced wine should now be properly brewable. If issues persist, ping @Dongwaiver
+      (that's me!) on the Discord.
+  - rscadd: Adds 'the sunwrought visage', a unique upgrade to the 'sun hood' that
+      can be crafted with a golden mask and Journeyman-tier Holy skills. Provides
+      maille-tier protection and a snazzy, Stonekeep-sourced sprite.
+  - rscadd: Replaces the 'Smash' intent's SFX for Maces with something a little more
+      unique., and a little less jarring.
+  Ryan180602:
+  - rscadd: mounts can carry incapacitated
+  Teragenic:
+  - rscadd: Allows Eoran Worshippers to worship at the Shrine and Eoran Pomegranate
+      Trees
+  WeNeedMorePhoron:
+  - rscadd: Guard keybind (G) - enter Guard from any stance. Old characters will need
+      to set it manually.
+  - rscadd: Distracting Swipe, Piercing Lunge and Upper Cut now aim for your targeted
+      zone.
+  - rscadd: Guard deflections against spells now grant Adrenaline Rush.
+  - rscadd: Weapon special hit messages now display the hit zone.
+  - bugfix: Decorated rapier description was showing duelist ring description.
+  - rscadd: Spell pool mage system
+  - rscadd: Revamped and reworked Spellblade classes to an active momentum based melee
+      based design. Ability sprites mostly done by Prominence/NoBleed. The bad sprites
+      by WeNeedMorePhoron.
+  - rscadd: Spellblade no longer lose momentum on off balance.
+  - rscadd: You now get a helpful tip on gaining your first spell telling you you
+      can use ctrl click and click drag to rearrange them.
+  - bugfix: Fix double clicking bug.
+  hazelrat:
+  - bugfix: Resolved an improper interaction causing the Head Physician's clothes
+      to be gendered according to pronouns, rather than to clothing preferences.
+  mumblemancer:
+  - qol: fulmen chair now tells you when you mmb it and it prompts the person
+  - bugfix: you should no longer be "under" the fulmen-chair
+  saltprjak:
+  - bugfix: Polishing a one-handed weapon properly updates its force.
