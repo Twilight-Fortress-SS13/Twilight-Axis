@@ -719,6 +719,8 @@
 
 /obj/item/rogueweapon/scabbard/gwstrap/getonmobprop(tag)
 	..()
+	if(!hol_comp)
+		return
 	if(!hol_comp.sheathed)
 		return
 	if(istype(hol_comp.sheathed, /obj/item/rogueweapon/estoc) || istype(hol_comp.sheathed, /obj/item/rogueweapon/greatsword))

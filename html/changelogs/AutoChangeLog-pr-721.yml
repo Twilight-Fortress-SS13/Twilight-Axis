@@ -1,0 +1,4 @@
+author: "sinerume"
+delete-after: True
+changes:
+  - rscadd: "TRAIT_SEEPRICES_SHITTY for Outlaw(Wretch)"

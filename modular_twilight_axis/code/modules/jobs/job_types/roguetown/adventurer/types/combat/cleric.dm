@@ -204,7 +204,7 @@
 		if("Slurbow + Dagger")
 			l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/special
 			r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow
-			beltl = /obj/item/quiver/bolts
+			beltl = /obj/item/quiver/bolt/light
 			H.change_stat(STATKEY_PER, 3)
 			H.change_stat(STATKEY_SPD, 1)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 3, TRUE)

@@ -147,7 +147,7 @@
 					/obj/effect/proc_holder/spell/invoked/appraise										= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/self/twilight_shacklebreaker							= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/twilight_weightofchains						= CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/transact										= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/twilight_transact								= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/twilight_equalize								= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/lesser_heal 									= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/blood_heal									= CLERIC_T1,

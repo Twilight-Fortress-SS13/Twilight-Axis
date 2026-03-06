@@ -68,7 +68,7 @@ SUBSYSTEM_DEF(ticker)
 	var/list/royals_readied = list()
 
 	/// Realm name, the location name of the current map
-	var/realm_name = "Twilight Axis"
+	var/realm_name = "Azure Peak"
 	/// Formal realm type (e.g. "Grand Duchy", "Most Serene Republic"). Changed by usurpation rites.
 	var/realm_type = "Grand Duchy"
 	/// Short form for casual references (e.g. "Duchy", "Republic"). Changed by usurpation rites.
@@ -326,11 +326,13 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/setup()
 	message_admins(span_boldannounce("Starting game..."))
-	var/init_start = world.timeofday
 
 	if(SSmapping.map_adjustment)
 		realm_name = SSmapping.map_adjustment.realm_name
-   
+		realm_type = SSmapping.map_adjustment.realm_type // TA EDIT
+		realm_type_short = SSmapping.map_adjustment.realm_type_short // TA EDIT
+	to_chat(world, "<b><span class='notice'><span class='big'>Welcome to the [SSticker.realm_type] of [SSticker.realm_name].</span></span></b>")
+	var/init_start = world.timeofday
 	CHECK_TICK
 	//Configure mode and assign player to special mode stuff
 	var/can_continue = 0

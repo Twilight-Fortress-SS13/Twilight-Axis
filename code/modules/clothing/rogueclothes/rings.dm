@@ -52,6 +52,12 @@
 	sellprice = 33
 	is_silver = FALSE //Temporary measure to prevent people from easily metachecking vampyres. Replace with a more sophisticated alternative if-or-when available.
 
+/obj/item/clothing/ring/silver/cleric
+	name = "clerical silver ring"
+	desc = "A ring of silvered glimmerance, detailed with the etchings of a faith-militance's creed. In the closing daes of Psydonia's ancient calamity, such jewelry was worn \
+	by the first crusaders; those who had been endowed with the power to invoke the miracles of His tenmost angels. Nowadaes, it is worn by their innumerable descendants in veneration."
+	sellprice = 25
+
 /obj/item/clothing/ring/gold
 	name = "gold ring"
 	desc = "A ring of golden beauty."
@@ -325,6 +331,7 @@
 
 /obj/item/clothing/ring/fate_weaver
 	name = "fate weaver"
+	var/obj/effect/proc_holder/spell/self/conjure_armor/linked_conjure_spell
 	desc = "An arcyne creation first theorized by malcontents with the resolution of Xylix's plays. It protects it's wearer by tugging things gently toward less fatal potentials."
 	icon_state = "ring_s"
 	max_integrity = 50
@@ -341,6 +348,8 @@
 /obj/item/clothing/ring/fate_weaver/proc/dispel()
 	if(!QDELETED(src))
 		src.visible_message(span_warning("The [src]'s borders begin to shimmer and fade, before it vanishes entirely!"))
+		if(linked_conjure_spell)
+			linked_conjure_spell.start_delayed_recharge()
 		qdel(src)
 
 /obj/item/clothing/ring/fate_weaver/obj_break()

@@ -1,0 +1,348 @@
+2026-03-01:
+  Lamasmaster:
+  - rscadd: New examine for Matthiosites
+  - balance: Storytellers
+  Ryan180602:
+  - rscdel: removes stockless crossbow.
+  - code_imp: let slurbows fit in bags.
+  - balance: firing projectiles when buckled halves your accuracy.
+  - balance: barding slows down the mount. `1.25` for padded, `1.5` for chainmail.
+  - balance: mounts cannot dodge if being ridden on.
+  - balance: spells cannot be casted on horseback.
+  THE VILE LICH:
+  - image: added sprites for the random herb, dungeon rocks, and roguegems as well
+      as the new gemcraft gemspawner
+  - rscadd: gemcraft gemspawner
+  - qol: made acid mage room in the tomb of alothesos a little less awkward to navigate
+  - bugfix: a few rooms in the tomb now have properly set paintings. no more snatching
+      them w/o fighting for them.
+  WeNeedMorePhoron:
+  - rscadd: 'Garbage collection system has been optimized with port from TG #62969'
+  - bugfix: Fixed a decent amount of hard deletes. Report anything odd with mobs behavior.
+  - rscadd: Probably optimized progress bars
+  - rscadd: Ghost no longer activate mobs.
+  - rscadd: Optimized mouseover text. Report weirdness.
+  - rscadd: For performance reason, Pestran's Bodypart Miracle only attaches from
+      the user's hand and from the same turf.
+  bearrrrrrrr:
+  - qol: Lirvan Tithebound now spawns with
+  mumblemancer:
+  - balance: graggar's unholy grasp no longer legcuffs. still slows you down, though.
+  - bugfix: graggar net on_hit no longer is "The the"
+  - rscadd: graggar unholy grasp now produces a chat message when the effect ends
+  - code_imp: ported suture's single entry wrapper for /baseturfs
+  - code_imp: set most baseturfs on /closed to single entries
+  - rscadd: a horible, horrible codersprite in for incorrectly applied baseturfs
+  zoktiik:
+  - bugfix: Middle-clicking the Combat Mode button now works again (a change to code
+      affecting mouseclicks broke it).
+  - bugfix: Toggle Compliance Notifs now actually saves in your preferences.
+  - image: Compliance mode now has its own distinct HUD icon, done by Jam (Jamdrawers).
+  - image: Also ported improvements to a few other icons, also done by Jam.
+  - spellcheck: Changed a lot of the text related to compliance mode, for clarity.
+  - qol: Shift-click examining the Combat Mode button provides a detailed description
+      of its interactions.
+  - qol: Your manual pixel shift is no longer affected when you get passive grabbed,
+      aggressive grabbed, or released from a grab. However, movement will still reset
+      your position.
+2026-03-02:
+  Antoonij:
+  - code_imp: bump timer version
+  FreeStylaLT:
+  - code_imp: Added functionality for virtuous virtues.
+  Ldip999:
+  - bugfix: Fixes runtime if ghost inspects a gnoll
+  - qol: Miacraft now supports aliases
+  NewyearnewmeUwu:
+  - qol: secular diagnosis now has a range of 2
+  ReezeBL:
+  - bugfix: Psydonian grit and high willpower sometimes prevent pain stun as intended
+  WeNeedMorePhoron:
+  - rscadd: Fixes Enchanted Weapon not refreshing in holster (again)
+  - bugfix: Fix mouseover not clearing itself.
+2026-03-03:
+  FreeStylaLT:
+  - balance: Aasimar lux is now purified, but their 'devitalised' period lasts longer.
+  - balance: Tieflings cannot have their Lux extracted. It is infernal and incompatible.
+  - balance: Light Steps now muffles armor sounds when walking.
+  - balance: Removed dual wielder still giving an offensive advantage in certain scenarios.
+  Ketrai:
+  - balance: Lithmyc maces are stronger now.
+  Lamasmaster:
+  - rscdel: Necra's Vow
+  - balance: Desert Rider Janissary
+  NewyearnewmeUwu:
+  - qol: Master level or higher medicine skill will let you check for a soul upon
+      heartbeat listening.
+  Ollanius:
+  - rscdel: Eora's Tree no longer explodes ugly people.
+  - rscadd: Eora's Tree now explodes people who've been cursed by Eora.
+  - rscadd: Eora's Tree very rarely blesses people with leprosy.
+  - rscadd: Eora's Tree very rarely blesses people with ugliness, temporarily gifting
+      them beauty at the cost of Constitution.
+  - code_imp: Added more distinct coloration to the 'blessed-by-Eora's-Tree' messages.
+  - rscadd: Adds tutorials (for most core mechanics) to most commonplace items, turfs,
+      and effects in the game. These tutorials can be accessed by clicking the 'Mechanics'
+      tab, which shows up in the chatbox when examining applicable things.
+  - rscadd: 'Turns the Survival Handbook into ''Tips, Tricks & Triumphs: The Azurian
+      Survival Guide.'' It has a unique sprite, now provides important information
+      to help orient new-and-returning players, and can be redeemed at the Stockpile
+      for change.'
+  - balance: Threshers now have the Flail's smashing intent, when wielded.
+  - balance: Whole pies and cheese wheels can now be bitten more times, for those
+      who adore gluttony in its rawest form.
+  - balance: Adds an alternate recipe to the potter's wheel, requiring whetstones
+      instead of bronze cogs. The bronze-cogged variant is now a little simpler to
+      create, to compensate.
+  - code_imp: Threshers now properly have their unique intent forked off of 'flail/thresh',
+      instead of being 'flailthresh'.
+  - code_imp: The new tutorials might be a little too verbose. Feel free to slim them
+      down or rewrite them as seen fit.
+  - code_imp: Tweaked 'rous master' to 'rousmaster.'
+  - code_imp: Adjusted a variety of descriptions.
+  - rscadd: A recipe for.. medicinal fish vinegear.. ? Indeed! Three fishes of any
+      sort, a palmful of salt and sugar, a sprig of canedula, and a half-hour of your
+      time for a bottle of this.. perplexingly safe ancestor to lifeblood. Bottoms
+      up!
+  - rscadd: Spiced wine! Brewed in a keg from two jackberries, a tangerine, and a
+      palmful each of sugar, pumpkin spice, and rocknut. It's said to have minor healing
+      properties, and - when fully aged - a uniquely aromatic and heavenly taste.
+  - rscadd: Adds 'the Apple of Ambrosia', a golden fruit that never rots and provides
+      strong healing to whoever eats it. It can be very rarely found in high-tier
+      dungeon lootdrops, or purchased from the Hoardmaster for a high fee.
+  - rscadd: Adds a description to the apple, and explains how people can put apples
+      on their head as part of an archery-based minigame.
+  - balance: The Paladin's 'Cleric' oath now receives Apprentice-tier medicine skills
+      and a special needle, in addition to their regular health potion. Likewise,
+      the 'Crusader' oath has lost its scabbard - for the sake of space - in favor
+      of a new surcoat.
+  - balance: The Decorated Sugarloaf Helmets given to Matthiosite Heretics and Undivided
+      Paladins is a special variant, which will smelt into a regular amount of steel.
+  - balance: Decorated Sugarloaf and Bucket Helmets now smelt into a single ingot
+      of gold.
+  - rscadd: Paladins can now opt to take no oath at all, which simply gifts them a
+      unique silver ring in turn.
+  - rscadd: Readds the Sugarloaf Helmets (and its Decorated variant), based off the
+      old Stonekeep-era Crusader helms.
+  - rscadd: Readds the Surcoats of the Golden + Silver Orders, acquirable via the
+      loadout system and through sewing.
+  - rscadd: Decorated Sugarloaf and Bucket Helmets can now be smithed through a series
+      of Expert-tier armorsmithing recipes.
+  - rscadd: Undivided or otherwise Unaligned Paladins now receive the new Surcoat
+      of the Golden Order, instead of a Desert Cape.
+  - rscadd: Adds the Barbute, Visored Barbute, and Great Barbute! Courtesy to Dakken
+      (and Cre77) for the assets. These can be smithed, purchased, or acquired in
+      the appropriate loadouts.
+  - rscadd: Desert Capes and Heavy Surcoats have now been added to the loadout system.
+  - rscadd: The original Stonekeep-era Surcoats (without verminfolk/dwarf sprites)
+      can now be stitched together, exclusively.
+  - rscadd: Greatplume Armets! These armet variants can accept a unique 64x64-scaled
+      plume, which also happens to be greyscalable.
+  - rscadd: Greatplume Froggemunds! These can accept orles as well, in addition to
+      the standard plume.
+  - rscadd: All bucket helmet variants can now accept an alternate detail, via applying
+      a nurse's veil.
+  - rscadd: Golden armets exclusively use the greatplume, now.
+  - bugfix: Needles now properly show their strings.
+  - code_imp: Adds tips to how needles work.
+  - code_imp: Ensures code-parity with Ansari's decomponentization PR.
+  - code_imp: Future reference - check 'crusader.dm' for the cloaks.
+  - code_imp: The head.dmi for 64x64x sprites has an example of both a regular one-detail
+      helmet and two-detail helmet, now, for future reference.
+  Potatocrip:
+  - rscadd: Added vamp ear color customization to villain prefs
+  Ruediger4:
+  - rscadd: '**Adventurer Foreigner** receives two new subclasses: Grenzelhoftian
+      Bludhund and Etruscan Nostromo. Themed around Grenzel merc and Vaquero/Condottieri
+      merc respectively. **SIGNIFICANTLY WEAKER** than the actual merc counterparts.
+      Soul.'
+  Ryan180602:
+  - rscadd: adds set pose
+  - rscadd: Calling a mount now tames it to your name.
+  - rscadd: Caparisons can be dyed in bins.
+  - rscadd: Passengers to saiga/fogbeasts.
+  - rscdel: Riders can no longer drag conscious, standing people around.
+  - rscadd: projectile falloff (this should not affect magic. lmk if it does)
+  - rscadd: boltpouches become default instead of bolt quivers.
+  - rscadd: slurbows now use light bolts.
+  - bugfix: crossbows now use the crossbow skill for parrying as intended
+  SpartanBobby:
+  - rscadd: Did stuff to the werevolf simplemob to make it hurt people
+  Teragenic:
+  - qol: made the guest rooms easier to use for bigger parties.
+  WeNeedMorePhoron:
+  - rscadd: Chat Help verb to OOC tab for help with chat
+  - rscadd: You can substitute your name's position in a me / emote with $n. Don't
+      abuse it.
+  - rscdel: Remove using + to whisper
+  - rscadd: TGUI Crafting Menu optimized. Report any weirdness.
+  - rscadd: You may now Shift Right Click a quiver to select what types of ammunition.
+      Better examine text and mechanics text added
+  - rscadd: Sling has been rebalanced to shoot faster, hit less hard and carry 40x
+      instead of 20x ammo in one pouch.
+  - bugfix: You feel someone shave every kitsune's tails. Report weirdness with tails
+      still wagging after you go unconscious
+  WrongEnd:
+  - balance: Munitioneer now gets a Riddle of Steel in their backpack.
+  eirenxiv:
+  - rscdel: removes antag objective from suitors
+  - balance: adjusted suitor PQ to 5
+  - balance: changed suitor skills, traits and loadouts
+  mumblemancer:
+  - rscdel: werewolves no longer cry for dendor on transformation
+  - rscadd: werewolves now cry for dendor on gaining antag datum (local)
+  - rscadd: xylix now has a ritual
+  - balance: revel in death now only applies a 1.25* pain mod thru sensitive nerves
+2026-03-04:
+  Daburuu:
+  - bugfix: Heretic spy now spawns with dagger, if choosing ranged weapons
+  FreeStylaLT:
+  - balance: Restricted gnolls from taking the dual wielder virtue.
+  Ketrai:
+  - rscadd: delayed gnoll deployment into rounds. gnolls cannot appear in groups on
+      lowpop rounds
+  - balance: gnoll stalk is now indefinite until action is taken by the gnoll
+  - balance: abduct can now be broken by damaging gnolls attempting to abduct, or
+      before they attempt to do so
+  - balance: gnolls no longer have z-leap, they have higher stats instead
+  Lamasmaster:
+  - image: Ascendant Miracle Icons
+  - balance: Seed planting timer
+  Ldip999:
+  - code_imp: Makes health updated mandatory on loss adjusts, even if the final damage
+      of a certain value is zero.
+  Ollanius:
+  - rscadd: Adds more detailed tutorials to most basic miracles, revivals, necromantics,
+      and butcherings.
+  - bugfix: Minor spelling mistake with the Washbin's gone. My bad.
+  - bugfix: Spiced wine should now be properly brewable. If issues persist, ping @Dongwaiver
+      (that's me!) on the Discord.
+  - rscadd: Adds 'the sunwrought visage', a unique upgrade to the 'sun hood' that
+      can be crafted with a golden mask and Journeyman-tier Holy skills. Provides
+      maille-tier protection and a snazzy, Stonekeep-sourced sprite.
+  - rscadd: Replaces the 'Smash' intent's SFX for Maces with something a little more
+      unique., and a little less jarring.
+  Ryan180602:
+  - rscadd: mounts can carry incapacitated
+  Teragenic:
+  - rscadd: Allows Eoran Worshippers to worship at the Shrine and Eoran Pomegranate
+      Trees
+  WeNeedMorePhoron:
+  - rscadd: Guard keybind (G) - enter Guard from any stance. Old characters will need
+      to set it manually.
+  - rscadd: Distracting Swipe, Piercing Lunge and Upper Cut now aim for your targeted
+      zone.
+  - rscadd: Guard deflections against spells now grant Adrenaline Rush.
+  - rscadd: Weapon special hit messages now display the hit zone.
+  - bugfix: Decorated rapier description was showing duelist ring description.
+  - rscadd: Spell pool mage system
+  - rscadd: Revamped and reworked Spellblade classes to an active momentum based melee
+      based design. Ability sprites mostly done by Prominence/NoBleed. The bad sprites
+      by WeNeedMorePhoron.
+  - rscadd: Spellblade no longer lose momentum on off balance.
+  - rscadd: You now get a helpful tip on gaining your first spell telling you you
+      can use ctrl click and click drag to rearrange them.
+  - bugfix: Fix double clicking bug.
+  hazelrat:
+  - bugfix: Resolved an improper interaction causing the Head Physician's clothes
+      to be gendered according to pronouns, rather than to clothing preferences.
+  mumblemancer:
+  - qol: fulmen chair now tells you when you mmb it and it prompts the person
+  - bugfix: you should no longer be "under" the fulmen-chair
+  saltprjak:
+  - bugfix: Polishing a one-handed weapon properly updates its force.
+2026-03-05:
+  Ketrai:
+  - balance: Cerulean arils have bait resilience now
+  Ollanius:
+  - bugfix: THIRD TIMES THE CHARM. SPICED WINE SHOULD BE BREWABLE NOW.
+  - bugfix: FISH FILLET INSTEAD OF REGULAR FISHES FOR GARUM.
+  - code_imp: PUMPKIN SPICE IS NOW UNDER THE /FOOD/SNACKS FILEPATH.
+  - rscadd: Adds a very rare alternative to the usual round-ending theme.
+  - rscadd: Adds a new round-ending stinger.
+  - rscadd: Reimplements the more agnostic and fitting dialogue that prints at the
+      end of each round.
+  - code_imp: All included assets with this pull request have been checked to be compliant
+      with our codebase's expectations. We're (legally) safe to use them, as long
+      as the proper credit is provided.
+  - code_imp: Likewise - credit to Hildegard Von Blingin, Whitney Avalon, Sabrina
+      Carpenter, Valo X, and Power Pak.
+  - code_imp: The old round-ending dialogue has been preserved in the roundend.dm,
+      in case someone wishes to reuse them.
+  - rscadd: Mirth.
+  Ryan180602:
+  - bugfix: Mages can spell on chairs again. Only proper mounted spelling is disabled.
+  Teragenic:
+  - qol: Greatweapon Strap and Lamptern for Fjall Jarn
+  WeNeedMorePhoron:
+  - rscdel: Remove the overlay queueing subsystem.
+  - rscadd: You get a message in chat when you are stopped from learning a skill by
+      xp cap.
+  bearrrrrrrr:
+  - rscadd: Chandelier admin smite.
+  eirenxiv:
+  - rscadd: Added various wizard hats and their colour variations to the loadout menu
+  - rscadd: Added a chef hat to the loadout menu
+  - rscadd: Added a satchel for 2 loadout points to the loadout menu
+2026-03-06:
+  BurpleBineapple:
+  - bugfix: The Marshal's sword, Oathkeeper, is correctly longsword sized.
+  FreeStylaLT:
+  - balance: Intellectual virtue / trait now grants a +5% crafting chance to any recipe.
+  KatTheFox:
+  - qol: You can now use orison's conjure water to perform some cooking tasks, like
+      wetting flour or washing rice.
+  Ketrai:
+  - bugfix: zizo's fancier crosses are no longer prayer unworthy
+  - rscadd: Baothan amulet.
+  - rscadd: All inhumen gods now have stone and decorated crosses.
+  Lamasmaster:
+  - balance: Flail strike delay
+  NOCTURNE:
+  - rscadd: telescopes have significantly more effects!
+  - rscdel: zerobrine
+  Ollanius:
+  - rscadd: You can now clink glasses together! This happens when two people offer
+      a cup, bottle, mug, goblet, or glass to each other at the same time. Credit
+      to tmyqlfpir for its creation!
+  - bugfix: Makharia shows again, when scabbarded.
+  - bugfix: Delectable Spiced Wine should now show up as a selectable option for favorite
+      drinks.
+  - code_imp: All variants of spiced wine now have pre-filled bottles and kegs for
+      mapping purposes. Same with Zarum.
+  Ryan180602:
+  - balance: updates deserter to 11-pt statline, with barbute and poleaxe option.
+  - balance: downgrades levyman statline
+  - balance: Adds miniscule passive blood regen. Procs when uncon, and not hungry/thirsty
+  - balance: Strong Red heals a few factors less. And stays longer in system. Does
+      not regen blood.
+  - balance: Regular Red heals the same. Does not regen blood.
+  - balance: Bandages are 0.5x more effective (compared to 0.25x at current).
+  - balance: Water regens blood more, now. (Nearly as much as prior strong red did).
+  - balance: Cheeles start with more blood, and can carry as much blood as in a person.
+  - bugfix: Miracle range is now enforced properly. Miracle is 4-tile radius, Fortify(and
+      other greater miracles) are also 4-tile radius.
+  - rscadd: Miracles produce a beam from user to target.
+  - code_imp: Blood transfer Miracle is now Blood Boon.
+  - code_imp: Wild-Kins are forced to have a snout.
+  - code_imp: Half-Kins can also use the colour picker, now.
+  - balance: Kaz scabbards have 200 integrity.
+  - balance: Kaz skin has 125 integrity.
+  - balance: 'Seonjang''s traits are now: BLOOD_RESISTANCE, NOPAINSTUN'
+  - balance: 'Regular Ruma clan traits are now: BLOOD_RESISTANCE, IGNOREDAMAGESLOWDOWN'
+  - balance: Astrata's Grasp no longer can parry
+  WeNeedMorePhoron:
+  - bugfix: Progress Bar is now only sent to nearby clients instead of all clients,
+      report any oddity. Not being able to see a progress bar after walking on screen
+      is an intended edge case.
+  - bugfix: Massively optimized soil processing. Report any oddity.
+  bearrrrrrrr:
+  - rscadd: conjure crystalhide, new mage spell
+  - balance: spitfire cd, stygian interactions, things renamed, dragonhide armor changed,
+      etc etc,. genuinely huge PR
+  chemistrymain3:
+  - rscdel: Removed hierophant's default preselect spells.
+  eirenxiv:
+  - bugfix: fixed disgraced knight fortune statkey
+  hazelrat:
+  - rscadd: Introduced a lore blurb for Hammerhold.

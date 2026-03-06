@@ -1,6 +1,7 @@
 /obj/effect/proc_holder/spell/invoked/order
 	name = ""
-	range = 1
+	range = 5
+	ignore_los = TRUE // this is an aoe
 	associated_skill = /datum/skill/misc/athletics
 	devotion_cost = 0
 	chargedrain = 1
@@ -19,18 +20,22 @@
 	var/affectedtargets = list()
 	if(!single_target) //We want one spell to use the old method so we'll separate this out
 		if(user.job == "Sergeant")
-			affectedjobs = list("Man at Arms", "Watchman")
-		else if(user.job == "Knight")
-			affectedjobs = list("Knight", "Squire")
+			affectedjobs = list("Man at Arms")
+		else if((user.job == "Knight") || (user.job == "Royal Knight"))
+			affectedjobs = list("Knight", "Squire", "Royal Knight")
 		else if(user.job == "Wretch")
 			affectedjobs = list("Brother")
 		else if(user.job == "Migrant")
 			affectedjobs = list("Heartfelt Retinue", "Migrant")
+		else if(user.job == "Town Sheriff")
+			affectedjobs = list("Town Watch")
+		else if(user.job == "Overseer")
+			affectedjobs = list("Vanguard")
 		else //failsafe in case someone somehow gets the spells without a role that uses them
 			to_chat(user, span_alert("I don't have authority to order anyone!"))
 			revert_cast()
 			return FALSE
-		for(var/mob/living/carbon/target in view(5, get_turf(user)))
+		for(var/mob/living/carbon/target in view(range, get_turf(user)))
 			if(target.job in affectedjobs)
 				affectedtargets += target
 				continue
@@ -143,18 +148,28 @@
 			to_chat(user, span_alert("I must say something to give an order!"))
 			return
 		if(user.job == "Sergeant")
-			if(!(target.job in list("Man at Arms", "Watchman")))
+			if(!(target.job in list("Man at Arms")))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				revert_cast()
 				return
-		if(user.job == "Knight")
-			if(!(target.job in list("Knight", "Squire")))
+		if((user.job == "Knight") || (user.job == "Royal Knight"))
+			if(!(target.job in list("Knight", "Squire", "Royal Knight")))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				revert_cast()
 				return
 		if(user.job == "Wretch")
 			if(!(target.job in list("Brother")))
 				to_chat(user, span_alert("I cannot order one not of the brotherhood cause!"))
+				return
+		if(user.job == "Town Sheriff")
+			if(!(target.job in list("Town Watch")))
+				to_chat(user, span_alert("I cannot order one not of my ranks!"))
+				revert_cast()
+				return
+		if(user.job == "Overseer")
+			if(!(target.job in list("Vanguard")))
+				to_chat(user, span_alert("I cannot order one not of my ranks!"))
+				revert_cast()
 				return
 		if(target == user)
 			to_chat(user, span_alert("I cannot order myself!"))

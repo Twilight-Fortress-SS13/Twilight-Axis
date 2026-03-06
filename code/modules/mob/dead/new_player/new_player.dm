@@ -277,9 +277,6 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 		var/datum/poll_question/poll = locate(href_list["votepollref"]) in GLOB.polls
 		vote_on_poll_handler(poll, href_list)
 
-	if(href_list["explainreadyupbonus"])
-		to_chat(src, span_smallnotice("Ready up for 20 mammons in a stashed pouch, full hydration, a great meal buff and +1 triumph!"))
-
 
 /mob/dead/new_player/verb/do_rp_prompt()
 	set name = "Lore Primer"
@@ -556,6 +553,8 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 	omegalist += list(GLOB.courtier_positions)
 	omegalist += list(GLOB.retinue_positions)
 	omegalist += list(GLOB.garrison_positions)
+	omegalist += list(GLOB.citywatch_positions)
+	omegalist += list(GLOB.vanguard_positions)
 	omegalist += list(GLOB.church_positions)
 	omegalist += list(GLOB.burgher_positions)
 	omegalist += list(GLOB.peasant_positions)
@@ -586,13 +585,20 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 			var/cat_name = ""
 			switch (SSjob.name_occupations[category[1]].department_flag)
 				if (NOBLEMEN)
-					cat_name = "Ducal Family"
+					if(SSmapping.config.map_name == "Rockhill")
+						cat_name = "Royal Family"
+					else
+						cat_name = "Ducal Family"
 				if (COURTIERS)
 					cat_name = "Courtiers"
 				if (RETINUE)
 					cat_name = "Retinue"
 				if (GARRISON)
 					cat_name = "Garrison"
+				if (CITYWATCH)
+					cat_name = "City Watch"
+				if (VANGUARD)
+					cat_name = "Vanguard"
 				if (CHURCHMEN)
 					cat_name = "Churchmen"
 				if (BURGHERS)

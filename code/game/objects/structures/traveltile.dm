@@ -41,6 +41,7 @@
 	var/aportalgoesto = "REPLACETHIS"
 	var/aallmig
 	var/required_trait = null
+	var/grants_access_on_use = TRUE // 16.02.2026 TA edit for Corde50 shitportals. Adds proverku daet li traveltile trait dlya zritelya
 	var/list/required_jobs = null
 	var/travel_time = 5 SECONDS
 	var/travel_message = "I begin to travel..."
@@ -145,7 +146,7 @@
 	return FALSE
 
 /obj/structure/fluff/traveltile/proc/perform_travel(obj/structure/fluff/traveltile/T, mob/living/L)
-	if(watchable && !L.restrained(ignore_grab = TRUE)) // heavy-handedly prevents using prisoners to metagame camp locations. pulledby would stop this but prisoners can also be kicked/thrown into the tile repeatedly
+	if(watchable && grants_access_on_use && !L.restrained(ignore_grab = TRUE)) // 16.02.2026 TA Edit for Corde50 shitportals. Heavy-handedly prevents using prisoners to metagame camp locations. pulledby would stop this but prisoners can also be kicked/thrown into the tile repeatedly 
 		for(var/mob/living/carbon/human/H in hearers(6,src))
 			if(H == L)
 				continue

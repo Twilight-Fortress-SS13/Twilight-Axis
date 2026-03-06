@@ -11,7 +11,9 @@
 
 /obj/structure/roguemachine/steward
 	name = "nerve master"
-	desc = "A magitech device connected to the royal treasury. Stewards can manage payroll by interacting with it."
+	desc = "A magitech device connected to the arteries of Azuria's royal treasury. When unlocked with the proper key, it can sway the fate of an entire kingdom's \
+	finances. Stewards traditionally use these machines to export stockpiled goods for coinage, to pay-and-tax all accounts registered through the MEISTER, and to \
+	import supplies for taskings-a-plenty."
 	icon = 'icons/roguetown/misc/machines.dmi'
 	icon_state = "steward_machine"
 	density = TRUE
@@ -38,18 +40,38 @@
 //	For competence of life I will allow you,
 //	That lack of means enforce you not to evil:
 /obj/structure/roguemachine/steward/proc/setup_default_payments()
-	daily_payments["Sergeant"] = 40 //Garrison
-	daily_payments["Man at Arms"] = 30
-	daily_payments["Warden"] = 30
-	daily_payments["Veteran"] = 20
-	daily_payments["Squire"] = 10
-	daily_payments["Seneschal"] = 40 //Manor-House
-	daily_payments["Servant"] = 20	
-	daily_payments["Head Physician"] = 20 //Doctors
-	daily_payments["Apothecary"] = 10
-	daily_payments["Court Magician"] = 40 //University
-	daily_payments["Archivist"] = 20
-	daily_payments["Magicians Associate"] = 10
+	if(SSmapping.config.map_name == "Rockhill")
+		daily_payments["Royal Guard Sergeant"] = 40
+		daily_payments["Court Physician"] = 20
+		daily_payments["Court Magician"] = 40 //University
+		daily_payments["Magicians Associate"] = 10
+		daily_payments["Archivist"] = 20
+		daily_payments["Royal Guard"] = 20
+		daily_payments["Town Sheriff"] = 35
+		daily_payments["Town Watch"] = 20
+		daily_payments["Overseer"] = 30
+		daily_payments["Vanguard"] = 10
+		daily_payments["Veteran"] = 20
+		daily_payments["Squire"] = 10
+		daily_payments["Seneschal"] = 40 //Manor-House
+		daily_payments["Servant"] = 20
+		daily_payments["Apothecary"] = 10
+		daily_payments["Mayor"] = 40
+		daily_payments["Bailiff"] = 10
+	else
+		daily_payments["Sergeant"] = 40 //Garrison
+		daily_payments["Man at Arms"] = 30
+		daily_payments["Warden"] = 30
+		daily_payments["Veteran"] = 20
+		daily_payments["Squire"] = 10
+		daily_payments["Seneschal"] = 40 //Manor-House
+		daily_payments["Servant"] = 20	
+		daily_payments["Head Physician"] = 20 //Doctors
+		daily_payments["Apothecary"] = 10
+		daily_payments["Court Magician"] = 40 //University
+		daily_payments["Archivist"] = 20
+		daily_payments["Magicians Associate"] = 10
+	
 
 /obj/structure/roguemachine/steward/attackby(obj/item/P, mob/user, params)
 	if(istype(P, /obj/item/roguekey))
@@ -109,7 +131,7 @@
 		SStreasury.log_to_steward("-[amt] imported [D.name]")
 		record_round_statistic(STATS_STOCKPILE_IMPORTS_VALUE, amt)
 		if(amt >= 100) //Only announce big spending.
-			scom_announce("Twilight Axis imports [D.name] for [amt] mammon.", )
+			scom_announce("[SSticker.realm_name] imports [D.name] for [amt] mammon.", ) //TA_EDIT
 		D.raise_demand()
 		addtimer(CALLBACK(src, PROC_REF(do_import), D.type), 10 SECONDS)
 	if(href_list["export"])
@@ -217,7 +239,7 @@
 				SStreasury.give_money_account(-newtax, A, "NERVE MASTER")
 				break
 	if(href_list["payroll"])
-		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
+		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.vanguard_positions) + list(GLOB.citywatch_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
 		var/list/things = list()
 		for(var/list/category in L)
 			for(var/A in category)
@@ -241,7 +263,7 @@
 				record_round_statistic(STATS_WAGES_PAID)
 				SStreasury.give_money_account(amount_to_pay, H, "NERVE MASTER")
 	if(href_list["setdailypay"])
-		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
+		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.vanguard_positions) + list(GLOB.citywatch_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
 		var/list/things = list()
 		for(var/list/category in L)
 			for(var/A in category)
@@ -578,7 +600,7 @@
 				var/min = round(total_seconds / 60)
 				var/sec = total_seconds % 60
 
-				contents += "Осталось времени: [min] минут [sec < 10 ? "0[sec]" : "[sec]"] секунд<BR>"
+				contents += "Осталось времени: [max(min,0)] минут [max(sec,0) < 10 ? "0[sec]" : "[sec]"] секунд<BR>"
 				contents += "</div>"
 
 			contents += "------ДОСТУПНЫЕ------<BR>"

@@ -57,11 +57,11 @@
 	var/datum/status_effect/buff/clash/guard = has_status_effect(/datum/status_effect/buff/clash)
 	if(guard)
 		if(P.on_guard_deflect(src))
-			apply_status_effect(/datum/status_effect/buff/spell_parry_buffer)
+			apply_status_effect(/datum/status_effect/buff/parry_buffer)
 			remove_status_effect(/datum/status_effect/buff/clash)
 			return TRUE
 		return FALSE
-	if(has_status_effect(/datum/status_effect/buff/spell_parry_buffer))
+	if(has_status_effect(/datum/status_effect/buff/parry_buffer))
 		if(P.on_guard_deflect(src, silent = TRUE))
 			return TRUE
 	return FALSE
@@ -108,7 +108,7 @@
 	if(SEND_SIGNAL(src, COMSIG_ATOM_BULLET_ACT, P, def_zone) & COMPONENT_ATOM_BLOCK_BULLET)
 		return
 	def_zone = bullet_hit_accuracy_check(P.accuracy + P.bonus_accuracy, def_zone)
-	var/ap = (P.flag == "blunt") ? BLUNT_DEFAULT_PENFACTOR : P.armor_penetration
+	var/ap = (P.flag == "blunt") ? BLUNT_NO_PENFACTOR : P.armor_penetration // TA EDIT, prev. BLUNT_DEFAULT_PENFACTOR
 	var/armor = run_armor_check(def_zone, P.flag, "", "",armor_penetration = ap, damage = P.damage, used_weapon = P)
 
 	next_attack_msg.Cut()
@@ -186,7 +186,7 @@
 		if(SEND_SIGNAL(src, COMSIG_LIVING_IMPACT_ZONE, I, zone) & COMPONENT_CANCEL_THROW)
 			return FALSE
 		if(!blocked)
-			var/ap = (damage_flag == "blunt") ? BLUNT_DEFAULT_PENFACTOR : I.armor_penetration
+			var/ap = (damage_flag == "blunt") ? BLUNT_NO_PENFACTOR : I.armor_penetration // TA EDIT, prev. BLUNT_DEFAULT_PENFACTOR
 			var/armor = run_armor_check(zone, damage_flag, "", "", armor_penetration = ap, damage = I.throwforce, used_weapon = I)
 			next_attack_msg.Cut()
 			var/nodmg = FALSE
@@ -337,7 +337,8 @@
 	if(user != src)
 		if(pulling != user) // If the person we're pulling aggro grabs us don't break the grab
 			stop_pulling()
-		user.set_pull_offsets(src, user.grab_state)
+		if(!is_shifted)
+			user.set_pull_offsets(src, user.grab_state)
 	log_combat(user, src, "grabbed", addition="aggressive grab[add_log]")
 	return 1
 

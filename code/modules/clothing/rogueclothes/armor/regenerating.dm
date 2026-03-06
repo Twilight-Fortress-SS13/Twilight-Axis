@@ -200,8 +200,8 @@
 	resistance_flags = FIRE_PROOF
 	icon_state = "easttats"
 	armor = ARMOR_RUMACLAN
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
-	body_parts_inherent = COVERAGE_ALL_BUT_HANDFEET
+	body_parts_covered = COVERAGE_FULL
+	body_parts_inherent = COVERAGE_FULL
 	icon = 'icons/roguetown/clothing/shirts.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/shirts.dmi'
 	sleeved = 'icons/roguetown/clothing/onmob/helpers/sleeves_shirts.dmi'
@@ -213,5 +213,5 @@
 	repairmsg_stop = "The tattoos stops mending from the onslaught!"
 	repairmsg_end = "The tattoos flow more calmly, as they finish resting and regain their strength."
 
-	interrupt_damount = 25
+	interrupt_damount = 20
 	repair_time = 35 SECONDS

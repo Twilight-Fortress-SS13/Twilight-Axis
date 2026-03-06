@@ -51,6 +51,15 @@ body {
 	src: url("Celtes SP.otf");
 }
 
+@font-face {
+	font-family: "Furqan";
+	src: url("celestial.ttf");
+}
+
+@font-face {
+	font-family: "Furqan";
+	src: url("raneshi.ttf");
+}
 @font-face { 
   font-family: "Kamelia"; 
   src: url('Kamelia.ttf'); 

@@ -154,3 +154,19 @@
 
 /obj/item/clothing/head/roguetown/helmet/heavy/astratan/oldrw/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
+
+/obj/item/clothing/head/roguetown/helmet/heavy/citywatch
+	name = "citywatch's helmet"
+	desc = "Тяжелый шлем, невероятно устойчивый ко всем видам урона. Используется городским Дозором Рокхилла."
+	icon_state = "citywatch_helmet"
+	item_state = "citywatch_helmet"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/citywatch_armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/citywatch_armor.dmi'
+	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDESNOUT
+
+/obj/item/clothing/head/roguetown/helmet/heavy/citywatch/sheriff
+	name = "sheriff's helmet"
+	desc = "Тяжелый шлем, невероятно устойчивый ко всем видам урона. Окрашен в другой цвет, в отличии от других шлемов Дозора, чтобы выделить шерифа."
+	icon_state = "sheriff_helm"
+	item_state = "sheriff_helm"
+

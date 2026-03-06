@@ -59,30 +59,43 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 	if(C.mob != src)
 		return
 
-	if(SSticker.HasRoundStarted())
-		src << browse(null, "window=lobby_window")
-		return
-
-	var/list/dat = list("<center>")
-
 	var/time_remaining = SSticker.GetTimeLeft()
-	if(time_remaining > 0)
-		dat += "Time To Start: [round(time_remaining / 10)]s<br>"
-	else if(time_remaining == -10)
-		dat += "Time To Start: DELAYED<br>"
+	if(SSticker.HasRoundStarted() || time_remaining <= 0)
+		client << browse(null, "window=lobby_window")
+		return
+	if(!winexists(client, "lobby_window"))
+		open_lobby()
+		sleep(0)
+	var/lobby_visible = winget(client, "lobby_window", "is-visible")
+	if(lobby_visible == "false")
+		client << browse(null, "window=lobby_window")
+		open_lobby()
+		sleep(0)
+
+	var/timer_text
+	if (time_remaining > 0)
+		timer_text = "Time To Start: [round(time_remaining/10)]s"
+	else if (time_remaining == -10)
+		timer_text = "Time To Start: DELAYED"
 	else
-		dat += "Time To Start: SOON<br>"
+		timer_text = "Time To Start: SOON"
+		client << browse(null, "window=lobby_window")
+		return
+	client << output(timer_text, "lobby_window.browser:update_timer")
 
-	dat += "Total players ready: [SSticker.totalPlayersReady]<br>"
-	if(ready == PLAYER_READY_TO_PLAY)
-		dat += "[span_good("Ready Bonus!")]<a href='?src=[REF(src)];explainreadyupbonus=1'>(?)</a><br>"
+	client << output(
+	"Total players ready: [SSticker.totalPlayersReady]",
+	"lobby_window.browser:update_ready_count"
+	)
+
+	var/bonus_html
+	if (src.ready)
+		bonus_html = span_good("Ready Bonus!")
 	else
-		dat += "[span_highlight("No bonus! Ready up!")]<a href='?src=[REF(src)];explainreadyupbonus=1'>(?)</a><br>"
+		bonus_html = span_highlight("No bonus! Ready up!")
+	client << output(bonus_html, "lobby_window.browser:update_ready_bonus")
 
-	dat += "<b>Classes:</b><br>"
-	dat += "</center>"
-
-	var/list/job_list = list()
+	var/list/dat = list()
 	var/list/ready_players_by_job = list()
 	var/static/list/wanderer_jobs = list(
 		"Adventurer",
@@ -90,26 +103,9 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		"Court Agent",
 	)
 
-	for(var/mob/dead/new_player/player as anything in GLOB.player_list)
-		if(QDELETED(player))
-			continue
-
-		var/client/player_client = player.client
-		if(!player_client)
-			continue
-
-		if(player_client.ckey in GLOB.hiderole)
-			continue
-
-		if(player.ready != PLAYER_READY_TO_PLAY)
-			continue
-
-		var/datum/preferences/prefs = player_client.prefs
-		if(!prefs)
-			continue
-
-		var/list/job_choice = prefs.job_preferences
-		if(!job_choice)
+	dat += "<center><b>Classes:</b></center><hr>"
+	for (var/mob/dead/new_player/player in GLOB.player_list)
+		if (player.client?.ckey in GLOB.hiderole)
 			continue
 
 		for(var/job_name as anything in job_choice)
@@ -125,34 +121,58 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 			ready_players_by_job[job_name] += prefs.real_name
 			break
 
-	for(var/job_name as anything in ready_players_by_job)
+	var/list/job_list_by_department = list(
+		"Noblemen" = list(),
+		"Courtiers" = list(),
+		"Garrison" = list(),
+		"Church" = list(),
+		"Burghers" = list(),
+		"Peasants" = list(),
+		"Inquisition" = list(),
+		"Sidefolk" = list(),
+		"Wanderers" = list(),
+	)
+
+	for(var/job_name in ready_players_by_job)
+		var/datum/job/J = SSjob.GetJob(job_name)
+		var/key
+		var/display_name = job_name
+		if(!J)
+			key = SSjob.bitflag_to_department(WANDERERS, TRUE)
+		else
+			key = SSjob.bitflag_to_department(J.department_flag)
+			if(J.display_title)
+				display_name = J.display_title
+
+		if(key == "City Watch" || key == "Vanguard" || key == "Retinue")
+			key = "Garrison"
+
 		var/list/job_players = ready_players_by_job[job_name]
-		job_list += "<b>[job_name]</b> ([job_players.len]) - [job_players.Join(", ")]<br>"
+		
+		if(!job_list_by_department[key])
+			job_list_by_department[key] = list()
+			
+		job_list_by_department[key] += "<B>[display_name]</B> ([job_players.len]) - [job_players.Join(", ")]<br>"
 
-	sortTim(job_list, cmp = GLOBAL_PROC_REF(cmp_text_asc))
-	dat += job_list
+	for(var/department in job_list_by_department)
+		var/list/jobs_under_department = job_list_by_department[department]
+		if(jobs_under_department.len)
+			sortTim(jobs_under_department, cmp = GLOBAL_PROC_REF(cmp_text_asc))
+			
+			dat += "<h3><center><font color='[JCOLOR_BY_DEPARTMENT[department]]'>----- [department] -----</font></center></h3>"
+			
+			dat += "<div class='block'>"
+			dat += jobs_under_department.Join("")
+			dat += "</div>"
 
-	if(QDELETED(src))
+	client << output(dat.Join(), "lobby_window.browser:update_jobs")
+/mob/dead/new_player/proc/open_lobby()
+	if (!client)
 		return
-	if(client != C)
-		return
-	if(C.mob != src)
-		return
-
-	var/datum/browser/popup = new(src, "lobby_window", "<div align='center'>LOBBY</div>", 330, 430)
-	popup.set_window_options("can_close=1;can_minimize=0;can_maximize=0;can_resize=1;")
-	popup.set_content(dat.Join())
-
-	if(QDELETED(src) || client != C || C.mob != src)
-		qdel(popup)
-		return
-
-	if(winexists(src, "lobby_window"))
-		src << browse(popup.get_content(), "window=lobby_window")
-		qdel(popup)
-		return
-
-	popup.open(FALSE)
+	client << browse(
+		file("html/lobby/lobby.html"),
+		"window=lobby_window;size=330x830"
+	)
 
 /mob/dead/proc/server_hop()
 	set category = "OOC"

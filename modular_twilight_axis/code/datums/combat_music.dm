@@ -5,6 +5,28 @@
 	credits = "Helbrede - Helheim"
 	musicpath = list('modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg')
 
+/datum/combat_music/watchman
+	name = "Watchman of Rockhill"
+	desc = ""
+	shortname = "Watchman"
+	credits = "Какое то жесткое стучание по батареям с распиливанием досок на фоне. Я не помню от куда я это выдрал год назад."
+	musicpath = list('modular_twilight_axis/sound/music/combat/combat_watchman.ogg')
+
+/datum/combat_music/man_at_arms_enigma
+	name = "Man At Arms of Rockhill"
+	desc = ""
+	shortname = "Man At Arms"
+	credits = "Я не помню от куда я это выдрал год назад."
+	musicpath = list('modular_twilight_axis/sound/music/combat/combat_retinue.ogg')
+
+/datum/combat_music/vanguard_enigma
+	name = "Vanguard of Rockhill"
+	desc = ""
+	shortname = "Vanguard"
+	credits = "Я не помню от куда я это выдрал год назад."
+	musicpath = list('modular_twilight_axis/sound/music/combat/combat_vanguard.ogg')
+
+
 /datum/combat_music/inquis_blackpowder
 	name = "Inquisition - Blackpowder Order"
 	desc = ""
@@ -46,3 +68,10 @@
 	shortname = "Tabaxi"
 	credits = "La Caution Thé à la Menthe Instrumentale HQ Oceans Twelve"
 	musicpath = list('modular_twilight_axis/sound/music/combat_tabaxi.ogg')
+
+/datum/combat_music/lich 
+	name = "Lich - Herald of HER will"
+	desc = "March of the Dead"
+	shortname = "Lich"
+	credits = "Sefus - Herald of HER will"
+	musicpath = list('modular_twilight_axis/sound/music/combat_lich.ogg')

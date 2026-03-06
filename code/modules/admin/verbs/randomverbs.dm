@@ -125,12 +125,16 @@
 		return
 
 	var/amt = ""
-	amt = input("Message:", "Please enter the amount of PQ to add/remove:") as num|null
+	var/reason = ""
+	var/prompt = "Please enter the amount of PQ to add/remove:"
+
+	amt = input("Message:", prompt) as num|null
 
 	if(!amt)
 		return
 
-	var/reason = stripped_input(usr, "Please specify a reason for the adjustment:", "Message:", "", MAX_MESSAGE_BIGME)
+	prompt = "Please specify a reason for the adjustment:"
+	reason = input("Message:", prompt) as text|null
 	if(!reason)
 		reason = "Player Panel Adjustment"
 
@@ -138,7 +142,7 @@
 
 	//Admin log happens in child proc
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Modify Player Quality") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-cmd_admin_mod_pq
+
 /client/proc/cmd_admin_world_narrate()
 	set category = "-Special Verbs-"
 	set name = "Narrate - Global"
@@ -730,6 +734,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		ADMIN_PUNISHMENT_CRIPPLE,
 		ADMIN_PUNISHMENT_PSYDON,
 		ADMIN_PUNISHMENT_DIVINE_WRATH,
+		ADMIN_PUNISHMENT_CHANDELIER,
 	)
 
 	var/punishment = input("Choose a punishment", "DIVINE SMITING") as null|anything in sortList(punishment_list)
@@ -846,6 +851,22 @@ Traitors and the like can also be revived with the previous role mostly intact.
 				to_chat(usr,span_warning("Target must be human!"))
 				return
 			divine_wrath(target)
+		if(ADMIN_PUNISHMENT_CHANDELIER)
+			if(!ishuman(target))
+				to_chat(usr,span_warning("Target must be human!"))
+				return
+
+			var/mob/living/carbon/human/humie = target
+			var/obj/item/bodypart/affecting = humie.get_bodypart(BODY_ZONE_HEAD)
+			if(!affecting)
+				to_chat(usr,span_warning("Target must have a head!"))
+				return
+
+			var/obj/machinery/light/rogue/chand/chandelier = new /obj/machinery/light/rogue/chand(get_turf(humie))
+			chandelier.layer = ABOVE_MOB_LAYER
+			playsound(get_turf(humie), 'sound/combat/hits/blunt/frying_pan(4).ogg', 100, FALSE)
+			affecting.add_wound(/datum/wound/fracture/head)
+			humie.visible_message(span_userdanger("There is a sickening CRUNCH as a chandelier crashes down onto [humie]!"))
 	punish_log(target, punishment)
 
 /client/proc/punish_log(whom, punishment)
