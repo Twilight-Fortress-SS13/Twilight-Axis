@@ -47,16 +47,9 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 	loc = destination
 	Moved(oldloc, NONE, TRUE)
 
-
 /mob/dead/new_player/proc/lobby_refresh()
-	if(QDELETED(src))
-		return
-
-	var/client/C = client
-	if(!C)
-		return
-
-	if(C.mob != src)
+	set waitfor = 0
+	if(!client)
 		return
 
 	var/time_remaining = SSticker.GetTimeLeft()
@@ -97,29 +90,27 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 
 	var/list/dat = list()
 	var/list/ready_players_by_job = list()
-	var/static/list/wanderer_jobs = list(
+	var/list/wanderer_jobs = list(
 		"Adventurer",
 		"Wretch",
-		"Court Agent",
+		"Court Agent"
 	)
 
 	dat += "<center><b>Classes:</b></center><hr>"
 	for (var/mob/dead/new_player/player in GLOB.player_list)
 		if (player.client?.ckey in GLOB.hiderole)
 			continue
-
-		for(var/job_name as anything in job_choice)
-			if(job_choice[job_name] != JP_HIGH)
-				continue
-
-			if(job_name in wanderer_jobs)
-				job_name = "Wanderer"
-
-			if(!ready_players_by_job[job_name])
-				ready_players_by_job[job_name] = list()
-
-			ready_players_by_job[job_name] += prefs.real_name
-			break
+		var/job_choice = player.client?.prefs?.job_preferences
+		if (job_choice)
+			for (var/job_name in job_choice)
+				if (job_choice[job_name] == JP_HIGH)
+					if (job_name in wanderer_jobs)
+						job_name = "Wanderer"
+					if (player.ready == PLAYER_READY_TO_PLAY)
+						if (!ready_players_by_job[job_name])
+							ready_players_by_job[job_name] = list()
+						ready_players_by_job[job_name] += player.client.prefs.real_name
+						break
 
 	var/list/job_list_by_department = list(
 		"Noblemen" = list(),
@@ -166,6 +157,7 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 			dat += "</div>"
 
 	client << output(dat.Join(), "lobby_window.browser:update_jobs")
+
 /mob/dead/new_player/proc/open_lobby()
 	if (!client)
 		return

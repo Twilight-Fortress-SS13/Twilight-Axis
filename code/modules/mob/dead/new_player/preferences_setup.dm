@@ -47,7 +47,6 @@
 		return
 
 	copy_to(mannequin, 1, TRUE, TRUE)
-	COMPILE_OVERLAYS(mannequin)
 	if(parent == C)
 		C.show_character_previews(new /mutable_appearance(mannequin))
 
