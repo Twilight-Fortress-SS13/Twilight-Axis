@@ -187,6 +187,7 @@
 	COOLDOWN_DECLARE(priest_announcement)
 	COOLDOWN_DECLARE(guildmaster_announcement) //This is not for priest but if you are looking for GUILDMASTER announcements it's here, more so convinence than anything.
 	COOLDOWN_DECLARE(crier_announcement)
+	COOLDOWN_DECLARE(goblinchief_announcement_cd)
 	COOLDOWN_DECLARE(priest_sermon)
 	COOLDOWN_DECLARE(priest_apostasy)
 	COOLDOWN_DECLARE(priest_excommunicate)

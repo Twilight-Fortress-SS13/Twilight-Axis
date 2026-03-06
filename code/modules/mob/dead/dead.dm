@@ -126,6 +126,7 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		"Inquisition" = list(),
 		"Sidefolk" = list(),
 		"Wanderers" = list(),
+		"Goblin Cave" = list(),
 	)
 
 	for(var/job_name in ready_players_by_job)

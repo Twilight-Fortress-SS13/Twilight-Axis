@@ -49,3 +49,25 @@
 /obj/effect/landmark/start/bailiff
 	name = "Bailiff"
 	icon_state = "arrow"
+
+/obj/effect/landmark/start/goblin_chief
+	name = "Goblin Chief"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/goblin_shaman
+    name = "Goblin Shaman"
+    icon_state = "arrow"
+
+/obj/effect/landmark/start/goblin_warrior
+    name = "Goblin Warrior"
+    icon_state = "arrow"
+
+/obj/effect/landmark/start/goblin_slave
+    name = "Goblin Slave"
+    icon_state = "arrow"
+
+/obj/effect/landmark/start/goblinlate
+	name = "Goblinlate"
+	icon_state = "arrow"
+	jobspawn_override = list("Goblin Warrior", "Goblin Chief", "Goblin Slave", "Goblin Shaman")
+	delete_after_roundstart = FALSE

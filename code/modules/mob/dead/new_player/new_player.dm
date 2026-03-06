@@ -562,6 +562,7 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 	omegalist += list(GLOB.wanderer_positions)
 	omegalist += list(GLOB.inquisition_positions)
 	omegalist += list(GLOB.antagonist_positions)
+	omegalist += list(GLOB.goblin_positions)
 
 	for(var/list/category in omegalist)
 		if(!SSjob.name_occupations[category[1]])
@@ -613,6 +614,8 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 					cat_name = "Inquisition"
 				if (ANTAGONIST)
 					cat_name = "Antagonists"
+				if (GOBLINCAVE)
+					cat_name = "Goblin Cave"
 
 			dat += "<fieldset style='width: 185px; border: 2px solid [cat_color]; display: inline'>"
 			dat += "<legend align='center' style='font-weight: bold; color: [cat_color]'>[cat_name]</legend>"

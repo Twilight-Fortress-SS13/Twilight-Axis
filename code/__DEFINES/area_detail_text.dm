@@ -79,6 +79,9 @@ Rusted metals distantly grind in anoxic pus-condensate in-tune with the Signal. 
 // Forsaken Cathedral
 #define DETAIL_TEXT_FORSAKEN_CATHEDRAL ""
 
+// Goblin Cave
+#define DETAIL_TEXT_GOBLIN_CAVE ""
+
 // Town
 #define DETAIL_TEXT_AZURE_PEAK ""
 #define DETAIL_TEXT_KEEP ""

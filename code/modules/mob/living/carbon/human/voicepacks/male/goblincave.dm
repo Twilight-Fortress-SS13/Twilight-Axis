@@ -1,0 +1,28 @@
+/datum/voicepack/male/goblincave/get_sound(soundin, modifiers)
+	var/used
+	switch(modifiers)
+		if("old")
+			used = getfold(soundin)
+		if("young")
+			used = getfyoung(soundin)
+		if("silenced")
+			used = getfsilenced(soundin)
+	if(!used)
+		switch(soundin)
+			if("laugh")
+				used = pick('sound/vo/mobs/gob/laugh (1).ogg','sound/vo/mobs/gob/laugh (2).ogg')
+			if("pain")
+				used = pick('sound/vo/mobs/gob/pain (1).ogg','sound/vo/mobs/gob/pain (2).ogg','sound/vo/mobs/gob/pain (3).ogg','sound/vo/mobs/gob/pain (4).ogg','sound/vo/mobs/gob/pain (5).ogg')
+			if("paincrit")
+				used = pick('sound/vo/mobs/gob/pain (1).ogg','sound/vo/mobs/gob/pain (2).ogg','sound/vo/mobs/gob/pain (3).ogg','sound/vo/mobs/gob/pain (4).ogg','sound/vo/mobs/gob/pain (5).ogg')
+			if("painscream")
+				used = pick('sound/vo/mobs/gob/painscream (1).ogg','sound/vo/mobs/gob/painscream (2).ogg','sound/vo/mobs/gob/painscream (3).ogg','sound/vo/mobs/gob/painscream (4).ogg','sound/vo/mobs/gob/painscream (5).ogg')
+			if("chuckle")
+				used = list('sound/vo/male/goblin/chuckle (1).ogg','sound/vo/male/goblin/chuckle (3).ogg')
+			if("giggle")
+				used = list('sound/vo/male/goblin/giggle (2).ogg','sound/vo/male/goblin/giggle (3).ogg')
+
+	if(!used)
+		used = ..(soundin)
+	return used
+

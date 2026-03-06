@@ -136,6 +136,11 @@
 
 #define SLOP				(1<<13)
 
+#define GOBLINCAVE			(1<<14)
+
+#define GOBLINWARRIOR	(1<<0)
+#define GOBLINCHIEF		(1<<1)
+
 #define TESTER		(1<<0)
 
 #define JCOLOR_NOBLE  "#007fff"
@@ -261,6 +266,11 @@
 #define JDO_BANDIT 11.1
 #define JDO_WRETCH 11.2
 #define JDO_GNOLL 11.3
+
+// Goblin Cave
+
+#define JDO_GOBLINWARRIOR 12
+#define JDO_GOBLINCHIEF 12.1
 
 #define BITFLAG_HOLY_WARRIOR (1<<0)
 #define BITFLAG_ROYALTY (1<<1)

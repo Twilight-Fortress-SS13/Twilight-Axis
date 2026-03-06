@@ -324,6 +324,8 @@ SUBSYSTEM_DEF(job)
 			key = "Inquisition"
 		if(SIDEFOLK)
 			key = "Sidefolk"
+		if(GOBLINCAVE)
+			key = "Goblin Cave"
 		if(WANDERERS)
 			key = "Wanderers"
 		else

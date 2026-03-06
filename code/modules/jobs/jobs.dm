@@ -207,6 +207,11 @@ GLOBAL_LIST_INIT(inquisition_positions, list( //Self explanatory
 	"Orthodoxist",
 ))
 
+GLOBAL_LIST_INIT(goblin_positions, list( //Self explanatory
+	"Goblin Warrior",
+	"Goblin Chief",
+))
+
 GLOBAL_LIST_INIT(rogueoverthrow_positions, list( //Used for Aspirant / Peasant Rebellion
 	"Grand Duke",
 	"Consort",
@@ -277,6 +282,7 @@ GLOBAL_LIST_INIT(job_assignment_order, get_job_assignment_order())
 	sorting_order += GLOB.sidefolk_positions
 	sorting_order += GLOB.antagonist_positions
 	sorting_order += GLOB.inquisition_positions
+	sorting_order += GLOB.goblin_positions
 	return sorting_order
 
 GLOBAL_LIST_INIT(exp_jobsmap, list(

@@ -6,6 +6,7 @@
 		#include "map_files\roguetest\roguetest.dmm"
 		#include "map_files\otherz\dungeon.dmm"
 		#include "map_files\otherz\wretch_coast.dmm"
+		#include "map_files\otherz\goblin_cave.dmm"
 
 		#ifdef ALL_TEMPLATES
 			#include "templates.dm"

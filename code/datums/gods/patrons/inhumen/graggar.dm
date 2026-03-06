@@ -65,6 +65,9 @@
 	// Allows prayer in the Zzzzzzzurch(!)
 	if(istype(get_area(follower), /area/rogue/under/cave/inhumen))
 		return TRUE
+	// Allows prayer in the goblincave(!)
+	if(istype(get_area(follower), /area/rogue/under/cave/goblincave))
+		return TRUE
 	// Allows prayer near EEEVIL psycross
 	for(var/obj/structure/fluff/psycross/zizocross/cross in view(4, get_turf(follower)))
 		if(cross.divine == TRUE)
