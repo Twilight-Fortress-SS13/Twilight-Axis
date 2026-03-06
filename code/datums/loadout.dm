@@ -1669,6 +1669,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/rogue/instrument/viola
 	donatitem = TRUE
 
+/datum/loadout_item/donat/beer
+	name = "Пиво"
+	category = list("Разное", "Донат")
+	path = /obj/item/reagent_containers/glass/bottle/rogue/beer
+	donatitem = TRUE
+
+/datum/loadout_item/donat/wine
+	name = "Вино"
+	category = list("Разное", "Донат")
+	path = /obj/item/reagent_containers/glass/bottle/rogue/wine
+	donatitem = TRUE
+
 // Одежда для донатеров
 
 /datum/loadout_item/stargazer

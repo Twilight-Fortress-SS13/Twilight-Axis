@@ -747,6 +747,9 @@
 	pixel_y = -5;
 	sellprice = 8
 	},
+/obj/structure/fluff/walldeco/church/line{
+	dir = 4
+	},
 /turf/open/floor/rogue/tile/bath,
 /area/rogue/indoors/vampire_manor)
 "eS" = (
@@ -1526,6 +1529,9 @@
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/bograt/safe)
 "jb" = (
+/obj/structure/fluff/walldeco/church/line{
+	dir = 4
+	},
 /turf/open/floor/rogue/tile/bath,
 /area/rogue/indoors/vampire_manor)
 "jc" = (
@@ -4363,6 +4369,13 @@
 	icon_state = "vertw"
 	},
 /area/rogue/indoors/banditcamp)
+"AG" = (
+/obj/machinery/light/rogue/candle/l,
+/obj/structure/fluff/walldeco/church/line{
+	dir = 4
+	},
+/turf/open/floor/rogue/tile/bath,
+/area/rogue/indoors/vampire_manor)
 "AH" = (
 /turf/closed/wall/mineral/rogue/tent{
 	dir = 4
@@ -6610,6 +6623,7 @@
 "Oj" = (
 /obj/machinery/light/rogue/oven/south,
 /obj/machinery/light/rogue/hearth,
+/obj/item/cooking/pan,
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/indoors/wretchcamp)
 "Ok" = (
@@ -16036,7 +16050,7 @@ zM
 kA
 eR
 jb
-nH
+AG
 kA
 CC
 ot

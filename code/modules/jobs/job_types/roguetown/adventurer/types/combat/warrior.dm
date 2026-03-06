@@ -619,6 +619,7 @@
 		/obj/item/recipe_book/survival = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/book/rogue/trophy_rules = 1 //TA edit - added trophy_hunter component
 		)
 
 	H.set_blindness(0)
@@ -633,6 +634,8 @@
 			wrists = /obj/item/clothing/neck/roguetown/psicross/silver/noc 
 		else
 			wrists = /obj/item/clothing/neck/roguetown/psicross/silver/undivided
+	
+	H.AddComponent(/datum/component/trophy_hunter) //TA edit - added trophy_hunter component
 
 	//Old people get the option to become glass cannons. Expert Knives + Expert in their chosen weapon, but a permenant -I STR, -I PER, -2 SPD and -2 CON debuff.
 

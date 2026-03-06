@@ -57,7 +57,7 @@
 				backpack_contents += list(/obj/item/natural/bundle/fibers/full = 1)
 
 		H.verbs |= /mob/proc/haltyell
-		var/armor_options = list("Brigandine Set", "Maille Set")
+		var/armor_options = list("Light Brigandine Set", "Maille Set")
 		var/armor_choice = input(H, "Choose your armor.", "TAKE UP ARMS") as anything in armor_options
 
 		switch(armor_choice)

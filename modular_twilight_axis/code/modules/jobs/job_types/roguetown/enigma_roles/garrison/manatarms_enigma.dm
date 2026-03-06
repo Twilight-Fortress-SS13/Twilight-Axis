@@ -68,10 +68,10 @@
 	category_tags = list(CTAG_ROYALGUARD_ENIGMA)
 	traits_applied = list(TRAIT_HEAVYARMOR)
 	subclass_stats = list(
-		STATKEY_STR = 3,// seems kinda lame but remember guardsman bonus!!
+		STATKEY_STR = 2,// seems kinda lame but remember guardsman bonus!!
 		STATKEY_INT = 1,
 		STATKEY_CON = 3, //Like other footman classes their main thing is constitution more so than anything else
-		STATKEY_WIL = 2
+		STATKEY_WIL = 1
 	)
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_EXPERT,

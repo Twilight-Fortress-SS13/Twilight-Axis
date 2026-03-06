@@ -1,3 +1,7 @@
+#define COMSIG_HEADHOOK_CONTENTS_CHANGED "headhook_contents_changed"
+#define COMSIG_HEADHOOK_EQUIPPED "headhook_equipped"
+#define COMSIG_HEADHOOK_UNEQUIPPED "headhook_unequipped"
+
 //COMBO-CORE - BEGIN//
 /// External entrypoint: push an input.
 /// Args: (skill_id, mob/living/target, zone, extra)

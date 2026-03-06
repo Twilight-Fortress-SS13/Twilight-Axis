@@ -152,6 +152,7 @@
 	name = "'Regret' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Zweihander"
 	target_items = list(
+		/obj/item/rogueweapon/greatsword/grenz/flamberge 	= /obj/item/rogueweapon/greatsword/grenz/flamberge/eiren,
 		/obj/item/rogueweapon/greatsword/zwei 				= /obj/item/rogueweapon/greatsword/zwei/eiren,
 		/obj/item/rogueweapon/greatsword/grenz 				= /obj/item/rogueweapon/greatsword/zwei/eiren/steel,
 		/obj/item/rogueweapon/greatsword	  				= /obj/item/rogueweapon/greatsword/eiren,
@@ -181,12 +182,12 @@
 //inverserun claymore
 /obj/item/enchantingkit/inverserun
 	name = "'Votive Thorns' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Zweihander"
 	target_items = list(
-		/obj/item/rogueweapon/greatsword/zwei = /obj/item/rogueweapon/greatsword/zwei/inverserun, 
+		/obj/item/rogueweapon/greatsword/grenz/flamberge 	= /obj/item/rogueweapon/greatsword/grenz/flamberge/inverserun,
+		/obj/item/rogueweapon/greatsword/zwei 				= /obj/item/rogueweapon/greatsword/zwei/inverserun,
+		/obj/item/rogueweapon/greatsword	  				= /obj/item/rogueweapon/greatsword/inverserun,
 		/obj/item/rogueweapon/greatsword/grenz = /obj/item/rogueweapon/greatsword/zwei/inverserun/steel)
 	icon_loadout = /obj/item/rogueweapon/greatsword/zwei/inverserun
-
 
 //Zoe - Tytos Blackwood cloak
 /obj/item/enchantingkit/zoe
@@ -238,10 +239,10 @@
 	name = "'armoured avantyne barbute' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Armet or Hounskull Bascinet"
 	target_items = list(
-		/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet, 
-		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull
+		/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/dakken,
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken
 	)
-	result_item = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken
+	result_item = null
 
 //StinkethStonketh - Shashka & pike
 /obj/item/enchantingkit/stinketh_shashka
@@ -285,9 +286,9 @@
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can restore the original appearance of.. </br>..a Steel Cuirass.. </br>..a Steel Halfplate.. </br>..a set of Steel Plate Armor.. </br>..or a set of Fluted Plate Armor."
 	target_items = list(
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass 		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/legacy,
-		/obj/item/clothing/suit/roguetown/armor/plate	  			= /obj/item/clothing/suit/roguetown/armor/plate/legacy,
+		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted 	= /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy,
 		/obj/item/clothing/suit/roguetown/armor/plate/full 			= /obj/item/clothing/suit/roguetown/armor/plate/full/legacy,
-		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted 	= /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy
+		/obj/item/clothing/suit/roguetown/armor/plate	  			= /obj/item/clothing/suit/roguetown/armor/plate/legacy
 		)
 	result_item = null
 	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy
@@ -305,12 +306,12 @@
 	name = "'Doublehead' axe morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..an Iron Axe.. </br>..a Bronze Axe.. </br>..a Steel Axe.. </br>..a Battle Axe..  </br>..a Silver War Axe.. </br>..or a Psydonic War Axe."
 	target_items = list(
-		/obj/item/rogueweapon/stoneaxe/woodcut							= /obj/item/rogueweapon/stoneaxe/woodcut/triumphalt,
 		/obj/item/rogueweapon/stoneaxe/woodcut/steel					= /obj/item/rogueweapon/stoneaxe/woodcut/steel/triumph,
 		/obj/item/rogueweapon/stoneaxe/woodcut/bronze					= /obj/item/rogueweapon/stoneaxe/woodcut/bronze/triumph,
-		/obj/item/rogueweapon/stoneaxe/battle	  						= /obj/item/rogueweapon/stoneaxe/battle/triumph,
 		/obj/item/rogueweapon/stoneaxe/woodcut/silver					= /obj/item/rogueweapon/stoneaxe/woodcut/silver/triumph,
 		/obj/item/rogueweapon/stoneaxe/battle/psyaxe					= /obj/item/rogueweapon/stoneaxe/battle/psyaxe/triumph,
+		/obj/item/rogueweapon/stoneaxe/woodcut							= /obj/item/rogueweapon/stoneaxe/woodcut/triumphalt,
+		/obj/item/rogueweapon/stoneaxe/battle	  						= /obj/item/rogueweapon/stoneaxe/battle/triumph
 		)
 	result_item = null
 
@@ -345,9 +346,10 @@
 	name = "'Rockhillian' longsword morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..a Steel Longsword.. </br>..a Steel Broadsword.. </br>..or an Executioner Sword."
 	target_items = list(
-		/obj/item/rogueweapon/sword/long						= /obj/item/rogueweapon/sword/long/triumph/rockhill,
-		/obj/item/rogueweapon/sword/long/exe	  				= /obj/item/rogueweapon/sword/long/exe/rockhill,
-		/obj/item/rogueweapon/sword/long/broadsword/steel		= /obj/item/rogueweapon/sword/long/broadsword/steel/rockhill
+		/obj/item/rogueweapon/sword/long/broadsword/bronze		= /obj/item/rogueweapon/sword/long/broadsword/bronze/rockhill,
+		/obj/item/rogueweapon/sword/long/broadsword/steel		= /obj/item/rogueweapon/sword/long/broadsword/steel/rockhill,
+		/obj/item/rogueweapon/sword/long/broadsword				= /obj/item/rogueweapon/sword/long/broadsword/rockhill,
+		/obj/item/rogueweapon/sword/long/exe	  				= /obj/item/rogueweapon/sword/long/exe/rockhill
 		)
 	result_item = null
 	icon_loadout = /obj/item/rogueweapon/sword/long/triumph/rockhill
@@ -356,8 +358,8 @@
 	name = "'Sabreguard' longsword morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..a Steel Longsword.. </br>..or a Kriegmesser."
 	target_items = list(
-		/obj/item/rogueweapon/sword/long							= /obj/item/rogueweapon/sword/long/triumph/sabreguard,
-		/obj/item/rogueweapon/sword/long/kriegmesser	  			= /obj/item/rogueweapon/sword/long/kriegmesser/sabreguard
+		/obj/item/rogueweapon/sword/long/kriegmesser	  			= /obj/item/rogueweapon/sword/long/kriegmesser/sabreguard,
+		/obj/item/rogueweapon/sword/long							= /obj/item/rogueweapon/sword/long/triumph/sabreguard
 		)
 	result_item = null
 	icon_loadout = /obj/item/rogueweapon/sword/long/triumph/sabreguard
@@ -366,8 +368,8 @@
 	name = "'Psycrucifix' longsword morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..a Steel Longsword.. </br>..or a Psydonic Longsword."
 	target_items = list(
-		/obj/item/rogueweapon/sword/long						= /obj/item/rogueweapon/sword/long/triumph/psycrucifix,
-		/obj/item/rogueweapon/sword/long/psysword	  			= /obj/item/rogueweapon/sword/long/psysword/psycrucifix
+		/obj/item/rogueweapon/sword/long/psysword	  			= /obj/item/rogueweapon/sword/long/psysword/psycrucifix,
+		/obj/item/rogueweapon/sword/long						= /obj/item/rogueweapon/sword/long/triumph/psycrucifix
 		)
 	result_item = null
 	icon_loadout = /obj/item/rogueweapon/sword/long/triumph/psycrucifix

@@ -1,3 +1,14 @@
+#define TROPHY_EFFECT_ARMOR "armor"
+
+#define TROPHY_GROUP_ARMOR "armor"
+#define TROPHY_GROUP_STRONG "strong"
+#define TROPHY_GROUP_PERCEPTION "perception"
+#define TROPHY_GROUP_RAGE "rage"
+
+#define TROPHY_EFFECT_STR "str"
+#define TROPHY_EFFECT_PER "per"
+#define TROPHY_EFFECT_RAGE_PACKAGE "rage_package"
+
 //COMBO-CORE - BEGIN//
 #define COMPONENT_COMBO_ACCEPTED (1<<0)
 #define COMPONENT_COMBO_FIRED    (1<<1)
