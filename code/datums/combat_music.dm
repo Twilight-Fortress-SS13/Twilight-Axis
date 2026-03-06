@@ -488,3 +488,75 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	shortname = "Warscholar"
 	credits = "Butcher's Boulevard - Kristjan Thomas Haaristo"
 	musicpath = list('sound/music/warscholar.ogg')
+
+
+/datum/combat_music/blackknife
+	name = "Blacksteel Dagger"
+	desc = "Your vision narrows."
+	shortname = "BlackKnife"
+	credits = "Toby Fox - Black Knife"
+	musicpath = list('modular_twilight_axis/sound/music/combat_BlackKnife.ogg')
+
+
+/datum/combat_music/blackhammer
+	name = "Blacksteel Hammer"
+	desc = "Your vision... Wait."
+	shortname = "BlackHammer"
+	credits = "XLGlazzer - Hell Hammer, but in the style of Black Knife"
+	musicpath = list('modular_twilight_axis/sound/music/combat_BlackHammer.ogg')
+
+
+/datum/combat_music/brigan
+	name = "Good Ol' Brigandry"
+	desc = "Welcome back, classic bandit'o brigand."
+	shortname = "OlNewBrigand"
+	credits = "He was with us all this time..."
+	musicpath = list('modular_twilight_axis/sound/music/combat_bandit_brigand.ogg')
+
+
+/datum/combat_music/decisive
+	name = "DECISIVE BATTLE"
+	desc = "Shoot good, move better."
+	shortname = "DecBattle"
+	credits = "AZALI - DECISIVE BATTLE"
+	musicpath = list('modular_twilight_axis/sound/music/combat_DECISIVEBATTLE.ogg')
+
+
+/datum/combat_music/discovery
+	name = "Discovery"
+	desc = ""
+	shortname = "Discovery"
+	credits = "Nik Ammar - Discovery"
+	musicpath = list('modular_twilight_axis/sound/music/combat_HammerholdsPride.ogg')
+
+
+/datum/combat_music/princevladimir
+	name = "Near Your Love"
+	desc = ""
+	shortname = "PrinceV"
+	credits = "Sergey Starostin - Near Your Love (Varangian)"
+	musicpath = list('modular_twilight_axis/sound/music/combat_PrinceVladimir.ogg')
+
+
+/datum/combat_music/hedgeknighto
+	name = "Good Ol' Knight"
+	desc = "Welcome back, classic bandit'o knight."
+	shortname = "OlNewKnight"
+	credits = "He was with us all this time..."
+	musicpath = list('modular_twilight_axis/sound/music/music_combat_bandit2.ogg')
+
+
+/datum/combat_music/theclueless
+	name = "The Clueless"
+	desc = ""
+	shortname = "Clueless"
+	credits = "LISA: The Clueless - Manly Butter Bath"
+	musicpath = list('modular_twilight_axis/sound/music/combat_TheCluelessManlyButterBath.ogg')
+
+
+/datum/combat_music/hostiles
+	name = "We've Got Hostiles"
+	desc = ""
+	shortname = "Hostiles"
+	credits = "morch kovalski - We've Got Hostiles"
+	musicpath = list('modular_twilight_axis/sound/music/combat_WeveGotHostiles.ogg')
