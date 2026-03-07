@@ -107,7 +107,6 @@
 		if("Steel Handclaw")
 			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_MASTER, TRUE)
 			ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)
-			H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/berserker
 			r_hand = /obj/item/rogueweapon/handclaw/steel
 			gloves = /obj/item/clothing/gloves/roguetown/plate/graggar
