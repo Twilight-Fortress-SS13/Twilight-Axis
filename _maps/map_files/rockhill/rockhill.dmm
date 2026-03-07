@@ -15209,7 +15209,7 @@
 /obj/structure/mineral_door/wood/deadbolt{
 	dir = 8
 	},
-/turf/closed/wall/mineral/rogue/decowood,
+/turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
 "dOv" = (
 /turf/open/floor/rogue/herringbone,
