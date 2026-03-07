@@ -55,18 +55,18 @@
 	subclass_languages = list(/datum/language/thievescant)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_STRONGBITE, TRAIT_HEAVYARMOR, TRAIT_GOBLINCAVE)
 	subclass_stats = list(
-		STATKEY_STR = 4,
+		STATKEY_STR = 3,
 		STATKEY_INT = -3,
 		STATKEY_SPD = -2,
-		STATKEY_CON = 3,
-		STATKEY_WIL = 2,
+		STATKEY_CON = 2,
+		STATKEY_WIL = 1,
 	)
 	subclass_skills = list(
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER,
-		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
@@ -93,22 +93,22 @@
 	var/weapon_choice = input(H, "Choose your WEAPON.", "TAKE UP ARMS.") as anything in weapons
 	switch(weapon_choice)
 		if("Steel Warhammer and Shield")
-			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_MASTER, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_MASTER, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_EXPERT, TRUE)
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/berserker
 			r_hand = /obj/item/rogueweapon/mace/warhammer/steel
 			gloves = /obj/item/clothing/gloves/roguetown/bandages
 			armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
 			backr = /obj/item/rogueweapon/shield/wood
 		if("Steel Handclaw")
-			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_MASTER, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_EXPERT, TRUE)
 			ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/berserker
 			r_hand = /obj/item/rogueweapon/handclaw/steel
 			gloves = /obj/item/clothing/gloves/roguetown/plate/graggar
 			armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
 		if("Grand Maul")
-			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_MASTER, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/berserker
 			r_hand = /obj/item/rogueweapon/mace/maul/grand
 			gloves = /obj/item/clothing/gloves/roguetown/plate/graggar
