@@ -19,6 +19,13 @@
 	damfactor = 1.3
 	clickcd = 10
 
+/datum/intent/dagger/thrust/quick
+	name = "quick thrust"
+	icon_state = "inthresh"
+	attack_verb = list("thrusts", "shanks")
+	penfactor = 20 //Counts as up to 30-35AP, when factoring in strength-modified damage. Keep restricted to weapons that're meant to counter grapplers and wrestlers.
+	clickcd = 4 //Halved penetration, doubled attack speed. This is either going to be extremely funny, or extremely evil.
+
 /obj/item/rogueweapon/huntingknife/idagger/steel/devilsknife
 	name ="devilsknife"
 	desc = "More a sickle than a knife. It is said that Xylix once won these in a game of chance against an archdevil. These are simple reproductions, with jingling bells attached to the blades."
