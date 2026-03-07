@@ -80,10 +80,13 @@
 	if(!visualsOnly)
 		var/obj/item/organ/eyes/eyes = H.getorganslot(ORGAN_SLOT_EYES)
 		if(eyes)
-			eyes.Remove(H, 1)
-			QDEL_NULL(eyes)
-		eyes = new /obj/item/organ/eyes/night_vision/wild_goblin
-		eyes.Insert(H)
+			var/has_wild_goblin_eye_action = FALSE
+			for(var/datum/action/item_action/organ_action/use/goblin_cave_wild_eyes/action in eyes.actions)
+				has_wild_goblin_eye_action = TRUE
+				break
+			if(!has_wild_goblin_eye_action)
+				var/datum/action/item_action/organ_action/use/goblin_cave_wild_eyes/action = new(eyes)
+				action.Grant(H)
 	H.set_blindness(-3)
 	if(!H.mind)
 		return
@@ -209,10 +212,13 @@
 	if(!visualsOnly)
 		var/obj/item/organ/eyes/eyes = H.getorganslot(ORGAN_SLOT_EYES)
 		if(eyes)
-			eyes.Remove(H, 1)
-			QDEL_NULL(eyes)
-		eyes = new /obj/item/organ/eyes/night_vision/wild_goblin
-		eyes.Insert(H)
+			var/has_wild_goblin_eye_action = FALSE
+			for(var/datum/action/item_action/organ_action/use/goblin_cave_wild_eyes/action in eyes.actions)
+				has_wild_goblin_eye_action = TRUE
+				break
+			if(!has_wild_goblin_eye_action)
+				var/datum/action/item_action/organ_action/use/goblin_cave_wild_eyes/action = new(eyes)
+				action.Grant(H)
 	H.set_blindness(-3)
 	if(!H.mind)
 		return
@@ -278,10 +284,13 @@
 	if(!visualsOnly)
 		var/obj/item/organ/eyes/eyes = H.getorganslot(ORGAN_SLOT_EYES)
 		if(eyes)
-			eyes.Remove(H, 1)
-			QDEL_NULL(eyes)
-		eyes = new /obj/item/organ/eyes/night_vision/wild_goblin
-		eyes.Insert(H)
+			var/has_wild_goblin_eye_action = FALSE
+			for(var/datum/action/item_action/organ_action/use/goblin_cave_wild_eyes/action in eyes.actions)
+				has_wild_goblin_eye_action = TRUE
+				break
+			if(!has_wild_goblin_eye_action)
+				var/datum/action/item_action/organ_action/use/goblin_cave_wild_eyes/action = new(eyes)
+				action.Grant(H)
 	H.set_blindness(-3)
 	if(!H.mind)
 		return
