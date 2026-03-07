@@ -1,5 +1,3 @@
-#define GOBLINCHIEF_ANNOUNCEMENT_COOLDOWN (2 MINUTES)
-
 /datum/job/roguetown/goblin_chief
 	title = "Goblin Chief"
 	flag = GOBLINCHIEF
@@ -145,32 +143,3 @@
 		/obj/item/storage/keyring/goblinchief = 1,
 		)
 
-/mob/living/carbon/human/proc/goblinchief_announcement()
-	set name = "Announcement"
-	set category = "CHIEF"
-	if(stat)
-		return
-	var/announcementinput = input("Вырази волю Граггара...", "Make an Announcement") as text|null
-	if(announcementinput)
-		if(!src.can_speak_vocal())
-			to_chat(src,span_warning("I can't speak!"))
-			return FALSE
-		if(!istype(get_area(src), /area/rogue/under/cave/goblincave))//Nuh uh
-			to_chat(src, span_warning("I can only speak from within the Cave."))
-			return FALSE
-		if (!COOLDOWN_FINISHED(src, goblinchief_announcement_cd))
-			to_chat(src, span_warning("You must wait before speaking again."))
-			return FALSE
-		visible_message(span_warning("[src] takes a deep breath, preparing to make an announcement."))
-		if(do_after(src, 15 SECONDS, target = src)) // Reduced to 15 seconds from 30 on the original Herald PR. 15 is well enough time for sm1 to shove you.
-			say(announcementinput)
-			var/sanitized_input = trim(copytext(sanitize(announcementinput), 1, MAX_MESSAGE_LEN))
-			var/accented_input = treat_message_accent(sanitized_input, strings("accent_universal.json", "universal"), 1)
-			var/treated_input = treat_message(accented_input, /datum/language/common)
-			priority_announce("[treated_input]", "<span class='reallybig'>The Graggar Champion Roars</span>", 'sound/vo/mobs/troll/idle2.ogg', sender = src)
-			COOLDOWN_START(src, goblinchief_announcement_cd, GOBLINCHIEF_ANNOUNCEMENT_COOLDOWN)
-		else
-			to_chat(src, span_warning("Your announcement was interrupted!"))
-			return FALSE
-
-#undef GOBLINCHIEF_ANNOUNCEMENT_COOLDOWN
