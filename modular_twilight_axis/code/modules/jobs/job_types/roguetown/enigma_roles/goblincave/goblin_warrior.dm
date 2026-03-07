@@ -54,10 +54,10 @@
 	category_tags = list(CTAG_GOBLINWARRIOR)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED, TRAIT_GOBLINCAVE)
 	subclass_stats = list(
-		STATKEY_STR = 3,
+		STATKEY_STR = 2,
 		STATKEY_CON = 2,
-		STATKEY_WIL = 1,
-		STATKEY_INT = -3,
+		STATKEY_SPD = -1,
+		STATKEY_INT = -4,
 	)
 	subclass_skills = list(
 		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
