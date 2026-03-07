@@ -59,8 +59,9 @@
 	subclass_stats = list(
 		STATKEY_STR = 4,
 		STATKEY_INT = -3,
-		STATKEY_CON = 4,
-		STATKEY_WIL = 4,
+		STATKEY_SPD = -2,
+		STATKEY_CON = 3,
+		STATKEY_WIL = 2,
 	)
 	subclass_skills = list(
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
