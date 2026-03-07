@@ -12,9 +12,9 @@
 		/datum/species/halforc
 	)
 	allowed_patrons = list(/datum/patron/inhumen/graggar)
-	tutorial = "Ты — порождение Граггара, Бога Сила и Власти: из его собственной крови слеплены первые гоблины, жалкие, но жадные до силы твари. Ты доказал, что можешь резать глотки и выживать — теперь твоя жизнь имеет вкус: чужая кровь, трофеи и власть над слабыми. \
-				Подчиняйся только тем, кто сильнее, иначе сильный сам вырвет твою печень. Дерись жестоко, ломай и порабощай, жри слабаков после победы — слабость карается смертью, а сила — правом забрать всё. \
-				Умереть, захлебнувшись в крови врагов и своей собственной — высшая милость. Вождь каждую ночь рычит: героев отец бьёт последними, трусов — первыми и с наслаждением."
+	tutorial = "Ты — Вожак, избранный Граггаром, воплощение абсолютной власти в племени. \
+				Твоя жестокость — не злоба, а священный язык, которым ты доказываешь племени, что слабость недостойна жить. \
+				Ты обязан ежедневно доказывать племени, почему именно ты — вожак, оставляя после себя страх, который громче любых слов." 
 	class_categories = FALSE
 
 	outfit = null
@@ -32,13 +32,13 @@
 	wanderer_examine = TRUE
 	advjob_examine = FALSE
 	always_show_on_latechoices = TRUE
-	job_reopens_slots_on_death = TRUE
-	same_job_respawn_delay = 1 MINUTES
+	job_reopens_slots_on_death = FALSE
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
 
 	job_subclasses = list(
-		/datum/advclass/goblin_chief/brute,
+		/datum/advclass/goblin_chief/chief,
 	)
 
 /datum/job/roguetown/goblin_chief/after_spawn(mob/living/H, mob/M, latejoin = TRUE)
@@ -47,13 +47,15 @@
 		var/mob/living/carbon/human/human = H
 		human.grant_language(/datum/language/orcish)
 
-/datum/advclass/goblin_chief/brute
-	name = "Brute"
-	tutorial = "Ты — гоблин-костолом, кровь Граггара кипит в тебе: ломаешь врагов голыми руками или оружием ближнего боя, без доспехов, чистой силой. Дроби черепа, души и ломай кости в ближнем бою."
-	outfit = /datum/outfit/job/roguetown/goblin_chief/brute
+/datum/advclass/goblin_chief/chief
+	name = "Chief"
+	tutorial = "Ты — Вожак, избранный Граггаром, воплощение абсолютной власти в племени. \
+				Твоя жестокость — не злоба, а священный язык, которым ты доказываешь племени, что слабость недостойна жить. \
+				Ты обязан ежедневно доказывать племени, почему именно ты — вожак, оставляя после себя страх, который громче любых слов." 
+	outfit = /datum/outfit/job/roguetown/goblin_chief/chief
 	category_tags = list(CTAG_GOBLINCHIEF)
 	subclass_languages = list(/datum/language/thievescant)
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_STRONGBITE, TRAIT_HEAVYARMOR)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_STRONGBITE, TRAIT_HEAVYARMOR, TRAIT_GOBLINCAVE)
 	subclass_stats = list(
 		STATKEY_STR = 4,
 		STATKEY_INT = -3,
@@ -63,7 +65,6 @@
 	subclass_skills = list(
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/bows = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
@@ -73,9 +74,9 @@
 		/datum/skill/misc/sneaking = SKILL_LEVEL_NOVICE,
 	)
 
-/datum/outfit/job/roguetown/goblin_chief/brute/pre_equip(mob/living/carbon/human/H, visualsOnly)
+/datum/outfit/job/roguetown/goblin_chief/chief/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	..()
-	to_chat(H, span_warning("You are a goblin brute. Crush your enemies!"))
+	to_chat(H, span_warning("You are a goblin chief. Crush your enemies!"))
 	H.dna.species.soundpack_m = new /datum/voicepack/male/goblincave()
 	H.dna.species.soundpack_f = new /datum/voicepack/female/goblincave()
 	if(!visualsOnly)
@@ -91,15 +92,17 @@
 	if(!H.mind)
 		return
 
-	var/weapons = list("Steel Warhammer","Steel Handclaw","Grand Maul","Discipline - Unarmed")
+	var/weapons = list("Steel Warhammer and Shield","Steel Handclaw","Grand Maul","Discipline - Unarmed")
 	var/weapon_choice = input(H, "Choose your WEAPON.", "TAKE UP ARMS.") as anything in weapons
 	switch(weapon_choice)
-		if("Steel Warhammer")
-			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
+		if("Steel Warhammer and Shield")
+			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_MASTER, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_MASTER, TRUE)
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/berserker
 			r_hand = /obj/item/rogueweapon/mace/warhammer/steel
 			gloves = /obj/item/clothing/gloves/roguetown/bandages
 			armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
+			backr = /obj/item/rogueweapon/shield/wood
 		if("Steel Handclaw")
 			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_MASTER, TRUE)
 			ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)
@@ -115,9 +118,8 @@
 			gloves = /obj/item/clothing/gloves/roguetown/plate/graggar
 			armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
 		if ("Discipline - Unarmed")
-			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_EXPERT, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_MASTER, TRUE)
 			ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)
-			ADD_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/berserker
 			gloves = /obj/item/clothing/gloves/roguetown/bandages/pugilist
 			armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
@@ -165,7 +167,7 @@
 			var/sanitized_input = trim(copytext(sanitize(announcementinput), 1, MAX_MESSAGE_LEN))
 			var/accented_input = treat_message_accent(sanitized_input, strings("accent_universal.json", "universal"), 1)
 			var/treated_input = treat_message(accented_input, /datum/language/common)
-			priority_announce("[treated_input]", "<span class='reallybig'>The Graggar Champion Roar</span>", 'sound/vo/mobs/troll/idle2.ogg', sender = src)
+			priority_announce("[treated_input]", "<span class='reallybig'>The Graggar Champion Roars</span>", 'sound/vo/mobs/troll/idle2.ogg', sender = src)
 			COOLDOWN_START(src, goblinchief_announcement_cd, GOBLINCHIEF_ANNOUNCEMENT_COOLDOWN)
 		else
 			to_chat(src, span_warning("Your announcement was interrupted!"))

@@ -140,6 +140,8 @@
 
 #define GOBLINWARRIOR	(1<<0)
 #define GOBLINCHIEF		(1<<1)
+#define GOBLINSHAMAN	(1<<2)
+#define GOBLINSLAVE		(1<<3)
 
 #define TESTER		(1<<0)
 
@@ -271,6 +273,8 @@
 
 #define JDO_GOBLINWARRIOR 12
 #define JDO_GOBLINCHIEF 12.1
+#define JDO_GOBLINSHAMAN 12.2
+#define JDO_GOBLINSLAVE 12.3
 
 #define BITFLAG_HOLY_WARRIOR (1<<0)
 #define BITFLAG_ROYALTY (1<<1)

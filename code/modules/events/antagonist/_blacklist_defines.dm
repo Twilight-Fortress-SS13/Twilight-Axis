@@ -32,4 +32,8 @@
 		"Watchman", \
 		"Town Watch", \
 		"Squire",\
+		"Goblin Chief",\
+		"Goblin Shaman",\
+		"Goblin Slave",\
+		"Goblin Warrior",\
 	)

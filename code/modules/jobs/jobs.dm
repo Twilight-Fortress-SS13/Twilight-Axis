@@ -210,6 +210,8 @@ GLOBAL_LIST_INIT(inquisition_positions, list( //Self explanatory
 GLOBAL_LIST_INIT(goblin_positions, list( //Self explanatory
 	"Goblin Warrior",
 	"Goblin Chief",
+	"Goblin Shaman",
+	"Goblin Slave",
 ))
 
 GLOBAL_LIST_INIT(rogueoverthrow_positions, list( //Used for Aspirant / Peasant Rebellion

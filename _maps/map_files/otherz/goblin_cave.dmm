@@ -6,7 +6,7 @@
 "aY" = (/obj/effect/landmark/start/goblinlate,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
 "aZ" = (/obj/structure/fluff/nest,/obj/effect/landmark/start/goblin_slave,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "bq" = (/turf/open/floor/carpet/red,/area/rogue/under/cave/goblincave)
-"bA" = (/obj/item/reagent_containers/glass/bucket,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
+"bA" = (/obj/item/reagent_containers/glass/bucket,/turf/open/floor/rogue/dirt/road,/area/rogue/under/cave/goblincave)
 "cc" = (/obj/item/natural/rock,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "co" = (/turf/open/floor/rogue/concrete,/area/rogue/under/cave/goblincave)
 "ct" = (/obj/item/natural/rock,/turf/open/floor/rogue/dirt,/area/rogue/under/cave/goblincave)
@@ -32,6 +32,7 @@
 "ho" = (/obj/structure/chair/wood/rogue/throne,/obj/effect/landmark/start/goblin_chief,/turf/open/floor/carpet/royalblack,/area/rogue/under/cave/goblincave)
 "hC" = (/obj/structure/table/wood{icon_state = "tablewood1"},/obj/item/reagent_containers/food/snacks/rogue/meat/poultry/baked,/turf/open/floor/rogue/cobble,/area/rogue/under/cave/goblincave)
 "hQ" = (/obj/item/roguebin/water/gross,/turf/open/floor/rogue/metal,/area/rogue/under/cave/goblincave)
+"ij" = (/obj/structure/fluff/psycross/graggar/decorated,/turf/open/floor/rogue/cobble,/area/rogue/under/cave/goblincave)
 "iy" = (/obj/structure/fluff/railing/border{dir = 9},/obj/effect/landmark/start/goblin_warrior,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "iB" = (/obj/structure/mineral_door/wood/deadbolt{dir = 4},/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "iU" = (/obj/item/rogueweapon/pick,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
@@ -97,6 +98,7 @@
 "yf" = (/obj/machinery/light/rogue/smelter,/turf/open/floor/rogue/metal,/area/rogue/under/cave/goblincave)
 "ym" = (/obj/item/millstone,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
 "yG" = (/obj/structure/fluff/nest,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
+"yR" = (/obj/structure/fluff/nest,/obj/effect/landmark/start/goblin_slave,/obj/effect/decal/cleanable/coom,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "zf" = (/turf/open/floor/carpet/royalblack,/area/rogue/under/cave/goblincave)
 "zk" = (/obj/structure/stairs/stone{dir = 8},/turf/open/floor/rogue/cobble,/area/rogue/under/cave/goblincave)
 "zy" = (/obj/structure/chair/wood/rogue/chair3{dir = 1},/turf/open/floor/rogue/greenstone,/area/rogue/under/cave/goblincave)
@@ -121,6 +123,7 @@
 "Eo" = (/obj/effect/landmark/start/goblin_shaman,/turf/open/floor/rogue/cobble,/area/rogue/under/cave/goblincave)
 "EB" = (/obj/machinery/light/rogue/torchholder{dir = 4},/turf/open/floor/rogue/metal,/area/rogue/under/cave/goblincave)
 "EE" = (/obj/structure/mirror,/obj/structure/table/wood{icon_state = "tablewood1"},/obj/item/clothing/mask/cigarette/pipe/crafted,/obj/item/reagent_containers/glass/bucket,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
+"EZ" = (/obj/structure/fluff/psycross/graggar/decorated,/turf/open/floor/rogue/greenstone,/area/rogue/under/cave/goblincave)
 "Fe" = (/obj/effect/decal/cleanable/blood/gibs/down,/turf/open/floor/rogue/concrete,/area/rogue/under/cave/goblincave)
 "Fp" = (/obj/structure/fluff/alch,/turf/open/floor/rogue/metal/barograte,/area/rogue/under/cave/goblincave)
 "FB" = (/obj/machinery/light/rogue/oven/south,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
@@ -140,6 +143,7 @@
 "If" = (/turf/closed/mineral/rogue/bedrock,/area/rogue/under/cave/goblincave)
 "Iy" = (/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
 "II" = (/obj/effect/decal/cleanable/blood/puddle,/obj/machinery/light/rogue/firebowl/standing/blue,/turf/open/floor/rogue/concrete,/area/rogue/under/cave/goblincave)
+"Jh" = (/obj/structure/fluff/psycross/graggar/decorated,/turf/open/floor/carpet/royalblack,/area/rogue/under/cave/goblincave)
 "Ji" = (/obj/structure/table/wood{icon_state = "tablewood1"},/obj/item/reagent_containers/powder/flour,/obj/item/reagent_containers/food/snacks/rogue/meat/poultry,/obj/item/reagent_containers/food/snacks/rogue/dough,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Jp" = (/obj/structure/table/wood{icon_state = "tablewood1"},/obj/item/flashlight/flare/torch,/obj/item/flashlight/flare/torch,/obj/item/flashlight/flare/torch,/obj/item/flashlight/flare/torch,/obj/item/flashlight/flare/torch,/obj/item/flashlight/flare/torch,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
 "Jr" = (/obj/structure/bars,/turf/open/water/sewer,/area/rogue/under/cave/goblincave)
@@ -154,7 +158,7 @@
 "KP" = (/obj/structure/lever/wall{pixel_x = 18; redstone_id = "goblingate"},/turf/open/floor/rogue/naturalstone,/area/rogue/under/cave/goblincave)
 "KR" = (/obj/structure/fluff/statue/tdummy,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Le" = (/obj/structure/closet/crate/chest,/obj/item/rope/chain,/obj/item/rope/chain,/obj/item/rope/chain,/obj/item/rope/chain,/obj/item/rope/chain,/obj/item/rope/chain,/obj/item/rope/chain,/obj/item/rope/chain,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
-"Lq" = (/obj/structure/well,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
+"Lq" = (/obj/structure/well,/turf/open/floor/rogue/dirt,/area/rogue/under/cave/goblincave)
 "Lt" = (/obj/structure/stairs/stone{dir = 1},/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Md" = (/turf/closed/wall/mineral/rogue/stone/window/moss,/area/rogue/under/cave/goblincave)
 "Me" = (/obj/structure/bearpelt,/turf/open/floor/rogue/cobble,/area/rogue/under/cave/goblincave)
@@ -162,6 +166,7 @@
 "Mj" = (/obj/structure/pillory/double,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
 "Mq" = (/obj/item/grown/log/tree/small,/obj/item/grown/log/tree/small,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "MC" = (/obj/effect/decal/remains/human{pixel_y = 5},/turf/open/floor/rogue/concrete,/area/rogue/under/cave/goblincave)
+"MM" = (/obj/machinery/light/rogue/torchholder{dir = 8},/obj/effect/decal/cleanable/vomit/old,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
 "Nk" = (/obj/structure/table/wood{icon_state = "largetable"; dir = 5},/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Nn" = (/obj/item/roguekey/goblinkey,/obj/item/roguekey/goblinkey,/obj/item/roguekey/goblinkey,/obj/item/roguekey/goblinkey,/obj/item/roguekey/goblinkey,/obj/item/storage/keyring,/obj/item/storage/keyring,/obj/item/storage/keyring,/obj/item/storage/keyring,/turf/open/floor/rogue/cobble,/area/rogue/under/cave/goblincave)
 "Np" = (/obj/structure/fluff/statue/knight/interior,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
@@ -206,6 +211,7 @@
 "XR" = (/obj/structure/rack/rogue,/obj/item/rogueweapon/huntingknife/scissors,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
 "XT" = (/obj/item/rogueweapon/shovel,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Yj" = (/obj/structure/table/wood{icon_state = "largetable"; dir = 1},/obj/item/reagent_containers/glass/bowl,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
+"Ys" = (/obj/structure/fluff/psycross/graggar/decorated,/turf/open/floor/rogue/concrete,/area/rogue/under/cave/goblincave)
 "YA" = (/obj/effect/decal/cleanable/sigil/NW,/turf/open/floor/rogue/metal,/area/rogue/under/cave/goblincave)
 "Zk" = (/obj/structure/chair/wood/rogue/chair3,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Zn" = (/obj/structure/bars{icon_state = "barsbent"; layer = 2.81},/obj/structure/table/wood{icon_state = "tablewood1"},/turf/open/floor/rogue/greenstone,/area/rogue/under/cave/goblincave)
@@ -225,35 +231,35 @@ IfFLFLFLFLFLptFLFLFLFLFLFLFLFLIfXzXzXzXzXzXzXzXzXzQqKIKIKIIfIfIfFLFLFLFLFLFLFLFL
 IfFLFLFLFLFLFLFLFLFLFLFLFLFLFLIfIfIfIfIfXzXzXzjiXzmyKIPmKIKIXzIfFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLIfJWVwJWIfFLFLFLFLFLptdMFLFLIf
 IfFLFLFLFLptFLFLFLFLFLFLFLFLIfIfIfIfIfIfXzzIGhRYRYRYzIzIdozIXzIfIfIfIfIfIfFLFLFLFLFLFLFLFLFLIfIfIfJWVwJWIfIfIfIfIfIfptdMFLFLIf
 IfFLFLFLFLFLFLFLFLFLFLFLFLFLIfXzXzXzXzXzXzXzXzPPXzzIXzPPXzXzXzXzKIKIKIKIIfIfIfIfIfIfIfIfIfIfIfIfIfJWVwJWvTOPXzXzXzIfptFLdMFLIf
-IfFLFLFLFLFLFLFLFLFLFLFLFLFLIfXzZMIyIyrxXzVNtaaBCUzIHgzIzIaZXzmRdjqiHwKIKIKIKIKIKIXzXzXzKIKIKIKIJWJWdOaBaBRYdOaBKIIfptFLdMFLIf
+IfFLFLFLFLFLFLFLFLFLFLFLFLFLIfXzZMIyIyrxXzVNtaaBCUzIHgzIzIaZXzmRdjqiHwKIKIKIKIKIKIXzXzXzKIKIKIKIEZJWdOaBaBRYdOaBKIIfptFLdMFLIf
 IfFLFLptFLFLFLFLFLFLFLFLFLFLIfXzIyRYRYfvXzXzXzXzXzRYXzXzXzXzKIIyzfbqbqKIqrxwdgWsdgBSSTXzXzsosoKIDCdOdOdOaBaBRYaBXzIfptFLdMFLIf
-IfFLptFLFLFLFLFLFLFLFLFLFLFLIfXzSHRYzIfvXzaZzIzIiBRYHgzIzIaZKIIyRYRYRYKIWcRYRYRYRYRYHFXztbJWJWZnJWdOuHdOdOaBdORYKIIfptFLFLFLIf
+IfFLptFLFLFLFLFLFLFLFLFLFLFLIfXzSHRYzIfvXzyRzIzIiBRYHgzIzIaZKIIyRYRYRYKIWcRYRYRYRYRYHFXztbJWJWZnJWdOuHdOdOaBdORYKIIfptFLFLFLIf
 IfFLFLFLFLFLFLFLFLFLFLFLFLFLIfKIGfdozIfvXzXzXzPPXzzIXzPPKIKIKIWJRYRYRYKIwZKszIagapLeXRXzzyJWdOTldOdOdOdOdOOPXzKIKIIfptFLdMFLIf
 IfFLptFLFLFLFLFLFLFLFLctFLFLIfKIKIXzQdXzXzXzVDKRyGzIzIAjVDKIKIKIMeRYlbXzXzXzViXzXzXzXzXzJWJWKPKIvTdOdOdOdOXzXzIfIfIfptFLdMFLIf
-IfFLFLFLFLFLFLFLFLFLaBaBmWFLIfKIzIpQzIdOHNRXzIzIzIzIRYRYRYKIRYRYRYRYPtXzyGzIzIRYIyIyJpKIPeJWKIKIXzOPnSnSnSKIIfIfFLptFLFLFLdMIf
+IfFLFLFLFLFLFLFLFLFLaBaBmWFLIfKIzIpQzIdOHNRXzIzIzIzIRYRYijKIRYRYRYRYPtXzyGzIzIRYIyIyJpKIPeJWKIKIXzOPnSnSnSKIIfIfFLptFLFLFLdMIf
 IfptFLFLFLFLFLFLFLaBaBgegemWIfKIdOdOdOdOdOXzRYzIzIzIzIXzXzXzltXzXzXzXzXzXzXzzIzIRYRYkaKIPePeXzIfIfIfdOdOdOXzIfFLFLptFLFLFLdMIf
-IfFLFLFLFLFLFLFLFLFLmWgegeaBIfXzKARYzIdOloXzRYzIXzoiXzXzIyXzbqzfhozfbqKIdBXzXzlBXzXzKIKIJWPeXzIfFLIfdOdOdOIfIfFLFLptFLFLFLdMIf
+IfFLFLFLFLFLFLFLFLFLmWgegeaBIfXzKARYzIdOloXzRYzIXzoiXzXzIyXzbqJhhoJhbqKIdBXzXzlBXzXzKIKIJWPeXzIfFLIfdOdOdOIfIfFLFLptFLFLFLdMIf
 IfFLFLFLFLFLFLFLFLFLctaBgeaBIfXzfKzIzIzIhCKIXiRYXzRYIyIyIyXzockuzfbqocKIIyIyzIzIIyIyPezkJWJWXzIfFLIfIfIfIfIfFLFLFLptFLFLFLdMIf
 IfFLFLFLFLFLFLFLFLFLFLaBgectaBXzfKzIzIzIfKKIRYRYXzRYIyXzXzXzPeococococKIKIKIzIRYRYRYRYzkJWJWXzIfFLFLFLFLFLFLFLFLFLFLptFLFLdMIf
 IfFLFLFLFLFLFLFLFLFLFLaBgegegeXzXzMdKIKIKIKIMdKIXzRYzIPPvTZIPeLtmymyoccAXtPPRYPeKIKIKIPPXzXzXzIfFLFLFLFLFLFLFLFLFLFLptFLFLdMIf
 IfFLFLFLFLFLFLFLFLFLFLctgegeaBzIcciUzIzIzIwoskXTXzzIzIXznWAYkIiyoyAEujqAnWXzRYPeKIjiRYNnjijiXzIfFLFLFLFLFLFLFLFLFLFLptFLFLdMIf
 IfFLFLFLFLFLFLFLFLFLFLFLFLgeaBctaBiUgegegezIzIzIVLzIzIPPMjRYoyzIoyRYBMRYHaPPRYRYKIjiRYRYRYRYXzIfIfIfIfIfIfIfFLFLFLFLptFLFLdMIf
-IfFLFLFLFLFLFLFLFLFLFLFLFLctaBFLaBaBaBmWgegeRYSRXzzIRYKIIyRYoyRYRYzIBMzIzIPPPeRYXzRYRYRYPPXzXzXzXzXzXzXzXzIfIfFLFLFLptFLFLdMIf
+IfFLFLFLFLFLFLFLFLFLFLFLFLctaBFLaBaBaBmWgegeRYSRXzzIRYKIIyRYoyRYRYzIBMzIzIPPPeRYXzNuRYRYPPXzXzXzXzXzXzXzXzIfIfFLFLFLptFLFLdMIf
 IfptFLFLFLFLFLFLFLFLFLFLFLFLFLIfKIMdKIKIKIKIMdKIXzRYRYKIaYRYXzXzrKXzXzzIzIXzPeRYKKRYRYPPPPPeZFRYRYNusiyfXzXzIfFLFLFLptFLFLptIf
 IfptFLFLFLFLptFLFLFLFLFLFLFLFLIfKIWCFBFBZMPfMqTzXzIyloKIKIXzXzLtLtLtXzXzXzXzfZRYXzPPPPPPAwdGRYRYRYRYRYPehQXzIfFLFLFLFLptFLdMIf
 IfptFLFLFLFLptFLFLFLFLFLFLFLFLIfKIWaZkRYRYRYzIzIXzIyRYRYRYRYBYzIzIzIzIBYRYRYRYRYXzEBPePePeRYRYRYKwRYnqRYuTXzIfFLFLFLFLptFLptIf
 IfptptFLFLFLptFLFLFLFLFLFLFLFLIfKIslzIRYRYRYRYRYzCRYRYIyIyIyzIzIzIzIzIzIRYRYRYzImkzIRYRYRYRYRYRYKwSRnhRYZqXzIfFLFLFLFLptFLptIf
-IfdMptFLFLFLptptFLFLFLFLFLFLFLIfKIFXzIzIRYRYRYHFXzXzXzKIKIKIKIpepepeXzXzXzXzXzXzXzzIzIzIRYRYRYRYRYRYRYPeRaXzIfFLFLFLFLptFLptIf
+IfdMptFLFLFLptptFLFLFLFLFLFLFLIfKIFXzIzIRYRYRYMMXzXzXzKIKIKIKIpepepeXzXzXzXzXzXzXzzIzIzIRYRYRYRYRYRYRYPeRaXzIfFLFLFLFLptFLptIf
 IfdMptFLFLFLFLptFLFLFLFLFLFLFLIfXztTDdDdJijLymXzXzIfIfKIIyIydjzIzIzIdjbALqXzIfIfXzXzXzXzRYRYRYRYGOGORYPeXzXzIfFLFLFLFLptFLptIf
-IfFLdMptFLFLFLptptFLFLFLFLFLFLIfXzXzXzXzXzXzXzXzIfIfIfKIIyRYgAZkzIZkzIzIIyXzIfIfIfIfIfXzXzvYRYRYRYRYRYGhXzIfIfFLFLFLptptFLptIf
+IfFLdMptFLFLFLptptFLFLFLFLFLFLIfXzXzXzXzXzXzXzXzIfIfIfKIIyRYgAZkzIZkzIzIaBXzIfIfIfIfIfXzXzvYRYRYRYRYRYGhXzIfIfFLFLFLptptFLptIf
 IfFLdMptFLFLFLFLptFLFLFLFLFLFLIfIfIfIfIfIfIfIfIfIfFLIfKIWcRYBkYjBkBkNkRYHFXzIfFLFLFLFLFLXzXzPecBcBcBPeXzXzIfFLFLFLFLptFLptdMIf
 IfptdMptptFLFLFLFLptptFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLIfKIIyGXxeKqKqDFTURYIyXzIfFLFLFLFLFLFLFLgegegegegeFLFLFLFLFLFLFLptFLptFLIf
 IfFLdMFLptFLFLFLFLFLptFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLIfKIIyzIzIzIgFgFIyIydBXzIfFLFLFLFLFLFLFLgegegegegeFLFLFLFLFLptptFLFLptFLIf
 IfFLdMFLFLptFLFLFLFLFLptFLFLFLFLFLFLFLFLFLFLFLFLFLFLIfKIIyIyIyIyIyIyIyIyIyXzIfFLFLFLFLFLFLFLFLFLgegeFLFLFLFLFLptptFLFLdMptFLIf
-IfFLdMFLFLptFLFLFLFLFLFLptptFLFLFLFLFLFLFLFLFLFLFLFLIfXzNpcouekOZBAyKlcomdXzIfFLFLFLFLFLFLFLFLFLFLgeFLFLFLFLFLptFLFLFLdMptFLIf
+IfFLdMFLFLptFLFLFLFLFLFLptptFLFLFLFLFLFLFLFLFLFLFLFLIfXzIyYsuekOZBAyKlYsIyXzIfFLFLFLFLFLFLFLFLFLFLgeFLFLFLFLFLptFLFLFLdMptFLIf
 IfFLdMFLFLptFLFLFLFLFLFLFLptptFLFLFLFLFLFLFLFLFLFLFLIfXzIyKlFeYAPzsPMCKlIyXzIfFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLptFLdMdMptptFLIf
 IfdMFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLIfXzIypTcoaPpVGVAcIIIyXzIfFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLdMFLFLptFLFLIf
-IfptptFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLIfXzIyvscoMgnxuXcoRjIyXzIfFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLdMFLptptFLFLIf
+IfptptFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLIfXzNpvscoMgnxuXcoRjmdXzIfFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLdMFLptptFLFLIf
 IfFLptptFLptFLptFLFLFLFLFLFLFLFLFLFLFLFLptptFLptptptIfXzIycoefDlKlfxKlcoIyXzIfptptptptFLFLFLFLFLFLFLFLFLFLFLFLFLFLptptFLFLFLIf
 IfFLFLFLFLFLFLFLFLptptFLptptFLptptFLptptFLFLFLFLFLFLIfXzXzXzXzXzXzXzXzXzXzXzIfFLFLFLFLptptptptptFLFLFLFLFLFLptFLptptFLFLFLFLIf
 IfFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLFLIfIfIfIfIfIfIfIfIfIfIfIfIfFLFLFLFLFLFLFLFLFLptptptptFLptFLFLFLFLFLFLFLFLIf
