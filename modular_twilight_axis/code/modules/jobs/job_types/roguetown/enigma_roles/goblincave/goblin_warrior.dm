@@ -180,8 +180,8 @@
 		STATKEY_STR = -2,
 		STATKEY_INT = -1,
 		STATKEY_PER = 1,
-		STATKEY_WIL = 2,
-		STATKEY_SPD = 4,
+		STATKEY_WIL = 1,
+		STATKEY_SPD = 3,
 	)
 	subclass_skills = list(
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
@@ -253,12 +253,12 @@
 		STATKEY_INT = -1,
 		STATKEY_PER = 3,
 		STATKEY_WIL = 1,
-		STATKEY_SPD = 3,
+		STATKEY_SPD = 2,
 	)
 	subclass_skills = list(
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/bows = SKILL_LEVEL_MASTER,
+		/datum/skill/combat/bows = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_NOVICE,
