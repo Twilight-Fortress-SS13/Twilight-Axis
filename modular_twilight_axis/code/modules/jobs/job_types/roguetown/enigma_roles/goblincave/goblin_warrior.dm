@@ -20,7 +20,7 @@
 	display_order = JDO_GOBLINWARRIOR
 	selection_color = JCOLOR_WANDERER
 	show_in_credits = FALSE
-	min_pq = -50
+	min_pq = -30
 	max_pq = null
 
 	advclass_cat_rolls = list(CTAG_GOBLINWARRIOR = 10)
