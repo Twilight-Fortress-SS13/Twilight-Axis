@@ -86,6 +86,8 @@
 		eyes = new /obj/item/organ/eyes/night_vision/wild_goblin
 		eyes.Insert(H)
 	H.set_blindness(-3)
+	if(H.mind)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/chief_announce)
 	if(!H.mind)
 		return
 
@@ -141,3 +143,30 @@
 		/obj/item/storage/keyring/goblinchief = 1,
 		)
 
+/obj/effect/proc_holder/spell/self/chief_announce
+	name = "Command Will"
+	desc = "Bellow a commandment, which will be heard by all goblins in your cave - regardless of their location."
+	recharge_time = 20 SECONDS
+
+/obj/effect/proc_holder/spell/self/chief_announce/cast(list/targets, mob/user)
+	if(user.stat)
+		return FALSE
+
+	var/calltext = input("Send Your Will To Your Goblins", "GOBLINS ANNOUNCE") as text|null
+	if(!calltext)
+		return FALSE
+	calltext = copytext_char(sanitize(calltext), 1, MAX_MESSAGE_LEN)
+	if(!length(calltext))
+		return FALSE
+
+	var/list/allowed_goblin_jobs = list("Goblin Chief", "Goblin Warrior", "Goblin Slave", "Goblin Shaman")
+
+	for(var/mob/living/carbon/human/goblin in GLOB.human_list)
+		if(!goblin.mind)
+			continue
+		if(!(goblin.job in allowed_goblin_jobs) && !(goblin.mind.assigned_role in allowed_goblin_jobs))
+			continue
+		to_chat(goblin, span_boldannounce("[span_purple(user.real_name)] roars out their commandment: [calltext]"))
+		goblin.playsound_local(get_turf(user), 'sound/vo/mobs/troll/idle2.ogg', 70, FALSE)
+
+	..()
