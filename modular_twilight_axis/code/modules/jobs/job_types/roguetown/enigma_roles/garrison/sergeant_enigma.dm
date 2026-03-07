@@ -75,7 +75,7 @@
 	category_tags = list(CTAG_ROYALSERGEANT)
 	subclass_stats = list(
 		STATKEY_STR = 2,
-		STATKEY_INT = 3,
+		STATKEY_INT = 1,
 		STATKEY_CON = 2,//Glorified footman
 		STATKEY_PER = 1, //Gets bow-skills, so give a SMALL tad of perception to aid in bow draw.
 		STATKEY_WIL = 2,
@@ -160,6 +160,7 @@
 				beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 				H.change_stat(STATKEY_PER, 2)
 				H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 4, TRUE)
+				ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,

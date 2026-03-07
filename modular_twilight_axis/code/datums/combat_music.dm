@@ -68,3 +68,10 @@
 	shortname = "Tabaxi"
 	credits = "La Caution Thé à la Menthe Instrumentale HQ Oceans Twelve"
 	musicpath = list('modular_twilight_axis/sound/music/combat_tabaxi.ogg')
+
+/datum/combat_music/lich 
+	name = "Lich - Herald of HER will"
+	desc = "March of the Dead"
+	shortname = "Lich"
+	credits = "Sefus - Herald of HER will"
+	musicpath = list('modular_twilight_axis/sound/music/combat_lich.ogg')

@@ -243,7 +243,7 @@
 
 	user.changeNext_move(CLICK_CD_GRABBING)
 	var/mob/living/carbon/C = grabbed
-	var/armor_block = C.run_armor_check(sublimb_grabbed, d_type, armor_penetration = BLUNT_DEFAULT_PENFACTOR)
+	var/armor_block = C.run_armor_check(sublimb_grabbed, d_type, armor_penetration = BLUNT_NO_PENFACTOR) // TA EDIT, prev. BLUNT_DEFAULT_PENFACTOR
 	var/damage = user.get_punch_dmg()
 	if(HAS_TRAIT(user, TRAIT_STRONGBITE))
 		damage = damage*2

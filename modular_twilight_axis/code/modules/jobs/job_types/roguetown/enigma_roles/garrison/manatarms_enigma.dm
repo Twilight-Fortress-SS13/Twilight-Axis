@@ -68,10 +68,10 @@
 	category_tags = list(CTAG_ROYALGUARD_ENIGMA)
 	traits_applied = list(TRAIT_HEAVYARMOR)
 	subclass_stats = list(
-		STATKEY_STR = 3,// seems kinda lame but remember guardsman bonus!!
+		STATKEY_STR = 2,// seems kinda lame but remember guardsman bonus!!
 		STATKEY_INT = 1,
 		STATKEY_CON = 3, //Like other footman classes their main thing is constitution more so than anything else
-		STATKEY_WIL = 2
+		STATKEY_WIL = 1
 	)
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_EXPERT,
@@ -231,10 +231,12 @@
 				beltr = /obj/item/quiver/twilight_bullet/lead
 				r_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 				l_hand = /obj/item/twilight_powderflask
+				ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 			if("Arquebus Rifle")
 				beltr = /obj/item/quiver/twilight_bullet/lead
 				r_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet
 				l_hand = /obj/item/twilight_powderflask
+				ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 		switch(armor_choice)
 			if("Maille Set(Medium Armor)")
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/scale

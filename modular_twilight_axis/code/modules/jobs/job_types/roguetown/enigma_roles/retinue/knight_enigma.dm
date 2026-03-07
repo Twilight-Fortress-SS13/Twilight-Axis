@@ -107,6 +107,7 @@
 		/datum/skill/combat/polearms = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/swords = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/axes = SKILL_LEVEL_MASTER,
+		/datum/skill/combat/whipsflails = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/maces = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/shields = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/riding = SKILL_LEVEL_EXPERT,

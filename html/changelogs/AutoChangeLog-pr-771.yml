@@ -1,0 +1,5 @@
+author: "Oni328"
+delete-after: True
+changes:
+  - rscadd: "Wine to donat loadout"
+  - rscadd: "Beer to donat loadout"

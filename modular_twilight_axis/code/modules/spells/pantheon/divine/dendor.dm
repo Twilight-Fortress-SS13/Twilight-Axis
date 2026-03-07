@@ -9,9 +9,8 @@
 	recharge_time = 5 MINUTES
 	miracle = TRUE
 	devotion_cost = 150
-	invocations = list("Threefather! Give me you'r protect!")
+	invocations = list("Threefather! Give me your protect!")
 	invocation_type = "shout"
-
 
 	objtoequip = /obj/item/clothing/suit/roguetown/vinearmour
 	slottoequip = SLOT_ARMOR
@@ -40,7 +39,7 @@
 	flags_inv = null
 	armor_class = ARMOR_CLASS_LIGHT
 	blade_dulling = DULLING_BASHCHOP
-	blocksound = PLATEHIT
+	blocksound = SOFTHIT
 	armor = ARMOR_VINES
 	body_parts_covered = COVERAGE_FULL | NECK | HANDS | FEET
 	unenchantable = TRUE
@@ -83,10 +82,6 @@
 /atom/movable/screen/alert/status_effect/buff/vinearmour
 	name = "Vinearmour"
 	desc = "The vines hirt you, but protects!"
-
-
-
-
 
 /datum/intent/simple/beast_claws/slash
 	name = "Рассекающий удар"
@@ -163,12 +158,11 @@
 
 	user.put_in_hands(new /obj/item/rogueweapon/beast_claws(user), TRUE, FALSE, TRUE)
 
-
 // -- Debuff
 
 /atom/movable/screen/alert/status_effect/debuff/beast_rage
 	name = "Уставший зверь"
-	desc = "Мой внутренни зверь устал, как и я."
+	desc = "Мой внутренний зверь устал, как и я."
 	icon_state = "debuff"
 
 /datum/status_effect/debuff/beast_rage_weakness
@@ -185,7 +179,7 @@
 
 /atom/movable/screen/alert/status_effect/buff/beast_rage
 	name = "Буйствующий зверь"
-	desc = "Мой внутренни зверь буйствует! Силы переполняют меня, но мой разум гаснет!"
+	desc = "Мой внутренний зверь буйствует! Силы переполняют меня, но мой разум гаснет!"
 	icon_state = "buff"
 
 /datum/status_effect/buff/beast_rage
@@ -194,7 +188,6 @@
 	effectedstats = list(
 		"speed" = 2,
 		"strength" = 2,
-		"endurance" = 1,
 		"willpower" = 2,
 		"intelligence" = -5,
 	)
@@ -212,7 +205,7 @@
 	name = "Буйство зверя"
 	desc = ""
 	overlay_state = "dendor"
-	recharge_time = 2.5 MINUTES
+	recharge_time = 3 MINUTES
 	req_items = /obj/item/clothing/neck/roguetown/psicross/dendor
 	sound = 'sound/magic/churn.ogg'
 	associated_skill = /datum/skill/magic/druidic
@@ -233,13 +226,13 @@
 	range = -1
 	overlay_state = "blesscrop"
 	releasedrain = 30
-	recharge_time = 30 SECONDS
+	recharge_time = 5 MINUTES
 	req_items = /obj/item/clothing/neck/roguetown/psicross/dendor
 	cast_without_targets = TRUE
 	sound = 'sound/magic/churn.ogg'
 	associated_skill = /datum/skill/magic/druidic
 	miracle = TRUE
-	devotion_cost = 20
+	devotion_cost = 70
 
 /obj/effect/proc_holder/spell/targeted/create_seed/proc/get_seeds_dict()
 	var/list/allowed_seeds = list()

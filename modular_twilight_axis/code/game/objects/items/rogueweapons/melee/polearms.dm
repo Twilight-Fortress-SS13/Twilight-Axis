@@ -31,3 +31,15 @@
 		added_int = 50,\
 		added_def = 2,\
 	)
+
+/datum/intent/sword/bash
+	penfactor = BLUNT_LOWER_PENFACTOR
+
+/datum/intent/rend
+	penfactor = BLUNT_NO_PENFACTOR
+
+/datum/intent/rend/reach
+	penfactor = BLUNT_NO_PENFACTOR
+
+/datum/intent/partizan/peel
+	penfactor = BLUNT_NO_PENFACTOR

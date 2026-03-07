@@ -91,7 +91,7 @@
 		owner.become_unknown_to(MF)
 
 	var/mob/living/carbon/human/L = owner.current
-	L.cmode_music = 'sound/music/combat_heretic.ogg'
+	L.cmode_music = 'modular_twilight_axis/sound/music/combat_lich.ogg' //TA_EDIT
 	L.faction = list("undead")
 
 	for(var/datum/charflaw/cf in L.charflaws)

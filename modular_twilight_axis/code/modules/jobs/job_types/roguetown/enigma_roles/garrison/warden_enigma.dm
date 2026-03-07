@@ -48,8 +48,7 @@
 	category_tags = list(CTAG_OVERSEER)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_WOODSMAN, TRAIT_STEELHEARTED)
 	subclass_stats = list(
-		STATKEY_STR = 3,
-		STATKEY_PER = 2,
+		STATKEY_STR = 2,
 		STATKEY_CON = 2,
 		STATKEY_WIL = 2,
 		STATKEY_INT = 1,
