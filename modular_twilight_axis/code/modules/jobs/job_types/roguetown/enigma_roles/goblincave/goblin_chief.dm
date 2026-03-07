@@ -86,8 +86,6 @@
 		eyes = new /obj/item/organ/eyes/night_vision/wild_goblin
 		eyes.Insert(H)
 	H.set_blindness(-3)
-	if(H.mind)
-		H.verbs += /mob/living/carbon/human/proc/goblinchief_announcement
 	if(!H.mind)
 		return
 
