@@ -1,3 +1,4 @@
+/*
 /datum/advclass/noctite_spellblade
 	name = "Newmoon Spellblade"
 	tutorial = "Заклинатели Новолунья известны в кругах радикальных Ноктитов как самые преданные Нок монахи, чаще всего происходящие из Зибантии. \
@@ -70,3 +71,4 @@
 	H.AddSpell(select_weapon)
 	H.AddSpell(summon_weapon)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/noctite_fortify)
+*/

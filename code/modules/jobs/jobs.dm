@@ -236,6 +236,7 @@ GLOBAL_LIST_INIT(rogueoverthrow_positions, list( //Used for Aspirant / Peasant R
 	"Mayor",
 	"Bailiff",
 ))
+GLOBAL_LIST_INIT(aspirant_eligible_positions, list(ASPIRANT_ELIGIBLE_POSITIONS))
 
 GLOBAL_LIST_INIT(roguewar_positions, list(
 	"Adventurer",

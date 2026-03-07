@@ -864,7 +864,7 @@
 	item_state = "axegun"
 	damfactor = 0.9
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop)
-	gripped_intents = list(/datum/intent/shoot/twilight_firearm, /datum/intent/arc/twilight_firearm, /datum/intent/axe/cut/battle/greataxe, /datum/intent/axe/chop/battle/greataxe)
+	gripped_intents = list(/datum/intent/shoot/twilight_firearm, /datum/intent/arc/twilight_firearm, /datum/intent/axe/cut/long, /datum/intent/axe/chop/long)
 	associated_skill = /datum/skill/combat/axes
 
 /obj/item/gun/ballistic/twilight_firearm/axtgonne/getonmobprop(tag)
