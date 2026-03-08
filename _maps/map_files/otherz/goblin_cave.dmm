@@ -200,6 +200,7 @@
 "Mq" = (/obj/item/grown/log/tree/small,/obj/item/grown/log/tree/small,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "MC" = (/obj/effect/decal/remains/human{pixel_y = 5},/turf/open/floor/rogue/concrete,/area/rogue/under/cave/goblincave)
 "MM" = (/obj/machinery/light/rogue/torchholder{dir = 8},/obj/effect/decal/cleanable/vomit/old,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
+"MY" = (/obj/item/flashlight/flare/torch/lantern,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Nf" = (/obj/effect/decal/cleanable/blood,/obj/structure/spike_pit,/turf/open/floor/rogue/dirt,/area/rogue/under/cave/goblincave)
 "Nk" = (/obj/structure/table/wood{icon_state = "largetable"; dir = 5},/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Nn" = (/obj/item/roguekey/goblinkey,/obj/item/roguekey/goblinkey,/obj/item/roguekey/goblinkey,/obj/item/roguekey/goblinkey,/obj/item/roguekey/goblinkey,/obj/item/storage/keyring,/obj/item/storage/keyring,/obj/item/storage/keyring,/obj/item/storage/keyring,/turf/open/floor/rogue/cobble,/area/rogue/under/cave/goblincave)
@@ -288,7 +289,7 @@ IfFLFLFLFLdMFLFLFLFLmWgegeaBIfXzKARYzIdOloXzRYzIXzoiXzXzIyXzbqJhhoJhbqKIdBXzXzlB
 IfFLFLFLFLdMFLFLdMFLctaBgeaBIfXzfKzIzIzIhCKIXiRYXzRYIyIyIyXzockuzfbqocKIIyIyzIzIIyIyPezkJWJWXzIfFLIfIfIfIfIfFLFLFLptFLFLFLdMIf
 IfFLFLFLFLdMdMFLdMFLFLaBgectaBXzfKzIzIzIfKKIRYRYXzRYIyXzXzXzPeococococKIKIKIzIRYRYRYRYzkJWJWXzIfFLFLFLFLFLFLFLFLFLFLptFLFLdMIf
 IfFLFLdMFLFLdMFLFLFLFLaBgegegeXzXzMdKIKIKIKIMdKIXzRYzIPPvTZIPeLtmymyoccAXtPPRYPeKIKIKIPPXzXzXzIfFLFLFLFLFLFLFLFLFLFLptFLFLdMIf
-IfFLFLdMFLFLFLFLFLptFLctgegeaBzIcciUzIzIzIwoskXTXzzIzIXznWAYAYiyoyAEqAqAnWXzRYPeKIjiRYNnjijiXzIfFLFLFLFLFLFLFLFLFLFLptFLFLdMIf
+IfFLFLdMFLFLFLFLFLptFLctgegeaBzIcciUzIMYMYwoskXTXzzIzIXznWAYAYiyoyAEqAqAnWXzRYPeKIjiRYNnjijiXzIfFLFLFLFLFLFLFLFLFLFLptFLFLdMIf
 IfFLFLFLFLdMFLFLdMdMdMFLFLgeaBctaBiUgegegezIzIzIVLzIzIPPMjRYRYkIoyoyzIRYHaPPRYRYKIjiRYRYRYRYXzIfIfIfIfIfIfIfFLFLFLFLptFLFLdMIf
 IfFLFLFLFLFLFLFLFLFLFLFLFLctaBFLaBaBaBmWgegeRYSRXzzIRYKIIyRYRYRYRYzIzIzIzIPPPeRYXzNuRYRYPPXzXzXzXzXzXzXzXzIfIfFLFLFLptFLFLdMIf
 IfptFLFLFLFLFLFLFLptFLFLFLFLFLIfKIMdKIKIKIKIMdKIXzRYRYKIIyRYXzXzrKXzXzzIzIXzPeRYKKRYRYPPPPPeZFRYRYNusiyfXzXzIfFLFLFLptFLFLptIf
