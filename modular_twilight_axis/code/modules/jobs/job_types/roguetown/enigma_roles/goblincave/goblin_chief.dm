@@ -53,7 +53,7 @@
 	outfit = /datum/outfit/job/roguetown/goblin_chief/chief
 	category_tags = list(CTAG_GOBLINCHIEF)
 	subclass_languages = list(/datum/language/thievescant)
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_STRONGBITE, TRAIT_HEAVYARMOR, TRAIT_GOBLINCAVE, TRAIT_AZURENATIVE)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_STRONGBITE, TRAIT_HEAVYARMOR, TRAIT_GOBLINCAVE, TRAIT_AZURENATIVE, TRAIT_LEECHIMMUNE)
 	subclass_stats = list(
 		STATKEY_STR = 4,
 		STATKEY_INT = -2,
