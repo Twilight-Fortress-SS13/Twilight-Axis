@@ -257,7 +257,7 @@
 	maximum_possible_slots = 2
 	subclass_stats = list(
 		STATKEY_STR = -3,
-		STATKEY_INT = -1,
+		STATKEY_CON = -1,
 		STATKEY_PER = 3,
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 3,
