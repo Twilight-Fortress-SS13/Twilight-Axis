@@ -3,8 +3,8 @@
 	flag = GOBLINWARRIOR
 	department_flag = GOBLINCAVE
 	faction = "Station"
-	total_positions = 4
-	spawn_positions = 4
+	total_positions = 10
+	spawn_positions = 10
 	allowed_races = list(
 		/datum/species/goblinp,
 	)
@@ -29,8 +29,8 @@
 	wanderer_examine = TRUE
 	advjob_examine = FALSE
 	always_show_on_latechoices = TRUE
-	job_reopens_slots_on_death = TRUE
-	same_job_respawn_delay = 3 MINUTES
+	job_reopens_slots_on_death = FALSE
+	same_job_respawn_delay = 1 MINUTES
 
 	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
 
