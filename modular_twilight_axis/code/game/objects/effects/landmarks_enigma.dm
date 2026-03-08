@@ -66,8 +66,26 @@
     name = "Goblin Slave"
     icon_state = "arrow"
 
-/obj/effect/landmark/start/goblinlate
-	name = "Goblinlate"
+/obj/effect/landmark/start/goblin_chieflate
+	name = "Goblin_ChiefLate"
 	icon_state = "arrow"
-	jobspawn_override = list("Goblin Warrior", "Goblin Chief", "Goblin Slave", "Goblin Shaman")
+	jobspawn_override = list("Goblin Chief")
+	delete_after_roundstart = FALSE
+
+/obj/effect/landmark/start/goblin_shamanlate
+	name = "Goblin_ShamanLate"
+	icon_state = "arrow"
+	jobspawn_override = list("Goblin Shaman")
+	delete_after_roundstart = FALSE
+
+/obj/effect/landmark/start/goblinlate
+	name = "GoblinLate"
+	icon_state = "arrow"
+	jobspawn_override = list("Goblin Warrior")
+	delete_after_roundstart = FALSE
+
+/obj/effect/landmark/start/goblin_slavelate
+	name = "Goblin_SlaveLate"
+	icon_state = "arrow"
+	jobspawn_override = list("Goblin Slave")
 	delete_after_roundstart = FALSE

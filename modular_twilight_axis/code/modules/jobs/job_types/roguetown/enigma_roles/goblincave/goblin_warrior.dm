@@ -52,7 +52,7 @@
 	tutorial = "Ты — гоблин-костолом, кровь Граггара кипит в тебе: ломаешь врагов голыми руками или оружием ближнего боя, без доспехов, чистой силой. Дроби черепа, души и ломай кости в ближнем бою."
 	outfit = /datum/outfit/job/roguetown/goblin_warrior/brute
 	category_tags = list(CTAG_GOBLINWARRIOR)
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED, TRAIT_GOBLINCAVE)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED, TRAIT_GOBLINCAVE, TRAIT_AZURENATIVE)
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_CON = 2,
@@ -179,7 +179,7 @@
 	outfit = /datum/outfit/job/roguetown/goblin_warrior/assassin
 	category_tags = list(CTAG_GOBLINWARRIOR)
 	subclass_languages = list(/datum/language/thievescant)
-	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_LIGHT_STEP, TRAIT_STEELHEARTED)
+	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_LIGHT_STEP, TRAIT_STEELHEARTED, TRAIT_AZURENATIVE)
 	maximum_possible_slots = 2
 	subclass_stats = list(
 		STATKEY_STR = -2,
@@ -253,7 +253,7 @@
 				Граггар не одобряет это, а племенные воины косятся с презрением: однако ты всё еще жив, а эти дуболомы - нет."
 	outfit = /datum/outfit/job/roguetown/goblin_warrior/archer
 	category_tags = list(CTAG_GOBLINWARRIOR)
-	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_LIGHT_STEP, TRAIT_STEELHEARTED)
+	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_LIGHT_STEP, TRAIT_STEELHEARTED, TRAIT_AZURENATIVE)
 	maximum_possible_slots = 2
 	subclass_stats = list(
 		STATKEY_STR = -3,

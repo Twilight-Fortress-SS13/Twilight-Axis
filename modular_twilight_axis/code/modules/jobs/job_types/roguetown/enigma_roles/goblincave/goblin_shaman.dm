@@ -47,7 +47,7 @@
 	tutorial = "Ты — Шаман, голос Граггара в племени. Твоя магия — кровь, страх и сломанные души: вырезаешь руны, питаешься криками. Каждый ритуал доказывает — без твоих проклятий и крови племя сгинет."
 	outfit = /datum/outfit/job/roguetown/goblin_shaman/shaman
 	category_tags = list(CTAG_GOBLINSHAMAN)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T3, TRAIT_INTELLECTUAL, TRAIT_ALCHEMY_EXPERT, TRAIT_HERESIARCH, TRAIT_STEELHEARTED, TRAIT_GOBLINCAVE)
+	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T3, TRAIT_INTELLECTUAL, TRAIT_ALCHEMY_EXPERT, TRAIT_HERESIARCH, TRAIT_STEELHEARTED, TRAIT_GOBLINCAVE, TRAIT_AZURENATIVE)
 	subclass_stats = list(
 		STATKEY_INT = 4,
 		STATKEY_PER = 2,
