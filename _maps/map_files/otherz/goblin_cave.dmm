@@ -1,6 +1,6 @@
 "ae" = (/obj/effect/decal/cleanable/greenglow{desc = "Just looking at it makes you feel strangely warm inside."; name = "alchemycal spill"},/turf/open/floor/rogue/metal/barograte,/area/rogue/under/cave/goblincave)
 "ag" = (/obj/structure/rack/rogue,/obj/item/rogueweapon/katar/punchdagger,/obj/item/rogueweapon/knuckles,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
-"ap" = (/obj/structure/rack/rogue,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
+"ap" = (/obj/structure/rack/rogue,/obj/item/quiver/Parrows,/obj/item/quiver/Parrows,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
 "aB" = (/turf/open/floor/rogue/dirt,/area/rogue/under/cave/goblincave)
 "aP" = (/obj/effect/decal/cleanable/sigil/W,/obj/effect/decal/cleanable/blood/old,/obj/item/rogueweapon/huntingknife/idagger/steel/profane,/turf/open/floor/rogue/metal,/area/rogue/under/cave/goblincave)
 "aY" = (/obj/structure/stairs/stone{dir = 1},/obj/effect/landmark/start/goblinlate,/turf/open/floor/rogue/cobble,/area/rogue/under/cave/goblincave)
