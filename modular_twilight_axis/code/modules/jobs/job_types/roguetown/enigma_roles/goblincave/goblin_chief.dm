@@ -55,11 +55,11 @@
 	subclass_languages = list(/datum/language/thievescant)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_STRONGBITE, TRAIT_HEAVYARMOR, TRAIT_GOBLINCAVE)
 	subclass_stats = list(
-		STATKEY_STR = 3,
-		STATKEY_INT = -3,
+		STATKEY_STR = 4,
+		STATKEY_INT = -2,
 		STATKEY_SPD = -2,
-		STATKEY_CON = 2,
-		STATKEY_WIL = 1,
+		STATKEY_CON = 3,
+		STATKEY_WIL = 2,
 	)
 	subclass_skills = list(
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
