@@ -254,7 +254,7 @@
 "Xt" = (/obj/machinery/light/rogue/firebowl,/turf/open/floor/rogue/blocks{icon_state = "paving"},/area/rogue/under/cave/goblincave)
 "Xz" = (/turf/closed/wall/mineral/rogue/stone,/area/rogue/under/cave/goblincave)
 "XH" = (/obj/structure/fluff/traveltile/goblincave{aportalid = "goblincaveout6"; aportalgoesto = "goblincavein6"},/turf/open/floor/rogue/cobble,/area/rogue/under/cave/goblincave)
-"XR" = (/obj/structure/rack/rogue,/obj/item/rogueweapon/huntingknife/scissors,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
+"XR" = (/obj/structure/rack/rogue,/obj/item/rogueweapon/huntingknife/scissors,/obj/item/restraints/legcuffs/beartrap/crafted,/obj/item/restraints/legcuffs/beartrap/crafted,/obj/item/restraints/legcuffs/beartrap/crafted,/obj/item/restraints/legcuffs/beartrap/crafted,/obj/item/restraints/legcuffs/beartrap/crafted,/turf/open/floor/rogue/blocks,/area/rogue/under/cave/goblincave)
 "XT" = (/obj/item/rogueweapon/shovel,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Yj" = (/obj/structure/table/wood{icon_state = "largetable"; dir = 1},/obj/item/reagent_containers/glass/bowl,/turf/open/floor/rogue/cobble/mossy,/area/rogue/under/cave/goblincave)
 "Ys" = (/obj/structure/fluff/psycross/graggar/decorated,/turf/open/floor/rogue/concrete,/area/rogue/under/cave/goblincave)
