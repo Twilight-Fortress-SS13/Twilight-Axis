@@ -2,5 +2,5 @@
 	"map_name": "Goblin Cave",
 	"map_path": "map_files/otherz",
 	"map_file": "goblin_cave.dmm",
-	"traits": [{"Name": "goblin_cave", "Up": true}, {"Up": true, "Down": true}, {"Down": true}]
+	"traits": [{"Name": "goblin_cave"}]
 }
