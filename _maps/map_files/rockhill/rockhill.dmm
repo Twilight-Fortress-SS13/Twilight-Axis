@@ -1492,12 +1492,8 @@
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/manor/rockhill)
 "ava" = (
-/obj/structure/fluff/railing/wood{
-	dir = 1;
-	layer = 2.7;
-	pixel_y = 7
-	},
-/turf/closed/wall/mineral/rogue/stonebrick,
+/obj/structure/glowshroom,
+/turf/open/water/swamp,
 /area/rogue/under/town/sewer)
 "avb" = (
 /obj/structure/stairs/stone,
@@ -10431,12 +10427,7 @@
 	dir = 8;
 	layer = 2
 	},
-/obj/structure/fluff/railing/wood{
-	dir = 1;
-	layer = 1.9;
-	pixel_y = 7
-	},
-/turf/closed/wall/mineral/rogue/stonebrick,
+/turf/open/water/cleanshallow,
 /area/rogue/under/town/sewer)
 "cGQ" = (
 /obj/structure/fluff/railing/border{
@@ -51101,14 +51092,6 @@
 /obj/item/rope,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet)
-"ndc" = (
-/obj/structure/fluff/railing/wood{
-	dir = 1;
-	layer = 1.9;
-	pixel_y = 7
-	},
-/turf/closed/wall/mineral/rogue/stonebrick,
-/area/rogue/under/town/sewer)
 "ndt" = (
 /obj/structure/fermentation_keg,
 /turf/open/floor/rogue/twig,
@@ -296444,10 +296427,10 @@ vKd
 vKd
 vKd
 vKd
-ndc
+gMO
 lEn
 gMO
-uEX
+ava
 gLf
 gLf
 gLf
@@ -296876,10 +296859,10 @@ qeC
 qeC
 aTR
 tSK
-ava
+gMO
 gMO
 lMF
-uEX
+mXk
 gLf
 vIa
 aUc
@@ -297307,11 +297290,11 @@ idK
 euP
 euP
 idK
-rdE
-rRb
+jPA
+lEn
 gMO
 gMO
-gMO
+lEn
 gLf
 aUc
 aUc
@@ -308543,7 +308526,7 @@ gVZ
 aDx
 cQp
 uEX
-cQp
+vET
 jQS
 vIa
 vIa
@@ -310272,9 +310255,9 @@ bqq
 cQp
 rSC
 bqq
+xwE
 bqq
-bqq
-cQp
+vET
 cQp
 bqq
 cQp
@@ -310704,7 +310687,7 @@ rSC
 rSC
 rSC
 rSC
-uEX
+mXk
 uEX
 uEX
 uEX
@@ -311136,7 +311119,7 @@ cQp
 cQp
 cQp
 xwE
-bqq
+xwE
 bqq
 uEX
 cQp
@@ -311569,9 +311552,9 @@ jQS
 jQS
 lrs
 jQS
-cQp
-uEX
-cQp
+vET
+mXk
+vET
 jQS
 jQS
 lrs
