@@ -1,3 +1,4 @@
+/*
 /datum/advclass/templar/noc_spellblade
 	name = "Noccite Azurcaephan"
 	tutorial = "You are a Noccite Azurcaephan - A devotee of the Azurean Church\
@@ -175,3 +176,4 @@
 					H.put_in_hands(new /obj/item/rogueweapon/mace/maul/grand(H))
 					H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
+*/
