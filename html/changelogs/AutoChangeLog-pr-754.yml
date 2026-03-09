@@ -1,0 +1,5 @@
+author: "PatapoIIIa"
+delete-after: True
+changes:
+  - balance: "Гоблинские и скелетные глаза теперь снижают Perception на 3"
+  - rscadd: "Добавлено описание красноватого свечения глаз при examine как у Зизо-культа. Учитывает наличие маски."
