@@ -350,12 +350,11 @@
 /datum/component/overlay_lighting/proc/set_lum_power(new_lum_power)
 	if(lum_power == new_lum_power)
 		return
-	. = lum_power
+
 	lum_power = new_lum_power
-	var/difference = . - lum_power
-	for(var/t in affected_turfs)
-		var/turf/lit_turf = t
-		lit_turf.dynamic_lumcount -= difference
+
+	if(overlay_lighting_flags & LIGHTING_ON)
+		make_luminosity_update()
 
 
 #undef LIGHTING_ON

@@ -3,6 +3,7 @@
 
 #define LP_CLIENT_COLOUR_PRIORITY 1.5
 #define LP_VISUAL_UPDATE_EPSILON 0.01
+#define LP_PROCESS_STOP_EPSILON 0.001
 
 #define LP_NORMAL_DARK_START 0.52
 #define LP_DARKVISION_DARK_START 0.60
@@ -17,16 +18,16 @@
 #define LP_ZIZOSIGHT_ADAPT_TO_DARK 0.08
 #define LP_ZIZOSIGHT_ADAPT_TO_LIGHT 0.06
 
-#define LP_NORMAL_TARGET_SEE_IN_DARK 3
-#define LP_DARKVISION_TARGET_SEE_IN_DARK 6
+#define LP_NORMAL_TARGET_SEE_IN_DARK 6
+#define LP_DARKVISION_TARGET_SEE_IN_DARK 12
 #define LP_ZIZOSIGHT_TARGET_SEE_IN_DARK 15
 
-#define LP_NORMAL_TARGET_LIGHTING_ALPHA 210
-#define LP_DARKVISION_TARGET_LIGHTING_ALPHA 180
-#define LP_ZIZOSIGHT_TARGET_LIGHTING_ALPHA 150
+#define LP_NORMAL_TARGET_LIGHTING_ALPHA 220
+#define LP_DARKVISION_TARGET_LIGHTING_ALPHA 200
+#define LP_ZIZOSIGHT_TARGET_LIGHTING_ALPHA 180
 
-#define LP_DARK_VEIL_STRENGTH 1.10
-#define LP_GLARE_STRENGTH 1.25
+#define LP_DARK_VEIL_STRENGTH 0.45
+#define LP_GLARE_STRENGTH 0.55
 
 #define LP_LIGHTING_ANIM_TIME 2
 
@@ -108,6 +109,8 @@
 	var/last_applied_see_in_dark = null
 	var/last_applied_lighting_alpha = null
 
+	var/is_processing_active = FALSE
+
 /datum/component/light_perception/Initialize(starting_perception = 1)
 	. = ..()
 	if(!isliving(parent))
@@ -119,6 +122,7 @@
 	last_visual_perception = current_perception
 
 	RegisterSignal(owner, COMSIG_PARENT_QDELETING, PROC_REF(on_parent_qdel))
+	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(on_owner_moved))
 
 	owner.lp_animated_lighting = TRUE
 	owner.lp_lighting_anim_time = LP_LIGHTING_ANIM_TIME
@@ -128,10 +132,15 @@
 	refresh_eye_cache()
 	refresh_target()
 	apply_state(TRUE)
-	START_PROCESSING(SSfastprocess, src)
+
+	if(needs_processing())
+		start_lp_processing()
 
 /datum/component/light_perception/Destroy()
-	STOP_PROCESSING(SSfastprocess, src)
+	stop_lp_processing()
+
+	if(owner)
+		UnregisterSignal(owner, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_MOVED))
 
 	restore_cached_eyes()
 
@@ -147,8 +156,45 @@
 
 /datum/component/light_perception/proc/on_parent_qdel()
 	SIGNAL_HANDLER
-	STOP_PROCESSING(SSfastprocess, src)
+	stop_lp_processing()
 	qdel(src)
+
+/datum/component/light_perception/proc/on_owner_moved(atom/movable/source, OldLoc, Dir, Forced)
+	SIGNAL_HANDLER
+	if(!owner || !owner.client)
+		return
+
+	refresh_target()
+	apply_visuals()
+
+	if(needs_processing())
+		start_lp_processing()
+	else
+		stop_lp_processing()
+
+/datum/component/light_perception/proc/start_lp_processing()
+	if(is_processing_active)
+		return
+	is_processing_active = TRUE
+	START_PROCESSING(SSfastprocess, src)
+
+/datum/component/light_perception/proc/stop_lp_processing()
+	if(!is_processing_active)
+		return
+	is_processing_active = FALSE
+	STOP_PROCESSING(SSfastprocess, src)
+
+/datum/component/light_perception/proc/needs_processing()
+	if(abs(current_perception - target_perception) > LP_PROCESS_STOP_EPSILON)
+		return TRUE
+
+	if(get_current_dark_veil() > 0)
+		return TRUE
+
+	if(get_current_glare() > 0)
+		return TRUE
+
+	return FALSE
 
 /datum/component/light_perception/process(seconds_per_tick)
 	if(!owner || QDELETED(owner))
@@ -174,6 +220,9 @@
 	var/current_visual_veil = max(get_current_dark_veil(), get_current_glare())
 	if(abs(current_perception - last_visual_perception) >= LP_VISUAL_UPDATE_EPSILON || abs(current_visual_veil - last_visual_veil) >= LP_VISUAL_UPDATE_EPSILON)
 		apply_state()
+
+	if(!needs_processing())
+		stop_lp_processing()
 
 /datum/component/light_perception/proc/approach(current, target, delta)
 	if(current < target)
@@ -236,10 +285,16 @@
 	return 1 - current_perception
 
 /datum/component/light_perception/proc/get_current_dark_veil()
-	return clamp((current_perception - target_perception) * LP_DARK_VEIL_STRENGTH, 0, 1)
+	var/delta = current_perception - target_perception
+	if(delta <= 0.08)
+		return 0
+	return clamp((delta - 0.08) * LP_DARK_VEIL_STRENGTH, 0, 1)
 
 /datum/component/light_perception/proc/get_current_glare()
-	return clamp((target_perception - current_perception) * LP_GLARE_STRENGTH, 0, 1)
+	var/delta = target_perception - current_perception
+	if(delta <= 0.08)
+		return 0
+	return clamp((delta - 0.08) * LP_GLARE_STRENGTH, 0, 1)
 
 /datum/component/light_perception/proc/get_normalized_turf_luma(turf/T)
 	if(!T)
@@ -294,7 +349,7 @@
 
 	cached_eyes = E
 	if(!cached_eyes)
-		cached_eye_base_see_in_dark = 3
+		cached_eye_base_see_in_dark = LP_NORMAL_TARGET_SEE_IN_DARK
 		cached_eye_base_lighting_alpha = null
 		return
 
@@ -334,7 +389,7 @@
 
 	if(changed)
 		owner.update_sight()
-		
+
 /datum/component/light_perception/proc/apply_visuals()
 	if(!owner || !owner.client)
 		return
@@ -399,11 +454,52 @@
 			L.alpha = lighting_alpha
 
 
+/datum/component/overlay_lighting/proc/get_turf_lum_falloff(turf/source_turf, turf/target_turf)
+	if(!source_turf || !target_turf)
+		return 0
+
+	var/dist = get_dist(source_turf, target_turf)
+	if(dist > lumcount_range)
+		return 0
+
+	if(lumcount_range <= 0)
+		return lum_power
+
+	var/falloff = 1 - (dist / max(lumcount_range, 1))
+	falloff = clamp(falloff, 0, 1)
+
+	return lum_power * falloff
+
+/datum/component/overlay_lighting/get_new_turfs()
+	if(!current_holder)
+		return
+
+	var/turf/source_turf = get_turf(current_holder)
+	if(!source_turf)
+		return
+
+	for(var/turf/lit_turf in view(lumcount_range, source_turf))
+		var/add_value = get_turf_lum_falloff(source_turf, lit_turf)
+		if(add_value <= 0)
+			continue
+
+		lit_turf.dynamic_lumcount += add_value
+		LAZYSET(affected_turfs, lit_turf, add_value)
+
+/datum/component/overlay_lighting/clean_old_turfs()
+	for(var/t in affected_turfs)
+		var/turf/lit_turf = t
+		var/remove_value = affected_turfs[t]
+		lit_turf.dynamic_lumcount -= remove_value
+	affected_turfs = null
+
+
 #undef LIGHT_PERCEPTION_MIN
 #undef LIGHT_PERCEPTION_MAX
 
 #undef LP_CLIENT_COLOUR_PRIORITY
 #undef LP_VISUAL_UPDATE_EPSILON
+#undef LP_PROCESS_STOP_EPSILON
 
 #undef LP_NORMAL_DARK_START
 #undef LP_DARKVISION_DARK_START
