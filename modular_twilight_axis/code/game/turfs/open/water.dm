@@ -35,3 +35,44 @@
 //		M.visible_message(span_notice("[M] looks a bit better after soaking in the spring."))
 
 	last_heal = world.time
+
+
+/turf/open/water/ocean/deep/scaldingwater
+	name = "Magic flow"
+	desc = "The water is boiling and steaming. It looks like it could energize you, if you can survive the heat."
+	icon = 'icons/turf/roguefloor.dmi'
+	icon_state = "acid"
+	water_color = "#ff7f50"
+	water_reagent = /datum/reagent/water
+	
+
+	var/tick_interval = 2 SECONDS 
+	var/energy_gain = 35 
+	var/fire_damage = 5 
+	var/last_tick = 0
+
+/turf/open/water/ocean/deep/scaldingwater/Initialize()
+	. = ..()
+	START_PROCESSING(SSobj, src)
+
+/turf/open/water/ocean/deep/scaldingwater/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	return ..()
+
+/turf/open/water/ocean/deep/scaldingwater/process()
+	if(world.time < last_tick + tick_interval)
+		return
+
+	for(var/mob/living/carbon/M in src)
+		if(M.stat == DEAD) 
+			continue
+
+		M.adjustFireLoss(fire_damage)
+		
+		M.energy_add(energy_gain)
+
+		if(prob(5))
+			to_chat(M, span_danger("The water sears your flesh, but adrenaline rushes through you!"))
+			M.emote("gasp")
+
+	last_tick = world.time

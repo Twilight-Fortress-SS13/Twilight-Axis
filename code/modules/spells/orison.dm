@@ -288,16 +288,17 @@
 	if(volume >= 50)
 		M.reagents.remove_reagent(/datum/reagent/water/medicine, 2) // no more than 1 large bottle at a time
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.5, 0)
-		M.adjustFireLoss(-0.5, 0)
-		M.adjustOxyLoss(-0.5, 0)
-		M.adjustToxLoss(-0.5, 0)
+		M.adjustBruteLoss(-0.5 * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-0.5 * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOxyLoss(-0.5 * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustToxLoss(-0.5 * REAGENTS_EFFECT_MULTIPLIER, 0)
 		for(var/datum/reagent/R in M.reagents.reagent_list)
 			if(R.harmful)
-				holder.remove_reagent(R.type, 0.2)
+				holder.remove_reagent(R.type, 0.2 * REAGENTS_EFFECT_MULTIPLIER)
 		var/list/wCount = M.get_wounds()
 		if(wCount.len > 0)
-			M.heal_wounds(2)
+			M.heal_wounds(2 * REAGENTS_EFFECT_MULTIPLIER)
+		..()
 
 /obj/item/melee/touch_attack/orison/proc/create_water(atom/thing, mob/living/carbon/human/user)
 	// normally we wouldn't use fatigue here to keep in line w/ other holy magic, but we have to since water is a persistent resource
@@ -348,5 +349,17 @@
 		the_cloth.wet = holy_skill * 5
 		user.visible_message(span_info("[user] closes [user.p_their()] eyes in prayer, beads of moisture coalescing in [user.p_their()] hands to moisten [the_cloth]."), span_notice("I utter forth a plea to [user.patron.name] for succour, and will moisture into [the_cloth]. I should be able to clean with it properly now."))
 		return water_moisten
+	else if (istype(thing, /obj/item/reagent_containers/powder/flour))
+		// these three should probably be abstracted but the type pathing here is a nightmare and it's only three cases for now so it's probably fine
+		var/obj/item/reagent_containers/powder/flour/the_flour = thing
+		the_flour.wet(src, user)
+		return
+	else if (istype(thing, /obj/item/reagent_containers/food/snacks/grown/rice))
+		var/obj/item/reagent_containers/food/snacks/grown/rice/the_rice = thing
+		the_rice.wet(src, user)
+		return
+	else if (istype(thing, /obj/item/reagent_containers/powder/mineral))
+		var/obj/item/reagent_containers/powder/mineral/the_mineral = thing
+		the_mineral.wet(src, user)
 	else
 		to_chat(user, span_info("I'll need to find a container that can hold water."))

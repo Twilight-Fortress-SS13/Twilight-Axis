@@ -817,7 +817,7 @@
 	var/obj/item/I = owner.get_active_held_item()
 	var/datum/intent/used_intent = owner.used_intent
 
-	var/eff = accuracy_check(desired_zone, owner, target, /datum/skill/combat/unarmed, used_intent, I)
+	var/eff = melee_accuracy_check(desired_zone, owner, target, /datum/skill/combat/unarmed, used_intent, I)
 	return eff || BODY_ZONE_CHEST
 
 /datum/component/combo_core/proc/IsValidPrefix()
@@ -1192,7 +1192,7 @@
 	var/d = last_input_dir || owner.dir
 	if(d)
 		owner.setDir(d)
-	var/zone = accuracy_check(owner.zone_selected, owner, target, /datum/skill/combat/unarmed, owner.used_intent)
+	var/zone = melee_accuracy_check(owner.zone_selected, owner, target, /datum/skill/combat/unarmed, owner.used_intent)
 	sb_fire_sound_note(owner, target, 1.5, BRUTE, zone, d)
 	ResetRhythm()
 

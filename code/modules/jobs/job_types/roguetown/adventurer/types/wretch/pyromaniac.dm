@@ -5,6 +5,7 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/pyromaniac
 	cmode_music = 'sound/music/Iconoclast.ogg'
+	class_select_category = CLASS_CAT_ROGUE
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ALCHEMY_EXPERT, TRAIT_EXPLOSIVE_SUPPLY)
 	subclass_stats = list(
@@ -65,7 +66,7 @@
 			if("Crossbows")
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 4, TRUE)
 				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
-				beltl = /obj/item/quiver/pyrobolts
+				beltl = /obj/item/quiver/bolt/pyro
 			if("BOMBS") //30 bombs. 18 fire, 4 tnt, 4 impacts, 4 firegas.
 				ADD_TRAIT(H, TRAIT_BOMBER_EXPERT, TRAIT_GENERIC)
 				H.adjust_skillrank_up_to(/datum/skill/craft/engineering, 4, TRUE)

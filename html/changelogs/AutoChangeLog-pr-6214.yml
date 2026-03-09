@@ -1,0 +1,6 @@
+author: "Ketrai"
+delete-after: True
+changes:
+  - bugfix: "Herb seed names are no longer obfuscated in the crafting menu."
+  - qol: "Digging furrows with herb seeds now takes medicine skill if it is higher than farming skill."
+  - balance: "Sui dust is cheaper."

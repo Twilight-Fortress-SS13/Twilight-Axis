@@ -1,9 +1,20 @@
+#define MIN_BULLET_RANGE		0
+#define MAX_BULLET_RANGE		20 // overriden by firearm in all cases, besides runelock
+
+#define AP_FALLOFF_BULLET		0.5
+#define DMG_FALLOFF_BULLET		0.5
+
 /obj/projectile/bullet
 	var/silver = FALSE
 	var/blessed = FALSE
 	var/critfactor = 1
 	var/gunpowder_npc_critfactor = 1
 	var/gunpowder
+
+	min_range = MIN_BULLET_RANGE
+	max_range = MAX_BULLET_RANGE
+	dam_falloff_factor = DMG_FALLOFF_BULLET
+	ap_falloff_factor = AP_FALLOFF_BULLET
 
 /obj/item/ammo_casing
 	var/obj/item/quiver/twilight_bullet/runicbag/linked_bag = null
@@ -14,7 +25,7 @@
 /obj/projectile/bullet/twilight_lead
 	name = "lead sphere"
 	desc = "Небольшая свинцовая сфера. Хорошо сочетается с порохом."
-	damage = 70
+	damage = 140
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
@@ -24,22 +35,22 @@
 	embedchance = 100
 	woundclass = BCLASS_STAB
 	flag = "stab"
-	armor_penetration = 42
+	armor_penetration = 84
 	speed = 0.1
 
 /obj/projectile/bullet/twilight_lead/silver
 	name = "silver sphere"
 	desc = "Небольшая серебряная сфера. Мягче, чем свинцовая пуля, но крайне эффективна против нежити."
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/silver
-	damage = 60
-	armor_penetration = 35
+	damage = 120
+	armor_penetration = 70
 	silver = TRUE
 	critfactor = 0.8
 
 /obj/projectile/bullet/twilight_cannonball
 	name = "cannonball"
 	desc = "Крупная свинцовая сфера. Важен не размер ствола, а размер отверстия, что он делает в вашем противнике."
-	damage = 60
+	damage = 120
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
@@ -49,13 +60,13 @@
 	embedchance = 0
 	woundclass = BCLASS_STAB
 	flag = "blunt"
-	armor_penetration = 5
+	armor_penetration = 10
 	speed = 0.1
 
 /obj/projectile/bullet/twilight_grapeshot
 	name = "grapeshot"
 	desc = "Плотно упакованный в бумагу набор небольших металлических шариков. Хорошо сочетается с порохом."
-	damage = 20
+	damage = 30 // я уже не помню, как оно было до ввода эффективного ренжа, но мне ссыкотно от мысли в 240 базового урона до применения мода от персы. 180 выглядит баланснее.
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
@@ -65,7 +76,7 @@
 	embedchance = 100
 	woundclass = BCLASS_STAB
 	flag = "stab"
-	armor_penetration = 42
+	armor_penetration = 84 
 	speed = 0.1
 	critfactor = 0.67
 
@@ -92,7 +103,7 @@
 
 /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	name = "blessed sphere"
-	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отавианских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
+	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отаванских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
 	damage = 100
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock/blessed
 	icon_state = "musketball_blessed"
@@ -154,20 +165,15 @@
 		critfactor *= gun.critfactor
 		gunpowder_npc_critfactor *= gun.npcdamfactor
 		gunpowder = gun.gunpowder
+		max_range = gun.effective_range
 	..()
 
 /obj/projectile/bullet/on_hit(atom/target, blocked = FALSE)
 	if(isliving(target))
 		var/mob/living/T = target
 		if(istype(fired_from, /obj/item/gun/ballistic/twilight_firearm)) //Double damage in close range
-			var/obj/item/gun/ballistic/twilight_firearm/G = fired_from
-			var/is_within_effective_range = FALSE
-			for(var/mob/M in range(G.effective_range, T))
-				if(M == firer)
-					is_within_effective_range = TRUE
+			var/is_within_effective_range = !check_range(get_turf(target))
 			if(is_within_effective_range)
-				damage *= 2
-				armor_penetration *= 2
 				if(!istype(T.get_inactive_held_item(), /obj/item/rogueweapon/shield) && !istype(T.get_active_held_item(), /obj/item/rogueweapon/shield) && (blocked == 0))
 					switch(gunpowder) //Hande gunpowder types that are BLOCKED by shields and armor
 						if("fyrepowder")
@@ -391,7 +397,7 @@
 
 /obj/item/ammo_casing/caseless/twilight_lead/runelock/blessed
 	name = "blessed sphere"
-	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отавианских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
+	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отаванских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
 	projectile_type = /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	icon_state = "musketball_blessed"
 	w_class = WEIGHT_CLASS_TINY

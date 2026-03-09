@@ -4,7 +4,7 @@
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
 		var/churchiny = "Brother"
-		if(should_wear_femme_clothes(H))
+		if(H.titles_pref == TITLES_F)
 			churchiny = "Sister"
 		H.real_name = "[churchiny] [prev_real_name]"
 		H.name = "[churchiny] [prev_name]"
@@ -233,7 +233,7 @@
 		if("Slurbow + Dagger")
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/special(H), TRUE)
 			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow(H), TRUE)
-			H.equip_to_slot_or_del(new /obj/item/quiver/bolts, SLOT_BELT_L, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/light, SLOT_BELT_L, TRUE)
 			H.change_stat(STATKEY_PER, 3)
 			H.change_stat(STATKEY_SPD, 1)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
@@ -265,7 +265,7 @@
 		if("Slurbow + Cackle Lash")
 			H.put_in_hands(new /obj/item/rogueweapon/whip/xylix(H), TRUE)
 			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow(H), TRUE)
-			H.equip_to_slot_or_del(new /obj/item/quiver/bolts, SLOT_BELT_L, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/light, SLOT_BELT_L, TRUE)
 			H.change_stat(STATKEY_PER, 3)
 			H.change_stat(STATKEY_SPD, 1)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)

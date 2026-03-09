@@ -1,0 +1,4 @@
+author: "Baneuus"
+delete-after: True
+changes:
+  - balance: "Stones are now twice as weak."

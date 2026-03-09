@@ -16,6 +16,7 @@
 	max_pq = null
 
 	obsfuscated_job = TRUE
+	class_categories = TRUE
 
 	advclass_cat_rolls = list(CTAG_WRETCH = 20)
 	PQ_boost_divider = 10
@@ -43,8 +44,11 @@
 		/datum/advclass/wretch/plaguebearer,
 		/datum/advclass/wretch/pyromaniac,
 		/datum/advclass/wretch/vigilante,
-		/datum/advclass/wretch/blackoakwyrm,
-
+		/datum/advclass/wretch/munitioneer,
+		/datum/advclass/wretch/pariah,
+		/datum/advclass/wretch/heretic_spellblade,
+		/datum/advclass/wretch/ancient_spellblade,
+		/datum/advclass/wretch/ancient_deathknight,
 		/datum/advclass/wretch/munitioneer,
 
 		/datum/advclass/wretch/twilight_corsair,
@@ -61,7 +65,14 @@
 		if(H.mind && !H.mind.has_antag_datum(/datum/antagonist/wretch))
 			var/datum/antagonist/new_antag = new /datum/antagonist/wretch()
 			H.mind.add_antag_datum(new_antag)
-
+/*
+/datum/job/roguetown/wretch/on_round_removal(mob/M)
+	// Respawn delay applies immediately
+	if(same_job_respawn_delay && M.ckey)
+		GLOB.job_respawn_delays[M.ckey] = world.time + same_job_respawn_delay
+	// Delayed slot reopen after 1 hour — subclass always reopens, global slot only if garrison criteria met
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(wretch_delayed_slot_reopen), M.advjob), 1 HOURS)
+*/
 // Proc for wretch to select a bounty
 /proc/wretch_select_bounty(mob/living/carbon/human/H)
 	var/datum/preferences/P = H?.client?.prefs
@@ -123,6 +134,46 @@
 	)
 	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, FALSE, my_crime, bounty_poster)
 	to_chat(H, span_danger("You are playing an Antagonist role. By choosing to spawn as a Wretch, you are expected to actively create conflict with other players. Failing to play this role with the appropriate gravitas may result in punishment for Low Roleplay standards."))
+
+/// Returns an assoc list with all intermediate wretch scaling values for admin display.
+/proc/calculate_wretch_scaling()
+	var/list/result = list()
+	var/player_count = length(GLOB.joined_player_list)
+	result["player_count"] = player_count
+
+	// Tier 1: Population scaling, +1 per 10 players above 40, max 10
+	var/slots = 5
+	if(player_count > 40)
+		slots += floor((player_count - 40) / 10)
+	slots = min(slots, 10)
+	result["tier1_slots"] = slots
+
+	// Check for major round antagonists (lich, vampire lord) — hard cap at tier 1
+	var/major_antag_active = FALSE
+	for(var/datum/antagonist/antag as anything in GLOB.antagonists)
+		if(QDELETED(antag) || QDELETED(antag.owner))
+			continue
+		if(istype(antag, /datum/antagonist/lich) || istype(antag, /datum/antagonist/vampire/lord))
+			major_antag_active = TRUE
+			break
+	result["major_antag_active"] = major_antag_active
+
+	// Tier 2: Garrison-gated expansion from 10 to 15
+	var/garrison_count = SSgamemode.garrison
+	var/holy_count = SSgamemode.holy_warrior
+	var/combat_count = garrison_count + holy_count
+	result["garrison"] = garrison_count
+	result["holy_warrior"] = holy_count
+	result["combat_total"] = combat_count
+
+	var/tier2_max = 0
+	if(slots >= 10 && !major_antag_active)
+		tier2_max = min(max(0, combat_count - 10), 5)
+		slots += tier2_max
+	result["tier2_extra"] = tier2_max
+	result["final_slots"] = slots
+
+	return result
 
 /proc/update_wretch_slots()
 	var/datum/job/wretch_job = SSjob.GetJob("Wretch")

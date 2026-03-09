@@ -3,8 +3,8 @@
 	flag = TOWNWATCH
 	department_flag = CITYWATCH
 	faction = "Station"
-	total_positions = 5
-	spawn_positions = 5
+	total_positions = 4
+	spawn_positions = 4
 	allowed_races = RACES_TOLERATED_UP
 	allowed_ages = list(AGE_ADULT, AGE_MIDDLEAGED)
 	display_order = JDO_TOWNWATCH

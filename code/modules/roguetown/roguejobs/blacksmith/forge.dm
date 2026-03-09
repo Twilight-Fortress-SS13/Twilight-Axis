@@ -13,6 +13,11 @@
 	climb_time = 0
 	var/heat_time = 20 SECONDS
 
+/obj/machinery/light/rogue/forge/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("When held with a pair of tongs, left-clicking the forge with an ingot will temporarily heat it up. Heated-up ingots can then be placed on an anvil and pounded into a variety of recipes.")
+	. += span_info("Left-clicking the forge with a torch, lamptern, flint, or other type of ignitioneer will light it back up. Fuel - like wood and books - can be added by left-clicking the forge with it.")
+
 /obj/machinery/light/rogue/forge/attackby(obj/item/W, mob/living/user, params)
 	if(istype(W, /obj/item/rogueweapon/tongs) && on)
 		var/obj/item/rogueweapon/tongs/T = W
@@ -31,19 +36,4 @@
 					heldstuff.hott = FALSE
 					heldstuff.obj_break()
 			return
-
-	
-	else if(istype(W, /obj/item/branding_iron) && on)
-		var/obj/item/branding_iron/B = W
-		
-		B.hott = world.time + heat_time 
-		
-		
-		addtimer(CALLBACK(B, TYPE_PROC_REF(/obj/item/branding_iron, make_unhot)), heat_time)
-		
-		B.update_icon()
-		user.visible_message(span_info("[user] heats the branding iron in the forge."))
-		playsound(src, 'sound/items/steamrelease.ogg', 50, 1)
-		return
-
 	return ..()

@@ -5,6 +5,7 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/outlaw
 	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	class_select_category = CLASS_CAT_ROGUE
 	category_tags = list(CTAG_WRETCH)
 	subclass_languages = list(/datum/language/thievescant)
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_MEDIUMARMOR, TRAIT_GRAVEROBBER, TRAIT_SEEPRICES_SHITTY) //Doubt you have much to say about robbing graves
@@ -50,7 +51,7 @@
 	neck = /obj/item/clothing/neck/roguetown/coif/heavypadding
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 	mask = /obj/item/clothing/mask/rogue/ragmask/black
-	beltr = /obj/item/quiver/bolts
+	beltr = /obj/item/quiver/bolt/standard
 	backpack_contents = list(
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/flashlight/flare/torch/lantern/prelit = 1,

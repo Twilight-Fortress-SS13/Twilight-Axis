@@ -1,0 +1,4 @@
+author: "WeNeedMorePhoron"
+delete-after: True
+changes:
+  - rscadd: "Adventurer / Wretch slots now scales before positions are assigned at roundstart, based on amount of readied up players + 10%."

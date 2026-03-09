@@ -26,6 +26,7 @@
 	converted_type = /area/rogue/indoors/shelter/bograt
 	deathsight_message = "a wretched, fetid bog"
 	threat_region = THREAT_REGION_ROCKHILL_BOG_NORTH
+	warden_area = FALSE
 
 /area/rogue/indoors/shelter/bograt
 	name = "Rockhill Bog"
@@ -33,6 +34,7 @@
 	droning_sound = 'sound/music/area/bog.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
+	warden_area = FALSE
 
 /area/rogue/outdoors/bograt/north
 	name = "Northern Terrorbog"
@@ -49,6 +51,7 @@
 
 	threat_region = THREAT_REGION_ROCKHILL_BOG_NORTH
 	deathsight_message = "a waterlogged mire bridging civilization and the wretched, fetid bog"
+	warden_area = FALSE
 
 /area/rogue/outdoors/bograt/south
 	name = "Southern Terrorbog"
@@ -69,6 +72,7 @@
 		new /datum/ambush_config/mirespiders_crawlers = 15,
 		/mob/living/simple_animal/hostile/retaliate/rogue/mossback = 10,)
 	deathsight_message = "the depths of the wretched bog, home to old magycks and zizite prayers alike"
+	warden_area = FALSE
 
 /area/rogue/outdoors/bograt/west
 	name = "Western Terrorbog"
@@ -88,6 +92,7 @@
 		new /datum/ambush_config/triple_deepone = 30,
 		new /datum/ambush_config/deepone_party = 20,)
 	deathsight_message = "the terrible marsh towards setting sun"
+	warden_area = FALSE
 
 /area/rogue/outdoors/bograt/sunken
 	name = "Cursed Mire"
@@ -106,12 +111,14 @@
 		new /datum/ambush_config/mirespiders_aragn = 10,
 		new /datum/ambush_config/mirespiders_unfair = 5)
 	deathsight_message = "the deepest depths of the mire, as dangerous as it is sunken"
+	warden_area = FALSE
 
 /area/rogue/outdoors/bograt/safe
 	name = "Terrorbog Pass"
 	ambush_times = null
 	ambush_mobs = null
 	deathsight_message = "a foreign, distant pass, leading to the fetid bog"
+	warden_area = FALSE
 
 /area/rogue/outdoors/bograt/above
 	name = "Terrorbog Above"
@@ -121,3 +128,7 @@
 	first_time_text = null
 	ambush_times = null
 	ambush_mobs = null
+	warden_area = FALSE
+
+/area/rogue/under/cave
+	warden_area = FALSE

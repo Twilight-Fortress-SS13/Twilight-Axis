@@ -337,6 +337,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Плащи"
 	path = /obj/item/clothing/cloak/raincloak/furcloak
 
+/datum/loadout_item/wickercloak
+	name = "Wicker Cloak"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/wickercloak
+
 /datum/loadout_item/direcloak
 	name = "direbear cloak"
 	category = "Плащи"
@@ -396,6 +401,41 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Apron, Cooking"
 	category = "Плащи"
 	path = /obj/item/clothing/cloak/apron/cook
+
+/datum/loadout_item/surcoatheavy
+	name = "Surcoat, Overvestments"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/stabard/crusader/heavy
+
+/datum/loadout_item/surcoatgoldenorder
+	name = "Surcoat, Golden Order"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/stabard/crusader
+
+/datum/loadout_item/surcoatsilverorder
+	name = "Surcoat, Silver Order"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/stabard/crusader/t
+
+/datum/loadout_item/surcoatgoldenorderast
+	name = "Surcoat, Golden Order, Astratan"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/stabard/crusader/astrata
+
+/datum/loadout_item/surcoatsilverorderast
+	name = "Surcoat, Silver Order, Astratan"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/stabard/crusader/t/astrata
+
+/datum/loadout_item/surcoatgoldenorderuni
+	name = "Surcoat, Golden Order, Undivided"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/stabard/crusader/undivided
+
+/datum/loadout_item/surcoatsilverorderuni
+	name = "Surcoat, Silver Order, Undivided"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/stabard/crusader/t/undivided
 
 //SHOES
 /datum/loadout_item/darkboots
@@ -1629,6 +1669,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/rogue/instrument/viola
 	donatitem = TRUE
 
+/datum/loadout_item/donat/beer
+	name = "Пиво"
+	category = list("Разное", "Донат")
+	path = /obj/item/reagent_containers/glass/bottle/rogue/beer
+	donatitem = TRUE
+
+/datum/loadout_item/donat/wine
+	name = "Вино"
+	category = list("Разное", "Донат")
+	path = /obj/item/reagent_containers/glass/bottle/rogue/wine
+	donatitem = TRUE
+
 // Одежда для донатеров
 
 /datum/loadout_item/stargazer
@@ -1984,6 +2036,69 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/flowercrown/rosa/resprite
 	donatitem = TRUE
+
+/datum/loadout_item/tw_d_horns_donat
+	name = "horns helmkleinod"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tw_d_horns
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/tw_d_castle_red_donat
+	name = "castle helmkleinod"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tw_d_castle_red
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/tw_d_graggar_donat
+	name = "bloodied star helmkleinod"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tw_d_graggar
+	donatitem = TRUE
+	donat_tier = 2
+	
+/datum/loadout_item/tw_d_efreet_donat
+	name = "afreet helmkleinod"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tw_d_efreet
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/tw_d_feathers_donat
+	name = "feathers accessory"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tw_d_feathers
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/tw_d_oathtaker_donat
+	name = "oathtaker symbol"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tw_d_oathtaker
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/tw_d_windmill_donat
+	name = "windmill helmkleinod"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tw_d_windmill
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/tw_d_swan_donat
+	name = "swan on lake"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tw_d_swan
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/tw_d_dragon_red_donat
+	name = "dragon's dread"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tw_d_dragon_red
+	donatitem = TRUE
+	donat_tier = 2
 
 // Пояса
 

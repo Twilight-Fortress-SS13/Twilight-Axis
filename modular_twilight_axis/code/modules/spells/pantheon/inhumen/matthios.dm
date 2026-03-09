@@ -241,9 +241,73 @@
 	owner.remove_filter(EQUALIZED_GLOW)
 	to_chat(owner, "<font color='yellow'>My borrowed power fades, leaving me to fend for myself once more.</font>")
 
-/obj/effect/proc_holder/spell/invoked/transact
+/obj/effect/proc_holder/spell/invoked/twilight_transact
+	name = "Transact"
+	desc = "Sacrifice an item in your hand, applying a heal over time with strength depending on its value."
 	overlay_state = "transact"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	invocation_type = "none"
+	releasedrain = 30
+	chargedrain = 0
+	chargetime = 0
+	range = 4
+	warnie = "sydwarning"
+	movement_interrupt = FALSE
+	sound = 'sound/effects/hood_ignite.ogg'
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = TRUE
+	recharge_time = 20 SECONDS
+	miracle = TRUE
+	devotion_cost = 20
+
+/obj/effect/proc_holder/spell/invoked/twilight_transact/cast(list/targets, mob/living/user)
+	. = ..()
+	var/obj/item/held_item = user.get_active_held_item()
+	if(!held_item)
+		to_chat(user, span_info("I need something of value to make a transaction..."))
+		return
+	var/helditemvalue = held_item.get_real_price()
+	if(!helditemvalue)
+		to_chat(user, span_info("This has no value, It will be of no use in such a transaction."))
+		return
+	if(helditemvalue<10)
+		to_chat(user, span_info("This has little value, It will be of no use in such a transaction."))
+		return
+	if(isliving(targets[1]))
+		var/mob/living/target = targets[1]
+		if(HAS_TRAIT(target, TRAIT_PSYDONITE))
+			user.playsound_local(user, 'sound/magic/PSY.ogg', 100, FALSE, -1)
+			target.visible_message(span_info("[target] stirs for a moment, the miracle dissipates."), span_notice("A dull warmth swells in your heart, only to fade as quickly as it arrived."))
+			playsound(target, 'sound/magic/PSY.ogg', 100, FALSE, -1)
+			return FALSE
+		user.visible_message(span_notice("The transaction is made! [target] is bathed in a golden light!"))
+		if(iscarbon(target))
+			var/mob/living/carbon/C = target
+			var/datum/status_effect/buff/healing/heal_effect = C.apply_status_effect(/datum/status_effect/buff/healing)
+			if(heal_effect)
+				heal_effect.healing_on_tick = helditemvalue / 2
+			playsound(user, 'sound/combat/hits/burn (2).ogg', 100, TRUE)
+			if(istype(held_item, /obj/item/rogueweapon))
+				to_chat(user, "<font color='yellow'>[held_item] melts at it's very fabric turning it into a heap of scrap. My transaction is accepted.</font>")
+				held_item.obj_break(TRUE)
+				held_item.sellprice = 1
+			else
+				to_chat(user, "<font color='yellow'>[held_item] is engulfed in unholy flame and dissipates into ash. My transaction is accepted.</font>")
+				qdel(held_item)
+		else
+			target.adjustBruteLoss(helditemvalue/2)
+			target.adjustFireLoss(helditemvalue/2)
+			playsound(user, 'sound/combat/hits/burn (2).ogg', 100, TRUE)
+			if(istype(held_item, /obj/item/rogueweapon))
+				to_chat(user, "<font color='yellow'>[held_item] melts at it's very fabric turning it into a heap of scrap. My transaction is accepted.</font>")
+				held_item.obj_break(TRUE)
+				held_item.sellprice = 1
+			else
+				to_chat(user, "<font color='yellow'>[held_item] is engulfed in unholy flame and dissipates into ash. My transaction is accepted.</font>")
+				qdel(held_item)
+		return TRUE
+	revert_cast()
+	return FALSE
 
 //T2
 
