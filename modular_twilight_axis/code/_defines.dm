@@ -36,3 +36,76 @@
 
 #define SB_MAX_VISIBLE_NOTES 5
 //SOUNDBREAKER - END //
+
+/// Rune trigger flags
+#define RUNE_TRIGGER_ON_HIT (1<<0)
+#define RUNE_TRIGGER_ON_PERSIST (1<<1)
+
+#define RUNE_ELEMENT_FIRE "fire"
+#define RUNE_ELEMENT_WATER "water"
+#define RUNE_ELEMENT_EARTH "earth"
+#define RUNE_ELEMENT_AIR "air"
+
+//#define TRAIT_RUNE_MASTER "rune_master"
+
+#define RUNE_LIST_FIRE list( \
+	"Возгорание" = /datum/rune/fire/ignition, \
+	"Пепел" = /datum/rune/fire/ash, \
+	"Клеймо" = /datum/rune/fire/brand, \
+	"Плавление" = /datum/rune/fire/melting \
+)
+
+#define RUNE_LIST_WATER list( \
+	"Иней" = /datum/rune/water/rime, \
+	"Морось" = /datum/rune/water/drizzle, \
+	"Глубина" = /datum/rune/water/depth, \
+	"Лёд" = /datum/rune/water/ice \
+)
+
+#define RUNE_LIST_EARTH list( \
+	"Разлом" = /datum/rune/earth/fracture, \
+	"Гравий" = /datum/rune/earth/gravel, \
+	"Гейзер" = /datum/rune/earth/geyser, \
+	"Оползень" = /datum/rune/earth/landslide \
+)
+
+#define RUNE_LIST_AIR list( \
+	"Порыв" = /datum/rune/air/gust, \
+	"Гром" = /datum/rune/air/thunder, \
+	"Разрежение" = /datum/rune/air/thinning, \
+	"Молния" = /datum/rune/air/lightning \
+)
+
+#define RUNE_LIST_FIRE_LOW list( \
+	"Горн" = /datum/rune/fire/forge, \
+	"Костёр" = /datum/rune/fire/bonfire \
+)
+
+#define RUNE_LIST_WATER_LOW list( \
+	"Прилив" = /datum/rune/water/tide, \
+	"Туман" = /datum/rune/water/mist \
+)
+
+#define RUNE_LIST_EARTH_LOW list( \
+	"Камень" = /datum/rune/earth/stone, \
+	"Порода" = /datum/rune/earth/bedrock \
+)
+
+#define RUNE_LIST_AIR_LOW list( \
+	"Ветер" = /datum/rune/air/wind, \
+	"Эхо" = /datum/rune/air/echo \
+)
+
+#define RUNE_LIST_LOW list( \
+	"Огонь" = RUNE_LIST_FIRE_LOW, \
+	"Вода" = RUNE_LIST_WATER_LOW, \
+	"Земля" = RUNE_LIST_EARTH_LOW, \
+	"Воздух" = RUNE_LIST_AIR_LOW \
+)
+
+#define RUNE_LIST_BASIC list( \
+	"Огонь" = RUNE_LIST_FIRE, \
+	"Вода" = RUNE_LIST_WATER, \
+	"Земля" = RUNE_LIST_EARTH, \
+	"Воздух" = RUNE_LIST_AIR \
+)

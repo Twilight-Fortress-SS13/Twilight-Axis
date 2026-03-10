@@ -36,3 +36,8 @@
 #define COMSIG_SOUNDBREAKER_PRIME_NOTE "soundbreaker_prime_note"
 #define COMPONENT_SOUNDBREAKER_PRIMED (1<<0)
 //SOUNDBREAKER - BEGIN//
+
+/// Signals for rune storage
+#define COMSIG_RUNE_WEAPON_HIT "rune_weapon_hit"
+#define COMSIG_RUNE_PERSIST_ATTACH "rune_persist_attach"
+#define COMSIG_RUNE_PERSIST_DETACH "rune_persist_detach"
