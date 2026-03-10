@@ -317,6 +317,12 @@
 		/obj/item/roguekey/goblinkey,
 		)
 
+/proc/update_goblin_cave_slots()
+	update_goblin_chief_slots()
+	update_goblin_shaman_slots()
+	update_goblin_slave_slots()
+	update_goblin_warrior_slots()
+
 /proc/update_goblin_warrior_slots()
     var/datum/job/goblin_warrior_job = SSjob.GetJob("Goblin Warrior")
     if(!goblin_warrior_job)

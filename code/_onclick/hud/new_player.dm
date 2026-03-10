@@ -214,6 +214,7 @@
 		base_icon_state = "not_ready"
 		GLOB.ready_player_list -= new_player.ckey
 	//update_appearance(UPDATE_ICON)
+	update_goblin_cave_slots()
 	update_bandits_slots()
 	update_wretch_slots()
 	update_mercenary_slots()
