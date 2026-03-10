@@ -3,8 +3,8 @@
 	flag = GOBLINSHAMAN
 	department_flag = GOBLINCAVE
 	faction = "Station"
-	total_positions = 1
-	spawn_positions = 1
+	total_positions = 0
+	spawn_positions = 0
 	allowed_races = list(
 		/datum/species/goblinp,
 	)
@@ -18,7 +18,7 @@
 	display_order = JDO_GOBLINSHAMAN
 	selection_color = JCOLOR_WANDERER
 	show_in_credits = FALSE
-	min_pq = -10
+	min_pq = 10
 	max_pq = null
 
 	advclass_cat_rolls = list(CTAG_GOBLINSHAMAN = 10)
@@ -123,3 +123,21 @@
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, devotion_limit = CLERIC_REQ_4)
 	if(istype(H.patron, /datum/patron/inhumen))
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/unholyblast)
+
+/proc/update_goblin_shaman_slots()
+    var/datum/job/goblin_shaman_job = SSjob.GetJob("Goblin Shaman")
+    if(!goblin_shaman_job)
+        return
+
+    var/player_count = length(GLOB.joined_player_list)
+    var/ready_player_count = length(GLOB.ready_player_list)
+    var/slots = 0
+
+    var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+
+    // При 80 игроках открывается 1 слот
+    if(current_players >= 80)
+        slots = 1
+
+    goblin_shaman_job.total_positions = slots
+    goblin_shaman_job.spawn_positions = slots
