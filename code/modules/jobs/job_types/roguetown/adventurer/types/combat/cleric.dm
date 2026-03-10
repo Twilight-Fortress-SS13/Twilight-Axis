@@ -598,7 +598,6 @@
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc
 			mask = /obj/item/clothing/mask/rogue/owlmask
 			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, 1, TRUE) // you already have expert in reading, so.. i will not force reading skill further
-
 		if(/datum/patron/divine/abyssor)
 			head = /obj/item/clothing/head/roguetown/roguehood/abyssor
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/abyssor
@@ -640,7 +639,7 @@
 			cloak = /obj/item/clothing/cloak/templar/pestran
 			head = /obj/item/clothing/head/roguetown/roguehood
 			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, 2, TRUE) // you still can level up medicine like it was nothing to expert
-			recipient.mind?.special_items["Medicine Pouch"] = /obj/item/storage/belt/rogue/pouch/medicine
+			beltl = /obj/item/storage/belt/rogue/pouch/medicine
 		if(/datum/patron/inhumen/zizo)
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe 
 			head = /obj/item/clothing/head/roguetown/roguehood
