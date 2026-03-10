@@ -929,25 +929,6 @@
 	icon_state = "eyekey"
 	lockid = "porta"
 
-// goblincave
-/obj/item/roguekey/goblinchiefkey
-	name = "Goblin Chief's Key"
-	desc = "A simple rusty iron key that opens the chief's personal room and goblin treasury."
-	icon_state = "cheesekey"
-	lockid = "gobbo-chief"
-
-/obj/item/roguekey/goblinshamankey
-	name = "Goblin Shaman's Key"
-	desc = "A simple worn iron key, covered in old scratches and faint green stains, used by the goblin shaman to secure his ritual room."
-	icon_state = "birdkey"
-	lockid = "gobbo-shaman"
-
-/obj/item/roguekey/goblinkey
-	name = "Goblin's Key"
-	desc = "A small, crude iron key, heavily rusted and slightly bent from years of use by an ordinary goblin."
-	icon_state = "toothkey"
-	lockid = "gobbo"
-
 //custom key
 /obj/item/roguekey/custom
 	name = "custom key"

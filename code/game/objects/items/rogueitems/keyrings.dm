@@ -392,13 +392,3 @@
 
 /obj/item/storage/keyring/vampire
 	keys = list(/obj/item/roguekey/vampire, /obj/item/roguekey/vampire/guest, /obj/item/roguekey/vampire/maid)
-
-/////////////////
-// GOBLIN CAVE //
-/////////////////
-
-/obj/item/storage/keyring/goblinchief
-	keys = list(/obj/item/roguekey/goblinchiefkey, /obj/item/roguekey/goblinkey, /obj/item/roguekey/goblinshamankey)
-
-/obj/item/storage/keyring/goblinshaman
-	keys = list(/obj/item/roguekey/goblinshamankey, /obj/item/roguekey/goblinkey)

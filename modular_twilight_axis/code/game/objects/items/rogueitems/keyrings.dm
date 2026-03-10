@@ -27,3 +27,13 @@
 
 /obj/item/storage/keyring/knightenigma
 	keys = list(/obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/knight, /obj/item/roguekey/armory)
+
+/////////////////
+// GOBLIN CAVE //
+/////////////////
+
+/obj/item/storage/keyring/goblinchief
+	keys = list(/obj/item/roguekey/goblinchiefkey, /obj/item/roguekey/goblinkey, /obj/item/roguekey/goblinshamankey)
+
+/obj/item/storage/keyring/goblinshaman
+	keys = list(/obj/item/roguekey/goblinshamankey, /obj/item/roguekey/goblinkey)
