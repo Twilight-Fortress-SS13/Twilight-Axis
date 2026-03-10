@@ -3,8 +3,8 @@
 	flag = GOBLINSLAVE
 	department_flag = GOBLINCAVE
 	faction = "Station"
-	total_positions = 4
-	spawn_positions = 4
+	total_positions = 0
+	spawn_positions = 0
 
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = ACCEPTED_RACES
@@ -94,3 +94,21 @@
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/roguekey/goblinkey = 1,
 		)
+
+/proc/update_goblin_slave_slots()
+    var/datum/job/goblin_slave_job = SSjob.GetJob("Goblin Slave")
+    if(!goblin_slave_job)
+        return
+
+    var/player_count = length(GLOB.joined_player_list)
+    var/ready_player_count = length(GLOB.ready_player_list)
+    var/slots = 0
+
+    var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+
+    // При 80 игроках открывается 4 слота
+    if(current_players >= 80)
+        slots = 4
+
+    goblin_slave_job.total_positions = slots
+    goblin_slave_job.spawn_positions = slots
