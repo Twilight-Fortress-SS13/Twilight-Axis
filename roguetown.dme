@@ -2584,7 +2584,6 @@
 #include "code\modules\roguetown\roguemachine\smuggler_mail.dm"
 #include "code\modules\roguetown\roguemachine\money.dm"
 #include "code\modules\roguetown\roguemachine\potionseller.dm"
-#include "code\modules\roguetown\roguemachine\smuggler_mail.dm"
 #include "code\modules\roguetown\roguemachine\submission.dm"
 #include "code\modules\roguetown\roguemachine\throne.dm"
 #include "code\modules\roguetown\roguemachine\titan.dm"
