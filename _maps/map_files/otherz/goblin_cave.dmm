@@ -918,7 +918,6 @@
 /area/rogue/under/cave/goblincave)
 "Fl" = (
 /obj/effect/decal/cleanable/sigil,
-/obj/structure/fluff/psycross/zizocross/graggar,
 /obj/structure/ritualcircle/graggar,
 /turf/open/floor/rogue/metal,
 /area/rogue/under/cave/goblincave)
