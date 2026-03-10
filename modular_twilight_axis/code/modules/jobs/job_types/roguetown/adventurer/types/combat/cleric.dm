@@ -162,7 +162,8 @@
 				H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
 				H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark)
 				H.mind?.current.faction += "[H.name]_faction"
-
+			if(H.patron?.type == /datum/patron/divine/abyssor)
+				H.grant_language(/datum/language/abyssal)
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
 	armor = /obj/item/clothing/suit/roguetown/armor/leather
 	pants = /obj/item/clothing/under/roguetown/trou/leather

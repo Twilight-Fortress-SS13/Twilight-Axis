@@ -3,9 +3,7 @@
 	if(ishuman(H))
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
-		var/nobility = "First Lord"
-		if(H.titles_pref == TITLES_F)
-			nobility = "First Lady"
+		var/nobility = "Consort"
 		H.real_name = "[nobility] [prev_real_name]"
 		H.name = "[nobility] [prev_name]"
 

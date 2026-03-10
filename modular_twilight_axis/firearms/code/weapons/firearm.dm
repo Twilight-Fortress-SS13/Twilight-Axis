@@ -781,6 +781,8 @@
 	icon = 'modular_twilight_axis/firearms/icons/pistol/pistol.dmi'
 	icon_state = "pistol"
 	item_state = "pistol"
+	pixel_y = 0
+	pixel_x = 0
 	force = 10
 	possible_item_intents = list(/datum/intent/shoot/twilight_firearm, /datum/intent/arc/twilight_firearm, /datum/intent/mace/strike/wood)
 	associated_skill = /datum/skill/combat/maces
@@ -805,9 +807,9 @@
 	if(tag)
 		switch(tag)
 			if("gen")
-				return list("shrink" = 0.4,"sx" = -10,"sy" = -8,"nx" = 13,"ny" = -8,"wx" = -8,"wy" = -7,"ex" = 7,"ey" = -8,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 30,"sturn" = -30,"wturn" = -30,"eturn" = 30,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+				return list("shrink" = 0.4,"sx" = -10,"sy" = -4,"nx" = 10,"ny" = -4,"wx" = -4,"wy" = -4,"ex" = 2,"ey" = -4, "northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 30,"sturn" = -30,"wturn" = -30,"eturn" = 30,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
 			if("onbelt")
-				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
+				return list("shrink" = 0.4,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra
 	name = "Umbra"
@@ -940,6 +942,8 @@
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar
 	name = "hand mortar"
 	desc = "Ручная мортирка со стволом из бронзы, дополнительно прижатым к лафету крепким ремнём из кожи. Стреляет картечью и ядрами на малые расстояния и с меньшей силой. Такие часто использовали каперы под флагами Грензельхофта"
+	pixel_y = 0
+	pixel_x = 0
 	damfactor = 0.8
 	npcdamfactor = 1.5
 	mag_type = /obj/item/ammo_box/magazine/internal/twilight_firearm/mortar

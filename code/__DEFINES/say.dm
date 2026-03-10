@@ -63,8 +63,8 @@
 #define SPAN_DWARF "dwarf"
 #define SPAN_ABYSS "abyssal"
 #define SPAN_ELF "elf"
-#define SPAN_CELESTIAL "celestial"
-#define SPAN_RANESHI "raneshi"
+#define SPAN_CELESTIAL "valorian" //TA EDIT
+#define SPAN_RANESHI "sandspeak" //TA EDIT
 #define SPAN_DELF "delf"
 #define SPAN_HELL "hellspeak"
 #define SPAN_GRENZELHOFTIAN "grenzelhoftian"

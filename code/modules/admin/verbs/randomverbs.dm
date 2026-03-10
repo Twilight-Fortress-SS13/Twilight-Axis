@@ -427,20 +427,50 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Rejuvinate") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/cmd_admin_create_centcom_report()
-	set category = "-Server-"
-	set name = "Create Command Report"
+	set category = "-Special Verbs-"
+	set name = "Make IC Announcement"
 
 	if(!check_rights(R_ADMIN))
+		return
+
+	var/title = input(usr, "Заголовок объявления?", "Announcement Title", "") as text|null
+	if(!title)
 		return
 
 	var/input = input(usr, "Enter a Command Report. Ensure it makes sense IC.", "What?", "") as message|null
 	if(!input)
 		return
 
+	var/list/sound_options = list("Bell(Base)", "Alert", "HorrorWhispers", "TerribleHorn", "EvilLaugh", "NecromancerLaugh", "Monsters", "OtavaComing", "Custom(file)")
+	var/sound_choice = input(src, "Какой звук?", "Announcement Sound", "Bell(Base)") as null|anything in sound_options
+	if(!sound_choice)
+		return
+
+	var/announce_sound = 'sound/misc/bell.ogg'
+	switch(sound_choice)
+		if("Alert")
+			announce_sound = 'sound/misc/alert.ogg'
+		if("HorrorWhispers")
+			announce_sound = 'sound/misc/carriage3.ogg'
+		if("TerribleHorn")
+			announce_sound = 'sound/misc/carriage4.ogg'
+		if("EvilLaugh")
+			announce_sound = 'sound/misc/HL (1).ogg'
+		if("NecromancerLaugh")
+			announce_sound = 'sound/misc/zizo.ogg'
+		if("Monsters")
+			announce_sound = 'sound/misc/kybraxor.ogg'
+		if("OtavaComing")
+			announce_sound = 'sound/misc/otavanlament.ogg'
+		if("Custom(file)")
+			announce_sound = input(src, "Выберите звуковой файл", "Custom Announcement Sound") as sound|null
+			if(!announce_sound)
+				return
+
 	var/confirm = alert(src, "Do you want to announce the contents of the report to the crew?", "Announce", "Yes", "No", "Cancel")
 	switch(confirm)
 		if("Yes")
-			priority_announce(input, null, 'sound/blank.ogg')
+			priority_announce(input, "<span class='reallybig'>[html_encode(title)]</span>", announce_sound, sender = usr)
 		if("Cancel")
 			return
 

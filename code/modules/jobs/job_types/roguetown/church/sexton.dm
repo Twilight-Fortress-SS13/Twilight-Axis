@@ -155,7 +155,8 @@
 
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_LOWER_CLASS, H, "Church Funding.")
-		
+	if(H.patron?.type == /datum/patron/divine/abyssor)
+		H.grant_language(/datum/language/abyssal)
 	var/prev_real_name = H.real_name
 	var/prev_name = H.name
 	var/prefix = "Gravetender" // similar to Big Man: prefix so it's easier to tell who this guy is.
