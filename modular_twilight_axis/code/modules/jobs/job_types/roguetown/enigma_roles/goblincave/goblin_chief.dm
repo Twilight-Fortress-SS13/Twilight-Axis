@@ -3,8 +3,8 @@
 	flag = GOBLINCHIEF
 	department_flag = GOBLINCAVE
 	faction = "Station"
-	total_positions = 1
-	spawn_positions = 1
+	total_positions = 0
+	spawn_positions = 0
 	allowed_races = list(
 		/datum/species/goblinp,
 		/datum/species/halforc
@@ -21,7 +21,7 @@
 	display_order = JDO_GOBLINCHIEF
 	selection_color = JCOLOR_WANDERER
 	show_in_credits = FALSE
-	min_pq = -25
+	min_pq = 20
 	max_pq = null
 
 	advclass_cat_rolls = list(CTAG_GOBLINCHIEF = 10)
@@ -173,3 +173,21 @@
 		goblin.playsound_local(get_turf(user), 'sound/vo/mobs/troll/idle2.ogg', 70, FALSE)
 
 	..()
+
+/proc/update_goblin_chief_slots()
+    var/datum/job/goblin_chief_job = SSjob.GetJob("Goblin Chief")
+    if(!goblin_chief_job)
+        return
+
+    var/player_count = length(GLOB.joined_player_list)
+    var/ready_player_count = length(GLOB.ready_player_list)
+    var/slots = 0
+
+    var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+
+    // При 80 игроках открывается 1 слот
+    if(current_players >= 80)
+        slots = 1
+
+    goblin_chief_job.total_positions = slots
+    goblin_chief_job.spawn_positions = slots
