@@ -17,7 +17,7 @@
 	advclass_cat_rolls = list(CTAG_COURTPHYS = 2)
 
 	give_bank_account = TRUE
-	min_pq = 5 //Please don't kill the duke by operating on strong intent. Play apothecary until you're deserving of the great white beak of doom
+	min_pq = 3 //Please don't kill the duke by operating on strong intent. Play apothecary until you're deserving of the great white beak of doom
 	max_pq = null
 	round_contrib_points = 5
 
@@ -69,6 +69,7 @@
 	H.adjust_blindness(-3)
 	mask = /obj/item/clothing/mask/rogue/courtphysician
 	neck = /obj/item/storage/belt/rogue/pouch/coins/mid //coin to hire mercenaries or adventurers with
+	wrists = /obj/item/storage/keyring/physician
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
 	belt = /obj/item/storage/belt/rogue/leather/black
 	beltl = /obj/item/storage/belt/rogue/surgery_bag/full/physician
@@ -80,12 +81,9 @@
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 2,
 		/obj/item/natural/worms/leech/cheele = 1, //little buddy
 		/obj/item/reagent_containers/glass/bottle/waterskin = 1,
-		/obj/item/recipe_book/alchemy = 1,)
-	if(SSmapping.config.map_name == "Rockhill")
-		wrists = /obj/item/storage/keyring/courtphysician
-	else
-		wrists = /obj/item/storage/keyring/physician
-	if(H.pronouns == SHE_HER)
+		/obj/item/recipe_book/alchemy = 1,
+		/obj/item/mini_flagpole/apothecary = 1,)
+	if(should_wear_femme_clothes(H))
 		head = /obj/item/clothing/head/roguetown/courtphysician/female
 		armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female
 		shirt = /obj/item/clothing/suit/roguetown/shirt/courtphysician/female
