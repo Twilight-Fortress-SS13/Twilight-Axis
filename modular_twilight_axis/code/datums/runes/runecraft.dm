@@ -41,16 +41,20 @@
 	return TRUE
 
 /obj/item/rogueweapon/huntingknife/idagger/proc/get_available_rune_choices(mob/living/user)
-	var/list/runes = RUNE_LIST_LOW
-
-	/*
-	if(HAS_TRAIT(user, TRAIT_RUNEMASTER))
+	var/list/runes = list()
+	if(HAS_TRAIT(user, TRAIT_RUNECARVER))
+		runes |= RUNE_LIST_LOW
+	
+	if(HAS_TRAIT(user, TRAIT_RUNEMAKER))
 		runes |= RUNE_LIST_BASIC
-	*/
 
-	/*
-	if(HAS_TRAIT(user, TRAIT_RUNEBLADE))
-		runes |= RUNE_LIST_MASTER
-	*/
+	// if(HAS_TRAIT(user, TRAIT_RUNEMASTER))
+	// 	runes |= RUNE_LIST_MASTER
 
 	return runes
+
+/datum/species/dwarf
+	inherent_traits = list(TRAIT_DRUNK_HEALING, TRAIT_CAVEDWELLER, TRAIT_RUNECARVER)
+
+/datum/advclass/witch
+	traits_applied = list(TRAIT_DEATHSIGHT, TRAIT_WITCH, TRAIT_ALCHEMY_EXPERT, TRAIT_RUNEMAKER)

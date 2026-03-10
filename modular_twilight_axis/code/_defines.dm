@@ -109,3 +109,10 @@
 	"Земля" = RUNE_LIST_EARTH, \
 	"Воздух" = RUNE_LIST_AIR \
 )
+
+// #define RUNE_LIST_MASTER list( \
+// 	"Огонь" = RUNE_LIST_FIRE_MASTER, \
+// 	"Вода" = RUNE_LIST_WATER_MASTER, \
+// 	"Земля" = RUNE_LIST_EARTH_MASTER, \
+// 	"Воздух" = RUNE_LIST_AIR_MASTER \
+// )
