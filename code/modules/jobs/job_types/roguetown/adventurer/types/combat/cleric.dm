@@ -40,9 +40,10 @@
 	..()
 
 	// Add druidic skill for Dendor followers
-	if(istype(H.patron, /datum/patron/divine/dendor))
-		H.adjust_skillrank(/datum/skill/magic/druidic, 3, TRUE)
-		to_chat(H, span_notice("As a follower of Dendor, you have innate knowledge of druidic magic."))
+	// if(istype(H.patron, /datum/patron/divine/dendor))
+	//	H.adjust_skillrank(/datum/skill/magic/druidic, 3, TRUE)
+	//	to_chat(H, span_notice("As a follower of Dendor, you have innate knowledge of druidic magic."))
+	// my boy, it has no use for now.
 
 	to_chat(H, span_warning("You are a wandering acolyte, versed in both miracles and martial arts. You forego the hauberk that paladins wear in favor of humbling your foes through bloodless strikes. Your satchel hangs heavy, too, with ample provisions for the pilgrimage you're upon."))
 	head = /obj/item/clothing/head/roguetown/headband/monk
@@ -585,16 +586,23 @@
 		if(/datum/patron/old_god)
 			cloak = /obj/item/clothing/cloak/tabard/psydontabard
 			head = /obj/item/clothing/head/roguetown/roguehood/psydon
+		if(/datum/patron/divine/ravox)
+			H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE) // a little bonus for battle-hungry devotees
 		if(/datum/patron/divine/astrata)
 			head = /obj/item/clothing/head/roguetown/roguehood/astrata
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/astrata
 		if(/datum/patron/divine/noc)
 			head =  /obj/item/clothing/head/roguetown/roguehood/nochood
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc
+			mask = /obj/item/clothing/mask/rogue/owlmask
+			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, 1, TRUE) // you already have expert in reading, so.. i will not force reading skill further
+
 		if(/datum/patron/divine/abyssor)
 			head = /obj/item/clothing/head/roguetown/roguehood/abyssor
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/abyssor
 			H.adjust_skillrank(/datum/skill/misc/swimming, SKILL_LEVEL_APPRENTICE, TRUE) //I mean, god of seas has not forgotten his devotee followers
+			H.adjust_skillrank(/datum/skill/craft/cooking, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/labor/fishing, SKILL_LEVEL_APPRENTICE, TRUE)
 		if(/datum/patron/divine/dendor)
 			head = /obj/item/clothing/head/roguetown/dendormask
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/dendor
@@ -609,8 +617,12 @@
 			head = /obj/item/clothing/head/roguetown/necrahood
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/necra
 		if (/datum/patron/divine/malum)
-			head = /obj/item/clothing/head/roguetown/roguehood //placeholder
+			head = /obj/item/clothing/head/roguetown/roguehood
 			cloak = /obj/item/clothing/cloak/templar/malumite
+			H.adjust_skillrank_up_to(/datum/skill/craft/blacksmithing, 1, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/armorsmithing, 1, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/weaponsmithing, 1, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/smelting, 1, TRUE) // something useful for malumites. maybe they'll be helping blacksmith
 		if (/datum/patron/divine/eora)
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/eora
 			head = /obj/item/clothing/head/roguetown/eoramask
@@ -620,6 +632,13 @@
 			ADD_TRAIT(H, TRAIT_GOODLOVER, TRAIT_GENERIC)
 		if (/datum/patron/divine/xylix)
 			cloak = /obj/item/clothing/cloak/templar/xylix
+			H.adjust_skillrank_up_to(/datum/skill/misc/music, 1, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/misc/lockpicking, 1, TRUE) // uhh, tricks, mockery and music. suits them well
+		if (/datum/patron/divine/pestra)
+			cloak = /obj/item/clothing/cloak/templar/pestran
+			head = /obj/item/clothing/head/roguetown/roguehood
+			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, 2, TRUE) // you still can level up medicine like it was nothing to expert
+			recipient.mind?.special_items["Medicine Pouch"] = /obj/item/storage/belt/rogue/pouch/medicine
 		if(/datum/patron/inhumen/zizo)
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe 
 			head = /obj/item/clothing/head/roguetown/roguehood
@@ -636,8 +655,12 @@
 		switch(weapon_choice)
 			if("Iron Spear")
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE) //TA edit
-				r_hand = /obj/item/rogueweapon/spear
-				l_hand = /obj/item/rogueweapon/scabbard/gwstrap
+				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
+					r_hand = /obj/item/rogueweapon/spear/psyspear/old // psydon will endure!
+					l_hand = /obj/item/rogueweapon/scabbard/gwstrap
+				else
+					r_hand = /obj/item/rogueweapon/spear
+					l_hand = /obj/item/rogueweapon/scabbard/gwstrap
 			if("Iron Quarterstaff")
 				H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_JOURNEYMAN, TRUE) //TA edit
 				r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/iron
