@@ -587,6 +587,8 @@
 			cloak = /obj/item/clothing/cloak/tabard/psydontabard
 			head = /obj/item/clothing/head/roguetown/roguehood/psydon
 		if(/datum/patron/divine/ravox)
+			cloak = /obj/item/clothing/cloak/templar/ravox
+			head = /obj/item/clothing/head/roguetown/roguehood
 			H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE) // a little bonus for battle-hungry devotees
 		if(/datum/patron/divine/astrata)
 			head = /obj/item/clothing/head/roguetown/roguehood/astrata
