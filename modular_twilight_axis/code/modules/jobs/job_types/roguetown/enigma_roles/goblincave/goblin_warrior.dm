@@ -3,8 +3,8 @@
 	flag = GOBLINWARRIOR
 	department_flag = GOBLINCAVE
 	faction = "Station"
-	total_positions = 10
-	spawn_positions = 10
+	total_positions = 0
+	spawn_positions = 0
 	allowed_races = list(
 		/datum/species/goblinp,
 	)
@@ -20,7 +20,7 @@
 	display_order = JDO_GOBLINWARRIOR
 	selection_color = JCOLOR_WANDERER
 	show_in_credits = FALSE
-	min_pq = -30
+	min_pq = 5
 	max_pq = null
 
 	advclass_cat_rolls = list(CTAG_GOBLINWARRIOR = 10)
@@ -316,3 +316,21 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/roguekey/goblinkey,
 		)
+
+/proc/update_goblin_warrior_slots()
+    var/datum/job/goblin_warrior_job = SSjob.GetJob("Goblin Warrior")
+    if(!goblin_warrior_job)
+        return
+
+    var/player_count = length(GLOB.joined_player_list)
+    var/ready_player_count = length(GLOB.ready_player_list)
+    var/slots = 0
+
+    var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+
+    // При 80 игроках открывается 6 слотов, далее +1 за каждые 10 игроков
+    if(current_players >= 80)
+        slots = 6 + floor((current_players - 80) / 10)
+
+    goblin_warrior_job.total_positions = slots
+    goblin_warrior_job.spawn_positions = slots
