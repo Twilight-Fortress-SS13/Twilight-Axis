@@ -66,6 +66,8 @@
 
 После этого команды, которые возвращают файл (`logs get`, `logs path`, `logs current <file>`), будут пытаться загрузить лог в Discord как вложение.
 
+Предпочтительно указывать полный `https://...` URL. Код также умеет нормализовать частые варианты без схемы, например `discord.com/api/webhooks/...` или `/api/webhooks/...`, но полный URL надежнее и понятнее.
+
 Что реально отправляется через webhook:
 
 - Текстовое сообщение с указанием, кто запросил лог.
@@ -193,6 +195,8 @@ Steps:
 4. Restart the server.
 
 After that, file-returning commands such as `logs get`, `logs path`, and `logs current <file>` will try to upload the selected log directly to Discord as an attachment.
+
+Use a full `https://...` URL whenever possible. The code also normalizes common scheme-less inputs such as `discord.com/api/webhooks/...` or `/api/webhooks/...`, but the full URL is the preferred format.
 
 What the webhook sends:
 

@@ -132,9 +132,42 @@ GLOBAL_LIST_EMPTY(discord_log_selection_cache)
 
 	return entry_data
 
+/proc/discord_log_normalize_webhook_url(raw_webhook_url)
+	if(!istext(raw_webhook_url))
+		return null
+
+	var/webhook_url = trim(raw_webhook_url)
+	if(!webhook_url)
+		return null
+
+	if(length(webhook_url) >= 2)
+		var/first_char = copytext(webhook_url, 1, 2)
+		var/last_char = copytext(webhook_url, length(webhook_url), length(webhook_url) + 1)
+		if((first_char == "\"" && last_char == "\"") || (first_char == "'" && last_char == "'") || (first_char == "<" && last_char == ">"))
+			webhook_url = trim(copytext(webhook_url, 2, length(webhook_url)))
+
+	if(!webhook_url)
+		return null
+
+	if(findtext(webhook_url, "http://") == 1 || findtext(webhook_url, "https://") == 1)
+		return webhook_url
+
+	if(findtext(webhook_url, " ") || findtext(webhook_url, "\n") || findtext(webhook_url, ascii2text(13)))
+		return FALSE
+
+	if(copytext(webhook_url, 1, 3) == "//" && findtext(webhook_url, "/api/webhooks/"))
+		return "https:[webhook_url]"
+
+	if(copytext(webhook_url, 1, 2) == "/" && findtext(webhook_url, "/api/webhooks/"))
+		return "https://discord.com[webhook_url]"
+
+	if(findtext(webhook_url, "/api/webhooks/"))
+		return "https://[webhook_url]"
+
+	return FALSE
+
 /proc/discord_log_upload_webhook_url()
-	var/webhook_url = trim(CONFIG_GET(string/admin_logs_webhook_url))
-	return webhook_url ? webhook_url : null
+	return discord_log_normalize_webhook_url(CONFIG_GET(string/admin_logs_webhook_url))
 
 /proc/discord_log_upload_file_to_discord(full_path, relative_path, issued_by)
 	if(!fexists(full_path))
@@ -144,10 +177,15 @@ GLOBAL_LIST_EMPTY(discord_log_selection_cache)
 		)
 
 	var/webhook_url = discord_log_upload_webhook_url()
-	if(!webhook_url)
+	if(isnull(webhook_url))
 		return list(
 			"success" = FALSE,
 			"message" = "Discord file upload is not configured.",
+		)
+	if(!istext(webhook_url) || !webhook_url)
+		return list(
+			"success" = FALSE,
+			"message" = "Discord file upload is misconfigured. Set `ADMIN_LOGS_WEBHOOK_URL` to a full Discord webhook URL.",
 		)
 
 	var/log_text = file2text(file(full_path))
