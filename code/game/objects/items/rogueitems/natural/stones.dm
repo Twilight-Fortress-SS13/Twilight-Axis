@@ -234,7 +234,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	var/list/given_intent_list = list(/datum/intent/hit) // By default you get this at least
 	var/list/extra_intent_list = list() // List of intents that we can possibly give it by the end of this
 	var/list/blunt_intents = list(/datum/intent/mace/strike/wood, /datum/intent/mace/smash/wood)
-	var/list/sharp_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/thrust/quick, /datum/intent/dagger/chop) // TA edit, prev. /thrust,
+	var/list/sharp_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/chop) // TA edit
 
 	var/bluntness_rating = rand(0,10)
 	var/sharpness_rating = rand(0,10)
@@ -373,7 +373,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 
 /obj/item/natural/rock
 	name = "boulder"
-	desc = "A rock protudes from the ground."
+	desc = "They're not 'rocks', they're minerals!"
 	icon_state = "stonebig1"
 	dropshrink = 0
 	throwforce = 25
@@ -411,6 +411,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 		if(L.m_intent == MOVE_INTENT_RUN)
 			L.visible_message(span_warning("[L] trips over the boulder!"),span_warning("I trip over the boulder!"))
 			L.Knockdown(10)
+			L.drop_all_held_items()
 			L.consider_ambush(always = TRUE)
 	..()
 

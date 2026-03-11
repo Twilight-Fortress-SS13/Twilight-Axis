@@ -410,16 +410,16 @@
 			lol++
 			switch(lol)
 				if(1)
-					intent1 = image(icon='icons/mob/roguehud.dmi',icon_state=intenty.icon_state, pixel_x = 64, pixel_y = 16, layer = layer+0.02)
+					intent1 = image(icon=intenty.icon,icon_state=intenty.icon_state, pixel_x = 64, pixel_y = 16, layer = layer+0.02)
 					add_overlay(intent1, TRUE)
 				if(2)
-					intent2 = image(icon='icons/mob/roguehud.dmi',icon_state=intenty.icon_state, pixel_x = 96, pixel_y = 16, layer = layer+0.02)
+					intent2 = image(icon=intenty.icon,icon_state=intenty.icon_state, pixel_x = 96, pixel_y = 16, layer = layer+0.02)
 					add_overlay(intent2, TRUE)
 				if(3)
-					intent3 = image(icon='icons/mob/roguehud.dmi',icon_state=intenty.icon_state, pixel_x = 64, layer = layer+0.02)
+					intent3 = image(icon=intenty.icon,icon_state=intenty.icon_state, pixel_x = 64, layer = layer+0.02)
 					add_overlay(intent3, TRUE)
 				if(4)
-					intent4 = image(icon='icons/mob/roguehud.dmi',icon_state=intenty.icon_state, pixel_x = 96, layer = layer+0.02)
+					intent4 = image(icon=intenty.icon,icon_state=intenty.icon_state, pixel_x = 96, layer = layer+0.02)
 					add_overlay(intent4, TRUE)
 		if(ismob(usr))
 			var/mob/M = usr
@@ -2044,7 +2044,7 @@
 
 	background.vis_contents += fill
 	mask.vis_contents += background
-	vis_contents.Add(mask, foreground)
+	vis_contents.Add(mask, foreground) 
 
 /atom/movable/screen/bloodpool/Destroy()
 	QDEL_NULL(background)
@@ -2120,3 +2120,12 @@
 /atom/movable/screen/bloodpool_maskpart/mask
 	icon_state = "mana_mask"
 
+
+/atom/movable/screen/bloodpool/breath
+	name = "breath"
+	screen_loc = "WEST-1:3, CENTER+2" 
+
+/atom/movable/screen/bloodpool/breath/Initialize(mapload)
+	. = ..()
+	set_fill_color("#00eaff")
+	set_value(1.0)

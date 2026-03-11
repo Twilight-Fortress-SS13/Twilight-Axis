@@ -240,7 +240,8 @@
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Armet or Hounskull Bascinet"
 	target_items = list(
 		/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/dakken,
-		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken,
+		/obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor            = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor/dakken
 	)
 	result_item = null
 
@@ -301,6 +302,7 @@
 		/obj/item/rogueweapon/stoneaxe/woodcut	  						= /obj/item/rogueweapon/stoneaxe/woodcut/triumph
 		)
 	result_item = null
+	icon_loadout = /obj/item/rogueweapon/stoneaxe/woodcut/triumph
 
 /obj/item/enchantingkit/triumph_weaponkit_axedouble
 	name = "'Doublehead' axe morphing elixir"
@@ -314,6 +316,7 @@
 		/obj/item/rogueweapon/stoneaxe/battle	  						= /obj/item/rogueweapon/stoneaxe/battle/triumph
 		)
 	result_item = null
+	icon_loadout = /obj/item/rogueweapon/stoneaxe/battle/triumph
 
 /obj/item/enchantingkit/triumph_weaponkit_sword
 	name = "'Valorian' sword morphing elixir"
