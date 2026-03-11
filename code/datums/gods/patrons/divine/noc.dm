@@ -16,7 +16,7 @@
 					/obj/effect/proc_holder/spell/self/blindnessorsilence		= CLERIC_T2,
 					/obj/effect/proc_holder/spell/self/wisescroll	     		= CLERIC_T3,
 					/obj/effect/proc_holder/spell/self/noc_spell_bundle			= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/resurrect/noc			= CLERIC_T4,
+				//	/obj/effect/proc_holder/spell/invoked/resurrect/noc			= CLERIC_T4, // TA EDIT
 	)
 	confess_lines = list(
 		"NOC IS NIGHT!",

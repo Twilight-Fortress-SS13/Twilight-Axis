@@ -17,7 +17,7 @@
 					/obj/effect/proc_holder/spell/invoked/mastersillusion		= CLERIC_T2,
 					/obj/effect/proc_holder/spell/targeted/touch/parlor_trick	= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/abscond				= CLERIC_T4,
-					/obj/effect/proc_holder/spell/invoked/resurrect/xylix		= CLERIC_T4,
+				//	/obj/effect/proc_holder/spell/invoked/resurrect/xylix		= CLERIC_T4, // TA EDIT
 	)
 	traits_tier = list(TRAIT_XYLIX_DEVOTEE = CLERIC_T0) //Requires a minimal holy skill or the 'Devotee' virtue to unlock. Rerolls luck events
 	confess_lines = list(

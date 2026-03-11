@@ -17,7 +17,7 @@
 	sound = 'sound/magic/revive.ogg'
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
-	recharge_time = 10 MINUTES
+	recharge_time = 30 MINUTES
 	miracle = TRUE
 	devotion_cost = 250
 	var/revive_pq = PQ_GAIN_REVIVE

@@ -121,6 +121,8 @@
 			if(corpse.burialrited)
 				to_chat(user, "This grave has already been consecrated...")
 				return
+			if(!corpse.mind)
+				to_chat(user, "This burried-one's lux is to weak to weave.")
 			else
 				to_chat(user, "I begin my burial rites...")
 				if(do_after(user, 50))
