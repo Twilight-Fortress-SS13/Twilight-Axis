@@ -124,6 +124,7 @@
 			// TA EDIT
 			if(!corpse.mind)
 				to_chat(user, "This burried-one's lux is too weak to weave.")
+				return
 			// TA EDIT
 			else
 				to_chat(user, "I begin my burial rites...")
