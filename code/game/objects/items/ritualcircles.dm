@@ -1166,9 +1166,9 @@
 		var/obj/item/soulthread/thread2combine = attacking_item
 		strungtogether += thread2combine.strungtogether
 		sellprice += 3
-		to_chat(user, "...[strungtogether] of 10 to the toll...")
+		to_chat(user, "...[strungtogether] of 6 to the toll...") // TA EDIT, prev. 10
 		qdel(thread2combine)
-	if(strungtogether >= 10)
+	if(strungtogether >= 6) // TA EDIT, prev. 10
 		to_chat(user, "The lux-stuff coalesces into a toll!")
 		new /obj/item/thetoll((get_turf(user)))
 		qdel(src)
