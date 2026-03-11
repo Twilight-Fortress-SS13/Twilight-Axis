@@ -237,6 +237,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/knifebelt/iron
 	cloak = /obj/item/clothing/cloak/raincloak/mortus
 	beltl = /obj/item/quiver/Warrows
+	beltr = /obj/item/storage/belt/rogue/pouch
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
