@@ -243,7 +243,8 @@
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/recipe_book/survival = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/roguekey/goblinkey,
+		/obj/item/roguekey/goblinkey = 1,
+		/obj/item/bomb/smoke = 2
 		)
 
 /datum/advclass/goblin_warrior/archer
