@@ -66,6 +66,8 @@ There are several things that need to be remembered:
 /mob/living/carbon/human/update_body()
 	dna.species.handle_body(src)
 	..()
+	world.log << "BODY_ADJ_LAYER = [islist(overlays_standing[BODY_ADJ_LAYER]) ? length(overlays_standing[BODY_ADJ_LAYER]) : (overlays_standing[BODY_ADJ_LAYER] ? 1 : 0)]"
+	rebuild_morph_cache_from_current()
 
 #define SUNDER_FILTER "sunder_filter"
 
@@ -1704,6 +1706,14 @@ generate/load female uniform sprites matching all previously decided variables
 			bloody_onmob["[index][(boobed_overlay) ? "_boob" : ""]"] = fcopy_rsc(clothing_icon)
 		var/mutable_appearance/pic = mutable_appearance(clothing_icon, -layer2use)
 		standing.overlays.Add(pic)
+
+	if(!isinhands && ishuman(loc))
+		var/mob/living/carbon/human/H = loc
+		var/icon/fitted = H.autofit_worn_icon(file2use, t_state, sleeveindex, 4, FALSE, FALSE)
+		if(fitted)
+			standing.icon = fitted
+			standing.icon_state = ""
+			standing.dir = SOUTH
 
 	standing = center_image(standing, isinhands ? inhand_x_dimension : worn_x_dimension, isinhands ? inhand_y_dimension : worn_y_dimension)
 
