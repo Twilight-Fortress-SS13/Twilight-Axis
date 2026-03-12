@@ -262,7 +262,7 @@
 "jL" = (
 /obj/structure/rack/rogue,
 /obj/item/rogueweapon/katar/punchdagger,
-/obj/item/rogueweapon/knuckles,
+/obj/item/clothing/gloves/roguetown/knuckles,
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/cave/goblincave)
 "kd" = (
