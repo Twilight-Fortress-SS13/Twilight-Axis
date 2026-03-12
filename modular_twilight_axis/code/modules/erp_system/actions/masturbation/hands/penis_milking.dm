@@ -6,7 +6,7 @@
 	inject_timing      = INJECT_ON_FINISH
 	inject_source      = INJECT_FROM_PASSIVE
 	inject_target_mode = INJECT_CONTAINER
-	message_start = "{actor} {pose} берёт свой член в руку."
-	message_tick = "{actor} {pose} мастурбирует рукой свой член."
+	message_start = "{actor} берёт свой член в руку."
+	message_tick = "{actor} мастурбирует рукой свой член."
 	message_finish =  "{actor} ослабляет хватку и останавливается."
 	message_climax_active = "Я чувствую, как семя вырывается наружу."

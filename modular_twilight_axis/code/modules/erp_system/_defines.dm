@@ -21,7 +21,6 @@
 #define ERP_SCOPE_SELF  1
 #define ERP_SCOPE_OTHER 2
 
-
 #define ERP_ACTION_ACTIVE_AROUSAL	"active_arousal"
 #define ERP_ACTION_ACTIVE_PAIN		"active_pain"
 #define ERP_ACTION_PASSIVE_AROUSAL	"passive_arousal"
@@ -105,36 +104,17 @@ var/global/list/ERP_ACTION_EDITOR_FIELDS = list(
 
 #define ERP_OVERLOAD_SP_TRIGGER 6.0
 #define ERP_OVERLOAD_MAX_OP 10
-#define ERP_OVERLOAD_DECAY_INTERVAL (4 MINUTES)
+#define ERP_OVERLOAD_DECAY_INTERVAL (15 MINUTES)
 
 #define ERP_BASE_AROUSAL_DECAY_RATE 0.20
 
 #define ERP_AGE_BASELINE 30
 #define ERP_BAOTHA_CHARGE_REGEN_MULT 1.25
 
-
-
 GLOBAL_LIST_INIT(available_kinks, generate_kink_list())
-GLOBAL_LIST_INIT(relationship_settings, list(
-	REL_LOVE_POTION = list(
-	"sex_mult" = 0.8,
-	"other_sex_mult" = 1.2,
-	"observe_min" = 10,
-	"observe_gain" = 1,
-	"observe_cap" = 30
-	)
-))
-var/global/list/ERP_ORGAN_ORDER = list(
-	SEX_ORGAN_BODY,
-	SEX_ORGAN_MOUTH,
-	SEX_ORGAN_BREASTS,
-	SEX_ORGAN_HANDS,
-	SEX_ORGAN_PENIS,
-	SEX_ORGAN_VAGINA,
-	SEX_ORGAN_ANUS,
-	SEX_ORGAN_TAIL,
-	SEX_ORGAN_LEGS
-)
+GLOBAL_LIST_INIT(relationship_settings, list(REL_LOVE_POTION = list("sex_mult" = 0.8,"other_sex_mult" = 1.2,"observe_min" = 10,"observe_gain" = 1,"observe_cap" = 30)))
+
+var/global/list/ERP_ORGAN_ORDER = list(SEX_ORGAN_BODY,SEX_ORGAN_MOUTH,SEX_ORGAN_BREASTS,SEX_ORGAN_HANDS,SEX_ORGAN_PENIS,SEX_ORGAN_VAGINA,SEX_ORGAN_ANUS,SEX_ORGAN_TAIL,SEX_ORGAN_LEGS)
 
 /proc/generate_kink_list()
 	var/list/kinks = list()

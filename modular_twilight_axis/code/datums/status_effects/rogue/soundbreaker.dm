@@ -151,13 +151,12 @@
 
 #define SB_BREAKER_PER_STACK 			10
 #define SB_BREAKER_MAX_CHANCE 			90
-#define SB_BREAKER_CLICK_MOD_PER_STACK	0.02
-#define SB_BREAKER_BASE_SPEEDUP			0.05
-#define SB_BREAKER_BASE_CHANCE 			30
+#define SB_BREAKER_CLICK_MOD_PER_STACK	0.20
+#define SB_BREAKER_BASE_CHANCE 			40
 
 /datum/status_effect/buff/soundbreaker_breaker_window
 	id = "soundbreaker_breaker_window"
-	duration = 2.0 SECONDS
+	duration = 2.5 SECONDS
 	status_type = STATUS_EFFECT_REPLACE
 	alert_type = null
 	var/success_chance = 0
@@ -179,7 +178,7 @@
 	if(!base_cd)
 		return
 
-	var/mult = 1 - (SB_BREAKER_BASE_SPEEDUP + stacks * SB_BREAKER_CLICK_MOD_PER_STACK)
+	var/mult = 1 - (stacks * SB_BREAKER_CLICK_MOD_PER_STACK)
 	original_next_move = owner.next_move
 	var/new_cd = round(base_cd * mult)
 	owner.changeNext_move(new_cd)
@@ -195,7 +194,6 @@
 
 	owner.next_move = original_next_move
 
-#undef SB_BREAKER_BASE_SPEEDUP
 #undef SB_BREAKER_BASE_CHANCE 
 #undef SB_BREAKER_CLICK_MOD_PER_STACK
 #undef SB_BREAKER_MAX_CHANCE

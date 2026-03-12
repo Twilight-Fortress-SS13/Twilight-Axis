@@ -63,4 +63,5 @@
 							/obj/item/natural/stone = 6,
 							/obj/item/natural/rock = 1,
 							/obj/item/grown/log/tree/stick = 3,
+							/obj/structure/leyline/normal/grove = 2,
 							/obj/structure/flora/roguetree/stump/log = 3)

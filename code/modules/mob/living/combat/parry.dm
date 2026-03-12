@@ -46,6 +46,20 @@
 	var/obj/item/mainhand = get_active_held_item()
 	var/obj/item/offhand = get_inactive_held_item()
 	var/obj/item/used_weapon = mainhand
+
+	// TA Edit start - new Ronin Class
+	var/need_override = TRUE
+	if(mainhand?.can_parry || offhand?.can_parry)
+		need_override = FALSE
+
+	if(need_override)
+		var/obj/item/override_parry_weapon = ronin_parry_override(src, intenty,user)
+		if(override_parry_weapon)
+			mainhand = override_parry_weapon
+			offhand = null
+			used_weapon = override_parry_weapon
+	// TA Edit end - new Ronin Class
+
 	var/obj/item/rogueweapon/shield/buckler/skiller = get_inactive_held_item()  // buckler code
 	var/obj/item/rogueweapon/shield/buckler/skillerbuck = get_active_held_item()
 
@@ -68,6 +82,8 @@
 	else
 		used_weapon = offhand
 		highest_defense += offhand_defense
+
+
 
 	var/defender_skill = 0
 	var/attacker_skill = 0
@@ -154,6 +170,11 @@
 	if(HAS_TRAIT(U, TRAIT_ARMOUR_LIKED))
 		if(HAS_TRAIT(U, TRAIT_FENCERDEXTERITY))
 			prob2defend -= 5
+
+	// TA addition start - new ronin class
+	if(HAS_TRAIT(src, TRAIT_PARRYEXPERT))
+		prob2defend += 30
+	// TA addition end - new ronin class
 
 	prob2defend = clamp(prob2defend, 5, 90)
 	if(HAS_TRAIT(user, TRAIT_HARDSHELL) && H.client)	//Dwarf-merc specific limitation w/ their armor on in pvp

@@ -69,6 +69,27 @@
 	credits = "La Caution Thé à la Menthe Instrumentale HQ Oceans Twelve"
 	musicpath = list('modular_twilight_axis/sound/music/combat_tabaxi.ogg')
 
+/datum/combat_music/skeleton
+	name = "Elder Skeleton"
+	desc = "He saw terrible past but you will never see beautifull future."
+	shortname = "Shkelet"
+	credits = "Sulphur head, probably, Vanderlin"
+	musicpath = list('modular_twilight_axis/sound/music/combat_skeleton.ogg')
+
+/datum/combat_music/knight
+	name = "Full-plate Knight"
+	desc = "His steps mean your DEATH."
+	shortname = "Dread Knight"
+	credits = "Sulphur head, probably, Vanderlin"
+	musicpath = list('modular_twilight_axis/sound/music/combat_fullplate.ogg')
+
+/datum/combat_music/highgrain
+	name = "Footstep"
+	desc = "I had him dead before he hit the ground."
+	shortname = "High Grain"
+	credits = "Half-Life Alyx - APC Cannon"
+	musicpath = list('modular_twilight_axis/sound/music/combat_highgrain.ogg')
+
 /datum/combat_music/lich 
 	name = "Lich - Herald of HER will"
 	desc = "March of the Dead"

@@ -11,6 +11,7 @@
 	var/tmp/chain_lock_until = 0
 	var/last_overload_sleep_decay_time = 0
 	var/tmp/nympho_sp_floor_until = 0
+	var/erp_last_climax_fx_time = 0
 
 /datum/component/arousal/RegisterWithParent()
 	. = ..()
@@ -275,6 +276,8 @@
 		adjust_satisfaction(ERP_SP_GAIN_MASTURBATE)
 	else
 		adjust_satisfaction(ERP_SP_GAIN_PARTNER)
+	
+	try_award_goodlover_triumph(partner)
 
 /datum/component/arousal/proc/get_climax_stress_event(mob/living/carbon/human/partner, is_masturbation)
 	var/is_nympho = is_lovefiend()
@@ -358,7 +361,7 @@
 /datum/component/arousal/process(dt)
 	seed_satisfaction_if_needed()
 	handle_satisfaction_decay()
-	handle_overload_sleep_clear()
+	handle_overload_sleep_decay()
 	handle_overload_decay()
 	handle_charge(dt * 1)
 	handle_lovefiend_idle(dt)
@@ -490,28 +493,12 @@
 		return
 	last_ejaculation_world_time = world.time
 
-	var/list/L = get_erp_links()
-	var/datum/erp_sex_link/best = pick_best_erp_link(L)
-
-	if(best)
-		var/mob/living/carbon/human/H = parent
-		if(!istype(H))
-			return
-
-		if(best.action && best.action.inject_timing == INJECT_ON_FINISH)
-			best.action.handle_inject(best, H)
-
-		var/datum/erp_controller/C = SSerp.get_controller_for(H)
-		var/datum/erp_actor/me = C ? C.get_actor_by_mob(H) : null
-		var/list/info = me ? best.handle_climax(me) : null
-		var/climax_type = info?["type"] || "self"
-		var/mob/living/carbon/human/partner = info?["partner"]
-
-		spread_chain_orgasm(H)
-		handle_climax(climax_type, H, partner, null)
-		award_satisfaction_on_climax(H, partner)
-		after_ejaculation(null, H, partner)
+	var/mob/living/carbon/human/H = parent
+	if(!istype(H))
 		return
+
+	apply_ejaculation_effects(H)
+	return
 
 /datum/component/arousal/handle_climax(climax_type, mob/living/carbon/human/climaxer, mob/living/carbon/human/partner, action)
 	switch(climax_type)
@@ -554,11 +541,15 @@
 		cost = round(cost * 0.75)
 	return max(1, cost)
 
-/datum/component/arousal/after_ejaculation(datum/sex_action/action, mob/living/carbon/human/climaxer, mob/living/carbon/human/partner)
+/datum/component/arousal/proc/apply_ejaculation_effects(mob/living/carbon/human/climaxer)
+	if(!istype(climaxer))
+		return
+
 	SEND_SIGNAL(climaxer, COMSIG_SEX_SET_AROUSAL, 20)
 	SEND_SIGNAL(climaxer, COMSIG_SEX_CLIMAX)
 
-	apply_climax_stress(climaxer, partner)
+
+	try_award_goodlover_triumph()
 	var/cost = get_charge_cost_for_climax()
 	charge = max(0, charge - cost)
 
@@ -566,19 +557,6 @@
 		try_gain_overload_point()
 
 	apply_post_climax_multiplier_gain()
-	climaxer.emote("moan", forced = TRUE)
-	climaxer.playsound_local(climaxer, 'sound/misc/mat/end.ogg', 100)
-
-	if(HAS_TRAIT(partner, TRAIT_GOODLOVER))
-		if(!climaxer.mob_timers["cumtri"])
-			climaxer.mob_timers["cumtri"] = world.time
-			climaxer.adjust_triumphs(1)
-			to_chat(climaxer, span_love("Our loving is a true TRIUMPH!"))
-		if(!partner.mob_timers["cumtri"])
-			partner.mob_timers["cumtri"] = world.time
-			partner.adjust_triumphs(1)
-			to_chat(partner, span_love("Our loving is a true TRIUMPH!"))
-
 	return
 
 /datum/component/arousal/proc/get_satisfaction_text()
@@ -707,13 +685,13 @@
 
 #define ERP_OVERLOAD_SLEEP_DECAY_INTERVAL (30 SECONDS)
 
-/datum/component/arousal/proc/handle_overload_sleep_clear()
+/datum/component/arousal/proc/handle_overload_sleep_decay()
 	if(overload_points <= 0)
 		last_overload_sleep_decay_time = 0
 		return
 
 	var/mob/living/carbon/human/H = parent
-	if(!istype(H))
+	if(!istype(H) || QDELETED(H))
 		last_overload_sleep_decay_time = 0
 		return
 
@@ -721,8 +699,23 @@
 		last_overload_sleep_decay_time = 0
 		return
 
-	clear_overload_points("sleep")
-	last_overload_sleep_decay_time = 0
+	if(!last_overload_sleep_decay_time)
+		last_overload_sleep_decay_time = world.time
+		return
+
+	if(world.time < last_overload_sleep_decay_time + ERP_OVERLOAD_SLEEP_DECAY_INTERVAL)
+		return
+
+	var/steps = floor((world.time - last_overload_sleep_decay_time) / ERP_OVERLOAD_SLEEP_DECAY_INTERVAL)
+	if(steps <= 0)
+		return
+
+	last_overload_sleep_decay_time += steps * ERP_OVERLOAD_SLEEP_DECAY_INTERVAL
+
+	overload_points = max(0, overload_points - steps)
+	update_overload_debuff()
+
+#undef ERP_OVERLOAD_SLEEP_DECAY_INTERVAL
 
 /datum/component/arousal/adjust_arousal(datum/source, amount, forced = FALSE)
 	if(arousal_frozen)
@@ -748,8 +741,134 @@
 		return istype(M, /mob/living/carbon/human) ? M : null
 	return null
 
+/datum/component/arousal/proc/find_active_knot_link_for_top(mob/living/carbon/human/H)
+	if(!istype(H) || QDELETED(H))
+		return null
+
+	var/datum/component/erp_knotting/K = H.GetComponent(/datum/component/erp_knotting)
+	if(!K || QDELETED(K))
+		return null
+
+	if(!islist(K.active_links) || !K.active_links.len)
+		return null
+
+	for(var/datum/erp_knot_link/KL in K.active_links)
+		if(!KL || QDELETED(KL) || !KL.is_valid())
+			continue
+		if(KL.top != H)
+			continue
+		if(!KL.penis_org || QDELETED(KL.penis_org))
+			continue
+		if(!KL.receiving_org || QDELETED(KL.receiving_org))
+			continue
+
+		return KL
+
+	return null
+
+#define ERP_GOODLOVER_SP_THRESHOLD 2.0
+
+/datum/component/arousal/proc/try_award_goodlover_triumph(mob/living/carbon/human/partner)
+	if(satisfaction_points < ERP_GOODLOVER_SP_THRESHOLD)
+		return
+
+	var/mob/living/carbon/human/climaxer = parent
+	if(!istype(climaxer) || climaxer.stat == DEAD)
+		return
+
+	if(!istype(partner) || partner == climaxer || QDELETED(partner) || partner.stat == DEAD)
+		return
+
+	if(!(HAS_TRAIT(partner, TRAIT_GOODLOVER) || HAS_TRAIT(climaxer, TRAIT_GOODLOVER)))
+		return
+
+	if(!climaxer.mob_timers)
+		climaxer.mob_timers = list()
+	if(!partner.mob_timers)
+		partner.mob_timers = list()
+
+	if(!climaxer.mob_timers["cumtri"])
+		climaxer.mob_timers["cumtri"] = world.time
+		climaxer.adjust_triumphs(1)
+		to_chat(climaxer, span_love("Our loving is a true TRIUMPH!"))
+
+	if(!partner.mob_timers["cumtri"])
+		partner.mob_timers["cumtri"] = world.time
+		partner.adjust_triumphs(1)
+		to_chat(partner, span_love("Our loving is a true TRIUMPH!"))
+
+#undef ERP_GOODLOVER_SP_THRESHOLD
+
+/datum/component/arousal/set_charge(amount)
+	var/empty = (charge < get_charge_cost_for_climax())
+	charge = clamp(amount, 0, SEX_MAX_CHARGE)
+	var/after_empty = (charge < get_charge_cost_for_climax())
+	if(empty && !after_empty)
+		to_chat(parent, span_notice("I feel like I'm not so spent anymore"))
+	if(!empty && after_empty)
+		to_chat(parent, span_notice("I'm spent!"))
+
+/datum/component/arousal/is_spent()
+	if(charge < get_charge_cost_for_climax())
+		return TRUE
+	return FALSE
+
 /datum/component/arousal/proc/is_nympho_sp_floor_active()
 	return is_lovefiend() && (world.time < nympho_sp_floor_until)
 
-#undef ERP_OVERLOAD_SLEEP_DECAY_INTERVAL
+/datum/component/arousal/check_processing()
+	INVOKE_ASYNC(src, PROC_REF(check_processing_async))
+	
+/datum/component/arousal/proc/check_processing_async()
+	var/mob/parent_mob = parent
+	if(parent_mob && !QDELETED(parent_mob))
+		START_PROCESSING(SSobj, src)
+	else
+		STOP_PROCESSING(SSobj, src)
+
+/datum/component/arousal/get_force_pleasure_multiplier(passed_force, giving)
+	switch(passed_force)
+		if(SEX_FORCE_LOW)
+			if(giving)
+				return 0.8
+			else
+				return 0.8
+		if(SEX_FORCE_MID)
+			if(giving)
+				return 1.0
+			else
+				return 1.0
+		if(SEX_FORCE_HIGH)
+			if(giving)
+				return 1.525
+			else
+				return 1.5
+		if(SEX_FORCE_EXTREME)
+			if(giving)
+				return 2.05
+			else
+				return 2.0
+
+/datum/component/arousal/get_force_pain_multiplier(passed_force)
+	switch(passed_force)
+		if(SEX_FORCE_LOW)
+			return 0.5
+		if(SEX_FORCE_MID)
+			return 1.0
+		if(SEX_FORCE_HIGH)
+			return 2.0
+		if(SEX_FORCE_EXTREME)
+			return 3.0
+
+/datum/component/arousal/get_speed_pain_multiplier(passed_speed)
+	switch(passed_speed)
+		if(SEX_SPEED_LOW)
+			return 0.8
+		if(SEX_SPEED_MID)
+			return 1.0
+		if(SEX_SPEED_HIGH)
+			return 1.2
+		if(SEX_SPEED_EXTREME)
+			return 1.4
+
 #undef NYMPHO_AROUSAL_SOFT_CAP
