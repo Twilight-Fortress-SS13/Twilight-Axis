@@ -18,3 +18,18 @@
 	icon_state = "book5_0"
 	base_icon_state = "book5"
 	bookfile = "ronin_codex.json"
+
+/obj/item/book/rogue/runeblade_codex
+	name = "Notes of Father"
+	desc = "A worn manuscript passed from father to son among runeblades. Within are recorded the sword forms, rune disciplines and killing combinations of the lineage."
+	icon_state = "book5_0"
+	base_icon_state = "book5"
+	bookfile = "runeblade_codex.json"
+
+
+/obj/item/book/rogue/witch_runes
+	name = "Coven Treatise on Northern Runes"
+	desc = "A practical manuscript compiled by several witch covens. It catalogues the known northern runes, their carving ingredients and the effects they impose when bound to steel."
+	icon_state = "book5_0"
+	base_icon_state = "book5"
+	bookfile = "witch_coven_runes.json"
