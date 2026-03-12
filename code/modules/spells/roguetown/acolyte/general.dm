@@ -41,8 +41,6 @@
 		revert_cast()
 		return FALSE
 
-	user.Beam(target,icon_state="lichbeam",time=1 SECONDS)
-
 	if(user.patron?.undead_hater && (target.mob_biotypes & MOB_UNDEAD))
 		// We simply do nothing to avoid healing being used to vamp/skelly check!
 		var/message_out_undead = span_info("Healing energies envelop [target]!")
@@ -135,8 +133,6 @@
 		playsound(target, 'sound/magic/PSY.ogg', 100, FALSE, -1)
 		return FALSE
 
-	user.Beam(target,icon_state="lichbeam",time=1 SECONDS)
-
 	if(user.patron?.undead_hater && (target.mob_biotypes & MOB_UNDEAD)) //positive energy harms the undead
 		target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I'm burned by holy light!"))
 		target.adjustFireLoss(25)
@@ -164,7 +160,7 @@
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 0
-	range = 3
+	range = 4
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	sound = list('sound/magic/regression1.ogg','sound/magic/regression2.ogg','sound/magic/regression3.ogg','sound/magic/regression4.ogg')
@@ -185,7 +181,6 @@
 	var/mob/living/target = targets[1]
 	target.visible_message(span_info("Order filled magic rewind [target]'s wounds!"), span_notice("My wounds, undone!"))
 	var/healing = 2.5
-	user.Beam(target,icon_state="lichbeam",time=1 SECONDS)
 	target.apply_status_effect(/datum/status_effect/buff/healing, healing)
 	return TRUE
 
@@ -197,7 +192,7 @@
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 0
-	range = 3
+	range = 4
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 //	chargedloop = /datum/looping_sound/invokeholy
@@ -220,7 +215,6 @@
 
 	var/mob/living/target = targets[1]
 	target.visible_message(span_info("A convergence of fates surrounds [target]!"), span_notice("My past and present converge as one!"))
-	user.Beam(target,icon_state="lichbeam",time=1 SECONDS)
 	if(iscarbon(target))
 		var/mob/living/carbon/C = target
 		C.apply_status_effect(/datum/status_effect/buff/convergence)

@@ -2,7 +2,7 @@
 	name = "Licker"
 	tutorial = "You have recently been embraced as a vampire. You do not know whom your sire is, strange urges, unnatural strength, a thirst you can barely control. You were outed as a monster and are now on the run."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_NO_CONSTRUCT
+	allowed_races = RACES_SHUNNED_UP
 	outfit = /datum/outfit/job/roguetown/wretch/licker
 	class_select_category = CLASS_CAT_ACCURSED
 	category_tags = list(CTAG_WRETCH)
@@ -72,7 +72,6 @@
 
 /datum/reagent/vampsolution/on_mob_metabolize(mob/living/M, mob/living/S)
 	M.overlay_fullscreen("druqk", /atom/movable/screen/fullscreen/druqks)
-	M.update_body_parts_head_only()
 	if(M.client)
 		ADD_TRAIT(M, TRAIT_DRUQK, "based")
 		SSdroning.area_entered(get_area(M), M.client)
@@ -84,4 +83,3 @@
 	if(M.client)
 		REMOVE_TRAIT(M, TRAIT_DRUQK, "based")
 		SSdroning.play_area_sound(get_area(M), M.client)
-	M.update_body_parts_head_only()

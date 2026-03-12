@@ -55,8 +55,7 @@
 				gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
 				ADD_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
 			if("Knuckledusters")
-				r_hand = /obj/item/rogueweapon/knuckles/psydon
-				gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
+				r_hand = /obj/item/clothing/gloves/roguetown/knuckles/psydon
 				ADD_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
 			if("Quarterstaff")
 				H.adjust_skillrank_up_to(/datum/skill/combat/staves, 4, TRUE)

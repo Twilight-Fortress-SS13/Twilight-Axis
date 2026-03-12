@@ -82,7 +82,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 /mob/dead/observer/rogue/Move(n, direct)
 	if(world.time < next_gmove)
 		return
-	next_gmove = world.time + 1
+	next_gmove = world.time + 3
 
 	setDir(direct)
 

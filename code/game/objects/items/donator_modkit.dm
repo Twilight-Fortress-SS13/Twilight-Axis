@@ -244,6 +244,7 @@
 		/obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor            = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor/dakken
 	)
 	result_item = null
+	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/dakken
 
 //StinkethStonketh - Shashka & pike
 /obj/item/enchantingkit/stinketh_shashka
@@ -294,6 +295,15 @@
 	result_item = null
 	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy
 
+/obj/item/enchantingkit/triumph_armorkit_drow
+	name = "'Drowcraft' armor morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..a set of Hardened Leather Armor.. </br>.. or a set of Studded Leather Armor."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy 		= /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest,
+		/obj/item/clothing/suit/roguetown/armor/leather/studded		= /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest
+		)
+	result_item = null
+
 /obj/item/enchantingkit/triumph_weaponkit_axe
 	name = "'Valorian' axe morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..an Iron Axe.. </br>..or an Iron Hatchet."
@@ -302,6 +312,7 @@
 		/obj/item/rogueweapon/stoneaxe/woodcut	  						= /obj/item/rogueweapon/stoneaxe/woodcut/triumph
 		)
 	result_item = null
+	icon_loadout = /obj/item/rogueweapon/stoneaxe/woodcut/triumph
 
 /obj/item/enchantingkit/triumph_weaponkit_axedouble
 	name = "'Doublehead' axe morphing elixir"
@@ -315,6 +326,7 @@
 		/obj/item/rogueweapon/stoneaxe/battle	  						= /obj/item/rogueweapon/stoneaxe/battle/triumph
 		)
 	result_item = null
+	icon_loadout = /obj/item/rogueweapon/stoneaxe/battle/triumph
 
 /obj/item/enchantingkit/triumph_weaponkit_sword
 	name = "'Valorian' sword morphing elixir"

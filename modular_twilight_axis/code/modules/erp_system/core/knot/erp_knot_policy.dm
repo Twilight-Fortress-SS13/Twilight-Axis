@@ -5,12 +5,21 @@
 	if(!L || !L.is_valid())
 		return ERP_KNOT_MOVE_KEEP
 
-	L.try_increase_strength_from_movement()
-
 	var/mob/living/top = L.top
 	var/mob/living/btm = L.btm
 
 	var/dist = get_dist(top, btm)
+	if(L.try_increase_strength_from_movement())
+		var/arousal = 4 * (L.strength / 100)
+		var/pain = 0.5 * (L.strength / 100)
+		var/arousal_p = arousal * 2
+		var/pain_p = pain * 2
+
+		L.actor_top?.apply_erp_effect(arousal, pain, FALSE, SEX_FORCE_MID, SEX_SPEED_MID, null)
+		L.actor_btm?.apply_erp_effect(arousal_p, pain_p, FALSE, SEX_FORCE_MID, SEX_SPEED_MID, null)
+		L.actor_top?.send_private_message(span_notice("The knot suddenly tightens."))
+		L.actor_btm?.send_private_message(span_notice("The knot suddenly tightens."))
+
 	if(dist <= 1)
 		L.note_activity()
 		btm.face_atom(top)

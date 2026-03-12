@@ -3,7 +3,7 @@ GLOBAL_LIST_INIT(ghost_verbs, list(
 //	/client/proc/ghost_down,
 	/client/proc/descend,
 	/client/proc/reenter_corpse,
-	/client/proc/dead_observe
+//	/client/proc/dead_observe
 	))
 
 /client/proc/ghost_up()

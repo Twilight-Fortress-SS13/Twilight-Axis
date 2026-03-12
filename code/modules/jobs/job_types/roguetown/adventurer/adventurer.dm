@@ -52,7 +52,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/mystic,
 		/datum/advclass/mystic/resilientsoul,
 		/datum/advclass/mystic/holyblade,
-	//	/datum/advclass/mystic/theurgist, // TA EDIT
+		/datum/advclass/mystic/theurgist,
 		/datum/advclass/mage,
 		/datum/advclass/mage/spellsinger,
 		/datum/advclass/mage/spellblade,
@@ -73,6 +73,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/foreigner/bronzeclad,
 
 		/datum/advclass/rogue/soundbreaker, // TA - Soundbreaker Class
+		/datum/advclass/foreigner/ronin, // TA - Ronin Class
 		/datum/advclass/ranger/twilight_hunter, // TA - Firearm Class
 		/datum/advclass/foreigner/gronnadv // TA - Gronn Nomad
 	)

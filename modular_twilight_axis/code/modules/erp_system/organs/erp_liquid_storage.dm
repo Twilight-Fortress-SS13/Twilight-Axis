@@ -4,8 +4,6 @@
 	var/producing_reagent = null
 	var/production_rate = 0
 	var/can_drain = TRUE
-	var/can_produce = TRUE
-	var/block_production = FALSE
 	var/block_drain = FALSE
 
 /datum/erp_liquid_storage/New(cap = 0, datum/erp_sex_organ/parent = null)

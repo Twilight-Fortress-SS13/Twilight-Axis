@@ -3,6 +3,6 @@
 
 	name = "Ласкать хвост"
 	required_target_organ = SEX_ORGAN_TAIL
-	message_start = "{actor} {pose} проводит рукой по хвосту."
-	message_tick = "{actor} {pose}, {force} и {speed} ласкает свой хвост."
+	message_start = "{actor} проводит рукой по хвосту."
+	message_tick = "{actor} {force} и {speed} ласкает свой хвост."
 	message_finish =  "{actor} отпускает хвост."

@@ -428,7 +428,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 
 /client/proc/cmd_admin_create_centcom_report()
 	set category = "-Special Verbs-"
-	set name = "Make IC Announc"
+	set name = "Make IC Announcement"
 
 	if(!check_rights(R_ADMIN))
 		return
@@ -463,7 +463,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		if("OtavaComing")
 			announce_sound = 'sound/misc/otavanlament.ogg'
 		if("Custom(file)")
-			announce_sound = input(src, "Выбери звуковой файл", "Custom Announcement Sound") as sound|null
+			announce_sound = input(src, "Выберите звуковой файл", "Custom Announcement Sound") as sound|null
 			if(!announce_sound)
 				return
 

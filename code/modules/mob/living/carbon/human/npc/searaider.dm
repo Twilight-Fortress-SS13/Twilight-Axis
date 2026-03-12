@@ -24,7 +24,7 @@ GLOBAL_LIST_INIT(searaider_aggro, world.file2list("strings/rt/searaideraggroline
 		aggressive=1
 		wander = TRUE
 		if(!is_silent && target != newtarg)
-			say(pick(GLOB.searaider_aggro))
+			say(pick(GLOB.searaider_aggro), npc_speech = TRUE)
 			pointed(target)
 
 /mob/living/carbon/human/species/human/northern/searaider/should_target(mob/living/L)
@@ -117,8 +117,16 @@ GLOBAL_LIST_INIT(searaider_aggro, world.file2list("strings/rt/searaideraggroline
 
 /mob/living/carbon/human/species/human/northern/searaider/handle_combat()
 	if(mode == NPC_AI_HUNT)
-		if(prob(50)) // ignores is_silent because they should at least still be able to scream at people!
-			emote("rage")
+		if(world.time >= (mob_timers["npc_chatter"] + 15 SECONDS))
+			if(prob(50))
+				mob_timers["npc_chatter"] = world.time
+				emote("rage")
+			else if(prob(5))
+				mob_timers["npc_chatter"] = world.time
+				if(prob(60))
+					say(pick(GLOB.searaider_aggro), npc_speech = TRUE)
+				else
+					emote(pick("laugh", "warcry"))
 	. = ..()
 
 /datum/outfit/job/roguetown/human/species/human/northern/searaider/pre_equip(mob/living/carbon/human/H)

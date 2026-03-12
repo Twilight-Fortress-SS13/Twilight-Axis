@@ -1,14 +1,3 @@
-// /datum/component/combo_core/soundbreaker
-// Moves ALL soundbreaker globals into this component.
-// External systems talk via signals ONLY:
-// - spells prime note
-// - aftermiss/resolveAdjacentClick consume prepared
-// - defense hook (riff proc)
-// - projectile hit (note projectile)
-// - status on_remove clears visuals/history
-//
-// Inside component: direct procs.
-
 /proc/soundbreaker_get_component(mob/living/user)
 	if(!isliving(user))
 		return null
@@ -17,6 +6,12 @@
 	if(!C)
 		C = user.AddComponent(/datum/component/combo_core/soundbreaker)
 	return C
+
+/proc/soundbreaker_get_component_safe(mob/living/user)
+	if(!isliving(user))
+		return null
+
+	return user.GetComponent(/datum/component/combo_core/soundbreaker)
 
 /proc/soundbreaker_prime_note(mob/living/user, note_id, damage_mult, damage_type, note_name)
 	var/datum/component/combo_core/soundbreaker/C = soundbreaker_get_component(user)
@@ -38,14 +33,23 @@
 		return
 	SEND_SIGNAL(defender, COMSIG_SOUNDBREAKER_RIFF_DEFENSE_SUCCESS)
 
-/datum/component/combo_core/soundbreaker
-	// Inherit engine
-	parent_type = /datum/component/combo_core
+/proc/soundbreaker_get_kick_offbalance_duration(mob/living/user, base_duration = 3 SECONDS)
+	if(!isliving(user))
+		return base_duration
 
-	// cached lists for overhead (remove mob vars)
+	var/datum/component/combo_core/soundbreaker/C = soundbreaker_get_component_safe(user)
+	if(!C)
+		return base_duration
+
+	return C.GetKickOffbalanceDuration(base_duration)
+
+/datum/component/combo_core/soundbreaker
+	parent_type = /datum/component/combo_core/combat_style
+
+	/// cached lists for overhead
 	var/list/note_history
 
-	// proxy weapon (remove mob var)
+	/// proxy weapon
 	var/obj/item/soundbreaker_proxy/proxy
 
 	var/list/granted_spells = list()
@@ -59,11 +63,14 @@
 		return .
 
 	note_history = list()
+
 	RegisterSignal(owner, COMSIG_SOUNDBREAKER_PRIME_NOTE, PROC_REF(_sig_prime_note))
 	RegisterSignal(owner, COMSIG_ATTACK_TRY_CONSUME, PROC_REF(_sig_try_consume_prepared))
 	RegisterSignal(owner, COMSIG_SOUNDBREAKER_RIFF_DEFENSE_SUCCESS, PROC_REF(_sig_riff_defense_success))
 	RegisterSignal(owner, COMSIG_SOUNDBREAKER_NOTE_PROJECTILE_HIT, PROC_REF(_sig_note_projectile_hit))
 	RegisterSignal(owner, COMSIG_SOUNDBREAKER_COMBO_CLEARED, PROC_REF(_sig_combo_cleared))
+	RegisterSignal(owner, COMSIG_SOUNDBREAKER_KICK_SUCCESS, PROC_REF(_sig_kick_success))
+
 	GrantSpells()
 
 /datum/component/combo_core/soundbreaker/Destroy(force)
@@ -73,6 +80,7 @@
 		UnregisterSignal(owner, COMSIG_SOUNDBREAKER_RIFF_DEFENSE_SUCCESS)
 		UnregisterSignal(owner, COMSIG_SOUNDBREAKER_NOTE_PROJECTILE_HIT)
 		UnregisterSignal(owner, COMSIG_SOUNDBREAKER_COMBO_CLEARED)
+		UnregisterSignal(owner, COMSIG_SOUNDBREAKER_KICK_SUCCESS)
 		RevokeSpells()
 
 	if(proxy)
@@ -85,16 +93,19 @@
 	note_history = null
 	return ..()
 
-// ----------------- combo_core overrides -----------------
+// ------------------------------------------------------------
+// combo_core overrides
+// ------------------------------------------------------------
+
 /datum/component/combo_core/soundbreaker/DefineRules()
-	RegisterRule("echo",        list(1,1,1),        10,  PROC_REF(_cb_echo))
-	RegisterRule("tempo",       list(2,2,2),        30,  PROC_REF(_cb_tempo))
-	RegisterRule("harmonic",    list(3,1,2),        50,  PROC_REF(_cb_harmonic))
-	RegisterRule("reverb_cut",  list(4,2,1,3),      80,  PROC_REF(_cb_reverb_cut))
-	RegisterRule("bass_drop",   list(4,1,2,3),      90,  PROC_REF(_cb_bass_drop))
-	RegisterRule("syncopation", list(3,2,4,1),      70,  PROC_REF(_cb_syncopation))
-	RegisterRule("crescendo",   list(2,3,1,3,2),   110,  PROC_REF(_cb_crescendo))
-	RegisterRule("overture",   	list(1,4,3,4,2),   100,  PROC_REF(_cb_overture))
+	RegisterRule("echo",        list(1, 1, 1),      10,  PROC_REF(_cb_echo))
+	RegisterRule("tempo",       list(2, 2, 2),      30,  PROC_REF(_cb_tempo))
+	RegisterRule("harmonic",    list(3, 1, 2),      50,  PROC_REF(_cb_harmonic))
+	RegisterRule("reverb_cut",  list(4, 2, 1, 3),   80,  PROC_REF(_cb_reverb_cut))
+	RegisterRule("bass_drop",   list(4, 1, 2, 3),   90,  PROC_REF(_cb_bass_drop))
+	RegisterRule("syncopation", list(3, 2, 4, 1),   70,  PROC_REF(_cb_syncopation))
+	RegisterRule("crescendo",   list(2, 3, 1, 3, 2), 110, PROC_REF(_cb_crescendo))
+	RegisterRule("overture",    list(1, 4, 3, 4, 2), 100, PROC_REF(_cb_overture))
 
 /datum/component/combo_core/soundbreaker/proc/_cb_overture(rule_id, mob/living/target, zone)
 	if(!owner || !target)
@@ -136,7 +147,15 @@
 /datum/component/combo_core/soundbreaker/OnHistoryCleared(reason)
 	ClearNoteIcons()
 
-// ----------------- external signal handlers -----------------
+/datum/component/combo_core/soundbreaker/OnComboPrepared(state_id, payload = null)
+	return
+
+/datum/component/combo_core/soundbreaker/OnComboConsumed(state_id, payload = null)
+	return
+
+// ------------------------------------------------------------
+// signals
+// ------------------------------------------------------------
 
 /datum/component/combo_core/soundbreaker/proc/_sig_prime_note(datum/source, note_id, damage_mult, damage_type, note_name)
 	SIGNAL_HANDLER
@@ -170,7 +189,6 @@
 	INVOKE_ASYNC(src, PROC_REF(_async_note_projectile_hit), local_owner, target, damage_mult, damage_type, zone)
 	return 0
 
-
 /datum/component/combo_core/soundbreaker/proc/_async_note_projectile_hit(mob/living/local_owner, mob/living/target, damage_mult, damage_type, zone)
 	if(!local_owner || QDELETED(local_owner) || !target)
 		return
@@ -184,14 +202,87 @@
 	ClearHistory("external_clear")
 	return 0
 
-// ----------------- Public-ish API used by shims or internal calls -----------------
+/datum/component/combo_core/soundbreaker/proc/_sig_kick_success(datum/source, atom/target_atom)
+	SIGNAL_HANDLER
+
+	HandleSuccessfulKick(target_atom)
+	return 0
+
+/datum/component/combo_core/soundbreaker/proc/HandleSuccessfulKick(atom/target_atom)
+	if(!owner)
+		return FALSE
+
+	if(GetComboStacks() <= 0)
+		return FALSE
+
+	var/has_breaker = !!owner.has_status_effect(/datum/status_effect/buff/soundbreaker_breaker_window)
+	var/has_combo = !!owner.has_status_effect(/datum/status_effect/buff/soundbreaker_combo)
+	if(!has_breaker && !has_combo)
+		return FALSE
+
+	var/refreshed_any = FALSE
+	if(has_breaker && RefreshBreakerWindowTimer())
+		refreshed_any = TRUE
+
+	if(has_combo && RefreshComboWindowTimer())
+		refreshed_any = TRUE
+
+	return refreshed_any
+	
+/datum/component/combo_core/soundbreaker/proc/RefreshBreakerWindowTimer()
+	if(!owner)
+		return FALSE
+
+	var/datum/status_effect/buff/soundbreaker_breaker_window/B = owner.has_status_effect(/datum/status_effect/buff/soundbreaker_breaker_window)
+	if(!B)
+		return FALSE
+
+	var/stacks = max(1, B.stacks)
+
+	owner.remove_status_effect(/datum/status_effect/buff/soundbreaker_breaker_window)
+	owner.apply_status_effect(/datum/status_effect/buff/soundbreaker_breaker_window, stacks)
+
+	return TRUE
+
+/datum/component/combo_core/soundbreaker/proc/RefreshComboWindowTimer()
+	if(!owner)
+		return FALSE
+
+	var/datum/status_effect/buff/soundbreaker_combo/C = owner.has_status_effect(/datum/status_effect/buff/soundbreaker_combo)
+	if(!C)
+		return FALSE
+
+	var/stacks = max(1, C.stacks)
+
+	owner.remove_status_effect(/datum/status_effect/buff/soundbreaker_combo)
+	owner.apply_status_effect(/datum/status_effect/buff/soundbreaker_combo, stacks)
+
+	return TRUE
+
+/datum/component/combo_core/soundbreaker/proc/GetKickOffbalanceDuration(base_duration = 3 SECONDS)
+	if(!owner)
+		return base_duration
+
+	var/stacks = clamp(GetComboStacks(), 0, 5)
+	if(stacks <= 0)
+		return base_duration
+
+	var/mult = 1 - (stacks * 0.10)
+	mult = clamp(mult, 0.5, 1)
+
+	return max(0.5 SECONDS, round(base_duration * mult))
+
+// ------------------------------------------------------------
+// spells / status integration
+// ------------------------------------------------------------
+
 /datum/component/combo_core/soundbreaker/proc/GrantSpells()
 	if(spells_granted || !owner?.mind)
 		return
 
 	var/mob/living/L = owner
-
 	RevokeSpells()
+
 	var/list/paths = list(
 		/obj/effect/proc_holder/spell/self/soundbreaker/bend,
 		/obj/effect/proc_holder/spell/self/soundbreaker/bare,
@@ -229,11 +320,12 @@
 /datum/component/combo_core/soundbreaker/ConsumeOnCombo(rule_id)
 	..()
 	if(owner)
-		owner.apply_status_effect(/datum/status_effect/buff/soundbreaker_breaker_window,GetComboStacks())
+		owner.apply_status_effect(/datum/status_effect/buff/soundbreaker_breaker_window, GetComboStacks())
 
 /datum/component/combo_core/soundbreaker/proc/GetProxy()
 	if(!owner)
 		return null
+
 	if(proxy && QDELETED(proxy))
 		proxy = null
 
@@ -241,6 +333,10 @@
 		proxy = new /obj/item/soundbreaker_proxy(owner)
 
 	return proxy
+
+// ------------------------------------------------------------
+// note flow
+// ------------------------------------------------------------
 
 /datum/component/combo_core/soundbreaker/proc/OnHit(mob/living/target, note_id, zone = BODY_ZONE_CHEST)
 	if(!owner || !note_id || !target)
@@ -258,13 +354,12 @@
 	ShowNoteIcon(note_id)
 	RegisterInput(note_id, target, zone)
 	AddComboStack()
+
 	var/new_stacks = GetComboStacks()
 	var/in_rhythm = IsValidPrefix()
 
 	if(in_rhythm && new_stacks >= 1)
 		owner.apply_status_effect(/datum/status_effect/buff/soundbreaker_breaker_window, new_stacks)
-	else
-		owner.remove_status_effect(/datum/status_effect/buff/soundbreaker_breaker_window)
 
 /datum/component/combo_core/soundbreaker/proc/AddComboStack()
 	if(!owner)
@@ -274,6 +369,7 @@
 /datum/component/combo_core/soundbreaker/proc/GetComboStacks()
 	if(!owner)
 		return 0
+
 	var/datum/status_effect/buff/soundbreaker_combo/C = owner.has_status_effect(/datum/status_effect/buff/soundbreaker_combo)
 	if(!C)
 		return 0
@@ -294,47 +390,20 @@
 
 	return FALSE
 
-/datum/component/combo_core/soundbreaker/proc/GetTargetTurf(atom/target_atom)
-	if(!target_atom)
-		return null
-	if(isturf(target_atom))
-		return target_atom
-	return get_turf(target_atom)
+// ------------------------------------------------------------
+// prepared note
+// ------------------------------------------------------------
 
-/datum/component/combo_core/soundbreaker/proc/GetAimDir(atom/target_atom)
-	if(!owner)
-		return SOUTH
-	if(!target_atom)
-		return owner.dir
-
-	var/turf/ot = get_turf(owner)
-	var/turf/tt = get_turf(target_atom)
-	if(!ot || !tt)
-		return owner.dir
-
-	var/d = get_dir(ot, tt)
-	return d ? d : owner.dir
-
-/datum/component/combo_core/soundbreaker/proc/FaceTurf(turf/T)
-	if(!owner || !T)
-		return
-
-	var/d = GetAimDir(T)
-	if(d)
-		owner.setDir(d)
-
-/datum/component/combo_core/soundbreaker/proc/GetPrimaryFromClick(atom/target_atom, turf/target_turf)
-	if(isliving(target_atom))
-		return target_atom
-	return _first_living_on_turf(target_turf)
-
-// ----------------- Prepared note -----------------
 /datum/component/combo_core/soundbreaker/proc/NoteDisplayName(note_id)
 	switch(note_id)
-		if(SOUNDBREAKER_NOTE_BEND) return "Bend"
-		if(SOUNDBREAKER_NOTE_BARE) return "Barre"
-		if(SOUNDBREAKER_NOTE_SHED) return "Shred"
-		if(SOUNDBREAKER_NOTE_RIFF) return "Riff"
+		if(SOUNDBREAKER_NOTE_BEND)
+			return "Bend"
+		if(SOUNDBREAKER_NOTE_BARE)
+			return "Barre"
+		if(SOUNDBREAKER_NOTE_SHED)
+			return "Shred"
+		if(SOUNDBREAKER_NOTE_RIFF)
+			return "Riff"
 	return "Unknown"
 
 /// Returns TRUE if primed (new or refreshed)
@@ -352,6 +421,7 @@
 		return FALSE
 
 	P.set_payload(note_id, damage_mult, damage_type, nname)
+	OnComboPrepared("prepared_note", note_id)
 	return TRUE
 
 /// Consume prepared note on swing attempt.
@@ -379,6 +449,8 @@
 	damage_mult *= (!HasMusic() ? 0.6 : 1)
 
 	owner.remove_status_effect(/datum/status_effect/buff/soundbreaker_prepared)
+	OnComboConsumed("prepared_note", note_id)
+
 	var/mob/living/last_hit = ExecuteNote(target_atom, aim_dir, note_id, damage_mult, damage_type, zone)
 	if(last_hit)
 		OnHit(last_hit, note_id, zone)
@@ -408,11 +480,9 @@
 
 	return null
 
-// ----------------- Damage pipeline (moved from globals) -----------------
-/datum/component/combo_core/soundbreaker/proc/GetAimTurf(atom/target_atom)
-	if(target_atom)
-		return get_turf(target_atom)
-	return null
+// ------------------------------------------------------------
+// damage pipeline
+// ------------------------------------------------------------
 
 /datum/component/combo_core/soundbreaker/proc/GetDamageFlag(bclass, damage_type)
 	switch(bclass)
@@ -424,14 +494,17 @@
 			return "stab"
 
 	switch(damage_type)
-		if(BRUTE) return "blunt"
-		if(BURN)  return "fire"
-		if(TOX)   return "bio"
-		if(OXY)   return "oxy"
+		if(BRUTE)
+			return "blunt"
+		if(BURN)
+			return "fire"
+		if(TOX)
+			return "bio"
+		if(OXY)
+			return "oxy"
 
 	return "blunt"
 
-/// Public: apply damage multiplier to a target
 /datum/component/combo_core/soundbreaker/proc/ApplyDamage(mob/living/target, damage_mult = 1, bclass = BCLASS_PUNCH, zone = BODY_ZONE_CHEST, damage_type = BRUTE, is_combo = FALSE)
 	if(!owner || !target)
 		return FALSE
@@ -443,18 +516,17 @@
 	zone = GetEffectiveHitZone(target, zone)
 	if(GetComboStacks() >= 5)
 		bclass = BCLASS_PIERCE
-		
+
 	var/ap = CalcAP(bclass)
 	return AttackViaPipeline(target, dmg, bclass, damage_type, zone, ap)
 
-/// Used by notes/combos when they want exact target, not random on turf
 /datum/component/combo_core/soundbreaker/proc/HitSpecific(mob/living/target, damage_mult = 1, damage_type = BRUTE, bclass = BCLASS_PUNCH, zone = BODY_ZONE_CHEST)
 	if(!owner || !target)
 		return FALSE
+
 	zone = TryGetZone(zone)
 	return ApplyDamage(target, damage_mult, bclass, zone, damage_type)
 
-/// Random living target on turf (excluding owner)
 /datum/component/combo_core/soundbreaker/proc/HitOneOnTurf(turf/T, damage_mult = 1, damage_type = BRUTE, bclass = BCLASS_PUNCH, zone)
 	if(!owner || !T)
 		return null
@@ -473,23 +545,15 @@
 	var/mob/living/target = pick(candidates)
 	if(!zone)
 		zone = TryGetZone(null)
+
 	if(ApplyDamage(target, damage_mult, bclass, zone, damage_type))
 		return target
 	return null
 
-/// Apply extra armor wear on successful hit.
-/// Designed to be called AFTER a confirmed successful attack.
-/datum/component/combo_core/soundbreaker/proc/apply_combo_armor_wear(
-	mob/living/carbon/human/target,
-	hit_zone,
-	attack_flag,
-	force_dynamic,
-	multiplier = 1
-)
+/datum/component/combo_core/soundbreaker/proc/apply_combo_armor_wear(mob/living/carbon/human/target, hit_zone, attack_flag, force_dynamic, multiplier = 1)
 	if(!target || !attack_flag || !force_dynamic)
 		return
 
-	// базовый расчёт износа
 	var/wear = round(force_dynamic * multiplier)
 	wear = clamp(wear, 1, 25)
 	if(wear <= 0)
@@ -497,10 +561,14 @@
 
 	var/cover_flag
 	switch(hit_zone)
-		if(BODY_ZONE_HEAD)   cover_flag = HEAD
-		if(BODY_ZONE_CHEST)  cover_flag = CHEST
-		if(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM) cover_flag = ARMS
-		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG) cover_flag = LEGS
+		if(BODY_ZONE_HEAD)
+			cover_flag = HEAD
+		if(BODY_ZONE_CHEST)
+			cover_flag = CHEST
+		if(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)
+			cover_flag = ARMS
+		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+			cover_flag = LEGS
 		else
 			return
 
@@ -517,15 +585,6 @@
 			continue
 
 		C.take_damage(wear, BRUTE, "blunt")
-
-/datum/component/combo_core/soundbreaker/proc/_get_stamina_pct(mob/living/L)
-	if(!L)
-		return 1
-	if(!isnum(L.max_stamina) || L.max_stamina <= 0)
-		return 1
-	if(!isnum(L.stamina))
-		return 1
-	return clamp(L.stamina / L.max_stamina, 0, 1)
 
 /datum/component/combo_core/soundbreaker/proc/AttackViaPipeline(mob/living/target, damage, bclass = BCLASS_PUNCH, damage_type = BRUTE, zone = null, armor_penetration = 0, params = null)
 	if(!owner || !target)
@@ -556,9 +615,11 @@
 	var/old_hand = owner.active_hand_index
 	P.last_attack_success = FALSE
 	P.last_attack_target = null
+
 	owner.face_atom(target)
 	owner.do_attack_animation(target, ATTACK_EFFECT_DISARM)
 	P.melee_attack_chain(owner, target, params)
+
 	var/success_main = P.last_attack_success
 
 	// dual swing
@@ -566,7 +627,7 @@
 	if(HAS_TRAIT(owner, TRAIT_DUALWIELDER))
 		var/offhand_index = (old_hand == 1) ? 2 : 1
 		var/obj/item/main_item = owner.held_items[old_hand]
-		var/obj/item/off_item  = owner.held_items[offhand_index]
+		var/obj/item/off_item = owner.held_items[offhand_index]
 
 		var/allow_dual = FALSE
 		if(!main_item && !off_item)
@@ -596,36 +657,6 @@
 
 #define SB_MIN_DAMAGE_MULT 0.75
 #define SB_MAX_DAMAGE_MULT 1.5
-
-/mob/living/carbon/human/get_punch_dmg()
-	var/damage
-	if(STASTR > UNARMED_DAMAGE_DEFAULT || STASTR < 10)
-		damage = STASTR
-	else
-		damage = UNARMED_DAMAGE_DEFAULT
-
-	var/used_str = STASTR
-
-	var/obj/G = get_item_by_slot(SLOT_GLOVES)
-	if(domhand)
-		used_str = get_str_arms(used_hand)
-
-	if(used_str >= 11)
-		damage = max(damage + (damage * ((used_str - 10) * 0.3)), 1)
-
-	if(used_str <= 9)
-		damage = max(damage - (damage * ((10 - used_str) * 0.1)), 1)
-
-	if(istype(G, /obj/item/clothing/gloves/roguetown))
-		var/obj/item/clothing/gloves/roguetown/GL = G
-		damage = (damage * GL.unarmed_bonus)
-
-	if(mind)
-		if(mind.has_antag_datum(/datum/antagonist/werewolf))
-			return 50
-
-	damage += dna.species.punch_damage
-	return damage
 
 /datum/component/combo_core/soundbreaker/proc/GetBaseUnarmedDamage(hand_index = null)
 	if(!owner)
@@ -716,16 +747,17 @@
 	damage += damage * con_bonus
 
 	damage *= damage_mult
+
 	var/skill = 1
 	if(holding)
 		skill = owner.get_skill_level(holding.associated_skill)
 	else
 		skill = owner.get_skill_level(/datum/skill/combat/unarmed)
+
 	var/music_skill = owner.get_skill_level(/datum/skill/misc/music)
 
 	var/skill_bonus = (skill * 0.2) + (music_skill * 0.1)
 	skill_bonus = clamp(skill_bonus, SB_MIN_DAMAGE_MULT, SB_MAX_DAMAGE_MULT)
-
 	damage *= skill_bonus
 
 	var/stacks = GetComboStacks()
@@ -769,88 +801,32 @@
 
 	return clamp(ap, 0, 100)
 
-// ----------------- Rhythm reset -----------------
+// ------------------------------------------------------------
+// rhythm reset
+// ------------------------------------------------------------
 
 /datum/component/combo_core/soundbreaker/proc/ResetRhythm()
 	if(!owner)
 		return
+
 	owner.remove_status_effect(/datum/status_effect/buff/soundbreaker_combo)
 	ClearNoteIcons()
 	ClearHistory("rhythm_reset")
 
-// ----------------- small helpers -----------------
-/datum/component/combo_core/soundbreaker/proc/TryGetZone(zone)
-	if(zone)
-		return zone
-	if(owner?.zone_selected)
-		return owner.zone_selected
-	return BODY_ZONE_CHEST
+// ------------------------------------------------------------
+// note visuals
+// ------------------------------------------------------------
 
-/datum/component/combo_core/soundbreaker/proc/IsOffbalanced(mob/living/L)
-	if(!L)
-		return FALSE
-	return L.IsOffBalanced()
-
-/datum/component/combo_core/soundbreaker/proc/SafeOffbalance(mob/living/L, duration)
-	if(!L)
-		return
-	L.OffBalance(duration)
-
-/datum/component/combo_core/soundbreaker/proc/SafeSlow(mob/living/L, amount)
-	if(!L)
-		return
-	L.Slowdown(amount)
-
-/datum/component/combo_core/soundbreaker/proc/Knockback(mob/living/target, tiles)
-	if(!owner || !target)
-		return
-	var/dir = get_dir(owner, target)
-	var/turf/start = get_turf(target)
-	var/turf/dest = get_ranged_target_turf(start, dir, tiles)
-	if(dest)
-		target.safe_throw_at(dest, tiles, 1, owner, force = MOVE_FORCE_EXTREMELY_STRONG)
-
-/datum/component/combo_core/soundbreaker/proc/GetEffectiveHitZone(mob/living/target, desired_zone)
-	if(!desired_zone || !owner || !target)
-		return BODY_ZONE_CHEST
-
-	var/obj/item/I = owner.get_active_held_item()
-	var/datum/intent/used_intent = owner.used_intent
-
-	var/eff = melee_accuracy_check(desired_zone, owner, target, /datum/skill/combat/unarmed, used_intent, I)
-	return eff || BODY_ZONE_CHEST
-
-/datum/component/combo_core/proc/IsValidPrefix()
-	if(!history || !rules)
-		return FALSE
-
-	var/list/skills_seq = list()
-	for(var/datum/combo_input_entry/E as anything in history)
-		skills_seq += E.skill_id
-
-	for(var/datum/combo_rule/R as anything in rules)
-		if(IsPrefix(skills_seq, R.pattern))
-			return TRUE
-
-	return FALSE
-
-/datum/component/combo_core/proc/IsPrefix(list/seq, list/pattern)
-	if(length(seq) > length(pattern))
-		return FALSE
-
-	for(var/i in 1 to length(seq))
-		if(seq[i] != pattern[i])
-			return FALSE
-
-	return TRUE
-
-// ----------------- Note visuals (overhead) -----------------
 /datum/component/combo_core/soundbreaker/proc/GetNoteIconState(note_id)
 	switch(note_id)
-		if(SOUNDBREAKER_NOTE_BEND) return "note_strike"
-		if(SOUNDBREAKER_NOTE_BARE) return "note_wave"
-		if(SOUNDBREAKER_NOTE_SHED) return "note_encore"
-		if(SOUNDBREAKER_NOTE_RIFF) return "note_riff"
+		if(SOUNDBREAKER_NOTE_BEND)
+			return "note_strike"
+		if(SOUNDBREAKER_NOTE_BARE)
+			return "note_wave"
+		if(SOUNDBREAKER_NOTE_SHED)
+			return "note_encore"
+		if(SOUNDBREAKER_NOTE_RIFF)
+			return "note_riff"
 	return null
 
 /datum/component/combo_core/soundbreaker/proc/ShowNoteIcon(note_id)
@@ -916,7 +892,7 @@
 
 	if(islist(note_history))
 		note_history.Cut()
-	
+
 	if(owner?.client)
 		owner.update_cone()
 
@@ -926,13 +902,18 @@
 	var/duration = 0.7 SECONDS
 	target.play_overhead_indicator_flick('modular_twilight_axis/icons/roguetown/misc/soundspells.dmi', icon_state, duration, ABOVE_MOB_LAYER + 0.3, null, 16, 0)
 
-// ----------------- FX helpers (use your existing FX objects) -----------------
+// ------------------------------------------------------------
+// FX helpers
+// ------------------------------------------------------------
+
 /datum/component/combo_core/soundbreaker/proc/sb_fx_ring(turf/T)
 	if(!T)
 		return
+
 	var/turf/spawn_turf = get_step(T, SOUTHWEST)
 	if(!spawn_turf)
 		spawn_turf = T
+
 	var/obj/effect/temp_visual/soundbreaker_fx/ring/fx = new(spawn_turf)
 	fx.setDir(owner.dir)
 
@@ -950,75 +931,6 @@
 	fx.icon = 'icons/effects/effects.dmi'
 	fx.icon_state = "blip"
 
-/datum/component/combo_core/soundbreaker/proc/GetFrontTurf(distance = 1, dir_override = null)
-	if(!owner)
-		return null
-
-	var/turf/T = get_turf(owner)
-	if(!T)
-		return null
-
-	var/d = dir_override || owner.dir
-	if(!d)
-		d = owner.dir
-
-	for(var/i in 1 to distance)
-		var/turf/next = get_step(T, d)
-		if(!next)
-			break
-		T = next
-
-	return T
-
-/datum/component/combo_core/soundbreaker/proc/GetArcTurfs(distance = 1, dir_override = null)
-	var/list/res = list()
-	if(!owner)
-		return res
-
-	var/d = dir_override || owner.dir
-	if(!d)
-		d = owner.dir
-
-	var/turf/center = GetFrontTurf(distance, d)
-	if(!center)
-		return res
-
-	res += center
-
-	var/turf/L = GetFrontTurf(distance, turn(d, 45))
-	if(L) res += L
-
-	var/turf/R = GetFrontTurf(distance, turn(d, -45))
-	if(R) res += R
-
-	return res
-
-/datum/component/combo_core/soundbreaker/proc/GetWaveLineTurfs(distance = 1, dir_override = null)
-	var/list/res = list()
-	if(!owner)
-		return res
-
-	var/d = dir_override || owner.dir
-	if(!d)
-		d = owner.dir
-
-	var/turf/center = GetFrontTurf(distance, d)
-	if(!center)
-		return res
-
-	res += center
-
-	var/dir_left  = turn(d, 90)
-	var/dir_right = turn(d, -90)
-
-	var/turf/L = get_step(center, dir_left)
-	if(L) res += L
-
-	var/turf/R = get_step(center, dir_right)
-	if(R) res += R
-
-	return res
-
 /datum/component/combo_core/soundbreaker/proc/StepBehind(mob/living/target)
 	if(!owner || !target)
 		return
@@ -1032,35 +944,10 @@
 	if(behind && !behind.density)
 		owner.forceMove(behind)
 
-/datum/component/combo_core/soundbreaker/proc/_turf_is_dash_blocked(turf/T)
-	if(!T)
-		return TRUE
-	if(T.density)
-		return TRUE
+// ------------------------------------------------------------
+// notes play procs
+// ------------------------------------------------------------
 
-	for(var/atom/movable/A in T)
-		if(ismob(A))
-			continue
-		if(A.density)
-			return TRUE
-
-	return FALSE
-
-/datum/component/combo_core/soundbreaker/proc/_first_living_on_turf(turf/T)
-	if(!T)
-		return null
-	var/mob/living/first_dead = null
-	for(var/mob/living/L in T)
-		if(L == owner)
-			continue
-		if(L.stat == DEAD)
-			if(!first_dead)
-				first_dead = L
-			continue
-		return L
-	return first_dead
-
-// ----------------- Notes play procs -----------------
 /datum/component/combo_core/soundbreaker/proc/NoteBendPlay(atom/target_atom, aim_dir, damage_mult, damage_type, zone)
 	var/turf/start = get_turf(owner)
 	if(!start)
@@ -1158,7 +1045,10 @@
 	owner.apply_status_effect(/datum/status_effect/buff/soundbreaker_riff)
 	return null
 
-// ----------------- Riff defense proc -----------------
+// ------------------------------------------------------------
+// riff defense proc
+// ------------------------------------------------------------
+
 /datum/component/combo_core/soundbreaker/proc/RiffOnSuccessfulDefense()
 	if(!owner)
 		return
@@ -1174,7 +1064,9 @@
 
 	owner.remove_status_effect(/datum/status_effect/buff/soundbreaker_riff)
 
-// ----------------- Combos (moved from globals, unchanged behavior) -----------------
+// ------------------------------------------------------------
+// combos
+// ------------------------------------------------------------
 
 /datum/component/combo_core/soundbreaker/proc/ComboEchoBeat(mob/living/target)
 	ApplyDamage(target, 1.5, BCLASS_PUNCH, is_combo = TRUE)
@@ -1192,6 +1084,7 @@
 	var/d = last_input_dir || owner.dir
 	if(d)
 		owner.setDir(d)
+
 	var/zone = melee_accuracy_check(owner.zone_selected, owner, target, /datum/skill/combat/unarmed, owner.used_intent)
 	sb_fire_sound_note(owner, target, 1.5, BRUTE, zone, d)
 	ResetRhythm()
@@ -1201,7 +1094,8 @@
 	var/turf/origin = get_turf(owner)
 	var/turf/tt = target ? get_turf(target) : null
 	var/d = (origin && tt) ? get_dir(origin, tt) : owner.dir
-	if(!d) d = owner.dir
+	if(!d)
+		d = owner.dir
 
 	var/turf/front1 = GetFrontTurf(1, d)
 	var/list/wave2 = GetWaveLineTurfs(2, d)
@@ -1239,6 +1133,7 @@
 	for(var/turf/T in wave2)
 		if(!T)
 			continue
+
 		SwingFX(T)
 
 		var/mob/living/hit = _pick_combo_victim_on_turf(T, primary)
@@ -1252,7 +1147,8 @@
 
 	var/turf/tt = target ? get_turf(target) : null
 	var/d = (origin && tt) ? get_dir(origin, tt) : owner.dir
-	if(!d) d = owner.dir
+	if(!d)
+		d = owner.dir
 
 	var/list/turfs = GetArcTurfs(1, d)
 	var/zone = TryGetZone(owner.zone_selected)
@@ -1361,13 +1257,13 @@
 		ResetRhythm()
 		return
 
-	var/mob/living/M1 = _first_living_on_turf(t1)
-	if(M1 && ApplyDamage(M1, dmg_mult, BCLASS_PUNCH, zone, dmg_type, is_combo = TRUE))
-		hit_mob = M1
-
 	var/mob/living/M2 = _first_living_on_turf(t2)
 	if(M2 && ApplyDamage(M2, dmg_mult, BCLASS_PUNCH, zone, dmg_type, is_combo = TRUE))
 		hit_mob = M2
+
+	var/mob/living/M1 = _first_living_on_turf(t1)
+	if(M1 && ApplyDamage(M1, dmg_mult, BCLASS_PUNCH, zone, dmg_type, is_combo = TRUE))
+		hit_mob = M1
 
 	if(M2)
 		var/turf/behind2 = get_step(t2, dash_dir)

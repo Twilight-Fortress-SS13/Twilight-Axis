@@ -26,6 +26,8 @@
 	switch(d_intent)
 		if(INTENT_PARRY)
 			success = attempt_parry(intenty, user)
+			if(success)
+				ronin_on_parry_success(src, user)
 		if(INTENT_DODGE)
 			success = attempt_dodge(intenty, user)
 

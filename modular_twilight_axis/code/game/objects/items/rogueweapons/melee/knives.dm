@@ -104,6 +104,19 @@
 	possible_item_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/chop/necra) // chop chop chop
 	force = 23
 	max_integrity = 200
+	smeltresult = /obj/item/ingot/silver
+	is_silver = TRUE
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/necra/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_TENNITE,\
+		silver_type = SILVER_TENNITE,\
+		added_force = 0,\
+		added_blade_int = 50,\
+		added_int = 50,\
+		added_def = 2,\
+	)
 
 /datum/intent/dagger/cut/blunt
 	penfactor = BLUNT_NO_PENFACTOR

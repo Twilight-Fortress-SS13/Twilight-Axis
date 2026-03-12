@@ -198,3 +198,14 @@
 		owner.change_stat(STATKEY_SPD, -current_speed_penalty)
 		owner.remove_atom_colour(ADMIN_COLOUR_PRIORITY)
 		owner.update_move_intent_slowdown()
+
+/atom/movable/screen/alert/status_effect/shrink
+	name = "Shrink"
+	desc = "I'm tiny!"
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/shrink
+	id = "shrink"
+	alert_type = /atom/movable/screen/alert/status_effect/shrink
+	effectedstats = list(STATKEY_SPD = -1, STATKEY_CON = -1)
+	duration = 2 MINUTES

@@ -1,6 +1,8 @@
 /datum/erp_knot_link
 	var/mob/living/top
 	var/mob/living/btm
+	var/datum/erp_actor/actor_top
+	var/datum/erp_actor/actor_btm
 	var/datum/erp_sex_organ/penis/penis_org
 	var/datum/erp_sex_organ/receiving_org
 	var/penis_unit_id = 0
@@ -12,6 +14,8 @@
 	. = ..()
 	top = _top
 	btm = _btm
+	actor_top = SSerp.get_actor_for_mob(top)
+	actor_btm = SSerp.get_actor_for_mob(btm)
 	penis_org = _penis
 	receiving_org = _recv
 	penis_unit_id = _unit_id
@@ -53,9 +57,9 @@
 	return round((strength / ERP_KNOT_MAX_STRENGTH) * 30)
 
 /datum/erp_knot_link/proc/try_increase_strength_from_movement()
-	var/ch = 5 + round((strength / 100) * 10)
+	var/ch = strength / 100
 	if(prob(ch))
-		strength = min(ERP_KNOT_MAX_STRENGTH, strength + 2)
+		strength = ERP_KNOT_MAX_STRENGTH
 		note_activity()
 		return TRUE
 	return FALSE

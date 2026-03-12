@@ -35,7 +35,7 @@
 	embedchance = 100
 	woundclass = BCLASS_STAB
 	flag = "stab"
-	armor_penetration = 84
+	armor_penetration = 60
 	speed = 0.1
 
 /obj/projectile/bullet/twilight_lead/silver
@@ -43,14 +43,14 @@
 	desc = "Небольшая серебряная сфера. Мягче, чем свинцовая пуля, но крайне эффективна против нежити."
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/silver
 	damage = 120
-	armor_penetration = 70
+	armor_penetration = 50
 	silver = TRUE
 	critfactor = 0.8
 
 /obj/projectile/bullet/twilight_cannonball
 	name = "cannonball"
 	desc = "Крупная свинцовая сфера. Важен не размер ствола, а размер отверстия, что он делает в вашем противнике."
-	damage = 120
+	damage = 200
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
@@ -59,7 +59,7 @@
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 0
 	woundclass = BCLASS_STAB
-	flag = "blunt"
+	flag = "stab"
 	armor_penetration = 10
 	speed = 0.1
 
@@ -76,7 +76,7 @@
 	embedchance = 100
 	woundclass = BCLASS_STAB
 	flag = "stab"
-	armor_penetration = 84 
+	armor_penetration = 60
 	speed = 0.1
 	critfactor = 0.67
 
@@ -89,7 +89,7 @@
 	name = "runed sphere"
 	desc = "Небольшой, идеально круглый металлический шар, покрытый псайдонитскими рунами. Смертоносен на высокой скорости."
 	damage = 90
-	armor_penetration = 75
+	armor_penetration = 60
 	speed = 0.6
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'

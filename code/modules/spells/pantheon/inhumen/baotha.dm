@@ -65,31 +65,57 @@
 	invocation_type = "none"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
-	recharge_time = 5 SECONDS 
+	recharge_time = 6 MINUTES
 	miracle = TRUE
 	devotion_cost = 10
 	var/duration = 60 SECONDS
+	var/static/list/reagent_blacklist = list(
+		/datum/reagent/rotcure,
+		/datum/reagent/vitae,
+		/datum/reagent/medicine/stampot,
+		/datum/reagent/medicine/strongstam,
+		/datum/reagent/medicine/strongmana,
+		/datum/reagent/medicine/manapot,
+		/datum/reagent/medicine/stronghealth,
+		/datum/reagent/buff/tri,
+		/datum/reagent/buff/constitution,
+		/datum/reagent/buff/fortune,
+		/datum/reagent/buff/endurance,
+		/datum/reagent/buff/strength,
+		/datum/reagent/buff/speed,
+		/datum/reagent/buff/perception
+	)
 
 /obj/effect/proc_holder/spell/self/bless_drink/cast(list/targets, mob/living/user)
-	. = ..()
-
 	if(!ishuman(user))
 		revert_cast()
 		return FALSE
-
-	var/obj/item/reagent_containers/glass/held = user.get_active_held_item()
-	if(!istype(held))
+	var/held = user.get_active_held_item()
+	if(!istype(held, /obj/item/reagent_containers/glass))
 		revert_cast()
 		to_chat(user, span_info("This is not a suitable container for this!"))
+		return FALSE
+	
+	var/obj/item/reagent_containers/glass/target_container = held
+	for(var/reagent in reagent_blacklist)
+		if(target_container.reagents.has_reagent(reagent))
+			revert_cast()
+			to_chat(user, span_info("The drink within is too potent."))
+			return FALSE
+
+	if(target_container.is_infinite)
+		revert_cast()
+		to_chat(user, span_info("This is already blessed!"))
 		return FALSE
 
 	var/dur = duration * user.get_skill_level(associated_skill)
 	var/printed_dur = round(dur / 600)
-
-	held.AddElement(/datum/element/infinite_reagents, list(/datum/reagent/water, /datum/reagent/consumable/ethanol))
-	addtimer(CALLBACK(held, TYPE_PROC_REF(/datum, _RemoveElement), list(/datum/element/infinite_reagents)), dur)
-
-	to_chat(user, span_notice("The drink swirls for a mote. This will last around [printed_dur] minute[(printed_dur > 1) ? "s" : ""]."))
+	if(target_container.set_infinite(user, dur))
+		user.playsound_local(get_turf(user), 'sound/magic/baotha_blessdrink.ogg', 100, TRUE)
+		to_chat(user, span_notice("The drink swirls for a mote. This will last around [printed_dur] minute[(printed_dur > 1) ? "s" : ""]."))
+	else
+		revert_cast()
+		return FALSE
 	return TRUE
 
 // T0, orison inspired healing spell that pours a drink called Lover's Ruin. Works like a red for baotha blessed, poisons non-blessed.
