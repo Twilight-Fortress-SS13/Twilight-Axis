@@ -17,6 +17,9 @@
 	if(. == COMPONENT_INCOMPATIBLE)
 		return .
 
+	var/obj/item/rogueweapon/weapon = parent
+	if(weapon)
+		max_runes = weapon.get_rune_capacity()
 	cache_base_integrity()
 	refresh_persistent_holder(get_current_holder())
 	return .
@@ -393,3 +396,66 @@
 		storage.trigger_random_weapon_rune(user, target)
 
 	return .
+
+/obj/item/rogueweapon/proc/get_rune_capacity()
+	return 2
+
+/obj/item/rogueweapon/huntingknife/get_rune_capacity()
+	return 1
+
+/obj/item/rogueweapon/flail/get_rune_capacity()
+	return 1
+
+/obj/item/rogueweapon/whip/get_rune_capacity()
+	return 1
+
+/obj/item/rogueweapon/axe/get_rune_capacity()
+	return 2
+
+/obj/item/rogueweapon/sword/get_rune_capacity()
+	return 2
+
+/obj/item/rogueweapon/mace/get_rune_capacity()
+	return 2
+
+/obj/item/rogueweapon/blunt/get_rune_capacity()
+	return 2
+
+/obj/item/rogueweapon/pick/get_rune_capacity()
+	return 2
+
+/obj/item/rogueweapon/spear/get_rune_capacity()
+	return 3
+
+/obj/item/rogueweapon/polearm/get_rune_capacity()
+	return 3
+
+/obj/item/rogueweapon/sword/long/get_rune_capacity()
+	return 3
+
+/obj/item/rogueweapon/sword/great/get_rune_capacity()
+	return 3
+
+/obj/item/rogueweapon/axe/twohanded/get_rune_capacity()
+	return 3
+
+/obj/item/rogueweapon/axe/great/get_rune_capacity()
+	return 3
+
+/obj/item/rogueweapon/mace/maul/grand/malum/get_rune_capacity()
+	return 4
+
+/obj/item/rogueweapon/greatsword/grenz/flamberge/malum/get_rune_capacity()
+	return 4
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/malum/get_rune_capacity()
+	return 4
+
+/obj/item/rogueweapon/sword/blacksteel/get_rune_capacity()
+	return 4
+
+/obj/item/rogueweapon/greatsword/grenz/flamberge/blacksteel/get_rune_capacity()
+	return 4
+
+/obj/item/rogueweapon/pick/blacksteel/get_rune_capacity()
+	return 4
