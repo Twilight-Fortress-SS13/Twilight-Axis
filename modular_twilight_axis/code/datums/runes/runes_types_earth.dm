@@ -135,7 +135,7 @@
 	if(!L)
 		return
 
-	L.adjustToxLoss(scale_amount(8, applied))
+	L.adjustToxLoss(scale_amount(8))
 
 
 /datum/rune/earth/landslide

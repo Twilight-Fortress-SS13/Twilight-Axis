@@ -35,7 +35,7 @@
 	..()
 	H.adjust_blindness(-3)
 	has_loadout = TRUE
-	to_chat(H, span_warning("It was a long journey to this country, but the one, who knows the magic older than bricks, that town was build from, but you finaly arrived to brind more glory to skills that you mastered in years on wild north."))
+	to_chat(H, span_warning("It was a long journey to this country, but the one, who knows the magic older than bricks, that town was build from, but you finally arrived to bring more glory to skills that you mastered in years on wild north."))
 	pants = /obj/item/clothing/under/roguetown/chainlegs/kilt
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 	gloves = /obj/item/clothing/gloves/roguetown/angle/gronn

@@ -85,7 +85,7 @@
 	if(!L)
 		return
 
-	L.adjustFireLoss(scale_amount(6, applied))
+	L.adjustFireLoss(scale_amount(6))
 
 
 /datum/rune/fire/ash
@@ -206,7 +206,7 @@
 		if(!C.armor)
 			continue
 
-		C.take_damage(scale_amount(5, applied), BRUTE, "fire")
+		C.take_damage(scale_amount(5), BRUTE, "fire")
 		break
 
 
@@ -235,4 +235,4 @@
 	if(!weapon)
 		return
 
-	weapon.take_damage(scale_amount(1, applied), BRUTE, "blunt")
+	weapon.take_damage(scale_amount(1), BRUTE, "blunt")

@@ -416,3 +416,5 @@
 		return
 
 	storage.trigger_runeblade_best_rune(owner, target, 1, 1, 0)
+
+#undef COMSIG_RUNEBLADE_SUCCESSFUL_ATTACK

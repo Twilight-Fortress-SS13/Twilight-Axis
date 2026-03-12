@@ -1,3 +1,5 @@
+#define RUNE_INTEGRITY_PENALTY_PCT 0.10
+
 /datum/component/rune_storage
 	var/list/applied_runes = list()
 	var/list/persistent_runes = list()
@@ -35,7 +37,7 @@
 
 	var/obj/item/weapon = get_weapon()
 	if(weapon && weapon.max_integrity)
-		var/reduction = round(weapon.max_integrity * 0.10)
+		var/reduction = round(weapon.max_integrity * RUNE_INTEGRITY_PENALTY_PCT)
 		weapon.max_integrity = max(1, weapon.max_integrity - reduction)
 
 	advance_active_rune()
@@ -74,7 +76,7 @@
 		new_rune.on_persistent_apply(weapon, user, src, new_applied)
 
 	if(weapon && weapon.max_integrity)
-		var/reduction = round(weapon.max_integrity * 0.10)
+		var/reduction = round(weapon.max_integrity * RUNE_INTEGRITY_PENALTY_PCT)
 		weapon.max_integrity = max(1, weapon.max_integrity - reduction)
 
 	qdel(old_applied)
@@ -172,3 +174,5 @@
 		triggered = TRUE
 
 	return triggered
+
+#undef RUNE_INTEGRITY_PENALTY_PCT

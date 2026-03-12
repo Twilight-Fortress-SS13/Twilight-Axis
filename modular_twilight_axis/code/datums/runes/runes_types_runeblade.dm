@@ -80,7 +80,7 @@
 		return
 
 	var/mob/living/L = target
-	var/stacks = max(1, scale_amount(3, applied))
+	var/stacks = max(1, scale_amount(3))
 	L.apply_status_effect(/datum/status_effect/fire_handler/fire_stacks, stacks)
 
 /datum/rune/air/blade
@@ -133,7 +133,7 @@
 
 	var/mob/living/L = target
 	if(!(L.mobility_flags & MOBILITY_STAND))
-		user.stamina_add(-scale_amount(15, applied))
+		user.stamina_add(-scale_amount(15))
 
 /datum/rune/earth/stoneskin
 	id = "earth_stoneskin"
@@ -203,9 +203,9 @@
 		return
 
 	var/mob/living/L = target
-	L.adjustFireLoss(scale_amount(4, applied))
+	L.adjustFireLoss(scale_amount(4))
 
-	var/hypo_stacks = max(1, scale_amount(1, applied))
+	var/hypo_stacks = max(1, scale_amount(1))
 	L.apply_status_effect(/datum/status_effect/stacking/hypothermia, hypo_stacks)
 
 /datum/rune/water/vampirism
@@ -228,4 +228,4 @@
 	if(!user)
 		return
 
-	user.adjustBruteLoss(-scale_amount(5, applied))
+	user.adjustBruteLoss(-scale_amount(5))

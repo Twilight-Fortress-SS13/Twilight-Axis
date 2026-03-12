@@ -107,8 +107,8 @@
 	if(!L)
 		return
 
-	L.adjustStaminaLoss(scale_amount(18, applied))
-	L.OffBalance(scale_duration(1 SECONDS, applied))
+	L.adjustStaminaLoss(scale_amount(18))
+	L.OffBalance(scale_duration(1 SECONDS))
 
 
 /datum/rune/air/thinning
@@ -129,7 +129,7 @@
 	if(!L)
 		return
 
-	L.adjustOxyLoss(scale_amount(8, applied))
+	L.adjustOxyLoss(scale_amount(8))
 
 
 /datum/rune/air/echo

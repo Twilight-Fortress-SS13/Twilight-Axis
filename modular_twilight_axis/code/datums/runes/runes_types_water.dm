@@ -51,7 +51,7 @@
 	if(!L)
 		return
 
-	L.adjustStaminaLoss(scale_amount(12, applied))
+	L.adjustStaminaLoss(scale_amount(12))
 
 
 /datum/rune/water/tide
@@ -94,7 +94,7 @@
 	if(!L)
 		return
 
-	L.adjustOxyLoss(scale_amount(8, applied))
+	L.adjustOxyLoss(scale_amount(8))
 
 
 /datum/rune/water/mist
@@ -137,5 +137,5 @@
 	if(!L)
 		return
 
-	var/stacks = max(1, scale_amount(1, applied))
+	var/stacks = max(1, scale_amount(1))
 	L.apply_status_effect(/datum/status_effect/stacking/hypothermia, stacks)
