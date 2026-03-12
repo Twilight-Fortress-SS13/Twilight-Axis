@@ -53,6 +53,16 @@
 	if(ispath(special))
 		special = new special()
 
+	//TA addition start - Runes
+	RegisterSignal(src, COMSIG_ITEM_EQUIPPED, PROC_REF(_rune_holder_update))
+	RegisterSignal(src, COMSIG_ITEM_DROPPED, PROC_REF(_rune_holder_update))
+
+/obj/item/rogueweapon/proc/_rune_holder_update()
+	var/datum/component/rune_storage/storage = GetComponent(/datum/component/rune_storage)
+	if(storage)
+		storage.refresh_persistent_holder()
+	//TA addition end - Runes
+
 /obj/item/rogueweapon/ComponentInitialize()
 	if(is_silver) // By default, silver weapons are supposed to be blesseable.
 		AddComponent(\
