@@ -57,6 +57,7 @@
 // FIRE RUNES
 // ==========================================================
 
+#define FORGE_REPAIR_INTERVAL 60 SECONDS
 /datum/rune/fire
 	element = RUNE_ELEMENT_FIRE
 	color = "#ff6a00"
@@ -127,7 +128,7 @@
 	if(!weapon || !applied)
 		return
 
-	addtimer(CALLBACK(src, PROC_REF(_forge_tick), weapon, storage, applied), 60 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(_forge_tick), weapon, storage, applied), FORGE_REPAIR_INTERVAL)
 
 /datum/rune/fire/forge/proc/_forge_tick(obj/item/weapon, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(!weapon || QDELETED(weapon) || !storage || !applied)
@@ -238,3 +239,5 @@
 		return
 
 	weapon.take_damage(scale_amount(1), BRUTE, "blunt")
+
+#undef FORGE_REPAIR_INTERVAL
