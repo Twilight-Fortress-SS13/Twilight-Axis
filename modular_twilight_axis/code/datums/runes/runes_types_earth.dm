@@ -39,6 +39,7 @@
 	cooldown = 0
 	proc_chance = 100
 	is_persistent = TRUE
+	can_stack = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/stone = 1,
 		/obj/item/natural/stoneblock = 1
@@ -103,6 +104,7 @@
 	cooldown = 0
 	proc_chance = 100
 	is_persistent = TRUE
+	can_stack = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/stoneblock = 1,
 		/obj/item/rogueore/iron = 1

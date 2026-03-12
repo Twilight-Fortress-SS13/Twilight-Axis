@@ -62,6 +62,7 @@
 	cooldown = 0
 	proc_chance = 100
 	is_persistent = TRUE
+	can_stack = FALSE
 	carve_ingredients = list(
 		/obj/item/reagent_containers/powder/salt = 1,
 		/obj/item/natural/glass = 1
@@ -105,6 +106,7 @@
 	cooldown = 30
 	proc_chance = 100
 	is_persistent = TRUE
+	can_stack = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/fibers = 1,
 		/obj/item/natural/feather = 1

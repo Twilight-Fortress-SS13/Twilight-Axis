@@ -17,6 +17,9 @@
 	/// Whether this rune has a persistent effect while attached
 	var/is_persistent = FALSE
 
+	/// Whether this rune may coexist with another rune of the same exact type on one weapon
+	var/can_stack = TRUE
+
 	/// Element string/define
 	var/element = RUNE_ELEMENT_EARTH
 
@@ -107,3 +110,8 @@
 	if(weapon && weapon_self_damage_pct > 0)
 		var/self_damage = max(1, round(max(weapon.obj_integrity, 1) * weapon_self_damage_pct))
 		weapon.take_damage(self_damage, BRUTE, "blunt")
+
+/datum/rune/proc/is_same_rune_type(datum/rune/other)
+	if(!other)
+		return FALSE
+	return type == other.type

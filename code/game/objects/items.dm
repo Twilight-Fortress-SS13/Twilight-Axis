@@ -409,6 +409,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		else
 			blade_int = max_blade_int
 
+	//TA addition start - Runes
+	RegisterSignal(src, COMSIG_ITEM_EQUIPPED, PROC_REF(_rune_holder_update))
+	RegisterSignal(src, COMSIG_ITEM_DROPPED, PROC_REF(_rune_holder_update))
+	//TA addition end - Runes
+
 /obj/item/Destroy()
 	item_flags &= ~DROPDEL	//prevent reqdels
 	if(ismob(loc))

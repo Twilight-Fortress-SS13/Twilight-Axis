@@ -171,6 +171,11 @@
 
 		target[category] |= source[category]
 
+/obj/item/rogueweapon/proc/_rune_holder_update()
+	var/datum/component/rune_storage/storage = GetComponent(/datum/component/rune_storage)
+	if(storage)
+		storage.refresh_persistent_holder()
+
 /datum/species/dwarf
 	inherent_traits = list(TRAIT_DRUNK_HEALING, TRAIT_CAVEDWELLER, TRAIT_RUNECARVER)
 
