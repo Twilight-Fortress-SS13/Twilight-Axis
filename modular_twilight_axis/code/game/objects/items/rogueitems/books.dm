@@ -26,7 +26,6 @@
 	base_icon_state = "book5"
 	bookfile = "runeblade_codex.json"
 
-
 /obj/item/book/rogue/witch_runes
 	name = "Coven Treatise on Northern Runes"
 	desc = "A practical manuscript compiled by several witch covens. It catalogues the known northern runes, their carving ingredients and the effects they impose when bound to steel."

@@ -49,7 +49,8 @@
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/poor
 	beltl = /obj/item/rogueweapon/huntingknife/copper
 	backpack_contents = list(
-		/obj/item/roguekey/mercenary = 1
+		/obj/item/roguekey/mercenary = 1,
+		/obj/item/book/rogue/runeblade_codex = 1
 		)
 	H.merctype = 2
 	H.AddComponent(/datum/component/combo_core/runeblade, 30 SECONDS, 3, 3)

@@ -44,7 +44,8 @@
 						/obj/item/recipe_book/alchemy = 1,
 						/obj/item/recipe_book/survival = 1,
 						/obj/item/recipe_book/magic = 1,
-						/obj/item/chalk = 1
+						/obj/item/chalk = 1,
+						/obj/item/book/rogue/witch_runes = 1
 						)
 	var/classes = list("Old Magick", "Godsblood", "Mystagogue")
 	var/classchoice = input("How do your powers manifest?", "THE OLD WAYS") as anything in classes
