@@ -8,9 +8,9 @@
 
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = ACCEPTED_RACES
-	tutorial = "Ты — Раб, жалкое доказательство силы вожака и Граггара в племени. \
-				Твоя слабость — это их трофей: ты существуешь, чтобы пресмыкаться, служить и терпеть, напоминая всем, что подчинение — единственный путь выживания. \
-				Каждый удар, каждое унижение, каждый приказ — это напоминание: ты сломлен, ты ничто, и твоё место — в грязи у ног сильных, пока они не решат иначе."
+	tutorial = "You are a Slave — pitiful proof of the Chief's and Graggar's power in the tribe. \
+				Your weakness is their trophy: you exist to grovel, serve, and endure, reminding everyone that submission is the only path to survival. \
+				Every blow, every humiliation, every order is a reminder: you are broken, you are nothing, and your place is in the dirt at the feet of the strong — until they decide otherwise."
 	class_categories = FALSE
 
 	outfit = null
@@ -45,9 +45,9 @@
 	
 /datum/advclass/goblin_slave/slave
 	name = "Slave"
-	tutorial = "Ты — Раб, жалкое доказательство силы вожака и Граггара в племени. \
-				Твоя слабость — это их трофей: ты существуешь, чтобы пресмыкаться, служить и терпеть, напоминая всем, что подчинение — единственный путь выживания. \
-				Каждый удар, каждое унижение, каждый приказ — это напоминание: твоя воля сломлена, ты ничто, и твоё место — в грязи у ног сильных, пока они не решат иначе."
+	tutorial = "You are a Slave — pitiful proof of the Chief's and Graggar's power in the tribe. \
+				Your weakness is their trophy: you exist to grovel, serve, and endure, reminding everyone that submission is the only path to survival. \
+				Every blow, every humiliation, every order is a reminder: your will is broken, you are nothing, and your place is in the dirt at the feet of the strong — until they decide otherwise."
 	outfit = /datum/outfit/job/roguetown/goblin_slave/slave
 	category_tags = list(CTAG_GOBLINSLAVE)
 	subclass_languages = list(/datum/language/thievescant)
@@ -106,7 +106,7 @@
 
     var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 
-    // При 80 игроках открывается 4 слота
+    // At 80 players, 4 slots open
     if(current_players >= 80)
         slots = 4
 

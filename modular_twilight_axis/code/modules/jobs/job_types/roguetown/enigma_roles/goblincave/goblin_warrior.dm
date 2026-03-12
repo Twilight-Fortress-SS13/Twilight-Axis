@@ -9,9 +9,9 @@
 		/datum/species/goblinp,
 	)
 	allowed_patrons = list(/datum/patron/inhumen/graggar)
-	tutorial = "Ты — порождение Граггара, Бога Сила и Власти: из его собственной крови слеплены первые гоблины, жалкие, но жадные до силы твари. Ты доказал, что можешь резать глотки и выживать — теперь твоя жизнь имеет вкус: чужая кровь, трофеи и власть над слабыми. \
-				Подчиняйся только тем, кто сильнее, иначе сильный сам вырвет твою печень. Дерись жестоко, ломай и порабощай, жри слабаков после победы — слабость карается смертью, а сила — правом забрать всё. \
-				Умереть, захлебнувшись в крови врагов и своей собственной — высшая милость. Вождь каждую ночь рычит: героев отец бьёт последними, трусов — первыми и с наслаждением."
+	tutorial = "You are Graggar's spawn, born of his own blood — pitiful yet hungry for power. You have proven you can cut throats and survive. Now your life has savour: enemy blood, trophies, and dominion over the weak. \
+				Submit only to those stronger than you, or they will tear out your liver. Fight savagely, break and enslave, devour the weak after victory — weakness is punished by death, strength earns the right to take everything. \
+				To die choking on the blood of your enemies and your own — that is the highest grace. The Chief growls each night: the father beats heroes last, and cowards first, with great pleasure."
 	class_categories = FALSE
 
 	outfit = null
@@ -49,7 +49,7 @@
 
 /datum/advclass/goblin_warrior/brute
 	name = "Brute"
-	tutorial = "Ты — гоблин-костолом, кровь Граггара кипит в тебе: ломаешь врагов голыми руками или оружием ближнего боя, без доспехов, чистой силой. Дроби черепа, души и ломай кости в ближнем бою."
+	tutorial = "You are a goblin brute — Graggar's blood boils in your veins. Break enemies with bare hands or melee weapons, with no armour, through sheer strength alone. Shatter skulls, crush spirits, and snap bones in close combat."
 	outfit = /datum/outfit/job/roguetown/goblin_warrior/brute
 	category_tags = list(CTAG_GOBLINWARRIOR)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED, TRAIT_GOBLINCAVE, TRAIT_AZURENATIVE, TRAIT_LEECHIMMUNE)
@@ -71,7 +71,7 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 	)
-	extra_context = "Этот подкласс предлагает на выбор две дисциплины: одна обеспечивает EXPERT навыки в кулачном бою и черту «Expert Pugilist» и «Critical Resistance», а другая - владение на выбор одним из видов оружия"
+	extra_context = "This subclass offers two disciplines: one grants EXPERT unarmed skill along with the 'Expert Pugilist' and 'Critical Resistance' traits, while the other grants mastery of one weapon type of your choice."
 
 /datum/outfit/job/roguetown/goblin_warrior/brute/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	..()
@@ -173,9 +173,9 @@
 
 /datum/advclass/goblin_warrior/assassin
 	name = "Assassin"
-	tutorial = "Ты — гоблин-ассасин: крадёшься в темноте, режешь глотки кинжалом или стреляешь с лука издалека, чтобы мгновенно исчезнуть. \
-				Твоя сила — в скрытности, удар из тени, страх в глазах врагов. \
-				Граггар не одобряет это, а племенные воины косятся с презрением: однако ты всё еще жив, а эти дуболомы - нет."
+	tutorial = "You are a goblin assassin — you slink through darkness, slit throats with a dagger or shoot from afar, then vanish in an instant. \
+				Your strength is stealth: striking from the shadows, and the fear in your enemies' eyes. \
+				Graggar disapproves, and the tribal warriors eye you with contempt — but you are still alive, and those brutes are not."
 	outfit = /datum/outfit/job/roguetown/goblin_warrior/assassin
 	category_tags = list(CTAG_GOBLINWARRIOR)
 	subclass_languages = list(/datum/language/thievescant)
@@ -204,9 +204,7 @@
 
 /datum/outfit/job/roguetown/goblin_warrior/assassin/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	..()
-	to_chat(H, span_warning("Ты — гоблин-ассасин: крадёшься в темноте, режешь глотки кинжалом или стреляешь с лука издалека, чтобы мгновенно исчезнуть. \
-				Твоя сила — в скрытности, удар из тени, страх в глазах врагов. \
-				Граггар не одобряет это, а племенные воины косятся с презрением: однако ты всё еще жив, а эти дуболомы - нет."))
+	to_chat(H, span_warning("You are a goblin assassin. Slink through darkness, strike from the shadows, and vanish before your foes can retaliate."))
 	H.dna.species.soundpack_m = new /datum/voicepack/male/goblincave()
 	H.dna.species.soundpack_f = new /datum/voicepack/female/goblincave()
 	if(!visualsOnly)
@@ -250,9 +248,9 @@
 
 /datum/advclass/goblin_warrior/archer
 	name = "Archer"
-	tutorial = "Ты — гоблин-лучник: стреляешь с лука издалека, прикрывая союзников. \
-				Твоя сила — в скрытности, дистанции, и отравленных стрелах, что ослабляют врагов. \
-				Граггар не одобряет это, а племенные воины косятся с презрением: однако ты всё еще жив, а эти дуболомы - нет."
+	tutorial = "You are a goblin archer — you shoot from range, covering your allies from a safe distance. \
+				Your strength lies in stealth, distance, and poisoned arrows that weaken your foes. \
+				Graggar disapproves, and the tribal warriors eye you with contempt — but you are still alive, and those brutes are not."
 	outfit = /datum/outfit/job/roguetown/goblin_warrior/archer
 	category_tags = list(CTAG_GOBLINWARRIOR)
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_LIGHT_STEP, TRAIT_STEELHEARTED, TRAIT_AZURENATIVE, TRAIT_LEECHIMMUNE)
@@ -278,9 +276,7 @@
 
 /datum/outfit/job/roguetown/goblin_warrior/archer/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	..()
-	to_chat(H, span_warning("Ты — гоблин-лучник: стреляешь с лука издалека, прикрывая союзников. \
-				Твоя сила — в скрытности, дистанции, и отравленных стрелах, что ослабляют врагов. \
-				Граггар не одобряет это, а племенные воины косятся с презрением: однако ты всё еще жив, а эти дуболомы - нет."))
+	to_chat(H, span_warning("You are a goblin archer. Cover your allies from range and weaken enemies with poisoned arrows."))
 	H.dna.species.soundpack_m = new /datum/voicepack/male/goblincave()
 	H.dna.species.soundpack_f = new /datum/voicepack/female/goblincave()
 	if(!visualsOnly)
@@ -336,7 +332,7 @@
 
     var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 
-    // При 80 игроках открывается 6 слотов, далее +1 за каждые 10 игроков
+    // At 80 players, 6 slots open; +1 for every additional 10 players
     if(current_players >= 80)
         slots = 6 + floor((current_players - 80) / 10)
 

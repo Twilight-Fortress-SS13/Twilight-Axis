@@ -9,7 +9,8 @@
 		/datum/species/goblinp,
 	)
 	allowed_patrons = list(/datum/patron/inhumen/graggar)
-	tutorial = "Ты — Шаман, голос Граггара в племени. Твоя магия — кровь, страх и сломанные души: вырезаешь руны, питаешься криками. Каждый ритуал доказывает — без твоих проклятий и крови племя сгинет."
+	tutorial = "You are the Shaman, Graggar's voice among the tribe. Your magic is blood, fear, and broken souls. You carve runes and feed on screams. \
+				Every ritual proves it: without your curses and blood, the tribe will perish."
 	class_categories = FALSE
 
 	outfit = null
@@ -44,7 +45,7 @@
 
 /datum/advclass/goblin_shaman/shaman
 	name = "Shaman"
-	tutorial = "Ты — Шаман, голос Граггара в племени. Твоя магия — кровь, страх и сломанные души: вырезаешь руны, питаешься криками. Каждый ритуал доказывает — без твоих проклятий и крови племя сгинет."
+	tutorial = "Goblin shaman of Graggar. Use rites and curses to empower allies and punish enemies."
 	outfit = /datum/outfit/job/roguetown/goblin_shaman/shaman
 	category_tags = list(CTAG_GOBLINSHAMAN)
 	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T3, TRAIT_INTELLECTUAL, TRAIT_ALCHEMY_EXPERT, TRAIT_HERESIARCH, TRAIT_STEELHEARTED, TRAIT_GOBLINCAVE, TRAIT_AZURENATIVE, TRAIT_LEECHIMMUNE)
@@ -135,7 +136,7 @@
 
     var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 
-    // При 80 игроках открывается 1 слот
+    // At 80 players, 1 slot opens
     if(current_players >= 80)
         slots = 1
 

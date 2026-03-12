@@ -10,9 +10,9 @@
 		/datum/species/halforc
 	)
 	allowed_patrons = list(/datum/patron/inhumen/graggar)
-	tutorial = "Ты — Вожак, избранный Граггаром, воплощение абсолютной власти в племени. \
-				Твоя жестокость — не злоба, а священный язык, которым ты доказываешь племени, что слабость недостойна жить. \
-				Ты обязан ежедневно доказывать племени, почему именно ты — вожак, оставляя после себя страх, который громче любых слов." 
+	tutorial = "You are the Chief, chosen by Graggar — the embodiment of absolute power in the tribe. \
+				Your brutality is not spite; it is a sacred language proving to your tribe that weakness does not deserve to live. \
+				Every day you must prove why you alone are Chief, leaving behind a fear that speaks louder than any words." 
 	class_categories = FALSE
 
 	outfit = null
@@ -47,9 +47,9 @@
 
 /datum/advclass/goblin_chief/chief
 	name = "Chief"
-	tutorial = "Ты — Вожак, избранный Граггаром, воплощение абсолютной власти в племени. \
-				Твоя жестокость — не злоба, а священный язык, которым ты доказываешь племени, что слабость недостойна жить. \
-				Ты обязан ежедневно доказывать племени, почему именно ты — вожак, оставляя после себя страх, который громче любых слов." 
+	tutorial = "You are the Chief, chosen by Graggar — the embodiment of absolute power in the tribe. \
+				Your brutality is not spite; it is a sacred language proving to your tribe that weakness does not deserve to live. \
+				Every day you must prove why you alone are Chief, leaving behind a fear that speaks louder than any words." 
 	outfit = /datum/outfit/job/roguetown/goblin_chief/chief
 	category_tags = list(CTAG_GOBLINCHIEF)
 	subclass_languages = list(/datum/language/thievescant)
@@ -185,7 +185,7 @@
 
     var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 
-    // При 80 игроках открывается 1 слот
+    // At 80 players, 1 slot opens
     if(current_players >= 80)
         slots = 1
 
