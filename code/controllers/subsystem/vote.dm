@@ -18,7 +18,7 @@ SUBSYSTEM_DEF(vote)
 	var/list/voted = list()
 	var/list/voting = list()
 	var/list/generated_actions = list()
-	var/static/list/everyone_is_equal = list("custom")
+	var/static/list/everyone_is_equal = list("custom", "map") // TA EDIT
 
 /datum/controller/subsystem/vote/fire()	//called by master_controller
 	if(mode)

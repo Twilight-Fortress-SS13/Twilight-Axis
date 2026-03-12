@@ -97,6 +97,7 @@
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/writeresidentscroll)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/mayor_announcement)
 
 /obj/item/clothing/head/roguetown/chaperon/noble/mayor
 	name = "Mayor's chaperon"
@@ -168,3 +169,33 @@
 	qdel(sacrifice)
 	H.put_in_hands(new /obj/item/book/granter/residentcard, TRUE)
 
+/obj/effect/proc_holder/spell/self/mayor_announcement
+	name = "The Mayor's Speech"
+	desc = "Let your word be heard by everyone on this city and near of it. You need streetpipe to speak."
+	overlay_state = "paper"
+	action_icon = 'modular_twilight_axis/icons/mob/actions/roguespells.dmi'
+	releasedrain = 40
+	chargetime = 1 SECONDS
+	recharge_time = 5 MINUTES
+	warnie = "spellwarning"
+	antimagic_allowed = FALSE
+	charging_slowdown = 3
+
+/obj/effect/proc_holder/spell/self/mayor_announcement/cast(list/targets, mob/living/user = usr)
+	var/turf/T = get_step(user, user.dir)
+	if(!(locate(/obj/structure/broadcast_horn/paid) in T))
+		to_chat(user, span_warning("I need streetpipe to speak.")) 
+		revert_cast()
+		return
+	if(!SScommunications.can_announce(user, FALSE))
+		to_chat(user, span_warning("You are not ready to speak yet."))
+		revert_cast()
+		return FALSE
+	var/message = stripped_input(user, "What message do you wish to broadcast to the this land?", "The Mayor's Speech", "")
+	if(!message || QDELETED(src) || user.stat != CONSCIOUS)
+		revert_cast()
+		return FALSE
+	var/used_title = "Mayor"
+	priority_announce(html_decode(user.treat_message(message)), "[used_title] Speak", 'sound/misc/bellold.ogg', sender = user)
+	log_game("[key_name(user)] used The Mayor's Speech: [message]")
+	return TRUE
