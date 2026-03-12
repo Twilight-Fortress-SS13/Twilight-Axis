@@ -58,7 +58,8 @@
 		/datum/advclass/mercenary/lirvanmerc,
     /datum/advclass/mercenary/twilight_gunslinger,
 	/datum/advclass/mercenary/twilight_heishi,
-	/datum/advclass/mercenary/twilight_yohei
+	/datum/advclass/mercenary/twilight_yohei,
+	/datum/advclass/mercenary/twilight_runeblade
 	)
 
 /datum/job/roguetown/mercenary/after_spawn(mob/living/L, mob/M, latejoin = FALSE)

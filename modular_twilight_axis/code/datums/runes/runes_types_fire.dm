@@ -1,8 +1,16 @@
+// ==========================================================
+// FIRE RUNES + RELATED STATUS EFFECTS
+// ==========================================================
+
 /datum/status_effect/debuff/rune_silence
 	id = "rune_silence"
 	duration = 5 SECONDS
 	status_type = STATUS_EFFECT_REFRESH
 	alert_type = null
+
+/datum/status_effect/debuff/rune_silence/on_creation(mob/living/new_owner, custom_duration = 5 SECONDS)
+	duration = custom_duration
+	return ..()
 
 /datum/status_effect/debuff/rune_silence/on_apply()
 	. = ..()
@@ -14,12 +22,18 @@
 	if(owner)
 		REMOVE_TRAIT(owner, TRAIT_MUTE, id)
 
+
 /datum/status_effect/debuff/rune_accuracy_down
 	id = "rune_accuracy_down"
 	duration = 4 SECONDS
 	status_type = STATUS_EFFECT_REFRESH
 	alert_type = null
 	effectedstats = list(STATKEY_ACC = -2)
+
+/datum/status_effect/debuff/rune_accuracy_down/on_creation(mob/living/new_owner, custom_duration = 4 SECONDS)
+	duration = custom_duration
+	return ..()
+
 
 /datum/status_effect/buff/rune_hypothermia_resist
 	id = "rune_hypothermia_resist"
@@ -38,6 +52,11 @@
 		owner.change_stat(STATKEY_CON, -1)
 	. = ..()
 
+
+// ==========================================================
+// FIRE RUNES
+// ==========================================================
+
 /datum/rune/fire
 	element = RUNE_ELEMENT_FIRE
 	color = "#ff6a00"
@@ -47,43 +66,61 @@
 		return null
 	return target
 
+
 /datum/rune/fire/ignition
 	id = "fire_ignition"
 	name = "Возгорание"
 	desc = "Шанс нанести ожоговый урон на цель."
+	color = "#ff5a1f"
 	cooldown = 20
 	proc_chance = 35
 	is_persistent = FALSE
+	carve_ingredients = list(
+		/obj/item/rogueore/coal = 1,
+		/obj/item/natural/thorn = 1
+	)
 
 /datum/rune/fire/ignition/on_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	var/mob/living/L = get_living_target(target)
 	if(!L)
 		return
 
-	L.adjustFireLoss(6)
+	L.adjustFireLoss(scale_amount(6, applied))
+
 
 /datum/rune/fire/ash
 	id = "fire_ash"
 	name = "Пепел"
 	desc = "Шанс наложить немоту."
+	color = "#c96a4c"
 	cooldown = 25
 	proc_chance = 20
 	is_persistent = FALSE
+	carve_ingredients = list(
+		/obj/item/rogueore/coal = 1,
+		/obj/item/natural/bone = 1
+	)
 
 /datum/rune/fire/ash/on_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	var/mob/living/L = get_living_target(target)
 	if(!L)
 		return
 
-	L.apply_status_effect(/datum/status_effect/debuff/rune_silence)
+	L.apply_status_effect(/datum/status_effect/debuff/rune_silence, scale_duration(5 SECONDS, applied))
+
 
 /datum/rune/fire/forge
 	id = "fire_forge"
 	name = "Горн"
 	desc = "Клинок медленно восстанавливает прочность."
+	color = "#ff8c2e"
 	cooldown = 0
 	proc_chance = 100
 	is_persistent = TRUE
+	carve_ingredients = list(
+		/obj/item/rogueore/coal = 1,
+		/obj/item/rogueore/iron = 1
+	)
 
 /datum/rune/fire/forge/on_persistent_apply(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(!weapon || !applied)
@@ -102,13 +139,19 @@
 
 	addtimer(CALLBACK(src, PROC_REF(_forge_tick), weapon, storage, applied), 60 SECONDS)
 
+
 /datum/rune/fire/brand
 	id = "fire_brand"
 	name = "Клеймо"
-	desc = "Удар по раненой цели усиливает боль и кратко снижает её точность."
+	desc = "Удар по раненой цели усиливает боль и снижает точность."
+	color = "#e3482b"
 	cooldown = 25
 	proc_chance = 35
 	is_persistent = FALSE
+	carve_ingredients = list(
+		/obj/item/natural/thorn = 1,
+		/obj/item/rogueore/coal = 1
+	)
 
 /datum/rune/fire/brand/on_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	var/mob/living/L = get_living_target(target)
@@ -118,16 +161,22 @@
 	if(L.health >= L.maxHealth)
 		return
 
-	L.apply_status_effect(/datum/status_effect/debuff/rune_accuracy_down)
-	L.OffBalance(1 SECONDS)
+	L.apply_status_effect(/datum/status_effect/debuff/rune_accuracy_down, scale_duration(4 SECONDS, applied))
+	L.OffBalance(scale_duration(1 SECONDS, applied))
+
 
 /datum/rune/fire/melting
 	id = "fire_melting"
 	name = "Плавление"
 	desc = "Урон по броне наносит ей дополнительный урон."
+	color = "#ff7f50"
 	cooldown = 30
 	proc_chance = 40
 	is_persistent = FALSE
+	carve_ingredients = list(
+		/obj/item/rogueore/coal = 1,
+		/obj/item/rogueore/copper = 1
+	)
 
 /datum/rune/fire/melting/on_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(!ishuman(target) || !user)
@@ -157,16 +206,22 @@
 		if(!C.armor)
 			continue
 
-		C.take_damage(5, BRUTE, "fire")
+		C.take_damage(scale_amount(5, applied), BRUTE, "fire")
 		break
+
 
 /datum/rune/fire/bonfire
 	id = "fire_bonfire"
 	name = "Костёр"
 	desc = "Владелец получает сопротивление гипотермии, но клинок быстрее изнашивается."
+	color = "#ffb347"
 	cooldown = 0
 	proc_chance = 100
 	is_persistent = TRUE
+	carve_ingredients = list(
+		/obj/item/natural/wood/plank = 1,
+		/obj/item/rogueore/coal = 1
+	)
 
 /datum/rune/fire/bonfire/on_persistent_apply(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(user)
@@ -180,4 +235,4 @@
 	if(!weapon)
 		return
 
-	weapon.take_damage(1, BRUTE, "blunt")
+	weapon.take_damage(scale_amount(1, applied), BRUTE, "blunt")

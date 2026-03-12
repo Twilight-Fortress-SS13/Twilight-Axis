@@ -26,8 +26,16 @@
 	/// Color used by rune stone visuals
 	var/color = null
 
+	/// Ingredients required to carve this rune from a stone.
+	/// Format: list(/obj/item/something = amount, ...)
+	var/list/carve_ingredients = list()
+
+
 /datum/rune/proc/can_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(!weapon || !storage || !applied)
+		return FALSE
+
+	if(!applied.rune)
 		return FALSE
 
 	if(applied.next_trigger_time > world.time)
@@ -38,17 +46,64 @@
 
 	return TRUE
 
+
 /datum/rune/proc/on_apply(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	return
+
 
 /datum/rune/proc/on_remove(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	return
 
+
 /datum/rune/proc/on_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	return
+
 
 /datum/rune/proc/on_persistent_apply(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	return
 
+
 /datum/rune/proc/on_persistent_remove(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	return
+
+
+/datum/rune/proc/scale_amount(base_value, effect_mult = 1, minimum = 1)
+	if(!isnum(base_value))
+		return base_value
+
+	var/scaled = round(base_value * effect_mult)
+
+	if(base_value > 0)
+		return max(minimum, scaled)
+
+	if(base_value < 0)
+		return min(-minimum, scaled)
+
+	return 0
+
+
+/datum/rune/proc/scale_duration(base_duration, effect_mult = 1, minimum = 1)
+	if(!isnum(base_duration))
+		return base_duration
+
+	return max(minimum, round(base_duration * effect_mult))
+
+
+/datum/rune/proc/get_runtime_cooldown(cooldown_mult = 1)
+	return round(cooldown * cooldown_mult)
+
+
+/datum/rune/proc/finalize_runtime_trigger(
+	obj/item/weapon,
+	datum/applied_rune/applied,
+	cooldown_mult = 1,
+	weapon_self_damage_pct = 0
+)
+	if(!applied)
+		return
+
+	applied.next_trigger_time = world.time + get_runtime_cooldown(cooldown_mult)
+
+	if(weapon && weapon_self_damage_pct > 0)
+		var/self_damage = max(1, round(max(weapon.obj_integrity, 1) * weapon_self_damage_pct))
+		weapon.take_damage(self_damage, BRUTE, "blunt")

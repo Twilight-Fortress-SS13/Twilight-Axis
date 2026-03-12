@@ -1,3 +1,7 @@
+// ==========================================================
+// AIR RUNES + BUFFS
+// ==========================================================
+
 /datum/status_effect/buff/rune_attack_speed
 	id = "rune_attack_speed"
 	duration = -1
@@ -15,14 +19,14 @@
 		owner.change_stat(STATKEY_SPD, -1)
 	. = ..()
 
+
 /datum/status_effect/buff/rune_echo
 	id = "rune_echo"
 	duration = -1
 	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = null
-
-/datum/status_effect/buff/rune_echo
 	var/proc_bonus = 25
+
 
 /datum/rune/air
 	element = RUNE_ELEMENT_AIR
@@ -33,13 +37,19 @@
 		return null
 	return target
 
+
 /datum/rune/air/wind
 	id = "air_wind"
 	name = "Ветер"
 	desc = "Ускоряет атаки владельца."
+	color = "#f0fbff"
 	cooldown = 0
 	proc_chance = 100
 	is_persistent = TRUE
+	carve_ingredients = list(
+		/obj/item/natural/feather = 1,
+		/obj/item/natural/fibers = 1
+	)
 
 /datum/rune/air/wind/on_persistent_apply(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(user)
@@ -49,13 +59,19 @@
 	if(user)
 		user.remove_status_effect(/datum/status_effect/buff/rune_attack_speed)
 
+
 /datum/rune/air/gust
 	id = "air_gust"
 	name = "Порыв"
 	desc = "Шанс оттолкнуть цель."
+	color = "#cfeeff"
 	cooldown = 45
 	proc_chance = 20
 	is_persistent = FALSE
+	carve_ingredients = list(
+		/obj/item/natural/feather = 1,
+		/obj/item/natural/thorn = 1
+	)
 
 /datum/rune/air/gust/on_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(!user || !isliving(target))
@@ -63,49 +79,71 @@
 
 	var/mob/living/L = target
 	var/dir_to_push = get_dir(user, L)
+
+	var/dist = scale_amount(1, applied)
+
 	var/turf/start = get_turf(L)
-	var/turf/dest = get_ranged_target_turf(start, dir_to_push, 1)
+	var/turf/dest = get_ranged_target_turf(start, dir_to_push, dist)
+
 	if(dest)
-		L.safe_throw_at(dest, 1, 1, user, force = MOVE_FORCE_STRONG)
+		L.safe_throw_at(dest, dist, 1, user, force = MOVE_FORCE_STRONG)
+
 
 /datum/rune/air/thunder
 	id = "air_thunder"
 	name = "Гром"
 	desc = "Наносит shock."
+	color = "#a9d7ff"
 	cooldown = 30
 	proc_chance = 35
 	is_persistent = FALSE
+	carve_ingredients = list(
+		/obj/item/rogueore/copper = 1,
+		/obj/item/natural/feather = 1
+	)
 
 /datum/rune/air/thunder/on_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	var/mob/living/L = get_living_target(target)
 	if(!L)
 		return
 
-	L.adjustStaminaLoss(18)
-	L.OffBalance(1 SECONDS)
+	L.adjustStaminaLoss(scale_amount(18, applied))
+	L.OffBalance(scale_duration(1 SECONDS, applied))
+
 
 /datum/rune/air/thinning
 	id = "air_thinning"
 	name = "Разрежение"
 	desc = "Наносит окси-урон на цель."
+	color = "#bfe6f5"
 	cooldown = 25
 	proc_chance = 30
 	is_persistent = FALSE
+	carve_ingredients = list(
+		/obj/item/natural/feather = 1,
+		/obj/item/natural/bone = 1
+	)
 
 /datum/rune/air/thinning/on_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	var/mob/living/L = get_living_target(target)
 	if(!L)
 		return
 
-	L.adjustOxyLoss(8)
+	L.adjustOxyLoss(scale_amount(8, applied))
+
 
 /datum/rune/air/echo
 	id = "air_echo"
 	name = "Эхо"
 	desc = "Повышает шанс срабатывания следующей руны."
+	color = "#ddefff"
 	cooldown = 30
 	proc_chance = 100
 	is_persistent = TRUE
+	carve_ingredients = list(
+		/obj/item/natural/bowstring = 1,
+		/obj/item/natural/feather = 1
+	)
 
 /datum/rune/air/echo/on_persistent_apply(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(user)
@@ -123,6 +161,7 @@
 		return FALSE
 
 	var/chance_to_roll = proc_chance
+
 	var/datum/status_effect/buff/rune_echo/E = user?.has_status_effect(/datum/status_effect/buff/rune_echo)
 	if(E)
 		chance_to_roll = min(chance_to_roll + E.proc_bonus, 100)
@@ -133,17 +172,23 @@
 
 	return TRUE
 
+
 /datum/rune/air/lightning
 	id = "air_lightning"
 	name = "Молния"
 	desc = "Имеет шанс на иммобилизацию противника."
+	color = "#8fc5ff"
 	cooldown = 40
 	proc_chance = 20
 	is_persistent = FALSE
+	carve_ingredients = list(
+		/obj/item/rogueore/copper = 1,
+		/obj/item/natural/glass = 1
+	)
 
 /datum/rune/air/lightning/on_trigger(obj/item/weapon, mob/living/user, atom/target, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	var/mob/living/L = get_living_target(target)
 	if(!L)
 		return
 
-	L.Immobilize(2 SECONDS)
+	L.Immobilize(scale_duration(2 SECONDS, applied))

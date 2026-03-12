@@ -96,6 +96,26 @@
 	"Эхо" = /datum/rune/air/echo \
 )
 
+#define RUNE_LIST_FIRE_MASTER list( \
+	"Павший волк" = /datum/rune/fire/fallen_crusader, \
+	"Пламя магии" = /datum/rune/fire/spellflame \
+)
+
+#define RUNE_LIST_WATER_MASTER list( \
+	"Режущий лед" = /datum/rune/water/razorice, \
+	"Пресыщение" = /datum/rune/water/vampirism \
+)
+
+#define RUNE_LIST_EARTH_MASTER list( \
+	"Каменная кожа" = /datum/rune/earth/stoneskin, \
+	"Конец времен" = /datum/rune/earth/apocalypse \
+)
+
+#define RUNE_LIST_AIR_MASTER list( \
+	"Лезвие" = /datum/rune/air/blade, \
+	"Казнь" = /datum/rune/air/execution \
+)
+
 #define RUNE_LIST_LOW list( \
 	"Огонь" = RUNE_LIST_FIRE_LOW, \
 	"Вода" = RUNE_LIST_WATER_LOW, \
@@ -110,9 +130,9 @@
 	"Воздух" = RUNE_LIST_AIR \
 )
 
-// #define RUNE_LIST_MASTER list( \
-// 	"Огонь" = RUNE_LIST_FIRE_MASTER, \
-// 	"Вода" = RUNE_LIST_WATER_MASTER, \
-// 	"Земля" = RUNE_LIST_EARTH_MASTER, \
-// 	"Воздух" = RUNE_LIST_AIR_MASTER \
-// )
+#define RUNE_LIST_MASTER list( \
+	"Огонь" = RUNE_LIST_FIRE_MASTER, \
+	"Вода" = RUNE_LIST_WATER_MASTER, \
+	"Земля" = RUNE_LIST_EARTH_MASTER, \
+	"Воздух" = RUNE_LIST_AIR_MASTER \
+)
