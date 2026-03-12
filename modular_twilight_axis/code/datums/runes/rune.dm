@@ -95,6 +95,8 @@
 /datum/rune/proc/get_runtime_cooldown(cooldown_mult = 1)
 	return round(cooldown * cooldown_mult)
 
+/datum/rune/proc/finalize_trigger(obj/item/weapon, datum/applied_rune/applied)
+	return finalize_runtime_trigger(weapon, applied, 1, 0)
 
 /datum/rune/proc/finalize_runtime_trigger(
 	obj/item/weapon,

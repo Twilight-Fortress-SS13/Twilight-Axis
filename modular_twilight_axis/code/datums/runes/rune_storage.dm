@@ -279,8 +279,12 @@
 
 	return TRUE
 
-/datum/component/rune_storage/proc/get_random_ready_on_hit_rune()
+/datum/component/rune_storage/proc/get_random_ready_on_hit_rune(mob/living/user, atom/target)
 	if(!length(applied_runes))
+		return null
+
+	var/obj/item/weapon = get_weapon()
+	if(!weapon)
 		return null
 
 	var/list/candidates = list()
@@ -292,7 +296,7 @@
 			continue
 		if(!(A.rune.trigger_flags & RUNE_TRIGGER_ON_HIT))
 			continue
-		if(!A.rune.can_trigger(get_weapon(), A))
+		if(!A.rune.can_trigger(weapon, user, target, src, A))
 			continue
 
 		candidates += A
@@ -303,12 +307,12 @@
 	return pick(candidates)
 
 /datum/component/rune_storage/proc/trigger_random_weapon_rune(mob/living/user, atom/target)
-	var/datum/applied_rune/A = get_random_ready_on_hit_rune()
-	if(!A || !A.rune)
-		return FALSE
-
 	var/obj/item/weapon = get_weapon()
 	if(!weapon)
+		return FALSE
+
+	var/datum/applied_rune/A = get_random_ready_on_hit_rune(user, target)
+	if(!A || !A.rune)
 		return FALSE
 
 	A.rune.on_trigger(weapon, user, target, src, A)
