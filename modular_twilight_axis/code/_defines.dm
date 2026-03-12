@@ -97,7 +97,7 @@
 )
 
 #define RUNE_LIST_FIRE_MASTER list( \
-	"Павший волк" = /datum/rune/fire/fallen_crusader, \
+	"Павший волк" = /datum/rune/fire/fallen_volf, \
 	"Пламя магии" = /datum/rune/fire/spellflame \
 )
 

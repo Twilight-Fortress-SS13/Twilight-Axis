@@ -1,15 +1,15 @@
 /datum/advclass/mercenary/twilight_runeblade
-	name = "Gronn Runeblade"
+	name = "Gronnic Runeblade"
 	tutorial = "Coming from the northern lands of Grimmoria, the Runeblades are masters of the Runes, holding knowledge of exotic ones, that helps them to survive in the wild and brings victory over their foes."
 	allowed_sexes = list(MALE)
-	allowed_races = list(/datum/species/human)
+	allowed_races = list(/datum/species/human/northern)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_runeblade
 	category_tags = list(CTAG_MERCENARY)
-	class_select_category = CLASS_CAT_RACIAL
+	class_select_category = CLASS_CAT_GRONN
 	maximum_possible_slots = 1
 	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'
-	subclass_languages = list(/datum/language/raneshi)
-	traits_applied = list(TRAIT_RUNEMASTER, TRAIT_MEDIUMARMOR)
+	subclass_languages = list(/datum/language/gronnic)
+	traits_applied = list(TRAIT_RUNEMASTER, TRAIT_MEDIUMARMOR, TRAIT_DUALWIELDER)
 	subclass_stats = list(
 		STATKEY_SPD = 1,
 		STATKEY_WIL = 2,
@@ -36,17 +36,21 @@
 	H.adjust_blindness(-3)
 	has_loadout = TRUE
 	to_chat(H, span_warning("It was a long journey to this country, but the one, who knows the magic older than bricks, that town was build from, but you finaly arrived to brind more glory to skills that you mastered in years on wild north."))
-	pants = /obj/item/clothing/under/roguetown/trou/leather/pontifex/raneshen
-	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen/new_coat
-	cloak = /obj/item/clothing/cloak/twilight_desert
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
+	pants = /obj/item/clothing/under/roguetown/chainlegs/kilt
+	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
+	gloves = /obj/item/clothing/gloves/roguetown/angle/gronn
+	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn
+	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/random
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
+	neck = /obj/item/clothing/neck/roguetown/leather
 	backl = /obj/item/storage/backpack/rogue/satchel
-	belt = /obj/item/storage/belt/rogue/leather/shalal
-	neck = 	/obj/item/clothing/neck/roguetown/leather
-	mask = /obj/item/clothing/mask/rogue/facemask/steel/miragefen_rogue
+	belt = /obj/item/storage/belt/rogue/leather
+	beltr = /obj/item/rogueweapon/stoneaxe/handaxe/copper
+	beltl = /obj/item/rogueweapon/stoneaxe/handaxe/copper
 	backpack_contents = list(
-		/obj/item/roguekey/mercenary,
-		/obj/item/storage/belt/rogue/pouch/coins/poor
+		/obj/item/roguekey/mercenary = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
+		/obj/item/rogueweapon/huntingknife/copper = 1
 		)
 	H.merctype = 2
 	H.AddComponent(/datum/component/combo_core/runeblade, 30 SECONDS, 3, 3)

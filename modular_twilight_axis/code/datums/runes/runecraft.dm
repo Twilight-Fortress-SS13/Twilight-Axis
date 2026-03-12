@@ -1,4 +1,4 @@
-/obj/item/rogueweapon/huntingknife/idagger/afterattack(atom/target, mob/living/user, proximity_flag, click_parameters)
+/obj/item/rogueweapon/huntingknife/afterattack(atom/target, mob/living/user, proximity_flag, click_parameters)
 	. = ..()
 	if(.)
 		return
@@ -10,7 +10,7 @@
 		var/obj/item/natural/stone/stone_target = target
 		try_carve_runestone(stone_target, user)
 
-/obj/item/rogueweapon/huntingknife/idagger/proc/try_carve_runestone(obj/item/natural/stone/stone_target, mob/living/user)
+/obj/item/rogueweapon/huntingknife/proc/try_carve_runestone(obj/item/natural/stone/stone_target, mob/living/user)
 	if(!stone_target || !user)
 		return FALSE
 
@@ -78,7 +78,7 @@
 	qdel(rune_preview)
 	return TRUE
 
-/obj/item/rogueweapon/huntingknife/idagger/proc/has_carve_ingredients_on_turf(turf/source_turf, list/ingredients)
+/obj/item/rogueweapon/huntingknife/proc/has_carve_ingredients_on_turf(turf/source_turf, list/ingredients)
 	if(!source_turf)
 		return FALSE
 
@@ -102,7 +102,7 @@
 
 	return TRUE
 
-/obj/item/rogueweapon/huntingknife/idagger/proc/consume_carve_ingredients_on_turf(turf/source_turf, list/ingredients)
+/obj/item/rogueweapon/huntingknife/proc/consume_carve_ingredients_on_turf(turf/source_turf, list/ingredients)
 	if(!source_turf)
 		return FALSE
 
@@ -127,7 +127,7 @@
 
 	return TRUE
 
-/obj/item/rogueweapon/huntingknife/idagger/proc/build_carve_ingredient_text(list/ingredients)
+/obj/item/rogueweapon/huntingknife/proc/build_carve_ingredient_text(list/ingredients)
 	if(!islist(ingredients) || !length(ingredients))
 		return "No additional ingredients are required."
 
@@ -144,7 +144,7 @@
 
 	return "Required: [english_list(parts)]."
 
-/obj/item/rogueweapon/huntingknife/idagger/proc/get_available_rune_choices(mob/living/user)
+/obj/item/rogueweapon/huntingknife/proc/get_available_rune_choices(mob/living/user)
 	var/list/runes = list()
 
 	if(HAS_TRAIT(user, TRAIT_RUNECARVER))
@@ -157,11 +157,11 @@
 	if(HAS_TRAIT(user, TRAIT_RUNEMASTER))
 		merge_rune_category_list(runes, RUNE_LIST_LOW)
 		merge_rune_category_list(runes, RUNE_LIST_BASIC)
-	// 	merge_rune_category_list(runes, RUNE_LIST_MASTER)
+		merge_rune_category_list(runes, RUNE_LIST_MASTER)
 
 	return runes
 
-/obj/item/rogueweapon/huntingknife/idagger/proc/merge_rune_category_list(list/target, list/source)
+/obj/item/rogueweapon/huntingknife/proc/merge_rune_category_list(list/target, list/source)
 	if(!islist(target) || !islist(source))
 		return
 

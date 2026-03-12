@@ -9,7 +9,7 @@
 	releasedrain = 0
 	chargedrain = 0
 	chargetime = 0
-	recharge_time = 20 SECONDS
+	recharge_time = 5 SECONDS
 
 	warnie = "spellwarning"
 	no_early_release = TRUE
@@ -22,6 +22,8 @@
 	charging_slowdown = 0
 	chargedloop = null
 	overlay_state = null
+
+	action_icon = 'modular_twilight_axis/icons/roguetown/misc/runebladespells.dmi'
 
 	var/skill_id = 0
 	var/effect_mult = 1
@@ -53,6 +55,7 @@
 /obj/effect/proc_holder/spell/self/runeblade/manifestation
 	name = "Rune Manifestation"
 	desc = "Next successful strike triggers one rune at +10% effect and +5% cooldown."
+	overlay_state = "manifestation"
 	skill_id = 1
 	effect_mult = 1.10
 	cooldown_mult = 1.05
@@ -63,6 +66,7 @@
 /obj/effect/proc_holder/spell/self/runeblade/overload
 	name = "Rune Overload"
 	desc = "Next successful strike triggers one rune at +20% effect, but damages the blade."
+	overlay_state = "overload"
 	skill_id = 2
 	effect_mult = 1.20
 	cooldown_mult = 1
@@ -73,6 +77,7 @@
 /obj/effect/proc_holder/spell/self/runeblade/harmony
 	name = "Rune Harmony"
 	desc = "Next successful strike triggers one rune at -20% effect and -20% cooldown."
+	overlay_state = "harmony"
 	skill_id = 3
 	effect_mult = 0.80
 	cooldown_mult = 0.80
@@ -83,6 +88,7 @@
 /obj/effect/proc_holder/spell/self/runeblade/saturation
 	name = "Rune Saturation"
 	desc = "Next successful strike triggers all non-persistent runes at -60% effect."
+	overlay_state = "saturation"
 	skill_id = 4
 	effect_mult = 0.40
 	cooldown_mult = 1
