@@ -50,12 +50,12 @@
 
 	var/msg = null
 	if(best?.action && SSerp?.action_message_renderer && best.action.message_tick)
-		msg = SSerp.action_message_renderer.build_message(best.action.message_tick, best)
+		msg = SSerp.action_message_renderer.build_message(best.action.message_tick, best, allow_knot_suffix = TRUE)
 
 	if(msg)
 		var/list/fs = controller.get_scene_force_speed_avg(active)
 		var/avg_force = fs ? (fs["force"] || SEX_FORCE_MID) : SEX_FORCE_MID
-		var/stam_cost = 2 * avg_force
+		var/stam_cost = 3 * avg_force
 		best?.actor_active?.stamina_add(-stam_cost)
 
 		controller.play_tick_effects(active, best, dt)
@@ -80,7 +80,7 @@
 
 /// Picks best link for message emission.
 /datum/erp_scene_runtime/proc/pick_best_message_link(list/active_links)
-	var/datum/erp_sex_link/best = null
+	var/list/tied = list()
 	var/best_w = -1
 
 	for(var/datum/erp_sex_link/L in active_links)
@@ -93,9 +93,14 @@
 
 		if(w > best_w)
 			best_w = w
-			best = L
+			tied = list(L)
+		else if(w == best_w)
+			tied += L
 
-	return best
+	if(!tied.len)
+		return null
+
+	return pick(tied)
 
 /// Marks scene started.
 /datum/erp_scene_runtime/proc/on_scene_started(list/active_links, datum/erp_sex_link/best)

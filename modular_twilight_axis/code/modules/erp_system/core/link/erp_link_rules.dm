@@ -36,3 +36,31 @@
 /// Template conditional (dullahan).
 /datum/erp_link_rules/proc/is_dullahan_scene(datum/erp_sex_link/L)
 	return L?.actor_passive?.is_dullahan_scene() || FALSE
+
+/// Template conditional (knot).
+/datum/erp_link_rules/proc/is_knot_scene(datum/erp_sex_link/L)
+	if(!L)
+		return FALSE
+
+	var/datum/erp_controller/C = L.session
+	if(!C || QDELETED(C))
+		return FALSE
+
+	var/mob/living/carbon/human/H = C.owner?.get_effect_mob()
+	if(!istype(H))
+		return FALSE
+
+	var/datum/erp_sex_organ/penis/P = null
+	if(istype(L.init_organ, /datum/erp_sex_organ/penis))
+		P = L.init_organ
+	else if(istype(L.target_organ, /datum/erp_sex_organ/penis))
+		P = L.target_organ
+
+	if(!P)
+		return FALSE
+
+	if(!P.have_knot)
+		return FALSE
+
+	C.knot_d?.get_penis_knot_ui_state(H)
+	return C.do_knot_action

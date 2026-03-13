@@ -576,6 +576,11 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
 
+/obj/item/clothing/suit/roguetown/shirt/kamishimo/ronin
+	name = "ronin kamishimo"
+	desc = "An oddly shaped a sleeveless vest-jacket of wandering ronin."
+	color = CLOTHING_BLUE
+
 /obj/item/clothing/suit/roguetown/shirt/kazengun_jacket
 	name = "kazengun jacket"
 	desc = "Classical Kazengun jacket."

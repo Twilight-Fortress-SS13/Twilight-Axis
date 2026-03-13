@@ -1,3 +1,5 @@
+GLOBAL_LIST_INIT(goblin_aggro, world.file2list("strings/rt/goblinaggrolines.txt"))
+
 /mob/living/carbon/human/species/goblin
 	name = "goblin"
 
@@ -147,9 +149,6 @@
 	H.update_transform()
 	return TRUE
 
-/mob/living/carbon/human/species/goblin/update_body_parts(redraw)
-	update_body()
-
 /mob/living/carbon/human/species/goblin/update_body()
 	remove_overlay(BODY_LAYER)
 	if(!dna || !dna.species)
@@ -212,10 +211,16 @@
 	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(after_creation)), 1 SECONDS)
 
+/mob/living/carbon/human/species/goblin/retaliate(mob/living/L)
+	var/newtarg = target
+	. = ..()
+	if(target != newtarg && npc_combat_dialogue(GLOB.goblin_aggro, list("laugh", "giggle", "chuckle", "cackle", "screech", "hiss", "growl"), prob_chance = 10))
+		pointed(target)
+
+
 /mob/living/carbon/human/species/goblin/handle_combat()
 	if(mode == NPC_AI_HUNT)
-		if(prob(2))
-			emote("laugh")
+		npc_combat_dialogue(GLOB.goblin_aggro, list("laugh", "giggle", "chuckle", "cackle", "screech", "hiss", "growl"), prob_chance = 10)
 	. = ..()
 
 /mob/living/carbon/human/species/goblin/after_creation()

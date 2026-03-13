@@ -1,5 +1,5 @@
-#define ERP_SCENE_AROUSAL_MULT 3.00
-#define ERP_SCENE_PAIN_MULT 0.75
+#define ERP_SCENE_AROUSAL_MULT 2.00
+#define ERP_SCENE_PAIN_MULT 1.00
 
 /datum/erp_scene_effects
 	var/datum/erp_controller/controller
@@ -21,8 +21,6 @@
 	var/p_arousal_sum = 0
 	var/a_pain_sum = 0
 	var/p_pain_sum = 0
-
-	var/list/asphyxia_by_actor = list()
 	for(var/datum/erp_sex_link/L in active_links)
 		if(!L || QDELETED(L) || !L.is_valid())
 			continue
@@ -79,12 +77,14 @@
 			if(mouth_actor)
 				var/add = 0
 				if(f >= SEX_FORCE_EXTREME)
-					add = 3
+					add = 8
 				else if(f >= SEX_FORCE_HIGH)
-					add = 2
+					add = 5
 
 				if(add > 0)
-					asphyxia_by_actor[mouth_actor] = (asphyxia_by_actor[mouth_actor] || 0) + add
+					var/mob/living/victim = mouth_actor.get_effect_mob()
+					if(victim)
+						victim.adjustOxyLoss(add)
 
 	if(n <= 0)
 		return
@@ -137,9 +137,7 @@
 /datum/erp_scene_effects/proc/_is_sucking_link(datum/erp_sex_link/L)
 	var/init_t = L.init_organ?.erp_organ_type
 	var/tgt_t  = L.target_organ?.erp_organ_type
-	if(!(init_t == SEX_ORGAN_MOUTH || tgt_t == SEX_ORGAN_MOUTH))
-		return FALSE
-	return !(init_t == SEX_ORGAN_MOUTH && tgt_t == SEX_ORGAN_MOUTH)
+	return (init_t == SEX_ORGAN_MOUTH && tgt_t == SEX_ORGAN_MOUTH)
 
 /datum/erp_scene_effects/proc/_get_mouth_actor_for_link(datum/erp_sex_link/L)
 	if(L.init_organ?.erp_organ_type == SEX_ORGAN_MOUTH)

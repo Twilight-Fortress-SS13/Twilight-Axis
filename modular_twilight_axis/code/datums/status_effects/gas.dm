@@ -55,7 +55,6 @@
 	owner.add_atom_colour(rgb(50, 150, 255), ADMIN_COLOUR_PRIORITY)
 
 	owner.apply_status_effect(STATUS_EFFECT_PARALYZED, duration)
-	ADD_TRAIT(owner, TRAIT_STUCKITEMS, id) 
 	
 	owner.lying = 0
 	owner.pixel_x = 0
@@ -99,7 +98,6 @@
 		if(ice_visual)
 			owner.cut_overlay(ice_visual)
 		owner.remove_atom_colour(ADMIN_COLOUR_PRIORITY)
-		REMOVE_TRAIT(owner, TRAIT_STUCKITEMS, id)
 
 		if(support)
 			support.unbuckle_all_mobs(force = TRUE)

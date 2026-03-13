@@ -3,6 +3,6 @@
 	name = "Облизать пальцы"
 	required_target_organ = SEX_ORGAN_HANDS
 	require_same_tile = FALSE
-	message_start = "{actor} {pose} помещает в рот палец {partner}."
-	message_tick = "{actor} {pose}, {force} и {speed} облизывает палец {partner}."
+	message_start = "{actor} помещает в рот палец {partner}."
+	message_tick = "{actor} {force} и {speed} облизывает палец {partner}."
 	message_finish =  "{actor} вытаскивает из рта палец {partner}."

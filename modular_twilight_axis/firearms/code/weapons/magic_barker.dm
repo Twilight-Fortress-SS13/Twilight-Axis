@@ -11,7 +11,7 @@
 	light_outer_range = 2
 	light_power = 1
 	light_color = "#f5a885"
-	possible_item_intents = list(/datum/intent/mace/strike/wood, /datum/intent/special/magicarc)
+	possible_item_intents = list(/datum/intent/mace/strike/wood)
 
 /obj/item/gun/ballistic/twilight_firearm/barker/barker_staff/getonmobprop(tag)
 	. = ..()

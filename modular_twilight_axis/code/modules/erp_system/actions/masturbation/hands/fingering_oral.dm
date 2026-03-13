@@ -3,6 +3,6 @@
 
 	name = "Фингеринг оральный"
 	required_target_organ = SEX_ORGAN_MOUTH
-	message_start = "{actor} {pose} касается своих губ {dullahan?отделенной головы :}пальцем."
-	message_tick = "{actor} {pose}, {force} и {speed} посасывает свой палец."
+	message_start = "{actor} касается своих губ {dullahan?отделенной головы :}пальцем."
+	message_tick = "{actor} {force} и {speed} посасывает свой палец."
 	message_finish =  "{actor} вытаскивает палец из рта {dullahan?своей отделенной головы :}."

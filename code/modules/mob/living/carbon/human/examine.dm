@@ -200,7 +200,7 @@
 					else
 						. += span_aiprivradio("[m1] сплетается с [partner_mob].")
 
-		if(!erp_hidden || can_see_hidden)
+		if(can_see_hidden)
 			var/datum/status_effect/erp_coating/groin/G = null
 			if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
 				G = has_status_effect(/datum/status_effect/erp_coating/groin)

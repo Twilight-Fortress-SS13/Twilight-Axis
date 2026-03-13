@@ -93,7 +93,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/tw_d_horns
 	name = "horns helmkleinod (-20 TRI)"
-	category = "Головные уборы"
+	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_horns
 	triumph_cost = 20
 
@@ -104,49 +104,49 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/tw_d_castle_red
 	name = "castle helmkleinod (-20 TRI)"
-	category = "Головные уборы"
+	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_castle_red
 	triumph_cost = 20
 
 /datum/loadout_item/tw_d_graggar
 	name = "bloodied star helmkleinod (-20 TRI)"
-	category = "Головные уборы"
+	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_graggar
 	triumph_cost = 20
-	
+
 /datum/loadout_item/tw_d_efreet
 	name = "afreet helmkleinod (-15 TRI)"
-	category = "Головные уборы"
+	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_efreet
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_feathers
 	name = "feathers accessory (-10 TRI)"
-	category = "Головные уборы"
+	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_feathers
 	triumph_cost = 10
 
 /datum/loadout_item/tw_d_oathtaker
 	name = "oathtaker symbol (-10 TRI)"
-	category = "Головные уборы"
+	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_oathtaker
 	triumph_cost = 10
 
 /datum/loadout_item/tw_d_windmill
 	name = "windmill helmkleinod (-15 TRI)"
-	category = "Головные уборы"
+	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_windmill
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_swan
 	name = "swan on lake (-15 TRI)"
-	category = "Головные уборы"
+	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_swan
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_dragon_red
 	name = "dragon's dread (-15 TRI)"
-	category = "Головные уборы"
+	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_dragon_red
 	triumph_cost = 15
 
@@ -214,12 +214,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Buckled Hat"
 	category = "Головные уборы"
 	path = /obj/item/clothing/head/roguetown/puritan
-
-/datum/loadout_item/gdhat
-	name = "Gravedigger's Hat (-5 TRI)"
-	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/duelhat/pretzel
-	triumph_cost = 5
 
 /datum/loadout_item/folded_hat
 	name = "Folded Hat"
@@ -1105,10 +1099,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Триумфы")
 	triumph_cost = 6
 
-/datum/loadout_item/triumph_weaponkitaxe
-	name = "Morphing Elixir, 'Valorian Axe' (-3 TRI)"
-	path = /obj/item/enchantingkit/triumph_weaponkit_axe
-	triumph_cost = 3
 
 // -5 TRI Minisection.
 
@@ -1343,7 +1333,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/dakken_zizhelm
 	category = list("Броня", "Донат")
 	donatitem = TRUE
- 
+
 /datum/loadout_item/donator_bigfoot_axe
 	name = "Donator Kit - Gilded GreatAxe - Required: Steel Greataxe"
 	category = list("Оружие", "Донат")
@@ -1355,13 +1345,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/zydrasiconocrown
 	category = list("Броня", "Донат")
 	donatitem = TRUE
-	
+
 /datum/loadout_item/donator_zydrasiconopauldrons
 	name = "Donator Kit - Iconoclast Pauldrons - Required: Lightweight Brigandine(Only men, no small races)"
 	path = /obj/item/enchantingkit/zydrasiconopauldrons
 	category = list("Броня", "Донат")
 	donatitem = TRUE
-	
+
 /datum/loadout_item/donator_eiren4
 	name = "Donator Kit - Darkwood's Embrace"
 	path = /obj/item/clothing/suit/roguetown/armor/longcoat/eiren
@@ -1379,7 +1369,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/zydrasiconosash
 	category = list("Броня", "Донат")
 	donatitem = TRUE
-	
+
 /datum/loadout_item/donator_zydras
 	name = "Donator Kit - Padded silky dress - Required: Silky Dress(No Small Races)"
 	category = list("Одежда", "Донат")
@@ -1608,6 +1598,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/drd_lsword
 	donatitem = TRUE
 
+/datum/loadout_item/donator_weaponkitaxe
+	name = "Donator Kit - Valorian Axe - Required: Iron Axe or an Iron Hatchet"
+	path = /obj/item/enchantingkit/triumph_weaponkit_axe
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkitaxealt
+	name = "Donator Kit - Doubleheaded Axe - Required: Iron Axe, Bronze Axe, Steel Axe, Battle Axe, Silver War Axe or a Psydonic War Axe."
+	path = /obj/item/enchantingkit/triumph_weaponkit_axedouble
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
 // Разное
 /datum/loadout_item/donat
 	name = "Музыкальная коробка"
@@ -1672,7 +1674,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donat/beer
 	name = "Пиво"
 	category = list("Разное", "Донат")
-	path = /obj/item/reagent_containers/glass/bottle/rogue/beer
+	path = /obj/item/reagent_containers/glass/bottle/rogue/beer/blackgoat
 	donatitem = TRUE
 
 /datum/loadout_item/donat/wine
@@ -1864,7 +1866,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/templar/necran
 	donatitem = TRUE
-	
+
 /datum/loadout_item/donat/tabard/crusader/psydon
 	name = "Табард Псайдона"
 	category = list("Плащи", "Донат")
@@ -1943,6 +1945,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Эоранская маска"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/eoramask
+	donatitem = TRUE
+
+/datum/loadout_item/donat/xylixmask
+	name = "Ксайликситская маска"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/mask/rogue/xylixmask
 	donatitem = TRUE
 
 /datum/loadout_item/donat/eyepatchfake
@@ -2038,63 +2046,63 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/tw_d_horns_donat
-	name = "horns helmkleinod"
+	name = "horns helmkleinod(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_horns
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_castle_red_donat
-	name = "castle helmkleinod"
+	name = "castle helmkleinod(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_castle_red
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_graggar_donat
-	name = "bloodied star helmkleinod"
+	name = "bloodied star helmkleinod(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_graggar
 	donatitem = TRUE
 	donat_tier = 2
-	
+
 /datum/loadout_item/tw_d_efreet_donat
-	name = "afreet helmkleinod"
+	name = "afreet helmkleinod(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_efreet
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_feathers_donat
-	name = "feathers accessory"
+	name = "feathers accessory(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_feathers
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_oathtaker_donat
-	name = "oathtaker symbol"
+	name = "oathtaker symbol(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_oathtaker
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_windmill_donat
-	name = "windmill helmkleinod"
+	name = "windmill helmkleinod(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_windmill
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_swan_donat
-	name = "swan on lake"
+	name = "swan on lake(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_swan
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_dragon_red_donat
-	name = "dragon's dread"
+	name = "dragon's dread(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_dragon_red
 	donatitem = TRUE

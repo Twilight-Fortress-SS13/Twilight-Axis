@@ -35,4 +35,13 @@
 /// Args: (note_id, damage_mult, damage_type, note_name)
 #define COMSIG_SOUNDBREAKER_PRIME_NOTE "soundbreaker_prime_note"
 #define COMPONENT_SOUNDBREAKER_PRIMED (1<<0)
-//SOUNDBREAKER - BEGIN//
+
+/// Successful kick
+#define COMSIG_SOUNDBREAKER_KICK_SUCCESS "soundbreaker_kick_success"
+//SOUNDBREAKER - END//
+
+//RONIN - BEGIN//
+#define COMSIG_LIVING_TAKE_DAMAGE "living_take_damage"
+#define COMSIG_MOB_PARRY_SUCCESS "mob_dodge_success"
+#define COMSIG_MOB_QUERY_PARRY_WEAPON "mob_query_parry_weapon"
+//RONIN - END//

@@ -6,6 +6,7 @@
 	name = "newmoon hood"
 	desc = "Сотканный из плотного материала капюшон Новолунья. Достаточно крепок на разрыв и ощущается теплым за счет подкладки. Секрет изготовления ткани остается загадкой даже для самих Новолунцев."
 	color = "#78a3c9"
+	slot_flags = ITEM_SLOT_HEAD
 	armor = ARMOR_NEWMOON_HOOD
 	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_TWIST)
 	body_parts_covered = HEAD|HAIR|EARS|NOSE|NECK

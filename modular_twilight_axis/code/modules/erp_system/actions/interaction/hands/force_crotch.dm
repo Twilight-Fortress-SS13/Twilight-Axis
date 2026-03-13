@@ -12,6 +12,6 @@
 
 	target_suck_sound = TRUE
 
-	message_start = "{actor} {pose} хватает {dullahan?отделенную :}головы {partner}, прижимая к своей промежности."
-	message_tick = "{actor} {pose}, {force} и {speed} водит лицом {dullahan?отделенной головы :}{partner} по своей промежности."
+	message_start = "{actor} хватает {dullahan?отделенную :}головы {partner}, прижимая к своей промежности."
+	message_tick = "{actor} {force} и {speed} водит лицом {dullahan?отделенной головы :}{partner} по своей промежности."
 	message_finish =  "{actor} отпускает {dullahan?отделенную :}голову {partner}."

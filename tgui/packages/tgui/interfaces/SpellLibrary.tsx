@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
+
 
 type Spell = {
   name: string;
@@ -13,157 +14,154 @@ type Spell = {
   can_afford: boolean;
 };
 
+type SpellPool = {
+  name: string;
+  remaining: number;
+  max: number;
+};
+
 type Data = {
-  user_points: number;
+  user_points?: number;
+  spell_pools?: SpellPool[];
   hide_unavailable: boolean;
   spells: Spell[];
 };
 
-
 type SortDirection = 'asc' | 'desc';
 
-export const SpellLibrary = (props, context) => {
+export const SpellLibrary = () => {
   const { act, data } = useBackend<Data>(); 
-  
-  if (!data) {
-    return (
-      <Window title="Grimoire of Arcane Arts" width={700} height={600} theme="dark">
-        <Window.Content>Loading Spells...</Window.Content>
-      </Window>
-    );
-  }
-
-  const { user_points, hide_unavailable, spells } = data;
 
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc'); 
   const [activeTier, setActiveTier] = useState<number | null>(null);
 
+  if (!data) {
+    return (
+      <Window title="Grimoire of Arcane Arts" width={700} height={600} theme="dark">
+        <Window.Content>Loading...</Window.Content>
+      </Window>
+    );
+  }
 
-  const getBtnStyle = (isActive: boolean) => ({
-    minWidth: '70px', 
-    textAlign: 'center',
-    border: `1px solid ${isActive ? '#4caf50' : '#2c3038'}`, 
-    backgroundColor: isActive ? '#4caf50' : '#2c3038', 
-    color: isActive ? '#fff' : '#c5c6c7', 
-    lineHeight: '18px',
-    fontSize: '11px',
-    padding: '2px 6px',
-    cursor: 'pointer',
-    userSelect: 'none',
-    marginLeft: '4px',
-    borderRadius: '3px'
-  });
+  const { user_points, spell_pools, hide_unavailable, spells = [] } = data;
 
-  const getTierFilterBtnStyle = (isActive: boolean) => ({
+  const uniqueTiers = useMemo(() => {
+    return Array.from(new Set(spells.map(s => s.tier))).sort((a, b) => a - b);
+  }, [spells]);
+
+  const processedSpells = useMemo(() => {
+    let result = [...spells];
+    if (activeTier !== null) {
+      result = result.filter(s => s.tier === activeTier);
+    }
+    result.sort((a, b) => {
+      const diff = a.cost - b.cost;
+      return sortDirection === 'asc' ? diff : -diff;
+    });
+    return result;
+  }, [spells, activeTier, sortDirection]);
+
+
+  const btnBaseStyle = (isActive: boolean) => ({
     minWidth: '40px', 
-    textAlign: 'center',
-    border: `1px solid ${isActive ? '#4caf50' : '#2c3038'}`,
+    textAlign: 'center' as const,
+    border: `1px solid ${isActive ? '#4caf50' : '#444'}`,
     backgroundColor: isActive ? '#4caf50' : '#2c3038',
     color: isActive ? '#fff' : '#c5c6c7',
     lineHeight: '18px',
     fontSize: '11px',
-    padding: '2px 6px',
-    cursor: 'pointer',
-    userSelect: 'none',
+    padding: '2px 8px',
+    cursor: 'pointer' as const,
+    userSelect: 'none' as const,
+    borderRadius: '3px',
     marginLeft: '4px',
-    borderRadius: '3px'
-  });
-
-  const uniqueTiers = Array.from(new Set((spells || []).map(spell => spell.tier)))
-    .sort((a, b) => a - b);
-
-  const filteredByTierSpells = activeTier !== null
-    ? (spells || []).filter(spell => spell.tier === activeTier)
-    : (spells || []);
-
-  const sortedAndFilteredSpells = [...filteredByTierSpells].sort((a, b) => {
-    const comparison = a.cost - b.cost;
-    return sortDirection === 'asc' ? comparison : -comparison;
+    transition: 'all 0.1s ease-in-out'
   });
 
   return (
     <Window
       title="Grimoire of Arcane Arts"
       width={700}
-      height={600}
+      height={650}
       theme="dark"
     >
       <Window.Content>
         <div style={{ 
           display: 'flex', 
-          flexDirection: 'column', 
+          flexDirection: 'column' as const, 
           height: '100%',
           backgroundImage: 'url("bg_texture.png")', 
           backgroundSize: 'cover',
           backgroundAttachment: 'fixed',
-          padding: '6px'
+          padding: '8px',
+          backgroundColor: '#0b0c10'
         }}>
           
           <div style={{ 
-            padding: '6px 10px',
+            padding: '8px 12px',
             marginBottom: '6px', 
             backgroundColor: 'rgba(11, 12, 16, 0.95)',
             border: '1px solid #666', 
             borderRadius: '4px',
             display: 'flex', 
-            justifyContent: 'space-between', 
+            justifyContent: 'space-between' as const, 
             alignItems: 'center',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.5)',
-            flexShrink: 0
+            boxShadow: '0 4px 10px rgba(0,0,0,0.5)'
           }}>
-            <div style={{ color: '#c5c6c7', fontWeight: 'bold', fontSize: '1.1em', textShadow: '1px 1px 2px black', marginRight: 'auto' }}>
-              Point: {user_points}
+            <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' as const }}>
+              {user_points !== undefined && (
+                <div style={{ color: '#c5c6c7', fontWeight: 'bold' as const, fontSize: '1.1em' }}>
+                  Energy: {user_points}
+                </div>
+              )}
+              {spell_pools?.map(pool => (
+                <div key={pool.name} style={{ borderRight: '1px solid #444', paddingRight: '10px' }}>
+                  <span style={{ color: '#888', fontSize: '10px', textTransform: 'uppercase' }}>{pool.name}</span>
+                  <div style={{ color: '#fff', fontWeight: 'bold' as const }}>{pool.remaining} / {pool.max}</div>
+                </div>
+              ))}
             </div>
 
-            <div style={{ display: 'flex', marginRight: '10px' }}>
-              <div style={{ color: '#888', fontSize: '10px', marginRight: '5px', alignSelf: 'center' }}>Sort by:</div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ color: '#888', fontSize: '10px', marginRight: '5px' }}>SORT:</div>
               <div
-                className={"btn selected"} 
-                onClick={() => setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')}
-                style={getBtnStyle(true)} 
+                className="btn"
+                style={btnBaseStyle(true)}
+                onClick={() => setSortDirection(d => d === 'asc' ? 'desc' : 'asc')}
               >
                 Cost {sortDirection === 'asc' ? '▲' : '▼'}
               </div>
-            </div>
-            
-            <div
-              className={"btn " + (hide_unavailable ? "selected" : "")}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                act('toggle_filter');
-              }}
-              style={getBtnStyle(hide_unavailable)} 
-            >
-              {hide_unavailable ? "Show All" : "Hide Locked"}
+              <div
+                className={"btn " + (hide_unavailable ? "selected" : "")}
+                style={{ ...btnBaseStyle(hide_unavailable), minWidth: '80px', marginLeft: '10px' }}
+                onClick={() => act('toggle_filter')}
+              >
+                {hide_unavailable ? "Show All" : "Hide Locked"}
+              </div>
             </div>
           </div>
 
           <div style={{
-            padding: '6px 10px',
-            marginBottom: '6px',
-            backgroundColor: 'rgba(11, 12, 16, 0.95)',
-            border: '1px solid #666', 
+            padding: '4px 10px',
+            marginBottom: '8px',
+            backgroundColor: 'rgba(31, 40, 51, 0.8)',
+            border: '1px solid #444',
             borderRadius: '4px',
             display: 'flex',
             alignItems: 'center',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.5)',
-            flexShrink: 0
           }}>
-            <div style={{ color: '#888', fontSize: '10px', marginRight: '5px' }}>Filter by Tier:</div>
+            <div style={{ color: '#888', fontSize: '10px', marginRight: '8px' }}>FILTER BY TIER:</div>
             <div
-              className={"btn " + (activeTier === null ? "selected" : "")}
+              style={btnBaseStyle(activeTier === null)}
               onClick={() => setActiveTier(null)}
-              style={getTierFilterBtnStyle(activeTier === null)}
             >
               All
             </div>
             {uniqueTiers.map(tier => (
               <div
-                key={`tier-${tier}`}
-                className={"btn " + (activeTier === tier ? "selected" : "")}
+                key={`t-${tier}`}
+                style={btnBaseStyle(activeTier === tier)}
                 onClick={() => setActiveTier(tier)}
-                style={getTierFilterBtnStyle(activeTier === tier)}
               >
                 T{tier}
               </div>
@@ -171,110 +169,96 @@ export const SpellLibrary = (props, context) => {
           </div>
 
           <div style={{ 
-            flex: '1', 
+            flexGrow: 1, 
             overflowY: 'auto', 
             display: 'flex', 
-            flexWrap: 'wrap', 
-            alignContent: 'flex-start',
-            paddingRight: '2px'
+            flexWrap: 'wrap' as const, 
+            alignContent: 'flex-start'
           }}>
-            {sortedAndFilteredSpells.map((spell) => {
+            {processedSpells.map((spell) => {
               if (hide_unavailable && !spell.is_known && !spell.can_afford) {
                 return null;
               }
 
               const isLocked = !spell.is_known && !spell.can_afford;
               const borderColor = spell.is_known ? '#4caf50' : (isLocked ? '#f44336' : '#666');
-              const opacity = isLocked ? 0.75 : 1;
-              const bgColor = spell.is_known ? 'rgba(27, 38, 27, 0.95)' : 'rgba(31, 40, 51, 0.95)';
+              const bgColor = spell.is_known ? 'rgba(27, 38, 27, 0.96)' : 'rgba(31, 40, 51, 0.96)';
 
               return (
                 <div key={spell.path} style={{ 
                   width: '32%', 
                   margin: '0.6%', 
                   boxSizing: 'border-box',
-                  display: 'flex',
-                  flexDirection: 'column'
+                  display: 'flex'
                 }}>
                   <div className="candystripe" style={{ 
                     border: `1px solid ${borderColor}`,
-                    padding: '12px',
+                    padding: '10px',
                     display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%',
-                    opacity: opacity,
+                    flexDirection: 'column' as const,
+                    width: '100%',
+                    opacity: isLocked ? 0.7 : 1,
                     backgroundColor: bgColor,
                     borderRadius: '4px',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.5)',
-                    position: 'relative'
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
                   }}>
                     
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                      <span style={{ fontWeight: 'bold', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' as const, marginBottom: '6px' }}>
+                      <span style={{ fontWeight: 'bold' as const, color: '#fff', fontSize: '12px', whiteSpace: 'nowrap' as const, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {spell.name}
                       </span>
-                      <span style={{ background: borderColor, color: '#0b0c10', padding: '0px 4px', fontSize: '10px', borderRadius: '3px', fontWeight: 'bold', lineHeight: '14px' }}>
+                      <span style={{ background: borderColor, color: '#000', padding: '0px 5px', fontSize: '10px', borderRadius: '3px', fontWeight: 'bold' as const }}>
                         T{spell.tier}
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', marginBottom: '4px', backgroundColor: 'rgba(0,0,0,0.3)', padding: '3px', borderRadius: '3px' }}>
+                    <div style={{ display: 'flex', marginBottom: '8px', gap: '8px' }}>
                        <div style={{ 
-                          width: '64px', height: '64px', marginRight: '6px', 
-                          border: '1px solid #333', background: '#000',
-                          flexShrink: 0,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center'
+                          width: '54px', height: '54px', 
+                          border: '1px solid #444', background: '#000',
+                          flexShrink: 0, padding: '2px'
                        }}>
                           {spell.img64 ? (
                             <img 
                               src={`data:image/png;base64,${spell.img64}`} 
-                              style={{ maxWidth: '100%', maxHeight: '100%', imageRendering: 'pixelated' }} 
+                              style={{ width: '100%', height: '100%', imageRendering: 'pixelated' as const }} 
                             />
                           ) : (
-                            <span style={{ color: '#555', fontSize: '16px' }}>?</span>
+                            <div style={{ textAlign: 'center' as const, lineHeight: '50px', color: '#444' }}>?</div>
                           )}
                        </div>
-                       <div style={{ fontSize: '10px', color: '#aab', height: '4.4em', overflow: 'hidden', lineHeight: '1.1' }}>
+                       <div style={{ fontSize: '10.5px', color: '#aab', height: '52px', overflow: 'hidden', lineHeight: '1.2' }}>
                          {spell.desc}
                        </div>
                     </div>
 
+                    
                     <div style={{ marginTop: 'auto' }}>
                       {spell.is_known ? (
-                        <div className="btn disabled" style={{ 
-                            width: '100%', textAlign: 'center', 
-                            border: '1px solid #4caf50', color: '#4caf50', background: 'transparent',
-                            fontWeight: 'bold', fontSize: '10px', padding: '1px 0', lineHeight: '16px'
+                        <div style={{ 
+                            width: '100%', textAlign: 'center' as const, border: '1px solid #4caf50', 
+                            color: '#4caf50', padding: '3px 0', fontSize: '10px', fontWeight: 'bold' as const
                         }}>
                           LEARNED
                         </div>
                       ) : (
                         <div
                            className={"btn " + (spell.can_afford ? "" : "disabled")}
-                           onClick={(e) => {
-                             e.preventDefault();
-                             e.stopPropagation();
-                             if (spell.can_afford) {
-                               act('learn', { path: spell.path });
-                             }
-                           }}
+                           onClick={() => spell.can_afford && act('learn', { path: spell.path })}
                            style={{ 
                              width: '100%', 
-                             textAlign: 'center',
+                             textAlign: 'center' as const,
                              backgroundColor: spell.can_afford ? '#2e7d32' : '#2c3038', 
-                             color: spell.can_afford ? '#fff' : '#555',
-                             fontWeight: 'bold',
+                             color: spell.can_afford ? '#fff' : '#777',
+                             fontWeight: 'bold' as const,
                              fontSize: '10px',
                              border: spell.can_afford ? '1px solid #4caf50' : '1px solid transparent',
-                             boxShadow: spell.can_afford ? '0 0 5px rgba(76, 175, 80, 0.4)' : 'none',
-                             transition: 'all 0.2s',
-                             lineHeight: '16px',
-                             padding: '1px 0',
-                             cursor: spell.can_afford ? 'pointer' : 'default',
-                             userSelect: 'none'
+                             padding: '4px 0',
+                             cursor: (spell.can_afford ? 'pointer' : 'default') as const,
+                             borderRadius: '3px'
                            }}
                         >
-                          {spell.can_afford ? `WEAVE (${spell.cost} PT)` : `${spell.cost} PT REQUIRED`}
+                          {spell.can_afford ? `WEAVE (${spell.cost} PT)` : `LOCKED (${spell.cost} PT)`}
                         </div>
                       )}
                     </div>
