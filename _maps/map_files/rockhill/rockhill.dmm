@@ -3485,13 +3485,6 @@
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/garrison)
-"aRn" = (
-/obj/structure/fluff/traveltile/goblincave{
-	aportalid = "goblincavein4";
-	aportalgoesto = "goblincaveout4"
-	},
-/turf/open/floor/rogue/dirt,
-/area/rogue/under/town/sewer)
 "aRo" = (
 /obj/structure/table/wood/large_table/south_west,
 /obj/item/cooking/platter/silver,
@@ -5428,13 +5421,6 @@
 /obj/structure/flora/roguegrass/herb/atropa,
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/woodsrat/north)
-"brz" = (
-/obj/structure/fluff/traveltile/goblincave{
-	aportalid = "goblincavein5";
-	aportalgoesto = "goblincaveout5"
-	},
-/turf/open/floor/rogue/dirt,
-/area/rogue/under/town/sewer)
 "brB" = (
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/under/underdark/south)
@@ -6833,6 +6819,12 @@
 	icon_state = "vertw"
 	},
 /area/rogue/indoors/town)
+"bLn" = (
+/obj/structure/mineral_door/wood/deadbolt{
+	dir = 8
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/indoors/shelter/mountains)
 "bLq" = (
 /obj/machinery/light/rogue/torchholder{
 	dir = 4
@@ -13854,13 +13846,6 @@
 /obj/structure/hotspring/border/twelve,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors/town/grovercunder)
-"dqL" = (
-/obj/structure/fluff/traveltile/goblincave{
-	aportalgoesto = "goblincaveout3";
-	aportalid = "goblincavein3"
-	},
-/turf/open/floor/rogue/cobble,
-/area/rogue/under/town/sewer)
 "dqS" = (
 /obj/structure/roguewindow,
 /turf/open/floor/rogue/churchbrick,
@@ -21393,13 +21378,6 @@
 /obj/structure/fluff/statue/gargoyle/moss,
 /turf/open/floor/rogue/church,
 /area/rogue/outdoors/town/rockhill)
-"fip" = (
-/obj/structure/fluff/traveltile/goblincave{
-	aportalgoesto = "goblincaveout2";
-	aportalid = "goblincavein2"
-	},
-/turf/open/floor/rogue/cobble,
-/area/rogue/under/town/sewer)
 "fiu" = (
 /obj/structure/rack/rogue/shelf/big,
 /turf/open/floor/rogue/blocks/stonered,
@@ -22834,12 +22812,6 @@
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/shop)
-"fBx" = (
-/obj/structure/fluff/railing/border{
-	dir = 9
-	},
-/turf/open/water/cleanshallow,
-/area/rogue/under/town/sewer)
 "fBC" = (
 /obj/machinery/light/rogue/firebowl/standing/blue,
 /turf/open/floor/rogue/churchrough{
@@ -35998,10 +35970,6 @@
 	},
 /turf/open/floor/rogue/blocks/newstone,
 /area/rogue/indoors/town/manor/rockhill)
-"iPS" = (
-/obj/structure/glowshroom,
-/turf/open/water/swamp,
-/area/rogue/under/town/sewer)
 "iPU" = (
 /obj/structure/table/wood{
 	dir = 8;
@@ -36818,6 +36786,13 @@
 /obj/structure/chair/stool/rogue,
 /turf/open/floor/rogue/twig,
 /area/rogue/indoors)
+"jbx" = (
+/obj/structure/fluff/traveltile/goblincave{
+	aportalgoesto = "goblincaveout2";
+	aportalid = "goblincavein2"
+	},
+/turf/open/floor/rogue/cobble,
+/area/rogue/under/town/sewer)
 "jbC" = (
 /obj/effect/wisp/prestidigitation{
 	color = "#ffff00";
@@ -38216,13 +38191,6 @@
 	},
 /turf/open/floor/rogue/carpet/lord/center,
 /area/rogue/indoors/town/manor/rockhill)
-"jrW" = (
-/obj/structure/fluff/traveltile/goblincave{
-	aportalgoesto = "goblincaveout8";
-	aportalid = "goblincavein8"
-	},
-/turf/open/floor/rogue/naturalstone,
-/area/rogue/indoors/shelter/mountains)
 "jsb" = (
 /obj/structure/flora/newtree,
 /turf/open/floor/rogue/grassyel,
@@ -42959,6 +42927,10 @@
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cavewet)
+"kBq" = (
+/obj/structure/glowshroom,
+/turf/open/water/swamp,
+/area/rogue/under/town/sewer)
 "kBs" = (
 /obj/structure/rack/rogue,
 /obj/item/reagent_containers/glass/bucket,
@@ -59073,6 +59045,13 @@
 	},
 /turf/closed/mineral/rogue,
 /area/rogue/outdoors/mountains)
+"oGz" = (
+/obj/structure/fluff/traveltile/goblincave{
+	aportalid = "goblincavein6";
+	aportalgoesto = "goblincaveout6"
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/sewer)
 "oGF" = (
 /turf/closed/wall/mineral/rogue/wooddark/window,
 /area/rogue/outdoors/town/roofs)
@@ -63819,8 +63798,8 @@
 /area/rogue/outdoors/mountains/decap/somewhere)
 "pRr" = (
 /obj/structure/fluff/traveltile/goblincave{
-	aportalid = "goblincavein1";
-	aportalgoesto = "goblincaveout1"
+	aportalgoesto = "goblincaveout3";
+	aportalid = "goblincavein3"
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/town/sewer)
@@ -65828,6 +65807,13 @@
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/inq/shipwardroom)
+"qrG" = (
+/obj/structure/fluff/traveltile/goblincave{
+	aportalgoesto = "goblincaveout7";
+	aportalid = "goblincavein7"
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/indoors/shelter/mountains)
 "qrL" = (
 /turf/closed/wall/mineral/rogue/wooddark,
 /area/rogue/indoors/inq/basement/shipshold)
@@ -66883,13 +66869,6 @@
 	},
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/manor/rockhill)
-"qFj" = (
-/obj/structure/fluff/traveltile/goblincave{
-	aportalgoesto = "goblincaveout9";
-	aportalid = "goblincavein9"
-	},
-/turf/open/floor/rogue/naturalstone,
-/area/rogue/indoors/shelter/mountains)
 "qFk" = (
 /obj/structure/roguewindow/harem3,
 /turf/open/floor/rogue/tile,
@@ -68927,6 +68906,13 @@
 /obj/item/reagent_containers/glass/bucket,
 /turf/open/floor/rogue/tile,
 /area/rogue/under/town/basement)
+"rkn" = (
+/obj/structure/fluff/traveltile/goblincave{
+	aportalgoesto = "goblincaveout9";
+	aportalid = "goblincavein9"
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/indoors/shelter/mountains)
 "rko" = (
 /obj/structure/bed/rogue/shit{
 	pixel_y = 8
@@ -69553,6 +69539,13 @@
 /obj/structure/table/wood/poor,
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors)
+"rrP" = (
+/obj/structure/fluff/traveltile/goblincave{
+	aportalid = "goblincavein1";
+	aportalgoesto = "goblincaveout1"
+	},
+/turf/open/floor/rogue/cobble,
+/area/rogue/under/town/sewer)
 "rrQ" = (
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town/church/chapel)
@@ -71409,6 +71402,13 @@
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors)
+"rQl" = (
+/obj/structure/fluff/traveltile/goblincave{
+	aportalid = "goblincavein4";
+	aportalgoesto = "goblincaveout4"
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/sewer)
 "rQm" = (
 /obj/structure/table/wood{
 	density = 0;
@@ -80190,13 +80190,6 @@
 /obj/item/broom,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/town/magician/tower)
-"udL" = (
-/obj/structure/fluff/traveltile/goblincave{
-	aportalgoesto = "goblincaveout7";
-	aportalid = "goblincavein7"
-	},
-/turf/open/floor/rogue/naturalstone,
-/area/rogue/indoors/shelter/mountains)
 "udO" = (
 /obj/structure/mineral_door/wood/donjon/stone{
 	lockid = "church"
@@ -88224,8 +88217,8 @@
 /area/rogue/indoors/town/warden)
 "wle" = (
 /obj/structure/fluff/traveltile/goblincave{
-	aportalid = "goblincavein6";
-	aportalgoesto = "goblincaveout6"
+	aportalid = "goblincavein5";
+	aportalgoesto = "goblincaveout5"
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/under/town/sewer)
@@ -88421,6 +88414,13 @@
 /obj/machinery/light/rogue/candle/blue/l,
 /turf/open/floor/rogue/tile,
 /area/rogue/under/town/sewer)
+"wnI" = (
+/obj/structure/fluff/traveltile/goblincave{
+	aportalgoesto = "goblincaveout8";
+	aportalid = "goblincavein8"
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/indoors/shelter/mountains)
 "wnR" = (
 /obj/structure/fluff/railing/wood{
 	dir = 1;
@@ -91565,6 +91565,12 @@
 /obj/item/kitchen/rollingpin,
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/rockharbor)
+"xcd" = (
+/obj/structure/fluff/railing/border{
+	dir = 9
+	},
+/turf/open/water/cleanshallow,
+/area/rogue/under/town/sewer)
 "xcj" = (
 /obj/structure/flora/newleaf,
 /obj/structure/flora/newbranch/leafless{
@@ -262178,9 +262184,9 @@ gLf
 gLf
 lrs
 jQS
-aRn
-brz
+rQl
 wle
+oGz
 iyZ
 gLf
 lrs
@@ -298909,7 +298915,7 @@ bEw
 vKd
 tft
 cGK
-fBx
+xcd
 tnL
 lEn
 gMO
@@ -299343,7 +299349,7 @@ vKd
 gMO
 lEn
 gMO
-iPS
+kBq
 gLf
 gLf
 gLf
@@ -314897,9 +314903,9 @@ vRu
 vRu
 vRu
 jQS
+rrP
+jbx
 pRr
-fip
-dqL
 jQS
 vRu
 vRu
@@ -400920,7 +400926,7 @@ vIa
 vIa
 vIa
 vIa
-fZe
+bLn
 fZe
 vIa
 vIa
@@ -415190,9 +415196,9 @@ fZe
 fZe
 fZe
 fON
-udL
-jrW
-qFj
+qrG
+wnI
+rkn
 fON
 iyK
 iyK
