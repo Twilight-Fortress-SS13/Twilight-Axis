@@ -662,3 +662,36 @@
       ingame) and delete the unneeded ones. Despite some of the tags, changelogs should
       generally represent how a player might be affected by the changes rather than
       a summary of the PR''s contents. -->'
+2026-03-13:
+  Ldip999:
+  - rscadd: New table to armor assess
+  - qol: TGUI Chat now uses dynamic tracking tolerance
+  Ryan180602:
+  - code_imp: heretic mob weapons ash on heretic mob death
+  - bugfix: Combat Aware balloons shows up on the attacker once more.
+  - balance: Combat Aware balloons show aim-zone and not hit-zone.
+  WeNeedMorePhoron:
+  - rscadd: Make forest actually spawn leylines.
+  - bugfix: Simple mobs should no longer aggro on people way off screen.
+  - rscadd: Outlaw gears - including armor when dismembered now dust on drop.
+  - rscadd: Leyline spawn rates reduced massively for forest and by half for bog
+  - rscadd: Leyline light range lowered to 3
+  - rscadd: Brazier is now destructible with 200 integrity.
+  - rscadd: You get an informative message telling you are wearing armor of the wrong
+      armor class and its penalty and when you remove them properly.
+  - rscadd: Spell examination now give you a detailed breakdown on factors affecting
+      your charge time, cooldown and cost
+  - bugfix: All spells now charge its stamina cost properly instead of costing 0.
+      This was a major bug for at least a few weeks.
+  - rscdel: Removed the Icon updates and icon cache subsystem ported from Scarlet.
+      Report any oddity. This should improve or at least have no impact on server
+      performance.
+  - rscadd: Re-enable tabs on character setup page
+  Wildwestmars:
+  - rscadd: Added keybind for set pose.
+  eirenxiv:
+  - bugfix: fixed needle repair on non-clothing
+  - balance: scabbards that parry now repair with hammer only
+  - rscdel: Removed Malum T1 "Rework"
+  - bugfix: fixed malum T3 Repair overcapping, removing armour rating and more
+  - bugfix: fixed spectacles not working in head slot
