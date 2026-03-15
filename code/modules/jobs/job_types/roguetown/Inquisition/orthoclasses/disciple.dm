@@ -75,6 +75,7 @@
 				wrists = /obj/item/clothing/wrists/roguetown/bracers/psythorns
 				neck = /obj/item/clothing/neck/roguetown/psicross/silver
 				id = /obj/item/clothing/ring/signet/silver
+				change_origin(H, /datum/virtue/origin/otava, "Holy order")
 			if("Naledian - Lightweight, Arcyne-Martiality")
 				head = /obj/item/clothing/head/roguetown/headband/naledi
 				mask = /obj/item/clothing/mask/rogue/lordmask/naledi/sojourner
@@ -99,10 +100,12 @@
 				H.change_stat(STATKEY_WIL, -3)
 				H.change_stat(STATKEY_INT, 3)
 				H.change_stat(STATKEY_SPD, 2) //Turns the Sojourner's unmodified statblock to 3/0/0/1/1, compared to the Disciple's 3/3/3/-2/-1.
+				change_origin(H, /datum/virtue/origin/naledi, "Holy order")//These are Naledi we make them actually Naledi
+				H.grant_language(/datum/language/celestial)
 
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
 	armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple
-	
+
 	backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
 	/obj/item/paper/inqslip/arrival/ortho = 1,
 	/obj/item/roguegem/amethyst/naledi = 1) //Kept here for now, until we figure out how to make it better fit in overfilled hands.
@@ -112,6 +115,6 @@
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)	//Capped to T2 miracles.
-
 	if(!isdarkelf(H) && !HAS_TRAIT(H, TRAIT_NALEDI)) //TA EDIT
 		change_origin(H, /datum/virtue/origin/otava, "Holy order")
+

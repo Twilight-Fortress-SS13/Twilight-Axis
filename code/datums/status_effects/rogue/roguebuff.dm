@@ -2084,15 +2084,15 @@
 	id = "Stagehand"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/stagehands_silence
 	duration = 20 MINUTES
+	// this was supposed to only apply if you had less than 12 speed but it broke whenever other spd mods applied. 
+	// i couldnt fix it, unfortunately.
+	// IF people use it to game just fucking remove it we cant have shiut in thjis codebase anymore
+	effectedstats = list(STATKEY_SPD = 1)
+
 
 /atom/movable/screen/alert/status_effect/buff/stagehands_silence
 	name = "Stangehand's Silence"
 	desc = "The slow quicken. My footsteps are quiet and I can move faster while sneaking."
-
-/datum/status_effect/buff/stagehands_silence/on_creation(mob/living/new_owner, ...)
-	. = ..()
-	if(owner.STASPD < 12)
-		effectedstats = list(STATKEY_SPD = 1) // +1 buff to spd for people w/ less than 12. should be cool but prevents any stupid shit. hopefully.
 
 /datum/status_effect/buff/stagehands_silence/on_apply()
 	. = ..()

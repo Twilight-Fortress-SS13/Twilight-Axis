@@ -360,7 +360,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	id = "fleshmend_tax"
 	duration = 6000
 	alert_type = /atom/movable/screen/alert/status_effect/fleshmend_tax
-	effectedstats = list(STATKEY_STR = -2, STATKEY_SP = -2, STATKEY_CON = -2)
+	effectedstats = list(STATKEY_STR = -2, STATKEY_SPD = -2, STATKEY_CON = -2)
 
 /atom/movable/screen/alert/status_effect/fleshmend_tax
 	name = "Истощение плоти"

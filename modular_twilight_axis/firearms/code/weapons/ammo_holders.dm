@@ -167,7 +167,7 @@
 /obj/item/quiver/twilight_bullet/runicbag/attack_self(mob/living/user)
 	if(linked_ammo_types)
 		to_chat(user, span_notice("I begin recalling my ammunition..."))
-		if(do_after(user, 3 SECONDS, src))
+		if(do_after(user, 10 SECONDS, src))
 			playsound(src, 'sound/magic/blink.ogg', 80)
 			for(var/B in linked_ammo_types)
 				if(arrows.len < max_storage)

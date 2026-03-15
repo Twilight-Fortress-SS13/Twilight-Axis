@@ -113,7 +113,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Головные уборы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_graggar
 	triumph_cost = 20
-	
+
 /datum/loadout_item/tw_d_efreet
 	name = "afreet helmkleinod (-15 TRI)"
 	category = list("Головные уборы", "Триумфы")
@@ -495,6 +495,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Одежда"
 	path = /obj/item/clothing/suit/roguetown/armor/longcoat
 
+/datum/loadout_item/slit_dress
+	name = "Slitted dress"
+	category = "Одежда"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/slit
+
 /datum/loadout_item/robe
 	name = "Robe"
 	category = "Одежда"
@@ -721,6 +726,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Одежда"
 	path = /obj/item/clothing/under/roguetown/trou
 
+/datum/loadout_item/belt_trousers
+	name = "Belt-Buckled Trousers"
+	category = "Одежда"
+	path = /obj/item/clothing/under/roguetown/trou/beltpants
+
 /datum/loadout_item/leathertrou
 	name = "Leather Trousers"
 	category = "Одежда"
@@ -883,6 +893,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Аксессуары"
 	path = /obj/item/storage/belt/rogue/leather/battleskirt/faulds
 
+/datum/loadout_item/doublebelt
+	name = "Paired belts"
+	category = "Аксессуары"
+	path = /obj/item/storage/belt/rogue/leather/double
+
 /datum/loadout_item/psicross
 	name = "Psydonian Cross"
 	category = "Аксессуары"
@@ -965,6 +980,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Amulet of Graggar"
 	category = "Аксессуары"
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar
+
+/datum/loadout_item/psicross/baotha
+	name = "Amulet of Baotha"
+	category = "Аксессуары"
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/baotha
 
 /datum/loadout_item/psicross/gronnzizo
 	name = "Wolf Talisman"
@@ -1333,7 +1353,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/dakken_zizhelm
 	category = list("Броня", "Донат")
 	donatitem = TRUE
- 
+
 /datum/loadout_item/donator_bigfoot_axe
 	name = "Donator Kit - Gilded GreatAxe - Required: Steel Greataxe"
 	category = list("Оружие", "Донат")
@@ -1345,13 +1365,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/zydrasiconocrown
 	category = list("Броня", "Донат")
 	donatitem = TRUE
-	
+
 /datum/loadout_item/donator_zydrasiconopauldrons
 	name = "Donator Kit - Iconoclast Pauldrons - Required: Lightweight Brigandine(Only men, no small races)"
 	path = /obj/item/enchantingkit/zydrasiconopauldrons
 	category = list("Броня", "Донат")
 	donatitem = TRUE
-	
+
 /datum/loadout_item/donator_eiren4
 	name = "Donator Kit - Darkwood's Embrace"
 	path = /obj/item/clothing/suit/roguetown/armor/longcoat/eiren
@@ -1369,7 +1389,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/zydrasiconosash
 	category = list("Броня", "Донат")
 	donatitem = TRUE
-	
+
 /datum/loadout_item/donator_zydras
 	name = "Donator Kit - Padded silky dress - Required: Silky Dress(No Small Races)"
 	category = list("Одежда", "Донат")
@@ -1745,6 +1765,36 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe
 	donatitem = TRUE
 
+/datum/loadout_item/donat/shirt_formal
+	name = "Строгая рубашка"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/formal
+	donatitem = TRUE
+
+/datum/loadout_item/donat/tights_shorts
+	name = "Строгие короткие штаны"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/under/roguetown/tights/shorts
+	donatitem = TRUE
+
+/datum/loadout_item/donat/tights_fancy
+	name = "Строгие штаны"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/under/roguetown/tights/formalfancy
+	donatitem = TRUE
+
+/datum/loadout_item/donat/maid_dress_fancy
+	name = "Платье горничной (новое)"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/maidfancy
+	donatitem = TRUE
+
+/datum/loadout_item/donat/maid_servant
+	name = "Servant Gown"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/maidservant
+	donatitem = TRUE
+
 /datum/loadout_item/donat/maid_dress
 	name = "Платье горничной"
 	category = list("Одежда", "Донат")
@@ -1761,6 +1811,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Кимоно (только для женщин)"
 	category = list("Одежда", "Донат")
 	path = /obj/item/clothing/suit/roguetown/shirt/kimono
+	donatitem = TRUE
+
+/datum/loadout_item/slitteddress
+	name = "Slitted dress"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/slit
 	donatitem = TRUE
 
 // Табарды и плащи
@@ -1866,7 +1922,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/templar/necran
 	donatitem = TRUE
-	
+
 /datum/loadout_item/donat/tabard/crusader/psydon
 	name = "Табард Псайдона"
 	category = list("Плащи", "Донат")
@@ -1901,6 +1957,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Фартук горничной"
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/apron/waist/maid
+	donatitem = TRUE
+
+/datum/loadout_item/donat/maid_apron_fancy
+	name = "Фартук горничной (новый)"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/apron/waist/fancymaid
 	donatitem = TRUE
 
 /datum/loadout_item/donat/scarf
@@ -1947,6 +2009,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/head/roguetown/eoramask
 	donatitem = TRUE
 
+/datum/loadout_item/donat/xylixmask
+	name = "Ксайликситская маска"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/mask/rogue/xylixmask
+	donatitem = TRUE
+
 /datum/loadout_item/donat/eyepatchfake
 	name = "Повязка на правый глаз(ненастоящая)"
 	category = list("Головные уборы", "Донат")
@@ -1963,6 +2031,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Совиная маска"
 	category = list ("Донат", "Головные уборы")
 	path = /obj/item/clothing/mask/rogue/owlmask
+	donatitem = TRUE
+
+/datum/loadout_item/onimask
+	name = "Oni mask"
+	category = list ("Донат", "Головные уборы")
+	path = /obj/item/clothing/mask/rogue/yoruku_oni
+	donatitem = TRUE
+
+/datum/loadout_item/kitsunemask
+	name = "Kitsune mask"
+	category = list ("Донат", "Головные уборы")
+	path = /obj/item/clothing/mask/rogue/yoruku_kitsune
 	donatitem = TRUE
 
 // Шляпы
@@ -2015,6 +2095,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/head/roguetown/maidhead
 	donatitem = TRUE
 
+/datum/loadout_item/donat/maidband
+	name = "Чепчик горничной (новый)"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/maidband
+	donatitem = TRUE
+
 /datum/loadout_item/donat/kokoshnik
 	name = "Кокошник"
 	category = list("Головные уборы", "Донат")
@@ -2059,7 +2145,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/head/roguetown/tw_d_graggar
 	donatitem = TRUE
 	donat_tier = 2
-	
+
 /datum/loadout_item/tw_d_efreet_donat
 	name = "afreet helmkleinod(Донат - Т2)"
 	category = list("Головные уборы", "Донат")
@@ -2110,6 +2196,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/storage/belt/rogue/leather/hammerhold_sash
 	donatitem = TRUE
 
+/datum/loadout_item/donat/suspenders
+	name = "Подтяжки"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/storage/belt/rogue/leather/suspenders
+	donatitem = TRUE
+
 // Обувь
 
 /datum/loadout_item/hammerhold_shoes
@@ -2124,6 +2216,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/shoes/roguetown/boots/hammerhold_boots
 	donatitem = TRUE
 
+// Одежда на шею
+
+/datum/loadout_item/woolencollar
+	name = "Woolen Collar"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/clothing/neck/roguetown/collar/woolen
+	donatitem = TRUE
 
 // Aria Mrix Start
 

@@ -49,7 +49,7 @@
 		/obj/item/roguegem/amethyst = 1,
 		)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2) // TA EDIT, prev. T1
+	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
 	switch(H.patron?.type)
@@ -116,12 +116,11 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/alchemy = SKILL_LEVEL_JOURNEYMAN, // TA EDIT, prev. appr.
-		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN, // TA EDIT, prev. appr.
+		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
-		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN, // usual weapon proficiency, they start with a staff for self defense but shouldn't be crippled if they change for a quarterstaff
 	)
 
 /datum/outfit/job/roguetown/adventurer/resilient/pre_equip(mob/living/carbon/human/H)
@@ -150,7 +149,7 @@
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stoneskin)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/fortitude)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_2) // TA EDIT, prev. T1
+	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
 		//TA EDIT
@@ -235,7 +234,6 @@
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
-		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN, // usual weapon proficiency, baseline apprentice is pretty coal to work with
 		/datum/skill/combat/shields = SKILL_LEVEL_APPRENTICE, // TA EDIT, prev. novice
 	)
 
@@ -253,17 +251,6 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 	neck = /obj/item/clothing/neck/roguetown/coif/padded
 
-	if(H.mind)
-		var/weapons = list("Arming Sword", "Shortsword", "Falchion") // you may want to upgrade for a better sword
-		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
-		switch(weapon_choice)
-			if("Arming Sword")
-				r_hand = /obj/item/rogueweapon/sword
-			if("Shortsword")
-				r_hand = /obj/item/rogueweapon/sword/short
-			if("Falchion")
-				r_hand = /obj/item/rogueweapon/sword/short/falchion
-
 	H.dna.species.soundpack_m = new /datum/voicepack/male/wizard()
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
@@ -272,7 +259,7 @@
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/enchant_weapon)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynestrike)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2) // TA EDIT, prev. T1
+	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
 		// TA EDIT
@@ -421,7 +408,7 @@
 
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2) // TA EDIT, prev. T1
+	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
 	switch(H.patron?.type)

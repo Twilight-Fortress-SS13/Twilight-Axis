@@ -1656,3 +1656,15 @@
 	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
 	color = "#FFFFFF"
 	detail_color = "#FFFFFF"
+
+/obj/item/clothing/cloak/apron/waist/fancymaid
+	name = "maid apron"
+	desc = "The frilly apron of a housemaster. It has pockets to store small things."
+	detail_color = "_detail"
+	detail_color = CLOTHING_DARK_GREY
+	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
+	icon_state = "maidapronfancy"
+	item_state = "maidapronfancy"
+	boobed = FALSE
+	grid_width = 64
+	grid_height = 64

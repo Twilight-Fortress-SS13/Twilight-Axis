@@ -16,7 +16,8 @@
 	spawnableAtoms = list(/obj/structure/flora/tinymushrooms = 3,
 							/obj/structure/roguerock = 10,
 							/obj/item/natural/rock = 10,
-							/obj/structure/vine = 4)
+							/obj/structure/vine = 4,
+							/obj/structure/leyline/normal/coast = 1)
 
 /datum/mapGeneratorModule/underdarkratmud
 	clusterCheckFlags = CLUSTER_CHECK_SAME_ATOMS
@@ -30,4 +31,5 @@
 							/obj/structure/flora/tinymushrooms = 3,
 							/obj/structure/flora/roguegrass = 10,
 							/obj/structure/flora/roguegrass/herb/random = 2,
-							/obj/structure/zizo_bane = 0.5)
+							/obj/structure/zizo_bane = 0.5,
+							/obj/structure/leyline/normal/coast = 1)

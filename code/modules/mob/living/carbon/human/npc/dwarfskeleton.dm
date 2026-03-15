@@ -23,8 +23,7 @@ GLOBAL_LIST_INIT(dwarfskeleton_aggro, world.file2list("strings/rt/dskeletonaggro
 
 /mob/living/carbon/human/species/dwarfskeleton/retaliate(mob/living/L)
 	.=..()
-	if(prob(5))
-		say(pick(GLOB.dwarfskeleton_aggro), npc_speech = TRUE)
+	if(npc_combat_dialogue(GLOB.dwarfskeleton_aggro, prob_chance = 5, cooldown = 0))
 		pointed(target)
 
 /mob/living/carbon/human/species/dwarfskeleton/Initialize()

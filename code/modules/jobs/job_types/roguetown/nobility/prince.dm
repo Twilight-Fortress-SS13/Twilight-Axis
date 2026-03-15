@@ -104,13 +104,28 @@
 	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/gold
 	belt = /obj/item/storage/belt/rogue/leather
-	l_hand = /obj/item/rogueweapon/sword/sabre
 	beltl = /obj/item/rogueweapon/scabbard/sword/royal
 	beltr = /obj/item/storage/keyring/heir
 	neck = /obj/item/storage/belt/rogue/pouch/coins/rich
 	backr = /obj/item/storage/backpack/rogue/satchel
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
+
+/datum/outfit/job/roguetown/heir/daring/choose_loadout(mob/living/carbon/human/H)
+	. = ..()
+	var/weapons = list( // All decorated/gilded weapons, rich pompous ass that you are.
+	"Sabre",
+	"Rapier",
+	"Arming Sword"
+	)
+	var/weapon_choice = input(H, "Choose your weapon.", "ARMS TO INVITE ENVY") as anything in weapons
+	switch(weapon_choice)
+		if("Sabre")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/sabre/dec)
+		if("Rapier")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/rapier/dec)
+		if("Arming Sword")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/decorated)
 
 /datum/advclass/heir/bookworm
 	name = "Introverted Bookworm"
@@ -153,6 +168,11 @@
 	neck = /obj/item/storage/belt/rogue/pouch/coins/rich
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/heir_spell_bundle)
+	backpack_contents = list(
+		/obj/item/handmirror = 1
+	)
+		
 
  
 /datum/advclass/heir/aristocrat
@@ -203,6 +223,9 @@
 		shirt = /obj/item/clothing/suit/roguetown/shirt/dress/royal/princess
 		shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/gold
+	backpack_contents = list(
+		/obj/item/storage/belt/rogue/pouch/coins/rich = 1
+	)
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
 
@@ -219,7 +242,7 @@
 		STATKEY_INT = -2,
 		STATKEY_CON = -2,
 		STATKEY_WIL = -2,
-		STATKEY_LCK = -2
+		STATKEY_LCK = 5
 	)
 	subclass_skills = list(
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
