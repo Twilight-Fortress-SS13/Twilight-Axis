@@ -176,3 +176,15 @@
 	if(on)
 		set_light_on(FALSE)
 	update_icon()
+
+/obj/item/clothing/mask/rogue/yoruku_oni
+	name = "oni mask"
+	desc = "A wood mask carved in the visage of demons said to stalk the mountains of Kazengun."
+	icon_state = "oni"
+	stack_fovs = FALSE
+
+/obj/item/clothing/mask/rogue/yoruku_kitsune
+	name = "kitsune mask"
+	desc = "A wood mask carved in the visage of the fox spirits said to ply their tricks in the forests of Kazengun."
+	icon_state = "kitsune"
+	stack_fovs = FALSE

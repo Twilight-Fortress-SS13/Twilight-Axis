@@ -22,8 +22,7 @@
 	round_contrib_points = 2
 	job_subclasses = list(
 		/datum/advclass/inquisitor/inspector,
-		/datum/advclass/inquisitor/ordinator,
-    	/datum/advclass/inquisitor/blackpowder
+		/datum/advclass/inquisitor/ordinator
 	)
 	same_job_respawn_delay = 30 MINUTES
 

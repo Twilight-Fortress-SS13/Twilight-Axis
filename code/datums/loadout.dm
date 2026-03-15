@@ -495,6 +495,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Одежда"
 	path = /obj/item/clothing/suit/roguetown/armor/longcoat
 
+/datum/loadout_item/slit_dress
+	name = "Slitted dress"
+	category = "Одежда"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/slit
+
 /datum/loadout_item/robe
 	name = "Robe"
 	category = "Одежда"
@@ -721,6 +726,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Одежда"
 	path = /obj/item/clothing/under/roguetown/trou
 
+/datum/loadout_item/belt_trousers
+	name = "Belt-Buckled Trousers"
+	category = "Одежда"
+	path = /obj/item/clothing/under/roguetown/trou/beltpants
+
 /datum/loadout_item/leathertrou
 	name = "Leather Trousers"
 	category = "Одежда"
@@ -883,6 +893,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Аксессуары"
 	path = /obj/item/storage/belt/rogue/leather/battleskirt/faulds
 
+/datum/loadout_item/doublebelt
+	name = "Paired belts"
+	category = "Аксессуары"
+	path = /obj/item/storage/belt/rogue/leather/double
+
 /datum/loadout_item/psicross
 	name = "Psydonian Cross"
 	category = "Аксессуары"
@@ -965,6 +980,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Amulet of Graggar"
 	category = "Аксессуары"
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar
+
+/datum/loadout_item/psicross/baotha
+	name = "Amulet of Baotha"
+	category = "Аксессуары"
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/baotha
 
 /datum/loadout_item/psicross/gronnzizo
 	name = "Wolf Talisman"
@@ -1793,6 +1813,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/suit/roguetown/shirt/kimono
 	donatitem = TRUE
 
+/datum/loadout_item/slitteddress
+	name = "Slitted dress"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/slit
+	donatitem = TRUE
+
 // Табарды и плащи
 
 /datum/loadout_item/donat/matron
@@ -2007,6 +2033,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/mask/rogue/owlmask
 	donatitem = TRUE
 
+/datum/loadout_item/onimask
+	name = "Oni mask"
+	category = list ("Донат", "Головные уборы")
+	path = /obj/item/clothing/mask/rogue/yoruku_oni
+	donatitem = TRUE
+
+/datum/loadout_item/kitsunemask
+	name = "Kitsune mask"
+	category = list ("Донат", "Головные уборы")
+	path = /obj/item/clothing/mask/rogue/yoruku_kitsune
+	donatitem = TRUE
+
 // Шляпы
 
 /datum/loadout_item/stargazerhood
@@ -2178,6 +2216,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/shoes/roguetown/boots/hammerhold_boots
 	donatitem = TRUE
 
+// Одежда на шею
+
+/datum/loadout_item/woolencollar
+	name = "Woolen Collar"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/clothing/neck/roguetown/collar/woolen
+	donatitem = TRUE
 
 // Aria Mrix Start
 

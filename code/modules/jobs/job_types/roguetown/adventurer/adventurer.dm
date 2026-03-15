@@ -70,12 +70,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/foreigner/slaver,
 		/datum/advclass/foreigner/shepherd,
 		/datum/advclass/foreigner/fencerguy,
-		/datum/advclass/foreigner/bronzeclad,
-
-		/datum/advclass/rogue/soundbreaker, // TA - Soundbreaker Class
-		/datum/advclass/foreigner/ronin, // TA - Ronin Class
-		/datum/advclass/ranger/twilight_hunter, // TA - Firearm Class
-		/datum/advclass/foreigner/gronnadv // TA - Gronn Nomad
+		/datum/advclass/foreigner/bronzeclad
 	)
 
 /mob/living/carbon/human/proc/adv_hugboxing_start()

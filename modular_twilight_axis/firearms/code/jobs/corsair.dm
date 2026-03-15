@@ -17,6 +17,7 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_corsair
 	category_tags = list(CTAG_WRETCH)
+	class_select_category = CLASS_CAT_RANGER
 	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_DODGEEXPERT)
 	maximum_possible_slots = 2
 	classes = list("Kaper" = "During the Twilight War, you served aboard a Reichsmarine warship, intercepting, \
