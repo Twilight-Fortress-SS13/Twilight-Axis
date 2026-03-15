@@ -9,7 +9,7 @@
 	maximum_possible_slots = 1
 	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'
 	subclass_languages = list(/datum/language/gronnic)
-	traits_applied = list(TRAIT_RUNEMASTER, TRAIT_DODGEEXPERT)
+	traits_applied = list(TRAIT_RUNEMASTER, TRAIT_PARRYEXPERT)
 	subclass_stats = list(
 		STATKEY_SPD = 1,
 		STATKEY_WIL = 2,
@@ -53,7 +53,7 @@
 		/obj/item/book/rogue/runeblade_codex = 1
 		)
 	H.merctype = 2
-	H.AddComponent(/datum/component/combo_core/runeblade, 30 SECONDS, 3, 3)
+	H.AddComponent(/datum/component/combo_core/runeblade, 20 SECONDS, 3, 3)
 
 /obj/item/clothing/under/roguetown/gronn_kilt
 	name = "gronnic leather kilt"

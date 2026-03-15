@@ -3403,6 +3403,7 @@
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\combat\foreigner.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\combat\rogue.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\wretch\lunacyembracer.dm"
+#include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\wretch\runemaster.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\wretch\shaman.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\burghers\mage_apprentice.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\church\acolyte.dm"

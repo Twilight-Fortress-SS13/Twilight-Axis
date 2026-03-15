@@ -26,6 +26,13 @@
 	base_icon_state = "book5"
 	bookfile = "runeblade_codex.json"
 
+/obj/item/book/rogue/runemaster_codex
+	name = "Notes of Father"
+	desc = "A book that contains the teachings of the Runemaster."
+	icon_state = "book5_0"
+	base_icon_state = "book5"
+	bookfile = "runemaster_codex.json"
+
 /obj/item/book/rogue/witch_runes
 	name = "Coven Treatise on Northern Runes"
 	desc = "A practical manuscript compiled by several witch covens. It catalogues the known northern runes, their carving ingredients and the effects they impose when bound to steel."
