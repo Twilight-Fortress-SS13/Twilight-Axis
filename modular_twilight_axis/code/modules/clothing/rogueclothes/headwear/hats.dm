@@ -169,6 +169,11 @@
 	desc = "An oddly shaped hat made of tightly-sewn leather, commonly worn by soundbreakers."
 	color = CLOTHING_RED
 
+/obj/item/clothing/head/roguetown/gasa/ronin
+	name = "ronin gasa"
+	desc = "An oddly shaped hat of wandering ronin."
+	color = CLOTHING_BLUE
+
 /obj/item/clothing/head/roguetown/antlers
 	name = "old antlers"
 	desc = "Old antlers which you can wear on helmet, hood....or straight on your head!"

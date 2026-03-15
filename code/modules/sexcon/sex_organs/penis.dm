@@ -108,6 +108,18 @@
 	penis_type = PENIS_TYPE_EQUINE
 	sheath_type = SHEATH_TYPE_NORMAL
 
+//TA Add start - NEW ERP SYSTEM
+/obj/item/organ/penis/equine_knotted
+	name = "equine knotted penis"
+	penis_type = PENIS_TYPE_EQUINE_KNOTTED
+	sheath_type = SHEATH_TYPE_NORMAL
+
+/obj/item/organ/penis/tapered_knot
+	name = "tapered penis"
+	penis_type = PENIS_TYPE_TAPERED_KNOTTED
+	sheath_type = SHEATH_TYPE_SLIT
+//TA Add end - NEW ERP SYSTEM
+
 /obj/item/organ/penis/tapered_mammal
 	name = "tapered penis"
 	penis_type = PENIS_TYPE_TAPERED

@@ -77,11 +77,9 @@
 				gloves = /obj/item/clothing/gloves/roguetown/bandages
 			if("Knuckledusters")
 				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
-					beltl = /obj/item/rogueweapon/knuckles/psydon/old
-					gloves = /obj/item/clothing/gloves/roguetown/bandages
+					r_hand = /obj/item/clothing/gloves/roguetown/knuckles/psydon/old
 				else
-					beltl = /obj/item/rogueweapon/knuckles/bronzeknuckles
-					gloves = /obj/item/clothing/gloves/roguetown/bandages
+					r_hand = /obj/item/clothing/gloves/roguetown/knuckles/bronze
 			if("Quarterstaff")
 				H.adjust_skillrank_up_to(/datum/skill/combat/staves, 3, TRUE) //On par with the new Quarterstaff-centric virtue. A monk can take said-virtue if they want the best of both worlds.
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 2, TRUE) //Balance idea's pretty simple. A dedicated staff user can use polearms too - as both weapon types are fundamentally similar, but it'd always be a skill level lower than the staff.
@@ -663,7 +661,6 @@
 					r_hand = /obj/item/rogueweapon/spear
 					l_hand = /obj/item/rogueweapon/scabbard/gwstrap
 			if("Iron Quarterstaff")
-				H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_JOURNEYMAN, TRUE) //TA edit
 				r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/iron
 				l_hand = /obj/item/rogueweapon/scabbard/gwstrap
 	if(istype(H.patron, /datum/patron/divine))

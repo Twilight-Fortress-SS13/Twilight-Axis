@@ -46,6 +46,20 @@
 	var/obj/item/mainhand = get_active_held_item()
 	var/obj/item/offhand = get_inactive_held_item()
 	var/obj/item/used_weapon = mainhand
+
+	// TA Edit start - new Ronin Class
+	var/need_override = TRUE
+	if(mainhand?.can_parry || offhand?.can_parry)
+		need_override = FALSE
+
+	if(need_override)
+		var/obj/item/override_parry_weapon = ronin_parry_override(src, intenty,user)
+		if(override_parry_weapon)
+			mainhand = override_parry_weapon
+			offhand = null
+			used_weapon = override_parry_weapon
+	// TA Edit end - new Ronin Class
+
 	var/obj/item/rogueweapon/shield/buckler/skiller = get_inactive_held_item()  // buckler code
 	var/obj/item/rogueweapon/shield/buckler/skillerbuck = get_active_held_item()
 
@@ -69,18 +83,25 @@
 		used_weapon = offhand
 		highest_defense += offhand_defense
 
+
+
 	var/defender_skill = 0
 	var/attacker_skill = 0
 	var/obj/item/clothing/wrists/roguetown/bracers/unarmed_bracers
+	var/obj/item/clothing/gloves/roguetown/knuckles/unarmed_knuckles
 
 	if(highest_defense <= (H.get_skill_level(/datum/skill/combat/unarmed) * 20))
 		defender_skill = H.get_skill_level(/datum/skill/combat/unarmed)
 		var/obj/B = H.get_item_by_slot(SLOT_WRISTS)
+		var/obj/K = H.get_item_by_slot(SLOT_GLOVES)
 		if(istype(B, /obj/item/clothing/wrists/roguetown/bracers))
 			prob2defend += (defender_skill * 35)
 			unarmed_bracers = B
+		else if(istype(K, /obj/item/clothing/gloves/roguetown/knuckles))
+			prob2defend += (defender_skill * 35)
+			unarmed_knuckles = K
 		else
-			prob2defend += (defender_skill * 10)		// no bracers gonna be butts.
+			prob2defend += (defender_skill * 10)		// no bracers or knuckles gonna be butts.
 		weapon_parry = FALSE
 	else
 		if(used_weapon)
@@ -113,6 +134,19 @@
 	else
 		attacker_skill = U.get_skill_level(/datum/skill/combat/unarmed)
 		prob2defend -= (attacker_skill * 20)
+		if(user.STASPD > src.STASPD) //unarmed is inherently swift
+			var/spdmod = ((user.STASPD - src.STASPD) * 10)
+			var/permod = ((src.STAPER - user.STAPER) * 10)
+			var/intmod = ((src.STAINT - user.STAINT) * 3)
+			if(mind)
+				if(permod > 0)
+					spdmod -= permod
+				if(intmod > 0)
+					spdmod -= intmod
+			var/finalmod = spdmod
+			if(mind)
+				finalmod = clamp(spdmod, 0, 30)
+			prob2defend -= finalmod
 
 	if(HAS_TRAIT(src, TRAIT_GUIDANCE))
 		prob2defend += 20
@@ -137,12 +171,19 @@
 		if(HAS_TRAIT(U, TRAIT_FENCERDEXTERITY))
 			prob2defend -= 5
 
+	// TA addition start - new ronin class
+	if(HAS_TRAIT(src, TRAIT_PARRYEXPERT))
+		prob2defend += 30
+	// TA addition end - new ronin class
+
 	prob2defend = clamp(prob2defend, 5, 90)
 	if(HAS_TRAIT(user, TRAIT_HARDSHELL) && H.client)	//Dwarf-merc specific limitation w/ their armor on in pvp
 		prob2defend = clamp(prob2defend, 5, 70)
+	var/untrained_armor = FALSE
 	if(!H?.check_armor_skill())
 		prob2defend = clamp(prob2defend, 5, 75)			//Caps your max parry to 75 if using armor you're not trained in. Bad dexerity.
 		drained = drained + 5							//More stamina usage for not being trained in the armor you're using.
+		untrained_armor = TRUE
 
 	//Dual Wielding
 	var/defender_dualw
@@ -206,7 +247,7 @@
 		attacker_skill_type = /datum/skill/combat/unarmed
 
 	if(weapon_parry == TRUE)
-		if(do_parry(used_weapon, drained, user)) //show message
+		if(do_parry(used_weapon, drained, user, untrained_armor)) //show message
 			//only gain experience if attacker and defender aren't using non-combat skills for their weapons
 			if(ispath(attacker_skill_type, /datum/skill/combat) && ispath(used_weapon.associated_skill, /datum/skill/combat))
 				if ((mobility_flags & MOBILITY_STAND))
@@ -269,7 +310,7 @@
 			return FALSE
 
 	if(weapon_parry == FALSE)
-		if(do_unarmed_parry(drained, user))
+		if(do_unarmed_parry(drained, user, untrained_armor))
 			//only gain experience if attacker isn't using a non-combat skill for their weapon
 			if(ispath(attacker_skill_type, /datum/skill/combat))
 				if((mobility_flags & MOBILITY_STAND))
@@ -283,13 +324,15 @@
 
 			if(unarmed_bracers)
 				unarmed_bracers.take_damage(INTEG_PARRY_DECAY_NOSHARP, "slash", armor_penetration = 100)
+			else if(unarmed_knuckles)
+				unarmed_knuckles.take_damage(INTEG_PARRY_DECAY_NOSHARP, "slash", armor_penetration = 100)
 			flash_fullscreen("blackflash2")
 			return TRUE
 		else
 
 			return FALSE
 
-/mob/proc/do_parry(obj/item/W, parrydrain as num, mob/living/user)
+/mob/proc/do_parry(obj/item/W, parrydrain as num, mob/living/user, untrained_armor = FALSE)
 	if(ishuman(src))
 		var/mob/living/carbon/human/H = src
 		//Tempo bonus
@@ -299,6 +342,8 @@
 				playsound(get_turf(src), pick(W.parrysound), 100, FALSE)
 			if(src.client)
 				record_round_statistic(STATS_PARRIES)
+				log_combat(src, user, "parried")
+
 
 			var/def_verb = "parries"
 			var/att_verb = ""
@@ -307,6 +352,8 @@
 			if(istype(user.rmb_intent, /datum/rmb_intent/strong))
 				att_verb = "'s [pick("hefty", "strong")] attack"
 			var/def_msg = "<b>[src]</b> [def_verb] [user][att_verb] with [W]!"
+			if(untrained_armor)
+				def_msg += " Untrained Armor Penalty!"
 
 			visible_message(span_combatsecondary(def_msg), span_boldwarning(def_msg), COMBAT_MESSAGE_RANGE, list(user))
 			to_chat(user, span_boldwarning(def_msg))
@@ -332,7 +379,7 @@
 			playsound(get_turf(src), pick(W.parrysound), 100, FALSE)
 		return TRUE
 
-/mob/proc/do_unarmed_parry(parrydrain as num, mob/living/user)
+/mob/proc/do_unarmed_parry(parrydrain as num, mob/living/user, untrained_armor = FALSE)
 	if(ishuman(src))
 		var/mob/living/carbon/human/H = src
 		//Tempo bonus
@@ -340,9 +387,13 @@
 
 		if(H.stamina_add(parrydrain))
 			playsound(get_turf(src), pick(parry_sound), 100, FALSE)
-			src.visible_message(span_warning("<b>[src]</b> parries [user]!"))
+			var/parry_msg = "<b>[src]</b> parries [user]!"
+			if(untrained_armor)
+				parry_msg += " Untrained Armor Penalty!"
+			src.visible_message(span_warning(parry_msg))
 			if(src.client)
 				record_round_statistic(STATS_PARRIES)
+				log_combat(src, user, "parried")
 			return TRUE
 		else
 			to_chat(src, span_boldwarning("I'm too tired to parry!"))
@@ -350,6 +401,7 @@
 	else
 		if(src.client)
 			record_round_statistic(STATS_PARRIES)
+			log_combat(src, user, "parried")
 		playsound(get_turf(src), pick(parry_sound), 100, FALSE)
 		return TRUE
 

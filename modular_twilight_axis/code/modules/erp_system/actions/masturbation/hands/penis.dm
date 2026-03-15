@@ -3,6 +3,6 @@
 
 	name = "Мастурбация члена"
 	required_target_organ = SEX_ORGAN_PENIS
-	message_start = "{actor} {pose} хватает свой член."
-	message_tick = "{actor} {pose}, {force} и {speed} дёргает свой член."
+	message_start = "{actor} хватает свой член."
+	message_tick = "{actor} {force} и {speed} дёргает свой член."
 	message_finish =  "{actor} ослабляет хватку и останавливается."

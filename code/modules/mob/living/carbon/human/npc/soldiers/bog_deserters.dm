@@ -102,7 +102,6 @@
 		/datum/rmb_intent/riposte,\
 		/datum/rmb_intent/weak
 	)
-	var/is_silent = FALSE /// Determines whether or not we will scream our funny lines at people.
 	npc_max_jump_stamina = 0
 
 
@@ -116,9 +115,9 @@
 	if(target)
 		aggressive=1
 		wander = TRUE
-		if(!is_silent && target != newtarg)
-			say(pick(GLOB.highwayman_aggro), npc_speech = TRUE)
-			pointed(target)
+		if(target != newtarg)
+			if(npc_combat_dialogue(GLOB.highwayman_aggro, prob_chance = 50, cooldown = 0))
+				pointed(target)
 
 /mob/living/carbon/human/species/human/northern/bog_deserters/should_target(mob/living/L)
 	if(L.stat != CONSCIOUS)
@@ -168,11 +167,7 @@
 
 /mob/living/carbon/human/species/human/northern/bog_deserters/handle_combat()
 	if(mode == NPC_AI_HUNT)
-		if(prob(5))
-			if(prob(60))
-				say(pick(GLOB.highwayman_aggro), npc_speech = TRUE)
-			else
-				emote(pick("laugh", "warcry", "rage"))
+		npc_combat_dialogue(GLOB.highwayman_aggro, list("laugh", "warcry", "rage"), prob_chance = 5, say_chance = 60)
 	. = ..()
 
 /datum/outfit/job/roguetown/human/northern/bog_deserters/pre_equip(mob/living/carbon/human/H)

@@ -236,7 +236,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	/// Assoc list of culinary preferences, where the key is the type of the culinary preference, and value is food/drink typepath
 	var/list/culinary_preferences = list()
 
-	var/datum/advclass/preview_subclass
 
 	var/tgui_pref = TRUE
 
@@ -262,6 +261,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 
 	var/attack_blip_frequency = ATTACK_BLIP_PREF_DEFAULT
+
+	/// Per-character theme override for examine panel viewers
+	var/examine_theme
 
 	var/datum/loadout_panel/loadoutpanel
 
@@ -666,6 +668,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 //			-----------START OF BODY TABLE-----------
 			dat += "<table width='100%'><tr><td width='1%' valign='top'>"
+			var/datum/job/highest_pref
+			for(var/job in job_preferences)
+				if(job_preferences[job] > highest_pref)
+					highest_pref = SSjob.GetJob(job)
 			dat += "<b>Update feature colors with change:</b> <a href='?_src_=prefs;preference=update_mutant_colors;task=input'>[update_mutant_colors ? "Yes" : "No"]</a><BR>"
 			var/use_skintones = pref_species.use_skintones
 			if(use_skintones)
@@ -695,6 +701,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><b>NSFW Headshot:</b> <a href='?_src_=prefs;preference=nsfw_headshot;task=input'>Change</a>" //TA edit
 			if(nsfw_headshot_link != null) //TA edit
 				dat += "<br><img src='[nsfw_headshot_link]' width='125px' height='175px'>" //TA edit
+
+			var/examine_theme_name = "None (Use Viewer's)"
+			if(examine_theme)
+				var/list/all_themes = get_tgui_themes()
+				examine_theme_name = all_themes[examine_theme] || examine_theme
+			dat += "<br><b>Examine Theme:</b> <a href='?_src_=prefs;preference=examine_theme;task=input'>[examine_theme_name]</a>"
 
 			dat += "<br><b>[(length(flavortext) < MINIMUM_FLAVOR_TEXT) ? "<font color = '#802929'>" : ""]Flavortext:[(length(flavortext) < MINIMUM_FLAVOR_TEXT) ? "</font>" : ""]</b><a href='?_src_=prefs;preference=formathelp;task=input'>(?)</a><a href='?_src_=prefs;preference=flavortext;task=input'>Change</a>"
 			dat += "<br><b>NSFW Flavortext:</b><a href='?_src_=prefs;preference=formathelp;task=input'>(?)</a><a href='?_src_=prefs;preference=nsfwflavortext;task=input'>Change</a>"
@@ -1824,6 +1836,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						else
 							to_chat(user, "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,.</font>")
 
+	
 				if("nickname")
 					var/new_name = tgui_input_text(user, "Choose your character's nickname (For Highlighting):", "NICKNAME",  encode = FALSE)
 					if(new_name)
@@ -2295,6 +2308,27 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					img_gallery = list()
 					to_chat(user, "<span class='notice'>Successfully cleared image gallery.</span>")
 					log_game("[user] has cleared their image gallery.")
+
+				if("examine_theme")
+					var/list/all_themes = get_tgui_themes()
+					var/list/choices = list("None (Use Viewer's)")
+					for(var/theme_key in all_themes)
+						if(theme_key == "trey_liam")
+							continue
+						choices += all_themes[theme_key]
+					var/current_display = "None (Use Viewer's)"
+					if(examine_theme)
+						current_display = all_themes[examine_theme] || examine_theme
+					var/picked = tgui_input_list(user, "Choose the theme others see on your examine panel:", "Examine Theme", choices, current_display)
+					if(!picked)
+						return
+					if(picked == "None (Use Viewer's)")
+						examine_theme = null
+					else
+						for(var/theme_key in all_themes)
+							if(all_themes[theme_key] == picked)
+								examine_theme = theme_key
+								break
 
 				if("ooc_preview")
 					var/datum/examine_panel/preview_examine_panel = new(user)
@@ -2825,7 +2859,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 				if("tgui_lock")
 					tgui_lock = !tgui_lock
 				if("tgui_theme")
-					setTguiStyle()
+					setTguiStyle(user)
 				if("winflash")
 					windowflashing = !windowflashing
 
@@ -3127,6 +3161,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 	character.img_gallery = img_gallery
 
+	character.examine_theme = examine_theme
 	character.ooc_extra = ooc_extra
 
 	character.song_title = song_title
@@ -3161,7 +3196,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	if(icon_updates)
 		character.update_body()
 		character.update_hair()
-		character.update_body_parts(redraw = TRUE)
+		character.update_body_parts(redraw = FALSE)
 
 	character.char_accent = char_accent
 

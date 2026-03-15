@@ -104,18 +104,13 @@
 		qdel(ui)
 		ui = null
 
-	var/datum/erp_actor/old_owner = owner
-	owner = null
-
 	if(actors)
 		for(var/datum/erp_actor/A2 in actors)
-			if(A2 && A2 != old_owner)
-				qdel(A2)
+			if(A2)
+				SSerp.release_actor(A2)
 		actors = null
 
-	if(old_owner)
-		qdel(old_owner)
-
+	owner = null
 	active_partner = null
 	owner_client = null
 
@@ -190,7 +185,10 @@
 /// Handles climax signal and schedules effects.
 /datum/erp_controller/proc/on_arousal_climax(datum/source)
 	SIGNAL_HANDLER
-	climax_d?.on_arousal_climax(source)
+	if(!climax_d)
+		return
+
+	INVOKE_ASYNC(climax_d, TYPE_PROC_REF(/datum/erp_climax_service, on_arousal_climax), source)
 
 /// Runs delayed climax effects (async).
 /datum/erp_controller/proc/handle_arousal_climax_effects(mob/living/carbon/human/who, list/active_links)
@@ -576,26 +574,6 @@
 /datum/erp_controller/proc/get_actor_by_mob(mob/living/M)
 	return partners_d ? partners_d.get_actor_by_mob(M) : null
 
-/// Picks best link for climax context.
-/datum/erp_controller/proc/pick_best_climax_link(mob/living/carbon/human/who, list/active_links)
-	return climax_d ? climax_d.pick_best_climax_link(who, active_links) : null
-
-/// Computes orgasm context for who+link.
-/datum/erp_controller/proc/get_orgasm_context(mob/living/carbon/human/who, datum/erp_sex_link/best)
-	return climax_d ? climax_d.get_orgasm_context(who, best) : null
-
-/// Applies coating status effect.
-/datum/erp_controller/proc/apply_coating(mob/living/carbon/human/target, zone, datum/reagents/R, capacity = 30)
-	return climax_d ? climax_d.apply_coating(target, zone, R, capacity) : FALSE
-
-/// Applies coating and creates puddle.
-/datum/erp_controller/proc/apply_coating_and_puddle(datum/erp_sex_organ/source_organ, mob/living/carbon/human/coat_mob, zone, mob/living/carbon/human/feet_mob, amount, capacity = 30)
-	return climax_d ? climax_d.apply_coating_and_puddle(source_organ, coat_mob, zone, feet_mob, amount, capacity) : FALSE
-
-/// Executes climax effects for who+best.
-/datum/erp_controller/proc/do_climax_effects(mob/living/carbon/human/who, datum/erp_sex_link/best)
-	return climax_d ? climax_d.do_climax_effects(who, best) : FALSE
-
 /// Gets knotting component for human.
 /datum/erp_controller/proc/_get_knotting_component(mob/living/carbon/human/H)
 	return knot_d ? knot_d.get_knotting_component(H) : null
@@ -803,3 +781,11 @@
 		ui = new(ui_host, src)
 
 	request_ui_update()
+
+/datum/erp_controller/proc/force_stop_all_links(reason = "forced")
+	if(links && links.len)
+		var/list/ls = links.Copy()
+		for(var/datum/erp_sex_link/L in ls)
+			if(L)
+				stop_link_runtime(L)
+	links?.Cut()
