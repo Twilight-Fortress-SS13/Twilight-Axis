@@ -42,7 +42,6 @@
 							/obj/item/natural/stone = 3,
 							/obj/item/natural/rock = 2,
 							/obj/item/magic/artifact = 0.15,
-							/obj/structure/leyline = 0.15,
 							/obj/structure/voidstoneobelisk = 0.1,
 							/obj/structure/flora/roguegrass/herb/manabloom = 0.2,
 							/obj/item/magic/manacrystal = 0.15,
@@ -51,7 +50,8 @@
 							/obj/structure/flora/roguegrass/herb/random = 3,
 							/obj/structure/flora/rogueshroom = 1,
 							/obj/effect/decal/remains/bear = 0.5,
-							/obj/effect/decal/remains/human = 0.3)
+							/obj/effect/decal/remains/human = 0.3,
+							/obj/structure/leyline/normal/coast = 0.5)
 	spawnableTurfs = list(/turf/open/floor/rogue/dirt/road=2,
 						/turf/open/water/swamp=2,)
 	allowed_areas = list(/area/rogue/outdoors/bograt)
@@ -97,7 +97,9 @@
 							/obj/structure/flora/rogueshroom = 3,
 							/obj/effect/decal/remains/bear = 2,
 							/obj/effect/decal/remains/human = 2,
-							/obj/structure/zizo_bane = 3)
+							/obj/structure/zizo_bane = 3,
+							/obj/structure/leyline/normal/coast = 0.5,
+							/obj/structure/leyline/powerful = 1)
 	spawnableTurfs = list(/turf/open/floor/rogue/dirt/road=3,
 						/turf/open/water/swamp=3)
 

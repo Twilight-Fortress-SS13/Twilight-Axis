@@ -1,0 +1,7 @@
+author: "Ollanius"
+delete-after: True
+changes:
+  - balance: "Fancy clay vases (at Journeyman) now sell for 20 > 14, and clay statues (at Expert) now sell for 35 > 15. That is to say, they sell for more now - largely because the Skillcap system ensures that not many others can easily replicate their handiwork. In exchange, clay statues need a little extra clay to prepare."
+  - rscadd: "Splits clay vessels into two craftable types; 'dyeable' (standard) and 'traditional' (uses the original-turned-new baked sprites). Functionally identical, otherwise."
+  - bugfix: "Clay vessels and statues can now be dyed, once again."
+  - rscadd: "Adds three new clay statue sprites, and completely overhauls the glass statue with five new sprites. You can stain the glass in a dyebin, too."

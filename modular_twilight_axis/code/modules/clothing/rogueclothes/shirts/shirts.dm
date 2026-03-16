@@ -419,14 +419,13 @@
 	..()
 	if(!picked)
 		var/iconH = icon_state
-		var/choiceC = input(user, "Choose a color.", "Hammerhold colors") as anything in kimono_colors
+		var/choiceC = input(user, "Choose a color.", "Kimono colors") as anything in kimono_colors
 		if(choiceC == "white")
 			iconH = "white_kimono"
 		if(choiceC == "black")
 			iconH = "black_kimono"
-
-		if(choiceC == "red")
-			iconH = "red_kimono"
+		if(choiceC == "blue")
+			iconH = "blue_kimono"
 		icon_state = iconH
 		item_state = iconH
 		base_icon_state = iconH

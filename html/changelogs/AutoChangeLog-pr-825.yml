@@ -1,0 +1,4 @@
+author: "mykokonfq"
+delete-after: True
+changes:
+  - balance: "у гарроты применяется combat модификатор 0,15 (с мешком на голове 0,3). Для мешка, если есть трейт blackbagger - 3 секунды для надевания."

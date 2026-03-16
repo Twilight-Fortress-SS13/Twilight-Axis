@@ -31,11 +31,7 @@
 		/datum/advclass/manorguard/skirmisher,
 		/datum/advclass/manorguard/cavalry,
 		/datum/advclass/manorguard/bailiff,
-
-		/datum/advclass/manorguard/standard_bearer,
-
-		/datum/advclass/manorguard/twilight_grenadier
-
+		/datum/advclass/manorguard/standard_bearer
 	)
 
 /datum/outfit/job/roguetown/manorguard
