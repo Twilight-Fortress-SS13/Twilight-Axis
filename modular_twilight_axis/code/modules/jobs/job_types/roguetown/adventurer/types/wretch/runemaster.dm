@@ -29,7 +29,7 @@
 		/datum/skill/craft/weaponsmithing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE
 	)
-	extra_context = "This subclass is race-limited to: Humen Male Only."
+	extra_context = "This subclass is race-limited to: Humen Male Only. Will enforce faith to Psydon"
 
 /datum/outfit/job/roguetown/wretch/twilight_runemaster/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -38,6 +38,7 @@
 	to_chat(H, span_warning("A long painful years of struggle has finally ended, and you finally arrived to this lands to escape from the Otavian rules and live in your own way with noledge of powerfull runes."))
 	H.mind?.current.faction += "[H.name]_faction"
 	H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
+	H.set_patron(/datum/patron/old_god)
 
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 	cloak = /obj/item/clothing/cloak/tabard/psydontabard
