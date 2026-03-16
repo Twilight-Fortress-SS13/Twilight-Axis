@@ -1,10 +1,5 @@
 #define COMSIG_RUNEBLADE_SUCCESSFUL_ATTACK "runeblade_successful_attack"
 
-/proc/runeblade_notify_successful_attack(mob/living/user, mob/living/target, obj/item/weapon)
-	if(!isliving(user) || !isliving(target) || !weapon)
-		return
-	SEND_SIGNAL(user, COMSIG_RUNEBLADE_SUCCESSFUL_ATTACK, target, weapon)
-
 /proc/runeblade_get_component(mob/living/user)
 	if(!isliving(user))
 		return null
@@ -38,12 +33,12 @@
 	if(. == COMPONENT_INCOMPATIBLE)
 		return .
 
-	RegisterSignal(owner, COMSIG_RUNEBLADE_SUCCESSFUL_ATTACK, PROC_REF(_sig_successful_attack))
+	RegisterSignal(owner, COMSIG_ATTACK_TRY_CONSUME, PROC_REF(_sig_successful_attack))
 	GrantSpells()
 
 /datum/component/combo_core/runeblade/Destroy(force)
 	if(owner)
-		UnregisterSignal(owner, COMSIG_RUNEBLADE_SUCCESSFUL_ATTACK)
+		UnregisterSignal(owner, COMSIG_ATTACK_TRY_CONSUME)
 		RevokeSpells()
 	return ..()
 
