@@ -363,7 +363,7 @@
 		return
 	// TA Add start - SOUNDBREAKER
 	if(used_intent.is_attack_swing())
-		if(try_consume_attack_effects(src, A, zone_selected))
+		if(try_consume_attack_effects(src, A, zone_selected, W))
 			atkswinging = null
 			return
 	// TA Add end - SOUNDBREAKER

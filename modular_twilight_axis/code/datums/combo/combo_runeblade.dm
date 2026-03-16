@@ -42,7 +42,7 @@
 		RevokeSpells()
 	return ..()
 
-/datum/component/combo_core/runeblade/proc/_sig_successful_attack(datum/source, mob/living/target, obj/item/weapon)
+/datum/component/combo_core/runeblade/proc/_sig_successful_attack(datum/source, mob/living/target, zone, obj/item/weapon)
 	SIGNAL_HANDLER
 	AfterSuccessfulHit(target, weapon)
 	return 0
