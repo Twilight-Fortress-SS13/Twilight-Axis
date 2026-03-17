@@ -3,6 +3,11 @@
 	desc = "A runeblade technique is primed."
 	icon_state = "buff"
 
+/atom/movable/screen/alert/status_effect/buff/runeblade_prepared
+	name = "Prepared Rune Art"
+	desc = "A runeblade technique is primed."
+	icon_state = "buff"
+
 /datum/status_effect/buff/runeblade_prepared
 	id = "runeblade_prepared"
 	status_type = STATUS_EFFECT_REPLACE
@@ -17,7 +22,8 @@
 	var/use_in_combo = TRUE
 	var/prepared_name = "Prepared Rune Art"
 
-/datum/status_effect/buff/runeblade_prepared/on_apply(
+/datum/status_effect/buff/runeblade_prepared/on_creation(
+	mob/living/new_owner,
 	new_skill_id,
 	new_effect_mult,
 	new_cooldown_mult,
@@ -26,9 +32,7 @@
 	new_use_in_combo,
 	new_prepared_name
 )
-	. = ..()
-
-	skill_id = new_skill_id
+	skill_id = isnum(new_skill_id) ? round(new_skill_id) : 0
 	effect_mult = isnum(new_effect_mult) ? new_effect_mult : 1
 	cooldown_mult = isnum(new_cooldown_mult) ? new_cooldown_mult : 1
 	weapon_self_damage_pct = isnum(new_weapon_self_damage_pct) ? new_weapon_self_damage_pct : 0
@@ -37,11 +41,19 @@
 
 	if(new_prepared_name)
 		prepared_name = new_prepared_name
+
+	return ..()
+
+/datum/status_effect/buff/runeblade_prepared/on_apply()
+	. = ..()
+	if(!.)
+		return FALSE
 
 	update_alert()
 	return TRUE
 
 /datum/status_effect/buff/runeblade_prepared/refresh(
+	mob/living/new_owner,
 	new_skill_id,
 	new_effect_mult,
 	new_cooldown_mult,
@@ -50,12 +62,7 @@
 	new_use_in_combo,
 	new_prepared_name
 )
-	. = ..()
-
-	if(QDELETED(src))
-		return
-
-	skill_id = new_skill_id
+	skill_id = isnum(new_skill_id) ? round(new_skill_id) : 0
 	effect_mult = isnum(new_effect_mult) ? new_effect_mult : 1
 	cooldown_mult = isnum(new_cooldown_mult) ? new_cooldown_mult : 1
 	weapon_self_damage_pct = isnum(new_weapon_self_damage_pct) ? new_weapon_self_damage_pct : 0
@@ -64,6 +71,11 @@
 
 	if(new_prepared_name)
 		prepared_name = new_prepared_name
+
+	. = ..()
+
+	if(QDELETED(src))
+		return
 
 	update_alert()
 

@@ -138,11 +138,10 @@
 	else
 		success = storage.trigger_runeblade_best_rune(owner, target, P.effect_mult, P.cooldown_mult, P.weapon_self_damage_pct)
 
-	owner.remove_status_effect(/datum/status_effect/buff/runeblade_prepared)
-
 	if(success && P.use_in_combo)
 		RegisterInput(P.skill_id, target, owner.zone_selected || BODY_ZONE_CHEST)
 
+	owner.remove_status_effect(/datum/status_effect/buff/runeblade_prepared)
 	return success
 
 /datum/component/combo_core/runeblade/proc/GetRunebladeWeapon()
