@@ -33,7 +33,7 @@
 	if(. == COMPONENT_INCOMPATIBLE)
 		return .
 
-	RegisterSignal(owner, COMSIG_ATTACK_TRY_CONSUME, PROC_REF(_sig_successful_attack))
+	RegisterSignal(owner, COMSIG_ATTACK_TRY_CONSUME, PROC_REF(_sig_attack_committed))
 	GrantSpells()
 
 /datum/component/combo_core/runeblade/Destroy(force)
@@ -42,9 +42,9 @@
 		RevokeSpells()
 	return ..()
 
-/datum/component/combo_core/runeblade/proc/_sig_successful_attack(datum/source, mob/living/target, zone, obj/item/weapon)
+/datum/component/combo_core/runeblade/proc/_sig_attack_committed(datum/source, mob/living/target, zone, obj/item/weapon)
 	SIGNAL_HANDLER
-	AfterSuccessfulHit(target, weapon)
+	ConsumePreparedStrike(target, weapon, zone)
 	return 0
 
 /datum/component/combo_core/runeblade/DefineRules()
@@ -103,7 +103,11 @@
 	use_in_combo,
 	prepared_name
 )
-	if(!owner || !skill_id)
+	if(!owner || !isnum(skill_id))
+		return FALSE
+
+	skill_id = round(skill_id)
+	if(skill_id < 1 || skill_id > 4)
 		return FALSE
 
 	owner.remove_status_effect(/datum/status_effect/buff/runeblade_prepared)
@@ -120,26 +124,32 @@
 
 	return !!owner.has_status_effect(/datum/status_effect/buff/runeblade_prepared)
 
-/datum/component/combo_core/runeblade/proc/AfterSuccessfulHit(mob/living/target, obj/item/weapon)
-	if(!owner || !weapon || !target)
-		return FALSE
-
-	var/datum/component/rune_storage/storage = weapon.GetComponent(/datum/component/rune_storage)
-	if(!storage)
+/datum/component/combo_core/runeblade/proc/ConsumePreparedStrike(mob/living/target, obj/item/weapon, zone)
+	if(!owner || !weapon)
 		return FALSE
 
 	var/datum/status_effect/buff/runeblade_prepared/P = owner.has_status_effect(/datum/status_effect/buff/runeblade_prepared)
 	if(!P)
 		return FALSE
 
-	var/success = FALSE
-	if(P.activate_all)
-		success = storage.trigger_runeblade_all_runes(owner, target, P.effect_mult, P.cooldown_mult, P.weapon_self_damage_pct)
-	else
-		success = storage.trigger_runeblade_best_rune(owner, target, P.effect_mult, P.cooldown_mult, P.weapon_self_damage_pct)
+	var/skill_id = P.skill_id
+	var/effect_mult = P.effect_mult
+	var/cooldown_mult = P.cooldown_mult
+	var/weapon_self_damage_pct = P.weapon_self_damage_pct
+	var/activate_all = P.activate_all
+	var/use_in_combo = (skill_id >= 1 && skill_id <= 3)
 
-	if(success && P.use_in_combo)
-		RegisterInput(P.skill_id, target, owner.zone_selected || BODY_ZONE_CHEST)
+	var/datum/component/rune_storage/storage = weapon.GetComponent(/datum/component/rune_storage)
+
+	var/success = FALSE
+	if(storage && target)
+		if(activate_all)
+			success = storage.trigger_runeblade_all_runes(owner, target, effect_mult, cooldown_mult, weapon_self_damage_pct)
+		else
+			success = storage.trigger_runeblade_best_rune(owner, target, effect_mult, cooldown_mult, weapon_self_damage_pct)
+
+	if(use_in_combo)
+		RegisterInput(skill_id, target, zone || owner.zone_selected || BODY_ZONE_CHEST)
 
 	owner.remove_status_effect(/datum/status_effect/buff/runeblade_prepared)
 	return success
@@ -198,7 +208,7 @@
 			continue
 		if(L.stat == DEAD)
 			continue
-		res += L
+		res |= L
 
 	return res
 
@@ -217,7 +227,7 @@
 
 	var/mob/living/C = GetLivingOnTurf(center)
 	if(C)
-		res += C
+		res |= C
 
 	if(width >= 3)
 		var/turf/LT = get_step(center, turn(d, 90))
@@ -227,9 +237,9 @@
 		var/mob/living/RR = GetLivingOnTurf(RT)
 
 		if(LL)
-			res += LL
+			res |= LL
 		if(RR)
-			res += RR
+			res |= RR
 
 	return res
 
@@ -250,6 +260,8 @@
 	)
 
 	for(var/turf/T as anything in turfs)
+		if(!T)
+			continue
 		var/mob/living/L = GetLivingOnTurf(T)
 		if(L)
 			res |= L
@@ -264,27 +276,37 @@
 	return storage.trigger_runeblade_best_rune(owner, target, effect_mult, cooldown_mult, weapon_self_damage_pct)
 
 /datum/component/combo_core/runeblade/proc/ComboTriggerTargetList(list/targets, effect_mult = 1, cooldown_mult = 1, weapon_self_damage_pct = 0)
-	if(!length(targets))
+	if(!islist(targets))
 		return FALSE
+
+	if(!length(targets))
+		return TRUE
 
 	var/triggered = FALSE
 	for(var/mob/living/L as anything in targets)
+		if(!L || L.stat == DEAD)
+			continue
 		if(ComboTriggerTarget(L, effect_mult, cooldown_mult, weapon_self_damage_pct))
 			triggered = TRUE
 
-	return triggered
+	return triggered || TRUE
 
 /datum/component/combo_core/runeblade/proc/ComboTriggerAllTargets(list/targets, effect_mult = 1, cooldown_mult = 1, weapon_self_damage_pct = 0)
 	var/datum/component/rune_storage/storage = GetRunebladeStorage()
-	if(!storage || !length(targets))
+	if(!storage)
 		return FALSE
+
+	if(!islist(targets) || !length(targets))
+		return TRUE
 
 	var/triggered = FALSE
 	for(var/mob/living/L as anything in targets)
+		if(!L || L.stat == DEAD)
+			continue
 		if(storage.trigger_runeblade_all_runes(owner, L, effect_mult, cooldown_mult, weapon_self_damage_pct))
 			triggered = TRUE
 
-	return triggered
+	return triggered || TRUE
 
 /datum/component/combo_core/runeblade/proc/_cb_longstrike(rule_id, mob/living/target, zone)
 	var/list/targets = list()
@@ -293,9 +315,9 @@
 	var/mob/living/L2 = GetLivingOnTurf(GetFrontTurf(2))
 
 	if(L1)
-		targets += L1
+		targets |= L1
 	if(L2)
-		targets += L2
+		targets |= L2
 
 	return ComboTriggerTargetList(targets, 1, 1, 0)
 
@@ -330,22 +352,17 @@
 	if(!current)
 		return FALSE
 
-	var/dash_steps = 1
-	for(var/i in 1 to 6)
+	for(var/i in 1 to 4)
 		var/turf/next = get_step(current, d)
 		if(!next || next.density)
 			break
 
 		var/mob/living/L = GetLivingOnTurf(next)
 		if(L)
-			hit_targets += L
-			dash_steps++
+			hit_targets |= L
 
 		owner.forceMove(next)
 		current = next
-
-		if(i >= dash_steps)
-			break
 
 	return ComboTriggerTargetList(hit_targets, 1, 1, 0)
 
@@ -361,7 +378,7 @@
 /datum/component/combo_core/runeblade/proc/_cb_overstrain(rule_id, mob/living/target, zone)
 	var/list/targets = GetLivingInRadius(1)
 	if(!length(targets) && target)
-		targets += target
+		targets |= target
 
 	return ComboTriggerAllTargets(targets, 3.0, 1, 0.20)
 
@@ -395,7 +412,7 @@
 	if(rune_count <= 0)
 		return FALSE
 
-	weapon.take_damage((weapon.obj_integrity/10), BRUTE, "blunt")
+	weapon.take_damage(max(1, round(weapon.obj_integrity / 10)), BRUTE, "blunt")
 
 	for(var/i in 1 to rune_count)
 		QueueAction((i - 1) * 0.5 SECONDS, PROC_REF(_trick_followup_hit), target, weapon, storage)
