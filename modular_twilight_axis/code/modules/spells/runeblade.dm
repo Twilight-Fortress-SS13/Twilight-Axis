@@ -9,7 +9,7 @@
 	releasedrain = 0
 	chargedrain = 0
 	chargetime = 0
-	recharge_time = 5 SECONDS
+	recharge_time = 2 SECONDS
 
 	warnie = "spellwarning"
 	no_early_release = TRUE
