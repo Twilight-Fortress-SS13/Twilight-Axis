@@ -395,7 +395,7 @@
 	if(rune_count <= 0)
 		return FALSE
 
-	weapon.take_damage(max(1, weapon.obj_integrity), BRUTE, "blunt")
+	weapon.take_damage((weapon.obj_integrity/10), BRUTE, "blunt")
 
 	for(var/i in 1 to rune_count)
 		QueueAction((i - 1) * 0.5 SECONDS, PROC_REF(_trick_followup_hit), target, weapon, storage)
