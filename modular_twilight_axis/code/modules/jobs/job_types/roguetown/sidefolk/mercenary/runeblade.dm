@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_runeblade
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_GRONN
-	maximum_possible_slots = 1
+	maximum_possible_slots = 3
 	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'
 	subclass_languages = list(/datum/language/gronnic)
 	traits_applied = list(TRAIT_RUNEMASTER, TRAIT_PARRYEXPERT)
