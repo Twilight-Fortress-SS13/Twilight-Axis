@@ -146,10 +146,6 @@
 
 /obj/item/rogueweapon/huntingknife/proc/get_available_rune_choices(mob/living/user)
 	var/list/runes = list()
-
-	if(HAS_TRAIT(user, TRAIT_RUNECARVER))
-		merge_rune_category_list(runes, RUNE_LIST_LOW)
-
 	if(HAS_TRAIT(user, TRAIT_RUNEMAKER))
 		merge_rune_category_list(runes, RUNE_LIST_LOW)
 		merge_rune_category_list(runes, RUNE_LIST_BASIC)
@@ -170,9 +166,6 @@
 			target[category] = list()
 
 		target[category] |= source[category]
-
-/datum/species/dwarf
-	inherent_traits = list(TRAIT_DRUNK_HEALING, TRAIT_CAVEDWELLER, TRAIT_RUNECARVER)
 
 /datum/advclass/witch
 	traits_applied = list(TRAIT_DEATHSIGHT, TRAIT_WITCH, TRAIT_ALCHEMY_EXPERT, TRAIT_RUNEMAKER)

@@ -26,7 +26,6 @@
 #define TRAIT_FENCERDEXTERITY "Fencer's Dexterity"
 #define TRAIT_HONORBOUND "Honorbound Tattoos"
 #define TRAIT_SKILLBLESSED "Skill Blessed"
-#define TRAIT_RUNECARVER "Runecarver" //TA add - runeblade
 #define TRAIT_RUNEMAKER "Rune Maker" //TA add - runeblade
 #define TRAIT_RUNEMASTER "Rune Master" //TA add - runeblade
 #define TRAIT_NALEDI "Naledi Complex"
@@ -349,7 +348,6 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_BLOOD_RESISTANCE = span_info("My body is taut, and my blood runs slower. I bleed far less than others."),
 	TRAIT_JAILOR = span_info("I am the ducal torturer and executioneer. Society looks down upon me and I will never be graced by loving touch of the Gods."),
 	TRAIT_SKILLBLESSED = span_greentext("I've reunited with an old friend of mine. All is well."),
-	TRAIT_RUNECARVER = span_greentext("I've learned an ancient art of making special runes to increase my power."), //TA add - runeblade
 	TRAIT_RUNEMAKER = span_greentext("I've mastered the art of runecarving, increasing my arsenal of known runes."), //TA add - runeblade
 	TRAIT_RUNEMASTER = span_greentext("I've dived into the depths of the runic arts and know much more about runes than anyone else."), //TA add - runeblade
 	TRAIT_LONGSWORDSMAN = span_info("\"I will crush anyone who opposes me. I am of royal blood. I dispense justice, advance the cause of good and destroy evil. To those who learn my crossings I will grant great fame and renown in the art of armed fighting.\" - I fight like a Master when I wield any longsword, though I can only perform master strikes with a perfectly balanced basket-hilted or reformist longsword."),
