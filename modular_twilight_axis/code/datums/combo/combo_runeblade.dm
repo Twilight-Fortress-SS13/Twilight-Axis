@@ -368,28 +368,29 @@
 	P.fire()
 
 /datum/component/combo_core/runeblade/proc/_cb_dash(rule_id, mob/living/target, zone)
+	if(!owner || !target || target.stat == DEAD)
+		return FALSE
 	var/list/path = GetTeleportPath()
 	if(!length(path))
 		return FALSE
-	for(var/i in 1 to length(path))
-		var/turf/T = path[i]
-		QueueAction(
-			(i - 1) * 0.10 SECONDS,
-			PROC_REF(_dash_step),
-			T
-		)
-	return TRUE
-
-/datum/component/combo_core/runeblade/proc/_dash_step(turf/T)
-	if(!owner || !T)
-		return
-	if(T.density)
-		return
-	owner.forceMove(T)
-	SwingFX(T)
-	var/mob/living/L = GetLivingOnTurf(T)
-	if(L)
-		ComboTriggerTarget(L)
+	var/d = owner.dir
+	var/turf/current = get_turf(owner)
+	if(!current)
+		return FALSE
+	var/last_hit_success = FALSE
+	for(var/i in 1 to RUNEBLADE_DASH_HITS)
+		var/turf/next = get_step(current, d)
+		if(!next || next.density)
+			break
+		owner.forceMove(next)
+		current = next
+		var/mob/living/L = GetLivingOnTurf(next)
+		if(!L)
+			continue
+		var/hit_success = ComboTriggerTarget(L, 1, 1, 0)
+		if(i == RUNEBLADE_DASH_HITS)
+			last_hit_success = hit_success
+	return last_hit_success
 
 /datum/component/combo_core/runeblade/proc/_cb_nova(rule_id, mob/living/target, zone)
 	var/list/turfs = GetAdjacentTurfs()
@@ -468,7 +469,7 @@
 /datum/component/combo_core/runeblade/proc/_cb_trick(rule_id, mob/living/target, zone)
 	var/obj/item/weapon = GetRunebladeWeapon()
 	var/datum/component/rune_storage/storage = GetRunebladeStorage()
-	if(!weapon || !storage || !target)
+	if(!weapon || !storage || !target || target.stat == DEAD)
 		return FALSE
 	var/rune_count = 0
 	for(var/datum/applied_rune/applied in storage.applied_runes)

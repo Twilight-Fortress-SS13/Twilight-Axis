@@ -1,12 +1,12 @@
 /datum/advclass/mercenary/twilight_runeblade
 	name = "Gronnic Runeblade"
 	tutorial = "Coming from the northern lands of Grimmoria, the Runeblades are masters of the Runes, holding knowledge of exotic ones, that helps them to survive in the wild and brings victory over their foes."
-	allowed_sexes = list(MALE)
-	allowed_races = list(/datum/species/human/northern)
+	allowed_sexes = list(MALE, FEMALE)
+	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_runeblade
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_GRONN
-	maximum_possible_slots = 3
+	maximum_possible_slots = 1
 	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'
 	subclass_languages = list(/datum/language/gronnic)
 	traits_applied = list(TRAIT_RUNEMASTER, TRAIT_PARRYEXPERT)

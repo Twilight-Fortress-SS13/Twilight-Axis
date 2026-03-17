@@ -1,8 +1,8 @@
 /datum/advclass/wretch/twilight_runemaster
 	name = "Otavian Runemaster"
 	tutorial = "Fleed from strong and harsh Otavian domain, a skilled runemaster that cames to this lands to seek shelter and protect his earned freedom."
-	allowed_sexes = list(MALE)
-	allowed_races = list(/datum/species/human/northern)
+	allowed_sexes = list(MALE, FEMALE)
+	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_runeblade
 	category_tags = list(CTAG_WRETCH)
 	maximum_possible_slots = 1
