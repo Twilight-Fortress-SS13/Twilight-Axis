@@ -761,3 +761,64 @@
   - balance: Big Fellas get loadout-fitting gloves
   - rscdel: Removed the flint & bait bag from Big Fellas' satchels
   - bugfix: Big Fellas actually lose -1FOR
+2026-03-16:
+  Aisu9:
+  - bugfix: double reagent production trigger on using orison on container you can
+      drink from, it now always produce that same amount at the cost of slightly more
+      devotion.
+  BurpleBineapple:
+  - rscadd: Daring Twit Prince gets a choice of gilded swords.
+  - rscadd: Bookworm Prince gets a choice of very specific T2 spells.
+  - balance: Bookworm Prince has 6 spellpoints instead of 9 spellpoints.
+  - rscadd: Sheltered Aristrocrat Prince gets an extra pouch of coins.
+  - balance: Balance is utterly destroyed because Inbred Wastrel has 5 FOR now (And
+      -2 in every other stat)
+  FreeStylaLT:
+  - balance: Reworked nets.
+  WeNeedMorePhoron:
+  - rscadd: Fix Fireball not dealing direct damage properly to NPC
+  - rscadd: TGUI themes / buttons look better. I think. Subjectively.
+  - bugfix: Magic recipe book should no longer crash
+  - balance: Spells no longer gain additional stamina cost reduction from skills.
+      Int up to 15 reduces cost (and cooldown) by up to 5% each point
+  - balance: The entirety of all mage spells and spellblade spells stamina cost has
+      been reworked and consolidated into categories. In general it should be lower.
+      A further rework for miracles may come down the line.
+  - balance: Wearing medium / heavy armor imposes a 15 / 30% cooldown penalty when
+      casting spells / miracles. 80% if you are not trained in it
+  - balance: Spitfire & Fireball stamina cost and cooldown reduced to keep fire mage
+      viable and good feeling until a major overhaul of mage is done
+  - balance: Fetch & Repel now have a half second charge time for telegraphing
+  - balance: Create Campfire now interrupts movement to reduce in combat abuse / usage
+  - balance: Mirror Transform now only costs 5 stamina baseline instead of 35.
+  babamandaa:
+  - bugfix: Zeybek gets their intended items.
+2026-03-17:
+  Antoonij:
+  - bugfix: passive blood regen while unconscious
+  JohnChiffir:
+  - rscadd: Apple/mentha/blackberry/mentha-apple/choco/strawberry/carrot/lime/salvia/salvia-vleriana/calendula
+      zigs and ziggara
+  - rscadd: reagents for above zigs
+  - rscadd: zigs above to a drugmachine as an option to buy
+  KatTheFox:
+  - qol: hoes now have till intent as their first intent when two-handed
+  Ollanius:
+  - balance: Fancy clay vases (at Journeyman) now sell for 20 > 14, and clay statues
+      (at Expert) now sell for 35 > 15. That is to say, they sell for more now - largely
+      because the Skillcap system ensures that not many others can easily replicate
+      their handiwork. In exchange, clay statues need a little extra clay to prepare.
+  - rscadd: Splits clay vessels into two craftable types; 'dyeable' (standard) and
+      'traditional' (uses the original-turned-new baked sprites). Functionally identical,
+      otherwise.
+  - bugfix: Clay vessels and statues can now be dyed, once again.
+  - rscadd: Adds three new clay statue sprites, and completely overhauls the glass
+      statue with five new sprites. You can stain the glass in a dyebin, too.
+  SayonaraEcho:
+  - bugfix: Blacksteel armet overlay hair.
+  - bugfix: FOV psydonian thorns.
+  WeNeedMorePhoron:
+  - rscadd: You can no longer disarm nodrop items from outlaw
+  - rscadd: Halved leyline spawn rate. Again.
+  nauticall:
+  - rscadd: Adds Lmwevil's custom item, a brass-beaked physician mask.

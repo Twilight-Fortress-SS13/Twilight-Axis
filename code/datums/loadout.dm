@@ -2045,6 +2045,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/mask/rogue/yoruku_kitsune
 	donatitem = TRUE
 
+/datum/loadout_item/donator_lmwevil/brassbeak
+	name = "Donator Kit - Brass Beak Mask"
+	category = list ("Донат", "Головные уборы")
+	path = /obj/item/enchantingkit/lmwevil_brassbeak
+	donatitem = TRUE
+
 // Шляпы
 
 /datum/loadout_item/stargazerhood

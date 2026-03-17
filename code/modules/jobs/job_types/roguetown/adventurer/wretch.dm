@@ -48,7 +48,7 @@
 		/datum/advclass/wretch/pariah,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
-		/datum/advclass/wretch/ancient_deathknight,
+//		/datum/advclass/wretch/ancient_deathknight,
 		/datum/advclass/wretch/munitioneer
 	)
 
