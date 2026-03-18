@@ -214,4 +214,10 @@
 	path = /obj/item/enchantingkit/drd_lsword
 	ckeywhitelist = list("drd2021")
 	sort_category = "Donator"
+
+/datum/loadout_item/donator_lmwevil/brassbeak
+	name = "Donator Kit - Brass Beak Mask"
+	path = /obj/item/enchantingkit/lmwevil_brassbeak
+	ckeywhitelist = list("lmwevil")
+	sort_category = "Donator"
 */

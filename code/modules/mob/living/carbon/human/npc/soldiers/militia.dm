@@ -158,6 +158,8 @@
 	wander = FALSE
 
 /mob/living/carbon/human/species/human/northern/militia/deserter // Bad deserter, trash mob
+	threat_point = THREAT_MODERATE
+	ambush_faction = "bandits"
 	faction = list("viking", "station")
 
 /mob/living/carbon/human/species/human/northern/militia/after_creation()

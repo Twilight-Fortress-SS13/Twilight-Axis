@@ -1,0 +1,5 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - rscadd: "NSFW gallery"
+  - rscadd: "OOC extra"

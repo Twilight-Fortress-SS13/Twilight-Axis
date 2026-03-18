@@ -231,24 +231,6 @@
 	head_items = list()
 	return ..()
 
-/datum/species/gnoll/on_species_gain(mob/living/carbon/C, datum/species/old_species)
-	. = ..()
-	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
-	C.icon_state = "firepelt"
-	C.base_pixel_x = -8
-	C.pixel_x = -8
-	C.base_pixel_y = -4
-	C.pixel_y = -4
-
-	var/mob/living/carbon/human/H = C
-	if(istype(H))
-		var/datum/preferences/P = H.client?.prefs
-		if(P)
-			P.validate_customizer_entries()
-			P.apply_customizer_organs_to_mob(H)
-
-		SEND_SIGNAL(H, COMSIG_ERP_ANATOMY_CHANGED)
-
 /mob/living/carbon/human/species/wildshape
 	var/added_penis = FALSE
 	var/added_testicles = FALSE
@@ -350,47 +332,23 @@
 	if(!target_atom || QDELETED(target_atom))
 		return null
 
-	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
-
-	if(!consent)
-		return null
+	if(istype(target_atom, /obj/structure/closet))
+		return erp_try_start_container(initiator, target_atom, actor, silent)
 
 	var/force = FALSE
 	#ifdef LOCALTEST
 		force = TRUE
 	#endif
 
-	// ACTOR CHECKS
-	if(!force)
-		var/mob/living/carbon/human/human_actor = actor
-		if(!human_actor.can_do_sex)
-			if(!silent)
-				to_chat(actor, span_warning("I can't do this."))
-			return null
+	if(!erp_can_use_menu_as_actor(actor, silent, force))
+		return null
 
-		if(human_actor.is_erp_blocked_as_target())
-			return null
+	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
+	if(!consent)
+		return null
 
-		if(actor.client && actor.client.prefs && !actor.client.prefs.sexable)
-			if(!silent)
-				to_chat(actor, span_warning("You don't want to do this. (ERP preference)"))
-			return null
-
-	// CONSENT CHECKS
-	if(!force)
-		if(consent.is_erp_blocked_as_target())
-			return null
-
-		if(!consent.client)
-			to_chat(actor, span_warning("You can't do this."))
-			return null //Ранний возврат до ввода хедлесс-клиентов для мобов и объектов
-
-		if(consent.client && consent.client.prefs && !consent.client.prefs.sexable)
-			if(!silent)
-				to_chat(actor, span_warning("[consent] doesn't wish to be touched. (Their ERP preference)"))
-				to_chat(consent, span_warning("[actor] failed to touch you. (Your ERP preference)"))
-			log_combat(actor, consent, "tried unwanted ERP menu against")
-			return null
+	if(!erp_can_target_atom_for_menu(actor, target_atom, silent, force))
+		return null
 
 	var/client/C = actor.client
 	var/datum/erp_controller/EC = SSerp.get_or_create_controller(initiator, C, actor)
@@ -400,4 +358,104 @@
 	EC.add_partner_atom(target_atom)
 	EC.open_ui(actor)
 
+	return EC
+
+/proc/erp_can_use_menu_as_actor(mob/living/actor, silent = FALSE, force = FALSE)
+	if(!actor || !istype(actor))
+		return FALSE
+
+	if(force)
+		return TRUE
+
+	var/mob/living/carbon/human/human_actor = actor
+	if(!human_actor.can_do_sex)
+		if(!silent)
+			to_chat(actor, span_warning("I can't do this."))
+		return FALSE
+
+	if(human_actor.is_erp_blocked_as_target())
+		return FALSE
+
+	if(actor.client && actor.client.prefs && !actor.client.prefs.sexable)
+		if(!silent)
+			to_chat(actor, span_warning("You don't want to do this. (ERP preference)"))
+		return FALSE
+
+	return TRUE
+
+
+/proc/erp_can_target_atom_for_menu(mob/living/actor, atom/target_atom, silent = FALSE, force = FALSE)
+	if(!actor || !target_atom || QDELETED(target_atom))
+		return FALSE
+
+	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
+	if(!consent)
+		return FALSE
+
+	if(force)
+		return TRUE
+
+	if(consent.is_erp_blocked_as_target())
+		return FALSE
+
+	if(!consent.client)
+		return FALSE
+
+	if(consent.client && consent.client.prefs && !consent.client.prefs.sexable)
+		if(!silent)
+			to_chat(actor, span_warning("[consent] doesn't wish to be touched. (Their ERP preference)"))
+			to_chat(consent, span_warning("[actor] failed to touch you. (Your ERP preference)"))
+		log_combat(actor, consent, "tried unwanted ERP menu against")
+		return FALSE
+
+	return TRUE
+
+
+/proc/erp_collect_valid_targets_from_container(atom/container, atom/initiator, mob/living/actor, silent = FALSE, force = FALSE)
+	var/list/out = list()
+
+	if(!container || QDELETED(container) || !actor)
+		return out
+
+	for(var/atom/movable/AM in container.contents)
+		if(!AM || QDELETED(AM))
+			continue
+
+		if(!erp_can_target_atom_for_menu(actor, AM, TRUE, force))
+			continue
+
+		out += AM
+
+	return out
+
+
+/proc/erp_try_start_container(atom/initiator, atom/container, mob/living/actor, silent = FALSE)
+	if(!actor || !container || QDELETED(container))
+		return null
+
+	var/force = FALSE
+	#ifdef LOCALTEST
+		force = TRUE
+	#endif
+
+	if(!erp_can_use_menu_as_actor(actor, silent, force))
+		return null
+
+	var/list/targets = erp_collect_valid_targets_from_container(container, initiator, actor, silent, force)
+	if(!targets.len)
+		if(!silent)
+			to_chat(actor, span_warning("There is no valid partner inside."))
+		return null
+
+	var/client/C = actor.client
+	var/datum/erp_controller/EC = SSerp.get_or_create_controller(initiator, C, actor)
+	if(!EC)
+		return null
+
+	var/first = TRUE
+	for(var/atom/target_atom as anything in targets)
+		EC.add_partner_atom(target_atom, first)
+		first = FALSE
+
+	EC.open_ui(actor)
 	return EC

@@ -111,6 +111,3 @@
 		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
-	
-	if(!isdarkelf(H)) //TA EDIT
-		change_origin(H, /datum/virtue/origin/otava, "Holy order")

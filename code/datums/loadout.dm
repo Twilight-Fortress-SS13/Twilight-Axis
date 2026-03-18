@@ -1511,7 +1511,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donat_weaponkitrock
-	name = "Donator Kit - 'Rockhillian Longsword' - Required: Longsword, Broadsword or Executioner Sword"
+	name = "Donator Kit - 'Rockhillian Longsword' - Required: Broadsword or Executioner Sword"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/triumph_weaponkit_rock
 	donatitem = TRUE
@@ -2001,7 +2001,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Маска Наледи"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/mask/rogue/lordmask/naledi/decorated
-	donatitem = TRUE
 
 /datum/loadout_item/donat/eoramask
 	name = "Эоранская маска"
@@ -2043,6 +2042,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Kitsune mask"
 	category = list ("Донат", "Головные уборы")
 	path = /obj/item/clothing/mask/rogue/yoruku_kitsune
+	donatitem = TRUE
+
+/datum/loadout_item/donator_lmwevil/brassbeak
+	name = "Donator Kit - Brass Beak Mask"
+	category = list ("Донат", "Головные уборы")
+	path = /obj/item/enchantingkit/lmwevil_brassbeak
 	donatitem = TRUE
 
 // Шляпы

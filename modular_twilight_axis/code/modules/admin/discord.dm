@@ -1,6 +1,9 @@
 /datum/config_entry/string/admin_bans_channel
 	default = null
 
+/datum/config_entry/string/admin_bans_channel2
+	default = null
+
 /datum/config_entry/string/admin_notes_channel
 	default = null
 
@@ -17,8 +20,10 @@
 		return
 
 	var/admin_bans_channel = CONFIG_GET(string/admin_bans_channel)
+	var/admin_bans_channel2 = CONFIG_GET(string/admin_bans_channel2)
+	
 
-	if(!admin_bans_channel)
+	if(!admin_bans_channel && !admin_bans_channel2)
 		return
 
 	var/severity_dict = list(
@@ -80,10 +85,11 @@
 		field_reason,
 	)
 
-	send2chat(
-		message,
-		admin_bans_channel
-	)
+	if(admin_bans_channel)
+		send2chat(message, admin_bans_channel)
+
+	if(admin_bans_channel2)
+		send2chat(message, admin_bans_channel2)
 
 /// Отправляет средствами TGS сообщение в дискорд об изменении PQ игрока.
 /world/proc/TgsAnnouncePQChanges(value, player_ckey, admin_ckey, reason)
@@ -223,8 +229,9 @@
 		return
 
 	var/admin_bans_channel = CONFIG_GET(string/admin_bans_channel)
+	var/admin_bans_channel2 = CONFIG_GET(string/admin_bans_channel2)
 
-	if(!admin_bans_channel)
+	if(!admin_bans_channel && !admin_bans_channel2)
 		return
 
 	var/description = "Игроку доступна роль `[role]`!"
@@ -256,7 +263,8 @@
 		field_admin_ckey,
 	)
 
-	send2chat(
-		message,
-		admin_bans_channel
-	)
+	if(admin_bans_channel)
+		send2chat(message, admin_bans_channel)
+
+	if(admin_bans_channel2)
+		send2chat(message, admin_bans_channel2)

@@ -381,6 +381,7 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 			if(!SSmapping.retainer.head_rebel_decree)
 				user.mind.adjust_triumphs(1)
 			SSmapping.retainer.head_rebel_decree = TRUE
+	GLOB.lord_decrees += raw_message
 	record_round_statistic(STATS_LAWS_AND_DECREES_MADE)
 	SScommunications.make_announcement(user, TRUE, raw_message)
 

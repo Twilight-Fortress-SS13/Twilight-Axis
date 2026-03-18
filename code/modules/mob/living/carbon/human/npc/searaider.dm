@@ -11,6 +11,8 @@ GLOBAL_LIST_INIT(searaider_aggro, world.file2list("strings/rt/searaideraggroline
 	possible_rmb_intents = list()
 
 /mob/living/carbon/human/species/human/northern/searaider/ambush
+	threat_point = THREAT_MODERATE
+	ambush_faction = "raiders"
 	aggressive=1
 
 	wander = TRUE
