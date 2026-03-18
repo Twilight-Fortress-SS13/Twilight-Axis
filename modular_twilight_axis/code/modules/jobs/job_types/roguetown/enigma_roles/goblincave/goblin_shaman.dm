@@ -126,19 +126,22 @@
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/unholyblast)
 
 /proc/update_goblin_shaman_slots()
-    var/datum/job/goblin_shaman_job = SSjob.GetJob("Goblin Shaman")
-    if(!goblin_shaman_job)
-        return
+	var/datum/job/goblin_shaman_job = SSjob.GetJob("Goblin Shaman")
+	if(!goblin_shaman_job)
+		return
 
-    var/player_count = length(GLOB.joined_player_list)
-    var/ready_player_count = length(GLOB.ready_player_list)
-    var/slots = 0
+	var/player_count = length(GLOB.joined_player_list)
+	var/ready_player_count = length(GLOB.ready_player_list)
+	var/slots = 0
 
-    var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 
-    // At 80 players, 1 slot opens
-    if(current_players >= 80)
-        slots = 1
+	// На 80 игроках, 1 слот открывается
+	if(SSmapping.config.map_name == "Rockhill")
+		if(current_players >= 80)
+			slots = 1
+	else
+		slots = 0
 
-    goblin_shaman_job.total_positions = slots
-    goblin_shaman_job.spawn_positions = slots
+	goblin_shaman_job.total_positions = slots
+	goblin_shaman_job.spawn_positions = slots

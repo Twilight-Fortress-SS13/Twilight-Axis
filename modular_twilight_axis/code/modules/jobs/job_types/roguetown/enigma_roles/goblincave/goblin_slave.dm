@@ -96,19 +96,22 @@
 		)
 
 /proc/update_goblin_slave_slots()
-    var/datum/job/goblin_slave_job = SSjob.GetJob("Goblin Slave")
-    if(!goblin_slave_job)
-        return
+	var/datum/job/goblin_slave_job = SSjob.GetJob("Goblin Slave")
+	if(!goblin_slave_job)
+		return
 
-    var/player_count = length(GLOB.joined_player_list)
-    var/ready_player_count = length(GLOB.ready_player_list)
-    var/slots = 0
+	var/player_count = length(GLOB.joined_player_list)
+	var/ready_player_count = length(GLOB.ready_player_list)
+	var/slots = 0
 
-    var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 
-    // At 80 players, 4 slots open
-    if(current_players >= 80)
-        slots = 4
+	// На 80 игроках, 4 sслота
+	if(SSmapping.config.map_name == "Rockhill")
+		if(current_players >= 80)
+			slots = 4
+	else
+		slots = 0
 
-    goblin_slave_job.total_positions = slots
-    goblin_slave_job.spawn_positions = slots
+	goblin_slave_job.total_positions = slots
+	goblin_slave_job.spawn_positions = slots
