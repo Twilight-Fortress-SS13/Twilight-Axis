@@ -241,6 +241,8 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 					continue
 				valid_paths += sub_path
 		else
+			if(!initial(path.name))
+				continue
 			if(should_hide_recipe(path))
 				continue
 			valid_paths += path

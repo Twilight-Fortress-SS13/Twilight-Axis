@@ -7,6 +7,7 @@
 	class_select_category = CLASS_CAT_ACCURSED
 	category_tags = list(CTAG_WRETCH)
 	maximum_possible_slots = 2 // Two so that the gimmick isn't overdone
+	min_pq = 30 // TA EDIT
 	applies_post_equipment = TRUE
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ARCYNE_T2)
 	subclass_stats = list(
@@ -102,7 +103,7 @@
 			if("macebearer")
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/shatter)
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/tremor)
-				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/charge)
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/charge)
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/cataclysm)
 
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/recall_weapon)

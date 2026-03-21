@@ -8,7 +8,6 @@ type RecipeEntry = {
 };
 
 type Props = {
-  title: string;
   recipes: RecipeEntry[];
   categories: string[];
   category: string;
@@ -20,7 +19,6 @@ type Props = {
 
 export const RecipeBookSidebar = memo((props: Props) => {
   const {
-    title,
     recipes,
     categories,
     category,
@@ -36,10 +34,10 @@ export const RecipeBookSidebar = memo((props: Props) => {
     const query = search.toLowerCase();
     const seen = new Set<string>();
     return recipes.filter((r) => {
-      const matchCat = category === 'All' || r.category === category;
-      const matchSearch = !query || r.name.toLowerCase().includes(query);
+      const matchCat = category === 'Всё' || r.category === category;
+      const matchSearch = !query || (r.name && r.name.toLowerCase().includes(query));
       if (!matchCat || !matchSearch) return false;
-      if (category === 'All') {
+      if (category === 'Всё') {
         if (seen.has(r.path)) return false;
         seen.add(r.path);
       }
@@ -47,63 +45,88 @@ export const RecipeBookSidebar = memo((props: Props) => {
     });
   }, [recipes, search, category]);
 
+  const hasCategories = categories.length > 1;
+
   return (
-    <Stack vertical fill>
-      {!!onBack && (
-        <Stack.Item>
-          <Button fluid icon="arrow-left" onClick={onBack}>
-            Back to Library
-          </Button>
+    <Stack fill>
+      {hasCategories && (
+        <Stack.Item style={{ overflow: 'auto', minWidth: '130px' }}>
+          <Stack vertical fill>
+            <Stack.Item grow basis={0} style={{ overflow: 'auto' }}>
+              <Section fill scrollable title="Фильтр">
+                <Stack vertical>
+                  {categories.map((cat) => (
+                    <Stack.Item key={cat}>
+                      <Button
+                        fluid
+                        compact
+                        selected={category === cat}
+                        onClick={() => onCategoryChange(cat)}
+                      >
+                        {cat}
+                      </Button>
+                    </Stack.Item>
+                  ))}
+                </Stack>
+              </Section>
+            </Stack.Item>
+            {!!onBack && (
+              <Stack.Item>
+                <Button
+                  fluid
+                  icon="arrow-left"
+                  onClick={onBack}
+                >
+                  Library
+                </Button>
+              </Stack.Item>
+            )}
+          </Stack>
         </Stack.Item>
       )}
-      <Stack.Item>
-        <Box bold textAlign="center" py={0.5}>
-          {title}
-        </Box>
-      </Stack.Item>
-      <Stack.Item>
-        <Input
-          fluid
-          placeholder="Search..."
-          value={search}
-          onChange={(value) => setSearch(value)}
-        />
-      </Stack.Item>
-      {categories.length > 1 && (
-        <Stack.Item>
-          <Box style={{ display: 'flex', flexWrap: 'wrap', gap: '2px' }}>
-            {categories.map((cat) => (
+      <Stack.Item grow basis={0}>
+        <Stack vertical fill>
+          <Stack.Item grow basis={0} style={{ overflow: 'auto' }}>
+            <Section fill scrollable title="Entries">
+              {filtered.length === 0 ? (
+                <Box italic color="label" textAlign="center">
+                  No matching entries found.
+                </Box>
+              ) : (
+                filtered.map((recipe) => (
+                  <Button
+                    key={recipe.path}
+                    fluid
+                    selected={selectedRecipe === recipe.path}
+                    onClick={() => onSelectRecipe(recipe.path)}
+                    style={{ whiteSpace: 'normal' }}
+                  >
+                    {recipe.name}
+                  </Button>
+                ))
+              )}
+            </Section>
+          </Stack.Item>
+          <Stack.Item>
+            <Input
+              fluid
+              placeholder="Search..."
+              value={search}
+              onChange={(value) => setSearch(value)}
+            />
+          </Stack.Item>
+          {!hasCategories && !!onBack && (
+            <Stack.Item>
               <Button
-                key={cat}
-                selected={category === cat}
-                compact
-                onClick={() => onCategoryChange(cat)}
-              >
-                {cat}
-              </Button>
-            ))}
-          </Box>
-        </Stack.Item>
-      )}
-      <Stack.Item grow basis={0} style={{ overflow: 'auto' }}>
-        <Section fill scrollable>
-          {filtered.length === 0 ? (
-            <Box italic color="label" textAlign="center">
-              No matching entries found.
-            </Box>
-          ) : (
-            filtered.map((recipe) => (
-              <Button
-                key={recipe.path}
                 fluid
-                selected={selectedRecipe === recipe.path}
-                onClick={() => onSelectRecipe(recipe.path)}
+                icon="arrow-left"
+                onClick={onBack}
               >
-                {recipe.name}
+                Back to Library
               </Button>
-            ))
+            </Stack.Item>
           )}
-        </Section>
+        </Stack>
       </Stack.Item>
     </Stack>
   );

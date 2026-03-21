@@ -1,2 +1,3 @@
-/datum/job/roguetown/orthodoxist
-	job_traits = list(TRAIT_STEELHEARTED, TRAIT_INQUISITION, TRAIT_OUTLANDER)
+/datum/job/roguetown/orthodoxist/New()
+	job_traits += list(TRAIT_OUTLANDER)
+	. = ..()

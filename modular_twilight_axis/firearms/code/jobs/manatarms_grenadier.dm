@@ -1,3 +1,7 @@
+/datum/job/roguetown/manorguard/New()
+	job_subclasses += list(/datum/advclass/manorguard/twilight_grenadier)
+	. = ..()
+
 /datum/advclass/manorguard/twilight_grenadier
 	name = "Grenadier"
 	tutorial = "You are a professional soldier of the realm, specializing in revolutionary gunpowder weaponry. There are many men who can block a blade, but you're yet to find one who can block a bullet."

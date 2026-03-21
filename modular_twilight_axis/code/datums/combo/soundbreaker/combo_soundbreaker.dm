@@ -687,7 +687,7 @@
 		var/obj/G = H.get_item_by_slot(SLOT_GLOVES)
 		if(istype(G, /obj/item/clothing/gloves/roguetown))
 			var/obj/item/clothing/gloves/roguetown/GL = G
-			damage = (damage * GL.unarmed_bonus)
+			damage = (damage + GL.unarmed_bonus)
 
 		if(H.dna?.species)
 			damage += H.dna.species.punch_damage

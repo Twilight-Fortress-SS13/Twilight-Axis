@@ -9,3 +9,5 @@
 #include "./src/elize.dm"
 #include "./src/wavy.dm"
 #include "./src/charlotta.dm"
+#include "./src/volaju.dm"
+#include "./src/long_twist.dm"

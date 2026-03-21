@@ -33,7 +33,15 @@ export const RecipeBook = () => {
   const { data } = useBackend<RecipeBookData>();
 
   return (
-    <Window width={1000} height={810} title="Encyclopedia">
+    <Window
+      width={1150}
+      height={810}
+      title={
+        data.page === 'book' && data.current_book_title
+          ? `Encyclopedia - ${data.current_book_title}`
+          : 'Encyclopedia'
+      }
+    >
       <Window.Content>
         {data.page === 'book' && data.current_book ? (
           <BookPage />
@@ -83,12 +91,14 @@ const LibraryPage = () => {
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
               gap: '2px',
+              alignItems: 'stretch',
             }}
           >
             {guides.map((book) => (
               <Button
                 key={book.path}
                 fluid
+                style={{ height: '100%' }}
                 onClick={() => act('open_book', { path: book.path })}
               >
                 {book.wiki_name}
@@ -107,12 +117,14 @@ const LibraryPage = () => {
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
               gap: '2px',
+              alignItems: 'stretch',
             }}
           >
             {recipes.map((book) => (
               <Button
                 key={book.path}
                 fluid
+                style={{ height: '100%' }}
                 onClick={() => act('open_book', { path: book.path })}
               >
                 {book.wiki_name}
@@ -154,7 +166,6 @@ const BookPage = () => {
     <Stack fill>
       <Stack.Item basis="30%">
         <RecipeBookSidebar
-          title={data.current_book_title}
           recipes={recipes}
           categories={categories}
           category={category}

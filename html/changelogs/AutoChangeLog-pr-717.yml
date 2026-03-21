@@ -1,0 +1,4 @@
+author: "G9ose"
+delete-after: True
+changes:
+  - rscadd: "Новый класс для вретчей в виде скелетов."

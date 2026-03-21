@@ -18,6 +18,8 @@ GLOBAL_LIST_INIT(dwarfskeleton_aggro, world.file2list("strings/rt/dskeletonaggro
 	possible_rmb_intents = list(/datum/rmb_intent/feint, /datum/rmb_intent/aimed, /datum/rmb_intent/strong, /datum/rmb_intent/weak)
 
 /mob/living/carbon/human/species/dwarfskeleton/ambush
+	threat_point = THREAT_ELITE
+	ambush_faction = "undead"
 	aggressive=1
 	wander = TRUE
 

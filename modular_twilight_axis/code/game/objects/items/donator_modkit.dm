@@ -89,3 +89,48 @@
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Coat"
 	target_items = list(/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat)
 	result_item = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat/heavy
+
+// Sanguine Set
+
+/obj/item/enchantingkit/sanguine_vest
+	name = "'Sanguine Vest' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Gambeson or Padded Gambeson"
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/shirt/courtphysician,
+		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/shirt/courtphysician,
+		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/otavan = /obj/item/clothing/suit/roguetown/shirt/courtphysician,
+		/obj/item/clothing/suit/roguetown/shirt/freifechter = /obj/item/clothing/suit/roguetown/shirt/courtphysician)
+	icon_loadout = /obj/item/clothing/suit/roguetown/shirt/courtphysician
+
+/obj/item/enchantingkit/sanguine_heels
+	name = "'Sanguine Heels' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Heavy Leather Boots"
+	target_items = list(
+		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/courtphysician/female,
+		/obj/item/clothing/shoes/roguetown/boots/leather = /obj/item/clothing/shoes/courtphysician/female,
+		/obj/item/clothing/shoes/roguetown/boots/otavan = /obj/item/clothing/shoes/courtphysician/female)
+	icon_loadout = /obj/item/clothing/shoes/courtphysician/female
+
+/obj/item/enchantingkit/sanguine_trousers
+	name = "'Sanguine Trousers' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Trousers or Fencing Breeches"
+	target_items = list(
+		/obj/item/clothing/under/roguetown/heavy_leather_pants = /obj/item/clothing/under/roguetown/trou/leather/courtphysician,
+		/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan = /obj/item/clothing/under/roguetown/trou/leather/courtphysician,
+		/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/generic = /obj/item/clothing/under/roguetown/trou/leather/courtphysician)
+	icon_loadout = /obj/item/clothing/under/roguetown/trou/leather/courtphysician
+
+/obj/item/enchantingkit/sanguine_jacket
+	name = "'Sanguine Jacket' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Jacket or Fencing Jacket"
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female,
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy/freifechter = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female,
+		/obj/item/clothing/suit/roguetown/armor/gambeson/lord/heavy = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female
+
+/obj/item/enchantingkit/sanguine_coat
+	name = "'Sanguine Coat' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Coat"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat)
+	result_item = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician

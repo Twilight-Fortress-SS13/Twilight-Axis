@@ -24,14 +24,23 @@ type StorageBackend = {
 const testGeneric = (testFn: () => boolean) => (): boolean => {
   try {
     return Boolean(testFn());
-  } catch {
+  } catch (error) {
+    console.error('Storage backend test failed:', error);
     return false;
   }
 };
 
-const testHubStorage = testGeneric(
-  () => window.hubStorage && !!window.hubStorage.getItem,
-);
+const testHubStorage = testGeneric(() => {
+  const exists = !!window.hubStorage;
+  const hasGetter = !!window.hubStorage?.getItem;
+  const hasSetter = !!window.hubStorage?.setItem;
+
+  console.log('[storage] hubStorage exists:', exists);
+  console.log('[storage] hubStorage has getItem:', hasGetter);
+  console.log('[storage] hubStorage has setItem:', hasSetter);
+
+  return exists && hasGetter && hasSetter;
+});
 
 class MemoryBackend implements StorageBackend {
   private store: Record<string, any>;
@@ -43,18 +52,23 @@ class MemoryBackend implements StorageBackend {
   }
 
   async get(key: string): Promise<any> {
-    return this.store[key];
+    const value = this.store[key];
+    console.log('[storage:memory] get', key, value);
+    return value;
   }
 
   async set(key: string, value: any): Promise<void> {
+    console.log('[storage:memory] set', key, value);
     this.store[key] = value;
   }
 
   async remove(key: string): Promise<void> {
+    console.log('[storage:memory] remove', key);
     this.store[key] = undefined;
   }
 
   async clear(): Promise<void> {
+    console.log('[storage:memory] clear');
     this.store = {};
   }
 }
@@ -67,23 +81,57 @@ class HubStorageBackend implements StorageBackend {
   }
 
   async get(key: string): Promise<any> {
-    const value = await window.hubStorage.getItem(`${KEY_NAME}-${key}`);
-    if (typeof value === 'string') {
-      return JSON.parse(value);
+    const fullKey = `${KEY_NAME}-${key}`;
+    try {
+      const value = await window.hubStorage.getItem(fullKey);
+      console.log('[storage:hub] raw get', fullKey, value);
+
+      if (typeof value === 'string') {
+        try {
+          const parsed = JSON.parse(value);
+          console.log('[storage:hub] parsed get', fullKey, parsed);
+          return parsed;
+        } catch (error) {
+          console.error('[storage:hub] failed to parse JSON for', fullKey, value, error);
+          return undefined;
+        }
+      }
+
+      return undefined;
+    } catch (error) {
+      console.error('[storage:hub] get failed for', fullKey, error);
+      return undefined;
     }
-    return undefined;
   }
 
   async set(key: string, value: any): Promise<void> {
-    window.hubStorage.setItem(`${KEY_NAME}-${key}`, JSON.stringify(value));
+    const fullKey = `${KEY_NAME}-${key}`;
+    try {
+      const serialized = JSON.stringify(value);
+      console.log('[storage:hub] set', fullKey, value);
+      await window.hubStorage.setItem(fullKey, serialized);
+    } catch (error) {
+      console.error('[storage:hub] set failed for', fullKey, value, error);
+    }
   }
 
   async remove(key: string): Promise<void> {
-    window.hubStorage.removeItem(`${KEY_NAME}-${key}`);
+    const fullKey = `${KEY_NAME}-${key}`;
+    try {
+      console.log('[storage:hub] remove', fullKey);
+      await window.hubStorage.removeItem(fullKey);
+    } catch (error) {
+      console.error('[storage:hub] remove failed for', fullKey, error);
+    }
   }
 
   async clear(): Promise<void> {
-    window.hubStorage.clear();
+    try {
+      console.log('[storage:hub] clear');
+      await window.hubStorage.clear();
+    } catch (error) {
+      console.error('[storage:hub] clear failed', error);
+    }
   }
 }
 
@@ -98,13 +146,15 @@ class StorageProxy implements StorageBackend {
   constructor() {
     this.backendPromise = (async () => {
       if (testHubStorage()) {
+        this.impl = IMPL_HUB_STORAGE;
+        console.log('[storage] Selected backend: HUB_STORAGE');
         return new HubStorageBackend();
       }
 
+      this.impl = IMPL_MEMORY;
       console.warn(
-        'No supported storage backend found. Using in-memory storage.',
+        '[storage] No supported storage backend found. Using in-memory storage.',
       );
-
       return new MemoryBackend();
     })();
   }

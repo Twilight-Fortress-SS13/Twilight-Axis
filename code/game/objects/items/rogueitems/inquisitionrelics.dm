@@ -1097,7 +1097,7 @@ Inquisitorial armory down here
 	var/timetobag = 8 SECONDS
 	if(HAS_TRAIT(user, TRAIT_BLACKBAGGER))
 		trained = TRUE
-		timetobag = 4 SECONDS
+		timetobag = 3 SECONDS
 	user.visible_message(span_danger("[user] goes to [trained ? "expertly" : "clumsily"] black bag [M]!"))
 	if(HAS_TRAIT(M, TRAIT_GRABIMMUNE))
 		user.visible_message(span_danger("[M] slips past [user]'s attempt to black bag them!"))

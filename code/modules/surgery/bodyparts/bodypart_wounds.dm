@@ -435,21 +435,31 @@
 			try_knockout = TRUE
 		var/dislocation_type
 		var/fracture_type = /datum/wound/fracture/head
-		var/necessary_damage = 0.9
-		if(zone_precise == BODY_ZONE_PRECISE_SKULL)
-			fracture_type = /datum/wound/fracture/head/brain
+		var/necessary_damage = 1
+		if(zone_precise == BODY_ZONE_HEAD)
+			if(owner.has_wound(/datum/wound/fracture/head))
+				fracture_type = /datum/wound/fracture/head/shatter
+			else
+				fracture_type = /datum/wound/fracture/head
+		else if(zone_precise == BODY_ZONE_PRECISE_SKULL)
+			if(owner.has_wound(/datum/wound/fracture/head/brain))
+				fracture_type = /datum/wound/fracture/head/brain/shatter
+			else
+				fracture_type = /datum/wound/fracture/head/brain
 		else if(zone_precise== BODY_ZONE_PRECISE_EARS)
 			fracture_type = /datum/wound/fracture/head/ears
-			necessary_damage = 0.8
+			necessary_damage = 0.9
 		else if(zone_precise == BODY_ZONE_PRECISE_NOSE)
 			fracture_type = /datum/wound/fracture/head/nose
-			necessary_damage = 0.7
+			necessary_damage = 0.8
 		else if(zone_precise == BODY_ZONE_PRECISE_MOUTH)
 			fracture_type = /datum/wound/fracture/mouth
-			necessary_damage = 0.7
+			necessary_damage = 0.8
 		else if(zone_precise == BODY_ZONE_PRECISE_NECK)
-			fracture_type = /datum/wound/fracture/neck
-			dislocation_type = /datum/wound/dislocation/neck
+			if(owner.has_wound(/datum/wound/fracture/neck))
+				fracture_type = /datum/wound/fracture/neck/shatter
+			else
+				fracture_type = /datum/wound/fracture/neck
 		if(prob(used) && (damage_dividend >= necessary_damage))
 			if(dislocation_type)
 				attempted_wounds += dislocation_type

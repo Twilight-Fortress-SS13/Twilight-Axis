@@ -1,0 +1,4 @@
+author: "ReezeBL"
+delete-after: True
+changes:
+  - bugfix: "path for kimono detail color"

@@ -89,7 +89,7 @@
 	beltr = /obj/item/rogueweapon/mace/stunmace
 	cloak = /obj/item/clothing/cloak/sheriff
 	r_hand = /obj/item/rogueweapon/sword/sabre
-	backpack_contents = list(/obj/item/storage/keyring/sheriff = 1, /obj/item/signal_hornn/blue = 1, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/rogueweapon/huntingknife/idagger/steel = 1)
+	backpack_contents = list(/obj/item/storage/keyring/sheriff = 1, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/rogueweapon/huntingknife/idagger/steel = 1)
 
 /datum/outfit/job/roguetown/sheriff/pre_equip(mob/living/carbon/human/H)
 	..()

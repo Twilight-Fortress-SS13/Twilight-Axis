@@ -73,6 +73,9 @@ export const ThemePicker = () => {
                     <Stack.Item>
                       <Button disabled>Disabled</Button>
                     </Stack.Item>
+                    <Stack.Item>
+                      <Button color="transparent">Transparent</Button>
+                    </Stack.Item>
                   </Stack>
                   <Divider />
                   <ProgressBar value={0.65}>Momentum: 65%</ProgressBar>
