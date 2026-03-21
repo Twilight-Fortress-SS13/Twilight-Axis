@@ -653,7 +653,6 @@
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
 			if("Iron Spear")
-				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE) //TA edit
 				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
 					r_hand = /obj/item/rogueweapon/spear/psyspear/old // psydon will endure!
 					l_hand = /obj/item/rogueweapon/scabbard/gwstrap
