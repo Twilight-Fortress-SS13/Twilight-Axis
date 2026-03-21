@@ -90,6 +90,9 @@
 			if(istype(conjured_armor, /obj/item/clothing/suit/roguetown/dragonhide))
 				var/obj/item/clothing/suit/roguetown/dragonhide/armor = conjured_armor
 				armor.linked_conjure_spell = src
+			if(istype(conjured_armor, /obj/item/clothing/suit/roguetown/vinearmour)) // TA EDIT ARMOR DRUID START
+				var/obj/item/clothing/suit/roguetown/vinearmour/armor = conjured_armor
+				armor.linked_conjure_spell = src // TA EDIT ARMOR DRUID END
 			charge_counter = recharge_time
 			STOP_PROCESSING(SSfastprocess, src)
 			if(action)

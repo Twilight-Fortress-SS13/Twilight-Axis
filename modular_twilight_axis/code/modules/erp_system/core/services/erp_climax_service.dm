@@ -61,7 +61,7 @@
 		if(Lx.finish_mode != "until_climax")
 			continue
 
-		if(Lx.actor_active?.physical != who && Lx.actor_passive?.physical != who)
+		if(Lx.actor_active?.physical != who)
 			continue
 
 		var/datum/erp_controller/link_controller = Lx.session

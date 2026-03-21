@@ -198,6 +198,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/nsfw_headshot_link //Twilight Axis edit далее TA
 	var/list/violated = list() // ТА
 	var/ooc_extra
+	var/ooc_extra_img // ТА 
+	var/ooc_extra_img_link // ТА
 	var/song_artist
 	var/song_title
 	var/list/descriptor_entries = list()
@@ -223,11 +225,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/nsfwflavortext
 	var/nsfwflavortext_cached
 
+	var/nsfw_ooc_extra_img // TA EDIT
+	var/nsfw_ooc_extra_img_link // TA EDIT
+
 	var/erpprefs
 	var/erpprefs_cached
 
 	var/list/img_gallery = list()
-
+	var/list/nsfw_img_gallery = list()
 	var/datum/familiar_prefs/familiar_prefs
 
 	var/taur_type = null
@@ -719,11 +724,19 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><b>Song:</b> <a href='?_src_=prefs;preference=ooc_extra;task=input'>Change URL</a>"
 			dat += "<a href='?_src_=prefs;preference=change_title;task=input'>Change Title</a>"
 			dat += "<a href='?_src_=prefs;preference=change_artist;task=input'>Change Artist</a>"
+			dat += "<br><b>OOC Extra Image/Video/Gif (Flavor Text):</b> <a href='?_src_=prefs;preference=ooc_extra_img;task=input'>Change</a>"
+			if(ooc_extra_img_link != null)
+				dat += "<br><img src='[ooc_extra_img_link]' width='100px' height='100px'>"
+			dat += "<br><b>NSFW OOC Extra Image/Video/Gif (Flavor Text):</b> <a href='?_src_=prefs;preference=nsfw_ooc_extra_img;task=input'>Change</a>"
+			if(nsfw_ooc_extra_img_link != null)
+				dat += "<br><img src='[nsfw_ooc_extra_img_link]' width='100px' height='100px'>"
 			dat += "<br><B>Image Gallery:</b> <a href='?_src_=prefs;preference=img_gallery;task=input'>Add</a>"
 			dat+= "<a href='?_src_=prefs;preference=clear_gallery;task=input'>Clear Gallery</a>"
+			dat += "<br><B>NSFW Image Gallery:</b> <a href='?_src_=prefs;preference=nsfw_img_gallery;task=input'>Add</a>"
+			dat+= "<a href='?_src_=prefs;preference=clear_nsfw_gallery;task=input'>Clear NSFW Gallery</a>"
 			dat += "<br><a href='?_src_=prefs;preference=ooc_preview;task=input'><b>Preview Examine</b></a>"
 
-			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;task=input'>Change</a>"
+			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;tdask=input'>Change</a>"
 
 			dat += "</td>"
 
@@ -2297,6 +2310,34 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					to_chat(user, "<span class='notice'>Successfully added image to gallery.</span>")
 					log_game("[user] has added an image to their gallery: '[new_galleryimg]'.")
 
+				if("nsfw_img_gallery")
+
+					if(nsfw_img_gallery.len >= 3)
+						to_chat(user, "You already have three images in your gallery!")
+						return
+
+					to_chat(user, "<span class='notice'>Please use an image ["<span class='bold'>of your character</span>"] to maintain immersion level. Lastly, ["<span class='bold'>do not use a real life photo or use any image that is less than serious.</span>"]</span>")
+					to_chat(user, "<span class='notice'>If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser.</span>")
+					to_chat(user, "<span class='notice'>Keep in mind that all three images are displayed next to eachother and justified to fill a horizontal rectangle. As such, vertical images work best.</span>")
+					to_chat(user, "<span class='notice'>You can only have a maximum of ["<span class='bold'>THREE IMAGES</span>"] in your gallery at a time.</span>")
+
+					var/new_galleryimg = tgui_input_text(user, "Input the image link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Gallery Image",  encode = FALSE)
+
+					if(new_galleryimg == null)
+						return
+					if(new_galleryimg == "")
+						new_galleryimg = null
+						ShowChoices(user)
+						return
+					if(!valid_headshot_link(user, new_galleryimg))
+						to_chat(user, "<span class='notice'>Invalid image link. Make sure it's a direct link from a valid host (gyazo, discord, lensdump, imgbox, catbox).</span>")
+						new_galleryimg = null
+						ShowChoices(user)
+						return
+					nsfw_img_gallery += new_galleryimg
+					to_chat(user, "<span class='notice'>Successfully added image to nsfw gallery.</span>")
+					log_game("[user] has added an image to their nsfw gallery: '[new_galleryimg]'.")
+
 				if("clear_gallery")
 					if(!img_gallery.len)
 						to_chat(user, "You don't have any images in your gallery to clear!")
@@ -2329,6 +2370,19 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 							if(all_themes[theme_key] == picked)
 								examine_theme = theme_key
 								break
+
+				if("clear_nsfw_gallery")
+					if(!nsfw_img_gallery.len)
+						to_chat(user, "You don't have any images in your nsfw gallery to clear!")
+						return
+					var/dachoice = tgui_alert(user, "Do you really want to clear your nsfw image gallery?", "Clear nsfw Gallery", list("Yae", "Nae"))
+					if(dachoice == "Nae")
+						ShowChoices(user)
+						return
+					nsfw_img_gallery = list()
+					to_chat(user, "<span class='notice'>Successfully cleared their nsfw image gallery.</span>")
+					log_game("[user] has cleared their nsfw image gallery.")
+
 
 				if("ooc_preview")
 					var/datum/examine_panel/preview_examine_panel = new(user)
@@ -2404,6 +2458,70 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					song_title = new_title
 					to_chat(user, "<span class='notice'>Successfully updated song title.</span>")
 					log_game("[user] has set their song title.")
+
+				if("ooc_extra_img")
+					to_chat(user, "<span class='notice'>Add a link to images/videos (jpg, png, gif, mp4) that will be displayed in your Flavor Text.</span>")
+					to_chat(user, "<span class='notice'>Images/videos will be constrained by width but have limitless height. Suitable hosts: catbox, discord, gyazo, lensdump, imgbox.</span>")
+					to_chat(user, "<font color='#d6d6d6'>Leave a single space to delete it.</font>")
+					to_chat(user, "<font color='red'>Abuse of this will get you banned.</font>")
+					var/link = tgui_input_text(user, "Input the image/video link (https):", "OOC Extra Image", ooc_extra_img_link, encode = FALSE)
+					if(link == null)
+						return
+					if(!link || !length(trim(link)))
+						ooc_extra_img = null
+						ooc_extra_img_link = null
+						to_chat(user, "<span class='notice'>Successfully deleted OOC Extra Image.</span>")
+						ShowChoices(user)
+						return
+					var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif", "mp4")
+					if(!valid_headshot_link(user, link, FALSE, valid_ext))
+						link = null
+						ShowChoices(user)
+						return
+					ooc_extra_img_link = link
+					var/ext = lowertext(splittext(link, ".")[length(splittext(link, "."))])
+					var/info
+					switch(ext)
+						if("jpg", "jpeg", "png", "gif")
+							ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
+							info = "an image."
+						if("mp4")
+							ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
+							info = "a video."
+					to_chat(user, "<span class='notice'>Successfully updated OOC Extra Image with [info]</span>")
+					log_game("[user] has set their OOC Extra Image to '[link]'.")
+
+				if("nsfw_ooc_extra_img")
+					to_chat(user, "<span class='notice'>Add a link to NSFW images/videos (jpg, png, gif, mp4) that will be displayed in your NSFW Flavor Text.</span>")
+					to_chat(user, "<span class='notice'>Images/videos will be constrained by width but have limitless height. Suitable hosts: catbox, discord, gyazo, lensdump, imgbox.</span>")
+					to_chat(user, "<font color='#d6d6d6'>Leave a single space to delete it.</font>")
+					to_chat(user, "<font color='red'>Abuse of this will get you banned.</font>")
+					var/link = tgui_input_text(user, "Input the image/video link (https):", "NSFW OOC Extra Image", nsfw_ooc_extra_img_link, encode = FALSE)
+					if(link == null)
+						return
+					if(!link || !length(trim(link)))
+						nsfw_ooc_extra_img = null
+						nsfw_ooc_extra_img_link = null
+						to_chat(user, "<span class='notice'>Successfully deleted NSFW OOC Extra Image.</span>")
+						ShowChoices(user)
+						return
+					var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif", "mp4")
+					if(!valid_headshot_link(user, link, FALSE, valid_ext))
+						link = null
+						ShowChoices(user)
+						return
+					nsfw_ooc_extra_img_link = link
+					var/ext = lowertext(splittext(link, ".")[length(splittext(link, "."))])
+					var/info
+					switch(ext)
+						if("jpg", "jpeg", "png", "gif")
+							nsfw_ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
+							info = "an image."
+						if("mp4")
+							nsfw_ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
+							info = "a video."
+					to_chat(user, "<span class='notice'>Successfully updated NSFW OOC Extra Image with [info]</span>")
+					log_game("[user] has set their NSFW OOC Extra Image to '[link]'.")
 
 				if("familiar_prefs")
 					familiar_prefs.fam_show_ui()
@@ -3148,7 +3266,11 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	character.flavortext = flavortext
 	character.ooc_notes = ooc_notes
 	character.nsfwflavortext = nsfwflavortext
-	
+
+	character.nsfw_ooc_extra_img = nsfw_ooc_extra_img
+
+	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link	
+
 	character.nsfw_headshot_link = nsfw_headshot_link //TA edit
 
 	character.erpprefs = erpprefs
@@ -3161,8 +3283,14 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 	character.img_gallery = img_gallery
 
+	character.nsfw_img_gallery = nsfw_img_gallery
+
 	character.examine_theme = examine_theme
 	character.ooc_extra = ooc_extra
+
+	character.ooc_extra_img = ooc_extra_img
+
+	character.ooc_extra_img_link = ooc_extra_img_link
 
 	character.song_title = song_title
 

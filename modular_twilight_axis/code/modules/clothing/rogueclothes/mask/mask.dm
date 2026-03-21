@@ -188,3 +188,6 @@
 	desc = "A wood mask carved in the visage of the fox spirits said to ply their tricks in the forests of Kazengun."
 	icon_state = "kitsune"
 	stack_fovs = FALSE
+
+/obj/item/clothing/mask/rogue/lordmask/naledi/steel
+	max_integrity = 200

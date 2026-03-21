@@ -458,8 +458,6 @@
 	/datum/status_effect/buff/refocus,
 	/datum/status_effect/buff/healing,
 	/datum/status_effect/buff/psyhealing,
-	/datum/status_effect/buff/convergence,
-	/datum/status_effect/buff/stasis,
 	/datum/status_effect/buff/order/movemovemove,
 	/datum/status_effect/buff/order/takeaim,
 	/datum/status_effect/buff/order/hold,

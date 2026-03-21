@@ -260,15 +260,18 @@
 		return
 
 	var/obj/structure/bed/rogue/bed = find_bed_for_thrust(L, user, target)
-	if(!bed || QDELETED(bed))
+	if(bed && !QDELETED(bed))
+		var/oldy = bed.pixel_y
+		var/target_y = oldy - 1
+		var/t = max(1, round(time / 2))
+		animate(bed, pixel_y = target_y, time = t)
+		animate(pixel_y = oldy, time = t)
+		bed.damage_bed(force > SEX_FORCE_HIGH ? 0.5 : 0.25)
 		return
 
-	var/oldy = bed.pixel_y
-	var/target_y = oldy - 1
-	var/t = max(1, round(time / 2))
-	animate(bed, pixel_y = target_y, time = t)
-	animate(pixel_y = oldy, time = t)
-	bed.damage_bed(force > SEX_FORCE_HIGH ? 0.5 : 0.25)
+	var/obj/structure/closet/C = find_closet_for_thrust(L, user, target)
+	if(C)
+		shake_closet(C, force, time)
 
 /// Finds closest bed for thrust animation.
 /datum/erp_vfx_service/proc/find_bed_for_thrust(datum/erp_sex_link/L, mob/living/user, atom/movable/target)
@@ -317,3 +320,28 @@
 
 /datum/erp_vfx_service/proc/is_thrust_init(init_t)
 	return (init_t in list(SEX_ORGAN_MOUTH, SEX_ORGAN_VAGINA, SEX_ORGAN_PENIS, SEX_ORGAN_TAIL))
+
+/datum/erp_vfx_service/proc/find_closet_for_thrust(datum/erp_sex_link/L, mob/living/user, atom/movable/target)  
+    var/atom/movable/A = L?.actor_active?.get_movable()  
+    var/atom/movable/B = L?.actor_passive?.get_movable()  
+
+    if(A?.loc == B?.loc && istype(A.loc, /obj/structure/closet))  
+        return A.loc  
+
+    return null 
+
+/datum/erp_vfx_service/proc/shake_closet(obj/structure/closet/C, force, time)
+	if(!C || QDELETED(C))
+		return
+
+	var/oldx = C.pixel_x
+	var/push = 1
+	if(force >= SEX_FORCE_EXTREME)
+		push = 3
+	else if(force >= SEX_FORCE_HIGH)
+		push = 2
+
+	var/target_x = oldx + pick(-push, push)
+	var/t = max(1, round(time / 2))
+	animate(C, pixel_x = target_x, time = t)
+	animate(pixel_x = oldx, time = t)

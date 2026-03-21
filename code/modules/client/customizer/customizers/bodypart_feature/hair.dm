@@ -512,6 +512,7 @@
 		/datum/sprite_accessory/hair/head/wavy,
 		/datum/sprite_accessory/hair/head/wavy_medium,
 		/datum/sprite_accessory/hair/head/charlotta,
+		/datum/sprite_accessory/hair/head/volaju_alt,
 		/datum/sprite_accessory/hair/head/long_twist,
 		)
 

@@ -1,5 +1,3 @@
-
-
 GLOBAL_LIST_INIT(threat_region_templates, list(
 	//Dunworld
 	THREAT_REGION_AZURE_BASIN = /datum/threat_region/azure_basin,
@@ -23,7 +21,7 @@ GLOBAL_LIST_INIT(threat_region_templates, list(
 
 SUBSYSTEM_DEF(regionthreat)
 	name = "Regional Threat"
-	wait = 15 MINUTES
+	wait = 30 MINUTES
 	flags = SS_KEEP_TIMING | SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME
 	// The first four regions are meant to be "tameable" for towner purposes
@@ -60,7 +58,7 @@ SUBSYSTEM_DEF(regionthreat)
 		TRS.region_name = TR.region_name
 		TRS.danger_level = TR.get_danger_level()
 		TRS.danger_color = TR.get_danger_color()
-		if(TR.min_ambush == DANGER_SAFE_FLOOR) //TA EDIT
+		if(TR.min_ambush == 0) //TA EDIT
 			TRS.can_be_cleared = TRUE //TA EDIT
 		threat_region_displays += TRS
 	return threat_region_displays

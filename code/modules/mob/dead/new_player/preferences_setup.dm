@@ -15,6 +15,10 @@
 	if(ft_reset)
 		flavortext = null
 		nsfwflavortext = null
+		ooc_extra_img = null
+		ooc_extra_img_link = null
+		nsfw_ooc_extra_img = null
+		nsfw_ooc_extra_img_link = null
 		erpprefs = null
 		ooc_notes = null
 		ooc_extra = null
@@ -23,6 +27,7 @@
 		headshot_link = null
 		nsfw_headshot_link = null
 		img_gallery = null
+		nsfw_img_gallery = null
 	features = pref_species.get_random_features()
 	body_markings = pref_species.get_random_body_markings(features)
 	accessory = "Nothing"

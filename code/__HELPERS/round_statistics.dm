@@ -1,6 +1,7 @@
 // Census
 #define STATS_ALIVE_NORTHERN_HUMANS "alive_northern_humans"
 #define STATS_ALIVE_DWARVES "alive_dwarves"
+#define STATS_ALIVE_GNOMES "alinve_gnomes"
 #define STATS_ALIVE_DARK_ELVES "alive_dark_elves"
 #define STATS_ALIVE_WOOD_ELVES "alive_wood_elves"
 #define STATS_ALIVE_SUN_ELVES "alive_sun_elves"
@@ -14,6 +15,7 @@
 #define STATS_ALIVE_HALFKIN "alive_halfkin"
 #define STATS_ALIVE_WILDKIN "alive_wildkin"
 #define STATS_ALIVE_CONSTRUCTS "alive_constructs"
+#define STATS_ALIVE_REVENANTS "alive_revenants"
 #define STATS_ALIVE_VERMINFOLK "alive_verminfolk"
 #define STATS_ALIVE_DRACON "alive_dracon"
 #define STATS_ALIVE_AXIAN "alive_axian"
@@ -259,6 +261,7 @@ GLOBAL_LIST_INIT(azure_round_stats, list(
 	STATS_VOYEURS = 0,
 	STATS_ALIVE_NORTHERN_HUMANS = 0,
 	STATS_ALIVE_DWARVES = 0,
+	STATS_ALIVE_GNOMES = 0,
 	STATS_ALIVE_DARK_ELVES = 0,
 	STATS_ALIVE_HALF_ELVES = 0,
 	STATS_ALIVE_SUN_ELVES = 0,
@@ -271,6 +274,7 @@ GLOBAL_LIST_INIT(azure_round_stats, list(
 	STATS_ALIVE_HALFKIN = 0,
 	STATS_ALIVE_WILDKIN = 0,
 	STATS_ALIVE_CONSTRUCTS = 0,
+	STATS_ALIVE_REVENANTS = 0,
 	STATS_ALIVE_VERMINFOLK = 0,
 	STATS_ALIVE_DRACON = 0,
 	STATS_ALIVE_AXIAN = 0,
