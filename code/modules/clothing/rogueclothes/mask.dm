@@ -561,9 +561,9 @@
 	equip_delay_self = 3.5 SECONDS
 	unequip_delay_self = 3.5 SECONDS
 
-/obj/item/clothing/mask/rogue/exoticsilkmask
-	name = "exotic silk mask"
-	icon_state = "exoticsilkmask"
+/obj/item/clothing/mask/rogue/silkmask
+	name = "giltsilk mask"
+	icon_state = "silkmask"
 	flags_inv = HIDEFACE|HIDEFACIALHAIR
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
 	sewrepair = TRUE
@@ -572,7 +572,7 @@
 	salvage_result = /obj/item/natural/silk
 	salvage_amount = 2
 
-/obj/item/clothing/mask/rogue/exoticsilkmask/ComponentInitialize()
+/obj/item/clothing/mask/rogue/silkmask/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/equip/rummaging-03.ogg', null, (UPD_HEAD|UPD_MASK))	//Standard mask
 
 /obj/item/clothing/mask/rogue/blindfold

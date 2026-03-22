@@ -497,8 +497,8 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Обувь"
 	path = /obj/item/clothing/shoes/roguetown/boots/furlinedanklets
 
-/datum/loadout_item/exoticanklets
-	name = "Exotic Anklets"
+/datum/loadout_item/silkanklets
+	name = "Silk Anklets"
 	category = "Обувь"
 	path = /obj/item/clothing/shoes/roguetown/anklets
 
@@ -565,10 +565,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Одежда"
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/priest
 
-/datum/loadout_item/exoticsilkbra
-	name = "Exotic Silk Bra"
+/datum/loadout_item/silkbra
+	name = "Giltsilk Bra"
 	category = "Одежда"
-	path = /obj/item/clothing/suit/roguetown/shirt/exoticsilkbra
+	path = /obj/item/clothing/suit/roguetown/shirt/silkbra
 
 /datum/loadout_item/desertbra
 	name = "Desert Bra"
@@ -807,10 +807,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Аксессуары"
 	path = /obj/item/clothing/gloves/roguetown/bandages
 
-/datum/loadout_item/exoticsilkbelt
-	name = "Exotic Silk Belt"
+/datum/loadout_item/silkbelt
+	name = "Giltsilk Belt"
 	category = "Аксессуары"
-	path = /obj/item/storage/belt/rogue/leather/exoticsilkbelt
+	path = /obj/item/storage/belt/rogue/leather/silkbelt
 
 /datum/loadout_item/ragmask
 	name = "Rag Mask"
@@ -833,10 +833,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	path = /obj/item/clothing/head/roguetown/roguehood/eorahood
 
-/datum/loadout_item/exoticsilkmask
-	name = "Exotic Silk Mask"
+/datum/loadout_item/silkmask
+	name = "Giltsilk Mask"
 	category = "Аксессуары"
-	path = /obj/item/clothing/mask/rogue/exoticsilkmask
+	path = /obj/item/clothing/mask/rogue/silkmask
 
 /datum/loadout_item/duelmaskc
 	name = "Duelist's Mask"

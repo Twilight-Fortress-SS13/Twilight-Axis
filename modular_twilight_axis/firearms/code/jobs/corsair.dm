@@ -11,8 +11,8 @@
 	sellprice = 25
 
 /datum/advclass/wretch/twilight_corsair
-	name = "Sea Rogue"
-	tutorial = "You spent your entire lyfe making a living through piracy in the seas of Grimoria, where gunpowder and steel were always your loyal companions."
+	name = "Corsair"
+	tutorial = "During the Twilight War, you served aboard a Reichsmarine warship, intercepting, boarding and ravaging Golden Empire's trade vessels on Kaiser's orders. After the war ended, your crew saw it fit to continue with the practice, flying a flag with a different shade of black."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_corsair

@@ -533,7 +533,7 @@
 
 /obj/item/clothing/shoes/roguetown/anklets
 	name = "golden anklets"
-	desc = "Luxurious anklets made of the finest gold. They leave the feet bare while adding an exotic flair."
+	desc = "Luxurious anklets made of the finest gold. They leave the feet bare while adding a silky flair."
 	gender = PLURAL
 	icon_state = "anklets"
 	item_state = "anklets"

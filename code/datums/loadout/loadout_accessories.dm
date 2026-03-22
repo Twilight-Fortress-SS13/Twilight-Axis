@@ -29,9 +29,9 @@
 	path = /obj/item/clothing/gloves/roguetown/bandages
 	sort_category = "Accessories"
 
-/datum/loadout_item/exoticsilkbelt
-	name = "Exotic Silk Belt"
-	path = /obj/item/storage/belt/rogue/leather/exoticsilkbelt
+/datum/loadout_item/silkbelt
+	name = "Giltsilk Belt"
+	path = /obj/item/storage/belt/rogue/leather/silkbelt
 	sort_category = "Accessories"
 	cost = 2
 
@@ -55,9 +55,9 @@
 	path = /obj/item/clothing/head/roguetown/roguehood/eorahood
 	sort_category = "Accessories"
 
-/datum/loadout_item/exoticsilkmask
-	name = "Exotic Silk Mask"
-	path = /obj/item/clothing/mask/rogue/exoticsilkmask
+/datum/loadout_item/silkmask
+	name = "Giltsilk Mask"
+	path = /obj/item/clothing/mask/rogue/silkmask
 	sort_category = "Accessories"
 	cost = 2
 
