@@ -33,13 +33,10 @@
 	)
 
 /datum/intent/sword/bash
-	penfactor = PEN_NONE
+	penfactor = PEN_LIGHT
 
-/datum/intent/rend
-	penfactor = PEN_NONE
+/datum/intent/spear/bash
+	penfactor = PEN_LIGHT
 
-/datum/intent/rend/reach
-	penfactor = PEN_NONE
-
-/datum/intent/partizan/peel
-	penfactor = PEN_NONE
+/datum/intent/spear/thrust/quarterstaff
+	penfactor = PEN_LIGHT

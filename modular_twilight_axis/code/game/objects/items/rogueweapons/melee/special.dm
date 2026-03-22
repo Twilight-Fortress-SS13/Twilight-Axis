@@ -1,5 +1,5 @@
 /datum/intent/knuckles/strike
-	penfactor = PEN_NONE
+	penfactor = PEN_LIGHT
 
-/datum/intent/claw/rend
-	penfactor = PEN_NONE
+/datum/intent/lordbash
+	penfactor = PEN_LIGHT

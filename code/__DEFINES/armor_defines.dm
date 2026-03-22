@@ -38,7 +38,7 @@
 // DR Absorb: damage reduced by tier, ALL damage goes to armor integrity (none to HP). Blunt.
 // DR Pierce: damage reduced by tier, reduced damage STILL hits HP. Armor also takes integrity damage. Fire, acid.
 // DBLOCK: tier pass/fail penetration system. Slash, stab, piercing.
-#define ARMOR_DR_ABSORB_TYPES list("blunt")
+#define ARMOR_DR_ABSORB_TYPES list() // TA EDIT, prev. "blunt"
 #define ARMOR_DR_PIERCE_TYPES list("fire", "acid")
 #define ARMOR_DR_TYPES list("blunt", "fire", "acid")
 #define ARMOR_DBLOCK_TYPES list("slash", "stab", "piercing")
@@ -147,8 +147,8 @@
 // LIGHT ARMOR - Split into two sidegrades: PADDED VS LEATHER
 // PADDED: Best Blunt protection, Bodkin immune. But Axe CHOP (MEDIUM) and sword thrust (MEDIUM) get through. 
 // LEATHER: Decent Blunt DR. Axe CHOP blocked, but sword thrust (MEDIUM) and bodkin (HEAVY) get through. Better vs slash than padded, worse vs piercing.
-#define ARMOR_PADDED list("blunt" = DR_ULTRA, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_BSTEEL, "fire" = DR_MEDIUM, "acid" = DR_NONE)
-#define ARMOR_LEATHER list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "acid" = DR_NONE)
+#define ARMOR_PADDED list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_BSTEEL, "fire" = DR_MEDIUM, "acid" = DR_NONE) // TA EDIT, prev. blunt" = DR_ULTRA
+#define ARMOR_LEATHER list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "acid" = DR_NONE) // TA EDIT, prev.  blunt" = DR_SUPER
 
 // LIGHT ARMOR - SNOWFLAKE. Not comfortable with them, but not touching it atm.
 #define ARMOR_DRAGONSKIN list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_MEDIUM, "fire" = DR_HEAVY, "acid" = DR_NONE) // Iconoclast dragon skin. Fire resistant.

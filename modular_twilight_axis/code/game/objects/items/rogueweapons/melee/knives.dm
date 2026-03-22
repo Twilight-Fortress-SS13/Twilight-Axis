@@ -118,14 +118,5 @@
 		added_def = 2,\
 	)
 
-/datum/intent/dagger/cut/blunt
-	penfactor = PEN_NONE
-
-/datum/intent/dagger/thrust/blunt
-	penfactor = PEN_NONE
-
 /datum/intent/dagger/sucker_punch
-	penfactor = PEN_NONE
-
-/datum/intent/dagger/cut/rend
-	penfactor = PEN_NONE
+	penfactor = PEN_LIGHT
