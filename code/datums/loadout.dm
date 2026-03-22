@@ -441,6 +441,16 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Плащи"
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader/t/undivided
 
+/datum/loadout_item/scaledcloak
+	name = "Scaled Cloak"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/scaledcloak
+
+/datum/loadout_item/sleevedtabard
+	name = "Tabard, Sleeved"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/sleevedtabard
+
 //SHOES
 /datum/loadout_item/darkboots
 	name = "Dark Boots"
@@ -714,6 +724,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "White Foreign Shirt"
 	category = "Одежда"
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt2
+
+/datum/loadout_item/baredrobe
+	name = "Bared Robe"
+	category = "Одежда"
+	path = /obj/item/clothing/suit/roguetown/shirt/robe/bared
 
 //PANTS
 /datum/loadout_item/tights
@@ -1968,6 +1983,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/apron/waist/fancymaid
 	donatitem = TRUE
+
 
 /datum/loadout_item/donat/scarf
 	name = "Шарф"
