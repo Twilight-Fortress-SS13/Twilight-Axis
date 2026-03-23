@@ -6,7 +6,7 @@
 	return TRUE
 
 /datum/intent/effect/daze
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE
 
 /mob/living/try_kick(atom/A)
 

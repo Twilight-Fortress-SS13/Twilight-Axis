@@ -429,6 +429,10 @@
 	effectedstats = list(STATKEY_PER = -3, STATKEY_LCK = -1)
 	duration = 8 SECONDS
 
+/datum/status_effect/debuff/dazed/skullshatter
+	effectedstats = list(STATKEY_PER = -1, STATKEY_INT = -1, STATKEY_SPD = -1)
+	duration = -1
+
 /atom/movable/screen/alert/status_effect/debuff/dazed
 	name = "Dazed"
 	desc = "You've been smacked on the head very hard. Which way is left, again?"

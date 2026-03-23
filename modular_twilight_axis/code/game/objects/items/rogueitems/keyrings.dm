@@ -14,7 +14,7 @@
 	keys = list(/obj/item/roguekey/walls, /obj/item/roguekey/dungeon)
 
 /obj/item/storage/keyring/courtphysician
-	keys = list(/obj/item/roguekey/manor, /obj/item/roguekey/courtphysician, /obj/item/roguekey/physician, /obj/item/roguekey/keeper)
+	keys = list(/obj/item/roguekey/manor, /obj/item/roguekey/courtphysician, /obj/item/roguekey/apothecary, /obj/item/roguekey/keeper)
 	
 /obj/item/storage/keyring/mayor
 	keys = list(/obj/item/roguekey/mayor, /obj/item/roguekey/bailiff, /obj/item/roguekey/walls)
@@ -27,3 +27,12 @@
 
 /obj/item/storage/keyring/knightenigma
 	keys = list(/obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/knight, /obj/item/roguekey/armory)
+
+/obj/item/storage/keyring/apothecaryenigma
+	keys = list(/obj/item/roguekey/apothecary, /obj/item/roguekey/keeper)
+
+/obj/item/storage/keyring/apprenticeenigma
+	keys = list(/obj/item/roguekey/manor, /obj/item/roguekey/university)
+
+/obj/item/storage/keyring/magicianenigma
+	keys = list(/obj/item/roguekey/manor, /obj/item/roguekey/mage, /obj/item/roguekey/university)

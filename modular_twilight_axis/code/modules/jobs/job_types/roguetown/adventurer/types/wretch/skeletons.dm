@@ -2,9 +2,8 @@
 	name = "old rebel's hat"
 	desc = "Старая фаретровая шляпа, пожёванная временем, идеально подходит какому-нибудь бунтовщику против этого общество, позади которого ничего не осталось кроме кучки костей."
 	max_integrity = 100
-	armor = ARMOR_SPELLSINGER
+	armor = ARMOR_LEATHER
 	body_parts_covered = HEAD|HAIR|EARS
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_TWIST)
 
 /datum/advclass/wretch/thehero
 	name = "Undead Warrior"

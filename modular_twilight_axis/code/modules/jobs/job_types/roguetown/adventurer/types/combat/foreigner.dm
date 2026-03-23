@@ -77,7 +77,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/ronin
 	class_select_category = CLASS_CAT_NOMAD
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_PARRYEXPERT)
-	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
+	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	subclass_languages = list(/datum/language/kazengunese)
 	cmode_music = 'sound/music/combat_kazengite.ogg'
 	subclass_stats = list(

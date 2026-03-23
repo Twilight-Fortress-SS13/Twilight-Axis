@@ -8,7 +8,7 @@
 	no_early_release = TRUE
 	recharge_time = 5 MINUTES
 	miracle = TRUE
-	devotion_cost = 150
+	devotion_cost = 200
 	invocations = list("Threefather! Give me your protect!")
 	invocation_type = "shout"
 
@@ -43,6 +43,7 @@
 	armor = ARMOR_VINES
 	body_parts_covered = COVERAGE_FULL | NECK | HANDS | FEET
 	unenchantable = TRUE
+	var/obj/effect/proc_holder/spell/self/conjure_armor/linked_conjure_spell
 
 /obj/item/clothing/suit/roguetown/vinearmour/equipped(mob/living/user)
 	. = ..()
@@ -51,6 +52,8 @@
 
 
 /obj/item/clothing/suit/roguetown/vinearmour/proc/dispel()
+	if(linked_conjure_spell)
+		linked_conjure_spell.start_delayed_recharge()
 	if(!QDELETED(src))
 		src.visible_message(span_warning("The [src]'s body no more covered by vines!"))
 		qdel(src)
@@ -212,7 +215,7 @@
 	invocations = list("Вот она! Ярость дикого сердца!")
 	invocation_type = "shout" //can be none, whisper, emote and shout
 	miracle = TRUE
-	devotion_cost = 100
+	devotion_cost = 125
 
 /obj/effect/proc_holder/spell/self/beast_rage/cast(mob/living/user = usr)
 	. = ..()
@@ -226,13 +229,13 @@
 	range = -1
 	overlay_state = "blesscrop"
 	releasedrain = 30
-	recharge_time = 5 MINUTES
+	recharge_time = 15 MINUTES
 	req_items = /obj/item/clothing/neck/roguetown/psicross/dendor
 	cast_without_targets = TRUE
 	sound = 'sound/magic/churn.ogg'
 	associated_skill = /datum/skill/magic/druidic
 	miracle = TRUE
-	devotion_cost = 70
+	devotion_cost = 100
 
 /obj/effect/proc_holder/spell/targeted/create_seed/proc/get_seeds_dict()
 	var/list/allowed_seeds = list()

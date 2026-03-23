@@ -25,6 +25,7 @@
  *   link-hover      – a:hover / a:active color
  */
 
+@use 'sass:color';
 @use 'sass:map';
 
 @font-face {
@@ -142,20 +143,20 @@
     line-height: 1.667em;
     background-color: map.get($colors, 'border');
     border: 2px solid map.get($colors, 'accent');
-    outline: 1px solid darken(map.get($colors, 'border'), 6%);
+    outline: 1px solid color.adjust(map.get($colors, 'border'), $lightness: -6%);
     outline-offset: -3px;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
     // Raised: light top-left edge, dark bottom-right, drop shadow beneath
     box-shadow:
       inset 1px 1px 0 rgba(255, 255, 255, 0.12),
       inset -1px -1px 0 rgba(0, 0, 0, 0.2),
-      0 2px 0 darken(map.get($colors, 'border'), 10%),
+      0 2px 0 color.adjust(map.get($colors, 'border'), $lightness: -10%),
       0 3px 6px rgba(0, 0, 0, 0.25);
 
     &:hover {
-      background-color: lighten(map.get($colors, 'border'), 6%);
+      background-color: color.adjust(map.get($colors, 'border'), $lightness: 6%);
       border-color: map.get($colors, 'accent-bright');
-      outline-color: darken(map.get($colors, 'border'), 3%);
+      outline-color: color.adjust(map.get($colors, 'border'), $lightness: -3%);
     }
 
     &:active {
@@ -171,7 +172,7 @@
       // Carved recess
       background-color: map.get($colors, 'btn-selected');
       border-color: map.get($colors, 'accent');
-      outline-color: darken(map.get($colors, 'btn-selected'), 4%);
+      outline-color: color.adjust(map.get($colors, 'btn-selected'), $lightness: -4%);
       box-shadow:
         inset 2px 2px 4px rgba(0, 0, 0, 0.5),
         inset -1px -1px 0 rgba(255, 255, 255, 0.04);
@@ -218,9 +219,9 @@
   .Input {
     min-height: 1.667em;
     line-height: 1.667em;
-    background-color: darken(map.get($colors, 'base'), 2%);
+    background-color: color.adjust(map.get($colors, 'base'), $lightness: -2%);
     border: 2px solid map.get($colors, 'accent');
-    outline: 1px solid darken(map.get($colors, 'base'), 5%);
+    outline: 1px solid color.adjust(map.get($colors, 'base'), $lightness: -5%);
     outline-offset: -3px;
     color: #{map.get($colors, 'text')};
     box-shadow:
