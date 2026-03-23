@@ -1,6 +1,7 @@
 /obj/item/organ/tail
 	name = "tail"
 	desc = "A severed tail. What did you cut this off of?"
+	icon = 'modular_twilight_axis/icons/roguetown/items/surgery.dmi' //TA_EDIT
 	icon_state = "severedtail"
 	visible_organ = TRUE
 	zone = BODY_ZONE_PRECISE_GROIN
@@ -16,6 +17,7 @@
 /obj/item/organ/tail/lizard
 	name = "zardman tail"
 	desc = "A severed lizard tail. Somewhere, no doubt, a lizard hater is very pleased with themselves."
+	icon_state = "lizardtail" //TA_EDIT
 	color = "#116611"
 	accessory_type = /datum/sprite_accessory/tail/lizard/smooth
 
@@ -70,11 +72,13 @@
 /obj/item/organ/tail/lizard
 	name = "zardman tail"
 	desc = ""
+	icon_state = "lizardtail" //TA_EDIT
 	color = "#116611"
 	accessory_type =  /datum/sprite_accessory/tail/lizard/smooth
 
 /obj/item/organ/tail/kobold
 	name = "kobold tail"
 	desc = ""
+	icon_state = "koboldtail" //TA_EDIT
 	color = "#116611"
 	accessory_type =  /datum/sprite_accessory/tail/lizard/kobold
