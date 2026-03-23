@@ -31,44 +31,45 @@
 				else
 					held_item.melee_attack_chain(user, src, params)
 		return
-	if(user == src)
-		if(get_num_arms(FALSE) < 1)
-			return
-		if(user.zone_selected == BODY_ZONE_PRECISE_GROIN)
-			if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
-				if(!underwear)
-					return
-				src.visible_message(span_notice("[src] begins to take off [underwear]..."))
-				if(do_after(user, 30, needhand = 1, target = src))
-					var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
-					chest.remove_bodypart_feature(underwear.undies_feature)
-					underwear.forceMove(get_turf(src))
-					src.put_in_hands(underwear)
-					underwear = null
-		if((user.zone_selected == BODY_ZONE_L_LEG) || (user.zone_selected == BODY_ZONE_R_LEG))
-			if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
-				if(!legwear_socks)
-					return
-				src.visible_message(span_notice("[src] begins to take off [legwear_socks]..."))
-				if(do_after(user, 30, needhand = 1, target = src))
-					var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
-					chest.remove_bodypart_feature(legwear_socks.legwears_feature)
-					legwear_socks.forceMove(get_turf(src))
-					src.put_in_hands(legwear_socks)
-					legwear_socks = null
-		if(user.zone_selected == BODY_ZONE_CHEST)
-			if(!piercings_item)
+	if(get_num_arms(FALSE) < 1)
+		return
+	if(user.zone_selected == BODY_ZONE_PRECISE_GROIN)
+		if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
+			if(!underwear)
 				return
-			var/under_clothes = get_location_accessible(src, BODY_ZONE_CHEST, skipundies = TRUE)
-			src.visible_message(span_notice("[src] begins to take off [piercings_item][under_clothes ? " from under their clothes" : ""]..."))
-			var/delay = under_clothes ? 25 : 40
-			if(do_after(user, delay, target = src))
+			src.visible_message(span_notice("[user] begins to take off [(src==user)?" ":"[src]'s"][underwear]..."))
+			if(do_after(user, 30, needhand = 1, target = src))
 				var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
-				chest.remove_bodypart_feature(piercings_item.piercings_feature)
-				piercings_item.forceMove(get_turf(src))
-				src.put_in_hands(piercings_item)
-				piercings_item = null
-				regenerate_icons()
+				var/obj/item/undies/undies = underwear
+				underwear = null
+				undies.forceMove(get_turf(src))
+				user.put_in_hands(undies)
+				chest.remove_bodypart_feature(undies.undies_feature)
+			return
+	if((user.zone_selected == BODY_ZONE_L_LEG) || (user.zone_selected == BODY_ZONE_R_LEG))
+		if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
+			if(!legwear_socks)
+				return
+			src.visible_message(span_notice("[user] begins to take off [(src==user)?" ":"[src]'s"][legwear_socks]..."))
+			if(do_after(user, 30, needhand = 1, target = src))
+				var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
+				chest.remove_bodypart_feature(legwear_socks.legwears_feature)
+				legwear_socks.forceMove(get_turf(src))
+				src.put_in_hands(legwear_socks)
+				legwear_socks = null
+	if(user.zone_selected == BODY_ZONE_CHEST)
+		if(!piercings_item)
+			return
+		var/under_clothes = get_location_accessible(src, BODY_ZONE_CHEST, skipundies = TRUE)
+		src.visible_message(span_notice("[user] begins to take off [(src==user)?" ":"[src]'s"][piercings_item][under_clothes ? " from under their clothes" : ""]..."))
+		var/delay = under_clothes ? 25 : 40
+		if(do_after(user, delay, target = src))
+			var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
+			chest.remove_bodypart_feature(piercings_item.piercings_feature)
+			piercings_item.forceMove(get_turf(src))
+			src.put_in_hands(piercings_item)
+			piercings_item = null
+			regenerate_icons()
 #endif
 
 /mob/living/carbon/human/Initialize()
@@ -473,7 +474,7 @@
 		hud_used.clock.update_icon()
 
 /mob/living/carbon/human/update_health_hud()
-	if(!client || !hud_used)
+	if(!hud_used)
 		return
 	if(dna.species.update_health_hud())
 		return
@@ -491,11 +492,12 @@
 			if(bloodloss > 0)
 				usedloss = bloodloss
 
-			hud_used.bloods.cut_overlays()
+			var/toxoverlay = null
+			var/oxyoverlay = null
+			var/painoverlay = null
 			if(usedloss <= 0)
 				hud_used.bloods.icon_state = "dam0"
 				if(toxloss > 0)
-					var/toxoverlay
 					switch(toxloss)
 						if(1 to 20)
 							toxoverlay = "toxloss20"
@@ -507,10 +509,8 @@
 							toxoverlay = "toxloss80"
 						if(100 to 999)
 							toxoverlay = "toxloss100"
-					hud_used.bloods.add_overlay(toxoverlay)
 
 				if(oxyloss > 0)
-					var/oxyoverlay
 					switch(oxyloss)
 						if(1 to 20)
 							oxyoverlay = "oxyloss20"
@@ -522,7 +522,6 @@
 							oxyoverlay = "oxyloss80"
 						if(100 to 999)
 							oxyoverlay = "oxyloss100"
-					hud_used.bloods.add_overlay(oxyoverlay)
 			else
 				var/used = round(usedloss, 10)
 				if(used <= 80)
@@ -530,7 +529,6 @@
 				else
 					hud_used.bloods.icon_state = "damelse"
 			if(painpercent > 0)
-				var/painoverlay
 				switch(painpercent)
 					if(1 to 29)
 						painoverlay = "painloss20"
@@ -542,7 +540,9 @@
 						painoverlay = "painloss80"
 					if(100 to 999)
 						painoverlay = "painloss100"
-				hud_used.bloods.add_overlay(painoverlay)
+			var/atom/movable/screen/healths/blood/blood_hud = hud_used.bloods
+			if(istype(blood_hud))
+				blood_hud.update_indicator_states(toxoverlay, oxyoverlay, painoverlay)
 
 /*		if(hud_used.healthdoll)
 			hud_used.healthdoll.cut_overlays()
@@ -662,11 +662,6 @@
 					hud_used.energy.icon_state = "energy15"
 				else if(energy > max_energy*0.05)
 					hud_used.energy.icon_state = "energy10"
-				else if(energy > 0)
-					hud_used.energy.icon_state = "energy5"
-
-		if(hud_used.zone_select)
-			hud_used.zone_select.update_icon()
 
 /mob/living/carbon/human/fully_heal(admin_revive = FALSE, break_restraints = FALSE)
 	dna?.species.spec_fully_heal(src)
@@ -1105,6 +1100,16 @@
 	if(!(mobility_flags & MOBILITY_CANSTAND) && mouth?.spitoutmouth)
 		visible_message(span_warning("[src] spits out [mouth]."))
 		dropItemToGround(mouth, silent = FALSE)
+
+/*/mob/living/carbon/human/proc/update_heretic_commune()
+	if(HAS_TRAIT(src, TRAIT_COMMIE) || HAS_TRAIT(src, TRAIT_CABAL) || HAS_TRAIT(src, TRAIT_HORDE) || HAS_TRAIT(src, TRAIT_DEPRAVED))
+		verbs |= /mob/living/carbon/human/verb/commune
+		verbs |= /mob/living/carbon/human/verb/show_heretics
+		verbs |= /mob/living/carbon/human/verb/bad_omen
+	else
+		verbs -= /mob/living/carbon/human/verb/commune
+		verbs -= /mob/living/carbon/human/verb/show_heretics
+		verbs -= /mob/living/carbon/human/verb/bad_omen*/
 
 /mob/living/carbon/human/Topic(href, href_list)
 	..()

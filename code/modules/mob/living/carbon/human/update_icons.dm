@@ -57,6 +57,10 @@ There are several things that need to be remembered:
 			jazz += 2
 	return jazz
 
+/mob/living/carbon/human
+	var/damage_overlay_cache_key
+	var/body_overlay_cache_key
+
 //HAIR OVERLAY
 /mob/living/carbon/human/update_hair()
 	rebuild_obscured_flags()
@@ -64,6 +68,13 @@ There are several things that need to be remembered:
 	return
 
 /mob/living/carbon/human/update_body()
+	var/obj/item/bodypart/head/HD = get_bodypart(BODY_ZONE_HEAD)
+	var/new_cache_key = "[HD ? HD.skeletonized : "nohead"]|[HAS_TRAIT(src, TRAIT_HUSK)]|[lip_style]|[lip_color]|[gender]|[dna?.species?.hairyness]|[hair_color]"
+
+	if(body_overlay_cache_key == new_cache_key)
+		return
+	body_overlay_cache_key = new_cache_key
+
 	dna.species.handle_body(src)
 	..()
 
@@ -72,6 +83,7 @@ There are several things that need to be remembered:
 /mob/living/carbon/human/update_fire()
 	var/datum/status_effect/fire_handler/fire_stacks/sunder/sunder_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder)
 	var/datum/status_effect/fire_handler/fire_stacks/sunder/blessed/blessed_sunder = has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
+	defer_overlay_vision_updates()
 	if(sunder_status?.on_fire || blessed_sunder?.on_fire)
 		var/filter = get_filter(SUNDER_FILTER)
 		if(!filter)
@@ -83,11 +95,13 @@ There are several things that need to be remembered:
 		new_fire_overlay.appearance_flags = RESET_COLOR
 		overlays_standing[SUNDER_LAYER] = new_fire_overlay
 		apply_overlay(SUNDER_LAYER)
+		resume_overlay_vision_updates()
 		return
 	else
 		remove_filter(SUNDER_FILTER)
 		remove_overlay(SUNDER_LAYER)
 		QDEL_NULL(sunder_light_obj)
+		resume_overlay_vision_updates()
 
 	if(fire_stacks < 10)
 		return ..("Generic_mob_burning")
@@ -102,10 +116,43 @@ There are several things that need to be remembered:
 /mob/living/carbon/human/update_damage_overlays()
 	START_PROCESSING(SSdamoverlays,src)
 
+/mob/living/carbon/human/proc/generate_damage_overlay_key()
+	var/key = "[gender]|[dna?.species?.type]|"
+
+	if(gender == FEMALE || dna?.species?.use_f)
+		key += wear_armor?.flags_inv & HIDEBOOB ? "1" : "0"
+		key += wear_shirt?.flags_inv & HIDEBOOB ? "1" : "0"
+		key += cloak?.flags_inv & HIDEBOOB ? "1" : "0"
+	else
+		key += "000"
+	key += "|"
+
+	for(var/obj/item/bodypart/BP as anything in bodyparts)
+		key += "[BP.body_zone][BP.brutestate][BP.burnstate]"
+		key += BP.skeletonized ? "S" : "N"
+		key += BP.bleeding > 0 ? "B" : "N"
+		key += "[length(BP.embedded_objects)]"
+		key += BP.bandage ? "b[BP.bandage.color]" : "n"
+
+		if(BP.wounds && length(BP.wounds))
+			for(var/datum/wound/wound in BP.wounds)
+				if(wound.mob_overlay)
+					key += wound.mob_overlay
+		key += "|"
+
+	return key
+
 /mob/living/carbon/human/proc/update_damage_overlays_real()
-	if(dna.species)
-		if(dna.species.update_damage_overlays(src))
-			return
+	if(dna?.species?.update_damage_overlays(src))
+		return
+
+	// Check if damage overlay state has changed - skip rebuild if unchanged
+	var/new_cache_key = generate_damage_overlay_key()
+	if(damage_overlay_cache_key == new_cache_key)
+		return
+	damage_overlay_cache_key = new_cache_key
+
+	defer_overlay_vision_updates()
 	remove_overlay(DAMAGE_LAYER)
 	remove_overlay(LEG_DAMAGE_LAYER)
 	remove_overlay(ARM_DAMAGE_LAYER)
@@ -267,6 +314,7 @@ There are several things that need to be remembered:
 	apply_overlay(DAMAGE_LAYER)
 	apply_overlay(LEG_DAMAGE_LAYER)
 	apply_overlay(ARM_DAMAGE_LAYER)
+	resume_overlay_vision_updates()
 
 
 /* --------------------------------------- */
@@ -627,6 +675,9 @@ There are several things that need to be remembered:
 		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_SHOES]
 		inv.update_icon()
 
+	var/obj/item/bodypart/taur/taur = get_taur_tail()
+	var/icon/c_mask = taur?.clip_mask
+
 	if(shoes)
 		shoes.screen_loc = rogueui_shoes					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
@@ -695,9 +746,14 @@ There are several things that need to be remembered:
 
 
 /mob/living/carbon/human/update_inv_head(hide_nonstandard = FALSE)
+	update_inv_head_real(hide_nonstandard)
+
+/mob/living/carbon/human/update_inv_head_real(hide_nonstandard = FALSE)
+	defer_overlay_vision_updates()
 	remove_overlay(HEAD_LAYER)
 
 	if(!get_bodypart(BODY_ZONE_HEAD)) //Decapitated
+		resume_overlay_vision_updates()
 		return
 
 	if(client && hud_used && hud_used.inv_slots[SLOT_HEAD])
@@ -709,7 +765,6 @@ There are several things that need to be remembered:
 		overlays_standing[HEAD_LAYER] = head.build_worn_icon(default_layer = HEAD_LAYER, default_icon_file = 'icons/roguetown/clothing/onmob/head.dmi', female = FALSE)
 		var/mutable_appearance/head_overlay = overlays_standing[HEAD_LAYER]
 		if(head_overlay)
-			remove_overlay(HEAD_LAYER)
 			if(gender == MALE)
 				if(OFFSET_HEAD in dna.species.offset_features)
 					head_overlay.pixel_x += dna.species.offset_features[OFFSET_HEAD][1]
@@ -723,6 +778,7 @@ There are several things that need to be remembered:
 
 	rebuild_obscured_flags()
 	update_hair() //hoodies
+	resume_overlay_vision_updates()
 
 /mob/living/carbon/human/update_inv_belt(hide_experimental = FALSE)
 	remove_overlay(BELT_LAYER)
@@ -886,6 +942,14 @@ There are several things that need to be remembered:
 							mbeltoverlay.pixel_x += dna.species.offset_features[OFFSET_BELT_F][1]
 							mbeltoverlay.pixel_y += dna.species.offset_features[OFFSET_BELT_F][2]
 				standing_front += mbeltoverlay
+				if(istype(belt, /obj/item/storage/belt/rogue)) // check if belt has dildo attached
+					var/obj/item/storage/belt/rogue/belt_with_dildo = belt
+					if(istype(belt_with_dildo.attached_toy, /obj/item/dildo)) // draw dildo in correct position
+						var/mutable_appearance/mbeltoverlaydildo = mutable_appearance('modular/icons/obj/lewd/dildo.dmi', "dildo_belt_[belt_with_dildo.attached_toy.dildo_size]")
+						mbeltoverlaydildo.color = belt_with_dildo.attached_toy.color // get material color
+						mbeltoverlaydildo.pixel_x = mbeltoverlay.pixel_x
+						mbeltoverlaydildo.pixel_y = mbeltoverlay.pixel_y
+						standing_front += mbeltoverlaydildo
 
 	overlays_standing[BELT_LAYER] = standing_front
 	overlays_standing[BELT_BEHIND_LAYER] = standing_behind
@@ -949,6 +1013,7 @@ There are several things that need to be remembered:
 
 
 /mob/living/carbon/human/update_inv_wear_mask()
+	defer_overlay_vision_updates()
 	..()
 	update_body_parts(TRUE)
 	var/mutable_appearance/mask_overlay = overlays_standing[MASK_LAYER]
@@ -965,6 +1030,7 @@ There are several things that need to be remembered:
 				mask_overlay.pixel_y += dna.species.offset_features[OFFSET_FACEMASK_F][2]
 		overlays_standing[MASK_LAYER] = mask_overlay
 		apply_overlay(MASK_LAYER)
+	resume_overlay_vision_updates()
 
 /mob/living/carbon/human/update_inv_back(hide_experimental = FALSE)
 	remove_overlay(BACK_LAYER)
@@ -1366,6 +1432,8 @@ There are several things that need to be remembered:
 	var/obj/item/bodypart/taur/taur = get_taur_tail()
 	var/icon/c_mask = taur?.clip_mask
 
+	var/icon/clip_mask_init
+
 	if(client && hud_used)
 		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_PANTS]
 		inv.update_icon()
@@ -1427,9 +1495,11 @@ There are several things that need to be remembered:
 	apply_overlay(LEGSLEEVE_LAYER)
 
 /mob/living/carbon/human/update_inv_mouth()
+	defer_overlay_vision_updates()
 	remove_overlay(MOUTH_LAYER)
 
 	if(!isdullahan(src) && !get_bodypart(BODY_ZONE_HEAD)) //Decapitated
+		resume_overlay_vision_updates()
 		return
 
 	if(client && hud_used && hud_used.inv_slots[SLOT_MOUTH])
@@ -1441,10 +1511,8 @@ There are several things that need to be remembered:
 			overlays_standing[MOUTH_LAYER] = mouth.build_worn_icon(default_layer = MOUTH_LAYER, default_icon_file = 'icons/roguetown/clothing/onmob/mouth_items.dmi')
 		update_hud_mouth(mouth)
 
-	apply_overlay(MOUTH_LAYER)
 	var/mutable_appearance/mouth_overlay = overlays_standing[MOUTH_LAYER]
 	if(mouth_overlay)
-		remove_overlay(MOUTH_LAYER)
 		if(gender == MALE)
 			if(OFFSET_MOUTH in dna.species.offset_features)
 				mouth_overlay.pixel_x += dna.species.offset_features[OFFSET_MOUTH][1]
@@ -1454,9 +1522,10 @@ There are several things that need to be remembered:
 				mouth_overlay.pixel_x += dna.species.offset_features[OFFSET_MOUTH_F][1]
 				mouth_overlay.pixel_y += dna.species.offset_features[OFFSET_MOUTH_F][2]
 		overlays_standing[MOUTH_LAYER] = mouth_overlay
-		apply_overlay(MOUTH_LAYER)
-
+	apply_overlay(MOUTH_LAYER)
+	
 	rebuild_obscured_flags()
+	resume_overlay_vision_updates()
 
 /mob/living/carbon/human/proc/update_inv_armor_special()
 	remove_overlay(ARMOR_LAYER)
@@ -1925,16 +1994,13 @@ generate/load female uniform sprites matching all previously decided variables
 	if(oldkey == icon_render_key && !redraw)
 		return
 
+	defer_overlay_vision_updates()
 	remove_overlay(BODYPARTS_LAYER)
 
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		BP.update_limb()
-
-	//LOAD ICONS
-	if(!redraw)
-		if(limb_icon_cache[icon_render_key])
-			load_limb_from_cache()
-			return
+	if(!redraw && limb_icon_cache[icon_render_key])
+		load_limb_from_cache()
+		resume_overlay_vision_updates()
+		return
 
 	//GENERATE NEW LIMBS
 	var/list/new_limbs = list()
@@ -1962,6 +2028,7 @@ generate/load female uniform sprites matching all previously decided variables
 
 	apply_overlay(BODYPARTS_LAYER)
 	update_damage_overlays()
+	resume_overlay_vision_updates()
 
 /mob/living/carbon/proc/has_boobed_overlay()
 	var/obj/item/organ/breasts/boobs = getorganslot(ORGAN_SLOT_BREASTS)

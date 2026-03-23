@@ -1058,7 +1058,7 @@
 			clear_fullscreen("painflash")
 
 /mob/living/carbon/update_health_hud(shown_health_amount)
-	if(!client || !hud_used)
+	if(!hud_used)
 		return
 	if(hud_used.healths)
 		if(stat != DEAD)

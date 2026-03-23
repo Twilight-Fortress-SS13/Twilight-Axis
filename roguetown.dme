@@ -426,6 +426,7 @@
 #include "code\controllers\subsystem\processing\fluids.dm"
 #include "code\controllers\subsystem\processing\haunting.dm"
 #include "code\controllers\subsystem\processing\huds.dm"
+#include "code\controllers\subsystem\processing\icon_updates.dm"
 #include "code\controllers\subsystem\processing\incone.dm"
 #include "code\controllers\subsystem\processing\mapgen.dm"
 #include "code\controllers\subsystem\processing\mousecharge.dm"

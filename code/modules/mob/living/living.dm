@@ -2,6 +2,8 @@
 	//used by the basic ai controller /datum/ai_behavior/basic_melee_attack to determine how fast a mob can attack
 	var/melee_cooldown = CLICK_CD_MELEE
 	var/pain_threshold = 0
+	var/zone_selector_hud_dirty = FALSE
+	var/zone_selector_hud_update_queued = FALSE
 
 /mob/living/Initialize()
 	. = ..()
@@ -74,6 +76,26 @@
 
 /mob/living/proc/OpenCraftingMenu()
 	return
+
+/mob/living/proc/update_zone_selector_hud()
+	if(hud_used?.zone_select)
+		hud_used.zone_select.update_zone_layers()
+
+/mob/living/proc/mark_zone_selector_hud_dirty()
+	if(!hud_used?.zone_select)
+		return
+	zone_selector_hud_dirty = TRUE
+	if(zone_selector_hud_update_queued)
+		return
+	zone_selector_hud_update_queued = TRUE
+	addtimer(CALLBACK(src, PROC_REF(flush_zone_selector_hud)), 0)
+
+/mob/living/proc/flush_zone_selector_hud()
+	zone_selector_hud_update_queued = FALSE
+	if(!zone_selector_hud_dirty)
+		return
+	zone_selector_hud_dirty = FALSE
+	update_zone_selector_hud()
 
 //Generic Bump(). Override MobBump() and ObjBump() instead of this.
 /mob/living/Bump(atom/A)
@@ -484,11 +506,11 @@
 			var/used_limb = C.find_used_grab_limb(src)
 			O.name = "[C]'s [parse_zone(used_limb)]"
 			var/obj/item/bodypart/BP = C.get_bodypart(check_zone(used_limb))
-			LAZYADD(C.grabbedby, O)
+			C.grabbedby += O
 			O.grabbed = C
 			O.grabbee = src
 			O.limb_grabbed = BP
-			LAZYADD(BP.grabbedby, O)
+			BP.grabbedby += O
 			if(item_override)
 				O.sublimb_grabbed = item_override
 			else

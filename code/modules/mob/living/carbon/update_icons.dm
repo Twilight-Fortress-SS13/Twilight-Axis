@@ -49,20 +49,116 @@
 
 /mob/living
 	var/list/overlays_standing[TOTAL_LAYERS]
+	var/overlay_vision_update_defer_count = 0
+	var/overlay_vision_update_pending = FALSE
 
-/mob/living/proc/apply_overlay(cache_index)
-	if((. = overlays_standing[cache_index]))
-		add_overlay(.)
+/mob/living/proc/request_overlay_vision_update()
+	if(!client)
+		overlay_vision_update_pending = FALSE
+		return
+	if(overlay_vision_update_defer_count)
+		overlay_vision_update_pending = TRUE
+		return
+	update_vision_cone()
+
+/mob/living/proc/defer_overlay_vision_updates()
+	overlay_vision_update_defer_count++
+
+/mob/living/proc/resume_overlay_vision_updates()
+	if(overlay_vision_update_defer_count)
+		overlay_vision_update_defer_count--
+	if(overlay_vision_update_defer_count || !overlay_vision_update_pending)
+		return
+	overlay_vision_update_pending = FALSE
 	if(client)
 		update_vision_cone()
 
-/mob/living/proc/remove_overlay(cache_index)
+/mob/living/proc/apply_overlay(cache_index, update_vision = TRUE)
+	if((. = overlays_standing[cache_index]))
+		add_overlay(.)
+	if(update_vision)
+		request_overlay_vision_update()
+
+/mob/living/proc/remove_overlay(cache_index, update_vision = TRUE)
 	var/I = overlays_standing[cache_index]
 	if(I)
 		cut_overlay(I)
 		overlays_standing[cache_index] = null
-	if(client)
-		update_vision_cone()
+	if(update_vision)
+		request_overlay_vision_update()
+
+/mob/living/carbon
+	var/pending_icon_updates = 0
+
+/// Schedule a deferred icon update - batches multiple calls in the same tick
+/mob/living/carbon/proc/queue_icon_update(update_type)
+	pending_icon_updates |= update_type
+	START_PROCESSING(SSiconupdates, src)
+
+/// Process all pending icon updates in a single batch
+/mob/living/carbon/proc/process_pending_icon_updates()
+	if(!pending_icon_updates)
+		return
+	var/updates = pending_icon_updates
+	pending_icon_updates = NONE
+	defer_overlay_vision_updates()
+
+	if(updates & PENDING_UPDATE_BODY)
+		update_body_parts()
+	if(updates & PENDING_UPDATE_HAIR)
+		update_hair()
+	if(updates & PENDING_UPDATE_DAMAGE)
+		update_damage_overlays()
+	if(updates & PENDING_UPDATE_INV_HANDS)
+		update_inv_hands()
+	if(updates & PENDING_UPDATE_INV_GLOVES)
+		update_inv_gloves_real()
+	if(updates & PENDING_UPDATE_INV_SHOES)
+		update_inv_shoes_real()
+	if(updates & PENDING_UPDATE_INV_HEAD)
+		update_inv_head_real()
+	if(updates & PENDING_UPDATE_INV_BELT)
+		update_inv_belt_real()
+	if(updates & PENDING_UPDATE_INV_BACK)
+		update_inv_back_real()
+	if(updates & PENDING_UPDATE_INV_ARMOR)
+		update_inv_armor_real()
+	if(updates & PENDING_UPDATE_INV_SHIRT)
+		update_inv_shirt_real()
+	if(updates & PENDING_UPDATE_INV_PANTS)
+		update_inv_pants_real()
+	if(updates & PENDING_UPDATE_INV_CLOAK)
+		update_inv_cloak_real()
+	resume_overlay_vision_updates()
+
+// Base implementations for carbon mobs - these are just stubs in case someone makes a non-human carbon mob some day
+// /mob/living/carbon/human will override these
+/mob/living/carbon/proc/update_inv_gloves_real()
+	return
+
+/mob/living/carbon/proc/update_inv_shoes_real()
+	return
+
+/mob/living/carbon/proc/update_inv_head_real()
+	return
+
+/mob/living/carbon/proc/update_inv_belt_real()
+	return
+
+/mob/living/carbon/proc/update_inv_back_real()
+	return
+
+/mob/living/carbon/proc/update_inv_armor_real()
+	return
+
+/mob/living/carbon/proc/update_inv_shirt_real()
+	return
+
+/mob/living/carbon/proc/update_inv_pants_real()
+	return
+
+/mob/living/carbon/proc/update_inv_cloak_real()
+	return
 
 /mob/living/carbon/regenerate_icons()
 	if(notransform)
@@ -98,10 +194,12 @@
 		GLOB.dismembered_clothing_icons[index] = dismembered*/
 
 /mob/living/carbon/update_inv_hands(hide_experimental = FALSE)
+	defer_overlay_vision_updates()
 	remove_overlay(HANDS_LAYER)
 	remove_overlay(HANDS_BEHIND_LAYER)
 	if (handcuffed)
 		drop_all_held_items()
+		resume_overlay_vision_updates()
 		return
 
 	var/list/hands = list()
@@ -211,6 +309,7 @@
 	overlays_standing[HANDS_LAYER] = hands
 	apply_overlay(HANDS_BEHIND_LAYER)
 	apply_overlay(HANDS_LAYER)
+	resume_overlay_vision_updates()
 
 /mob/living/carbon/update_warning(datum/intent/I)
 	remove_overlay(HALO_LAYER) //yoink
@@ -411,10 +510,12 @@
 	if(oldkey == icon_render_key)
 		return
 
+	defer_overlay_vision_updates()
 	remove_overlay(BODYPARTS_LAYER)
 
 	if(limb_icon_cache[icon_render_key])
 		load_limb_from_cache()
+		resume_overlay_vision_updates()
 		return
 
 	var/list/new_limbs = list()
@@ -428,6 +529,7 @@
 
 	apply_overlay(BODYPARTS_LAYER)
 	update_damage_overlays()
+	resume_overlay_vision_updates()
 
 
 

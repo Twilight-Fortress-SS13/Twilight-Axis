@@ -102,8 +102,8 @@
 
 	zone_select = new /atom/movable/screen/zone_sel()
 	zone_select.icon = ui_style
-	zone_select.hud = src
-	zone_select.update_icon()
+	claim_screen(zone_select)
+	zone_select.update_zone_layers()
 	static_inventory += zone_select
 
 	mymob.client.screen = list()

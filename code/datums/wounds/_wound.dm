@@ -181,6 +181,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		affected.bandage_expire() //new bleeding wounds always expire bandages, fuck you
 	if(disabling)
 		affected.update_disabled()
+	affected.owner?.mark_zone_selector_hud_dirty()
 
 /// Removes this wound from a given bodypart
 /datum/wound/proc/remove_from_bodypart()
@@ -200,6 +201,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 /datum/wound/proc/on_bodypart_loss(obj/item/bodypart/affected)
 	if(disabling)
 		affected.update_disabled()
+	affected.owner?.mark_zone_selector_hud_dirty()
 
 /// Returns whether or not this wound can be applied to a given mob
 /datum/wound/proc/can_apply_to_mob(mob/living/affected)
@@ -243,6 +245,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		werewolf_infect_attempt()
 	if(mortal && HAS_TRAIT(affected, TRAIT_CRITICAL_WEAKNESS))
 		affected.death()
+	affected.mark_zone_selector_hud_dirty()
 
 /// Removes this wound from a given, simpler than adding to a bodypart - No extra effects
 /datum/wound/proc/remove_from_mob()
@@ -258,6 +261,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 /datum/wound/proc/on_mob_loss(mob/living/affected)
 	if(mob_overlay)
 		affected.update_damage_overlays()
+	affected.mark_zone_selector_hud_dirty()
 
 /// Called on handle_wounds(), on the life() proc
 /datum/wound/proc/on_life()
@@ -298,6 +302,9 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 /datum/wound/proc/set_bleed_rate(amount)
 	if(!owner)
 		return
+	var/old_bleed_visible = FALSE
+	if(bodypart_owner)
+		old_bleed_visible = !!bodypart_owner.get_hud_bleed_rate()
 
 	// do simple bleeding
 	if(owner.simple_wounds?.len)
@@ -312,6 +319,8 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		bodypart_owner.bleeding -= bleed_rate
 		bleed_rate = amount
 		bodypart_owner.bleeding += bleed_rate
+		if(old_bleed_visible != !!bodypart_owner.get_hud_bleed_rate())
+			bodypart_owner.owner?.mark_zone_selector_hud_dirty()
 
 /// Heals this wound by the given amount, and deletes it if it's healed completely
 /datum/wound/proc/heal_wound(heal_amount)
@@ -350,6 +359,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	if(mob_overlay != old_overlay)
 		owner?.update_damage_overlays()
 	record_round_statistic(STATS_WOUNDS_SEWED)
+	owner?.mark_zone_selector_hud_dirty()
 	return TRUE
 
 /// Checks if this wound has a special infection (zombie or werewolf)

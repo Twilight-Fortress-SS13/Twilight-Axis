@@ -121,7 +121,7 @@
 	rmb_intent.update_icon()
 
 	bloods = new /atom/movable/screen/healths/blood
-	bloods.hud = src
+	claim_screen(bloods)
 	bloods.screen_loc = rogueui_blood
 	static_inventory += bloods
 
@@ -399,11 +399,9 @@
 	zone_select =  new /atom/movable/screen/zone_sel()
 	zone_select.icon = 'icons/mob/roguehud64.dmi'
 	zone_select.screen_loc = rogueui_targetdoll
-	zone_select.update_icon()
-	zone_select.hud = src
+	claim_screen(zone_select)
+	zone_select.update_zone_layers()
 	static_inventory += zone_select
-
-	zone_select.update_icon()
 
 	stamina = new /atom/movable/screen/stamina()
 	infodisplay += stamina
