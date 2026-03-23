@@ -943,3 +943,23 @@
   - bugfix: gorgets are disallowed by fencer's dexterity, as was always intended.
   mumblemancer:
   - bugfix: miners have the right clothing type per preference
+2026-03-22:
+  Clem-The-Duck:
+  - rscadd: Adds three new items to the loadout, the Scaled Cloak, Bared Robe, and
+      Sleeved Tabard.
+  KatTheFox:
+  - qol: 'crafting attempts now have a ''pity threshold'': you will automatically
+      succeed after 99 failed attempts, so long as the recipe is possible for you
+      to make (i.e. not a 0% chance)'
+  Lamasmaster:
+  - balance: Graggar Silence
+  - bugfix: Waterskin starting uncorked
+  eirenxiv:
+  - rscadd: Added another unused cloak to the loadout selection, the now golden order
+      cloak
+  - rscadd: Added the naledian psy-bracelet to the loadout selection
+  mumblemancer:
+  - refactor: all "exotic silk items" are now "giltsilk." !!!IF YOU PREVIOUSLY HAD
+      THESE IN YOUR LOADOUT, YOU WILL NEED TO PICK THEM AGAIN!!!
+  rivercadaver:
+  - rscadd: Added writing

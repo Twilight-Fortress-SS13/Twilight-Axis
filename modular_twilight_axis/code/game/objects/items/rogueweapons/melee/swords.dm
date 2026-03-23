@@ -61,16 +61,16 @@
 	update_icon()
 
 /datum/intent/sword/thrust/blunt
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/sword/strike
-	penfactor = BLUNT_LOWER_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/sword/peel
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/sword/thrust/exe
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/sword/disarm
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE

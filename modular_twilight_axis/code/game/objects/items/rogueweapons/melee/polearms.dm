@@ -33,13 +33,13 @@
 	)
 
 /datum/intent/sword/bash
-	penfactor = BLUNT_LOWER_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/rend
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/rend/reach
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/partizan/peel
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE

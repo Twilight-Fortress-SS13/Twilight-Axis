@@ -770,7 +770,6 @@
 	if(status_flags & GODMODE)
 		return
 	var/total_burn	= 0
-//	var/total_brute	= 0
 	var/total_stamina = 0
 	var/total_tox = getToxLoss()
 	var/total_oxy = getOxyLoss()
@@ -779,7 +778,7 @@
 		BODY_ZONE_HEAD,
 		BODY_ZONE_CHEST,
 	)
-	for(var/obj/item/bodypart/bodypart as anything in bodyparts) //hardcoded to streamline things a bit
+	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
 		if(!(bodypart.body_zone in lethal_zones))
 			continue
 		var/hardcrit_divisor = !mind ? FIRE_HARDCRIT_DIVISOR_MINDLESS : FIRE_HARDCRIT_DIVISOR
@@ -1099,6 +1098,20 @@
 			cure_blind(UNCONSCIOUS_BLIND)
 			return
 		if(((blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE)) || IsUnconscious() || IsSleeping() || getOxyLoss() > 75 || (HAS_TRAIT(src, TRAIT_DEATHCOMA)) || (health <= HEALTH_THRESHOLD_FULLCRIT && !HAS_TRAIT(src, TRAIT_NOHARDCRIT)))
+			if(stat != UNCONSCIOUS) // Transition into hardcrit — announce once
+				if((blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE))
+					visible_message(span_danger("<b>[src] collapses, [src.p_their()] skin pale as parchment!</b>"), \
+						span_userdanger("My blood... there is nothing left. I cannot feel my limbs."))
+				else if(getOxyLoss() > 75)
+					visible_message(span_danger("<b>[src] collapses, [src.p_their()] lips turning blue!</b>"), \
+						span_userdanger("I cannot breathe... the world grows dark."))
+				else if(health <= HEALTH_THRESHOLD_FULLCRIT)
+					if(getBruteLoss() >= getFireLoss())
+						visible_message(span_danger("<b>[src] collapses, broken and bloodied!</b>"), \
+							span_userdanger("My bones are shattered... I cannot go on."))
+					else
+						visible_message(span_danger("<b>[src] collapses, [src.p_their()] flesh charred and smoking!</b>"), \
+							span_userdanger("The burning... it has taken everything from me."))
 			stat = UNCONSCIOUS
 			if(ishuman(src))
 				var/mob/living/carbon/human/H = src
@@ -1129,7 +1142,7 @@
 		throw_alert("handcuffed", /atom/movable/screen/alert/restrained/handcuffed, new_master = src.handcuffed)
 	else
 		clear_alert("handcuffed")
-	update_action_buttons_icon() //some of our action buttons might be unusable when we're handcuffed.
+	update_mob_action_buttons() //some of our action buttons might be unusable when we're handcuffed.
 	update_inv_handcuffed()
 	update_hud_handcuffed()
 	update_mobility()

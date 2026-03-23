@@ -8,7 +8,6 @@
 	body_parts_covered = HEAD|HAIR|EARS
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HEAD //Meant to be worn under helmets pmuch
 	armor = ARMOR_PADDED_BAD
-	prevent_crits = PREVENT_CRITS_NONE
 	blocksound = SOFTHIT
 	max_integrity = ARMOR_INT_HELMET_CLOTH
 	color = "#463C2B"
@@ -28,7 +27,6 @@
 	icon_state = "paddedarmingcap"
 	item_state = "paddedarmingcap"
 	armor = ARMOR_PADDED
-	prevent_crits = list(BCLASS_BLUNT, BCLASS_SMASH)
 	max_integrity = ARMOR_INT_HELMET_CLOTH + 60
 
 /obj/item/clothing/head/roguetown/helmet/leather
@@ -39,7 +37,6 @@
 	icon_state = "leatherhelm"
 	armor = ARMOR_LEATHER
 	sellprice = 10
-	prevent_crits = PREVENT_CRITS_NONE
 	anvilrepair = null
 	smeltresult = null
 	sewrepair = TRUE
@@ -124,8 +121,7 @@
 	max_integrity = ARMOR_INT_HELMET_HARDLEATHER
 	sellprice = 15
 	body_parts_covered = HEAD|EARS|HAIR|NOSE
-	prevent_crits = PREVENT_CRITS_NONE
-	armor = ARMOR_LEATHER_GOOD
+	armor = ARMOR_LEATHER
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_HIP
 	anvilrepair = null
 	smeltresult = null
@@ -138,8 +134,7 @@
 	desc = "An oddly shaped hat made of tightly-sewn leather, commonly worn by spellswords."
 	icon_state = "spellcasterhat"
 	item_state = "spellcasterhat"
-	prevent_crits = PREVENT_CRITS_NONE
-	armor = ARMOR_SPELLSINGER
+	armor = ARMOR_LEATHER
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/64x64/head.dmi'
 	bloody_icon = 'icons/effects/blood64.dmi'
 	worn_x_dimension = 64
@@ -163,8 +158,7 @@
 	dynamic_hair_suffix = ""
 	max_integrity = ARMOR_INT_HELMET_LEATHER
 	body_parts_covered = HEAD|HAIR|EARS
-	prevent_crits = PREVENT_CRITS_NONE
-	armor = ARMOR_SPELLSINGER // spellsinger hat stats
+	armor = ARMOR_LEATHER // spellsinger hat stats
 	sewrepair = TRUE
 	resistance_flags = FIRE_PROOF
 	var/picked = FALSE
@@ -207,7 +201,6 @@
 	name = "grenzelhoft tellerbarret"
 	desc = "The latest in sixteenth-century fashionwear, stitched by the finest tailors in Grenzelhoft. </br>I can fit this onto a sallet, Etruscan bascinet, or Blacksteel armet for added protection."
 	max_integrity = ARMOR_INT_HELMET_CLOTH
-	prevent_crits = PREVENT_CRITS_NONE
 	icon_state = "grenzelhat"
 	item_state = "grenzelhat"
 	icon = 'icons/roguetown/clothing/head.dmi'
@@ -215,7 +208,7 @@
 	detail_tag = "_detail"
 	altdetail_tag = "_detailalt"
 	dynamic_hair_suffix = ""
-	armor = ARMOR_CLOTHING_GOOD //One-to-one replication of the original Plume Hat's protections.
+	armor = ARMOR_PADDED_BAD
 	resistance_flags = FLAMMABLE
 	color = "#262927"
 	detail_color = "#FFFFFF"
@@ -275,7 +268,7 @@
 	desc = "A reinforced bamboo hat."
 	icon_state = "easthat"
 	item_state = "easthat"
-	armor = ARMOR_SPELLSINGER
+	armor = ARMOR_LEATHER
 	max_integrity = ARMOR_INT_HELMET_LEATHER
 	blocksound = SOFTHIT
 	sewrepair = TRUE

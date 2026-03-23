@@ -5,8 +5,7 @@
 	icon_state = "longcoat"
 	item_state = "longcoat"
 	body_parts_covered = COVERAGE_ALL_BUT_ARMS
-	armor = ARMOR_LEATHER_GOOD
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_BLUNT, BCLASS_CHOP, BCLASS_SMASH)
+	armor = ARMOR_LEATHER
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
 	sellprice = 25
 

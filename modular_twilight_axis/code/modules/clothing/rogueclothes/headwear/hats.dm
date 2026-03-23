@@ -23,7 +23,6 @@
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/decorated
 	armor = null
-	prevent_crits = null
 
 /obj/item/clothing/head/roguetown/twilight_elven_hat
 	name = "elven burka"

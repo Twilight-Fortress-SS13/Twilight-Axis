@@ -109,7 +109,6 @@
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
 	belt = /obj/item/storage/belt/rogue/leather/plaquesilver
-	beltr = /obj/item/storage/keyring/magician
 	beltl = /obj/item/storage/magebag/associate
 	id = /obj/item/clothing/ring/gold
 	r_hand = /obj/item/rogueweapon/woodstaff/riddle_of_steel/magos
@@ -126,3 +125,7 @@
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/arcane_announcement) //TA EDIT
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/shrink) //TA EDIT
+	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
+		beltr = /obj/item/storage/keyring/magicianenigma
+	else 
+		beltr = /obj/item/storage/keyring/magician
