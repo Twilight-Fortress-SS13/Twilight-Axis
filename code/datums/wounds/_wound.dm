@@ -312,6 +312,10 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		bodypart_owner.bleeding -= bleed_rate
 		bleed_rate = amount
 		bodypart_owner.bleeding += bleed_rate
+		if(bodypart_owner.owner)
+			var/datum/hud/hud_used = bodypart_owner.owner.hud_used
+			if(hud_used?.zone_select)
+				hud_used.zone_select.update_limb(bodypart_owner.body_zone)
 
 /// Heals this wound by the given amount, and deletes it if it's healed completely
 /datum/wound/proc/heal_wound(heal_amount)
