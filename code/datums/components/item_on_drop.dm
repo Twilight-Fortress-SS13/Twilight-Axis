@@ -19,4 +19,5 @@
 /datum/component/item_on_drop/dust
 
 /datum/component/item_on_drop/dust/handle_drop(obj/item/source, mob/user)
-	qdel(source)
+	if(!QDELETED(source))
+		qdel(source)

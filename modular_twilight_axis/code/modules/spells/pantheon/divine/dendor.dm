@@ -95,7 +95,6 @@
 	miss_sound = "bluntwoosh"
 	item_d_type = "slash"
 	penfactor = 25
-	item_d_type = "cut"
 	icon_state = "inchop"
 // - - -
 

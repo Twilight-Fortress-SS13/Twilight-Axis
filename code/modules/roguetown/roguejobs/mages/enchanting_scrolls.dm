@@ -14,6 +14,9 @@ T1 Enchantments below here*/
 	grid_height = 32
 
 /obj/item/enchantmentscroll/attack_obj(obj/item/O, mob/living/user)
+	if(!isitem(O))
+		to_chat(user, span_warning("You cannot enchant this."))
+		return FALSE
 	if(O.unenchantable)
 		to_chat(user, span_warning("You cannot enchant this item."))
 		return FALSE

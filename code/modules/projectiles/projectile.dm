@@ -390,6 +390,8 @@
 	beam_segments[beam_index] = null
 
 /obj/projectile/Bump(atom/A)
+	if(!trajectory)
+		return
 	var/datum/point/pcache = trajectory.copy_to()
 	var/turf/T = get_turf(A)
 	if(ricochets < ricochets_max && check_ricochet_flag(A) && check_ricochet(A))

@@ -42,7 +42,7 @@
 	if(advsetup)
 		Stun(50)
 
-	if(mind)
+	if(mind?.sleep_adv)
 		mind.sleep_adv.add_stress_cycle(get_stress_amount())
 		for(var/datum/antagonist/A as anything in mind.antag_datums)
 			A.on_life(src)
