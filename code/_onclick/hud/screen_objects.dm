@@ -982,12 +982,20 @@
 	var/hovering
 	var/obj/effect/overlay/flash_layer
 	var/arrowheight = 0
+	var/list/limb_vis = list()
+	var/obj/effect/overlay/vis/selection_vis
 
 /atom/movable/screen/zone_sel/New()
 	..()
 	flash_layer = new
 	flash_layer.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	vis_contents += flash_layer
+	selection_vis = new
+	selection_vis.icon = 'icons/mob/roguehud64.dmi'
+	selection_vis.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	selection_vis.layer = ABOVE_HUD_LAYER + 0.1
+	selection_vis.plane = ABOVE_HUD_PLANE
+	vis_contents += selection_vis
 
 /atom/movable/screen/zone_sel/Click(location, control,params)
 	if(isobserver(usr))
