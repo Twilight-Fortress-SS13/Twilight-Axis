@@ -53,11 +53,23 @@
 
 	// TA Edit start - new Ronin Class
 	var/need_override = TRUE
-	if(mainhand?.can_parry || offhand?.can_parry)
+
+	var/mainhand_can_parry = FALSE
+	var/offhand_can_parry = FALSE
+
+	if(isitem(mainhand))
+		var/obj/item/MH = mainhand
+		mainhand_can_parry = !!MH.can_parry
+
+	if(isitem(offhand))
+		var/obj/item/OH = offhand
+		offhand_can_parry = !!OH.can_parry
+
+	if(mainhand_can_parry || offhand_can_parry)
 		need_override = FALSE
 
 	if(need_override)
-		var/obj/item/override_parry_weapon = ronin_parry_override(src, intenty,user)
+		var/obj/item/override_parry_weapon = ronin_parry_override(src, intenty, user)
 		if(override_parry_weapon)
 			mainhand = override_parry_weapon
 			offhand = null
