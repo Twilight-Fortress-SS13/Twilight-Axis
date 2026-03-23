@@ -87,49 +87,6 @@
 	if(update_vision)
 		request_overlay_vision_update()
 
-/mob/living/carbon
-	var/pending_icon_updates = 0
-
-/// Schedule a deferred icon update - batches multiple calls in the same tick
-/mob/living/carbon/proc/queue_icon_update(update_type)
-	pending_icon_updates |= update_type
-	START_PROCESSING(SSiconupdates, src)
-
-/// Process all pending icon updates in a single batch
-/mob/living/carbon/proc/process_pending_icon_updates()
-	if(!pending_icon_updates)
-		return
-	var/updates = pending_icon_updates
-	pending_icon_updates = NONE
-	defer_overlay_vision_updates()
-
-	if(updates & PENDING_UPDATE_BODY)
-		update_body_parts()
-	if(updates & PENDING_UPDATE_HAIR)
-		update_hair()
-	if(updates & PENDING_UPDATE_DAMAGE)
-		update_damage_overlays()
-	if(updates & PENDING_UPDATE_INV_HANDS)
-		update_inv_hands()
-	if(updates & PENDING_UPDATE_INV_GLOVES)
-		update_inv_gloves_real()
-	if(updates & PENDING_UPDATE_INV_SHOES)
-		update_inv_shoes_real()
-	if(updates & PENDING_UPDATE_INV_HEAD)
-		update_inv_head_real()
-	if(updates & PENDING_UPDATE_INV_BELT)
-		update_inv_belt_real()
-	if(updates & PENDING_UPDATE_INV_BACK)
-		update_inv_back_real()
-	if(updates & PENDING_UPDATE_INV_ARMOR)
-		update_inv_armor_real()
-	if(updates & PENDING_UPDATE_INV_SHIRT)
-		update_inv_shirt_real()
-	if(updates & PENDING_UPDATE_INV_PANTS)
-		update_inv_pants_real()
-	if(updates & PENDING_UPDATE_INV_CLOAK)
-		update_inv_cloak_real()
-	resume_overlay_vision_updates()
 
 // Base implementations for carbon mobs - these are just stubs in case someone makes a non-human carbon mob some day
 // /mob/living/carbon/human will override these

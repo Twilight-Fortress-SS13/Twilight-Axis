@@ -1872,6 +1872,7 @@
 			state2use = "mood_sleep"
 		else if(H.nausea >= 100)
 			state2use = "mood_sick"
+	icon_state = state2use
 	if(stress_state_layer)
 		if(stress_state_layer.icon != icon)
 			stress_state_layer.icon = icon
@@ -1975,6 +1976,7 @@
 	if(isliving(hud?.mymob))
 		var/mob/living/L = hud.mymob
 		if(L.rmb_intent)
+			icon_state = "[L.rmb_intent.icon_state]_x"
 			if(current_intent_layer)
 				if(current_intent_layer.icon != icon)
 					current_intent_layer.icon = icon
@@ -1982,6 +1984,8 @@
 				current_intent_layer.alpha = 255
 			name = L.rmb_intent.name
 			desc = L.rmb_intent.desc
+		else
+			icon_state = "rmbintent"
 
 /atom/movable/screen/rmbintent/Click(location,control,params)
 	var/list/modifiers = params2list(params)

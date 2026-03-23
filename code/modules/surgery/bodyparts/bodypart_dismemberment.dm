@@ -238,7 +238,8 @@
 	update_icon_dropped()
 	was_owner.update_health_hud() //update the healthdoll
 	was_owner.mark_zone_selector_hud_dirty()
-	was_owner.queue_icon_update(PENDING_UPDATE_BODY)
+	was_owner.update_body()
+	was_owner.update_hair()
 	was_owner.update_mobility()
 
 	// drop_location = null happens when a "dummy human" used for rendering icons on prefs screen gets its limbs replaced.
@@ -463,7 +464,9 @@
 		C.add_movespeed_modifier("[src.type]_slow", update=TRUE, priority=100, flags=NONE, override=FALSE, multiplicative_slowdown=organ_slowdown, movetypes=GROUND, blacklisted_movetypes=NONE, conflict=FALSE)
 	C.updatehealth()
 	C.mark_zone_selector_hud_dirty()
-	C.queue_icon_update(PENDING_UPDATE_BODY | PENDING_UPDATE_HAIR | PENDING_UPDATE_DAMAGE)
+	C.update_body()
+	C.update_hair()
+	C.update_damage_overlays()
 	C.update_mobility()
 	return TRUE
 
