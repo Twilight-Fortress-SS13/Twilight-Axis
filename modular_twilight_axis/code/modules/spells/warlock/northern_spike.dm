@@ -21,9 +21,9 @@
 	var/tmp/damage_mult = 1
 
 /obj/effect/proc_holder/spell/invoked/projectile/northern_spike/cast(list/targets, mob/user)
-	var/list/context = warlock_spell_pre_cast(user, WARLOCK_SLOT_2, WARLOCK_SCHOOL_FROST, src)
+	var/list/context = warlock_spell_pre_cast(user, WARLOCK_SLOT_2, WARLOCK_SCHOOL_FIREFROST, src)
 	var/success = ..()
-	warlock_spell_post_cast(user, WARLOCK_SLOT_2, WARLOCK_SCHOOL_FROST, success, context)
+	warlock_spell_post_cast(user, WARLOCK_SLOT_2, WARLOCK_SCHOOL_FIREFROST, success, context)
 	return success
 
 /obj/projectile/magic/northern_spike
@@ -39,15 +39,17 @@
 	var/mob/living/pinned_mob = null
 	var/tmp/damage_mult = 1
 
+/obj/projectile/magic/northern_spike/Initialize()
+	. = ..()
+	if(isliving(firer))
+		var/list/context = warlock_spell_pre_cast(firer, WARLOCK_SLOT_2, WARLOCK_SCHOOL_FIREFROST, src)
+		damage_mult = warlock_get_damage_mult(context)
+
 /obj/projectile/magic/northern_spike/on_hit(target, blocked = FALSE)
 	var/mob/living/L = target
 	if(ismob(target) && !pinned_mob)
 		if(L.anti_magic_check())
 			return BULLET_ACT_BLOCK
-		
-		if(isliving(firer))
-			var/list/context = warlock_spell_pre_cast(firer, WARLOCK_SLOT_2, WARLOCK_SCHOOL_FIRE, src)
-			damage_mult = warlock_get_damage_mult(context)
 
 		pinned_mob = L
 		L.apply_status_effect(/datum/status_effect/buff/frostbite)

@@ -16,9 +16,11 @@
 
 	subclass_skills = list(
 		/datum/skill/magic/arcane = SKILL_LEVEL_EXPERT,
-		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/athletics = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_NOVICE
@@ -38,16 +40,21 @@
 /datum/outfit/job/roguetown/wretch/warlock/pre_equip(mob/living/carbon/human/H)
 	..()
 
-	head = /obj/item/clothing/head/roguetown/wizhat
-	shirt = /obj/item/clothing/suit/roguetown/shirt/robe/spellcasterrobe
-	shoes = /obj/item/clothing/shoes/roguetown/boots
-	neck = /obj/item/storage/belt/rogue/pouch/coins/poor
-	backl = /obj/item/storage/backpack/rogue/satchel
+	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
+	pants = /obj/item/clothing/under/roguetown/tights/random
 	belt = /obj/item/storage/belt/rogue/leather
-	beltl = /obj/item/flashlight/flare/torch/lantern
+	beltl = /obj/item/storage/magebag/associate
+	backl = /obj/item/storage/backpack/rogue/satchel
+	backr = /obj/item/rogueweapon/woodstaff
+	shoes = /obj/item/clothing/shoes/roguetown/gladiator
+	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
+	head = /obj/item/clothing/head/roguetown/roguehood/mage
+	beltr = /obj/item/flashlight/flare/torch/lantern
 
 	backpack_contents = list(
-		/obj/item/recipe_book/survival = 1,
+		/obj/item/recipe_book/alchemy = 1,
+		/obj/item/recipe_book/magic = 1,
+		/obj/item/chalk = 1,
 	)
 
 	to_chat(H, span_warning("You are a Warlock — a wielder of cursed flame and killing frost."))
@@ -55,3 +62,4 @@
 
 	if(H.mind)
 		H.AddComponent(/datum/component/spell_proc/warlock)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)

@@ -39,11 +39,13 @@
 	guard_deflectable = TRUE
 	var/tmp/damage_mult = 1
 
-/obj/projectile/magic/aoe/fireball/rogue/pyroblast/on_hit(target)
+/obj/projectile/magic/aoe/fireball/rogue/pyroblast/Initialize()
+	. = ..()
 	if(isliving(firer))
 		var/list/context = warlock_spell_pre_cast(firer, WARLOCK_SLOT_3, WARLOCK_SCHOOL_FIRE, src)
 		damage_mult = warlock_get_damage_mult(context)
 
+/obj/projectile/magic/aoe/fireball/rogue/pyroblast/on_hit(target)
 	damage = round(initial(damage) * damage_mult)
 
 	var/turf/epicenter = get_turf(target)

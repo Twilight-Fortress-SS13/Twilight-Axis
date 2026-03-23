@@ -20,9 +20,9 @@
 	var/tmp/damage_mult = 1
 
 /obj/effect/proc_holder/spell/invoked/projectile/scorch_bolt/cast(list/targets, mob/user)
-	var/list/context = warlock_spell_pre_cast(user, WARLOCK_SLOT_1, WARLOCK_SCHOOL_FIRE, src)
+	var/list/context = warlock_spell_pre_cast(user, WARLOCK_SLOT_1, WARLOCK_SCHOOL_FIREFROST, src)
 	var/success = ..()
-	warlock_spell_post_cast(user, WARLOCK_SLOT_1, WARLOCK_SCHOOL_FIRE, success, context)
+	warlock_spell_post_cast(user, WARLOCK_SLOT_1, WARLOCK_SCHOOL_FIREFROST, success, context)
 	return success
 
 /obj/projectile/magic/scorch_bolt
@@ -36,15 +36,17 @@
 	guard_deflectable = TRUE
 	var/tmp/damage_mult = 1
 
+/obj/projectile/magic/scorch_bolt/Initialize()
+	. = ..()
+	if(isliving(firer))
+		var/list/context = warlock_spell_pre_cast(firer, WARLOCK_SLOT_1, WARLOCK_SCHOOL_FIREFROST, src)
+		damage_mult = warlock_get_damage_mult(context)
+
 /obj/projectile/magic/scorch_bolt/on_hit(target, blocked = FALSE)
 	var/mob/living/L = target
 	if(ismob(target))
 		if(L.anti_magic_check())
 			return BULLET_ACT_BLOCK
-
-		if(isliving(firer))
-			var/list/context = warlock_spell_pre_cast(firer, WARLOCK_SLOT_1, WARLOCK_SCHOOL_FIRE, src)
-			damage_mult = warlock_get_damage_mult(context)
 
 		temporary_unstoppable_movement = TRUE
 		movement_type |= UNSTOPPABLE

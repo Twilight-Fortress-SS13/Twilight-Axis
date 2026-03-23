@@ -39,12 +39,14 @@
 	npc_simple_damage_mult = 2 
 	var/tmp/damage_mult = 1
 
-/obj/projectile/magic/fire_arrow/on_hit(target)
-	var/mob/living/L = target
+/obj/projectile/magic/fire_arrow/Initialize()
+	. = ..()
 	if(isliving(firer))
 		var/list/context = warlock_spell_pre_cast(firer, WARLOCK_SLOT_1, WARLOCK_SCHOOL_FIRE, src)
 		damage_mult = warlock_get_damage_mult(context)
 
+/obj/projectile/magic/fire_arrow/on_hit(target)
+	var/mob/living/L = target
 	damage = round(initial(damage) * damage_mult)
 
 	. = ..()

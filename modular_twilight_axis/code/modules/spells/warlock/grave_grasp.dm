@@ -24,14 +24,14 @@
 		to_chat(user, span_warning("Я не могу призвать руку тут!"))
 		return FALSE
 
-	var/list/context = warlock_spell_pre_cast(user, WARLOCK_SLOT_4, WARLOCK_SCHOOL_FIRE, src)
+	var/list/context = warlock_spell_pre_cast(user, WARLOCK_SLOT_4, WARLOCK_SCHOOL_FIREFROST, src)
 	damage_mult = src.damage_mult
 
 	var/obj/effect/grave_hand/H = new /obj/effect/grave_hand(T, user)
 	H.damage_mult = damage_mult
 	new /obj/effect/temp_visual/gravity_trap(T)
 
-	warlock_spell_post_cast(user, WARLOCK_SLOT_4, WARLOCK_SCHOOL_FIRE, TRUE, context)
+	warlock_spell_post_cast(user, WARLOCK_SLOT_4, WARLOCK_SCHOOL_FIREFROST, TRUE, context)
 	return TRUE
 
 /obj/effect/grave_hand

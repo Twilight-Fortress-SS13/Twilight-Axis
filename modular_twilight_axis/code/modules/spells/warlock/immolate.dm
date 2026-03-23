@@ -21,7 +21,7 @@
 
 /obj/effect/proc_holder/spell/invoked/immolate/cast(list/targets, mob/user)
 	var/turf/center = get_turf(user)
-	var/list/context = warlock_spell_pre_cast(user, WARLOCK_SLOT_4, WARLOCK_SCHOOL_FIRE, src)
+	var/list/context = warlock_spell_pre_cast(user, WARLOCK_SLOT_4, WARLOCK_SCHOOL_FIREFROST, src)
 	damage_mult = src.damage_mult
 	
 	new /obj/effect/temp_visual/explosion(center)
@@ -64,5 +64,5 @@
 			user.set_light(0)
 			to_chat(user, span_notice("Ваше пламя угасает."))
 
-	warlock_spell_post_cast(user, WARLOCK_SLOT_4, WARLOCK_SCHOOL_FIRE, TRUE, context)
+	warlock_spell_post_cast(user, WARLOCK_SLOT_4, WARLOCK_SCHOOL_FIREFROST, TRUE, context)
 	return TRUE

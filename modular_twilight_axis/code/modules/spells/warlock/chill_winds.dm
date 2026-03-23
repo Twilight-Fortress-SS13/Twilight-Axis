@@ -24,7 +24,7 @@
 		return FALSE
 
 	var/list/context = warlock_spell_pre_cast(user, WARLOCK_SLOT_3, WARLOCK_SCHOOL_FROST, src)
-	damage_mult = src.damage_mult
+	damage_mult = warlock_get_damage_mult(context)
 
 	playsound(T, 'sound/magic/abyssor_splash.ogg', 80, TRUE)
 	new /obj/effect/temp_visual/tornado(T) 

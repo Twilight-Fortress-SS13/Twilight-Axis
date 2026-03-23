@@ -1,18 +1,13 @@
-// ============================================================
-// warlock_statuses.dm
-// Heat / Cold cross-school stack statuses.
-// ============================================================
-
 #define WARLOCK_MAX_STACKS 5
 
 /atom/movable/screen/alert/status_effect/warlock_heat
 	name = "Cursed Heat"
-	desc = "Жар другой школы копится в вашем теле."
+	desc = "Жар копится в вашем теле."
 	icon_state = "buff"
 
 /atom/movable/screen/alert/status_effect/warlock_cold
 	name = "Doom Cold"
-	desc = "Холод другой школы копится в вашем теле."
+	desc = "Холод копится в вашем теле."
 	icon_state = "buff"
 
 /datum/status_effect/warlock_heat
@@ -27,13 +22,13 @@
 	UpdateAlert()
 	return TRUE
 
-/datum/status_effect/warlock_heat/refresh()
+/datum/status_effect/warlock_heat/refresh(mob/living/new_owner, amount = 1)
 	. = ..()
-	AddStacks(1)
+	AddStacks(amount)
 
 /datum/status_effect/warlock_heat/proc/AddStacks(amount = 1)
 	stacks = clamp(stacks + amount, 1, WARLOCK_MAX_STACKS)
-	duration = initial(duration)
+	duration = world.time + initial(duration)
 	UpdateAlert()
 
 /datum/status_effect/warlock_heat/proc/UpdateAlert()
@@ -53,13 +48,13 @@
 	UpdateAlert()
 	return TRUE
 
-/datum/status_effect/warlock_cold/refresh()
+/datum/status_effect/warlock_cold/refresh(mob/living/new_owner, amount = 1)
 	. = ..()
-	AddStacks(1)
+	AddStacks(amount)
 
 /datum/status_effect/warlock_cold/proc/AddStacks(amount = 1)
 	stacks = clamp(stacks + amount, 1, WARLOCK_MAX_STACKS)
-	duration = initial(duration)
+	duration = world.time + initial(duration)
 	UpdateAlert()
 
 /datum/status_effect/warlock_cold/proc/UpdateAlert()

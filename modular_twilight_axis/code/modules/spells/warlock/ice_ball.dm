@@ -38,15 +38,17 @@
 	woundclass = BCLASS_BLUNT
 	var/tmp/damage_mult = 1
 
+/obj/projectile/magic/ice_ball/Initialize()
+	. = ..()
+	if(isliving(firer))
+		var/list/context = warlock_spell_pre_cast(firer, WARLOCK_SLOT_2, WARLOCK_SCHOOL_FROST, src)
+		damage_mult = warlock_get_damage_mult(context)
+
 /obj/projectile/magic/ice_ball/on_hit(target, blocked = FALSE)
 	var/mob/living/L = target
 	if(ismob(target))
 		if(L.anti_magic_check())
 			return BULLET_ACT_BLOCK
-
-		if(isliving(firer))
-			var/list/context = warlock_spell_pre_cast(firer, WARLOCK_SLOT_2, WARLOCK_SCHOOL_FIRE, src)
-			damage_mult = warlock_get_damage_mult(context)
 
 		temporary_unstoppable_movement = TRUE
 		movement_type |= UNSTOPPABLE

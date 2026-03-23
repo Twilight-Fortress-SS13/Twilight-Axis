@@ -1,33 +1,11 @@
 // ============================================================
 // warlock_proc_component.dm
-// Minimal warlock spell-proc component.
-//
-// 5 fixed slots:
-// 1, 2, 3, 4, switch
-//
-// slot_1: fire_arrow / frost_arrow / scorch_bolt
-// slot_2: dragon_breath / ice_ball / northern_spike
-// slot_3: pyroblast / chill_winds / grave_grasp
-// slot_4: sun_nova / cold_glare / immolate
-// slot_switch: stance switch
-//
-// Rules:
-// - On init grants first 5 spells immediately
-// - Stance swap preserves slot mapping
-// - Proc replacement occupies same slot
-// - Base cooldown belongs to slot
-// - Proc cast does not consume slot cooldown
-// - Stacks:
-//   * each stack gives +5% proc chance to its own school
-//   * each stack gives +10% damage if spell is proc
-//   * each stack gives +10% damage if spell is opposite school relative to that stack
-// - Post-cast:
-//   * proc cast clears both schools, then grants 1 stack of its own school
-//   * base cast clears opposite school, then grants 1 stack of its own school
+// Warlock proc component.
 // ============================================================
 
 #define WARLOCK_SCHOOL_FIRE "fire"
 #define WARLOCK_SCHOOL_FROST "frost"
+#define WARLOCK_SCHOOL_FIREFROST "firefrost"
 
 #define WARLOCK_SLOT_1 "slot_1"
 #define WARLOCK_SLOT_2 "slot_2"
@@ -65,7 +43,7 @@
 	/// spell datum => slot_id
 	var/list/spell_to_slot
 
-	/// spell datum => school
+	/// spell datum => school tag assigned on bar build
 	var/list/spell_to_school
 
 	/// slot_id => proc active?
@@ -263,17 +241,21 @@
 		return
 
 	var/remaining = slot_saved_cooldown[slot_id]
+	var/datum/action/spell_action/SA = S.action
+
 	if(!remaining || remaining <= 0)
 		S.charge_counter = S.recharge_time
 		S.last_process_time = world.time
-		S.action?.button?.update_maptext(0)
-		S.action?.UpdateButtonIcon()
+		SA?.update_all_maptext(0)
+		S.action?.build_all_button_icons()
+		STOP_PROCESSING(SSfastprocess, S)
 		return
 
 	S.charge_counter = max(S.recharge_time - remaining, 0)
 	S.last_process_time = world.time
 	START_PROCESSING(SSfastprocess, S)
-	S.action?.UpdateButtonIcon()
+	SA?.update_all_maptext(remaining)
+	S.action?.build_all_button_icons()
 
 /datum/component/spell_proc/warlock/proc/GetSpellSchoolFromSlot(spell_slot)
 	if(spell_slot == WARLOCK_SLOT_SWITCH)
@@ -283,27 +265,100 @@
 	if(!S)
 		return current_school
 
-	return spell_to_school[S]
+	var/spell_school = spell_to_school[S]
+	if(spell_school == WARLOCK_SCHOOL_FIREFROST)
+		return current_school
+
+	return spell_school
+
+/datum/component/spell_proc/warlock/proc/ResolveEffectiveSchool(spell_slot, spell_school)
+	if(spell_school == WARLOCK_SCHOOL_FIRE)
+		return WARLOCK_SCHOOL_FIRE
+	if(spell_school == WARLOCK_SCHOOL_FROST)
+		return WARLOCK_SCHOOL_FROST
+	return null
+
+/datum/component/spell_proc/warlock/proc/GetOppositeSchool(school)
+	switch(school)
+		if(WARLOCK_SCHOOL_FIRE)
+			return WARLOCK_SCHOOL_FROST
+		if(WARLOCK_SCHOOL_FROST)
+			return WARLOCK_SCHOOL_FIRE
+	return null
+
+/datum/component/spell_proc/warlock/proc/GetHeatStatus()
+	if(!owner)
+		return null
+	return owner.has_status_effect(/datum/status_effect/warlock_heat)
+
+/datum/component/spell_proc/warlock/proc/GetColdStatus()
+	if(!owner)
+		return null
+	return owner.has_status_effect(/datum/status_effect/warlock_cold)
+
+/datum/component/spell_proc/warlock/proc/GetStacksForSchool(school)
+	switch(school)
+		if(WARLOCK_SCHOOL_FIRE)
+			var/datum/status_effect/warlock_heat/H = GetHeatStatus()
+			return H ? H.stacks : 0
+
+		if(WARLOCK_SCHOOL_FROST)
+			var/datum/status_effect/warlock_cold/C = GetColdStatus()
+			return C ? C.stacks : 0
+
+	return 0
+
+/datum/component/spell_proc/warlock/proc/AddStackForSchool(school, amount = 1)
+	if(!owner || amount <= 0)
+		return
+
+	switch(school)
+		if(WARLOCK_SCHOOL_FIRE)
+			owner.apply_status_effect(/datum/status_effect/warlock_heat)
+
+		if(WARLOCK_SCHOOL_FROST)
+			owner.apply_status_effect(/datum/status_effect/warlock_cold)
+
+/datum/component/spell_proc/warlock/proc/ClearStacksForSchool(school)
+	if(!owner)
+		return
+
+	switch(school)
+		if(WARLOCK_SCHOOL_FIRE)
+			var/datum/status_effect/warlock_heat/H = GetHeatStatus()
+			if(H)
+				qdel(H)
+
+		if(WARLOCK_SCHOOL_FROST)
+			var/datum/status_effect/warlock_cold/C = GetColdStatus()
+			if(C)
+				qdel(C)
+
+/datum/component/spell_proc/warlock/proc/CalculateProcChanceForSchool(school)
+	return WARLOCK_BASE_PROC_CHANCE + (GetStacksForSchool(school) * WARLOCK_PROC_PER_STACK)
 
 /datum/component/spell_proc/warlock/OnSpellProcPreCast(spell_slot, spell_school, list/context)
 	if(!spell_slot || spell_slot == WARLOCK_SLOT_SWITCH)
 		return
 
-	if(!spell_school)
-		spell_school = GetSpellSchoolFromSlot(spell_slot)
+	var/effective_school = ResolveEffectiveSchool(spell_slot, spell_school)
+	if(!effective_school)
+		return
 
-	var/same_school_stacks = GetStacksForSchool(spell_school)
-	var/opposite_school = GetOppositeSchool(spell_school)
+	var/same_school_stacks = GetStacksForSchool(effective_school)
+	var/opposite_school = GetOppositeSchool(effective_school)
 	var/opposite_school_stacks = GetStacksForSchool(opposite_school)
 	var/is_proc = IsProcSlot(spell_slot)
-	var/proc_chance = WARLOCK_BASE_PROC_CHANCE + (same_school_stacks * WARLOCK_PROC_PER_STACK)
+	var/proc_chance = CalculateProcChanceForSchool(effective_school)
 	var/damage_mult = 1
+
 	if(is_proc && same_school_stacks > 0)
 		damage_mult += (same_school_stacks * WARLOCK_DAMAGE_PER_STACK)
 
 	if(opposite_school_stacks > 0)
 		damage_mult += (opposite_school_stacks * WARLOCK_DAMAGE_PER_STACK)
 
+	context["effective_school"] = effective_school
 	context["same_school_stacks"] = same_school_stacks
 	context["opposite_school_stacks"] = opposite_school_stacks
 	context["proc_chance"] = proc_chance
@@ -317,93 +372,43 @@
 	if(!spell_slot || spell_slot == WARLOCK_SLOT_SWITCH)
 		return
 
-	if(!spell_school)
-		spell_school = GetSpellSchoolFromSlot(spell_slot)
+	var/effective_school = context["effective_school"]
+	if(!effective_school)
+		effective_school = ResolveEffectiveSchool(spell_slot, spell_school)
 
-	var/is_proc = IsProcSlot(spell_slot)
-	var/opposite_school = GetOppositeSchool(spell_school)
+	if(!effective_school)
+		return
+
+	var/is_proc = context["is_proc"]
+	if(isnull(is_proc))
+		is_proc = IsProcSlot(spell_slot)
 
 	if(is_proc)
-		ClearStacksForSchool(spell_school)
+		ClearStacksForSchool(effective_school)
 		slot_proc_active[spell_slot] = FALSE
 		RebuildSpellBar()
 		return
 
-	if(opposite_school)
-		var/opposite_school_stacks = GetStacksForSchool(opposite_school)
-		if(opposite_school_stacks > 0)
-			ClearStacksForSchool(opposite_school)
+	var/opposite_school = GetOppositeSchool(effective_school)
+	var/opposite_school_stacks = context["opposite_school_stacks"]
+	if(isnull(opposite_school_stacks))
+		opposite_school_stacks = GetStacksForSchool(opposite_school)
 
-	AddStackForSchool(spell_school, 1)
+	if(opposite_school && opposite_school_stacks > 0)
+		ClearStacksForSchool(opposite_school)
+
+	AddStackForSchool(effective_school, 1)
 	var/obj/effect/proc_holder/spell/S = slot_spell_refs[spell_slot]
 	if(S)
 		slot_saved_cooldown[spell_slot] = GetRemainingCooldown(S)
 
 	var/proc_chance = context["proc_chance"]
 	if(isnull(proc_chance))
-		proc_chance = WARLOCK_BASE_PROC_CHANCE
+		proc_chance = CalculateProcChanceForSchool(effective_school)
 
 	if(prob(proc_chance))
 		slot_proc_active[spell_slot] = TRUE
 		RebuildSpellBar()
-
-/datum/component/spell_proc/warlock/proc/GetOppositeSchool(school)
-	switch(school)
-		if(WARLOCK_SCHOOL_FIRE)
-			return WARLOCK_SCHOOL_FROST
-		if(WARLOCK_SCHOOL_FROST)
-			return WARLOCK_SCHOOL_FIRE
-	return null
-
-/datum/component/spell_proc/warlock/proc/GetStacksForSchool(school)
-	switch(school)
-		if(WARLOCK_SCHOOL_FIRE)
-			var/datum/status_effect/warlock_heat/H = owner?.has_status_effect(/datum/status_effect/warlock_heat)
-			return H ? H.stacks : 0
-
-		if(WARLOCK_SCHOOL_FROST)
-			var/datum/status_effect/warlock_cold/C = owner?.has_status_effect(/datum/status_effect/warlock_cold)
-			return C ? C.stacks : 0
-
-	return 0
-
-/datum/component/spell_proc/warlock/proc/AddStackForSchool(school, amount = 1)
-	if(!owner || amount <= 0)
-		return
-
-	switch(school)
-		if(WARLOCK_SCHOOL_FIRE)
-			var/datum/status_effect/warlock_heat/H = owner.has_status_effect(/datum/status_effect/warlock_heat)
-			if(!H)
-				H = owner.apply_status_effect(/datum/status_effect/warlock_heat)
-				if(H && amount > 1)
-					H.AddStacks(amount - 1)
-			else
-				H.AddStacks(amount)
-
-		if(WARLOCK_SCHOOL_FROST)
-			var/datum/status_effect/warlock_cold/C = owner.has_status_effect(/datum/status_effect/warlock_cold)
-			if(!C)
-				C = owner.apply_status_effect(/datum/status_effect/warlock_cold)
-				if(C && amount > 1)
-					C.AddStacks(amount - 1)
-			else
-				C.AddStacks(amount)
-
-/datum/component/spell_proc/warlock/proc/ClearStacksForSchool(school)
-	if(!owner)
-		return
-
-	switch(school)
-		if(WARLOCK_SCHOOL_FIRE)
-			var/datum/status_effect/warlock_heat/H = owner.has_status_effect(/datum/status_effect/warlock_heat)
-			if(H)
-				qdel(H)
-
-		if(WARLOCK_SCHOOL_FROST)
-			var/datum/status_effect/warlock_cold/C = owner.has_status_effect(/datum/status_effect/warlock_cold)
-			if(C)
-				qdel(C)
 
 #undef WARLOCK_SLOT_SWITCH
 #undef WARLOCK_BASE_PROC_CHANCE

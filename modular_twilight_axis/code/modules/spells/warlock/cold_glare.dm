@@ -28,7 +28,7 @@
 
 	playsound(user_turf, 'sound/magic/abyssor_splash.ogg', 100, TRUE)
 
-	for(var/turf/T in view(range, user))
+	for(var/turf/T in orange(range, user))
 		if(T == user_turf) 
 			continue
 		
