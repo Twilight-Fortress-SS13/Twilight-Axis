@@ -226,13 +226,13 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
 	icon_state = "yoheisuit"
-	armor = ARMOR_LEATHER_STUDDED
+	armor = ARMOR_BRIGANDINE
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 25
 
 /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/yohei
 	name = "shadowed hood"
 	max_integrity = 100
-	armor = ARMOR_SPELLSINGER
+	armor = ARMOR_LEATHER
 	color = CLOTHING_BLACK
 	desc = "A traditional Kazengunese hood, dyed in dark colors."
 

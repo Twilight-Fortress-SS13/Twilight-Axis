@@ -1,2 +1,2 @@
 /datum/intent/buttstroke
-	penfactor = BLUNT_LOWER_PENFACTOR
+	penfactor = PEN_NONE

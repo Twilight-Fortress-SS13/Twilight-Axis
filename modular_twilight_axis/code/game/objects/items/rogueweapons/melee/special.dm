@@ -1,5 +1,5 @@
 /datum/intent/knuckles/strike
-	penfactor = BLUNT_UNARMED_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/claw/rend
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE

@@ -147,7 +147,7 @@
 	desc = "Кожаный подсумок, предназначенный для хранения рунических пуль. Нанесенная на металл замка руна привязывается к хранящимся внутри боеприпасам, и при активации возвращает уже отстреленные рунические пули в хранилище для повторного использования."
 	icon_state = "runebag"
 	item_state = "runebag"
-	max_storage = 10
+	max_storage = 4
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
 	var/list/linked_ammo_types = list()
 
@@ -199,7 +199,7 @@
 
 /obj/item/quiver/twilight_bullet/runicbag/runed/Initialize()
 	. = ..()
-	for(var/i in 1 to 8)
+	for(var/i in 1 to 4)
 		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/R = new()
 		arrows += R
 		R.linked_bag = src

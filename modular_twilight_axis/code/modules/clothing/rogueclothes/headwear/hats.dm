@@ -13,6 +13,7 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
 	icon_state = "eaststrawhat"
 	flags_inv = HIDEEARS
+	sewrepair = TRUE
 	var/hides_ears = TRUE
 
 /obj/item/clothing/head/roguetown/eaststrawhat/MiddleClick(mob/user, params)
@@ -22,7 +23,6 @@
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/decorated
 	armor = null
-	prevent_crits = null
 
 /obj/item/clothing/head/roguetown/twilight_elven_hat
 	name = "elven burka"
@@ -286,6 +286,7 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/kazengun_n_burger.dmi'
 	body_parts_covered = NECK
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	detail_tag = "_detail"
 	dynamic_hair_suffix = ""
 	edelay_type = 1
 	adjustable = CAN_CADJUST
@@ -294,12 +295,29 @@
 	salvage_result = /obj/item/natural/cloth
 	salvage_amount = 1
 
-/datum/crafting_recipe/roguetown/survival/burgerhood //i dunno where to place it helpppp
+/datum/crafting_recipe/roguetown/sewing/burgerhood //i dunno where to place it helpppp
 	name = "noble hood"
 	category = "Hoods"
 	result = list(/obj/item/clothing/head/roguetown/roguehood/burgerhood)
 	reqs = list(/obj/item/natural/cloth = 2,
 	            /obj/item/natural/fibers = 1)
+	tools = list(/obj/item/needle)
+	craftdiff = 2
+	sellprice = 15
+
+/obj/item/clothing/head/roguetown/hscarf
+	desc = "Шёлковая повязка, что часто находится на голове чаще всего или моряка, или пирата!"
+	name = "head scarf"
+	icon_state = "headscarf"
+	item_state = "headscarf"
+	icon = 'modular_twilight_axis/icons/clothing/kazengun_n_burger.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/kazengun_n_burger.dmi'
+
+/datum/crafting_recipe/roguetown/sewing/hscarf
+	name = "head scarf"
+	category = "Hoods"
+	result = list(/obj/item/clothing/head/roguetown/hscarf)
+	reqs = list(/obj/item/natural/silk = 4)
 	tools = list(/obj/item/needle)
 	craftdiff = 2
 	sellprice = 15

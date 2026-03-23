@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button, Stack } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
@@ -14,6 +14,9 @@ enum Page {
   ImageGallery,
   NSFWHeadshot,
 }
+
+const isValidAssetValue = (value?: string | null) =>
+  !!value && value !== '0' && value !== '00';
 
 export const ExaminePanel = (props) => {
   const { act, data } = useBackend<ExaminePanelData>();
@@ -31,11 +34,33 @@ export const ExaminePanel = (props) => {
 
   const [currentPage, setCurrentPage] = useState(Page.FlavorText);
 
-  const hasSfwGallery = !!img_gallery?.length;
-  const hasNsfwGallery = !!nsfw_img_gallery?.length;
-  const hasAnyGallery = hasSfwGallery || hasNsfwGallery;
-  const hasNudeshot = !!nsfw_headshot;
-  const showNudeshot = is_naked && hasNudeshot;
+  const safeSfwGallery = useMemo(
+    () => (img_gallery || []).filter(isValidAssetValue),
+    [img_gallery],
+  );
+
+  const safeNsfwGallery = useMemo(
+    () => (nsfw_img_gallery || []).filter(isValidAssetValue),
+    [nsfw_img_gallery],
+  );
+
+  const hasSfwGallery = safeSfwGallery.length > 0;
+  const hasNsfwGallery = safeNsfwGallery.length > 0;
+  const hasAnyGallery = Boolean(hasSfwGallery || hasNsfwGallery);
+  const hasNudeshot = isValidAssetValue(nsfw_headshot);
+  const showNudeshot = Boolean(is_naked) && hasNudeshot;
+  const shouldShowTabs = Boolean(hasAnyGallery || showNudeshot);
+
+  useEffect(() => {
+    if (currentPage === Page.ImageGallery && !hasAnyGallery) {
+      setCurrentPage(Page.FlavorText);
+      return;
+    }
+
+    if (currentPage === Page.NSFWHeadshot && !showNudeshot) {
+      setCurrentPage(Page.FlavorText);
+    }
+  }, [currentPage, hasAnyGallery, showNudeshot]);
 
   let pageContents;
 
@@ -85,7 +110,7 @@ export const ExaminePanel = (props) => {
     >
       <Window.Content>
         <Stack vertical fill>
-          {(hasAnyGallery || showNudeshot) && (
+          {shouldShowTabs && (
             <>
               <Stack style={{ marginBottom: '4px' }}>
                 <Stack.Item grow>

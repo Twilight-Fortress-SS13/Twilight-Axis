@@ -119,13 +119,13 @@
 	)
 
 /datum/intent/dagger/cut/blunt
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/dagger/thrust/blunt
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/dagger/sucker_punch
-	penfactor = BLUNT_LOWER_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/dagger/cut/rend
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE

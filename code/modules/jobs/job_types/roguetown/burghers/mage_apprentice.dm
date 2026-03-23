@@ -80,7 +80,6 @@
 	pants = /obj/item/clothing/under/roguetown/tights/random
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/magebag/associate
-	beltr = /obj/item/storage/keyring/apprentice
 	backl = /obj/item/storage/backpack/rogue/satchel
 	backr = /obj/item/rogueweapon/woodstaff
 	shoes = /obj/item/clothing/shoes/roguetown/gladiator
@@ -99,6 +98,10 @@
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")
+	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
+		beltr = /obj/item/storage/keyring/apprenticeenigma
+	else 
+		beltr = /obj/item/storage/keyring/apprentice
 
 /datum/advclass/wapprentice/alchemist
 	name = "Alchemist Associate"

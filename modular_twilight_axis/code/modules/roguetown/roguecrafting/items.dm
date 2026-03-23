@@ -95,3 +95,27 @@
 	craftdiff = 0
 	req_table = TRUE
 	bypass_dupe_test = TRUE
+
+/datum/crafting_recipe/roguetown/survival/grenzelhauberk/off
+	name = "take a grenzelhoftian hip-shirt off the hauberk"
+	result = list(/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft = 1, /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk = 1)
+	reqs = list(/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/grenzelhoft = 1)
+	craftdiff = 0
+	req_table = TRUE
+	bypass_dupe_test = TRUE
+
+/datum/crafting_recipe/roguetown/survival/naledymask_up
+	name = "combining a war scholar's mask with a steel mask"
+	result = list(/obj/item/clothing/mask/rogue/lordmask/naledi/steel = 1)
+	reqs = list(/obj/item/clothing/mask/rogue/lordmask/naledi = 1, /obj/item/clothing/mask/rogue/facemask/steel = 1)
+	craftdiff = 0
+	req_table = TRUE
+	bypass_dupe_test = TRUE
+
+/datum/crafting_recipe/roguetown/survival/naledymask_up_decorative
+	name = "combining a war scholar's mask(decorated) with a steel mask"
+	result = list(/obj/item/clothing/mask/rogue/lordmask/naledi/steel = 1)
+	reqs = list(/obj/item/clothing/mask/rogue/lordmask/naledi/decorated = 1, /obj/item/clothing/mask/rogue/facemask/steel = 1)
+	craftdiff = 0
+	req_table = TRUE
+	bypass_dupe_test = TRUE

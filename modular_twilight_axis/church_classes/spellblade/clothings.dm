@@ -8,7 +8,6 @@
 	color = "#78a3c9"
 	slot_flags = ITEM_SLOT_HEAD
 	armor = ARMOR_NEWMOON_HOOD
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_TWIST)
 	body_parts_covered = HEAD|HAIR|EARS|NOSE|NECK
 	max_integrity = 230
 	armor_class = ARMOR_CLASS_MEDIUM
@@ -23,7 +22,6 @@
 	item_state = "newmoon_jacket"
 	blocksound = SOFTHIT
 	armor = ARMOR_NEWMOON_JACKET
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_BLUNT, BCLASS_CHOP)
 	nodismemsleeves = TRUE
 	body_parts_covered = CHEST|GROIN|VITALS|LEGS|ARMS
 	max_integrity = 300

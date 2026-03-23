@@ -1309,16 +1309,20 @@ GLOBAL_VAR_INIT(mobids, 1)
 	if(stat != CONSCIOUS)
 		to_chat(src, span_warning("I can't set my pose right now."))
 		return
-	var/new_pose = tgui_input_text(src, "Set your character's pose (MARKDOWN AVAILABLE):", "SET POSE", pose_text, multiline = FALSE,  encode = FALSE, bigmodal = TRUE, max_length = 256)
+
+	var/old_pose = pose_text
+	var/new_pose = tgui_input_text(src, "Set your character's pose (MARKDOWN AVAILABLE):", "SET POSE", pose_text, multiline = FALSE, encode = FALSE, bigmodal = TRUE, max_length = 256)
 	if(isnull(new_pose))
 		return
 
 	if(!length(new_pose))
 		pose_text = ""
+		log_admin("[src.ckey] ([src.real_name]) cleared pose. Old pose: [old_pose]")
 		to_chat(src, span_notice("I clear my pose."))
 		return
 
 	pose_text = parsemarkdown_basic(new_pose)
+	log_admin("[src.ckey] ([src.real_name]) set pose. New pose: [new_pose]")
 	to_chat(src, span_notice("I set my pose."))
 
 ///Adjust the nutrition of a mob
