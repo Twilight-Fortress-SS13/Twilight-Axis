@@ -45,7 +45,7 @@
 		setup_auto_repair()
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armor_penetration)
-	if(QDELETED(src))
+	if(QDELETED(src) || QDELING(src))
 		return
 	..()
 	if(reptimer)
