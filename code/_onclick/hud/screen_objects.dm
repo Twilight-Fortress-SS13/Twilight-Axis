@@ -446,7 +446,6 @@
 	intent_vis4 = _create_intent_slot(pixel_x_offsets[4], pixel_y_offsets[4])
 	border_vis1 = _create_border_slot()
 	border_vis2 = _create_border_slot()
-	HUD_LOG("rogintent", "New", "created, vis_contents.len=[vis_contents.len], base: [hud_debug_dump_vis(src)]")
 
 /atom/movable/screen/act_intent/rogintent/proc/_create_intent_slot(px, py)
 	var/obj/effect/overlay/vis/slot = new
@@ -457,7 +456,6 @@
 	slot.layer = layer + 0.02
 	slot.plane = plane
 	vis_contents += slot
-	HUD_LOG("rogintent", "create_intent_slot", "px=[px] py=[py] child: [hud_debug_dump_vis_child(slot)]")
 	return slot
 
 /atom/movable/screen/act_intent/rogintent/proc/_create_border_slot()
@@ -467,17 +465,14 @@
 	slot.layer = layer + 0.01
 	slot.plane = plane
 	vis_contents += slot
-	HUD_LOG("rogintent", "create_border_slot", "child: [hud_debug_dump_vis_child(slot)]")
 	return slot
 
 /atom/movable/screen/act_intent/rogintent/update_icon(list/intentsl,list/intentsr, oactive = FALSE)
-	HUD_LOG("rogintent", "update_icon", "intentsl=[intentsl?.len] intentsr=[intentsr?.len] oactive=[oactive]")
 	if(!intentsl || !intentsr)
 		intent_vis1.icon = null
 		intent_vis2.icon = null
 		intent_vis3.icon = null
 		intent_vis4.icon = null
-		HUD_LOG("rogintent", "update_icon", "CLEARED all slots (null intents)")
 		return
 	var/list/used = intentsr
 	if(hud.mymob.active_hand_index == 1)
@@ -498,14 +493,12 @@
 				break
 		slot.icon = intenty.icon
 		slot.icon_state = intenty.icon_state
-		HUD_LOG("rogintent", "update_icon", "slot[lol]: icon=[intenty.icon] state=[intenty.icon_state] -> child: [hud_debug_dump_vis_child(slot)]")
 	if(lol < 4)
 		intent_vis4.icon = null
 	if(lol < 3)
 		intent_vis3.icon = null
 	if(lol < 2)
 		intent_vis2.icon = null
-	HUD_LOG("rogintent", "update_icon", "filled [lol] slots")
 	if(ismob(usr))
 		var/mob/M = usr
 		switch_intent(M.r_index, M.l_index, oactive)
@@ -514,11 +507,9 @@
 	var/used = "offintent"
 	if(oactive)
 		used = "offintentselected"
-	HUD_LOG("rogintent", "switch_intent", "r=[r_index] l=[l_index] oactive=[oactive]")
 	if(!r_index || !l_index)
 		border_vis1.icon = null
 		border_vis2.icon = null
-		HUD_LOG("rogintent", "switch_intent", "CLEARED borders (null index)")
 		return
 	var/used_index = r_index
 	var/other = l_index
@@ -535,7 +526,6 @@
 	border_vis2.icon_state = used
 	border_vis2.pixel_x = px[other]
 	border_vis2.pixel_y = py[other]
-	HUD_LOG("rogintent", "switch_intent", "border1: [hud_debug_dump_vis_child(border_vis1)] | border2: [hud_debug_dump_vis_child(border_vis2)]")
 
 /atom/movable/screen/act_intent/rogintent/Click(location, control, params)
 
@@ -1074,7 +1064,6 @@
 	selection_vis.layer = layer + 0.2
 	selection_vis.plane = plane
 	vis_contents += selection_vis
-	HUD_LOG("zone_sel", "New", "created: [hud_debug_dump_vis(src)]")
 
 /atom/movable/screen/zone_sel/Click(location, control,params)
 	if(isobserver(usr))
@@ -1447,18 +1436,15 @@
 			limb.layer = layer + 0.1
 			limb_vis[zone] = limb
 			vis_contents += limb
-			HUD_LOG("zone_sel", "rebuild_limbs", "NEW limb vis for zone=[zone]")
 
 		limb.icon_state = "[gender_prefix]-[zone]"
 		limb.cut_overlays()
 
 		if(!BP)
 			limb.color = "#2f002f"
-			HUD_LOG("zone_sel", "rebuild_limbs", "zone=[zone] MISSING (purple)")
 			continue
 		if(nopain)
 			limb.color = "#78a8ba"
-			HUD_LOG("zone_sel", "rebuild_limbs", "zone=[zone] NOPAIN")
 			continue
 
 		limb.color = null
@@ -1470,7 +1456,6 @@
 		var/bleed = BP.get_bleed_rate()
 		if(bleed)
 			limb.add_overlay(mutable_appearance('icons/mob/roguehud64.dmi', "[gender_prefix]-[zone]-bleed"))
-		HUD_LOG("zone_sel", "rebuild_limbs", "zone=[zone] dmg=[damage]/[BP.max_damage] wound_alpha=[wound.alpha] bleed=[bleed] overlays=[limb.overlays.len]")
 
 /atom/movable/screen/zone_sel/proc/update_limb(zone)
 	if(!hud?.mymob || !ishuman(hud.mymob))
@@ -1486,7 +1471,6 @@
 		limb.layer = layer + 0.1
 		limb_vis[zone] = limb
 		vis_contents += limb
-		HUD_LOG("zone_sel", "update_limb", "NEW limb vis for zone=[zone]")
 
 	limb.icon_state = "[gender_prefix]-[zone]"
 	limb.cut_overlays()
@@ -1494,7 +1478,6 @@
 	var/list/missing = H.get_missing_limbs()
 	if(zone in missing)
 		limb.color = "#2f002f"
-		HUD_LOG("zone_sel", "update_limb", "zone=[zone] MISSING (purple)")
 		return
 
 	var/obj/item/bodypart/BP = H.get_bodypart(zone)
@@ -1502,12 +1485,10 @@
 		vis_contents -= limb
 		limb_vis -= zone
 		qdel(limb)
-		HUD_LOG("zone_sel", "update_limb", "zone=[zone] NO BODYPART, removed vis")
 		return
 
 	if(HAS_TRAIT(H, TRAIT_NOPAIN))
 		limb.color = "#78a8ba"
-		HUD_LOG("zone_sel", "update_limb", "zone=[zone] NOPAIN")
 		return
 
 	limb.color = null
@@ -1519,7 +1500,6 @@
 	var/bleed = BP.get_bleed_rate()
 	if(bleed)
 		limb.add_overlay(mutable_appearance('icons/mob/roguehud64.dmi', "[gender_prefix]-[zone]-bleed"))
-	HUD_LOG("zone_sel", "update_limb", "zone=[zone] dmg=[damage]/[BP.max_damage] wound_alpha=[wound.alpha] bleed=[bleed] overlays=[limb.overlays.len]")
 
 /atom/movable/screen/zone_sel/proc/update_selection()
 	if(!hud?.mymob)
@@ -1527,12 +1507,10 @@
 	var/gender_prefix = hud.mymob.gender == "male" ? "m" : "f"
 	selection_vis.icon = 'icons/mob/roguehud64.dmi'
 	selection_vis.icon_state = "[gender_prefix]_[hud.mymob.zone_selected]"
-	HUD_LOG("zone_sel", "update_selection", "state=[selection_vis.icon_state] child: [hud_debug_dump_vis_child(selection_vis)]")
 
 /atom/movable/screen/zone_sel/proc/flash_limb(zone, limb_color="#FF0000")
 	if(!zone || !hud?.mymob)
 		return
-	HUD_LOG("zone_sel", "flash_limb", "zone=[zone] color=[limb_color]")
 
 	var/gender_prefix = (hud.mymob.gender == FEMALE) ? "f" : "m"
 
@@ -1920,7 +1898,6 @@
 	intent_icon_vis.layer = layer + 0.01
 	intent_icon_vis.plane = plane
 	vis_contents += intent_icon_vis
-	HUD_LOG("rmbintent", "New", "created, child: [hud_debug_dump_vis_child(intent_icon_vis)] | parent: [hud_debug_dump_vis(src)]")
 
 /atom/movable/screen/rmbintent/update_icon()
 	if(isliving(hud?.mymob))
@@ -1930,13 +1907,10 @@
 			intent_icon_vis.icon_state = "[L.rmb_intent.icon_state]_x"
 			name = L.rmb_intent.name
 			desc = L.rmb_intent.desc
-			HUD_LOG("rmbintent", "update_icon", "SET icon_state=[intent_icon_vis.icon_state] name=[name] | child: [hud_debug_dump_vis_child(intent_icon_vis)]")
 		else
 			intent_icon_vis.icon = null
-			HUD_LOG("rmbintent", "update_icon", "CLEARED (no rmb_intent)")
 	else
 		intent_icon_vis.icon = null
-		HUD_LOG("rmbintent", "update_icon", "CLEARED (not living)")
 
 /atom/movable/screen/rmbintent/Click(location,control,params)
 	var/list/modifiers = params2list(params)

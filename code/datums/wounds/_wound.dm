@@ -317,11 +317,9 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		bleed_rate = amount
 		bodypart_owner.bleeding += bleed_rate
 		var/now_bleeding = bodypart_owner.bleeding > 0
-		HUD_LOG("wound", "set_bleed_rate", "zone=[bodypart_owner.body_zone] was=[was_bleeding] now=[now_bleeding] rate=[amount] total=[bodypart_owner.bleeding]")
 		if(was_bleeding != now_bleeding && bodypart_owner.owner)
 			var/datum/hud/hud_used = bodypart_owner.owner.hud_used
 			if(hud_used?.zone_select)
-				HUD_LOG("wound", "set_bleed_rate", "TRANSITION zone=[bodypart_owner.body_zone] -> update_limb")
 				hud_used.zone_select.update_limb(bodypart_owner.body_zone)
 
 /// Heals this wound by the given amount, and deletes it if it's healed completely

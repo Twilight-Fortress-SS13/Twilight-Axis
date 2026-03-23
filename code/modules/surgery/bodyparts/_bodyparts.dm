@@ -390,7 +390,6 @@
 	if(owner)
 		var/datum/hud/hud_used = owner.hud_used
 		if(hud_used?.zone_select)
-			HUD_LOG("bodypart", "receive_damage", "zone=[body_zone] brute=[brute_dam] burn=[burn_dam] bleed=[bleeding] -> update_limb")
 			hud_used.zone_select.update_limb(body_zone)
 	return .
 
@@ -420,7 +419,6 @@
 	if(owner)
 		var/datum/hud/hud_used = owner.hud_used
 		if(hud_used?.zone_select)
-			HUD_LOG("bodypart", "heal_damage", "zone=[body_zone] brute=[brute_dam] burn=[burn_dam] bleed=[bleeding] -> update_limb")
 			hud_used.zone_select.update_limb(body_zone)
 	return .
 
