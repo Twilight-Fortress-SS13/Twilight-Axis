@@ -2,7 +2,7 @@
 // HUD DEBUG LOGGING
 // Comment/uncomment the line below to toggle ALL hud logging
 // ============================================================
-#define HUD_DEBUG_LOG
+// #define HUD_DEBUG_LOG
 
 #ifdef HUD_DEBUG_LOG
 #define HUD_LOG(source, action, details) hud_debug_log(source, action, details)
