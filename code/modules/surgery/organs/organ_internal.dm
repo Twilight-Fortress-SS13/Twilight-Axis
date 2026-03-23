@@ -99,7 +99,8 @@
 			M.death()
 	for(var/X in actions)
 		var/datum/action/A = X
-		A.Remove(M)
+		if(M)
+			A.Remove(M)
 	update_icon()
 
 	if(ishuman(M))

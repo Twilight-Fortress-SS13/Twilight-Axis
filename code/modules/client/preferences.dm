@@ -3324,7 +3324,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	if(icon_updates)
 		character.update_body()
 		character.update_hair()
-		character.update_body_parts(redraw = FALSE)
 
 	character.char_accent = char_accent
 

@@ -1072,11 +1072,6 @@ GLOBAL_LIST_EMPTY(friendly_animal_types)
 			var/icon/partial = getFlatIcon(body)
 			out_icon.Insert(partial,dir=D)
 
-		body.update_inv_hands()
-		body.update_inv_belt()
-		body.update_inv_back()
-		body.update_inv_head()
-
 		humanoid_icon_cache[icon_id] = out_icon
 		dummy_key? unset_busy_human_dummy(dummy_key) : qdel(body)
 		return out_icon

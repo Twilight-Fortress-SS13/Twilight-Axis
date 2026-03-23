@@ -60,14 +60,20 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 	if(SSticker.HasRoundStarted() || time_remaining <= 0)
 		client << browse(null, "window=lobby_window")
 		return
+	if(!client)
+		return
 	if(!winexists(client, "lobby_window"))
 		open_lobby()
 		sleep(0)
+	if(!client)
+		return
 	var/lobby_visible = winget(client, "lobby_window", "is-visible")
 	if(lobby_visible == "false")
 		client << browse(null, "window=lobby_window")
 		open_lobby()
 		sleep(0)
+	if(!client)
+		return
 
 	var/timer_text
 	if (time_remaining > 0)
@@ -80,11 +86,15 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		return
 	client << output(timer_text, "lobby_window.browser:update_timer")
 
+	if(!client)
+		return
 	client << output(
 	"Total players ready: [SSticker.totalPlayersReady]",
 	"lobby_window.browser:update_ready_count"
 	)
 
+	if(!client)
+		return
 	var/bonus_html
 	if (src.ready)
 		bonus_html = span_good("Ready Bonus!")
