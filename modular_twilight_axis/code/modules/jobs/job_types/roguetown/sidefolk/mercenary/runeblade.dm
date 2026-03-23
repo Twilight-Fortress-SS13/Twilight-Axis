@@ -60,7 +60,7 @@
 	desc = "A set of special furried leather kilt."
 	gender = PLURAL
 	sewrepair = FALSE
-	armor = ARMOR_LEATHER_STUDDED
+	armor = ARMOR_PADDED
 	blocksound = SOFTHIT
 	max_integrity = ARMOR_INT_LEG_HARDLEATHER
 	icon_state = "gronnicleather_kilt"
