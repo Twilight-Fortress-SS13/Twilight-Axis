@@ -5,5 +5,6 @@
 		/datum/advclass/wretch/lunacyembracer,
 		/datum/advclass/wretch/rogueshaman,
 		/datum/advclass/wretch/thehero,
+		/datum/advclass/wretch/warlock
 	)
 	. = ..()
