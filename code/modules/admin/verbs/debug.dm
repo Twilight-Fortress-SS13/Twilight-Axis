@@ -1394,6 +1394,68 @@ GLOBAL_LIST_EMPTY(loadout_selected_advclasses)
 		return
 	debug_variables(GLOB.huds[i])
 
+#ifdef HUD_DEBUG_LOG
+/client/proc/hud_debug_dump_verb()
+	set category = "Debug"
+	set name = "HUD Debug Log"
+	set desc = "Shows HUD debug log buffer"
+
+	if(!holder)
+		return
+	hud_debug_dump(mob)
+
+/client/proc/hud_debug_inspect_verb()
+	set category = "Debug"
+	set name = "HUD Debug Inspect"
+	set desc = "Inspect current HUD vis_contents state"
+
+	if(!holder || !mob)
+		return
+	var/datum/hud/H = mob.hud_used
+	if(!H)
+		to_chat(mob, "<span class='warning'>No HUD found</span>")
+		return
+	to_chat(mob, "<span class='notice'>--- HUD INSPECT START ---</span>")
+	if(H.action_intent)
+		to_chat(mob, "<span class='notice'>action_intent: [hud_debug_dump_vis(H.action_intent)]</span>")
+		for(var/thing in H.action_intent.vis_contents)
+			to_chat(mob, "<span class='notice'>  vis_child: [hud_debug_dump_vis_child(thing)]</span>")
+	if(H.rmb_intent)
+		to_chat(mob, "<span class='notice'>rmb_intent: [hud_debug_dump_vis(H.rmb_intent)]</span>")
+		for(var/thing in H.rmb_intent.vis_contents)
+			to_chat(mob, "<span class='notice'>  vis_child: [hud_debug_dump_vis_child(thing)]</span>")
+	if(H.zone_select)
+		to_chat(mob, "<span class='notice'>zone_sel: [hud_debug_dump_vis(H.zone_select)]</span>")
+		to_chat(mob, "<span class='notice'>  limb_vis zones: [json_encode(H.zone_select.limb_vis)]</span>")
+		for(var/zone in H.zone_select.limb_vis)
+			var/obj/effect/overlay/vis/limb = H.zone_select.limb_vis[zone]
+			if(limb)
+				to_chat(mob, "<span class='notice'>  limb [zone]: [hud_debug_dump_vis_child(limb)]</span>")
+		for(var/thing in H.zone_select.vis_contents)
+			to_chat(mob, "<span class='notice'>  vis_child: [hud_debug_dump_vis_child(thing)]</span>")
+	to_chat(mob, "<span class='notice'>--- HUD INSPECT END ---</span>")
+
+/client/proc/hud_debug_toggle_verb()
+	set category = "Debug"
+	set name = "HUD Debug Toggle"
+	set desc = "Toggle HUD debug logging on/off"
+
+	if(!holder)
+		return
+	GLOB.hud_debug_enabled = !GLOB.hud_debug_enabled
+	to_chat(mob, "<span class='notice'>HUD debug logging: [GLOB.hud_debug_enabled ? "ON" : "OFF"]</span>")
+
+/client/proc/hud_debug_clear_verb()
+	set category = "Debug"
+	set name = "HUD Debug Clear"
+	set desc = "Clear HUD debug log buffer"
+
+	if(!holder)
+		return
+	GLOB.hud_debug_buffer.Cut()
+	to_chat(mob, "<span class='notice'>HUD debug buffer cleared</span>")
+#endif
+
 /client/proc/jump_to_ruin()
 	set category = "Debug"
 	set name = "Jump to Ruin"

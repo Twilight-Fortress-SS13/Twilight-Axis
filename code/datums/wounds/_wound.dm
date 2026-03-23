@@ -161,7 +161,10 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	sortTim(affected.wounds, GLOBAL_PROC_REF(cmp_wound_severity_dsc))
 	bodypart_owner = affected
 	owner = bodypart_owner.owner
-	bodypart_owner.bleeding += bleed_rate // immediately apply our base bleeding
+	var/initial_bleed = bleed_rate
+	bleed_rate = 0
+	if(initial_bleed)
+		set_bleed_rate(initial_bleed)
 	on_bodypart_gain(affected)
 	INVOKE_ASYNC(src, PROC_REF(on_mob_gain), affected.owner) //this is literally a fucking lint error like new species cannot possible spawn with wounds until after its ass
 	if(crit_message)
@@ -309,12 +312,16 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 			owner.simple_bleeding = 0
 			owner.bleed_rate = 0
 	else if(bodypart_owner)
+		var/was_bleeding = bodypart_owner.bleeding > 0
 		bodypart_owner.bleeding -= bleed_rate
 		bleed_rate = amount
 		bodypart_owner.bleeding += bleed_rate
-		if(bodypart_owner.owner)
+		var/now_bleeding = bodypart_owner.bleeding > 0
+		HUD_LOG("wound", "set_bleed_rate", "zone=[bodypart_owner.body_zone] was=[was_bleeding] now=[now_bleeding] rate=[amount] total=[bodypart_owner.bleeding]")
+		if(was_bleeding != now_bleeding && bodypart_owner.owner)
 			var/datum/hud/hud_used = bodypart_owner.owner.hud_used
 			if(hud_used?.zone_select)
+				HUD_LOG("wound", "set_bleed_rate", "TRANSITION zone=[bodypart_owner.body_zone] -> update_limb")
 				hud_used.zone_select.update_limb(bodypart_owner.body_zone)
 
 /// Heals this wound by the given amount, and deletes it if it's healed completely

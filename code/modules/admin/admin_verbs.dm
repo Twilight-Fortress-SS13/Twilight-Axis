@@ -291,7 +291,13 @@ GLOBAL_LIST_INIT(admin_verbs_hideable, list(
 //	/client/proc/admin_change_sec_level,
 	/client/proc/cmd_display_del_log,
 	/client/proc/toggle_combo_hud,
-	/client/proc/debug_huds
+	/client/proc/debug_huds,
+#ifdef HUD_DEBUG_LOG
+	/client/proc/hud_debug_dump_verb,
+	/client/proc/hud_debug_inspect_verb,
+	/client/proc/hud_debug_toggle_verb,
+	/client/proc/hud_debug_clear_verb,
+#endif
 	))
 GLOBAL_PROTECT(admin_verbs_hideable)
 
