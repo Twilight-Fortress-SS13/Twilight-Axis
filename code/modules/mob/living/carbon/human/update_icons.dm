@@ -675,9 +675,6 @@ There are several things that need to be remembered:
 		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_SHOES]
 		inv.update_icon()
 
-	var/obj/item/bodypart/taur/taur = get_taur_tail()
-	var/icon/c_mask = taur?.clip_mask
-
 	if(shoes)
 		shoes.screen_loc = rogueui_shoes					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
@@ -942,14 +939,6 @@ There are several things that need to be remembered:
 							mbeltoverlay.pixel_x += dna.species.offset_features[OFFSET_BELT_F][1]
 							mbeltoverlay.pixel_y += dna.species.offset_features[OFFSET_BELT_F][2]
 				standing_front += mbeltoverlay
-				if(istype(belt, /obj/item/storage/belt/rogue)) // check if belt has dildo attached
-					var/obj/item/storage/belt/rogue/belt_with_dildo = belt
-					if(istype(belt_with_dildo.attached_toy, /obj/item/dildo)) // draw dildo in correct position
-						var/mutable_appearance/mbeltoverlaydildo = mutable_appearance('modular/icons/obj/lewd/dildo.dmi', "dildo_belt_[belt_with_dildo.attached_toy.dildo_size]")
-						mbeltoverlaydildo.color = belt_with_dildo.attached_toy.color // get material color
-						mbeltoverlaydildo.pixel_x = mbeltoverlay.pixel_x
-						mbeltoverlaydildo.pixel_y = mbeltoverlay.pixel_y
-						standing_front += mbeltoverlaydildo
 
 	overlays_standing[BELT_LAYER] = standing_front
 	overlays_standing[BELT_BEHIND_LAYER] = standing_behind
@@ -1431,8 +1420,6 @@ There are several things that need to be remembered:
 
 	var/obj/item/bodypart/taur/taur = get_taur_tail()
 	var/icon/c_mask = taur?.clip_mask
-
-	var/icon/clip_mask_init
 
 	if(client && hud_used)
 		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_PANTS]

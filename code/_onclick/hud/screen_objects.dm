@@ -19,7 +19,7 @@
 
 /atom/movable/screen/Destroy()
 	if(hud)
-		UnregisterSignal(hud, COMSIG_QDELETING)
+		UnregisterSignal(hud, COMSIG_PARENT_QDELETING)
 	master = null
 	hud = null
 	return ..()
@@ -48,17 +48,6 @@
 
 /atom/movable/screen/proc/component_click(atom/movable/screen/component_button/component, params)
 	return
-
-/atom/movable/screen/proc/set_new_hud(datum/hud/new_hud)
-	if(hud)
-		UnregisterSignal(hud, COMSIG_QDELETING)
-	hud = new_hud
-	if(hud)
-		RegisterSignal(hud, COMSIG_QDELETING, PROC_REF(clear_hud))
-
-/atom/movable/screen/proc/clear_hud(datum/source)
-	SIGNAL_HANDLER
-	set_new_hud(null)
 
 /atom/movable/screen/proc/get_human_owner()
 	return hud?.get_human_owner()
@@ -1844,20 +1833,21 @@
 	if(H)
 		if(!HAS_TRAIT(H, TRAIT_NOMOOD))
 			var/stress_amt = H.get_stress_amount()
-			if(stress_amt > 0)
-				state2use = "stress2"
-			if(5 to 24)
-				state2use = "stress3"
-			if(25 to 999)
-				state2use = "stress4"
-			if(-4 to -1)
-				state2use = "peace"
-			if(-9 to -5)
-				state2use = "peace2"
-			if(-20 to -10)
-				state2use = "peace3"
-			if(-999 to -21)
-				state2use = "mood_nirvana"
+			switch(stress_amt)
+				if(1 to 4)
+					state2use = "stress2"
+				if(5 to 24)
+					state2use = "stress3"
+				if(25 to 999)
+					state2use = "stress4"
+				if(-4 to -1)
+					state2use = "peace"
+				if(-9 to -5)
+					state2use = "peace2"
+				if(-20 to -10)
+					state2use = "peace3"
+				if(-999 to -21)
+					state2use = "mood_nirvana"
 
 		//Regular overrides for stress
 		if(H.has_status_effect(/datum/status_effect/buff/drunk))
