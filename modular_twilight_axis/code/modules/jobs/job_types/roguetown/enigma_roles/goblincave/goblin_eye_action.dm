@@ -1,7 +1,6 @@
 /datum/action/item_action/organ_action/use/goblin_cave_wild_eyes/New(Target)
 	..()
 	name = "Use wild goblin eyes"
-	button.name = name
 
 /mob/living/carbon/human/proc/is_goblin_cave_eye_glow_role()
 	var/static/list/goblin_eye_glow_roles = list("Goblin Chief", "Goblin Warrior", "Goblin Shaman")
