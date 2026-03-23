@@ -547,12 +547,7 @@
 	elder_tanuki_riposte_ready = FALSE
 	OnComboConsumed("tanuki_riposte", target)
 
-	target.Stun(1 SECONDS)
-	target.OffBalance(2 SECONDS)
 	target.Immobilize(2 SECONDS)
-	target.apply_status_effect(/datum/status_effect/debuff/baited)
-	target.apply_status_effect(/datum/status_effect/debuff/exposed)
-	target.apply_status_effect(/datum/status_effect/debuff/clickcd, 5 SECONDS)
 	var/obj/item/in_hand = target.get_active_held_item()
 	var/mob/living/carbon/human/target_mob = target
 	if(in_hand && target_mob)

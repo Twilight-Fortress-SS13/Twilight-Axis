@@ -1,6 +1,3 @@
-/// Below this TP value, natural ambushes stop firing. Signal horn can still go below.
-#define AMBUSH_SAFE_FLOOR 25
-
 /// Minimum time between natural ambushes in the same region. Signal horn bypasses this.
 #define AMBUSH_REGION_COOLDOWN (5 MINUTES)
 
@@ -20,7 +17,7 @@
 
 /// Tick rate multipliers - fraction of max_ambush added per SS tick.
 /// SS fires every 30 minutes = 6 ticks per 3-hour round.
-/// Highpop: 20% of max per tick -> full refill in 5 ticks (2.5 hours).
-/// Lowpop: 10% of max per tick -> full refill in 10 ticks (5 hours).
-#define THREAT_HIGHPOP_TICK_RATE 0.2
-#define THREAT_LOWPOP_TICK_RATE 0.1
+/// Highpop: 10% of max per tick -> full refill in 10 ticks (5 hours).
+/// Lowpop: 5% of max per tick -> full refill in 20 ticks (10 hours).
+#define THREAT_HIGHPOP_TICK_RATE 0.1
+#define THREAT_LOWPOP_TICK_RATE 0.05

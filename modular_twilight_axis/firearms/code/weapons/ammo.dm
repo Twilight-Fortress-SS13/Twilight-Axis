@@ -14,7 +14,6 @@
 	min_range = MIN_BULLET_RANGE
 	max_range = MAX_BULLET_RANGE
 	dam_falloff_factor = DMG_FALLOFF_BULLET
-	ap_falloff_factor = AP_FALLOFF_BULLET
 
 /obj/item/ammo_casing
 	var/obj/item/quiver/twilight_bullet/runicbag/linked_bag = null
@@ -25,7 +24,7 @@
 /obj/projectile/bullet/twilight_lead
 	name = "lead sphere"
 	desc = "Небольшая свинцовая сфера. Хорошо сочетается с порохом."
-	damage = 140
+	damage = 100
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
@@ -33,9 +32,9 @@
 	range = 12		
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
-	woundclass = BCLASS_STAB
-	flag = "stab"
-	armor_penetration = 60
+	woundclass = BCLASS_PIERCE
+	flag = "piercing"
+	armor_penetration = PEN_HEAVY
 	speed = 0.1
 
 /obj/projectile/bullet/twilight_lead/silver
@@ -43,7 +42,7 @@
 	desc = "Небольшая серебряная сфера. Мягче, чем свинцовая пуля, но крайне эффективна против нежити."
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/silver
 	damage = 120
-	armor_penetration = 50
+	armor_penetration = PEN_MEDIUM
 	silver = TRUE
 	critfactor = 0.8
 
@@ -60,7 +59,7 @@
 	embedchance = 0
 	woundclass = BCLASS_STAB
 	flag = "stab"
-	armor_penetration = 10
+	armor_penetration = PEN_HEAVY
 	speed = 0.1
 
 /obj/projectile/bullet/twilight_grapeshot
@@ -74,9 +73,9 @@
 	range = 10
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
-	woundclass = BCLASS_STAB
-	flag = "stab"
-	armor_penetration = 60
+	woundclass = BCLASS_PIERCE
+	flag = "piercing"
+	armor_penetration = PEN_HEAVY
 	speed = 0.1
 	critfactor = 0.67
 
@@ -89,17 +88,17 @@
 	name = "runed sphere"
 	desc = "Небольшой, идеально круглый металлический шар, покрытый псайдонитскими рунами. Смертоносен на высокой скорости."
 	damage = 90
-	armor_penetration = 60
 	speed = 0.6
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_runed"
 	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
-	range = 20
+	range = 50
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	embedchance = 100
-	woundclass = BCLASS_STAB
-	flag = "piercing"
+	woundclass = BCLASS_PIERCE
+	flag = "stab"
+	armor_penetration = PEN_HEAVY
 
 /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	name = "blessed sphere"
@@ -159,7 +158,8 @@
 		var/obj/item/gun/ballistic/twilight_firearm/gun = fired_from
 		if(isliving(firer))
 			var/mob/living/L = firer
-			damage *= gun.damfactor * (L.STAPER > 10 ? L.STAPER / 10 : 1)
+			var/per_scaling = 1 + (min(L.STAPER, RANGED_STAT_SOFTCAP) * RANGED_STAT_MULT) + (max(0, L.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+			damage *= gun.damfactor * per_scaling
 		else
 			damage *= gun.damfactor
 		critfactor *= gun.critfactor
@@ -168,13 +168,13 @@
 		max_range = gun.effective_range
 	..()
 
-/obj/projectile/bullet/on_hit(atom/target, blocked = FALSE)
+/obj/projectile/bullet/on_hit(atom/target)
 	if(isliving(target))
 		var/mob/living/T = target
 		if(istype(fired_from, /obj/item/gun/ballistic/twilight_firearm)) //Double damage in close range
 			var/is_within_effective_range = !check_range(get_turf(target))
 			if(is_within_effective_range)
-				if(!istype(T.get_inactive_held_item(), /obj/item/rogueweapon/shield) && !istype(T.get_active_held_item(), /obj/item/rogueweapon/shield) && (blocked == 0))
+				if(!istype(T.get_inactive_held_item(), /obj/item/rogueweapon/shield) && !istype(T.get_active_held_item(), /obj/item/rogueweapon/shield))
 					switch(gunpowder) //Hande gunpowder types that are BLOCKED by shields and armor
 						if("fyrepowder")
 							if(istype(src, /obj/projectile/bullet/twilight_grapeshot))

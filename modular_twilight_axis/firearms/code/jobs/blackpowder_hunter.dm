@@ -14,7 +14,7 @@
 	subclass_skills = list(
 		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -42,12 +42,12 @@
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/twilight_powderflask = 1,
 	)
-	var/classes = list("Nobleblood", "Peasant")
+	var/classes = list("Noble", "Peasant")
 	var/class_choice = input("Choose your archetypes", "Available archetypes") as anything in classes
 
 	switch(class_choice)
-		if("Nobleblood")
-			to_chat(H, span_purple("'..Ох, твои прародители явно постарались дабы получить благословение Астраты, не опозорь их..А, ты уже..как ты умудрился загнать досмерти свою лошадь?..'"))
+		if("Noble")
+			to_chat(H, span_purple("'..Ох, твои прародители явно постарались дабы получить благословение Астраты, не опозорь их.. А, ты уже..как ты умудрился загнать досмерти свою лошадь?..'"))
 			var/helmets = list(
 				"Sallet"			= /obj/item/clothing/head/roguetown/helmet/sallet/iron,
 				"Visored Sallet"	= /obj/item/clothing/head/roguetown/helmet/sallet/visored/iron,
@@ -68,7 +68,7 @@
 			shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 			gloves = /obj/item/clothing/gloves/roguetown/angle
 			backl = /obj/item/gun/ballistic/twilight_firearm/hunt_arquebus
-			H.put_in_hands(new /obj/item/natural/feather(H), TRUE)			//customizieee
+			H.put_in_hands(new /obj/item/natural/feather(H), TRUE)
 			H.put_in_hands(new /obj/item/natural/cloth(H), TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 4, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/misc/riding, 2, TRUE)
@@ -85,5 +85,5 @@
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 			head = /obj/item/clothing/head/roguetown/hatfur
 			H.put_in_hands(new /obj/item/natural/bundle/fibers/full(H), TRUE)
-			ADD_TRAIT(H, TRAIT_SURVIVAL_EXPERT, TRAIT_GENERIC)
-			ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_OUTDOORSMAN, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)

@@ -1,5 +1,5 @@
 /datum/intent/whip/punish
-	penfactor = BLUNT_NO_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/whip/crack/blunt
-	penfactor = BLUNT_LOWER_PENFACTOR
+	penfactor = PEN_NONE

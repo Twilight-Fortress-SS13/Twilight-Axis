@@ -60,14 +60,27 @@
 		if(H.mind && !H.mind.has_antag_datum(/datum/antagonist/wretch))
 			var/datum/antagonist/new_antag = new /datum/antagonist/wretch()
 			H.mind.add_antag_datum(new_antag)
-/*
+
 /datum/job/roguetown/wretch/on_round_removal(mob/M)
 	// Respawn delay applies immediately
-	if(same_job_respawn_delay && M.ckey)
+	if(same_job_respawn_delay && M?.ckey)
 		GLOB.job_respawn_delays[M.ckey] = world.time + same_job_respawn_delay
-	// Delayed slot reopen after 1 hour — subclass always reopens, global slot only if garrison criteria met
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(wretch_delayed_slot_reopen), M.advjob), 1 HOURS)
-*/
+
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(wretch_delayed_slot_reopen), M?.advjob), 1 HOURS)
+
+/proc/wretch_delayed_slot_reopen(advclass_name)
+	if(advclass_name)
+		var/datum/advclass/target_class = SSrole_class_handler.get_advclass_by_name(advclass_name)
+		if(target_class)
+			SSrole_class_handler.adjust_class_amount(target_class, -1)
+
+	var/datum/job/wretch_job = SSjob.GetJob("Wretch")
+	if(!wretch_job)
+		return
+
+	wretch_job.current_positions = max(0, wretch_job.current_positions - 1)
+	update_wretch_slots()
+
 // Proc for wretch to select a bounty
 /proc/wretch_select_bounty(mob/living/carbon/human/H)
 	var/datum/preferences/P = H?.client?.prefs
@@ -131,9 +144,15 @@
 	to_chat(H, span_danger("You are playing an Antagonist role. By choosing to spawn as a Wretch, you are expected to actively create conflict with other players. Failing to play this role with the appropriate gravitas may result in punishment for Low Roleplay standards."))
 
 /// Returns an assoc list with all intermediate wretch scaling values for admin display.
-/proc/calculate_wretch_scaling()
+/proc/calculate_wretch_scaling(override_player_count)
 	var/list/result = list()
-	var/player_count = length(GLOB.joined_player_list)
+
+	var/player_count
+	if(isnull(override_player_count))
+		player_count = length(GLOB.joined_player_list)
+	else
+		player_count = override_player_count
+
 	result["player_count"] = player_count
 
 	// Tier 1: Population scaling, +1 per 10 players above 40, max 10
@@ -158,6 +177,7 @@
 	var/holy_count = SSgamemode.holy_warrior
 	var/acolyte_count = SSgamemode.half_combatant
 	var/combat_count = garrison_count + holy_count + FLOOR(acolyte_count * 0.5, 1)
+
 	result["garrison"] = garrison_count
 	result["holy_warrior"] = holy_count
 	result["acolyte"] = acolyte_count
@@ -167,6 +187,7 @@
 	if(slots >= 10 && !major_antag_active)
 		tier2_max = min(max(0, combat_count - 10), 5)
 		slots += tier2_max
+
 	result["tier2_extra"] = tier2_max
 	result["final_slots"] = slots
 
@@ -177,17 +198,12 @@
 	if(!wretch_job)
 		return
 
-	var/player_count = length(GLOB.joined_player_list)
-	var/ready_player_count = length(GLOB.ready_player_list)
-	var/slots = 5
-	
-	//Add 1 slot for every 10 players over 30. Less than 40 players, 5 slots. 40 or more players, 6 slots. 50 or more players, 7 slots - etc.
-	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
-	if(current_players > 40)
-		var/extra = floor((current_players - 40) / 10)
-		slots += extra
-	//5 slots minimum, 8 maximum.
-	slots = min(slots, 8)
+	var/override_player_count = null
+	if(SSticker.current_state == GAME_STATE_PREGAME)
+		override_player_count = length(GLOB.ready_player_list)
 
-	wretch_job.total_positions = slots
-	wretch_job.spawn_positions = slots
+	var/list/scaling = calculate_wretch_scaling(override_player_count)
+	var/slots = scaling["final_slots"]
+
+	wretch_job.total_positions = max(wretch_job.current_positions, slots)
+	wretch_job.spawn_positions = max(wretch_job.current_positions, slots)
