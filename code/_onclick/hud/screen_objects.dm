@@ -490,9 +490,12 @@
 				slot = intent_vis3
 			if(4)
 				slot = intent_vis4
-				break
+		if(!slot)
+			continue
 		slot.icon = intenty.icon
 		slot.icon_state = intenty.icon_state
+		if(lol >= 4)
+			break
 	if(lol < 4)
 		intent_vis4.icon = null
 	if(lol < 3)
