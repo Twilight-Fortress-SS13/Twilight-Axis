@@ -3,7 +3,7 @@
 	tutorial = "Fleed from strong and harsh Otavian domain, a skilled runemaster that cames to this lands to seek shelter and protect his earned freedom."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
-	outfit = /datum/outfit/job/roguetown/mercenary/twilight_runeblade
+	outfit = /datum/outfit/job/roguetown/wretch/twilight_runemaster
 	category_tags = list(CTAG_WRETCH)
 	maximum_possible_slots = 1
 	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'
