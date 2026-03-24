@@ -1478,7 +1478,7 @@
 			continue
 		var/damage = min(BP.burn_dam + BP.brute_dam, BP.max_damage)
 		var/wound_alpha = clamp(round((damage / BP.max_damage) * 510), 0, 255)
-		var/has_bleed = BP.get_bleed_rate() > 0
+		var/has_bleed = BP.bleeding > 0  // Прямое чтение — get_bleed_rate() вызывает process_bandage → heal_damage → рекурсия
 		_apply_limb_state(zone, null, wound_alpha, has_bleed)
 
 /// Creates limb/wound/bleed vis objects for a zone if they don't exist
@@ -1565,7 +1565,7 @@
 		if(!limb_vis[zone])
 			// Cold path: first time seeing this zone
 			_ensure_limb_vis(zone, H.gender == "male" ? "m" : "f")
-		var/has_bleed = BP.get_bleed_rate() > 0
+		var/has_bleed = BP.bleeding > 0  // Прямое чтение — get_bleed_rate() вызывает process_bandage → heal_damage → рекурсия
 		if(HAS_TRAIT(H, TRAIT_NOPAIN))
 			_apply_limb_state(zone, "#78a8ba", 0, has_bleed)
 			return
