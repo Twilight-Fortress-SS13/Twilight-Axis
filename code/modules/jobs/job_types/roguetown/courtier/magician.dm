@@ -6,13 +6,15 @@
 	total_positions = 1
 	spawn_positions = 1
 
-	allowed_races = RACES_NO_CONSTRUCT		//Nobility, no construct
+	allowed_races = RACES_SHUNNED_UP		//Nobility, no construct
 	allowed_sexes = list(MALE, FEMALE)
 	spells = list(/obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
 	display_order = JDO_MAGICIAN
 	tutorial = "Your creed is one dedicated to the conquering of the arcane arts and the constant thrill of knowledge. \
 		You owe your life to the Lord, for it was his coin that allowed you to continue your studies in these dark times. \
-		In return, you have proven time and time again as justicar and trusted advisor to their reign."
+		In return, you have proven time and time again as justicar and trusted advisor to their reign. You operate \
+		within the University of Azuria, sharing authority jointly with the Head Physician; their realm is the study \
+		of the mundane body, whereas you have authority over all things arcane."
 	outfit = /datum/outfit/job/roguetown/magician
 	whitelist_req = TRUE
 	give_bank_account = TRUE
@@ -35,7 +37,9 @@
 	name = "Court Magician"
 	tutorial = "Your creed is one dedicated to the conquering of the arcane arts and the constant thrill of knowledge. \
 		You owe your life to the Lord, for it was his coin that allowed you to continue your studies in these dark times. \
-		In return, you have proven time and time again as justicar and trusted advisor to their reign."
+		In return, you have proven time and time again as justicar and trusted advisor to their reign. You operate \
+		within the University of Azuria, sharing authority jointly with the Head Physician; their realm is the study \
+		of the mundane body, whereas you have authority over all things arcane."
 	outfit = /datum/outfit/job/roguetown/magician/basic
 
 	subclass_spellpoints = 36
@@ -105,7 +109,6 @@
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
 	belt = /obj/item/storage/belt/rogue/leather/plaquesilver
-	beltr = /obj/item/storage/keyring/magician
 	beltl = /obj/item/storage/magebag/associate
 	id = /obj/item/clothing/ring/gold
 	r_hand = /obj/item/rogueweapon/woodstaff/riddle_of_steel/magos
@@ -121,3 +124,8 @@
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/arcane_announcement) //TA EDIT
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/shrink) //TA EDIT
+	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
+		beltr = /obj/item/storage/keyring/magicianenigma
+	else 
+		beltr = /obj/item/storage/keyring/magician

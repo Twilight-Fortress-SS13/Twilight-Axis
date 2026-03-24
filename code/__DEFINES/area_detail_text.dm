@@ -17,7 +17,7 @@
 // Hotsprings
 #define DETAIL_TEXT_EORAN_SHRINE "An Eoran shrine, nestled high in the mountains, hidden away from well-trodden paths. Cherry blossom, a symbol of both love and the fleeting nature of lyfe in Kazengun, are planted and maintained here by Eoran devotees.\n\
 	Oddly, the trees here seem to bloom year-round."
-#define DETAIL_TEXT_ABANDONED_HOT_SPRINGS ""
+#define DETAIL_TEXT_ABANDONED_HOT_SPRINGS "A pit of silken webs, nestled deep within the bog. The love that once bloomed here has curdled into venom, and stranger things now bud and scuttle through the water."
 
 // Azure Grove
 #define DETAIL_TEXT_AZURE_GROVE ""
@@ -36,25 +36,23 @@
 // Undercoast
 #define DETAIL_TEXT_UNDERCOAST ""
 #define DETAIL_TEXT_TEMPLE_SHATTERED_GOD "Masonry now forms impenetrable islands of purposeless granite. Cobblestone fractals underfoot. \n\ A sense of holiness lingers here, despite time."
-#define DETAIL_TEXT_ORC_RUIN ""
+#define DETAIL_TEXT_ORC_RUIN "An old coastal wayfort, now filed with Inhumenity like pus in a wound. Beneath salt-stained cliffs, iron-masked raiders sharpen their blades, and prepare for war."
 
 // Terrorbog
-#define DETAIL_TEXT_TERRORBOG "Fetid sulfuric smell. The land is in misery; my feet find sogging ground choked in vine and scumwater. The land itself is engulfed in its own anguish. Somewhere, a baby bird has tumbled out of its nest and landed in a dark puddle, left to an uncertain fate.\n\
-There used to be temples here, she says. And they used to be tall and grand, and sung praises to Him in all His glory. For a moment, my mind's eagle-eye envisions a white-marble basin in upside-down ziggurat, guarded by an angelic protectorate- and then, the moment fades, and I am in the here and now. once more.\n\
-One must wonder if those stygian-filligreed constructs have survived in the peat and moss."
+#define DETAIL_TEXT_TERRORBOG "Болота Ужаса во все времена оставались крепостью зла и тьмы. Стража не патрулирует эти земли, а попасть в засаду здесь столь же просто, сколь оступиться в глубокой трясине. Многие искатели приключений нашли здесь свою смерть, но не для всех она стала концом."
 
 // North Coast
 #define DETAIL_TEXT_NORTH_COAST "Chilly winds blow from the palagic northways. This is the part of land where the trading ships hook 'round to return to land after months' voyages- and where they are plundered by ne'er-do-wells. \n\
 Abyssor rests offshore. Even his quietest exhale is enough to send waves from the hadal to crash onto sand."
-#define DETAIL_TEXT_NORTH_COAST_HAMLET ""
+#define DETAIL_TEXT_NORTH_COAST_HAMLET "Ещё недавно в этой небольшой шахтерской деревушке жизнь била ключом — в церкви звонили колокола, звон от ударов молота о наковальню не стихал ни днём, ни ночью, а в таверне искатели приключений с юга делились с местными последними слухами из столицы. Сейчас же здесь не осталось ни единой живой души. Ожившие мертвецы, что ныне заполнили пустые дома, весьма весьма недвусмысленно указывают на виновников произошедшего."
 #define DETAIL_TEXT_MAD_DUKE_COURT ""
 
 // Actual Azure Coast
 #define DETAIL_TEXT_ACTUAL_COAST ""
-#define DETAIL_TEXT_CITY_COAST "Close enough to the city that I can see its torchlight. It is easy to imagine why they say the Comet Syon landed here. The bay yawns like a giant concave lens; the hinted epicenter of ego-death. \n\\n\ The salted ocean air carries a bitter taste, here."
+#define DETAIL_TEXT_CITY_COAST "Отсюда можно видеть огни Сумеречной Оси, столицы Великого Герцогства. От порта и делового квартала на берегу залива до жилых районов на возвышенности, Ось подобна полосе света, что раскинулась по всей протяженности склона горы."
 
 // Mount Decap & Dungeons
-#define DETAIL_TEXT_DECAP "Mount Golgotha and its lava-flows stretches to the north. An impossibly-tall sinewave of earth, full of rage at its severed futures. It is still, after a thousand years, screaming upwards at the sky; acrid smoke tries to choke the firmament above and jagged cliffs try to pierce its nebulous hide. The ancient alps (old- too old for rage) have cracks in them that break the massif northwards and spill a river with cool, clear water. \n\ Tarichea, o, glowing monument!, once powered by the lava flows of Mount Golgotha, now lays drowned in them."
+#define DETAIL_TEXT_DECAP "Безголовая Гора, Висельная Гора, Гора Обезглавливания... В первые годы существования Великого Герцогства здесь проводились массовые казни сторонников тёмных сил, что властвовали над этой долиной до пришествия сил под флагом Астраты.\n\ Ныне, Безголовая Гора остается одним из самых опасных мест в Герцогстве. Зловещие слухи ходят об этом месте — якобы, именно здесь скрываются шайки маттиоситов, что терроризируют северные тракты страны. Азурийские Смотрители не патрулируют этот регион, справедливо полагая, что живыми они отсюда не вернутся.\n\ Впрочем, путников и искателей приключений здесь поджидает не только опасность. По некоторым слухам, именно здесь находятся руины Тарихеи — древнего города Божественной Империи, разрушенного до основания во время Войны в Небесах. Несметные богатства скрываются в его хранилищах, ожидая тех, кому хватит смелости забрать их."
 #define DETAIL_TEXT_DECAP_TARICHEA ""
 #define DETAIL_TEXT_DECAP_GUNDU_ZIRAK ""
 #define DETAIL_TEXT_DECAP_DRAGONDEN ""
@@ -86,7 +84,7 @@ Rusted metals distantly grind in anoxic pus-condensate in-tune with the Signal. 
 #define DETAIL_TEXT_UNIVERSITY_OF_AZURIA ""
 #define DETAIL_TEXT_CHAPEL "Narthex of faith, roosting the Flock."
 #define DETAIL_TEXT_INQUISITION_HQ ""
-#define DETAIL_TEXT_AZUREAN_GUILD_OF_CRAFT "\"We had a name fer it, eh? Called it the Dwarven Quarter. Forges an' 'ammers, underground an' wrapped in stone. Joos' like 'ome! Bu' then tha bloody bluebloods started complainin' aboot tha' dirt whenever they visited. Bloody brash-polishers! Well, we 'ad to move tha shop topside. \n\ \n\ Not as charmin, no moor.\""
+#define DETAIL_TEXT_AZUREAN_GUILD_OF_CRAFT "Здесь базируется легендарная Азурийская Гильдия Мастеров, изделиям которой Великое Герцогство во многом обязано своим богатством."
 
 
 // Tomb of Alotheos

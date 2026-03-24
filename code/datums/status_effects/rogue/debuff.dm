@@ -177,7 +177,11 @@
 	id = "net"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/netted
 	effectedstats = list(STATKEY_SPD = -5, STATKEY_WIL = -2)
-	duration = 3 MINUTES
+ 
+/datum/status_effect/debuff/netted/on_creation(mob/living/new_owner, newdur)
+	if(newdur)
+		duration = newdur
+	. = ..()
 
 /datum/status_effect/debuff/netted/on_apply()
 		. = ..()
@@ -227,6 +231,9 @@
 /datum/status_effect/debuff/devitalised/lesser
 	effectedstats = list(STATKEY_STR = -1, STATKEY_WIL = -1, STATKEY_CON = -1, STATKEY_SPD = -1, STATKEY_LCK = -1)
 	duration = 5 MINUTES
+
+/datum/status_effect/debuff/devitalised/greater
+	duration = 30 MINUTES
 
 /atom/movable/screen/alert/status_effect/debuff/devitalised
 	name = "Devitalised"
@@ -422,27 +429,43 @@
 	effectedstats = list(STATKEY_PER = -3, STATKEY_LCK = -1)
 	duration = 8 SECONDS
 
+/datum/status_effect/debuff/dazed/skullshatter
+	effectedstats = list(STATKEY_PER = -1, STATKEY_INT = -1, STATKEY_SPD = -1)
+	duration = -1
+
 /atom/movable/screen/alert/status_effect/debuff/dazed
 	name = "Dazed"
 	desc = "You've been smacked on the head very hard. Which way is left, again?"
 	icon_state = "dazed"
 
 /datum/status_effect/debuff/cold
-	id = "Frostveiled"
-	alert_type =  /atom/movable/screen/alert/status_effect/debuff/cold
+	id = "Chilled"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/cold
 	effectedstats = list(STATKEY_SPD = -2)
-	duration = 12 SECONDS
+	duration = 10 SECONDS
+	var/cold_color = "#88BFFF"
 
 /datum/status_effect/debuff/cold/on_apply()
 	. = ..()
 	var/mob/living/target = owner
-	var/newcolor = rgb(136, 191, 255)
-	target.add_atom_colour(newcolor, TEMPORARY_COLOUR_PRIORITY)
-	addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, remove_atom_colour), TEMPORARY_COLOUR_PRIORITY, newcolor), 12 SECONDS)
+	target.add_atom_colour(cold_color, TEMPORARY_COLOUR_PRIORITY)
+	addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, remove_atom_colour), TEMPORARY_COLOUR_PRIORITY, cold_color), duration)
 
 /atom/movable/screen/alert/status_effect/debuff/cold
-	name = "Cold"
+	name = "Chilled"
 	desc = "Something has chilled me to the bone! It's hard to move."
+	icon_state = "muscles"
+
+/datum/status_effect/debuff/cold/greater
+	id = "Frozen"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/cold/greater
+	effectedstats = list(STATKEY_SPD = -3)
+	duration = 20 SECONDS
+	cold_color = "#64A0FF"
+
+/atom/movable/screen/alert/status_effect/debuff/cold/greater
+	name = "Frozen"
+	desc = "An intense cold has seized my body! I can barely move."
 	icon_state = "muscles"
 
 ///// Freifechter Daze Variants /////
@@ -810,7 +833,8 @@
 		SSdroning.play_area_sound(get_area(owner), owner.client)
 
 /datum/status_effect/debuff/joybringer_druqks/tick()
-	owner.hallucination += 3
+	if(owner.hallucination < 30) // this can stack up INFINITELY if you dont cap it like this
+		owner.hallucination += 3 // and it doesnt decay *that* fast.
 	owner.Jitter(1)
 
 	if(!prob(10))
@@ -959,9 +983,13 @@
 		return FALSE
 	var/mob/living/carbon/human/H = owner
 	var/datum/physiology/phy = H.physiology 
-	var/con_mod = H.STACON - 10 // this gets NASTY as you bleed out.
+	var/con_mod = H.STACON - 10
+	// con mod needs to be greater than 1 for scaling
 	if(con_mod > 0)
+		// ensure their gotten con mod does not go below 1 or exceed the bleedrate cap.
 		con_mod = clamp(con_mod, 1, CONSTITUTION_BLEEDRATE_CAP - 10)
+		// this ""equalizes"" high con ppl into bleeding more, but they SHOULD generally still 
+		// bleed less than if they had just 10 con. remember: this numbers gets sent THRU their con score after.
 		phy.bleed_mod = 1.15 + (con_mod * 0.1) // at 15 con you'll bleed from a wound by .825
 	else
 		phy.bleed_mod = 1.15 // if you already have low con, we're not going to turbofuck you. ok?
@@ -993,7 +1021,7 @@
 	var/mob/living/carbon/human/H = owner
 	var/datum/physiology/phy = H.physiology 
 	var/pain_mod = phy.pain_mod
-	phy.pain_mod = pain_mod * 1.75 // this then gets reduced by con, among other things. change as needed.
+	phy.pain_mod = pain_mod * 1.25 // this then gets reduced by wil, among other things. change as needed.
 	H.visible_message(span_warning("[owner] looks to be in great pain, their wounds BLACKENING!"), span_danger("EVERYTHING HURTS!! MY WOUNDS PAIN HAS INCREASED!!"))
 
 /datum/status_effect/debuff/sensitive_nerves/on_remove()
@@ -1003,7 +1031,7 @@
 	var/mob/living/carbon/human/H = owner
 	var/datum/physiology/phy = H.physiology 
 	var/pain_mod = phy.pain_mod
-	phy.pain_mod = pain_mod / 1.75 // this then gets reduced by con, among other things. change as needed.
+	phy.pain_mod = pain_mod / 1.25 // this should be a define fuuuck
 	H.visible_message(span_warning("[owner]'s wounds suddenly return to normal!"), span_warning("My magickally induced pain subsides!"))
 
 

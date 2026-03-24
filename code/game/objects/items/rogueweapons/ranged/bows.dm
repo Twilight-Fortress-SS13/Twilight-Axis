@@ -26,8 +26,11 @@
 		if(strength_check == TRUE)
 			newtime = ((newtime + 10) - (mastermob.STASTR / 2))
 		else
-			newtime = newtime 
+			newtime = newtime
 		newtime = ((newtime + 20) - (mastermob.STAPER))
+		var/obj/item/gun/ballistic/gun = masteritem
+		if(istype(gun) && gun.chambered)
+			newtime *= gun.chambered.charge_time_mult
 		if(newtime > 1)
 			return newtime //this value is how fast we can accurately shoot a bow. most builds will turn up with about 6 - 12 on non heavy bows.
 		else
@@ -66,6 +69,9 @@
 		else
 			newtime = newtime
 		newtime = ((newtime + 20) - (mastermob.STAPER))
+		var/obj/item/gun/ballistic/gun = masteritem
+		if(istype(gun) && gun.chambered)
+			newtime *= gun.chambered.charge_time_mult
 		if(newtime > 3)
 			return newtime
 		else
@@ -239,7 +245,8 @@
 			BB.accuracy -= 15
 		else
 			BB.damage = BB.damage
-		BB.damage *= damfactor * (user.STAPER > 10 ? user.STAPER / 10 : 1)
+		var/per_scaling = 1 + (min(user.STAPER, RANGED_STAT_SOFTCAP) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+		BB.damage *= damfactor * per_scaling
 	return ..()
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/update_icon()
@@ -361,7 +368,7 @@
 	icon = 'icons/roguetown/weapons/64.dmi'
 	icon_state = "longbow"
 	slot_flags = ITEM_SLOT_BACK
-	damfactor = 1.2
+	damfactor = 1.3
 	accfactor = 0.9
 	pixel_y = -16
 	pixel_x = -16

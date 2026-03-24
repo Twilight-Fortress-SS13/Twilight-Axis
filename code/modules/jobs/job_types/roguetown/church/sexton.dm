@@ -142,7 +142,7 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 	backr = /obj/item/rogueweapon/shovel/silver //Not pre-blessed, mind you
 	beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow //main tool of defense
-	beltr = /obj/item/quiver/bolts
+	beltr = /obj/item/quiver/bolt/light
 	backpack_contents = list(
 		/obj/item/burial_shroud = 2, //easier retrievals
 		/obj/item/storage/keyring/acolyte = 1,
@@ -155,7 +155,8 @@
 
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_LOWER_CLASS, H, "Church Funding.")
-		
+	if(H.patron?.type == /datum/patron/divine/abyssor)
+		H.grant_language(/datum/language/abyssal)
 	var/prev_real_name = H.real_name
 	var/prev_name = H.name
 	var/prefix = "Gravetender" // similar to Big Man: prefix so it's easier to tell who this guy is.

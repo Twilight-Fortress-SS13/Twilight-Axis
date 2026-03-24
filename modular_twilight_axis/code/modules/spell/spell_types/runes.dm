@@ -1,4 +1,4 @@
-/obj/effect/proc_holder/spell/invoked/stasis/runed
+/*/obj/effect/proc_holder/spell/invoked/stasis/runed
 	name = "Stasis"
 	desc = "Dangerous rune spell copied from Naledi schools. It will leave your or yours victim mark on the floor, then teleport after a short time"
 	releasedrain = 25
@@ -30,3 +30,4 @@
 		play_indicator(target,'modular_twilight_axis/icons/mob/overhead_effects.dmi', "timestop_rune", 30 SECONDS, OBJ_LAYER)
 		addtimer(CALLBACK(src, PROC_REF(remove_buff), target), wait = 30 SECONDS)
 		return TRUE
+*/

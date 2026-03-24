@@ -101,6 +101,7 @@
 	name = "Mountains"
 	first_time_text = "Somewhere High"
 	deathsight_message = "a twisted tangle of soaring peaks"
+	warden_area = FALSE
 
 /area/rogue/indoors/town/fire_chamber/helly
 	name = "Another Place"
@@ -108,6 +109,7 @@
 	ambientsounds = list('sound/ambience/hell1.ogg')
 	droning_sound = 'sound/music/area/dwarf.ogg'
 	town_area = FALSE
+	warden_area = FALSE
 
 /area/rogue/indoors/inq/shipwardroom
 	name = "The Inquisition ship wardroom"

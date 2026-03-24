@@ -82,7 +82,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 /mob/dead/observer/rogue/Move(n, direct)
 	if(world.time < next_gmove)
 		return
-	next_gmove = world.time + 1
+	next_gmove = world.time + 3
 
 	setDir(direct)
 
@@ -381,6 +381,7 @@ Works together with spawning an observer, noted above.
 	ghost.ghostize_time = world.time
 	SStgui.on_transfer(src, ghost) // Transfer NanoUIs.
 	ghost.can_reenter_corpse = can_reenter_corpse
+	ghost.advjob = src.advjob
 	ghost.key = key
 	return ghost
 

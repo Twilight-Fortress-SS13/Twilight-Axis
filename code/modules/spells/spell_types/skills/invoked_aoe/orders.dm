@@ -1,6 +1,7 @@
 /obj/effect/proc_holder/spell/invoked/order
 	name = ""
-	range = 1
+	range = 5
+	ignore_los = TRUE // this is an aoe
 	associated_skill = /datum/skill/misc/athletics
 	devotion_cost = 0
 	chargedrain = 1
@@ -20,6 +21,8 @@
 	if(!single_target) //We want one spell to use the old method so we'll separate this out
 		if(user.job == "Sergeant")
 			affectedjobs = list("Man at Arms")
+		else if(user.job == "Royal Guard Sergeant")
+			affectedjobs = list("Royal Guard")
 		else if((user.job == "Knight") || (user.job == "Royal Knight"))
 			affectedjobs = list("Knight", "Squire", "Royal Knight")
 		else if(user.job == "Wretch")
@@ -34,7 +37,7 @@
 			to_chat(user, span_alert("I don't have authority to order anyone!"))
 			revert_cast()
 			return FALSE
-		for(var/mob/living/carbon/target in view(5, get_turf(user)))
+		for(var/mob/living/carbon/target in view(range, get_turf(user)))
 			if(target.job in affectedjobs)
 				affectedtargets += target
 				continue
@@ -148,6 +151,11 @@
 			return
 		if(user.job == "Sergeant")
 			if(!(target.job in list("Man at Arms")))
+				to_chat(user, span_alert("I cannot order one not of my ranks!"))
+				revert_cast()
+				return
+		if(user.job == "Royal Guard Sergeant")
+			if(!(target.job in list("Royal Guard")))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				revert_cast()
 				return

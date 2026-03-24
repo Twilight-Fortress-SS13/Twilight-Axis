@@ -172,7 +172,8 @@
 		var/obj/projectile/bullet/BB = CB.BB
 		BB.gunpowder_npc_critfactor *= npcdamfactor
 		BB.critfactor *= critfactor
-		BB.damage *= damfactor * (user.STAPER > 10 ? user.STAPER / 10 : 1)
+		var/per_scaling = 1 + (min(user.STAPER, RANGED_STAT_SOFTCAP) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+		BB.damage *= damfactor * per_scaling
 	cocked = FALSE
 	update_icon()
 	var/dir = get_dir(src, target)
@@ -226,7 +227,7 @@
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle
 	name = "Doomsdae"
-	desc = "Реликвия новой эпохи, созданная для войны, что положит конец истории мироздания, какой мы её знаем. Изготовленная отавианскими мастерами артефакторики, и зачарованная рунными магами Отавы, эта руническая винтовка - оружие, что сокрушит легионы тьмы в Конце Времен. Руны нанесены на ствол оружия кровью еретиков, поплатившихся за свое предательство истинной веры своими жизнями."
+	desc = "Реликвия новой эпохи, созданная для войны, что положит конец истории мироздания, какой мы её знаем. Изготовленная отаванскими мастерами артефакторики, и зачарованная рунными магами Отавы, эта руническая винтовка - оружие, что сокрушит легионы тьмы в Конце Времен. Руны нанесены на ствол оружия кровью еретиков, поплатившихся за свое предательство истинной веры своими жизнями."
 	icon = 'modular_twilight_axis/firearms/icons/runelock_rifle.dmi'
 	icon_state = "runelock"
 	icon_state_ready = "runelock_loaded"

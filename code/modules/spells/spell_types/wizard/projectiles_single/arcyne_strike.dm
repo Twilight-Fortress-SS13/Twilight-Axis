@@ -4,7 +4,7 @@
 	overlay_state = "conjure_weapon"
 	range = 3
 	projectile_type = /obj/projectile/energy/arcynestrike
-	releasedrain = 20
+	releasedrain = SPELLCOST_MINOR_PROJECTILE
 	chargedrain = 0
 	chargetime = 0.4 SECONDS
 	recharge_time = 6 SECONDS
@@ -79,7 +79,7 @@
 	if(ismob(target))
 		var/datum/status_effect/debuff/arcanemark/mark = M.has_status_effect(/datum/status_effect/debuff/arcanemark)
 		if(mark && mark.stacks == mark.max_stacks)
-			armor_penetration = 50 //pierces most armors
+			armor_penetration = PEN_HEAVY //pierces most armors
 			apply_mark = FALSE
 			consume_arcane_mark_stacks(M)
 
@@ -91,3 +91,7 @@
 			playsound(get_turf(target), 'sound/magic/magic_nulled.ogg', 100)
 			qdel(src)
 			return BULLET_ACT_BLOCK
+		if(istype(M, /mob/living/carbon) && (src.apply_mark == TRUE))
+			apply_arcane_mark(M)
+	else
+		return

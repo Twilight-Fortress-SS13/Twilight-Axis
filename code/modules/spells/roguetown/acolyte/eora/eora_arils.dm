@@ -83,7 +83,7 @@
 	//Instant heal, but you can only eat a couple before the next will make you pass out.
 	var/list/wCount = eater.get_wounds()
 	//No undead because they kinda don't have blood to give for this.
-	if(!eater.construct && !(eater.mob_biotypes & MOB_UNDEAD))
+	if(!user.construct && !(user.mob_biotypes & MOB_UNDEAD))
 		var/current_brute_loss = eater.getBruteLoss()
 		blood_loss += (user.blood_volume * 0.08)
 		if(wCount.len > 0)
@@ -157,6 +157,7 @@
 	icon_state = "cerulean"
 	effect_desc = "Excellent fishing bait that attracts treasure."
 	baitpenalty = 5
+	baitresilience = 4
 	isbait = TRUE
 	fishingMods=list(
 		"commonFishingMod" = 0.2,

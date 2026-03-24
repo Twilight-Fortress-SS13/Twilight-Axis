@@ -1,10 +1,14 @@
+/datum/job/roguetown/manorguard/New()
+	job_subclasses += list(/datum/advclass/manorguard/twilight_grenadier)
+	. = ..()
+
 /datum/advclass/manorguard/twilight_grenadier
 	name = "Grenadier"
 	tutorial = "You are a professional soldier of the realm, specializing in revolutionary gunpowder weaponry. There are many men who can block a blade, but you're yet to find one who can block a bullet."
 	outfit = /datum/outfit/job/roguetown/manorguard/twilight_grenadier
 	maximum_possible_slots = 2
 	category_tags = list(CTAG_MENATARMS)
-	traits_applied = list(TRAIT_MEDIUMARMOR)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_FIREARMS_MARKSMAN)
 	subclass_stats = list(
 		STATKEY_WIL = 2,// seems kinda lame but remember guardsman bonus!!
 		STATKEY_PER = 2,
@@ -15,7 +19,7 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
@@ -57,7 +61,7 @@
 				backpack_contents += list(/obj/item/natural/bundle/fibers/full = 1)
 
 		H.verbs |= /mob/proc/haltyell
-		var/armor_options = list("Brigandine Set", "Maille Set")
+		var/armor_options = list("Light Brigandine Set", "Maille Set")
 		var/armor_choice = input(H, "Choose your armor.", "TAKE UP ARMS") as anything in armor_options
 
 		switch(armor_choice)

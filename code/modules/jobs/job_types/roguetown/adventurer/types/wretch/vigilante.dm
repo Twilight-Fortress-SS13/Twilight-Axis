@@ -5,6 +5,7 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/vigilante
 	cmode_music = 'sound/music/combatmaniac.ogg'
+	class_select_category = CLASS_CAT_ROGUE
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_DECEIVING_MEEKNESS, TRAIT_PERFECT_TRACKER)
 	maximum_possible_slots = 1 // There can only be one. 
@@ -77,7 +78,7 @@
 			if("JUSTICE DISPENSED THROUGH KNUCKLE AND BLADE!")
 				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_EXPERT, TRUE) //No Civbarb. 
 				l_hand = /obj/item/rogueweapon/katar
-				r_hand = /obj/item/rogueweapon/knuckles
+				r_hand = /obj/item/clothing/gloves/roguetown/knuckles
 	wretch_select_bounty(H)
 
 /datum/outfit/job/roguetown/wretch/vigilante/proc/owl_equip(mob/living/carbon/human/H)

@@ -26,9 +26,8 @@
 	virtue_restrictions = list(/datum/virtue/utility/noble)
 	job_subclasses = list(
 		/datum/advclass/templar/monk,
-		/datum/advclass/templar/crusader,
-		/datum/advclass/templar/vigilant,
-		/datum/advclass/noctite_spellblade //TA EDIT
+		/datum/advclass/templar/crusader
+//		/datum/advclass/templar/noc_spellblade, //TA EDIT
 	)
 
 /datum/outfit/job/roguetown/templar
@@ -158,7 +157,7 @@
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Knuckledusters")
-			H.put_in_hands(new /obj/item/rogueweapon/knuckles(H))
+			H.put_in_hands(new /obj/item/clothing/gloves/roguetown/knuckles(H))
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Quarterstaff")
@@ -169,7 +168,7 @@
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
 			H.change_stat(STATKEY_PER, 1) //Matches the Disciple's balance; exchanges the 'dodge expert' trait for additional accuracy with the staff.
 		if("Close Caress")
-			H.put_in_hands(new /obj/item/rogueweapon/knuckles/eora(H))
+			H.put_in_hands(new /obj/item/clothing/gloves/roguetown/knuckles/eora(H))
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Barotrauma")
@@ -207,6 +206,9 @@
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
 		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+		// see acolyte.dm's eora page. they dont get farming bc they dont have a tree.
+		H.adjust_skillrank(/datum/skill/craft/sewing, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/cooking, 1, TRUE)
 		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt
 	if(H.patron?.type == /datum/patron/divine/malum)
 		ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC) // ONE exception for the "no combat role get this" rules
@@ -245,6 +247,7 @@
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
@@ -399,7 +402,7 @@
 			H.adjust_skillrank(/datum/skill/combat/axes, 1, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Crossbow + Shortsword")
-			H.equip_to_slot_or_del(new /obj/item/quiver/bolts, SLOT_BELT_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/standard, SLOT_BELT_R, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/cuirass, SLOT_ARMOR, TRUE) //Cuirass, not halfplate. Slightly reduced starting armor.
 			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow(H))
 			H.put_in_hands(new /obj/item/rogueweapon/sword/short(H), TRUE)
@@ -493,7 +496,7 @@
 		H.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
 	if(H.patron?.type == /datum/patron/divine/abyssor)
 		H.adjust_skillrank(/datum/skill/labor/fishing, 2, TRUE)
-		H.adjust_skillrank(/datum/skill/misc/swimming, 3, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/swimming, 4, TRUE)
 		ADD_TRAIT(H, TRAIT_WATERBREATHING, TRAIT_GENERIC)
 		H.grant_language(/datum/language/abyssal)
 	if(H.patron?.type == /datum/patron/divine/necra)

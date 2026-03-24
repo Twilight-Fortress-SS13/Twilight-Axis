@@ -9,6 +9,28 @@
 	spillable = TRUE
 	possible_item_intents = list(INTENT_POUR, /datum/intent/fill, INTENT_SPLASH, INTENT_GENERIC)
 	resistance_flags = ACID_PROOF
+	var/is_infinite = FALSE
+
+/obj/item/reagent_containers/glass/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Right click on someone to offer your glass to them. If someone else offers a glass to you in response, they'll clink together in celebration!")
+
+/obj/item/reagent_containers/glass/examine(mob/user)
+	. = ..()
+	if(user.mind && ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(!H.patron || !istype(H.patron, /datum/patron/inhumen/baotha))
+			return
+		if(is_infinite)
+			. += span_notice("It's been touched by the Lady... it won't run dry, for now.")
+/obj/item/reagent_containers/glass/proc/reset_infinite()
+	is_infinite = FALSE
+
+/obj/item/reagent_containers/glass/proc/set_infinite(mob/user, delay)
+	is_infinite = TRUE
+	var/timer = (delay ? delay : 60 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(reset_infinite)), timer)
+	return TRUE
 
 /datum/intent/fill
 	name = "fill"
@@ -75,11 +97,7 @@
 					if (prob(25))
 						to_chat(human_user, span_red("I've got better manners than this..."))
 			to_chat(user, span_notice("I swallow a gulp of [src]."))
-
-		var/signal_ret = SEND_SIGNAL(src, COMSIG_OBJ_PRE_TRANSFER_REAGENTS, M)
-		if(!(signal_ret & COMPONENT_PREVENT_CONTAINER_REAGENT_TRANSFER))
-			addtimer(CALLBACK(reagents, TYPE_PROC_REF(/datum/reagents, trans_to), M, amount_per_gulp, TRUE, TRUE, FALSE, user, FALSE, INGEST, TRUE, FALSE, TRUE), 5)
-		
+		addtimer(CALLBACK(reagents, TYPE_PROC_REF(/datum/reagents, trans_to), M, amount_per_gulp, TRUE, TRUE, FALSE, user, FALSE, INGEST, TRUE, FALSE, (is_infinite ? FALSE : TRUE)), 5)
 		playsound(M.loc,pick(drinksounds), 100, TRUE)
 		if(user.client?.prefs.autoconsume)
 			if(M == user && do_after(user, CLICK_CD_MELEE))
@@ -244,7 +262,7 @@
 	dropshrink = 0.8
 	slot_flags = null
 	resistance_flags = NONE
-	armor = list("blunt" = 25, "slash" = 20, "stab" = 15, "piercing" = 0, "fire" = 75, "acid" = 50) //Weak melee protection, because you can wear it on your head
+	armor = ARMOR_BUCKET
 	slot_equipment_priority = list( \
 		SLOT_BACK, SLOT_RING,\
 		SLOT_PANTS, SLOT_ARMOR,\

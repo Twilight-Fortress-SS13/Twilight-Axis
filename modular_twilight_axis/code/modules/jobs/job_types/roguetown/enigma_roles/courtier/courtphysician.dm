@@ -13,7 +13,7 @@
 		Take care of the health of the king and his courtiers, because your well-being depends on it."
 	outfit = /datum/outfit/job/roguetown/courtphysician
 	whitelist_req = TRUE
-	advclass_cat_rolls = list(CTAG_COURTPHYS = 2)
+	advclass_cat_rolls = list(CTAG_COURTPHYSICIAN = 2)
 	give_bank_account = TRUE
 	min_pq = 5 //Please don't kill the duke by operating on strong intent. Play apothecary until you're deserving of the great white beak of doom
 	max_pq = null
@@ -21,7 +21,7 @@
 
 	cmode_music = 'sound/music/combat_physician.ogg'
 
-	job_traits = list(TRAIT_MEDICINE_EXPERT, TRAIT_ALCHEMY_EXPERT, TRAIT_NOSTINK, TRAIT_EMPATH)
+	job_traits = list(TRAIT_MEDICINE_EXPERT, TRAIT_ALCHEMY_EXPERT, TRAIT_NOSTINK, TRAIT_EMPATH, TRAIT_STEELHEARTED)
 	job_subclasses = list(
 		/datum/advclass/courtphysician
 	)
@@ -74,7 +74,7 @@
 	id = /obj/item/scomstone/bad
 	r_hand = /obj/item/rogueweapon/sword/rapier/courtphysician
 	backl = /obj/item/storage/backpack/rogue/satchel
-	wrists = /obj/item/storage/keyring/sheriff
+	wrists = /obj/item/storage/keyring/courtphysician
 	backpack_contents = list(
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 2,
 		/obj/item/natural/worms/leech/cheele = 1, //little buddy

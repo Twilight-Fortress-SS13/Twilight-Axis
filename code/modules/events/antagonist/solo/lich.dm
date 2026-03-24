@@ -12,7 +12,7 @@
 	denominator = 80
 
 	base_antags = 1
-	maximum_antags = 2
+	maximum_antags = 1
 
 	weight = 2	//i hate you
 	max_occurrences = 1 // mashallah

@@ -246,9 +246,8 @@
 	hammerhold_variants = null
 
 /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat/heavy 
-	prevent_crits = PREVENT_CRITS_MOST
 	body_parts_covered = COVERAGE_ALL_BUT_ARMS
-	armor = ARMOR_LEATHER_GOOD
+	armor = ARMOR_LEATHER
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
@@ -295,8 +294,7 @@
 	hammerhold_variants = null
 
 /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/heavy
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_CHOP)
-	armor = ARMOR_PADDED_GOOD
+	armor = ARMOR_PADDED
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
 	blocksound = SOFTUNDERHIT
@@ -312,7 +310,6 @@
 /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/light
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
 	armor = ARMOR_PADDED
-	prevent_crits = PREVENT_CRITS_NONE
 	blocksound = SOFTUNDERHIT
 	blade_dulling = DULLING_BASHCHOP
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM
@@ -419,14 +416,13 @@
 	..()
 	if(!picked)
 		var/iconH = icon_state
-		var/choiceC = input(user, "Choose a color.", "Hammerhold colors") as anything in kimono_colors
+		var/choiceC = input(user, "Choose a color.", "Kimono colors") as anything in kimono_colors
 		if(choiceC == "white")
 			iconH = "white_kimono"
 		if(choiceC == "black")
 			iconH = "black_kimono"
-
-		if(choiceC == "red")
-			iconH = "red_kimono"
+		if(choiceC == "blue")
+			iconH = "blue_kimono"
 		icon_state = iconH
 		item_state = iconH
 		base_icon_state = iconH
@@ -576,6 +572,11 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
 
+/obj/item/clothing/suit/roguetown/shirt/kamishimo/ronin
+	name = "ronin kamishimo"
+	desc = "An oddly shaped a sleeveless vest-jacket of wandering ronin."
+	color = CLOTHING_BLUE
+
 /obj/item/clothing/suit/roguetown/shirt/kazengun_jacket
 	name = "kazengun jacket"
 	desc = "Classical Kazengun jacket."
@@ -590,3 +591,7 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/duelcoat/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_HONORBOUND)

@@ -50,7 +50,8 @@
 			/obj/item/rogueweapon/huntingknife = 1,
 			/obj/item/roguekey/mercenary = 1,
 			/obj/item/rope/chain = 1,
-			/obj/item/natural/head/troll = 1 // will spawn inside of the belt but I can't be bothered to make it spawn in the headhook
+			/obj/item/natural/head/troll = 1, // will spawn inside of the belt but I can't be bothered to make it spawn in the headhook
+			/obj/item/book/rogue/trophy_rules = 1 //TA edit - added trophy_hunter component
 		)
 		var/weapons = list("Hatchets", "Greataxe")
 		var/weapon_choice = input("Choose your weapon", "How will you channel your rage?") as anything in weapons
@@ -61,12 +62,13 @@
 				backl = /obj/item/rogueweapon/stoneaxe/woodcut/steel/slayer
 				beltl = /obj/item/rogueweapon/stoneaxe/woodcut/steel/slayer
 				ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
+		H.AddComponent(/datum/component/trophy_hunter) //TA edit - added trophy_hunter component
 
 /obj/item/rogueweapon/stoneaxe/woodcut/steel/slayer
 	name = "slayer axe"
 	desc = "A marvel of craftsdwarfship, this ornate handaxe attunes itself to those who have sworn the Oath."
 	force = 26
-	possible_item_intents = list(/datum/intent/axe/cut/battle, /datum/intent/axe/chop/battle, /datum/intent/axe/bash)
+	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/axe/bash)
 	gripped_intents = null
 	icon_state = "slayer_axe"
 	icon = 'icons/roguetown/weapons/axes32.dmi'
@@ -87,7 +89,7 @@
 	force = 20
 	force_wielded = 34 // Slightly weaker than the double bladed greataxe, but the edge doesn't dull quickly.
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, SPEAR_BASH)
-	gripped_intents = list(/datum/intent/axe/cut/battle/greataxe, /datum/intent/axe/chop/battle/greataxe, SPEAR_BASH)
+	gripped_intents = list(/datum/intent/axe/cut/long, /datum/intent/axe/chop/long, SPEAR_BASH)
 	icon_state = "slayer"
 	icon = 'icons/roguetown/weapons/axes64.dmi'
 	dropshrink = 0.6
@@ -122,13 +124,12 @@
 	name = "rough skin"
 	desc = ""
 	icon_state = null
-	armor = ARMOR_RUMACLAN
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT)
+	armor = ARMOR_MAILLE
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
-	body_parts_covered = COVERAGE_FULL
-	body_parts_inherent = COVERAGE_FULL
+	body_parts_covered = COVERAGE_NEARLY_FULL
+	body_parts_inherent = COVERAGE_NEARLY_FULL
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
 	allowed_race = list(
@@ -171,6 +172,12 @@
 	sound = 'sound/magic/axedance.ogg'
 
 /obj/effect/proc_holder/spell/self/axedance/cast(mob/living/user)
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		recharge_time = round(initial(recharge_time) * H.get_trophy_rage_cooldown_mult())
+	else
+		recharge_time = initial(recharge_time)
+
 	user.apply_status_effect(/datum/status_effect/buff/axedance)
 	return TRUE
 
@@ -189,8 +196,13 @@
 
 /datum/status_effect/buff/axedance/on_apply()
 	. = ..()
+	duration = initial(duration)
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		duration += H.get_trophy_rage_duration_bonus()
+
 	var/filter = owner.get_filter(AXEDANCE_FILTER)
-	if (!filter)
+	if(!filter)
 		owner.add_filter(AXEDANCE_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 50, "size" = 1))
 	to_chat(owner, span_warning("I AM AN AVATAR OF DIVINE MIGHT!"))
 	ADD_TRAIT(owner, TRAIT_HARDDISMEMBER, STATUS_EFFECT_TRAIT)

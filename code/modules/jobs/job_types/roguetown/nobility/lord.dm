@@ -10,7 +10,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = JCOLOR_NOBLE
-	allowed_races = RACES_NO_CONSTRUCT
+	allowed_races = RACES_SHUNNED_UP
 	allowed_sexes = list(MALE, FEMALE)
 	advclass_cat_rolls = list(CTAG_LORD = 20)
 
@@ -451,6 +451,8 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	var/accept_message = "I will serve!"
 	/// Say message when the recruit refuses
 	var/refuse_message = "I refuse."
+	ignore_los = 1 // this needs to ignore normal "range", it looks like
+	range = 3
 
 /obj/effect/proc_holder/spell/self/convertrole/cast(list/targets,mob/user = usr)
 	. = ..()

@@ -6,11 +6,11 @@
 		var/nobility = "Duke"
 		if(SSmapping.config.map_name == "Rockhill")
 			nobility = "King"
-			if(should_wear_femme_clothes(H))
+			if(H.titles_pref == TITLES_F)
 				nobility = "Queen"
 		else
 			nobility = "Duke"
-			if(should_wear_femme_clothes(H))
+			if(H.titles_pref == TITLES_F)
 				nobility = "Duchess"
 		H.real_name = "[nobility] [prev_real_name]"
 		H.name = "[nobility] [prev_name]"

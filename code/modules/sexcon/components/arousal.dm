@@ -129,6 +129,7 @@
 
 	// Apply multipliers
 	arousal_amt *= get_force_pleasure_multiplier(applied_force, giving)
+	arousal_amt *= get_speed_pain_multiplier(applied_speed)
 	pain_amt *= get_force_pain_multiplier(applied_force)
 	pain_amt *= get_speed_pain_multiplier(applied_speed)
 
@@ -416,19 +417,19 @@
 				return 0.8
 		if(SEX_FORCE_MID)
 			if(giving)
-				return 1.0
+				return 1.2
 			else
-				return 1.0
+				return 1.2
 		if(SEX_FORCE_HIGH)
 			if(giving)
-				return 1.25
+				return 1.6
 			else
 				return 1.2
 		if(SEX_FORCE_EXTREME)
 			if(giving)
-				return 1.55
+				return 2.0
 			else
-				return 1.5
+				return 0.8
 
 /datum/component/arousal/proc/get_force_pain_multiplier(passed_force)
 	switch(passed_force)

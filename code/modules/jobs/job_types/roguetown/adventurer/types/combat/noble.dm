@@ -2,7 +2,7 @@
 	name = "Aristocrat"
 	tutorial = "You are a traveling noble visiting foreign lands. With wealth, come the poor, ready to pilfer you of your hard earned (inherited) coin, so tread lightly unless you want to meet a grizzly end."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_NO_CONSTRUCT
+	allowed_races = RACES_SHUNNED_UP
 	outfit = /datum/outfit/job/roguetown/adventurer/noble
 	traits_applied = list(TRAIT_NOBLE)
 	class_select_category = CLASS_CAT_NOBLE
@@ -90,13 +90,17 @@
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
+			"Sugarloaf Helmet"  = /obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader,
 			"Knight's Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight,
 			"Knight's Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old,
+			"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/greatplume,
 			"Visored Sallet"			= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
 			"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,
 			"Hounskull Bascinet" 		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
 			"Etruscan Bascinet" 		= /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 			"Slitted Kettle"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
+			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
+			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 			"None"
 			)
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets

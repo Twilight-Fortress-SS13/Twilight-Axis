@@ -48,8 +48,7 @@
 	category_tags = list(CTAG_OVERSEER)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_WOODSMAN, TRAIT_STEELHEARTED)
 	subclass_stats = list(
-		STATKEY_STR = 3,
-		STATKEY_PER = 2,
+		STATKEY_STR = 2,
 		STATKEY_CON = 2,
 		STATKEY_WIL = 2,
 		STATKEY_INT = 1,
@@ -94,7 +93,7 @@
 /datum/outfit/job/roguetown/overseer/pre_equip(mob/living/carbon/human/H)
 	..()
 	if(H.mind)
-		backpack_contents = list(/obj/item/storage/keyring/warden_enigma = 1, /obj/item/signal_hornn/green = 1, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/rogueweapon/huntingknife/idagger/steel = 1)
+		backpack_contents = list(/obj/item/storage/keyring/warden_enigma = 1, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/rogueweapon/huntingknife/idagger/steel = 1)
 		SStreasury.give_money_account(ECONOMIC_UPPER_MIDDLE_CLASS, H, "Savings.")
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/movemovemove)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/takeaim)

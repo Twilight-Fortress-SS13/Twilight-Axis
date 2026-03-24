@@ -12,3 +12,8 @@
 	name = "Hide Corslet"
 	cost = 35
 	contains = list(/obj/item/clothing/suit/roguetown/armor/leather/hide/bikini)
+
+/datum/supply_pack/rogue/Mage/cinnabar
+	name = "Cinnabar Ore"
+	cost = 30
+	contains = list(/obj/item/rogueore/cinnabar = 1)

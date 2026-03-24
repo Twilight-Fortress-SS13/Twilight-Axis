@@ -11,7 +11,7 @@
 	light_outer_range = 2
 	light_power = 1
 	light_color = "#f5a885"
-	possible_item_intents = list(/datum/intent/mace/strike/wood, /datum/intent/special/magicarc)
+	possible_item_intents = list(/datum/intent/mace/strike/wood)
 
 /obj/item/gun/ballistic/twilight_firearm/barker/barker_staff/getonmobprop(tag)
 	. = ..()
@@ -125,7 +125,7 @@
 
 /obj/item/gun/ballistic/twilight_firearm/barker/barker_light/dendor1
 	name = "hermit's barker"
-	desc = "Один из первых образцов огнестрельного оружия, созданный отавийскими мастерами в начале позапрошлого века. Этот оброс костями и кожей словно друидский посох, что дало ему чуть больше прочности"
+	desc = "Один из первых образцов огнестрельного оружия, созданный отаванскими мастерами в начале позапрошлого века. Этот оброс костями и кожей словно друидский посох, что дало ему чуть больше прочности"
 	icon = 'modular_twilight_axis/firearms/icons/magic/dendor1.dmi'
 	icon_state = "dendor1"
 	item_state = "dendor1"
@@ -174,7 +174,7 @@
 
 /obj/item/gun/ballistic/twilight_firearm/barker/arti_barker1
 	name = "ignited barker"
-	desc = "Один из первых образцов огнестрельного оружия, созданный отавийскими мастерами в начале позапрошлого века. Данный образец оснащён поворотной ручкой с тлеющим углём, что за вас подожжёт фитиль."
+	desc = "Один из первых образцов огнестрельного оружия, созданный отаванскими мастерами в начале позапрошлого века. Данный образец оснащён поворотной ручкой с тлеющим углём, что за вас подожжёт фитиль."
 	icon = 'modular_twilight_axis/firearms/icons/magic/barti.dmi'
 	icon_state = "barti"
 	item_state = "barti"

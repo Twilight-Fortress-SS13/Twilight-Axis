@@ -1,2 +1,9 @@
-/datum/job/roguetown/wretch
-	job_traits = list(TRAIT_STEELHEARTED, TRAIT_OUTLAW, TRAIT_HERESIARCH, TRAIT_SELF_SUSTENANCE, TRAIT_ZURCH, TRAIT_OUTLANDER)
+/datum/job/roguetown/wretch/New()
+	job_traits += list(TRAIT_OUTLANDER)
+	job_subclasses += list(
+		/datum/advclass/wretch/twilight_corsair,
+		/datum/advclass/wretch/lunacyembracer,
+		/datum/advclass/wretch/rogueshaman,
+		/datum/advclass/wretch/thehero,
+	)
+	. = ..()

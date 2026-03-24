@@ -6,7 +6,7 @@
 	attack_verb = list("strikes", "hits")
 	hitsound = list('sound/combat/hits/blunt/metalblunt (1).ogg', 'sound/combat/hits/blunt/metalblunt (2).ogg', 'sound/combat/hits/blunt/metalblunt (3).ogg')
 	chargetime = 0
-	penfactor = BLUNT_DEFAULT_PENFACTOR
+	penfactor = PEN_NONE
 	swingdelay = 0
 	icon_state = "instrike"
 	item_d_type = "blunt"
@@ -17,7 +17,7 @@
 	blade_class = BCLASS_SMASH
 	attack_verb = list("smashes")
 	hitsound = list('sound/combat/hits/blunt/metalblunt (1).ogg', 'sound/combat/hits/blunt/metalblunt (2).ogg', 'sound/combat/hits/blunt/metalblunt (3).ogg')
-	penfactor = BLUNT_DEFAULT_PENFACTOR
+	penfactor = PEN_NONE
 	chargedrain = 1 // Slight stamina drain on use.
 	chargetime = 5 // Half a second of charge for a bit of a warning.
 	icon_state = "insmash"
@@ -48,11 +48,11 @@
 		user, \
 		spin = FALSE, \
 		force = H.move_force)
-// Do not call handle_knockback like in knockback cuz that means it will hardstun
+// Do not call handle_knockback like in knockback cuz that means it will hardstun.
 
 /datum/intent/mace/smash/prewarning()
 	if(mastermob)
-		playsound(mastermob, pick('sound/combat/shieldraise.ogg'), 100, FALSE)
+		playsound(mastermob, pick('sound/combat/wooshes/blunt/wooshhuge (2).ogg'), 100, FALSE)
 
 /datum/intent/mace/smash/lesser
 	name = "one-handed smash" //Exclusive to Warhammers, and other mace-styled bludgeons that can only be wielded in one hand.
@@ -70,14 +70,14 @@
 	recovery = 30
 	warnie = "mobwarning"
 	hitsound = list('sound/combat/hits/bladed/genstab (1).ogg', 'sound/combat/hits/bladed/genstab (2).ogg', 'sound/combat/hits/bladed/genstab (3).ogg')
-	penfactor = 25
+	penfactor = PEN_MEDIUM
 	damfactor = 0.9
 	item_d_type = "stab"
 
 /datum/intent/mace/bash
 	name = "bash"
 	blade_class = BCLASS_BLUNT
-	penfactor = BLUNT_DEFAULT_PENFACTOR
+	penfactor = PEN_NONE
 	icon_state = "inbash"
 	attack_verb = list("bashes", "strikes")
 	damfactor = NONBLUNT_BLUNT_DAMFACTOR
@@ -91,10 +91,12 @@
 /datum/intent/mace/strike/grand
 	name = "heavy strike"
 	damfactor = 1.1
+	demolition_mod = 1.25
 
 /datum/intent/mace/smash/grand
 	name = "heavy smash"
 	damfactor = 1.1
+	demolition_mod = 1.25
 	chargedrain = 1.5
 	desc = "A powerful blow that delivers Strength-scaling knockback and slowdown to the target. The amount of inflicted knockback scales off your Strength, ranging from X (1 tile) to XV (5 tiles). </br>Cannot inflict any knockback or slowdown if your Strength is below X. </br>Cannot be used consecutively more than every 5 seconds on the same target. </br>Prone targets halve the knockback distance. </br>Not fully charging the attack limits knockback to 1 tile."
 	maxrange = 5
@@ -103,7 +105,8 @@
 	name = "crush"
 	attack_verb = list("crushes")
 	icon_state = "incrush"
-	damfactor = 1.75 //Deals 83 DMG when swung from the strongest Maul (at a base of 34 DMG) with XIV STR. For comparison, a Steel Flail (which can be one-handed and swung faster) deals 63 DMG under the same parameters.
+	damfactor = 1.75
+	demolition_mod = 1.25 //Deals 83 DMG when swung from the strongest Maul (at a base of 34 DMG) with XIV STR. For comparison, a Steel Flail (which can be one-handed and swung faster) deals 63 DMG under the same parameters.
 	chargedrain = 1.8 //Note that the Maul series is hardlocked to characters that have abnormally high STR, and is otherwise physically unwieldable.
 	chargetime = 10
 	desc = "A titanic blow that delivers Strength-scaling knockback and slowdown to the target. The amount of inflicted knockback scales off your Strength, ranging from X (1 tile) to XV (5 tiles). </br>Actively drains stamina while being charged up. </br>Cannot inflict any knockback or slowdown if your Strength is below X. </br>Cannot be used consecutively more than every 5 seconds on the same target. </br>Prone targets halve the knockback distance. </br>Not fully charging the attack limits knockback to 1 tile."
@@ -322,11 +325,11 @@
 
 /datum/intent/mace/strike/wood
 	hitsound = list('sound/combat/hits/blunt/woodblunt (1).ogg', 'sound/combat/hits/blunt/woodblunt (2).ogg')
-	penfactor = BLUNT_DEFAULT_PENFACTOR
+	penfactor = PEN_NONE
 
 /datum/intent/mace/smash/wood
 	hitsound = list('sound/combat/hits/blunt/woodblunt (1).ogg', 'sound/combat/hits/blunt/woodblunt (2).ogg')
-	penfactor = BLUNT_DEFAULT_PENFACTOR
+	penfactor = PEN_NONE
 
 /obj/item/rogueweapon/mace/woodclub/deprived
 	name = "warped club"
@@ -851,7 +854,7 @@
 	animname = "stab"
 	hitsound = list('sound/combat/hits/bladed/genstab (1).ogg', 'sound/combat/hits/bladed/genstab (2).ogg', 'sound/combat/hits/bladed/genstab (3).ogg')
 	no_early_release = TRUE
-	penfactor = 20
+	penfactor = PEN_LIGHT
 	damfactor = 0.9
 	item_d_type = "stab"
 
@@ -863,7 +866,7 @@
 	animname = "stab"
 	hitsound = list('sound/combat/hits/bladed/genstab (1).ogg', 'sound/combat/hits/bladed/genstab (2).ogg', 'sound/combat/hits/bladed/genstab (3).ogg')
 	no_early_release = TRUE
-	penfactor = 20
+	penfactor = PEN_LIGHT
 	damfactor = 0.8
 	swingdelay = 4
 	item_d_type = "stab"
@@ -878,7 +881,7 @@
 	misscost = 1
 	swingdelay = 15
 	clickcd = 15
-	penfactor = 80
+	penfactor = PEN_BSTEEL
 	damfactor = 0.9
 	item_d_type = "stab"
 
@@ -888,7 +891,7 @@
 	force = 12 //Don't one-hand this.
 	force_wielded = 32 //-3 compared to grand mace(steel goden). Better intents.
 	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/bash/ranged) 
-	gripped_intents = list(/datum/intent/mace/smash/crush, /datum/intent/mace/strike/grand, /datum/intent/effect/daze, /datum/intent/effect/hobble)
+	gripped_intents = list(/datum/intent/mace/smash/crush, /datum/intent/mace/strike/grand, /datum/intent/mace/sweep, /datum/intent/effect/hobble)
 	name = "maul"
 	desc = "Who would need something this large? It looks like it was made for tearing down walls, rather than men."
 	icon_state = "sledge"
@@ -899,7 +902,6 @@
 	smelt_bar_num = 2
 	minstr = 14
 	wdefense = 3
-	demolition_mod = 1.25 //Oh, yes...
 	pixel_y = -16
 	pixel_x = -16
 	inhand_x_dimension = 64
@@ -961,11 +963,28 @@
 	desc = "Covered in spikes, such is the weapon of a Dwarvish smith. \
 	This one has been well balanced, allowing for a weaker wielder to make use of it."
 	icon_state = "spiky"
-	gripped_intents = list(/datum/intent/maul/spiked, /datum/intent/mace/smash/grand, /datum/intent/effect/daze, /datum/intent/effect/hobble)
+	gripped_intents = list(/datum/intent/maul/spiked, /datum/intent/mace/smash/grand, /datum/intent/mace/sweep, /datum/intent/effect/hobble)
 	wdefense_wbonus = 2 //4
 	minstr = 10 //+1 STR from Grudgebearer Smith. It should be fine.
 	smelt_bar_num = 3 //Please don't...
 	max_integrity = 370
+
+/datum/intent/mace/sweep
+	name = "sweeping strike"
+	icon_state = "insweep"
+	blade_class = BCLASS_BLUNT
+	attack_verb = list("sweeps through", "smashes across")
+	animname = "strike"
+	hitsound = list('sound/combat/hits/blunt/metalblunt (1).ogg', 'sound/combat/hits/blunt/metalblunt (2).ogg', 'sound/combat/hits/blunt/metalblunt (3).ogg')
+	penfactor = PEN_NONE
+	chargetime = 0
+	damfactor = 1.2
+	demolition_mod = 1.25
+	clickcd = CLICK_CD_GLACIAL
+	item_d_type = "blunt"
+	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
+	cleave = /datum/cleave_pattern/frontal_arc
+	desc = "A heavy sweep that smashes through targets to the sides and front."
 
 //Intents for the mauls.
 /datum/intent/effect/hobble
@@ -977,7 +996,7 @@
 	hitsound = list('sound/combat/hits/blunt/shovel_hit3.ogg')
 	swingdelay = 6
 	damfactor = 0.8
-	penfactor = BLUNT_DEFAULT_PENFACTOR
+	penfactor = PEN_NONE
 	clickcd = CLICK_CD_HEAVY
 	item_d_type = "blunt"
 	intent_effect = /datum/status_effect/debuff/hobbled
@@ -1022,11 +1041,11 @@
 	spawn(0)
 		spawn_spore_clouds(target, user)
 
-	if(hit_count == 6)
+	if(hit_count == 4)
 		playsound(user, 'sound/magic/magnet.ogg', 75)
 		to_chat(user, span_userdanger("The mushroom mace is pulsing wildly!"))
 
-	if(hit_count >= 7)
+	if(hit_count >= 5)
 		spawn(0)
 			mushroom_boom(target, user)
 		hit_count = 0 // Reset after the big boom
@@ -1054,9 +1073,9 @@
 	explosion(T, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 4, smoke = TRUE, soundin = pick('sound/misc/explode/explosion.ogg'))
 
 	for(var/mob/living/L in range(2, T))
-		var/damage = 30
+		var/damage = 25
 		if(L == user)
-			damage = 10 // User takes reduced damage
+			damage = 5 // User takes reduced damage
 		L.apply_damage(damage, TOX)
 		if(L != user && ishuman(L))
 			var/mob/living/carbon/human/H = L
@@ -1069,7 +1088,7 @@
 	duration = 16 SECONDS
 	plane = GAME_PLANE_UPPER
 	layer = ABOVE_ALL_MOB_LAYER
-	var/damage_amount = 5
+	var/damage_amount = 6
 
 /obj/effect/temp_visual/spore/Initialize(mapload)
 	. = ..()
@@ -1103,7 +1122,7 @@
 	desc = "A heavy mace forged from fungal-infused metals. Looks spiky!"
 	icon_state = "mushroom"
 	force = 18
-	force_wielded = 24
+	force_wielded = 27
 	max_integrity = 500
 	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/boom, /datum/intent/mace/strike/dislocate)
 	gripped_intents = list(/datum/intent/mace/strike, /datum/intent/mace/boom, /datum/intent/mace/strike/dislocate, /datum/intent/mace/smash)

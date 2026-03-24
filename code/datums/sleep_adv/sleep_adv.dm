@@ -100,6 +100,16 @@
 	if(trait_capped_level && enough_sleep_xp_to_advance(skill, trait_capped_level - mind.current.get_skill_level(skill)))
 		amt = 0
 
+		// Notifying you on a cooldown if you actually hit the cap
+		var/skillname = skillref.name ? skillref.name : "ERROR"
+		var/captimer = LAZYACCESS(L.mob_timers, "skillcap_[skillname]")
+
+		if(!captimer || world.time > (captimer + SKILLCAP_NOTIF_COOLDOWN))
+			L.mob_timers["skillcap_[skillname]"] = world.time
+			to_chat(L, span_warning("I can't learn anything more about [skillname]."))
+			if(show_xp)
+				L.balloon_alert(L, "<font color = '#bb2b2b'>Skill cap!</font>")
+
 	var/capped_pre = enough_sleep_xp_to_advance(skill, 2)
 	var/can_advance_pre = enough_sleep_xp_to_advance(skill, 1)
 
@@ -212,6 +222,9 @@
 /datum/sleep_adv/proc/close_ui()
 	if(!mind.current)
 		return
+	if(mind.has_changed_spell)
+		mind.has_changed_spell = FALSE
+		to_chat(mind.current, span_smallnotice("I feel like I can change my spells again."))
 	mind.current << browse(null, "window=dreams")
 
 /datum/sleep_adv/proc/process_sleep()

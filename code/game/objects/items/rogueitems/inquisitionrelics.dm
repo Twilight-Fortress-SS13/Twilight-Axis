@@ -480,7 +480,7 @@ Inquisitorial armory down here
 	throwforce = 15
 	force = 5
 	tool_behaviour = null
-	possible_item_intents = list(/datum/intent/use, /datum/intent/dagger/thrust/quick) //Extremely low damage, blocked by anything sturdier than a cloth shirt. Quite funny to imagine it as a shiv, however.
+	possible_item_intents = list(/datum/intent/use, /datum/intent/dagger/thrust) //Extremely low damage, blocked by anything sturdier than a cloth shirt. Quite funny to imagine it as a shiv, however.
 	slot_flags = ITEM_SLOT_HIP
 	sharpness = IS_SHARP
 	experimental_inhand = TRUE
@@ -1097,7 +1097,7 @@ Inquisitorial armory down here
 	var/timetobag = 8 SECONDS
 	if(HAS_TRAIT(user, TRAIT_BLACKBAGGER))
 		trained = TRUE
-		timetobag = 4 SECONDS
+		timetobag = 3 SECONDS
 	user.visible_message(span_danger("[user] goes to [trained ? "expertly" : "clumsily"] black bag [M]!"))
 	if(HAS_TRAIT(M, TRAIT_GRABIMMUNE))
 		user.visible_message(span_danger("[M] slips past [user]'s attempt to black bag them!"))

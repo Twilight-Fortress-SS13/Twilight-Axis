@@ -15,12 +15,12 @@
 	chargedloop = /datum/looping_sound/invokegen
 	chargedrain = 1
 	chargetime = 20
-	releasedrain = 25
+	releasedrain = SPELLCOST_CANTRIP
 	no_early_release = TRUE
 	movement_interrupt = FALSE
 	charging_slowdown = 2
 	warnie = "spellwarning"
-	ignore_los = TRUE
+	ignore_los = 1
 
 /obj/effect/proc_holder/spell/invoked/mindlink/cast(list/targets, mob/living/user)
 	. = ..()

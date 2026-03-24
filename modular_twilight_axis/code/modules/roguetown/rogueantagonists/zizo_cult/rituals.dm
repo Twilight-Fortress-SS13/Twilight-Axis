@@ -840,14 +840,24 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/mob/living/carbon/human/target = locate() in center.contents
 	if(!target)
 		return
+	if(!target.mind)
+		to_chat(user, span_warning("They are not worth saving."))
+		return
+	if(!target.mind.active)
+		to_chat(user, span_warning("They are unresponsive to my attempts. For now."))
+		return
+	if(alert(target, "The Dark Lady reaches out to you. Will you take her help?", "Fleshmend", "Embrace me", "I'll be on my own") != "Embrace me")
+		to_chat(user, span_notice("[target] refuses her help."))
+		return
 	target.playsound_local(target, 'sound/misc/vampirespell.ogg', 100, FALSE, pressure_affected = FALSE)
-	target.fully_heal()
-	target.revive()
-	target.regenerate_limbs()
-	target.apply_status_effect(/datum/status_effect/debuff/fleshmend_exhaustion)
-	target.heal_wounds()
-	target.apply_status_effect(/datum/status_effect/debuff/fleshmend_exhaustion)
-	to_chat(target, span_notice("ZIZO EMPOWERS ME!"))
+	if((!HAS_TRAIT(target, TRAIT_DNR) && !HAS_TRAIT(target, TRAIT_NECRAS_VOW)) || target.stat != DEAD)
+		if(target.stat == DEAD)
+			target.revive()
+		target.fully_heal()
+		target.regenerate_limbs()
+		target.heal_wounds(500)
+		target.apply_status_effect(/datum/status_effect/debuff/fleshmend_exhaustion)
+		to_chat(target, span_notice("ZIZO EMPOWERS ME!"))
 
 /datum/ritual/fleshcrafting/darkeyes
 	name = "Глаза ночи"

@@ -23,6 +23,9 @@
 		newtime = (newtime - (mastermob.get_skill_level(/datum/skill/combat/slings) * 1.5)) //each point of skill is -0.15 seconds, maximum -0.9 seconds
 		newtime = (newtime - (mastermob.STAPER / 2)) //each point of perception is -0.05 seconds, maximum -1.0 second
 		newtime = (newtime - (mastermob.STASTR / 5)) //each point of strength is -0.02 seconds, maximum -0.4 seconds
+		var/obj/item/gun/ballistic/gun = masteritem
+		if(istype(gun) && gun.chambered)
+			newtime *= gun.chambered.charge_time_mult
 		if(newtime > 0.5)
 			return newtime //final time to 'charge' the sling. for example, 10 STR, 14 PER, and expert skill equals 5 or 0.5 seconds
 		else
@@ -53,6 +56,9 @@
 		newtime = (newtime - (mastermob.get_skill_level(/datum/skill/combat/slings) * 1.5)) //each point of skill is -0.15 seconds, maximum -0.9 seconds
 		newtime = (newtime - (mastermob.STAPER / 2)) //each point of perception is -0.05 seconds, maximum -1.0 second
 		newtime = (newtime - (mastermob.STASTR / 5)) //each point of strength is -0.02 seconds, maximum -0.4 seconds
+		var/obj/item/gun/ballistic/gun = masteritem
+		if(istype(gun) && gun.chambered)
+			newtime *= gun.chambered.charge_time_mult
 		if(newtime > 0.5)
 			return newtime //final time to 'charge' the sling. for example, 10 STR, 14 PER, and expert skill equals 0.7 seconds
 		else
@@ -190,8 +196,9 @@
 			BB.damage = BB.damage - (BB.damage * (user.client.chargedprog / 100))
 		else
 			BB.damage = BB.damage
-		BB.damage = BB.damage * (((user.STAPER / 1.25) + (user.STASTR / 5)) / 10) * damfactor + bonus_stone_force
-		// each point of perception is 8% damage. each point of strength is 2% damage. 100% damage at 10 in both. the stone's bonus force is added as a flat amount
+		var/per_scaling = 1 + (min(user.STAPER, RANGED_STAT_SOFTCAP) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+		BB.damage = BB.damage * per_scaling + bonus_stone_force
+		// PER scales damage by 10% per point up to softcap, then 5% per point. Stone bonus force is added flat.
 		if (temp_stone != null) //reseting after stone ammo use
 			bonus_stone_force = 0 //stone is thrown, so the bonus is lost
 			temp_stone = null //stone is gone, forever.

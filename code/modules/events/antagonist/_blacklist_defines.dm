@@ -25,6 +25,7 @@
 		"Druid",\
 		"Acolyte",\
 		"Man at Arms",\
+		"Royal Guard Sergeant",\
 		"Royal Guard",\
 		"Vanguard", \
 		"Overseer",\

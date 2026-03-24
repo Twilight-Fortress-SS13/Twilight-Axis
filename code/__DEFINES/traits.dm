@@ -33,6 +33,7 @@
 #define TRAIT_MEDIUMARMOR "Maille Training"
 #define TRAIT_HEAVYARMOR "Plate Training"
 #define TRAIT_DODGEEXPERT "Expert Dodger"
+#define TRAIT_PARRYEXPERT "Parry Expert"// TA ADD - new ronin class
 #define TRAIT_MAGEARMOR "Magic Barrier"
 #define TRAIT_DECEIVING_MEEKNESS "Deceiving Meekness"
 #define TRAIT_CRITICAL_RESISTANCE "Critical Resistance"
@@ -105,6 +106,8 @@
 #define TRAIT_GOODWRITER "Great Writer"
 #define TRAIT_WAGES_SUSPENDED "Wages Suspended" //Stops nerve master daily pay for this guy
 #define TRAIT_NODEF "Recklessness"
+#define TRAIT_EMPOWERED_UNARMED "Empowered Unarmed" // Temporary trait — next unarmed attack bypasses defense
+#define TRAIT_DODGE_NO_MOVE "Dodge No Move" // Dodge rolls still happen but the mob doesn't physically move
 #define TRAIT_SHIRTLESS "Shirtless"
 #define TRAIT_STANDARD_BEARER "Standard Bearer" //Can use the keep's standard to provide buffs and rally the retinue.
 #define TRAIT_VENDETTA "Vendetta" // Trait for xylixan opponent and caster, allows for clashing in the azure_combat file similar to Dulist Rings
@@ -220,10 +223,13 @@
 #define TRAIT_NOPAIN	"Painless"
 #define TRAIT_NOPAINSTUN	"Enduring"
 #define TRAIT_NOBREATH	"Breathless"
+#define TRAIT_DEATHLESS "Deathless"
 #define TRAIT_TOXIMMUNE	"Poison Immune"
 #define TRAIT_GRABIMMUNE "Unstoppable"
 #define TRAIT_ROTMAN "Rotman"
+#define TRAIT_DEADITE "Deadite"
 #define TRAIT_ZOMBIE_IMMUNE "Deadite Immunity" //immune to deadite infection
+#define TRAIT_FACELESS_KNOWN "Faceless but Known" //recognizable despite having no face (skeletonized head - for skeleton) — does NOT bypass TRAIT_DISFIGURED
 #define TRAIT_NOHUNGER	"Foodless"
 #define TRAIT_DARKVISION "Darksight"
 #define TRAIT_NOCSHADES "Nocshaded"
@@ -348,6 +354,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_MEDIUMARMOR = span_info("I can move freely in medium armor."),
 	TRAIT_HEAVYARMOR = span_info("I can move freely in heavy armor."),
 	TRAIT_DODGEEXPERT = span_info("I am much better at dodging incoming strikes, when dressed in either light armor or nothing at all. Heavier armor, such as maille or plate, is too burdensome for me to quickly maneuver in."),
+	TRAIT_PARRYEXPERT = span_info("I am much better at parrying incoming strikes, having a more high probability of deflecting a blow with my weapon."),// TA ADD - new ronin class
 	TRAIT_MAGEARMOR = span_info("My magics can protect me from a blow every so often."),
 	TRAIT_DECEIVING_MEEKNESS = span_info("People look at me and think I am a weakling. They are mistaken. I've learned how to hide my vices and true beliefs from others."),
 	TRAIT_CRITICAL_RESISTANCE = span_info("My constitution is iron-clad. My lifeblood flows slowly, I can resist the first few critical wounds that would fell others, but repeated punishment will overwhelm my defenses."),
@@ -386,7 +393,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_SEEDKNOW = span_info("I know which seeds grow which crops."),
 	TRAIT_PERFECT_TRACKER = span_info("I am a master at pursuing those I hunt. I can discern every last detail within a spotted track, and any attempts to hide said-tracks will fail to deceive me."),//Hearthstone port.
 	TRAIT_ZIZOSIGHT = span_info("Zizo blesses my eyes to be unburdened by the night."), //Hearthstone change.
-	TRAIT_CIVILIZEDBARBARIAN = span_info("My rigorous training in the martial arts has turned me into a living weapon. No limb is out of reach for my fists and feet, and my unarmed strikes now have a higher chance to inflict critical damage."),
+	TRAIT_CIVILIZEDBARBARIAN = span_info("My rigorous training in the martial arts has turned me into a living weapon. No limb is out of reach for my fists and feet, and my unarmed strikes are now stronger (+4 Unarmed Damage). My parrying with bracers, knuckles, or bandages is significantly more effective."),
 	TRAIT_COMICSANS = span_sans("I am cursed with a odd voice."),
 	TRAIT_SQUIRE_REPAIR = span_info("Trained at my Master's side, I can restore any kind of gears with time and polish them until they gleam like new."),
 	TRAIT_WATERBREATHING = span_info("I do not drown in bodies of water."),
@@ -438,18 +445,20 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_CICERONE = span_info("I am well-versed in the differences of brews and spirits, and can tell them apart at a glance."),
 	TRAIT_BETTER_SLEEP = span_info("I recover more energy when sleeping."),
 	TRAIT_ROTMAN = span_info("I am partially undead. My heart does not beat."),
+	TRAIT_DEADITE = span_info("I am a feral deadite."),
 	TRAIT_EASYDISMEMBER = span_info("My limbs are frail and fragile. They can be dismembered with greater ease, including my neck."),
 	TRAIT_HARDDISMEMBER = span_info("My body is strong and endurant. My limbs are not easily dismembered."),
 	TRAIT_NOPAIN = span_info("I feel no pain."),
 	TRAIT_NOPAINSTUN = span_info("Pain does not impair me."),
 	TRAIT_NOBREATH = span_info("I do not breathe."),
+	TRAIT_DEATHLESS = span_info("Even without my lyfesblood, I will not be taken by Necra so easily."),
 	TRAIT_TOXIMMUNE = span_info("Poisons do nothing to me."),
 	TRAIT_ZOMBIE_IMMUNE = span_info("Deadite bites cannot infect me."),
 	TRAIT_NOHUNGER = span_info("I do not hunger, or thirst."),
 	TRAIT_DARKVISION = span_info("I can see better in the dark."),
 	TRAIT_NOCSHADES = span_info("The lens I look through allows me to see in the dark clear as dae, at the cost of greater vision."),
 	TRAIT_RESIDENT = span_info("I've been granted a Meister account, and the ownership of a house in city."), //TA_EDIT
-	TRAIT_LIGHT_STEP = span_info("My steps are light and swift. I make less noise while sneaking, and can sneak much quicker."),
+	TRAIT_LIGHT_STEP = span_info("My steps are light and swift. I make less noise while sneaking and wearing armor, and can sneak much quicker."),
 	TRAIT_NOMOOD = span_info("I feel no sorrow, no joy, and no stress."),
 	TRAIT_AZURENATIVE = span_info("I've grown up and lived all my lyfe in these lands. I can only trigger ambushes if I sprint through them."),
 	TRAIT_SLEUTH = span_info("I can spot my tracked Mark's trail without needing to approach it, and can spot them at a distance. I can track more frequently, and the act is not impaired by movement. I can examine tracks right away."),
@@ -714,7 +723,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_BLOODLOSS_IMMUNE "bloodloss_immune" // can bleed, but will never die from blood loss
 #define TRAIT_NO_BITE "no_bite" //prevents biting
 #define TRAIT_LEGENDARY_ALCHEMIST		"Expert Herb Finder"
-#define TRAIT_STUCKITEMS "stuck_items" // Prevents removing items except for hand slots
 /// Used to track if a player has rejected vampire convert
 #define TRAIT_REFUSED_VAMP_CONVERT "refused_vampire_conversion"
 /// makes your footsteps completely silent
@@ -759,6 +767,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_STATUS_EFFECT	"status_effect"
 #define TRAIT_VIRTUE "virtue"
 #define TRAIT_MIRACLE "miracle"
+#define TRAIT_ADMIN "admin"
 #define UNCONSCIOUS_BLIND "unconscious_blind"
 #define EYE_DAMAGE "eye_damage"
 #define GENETIC_MUTATION "genetic"
@@ -789,6 +798,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 // unique trait sources, still defines
 #define TRAIT_GUIDANCE "Guidance"
+#define TRAIT_REVERSE_GUIDANCE "Reverse Guidance"
 #define TRAIT_FORTITUDE "Fortitude"
 #define CLONING_POD_TRAIT "cloning-pod"
 #define STATUE_MUTE "statue"

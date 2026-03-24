@@ -68,3 +68,108 @@
 	shortname = "Tabaxi"
 	credits = "La Caution Thé à la Menthe Instrumentale HQ Oceans Twelve"
 	musicpath = list('modular_twilight_axis/sound/music/combat_tabaxi.ogg')
+
+/datum/combat_music/skeleton
+	name = "Elder Skeleton"
+	desc = "He saw terrible past but you will never see beautifull future."
+	shortname = "Shkelet"
+	credits = "Sulphur head, probably, Vanderlin"
+	musicpath = list('modular_twilight_axis/sound/music/combat_skeleton.ogg')
+
+/datum/combat_music/knight
+	name = "Full-plate Knight"
+	desc = "His steps mean your DEATH."
+	shortname = "Dread Knight"
+	credits = "Sulphur head, probably, Vanderlin"
+	musicpath = list('modular_twilight_axis/sound/music/combat_fullplate.ogg')
+
+/datum/combat_music/highgrain
+	name = "Footstep"
+	desc = "I had him dead before he hit the ground."
+	shortname = "High Grain"
+	credits = "Half-Life Alyx - APC Cannon"
+	musicpath = list('modular_twilight_axis/sound/music/combat_highgrain.ogg')
+
+/datum/combat_music/lich 
+	name = "Lich - Herald of HER will"
+	desc = "March of the Dead"
+	shortname = "Lich"
+	credits = "Sefus - Herald of HER will"
+	musicpath = list('modular_twilight_axis/sound/music/combat_lich.ogg')
+
+/datum/combat_music/blackknife
+	name = "Blacksteel Dagger"
+	desc = "Your vision narrows."
+	shortname = "BlackKnife"
+	credits = "Toby Fox - Black Knife"
+	musicpath = list('modular_twilight_axis/sound/music/combat_blackknife.ogg')
+
+/datum/combat_music/blackhammer
+	name = "Blacksteel Hammer"
+	desc = "Your vision... Wait."
+	shortname = "BlackHammer"
+	credits = "XLGlazzer - Hell Hammer, but in the style of Black Knife"
+	musicpath = list('modular_twilight_axis/sound/music/combat_blackhammer.ogg')
+
+/datum/combat_music/brigand
+	name = "Good Ol' Brigandry"
+	desc = "Welcome back, classic bandit'o brigand."
+	shortname = "OlNewBrigand"
+	credits = "He was with us all this time..."
+	musicpath = list('modular_twilight_axis/sound/music/combat_bandit_brigand.ogg')
+
+/datum/combat_music/decisive
+	name = "DECISIVE BATTLE"
+	desc = "Shoot good, move better."
+	shortname = "DecBattle"
+	credits = "AZALI - DECISIVE BATTLE"
+	musicpath = list('modular_twilight_axis/sound/music/combat_decisivebattle.ogg')
+
+/datum/combat_music/discovery
+	name = "Discovery"
+	desc = ""
+	shortname = "Discovery"
+	credits = "Nik Ammar - Discovery"
+	musicpath = list('modular_twilight_axis/sound/music/combat_discovery.ogg')
+
+/datum/combat_music/princevladimir
+	name = "Near Your Love"
+	desc = ""
+	shortname = "PrinceV"
+	credits = "Sergey Starostin - Near Your Love (Varangian)"
+	musicpath = list('modular_twilight_axis/sound/music/combat_princevladimir.ogg')
+
+/datum/combat_music/hedgeknight
+	name = "Good Ol' Knight"
+	desc = "Welcome back, classic bandit'o knight."
+	shortname = "OlNewKnight"
+	credits = "That one, was with us all this time too..."
+	musicpath = list('modular_twilight_axis/sound/music/combat_bandit2.ogg')
+
+/datum/combat_music/theclueless
+	name = "The Clueless"
+	desc = ""
+	shortname = "Clueless"
+	credits = "LISA: The Clueless - Manly Butter Bath"
+	musicpath = list('modular_twilight_axis/sound/music/combat_thecluelessmanlybutterbath.ogg')
+
+/datum/combat_music/hostiles
+	name = "We've Got Hostiles"
+	desc = ""
+	shortname = "Hostiles"
+	credits = "morch kovalski - We've Got Hostiles"
+	musicpath = list('modular_twilight_axis/sound/music/combat_wevegothostiles.ogg')
+
+/datum/combat_music/cowboy
+	name = "Go Cowboy"
+	desc = ""
+	shortname = "Cowboy"
+	credits = "Moon - Go Cowboy"
+	musicpath = list('modular_twilight_axis/sound/music/combat_gocowboy.ogg')
+
+/datum/combat_music/oldreamer
+	name = "Good Ol' Dreamer"
+	desc = "I must awake."
+	shortname = "OlNewDreamer"
+	credits = "Judge Bitch - Hot Plates"
+	musicpath = list('modular_twilight_axis/sound/music/combat_dreamerold.ogg')

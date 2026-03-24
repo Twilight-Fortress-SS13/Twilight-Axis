@@ -4,7 +4,7 @@
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
 		var/churchiny = "Brother"
-		if(should_wear_femme_clothes(H))
+		if(H.titles_pref == TITLES_F)
 			churchiny = "Sister"
 		H.real_name = "[churchiny] [prev_real_name]"
 		H.name = "[churchiny] [prev_name]"

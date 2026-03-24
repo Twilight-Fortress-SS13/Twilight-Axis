@@ -17,6 +17,11 @@
 	backpack_contents += /obj/item/storage/keyring/lord
 	backpack_contents += /obj/item/rogueweapon/huntingknife/idagger/steel/special
 
+/datum/outfit/job/roguetown/lord/mage/pre_equip(mob/living/carbon/human/H)
+	. = ..()
+	H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 3, TRUE)
+	backpack_contents += /obj/item/storage/keyring/lord
+
 /datum/outfit/job/roguetown/lord/inbred/pre_equip(mob/living/carbon/human/H)
 	. = ..()
 	H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 3, TRUE)

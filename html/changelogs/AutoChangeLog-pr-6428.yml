@@ -1,0 +1,4 @@
+author: "Ketrai"
+delete-after: True
+changes:
+  - bugfix: "Inhumen resurrection for Baotha, Matthios and Graggar now uses their god crosses."

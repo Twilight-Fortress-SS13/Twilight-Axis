@@ -295,7 +295,6 @@
 #define COMSIG_LIVING_ONJUMP "living_onjump"					//from base of /mob/living/proc/jump_action(atom/A)
 #define COMSIG_LIVING_SWINGDELAY_MOD "living_swingdelay_mod"	//from base of /obj/item/proc/attack(mob/living/M, mob/living/user)
 #define COMSIG_PROCESS_BORGCHARGER_OCCUPANT "living_charge"		//sent from borg recharge stations: (amount, repairs)
-#define COMSIG_MOB_CLIENT_LOGIN "comsig_mob_client_login"		//sent when a mob/login() finishes: (client)
 #define COMSIG_BORG_SAFE_DECONSTRUCT "borg_safe_decon"			//sent from borg mobs to itself, for tools to catch an upcoming destroy() due to safe decon (rather than detonation)
 
 //ALL OF THESE DO NOT TAKE INTO ACCOUNT WHETHER AMOUNT IS 0 OR LOWER AND ARE SENT REGARDLESS!
@@ -327,8 +326,6 @@
 #define COMSIG_OBJ_SETANCHORED "obj_setanchored"				//called in /obj/structure/setAnchored(): (value)
 #define COMSIG_OBJ_DEFAULT_UNFASTEN_WRENCH "obj_default_unfasten_wrench"	//from base of code/game/machinery
 #define COMSIG_MULTITOOL_REMOVE_BUFFER "multitool_remove_buffer"
-#define COMSIG_OBJ_PRE_TRANSFER_REAGENTS "obj_pre_transfer_reagents"
-#define COMPONENT_PREVENT_CONTAINER_REAGENT_TRANSFER (1<<0)
 
 // /obj/machinery signals
 #define COMSIG_MACHINERY_BROKEN "machinery_broken"				//from /obj/machinery/obj_break(damage_flag): (damage_flag)
@@ -336,7 +333,6 @@
 #define COMSIG_MACHINERY_POWER_RESTORED "machinery_power_restored"	//from base power_change() when power is restored
 
 // /obj/item signals
-#define COMSIG_ITEM_QUENCHED "item_quenched"					//from base of /obj/item/roguebin/attackby() : (obj/item/I, mob/user, params)
 #define COMSIG_ITEM_ATTACK "item_attack"						//from base of obj/item/attack(): (/mob/living/target, /mob/living/user)
 #define COMSIG_ITEM_ATTACK_SUCCESS "item_attack_success"		//from base of obj/item/attack(): (/mob/living/target, /mob/living/user) upon successful attacking
 #define COMSIG_ITEM_ATTACKED_SUCCESS	"mob_item_attacked"		//from base of obj/item/attack(): (/mob/living/user, /mob/living/target) upon successful attacking
@@ -394,6 +390,7 @@
 
 // /obj/projectile signals (sent to the firer)
 #define COMSIG_PROJECTILE_ON_HIT "projectile_on_hit"			// from base of /obj/projectile/proc/on_hit(): (atom/movable/firer, atom/target, Angle)
+#define COMSIG_PROJECTILE_SELF_ON_HIT "projectile_self_on_hit"	// from base of /obj/projectile/proc/on_hit(), sent to the projectile itself: (mob/firer, atom/target, Angle)
 #define COMSIG_PROJECTILE_BEFORE_FIRE "projectile_before_fire" 			// from base of /obj/projectile/proc/fire(): (obj/projectile, atom/original_target)
 #define COMSIG_PROJECTILE_PREHIT "com_proj_prehit"				// sent to targets during the process_hit proc of projectiles
 
@@ -478,10 +475,6 @@
 #define COMSIG_AFTER_STORAGE_INSERT "storage_after_insert"				//(obj/item/inserting, obj/storage_master, mob/user)
 #define COMSIG_AFTER_STORAGE_REMOVE "storage_after_remove"				//(obj/item/removing, obj/storage_master)
 
-// /datum/action signals
-#define COMSIG_ACTION_TRIGGER "action_trigger"						//from base of datum/action/proc/Trigger(): (datum/action)
-	#define COMPONENT_ACTION_BLOCK_TRIGGER 1
-
 /*******Non-Signal Component Related Defines*******/
 
 //Redirection component init flags
@@ -512,13 +505,6 @@
 
 #define COMSIG_ITEM_ATTACK_EFFECT "item_attack_effect"
 #define COMSIG_ITEM_ATTACK_EFFECT_SELF "item_attack_effect_self"
-
-//S Smithing
-
-#define COMSIG_ITEM_PLACED_ON_ANVIL "item_placed_on_anvil"
-#define COMSIG_ITEM_REMOVED_FROM_ANVIL "item_removed_from_anvil"
-#define COMSIG_ITEM_HAMMERED_ON_ANVIL "item_hammered_on_anvil"
-#define COMSIG_ITEM_ADDED_TO_FORGING "item_added_to_forging"
 
 //Roguetown-specific
 #define  COMSIG_MOB_ON_KICK	"mob_on_kick"	//from /mob/living/proc/try_kick(atom/A). This is for when the src has done a kick.

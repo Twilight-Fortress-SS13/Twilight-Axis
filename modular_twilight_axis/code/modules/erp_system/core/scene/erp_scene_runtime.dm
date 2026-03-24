@@ -50,13 +50,21 @@
 
 	var/msg = null
 	if(best?.action && SSerp?.action_message_renderer && best.action.message_tick)
-		msg = SSerp.action_message_renderer.build_message(best.action.message_tick, best)
+		msg = SSerp.action_message_renderer.build_message(best.action.message_tick, best, allow_knot_suffix = TRUE)
 
 	if(msg)
 		var/list/fs = controller.get_scene_force_speed_avg(active)
 		var/avg_force = fs ? (fs["force"] || SEX_FORCE_MID) : SEX_FORCE_MID
-		var/stam_cost = 2 * avg_force
-		best?.actor_active?.stamina_add(-stam_cost)
+		var/stam_cost = 0.5 * avg_force
+
+		var/datum/erp_actor/active_actor = best?.actor_active
+		var/mob/living/active_mob = active_actor?.physical
+
+		if(active_mob)
+			if(!(active_mob.stamina_add(stam_cost)))
+				break_links_for_exhausted_actor(active_actor)
+				controller.ui?.request_update()
+				return
 
 		controller.play_tick_effects(active, best, dt)
 		controller.send_message(best.spanify_sex(msg), best)
@@ -80,7 +88,7 @@
 
 /// Picks best link for message emission.
 /datum/erp_scene_runtime/proc/pick_best_message_link(list/active_links)
-	var/datum/erp_sex_link/best = null
+	var/list/tied = list()
 	var/best_w = -1
 
 	for(var/datum/erp_sex_link/L in active_links)
@@ -93,9 +101,14 @@
 
 		if(w > best_w)
 			best_w = w
-			best = L
+			tied = list(L)
+		else if(w == best_w)
+			tied += L
 
-	return best
+	if(!tied.len)
+		return null
+
+	return pick(tied)
 
 /// Marks scene started.
 /datum/erp_scene_runtime/proc/on_scene_started(list/active_links, datum/erp_sex_link/best)
@@ -106,3 +119,25 @@
 /datum/erp_scene_runtime/proc/on_scene_ended(datum/erp_sex_link/last_best)
 	controller.scene_active = FALSE
 	controller.scene_started_at = 0
+
+/datum/erp_scene_runtime/proc/break_links_for_exhausted_actor(datum/erp_actor/exhausted_actor)
+	if(!exhausted_actor)
+		return FALSE
+
+	var/list/to_stop = list()
+
+	if(controller.links && controller.links.len)
+		for(var/datum/erp_sex_link/L in controller.links)
+			if(!L || QDELETED(L) || !L.is_valid())
+				continue
+			if(L.actor_active != exhausted_actor)
+				continue
+			to_stop += L
+
+	if(!to_stop.len)
+		return FALSE
+
+	for(var/datum/erp_sex_link/L in to_stop)
+		controller.stop_link_runtime(L)
+
+	return TRUE

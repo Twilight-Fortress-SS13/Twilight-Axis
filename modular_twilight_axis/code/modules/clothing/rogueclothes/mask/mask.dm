@@ -4,14 +4,12 @@
 
 /obj/item/clothing/mask/rogue/lordmask/naledi/decorated
 	armor = null
-	prevent_crits = null
 
 /obj/item/clothing/mask/rogue/facemask/xylixmask
 	name = "xylixian mask"
 	desc = "A ceramic mask, forever stuck with the joyful smile its patron god favors. While it will shatter easily from blows, its smug countenance shall taunt its foes."
 	max_integrity = 50
 	armor = null
-	prevent_crits = null
 	drop_sound = 'sound/foley/brickdrop.ogg'
 	pickup_sound = 'sound/foley/brickdrop.ogg'
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
@@ -49,7 +47,6 @@
 /obj/item/clothing/mask/rogue/facemask/xylixmask/armored
 	max_integrity = 200
 	armor = ARMOR_PLATE
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
 
 /obj/item/clothing/mask/rogue/facemask/xylixmask/armored/Initialize()
 	..()
@@ -74,7 +71,6 @@
 /obj/item/clothing/head/roguetown/dendormask/armored
 	max_integrity = 200
 	armor = ARMOR_PLATE
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
 
 /obj/item/clothing/mask/rogue/eyepatch
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
@@ -116,7 +112,6 @@
 	item_state = "psybarbsmask"
 	smeltresult = /obj/item/ingot/blacksteel
 	armor = ARMOR_PLATE_BSTEEL
-	prevent_crits = PREVENT_CRITS_ALL
 	blocksound = PLATEHIT
 	resistance_flags = FIRE_PROOF
 	max_integrity = ARMOR_INT_SIDE_BLACKSTEEL
@@ -176,3 +171,18 @@
 	if(on)
 		set_light_on(FALSE)
 	update_icon()
+
+/obj/item/clothing/mask/rogue/yoruku_oni
+	name = "oni mask"
+	desc = "A wood mask carved in the visage of demons said to stalk the mountains of Kazengun."
+	icon_state = "oni"
+	stack_fovs = FALSE
+
+/obj/item/clothing/mask/rogue/yoruku_kitsune
+	name = "kitsune mask"
+	desc = "A wood mask carved in the visage of the fox spirits said to ply their tricks in the forests of Kazengun."
+	icon_state = "kitsune"
+	stack_fovs = FALSE
+
+/obj/item/clothing/mask/rogue/lordmask/naledi/steel
+	max_integrity = 200

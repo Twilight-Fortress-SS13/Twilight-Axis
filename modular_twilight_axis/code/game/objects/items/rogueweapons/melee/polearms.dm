@@ -31,3 +31,15 @@
 		added_int = 50,\
 		added_def = 2,\
 	)
+
+/datum/intent/sword/bash
+	penfactor = PEN_NONE
+
+/datum/intent/rend
+	penfactor = PEN_NONE
+
+/datum/intent/rend/reach
+	penfactor = PEN_NONE
+
+/datum/intent/partizan/peel
+	penfactor = PEN_NONE

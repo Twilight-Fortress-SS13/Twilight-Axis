@@ -411,10 +411,12 @@
 
 /mob/living/simple_animal/hostile/proc/Aggro()
 	vision_range = aggro_vision_range
-	if(target && emote_taunt.len && prob(taunt_chance))
-		emote("me", 1, "[pick(emote_taunt)] at [target].")
-		taunt_chance = max(taunt_chance-7,2)
-	emote("aggro")
+	if(world.time >= (mob_timers["npc_chatter"] + 15 SECONDS))
+		if(target && emote_taunt.len && prob(taunt_chance))
+			emote("me", 1, "[pick(emote_taunt)] at [target].")
+			taunt_chance = max(taunt_chance-7,2)
+		emote("aggro")
+		mob_timers["npc_chatter"] = world.time
 
 
 /mob/living/simple_animal/hostile/proc/LoseAggro()
@@ -513,8 +515,7 @@
 /mob/living/simple_animal/hostile/Move(atom/newloc, dir , step_x , step_y)
 	if(dodging && approaching_target && prob(dodge_prob) && moving_diagonally == 0 && isturf(loc) && isturf(newloc) && !incapacitated())
 		return dodge(newloc,dir)
-	else
-		return ..()
+	return ..()
 
 /mob/living/simple_animal/hostile/proc/dodge(moving_to,move_direction)
 	//Assuming we move towards the target we want to swerve toward them to get closer

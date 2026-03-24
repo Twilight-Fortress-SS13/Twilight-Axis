@@ -47,6 +47,8 @@
 
 /datum/config_entry/flag/log_say	// log client say
 
+/datum/config_entry/flag/log_npc_say	// log NPC say
+
 /datum/config_entry/flag/log_telepathy // log telepathic messages
 
 /datum/config_entry/flag/log_admin	// log admin actions
@@ -359,6 +361,7 @@
 	config_entry_value = "check.getipintel.net"
 
 /datum/config_entry/flag/aggressive_changelog
+	config_entry_value = TRUE
 
 /datum/config_entry/flag/autoconvert_notes	//if all connecting player's notes should attempt to be converted to the database
 	protection = CONFIG_ENTRY_LOCKED

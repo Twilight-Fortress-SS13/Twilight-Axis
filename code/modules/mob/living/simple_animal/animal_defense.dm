@@ -6,7 +6,7 @@
 		I.funny_attack_effects(src, user)
 		if(I.force_dynamic)
 			var/newforce = get_complex_damage(I, user)
-			var/haha = user.used_intent.blade_class
+			var/haha = user.used_intent.item_d_type
 			var/armor = run_armor_check(null, haha, armor_penetration = I.armor_penetration, damage = newforce, used_weapon = I)
 			var/nodmg = FALSE
 			next_attack_msg.Cut()
@@ -42,7 +42,7 @@
 			return TRUE
 		I.do_special_attack_effect(user, null, null, src, null)
 
-/mob/living/simple_animal/getarmor(def_zone, type, damage, armor_penetration, blade_dulling, peeldivisor, intdamfactor = 1, used_weapon)
+/mob/living/simple_animal/getarmor(def_zone, type, damage, armor_penetration, blade_dulling, intdamfactor = 1, used_weapon)
 	if(!type)
 		return 0
 	var/armorval = 0

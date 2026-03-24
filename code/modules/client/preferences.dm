@@ -97,6 +97,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/vampire_skin = null
 	var/vampire_eyes = null
 	var/vampire_hair = null
+	var/vampire_ears = null
 	var/extra_language = "None" // Extra language
 	var/voice_color = "a0a0a0"
 	var/voice_pitch = 1
@@ -194,9 +195,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/vampire_headshot_link
 	var/werewolf_headshot_link //not used but setting up for the future
 	var/chatheadshot = TRUE
-	var/nsfw_headshot_link //Twilight Axis edit далее TA
 	var/list/violated = list() // ТА
 	var/ooc_extra
+	var/ooc_extra_img // ТА 
+	var/ooc_extra_img_link // ТА
 	var/song_artist
 	var/song_title
 	var/list/descriptor_entries = list()
@@ -222,11 +224,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/nsfwflavortext
 	var/nsfwflavortext_cached
 
+	var/nsfw_ooc_extra_img // TA EDIT
+	var/nsfw_ooc_extra_img_link // TA EDIT
+
 	var/erpprefs
 	var/erpprefs_cached
 
 	var/list/img_gallery = list()
-
+	var/list/nsfw_img_gallery = list()
 	var/datum/familiar_prefs/familiar_prefs
 
 	var/taur_type = null
@@ -235,7 +240,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	/// Assoc list of culinary preferences, where the key is the type of the culinary preference, and value is food/drink typepath
 	var/list/culinary_preferences = list()
 
-	var/datum/advclass/preview_subclass
 
 	var/tgui_pref = TRUE
 
@@ -261,6 +265,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 
 	var/attack_blip_frequency = ATTACK_BLIP_PREF_DEFAULT
+
+	/// Per-character theme override for examine panel viewers
+	var/examine_theme
 
 	var/datum/loadout_panel/loadoutpanel
 
@@ -342,7 +349,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	random_character(gender, FALSE, FALSE)
 	accessory = "Nothing"
 
-	nsfw_headshot_link = null //TA edit
 
 	customizer_entries = list()
 	validate_customizer_entries()
@@ -539,18 +545,65 @@ GLOBAL_LIST_EMPTY(chosen_names)
 //				dat += "<a href='?_src_=prefs;preference=toggle_random;random_type=[RANDOM_AGE_ANTAG]'>When Antagonist: [(randomise[RANDOM_AGE_ANTAG]) ? "Yes" : "No"]</A>"
 
 //			dat += "<b><a href='?_src_=prefs;preference=name;task=random'>Random Name</A></b><BR>"
+			if(!virtue)
+				virtue = GLOB.virtues[/datum/virtue/none]
+			if(!virtuetwo)
+				virtuetwo = GLOB.virtues[/datum/virtue/none]
+			var/virtue_html
 			if(length(pref_species.restricted_virtues))
 				if(virtue.type in pref_species.restricted_virtues)
 					virtue = GLOB.virtues[/datum/virtue/none]
 				if(virtuetwo.type in pref_species.restricted_virtues)
 					virtuetwo = GLOB.virtues[/datum/virtue/none]
+			if(istype(virtue, virtuetwo) && !virtue.stackable)
+				virtuetwo = GLOB.virtues[/datum/virtue/none]
 			if(virtue.virtuous_only && !statpack.virtuous)
 				virtue = GLOB.virtues[/datum/virtue/none]
-			dat += "<b>Virtue:</b> <a href='?_src_=prefs;preference=virtue;task=input'>[virtue]</a><BR>"
+			var/tricost_virt = 0
+			if(length(virtue.extra_choices) && length(virtue.picked_choices))
+				for(var/i in 1 to length(virtue.picked_choices))
+					tricost_virt += virtue.choice_costs[i]
+			virtue_html += "<b>Virtue[tricost_virt ? " <font color = '#d1c8bb'>([tricost_virt] TRI)</font>" : ""]:</b> <a href='?_src_=prefs;preference=virtue;task=input'><b><font color = '#cfa971'>[virtue]</font></b></a><BR>"
+			if(length(virtue.picked_choices))
+				for(var/i = 1 to virtue.picked_choices.len)
+					var/choice = virtue.picked_choices[i]
+					var/tooltip
+					var/choice_string = choice
+					var/dat_html = "   <a href='?_src_=prefs;preference=subvirtue;task=remove;index=[i]'><i>[choice_string]</i></a>"
+					if(LAZYACCESS(virtue.choice_tooltips, choice))
+						tooltip = TRUE
+					var/tooltip_html = tooltip ? "<a href='?_src_=prefs;preference=subvirtue;task=tooltip;tooltip=[choice]'>(?)</a><br>" : "<br>"
+					virtue_html += "[dat_html][tooltip_html]"
+			if(length(virtue.picked_choices) < virtue.max_choices)
+				virtue_html += "   <a href='?_src_=prefs;preference=subvirtue;task=input'>[(virtue.choice_costs[(virtue.picked_choices.len + 1)] <= 0) ? "<font color = '#a08357'>" : ""]Pick Bonus[(virtue.choice_costs[(virtue.picked_choices.len + 1)] <= 0) ? "</font>" : ""] [(virtue.choice_costs[(virtue.picked_choices.len + 1)] > 0) ? "([virtue.choice_costs[(virtue.picked_choices.len + 1)]] TRI)" : ""] </a><br>"
 			if(statpack.virtuous)
-				dat += "<b>Second Virtue:</b> <a href='?_src_=prefs;preference=virtuetwo;task=input'>[virtuetwo]</a><BR>"
+				tricost_virt = 0
+				if(length(virtuetwo.extra_choices) && length(virtuetwo.picked_choices))
+					for(var/i in 1 to length(virtuetwo.picked_choices))
+						tricost_virt += virtuetwo.choice_costs[i]
+				virtue_html += "<b>Second Virtue[tricost_virt ? " <font color = '#d1c8bb'>([tricost_virt] TRI)</font>" : ""]:</b> <a href='?_src_=prefs;preference=virtuetwo;task=input'><b><font color = '#cfa971'>[virtuetwo]</font></b></a><BR>"
+				if(length(virtuetwo.extra_choices) && length(virtuetwo.picked_choices))
+					for(var/i in 1 to length(virtuetwo.picked_choices))
+						var/choice = virtuetwo.picked_choices[i]
+						var/tooltip
+						var/choice_string = choice
+						var/dat_html = "   <a href='?_src_=prefs;preference=subvirtue_two;task=remove;index=[i]'><i>[choice_string]</i></a>"
+						if(LAZYACCESS(virtuetwo.choice_tooltips, choice))
+							tooltip = TRUE
+						var/tooltip_html = tooltip ? "<a href='?_src_=prefs;preference=subvirtue_two;task=tooltip;tooltip=[choice]'>(?)</a><br>" : "<br>"
+						virtue_html += "[dat_html][tooltip_html]"
+				if(length(virtuetwo.picked_choices) < virtuetwo.max_choices)
+					virtue_html += "   <a href='?_src_=prefs;preference=subvirtue_two;task=input'>[(virtuetwo.choice_costs[(virtuetwo.picked_choices.len + 1)] <= 0) ? "<font color = '#a08357'>" : ""]Pick Bonus[(virtuetwo.choice_costs[(virtuetwo.picked_choices.len + 1)] <= 0) ? "</font>" : ""] [(virtuetwo.choice_costs[(virtuetwo.picked_choices.len + 1)] > 0) ? "([virtuetwo.choice_costs[(virtuetwo.picked_choices.len + 1)]] TRI)" : ""] </a><br>"
 			else
 				virtuetwo = GLOB.virtues[/datum/virtue/none]
+			var/virtue_fieldset
+			if(statpack.virtuous)
+				virtue_fieldset += "<fieldset style='border: 1px solid ["#a08357"]; display: inline'>"
+				virtue_fieldset += "<legend align='center' style='font-weight: bold; color: ["#a08357"]'>Virtues</legend>"
+			dat += virtue_fieldset ? virtue_fieldset : ""
+			dat += virtue_html
+			dat += virtue_fieldset ? "</fieldset>" : ""
+			dat += "<br>"
 			dat += "<b>Vices:</b>"
 			if(charflaws.len)
 				for(var/i = 1 to charflaws.len)
@@ -618,6 +671,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 //			-----------START OF BODY TABLE-----------
 			dat += "<table width='100%'><tr><td width='1%' valign='top'>"
+			var/datum/job/highest_pref
+			for(var/job in job_preferences)
+				if(job_preferences[job] > highest_pref)
+					highest_pref = SSjob.GetJob(job)
 			dat += "<b>Update feature colors with change:</b> <a href='?_src_=prefs;preference=update_mutant_colors;task=input'>[update_mutant_colors ? "Yes" : "No"]</a><BR>"
 			var/use_skintones = pref_species.use_skintones
 			if(use_skintones)
@@ -643,10 +700,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><b>Headshot:</b> <a href='?_src_=prefs;preference=headshot;task=input'>Change</a>"
 			if(headshot_link != null)
 				dat += "<br><img src='[headshot_link]' width='100px' height='100px'>"
-			
-			dat += "<br><b>NSFW Headshot:</b> <a href='?_src_=prefs;preference=nsfw_headshot;task=input'>Change</a>" //TA edit
-			if(nsfw_headshot_link != null) //TA edit
-				dat += "<br><img src='[nsfw_headshot_link]' width='125px' height='175px'>" //TA edit
+
+			var/examine_theme_name = "None (Use Viewer's)"
+			if(examine_theme)
+				var/list/all_themes = get_tgui_themes()
+				examine_theme_name = all_themes[examine_theme] || examine_theme
+			dat += "<br><b>Examine Theme:</b> <a href='?_src_=prefs;preference=examine_theme;task=input'>[examine_theme_name]</a>"
 
 			dat += "<br><b>[(length(flavortext) < MINIMUM_FLAVOR_TEXT) ? "<font color = '#802929'>" : ""]Flavortext:[(length(flavortext) < MINIMUM_FLAVOR_TEXT) ? "</font>" : ""]</b><a href='?_src_=prefs;preference=formathelp;task=input'>(?)</a><a href='?_src_=prefs;preference=flavortext;task=input'>Change</a>"
 			dat += "<br><b>NSFW Flavortext:</b><a href='?_src_=prefs;preference=formathelp;task=input'>(?)</a><a href='?_src_=prefs;preference=nsfwflavortext;task=input'>Change</a>"
@@ -659,11 +718,19 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><b>Song:</b> <a href='?_src_=prefs;preference=ooc_extra;task=input'>Change URL</a>"
 			dat += "<a href='?_src_=prefs;preference=change_title;task=input'>Change Title</a>"
 			dat += "<a href='?_src_=prefs;preference=change_artist;task=input'>Change Artist</a>"
+			dat += "<br><b>OOC Extra Image/Video/Gif (Flavor Text):</b> <a href='?_src_=prefs;preference=ooc_extra_img;task=input'>Change</a>"
+			if(ooc_extra_img_link != null)
+				dat += "<br><img src='[ooc_extra_img_link]' width='100px' height='100px'>"
+			dat += "<br><b>NSFW OOC Extra Image/Video/Gif (Flavor Text):</b> <a href='?_src_=prefs;preference=nsfw_ooc_extra_img;task=input'>Change</a>"
+			if(nsfw_ooc_extra_img_link != null)
+				dat += "<br><img src='[nsfw_ooc_extra_img_link]' width='100px' height='100px'>"
 			dat += "<br><B>Image Gallery:</b> <a href='?_src_=prefs;preference=img_gallery;task=input'>Add</a>"
 			dat+= "<a href='?_src_=prefs;preference=clear_gallery;task=input'>Clear Gallery</a>"
+			dat += "<br><B>NSFW Image Gallery:</b> <a href='?_src_=prefs;preference=nsfw_img_gallery;task=input'>Add</a>"
+			dat+= "<a href='?_src_=prefs;preference=clear_nsfw_gallery;task=input'>Clear NSFW Gallery</a>"
 			dat += "<br><a href='?_src_=prefs;preference=ooc_preview;task=input'><b>Preview Examine</b></a>"
 
-			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;task=input'>Change</a>"
+			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;tdask=input'>Change</a>"
 
 			dat += "</td>"
 
@@ -925,7 +992,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		dat = list("<center>REGISTER!</center>")
 
 	winshow(user, "preferencess_window", TRUE)
-	winset(user, "preferencess_window", "size=820x850")
+	winset(user, "preferencess_window", "size=820x900")
 	winset(user, "preferencess_window", "pos=280,80")
 	var/datum/browser/popup = new(user, "preferences_browser", "<div align='center'>Character Sheet</div>", 700, 600)
 	popup.set_window_options("can_close=1")
@@ -1358,6 +1425,11 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 		dat += "<a href='?_src_=prefs;preference=vampire_hair;task=input'> <span style='border: 1px solid #161616; background-color: [vampire_hair ? vampire_hair : "#FFFFFF"];'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=vampire_hair_clear;task=input'>clear</a></a>"
 	else
 		dat += "<a href='?_src_=prefs;preference=vampire_hair;task=input'>(C)</a>"
+	dat += "<br><b>Vampire Ear Color:</b> "
+	if (!isnull(vampire_ears))
+		dat += "<a href='?_src_=prefs;preference=vampire_ears;task=input'> <span style='border: 1px solid #161616; background-color: [vampire_ears ? vampire_ears : "#FFFFFF"];'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=vampire_ears_clear;task=input'>clear</a></a>"
+	else
+		dat += "<a href='?_src_=prefs;preference=vampire_ears;task=input'>(C)</a>"
 	dat += "<BR><b>Quicksilver Resistant:</b> <a href='?_src_=prefs;preference=qsr;task=input'>[qsr_pref ? "Yes" : "No"]</a>"
 	dat += "</body>"
 
@@ -1491,6 +1563,46 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 				SetAntag(user)
 	else if(href_list["preference"] == "tgui_ui_prefs")
 		tgui_pref = !tgui_pref
+
+	else if(href_list["preference"] == "subvirtue")
+		var/task = href_list["task"]
+		if(task == "input")
+			if(length(virtue.picked_choices) < virtue.max_choices)
+				var/list/subchoices = virtue.extra_choices.Copy()
+				for(var/choice in subchoices)
+					if(choice in virtue.picked_choices)
+						subchoices.Remove(choice)
+				var/result = tgui_input_list(user, "What strength shall you wield?", "VIRTUES", subchoices)
+				if(result)
+					virtue.picked_choices.Add(result)
+		else if(task == "remove")
+			var/index = text2num(href_list["index"])
+			if(index && (index >= 1) && (index <= virtue.picked_choices.len))
+				var/v_to_remove = virtue.picked_choices[index]
+				virtue.picked_choices.Remove(v_to_remove)
+		else if(task == "tooltip")
+			var/tooltip = href_list["tooltip"]
+			to_chat(user, span_notice(virtue.choice_tooltips[tooltip]))
+
+	else if(href_list["preference"] == "subvirtue_two")
+		var/task = href_list["task"]
+		if(task == "input")
+			if(length(virtuetwo.picked_choices) < virtuetwo.max_choices)
+				var/list/subchoices = virtuetwo.extra_choices.Copy()
+				for(var/choice in subchoices)
+					if(choice in virtuetwo.picked_choices)
+						subchoices.Remove(choice)
+				var/result = tgui_input_list(user, "What strength shall you wield?", "VIRTUES", subchoices)
+				if(result)
+					virtuetwo.picked_choices.Add(result)
+		else if(task == "remove")
+			var/index = text2num(href_list["index"])
+			if(index && (index >= 1) && (index <= virtuetwo.picked_choices.len))
+				var/v_to_remove = virtuetwo.picked_choices[index]
+				virtuetwo.picked_choices.Remove(v_to_remove)
+		else if(task == "tooltip")
+			var/tooltip = href_list["tooltip"]
+			to_chat(user, span_notice(virtuetwo.choice_tooltips[tooltip]))
 
 	else if(href_list["preference"] == "charflaw")
 		var/task = href_list["task"]
@@ -1731,6 +1843,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						else
 							to_chat(user, "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,.</font>")
 
+	
 				if("nickname")
 					var/new_name = tgui_input_text(user, "Choose your character's nickname (For Highlighting):", "NICKNAME",  encode = FALSE)
 					if(new_name)
@@ -2130,22 +2243,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					nsfwflavortext_cached = parsemarkdown_basic(html_encode(nsfwflavortext), hyperlink = TRUE)
 					to_chat(user, "<span class='notice'>Successfully updated NSFW flavortext</span>")
 					log_game("[user] has set their NSFW flavortext'.")
-				if("nsfw_headshot")//TA edit
-					to_chat(user, "<span class='notice'>Finally a place to show it all.</span>")
-					var/new_nsfw_headshot_link = input(user, "Input the nsfw headshot link (https, hosts: gyazo, lensdump, imgbox, catbox):", "NSFW Headshot", nsfw_headshot_link) as text|null
-					if(new_nsfw_headshot_link == null)
-						return
-					if(new_nsfw_headshot_link == "")
-						nsfw_headshot_link = null
-						ShowChoices(user)
-						return
-					if(!valid_nsfw_headshot_link(user, new_nsfw_headshot_link))
-						nsfw_headshot_link = null
-						ShowChoices(user)
-						return
-					nsfw_headshot_link = new_nsfw_headshot_link
-					to_chat(user, "<span class='notice'>Successfully updated NSFW Headshot picture</span>")
-					log_game("[user] has set their NSFW Headshot image to '[nsfw_headshot_link]'.") //TA edit end
 				if("erpprefs")
 					to_chat(user, "<span class='notice'>["<span class='bold'>Erotic Roleplay preferences. If you put 'anything goes' or 'no limits' here, do not be surprised if people take you up on it.</span>"]</span>")
 					to_chat(user, "<font color = '#d6d6d6'>Leave blank to clear.</font>")
@@ -2191,6 +2288,34 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					to_chat(user, "<span class='notice'>Successfully added image to gallery.</span>")
 					log_game("[user] has added an image to their gallery: '[new_galleryimg]'.")
 
+				if("nsfw_img_gallery")
+
+					if(nsfw_img_gallery.len >= 3)
+						to_chat(user, "You already have three images in your gallery!")
+						return
+
+					to_chat(user, "<span class='notice'>Please use an image ["<span class='bold'>of your character</span>"] to maintain immersion level. Lastly, ["<span class='bold'>do not use a real life photo or use any image that is less than serious.</span>"]</span>")
+					to_chat(user, "<span class='notice'>If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser.</span>")
+					to_chat(user, "<span class='notice'>Keep in mind that all three images are displayed next to eachother and justified to fill a horizontal rectangle. As such, vertical images work best.</span>")
+					to_chat(user, "<span class='notice'>You can only have a maximum of ["<span class='bold'>THREE IMAGES</span>"] in your gallery at a time.</span>")
+
+					var/new_galleryimg = tgui_input_text(user, "Input the image link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Gallery Image",  encode = FALSE)
+
+					if(new_galleryimg == null)
+						return
+					if(new_galleryimg == "")
+						new_galleryimg = null
+						ShowChoices(user)
+						return
+					if(!valid_headshot_link(user, new_galleryimg))
+						to_chat(user, "<span class='notice'>Invalid image link. Make sure it's a direct link from a valid host (gyazo, discord, lensdump, imgbox, catbox).</span>")
+						new_galleryimg = null
+						ShowChoices(user)
+						return
+					nsfw_img_gallery += new_galleryimg
+					to_chat(user, "<span class='notice'>Successfully added image to nsfw gallery.</span>")
+					log_game("[user] has added an image to their nsfw gallery: '[new_galleryimg]'.")
+
 				if("clear_gallery")
 					if(!img_gallery.len)
 						to_chat(user, "You don't have any images in your gallery to clear!")
@@ -2202,6 +2327,40 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					img_gallery = list()
 					to_chat(user, "<span class='notice'>Successfully cleared image gallery.</span>")
 					log_game("[user] has cleared their image gallery.")
+
+				if("examine_theme")
+					var/list/all_themes = get_tgui_themes()
+					var/list/choices = list("None (Use Viewer's)")
+					for(var/theme_key in all_themes)
+						if(theme_key == "trey_liam")
+							continue
+						choices += all_themes[theme_key]
+					var/current_display = "None (Use Viewer's)"
+					if(examine_theme)
+						current_display = all_themes[examine_theme] || examine_theme
+					var/picked = tgui_input_list(user, "Choose the theme others see on your examine panel:", "Examine Theme", choices, current_display)
+					if(!picked)
+						return
+					if(picked == "None (Use Viewer's)")
+						examine_theme = null
+					else
+						for(var/theme_key in all_themes)
+							if(all_themes[theme_key] == picked)
+								examine_theme = theme_key
+								break
+
+				if("clear_nsfw_gallery")
+					if(!nsfw_img_gallery.len)
+						to_chat(user, "You don't have any images in your nsfw gallery to clear!")
+						return
+					var/dachoice = tgui_alert(user, "Do you really want to clear your nsfw image gallery?", "Clear nsfw Gallery", list("Yae", "Nae"))
+					if(dachoice == "Nae")
+						ShowChoices(user)
+						return
+					nsfw_img_gallery = list()
+					to_chat(user, "<span class='notice'>Successfully cleared their nsfw image gallery.</span>")
+					log_game("[user] has cleared their nsfw image gallery.")
+
 
 				if("ooc_preview")
 					var/datum/examine_panel/preview_examine_panel = new(user)
@@ -2278,6 +2437,70 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					to_chat(user, "<span class='notice'>Successfully updated song title.</span>")
 					log_game("[user] has set their song title.")
 
+				if("ooc_extra_img")
+					to_chat(user, "<span class='notice'>Add a link to images/videos (jpg, png, gif, mp4) that will be displayed in your Flavor Text.</span>")
+					to_chat(user, "<span class='notice'>Images/videos will be constrained by width but have limitless height. Suitable hosts: catbox, discord, gyazo, lensdump, imgbox.</span>")
+					to_chat(user, "<font color='#d6d6d6'>Leave a single space to delete it.</font>")
+					to_chat(user, "<font color='red'>Abuse of this will get you banned.</font>")
+					var/link = tgui_input_text(user, "Input the image/video link (https):", "OOC Extra Image", ooc_extra_img_link, encode = FALSE)
+					if(link == null)
+						return
+					if(!link || !length(trim(link)))
+						ooc_extra_img = null
+						ooc_extra_img_link = null
+						to_chat(user, "<span class='notice'>Successfully deleted OOC Extra Image.</span>")
+						ShowChoices(user)
+						return
+					var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif", "mp4")
+					if(!valid_headshot_link(user, link, FALSE, valid_ext))
+						link = null
+						ShowChoices(user)
+						return
+					ooc_extra_img_link = link
+					var/ext = lowertext(splittext(link, ".")[length(splittext(link, "."))])
+					var/info
+					switch(ext)
+						if("jpg", "jpeg", "png", "gif")
+							ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
+							info = "an image."
+						if("mp4")
+							ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
+							info = "a video."
+					to_chat(user, "<span class='notice'>Successfully updated OOC Extra Image with [info]</span>")
+					log_game("[user] has set their OOC Extra Image to '[link]'.")
+
+				if("nsfw_ooc_extra_img")
+					to_chat(user, "<span class='notice'>Add a link to NSFW images/videos (jpg, png, gif, mp4) that will be displayed in your NSFW Flavor Text.</span>")
+					to_chat(user, "<span class='notice'>Images/videos will be constrained by width but have limitless height. Suitable hosts: catbox, discord, gyazo, lensdump, imgbox.</span>")
+					to_chat(user, "<font color='#d6d6d6'>Leave a single space to delete it.</font>")
+					to_chat(user, "<font color='red'>Abuse of this will get you banned.</font>")
+					var/link = tgui_input_text(user, "Input the image/video link (https):", "NSFW OOC Extra Image", nsfw_ooc_extra_img_link, encode = FALSE)
+					if(link == null)
+						return
+					if(!link || !length(trim(link)))
+						nsfw_ooc_extra_img = null
+						nsfw_ooc_extra_img_link = null
+						to_chat(user, "<span class='notice'>Successfully deleted NSFW OOC Extra Image.</span>")
+						ShowChoices(user)
+						return
+					var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif", "mp4")
+					if(!valid_headshot_link(user, link, FALSE, valid_ext))
+						link = null
+						ShowChoices(user)
+						return
+					nsfw_ooc_extra_img_link = link
+					var/ext = lowertext(splittext(link, ".")[length(splittext(link, "."))])
+					var/info
+					switch(ext)
+						if("jpg", "jpeg", "png", "gif")
+							nsfw_ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
+							info = "an image."
+						if("mp4")
+							nsfw_ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
+							info = "a video."
+					to_chat(user, "<span class='notice'>Successfully updated NSFW OOC Extra Image with [info]</span>")
+					log_game("[user] has set their NSFW OOC Extra Image to '[link]'.")
+
 				if("familiar_prefs")
 					familiar_prefs.fam_show_ui()
 
@@ -2299,12 +2522,18 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					var/new_vampireskin = input(user, "Choose your character's vampire skin color:", "Character Preference","#"+vampire_skin) as color|null
 					if(new_vampireskin)
 						vampire_skin = new_vampireskin
+				if("vampire_ears")
+					var/new_vampireears = input(user, "Choose your character's vampire ear color:", "Character Preference","#"+vampire_ears) as color|null
+					if(new_vampireears)
+						vampire_ears = new_vampireears
 				if("vampire_hair_clear")
 					vampire_hair = null
 				if("vampire_eyes_clear")
 					vampire_eyes = null
 				if("vampire_skin_clear")
 					vampire_skin = null
+				if("vampire_ears_clear")
+					vampire_ears = null
 
 				if("species")
 					var/list/species = list()
@@ -2397,7 +2626,8 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						if (!V.name)
 							continue
 						if ((V.name == virtue.name || V.name == virtuetwo.name) && !istype(V, /datum/virtue/none))
-							continue
+							if(!V.stackable)
+								continue
 						if (istype(V, /datum/virtue/origin))
 							continue
 						if(V.unlisted)
@@ -2415,9 +2645,8 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 					if (result)
 						var/datum/virtue/virtue_chosen = virtue_choices[result]
-						virtue = virtue_chosen
+						virtue = new virtue_chosen.type
 						to_chat(user, process_virtue_text(virtue_chosen))
-
 				if("virtuetwo")
 					var/list/virtue_choices = list()
 					for (var/path as anything in GLOB.virtues)
@@ -2425,7 +2654,8 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						if (!V.name)
 							continue
 						if ((V.name == virtue.name || V.name == virtuetwo.name) && !istype(V, /datum/virtue/none))
-							continue
+							if(!V.stackable)
+								continue
 						if (istype(V, /datum/virtue/origin))
 							continue
 						if(V.unlisted)
@@ -2441,7 +2671,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 					if (result)
 						var/datum/virtue/virtue_chosen = virtue_choices[result]
-						virtuetwo = virtue_chosen
+						virtuetwo = new virtue_chosen.type
 						to_chat(user, process_virtue_text(virtue_chosen))
 					/*	if (statpack.type != /datum/statpack/wildcard/virtuous)
 							statpack = new /datum/statpack/wildcard/virtuous
@@ -2725,7 +2955,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 				if("tgui_lock")
 					tgui_lock = !tgui_lock
 				if("tgui_theme")
-					setTguiStyle()
+					setTguiStyle(user)
 				if("winflash")
 					windowflashing = !windowflashing
 
@@ -2986,6 +3216,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	character.vampire_skin = vampire_skin
 	character.vampire_eyes = vampire_eyes
 	character.vampire_hair = vampire_hair
+	character.vampire_ears = vampire_ears
 	character.hairstyle = hairstyle
 	character.facial_hairstyle = facial_hairstyle
 	character.detail = detail
@@ -3013,8 +3244,10 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	character.flavortext = flavortext
 	character.ooc_notes = ooc_notes
 	character.nsfwflavortext = nsfwflavortext
-	
-	character.nsfw_headshot_link = nsfw_headshot_link //TA edit
+
+	character.nsfw_ooc_extra_img = nsfw_ooc_extra_img
+
+	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link	
 
 	character.erpprefs = erpprefs
 	
@@ -3026,7 +3259,14 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 	character.img_gallery = img_gallery
 
+	character.nsfw_img_gallery = nsfw_img_gallery
+
+	character.examine_theme = examine_theme
 	character.ooc_extra = ooc_extra
+
+	character.ooc_extra_img = ooc_extra_img
+
+	character.ooc_extra_img_link = ooc_extra_img_link
 
 	character.song_title = song_title
 
@@ -3060,7 +3300,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	if(icon_updates)
 		character.update_body()
 		character.update_hair()
-		character.update_body_parts(redraw = TRUE)
+		character.update_body_parts(redraw = FALSE)
 
 	character.char_accent = char_accent
 
@@ -3158,39 +3398,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 		return FALSE
 	return TRUE
 
-/proc/valid_nsfw_headshot_link(mob/user, value, silent = FALSE) //TA edit
-	var/static/link_regex = regex("i.gyazo.com|a.l3n.co|b.l3n.co|c.l3n.co|images2.imgbox.com|thumbs2.imgbox.com|files.catbox.moe") //gyazo, discord, lensdump, imgbox, catbox
-	var/static/list/valid_extensions = list("jpg", "png", "jpeg") // Regex works fine, if you know how it works
-
-	if(!length(value))
-		return FALSE
-
-	var/find_index = findtext(value, "https://")
-	if(find_index != 1)
-		if(!silent)
-			to_chat(user, "<span class='warning'>Your link must be https!</span>")
-		return FALSE
-
-	if(!findtext(value, "."))
-		if(!silent)
-			to_chat(user, "<span class='warning'>Invalid link!</span>")
-		return FALSE
-	var/list/value_split = splittext(value, ".")
-
-	// extension will always be the last entry
-	var/extension = value_split[length(value_split)]
-	if(!(extension in valid_extensions))
-		if(!silent)
-			to_chat(usr, "<span class='warning'>The image must be one of the following extensions: '[english_list(valid_extensions)]'</span>")
-		return FALSE
-
-	find_index = findtext(value, link_regex)
-	if(find_index != 9)
-		if(!silent)
-			to_chat(usr, "<span class='warning'>The image must be hosted on one of the following sites: 'Gyazo, Lensdump, Imgbox, Catbox'</span>")
-		return FALSE
-	return TRUE //TA edit end
-
 /datum/preferences/proc/is_active_migrant()
 	if(!migrant)
 		return FALSE
@@ -3245,6 +3452,8 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 			dat += "<font color = '#ffffff'><font size = 3>This Virtue has this special behaviour: <br>"
 		dat += "[V.custom_text]"
 		dat += "</font>"
+	if(V.stackable)
+		dat += "<font color = '#ffeea3'>This virtue can be picked twice using Virtuous.</font><br>"
 	return dat
 
 /datum/preferences/proc/LorePopup(mob/user)

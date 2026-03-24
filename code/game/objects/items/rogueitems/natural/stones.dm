@@ -144,6 +144,15 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	sharpening_factor = 12
 	spark_chance = 35
 
+/obj/item/natural/stone/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Left-click a bladed weapon to begin sharpening it. Sharpening automatically stops once you move, or once the bladed weapon has been completely resharpened.")
+	. += span_info("Left-clicking a bladed weapon, another stone, or a rock has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other igniteable structures.")
+	. += span_info("Sharpening a bladed weapon will permenantly remove a very small amount of its maximum sharpness, with each pass. This can be avoided by sharpening it at a blacksmith's grindstone.")
+	. += span_info("Left-clicking a stone with a chisel will turn it into a stone block, which can be used for masonry and construction.")
+	. += span_info("Stones can be 'slapcrafted' into new items by left-clicking them with certain tools and materials. 'Slapcrafted' items don't require a Crafting skill to make.")
+	. += span_info("'Slapcrafts' for stones include tools and pots.")
+
 /obj/item/natural/stone/Initialize()
 	. = ..()
 	stone_lore()
@@ -182,6 +191,14 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	sharpening_factor = 21
 	spark_chance = 80
 
+/obj/item/natural/whetstone/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Left-click a bladed weapon to begin sharpening it. Sharpening automatically stops once you move, or once the bladed weapon has been completely resharpened.")
+	. += span_info("Left-clicking a bladed weapon, another stone, or a rock has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other igniteable structures.")
+	. += span_info("Sharpening a bladed weapon will permenantly remove a very small amount of its maximum sharpness, with each pass. This can be avoided by sharpening it at a blacksmith's grindstone.")
+	. += span_info("Whetstones can be 'slapcrafted' into new items by left-clicking them with certain tools and materials. 'Slapcrafted' items don't require a Crafting skill to make.")
+	. += span_info("'Slapcrafts' for whestones include tools, and - if used with hunting knives and farming tools - unique weapons.")
+
 /obj/item/natural/whetstone/Initialize()
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
@@ -217,7 +234,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	var/list/given_intent_list = list(/datum/intent/hit) // By default you get this at least
 	var/list/extra_intent_list = list() // List of intents that we can possibly give it by the end of this
 	var/list/blunt_intents = list(/datum/intent/mace/strike/wood, /datum/intent/mace/smash/wood)
-	var/list/sharp_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/thrust, /datum/intent/dagger/chop)
+	var/list/sharp_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/chop) // TA edit
 
 	var/bluntness_rating = rand(0,10)
 	var/sharpness_rating = rand(0,10)
@@ -279,7 +296,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 		magic_power += personality_modifier
 
 	var/max_force_range = sharpness_rating + bluntness_rating // Add them together
-	//max_force_range = round(max_force_range/2) // Divide by 2 and round jus incase
+	max_force_range = round(max_force_range/2) // Divide by 2 and round jus incase // TA EDIT, prev. commented out
 
 	bonus_force = rand(0, max_force_range) // Your total bonus force is now between 1 and your sharpness/bluntness totals
 
@@ -305,6 +322,8 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	desc = stone_desc
 	force += bonus_force // This will result in a stone that has only 40 max at a extremely low chance damage at this time of this PR.
 	throwforce += bonus_force // It gets added to throw damage too
+	force = min(force, 20) // TA EDIT
+	throwforce = min(throwforce, 20) // TA EDIT
 	possible_item_intents = given_intent_list // And heres ur new extra intents too
 
 /obj/item/natural/stone/attackby(obj/item/W, mob/living/user, params)
@@ -354,7 +373,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 
 /obj/item/natural/rock
 	name = "boulder"
-	desc = "A rock protudes from the ground."
+	desc = "They're not 'rocks', they're minerals!"
 	icon_state = "stonebig1"
 	dropshrink = 0
 	throwforce = 25
@@ -377,16 +396,22 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	attacked_sound = 'sound/foley/hit_rock.ogg'
 
 
+/obj/item/natural/rock/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Rocks can be destroyed by left-clicking them with an item that has the 'PICK' intent selected. Hidden inside can be anything from stones and salt to ores and gems.")
+	. += span_info("Left-clicking a rock with a stone has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other igniteable structures.")
+	. += span_info("Left-clicking a rock with a chisel will turn it into a stone block, which can be used for masonry and construction.")
+
 /obj/item/natural/rock/Initialize()
 	icon_state = "stonebig[rand(1,2)]"
 	..()
-
 
 /obj/item/natural/rock/Crossed(mob/living/L)
 	if(istype(L) && !L.throwing)
 		if(L.m_intent == MOVE_INTENT_RUN)
 			L.visible_message(span_warning("[L] trips over the boulder!"),span_warning("I trip over the boulder!"))
 			L.Knockdown(10)
+			L.drop_all_held_items()
 			L.consider_ambush(always = TRUE)
 	..()
 
@@ -441,6 +466,22 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 			var/turf/front = get_turf(src)
 			S.set_up(1, 1, front)
 			S.start()
+		return
+	if(istype(W, /obj/item/contraption/pick/drill) && user.used_intent.type == /datum/intent/drill)
+		var/obj/item/contraption/pick/drill/drillitem = W
+		if(drillitem.current_charge < 10)
+			to_chat(user, span_warning("Not enough fuel."))
+			return
+		playsound(src.loc, 'sound/items/stonestone.ogg', 100)
+		if(prob(35))
+			var/datum/effect_system/spark_spread/S = new()
+			var/turf/front = get_turf(src)
+			S.set_up(1, 1, front)
+			S.start()
+		src.take_damage(500) //smashs through boulders with ease
+		drillitem.current_charge -= 10
+		if (drillitem.current_charge < 1)
+			ungrip(user, "it runs out of fuel")
 		return
 	if( user.used_intent.type == /datum/intent/chisel )
 		playsound(src.loc, pick('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg'), 100)

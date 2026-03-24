@@ -5,7 +5,7 @@
 	cost = 2
 	xp_gain = TRUE
 	school = "transmutation"
-	releasedrain = 50
+	releasedrain = SPELLCOST_STAT_BUFF
 	chargedrain = 0
 	chargetime = 1 SECONDS
 	recharge_time = 1.5 MINUTES
@@ -19,13 +19,14 @@
 	charging_slowdown = 1
 	chargedloop = /datum/looping_sound/invokegen
 	associated_skill = /datum/skill/magic/arcane
-	range = 7
+	range = 1
+	ignore_los = 1 // this should be a /self
 
 /obj/effect/proc_holder/spell/invoked/longstrider/cast(list/targets, mob/user = usr)
 
 	user.visible_message("[user] mutters an incantation and a dim pulse of light radiates out from them.")
 
-	for(var/mob/living/L in range(1, usr))
+	for(var/mob/living/L in range(range, usr))
 		L.apply_status_effect(/datum/status_effect/buff/longstrider)
 
 	return TRUE

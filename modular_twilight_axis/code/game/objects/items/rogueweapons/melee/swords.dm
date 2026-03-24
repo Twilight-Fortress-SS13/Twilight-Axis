@@ -59,3 +59,18 @@
 			I.afterchange()
 	user.update_a_intents()
 	update_icon()
+
+/datum/intent/sword/thrust/blunt
+	penfactor = PEN_NONE
+
+/datum/intent/sword/strike
+	penfactor = PEN_NONE
+
+/datum/intent/sword/peel
+	penfactor = PEN_NONE
+
+/datum/intent/sword/thrust/exe
+	penfactor = PEN_NONE
+
+/datum/intent/sword/disarm
+	penfactor = PEN_NONE

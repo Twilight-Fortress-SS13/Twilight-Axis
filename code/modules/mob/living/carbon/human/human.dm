@@ -73,12 +73,10 @@
 
 /mob/living/carbon/human/Initialize()
 	verbs += /mob/living/proc/lay_down
-
-	icon_state = ""		//Remove the inherent human icon that is visible on the map editor. We're rendering ourselves limb by limb, having it still be there results in a bug where the basic human icon appears below as south in all directions and generally looks nasty.
+	icon_state = "" //Remove the inherent human icon that is visible on the map editor. We're rendering ourselves limb by limb, having it still be there results in a bug where the basic human icon appears below as south in all directions and generally looks nasty.
 
 	//initialize limbs first
 	create_bodyparts()
-
 	setup_human_dna()
 
 	if(dna.species)
@@ -90,10 +88,21 @@
 
 	. = ..()
 
+	AddComponent(/datum/component/arousal)
+	
+
 	RegisterSignal(src, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(clean_blood))
 	AddComponent(/datum/component/personal_crafting)
 	AddComponent(/datum/component/footstep, footstep_type, 1, 2)
 	GLOB.human_list += src
+	unarmed_special = new /datum/special_intent/upper_cut()
+
+	max_breath = 10
+	breath_remaining = 10
+	addtimer(CALLBACK(src, PROC_REF(update_breath_hud)), 1)
+
+	our_cells = new(interesting_dist, interesting_dist, 1)
+	set_new_cells()
 
 /mob/living/carbon/human/ZImpactDamage(turf/T, levels)
 	var/obj/item/bodypart/affecting
@@ -718,7 +727,15 @@
 						if("Flavor")
 							flavortext = null
 							nsfwflavortext = null
+							ooc_extra_img = null
+							ooc_extra_img_link = null
+							nsfw_ooc_extra_img = null
+							nsfw_ooc_extra_img_link = null
 							client.prefs?.flavortext = null
+							client.prefs?.ooc_extra_img = null
+							client.prefs?.ooc_extra_img_link = null
+							client.prefs?.nsfw_ooc_extra_img = null
+							client.prefs?.nsfw_ooc_extra_img_link = null
 						if("Notes")
 							ooc_notes = null
 							erpprefs = null
@@ -731,7 +748,9 @@
 							client.prefs?.song_title = null
 							client.prefs?.ooc_extra = null
 							img_gallery = list()
+							nsfw_img_gallery = list()
 							client.prefs?.img_gallery = list()
+							client.prefs?.nsfw_img_gallery = list()
 						else
 							return
 					client.prefs?.save_preferences()
@@ -746,21 +765,31 @@
 			if(alert(usr,"This cannot be undone. Are you sure?","DON'T FATFINGER THIS","Yes","No") == "Yes")
 				flavortext = null
 				nsfwflavortext = null
+				ooc_extra_img = null
+				ooc_extra_img_link = null
+				nsfw_ooc_extra_img = null
+				nsfw_ooc_extra_img_link = null
 				erpprefs = null
 				ooc_notes = null
 				ooc_extra = null
 				song_artist = null
 				song_title = null
 				img_gallery = list()
+				nsfw_img_gallery = list()
 				if(client)
 					client.prefs?.flavortext = null
 					client.prefs?.nsfwflavortext = null
+					client.prefs?.ooc_extra_img = null
+					client.prefs?.ooc_extra_img_link = null
+					client.prefs?.nsfw_ooc_extra_img = null
+					client.prefs?.nsfw_ooc_extra_img_link = null
 					client.prefs?.erpprefs = null
 					client.prefs?.ooc_notes = null
 					client.prefs?.ooc_extra = null
 					client.prefs?.song_artist = null
 					client.prefs?.song_title = null
 					client.prefs?.img_gallery = list()
+					client.prefs?.nsfw_img_gallery = list()
 					client.prefs?.save_preferences()
 					client.prefs?.save_character()
 					to_chat(usr, span_warn("Slot purged successfully."))
@@ -1076,16 +1105,6 @@
 	if(!(mobility_flags & MOBILITY_CANSTAND) && mouth?.spitoutmouth)
 		visible_message(span_warning("[src] spits out [mouth]."))
 		dropItemToGround(mouth, silent = FALSE)
-
-/*/mob/living/carbon/human/proc/update_heretic_commune()
-	if(HAS_TRAIT(src, TRAIT_FREEMAN) || HAS_TRAIT(src, TRAIT_CABAL) || HAS_TRAIT(src, TRAIT_HORDE) || HAS_TRAIT(src, TRAIT_DEPRAVED))
-		verbs |= /mob/living/carbon/human/verb/commune
-		verbs |= /mob/living/carbon/human/verb/show_heretics
-		verbs |= /mob/living/carbon/human/verb/bad_omen
-	else
-		verbs -= /mob/living/carbon/human/verb/commune
-		verbs -= /mob/living/carbon/human/verb/show_heretics
-		verbs -= /mob/living/carbon/human/verb/bad_omen*/
 
 /mob/living/carbon/human/Topic(href, href_list)
 	..()

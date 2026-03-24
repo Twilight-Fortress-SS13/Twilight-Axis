@@ -1,0 +1,5 @@
+author: "ReezeBL"
+delete-after: True
+changes:
+  - code_imp: "reorganize firearms projectiles to use min_range/max_range system from upstream."
+  - bugfix: "prevent_crits flags on some modular clothes should be fine now"

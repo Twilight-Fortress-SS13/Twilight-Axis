@@ -507,7 +507,7 @@
 	if(applies_to_admins)
 		send2irc("BAN ALERT","[kn] [msg]")
 	if(player_ckey)
-		create_message("note", player_ckey, admin_ckey, note_reason, null, null, 0, 0, null, 0, severity)
+		create_message("note", player_ckey, admin_ckey, note_reason, logged = FALSE, note_severity = severity)
 	var/client/C = GLOB.directory[player_ckey]
 	var/datum/admin_help/AH = admin_ticket_log(player_ckey, "[kna] [msg]")
 	var/appeal_url = "No ban appeal url set!"
@@ -700,7 +700,8 @@
 	qdel(query_unban)
 	log_admin_private("[kn] has unbanned [target] from [role].")
 	message_admins("[kna] has unbanned [target] from [role].")
-	world.TgsAnnounceUnban(target, admin_key, role)
+	var/current_admin = usr.ckey
+	world.TgsAnnounceUnban(target, current_admin, role)
 	var/client/C = GLOB.directory[player_key]
 	if(C)
 		build_ban_cache(C)

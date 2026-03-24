@@ -5,6 +5,7 @@
 	icon_state = "bplatehelm"
 	item_state = "bplatehelm"
 	adjustable = CAN_CADJUST
+	flags_inv = HIDEEARS|HIDEFACE|HIDESNOUT|HIDEHAIR
 
 /obj/item/clothing/head/roguetown/helmet/blacksteel/modern/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
@@ -60,7 +61,6 @@
 	flags_inv = HIDEEARS|HIDEFACE|HIDESNOUT
 	flags_cover = HEADCOVERSEYES | HEADCOVERSMOUTH
 	armor = ARMOR_PLATE_BSTEEL
-	prevent_crits = PREVENT_CRITS_ALL
 	block2add = FOV_BEHIND
 	max_integrity = ARMOR_INT_HELMET_BLACKSTEEL
 	smeltresult = /obj/item/ingot/blacksteel
@@ -73,6 +73,24 @@
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 
+/obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader/blacksteel
+	name = "blacksteel sugarloaf helmet"
+	desc = "A greathelmet of blacksteel that offers excellent protection to the head, while also ensuring total coverage to its most vulnerable spots. It \
+	resembles a freshly baked loave when worn - ergo, 'sugarloaf helmet'. Blessed fool, your faith will be challenged at every crevice-and-turn; will you \
+	succumb to despair's allure, or will your virtue shine forth in Psydonia's darkest hour?"
+	icon_state = "crusader_helmb3"
+	icon = 'icons/roguetown/clothing/special/crusader.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/crusader.dmi'
+	smeltresult = /obj/item/ingot/blacksteel
+	armor = ARMOR_PLATE_BSTEEL
+	block2add = FOV_BEHIND
+	max_integrity = ARMOR_INT_HELMET_BLACKSTEEL
+	smelt_bar_num = 2
+
+/obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader/blacksteel/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("If handed to a Tailor, this Blacksteel Sugarloaf Helmet can be used to stitch a uniquely matching surcoat.")
+
 /obj/item/clothing/head/roguetown/helmet/blacksteel/psythorns
 	name = "crown of psydonian thorns"
 	desc = "Thorns fashioned from pliable yet durable blacksteel - woven and interlinked, fashioned to be worn upon the head."
@@ -84,6 +102,7 @@
 	alternate_worn_layer  = 8.9 //On top of helmet
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
 	armor_class = ARMOR_CLASS_NONE
+	block2add = FOV_DEFAULT
 
 /obj/item/clothing/head/roguetown/helmet/blacksteel/psythorns/attack_self(mob/living/user)
 	. = ..()

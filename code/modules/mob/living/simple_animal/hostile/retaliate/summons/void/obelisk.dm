@@ -2,7 +2,6 @@
 	. = ..()
 	ADD_TRAIT(src,TRAIT_NOFIRE, "[type]")
 	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_GENERIC)
-	ADD_TRAIT(src, TRAIT_ANTIMAGIC, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_SHOCKIMMUNE, TRAIT_GENERIC)
@@ -63,7 +62,7 @@
 	minimum_distance = 0
 	deaggroprob = 0
 	defprob = 35
-	retreat_health = 0.2
+	retreat_health = 0
 	food = 0
 	dodgetime = 17
 	aggressive = 1
@@ -89,7 +88,7 @@
 	blade_class = BCLASS_BLUNT
 	hitsound = 'sound/combat/hits/onstone/wallhit.ogg'
 	chargetime = 0
-	penfactor = 20
+	penfactor = PEN_LIGHT
 	swingdelay = 0
 	candodge = TRUE
 	canparry = TRUE

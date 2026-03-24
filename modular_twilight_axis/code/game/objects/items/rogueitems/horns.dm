@@ -654,3 +654,62 @@
 		//sound played for other players
 		player.playsound_local(get_turf(player), 'modular_twilight_axis/sound/items/horn/FullAlertVanguard.ogg', 35, FALSE, pressure_affected = FALSE)
 		to_chat(player, "<span class='warning'>Я слышу объявление полной тревоги при помощи сигнального рога авангарда где-то[disttext][dirtext]!</span>")
+
+#define WARDEN_AMBUSH_MIN 2
+#define WARDEN_AMBUSH_MAX 9
+
+/obj/item/signal_horn/vanguard_battle
+	name = "vanguard battle horn"
+	desc = "A horn used by the Vanguard bog patrols. Blowing it attracts the attention of various creechurs and rapscallions, enabling the Vanguard to clear them out."
+
+/obj/item/signal_horn/vanguard_battle/sound_horn(mob/living/user)
+	user.visible_message(span_userdanger("[user] blows the horn!"))
+	playsound(src, 'sound/items/horn/bogguardhorn.ogg', 100, TRUE)
+
+	for(var/mob/living/player in GLOB.player_list)
+		if(player.stat == DEAD)
+			continue
+		if(isbrain(player))
+			continue
+
+		var/turf/origin_turf = get_turf(src)
+
+		var/distance = get_dist(player, origin_turf)
+		if(distance <= 7 || distance > 21) // two screens away
+			continue
+		var/dirtext = " to the "
+		var/direction = get_dir(player, origin_turf)
+		switch(direction)
+			if(NORTH)
+				dirtext += "north"
+			if(SOUTH)
+				dirtext += "south"
+			if(EAST)
+				dirtext += "east"
+			if(WEST)
+				dirtext += "west"
+			if(NORTHWEST)
+				dirtext += "northwest"
+			if(NORTHEAST)
+				dirtext += "northeast"
+			if(SOUTHWEST)
+				dirtext += "southwest"
+			if(SOUTHEAST)
+				dirtext += "southeast"
+			else //Where ARE you.
+				dirtext = "although I cannot make out an exact direction"
+
+		player.playsound_local(get_turf(player), 'sound/items/horn/bogguardhorn.ogg', 35, FALSE, pressure_affected = FALSE)
+		to_chat(player, span_warning("I hear the Vanguard battle horn somewhere [dirtext]"))
+
+	var/random_ambushes = 4 + rand(0,2) // 4 - 6 ambushes
+	var/did_ambush = FALSE
+	for(var/i = 0, i < random_ambushes, i++)
+		var/silent = (i != 0)
+		var/success = user.consider_ambush(TRUE, TRUE, min_dist = WARDEN_AMBUSH_MIN, max_dist = WARDEN_AMBUSH_MAX, silent = silent)
+		if(success)
+			did_ambush = TRUE
+	return did_ambush
+
+#undef WARDEN_AMBUSH_MIN
+#undef WARDEN_AMBUSH_MAX

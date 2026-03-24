@@ -19,4 +19,11 @@
 	name = "Custom Book"
 	path = /obj/item/book/rogue/loadoutbook
 	sort_category = "Miscellaneous"
+
+/datum/loadout_item/triumph_satchel
+	name = "Satchel"
+	path = /obj/item/storage/backpack/rogue/satchel
+	sort_category = "Miscellaneous"
+	cost = 2
+
 */

@@ -161,8 +161,6 @@
 	bruteloss = CLAMP((bruteloss + (amount * CONFIG_GET(number/damage_multiplier))), 0, maxHealth * 2)
 	. -= bruteloss
 
-	if (!.)
-		return FALSE
 
 	if(updating_health)
 		updatehealth()
@@ -182,9 +180,6 @@
 	. = oxyloss
 	oxyloss = CLAMP((oxyloss + (amount * CONFIG_GET(number/damage_multiplier))), 0, maxHealth * 2)
 	. -= oxyloss
-
-	if (!.)
-		return FALSE
 
 	if(updating_health)
 		updatehealth()
@@ -208,9 +203,6 @@
 	. = toxloss
 	toxloss = CLAMP((toxloss + (amount * CONFIG_GET(number/damage_multiplier))), 0, maxHealth * 2)
 	. -= toxloss
-
-	if (!.)
-		return FALSE
 
 	if(updating_health)
 		updatehealth()
@@ -253,8 +245,6 @@
 	cloneloss = CLAMP((cloneloss + (amount * CONFIG_GET(number/damage_multiplier))), 0, maxHealth * 2)
 	. -= cloneloss
 
-	if (!.)
-		return FALSE
 
 	if(updating_health)
 		updatehealth()

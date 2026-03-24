@@ -11,15 +11,15 @@
 			STATKEY_INT = 2,
 			STATKEY_CON = 2,
 			STATKEY_WIL = 2,
-			STATKEY_PER = 2,
+			STATKEY_PER = 2 // TA EDIT
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 12
+	subclass_spellpoints = 12 // +2 spellpoints the mystic is quite iltteraly the toolbox of casters, capable of a lot while not having much for offense // TA EDIT, prev. 8
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE, // TA EDIT, prev. novice
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
@@ -34,7 +34,8 @@
 	shoes = /obj/item/clothing/shoes/roguetown/boots
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
-	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
+	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
 	backl = /obj/item/storage/backpack/rogue/satchel
@@ -44,9 +45,11 @@
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
+		/obj/item/spellbook_unfinished/pre_arcyne = 1,
+		/obj/item/roguegem/amethyst = 1,
 		)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2)
+	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
 	switch(H.patron?.type)
@@ -108,17 +111,16 @@
 			STATKEY_WIL = 2,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 9
+	subclass_spellpoints = 9 // +2 spellpoint, added flexibility, this is a healer focussed class and should be able to a bit more than just healing with the arcyne-holy training // TA EDIT, prev. 4
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/alchemy = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
-		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
 	)
 
 /datum/outfit/job/roguetown/adventurer/resilient/pre_equip(mob/living/carbon/human/H)
@@ -128,23 +130,29 @@
 	shoes = /obj/item/clothing/shoes/roguetown/boots
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
-	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
+	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
-	backl = /obj/item/storage/backpack/rogue/satchel
+	backl = /obj/item/storage/backpack/rogue/backpack
 	backr = /obj/item/rogueweapon/woodstaff
 	H.dna.species.soundpack_m = new /datum/voicepack/male/wizard()
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
+		/obj/item/folding_alchcauldron_stored = 1,
+		/obj/item/reagent_containers/glass/bottle = 3,
+		/obj/item/reagent_containers/glass/bottle/alchemical = 3,
+		/obj/item/recipe_book/alchemy = 1,
 		/obj/item/roguegem/amethyst = 1, // for their starting staff or a gem-bound spellbook if they take the time to craft one, increase how fast they cast stoneskin/fortitude
 		)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stoneskin)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/fortitude)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_2)
+	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
+		//TA EDIT
 		var/weapons = list("Goedendag", "Quarterstaff")
 		var/weapon_choice = input("Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
@@ -154,6 +162,7 @@
 			if("Quarterstaff")
 				r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/iron
 				H.adjust_skillrank_up_to(/datum/skill/combat/staves, 3, TRUE)
+		//TA EDIT
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			neck = /obj/item/clothing/neck/roguetown/psicross
@@ -215,7 +224,7 @@
 			STATKEY_WIL = 1,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 8
+	subclass_spellpoints = 8 // +3 spellpoints, despite your training to melee weapon and spell you are still not capable of good defense and offense // TA EDIT, prev. 4
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -225,8 +234,7 @@
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
-		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/shields = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/shields = SKILL_LEVEL_APPRENTICE, // TA EDIT, prev. novice
 	)
 
 /datum/outfit/job/roguetown/adventurer/holyblade/pre_equip(mob/living/carbon/human/H)
@@ -236,10 +244,13 @@
 	shoes = /obj/item/clothing/shoes/roguetown/boots
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
-	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
+	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
 	backl = /obj/item/storage/backpack/rogue/satchel
+	neck = /obj/item/clothing/neck/roguetown/coif/padded
+
 	H.dna.species.soundpack_m = new /datum/voicepack/male/wizard()
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
@@ -248,9 +259,10 @@
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/enchant_weapon)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynestrike)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
+	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
+		// TA EDIT
 		var/weapons = list("Sword & Shield", "Axe & Shield", "Warhammer & Shield", "Spear")
 		var/weapon_choice = input("Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
@@ -270,33 +282,34 @@
 			if("Spear")
 				r_hand = /obj/item/rogueweapon/spear
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 3, TRUE)
+		//TA EDIT
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
-			neck = /obj/item/clothing/neck/roguetown/psicross
+			id = /obj/item/clothing/neck/roguetown/psicross
 		if(/datum/patron/divine/undivided)
-			neck = /obj/item/clothing/neck/roguetown/psicross/undivided
+			id = /obj/item/clothing/neck/roguetown/psicross/undivided
 		if(/datum/patron/divine/astrata)
-			neck = /obj/item/clothing/neck/roguetown/psicross/astrata
+			id = /obj/item/clothing/neck/roguetown/psicross/astrata
 			H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
 		if(/datum/patron/divine/noc)
-			neck = /obj/item/clothing/neck/roguetown/psicross/noc
+			id = /obj/item/clothing/neck/roguetown/psicross/noc
 		if(/datum/patron/divine/abyssor)
-			neck = /obj/item/clothing/neck/roguetown/psicross/abyssor
+			id = /obj/item/clothing/neck/roguetown/psicross/abyssor
 			H.grant_language(/datum/language/abyssal)
 		if(/datum/patron/divine/dendor)
-			neck = /obj/item/clothing/neck/roguetown/psicross/dendor
+			id = /obj/item/clothing/neck/roguetown/psicross/dendor
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg' // see: druid.dm
 		if(/datum/patron/divine/necra)
-			neck = /obj/item/clothing/neck/roguetown/psicross/necra
+			id = /obj/item/clothing/neck/roguetown/psicross/necra
 			H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
 		if(/datum/patron/divine/pestra)
-			neck = /obj/item/clothing/neck/roguetown/psicross/pestra
+			id = /obj/item/clothing/neck/roguetown/psicross/pestra
 		if(/datum/patron/divine/ravox)
-			neck = /obj/item/clothing/neck/roguetown/psicross/ravox
+			id = /obj/item/clothing/neck/roguetown/psicross/ravox
 		if(/datum/patron/divine/malum)
-			neck = /obj/item/clothing/neck/roguetown/psicross/malum
+			id = /obj/item/clothing/neck/roguetown/psicross/malum
 		if(/datum/patron/divine/eora)
-			neck = /obj/item/clothing/neck/roguetown/psicross/eora
+			id = /obj/item/clothing/neck/roguetown/psicross/eora
 			H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = 'sound/music/combat_heretic.ogg'
@@ -311,10 +324,9 @@
 			H.cmode_music = 'sound/music/combat_baotha.ogg'
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/divine/xylix)
-			neck = /obj/item/clothing/neck/roguetown/luckcharm
+			id = /obj/item/clothing/neck/roguetown/luckcharm
 			H.cmode_music = 'sound/music/combat_jester.ogg'
-		
-/*
+
 /datum/advclass/mystic/theurgist
 	name = "Theurgist"
 	tutorial = "I have spent my youth deepening my faith among Noctite acolytes and where shown the wonders of the Arcynes, one day i decided to begins my studies of the arcyne art"
@@ -330,17 +342,17 @@
 			STATKEY_WIL = 2,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 3 // +2 spellpoints, you focused on offensive training and loose on utility
+	subclass_spellpoints = 6 // +2 spellpoints, you focused on offensive training and loose on utility // TA EDIT, prev. 3
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/alchemy = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
-		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE, // arcyne focused class, they ought to have better alchemy knowledge than their counterpart
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
-		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE, // lower weapon profficiency because of specialization/unique spell pack
+		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN, // what the bookworm gonna do? smash your head with their stick, they are better casting a spell
 	)
 
 /datum/outfit/job/roguetown/adventurer/theurgist/pre_equip(mob/living/carbon/human/H)
@@ -351,6 +363,8 @@
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
+	gloves = /obj/item/clothing/gloves/roguetown/angle
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
 	backl = /obj/item/storage/backpack/rogue/satchel
@@ -360,16 +374,17 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
 		/obj/item/roguegem/amethyst = 1,
+		/obj/item/spellbook_unfinished/pre_arcyne = 1,
 		)
 
 	var/options = list("Arcyne bolt and Repulse", "Arcyne bolt and Blink", "Frost bolt and Repulse", "Frost bolt and Blink", "Spitfire and Repulse", "Spitfire and Blink", "Lightning bolt and Repulse", "Lightning bolt and Blink")
 	var/option_choice = input("Shape your offense", "Rain Destruction!") as anything in options
 	switch(option_choice)
 		if("Arcyne bolt and Repulse")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynebolt)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcynebolt)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
 		if("Arcyne bolt and Blink")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynebolt)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcynebolt)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/blink)
 		if("Frost bolt and Repulse")
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/frostbolt)
@@ -393,7 +408,7 @@
 
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
+	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
 		H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/blood_heal)
 	switch(H.patron?.type)
@@ -439,4 +454,3 @@
 		if(/datum/patron/divine/xylix)
 			neck = /obj/item/clothing/neck/roguetown/luckcharm
 			H.cmode_music = 'sound/music/combat_jester.ogg'
-*/

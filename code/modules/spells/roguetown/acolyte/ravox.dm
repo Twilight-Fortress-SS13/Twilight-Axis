@@ -1,9 +1,10 @@
 //These are all Vanderlin ports, simply redone values and additions to fit Azure. Credit for the code and idea goes to them!
 
-//Divine Strike - Enhance your held weapon to have the next strike do extra damage and slow the target. Undead debuffed more.
+//Divine Strike - Enhance your held weapon to have the next strike ~~do extra damage~~ and slow the target. Undead debuffed more.
+//03/21/2026: Spell does not add extra damage. Leaving comment bc maybe it's supposed to, but, uhhh. IDK I'm fixing the description for now. -- MUMBLEMANCER
 /obj/effect/proc_holder/spell/self/divine_strike
 	name = "Divine Strike"
-	desc = "Bless your next strike to do extra damage and slow the target."
+	desc = "Bless your next strike to slow the target."
 	action_icon = 'icons/mob/actions/ravoxmiracles.dmi'
 	overlay_icon = 'icons/mob/actions/ravoxmiracles.dmi'
 	overlay_state = "divine_strike"
@@ -21,6 +22,7 @@
 	antimagic_allowed = TRUE
 	miracle = TRUE
 	devotion_cost = 30
+	range = 0
 
 /obj/effect/proc_holder/spell/self/divine_strike/cast(mob/living/user)
 	if(!isliving(user))
@@ -93,9 +95,10 @@
 	releasedrain = 30
 	miracle = TRUE
 	devotion_cost = 40
+	range = 3
 
 /obj/effect/proc_holder/spell/self/call_to_arms/cast(list/targets,mob/living/user = usr)
-	for(var/mob/living/carbon/target in view(3, get_turf(user)))
+	for(var/mob/living/carbon/target in view(range, get_turf(user)))
 		if(istype(target.patron, /datum/patron/inhumen))
 			target.apply_status_effect(/datum/status_effect/debuff/call_to_arms)	//Debuffs inhumen worshipers.
 			continue
@@ -182,7 +185,7 @@
 
 /atom/movable/screen/alert/status_effect/buff/divine_strike
 	name = "Divine Strike"
-	desc = "Your next attack deals additional damage and slows your target."
+	desc = "Your next attack slows your target, lowering their WIL and SPD."
 	icon_state = "stressvg"
 
 /obj/effect/proc_holder/spell/invoked/tug_of_war

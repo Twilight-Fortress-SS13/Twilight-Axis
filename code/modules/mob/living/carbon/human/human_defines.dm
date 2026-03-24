@@ -113,14 +113,20 @@
 	var/headshot_link = null
 	var/standard_headshot_link = null //used to store headshots when swapping for antag ones
 	var/flavortext = null
+	/// For setpose
+	var/pose_text = ""
 	var/ooc_notes = null
 	var/ooc_extra
+	var/ooc_extra_img
+	var/ooc_extra_img_link
 	var/rumour = null
 	var/noble_gossip = null
 	var/song_title
 	var/song_artist
 	var/received_resident_key = FALSE
 	var/nsfwflavortext = null
+	var/nsfw_ooc_extra_img
+	var/nsfw_ooc_extra_img_link
 	var/erpprefs = null
 
 	// Cached version
@@ -129,10 +135,13 @@
 	var/ooc_notes_cached = ""
 	var/erpprefs_cached = ""
 
+	/// Per-character theme override for examine panel viewers
+	var/examine_theme
 	var/list/img_gallery = list()
+
+	var/list/nsfw_img_gallery = list()
 	
 
-	var/nsfw_headshot_link = null //TA edit
 
 	var/has_confessed = FALSE // Used to track if they have confessed it was written onto a confession paper
 
@@ -153,6 +162,7 @@
 	var/vampire_skin = null
 	var/vampire_eyes = null
 	var/vampire_hair = null
+	var/vampire_ears = null
 	//An alternative headshot link that can be used when users want to use it for a special role like while a vampire, werewolf, bandit, etc.
 	var/vampire_headshot_link
 	var/lich_headshot_link

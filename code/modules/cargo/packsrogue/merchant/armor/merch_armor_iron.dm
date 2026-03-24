@@ -16,6 +16,11 @@
 	cost = 40
 	contains = list(/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron)
 
+/datum/supply_pack/rogue/armor_iron/brigandine_light//It's made with iron and melts into iron it's not steel.
+	name = "Brigandine, Light"
+	cost = 55 //1 Iron, 1 Leather
+	contains = list(/obj/item/clothing/suit/roguetown/armor/brigandine/light)
+
 /datum/supply_pack/rogue/armor_iron/chaincoif_iron
 	name = "Chain Coif"
 	cost = 25
@@ -135,6 +140,11 @@
 	name = "Helmet, Armet, Knight's"
 	cost = 40
 	contains = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/iron)
+
+/datum/supply_pack/rogue/armor_iron/knightarmetgreatplume
+	name = "Helmet, Armet, Greatplumed"
+	cost = 40
+	contains = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/iron/greatplume)
 
 /datum/supply_pack/rogue/armor_iron/knight
 	name = "Helmet, Knight"

@@ -97,7 +97,8 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 	var/list/wanderer_jobs = list(
 		"Adventurer",
 		"Wretch",
-		"Court Agent"
+		"Court Agent",
+		"Bandit"
 	)
 
 	dat += "<center><b>Classes:</b></center><hr>"

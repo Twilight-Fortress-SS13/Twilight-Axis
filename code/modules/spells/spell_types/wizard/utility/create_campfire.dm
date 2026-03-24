@@ -4,7 +4,7 @@
 	overlay_state = "create_campfire"
 	sound = list('sound/magic/whiteflame.ogg')
 
-	releasedrain = 30
+	releasedrain = SPELLCOST_CANTRIP
 	chargedrain = 1
 	chargetime = 3 SECONDS
 	no_early_release = TRUE
@@ -12,7 +12,7 @@
 
 	warnie = "spellwarning"
 	no_early_release = TRUE
-	movement_interrupt = FALSE
+	movement_interrupt = TRUE // Kills off mid combat use I think
 	antimagic_allowed = FALSE
 	charging_slowdown = 3
 	cost = 1
@@ -31,7 +31,8 @@
 /obj/effect/proc_holder/spell/invoked/create_campfire/cast(list/targets, mob/user = usr)
 	var/turf/target = get_turf(targets[1])
 
-	if(!target || target.density)
+	if(!target || !target.Enter(user) || istransparentturf(target))
+		to_chat(user, "<span class='warning'>This turf can't be on fiyaaaah! (It's blocked sire.)</span>")
 		revert_cast()
 		return
 	new /obj/machinery/light/rogue/campfire/create_campfire(target)
@@ -55,3 +56,9 @@
 	. = ..()
 	if(lifespan)
 		QDEL_IN(src, lifespan) //delete after it runs out
+
+/obj/machinery/light/rogue/campfire/create_campfire/onkick(mob/user)
+	var/mob/living/L = user
+	L.visible_message(span_info("[L] kicks \the [src], the arcyne fire dissipating."))
+	burn_out()
+	qdel(src)

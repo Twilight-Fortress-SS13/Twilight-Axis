@@ -291,6 +291,13 @@
 
 	log_admin("[H.key]/([H.real_name]) has joined as [H.mind.assigned_role].")
 
+/// Called when a player permanently leaves the round (via returntolobby). Handles slot reopening and respawn delays.
+/datum/job/proc/on_round_removal(mob/M)
+	if(job_reopens_slots_on_death)
+		current_positions = max(0, current_positions - 1)
+	if(same_job_respawn_delay && M.ckey)
+		GLOB.job_respawn_delays[M.ckey] = world.time + same_job_respawn_delay
+
 /client/verb/set_mugshot()
 	set category = "OOC"
 	set name = "Set Credits Mugshot"
@@ -487,8 +494,8 @@
 
 	if(length(statcl))
 		for(var/stat in statcl)
-			if(statcl[stat] < H.get_stat(stat))
-				H.change_stat(stat, (statcl[stat] - H.get_stat(stat)))
+			if(statcl[stat] < H.get_true_stat(stat))
+				H.change_stat(stat, (statcl[stat] - H.get_true_stat(stat)))
 				to_chat(H, "Your [stat] was reduced to \Roman[statcl[stat]] due to class limits.")
 
 // LETHALSTONE EDIT: Helper functions for pronoun-based clothing selection
@@ -540,7 +547,12 @@
 					for(var/stat in adv_ref.adv_stat_ceiling)
 						dat += "["[capitalize(stat)]: <b>\Roman[adv_ref.adv_stat_ceiling[stat]]</b>"] | "
 					dat += "<i><br>Regardless of your statpacks or race choice, you will not be able to exceed these stats on spawn.</i></font>"
-				if(adv_ref.subclass_spellpoints > 0)
+				if(LAZYLEN(adv_ref.subclass_spell_point_pools))
+					dat += "<font color = '#a3a7e0'><b>Spell Pools:</b><br>"
+					for(var/pool_name in adv_ref.subclass_spell_point_pools)
+						dat += "[capitalize(pool_name)]: <b>[adv_ref.subclass_spell_point_pools[pool_name]]</b> points<br>"
+					dat += "</font>"
+				else if(adv_ref.subclass_spellpoints > 0)
 					dat += "<font color = '#a3a7e0'>Starting Spellpoints: <b>[adv_ref.subclass_spellpoints]</b></font>"
 				if(length(adv_ref.subclass_languages))
 					dat += "<details><summary><i>Known Languages</i></summary>"

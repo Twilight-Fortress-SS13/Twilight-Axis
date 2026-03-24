@@ -8,10 +8,9 @@
 	no_early_release = TRUE
 	recharge_time = 5 MINUTES
 	miracle = TRUE
-	devotion_cost = 150
-	invocations = list("Threefather! Give me you'r protect!")
+	devotion_cost = 200
+	invocations = list("Threefather! Give me your protect!")
 	invocation_type = "shout"
-
 
 	objtoequip = /obj/item/clothing/suit/roguetown/vinearmour
 	slottoequip = SLOT_ARMOR
@@ -40,10 +39,11 @@
 	flags_inv = null
 	armor_class = ARMOR_CLASS_LIGHT
 	blade_dulling = DULLING_BASHCHOP
-	blocksound = PLATEHIT
+	blocksound = SOFTHIT
 	armor = ARMOR_VINES
 	body_parts_covered = COVERAGE_FULL | NECK | HANDS | FEET
 	unenchantable = TRUE
+	var/obj/effect/proc_holder/spell/self/conjure_armor/linked_conjure_spell
 
 /obj/item/clothing/suit/roguetown/vinearmour/equipped(mob/living/user)
 	. = ..()
@@ -52,6 +52,8 @@
 
 
 /obj/item/clothing/suit/roguetown/vinearmour/proc/dispel()
+	if(linked_conjure_spell)
+		linked_conjure_spell.start_delayed_recharge()
 	if(!QDELETED(src))
 		src.visible_message(span_warning("The [src]'s body no more covered by vines!"))
 		qdel(src)
@@ -83,10 +85,6 @@
 /atom/movable/screen/alert/status_effect/buff/vinearmour
 	name = "Vinearmour"
 	desc = "The vines hirt you, but protects!"
-
-
-
-
 
 /datum/intent/simple/beast_claws/slash
 	name = "Рассекающий удар"
@@ -163,12 +161,11 @@
 
 	user.put_in_hands(new /obj/item/rogueweapon/beast_claws(user), TRUE, FALSE, TRUE)
 
-
 // -- Debuff
 
 /atom/movable/screen/alert/status_effect/debuff/beast_rage
 	name = "Уставший зверь"
-	desc = "Мой внутренни зверь устал, как и я."
+	desc = "Мой внутренний зверь устал, как и я."
 	icon_state = "debuff"
 
 /datum/status_effect/debuff/beast_rage_weakness
@@ -185,7 +182,7 @@
 
 /atom/movable/screen/alert/status_effect/buff/beast_rage
 	name = "Буйствующий зверь"
-	desc = "Мой внутренни зверь буйствует! Силы переполняют меня, но мой разум гаснет!"
+	desc = "Мой внутренний зверь буйствует! Силы переполняют меня, но мой разум гаснет!"
 	icon_state = "buff"
 
 /datum/status_effect/buff/beast_rage
@@ -194,7 +191,6 @@
 	effectedstats = list(
 		"speed" = 2,
 		"strength" = 2,
-		"endurance" = 1,
 		"willpower" = 2,
 		"intelligence" = -5,
 	)
@@ -212,14 +208,14 @@
 	name = "Буйство зверя"
 	desc = ""
 	overlay_state = "dendor"
-	recharge_time = 2.5 MINUTES
+	recharge_time = 3 MINUTES
 	req_items = /obj/item/clothing/neck/roguetown/psicross/dendor
 	sound = 'sound/magic/churn.ogg'
 	associated_skill = /datum/skill/magic/druidic
 	invocations = list("Вот она! Ярость дикого сердца!")
 	invocation_type = "shout" //can be none, whisper, emote and shout
 	miracle = TRUE
-	devotion_cost = 100
+	devotion_cost = 125
 
 /obj/effect/proc_holder/spell/self/beast_rage/cast(mob/living/user = usr)
 	. = ..()
@@ -233,13 +229,13 @@
 	range = -1
 	overlay_state = "blesscrop"
 	releasedrain = 30
-	recharge_time = 30 SECONDS
+	recharge_time = 15 MINUTES
 	req_items = /obj/item/clothing/neck/roguetown/psicross/dendor
 	cast_without_targets = TRUE
 	sound = 'sound/magic/churn.ogg'
 	associated_skill = /datum/skill/magic/druidic
 	miracle = TRUE
-	devotion_cost = 20
+	devotion_cost = 100
 
 /obj/effect/proc_holder/spell/targeted/create_seed/proc/get_seeds_dict()
 	var/list/allowed_seeds = list()

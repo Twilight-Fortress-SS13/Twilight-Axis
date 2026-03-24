@@ -1,4 +1,4 @@
-/obj/effect/proc_holder/spell/invoked/mirror_transform  // Changed from targeted to invoked
+/obj/effect/proc_holder/spell/invoked/mirror_transform
 	name = "Mirror Transform"
 	desc = "Temporarily grants you the ability to use mirrors to change your appearance."
 	clothes_req = FALSE
@@ -6,9 +6,8 @@
 	associated_skill = /datum/skill/magic/arcane
 	cost = 1 // Trash spell
 	xp_gain = TRUE
-	// Fix invoked spell variables
-	releasedrain = 35
-	chargedrain = 1  // Fixed from chargeddrain to chargedrain
+	releasedrain = SPELLCOST_CANTRIP
+	chargedrain = 1  
 	chargetime = 10
 	recharge_time = 300 SECONDS
 	warnie = "spellwarning"
@@ -838,12 +837,15 @@
 		var/datum/erp_actor/A = C.get_actor_by_mob(M)
 		if(A)
 			A.mark_organs_dirty()
-		return
+			C.ui?.request_update()
 
 	for(var/datum/erp_controller/C2 in SSerp.controllers)
-		if(!C2 || QDELETED(C2))
+		if(!C2 || QDELETED(C2) || C2 == C)
 			continue
+
 		var/datum/erp_actor/A2 = C2.get_actor_by_mob(M)
-		if(A2)
-			A2.mark_organs_dirty()
-			return
+		if(!A2)
+			continue
+
+		A2.mark_organs_dirty()
+		C2.ui?.request_update()

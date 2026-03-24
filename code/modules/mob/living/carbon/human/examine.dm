@@ -93,10 +93,6 @@
 		else
 			. = list(span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
 
-		for(var/obj/item/bodypart/BP in bodyparts)
-			if(BP.brand_text)
-				if(observer_privilege || get_location_accessible(src, BP.body_zone))
-					. += "<span class='userdanger' style='font-size: 1.2em'>BRAND ON [uppertext(BP.name)]: \"[BP.brand_text]\"</span>"
 		//Origins
 		var/pronoun	//They / Their
 		if(!dna.species.use_skin_tone_wording_for_examine)
@@ -204,7 +200,7 @@
 					else
 						. += span_aiprivradio("[m1] сплетается с [partner_mob].")
 
-		if(!erp_hidden || can_see_hidden)
+		if(can_see_hidden)
 			var/datum/status_effect/erp_coating/groin/G = null
 			if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
 				G = has_status_effect(/datum/status_effect/erp_coating/groin)
@@ -320,7 +316,7 @@
 			
 			if(user.has_flaw(/datum/charflaw/averse))
 				var/datum/charflaw/averse/averseflaw = user.get_flaw(/datum/charflaw/averse)
-				if(averseflaw.check_aversion(user, src))
+				if(averseflaw?.check_aversion(user, src))
 					user.add_stress(/datum/stressevent/averse)
 					. += span_secradio("One of <b>them...</b>")
 
@@ -443,7 +439,7 @@
 			. += span_userdanger("<a href='?src=[REF(src)];task=bloodpoolinfo;'>Vitae: [(mind && !clan) ? (bloodpool * CLIENT_VITAE_MULTIPLIER) : bloodpool]; Blood: [blood_volume]</a>")
 
 	if(wear_shirt && !(SLOT_SHIRT in obscured))
-		var/str = "[m3] [wear_shirt.generate_tooltip(wear_shirt.get_examine_string(user), showcrits = (is_normal || is_smart))]. "
+		var/str = "[m3] [wear_shirt.generate_tooltip(wear_shirt.get_examine_string(user))]. "
 		str += "[wear_shirt.integrity_check(is_smart)]"
 		if(is_stupid)
 			str = "[m3] some kind of shirt!"
@@ -457,7 +453,7 @@
 			var/obj/item/clothing/under/U = wear_pants
 			if(U.attached_accessory)
 				accessory_msg += " with [icon2html(U.attached_accessory, user)] \a [U.attached_accessory]"
-		var/str = "[m3] [wear_pants.generate_tooltip(wear_pants.get_examine_string(user), showcrits = (is_normal || is_smart))][accessory_msg]. "
+		var/str = "[m3] [wear_pants.generate_tooltip(wear_pants.get_examine_string(user))][accessory_msg]. "
 		if(!wear_armor)
 			str += wear_pants.integrity_check(is_smart)
 		if(is_stupid)
@@ -467,7 +463,7 @@
 
 	//head
 	if(head && !(SLOT_HEAD in obscured))
-		var/str = "[m3] [head.generate_tooltip(head.get_examine_string(user), showcrits = (is_normal || is_smart))] on [m2] head. "
+		var/str = "[m3] [head.generate_tooltip(head.get_examine_string(user))] on [m2] head. "
 		str += head.integrity_check(is_smart)
 		if(is_stupid)
 			if(istype(head,/obj/item/clothing/head/roguetown/helmet))
@@ -478,7 +474,7 @@
 
 	//suit/armor
 	if(wear_armor && !(SLOT_ARMOR in obscured))
-		var/str = "[m3] [wear_armor.generate_tooltip(wear_armor.get_examine_string(user), showcrits = (is_normal || is_smart))]. "
+		var/str = "[m3] [wear_armor.generate_tooltip(wear_armor.get_examine_string(user))]. "
 		if(is_smart || is_normal)
 			str += wear_armor.integrity_check(is_smart)
 		else if (is_stupid)
@@ -507,7 +503,7 @@
 		var/str
 		if(istype(cloak, /obj/item/clothing))
 			var/obj/item/clothing/CL = cloak
-			str = "[m3] [CL.generate_tooltip(CL.get_examine_string(user), showcrits = (is_normal || is_smart))] on [m2] shoulders. "
+			str = "[m3] [CL.generate_tooltip(CL.get_examine_string(user))] on [m2] shoulders. "
 		else
 			str = "[m3] [cloak.get_examine_string(user)] on [m2] shoulders. "
 		str += cloak.integrity_check(is_smart)
@@ -538,7 +534,7 @@
 	var/datum/component/forensics/FR = GetComponent(/datum/component/forensics)
 	//gloves
 	if(gloves && !(SLOT_GLOVES in obscured))
-		var/str = "[m3] [gloves.generate_tooltip(gloves.get_examine_string(user), showcrits = (is_normal || is_smart))] on [m2] hands. "
+		var/str = "[m3] [gloves.generate_tooltip(gloves.get_examine_string(user))] on [m2] hands. "
 		str += gloves.integrity_check(is_smart)
 		if(is_stupid)
 			str = "[m3] a pair of gloves of some kind!"
@@ -571,7 +567,7 @@
 
 	//shoes
 	if(shoes && !(SLOT_SHOES in obscured))
-		var/str = "[m3] [shoes.generate_tooltip(shoes.get_examine_string(user), showcrits = (is_normal || is_smart))] on [m2] feet. "
+		var/str = "[m3] [shoes.generate_tooltip(shoes.get_examine_string(user))] on [m2] feet. "
 		str += shoes.integrity_check(is_smart)
 		if(is_stupid)
 			str = "[m3] some shoes on [m2] feet!"
@@ -579,7 +575,7 @@
 
 	//mask
 	if(wear_mask && !(SLOT_WEAR_MASK in obscured))
-		var/str = "[m3] [wear_mask.generate_tooltip(wear_mask.get_examine_string(user), showcrits = (is_normal || is_smart))] on [m2] face. "
+		var/str = "[m3] [wear_mask.generate_tooltip(wear_mask.get_examine_string(user))] on [m2] face. "
 		str += wear_mask.integrity_check(is_smart)
 		if(is_stupid)
 			str = "[m3] some kinda thing on [m2] face!"
@@ -590,7 +586,7 @@
 		var/str
 		if(istype(mouth, /obj/item/clothing))
 			var/obj/item/clothing/CM = mouth
-			str = "[m3] [CM.generate_tooltip(CM.get_examine_string(user), showcrits = (is_normal || is_smart))] in [m2] mouth. "
+			str = "[m3] [CM.generate_tooltip(CM.get_examine_string(user))] in [m2] mouth. "
 		else
 			"[m3] [mouth.get_examine_string(user)] in [m2] mouth. "
 		str += mouth.integrity_check(is_smart)
@@ -600,7 +596,7 @@
 
 	//neck
 	if(wear_neck && !(SLOT_NECK in obscured))
-		var/str = "[m3] [wear_neck.generate_tooltip(wear_neck.get_examine_string(user), showcrits = (is_normal || is_smart))] around [m2] neck. "
+		var/str = "[m3] [wear_neck.generate_tooltip(wear_neck.get_examine_string(user))] around [m2] neck. "
 		str += wear_neck.integrity_check(is_smart)
 		if (is_stupid)
 			str = "[m3] something on [m2] neck!"
@@ -619,7 +615,7 @@
 
 	//ID
 	if(wear_ring && !(SLOT_RING in obscured))
-		var/str = "[m3] [wear_ring.generate_tooltip(wear_ring.get_examine_string(user), showcrits = (is_normal || is_smart))] on [m2] hands. "
+		var/str = "[m3] [wear_ring.generate_tooltip(wear_ring.get_examine_string(user))] on [m2] hands. "
 		if(is_smart && istype(wear_ring, /obj/item/clothing/ring/active))
 			var/obj/item/clothing/ring/active/AR = wear_ring
 			if(AR.cooldowny)
@@ -633,7 +629,7 @@
 
 	//wrists
 	if(wear_wrists && !(SLOT_WRISTS in obscured))
-		var/str = "[m3] [wear_wrists.generate_tooltip(wear_wrists.get_examine_string(user), showcrits = (is_normal || is_smart))] on [m2] wrists."
+		var/str = "[m3] [wear_wrists.generate_tooltip(wear_wrists.get_examine_string(user))] on [m2] wrists."
 		str += wear_wrists.integrity_check(is_smart)
 		if (is_stupid)
 			str = "[m3] something on [m2] wrists!"
@@ -754,6 +750,11 @@
 			missing_limb_message = span_danger("[missing_limb_message]")
 		msg += missing_limb_message
 
+	for(var/obj/item/bodypart/BP in bodyparts) //TA EDIT
+		if(BP.brand_text)
+			if(observer_privilege || get_location_accessible(src, BP.body_zone))
+				msg += "<span class='warning' style='font-size: 1.15em;'>[m1] branded on [m2] [BP.name]: <b style='font-size: 1.3em; color: #c48e42;'>\"[uppertext(BP.brand_text)]\"</b></span>"
+	
 	//Grabbing
 	if(pulledby && pulledby.grab_state)
 		msg += "[m1] being grabbed by [pulledby]."
@@ -985,9 +986,11 @@
 	if(!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS) && user != src)
 		if(isliving(user))
 			var/mob/living/L = user
-			if(L.STAINT > 9 && L.STAPER > 9)
+			if((L.STAINT > 9 && L.STAPER > 9) || HAS_TRAIT(L, TRAIT_INTELLECTUAL))
 				if(HAS_TRAIT(src, TRAIT_COMBAT_AWARE))
-					. += span_warning("<i>They look battle-aware.</i>")
+					. += span_warning("<i>[m1] battle-aware.</i>")
+				if(HAS_TRAIT(src, TRAIT_DEATHLESS) && !mind.has_antag_datum(/datum/antagonist/vampire))
+					. += span_warning("<i>[m1] absent of lyfe. [t_He] will linger even without blood.</i>")
 				if(HAS_TRAIT(user, TRAIT_COMBAT_AWARE))
 					var/userheld = user.get_active_held_item()
 					var/srcheld = get_active_held_item()
@@ -1046,14 +1049,18 @@
 			user.add_stress(/datum/stressevent/hunted)
 
 	if(dna?.species?.type == /datum/species/gnoll)
-		var/mob/living/carbon/human/H = user
-		if(H.dna?.species?.type == /datum/species/gnoll)
-			if(user.advjob)
-				. += span_notice("<i>They are a [advjob] of the pack.</i>")
+		if(istype(user, /mob/living/carbon/human)) //Submitting this one upstream because not our shitcode for once
+			var/mob/living/carbon/human/H = user
+			if(H.dna?.species?.type == /datum/species/gnoll)
+				if(user.advjob)
+					. += span_notice("<i>They are a [advjob] of the pack.</i>")
 
 	var/trait_exam = common_trait_examine()
 	if(!isnull(trait_exam))
 		. += trait_exam
+
+	if(pose_text)
+		. += fieldset_block("Pose", pose_text, "pose_block")
 
 	SEND_SIGNAL(src, COMSIG_PARENT_EXAMINE, user, .)
 

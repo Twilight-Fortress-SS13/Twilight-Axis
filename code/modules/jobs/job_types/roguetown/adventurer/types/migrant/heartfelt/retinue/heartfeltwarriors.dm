@@ -160,7 +160,7 @@
 	H.set_blindness(0)
 	switch(weapon_choice)
 		if("Crossbow")
-			beltr = /obj/item/quiver/bolts
+			beltr = /obj/item/quiver/bolt/standard
 			backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 			H.change_stat(STATKEY_STR, 1)
 		if("Bow")
@@ -172,7 +172,7 @@
 			r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/sling // Both are belt slots and it's not worth setting where the cugel goes for everyone else, sad.
 			H.change_stat(STATKEY_SPD, 1)
 		else
-			beltr = /obj/item/quiver/bolts
+			beltr = /obj/item/quiver/bolt/standard
 			backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 
 	backpack_contents = list(
@@ -216,7 +216,7 @@
 	However, with the increase in banditry, necromancy, deadite risings, and increasing sea raider raids, there are rumors abound that Heartfelt is not what it used to be. \
 	Travellers often warn of Heartfelt having fallen already, and words of secretive cultists isn't unheard of."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_NO_CONSTRUCT
+	allowed_races = RACES_SHUNNED_UP
 	outfit = /datum/outfit/job/roguetown/heartfelt/retinue/squire
 	maximum_possible_slots = 2
 	pickprob = 100
@@ -289,7 +289,7 @@
 			backl = /obj/item/rogueweapon/scabbard/gwstrap
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE)
 		if("Crossbow")
-			beltr = /obj/item/quiver/bolts
+			beltr = /obj/item/quiver/bolt/standard
 			backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_JOURNEYMAN, TRUE)
 		if("Bow")

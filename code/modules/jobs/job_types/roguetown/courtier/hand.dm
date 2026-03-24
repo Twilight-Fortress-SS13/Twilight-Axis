@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 
-	allowed_races = RACES_NO_CONSTRUCT	//No noble constructs.
+	allowed_races = RACES_SHUNNED_UP	//No noble constructs.
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/hand
 	advclass_cat_rolls = list(CTAG_HAND = 20)
@@ -32,8 +32,8 @@
 /datum/outfit/job/roguetown/hand
 	backr = /obj/item/storage/backpack/rogue/satchel/short
 	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
-	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/light/fencer //steel protection with awful integrity, to go under the awful integrity gambeson- light tho
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy/hand
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine/hand
 	belt = /obj/item/storage/belt/rogue/leather/steel
 	id = /obj/item/scomstone/garrison/hand
 	job_bitflag = BITFLAG_ROYALTY
@@ -88,10 +88,10 @@
 	)
 
 /datum/outfit/job/roguetown/hand/blademaster/pre_equip(mob/living/carbon/human/H)
-	r_hand = /obj/item/rogueweapon/sword/long/oathkeeper/hand
+	r_hand = /obj/item/rogueweapon/sword/long/hand
 	beltr = /obj/item/rogueweapon/scabbard/sword/royal
 	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand
-	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand
+	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/hand
 	pants = /obj/item/clothing/under/roguetown/tights/black
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/dtace = 1,
@@ -138,7 +138,7 @@
 	)
 
 /datum/outfit/job/roguetown/hand/spymaster
-	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/spymaster
+	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/hand/spymaster
 
 //Spymaster start. More similar to the rogue adventurer - loses heavy armor and sword skills for more sneaky stuff.
 /datum/outfit/job/roguetown/hand/spymaster/pre_equip(mob/living/carbon/human/H)
@@ -198,7 +198,7 @@
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 	)
 /datum/outfit/job/roguetown/hand/advisor
-	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/advisor
+	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/hand/advisor
 	r_hand = /obj/item/rogueweapon/sword/rapier/hand
 	beltr = /obj/item/rogueweapon/scabbard/sheath/courtphysician/hand
 	beltl = /obj/item/rogueweapon/huntingknife/idagger/dtace

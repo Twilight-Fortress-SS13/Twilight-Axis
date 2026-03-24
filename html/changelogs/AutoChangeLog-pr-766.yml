@@ -1,0 +1,4 @@
+author: "Kokserva"
+delete-after: True
+changes:
+  - rscadd: "добавил ключик и навык цепов для королевских рыцарей Рокхилла"

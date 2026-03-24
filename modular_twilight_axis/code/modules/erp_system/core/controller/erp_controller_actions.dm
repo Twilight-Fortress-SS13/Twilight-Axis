@@ -75,13 +75,15 @@
 	if(!controller.active_partner)
 		return "Нет партнёра."
 
-	if(ctx.distance > 1)
+	var/in_shared_closet = is_shared_closet_context()
+	
+	if(!in_shared_closet && ctx.distance > 1)
 		return "Слишком далеко."
 
-	if(A.require_same_tile && !(ctx.same_tile || ctx.has_passive_grab))
+	if(!in_shared_closet && A.require_same_tile && !(ctx.same_tile || ctx.has_passive_grab))
 		return "Нужно быть на одном тайле или держать партнёра."
 
-	if(A.require_grab && !ctx.has_aggressive_grab)
+	if(!in_shared_closet && A.require_grab && !ctx.has_aggressive_grab)
 		return "Нужен более сильный захват."
 
 	if(A.required_init_organ && init.erp_organ_type != A.required_init_organ)
@@ -90,7 +92,7 @@
 	if(A.required_target_organ && target.erp_organ_type != A.required_target_organ)
 		return "Нужна другая цель."
 
-	if(!ctx.has_passive_grab)
+	if(!ctx.has_passive_grab && !in_shared_closet)
 		var/it = init.erp_organ_type
 		if(!(it in ctx.self_access))
 			ctx.self_access[it] = controller.owner.is_organ_accessible_for(controller.owner, it, FALSE)
@@ -193,8 +195,13 @@
 			else
 				tgt = any_tgt
 
-		var/reason = validate_action(Act, init, tgt, ctx)
+		if(Act.required_init_organ && !init)
+			continue
 
+		if(Act.required_target_organ && !tgt)
+			continue
+
+		var/reason = validate_action(Act, init, tgt, ctx)
 		out += list(list(
 			"id" = Act.id,
 			"name" = Act.name,
@@ -294,3 +301,22 @@
 		return n
 
 	return t
+
+/datum/erp_controller_actions/proc/is_shared_closet_context()
+	var/mob/living/A = controller.owner?.get_effect_mob()
+	var/mob/living/B = controller.active_partner?.get_effect_mob()
+
+	if(!A || !B)
+		return FALSE
+
+	return (istype(A.loc, /obj/structure/closet) && A.loc == B.loc)
+
+/datum/erp_controller_actions/proc/is_organ_hidden_by_clothes(datum/erp_actor/A, datum/erp_sex_organ/O)
+	if(!A || !O)
+		return TRUE
+
+	var/mob/living/M = A.get_effect_mob()
+	if(!M)
+		return TRUE
+
+	return !A.is_organ_accessible_for(controller.owner, O.erp_organ_type, FALSE)

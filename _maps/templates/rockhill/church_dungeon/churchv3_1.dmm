@@ -1,0 +1,4147 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"an" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"aG" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"ba" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"bF" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"cy" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"cD" = (
+/turf/closed/wall/mineral/rogue/stone/red_moss,
+/area/rogue/under/town/basement)
+"cH" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/imp{
+	faction = list("fae");
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"di" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"eh" = (
+/obj/structure/flora/roguegrass/water/reeds,
+/obj/structure/flora/roguegrass/water/reeds,
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"eG" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"eL" = (
+/obj/effect/decal/cleanable/blood/gibs/up,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"fr" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"gV" = (
+/obj/structure/flora/roguetree/burnt,
+/obj/structure/flora/newleaf,
+/obj/structure/flora/newleaf,
+/obj/structure/flora/newleaf,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"hi" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"hv" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"hU" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"iz" = (
+/turf/closed/mineral/random/rogue/med,
+/area/rogue/under/cavewet/bogcaves)
+"iE" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"ja" = (
+/obj/item/natural/glass_shard,
+/obj/effect/decal/cleanable/debris,
+/turf/open/floor/rogue/underworld/road,
+/area/rogue/under/town/basement)
+"jn" = (
+/obj/effect/decal/cleanable/blood/gibs/core,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"jv" = (
+/obj/structure/fluff/nest,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"jC" = (
+/obj/effect/wisp/prestidigitation{
+	pixel_x = 0;
+	name = "Блуждающий огонёк";
+	desc = "Крошечный голубой огонёк, подпитываемый неизвестной энергией."
+	},
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"jF" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"jV" = (
+/obj/structure/flora/ausbushes/ywflowers,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"jW" = (
+/obj/structure/flora/roguegrass/thorn_bush,
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"kh" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"kz" = (
+/obj/structure/flora/newleaf,
+/obj/structure/flora/roguegrass,
+/obj/structure/trap/stun{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"kW" = (
+/turf/open/floor/rogue/underworld/road,
+/area/rogue/under/town/basement)
+"lc" = (
+/obj/structure/trap/stun{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"lp" = (
+/obj/structure/flora/ausbushes/brflowers,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"mE" = (
+/obj/structure/flora/ausbushes/ppflowers,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"mP" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass,
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"mQ" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"nj" = (
+/obj/structure/flora/roguegrass/water,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"nq" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"oa" = (
+/obj/structure/roguerock,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"op" = (
+/obj/structure/flora/roguegrass,
+/obj/effect/decal/cleanable/blood/gibs/core,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"oy" = (
+/turf/open/floor/rogue/cobble,
+/area/rogue/under/town/basement)
+"oH" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"oV" = (
+/obj/structure/roguerock,
+/obj/item/natural/rock{
+	pixel_y = -9
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"pg" = (
+/obj/structure/flora/roguegrass,
+/obj/effect/wisp/prestidigitation{
+	pixel_x = 0;
+	name = "Блуждающий огонёк";
+	desc = "Крошечный голубой огонёк, подпитываемый неизвестной энергией."
+	},
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"pB" = (
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"pW" = (
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"qe" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"ql" = (
+/obj/structure/trap/stun{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"qm" = (
+/turf/closed/wall/shroud{
+	name = "thick roots"
+	},
+/area/rogue/under/town/basement)
+"qs" = (
+/obj/structure/trap/chill{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"qu" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"qE" = (
+/obj/structure/flora/newleaf,
+/obj/structure/flora/newleaf,
+/obj/structure/flora/newleaf,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"qQ" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"ra" = (
+/turf/open/water/swamp/deep,
+/area/rogue/under/town/basement)
+"rn" = (
+/obj/structure/flora/rogueshroom{
+	pixel_y = -5
+	},
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"rp" = (
+/turf/closed/mineral/random/rogue/high,
+/area/rogue/under/town/basement)
+"rA" = (
+/obj/effect/wisp/prestidigitation{
+	pixel_x = 0;
+	name = "Блуждающий огонёк";
+	desc = "Крошечный голубой огонёк, подпитываемый неизвестной энергией."
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"rP" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/rogueshroom{
+	pixel_y = -5
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"sn" = (
+/obj/structure/trap/damage{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"ss" = (
+/obj/item/roguegem/random,
+/obj/item/roguegem/random,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/misc,
+/obj/effect/landmark/chest_or_mimic,
+/turf/open/floor/rogue/volcanic,
+/area/rogue/under/town/basement)
+"sL" = (
+/turf/open/water/cleanshallow,
+/area/rogue/under/town/basement)
+"tb" = (
+/obj/item/natural/rock,
+/obj/effect/decal/cleanable/debris/stony,
+/turf/open/floor/rogue/volcanic,
+/area/rogue/under/town/basement)
+"tm" = (
+/turf/closed/wall/mineral/rogue/stone,
+/area/rogue/under/town/basement)
+"tx" = (
+/obj/structure/flora/roguegrass/water,
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"ty" = (
+/obj/effect/decal/remains/saiga,
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"ua" = (
+/obj/structure/flora/roguegrass,
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/glimmerwing{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"up" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"vj" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"vm" = (
+/obj/structure/spider/stickyweb,
+/obj/structure/closet/crate/roguecloset/inn/chest{
+	keylock = 1;
+	locked = 1
+	},
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"vy" = (
+/obj/effect/decal/cleanable/blood/gibs,
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"vV" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/elemental/crawler{
+	del_on_deaggro = 599400;
+	faction = list("fae")
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"wk" = (
+/obj/structure/flora/roguegrass/water,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"wu" = (
+/obj/effect/decal/cleanable/blood/gibs/down,
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"ww" = (
+/obj/effect/decal/cleanable/blood/tracks,
+/turf/open/floor/rogue/cobble,
+/area/rogue/under/town/basement)
+"wH" = (
+/obj/effect/decal/cleanable/blood/gibs/torso,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"wX" = (
+/obj/structure/flora/ausbushes/lavendergrass,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"xa" = (
+/obj/structure/flora/roguegrass/water,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"xl" = (
+/obj/structure/flora/roguegrass,
+/mob/living/simple_animal/hostile/retaliate/rogue/elemental/warden{
+	faction = list("fae")
+	},
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"xt" = (
+/obj/structure/flora/ausbushes/ppflowers,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"xy" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"xQ" = (
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"xW" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"yg" = (
+/obj/effect/decal/cleanable/debris/stony,
+/turf/open/floor/rogue/volcanic,
+/area/rogue/under/town/basement)
+"yo" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/closet/crate/roguecloset/inn/chest{
+	keylock = 1;
+	locked = 1
+	},
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"yr" = (
+/obj/effect/wisp/prestidigitation{
+	pixel_x = 0;
+	name = "Блуждающий огонёк";
+	desc = "Крошечный голубой огонёк, подпитываемый неизвестной энергией."
+	},
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"yv" = (
+/obj/structure/flora/ausbushes/lavendergrass,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"yB" = (
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"yQ" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"zc" = (
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"zj" = (
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"zx" = (
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"zz" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound{
+	faction = list("fae");
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/volcanic,
+/area/rogue/under/town/basement)
+"zO" = (
+/obj/structure/flora/roguetree/burnt,
+/obj/structure/flora/newleaf,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"zS" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/spider/stickyweb,
+/mob/living/simple_animal/hostile/retaliate/rogue/spider,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"Ag" = (
+/obj/structure/fluff/psycross/crafted{
+	pixel_y = 8
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"AB" = (
+/turf/closed/mineral/random/rogue,
+/area/rogue/under/town/basement)
+"AW" = (
+/obj/structure/flora/roguegrass/bush,
+/obj/structure/closet/crate/roguecloset/inn/chest{
+	keylock = 1;
+	locked = 1
+	},
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"BJ" = (
+/obj/structure/spider/stickyweb,
+/mob/living/simple_animal/hostile/retaliate/rogue/spider,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"BR" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"Cg" = (
+/obj/effect/decal/cleanable/blood/gibs/core,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"Db" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"Di" = (
+/turf/closed/mineral/rogue/bedrock,
+/area/rogue/under/cavewet/bogcaves)
+"Do" = (
+/obj/effect/decal/cleanable/blood/gibs/up,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"Ds" = (
+/obj/structure/fluff/nest,
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"Dw" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/structure/fluff/nest,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"DG" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"DJ" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/rogue/cobble,
+/area/rogue/under/town/basement)
+"DL" = (
+/obj/structure/trap/chill{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"DM" = (
+/turf/closed/wall/mineral/rogue/stone/moss,
+/area/rogue/under/town/basement)
+"DV" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"EX" = (
+/obj/structure/flora/newleaf,
+/obj/structure/flora/newleaf,
+/mob/living/simple_animal/hostile/retaliate/rogue/elemental/crawler{
+	del_on_deaggro = 599400;
+	faction = list("fae")
+	},
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"Fc" = (
+/obj/structure/flora/rogueshroom{
+	pixel_y = -5
+	},
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"Ft" = (
+/obj/effect/decal/cleanable/blood/old,
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"Gk" = (
+/obj/structure/stairs,
+/turf/open/floor/rogue/ruinedwood{
+	icon_state = "horzw"
+	},
+/area/rogue/under/town/basement)
+"Gu" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/glimmerwing{
+	del_on_deaggro = 599400
+	},
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"Gz" = (
+/turf/open/floor/rogue/volcanic,
+/area/rogue/under/town/basement)
+"GM" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/elemental/crawler{
+	del_on_deaggro = 599400;
+	faction = list("fae")
+	},
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"Hc" = (
+/obj/effect/decal/remains/mole,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"Hl" = (
+/obj/structure/flora/roguegrass,
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"HG" = (
+/obj/item/natural/rock,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"HM" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"HN" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"HR" = (
+/obj/structure/flora/roguegrass/water,
+/obj/structure/flora/roguegrass/water,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"HV" = (
+/obj/effect/wisp/prestidigitation{
+	pixel_x = 0;
+	name = "Блуждающий огонёк";
+	desc = "Крошечный голубой огонёк, подпитываемый неизвестной энергией."
+	},
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"HZ" = (
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"Il" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"In" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/glimmerwing{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"Iq" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/spider/stickyweb,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"Iv" = (
+/obj/structure/flora/roguegrass/water/reeds,
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"Jh" = (
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"Jm" = (
+/obj/structure/flora/roguegrass/water/reeds,
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/glimmerwing{
+	del_on_deaggro = 599400
+	},
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"JK" = (
+/obj/structure/trap/fire{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/underworld/road,
+/area/rogue/under/town/basement)
+"Km" = (
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"Ko" = (
+/obj/effect/decal/cleanable/debris/stony,
+/turf/open/floor/rogue/underworld/road,
+/area/rogue/under/town/basement)
+"KF" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"LO" = (
+/obj/effect/decal/cleanable/debris/stony,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"LQ" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"Mh" = (
+/obj/item/natural/rock,
+/turf/open/floor/rogue/volcanic,
+/area/rogue/under/town/basement)
+"Mk" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"Mv" = (
+/obj/structure/flora/ausbushes/lavendergrass,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"Mz" = (
+/obj/structure/flora/roguegrass/thorn_bush,
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"Nf" = (
+/obj/effect/wisp/prestidigitation{
+	pixel_x = 0;
+	name = "Блуждающий огонёк";
+	desc = "Крошечный голубой огонёк, подпитываемый неизвестной энергией."
+	},
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"Np" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"NI" = (
+/obj/structure/trap/fire{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"NO" = (
+/turf/closed/mineral/random/rogue,
+/area/rogue/under/cavewet/bogcaves)
+"NR" = (
+/obj/structure/flora/ausbushes/ywflowers,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"NT" = (
+/obj/structure/flora/ausbushes/lavendergrass,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"Oa" = (
+/obj/structure/flora/roguegrass,
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"Ot" = (
+/obj/structure/mineral_door/wood{
+	locked = 1
+	},
+/obj/effect/decal/cleanable/blood/tracks,
+/turf/open/floor/rogue/cobble,
+/area/rogue/under/town/basement)
+"Ou" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"OE" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"OP" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"Pt" = (
+/obj/effect/decal/cleanable/blood/gibs/core,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"PJ" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/spider,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"PW" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"Qq" = (
+/obj/structure/trap/chill{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"Qr" = (
+/obj/structure/trap/stun{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"Qs" = (
+/obj/structure/flora/roguegrass/bush,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"Qt" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"QH" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"QQ" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/elemental/crawler{
+	del_on_deaggro = 599400;
+	faction = list("fae")
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"Rj" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"Rm" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"RG" = (
+/obj/structure/flora/newleaf,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"RJ" = (
+/obj/effect/decal/cleanable/blood/gibs/limb,
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"RQ" = (
+/obj/effect/wisp/prestidigitation{
+	pixel_x = 0;
+	name = "Блуждающий огонёк";
+	desc = "Крошечный голубой огонёк, подпитываемый неизвестной энергией."
+	},
+/turf/open/water/swamp,
+/area/rogue/under/town/basement)
+"So" = (
+/obj/structure/flora/roguegrass,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/misc{
+	loot = list(/obj/item/enchantmentscroll/holding = 1, /obj/item/enchantmentscroll/light = 1, /obj/item/enchantmentscroll/mining = 1, /obj/item/enchantmentscroll/nightvision = 1, /obj/item/enchantmentscroll/smithing = 1, /obj/item/enchantmentscroll/woodcut = 1, /obj/item/enchantmentscroll/xylix = 1, /obj/item/book_crafting_kit = 1, /obj/item/spellbook_unfinished = 1, /obj/item/paper = 1, /obj/item/paper/scroll = 1, /obj/item/natural/feather = 1, /obj/item/lockpick = 1, /obj/item/enchantmentscroll/climbing = 1)
+	},
+/obj/effect/spawner/lootdrop/roguetown/dungeon/misc{
+	loot = list(/obj/item/enchantmentscroll/holding = 1, /obj/item/enchantmentscroll/light = 1, /obj/item/enchantmentscroll/mining = 1, /obj/item/enchantmentscroll/nightvision = 1, /obj/item/enchantmentscroll/smithing = 1, /obj/item/enchantmentscroll/woodcut = 1, /obj/item/enchantmentscroll/xylix = 1, /obj/item/book_crafting_kit = 1, /obj/item/spellbook_unfinished = 1, /obj/item/paper = 1, /obj/item/paper/scroll = 1, /obj/item/natural/feather = 1, /obj/item/lockpick = 1, /obj/item/enchantmentscroll/climbing = 1)
+	},
+/obj/effect/spawner/lootdrop/roguetown/dungeon/misc{
+	loot = list(/obj/item/enchantmentscroll/holding = 1, /obj/item/enchantmentscroll/light = 1, /obj/item/enchantmentscroll/mining = 1, /obj/item/enchantmentscroll/nightvision = 1, /obj/item/enchantmentscroll/smithing = 1, /obj/item/enchantmentscroll/woodcut = 1, /obj/item/enchantmentscroll/xylix = 1, /obj/item/book_crafting_kit = 1, /obj/item/spellbook_unfinished = 1, /obj/item/paper = 1, /obj/item/paper/scroll = 1, /obj/item/natural/feather = 1, /obj/item/lockpick = 1, /obj/item/enchantmentscroll/climbing = 1)
+	},
+/obj/structure/closet/crate/roguecloset/inn/chest{
+	keylock = 1;
+	locked = 1
+	},
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"Sz" = (
+/turf/closed/mineral/random/rogue/high,
+/area/rogue/under/cavewet/bogcaves)
+"SJ" = (
+/obj/item/natural/glass_shard,
+/obj/effect/decal/cleanable/debris,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"SU" = (
+/obj/structure/flora/newleaf,
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"SZ" = (
+/obj/effect/wisp/prestidigitation{
+	pixel_x = 0;
+	name = "Блуждающий огонёк";
+	desc = "Крошечный голубой огонёк, подпитываемый неизвестной энергией."
+	},
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"Ta" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"Tp" = (
+/turf/closed/mineral/rogue/bedrock,
+/area/rogue/under/town/basement)
+"Tx" = (
+/obj/structure/flora/ausbushes/brflowers,
+/turf/open/floor/rogue/grass,
+/area/rogue/under/town/basement)
+"TM" = (
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"TQ" = (
+/obj/structure/flora/newleaf,
+/obj/structure/flora/newleaf,
+/obj/structure/flora/newleaf,
+/obj/structure/flora/roguetree/burnt,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"Up" = (
+/obj/effect/wisp/prestidigitation{
+	pixel_x = 0;
+	name = "Блуждающий огонёк";
+	desc = "Крошечный голубой огонёк, подпитываемый неизвестной энергией."
+	},
+/turf/open/water/cleanshallow,
+/area/rogue/under/town/basement)
+"Uu" = (
+/obj/effect/decal/cleanable/blood/gibs/core,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"UE" = (
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"Vf" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/elemental/crawler{
+	del_on_deaggro = 599400;
+	faction = list("fae")
+	},
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"Vh" = (
+/obj/structure/flora/rogueshroom{
+	pixel_y = -5
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"Vs" = (
+/obj/effect/decal/remains/mole,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"Wb" = (
+/obj/structure/roguerock,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"Wt" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/spider,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"WC" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass,
+/obj/structure/spider/stickyweb,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"WT" = (
+/obj/effect/decal/cleanable/blood/gibs/torso,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"Xb" = (
+/obj/structure/flora/newleaf,
+/obj/structure/flora/newleaf,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"Xj" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/imp{
+	faction = list("fae");
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/volcanic,
+/area/rogue/under/town/basement)
+"XF" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/glimmerwing{
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"XH" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/spider,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+"XJ" = (
+/obj/effect/decal/remains/saiga,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"XV" = (
+/obj/structure/trap/damage{
+	mouse_opacity = 0;
+	alpha = 20
+	},
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/under/town/basement)
+"YH" = (
+/turf/closed/wall/shroud{
+	name = "thick roots"
+	},
+/area/rogue/under/cavewet/bogcaves)
+"YI" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"Zw" = (
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/grassyel,
+/area/rogue/under/town/basement)
+"Zx" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/elemental/crawler{
+	del_on_deaggro = 599400;
+	faction = list("fae")
+	},
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/town/basement)
+"Zy" = (
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/under/town/basement)
+"ZC" = (
+/turf/open/lava,
+/area/rogue/under/town/basement)
+"ZP" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/roguegrass/maneater/real,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/basement)
+"ZV" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound{
+	faction = list("fae");
+	del_on_deaggro = 599400
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/basement)
+
+(1,1,1) = {"
+NO
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+iz
+iz
+iz
+iz
+iz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Di
+"}
+(2,1,1) = {"
+NO
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+NO
+NO
+Tp
+Tp
+kW
+yg
+Gz
+Xj
+Jh
+kW
+Tp
+iz
+iz
+iz
+iz
+iz
+iz
+Sz
+iz
+Sz
+iz
+iz
+iz
+iz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+"}
+(3,1,1) = {"
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+NO
+Tp
+Tp
+kW
+kW
+Jh
+cH
+ZV
+cH
+Mh
+Gz
+Tp
+Tp
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+"}
+(4,1,1) = {"
+iz
+DM
+DM
+qm
+qm
+qm
+qm
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+kW
+yg
+Gz
+HG
+Jh
+SJ
+cH
+LO
+Jh
+yg
+zz
+Tp
+Tp
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+iz
+DM
+qm
+qm
+qm
+qm
+qm
+DM
+DM
+DM
+DM
+DM
+Sz
+"}
+(5,1,1) = {"
+iz
+qm
+qm
+Iv
+Iv
+Iv
+xQ
+xQ
+xQ
+xQ
+Iv
+Iv
+Tp
+Tp
+kW
+Gz
+Jh
+kW
+kW
+Ko
+Gz
+yg
+kW
+Jh
+Jh
+Jh
+kW
+qm
+qm
+qm
+qm
+Tp
+Tp
+Tp
+Tp
+Tp
+qm
+qm
+qm
+qm
+qm
+DM
+DM
+DM
+qm
+qm
+qm
+Mv
+Zw
+di
+pB
+qm
+qm
+DM
+Sz
+"}
+(6,1,1) = {"
+iz
+qm
+xQ
+xQ
+xQ
+xQ
+vV
+TM
+HR
+mE
+xQ
+Iv
+xQ
+xQ
+xQ
+JK
+Gz
+Jh
+yg
+Jh
+kW
+Jh
+ja
+Zy
+Gz
+yg
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Pt
+pB
+pB
+pB
+pB
+Rm
+jC
+Zy
+qm
+qm
+pB
+pB
+qm
+ra
+zx
+HZ
+eG
+ra
+cD
+Zy
+qm
+qm
+Sz
+"}
+(7,1,1) = {"
+iz
+DM
+Iv
+Nf
+wk
+BR
+bF
+qQ
+bF
+wk
+Qs
+RQ
+xQ
+xQ
+tm
+tm
+tm
+tm
+kW
+yg
+Jh
+kW
+HG
+Jh
+pB
+Ou
+Zy
+Zy
+xt
+ZP
+TM
+pB
+Mk
+Zy
+Zy
+qm
+qm
+TM
+TM
+TM
+an
+pB
+NT
+TM
+zx
+YI
+eG
+eG
+ua
+Mv
+eG
+eG
+Np
+qm
+Sz
+"}
+(8,1,1) = {"
+Sz
+DM
+xQ
+Km
+Fc
+Qs
+qQ
+pg
+Qs
+cy
+wk
+xQ
+xQ
+eh
+xQ
+RQ
+tm
+tm
+tm
+oV
+Jh
+pB
+kW
+Jh
+HV
+NI
+Zy
+Zy
+Zy
+Zy
+Zy
+LQ
+qm
+qm
+qm
+qm
+qm
+qm
+Zy
+Zy
+pB
+OE
+TM
+zx
+HZ
+Mv
+eG
+qm
+qm
+So
+KF
+HZ
+eG
+qm
+Sz
+"}
+(9,1,1) = {"
+Sz
+DM
+xQ
+AW
+qQ
+Nf
+qQ
+xl
+qQ
+qQ
+bF
+xQ
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+Gz
+tb
+Wb
+Tp
+Tp
+Tp
+qm
+qm
+qm
+qm
+Tp
+Tp
+qm
+qm
+qm
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+DM
+DM
+DM
+DM
+TM
+ra
+qm
+qm
+qm
+qm
+zx
+jC
+YI
+qm
+Sz
+"}
+(10,1,1) = {"
+Sz
+DM
+TM
+TM
+qQ
+qQ
+Fc
+bF
+Zx
+mE
+TM
+xQ
+Tp
+Tp
+Tp
+Jh
+Gz
+Gz
+Gz
+Gz
+Jh
+AB
+AB
+AB
+cD
+qm
+qm
+Zy
+LQ
+Zy
+Zy
+Zy
+pB
+Zy
+TM
+Tp
+NO
+NO
+NO
+NO
+iz
+iz
+iz
+DM
+qm
+eG
+zx
+qm
+qm
+qm
+qm
+eG
+eG
+qm
+iz
+"}
+(11,1,1) = {"
+Sz
+DM
+xQ
+TM
+bF
+cy
+qQ
+Qs
+cy
+Qs
+TM
+Iv
+qm
+AB
+AB
+HG
+Hc
+kW
+kW
+Jh
+kW
+AB
+AB
+cD
+qm
+Zy
+TM
+LQ
+LQ
+pB
+pB
+pB
+Zy
+LQ
+LQ
+Tp
+NO
+NO
+NO
+NO
+NO
+NO
+iz
+DM
+qm
+Zw
+eG
+eG
+HZ
+ra
+qm
+Mv
+TM
+DM
+Sz
+"}
+(12,1,1) = {"
+Sz
+DM
+Iv
+TM
+vV
+Qs
+mE
+bF
+Km
+TM
+xa
+Iv
+qm
+AB
+ss
+Gz
+ZC
+ZC
+Gz
+Jh
+Jh
+cD
+cD
+cD
+Jh
+Jh
+Jh
+jC
+Zy
+Zy
+Zy
+Zy
+TM
+LQ
+Mk
+qm
+NO
+NO
+NO
+NO
+NO
+NO
+NO
+DM
+qm
+SZ
+cD
+eG
+eG
+YI
+Np
+eG
+an
+DM
+iz
+"}
+(13,1,1) = {"
+Sz
+Tp
+Iv
+xQ
+Qs
+Km
+xQ
+xQ
+wk
+RQ
+xQ
+xQ
+qm
+AB
+Gz
+Gz
+ZC
+kW
+Gz
+Gz
+AB
+cD
+cD
+Jh
+Jh
+Zy
+Zy
+up
+Tp
+Tp
+Tp
+cD
+TM
+hi
+TM
+Tp
+NO
+NO
+NO
+NO
+NO
+NO
+NO
+qm
+Zy
+Mv
+Zw
+YI
+eG
+yB
+TM
+wX
+Zy
+Tp
+iz
+"}
+(14,1,1) = {"
+Sz
+Tp
+Iv
+Iv
+Iv
+xQ
+xQ
+Iv
+xQ
+xQ
+xQ
+Zy
+qm
+rp
+Jh
+ZC
+ZC
+HG
+Hc
+rp
+cD
+cD
+Jh
+Jh
+Zy
+TM
+Zy
+Tp
+Tp
+Sz
+Sz
+qm
+hi
+mQ
+TM
+Tp
+Sz
+Sz
+NO
+NO
+NO
+NO
+NO
+qm
+qm
+qm
+DM
+DM
+pB
+pB
+TM
+Zy
+DM
+Tp
+iz
+"}
+(15,1,1) = {"
+Sz
+Tp
+Tp
+Tp
+DM
+cD
+cD
+cD
+xQ
+xQ
+Zy
+Tp
+Tp
+rp
+rp
+Jh
+Gz
+Gz
+rp
+cD
+cD
+QQ
+Zy
+Zy
+TM
+TM
+Tp
+Tp
+Sz
+Sz
+Sz
+qm
+jF
+pB
+TM
+Tp
+Sz
+Sz
+Di
+Di
+Di
+Di
+NO
+NO
+NO
+NO
+NO
+NO
+DM
+pB
+Cg
+pW
+DM
+iz
+iz
+"}
+(16,1,1) = {"
+Sz
+Sz
+Sz
+Sz
+iz
+iz
+Sz
+cD
+Zy
+rP
+xy
+Tp
+Tp
+rp
+rp
+rp
+rp
+rp
+cD
+cD
+Jh
+Jh
+pB
+LQ
+LQ
+Tp
+Tp
+Sz
+Sz
+Sz
+Sz
+qm
+Zy
+pB
+Zy
+qm
+Sz
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+Tp
+DM
+NO
+DM
+pB
+TM
+pW
+DM
+iz
+iz
+"}
+(17,1,1) = {"
+Sz
+Sz
+Sz
+Sz
+iz
+iz
+Sz
+cD
+Vh
+xy
+oa
+cD
+rp
+rp
+rp
+rp
+rp
+cD
+cD
+Zy
+Jh
+jV
+OP
+Zy
+Tp
+Tp
+Sz
+Sz
+Sz
+Sz
+Sz
+qm
+Zy
+Zy
+rA
+DM
+Sz
+Tp
+Tp
+Tp
+Tp
+TM
+LQ
+LQ
+qm
+Tp
+qm
+NO
+DM
+yv
+pB
+pW
+DM
+iz
+iz
+"}
+(18,1,1) = {"
+Sz
+Sz
+Sz
+Sz
+iz
+iz
+Sz
+cD
+Zy
+xy
+rn
+qm
+rp
+rp
+rp
+rp
+cD
+cD
+Zy
+Zy
+Ta
+Jh
+Zy
+Tp
+Tp
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+cD
+TM
+qm
+TM
+qm
+Sz
+Tp
+Tp
+Jh
+Jh
+aG
+DG
+XJ
+Zy
+Zy
+qm
+NO
+DM
+LQ
+PW
+DM
+DM
+iz
+iz
+"}
+(19,1,1) = {"
+Sz
+Sz
+Sz
+Sz
+iz
+cD
+cD
+cD
+Km
+RG
+RG
+qm
+qm
+qm
+cD
+cD
+cD
+Km
+pg
+pB
+Jh
+Jh
+cD
+cD
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+TM
+qm
+LQ
+qm
+Sz
+qm
+LQ
+LQ
+Jh
+Ds
+Hc
+Jh
+Ft
+Dw
+qm
+NO
+DM
+ql
+LQ
+DM
+DM
+iz
+iz
+"}
+(20,1,1) = {"
+Sz
+Sz
+Sz
+Sz
+iz
+cD
+qQ
+bF
+Xb
+zO
+RG
+Km
+Km
+Hl
+qQ
+cD
+mE
+Km
+Km
+Zy
+Zy
+DM
+cD
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+TM
+XV
+LQ
+qm
+TM
+TM
+LQ
+Jh
+LQ
+TM
+XJ
+LQ
+LQ
+LQ
+qm
+NO
+DM
+DM
+pW
+Cg
+DM
+iz
+iz
+"}
+(21,1,1) = {"
+Sz
+Sz
+Sz
+Sz
+iz
+cD
+qQ
+qQ
+kz
+RG
+NR
+Km
+Fc
+Km
+qQ
+SU
+RG
+Km
+Km
+qQ
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+cD
+TM
+pW
+qu
+Zy
+TM
+LQ
+LQ
+Jh
+aG
+Zy
+HV
+TM
+HM
+TM
+DM
+YH
+DM
+DM
+TM
+LQ
+Tp
+iz
+iz
+"}
+(22,1,1) = {"
+Sz
+Sz
+Sz
+Sz
+YH
+cD
+Km
+Fc
+TM
+LQ
+LQ
+pB
+wH
+pB
+nj
+Km
+gV
+qE
+Km
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+LQ
+pW
+Jh
+TM
+TM
+TM
+Zy
+nq
+ty
+Jh
+Jh
+Jh
+Zy
+LQ
+DM
+YH
+Tp
+DM
+LQ
+pW
+Tp
+iz
+iz
+"}
+(23,1,1) = {"
+Sz
+Sz
+Sz
+qm
+qm
+Km
+Km
+Ag
+xa
+xa
+xa
+TM
+BR
+an
+pB
+Ta
+Ta
+EX
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+qm
+sn
+pW
+Jh
+Zy
+Sz
+DM
+Vs
+LQ
+LQ
+Zy
+nq
+HM
+LQ
+hU
+DM
+NO
+DM
+XF
+hi
+hi
+Tp
+iz
+iz
+"}
+(24,1,1) = {"
+Sz
+Sz
+Sz
+cD
+Km
+Km
+rn
+TM
+tx
+RJ
+tx
+tx
+xQ
+xQ
+xQ
+xa
+LQ
+qQ
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+rp
+rp
+Tp
+qm
+Zy
+Zy
+DL
+Zy
+Sz
+qm
+DM
+jv
+LQ
+LQ
+LQ
+jv
+TM
+Zy
+DM
+NO
+qm
+LQ
+Zy
+hi
+DM
+iz
+iz
+"}
+(25,1,1) = {"
+Sz
+Sz
+iz
+cD
+Km
+Ou
+Vf
+BR
+xQ
+tx
+tx
+xQ
+xQ
+xQ
+RQ
+TM
+Fc
+mE
+cD
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+rp
+Tp
+sL
+sL
+Zy
+Zy
+LQ
+DM
+Sz
+qm
+DM
+DM
+DM
+DM
+DM
+qm
+qm
+qm
+qm
+iz
+qm
+TM
+hi
+hi
+Tp
+iz
+iz
+"}
+(26,1,1) = {"
+iz
+iz
+iz
+cD
+LQ
+Ta
+TM
+xQ
+RQ
+tx
+Iv
+Iv
+xQ
+xQ
+RJ
+xa
+LQ
+Km
+cD
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+rp
+rp
+Tp
+Up
+Jh
+Zy
+TM
+LQ
+qm
+Sz
+Sz
+Di
+Di
+Di
+Di
+Di
+Di
+NO
+NO
+iz
+iz
+qm
+pB
+hv
+Zy
+DM
+iz
+iz
+"}
+(27,1,1) = {"
+iz
+iz
+iz
+qm
+LQ
+TM
+vy
+xQ
+xQ
+Iv
+Iv
+xQ
+wu
+xQ
+xQ
+Ag
+LQ
+Km
+cD
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Tp
+Tp
+sL
+sL
+TM
+LQ
+TM
+TM
+qm
+qm
+qm
+cD
+DM
+DM
+DM
+cD
+Di
+NO
+NO
+iz
+iz
+qm
+Zy
+jC
+DM
+Tp
+iz
+iz
+"}
+(28,1,1) = {"
+iz
+iz
+NO
+qm
+LQ
+xQ
+xQ
+xQ
+wu
+Iv
+Jm
+xQ
+Iv
+RJ
+tx
+xQ
+LQ
+qQ
+qm
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+rp
+Tp
+sL
+LQ
+LQ
+TM
+Zy
+Zy
+Jh
+Jh
+Zy
+cD
+oy
+DJ
+oy
+cD
+Di
+NO
+NO
+iz
+iz
+qm
+hi
+hi
+DM
+Tp
+iz
+iz
+"}
+(29,1,1) = {"
+iz
+iz
+iz
+qm
+TM
+TM
+RQ
+xQ
+xQ
+Iv
+vy
+xQ
+tx
+xQ
+tx
+xa
+TM
+qQ
+qm
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+rp
+Tp
+Jh
+LQ
+TM
+TM
+Zy
+TM
+Zy
+Jh
+Zy
+Ot
+ww
+oy
+Gk
+DM
+Di
+NO
+NO
+iz
+iz
+DM
+hi
+DM
+DM
+DM
+iz
+iz
+"}
+(30,1,1) = {"
+Sz
+iz
+iz
+qm
+Do
+xa
+xQ
+xQ
+xQ
+xQ
+xQ
+tx
+RQ
+xQ
+xQ
+xa
+Do
+Km
+qm
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+rp
+rp
+Tp
+TM
+Zy
+Jh
+pB
+TM
+lc
+Zy
+Zy
+cD
+DJ
+oy
+oy
+DM
+Di
+NO
+NO
+iz
+iz
+DM
+hi
+DM
+Mk
+DM
+iz
+iz
+"}
+(31,1,1) = {"
+Sz
+iz
+iz
+qm
+Fc
+TM
+tx
+xQ
+wu
+xQ
+RJ
+xQ
+xQ
+xQ
+vy
+TM
+Fc
+Km
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+rp
+rp
+rp
+Tp
+Jh
+TM
+rA
+Zy
+cD
+cD
+cD
+DM
+DM
+cD
+cD
+cD
+Di
+NO
+NO
+iz
+iz
+DM
+Zy
+Zy
+Zy
+DM
+iz
+iz
+"}
+(32,1,1) = {"
+Sz
+Sz
+Sz
+qm
+Km
+Ag
+xa
+xQ
+xQ
+xQ
+xQ
+xQ
+TM
+LQ
+LQ
+TM
+qQ
+Km
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+rp
+rp
+rp
+Tp
+Tp
+Zy
+TM
+TM
+cD
+Sz
+Sz
+Di
+Di
+Di
+Di
+Di
+Di
+NO
+NO
+iz
+iz
+DM
+GM
+pB
+Zy
+qm
+iz
+iz
+"}
+(33,1,1) = {"
+Sz
+Sz
+Sz
+cD
+Km
+Km
+TM
+TM
+xQ
+RQ
+TM
+LQ
+LQ
+WT
+Km
+Km
+qQ
+qQ
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Tp
+Zy
+Zy
+Zy
+qm
+Sz
+cD
+DM
+DM
+DM
+DM
+DM
+DM
+Tp
+Tp
+Tp
+iz
+DM
+DM
+hi
+qm
+qm
+iz
+iz
+"}
+(34,1,1) = {"
+Sz
+Sz
+Sz
+cD
+Km
+qQ
+LQ
+LQ
+TM
+TM
+Ag
+Ta
+Km
+cy
+pB
+Km
+Km
+Km
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+qm
+Zy
+qs
+qm
+qm
+Sz
+DM
+xQ
+tx
+LQ
+Zy
+PJ
+WC
+Tp
+Tp
+Tp
+iz
+Tp
+DM
+hi
+qm
+qm
+iz
+iz
+"}
+(35,1,1) = {"
+Sz
+Sz
+Sz
+Tp
+Tp
+cD
+qQ
+qQ
+NR
+pB
+pB
+Km
+rn
+pB
+qQ
+qQ
+RG
+Km
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+qm
+hi
+pW
+qm
+cD
+Sz
+DM
+xQ
+xQ
+ba
+ba
+Db
+Iq
+Iq
+zS
+Tp
+iz
+Tp
+DM
+hi
+qm
+DM
+iz
+iz
+"}
+(36,1,1) = {"
+Sz
+Sz
+Sz
+Di
+Di
+Tp
+Km
+RG
+RG
+RG
+Km
+Km
+Km
+Km
+qQ
+qE
+gV
+qQ
+qQ
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+qm
+qu
+pB
+Zy
+Zy
+Zy
+ba
+Jh
+xW
+ba
+Wt
+xQ
+xQ
+zx
+eG
+DM
+iz
+DM
+LQ
+Qr
+qm
+DM
+iz
+iz
+"}
+(37,1,1) = {"
+iz
+iz
+Sz
+Sz
+iz
+Tp
+Km
+RG
+RG
+TQ
+qE
+RG
+Km
+qQ
+Km
+Km
+Km
+qQ
+NR
+Km
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+qm
+qm
+Zy
+Zy
+TM
+ba
+ba
+LQ
+Uu
+Wt
+eG
+LQ
+tx
+xQ
+tx
+DM
+iz
+DM
+vj
+Ta
+qm
+DM
+iz
+iz
+"}
+(38,1,1) = {"
+Sz
+Sz
+iz
+Sz
+iz
+Tp
+Km
+Km
+RG
+Xb
+RG
+Km
+NR
+qQ
+qQ
+DM
+Km
+qQ
+pg
+xy
+Zy
+cD
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+qm
+pB
+pW
+Tp
+Rj
+LQ
+LQ
+Wt
+xQ
+xQ
+eG
+qe
+xQ
+xQ
+DM
+iz
+DM
+HV
+pB
+Zy
+Tp
+iz
+iz
+"}
+(39,1,1) = {"
+iz
+Sz
+Sz
+Sz
+iz
+Tp
+cD
+Tp
+qQ
+qQ
+Km
+DM
+qm
+qm
+DM
+DM
+DM
+qQ
+Vf
+Zy
+qm
+qm
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+qm
+hi
+Qq
+Tp
+Di
+Tp
+XH
+xQ
+xQ
+tx
+Wt
+zx
+zx
+Jh
+DM
+iz
+DM
+Zy
+DM
+Zy
+Tp
+iz
+iz
+"}
+(40,1,1) = {"
+iz
+iz
+iz
+Sz
+Sz
+iz
+Sz
+Tp
+Zy
+qQ
+qQ
+qm
+YH
+Sz
+Sz
+Sz
+DM
+DM
+Zy
+pB
+qm
+Zy
+Zy
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+qm
+qu
+Jh
+cD
+Sz
+DM
+eG
+zx
+tx
+kh
+kh
+Jh
+XH
+ba
+DM
+iz
+qm
+DM
+DM
+Zy
+Tp
+iz
+Sz
+"}
+(41,1,1) = {"
+iz
+iz
+iz
+iz
+iz
+Di
+Di
+Tp
+lc
+pB
+UE
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+DM
+Ta
+mP
+Ta
+pB
+In
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+qm
+Ta
+Jh
+cD
+Sz
+DM
+Jh
+zx
+zx
+zx
+zx
+Jh
+BJ
+vm
+DM
+iz
+qm
+DM
+Ta
+Zy
+Tp
+Sz
+Sz
+"}
+(42,1,1) = {"
+iz
+iz
+iz
+iz
+Di
+Di
+Sz
+cD
+ZP
+pB
+LQ
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+cD
+Zy
+Zy
+Zy
+Ta
+Zy
+cD
+cD
+Sz
+Sz
+Sz
+Sz
+DM
+Qq
+Jh
+NI
+cD
+Sz
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+iz
+qm
+eG
+Zw
+GM
+Tp
+Sz
+Sz
+"}
+(43,1,1) = {"
+iz
+qm
+qm
+qm
+Tp
+cD
+cD
+cD
+Zy
+pB
+LQ
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+cD
+cD
+HV
+Zy
+Ta
+Zy
+Zy
+cD
+qm
+Sz
+Sz
+Sz
+DM
+Jh
+Jh
+Zy
+cD
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+iz
+iz
+iz
+iz
+qm
+eG
+eG
+vj
+DM
+Sz
+Sz
+"}
+(44,1,1) = {"
+iz
+qm
+qm
+Zy
+Tx
+jW
+Zy
+Zy
+TM
+yB
+Zy
+Zy
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+cD
+cD
+Zy
+Zy
+pB
+qm
+Zy
+qm
+qm
+Sz
+Sz
+DM
+Zy
+Ta
+qm
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+DM
+DM
+DM
+qm
+qm
+TM
+eG
+zx
+DM
+DM
+Sz
+"}
+(45,1,1) = {"
+iz
+cD
+pW
+hi
+hi
+Zy
+TM
+yQ
+TM
+LQ
+LQ
+OE
+qm
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+qm
+qm
+Zy
+Zy
+Ta
+xy
+Zy
+cD
+qm
+qm
+DM
+Zy
+qm
+qm
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+zx
+Mv
+qm
+qm
+TM
+TM
+Oa
+LQ
+Mv
+DM
+Sz
+"}
+(46,1,1) = {"
+Sz
+cD
+hi
+DV
+pB
+pW
+pW
+hi
+op
+pB
+Ta
+iE
+qm
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+qm
+Jh
+Jh
+Jh
+pB
+qm
+qm
+Zy
+Zy
+Zy
+Zy
+qm
+Zy
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+HN
+ZP
+LQ
+TM
+xQ
+xQ
+xQ
+LQ
+TM
+Tp
+Sz
+"}
+(47,1,1) = {"
+Sz
+cD
+pW
+zj
+eL
+qm
+qm
+yr
+hi
+hi
+jn
+TM
+qm
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+cD
+qm
+Jh
+OP
+Jh
+Il
+pB
+Zy
+jC
+pB
+Ta
+Jh
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+eG
+LQ
+TM
+Gu
+xQ
+qm
+xQ
+xQ
+LQ
+Tp
+Sz
+"}
+(48,1,1) = {"
+Sz
+cD
+hi
+pB
+Uu
+Zy
+qm
+qm
+qm
+pW
+zj
+TM
+qm
+YH
+YH
+YH
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+qm
+qm
+Zy
+QH
+Zy
+Zy
+Zy
+Jh
+Jh
+Jh
+Mk
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+DM
+LQ
+TM
+xQ
+xQ
+qm
+qm
+qm
+xQ
+TM
+Tp
+Sz
+"}
+(49,1,1) = {"
+iz
+cD
+TM
+pB
+pB
+qm
+qm
+qm
+qm
+Tx
+Zy
+Zy
+DM
+DM
+DM
+qm
+DM
+DM
+DM
+DM
+DM
+DM
+cD
+cD
+cD
+cD
+qm
+qm
+qm
+Tp
+Tp
+Tp
+cD
+Tp
+Tp
+cD
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+Cg
+TM
+xQ
+qm
+qm
+qm
+xQ
+xQ
+TM
+DM
+Sz
+"}
+(50,1,1) = {"
+iz
+Tp
+TM
+pB
+Zy
+pW
+qm
+pW
+qm
+hi
+Qt
+TM
+TM
+TM
+Zy
+OE
+TM
+Zy
+Zy
+Pt
+TM
+ZP
+LQ
+LQ
+TM
+oH
+Zy
+Zy
+Zy
+Zy
+LQ
+LQ
+TM
+qm
+qm
+qm
+qm
+qm
+Zy
+LQ
+TM
+OE
+TM
+Mv
+zx
+TM
+xQ
+qm
+qm
+xQ
+RQ
+Cg
+TM
+DM
+Sz
+"}
+(51,1,1) = {"
+iz
+Tp
+TM
+zc
+HV
+zj
+hi
+hi
+Uu
+pB
+Zy
+pB
+pB
+TM
+rA
+Zy
+lp
+TM
+Zy
+Zy
+an
+pB
+qm
+qm
+Zy
+HV
+Ta
+pB
+pB
+TM
+pB
+qm
+qm
+qm
+qm
+pB
+Pt
+pB
+Ta
+Ta
+pB
+TM
+zx
+zx
+eG
+TM
+xQ
+xQ
+qm
+xQ
+LQ
+LQ
+eG
+DM
+Sz
+"}
+(52,1,1) = {"
+iz
+Tp
+Zy
+Tx
+hi
+hi
+hi
+pW
+Zy
+UE
+Zy
+Zy
+Mz
+pB
+Zy
+Pt
+pB
+pB
+zc
+pB
+TM
+qm
+qm
+qm
+qm
+qm
+qm
+Cg
+LQ
+LQ
+Zy
+fr
+Mk
+pB
+Ta
+Ta
+HV
+Mk
+Zy
+Qt
+Zy
+Zy
+eG
+eG
+zx
+eG
+LQ
+TM
+xQ
+xQ
+TM
+yo
+qm
+DM
+Sz
+"}
+(53,1,1) = {"
+iz
+qm
+qm
+fr
+Zy
+TM
+TM
+TM
+TM
+Zy
+TM
+OE
+TM
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+qm
+qm
+qm
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+Tp
+Tp
+Tp
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+DM
+Tp
+Mv
+zx
+LQ
+TM
+TM
+LQ
+TM
+qm
+qm
+DM
+Sz
+"}
+(54,1,1) = {"
+iz
+cD
+cD
+qm
+qm
+qm
+qm
+qm
+qm
+DM
+DM
+DM
+DM
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Tp
+Tp
+Tp
+DM
+DM
+DM
+DM
+DM
+DM
+Tp
+DM
+Sz
+"}
+(55,1,1) = {"
+Di
+iz
+iz
+iz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+"}

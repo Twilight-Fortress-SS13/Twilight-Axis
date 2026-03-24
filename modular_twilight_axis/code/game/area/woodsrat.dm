@@ -22,6 +22,7 @@
 	converted_type = /area/rogue/indoors/shelter/woods
 	deathsight_message = "somewhere in the wilds"
 	threat_region = THREAT_REGION_ROCKHILL_OUTER_GROVE
+	warden_area = FALSE
 
 /area/rogue/indoors/shelter/woodsrat
 	name = "Murderwood Shelter"
@@ -30,7 +31,7 @@
 	droning_sound_dusk = 'sound/music/area/septimus.ogg'
 	droning_sound_night = 'sound/music/area/forestnight.ogg'
 	threat_region = THREAT_REGION_ROCKHILL_OUTER_GROVE
-
+	warden_area = FALSE
 
 /area/rogue/outdoors/woodsrat/north
 	name = "Rockhill Woods - North"
@@ -47,6 +48,7 @@
 	converted_type = /area/rogue/indoors/shelter/woods
 	deathsight_message = "somewhere in the wilds"
 	threat_region = THREAT_REGION_ROCKHILL_WOODS_NORTH
+	warden_area = FALSE
 
 /area/rogue/outdoors/woodsrat/south
 	name = "Rockhill Woods - South"
@@ -64,8 +66,7 @@
 	converted_type = /area/rogue/indoors/shelter/woods
 	deathsight_message = "somewhere in the wilds"
 	threat_region = THREAT_REGION_ROCKHILL_WOODS_SOUTH
-
-
+	warden_area = FALSE
 
 /area/rogue/outdoors/woodsrat/above
 	name = "Woods above"
@@ -75,12 +76,14 @@
 	first_time_text = null
 	ambush_times = null
 	ambush_mobs = null
+	warden_area = FALSE
 
 /area/rogue/outdoors/woodsrat/safe
 	name = "Woods safe"
 	first_time_text = null
 	ambush_times = null
 	ambush_mobs = null
+	warden_area = FALSE
 
 /area/rogue/outdoors/woodsrat/river
 	name = "river"
@@ -89,3 +92,4 @@
 	ambientnight = AMB_RIVERNIGHT
 	spookysounds = SPOOKY_FROG
 	spookynight = SPOOKY_FOREST
+	warden_area = FALSE

@@ -3,8 +3,10 @@
 	typepath = /datum/round_event/migrant_wave/gnolls
 	wave_type = /datum/migrant_wave/gnolls
 	max_occurrences = 2
-	weight = 5
-	earliest_start = 0 SECONDS
+	// Disabled for now, handled by bandit wave!
+	weight = 0
+	earliest_start = 30 MINUTES
+	min_players = 25
 	tags = list(
 		TAG_COMBAT,
 		TAG_VILLIAN,

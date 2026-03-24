@@ -17,6 +17,10 @@
 	dropshrink = 1 // Override for bucket
 	volume = 240
 
+/obj/item/reagent_containers/glass/bucket/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_notice("Freshwater can be collected by leaving out buckets, pots, washbins, and any other uncovered containers on an uncovered tile while it's raining.")
+
 /obj/item/reagent_containers/glass/bucket/pot/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Pots can be placed atop a hearth by left-clicking it. If the hearth is lit, the placed pot will eventually come to a boil - so long as it's filled with water.")
@@ -60,6 +64,7 @@
 /obj/item/reagent_containers/glass/bucket/pot/stone
 	name = "stone pot"
 	desc = "A pot made out of stone. It can hold less than a metal pot."
+	icon_state = "pote_stone"
 	volume = 120 // 99 is the max volume for a stone pot
 
 /obj/item/reagent_containers/glass/bucket/pot/kettle
@@ -202,7 +207,7 @@
 	desc = "A heftsome, iron-bottomed mug. It can be set upon a hearth to brew traditional drinks, or - for the more alcoholically-inclined - used as a pitcher of liqour."
 	icon = 'modular/Neu_Food/icons/cookware/unused.dmi'
 	icon_state = "stein"
-	volume = 50
+	volume = 60
 	sellprice = 10
 	force = 10
 	throwforce = 15
@@ -212,7 +217,7 @@
 	desc = "A regal, silver-bottomed mug with gilded marginalia. Perfect for refilling mugs-a-plenty during the chaos of an innhouse's feast, or for drowning away the sorrows of a sorrid week. It can be set upon a hearth to brew traditional drinks."
 	icon = 'modular/Neu_Food/icons/cookware/unused.dmi'
 	icon_state = "silverstein"
-	volume = 75
+	volume = 80
 	sellprice = 40
 	force = 15
 	throwforce = 20

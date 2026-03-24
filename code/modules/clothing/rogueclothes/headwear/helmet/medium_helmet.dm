@@ -46,6 +46,7 @@
 
 /obj/item/clothing/suit/roguetown/head/helmet/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
 
 /obj/item/clothing/head/roguetown/helmet/get_mechanics_examine(mob/user)
 	. = ..()
@@ -104,7 +105,6 @@
 	material_category = ARMOR_MAT_PLATE
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
-	prevent_crits = PREVENT_CRITS_NONE
 
 /obj/item/clothing/head/roguetown/helmet/kettle/paalloy
 	name = "ancient kettle helmet"
@@ -155,7 +155,7 @@
 	smeltresult = /obj/item/ingot/steel
 	body_parts_covered = HEAD|HAIR|EARS
 
-/obj/item/clothing/wrists/roguetown/bracers/jackchain/ComponentInitialize()
+/obj/item/clothing/head/roguetown/helmet/sallet/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 
 /obj/item/clothing/head/roguetown/helmet/sallet/attackby(obj/item/W, mob/living/user, params)
@@ -222,6 +222,7 @@
 	icon_state = "shishak"
 
 /obj/item/clothing/head/roguetown/helmet/sallet/visored/ComponentInitialize()
+	..()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), HIDEEARS|HIDEHAIR, null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Sallet. Hides ears at the very least since it's a helmet.
 
 /obj/item/clothing/head/roguetown/helmet/sallet/visored/attackby(obj/item/W, mob/living/user, params)
@@ -314,6 +315,7 @@
 				return list("shrink" = 0.32,"sx" = -3,"sy" = -8,"nx" = 6,"ny" = -8,"wx" = -1,"wy" = -8,"ex" = 3,"ey" = -8,"nturn" = 180,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 1,"sflip" = 0,"wflip" = 0,"eflip" = 8,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 /obj/item/clothing/head/roguetown/helmet/otavan/ComponentInitialize()
+	..()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), HIDEEARS, null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Otavan. Only hides ears when open.
 
 /obj/item/clothing/head/roguetown/helmet/elvenbarbute
@@ -353,6 +355,10 @@
 	flags_inv = HIDEEARS|HIDEHAIR
 	smeltresult = /obj/item/ingot/steel //STOP TOUCHING THE FOV IT IS NOT MEANT TO HAVE A FULL HELMET BLOCK ON IT THIS IS THE 3RD TIME SOMEONE DONE THIS.
 
+/obj/item/clothing/head/roguetown/helmet/bascinet/ComponentInitialize()
+	..()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+
 /obj/item/clothing/head/roguetown/helmet/bascinet/attackby(obj/item/W, mob/living/user, params)
 	..()
 	if(istype(W, /obj/item/natural/cloth) && !detail_tag)
@@ -391,6 +397,7 @@
 	stack_fovs = TRUE
 
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/ComponentInitialize()
+	..()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
 
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/attackby(obj/item/W, mob/living/user, params)
@@ -440,47 +447,8 @@
 	item_state = "hounskull"
 
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/ComponentInitialize()
-	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
-
-/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/attackby(obj/item/W, mob/living/user, params)
 	..()
-	if(istype(W, /obj/item/natural/feather) && !detail_tag)
-		var/choice = input(user, "Choose a color.", "Plume") as anything in COLOR_MAP
-		detail_color = COLOR_MAP[choice]
-		detail_tag = "_detail"
-		user.visible_message(span_warning("[user] adds [W] to [src]."))
-		user.transferItemToLoc(W, src, FALSE, FALSE)
-		update_icon()
-		if(loc == user && ishuman(user))
-			var/mob/living/carbon/H = user
-			H.update_inv_head()
-	if(istype(W, /obj/item/natural/cloth) && !altdetail_tag)
-		var/choicealt = input(user, "Choose a color.", "Orle") as anything in COLOR_MAP + pridelist
-		user.visible_message(span_warning("[user] adds [W] to [src]."))
-		user.transferItemToLoc(W, src, FALSE, FALSE)
-		altdetail_color = COLOR_MAP[choicealt]
-		altdetail_tag = "_detailalt"
-		if(choicealt in pridelist)
-			detail_tag = "_detailp"
-		update_icon()
-		if(loc == user && ishuman(user))
-			var/mob/living/carbon/H = user
-			H.update_inv_head()
-
-/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/update_icon()
-	cut_overlays()
-	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
-		pic.appearance_flags = RESET_COLOR
-		if(get_detail_color())
-			pic.color = get_detail_color()
-		add_overlay(pic)
-	if(get_altdetail_tag())
-		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[icon_state][altdetail_tag]"))
-		pic2.appearance_flags = RESET_COLOR
-		if(get_altdetail_color())
-			pic2.color = get_altdetail_color()
-		add_overlay(pic2)
+	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
 
 /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan
 	name = "klappvisier bascinet"
@@ -521,6 +489,7 @@
 		add_overlay(pic)
 
 /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan/ComponentInitialize()
+	..()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
 
 /obj/item/clothing/head/roguetown/helmet/kettle/jingasa
@@ -560,6 +529,7 @@
 	smelt_bar_num = 2
 
 /obj/item/clothing/head/roguetown/helmet/bascinet/antler/ComponentInitialize()
+	..()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
 
 //............... Eora Helmet ............... //

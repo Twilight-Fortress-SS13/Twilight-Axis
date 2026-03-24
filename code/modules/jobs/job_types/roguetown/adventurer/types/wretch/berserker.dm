@@ -5,6 +5,7 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/berserker
 	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
+	class_select_category = CLASS_CAT_WARRIOR
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_STRONGBITE, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
 	// Literally same stat spread as Atgervi Shaman
@@ -76,7 +77,7 @@
 				beltr = /obj/item/rogueweapon/katar
 			if("Knuckledusters")
 				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_MASTER, TRUE)
-				beltr = /obj/item/rogueweapon/knuckles
+				r_hand = /obj/item/clothing/gloves/roguetown/knuckles
 			if("Punch Dagger")
 				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_MASTER, TRUE)
 				beltr = /obj/item/rogueweapon/katar/punchdagger
