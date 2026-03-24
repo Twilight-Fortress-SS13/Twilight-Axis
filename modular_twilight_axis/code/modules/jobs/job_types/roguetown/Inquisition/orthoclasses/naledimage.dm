@@ -5,7 +5,7 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/naledimage
 	category_tags = list(CTAG_ORTHODOXIST)
-	subclass_languages = list(/datum/language/otavan)
+	subclass_languages = list(/datum/language/otavan, /datum/language/raneshi)
 	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
 	traits_applied = list(
 		TRAIT_PSYDONITE,
