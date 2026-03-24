@@ -41,7 +41,7 @@
 #define ARMOR_DR_ABSORB_TYPES list() // TA EDIT, prev. "blunt"
 #define ARMOR_DR_PIERCE_TYPES list("fire", "acid")
 #define ARMOR_DR_TYPES list("blunt", "fire", "acid")
-#define ARMOR_DBLOCK_TYPES list("slash", "stab", "piercing")
+#define ARMOR_DBLOCK_TYPES list("slash", "stab", "piercing", "blunt") // TA EDIT
 
 // Penetration passthrough fractions
 #define PEN_PASSTHROUGH_OVER	1.0		// pen > armor tier: full damage through
