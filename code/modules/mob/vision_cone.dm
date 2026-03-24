@@ -359,7 +359,7 @@
 		hud_used.fov.alpha = 255
 		hud_used.fov_blocker.alpha = 255
 	var/atom/movable/screen/plane_master/game_world_fov_hidden/PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in client.screen
-	PM.backdrop(src)
+	PM?.backdrop(src)
 
 /mob/proc/hide_cone()
 	if(!client)
@@ -368,7 +368,7 @@
 		hud_used.fov.alpha = 0
 		hud_used.fov_blocker.alpha = 0
 	var/atom/movable/screen/plane_master/game_world_fov_hidden/PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in client.screen
-	PM.backdrop(src)
+	PM?.backdrop(src)
 
 /atom/movable/screen/fov_blocker
 	icon = 'icons/mob/vision_cone.dmi'
