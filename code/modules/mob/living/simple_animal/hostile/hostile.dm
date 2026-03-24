@@ -289,7 +289,7 @@
 		UnregisterSignal(target, COMSIG_PARENT_QDELETING)
 	target = new_target
 	if(target)
-		RegisterSignal(target, COMSIG_PARENT_QDELETING, PROC_REF(handle_target_del), override = TRUE)
+		RegisterSignal(target, COMSIG_PARENT_QDELETING, PROC_REF(handle_target_del))
 	LosePatience()
 	if(target != null)
 		GainPatience()
