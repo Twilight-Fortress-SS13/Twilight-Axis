@@ -81,7 +81,10 @@
 
 	var/mob/living/L = target
 	var/stacks = max(1, scale_amount(3))
-	L.apply_status_effect(/datum/status_effect/fire_handler/fire_stacks, stacks)
+
+	var/datum/status_effect/fire_handler/fire_stacks/fire = L.apply_status_effect(/datum/status_effect/fire_handler/fire_stacks, stacks)
+	if(fire)
+		fire.ignite()
 
 /datum/rune/air/blade
 	id = "air_blade"
