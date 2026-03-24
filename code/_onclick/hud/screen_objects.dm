@@ -278,6 +278,13 @@
 	var/obj/effect/overlay/vis/blocked_vis
 	var/obj/effect/overlay/vis/active_vis
 
+/atom/movable/screen/inventory/hand/Destroy()
+	QDEL_NULL(handcuff_vis)
+	QDEL_NULL(grabbed_vis)
+	QDEL_NULL(blocked_vis)
+	QDEL_NULL(active_vis)
+	return ..()
+
 /atom/movable/screen/inventory/hand/New()
 	..()
 	handcuff_vis = new
@@ -436,6 +443,15 @@
 	var/obj/effect/overlay/vis/border_vis1
 	var/obj/effect/overlay/vis/border_vis2
 
+/atom/movable/screen/act_intent/rogintent/Destroy()
+	QDEL_NULL(intent_vis1)
+	QDEL_NULL(intent_vis2)
+	QDEL_NULL(intent_vis3)
+	QDEL_NULL(intent_vis4)
+	QDEL_NULL(border_vis1)
+	QDEL_NULL(border_vis2)
+	return ..()
+
 /atom/movable/screen/act_intent/rogintent/New()
 	..()
 	var/static/list/pixel_x_offsets = list(64, 96, 64, 96)
@@ -468,7 +484,7 @@
 	return slot
 
 /atom/movable/screen/act_intent/rogintent/update_icon(list/intentsl,list/intentsr, oactive = FALSE)
-	if(!intentsl || !intentsr)
+	if(!intentsl || !intentsr || !hud?.mymob)
 		intent_vis1.icon = null
 		intent_vis2.icon = null
 		intent_vis3.icon = null
@@ -510,7 +526,7 @@
 	var/used = "offintent"
 	if(oactive)
 		used = "offintentselected"
-	if(!r_index || !l_index)
+	if(!r_index || !l_index || !hud?.mymob)
 		border_vis1.icon = null
 		border_vis2.icon = null
 		return
@@ -1053,7 +1069,29 @@
 	var/obj/effect/overlay/flash_layer
 	var/arrowheight = 0
 	var/list/limb_vis = list()
+	var/list/wound_vis = list()
+	var/list/bleed_vis = list()
+	var/list/limb_cache = list()  // zone -> "color|wound_alpha|bleed"
+	var/list/flash_vis = list()  // zone -> reusable flash overlay
 	var/obj/effect/overlay/vis/selection_vis
+
+/atom/movable/screen/zone_sel/Destroy()
+	for(var/zone in limb_vis)
+		qdel(limb_vis[zone])
+	for(var/zone in wound_vis)
+		qdel(wound_vis[zone])
+	for(var/zone in bleed_vis)
+		qdel(bleed_vis[zone])
+	for(var/zone in flash_vis)
+		qdel(flash_vis[zone])
+	limb_vis = null
+	wound_vis = null
+	bleed_vis = null
+	limb_cache = null
+	flash_vis = null
+	QDEL_NULL(selection_vis)
+	QDEL_NULL(flash_layer)
+	return ..()
 
 /atom/movable/screen/zone_sel/New()
 	..()
@@ -1405,15 +1443,18 @@
 /atom/movable/screen/zone_sel/proc/rebuild_limbs()
 	if(hud.mymob.stat == DEAD || !ishuman(hud.mymob))
 		for(var/zone in limb_vis)
-			vis_contents -= limb_vis[zone]
-			qdel(limb_vis[zone])
+			_cleanup_limb_vis(zone)
 		limb_vis.Cut()
+		wound_vis.Cut()
+		bleed_vis.Cut()
+		limb_cache.Cut()
 		return
 
 	var/mob/living/carbon/human/H = hud.mymob
 	var/gender_prefix = H.gender == "male" ? "m" : "f"
 	var/list/missing_bodyparts_zones = H.get_missing_limbs()
 	var/nopain = HAS_TRAIT(H, TRAIT_NOPAIN)
+	limb_cache.Cut() // force full re-apply on rebuild (handles gender change, etc.)
 
 	var/list/needed_zones = list()
 	for(var/obj/item/bodypart/BP as anything in H.bodyparts)
@@ -1424,47 +1465,24 @@
 
 	for(var/zone in limb_vis)
 		if(!(zone in needed_zones))
-			vis_contents -= limb_vis[zone]
-			qdel(limb_vis[zone])
-			limb_vis -= zone
+			_cleanup_limb_vis(zone)
 
 	for(var/zone in needed_zones)
+		_ensure_limb_vis(zone, gender_prefix)
 		var/obj/item/bodypart/BP = needed_zones[zone]
-		var/obj/effect/overlay/vis/limb = limb_vis[zone]
-		if(!limb)
-			limb = new
-			limb.icon = 'icons/mob/roguehud64.dmi'
-			limb.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-			limb.plane = plane
-			limb.layer = layer + 0.1
-			limb_vis[zone] = limb
-			vis_contents += limb
-
-		limb.icon_state = "[gender_prefix]-[zone]"
-		limb.cut_overlays()
-
 		if(!BP)
-			limb.color = "#2f002f"
+			_apply_limb_state(zone, "#2f002f", 0, FALSE)
 			continue
 		if(nopain)
-			limb.color = "#78a8ba"
+			_apply_limb_state(zone, "#78a8ba", 0, FALSE)
 			continue
-
-		limb.color = null
 		var/damage = min(BP.burn_dam + BP.brute_dam, BP.max_damage)
-		var/comparison = damage / BP.max_damage
-		var/mutable_appearance/wound = mutable_appearance('icons/mob/roguehud64.dmi', "[gender_prefix]w-[zone]")
-		wound.alpha = clamp((comparison * 255) * 2, 0, 255)
-		limb.add_overlay(wound)
-		var/bleed = BP.get_bleed_rate()
-		if(bleed)
-			limb.add_overlay(mutable_appearance('icons/mob/roguehud64.dmi', "[gender_prefix]-[zone]-bleed"))
+		var/wound_alpha = clamp(round((damage / BP.max_damage) * 510), 0, 255)
+		var/has_bleed = BP.get_bleed_rate() > 0
+		_apply_limb_state(zone, null, wound_alpha, has_bleed)
 
-/atom/movable/screen/zone_sel/proc/update_limb(zone)
-	if(!hud?.mymob || !ishuman(hud.mymob))
-		return
-	var/mob/living/carbon/human/H = hud.mymob
-	var/gender_prefix = H.gender == "male" ? "m" : "f"
+/// Creates limb/wound/bleed vis objects for a zone if they don't exist
+/atom/movable/screen/zone_sel/proc/_ensure_limb_vis(zone, gender_prefix)
 	var/obj/effect/overlay/vis/limb = limb_vis[zone]
 	if(!limb)
 		limb = new
@@ -1474,35 +1492,97 @@
 		limb.layer = layer + 0.1
 		limb_vis[zone] = limb
 		vis_contents += limb
-
 	limb.icon_state = "[gender_prefix]-[zone]"
-	limb.cut_overlays()
 
-	var/list/missing = H.get_missing_limbs()
-	if(zone in missing)
-		limb.color = "#2f002f"
-		return
+	var/obj/effect/overlay/vis/wnd = wound_vis[zone]
+	if(!wnd)
+		wnd = new
+		wnd.icon = 'icons/mob/roguehud64.dmi'
+		wnd.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+		wnd.plane = plane
+		wnd.layer = layer + 0.11
+		wnd.alpha = 0
+		wound_vis[zone] = wnd
+		vis_contents += wnd
+	wnd.icon_state = "[gender_prefix]w-[zone]"
 
-	var/obj/item/bodypart/BP = H.get_bodypart(zone)
-	if(!BP)
-		vis_contents -= limb
+	if(!bleed_vis[zone])
+		var/obj/effect/overlay/vis/bld = new
+		bld.icon = null
+		bld.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+		bld.plane = plane
+		bld.layer = layer + 0.12
+		bleed_vis[zone] = bld
+		vis_contents += bld
+
+/// Removes all vis objects for a zone
+/atom/movable/screen/zone_sel/proc/_cleanup_limb_vis(zone)
+	if(limb_vis[zone])
+		vis_contents -= limb_vis[zone]
+		qdel(limb_vis[zone])
 		limb_vis -= zone
-		qdel(limb)
+	if(wound_vis[zone])
+		vis_contents -= wound_vis[zone]
+		qdel(wound_vis[zone])
+		wound_vis -= zone
+	if(bleed_vis[zone])
+		vis_contents -= bleed_vis[zone]
+		qdel(bleed_vis[zone])
+		bleed_vis -= zone
+	limb_cache -= zone
+
+/// Applies visual state to a zone with cache check — skips no-op updates
+/atom/movable/screen/zone_sel/proc/_apply_limb_state(zone, limb_color, wound_alpha, has_bleed)
+	var/cache_key = "[limb_color]|[wound_alpha]|[has_bleed]"
+	if(limb_cache[zone] == cache_key)
+		return
+	limb_cache[zone] = cache_key
+
+	var/obj/effect/overlay/vis/limb = limb_vis[zone]
+	limb.color = limb_color
+
+	var/obj/effect/overlay/vis/wnd = wound_vis[zone]
+	wnd.alpha = wound_alpha
+
+	var/obj/effect/overlay/vis/bld = bleed_vis[zone]
+	if(has_bleed)
+		if(!bld.icon)
+			var/gender_prefix = hud.mymob.gender == "male" ? "m" : "f"
+			bld.icon = 'icons/mob/roguehud64.dmi'
+			bld.icon_state = "[gender_prefix]-[zone]-bleed"
+	else
+		if(bld.icon)
+			bld.icon = null
+
+/atom/movable/screen/zone_sel/proc/update_limb(zone)
+	if(!hud?.mymob || !ishuman(hud.mymob))
+		return
+	var/mob/living/carbon/human/H = hud.mymob
+
+	// Hot path: bodypart exists and vis objects exist — skip expensive checks
+	var/obj/item/bodypart/BP = H.get_bodypart(zone)
+	if(BP)
+		if(!limb_vis[zone])
+			// Cold path: first time seeing this zone
+			_ensure_limb_vis(zone, H.gender == "male" ? "m" : "f")
+		if(HAS_TRAIT(H, TRAIT_NOPAIN))
+			_apply_limb_state(zone, "#78a8ba", 0, FALSE)
+			return
+		var/damage = min(BP.burn_dam + BP.brute_dam, BP.max_damage)
+		var/wound_alpha = clamp(round((damage / BP.max_damage) * 510), 0, 255)
+		var/has_bleed = BP.get_bleed_rate() > 0
+		_apply_limb_state(zone, null, wound_alpha, has_bleed)
 		return
 
-	if(HAS_TRAIT(H, TRAIT_NOPAIN))
-		limb.color = "#78a8ba"
+	// Cold path: no bodypart — missing limb or cleanup
+	if(zone in H.get_missing_limbs())
+		if(!limb_vis[zone])
+			_ensure_limb_vis(zone, H.gender == "male" ? "m" : "f")
+		_apply_limb_state(zone, "#2f002f", 0, FALSE)
 		return
 
-	limb.color = null
-	var/damage = min(BP.burn_dam + BP.brute_dam, BP.max_damage)
-	var/comparison = damage / BP.max_damage
-	var/mutable_appearance/wound = mutable_appearance('icons/mob/roguehud64.dmi', "[gender_prefix]w-[zone]")
-	wound.alpha = clamp((comparison * 255) * 2, 0, 255)
-	limb.add_overlay(wound)
-	var/bleed = BP.get_bleed_rate()
-	if(bleed)
-		limb.add_overlay(mutable_appearance('icons/mob/roguehud64.dmi', "[gender_prefix]-[zone]-bleed"))
+	// Zone doesn't exist on this mob — clean up vis objects if they were created
+	_cleanup_limb_vis(zone)
 
 /atom/movable/screen/zone_sel/proc/update_selection()
 	if(!hud?.mymob)
@@ -1517,23 +1597,21 @@
 
 	var/gender_prefix = (hud.mymob.gender == FEMALE) ? "f" : "m"
 
-	var/obj/effect/overlay/highlight = new
-	highlight.icon = 'icons/mob/roguehud64.dmi'
+	// Reuse existing flash overlay for this zone instead of creating new objects
+	var/obj/effect/overlay/vis/highlight = flash_vis[zone]
+	if(!highlight)
+		highlight = new
+		highlight.icon = 'icons/mob/roguehud64.dmi'
+		highlight.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+		highlight.layer = layer + 0.3
+		highlight.plane = plane
+		flash_vis[zone] = highlight
+		flash_layer.vis_contents += highlight
 	highlight.icon_state = "[gender_prefix]-[zone]"
 	highlight.color = limb_color
 	highlight.alpha = 180
-	highlight.layer = layer + 0.3
-	highlight.plane = plane
-	highlight.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-
-	flash_layer.vis_contents += highlight
 
 	animate(highlight, alpha = 0, time = 20, easing = EASE_IN)
-
-	spawn(20)
-		if(highlight in flash_layer.vis_contents)
-			flash_layer.vis_contents -= highlight
-		qdel(highlight)
 
 /atom/movable/screen/zone_sel/robot
 	icon = 'icons/mob/screen_cyborg.dmi'
@@ -1966,8 +2044,9 @@
 		showing = FALSE
 
 /atom/movable/screen/rmbintent/Destroy()
+	QDEL_NULL(intent_icon_vis)
 	QDEL_LIST(shown_intents)
-	. = ..()
+	return ..()
 
 /atom/movable/screen/rintent_selection
 	name = "rmb intent"
