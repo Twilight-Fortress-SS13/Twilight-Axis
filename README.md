@@ -1,15 +1,15 @@
 <p align="center">
- <img width="450px" src="https://github.com/user-attachments/assets/6b803f1d-3262-4373-8531-8f8415a3d05f" align="center" alt="Twilight Fortress" />
- <h1 align="center">Twilight Axis</h1>
- <h2 align="center">Roleplay Medieval High-Fantasy | D&D-like Server</h2>
+ <img width="450px" src="https://cdn.discordapp.com/attachments/1472988991497441524/1475697776841981963/image.png?ex=69a3b427&is=69a262a7&hm=645584eaf78401012a4900c3c75ede0d758f589ff9492ba6b277b6b84766d07d" align="center" alt="New Psydonia" />
+ <h1 align="center">Saint Place</h1>
+ <h2 align="center">RogueTown-idea-based Server</h2>
 </p>
 
 <div align="center">
 
 | Website                   | Link                                           |
 |---------------------------|------------------------------------------------|
-| Discord          | [https://discord.gg/6Sga5Uvdn6](https://discord.gg/6Sga5Uvdn6) |
-| Wiki Twilight Axis                     | [Wiki](https://wiki.twilight-fortress-axis.ru/index.php?title=%D0%97%D0%B0%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0) |
+| Discord          | [https://discord.gg/nnSszHGYTm](https://discord.gg/nnSszHGYTm) |
+| Usable Wiki                     | [Wiki](https://twilight-fortress-axis.ru/index.php?title=%D0%97%D0%B0%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0) |
 
   ## LICENSE
 Original Fork Originates from [commit c28b351807bad950d2b323ada048190844bbda32](https://github.com/tgstation/tgstation/commit/c28b351807bad950d2b323ada048190844bbda32).
@@ -27,6 +27,3 @@ See the footer of [code/__DEFINES/tgs.dm](./code/__DEFINES/tgs.dm) and [code/mod
 
 All assets including icons and sound are under a [Creative Commons 3.0 BY-SA license](https://creativecommons.org/licenses/by-sa/3.0/) unless otherwise indicated.
 
-</div>
-
-This is fork of Azure Peak. There's a discord link [Azure Peak](https://discord.gg/NCFXUAgCPT)
