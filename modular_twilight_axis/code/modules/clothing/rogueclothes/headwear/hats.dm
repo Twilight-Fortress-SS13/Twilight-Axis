@@ -305,6 +305,15 @@
 	craftdiff = 2
 	sellprice = 15
 
+/obj/item/clothing/head/roguetown/duelhat/etrusca
+	name = "etruscian duelist hat"
+	desc = "A dainty looking feathered hat that is actually quite heavy and thick, Duelists from Etrusca are known to value winning fights without dirtying the white feather on top"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	icon_state = "duelisthat"
+	item_state = "duelisthat"
+	color = null
+
 /obj/item/clothing/head/roguetown/hscarf
 	desc = "Шёлковая повязка, что часто находится на голове чаще всего или моряка, или пирата!"
 	name = "head scarf"
@@ -312,6 +321,7 @@
 	item_state = "headscarf"
 	icon = 'modular_twilight_axis/icons/clothing/kazengun_n_burger.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/kazengun_n_burger.dmi'
+	salvage_result = /obj/item/natural/silk
 
 /datum/crafting_recipe/roguetown/sewing/hscarf
 	name = "head scarf"

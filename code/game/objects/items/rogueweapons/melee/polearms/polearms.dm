@@ -320,7 +320,7 @@
 	force = 25
 	force_wielded = 25
 	possible_item_intents = list(SHORT_SPEAR_THRUST, SHORT_SPEAR_CUT)
-	gripped_intents = list(SHORT_SPEAR_THRUST, SHORT_SPEAR_CUT, SPEAR_BASH) 
+	gripped_intents = list(SHORT_SPEAR_THRUST, SHORT_SPEAR_CUT, SPEAR_BASH)
 	name = "short spear"
 	icon_state = "short_spear"
 	wlength = WLENGTH_LONG
@@ -362,7 +362,7 @@
 	effective_range = null
 	effective_range_type = EFF_RANGE_NONE
 
-// 
+//
 /obj/item/rogueweapon/spear/spellblade
 	name = "dory"
 	icon_state = "short_spear"
@@ -1142,7 +1142,7 @@
 	force = 23
 	force_wielded = 30
 	sellprice = 50
-	max_integrity = 175
+	max_integrity = 250 //equal to psydonite; putting it at half of this was a neat little experiment but agonizing
 
 
 /obj/item/rogueweapon/spear/partizan

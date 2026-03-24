@@ -71,3 +71,33 @@
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
+
+/obj/item/clothing/head/roguetown/helmet/sallet/morion/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_HONORBOUND)
+
+/obj/item/clothing/head/roguetown/helmet/sallet/morion
+	name = "etruscan morion"
+	desc = "The famous Etruscan morion, which can often be seen on sailors and ordinary infantry."
+	icon_state = "morion"
+	item_state = "morion"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	resistance_flags = FIRE_PROOF
+	var/picked = FALSE
+	color = "#FFFFFF"
+	max_integrity = ARMOR_INT_HELMET_STEEL + 15
+	worn_y_dimension = 30
+
+/obj/item/clothing/head/roguetown/helmet/sallet/morion/attackby(obj/item/W, mob/living/user, params)
+	..()
+	if(istype(W, /obj/item/natural/feather) && !detail_tag)
+		var/choice = input(user, "Choose a color.", "Plume") as anything in COLOR_MAP
+		detail_color = COLOR_MAP[choice]
+		detail_tag = "_detail"
+		user.visible_message(span_warning("[user] adds [W] to [src]."))
+		user.transferItemToLoc(W, src, FALSE, FALSE)
+		update_icon()
+		if(loc == user && ishuman(user))
+			var/mob/living/carbon/H = user
+			H.update_inv_head()

@@ -83,13 +83,13 @@
 
 /datum/loadout_item/donator_eiren
 	name = "Donator Kit - Regret"
-	path = /obj/item/enchantingkit/eiren
+	path = /obj/item/enchantingkit/weapon/eiren
 	ckeywhitelist = list("eirenxiv")
 	sort_category = "Donator"
 
 /datum/loadout_item/donator_eiren2
 	name = "Donator Kit - Lunae"
-	path = /obj/item/enchantingkit/eirensabre
+	path = /obj/item/enchantingkit/weapon/eirensabre
 	ckeywhitelist = list("eirenxiv")
 	sort_category = "Donator"
 
@@ -119,7 +119,7 @@
 
 /datum/loadout_item/donator_inverserun
 	name = "Donator Kit - Votive Thorns"
-	path = /obj/item/enchantingkit/inverserun
+	path = /obj/item/enchantingkit/weapon/inverserun
 	ckeywhitelist = list("inverserun")
 	sort_category = "Donator"
 

@@ -1127,3 +1127,11 @@
   - balance: modified coverage on armour, combination with bracers still gives full
       coverage
   - balance: replaced hand light haubergeon with padded gambeson
+2026-03-24:
+  ReezeBL:
+  - bugfix: quiteus poison component purged from ALL items on a single use no more
+  WeNeedMorePhoron:
+  - bugfix: Multiple person butchering the same simple mob no longer duplicates head
+  nauticall:
+  - qol: You can now open and close unlocked doors with left-click while holding a
+      key or key ring.
