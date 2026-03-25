@@ -32,8 +32,8 @@
 	range = 12
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
-	woundclass = BCLASS_PIERCE
-	flag = "piercing"
+	woundclass = BCLASS_STAB
+	flag = "stab"
 	armor_penetration = PEN_HEAVY
 	speed = 0.1
 
@@ -73,8 +73,8 @@
 	range = 10
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
-	woundclass = BCLASS_PIERCE
-	flag = "piercing"
+	woundclass = BCLASS_STAB
+	flag = "stab"
 	armor_penetration = PEN_HEAVY
 	speed = 0.1
 	critfactor = 0.67
@@ -96,7 +96,7 @@
 	range = 50
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	embedchance = 100
-	woundclass = BCLASS_PIERCE
+	woundclass = BCLASS_STAB
 	flag = "stab"
 	armor_penetration = PEN_HEAVY
 
