@@ -82,7 +82,20 @@
 		if(used_intent.blade_class == BCLASS_CUT)
 			bonus += 6
 		if((used_intent.blade_class == BCLASS_BLUNT || used_intent.blade_class == BCLASS_SMASH) && check_zone(zone) != zone)	//A mace can't hit the eyes very well
-			bonus -= 10
+		// TA EDIT
+			var/is_heavy = FALSE
+			if(I && I.wbalance == WBALANCE_HEAVY)
+				is_heavy = TRUE
+			
+			if(is_heavy)
+				var/zone_difficulty = ranged_zone_difficulty(zone)
+				if(zone_difficulty == ULTRA_PRECISE_ZONE || zone == BODY_ZONE_PRECISE_NECK)
+					bonus -= 40
+				else
+					bonus -= 20
+			else
+				bonus -= 10
+		// TA EDIT
 		if(used_intent.accuracy_modifier)
 			bonus += used_intent.accuracy_modifier
 
