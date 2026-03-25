@@ -394,8 +394,9 @@
 	..()
 	L.playsound_local(L, 'sound/ravein/small/hello_my_friend.ogg', 100, FALSE)
 	L.flash_fullscreen("whiteflash")
-	animate(L.client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE)
-	animate(pixel_y = -1, time = 1, flags = ANIMATION_RELATIVE)
+	if(L.client)
+		animate(L.client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE)
+		animate(pixel_y = -1, time = 1, flags = ANIMATION_RELATIVE)
 
 /datum/reagent/starsugar/on_mob_end_metabolize(mob/living/L)
 	L.remove_status_effect(/datum/status_effect/buff/starsugar)

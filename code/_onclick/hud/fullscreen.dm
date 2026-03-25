@@ -85,6 +85,8 @@
 	var/show_when_dead = FALSE
 
 /atom/movable/screen/fullscreen/proc/update_for_view(client_view)
+	if(isnull(client_view))
+		return
 	if (screen_loc == "CENTER-7,CENTER-7" && view != client_view)
 		var/list/actualview = getviewsize(client_view)
 		view = client_view

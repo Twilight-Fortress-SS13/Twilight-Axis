@@ -1011,7 +1011,7 @@
 	// causing LOG_NPC_SAY (1<<20 = 1048576) to be stored incorrectly and match against wrong filters.
 	var/smessage_type = "[message_type]"
 
-	if(client)
+	if(client?.player_details)
 		if(!islist(client.player_details.logging[smessage_type]))
 			client.player_details.logging[smessage_type] = list()
 
