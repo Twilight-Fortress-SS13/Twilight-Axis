@@ -40,7 +40,7 @@
 	RegisterSignal(parent, COMSIG_ATOM_ATTACK_RIGHT, PROC_REF(right_click))
 	RegisterSignal(parent, COMSIG_PARENT_ATTACKBY, PROC_REF(attack_by))
 	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(examine_check))
-	RegisterSignal(parent, COMSIG_ATOM_UPDATE_ICON, PROC_REF(update_icon))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_ICON, PROC_REF(signal_update_icon)) // TA EDIT
 
 /datum/component/holster/proc/search_turf(atom/source, turf/T, mob/living/user)
 	to_chat(user, span_notice("I search for my sword..."))
@@ -159,18 +159,22 @@
 		examine_list += span_notice("The sheath is occupied by [sheathed]. Left-click to pull it out.")
 
 
-/datum/component/holster/proc/update_icon(atom/source, mob/living/user)
+/datum/component/holster/proc/update_icon(mob/living/user) // TA EDIT
 	var/obj/item/I = parent
+
 	if(use_icons)
 		if(sheathed)
 			I.icon_state = "[initial(I.icon_state)]_[sheathed.sheathe_icon]"
 		else
 			I.icon_state = "[initial(I.icon_state)]"
 
-		if(user)
-			user.update_inv_hands()
-			user.update_inv_belt()
-			user.update_inv_back()
+	if(!user && ismob(I.loc)) // TA EDIT START
+		user = I.loc
+
+	if(user)
+		user.update_inv_hands()
+		user.update_inv_belt()
+		user.update_inv_back() // TA EDIT END
 
 	I.getonmobprop(tag)
 
@@ -241,3 +245,11 @@
 	if(.)
 		var/obj/item/rogueweapon/RW = parent
 		RW.cast_time_reduction = RUBY_CAST_TIME_REDUCTION
+
+
+// TA EDIT START
+
+/datum/component/holster/proc/signal_update_icon(atom/source, mob/living/user)
+	update_icon(user)
+
+// TA EDIT END

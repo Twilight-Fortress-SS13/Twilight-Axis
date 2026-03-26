@@ -44,7 +44,7 @@
 	if (!H)
 		return
 	var/should_update = FALSE
-	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Tail", "Tail Color One", "Tail Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color", "Nudeshot") //TA edit - new ERP SYSTEM
+	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Tail", "Tail Color One", "Tail Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color")
 	var/chosen = input(H, "Change what?", "Appearance") as null|anything in choices
 
 	if(!chosen)
@@ -52,8 +52,8 @@
 
 	switch(chosen)
 		//TA addition start - new ERP SYSTEM
-		if("Nudeshot")
-			H.mirror_set_nudeshot_url()
+//		if("Nudeshot")  // Надо будет сделать кнопку добавления в NSFW галерею и кнопку удаления от туда картинок. Это уже потом.
+//			H.mirror_set_nudeshot_url()
 		//TA addition end - new ERP SYSTEM
 		if("Hairstyle")
 			var/datum/customizer_choice/bodypart_feature/hair/head/humanoid/hair_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/hair/head/humanoid)
@@ -635,18 +635,20 @@
 
 			var/new_style = input(H, "Choose your ears", "Ears Customization") as null|anything in valid_ears
 			if(new_style)
+				var/obj/item/organ/ears/ears = H.getorganslot(ORGAN_SLOT_EARS)
+
+				if(!ears)
+					ears = new /obj/item/organ/ears()
+					ears.Insert(H, TRUE, FALSE)
+
 				if(new_style == "none")
-					var/obj/item/organ/ears/ears = H.getorganslot(ORGAN_SLOT_EARS)
-					if(ears)
-						ears.Remove(H)
-						qdel(ears)
-						H.update_body()
-						should_update = TRUE
+					ears.Remove(H)
+					ears.accessory_type = initial(ears.accessory_type)
+					ears.accessory_colors = initial(ears.accessory_colors)
+					ears.Insert(H, TRUE, FALSE)
+					H.update_body()
+					should_update = TRUE
 				else
-					var/obj/item/organ/ears/ears = H.getorganslot(ORGAN_SLOT_EARS)
-					if(!ears)
-						ears = new /obj/item/organ/ears()
-						ears.Insert(H, TRUE, FALSE)
 					ears.accessory_type = valid_ears[new_style]
 					var/datum/sprite_accessory/ears/ears_type = SPRITE_ACCESSORY(ears.accessory_type)
 					ears.accessory_colors = ears_type.get_default_colors(color_key_source_list_from_carbon(H))

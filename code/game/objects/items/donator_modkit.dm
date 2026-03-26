@@ -3,13 +3,180 @@
 /obj/item/enchantingkit
 	name = "morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item."
-	icon = 'icons/obj/items/donor_objects.dmi'	//We default to here just to avoid tons of uneeded sprites.
+	icon = 'icons/obj/items/donor_objects.dmi'
 	icon_state = "enchanting_kit"
-	w_class = WEIGHT_CLASS_SMALL	//So can fit in a bag, we don't need these large. They're just used to apply to items.
+	w_class = WEIGHT_CLASS_SMALL
 	var/list/target_items = list()
-	/// Result item we'll exchange it to. Currently /weapon/ type kits use this as an example they'll copy all the visual data from. Keep this in mind if this never gets properly refactored!
 	var/result_item = null
 	var/icon_loadout = null
+
+/obj/item/enchantingkit/proc/get_result_type(obj/item/I)
+	if(!I)
+		return null
+
+	var/result_type = null
+
+	if(LAZYLEN(target_items))
+		for(var/T in target_items)
+			if(istype(I, T))
+				result_type = target_items[T]
+				break
+
+	if(!result_type && result_item)
+		result_type = result_item
+
+	if(!result_type && !result_item)
+		CRASH("No result_item on a donator kit while result_type was empty. Something went wrong.")
+
+	return result_type
+
+/obj/item/enchantingkit/proc/prepare_morph_target(obj/item/I, mob/user)
+	if(!I || !user)
+		return FALSE
+
+	if(I.loc == user)
+		user.temporarilyRemoveItemFromInventory(I, TRUE)
+
+	remove_item_from_storage(I)
+	return TRUE
+
+/obj/item/enchantingkit/proc/copy_item_var(datum/source, datum/target, var_name)
+	if(!source || !target || !var_name)
+		return
+
+	if(!(var_name in source.vars) || !(var_name in target.vars))
+		return
+
+	var/value = source.vars[var_name]
+
+	if(islist(value))
+		var/list/value_list = value
+		target.vars[var_name] = value_list.Copy()
+	else
+		target.vars[var_name] = value
+
+/obj/item/enchantingkit/proc/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	if(!source_item || !result_item)
+		return
+
+	var/static/list/common_item_vars = list(
+		"w_class",
+		"force",
+		"throwforce",
+		"throw_speed",
+		"throw_range",
+		"max_integrity",
+		"obj_integrity",
+		"integrity_failure",
+		"resistance_flags",
+		"item_flags",
+		"slot_flags",
+		"hitsound",
+		"usesound",
+		"mob_throw_hit_sound",
+		"equip_sound",
+		"pickup_sound",
+		"drop_sound",
+		"place_sound",
+		"heat_protection",
+		"cold_protection",
+		"max_heat_protection_temperature",
+		"min_cold_protection_temperature",
+		"flags_inv",
+		"flags_cover",
+		"transparent_protection",
+		"interaction_flags_item",
+		"body_parts_covered",
+		"body_parts_covered_dynamic",
+		"body_parts_inherent",
+		"surgery_cover",
+		"gas_transfer_coefficient",
+		"permeability_coefficient",
+		"siemens_coefficient",
+		"slowdown",
+		"armor_penetration",
+		"allowed",
+		"equip_delay_self",
+		"unequip_delay_self",
+		"inv_storage_delay",
+		"edelay_type",
+		"equip_delay_other",
+		"strip_delay",
+		"breakouttime",
+		"slipouttime",
+		"species_exception",
+		"block_chance",
+		"hit_reaction_chance",
+		"reach",
+		"can_parry",
+		"associated_skill",
+		"possible_item_intents",
+		"bigboy",
+		"wdefense",
+		"wdefense_wbonus",
+		"wdefense_dynamic",
+		"salvage_result",
+		"salvage_amount",
+		"fiber_salvage",
+		"anvilrepair",
+		"sewrepair",
+		"breakpath",
+		"sellprice",
+		"blocksound",
+		"armor"
+	)
+
+	for(var/var_name in common_item_vars)
+		copy_item_var(source_item, result_item, var_name)
+
+	if(istype(source_item, /obj/item/clothing) && istype(result_item, /obj/item/clothing))
+		var/static/list/clothing_vars = list(
+			"flash_protect",
+			"tint",
+			"up",
+			"visor_flags",
+			"visor_flags_inv",
+			"visor_flags_cover",
+			"visor_vars_to_toggle",
+			"clothing_flags",
+			"stack_fovs",
+			"pocket_storage_component_path",
+			"allowed_sex",
+			"allowed_race",
+			"immune_to_genderswap",
+			"armor_class",
+			"naledicolor",
+			"chunkcolor",
+			"material_category",
+			"r_sleeve_status",
+			"l_sleeve_status",
+			"r_sleeve_zone",
+			"l_sleeve_zone",
+			"torn_sleeve_number",
+			"nodismemsleeves"
+		)
+
+		for(var/var_name in clothing_vars)
+			copy_item_var(source_item, result_item, var_name)
+
+	if(istype(source_item, /obj/item/rogueweapon) && istype(result_item, /obj/item/rogueweapon))
+		var/static/list/rogueweapon_vars = list(
+			"is_silver"
+		)
+
+		for(var/var_name in rogueweapon_vars)
+			copy_item_var(source_item, result_item, var_name)
+
+	if(result_item.max_integrity && result_item.obj_integrity > result_item.max_integrity)
+		result_item.obj_integrity = result_item.max_integrity
+
+/obj/item/enchantingkit/proc/transfer_item_contents(obj/item/source_item, obj/item/result_item)
+	if(!source_item || !result_item)
+		return
+
+	for(var/atom/movable/A in source_item.contents)
+		if(A && A.loc == source_item)
+			A.forceMove(result_item)
 
 /obj/item/enchantingkit/pre_attack(obj/item/I, mob/user)
 	if(!I || !user)
@@ -18,28 +185,14 @@
 	if(!is_type_in_list(I, target_items))
 		return ..()
 
-	var/R_type = null
-	if(LAZYLEN(target_items))
-		for(var/T in target_items)
-			if(istype(I, T))
-				R_type = target_items[T]
-				break
+	var/result_type = get_result_type(I)
 
-	if(!R_type && result_item)
-		R_type = result_item
-
-	if(!R_type && !result_item)
-		CRASH("No result_item on a donator kit while R_type was empty. Something went wrong.")
-
-	if(!R_type)
+	if(!result_type)
 		to_chat(user, span_warning("[src] doesn't know how to morph [I]."))
 		return TRUE
 
-	if(I.loc == user)
-		// pulls from hands/slots/inventory cleanly
-		user.temporarilyRemoveItemFromInventory(I, TRUE)
+	prepare_morph_target(I, user)
 
-	remove_item_from_storage(I)
 	var/turf/T = get_turf(user)
 	if(!T)
 		T = get_turf(I)
@@ -47,12 +200,22 @@
 		to_chat(user, span_warning("Nowhere to morph [I]."))
 		return TRUE
 
-	var/obj/item/R = new R_type(T)
-	to_chat(user, span_notice("You apply the [src] to [I], using the enchanting dust and tools to turn it into [R]."))
-	R.name += " <font size = 1>([I.name])</font>"
+	var/old_name = I.name
+	var/obj/item/new_item = new result_type(T)
+
+	inherit_item_mechanics(I, new_item)
+	transfer_item_contents(I, new_item)
+
+	to_chat(user, span_notice("You apply the [src] to [I], using the enchanting dust and tools to turn it into [new_item]."))
+	new_item.name = "[initial(new_item.name)] ([old_name])"
+
 	qdel(I)
-	if(!user.put_in_hands(R))
-		R.forceMove(get_turf(user))
+
+	if(!user.put_in_hands(new_item))
+		new_item.forceMove(get_turf(user))
+
+	new_item.update_icon()
+	new_item.update_transform()
 
 	if(ismob(user))
 		var/mob/M = user
@@ -83,6 +246,11 @@
 
 	var/obj/item/rogueweapon/RI = R_type
 	var/obj/item/rogueweapon/TI = I
+
+	var/old_is_silver = null
+	if("is_silver" in TI.vars)
+		old_is_silver = TI.vars["is_silver"]
+
 	TI.icon = RI::icon
 	TI.icon_state = RI::icon_state
 	TI.item_state = RI::item_state
@@ -91,8 +259,11 @@
 	TI.righthand_file = RI::righthand_file
 	TI.sheathe_icon = RI::sheathe_icon ? RI::sheathe_icon : TI.sheathe_icon
 
+	if("is_silver" in TI.vars)
+		TI.vars["is_silver"] = old_is_silver
+
 	to_chat(user, span_notice("You apply the [src] to [I], using the enchanting dust and tools to turn it into [RI::name]."))
-	I.name = "[RI::name] <font size = 1>([I.name])</font>"
+	I.name = "[RI::name] ([I.name])"
 	I.desc = RI::desc
 	I.update_transform()
 
@@ -280,7 +451,7 @@
 		/obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute = /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm/ryan)
 	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm/ryan
 
-//Dakken12 - Armet/Hounskull
+//Dakken12 - Armet/Hounskull/Swords
 /obj/item/enchantingkit/dakken_zizhelm
 	name = "'armoured avantyne barbute' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Armet or Hounskull Bascinet"
@@ -291,6 +462,15 @@
 	)
 	result_item = null
 	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/dakken
+
+/obj/item/enchantingkit/dakken_alloybsword
+	name = "'avantyne-threaded sword' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long	= /obj/item/rogueweapon/sword/long/dakken_longsword,
+		/obj/item/rogueweapon/sword			= /obj/item/rogueweapon/sword/dakken_sword
+	)
+	result_item = null
+	icon_loadout = /obj/item/rogueweapon/sword/long/dakken_longsword
 
 //StinkethStonketh - Shashka & pike
 /obj/item/enchantingkit/weapon/stinketh_shashka
@@ -355,6 +535,7 @@
 		/obj/item/clothing/suit/roguetown/armor/leather/studded		= /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest
 	)
 	result_item = null
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest
 
 /obj/item/enchantingkit/triumph_weaponkit_axe
 	name = "'Valorian' axe morphing elixir"

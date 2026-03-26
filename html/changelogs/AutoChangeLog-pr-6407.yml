@@ -1,7 +1,0 @@
-author: "FreeStylaLT"
-delete-after: True
-changes:
-  - refactor: "Breathless trait no longer grants immunity to oxy damage caused by bloodloss."
-  - rscadd: "Added a \"Deathless\" trait that grants immunity to oxy damage."
-  - balance: "Gave \"Deathless\" trait to Constructs, Revenants and the Rotcured virtue."
-  - spellcheck: "Renamed \"Deathless\" virtue to \"Hollow\" to reduce confusion."

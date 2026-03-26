@@ -1,5 +1,0 @@
-author: "Ryan180602"
-delete-after: True
-changes:
-  - admin: "all notes are now assumed to be hidden by default. notes can be edited to reflect against this."
-  - admin: "HERMES mail is logged."

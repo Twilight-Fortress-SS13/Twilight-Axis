@@ -37,6 +37,8 @@
 	pumpkin spice and tossed into a kettle, it makes for an absolutely divine drink."
 	bitesize = 3 //Sharing is caring!
 	icon_state = "chocolatehalf"
+	slices_num = null
+	slice_path = null
 
 /obj/item/reagent_containers/food/snacks/jamtallow
 	name = "stick of jamtallow"

@@ -1,9 +1,0 @@
-author: "borneblood"
-delete-after: True
-changes:
-  - rscadd: "Tiered Secular Diagnosis system, that can scale up to Miracle Diagnosis at Master/Legendary Medicine"
-  - rscadd: "Reagent detection via Leech/Cheele embed, Incision (miracle) and Forceps (secular)"
-  - qol: "Improved readability of all diagnosis feedback, while keeping the archaic vibe"
-  - balance: "Secular & Diagnosis have more range (again!)"
-  - bugfix: "Cooldowns now function correctly, which may prevent issues if spammed"
-  - bugfix: "Cleaned up logic and potential TGUI runtime issues"

@@ -192,6 +192,12 @@
 	ckeywhitelist = list("dakken12") 
 	sort_category = "Donator"
 
+/datum/loadout_item/donator_dakken/sword
+	name = "Donator Kit - Avantyne Threaded Sword"
+	path = /obj/item/enchantingkit/dakken_alloybsword
+	ckeywhitelist = list("dakken12") 
+	sort_category = "Donator"
+
 /datum/loadout_item/donator_koruu/glaive
 	name = "Donator Kit - Glaive"
 	path = /obj/item/enchantingkit/koruu_glaive

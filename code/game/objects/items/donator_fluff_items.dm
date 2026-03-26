@@ -350,6 +350,20 @@
 	worn_y_dimension = 64
 	bloody_icon = 'icons/effects/blood64.dmi'
 
+/obj/item/rogueweapon/sword/dakken_sword
+	name = "avantyne threaded sword"
+	desc = "'Threads of dark metal wind through what was formerly a simple steel blade. Cracks and chips are filled in as the weapon of war is reshaped into a symbol of faith.'"
+	icon = 'icons/obj/items/donor_weapons.dmi'
+	icon_state = "alloybsword_32"
+	sheathe_icon = "alloybsword"
+
+/obj/item/rogueweapon/sword/long/dakken_longsword
+	name = "avantyne threaded longsword"
+	desc = "'Threads of dark metal wind through what was formerly a simple steel blade. Cracks and chips are filled in as the weapon of war is reshaped into a symbol of faith.'"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	icon_state = "alloybsword_64"
+	sheathe_icon = "alloybsword"
+
 /obj/item/rogueweapon/spear/boar/frei/pike/stinketh
 	name = "Kindness of Ravens Standard"
 	desc = "A Freifechter's steel pike with a reinforced spruce shaft sporting a black banner with a strange blend of religious symbols."

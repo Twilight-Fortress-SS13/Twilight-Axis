@@ -920,34 +920,6 @@
 	spitoutmouth = FALSE
 	sewrepair = TRUE
 
-////////////////////////
-// Triumph Exclusive! //
-////////////////////////
-
-//Purchasable via Triumphs. Blacklisted from the Stockpile and fitted with a reduced saleprice.
-/obj/item/clothing/neck/roguetown/ornateamulet/noble/triumph
-	name = "ornate amulet"
-	desc = "An opulent, golden necklace. When it catches the candelight, it offers a warped yet unmarred reflection of its wearer's guise."
-	sellprice = 33
-
-/obj/item/clothing/neck/roguetown/psicross/g/triumph
-	name = "ornate golden psycross"
-	desc = "'It does not matter, whether He is lyving or gone. His greatest creation still persists; the very world that our feet tread 'pon, now. That, alone, makes everything worth fighting for.'"
-	sellprice = 55
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/g/triumph
-	name = "ornate inverted psycross"
-	desc = "'Meet your lord, and know your place. Let progress be my chariot, and let my hands be the vessel that rips paradise free from its heavenly grasp. Let Psydonia's carcass not spell the death of Man, but the birth of Gods.'"
-	sellprice = 66
-
-/obj/item/clothing/neck/roguetown/psicross/astrata/g/triumph
-	name = "ornate amulet of Astrata"
-	desc = "Her command is absolute, and Her tyranny is unmarrable. Reclaim this world, child of mine, from those who'd seek to destroy it."
-	icon_state = "astrata_g"
-	sellprice = 77
-
-//
-
 /obj/item/clothing/neck/roguetown/luckcharm
 	name = "luck charm"
 	desc = "A cabbit's foot necklace. Some say it brings good luck. It only feels more lucky when it's worn around the neck."
