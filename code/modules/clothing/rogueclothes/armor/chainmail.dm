@@ -13,7 +13,7 @@
 	equip_sound = 'sound/foley/equip/equip_armor_chain.ogg'
 	anvilrepair = /datum/skill/craft/armorsmithing
 	smeltresult = /obj/item/ingot/steel
-	armor_class = ARMOR_CLASS_MEDIUM
+	armor_class = ARMOR_CLASS_LIGHT
 	material_category = ARMOR_MAT_CHAINMAIL
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/ComponentInitialize()
@@ -73,7 +73,7 @@
 	item_state = "hauberk"
 	armor = ARMOR_MAILLE
 	smeltresult = /obj/item/ingot/steel
-	armor_class = ARMOR_CLASS_LIGHT
+	armor_class = ARMOR_CLASS_MEDIUM
 	smelt_bar_num = 2
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron
