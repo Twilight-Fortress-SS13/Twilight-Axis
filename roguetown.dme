@@ -12,7 +12,7 @@
 #include "_maps\templates\arcyne_fortress.dm"
 #include "code\__byond_version_compat.dm"
 #include "code\_compile_options.dm"
-#include "modular_saint_place\world.dm"
+#include "code\world.dm"
 #include "code\__DEFINES\_bitfields.dm"
 #include "code\__DEFINES\_globals.dm"
 #include "code\__DEFINES\_helpers.dm"
