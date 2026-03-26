@@ -73,7 +73,7 @@
 	item_state = "hauberk"
 	armor = ARMOR_MAILLE
 	smeltresult = /obj/item/ingot/steel
-	armor_class = ARMOR_CLASS_MEDIUM
+	armor_class = ARMOR_CLASS_LIGHT
 	smelt_bar_num = 2
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron
