@@ -74,9 +74,6 @@
 			used.take_damage(intdamage, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
 	else
 		// DR types: blunt, fire, acid
-		if(def_zone == BODY_ZONE_PRECISE_R_EYE || def_zone == BODY_ZONE_PRECISE_L_EYE)
-			def_zone = BODY_ZONE_HEAD
-		// TA EDIT, basically lore-wise eyes are just too hard to precisely hit with blunt weapon, OOC-sided we got no armour for eyes
 		var/list/layers = get_best_worn_armor_layered(def_zone, d_type)
 		if(length(layers))
 			for(var/C in layers)

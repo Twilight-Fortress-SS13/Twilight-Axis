@@ -89,12 +89,17 @@
 			
 			if(is_heavy)
 				var/zone_difficulty = ranged_zone_difficulty(zone)
-				if(zone_difficulty == ULTRA_PRECISE_ZONE || zone == BODY_ZONE_PRECISE_NECK)
+				if(zone == BODY_ZONE_PRECISE_R_EYE || zone == BODY_ZONE_PRECISE_L_EYE)
+					bonus -= 60
+				else if(zone_difficulty == ULTRA_PRECISE_ZONE || zone == BODY_ZONE_PRECISE_NECK)
 					bonus -= 40
 				else
 					bonus -= 20
 			else
-				bonus -= 10
+				if(zone == BODY_ZONE_PRECISE_R_EYE || zone == BODY_ZONE_PRECISE_L_EYE)
+					bonus -= 40
+				else
+					bonus -= 10
 		// TA EDIT
 		if(used_intent.accuracy_modifier)
 			bonus += used_intent.accuracy_modifier
