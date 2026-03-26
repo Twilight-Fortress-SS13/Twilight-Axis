@@ -34,3 +34,7 @@
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
 
 /obj/item/clothing/suit/roguetown/armor/citywatch
+
+/obj/item/clothing/suit/roguetown/armor/chainmail
+	armor_class = ARMOR_CLASS_LIGHT
+	
