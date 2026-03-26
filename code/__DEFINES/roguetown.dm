@@ -98,6 +98,11 @@ Balloon Alert / Floating Text defines
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
 
+#define RACES_BLESSED \
+	/datum/species/human/northern,\
+	/datum/species/aasimar,\
+	/datum/species/tabaxi,\
+
 #define RACES_DESPISED \
 	/datum/species/dullahan,\
 
@@ -113,6 +118,8 @@ Balloon Alert / Floating Text defines
 #define RACES_SHUNNED_UP list(RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED)
 
 #define RACES_TOLERATED_UP list(RACES_TOLERATED, RACES_RESPECTED)
+
+#define RACES_SAINT_PLACE list(RACES_BLESSED)
 
 #define NOBLE_RACES_TYPES list(\
 	/datum/species/human/northern,\
