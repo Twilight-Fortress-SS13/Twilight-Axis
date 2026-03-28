@@ -99,12 +99,6 @@
 		"ЗИЗО СПАСЕТ НАС ОТ СТРАДАНИЙ!",
 	)
 
-/datum/patron/inhumen/zizo/on_gain(mob/living/living)
-	. = ..()
-	if(ishuman(living) && living.mind)
-		living.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/zizo_cross_stone)
-		living.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/zizo_cross_gold)
-
 /datum/patron/inhumen/zizo/post_equip(mob/living/pious)
 	. = ..()
 	if(ishuman(pious))
@@ -112,6 +106,8 @@
 		if(human.mind)
 			human.mind.special_items["Lexicon of Her Truth"] = /obj/item/book/rogue/bibble/zizo
 			human.mind.special_items["Ritual's guide book"] = /obj/item/recipe_book/zizo
+			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/zizo_cross_stone)
+			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/zizo_cross_gold)
 
 /datum/patron/inhumen/graggar
 	name = "Graggar"
@@ -140,12 +136,13 @@
 		"ЧЁРНОЕ СОЛНЦЕ ТРЕБУЕТ КРОВИ!",
 	)
 
-
-/datum/patron/inhumen/graggar/on_gain(mob/living/living)
+/datum/patron/inhumen/graggar/post_equip(mob/living/pious)
 	. = ..()
-	if(ishuman(living) && living.mind)
-		living.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/graggar_cross_stone)
-		living.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/graggar_cross_meat)
+	if(ishuman(pious))
+		var/mob/living/carbon/human/human = pious
+		if(human.mind)
+			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/graggar_cross_stone)
+			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/graggar_cross_meat)
 
 /datum/patron/inhumen/matthios
 	name = "Matthios"
@@ -198,11 +195,13 @@
 /datum/objective/hoard_mammons/update_explanation_text()
 	explanation_text = "Accumulate at least [target_mammons] mammons in your possession to be used for Freedom's unstoppable march."
 
-/datum/patron/inhumen/matthios/on_gain(mob/living/living)
+/datum/patron/inhumen/matthios/post_equip(mob/living/pious)
 	. = ..()
-	if(ishuman(living) && living.mind)
-		living.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/matthios_cross_stone)
-		living.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/matthios_cross_meat)
+	if(ishuman(pious))
+		var/mob/living/carbon/human/human = pious
+		if(human.mind)
+			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/matthios_cross_stone)
+			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/matthios_cross_meat)
 
 /datum/patron/inhumen/baotha
 	name = "Baotha"
@@ -230,11 +229,13 @@
 		"БАОТА - МОЯ РАДОСТЬ!",
 	)
 
-/datum/patron/inhumen/baotha/on_gain(mob/living/living)
+/datum/patron/inhumen/baotha/post_equip(mob/living/pious)
 	. = ..()
-	if(ishuman(living) && living.mind)
-		living.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/baotha_cross_stone)
-		living.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/baotha_cross_meat)
+	if(ishuman(pious))
+		var/mob/living/carbon/human/human = pious
+		if(human.mind)
+			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/baotha_cross_stone)
+			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/baotha_cross_meat)
 
 /////////////////////////////////
 // Does God Hear Your Prayer ? //

@@ -143,6 +143,8 @@
 		var/m2 = "[user_name_admin] has deleted a [type][(type == "note" || type == "message" || type == "watchlist entry") ? " for" : " made by"] [target_key]:<br>[text]"
 		log_admin_private(m1)
 		message_admins(m2)
+		if(type == "note" || type == "message" || type == "message sent" || type == "watchlist entry")
+			world.TgsAnnounceAdminMessageDeletion(deleted_by_ckey, target_key, type, text)
 		if(browse)
 			browse_messages("[type]")
 		else

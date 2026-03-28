@@ -5,9 +5,6 @@
 		return FALSE
 	return TRUE
 
-/datum/intent/effect/daze
-	penfactor = PEN_NONE
-
 /mob/living/try_kick(atom/A)
 
 	if(ismob(A) && HAS_TRAIT(A, "ethereal"))//TA EDIT

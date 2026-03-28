@@ -50,7 +50,7 @@
 	force_wielded = 35
 	max_blade_int = 250
 	possible_item_intents = list(SPEAR_THRUST_1H, /datum/intent/spear/bash)
-	gripped_intents = list(/datum/intent/spear/thrust, /datum/intent/rend/reach/partizan, /datum/intent/partizan/peel, /datum/intent/spear/bash)
+	gripped_intents = list(/datum/intent/spear/thrust, /datum/intent/rend/reach/partizan, /datum/intent/spear/bash)
 	icon_state = "moonlight_spear"
 	icon = 'modular_twilight_axis/church_classes/icons/prismatic_weapons64.dmi'
 	max_integrity = 50
