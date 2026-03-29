@@ -212,8 +212,6 @@
 						if("arcyne gunpowder")
 							if(ishuman(T))
 								var/mob/living/carbon/human/H = T
-								if(istype(H.wear_ring, /obj/item/clothing/ring/fate_weaver))
-									H.wear_ring.obj_break()
 								H.set_silence(5 SECONDS)
 						if("terrorpowder")
 							gunpowder_npc_critfactor += 1
@@ -366,8 +364,6 @@
 		if("arcyne gunpowder")
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
-				if(istype(H.wear_ring, /obj/item/clothing/ring/fate_weaver))
-					H.wear_ring.obj_break()
 				H.set_silence(5 SECONDS)
 
 /obj/projectile/bullet/twilight_cannonball/on_hit(atom/target, blocked = FALSE)

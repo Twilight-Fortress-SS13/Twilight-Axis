@@ -116,7 +116,7 @@ GLOBAL_LIST_INIT(erp_race_body_zone_bonus, list(
 #define ERP_BAOTHA_CHARGE_REGEN_MULT 1.25
 
 GLOBAL_LIST_INIT(available_kinks, generate_kink_list())
-GLOBAL_LIST_INIT(relationship_settings, list(REL_LOVE_POTION = list("sex_mult" = 0.8,"other_sex_mult" = 1.2,"observe_min" = 10,"observe_gain" = 1,"observe_cap" = 30)))
+GLOBAL_LIST_INIT(relationship_settings, list("love_potion_settings" = list("sex_mult" = 0.8,"other_sex_mult" = 1.2,"observe_min" = 10,"observe_gain" = 1,"observe_cap" = 30,"flag" = REL_LOVE_POTION)))
 
 var/global/list/ERP_ORGAN_ORDER = list(SEX_ORGAN_BODY,SEX_ORGAN_MOUTH,SEX_ORGAN_BREASTS,SEX_ORGAN_HANDS,SEX_ORGAN_PENIS,SEX_ORGAN_VAGINA,SEX_ORGAN_ANUS,SEX_ORGAN_TAIL,SEX_ORGAN_LEGS)
 

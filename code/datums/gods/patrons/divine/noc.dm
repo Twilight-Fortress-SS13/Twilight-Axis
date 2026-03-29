@@ -6,7 +6,7 @@
 	mob_traits = list(TRAIT_NIGHT_OWL)
 	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison			= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/invoked/noc_sight				= CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/darkvision/miracle	= CLERIC_T0,
+					/datum/action/cooldown/spell/darkvision/miracle	= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/moondream             = CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/wise_moon                = CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/moon_light     			= CLERIC_T1,
@@ -14,7 +14,6 @@
 					/obj/effect/proc_holder/spell/invoked/blood_heal			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/invisibility/miracle	= CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/blindnessorsilence		= CLERIC_T2,
-					/obj/effect/proc_holder/spell/self/wisescroll	     		= CLERIC_T3,
 					/obj/effect/proc_holder/spell/self/noc_spell_bundle			= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/resurrect/noc			= CLERIC_T4,
 	)

@@ -14,11 +14,11 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	. = ..()
 	for(var/book_type in subtypesof(/obj/item/recipe_book))
 		var/obj/item/recipe_book/book = new book_type()
-		if(!length(book.types))
+		if(!length(book.types) && !book.wiki_only)
 			qdel(book)
 			continue
 		var/book_key = "[book_type]"
-		if(book.can_spawn)
+		if(book.can_spawn || book.wiki_only)
 			book_entries += list(list(
 				"name" = book.name,
 				"wiki_name" = book.wiki_name || book.name,
@@ -201,6 +201,12 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 
 			if(book_path == /obj/item/recipe_book/zizo)
 				return
+
+			var/obj/item/recipe_book/temp_book = new book_path()
+			if(temp_book.open_wiki_entry(user))
+				qdel(temp_book)
+				return FALSE
+			qdel(temp_book)
 
 			for(var/list/entry in book_entries)
 				if(entry["path"] == book_path)

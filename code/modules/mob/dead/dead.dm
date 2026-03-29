@@ -100,6 +100,9 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		"Court Agent",
 		"Bandit"
 	)
+	var/list/count_only_job = list(
+		"Hag"
+	)
 
 	dat += "<center><b>Classes:</b></center><hr>"
 	for (var/mob/dead/new_player/player in GLOB.player_list)
@@ -144,24 +147,28 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 			key = "Garrison"
 
 		var/list/job_players = ready_players_by_job[job_name]
-		
+
 		if(!job_list_by_department[key])
 			job_list_by_department[key] = list()
-			
-		job_list_by_department[key] += "<B>[display_name]</B> ([job_players.len]) - [job_players.Join(", ")]<br>"
+
+		if(job_name in count_only_job)
+			job_list_by_department[key] += "<B>[display_name]</B> ([job_players.len])<br>"
+		else
+			job_list_by_department[key] += "<B>[display_name]</B> ([job_players.len]) - [job_players.Join(", ")]<br>"
 
 	for(var/department in job_list_by_department)
 		var/list/jobs_under_department = job_list_by_department[department]
 		if(jobs_under_department.len)
 			sortTim(jobs_under_department, cmp = GLOBAL_PROC_REF(cmp_text_asc))
-			
+
 			dat += "<h3><center><font color='[JCOLOR_BY_DEPARTMENT[department]]'>----- [department] -----</font></center></h3>"
-			
+
 			dat += "<div class='block'>"
 			dat += jobs_under_department.Join("")
 			dat += "</div>"
 
 	client << output(dat.Join(), "lobby_window.browser:update_jobs")
+
 /mob/dead/new_player/proc/open_lobby()
 	if (!client)
 		return

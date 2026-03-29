@@ -1,46 +1,50 @@
-/obj/effect/proc_holder/spell/invoked/mirror_transform
+/datum/action/cooldown/spell/mirror_transform
 	name = "Mirror Transform"
 	desc = "Temporarily grants you the ability to use mirrors to change your appearance."
-	clothes_req = FALSE
-	charge_type = "recharge"
-	associated_skill = /datum/skill/magic/arcane
-	cost = 1 // Trash spell
-	xp_gain = TRUE
-	releasedrain = SPELLCOST_CANTRIP
-	chargedrain = 1  
-	chargetime = 10
-	recharge_time = 300 SECONDS
-	warnie = "spellwarning"
-	no_early_release = TRUE
-	movement_interrupt = FALSE
-	spell_tier = 1
-	invocations = list("Effingo")
-	invocation_type = "whisper"
-	hide_charge_effect = TRUE
-	charging_slowdown = 3
-	chargedloop = /datum/looping_sound/wind
-	overlay_state = "mirror"
+	button_icon = 'icons/mob/actions/roguespells.dmi'
+	button_icon_state = "mirror"
+	sound = 'sound/magic/whiteflame.ogg'
 
-/obj/effect/proc_holder/spell/invoked/mirror_transform/cast(list/targets, mob/user)  // Changed to match invoked spell pattern
-	if(!isliving(targets[1]))
-		return
-	var/mob/living/carbon/human/H = targets[1]
+	click_to_activate = FALSE
+	self_cast_possible = TRUE
+
+	primary_resource_type = SPELL_COST_STAMINA
+	primary_resource_cost = SPELLCOST_CANTRIP
+
+	invocations = list("Effingo")
+	invocation_type = INVOCATION_WHISPER
+
+	charge_required = TRUE
+	charge_time = 1 SECONDS
+	charge_drain = 1
+	charge_slowdown = 3
+	charge_sound = null
+	cooldown_time = 300 SECONDS
+
+	associated_skill = /datum/skill/magic/arcane
+	point_cost = 1
+	spell_tier = 1
+	spell_impact_intensity = SPELL_IMPACT_NONE
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+
+/datum/action/cooldown/spell/mirror_transform/cast(atom/cast_on)
+	. = ..()
+	var/mob/living/carbon/human/H = owner
 	if(!istype(H))
-		return
+		return FALSE
 
 	ADD_TRAIT(H, TRAIT_MIRROR_MAGIC, TRAIT_GENERIC)
 	H.visible_message(span_notice("[H]'s reflection shimmers briefly."), span_notice("You feel a connection to mirrors forming..."))
-	
-	addtimer(CALLBACK(src, PROC_REF(remove_mirror_magic), H), 5 MINUTES)
-	return TRUE  // Return TRUE for successful cast
 
-/obj/effect/proc_holder/spell/invoked/mirror_transform/proc/remove_mirror_magic(mob/living/carbon/human/H)
+	addtimer(CALLBACK(src, PROC_REF(remove_mirror_magic), H), 5 MINUTES)
+	return TRUE
+
+/datum/action/cooldown/spell/mirror_transform/proc/remove_mirror_magic(mob/living/carbon/human/H)
 	if(!QDELETED(H))
 		REMOVE_TRAIT(H, TRAIT_MIRROR_MAGIC, TRAIT_GENERIC)
 		to_chat(H, span_warning("Your connection to mirrors fades away."))
 
 /proc/perform_mirror_transform(mob/living/carbon/human/H)
-	// Handles the actual appearance changing part of the spell. For reasons unknown to man, this previously lived exclusively on the mirror object.
 	if (!H)
 		return
 	var/should_update = FALSE
@@ -311,15 +315,12 @@
 						break
 
 					if(current_facial)
-						// Create a new facial hair entry with the SAME color as the current facial hair
 						var/datum/customizer_entry/hair/facial/facial_entry = new()
 						facial_entry.hair_color = current_facial.hair_color
 
-						// Create the new facial hair with the new style but preserve color
 						var/datum/bodypart_feature/hair/facial/new_facial = new()
 						new_facial.set_accessory_type(valid_facial_hairstyles[new_style], facial_entry.hair_color, H)
 
-						// Apply all the color data from the entry
 						facial_choice.customize_feature(new_facial, H, null, facial_entry)
 
 						head.remove_bodypart_feature(current_facial)
@@ -338,12 +339,10 @@
 			if(new_style)
 				var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
 				if(head && head.bodypart_features)
-					// Remove existing accessory if any
 					for(var/datum/bodypart_feature/accessory/old_acc in head.bodypart_features)
 						head.remove_bodypart_feature(old_acc)
 						break
 
-					// Add new accessory if not "none"
 					if(new_style != "none")
 						var/datum/bodypart_feature/accessory/accessory_feature = new()
 						accessory_feature.set_accessory_type(valid_accessories[new_style], H.hair_color, H)
@@ -361,12 +360,10 @@
 			if(new_detail)
 				var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
 				if(head && head.bodypart_features)
-					// Remove existing face detail if any
 					for(var/datum/bodypart_feature/face_detail/old_detail in head.bodypart_features)
 						head.remove_bodypart_feature(old_detail)
 						break
 
-					// Add new face detail if not "none"
 					if(new_detail != "none")
 						var/datum/bodypart_feature/face_detail/detail_feature = new()
 						detail_feature.set_accessory_type(valid_details[new_detail], H.hair_color, H)
@@ -374,12 +371,13 @@
 					should_update = TRUE
 
 		if("Penis")
-			var/list/valid_penis_types = list("none")
-			for(var/penis_path in subtypesof(/datum/sprite_accessory/penis))
-				var/datum/sprite_accessory/penis/penis = new penis_path()
-				valid_penis_types[penis.name] = penis_path
+			var/list/valid_penis_organs = list("none")
+			for(var/penis_type in subtypesof(/obj/item/organ/penis))
+				var/obj/item/organ/penis/temp_penis = new penis_type
+				valid_penis_organs[temp_penis.name] = penis_type
+				qdel(temp_penis)
 
-			var/new_style = input(H, "Choose your penis type", "Penis Customization") as null|anything in valid_penis_types
+			var/new_style = input(H, "Choose your penis type", "Penis Customization") as null|anything in valid_penis_organs
 			if(new_style)
 				if(new_style == "none")
 					var/obj/item/organ/penis/penis = H.getorganslot(ORGAN_SLOT_PENIS)
@@ -389,22 +387,44 @@
 						H.update_body()
 						should_update = TRUE
 				else
-					var/obj/item/organ/penis/penis = H.getorganslot(ORGAN_SLOT_PENIS)
-					if(!penis)
-						penis = new()
-						penis.Insert(H, TRUE, FALSE)
-					penis.accessory_type = valid_penis_types[new_style]
-					var/datum/sprite_accessory/penis/penis_type = SPRITE_ACCESSORY(penis.accessory_type)
-					
-					penis.accessory_colors = mirror_pick_accessory_colors(H, penis_type, penis.accessory_colors)
-					//TA edit start - new ERP SYSTEM
-					if(penis.sex_organ)
-						var/datum/erp_sex_organ/penis/SP = penis.sex_organ
-						SP.refresh_from_organ(penis)
-					else
-						penis.refresh_sex_organ()
+					var/selected_type = valid_penis_organs[new_style]
 
-					//TA edit end - new ERP SYSTEM
+					var/obj/item/organ/penis/old_penis = H.getorganslot(ORGAN_SLOT_PENIS)
+					var/old_size = DEFAULT_PENIS_SIZE
+					var/old_colors = null
+					var/old_functional = TRUE
+					var/old_manual_override = FALSE
+					var/old_erect_state = ERECT_STATE_NONE
+
+					if(old_penis)
+						old_size = old_penis.penis_size
+						old_colors = old_penis.accessory_colors
+						old_functional = old_penis.functional
+						old_manual_override = old_penis.manual_erection_override
+						old_erect_state = old_penis.erect_state
+
+						old_penis.Remove(H)
+						qdel(old_penis)
+
+					var/obj/item/organ/penis/new_penis = new selected_type
+					new_penis.penis_size = old_size
+					new_penis.functional = old_functional
+					new_penis.Insert(H, TRUE, FALSE)
+
+					var/datum/sprite_accessory/penis/penis_accessory = SPRITE_ACCESSORY(new_penis.accessory_type)
+					new_penis.accessory_colors = mirror_pick_accessory_colors(H, penis_accessory, old_colors)
+
+					if(old_manual_override)
+						new_penis.set_manual_erect_state(old_erect_state)
+					else
+						new_penis.on_arousal_changed()
+
+					if(new_penis.sex_organ)
+						var/datum/erp_sex_organ/penis/SP = new_penis.sex_organ
+						SP.refresh_from_organ(new_penis)
+					else
+						new_penis.refresh_sex_organ()
+
 					H.update_body()
 					should_update = TRUE
 
@@ -598,11 +618,11 @@
 					if(tail.accessory_colors)
 						colors = color_string_to_list(tail.accessory_colors)
 					if(!length(colors))
-						colors = list("#FFFFFF", "#FFFFFF") // Default colors if none set
+						colors = list("#FFFFFF", "#FFFFFF")
 					colors[1] = sanitize_hexcolor(new_color, 6, TRUE)
 					tail.accessory_colors = color_list_to_string(colors)
 					tail.Insert(H, TRUE, FALSE)
-					H.dna.features["tail_color"] = colors[1]  // Update DNA features
+					H.dna.features["tail_color"] = colors[1]
 					H.update_body()
 					should_update = TRUE
 			else
@@ -618,11 +638,11 @@
 					if(tail.accessory_colors)
 						colors = color_string_to_list(tail.accessory_colors)
 					if(!length(colors))
-						colors = list("#FFFFFF", "#FFFFFF") // Default colors if none set
+						colors = list("#FFFFFF", "#FFFFFF")
 					colors[2] = sanitize_hexcolor(new_color, 6, TRUE)
 					tail.accessory_colors = color_list_to_string(colors)
 					tail.Insert(H, TRUE, FALSE)
-					H.dna.features["tail_color2"] = colors[2]  // Update DNA features
+					H.dna.features["tail_color2"] = colors[2]
 					H.update_body()
 					should_update = TRUE
 			else
@@ -665,11 +685,11 @@
 					if(ears.accessory_colors)
 						colors = color_string_to_list(ears.accessory_colors)
 					if(!length(colors))
-						colors = list("#FFFFFF", "#FFFFFF") // Default colors if none set
+						colors = list("#FFFFFF", "#FFFFFF")
 					colors[1] = sanitize_hexcolor(new_color, 6, TRUE)
 					ears.accessory_colors = color_list_to_string(colors)
 					ears.Insert(H, TRUE, FALSE)
-					H.dna.features["ears_color"] = colors[1]  // Update DNA features
+					H.dna.features["ears_color"] = colors[1]
 					H.update_body()
 					should_update = TRUE
 			else
@@ -685,16 +705,16 @@
 					if(ears.accessory_colors)
 						colors = color_string_to_list(ears.accessory_colors)
 					if(!length(colors))
-						colors = list("#FFFFFF", "#FFFFFF") // Default colors if none set
+						colors = list("#FFFFFF", "#FFFFFF")
 					colors[2] = sanitize_hexcolor(new_color, 6, TRUE)
 					ears.accessory_colors = color_list_to_string(colors)
 					ears.Insert(H, TRUE, FALSE)
-					H.dna.features["ears_color2"] = colors[2]  // Update DNA features
+					H.dna.features["ears_color2"] = colors[2]
 					H.update_body()
 					should_update = TRUE
 			else
 				to_chat(H, span_warning("You don't have a ears!"))
-				
+
 		if("Horns")
 			var/list/valid_horns = list("none")
 			for(var/horns_path in subtypesof(/datum/sprite_accessory/horns))
@@ -731,11 +751,11 @@
 					if(horns.accessory_colors)
 						colors = color_string_to_list(horns.accessory_colors)
 					if(!length(colors))
-						colors = list("#FFFFFF", "#FFFFFF") // Default colors if none set
+						colors = list("#FFFFFF", "#FFFFFF")
 					colors[1] = sanitize_hexcolor(new_color, 6, TRUE)
 					horns.accessory_colors = color_list_to_string(colors)
 					horns.Insert(H, TRUE, FALSE)
-					H.dna.features["horns_color"] = colors[1]  // Update DNA features
+					H.dna.features["horns_color"] = colors[1]
 					H.update_body()
 					should_update = TRUE
 			else
@@ -777,11 +797,11 @@
 					if(wings.accessory_colors)
 						colors = color_string_to_list(wings.accessory_colors)
 					if(!length(colors))
-						colors = list("#FFFFFF", "#FFFFFF") // Default colors if none set
+						colors = list("#FFFFFF", "#FFFFFF")
 					colors[1] = sanitize_hexcolor(new_color, 6, TRUE)
 					wings.accessory_colors = color_list_to_string(colors)
 					wings.Insert(H, TRUE, FALSE)
-					H.dna.features["wings_color"] = colors[1]  // Update DNA features
+					H.dna.features["wings_color"] = colors[1]
 					H.update_body()
 					should_update = TRUE
 			else

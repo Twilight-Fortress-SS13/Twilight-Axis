@@ -137,7 +137,7 @@
 		mob_ignite(M)
 		if(isfinal)
 			if(ishuman(M))
-				var/mob/living/carbon/human/H
+				var/mob/living/carbon/human/H = M
 				var/type = H.patron?.type
 				if(istype(type, /datum/patron/inhumen))
 					H.electrocution_animation(20)
@@ -562,7 +562,14 @@
 				head = /obj/item/clothing/head/roguetown/helmet/heavy/holysee/alt
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_UPPER_CLASS, H, "Church Funding.")
+		var/obj/effect/proc_holder/spell/targeted/martyr_select_weapon/sel = new
+		var/obj/effect/proc_holder/spell/invoked/martyr_summon_weapon/sum = new
 
+		sel.summon_weapon = sum
+		sum.weapon_select = sel
+
+		H.AddSpell(sel)
+		H.AddSpell(sum)
 
 /obj/item/rogueweapon/sword/long/martyr
 	force = 30
@@ -595,7 +602,7 @@
 	is_silver = TRUE
 	toggle_state = null
 	is_important = TRUE
-	special = /datum/special_intent/martyr_blazing_sweep_sword
+	special = /datum/special_intent/martyr_astrata_verdict
 
 /obj/item/rogueweapon/sword/long/martyr/ComponentInitialize()
 	AddComponent(\
@@ -704,7 +711,7 @@
 	is_silver = TRUE
 	toggle_state = null
 	is_important = TRUE
-	special = /datum/special_intent/martyr_blazing_sweep
+	special = /datum/special_intent/martyr_ravox_charge
 
 /obj/item/rogueweapon/greataxe/steel/doublehead/martyr/ComponentInitialize()
 	AddComponent(\
@@ -810,7 +817,7 @@
 	is_silver = TRUE
 	toggle_state = null
 	is_important = TRUE
-	special = /datum/special_intent/martyr_volcano_slam
+	special = /datum/special_intent/martyr_malum_hammerfall
 
 /obj/item/rogueweapon/mace/goden/martyr/ComponentInitialize()
 	AddComponent(\
@@ -913,7 +920,8 @@
 	toggle_state = null
 	is_important = TRUE
 	throwforce = 40
-	special = /datum/special_intent/martyr_blazing_trident
+	var/is_being_thrown_by_special = FALSE
+	special = /datum/special_intent/martyr_abyssor_harpoon
 
 /obj/item/rogueweapon/spear/partizan/martyr/ComponentInitialize()
 	AddComponent(\
@@ -1281,6 +1289,31 @@
 	flags_inv = HIDECROTCH|HIDEBOOB
 	storage = TRUE
 	sellprice = 300
+
+// Helpers
+
+/proc/get_martyr_component_for(mob/living/carbon/human/H)
+	if(!H)
+		return null
+
+	var/obj/item/I = SSroguemachine.martyrweapon
+	if(!I)
+		return null
+
+	var/datum/component/martyrweapon/C = I.GetComponent(/datum/component/martyrweapon)
+	if(!C)
+		return null
+
+	if(C.current_holder != H)
+		return null
+
+	return C
+
+/proc/martyr_ult_active(mob/living/carbon/human/H)
+	var/datum/component/martyrweapon/C = get_martyr_component_for(H)
+	if(!C)
+		return FALSE
+	return (C.is_active && C.current_state == STATE_MARTYRULT)
 
 #undef STATE_SAFE
 #undef STATE_MARTYR
