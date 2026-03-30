@@ -270,7 +270,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/examine_theme
 
 	var/datum/loadout_panel/loadoutpanel
-
+	var/datum/tat_build/tat_build
 
 
 /datum/preferences/New(client/C)
@@ -279,6 +279,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	familiar_prefs = new /datum/familiar_prefs(src)
 
 	loadoutpanel = new(C.mob)
+	tat_build = new()
 
 	for(var/custom_name_id in GLOB.preferences_custom_names)
 		custom_names[custom_name_id] = get_default_name(custom_name_id)
@@ -743,7 +744,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><B>NSFW Image Gallery:</b> <a href='?_src_=prefs;preference=nsfw_img_gallery;task=input'>Add</a>"
 			dat+= "<a href='?_src_=prefs;preference=clear_nsfw_gallery;task=input'>Clear NSFW Gallery</a>"
 			dat += "<br><a href='?_src_=prefs;preference=ooc_preview;task=input'><b>Preview Examine</b></a>"
-
+			
+			dat += "<br><b>Free Roam Settings:</b> <a href='?_src_=prefs;preference=tat_build;task=input'>Change</a>"
 			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;task=input'>Change</a>"
 
 			dat += "</td>"
@@ -2454,6 +2456,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					clean_loadout(user)
 
 					loadoutpanel.ui_interact(user)
+
+				if("tat_build")
+					tat_build.ui_interact(user)
 
 				if("vampire_hair")
 					var/new_vampirehair = input(user, "Choose your character's vampire hair color:", "Character Preference","#"+vampire_hair) as color|null

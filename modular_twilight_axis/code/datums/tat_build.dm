@@ -126,8 +126,14 @@
 	apply_traits(H)
 	apply_items(H)
 
-// /datum/tat_build/ui_interact(mob/user, datum/tgui/ui)
-// 	return tgui_open(user, src, "TATBuild")
+/datum/tat_build/ui_state(mob/user)
+	return GLOB.always_state
+
+/datum/tat_build/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "TATBuild")
+		ui.open()
 
 /datum/tat_build/ui_static_data(mob/user)
 	return list(
@@ -186,22 +192,58 @@
 
 	return TRUE
 
+/datum/tat_build/proc/load_from_list(list/L)
+	reset_build()
+
+	if(!islist(L))
+		dirty = FALSE
+		return
+
+	var/list/_stats = L["stats"]
+	var/list/_skills = L["skills"]
+	var/list/_traits = L["traits"]
+	var/list/_items = L["items"]
+
+	if(islist(_stats))
+		for(var/id in _stats)
+			if(istext(id) && isnum(_stats[id]))
+				stats[id] = _stats[id]
+
+	if(islist(_skills))
+		for(var/skill_type in _skills)
+			if(ispath(skill_type) && isnum(_skills[skill_type]))
+				skills[skill_type] = _skills[skill_type]
+
+	if(islist(_traits))
+		for(var/trait_id in _traits)
+			if(!isnull(trait_id))
+				traits += trait_id
+
+	if(islist(_items))
+		for(var/item_path in _items)
+			if(ispath(item_path) && isnum(_items[item_path]))
+				items[item_path] = _items[item_path]
+
+	dirty = FALSE
+
+/datum/tat_build/proc/export_to_list()
+	return list(
+		"stats" = stats.Copy(),
+		"skills" = skills.Copy(),
+		"traits" = traits.Copy(),
+		"items" = items.Copy(),
+	)
+
 #undef TAT_TRAIT_SOURCE
-
-/datum/preferences
-	var/datum/tat_build/tat_build
-
-/datum/preferences/proc/open_tat(mob/user)
-	if(!tat_build)
-		tat_build = new()
-	tat_build.ui_interact(user)
 
 /datum/preferences/proc/sanitize_tat_build(list/tat_data)
 	if(!tat_build)
 		tat_build = new()
 
+	tat_build.reset_build()
+
 	if(!islist(tat_data))
-		tat_build.reset_build()
+		tat_build.dirty = FALSE
 		return
 
 	var/list/stats = tat_data["stats"]
@@ -209,30 +251,24 @@
 	var/list/traits = tat_data["traits"]
 	var/list/items = tat_data["items"]
 
-	tat_build.reset_build()
-
-	// STATS
 	if(islist(stats))
 		for(var/id in stats)
 			if(istext(id) && isnum(stats[id]))
 				tat_build.stats[id] = stats[id]
 
-	// SKILLS
 	if(islist(skills))
-		for(var/path in skills)
-			if(ispath(path) && isnum(skills[path]))
-				tat_build.skills[path] = skills[path]
+		for(var/skill_type in skills)
+			if(ispath(skill_type) && isnum(skills[skill_type]))
+				tat_build.skills[skill_type] = skills[skill_type]
 
-	// TRAITS
 	if(islist(traits))
-		for(var/id in traits)
-			if(istext(id))
-				tat_build.traits += id
+		for(var/trait_id in traits)
+			if(!isnull(trait_id))
+				tat_build.traits += trait_id
 
-	// ITEMS
 	if(islist(items))
-		for(var/path in items)
-			if(ispath(path) && isnum(items[path]))
-				tat_build.items[path] = items[path]
+		for(var/item_path in items)
+			if(ispath(item_path) && isnum(items[item_path]))
+				tat_build.items[item_path] = items[item_path]
 
 	tat_build.dirty = FALSE

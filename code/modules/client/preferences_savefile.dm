@@ -191,7 +191,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["erp_kink_prefs"] >> erp_kink_prefs
 	S["erp_organ_sensitivity"] >> erp_organ_prefs
 	// TA Addition end - new ERP SYSTEM
-	S["tat_build"] >> tat_build
+	var/list/L
+	S["tat_build"] >> L
+
+	if(!tat_build)
+		tat_build = new()
 
 	//try to fix any outdated data if necessary
 	if(needs_update >= 0)
@@ -242,8 +246,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	erp_organ_prefs = sanitize_islist(erp_organ_prefs, list())
 	sanitize_erp_organ_prefs()
 	//TA Addition end - new ERP SYSTEM
-	tat_build = sanitize_islist(tat_build, list())
-	sanitize_erp_organ_prefs()
+	tat_build.load_from_list(L)
 
 	verify_keybindings_valid()
 	return TRUE
@@ -340,12 +343,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["erp_kink_prefs"], erp_kink_prefs)
 	WRITE_FILE(S["erp_organ_sensitivity"], erp_organ_prefs)
 	// TA Addition end - new ERP SYSTEM
-	WRITE_FILE(S["tat_build"], list(
-		"stats" = tat_build.stats,
-		"skills" = tat_build.skills,
-		"traits" = tat_build.traits,
-		"items" = tat_build.items,
-	))
+	WRITE_FILE(S["tat_build"], tat_build.export_to_list())
 	return TRUE
 
 

@@ -35,23 +35,14 @@ const ListBlock = ({
             <Stack.Item key={key}>
               <Stack justify="space-between">
                 <Stack.Item>{key}</Stack.Item>
-
                 <Stack.Item>
-                  <Button
-                    compact
-                    onClick={() => onAdd(key)}
-                  >
+                  <Button compact onClick={() => onAdd(key)}>
                     +
                   </Button>
-
                   <Box as="span" mx={1}>
                     {val}
                   </Box>
-
-                  <Button
-                    compact
-                    onClick={() => onRemove(key)}
-                  >
+                  <Button compact onClick={() => onRemove(key)}>
                     -
                   </Button>
                 </Stack.Item>
@@ -64,14 +55,13 @@ const ListBlock = ({
   );
 };
 
-export const TATBuild = (_props, context) => {
+export const TATBuild = () => {
   const { act, data } = useBackend<Data>();
 
   return (
     <Window title="TAT" width={600} height={700}>
       <Window.Content scrollable>
         <Stack vertical>
-
           <ListBlock
             title="Stats"
             entries={data.available_stats}
@@ -98,8 +88,7 @@ export const TATBuild = (_props, context) => {
                       selected={selected}
                       onClick={() =>
                         act(selected ? 'remove_trait' : 'add_trait', { id })
-                      }
-                    >
+                      }>
                       {id}
                     </Button>
                   </Stack.Item>
@@ -134,11 +123,8 @@ export const TATBuild = (_props, context) => {
               </Button>
             </Stack>
           </Section>
-
         </Stack>
       </Window.Content>
     </Window>
   );
 };
-
-export default TATBuild;
