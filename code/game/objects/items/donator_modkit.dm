@@ -258,6 +258,7 @@
 	TI.lefthand_file = RI::lefthand_file
 	TI.righthand_file = RI::righthand_file
 	TI.sheathe_icon = RI::sheathe_icon ? RI::sheathe_icon : TI.sheathe_icon
+	TI.bigboy = RI::bigboy
 
 	if("is_silver" in TI.vars)
 		TI.vars["is_silver"] = old_is_silver
