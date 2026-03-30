@@ -291,3 +291,16 @@
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/citywatch_armor.dmi'
 	icon_state = "sheriffcloak"
 	alternate_worn_layer = CLOAK_BEHIND_LAYER
+
+/obj/item/clothing/cloak/duelcape
+	name = "duelist cape"
+	desc = "A cape designed for mercenary bands hailing from far away."
+	alternate_worn_layer = CLOAK_BEHIND_LAYER
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "duelistcape"
+	item_state = "duelistcape"
+	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
+	inhand_mod = FALSE
+	color = null

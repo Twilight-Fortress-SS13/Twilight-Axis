@@ -9,16 +9,16 @@
 	associated_skill = /datum/skill/magic/arcane
 	var/chosen_bundle
 	var/list/utility_bundle = list(	//Fly! Well, sort of.
-		/obj/effect/proc_holder/spell/invoked/leap,
-		/obj/effect/proc_holder/spell/invoked/featherfall,
-		/obj/effect/proc_holder/spell/invoked/mirror_transform
+		/datum/action/cooldown/spell/leap,
+		/datum/action/cooldown/spell/featherfall,
+		/datum/action/cooldown/spell/mirror_transform
 	)
-	var/list/offensive_bundle = list( //Bonk. Bonk. Bonk. Bonk. Bonk.
-		/obj/effect/proc_holder/spell/invoked/projectile/arcynebolt
+	var/list/offensive_bundle = list(
+		/datum/action/cooldown/spell/projectile/arcyne_lance
 	)
 	var/list/buff_bundle = list( //Support a knight, maybe. Or like, ERP harder without stamcritting.
-		/obj/effect/proc_holder/spell/invoked/stoneskin,
-		/obj/effect/proc_holder/spell/invoked/fortitude
+		/datum/action/cooldown/spell/stoneskin,
+		/datum/action/cooldown/spell/fortitude
 	)
 /obj/effect/proc_holder/spell/self/heir_spell_bundle/cast(list/targets, mob/user)
 	. = ..()
@@ -45,7 +45,7 @@
 		if(user?.mind.has_spell(spells[spell_type]))
 			spells.Remove(spell_type)
 	for(var/spell_type in spells)
-		var/obj/effect/proc_holder/spell/new_spell = new spell_type
+		var/datum/new_spell = new spell_type
 		user?.mind.AddSpell(new_spell)
 	if(!length(spells))
 		user.mind?.RemoveSpell(src.type)

@@ -59,18 +59,3 @@
 			I.afterchange()
 	user.update_a_intents()
 	update_icon()
-
-/datum/intent/sword/thrust/blunt
-	penfactor = BLUNT_NO_PENFACTOR
-
-/datum/intent/sword/strike
-	penfactor = BLUNT_LOWER_PENFACTOR
-
-/datum/intent/sword/peel
-	penfactor = BLUNT_NO_PENFACTOR
-
-/datum/intent/sword/thrust/exe
-	penfactor = BLUNT_NO_PENFACTOR
-
-/datum/intent/sword/disarm
-	penfactor = BLUNT_NO_PENFACTOR

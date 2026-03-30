@@ -106,7 +106,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron) // This creates the cleric holder used for devotion spells
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)	//Starts off maxed out.
 
-	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/lightningbolt/sacred_flame_rogue) //TA EDIT
+	//H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/lightningbolt/sacred_flame_rogue) //TA EDIT
 	H.verbs |= /mob/living/carbon/human/proc/coronate_lord
 	H.verbs |= /mob/living/carbon/human/proc/churchannouncement
 	H.verbs |= /mob/living/carbon/human/proc/churchexcommunicate //your button against clergy
@@ -263,8 +263,8 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	if(H.patron?.type == /datum/patron/divine/noc)
 		H.adjust_skillrank(/datum/skill/magic/arcane, 2, TRUE)
 		if(H.mind)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
-		ADD_TRAIT(H, TRAIT_ARCYNE_T1, TRAIT_GENERIC)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/touch/prestidigitation)
+		ADD_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/abyssor)
 		ADD_TRAIT(H, TRAIT_WATERBREATHING, TRAIT_GENERIC)
 		H.grant_language(/datum/language/abyssal)

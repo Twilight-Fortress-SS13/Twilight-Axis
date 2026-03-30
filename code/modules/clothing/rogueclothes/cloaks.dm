@@ -259,7 +259,7 @@
 	alternate_worn_layer = TABARD_LAYER
 	boobed = TRUE
 	name = "pestran tabard"
-	desc = "A simple covering of green cloth, meant to keep rot and blood alike off it's wearer."
+	desc = "A simple covering of green cloth, meant to keep rot and blood alike off its wearer."
 	icon_state = "pestratabard"
 
 /obj/item/clothing/cloak/templar/eoran
@@ -892,6 +892,9 @@
 /obj/item/clothing/cloak/cape/guard
 	color = CLOTHING_AZURE
 
+/obj/item/clothing/cloak/cape/red
+	color = CLOTHING_RED
+
 /obj/item/clothing/cloak/cape/guard/Initialize()
 	. = ..()
 	if(GLOB.lordprimary)
@@ -1285,7 +1288,6 @@
 	icon_state = "dragonnecklace"
 	max_integrity = ARMOR_INT_SIDE_IRON //Iron gorget now.
 	armor = ARMOR_PLATE
-	prevent_crits = PREVENT_CRITS_ALL
 	blocksound = PLATEHIT
 	//dropshrink = 0.75
 	resistance_flags = FIRE_PROOF

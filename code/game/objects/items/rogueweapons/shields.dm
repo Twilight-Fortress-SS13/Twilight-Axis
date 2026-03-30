@@ -73,7 +73,7 @@
 	icon_state = "inbash"
 	hitsound = list('sound/combat/shieldbash_wood.ogg')
 	chargetime = 0
-	penfactor = BLUNT_DEFAULT_PENFACTOR
+	penfactor = PEN_NONE
 	item_d_type = "blunt"
 	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
 
@@ -672,6 +672,23 @@
 				return list("shrink" = 0.6,"sx" = -5,"sy" = -1,"nx" = 6,"ny" = -1,"wx" = 0,"wy" = -2,"ex" = 0,"ey" = -2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0)
 			if("onback")
 				return list("shrink" = 0.6,"sx" = 1,"sy" = 4,"nx" = 1,"ny" = 2,"wx" = 3,"wy" = 3,"ex" = 0,"ey" = 2,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 8,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
+
+/obj/item/rogueweapon/shield/bronze/great
+	name = "hoplon greatshield"
+	desc = "A heavy shield, taller and thicker than most of their contemporaries. It has survived the Calamity, endured the Apotheosis, and blunted the Sundering; and for one final time, it shall ward this dying world from a crueler fate."
+	icon_state = "bronzegreatshield"
+	item_state = "bronzegreatshield"
+	max_integrity = 360 //Highest integrity and passive projectile-blocking chance of most non-unique shields.
+	possible_item_intents = list(/datum/intent/shield/block, /datum/intent/mace/smash/shield/metal/great, /datum/intent/effect/daze) // No SHIELD_BASH. Able to inflict Daze due to its weight.
+	force = 28
+	coverage = 75 
+	wdefense = 10
+	minstr = 12 //Requires a natural +STR modifier or statpack to double as a melee weapon, for its given class. Note that it has a heavier charge time and active stamina drain, too, as.. well, it's quite heavy.
+
+/obj/item/rogueweapon/shield/bronze/great/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("This greatshield has a uniquely high chance to block incoming projectiles, without requiring the active use of the 'BLOCK' intent.")
+
 
 /obj/item/rogueweapon/shield/iron/steppesman
 	name = "steppesman shield"

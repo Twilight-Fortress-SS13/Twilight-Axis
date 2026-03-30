@@ -65,7 +65,7 @@
 	return TRUE
 
 /atom/movable/screen/alert/status_effect/buff/snackbuff
-	name = "Good snack"
+	name = "Good Snack"
 	desc = "Better than plain bread. Tasty."
 	icon_state = "foodbuff"
 
@@ -108,7 +108,7 @@
 	duration = 30 MINUTES
 
 /atom/movable/screen/alert/status_effect/buff/mealbuff
-	name = "Good meal"
+	name = "Good Meal"
 	desc = "A meal a day keeps the barber away, or at least it makes it slighly easier."
 	icon_state = "foodbuff"
 
@@ -133,7 +133,7 @@
 	duration = 30 MINUTES
 
 /atom/movable/screen/alert/status_effect/buff/greatmealbuff
-	name = "Great meal!"
+	name = "Great Meal!"
 	desc = "That meal was something akin to a noble's feast! It's bound to keep me energized for an entire day."
 	icon_state = "foodbuff"
 
@@ -163,7 +163,7 @@
 	. = ..()
 
 /atom/movable/screen/alert/status_effect/buff/sweet
-	name = "Sweet embrace"
+	name = "Sweet Embrace"
 	desc = "Sweets are always a sign of good luck, everything goes well when you eat some of them."
 	icon_state = "foodbuff"
 
@@ -434,87 +434,8 @@
 	name = "Invigorated"
 	desc = "I have supped on the finest of delicacies: life!"
 
-/atom/movable/screen/alert/status_effect/buff/featherfall
-	name = "Featherfall"
-	desc = "I am somewhat protected against falling from heights."
-	icon_state = "buff"
+// Featherfall, Darkvision, Longstrider status effects moved to augmentation_status_effects.dm
 
-/datum/status_effect/buff/featherfall
-	id = "featherfall"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/featherfall
-	duration = 1 MINUTES
-
-/datum/status_effect/buff/featherfall/on_apply()
-	. = ..()
-	to_chat(owner, span_warning("I feel lighter."))
-	ADD_TRAIT(owner, TRAIT_NOFALLDAMAGE2, MAGIC_TRAIT)
-
-/datum/status_effect/buff/featherfall/on_remove()
-	. = ..()
-	to_chat(owner, span_warning("The feeling of lightness fades."))
-	REMOVE_TRAIT(owner, TRAIT_NOFALLDAMAGE2, MAGIC_TRAIT)
-
-/atom/movable/screen/alert/status_effect/buff/darkvision
-	name = "Darkvision"
-	desc = "I can see in the dark somewhat."
-	icon_state = "buff"
-
-/datum/status_effect/buff/darkvision
-	id = "darkvision"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/darkvision
-	duration = 15 MINUTES
-
-/datum/status_effect/buff/darkvision/on_apply(mob/living/new_owner, assocskill)
-	if(assocskill)
-		duration += 5 MINUTES * assocskill
-	. = ..()
-	to_chat(owner, span_warning("The darkness fades somewhat."))
-	ADD_TRAIT(owner, TRAIT_DARKVISION, MAGIC_TRAIT)
-
-/datum/status_effect/buff/darkvision/on_remove()
-	. = ..()
-	to_chat(owner, span_warning("The darkness returns to normal."))
-	REMOVE_TRAIT(owner, TRAIT_DARKVISION, MAGIC_TRAIT)
-
-/atom/movable/screen/alert/status_effect/buff/longstrider
-	name = "Longstrider"
-	desc = "I can easily walk through rough terrain."
-	icon_state = "longstrider"
-
-/datum/status_effect/buff/longstrider
-	id = "longstrider"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/longstrider
-	duration = 15 MINUTES
-
-/datum/status_effect/buff/longstrider/on_apply()
-	. = ..()
-	to_chat(owner, span_warning("I am unburdened by the terrain."))
-	ADD_TRAIT(owner, TRAIT_LONGSTRIDER, MAGIC_TRAIT)
-
-/datum/status_effect/buff/longstrider/on_remove()
-	. = ..()
-	to_chat(owner, span_warning("The rough floors slow my travels once again."))
-	REMOVE_TRAIT(owner, TRAIT_LONGSTRIDER, MAGIC_TRAIT)
-
-/atom/movable/screen/alert/status_effect/buff/magearmor
-	name = "Weakened Barrier"
-	desc = "My magical barrier is weakened."
-	icon_state = "stressvg"
-
-/datum/status_effect/buff/magearmor
-	id = "magearmor"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/magearmor
-
-/datum/status_effect/buff/magearmor/on_apply()
-	. = ..()
-	playsound(owner, 'sound/magic/magearmordown.ogg', 75, FALSE)
-	duration = (7-owner.get_skill_level(/datum/skill/magic/arcane)) MINUTES
-
-/datum/status_effect/buff/magearmor/on_remove()
-	. = ..()
-	to_chat(owner, span_warning("My magical barrier reforms."))
-	playsound(owner, 'sound/magic/magearmorup.ogg', 75, FALSE)
-	owner.magearmor = 0
 
 /atom/movable/screen/alert/status_effect/buff/guardbuffone
 	name = "Vigilant Guardsman"
@@ -1344,6 +1265,8 @@
 	var/dur
 	var/sfx_on_apply = 'sound/combat/clash_initiate.ogg'
 	var/swingdelay_mod = 5
+	/// Set TRUE when guard successfully deflects a spell. Halves the guard cooldown as reward.
+	var/deflected_spell = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/buff/clash
 
 	mob_effect_icon = 'icons/mob/mob_effects.dmi'
@@ -1377,6 +1300,7 @@
 /datum/status_effect/buff/clash/proc/process_touch(mob/living/carbon/human/parent, mob/living/carbon/human/attacker, mob/living/carbon/human/defender)
 	var/obj/item/I = defender.get_active_held_item()
 	defender.process_clash(attacker, I, null)
+	return COMPONENT_HAND_NO_ATTACK
 
 /datum/status_effect/buff/clash/proc/process_attack(mob/living/parent, mob/living/target, mob/user, obj/item/I)
 	var/bad_guard = FALSE
@@ -1415,6 +1339,8 @@
 
 /datum/status_effect/buff/clash/proc/apply_cooldown()
 	var/newcd = BASE_RCLICK_CD - owner.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS)
+	if(deflected_spell)
+		newcd *= 0.5
 	owner.apply_status_effect(/datum/status_effect/debuff/clashcd, newcd)
 
 //Our guard was disrupted by normal means.
@@ -1603,8 +1529,6 @@
 		if(ishuman(user) && target == owner)
 			var/mob/living/carbon/human/HM = user
 			if(check_zone(HM.zone_selected) == protected_zone)	//User has struck the exact limb that was being protected. Bad!
-				var/mob/living/carbon/human/H = owner
-				H?.purge_peel(99)
 				if(ishuman(user))
 					apply_debuffs(HM)
 					perform_disarm(HM)
@@ -1677,6 +1601,7 @@
 	if(attacker && check_zone(attacker.zone_selected) == protected_zone)
 		var/obj/item/I = defender.get_active_held_item()
 		defender.process_clash(attacker, I, null)	//This will strike at their hand, but not clear away the effect. They tried to grab the protected limb.
+		return COMPONENT_HAND_NO_ATTACK
 
 /datum/status_effect/buff/clash/limbguard/apply_cooldown()
 	owner.apply_status_effect(/datum/status_effect/debuff/specialcd, 60 SECONDS)
@@ -1951,7 +1876,7 @@
 		return
 
 	var/armor_block = target.run_armor_check(user.zone_selected, "blunt")
-	if(prob(armor_block))
+	if(armor_block > 0)
 		return
 
 	apply_effects(target)
@@ -1965,8 +1890,8 @@
 	if(!HAS_TRAIT(target, TRAIT_OUTLAW) || (!(target.name in user.mind.known_people)))
 		return
 
-	var/armor_block = target.run_armor_check(user.zone_selected, item.d_type)
-	if(prob(armor_block))
+	var/armor_block = target.run_armor_check(user.zone_selected, item.d_type, armor_penetration = PEN_NONE, damage = 1)
+	if(armor_block > 0)
 		return
 
 	apply_effects(target)
@@ -2199,7 +2124,7 @@
 	. = ..()
 	if(gave_buff) // because we ensure that the buff was actually given out, and due to the 0-3 scale of it, we can just
 		owner.adjust_skillrank(/datum/skill/misc/reading, -1, TRUE) // -1 skill once it wears off and it (should) be fine.
-		to_chat(owner, span_warning("The blessing of HERMES begins to wear off. The written word loses it's meaning in my skull."))
+		to_chat(owner, span_warning("The blessing of HERMES begins to wear off. The written word loses its meaning in my skull."))
 
 //Artificer armor buff
 /datum/status_effect/buff/artificerint

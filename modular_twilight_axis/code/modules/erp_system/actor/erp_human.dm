@@ -211,3 +211,9 @@
 /// Human actors can register signals.
 /datum/erp_actor/human/can_register_signals()
 	return TRUE
+
+/datum/erp_actor/get_strength(var/stat)
+	var/mob/living/M = get_effect_mob()
+	if(!M)
+		return 10
+	return M.get_stat(stat)

@@ -943,3 +943,413 @@
   - bugfix: gorgets are disallowed by fencer's dexterity, as was always intended.
   mumblemancer:
   - bugfix: miners have the right clothing type per preference
+2026-03-22:
+  Clem-The-Duck:
+  - rscadd: Adds three new items to the loadout, the Scaled Cloak, Bared Robe, and
+      Sleeved Tabard.
+  KatTheFox:
+  - qol: 'crafting attempts now have a ''pity threshold'': you will automatically
+      succeed after 99 failed attempts, so long as the recipe is possible for you
+      to make (i.e. not a 0% chance)'
+  Lamasmaster:
+  - balance: Graggar Silence
+  - bugfix: Waterskin starting uncorked
+  eirenxiv:
+  - rscadd: Added another unused cloak to the loadout selection, the now golden order
+      cloak
+  - rscadd: Added the naledian psy-bracelet to the loadout selection
+  mumblemancer:
+  - refactor: all "exotic silk items" are now "giltsilk." !!!IF YOU PREVIOUSLY HAD
+      THESE IN YOUR LOADOUT, YOU WILL NEED TO PICK THEM AGAIN!!!
+  rivercadaver:
+  - rscadd: Added writing
+2026-03-23:
+  FreeStylaLT:
+  - rscadd: Added a Toggle for Instrument songs.
+  Ollanius:
+  - rscadd: All common fruits - sans apples - can now be turned into raisins. Non-jackberried
+      raisins are referred to as 'giblets'.
+  - rscadd: Applying any piece of honey to some raisins will make 'honeyed raisins'
+      (or 'honeyed giblets').
+  - rscadd: Honeyed raisins-and-giblets can be tossed into a pot of fat to make sweetglass;
+      fancy and delicious candies.
+  - rscadd: Adds 'smothered blackberries' and 'smothered tangerines', made by crafting
+      the fruits together with sugar.
+  - rscadd: Adds jamtallow and marmalade, sliceable jams made by tossing the aforementioned
+      smotherables into a pot of fat.
+  - rscadd: Buns, psycrossbuns, crossbuns, bread slices, and pieces of toast can now
+      be jammed (and marmaladed) for a great treat.
+  - rscadd: Adds apple bread, a slightly finer variant of raisin bread. Made the same
+      way, just with apple slices instead.
+  - rscadd: Ambrosia can now be fermented to make a very, very, VERY potent cider.
+      Test your might.. and your liver, as well!
+  - rscadd: Added over sixty(!!!) new unique soups and stews that can be brewed in
+      a pot. The quality of an ingredient (and the amount of preperation already devoted
+      to making it) now affects how nutritious, thick, and long-lasting the broth
+      is. Raw vegetables and meat'll make decent broth, but sliding in something like
+      roasted potatoes and peppersteak'll make for a delicious stew.
+  - rscadd: Nearly every foodstuff in the game can now be stewed in a pot, barring
+      very minor exceptions. This now includes unique recipes (and coverage) for loaves
+      of bread + raisin/apple bread, cooked vegetables and meats, all cooked meal
+      tiers (including rice and shellfish dishes), preserved foodstuffs, and - for
+      the particularly wretched - whole sticks of fried butter.
+  - rscadd: Poisoned jackberry seeds can now be roasted, then milled down, to create
+      pepper. While pepper can't be used on its own, five clumps combined with a whetstone
+      and small log can craft a new peppergrinder! ..with expert-tier carpentry.
+  - rscadd: Pears, apples, tangerines, lemons, and limes can now be brewed into juice.
+  - rscadd: Sinew, tendons, bones, tailbones, and organs can now be brewed into offal
+      soup and bone broth. Useful in a pinch!
+  - rscadd: Adds new dedicated sprites to limes and rocknuts. Rocknuts're basically
+      cinnamoney-tobaccoey acorns.
+  - rscadd: Chocolate bars can now be cleaved in half, and now count as lavish-tiered
+      meals.
+  - rscadd: Pumpkin spice can now be crafted with halved chocolate bars, dried rosa/tea
+      leaves, and roasted coffee beans.
+  - rscadd: These spiced ingredients can be brewed for mildly restorative (or if already
+      present, enhanced) effects.
+  - rscadd: Adds brothbriques, crafted at a drying rack with tallow, saloumi/coppiete,
+      and raisins. Excellent, sliceable survival ration.
+  - rscadd: Adds lemony stickets, a vegetarian coppiette variant made from lemons,
+      sugar, and ash at a drying rack.
+  - rscadd: Adds allspice - an expert-tier cooking recipe with five spices. When used
+      in stews, imparts the 'Great Meal' buff.
+  - rscadd: Adds 'dragee' - an expert-tier cooking treat made from calendulas, sugar,
+      and rocknuts.  Medicinal candy!
+  - rscadd: Adds 'caramels' - exactly what it says on the tin. Made by deepfrying
+      sugar.
+  - rscadd: Adds 'salotack' - an apprentice-level cooking recipe made with salo and
+      hardtack. Very good in a stew!
+  - rscadd: Adds sugarglass sculptures - expert-tier cooking recipes that, when baked,
+      turn into lovely (and delicious) artpieces!
+  - rscadd: Adds 'panacea of skysugar' - a master-tier alchemic recipe made with impure
+      lux, blackberries, and starsugar.
+  - rscadd: Adds 'skysugar slabs' - a massive hunk of alchemically purified starsugar,
+      grindable down into three handfuls of powder.
+  - rscadd: Adds 'skysugar' - far too potent to safely use, but extremely valuable
+      and sellable to Bathmatrons and Merchants.
+  - code_imp: 'Small bug that I wasn''t able to fix is that certain recipes won''t
+      properly proceed. This largely applies to the Evil Fish Stew (from ZIzo Abberants)
+      and more complex recipes for Volf and Cabbit Stew. From what I understand, this
+      is a facet that''s inherent to the code we''re working with: subtyped meals
+      have a tendency to be overwritten or evaporated when called upon for unique
+      recipes. Shouldn''t impact the game too much, but I figure I''d note it here.'
+  - code_imp: Likewise, the only feature I couldn't get working - also due to how
+      the code inherently works (alongside my own inexperience) - is adding special
+      stress events to different types of stew. I only realized near the end that
+      the 'quality' variable only gets triggered when the drink-in-question's marked
+      as 'favorite'.. and all soups and stews've been hardcoded to not be selectable.
+      Might commission someone later to do the dirty work and get that tweaked.
+  - rscadd: 'Adds a lot of food from Vanderlin PR #5638. Great thanks to Terracotta
+      and The-Awful!'
+  - rscadd: Adds 'dot tarts', made by spooning butterdough slices. It can accept a
+      wide variety of fruits.
+  - rscadd: Butterdough, when baked, now makes delicious bookbread. Like raisin bread,
+      this can also be studded with many fruits (or chocolates) beforehand to make
+      fruity bookbread.
+  - rscadd: Spooning butterdough now makes muffins.
+  - rscadd: Rolling out dough makes flatdough. Flatdough can be scored with a sharp
+      item to make crackerdough, which is the predecessor to hardtack (or if you add
+      chocolate halves to it, cookies!). Likewise, you can alternatively smear tomatoes
+      and fresh cheese on it (alongside some toppings) to make tomatoplates - 'zah!
+  - rscadd: Biscuits can now come in four delicious varieties; plum, tangerine, chocolate,
+      and the ever-venerable raisin.
+  - rscadd: Four kinds of cookies; caramel, raisin, chocolate, and dragee.
+  - rscadd: Adds a new wealth of time change tips and maxxed-out stress messages,
+      alongside slightly reorganizing them. If any previous tips-or-messages seem
+      missing, ping @Dongwaiver in the Discord for a speedy fix.
+  - balance: A little 'balance' tweak for the road - rolling pings now scale off Cooking.
+      Fear the defenseless eight-force rod of justice!
+  - code_imp: 'Adds in all my remaining unused assets from over the (nearly) two years
+      of spritesmanship that I''ve cooked up, alongside a wide variety of sprites.
+      Check out the "Files Changed" tab on PR #6328 to see where everything''s been
+      added, if you wish to check them out. These''ll gradually be implemented, to
+      some degree, going forward.'
+  - code_imp: Adds a very lovely assortment of expanded pottery sprites, courtesy
+      of Caustic Cove's Ghostcoffee. Likewise, adds a very lovely assortment of porcelain
+      sprites - courtesy of Ratwood's Ophaq.
+  - code_imp: All basic onmob- and sleever-type .dmis now include a preassembled version
+      of all four bodytypes in all four directions. This should hopefully make it
+      far easier for new contributors to comfortably design garbs-and-gear.
+  - code_imp: Above all else - thank each and every one of you. Here's to a thousand
+      stories hence, and a thousand stories more!
+  - rscdel: Removed Zerobrine. For real, this time.
+  - code_imp: Boo!
+  - rscadd: Tailors now spawn with a wooden hammer and a pouch of scrap, allowing
+      them to better practice the craft of leather-reinforcement.
+  - rscadd: Blacksmiths can now forge two pieces of scrap from an Iron ingot.
+  - rscadd: Sugarglass statues can now be uniquely renamed.
+  WeNeedMorePhoron:
+  - rscadd: Arcyne Bolt and Fireball has been refactored to use a new action system
+      and have a different, more detailed telegraph. Report any issues with these
+      two spells in particular.
+  - balance: Weapon penetration reworked into a tier system (NONE/LIGHT/MEDIUM/HEAVY/BSTEEL).
+      Penetration that exceeds armor passes 100%, matching tier passes 20%, below
+      is blocked.
+  - balance: Armor consolidated from 16+ classes into 8 standardized tiers. Padded
+      and Leather are now explicit sidegrades.
+  - balance: Ranged weapons (bows, longbows, slings) now scale uniformly off Perception
+      with a softcap at 15. Slings no longer benefit from Strength.
+  - balance: Longbow damage factor increased to 1.3x. Broadhead arrow damage raised
+      to 50 (PEN_LIGHT). Sling bullets raised to ~40 damage.
+  - balance: Estoc reworked into a 2H thrusting specialist with lunge (reach 2), halfsword
+      (PEN_BSTEEL), and point-blank thrust (PEN_HEAVY).
+  - balance: Longsword gains a fast 2H cut. Arming sword can no longer be two-handed.
+  - balance: Sabre thrust reduced to PEN_LIGHT.
+  - balance: STR post-softcap scaling increased from 3.4% to 5% per point.
+  - balance: Crit-susceptible and crit-preventing armor properties removed. Crits
+      now depend purely on bodypart damage. In compensation, critical damage threshold
+      raised to 90% again - blocking dismemberment and crits from occuring until 90%
+      damage has accumulated on the limb. This does not affect most NPCs.
+  - balance: Gnoll Claws downgraded to MEDIUM Pen (Pen bad padded armor and padded
+      armor, nothing else)
+  - balance: All mage spells classified as BURN or ACID types. REDUCE armor mechanics
+      added - they always go through to HP but a portion goes into the armor instead.
+      Light Armor are good vs burn damage.
+  - balance: Removed the unique Grudgebearer layering mechanics. Soldier now start
+      off with the equivalence of a full set of plate armor in protection and integrity
+      instead.
+  - balance: Found and fixed a bug where penetrating ranged attacks (Bodkin / Bolts)
+      were passing in the entirety of their unmitigated damage when rolling for crit.
+      This might drastically affects the balance of AP ranged weapons so there will
+      not be any additional.
+  - balance: Ruma's Tattoo raised to plate level protection and 250 integrity.
+  - balance: Hand's Gambeson is maille tier protection and moved to shirt slot.
+  - rscdel: Removed the Peel system entirely - all peel intents, coverage stripping,
+      thresholds, and related code.
+  - rscdel: Removed pain stagger mechanic.
+  - qol: 'Added keybindable Alt Grip hotkey (default: 5) for mordhau and alternate
+      grips.'
+  - qol: Examining unarmored clothing now shows "NO ARMOR!" instead of empty tier
+      dots (Or a F scoreboard card)
+  eirenxiv:
+  - balance: changed hand armour to hauberk subtype
+  - balance: made unique hand armour brigandine armour
+  - balance: modified coverage on armour, combination with bracers still gives full
+      coverage
+  - balance: replaced hand light haubergeon with padded gambeson
+2026-03-24:
+  ReezeBL:
+  - bugfix: quiteus poison component purged from ALL items on a single use no more
+  WeNeedMorePhoron:
+  - bugfix: Multiple person butchering the same simple mob no longer duplicates head
+  nauticall:
+  - qol: You can now open and close unlocked doors with left-click while holding a
+      key or key ring.
+2026-03-25:
+  FreeStylaLT:
+  - refactor: Breathless trait no longer grants immunity to oxy damage caused by bloodloss.
+  - rscadd: Added a "Deathless" trait that grants immunity to oxy damage.
+  - balance: Gave "Deathless" trait to Constructs, Revenants and the Rotcured virtue.
+  - spellcheck: Renamed "Deathless" virtue to "Hollow" to reduce confusion.
+  Ketrai:
+  - bugfix: Inhumen resurrection for Baotha, Matthios and Graggar now uses their god
+      crosses.
+  Ollanius:
+  - rscadd: Stone pots now have a unique sprite attributed to them, courtesy of Caustic
+      Cove.
+  Ryan180602:
+  - admin: all notes are now assumed to be hidden by default. notes can be edited
+      to reflect against this.
+  - admin: HERMES mail is logged.
+  bearrrrrrrr:
+  - rscadd: Lirvan Tithebound get a leap attack thing.
+  - balance: Lirvan Tithebound INVOKE stats majorly nerfed.
+  borneblood:
+  - rscadd: Tiered Secular Diagnosis system, that can scale up to Miracle Diagnosis
+      at Master/Legendary Medicine
+  - rscadd: Reagent detection via Leech/Cheele embed, Incision (miracle) and Forceps
+      (secular)
+  - qol: Improved readability of all diagnosis feedback, while keeping the archaic
+      vibe
+  - balance: Secular & Diagnosis have more range (again!)
+  - bugfix: Cooldowns now function correctly, which may prevent issues if spammed
+  - bugfix: Cleaned up logic and potential TGUI runtime issues
+  moltosotto:
+  - qol: Councillors can now hand out quests at the stewardry.
+2026-03-26:
+  Astrachan "Drake Girl" Rosaceae:
+  - bugfix: void dragon binding now actually works
+  BurpleBineapple:
+  - balance: Vaquero can choose between their classic medium armor setup or the new
+      Bardic Inspiration
+  FreeStylaLT:
+  - refactor: Rotcured no longer makes the character green by default.
+  - rscadd: Added a 'Rotten' skin tone option, unlocked when Rotcured is selected
+      as one of the two virtues.
+  KatTheFox:
+  - rscadd: purple halfmask added to loadout
+  Lamasmaster:
+  - image: Language Icons (Etrusco)
+  Ollanius:
+  - bugfix: Baking most types of cookies should properly generate a pollutant, now,
+      instead of the 'smells' placeholder.
+  - bugfix: Relisted the teachings of Chocolate Jesus as blasphemic; you can no longer
+      infinitely duplicate halved chocolate ingots.
+  - balance: Remembering a TRIUMPH now costs 3 TRI > 1 TRI.
+  - balance: Picking the Leper or Asundered Mind vice now rewards 3 TRI > 1 TRI.
+  - balance: Golden scabbards, royal clothes, and other higher-end purchasable items
+      now cost 9 TRI > 7 TRI.
+  - balance: The Vial of Distilled Triumphance now costs 99 TRI > 77 TRI.
+  - balance: Reduced the Grenzelhoftian Beret from 7 TRI < 5 TRI.
+  - rscadd: '''No Flaw'' is now ''Flawless''.'
+  - rscadd: New Triumph-exclusive reskins for the Valorian Greatsword, Dadao, Wodao,
+      and Greatdadao.
+  - rscadd: New donator-specific reskin, the 'Avantyne-Threaded Sword'. Comes in two
+      flavors, for the Arming Sword and Longsword.
+  - bugfix: The Hand's 'Azurefyre' sword should now properly show its unique scabbard
+      sprite, when stowed.
+  - bugfix: Adjusts descriptions of all Triumph-exclusive reskinning elixirs to be
+      more accurate and less clunky.
+  - bugfix: The 'Rockhillian Longsword' elixir is now termed the 'Rockhillian Broadsword'
+      elixir, to be more accurate to its applicability.
+  - code_imp: Moved the Silver Executioner Sword's recipe to the anvil.dm, as it should've
+      been. No user facing changes.
+  - code_imp: Virtually all Triumph-exclusive items (that aren't already obtainable
+      ingame), reskins, and potions have been moved out of their original files. They're
+      now located in 'triumph_rewards.dm' and 'triumph_modkit.dm', which're both stored
+      in Roguetown's 'triumph' folder. This should hopefully clear up the road going
+      forward, and make adding more Triumph-exclusive things less of a headache.
+  Ryan180602:
+  - rscadd: extended/greenshift for psydon
+  - rscadd: vote panel now pops up on vote start.
+  - rscadd: new vote panel + vote measures.
+  - rscadd: vote log for admins.
+  WeNeedMorePhoron:
+  - rscdel: Remove parallax subsystem, report any oddity especially as ghost.
+  eirenxiv:
+  - bugfix: fixed psydonian thorns flags, again
+  - bugfix: fixed psydonian thorns coverage flags
+  hazelrat:
+  - bugfix: Garrison should no longer lose their town buff while in the external area
+      of the university.
+2026-03-27:
+  SayonaraEcho:
+  - rscadd: New recipes for alchemy transmutation, tin and copper.
+  WeNeedMorePhoron:
+  - bugfix: Recipe books not supposed to spawn will now work correctly.
+  Wildwestmars:
+  - rscadd: A deadbolt pillory recipe.
+  eirenxiv:
+  - bugfix: fixed bolt pouch and quiver buying from the tailor silverface
+2026-03-28:
+  BurpleBineapple:
+  - balance: Brigandine armor has been separated into its own category as an armor
+      with high blunt/arrow/slash protection but lacking in stab protection.
+  - balance: Leather armor has had its slash armor reduced by 1 tier.
+  - balance: Padded gambesons have 4/5 BLUNT resistance. Leather armor takes its place
+      as the better padding with 5/5 BLUNT resistance.
+  - balance: Studded leather now counts as brigandine armor, at 250 durability.
+  - balance: Maille has been reduced by 1 tier in arrow protection. Wear a gambeson,
+      Ser.
+  - balance: The light brigandine, brigandine, and coat of plates have the same armor
+      protection. Brigandine (MEDIUM AC) and coat of plates (HEAVY AC) have +50 and
+      +100 integrity respectively, and cover arms.
+  - bugfix: Medium and Heavy brigandines use ARMOR_BRIGANDINE.
+  FreeStylaLT:
+  - code_imp: Deathless trait users no longer get the full bleedout messages.
+  - rscadd: Matthios T2, Barter. It exchanges items for a portion of their selling
+      price. (Generally less than turning it into a stockpile, etc)
+  KatTheFox:
+  - bugfix: many, many typos and grammar errors
+  NewyearnewmeUwu:
+  - code_imp: removed the random swamp fog
+  Ollanius:
+  - bugfix: Fixed the Avantyne Threaded Longsword's onmob, ensuring it properly renders
+      now.
+  - code_imp: Most two-handed weapons use the internal flag of '1' to determine whether
+      it should be displayed in a wielded- or unwielded state. Make sure to keep that
+      '1' untouched by additional numbers (when designating sprites inside of a .dmi),
+      or it'll cause some visual glitches.
+  - rscadd: Adds Bronze, Ancient, and Decrepit variants of the Noc amulet.
+  - rscadd: Adds proper Ancient variants of the Psycross and Zcross.
+  - rscadd: Adds crafting recipes for the aforementioned necklaces, including those
+      which previously didn't have any.
+  - code_imp: Amulets of Inhumenity are now termed as Amulets of Ascension, to better
+      match Zizo's theming.
+  - code_imp: Light improvement on unused dagger sprites.
+  PatapoIIIa:
+  - rscadd: Add new tents
+  - qol: made new tents
+  - bugfix: fix walls counter
+  SayonaraEcho:
+  - bugfix: fixed Crier's hat onmob sprite.
+  WeNeedMorePhoron:
+  - balance: Plate armor is considered medium instead of heavy against piercing attack,
+      so bolts / bodkin will go through for 100% damage now.
+  Wildwestmars:
+  - rscadd: More Big Fella Nicknames.
+  eirenxiv:
+  - balance: changed hand armour back into a regular gambeson
+  - balance: returned besilked haubergeon to the hand
+  - balance: hand bracers -> maille
+  - balance: no more value on unique hand drip
+  - bugfix: fixed various weapon intents (psybroadsword, estoc, kanabo, steppesman
+      axe, otherwordly sword)
+  moltosotto:
+  - balance: Gave Town Elder a manor key, removed mace skill in favor of more sovlful
+      staves.
+  mumblemancer:
+  - qol: mining skill of apprentice or above allows you to mine by walking into a
+      wall w/ a pick or whatever
+  - qol: rmb special intent w/ pickaxes vs. mineral walls doafter timer reduced
+2026-03-29:
+  BurpleBineapple:
+  - image: updated Estoc sprite.
+  FreeStylaLT:
+  - rscdel: Removed the bleedout message entirely.
+  Ketrai:
+  - rscadd: New antag! Hags!
+  - balance: Hag deathless cost 85 => 65
+  - bugfix: Hag heart no longer runtimes
+  Ollanius:
+  - bugfix: Prerequisite recipes introduced in the Felina PR (with sugarstatues, sugarshapes
+      and smothered fruits) can no longer be selected as a favorite meal.
+  - bugfix: Corrects the description of jamtallow and marmalade slices to more accurately
+      hint at their ideal combinations.
+  - bugfix: You can no long select soul-diffused methamphetamine as a favorite meal.
+  Ryan180602:
+  - rscadd: donor items
+  - rscadd: nsfw gallery
+  WeNeedMorePhoron:
+  - rscadd: Complete magic system overhaul - Aspect-based magic replaces free-pick
+      spells. Mages now choose Major Aspects (offensive packages), Minor Aspects (utility/defense),
+      and Utility spells within class-defined budgets. 30+ new spells added.
+  - rscadd: Eight major aspects - Pyromancy, Cryomancy, Fulgurmancy, Geomancy, Kinesis,
+      Augmentation, Ferramancy.
+  - rscadd: 12 minor aspects including Aegistcraft, Artifice, Artifice, most of them
+      remixes of previously existing spells, some of them new and original
+  - rscadd: Spell Implement system. Charge reduction completely eliminated from spell.
+      You now upgrade staffs with gems.
+  - rscadd: Rune ward spell added as a utility spell, letting you inscribe runes with
+      ash
+  - rscadd: Grimoire / Aspect Picker UI for picking spell, reshaping (rebinding),
+      and spell management. Can be accessed in a read only form in Encyclopedia.
+  - rscadd: Variant system for class (possibly origin in the future) aspect override)
+  - rscadd: Conjure Armor, Mage Armor removed in favor of the Arcyne Ward system -
+      a universal spell that nearly all mages starts with to conjure a blue-draining
+      skin armor which loses coverage to actual, real armor and drain your blue.
+  - rscadd: Dragonhide and Crystalhide is now an upgrade to the above Arcyne Ward
+      and is a choice of a Minor Aspect. Gives better padded / brigandine armor respectively
+      with 300 integrity.
+  - rscadd: Phalangite Spellblade subclass has been completely reworked.
+  - rscadd: Rituos reworked to no longer grant 1 free spell every dae and 18 spellpoints
+      at the end, instead becoming a one off process to grant you Minor Aspects and
+      Utilities point, with a non-skeletal path
+  - rscadd: All mage classes with aspect configurations now starts with a finished
+      spellbook. Most of them also start with a choice of staff or wand.
+  - balance: All spells now have charge times and will respect armor and be blocked
+      (Brute) or damage reduced (Burn)
+  - balance: Spell Guard (blocking / riposting spells) now give 0.5x cooldown
+  - balance: Only one enchantment can be on an item at a time
+  - balance: Staff weapon defnse reduced by 2.
+  - balance: Haste grants 3 Speed instead of +5. Buff duration standardized to 2.5
+      minutes instead of 2 minutes when cast on others. Self duration not changed
+  - balance: Enchant Weapon, Longstrider, Fire Cascade, Fire Walker, Meteor Storm,
+      Sundering Lightning removed.
+  - balance: Non-projectile spells should no longer be castable across Z level to
+      reduce cheese. This also includes Iron Tempest which is of a similar nature.
+  - balance: Mimic are no longer antimagic.
+  - refactor: (Nearly) All legacy mage spells should be migrated to the new action-based
+      spell system ported from TG / Vanderlin
+  - qol: Opinionated spell arrangement for aspects - some class granted spells are
+      now arranged to be explicitly after aspect spells.

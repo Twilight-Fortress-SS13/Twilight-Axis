@@ -5,11 +5,11 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/naledimage
 	category_tags = list(CTAG_ORTHODOXIST)
-	subclass_languages = list(/datum/language/otavan)
+	subclass_languages = list(/datum/language/otavan, /datum/language/raneshi)
 	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
 	traits_applied = list(
 		TRAIT_PSYDONITE,
-		TRAIT_ARCYNE_T3,
+		TRAIT_ARCYNE,
 		TRAIT_MAGEARMOR,
 		TRAIT_INTELLECTUAL, 
 		TRAIT_NALEDI,
@@ -23,7 +23,7 @@
 		STATKEY_CON = 1,
 		STATKEY_STR = -1,
 	)
-	subclass_spellpoints = 21
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 2, "utilities" = 6)
 	subclass_skills = list(
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,
@@ -67,7 +67,7 @@
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	id = /obj/item/clothing/ring/signet/silver
-	backl = /obj/item/rogueweapon/woodstaff/naledi
+	//backl = /obj/item/rogueweapon/woodstaff/naledi
 	backpack_contents = list(
 		/obj/item/roguekey/inquisitionmanor,
 		/obj/item/rogueweapon/huntingknife,
@@ -77,4 +77,3 @@
 	)
 	if(H.age == AGE_OLD)
 		H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_MASTER, TRUE)
-		H?.mind.adjust_spellpoints(12)

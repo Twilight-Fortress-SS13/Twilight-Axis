@@ -268,3 +268,46 @@
 
 	if(admin_bans_channel2)
 		send2chat(message, admin_bans_channel2)
+
+
+/world/proc/TgsAnnounceAdminMessageDeletion(admin_ckey, target_key, type, text)
+	if(!TgsAvailable())
+		return
+
+	var/admin_notes_channel = CONFIG_GET(string/admin_notes_channel)
+	if(!admin_notes_channel)
+		return
+
+	var/pretty_type = capitalize("[type]")
+	var/datum/tgs_chat_embed/structure/embed = new()
+	embed.title = "Удаление [pretty_type]"
+	embed.description = copytext_char("[text]", 1, 4000)
+	embed.colour = "#ed8796"
+	embed.footer = create_discord_embed_footer()
+
+	var/datum/tgs_chat_embed/field/field_player_ckey = new(
+		"Игрок", "`[target_key]`"
+	)
+
+	var/datum/tgs_chat_embed/field/field_admin_ckey = new(
+		"Удалил", "`[admin_ckey]`"
+	)
+
+	var/datum/tgs_chat_embed/field/field_type = new(
+		"Тип", "`[type]`"
+	)
+
+	field_player_ckey.is_inline = TRUE
+	field_admin_ckey.is_inline = TRUE
+	field_type.is_inline = TRUE
+
+	embed.fields = list(
+		field_player_ckey,
+		field_admin_ckey,
+		field_type,
+	)
+
+	var/datum/tgs_message_content/message = new("")
+	message.embed = embed
+
+	send2chat(message, admin_notes_channel)

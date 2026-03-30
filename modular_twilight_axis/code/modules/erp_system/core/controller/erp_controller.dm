@@ -657,18 +657,6 @@
 /datum/erp_controller/proc/_zone_key_to_bodyzone(zone)
 	return vfx_d ? vfx_d.zone_key_to_bodyzone(zone) : null
 
-/// Tries to break bed on strong thrust.
-/datum/erp_controller/proc/_erp_try_bed_break(datum/erp_sex_link/L, mob/living/user, atom/movable/target, time)
-	vfx_d?.try_bed_break(L, user, target, time)
-
-/// Finds bed near thrust.
-/datum/erp_controller/proc/_erp_find_bed_for_thrust(datum/erp_sex_link/L, mob/living/user, atom/movable/target)
-	return vfx_d ? vfx_d.find_bed_for_thrust(L, user, target) : null
-
-/// Finds bed on turf.
-/datum/erp_controller/proc/_erp_find_bed_on_turf(turf/T)
-	return vfx_d ? vfx_d.find_bed_on_turf(T) : null
-
 #undef ERP_AROUSAL_HEARTS_THRESHOLD
 #undef ERP_TICK_EFFECT_COOLDOWN
 

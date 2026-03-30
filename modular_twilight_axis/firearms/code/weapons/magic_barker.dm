@@ -1,5 +1,5 @@
-#define BARKER_TOPER_CAST_TIME_REDUCTION 0.05
-#define BARKER_EMERALD_CAST_TIME_REDUCTION 0.10
+#define BARKER_TOPER_CAST_TIME_REDUCTION 0.1
+#define BARKER_EMERALD_CAST_TIME_REDUCTION 0.1
 #define BARKER_SAPPHIRE_CAST_TIME_REDUCTION 0.15
 #define BARKER_RUBY_CAST_TIME_REDUCTION 0.25
 
@@ -75,7 +75,7 @@
 	name = "rontz focused barker"
 	result = /obj/item/gun/ballistic/twilight_firearm/barker/barker_staff/rontz
 	reqs = list(/obj/item/gun/ballistic/twilight_firearm/barker = 1,
-				/obj/item/magic/manacrystal = 1,
+				/datum/reagent/medicine/manapot = 15,
 				/obj/item/candle/yellow = 3,
 				/obj/item/roguegem/ruby = 1)
 	craftdiff = 0
@@ -84,7 +84,7 @@
 	name = "gemerald focused barker"
 	result = /obj/item/gun/ballistic/twilight_firearm/barker/barker_staff/gemerald
 	reqs = list(/obj/item/gun/ballistic/twilight_firearm/barker = 1,
-				/obj/item/magic/manacrystal = 1,
+				/datum/reagent/medicine/manapot = 15,
 				/obj/item/candle/yellow = 3,
 				/obj/item/roguegem/green = 1)
 	craftdiff = 0
@@ -93,7 +93,7 @@
 	name = "sapphire focused barker"
 	result = /obj/item/gun/ballistic/twilight_firearm/barker/barker_staff/sapphire
 	reqs = list(/obj/item/gun/ballistic/twilight_firearm/barker = 1,
-				/obj/item/magic/manacrystal = 1,
+				/datum/reagent/medicine/manapot = 15,
 				/obj/item/candle/yellow = 3,
 				/obj/item/roguegem/violet = 1)
 	craftdiff = 0
@@ -102,7 +102,7 @@
 	name = "toper focused barker"
 	result = /obj/item/gun/ballistic/twilight_firearm/barker/barker_staff/toper
 	reqs = list(/obj/item/gun/ballistic/twilight_firearm/barker = 1,
-				/obj/item/magic/manacrystal = 1,
+				/datum/reagent/medicine/manapot = 15,
 				/obj/item/candle/yellow = 3,
 				/obj/item/roguegem/yellow = 1)
 	craftdiff = 0
@@ -111,7 +111,7 @@
 	name = "amythortz focused barker"
 	result = /obj/item/gun/ballistic/twilight_firearm/barker/barker_staff/toper
 	reqs = list(/obj/item/gun/ballistic/twilight_firearm/barker = 1,
-				/obj/item/magic/manacrystal = 1,
+				/datum/reagent/medicine/manapot = 15,
 				/obj/item/candle/yellow = 3,
 				/obj/item/roguegem/amethyst = 1)
 	craftdiff = 0

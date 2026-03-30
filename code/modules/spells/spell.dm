@@ -48,7 +48,6 @@
 		var/obj/effect/R = new /obj/effect/spell_rune
 		R.icon = action_icon
 		R.icon_state = overlay_state // Weird af but that's how spells work???
-		action.overlay_alpha = overlay_alpha
 		mob_charge_effect = R
 	update_icon()
 
@@ -56,6 +55,7 @@
 	if(active)
 		active = FALSE
 	remove_ranged_ability()
+	update_icon()
 
 /obj/effect/proc_holder/proc/on_gain(mob/living/user)
 	return
@@ -111,6 +111,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			user.ranged_ability.deactivate(user)
 		else
 			return
+	// If a new-style action spell is currently set as click_intercept, unset it first
+	var/datum/action/cooldown/active_action = user.click_intercept
+	if(istype(active_action))
+		active_action.unset_click_ability(user, refund_cooldown = TRUE)
 	user.ranged_ability = src
 	ranged_ability_user = user
 	user.click_intercept = src
@@ -122,8 +126,11 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	update_icon()
 
 /obj/effect/proc_holder/proc/remove_ranged_ability(msg)
-	if(!ranged_ability_user || !ranged_ability_user.client || (ranged_ability_user.ranged_ability && ranged_ability_user.ranged_ability != src)) //To avoid removing the wrong ability
+	if(!ranged_ability_user || !ranged_ability_user.client || (ranged_ability_user.ranged_ability && ranged_ability_user.ranged_ability != src))
 		return
+	// Clean up stale client signals from cooldown spells that may still be registered
+	for(var/datum/action/cooldown/spell/S in ranged_ability_user.actions)
+		S.UnregisterSignal(ranged_ability_user.client, list(COMSIG_CLIENT_MOUSEDOWN, COMSIG_CLIENT_MOUSEUP))
 	ranged_ability_user.ranged_ability = null
 
 	ranged_ability_user.click_intercept = null
@@ -178,8 +185,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	var/player_lock = TRUE //If it can be used by simple mobs
 	var/gesture_required = FALSE // Can it be cast while cuffed? Rule of thumb: Offensive spells + Mobility cannot be cast
 	var/spell_tier = 1 // Tier of the spell, used to determine whether you can learn it based on your spell. Starts at 1.
+	var/spell_impact_intensity = SPELL_IMPACT_NONE // Visual impact intensity for on-hit effects. See SPELL_IMPACT defines.
 	var/refundable = FALSE // If true, the spell can be refunded. This is modified at the point it is added to the user's mind by learnspell.
-	var/learned_from_pool // If set, the spell was learned from a pool-based system and should refund to this pool name.
 	var/zizo_spell = FALSE // If this spell is fucked up & evil and can only be learned by heretics.
 
 	var/overlay = 0
@@ -207,8 +214,6 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	base_action = /datum/action/spell_action/spell
 
 /obj/effect/proc_holder/spell/get_chargetime()
-	if(ranged_ability_user && chargetime)
-		return calculate_chargetime(ranged_ability_user)
 	return chargetime
 
 /obj/effect/proc_holder/spell/get_fatigue_drain()
@@ -228,43 +233,6 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		newdrain += releasedrain * diff * FATIGUE_REDUCTION_PER_INT
 	return max(newdrain, 0.1)
 
-/obj/effect/proc_holder/spell/proc/calculate_chargetime(mob/living/user)
-	if(!user || !chargetime || miracle)
-		return chargetime
-	var/newtime = chargetime
-	//skill block
-	newtime = newtime - (chargetime * (user.get_skill_level(associated_skill) * CHARGE_REDUCTION_PER_SKILL))
-	//spellbook cast time reduction
-	var/obj/item/book/spellbook/sbook = user.is_holding_item_of_type(/obj/item/book/spellbook)
-	if(sbook && sbook?.open)
-		newtime = newtime - (chargetime * (sbook.get_castred()))
-	//staff cast time reduction
-	var/obj/item/rogueweapon/staff = user.is_holding_item_of_type(/obj/item/rogueweapon/)
-	if(staff && staff.cast_time_reduction)
-		newtime = newtime - (chargetime * (staff.cast_time_reduction))
-	if(newtime > 0)
-		return newtime
-	return 0.1
-
-
-/obj/effect/proc_holder/spell/proc/get_chargetime_breakdown(mob/living/user)
-	var/list/breakdown = list()
-	var/skill_level = user.get_skill_level(associated_skill)
-	if(skill_level > 0)
-		var/skill_mod = chargetime * skill_level * CHARGE_REDUCTION_PER_SKILL
-		if(skill_mod >= 1)
-			breakdown += span_smallgreen("  Skill: -[DisplayTimeText(skill_mod)]")
-	var/obj/item/book/spellbook/sbook = user.is_holding_item_of_type(/obj/item/book/spellbook)
-	if(sbook && sbook?.open)
-		var/book_mod = chargetime * sbook.get_castred()
-		if(book_mod >= 1)
-			breakdown += span_smallgreen("  Spellbook: -[DisplayTimeText(book_mod)]")
-	var/obj/item/rogueweapon/staff = user.is_holding_item_of_type(/obj/item/rogueweapon/)
-	if(staff && staff.cast_time_reduction)
-		var/staff_mod = chargetime * staff.cast_time_reduction
-		if(staff_mod >= 1)
-			breakdown += span_smallgreen("  Staff: -[DisplayTimeText(staff_mod)]")
-	return breakdown
 
 /obj/effect/proc_holder/spell/proc/get_cooldown_breakdown(mob/living/user)
 	var/list/breakdown = list()
@@ -335,15 +303,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			stats += span_info("Range: [range] tiles")
 	else if(range == 0) // as do spells that only affect the user
 		stats += span_info("Range: Self")
-	var/base_ct = chargetime
-	if(base_ct > 0)
-		var/dynamic_ct = user ? calculate_chargetime(user) : base_ct
-		if(dynamic_ct != base_ct)
-			stats += span_info("Charge time: [DisplayTimeText(base_ct)] (current: [dynamic_ct < 1 ? "instant" : DisplayTimeText(dynamic_ct)])")
-			if(user)
-				stats += get_chargetime_breakdown(user)
-		else
-			stats += span_info("Charge time: [DisplayTimeText(base_ct)]")
+	if(chargetime > 0)
+		stats += span_info("Charge time: [DisplayTimeText(chargetime)]")
 	else
 		stats += span_info("Charge time: None")
 	var/base_cd = initial(recharge_time)
@@ -406,11 +367,11 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	if(!phase_allowed && istype(user.loc, /obj/effect/dummy))
 		to_chat(user, span_warning("[name] cannot be cast unless I am completely manifested in the material plane!"))
 		return FALSE
-
+/*
 	if(istype(user, /mob/living/carbon/human/species/wildshape) && !istype(user, /mob/living/carbon/human/species/wildshape/dragon_matthios)) //TA changes
 		if(is_type_in_list(src, GLOB.learnable_spells))
 			return FALSE
-
+*/
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if((invocation_type == "whisper" || invocation_type == "shout") && (!H.can_speak_vocal() || !H.getorganslot(ORGAN_SLOT_TONGUE)))
@@ -473,22 +434,24 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			if("holdervar")
 				adjust_var(user, holder_var_type, holder_var_amount)
 	if(action)
-		action.UpdateButtonIcon()
+		action.build_all_button_icons()
 	START_PROCESSING(SSfastprocess, src)
 	record_featured_stat(FEATURED_STATS_MAGES, user)
 	return TRUE
 
-/obj/effect/proc_holder/spell/proc/charge_check(mob/user)
+/obj/effect/proc_holder/spell/proc/charge_check(mob/user, feedback = TRUE)
 	if(skipcharge)
 		return TRUE
 	switch(charge_type)
 		if("recharge")
 			if(charge_counter < recharge_time)
-				to_chat(user, still_recharging_msg)
+				if(feedback)
+					to_chat(user, still_recharging_msg)
 				return FALSE
 		if("charges")
 			if(!charge_counter)
-				to_chat(user, span_warning("[name] has no charges left!"))
+				if(feedback)
+					to_chat(user, span_warning("[name] has no charges left!"))
 				return FALSE
 	return TRUE
 
@@ -572,13 +535,13 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		charge_counter += delta
 		if(charge_counter >= recharge_time)
 			charge_counter = recharge_time
-			if(action?.button)
-				action.button.update_maptext(0)
-			action?.UpdateButtonIcon()
+			var/datum/action/spell_action/SA = action
+			SA?.update_all_maptext(0)
+			action?.build_all_button_icons()
 			STOP_PROCESSING(SSfastprocess, src)
 			return
-		if(action?.button)
-			action.button.update_maptext(recharge_time - charge_counter)
+		var/datum/action/spell_action/SA = action
+		SA?.update_all_maptext(recharge_time - charge_counter)
 
 /obj/effect/proc_holder/spell/proc/perform(list/targets, recharge = TRUE, mob/user = usr) //if recharge is started is important for the trigger spells
 	if(!ignore_los)
@@ -641,7 +604,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 				var/mob/living/carbon/human/H = user
 				H.bad_guard(span_warning("I can't focus while casting spells!"), cheesy = TRUE)
 		if(action)
-			action.UpdateButtonIcon()
+			action.build_all_button_icons()
 		return TRUE
 	return FALSE
 
@@ -716,9 +679,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		if("holdervar")
 			adjust_var(user, holder_var_type, -holder_var_amount)
 	START_PROCESSING(SSfastprocess, src)
-	if(action?.button)
-		action.button.update_maptext(0)
-		action.UpdateButtonIcon()
+	if(action)
+		var/datum/action/spell_action/SA = action
+		SA?.update_all_maptext(0)
+		action.build_all_button_icons()
 	if(user.mmb_intent && user.mmb_intent.mob_light)
 		QDEL_NULL(user.mmb_intent.mob_light)
 
@@ -840,9 +804,6 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 	perform(targets,user=user)
 
-/obj/effect/proc_holder/spell/proc/updateButtonIcon(status_only, force)
-	action.UpdateButtonIcon(status_only, force)
-
 /obj/effect/proc_holder/spell/proc/can_be_cast_by(mob/caster)
 	if((human_req || clothes_req) && !ishuman(caster))
 		return 0
@@ -860,25 +821,26 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	qdel(dummy)
 	return 1
 
-/obj/effect/proc_holder/spell/proc/can_cast(mob/user = usr)
+/obj/effect/proc_holder/spell/proc/can_cast(mob/user = usr, feedback = TRUE)
 	if(((!user.mind) || !(src in user.mind.spell_list)) && !(src in user.mob_spell_list))
 		return FALSE
 
 	// deny horsespellers
 	if(user.client && user.buckled && isliving(user.buckled))
-		to_chat(user, span_warning("I'm too distracted riding [user.buckled] to cast!"))
+		if(feedback)
+			to_chat(user, span_warning("I'm too distracted riding [user.buckled] to cast!"))
 		return FALSE
 
-	if(!charge_check(user))
+	if(!charge_check(user, feedback))
 		return FALSE
 
 	if(user.stat && !stat_allowed)
 		return FALSE
-
+/*
 	if(istype(user, /mob/living/carbon/human/species/wildshape) && !istype(user, /mob/living/carbon/human/species/wildshape/dragon_matthios)) //TA EDIT
 		if(is_type_in_list(src, GLOB.learnable_spells))
 			return FALSE
-	
+*/
 	if(!ignore_cockblock && HAS_TRAIT(user, TRAIT_SPELLCOCKBLOCK))
 		return FALSE
 
@@ -965,6 +927,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 				playsound(get_turf(target), pick(target.parry_sound), 100)
 		target.apply_status_effect(/datum/status_effect/buff/parry_buffer)
 		target.apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+		guard.deflected_spell = TRUE
 		target.remove_status_effect(/datum/status_effect/buff/clash)
 		// Pseudo-melee punishment: expose the attacker if provided
 		if(attacker && ishuman(attacker))

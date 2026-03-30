@@ -1,6 +1,6 @@
 /obj/effect/proc_holder/spell/invoked/vigorousexchange
 	name = "Vigorous Exchange"
-	desc = "Restores the targets Energy, Twice as effective on someone else."
+	desc = "Restores the target's Energy, twice as effective on someone else."
 	action_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_state = "vigorousexchange"
@@ -25,7 +25,7 @@
 
 /obj/effect/proc_holder/spell/invoked/heatmetal
 	name = "Heat Metal"
-	desc= "Damages Armor, Forces target to drop a metallic weapon, heats up an ingot in tongs or smelts a single item."
+	desc= "Damages Armor, forces target to drop a metallic weapon, heats up an ingot in tongs or smelts a single item."
 	action_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_state = "heatmetal"
@@ -122,7 +122,7 @@
 
 /obj/effect/proc_holder/spell/invoked/craftercovenant
 	name = "The Crafter’s Covenant"
-	desc = "Melt a pile of valuables and convert them into a single item. Sacrifice is accepted even if its not valuable enough to make anything."
+	desc = "Melt a pile of valuables and convert them into a single item. Sacrifice is accepted even if it's not valuable enough to make anything."
 	action_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_state = "craftercovenant"
@@ -624,15 +624,10 @@ var/global/list/anvil_recipe_prices[][]
 		if(cost != 0)
 			to_chat(user, "<font color='purple'>I lose [cost] devotion!</font>")
 		if(I.max_integrity <= I.obj_integrity)
-			if(I.obj_broken)
-				I.obj_fix()
-			if(I.peel_count)
-				I.peel_count--
-				I.visible_message(span_info("[I]'s shorn layers mend together. ([I.peel_count])."))
-			else
-				if(I.body_parts_covered_dynamic != I.body_parts_covered)
-					I.repair_coverage()
-					to_chat(user, span_info("[I]'s shorn layers mend together, completely."))
+			I.obj_fix()
+			I.repair_coverage()
+			I.visible_message(span_info("[I] mend together, completely."))
+			continue
 		if((user.devotion?.devotion - cost) < 0)
 			to_chat(user, span_warning("I do not have enough devotion!"))
 			return FALSE

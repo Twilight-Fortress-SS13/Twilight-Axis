@@ -291,34 +291,3 @@ export const ImageGalleryPage = (props) => {
     </Section>
   );
 };
-
-export const NSFWHeadshotPage = (props) => {
-  const { data } = useBackend<ExaminePanelData>();
-  const {
-    nsfw_headshot,
-  } = data;
-
-  const safeNsfwHeadshot = isValidAssetValue(nsfw_headshot)
-    ? nsfw_headshot
-    : null;
-
-  return (
-    <Stack fill justify="space-evenly">
-      <Stack.Item grow>
-        <Section align="center">
-          {safeNsfwHeadshot ? (
-            <Image
-              maxHeight="100%"
-              maxWidth="100%"
-              src={resolveAsset(safeNsfwHeadshot)}
-            />
-          ) : (
-            <Box align="center" color="gray">
-              No nudeshot available.
-            </Box>
-          )}
-        </Section>
-      </Stack.Item>
-    </Stack>
-  );
-};

@@ -390,6 +390,11 @@
 	salvage_result = /obj/item/natural/hide
 	salvage_amount = 1
 
+/obj/item/clothing/suit/roguetown/shirt/tribalrag/gladiator
+	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
+	name = "gladiator's rags"
+	desc = "What we do in life, echoes in eternity."
+
 /obj/item/clothing/suit/roguetown/shirt/robe/archivist
 	name = "archivist's robe"
 	desc = "Robes belonging to seekers of knowledge."
@@ -649,11 +654,11 @@
 	icon_state = "weddingdress"
 	item_state = "weddingdress"
 
-/obj/item/clothing/suit/roguetown/shirt/exoticsilkbra
-	name = "exotic silk bra"
+/obj/item/clothing/suit/roguetown/shirt/silkbra
+	name = "giltsilk bra"
 	desc = "An exquisite bra crafted from the finest silk and adorned with gold rings. It leaves little to the imagination."
-	icon_state = "exoticsilkbra"
-	item_state = "exoticsilkbra"
+	icon_state = "silkbra"
+	item_state = "silkbra"
 	body_parts_covered = CHEST
 	boobed = TRUE
 	sewrepair = TRUE

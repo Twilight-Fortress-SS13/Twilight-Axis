@@ -12,7 +12,7 @@
 	throwforce = 10
 	w_class = WEIGHT_CLASS_NORMAL
 	block_chance = 0
-	armor_penetration = 0
+	armor_penetration = PEN_NONE
 	sharpness = IS_SHARP
 	possible_item_intents = list(SWORD_CUT, SWORD_THRUST)
 	can_parry = TRUE
@@ -43,7 +43,6 @@
 
 	var/malumblessed_w = FALSE
 
-	var/cast_time_reduction = null
 
 /obj/item/rogueweapon/Initialize()
 	. = ..()
@@ -52,6 +51,16 @@
 	
 	if(ispath(special))
 		special = new special()
+
+/obj/item/rogueweapon/dropped(mob/user, silent)
+	. = ..()
+	if(istype(src, /obj/item/rogueweapon/shield))
+		return
+	if(implement_multiplier)
+		return
+	if(isliving(user))
+		var/mob/living/L = user
+		L.apply_status_effect(/datum/status_effect/recent_weapon)
 
 /obj/item/rogueweapon/ComponentInitialize()
 	if(is_silver) // By default, silver weapons are supposed to be blesseable.

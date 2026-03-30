@@ -142,21 +142,20 @@
 			acheck_dflag = "blunt"
 		if(BCLASS_CHOP, BCLASS_CUT, BCLASS_LASHING, BCLASS_PUNISH)
 			acheck_dflag = "slash"
-		if(BCLASS_PICK, BCLASS_STAB)
+		if(BCLASS_PICK, BCLASS_STAB, BCLASS_BITE)
 			acheck_dflag = "stab"
 		if(BCLASS_PIERCE)
 			acheck_dflag = "piercing"
+		if(BCLASS_BURN)
+			acheck_dflag = "fire"
 	armor = owner.run_armor_check(zone_precise, acheck_dflag, damage = 0)
-	if(ishuman(owner))
-		var/mob/living/carbon/human/human_owner = owner
-		if(human_owner.checkcritarmor(zone_precise, bclass) && armor)
-			do_crit = FALSE
-		if((owner.mind || HAS_TRAIT(owner, TRAIT_CRIT_THRESHOLD)) && (get_damage() <= (max_damage * CRIT_DISMEMBER_DAMAGE_THRESHOLD))) //No crits unless the damage is maxed out.
-			do_crit = FALSE // We used to check if they are buckled or lying down but being grounded is a big enough advantage.
+	armor = owner.getarmor(zone_precise, acheck_dflag)
+	if((owner.mind || HAS_TRAIT(owner, TRAIT_CRIT_THRESHOLD)) && (get_damage() <= (max_damage * CRIT_DISMEMBER_DAMAGE_THRESHOLD))) //No crits unless the limb is at 75%+ damage.
+		do_crit = FALSE
 	if(user)
 		if(user.goodluck(2))
 			dam += 10
-		if(istype(user.rmb_intent, /datum/rmb_intent/weak) || bclass == BCLASS_PEEL)
+		if(istype(user.rmb_intent, /datum/rmb_intent/weak))
 			do_crit = FALSE
 
 	var/datum/wound/dynwound = manage_dynamic_wound(bclass, dam, armor)
@@ -300,7 +299,6 @@
 			used = round(damage_dividend * 20 + (dam / 2))
 			if(prob(used))
 				attempted_wounds += /datum/wound/sunder
-
 	// Check if critical resistance applies
 	var/has_crit_attempt = length(attempted_wounds)
 	if(!has_crit_attempt)
@@ -380,7 +378,6 @@
 			used = round(damage_dividend * 20 + (dam / 2))
 			if(prob(used))
 				attempted_wounds += list(/datum/wound/sunder/chest)
-
 	// Check if critical resistance applies
 	var/has_crit_attempt = length(attempted_wounds)
 	if(!has_crit_attempt)
@@ -512,7 +509,6 @@
 			used = round(damage_dividend * 20 + (dam / 2), 1)
 			if(prob(used))
 				attempted_wounds += /datum/wound/sunder/head
-
 	var/has_crit_attempt = length(attempted_wounds) || try_knockout
 	if(!has_crit_attempt)
 		return FALSE

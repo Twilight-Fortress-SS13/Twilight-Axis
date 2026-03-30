@@ -133,7 +133,6 @@
 				headshot = holder.lich_headshot_link
 			else
 				headshot = holder.headshot_link
-			nsfw_headshot += holder.nsfw_headshot_link
 			img_gallery = holder.img_gallery
 			nsfw_img_gallery = holder.nsfw_img_gallery
 			ooc_extra_image = holder.ooc_extra_img
@@ -154,7 +153,6 @@
 			headshot = pref.lich_headshot_link
 		else
 			headshot = pref.headshot_link
-		nsfw_headshot = pref.nsfw_headshot_link
 		img_gallery = pref.img_gallery
 		nsfw_img_gallery = pref.nsfw_img_gallery
 		ooc_extra_image = pref.ooc_extra_img

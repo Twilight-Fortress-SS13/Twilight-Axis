@@ -176,6 +176,23 @@
 /datum/job/proc/special_job_check(mob/dead/new_player/player)
 	return TRUE
 
+/datum/job/proc/validate_prefs_for_job(datum/preferences/P) //TA EDIT START
+	if(!P) return FALSE
+	if(length(allowed_races) && !(P.pref_species.type in allowed_races)) return FALSE
+	if(length(allowed_patrons) && !(P.selected_patron.type in allowed_patrons)) return FALSE
+	if(length(allowed_ages) && !(P.age in allowed_ages)) return FALSE
+	if(length(allowed_sexes) && !(P.gender in allowed_sexes)) return FALSE
+	
+	if(length(virtue_restrictions) && ((P.virtue.type in virtue_restrictions) || (P.virtuetwo?.type in virtue_restrictions) || (P.virtue_origin?.type in virtue_restrictions)))
+		return FALSE
+		
+	if(length(vice_restrictions))
+		for(var/datum/charflaw/cf in P.charflaws)
+			if(cf.type in vice_restrictions)
+				return FALSE
+				
+	return TRUE //TA EDIT END
+
 /datum/job/proc/get_used_title(mob/player)
 	var/titles = player.titles_pref
 	var/used_name = display_title || title
@@ -547,13 +564,30 @@
 					for(var/stat in adv_ref.adv_stat_ceiling)
 						dat += "["[capitalize(stat)]: <b>\Roman[adv_ref.adv_stat_ceiling[stat]]</b>"] | "
 					dat += "<i><br>Regardless of your statpacks or race choice, you will not be able to exceed these stats on spawn.</i></font>"
-				if(LAZYLEN(adv_ref.subclass_spell_point_pools))
-					dat += "<font color = '#a3a7e0'><b>Spell Pools:</b><br>"
-					for(var/pool_name in adv_ref.subclass_spell_point_pools)
-						dat += "[capitalize(pool_name)]: <b>[adv_ref.subclass_spell_point_pools[pool_name]]</b> points<br>"
+				if(LAZYLEN(adv_ref.subclass_mage_aspects))
+					var/list/aspect_cfg = adv_ref.subclass_mage_aspects
+					dat += "<font color = '#a3a7e0'><b>Mage Aspects:</b><br>"
+					if(aspect_cfg["mastery"])
+						dat += "Mastery: <b>Unlocked</b><br>"
+					if(aspect_cfg["major"] > 0)
+						dat += "Major Aspects: <b>[aspect_cfg["major"]]</b><br>"
+					if(aspect_cfg["minor"] > 0)
+						dat += "Minor Aspects: <b>[aspect_cfg["minor"]]</b><br>"
+					if(aspect_cfg["utilities"] > 0)
+						dat += "Utility Slots: <b>[aspect_cfg["utilities"]]</b><br>"
+					if(LAZYLEN(aspect_cfg["locked_aspects"]))
+						dat += "Innate: "
+						var/list/locked = aspect_cfg["locked_aspects"]
+						for(var/aspect_path in locked)
+							var/datum/magic_aspect/A = aspect_path
+							dat += "<b>[initial(A.name)]</b> "
+						dat += "<br>"
+					if(islist(aspect_cfg["variants"]))
+						var/list/overrides = aspect_cfg["variants"]
+						for(var/aspect_path in overrides)
+							var/datum/magic_aspect/A = aspect_path
+							dat += "Tradition: <b>[capitalize(overrides[aspect_path])] [initial(A.name)]</b><br>"
 					dat += "</font>"
-				else if(adv_ref.subclass_spellpoints > 0)
-					dat += "<font color = '#a3a7e0'>Starting Spellpoints: <b>[adv_ref.subclass_spellpoints]</b></font>"
 				if(length(adv_ref.subclass_languages))
 					dat += "<details><summary><i>Known Languages</i></summary>"
 					for(var/i in 1 to length(adv_ref.subclass_languages))

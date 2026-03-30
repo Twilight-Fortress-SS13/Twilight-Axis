@@ -122,6 +122,23 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		cmd_admin_pm(href_list["priv_msg"],null)
 		return
 
+	// Adminhelp ticket shortcuts
+	// Open the current adminhelp ticket chat window
+	if(href_list["viewticket"])
+		get_adminhelp()
+		return
+
+	// Quick reply to the current ticket using the adminhelp system
+	if(href_list["replyticket"])
+		if(!current_ticket)
+			to_chat(src, span_notice("You don't have an active admin help ticket to reply to."))
+			return
+		var/msg = input(src, "Reply to the admin team:", "Adminhelp reply") as message|null
+		if(!msg)
+			return
+		current_ticket.MessageNoRecipient(msg, FALSE)
+		return
+
 	if(href_list["playerlistrogue"])
 		if(SSticker.current_state != GAME_STATE_FINISHED)
 			return
@@ -643,9 +660,6 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	GLOB.clients -= src
 	QDEL_NULL(tgui_panel)
 	QDEL_LIST_ASSOC_VAL(char_render_holders)
-	if(movingmob != null)
-		movingmob.client_mobs_in_contents -= mob
-		UNSETEMPTY(movingmob.client_mobs_in_contents)
 	Master.UpdateTickRate()
 	return ..()
 
@@ -957,7 +971,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			qdel(query_get_notes)
 			return
 	qdel(query_get_notes)
-	create_message("note", key, system_ckey, message, null, null, 0, 0, null, 0, 0)
+	create_message("note", key, system_ckey, message, logged = FALSE, note_severity = "none")
 
 
 /client/proc/check_ip_intel()

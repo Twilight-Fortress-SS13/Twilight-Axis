@@ -57,7 +57,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	desc = "Those who wear, thy should beware, for those who do; never come back as who they once were again."
 	allowed_race = NON_DWARVEN_RACE_TYPES
 	body_parts_covered = ARMS|CHEST|VITALS
-	armor = ARMOR_PADDED_GOOD
+	armor = ARMOR_PADDED
 
 /obj/item/clothing/cloak/half/shadowcloak/cult/Initialize(mapload, ...)
 	. = ..()
@@ -377,7 +377,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	sellprice = 0
 	max_integrity = 100
 	body_parts_covered = COVERAGE_FULL | COVERAGE_HEAD_NOSE | NECK | HANDS | FEET 
-	armor = ARMOR_FATEWEAVER 
+	armor = ARMOR_DRAGONSKIN 
 	blade_dulling = DULLING_BASHCHOP
 	blocksound = PLATEHIT
 	break_sound = 'sound/foley/breaksound.ogg'

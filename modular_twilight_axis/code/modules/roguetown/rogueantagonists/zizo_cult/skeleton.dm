@@ -98,6 +98,6 @@ NECRO SKELETONS
 	r_hand = /obj/item/rogueweapon/sword/long/zizo
 
 	H.energy = H.max_energy
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/mending)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/fetch)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/fetch)
 	ADD_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)

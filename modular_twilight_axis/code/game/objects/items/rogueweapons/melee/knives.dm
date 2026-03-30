@@ -117,15 +117,3 @@
 		added_int = 50,\
 		added_def = 2,\
 	)
-
-/datum/intent/dagger/cut/blunt
-	penfactor = BLUNT_NO_PENFACTOR
-
-/datum/intent/dagger/thrust/blunt
-	penfactor = BLUNT_NO_PENFACTOR
-
-/datum/intent/dagger/sucker_punch
-	penfactor = BLUNT_LOWER_PENFACTOR
-
-/datum/intent/dagger/cut/rend
-	penfactor = BLUNT_NO_PENFACTOR

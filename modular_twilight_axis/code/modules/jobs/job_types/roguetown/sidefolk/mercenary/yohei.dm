@@ -60,7 +60,8 @@
 		/obj/item/roguekey/mercenary,
 		/obj/item/flashlight/flare/torch/lantern,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun,
-		/obj/item/rogueweapon/scabbard/sheath/kazengun
+		/obj/item/rogueweapon/scabbard/sheath/kazengun,
+		/obj/item/storage/belt/rogue/pouch/coins/poor
 		)
 	H.merctype = 2
 
@@ -195,7 +196,7 @@
 ///////////////////////////
 /datum/intent/sword/cut/miaodao
 	reach = 2
-	penfactor = 20
+	penfactor = PEN_LIGHT
 
 /datum/intent/sword/cut/miaodao/fast
 	clickcd = 9
@@ -226,13 +227,13 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
 	icon_state = "yoheisuit"
-	armor = ARMOR_LEATHER_STUDDED
+	armor = ARMOR_BRIGANDINE
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 25
 
 /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/yohei
 	name = "shadowed hood"
 	max_integrity = 100
-	armor = ARMOR_SPELLSINGER
+	armor = ARMOR_LEATHER
 	color = CLOTHING_BLACK
 	desc = "A traditional Kazengunese hood, dyed in dark colors."
 

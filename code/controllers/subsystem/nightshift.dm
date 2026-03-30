@@ -92,6 +92,7 @@ SUBSYSTEM_DEF(nightshift)
 			if(HAS_TRAIT(src, TRAIT_NIGHT_OWL))
 				apply_status_effect(/datum/status_effect/debuff/sleepytime)
 		if("night")
+			SEND_SIGNAL(src, COMSIG_SLEEPY_TIME)
 			handle_sleep_triumphs()
 			if(HAS_TRAIT(src, TRAIT_INFINITE_STAMINA) || HAS_TRAIT(src, TRAIT_NOSLEEP))
 				return ..()
@@ -100,6 +101,15 @@ SUBSYSTEM_DEF(nightshift)
 			else
 				apply_status_effect(/datum/status_effect/debuff/sleepytime)
 				add_stress(/datum/stressevent/sleepytime)
+
+	//TA EDIT BEGIN
+	if(todd != "day")
+		if(HAS_TRAIT(src, TRAIT_NOC_LIGHT_BLESSING))
+			apply_status_effect(/datum/status_effect/buff/noc_light_blessing)
+	else 
+		remove_status_effect(/datum/status_effect/buff/noc_light_blessing)
+
+	//TA EDIT END
 
 /mob/living/carbon/human/proc/handle_sleep_triumphs()
 	if(!mind)

@@ -1,9 +1,5 @@
-#define ROCK_CHARGE_REDUCTION 0.15
-#define GEM_CHARGE_REDUCTION 0.25
-
 /* Spellbook
-Intended to be a reward or a goal for pure mage, allowing them to reset and swap out 2 spells per day, and
-decreases charge time if held opened in hand, for pure mage build + aesthetics.
+Intended to be a reward or a goal for pure mage, allowing them to rebind their aspect spells.
 */
 
 /obj/item/book/spellbook
@@ -11,6 +7,8 @@ decreases charge time if held opened in hand, for pure mage build + aesthetics.
 	icon = 'icons/roguetown/items/books.dmi'
 	icon_state = "spellbookbrown_0"
 	slot_flags = ITEM_SLOT_HIP
+	grid_width = 32
+	grid_height = 32
 	base_icon_state = "spellbookbrown"
 	unique = TRUE
 	firefuel = 2 MINUTES
@@ -20,7 +18,7 @@ decreases charge time if held opened in hand, for pure mage build + aesthetics.
 	associated_skill = /datum/skill/misc/reading
 	possible_item_intents = list(/datum/intent/use)
 	name = "\improper tome of the arcyne"
-	desc = "A crackling, glowing book, filled with runes and symbols that hurt the mind to stare at. Can be used to unbind spells."
+	desc = "A crackling, glowing book, filled with runes and symbols that hurt the mind to stare at. Can be used to rebind aspect spells."
 	var/picked // if the book has had it's style picked or not
 	var/born_of_rock = FALSE // was a magical stone used to make it instead of a gem
 
@@ -82,11 +80,7 @@ decreases charge time if held opened in hand, for pure mage build + aesthetics.
 
 /obj/item/book/spellbook/examine(mob/user)
 	. = ..()
-	. += span_notice("Reading it once per day allows you to unbind up to two spells and refund their spell points.")
-	if(born_of_rock)
-		. += span_notice("This tome was made from a magical stone instead of a proper gem. Holding it in your hand with it open reduces spell casting time by [ROCK_CHARGE_REDUCTION * 100]%")
-	else
-		. += span_notice("This tome was made from a gem. Holding it in your hand with it open reduces spell casting time by [GEM_CHARGE_REDUCTION * 100]%")
+	. += span_notice("Reading it allows you to rebind your aspect spells.")
 
 /obj/item/book/spellbook/attack_self(mob/user)
 	if(!open)
@@ -106,46 +100,13 @@ decreases charge time if held opened in hand, for pure mage build + aesthetics.
 
 /obj/item/book/spellbook/proc/change_spells(mob/user = usr)
 	var/datum/mind/user_mind = user.mind
-	if(!user_mind) return // How??
-	if(user_mind.has_changed_spell)
-		to_chat(user, span_warning("I have already unbinded my spells today!"))
+	if(!user_mind)
 		return
-	var/list/resettable_spells = list()
-	var/list/spell_list = user_mind.spell_list
-	for(var/i = 1, i <= spell_list.len, i++)
-		var/obj/effect/proc_holder/spell/spell = spell_list[i]
-		if(spell.refundable == TRUE)
-			if(spell.cost > 0)
-				var/pool_tag = spell.learned_from_pool ? " ([capitalize(spell.learned_from_pool)])" : ""
-				resettable_spells["[spell.name]: [spell.cost][pool_tag]"] = spell_list[i]
-	if(!resettable_spells.len)
-		to_chat(user, span_warning("I have no spells to unbind!"))
+	if(!LAZYLEN(user_mind.mage_aspect_config))
+		to_chat(user, span_warning("I lack the arcyne training to make use of this."))
 		return
-	user_mind.has_changed_spell = TRUE //To pre-empt a halting duplication in the for loop here
-	var/unlearn_success = FALSE
-	for(var/i = 1, i <= 2, i++)
-		var/choice = tgui_input_list(user, "Choose up to two spells to unbind. Cancel both to not use up your daily unbinding.", "Unbind Spell", resettable_spells)
-		var/obj/effect/proc_holder/spell/item = resettable_spells[choice]
-		if(!item)
-			break
-		if(!resettable_spells.len)
-			return
-		if(user_mind.RemoveSpell(item))
-			if(item.learned_from_pool && LAZYLEN(user_mind.spell_points_used_by_pool))
-				user_mind.spell_points_used_by_pool[item.learned_from_pool] = max(0, user_mind.spell_points_used_by_pool[item.learned_from_pool] - item.cost)
-			else
-				user_mind.used_spell_points -= item.cost
-			unlearn_success = TRUE
-		resettable_spells.Remove(choice)
-		user_mind.check_learnspell()
-	if(!unlearn_success)
-		user_mind.has_changed_spell = FALSE //If we didn't unlearn anything, reset
-
-/obj/item/book/spellbook/proc/get_castred()
-	if(born_of_rock)
-		return ROCK_CHARGE_REDUCTION
-	else
-		return GEM_CHARGE_REDUCTION
+	var/datum/aspect_picker/picker = new(user, FALSE, user_mind.mage_aspect_config)
+	picker.ui_interact(user)
 
 /obj/item/book/spellbook/attack_right(mob/user)
 	if(!picked)
@@ -229,7 +190,7 @@ decreases charge time if held opened in hand, for pure mage build + aesthetics.
 	icon_state = "spellbook_unfinished"
 	desc = "A fully bound tome of scroll paper. It's lacking a certain arcyne energy. Crush a gem or a magical stone over it to complete it."
 	grid_width = 32
-	grid_height = 64
+	grid_height = 32
 
 
 /obj/item/spellbook_unfinished/pre_arcyne/attackby(obj/item/P, mob/living/carbon/human/user, params)
@@ -301,5 +262,3 @@ decreases charge time if held opened in hand, for pure mage build + aesthetics.
 	else
 		return ..()
 
-#undef ROCK_CHARGE_REDUCTION
-#undef GEM_CHARGE_REDUCTION
