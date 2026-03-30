@@ -29,6 +29,11 @@
 		storage.reagents.remove_reagent(/datum/reagent/consumable/milk/erp, milk_amt)
 		H.reagents.add_reagent(/datum/reagent/consumable/milk/erp, milk_amt)
 
+	var/lube_amt = storage.reagents.get_reagent_amount(/datum/reagent/erpjuice/lube)
+	if(lube_amt > 0)
+		storage.reagents.remove_reagent(/datum/reagent/erpjuice/lube, lube_amt)
+		H.reagents.add_reagent(/datum/reagent/erpjuice/lube, lube_amt)
+
 	if(has_liquid())
 		if(!H.has_status_effect(/datum/status_effect/mouth_full))
 			H.apply_status_effect(/datum/status_effect/mouth_full)

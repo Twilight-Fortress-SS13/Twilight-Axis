@@ -176,7 +176,7 @@
     
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
-			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/plate/scale/knight,
+			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/heavy,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted,
 		)
@@ -297,7 +297,7 @@
 
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
-			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/plate/scale/knight,
+			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/heavy,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted,
 		)
@@ -343,7 +343,7 @@
 	tutorial = "You are the picture-perfect knight from a high tale, knowledgeable in riding steeds into battle. You specialize in weapons most useful on a saiga including spears, swords, maces, and a variety of ranged weaponry."
 	outfit = /datum/outfit/job/roguetown/knight/mountedknight
 	subclass_stashed_items = list("Ducal Caparison" = /obj/item/caparison/azure)
-	extra_context = "This subclass recieves Azurean Caparison in it's stash."
+	extra_context = "This subclass recieves Azurean Caparison in its stash."
 
 	category_tags = list(CTAG_ROYALGUARD)
 
@@ -447,7 +447,7 @@
 
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
-			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/plate/scale/knight,
+			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/heavy,
 			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted,
 		)
@@ -665,7 +665,7 @@
 	traits_applied = list(TRAIT_HEAVYARMOR)
 
 	subclass_stashed_items = list("Ducal Caparison" = /obj/item/caparison/azure)
-	extra_context = "This class gains Master skill in their weapon of choice. Recieves Azurean Caparison in it's stash."
+	extra_context = "This class gains Master skill in their weapon of choice. Recieves Azurean Caparison in its stash."
 
 	subclass_stats = list(
 		STATKEY_STR = 2,
@@ -814,7 +814,7 @@
 			armor = /obj/item/clothing/suit/roguetown/armor/brigandine/retinue
 			pants = /obj/item/clothing/under/roguetown/chainlegs
 		if("Coat of Plates")
-			armor = /obj/item/clothing/suit/roguetown/armor/plate/scale/knight
+			armor = /obj/item/clothing/suit/roguetown/armor/brigandine/heavy
 			pants = /obj/item/clothing/under/roguetown/chainlegs
 		if("Fluted Cuirass")
 			armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted

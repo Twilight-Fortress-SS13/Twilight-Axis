@@ -32,8 +32,8 @@
 	range = 12		
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
-	woundclass = BCLASS_PIERCE
-	flag = "piercing"
+	woundclass = BCLASS_STAB
+	flag = "stab"
 	armor_penetration = PEN_HEAVY
 	speed = 0.1
 
@@ -49,7 +49,7 @@
 /obj/projectile/bullet/twilight_cannonball
 	name = "cannonball"
 	desc = "Крупная свинцовая сфера. Важен не размер ствола, а размер отверстия, что он делает в вашем противнике."
-	damage = 200
+	damage = 150
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
@@ -59,8 +59,11 @@
 	embedchance = 0
 	woundclass = BCLASS_STAB
 	flag = "stab"
-	armor_penetration = PEN_HEAVY
+	armor_penetration = PEN_MEDIUM
 	speed = 0.1
+	var/cannon_aoe_radius = 1
+	var/cannon_aoe_damage_ratio = 0.25
+	var/cannon_aoe_penetration = PEN_MEDIUM
 
 /obj/projectile/bullet/twilight_grapeshot
 	name = "grapeshot"
@@ -73,8 +76,8 @@
 	range = 10
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
-	woundclass = BCLASS_PIERCE
-	flag = "piercing"
+	woundclass = BCLASS_STAB
+	flag = "stab"
 	armor_penetration = PEN_HEAVY
 	speed = 0.1
 	critfactor = 0.67
@@ -96,7 +99,7 @@
 	range = 50
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	embedchance = 100
-	woundclass = BCLASS_PIERCE
+	woundclass = BCLASS_STAB
 	flag = "stab"
 	armor_penetration = PEN_HEAVY
 
@@ -209,8 +212,6 @@
 						if("arcyne gunpowder")
 							if(ishuman(T))
 								var/mob/living/carbon/human/H = T
-								if(istype(H.wear_ring, /obj/item/clothing/ring/fate_weaver))
-									H.wear_ring.obj_break()
 								H.set_silence(5 SECONDS)
 						if("terrorpowder")
 							gunpowder_npc_critfactor += 1
@@ -298,50 +299,99 @@
 							affecting.twilight_gunpowder_crit(P.woundclass, zone_precise = zone, silent = FALSE, crit_message = TRUE)
 	. = ..()*/
 
-/obj/projectile/bullet/twilight_cannonball/on_hit(atom/target, blocked = FALSE)
-	. = ..()
-	var/turf/T = get_turf(target)
+/obj/projectile/bullet/twilight_cannonball/proc/play_cannonball_blast_visuals(turf/T)
+	if(!T)
+		return
+
+	var/datum/effect_system/explosion/smoke/E = new
+	E.set_up(T)
+	E.start()
+
+	playsound(T, pick('sound/misc/explode/bomb.ogg', 'sound/misc/explode/explosionclose (1).ogg', 'sound/misc/explode/explosionclose (2).ogg', 'sound/misc/explode/explosionclose (3).ogg'), 120, TRUE, 8)
+	playsound(T, pick('sound/misc/explode/incendiary (1).ogg', 'sound/misc/explode/incendiary (2).ogg'), 100, TRUE, 4)
+
+/obj/projectile/bullet/twilight_cannonball/proc/get_cannonball_aoe_damage()
+	return round(damage * cannon_aoe_damage_ratio)
+
+/obj/projectile/bullet/twilight_cannonball/proc/apply_cannonball_aoe_to_mob(mob/living/L, turf/epicenter)
+	if(!L || !epicenter || L.stat == DEAD)
+		return FALSE
+
+	var/aoe_damage = get_cannonball_aoe_damage()
+	if(!aoe_damage || aoe_damage <= 0)
+		return FALSE
+
+	var/def_zone = BODY_ZONE_CHEST
+	var/armor = L.run_armor_check(def_zone, src.flag, "", "", armor_penetration = cannon_aoe_penetration, damage = aoe_damage, used_weapon = src)
+	if(!L.apply_damage(aoe_damage, damage_type, def_zone, armor))
+		return FALSE
+
+	L.visible_message(
+		span_danger("[L] is caught in the blast of \the [src]!"),
+		span_danger("The [src.name] blast catches me!")
+	)
+	return TRUE
+
+/obj/projectile/bullet/twilight_cannonball/proc/apply_cannonball_aoe_gunpowder(mob/living/L)
+	if(!L)
+		return
+
 	switch(gunpowder)
 		if("fyrepowder")
-			explosion(T, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 1, flame_range = 2, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
+			L.adjust_fire_stacks(2)
+			L.ignite_mob()
+
 		if("holy fyrepowder")
-			explosion(T, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 1, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
-			for(var/mob/living/L in range(2, T))
-				if(!(L == target))
-					if(HAS_TRAIT(L, TRAIT_SILVER_WEAK))
-						if(!L.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
-							if(L.patron)
-								to_chat(L, span_danger("The trice-cursed Otavan silver! By [L.patron.name], it hurts!!"))
-							else
-								to_chat(L, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
-						L.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
+			if(HAS_TRAIT(L, TRAIT_SILVER_WEAK))
+				if(!L.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
+					if(L.patron)
+						to_chat(L, span_danger("The trice-cursed Otavan silver! By [L.patron.name], it hurts!!"))
 					else
-						L.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/divine)
-					L.ignite_mob()
+						to_chat(L, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
+				L.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
+			else
+				L.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/divine)
+			L.ignite_mob()
+
 		if("corrosive gunpowder")
-			explosion(T, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 1, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
-			for(var/mob/living/L in range(1, T)) //apply damage over time to mobs
-				if(!(L == target))
-					var/mob/living/carbon/M = L
-					M.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
-					new /obj/effect/temp_visual/acidsplash(get_turf(M))
-			for(var/turf/turfs_in_range in range(2, T)) //make a splash
-				new /obj/effect/temp_visual/acidsplash(turfs_in_range)
+			L.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
+			new /obj/effect/temp_visual/acidsplash(get_turf(L))
+
 		if("thunderpowder")
-			explosion(T, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 1, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
-			for(var/mob/living/L in range(2, T))
-				if(!(L == target))
-					L.Immobilize(30)
-					L.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
+			L.Immobilize(10)
+			L.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
+
 		if("arcyne gunpowder")
-			explosion(T, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 1, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
-			for(var/mob/living/carbon/human/L in range(2, T))
-				if(!(L == target))
-					if(istype(L.wear_ring, /obj/item/clothing/ring/fate_weaver))
-						L.wear_ring.obj_break()
-					L.set_silence(5 SECONDS)
-		else
-			explosion(T, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 1, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
+			if(ishuman(L))
+				var/mob/living/carbon/human/H = L
+				H.set_silence(5 SECONDS)
+
+/obj/projectile/bullet/twilight_cannonball/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+
+	var/turf/epicenter = get_turf(target)
+	if(!epicenter)
+		return .
+
+	play_cannonball_blast_visuals(epicenter)
+
+	if(gunpowder == "corrosive gunpowder")
+		for(var/turf/turfs_in_range in range(cannon_aoe_radius, epicenter))
+			new /obj/effect/temp_visual/acidsplash(turfs_in_range)
+
+	epicenter.visible_message(span_danger("The [src.name] bursts apart in a violent blast!"))
+
+	if(cannon_aoe_radius > 0)
+		var/mob/living/direct_hit = ismob(target) ? target : null
+		for(var/turf/T in range(cannon_aoe_radius, epicenter))
+			for(var/mob/living/L in T)
+				if(L == direct_hit)
+					continue
+				if(!apply_cannonball_aoe_to_mob(L, epicenter))
+					continue
+				apply_cannonball_aoe_gunpowder(L)
+
+	return .
 
 /obj/item/ammo_casing/caseless/twilight_lead
 	name = "lead sphere"

@@ -14,16 +14,24 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	. = ..()
 	for(var/book_type in subtypesof(/obj/item/recipe_book))
 		var/obj/item/recipe_book/book = new book_type()
-		if(!length(book.types))
+		if(!length(book.types) && !book.wiki_only)
 			qdel(book)
 			continue
-		book_entries += list(list(
-			"name" = book.name,
-			"wiki_name" = book.wiki_name || book.name,
-			"types" = book.types.Copy(),
-			"path" = book_type,
-			"wiki_section" = book.wiki_section
-		))
+		var/book_key = "[book_type]"
+		if(book.can_spawn || book.wiki_only)
+			book_entries += list(list(
+				"name" = book.name,
+				"wiki_name" = book.wiki_name || book.name,
+				"types" = book.types.Copy(),
+				"path" = book_type,
+				"wiki_section" = book.wiki_section
+			))
+		// Cache recipe data for all books, even those hidden from the library
+		if(!cached_book_recipes[book_key])
+			if(book_type == /obj/item/recipe_book/miracle_compendium)
+				cached_book_recipes[book_key] = build_miracle_list(book.types)
+			else
+				cached_book_recipes[book_key] = build_recipe_list(book.types)
 		qdel(book)
 	book_entries = sortTim(book_entries, GLOBAL_PROC_REF(cmp_book_entries))
 
@@ -36,7 +44,7 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	return GLOB.recipe_wiki
 
 /// Open the recipe viewer for a specific book's types. Used by physical recipe book items.
-/datum/recipe_wiki/proc/show_to_user(mob/user, list/type_filter, title = "Recipe Book", book_path = null, locked_book = FALSE)
+/datum/recipe_wiki/proc/show_to_user(mob/user, list/type_filter, title = "Recipe Book", book_type_path, locked_book = FALSE)
 	if(!user?.client)
 		return
 	var/ckey = user.client.ckey
@@ -48,7 +56,7 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	state["filter"] = type_filter
 	state["title"] = title
 	state["page"] = "book"
-	state["book_path"] = book_path ? "[book_path]" : null
+	state["book_path"] = book_type_path ? "[book_type_path]" : null
 	state["locked_book"] = locked_book
 	ui_interact(user)
 
@@ -193,6 +201,12 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 
 			if(book_path == /obj/item/recipe_book/zizo)
 				return
+
+			var/obj/item/recipe_book/temp_book = new book_path()
+			if(temp_book.open_wiki_entry(user))
+				qdel(temp_book)
+				return FALSE
+			qdel(temp_book)
 
 			for(var/list/entry in book_entries)
 				if(entry["path"] == book_path)

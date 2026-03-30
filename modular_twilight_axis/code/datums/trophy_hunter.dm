@@ -1,3 +1,5 @@
+#define EXORCIST_ASPYRANT_BONUS 1
+
 /datum/component/trophy_hunter
 	var/mob/living/carbon/human/owner
 	var/obj/item/storage/hip/headhook/active_hook
@@ -113,8 +115,12 @@
 			owner.change_stat(STATKEY_PER, E.value)
 
 		if(TROPHY_EFFECT_RAGE_PACKAGE)
-			owner.trophy_rage_duration_bonus += E.value
-			owner.trophy_rage_cooldown_mult = min(owner.trophy_rage_cooldown_mult, E.aux_value)
+			if(owner.has_axedance())
+				owner.trophy_rage_duration_bonus += E.value
+				owner.trophy_rage_cooldown_mult = min(owner.trophy_rage_cooldown_mult, E.aux_value)
+			else
+				owner.change_stat(STATKEY_CON, EXORCIST_ASPYRANT_BONUS)
+				owner.change_stat(STATKEY_WIL, EXORCIST_ASPYRANT_BONUS)
 
 	if(E.message)
 		to_chat(owner, span_notice(E.message))
@@ -128,9 +134,13 @@
 			owner.change_stat(STATKEY_PER, -E.value)
 
 		if(TROPHY_EFFECT_RAGE_PACKAGE)
-			owner.trophy_rage_duration_bonus = max(owner.trophy_rage_duration_bonus - E.value, 0)
-			owner.trophy_rage_cooldown_mult = 1
-
+			if(owner.has_axedance())
+				owner.trophy_rage_duration_bonus = max(owner.trophy_rage_duration_bonus - E.value, 0)
+				owner.trophy_rage_cooldown_mult = 1
+			else
+				owner.change_stat(STATKEY_CON, -EXORCIST_ASPYRANT_BONUS)
+				owner.change_stat(STATKEY_WIL, -EXORCIST_ASPYRANT_BONUS)
+			
 /datum/component/trophy_hunter/proc/get_armor_bonus_for_zone(def_zone, d_type)
 	var/list/valid_damage_types = list("blunt", "slash", "stab", "pierce")
 	if(!(d_type in valid_damage_types))
@@ -141,3 +151,5 @@
 		return 0
 
 	return E.value
+
+#undef EXORCIST_ASPYRANT_BONUS

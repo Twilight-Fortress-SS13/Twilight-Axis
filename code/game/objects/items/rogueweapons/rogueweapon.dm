@@ -43,7 +43,6 @@
 
 	var/malumblessed_w = FALSE
 
-	var/cast_time_reduction = null
 
 /obj/item/rogueweapon/Initialize()
 	. = ..()
@@ -52,7 +51,7 @@
 	
 	if(ispath(special))
 		special = new special()
-
+	
 	//TA addition start - Runes
 	RegisterSignal(src, COMSIG_ITEM_EQUIPPED, PROC_REF(_rune_holder_update))
 	RegisterSignal(src, COMSIG_ITEM_DROPPED, PROC_REF(_rune_holder_update))
@@ -62,6 +61,15 @@
 	if(storage)
 		storage.refresh_persistent_holder()
 	//TA addition end - Runes
+/obj/item/rogueweapon/dropped(mob/user, silent)
+	. = ..()
+	if(istype(src, /obj/item/rogueweapon/shield))
+		return
+	if(implement_multiplier)
+		return
+	if(isliving(user))
+		var/mob/living/L = user
+		L.apply_status_effect(/datum/status_effect/recent_weapon)
 
 /obj/item/rogueweapon/ComponentInitialize()
 	if(is_silver) // By default, silver weapons are supposed to be blesseable.

@@ -2,6 +2,20 @@
 /client/var/datum/admin_help/current_ticket	//the current ticket the (usually) not-admin client is dealing with
 
 //
+// ADMIN HELP UI STATE
+//
+
+// Custom UI state for admin ticket panel that requires R_ADMIN permission
+/datum/ui_state/ahelp_state
+
+/datum/ui_state/ahelp_state/can_use_topic(src_object, mob/user)
+	if(check_rights_for(user.client, R_ADMIN))
+		return UI_INTERACTIVE
+	return UI_CLOSE
+
+GLOBAL_DATUM_INIT(ahelp_state, /datum/ui_state/ahelp_state, new)
+
+//
 //TICKET MANAGER
 //
 
@@ -12,9 +26,31 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	var/list/closed_tickets = list()
 	var/list/resolved_tickets = list()
 
+	// Track selected ticket per user
+	var/list/selected_tickets = list()  // Maps ckey -> ticket_id
+
+	/// Ckeys of admins who have opted to hide their character name in ticket messages. Persisted to disk.
+	var/list/admin_hide_charname = list()
+
 	var/obj/effect/statclick/ticket_list/astatclick = new(null, null, AHELP_ACTIVE)
 	var/obj/effect/statclick/ticket_list/cstatclick = new(null, null, AHELP_CLOSED)
 	var/obj/effect/statclick/ticket_list/rstatclick = new(null, null, AHELP_RESOLVED)
+
+/datum/admin_help_tickets/New()
+	var/json_data = file2text("data/admin_hide_charname.json")
+	if(json_data)
+		var/list/loaded = safe_json_decode(json_data)
+		if(islist(loaded))
+			admin_hide_charname = loaded
+	. = ..()
+
+/datum/admin_help_tickets/proc/IsAdminInHideCharname(ckey)
+	return (ckey in admin_hide_charname)
+
+/datum/admin_help_tickets/proc/SaveHideCharname()
+	var/path = "data/admin_hide_charname.json"
+	fdel(path)
+	WRITE_FILE(path, json_encode(admin_hide_charname))
 
 /datum/admin_help_tickets/Destroy()
 	QDEL_LIST(active_tickets)
@@ -65,50 +101,25 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 
 //opens the ticket listings for one of the 3 states
 /datum/admin_help_tickets/proc/BrowseTickets(state)
-	var/list/l2b
-	var/title
-	switch(state)
-		if(AHELP_ACTIVE)
-			l2b = active_tickets
-			title = "Active Tickets"
-		if(AHELP_CLOSED)
-			l2b = closed_tickets
-			title = "Closed Tickets"
-		if(AHELP_RESOLVED)
-			l2b = resolved_tickets
-			title = "Resolved Tickets"
-	if(!l2b)
+	if(!check_rights(R_ADMIN))
+		to_chat(usr, "<font color='red'>Error: You do not have permission to view tickets.</font>")
 		return
-	var/list/dat = list("<html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'><title>[title]</title></head>")
-	dat += "<A href='?_src_=holder;[HrefToken()];ahelp_tickets=[state]'>Refresh</A><br><br>"
-	for(var/I in l2b)
-		var/datum/admin_help/AH = I
-		dat += "<span class='adminnotice'><span class='adminhelp'>Ticket #[AH.id]</span>: <A href='?_src_=holder;[HrefToken()];ahelp=[REF(AH)];ahelp_action=ticket'>[AH.initiator_key_name]: [AH.name]</A></span><br>"
-
-	usr << browse(dat.Join(), "window=ahelp_list[state];size=600x480")
+	
+	// Redirect to TGUI panel instead of old HTML browser
+	ui_interact(usr)
 
 //Tickets statpanel
 /datum/admin_help_tickets/proc/stat_entry()
 	SHOULD_CALL_PARENT(TRUE)
-	var/num_disconnected = 0
-	stat("Active Tickets:", astatclick.update("[active_tickets.len]"))
-	astatclick.update("[active_tickets.len]")
-	for(var/I in active_tickets)
-		var/datum/admin_help/AH = I
-		if(AH.initiator)
-			stat("#[AH.id]. [AH.initiator_key_name]:", AH.statclick.update())
-		else
-			++num_disconnected
-	if(num_disconnected)
-		stat("Disconnected:", astatclick.update("[num_disconnected]"))
-	stat("Closed Tickets:", cstatclick.update("[closed_tickets.len]"))
-	stat("Resolved Tickets:", rstatclick.update("[resolved_tickets.len]"))
+	var/label = "Open Ticket Manager ([active_tickets.len] active)"
+	stat(null, astatclick.update(label))
 
 //Reassociate still open ticket if one exists
 /datum/admin_help_tickets/proc/ClientLogin(client/C)
 	C.current_ticket = CKey2ActiveTicket(C.ckey)
 	if(C.current_ticket)
 		C.current_ticket.initiator = C
+		C.current_ticket.initiator_mob = C.mob
 		C.current_ticket.AddInteraction("Client reconnected.")
 
 //Dissasociate ticket
@@ -126,6 +137,369 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			return AH
 
 //
+// TGUI INTERFACE FOR ADMIN PANEL
+//
+
+/datum/admin_help_tickets/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "AdminTicketPanel", "Admin Ticket Panel")
+		ui.open()
+
+/datum/admin_help_tickets/ui_data(mob/user)
+	var/list/data = list()
+	
+	data["active_tickets"] = list()
+	for(var/datum/admin_help/ticket in active_tickets)
+		var/list/ticket_data = list()
+		ticket_data["id"] = ticket.id
+		ticket_data["name"] = html_decode(ticket.name)
+		ticket_data["state"] = "ACTIVE"
+		ticket_data["initiator_ckey"] = ticket.initiator_ckey
+		ticket_data["initiator_name"] = ticket.initiator_key_name
+		ticket_data["opened_at"] = ticket.opened_at
+		ticket_data["closed_at"] = ticket.closed_at
+		ticket_data["initiator_connected"] = ticket.initiator ? TRUE : FALSE
+		data["active_tickets"] += list(ticket_data)
+	
+	data["closed_tickets"] = list()
+	for(var/datum/admin_help/ticket in closed_tickets)
+		var/list/ticket_data = list()
+		ticket_data["id"] = ticket.id
+		ticket_data["name"] = html_decode(ticket.name)
+		ticket_data["state"] = "CLOSED"
+		ticket_data["initiator_ckey"] = ticket.initiator_ckey
+		ticket_data["initiator_name"] = ticket.initiator_key_name
+		ticket_data["opened_at"] = ticket.opened_at
+		ticket_data["closed_at"] = ticket.closed_at
+		ticket_data["initiator_connected"] = ticket.initiator ? TRUE : FALSE
+		data["closed_tickets"] += list(ticket_data)
+	
+	data["resolved_tickets"] = list()
+	for(var/datum/admin_help/ticket in resolved_tickets)
+		var/list/ticket_data = list()
+		ticket_data["id"] = ticket.id
+		ticket_data["name"] = html_decode(ticket.name)
+		ticket_data["state"] = "RESOLVED"
+		ticket_data["initiator_ckey"] = ticket.initiator_ckey
+		ticket_data["initiator_name"] = ticket.initiator_key_name
+		ticket_data["opened_at"] = ticket.opened_at
+		ticket_data["closed_at"] = ticket.closed_at
+		ticket_data["initiator_connected"] = ticket.initiator ? TRUE : FALSE
+		data["resolved_tickets"] += list(ticket_data)
+	
+	// Include selected ticket details if any
+	data["selected_ticket"] = null
+	var/user_ckey = user.ckey
+	if(user_ckey && selected_tickets[user_ckey])
+		var/selected_id = selected_tickets[user_ckey]
+		var/datum/admin_help/selected = TicketByID(selected_id)
+		if(selected)
+			var/list/full_ticket = selected.ui_data(user)
+			full_ticket["initiator_connected"] = selected.initiator ? TRUE : FALSE
+			data["selected_ticket"] = full_ticket
+
+	// Whether this admin has opted to hide their character name in ticket messages
+	data["admin_hide_charname"] = (user.ckey in admin_hide_charname)
+
+	return data
+
+/datum/admin_help_tickets/ui_static_data(mob/user)
+	return list()
+
+/datum/admin_help_tickets/ui_act(action, list/params)
+	. = ..()
+	if(.)
+		return
+	
+	var/mob/user = usr
+	if(!check_rights_for(user.client, R_ADMIN))
+		return FALSE
+	
+	switch(action)
+		if("select_ticket")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket)
+				return FALSE
+
+			// Store the selected ticket for this user
+			selected_tickets[user.ckey] = ticket_id
+			return TRUE
+
+		if("toggle_charname")
+			// Toggle whether this admin's character name is hidden in ticket messages.
+			if(user.ckey in admin_hide_charname)
+				admin_hide_charname -= user.ckey
+			else
+				admin_hide_charname += user.ckey
+			SaveHideCharname()
+			return TRUE
+
+		if("send_message")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || ticket.state != AHELP_ACTIVE)
+				return FALSE
+
+			var/message = params["message"]
+			if(!message)
+				return FALSE
+
+			// Preserve newlines as <br> so they survive sanitization and render correctly in TGUI
+			message = sanitize_preserve_newlines(trim(message))
+			if(!message)
+				return FALSE
+
+			// Admin is responding
+			user.client.cmd_admin_pm(ticket.initiator, message)
+			return TRUE
+		
+		if("jump_to", "observe", "pm")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator)
+				return FALSE
+			
+			switch(action)
+				if("jump_to")
+					user.client.holder.Topic(null, list("adminplayerobservejump" = "[REF(ticket.initiator.mob)]", "_src_" = "holder"))
+				if("observe")
+					user.client.holder.Topic(null, list("adminplayerobservefollow" = "[REF(ticket.initiator.mob)]", "_src_" = "holder"))
+				if("pm")
+					user.client.cmd_ahelp_reply(ticket.initiator)
+			return TRUE
+		
+		if("reject")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket)
+				return FALSE
+			ticket.Reject()
+			return TRUE
+		
+		if("ic_issue")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket)
+				return FALSE
+			ticket.ICIssue()
+			return TRUE
+		
+		if("close")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket)
+				return FALSE
+			ticket.Close()
+			return TRUE
+		
+		if("resolve")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket)
+				return FALSE
+			ticket.Resolve()
+			return TRUE
+		
+		if("handle")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket)
+				return FALSE
+			ticket.handle_issue()
+			return TRUE
+		
+		if("reopen")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket)
+				return FALSE
+			ticket.Reopen()
+			return TRUE
+		
+		if("retitle")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket)
+				return FALSE
+			ticket.Retitle()
+			return TRUE
+		
+		if("ticket_pp")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !user.client?.holder)
+				return FALSE
+			var/mob/pp_target = ticket.initiator ? ticket.initiator.mob : ticket.initiator_mob
+			if(!pp_target)
+				return FALSE
+			// Let the ticket know the admin is opening the player panel
+			admin_ticket_log(pp_target, "<font color='green'>[key_name_admin(user)] is reviewing your character via the player panel.</font>")
+			user.client.holder.show_player_panel_next(pp_target)
+			return TRUE
+
+		if("ticket_vv")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !user.client)
+				return FALSE
+			var/mob/vv_target = ticket.initiator ? ticket.initiator.mob : ticket.initiator_mob
+			if(!vv_target)
+				return FALSE
+			// Transparency: viewing variables for this ticket's initiator
+			admin_ticket_log(vv_target, "<font color='green'>[key_name_admin(user)] is viewing your variables in relation to this ticket.</font>")
+			user.client.debug_variables(vv_target)
+			return TRUE
+
+		if("ticket_sm")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator || !ticket.initiator.mob || !user.client)
+				return FALSE
+			user.client.cmd_admin_subtle_message(ticket.initiator.mob)
+			return TRUE
+
+		if("ticket_flw")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !user.client)
+				return FALSE
+			var/mob/flw_target = ticket.initiator ? ticket.initiator.mob : ticket.initiator_mob
+			if(!flw_target)
+				return FALSE
+			// Only allow non-observers with proper admin rights to follow
+			var/client/C = user.client
+			if(!isobserver(user) && !check_rights_for(C, R_ADMIN))
+				return FALSE
+
+			// Let the player know an admin is observing them (only if connected)
+			admin_ticket_log(flw_target, "<font color='green'>[key_name_admin(user)] is now observing you.</font>")
+
+			// Mirror the behaviour of the adminplayerobservefollow href
+			var/can_ghost = TRUE
+			if(!isobserver(user))
+				can_ghost = C.admin_ghost()
+			if(!can_ghost)
+				return FALSE
+
+			var/mob/dead/observer/A = C.mob
+			if(!istype(A))
+				return FALSE
+			A.ManualFollow(flw_target)
+			return TRUE
+
+		if("ticket_tp")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator || !ticket.initiator.mob || !user.client?.holder)
+				return FALSE
+			// Traitor panel / status review transparency
+			admin_ticket_log(ticket.initiator.mob, "<font color='green'>[key_name_admin(user)] is reviewing your role and status in relation to this ticket.</font>")
+			user.client.holder.show_traitor_panel(ticket.initiator.mob)
+			return TRUE
+
+		if("ticket_smite")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator || !ticket.initiator.mob || !user.client)
+				return FALSE
+			user.client.smite(ticket.initiator.mob)
+			return TRUE
+
+		if("ticket_cake")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator || !ticket.initiator.mob || !user.client)
+				return FALSE
+			user.client.admin_spawn_cake(ticket.initiator.mob)
+			return TRUE
+
+		if("ticket_aheal")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator || !ticket.initiator.mob || !user.client)
+				return FALSE
+			user.client.cmd_admin_rejuvenate(ticket.initiator.mob)
+			return TRUE
+
+		if("ticket_pq")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator_ckey)
+				return FALSE
+			// PQ / history transparency
+			admin_ticket_log(ticket.initiator_ckey, "<font color='green'>[key_name_admin(user)] is reviewing your account history and playtime in relation to this ticket.</font>")
+			check_pq_menu(ticket.initiator_ckey)
+			return TRUE
+
+		if("ticket_gm")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator || !ticket.initiator.mob || !user.client)
+				return FALSE
+			user.client.Getmob(ticket.initiator.mob)
+			return TRUE
+
+		if("ticket_jm")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator || !ticket.initiator.mob || !user.client)
+				return FALSE
+			user.client.jumptomob(ticket.initiator.mob)
+			return TRUE
+
+		if("ticket_nd")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator || !ticket.initiator.mob || !user.client)
+				return FALSE
+			admin_ticket_log(ticket.initiator.mob, "<font color='green'>[key_name_admin(user)] is composing a narrative message for you related to this ticket.</font>")
+			user.client.cmd_admin_direct_narrate(ticket.initiator.mob)
+			return TRUE
+
+		if("ticket_ap")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || !ticket.initiator || !ticket.initiator.mob || !user.client)
+				return FALSE
+			admin_ticket_log(ticket.initiator.mob, "<font color='green'>[key_name_admin(user)] is using advanced tools on your character in relation to this ticket.</font>")
+			user.client.callproc_datum(ticket.initiator.mob)
+			return TRUE
+
+		if("embed_media")
+			var/ticket_id = params["ticket_id"]
+			var/datum/admin_help/ticket = TicketByID(ticket_id)
+			if(!ticket || ticket.state != AHELP_ACTIVE)
+				return FALSE
+			var/url = params["url"]
+			var/embed_type = params["embed_type"]
+			if(!url || !embed_type)
+				return FALSE
+			url = trim(url)
+			// Only allow https URLs for safety
+			if(findtext(url, "https://") != 1)
+				return FALSE
+			// Only allow image or video types
+			if(embed_type != "image" && embed_type != "video")
+				return FALSE
+			var/prefix = embed_type == "image" ? "EMBED_IMAGE:" : "EMBED_VIDEO:"
+			var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname()
+			ticket.AddInteraction("<font color='blue'>PM from [key_name_admin(user, show_charname)]: [prefix][url]</font>")
+			// Notify the player if connected
+			if(ticket.initiator)
+				to_chat(ticket.initiator, span_adminhelp("<b>Admin [key_name_admin(user, show_charname)] embedded a [embed_type] in your ticket.</b>"))
+			log_admin_private("Ticket #[ticket.id]: [key_name(user)] embedded [embed_type]: [url]")
+			// Notify other admins in chat with a placeholder - no raw URLs to prevent flashbanging
+			message_admins(span_adminnotice("<font color='blue'>Ticket #[ticket.id] [ticket.TicketHref("Show Ticket")] - [key_name_admin(user)] sent [ticket.initiator_key_name] an (embedded [embed_type]).</font>"))
+			return TRUE
+	
+	return FALSE
+
+/datum/admin_help_tickets/ui_state(mob/user)
+	return GLOB.ahelp_state
+
+//
 //TICKET LIST STATCLICK
 //
 
@@ -137,7 +511,9 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	..()
 
 /obj/effect/statclick/ticket_list/Click()
-	GLOB.ahelp_tickets.BrowseTickets(current_state)
+	// Open TGUI panel instead of old HTML browser
+	if(usr?.client)
+		GLOB.ahelp_tickets.ui_interact(usr)
 
 //called by admin topic
 /obj/effect/statclick/ticket_list/proc/Action()
@@ -156,13 +532,12 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	var/closed_at
 
 	var/client/initiator	//semi-misnomer, it's the person who ahelped/was bwoinked
+	var/mob/initiator_mob	//stored separately so tools still work when player is DC'd
 	var/initiator_ckey
 	var/initiator_key_name
 	var/heard_by_no_admins = FALSE
 	/// The collection of interactions with this ticket. Use AddInteraction() or, preferably, admin_ticket_log()
-	var/list/ticket_interactions
-	/// List of player interactions
-	var/list/player_interactions
+	var/list/_interactions
 	/// Statclick holder for the ticket
 
 	var/obj/effect/statclick/ahelp/statclick
@@ -179,7 +554,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 //call this on its own to create a ticket, don't manually assign current_ticket
 //msg is the title of the ticket: usually the ahelp text
 //is_bwoink is TRUE if this ticket was started by an admin PM
-/datum/admin_help/New(msg, client/C, is_bwoink)
+/datum/admin_help/New(msg, client/C, is_bwoink, author)
 	//clean the input msg
 	msg = copytext_char(msg,1,MAX_MESSAGE_LEN)
 	if(!msg || !C || !C.mob)
@@ -192,6 +567,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	name = copytext_char(msg, 1, 100)
 
 	initiator = C
+	initiator_mob = C.mob
 	initiator_ckey = initiator.ckey
 	initiator_key_name = key_name(initiator, FALSE, TRUE)
 	if(initiator.current_ticket)	//This is a bug
@@ -203,18 +579,26 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	TimeoutVerb()
 
 	statclick = new(null, src)
-	ticket_interactions = list()
-	player_interactions = list()
+	_interactions = list()
 
 	addtimer(CALLBACK(src, PROC_REF(add_to_ping_ss), 2 MINUTES)) // Ticket Ping | this is not responsible for the notification itself, but only for adding the ticket to the list of those to notify.
 
 	if(is_bwoink)
-		AddInteraction("<font color='blue'>[key_name_admin(usr)] PM'd [LinkedReplyName()]</font>")
+		// Store the admin's opening message as a full interaction so it's visible in the ticket panel
+		var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr?.ckey)
+		AddInteraction("<font color='blue'>PM from [key_name_admin(usr, show_charname)]: [msg]</font>")
 		message_admins("<font color='blue'>Ticket [TicketHref("#[id]")] created</font>")
 	else
-		MessageNoRecipient(msg)
+		// Add a clean initial message for the player's view
+		AddInteraction("<font color='green'>Ticket opened. Your message has been sent to the admin team.</font>")
+		
+		MessageNoRecipient(msg, newticket = TRUE)
 
 	GLOB.ahelp_tickets.active_tickets += src
+	
+	// Open the TGUI chat window for the initiator
+	if(C && C.mob)
+		ui_interact(C.mob)
 
 /datum/admin_help/Destroy()
 	RemoveActive()
@@ -226,9 +610,9 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(heard_by_no_admins && usr && usr.ckey != initiator_ckey)
 		heard_by_no_admins = FALSE
 		send2irc(initiator_ckey, "Ticket #[id]: Answered by [key_name(usr)]")
-	ticket_interactions += "[time_stamp()]: [formatted_message]"
-	if(!isnull(player_message))
-		player_interactions += "[time_stamp()]: [player_message]"
+	_interactions += "[time_stamp()]: [formatted_message]"
+	// Update any open TGUI windows
+	SStgui.update_uis(src)
 
 //Removes the ahelp verb and returns it after 2 minutes
 /datum/admin_help/proc/TimeoutVerb()
@@ -268,26 +652,43 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 
 //message from the initiator without a target, all admins will see this
 //won't bug irc
-/datum/admin_help/proc/MessageNoRecipient(msg)
+/datum/admin_help/proc/MessageNoRecipient(msg, play_sound = TRUE, newticket = FALSE)
 	msg = copytext_char(msg, 1, MAX_MESSAGE_LEN)
 	var/ref_src = "[REF(src)]"
-	//Message to be sent to all admins
-	var/admin_msg = span_adminnotice("<span class='adminhelp'>Ticket [TicketHref("#[id]", ref_src)]</span><b>: [LinkedReplyName(ref_src)] [FullMonty(ref_src)]:</b> <span class='linkify'>[keywords_lookup(msg)]</span>")
+	// Simplified message to be sent to all admins, including title and action links
+	var/admin_msg = span_adminnotice("<font color='#c87941'><b>Ticket #[id]: ([initiator_ckey]) - [TicketHref("Show Ticket", ref_src)]</b><br><span class='linkify' style='font-weight:normal;color:#c87941'>[msg]</span></font>")
 
 	AddInteraction("<font color='red'>[LinkedReplyName(ref_src)]: [msg]</font>", player_message = "<font color='red'>[LinkedReplyName(ref_src)]: [msg]</font>")
 
+	// Log full player message content in addition to title
+	log_admin_private("Ticket #[id]: [initiator_key_name] -> Admins: [msg]")
+
 	//send this msg to all admins
 	for(var/client/X in GLOB.admins)
-		if(X.prefs.toggles & SOUND_ADMINHELP)
+		if(play_sound && (X.prefs.toggles & SOUND_ADMINHELP))
 			SEND_SOUND(X, sound('sound/adminhelp.ogg'))
 		window_flash(X, ignorepref = TRUE)
 		to_chat(X, admin_msg)
 
 	//show it to the person adminhelping too
-	to_chat(initiator, span_adminnotice("PM to-<b>Admins</b>: <span class='linkify'>[msg]</span>"))
+	to_chat(initiator, span_adminnotice("PM to-<b>Admins</b>: <font color='#FFA040'><span class='linkify'>[msg]</span></font>"))
+
+	if(!newticket)
+		var/list/data = list(
+			"type"= "areply",
+			"id"= "[src.id]",
+			"initiator"= initiator.ckey,
+			"admin"= "0",
+			"message"= discord_sanitize_ahelp(msg)
+		)
+		send2discordwh(data)  
 
 //Reopen a closed ticket
-/datum/admin_help/proc/Reopen()
+/datum/admin_help/proc/Reopen(key_name = null)
+	if(!key_name)
+		var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr?.ckey)
+		key_name = key_name_admin(usr, show_charname)
+
 	if(state == AHELP_ACTIVE)
 		to_chat(usr, span_warning("This ticket is already open."))
 		return
@@ -310,12 +711,12 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(initiator)
 		initiator.current_ticket = src
 
-	AddInteraction("<font color='purple'>Reopened by [key_name_admin(usr)]</font>", player_message = "Ticket reopened!")
-	var/msg = span_adminhelp("Ticket [TicketHref("#[id]")] reopened by [key_name_admin(usr)].")
+	AddInteraction("<font color='purple'>Reopened by [key_name]</font>", player_message = "Ticket reopened!")
+	var/msg = span_adminhelp("Ticket [TicketHref("#[id]")] reopened by [key_name].")
 	message_admins(msg)
 	log_admin_private(msg)
 	SSblackbox.record_feedback("tally", "ahelp_stats", 1, "reopened")
-	TicketPanel()	//can only be done from here, so refresh it
+	// TGUI will auto-update
 
 //private
 /datum/admin_help/proc/RemoveActive()
@@ -328,13 +729,17 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		initiator.current_ticket = null
 
 //Mark open ticket as closed/meme
-/datum/admin_help/proc/Close(key_name = key_name_admin(usr), silent = FALSE)
+/datum/admin_help/proc/Close(key_name = null, silent = FALSE)
+	if(!key_name)
+		var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr?.ckey)
+		key_name = key_name_admin(usr, show_charname)
+
 	if(state != AHELP_ACTIVE)
 		return
 	RemoveActive()
 	state = AHELP_CLOSED
 	GLOB.ahelp_tickets.ListInsert(src)
-	to_chat(initiator, span_adminhelp("Ticket closed by [usr?.client?.holder?.fakekey? usr.client.holder.fakekey : "an administrator"]."))
+	to_chat(initiator, span_adminhelp("Ticket closed by [key_name]."))
 	AddInteraction("<font color='red'>Closed by [key_name].</font>", player_message = "<font color='red'>Ticket closed!</font>")
 	if(!silent)
 		SSblackbox.record_feedback("tally", "ahelp_stats", 1, "closed")
@@ -343,7 +748,11 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		log_admin_private(msg)
 
 //Resolve ticket with mentorhelp Issue message
-/datum/admin_help/proc/mentorissue(key_name = key_name_admin(usr))
+/datum/admin_help/proc/mentorissue(key_name = null)
+	if(!key_name)
+		var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr?.ckey)
+		key_name = key_name_admin(usr, show_charname)
+		
 	if(state != AHELP_ACTIVE)
 		return
 	var/msg = "<font color='red' size='4'><b>- AdminHelp marked as ingame mechanics issue! -</b></font><br>"
@@ -356,10 +765,14 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	log_admin_private(msg)
 	AddInteraction("Marked as mechanics issue by [key_name]")
 	AddInteraction("Marked as mechanics issue by [key_name]", player_message = "<font color='green'>Marked as mechanics issue!</font>")
-	Resolve(silent = TRUE)
+	Resolve(key_name = key_name, silent = TRUE)
 
 //Mark open ticket as resolved/legitimate, returns ahelp verb
-/datum/admin_help/proc/Resolve(key_name = key_name_admin(usr), silent = FALSE)
+/datum/admin_help/proc/Resolve(key_name = null, silent = FALSE)
+	if(!key_name)
+		var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr?.ckey)
+		key_name = key_name_admin(usr, show_charname)
+		
 	if(state != AHELP_ACTIVE)
 		return
 	RemoveActive()
@@ -369,7 +782,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	addtimer(CALLBACK(initiator, TYPE_PROC_REF(/client, giveadminhelpverb)), 50)
 
 	AddInteraction("<font color='green'>Resolved by [key_name].</font>", player_message = "<font color='green'>Ticket resolved!</font>")
-	to_chat(initiator, span_adminhelp("Your ticket has been resolved by [usr?.client?.holder?.fakekey? usr.client.holder.fakekey : "an administrator"]. The Adminhelp verb will be returned to you shortly."))
+	to_chat(initiator, span_adminhelp("Your ticket has been resolved by [key_name]. The Adminhelp verb will be returned to you shortly."))
 	if(!silent)
 		SSblackbox.record_feedback("tally", "ahelp_stats", 1, "resolved")
 		var/msg = "Ticket [TicketHref("#[id]")] resolved by [key_name]"
@@ -377,7 +790,11 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		log_admin_private(msg)
 
 //Close and return ahelp verb, use if ticket is incoherent
-/datum/admin_help/proc/Reject(key_name = key_name_admin(usr))
+/datum/admin_help/proc/Reject(key_name = null)
+	if(!key_name)
+		var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr?.ckey)
+		key_name = key_name_admin(usr, show_charname)
+		
 	if(state != AHELP_ACTIVE)
 		return
 
@@ -386,7 +803,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 
 		SEND_SOUND(initiator, sound('sound/adminhelp.ogg'))
 
-		to_chat(initiator, "<font color='red' size='4'><b>- AdminHelp Rejected by [usr?.client?.holder?.fakekey? usr.client.holder.fakekey : "an administrator"]! -</b></font>")
+		to_chat(initiator, "<font color='red' size='4'><b>- AdminHelp Rejected by [key_name]! -</b></font>")
 		to_chat(initiator, "<font color='red'><b>Your admin help was rejected.</b> The adminhelp verb has been returned to you so that you may try again.</font>")
 		to_chat(initiator, "Please try to be calm, clear, and descriptive in admin helps, do not assume the admin has seen any related events, and clearly state the names of anybody you are reporting.")
 
@@ -395,14 +812,18 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	message_admins(msg)
 	log_admin_private(msg)
 	AddInteraction("Rejected by [key_name].", player_message = "Ticket rejected!")
-	Close(silent = TRUE)
+	Close(key_name = key_name, silent = TRUE)
 
 //Resolve ticket with IC Issue message
-/datum/admin_help/proc/ICIssue(key_name = key_name_admin(usr))
+/datum/admin_help/proc/ICIssue(key_name = null)
+	if(!key_name)
+		var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr?.ckey)
+		key_name = key_name_admin(usr, show_charname)
+		
 	if(state != AHELP_ACTIVE)
 		return
 
-	var/msg = "<font color='red' size='4'><b>- AdminHelp marked as IC issue by [usr?.client?.holder?.fakekey? usr.client.holder.fakekey : "an administrator"]! -</b></font><br>"
+	var/msg = "<font color='red' size='4'><b>- AdminHelp marked as IC issue by [key_name]! -</b></font><br>"
 	msg += "<font color='red'>Your ahelp is unable to be answered properly due to events occurring in the round. Your question probably has an IC answer, which means you should deal with it IC!</font>"
 	if(initiator)
 		to_chat(initiator, msg)
@@ -412,17 +833,24 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	message_admins(msg)
 	log_admin_private(msg)
 	AddInteraction("Marked as IC issue by [key_name]", player_message = "Marked as IC issue!")
-	Resolve(silent = TRUE)
+	Resolve(key_name = key_name, silent = TRUE)
 
 //Let the initiator know their ahelp is being handled
-/datum/admin_help/proc/handle_issue(key_name = key_name_admin(usr))
+/datum/admin_help/proc/handle_issue(key_name = null, irc = FALSE)
+	if(!key_name)
+		var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr?.ckey)
+		key_name = key_name_admin(usr, show_charname)
+		
 	if(state != AHELP_ACTIVE)
 		return FALSE
 
-	if(handler && handler == usr.ckey) // No need to handle it twice as the same person ;)
-		return TRUE
+	if(handler)  // No need to handle it twice as the same person ;)
+		if(irc && handler == key_name)
+			return TRUE
+		if(handler == usr.ckey)
+			return TRUE
 
-	var/msg = span_adminhelp("Your ticket is now being handled by [usr?.client?.holder?.fakekey ? usr?.client?.holder?.fakekey : "an administrator"]! Please wait while they type their response and/or gather relevant information.")
+	var/msg = span_adminhelp("Your ticket is now being handled by [key_name]! Please wait while they type their response and/or gather relevant information.")
 
 	if(initiator)
 		to_chat(initiator, msg)
@@ -433,40 +861,21 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	log_admin_private(msg)
 	AddInteraction("Being handled by [key_name]", "Being handled by [key_name_admin(usr, FALSE)]")
 
-	handler = "[usr.ckey]"
+	if(irc)
+		handler = key_name
+	else
+		handler = "[usr.ckey]"
 	return TRUE
 
 //Show the ticket panel
 /datum/admin_help/proc/TicketPanel()
-	var/list/dat = list("<html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'><title>Ticket #[id]</title></head>")
-	var/ref_src = "[REF(src)]"
-	dat += "<h4>Admin Help Ticket #[id]: [LinkedReplyName(ref_src)]</h4>"
-	dat += "<b>State: "
-	switch(state)
-		if(AHELP_ACTIVE)
-			dat += "<font color='red'>OPEN</font>"
-		if(AHELP_RESOLVED)
-			dat += "<font color='green'>RESOLVED</font>"
-		if(AHELP_CLOSED)
-			dat += "CLOSED"
-		else
-			dat += "UNKNOWN"
-	dat += "</b>[FOURSPACES][TicketHref("Refresh", ref_src)][FOURSPACES][TicketHref("Re-Title", ref_src, "retitle")]"
-	if(state != AHELP_ACTIVE)
-		dat += "[FOURSPACES][TicketHref("Reopen", ref_src, "reopen")]"
-	dat += "<br><br>Opened at: [gameTimestamp(wtime = opened_at)] (Approx [DisplayTimeText(world.time - opened_at)] ago)"
-	if(closed_at)
-		dat += "<br>Closed at: [gameTimestamp(wtime = closed_at)] (Approx [DisplayTimeText(world.time - closed_at)] ago)"
-	dat += "<br><br>"
-	if(initiator)
-		dat += "<b>Actions:</b> [FullMonty(ref_src)]<br>"
-	else
-		dat += "<b>DISCONNECTED</b>[FOURSPACES][ClosureLinks(ref_src)]<br>"
-	dat += "<br><b>Log:</b><br><br>"
-	for(var/I in ticket_interactions)
-		dat += "[I]<br>"
-
-	usr << browse(dat.Join(), "window=ahelp[id];size=620x480")
+	// Redirect to TGUI admin panel and pre-select this ticket
+	if(usr?.client)
+		// Remember this ticket as selected for this admin so that
+		// "Show Ticket" links in chat focus the correct entry.
+		GLOB.ahelp_tickets.selected_tickets[usr.ckey] = id
+		GLOB.ahelp_tickets.ui_interact(usr)
+		// The TGUI will handle rendering the selected ticket
 
 /datum/admin_help/proc/Retitle()
 	var/new_title = input(usr, "Enter a title for the ticket", "Rename Ticket", name) as text|null
@@ -476,7 +885,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		var/msg = "Ticket [TicketHref("#[id]")] titled [name] by [key_name_admin(usr)]"
 		message_admins(msg)
 		log_admin_private(msg)
-	TicketPanel()	//we have to be here to do this
+		AddInteraction("Retitled by [key_name_admin(usr)]")
 
 //Forwarded action from admin/Topic
 /datum/admin_help/proc/Action(action)
@@ -527,14 +936,208 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		dat += "<br>Closed at: [gameTimestamp("hh:mm:ss", closed_at)] (Approx [DisplayTimeText(world.time - closed_at)] ago)"
 	dat += "<br><br>"
 	dat += "<br><b>Log:</b><br><br>"
-	for (var/interaction in player_interactions)
-		dat += "[interaction]<br>"
+//	for (var/interaction in player_interactions)
+//		dat += "[interaction]<br>"
 
 	dat+= "<br><b>THIS IS AN EXPERIMENTAL FEATURE, REPORT ANY BUGS TO GITHUB!!</b><br>"
 
 	var/datum/browser/player_panel = new(usr, "ahelp[id]", 0, 620, 480)
 	player_panel.set_content(dat.Join())
 	player_panel.open()
+
+//
+// TGUI INTERFACE
+//
+
+/datum/admin_help/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "AdminHelpChat", "Admin Help")
+		ui.open()
+
+/datum/admin_help/ui_data(mob/user)
+	var/list/data = list()
+	
+	data["ticket_id"] = id
+	data["ticket_name"] = html_decode(name)
+	data["ticket_state"] = state == AHELP_ACTIVE ? "ACTIVE" : (state == AHELP_CLOSED ? "CLOSED" : "RESOLVED")
+	data["can_send"] = (state == AHELP_ACTIVE)
+	data["initiator_ckey"] = initiator_ckey
+	data["initiator_name"] = initiator_key_name
+	data["opened_at"] = opened_at
+	data["closed_at"] = closed_at
+	data["is_admin"] = user.client?.holder ? TRUE : FALSE
+	
+	data["messages"] = list()
+	for(var/interaction in _interactions)
+		// Parse the interaction log
+		var/list/msg_data = list()
+		// time_stamp() format is "hh:mm:ss" (8 chars) + ": " (2 chars) = 10 chars total
+		var/timestamp = copytext_char(interaction, 1, 9)  // Extract "hh:mm:ss"
+		var/rest = copytext_char(interaction, 11)  // Skip "hh:mm:ss: " (10 chars)
+		
+		msg_data["timestamp"] = timestamp
+		msg_data["full_text"] = interaction
+		
+		// Strip ALL HTML tags - simple and robust approach
+		var/clean_text = rest
+		// Convert <br> tags to actual newlines before stripping other tags
+		clean_text = replacetext(clean_text, "<br>", "\n")
+		clean_text = replacetext(clean_text, "<br/>", "\n")
+		clean_text = replacetext(clean_text, "<br />", "\n")
+		// Keep stripping tags until none remain
+		var/max_iterations = 100 // Safety limit
+		var/iterations = 0
+		while(iterations < max_iterations)
+			iterations++
+			var/tag_start = findtext(clean_text, "<")
+			if(!tag_start || tag_start == 0)
+				break
+			var/tag_end = findtext(clean_text, ">", tag_start)
+			if(!tag_end || tag_end == 0)
+				// Broken tag at end, just remove everything from < onwards
+				// Use copytext (byte-based) to match findtext's byte positions
+				clean_text = copytext(clean_text, 1, tag_start)
+				break
+			
+			// Check if this is a link tag - extract the link text
+			// copytext uses byte positions, consistent with findtext
+			var/tag_section = copytext(clean_text, tag_start, tag_end + 1)
+			if(findtext(tag_section, "<A ") == 1 || findtext(tag_section, "<a ") == 1)
+				// Find the closing </A>
+				var/close_pos = findtext(clean_text, "</A>", tag_end)
+				if(!close_pos)
+					close_pos = findtext(clean_text, "</a>", tag_end)
+				if(close_pos && close_pos > 0)
+					// Extract text between tags (all byte-based to match findtext)
+					var/link_text = copytext(clean_text, tag_end + 1, close_pos)
+					clean_text = copytext(clean_text, 1, tag_start) + link_text + copytext(clean_text, close_pos + 4)
+					continue
+			
+			// Remove this tag (byte-based to match findtext)
+			clean_text = copytext(clean_text, 1, tag_start) + copytext(clean_text, tag_end + 1)
+
+		// Decode HTML entities so special characters like ', <, > display correctly
+		clean_text = html_decode(clean_text)
+		
+		// Detect message type and parse accordingly
+		if(findtext(rest, "<font color='red'>"))
+			// Player message
+			msg_data["is_admin"] = FALSE
+			msg_data["author"] = initiator_key_name
+			// Extract the actual message after the last ": "
+			var/last_colon = 0
+			var/search_pos = 1
+			while(TRUE)
+				var/pos = findtext(clean_text, ": ", search_pos)
+				if(pos)
+					last_colon = pos
+					search_pos = pos + 1
+				else
+					break
+			if(last_colon)
+				msg_data["message"] = trim(copytext(clean_text, last_colon + 2))
+			else
+				msg_data["message"] = trim(clean_text)
+		else if(findtext(rest, "<font color='blue'>") || findtext(rest, "PM from"))
+			// Admin message
+			msg_data["is_admin"] = TRUE
+			msg_data["author"] = "Admin"
+			// Extract admin name if possible
+			if(findtext(clean_text, "PM from"))
+				var/name_start = findtext(clean_text, "PM from") + 8
+				var/name_end = findtext(clean_text, ":", name_start)
+				if(name_end)
+					msg_data["author"] = trim(copytext(clean_text, name_start, name_end))
+			// Extract the actual message after the last ": "
+			var/last_colon = 0
+			var/search_pos = 1
+			while(TRUE)
+				var/pos = findtext(clean_text, ": ", search_pos)
+				if(pos)
+					last_colon = pos
+					search_pos = pos + 1
+				else
+					break
+			if(last_colon)
+				msg_data["message"] = trim(copytext(clean_text, last_colon + 2))
+			else
+				msg_data["message"] = trim(clean_text)
+		else if(findtext(rest, "<font color='green'>"))
+			// System message (positive/info)
+			msg_data["is_admin"] = FALSE
+			msg_data["author"] = "System"
+			msg_data["message"] = trim(clean_text)
+		else
+			// Other system messages
+			msg_data["is_admin"] = FALSE
+			msg_data["author"] = "System"
+			msg_data["message"] = trim(clean_text)
+
+		// Detect embedded media — EMBED_IMAGE: and EMBED_VIDEO: are 12 chars each,
+		// so the URL starts at position 13.
+		var/raw_msg = msg_data["message"]
+		if(raw_msg && findtext(raw_msg, "EMBED_IMAGE:") == 1)
+			msg_data["embed_type"] = "image"
+			msg_data["embed_url"] = copytext(raw_msg, 13)
+			msg_data["message"] = "(image embed)"
+		else if(raw_msg && findtext(raw_msg, "EMBED_VIDEO:") == 1)
+			msg_data["embed_type"] = "video"
+			msg_data["embed_url"] = copytext(raw_msg, 13)
+			msg_data["message"] = "(video embed)"
+
+		data["messages"] += list(msg_data)
+	
+	return data
+
+/datum/admin_help/ui_act(action, list/params)
+	. = ..()
+	if(.)
+		return
+	
+	switch(action)
+		if("send_message")
+			if(state != AHELP_ACTIVE)
+				return FALSE
+
+			var/message = params["message"]
+			if(!message)
+				return FALSE
+
+			// Preserve newlines as <br> so they survive sanitization and display correctly in TGUI
+			message = sanitize_preserve_newlines(trim(message))
+			if(!message)
+				return FALSE
+
+			// Send the message
+			MessageNoRecipient(message, FALSE)
+			TimeoutVerb()
+			
+			return TRUE
+		
+		if("embed_media")
+			if(state != AHELP_ACTIVE)
+				return FALSE
+			if(!usr.client?.holder)
+				return FALSE
+			var/url = params["url"]
+			var/embed_type = params["embed_type"]
+			if(!url || !embed_type)
+				return FALSE
+			url = trim(url)
+			if(findtext(url, "https://") != 1)
+				return FALSE
+			if(embed_type != "image" && embed_type != "video")
+				return FALSE
+			var/prefix = embed_type == "image" ? "EMBED_IMAGE:" : "EMBED_VIDEO:"
+			AddInteraction("<font color='blue'>PM from [key_name_admin(usr)]: [prefix][url]</font>")
+			if(initiator)
+				to_chat(initiator, span_adminhelp("<b>Admin [key_name_admin(usr)] embedded a [embed_type] in your ticket.</b>"))
+			log_admin_private("Ticket #[id]: [key_name(usr)] embedded [embed_type]: [url]")
+			return TRUE
+
+/datum/admin_help/ui_state(mob/user)
+	return GLOB.always_state
 
 //
 // TICKET STATCLICK
@@ -568,6 +1171,12 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 
 // Used for methods where input via arg doesn't work
 /client/proc/get_adminhelp()
+	// If there's an existing ticket, open the TGUI chat window
+	if(current_ticket)
+		current_ticket.ui_interact(mob)
+		return
+	
+	// Otherwise, use the old input method for initial ticket creation
 	var/msg = input(src, "Please describe your problem concisely and an admin will help as soon as they're able.", "Adminhelp contents") as message|null
 	adminhelp(msg)
 
@@ -583,6 +1192,12 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(prefs.muted & MUTE_ADMINHELP)
 		to_chat(src, span_danger("Error: Admin-PM: You cannot send adminhelps (Muted)."))
 		return
+	
+	// If no message provided and we have an existing ticket, open the TGUI window
+	if(!msg && current_ticket)
+		current_ticket.ui_interact(mob)
+		return
+	
 	if(handle_spam_prevention(msg,MUTE_ADMINHELP))
 		return
 
@@ -595,7 +1210,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(current_ticket)
 		if(alert(usr, "You already have a ticket open. Is this for the same issue?",,"Yes","No") != "No")
 			if(current_ticket)
-				current_ticket.MessageNoRecipient(msg)
+				current_ticket.MessageNoRecipient(msg, FALSE)
 				current_ticket.TimeoutVerb()
 				return
 			else
@@ -606,33 +1221,16 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 
 	new /datum/admin_help(msg, src, FALSE)
 
-/client/verb/view_latest_ticket()
+/client/verb/reopenticket()
 	set category = "-Admin-"
-	set name = "View Latest Ticket"
-
+	set name = "View Ticket"
+	set desc = "Reopen your admin help ticket chat window"
+	
 	if(!current_ticket)
-		// Check if the client had previous tickets, and show the latest one
-		var/list/prev_tickets = list()
-		var/datum/admin_help/last_ticket
-		// Check all resolved tickets for this player
-		for(var/datum/admin_help/resolved_ticket in GLOB.ahelp_tickets.resolved_tickets)
-			if(resolved_ticket.initiator_ckey == ckey) // Initiator is a misnomer, it's always the non-admin player even if an admin bwoinks first
-				prev_tickets += resolved_ticket
-		// Check all closed tickets for this player
-		for(var/datum/admin_help/closed_ticket in GLOB.ahelp_tickets.closed_tickets)
-			if(closed_ticket.initiator_ckey == ckey)
-				prev_tickets += closed_ticket
-		// Take the most recent entry of prev_tickets and open the panel on it
-		if(LAZYLEN(prev_tickets))
-			last_ticket = pop(prev_tickets)
-			last_ticket.player_ticket_panel()
-			return
-
-		// client had no tickets this round
-		to_chat(src, span_warning("You have not had an ahelp ticket this round."))
+		to_chat(src, span_notice("You don't have an active admin help ticket."))
 		return
-
-	current_ticket.player_ticket_panel()
+	
+	current_ticket.ui_interact(mob)
 
 //
 // LOGGING
@@ -642,26 +1240,23 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 /// what can be a client, ckey, or mob
 /// player_message: If the message should be shown in the player ticket panel, fill this out
 /proc/admin_ticket_log(what, message, player_message)
-	var/client/mob_client
+	var/client/C
 	var/mob/Mob = what
 	if(istype(Mob))
-		mob_client = Mob.client
+		C = Mob.client
 	else
-		mob_client = what
-	if(istype(mob_client) && mob_client.current_ticket)
-		if (isnull(player_message))
-			mob_client.current_ticket.AddInteraction(message)
-		else
-			mob_client.current_ticket.AddInteraction(message, player_message)
-		return mob_client.current_ticket
-	if(istext(what)) //ckey
-		var/datum/admin_help/active_admin_help = GLOB.ahelp_tickets.CKey2ActiveTicket(what)
-		if(active_admin_help)
-			if(isnull(player_message))
-				active_admin_help.AddInteraction(message)
-			else
-				active_admin_help.AddInteraction(message, player_message)
-			return active_admin_help
+		C = what
+	if(istype(C) && C.current_ticket)
+		var/datum/admin_help/AH = C.current_ticket
+		// Only log to admin logs; do not expose as a ticket chat message
+		log_admin_private("Ticket #[AH.id]: [message]")
+		return AH
+	if(istext(what))	//ckey
+		var/datum/admin_help/AH = GLOB.ahelp_tickets.CKey2ActiveTicket(what)
+		if(AH)
+			// Only log to admin logs; do not expose as a ticket chat message
+			log_admin_private("Ticket #[AH.id]: [message]")
+			return AH
 
 //
 // HELPER PROCS
@@ -800,3 +1395,16 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			return founds
 
 	return msg
+
+//
+// ADMIN TICKET PANEL VERB
+//
+
+/client/proc/open_ticket_panel()
+	set category = "Admin"
+	set name = "Open Ticket Panel"
+	
+	if(!check_rights(R_ADMIN))
+		return
+	
+	GLOB.ahelp_tickets.ui_interact(mob)

@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/mystic
 	class_select_category = CLASS_CAT_MYSTIC
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T2)
+	traits_applied = list(TRAIT_SEEDKNOW, TRAIT_ARCYNE)
 	subclass_stats = list( // stat spread of 6 points, lower than the 7 adventurer gets on average
 			STATKEY_INT = 2,
 			STATKEY_CON = 2,
@@ -14,7 +14,7 @@
 			STATKEY_PER = 2 // TA EDIT
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 12 // +2 spellpoints the mystic is quite iltteraly the toolbox of casters, capable of a lot while not having much for offense // TA EDIT, prev. 8
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -45,8 +45,7 @@
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
-		/obj/item/spellbook_unfinished/pre_arcyne = 1,
-		/obj/item/roguegem/amethyst = 1,
+		/obj/item/book/spellbook = 1,
 		)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1)
@@ -98,20 +97,20 @@
 
 /datum/advclass/mystic/resilientsoul
 	name = "Resilient Soul"
-	tutorial = "I have spent my youth deepening my faith, but soon followed closely on the side of a generous enchantor who taught me a few tricks to preserve and save lyves"
+	tutorial = "I have spent my youth deepening my faith, but eventually crossed paths with a generous enchanter who taught me a few tricks to preserve and save lyves"
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/adventurer/resilient
 	class_select_category = CLASS_CAT_MYSTIC
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T2)
+	traits_applied = list(TRAIT_SEEDKNOW, TRAIT_ARCYNE)
 	subclass_stats = list(
 			STATKEY_INT = 1,
 			STATKEY_CON = 3,
 			STATKEY_WIL = 2,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 9 // +2 spellpoint, added flexibility, this is a healer focussed class and should be able to a bit more than just healing with the arcyne-holy training // TA EDIT, prev. 4
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4, "locked_aspects" = list(/datum/magic_aspect/lesser_augmentation), "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -121,6 +120,7 @@
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
+		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 	)
 
 /datum/outfit/job/roguetown/adventurer/resilient/pre_equip(mob/living/carbon/human/H)
@@ -144,10 +144,25 @@
 		/obj/item/reagent_containers/glass/bottle = 3,
 		/obj/item/reagent_containers/glass/bottle/alchemical = 3,
 		/obj/item/recipe_book/alchemy = 1,
-		/obj/item/roguegem/amethyst = 1, // for their starting staff or a gem-bound spellbook if they take the time to craft one, increase how fast they cast stoneskin/fortitude
+		/obj/item/book/spellbook = 1,
 		)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stoneskin)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/fortitude)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/stoneskin)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/fortitude)
+	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Gravel Blast", "Stygian Efflorescence", "Arcyne Lance")
+	var/poke_choice = input(H, "Choose your offensive cantrip.", "Arcyne Training") as anything in poke_options
+	switch(poke_choice)
+		if("Spitfire")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/spitfire)
+		if("Frost Bolt")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/frost_bolt)
+		if("Arc Bolt")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arc_bolt)
+		if("Gravel Blast")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast)
+		if("Stygian Efflorescence")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/stygian_efflorescence)
+		if("Arcyne Lance")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcyne_lance)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
@@ -209,13 +224,13 @@
 
 /datum/advclass/mystic/holyblade
 	name = "Holyblade"
-	tutorial = "I have spent my youth deepening my faith and one day a spellblade was under my care at the church, ever since their recovery they accepted me as their pupil and taught the way of the blade and arcyne"
+	tutorial = "I have spent my youth deepening my faith and one day a spellblade was under my care at the church, ever since their recovery they accepted me as their pupil and taught me the way of the blade and arcyne"
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/adventurer/holyblade
 	class_select_category = CLASS_CAT_MYSTIC
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T2)
+	traits_applied = list(TRAIT_SEEDKNOW, TRAIT_ARCYNE)
 	subclass_stats = list(
 			STATKEY_STR = 1,
 			STATKEY_PER = 1,
@@ -224,7 +239,7 @@
 			STATKEY_WIL = 1,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 8 // +3 spellpoints, despite your training to melee weapon and spell you are still not capable of good defense and offense // TA EDIT, prev. 4
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 2, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -239,7 +254,7 @@
 
 /datum/outfit/job/roguetown/adventurer/holyblade/pre_equip(mob/living/carbon/human/H)
 	..()
-	to_chat(H, span_warning("I have spent my youth deepening my faith and one day a spellblade was under my care at the church, ever since their recovery they accepted me as their pupil and taught the way of the blade and arcyne"))
+	to_chat(H, span_warning("I have spent my youth deepening my faith and one day a spellblade was under my care at the church, ever since their recovery they accepted me as their pupil and taught me the way of the blade and arcyne"))
 	head = /obj/item/clothing/head/roguetown/roguehood/mage
 	shoes = /obj/item/clothing/shoes/roguetown/boots
 	pants = /obj/item/clothing/under/roguetown/trou/leather
@@ -255,9 +270,23 @@
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
+		/obj/item/book/spellbook = 1,
 		)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/enchant_weapon)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynestrike)
+	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Gravel Blast", "Stygian Efflorescence", "Arcyne Lance")
+	var/poke_choice = input(H, "Choose your offensive cantrip.", "Arcyne Training") as anything in poke_options
+	switch(poke_choice)
+		if("Spitfire")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/spitfire)
+		if("Frost Bolt")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/frost_bolt)
+		if("Arc Bolt")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arc_bolt)
+		if("Gravel Blast")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast)
+		if("Stygian Efflorescence")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/stygian_efflorescence)
+		if("Arcyne Lance")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcyne_lance)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
@@ -329,20 +358,20 @@
 
 /datum/advclass/mystic/theurgist
 	name = "Theurgist"
-	tutorial = "I have spent my youth deepening my faith among Noctite acolytes and where shown the wonders of the Arcynes, one day i decided to begins my studies of the arcyne art"
+	tutorial = "I have spent my youth deepening my faith among Noccite acolytes, and was shown the wonders of the Arcyne. Ever since, I have studied the arcyne arts."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/adventurer/theurgist
 	class_select_category = CLASS_CAT_MYSTIC
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T2)
+	traits_applied = list(TRAIT_SEEDKNOW, TRAIT_ARCYNE)
 	subclass_stats = list(
 			STATKEY_INT = 3,
 			STATKEY_CON = 1,
 			STATKEY_WIL = 2,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_spellpoints = 6 // +2 spellpoints, you focused on offensive training and loose on utility // TA EDIT, prev. 3
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -357,7 +386,7 @@
 
 /datum/outfit/job/roguetown/adventurer/theurgist/pre_equip(mob/living/carbon/human/H)
 	..()
-	to_chat(H, span_warning("I have spent my youth deepening my faith among Noctite acolytes and where shown the wonders of the Arcynes, one day i decided to begins my studies of the arcyne art"))
+	to_chat(H, span_warning("I have spent my youth deepening my faith among Noccite acolytes, and was shown the wonders of the Arcyne. Ever since, I have studied the arcyne arts."))
 	head = /obj/item/clothing/head/roguetown/roguehood/mage
 	shoes = /obj/item/clothing/shoes/roguetown/boots
 	pants = /obj/item/clothing/under/roguetown/trou/leather
@@ -373,39 +402,24 @@
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
-		/obj/item/roguegem/amethyst = 1,
-		/obj/item/spellbook_unfinished/pre_arcyne = 1,
+		/obj/item/book/spellbook = 1,
 		)
 
-	var/options = list("Arcyne bolt and Repulse", "Arcyne bolt and Blink", "Frost bolt and Repulse", "Frost bolt and Blink", "Spitfire and Repulse", "Spitfire and Blink", "Lightning bolt and Repulse", "Lightning bolt and Blink")
-	var/option_choice = input("Shape your offense", "Rain Destruction!") as anything in options
-	switch(option_choice)
-		if("Arcyne bolt and Repulse")
-			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcynebolt)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
-		if("Arcyne bolt and Blink")
-			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcynebolt)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/blink)
-		if("Frost bolt and Repulse")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/frostbolt)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
-		if("Frost bolt and Blink")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/frostbolt)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/blink)
-		if("Spitfire and Repulse")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/spitfire)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
-		if("Spitfire and Blink")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/spitfire)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/blink)
-		if("Lightning bolt and Repulse")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/lightningbolt)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
-		if("Lightning bolt and Blink")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/lightningbolt)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/blink)
-
-
+	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Gravel Blast", "Stygian Efflorescence", "Arcyne Lance")
+	var/poke_choice = input(H, "Choose your offensive cantrip.", "Arcyne Training") as anything in poke_options
+	switch(poke_choice)
+		if("Spitfire")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/spitfire)
+		if("Frost Bolt")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/frost_bolt)
+		if("Arc Bolt")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arc_bolt)
+		if("Gravel Blast")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast)
+		if("Stygian Efflorescence")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/stygian_efflorescence)
+		if("Arcyne Lance")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcyne_lance)
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)

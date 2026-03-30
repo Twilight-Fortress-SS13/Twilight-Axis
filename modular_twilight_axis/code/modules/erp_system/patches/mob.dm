@@ -318,7 +318,6 @@
 		to_chat(src, span_warning("Only http/https links are allowed."))
 		return FALSE
 
-	nsfw_headshot_link = url
 	update_body()
 	update_body_parts()
 

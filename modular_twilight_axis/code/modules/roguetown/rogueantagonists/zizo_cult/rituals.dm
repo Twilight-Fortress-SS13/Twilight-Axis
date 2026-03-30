@@ -780,7 +780,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 	ADD_TRAIT(target,TRAIT_HEAVYARMOR, TRAIT_GENERIC)
-	target.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/mending)
+	target.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 
 /datum/ritual/transmutation/summonweapon
 	name = "Призыв Оружия"
@@ -896,7 +896,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	S.start()
 	new /obj/item/necro_relics/necro_crystal(center)
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
-
+/*
 /datum/ritual/fleshcrafting/arcane
 	name = "Поглощение Арканы"
 	desk = "Принеся в жертву мага, одаривает культиста очками на изучение заклинаний и повышает его навык владения арканой. Нужно изначально быть магом..."
@@ -923,7 +923,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	cultist.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
 	cultist.mind.adjust_spellpoints(16)
 	to_chat(cultist, span_notice("Stolen Arcane prowess floods my mind, ZIZO empowers me."))
-
+*/
 ///datum/ritual/fleshcrafting/curse
 //	name = "Hollow Curse"
 //	desk = "Поменяем потом его или удалим"

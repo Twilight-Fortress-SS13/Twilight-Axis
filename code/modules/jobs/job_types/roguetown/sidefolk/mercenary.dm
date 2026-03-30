@@ -29,6 +29,7 @@
 		/datum/advclass/mercenary/etrusca/balestrieri,
 		/datum/advclass/mercenary/desert_rider,
 		/datum/advclass/mercenary/desert_rider/zeybek,
+		/datum/advclass/mercenary/desert_rider/sahir,
 		/datum/advclass/mercenary/desert_rider/almah,
 		/datum/advclass/mercenary/forlorn,
 		/datum/advclass/mercenary/vaquero,
@@ -54,16 +55,12 @@
 		/datum/advclass/mercenary/warscholar/vizier,
 		/datum/advclass/mercenary/blackoak,
 		/datum/advclass/mercenary/blackoak/ranger,
+		/datum/advclass/mercenary/blackoak/adept,
 		/datum/advclass/mercenary/underdweller,
 		/datum/advclass/mercenary/grudgebearer,
 		/datum/advclass/mercenary/grudgebearer/soldier,
 		/datum/advclass/mercenary/trollslayer,
-		/datum/advclass/mercenary/lirvanmerc,
-    /datum/advclass/mercenary/twilight_gunslinger,
-	/datum/advclass/mercenary/twilight_heishi,
-	/datum/advclass/mercenary/twilight_yohei,
-	/datum/advclass/mercenary/twilight_conquistador,
-	/datum/advclass/mercenary/twilight_runeblade
+		/datum/advclass/mercenary/lirvanmerc
 	)
 
 /datum/job/roguetown/mercenary/after_spawn(mob/living/L, mob/M, latejoin = FALSE)

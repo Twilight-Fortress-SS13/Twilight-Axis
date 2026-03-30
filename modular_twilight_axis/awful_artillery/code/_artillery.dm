@@ -205,7 +205,7 @@
 			if(M.z > src.z)
 				message += " откуда то снизу"
 
-			var/dir = get_dir(src, M)
+			var/dir = get_dir(M, src)
 			switch(dir)
 				if(NORTH)
 					message += " с севера"
