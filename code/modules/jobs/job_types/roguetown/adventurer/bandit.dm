@@ -126,6 +126,11 @@
 	if(!bandit_job)
 		return
 
+	if(is_storyteller_soft_antag_blocked())
+		bandit_job.total_positions = 0
+		bandit_job.spawn_positions = 0
+		return
+
 	var/player_count = length(GLOB.joined_player_list)
 	var/ready_player_count = length(GLOB.ready_player_list)
 	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count

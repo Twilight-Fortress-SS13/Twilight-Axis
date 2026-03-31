@@ -742,6 +742,12 @@
 	additional_items = list(/obj/item/ingot/steel)
 	created_item = /obj/item/rogueweapon/estoc
 
+/datum/anvil_recipe/weapons/steel/tuck
+	name = "Azurean Tuck, Steel (+1 Steel)"
+	req_bar = /obj/item/ingot/steel
+	additional_items = list(/obj/item/ingot/steel)
+	created_item = /obj/item/rogueweapon/sword/long/tuck
+
 /datum/anvil_recipe/weapons/steel/axe
 	name = "Axe, Steel (+1 Stick)"
 	req_bar = /obj/item/ingot/steel
@@ -1062,6 +1068,11 @@
 	created_item = /obj/item/ammo_casing/caseless/rogue/javelin/silver
 	createditem_num = 2
 
+/datum/anvil_recipe/weapons/silver/exec
+	name = "Executioners Sword, Silver (+3 Silver, +1 Small Log)"
+	req_bar = /obj/item/ingot/silver
+	additional_items = list(/obj/item/ingot/silver, /obj/item/ingot/silver, /obj/item/ingot/silver, /obj/item/grown/log/tree/small)
+	created_item = /obj/item/rogueweapon/sword/long/exe/silver
 
 // SHIELDS
 
@@ -1255,17 +1266,17 @@
 // SLING
 
 /datum/anvil_recipe/weapons/iron/slingbullets
-	name = "Sling Bullets, Iron (x10)"
+	name = "Sling Bullets, Iron (x20)"
 	req_bar = /obj/item/ingot/iron
 	created_item = /obj/item/ammo_casing/caseless/rogue/sling_bullet/iron
-	createditem_num = 10
+	createditem_num = 20
 	i_type = "Ammo"
 
 /datum/anvil_recipe/weapons/bronze/slingbullets
-	name = "Sling Bullets, Bronze (x10)"
+	name = "Sling Bullets, Bronze (x20)"
 	req_bar = /obj/item/ingot/bronze
 	created_item = /obj/item/ammo_casing/caseless/rogue/sling_bullet/bronze
-	createditem_num = 10
+	createditem_num = 20
 	i_type = "Ammo"
 
 /datum/anvil_recipe/weapons/aalloy/slingbullets
@@ -1283,10 +1294,10 @@
 	i_type = "Ammo"
 
 /datum/anvil_recipe/weapons/steel/slingbullets
-	name = "Sling Bullets, Steel (x5)"
+	name = "Steel Scattershot (x20)"
 	req_bar = /obj/item/ingot/steel
-	created_item = /obj/item/ammo_casing/caseless/rogue/sling_bullet/steel
-	createditem_num = 5
+	created_item = /obj/item/ammo_casing/caseless/rogue/sling_bullet/scattershot
+	createditem_num = 20
 	i_type = "Ammo"
 
 // UNIQUE

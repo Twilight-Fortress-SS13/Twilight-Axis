@@ -44,7 +44,7 @@
 
 /datum/sprite_accessory/penis/knotted2
 	name = "Knotted 2"
-	icon_state = "knotted2"
+	icon_state = "knotted" //icon_state = "knotted2"
 	color_key_defaults = list(null, KEY_CHEST_COLOR)
 	default_colors = list("C52828", null)
 

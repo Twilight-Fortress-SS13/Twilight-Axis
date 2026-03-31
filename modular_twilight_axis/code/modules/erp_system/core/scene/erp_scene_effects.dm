@@ -1,5 +1,5 @@
-#define ERP_SCENE_AROUSAL_MULT 2.00
-#define ERP_SCENE_PAIN_MULT 1.00
+#define ERP_SCENE_AROUSAL_MULT 1.90
+#define ERP_SCENE_PAIN_MULT 1.50
 
 /datum/erp_scene_effects
 	var/datum/erp_controller/controller
@@ -54,16 +54,26 @@
 			p_arousal_sum += arP
 
 			if(f > SEX_FORCE_MID)
+				var/active_pain_mult = 1
+				var/passive_pain_mult = 1
+				var/str_active = L.actor_active ? L.actor_active.get_strength() : 10
+				var/self_mult = max(0, (10 - str_active) / 2)
+				if(L.actor_active == L.actor_passive)
+					active_pain_mult = self_mult
+					passive_pain_mult = self_mult
+				else
+					passive_pain_mult = self_mult
+
 				if(isnum(paA) && paA != 0)
 					var/datum/erp_sex_organ/Oa = L.init_organ
 					if(Oa && !QDELETED(Oa))
-						Oa.add_pain(paA)
+						Oa.add_pain(paA * active_pain_mult)
 						paA *= Oa.pain
 
 				if(isnum(paP) && paP != 0)
 					var/datum/erp_sex_organ/Op = L.target_organ
 					if(Op && !QDELETED(Op))
-						Op.add_pain(paP)
+						Op.add_pain(paP * passive_pain_mult)
 						paP *= Op.pain
 
 				a_pain_sum += paA
@@ -112,6 +122,8 @@
 	if(best?.actor_passive && best?.actor_active != best?.actor_passive)
 		var/multP = controller.inject_d.rel_mult_for(mp, ma)
 		best.actor_passive.apply_erp_effect(p_arousal * multP, p_pain, FALSE, avg_force, avg_speed, null)
+
+	apply_training(active_links)
 
 /// Returns average force/speed for active links.
 /datum/erp_scene_effects/proc/get_scene_force_speed_avg(list/active_links)

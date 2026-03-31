@@ -8,10 +8,16 @@
 	var/has_invalid_items = FALSE
 
 	for(var/item_name in selected_loadout_items)
-		if(GLOB.loadout_items_by_name[item_name])
-			valid_items.Add(item_name)
-		else
+		var/datum/loadout_item/item = GLOB.loadout_items_by_name[item_name]
+		if(!item)
 			has_invalid_items = TRUE
+			continue
+
+		if(item.get_loadout_lock_reason(user))
+			has_invalid_items = TRUE
+			continue
+
+		valid_items.Add(item_name)
 
 	if(has_invalid_items)
 		selected_loadout_items = valid_items
@@ -30,7 +36,7 @@
 	var/modifiers = 0
 	
 	var/plevel = check_patreon_lvl(user.ckey)
-	
+
 	if(plevel == 1)
 		modifiers = 4
 	if(plevel == 2)
@@ -52,15 +58,13 @@
 /datum/preferences/proc/remove_loadout_item(item_name)
 	selected_loadout_items.RemoveAll(item_name)
 
-//
-
 /client/verb/boosty()
 	set name = "boosty"
 	set desc = ""
 	set category = "OOC"
 	var/boostyurl = CONFIG_GET(string/boostyurl)
 	if(boostyurl)
-		if(alert("This will open the boosty in your browser. Are you sure?",,"Yes","No")!="Yes")
+		if(alert("This will open the boosty in your browser. Are you sure?",, "Yes", "No") != "Yes")
 			return
 		src << link(boostyurl)
 	else
@@ -70,11 +74,9 @@
 /datum/config_entry/string/boostyurl
 	config_entry_value = ""
 
-
 /datum/loadout_panel
 	/// Mob that the examine panel belongs to.
 	var/mob/living/carbon/human/holder
-	
 
 /datum/loadout_panel/New(mob/holder_mob)
 	if(holder_mob)
@@ -100,46 +102,39 @@
 		var/list/items_in_cat = GLOB.loadout_items_by_category[cat_name]
 		if(!categories[cat_name])
 			categories[cat_name] = list()
-		for(var/datum/loadout_item/item in items_in_cat)
-			if(!item.ckeywhitelist || item.donator_ckey_check(user.ckey))
-				var/icon = item.path::icon
-				var/icon_state = item.path::icon_state
-				var/selected = FALSE
 
-				if(ispath(item.path, /obj/item/enchantingkit))
-					var/obj/item/enchantingkit/kit_typepath = item.path
-					var/obj/result_item = kit_typepath.result_item
-					var/obj/icon_loadout = kit_typepath.icon_loadout
-					if(result_item != null)
-						icon = result_item::icon
-						icon_state = result_item::icon_state
-					else
-						icon = icon_loadout::icon
-						icon_state = icon_loadout::icon_state						
-				
-				if(item.name in selected_loadout_items)
-					selected = TRUE
-			
-				if(item.donat_tier > 0 && donat_level < item.donat_tier)
-					categories[cat_name][item.name] += list(
-						name = item.name,
-						path = item.path,
-						icon = icon,
-						icon_state = icon_state,
-						isDonatorItem = item.donatitem,
-						isSelected = FALSE,
-						unavailable = TRUE,
-						requiredTier = item.donat_tier
-					)
+		for(var/datum/loadout_item/item in items_in_cat)
+			if(item.ckeywhitelist && !item.donator_ckey_check(user.ckey))
+				continue
+
+			var/icon = item.path::icon
+			var/icon_state = item.path::icon_state
+			var/selected = (item.name in selected_loadout_items)
+			var/lock_reason = item.get_loadout_lock_reason(user)
+
+			if(ispath(item.path, /obj/item/enchantingkit))
+				var/obj/item/enchantingkit/kit_typepath = item.path
+				var/obj/result_item = kit_typepath.result_item
+				var/obj/icon_loadout = kit_typepath.icon_loadout
+				if(result_item != null)
+					icon = result_item::icon
+					icon_state = result_item::icon_state
 				else
-					categories[cat_name][item.name] += list(
-						name = item.name,
-						path = item.path,
-						icon = icon,
-						icon_state = icon_state,
-						isDonatorItem = item.donatitem,
-						isSelected = selected
-					)
+					icon = icon_loadout::icon
+					icon_state = icon_loadout::icon_state
+
+			categories[cat_name][item.name] += list(
+				name = item.name,
+				path = item.path,
+				icon = icon,
+				icon_state = icon_state,
+				isDonatorItem = item.donatitem,
+				isSelected = selected,
+				unavailable = !isnull(lock_reason),
+				unavailableReason = lock_reason,
+				requiredTier = item.donat_tier
+			)
+
 	data["categories"] = categories
 	data["isDonator"] = donat_level
 	data["curLoadoutSlots"] = selected_loadout_items.len
@@ -155,10 +150,22 @@
 
 	switch(action)
 		if("add")
+			var/item_name = params["item"]
+			var/datum/loadout_item/item = GLOB.loadout_items_by_name[item_name]
+
+			if(!item)
+				return TRUE
+
 			if(user_prefs.selected_loadout_items.len >= user_prefs.get_loadout_size(user))
 				to_chat(user, "Лимит исчерпан!")
 				return TRUE
-			user_prefs.add_loadout_item(params["item"])
+
+			var/lock_reason = item.get_loadout_lock_reason(user)
+			if(lock_reason)
+				to_chat(user, lock_reason)
+				return TRUE
+
+			user_prefs.add_loadout_item(item_name)
 			return TRUE
 
 		if("remove")
@@ -173,7 +180,6 @@
 		if("boosty")
 			user << link(CONFIG_GET(string/boostyurl))
 			return TRUE
-
 
 /datum/loadout_panel/ui_assets(mob/user)
 	return list(

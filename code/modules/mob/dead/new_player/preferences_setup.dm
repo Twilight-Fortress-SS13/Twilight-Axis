@@ -25,7 +25,6 @@
 		song_title = null
 		song_artist = null
 		headshot_link = null
-		nsfw_headshot_link = null
 		img_gallery = null
 		nsfw_img_gallery = null
 	features = pref_species.get_random_features()

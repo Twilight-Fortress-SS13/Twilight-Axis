@@ -5,6 +5,13 @@
 		if(check_rights_for(C, R_ADMIN))
 			to_chat(C, msg)
 
+/proc/message_admins_without(msg, toexcl)
+	var/list/adminlist = GLOB.admins - toexcl
+	msg = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">[msg]</span></span>"
+	for(var/client/C in adminlist)
+		if(check_rights_for(C, R_ADMIN))
+			to_chat(C, msg)
+
 /proc/spawn_message_admins(msg)
 	msg = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">[msg]</span></span>"
 	for(var/client/C in GLOB.admins)

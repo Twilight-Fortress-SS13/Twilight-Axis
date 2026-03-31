@@ -343,6 +343,17 @@ SUBSYSTEM_DEF(ticker)
 
 	CHECK_TICK
 
+
+	// Pre-scale wretch and adventurer slots before job assignment using readied player count.
+	// Add ~10% buffer to account for immediate latejoins.
+//	var/readied_count = 0
+//	for(var/mob/dead/new_player/player in GLOB.new_player_list)
+//		if(player.ready == PLAYER_READY_TO_PLAY)
+//			readied_count++
+//	var/estimated_pop = round(readied_count * 1.1)
+	gnollslot_update()
+//	update_scaling_slots(estimated_pop)
+
 	can_continue = can_continue && SSjob.DivideOccupations(list()) 				//Distribute jobs
 
 	CHECK_TICK

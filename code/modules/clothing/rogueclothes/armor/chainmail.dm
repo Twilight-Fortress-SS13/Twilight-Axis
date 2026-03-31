@@ -111,7 +111,6 @@
 	body_parts_covered = CHEST|GROIN
 	armor_class = ARMOR_CLASS_LIGHT //placed in the medium category to keep it with its parent obj
 
-
 //HEAVY ARMOR//
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/heavy

@@ -18,7 +18,7 @@
 	glow_intensity = GLOW_INTENSITY_HIGH
 	gesture_required = TRUE
 	ignore_los = FALSE
-	var/duration = 120
+	var/duration = 12 SECONDS
 
 /obj/effect/proc_holder/spell/self/mist_form/cast(list/targets, mob/living/user = usr)
 	if(user.has_status_effect(/datum/status_effect/buff/mist_form))

@@ -60,7 +60,8 @@
 		/obj/item/roguekey/mercenary,
 		/obj/item/flashlight/flare/torch/lantern,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun,
-		/obj/item/rogueweapon/scabbard/sheath/kazengun
+		/obj/item/rogueweapon/scabbard/sheath/kazengun,
+		/obj/item/storage/belt/rogue/pouch/coins/poor
 		)
 	H.merctype = 2
 
@@ -195,7 +196,7 @@
 ///////////////////////////
 /datum/intent/sword/cut/miaodao
 	reach = 2
-	penfactor = 20
+	penfactor = PEN_LIGHT
 
 /datum/intent/sword/cut/miaodao/fast
 	clickcd = 9
