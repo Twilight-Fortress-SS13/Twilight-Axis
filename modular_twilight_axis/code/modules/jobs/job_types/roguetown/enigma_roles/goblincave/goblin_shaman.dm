@@ -48,7 +48,7 @@
 	tutorial = "Goblin shaman of Graggar. Use rites and curses to empower allies and punish enemies."
 	outfit = /datum/outfit/job/roguetown/goblin_shaman/shaman
 	category_tags = list(CTAG_GOBLINSHAMAN)
-	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_ARCYNE_T3, TRAIT_INTELLECTUAL, TRAIT_ALCHEMY_EXPERT, TRAIT_HERESIARCH, TRAIT_STEELHEARTED, TRAIT_GOBLINCAVE, TRAIT_AZURENATIVE, TRAIT_LEECHIMMUNE)
+	traits_applied = list(TRAIT_MAGEARMOR, TRAIT_INTELLECTUAL, TRAIT_ALCHEMY_EXPERT, TRAIT_HERESIARCH, TRAIT_STEELHEARTED, TRAIT_GOBLINCAVE, TRAIT_AZURENATIVE, TRAIT_LEECHIMMUNE)
 	subclass_stats = list(
 		STATKEY_INT = 4,
 		STATKEY_PER = 2,
@@ -57,6 +57,7 @@
 		STATKEY_STR = -3,
 		STATKEY_CON = -3,
 	)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 2, "utilities" = 6, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,
@@ -73,7 +74,6 @@
 		/datum/skill/craft/crafting = SKILL_LEVEL_EXPERT,
 	)
 
-	subclass_spellpoints = 18
 
 /datum/outfit/job/roguetown/goblin_shaman/shaman/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	..()
@@ -94,7 +94,6 @@
 	if(!H.mind)
 		return
 
-	if(H.mind) H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
 	if(should_wear_masc_clothes(H))
 		H.dna.species.soundpack_m = new /datum/voicepack/male/goblincave()
 	if(should_wear_femme_clothes(H))
@@ -112,7 +111,7 @@
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/magebag/associate
 	beltr = /obj/item/storage/keyring/goblinshaman
-	r_hand = /obj/item/rogueweapon/woodstaff/ruby
+	r_hand = /obj/item/rogueweapon/woodstaff/implement/greater
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
