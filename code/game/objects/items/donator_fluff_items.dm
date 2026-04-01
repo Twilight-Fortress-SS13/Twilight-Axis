@@ -180,6 +180,21 @@
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
+/obj/item/rogueweapon/eirenxiv/eiren_m
+	name = "glintstone longsword"
+	desc = "A glimmering blade, forged from a blue-white ore found rarely within the duchy of Azuria. Identical to steel in its properties, the tempering process to preserve the blue sheen is extensive and time consuming."
+	icon_state = "eiren_m"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	sheathe_icon = "eiren_m"
+	bigboy = TRUE
+
+/obj/item/rogueweapon/eirenxiv/eirensword
+	name = "stygian longsword"
+	desc = "A finely crafted steel longsword, its design perfectly combining elegance and practicality. Quenched in white oil, refined by the dwarves of Hammerhold, the blade holds a darker hue than usual."
+	icon_state = "eirensword"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	sheathe_icon = "eirensword"
+	bigboy = TRUE
 
 /obj/item/clothing/head/roguetown/duelhat/pretzel
 	name = "rethrifted gravedigger's hat" 
@@ -403,6 +418,21 @@
 	icon_state = "drd_lsword"
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
 
+/obj/item/caparison/drd
+	name = "\improper House Woerden caparison"
+	desc = "The livery of House Woerden: Pale blue, and white. A deer's head marks the flanks of the caparison."
+	icon = 'icons/clothing/donor_clothes.dmi'
+	icon_state = "drd_caparison"
+	caparison_icon = 'icons/clothing/onmob/donor_caparisons.dmi'
+	caparison_state = "drd_caparison"
+	female_caparison_state = "drd_caparison-f"
+
+/obj/item/rogueweapon/drd/shield
+	name = "kite shield"
+	desc = "The heraldry of the near-fallen House Woerden: Argent and celestial-azure, per bend, in fess point a deer head erased affronty gray."
+	icon_state = "drd_shield"
+	icon = 'icons/obj/items/donor_weapons.dmi'
+
 //LMWEVIL
 /obj/item/clothing/mask/rogue/courtphysician/brassbeak
 	name = "\improper Society of the Brass Beak mask"
@@ -447,3 +477,15 @@
 	Borne upon it, a freshly carved inscription reads, \"But The Darkness Comprehended It Not\"."
 	icon_state = "maesune_shield"
 	icon = 'icons/obj/items/donor_weapons.dmi'
+
+//NEROCAVALIER
+/obj/item/rogueweapon/nerocavalier/flsword
+	name = "blacksteel longsword"
+	desc = "A sleek blade of a dark, and burnished hue. A handle carved from a rosawood branch. A pairing that should sing a melody sweeter than any harp as it parts the air.. and yet, beautiful it may be, it is not worthy of song."
+	icon_state = "flsword"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	bigboy = TRUE
+
+//WALKTHEWASTE
+/obj/item/clothing/head/roguetown/mentorhat/walkthewaste
+	armor = ARMOR_CLOTHING

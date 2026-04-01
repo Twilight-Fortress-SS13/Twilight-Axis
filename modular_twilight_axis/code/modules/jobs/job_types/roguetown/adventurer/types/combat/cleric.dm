@@ -55,7 +55,7 @@
 			cloak = /obj/item/clothing/cloak/tabard/devotee/abyssor
 		if(/datum/patron/divine/xylix)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/xylix
-			cloak = /obj/item/clothing/cloak/templar/xylix
+			cloak = /obj/item/clothing/cloak/templar/xylixian
 			H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 		if(/datum/patron/divine/dendor)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/dendor
@@ -81,7 +81,7 @@
 		if(/datum/patron/divine/ravox)
 			head = /obj/item/clothing/head/roguetown/roguehood
 			wrists = /obj/item/clothing/neck/roguetown/psicross/ravox
-			cloak = /obj/item/clothing/cloak/cleric/ravox
+			cloak = /obj/item/clothing/cloak/templar/ravox
 		if(/datum/patron/divine/malum)
 			head = /obj/item/clothing/head/roguetown/roguehood
 			wrists = /obj/item/clothing/neck/roguetown/psicross/malum
@@ -112,7 +112,7 @@
 						if("Ravox")
 							head = /obj/item/clothing/head/roguetown/roguehood
 							wrists = /obj/item/clothing/neck/roguetown/psicross/ravox
-							cloak = /obj/item/clothing/cloak/cleric/ravox
+							cloak = /obj/item/clothing/cloak/templar/ravox
 						if("Dendor")
 							wrists = /obj/item/clothing/neck/roguetown/psicross/dendor
 							cloak = /obj/item/clothing/cloak/tabard/devotee/dendor
@@ -127,7 +127,7 @@
 							cloak = /obj/item/clothing/cloak/tabard/devotee/abyssor
 						if("Xylix")
 							wrists = /obj/item/clothing/neck/roguetown/psicross/xylix
-							cloak = /obj/item/clothing/cloak/templar/xylix
+							cloak = /obj/item/clothing/cloak/templar/xylixian
 						if("Eora")
 							head = /obj/item/clothing/head/roguetown/eoramask
 							wrists = /obj/item/clothing/neck/roguetown/psicross/eora

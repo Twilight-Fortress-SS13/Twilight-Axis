@@ -1148,30 +1148,85 @@
 
 /obj/item/soulthread
 	name = "lux-thread"
-	desc = "Eerie glowing thread, cometh from the grave"
+	desc = "An eerie, softly glowing thread. It hums faintly with something that was once not quite at rest."
 	icon = 'icons/roguetown/items/natural.dmi'
 	icon_state = "luxthread"
 	var/strungtogether = 1
+	var/max_threads = 10
 	sellprice = 3
 	grid_width = 32
 	grid_height = 32
-
+	w_class = WEIGHT_CLASS_TINY
 
 /obj/item/soulthread/examine(mob/user)
 	. = ..()
-	. += "</br>[strungtogether] threads are gathered of 10..."
+	. += "</br><span class='notice'>[strungtogether]/[max_threads] threads woven together.</span>"
+
+/obj/item/soulthread/proc/process_total(total, mob/user)
+	var/turf/T = get_turf(src)
+	var/tolls_to_make = total - (total % max_threads)
+	tolls_to_make /= max_threads
+	var/remainder = total % max_threads
+	if(user)
+		to_chat(user, "<span class='purple'>The threads entangle ethereally in your grasp... ([total]/[max_threads])</span>")
+	if(tolls_to_make)
+		for(var/i = 1 to tolls_to_make)
+			new /obj/item/thetoll(T)
+		if(user)
+			to_chat(user, "<span class='boldnotice'>The gathered threads bind together, forming a weeping toll!</span>")
+	if(remainder)
+		strungtogether = remainder
+		sellprice = 3 * remainder
+	else
+		qdel(src)
+
+/obj/item/soulthread/proc/merge_into(obj/item/soulthread/target, mob/user)
+	if(target == src)
+		return
+
+	var/total = target.strungtogether + src.strungtogether
+	target.process_total(total, user)
+	qdel(src)
 
 /obj/item/soulthread/attackby(obj/item/attacking_item, mob/user)
-	if(istype(attacking_item, /obj/item/soulthread))
-		var/obj/item/soulthread/thread2combine = attacking_item
-		strungtogether += thread2combine.strungtogether
-		sellprice += 3
-		to_chat(user, "...[strungtogether] of 10 to the toll...")
-		qdel(thread2combine)
-	if(strungtogether >= 10)
-		to_chat(user, "The lux-stuff coalesces into a toll!")
-		new /obj/item/thetoll((get_turf(user)))
-		qdel(src)
+	if(!istype(attacking_item, /obj/item/soulthread))
+		return ..()
+
+	var/obj/item/soulthread/other = attacking_item
+	merge_into(other, user)
+
+/obj/item/soulthread/afterattack(atom/target, mob/user, proximity_flag, click_params)
+	if(!proximity_flag)
+		return
+
+	var/turf/T = get_turf(target)
+	if(!T)
+		return
+	for(var/obj/item/soulthread/other in T)
+		if(!other)
+			return
+
+	to_chat(user, "<span class='notice'>You begin gathering the scattered threads...</span>")
+
+	for(var/obj/item/soulthread/other in T)
+		if(other == src)
+			continue
+
+		if(strungtogether >= max_threads)
+			break
+
+		if(!do_after(user, 0.5 SECONDS, TRUE, src))
+			break
+
+		if(!(other in T.contents))
+			continue
+
+		var/total = strungtogether + other.strungtogether
+		qdel(other)
+		process_total(total, user)
+
+		if(QDELETED(src))
+			return
 
 /obj/item/thetoll
 	grid_width = 32
@@ -1181,7 +1236,8 @@
 	icon = 'icons/roguetown/underworld/enigma_husks.dmi'
 	icon_state = "soultoken"
 	sellprice = 30
-
+	w_class = WEIGHT_CLASS_TINY
+	dropshrink = 0.5
 
 /obj/structure/ritualcircle/eora
 	name = "Rune of Love"
@@ -1264,6 +1320,15 @@
 				return
 			if(!do_after(user, 5 SECONDS))
 				return
+			var/list/helm_options = list(
+				"Avantyne Barbute" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "zizobarbute"),
+				"Avantyne Froggemund" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "zizofrogmouth"),
+				"Avantyne Volf-Plate" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "volfplate_avantyne"),
+			)
+
+			var/choice = show_radial_menu(user, src, helm_options, require_near = TRUE, tooltips = TRUE)
+			if(!choice)
+				choice = "Avantyne Barbute"
 			user.say("ZIZO! ZIZO! DAME OF PROGRESS!!")
 			if(!do_after(user, 5 SECONDS))
 				return
@@ -1275,14 +1340,22 @@
 				return
 			icon_state = "zizo_active"
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-			zizoarmaments(target)
+			zizoarmaments(target, choice)
 			spawn(120)
 				icon_state = "zizo_chalky"
 
-/obj/structure/ritualcircle/zizo/proc/zizoarmaments(mob/living/carbon/human/target)
+/obj/structure/ritualcircle/zizo/proc/zizoarmaments(mob/living/carbon/human/target, choice)
 	if(!HAS_TRAIT(target, TRAIT_CABAL))
 		loc.visible_message(span_cult("THE RITE REJECTS ONE NOT OF THE CABAL"))
 		return
+	var/obj/item/clothing/head/roguetown/helmet/heavy/helm_path
+	switch(choice)
+		if("Avantyne Barbute")
+			helm_path = /obj/item/clothing/head/roguetown/helmet/heavy/zizo
+		if("Avantyne Froggemund")
+			helm_path = /obj/item/clothing/head/roguetown/helmet/heavy/zizo/frogge
+		if("Avantyne Volf-Plate")
+			helm_path = /obj/item/clothing/head/roguetown/helmet/heavy/zizo/volfhelm
 	target.Stun(60)
 	target.Knockdown(60)
 	to_chat(target, span_userdanger("UNIMAGINABLE PAIN!"))
@@ -1291,11 +1364,11 @@
 	loc.visible_message(span_cult("Great hooks come from the rune, embedding into [target]'s ankles, pulling them onto the rune. Then, into their wrists. Their lux is torn from their chest, and reforms into armor. "))
 	spawn(20)
 		playsound(loc, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
-		target.equipOutfit(/datum/outfit/job/roguetown/darksteelrite)
+		target.equipOutfit(/datum/outfit/job/roguetown/darksteelrite, helm_path)
 		spawn(40)
 			to_chat(target, span_purple("They are ignorant, backwards, without hope. You. You will be powerful."))
 
-/datum/outfit/job/roguetown/darksteelrite/pre_equip(mob/living/carbon/human/H)
+/datum/outfit/job/roguetown/darksteelrite/pre_equip(mob/living/carbon/human/H, obj/item/clothing/head/roguetown/helmet/heavy/helm_path)
 	..()
 	var/list/items = list()
 	items |= H.get_equipped_items(TRUE)
@@ -1308,7 +1381,7 @@
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/zizo
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/zizo
 	gloves = /obj/item/clothing/gloves/roguetown/plate/zizo
-	head = /obj/item/clothing/head/roguetown/helmet/heavy/zizo
+	head = helm_path
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	backr = /obj/item/rogueweapon/sword/long/zizo
 

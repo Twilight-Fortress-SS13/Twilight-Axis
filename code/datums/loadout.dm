@@ -1062,37 +1062,31 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Wolf Talisman"
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
-	donatitem = TRUE
 
 /datum/loadout_item/psicross/gronnbaotha
 	name = "Leopard Talisman"
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/baothagronn
-	donatitem = TRUE
 
 /datum/loadout_item/psicross/gronnmatthios
 	name = "Bear Talisman"
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn
-	donatitem = TRUE
 
 /datum/loadout_item/psicross/gronngraggar
 	name = "Moose Talisman"
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
-	donatitem = TRUE
 
 /datum/loadout_item/psicross/gronndendor
 	name = "Volfskinned Talisman"
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/clothing/neck/roguetown/psicross/dendor/gronn
-	donatitem = TRUE
 
 /datum/loadout_item/psicross/gronnabyssor
 	name = "Hadal Talisman"
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/clothing/neck/roguetown/psicross/abyssor/gronn
-	donatitem = TRUE
 
 /datum/loadout_item/wedding_band
 	name = "silver wedding band"
@@ -1300,6 +1294,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/mask/rogue/facemask/goldmaskc/triumph
 	category = list("Триумфы")
 	triumph_cost = 10
+
+/datum/loadout_item/triumph_weaponkit_estoc
+	name = "Azurian Estoc(-5 TRI) - Required: Estoc or Stecher"
+	path = /obj/item/enchantingkit/triumph_weaponkit_estoc
+	category = list("Триумфы")
+	triumph_cost = 5
 
 // -7 TRI Minisection.
 /*
@@ -1617,6 +1617,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/triumph_weaponkit_psy
 	donatitem = TRUE
 
+/datum/loadout_item/donator_nerocavalier
+	name = "Donator Kit - Blacksteel Longsword - Required: Longsword"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/noire_flsword
+	donatitem = TRUE
+
 /datum/loadout_item/donator_dasfox/periapt
 	name = "Donator Item - Defiled Astratan Periapt"
 	path = /obj/item/clothing/neck/roguetown/psicross/astrata/dasfox
@@ -1627,6 +1633,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Donator Item - Western Estates Caparison"
 	path = /obj/item/caparison/ryan
 	category = list("Разное", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_estoc
+	name = "Donator Item - Azurian Estoc - Required: Estoc Or Stecher"
+	path = /obj/item/enchantingkit/triumph_weaponkit_estoc
+	category = list("Оружие", "Донат")
 	donatitem = TRUE
 
 /datum/loadout_item/donator_drow_armorkit
@@ -1746,7 +1758,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 2
 
-/datum/loadout_item/donator/eoranspike
+/datum/loadout_item/donator_eoranspike
 	name = "Donator Kit - Eoran Spike - Required: Steel Dagger"
 	path = /obj/item/enchantingkit/shudderfly_dagger
 	category = list("Оружие", "Донат")
@@ -2036,14 +2048,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donat/tabard/abyssor
 	name = "Табард-плащ Абиссора"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/tabard/abyssortabard
+	path = /obj/item/clothing/cloak/tabard/abyssorite
 	donat_tier = 2
 	donatitem = TRUE
 
 /datum/loadout_item/donat/tabard/crusader/ravox
 	name = "Табард-плащ Равокса (старый)"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/cleric/ravox
+	path = /obj/item/clothing/cloak/templar/ravox
 	donatitem = TRUE
 
 /datum/loadout_item/donat/tabard/templar/ravox
@@ -2495,13 +2507,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 2
 
-/datum/loadout_item/donator/koruu_kukri
+/datum/loadout_item/donator_koruu_kukri
 	name = "Donator Kit - Leachwhacker - Required: Any Dagger"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/weapon/koruu_kukri
 	donatitem = TRUE
 
-/datum/loadout_item/donator/koruu_kukri_warden
+/datum/loadout_item/donator_koruu_kukri_warden
 	name = "Donator Kit - Warden Leachwhacker - Required: Warden's Seax"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/weapon/koruu_kukri/warden

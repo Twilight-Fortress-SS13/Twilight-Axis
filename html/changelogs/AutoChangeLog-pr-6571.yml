@@ -1,0 +1,6 @@
+author: "borneblood"
+delete-after: True
+changes:
+  - qol: "Graverobbers can dig graves with STRONG intent."
+  - bugfix: "Locate Corpse should now stop looping if the corpse is revived, oops."
+  - spellcheck: "Fixed an OCD killer typo for flavortext on Locate Corpse."

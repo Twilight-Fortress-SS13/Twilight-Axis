@@ -183,7 +183,9 @@
 					/obj/effect/proc_holder/spell/invoked/twilight_churnwealthy							= CLERIC_T2,
 					/obj/effect/proc_holder/spell/self/twilight_amongus									= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/projectile/twilight_crownfortheking			= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/barter										= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/twilight_commieflag							= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/resurrect/matthios							= CLERIC_T3,
 					/obj/effect/proc_holder/spell/self/wildshape_twilight_wingsoffreedom				= CLERIC_T4,
 	)
 	confess_lines = list(

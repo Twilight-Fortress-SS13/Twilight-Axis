@@ -662,7 +662,7 @@
 	force = 0
 	force_wielded = 0
 	wdefense = 1
-	possible_item_intents = list(/datum/intent/spear/thrust/ducal_standard)
+	possible_item_intents = list(/datum/intent/spear/thrust)
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "matthios_standard"
 	resistance_flags = FIRE_PROOF

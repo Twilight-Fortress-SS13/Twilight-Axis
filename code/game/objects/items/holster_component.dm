@@ -168,6 +168,8 @@
 		else
 			I.icon_state = "[initial(I.icon_state)]"
 
+	//	I.update_slot_icon()
+
 	if(!user && ismob(I.loc)) // TA EDIT START
 		user = I.loc
 
