@@ -46,7 +46,7 @@
 	animname = "stab"
 	blade_class = BCLASS_STAB
 	hitsound = list('sound/combat/hits/bladed/genstab (1).ogg', 'sound/combat/hits/bladed/genstab (2).ogg', 'sound/combat/hits/bladed/genstab (3).ogg')
-	penfactor = PEN_MEDIUM
+	penfactor = PEN_LIGHT //TA EDIT
 	chargetime = 0
 	swingdelay = 0
 	item_d_type = "stab"
@@ -54,14 +54,14 @@
 /datum/intent/sword/thrust/short
 	clickcd = 8
 	damfactor = 1.1
-	penfactor = PEN_MEDIUM
+	penfactor = PEN_LIGHT //TA EDIT
 
 /datum/intent/sword/thrust/arming
 	clickcd = CLICK_CD_QUICK // Less than rapier
-	penfactor = PEN_MEDIUM // Arming sword thrust — penetrates light armor.
+	penfactor = PEN_LIGHT // Arming sword thrust — penetrates light armor. //TA EDIT
 
 /datum/intent/sword/thrust/long
-	penfactor = PEN_MEDIUM // Longsword thrust — same pen tier, higher base damage
+	penfactor = PEN_LIGHT // Longsword thrust — same pen tier, higher base damage //TA EDIT
 	// Their cut is actually pretty decent when 2handed and should be inferior to zwei.
 
 /datum/intent/sword/thrust/krieg

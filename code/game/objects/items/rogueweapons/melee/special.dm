@@ -20,7 +20,7 @@
 	animname = "stab"
 	blade_class = BCLASS_STAB
 	hitsound = list('sound/combat/hits/bladed/genstab (1).ogg', 'sound/combat/hits/bladed/genstab (2).ogg', 'sound/combat/hits/bladed/genstab (3).ogg')
-	penfactor = PEN_MEDIUM // This make them good vs other light armor users
+	penfactor = PEN_LIGHT // This make them good vs other light armor users //TA EDIT
 	// So they don't need extra bonus damage on top
 	chargetime = 0
 	clickcd = CLICK_CD_FAST
