@@ -1,6 +1,6 @@
 /datum/mob_descriptor/defiant
 	name = "Defiant"
-	slot = MOB_DESCRIPTOR_SLOT_NOTHING
+	slot = MOB_DESCRIPTOR_SLOT_DEFIANT
 	verbage = "looks"
 	describe = "defiant"
 	show_obscured = TRUE

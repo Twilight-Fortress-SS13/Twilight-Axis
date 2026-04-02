@@ -22,7 +22,7 @@
 	same_job_respawn_delay = 30 MINUTES
 	job_subclasses = list(
 		/datum/advclass/mercenary/anthrax,
-		/datum/advclass/mercenary/anthrax/assasin,
+		/datum/advclass/mercenary/anthrax_assassin,
 		/datum/advclass/mercenary/atgervi,
 		/datum/advclass/mercenary/atgervi/shaman,
 		/datum/advclass/mercenary/etrusca/condottiero,
