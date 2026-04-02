@@ -70,6 +70,7 @@ GLOBAL_LIST_INIT(special_roles_rogue, list(
 	ROLE_DREAMWALKER = /datum/antagonist/dreamwalker,
 	ROLE_GNOLL = /datum/antagonist/gnoll,
 	ROLE_ASSASSIN = /datum/antagonist/assassin,
+	ROLE_HAG = /datum/antagonist/hag,
 	ROLE_CULT = /datum/antagonist/zizocultist,
 ))
 

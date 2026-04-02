@@ -124,7 +124,7 @@
 
 	H.adjust_blindness(-3)
 	if(H.mind)
-		var/weapons = list("Claymore","Great Mace","Battle Axe","Poleaxe","Estoc","Lucerne", "Partizan")
+		var/weapons = list("Claymore","Great Mace","Battle Axe","Poleaxe","Estoc","Stecher","Lucerne", "Partizan")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)
 		switch(weapon_choice)
@@ -141,6 +141,9 @@
 			if("Estoc")
 				r_hand = /obj/item/rogueweapon/estoc
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
+			if("Stecher")
+				r_hand = /obj/item/rogueweapon/sword/long/ap
+				backl = /obj/item/rogueweapon/scabbard/sword/noble
 			if("Lucerne")
 				r_hand = /obj/item/rogueweapon/eaglebeak/lucerne
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
@@ -535,7 +538,7 @@
 
 	H.adjust_blindness(-3)
 	if(H.mind)
-		var/weapons = list("Rapier + Longbow","Estoc + Recurve Bow","Sabre + Buckler","Whip + Crossbow","Poleaxe + Sling", "Shamshir + Pistol")
+		var/weapons = list("Rapier + Longbow","Estoc + Recurve Bow","Stecher + Recurve Bow","Sabre + Buckler","Whip + Crossbow","Poleaxe + Sling", "Shamshir + Pistol")
 		var/armor_options = list("Light Armor", "Medium Armor", "Medium Cuirass")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		var/armor_choice = input(H, "Choose your armor.", "TAKE UP ARMS") as anything in armor_options
@@ -550,6 +553,12 @@
 			if("Estoc + Recurve Bow")
 				r_hand = /obj/item/rogueweapon/estoc
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
+				beltr = /obj/item/quiver/arrows
+				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+
+			if("Stecher + Recurve Bow")
+				r_hand = /obj/item/rogueweapon/sword/long/ap
+				backl = /obj/item/rogueweapon/scabbard/sword/noble
 				beltr = /obj/item/quiver/arrows
 				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
 
@@ -738,6 +747,7 @@
 		"Battle Axe",
 		"Poleaxe",
 		"Estoc",
+		"Stecher",
 		"Longsword",
 		"Flail",
 		"Sabre",
@@ -763,6 +773,10 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 			r_hand = /obj/item/rogueweapon/estoc
 			backl = /obj/item/rogueweapon/scabbard/gwstrap
+		if("Stecher")
+			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
+			r_hand = /obj/item/rogueweapon/sword/long/ap
+			backl = /obj/item/rogueweapon/scabbard/sword/noble
 		if("Battle Axe")
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_MASTER, TRUE)
 			r_hand = /obj/item/rogueweapon/stoneaxe/battle

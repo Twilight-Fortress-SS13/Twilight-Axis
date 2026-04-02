@@ -67,7 +67,7 @@
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	id = /obj/item/clothing/ring/signet/silver
-	//backl = /obj/item/rogueweapon/woodstaff/naledi
+	backl = /obj/item/rogueweapon/woodstaff/implement/grand/naledi
 	backpack_contents = list(
 		/obj/item/roguekey/inquisitionmanor,
 		/obj/item/rogueweapon/huntingknife,

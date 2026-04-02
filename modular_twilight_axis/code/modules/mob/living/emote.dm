@@ -538,6 +538,55 @@
 	key_third_person = "машет крыльями"
 	message = "хлопает своими крыльями."
 
+/datum/emote/living/softmoan
+	key = "softmoan"
+	key_third_person = "мягко стонет"
+	message = "мягко стонет."
+	message_muffled = "приглушенно стонет."
+	emote_type = EMOTE_AUDIBLE
+	show_runechat = TRUE
+
+/mob/living/carbon/human/verb/emote_softmoan()
+	set name = "Мягко стонать"
+	set category = "Noises"
+
+	emote("softmoan", intentional = TRUE)
+
+/datum/emote/living/moan
+	key = "moan"
+	key_third_person = "стонет"
+	message = "стонет."
+	message_muffled = "приглушенно стонет."
+	emote_type = EMOTE_AUDIBLE
+	show_runechat = TRUE
+
+/mob/living/carbon/human/verb/emote_moan()
+	set name = "Стонать"
+	set category = "Noises"
+
+	emote("moan", intentional = TRUE)
+
+/datum/emote/living/pat
+	key = "pat"
+	key_third_person = "гладит по голове"
+	message = ""
+	message_param = "гладит по голове %t."
+	emote_type = EMOTE_VISIBLE
+	restraint_check = TRUE
+
+/mob/living/carbon/human/verb/emote_pat()
+	set name = "Гладить"
+	set category = "Emotes"
+
+	emote("pat", intentional = TRUE, targetted = TRUE)
+
+/datum/emote/living/pat/adjacentaction(mob/user, mob/target)
+	. = ..()
+	if(!user || !target)
+		return
+	if(ishuman(target))
+		playsound(target.loc, 'sound/vo/hug.ogg', 100, FALSE, -1)
+
 /*
 /datum/emote/living/stat_roll/strength
 	attempt_message_list = list(
