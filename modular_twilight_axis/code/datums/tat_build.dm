@@ -612,12 +612,10 @@
 			H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 
 	if(TAT_TRAIT_SOUNDBREAKER in traits)
-		if(H.LoadComponent(/datum/component/combo_core/soundbreaker))
-			; // компонент загрузится сам, если поддерживается кодовой базой
+		H.LoadComponent(/datum/component/combo_core/soundbreaker)
 
 	if(TAT_TRAIT_RONIN in traits)
-		if(H.LoadComponent(/datum/component/combo_core/ronin))
-			; // аналогично, если уже реализовано в проекте
+		H.LoadComponent(/datum/component/combo_core/ronin)
 
 /datum/tat_build/proc/apply_items(mob/living/carbon/human/H)
 	if(!H)
