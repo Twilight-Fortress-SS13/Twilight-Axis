@@ -476,7 +476,7 @@
 	give_bank_account = TRUE
 
 	cmode_music = 'sound/music/combat_martyrsafe.ogg'
-	job_traits = list(TRAIT_HEAVYARMOR, TRAIT_STEELHEARTED, TRAIT_SILVER_BLESSED, TRAIT_EMPATH, TRAIT_MEDICINE_EXPERT, TRAIT_DUALWIELDER, TRAIT_CLERGY, TRAIT_TEMPO)
+	job_traits = list(TRAIT_HEAVYARMOR, TRAIT_STEELHEARTED, TRAIT_SILVER_BLESSED, TRAIT_EMPATH, TRAIT_MEDICINE_EXPERT, TRAIT_DUALWIELDER, TRAIT_CLERGY, TRAIT_TEMPO, TRAIT_MARRIAGE_CAPABLE)
 
 	//No undeath-adjacent virtues for a role that can sacrifice itself. The Ten like their sacrifices 'pure'. (I actually didn't want to code returning those virtue traits post-sword use)
 	//They get those traits during sword activation, anyway.
@@ -702,6 +702,7 @@
 	item_state = "martyraxe"
 	name = "divine axe"
 	desc = "A relic from the Holy See's own vaults; a blessed silver axe, marked with the ten-pointed sigil of Astrata's undivided might. </br>It simmers with godly energies, and will only yield to the hands of those who have taken the Oath."
+	minstr = 12
 	max_blade_int = 250
 	max_integrity = 9999
 	bigboy = 1

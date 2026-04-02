@@ -2052,6 +2052,40 @@
 	desc = "My natural defenses are gone! I am lighter, but far weaker."
 	icon_state = "buff"
 
+// escalating buffs applied on bleed out tied to TRAIT_JOURNEYS_END, currently only used by mistwalker
+/atom/movable/screen/alert/status_effect/buff/journey_ending
+	name = "An end in sight..."
+	desc = "Is this to be my story?"
+	icon_state = "buff"
+
+/atom/movable/screen/alert/status_effect/buff/journey_end
+	name = "The chapter's closing."
+	desc = "Treading the fine line of lyfe and death."
+	icon_state = "buff"
+
+/atom/movable/screen/alert/status_effect/buff/journey_end_final
+	name = "The final act!"
+	desc = "A death worthy of song!"
+	icon_state = "buff"
+
+/datum/status_effect/buff/journey_ending
+	id = "journey_ending"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/journey_ending
+	effectedstats = list(STATKEY_SPD = 2, STATKEY_WIL = 2)
+	duration = -1
+
+/datum/status_effect/buff/journey_end
+	id = "journey_end"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/journey_end
+	effectedstats = list(STATKEY_STR = 2, STATKEY_SPD = 3, STATKEY_WIL = 2, STATKEY_CON = 2)
+	duration = -1
+
+/datum/status_effect/buff/journey_end_final //takes ages for them to die to bloodloss, but they *do* die to it
+	id = "journey_end_final"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/journey_end_final
+	effectedstats = list(STATKEY_STR = 5, STATKEY_SPD = 6, STATKEY_WIL = 4, STATKEY_CON = 4)
+	duration = -1
+
 /datum/status_effect/buff/stagehands_silence
 	id = "Stagehand"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/stagehands_silence
@@ -2169,3 +2203,83 @@
 	name = "Wrench Tuneup"
 	desc = "a wrench has turned me up, helping steel myself for more damage"
 	icon_state = "buff"
+
+#define NECRACON_FILTER "necra_consecration"
+#define NECRACON_TIER_NORMAL 2
+#define NECRACON_TIER_EXPERT 3
+#define NECRACON_TIER_MASTER 4
+
+
+/datum/status_effect/buff/necran_consecration
+	id = "necra_consecrate"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/necra_consecrate
+	effectedstats = list(STATKEY_CON = 1)
+	var/outline_colour ="#929186" // A dull grey.
+	var/tier = 2
+	duration = 3 SECONDS
+
+/datum/status_effect/buff/necran_consecration/on_creation(mob/living/new_owner, newtier)
+	if(newtier > NECRACON_TIER_NORMAL)
+		tier = newtier
+	. = ..()
+
+/datum/status_effect/buff/necran_consecration/refresh()
+	. = ..()
+	var/bluerestore = 0
+	if(HAS_TRAIT(owner, TRAIT_DNR))
+		bluerestore += 5
+	switch(tier)
+		if(NECRACON_TIER_NORMAL)
+			bluerestore += 5
+		if(NECRACON_TIER_EXPERT)
+			bluerestore += 8
+		if(NECRACON_TIER_MASTER)
+			bluerestore += 10
+	owner.energy_add(bluerestore)
+
+/datum/status_effect/buff/necran_consecration/on_apply()
+	. = ..()
+
+	var/bluerestore = 0
+	if(HAS_TRAIT(owner, TRAIT_DNR))
+		bluerestore += 5
+	switch(tier)
+		if(NECRACON_TIER_NORMAL)
+			bluerestore += 5
+		if(NECRACON_TIER_EXPERT)
+			bluerestore += 8
+		if(NECRACON_TIER_MASTER)
+			bluerestore += 10
+	owner.energy_add(bluerestore)
+
+	var/filter = owner.get_filter(NECRACON_FILTER)
+	if (!filter)
+		owner.add_filter(NECRACON_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 200, "size" = 1))
+	ADD_TRAIT(owner, TRAIT_ADRENALINE_RUSH, TRAIT_NECRACON)
+	if(tier > NECRACON_TIER_NORMAL)	//expert
+		ADD_TRAIT(owner, TRAIT_FORTITUDE, TRAIT_NECRACON)
+		if(HAS_TRAIT(owner, TRAIT_DNR))
+			ADD_TRAIT(owner, TRAIT_GUIDANCE, TRAIT_NECRACON)
+	if(tier > NECRACON_TIER_EXPERT && HAS_TRAIT(owner, TRAIT_DNR))	//master+
+		ADD_TRAIT(owner, TRAIT_NOPAIN, TRAIT_NECRACON)
+
+/datum/status_effect/buff/necran_consecration/on_remove()
+	. = ..()
+	owner.remove_filter(NECRACON_FILTER)
+	REMOVE_TRAIT(owner, TRAIT_ADRENALINE_RUSH, TRAIT_NECRACON)
+	if(tier > NECRACON_TIER_NORMAL)
+		REMOVE_TRAIT(owner, TRAIT_FORTITUDE, TRAIT_NECRACON)
+		REMOVE_TRAIT(owner, TRAIT_GUIDANCE, TRAIT_NECRACON)
+	if(tier > NECRACON_TIER_EXPERT)
+		REMOVE_TRAIT(owner, TRAIT_NOPAIN, TRAIT_NECRACON)
+
+
+/atom/movable/screen/alert/status_effect/buff/necra_consecrate
+	name = "Necra's Blessed Consecration"
+	desc = "Upon this ground, I hold firm. Upon this ground, Her will guides me true. Upon this ground, I will send them back to Her waiting grasp."
+	icon_state = "buff"
+
+#undef NECRACON_FILTER
+#undef NECRACON_TIER_NORMAL
+#undef NECRACON_TIER_EXPERT
+#undef NECRACON_TIER_MASTER

@@ -337,6 +337,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			// Let the ticket know the admin is opening the player panel
 			admin_ticket_log(pp_target, "<font color='green'>[key_name_admin(user)] is reviewing your character via the player panel.</font>")
 			user.client.holder.show_player_panel_next(pp_target)
+			message_admins("Admin [key_name_admin(usr)] checked the player panel of [key_name_admin(pp_target)]!")
+			log_admin("Admin [key_name(usr)] checked the player panel of [key_name_admin(pp_target)]!")
 			return TRUE
 
 		if("ticket_vv")

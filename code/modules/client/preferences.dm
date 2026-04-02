@@ -622,7 +622,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			if(charflaws.len)
 				for(var/i = 1 to charflaws.len)
 					var/datum/charflaw/cf = charflaws[i]
-					dat += " <a href='?_src_=prefs;preference=charflaw;task=remove;index=[i]'>[cf]</a>"
+					var/warning = ""
+					if(cf.needs_extra_vice && charflaws.len < 2)
+						warning = "<font color = '#910505'>"
+					dat += "[warning] <a href='?_src_=prefs;preference=charflaw;task=remove;index=[i]'>[cf]</a>[warning ? " (Requires Extra Vice!)</font>" : ""]"
 					if(i < charflaws.len)
 						dat += " |"
 				dat += "<BR>"
@@ -1860,16 +1863,18 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						to_chat(user, "<font color='red'><b>Your classes have been reset.</b></font>")
 
 				if ("titles")
-					var/titles_input = tgui_input_list(user, "Choose your character's titles", "TITLES", GLOB.titles_list)
-					if(titles_input)
-						titles_pref = titles_input
-						to_chat(user, "<font color='red'>Your character's titles are now [titles_pref].</font>")
+					if(titles_pref == TITLES_M)
+						titles_pref = TITLES_F
+					else
+						titles_pref = TITLES_M
+					to_chat(user, "<font color='red'>Your character's titles are now [titles_pref].</font>")
 
 				if ("clothespref")
-					var/clothespref_input = tgui_input_list(user, "Choose your character's clothing preference", "CLOTHING", GLOB.clothespref_list)
-					if(clothespref_input)
-						clothes_pref = clothespref_input
-						to_chat(user, "<font color='red'>Your character's titles are now [clothespref_input].</font>")
+					if(clothes_pref == CLOTHES_M)
+						clothes_pref = CLOTHES_F
+					else
+						clothes_pref = CLOTHES_M
+					to_chat(user, "<font color='red'>Your character's titles are now [clothes_pref].</font>")
 				// LETHALSTONE EDIT: add voice type selection
 				if ("voicetype")
 					var voicetype_input = tgui_input_list(user, "Choose your character's voice type", "VOICE TYPE", GLOB.voice_types_list)
@@ -2619,28 +2624,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 							to_chat(user, span_purple("Your statpack has been set to virtuous (no stats) due to selecting a virtue.")) */
 
 				if("origin")
-					var/list/virtue_choices = list()
-					for (var/path as anything in GLOB.virtues)
-						var/datum/virtue/V = GLOB.virtues[path]
-						if (!V.name)
-							continue
-						if (V.name == virtue_origin.name)
-							continue
-						if (!istype(V, /datum/virtue/origin))
-							continue
-						if (V.restricted == TRUE)
-							if((pref_species.type in V.races))
-								continue
-						if (istype(V, /datum/virtue/origin/racial))
-							if(!(pref_species.type in V.races))
-								continue
-						virtue_choices[V.name] = V
-					var/result = tgui_input_list(user, "From where do you come?", "ORIGINS",virtue_choices)
-
-					if (result)
-						var/datum/virtue/virtue_chosen = virtue_choices[result]
-						virtue_origin = virtue_chosen
-						to_chat(user, process_virtue_text(virtue_chosen))
+					var/datum/origin_picker_panel/origin_picker = new(src) // TA EDIT
+					origin_picker.ui_interact(user) // TA EDIT
 
 				if("charflaw_averse_choice")
 					var/choice = tgui_input_list(user, "Who do you loathe?", "AVERSION", GLOB.averse_factions)

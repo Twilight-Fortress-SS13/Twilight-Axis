@@ -258,6 +258,7 @@
 	TI.lefthand_file = RI::lefthand_file
 	TI.righthand_file = RI::righthand_file
 	TI.sheathe_icon = RI::sheathe_icon ? RI::sheathe_icon : TI.sheathe_icon
+	TI.bigboy = RI::bigboy
 
 	if("is_silver" in TI.vars)
 		TI.vars["is_silver"] = old_is_silver
@@ -386,6 +387,20 @@
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Sabre"
 	target_items = list(/obj/item/rogueweapon/sword/sabre)
 	result_item = /obj/item/rogueweapon/example/eiren_sabre_alt
+
+/obj/item/enchantingkit/weapon/eiren_m
+	name = "glintstone longsword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long
+	)
+	result_item = /obj/item/rogueweapon/eirenxiv/eiren_m
+
+/obj/item/enchantingkit/weapon/eirensword
+	name = "stygian longsword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long
+	)
+	result_item = /obj/item/rogueweapon/eirenxiv/eirensword
 
 //pretzel - custom steel greatsword. PSYDON LYVES. PSYDON ENDVRES.
 /obj/item/enchantingkit/weapon/waff
@@ -523,6 +538,14 @@
 	target_items = list(/obj/item/rogueweapon/sword/long)
 	result_item = /obj/item/rogueweapon/sword/long/drd
 
+//DRD21 - Shield
+/obj/item/enchantingkit/weapon/drd_shield
+	name = "'House Woerden shield' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/shield/tower/metal
+	)
+	result_item = /obj/item/rogueweapon/drd/shield
+
 //Lmwevil - Beak Mask
 /obj/item/enchantingkit/lmwevil_brassbeak
 	name = "brass beak mask morphing elixir"
@@ -540,6 +563,7 @@
 //Maesune - Sabre/Shield
 /obj/item/enchantingkit/weapon/maesune_shield
 	name = "'Fy Annwyl' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Kite Shield"
 	target_items = list(
 		/obj/item/rogueweapon/shield/tower/metal
 	)
@@ -547,6 +571,7 @@
 
 /obj/item/enchantingkit/weapon/maesune_sabre
 	name = "'Y Ceirw' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Falchion, Longsword, Sword, Silver Sword Or Kriegmesser"
 	target_items = list(
 		/obj/item/rogueweapon/sword/short/falchion,
 		/obj/item/rogueweapon/sword/long,
@@ -556,6 +581,15 @@
 		/obj/item/rogueweapon/sword/long/kriegmesser
 	)
 	result_item = /obj/item/rogueweapon/maesune/sabre
+
+//NeroCavalier - Sword
+/obj/item/enchantingkit/weapon/noire_flsword
+	name = "'Blacksteel Longsword' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long
+	)
+	result_item = /obj/item/rogueweapon/nerocavalier/flsword
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
