@@ -246,7 +246,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	erp_organ_prefs = sanitize_islist(erp_organ_prefs, list())
 	sanitize_erp_organ_prefs()
 	//TA Addition end - new ERP SYSTEM
-	tat_build.load_from_list(L)
+	tat_build.load_from_list(sanitize_islist(L, list()))
 
 	verify_keybindings_valid()
 	return TRUE

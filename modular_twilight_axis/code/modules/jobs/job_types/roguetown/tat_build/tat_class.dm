@@ -1,12 +1,12 @@
 /datum/job/roguetown/tat_class
-	title = "Free foam"
+	title = "Free roam"
 	department_flag = PEASANTS
 	faction = "Station"
 	total_positions = 4
 	spawn_positions = 4
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
-	tutorial = "Free foam."
+	tutorial = "Free roam."
 	display_order = JDO_MERCENARY
 	selection_color = JCOLOR_WANDERER
 	min_pq = 0

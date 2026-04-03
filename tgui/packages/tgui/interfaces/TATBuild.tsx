@@ -158,7 +158,7 @@ const PointsPanel = ({ data }: { data: Data }) => {
   );
 };
 
-const StatsTab = ({ data, act }: { data: Data; act: Function }) => {
+const StatsTab = ({ data, act }: { data: Data; act: (action: string, payload?: object) => void }) => {
   const rows = useMemo(() => {
     return Object.entries(data.available_stats || {}).sort((a, b) =>
       (a[1].name || a[0]).localeCompare(b[1].name || b[0])
