@@ -1217,7 +1217,7 @@
 	return TRUE
 
 /datum/tat_build/proc/add_trait(trait_id)
-	if(!trait_id || !(trait_id in available_traits) || trait_id in traits)
+	if(!trait_id || !(trait_id in available_traits) || (trait_id in traits))
 		return FALSE
 	if(trait_id == TAT_TRAIT_WARRIOR_MASTER && !(TAT_TRAIT_WARRIOR_EXPERT in traits))
 		return FALSE
