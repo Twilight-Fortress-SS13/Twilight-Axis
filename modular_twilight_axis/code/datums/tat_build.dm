@@ -359,7 +359,6 @@
 		/obj/item/clothing/cloak/stole = make_item_entry("Stole", 1, "clothing", "armor_family", "cloth", "cloak"),
 		/obj/item/clothing/cloak/stole/purple = make_item_entry("Stole Purple", 1, "clothing", "armor_family", "cloth", "cloak"),
 		/obj/item/clothing/cloak/stole/red = make_item_entry("Stole Red", 1, "clothing", "armor_family", "cloth", "cloak"),
-		/obj/item/clothing/cloak/templar/pestra = make_item_entry("Pestra", 1, "clothing", "armor_family", "cloth", "cloak"),
 		/obj/item/clothing/cloak/templar/pestran = make_item_entry("Pestran", 1, "clothing", "armor_family", "cloth", "cloak"),
 		/obj/item/clothing/cloak/templar/undivided = make_item_entry("Undivided", 1, "clothing", "armor_family", "cloth", "cloak"),
 		/obj/item/clothing/cloak/thief_cloak = make_item_entry("Thief Cloak", 1, "clothing", "armor_family", "cloth", "cloak"),
