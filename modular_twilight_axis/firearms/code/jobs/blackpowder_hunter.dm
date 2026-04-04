@@ -1,13 +1,12 @@
 /datum/advclass/ranger/twilight_hunter
 	name = "Blackpowder Hunter"
-	tutorial = "As gunpowder becomes more widespread accross Grimmoria, so do the Gunslingers - those who earn their living through their skill with those advanced weapons. But you are not one of 'em, you are just a wanderer with the weapon of new times. You are too young or too old to learn properly how to use effectively"
+	tutorial = "As gunpowder becomes more widespread accross Psydonia, so do the Gunslingers - those who earn their living through their skill with those advanced weapons. But you are not one of 'em, you are just a wanderer with the weapon of new times. You are too young or too old to learn properly how to use effectively"
 	outfit = /datum/outfit/job/roguetown/adventurer/twilight_hunter
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_blackpowderhunter.ogg'
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
 	traits_applied = list(TRAIT_STEELHEARTED)
 	subclass_stats = list(
 		STATKEY_PER = 2,
-		STATKEY_CON = 1,
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 1
 	)
@@ -32,9 +31,8 @@
 	..()
 	beltl = /obj/item/rogueweapon/scabbard/sheath
 	beltr = /obj/item/quiver/twilight_bullet/lead
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
 	backr = /obj/item/storage/backpack/rogue/satchel
-	mask = /obj/item/clothing/head/roguetown/armingcap/padded
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/recipe_book/survival = 1, 
@@ -70,12 +68,12 @@
 			backl = /obj/item/gun/ballistic/twilight_firearm/hunt_arquebus
 			H.put_in_hands(new /obj/item/natural/feather(H), TRUE)
 			H.put_in_hands(new /obj/item/natural/cloth(H), TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 4, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/misc/riding, 2, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/misc/riding, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/misc/reading, SKILL_LEVEL_APPRENTICE, TRUE)
 			ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 			ADD_TRAIT(H, TRAIT_NOBLE, TRAIT_GENERIC)
 		if("Peasant")
-			to_chat(H, span_purple("'..Та-ак...ты выбрал быть простым охотником..у тебя есть хороший потенциал в будущем!..'"))
+			to_chat(H, span_purple("'..Та-ак... ты выбрал быть простым охотником. У тебя есть хороший потенциал в будущем!..'"))
 			belt = /obj/item/storage/belt/rogue/leather
 			neck = /obj/item/clothing/neck/roguetown/leather
 			backl = /obj/item/gun/ballistic/twilight_firearm/barker
@@ -85,5 +83,6 @@
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 			head = /obj/item/clothing/head/roguetown/hatfur
 			H.put_in_hands(new /obj/item/natural/bundle/fibers/full(H), TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, SKILL_LEVEL_EXPERT, TRUE)
 			ADD_TRAIT(H, TRAIT_OUTDOORSMAN, TRAIT_GENERIC)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)

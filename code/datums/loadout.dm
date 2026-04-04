@@ -1191,6 +1191,66 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Триумфы")
 	triumph_cost = 6
 
+/datum/loadout_item/triumph_weaponkit_fancymace
+	name = "Morphing Elixir, 'Rungu-Shishpar Mace' - Required: Iron Mace, an Iron Warhammer, a Steel Mace, a Steel Warhammer, or a Silver Mace."
+	path = /obj/item/enchantingkit/triumph_weaponkit_fancymace
+	category = list("Триумфы")
+	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkit_krisdagger
+	name = "Morphing Elixir, 'Kris' - Required: Bauernwehr, a Combat Knife, an Iron Dagger, or a Steel Dagger."
+	path = /obj/item/enchantingkit/triumph_weaponkit_kris
+	category = list("Триумфы")
+	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkit_njoradagger
+	name = "Morphing Elixir, 'Njora' - Required: Steel Dagger, an Iron Dagger, a Hunting Knife, or a Combat Knife."
+	path = /obj/item/enchantingkit/triumph_weaponkit_njora
+	category = list("Триумфы")
+	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkit_alloywhip
+	name = "Morphing Elixir, 'Alloytip Whip' - Required: Bronze Whip, a Whip, or a Silver Whip."
+	path = /obj/item/enchantingkit/triumph_weaponkit_whip
+	category = list("Триумфы")
+	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkit_kaskara
+	name = "Morphing Elixir, 'Kaskara' - Required: Iron Arming Sword, a Steel Arming Sword, or a Rapier."
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_kaskara
+	category = list("Триумфы")
+	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkit_ida
+	name = "Morphing Elixir, 'Ida' - Required: Iron Shortsword or a Steel Shortsword"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ida
+	category = list("Триумфы")
+	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkit_hwi
+	name = "Morphing Elixir, 'Hwi' - Required: Iron Hunting Sword, an Iron Dueling Messer, a Steel Messer, a Steel Hunting Sword, or a Falchion"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_hwi
+	category = list("Триумфы")
+	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkit_ngombe
+	name = "Morphing Elixir, 'Ngombe' - Required: Iron Hunting Sword, an Iron Dueling Messer, a Steel Messer, a Steel Hunting Sword, or a Falchion"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ngombe
+	category = list("Триумфы")
+	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkit_ada
+	name = "Morphing Elixir, 'Ada' - Required: Iron Sabre, a Steel Sabre, a Falx, or a Falchion"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ada
+	category = list("Триумфы")
+	triumph_cost = 6
+
+/datum/loadout_item/triumph_weaponkit_sengese
+	name = "Morphing Elixir, 'Sengese' - Required: Iron Sabre, a Steel Sabre, a Falx, or a Falchion"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_sengese
+	category = list("Триумфы")
+	triumph_cost = 6
+
 // -5 TRI Minisection.
 
 /datum/loadout_item/triumph_shortsatchel
@@ -1431,6 +1491,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 2
 
+/datum/loadout_item/donator_strudel3
+	name = "Donator Kit - Etruscan Design Cloak - Required: Poncho (Only Woman, No Small Races)"
+	category = list("Плащи", "Донат")
+	path = /obj/item/enchantingkit/strudel3
+	donatitem = TRUE
+
+/datum/loadout_item/donator_strudel4
+	name = "Donator Kit - Form-fitting Padded Gambeson - Required: Padded Gambeson (Only Woman, No Small Races)"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/strudel4
+	donatitem = TRUE
+
 /datum/loadout_item/donator_bigfoot_axe
 	name = "Donator Kit - Gilded GreatAxe - Required: Steel Greataxe"
 	category = list("Оружие", "Донат")
@@ -1458,14 +1530,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donator_eiren5
 	name = "Donator Kit - Glintstone Longsword - Required: Longsword"
 	path = /obj/item/enchantingkit/weapon/eiren_m
-	category = list("Одежда", "Донат")
+	category = list("Оружие", "Донат")
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/donator_eiren6
 	name = "Donator Kit - Stygian Longsword - Required: Longsword"
 	path = /obj/item/enchantingkit/weapon/eirensword
-	category = list("Одежда", "Донат")
+	category = list("Оружие", "Донат")
 	donatitem = TRUE
 	donat_tier = 2
 
@@ -1652,6 +1724,66 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donator_weaponkit_estoc
 	name = "Donator Item - Azurian Estoc - Required: Estoc Or Stecher"
 	path = /obj/item/enchantingkit/triumph_weaponkit_estoc
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_fancymace
+	name = "Donator Item - 'Rungu-Shishpar Mace' - Required: Iron Mace, an Iron Warhammer, a Steel Mace, a Steel Warhammer, or a Silver Mace."
+	path = /obj/item/enchantingkit/triumph_weaponkit_fancymace
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_krisdagger
+	name = "Donator Item - 'Kris' - Required: Bauernwehr, a Combat Knife, an Iron Dagger, or a Steel Dagger."
+	path = /obj/item/enchantingkit/triumph_weaponkit_kris
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_njoradagger
+	name = "Donator Item - 'Njora' - Required: Steel Dagger, an Iron Dagger, a Hunting Knife, or a Combat Knife."
+	path = /obj/item/enchantingkit/triumph_weaponkit_njora
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_alloywhip
+	name = "Donator Item - 'Alloytip Whip' - Required: Bronze Whip, a Whip, or a Silver Whip."
+	path = /obj/item/enchantingkit/triumph_weaponkit_whip
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_kaskara
+	name = "Donator Item - 'Kaskara' - Required: Iron Arming Sword, a Steel Arming Sword, or a Rapier."
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_kaskara
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_ida
+	name = "Donator Item - 'Ida' - Required: Iron Shortsword or a Steel Shortsword"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ida
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_hwi
+	name = "Donator Item - 'Hwi' - Required: Iron Hunting Sword, an Iron Dueling Messer, a Steel Messer, a Steel Hunting Sword, or a Falchion"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_hwi
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_ngombe
+	name = "Donator Item - 'Ngombe' - Required: Iron Hunting Sword, an Iron Dueling Messer, a Steel Messer, a Steel Hunting Sword, or a Falchion"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ngombe
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_ada
+	name = "Donator Item - 'Ada' - Required: Iron Sabre, a Steel Sabre, a Falx, or a Falchion"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ada
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_weaponkit_sengese
+	name = "Donator Item - 'Sengese' - Required: Iron Sabre, a Steel Sabre, a Falx, or a Falchion"
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_sengese
 	category = list("Оружие", "Донат")
 	donatitem = TRUE
 
@@ -2446,6 +2578,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/shoes/roguetown/boots/hammerhold_boots
 	donatitem = TRUE
 
+/datum/loadout_item/etruscan_boots
+	name = "Donator Kit - Этруские ботфорты (только для женщин)"
+	category = list ("Обувь", "Донат")
+	path = /obj/item/enchantingkit/etruscan_boots
+	donatitem = TRUE
+
 // Аксессуары
 
 /datum/loadout_item/donat/hammerhold_sash
@@ -2459,7 +2597,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/storage/belt/rogue/leather/suspenders
 	donatitem = TRUE
-
+ 
 /datum/loadout_item/woolencollar
 	name = "Woolen Collar"
 	category = list("Аксессуары", "Донат")
@@ -2556,6 +2694,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/weapon/maesune_shield
 	donatitem = TRUE
 	donat_tier = 2
+
+/datum/loadout_item/donator_her_verdict
+	name = "Donator Kit - Her Verdict - Required: Kriegmesser"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/herverdict
+	donatitem = TRUE
+	donat_tier = 2
+	donat_ignore = list("uedhighcommand","imony")
 
 /datum/loadout_item/donator_maesune_sabre
 	name = "Donator Kit - Decorated Sabre - Required: Falchion, Longsword, Sword, Silver Sword Or Kriegmesser"

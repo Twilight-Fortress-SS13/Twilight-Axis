@@ -87,16 +87,8 @@
 	..()
 	var/atom/movable/screen/using
 
-	using = new /atom/movable/screen/ghost/orbit(null, src)
-	using.screen_loc = ui_ghost_orbit
-	static_inventory += using
-
 	using = new /atom/movable/screen/ghost/reenter_corpse(null, src)
 	using.screen_loc = ui_ghost_reenter_corpse
-	static_inventory += using
-
-	using = new /atom/movable/screen/ghost/teleport(null, src)
-	using.screen_loc = ui_ghost_teleport
 	static_inventory += using
 
 	using =  new /atom/movable/screen/backhudl/ghost()

@@ -27,7 +27,7 @@
 	ckeywhitelist = list("eekasqueak")
 	sort_category = "Donator"
 
-/datum/loadout_item/donator_strudel1
+/datum/loadout_item/donator/strudel1
 	name = "Donator Kit - Grenzelhoftian Mage Vest"
 	path = /obj/item/enchantingkit/strudel1
 	ckeywhitelist = list("toasterstrudes")
@@ -35,6 +35,16 @@
 /datum/loadout_item/donator/strudel2
 	name = "Donator Kit - Xylixian Fasching Leotard"
 	path = /obj/item/enchantingkit/strudel2
+	ckeywhitelist = list("toasterstrudes")
+
+/datum/loadout_item/donator/strudel3
+	name = "Donator Kit - Etruscan Design Cloak"
+	path = /obj/item/enchantingkit/strudel3
+	ckeywhitelist = list("toasterstrudes")
+
+/datum/loadout_item/donator/strudel4
+	name = "Donator Kit - Form-fitting Padded Gambeson"
+	path = /obj/item/enchantingkit/strudel4
 	ckeywhitelist = list("toasterstrudes")
 
 /datum/loadout_item/donator/bat

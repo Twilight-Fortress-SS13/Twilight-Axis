@@ -5,10 +5,9 @@
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(
-		STATKEY_WIL = 2,
-		STATKEY_SPD = 2,
+		STATKEY_SPD = 1,
+		STATKEY_WIL = 1,
 		STATKEY_PER = 1,
-		STATKEY_INT = 1,
 		STATKEY_STR = -2
 	)
 	subclass_skills = list(
@@ -159,7 +158,7 @@
 				H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
 				H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark)
 				H.mind?.current.faction += "[H.name]_faction"
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
 	armor = /obj/item/clothing/suit/roguetown/armor/leather
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/iron
@@ -171,7 +170,7 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_2)	//Capped to T2 miracles.
 
-	var/weapons = list("Dagger + Parrying Dagger","Rapier + Parrying Dagger","Recurve Bow + Dagger","Slurbow + Dagger")
+	var/weapons = list("Dagger + Parrying Dagger","Rapier + Parrying Dagger","Recurve Bow + Dagger","Crossbow + Dagger")
 	var/weapon_choice = input(H,"Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 	switch(weapon_choice)
 		if("Dagger + Parrying Dagger")
@@ -187,25 +186,22 @@
 			r_hand =/obj/item/rogueweapon/huntingknife/idagger/steel/parrying
 			beltl = /obj/item/rogueweapon/scabbard/sword
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_APPRENTICE, TRUE)
 			H.change_stat(STATKEY_SPD, 2)
 			H.change_stat(STATKEY_INT, 1)
 		if("Recurve Bow + Dagger")
-			l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/special
+			l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel
 			beltl = /obj/item/quiver/arrows
 			r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
 			H.change_stat(STATKEY_PER, 2)
 			H.change_stat(STATKEY_SPD, 1)
 			H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_JOURNEYMAN, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_APPRENTICE, TRUE)
-		if("Slurbow + Dagger")
-			l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/special
-			r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow
-			beltl = /obj/item/quiver/bolt/light
+		if("Сrossbow + Dagger")
+			l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel
+			r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
+			beltl = /obj/item/quiver/bolt
 			H.change_stat(STATKEY_PER, 2)
 			H.change_stat(STATKEY_SPD, 1)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_JOURNEYMAN, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_APPRENTICE, TRUE)
 
 	// -- Start of section for god specific bonuses --
 	if(H.patron?.type == /datum/patron/divine/undivided)

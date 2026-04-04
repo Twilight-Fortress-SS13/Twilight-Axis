@@ -16,9 +16,9 @@
 	whitelist_req = TRUE
 	advclass_cat_rolls = list(CTAG_MAYOR = 2)
 	give_bank_account = TRUE
-	min_pq = 5 
+	min_pq = 8
 	max_pq = null
-	round_contrib_points = 5
+	round_contrib_points = 3
 
 	cmode_music = 'sound/music/combat_poacher.ogg'
 	job_traits = list(TRAIT_SEEPRICES, TRAIT_EMPATH, TRAIT_INTELLECTUAL,)

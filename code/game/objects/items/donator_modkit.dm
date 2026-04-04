@@ -317,6 +317,18 @@
 	target_items = list(/obj/item/clothing/cloak/templar/xylixian)
 	result_item = /obj/item/clothing/cloak/templar/xylixian/faux
 
+/obj/item/enchantingkit/strudel3
+	name = "'Etruscan Design Cloak' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Poncho"
+	target_items = list(/obj/item/clothing/cloak/poncho)
+	result_item = /obj/item/clothing/cloak/poncho/dittocloak
+
+/obj/item/enchantingkit/strudel4
+	name = "'Form-fitting Padded Gambeson' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Padded Gambeson"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/gambeson/heavy)
+	result_item = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/strudels
+
 //Bat - Custom harp type
 /obj/item/enchantingkit/bat
 	name = "'Handcrafted Harp' morphing elixir"
