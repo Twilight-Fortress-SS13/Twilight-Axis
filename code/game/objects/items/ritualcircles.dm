@@ -1109,6 +1109,12 @@
 	if(!target.mind.active)
 		to_chat(user, "Necra is not done with [target], yet.")
 		return
+	if(HAS_TRAIT(target, TRAIT_DNR))
+		to_chat(user, span_danger("None of the divine have them. Their only chance is spent. Where did they go?"))
+		return
+	if(HAS_TRAIT(target, TRAIT_NECRAS_VOW))
+		to_chat(user, span_warning("This one has pledged themselves whole to Necra. They are Hers."))
+		return
 	if(target.mob_biotypes & MOB_UNDEAD) //positive energy harms the undead
 		target.visible_message(span_danger("[target] is unmade by divine magic! The Toll is accepted, and [target] is dragged to ever-death!"), span_userdanger("I'm unmade by divine magic!"))
 		target.gib()

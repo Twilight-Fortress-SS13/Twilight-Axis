@@ -357,6 +357,7 @@
 			weapons += "Decablade"
 		if(/datum/patron/divine/noc)
 			weapons += "Moonlight Khopesh"
+			weapons += "Moonlight Kriegmesser"
 		if(/datum/patron/divine/necra)
 			weapons += "Swift End"
 			weapons += "The Equipoise" //TA EDIT
@@ -421,6 +422,10 @@
 		if("Moonlight Khopesh")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/sabre/nockhopesh(H))
 			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
+		if("Moonlight Kriegmesser")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/long/nockriegmesser(H))
+			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Swift End")
 			H.put_in_hands(new /obj/item/rogueweapon/flail/sflail/necraflail(H))

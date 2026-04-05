@@ -1431,6 +1431,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 2
 
+/datum/loadout_item/donator_strudel3
+	name = "Donator Kit - Etruscan Design Cloak - Required: Poncho (Only Woman, No Small Races)"
+	category = list("Плащи", "Донат")
+	path = /obj/item/enchantingkit/strudel3
+	donatitem = TRUE
+
+/datum/loadout_item/donator_strudel4
+	name = "Donator Kit - Form-fitting Padded Gambeson - Required: Padded Gambeson (Only Woman, No Small Races)"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/strudel4
+	donatitem = TRUE
+
 /datum/loadout_item/donator_bigfoot_axe
 	name = "Donator Kit - Gilded GreatAxe - Required: Steel Greataxe"
 	category = list("Оружие", "Донат")
@@ -2446,6 +2458,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/shoes/roguetown/boots/hammerhold_boots
 	donatitem = TRUE
 
+/datum/loadout_item/etruscan_boots
+	name = "Donator Kit - Этруские ботфорты (только для женщин)"
+	category = list ("Обувь", "Донат")
+	path = /obj/item/enchantingkit/etruscan_boots
+	donatitem = TRUE
+
 // Аксессуары
 
 /datum/loadout_item/donat/hammerhold_sash
@@ -2459,7 +2477,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/storage/belt/rogue/leather/suspenders
 	donatitem = TRUE
-
+ 
 /datum/loadout_item/woolencollar
 	name = "Woolen Collar"
 	category = list("Аксессуары", "Донат")

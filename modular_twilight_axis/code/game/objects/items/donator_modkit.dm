@@ -134,3 +134,11 @@
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Coat"
 	target_items = list(/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat)
 	result_item = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician
+
+// Etrusca
+/obj/item/enchantingkit/etruscan_boots
+	name = "'Etruscan jackboots' morphing elixer (Only woman, no small races)"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Leather Boots or Heavy Leather Boots"
+	target_items = list(/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots/heavy,
+	/obj/item/clothing/shoes/roguetown/boots/leather = /obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots)
+	icon_loadout = /obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots
