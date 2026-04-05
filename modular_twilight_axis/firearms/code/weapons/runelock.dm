@@ -69,7 +69,7 @@
 		else
 			to_chat(user, "<span class='warning'>Я совершенно не понимаю, как этим пользоваться!</span>")
 	else
-		if(alt_intents)
+		if(alt_grips)
 			altgrip(user)
 		if(gripped_intents)
 			wield(user)
@@ -183,7 +183,7 @@
 	..()
 
 /obj/item/ammo_box/magazine/internal/shot/twilight_runelock
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock
 	caliber = "runed_sphere"
 	max_ammo = 1
 	start_empty = TRUE

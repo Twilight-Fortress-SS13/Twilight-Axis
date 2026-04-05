@@ -67,6 +67,13 @@
 		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle)
 	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle
 
+//Her Verdict - Kriegmesser
+/obj/item/enchantingkit/weapon/herverdict
+	name = "'Her Verdict' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Kriegmesser"
+	target_items = list(/obj/item/rogueweapon/sword/long/kriegmesser)
+	result_item = /obj/item/rogueweapon/sword/long/kriegmesser/donat_astrata
+
 //Zydras donator item - bathmatron padded dress
 /obj/item/enchantingkit/zydras
 	name = "'Gold-Black silky dress morphing elixir"
