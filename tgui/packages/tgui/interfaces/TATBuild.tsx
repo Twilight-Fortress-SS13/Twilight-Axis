@@ -43,7 +43,7 @@ type ItemEntry = {
   category?: string;
   unlock_type?: string;
   unlock_key?: string;
-  slot_group?: string;
+  slot_group?: string | null;
   amount: number;
   unlocked: boolean;
 };
@@ -52,7 +52,7 @@ type LoadoutEntry = {
   name: string;
   cost: number;
   category?: string;
-  slot_group?: string;
+  slot_group?: string | null;
   amount: number;
   equip: number;
   bag: number;
@@ -171,11 +171,15 @@ const PointsPanel = ({ data }: { data: Data }) => {
   );
 };
 
-const StatsTab = ({ data, act }: { data: Data; act: (action: string, payload?: object) => void }) => {
+const StatsTab = ({
+  data,
+  act,
+}: {
+  data: Data;
+  act: (action: string, payload?: object) => void;
+}) => {
   const rows = useMemo(() => {
-    return Object.entries(data.available_stats || {}).sort((a, b) =>
-      (a[1].name || a[0]).localeCompare(b[1].name || b[0]),
-    );
+    return Object.entries(data.available_stats || {});
   }, [data.available_stats]);
 
   return (
@@ -313,15 +317,15 @@ const TraitsTab = ({ data, act }: { data: Data; act: Function }) => {
 
     Object.values(groups).forEach((group) => {
       group.available.sort((a, b) =>
-        (a[1].name || a[0]).localeCompare(b[1].name || b[0]),
+        (a[1].name || a[0]).localeCompare(b[1].name || b[0])
       );
       group.selected.sort((a, b) =>
-        (a[1].name || a[0]).localeCompare(b[1].name || b[0]),
+        (a[1].name || a[0]).localeCompare(b[1].name || b[0])
       );
     });
 
     return Object.entries(groups).sort((a, b) =>
-      a[1].categoryName.localeCompare(b[1].categoryName),
+      a[1].categoryName.localeCompare(b[1].categoryName)
     );
   }, [traitEntries]);
 
@@ -398,14 +402,14 @@ const TraitsTab = ({ data, act }: { data: Data; act: Function }) => {
 const ItemsTab = ({ data, act }: { data: Data; act: Function }) => {
   const rows = useMemo(() => {
     return Object.entries(data.available_items || {}).sort((a, b) =>
-      (a[1].name || a[0]).localeCompare(b[1].name || b[0]),
+      (a[1].name || a[0]).localeCompare(b[1].name || b[0])
     );
   }, [data.available_items]);
 
   return (
     <Section title="Items">
       <Stack vertical>
-        {rows.length ? rows.map(([itemPath, entry]) => (
+        {rows.map(([itemPath, entry]) => (
           <NumericRow
             key={itemPath}
             title={entry.name || itemPath}
@@ -416,15 +420,14 @@ const ItemsTab = ({ data, act }: { data: Data; act: Function }) => {
             disabledRemove={(entry.amount || 0) <= 0}
             extra={
               <Box>
-                {entry.category ? `Category: ${entry.category}` : 'Category: item'}
+                {entry.category ? `Category: ${entry.category}` : 'Category: unknown'}
                 {entry.slot_group ? ` | Slot group: ${entry.slot_group}` : ''}
                 {' | '}Cost: {entry.cost}
+                {' | '}{entry.unlocked ? 'Unlocked' : 'Locked'}
               </Box>
             }
           />
-        )) : (
-          <NoticeBox>No items are currently available for the selected traits.</NoticeBox>
-        )}
+        ))}
       </Stack>
     </Section>
   );
@@ -433,59 +436,58 @@ const ItemsTab = ({ data, act }: { data: Data; act: Function }) => {
 const LoadoutTab = ({ data, act }: { data: Data; act: Function }) => {
   const rows = useMemo(() => {
     return Object.entries(data.loadout || {}).sort((a, b) =>
-      (a[1].name || a[0]).localeCompare(b[1].name || b[0]),
+      (a[1].name || a[0]).localeCompare(b[1].name || b[0])
     );
   }, [data.loadout]);
 
   return (
     <Section title="Loadout">
-      <Stack vertical>
-        {!rows.length && (
-          <NoticeBox>
-            Select some items first. Then you can decide what starts equipped and what goes into the backpack.
-          </NoticeBox>
-        )}
+      {!rows.length ? (
+        <NoticeBox>No selected items yet.</NoticeBox>
+      ) : (
+        <Stack vertical>
+          {rows.map(([itemPath, entry]) => (
+            <Box
+              key={itemPath}
+              style={{
+                padding: '8px 0',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+              }}>
+              <Box bold>{entry.name}</Box>
+              <Box mt={0.5} mb={1}>
+                Total: {entry.amount}
+                {' | '}Equip: {entry.equip}
+                {' | '}Bag: {entry.bag}
+                {entry.slot_group ? ` | Slot: ${entry.slot_group}` : ''}
+              </Box>
 
-        {rows.map(([itemPath, entry]) => (
-          <Box
-            key={itemPath}
-            style={{
-              padding: '8px 0',
-              borderBottom: '1px solid rgba(255,255,255,0.06)',
-            }}>
-            <Box bold>{entry.name}</Box>
-            <Box mb={1} style={{ opacity: 0.85 }}>
-              Total: {entry.amount}
-              {entry.slot_group ? ` | Slot group: ${entry.slot_group}` : ''}
-              {' | '}Cost: {entry.cost}
+              <Stack>
+                <Stack.Item grow>
+                  <NumericRow
+                    title="Equip on spawn"
+                    value={entry.equip}
+                    onAdd={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
+                    onRemove={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
+                    disabledAdd={entry.bag <= 0}
+                    disabledRemove={entry.equip <= 0}
+                  />
+                </Stack.Item>
+
+                <Stack.Item grow>
+                  <NumericRow
+                    title="Put into bag"
+                    value={entry.bag}
+                    onAdd={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
+                    onRemove={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
+                    disabledAdd={entry.equip <= 0}
+                    disabledRemove={entry.bag <= 0}
+                  />
+                </Stack.Item>
+              </Stack>
             </Box>
-
-            <Stack>
-              <Stack.Item grow>
-                <NumericRow
-                  title="Start Equipped"
-                  value={entry.equip || 0}
-                  onAdd={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
-                  onRemove={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
-                  disabledAdd={(entry.bag || 0) <= 0}
-                  disabledRemove={(entry.equip || 0) <= 0}
-                />
-              </Stack.Item>
-
-              <Stack.Item grow>
-                <NumericRow
-                  title="Put In Backpack"
-                  value={entry.bag || 0}
-                  onAdd={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
-                  onRemove={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
-                  disabledAdd={(entry.equip || 0) <= 0}
-                  disabledRemove={(entry.bag || 0) <= 0}
-                />
-              </Stack.Item>
-            </Stack>
-          </Box>
-        ))}
-      </Stack>
+          ))}
+        </Stack>
+      )}
     </Section>
   );
 };
@@ -495,7 +497,7 @@ export const TATBuild = () => {
   const [tab, setTab] = useState<TabKey>('stats');
 
   return (
-    <Window title="TAT Build" width={900} height={780}>
+    <Window title="TAT Build" width={860} height={780}>
       <Window.Content scrollable>
         <Stack vertical>
           <PointsPanel data={data} />

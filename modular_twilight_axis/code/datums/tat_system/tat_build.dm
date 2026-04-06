@@ -63,9 +63,9 @@
 
 /datum/tat_build/proc/get_effective_stat_points_total()
 	var/total = points_stats
-	if(TAT_TRAIT_BONUS_STAT_POOL in traits)
+	if(traits[TAT_TRAIT_BONUS_STAT_POOL])
 		total += TAT_BUILD_STAT_BONUS_EXTRA_STATS
-	if(TAT_TRAIT_WANTED in traits)
+	if(traits[TAT_TRAIT_WANTED])
 		total += TAT_BUILD_STAT_BONUS_WANTED
 	return total
 
@@ -196,9 +196,9 @@
 
 /datum/tat_build/proc/get_combat_skill_cap()
 	var/cap = TAT_SKILL_COMBAT_CAP_DEFAULT
-	if(TAT_TRAIT_WARRIOR_EXPERT in traits)
+	if(traits[TAT_TRAIT_WARRIOR_EXPERT])
 		cap = max(cap, TAT_SKILL_COMBAT_CAP_TRAIT_1)
-	if(TAT_TRAIT_WARRIOR_MASTER in traits)
+	if(traits[TAT_TRAIT_WARRIOR_MASTER])
 		cap = max(cap, TAT_SKILL_COMBAT_CAP_TRAIT_2)
 	return cap
 
@@ -212,11 +212,11 @@
 		if(TAT_SUPPLY_IRON)
 			return TRUE
 		if(TAT_SUPPLY_BRONZE)
-			return (TAT_TRAIT_BRONZE_SUPPLIER in traits)
+			return !!traits[TAT_TRAIT_BRONZE_SUPPLIER]
 		if(TAT_SUPPLY_SILVER)
-			return (TAT_TRAIT_SILVER_SUPPLIER in traits)
+			return !!traits[TAT_TRAIT_SILVER_SUPPLIER]
 		if(TAT_SUPPLY_STEEL)
-			return (TAT_TRAIT_STEEL_SUPPLIER in traits)
+			return !!traits[TAT_TRAIT_STEEL_SUPPLIER]
 	return FALSE
 
 /datum/tat_build/proc/can_use_armor_family(armor_family)
@@ -224,11 +224,11 @@
 		if(TAT_ARMOR_CLOTH)
 			return TRUE
 		if(TAT_ARMOR_LEATHER)
-			return (TAT_TRAIT_LEATHER_SUPPLIER in traits)
+			return !!traits[TAT_TRAIT_LEATHER_SUPPLIER]
 		if(TAT_ARMOR_MAIL)
-			return (TAT_TRAIT_MAIL_SUPPLIER in traits)
+			return !!traits[TAT_TRAIT_MAIL_SUPPLIER]
 		if(TAT_ARMOR_PLATE)
-			return (TAT_TRAIT_PLATE_SUPPLIER in traits)
+			return !!traits[TAT_TRAIT_PLATE_SUPPLIER]
 	return FALSE
 
 /datum/tat_build/proc/can_use_item_entry(list/entry)
@@ -311,8 +311,7 @@
 	for(var/stat_id in stat_order)
 		if(!(stat_id in available_stats))
 			continue
-		var/list/entry = available_stats[stat_id]
-		result[stat_id] = entry
+		result[stat_id] = available_stats[stat_id]
 	return result
 
 /datum/tat_build/proc/build_ui_skills()
@@ -330,6 +329,12 @@
 		)
 	return result
 
+/datum/tat_build/proc/build_ui_selected_traits()
+	var/list/result = list()
+	for(var/trait_id in traits)
+		result += trait_id
+	return result
+
 /datum/tat_build/proc/build_ui_traits()
 	var/list/result = list()
 	for(var/trait_id in available_traits)
@@ -340,7 +345,7 @@
 			"category" = entry["category"],
 			"category_name" = entry["category_name"],
 			"desc" = entry["desc"],
-			"selected" = (trait_id in traits),
+			"selected" = !!traits[trait_id],
 		)
 	return result
 
@@ -416,9 +421,9 @@
 	return FALSE
 
 /datum/tat_build/proc/has_invalid_trait_dependencies()
-	if((TAT_TRAIT_WARRIOR_MASTER in traits) && !(TAT_TRAIT_WARRIOR_EXPERT in traits))
+	if(traits[TAT_TRAIT_WARRIOR_MASTER] && !traits[TAT_TRAIT_WARRIOR_EXPERT])
 		return TRUE
-	if((TAT_TRAIT_BARDIC_INSPIRATION_T2 in traits) && !(TAT_TRAIT_BARDIC_INSPIRATION_T1 in traits))
+	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2] && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
 		return TRUE
 
 	for(var/trait_a in traits)
@@ -468,28 +473,28 @@
 	var/list/cleaned = list()
 	for(var/trait_id in traits)
 		if(trait_id in available_traits)
-			cleaned += trait_id
+			cleaned[trait_id] = TRUE
 	traits = cleaned
 
-	if((TAT_TRAIT_WARRIOR_MASTER in traits) && !(TAT_TRAIT_WARRIOR_EXPERT in traits))
+	if(traits[TAT_TRAIT_WARRIOR_MASTER] && !traits[TAT_TRAIT_WARRIOR_EXPERT])
 		traits -= TAT_TRAIT_WARRIOR_MASTER
 
-	if((TAT_TRAIT_BARDIC_INSPIRATION_T2 in traits) && !(TAT_TRAIT_BARDIC_INSPIRATION_T1 in traits))
+	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2] && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
 		traits -= TAT_TRAIT_BARDIC_INSPIRATION_T2
 
-	if((TAT_TRAIT_RESIDENT in traits) && (TRAIT_OUTLANDER in traits))
+	if(traits[TAT_TRAIT_RESIDENT] && traits[TRAIT_OUTLANDER])
 		traits -= TRAIT_OUTLANDER
-	if((TAT_TRAIT_RESIDENT in traits) && (TAT_TRAIT_WANTED in traits))
+	if(traits[TAT_TRAIT_RESIDENT] && traits[TAT_TRAIT_WANTED])
 		traits -= TAT_TRAIT_WANTED
-	if((TAT_TRAIT_RESIDENT in traits) && (TAT_TRAIT_BONUS_STAT_POOL in traits))
+	if(traits[TAT_TRAIT_RESIDENT] && traits[TAT_TRAIT_BONUS_STAT_POOL])
 		traits -= TAT_TRAIT_BONUS_STAT_POOL
 
 	while(get_remaining_trait_points() < 0)
 		var/changed = FALSE
 		for(var/trait_id in traits.Copy())
-			if(trait_id == TAT_TRAIT_WARRIOR_EXPERT && (TAT_TRAIT_WARRIOR_MASTER in traits))
+			if(trait_id == TAT_TRAIT_WARRIOR_EXPERT && traits[TAT_TRAIT_WARRIOR_MASTER])
 				continue
-			if(trait_id == TAT_TRAIT_BARDIC_INSPIRATION_T1 && (TAT_TRAIT_BARDIC_INSPIRATION_T2 in traits))
+			if(trait_id == TAT_TRAIT_BARDIC_INSPIRATION_T1 && traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
 				continue
 			traits -= trait_id
 			changed = TRUE
@@ -498,17 +503,17 @@
 		if(!changed)
 			break
 
-	if(!(TAT_TRAIT_BRONZE_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_BRONZE_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_BRONZE)
-	if(!(TAT_TRAIT_SILVER_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_SILVER_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_SILVER)
-	if(!(TAT_TRAIT_STEEL_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_STEEL_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_STEEL)
-	if(!(TAT_TRAIT_LEATHER_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_LEATHER_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_LEATHER)
-	if(!(TAT_TRAIT_MAIL_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_MAIL_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_MAIL)
-	if(!(TAT_TRAIT_PLATE_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_PLATE_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_PLATE)
 
 /datum/tat_build/proc/sanitize_skills()
@@ -685,12 +690,12 @@
 	return TRUE
 
 /datum/tat_build/proc/add_trait(trait_id)
-	if(!trait_id || !(trait_id in available_traits) || (trait_id in traits))
+	if(!trait_id || !(trait_id in available_traits) || traits[trait_id])
 		return FALSE
 
-	if(trait_id == TAT_TRAIT_WARRIOR_MASTER && !(TAT_TRAIT_WARRIOR_EXPERT in traits))
+	if(trait_id == TAT_TRAIT_WARRIOR_MASTER && !traits[TAT_TRAIT_WARRIOR_EXPERT])
 		return FALSE
-	if(trait_id == TAT_TRAIT_BARDIC_INSPIRATION_T2 && !(TAT_TRAIT_BARDIC_INSPIRATION_T1 in traits))
+	if(trait_id == TAT_TRAIT_BARDIC_INSPIRATION_T2 && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
 		return FALSE
 
 	for(var/existing_trait in traits)
@@ -700,31 +705,31 @@
 	if(get_remaining_trait_points() < get_trait_cost(trait_id))
 		return FALSE
 
-	traits += trait_id
+	traits[trait_id] = TRUE
 	dirty = TRUE
 	return TRUE
 
 /datum/tat_build/proc/remove_trait(trait_id)
-	if(!trait_id || !(trait_id in traits))
+	if(!trait_id || !traits[trait_id])
 		return FALSE
-	if(trait_id == TAT_TRAIT_WARRIOR_EXPERT && (TAT_TRAIT_WARRIOR_MASTER in traits))
+	if(trait_id == TAT_TRAIT_WARRIOR_EXPERT && traits[TAT_TRAIT_WARRIOR_MASTER])
 		return FALSE
-	if(trait_id == TAT_TRAIT_BARDIC_INSPIRATION_T1 && (TAT_TRAIT_BARDIC_INSPIRATION_T2 in traits))
+	if(trait_id == TAT_TRAIT_BARDIC_INSPIRATION_T1 && traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
 		return FALSE
 
 	traits -= trait_id
 
-	if(!(TAT_TRAIT_BRONZE_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_BRONZE_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_BRONZE)
-	if(!(TAT_TRAIT_SILVER_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_SILVER_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_SILVER)
-	if(!(TAT_TRAIT_STEEL_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_STEEL_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_STEEL)
-	if(!(TAT_TRAIT_LEATHER_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_LEATHER_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_LEATHER)
-	if(!(TAT_TRAIT_MAIL_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_MAIL_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_MAIL)
-	if(!(TAT_TRAIT_PLATE_SUPPLIER in traits))
+	if(!traits[TAT_TRAIT_PLATE_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_PLATE)
 
 	for(var/skill_type in skills.Copy())
@@ -847,8 +852,8 @@
 
 	if(islist(_traits))
 		for(var/trait_id in _traits)
-			if(trait_id in available_traits && !(trait_id in traits))
-				traits += trait_id
+			if(trait_id in available_traits)
+				traits[trait_id] = TRUE
 
 	if(islist(_skills))
 		for(var/skill_type in _skills)
@@ -909,42 +914,42 @@
 	if(!H)
 		return
 
-	if(TRAIT_TRAINED_SMITH in traits)
+	if(traits[TRAIT_TRAINED_SMITH])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/smelting", 3)
 
-	if(TRAIT_SMITHING_EXPERT in traits)
+	if(traits[TRAIT_SMITHING_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/smithing", 3)
 
-	if(TRAIT_ALCHEMY_EXPERT in traits)
+	if(traits[TRAIT_ALCHEMY_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/alchemy", 3)
 
-	if(TRAIT_MEDICINE_EXPERT in traits)
+	if(traits[TRAIT_MEDICINE_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/medicine", 3)
 
-	if(TRAIT_HOMESTEAD_EXPERT in traits)
+	if(traits[TRAIT_HOMESTEAD_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/carpentry", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/masonry", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/crafting", 3)
 
-	if(TRAIT_SURVIVAL_EXPERT in traits)
+	if(traits[TRAIT_SURVIVAL_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/butchering", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/traps", 3)
 
-	if(TRAIT_SEWING_EXPERT in traits)
+	if(traits[TRAIT_SEWING_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/sewing", 3)
 
-	if(TRAIT_SEEDKNOW in traits)
+	if(traits[TRAIT_SEEDKNOW])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/farming", 3)
 
-	if(TRAIT_CAUTIOUS_FISHER in traits)
+	if(traits[TRAIT_CAUTIOUS_FISHER])
 		grant_skill_bonus_if_exists(H, "/datum/skill/labor/fishing", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/fishing", 3)
 
-	if(TRAIT_SQUIRE_REPAIR in traits)
+	if(traits[TRAIT_SQUIRE_REPAIR])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/armorsmithing", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/weaponsmithing", 3)
 
-	if((TRAIT_ARCYNE in traits) || (TAT_TRAIT_SPELLBLADE in traits))
+	if(traits[TRAIT_ARCYNE] || traits[TAT_TRAIT_SPELLBLADE])
 		grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcane", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcana", 3)
 
@@ -977,10 +982,10 @@
 			else
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
 
-	if(TAT_TRAIT_RESIDENT in traits)
+	if(traits[TAT_TRAIT_RESIDENT])
 		ADD_TRAIT(H, TRAIT_RESIDENT, TAT_TRAIT_SOURCE)
 
-	if(TAT_TRAIT_SPELLBLADE in traits)
+	if(traits[TAT_TRAIT_SPELLBLADE])
 		ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
 		if(H.mind)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/recall_weapon)
@@ -988,15 +993,15 @@
 			H.mind.AddSpell(new /datum/action/cooldown/spell/bind_weapon)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 
-	if(TAT_TRAIT_SOUNDBREAKER in traits)
+	if(traits[TAT_TRAIT_SOUNDBREAKER])
 		H.LoadComponent(/datum/component/combo_core/soundbreaker)
 
-	if(TAT_TRAIT_RONIN in traits)
+	if(traits[TAT_TRAIT_RONIN])
 		H.LoadComponent(/datum/component/combo_core/ronin)
 
-	if((TAT_TRAIT_BARDIC_INSPIRATION_T1 in traits) || (TAT_TRAIT_BARDIC_INSPIRATION_T2 in traits))
+	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T1] || traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
 		var/bard_tier = BARD_T1
-		if(TAT_TRAIT_BARDIC_INSPIRATION_T2 in traits)
+		if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
 			bard_tier = BARD_T2
 
 		if(!H.inspiration)
@@ -1005,10 +1010,10 @@
 		else
 			H.inspiration.grant_inspiration(H, bard_tier)
 
-	if(TAT_TRAIT_PARTY_LEADER in traits)
+	if(traits[TAT_TRAIT_PARTY_LEADER])
 		H.LoadComponent(/datum/component/tat_party_leader)
 
-	if(TAT_TRAIT_WANTED in traits)
+	if(traits[TAT_TRAIT_WANTED])
 		ADD_TRAIT(H, TRAIT_OUTLAW, TAT_TRAIT_SOURCE)
 		ADD_TRAIT(H, TRAIT_HERESIARCH, TAT_TRAIT_SOURCE)
 		wretch_select_bounty(H)
@@ -1108,7 +1113,7 @@
 	return list(
 		"stats" = build_ui_stats(),
 		"skills" = build_ui_skills(),
-		"traits" = traits.Copy(),
+		"traits" = build_ui_selected_traits(),
 		"trait_entries" = build_ui_traits(),
 		"items" = build_ui_items(),
 		"loadout" = build_ui_loadout(),
