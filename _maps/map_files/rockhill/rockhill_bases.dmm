@@ -2661,7 +2661,9 @@
 /turf/open/water/swamp/deep,
 /area/rogue/outdoors/bograt/safe)
 "pt" = (
-/obj/structure/fluff/statue/evil,
+/obj/structure/fluff/statue/evil{
+	max_integrity = 1000
+	},
 /obj/machinery/light/rogue/firebowl/standing,
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/banditcamp)

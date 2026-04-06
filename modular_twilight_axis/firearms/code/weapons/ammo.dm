@@ -161,7 +161,7 @@
 		var/obj/item/gun/ballistic/twilight_firearm/gun = fired_from
 		if(isliving(firer))
 			var/mob/living/L = firer
-			var/per_scaling = 1 + (min(L.STAPER, RANGED_STAT_SOFTCAP) * RANGED_STAT_MULT) + (max(0, L.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+			var/per_scaling = 1 + ((min(L.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, L.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
 			damage *= gun.damfactor * per_scaling
 		else
 			damage *= gun.damfactor

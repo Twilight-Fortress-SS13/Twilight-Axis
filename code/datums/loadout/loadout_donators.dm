@@ -117,9 +117,14 @@
 	path = /obj/item/enchantingkit/weapon/eirensword
 	ckeywhitelist = list("eirenxiv", "muhsollini")
 
+/datum/loadout_item/donator/eiren7
+	name = "Donator Kit - Strigidae Armet"
+	path = /obj/item/enchantingkit/eiren_helmet
+	ckeywhitelist = list("eirenxiv") 
+
 /datum/loadout_item/donator/waff
 	name = "Donator Kit - Weeper's Lathe"
-	path = /obj/item/enchantingkit/waff
+	path = /obj/item/enchantingkit/weapon/waff
 	ckeywhitelist = list("waffai")
 
 /datum/loadout_item/donator/waff2
@@ -262,5 +267,15 @@
 	name = "Donator Item - Worn Bamboo Hat"
 	path = /obj/item/clothing/head/roguetown/mentorhat/walkthewaste
 	ckeywhitelist = list("walkthewaste")
+
+/datum/loadout_item/donator/sci_flamesword
+	name = "Donator Item - Flametongue"
+	path = /obj/item/enchantingkit/sci_flame
+	ckeywhitelist = list("scidragon")
+
+/datum/loadout_item/donator/sci_sandsword
+	name = "Donator Item - Sandlash"
+	path = /obj/item/enchantingkit/sci_sand
+	ckeywhitelist = list("scidragon")
 	sort_category = "Donator"
 */

@@ -225,4 +225,4 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1, start_maxed = TRUE)
 	//Minor regen, T1 only. Cannot progress beyond that (hah). Mostly for self healing.
-	wretch_select_bounty(H)
+	bountychoice_spellblade(H)			//TA - EDIT

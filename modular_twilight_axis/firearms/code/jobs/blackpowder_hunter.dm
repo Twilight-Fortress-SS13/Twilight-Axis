@@ -31,7 +31,6 @@
 	..()
 	beltl = /obj/item/rogueweapon/scabbard/sheath
 	beltr = /obj/item/quiver/twilight_bullet/lead
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
 	backr = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife = 1,
@@ -59,6 +58,7 @@
 			if(helmchoice != "None")
 				head = helmets[helmchoice]
 			cloak = /obj/item/clothing/cloak/raincloak/green
+			shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
 			armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/iron
 			belt = /obj/item/storage/belt/rogue/leather/battleskirt/black
 			pants = /obj/item/clothing/under/roguetown/chainlegs/iron/kilt
@@ -82,7 +82,7 @@
 			shoes = /obj/item/clothing/shoes/roguetown/boots
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 			head = /obj/item/clothing/head/roguetown/hatfur
+			shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
 			H.put_in_hands(new /obj/item/natural/bundle/fibers/full(H), TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, SKILL_LEVEL_EXPERT, TRUE)
 			ADD_TRAIT(H, TRAIT_OUTDOORSMAN, TRAIT_GENERIC)
-			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_SURVIVAL_EXPERT, TRAIT_GENERIC)

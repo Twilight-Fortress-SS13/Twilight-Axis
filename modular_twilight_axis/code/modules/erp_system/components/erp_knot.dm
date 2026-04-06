@@ -123,21 +123,57 @@
 		return FALSE
 	if(!penis_org || !receiving_org)
 		return FALSE
-	
-	var/list/used_units = list()
 
+	var/datum/erp_knot_rules/R = SSerp?.knot_rules
+	var/reason = R?.can_start_knot(user, target, penis_org, receiving_org, penis_unit_id, force_level)
+	if(reason)
+		SSerp?.knot_effects?.notify_try_knot_failed(user, target, reason)
+		return FALSE
+
+	var/max_units = max(1, penis_org.count_to_action)
+
+	var/requested_unit = penis_unit_id
+	if(!isnum(requested_unit))
+		requested_unit = -1
+	requested_unit = round(requested_unit)
+
+	if(requested_unit >= 0 && requested_unit < max_units)
+		var/datum/erp_knot_link/existing_requested = get_link_for_penis_unit(penis_org, requested_unit)
+		if(existing_requested && existing_requested.is_valid())
+			if(existing_requested.receiving_org == receiving_org && existing_requested.btm == target)
+				existing_requested.note_activity()
+				return TRUE
+			return FALSE
+
+		var/datum/erp_knot_link/Lreq = new(user, target, penis_org, receiving_org, requested_unit)
+
+		if(!islupian(user))
+			record_round_statistic(STATS_KNOTTED_NOT_LUPIANS)
+		record_round_statistic(STATS_KNOTTED)
+
+		active_links += Lreq
+		_add_to_index(Lreq)
+		_register_btm_moved(Lreq.btm)
+
+		var/datum/erp_knot_effects/Ereq = SSerp?.knot_effects
+		if(Ereq)
+			Ereq.on_knot_started(src, Lreq, force_level)
+
+		start_decay()
+		return TRUE
+
+	var/list/used_units = list()
 	for(var/datum/erp_knot_link/X as anything in active_links)
 		if(!istype(X) || !X.is_valid())
 			continue
 		if(X.penis_org == penis_org)
 			used_units += X.penis_unit_id
 
-	var/max = max(1, penis_org.count_to_action)
-	if(used_units.len >= max)
+	if(used_units.len >= max_units)
 		return FALSE
 
 	var/unit = null
-	for(var/i = 0; i < max; i++)
+	for(var/i = 0; i < max_units; i++)
 		if(!(i in used_units))
 			unit = i
 			break
@@ -150,11 +186,12 @@
 	if(!islupian(user))
 		record_round_statistic(STATS_KNOTTED_NOT_LUPIANS)
 	record_round_statistic(STATS_KNOTTED)
+
 	active_links += L
 	_add_to_index(L)
 	_register_btm_moved(L.btm)
 
-	var/datum/erp_knot_effects/E2 = SSerp.knot_effects
+	var/datum/erp_knot_effects/E2 = SSerp?.knot_effects
 	if(E2)
 		E2.on_knot_started(src, L, force_level)
 

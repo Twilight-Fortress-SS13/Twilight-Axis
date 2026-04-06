@@ -13,7 +13,8 @@
 	traits_applied = list(
 		TRAIT_CIVILIZEDBARBARIAN,
 		TRAIT_ARCYNE,
-		TRAIT_NALEDI
+		TRAIT_NALEDI,
+		TRAIT_BLOOD_RESISTANCE,
 	)
 	subclass_stats = list(
 		STATKEY_STR = 1,

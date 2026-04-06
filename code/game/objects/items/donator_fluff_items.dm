@@ -223,6 +223,29 @@
 	sheathe_icon = "eirensword"
 	bigboy = TRUE
 
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/eiren_helmet
+	name = "strigidae armet"
+	desc = "An armet of distinct bird like design with a pronounced beak. \
+		Close to the teachings of Noc himself, it shields the curious gaze of the one wearing it. \
+		This one has seen some use and may be fitted with a great plume atop, to bear heraldic colors."
+	icon_state = "armetowl"
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/eiren_helmet/attackby(obj/item/W, mob/living/user, params)
+	..()
+	if(!(istype(W, /obj/item/natural/feather) && !detail_tag))
+		return
+	var/choice = input(user, "Choose a color.", "Plume") as anything in COLOR_MAP
+	user.visible_message(span_warning("[user] adds [W] to [src]."))
+	user.transferItemToLoc(W, src, FALSE, FALSE)
+	detail_color = COLOR_MAP[choice]
+	detail_tag = "_detail"
+	update_icon()
+	if(loc == user && ishuman(user))
+		var/mob/living/carbon/H = user
+		H.update_inv_head()
+
 /obj/item/clothing/head/roguetown/duelhat/pretzel
 	name = "rethrifted gravedigger's hat" 
 	desc = "A gravetender's dark leather slouch, refitted with a golden dragon-sigil. Who needs a steel skullcap when you have dumb luck? <br> \
@@ -516,3 +539,24 @@
 //WALKTHEWASTE
 /obj/item/clothing/head/roguetown/mentorhat/walkthewaste
 	armor = ARMOR_CLOTHING
+
+//SCIDRAGON
+/obj/item/rogueweapon/sword/sabre/shamshir/dono_scidragon_flame
+	name = "flametongue"
+	desc = "An eternal flame dances and flickers across the blade of this shamshir, fueled by the passion of its wielder, promising to bring the heat of the long-away desert to its victims."
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	icon_state = "sci_firetongue"
+
+/obj/item/rogueweapon/sword/sabre/shamshir/dono_scidragon_flame/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/ignitable/fluff/sci_flame)
+
+/obj/item/rogueweapon/sword/sabre/shamshir/dono_scidragon_sand
+	name = "sandlash"
+	desc = "Fury of an untamable desert sandstorm, conjured along the steel of this shamshir, destined to bite and lash at the target of its owner's ire. Or perhaps just business."
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	icon_state = "sci_sandlash"
+
+/obj/item/rogueweapon/sword/sabre/shamshir/dono_scidragon_sand/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/ignitable/fluff/sci_sand)

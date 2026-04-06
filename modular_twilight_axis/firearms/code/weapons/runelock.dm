@@ -172,7 +172,7 @@
 		var/obj/projectile/bullet/BB = CB.BB
 		BB.gunpowder_npc_critfactor *= npcdamfactor
 		BB.critfactor *= critfactor
-		var/per_scaling = 1 + (min(user.STAPER, RANGED_STAT_SOFTCAP) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+		var/per_scaling = 1 + ((min(user.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
 		BB.damage *= damfactor * per_scaling
 	cocked = FALSE
 	update_icon()

@@ -13,7 +13,8 @@
 	allowed_races = RACES_NO_CONSTRUCT
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_ACCURSED
-	min_pq = 30
+	cmode_music = "modular_twilight_axis/sound/music/combat_skeleton.ogg"
+	min_pq = 30				//better RP?
 	maximum_possible_slots = 2
 	extra_context = "You're a SKELETON, be ready to shackle your bones. Minimum PQ Required: 30"
 	traits_applied = list(
@@ -23,7 +24,7 @@
 		TRAIT_TOXIMMUNE, 
 		TRAIT_SHOCKIMMUNE, 
 		TRAIT_SILVER_WEAK,
-		TRAIT_BREADY
+		TRAIT_BREADY,
 	)
 
 	subclass_skills = list(
@@ -119,7 +120,7 @@
 			beltr = /obj/item/rogueweapon/mace/cudgel
 		if("Toter Aufrührer")
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
-			H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 2, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 3, TRUE)
 			H.adjust_skillrank(/datum/skill/combat/unarmed, 3, TRUE)
 			head = /obj/item/clothing/head/roguetown/duelhat/pretzel/skelet
 			backl = /obj/item/storage/backpack/rogue/satchel

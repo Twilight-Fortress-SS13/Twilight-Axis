@@ -23,6 +23,7 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/tanning = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE				//Fo redin anient buks
 	)
 
 /datum/outfit/job/roguetown/wretch/rogueshaman
@@ -44,8 +45,6 @@
 	backr = /obj/item/storage/backpack/rogue/satchel
 	belt = /obj/item/storage/belt/rogue/leather
 	neck = /obj/item/storage/belt/rogue/pouch/coins/poor
-	beltl = /obj/item/rogueweapon/handclaw/gronn
-	beltr = /obj/item/rogueweapon/handclaw/gronn
 	mask = /obj/item/clothing/head/roguetown/helmet/sallet/warden/wolf/wretch
 
 	switch(H.patron?.type)
@@ -71,4 +70,15 @@
 		/obj/item/rogueweapon/huntingknife/stoneknife = 1
 		)
 		
-	wretch_select_bounty(H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			GLOB.excommunicated_players += H.real_name
+			H.put_in_hands(new /obj/item/rogueweapon/handclaw/gronn)
+			H.put_in_hands(new /obj/item/rogueweapon/handclaw/gronn)
+		if("They fear me")
+			to_chat(H, span_red("Они ничтожны, как и их боги. Этими когтями я разорву их словно шавок!"))
+			wretch_select_bounty(H)
+			H.put_in_hands(new /obj/item/rogueweapon/handclaw/steel)
+			H.put_in_hands(new /obj/item/rogueweapon/handclaw/steel)
