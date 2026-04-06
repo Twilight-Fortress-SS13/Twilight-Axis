@@ -1,0 +1,4 @@
+author: "borneblood"
+delete-after: True
+changes:
+  - qol: "Aquatic Compulsion is now a toggle Miracle and has a new animation."

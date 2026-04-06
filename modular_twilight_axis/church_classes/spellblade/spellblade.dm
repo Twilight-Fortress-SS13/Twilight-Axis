@@ -8,9 +8,9 @@
 		за своё верное служение и познание в аркане вы получили доступ к арканному оружию. Вам недоступны чудеса, но взамен вы получили доступ к аркане, и не смотря на то какое оружие свет Нок не сотворил бы для вас, вы являетесь экспертом в нем."
 	outfit = /datum/outfit/job/roguetown/spellblade
 	category_tags = list(CTAG_TEMPLAR)
-	subclass_languages = list(/datum/language/grenzelhoftian, /datum/language/celestial, /datum/language/elvish)
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_NIGHT_OWL, TRAIT_ARCYNE_T3, TRAIT_NOC_LIGHT_BLESSING)
-	subclass_spellpoints = 12
+	subclass_languages = list(/datum/language/raneshi)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_NIGHT_OWL, TRAIT_ARCYNE, TRAIT_NOC_LIGHT_BLESSING)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = FALSE, "minor" = 2, "utilities" = 6)
 	maximum_possible_slots = 1
 	subclass_stats = list(
 		STATKEY_WIL = 1,
@@ -55,7 +55,7 @@
 
 	H.cmode_music = 'modular_twilight_axis/church_classes/sound/cmode_spellblade.ogg'
 	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
-	REMOVE_TRAIT(H, TRAIT_RITUALIST, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_RITUALIST, JOB_TRAIT)
 
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Church Funding.")

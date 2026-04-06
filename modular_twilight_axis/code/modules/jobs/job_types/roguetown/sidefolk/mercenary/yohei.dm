@@ -60,7 +60,8 @@
 		/obj/item/roguekey/mercenary,
 		/obj/item/flashlight/flare/torch/lantern,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun,
-		/obj/item/rogueweapon/scabbard/sheath/kazengun
+		/obj/item/rogueweapon/scabbard/sheath/kazengun,
+		/obj/item/storage/belt/rogue/pouch/coins/poor
 		)
 	H.merctype = 2
 
@@ -195,7 +196,7 @@
 ///////////////////////////
 /datum/intent/sword/cut/miaodao
 	reach = 2
-	penfactor = 20
+	penfactor = PEN_LIGHT
 
 /datum/intent/sword/cut/miaodao/fast
 	clickcd = 9
@@ -218,7 +219,7 @@
 	wbalance = WBALANCE_SWIFT
 	possible_item_intents = list(/datum/intent/sword/cut/miaodao, /datum/intent/sword/strike)
 	gripped_intents = list(/datum/intent/sword/cut/miaodao/fast, /datum/intent/sword/thrust/zwei, /datum/intent/sword/peel/miaodao, /datum/intent/sword/chop/long)
-	alt_intents = null
+	alt_grips = null
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/yohei
 	name = "black dobo robe"

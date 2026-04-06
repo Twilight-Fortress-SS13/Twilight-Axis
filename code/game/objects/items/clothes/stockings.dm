@@ -28,18 +28,22 @@
 				return
 			if(!get_location_accessible(H, BODY_ZONE_PRECISE_R_FOOT))
 				return
-			if(!legwears_feature)
-				var/datum/bodypart_feature/legwear/legwear_new = new /datum/bodypart_feature/legwear()
-				legwear_new.set_accessory_type(sprite_acc, color, H)
-				legwears_feature = legwear_new
+
 			user.visible_message(span_notice("[user] tries to put [src] on [H]..."))
 			if(do_after(user, 50, needhand = 1, target = H))
 				var/obj/item/bodypart/chest = H.get_bodypart(BODY_ZONE_CHEST)
+				if(!chest)
+					return
+
+				var/datum/bodypart_feature/legwear/legwear_new = new /datum/bodypart_feature/legwear()
+				legwear_new.set_accessory_type(sprite_acc, color, H)
+				legwear_new.accessory_colors = color
+				legwears_feature = legwear_new
+
 				chest.add_bodypart_feature(legwears_feature)
 				user.dropItemToGround(src)
 				forceMove(H)
 				H.legwear_socks = src
-				legwears_feature.accessory_colors = color
 
 /obj/item/legwears/Destroy()
 	legwears_feature = null
@@ -70,6 +74,7 @@
 	name = "silk stockings"
 	desc = "A legwear made just for the pure aesthetics. Made out of thin silk. Popular among nobles."
 	icon_state = "silk"
+	sprite_acc = /datum/sprite_accessory/legwear/stockings/silk
 
 /obj/item/legwears/silk/random/Initialize()
 	. = ..()
@@ -96,6 +101,7 @@
 	name = "fishnet stockings"
 	desc = "A legwear popular among wenches."
 	icon_state = "fishnet"
+	sprite_acc = /datum/sprite_accessory/legwear/stockings/fishnet
 
 /obj/item/legwears/fishnet/random/Initialize()
 	. = ..()
@@ -122,6 +128,7 @@
 	name = "thigh-high stockings"
 	desc = "A legwear popular among those who plan to venture into colder climates."
 	icon_state = "thigh"
+	sprite_acc = /datum/sprite_accessory/legwear/stockings/thigh_high
 
 /obj/item/legwears/thigh_high/random/Initialize()
 	. = ..()
@@ -131,19 +138,23 @@
 	color = "#e6e5e5"
 
 //Thigh-high - Silk
+
 /obj/item/legwears/thigh_high_silk
 	name = "silk thigh-high stockings"
 	desc = "A legwear popular amongst the aristocracy and wealth burghers. Goes well with any dress!"
 	icon_state = "thigh_silk"
+	sprite_acc = /datum/sprite_accessory/legwear/stockings/thigh_high_silk
 
 /obj/item/legwears/thigh_high_silk/white
 	color = "#e6e5e5"
 
 //Knee-high
+
 /obj/item/legwears/knee_high
 	name = "knee-high stockings"
 	desc = "A legwear popular among those who enjoy taller boots."
 	icon_state = "knee"
+	sprite_acc = /datum/sprite_accessory/legwear/stockings/knee_high
 
 /obj/item/legwears/knee_high/random/Initialize()
 	. = ..()
@@ -152,11 +163,11 @@
 /obj/item/legwears/knee_high/white
 	color = "#e6e5e5"
 
-//Knee-high
 /obj/item/legwears/knee_high_silk
 	name = "knee-high stockings"
 	desc = "A legwear popular amongst wealthy courtesans and people with sense of style."
 	icon_state = "knee_silk"
+	sprite_acc = /datum/sprite_accessory/legwear/stockings/knee_high_silk
 
 /obj/item/legwears/knee_high_silk/white
 	color = "#e6e5e5"
@@ -194,6 +205,7 @@
 					/obj/item/legwears/red,
 					/obj/item/legwears/red,
 				)
+
 /datum/supply_pack/rogue/wardrobe/suits/stockings_purple
 	name = "Purple Stockings"
 	cost = 10
@@ -251,6 +263,7 @@
 					/obj/item/legwears/silk/red,
 					/obj/item/legwears/silk/red,
 				)
+
 /datum/supply_pack/rogue/wardrobe/suits/stockings_purple_silk
 	name = "Purple Silk Stockings"
 	cost = 30
@@ -292,6 +305,7 @@
 					/obj/item/legwears/fishnet/red,
 					/obj/item/legwears/fishnet/red,
 				)
+
 /datum/supply_pack/rogue/wardrobe/suits/stockings_purple_fishnet
 	name = "Purple Fishnet Stockings"
 	cost = 5
@@ -318,7 +332,7 @@
 
 /datum/crafting_recipe/roguetown/sewing/stockings_knee_white
 	name = "stockings - knee"
-	result = list(/obj/item/legwears/knee_high)
+	result = list(/obj/item/legwears/knee_high/white)
 	reqs = list(/obj/item/natural/cloth = 1,
 				/obj/item/natural/fibers = 1)
 	craftdiff = 3

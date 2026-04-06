@@ -114,7 +114,7 @@
 	time = clamp(time, 1.6, 3.6)
 
 	do_thrust_animate(user, target, null, pixels, time)
-	try_bed_break(best, user, target, time)
+	try_furniture_shake(best, user, target, time)
 
 /// Picks best thrust target from link.
 /datum/erp_vfx_service/proc/get_best_thrust_target(datum/erp_sex_link/best)
@@ -249,7 +249,8 @@
 	return null
 
 /// Tries bed break on strong thrust.
-/datum/erp_vfx_service/proc/try_bed_break(datum/erp_sex_link/L, mob/living/user, atom/movable/target, time)
+/// Tries to apply furniture VFX for thrusting scene.
+/datum/erp_vfx_service/proc/try_furniture_shake(datum/erp_sex_link/L, mob/living/user, atom/movable/target, time)
 	if(!L || QDELETED(L) || !L.is_valid())
 		return
 	if(!user || !target)
@@ -259,52 +260,124 @@
 	if(force <= SEX_FORCE_MID)
 		return
 
-	var/obj/structure/bed/rogue/bed = find_bed_for_thrust(L, user, target)
-	if(bed && !QDELETED(bed))
-		var/oldy = bed.pixel_y
-		var/target_y = oldy - 1
-		var/t = max(1, round(time / 2))
-		animate(bed, pixel_y = target_y, time = t)
-		animate(pixel_y = oldy, time = t)
-		bed.damage_bed(force > SEX_FORCE_HIGH ? 0.5 : 0.25)
+	var/atom/movable/furniture = L.get_furniture_for_scene()
+	if(!furniture)
 		return
 
-	var/obj/structure/closet/C = find_closet_for_thrust(L, user, target)
-	if(C)
-		shake_closet(C, force, time)
+	shake_furniture(furniture, force, time)
 
 /// Finds closest bed for thrust animation.
-/datum/erp_vfx_service/proc/find_bed_for_thrust(datum/erp_sex_link/L, mob/living/user, atom/movable/target)
-	var/mob/living/A = L.actor_active?.physical
-	var/mob/living/B = L.actor_passive?.physical
+/datum/erp_vfx_service/proc/shake_furniture(atom/movable/furniture, force, time)
+	if(!furniture || QDELETED(furniture))
+		return
+	if(time <= 0)
+		return
 
-	var/turf/tB = get_turf(B) || get_turf(target)
-	var/turf/tA = get_turf(A) || get_turf(user)
+	var/shake_force = clamp(round(force || SEX_FORCE_MID), SEX_FORCE_LOW, SEX_FORCE_EXTREME)
+	if(shake_force <= SEX_FORCE_MID)
+		return
 
-	var/obj/structure/bed/rogue/bed = null
+	var/old_pixel_y = furniture.pixel_y
+	var/pixel_shift = 1
 
-	if(tB)
-		bed = find_bed_on_turf(tB)
-		if(bed) return bed
+	switch(shake_force)
+		if(SEX_FORCE_HIGH)
+			pixel_shift = 2
+		if(SEX_FORCE_EXTREME)
+			pixel_shift = 3
+		else
+			pixel_shift = 1
 
-	if(tA)
-		bed = find_bed_on_turf(tA)
-		if(bed) return bed
+	var/half_time = max(1, round(time / 2))
+	var/target_pixel_y = old_pixel_y - pixel_shift
 
-	if(tB)
-		for(var/turf/T in orange(1, tB))
-			bed = find_bed_on_turf(T)
-			if(bed) return bed
+	animate(furniture, pixel_y = target_pixel_y, time = half_time)
+	animate(pixel_y = old_pixel_y, time = half_time)
 
-	return null
+	apply_furniture_side_effects(furniture, shake_force)
 
-/// Finds bed object on a turf.
-/datum/erp_vfx_service/proc/find_bed_on_turf(turf/T)
-	if(!T)
-		return null
-	for(var/obj/structure/bed/rogue/B in T)
-		return B
-	return null
+/// Applies object-specific side effects after generic shake.
+/datum/erp_vfx_service/proc/apply_furniture_side_effects(atom/movable/furniture, force)
+	if(!furniture || QDELETED(furniture))
+		return
+	if(!isobj(furniture))
+		return
+
+	var/obj/O = furniture
+	var/damage_amount = get_furniture_damage_from_force(force)
+	if(damage_amount <= 0)
+		return
+
+	damage_furniture_safely(O, damage_amount, force)
+
+/// Returns max safe brute damage that can be dealt to furniture
+/// without forcing it into broken or destroyed state.
+/datum/erp_vfx_service/proc/get_safe_furniture_damage_cap(obj/O)
+	if(!O || QDELETED(O))
+		return 0
+
+	if(!O.max_integrity)
+		return 0
+
+	var/min_safe_integrity
+	if(O.integrity_failure)
+		min_safe_integrity = (O.integrity_failure * O.max_integrity) + DAMAGE_PRECISION
+	else
+		min_safe_integrity = DAMAGE_PRECISION
+
+	var/safe_damage_cap = O.obj_integrity - min_safe_integrity
+	return max(0, round(safe_damage_cap, DAMAGE_PRECISION))
+
+/// Returns raw intended furniture damage from ERP force.
+/datum/erp_vfx_service/proc/get_furniture_damage_from_force(force)
+	if(force > SEX_FORCE_HIGH)
+		return 2
+	if(force > SEX_FORCE_MID)
+		return 1
+	return 0
+
+/// Plays custom ERP furniture sound overrides.
+/// Returns TRUE if custom sound was played and default take_damage sound should be suppressed.
+/datum/erp_vfx_service/proc/play_furniture_erp_sound(atom/movable/furniture, force)
+	if(!furniture || QDELETED(furniture))
+		return FALSE
+
+	if(istype(furniture, /obj/structure/bed/rogue))
+		if(force > SEX_FORCE_MID)
+			playsound(
+				furniture,
+				pick(list(
+					'sound/misc/mat/bed squeak (1).ogg',
+					'sound/misc/mat/bed squeak (2).ogg',
+					'sound/misc/mat/bed squeak (3).ogg'
+				)),
+				30,
+				TRUE,
+				ignore_walls = FALSE
+			)
+			return TRUE
+
+	return FALSE
+
+/// Applies capped brute damage to furniture without allowing it
+/// to cross into broken or destroyed state.
+/datum/erp_vfx_service/proc/damage_furniture_safely(obj/O, damage_amount, force)
+	if(!O || QDELETED(O))
+		return
+	if(damage_amount <= 0)
+		return
+
+	var/safe_cap = get_safe_furniture_damage_cap(O)
+	if(safe_cap <= 0)
+		return
+
+	var/final_damage = min(damage_amount, safe_cap)
+	if(final_damage < DAMAGE_PRECISION)
+		return
+
+	var/played_custom_sound = play_furniture_erp_sound(O, force)
+
+	O.take_damage(final_damage, BRUTE, "blunt", !played_custom_sound)
 
 /datum/erp_vfx_service/proc/is_sucking_pair(init_t, tgt_t)
 	return (init_t == SEX_ORGAN_MOUTH) || (tgt_t == SEX_ORGAN_MOUTH)

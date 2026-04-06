@@ -61,15 +61,15 @@
 		return FALSE
 
 	var/datum/erp_sex_organ/init = L.init_organ
-	var/datum/erp_sex_organ/tgt  = L.target_organ
+	var/datum/erp_sex_organ/tgt = L.target_organ
 
 	var/datum/erp_sex_organ/penis/P = null
 	var/datum/erp_sex_organ/other = null
 
-	if(istype(init,/datum/erp_sex_organ/penis))
+	if(istype(init, /datum/erp_sex_organ/penis))
 		P = init
 		other = tgt
-	else if(istype(tgt,/datum/erp_sex_organ/penis))
+	else if(istype(tgt, /datum/erp_sex_organ/penis))
 		P = tgt
 		other = init
 	else
@@ -80,15 +80,18 @@
 
 	var/mob/living/carbon/human/top = P.get_owner()
 	var/datum/component/erp_knotting/K = get_knotting_component(top)
-	if(!K)
+	if(!K || !islist(K.active_links) || !K.active_links.len)
 		return FALSE
 
-	var/unit = get_penis_unit_id_for_link(L)
-	var/datum/erp_sex_organ/forced = K.get_forced_inject_target(P, unit)
-	if(!forced)
-		return FALSE
+	for(var/datum/erp_knot_link/KL as anything in K.active_links)
+		if(!istype(KL) || !KL.is_valid())
+			continue
+		if(KL.penis_org != P)
+			continue
+		if(KL.receiving_org == other)
+			return TRUE
 
-	return (forced == other)
+	return FALSE
 
 /// Notes knot activity for penis/other pair.
 /datum/erp_knot_service/proc/note_knot_activity_from_link(datum/erp_sex_link/L)
@@ -96,15 +99,15 @@
 		return
 
 	var/datum/erp_sex_organ/init = L.init_organ
-	var/datum/erp_sex_organ/tgt  = L.target_organ
+	var/datum/erp_sex_organ/tgt = L.target_organ
 
 	var/datum/erp_sex_organ/penis/P = null
 	var/datum/erp_sex_organ/other = null
 
-	if(istype(init,/datum/erp_sex_organ/penis))
+	if(istype(init, /datum/erp_sex_organ/penis))
 		P = init
 		other = tgt
-	else if(istype(tgt,/datum/erp_sex_organ/penis))
+	else if(istype(tgt, /datum/erp_sex_organ/penis))
 		P = tgt
 		other = init
 	else
@@ -115,11 +118,17 @@
 
 	var/mob/living/carbon/human/top = P.get_owner()
 	var/datum/component/erp_knotting/K = get_knotting_component(top)
-	if(!K)
+	if(!K || !islist(K.active_links) || !K.active_links.len)
 		return
 
-	var/unit = get_penis_unit_id_for_link(L)
-	K.note_activity_between(P, other, unit)
+	for(var/datum/erp_knot_link/KL as anything in K.active_links)
+		if(!istype(KL) || !KL.is_valid())
+			continue
+		if(KL.penis_org != P)
+			continue
+		if(KL.receiving_org != other)
+			continue
+		KL.note_activity()
 
 /// Toggles do_knot_action state (owner only).
 /datum/erp_knot_service/proc/set_do_knot_action(mob/living/carbon/human/H, value)

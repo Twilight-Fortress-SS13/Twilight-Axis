@@ -35,7 +35,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	same_job_respawn_delay = 30 MINUTES
 	//No nobility for you, being a member of the clergy means you gave UP your nobility. It says this in many of the church tutorial texts.
 	virtue_restrictions = list(/datum/virtue/utility/noble)
-	job_traits = list(TRAIT_CHOSEN, TRAIT_RITUALIST, TRAIT_GRAVEROBBER, TRAIT_HOMESTEAD_EXPERT, TRAIT_MEDICINE_EXPERT, TRAIT_CLERGY)
+	job_traits = list(TRAIT_CHOSEN, TRAIT_RITUALIST, TRAIT_GRAVEROBBER, TRAIT_HOMESTEAD_EXPERT, TRAIT_MEDICINE_EXPERT, TRAIT_CLERGY, TRAIT_MARRIAGE_CAPABLE)
 	advclass_cat_rolls = list(CTAG_BISHOP = 2)
 	job_subclasses = list(
 		/datum/advclass/bishop
@@ -106,7 +106,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron) // This creates the cleric holder used for devotion spells
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)	//Starts off maxed out.
 
-	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/lightningbolt/sacred_flame_rogue) //TA EDIT
+	//H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/lightningbolt/sacred_flame_rogue) //TA EDIT
 	H.verbs |= /mob/living/carbon/human/proc/coronate_lord
 	H.verbs |= /mob/living/carbon/human/proc/churchannouncement
 	H.verbs |= /mob/living/carbon/human/proc/churchexcommunicate //your button against clergy
@@ -126,7 +126,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 			neck = /obj/item/clothing/neck/roguetown/psicross/undivided
 			wrists = /obj/item/clothing/wrists/roguetown/wrappings
 			shoes = /obj/item/clothing/shoes/roguetown/sandals
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/white
+			armor = /obj/item/clothing/suit/roguetown/shirt/robe/undivided
 			cloak = /obj/item/clothing/cloak/undivided
 			r_hand = /obj/item/clothing/suit/roguetown/shirt/robe/priest
 		if(/datum/patron/divine/astrata)
@@ -195,12 +195,12 @@ GLOBAL_LIST_EMPTY(heretical_players)
 			armor = /obj/item/clothing/suit/roguetown/armor/leather/vest
 			r_hand = /obj/item/clothing/suit/roguetown/shirt/robe/priest
 		if(/datum/patron/divine/ravox)
-			l_hand = /obj/item/clothing/head/roguetown/roguehood
+			l_hand = /obj/item/clothing/head/roguetown/roguehood/ravox
 			neck = /obj/item/clothing/neck/roguetown/psicross/ravox
 			cloak = /obj/item/clothing/cloak/undivided
 			wrists = /obj/item/clothing/wrists/roguetown/wrappings
 			shoes = /obj/item/clothing/shoes/roguetown/boots
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/white
+			armor = /obj/item/clothing/suit/roguetown/shirt/robe/ravox
 			r_hand = /obj/item/clothing/suit/roguetown/shirt/robe/priest
 		if(/datum/patron/divine/xylix)
 			l_hand = /obj/item/clothing/head/roguetown/roguehood
@@ -211,7 +211,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 			neck = /obj/item/clothing/neck/roguetown/luckcharm // For good luck, as Xylix would intend
 			H.cmode_music = 'sound/music/combat_jester.ogg'
 			var/datum/inspiration/I = new /datum/inspiration(H)
-			I.grant_inspiration(H, bard_tier = BARD_T2)
+			I.grant_inspiration(H, bard_tier = BARD_T1)
 			r_hand = /obj/item/clothing/suit/roguetown/shirt/robe/priest
 		else
 			l_hand = /obj/item/clothing/head/roguetown/roguehood/astrata
@@ -261,10 +261,10 @@ GLOBAL_LIST_EMPTY(heretical_players)
 		ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
 		H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
 	if(H.patron?.type == /datum/patron/divine/noc)
-		H.adjust_skillrank(/datum/skill/magic/arcane, 2, TRUE)
+		H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_APPRENTICE, TRUE)
 		if(H.mind)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
-		ADD_TRAIT(H, TRAIT_ARCYNE_T1, TRAIT_GENERIC)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/touch/prestidigitation)
+		ADD_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/abyssor)
 		ADD_TRAIT(H, TRAIT_WATERBREATHING, TRAIT_GENERIC)
 		H.grant_language(/datum/language/abyssal)

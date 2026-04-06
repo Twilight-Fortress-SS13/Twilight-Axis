@@ -12,6 +12,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/max_save_slots = 20
 
+	
+	var/list/job_characters = list() //TA EDIT
+	var/tmp/list/loaded_job_slots = list()  //TA EDIT
 
 	//non-preference stuff
 	var/muted = 0
@@ -123,7 +126,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	//Job preferences 2.0 - indexed by job title , no key or value implies never
 	var/list/job_preferences = list()
-
 		// Want randomjob if preferences already filled - Donkie
 	var/joblessrole = RETURNTOLOBBY  //defaults to 1 for fewer assistants
 
@@ -135,8 +137,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/list/ignoring = list()
 
 	var/clientfps = 100//0 is sync
-
-	var/parallax
 
 	var/ambientocclusion = TRUE
 	var/auto_fit_viewport = FALSE
@@ -195,7 +195,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/vampire_headshot_link
 	var/werewolf_headshot_link //not used but setting up for the future
 	var/chatheadshot = TRUE
-	var/nsfw_headshot_link //Twilight Axis edit далее TA
 	var/list/violated = list() // ТА
 	var/ooc_extra
 	var/ooc_extra_img // ТА 
@@ -339,6 +338,24 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	menuoptions = list()
 	return
 
+/datum/preferences/proc/get_job_prefs(job_title, forced_slot = null) //TA EDIT start
+	var/slot = forced_slot ? forced_slot : job_characters[job_title]
+	
+	
+	if(!slot || slot == loaded_slot)
+		return src
+
+	
+	if(loaded_job_slots["[slot]"])
+		return loaded_job_slots["[slot]"]
+
+	
+	var/datum/preferences/temp = new(parent)
+	temp.load_character(slot)
+	loaded_job_slots["[slot]"] = temp
+
+	return temp //TA EDIT END
+
 /datum/preferences/proc/set_new_race(datum/species/new_race, user)
 	pref_species = new_race
 	real_name = pref_species.random_name(gender,1)
@@ -350,7 +367,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	random_character(gender, FALSE, FALSE)
 	accessory = "Nothing"
 
-	nsfw_headshot_link = null //TA edit
 
 	customizer_entries = list()
 	validate_customizer_entries()
@@ -377,17 +393,18 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	if(tabchoice == 4)
 		current_tab = 0
 
-//	dat += "<a href='?_src_=prefs;preference=tab;tab=0' [current_tab == 0 ? "class='linkOn'" : ""]>Character Sheet</a>"
-//	dat += "<a href='?_src_=prefs;preference=tab;tab=1' [current_tab == 1 ? "class='linkOn'" : ""]>Game Preferences</a>"
-//	dat += "<a href='?_src_=prefs;preference=tab;tab=2' [current_tab == 2 ? "class='linkOn'" : ""]>OOC Preferences</a>"
-//	dat += "<a href='?_src_=prefs;preference=tab;tab=3' [current_tab == 3 ? "class='linkOn'" : ""]>Keybinds</a>"
+	dat += "<a href='?_src_=prefs;preference=tab;tab=0' [current_tab == 0 ? "class='linkOn'" : ""]>Character</a>"
+	dat += "<a href='?_src_=prefs;preference=tab;tab=1' [current_tab == 1 ? "class='linkOn'" : ""]>Game Settings</a>"
+	dat += "<a href='?_src_=prefs;preference=tab;tab=2' [current_tab == 2 ? "class='linkOn'" : ""]>OOC</a>"
+	dat += "<a href='?_src_=prefs;preference=tab;tab=3' [current_tab == 3 ? "class='linkOn'" : ""]>Keybinds</a>"
 
 	dat += "</center>"
+	dat += "<br>"
 
-	//var/used_title
+	var/used_title
 	switch(current_tab)
 		if (0) // Character Settings#
-		//	used_title = "Character Sheet"
+			used_title = "Character Sheet"
 
 			// Top-level menu table
 			dat += "<table style='width: 100%; line-height: 20px;'>"
@@ -402,18 +419,15 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:right'>"
-			dat += "<a href='?_src_=prefs;preference=keybinds;task=menu'>Keybinds</a>"
 			dat += "</td>"
 			dat += "</tr>"
 
 			// ANOTHA ROW
 			dat += "<tr style='padding-top: 0px;padding-bottom:0px'>"
 			dat += "<td style='width:33%;text-align:left'>"
-			dat += "<a href='?_src_=prefs;preference=tgui_ui_prefs;task=menu'>[tgui_pref ? "TGUI" : "Legacy"]</a>"
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:center'>"
-			dat += "<a href='?_src_=prefs;preference=antag;task=menu'>Villain Selection</a>"
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:right'>"
@@ -423,11 +437,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 			dat += "<tr style='padding-top: 0px;padding-bottom:0px'>"
 			dat += "<td style='width:33%;text-align:left'>"
-			dat += "<a href='?_src_=prefs;preference=tgui_theme'>Theme: [get_tgui_theme_display_name()]</a>"
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:center'>"
-		//	dat += "<a href='?_src_=prefs;preference=lore_primer'>* Lore Primer *</a>"  // TA EDIT
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:right'>"
@@ -610,7 +622,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			if(charflaws.len)
 				for(var/i = 1 to charflaws.len)
 					var/datum/charflaw/cf = charflaws[i]
-					dat += " <a href='?_src_=prefs;preference=charflaw;task=remove;index=[i]'>[cf]</a>"
+					var/warning = ""
+					if(cf.needs_extra_vice && charflaws.len < 2)
+						warning = "<font color = '#910505'>"
+					dat += "[warning] <a href='?_src_=prefs;preference=charflaw;task=remove;index=[i]'>[cf]</a>[warning ? " (Requires Extra Vice!)</font>" : ""]"
 					if(i < charflaws.len)
 						dat += " |"
 				dat += "<BR>"
@@ -702,10 +717,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><b>Headshot:</b> <a href='?_src_=prefs;preference=headshot;task=input'>Change</a>"
 			if(headshot_link != null)
 				dat += "<br><img src='[headshot_link]' width='100px' height='100px'>"
-			
-			dat += "<br><b>NSFW Headshot:</b> <a href='?_src_=prefs;preference=nsfw_headshot;task=input'>Change</a>" //TA edit
-			if(nsfw_headshot_link != null) //TA edit
-				dat += "<br><img src='[nsfw_headshot_link]' width='125px' height='175px'>" //TA edit
 
 			var/examine_theme_name = "None (Use Viewer's)"
 			if(examine_theme)
@@ -736,7 +747,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat+= "<a href='?_src_=prefs;preference=clear_nsfw_gallery;task=input'>Clear NSFW Gallery</a>"
 			dat += "<br><a href='?_src_=prefs;preference=ooc_preview;task=input'><b>Preview Examine</b></a>"
 
-			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;tdask=input'>Change</a>"
+			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;task=input'>Change</a>"
 
 			dat += "</td>"
 
@@ -746,99 +757,19 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "</tr>"
 			dat += "</table>"
 
-		if (1) // Game Preferences
-			//used_title = "Options"
-			dat += "<table><tr><td width='340px' height='300px' valign='top'>"
-			dat += "<h2>General Settings</h2>"
-//			dat += "<b>UI Style:</b> <a href='?_src_=prefs;task=input;preference=ui'>[UI_style]</a><br>"
+		if (1) // Game Settings
+			used_title = "Game Settings"
+			dat += "<table><tr><td width='340px' valign='top'>"
+			dat += "<h2>Display</h2>"
+			dat += "<b>TGUI Theme:</b> <a href='?_src_=prefs;preference=tgui_theme'>[get_tgui_theme_display_name()]</a><br>"
+			dat += "<b>UI Mode:</b> <a href='?_src_=prefs;preference=tgui_ui_prefs;task=menu'>[tgui_pref ? "TGUI" : "Legacy"]</a><br>"
 			dat += "<b>tgui Monitors:</b> <a href='?_src_=prefs;preference=tgui_lock'>[(tgui_lock) ? "Primary" : "All"]</a><br>"
-//			dat += "<b>tgui Style:</b> <a href='?_src_=prefs;preference=tgui_fancy'>[(tgui_fancy) ? "Fancy" : "No Frills"]</a><br>"
-//			dat += "<b>Show Runechat Chat Bubbles:</b> <a href='?_src_=prefs;preference=chat_on_map'>[chat_on_map ? "Enabled" : "Disabled"]</a><br>"
-//			dat += "<b>Runechat message char limit:</b> <a href='?_src_=prefs;preference=max_chat_length;task=input'>[max_chat_length]</a><br>"
-//			dat += "<b>See Runechat for non-mobs:</b> <a href='?_src_=prefs;preference=see_chat_non_mob'>[see_chat_non_mob ? "Enabled" : "Disabled"]</a><br>"
-//			dat += "<br>"
-//			dat += "<b>Action Buttons:</b> <a href='?_src_=prefs;preference=action_buttons'>[(buttons_locked) ? "Locked In Place" : "Unlocked"]</a><br>"
-//			dat += "<b>Hotkey mode:</b> <a href='?_src_=prefs;preference=hotkeys'>[(hotkeys) ? "Hotkeys" : "Default"]</a><br>"
-//			dat += "<br>"
-//			dat += "<b>PDA Color:</b> <span style='border:1px solid #161616; background-color: [pda_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=pda_color;task=input'>Change</a><BR>"
-//			dat += "<b>PDA Style:</b> <a href='?_src_=prefs;task=input;preference=pda_style'>[pda_style]</a><br>"
-//			dat += "<br>"
-//			dat += "<b>Ghost Ears:</b> <a href='?_src_=prefs;preference=ghost_ears'>[(chat_toggles & CHAT_GHOSTEARS) ? "All Speech" : "Nearest Creatures"]</a><br>"
-//			dat += "<b>Ghost Radio:</b> <a href='?_src_=prefs;preference=ghost_radio'>[(chat_toggles & CHAT_GHOSTRADIO) ? "All Messages":"No Messages"]</a><br>"
-//			dat += "<b>Ghost Sight:</b> <a href='?_src_=prefs;preference=ghost_sight'>[(chat_toggles & CHAT_GHOSTSIGHT) ? "All Emotes" : "Nearest Creatures"]</a><br>"
-//			dat += "<b>Ghost Whispers:</b> <a href='?_src_=prefs;preference=ghost_whispers'>[(chat_toggles & CHAT_GHOSTWHISPER) ? "All Speech" : "Nearest Creatures"]</a><br>"
-//			dat += "<b>Ghost PDA:</b> <a href='?_src_=prefs;preference=ghost_pda'>[(chat_toggles & CHAT_GHOSTPDA) ? "All Messages" : "Nearest Creatures"]</a><br>"
-
-/*			if(unlock_content)
-				dat += "<b>Ghost Form:</b> <a href='?_src_=prefs;task=input;preference=ghostform'>[ghost_form]</a><br>"
-				dat += "<B>Ghost Orbit: </B> <a href='?_src_=prefs;task=input;preference=ghostorbit'>[ghost_orbit]</a><br>"
-
-			var/button_name = "If you see this something went wrong."
-			switch(ghost_accs)
-				if(GHOST_ACCS_FULL)
-					button_name = GHOST_ACCS_FULL_NAME
-				if(GHOST_ACCS_DIR)
-					button_name = GHOST_ACCS_DIR_NAME
-				if(GHOST_ACCS_NONE)
-					button_name = GHOST_ACCS_NONE_NAME
-
-			dat += "<b>Ghost Accessories:</b> <a href='?_src_=prefs;task=input;preference=ghostaccs'>[button_name]</a><br>"
-
-			switch(ghost_others)
-				if(GHOST_OTHERS_THEIR_SETTING)
-					button_name = GHOST_OTHERS_THEIR_SETTING_NAME
-				if(GHOST_OTHERS_DEFAULT_SPRITE)
-					button_name = GHOST_OTHERS_DEFAULT_SPRITE_NAME
-				if(GHOST_OTHERS_SIMPLE)
-					button_name = GHOST_OTHERS_SIMPLE_NAME
-
-			dat += "<b>Ghosts of Others:</b> <a href='?_src_=prefs;task=input;preference=ghostothers'>[button_name]</a><br>"
-			dat += "<br>"
-
-			dat += "<b>Income Updates:</b> <a href='?_src_=prefs;preference=income_pings'>[(chat_toggles & CHAT_BANKCARD) ? "Allowed" : "Muted"]</a><br>"
-			dat += "<br>"
-*/
+			dat += "<b>Ambient Occlusion:</b> <a href='?_src_=prefs;preference=ambientocclusion'>[ambientocclusion ? "Enabled" : "Disabled"]</a><br>"
+			dat += "<b>Window Flashing:</b> <a href='?_src_=prefs;preference=winflash'>[(windowflashing) ? "Enabled":"Disabled"]</a><br>"
 			dat += "<b>FPS:</b> <a href='?_src_=prefs;preference=clientfps;task=input'>[clientfps]</a><br>"
-/*
-			dat += "<b>Parallax (Fancy Space):</b> <a href='?_src_=prefs;preference=parallaxdown' oncontextmenu='window.location.href=\"?_src_=prefs;preference=parallaxup\";return false;'>"
-			switch (parallax)
-				if (PARALLAX_LOW)
-					dat += "Low"
-				if (PARALLAX_MED)
-					dat += "Medium"
-				if (PARALLAX_INSANE)
-					dat += "Insane"
-				if (PARALLAX_DISABLE)
-					dat += "Disabled"
-				else
-					dat += "High"
-			dat += "</a><br>"
-*/
-//			dat += "<b>Fit Viewport:</b> <a href='?_src_=prefs;preference=auto_fit_viewport'>[auto_fit_viewport ? "Auto" : "Manual"]</a><br>"
-//			if (CONFIG_GET(string/default_view) != CONFIG_GET(string/default_view_square))
-//				dat += "<b>Widescreen:</b> <a href='?_src_=prefs;preference=widescreenpref'>[widescreenpref ? "Enabled ([CONFIG_GET(string/default_view)])" : "Disabled ([CONFIG_GET(string/default_view_square)])"]</a><br>"
-
-/*			if (CONFIG_GET(flag/maprotation))
-				var/p_map = preferred_map
-				if (!p_map)
-					p_map = "Default"
-					if (config.defaultmap)
-						p_map += " ([config.defaultmap.map_name])"
-				else
-					if (p_map in config.maplist)
-						var/datum/map_config/VM = config.maplist[p_map]
-						if (!VM)
-							p_map += " (No longer exists)"
-						else
-							p_map = VM.map_name
-					else
-						p_map += " (No longer exists)"
-				if(CONFIG_GET(flag/preference_map_voting))
-					dat += "<b>Preferred Map:</b> <a href='?_src_=prefs;preference=preferred_map;task=input'>[p_map]</a><br>"
-*/
-
-//			dat += "<b>Play Lobby Music:</b> <a href='?_src_=prefs;preference=lobby_music'>[(toggles & SOUND_LOBBY) ? "Enabled":"Disabled"]</a><br>"
-
+			dat += "<b>Fit Viewport:</b> <a href='?_src_=prefs;preference=auto_fit_viewport'>[auto_fit_viewport ? "Auto" : "Manual"]</a><br>"
+			if (CONFIG_GET(string/default_view) != CONFIG_GET(string/default_view_square))
+				dat += "<b>Widescreen:</b> <a href='?_src_=prefs;preference=widescreenpref'>[widescreenpref ? "Enabled ([CONFIG_GET(string/default_view)])" : "Disabled ([CONFIG_GET(string/default_view_square)])"]</a><br>"
 
 			dat += "</td><td width='400px' height='500px' valign='top'>"
 			dat += "<h2>Special Role Settings</h2>"
@@ -861,14 +792,60 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						dat += "<b>[capitalize(i)]:</b> <a href='?_src_=prefs;preference=be_special;be_special_type=[i]'>[(i in be_special) ? "Enabled" : "Disabled"]</a><br>"
 //			dat += "<br>"
 //			dat += "<b>Midround Antagonist:</b> <a href='?_src_=prefs;preference=allow_midround_antag'>[(toggles & MIDROUND_ANTAG) ? "Enabled" : "Disabled"]</a><br>"
+
+			if(preset_bounty_severity_key && !GLOB.wretch_severities[preset_bounty_severity_key])
+				preset_bounty_severity_key = null
+
+			if(preset_bounty_severity_b_key && !GLOB.bandit_severities[preset_bounty_severity_b_key])
+				preset_bounty_severity_b_key = null
+
+			if(preset_bounty_poster_key && !GLOB.bounty_posters[preset_bounty_poster_key])
+				preset_bounty_poster_key = null
+
+			dat += "<br><h2>Villain Settings</h2>"
+			dat += "<b>Lich Headshot:</b> <a href='?_src_=prefs;preference=lich_headshot;task=input'>Change</a>"
+			if(lich_headshot_link != null)
+				dat += "<br><img src='[lich_headshot_link]' width='100px' height='100px'>"
+			dat += "<br><b>Vampire Headshot:</b> <a href='?_src_=prefs;preference=vampire_headshot;task=input'>Change</a>"
+			if(vampire_headshot_link != null)
+				dat += "<br><img src='[vampire_headshot_link]' width='100px' height='100px'>"
+			dat += "<br><b>Vampire Skin Color:</b> "
+			if(!isnull(vampire_skin))
+				dat += "<a href='?_src_=prefs;preference=vampire_skin;task=input'><span style='border: 1px solid #161616; background-color: [vampire_skin ? vampire_skin : "#FFFFFF"];'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a> <a href='?_src_=prefs;preference=vampire_skin_clear;task=input'>clear</a>"
+			else
+				dat += "<a href='?_src_=prefs;preference=vampire_skin;task=input'>(C)</a>"
+			dat += "<br><b>Vampire Eye Color:</b> "
+			if(!isnull(vampire_eyes))
+				dat += "<a href='?_src_=prefs;preference=vampire_eyes;task=input'><span style='border: 1px solid #161616; background-color: [vampire_eyes ? vampire_eyes : "#FFFFFF"];'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a> <a href='?_src_=prefs;preference=vampire_eyes_clear;task=input'>clear</a>"
+			else
+				dat += "<a href='?_src_=prefs;preference=vampire_eyes;task=input'>(C)</a>"
+			dat += "<br><b>Vampire Hair Color:</b> "
+			if(!isnull(vampire_hair))
+				dat += "<a href='?_src_=prefs;preference=vampire_hair;task=input'><span style='border: 1px solid #161616; background-color: [vampire_hair ? vampire_hair : "#FFFFFF"];'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a> <a href='?_src_=prefs;preference=vampire_hair_clear;task=input'>clear</a>"
+			else
+				dat += "<a href='?_src_=prefs;preference=vampire_hair;task=input'>(C)</a>"
+			dat += "<br><b>Vampire Ear Color:</b> "
+			if(!isnull(vampire_ears))
+				dat += "<a href='?_src_=prefs;preference=vampire_ears;task=input'><span style='border: 1px solid #161616; background-color: [vampire_ears ? vampire_ears : "#FFFFFF"];'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a> <a href='?_src_=prefs;preference=vampire_ears_clear;task=input'>clear</a>"
+			else
+				dat += "<a href='?_src_=prefs;preference=vampire_ears;task=input'>(C)</a>"
+			dat += "<br><b>Quicksilver Resistant:</b> <a href='?_src_=prefs;preference=qsr;task=input'>[qsr_pref ? "Yes" : "No"]</a>"
+			dat += "<br><br><b>Preset Bounty:</b> <a href='?_src_=prefs;preference=preset_bounty_toggle;task=input'>[preset_bounty_enabled ? "Enabled" : "Disabled"]</a>"
+			if(preset_bounty_enabled)
+				dat += "<br><b>Bounty Poster:</b> "
+				dat += "<a href='?_src_=prefs;preference=preset_bounty_poster_key;task=input'>[GLOB.bounty_posters[preset_bounty_poster_key] || "None"]</a>"
+				dat += "<br><b>Crime Severity:</b> "
+				dat += "<a href='?_src_=prefs;preference=preset_bounty_severity_key;task=input'>[GLOB.wretch_severities[preset_bounty_severity_key] || "None"]</a>"
+				dat += "<br><b>Crime Severity (Bandit):</b> "
+				dat += "<a href='?_src_=prefs;preference=preset_bounty_severity_b_key;task=input'>[GLOB.bandit_severities[preset_bounty_severity_b_key] || "None"]</a>"
+				dat += "<br><b>Crime:</b> "
+				dat += "<a href='?_src_=prefs;preference=preset_bounty_crime;task=input'>[preset_bounty_crime || "None"]</a>"
 			dat += "</td></tr></table>"
 
 		if(2) //OOC Preferences
-		//	used_title = "ooc"
+			used_title = "OOC"
 			dat += "<table><tr><td width='340px' height='300px' valign='top'>"
 			dat += "<h2>OOC Settings</h2>"
-			dat += "<b>Window Flashing:</b> <a href='?_src_=prefs;preference=winflash'>[(windowflashing) ? "Enabled":"Disabled"]</a><br>"
-			dat += "<br>"
 			dat += "<b>Play Admin MIDIs:</b> <a href='?_src_=prefs;preference=hear_midis'>[(toggles & SOUND_MIDI) ? "Enabled":"Disabled"]</a><br>"
 			dat += "<b>Play Lobby Music:</b> <a href='?_src_=prefs;preference=lobby_music'>[(toggles & SOUND_LOBBY) ? "Enabled":"Disabled"]</a><br>"
 			dat += "<b>See Pull Requests:</b> <a href='?_src_=prefs;preference=pull_requests'>[(chat_toggles & CHAT_PULLR) ? "Enabled":"Disabled"]</a><br>"
@@ -924,7 +901,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "</tr></table>"
 
 		if(3) // Custom keybindings
-		//	used_title = "Keybinds"
+			used_title = "Keybinds"
 			// Create an inverted list of keybindings -> key
 			var/list/user_binds = list()
 			for (var/key in key_bindings)
@@ -974,7 +951,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	dat += "<table width='100%'>"
 	dat += "<tr>"
 	dat += "<td width='33%' align='left'>"
-	dat += "<b>Ambient Occlusion:</b> <a href='?_src_=prefs;preference=ambientocclusion'>[ambientocclusion ? "Enabled" : "Disabled"]</a><br>"
 	dat += "</td>"
 	dat += "<td width='33%' align='center'>"
 	//var/mob/dead/new_player/N = user
@@ -1000,11 +976,15 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	winshow(user, "preferencess_window", TRUE)
 	winset(user, "preferencess_window", "size=820x900")
 	winset(user, "preferencess_window", "pos=280,80")
-	var/datum/browser/popup = new(user, "preferences_browser", "<div align='center'>Character Sheet</div>", 700, 600)
+	var/datum/browser/popup = new(user, "preferences_browser", "<div align='center'>[used_title]</div>", 700, 600)
 	popup.set_window_options("can_close=1")
 	popup.set_content(dat.Join())
 	popup.open(FALSE)
-	update_preview_icon()
+	if(current_tab == 0)
+		winset(user, "preferencess_window.character_preview_map", "is-visible=true")
+		update_preview_icon()
+	else
+		winset(user, "preferencess_window.character_preview_map", "is-visible=false")
 	onclose(user, "preferencess_window", src)
 
 #undef APPEARANCE_CATEGORY_COLUMN
@@ -1035,182 +1015,126 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	popup.open(FALSE)
 	onclose(user, "capturekeypress", src)
 
-/datum/preferences/proc/SetChoices(mob/user, limit = 14, list/splitJobs = list("Court Magician", "Bishop", "Merchant", "Archivist", "Towner", "Grenzelhoft Mercenary", "Beggar", "Prisoner", "Goblin King"), widthPerColumn = 295, height = 620) //295 620
+/datum/preferences/proc/SetChoices(mob/user, limit = 14, list/splitJobs = list("Court Magician", "Bishop", "Merchant", "Archivist", "Towner", "Grenzelhoft Mercenary", "Beggar", "Prisoner", "Goblin King"), widthPerColumn = 350, height = 620)
 	if(!SSjob)
 		return
 
-	//limit - The amount of jobs allowed per column. Defaults to 17 to make it look nice.
-	//splitJobs - Allows you split the table by job. You can make different tables for each department by including their heads. Defaults to CE to make it look nice.
-	//widthPerColumn - Screen's width for every column.
-	//height - Screen's height.
-
 	var/width = widthPerColumn
-
 	var/HTML = "<center>"
 	if(SSjob.occupations.len <= 0)
-//		HTML += "The job SSticker is not yet finished creating jobs, please try again later"
-		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center><br>" // Easier to press up here.
-
+		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center><br>"
 	else
-//		HTML += "<b>Choose class preferences</b><br>"
-//		HTML += "<div align='center'>Left-click to raise a class preference, right-click to lower it.<br></div>"
-		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center>" // Easier to press up here.
-		if(joblessrole != RETURNTOLOBBY && joblessrole != BERANDOMJOB) // this is to catch those that used the previous definition and reset.
+		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center>"
+		if(joblessrole != RETURNTOLOBBY && joblessrole != BERANDOMJOB)
 			joblessrole = RETURNTOLOBBY
 		HTML += "<i>Click on an unlocked Class to get more information</i><br>"
 		HTML += "<b>If Role Unavailable:</b><font color='purple'><a href='?_src_=prefs;preference=job;task=nojob'>[joblessrole]</a></font><BR>"
 		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
-		HTML += "<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>" // Table within a table for alignment, also allows you to easily add more colomns.
+		HTML += "<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>"
 		HTML += "<table width='100%' cellpadding='1' cellspacing='0'>"
 		var/index = -1
-
-		//The job before the current job. I only use this to get the previous jobs color when I'm filling in blank rows.
 		var/datum/job/lastJob
-		for(var/datum/job/job in sortList(SSjob.occupations, GLOBAL_PROC_REF(cmp_job_display_asc)))
-			if(!job.spawn_positions)
-				continue
 
+		for(var/datum/job/job in sortList(SSjob.occupations, GLOBAL_PROC_REF(cmp_job_display_asc)))
+			if(!job.spawn_positions && !job.always_show_on_latechoices)
+				continue
+			
 			index += 1
-//			if((index >= limit) || (job.title in splitJobs))
 			if(index >= limit)
 				width += widthPerColumn
 				if((index < limit) && (lastJob != null))
-					//If the cells were broken up by a job in the splitJob list then it will fill in the rest of the cells with
-					//the last job's selection color. Creating a rather nice effect.
 					for(var/i = 0, i < (limit - index), i += 1)
-						HTML += "<tr bgcolor='#000000'><td width='60%' align='right'>&nbsp</td><td>&nbsp</td></tr>"
+						HTML += "<tr bgcolor='#000000'><td width='60%' align='right'>&nbsp</td><td width='40%'>&nbsp</td></tr>"
 				HTML += "</table></td><td width='20%'><table width='100%' cellpadding='1' cellspacing='0'>"
 				index = 0
 
 			if(job.title in splitJobs)
-				HTML += "<tr bgcolor='#000000'><td width='60%' align='right'><hr></td></tr>"
+				HTML += "<tr bgcolor='#000000'><td colspan='2'><hr></td></tr>"
 
-			HTML += "<tr bgcolor='#000000'><td width='60%' align='right'>"
+			HTML += "<tr bgcolor='#000000'>"
+			
 			var/rank = job.title
 			var/used_name = job.display_title || job.title
 			if((titles_pref == TITLES_F) && job.f_title)
 				used_name = "[job.f_title]"
 			lastJob = job
+
+			var/slot_button_html = ""
+			if(max_save_slots > 1)
+				var/slot_text = "Active"
+				if(job_characters[job.title])
+					slot_text = "Slot [job_characters[job.title]]"
+				slot_button_html = " | <a href='?_src_=prefs;preference=job;task=set_job_slot;text=[rank]'><font color='gray'>\[[slot_text]\]</font></a>"
+
+			var/start_font = ""
+			var/end_font = ""
+			var/job_unavailable_status = JOB_AVAILABLE
+			
+			if(isnewplayer(parent?.mob))
+				var/mob/dead/new_player/new_player = parent.mob
+				job_unavailable_status = new_player.IsJobUnavailable(job.title, latejoin = FALSE)
+
+			var/static/list/acceptable_unavailables = list(JOB_AVAILABLE, JOB_UNAVAILABLE_SLOTFULL)
+			if(!(job_unavailable_status in acceptable_unavailables))
+				start_font = "<font color='#a36c63'>"
+				end_font = "</font>"
+			
+			HTML += "<td width='60%' align='right'>"
+			HTML += {"
+<style>
+.tutorialhover { position: relative; display: inline-block; border-bottom: 1px dotted black; }
+.tutorialhover .tutorial { visibility: hidden; width: 280px; background-color: black; color: #e3c06f; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; top: 100%; left: 50%; margin-left: -140px; }
+.tutorialhover:hover .tutorial{ visibility: visible; }
+</style>
+<div class="tutorialhover"> [start_font][job.class_setup_examine ? "<a href='?src=[REF(job)];explainjob=1'>[used_name]</a>" : "[used_name]"][end_font]</span>
+<span class="tutorial">[job.tutorial]<br>Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contrib_points]" : ""]</span>
+</div>
+			"}
+			HTML += "</td>"
+
+			HTML += "<td width='40%' style='white-space: nowrap;'>"
+
 			if(is_banned_from(user.ckey, rank))
-				HTML += "[used_name]</td> <td><a href='?_src_=prefs;bancheck=[rank]'> BANNED</a></td></tr>"
+				HTML += "<a href='?_src_=prefs;bancheck=[rank]'> BANNED</a></td></tr>"
 				continue
 			var/required_playtime_remaining = job.required_playtime_remaining(user.client)
 			if(required_playtime_remaining)
-				HTML += "[used_name]</td> <td><font color=red> \[ [get_exp_format(required_playtime_remaining)] as [job.get_exp_req_type()] \] </font></td></tr>"
+				HTML += "<font color=red> \[ [get_exp_format(required_playtime_remaining)] as [job.get_exp_req_type()] \] </font></td></tr>"
 				continue
 			if(!job.player_old_enough(user.client))
 				var/available_in_days = job.available_in_days(user.client)
-				HTML += "[used_name]</td> <td><font color=red> \[IN [(available_in_days)] DAYS\]</font></td></tr>"
+				HTML += "<font color=red> \[IN [(available_in_days)] DAYS\]</font></td></tr>"
 				continue
+
 			#ifdef USES_PQ
 			if(!isnull(job.min_pq) && (get_playerquality(user.ckey) < job.min_pq))
-				HTML += "<font color=#a59461>[used_name] (Min PQ: [job.min_pq])</font></td> <td> </td></tr>"
+				HTML += "<font color=#a59461> (Min PQ: [job.min_pq])</font></td></tr>"
+				continue
+			if(!isnull(job.max_pq) && (get_playerquality(user.ckey) > job.max_pq))
+				HTML += "<font color=#a59461> (Max PQ: [job.max_pq])</font></td></tr>"
 				continue
 			#endif
-			if(!isnull(job.max_pq) && (get_playerquality(user.ckey) > job.max_pq))
-				HTML += "<font color=#a59461>[used_name] (Max PQ: [job.max_pq])</font></td> <td> </td></tr>"
-				continue
-			if(length(job.virtue_restrictions) && length(job.vice_restrictions))
-				var/list/restricted_list = list()
-				if(virtue.type in job.virtue_restrictions)
-					restricted_list.Add(virtue.name)
-				if(virtuetwo?.type in job.virtue_restrictions)
-					restricted_list.Add(virtuetwo.name)
-				for(var/datum/charflaw/cf in charflaws)
-					if(cf.type in job.vice_restrictions)
-						restricted_list.Add(cf.name)
-				if(length(restricted_list))
-					var/restrict_text = english_list(restricted_list)
-					HTML += "<font color='#a561a5'>[used_name] (Disallowed by Virtues / Vice: [restrict_text])</font></td> <td> </td></tr>"
-					continue
-			if(length(job.virtue_restrictions))
-				var/list/restricted_list = list()
-				if(virtue.type in job.virtue_restrictions)
-					restricted_list.Add(virtue.name)
-				if(virtuetwo?.type in job.virtue_restrictions)
-					restricted_list.Add(virtuetwo.name)
-				if(length(restricted_list))
-					var/restrict_text = english_list(restricted_list)
-					HTML += "<font color='#a59461'>[used_name] (Disallowed by Virtue: [restrict_text])</font></td> <td> </td></tr>"
-					continue
-			if(length(job.vice_restrictions))
-				var/list/restricted_list = list()
-				for(var/datum/charflaw/cf in charflaws)
-					if(cf.type in job.vice_restrictions)
-						restricted_list.Add(cf.name)
-				if(length(restricted_list))
-					var/restrict_text = english_list(restricted_list)
-					HTML += "<font color='#a56161'>[used_name] (Disallowed by Vice: [restrict_text])</font></td> <td> </td></tr>"
-					continue
-			var/job_unavailable = JOB_AVAILABLE
-			if(isnewplayer(parent?.mob))
-				var/mob/dead/new_player/new_player = parent.mob
-				job_unavailable = new_player.IsJobUnavailable(job.title, latejoin = FALSE)
-			var/static/list/acceptable_unavailables = list(
-				JOB_AVAILABLE,
-				JOB_UNAVAILABLE_SLOTFULL,
-			)
-			if(!(job_unavailable in acceptable_unavailables))
-				HTML += "<font color=#a36c63>[used_name]</font></td> <td> </td></tr>"
+
+			var/datum/preferences/char_prefs = get_job_prefs(rank)
+			var/is_ineligible = !job.validate_prefs_for_job(char_prefs)
+
+			if(is_ineligible)
+				HTML += "<font color='#a56161'> (Ineligible) </font>"
+				HTML += slot_button_html
+				HTML += "</td></tr>"
+				continue 
+
+
+			if(!(job_unavailable_status in acceptable_unavailables))
+				HTML += slot_button_html 
+				HTML += "</td></tr>" 
 				continue
 
-			var/job_display = used_name
-			//job_display += " <a href='?src=[REF(job)];explainjob=1'>{?}</a></span>"
-//			if((job_preferences[SSjob.overflow_role] == JP_LOW) && (rank != SSjob.overflow_role) && !is_banned_from(user.ckey, SSjob.overflow_role))
-//				HTML += "<font color=orange>[rank]</font></td><td></td></tr>"
-//				continue
-/*			if((rank in GLOB.command_positions) || (rank == "AI"))//Bold head jobs
-				HTML += "<b><span class='dark'><a href='?_src_=prefs;preference=job;task=tutorial;tut='[job.tutorial]''>[used_name]</a></span></b>"
-			else
-				HTML += span_dark("<a href='?_src_=prefs;preference=job;task=tutorial;tut='[job.tutorial]''>[used_name]</a>")*/
-
-			HTML += {"
-
-<style>
-
-
-.tutorialhover {
-	position: relative;
-	display: inline-block;
-	border-bottom: 1px dotted black;
-}
-
-.tutorialhover .tutorial {
-
-	visibility: hidden;
-	width: 280px;
-	background-color: black;
-	color: #e3c06f;
-	text-align: center;
-	border-radius: 6px;
-	padding: 5px 0;
-
-	position: absolute;
-	z-index: 1;
-	top: 100%;
-	left: 50%;
-	margin-left: -140px;
-}
-
-.tutorialhover:hover .tutorial{
-	visibility: visible;
-}
-
-</style>
-
-<div class="tutorialhover"> [job.class_setup_examine ? "<a href='?src=[REF(job)];explainjob=1'><font>[job_display]</font></a>" : "<font>[job_display]</font>"]</span>
-<span class="tutorial">[job.tutorial]<br>
-Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contrib_points]" : ""]</span>
-</div>
-
-			"}
-
-			HTML += "</td><td width='40%'>"
-
+		
 			var/prefLevelLabel = "ERROR"
 			var/prefLevelColor = "pink"
-			var/prefUpperLevel = -1 // level to assign on left click
-			var/prefLowerLevel = -1 // level to assign on right click
+			var/prefUpperLevel = -1 
+			var/prefLowerLevel = -1 
 
 			switch(job_preferences[job.title])
 				if(JP_HIGH)
@@ -1219,8 +1143,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					prefUpperLevel = 4
 					prefLowerLevel = 2
 					var/mob/dead/new_player/P = user
-					if(istype(P))
-						P.topjob = job.title
+					if(istype(P)) P.topjob = job.title
 				if(JP_MEDIUM)
 					prefLevelLabel = "Medium"
 					prefLevelColor = "green"
@@ -1238,30 +1161,18 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					prefLowerLevel = 1
 
 			HTML += "<a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
+			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font></a>"
+			
+			HTML += slot_button_html 
+			
+			HTML += "</td></tr>"
 
-//			if(rank == SSjob.overflow_role)//Overflow is special
-//				if(job_preferences[SSjob.overflow_role] == JP_LOW)
-//					HTML += "<font color=green>Yes</font>"
-//				else
-//					HTML += "<font color=red>No</font>"
-//				HTML += "</a></td></tr>"
-//				continue
-
-			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font>"
-			HTML += "</a></td></tr>"
-
-		for(var/i = 1, i < (limit - index), i += 1) // Finish the column so it is even
-			HTML += "<tr bgcolor='000000'><td width='60%' align='right'>&nbsp</td><td>&nbsp</td></tr>"
+		for(var/i = 1, i < (limit - index), i += 1) 
+			HTML += "<tr bgcolor='000000'><td width='60%' align='right'>&nbsp</td><td width='40%'>&nbsp</td></tr>"
 
 		HTML += "</td'></tr></table>"
 		HTML += "</center></table><br>"
 
-//		var/message = "Be an [SSjob.overflow_role] if preferences unavailable"
-//		if(joblessrole == BERANDOMJOB)
-//			message = "Get random job if preferences unavailable"
-//		else if(joblessrole == RETURNTOLOBBY)
-//			message = "Return to lobby if preferences unavailable"
-//		HTML += "<center><br><a href='?_src_=prefs;preference=job;task=random'>[message]</a></center>"
 		if(user.client.prefs.lastclass)
 			HTML += "<center><a href='?_src_=prefs;preference=job;task=triumphthing'>PLAY AS [user.client.prefs.lastclass] AGAIN</a></center>"
 		else
@@ -1318,8 +1229,10 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	return 1
 
 
-/datum/preferences/proc/ResetJobs()
+/datum/preferences/proc/ResetJobs() 
 	job_preferences = list()
+	job_characters = list() //TA EDIT
+	save_preferences()   //TA EDIT
 
 /datum/preferences/proc/ResetLastClass(mob/user)
 	if(user.client?.prefs)
@@ -1527,7 +1440,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 				SetChoices(user)
 			if("tutorial")
 				if(href_list["tut"])
-
 					to_chat(user, span_info("* ----------------------- *"))
 					to_chat(user, href_list["tut"])
 					to_chat(user, span_info("* ----------------------- *"))
@@ -1547,26 +1459,60 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 				if(SSticker.job_change_locked)
 					return 1
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
+			
+			if("set_job_slot") //TA EDIT START
+				if(SSticker.job_change_locked)
+					return 1
+				var/job_title = href_list["text"]
+				var/datum/job/J = SSjob.GetJob(job_title)
+				if(!J) return 1
+				
+				if(!path || !fexists(path))
+					return 1
+
+				var/list/valid_slots = list("Active Slot (Default)" = "default")
+				
+				
+				var/savefile/S = new /savefile(path)
+				
+				
+				var/datum/preferences/dummy_pref = new(parent)
+				
+				
+				for(var/i = 1 to max_save_slots)
+					
+					if(i % 5 == 0) 
+						CHECK_TICK
+					
+					
+					dummy_pref.fast_scan_for_job(S, i)
+					
+					
+					if(J.validate_prefs_for_job(dummy_pref))
+						valid_slots["Slot [i] - [dummy_pref.real_name] ([dummy_pref.pref_species.name])"] = i
+
+				var/choice = input(user, "Choose character for [job_title]:", "Character Select") as null|anything in valid_slots
+				if(choice)
+					if(valid_slots[choice] == "default")
+						job_characters -= job_title
+					else
+						job_characters[job_title] = valid_slots[choice]
+					save_preferences()
+					SetChoices(user) //TA EDIT END
 			else
 				SetChoices(user)
 		return 1
 
 	else if(href_list["preference"] == "antag")
 		switch(href_list["task"])
-			if("close")
-				user << browse(null, "window=antag_setup")
-				ShowChoices(user)
 			if("be_special")
 				var/be_special_type = href_list["be_special_type"]
 				if(be_special_type in be_special)
 					be_special -= be_special_type
 				else
 					be_special += be_special_type
-				SetAntag(user)
-			if("update")
-				SetAntag(user)
-			else
-				SetAntag(user)
+		ShowChoices(user, 1)
+		return 1
 	else if(href_list["preference"] == "tgui_ui_prefs")
 		tgui_pref = !tgui_pref
 
@@ -1671,10 +1617,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 		return
 	else if(href_list["preference"] == "descriptors")
 		show_descriptors_ui(user)
-		return
-
-	else if(href_list["preference"] == "lore_primer")
-		LorePopup(user)
 		return
 
 	else if(href_list["preference"] == "customizers")
@@ -1921,16 +1863,18 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						to_chat(user, "<font color='red'><b>Your classes have been reset.</b></font>")
 
 				if ("titles")
-					var/titles_input = tgui_input_list(user, "Choose your character's titles", "TITLES", GLOB.titles_list)
-					if(titles_input)
-						titles_pref = titles_input
-						to_chat(user, "<font color='red'>Your character's titles are now [titles_pref].</font>")
+					if(titles_pref == TITLES_M)
+						titles_pref = TITLES_F
+					else
+						titles_pref = TITLES_M
+					to_chat(user, "<font color='red'>Your character's titles are now [titles_pref].</font>")
 
 				if ("clothespref")
-					var/clothespref_input = tgui_input_list(user, "Choose your character's clothing preference", "CLOTHING", GLOB.clothespref_list)
-					if(clothespref_input)
-						clothes_pref = clothespref_input
-						to_chat(user, "<font color='red'>Your character's titles are now [clothespref_input].</font>")
+					if(clothes_pref == CLOTHES_M)
+						clothes_pref = CLOTHES_F
+					else
+						clothes_pref = CLOTHES_M
+					to_chat(user, "<font color='red'>Your character's titles are now [clothes_pref].</font>")
 				// LETHALSTONE EDIT: add voice type selection
 				if ("voicetype")
 					var voicetype_input = tgui_input_list(user, "Choose your character's voice type", "VOICE TYPE", GLOB.voice_types_list)
@@ -2249,22 +2193,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					nsfwflavortext_cached = parsemarkdown_basic(html_encode(nsfwflavortext), hyperlink = TRUE)
 					to_chat(user, "<span class='notice'>Successfully updated NSFW flavortext</span>")
 					log_game("[user] has set their NSFW flavortext'.")
-				if("nsfw_headshot")//TA edit
-					to_chat(user, "<span class='notice'>Finally a place to show it all.</span>")
-					var/new_nsfw_headshot_link = input(user, "Input the nsfw headshot link (https, hosts: gyazo, lensdump, imgbox, catbox):", "NSFW Headshot", nsfw_headshot_link) as text|null
-					if(new_nsfw_headshot_link == null)
-						return
-					if(new_nsfw_headshot_link == "")
-						nsfw_headshot_link = null
-						ShowChoices(user)
-						return
-					if(!valid_nsfw_headshot_link(user, new_nsfw_headshot_link))
-						nsfw_headshot_link = null
-						ShowChoices(user)
-						return
-					nsfw_headshot_link = new_nsfw_headshot_link
-					to_chat(user, "<span class='notice'>Successfully updated NSFW Headshot picture</span>")
-					log_game("[user] has set their NSFW Headshot image to '[nsfw_headshot_link]'.") //TA edit end
 				if("erpprefs")
 					to_chat(user, "<span class='notice'>["<span class='bold'>Erotic Roleplay preferences. If you put 'anything goes' or 'no limits' here, do not be surprised if people take you up on it.</span>"]</span>")
 					to_chat(user, "<font color = '#d6d6d6'>Leave blank to clear.</font>")
@@ -2582,7 +2510,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						set_new_race(race_chosen, user)
 				if("preset_bounty_toggle")
 					preset_bounty_enabled = !preset_bounty_enabled
-					return
 
 				if("preset_bounty_poster_key")
 					var/list/poster_choices = list()
@@ -2599,7 +2526,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					var/choice = input(user, "How severe are your crimes?", "Bounty Amount") as null|anything in sev_choices
 					if(choice)
 						preset_bounty_severity_key = sev_choices[choice]
-					return
 
 				if("subspecies")
 					var/list/species = list()
@@ -2628,11 +2554,9 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					var/choice = input(user, "How notorious are you?", "Bounty Amount") as null|anything in sev_choices
 					if(choice)
 						preset_bounty_severity_b_key = sev_choices[choice]
-					return
 
 				if("preset_bounty_crime")
 					preset_bounty_crime = input(user, "What is your crime?", "Crime") as text|null
-					return
 
 				if("update_mutant_colors")
 					update_mutant_colors = !update_mutant_colors
@@ -2700,28 +2624,8 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 							to_chat(user, span_purple("Your statpack has been set to virtuous (no stats) due to selecting a virtue.")) */
 
 				if("origin")
-					var/list/virtue_choices = list()
-					for (var/path as anything in GLOB.virtues)
-						var/datum/virtue/V = GLOB.virtues[path]
-						if (!V.name)
-							continue
-						if (V.name == virtue_origin.name)
-							continue
-						if (!istype(V, /datum/virtue/origin))
-							continue
-						if (V.restricted == TRUE)
-							if((pref_species.type in V.races))
-								continue
-						if (istype(V, /datum/virtue/origin/racial))
-							if(!(pref_species.type in V.races))
-								continue
-						virtue_choices[V.name] = V
-					var/result = tgui_input_list(user, "From where do you come?", "ORIGINS",virtue_choices)
-
-					if (result)
-						var/datum/virtue/virtue_chosen = virtue_choices[result]
-						virtue_origin = virtue_chosen
-						to_chat(user, process_virtue_text(virtue_chosen))
+					var/datum/origin_picker_panel/origin_picker = new(src) // TA EDIT
+					origin_picker.ui_interact(user) // TA EDIT
 
 				if("charflaw_averse_choice")
 					var/choice = tgui_input_list(user, "Who do you loathe?", "AVERSION", GLOB.averse_factions)
@@ -3052,16 +2956,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 				if("allow_midround_antag")
 					toggles ^= MIDROUND_ANTAG
 
-				if("parallaxup")
-					parallax = WRAP(parallax + 1, PARALLAX_INSANE, PARALLAX_DISABLE + 1)
-					if (parent && parent.mob && parent.mob.hud_used)
-						parent.mob.hud_used.update_parallax_pref(parent.mob)
-
-				if("parallaxdown")
-					parallax = WRAP(parallax - 1, PARALLAX_INSANE, PARALLAX_DISABLE + 1)
-					if (parent && parent.mob && parent.mob.hud_used)
-						parent.mob.hud_used.update_parallax_pref(parent.mob)
-
 				if("ambientocclusion")
 					ambientocclusion = !ambientocclusion
 					if(parent && parent.screen && parent.screen.len)
@@ -3156,8 +3050,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 				if("tab")
 					if (href_list["tab"])
 						current_tab = text2num(href_list["tab"])
-				if("lore_primer")
-					LorePopup(user)
 
 	ShowChoices(user)
 	return 1
@@ -3270,8 +3162,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	character.nsfw_ooc_extra_img = nsfw_ooc_extra_img
 
 	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link	
-
-	character.nsfw_headshot_link = nsfw_headshot_link //TA edit
 
 	character.erpprefs = erpprefs
 	
@@ -3422,39 +3312,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 		return FALSE
 	return TRUE
 
-/proc/valid_nsfw_headshot_link(mob/user, value, silent = FALSE) //TA edit
-	var/static/link_regex = regex("i.gyazo.com|a.l3n.co|b.l3n.co|c.l3n.co|images2.imgbox.com|thumbs2.imgbox.com|files.catbox.moe") //gyazo, discord, lensdump, imgbox, catbox
-	var/static/list/valid_extensions = list("jpg", "png", "jpeg") // Regex works fine, if you know how it works
-
-	if(!length(value))
-		return FALSE
-
-	var/find_index = findtext(value, "https://")
-	if(find_index != 1)
-		if(!silent)
-			to_chat(user, "<span class='warning'>Your link must be https!</span>")
-		return FALSE
-
-	if(!findtext(value, "."))
-		if(!silent)
-			to_chat(user, "<span class='warning'>Invalid link!</span>")
-		return FALSE
-	var/list/value_split = splittext(value, ".")
-
-	// extension will always be the last entry
-	var/extension = value_split[length(value_split)]
-	if(!(extension in valid_extensions))
-		if(!silent)
-			to_chat(usr, "<span class='warning'>The image must be one of the following extensions: '[english_list(valid_extensions)]'</span>")
-		return FALSE
-
-	find_index = findtext(value, link_regex)
-	if(find_index != 9)
-		if(!silent)
-			to_chat(usr, "<span class='warning'>The image must be hosted on one of the following sites: 'Gyazo, Lensdump, Imgbox, Catbox'</span>")
-		return FALSE
-	return TRUE //TA edit end
-
 /datum/preferences/proc/is_active_migrant()
 	if(!migrant)
 		return FALSE
@@ -3479,7 +3336,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 			dat += "["\Roman[L[2]]"] level[L[2] > 1 ? "s" : ""] of <b>[name]</b>[L[3] ? ", up to <b>[SSskills.level_names_plain[L[3]]]</b>" : ""] <br>"
 		dat += "</font>"
 	if(V.softcap)
-		dat += "<font color = '#a3e2ff'><font size = 3>This is a soft capped, and values will give only 1 level above the skill cap<br></font>"
+		dat += "<font color = '#a3e2ff'><font size = 3>This is soft capped, and values will give only 1 level above the skill cap<br></font>"
 	if(length(V.added_traits))
 		if(istype(V, /datum/virtue/origin))
 			dat += "<font color = '#a3e2ff'><font size = 3>This Origin grants the following traits: <br>"

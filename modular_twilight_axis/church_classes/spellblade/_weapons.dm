@@ -6,7 +6,6 @@
 	icon_state = "moonlight_saber"
 	icon = 'modular_twilight_axis/church_classes/icons/prismatic_weapons64.dmi'
 	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust, /datum/intent/sword/peel, /datum/intent/sword/chop)
-	alt_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust, /datum/intent/sword/strike, /datum/intent/sword/chop)
 	bigboy = TRUE
 	pixel_y = -16
 	pixel_x = -16
@@ -50,7 +49,7 @@
 	force_wielded = 35
 	max_blade_int = 250
 	possible_item_intents = list(SPEAR_THRUST_1H, /datum/intent/spear/bash)
-	gripped_intents = list(/datum/intent/spear/thrust, /datum/intent/rend/reach/partizan, /datum/intent/partizan/peel, /datum/intent/spear/bash)
+	gripped_intents = list(/datum/intent/spear/thrust, /datum/intent/rend/reach/partizan, /datum/intent/spear/bash)
 	icon_state = "moonlight_spear"
 	icon = 'modular_twilight_axis/church_classes/icons/prismatic_weapons64.dmi'
 	max_integrity = 50

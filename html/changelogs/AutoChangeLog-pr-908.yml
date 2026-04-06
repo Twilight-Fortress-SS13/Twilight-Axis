@@ -1,0 +1,4 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - balance: "Статы еретика теперь равны статам тамплиера."

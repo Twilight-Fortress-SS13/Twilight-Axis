@@ -1,13 +1,16 @@
 /obj/effect/proc_holder/spell/invoked/shadowstep
 	name = "Shadowstep"
 	desc = "Project your shadow to swap places with it, teleporting several feet away."
+	overlay_icon = 'modular_twilight_axis/icons/mob/actions/inq.dmi'
+	action_icon = 'modular_twilight_axis/icons/mob/actions/inq.dmi'
+	overlay_state = "shadowstep"
+	action_icon_state = "shadowstep"
 	cost = 3
 	xp_gain = TRUE
 	releasedrain = 30
 	warnie = "spellwarning"
 	movement_interrupt = TRUE
 	associated_skill = /datum/skill/magic/arcane
-	overlay_state = "shadowstep"
 	chargedrain = 1
 	chargetime = 0 SECONDS
 	recharge_time = 30 SECONDS
@@ -90,7 +93,7 @@
 					return
 				to_chat(user, span_info("I begin to meld with the shadows.."))
 				lockon(T, user)
-				if(do_after(user, 5 SECONDS))
+				if(do_after(user, 2 SECONDS))
 					tp(user)
 				else
 					reset(silent = TRUE)

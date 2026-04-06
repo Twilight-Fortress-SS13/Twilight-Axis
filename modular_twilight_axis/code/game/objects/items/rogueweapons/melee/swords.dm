@@ -60,17 +60,9 @@
 	user.update_a_intents()
 	update_icon()
 
-/datum/intent/sword/thrust/blunt
-	penfactor = PEN_NONE
-
-/datum/intent/sword/strike
-	penfactor = PEN_NONE
-
-/datum/intent/sword/peel
-	penfactor = PEN_NONE
-
-/datum/intent/sword/thrust/exe
-	penfactor = PEN_NONE
-
-/datum/intent/sword/disarm
-	penfactor = PEN_NONE
+/obj/item/rogueweapon/sword/long/kriegmesser/donat_astrata
+	name = "her verdict"
+	desc = "Wielded by the Paladins of the Punishing Light, these swords are forged from the same alloy of steel and silver used in the Eclipsum blades. While effective on the field of battle, this weapon is primarily known for it's use public executions.</br>'In the light of your rays I stand before you..' </br>'..with my blade raised and my soul bare..' </br>'..let you judge my verdict, and find it true..' </br>'..and let you guide my hand, O Radiant One.'"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
+	icon_state = "ast_kriegmesser"
+	sheathe_icon = "bs_swordregal" 

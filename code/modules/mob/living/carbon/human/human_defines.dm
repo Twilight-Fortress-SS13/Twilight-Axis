@@ -142,7 +142,6 @@
 	var/list/nsfw_img_gallery = list()
 	
 
-	var/nsfw_headshot_link = null //TA edit
 
 	var/has_confessed = FALSE // Used to track if they have confessed it was written onto a confession paper
 
@@ -200,6 +199,7 @@
 	COOLDOWN_DECLARE(priest_excommunicate)
 	COOLDOWN_DECLARE(priest_curse)
 	COOLDOWN_DECLARE(priest_change_miracles)
+	COOLDOWN_DECLARE(hag_transform_lockout)
 
 	// bait stacks for aimed intent
 	var/bait_stacks

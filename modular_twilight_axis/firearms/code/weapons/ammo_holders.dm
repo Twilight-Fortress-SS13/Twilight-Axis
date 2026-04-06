@@ -6,7 +6,7 @@
 	item_state = "pouch1"
 	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_NECK
 	max_storage = 30
-	var/ammo_type = /obj/item/ammo_casing/caseless/twilight_lead
+	var/ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead
 
 /obj/item/quiver/twilight_bullet/update_icon()
 	if(arrows.len)
@@ -19,7 +19,7 @@
 		to_chat(user, span_warning("My [src.name] is full!"))
 		return
 	to_chat(user, span_notice("I begin to gather the ammunition..."))
-	for(var/obj/item/ammo_casing/caseless/twilight_lead/arrow in T.contents)
+	for(var/obj/item/ammo_casing/caseless/rogue/twilight_lead/arrow in T.contents)
 		if(do_after(user, 5))
 			if(!eatarrow(arrow, T))
 				break
@@ -44,7 +44,7 @@
 	if (!arrows.len)
 		return
 	to_chat(user, span_warning("I begin to take out the ammo from [src], one by one..."))
-	for(var/obj/item/ammo_casing/caseless/arrow in arrows)
+	for(var/obj/item/ammo_casing/caseless/rogue/arrow in arrows)
 		if(!do_after(user, 0.5 SECONDS))
 			return
 		arrow.forceMove(user.loc)
@@ -61,7 +61,7 @@
 		var/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/B = A
 		if(arrows.len && !B.chambered && B.cocked)
 			for(var/AR in arrows)
-				if(istype(AR, /obj/item/ammo_casing/caseless/twilight_lead/runelock))
+				if(istype(AR, /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock))
 					arrows -= AR
 					B.attackby(AR, loc, params)
 					break
@@ -71,35 +71,35 @@
 /obj/item/quiver/twilight_bullet/runed/Initialize()
 	. = ..()
 	for(var/i in 1 to 10)
-		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/R = new()
+		var/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/R = new()
 		arrows += R
 	update_icon()
 
 /obj/item/quiver/twilight_bullet/blessed/Initialize()
 	. = ..()
 	for(var/i in 1 to 7)
-		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/blessed/R = new()
+		var/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/blessed/R = new()
 		arrows += R
 	update_icon()
 
 /obj/item/quiver/twilight_bullet/lead/Initialize()
 	. = ..()
 	for(var/i in 1 to max_storage)
-		var/obj/item/ammo_casing/caseless/twilight_lead/B = new()
+		var/obj/item/ammo_casing/caseless/rogue/twilight_lead/B = new()
 		arrows += B
 	update_icon()
 
 /obj/item/quiver/twilight_bullet/lead_ten/Initialize()
 	. = ..()
 	for(var/i in 1 to 10)
-		var/obj/item/ammo_casing/caseless/twilight_lead/B = new()
+		var/obj/item/ammo_casing/caseless/rogue/twilight_lead/B = new()
 		arrows += B
 	update_icon()
 
 /obj/item/quiver/twilight_bullet/silver/Initialize()
 	. = ..()
 	for(var/i in 1 to 10)
-		var/obj/item/ammo_casing/caseless/twilight_lead/silver/B = new()
+		var/obj/item/ammo_casing/caseless/rogue/twilight_lead/silver/B = new()
 		arrows += B
 	update_icon()
 
@@ -110,7 +110,7 @@
 	item_state = "cpouch1"
 	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_CLOAK|ITEM_SLOT_BELT
 	max_storage = 20
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball
 
 /obj/item/quiver/twilight_bullet/cannonball/update_icon()
 	if(arrows.len)
@@ -123,7 +123,7 @@
 		to_chat(user, span_warning("My [src.name] is full!"))
 		return
 	to_chat(user, span_notice("I begin to gather the ammunition..."))
-	for(var/obj/item/ammo_casing/caseless/twilight_cannonball/arrow in T.contents)
+	for(var/obj/item/ammo_casing/caseless/rogue/twilight_cannonball/arrow in T.contents)
 		if(do_after(user, 5))
 			if(!eatarrow(arrow))
 				break
@@ -131,14 +131,14 @@
 /obj/item/quiver/twilight_bullet/cannonball/lead/Initialize()
 	. = ..()
 	for(var/i in 1 to max_storage)
-		var/obj/item/ammo_casing/caseless/twilight_cannonball/B = new()
+		var/obj/item/ammo_casing/caseless/rogue/twilight_cannonball/B = new()
 		arrows += B
 	update_icon()
 
 /obj/item/quiver/twilight_bullet/cannonball/grapeshot/Initialize()
 	. = ..()
 	for(var/i in 1 to max_storage)
-		var/obj/item/ammo_casing/caseless/twilight_cannonball/grapeshot/B = new()
+		var/obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot/B = new()
 		arrows += B
 	update_icon()
 
@@ -148,7 +148,7 @@
 	icon_state = "runebag"
 	item_state = "runebag"
 	max_storage = 4
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock
 	var/list/linked_ammo_types = list()
 
 /obj/item/quiver/twilight_bullet/runicbag/attack_right(mob/user)
@@ -182,7 +182,7 @@
 		to_chat(user, span_notice("There is no linked ammunition to recall!"))
 
 /obj/item/quiver/twilight_bullet/runicbag/eatarrow(obj/A, loc)
-	if(istype(A, /obj/item/ammo_casing/caseless/twilight_lead/runelock))
+	if(istype(A, /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock))
 		var/obj/item/ammo_casing/R = A
 		if(arrows.len < max_storage)
 			if(ismob(loc))
@@ -200,7 +200,7 @@
 /obj/item/quiver/twilight_bullet/runicbag/runed/Initialize()
 	. = ..()
 	for(var/i in 1 to 4)
-		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/R = new()
+		var/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/R = new()
 		arrows += R
 		R.linked_bag = src
 	update_icon()
@@ -208,7 +208,7 @@
 /obj/item/quiver/twilight_bullet/runicbag/blessed/Initialize()
 	. = ..()
 	for(var/i in 1 to 5)
-		var/obj/item/ammo_casing/caseless/twilight_lead/runelock/blessed/R = new()
+		var/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/blessed/R = new()
 		arrows += R
 		R.linked_bag = src
 	update_icon()

@@ -162,3 +162,101 @@
 /// Wraps text in a styled span (kept because controller calls it).
 /datum/erp_sex_link/proc/spanify_sex(text)
 	return SSerp?.link_presenter?.spanify_sex(src, text)
+
+/// Always returns the first valid matching object.
+/datum/erp_sex_link/proc/get_furniture_for_scene()
+	var/mob/living/active_mob = actor_active?.physical
+	var/mob/living/passive_mob = actor_passive?.physical
+
+	var/turf/active_turf = get_turf(active_mob)
+	var/turf/passive_turf = get_turf(passive_mob)
+
+	if(active_turf && passive_turf && active_turf == passive_turf)
+		var/atom/movable/shared_furniture = find_furniture_on_turf(active_turf)
+		if(shared_furniture)
+			return shared_furniture
+
+	if(active_turf)
+		var/atom/movable/active_furniture = find_furniture_on_turf(active_turf)
+		if(active_furniture)
+			return active_furniture
+
+	if(passive_turf)
+		var/atom/movable/passive_furniture = find_furniture_on_turf(passive_turf)
+		if(passive_furniture)
+			return passive_furniture
+
+	return null
+
+/// Finds first valid furniture object on turf by scene priority
+/datum/erp_sex_link/proc/find_furniture_on_turf(turf/T)
+	if(!T)
+		return null
+
+	var/atom/movable/furniture
+
+	furniture = find_closet_on_turf(T)
+	if(furniture)
+		return furniture
+
+	furniture = find_bed_on_turf(T)
+	if(furniture)
+		return furniture
+
+	furniture = find_chair_on_turf(T)
+	if(furniture)
+		return furniture
+
+	furniture = find_table_on_turf(T)
+	if(furniture)
+		return furniture
+
+	return null
+
+/// Finds closet on turf.
+/datum/erp_sex_link/proc/find_closet_on_turf(turf/T)
+	if(!T)
+		return null
+
+	for(var/obj/structure/closet/C in T)
+		if(QDELETED(C))
+			continue
+		return C
+
+	return null
+
+/// Finds rogue bed on turf.
+/datum/erp_sex_link/proc/find_bed_on_turf(turf/T)
+	if(!T)
+		return null
+
+	for(var/obj/structure/bed/rogue/B in T)
+		if(QDELETED(B))
+			continue
+		return B
+
+	return null
+
+/// Finds chair on turf.
+/datum/erp_sex_link/proc/find_chair_on_turf(turf/T)
+	if(!T)
+		return null
+
+	for(var/obj/structure/chair/C in T)
+		if(QDELETED(C))
+			continue
+		return C
+
+	return null
+
+/// Finds table on turf.
+/datum/erp_sex_link/proc/find_table_on_turf(turf/T)
+	if(!T)
+		return null
+
+	for(var/obj/structure/table/TB in T)
+		if(QDELETED(TB))
+			continue
+		return TB
+
+	return null

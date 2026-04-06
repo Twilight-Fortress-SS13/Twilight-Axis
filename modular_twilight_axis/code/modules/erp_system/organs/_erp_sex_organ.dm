@@ -257,3 +257,42 @@
 
 /datum/erp_sex_organ/proc/on_inject(datum/erp_sex_link/link, inject_mode, target, datum/reagents/R, mob/living/carbon/human/who)
 	return
+
+/datum/erp_sex_organ/proc/apply_contact_effect(datum/erp_sex_link/L, mult = 1)
+	return
+
+/datum/erp_sex_organ/proc/sanitize_owner_links(datum/erp_controller/C)
+	if(!islist(links) || !links.len)
+		return FALSE
+
+	var/list/new_links = list()
+	var/changed = FALSE
+
+	for(var/datum/erp_sex_link/L in links)
+		if(!L || QDELETED(L))
+			changed = TRUE
+			continue
+
+		if(L.init_organ != src && L.target_organ != src)
+			changed = TRUE
+			continue
+
+		if(C)
+			if(!islist(C.links) || !(L in C.links))
+				changed = TRUE
+				continue
+
+		if(!L.is_valid())
+			if(C?.links && (L in C.links))
+				C.links -= L
+			L.finish()
+			qdel(L)
+			changed = TRUE
+			continue
+
+		new_links += L
+
+	if(changed)
+		links = new_links
+
+	return changed

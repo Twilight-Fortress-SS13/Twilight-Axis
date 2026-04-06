@@ -22,13 +22,14 @@
 	same_job_respawn_delay = 30 MINUTES
 	job_subclasses = list(
 		/datum/advclass/mercenary/anthrax,
-		/datum/advclass/mercenary/anthrax/assasin,
+		/datum/advclass/mercenary/anthrax_assassin,
 		/datum/advclass/mercenary/atgervi,
 		/datum/advclass/mercenary/atgervi/shaman,
 		/datum/advclass/mercenary/etrusca/condottiero,
 		/datum/advclass/mercenary/etrusca/balestrieri,
 		/datum/advclass/mercenary/desert_rider,
 		/datum/advclass/mercenary/desert_rider/zeybek,
+		/datum/advclass/mercenary/desert_rider/sahir,
 		/datum/advclass/mercenary/desert_rider/almah,
 		/datum/advclass/mercenary/forlorn,
 		/datum/advclass/mercenary/vaquero,
@@ -54,6 +55,7 @@
 		/datum/advclass/mercenary/warscholar/vizier,
 		/datum/advclass/mercenary/blackoak,
 		/datum/advclass/mercenary/blackoak/ranger,
+		/datum/advclass/mercenary/blackoak/adept,
 		/datum/advclass/mercenary/underdweller,
 		/datum/advclass/mercenary/grudgebearer,
 		/datum/advclass/mercenary/grudgebearer/soldier,

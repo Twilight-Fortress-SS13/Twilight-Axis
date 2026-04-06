@@ -1,3 +1,4 @@
+/*
 /obj/effect/proc_holder/spell/self/conjure_armor/vines
 	name = "Conjure vine armour"
 	desc = "Conjure a vine armour, which can defend."
@@ -73,7 +74,7 @@
 	user.remove_status_effect(/datum/status_effect/buff/vinearmour)
 	if(!QDELETED(src))
 		dispel()
-
+*/
 /datum/status_effect/buff/vinearmour
 	id = "vinearmour"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/vinearmour

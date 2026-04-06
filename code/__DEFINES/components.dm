@@ -326,8 +326,6 @@
 #define COMSIG_OBJ_SETANCHORED "obj_setanchored"				//called in /obj/structure/setAnchored(): (value)
 #define COMSIG_OBJ_DEFAULT_UNFASTEN_WRENCH "obj_default_unfasten_wrench"	//from base of code/game/machinery
 #define COMSIG_MULTITOOL_REMOVE_BUFFER "multitool_remove_buffer"
-#define COMSIG_OBJ_PRE_TRANSFER_REAGENTS "obj_pre_transfer_reagents"
-#define COMPONENT_PREVENT_CONTAINER_REAGENT_TRANSFER (1<<0)
 
 // /obj/machinery signals
 #define COMSIG_MACHINERY_BROKEN "machinery_broken"				//from /obj/machinery/obj_break(damage_flag): (damage_flag)
@@ -345,6 +343,7 @@
 #define COMSIG_ITEM_PRE_ATTACK "item_pre_attack"				//from base of obj/item/pre_attack(): (atom/target, mob/user, params)
 	#define COMPONENT_NO_ATTACK 1
 #define COMSIG_ITEM_AFTERATTACK "item_afterattack"				//from base of obj/item/afterattack(): (atom/target, mob/user, params)
+#define COMSIG_STRUCTURE_ATTACKBY "struct_attackby"
 #define COMSIG_ITEM_ATTACK_QDELETED "item_attack_qdeleted"		//from base of obj/item/attack_qdeleted(): (atom/target, mob/user, params)
 #define COMSIG_ITEM_EQUIPPED "item_equip"						//from base of obj/item/equipped(): (/mob/equipper, slot)
 #define COMSIG_ITEM_DROPPED "item_drop"							//from base of obj/item/dropped(): (mob/user)
@@ -511,3 +510,5 @@
 //Roguetown-specific
 #define  COMSIG_MOB_ON_KICK	"mob_on_kick"	//from /mob/living/proc/try_kick(atom/A). This is for when the src has done a kick.
 #define  COMSIG_MOB_KICKED	"mob_kicked"	//from /datum/species/proc/kicked(mob/living/carbon/human/user, mob/living/carbon/human/target). This is for when the mob has BEEN kicked.
+#define COMSIG_STATUS_EFFECT_HAG_CURSE_CLEARED "status_effect_hag_curse_cleared" // Sent when a hag curse is cleared by the curse status effect
+#define COMSIG_SLEEPY_TIME "sleepy_time" // from /mob/living/carbon/human/update_tod(todd)

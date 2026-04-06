@@ -4,8 +4,8 @@
 	flag = WRETCH
 	department_flag = ANTAGONIST
 	faction = "Station"
-	total_positions = 5
-	spawn_positions = 5
+	total_positions = 0
+	spawn_positions = 0
 	allowed_races = RACES_ALL_KINDS
 	tutorial = "Somewhere in your lyfe, you fell to the wrong side of civilization. Hounded by the consequences of your actions, you spend your daes prowling the roads for easy marks and loose purses, scraping to get by."
 	outfit = null
@@ -42,15 +42,26 @@
 		/datum/advclass/wretch/outlaw,
 		/datum/advclass/wretch/poacher,
 		/datum/advclass/wretch/plaguebearer,
+		/datum/advclass/wretch/mistwalker,
 		/datum/advclass/wretch/pyromaniac,
 		/datum/advclass/wretch/vigilante,
 		/datum/advclass/wretch/munitioneer,
 		/datum/advclass/wretch/pariah,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
+		/datum/advclass/wretch/slasher
 //		/datum/advclass/wretch/ancient_deathknight,
-		/datum/advclass/wretch/munitioneer
 	)
+
+/datum/job/roguetown/wretch/special_job_check(mob/dead/new_player/player)
+	if(is_storyteller_soft_antag_blocked())
+		return FALSE
+	return ..()
+
+/datum/job/roguetown/wretch/special_check_latejoin(client/C)
+	if(is_storyteller_soft_antag_blocked())
+		return FALSE
+	return ..()
 
 /datum/job/roguetown/wretch/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
@@ -154,6 +165,16 @@
 		player_count = override_player_count
 
 	result["player_count"] = player_count
+	if(is_storyteller_soft_antag_blocked())
+		result["tier1_slots"] = 0
+		result["major_antag_active"] = FALSE
+		result["garrison"] = SSgamemode.garrison
+		result["holy_warrior"] = SSgamemode.holy_warrior
+		result["acolyte"] = SSgamemode.half_combatant
+		result["combat_total"] = SSgamemode.garrison + SSgamemode.holy_warrior + FLOOR(SSgamemode.half_combatant * 0.5, 1)
+		result["tier2_extra"] = 0
+		result["final_slots"] = 0
+		return result
 
 	// Tier 1: Population scaling, +1 per 10 players above 40, max 10
 	var/slots = 5
@@ -189,7 +210,7 @@
 		slots += tier2_max
 
 	result["tier2_extra"] = tier2_max
-	result["final_slots"] = slots
+	result["final_slots"] = max(0, slots)
 
 	return result
 
@@ -207,3 +228,86 @@
 
 	wretch_job.total_positions = max(wretch_job.current_positions, slots)
 	wretch_job.spawn_positions = max(wretch_job.current_positions, slots)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/proc/bountychoice_poacher(mob/living/carbon/human/H)		//TA - EDIT START
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			H.change_stat(STATKEY_CON, -1)
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_PER, 1)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_spellblade(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			GLOB.excommunicated_players += H.real_name
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_STR, 1)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_heretic(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			GLOB.excommunicated_players += H.real_name
+		if("They fear me")
+			if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
+				H.put_in_hands(new /obj/item/clothing/head/roguetown/helmet/blacksteel/psythorns)
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_hereticspy(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			GLOB.excommunicated_players += H.real_name
+		if("They fear me")
+			if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
+				H.put_in_hands(new /obj/item/clothing/mask/rogue/spectacles/inq)
+				H.put_in_hands(new /obj/item/grapplinghook)
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_SPD, 1)
+			H.change_stat(STATKEY_INT, 1)
+
+/proc/bountychoice_vigilante(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)								//TA - EDIT END

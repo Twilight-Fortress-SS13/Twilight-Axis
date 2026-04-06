@@ -89,7 +89,7 @@
 	. = ..()
 
 	AddComponent(/datum/component/arousal)
-	
+
 
 	RegisterSignal(src, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(clean_blood))
 	AddComponent(/datum/component/personal_crafting)
@@ -665,9 +665,6 @@
 				else if(energy > 0)
 					hud_used.energy.icon_state = "energy5"
 
-		if(hud_used.zone_select)
-			hud_used.zone_select.update_icon()
-
 /mob/living/carbon/human/fully_heal(admin_revive = FALSE, break_restraints = FALSE)
 	dna?.species.spec_fully_heal(src)
 	if(admin_revive)
@@ -676,7 +673,9 @@
 	spill_embedded_objects()
 	set_heartattack(FALSE)
 	drunkenness = 0
-	return ..()
+	. = ..()
+	if(hud_used?.zone_select)
+		hud_used.zone_select.rebuild_limbs()
 
 /mob/living/carbon/human/check_weakness(obj/item/weapon, mob/living/attacker)
 	. = ..()
@@ -720,8 +719,8 @@
 		if(!client || !client.prefs)
 			return
 		if(alert(usr,"This will irreversibly purge an INDIVIDUAL PORTION of this slot. Is this what you want?","DON'T FATFINGER THIS","PURGE","Nevermind") == "PURGE")
-			if(alert(usr,"The next prompt will not have a Nevermind option. Are you sure you want this?","ITS NOT REVERSIBLE","Yes","Nevermind") == "Yes")
-				var/choice = alert(usr,"What would you like to purge?","ITS TOO LATE NOW","Flavor","Notes","Extra")
+			if(alert(usr,"The next prompt will not have a Nevermind option. Are you sure you want this?","IT'S NOT REVERSIBLE","Yes","Nevermind") == "Yes")
+				var/choice = alert(usr,"What would you like to purge?","IT'S TOO LATE NOW","Flavor","Notes","Extra")
 				if(choice)
 					switch(choice)
 						if("Flavor")

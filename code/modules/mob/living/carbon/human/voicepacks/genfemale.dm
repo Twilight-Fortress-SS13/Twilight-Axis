@@ -174,4 +174,9 @@
 				used = list('sound/vo/LizardSqueal.ogg')
 			if("thump")
 				used = list('sound/vo/LizardThump.ogg')
+			//MODULAR TWILIGHT AXIS
+			if("softmoan")
+				used = list('modular_twilight_axis/sound/misc/vo/female/gen/softmoan.ogg')
+			if("moan")
+				used = list('modular_twilight_axis/sound/misc/vo/female/gen/moan.ogg')
 	return used

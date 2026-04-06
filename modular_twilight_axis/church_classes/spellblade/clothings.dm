@@ -1,6 +1,6 @@
-#define ARMOR_NEWMOON_HOOD list("blunt" = 50, "slash" = 85, "stab" = 97, "piercing" = 93, "fire" = 0, "acid" = 0)
-#define ARMOR_NEWMOON_JACKET list("blunt" = 70, "slash" = 100, "stab" = 100, "piercing" = 100, "fire" = 0, "acid" = 0)
-#define ARMOR_NEWMOON_MASK list("blunt" = 5, "slash" = 15, "stab" = 15, "piercing" = 15, "fire" = 0, "acid" = 0)
+#define ARMOR_NEWMOON_HOOD list("blunt" = 3, "slash" = 4, "stab" = 5, "piercing" = 5, "fire" = 0, "acid" = 0)
+#define ARMOR_NEWMOON_JACKET list("blunt" = 4, "slash" = 5, "stab" = 5, "piercing" = 5, "fire" = 0, "acid" = 0)
+#define ARMOR_NEWMOON_MASK list("blunt" = 11, "slash" = 1, "stab" = 1, "piercing" = 1, "fire" = 0, "acid" = 0)
 
 /obj/item/clothing/head/roguetown/roguehood/newmoon
 	name = "newmoon hood"

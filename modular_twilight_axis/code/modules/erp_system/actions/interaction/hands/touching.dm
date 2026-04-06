@@ -1,4 +1,4 @@
-/datum/erp_action/other/hands/rubbing
+/datum/erp_action/other/hands/touching
 	abstract = FALSE
 	name = "Ласкать"
 	required_target_organ = SEX_ORGAN_BODY

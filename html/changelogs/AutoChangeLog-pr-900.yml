@@ -1,0 +1,7 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - bugfix: "Фиксит дубликацию наёмников в меню"
+  - bugfix: "Интент Miaodao корректен"
+  - bugfix: "Добавлен мешочек с деньгами Ау Ра наёмникам"
+  - bugfix: "Нормальный цвет эльфийских перчаток"

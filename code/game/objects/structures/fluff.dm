@@ -1177,6 +1177,16 @@
 	var/divine = TRUE
 	obj_flags = UNIQUE_RENAME | CAN_BE_HIT
 
+/obj/structure/fluff/psycross/get_mechanics_examine(mob/user)
+	. = ..()
+	var/mob/living/living_user = user
+	if(user.mind.assigned_role == "Bishop")
+		. += span_info("As the Bishop, you can marry two people by having them both bite an apple, then offering it to the cross.")
+		. += span_info("The second person to bite the apple will take the last name of whoever bit it first.")
+	else if(istype(living_user) && HAS_TRAIT(living_user, TRAIT_MARRIAGE_CAPABLE) && (living_user.patron.type == /datum/patron/divine/eora))
+		. += span_info("As an Eoran, you can marry two people by having them both bite an apple, then offering it to the cross.")
+		. += span_info("The second person to bite the apple will take the last name of whoever bit it first.")
+
 /obj/structure/fluff/psycross/Initialize()
 	. = ..()
 	become_hearing_sensitive()
@@ -1313,11 +1323,10 @@
 
 /obj/structure/fluff/psycross/attackby(obj/item/W, mob/user, params)
 	if(user.mind)
-		if(user.mind.assigned_role == "Bishop")
+		var/mob/living/living_user = user
+		// if there's no bishop inround, you can still get married... as long as there's an eoran. heretics can do it too!
+		if((user.mind.assigned_role == "Bishop") || (istype(living_user) && HAS_TRAIT(living_user, TRAIT_MARRIAGE_CAPABLE) && (living_user.patron.type == /datum/patron/divine/eora)))
 			if(istype(W, /obj/item/reagent_containers/food/snacks/grown/apple))
-				if(!istype(get_area(user), /area/rogue/indoors/town/church/chapel))
-					to_chat(user, span_warning("I need to do this in the chapel."))
-					return FALSE
 				var/marriage
 				var/obj/item/reagent_containers/food/snacks/grown/apple/A = W
 				//The MARRIAGE TEST BEGINS
@@ -1340,34 +1349,22 @@
 							* second. This seems to be the best way
 							* to use the least amount of variables.
 							*/
-							var/name_placement = 1
-							for(var/X in A.bitten_names)
-								//I think that guy is dead.
-								if(C.stat == DEAD)
-									continue
-								//That person is not a player or afk.
-								if(!C.client)
-									continue
-								//Gotta get a divorce first
-								if(C.marriedto)
-									continue
-								if(C.real_name == X)
-									//I know this is very sloppy but its alot less code.
-									switch(name_placement)
-										if(1)
-											if(thegroom)
-												continue
-											thegroom = C
-										if(2)
-											if(thebride)
-												continue
-											thebride = C
-
-									name_placement++
-
+							//I think that guy is dead.
+							if(C.stat == DEAD)
+								continue
+							//That person is not a player or afk.
+							if(!C.client)
+								continue
+							//Gotta get a divorce first
+							if(C.marriedto)
+								continue
+							if(C.real_name == A.bitten_names[1])
+								thegroom = C
+							if(C.real_name == A.bitten_names[2])
+								thebride = C
 						//WE FOUND THEM LETS GET THIS SHOW ON THE ROAD!
 						if(!thegroom || !thebride)
-
+							to_chat(user, span_warn("nonexistent"))
 							return
 						//Alright now for the boring surname formatting.
 						var/surname2use
@@ -1442,99 +1439,6 @@
 	if(M.flash_act())
 		var/diff = power - M.confused
 		M.confused += min(power, diff)
-
-/obj/structure/fluff/psycross/proc/summon_martyr_weapon_tgui(mob/user)
-	if(!user.mind)
-		return
-
-	var/list/weapon_choices = list(
-		"Sword" = CALLBACK(src, PROC_REF(summon_and_equip_sword), user),
-		"Axe" = CALLBACK(src, PROC_REF(summon_and_equip_axe), user),
-		"Mace" = CALLBACK(src, PROC_REF(summon_and_equip_mace), user),
-		"Trident" = CALLBACK(src, PROC_REF(summon_and_equip_spear), user)
-	)
-
-	var/result = tgui_input_list(user, "Choose a martyr weapon to summon:", "Martyr Weapon", weapon_choices)
-
-	if(result && weapon_choices[result])
-		var/datum/callback/selected_callback = weapon_choices[result]
-		selected_callback.Invoke()
-	else
-		to_chat(user, span_warning("No weapon was chosen."))
-
-/obj/structure/fluff/psycross/proc/summon_and_equip_sword(mob/user)
-	var/obj/item/rogueweapon/sword/long/martyr/I = SSroguemachine.martyrweapon
-
-	if(I)
-		I.anti_stall()
-
-	I = new /obj/item/rogueweapon/sword/long/martyr(src.loc)
-	SSroguemachine.martyrweapon = I
-
-	if(user.put_in_hands(I))
-		to_chat(user, span_notice("The martyr sword appears in your hand."))
-	else
-		to_chat(user, span_warning("Your hands are full! The sword falls to the ground."))
-
-	return I
-
-/obj/structure/fluff/psycross/proc/summon_and_equip_axe(mob/user)
-	var/obj/item/rogueweapon/greataxe/steel/doublehead/martyr/I = SSroguemachine.martyrweapon
-
-	if(I)
-		I.anti_stall()
-
-	I = new /obj/item/rogueweapon/greataxe/steel/doublehead/martyr(src.loc)
-	SSroguemachine.martyrweapon = I
-
-	if(user.put_in_hands(I))
-		to_chat(user, span_notice("The martyr axe appears in your hand."))
-	else
-		to_chat(user, span_warning("Your hands are full! The axe falls to the ground."))
-
-	return I
-
-/obj/structure/fluff/psycross/proc/summon_and_equip_mace(mob/user)
-	var/obj/item/rogueweapon/mace/goden/martyr/I = SSroguemachine.martyrweapon
-
-	if(I)
-		I.anti_stall()
-
-	I = new /obj/item/rogueweapon/mace/goden/martyr(src.loc)
-	SSroguemachine.martyrweapon = I
-
-	if(user.put_in_hands(I))
-		to_chat(user, span_notice("The martyr mace appears in your hand."))
-	else
-		to_chat(user, span_warning("Your hands are full! The mace falls to the ground."))
-
-	return I
-
-/obj/structure/fluff/psycross/proc/summon_and_equip_spear(mob/user)
-	var/obj/item/rogueweapon/spear/partizan/martyr/I = SSroguemachine.martyrweapon
-
-	if(I)
-		I.anti_stall()
-
-	I = new /obj/item/rogueweapon/spear/partizan/martyr(src.loc)
-	SSroguemachine.martyrweapon = I
-
-	if(user.put_in_hands(I))
-		to_chat(user, span_notice("The martyr trident appears in your hand."))
-	else
-		to_chat(user, span_warning("Your hands are full! The spear falls to the ground."))
-
-	return I
-
-/obj/structure/fluff/psycross/attack_hand(mob/user)
-	. = ..()
-	if(.)
-		return
-	if(user.job != "Martyr")
-		return
-	if((HAS_TRAIT(user, TRAIT_NOPAIN) && HAS_TRAIT(user, TRAIT_STRENGTH_UNCAPPED) && HAS_TRAIT(user, TRAIT_BLOODLOSS_IMMUNE))) // So that the martyr could not change weapons during his special ability... I do not know how to make it smarter.
-		return
-	summon_martyr_weapon_tgui(user)
 
 /obj/structure/fluff/beach_umbrella/security
 	icon_state = "hos_brella"

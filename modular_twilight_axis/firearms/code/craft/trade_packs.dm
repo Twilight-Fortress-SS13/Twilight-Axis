@@ -310,7 +310,7 @@
 /datum/supply_pack/rogue/Afreet/twilight_silver
 	name = "Silver bullet"
 	cost = 10
-	contains = list(/obj/item/ammo_casing/caseless/twilight_lead/silver)
+	contains = list(/obj/item/ammo_casing/caseless/rogue/twilight_lead/silver)
 
 /datum/supply_pack/rogue/Afreet/Mancatcher
 	name = "Mancatcher"
