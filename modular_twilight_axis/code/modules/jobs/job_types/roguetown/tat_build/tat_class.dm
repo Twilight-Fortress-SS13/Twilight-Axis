@@ -14,7 +14,6 @@
 	round_contrib_points = null
 	outfit = null
 	outfit_female = null
-	job_traits = list(TRAIT_STEELHEARTED)
 	always_show_on_latechoices = TRUE
 	class_categories = FALSE
 
