@@ -20,7 +20,26 @@
 
 /datum/job/roguetown/tat_class/after_spawn(mob/living/L, mob/M, latejoin = FALSE)
 	..()
-	if(L && ishuman(L))
-		var/mob/living/carbon/human/H = L
-		if(!H.mind)
-			return
+	if(!L || !ishuman(L))
+		return
+
+	var/mob/living/carbon/human/H = L
+	if(!H.mind)
+		return
+
+	var/datum/preferences/P
+	if(H.client?.prefs)
+		P = H.client.prefs
+	else if(M?.client?.prefs)
+		P = M.client.prefs
+
+	if(!P?.tat_build)
+		return
+
+	if(!P.tat_build.can_save())
+		P.sanitize_tat_build(P.tat_build.export_to_list())
+
+	if(!P.tat_build?.can_save())
+		return
+
+	P.tat_build.apply_to_human(H)
