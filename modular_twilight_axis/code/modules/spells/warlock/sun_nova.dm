@@ -60,7 +60,7 @@
 	density = FALSE
 	layer = ABOVE_MOB_LAYER
 	var/mob/living/caster
-	var/duration = 10 SECONDS
+	var/duration = 5 SECONDS
 	var/tmp/damage_mult = 1
 
 /obj/effect/sun_nova_fire/Initialize(mapload, mob/living/user)
@@ -68,20 +68,22 @@
 	if(. == INITIALIZE_HINT_QDEL)
 		return .
 
-	ASYNC(CALLBACK(src, PROC_REF(postInit), user))
-
-/obj/effect/sun_nova_fire/proc/postInit(mob/living/user)
-	if(QDELETED(src))
-		return
-
 	caster = user
 	set_light(2, 2, "#ff4500")
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/effect/sun_nova_fire/LateInitialize()
+	. = ..()
+
+	if(QDELETED(src))
+		return
 
 	var/mob/living/target = locate(/mob/living) in loc
 	if(target)
 		burn_target(target)
 
 	QDEL_IN(src, duration)
+	
 /obj/effect/sun_nova_fire/Crossed(atom/movable/AM)
 	. = ..()
 	if(isliving(AM))

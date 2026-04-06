@@ -62,4 +62,4 @@
 
 	if(H.mind)
 		H.AddComponent(/datum/component/spell_proc/warlock)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/touch/prestidigitation)
