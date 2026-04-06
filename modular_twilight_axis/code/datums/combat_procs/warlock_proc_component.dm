@@ -32,6 +32,38 @@
 
 	return user.GetComponent(/datum/component/spell_proc/warlock)
 
+/proc/warlock_spell_pre_cast(mob/living/user, spell_slot, spell_school, obj/effect/proc_holder/spell/S)
+	var/list/context = list()
+
+	if(!isliving(user))
+		return context
+
+	SEND_SIGNAL(user, COMSIG_SPELL_PROC_PRE_CAST, spell_slot, spell_school, context)
+
+	if(S)
+		S.StoreWarlockPreCastContext(context)
+
+	return context
+
+/proc/warlock_spell_post_cast(mob/living/user, spell_slot, spell_school, success, list/context)
+	if(!isliving(user))
+		return
+
+	if(!islist(context))
+		context = list()
+
+	SEND_SIGNAL(user, COMSIG_SPELL_PROC_CAST_RESOLVED, spell_slot, spell_school, success, context)
+
+/proc/warlock_get_damage_mult(list/context)
+	if(!islist(context))
+		return 1
+
+	var/damage_mult = context["damage_mult"]
+	return isnull(damage_mult) ? 1 : damage_mult
+
+/obj/effect/proc_holder/spell/proc/StoreWarlockPreCastContext(list/context)
+	return
+
 /datum/component/spell_proc/warlock
 	parent_type = /datum/component/spell_proc
 
@@ -276,6 +308,8 @@
 		return WARLOCK_SCHOOL_FIRE
 	if(spell_school == WARLOCK_SCHOOL_FROST)
 		return WARLOCK_SCHOOL_FROST
+	if(spell_school == WARLOCK_SCHOOL_FIREFROST)
+		return current_school
 	return null
 
 /datum/component/spell_proc/warlock/proc/GetOppositeSchool(school)
@@ -383,6 +417,9 @@
 	if(isnull(is_proc))
 		is_proc = IsProcSlot(spell_slot)
 
+	if(spell_school == WARLOCK_SCHOOL_FIREFROST)
+		is_proc = TRUE
+
 	if(is_proc)
 		ClearStacksForSchool(effective_school)
 		slot_proc_active[spell_slot] = FALSE
@@ -409,43 +446,6 @@
 	if(prob(proc_chance))
 		slot_proc_active[spell_slot] = TRUE
 		RebuildSpellBar()
-
-#undef WARLOCK_SLOT_SWITCH
-#undef WARLOCK_BASE_PROC_CHANCE
-#undef WARLOCK_PROC_PER_STACK
-#undef WARLOCK_DAMAGE_PER_STACK
-
-/proc/warlock_spell_pre_cast(mob/living/user, spell_slot, spell_school, obj/effect/proc_holder/spell/S)
-	var/list/context = list()
-
-	if(!isliving(user))
-		return context
-
-	SEND_SIGNAL(user, COMSIG_SPELL_PROC_PRE_CAST, spell_slot, spell_school, context)
-
-	if(S)
-		S.StoreWarlockPreCastContext(context)
-
-	return context
-
-/proc/warlock_spell_post_cast(mob/living/user, spell_slot, spell_school, success, list/context)
-	if(!isliving(user))
-		return
-
-	if(!islist(context))
-		context = list()
-
-	SEND_SIGNAL(user, COMSIG_SPELL_PROC_CAST_RESOLVED, spell_slot, spell_school, success, context)
-
-/proc/warlock_get_damage_mult(list/context)
-	if(!islist(context))
-		return 1
-
-	var/damage_mult = context["damage_mult"]
-	return isnull(damage_mult) ? 1 : damage_mult
-
-/obj/effect/proc_holder/spell/proc/StoreWarlockPreCastContext(list/context)
-	return
 
 /obj/effect/proc_holder/spell/self/warlock_stance_switch
 	name = "Warlock Stance"
@@ -497,3 +497,8 @@
 		return FALSE
 
 	return W.ToggleSchool()
+
+#undef WARLOCK_SLOT_SWITCH
+#undef WARLOCK_BASE_PROC_CHANCE
+#undef WARLOCK_PROC_PER_STACK
+#undef WARLOCK_DAMAGE_PER_STACK

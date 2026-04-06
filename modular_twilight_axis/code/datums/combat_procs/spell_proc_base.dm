@@ -24,7 +24,7 @@
 	owner = null
 	return ..()
 
-/datum/component/spell_proc/proc/_on_pre_cast(datum/source, spell_slot, spell_school, spell_kind, list/context)
+/datum/component/spell_proc/proc/_on_pre_cast(datum/source, spell_slot, spell_school, list/context)
 	SIGNAL_HANDLER
 
 	if(source != owner || !owner)
@@ -33,9 +33,9 @@
 	if(!islist(context))
 		context = list()
 
-	OnSpellProcPreCast(spell_slot, spell_school, spell_kind, context)
+	OnSpellProcPreCast(spell_slot, spell_school, context)
 
-/datum/component/spell_proc/proc/_on_cast_resolved(datum/source, spell_slot, spell_school, spell_kind, success, list/context)
+/datum/component/spell_proc/proc/_on_cast_resolved(datum/source, spell_slot, spell_school, success, list/context)
 	SIGNAL_HANDLER
 
 	if(source != owner || !owner)
@@ -44,10 +44,10 @@
 	if(!islist(context))
 		context = list()
 
-	OnSpellProcCastResolved(spell_slot, spell_school, spell_kind, success, context)
+	OnSpellProcCastResolved(spell_slot, spell_school, success, context)
 
-/datum/component/spell_proc/proc/OnSpellProcPreCast(spell_slot, spell_school, spell_kind, list/context)
+/datum/component/spell_proc/proc/OnSpellProcPreCast(spell_slot, spell_school, list/context)
 	return
 
-/datum/component/spell_proc/proc/OnSpellProcCastResolved(spell_slot, spell_school, spell_kind, success, list/context)
+/datum/component/spell_proc/proc/OnSpellProcCastResolved(spell_slot, spell_school, success, list/context)
 	return
