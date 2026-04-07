@@ -357,6 +357,17 @@
 	target_items = list(/obj/item/rogueweapon/greataxe/steel)
 	result_item = /obj/item/rogueweapon/greataxe/steel/gilded
 
+//Zydras donator items - Ironclad baddie
+/obj/item/enchantingkit/zydrashauberk
+	name = "Mailled Hauberk morphing elixir"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy)
+	result_item = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy/zycuirass
+
+/obj/item/enchantingkit/zydrasgreataxe
+	name = "Greataxe morphing elixir"
+	target_items = list(/obj/item/rogueweapon/greataxe)
+	result_item = /obj/item/rogueweapon/greataxe/zygreataxe
+/*
 //Zydras donator items - Iconoclast pyromaniac
 /obj/item/enchantingkit/zydrasiconocrown
 	name = "Barred Helmet morphing elixir"
@@ -375,6 +386,7 @@
 		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/zydrasiconosash)
 	result_item = null
 	icon_loadout = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/zydrasiconosash
+*/
 
 //Eiren - Zweihander and sabres
 /obj/item/enchantingkit/weapon/eiren

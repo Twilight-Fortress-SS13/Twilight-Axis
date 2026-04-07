@@ -1508,7 +1508,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/bigfoot_axe
 	donatitem = TRUE
-
+/*
 /datum/loadout_item/donator_zydrasiconocrown
 	name = "Donator Kit - Iconoclast Crown - Required: Barred Helmet(Only men, no small races)"
 	path = /obj/item/enchantingkit/zydrasiconocrown
@@ -1520,7 +1520,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/zydrasiconopauldrons
 	category = list("Броня", "Донат")
 	donatitem = TRUE
-
+*/
 /datum/loadout_item/donator_eiren4
 	name = "Donator Kit - Darkwood's Embrace"
 	path = /obj/item/clothing/suit/roguetown/armor/longcoat/eiren
@@ -1546,13 +1546,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/duelhat/pretzel
 	donatitem = TRUE
-
+/*
 /datum/loadout_item/donator_zydrasiconosash
 	name = "Donator Kit - Iconoclast Sash - Required: Hauberk(Only men, no small races)"
 	path = /obj/item/enchantingkit/zydrasiconosash
 	category = list("Броня", "Донат")
 	donatitem = TRUE
-
+*/
 /datum/loadout_item/donator_zydras
 	name = "Donator Kit - Padded silky dress - Required: Silky Dress(No Small Races)"
 	category = list("Одежда", "Донат")
