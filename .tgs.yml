@@ -6,5 +6,5 @@ static_files:
   - name: data
     populate: false
 windows_scripts:
-  Build: BUILD.bat
+  Build: bin\build
 security: Trusted
