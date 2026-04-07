@@ -1,0 +1,10 @@
+version: 1
+byond: "516.1666"
+static_files:
+  - name: config
+    populate: false
+  - name: data
+    populate: false
+windows_scripts:
+  Build: BUILD.bat
+security: Trusted
