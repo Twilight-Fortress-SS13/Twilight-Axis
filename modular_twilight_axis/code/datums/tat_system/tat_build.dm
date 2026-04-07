@@ -1092,36 +1092,48 @@
 	D.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
 
 /datum/tat_build/proc/apply_witch_package(mob/living/carbon/human/H)
-	if(!H || !traits[TAT_TRAIT_WITCH_INITIATE])
+	if(!H)
 		return
 
-	var/witch_path = get_magic_value("witch_path", "old_magick")
+	ADD_TRAIT(H, TRAIT_WITCH, TAT_TRAIT_SOURCE)
 
-	switch(witch_path)
-		if("old_magick")
+	switch(tgui_input_list(H, "Choose your witch path.", "Witch Initiate", list("Old Magick", "Godsblood", "Mystagogue")))
+		if("Old Magick")
 			ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
 			H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_APPRENTICE, TRUE)
 			if(H.mind)
-				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 5, "ward" = TRUE))
-				H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
+				H.mind.setup_mage_aspects(list(
+					"mastery" = FALSE,
+					"major" = 1,
+					"minor" = 1,
+					"utilities" = 5,
+					"ward" = TRUE,
+				))
+			H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
 
-		if("godsblood")
-			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_APPRENTICE, TRUE)
+		if("Godsblood")
 			var/datum/devotion/D = new /datum/devotion(H, H.patron)
+			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_APPRENTICE, TRUE)
 			D.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
 			D.max_devotion *= 0.5
 
-		if("mystagogue")
-			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
+		if("Mystagogue")
 			var/datum/devotion/D = new /datum/devotion(H, H.patron)
+			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 			D.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1)
 			D.max_devotion *= 0.5
 
 			ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
 			H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
 			if(H.mind)
-				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3, "ward" = TRUE))
-				H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
+				H.mind.setup_mage_aspects(list(
+					"mastery" = FALSE,
+					"major" = 0,
+					"minor" = 1,
+					"utilities" = 3,
+					"ward" = TRUE,
+				))
+			H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
 
 /datum/tat_build/proc/apply_traits(mob/living/carbon/human/H)
 	if(!H)
