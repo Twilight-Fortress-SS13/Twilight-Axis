@@ -25,6 +25,11 @@
 #define TAT_TRAIT_BONUS_STAT_POOL "tat_bonus_stat_pool"
 #define TAT_TRAIT_WANTED "tat_wanted"
 
+#define TAT_TRAIT_DIVINE_INITIATE "tat_divine_initiate"
+#define TAT_TRAIT_MAGE_INITIATE "tat_mage_initiate"
+#define TAT_TRAIT_DRUID_INITIATE "tat_druid_initiate"
+#define TAT_TRAIT_WITCH_INITIATE "tat_witch_initiate"
+
 #define TAT_BUILD_STAT_BONUS_EXTRA_STATS 3
 #define TAT_BUILD_STAT_BONUS_WANTED 5
 
@@ -151,7 +156,11 @@
 	TRAIT_WITCH = TAT_TRAIT_ENTRY("Witch Presence", 3, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "They fear you, but still find you useful."), \
 	TRAIT_NASTY_EATER = TAT_TRAIT_ENTRY("Inhumen Digestion", 2, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You can eat bad food, and water toxic to humen does not affect you."), \
 	TRAIT_GOODLOVER = TAT_TRAIT_ENTRY("Fabled Lover", 2, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "It is a lucky thing to share your bed."), \
-	TRAIT_NUTCRACKER = TAT_TRAIT_ENTRY("Nutcracker", 2, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You love kicking idiots in the nuts.")
+	TRAIT_NUTCRACKER = TAT_TRAIT_ENTRY("Nutcracker", 2, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You love kicking idiots in the nuts."), \
+	TAT_TRAIT_DIVINE_INITIATE = TAT_TRAIT_ENTRY("Divine Initiate", 3, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants miracles and devotion. Configure the miracle tier in the build UI."), \
+	TAT_TRAIT_MAGE_INITIATE = TAT_TRAIT_ENTRY("Mage Initiate", 3, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants Arcyne training, mage aspect setup, and a spellbook."), \
+	TAT_TRAIT_DRUID_INITIATE = TAT_TRAIT_ENTRY("Druid Initiate", 4, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants Dendor's druidic rites, direct druid spells, and wise tree alert."), \
+	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 4, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Choose one witch path: Old Magick, Godsblood, or Mystagogue."), \
 
 #define TAT_AVAILABLE_ITEMS_LIST \
 	/obj/item/rogueweapon/eaglebeak = TAT_ITEM_ENTRY("Eaglebeak", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \

@@ -14,6 +14,7 @@
 	var/list/traits = list()
 	var/list/items = list()
 	var/list/item_loadout = list()
+	var/list/magic_config = list()
 
 	var/dirty = FALSE
 	var/list/stat_order = TAT_STATS_ORDER_LIST
@@ -298,6 +299,25 @@
 	var/list/loadout = get_item_loadout_entry(item_path)
 	return loadout["bag"] || 0
 
+/datum/tat_build/proc/get_magic_value(key, default_value = null)
+	if(!islist(magic_config))
+		magic_config = list()
+	if(!(key in magic_config))
+		return default_value
+	return magic_config[key]
+
+/datum/tat_build/proc/set_magic_value(key, value)
+	if(!islist(magic_config))
+		magic_config = list()
+
+	if(isnull(value))
+		magic_config -= key
+	else
+		magic_config[key] = value
+
+	dirty = TRUE
+	return TRUE
+
 /datum/tat_build/proc/build_ui_stats()
 	var/list/result = list()
 	for(var/stat_id in stat_order)
@@ -411,6 +431,12 @@
 			items -= item_path
 			item_loadout -= item_path
 
+/datum/tat_build/proc/is_magic_initiation_trait(trait_id)
+	return (trait_id == TAT_TRAIT_DIVINE_INITIATE \
+		|| trait_id == TAT_TRAIT_MAGE_INITIATE \
+		|| trait_id == TAT_TRAIT_DRUID_INITIATE \
+		|| trait_id == TAT_TRAIT_WITCH_INITIATE)
+
 /datum/tat_build/proc/are_traits_mutually_exclusive(trait_a, trait_b)
 	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TRAIT_OUTLANDER) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TRAIT_OUTLANDER))
 		return TRUE
@@ -418,6 +444,10 @@
 		return TRUE
 	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TAT_TRAIT_BONUS_STAT_POOL) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TAT_TRAIT_BONUS_STAT_POOL))
 		return TRUE
+
+	if(is_magic_initiation_trait(trait_a) && is_magic_initiation_trait(trait_b))
+		return TRUE
+
 	return FALSE
 
 /datum/tat_build/proc/has_invalid_trait_dependencies()
@@ -456,6 +486,7 @@
 /datum/tat_build/proc/sanitize_stats()
 	for(var/stat_id in available_stats)
 		set_stat_value(stat_id, get_stat_value(stat_id))
+
 	while(get_remaining_stat_points() < 0)
 		var/changed = FALSE
 		for(var/stat_id in available_stats)
@@ -516,11 +547,56 @@
 	if(!traits[TAT_TRAIT_PLATE_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_PLATE)
 
+/datum/tat_build/proc/sanitize_magic()
+	if(!islist(magic_config))
+		magic_config = list()
+
+	if(!traits[TAT_TRAIT_DIVINE_INITIATE])
+		magic_config -= "divine_tier"
+		magic_config -= "divine_passive_gain"
+		magic_config -= "divine_devotion_limit"
+
+	if(!traits[TAT_TRAIT_MAGE_INITIATE])
+		magic_config -= "mage_aspects"
+		magic_config -= "mage_spellbook"
+
+	if(!traits[TAT_TRAIT_DRUID_INITIATE])
+		magic_config -= "druid_force_dendor"
+		magic_config -= "druid_alert"
+
+	if(!traits[TAT_TRAIT_WITCH_INITIATE])
+		magic_config -= "witch_path"
+
+	if(traits[TAT_TRAIT_DIVINE_INITIATE])
+		if(isnull(get_magic_value("divine_tier", null)))
+			magic_config["divine_tier"] = CLERIC_T1
+		if(isnull(get_magic_value("divine_passive_gain", null)))
+			magic_config["divine_passive_gain"] = CLERIC_REGEN_MINOR
+		if(isnull(get_magic_value("divine_devotion_limit", null)))
+			magic_config["divine_devotion_limit"] = CLERIC_REQ_1
+
+	if(traits[TAT_TRAIT_MAGE_INITIATE])
+		if(!islist(get_magic_value("mage_aspects", null)))
+			magic_config["mage_aspects"] = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3, "ward" = TRUE)
+		if(isnull(get_magic_value("mage_spellbook", null)))
+			magic_config["mage_spellbook"] = TRUE
+
+	if(traits[TAT_TRAIT_DRUID_INITIATE])
+		if(isnull(get_magic_value("druid_force_dendor", null)))
+			magic_config["druid_force_dendor"] = TRUE
+		if(isnull(get_magic_value("druid_alert", null)))
+			magic_config["druid_alert"] = TRUE
+
+	if(traits[TAT_TRAIT_WITCH_INITIATE])
+		if(isnull(get_magic_value("witch_path", null)))
+			magic_config["witch_path"] = "old_magick"
+
 /datum/tat_build/proc/sanitize_skills()
 	for(var/skill_type in skills.Copy())
 		if(!(skill_type in available_skills))
 			skills -= skill_type
 			continue
+
 		var/value = round(skills[skill_type])
 		value = clamp(value, 0, get_skill_cap(skill_type))
 		if(value > 0)
@@ -589,10 +665,7 @@
 
 /datum/tat_build/proc/sanitize_build()
 	sanitize_traits()
-	sanitize_skills()
-	sanitize_items()
-	sanitize_stats()
-	sanitize_traits()
+	sanitize_magic()
 	sanitize_skills()
 	sanitize_items()
 	sanitize_stats()
@@ -602,6 +675,7 @@
 	reset_skills()
 	reset_traits()
 	reset_items()
+	reset_magic()
 	dirty = TRUE
 
 /datum/tat_build/proc/reset_stats()
@@ -621,20 +695,27 @@
 	item_loadout = list()
 	dirty = TRUE
 
+/datum/tat_build/proc/reset_magic()
+	magic_config = list()
+	dirty = TRUE
+
 /datum/tat_build/proc/add_stat(id, amount = 1)
 	if(!id || !isnum(amount) || !(id in available_stats))
 		return FALSE
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
+
 	var/current = get_stat_value(id)
 	var/new_value = current + amount
 	if(new_value > get_stat_max(id))
 		return FALSE
+
 	var/old_delta = get_stat_point_delta_for_value(id, current)
 	var/new_delta = get_stat_point_delta_for_value(id, new_value)
 	if(get_remaining_stat_points() < (new_delta - old_delta))
 		return FALSE
+
 	set_stat_value(id, new_value)
 	dirty = TRUE
 	return TRUE
@@ -645,10 +726,12 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
+
 	var/current = get_stat_value(id)
 	var/new_value = current - amount
 	if(new_value < get_stat_min(id))
 		return FALSE
+
 	set_stat_value(id, new_value)
 	dirty = TRUE
 	return TRUE
@@ -659,15 +742,19 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
+
 	var/current = get_skill_value(skill_type)
 	var/new_value = current + amount
 	if(new_value > get_skill_cap(skill_type))
 		return FALSE
+
 	var/cost = 0
 	for(var/i in 1 to amount)
 		cost += current + i
+
 	if(get_remaining_skill_points() < cost)
 		return FALSE
+
 	skills[skill_type] = new_value
 	dirty = TRUE
 	return TRUE
@@ -678,14 +765,17 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
+
 	var/current = get_skill_value(skill_type)
 	if(current <= 0)
 		return FALSE
+
 	var/new_value = max(0, current - amount)
 	if(new_value > 0)
 		skills[skill_type] = new_value
 	else
 		skills -= skill_type
+
 	dirty = TRUE
 	return TRUE
 
@@ -731,6 +821,8 @@
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_MAIL)
 	if(!traits[TAT_TRAIT_PLATE_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_PLATE)
+
+	sanitize_magic()
 
 	for(var/skill_type in skills.Copy())
 		var/cap = get_skill_cap(skill_type)
@@ -831,6 +923,7 @@
 		"traits" = traits.Copy(),
 		"items" = items.Copy(),
 		"item_loadout" = item_loadout.Copy(),
+		"magic_config" = magic_config.Copy(),
 	)
 
 /datum/tat_build/proc/load_from_list(list/L)
@@ -844,6 +937,7 @@
 	var/list/_traits = L["traits"]
 	var/list/_items = L["items"]
 	var/list/_item_loadout = L["item_loadout"]
+	var/list/_magic_config = L["magic_config"]
 
 	if(islist(_stats))
 		for(var/stat_id in available_stats)
@@ -880,6 +974,9 @@
 				"equip" = round(text2num("[saved_loadout["equip"]]")),
 				"bag" = round(text2num("[saved_loadout["bag"]]")),
 			)
+
+	if(islist(_magic_config))
+		magic_config = _magic_config.Copy()
 
 	sanitize_build()
 	dirty = FALSE
@@ -949,9 +1046,82 @@
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/armorsmithing", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/weaponsmithing", 3)
 
-	if(traits[TRAIT_ARCYNE] || traits[TAT_TRAIT_SPELLBLADE])
+	if(traits[TRAIT_ARCYNE] || traits[TAT_TRAIT_SPELLBLADE] || traits[TAT_TRAIT_MAGE_INITIATE])
 		grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcane", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcana", 3)
+
+/datum/tat_build/proc/apply_divine_package(mob/living/carbon/human/H)
+	if(!H || !traits[TAT_TRAIT_DIVINE_INITIATE])
+		return
+
+	var/cleric_tier = get_magic_value("divine_tier", CLERIC_T1)
+	var/passive_gain = get_magic_value("divine_passive_gain", CLERIC_REGEN_MINOR)
+	var/devotion_limit = get_magic_value("divine_devotion_limit", CLERIC_REQ_1)
+
+	var/datum/devotion/D = new /datum/devotion(H, H.patron)
+	D.grant_miracles(H, cleric_tier = cleric_tier, passive_gain = passive_gain, devotion_limit = devotion_limit)
+
+/datum/tat_build/proc/apply_mage_package(mob/living/carbon/human/H)
+	if(!H || !traits[TAT_TRAIT_MAGE_INITIATE] || !H.mind)
+		return
+
+	ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
+
+	var/list/aspects = get_magic_value("mage_aspects", null)
+	if(islist(aspects))
+		H.mind.setup_mage_aspects(aspects)
+
+	if(get_magic_value("mage_spellbook", TRUE))
+		H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
+
+/datum/tat_build/proc/apply_druid_package(mob/living/carbon/human/H)
+	if(!H || !traits[TAT_TRAIT_DRUID_INITIATE])
+		return
+
+	if(get_magic_value("druid_force_dendor", TRUE))
+		H.set_patron(/datum/patron/divine/dendor)
+
+	if(get_magic_value("druid_alert", TRUE))
+		H.AddComponent(/datum/component/wise_tree_alert)
+
+	H.AddSpell(new /obj/effect/proc_holder/spell/targeted/create_seed)
+	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_claws)
+	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
+
+	var/datum/devotion/D = new /datum/devotion(H, H.patron)
+	D.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
+
+/datum/tat_build/proc/apply_witch_package(mob/living/carbon/human/H)
+	if(!H || !traits[TAT_TRAIT_WITCH_INITIATE])
+		return
+
+	var/witch_path = get_magic_value("witch_path", "old_magick")
+
+	switch(witch_path)
+		if("old_magick")
+			ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
+			H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_APPRENTICE, TRUE)
+			if(H.mind)
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 5, "ward" = TRUE))
+				H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
+
+		if("godsblood")
+			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_APPRENTICE, TRUE)
+			var/datum/devotion/D = new /datum/devotion(H, H.patron)
+			D.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
+			D.max_devotion *= 0.5
+
+		if("mystagogue")
+			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
+			var/datum/devotion/D = new /datum/devotion(H, H.patron)
+			D.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1)
+			D.max_devotion *= 0.5
+
+			ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
+			H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
+			if(H.mind)
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3, "ward" = TRUE))
+				H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
 
 /datum/tat_build/proc/apply_traits(mob/living/carbon/human/H)
 	if(!H)
@@ -976,7 +1146,11 @@
 				TAT_TRAIT_BARDIC_INSPIRATION_T2,
 				TAT_TRAIT_PARTY_LEADER,
 				TAT_TRAIT_BONUS_STAT_POOL,
-				TAT_TRAIT_WANTED
+				TAT_TRAIT_WANTED,
+				TAT_TRAIT_DIVINE_INITIATE,
+				TAT_TRAIT_MAGE_INITIATE,
+				TAT_TRAIT_DRUID_INITIATE,
+				TAT_TRAIT_WITCH_INITIATE
 			)
 				continue
 			else
@@ -1017,6 +1191,11 @@
 		ADD_TRAIT(H, TRAIT_OUTLAW, TAT_TRAIT_SOURCE)
 		ADD_TRAIT(H, TRAIT_HERESIARCH, TAT_TRAIT_SOURCE)
 		wretch_select_bounty(H)
+
+	apply_divine_package(H)
+	apply_mage_package(H)
+	apply_druid_package(H)
+	apply_witch_package(H)
 
 /datum/tat_build/proc/find_backpack_or_storage(mob/living/carbon/human/H)
 	if(!H)
@@ -1117,6 +1296,7 @@
 		"trait_entries" = build_ui_traits(),
 		"items" = build_ui_items(),
 		"loadout" = build_ui_loadout(),
+		"magic_config" = magic_config.Copy(),
 		"available_stats" = build_ui_stat_entries(),
 		"available_skills" = build_ui_skills(),
 		"available_traits" = build_ui_traits(),
@@ -1159,6 +1339,8 @@
 			return move_item_to_equip(text2path(params["path"]), text2num(params["amount"]) || 1)
 		if("move_item_to_bag")
 			return move_item_to_bag(text2path(params["path"]), text2num(params["amount"]) || 1)
+		if("set_magic_value")
+			return set_magic_value(params["key"], params["value"])
 		if("reset_all")
 			reset_build()
 			return TRUE
@@ -1181,8 +1363,6 @@
 			return TRUE
 
 	return FALSE
-
-#undef TAT_TRAIT_SOURCE
 
 /datum/preferences/proc/sanitize_tat_build(list/tat_data)
 	if(!tat_build)
