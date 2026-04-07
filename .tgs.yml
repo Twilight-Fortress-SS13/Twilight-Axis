@@ -2,9 +2,8 @@ version: 1
 byond: "516.1666"
 static_files:
   - name: config
-    populate: false
+    populate: true
   - name: data
-    populate: false
 windows_scripts:
-  Build: bin\build
-security: Trusted
+  PreCompile.bat: bin/build.cmd
+security: Safe
