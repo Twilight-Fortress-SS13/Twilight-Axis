@@ -94,7 +94,7 @@
 	if(!H.mind)
 		return
 
-	var/weapons = list("Steel Warhammer and Shield","Steel Handclaw","Grand Maul","Discipline - Unarmed")
+	var/weapons = list("Steel Warhammer and Shield","Steel Handclaw","Grand Maul (!!req 15str)","Discipline - Unarmed")
 	var/weapon_choice = input(H, "Choose your WEAPON.", "TAKE UP ARMS.") as anything in weapons
 	switch(weapon_choice)
 		if("Steel Warhammer and Shield")
@@ -112,7 +112,7 @@
 			r_hand = /obj/item/rogueweapon/handclaw/steel
 			gloves = /obj/item/clothing/gloves/roguetown/plate/graggar
 			armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
-		if("Grand Maul")
+		if("Grand Maul (!!req 15str)")
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/berserker
 			r_hand = /obj/item/rogueweapon/mace/maul/grand
