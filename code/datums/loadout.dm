@@ -1508,6 +1508,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/bigfoot_axe
 	donatitem = TRUE
+
 /*
 /datum/loadout_item/donator_zydrasiconocrown
 	name = "Donator Kit - Iconoclast Crown - Required: Barred Helmet(Only men, no small races)"
@@ -1521,6 +1522,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Броня", "Донат")
 	donatitem = TRUE
 */
+
 /datum/loadout_item/donator_eiren4
 	name = "Donator Kit - Darkwood's Embrace"
 	path = /obj/item/clothing/suit/roguetown/armor/longcoat/eiren
