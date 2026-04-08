@@ -25,14 +25,15 @@
 		"Stashed Axe & Whip" = list(/obj/item/rogueweapon/stoneaxe/woodcut, /obj/item/rogueweapon/whip)
 	)
     
-    /datum/virtue/combat/combat_virtue/apply_to_human(mob/living/carbon/human/recipient)
+
+/datum/virtue/combat/combat_virtue/apply_to_human(mob/living/carbon/human/recipient)
 	. = ..()
 	if(triumph_check(recipient))
 		for(var/choice in picked_choices)
-            if(ispath(extra_choices[choice], /datum/skill/combat/bows))
-                recipient.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_APPRENTICE, silent = TRUE)
-            else if(ispath(extra_choices[choice], /datum/skill/combat/crossbows))
-                recipient.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_APPRENTICE, silent = TRUE)
+			if(ispath(extra_choices[choice], /datum/skill/combat/bows))
+				recipient.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_APPRENTICE, silent = TRUE)
+			else if(ispath(extra_choices[choice], /datum/skill/combat/crossbows))
+				recipient.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_APPRENTICE, silent = TRUE)
 			else if(ispath(extra_choices[choice], /datum/skill))
 				recipient.adjust_skillrank_up_to(extra_choices[choice], SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
 			else if(islist(extra_choices[choice]))	//stashed items
