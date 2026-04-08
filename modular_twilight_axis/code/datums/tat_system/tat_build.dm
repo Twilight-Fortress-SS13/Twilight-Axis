@@ -248,8 +248,11 @@
 
 /datum/tat_build/proc/get_item_loadout_entry(item_path)
 	if(!(item_path in item_loadout) || !islist(item_loadout[item_path]))
+		var/default_equip = 0
+		if(item_path in items)
+			default_equip = max(0, round(text2num("[items[item_path]]")))
 		item_loadout[item_path] = list(
-			"equip" = 0,
+			"equip" = default_equip,
 			"bag" = 0,
 		)
 	return item_loadout[item_path]
@@ -264,7 +267,19 @@
 		item_loadout -= item_path
 		return
 
-	var/list/loadout = get_item_loadout_entry(item_path)
+	var/list/loadout
+	var/is_new_entry = FALSE
+
+	if(!(item_path in item_loadout) || !islist(item_loadout[item_path]))
+		loadout = list(
+			"equip" = total_amount,
+			"bag" = 0,
+		)
+		item_loadout[item_path] = loadout
+		is_new_entry = TRUE
+	else
+		loadout = item_loadout[item_path]
+
 	var/equip_amount = round(text2num("[loadout["equip"]]"))
 	var/bag_amount = round(text2num("[loadout["bag"]]"))
 
@@ -279,8 +294,8 @@
 	if(bag_amount > remaining)
 		bag_amount = remaining
 
-	if((equip_amount + bag_amount) < total_amount)
-		bag_amount += total_amount - (equip_amount + bag_amount)
+	if(!is_new_entry && (equip_amount + bag_amount) < total_amount)
+		equip_amount += total_amount - (equip_amount + bag_amount)
 
 	loadout["equip"] = equip_amount
 	loadout["bag"] = bag_amount
@@ -1209,25 +1224,125 @@
 	apply_druid_package(H)
 	apply_witch_package(H)
 
-/datum/tat_build/proc/find_backpack_or_storage(mob/living/carbon/human/H)
+/datum/tat_build/proc/get_equip_slots_for_item(obj/item/I)
+	var/list/slots = list()
+	if(!I)
+		return slots
+
+	var/flags = I.slot_flags
+
+	if(flags & ITEM_SLOT_WRISTS)
+		slots += SLOT_WRISTS
+	if(flags & ITEM_SLOT_GLOVES)
+		slots += SLOT_GLOVES
+	if(flags & ITEM_SLOT_SHOES)
+		slots += SLOT_SHOES
+	if(flags & ITEM_SLOT_RING)
+		slots += SLOT_RING
+	if(flags & ITEM_SLOT_HEAD)
+		slots += SLOT_HEAD
+	if(flags & ITEM_SLOT_MOUTH)
+		slots += SLOT_MOUTH
+	if(flags & ITEM_SLOT_MASK)
+		slots += SLOT_WEAR_MASK
+	if(flags & ITEM_SLOT_NECK)
+		slots += SLOT_NECK
+	if(flags & ITEM_SLOT_CLOAK)
+		slots += SLOT_CLOAK
+
+	if(flags & ITEM_SLOT_ARMOR)
+		slots += SLOT_ARMOR
+	if(flags & ITEM_SLOT_SHIRT)
+		slots += SLOT_SHIRT
+	if(flags & ITEM_SLOT_PANTS)
+		slots += SLOT_PANTS
+
+	if(flags & ITEM_SLOT_OCLOTHING)
+		if(!(SLOT_ARMOR in slots))
+			slots += SLOT_ARMOR
+	if(flags & ITEM_SLOT_ICLOTHING)
+		if(!(SLOT_SHIRT in slots))
+			slots += SLOT_SHIRT
+		if(!(SLOT_PANTS in slots))
+			slots += SLOT_PANTS
+
+	if(flags & ITEM_SLOT_BELT)
+		slots += SLOT_BELT_L
+		slots += SLOT_BELT_R
+		slots += SLOT_BELT
+
+	if(flags & ITEM_SLOT_HIP)
+		if(!(SLOT_BELT_L in slots))
+			slots += SLOT_BELT_L
+		if(!(SLOT_BELT_R in slots))
+			slots += SLOT_BELT_R
+		if(!(SLOT_BELT in slots))
+			slots += SLOT_BELT
+
+	if(flags & ITEM_SLOT_BACK_L)
+		slots += SLOT_BACK_L
+	if(flags & ITEM_SLOT_BACK_R)
+		slots += SLOT_BACK_R
+	if(flags & ITEM_SLOT_BACK)
+		if(!(SLOT_BACK_L in slots))
+			slots += SLOT_BACK_L
+		if(!(SLOT_BACK_R in slots))
+			slots += SLOT_BACK_R
+		if(!(SLOT_BACK in slots))
+			slots += SLOT_BACK
+
+	return slots
+
+/datum/tat_build/proc/get_storage_targets(mob/living/carbon/human/H)
+	var/list/targets = list()
 	if(!H)
-		return null
+		return targets
 
-	for(var/obj/item/I in H.contents)
-		if(istype(I, /obj/item/storage/backpack))
-			return I
+	var/obj/item/I = H.get_item_by_slot(SLOT_BACK_L)
+	if(I)
+		targets += I
 
-	for(var/obj/item/I in H.contents)
-		if(istype(I, /obj/item/storage))
-			return I
+	I = H.get_item_by_slot(SLOT_BACK_R)
+	if(I && !(I in targets))
+		targets += I
 
-	return null
+	I = H.get_item_by_slot(SLOT_BELT_L)
+	if(I && !(I in targets))
+		targets += I
+
+	I = H.get_item_by_slot(SLOT_BELT_R)
+	if(I && !(I in targets))
+		targets += I
+
+	I = H.get_item_by_slot(SLOT_BACK)
+	if(I && !(I in targets))
+		targets += I
+
+	I = H.get_item_by_slot(SLOT_BELT)
+	if(I && !(I in targets))
+		targets += I
+
+	I = H.get_item_by_slot(SLOT_CLOAK)
+	if(I && !(I in targets))
+		targets += I
+
+	return targets
 
 /datum/tat_build/proc/try_insert_into_storage(obj/item/I, atom/storage_owner, mob/living/carbon/human/H)
 	if(!I || !storage_owner)
 		return FALSE
 
-	I.forceMove(storage_owner)
+	return !!SEND_SIGNAL(storage_owner, COMSIG_TRY_STORAGE_INSERT, I, null, TRUE, TRUE)
+
+/datum/tat_build/proc/try_put_into_any_storage_or_drop(obj/item/I, mob/living/carbon/human/H)
+	if(!I || !H)
+		return FALSE
+
+	for(var/storage_owner in get_storage_targets(H))
+		if(try_insert_into_storage(I, storage_owner, H))
+			return TRUE
+
+	I.forceMove(get_turf(H))
 	return TRUE
 
 /datum/tat_build/proc/spawn_item_into_bag_or_fallback(mob/living/carbon/human/H, path)
@@ -1235,30 +1350,26 @@
 		return
 
 	var/obj/item/I = new path(get_turf(H))
-	var/atom/storage_owner = find_backpack_or_storage(H)
-
-	if(storage_owner && try_insert_into_storage(I, storage_owner, H))
+	if(!I)
 		return
 
-	if(H.put_in_hands(I))
-		return
-
-	I.forceMove(get_turf(H))
+	try_put_into_any_storage_or_drop(I, H)
 
 /datum/tat_build/proc/spawn_item_equipped_or_fallback(mob/living/carbon/human/H, path)
 	if(!H || !ispath(path))
 		return
 
 	var/obj/item/I = new path(get_turf(H))
-
-	if(hascall(H, "equip_to_appropriate_slot"))
-		if(call(H, "equip_to_appropriate_slot")(I, FALSE))
-			return
-
-	if(H.put_in_hands(I))
+	if(!I)
 		return
 
-	I.forceMove(get_turf(H))
+	var/list/slots = get_equip_slots_for_item(I)
+
+	for(var/slot_id in slots)
+		if(H.equip_to_slot_if_possible(I, slot_id, FALSE, TRUE, TRUE, TRUE))
+			return
+
+	try_put_into_any_storage_or_drop(I, H)
 
 /datum/tat_build/proc/apply_items(mob/living/carbon/human/H)
 	if(!H)
