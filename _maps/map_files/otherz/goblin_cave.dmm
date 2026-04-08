@@ -214,6 +214,10 @@
 /obj/effect/landmark/start/goblin_warrior,
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/under/cave/goblincave)
+"id" = (
+/obj/item/storage/belt/rogue/surgery_bag/full,
+/turf/open/floor/rogue/cobble,
+/area/rogue/under/cave/goblincave)
 "iq" = (
 /obj/structure/fluff/statue/knight/interior/r,
 /turf/open/floor/rogue/blocks,
@@ -2531,7 +2535,7 @@ Ul
 Ul
 VG
 hc
-Os
+id
 Jg
 bV
 bV
