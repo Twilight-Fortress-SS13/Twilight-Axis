@@ -298,3 +298,17 @@
   hazelrat:
   - qol: Walking into stone turfs with a pickaxe to mine them no longer incurs a greater
       stamina cost than clicking on them normally.
+2026-04-09:
+  FreeStylaLT:
+  - rscadd: Blacksteel Pickaxe now automatically breaks boulders.
+  Lamasmaster:
+  - balance: Eoran Vow
+  babamandaa:
+  - rscdel: ass clapping while sneaking
+  nauticall:
+  - rscadd: New 'Set Laws' TGUI window and command for the Duke/Regent to amend laws
+      with. 'Make law' and 'Remove law' are still available as the legacy/individual
+      methods for backwards compatibility.
+  - qol: The 'laws of the land' viewable on SCOMs are now collapsible.
+  - rscdel: Removed the 'Three Laws of Aasimar (Asimov)' from the list of default
+      lawsets.
