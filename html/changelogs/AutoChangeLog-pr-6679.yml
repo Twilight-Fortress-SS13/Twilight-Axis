@@ -1,0 +1,5 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - bugfix: "Fixed markings on the arms layering over shirts while facing south."
+  - bugfix: "Fixes sleeves layering over tabards on the east and west directions."
