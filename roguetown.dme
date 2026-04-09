@@ -3222,6 +3222,7 @@
 #include "modular\piercing\piercing.dm"
 #include "modular\piercing\piercings.dm"
 #include "modular\piercing\supply.dm"
+#include "modular_saint_place\code\mobs\spawned_mobs.dm"
 #include "modular\ze_genesis_call\genesis_call.dm"
 #include "modular_twilight_axis\awful_artillery\code\_artillery.dm"
 #include "modular_twilight_axis\awful_artillery\code\craft.dm"
