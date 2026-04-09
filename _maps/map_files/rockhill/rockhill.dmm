@@ -21795,13 +21795,6 @@
 /obj/structure/mineral_door/bars,
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/town/sewer)
-"eHv" = (
-/obj/structure/artillery/mortar{
-	dir = 8;
-	anchored = 1
-	},
-/turf/open/floor/rogue/metal/barograte,
-/area/rogue/outdoors/beach/inqshipout)
 "eHx" = (
 /obj/structure/fluff/railing/border{
 	dir = 8
@@ -23826,32 +23819,6 @@
 	desc = "Silky and sharp-smooth, like cracked glass"
 	},
 /area/rogue/indoors/town/fire_chamber/helly)
-"ffQ" = (
-/obj/item/artillery_shell/mortar{
-	pixel_x = -11;
-	pixel_y = -8
-	},
-/obj/structure/rack/rogue,
-/obj/item/artillery_shell/mortar{
-	pixel_y = -8
-	},
-/obj/item/artillery_shell/mortar{
-	pixel_y = -8;
-	pixel_x = 12
-	},
-/obj/item/artillery_shell/mortar{
-	pixel_y = 1;
-	pixel_x = -5
-	},
-/obj/item/artillery_shell/mortar{
-	pixel_y = 1;
-	pixel_x = 6
-	},
-/obj/item/artillery_shell/mortar{
-	pixel_y = 10
-	},
-/turf/open/floor/rogue/concrete,
-/area/rogue/indoors/inq/basement/shipshold)
 "ffX" = (
 /obj/machinery/gear_painter,
 /turf/open/floor/rogue/wood,
@@ -209798,7 +209765,7 @@ qmr
 tSJ
 fkZ
 sAI
-ffQ
+ucJ
 tSJ
 lmm
 qem
@@ -532938,7 +532905,7 @@ tTs
 uuv
 lSA
 rMg
-eHv
+hwn
 sZt
 gvb
 kwb

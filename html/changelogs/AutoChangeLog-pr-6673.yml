@@ -1,0 +1,4 @@
+author: "gatorceres"
+delete-after: True
+changes:
+  - bugfix: "heretics used wrong statkey for fortune bonus"
