@@ -6,7 +6,6 @@
 	icon_state = "moonlight_saber"
 	icon = 'modular_twilight_axis/church_classes/icons/prismatic_weapons64.dmi'
 	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust, /datum/intent/sword/peel, /datum/intent/sword/chop)
-	alt_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust, /datum/intent/sword/strike, /datum/intent/sword/chop)
 	bigboy = TRUE
 	pixel_y = -16
 	pixel_x = -16

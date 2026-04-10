@@ -8,7 +8,7 @@
 		за своё верное служение и познание в аркане вы получили доступ к арканному оружию. Вам недоступны чудеса, но взамен вы получили доступ к аркане, и не смотря на то какое оружие свет Нок не сотворил бы для вас, вы являетесь экспертом в нем."
 	outfit = /datum/outfit/job/roguetown/spellblade
 	category_tags = list(CTAG_TEMPLAR)
-	subclass_languages = list(/datum/language/grenzelhoftian, /datum/language/celestial, /datum/language/elvish)
+	subclass_languages = list(/datum/language/raneshi)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_NIGHT_OWL, TRAIT_ARCYNE, TRAIT_NOC_LIGHT_BLESSING)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = FALSE, "minor" = 2, "utilities" = 6)
 	maximum_possible_slots = 1

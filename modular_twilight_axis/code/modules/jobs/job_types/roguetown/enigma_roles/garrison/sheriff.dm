@@ -20,6 +20,8 @@
 	give_bank_account = TRUE
 	min_pq = 10
 	max_pq = null
+	round_contrib_points = 3
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'modular_twilight_axis/sound/music/combat/combat_watchman.ogg'
 	job_subclasses = list(

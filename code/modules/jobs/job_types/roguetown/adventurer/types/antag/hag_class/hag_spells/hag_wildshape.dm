@@ -9,7 +9,7 @@
 		return
 
 	var/area/A = get_area(H)
-	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag))
+	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag) && !istype(A, /area/rogue/outdoors/bograt) && !istype(A, /area/rogue/under/cavewet)) //TA_EDIT
 		to_chat(H, span_userdanger("The purity of the air shatters my form!"))
 
 		// Grab the human inside before we untransform
@@ -113,7 +113,7 @@
 		return FALSE
 
 	var/area/A = get_area(user)
-	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag))
+	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag) && !istype(A, /area/rogue/outdoors/bograt) && !istype(A, /area/rogue/under/cavewet)) //TA_EDIT
 		to_chat(user, span_warning("The air here is too pure. I can only reveal my true self within the Terrorbog or my Hut!"))
 		revert_cast(user)
 		return FALSE

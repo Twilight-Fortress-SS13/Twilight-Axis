@@ -28,7 +28,7 @@
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead
 	range = 12		
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
@@ -40,7 +40,7 @@
 /obj/projectile/bullet/twilight_lead/silver
 	name = "silver sphere"
 	desc = "Небольшая серебряная сфера. Мягче, чем свинцовая пуля, но крайне эффективна против нежити."
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/silver
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/silver
 	damage = 120
 	armor_penetration = PEN_MEDIUM
 	silver = TRUE
@@ -53,7 +53,7 @@
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball
 	range = 16		
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 0
@@ -72,7 +72,7 @@
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball/grapeshot
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot
 	range = 10
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
@@ -95,7 +95,7 @@
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_runed"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock
 	range = 50
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	embedchance = 100
@@ -107,7 +107,7 @@
 	name = "blessed sphere"
 	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отаванских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
 	damage = 100
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock/blessed
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/blessed
 	icon_state = "musketball_blessed"
 	silver = TRUE
 	blessed = TRUE
@@ -161,7 +161,7 @@
 		var/obj/item/gun/ballistic/twilight_firearm/gun = fired_from
 		if(isliving(firer))
 			var/mob/living/L = firer
-			var/per_scaling = 1 + (min(L.STAPER, RANGED_STAT_SOFTCAP) * RANGED_STAT_MULT) + (max(0, L.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+			var/per_scaling = 1 + ((min(L.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, L.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
 			damage *= gun.damfactor * per_scaling
 		else
 			damage *= gun.damfactor
@@ -393,7 +393,7 @@
 
 	return .
 
-/obj/item/ammo_casing/caseless/twilight_lead
+/obj/item/ammo_casing/caseless/rogue/twilight_lead
 	name = "lead sphere"
 	desc = "Небольшая свинцовая сфера. Хорошо сочетается с порохом."
 	projectile_type = /obj/projectile/bullet/twilight_lead
@@ -402,8 +402,9 @@
 	icon_state = "musketball"
 	dropshrink = 0.5
 	max_integrity = 0.1
+	ammo_weight = 1
 
-/obj/item/ammo_casing/caseless/twilight_lead/runelock
+/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock
 	name = "runed sphere"
 	desc = "Небольшой, идеально круглый металлический шар, покрытый псайдонитскими рунами. Смертоносен на высокой скорости."
 	projectile_type = /obj/projectile/bullet/twilight_lead/twilight_runelock
@@ -414,18 +415,18 @@
 	max_integrity = 0
 	w_class = WEIGHT_CLASS_TINY
 
-/obj/item/ammo_casing/caseless/twilight_lead/runelock/Initialize()
+/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/Initialize()
 	. = ..()
 	var/filter = src.get_filter("rune_filter")
 	if(!filter)
 		src.add_filter("rune_filter", 2, list("type" = "outline", "color" = rgb(112, 28, 28, 1), "alpha" = 200, "size" = 2))
 
-/obj/item/ammo_casing/caseless/twilight_lead/runelock/ready_proj(atom/target, mob/living/user, quiet, zone_override = "", atom/fired_from)
+/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/ready_proj(atom/target, mob/living/user, quiet, zone_override = "", atom/fired_from)
 	. = ..()
 	if(linked_bag)
 		linked_bag.linked_ammo_types += type
 
-/obj/item/ammo_casing/caseless/twilight_lead/runelock/equipped(mob/living/user)
+/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/equipped(mob/living/user)
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(!HAS_TRAIT(H, TRAIT_INQUISITION) && !(H.STAINT >= 15) && !(H.patron?.type == /datum/patron/old_god) && !(H.merctype == 10))
@@ -439,13 +440,13 @@
 		src.forceMove(get_turf(user))
 	..()
 
-/obj/item/ammo_casing/caseless/twilight_lead/silver
+/obj/item/ammo_casing/caseless/rogue/twilight_lead/silver
 	name = "silver sphere"
 	desc = "Небольшая серебряная сфера. Мягче, чем свинцовая пуля, но крайне эффективна против нежити."
 	projectile_type = /obj/projectile/bullet/twilight_lead/silver
 	icon_state = "musketball_silver"
 
-/obj/item/ammo_casing/caseless/twilight_lead/runelock/blessed
+/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/blessed
 	name = "blessed sphere"
 	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отаванских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
 	projectile_type = /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
@@ -453,7 +454,7 @@
 	w_class = WEIGHT_CLASS_TINY
 	smeltresult = /obj/item/rogueore/silver
 
-/obj/item/ammo_casing/caseless/twilight_cannonball
+/obj/item/ammo_casing/caseless/rogue/twilight_cannonball
 	name = "lead cannonball"
 	desc = "Крупная свинцовая сфера. Важен не размер ствола, а размер отверстия, что он делает в вашем противнике."
 	projectile_type = /obj/projectile/bullet/twilight_cannonball
@@ -464,8 +465,9 @@
 	max_integrity = 0.1
 	grid_width = 32
 	grid_height = 64
+	ammo_weight = 1
 
-/obj/item/ammo_casing/caseless/twilight_cannonball/grapeshot
+/obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot
 	name = "grapeshot"
 	desc = "Плотно упакованный в бумагу набор небольших металлических шариков. Хорошо сочетается с порохом."
 	projectile_type = /obj/projectile/bullet/twilight_grapeshot

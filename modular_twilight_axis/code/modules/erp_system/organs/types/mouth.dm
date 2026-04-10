@@ -81,6 +81,19 @@
 	H.visible_message(span_notice("[H] сплевывает."), span_notice("Я сплевываю семя из рта."))
 	return TRUE
 
+/datum/erp_sex_organ/mouth/apply_contact_effect(datum/erp_sex_link/L, mult = 1)
+	var/add = 0
+
+	if(L.force >= SEX_FORCE_HIGH)
+		add = L.force * mult
+
+	if(add <= 0)
+		return
+
+	var/mob/living/carbon/human/H = get_owner()
+	if(H)
+		H.adjustOxyLoss(add)
+
 /obj/item/bodypart/head/Initialize()
 	. = ..()
 	if(!sex_organ)

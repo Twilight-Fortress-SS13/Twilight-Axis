@@ -290,7 +290,7 @@
 	if(altgripped || wielded) //Trying to unwield it
 		ungrip(user)
 		return
-	if(alt_intents)
+	if(alt_grips)
 		altgrip(user)
 	if(gripped_intents)
 		wield(user)
@@ -696,7 +696,7 @@
 
 /obj/item/ammo_box/magazine/internal/twilight_firearm
 	name = "firearm internal magazine"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead
 	caliber = "lead_sphere"
 	max_ammo = 1
 	start_empty = TRUE
@@ -842,7 +842,7 @@
 
 /obj/item/ammo_box/magazine/internal/twilight_firearm/handgonne
 	name = "handgonne internal magazine"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball
 	caliber = "cannonball"
 	max_ammo = 1
 	start_empty = TRUE
@@ -963,7 +963,7 @@
 
 /obj/item/ammo_box/magazine/internal/twilight_firearm/mortar
 	name = "mortar internal magazine"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball/grapeshot
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot
 	caliber = "cannonball"
 	max_ammo = 1
 	start_empty = TRUE

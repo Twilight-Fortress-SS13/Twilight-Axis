@@ -1,5 +1,6 @@
 /datum/erp_action/other/hands/milking_breasts
 	name = "Доить грудь"
+	abstract = FALSE
 	required_target_organ = SEX_ORGAN_BREASTS
 	active_arousal_coeff  = 0.4
 	passive_arousal_coeff = 0.9

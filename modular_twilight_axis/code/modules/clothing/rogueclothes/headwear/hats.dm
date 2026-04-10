@@ -290,6 +290,8 @@
 	dynamic_hair_suffix = ""
 	edelay_type = 1
 	adjustable = CAN_CADJUST
+	color = "#de5013"
+	detail_color = "#e3ab12"
 	toggle_icon_state = TRUE
 	max_integrity = 180
 	salvage_result = /obj/item/natural/cloth

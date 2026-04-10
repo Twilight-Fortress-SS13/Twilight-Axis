@@ -69,7 +69,7 @@
 		else
 			to_chat(user, "<span class='warning'>Я совершенно не понимаю, как этим пользоваться!</span>")
 	else
-		if(alt_intents)
+		if(alt_grips)
 			altgrip(user)
 		if(gripped_intents)
 			wield(user)
@@ -172,7 +172,7 @@
 		var/obj/projectile/bullet/BB = CB.BB
 		BB.gunpowder_npc_critfactor *= npcdamfactor
 		BB.critfactor *= critfactor
-		var/per_scaling = 1 + (min(user.STAPER, RANGED_STAT_SOFTCAP) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+		var/per_scaling = 1 + ((min(user.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
 		BB.damage *= damfactor * per_scaling
 	cocked = FALSE
 	update_icon()
@@ -183,7 +183,7 @@
 	..()
 
 /obj/item/ammo_box/magazine/internal/shot/twilight_runelock
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock
 	caliber = "runed_sphere"
 	max_ammo = 1
 	start_empty = TRUE
