@@ -216,6 +216,8 @@
 			return !!traits[TAT_TRAIT_SILVER_SUPPLIER]
 		if(TAT_SUPPLY_STEEL)
 			return !!traits[TAT_TRAIT_STEEL_SUPPLIER]
+		if(TAT_SUPPLY_FIREARMS)
+			return !!traits[TAT_TRAIT_FIREARMS_SUPPLIER]
 	return FALSE
 
 /datum/tat_build/proc/can_use_armor_family(armor_family)
