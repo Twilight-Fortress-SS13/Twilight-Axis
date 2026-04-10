@@ -394,7 +394,7 @@
 	/obj/item/clothing/suit/roguetown/armor/leather/hide = TAT_ITEM_ENTRY("Hide Armor", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/studded = TAT_ITEM_ENTRY("Studded Leather Armor", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/studded/cuirbouilli = TAT_ITEM_ENTRY("Cuir-bouilli armor", 4, "clothing", "armor_family", TAT_ARMOR_LEATHER, "suit"), \
-	/obj/item/clothing/suit/roguetown/armor/leather/trophyfur = TAT_ITEM_ENTRY("Trophyfur", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/trophyfur = TAT_ITEM_ENTRY("Trophyfur", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/vest = TAT_ITEM_ENTRY("Vest", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/vest/sailor = TAT_ITEM_ENTRY("Sailor", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/vest/sailor/nightman = TAT_ITEM_ENTRY("Nightman", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "suit"), \
@@ -439,7 +439,7 @@
 	/obj/item/clothing/under/roguetown/platelegs = TAT_ITEM_ENTRY("Plate legs", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under"), \
 	/obj/item/clothing/under/roguetown/platelegs/iron = TAT_ITEM_ENTRY("Iron Plate legs", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under"), \
 	/obj/item/clothing/under/roguetown/splintlegs = TAT_ITEM_ENTRY("Splint legs", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under"), \
-	/obj/item/clothing/under/roguetown/splintlegs/gronn = TAT_ITEM_ENTRY("Gronn Byrine Chausses", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under"), \
+	/obj/item/clothing/under/roguetown/chainlegs/gronn = TAT_ITEM_ENTRY("Gronn Byrine Chausses", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under"), \
 	/obj/item/clothing/under/roguetown/tights/sailor = TAT_ITEM_ENTRY("Sailor Pants", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under"), \
 	/obj/item/clothing/under/roguetown/trou = TAT_ITEM_ENTRY("Work Trousers", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under"), \
 	/obj/item/clothing/under/roguetown/trou/leather = TAT_ITEM_ENTRY("Leather Trousers", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
