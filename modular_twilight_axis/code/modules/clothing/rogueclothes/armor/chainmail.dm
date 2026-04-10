@@ -34,3 +34,10 @@
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
 
 /obj/item/clothing/suit/roguetown/armor/citywatch
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/light/iron
+	name = "iron besilked haubergeon"
+	desc = "A maille shirt fashioned from hundreds of interlinked iron rings."
+	armor_class = ARMOR_CLASS_LIGHT
+	max_integrity = ARMOR_INT_CHEST_MEDIUM_IRON
+	smeltresult = /obj/item/ingot/iron

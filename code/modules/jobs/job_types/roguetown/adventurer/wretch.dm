@@ -218,6 +218,8 @@
 	var/datum/job/wretch_job = SSjob.GetJob("Wretch")
 	if(!wretch_job)
 		return
+	if(wretch_job.admin_slot_override)
+		return
 
 	var/override_player_count = null
 	if(SSticker.current_state == GAME_STATE_PREGAME)

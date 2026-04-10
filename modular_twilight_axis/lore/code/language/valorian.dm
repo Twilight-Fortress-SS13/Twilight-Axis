@@ -8,7 +8,7 @@
 	space_chance = 66
 	default_priority = 90
 	icon = 'modular_twilight_axis/lore/icons/language.dmi'
-	icon_state = "celestial"
+	icon_state = "valorian"
 	spans = list("valorian")
 	mutually_intelligible = list(/datum/language/grenzelhoftian)
 	syllables = list(

@@ -312,3 +312,19 @@
   - qol: The 'laws of the land' viewable on SCOMs are now collapsible.
   - rscdel: Removed the 'Three Laws of Aasimar (Asimov)' from the list of default
       lawsets.
+2026-04-10:
+  Aisu9:
+  - rscadd: donor item
+  Juubo:
+  - bugfix: run times when destroying rock walls
+  Quinalion:
+  - bugfix: Fixed markings on the arms layering over shirts while facing south.
+  - bugfix: Fixes sleeves layering over tabards on the east and west directions.
+  WeNeedMorePhoron:
+  - rscadd: When a bandit or more is present, wretch slots can no longer scales to
+      15.
+  gatorceres:
+  - bugfix: heretics used wrong statkey for fortune bonus
+  nauticall:
+  - rscadd: Added donor weapons Regnum & Aeternum.
+  - image: Added a two-handed wielded sprite for Judgement.

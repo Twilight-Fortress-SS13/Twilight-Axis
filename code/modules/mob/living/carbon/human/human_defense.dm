@@ -29,6 +29,7 @@
 		used = get_best_worn_armor(def_zone, d_type)
 		if(used)
 			protection = used.armor.getRating(d_type)
+			protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
 			if(!blade_dulling)
 				blade_dulling = BCLASS_BLUNT
 			if(used.blocksound)
@@ -82,6 +83,7 @@
 			for(var/C in layers)
 				if(layers[C] > protection)
 					protection = layers[C]
+			protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
 			// DR tier formula: damage * 1 / (1 + 0.2 * tier)
 			if(protection > 0)
 				var/dr_mult = 1 / (1 + 0.2 * protection)
@@ -130,7 +132,6 @@
 	if(physiology)
 		protection += physiology.armor.getRating(d_type)
 
-	protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
 	return protection
 
 /*

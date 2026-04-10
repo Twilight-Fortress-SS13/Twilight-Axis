@@ -29,6 +29,7 @@ interface Item {
   unavailable?: boolean;
   unavailableReason?: string;
   requiredTier?: number;
+  triumphCost?: number;
 }
 
 export const LoadoutPanel = () => {
@@ -189,18 +190,46 @@ export const LoadoutPanel = () => {
                   marginBottom: '4px',
                 }}
               >
-                <DmIcon
-                  icon={item?.icon}
-                  fallback={fallback}
-                  icon_state={item?.icon_state}
+                <Box
                   style={{
-                    backgroundColor: '#141414',
-                    borderRadius: '12px',
-                    padding: '16px',
-                    width: '96px',
-                    height: '96px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minWidth: '112px',
+                    marginRight: '12px',
+                    flexShrink: 0,
                   }}
-                />
+                >
+                  <DmIcon
+                    icon={item?.icon}
+                    fallback={fallback}
+                    icon_state={item?.icon_state}
+                    style={{
+                      backgroundColor: '#141414',
+                      borderRadius: '12px',
+                      padding: '16px',
+                      width: '96px',
+                      height: '96px',
+                    }}
+                  />
+                  {item?.triumphCost ? (
+                    <Box
+                      style={{
+                        marginTop: '6px',
+                        width: '96px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        color: '#d4af37',
+                        textAlign: 'center',
+                        textShadow: '1px 1px 3px rgba(0,0,0,0.75)',
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {item.triumphCost} триумфов
+                    </Box>
+                  ) : null}
+                </Box>
                 <blockquote
                   style={{
                     margin: 0,

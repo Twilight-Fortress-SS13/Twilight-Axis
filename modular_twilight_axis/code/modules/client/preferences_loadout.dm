@@ -104,6 +104,9 @@
 			categories[cat_name] = list()
 
 		for(var/datum/loadout_item/item in items_in_cat)
+			if(!item?.path)
+				continue
+
 			if(item.ckeywhitelist && !item.donator_ckey_check(user.ckey))
 				continue
 
@@ -132,7 +135,8 @@
 				isSelected = selected,
 				unavailable = !isnull(lock_reason),
 				unavailableReason = lock_reason,
-				requiredTier = item.donat_tier
+				requiredTier = item.donat_tier,
+				triumphCost = item.triumph_cost
 			)
 
 	data["categories"] = categories

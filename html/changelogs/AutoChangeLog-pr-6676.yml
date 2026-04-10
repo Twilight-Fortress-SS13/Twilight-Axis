@@ -1,4 +1,0 @@
-author: "WeNeedMorePhoron"
-delete-after: True
-changes:
-  - rscadd: "When a bandit or more is present, wretch slots can no longer scales to 15."

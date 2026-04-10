@@ -26,7 +26,6 @@
 		var/datum/component/arousal/CAR = GetComponent(/datum/component/arousal)
 		if(CAR)
 			CAR.adjust_arousal_special(src, 2)
-		return FALSE
 
 	// TA Edit start - SOUNDBREAKER
 	var/success = FALSE

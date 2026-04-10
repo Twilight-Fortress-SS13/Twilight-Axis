@@ -64,6 +64,7 @@
 
 	var/list/virtue_limits = list()
 	var/list/vice_limits = list()
+	var/list/origin_limits = list() //TA EDIT
 
 	var/datum/class_age_mod/age_mod = null
 
@@ -189,6 +190,14 @@
 			for(var/vice in H.charflaws)
 				if(istype(vice, vicetype))
 					return FALSE
+	
+	if(length(origin_limits) && H.client) //TA EDIT START
+		var/correlation = FALSE
+		for(var/origintype in origin_limits)
+			if(istype(H.client.prefs?.virtue_origin, origintype))
+				correlation = TRUE
+		if(!correlation)
+			return FALSE //TA EDIT END
 
 	if(maximum_possible_slots > -1)
 		if(total_slots_occupied >= maximum_possible_slots)

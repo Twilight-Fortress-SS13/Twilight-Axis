@@ -1,0 +1,4 @@
+author: "WeNeedMorePhoron"
+delete-after: True
+changes:
+  - bugfix: "Vicious Mockery no longer permanently buff your opponent on removal of the status effect. Oops."

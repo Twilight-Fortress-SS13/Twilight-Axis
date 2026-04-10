@@ -33,8 +33,13 @@
 	//How many players have this job
 	var/current_positions = 0
 
+	/// Admin-manual slot override set via Manage Job Slots for storyteller-capped roles.
+	var/admin_slot_override = FALSE
+
 	//Whether this job clears a slot when you get a rename prompt.
 	var/antag_job = FALSE
+	var/storyteller_antag_flags = STORYTELLER_ANTAG_NONE
+	var/storyteller_midround_antag_flags = STORYTELLER_ANTAG_NONE
 
 	//Supervisors, who this person answers to directly
 	var/supervisors = ""
@@ -150,6 +155,7 @@
 
 	var/list/virtue_restrictions
 	var/list/vice_restrictions
+	var/list/origin_requirement //TA EDIT
 
 	///The job's stats
 	var/list/job_stats
@@ -176,6 +182,9 @@
 /datum/job/proc/special_job_check(mob/dead/new_player/player)
 	return TRUE
 
+/datum/job/proc/uses_storyteller_slot_caps()
+	return title in list("Wretch", "Gnoll", "Assassin")
+
 /datum/job/proc/validate_prefs_for_job(datum/preferences/P) //TA EDIT START
 	if(!P) return FALSE
 	if(length(allowed_races) && !(P.pref_species.type in allowed_races)) return FALSE
@@ -190,7 +199,10 @@
 		for(var/datum/charflaw/cf in P.charflaws)
 			if(cf.type in vice_restrictions)
 				return FALSE
-				
+
+	if(length(origin_requirement) && !(P.virtue_origin?.type in origin_requirement))
+		return FALSE
+
 	return TRUE //TA EDIT END
 
 /datum/job/proc/get_used_title(mob/player)
@@ -735,6 +747,15 @@
 						if(istype(vice, vicetype))
 							advdat += "[cf.name]<br>"
 							found_issue = TRUE
+			
+			if(length(subclass.origin_limits)) //TA EDIT START
+				var/correlation = FALSE
+				for(var/origintype in subclass.origin_limits)
+					if(istype(player.prefs.virtue_origin, origintype))
+						correlation = TRUE
+				if(!correlation)
+					advdat += "[player.prefs.virtue_origin.name]<br>"
+					found_issue = TRUE //TA EDIT END
 			if(found_issue)
 				dat += "<font color = '#e4e1e1'><b>[subclass::name]</b></font><br>"
 				dat += advdat
@@ -774,3 +795,11 @@
 				for(var/vice in player.prefs.charflaws)
 					if(istype(vice, vicetype))
 						return TRUE
+		
+		if(length(subclass.origin_limits)) //TA EDIT START
+			var/correlation = FALSE
+			for(var/origintype in subclass.origin_limits)
+				if(istype(player.prefs.virtue_origin, origintype))
+					correlation = TRUE
+			if(!correlation)
+				return TRUE //TA EDIT END
