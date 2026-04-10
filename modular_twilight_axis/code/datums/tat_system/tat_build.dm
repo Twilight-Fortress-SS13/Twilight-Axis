@@ -58,9 +58,7 @@
 	)
 
 /datum/tat_build/proc/init_available_items()
-	available_items = list(
-		TAT_AVAILABLE_ITEMS_LIST
-	)
+	available_items = list(TAT_AVAILABLE_ITEMS_LIST)
 
 /datum/tat_build/proc/get_effective_stat_points_total()
 	var/total = points_stats
