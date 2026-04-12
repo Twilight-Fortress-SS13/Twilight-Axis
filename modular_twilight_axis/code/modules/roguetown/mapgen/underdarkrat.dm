@@ -16,6 +16,7 @@
 	spawnableAtoms = list(/obj/structure/flora/tinymushrooms = 2,
 							/obj/structure/roguerock = 10,
 							/obj/item/natural/rock = 10,
+							/obj/structure/flora/rogueshroom/happy/random = 5,
 							/obj/structure/vine = 4,
 							/obj/structure/leyline/normal/coast = 0.3)
 
@@ -26,7 +27,7 @@
 	excluded_turfs = list(/turf/open/floor/rogue/dirt/road)
 	spawnableAtoms = list(/obj/structure/flora/mushroomcluster = 2,
 							/obj/structure/flora/roguegrass/thorn_bush = 2,
-							/obj/structure/flora/rogueshroom/happy/random = 5,
+							/obj/structure/flora/rogueshroom/happy/random = 10,
 							/obj/structure/flora/rogueshroom = 2,
 							/obj/structure/flora/tinymushrooms = 2,
 							/obj/structure/flora/roguegrass = 5,

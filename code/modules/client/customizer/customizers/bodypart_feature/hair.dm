@@ -502,6 +502,8 @@
 		/datum/sprite_accessory/hair/head/hprotagonist,
 		/datum/sprite_accessory/hair/head/alsoprotagonist,
 		/datum/sprite_accessory/hair/head/ghast,
+		/datum/sprite_accessory/hair/head/scruffy,
+
 		// Twilight style
 		/datum/sprite_accessory/hair/head/dreadlocks_accurate,
 		/datum/sprite_accessory/hair/head/dreadlocks_accurate_tied,

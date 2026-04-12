@@ -1,5 +1,11 @@
 /*ALL DEFINES RELATED TO COMBAT GO HERE*/
 
+// Guidance system - used by parry.dm, dodge.dm, accuracy_checks.dm, and bardic songs
+#define FULL_GUIDANCE_CHANCE 20 // % parry/dodge bypass and parry/dodge chance (mage Guidance, Bard Fantasia/Requiem)
+#define LESSER_GUIDANCE_CHANCE 12 // % parry/dodge bypass and parry/dodge chance (Cantor/Spellsinger songs)
+#define FULL_GUIDANCE_ACCURACY 8 // Accuracy bonus from guidance (equivalent to 1 skill level)
+#define LESSER_GUIDANCE_ACCURACY 5 // Accuracy bonus from lesser guidance
+
 /// Alternate attack defines. Return these at the end of procs like afterattack_secondary.
 /// Calls the normal attack proc. For example, if returned in afterattack_secondary, will call afterattack.
 /// Will continue the chain depending on the return value of the non-alternate proc, like with normal attacks.
@@ -61,7 +67,6 @@
 #define HEALTH_THRESHOLD_NEARDEATH -90 //Not used mechanically, but to determine if someone is so close to death they hear the other side
 
 #define FIRE_HARDCRIT_BASE 300 //Total burn damage across all bodyparts to hardcrit a player
-#define FIRE_HARDCRIT_MINDLESS_MULT 0.5 //Mindless mobs without TRAIT_CRIT_THRESHOLD hardcrit at half (150)
 #define FIRE_HARDCRIT_NOPAIN_MULT 1.5 //NOPAIN/NOPAINSTUN increases threshold by 50% (450)
 
 #define STRENGTH_SOFTCAP 14	//STR value past which we get diminishing returns in our damage calculations.
@@ -114,6 +119,11 @@
 #define EFF_RANGE_EXACT 1
 #define EFF_RANGE_ABOVE 2
 #define EFF_RANGE_BELOW 3
+
+// Swingdelay presets
+#define SWINGDELAY_NORMAL 1	//No penalties, we just swing.
+#define SWINGDELAY_PENALTY 2 //We suffer a defensive penalty if struck during it. Otherwise, normal.
+#define SWINGDELAY_CANCEL 3 //We have -no- defense during it, and it can be interrupted if we are hit.
 
 //Grab levels
 #define GRAB_PASSIVE				0
@@ -388,13 +398,17 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 Medical defines
 */
 #define ARTERY_LIMB_BLEEDRATE 20	//This is used as a reference point for dynamic wounds, so it's better off as a define.
-#define CONSTITUTION_BLEEDRATE_MOD 0.1	//How much slower we'll be bleeding for every CON point. 0.1 = 10% slower.
-#define CONSTITUTION_BLEEDRATE_CAP 15	//The CON value up to which we get a bleedrate reduction.
+#define CONSTITUTION_BLEEDRATE_MOD 0.05	//How much slower we'll be bleeding for every CON point. 0.1 = 10% slower.
+#define CONSTITUTION_BLEEDRATE_CAP 20	//The CON value up to which we get a bleedrate reduction.
+
+#define WILLPOWER_STARTING_STAMINA 135	//Starting stamina (green bar) value. Before major changes this would represent Expert Athletics + ~11.5 WIL 
+#define WILLPOWER_MODIFIER	5	//How much stamina (flat value) we gain (or lose) for every WIL above / below 10.
+
+#define SPEED_MOVSPD_MOD 0.075	//Multiplicative modifier for our speed, per point (for both <10 and >10 values)
 
 /*
  Misc. Category. Spin it out if needed
 */
-#define CRIT_DISMEMBER_DAMAGE_THRESHOLD_NPC 0.45 // Half the player threshold for mindless NPCs
 #define CRIT_DISMEMBER_DAMAGE_THRESHOLD 0.9 // 90% damage threshold for dismemberment / crit
 #define STANDING_DECAP_GRACE_PERIOD 2 SECONDS // Time after falling prone where you still count as standing for decap purpose
 #define INT_NOISE_DELAY 1 SECONDS

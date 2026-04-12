@@ -27,7 +27,7 @@
 	advjob_examine = TRUE
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE
-	same_job_respawn_delay = 1 MINUTES
+	same_job_respawn_delay = 30 MINUTES
 	virtue_restrictions = list(
 		/datum/virtue/utility/noble,
 		/datum/virtue/combat/dualwielder, //Claws are too powerful, abusable

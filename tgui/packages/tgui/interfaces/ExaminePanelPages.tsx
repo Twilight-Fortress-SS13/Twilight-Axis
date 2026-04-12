@@ -26,6 +26,7 @@ export const FlavorTextPage = (props) => {
     is_naked,
     ooc_extra_image,
     nsfw_ooc_extra_image,
+    nsfw_examine_always,
   } = data;
 
   const [oocNotesIndex, setOocNotesIndex] = useState('SFW');
@@ -38,7 +39,8 @@ export const FlavorTextPage = (props) => {
   const safeOocNotesNsfw = sanitizeMarkupValue(ooc_notes_nsfw);
   const safeOocExtraImage = sanitizeMarkupValue(ooc_extra_image);
   const safeNsfwOocExtraImage = sanitizeMarkupValue(nsfw_ooc_extra_image);
-  const canShowNsfwFlavor = Boolean(safeFlavorTextNsfw) && Boolean(is_naked);
+  const canShowNsfwFlavor =
+    Boolean(safeFlavorTextNsfw) && Boolean(is_naked || nsfw_examine_always);
 
   const flavorHTML = useMemo(
     () => ({
@@ -223,6 +225,7 @@ export const ImageGalleryPage = (props) => {
     img_gallery,
     nsfw_img_gallery,
     is_naked,
+    nsfw_examine_always,
   } = data;
 
   const [galleryMode, setGalleryMode] = useState<'SFW' | 'NSFW'>('SFW');
@@ -238,7 +241,8 @@ export const ImageGalleryPage = (props) => {
   );
 
   const images = galleryMode === 'NSFW' ? safeNsfwGallery : safeSfwGallery;
-  const canShowNsfwGallery = safeNsfwGallery.length > 0 && Boolean(is_naked);
+  const canShowNsfwGallery =
+    safeNsfwGallery.length > 0 && Boolean(is_naked || nsfw_examine_always);
 
   return (
     <Section

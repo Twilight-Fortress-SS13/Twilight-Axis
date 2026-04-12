@@ -13,7 +13,7 @@
 /obj/item/rogueweapon/greatsword/bsword/psy/relic
 	desc = "Psydonian prayers and Tennite smiths, working as one to craft a weapon fit for a Golden Crusader. A heavy and large blade, favored by Archangel Uriel, to lay waste to those who threaten His flock. The crossguard's psycross reflects even the faintest of Noc's light. You're the light - show them the way."
 
-/obj/item/clothing/suit/roguetown/armor/regenerating/easttats
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/easttats
 	desc = "A mystic style of tattoos adopted by the Ruma Clan, emulating a practice performed by warrior monks that once made the Clan so valuable to the Shogunate. They are your way of identifying fellow clan members, an sign of companionship and secretive brotherhood. These are styled into the shape of clouds, created by a mystical ink which shifts and moves in ripples like a pond to harden where your skin is struck. It's movement causes you to shudder."
 
 /obj/item/rogueweapon/greatsword/bsword/psy/unforgotten

@@ -1,5 +1,6 @@
 /datum/erp_action/other/hands/milking_penis
 	name = "Доить член"
+	abstract = FALSE
 	required_target_organ = SEX_ORGAN_PENIS
 	active_arousal_coeff  = 0.6
 	passive_arousal_coeff = 1.0

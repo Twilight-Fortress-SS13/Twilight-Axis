@@ -13,7 +13,7 @@
 	if(mapload)
 		SSdungeon_generator.markers |= src
 	
-	alpha = 0 
+	alpha = 0
 
 /obj/effect/dungeon_directional_helper/Destroy()
 	SSdungeon_generator.markers -= src

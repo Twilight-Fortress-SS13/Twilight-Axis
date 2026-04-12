@@ -118,11 +118,16 @@
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc
 		if(/datum/patron/divine/ravox)
 			neck = /obj/item/clothing/neck/roguetown/psicross/ravox
-			cloak = /obj/item/clothing/cloak/templar/ravox
-			backpack_contents = list(/obj/item/ritechalk, /obj/item/book/rogue/law)
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/ravox
 		if(/datum/patron/divine/malum)
 			neck = /obj/item/clothing/neck/roguetown/psicross/malum
 			cloak = /obj/item/clothing/cloak/templar/malumite
+	// Patron dagger + sheath in satchel
+	var/patron_dagger = get_templar_patron_dagger(H)
+	if(patron_dagger)
+		backpack_contents += patron_dagger
+		backpack_contents += /obj/item/rogueweapon/scabbard/sheath
+
 	head = /obj/item/clothing/head/roguetown/headband/monk
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/cloth/monk
 	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/black
@@ -311,8 +316,6 @@
 			cloak = /obj/item/clothing/cloak/templar/xylixian
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/xylixhelm
 			H.cmode_music = 'sound/music/combat_jester.ogg'
-			var/datum/inspiration/I = new /datum/inspiration(H)
-			I.grant_inspiration(H, bard_tier = BARD_T1)
 		if(/datum/patron/divine/dendor)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/dendor
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/dendorhelm
@@ -347,6 +350,11 @@
 		if(/datum/patron/old_god)
 			wrists = /obj/item/clothing/neck/roguetown/psicross
 			cloak = /obj/item/clothing/cloak/tabard/crusader/psydon
+	// Patron dagger in satchel
+	var/patron_dagger = get_templar_patron_dagger(H)
+	if(patron_dagger)
+		backpack_contents += patron_dagger
+
 	gloves = /obj/item/clothing/gloves/roguetown/chain
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
 	pants = /obj/item/clothing/under/roguetown/chainlegs

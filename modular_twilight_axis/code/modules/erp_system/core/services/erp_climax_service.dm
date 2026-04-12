@@ -94,69 +94,124 @@
 	if(!A)
 		return
 
-	var/datum/erp_sex_organ/penis/P = null
+	var/list/relevant_links = list()
+	if(islist(active_links) && active_links.len)
+		for(var/datum/erp_sex_link/L in active_links)
+			if(!L || QDELETED(L) || !L.is_valid())
+				continue
+			if(L.actor_active?.physical != who && L.actor_passive?.physical != who)
+				continue
+			relevant_links += L
+
 	var/list/pens = A.get_organs_ref(SEX_ORGAN_PENIS)
 	if(islist(pens) && pens.len)
-		P = pens[1]
+		for(var/datum/erp_sex_organ/penis/P in pens)
+			if(!P || QDELETED(P))
+				continue
+			if(!P.producing || !P.producing.producing_reagent)
+				continue
 
-	if(P && P.producing && P.producing.producing_reagent)
-		var/datum/erp_sex_link/best_link = null
-		var/best_score = -1
+			var/datum/erp_sex_link/best_link = null
+			var/best_score = -1
+			var/list/receiving_targets = list()
+			var/list/receiving_force = list()
 
-		if(islist(active_links) && active_links.len)
-			for(var/datum/erp_sex_link/L in active_links)
-				if(!L || QDELETED(L) || !L.is_valid())
-					continue
-				if(L.actor_active?.physical != who && L.actor_passive?.physical != who)
-					continue
-				if(L.init_organ != P && L.target_organ != P)
+			for(var/datum/erp_sex_link/Lp in relevant_links)
+				if(Lp.init_organ != P && Lp.target_organ != P)
 					continue
 
-				var/sc = L.get_climax_score(who)
+				var/sc = Lp.get_climax_score(who)
 				if(sc > best_score)
 					best_score = sc
-					best_link = L
+					best_link = Lp
 
-		if(best_link)
-			if(controller.do_knot_action && P.have_knot)
-				var/mob/living/carbon/human/top = P.get_owner()
-				if(istype(top))
-					var/datum/component/erp_knotting/K = top.GetComponent(/datum/component/erp_knotting)
-					if(!K)
-						K = top.AddComponent(/datum/component/erp_knotting)
+				var/datum/erp_sex_organ/other = (Lp.init_organ == P) ? Lp.target_organ : Lp.init_organ
+				if(!other || QDELETED(other))
+					continue
+				if(!(other.erp_organ_type in list(SEX_ORGAN_VAGINA, SEX_ORGAN_ANUS, SEX_ORGAN_MOUTH)))
+					continue
 
-					var/datum/erp_sex_organ/receiving = (best_link.init_organ == P) ? best_link.target_organ : best_link.init_organ
-					if(receiving && (receiving.erp_organ_type in list(SEX_ORGAN_VAGINA, SEX_ORGAN_ANUS, SEX_ORGAN_MOUTH)))
-						var/mob/living/btm = receiving.get_owner()
-						if(istype(btm))
-							K.try_knot_link(btm, P, receiving, penis_unit_id = 0, force_level = best_link.force)
+				receiving_targets += other
+				receiving_force[other] = max(receiving_force[other] || 0, Lp.force)
 
-			//controller.handle_inject(best_link, P, INJECT_ORGAN, who)
-			if(best_link.action && best_link.action.inject_timing == INJECT_ON_FINISH)
+			var/mob/living/carbon/human/top = P.get_owner()
+			var/datum/component/erp_knotting/K = null
+			if(istype(top))
+				K = top.GetComponent(/datum/component/erp_knotting)
+				if(!K && P.have_knot)
+					K = top.AddComponent(/datum/component/erp_knotting)
+
+			if(controller.do_knot_action && P.have_knot && K && receiving_targets.len)
+				var/max_units = max(1, P.count_to_action)
+				var/list/free_units = list()
+
+				for(var/i = 0; i < max_units; i++)
+					var/datum/erp_knot_link/occupied = K.get_link_for_penis_unit(P, i)
+					if(!occupied || !occupied.is_valid())
+						free_units += i
+
+				for(var/datum/erp_sex_organ/T as anything in receiving_targets)
+					if(!free_units.len)
+						break
+
+					var/mob/living/btm = T.get_owner()
+					if(!istype(btm))
+						continue
+
+					var/slot = free_units[1]
+					free_units.Cut(1, 2)
+					K.try_knot_link(btm, P, T, penis_unit_id = slot, force_level = receiving_force[T])
+
+			if(best_link?.action && best_link.action.inject_timing == INJECT_ON_FINISH)
 				best_link.action.handle_inject(best_link, who)
 
-			do_climax_effects(who, best_link)
-		else
-			var/datum/reagents/Rp = P.extract_reagents(ERP_CLIMAX_AMOUNT_SINGLE)
-			if(Rp)
-				P.on_inject(null, INJECT_GROUND, get_turf(who), Rp, who)
-				P.route_reagents(Rp, INJECT_GROUND, get_turf(who))
-				qdel(Rp)
+			var/list/knot_links = list()
+			if(K && islist(K.active_links) && K.active_links.len)
+				for(var/datum/erp_knot_link/KL in K.active_links)
+					if(!KL || QDELETED(KL) || !KL.is_valid())
+						continue
+					if(KL.penis_org != P)
+						continue
+					knot_links += KL
 
-	var/datum/erp_sex_organ/vagina/V = null
+			if(knot_links.len)
+				for(var/datum/erp_knot_link/AKL in knot_links)
+					if(!AKL || QDELETED(AKL) || !AKL.is_valid())
+						continue
+
+					var/datum/erp_sex_organ/forced_target = AKL.receiving_org
+					if(!forced_target || QDELETED(forced_target))
+						continue
+
+					var/datum/reagents/Rin = P.extract_reagents(ERP_CLIMAX_AMOUNT_INSIDE)
+					if(!Rin)
+						continue
+
+					P.route_reagents(Rin, INJECT_ORGAN, forced_target)
+					qdel(Rin)
+
+					if(istype(forced_target, /datum/erp_sex_organ/vagina))
+						var/datum/erp_sex_organ/vagina/Vforced = forced_target
+						Vforced.on_climax(top, 0, 0)
+			else if(best_link)
+				do_climax_effects(who, best_link)
+			else
+				var/datum/reagents/Rp = P.extract_reagents(ERP_CLIMAX_AMOUNT_SINGLE)
+				if(Rp)
+					P.on_inject(null, INJECT_GROUND, get_turf(who), Rp, who)
+					P.route_reagents(Rp, INJECT_GROUND, get_turf(who))
+					qdel(Rp)
+
 	var/list/vags = A.get_organs_ref(SEX_ORGAN_VAGINA)
 	if(islist(vags) && vags.len)
-		V = vags[1]
+		for(var/datum/erp_sex_organ/vagina/V in vags)
+			if(!V || QDELETED(V))
+				continue
 
-	if(V)
-		var/datum/erp_sex_link/best_link_v = null
-		var/best_score_v = -1
-		if(islist(active_links) && active_links.len)
-			for(var/datum/erp_sex_link/Lv in active_links)
-				if(!Lv || QDELETED(Lv) || !Lv.is_valid())
-					continue
-				if(Lv.actor_active?.physical != who && Lv.actor_passive?.physical != who)
-					continue
+			var/datum/erp_sex_link/best_link_v = null
+			var/best_score_v = -1
+
+			for(var/datum/erp_sex_link/Lv in relevant_links)
 				if(Lv.init_organ != V && Lv.target_organ != V)
 					continue
 
@@ -165,31 +220,28 @@
 					best_score_v = scv
 					best_link_v = Lv
 
-		if(best_link_v)
-			controller.handle_inject(best_link_v, V, INJECT_ORGAN, who)
-			do_climax_effects(who, best_link_v)
-		else
-			var/datum/reagents/Rv = V.extract_reagents(ERP_CLIMAX_AMOUNT_SINGLE)
-			if(Rv)
-				V.on_inject(null, INJECT_GROUND, get_turf(who), Rv, who)
-				V.route_reagents(Rv, INJECT_GROUND, get_turf(who))
-				qdel(Rv)
+			if(best_link_v)
+				controller.handle_inject(best_link_v, V, INJECT_ORGAN, who)
+				do_climax_effects(who, best_link_v)
+			else
+				var/datum/reagents/Rv = V.extract_reagents(ERP_CLIMAX_AMOUNT_SINGLE)
+				if(Rv)
+					V.on_inject(null, INJECT_GROUND, get_turf(who), Rv, who)
+					V.route_reagents(Rv, INJECT_GROUND, get_turf(who))
+					qdel(Rv)
 
-	var/datum/erp_sex_organ/B = null
 	var/list/br = A.get_organs_ref(SEX_ORGAN_BREASTS)
 	if(islist(br) && br.len)
-		B = br[1]
+		for(var/datum/erp_sex_organ/B in br)
+			if(!B || QDELETED(B))
+				continue
+			if(!B.producing || !B.producing.producing_reagent)
+				continue
 
-	if(B && B.producing && B.producing.producing_reagent)
-		var/datum/erp_sex_link/best_link_b = null
-		var/best_score_b = -1
+			var/datum/erp_sex_link/best_link_b = null
+			var/best_score_b = -1
 
-		if(islist(active_links) && active_links.len)
-			for(var/datum/erp_sex_link/Lb in active_links)
-				if(!Lb || QDELETED(Lb) || !Lb.is_valid())
-					continue
-				if(Lb.actor_active?.physical != who && Lb.actor_passive?.physical != who)
-					continue
+			for(var/datum/erp_sex_link/Lb in relevant_links)
 				if(Lb.init_organ != B && Lb.target_organ != B)
 					continue
 
@@ -198,15 +250,11 @@
 					best_score_b = scb
 					best_link_b = Lb
 
-		if(best_link_b)
+			if(!best_link_b)
+				continue
+
 			controller.handle_inject(best_link_b, B, INJECT_ORGAN, who)
 			do_climax_effects(who, best_link_b)
-		else
-			var/datum/reagents/Rb = B.extract_reagents(ERP_CLIMAX_AMOUNT_SINGLE)
-			if(Rb)
-				B.on_inject(null, INJECT_GROUND, get_turf(who), Rb, who)
-				B.route_reagents(Rb, INJECT_GROUND, get_turf(who))
-				qdel(Rb)
 
 	controller.ui?.request_update()
 	return
@@ -400,39 +448,18 @@
 
 	if(organ_type == SEX_ORGAN_PENIS)
 		var/datum/erp_sex_organ/penis/Pk = orgasm_organ
-		var/mob/living/carbon/human/top = orgasm_organ.get_owner()
-		if(controller.do_knot_action && top && Pk.have_knot)
-			var/datum/component/erp_knotting/K = top.GetComponent(/datum/component/erp_knotting)
-			if(!K)
-				K = top.AddComponent(/datum/component/erp_knotting)
-
-			for(var/datum/erp_sex_link/L in controller.links)
-				if(!L || QDELETED(L) || !L.is_valid())
-					continue
-				if(L.init_organ != orgasm_organ && L.target_organ != orgasm_organ)
-					continue
-
-				var/datum/erp_sex_organ/receiving = (L.init_organ == orgasm_organ) ? L.target_organ : L.init_organ
-				if(!receiving || QDELETED(receiving))
-					continue
-				if(!(receiving.erp_organ_type in list(SEX_ORGAN_VAGINA, SEX_ORGAN_ANUS, SEX_ORGAN_MOUTH)))
-					continue
-
-				var/mob/living/btm = receiving.get_owner()
-				if(!istype(btm))
-					continue
-
-				if(K.try_knot_link(btm, orgasm_organ, receiving, penis_unit_id = 0, force_level = L.force))
-					break
 
 		var/list/tags = best.action?.action_tags
 		var/force_inside = FALSE
 		var/force_outside = FALSE
 		var/blocks_inside = FALSE
 		if(islist(tags))
-			if("inject_inside_only" in tags)  force_inside = TRUE
-			if("inject_outside_only" in tags) force_outside = TRUE
-			if("no_internal_climax" in tags)  blocks_inside = TRUE
+			if("inject_inside_only" in tags)
+				force_inside = TRUE
+			if("inject_outside_only" in tags)
+				force_outside = TRUE
+			if("no_internal_climax" in tags)
+				blocks_inside = TRUE
 
 		var/mode = Pk.climax_mode
 		if(force_inside)
@@ -462,8 +489,10 @@
 
 			orgasm_organ.route_reagents(Rin, INJECT_ORGAN, inside_target_organ)
 			qdel(Rin)
+
 			if(istype(inside_target_organ, /datum/erp_sex_organ/vagina))
 				var/datum/erp_sex_organ/vagina/Vin = inside_target_organ
+				var/mob/living/carbon/human/top = orgasm_organ.get_owner()
 				Vin.on_climax(top, 0, 0)
 
 			return TRUE

@@ -22,10 +22,6 @@
 	if(!CheckAdminHref(href, href_list))
 		return
 
-	if(href_list["mass_direct"])
-		if(mass_direct_handle_topic(href_list))
-			return
-
 	// Open Heal Panel from Player Panel
 	if(href_list["heal_panel"])
 		var/mob/living/M = locate(href_list["heal_panel"])
@@ -958,6 +954,9 @@
 		for(var/datum/job/job in SSjob.occupations)
 			if(job.title == Add)
 				job.total_positions += 1
+				job.spawn_positions = job.total_positions
+				if(job.uses_storyteller_slot_caps())
+					job.admin_slot_override = TRUE
 				log_admin("[key_name(usr)] added slot to [job.title].")
 				message_admins("[key_name(usr)] added slot to [job.title].")
 				break
@@ -978,8 +977,14 @@
 				if(!newtime)
 					to_chat(src.owner, "Setting to amount of positions filled for the job")
 					job.total_positions = job.current_positions
+					job.spawn_positions = job.total_positions
+					if(job.uses_storyteller_slot_caps())
+						job.admin_slot_override = TRUE
 					break
 				job.total_positions = newtime
+				job.spawn_positions = newtime
+				if(job.uses_storyteller_slot_caps())
+					job.admin_slot_override = TRUE
 				log_admin("[key_name(usr)] made custom [newtime] slots to [job.title].")
 				message_admins("[key_name(usr)] made custom [newtime] slots to [job.title].")
 		src.manage_free_slots()
@@ -993,6 +998,9 @@
 		for(var/datum/job/job in SSjob.occupations)
 			if(job.title == Remove && job.total_positions - job.current_positions > 0)
 				job.total_positions -= 1
+				job.spawn_positions = job.total_positions
+				if(job.uses_storyteller_slot_caps())
+					job.admin_slot_override = TRUE
 				log_admin("[key_name(usr)] removed job slot from [job.title].")
 				message_admins("[key_name(usr)] removed job slot from [job.title].")
 				break
@@ -1008,6 +1016,9 @@
 		for(var/datum/job/job in SSjob.occupations)
 			if(job.title == Unlimit)
 				job.total_positions = -1
+				job.spawn_positions = -1
+				if(job.uses_storyteller_slot_caps())
+					job.admin_slot_override = TRUE
 				log_admin("[key_name(usr)] removed the limit from [job.title] slots.")
 				message_admins("[key_name(usr)] removed the limit from [job.title] slots.")
 				break
@@ -1023,6 +1034,9 @@
 		for(var/datum/job/job in SSjob.occupations)
 			if(job.title == Limit)
 				job.total_positions = job.current_positions
+				job.spawn_positions = job.total_positions
+				if(job.uses_storyteller_slot_caps())
+					job.admin_slot_override = TRUE
 				log_admin("[key_name(usr)] added the limit to [job.title] slots.")
 				message_admins("[key_name(usr)] added the limit to [job.title] slots.")
 				break
@@ -1398,9 +1412,6 @@
 									var/mob/living/simple_animal/SA = spawned_mob
 									SA.toggle_ai(AI_OFF)
 									SA.can_have_ai = FALSE
-								if(ishuman(spawned_mob))
-									var/mob/living/carbon/human/H = spawned_mob
-									H.mode = NPC_AI_OFF
 								if(spawned_mob.ai_controller)
 									QDEL_NULL(spawned_mob.ai_controller)
 							if(where == "inhand" && isliving(usr) && isitem(O))
@@ -1627,7 +1638,11 @@
 		var/raisin = stripped_input(usr, "State a short reason for this change", "Game Master", null, null)
 		if(!amt2change || !raisin)
 			return
+		if(M.ckey == usr.ckey)
+			to_chat(src, span_boldwarning("Самому себе триумфы выдавать нельзя."))
+			return
 		M.adjust_triumphs(amt2change, FALSE, raisin)
+		world.TgsAnnounceTriumphChanges(amt2change, M.ckey, usr.ckey, raisin)
 		message_admins("[usr.key] adjusted [M.key]'s triumphs by [amt2change] with [!raisin ? "no reason given" : "reason: [raisin]"].")
 		log_admin("[usr.key] adjusted [M.key]'s triumphs by [amt2change] with [!raisin ? "no reason given" : "reason: [raisin]"].")
 

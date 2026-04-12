@@ -19,6 +19,7 @@
 	min_pq = 8
 	max_pq = null
 	round_contrib_points = 3
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'sound/music/combat_poacher.ogg'
 	job_traits = list(TRAIT_SEEPRICES, TRAIT_EMPATH, TRAIT_INTELLECTUAL,)
