@@ -164,7 +164,7 @@
 /datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording)
 	var/client/player = H?.client
 	if(player?.prefs)
-		var/origin_memory = player.prefs.virtue_origin
+		var/datum/virtue/origin/origin_memory = player.prefs.virtue_origin
 		player.prefs.virtue_origin = new new_origin
 		if(wording)
 			H.dna.species.skin_tone_wording = wording

@@ -1,7 +1,13 @@
-/datum/advclass/mercenary/desert_rider/almah
+/datum/advclass/mercenary/desert_rider_almah
 	name = "Desert Rider Almah"
 	tutorial = "You're an Almah - a blade dancer, trained in the arts of spellbladery, an art originating from Azurea in ancient time. Your people have refined spellbladery into an artform. They call you a bladedancer - for the beautiful, bloody tapestry of magycks and blade you weave out of your foes in battle."
+	allowed_sexes = list(MALE, FEMALE)
+	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/mercenary/desert_rider_almah
+	class_select_category = CLASS_CAT_RANESHENI
+	category_tags = list(CTAG_MERCENARY)
+	cmode_music = 'sound/music/combat_desertrider.ogg'
+	subclass_languages = list(/datum/language/raneshi)
 	traits_applied = list(TRAIT_ARCYNE)
 	subclass_stats = list(
 		STATKEY_SPD = 1, // Weighted 7. Swap str for spd
@@ -52,7 +58,6 @@
 	shoes = /obj/item/clothing/shoes/roguetown/shalal
 	belt = /obj/item/storage/belt/rogue/leather/shalal
 	backr = /obj/item/storage/backpack/rogue/satchel/black
-
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary,
 		/obj/item/rogueweapon/huntingknife/idagger/navaja,
@@ -141,5 +146,4 @@
 				if("Steel Warhammer & Shield")
 					r_hand = /obj/item/rogueweapon/mace/warhammer/steel
 					backl = /obj/item/rogueweapon/shield/tower/raneshen
-
 	H.merctype = 4
