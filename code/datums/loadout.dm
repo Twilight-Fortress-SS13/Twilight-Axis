@@ -1836,7 +1836,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donator_drow_armorkit
-	name = "Donator Item - Drowcraft Armor - Required: Hardened Leather Armor Or Studded Leather Armor"
+	name = "Donator Item - Drowcraft Armor - Required: Hardened Leather Armor, Studded Leather Armor, Lightweight Brigandine, Cuirass or Scalemail"
 	path = /obj/item/enchantingkit/triumph_armorkit_drow
 	category = list("Броня", "Донат")
 	donatitem = TRUE
@@ -2420,6 +2420,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Ксайликситская маска"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/mask/rogue/xylixmask
+	donatitem = TRUE
+
+/datum/loadout_item/weatheredmask
+	name = "Weathered Xylixian Mask"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/mask/rogue/xylixmask/weathered
 	donatitem = TRUE
 
 /datum/loadout_item/donat/eyepatchfake

@@ -576,6 +576,13 @@
 					for(var/stat in adv_ref.adv_stat_ceiling)
 						dat += "["[capitalize(stat)]: <b>\Roman[adv_ref.adv_stat_ceiling[stat]]</b>"] | "
 					dat += "<i><br>Regardless of your statpacks or race choice, you will not be able to exceed these stats on spawn.</i></font>"
+				if(length(adv_ref.origin_limits)) //TA EDIT START
+					dat += "["<br><font color = '#cf2a2a'><b>This subclass requires one of the following origins: "]</b></font><br>"
+					dat += " | "
+					for(var/orig in adv_ref.origin_limits)
+						var/datum/virtue/origin/origin = orig
+						dat += "[origin.name] | "
+					dat += "<i><br>Choosing this subclass with any other origin will enforce a compatiable origin on spawn.</i></font>" //TA EDIT END
 				if(LAZYLEN(adv_ref.subclass_mage_aspects))
 					var/list/aspect_cfg = adv_ref.subclass_mage_aspects
 					dat += "<font color = '#a3a7e0'><b>Mage Aspects:</b><br>"

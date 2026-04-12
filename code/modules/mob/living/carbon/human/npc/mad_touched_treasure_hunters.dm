@@ -4,19 +4,14 @@
 */
 
 /mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter
-	aggressive=1
-	mode = AI_IDLE
+	ai_controller = /datum/ai_controller/human_npc
 	faction = list("viking", "station")
 	ambushable = FALSE
 	dodgetime = 15
-	flee_in_pain = FALSE
-	possible_rmb_intents = list()
 
 /mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/ambush
 	threat_point = THREAT_ELITE
 	ambush_faction = "treasure_hunters"
-	aggressive = 1
-	wander = TRUE
 
 /mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/Initialize()
 	. = ..()
@@ -25,13 +20,13 @@
 
 /mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/after_creation()
 	..()
+	AddComponent(/datum/component/ai_aggro_system)
 	job = "Mad-touched Treasure Hunter"
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_INFINITE_STAMINA, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
-	ADD_TRAIT(src, TRAIT_CRIT_THRESHOLD, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_LEECHIMMUNE, INNATE_TRAIT)
 	ADD_TRAIT(src, TRAIT_DISFIGURED, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
@@ -44,21 +39,6 @@
 	var/obj/item/bodypart/head/head = get_bodypart(BODY_ZONE_HEAD)
 	head.sellprice = 40
 
-/mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/npc_idle()
-	if(m_intent == MOVE_INTENT_SNEAK)
-		return
-	if(world.time < next_idle)
-		return
-	next_idle = world.time + rand(30, 70)
-	if((mobility_flags & MOBILITY_MOVE) && isturf(loc) && wander)
-		if(prob(20))
-			var/turf/T = get_step(loc,pick(GLOB.cardinals))
-			if(!istype(T, /turf/open/transparent/openspace))
-				Move(T)
-		else
-			face_atom(get_step(src,pick(GLOB.cardinals)))
-	if(!wander && prob(10))
-		face_atom(get_step(src,pick(GLOB.cardinals)))
 
 /datum/outfit/job/roguetown/human/species/human/northern/mad_touched_treasure_hunter/pre_equip(mob/living/carbon/human/H)
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/paalloy
