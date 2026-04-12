@@ -18,4 +18,5 @@ export type ExaminePanelData = {
   is_vet: boolean | number;
   is_naked: boolean | number;
   examine_theme: string | null;
+  nsfw_examine_always: boolean | number;
 };

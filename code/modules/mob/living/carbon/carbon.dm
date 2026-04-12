@@ -797,7 +797,7 @@
 		var/hardcrit_divisor = !mind ? FIRE_HARDCRIT_DIVISOR_MINDLESS : FIRE_HARDCRIT_DIVISOR
 		
 		used_damage = avg_burn_factor * hardcrit_divisor
-	
+
 	if(used_damage < total_tox)
 		used_damage = total_tox
 	if(used_damage < total_oxy)
@@ -1137,18 +1137,15 @@
 						span_userdanger("The poison is too much... I cannot go on."))
 					balloon_alert_to_viewers("<font color='#2b8a3e'>poisoned!</font>")
 				else if(burned)
-					if(!mind && !HAS_TRAIT(src, TRAIT_CRIT_THRESHOLD))
-						visible_message(span_danger("<b>[src] collapses - [src.p_their()] will is too weak to endure the burns!</b>"))
-					else
-						visible_message(span_danger("<b>[src] collapses, [src.p_their()] flesh charred and smoking!</b>"), \
-							span_userdanger("My body is too burnt to go on!"))
+					visible_message(span_danger("<b>[src] collapses, [src.p_their()] flesh charred and smoking!</b>"), \
+						span_userdanger("My body is too burnt to go on!"))
 					balloon_alert_to_viewers("<font color='#bb2b2b'>burnt down!</font>")
 					playsound(src, 'sound/health/burning.ogg', 60, TRUE)
 				else if(health <= HEALTH_THRESHOLD_FULLCRIT)
 					visible_message(span_danger("<b>[src] collapses, broken and bloodied!</b>"), \
 						span_userdanger("My bones are shattered... I cannot go on."))
 					balloon_alert_to_viewers("<font color='#bb2b2b'>beaten down!</font>")
-			stat = UNCONSCIOUS
+			set_stat(UNCONSCIOUS)
 			if(ishuman(src))
 				var/mob/living/carbon/human/H = src
 				H.dna?.species?.stop_wagging_tail(H)
@@ -1159,9 +1156,9 @@
 				REMOVE_TRAIT(src, TRAIT_SIXTHSENSE, "near-death")
 		else
 			if(health <= crit_threshold && !HAS_TRAIT(src, TRAIT_NOSOFTCRIT))
-				stat = SOFT_CRIT
+				set_stat(SOFT_CRIT)
 			else
-				stat = CONSCIOUS
+				set_stat(CONSCIOUS)
 			cure_blind(UNCONSCIOUS_BLIND)
 			REMOVE_TRAIT(src, TRAIT_SIXTHSENSE, "near-death")
 		update_mobility()
