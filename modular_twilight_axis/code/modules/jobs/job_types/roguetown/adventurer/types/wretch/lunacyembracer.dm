@@ -55,6 +55,11 @@
 	neck = /obj/item/clothing/neck/roguetown/psicross/dendor
 	armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/berserker
 	head = /obj/item/flowercrown/briar
+	
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dropkick)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/chokeslam)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/headbutt)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stunner)
 
 	H.cmode_music = 'modular_twilight_axis/sound/music/combat_berserker.ogg'
 	to_chat(H, span_danger("You have abandoned your humanity to run wild under the moon. The call of nature fills your soul!"))
