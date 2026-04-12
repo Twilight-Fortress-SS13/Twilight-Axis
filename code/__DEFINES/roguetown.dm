@@ -112,9 +112,13 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 
 #define RACES_BLESSED \
-	/datum/species/human/northern,\
-	/datum/species/aasimar,\
-	/datum/species/tabaxi,\
+    /datum/species/tabaxi,\
+    /datum/species/lupian,\
+    /datum/species/dracon,\
+    /datum/species/kobold,\
+    /datum/species/vulpkanin,\
+    /datum/species/lizardfolk,\
+    /datum/species/anthromorphsmall
 
 #define RACES_DESPISED \
 	/datum/species/dullahan,\
