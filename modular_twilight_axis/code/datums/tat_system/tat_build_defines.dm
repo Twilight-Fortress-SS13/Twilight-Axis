@@ -311,8 +311,8 @@
 	/obj/item/rogueweapon/whip/silver = TAT_ITEM_ENTRY("Silver Whip", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "whip"), \
 	/obj/item/clothing/gloves/roguetown/knuckles = TAT_ITEM_ENTRY("Knuckles", 3, "clothing", "armor_family", TAT_SUPPLY_STEEL, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/knuckles/bronze = TAT_ITEM_ENTRY("Knuckles Bronze", 2, "clothing", "armor_family", TAT_SUPPLY_BRONZE, "gloves"), \
-	/obj/item/clothing/gloves/roguetown/angle = TAT_ITEM_ENTRY("Heavy Leather Gloves", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
-	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves = TAT_ITEM_ENTRY("Grenzelhoft Gloves", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/angle = TAT_ITEM_ENTRY("Heavy Leather Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves = TAT_ITEM_ENTRY("Grenzelhoft Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/eastgloves1 = TAT_ITEM_ENTRY("Swordsman Gloves", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/eastgloves2 = TAT_ITEM_ENTRY("Stylish Bandages", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/elven_gloves = TAT_ITEM_ENTRY("Elven Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
@@ -524,4 +524,13 @@
 	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hierophant = TAT_ITEM_ENTRY("Hierophant's Shawl", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/pontifex = TAT_ITEM_ENTRY("Pontifex's Kaftan", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/gambeson/light = TAT_ITEM_ENTRY("Light Gambeson", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
-	/obj/item/clothing/suit/roguetown/armor/gambeson/lord = TAT_ITEM_ENTRY("Arming Jacket", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit")
+	/obj/item/clothing/suit/roguetown/armor/gambeson/lord = TAT_ITEM_ENTRY("Arming Jacket", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit = TAT_ITEM_ENTRY("Old Dobo Robe", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/basiceast = TAT_ITEM_ENTRY("Simple Dobo Robe", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/suit/roguetown/shirt/dress/captainrobe = TAT_ITEM_ENTRY("Foreign Robes", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/brigandine/haraate = TAT_ITEM_ENTRY("Hansimhae Cuirass", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute = TAT_ITEM_ENTRY("Psydonic Barbute", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants2 = TAT_ITEM_ENTRY("Strange Ripped Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
+	/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/shepherd = TAT_ITEM_ENTRY("Shepherd Leather Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
+	/obj/item/clothing/head/roguetown/mentorhat = TAT_ITEM_ENTRY("Bamboo Hat", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
+	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves/freifechter = TAT_ITEM_ENTRY("Fencing Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves")
