@@ -38,6 +38,8 @@
 	for(var/path in subtypesof(/datum/skill))
 		if(path == /datum/skill)
 			continue
+		if(is_skill_blocked(path))
+			continue
 
 		var/datum/skill/skill = new path
 		if(initial(skill.abstract_type) == path)
@@ -608,6 +610,10 @@
 
 /datum/tat_build/proc/sanitize_skills()
 	for(var/skill_type in skills.Copy())
+		if(is_skill_blocked(skill_type))
+			skills -= skill_type
+			continue
+
 		if(!(skill_type in available_skills))
 			skills -= skill_type
 			continue
@@ -1490,6 +1496,11 @@
 			return TRUE
 
 	return FALSE
+
+/datum/tat_build/proc/is_skill_blocked(skill_type)
+	if(!ispath(skill_type, /datum/skill))
+		return TRUE
+	return (skill_type in TAT_BLOCKED_SKILLS_LIST)
 
 /datum/preferences/proc/sanitize_tat_build(list/tat_data)
 	if(!tat_build)

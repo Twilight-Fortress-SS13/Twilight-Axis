@@ -26,7 +26,6 @@ type SkillEntry = {
   cap: number;
   next_cost: number;
   is_combat: boolean;
-  category?: string;
 };
 
 type TraitEntry = {
@@ -259,7 +258,6 @@ const SkillsTab = ({
           skillPath,
           entry.name,
           entry.desc,
-          entry.category,
           entry.is_combat ? 'combat' : 'non-combat'
         )
       )
@@ -296,7 +294,6 @@ const SkillsTab = ({
                     {entry.is_combat ? 'Combat' : 'Non-combat'}
                     {' | '}Cap: {entry.cap}
                     {' | '}Next cost: {entry.next_cost}
-                    {!!entry.category && ` | Category: ${entry.category}`}
                   </Box>
                   {!!entry.desc && (
                     <Box mt={0.5}>
