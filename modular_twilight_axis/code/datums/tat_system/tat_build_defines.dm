@@ -87,13 +87,13 @@
 #define TAT_ITEM_ENTRY(_name, _cost, _category, _unlock_type, _unlock_key, _slot_group) list("name" = (_name), "cost" = (_cost), "category" = (_category), "unlock_type" = (_unlock_type), "unlock_key" = (_unlock_key), "slot_group" = (_slot_group))
 
 #define TAT_AVAILABLE_STATS_LIST \
-	STATKEY_STR = TAT_STAT_ENTRY("Strength", 2, 10, 7, 15), \
-	STATKEY_PER = TAT_STAT_ENTRY("Perception", 1, 10, 7, 15), \
-	STATKEY_INT = TAT_STAT_ENTRY("Intelligence", 1, 10, 7, 15), \
-	STATKEY_CON = TAT_STAT_ENTRY("Constitution", 1, 10, 7, 15), \
-	STATKEY_WIL = TAT_STAT_ENTRY("Willpower", 1, 10, 7, 15), \
-	STATKEY_SPD = TAT_STAT_ENTRY("Speed", 2, 10, 7, 15), \
-	STATKEY_LCK = TAT_STAT_ENTRY("Fortune", 0.5, 10, 7, 15)
+	STATKEY_STR = TAT_STAT_ENTRY("Strength", 2, 10, 3, 13), \
+	STATKEY_PER = TAT_STAT_ENTRY("Perception", 1, 10, 3, 13), \
+	STATKEY_INT = TAT_STAT_ENTRY("Intelligence", 1, 10, 3, 13), \
+	STATKEY_CON = TAT_STAT_ENTRY("Constitution", 1, 10, 3, 13), \
+	STATKEY_WIL = TAT_STAT_ENTRY("Willpower", 1, 10, 3, 13), \
+	STATKEY_SPD = TAT_STAT_ENTRY("Speed", 2, 10, 3, 15), \
+	STATKEY_LCK = TAT_STAT_ENTRY("Fortune", 0.5, 10, 3, 13)
 
 #define TAT_STATS_ORDER_LIST list( \
 	STATKEY_STR, \
