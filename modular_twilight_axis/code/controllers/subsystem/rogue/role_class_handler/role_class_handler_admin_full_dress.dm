@@ -28,7 +28,7 @@
 		//XTRA_MEATY.PQ_boost_divider = 10
 	else
 		var/datum/job/roguetown/RT_JOB = SSjob.GetJob(H.job)
-		if(RT_JOB.advclass_cat_rolls.len)
+		if(RT_JOB && islist(RT_JOB.advclass_cat_rolls) && RT_JOB.advclass_cat_rolls.len)
 			XTRA_MEATY.class_cat_alloc_attempts = RT_JOB.advclass_cat_rolls
 
 		//if(RT_JOB.PQ_boost_divider)
