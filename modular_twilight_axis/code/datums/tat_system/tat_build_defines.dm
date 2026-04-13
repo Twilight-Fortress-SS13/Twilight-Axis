@@ -481,4 +481,8 @@
 	/obj/item/rogueweapon/huntingknife/idagger/silver/stake = TAT_ITEM_ENTRY("Silver Stake", 2, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger/stake = TAT_ITEM_ENTRY("Stake", 1, "weapon", "weapon_supply", "knife", null), \
 	/obj/item/rogueweapon/huntingknife/combat/fencerguy = TAT_ITEM_ENTRY("Grenzelhoftian Seax", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
-	/obj/item/rogueweapon/greatsword/bsword/psy = TAT_ITEM_ENTRY("Forgoten Blade", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword")
+	/obj/item/rogueweapon/greatsword/bsword/psy = TAT_ITEM_ENTRY("Forgoten Blade", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
+	/obj/item/flashlight/flare/torch = TAT_ITEM_ENTRY("Torch", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/flashlight/flare/torch/lantern = TAT_ITEM_ENTRY("Iron Lamptern", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/flashlight/flare/torch/lantern/bronzelamptern = TAT_ITEM_ENTRY("Bronze Lamptern", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
+	/obj/item/flashlight/flare/torch/metal = TAT_ITEM_ENTRY("Fietorch", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc")

@@ -1012,7 +1012,7 @@
 	for(var/skill_type in skills)
 		var/level = skills[skill_type]
 		if(level > 0)
-			H.adjust_skillrank(skill_type, level, TRUE)
+			H.adjust_skillrank_up_to(skill_type, level, TRUE)
 
 /datum/tat_build/proc/grant_skill_bonus_if_exists(mob/living/carbon/human/H, path_text, amount = 3)
 	if(!H || !path_text || !istext(path_text))
