@@ -43,15 +43,16 @@
 	var/list/pending_invites = list()
 	var/bonus_applied = FALSE
 
-/datum/component/tat_party_leader/Initialize(mob/living/carbon/human/H)
+/datum/component/tat_party_leader/Initialize()
 	. = ..()
-	if(!istype(H))
+	if(!ishuman(parent))
 		return COMPONENT_INCOMPATIBLE
 
+	var/mob/living/carbon/human/H = parent
 	leader = H
 	add_verbs()
 	refresh_bonus()
-	return .
+	return
 
 /datum/component/tat_party_leader/Destroy(force)
 	remove_bonus()
