@@ -1107,7 +1107,7 @@
 	D.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
 
 /datum/tat_build/proc/apply_witch_package(mob/living/carbon/human/H)
-	if(!H)
+	if(!H || !traits[TAT_TRAIT_WITCH_INITIATE])
 		return
 
 	ADD_TRAIT(H, TRAIT_WITCH, TAT_TRAIT_SOURCE)
