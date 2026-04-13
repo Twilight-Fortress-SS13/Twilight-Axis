@@ -278,7 +278,7 @@
 	/obj/item/rogueweapon/sword/long/broadsword = TAT_ITEM_ENTRY("Broadsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/long/broadsword/bronze = TAT_ITEM_ENTRY("Spatha", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "sword"), \
 	/obj/item/rogueweapon/sword/long/broadsword/steel = TAT_ITEM_ENTRY("Steel Broadsword", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
-	/obj/item/rogueweapon/sword/long/exe = TAT_ITEM_ENTRY("Executioner Sword", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/rogueweapon/sword/long/exe = TAT_ITEM_ENTRY("Executioner Sword", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
 	/obj/item/rogueweapon/sword/long/exe/silver = TAT_ITEM_ENTRY("Silver Executioner Sword", 5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
 	/obj/item/rogueweapon/sword/long/greatkhopesh = TAT_ITEM_ENTRY("Great Khopesh", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/long/kriegmesser = TAT_ITEM_ENTRY("Kriegmesser", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
@@ -495,4 +495,14 @@
 	/obj/item/clothing/head/roguetown/helmet/bascinet/atgervi/gronn = TAT_ITEM_ENTRY("Gronnic Ravager Helm", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine/gronn = TAT_ITEM_ENTRY("Gronn Byrine Hauberk", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine = TAT_ITEM_ENTRY("Steel Brigandine", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
-	/obj/item/clothing/suit/roguetown/armor/brigandine/light = TAT_ITEM_ENTRY("Lightweight Brigandine", 3, "clothing", "armor_family", TAT_SUPPLY_IRON, "armor")
+	/obj/item/clothing/suit/roguetown/armor/brigandine/light = TAT_ITEM_ENTRY("Lightweight Brigandine", 3, "clothing", "armor_family", TAT_SUPPLY_IRON, "armor"), \
+	/obj/item/storage/belt/rogue/pouch/coins/poor = TAT_ITEM_ENTRY("Poor coins pouch", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "neck"), \
+	/obj/item/rogueweapon/scabbard/sword = TAT_ITEM_ENTRY("Scabbardheath", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
+	/obj/item/rogueweapon/scabbard/sheath = TAT_ITEM_ENTRY("Sheath", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
+	/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = TAT_ITEM_ENTRY("Tanto", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
+	/obj/item/rogueweapon/sword/short/kazengun = TAT_ITEM_ENTRY("Kodachi", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/rogueweapon/scabbard/sword/kazengun = TAT_ITEM_ENTRY("Simple Kazengun Scabbard", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo = TAT_ITEM_ENTRY("Ssangsudo", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/rogueweapon/scabbard/sheath/kazengun = TAT_ITEM_ENTRY("Plain Lacquer Sheath for Tanto", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "knife"), \
+	/obj/item/rogueweapon/scabbard/sword/kazengun/kodachi = TAT_ITEM_ENTRY("Plain Lacquer Sheath for Kodachi", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
+	/obj/item/rogueweapon/scabbard/gwstrap = TAT_ITEM_ENTRY("Greatweapon Strap", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword")
