@@ -511,4 +511,5 @@
 	/obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo = TAT_ITEM_ENTRY("Ssangsudo", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/scabbard/sheath/kazengun = TAT_ITEM_ENTRY("Plain Lacquer Sheath for Tanto", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "knife"), \
 	/obj/item/rogueweapon/scabbard/sword/kazengun/kodachi = TAT_ITEM_ENTRY("Plain Lacquer Sheath for Kodachi", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
-	/obj/item/rogueweapon/scabbard/gwstrap = TAT_ITEM_ENTRY("Greatweapon Strap", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword")
+	/obj/item/rogueweapon/scabbard/gwstrap = TAT_ITEM_ENTRY("Greatweapon Strap", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword"), \
+	/obj/item/clothing/shoes/roguetown/boots/armor = TAT_ITEM_ENTRY("Plated Boots", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "shoes")
