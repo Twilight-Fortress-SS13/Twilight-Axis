@@ -450,7 +450,7 @@
 	/obj/item/clothing/under/roguetown/tights/sailor = TAT_ITEM_ENTRY("Sailor Pants", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
 	/obj/item/clothing/under/roguetown/trou = TAT_ITEM_ENTRY("Work Trousers", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under"), \
 	/obj/item/clothing/under/roguetown/trou/leather = TAT_ITEM_ENTRY("Leather Trousers", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under"), \
-	/obj/item/clothing/under/roguetown/trou/leather/gronn = TAT_ITEM_ENTRY("Fur lined Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
+	/obj/item/clothing/under/roguetown/trou/leather/gronn = TAT_ITEM_ENTRY("Gronnic Fur Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
 	/obj/item/clothing/under/roguetown/trou/leather/pontifex/raneshen = TAT_ITEM_ENTRY("Baggy Desert Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
 	/obj/item/clothing/wrists/roguetown/bracers = TAT_ITEM_ENTRY("Steel Bracers ", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "wrists"), \
 	/obj/item/clothing/under/roguetown/trou/leathertights = TAT_ITEM_ENTRY("Leather tights", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
@@ -485,4 +485,8 @@
 	/obj/item/flashlight/flare/torch = TAT_ITEM_ENTRY("Torch", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/flashlight/flare/torch/lantern = TAT_ITEM_ENTRY("Iron Lamptern", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/flashlight/flare/torch/lantern/bronzelamptern = TAT_ITEM_ENTRY("Bronze Lamptern", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
-	/obj/item/flashlight/flare/torch/metal = TAT_ITEM_ENTRY("Fietorch", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc")
+	/obj/item/flashlight/flare/torch/metal = TAT_ITEM_ENTRY("Fietorch", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/generic = TAT_ITEM_ENTRY("Fencing Breeches", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
+	/obj/item/clothing/under/roguetown/trou/leather/atgervi = TAT_ITEM_ENTRY("Fur Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
+	/obj/item/clothing/gloves/roguetown/angle/atgervi = TAT_ITEM_ENTRY("Steel Bracers ", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "wrists"), \
+	/obj/item/clothing/shoes/roguetown/boots/leather/atgervi = TAT_ITEM_ENTRY("atgervi leather boots", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes")

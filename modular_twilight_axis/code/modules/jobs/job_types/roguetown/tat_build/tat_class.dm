@@ -1,6 +1,6 @@
 /datum/job/roguetown/tat_class
-	title = "Free roam"
-	f_title = "Free roam"
+	title = "Pliant Soul"
+	f_title = "Pliant Soul"
 	department_flag = SIDEFOLK
 	flag = SIDEFOLK
 	faction = "Station"
@@ -11,7 +11,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 
-	tutorial = "Free roam."
+	tutorial = "Pliant Soul."
 	display_order = JDO_MERCENARY
 	selection_color = JCOLOR_WANDERER
 
@@ -37,7 +37,7 @@
 	return ..()
 
 /datum/advclass/tat_class
-	name = "Free Roam"
+	name = "Pliant Soul"
 	tutorial = "A freeform class used for the TAT build system."
 	outfit = /datum/outfit/job/roguetown/tat_class/basic
 	category_tags = list(CTAG_ADVENTURER)
@@ -47,7 +47,7 @@
 	traits_applied = list()
 
 /datum/outfit/job/roguetown/tat_class
-	name = "Free roam"
+	name = "Pliant Soul"
 	jobtype = /datum/job/roguetown/tat_class
 
 /datum/outfit/job/roguetown/tat_class/basic/pre_equip(mob/living/carbon/human/H)
