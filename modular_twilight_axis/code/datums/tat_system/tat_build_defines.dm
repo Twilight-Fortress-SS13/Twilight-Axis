@@ -432,7 +432,7 @@
 	/obj/item/clothing/suit/roguetown/armor/plate/raneshen_scale = TAT_ITEM_ENTRY("Ranesheni Medium Lamellar Armor", 4, "clothing", "armor_family", TAT_ARMOR_MAIL, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/scale = TAT_ITEM_ENTRY("Scalemail", 4, "clothing", "armor_family", TAT_ARMOR_MAIL, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/scale/steppe = TAT_ITEM_ENTRY("Steel Heavy Lamellar", 4, "clothing", "armor_family", TAT_ARMOR_MAIL, "suit"), \
-	/obj/item/clothing/under/roguetown/brigandinelegs = TAT_ITEM_ENTRY("Brigandine Chausses", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "under"), \
+	/obj/item/clothing/under/roguetown/brigandinelegs = TAT_ITEM_ENTRY("Chausses, Brigandine", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "under"), \
 	/obj/item/clothing/under/roguetown/chainlegs = TAT_ITEM_ENTRY("Steel Chain Chausses", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "under"), \
 	/obj/item/clothing/under/roguetown/chainlegs/iron = TAT_ITEM_ENTRY("Iron Chain Chausses", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "under"), \
 	/obj/item/clothing/under/roguetown/chainlegs/iron/kilt = TAT_ITEM_ENTRY("Iron Chain Kilt", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "under"), \
@@ -488,5 +488,11 @@
 	/obj/item/flashlight/flare/torch/metal = TAT_ITEM_ENTRY("Fietorch", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/generic = TAT_ITEM_ENTRY("Fencing Breeches", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
 	/obj/item/clothing/under/roguetown/trou/leather/atgervi = TAT_ITEM_ENTRY("Fur Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
-	/obj/item/clothing/gloves/roguetown/angle/atgervi = TAT_ITEM_ENTRY("Steel Bracers ", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "wrists"), \
-	/obj/item/clothing/shoes/roguetown/boots/leather/atgervi = TAT_ITEM_ENTRY("atgervi leather boots", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes")
+	/obj/item/clothing/gloves/roguetown/angle/atgervi = TAT_ITEM_ENTRY("Fur-Lined Leather Gloves ", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "wrists"), \
+	/obj/item/clothing/shoes/roguetown/boots/leather/atgervi = TAT_ITEM_ENTRY("atgervi leather boots", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
+	/obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn = TAT_ITEM_ENTRY("Gronnic Ravager Mantle", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/gloves/roguetown/angle/gronn = TAT_ITEM_ENTRY("Gronnic Fur-Lined Leather Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
+	/obj/item/clothing/head/roguetown/helmet/bascinet/atgervi/gronn = TAT_ITEM_ENTRY("Gronnic Ravager Helm", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
+	/obj/item/clothing/suit/roguetown/armor/brigandine/gronn = TAT_ITEM_ENTRY("Gronn Byrine Hauberk", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/brigandine = TAT_ITEM_ENTRY("Steel Brigandine", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/brigandine/light = TAT_ITEM_ENTRY("Lightweight Brigandine", 3, "clothing", "armor_family", TAT_SUPPLY_IRON, "armor")
