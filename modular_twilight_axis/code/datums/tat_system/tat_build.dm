@@ -1393,11 +1393,15 @@
 	if(!H)
 		return
 	sanitize_build()
+	
+	var/obj/item/storage/backpack/rogue/satchel/B = new /obj/item/storage/backpack/rogue/satchel(H)
+	H.equip_to_slot_if_possible(B, SLOT_BACK_L, TRUE, TRUE, TRUE, TRUE)
+	apply_items(H)
+
 	apply_stats(H)
 	apply_skills(H)
 	apply_trait_skill_bonuses(H)
 	apply_traits(H)
-	apply_items(H)
 
 /datum/tat_build/ui_state(mob/user)
 	return GLOB.always_state
