@@ -1,4 +1,5 @@
-#define TAT_TRAIT_SOURCE "tat_build"
+#define TAT_TRAIT_SOURCE	"tat_build"
+#define CTAG_FREE_ROAM		"CTAG_FREE_ROAM"
 
 #define TAT_SKILL_COMBAT_CAP_DEFAULT 3
 #define TAT_SKILL_COMBAT_CAP_TRAIT_1 4

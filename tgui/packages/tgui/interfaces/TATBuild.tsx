@@ -4,6 +4,7 @@ import { Window } from 'tgui/layouts';
 import {
   Box,
   Button,
+  Input,
   NoticeBox,
   Section,
   Stack,
@@ -96,6 +97,20 @@ type NumericRowProps = {
   extra?: React.ReactNode;
 };
 
+const normalizeSearch = (value: unknown): string =>
+  String(value ?? '')
+    .toLowerCase()
+    .trim();
+
+const matchesSearch = (search: string, ...parts: Array<unknown>): boolean => {
+  if (!search) {
+    return true;
+  }
+
+  const normalized = normalizeSearch(search);
+  return parts.some((part) => normalizeSearch(part).includes(normalized));
+};
+
 const NumericRow = ({
   title,
   value,
@@ -152,19 +167,27 @@ const PointsPanel = ({ data }: { data: Data }) => {
     <Section title="Points">
       <Stack>
         <Stack.Item grow>
-          <Box>Stats: {data.points_stats_remaining} / {data.points_stats}</Box>
+          <Box>
+            Stats: {data.points_stats_remaining} / {data.points_stats}
+          </Box>
         </Stack.Item>
         <Stack.Item grow>
-          <Box>Skills: {data.points_skills_remaining} / {data.points_skills}</Box>
+          <Box>
+            Skills: {data.points_skills_remaining} / {data.points_skills}
+          </Box>
         </Stack.Item>
       </Stack>
 
       <Stack mt={1}>
         <Stack.Item grow>
-          <Box>Traits: {data.points_traits_remaining} / {data.points_traits}</Box>
+          <Box>
+            Traits: {data.points_traits_remaining} / {data.points_traits}
+          </Box>
         </Stack.Item>
         <Stack.Item grow>
-          <Box>Items: {data.points_items_remaining} / {data.points_items}</Box>
+          <Box>
+            Items: {data.points_items_remaining} / {data.points_items}
+          </Box>
         </Stack.Item>
       </Stack>
     </Section>
@@ -174,85 +197,118 @@ const PointsPanel = ({ data }: { data: Data }) => {
 const StatsTab = ({
   data,
   act,
+  search,
 }: {
   data: Data;
   act: (action: string, payload?: object) => void;
+  search: string;
 }) => {
   const rows = useMemo(() => {
-    return Object.entries(data.available_stats || {});
-  }, [data.available_stats]);
+    return Object.entries(data.available_stats || {}).filter(([statId, entry]) =>
+      matchesSearch(search, entry.name, statId)
+    );
+  }, [data.available_stats, search]);
 
   return (
     <Section title="Stats">
-      <Stack vertical>
-        {rows.map(([statId, entry]) => {
-          const value = data.stats?.[statId] ?? entry.base;
+      {!rows.length ? (
+        <NoticeBox>No matches found.</NoticeBox>
+      ) : (
+        <Stack vertical>
+          {rows.map(([statId, entry]) => {
+            const value = data.stats?.[statId] ?? entry.base;
 
-          return (
-            <NumericRow
-              key={statId}
-              title={entry.name || statId}
-              value={value}
-              onAdd={() => act('add_stat', { id: statId, amount: 1 })}
-              onRemove={() => act('remove_stat', { id: statId, amount: 1 })}
-              disabledAdd={value >= entry.max}
-              disabledRemove={value <= entry.min}
-              extra={
-                <Box>
-                  Base: {entry.base} | Min: {entry.min} | Max: {entry.max} | Cost per step: {entry.cost}
-                </Box>
-              }
-            />
-          );
-        })}
-      </Stack>
+            return (
+              <NumericRow
+                key={statId}
+                title={entry.name || statId}
+                value={value}
+                onAdd={() => act('add_stat', { id: statId, amount: 1 })}
+                onRemove={() => act('remove_stat', { id: statId, amount: 1 })}
+                disabledAdd={value >= entry.max}
+                disabledRemove={value <= entry.min}
+                extra={
+                  <Box>
+                    Base: {entry.base} | Min: {entry.min} | Max: {entry.max} |
+                    {' '}Cost per step: {entry.cost}
+                  </Box>
+                }
+              />
+            );
+          })}
+        </Stack>
+      )}
     </Section>
   );
 };
 
-const SkillsTab = ({ data, act }: { data: Data; act: Function }) => {
+const SkillsTab = ({
+  data,
+  act,
+  search,
+}: {
+  data: Data;
+  act: Function;
+  search: string;
+}) => {
   const rows = useMemo(() => {
-    return Object.entries(data.available_skills || {}).sort((a, b) => {
-      const aCombat = a[1].is_combat ? 0 : 1;
-      const bCombat = b[1].is_combat ? 0 : 1;
+    return Object.entries(data.available_skills || {})
+      .filter(([skillPath, entry]) =>
+        matchesSearch(
+          search,
+          skillPath,
+          entry.name,
+          entry.desc,
+          entry.category,
+          entry.is_combat ? 'combat' : 'non-combat'
+        )
+      )
+      .sort((a, b) => {
+        const aCombat = a[1].is_combat ? 0 : 1;
+        const bCombat = b[1].is_combat ? 0 : 1;
 
-      if (aCombat !== bCombat) {
-        return aCombat - bCombat;
-      }
+        if (aCombat !== bCombat) {
+          return aCombat - bCombat;
+        }
 
-      return (a[1].name || a[0]).localeCompare(b[1].name || b[0]);
-    });
-  }, [data.available_skills]);
+        return (a[1].name || a[0]).localeCompare(b[1].name || b[0]);
+      });
+  }, [data.available_skills, search]);
 
   return (
     <Section title="Skills">
-      <Stack vertical>
-        {rows.map(([skillPath, entry]) => (
-          <NumericRow
-            key={skillPath}
-            title={entry.name || skillPath}
-            value={entry.level || 0}
-            onAdd={() => act('add_skill', { path: skillPath, amount: 1 })}
-            onRemove={() => act('remove_skill', { path: skillPath, amount: 1 })}
-            disabledAdd={(entry.level || 0) >= (entry.cap || 0)}
-            disabledRemove={(entry.level || 0) <= 0}
-            extra={
-              <>
-                <Box>
-                  {entry.is_combat ? 'Combat' : 'Non-combat'}
-                  {' | '}Cap: {entry.cap}
-                  {' | '}Next cost: {entry.next_cost}
-                </Box>
-                {!!entry.desc && (
-                  <Box mt={0.5}>
-                    {entry.desc}
+      {!rows.length ? (
+        <NoticeBox>No matches found.</NoticeBox>
+      ) : (
+        <Stack vertical>
+          {rows.map(([skillPath, entry]) => (
+            <NumericRow
+              key={skillPath}
+              title={entry.name || skillPath}
+              value={entry.level || 0}
+              onAdd={() => act('add_skill', { path: skillPath, amount: 1 })}
+              onRemove={() => act('remove_skill', { path: skillPath, amount: 1 })}
+              disabledAdd={(entry.level || 0) >= (entry.cap || 0)}
+              disabledRemove={(entry.level || 0) <= 0}
+              extra={
+                <>
+                  <Box>
+                    {entry.is_combat ? 'Combat' : 'Non-combat'}
+                    {' | '}Cap: {entry.cap}
+                    {' | '}Next cost: {entry.next_cost}
+                    {!!entry.category && ` | Category: ${entry.category}`}
                   </Box>
-                )}
-              </>
-            }
-          />
-        ))}
-      </Stack>
+                  {!!entry.desc && (
+                    <Box mt={0.5}>
+                      {entry.desc}
+                    </Box>
+                  )}
+                </>
+              }
+            />
+          ))}
+        </Stack>
+      )}
     </Section>
   );
 };
@@ -283,7 +339,15 @@ const TraitPill = ({
   );
 };
 
-const TraitsTab = ({ data, act }: { data: Data; act: Function }) => {
+const TraitsTab = ({
+  data,
+  act,
+  search,
+}: {
+  data: Data;
+  act: Function;
+  search: string;
+}) => {
   const traitEntries = data.available_traits || {};
 
   const grouped = useMemo(() => {
@@ -296,24 +360,35 @@ const TraitsTab = ({ data, act }: { data: Data; act: Function }) => {
       }
     > = {};
 
-    Object.entries(traitEntries).forEach(([traitId, entry]) => {
-      const category = entry.category || 'other';
-      const categoryName = entry.category_name || 'Other';
+    Object.entries(traitEntries)
+      .filter(([traitId, entry]) =>
+        matchesSearch(
+          search,
+          traitId,
+          entry.name,
+          entry.desc,
+          entry.category,
+          entry.category_name
+        )
+      )
+      .forEach(([traitId, entry]) => {
+        const category = entry.category || 'other';
+        const categoryName = entry.category_name || 'Other';
 
-      if (!groups[category]) {
-        groups[category] = {
-          categoryName,
-          available: [],
-          selected: [],
-        };
-      }
+        if (!groups[category]) {
+          groups[category] = {
+            categoryName,
+            available: [],
+            selected: [],
+          };
+        }
 
-      if (entry.selected) {
-        groups[category].selected.push([traitId, entry]);
-      } else {
-        groups[category].available.push([traitId, entry]);
-      }
-    });
+        if (entry.selected) {
+          groups[category].selected.push([traitId, entry]);
+        } else {
+          groups[category].available.push([traitId, entry]);
+        }
+      });
 
     Object.values(groups).forEach((group) => {
       group.available.sort((a, b) =>
@@ -327,123 +402,169 @@ const TraitsTab = ({ data, act }: { data: Data; act: Function }) => {
     return Object.entries(groups).sort((a, b) =>
       a[1].categoryName.localeCompare(b[1].categoryName)
     );
-  }, [traitEntries]);
+  }, [traitEntries, search]);
 
   return (
     <Section title="Traits">
-      <Stack vertical>
-        {grouped.map(([categoryKey, group]) => (
-          <Box
-            key={categoryKey}
-            mb={2}
-            style={{
-              borderBottom: '1px solid rgba(255,255,255,0.08)',
-              paddingBottom: '10px',
-            }}>
+      {!grouped.length ? (
+        <NoticeBox>No matches found.</NoticeBox>
+      ) : (
+        <Stack vertical>
+          {grouped.map(([categoryKey, group]) => (
             <Box
-              bold
-              mb={1}
+              key={categoryKey}
+              mb={2}
               style={{
-                fontSize: '18px',
-                letterSpacing: '1px',
+                borderBottom: '1px solid rgba(255,255,255,0.08)',
+                paddingBottom: '10px',
               }}>
-              {group.categoryName}
+              <Box
+                bold
+                mb={1}
+                style={{
+                  fontSize: '18px',
+                  letterSpacing: '1px',
+                }}>
+                {group.categoryName}
+              </Box>
+
+              <Box bold mb={0.5}>
+                Pool
+              </Box>
+
+              {group.available.length ? (
+                <Stack wrap>
+                  {group.available.map(([traitId, entry]) => (
+                    <Stack.Item key={traitId}>
+                      <TraitPill
+                        title={entry.name || traitId}
+                        cost={entry.cost || 0}
+                        desc={entry.desc}
+                        onClick={() => act('add_trait', { id: traitId })}
+                      />
+                    </Stack.Item>
+                  ))}
+                </Stack>
+              ) : (
+                <NoticeBox>No available traits in this group.</NoticeBox>
+              )}
+
+              <Box bold mt={1} mb={0.5}>
+                Selected
+              </Box>
+
+              {group.selected.length ? (
+                <Stack wrap>
+                  {group.selected.map(([traitId, entry]) => (
+                    <Stack.Item key={traitId}>
+                      <TraitPill
+                        title={entry.name || traitId}
+                        cost={entry.cost || 0}
+                        desc={entry.desc}
+                        selected
+                        onClick={() => act('remove_trait', { id: traitId })}
+                      />
+                    </Stack.Item>
+                  ))}
+                </Stack>
+              ) : (
+                <NoticeBox>No selected traits in this group.</NoticeBox>
+              )}
             </Box>
-
-            <Box bold mb={0.5}>
-              Pool
-            </Box>
-
-            {group.available.length ? (
-              <Stack wrap>
-                {group.available.map(([traitId, entry]) => (
-                  <Stack.Item key={traitId}>
-                    <TraitPill
-                      title={entry.name || traitId}
-                      cost={entry.cost || 0}
-                      desc={entry.desc}
-                      onClick={() => act('add_trait', { id: traitId })}
-                    />
-                  </Stack.Item>
-                ))}
-              </Stack>
-            ) : (
-              <NoticeBox>No available traits in this group.</NoticeBox>
-            )}
-
-            <Box bold mt={1} mb={0.5}>
-              Selected
-            </Box>
-
-            {group.selected.length ? (
-              <Stack wrap>
-                {group.selected.map(([traitId, entry]) => (
-                  <Stack.Item key={traitId}>
-                    <TraitPill
-                      title={entry.name || traitId}
-                      cost={entry.cost || 0}
-                      desc={entry.desc}
-                      selected
-                      onClick={() => act('remove_trait', { id: traitId })}
-                    />
-                  </Stack.Item>
-                ))}
-              </Stack>
-            ) : (
-              <NoticeBox>No selected traits in this group.</NoticeBox>
-            )}
-          </Box>
-        ))}
-      </Stack>
+          ))}
+        </Stack>
+      )}
     </Section>
   );
 };
 
-const ItemsTab = ({ data, act }: { data: Data; act: Function }) => {
+const ItemsTab = ({
+  data,
+  act,
+  search,
+}: {
+  data: Data;
+  act: Function;
+  search: string;
+}) => {
   const rows = useMemo(() => {
-    return Object.entries(data.available_items || {}).sort((a, b) =>
-      (a[1].name || a[0]).localeCompare(b[1].name || b[0])
-    );
-  }, [data.available_items]);
+    return Object.entries(data.available_items || {})
+      .filter(([itemPath, entry]) =>
+        matchesSearch(
+          search,
+          itemPath,
+          entry.name,
+          entry.category,
+          entry.slot_group,
+          entry.unlock_type,
+          entry.unlock_key
+        )
+      )
+      .sort((a, b) =>
+        (a[1].name || a[0]).localeCompare(b[1].name || b[0])
+      );
+  }, [data.available_items, search]);
 
   return (
     <Section title="Items">
-      <Stack vertical>
-        {rows.map(([itemPath, entry]) => (
-          <NumericRow
-            key={itemPath}
-            title={entry.name || itemPath}
-            value={entry.amount || 0}
-            onAdd={() => act('add_item', { path: itemPath, amount: 1 })}
-            onRemove={() => act('remove_item', { path: itemPath, amount: 1 })}
-            disabledAdd={!entry.unlocked}
-            disabledRemove={(entry.amount || 0) <= 0}
-            extra={
-              <Box>
-                {entry.category ? `Category: ${entry.category}` : 'Category: unknown'}
-                {entry.slot_group ? ` | Slot group: ${entry.slot_group}` : ''}
-                {' | '}Cost: {entry.cost}
-                {' | '}{entry.unlocked ? 'Unlocked' : 'Locked'}
-              </Box>
-            }
-          />
-        ))}
-      </Stack>
+      {!rows.length ? (
+        <NoticeBox>No matches found.</NoticeBox>
+      ) : (
+        <Stack vertical>
+          {rows.map(([itemPath, entry]) => (
+            <NumericRow
+              key={itemPath}
+              title={entry.name || itemPath}
+              value={entry.amount || 0}
+              onAdd={() => act('add_item', { path: itemPath, amount: 1 })}
+              onRemove={() => act('remove_item', { path: itemPath, amount: 1 })}
+              disabledAdd={!entry.unlocked}
+              disabledRemove={(entry.amount || 0) <= 0}
+              extra={
+                <Box>
+                  {entry.category ? `Category: ${entry.category}` : 'Category: unknown'}
+                  {entry.slot_group ? ` | Slot group: ${entry.slot_group}` : ''}
+                  {' | '}Cost: {entry.cost}
+                  {' | '}{entry.unlocked ? 'Unlocked' : 'Locked'}
+                </Box>
+              }
+            />
+          ))}
+        </Stack>
+      )}
     </Section>
   );
 };
 
-const LoadoutTab = ({ data, act }: { data: Data; act: Function }) => {
+const LoadoutTab = ({
+  data,
+  act,
+  search,
+}: {
+  data: Data;
+  act: Function;
+  search: string;
+}) => {
   const rows = useMemo(() => {
-    return Object.entries(data.loadout || {}).sort((a, b) =>
-      (a[1].name || a[0]).localeCompare(b[1].name || b[0])
-    );
-  }, [data.loadout]);
+    return Object.entries(data.loadout || {})
+      .filter(([itemPath, entry]) =>
+        matchesSearch(
+          search,
+          itemPath,
+          entry.name,
+          entry.category,
+          entry.slot_group
+        )
+      )
+      .sort((a, b) =>
+        (a[1].name || a[0]).localeCompare(b[1].name || b[0])
+      );
+  }, [data.loadout, search]);
 
   return (
     <Section title="Loadout">
       {!rows.length ? (
-        <NoticeBox>No selected items yet.</NoticeBox>
+        <NoticeBox>No matches found.</NoticeBox>
       ) : (
         <Stack vertical>
           {rows.map(([itemPath, entry]) => (
@@ -495,12 +616,34 @@ const LoadoutTab = ({ data, act }: { data: Data; act: Function }) => {
 export const TATBuild = () => {
   const { act, data } = useBackend<Data>();
   const [tab, setTab] = useState<TabKey>('stats');
+  const [search, setSearch] = useState('');
 
   return (
     <Window title="TAT Build" width={860} height={780}>
       <Window.Content scrollable>
         <Stack vertical>
           <PointsPanel data={data} />
+
+          <Section title="Search">
+            <Stack align="center">
+              <Stack.Item grow>
+                <Input
+                  fluid
+                  placeholder={`Search in ${tab}...`}
+                  value={search}
+                  onChange={(value) => setSearch(String(value))}
+                />
+              </Stack.Item>
+
+              <Stack.Item>
+                <Button
+                  disabled={!search}
+                  onClick={() => setSearch('')}>
+                  Clear
+                </Button>
+              </Stack.Item>
+            </Stack>
+          </Section>
 
           {data.dirty ? (
             <NoticeBox>
@@ -548,11 +691,11 @@ export const TATBuild = () => {
             </Tabs>
           </Section>
 
-          {tab === 'stats' && <StatsTab data={data} act={act} />}
-          {tab === 'skills' && <SkillsTab data={data} act={act} />}
-          {tab === 'traits' && <TraitsTab data={data} act={act} />}
-          {tab === 'items' && <ItemsTab data={data} act={act} />}
-          {tab === 'loadout' && <LoadoutTab data={data} act={act} />}
+          {tab === 'stats' && <StatsTab data={data} act={act} search={search} />}
+          {tab === 'skills' && <SkillsTab data={data} act={act} search={search} />}
+          {tab === 'traits' && <TraitsTab data={data} act={act} search={search} />}
+          {tab === 'items' && <ItemsTab data={data} act={act} search={search} />}
+          {tab === 'loadout' && <LoadoutTab data={data} act={act} search={search} />}
 
           <Section>
             <Stack justify="space-between" wrap>

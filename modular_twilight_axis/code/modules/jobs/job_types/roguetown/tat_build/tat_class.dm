@@ -30,7 +30,7 @@
 	bypass_lastclass = TRUE
 	can_random = FALSE
 
-	//advclass_cat_rolls = list(CTAG_FREE_ROAM)
+	advclass_cat_rolls = list(CTAG_FREE_ROAM = 1)
 	job_subclasses = list(/datum/advclass/tat_class)
 
 /datum/job/roguetown/tat_class/after_spawn(mob/living/L, mob/M, latejoin = FALSE)
@@ -39,8 +39,7 @@
 /datum/advclass/tat_class
 	name = "Pliant Soul"
 	tutorial = "A freeform class used for the TAT build system."
-	outfit = /datum/outfit/job/roguetown/tat_class/basic
-	category_tags = list(CTAG_ADVENTURER)
+	category_tags = list(CTAG_FREE_ROAM)
 
 	subclass_stats = list()
 	subclass_skills = list()
