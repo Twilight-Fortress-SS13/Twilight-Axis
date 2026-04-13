@@ -87,13 +87,13 @@
 #define TAT_ITEM_ENTRY(_name, _cost, _category, _unlock_type, _unlock_key, _slot_group) list("name" = (_name), "cost" = (_cost), "category" = (_category), "unlock_type" = (_unlock_type), "unlock_key" = (_unlock_key), "slot_group" = (_slot_group))
 
 #define TAT_AVAILABLE_STATS_LIST \
-	STATKEY_STR = TAT_STAT_ENTRY("Strength", 2, 10, 1, 20), \
-	STATKEY_PER = TAT_STAT_ENTRY("Perception", 1, 10, 1, 20), \
-	STATKEY_INT = TAT_STAT_ENTRY("Intelligence", 1, 10, 1, 20), \
-	STATKEY_CON = TAT_STAT_ENTRY("Constitution", 1, 10, 1, 20), \
-	STATKEY_WIL = TAT_STAT_ENTRY("Willpower", 1, 10, 1, 20), \
-	STATKEY_SPD = TAT_STAT_ENTRY("Speed", 2, 10, 1, 20), \
-	STATKEY_LCK = TAT_STAT_ENTRY("Fortune", 0.5, 10, 1, 20)
+	STATKEY_STR = TAT_STAT_ENTRY("Strength", 2, 10, 7, 15), \
+	STATKEY_PER = TAT_STAT_ENTRY("Perception", 1, 10, 7, 15), \
+	STATKEY_INT = TAT_STAT_ENTRY("Intelligence", 1, 10, 7, 15), \
+	STATKEY_CON = TAT_STAT_ENTRY("Constitution", 1, 10, 7, 15), \
+	STATKEY_WIL = TAT_STAT_ENTRY("Willpower", 1, 10, 7, 15), \
+	STATKEY_SPD = TAT_STAT_ENTRY("Speed", 2, 10, 7, 15), \
+	STATKEY_LCK = TAT_STAT_ENTRY("Fortune", 0.5, 10, 7, 15)
 
 #define TAT_STATS_ORDER_LIST list( \
 	STATKEY_STR, \
@@ -514,4 +514,14 @@
 	/obj/item/rogueweapon/scabbard/gwstrap = TAT_ITEM_ENTRY("Greatweapon Strap", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword"), \
 	/obj/item/clothing/shoes/roguetown/boots/armor = TAT_ITEM_ENTRY("Plated Boots", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "shoes"), \
 	/obj/item/clothing/head/roguetown/helmet = TAT_ITEM_ENTRY("Steel Nasal Helmet", 1, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
-	/obj/item/rogueweapon/scabbard/sword/kazengun/noparry = TAT_ITEM_ENTRY("Ceremonial Kazengun Scabbard for Ssangsudo", 0, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword")
+	/obj/item/rogueweapon/scabbard/sword/kazengun/noparry = TAT_ITEM_ENTRY("Ceremonial Kazengun Scabbard for Ssangsudo", 0, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = TAT_ITEM_ENTRY("Padded Gambeson", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/otavan = TAT_ITEM_ENTRY("fencing gambeson", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/shirt/freifechter = TAT_ITEM_ENTRY("Padded Fencing Shirt", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/chargah = TAT_ITEM_ENTRY("Padded Caftan", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft = TAT_ITEM_ENTRY("Grenzelhoftian Hip-Shirt", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen = TAT_ITEM_ENTRY("Padded Desert Coat", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hierophant = TAT_ITEM_ENTRY("Hierophant's Shawl", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/pontifex = TAT_ITEM_ENTRY("Pontifex's Kaftan", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson/light = TAT_ITEM_ENTRY("Light Gambeson", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson/lord = TAT_ITEM_ENTRY("Arming Jacket", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit")
