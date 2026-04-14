@@ -212,8 +212,17 @@
 	return cap
 
 /datum/tat_build/proc/get_skill_cap(skill_type)
+	if(skill_type == /datum/skill/magic/arcane)
+		if(!can_train_arcane())
+			return 0
+
+	if(skill_type == /datum/skill/magic/holy)
+		if(!can_train_holy())
+			return 0
+
 	if(ispath(skill_type, /datum/skill/combat))
 		return get_combat_skill_cap()
+
 	return TAT_SKILL_NONCOMBAT_CAP
 
 /datum/tat_build/proc/can_use_weapon_supply_type(supply_type)
@@ -1598,3 +1607,15 @@
 
 	tat_build.load_from_list(tat_data)
 	tat_build.dirty = FALSE
+
+/datum/tat_build/proc/can_train_arcane()
+	if(traits[TAT_TRAIT_MAGE_INITIATE])
+		return TRUE
+	if(traits[TAT_TRAIT_SPELLBLADE])
+		return TRUE
+	if(traits[TRAIT_ARCYNE])
+		return TRUE
+	return FALSE
+
+/datum/tat_build/proc/can_train_holy()
+	return !!traits[TAT_TRAIT_DIVINE_INITIATE]
