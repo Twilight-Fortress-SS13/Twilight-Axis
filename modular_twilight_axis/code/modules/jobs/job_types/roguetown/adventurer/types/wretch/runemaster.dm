@@ -47,7 +47,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 	neck = /obj/item/clothing/neck/roguetown/leather
-	backr = /datum/anvil_recipe/weapons/silver/exec
+	backr = /obj/item/rogueweapon/sword/long/exe/silver
 	backl = /obj/item/storage/backpack/rogue/satchel/otavan
 	belt = /obj/item/storage/belt/rogue/leather
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/poor
