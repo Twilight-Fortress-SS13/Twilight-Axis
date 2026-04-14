@@ -1068,7 +1068,6 @@
 
 	if(traits[TRAIT_CAUTIOUS_FISHER])
 		grant_skill_bonus_if_exists(H, "/datum/skill/labor/fishing", 3)
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/fishing", 3)
 
 	if(traits[TRAIT_SQUIRE_REPAIR])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/armorsmithing", 3)
@@ -1076,7 +1075,6 @@
 
 	if(traits[TRAIT_ARCYNE] || traits[TAT_TRAIT_SPELLBLADE] || traits[TAT_TRAIT_MAGE_INITIATE])
 		grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcane", 3)
-		grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcana", 3)
 
 /datum/tat_build/proc/apply_divine_package(mob/living/carbon/human/H)
 	if(!H || !traits[TAT_TRAIT_DIVINE_INITIATE])

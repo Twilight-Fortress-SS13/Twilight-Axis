@@ -11,7 +11,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 
-	tutorial = "Pliant Soul."
+	tutorial = "Pliant soul in the rough Psydonia. Who you are? Deside by yourself, this is YOUR Journey."
 	display_order = JDO_MERCENARY
 	selection_color = JCOLOR_WANDERER
 
