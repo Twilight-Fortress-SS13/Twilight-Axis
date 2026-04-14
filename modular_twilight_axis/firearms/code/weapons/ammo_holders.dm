@@ -155,7 +155,6 @@
 	if(arrows.len)
 		var/obj/O = arrows[arrows.len]
 		arrows -= O
-		linked_ammo_types += O.type
 		O.forceMove(user.loc)
 		user.put_in_hands(O)
 		update_icon()

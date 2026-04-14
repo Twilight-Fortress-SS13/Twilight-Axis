@@ -97,11 +97,7 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 	var/valid_found = FALSE
 	var/mob/pawn = controller.pawn
 	for(var/maybe_target as anything in found)
-		if(maybe_target == pawn)
-			continue
-		if(!is_type_in_typecache(maybe_target, GLOB.target_interested_atoms))
-			continue
-		if(!strategy.can_attack(pawn, maybe_target))
+		if(!atom_allowed(maybe_target, strategy, pawn))
 			continue
 		valid_found = TRUE
 		break
@@ -120,31 +116,28 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 		return FALSE
 	if(!strategy.can_attack(pawn, checking))
 		return FALSE
+	// LOS check: proximity field fires on range, not sight, so gate walls here.
+	if(!(checking in viewers(vision_range, pawn)))
+		return FALSE
+	if(isliving(checking))
+		var/mob/living/living_check = checking
+		if(living_check.rogue_sneaking && isliving(pawn))
+			var/mob/living/living_pawn = pawn
+			var/extra_chance = (living_pawn.health <= living_pawn.maxHealth * 50) ? 30 : 0
+			if(!living_pawn.npc_detect_sneak(living_check, extra_chance))
+				return FALSE
 	return TRUE
 
 /datum/ai_behavior/find_potential_targets/proc/new_atoms_found(list/atom/movable/found, datum/ai_controller/controller, target_key, datum/targetting_datum/strategy, hiding_location_key)
 	var/mob/pawn = controller.pawn
-	var/list/accepted_targets = list()
+	// Don't short-circuit target selection: any candidate the proximity field reports
+	// still needs to go through the full perform() filter (viewers + sneak check).
+	// Just kick the cooldown so the behavior reruns immediately.
 	for(var/maybe_target as anything in found)
-		if(maybe_target == pawn)
+		if(!atom_allowed(maybe_target, strategy, pawn))
 			continue
-		// Need to better handle viewers here
-		if(!ismob(maybe_target) && !is_type_in_typecache(maybe_target, GLOB.target_interested_atoms))
-			continue
-		if(!strategy.can_attack(pawn, maybe_target))
-			continue
-		accepted_targets += maybe_target
-
-	// Alright, we found something acceptable, let's use it yeah?
-	var/atom/target = pick_final_target(controller, accepted_targets)
-	controller.set_blackboard_key(target_key, target)
-
-	var/atom/potential_hiding_location = strategy.find_hidden_mobs(pawn, target)
-
-	if(potential_hiding_location) //If they're hiding inside of something, we need to know so we can go for that instead initially.
-		controller.set_blackboard_key(hiding_location_key, potential_hiding_location)
-
-	finish_action(controller, succeeded = TRUE)
+		controller.modify_cooldown(src, world.time)
+		return
 
 /datum/ai_behavior/find_potential_targets/finish_action(datum/ai_controller/controller, succeeded, target_key, targeting_strategy_key, hiding_location_key)
 	. = ..()

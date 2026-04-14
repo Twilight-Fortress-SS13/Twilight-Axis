@@ -287,6 +287,10 @@ have ways of interacting with a specific atom and control it. They posses a blac
 /datum/ai_controller/proc/on_client_enter(datum/source, atom/target)
 	SIGNAL_HANDLER
 	if(ai_status == AI_STATUS_IDLE)
+		if(ismob(pawn))
+			var/mob/living/mob_pawn = pawn
+			if(mob_pawn.stat >= UNCONSCIOUS)
+				return
 		set_ai_status(AI_STATUS_ON)
 		return
 	// AI_STATUS_OFF can be set when zero clients are on a weatherproof z-level (dungeons,

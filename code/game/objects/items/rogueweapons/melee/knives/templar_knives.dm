@@ -21,7 +21,7 @@
 		if(/datum/patron/divine/xylix)
 			return /obj/item/rogueweapon/huntingknife/idagger/steel/devilsknife
 		if(/datum/patron/divine/undivided)
-			return /obj/item/rogueweapon/huntingknife/idagger/steel
+			return /obj/item/rogueweapon/huntingknife/idagger/steel/undivided
 	return null
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/astrata
@@ -89,3 +89,10 @@
 	These are simple reproductions, with jingling bells attached to the blades."
 	icon = 'icons/roguetown/weapons/templar_daggers32.dmi'
 	icon_state = "devilsknife"
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/undivided
+	name = "equilibrium"
+	desc = "A kampfmesser adorned for use by crusader orders, balanced to perfection allowing to perform feats a normal one cannot. \
+	Their devoted shall find it strikes true in the heart of evil."
+	icon = 'icons/roguetown/weapons/templar_daggers32.dmi'
+	icon_state = "undivided_dagger"

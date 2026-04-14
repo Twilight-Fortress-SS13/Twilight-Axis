@@ -18,7 +18,7 @@ GLOBAL_LIST_INIT(goblin_aggro, world.file2list("strings/rt/goblinaggrolines.txt"
 
 /mob/living/carbon/human/species/goblin/npc
 	ai_controller = /datum/ai_controller/human_npc
-	dodgetime = 30 //they can dodge easily, but have a cooldown on it
+	dodgetime = 30
 
 /mob/living/carbon/human/species/goblin/npc/ambush
 	threat_point = THREAT_LOW

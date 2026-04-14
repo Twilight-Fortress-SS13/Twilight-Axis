@@ -32,7 +32,8 @@
 
 /mob/living/carbon/human/species/skeleton/after_creation()
 	..()
-	AddComponent(/datum/component/ai_aggro_system)
+	if(ai_controller)
+		AddComponent(/datum/component/ai_aggro_system)
 	if(dna && dna.species)
 		dna.species.species_traits |= NOBLOOD
 		dna.species.soundpack_m = new /datum/voicepack/skeleton()
@@ -101,9 +102,10 @@
 
 /mob/living/carbon/human/species/skeleton/no_equipment/death(gibbed, nocutscene = FALSE)
 	..()
-	var/obj/item/necro_relics/necro_crystal/active_crystal = crystal.resolve()
-	for(var/datum/weakref/W in active_crystal.active_skeletons)
-		if(W.resolve() == src)
-			active_crystal.active_skeletons -= W
+	var/obj/item/necro_relics/necro_crystal/active_crystal = crystal?.resolve()
+	if(active_crystal)
+		for(var/datum/weakref/W in active_crystal.active_skeletons)
+			if(W.resolve() == src)
+				active_crystal.active_skeletons -= W
 	active_crystal = null
 	gib(no_brain = TRUE, no_organs = TRUE)
