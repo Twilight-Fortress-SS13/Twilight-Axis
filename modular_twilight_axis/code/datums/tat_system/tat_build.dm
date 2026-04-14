@@ -70,6 +70,14 @@
 		total += TAT_BUILD_STAT_BONUS_WANTED
 	return total
 
+/datum/tat_build/proc/get_effective_skill_points_total()
+	var/total = points_skills
+
+	if(traits[TRAIT_JACKOFALLTRADES])
+		total += points_skills
+
+	return total
+
 /datum/tat_build/proc/get_stat_entry(stat_id)
 	if(!(stat_id in available_stats))
 		return null
@@ -172,7 +180,7 @@
 	return total
 
 /datum/tat_build/proc/get_remaining_skill_points()
-	return points_skills - get_spent_skill_points()
+	return get_effective_skill_points_total() - get_spent_skill_points()
 
 /datum/tat_build/proc/get_spent_trait_points()
 	var/total = 0
@@ -1513,7 +1521,7 @@
 		"available_items" = build_ui_items(),
 		"points_stats" = get_effective_stat_points_total(),
 		"points_stats_remaining" = get_remaining_stat_points(),
-		"points_skills" = points_skills,
+		"points_skills" = get_effective_skill_points_total(),
 		"points_skills_remaining" = get_remaining_skill_points(),
 		"points_traits" = points_traits,
 		"points_traits_remaining" = get_remaining_trait_points(),
