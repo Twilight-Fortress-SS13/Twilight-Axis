@@ -69,47 +69,22 @@ Balloon Alert / Floating Text defines
 )
 
 #define RACES_RESPECTED \
-	/datum/species/human/northern,\
-	/datum/species/elf/wood,\
-	/datum/species/elf/sun,\
-	/datum/species/human/halfelf,\
-	/datum/species/dwarf/mountain,\
-	/datum/species/aasimar,\
-	/datum/species/lupian,\
-	/datum/species/vulpkanin,\
-	/datum/species/moth,\
-	/datum/species/dracon,\
-	/datum/species/dwarf/gnome,\
-	/datum/species/aura,\
-
+    /datum/species/tabaxi,\
+    /datum/species/dracon,\
+    /datum/species/vulpkanin,\
+    
 #define RACES_RESPECTED_NO_AASIMAR \
-	/datum/species/human/northern,\
-	/datum/species/elf/wood,\
-	/datum/species/elf/sun,\
-	/datum/species/human/halfelf,\
-	/datum/species/dwarf/mountain,\
-	/datum/species/lupian,\
-	/datum/species/vulpkanin,\
-	/datum/species/moth,\
-	/datum/species/dracon,\
-	/datum/species/dwarf/gnome\
-
+    /datum/species/tabaxi,\
+    /datum/species/dracon,\
+    /datum/species/vulpkanin,\
+    
 #define RACES_TOLERATED \
-	/datum/species/elf/dark,\
-	/datum/species/tieberian,\
-	/datum/species/lizardfolk,\
-	/datum/species/tabaxi,\
-	/datum/species/akula,\
-	/datum/species/anthromorph,\
-	/datum/species/demihuman,\
-	/datum/species/halforc,\
-	/datum/species/aura,\
-
+    /datum/species/lupian,\
+    /datum/species/lizardfolk,\
 
 #define RACES_SHUNNED \
 	/datum/species/anthromorphsmall,\
 	/datum/species/kobold,\
-	/datum/species/goblinp,\
 
 #define RACES_BLESSED \
     /datum/species/tabaxi,\
