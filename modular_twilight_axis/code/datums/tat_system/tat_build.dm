@@ -454,6 +454,56 @@
 		|| trait_id == TAT_TRAIT_DRUID_INITIATE \
 		|| trait_id == TAT_TRAIT_WITCH_INITIATE)
 
+/datum/tat_build/proc/get_effective_divine_tier()
+	var/tier = CLERIC_T1
+	if(traits[TAT_TRAIT_DIVINE_BOON_1])
+		tier++
+	if(traits[TAT_TRAIT_DIVINE_BOON_2])
+		tier++
+	if(traits[TAT_TRAIT_DIVINE_BOON_3])
+		tier++
+	return clamp(tier, CLERIC_T1, CLERIC_T4)
+
+/datum/tat_build/proc/get_divine_passive_gain_for_tier(cleric_tier)
+	switch(cleric_tier)
+		if(CLERIC_T4)
+			return CLERIC_REGEN_MAJOR
+		if(CLERIC_T2)
+			return CLERIC_REGEN_MINOR
+	return CLERIC_REGEN_WITCH
+
+/datum/tat_build/proc/get_divine_devotion_limit_for_tier(cleric_tier)
+	switch(cleric_tier)
+		if(CLERIC_T4)
+			return CLERIC_REQ_4
+		if(CLERIC_T3)
+			return CLERIC_REQ_3
+		if(CLERIC_T2)
+			return CLERIC_REQ_2
+	return CLERIC_REQ_1
+
+/datum/tat_build/proc/build_mage_aspects(scale_with_arcane = TRUE)
+	var/major = 1
+	var/minor = 2
+	var/utilities = 6
+
+	if(traits[TAT_TRAIT_MAGE_MAJOR_SLOT])
+		major += 1
+	if(traits[TAT_TRAIT_MAGE_MINOR_SLOT])
+		minor += 1
+	if(traits[TAT_TRAIT_MAGE_UTILITY_SLOT])
+		utilities += 1
+	if(scale_with_arcane)
+		utilities += get_skill_value(/datum/skill/magic/arcane)
+
+	return list(
+		"mastery" = FALSE,
+		"major" = major,
+		"minor" = minor,
+		"utilities" = utilities,
+		"ward" = TRUE,
+	)
+
 /datum/tat_build/proc/are_traits_mutually_exclusive(trait_a, trait_b)
 	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TRAIT_OUTLANDER) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TRAIT_OUTLANDER))
 		return TRUE
@@ -478,6 +528,14 @@
 	if(traits[TAT_TRAIT_WARRIOR_MASTER] && !traits[TAT_TRAIT_WARRIOR_EXPERT])
 		return TRUE
 	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2] && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
+		return TRUE
+	if(traits[TAT_TRAIT_DIVINE_BOON_1] && !traits[TAT_TRAIT_DIVINE_INITIATE])
+		return TRUE
+	if(traits[TAT_TRAIT_DIVINE_BOON_2] && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_1]))
+		return TRUE
+	if(traits[TAT_TRAIT_DIVINE_BOON_3] && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_2]))
+		return TRUE
+	if((traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return TRUE
 
 	for(var/trait_a in traits)
@@ -592,16 +650,13 @@
 		magic_config -= "witch_path"
 
 	if(traits[TAT_TRAIT_DIVINE_INITIATE])
-		if(isnull(get_magic_value("divine_tier", null)))
-			magic_config["divine_tier"] = CLERIC_T1
-		if(isnull(get_magic_value("divine_passive_gain", null)))
-			magic_config["divine_passive_gain"] = CLERIC_REGEN_MINOR
-		if(isnull(get_magic_value("divine_devotion_limit", null)))
-			magic_config["divine_devotion_limit"] = CLERIC_REQ_1
+		magic_config["divine_tier"] = get_effective_divine_tier()
+		magic_config["divine_passive_gain"] = get_divine_passive_gain_for_tier(magic_config["divine_tier"])
+		magic_config["divine_devotion_limit"] = get_divine_devotion_limit_for_tier(magic_config["divine_tier"])
 
 	if(traits[TAT_TRAIT_MAGE_INITIATE])
 		if(!islist(get_magic_value("mage_aspects", null)))
-			magic_config["mage_aspects"] = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3, "ward" = TRUE)
+			magic_config["mage_aspects"] = build_mage_aspects(TRUE)
 		if(isnull(get_magic_value("mage_spellbook", null)))
 			magic_config["mage_spellbook"] = TRUE
 
@@ -815,6 +870,14 @@
 		return FALSE
 	if(trait_id == TAT_TRAIT_BARDIC_INSPIRATION_T2 && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
 		return FALSE
+	if(trait_id == TAT_TRAIT_DIVINE_BOON_1 && !traits[TAT_TRAIT_DIVINE_INITIATE])
+		return FALSE
+	if(trait_id == TAT_TRAIT_DIVINE_BOON_2 && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_1]))
+		return FALSE
+	if(trait_id == TAT_TRAIT_DIVINE_BOON_3 && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_2]))
+		return FALSE
+	if((trait_id == TAT_TRAIT_MAGE_MAJOR_SLOT || trait_id == TAT_TRAIT_MAGE_MINOR_SLOT || trait_id == TAT_TRAIT_MAGE_UTILITY_SLOT) && !traits[TAT_TRAIT_MAGE_INITIATE])
+		return FALSE
 
 	for(var/existing_trait in traits)
 		if(are_traits_mutually_exclusive(trait_id, existing_trait))
@@ -833,6 +896,14 @@
 	if(trait_id == TAT_TRAIT_WARRIOR_EXPERT && traits[TAT_TRAIT_WARRIOR_MASTER])
 		return FALSE
 	if(trait_id == TAT_TRAIT_BARDIC_INSPIRATION_T1 && traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
+		return FALSE
+	if(trait_id == TAT_TRAIT_DIVINE_INITIATE && (traits[TAT_TRAIT_DIVINE_BOON_1] || traits[TAT_TRAIT_DIVINE_BOON_2] || traits[TAT_TRAIT_DIVINE_BOON_3]))
+		return FALSE
+	if(trait_id == TAT_TRAIT_DIVINE_BOON_1 && (traits[TAT_TRAIT_DIVINE_BOON_2] || traits[TAT_TRAIT_DIVINE_BOON_3]))
+		return FALSE
+	if(trait_id == TAT_TRAIT_DIVINE_BOON_2 && traits[TAT_TRAIT_DIVINE_BOON_3])
+		return FALSE
+	if(trait_id == TAT_TRAIT_MAGE_INITIATE && (traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]))
 		return FALSE
 
 	traits -= trait_id
@@ -1080,9 +1151,9 @@
 	if(!H || !traits[TAT_TRAIT_DIVINE_INITIATE])
 		return
 
-	var/cleric_tier = get_magic_value("divine_tier", CLERIC_T1)
-	var/passive_gain = get_magic_value("divine_passive_gain", CLERIC_REGEN_MINOR)
-	var/devotion_limit = get_magic_value("divine_devotion_limit", CLERIC_REQ_1)
+	var/cleric_tier = get_effective_divine_tier()
+	var/passive_gain = get_divine_passive_gain_for_tier(cleric_tier)
+	var/devotion_limit = get_divine_devotion_limit_for_tier(cleric_tier)
 
 	var/datum/devotion/D = new /datum/devotion(H, H.patron)
 	D.grant_miracles(H, cleric_tier = cleric_tier, passive_gain = passive_gain, devotion_limit = devotion_limit)
@@ -1093,9 +1164,9 @@
 
 	ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
 
-	var/list/aspects = get_magic_value("mage_aspects", null)
-	if(islist(aspects))
-		H.mind.setup_mage_aspects(aspects)
+	var/list/aspects = build_mage_aspects(TRUE)
+	H.mind.setup_mage_aspects(aspects)
+	set_magic_value("mage_aspects", aspects.Copy())
 
 	if(get_magic_value("mage_spellbook", TRUE))
 		H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
@@ -1200,6 +1271,7 @@
 	if(traits[TAT_TRAIT_SPELLBLADE])
 		ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
 		if(H.mind)
+			H.mind.setup_mage_aspects(build_mage_aspects(FALSE))
 			H.mind.AddSpell(new /datum/action/cooldown/spell/recall_weapon)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/empower_weapon)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/bind_weapon)

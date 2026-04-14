@@ -564,46 +564,63 @@ const LoadoutTab = ({
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
         <Stack vertical>
-          {rows.map(([itemPath, entry]) => (
-            <Box
-              key={itemPath}
-              style={{
-                padding: '8px 0',
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
-              }}>
-              <Box bold>{entry.name}</Box>
-              <Box mt={0.5} mb={1}>
-                Total: {entry.amount}
-                {' | '}Equip: {entry.equip}
-                {' | '}Bag: {entry.bag}
-                {entry.slot_group ? ` | Slot: ${entry.slot_group}` : ''}
-              </Box>
+          {rows.map(([itemPath, entry]) => {
+            const amount = entry.amount || 0;
+            const bag = Math.max(0, Math.min(entry.bag || 0, amount));
+            const statusText = bag > 0 ? `Bag (${bag})` : 'Character';
 
-              <Stack>
-                <Stack.Item grow>
-                  <NumericRow
-                    title="Equip on spawn"
-                    value={entry.equip}
-                    onAdd={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
-                    onRemove={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
-                    disabledAdd={entry.bag <= 0}
-                    disabledRemove={entry.equip <= 0}
-                  />
+            return (
+              <Stack
+                key={itemPath}
+                align="center"
+                style={{
+                  padding: '8px 0',
+                  borderBottom: '1px solid rgba(255,255,255,0.06)',
+                }}>
+                <Stack.Item grow basis={0}>
+                  <Box bold>{entry.name || itemPath}</Box>
+                  <Box mt={0.5} style={{ opacity: 0.85 }}>
+                    Total: {amount}
+                    {entry.slot_group ? ` | Slot: ${entry.slot_group}` : ''}
+                    {entry.category ? ` | Category: ${entry.category}` : ''}
+                  </Box>
                 </Stack.Item>
 
-                <Stack.Item grow>
-                  <NumericRow
-                    title="Put into bag"
-                    value={entry.bag}
-                    onAdd={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
-                    onRemove={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
-                    disabledAdd={entry.equip <= 0}
-                    disabledRemove={entry.bag <= 0}
-                  />
+                <Stack.Item width="40px">
+                  <Box textAlign="center" bold>
+                    {amount}
+                  </Box>
+                </Stack.Item>
+
+                <Stack.Item width="120px">
+                  <Button
+                    fluid
+                    disabled
+                    color={bag > 0 ? 'average' : 'good'}>
+                    {statusText}
+                  </Button>
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Button
+                    compact
+                    onClick={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
+                    disabled={bag >= amount}>
+                    +
+                  </Button>
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Button
+                    compact
+                    onClick={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
+                    disabled={bag <= 0}>
+                    -
+                  </Button>
                 </Stack.Item>
               </Stack>
-            </Box>
-          ))}
+            );
+          })}
         </Stack>
       )}
     </Section>
