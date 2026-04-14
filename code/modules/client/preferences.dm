@@ -105,10 +105,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/voice_color = "a0a0a0"
 	var/voice_pitch = 1
 	var/detail_color = "000"
-	var/datum/species/pref_species = new /datum/species/human/northern()	//Mutant race
-	var/static/datum/species/default_species = new /datum/species/human/northern()
+	var/datum/species/pref_species = new /datum/species/tabaxi//Mutant race
+	var/static/datum/species/default_species = new /datum/species/tabaxi()
 	var/datum/patron/selected_patron
-	var/static/datum/patron/default_patron = /datum/patron/divine/undivided
+	var/static/datum/patron/default_patron = /datum/patron/old_god
 	var/list/features = MANDATORY_FEATURE_LIST
 	var/list/randomise = list(RANDOM_UNDERWEAR = TRUE, RANDOM_UNDERWEAR_COLOR = TRUE, RANDOM_UNDERSHIRT = TRUE, RANDOM_SOCKS = TRUE, RANDOM_BACKPACK = TRUE, RANDOM_JUMPSUIT_STYLE = FALSE, RANDOM_SKIN_TONE = TRUE, RANDOM_EYE_COLOR = TRUE)
 	var/list/friendlyGenders = list("male" = "masculine", "female" = "feminine")
@@ -147,7 +147,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/ambiencevol = 50
 	var/mastervol = 50
 
-	var/anonymize = TRUE
+	var/anonymize = FALSE // Добавлено на СПС
 	var/masked_examine = FALSE
 	var/nsfw_examine_always = FALSE // TA EDIT
 	var/full_examine = FALSE
@@ -491,9 +491,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<BR>"
 			dat += "<b>Nickname:</b> "
 			dat += "<a href='?_src_=prefs;preference=nickname;task=input'>[nickname]</a><BR>"
-			// LETHALSTONE EDIT BEGIN: add pronoun prefs
-			dat += "<b>Pronouns:</b> <a href='?_src_=prefs;preference=pronouns;task=input'>[pronouns]</a> <b>Titles:</b> <a href='?_src_=prefs;preference=titles;task=input'>[titles_pref]</a><BR>"
-			dat += "<b>Clothing:</b><a href='?_src_=prefs;preference=clothespref;task=input'>[clothes_pref]</a><BR>"
+			// LETHALSTONE EDIT BEGIN: add pronoun prefs. Закомментировано. Запрещено.
+//			dat += "<b>Pronouns:</b> <a href='?_src_=prefs;preference=pronouns;task=input'>[pronouns]</a> <b>Titles:</b> <a href='?_src_=prefs;preference=titles;task=input'>[titles_pref]</a><BR>"
+//			dat += "<b>Clothing:</b><a href='?_src_=prefs;preference=clothespref;task=input'>[clothes_pref]</a><BR>"
 			// LETHALSTONE EDIT END
 			if(!voice_pack)
 				voice_pack = "Default"
@@ -503,8 +503,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<b>Voice Pack</b>: <a href='?_src_=prefs;preference=voicepack;task=input'>[voice_pack]</a>[(voice_pack != "Default") ? "|<a href='?_src_=prefs;preference=voicepack_preview;task=input'>(Sample)</a>" : ""]<BR>"
 
 			dat += "<BR>"
-			dat += "<b>Race:</b> <a href='?_src_=prefs;preference=species;task=input'>[pref_species.base_name]</a>[spec_check(user) ? "" : " (!)"]<BR>"
-			dat += "<b>Subrace:</b> <a href='?_src_=prefs;preference=subspecies;task=input'>[pref_species.sub_name]</a>[spec_check(user) ? "" : " (!)"]<BR>"
+			dat += "<b>Folk:</b> <a href='?_src_=prefs;preference=folks;task=input'>[pref_species.name]</a>[spec_check(user) ? "" : " (!)"]<BR>"
+//			dat += "<b>Race:</b> <a href='?_src_=prefs;preference=species;task=input'>[pref_species.base_name]</a>[spec_check(user) ? "" : " (!)"]<BR>"
+//			dat += "<b>Subrace:</b> <a href='?_src_=prefs;preference=subspecies;task=input'>[pref_species.sub_name]</a>[spec_check(user) ? "" : " (!)"]<BR>"
 			if(istype(virtue_origin, /datum/virtue/none))
 				virtue_origin = GLOB.virtues[/datum/virtue/origin/unknown]
 			dat += "<b>Origin:</b> <a href='?_src_=prefs;preference=origin;task=input'>[virtue_origin]</a> <a href='?_src_=prefs;preference=originhelp;task=input'>❖</a><BR>"
@@ -2485,7 +2486,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					vampire_skin = null
 				if("vampire_ears_clear")
 					vampire_ears = null
-
+/* СПИСОК ЗАКОММЕНТИРОВАН ТАК КАК НАДВИДЫ НЕ ИСПОЛЬЗУЮТСЯ. ВМЕСТО НИХ СУЩЕСТВУЕТ СПИСОК "folks"
 				if("species")
 					var/list/species = list()
 					for(var/A in GLOB.roundstart_races)
@@ -2511,7 +2512,32 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						set_new_race(race_chosen, user)
 				if("preset_bounty_toggle")
 					preset_bounty_enabled = !preset_bounty_enabled
+*/
+// Список существует, составляя абсолютный список всех доступных и разрешённых рас, которые конкретно сейчас может выбрать игрок.
+				if("folks")
+					var/list/species = list()
+					for(var/A in GLOB.roundstart_races)
+						var/datum/species/race = GLOB.species_list[A]
+						race = new race()
+						if(user.client)
+							if(race.patreon_req > user.client.patreonlevel())
+								continue
+							if(race.name == pref_species.name)
+								continue
+						else
+							continue
+						species[race.name] += race
 
+					species = sortList(species)
+
+					var/result = tgui_input_list(user, "By what shape are you bound?", "FOLK", species)
+
+					if(result)
+						var/datum/virtue/race_chosen = species[result]
+						set_new_race(race_chosen, user)
+				if("preset_bounty_toggle")
+					preset_bounty_enabled = !preset_bounty_enabled
+// Конец абсолютного списка рас и всего к нему прилагающегося.
 				if("preset_bounty_poster_key")
 					var/list/poster_choices = list()
 					for(var/key in GLOB.bounty_posters)
@@ -2527,7 +2553,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					var/choice = input(user, "How severe are your crimes?", "Bounty Amount") as null|anything in sev_choices
 					if(choice)
 						preset_bounty_severity_key = sev_choices[choice]
-
+/* СПИСОК ЗАКОММЕНТИРОВАН ТАК КАК ПОДВИДЫ НЕ ИСПОЛЬЗУЮТСЯ. ВМЕСТО НИХ СУЩЕСТВУЕТ СПИСОК "folks"
 				if("subspecies")
 					var/list/species = list()
 					for(var/A in GLOB.roundstart_races)
@@ -2547,7 +2573,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					if(result)
 						var/datum/virtue/subrace_chosen = species[result]
 						set_new_race(subrace_chosen, user)
-
+*/
 				if("preset_bounty_severity_b_key")
 					var/list/sev_choices = list()
 					for(var/key in GLOB.bandit_severities)
@@ -3079,12 +3105,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/species/chosen_species
 	chosen_species = pref_species.type
 	if(!(pref_species.name in GLOB.roundstart_races))
-		set_new_race(new /datum/species/human/northern)
+		set_new_race(new /datum/species/tabaxi)
 
 		random_character(gender, FALSE, FALSE)
 	if(parent)
 		if(pref_species.patreon_req > parent.patreonlevel())
-			set_new_race(new /datum/species/human/northern)
+			set_new_race(new /datum/species/tabaxi)
 			random_character(gender, FALSE, FALSE)
 
 	character.age = age

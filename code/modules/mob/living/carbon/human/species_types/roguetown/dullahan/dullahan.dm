@@ -150,9 +150,6 @@
 	var/obj/item/bodypart/head/dullahan/my_head
 	var/obj/effect/dummy/lighting_obj/moblight/mob_light_obj
 
-/datum/species/dullahan/check_roundstart_eligible()
-	return TRUE
-
 /datum/species/dullahan/qualifies_for_rank(rank, list/features)
 	return TRUE
 

@@ -111,9 +111,6 @@
 		/datum/descriptor_choice/prominent_three_wild,
 		/datum/descriptor_choice/prominent_four_wild,
 	)
-	
-/datum/species/demihuman/check_roundstart_eligible()
-	return TRUE
 
 /datum/species/demihuman/qualifies_for_rank(rank, list/features)
 	return TRUE

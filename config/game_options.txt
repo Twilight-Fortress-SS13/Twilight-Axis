@@ -430,17 +430,23 @@ SILICON_MAX_LAW_AMOUNT 12
 ## Uncommenting races will allow them to be choosen at roundstart while join_with_muntant_race is on. You'll need at least one.
 
 ## You probably want humans on your space station, but technically speaking you can turn them off without any ill effect
-ROUNDSTART_RACES humen
-ROUNDSTART_RACES dwarfm
-ROUNDSTART_RACES tiefling
+#ROUNDSTART_RACES humen
+#ROUNDSTART_RACES dwarfm
+#ROUNDSTART_RACES tiefling
 ROUNDSTART_RACES tabaxi
-ROUNDSTART_RACES helf
-ROUNDSTART_RACES elfw
-ROUNDSTART_RACES elfd
-ROUNDSTART_RACES elfc
-ROUNDSTART_RACES halforc 
-ROUNDSTART_RACES aasimar
-ROUNDSTART_RACES dullahan
+ROUNDSTART_RACES anthromorphsmall
+ROUNDSTART_RACES dracon
+ROUNDSTART_RACES kobold
+ROUNDSTART_RACES lizardfolk
+ROUNDSTART_RACES lupian
+ROUNDSTART_RACES vulpkanin
+#ROUNDSTART_RACES helf
+#ROUNDSTART_RACES elfw
+#ROUNDSTART_RACES elfd
+#ROUNDSTART_RACES elfc
+#ROUNDSTART_RACES halforc 
+#ROUNDSTART_RACES aasimar
+#ROUNDSTART_RACES dullahan
 
 ## Races that are a meme and should not be accessible in normal gameplay, unless you are insane
 #ROUNDSTART_RACES goblin

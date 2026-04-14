@@ -100,9 +100,6 @@
 		/datum/language/common
 	)
 
-/datum/species/aura/check_roundstart_eligible()
-	return TRUE
-
 /datum/species/aura/qualifies_for_rank(rank, list/features)
 	return TRUE
 

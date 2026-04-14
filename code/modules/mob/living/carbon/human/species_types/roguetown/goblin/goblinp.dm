@@ -111,9 +111,6 @@
 		/datum/descriptor_choice/prominent_four_wild,
 	)
 
-/datum/species/goblinp/check_roundstart_eligible()
-	return TRUE
-
 /datum/species/goblinp/qualifies_for_rank(rank, list/features)
 	return TRUE
 

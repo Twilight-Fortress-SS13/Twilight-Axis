@@ -75,9 +75,6 @@
 	body_markings = list(
 	)
 
-/datum/species/dwarf/mountain/check_roundstart_eligible()
-	return TRUE
-
 /datum/species/dwarf/mountain/get_span_language(datum/language/message_language)
 	if(!message_language)
 		return

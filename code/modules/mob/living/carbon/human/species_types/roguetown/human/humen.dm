@@ -79,10 +79,6 @@
 		/datum/body_marking/bun,
 	)
 
-/datum/species/human/northern/check_roundstart_eligible()
-	return TRUE
-	
-
 /datum/species/human/northern/get_skin_list()
 	return list(
 		"Grenzelhoft" = SKIN_COLOR_GRENZELHOFT,
