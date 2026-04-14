@@ -41,7 +41,7 @@
 
 	// Add druidic skill for Dendor followers
 	if(istype(H.patron, /datum/patron/divine/dendor))
-		H.adjust_skillrank(/datum/skill/magic/druidic, 3, TRUE)
+		H.adjust_skillrank(/datum/skill/magic/druidic, SKILL_LEVEL_JOURNEYMAN, TRUE)
 		to_chat(H, span_notice("As a follower of Dendor, you have innate knowledge of druidic magic."))
 
 	to_chat(H, span_warning("You are a wandering acolyte, versed in both miracles and martial arts. You forego the hauberk that paladins wear in favor of humbling your foes through bloodless strikes. Your satchel hangs heavy, too, with ample provisions for the pilgrimage you're upon."))
@@ -68,8 +68,8 @@
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
 			if("Discipline - Unarmed")
-				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, 4, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, 4, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_EXPERT, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_EXPERT, TRUE)
 				gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
 			if("Katar")
 				beltl = /obj/item/rogueweapon/katar/bronze
@@ -110,12 +110,12 @@
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/necra
 		if (/datum/patron/divine/malum)
 			mask = /obj/item/clothing/head/roguetown/roguehood //placeholder
-			cloak = /obj/item/clothing/cloak/templar/malumite
+			cloak = /obj/item/clothing/cloak/tabard/devotee/malum
 		if (/datum/patron/divine/eora)
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/eora
 			mask = /obj/item/clothing/head/roguetown/eoramask
 		if (/datum/patron/divine/xylix)
-			cloak = /obj/item/clothing/cloak/templar/xylix
+			cloak = /obj/item/clothing/cloak/tabard/devotee/xylix
 		else
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe //placeholder, anyone who doesn't have cool patron drip sprites just gets generic robes
 			mask = /obj/item/clothing/head/roguetown/roguehood
@@ -250,7 +250,7 @@
 			cloak = /obj/item/clothing/cloak/tabard/devotee/noc
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if(/datum/patron/divine/abyssor)
-			cloak = /obj/item/clothing/cloak/tabard/abyssortabard
+			cloak = /obj/item/clothing/cloak/tabard/devotee/abyssor
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if(/datum/patron/divine/dendor)
 			cloak = /obj/item/clothing/cloak/tabard/devotee/dendor
@@ -263,17 +263,17 @@
 			cloak = /obj/item/clothing/cloak/tabard/devotee/malum
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if (/datum/patron/divine/eora)
-			cloak = /obj/item/clothing/cloak/templar/eora
+			cloak = /obj/item/clothing/cloak/tabard/devotee/eora
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 			helmets += list("Old Eoran Sallet" = /obj/item/clothing/head/roguetown/helmet/sallet/eoran)
 		if (/datum/patron/divine/ravox)
-			cloak = /obj/item/clothing/cloak/cleric/ravox
+			cloak = /obj/item/clothing/cloak/tabard/devotee/ravox
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if (/datum/patron/divine/xylix)
-			cloak = /obj/item/clothing/cloak/templar/xylix
+			cloak = /obj/item/clothing/cloak/tabard/devotee/xylix
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		if (/datum/patron/divine/pestra)
-			cloak = /obj/item/clothing/cloak/templar/pestra
+			cloak = /obj/item/clothing/cloak/tabard/devotee/pestra
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 		else
 			cloak = /obj/item/clothing/cloak/tabard/stabard/crusader/undivided
@@ -429,14 +429,14 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_2)	//Capped to T2 miracles.
 	var/datum/inspiration/I = new /datum/inspiration(H)
-	I.grant_inspiration(H, bard_tier = BARD_T2)
+	I.grant_inspiration(H, bard_tier = BARD_T1)
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
-	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/mockery)
+	H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/vicious_mockery)
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			cloak = /obj/item/clothing/cloak/tabard/devotee/psydon
@@ -453,13 +453,13 @@
 		if (/datum/patron/divine/malum)
 			cloak = /obj/item/clothing/cloak/tabard/devotee/malum
 		if (/datum/patron/divine/eora)
-			cloak = /obj/item/clothing/cloak/templar/eora
+			cloak = /obj/item/clothing/cloak/tabard/devotee/eora
 		if (/datum/patron/divine/ravox)
-			cloak = /obj/item/clothing/cloak/templar/ravox
+			cloak = /obj/item/clothing/cloak/tabard/devotee/ravox
 		if (/datum/patron/divine/xylix)
-			cloak = /obj/item/clothing/cloak/templar/xylix
+			cloak = /obj/item/clothing/cloak/tabard/devotee/xylix
 		if (/datum/patron/divine/pestra)
-			cloak = /obj/item/clothing/cloak/templar/pestra
+			cloak = /obj/item/clothing/cloak/tabard/devotee/pestra
 		else
 			cloak = /obj/item/clothing/cloak/cape/crusader
 	if(H.mind)
@@ -504,7 +504,6 @@
 		if(/datum/patron/divine/dendor)
 			neck = /obj/item/clothing/neck/roguetown/psicross/dendor
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg' // see: druid.dm
-			ADD_TRAIT(H, TRAIT_SEEDKNOW, TRAIT_GENERIC)
 		if(/datum/patron/divine/necra)
 			neck = /obj/item/clothing/neck/roguetown/psicross/necra
 			H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
@@ -517,8 +516,6 @@
 		if(/datum/patron/divine/eora)
 			neck = /obj/item/clothing/neck/roguetown/psicross/eora
 			H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
-			ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
-			ADD_TRAIT(H, TRAIT_GOODLOVER, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = 'sound/music/combat_heretic.ogg'
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
@@ -549,7 +546,7 @@
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE, //If a potential staff-polearm user is at Apprentice-level or below, it's fine to match both combat skills.
-		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/magic/holy = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
@@ -563,13 +560,13 @@
 		"The Verses and Acts of the Ten" = /obj/item/book/rogue/bibble,
 		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy
 	)
-	extra_context = "This subclass regenerates Devotion slower, but has access to higher tier miracles."
+	extra_context = "This subclass regenerates Devotion far quicker, but only has access to lesser miracles."
 
 /datum/outfit/job/roguetown/adventurer/missionary/pre_equip(mob/living/carbon/human/H)
 	to_chat(H, span_warning("You are a devout worshipper of the divine with a strong connection to your patron god. You've spent years studying scriptures and serving your deity - now you wander into foreign lands, spreading the word of your faith."))
 	H.mind?.current.faction += "[H.name]_faction"
 	backl = /obj/item/storage/backpack/rogue/satchel
-	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/priest
+	shirt = /obj/item/clothing/suit/roguetown/armor/vestments_padded
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	shoes = /obj/item/clothing/shoes/roguetown/boots
 	belt = /obj/item/storage/belt/rogue/leather
@@ -586,13 +583,12 @@
 			head = /obj/item/clothing/head/roguetown/roguehood/psydon
 		if(/datum/patron/divine/undivided)
 			head = /obj/item/clothing/head/roguetown/roguehood
-			cloak = /obj/item/clothing/cloak/undivided
+			cloak = /obj/item/clothing/cloak/tabard/stabard/crusader/undivided
 			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 		if(/datum/patron/divine/astrata)
 			head = /obj/item/clothing/head/roguetown/roguehood/astrata
-			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/astrata
+			cloak = /obj/item/clothing/cloak/tabard/devotee/astrata
 			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
-			H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
 		if(/datum/patron/divine/noc)
 			head =  /obj/item/clothing/head/roguetown/roguehood/nochood
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc
@@ -606,17 +602,15 @@
 		if(/datum/patron/divine/dendor)
 			head = /obj/item/clothing/head/roguetown/dendormask
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/dendor
-			H.grant_language (/datum/language/beast)
 			H.adjust_skillrank(/datum/skill/labor/farming, SKILL_LEVEL_APPRENTICE, TRUE)
 		if(/datum/patron/divine/necra)
 			head = /obj/item/clothing/head/roguetown/necrahood
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/necra
 			ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 			ADD_TRAIT(H, TRAIT_SOUL_EXAMINE, TRAIT_GENERIC)
-			H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
 		if (/datum/patron/divine/malum)
 			head = /obj/item/clothing/head/roguetown/roguehood //placeholder
-			cloak = /obj/item/clothing/cloak/templar/malumite
+			cloak = /obj/item/clothing/cloak/tabard/devotee/malum
 			H.adjust_skillrank(/datum/skill/craft/blacksmithing, SKILL_LEVEL_NOVICE, TRUE)
 			H.adjust_skillrank(/datum/skill/craft/armorsmithing, SKILL_LEVEL_NOVICE, TRUE)
 			H.adjust_skillrank(/datum/skill/craft/weaponsmithing, SKILL_LEVEL_NOVICE, TRUE)
@@ -629,16 +623,16 @@
 			H.adjust_skillrank(/datum/skill/craft/cooking, SKILL_LEVEL_APPRENTICE, TRUE)
 			ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 		if (/datum/patron/divine/xylix)
-			cloak = /obj/item/clothing/cloak/templar/xylix
+			cloak = /obj/item/clothing/cloak/tabard/devotee/xylix
 			H.adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_NOVICE, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_NOVICE, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/music, SKILL_LEVEL_NOVICE, TRUE)
 		if (/datum/patron/divine/pestra)
-			cloak = /obj/item/clothing/cloak/templar/pestra
+			cloak = /obj/item/clothing/cloak/tabard/devotee/pestra
 			H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE)
 			ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 		if (/datum/patron/divine/ravox)
-			cloak = /obj/item/clothing/cloak/templar/ravox
+			cloak = /obj/item/clothing/cloak/tabard/devotee/ravox
 			H.adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_NOVICE, TRUE)
 			ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/zizo)
@@ -652,13 +646,12 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T3, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_3)	//Minor regen, capped to T3, parity with other Holy and/or Arcyne caster - no others spend 15 minutes idling only to unlock their entire potencial.
 	if(H.mind)
-		var/weapons = list("Iron Spear", "Iron Quarterstaff")
+		var/weapons = list("Woodstaff", "Quarterstaff")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
-			if("Iron Spear")
-				r_hand = /obj/item/rogueweapon/spear
-				l_hand = /obj/item/rogueweapon/scabbard/gwstrap
-			if("Iron Quarterstaff")
+			if("Woodstaff")
+				backr = /obj/item/rogueweapon/woodstaff
+			if("Quarterstaff")
 				r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/iron
 				l_hand = /obj/item/rogueweapon/scabbard/gwstrap
 	if(istype(H.patron, /datum/patron/divine))
@@ -680,6 +673,7 @@
 			neck = /obj/item/clothing/neck/roguetown/psicross/abyssor
 			H.grant_language(/datum/language/abyssal)
 		if(/datum/patron/divine/dendor)
+			H.grant_language (/datum/language/beast)
 			neck = /obj/item/clothing/neck/roguetown/psicross/dendor
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg' // see: druid.dm
 		if(/datum/patron/divine/necra)

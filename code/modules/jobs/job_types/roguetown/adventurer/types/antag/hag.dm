@@ -43,3 +43,38 @@
 	job_subclasses = list(
 		/datum/advclass/hag,
 	)
+
+// TA EDIT START
+/datum/job/roguetown/hag/after_spawn(mob/living/H, mob/M, latejoin = FALSE)
+	. = ..()
+
+	if(ishuman(H))
+		var/mob/living/carbon/human/Hu = H
+		Hu.verbs += /mob/living/carbon/human/verb/hold_breath
+
+/mob/living/carbon/human/verb/hold_breath()
+	set name = "Задержать дыхание"
+	set category = "Emotes"
+
+	if(!mind || mind.assigned_role != "Hag")
+		return
+
+	toggle_hold_breath()
+
+/mob/living/carbon/human/proc/toggle_hold_breath()
+	var/is_holding = HAS_TRAIT(src, TRAIT_HOLDBREATH)
+
+	if(is_holding)
+		REMOVE_TRAIT(src, TRAIT_HOLDBREATH, "hold_breath_verb")
+		visible_message(
+			span_notice("[src] перестает задерживать дыхание."),
+			span_notice("Ты перестаешь задерживать дыхание.")
+		)
+	else
+		ADD_TRAIT(src, TRAIT_HOLDBREATH, "hold_breath_verb")
+		visible_message(
+			span_notice("[src] задерживает свое дыхание."),
+			span_notice("Ты задерживаешь свое дыхание.")
+		)
+
+// TA EDIT END

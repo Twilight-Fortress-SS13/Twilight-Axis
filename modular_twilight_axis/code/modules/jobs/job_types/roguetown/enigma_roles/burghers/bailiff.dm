@@ -3,8 +3,8 @@
 	flag = BAILIFF
 	department_flag = BURGHERS
 	faction = "Station"
-	total_positions = 2
-	spawn_positions = 2
+	total_positions = 1
+	spawn_positions = 1
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = ACCEPTED_RACES
 	job_traits = list(TRAIT_SEEPRICES)
@@ -16,7 +16,7 @@
 	advclass_cat_rolls = list(CTAG_BAILIFF = 6)
 
 	give_bank_account = TRUE
-	min_pq = 2
+	min_pq = 4
 	max_pq = null
 	round_contrib_points = 2
 	same_job_respawn_delay = 30 MINUTES
@@ -29,7 +29,7 @@
 	)
 
 /datum/advclass/bailiff/bodyguard
-	name = "Bailiff bodyguard"
+	name = "Bailiff Bodyguard"
 	tutorial = "Вы ни много ни мало - но телохранитель. Защищая мэра, которому вы верны, как на улицах так и на разбирательствах... \
     Ваше прошлое, так или иначе, привело вас к этому положению: вы умеете обращаться с оружием, вы должны им обращаться, ведь власть Мэра порой обеспечивается силой, а не словом."
 	outfit = /datum/outfit/job/roguetown/bailiff/bodyguard
@@ -85,7 +85,7 @@
 		SStreasury.give_money_account(ECONOMIC_LOWER_CLASS, H, "Savings.")
 
 /datum/advclass/bailiff/squealer
-	name = "Bailiff squealer"
+	name = "Bailiff Squealer"
 	tutorial = "С детства Вы были странным ребёнком: Ваша внимательность часто приводила в замешательство окружающих Вас... \
 ... И теперь вы развили это в достаточной мере: многочисленные доносы и кляузы, написанные Вами, \
 ясно свидетельствуют о ваших неслабых способностях видеть и слышать то, что обычный человек пропустит мимо ушей."

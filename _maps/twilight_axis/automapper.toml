@@ -22,3 +22,10 @@ map_files = ["witch_hut_1.dmm","witch_hut_2.dmm"]
 directory = "_maps/twilight_axis/templates/dun_world/witch_hut/"
 required_map = "dun_world.dmm"
 coordinates = [194, 240, 1]
+
+# rockhill bridges
+[templates.bridge]
+map_files = ["bridge1.dmm","bridge2.dmm","bridge3.dmm","bridge4.dmm","bridge5.dmm","bridge6.dmm","bridge7.dmm"]
+directory = "_maps/twilight_axis/templates/rockhill/bridge/"
+required_map = "rockhill.dmm"
+coordinates = [145, 190, 1]

@@ -92,6 +92,12 @@
 	drop_sound = 'sound/foley/dropsound/chain_drop.ogg'
 
 /obj/item/leash/process(delta_time)
+	// anti-teleport desync safety
+	if(leash_pet && leash_master)
+		if(get_dist(leash_pet, leash_master) > 10)
+			leash_pet.remove_status_effect(/datum/status_effect/leash_pet)
+			return PROCESS_KILL
+
 	if(!leash_pet) //No pet, break loop
 		w_class = WEIGHT_CLASS_SMALL
 		return PROCESS_KILL
@@ -179,7 +185,15 @@
 	if(world.time < last_yank + 15)
 		return
 	//Yank the pet. Yank em in close.
-	apply_tug_mob_to_mob(leash_pet, leash_master, 1)
+	var/turf/T = get_turf(leash_pet)
+	var/blocked = FALSE
+	for(var/mob/M in T)
+		if(M.density && M != leash_pet && M != leash_master)
+			blocked = TRUE
+			break
+
+	if(!blocked)
+		step_towards(leash_pet, leash_master)
 	log_combat(leash_master, leash_pet, "leash-yanked")
 	leash_pet.visible_message(span_warning("[leash_master] yanks [leash_pet] closer with \the [src.name]."))
 
@@ -212,7 +226,15 @@
 		return
 	if(leash_pet == null)
 		return
-	apply_tug_mob_to_mob(leash_pet, leash_master, 1)
+	var/turf/T = get_turf(leash_pet)
+	var/blocked = FALSE
+	for(var/mob/M in T)
+		if(M.density && M != leash_pet && M != leash_master)
+			blocked = TRUE
+			break
+
+	if(!blocked)
+		step_towards(leash_pet, leash_master)
 	if(leash_pet.cmode && leash_master.m_intent == MOVE_INTENT_RUN) //stamina infliction Calls if pet has combatmode enabled while master has run intent active.
 		leash_master.stamina_add(1)
 		
@@ -269,11 +291,21 @@
 	addtimer(CALLBACK(src, PROC_REF(after_pet_move)), 0.2 SECONDS) //A short timer so the pet kind of bounces back after they make the step
 
 /obj/item/leash/proc/after_pet_move()
-	if(!leash_master)
+	if(!leash_master || !leash_pet)
 		return
-	if(!leash_pet)
+
+	var/dist = get_dist(leash_pet, leash_master)
+
+	if(dist > 7)
+		leash_pet.remove_status_effect(/datum/status_effect/leash_pet)
 		return
-	for(var/i in 2 to get_dist(leash_pet, leash_master)) // Move the pet to a minimum of 1 tiles away from the master, so the pet trails behind them.
+
+	var/turf/T = get_turf(leash_pet)
+	for(var/mob/M in T)
+		if(M.density && M != leash_pet && M != leash_master)
+			return
+
+	for(var/i in 1 to min(dist - 1, 2))
 		step_towards(leash_pet, leash_master)
 
 /obj/item/leash/proc/on_freepet_move()

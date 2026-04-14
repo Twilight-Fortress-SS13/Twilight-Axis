@@ -8,7 +8,7 @@
 		)
 
 /datum/advclass/mercenary/rumaclan/sasu
-	tutorial = "A band of foreign outcast Kazengunites, the Ruma Clan were exiled from the Shogunate on charges of conspiring with the rebels some hundered years ago. It is no organized group of soldiers, but rather a loose collection of experienced fighters."
+	tutorial = "A band of foreign outcast Kazengunites, the Ruma Clan were exiled from the Shogunate on charges of heresy and treason. It is no organized group of soldiers, but rather a loose collection of experienced fighters."
 
 /datum/outfit/job/roguetown/mercenary/rumaclan_sasu/pre_equip(mob/living/carbon/human/H)
 	. = ..()

@@ -492,8 +492,7 @@
 	/datum/status_effect/debuff/hereticsermon,
 	/datum/status_effect/debuff/mesmerised,
 	/datum/status_effect/debuff/necrandeathdoorwilloss,
-	/datum/status_effect/debuff/eoran_wilting,
-	/datum/status_effect/debuff/viciousmockery,)
+	/datum/status_effect/debuff/eoran_wilting,)
 
 /obj/effect/proc_holder/spell/self/twilight_amongus/cast(list/targets,mob/living/user = usr)
 	for(var/mob/living/carbon/target in view(5, get_turf(user)))
@@ -662,7 +661,7 @@
 	force = 0
 	force_wielded = 0
 	wdefense = 1
-	possible_item_intents = list(/datum/intent/spear/thrust/ducal_standard)
+	possible_item_intents = list(/datum/intent/spear/thrust)
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "matthios_standard"
 	resistance_flags = FIRE_PROOF
@@ -828,8 +827,13 @@
 		STAINT = 15
 
 		AddSpell(new /obj/effect/proc_holder/spell/self/twilight_dragonclaws)
-		mind.AddSpell(new /datum/action/cooldown/spell/projectile/spitfire)
-		mind.AddSpell(/datum/action/cooldown/spell/projectile/fireball)
+
+		var/datum/action/cooldown/spell/projectile/fireball/fireball = new /datum/action/cooldown/spell/projectile/fireball
+		var/datum/action/cooldown/spell/projectile/spitfire/spitfire = new /datum/action/cooldown/spell/projectile/spitfire
+		
+		fireball.Grant(src)
+		spitfire.Grant(src)
+
 		AddSpell(new /obj/effect/proc_holder/spell/targeted/woundlick)
 		src.apply_status_effect(/datum/status_effect/buff/twilight_dragon_form)
 
@@ -922,7 +926,7 @@
 	attack_verb = list("claws", "mauls", "eviscerates")
 	animname = "cut"
 	hitsound = "genslash"
-	penfactor = 60
+	penfactor = PEN_MEDIUM
 	reach = 2
 	candodge = TRUE
 	canparry = TRUE
@@ -937,7 +941,7 @@
 	attack_verb = list("claws", "mauls", "eviscerates")
 	animname = "chop"
 	hitsound = "genslash"
-	penfactor = 60
+	penfactor = PEN_HEAVY
 	candodge = TRUE
 	canparry = TRUE
 	miss_text = "slashes the air!"
@@ -951,7 +955,7 @@
 	icon_state = "insmash"
 	maxrange = 5
 	chargetime = 1
-	penfactor = 30
+	penfactor = PEN_LIGHT
 
 /datum/intent/mace/strike/twilight_dragon_strike
 	name = "armor rending strike"

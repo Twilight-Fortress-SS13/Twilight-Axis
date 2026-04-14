@@ -9,7 +9,7 @@
 		return
 
 	var/area/A = get_area(H)
-	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag))
+	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag) && !istype(A, /area/rogue/outdoors/bograt) && !istype(A, /area/rogue/under/cavewet)) //TA_EDIT
 		to_chat(H, span_userdanger("The purity of the air shatters my form!"))
 
 		// Grab the human inside before we untransform
@@ -43,7 +43,7 @@
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	sewrepair = FALSE
-	max_integrity = 250
+	max_integrity = 350
 	item_flags = DROPDEL
 
 /mob/living/carbon/human/species/wildshape/hag/gain_inherent_skills()
@@ -52,10 +52,10 @@
 		STASTR = 12
 		STACON = 15
 		STAWIL = 15
-		STAPER = 10
+		STAPER = 12
 		STASPD = 8
 		adjust_skillrank(/datum/skill/combat/wrestling, SKILL_LEVEL_JOURNEYMAN, TRUE)
-		adjust_skillrank(/datum/skill/combat/unarmed, SKILL_LEVEL_JOURNEYMAN, TRUE)
+		adjust_skillrank(/datum/skill/combat/unarmed, SKILL_LEVEL_EXPERT, TRUE)
 		adjust_skillrank(/datum/skill/misc/swimming, SKILL_LEVEL_JOURNEYMAN, TRUE)
 		adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_MASTER, TRUE)
 		adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_EXPERT, TRUE)
@@ -113,7 +113,7 @@
 		return FALSE
 
 	var/area/A = get_area(user)
-	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag))
+	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag) && !istype(A, /area/rogue/outdoors/bograt) && !istype(A, /area/rogue/under/cavewet)) //TA_EDIT
 		to_chat(user, span_warning("The air here is too pure. I can only reveal my true self within the Terrorbog or my Hut!"))
 		revert_cast(user)
 		return FALSE
@@ -145,7 +145,7 @@
 	icon = 'icons/roguetown/weapons/misc32.dmi'
 	max_blade_int = 600
 	max_integrity = 600
-	force = 25
+	force = 27
 	block_chance = 0
 	wdefense = 6
 	blade_dulling = DULLING_SHAFT_WOOD

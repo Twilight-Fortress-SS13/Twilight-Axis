@@ -62,6 +62,10 @@
 	/// set to TRUE to reset stats in equipme, clearing any racial bonuses or bonuses the character had before becoming this class
 	var/reset_stats = FALSE
 
+	var/list/virtue_limits = list()
+	var/list/vice_limits = list()
+	var/list/origin_limits = list() //TA EDIT
+
 	var/datum/class_age_mod/age_mod = null
 
 /datum/advclass/New()
@@ -147,6 +151,34 @@
 	if(cmode_music)
 		H.cmode_music = cmode_music
 
+	if(length(origin_limits) && H.client) //TA EDIT START
+		var/correlation = FALSE
+		for(var/origintype in origin_limits)
+			if(istype(H.client.prefs?.virtue_origin, origintype))
+				correlation = TRUE
+		if(!correlation)
+			var/datum/virtue/origin/first_origin = origin_limits[1]
+			to_chat(H, span_warning("I've spent so many daes in [first_origin.origin_name] that I've come to call it my home."))
+			change_origin(H, first_origin)
+
+/datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording)
+	var/client/player = H?.client
+	if(player?.prefs)
+		var/datum/virtue/origin/origin_memory = player.prefs.virtue_origin
+		player.prefs.virtue_origin = new new_origin
+		if(wording)
+			H.dna.species.skin_tone_wording = wording
+		player.prefs.virtue_origin.last_origin = origin_memory
+		player.prefs.virtue_origin.apply_to_human(H)
+		if(length(player.prefs.virtue_origin.added_languages))
+			for(var/L in player.prefs.virtue_origin.added_languages)
+				H.grant_language(L)
+		if(length(player.prefs.virtue_origin.last_origin.added_languages))
+			for(var/L in player.prefs.virtue_origin.last_origin.added_languages)
+				if(L != player.prefs.extra_language)
+					H.remove_language(L)
+		H.grant_language(player.prefs.extra_language)  //TA EDIT END
+
 /*
 	Whoa! we are checking requirements here!
 	On the datum! Wow!
@@ -175,6 +207,17 @@
 
 	if(length(allowed_patrons) && !(H.patron.type in allowed_patrons))
 		return FALSE
+
+	if(length(virtue_limits) && H.client)
+		for(var/virtuetype in virtue_limits)
+			if(istype(H.client.prefs?.virtue, virtuetype) || istype(H.client.prefs?.virtuetwo, virtuetype))
+				return FALSE
+
+	if(length(vice_limits) && H.client)
+		for(var/vicetype in vice_limits)
+			for(var/vice in H.charflaws)
+				if(istype(vice, vicetype))
+					return FALSE
 
 	if(maximum_possible_slots > -1)
 		if(total_slots_occupied >= maximum_possible_slots)

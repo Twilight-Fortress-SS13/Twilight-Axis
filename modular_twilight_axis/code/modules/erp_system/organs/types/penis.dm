@@ -51,10 +51,8 @@
 		if(K)
 			qdel(K)
 
-	var/double_count = (P.penis_type in list(PENIS_TYPE_TAPERED_DOUBLE,	PENIS_TYPE_TAPERED_DOUBLE_KNOTTED))
-
-	if(double_count)
-		count_to_action = 2
+	var/double_count = (P.penis_type in list(PENIS_TYPE_TAPERED_DOUBLE, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED))
+	count_to_action = double_count ? 2 : 1
 
 	var/obj/item/organ/testicles/T = H.getorganslot(ORGAN_SLOT_TESTICLES)
 	if(!T)
@@ -75,7 +73,7 @@
 	producing.production_rate = new_rate
 	if(storage.total_volume() > new_capacity)
 		storage.drain(storage.total_volume() - new_capacity)
-
+		
 /obj/item/organ/penis
 	var/manual_erection_override = FALSE
 

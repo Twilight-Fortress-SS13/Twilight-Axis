@@ -19,7 +19,7 @@
 	reqs = list(/obj/item/natural/hide/cured = 1,
 				/obj/item/natural/fibers = 1)
 	sellprice = 6
-	craftdiff = 0
+	craftdiff = 1
 
 /datum/crafting_recipe/roguetown/leather/container/twilight_ammoholder_cannonball
 	name = "cannonball bag (2 cured leather, 3 fibers)"
@@ -27,7 +27,7 @@
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/natural/fibers = 3)
 	sellprice = 6
-	craftdiff = 0
+	craftdiff = 1
 
 //Silverdust blessing related stuff, for Inq funny gunpowder
 /obj/item/alch/silverdust/examine(mob/user)
@@ -67,7 +67,7 @@
 	reqs = list(/obj/item/natural/hide/cured = 1,
 				/obj/item/natural/fibers = 2)
 	sellprice = 15
-	craftdiff = 0
+	craftdiff = 1
 
 /datum/crafting_recipe/roguetown/engineering/twilight_powderflask/basic
 	name = "engineer black gunpowder (4 coaldust, 1 fire essentia, powderflask)"

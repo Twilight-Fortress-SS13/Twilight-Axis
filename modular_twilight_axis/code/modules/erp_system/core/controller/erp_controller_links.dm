@@ -51,8 +51,7 @@
 	if(QDELETED(L))
 		return
 
-	if(L.is_valid())
-		controller._send_link_finish_message(L)
+	controller._send_link_finish_message(L)
 
 	if(L in controller.links)
 		controller.links -= L
@@ -212,10 +211,10 @@
 	var/list/p2 = controller.actions_d.pick_first_by_type(controller.active_partner, FALSE)
 
 	var/list/init_by = p1["by"]
-	var/list/tgt_by  = p2["by"]
+	var/list/tgt_by = p2["by"]
 
 	var/datum/erp_sex_organ/any_init = p1["any"]
-	var/datum/erp_sex_organ/any_tgt  = p2["any"]
+	var/datum/erp_sex_organ/any_tgt = p2["any"]
 
 	var/datum/erp_sex_organ/init = null
 	if(A.required_init_organ)
@@ -236,13 +235,22 @@
 	if(!isnull(reason))
 		return FALSE
 
-	if(istype(init,/datum/erp_sex_organ/penis))
+	if(istype(init, /datum/erp_sex_organ/penis))
 		var/datum/erp_sex_organ/penis/P = init
 		if(P.have_knot)
 			var/mob/living/carbon/human/top = P.get_owner()
 			var/datum/component/erp_knotting/K = controller._get_knotting_component(top)
-			if(K && !K.can_start_action_with_penis(P, target, 0))
-				return FALSE
+			if(K)
+				var/max_units = max(1, P.count_to_action)
+				var/can_use_any = FALSE
+
+				for(var/i = 0; i < max_units; i++)
+					if(K.can_start_action_with_penis(P, target, i))
+						can_use_any = TRUE
+						break
+
+				if(!can_use_any)
+					return FALSE
 
 	var/list/organs = list("init" = init, "target" = target)
 	var/datum/erp_sex_link/L = new(controller.owner, controller.active_partner, A, organs, controller)

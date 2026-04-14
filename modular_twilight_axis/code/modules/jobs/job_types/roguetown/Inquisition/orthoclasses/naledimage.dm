@@ -10,8 +10,6 @@
 	traits_applied = list(
 		TRAIT_PSYDONITE,
 		TRAIT_ARCYNE,
-		TRAIT_MAGEARMOR,
-		TRAIT_INTELLECTUAL, 
 		TRAIT_NALEDI,
 		TRAIT_ALCHEMY_EXPERT,
 	)
@@ -32,11 +30,11 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/arcane = SKILL_LEVEL_EXPERT,
-		/datum/skill/craft/sewing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
 	)
 	subclass_stashed_items = list(
 		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy,
@@ -60,14 +58,14 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/generic
 	mask = /obj/item/clothing/mask/rogue/lordmask/naledi
-	wrists = /obj/item/clothing/neck/roguetown/psicross
+	wrists = /obj/item/clothing/neck/roguetown/psicross/g
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/flashlight/flare/torch/lantern
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/poor
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	id = /obj/item/clothing/ring/signet/silver
-	//backl = /obj/item/rogueweapon/woodstaff/naledi
+	backl = /obj/item/rogueweapon/woodstaff/implement/grand/naledi
 	backpack_contents = list(
 		/obj/item/roguekey/inquisitionmanor,
 		/obj/item/rogueweapon/huntingknife,

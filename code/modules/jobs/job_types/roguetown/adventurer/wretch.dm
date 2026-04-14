@@ -42,14 +42,15 @@
 		/datum/advclass/wretch/outlaw,
 		/datum/advclass/wretch/poacher,
 		/datum/advclass/wretch/plaguebearer,
+		/datum/advclass/wretch/mistwalker,
 		/datum/advclass/wretch/pyromaniac,
 		/datum/advclass/wretch/vigilante,
 		/datum/advclass/wretch/munitioneer,
 		/datum/advclass/wretch/pariah,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
+		/datum/advclass/wretch/slasher
 //		/datum/advclass/wretch/ancient_deathknight,
-		/datum/advclass/wretch/munitioneer
 	)
 
 /datum/job/roguetown/wretch/special_job_check(mob/dead/new_player/player)
@@ -182,12 +183,12 @@
 	slots = min(slots, 10)
 	result["tier1_slots"] = slots
 
-	// Check for major round antagonists (lich, vampire lord) — hard cap at tier 1
+	// Check for major round antagonists (lich, vampire lord, any bandits) — hard cap at tier 1
 	var/major_antag_active = FALSE
 	for(var/datum/antagonist/antag as anything in GLOB.antagonists)
 		if(QDELETED(antag) || QDELETED(antag.owner))
 			continue
-		if(istype(antag, /datum/antagonist/lich) || istype(antag, /datum/antagonist/vampire/lord))
+		if(istype(antag, /datum/antagonist/lich) || istype(antag, /datum/antagonist/vampire/lord) || istype(antag, /datum/antagonist/bandit))
 			major_antag_active = TRUE
 			break
 	result["major_antag_active"] = major_antag_active
@@ -217,6 +218,8 @@
 	var/datum/job/wretch_job = SSjob.GetJob("Wretch")
 	if(!wretch_job)
 		return
+	if(wretch_job.admin_slot_override)
+		return
 
 	var/override_player_count = null
 	if(SSticker.current_state == GAME_STATE_PREGAME)
@@ -227,3 +230,86 @@
 
 	wretch_job.total_positions = max(wretch_job.current_positions, slots)
 	wretch_job.spawn_positions = max(wretch_job.current_positions, slots)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/proc/bountychoice_poacher(mob/living/carbon/human/H)		//TA - EDIT START
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			H.change_stat(STATKEY_CON, -1)
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_PER, 1)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_spellblade(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			GLOB.excommunicated_players += H.real_name
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_STR, 1)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_heretic(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			GLOB.excommunicated_players += H.real_name
+		if("They fear me")
+			if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
+				H.put_in_hands(new /obj/item/clothing/head/roguetown/helmet/blacksteel/psythorns)
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_hereticspy(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			GLOB.excommunicated_players += H.real_name
+		if("They fear me")
+			if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
+				H.put_in_hands(new /obj/item/clothing/mask/rogue/spectacles/inq)
+				H.put_in_hands(new /obj/item/grapplinghook)
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_SPD, 1)
+			H.change_stat(STATKEY_INT, 1)
+
+/proc/bountychoice_vigilante(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)								//TA - EDIT END

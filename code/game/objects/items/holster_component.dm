@@ -87,6 +87,7 @@
 		return FALSE
 	if(!move_after(user, sheathe_time, target = user))
 		return FALSE
+	I.clear_grip_state()
 
 	A.forceMove(src)
 	sheathed = A
@@ -167,6 +168,8 @@
 			I.icon_state = "[initial(I.icon_state)]_[sheathed.sheathe_icon]"
 		else
 			I.icon_state = "[initial(I.icon_state)]"
+
+	//	I.update_slot_icon()
 
 	if(!user && ismob(I.loc)) // TA EDIT START
 		user = I.loc

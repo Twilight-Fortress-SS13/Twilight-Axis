@@ -33,8 +33,13 @@
 	//How many players have this job
 	var/current_positions = 0
 
+	/// Admin-manual slot override set via Manage Job Slots for storyteller-capped roles.
+	var/admin_slot_override = FALSE
+
 	//Whether this job clears a slot when you get a rename prompt.
 	var/antag_job = FALSE
+	var/storyteller_antag_flags = STORYTELLER_ANTAG_NONE
+	var/storyteller_midround_antag_flags = STORYTELLER_ANTAG_NONE
 
 	//Supervisors, who this person answers to directly
 	var/supervisors = ""
@@ -150,6 +155,7 @@
 
 	var/list/virtue_restrictions
 	var/list/vice_restrictions
+	var/list/origin_requirement //TA EDIT
 
 	///The job's stats
 	var/list/job_stats
@@ -176,6 +182,9 @@
 /datum/job/proc/special_job_check(mob/dead/new_player/player)
 	return TRUE
 
+/datum/job/proc/uses_storyteller_slot_caps()
+	return title in list("Wretch", "Gnoll", "Assassin")
+
 /datum/job/proc/validate_prefs_for_job(datum/preferences/P) //TA EDIT START
 	if(!P) return FALSE
 	if(length(allowed_races) && !(P.pref_species.type in allowed_races)) return FALSE
@@ -190,7 +199,10 @@
 		for(var/datum/charflaw/cf in P.charflaws)
 			if(cf.type in vice_restrictions)
 				return FALSE
-				
+
+	if(length(origin_requirement) && !(P.virtue_origin?.type in origin_requirement))
+		return FALSE
+
 	return TRUE //TA EDIT END
 
 /datum/job/proc/get_used_title(mob/player)
@@ -564,6 +576,13 @@
 					for(var/stat in adv_ref.adv_stat_ceiling)
 						dat += "["[capitalize(stat)]: <b>\Roman[adv_ref.adv_stat_ceiling[stat]]</b>"] | "
 					dat += "<i><br>Regardless of your statpacks or race choice, you will not be able to exceed these stats on spawn.</i></font>"
+				if(length(adv_ref.origin_limits)) //TA EDIT START
+					dat += "["<br><font color = '#cf2a2a'><b>This subclass requires one of the following origins: "]</b></font><br>"
+					dat += " | "
+					for(var/orig in adv_ref.origin_limits)
+						var/datum/virtue/origin/origin = orig
+						dat += "[origin.name] | "
+					dat += "<i><br>Choosing this subclass with any other origin will enforce a compatiable origin on spawn.</i></font>" //TA EDIT END
 				if(LAZYLEN(adv_ref.subclass_mage_aspects))
 					var/list/aspect_cfg = adv_ref.subclass_mage_aspects
 					dat += "<font color = '#a3a7e0'><b>Mage Aspects:</b><br>"
@@ -706,6 +725,52 @@
 		popup.open(FALSE)
 		if(winexists(usr, "subclassslots"))
 			winset(usr, "subclassslots", "focus=true")
+	if(href_list["jobadvincomp"])
+		if(!usr)
+			return
+		if(!isdead(usr))
+			return
+		var/mob/dead/D = usr
+		var/client/player = D.client
+		var/list/dat = list()
+		for(var/adv in job_subclasses)
+			var/advdat = ""
+			var/datum/advclass/subclasspath = adv
+			var/datum/advclass/subclass = SSrole_class_handler.get_advclass_by_name(initial(subclasspath.name))
+			var/found_issue = FALSE
+			if(length(subclass.virtue_limits))
+				for(var/virtuetype in subclass.virtue_limits)
+					if(istype(player.prefs.virtue, virtuetype))
+						advdat += "[player.prefs.virtue.name]<br>"
+						found_issue = TRUE
+					if(istype(player.prefs.virtuetwo, virtuetype))
+						advdat += "[player.prefs.virtuetwo.name]<br>"
+						found_issue = TRUE
+
+			if(length(subclass.vice_limits))
+				for(var/vicetype in subclass.vice_limits)
+					for(var/vice in player.prefs.charflaws)
+						var/datum/charflaw/cf = vice
+						if(istype(vice, vicetype))
+							advdat += "[cf.name]<br>"
+							found_issue = TRUE
+			
+			if(length(subclass.origin_limits)) //TA EDIT START
+				var/correlation = FALSE
+				for(var/origintype in subclass.origin_limits)
+					if(istype(player.prefs.virtue_origin, origintype))
+						correlation = TRUE
+				if(!correlation)
+					advdat += "[player.prefs.virtue_origin.name]<br>"
+					found_issue = TRUE //TA EDIT END
+			if(found_issue)
+				dat += "<font color = '#e4e1e1'><b>[subclass::name]</b></font><br>"
+				dat += advdat
+		var/datum/browser/popup = new(usr, "subclassslots", "<div style='text-align: center'>Subclass Incompatibilities</div>", nwidth = 200, nheight = 300)
+		popup.set_content(dat.Join())
+		popup.open(FALSE)
+		if(winexists(usr, "subclassslots"))
+			winset(usr, "subclassslots", "focus=true")
 	. = ..()
 
 /datum/job/proc/has_limited_subclasses()
@@ -716,3 +781,32 @@
 		if(initial(subclass.maximum_possible_slots) != -1)
 			return TRUE
 	return FALSE
+
+/datum/job/proc/prefs_subclass_compatibility(client/player)
+	if(!player)
+		return FALSE
+	if(!player.prefs)
+		return FALSE
+	if(!length(job_subclasses))
+		return FALSE
+	for(var/adv in job_subclasses)
+		var/datum/advclass/subclasspath = adv
+		var/datum/advclass/subclass = SSrole_class_handler.get_advclass_by_name(initial(subclasspath.name))
+		if(length(subclass.virtue_limits))
+			for(var/virtuetype in subclass.virtue_limits)
+				if(istype(player.prefs.virtue, virtuetype) || istype(player.prefs.virtuetwo, virtuetype))
+					return TRUE
+
+		if(length(subclass.vice_limits))
+			for(var/vicetype in subclass.vice_limits)
+				for(var/vice in player.prefs.charflaws)
+					if(istype(vice, vicetype))
+						return TRUE
+		
+		if(length(subclass.origin_limits)) //TA EDIT START
+			var/correlation = FALSE
+			for(var/origintype in subclass.origin_limits)
+				if(istype(player.prefs.virtue_origin, origintype))
+					correlation = TRUE
+			if(!correlation)
+				return TRUE //TA EDIT END

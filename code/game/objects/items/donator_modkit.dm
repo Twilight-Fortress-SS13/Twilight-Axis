@@ -317,6 +317,18 @@
 	target_items = list(/obj/item/clothing/cloak/templar/xylixian)
 	result_item = /obj/item/clothing/cloak/templar/xylixian/faux
 
+/obj/item/enchantingkit/strudel3
+	name = "'Etruscan Design Cloak' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Poncho"
+	target_items = list(/obj/item/clothing/cloak/poncho)
+	result_item = /obj/item/clothing/cloak/poncho/dittocloak
+
+/obj/item/enchantingkit/strudel4
+	name = "'Form-fitting Padded Gambeson' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Padded Gambeson"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/gambeson/heavy)
+	result_item = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/strudels
+
 //Bat - Custom harp type
 /obj/item/enchantingkit/bat
 	name = "'Handcrafted Harp' morphing elixir"
@@ -345,6 +357,18 @@
 	target_items = list(/obj/item/rogueweapon/greataxe/steel)
 	result_item = /obj/item/rogueweapon/greataxe/steel/gilded
 
+//Zydras donator items - Ironclad baddie
+/obj/item/enchantingkit/zydrashauberk
+	name = "Mailled Hauberk morphing elixir"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy)
+	result_item = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy/zycuirass
+
+/obj/item/enchantingkit/zydrasgreataxe
+	name = "Greataxe morphing elixir"
+	target_items = list(/obj/item/rogueweapon/greataxe)
+	result_item = /obj/item/rogueweapon/greataxe/zygreataxe
+
+/*
 //Zydras donator items - Iconoclast pyromaniac
 /obj/item/enchantingkit/zydrasiconocrown
 	name = "Barred Helmet morphing elixir"
@@ -363,6 +387,7 @@
 		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/zydrasiconosash)
 	result_item = null
 	icon_loadout = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/zydrasiconosash
+*/
 
 //Eiren - Zweihander and sabres
 /obj/item/enchantingkit/weapon/eiren
@@ -387,6 +412,25 @@
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Sabre"
 	target_items = list(/obj/item/rogueweapon/sword/sabre)
 	result_item = /obj/item/rogueweapon/example/eiren_sabre_alt
+
+/obj/item/enchantingkit/weapon/eiren_m
+	name = "'glintstone longsword' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long
+	)
+	result_item = /obj/item/rogueweapon/eirenxiv/eiren_m
+
+/obj/item/enchantingkit/weapon/eirensword
+	name = "'stygian longsword' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long
+	)
+	result_item = /obj/item/rogueweapon/eirenxiv/eirensword
+
+/obj/item/enchantingkit/eiren_helmet
+	name = "'strigidae armet' morphing elixir"
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet)
+	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/eiren_helmet
 
 //pretzel - custom steel greatsword. PSYDON LYVES. PSYDON ENDVRES.
 /obj/item/enchantingkit/weapon/waff
@@ -524,6 +568,14 @@
 	target_items = list(/obj/item/rogueweapon/sword/long)
 	result_item = /obj/item/rogueweapon/sword/long/drd
 
+//DRD21 - Shield
+/obj/item/enchantingkit/weapon/drd_shield
+	name = "'House Woerden shield' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/shield/tower/metal
+	)
+	result_item = /obj/item/rogueweapon/drd/shield
+
 //Lmwevil - Beak Mask
 /obj/item/enchantingkit/lmwevil_brassbeak
 	name = "brass beak mask morphing elixir"
@@ -541,6 +593,7 @@
 //Maesune - Sabre/Shield
 /obj/item/enchantingkit/weapon/maesune_shield
 	name = "'Fy Annwyl' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Kite Shield"
 	target_items = list(
 		/obj/item/rogueweapon/shield/tower/metal
 	)
@@ -548,6 +601,7 @@
 
 /obj/item/enchantingkit/weapon/maesune_sabre
 	name = "'Y Ceirw' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Falchion, Longsword, Sword, Silver Sword Or Kriegmesser"
 	target_items = list(
 		/obj/item/rogueweapon/sword/short/falchion,
 		/obj/item/rogueweapon/sword/long,
@@ -557,6 +611,42 @@
 		/obj/item/rogueweapon/sword/long/kriegmesser
 	)
 	result_item = /obj/item/rogueweapon/maesune/sabre
+
+//NeroCavalier - Sword
+/obj/item/enchantingkit/weapon/noire_flsword
+	name = "'Blacksteel Longsword' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long
+	)
+	result_item = /obj/item/rogueweapon/nerocavalier/flsword
+
+/obj/item/enchantingkit/aisuwand
+	name = "Crystalline Wand morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Wand"
+	target_items = list(/obj/item/rogueweapon/wand)
+	result_item = /obj/item/rogueweapon/wand/aisu
+
+/obj/item/enchantingkit/weapon/regnum
+	name = "'Regnum' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword Or Judgement"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/judgement
+	)
+	result_item = /obj/item/rogueweapon/example/regnum
+
+/obj/item/enchantingkit/weapon/aeternum
+	name = "'Aeternum' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Greatsword, Claymore, Or Zweihander"
+	target_items = list(
+		/obj/item/rogueweapon/greatsword,
+		/obj/item/rogueweapon/greatsword/zwei,
+		/obj/item/rogueweapon/greatsword/grenz,
+		/obj/item/rogueweapon/greatsword/grenz/flamberge,
+		/obj/item/rogueweapon/greatsword/grenz/flamberge/blacksteel
+	)
+	result_item = /obj/item/rogueweapon/example/aeternum
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
@@ -576,13 +666,15 @@
 
 /obj/item/enchantingkit/triumph_armorkit_drow
 	name = "'Drowcraft' armor morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..a set of Hardened Leather Armor.. </br>.. or a set of Studded Leather Armor."
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Hardened Leather Armor, Studded Leather Armor, Lightweight Brigandine, Cuirass or Scalemail"
 	target_items = list(
-		/obj/item/clothing/suit/roguetown/armor/leather/heavy 		= /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest,
-		/obj/item/clothing/suit/roguetown/armor/leather/studded		= /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy,
+		/obj/item/clothing/suit/roguetown/armor/leather/studded,
+		/obj/item/clothing/suit/roguetown/armor/brigandine/light,
+		/obj/item/clothing/suit/roguetown/armor/plate/cuirass,
+		/obj/item/clothing/suit/roguetown/armor/plate/scale
 	)
-	result_item = null
-	icon_loadout = /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest
+	result_item = /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest
 
 /obj/item/enchantingkit/triumph_weaponkit_axe
 	name = "'Valorian' axe morphing elixir"

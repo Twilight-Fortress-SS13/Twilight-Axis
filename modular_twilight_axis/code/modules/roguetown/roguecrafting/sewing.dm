@@ -19,3 +19,23 @@
 	tools = list(/obj/item/needle)
 	craftdiff = 6
 	sellprice = 20
+
+/datum/crafting_recipe/roguetown/sewing/gambesonpants
+	name = "gamboised cuisses"
+	category = "Pants"
+	result = list(/obj/item/clothing/under/roguetown/gambeson)
+	reqs = list(/obj/item/natural/cloth = 4,
+	            /obj/item/natural/fibers = 4)
+	tools = list(/obj/item/needle)
+	craftdiff = 2
+	sellprice = 10
+
+/datum/crafting_recipe/roguetown/sewing/pgambesonpants
+	name = "padded gamboised cuisses"
+	category = "Pants"
+	result = list(/obj/item/clothing/under/roguetown/gambeson/heavy)
+	reqs = list(/obj/item/natural/cloth = 6,
+	            /obj/item/natural/fibers = 4)
+	tools = list(/obj/item/needle)
+	craftdiff = 3
+	sellprice = 25
