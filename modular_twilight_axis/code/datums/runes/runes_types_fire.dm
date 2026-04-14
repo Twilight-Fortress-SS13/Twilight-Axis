@@ -73,8 +73,8 @@
 	name = "Возгорание"
 	desc = "Шанс нанести ожоговый урон на цель."
 	color = "#ff5a1f"
-	cooldown = 20
-	proc_chance = 35
+	cooldown = 20 SECONDS
+	proc_chance = 15
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/rogueore/coal = 1,
@@ -94,8 +94,8 @@
 	name = "Пепел"
 	desc = "Шанс наложить немоту."
 	color = "#c96a4c"
-	cooldown = 25
-	proc_chance = 20
+	cooldown = 25 SECONDS
+	proc_chance = 20 
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/rogueore/coal = 1,
@@ -147,8 +147,8 @@
 	name = "Клеймо"
 	desc = "Удар по раненой цели усиливает боль и снижает точность."
 	color = "#e3482b"
-	cooldown = 25
-	proc_chance = 35
+	cooldown = 25 SECONDS
+	proc_chance = 15
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/thorn = 1,
@@ -172,8 +172,8 @@
 	name = "Плавление"
 	desc = "Урон по броне наносит ей дополнительный урон."
 	color = "#ff7f50"
-	cooldown = 30
-	proc_chance = 40
+	cooldown = 30 SECONDS
+	proc_chance = 20
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/rogueore/coal = 1,

@@ -59,8 +59,8 @@
 	name = "Разлом"
 	desc = "Шанс наложить exposed."
 	color = "#a3684f"
-	cooldown = 25
-	proc_chance = 35
+	cooldown = 25 SECONDS
+	proc_chance = 15
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/stone = 1,
@@ -80,8 +80,8 @@
 	name = "Гравий"
 	desc = "Снижает скорость движения цели."
 	color = "#7b6a58"
-	cooldown = 20
-	proc_chance = 40
+	cooldown = 20 SECONDS
+	proc_chance = 20
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/dirtclod = 1,
@@ -124,8 +124,8 @@
 	name = "Гейзер"
 	desc = "Шанс нанести токсин-урон цели."
 	color = "#b28b5c"
-	cooldown = 25
-	proc_chance = 30
+	cooldown = 25 SECONDS
+	proc_chance = 10
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/dirtclod = 1,
@@ -145,8 +145,8 @@
 	name = "Оползень"
 	desc = "Имеет шанс наложить стаггер."
 	color = "#8c7355"
-	cooldown = 30
-	proc_chance = 25
+	cooldown = 30 SECONDS
+	proc_chance = 15
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/dirtclod = 1,

@@ -17,8 +17,8 @@
 	name = "Иней"
 	desc = "Накладывает замедление."
 	color = "#b9ecff"
-	cooldown = 20
-	proc_chance = 35
+	cooldown = 20 SECONDS
+	proc_chance = 15
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/glass = 1,
@@ -38,8 +38,8 @@
 	name = "Морось"
 	desc = "Снижает выносливость цели."
 	color = "#7fd8ff"
-	cooldown = 20
-	proc_chance = 40
+	cooldown = 20 SECONDS
+	proc_chance = 20
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/fibers = 1,
@@ -82,8 +82,8 @@
 	name = "Глубина"
 	desc = "Шанс нанести окси-урон."
 	color = "#2f7fc7"
-	cooldown = 25
-	proc_chance = 30
+	cooldown = 25 SECONDS
+	proc_chance = 10
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/reagent_containers/powder/salt = 1,
@@ -103,7 +103,7 @@
 	name = "Туман"
 	desc = "Повышает скорость."
 	color = "#a8f1ff"
-	cooldown = 30
+	cooldown = 30 SECONDS
 	proc_chance = 100
 	is_persistent = TRUE
 	can_stack = FALSE

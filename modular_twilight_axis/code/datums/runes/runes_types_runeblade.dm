@@ -44,7 +44,7 @@
 	element = RUNE_ELEMENT_FIRE
 	color = "#c0392b"
 
-	cooldown = 35
+	cooldown = 35 SECONDS
 	proc_chance = 20
 	is_persistent = FALSE
 
@@ -66,8 +66,8 @@
 	element = RUNE_ELEMENT_FIRE
 	color = "#ff7a3a"
 
-	cooldown = 30
-	proc_chance = 25
+	cooldown = 30 SECONDS
+	proc_chance = 5
 	is_persistent = FALSE
 
 	carve_ingredients = list(
@@ -122,8 +122,8 @@
 	element = RUNE_ELEMENT_AIR
 	color = "#eeeeee"
 
-	cooldown = 25
-	proc_chance = 30
+	cooldown = 25 SECONDS
+	proc_chance = 10
 	is_persistent = FALSE
 
 	carve_ingredients = list(
@@ -171,8 +171,8 @@
 	element = RUNE_ELEMENT_EARTH
 	color = "#5a2b2b"
 
-	cooldown = 35
-	proc_chance = 25
+	cooldown = 35 SECONDS
+	proc_chance = 15
 	is_persistent = FALSE
 
 	carve_ingredients = list(
@@ -194,8 +194,8 @@
 	element = RUNE_ELEMENT_WATER
 	color = "#9fdfff"
 
-	cooldown = 30
-	proc_chance = 30
+	cooldown = 30 SECONDS
+	proc_chance = 10
 	is_persistent = FALSE
 
 	carve_ingredients = list(
@@ -220,8 +220,8 @@
 	element = RUNE_ELEMENT_WATER
 	color = "#8b0000"
 
-	cooldown = 30
-	proc_chance = 20
+	cooldown = 30 SECONDS
+	proc_chance = 10
 	is_persistent = FALSE
 
 	carve_ingredients = list(

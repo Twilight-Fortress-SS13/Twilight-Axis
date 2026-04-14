@@ -66,7 +66,7 @@
 	name = "Порыв"
 	desc = "Шанс оттолкнуть цель."
 	color = "#cfeeff"
-	cooldown = 45
+	cooldown = 45 SECONDS
 	proc_chance = 20
 	is_persistent = FALSE
 	carve_ingredients = list(
@@ -95,8 +95,8 @@
 	name = "Гром"
 	desc = "Наносит shock."
 	color = "#a9d7ff"
-	cooldown = 30
-	proc_chance = 35
+	cooldown = 30 SECONDS
+	proc_chance = 15
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/rogueore/copper = 1,
@@ -117,8 +117,8 @@
 	name = "Разрежение"
 	desc = "Наносит окси-урон на цель."
 	color = "#bfe6f5"
-	cooldown = 25
-	proc_chance = 30
+	cooldown = 25 SECONDS
+	proc_chance = 10
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/feather = 1,
@@ -138,7 +138,7 @@
 	name = "Эхо"
 	desc = "Повышает шанс срабатывания следующей руны."
 	color = "#ddefff"
-	cooldown = 30
+	cooldown = 30 SECONDS
 	proc_chance = 100
 	is_persistent = TRUE
 	can_stack = FALSE
@@ -180,7 +180,7 @@
 	name = "Молния"
 	desc = "Имеет шанс на иммобилизацию противника."
 	color = "#8fc5ff"
-	cooldown = 40
+	cooldown = 40 SECONDS
 	proc_chance = 20
 	is_persistent = FALSE
 	carve_ingredients = list(
