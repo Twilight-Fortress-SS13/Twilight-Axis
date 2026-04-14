@@ -533,4 +533,12 @@
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants2 = TAT_ITEM_ENTRY("Strange Ripped Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/shepherd = TAT_ITEM_ENTRY("Shepherd Leather Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "under"), \
 	/obj/item/clothing/head/roguetown/mentorhat = TAT_ITEM_ENTRY("Bamboo Hat", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
-	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves/freifechter = TAT_ITEM_ENTRY("Fencing Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves")
+	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves/freifechter = TAT_ITEM_ENTRY("Fencing Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
+	/obj/item/rogueweapon/hammer/iron = TAT_ITEM_ENTRY("Iron Hammer", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogueweapon/tongs = TAT_ITEM_ENTRY("Iron Tongs", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogueweapon/hammer/steel = TAT_ITEM_ENTRY("Steel Hammer", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "misc"), \
+	/obj/item/lockpickring/mundane = TAT_ITEM_ENTRY("Lockpick Ring", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogueweapon/blowrod = TAT_ITEM_ENTRY("Blowing Rod", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogueweapon/shovel = TAT_ITEM_ENTRY("Shovel", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/storage/belt/rogue/surgery_bag = TAT_ITEM_ENTRY("Surgeon's Bag", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/storage/backpack/rogue/backpack = TAT_ITEM_ENTRY("Backpack", 3, "clothing", "armor_family", TAT_ARMOR_CLOTH, "back"), \

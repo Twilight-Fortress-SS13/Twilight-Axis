@@ -1403,7 +1403,7 @@
 	sanitize_build()
 	
 	var/obj/item/storage/backpack/rogue/satchel/B = new /obj/item/storage/backpack/rogue/satchel(H)
-	H.equip_to_slot_if_possible(B, SLOT_BACK_L, TRUE, TRUE, TRUE, TRUE)
+	H.equip_to_slot_if_possible(B, SLOT_BACK_R, TRUE, TRUE, TRUE, TRUE)
 	apply_items(H)
 
 	apply_stats(H)
