@@ -83,6 +83,7 @@
 		"nsfw_ooc_extra_image" = nsfw_ooc_extra_image,
 		"has_song" = has_song,
 		"is_vet" = is_vet,
+		"is_donator" = is_donator(holder.ckey),
 		"is_naked" = is_naked,
 	)
 
@@ -198,6 +199,7 @@
 		"nsfw_ooc_extra_image" = nsfw_ooc_extra_image,
 		"has_song" = has_song,
 		"is_vet" = is_vet,
+		"is_donator" = is_donator(holder.ckey),
 		"is_naked" = is_naked,
 		"nsfw_examine_always" = nsfw_examine_always, // TA EDIT
 		"examine_theme" = char_examine_theme,
@@ -260,6 +262,9 @@
 			return TRUE
 		if("vet_chat")
 			to_chat(viewing, span_boldgreen("This player is age-verified!"))
+			return TRUE
+		if("donator_chat")
+			to_chat(viewing, span_boldgreen("This player is a donator!"))
 			return TRUE
 
 /datum/examine_panel/ui_close()

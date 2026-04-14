@@ -41,19 +41,27 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	apply_voicepacks(character, player)
 	if(player.prefs.dnr_pref)
 		apply_dnr_trait(character, player)
+	if(player.prefs.qsr_pref)
+		apply_qsr_trait(character, player)
+
+	var/triumph_discount_remaining = is_donator(player.ckey) ? 3 : 0 // donators get first 3 triumph points free
 	if(player.prefs.selected_loadout_items)
 		for(var/key in player.prefs.selected_loadout_items)
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
 			if(!item)
 				continue
-			// Проверка на триумфы
-			if(item.triumph_cost == 0)
-				character.mind.special_items[item.name] = item.path
-			else if(character.get_triumphs() >= item.triumph_cost)
-				character.adjust_triumphs(-item.triumph_cost)
-				character.mind.special_items[item.name] = item.path
-			else
-				to_chat(character, span_warning("Недостаточно триумфов для [item.name]."))
+
+			if(item.triumph_cost)
+				var/discounted_cost = max(0, item.triumph_cost - triumph_discount_remaining)
+				if(discounted_cost > 0 && character.get_triumphs() < discounted_cost)
+					to_chat(character, span_warning("Недостаточно триумфов для [item.name]."))
+					continue
+
+				triumph_discount_remaining = max(0, triumph_discount_remaining - item.triumph_cost)
+				if(discounted_cost > 0)
+					character.adjust_triumphs(-discounted_cost)
+
+			character.mind.special_items[item.name] = item.path
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	if(assigned_job)
 		assigned_job.clamp_stats(character)

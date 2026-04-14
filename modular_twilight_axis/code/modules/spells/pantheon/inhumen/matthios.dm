@@ -5,6 +5,170 @@
 
 //T0
 
+/datum/action/cooldown/spell/freemans_tools
+	desc = "A simple prayer to the Free-God Matthios, for tools of liberation and struggle.<br><br>His will manifests in three forms: gutter-born arts of the freemen, gilded tools of blessed liberation, or by granting the bases of Malchem, a form of primordial alchemy so impossible it is oft mistaken for sorcery."
+	options = list(
+		//a simple 'blinds u for 1 sec' throwable
+		"Pocket Sand" = list(
+			path = /obj/item/impact_grenade/pocketsand,
+			m_cooldown = 60 SECONDS,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Rogue Arts",
+			lines = list("Попробуй увернись!", "Горсть свободы!", "Лови подарочек!", "Береги глаза!", "Работает просто чудесно!")
+		),
+		//basically just lesser knock
+		"Gilded Lockpick" = list(
+			path = /obj/item/melee/touch_attack/lesserknock/matthios,
+			m_cooldown = 5 SECONDS,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Gilded Tools",
+			lines = list("+Направь мою руку, Маттиос.", "+Ни один замок не удержит тех, кто свободен!", "+Твой инструмент приведет нас к свободе!")
+		),
+		//freely spawns 400 mammon!!! no wae! is this trve?!!?!??
+		"Pouch of Bribery" = list(
+			path = /obj/item/storage/belt/rogue/pouch/coins/matthios,
+			m_cooldown = 5 MINUTES,
+			m_rank = SKILL_LEVEL_EXPERT,
+			category = "Rogue Arts",
+			lines = list("+Средства из наших запасов!", "+Богатство для жадных, инструмент для свободных...", "+Это нужно нам на дело, Батюшка.")
+		),
+		//makes failed lockpicking attempts muffled
+		"Gilded Dexterous Gloves" = list(
+			path = /obj/item/clothing/gloves/roguetown/fingerless_leather/muffle_matthios,
+			m_cooldown = 5 MINUTES,
+			m_rank = SKILL_LEVEL_JOURNEYMAN,
+			category = "Gilded Tools",
+			lines = list("+Руки мастера действуют бесшумно.", "+В тишине мы готовим наш удар по тирании.", "+Ловкость рук и никакого мошенничества.")
+		),
+		//makes your footsteps muffled
+		"Gilded Muffled Boots" = list(
+			path = /obj/item/clothing/shoes/roguetown/boots/muffle_matthios,
+			m_cooldown = 5 MINUTES,
+			m_rank = SKILL_LEVEL_APPRENTICE,
+			category = "Gilded Tools",
+			lines = list("+Я иду в Его тени, неслышим и незрим.", "+Они не смогут сковать того, кого не услышат.")
+		),
+		//enables piss night vision and sets your lockpick timer to 3 secs, makes you insane over time and prolonged use
+		"Gilded Lockpicking Specs" = list(
+			path = /obj/item/clothing/mask/rogue/spectacles/matthios,
+			m_cooldown = -1, // this is too stronk, so only 1 allowed
+			m_rank = SKILL_LEVEL_EXPERT,
+			category = "Gilded Tools",
+			lines = list("+Маттиос, укажи мне путь.","+Сквозь засовы и замки, я вижу цель нашей борьбы.","+Маттиос, открой мне истину во тьме.")
+		),
+		//normal chains that bind nobility faster
+		"Gilded Chains" = list(
+			path = /obj/item/rope/chain/matthios,
+			m_cooldown = 10 MINUTES,
+			m_rank = SKILL_LEVEL_JOURNEYMAN,
+			category = "Gilded Tools",
+			lines = list("Маттиос! Оковы для хозяев!", "Ты не уйдешь от справедливости народа!", "Скуем же тиранов их же цепями!")
+		),
+		//enables thieves' cant when worn on neck
+		"Gilded Amulet of Matthios" = list(
+			path = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded,
+			m_cooldown = 30 MINUTES,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Gilded Tools",
+			lines = list("+Маттиос, я вверяю себя в твои руки.", "+Господин Ничего, я несу твое знамя с гордостью.", "+Отец Свободы, твоя воля да будет исполнена.")
+		),
+		//miralchemy mode on
+		"Vial of Firstlaw" = list(
+			path = /obj/item/matthios_canister/firstlaw,
+			m_cooldown = 1 MINUTES,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		//turns 10 organic items into 1 rich food of choice (that will often be burned mess or bread if you're not starving to death)
+		"Vial of Kingsfeast Base" = list(
+			path = /obj/item/matthios_canister/kingsfeast,
+			m_cooldown = 2 MINUTES,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		//basically turns water or fruits into wine, if used with blood or lux instead, becomes Kingsblood
+		"Vial of Kingswine Base" = list(
+			path = /obj/item/matthios_canister/kingswine,
+			m_cooldown = 2 MINUTES,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		//makes you honk shoo mimimi, while restoring energy over time
+		"Vial of Goodnite Base" = list(
+			path = /obj/item/matthios_canister/goodnite,
+			m_cooldown = 2 MINUTES,
+			m_rank = SKILL_LEVEL_APPRENTICE,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		//a 4 use vial of mending
+		"Vial of Warsmith Base" = list(
+			path = /obj/item/matthios_canister/warsmith,
+			m_cooldown = 2 MINUTES,
+			m_rank = SKILL_LEVEL_JOURNEYMAN,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		// idk what else, but it should be used by baothans, something they'll want a lot
+/*		"Vial of Liquid Desire Base" = list(
+			path = /obj/item/matthios_canister/baotha,
+			m_cooldown = 10 MINUTES,
+			m_rank = SKILL_LEVEL_MASTER,
+			category = "Malchem Vials",
+			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+		),
+		// same idea but graggarites
+		"Vial of Liquid Bloodlust Base" = list(
+			path = /obj/item/matthios_canister/graggar,
+			m_cooldown = 10 MINUTES,
+			m_rank = SKILL_LEVEL_MASTER,
+			category = "Malchem Vials",
+			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+		),
+		// same idea but zizoids
+		"Vial of Liquid Progress Base" = list(
+			path = /obj/item/matthios_canister/zizo,
+			m_cooldown = 10 MINUTES,
+			m_rank = SKILL_LEVEL_MASTER,
+			category = "Malchem Vials",
+			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+		),
+		// the og idea was to make this deconvert nobles but idk now
+		"Vial of Liquid Freedom Base" = list(
+			path = /obj/item/matthios_canister/matthios,
+			m_cooldown = 10 MINUTES,
+			m_rank = SKILL_LEVEL_MASTER,
+			category = "Malchem Vials",
+			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+		),*/
+
+		// a spicy, explosive, very, very difficult-to-make revive vial, uses all herbs in the world and 1 of any lux type
+		"Vial of Lyfestruth Base" = list(
+			path = /obj/item/matthios_canister/lyfestruth,
+			m_cooldown = 30 MINUTES,
+			m_rank = SKILL_LEVEL_EXPERT,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		// a spicy, explosive grenade that ignites over a massive area, making tennites and nobles roll in agony and go insane
+		// but in my BETTER JUDGEMENT, this is just my early april fools joke, go to sleep my child
+//		"Vial of Truthsnuke Base" = list(
+//			path = /obj/item/matthios_canister/truthsnuke,
+//			m_cooldown = -1, // single use
+//			m_rank = SKILL_LEVEL_MASTER, // exclusive to devotee missionary/heretics
+//			category = "Malchem Vials",
+//			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+//		),
+		// MIGHT be enough tools but this thing here lets anyone add anything as much as they want, have fun!
+		// I'll probably reuse this as a template for a Zizo Artificery miracle in the future.
+	)
+
+/obj/item/roguecoin/gold/matthios
+	desc = "A gold coin bearing a stylized portrait of Kaiser Alister II Grenzelhoft and the Cross of the Eleven. Minted by the Imperial Treasury, these coins can be found all across the Western Kingdoms."
+
 /obj/effect/proc_holder/spell/invoked/appraise
 	overlay_state = "apprise"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'

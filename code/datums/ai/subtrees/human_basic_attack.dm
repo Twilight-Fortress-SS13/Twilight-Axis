@@ -113,9 +113,7 @@
 
 	_update_combat_intent(controller, pawn, target)
 	var/list/modifiers = list()
-	var/old_cmode = pawn.cmode
 	if(pawn.STAINT >= HUMAN_NPC_MIN_INT_FOR_TACTICS && AI_INT_SCALE_PROB(pawn, HUMAN_NPC_RMB_ATTEMPT_CHANCE))
-		pawn.cmode = TRUE
 		#ifdef NPC_THINK_DEBUG
 		AI_THINK(pawn, "RMB: intent=[pawn.rmb_intent?.type] stam=[pawn.stamina]/[pawn.max_stamina]")
 		#endif
@@ -132,7 +130,6 @@
 	else
 		controller.ai_interact(target, TRUE, TRUE, modifiers)
 
-	pawn.cmode = old_cmode
 	if(pawn.next_click < world.time)
 		// Post-attack click cooldown. Extra multiplier on feint — this is a committed action
 		// that should have a bigger opening between it and the next real swing.
@@ -148,7 +145,8 @@
 /datum/ai_behavior/basic_melee_attack/human_npc/finish_action(datum/ai_controller/controller, succeeded, target_key, targetting_datum_key, hiding_location_key)
 	. = ..()
 	var/mob/living/carbon/human/pawn = controller.pawn
-	pawn.cmode = FALSE
+	// cmode stays TRUE - it's managed by the aggro system, not the attack cycle.
+	// Clearing it here caused NPCs to lose the ability to parry/dodge between attacks.
 	SEND_SIGNAL(pawn, COMSIG_COMBAT_TARGET_SET, FALSE)
 
 /datum/ai_behavior/basic_melee_attack/human_npc/proc/_update_combat_intent(datum/ai_controller/controller, mob/living/carbon/human/pawn, mob/living/target)
