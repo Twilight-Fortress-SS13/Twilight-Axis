@@ -16,6 +16,8 @@ export type ExaminePanelData = {
   is_playing: boolean;
   has_song: boolean;
   is_vet: boolean | number;
+  is_donator: boolean | number;
   is_naked: boolean | number;
   examine_theme: string | null;
+  nsfw_examine_always: boolean | number;
 };

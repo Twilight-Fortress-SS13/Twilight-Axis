@@ -108,7 +108,11 @@
 					to_chat(src, msg)
 				return
 			else if(msg) // you want to continue if there's no message instead of returning now
-				current_ticket.MessageNoRecipient(msg)
+				if(current_ticket)
+					current_ticket.MessageNoRecipient(msg)
+				else
+					to_chat(src, span_danger("I can no longer reply to this ticket, please open another one by using the Adminhelp verb if need be."))
+					to_chat(src, span_notice("Message: [msg]"))
 				return
 
 		//get message text, limit it's length.and clean/escape html
@@ -125,8 +129,11 @@
 			if(!recipient)
 				if(holder)
 					to_chat(src, span_danger("Error: Admin-PM: Client not found."))
-				else
+				else if(current_ticket)
 					current_ticket.MessageNoRecipient(msg)
+				else
+					to_chat(src, span_danger("I can no longer reply to this ticket, please open another one by using the Adminhelp verb if need be."))
+					to_chat(src, span_notice("Message: [msg]"))
 				return
 
 	if (src.handle_spam_prevention(msg,MUTE_ADMINHELP))
@@ -168,7 +175,12 @@
 				player_message = player_interaction_message)
 
 			else		//recipient is an admin but sender is not
-				current_ticket.MessageNoRecipient(keywordparsedmsg)
+				if(current_ticket)
+					current_ticket.MessageNoRecipient(keywordparsedmsg)
+				else
+					to_chat(src, span_danger("I can no longer reply to this ticket, please open another one by using the Adminhelp verb if need be."))
+					to_chat(src, span_notice("Message: [rawmsg]"))
+					return
 
 			SEND_SOUND(recipient, sound('sound/adminhelp.ogg'))
 

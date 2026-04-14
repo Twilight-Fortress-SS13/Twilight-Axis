@@ -27,7 +27,7 @@
 	advjob_examine = TRUE
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE
-	same_job_respawn_delay = 1 MINUTES
+	same_job_respawn_delay = 30 MINUTES
 	virtue_restrictions = list(
 		/datum/virtue/utility/noble,
 		/datum/virtue/combat/dualwielder, //Claws are too powerful, abusable
@@ -43,3 +43,38 @@
 	job_subclasses = list(
 		/datum/advclass/hag,
 	)
+
+// TA EDIT START
+/datum/job/roguetown/hag/after_spawn(mob/living/H, mob/M, latejoin = FALSE)
+	. = ..()
+
+	if(ishuman(H))
+		var/mob/living/carbon/human/Hu = H
+		Hu.verbs += /mob/living/carbon/human/verb/hold_breath
+
+/mob/living/carbon/human/verb/hold_breath()
+	set name = "Задержать дыхание"
+	set category = "Emotes"
+
+	if(!mind || mind.assigned_role != "Hag")
+		return
+
+	toggle_hold_breath()
+
+/mob/living/carbon/human/proc/toggle_hold_breath()
+	var/is_holding = HAS_TRAIT(src, TRAIT_HOLDBREATH)
+
+	if(is_holding)
+		REMOVE_TRAIT(src, TRAIT_HOLDBREATH, "hold_breath_verb")
+		visible_message(
+			span_notice("[src] перестает задерживать дыхание."),
+			span_notice("Ты перестаешь задерживать дыхание.")
+		)
+	else
+		ADD_TRAIT(src, TRAIT_HOLDBREATH, "hold_breath_verb")
+		visible_message(
+			span_notice("[src] задерживает свое дыхание."),
+			span_notice("Ты задерживаешь свое дыхание.")
+		)
+
+// TA EDIT END

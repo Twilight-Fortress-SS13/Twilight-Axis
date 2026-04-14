@@ -83,6 +83,7 @@
 		"nsfw_ooc_extra_image" = nsfw_ooc_extra_image,
 		"has_song" = has_song,
 		"is_vet" = is_vet,
+		"is_donator" = is_donator(holder.ckey),
 		"is_naked" = is_naked,
 	)
 
@@ -112,6 +113,7 @@
 	var/has_song = FALSE
 	var/is_vet = FALSE
 	var/is_naked = FALSE
+	var/nsfw_examine_always = FALSE // TA EDIT
 	var/datum/antagonist/vampire/vampireplayer = user.mind?.has_antag_datum(/datum/antagonist/vampire)
 	var/datum/antagonist/lich/lichplayer = user.mind?.has_antag_datum(/datum/antagonist/lich)
 
@@ -122,6 +124,7 @@
 		obscured = ((!isobserver(user)) && !holder_human.client?.prefs?.masked_examine) && ((holder_human.wear_mask && (holder_human.wear_mask.flags_inv & HIDEFACE)) || (holder_human.head && (holder_human.head.flags_inv & HIDEFACE)))
 		flavor_text = obscured ? "Obscured" : holder.flavortext_cached
 		flavor_text_nsfw = obscured ? "Obscured" : holder.nsfwflavortext_cached
+		nsfw_examine_always = holder_human.client?.prefs?.nsfw_examine_always // TA EDIT
 		ooc_notes += holder.ooc_notes_cached
 		ooc_notes_nsfw += holder.erpprefs_cached
 		char_name = holder.name
@@ -145,6 +148,7 @@
 		obscured = FALSE
 		flavor_text = pref.flavortext_cached
 		flavor_text_nsfw = pref.nsfwflavortext_cached
+		nsfw_examine_always = FALSE // TA EDIT
 		ooc_notes = pref.ooc_notes_cached
 		ooc_notes_nsfw = pref.erpprefs_cached
 		if(vampireplayer && (!SEND_SIGNAL(pref, COMSIG_DISGUISE_STATUS))&& !isnull(pref.vampire_headshot_link)) //vampire with their disguise down and a valid headshot
@@ -195,7 +199,9 @@
 		"nsfw_ooc_extra_image" = nsfw_ooc_extra_image,
 		"has_song" = has_song,
 		"is_vet" = is_vet,
+		"is_donator" = is_donator(holder.ckey),
 		"is_naked" = is_naked,
+		"nsfw_examine_always" = nsfw_examine_always, // TA EDIT
 		"examine_theme" = char_examine_theme,
 	)
 	return data
@@ -256,6 +262,9 @@
 			return TRUE
 		if("vet_chat")
 			to_chat(viewing, span_boldgreen("This player is age-verified!"))
+			return TRUE
+		if("donator_chat")
+			to_chat(viewing, span_boldgreen("This player is a donator!"))
 			return TRUE
 
 /datum/examine_panel/ui_close()

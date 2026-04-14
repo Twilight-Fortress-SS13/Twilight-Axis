@@ -111,9 +111,6 @@
 	if(ishostile(src))
 		var/mob/living/simple_animal/hostile/H = src
 		H.LoseTarget()
-	if(ishuman(src))
-		var/mob/living/carbon/human/H = src
-		H.mode = NPC_AI_OFF
 
 /client/proc/show_game_over()
 	var/atom/movable/screen/splash/credits/S = new(src, FALSE)
@@ -135,11 +132,22 @@
 	get_end_reason()
 	roundend_notify_discord()
 
+	var/round_end_music_roll = rand(1, 100)
 	var/round_end_music
-	if(prob(1)) 
-		round_end_music = 2
-	else
-		round_end_music = rand(0, 1)
+
+	switch(round_end_music_roll)
+		if(1)
+			round_end_music = 2 // 1%
+		if(2 to 6)
+			round_end_music = 3 // 5%
+		if(7 to 11)
+			round_end_music = 4 // 5%
+		if(12 to 16)
+			round_end_music = 5 // 5%
+		if(17 to 21)
+			round_end_music = 6 // 5%
+		else
+			round_end_music = rand(0, 1)
 
 	var/list/key_list = list()
 	for(var/client/C in GLOB.clients)
@@ -152,6 +160,14 @@
 					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend.ogg', 100, FALSE)
 				if(2)
 					C.mob.playsound_local(C.mob, 'sound/music/roundend_mirthful.ogg', 100, FALSE) //Hildegard Von Blingin and Whitney Avalon's transformative cover of 'Manchild' by Sabrina Carpenter, circa 2026.
+				if(3)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend2.ogg', 100, FALSE)
+				if(4)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend3.ogg', 100, FALSE)
+				if(5)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend4.ogg', 100, FALSE)
+				if(6)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend5.ogg', 100, FALSE)
 		if(isliving(C.mob) && C.ckey)
 			key_list += C.ckey
 	for(var/mob/living/carbon/human/H in GLOB.player_list)

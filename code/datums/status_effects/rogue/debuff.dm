@@ -469,6 +469,10 @@
 	effectedstats = list(STATKEY_PER = -1, STATKEY_INT = -1, STATKEY_SPD = -1)
 	duration = -1
 
+/datum/status_effect/debuff/dazed/smite
+	effectedstats = list(STATKEY_PER = -1, STATKEY_INT = -2, STATKEY_SPD = -1)
+	duration = 1 MINUTES
+
 /atom/movable/screen/alert/status_effect/debuff/dazed
 	name = "Dazed"
 	desc = "You've been smacked on the head very hard. Which way is left, again?"
@@ -504,36 +508,44 @@
 	desc = "An intense cold has seized my body! I can barely move."
 	icon_state = "muscles"
 
+/// wrestler verison of daze////
+/datum/status_effect/debuff/dazed/stunner
+	id = "discombobulated"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed
+	effectedstats = list(STATKEY_CON = -2, STATKEY_INT = -2)
+	duration = 15 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+
 ///// Freifechter Daze Variants /////
 /datum/status_effect/debuff/dazed/longsword
 	id = "durchlauffen"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed/longsword
-	effectedstats = list(STATKEY_SPD = -3, STATKEY_INT = -1)
-	duration = 10 SECONDS
+	effectedstats = list(STATKEY_WIL = -4, STATKEY_INT = -1)
+	duration = 18 SECONDS
 	status_type = STATUS_EFFECT_REFRESH
 
 /atom/movable/screen/alert/status_effect/debuff/dazed/longsword
-	name = "Master Strike"
-	desc = "How the fuck did they do that!? My ears are ringing!"
+	name = "CAN'T FUCKING BREATHE"
+	desc = "WHAT THE HELL DID THEY DO TO ME?! I NEED TO ATTACK THEM WHILE THEY'RE SWINGING SO THEY CAN'T SHATTER MY WINDPIPE!!"
 	icon_state = "mstrike"
 
 /datum/status_effect/debuff/dazed/longsword2h
 	id = "zorn ort"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed/longsword2h
 	effectedstats = list(STATKEY_PER = -4, STATKEY_LCK = -3)
-	duration = 8 SECONDS
+	duration = 16 SECONDS
 	status_type = STATUS_EFFECT_REFRESH
 
 /atom/movable/screen/alert/status_effect/debuff/dazed/longsword2h
-	name = "Master Strike"
-	desc = "How the fuck did they do that!? My eye!"
+	name = "CAN'T FUCKING SEE"
+	desc = "WHAT THE HELL DID THEY DO TO ME?! I NEED TO RIPOSTE THEM WHILE THEY'RE SWINGING SO THEY CAN'T POKE MY EYES!!"
 	icon_state = "mstrike"
 
 /datum/status_effect/debuff/dazed/freisabre
 	id = "uszkodzić"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed/freisabre
 	effectedstats = list(STATKEY_STR = -2, STATKEY_SPD = -3)
-	duration = 10 SECONDS
+	duration = 16 SECONDS
 	status_type = STATUS_EFFECT_REFRESH
 
 /atom/movable/screen/alert/status_effect/debuff/dazed/freisabre
@@ -585,6 +597,9 @@
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/excomm
 	effectedstats = list(STATKEY_LCK = -2, STATKEY_INT = -2, STATKEY_SPD = -1, STATKEY_WIL = -1, STATKEY_CON = -1)
 	duration = -1
+
+
+
 
 /atom/movable/screen/alert/status_effect/debuff/excomm
 	name = "Excommunicated!"

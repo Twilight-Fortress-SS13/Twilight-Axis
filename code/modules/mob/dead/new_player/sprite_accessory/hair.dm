@@ -115,7 +115,7 @@
 
 /datum/sprite_accessory/hair/head/braided_sidetail
 	name = "Braided Sidetail"
-	icon_state = "braided-sidetail"
+	icon_state = "braided_sidetail"
 
 /datum/sprite_accessory/hair/head/front_braid
 	name = "Braided Front"
@@ -1569,6 +1569,10 @@
 /datum/sprite_accessory/hair/head/alsoprotagonist
 	name = "Alsoprotagonist"
 	icon_state = "alsoprotagonist"
+
+/datum/sprite_accessory/hair/head/scruffy
+	name = "Scruffy"
+	icon_state = "scruffy"
 
 /datum/sprite_accessory/hair/head/vulpkian
 	abstract_type = /datum/sprite_accessory/hair/head/vulpkian

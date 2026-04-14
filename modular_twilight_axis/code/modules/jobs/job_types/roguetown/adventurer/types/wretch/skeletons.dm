@@ -10,10 +10,11 @@
 	tutorial = "You're a shkeleton! You already forgot how you got all these bones, but people fears you, they want to dig you down. Do it first."
 	outfit = /datum/outfit/job/roguetown/wretch/hero
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_NO_CONSTRUCT		//how the fuck you're a skeleton
+	allowed_races = RACES_NO_CONSTRUCT
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_ACCURSED
-	min_pq = 30				//better RP?
+	cmode_music = "modular_twilight_axis/sound/music/combat_skeleton.ogg"
+	min_pq = 30
 	maximum_possible_slots = 2
 	extra_context = "You're a SKELETON, be ready to shackle your bones. Minimum PQ Required: 30"
 	traits_applied = list(
@@ -23,7 +24,7 @@
 		TRAIT_TOXIMMUNE, 
 		TRAIT_SHOCKIMMUNE, 
 		TRAIT_SILVER_WEAK,
-		TRAIT_BREADY
+		TRAIT_BREADY,
 	)
 
 	subclass_skills = list(
@@ -105,7 +106,7 @@
 				if("Bow")
 					H.adjust_skillrank(/datum/skill/combat/bows, 4, TRUE)
 					backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
-					beltl = /obj/item/quiver/arrows/bronze
+					beltl = /obj/item/quiver/arrows
 			backl = /obj/item/storage/backpack/rogue/satchel
 			neck = /obj/item/clothing/neck/roguetown/leather
 			shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/aalloy
@@ -119,7 +120,7 @@
 			beltr = /obj/item/rogueweapon/mace/cudgel
 		if("Toter Aufrührer")
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
-			H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 2, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 3, TRUE)
 			H.adjust_skillrank(/datum/skill/combat/unarmed, 3, TRUE)
 			head = /obj/item/clothing/head/roguetown/duelhat/pretzel/skelet
 			backl = /obj/item/storage/backpack/rogue/satchel
