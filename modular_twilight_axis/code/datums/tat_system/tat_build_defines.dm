@@ -542,3 +542,5 @@
 	/obj/item/rogueweapon/shovel = TAT_ITEM_ENTRY("Shovel", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/storage/belt/rogue/surgery_bag = TAT_ITEM_ENTRY("Surgeon's Bag", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/storage/backpack/rogue/backpack = TAT_ITEM_ENTRY("Backpack", 3, "clothing", "armor_family", TAT_ARMOR_CLOTH, "back"), \
+	/obj/item/storage/gadget/messkit = TAT_ITEM_ENTRY("Mess Kit", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/bedroll = TAT_ITEM_ENTRY("Bedroll", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "back"), \
