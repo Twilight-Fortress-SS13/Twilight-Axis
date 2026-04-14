@@ -461,8 +461,13 @@
 		return TRUE
 	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TAT_TRAIT_BONUS_STAT_POOL) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TAT_TRAIT_BONUS_STAT_POOL))
 		return TRUE
-	if((trait_a == TRAIT_DODGEEXPERT && trait_b == TRAIT_PARRYEXPERT) || (trait_b == TRAIT_DODGEEXPERT && trait_a == TRAIT_CRITICAL_RESISTANCE))
+	if((trait_a == TRAIT_DODGEEXPERT && trait_b == TRAIT_PARRYEXPERT) || (trait_b == TRAIT_DODGEEXPERT && trait_a == TRAIT_PARRYEXPERT))
 		return TRUE
+	if((trait_a == TRAIT_HEAVYARMOR && trait_b == TRAIT_CRITICAL_RESISTANCE) || (trait_b == TRAIT_HEAVYARMOR && trait_a == TRAIT_CRITICAL_RESISTANCE))
+		return TRUE
+	if((trait_a == TRAIT_MEDIUMARMOR && trait_b == TRAIT_CRITICAL_RESISTANCE) || (trait_b == TRAIT_MEDIUMARMOR && trait_a == TRAIT_CRITICAL_RESISTANCE))
+		return TRUE
+
 
 	if(is_magic_initiation_trait(trait_a) && is_magic_initiation_trait(trait_b))
 		return TRUE
