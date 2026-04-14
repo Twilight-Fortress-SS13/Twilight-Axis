@@ -98,9 +98,6 @@
 
 	restricted_virtues = list(/datum/virtue/utility/noble, /datum/virtue/utility/hollow)
 
-/datum/species/construct/metal/check_roundstart_eligible()
-	return TRUE
-	
 /datum/species/construct/metal/get_skin_list()
 	return list(
 		"BRASS" = "dfbd6c",

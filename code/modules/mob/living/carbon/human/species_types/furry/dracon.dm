@@ -135,9 +135,6 @@
 		/datum/descriptor_choice/prominent_four,
 	)
 
-/datum/species/dracon/check_roundstart_eligible()
-	return TRUE
-
 /datum/species/dracon/qualifies_for_rank(rank, list/features)
 	return TRUE
 

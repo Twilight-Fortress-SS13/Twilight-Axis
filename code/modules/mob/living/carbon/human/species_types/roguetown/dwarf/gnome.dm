@@ -80,9 +80,6 @@ Even though they are of mixed blood and smaller than typical dwarves, most gnome
 	body_markings = list(
 	)
 
-/datum/species/dwarf/gnome/check_roundstart_eligible()
-	return TRUE
-
 /datum/species/dwarf/gnome/get_span_language(datum/language/message_language)
 	if(!message_language)
 		return
