@@ -17,12 +17,17 @@
 	if(. == COMPONENT_INCOMPATIBLE)
 		return .
 
+	RegisterSignal(parent, COMSIG_MOVABLE_MOVED, PROC_REF(on_parent_moved))
 	var/obj/item/rogueweapon/weapon = parent
 	if(weapon)
 		max_runes = weapon.get_rune_capacity()
 	cache_base_integrity()
 	refresh_persistent_holder(get_current_holder())
 	return .
+
+/datum/component/rune_storage/proc/on_parent_moved()
+	SIGNAL_HANDLER
+	refresh_persistent_holder()
 
 /datum/component/rune_storage/Destroy(force)
 	clear_all_persistent_effects()
@@ -44,10 +49,14 @@
 	if(!weapon)
 		return null
 
-	if(isliving(weapon.loc))
-		return weapon.loc
+	if(!isliving(weapon.loc))
+		return null
 
-	return null
+	var/mob/living/holder = weapon.loc
+	if(!(weapon in holder.held_items))
+		return null
+
+	return holder
 
 /datum/component/rune_storage/proc/get_rune_integrity_penalty_pct()
 	return RUNE_INTEGRITY_PENALTY_PCT
@@ -398,7 +407,7 @@
 	return .
 
 /obj/item/rogueweapon/proc/get_rune_capacity()
-	return 2
+	return 1
 
 /obj/item/rogueweapon/huntingknife/get_rune_capacity()
 	return 1

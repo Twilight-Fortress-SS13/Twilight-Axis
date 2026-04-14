@@ -28,7 +28,7 @@
 	duration = 4 SECONDS
 	status_type = STATUS_EFFECT_REFRESH
 	alert_type = null
-	effectedstats = list(STATKEY_ACC = -2)
+	effectedstats = list(STATKEY_PER = 1)
 
 /datum/status_effect/debuff/rune_accuracy_down/on_creation(mob/living/new_owner, custom_duration = 4 SECONDS)
 	duration = custom_duration

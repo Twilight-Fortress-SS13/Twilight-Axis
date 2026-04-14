@@ -5,31 +5,30 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_runemaster
 	category_tags = list(CTAG_WRETCH)
+	class_select_category = CLASS_CAT_WARRIOR
 	maximum_possible_slots = 1
 	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'
 	subclass_languages = list(/datum/language/otavan)
 	traits_applied = list(TRAIT_RUNEMASTER, TRAIT_DODGEEXPERT)
 	subclass_stats = list(
-		STATKEY_SPD = 2,
+		STATKEY_SPD = 1,
 		STATKEY_WIL = 2,
-		STATKEY_CON = 2,
-		STATKEY_STR = 2
+		STATKEY_CON = 3,
+		STATKEY_STR = 1
 	)
 
 	subclass_skills = list(
-		/datum/skill/combat/swords = SKILL_LEVEL_MASTER,
+		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/knives = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
-		/datum/skill/craft/traps = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/tracking = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/weaponsmithing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/weaponsmithing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE
 	)
-	extra_context = "This subclass is race-limited to: Humen Male Only. Will enforce faith to Psydon"
+	extra_context = "Will enforce faith to Psydon"
 
 /datum/outfit/job/roguetown/wretch/twilight_runemaster/pre_equip(mob/living/carbon/human/H)
 	..()

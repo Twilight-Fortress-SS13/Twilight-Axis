@@ -7,7 +7,7 @@
 	duration = 2 SECONDS
 	status_type = STATUS_EFFECT_REFRESH
 	alert_type = null
-	effectedstats = list(STATKEY_SPD = -2, STATKEY_CON = -1)
+	effectedstats = list(STATKEY_SPD = 2, STATKEY_CON = 1)
 
 /datum/status_effect/debuff/rune_stagger/on_creation(mob/living/new_owner, custom_duration = 2 SECONDS)
 	duration = custom_duration
@@ -47,11 +47,11 @@
 
 /datum/rune/earth/stone/on_persistent_apply(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(user)
-		user.change_stat(STATKEY_CON, 2)
+		user.change_stat(STATKEY_CON, 1)
 
 /datum/rune/earth/stone/on_persistent_remove(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(user)
-		user.change_stat(STATKEY_CON, -2)
+		user.change_stat(STATKEY_CON, -1)
 
 
 /datum/rune/earth/fracture
@@ -112,11 +112,11 @@
 
 /datum/rune/earth/bedrock/on_persistent_apply(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(user)
-		user.change_stat(STATKEY_STR, 2)
+		user.change_stat(STATKEY_STR, 1)
 
 /datum/rune/earth/bedrock/on_persistent_remove(obj/item/weapon, mob/living/user, datum/component/rune_storage/storage, datum/applied_rune/applied)
 	if(user)
-		user.change_stat(STATKEY_STR, -2)
+		user.change_stat(STATKEY_STR, -1)
 
 
 /datum/rune/earth/geyser
