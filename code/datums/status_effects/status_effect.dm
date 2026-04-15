@@ -83,11 +83,13 @@
 	if(duration != -1)
 		duration = world.time + duration
 	tick_interval = world.time + tick_interval
+	//TA edit start - RUNE SYSTEM
 	if(alert_type && owner && !QDELETED(owner) && !QDELING(owner))
 		var/atom/movable/screen/alert/status_effect/A = owner.throw_alert(id, alert_type)
 		if(A)
 			A.attached_effect = src // so the alert can reference us, if it needs to
 			linked_alert = A // so we can reference the alert, if we need to
+	//TA edit end - RUNE SYSTEM
 
 	if(needs_processing)
 		START_PROCESSING(SSfastprocess, src)
