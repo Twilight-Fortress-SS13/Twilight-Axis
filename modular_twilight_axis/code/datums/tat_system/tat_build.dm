@@ -7,7 +7,7 @@
 	var/points_stats = 4
 	var/points_skills = 35
 	var/points_traits = 10
-	var/points_items = 15
+	var/points_items = 20
 
 	var/list/stats = list()
 	var/list/skills = list()
@@ -1222,6 +1222,7 @@
 		return
 
 	ADD_TRAIT(H, TRAIT_WITCH, TAT_TRAIT_SOURCE)
+	ADD_TRAIT(H, TRAIT_DEATHSIGHT, TAT_TRAIT_SOURCE)
 	//ADD_TRAIT(H, TRAIT_RUNEMAKER, TAT_TRAIT_SOURCE)
 	var/shapeshifts = list("Zad", "Cat", "Cat (Black)", "Bat", "Lesser Volf", "Cabbit", "Small Rous", "Lesser Venard")
 	var/shapeshiftchoice = input("What form does your second skin take?", "THE OLD WAYS") as anything in shapeshifts
