@@ -126,7 +126,7 @@
 	var/cooldown_mult = P.cooldown_mult
 	var/weapon_self_damage_pct = P.weapon_self_damage_pct
 	var/activate_all = P.activate_all
-	var/use_in_combo = (skill_id >= 1 && skill_id <= 3)
+	var/use_in_combo = P.use_in_combo
 	var/datum/component/rune_storage/storage = weapon.GetComponent(/datum/component/rune_storage)
 	var/success = FALSE
 	if(storage && target)
@@ -367,29 +367,34 @@
 	P.preparePixelProjectile(aim_target, owner)
 	P.fire()
 
-/datum/component/combo_core/runeblade/proc/_cb_dash(rule_id, mob/living/target, zone)
-	if(!owner || !target || target.stat == DEAD)
+/datum/component/combo_core/runeblade/proc/_cb_dash(rule_id, atom/target, zone)
+	if(!owner)
 		return FALSE
+
 	var/list/path = GetTeleportPath()
 	if(!length(path))
 		return FALSE
-	var/d = owner.dir
+
 	var/turf/current = get_turf(owner)
 	if(!current)
 		return FALSE
+
 	var/last_hit_success = FALSE
-	for(var/i in 1 to RUNEBLADE_DASH_HITS)
-		var/turf/next = get_step(current, d)
+
+	for(var/turf/next as anything in path)
 		if(!next || next.density)
 			break
+
 		owner.forceMove(next)
 		current = next
+
 		var/mob/living/L = GetLivingOnTurf(next)
 		if(!L)
 			continue
+
 		var/hit_success = ComboTriggerTarget(L, 1, 1, 0)
-		if(i == RUNEBLADE_DASH_HITS)
-			last_hit_success = hit_success
+		last_hit_success = hit_success
+
 	return last_hit_success
 
 /datum/component/combo_core/runeblade/proc/_cb_nova(rule_id, mob/living/target, zone)

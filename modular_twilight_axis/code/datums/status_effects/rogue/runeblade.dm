@@ -180,13 +180,13 @@
 	if(!owner || !owner.client || !owner.hud_used)
 		return
 
-	if(!linked_alert && alert_type)
+	if((!linked_alert || QDELETED(linked_alert)) && alert_type)
 		var/atom/movable/screen/alert/status_effect/A = owner.throw_alert(id, alert_type)
 		if(A)
 			A.attached_effect = src
 			linked_alert = A
 
-	if(!linked_alert)
+	if(!linked_alert || QDELETED(linked_alert))
 		return
 
 	switch(rune_element)
