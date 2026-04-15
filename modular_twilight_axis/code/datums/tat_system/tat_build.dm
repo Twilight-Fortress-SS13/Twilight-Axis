@@ -223,6 +223,9 @@
 	if(ispath(skill_type, /datum/skill/combat))
 		return get_combat_skill_cap()
 
+	if(should_softcap_peaceful_skill(skill_type) && !has_expert_trait_for_skill(skill_type))
+		return 2
+
 	return TAT_SKILL_NONCOMBAT_CAP
 
 /datum/tat_build/proc/can_use_weapon_supply_type(supply_type)
@@ -1210,44 +1213,8 @@
 		return
 
 	ADD_TRAIT(H, TRAIT_WITCH, TAT_TRAIT_SOURCE)
-
-	switch(tgui_input_list(H, "Choose your witch path.", "Witch Initiate", list("Old Magick", "Godsblood", "Mystagogue")))
-		if("Old Magick")
-			ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
-			H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_APPRENTICE, TRUE)
-			if(H.mind)
-				H.mind.setup_mage_aspects(list(
-					"mastery" = FALSE,
-					"major" = 1,
-					"minor" = 1,
-					"utilities" = 5,
-					"ward" = TRUE,
-				))
-			H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
-
-		if("Godsblood")
-			var/datum/devotion/D = new /datum/devotion(H, H.patron)
-			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_APPRENTICE, TRUE)
-			D.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
-			D.max_devotion *= 0.5
-
-		if("Mystagogue")
-			var/datum/devotion/D = new /datum/devotion(H, H.patron)
-			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
-			D.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1)
-			D.max_devotion *= 0.5
-
-			ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
-			H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
-			if(H.mind)
-				H.mind.setup_mage_aspects(list(
-					"mastery" = FALSE,
-					"major" = 0,
-					"minor" = 1,
-					"utilities" = 3,
-					"ward" = TRUE,
-				))
-			H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
+	//ADD_TRAIT(H, TRAIT_RUNEMAKER, TAT_TRAIT_SOURCE)
+	H.AddSpell(new /obj/effect/proc_holder/spell/self/witch_cat_form)
 
 /datum/tat_build/proc/apply_traits(mob/living/carbon/human/H)
 	if(!H)
@@ -1619,3 +1586,75 @@
 
 /datum/tat_build/proc/can_train_holy()
 	return !!traits[TAT_TRAIT_DIVINE_INITIATE]
+
+/datum/tat_build/proc/has_expert_trait_for_skill(skill_type)
+	switch(skill_type)
+		if(/datum/skill/craft/cooking)
+			return !!traits[TRAIT_COOKING_EXPERT]
+
+		if(/datum/skill/craft/alchemy)
+			return !!traits[TRAIT_ALCHEMY_EXPERT]
+
+		if(/datum/skill/craft/medicine)
+			return !!traits[TRAIT_MEDICINE_EXPERT]
+
+		if(/datum/skill/craft/sewing)
+			return !!traits[TRAIT_SEWING_EXPERT]
+
+		if(/datum/skill/craft/farming)
+			return !!traits[TRAIT_SEEDKNOW]
+
+		if(/datum/skill/craft/smithing)
+			return !!traits[TRAIT_SMITHING_EXPERT]
+
+		if(/datum/skill/craft/smelting)
+			return !!traits[TRAIT_TRAINED_SMITH]
+
+		if(/datum/skill/craft/carpentry)
+			return !!traits[TRAIT_HOMESTEAD_EXPERT]
+
+		if(/datum/skill/craft/masonry)
+			return !!traits[TRAIT_HOMESTEAD_EXPERT]
+
+		if(/datum/skill/craft/crafting)
+			return !!traits[TRAIT_HOMESTEAD_EXPERT]
+
+		if(/datum/skill/craft/butchering)
+			return !!traits[TRAIT_SURVIVAL_EXPERT]
+
+		if(/datum/skill/craft/traps)
+			return !!traits[TRAIT_SURVIVAL_EXPERT]
+
+		if(/datum/skill/labor/fishing)
+			return !!traits[TRAIT_CAUTIOUS_FISHER]
+
+		if(/datum/skill/craft/armorsmithing)
+			return !!traits[TRAIT_SQUIRE_REPAIR]
+
+		if(/datum/skill/craft/weaponsmithing)
+			return !!traits[TRAIT_SQUIRE_REPAIR]
+
+	return TRUE
+
+/datum/tat_build/proc/should_softcap_peaceful_skill(skill_type)
+	switch(skill_type)
+		if(
+			/datum/skill/craft/cooking,
+			/datum/skill/craft/alchemy,
+			/datum/skill/craft/medicine,
+			/datum/skill/craft/sewing,
+			/datum/skill/craft/farming,
+			/datum/skill/craft/smithing,
+			/datum/skill/craft/smelting,
+			/datum/skill/craft/carpentry,
+			/datum/skill/craft/masonry,
+			/datum/skill/craft/crafting,
+			/datum/skill/craft/butchering,
+			/datum/skill/craft/traps,
+			/datum/skill/labor/fishing,
+			/datum/skill/craft/armorsmithing,
+			/datum/skill/craft/weaponsmithing
+		)
+			return TRUE
+
+	return FALSE
