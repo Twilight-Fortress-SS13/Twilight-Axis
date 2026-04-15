@@ -18,6 +18,7 @@
 
 	var/dirty = FALSE
 	var/list/stat_order = TAT_STATS_ORDER_LIST
+	var/list/item_icon_cache = list()
 
 /datum/tat_build/New()
 	. = ..()
@@ -412,6 +413,8 @@
 		var/list/entry = available_items[item_path]
 		if(!can_use_item_entry(entry))
 			continue
+
+		var/list/icon_payload = get_item_icon_payload(item_path)
 		result["[item_path]"] = list(
 			"name" = entry["name"],
 			"cost" = entry["cost"],
@@ -421,6 +424,8 @@
 			"slot_group" = entry["slot_group"],
 			"amount" = (items[item_path] || 0),
 			"unlocked" = TRUE,
+			"icon" = icon_payload ? icon_payload["icon"] : null,
+			"icon_state" = icon_payload ? icon_payload["icon_state"] : null,
 		)
 	return result
 
@@ -436,6 +441,7 @@
 			continue
 
 		normalize_item_loadout(item_path)
+		var/list/icon_payload = get_item_icon_payload(item_path)
 
 		result["[item_path]"] = list(
 			"name" = entry["name"],
@@ -445,8 +451,16 @@
 			"amount" = amount,
 			"equip" = get_item_equip_amount(item_path),
 			"bag" = get_item_bag_amount(item_path),
+			"icon" = icon_payload ? icon_payload["icon"] : null,
+			"icon_state" = icon_payload ? icon_payload["icon_state"] : null,
 		)
 	return result
+
+/datum/tat_build/proc/reset_items()
+	items = list()
+	item_loadout = list()
+	item_icon_cache = list()
+	dirty = TRUE
 
 /datum/tat_build/proc/set_stat_value(stat_id, value)
 	if(!(stat_id in available_stats))
@@ -791,11 +805,6 @@
 
 /datum/tat_build/proc/reset_traits()
 	traits = list()
-	dirty = TRUE
-
-/datum/tat_build/proc/reset_items()
-	items = list()
-	item_loadout = list()
 	dirty = TRUE
 
 /datum/tat_build/proc/reset_magic()
@@ -1214,7 +1223,26 @@
 
 	ADD_TRAIT(H, TRAIT_WITCH, TAT_TRAIT_SOURCE)
 	//ADD_TRAIT(H, TRAIT_RUNEMAKER, TAT_TRAIT_SOURCE)
-	H.AddSpell(new /obj/effect/proc_holder/spell/self/witch_cat_form)
+	var/shapeshifts = list("Zad", "Cat", "Cat (Black)", "Bat", "Lesser Volf", "Cabbit", "Small Rous", "Lesser Venard")
+	var/shapeshiftchoice = input("What form does your second skin take?", "THE OLD WAYS") as anything in shapeshifts
+	if(H.mind)
+		switch (shapeshiftchoice)
+			if("Zad")
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/crow)
+			if("Cat")
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/cat)
+			if("Cat (Black)")
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/cat/black)
+			if("Bat")
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/bat)
+			if("Lesser Volf")
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/lesser_wolf)
+			if("Lesser Venard")
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/lesser_vernard)
+			if("Small Rous")
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/rous)
+			if("Cabbit")
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/cabbit)
 
 /datum/tat_build/proc/apply_traits(mob/living/carbon/human/H)
 	if(!H)
@@ -1590,21 +1618,21 @@
 /datum/tat_build/proc/has_expert_trait_for_skill(skill_type)
 	switch(skill_type)
 		if(/datum/skill/craft/cooking)
-			return !!traits[TRAIT_COOKING_EXPERT]
+			return !!traits[TRAIT_HOMESTEAD_EXPERT]
 
 		if(/datum/skill/craft/alchemy)
 			return !!traits[TRAIT_ALCHEMY_EXPERT]
 
-		if(/datum/skill/craft/medicine)
+		if(/datum/skill/misc/medicine)
 			return !!traits[TRAIT_MEDICINE_EXPERT]
 
 		if(/datum/skill/craft/sewing)
 			return !!traits[TRAIT_SEWING_EXPERT]
 
-		if(/datum/skill/craft/farming)
+		if(/datum/skill/labor/farming)
 			return !!traits[TRAIT_SEEDKNOW]
 
-		if(/datum/skill/craft/smithing)
+		if(/datum/skill/craft/blacksmithing)
 			return !!traits[TRAIT_SMITHING_EXPERT]
 
 		if(/datum/skill/craft/smelting)
@@ -1619,7 +1647,7 @@
 		if(/datum/skill/craft/crafting)
 			return !!traits[TRAIT_HOMESTEAD_EXPERT]
 
-		if(/datum/skill/craft/butchering)
+		if(/datum/skill/labor/butchering)
 			return !!traits[TRAIT_SURVIVAL_EXPERT]
 
 		if(/datum/skill/craft/traps)
@@ -1641,15 +1669,15 @@
 		if(
 			/datum/skill/craft/cooking,
 			/datum/skill/craft/alchemy,
-			/datum/skill/craft/medicine,
+			/datum/skill/misc/medicine,
 			/datum/skill/craft/sewing,
-			/datum/skill/craft/farming,
-			/datum/skill/craft/smithing,
+			/datum/skill/labor/farming,
+			/datum/skill/craft/blacksmithing,
 			/datum/skill/craft/smelting,
 			/datum/skill/craft/carpentry,
 			/datum/skill/craft/masonry,
 			/datum/skill/craft/crafting,
-			/datum/skill/craft/butchering,
+			/datum/skill/labor/butchering,
 			/datum/skill/craft/traps,
 			/datum/skill/labor/fishing,
 			/datum/skill/craft/armorsmithing,
@@ -1658,3 +1686,31 @@
 			return TRUE
 
 	return FALSE
+
+/datum/tat_build/proc/get_item_icon_payload(item_path)
+	if(!ispath(item_path, /obj/item))
+		return null
+
+	if(!islist(item_icon_cache))
+		item_icon_cache = list()
+
+	if(item_path in item_icon_cache)
+		return item_icon_cache[item_path]
+
+	var/obj/item/I = new item_path
+	if(!I)
+		return null
+
+	var/icon/render_icon = icon(initial(I.icon), initial(I.icon_state), SOUTH, 1)
+	var/icon_b64 = null
+	if(render_icon)
+		icon_b64 = icon2base64(render_icon)
+
+	var/list/payload = list(
+		"icon" = icon_b64,
+		"icon_state" = "[initial(I.icon_state)]",
+	)
+
+	item_icon_cache[item_path] = payload
+	qdel(I)
+	return payload
