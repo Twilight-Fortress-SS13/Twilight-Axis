@@ -6,7 +6,7 @@
 
 	var/points_stats = 4
 	var/points_skills = 35
-	var/points_traits = 10
+	var/points_traits = 12
 	var/points_items = 20
 
 	var/list/stats = list()
