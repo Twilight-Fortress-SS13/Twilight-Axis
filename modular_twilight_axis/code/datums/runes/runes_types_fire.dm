@@ -109,6 +109,7 @@
 
 	L.apply_status_effect(/datum/status_effect/debuff/rune_silence, scale_duration(5 SECONDS, applied))
 
+#define FORGE_RUNE_REPAIR_PERCENT 5
 
 /datum/rune/fire/forge
 	id = "fire_forge"
@@ -136,11 +137,13 @@
 	if(!(applied in storage.persistent_runes))
 		return
 
+	var/percent = (weapon.max_integrity / 100) * FORGE_RUNE_REPAIR_PERCENT
 	if(weapon.obj_integrity < weapon.max_integrity)
-		weapon.obj_integrity = min(weapon.obj_integrity + 1, weapon.max_integrity)
+		weapon.obj_integrity = min(weapon.obj_integrity + percent, weapon.max_integrity)
 
 	addtimer(CALLBACK(src, PROC_REF(_forge_tick), weapon, storage, applied), 60 SECONDS)
 
+#undef FORGE_RUNE_REPAIR_PERCENT
 
 /datum/rune/fire/brand
 	id = "fire_brand"
