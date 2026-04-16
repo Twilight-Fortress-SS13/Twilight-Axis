@@ -18,6 +18,7 @@
 #define TAT_TRAIT_LEATHER_SUPPLIER "tat_leather_supplier"
 #define TAT_TRAIT_MAIL_SUPPLIER "tat_mail_supplier"
 #define TAT_TRAIT_FIREARMS_SUPPLIER "tat_firearms_supplier"
+#define TAT_TRAIT_ARTIFACTS_SUPPLIER "tat_artifacts_supplier"
 #define TAT_TRAIT_PLATE_SUPPLIER "tat_plate_supplier"
 #define TAT_TRAIT_SPELLBLADE "tat_spellblade"
 
@@ -60,6 +61,7 @@
 #define TAT_SUPPLY_SILVER "silver"
 #define TAT_SUPPLY_STEEL "steel"
 #define TAT_SUPPLY_FIREARMS "firearms"
+#define TAT_SUPPLY_ARTIFACTS "artifacts"
 
 #define TAT_ARMOR_CLOTH "cloth"
 #define TAT_ARMOR_LEATHER "leather"
@@ -182,6 +184,7 @@
 	TAT_TRAIT_DRUID_INITIATE = TAT_TRAIT_ENTRY("Druid Initiate", 4, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants Dendor's druidic rites, direct druid spells, and wise tree alert."), \
 	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 3, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants witch trait and ability to shapeshift yourself into different small creatures."), \
 	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 3, TAT_CATEGORY_UTILITY, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants explosives gifts from your friends. Luck scaled."), \
+	TAT_TRAIT_ARTIFACTS_SUPPLIER = TAT_TRAIT_ENTRY("Artifacts Bearer", 4, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "You're one of the adventurers with stories about your raids. Now, you have one of the deadlist weapons in Grimmoria."), \
 
 #define TAT_AVAILABLE_ITEMS_LIST \
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
@@ -321,8 +324,8 @@
 	/obj/item/rogueweapon/sword/silver = TAT_ITEM_ENTRY("Silver Arming Sword", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
 	/obj/item/rogueweapon/whip/bronze = TAT_ITEM_ENTRY("Bronze Whip", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "whip"), \
 	/obj/item/rogueweapon/whip/silver = TAT_ITEM_ENTRY("Silver Whip", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "whip"), \
-	/obj/item/clothing/gloves/roguetown/knuckles = TAT_ITEM_ENTRY("Knuckles", 3, "clothing", "armor_family", TAT_SUPPLY_STEEL, "gloves"), \
-	/obj/item/clothing/gloves/roguetown/knuckles/bronze = TAT_ITEM_ENTRY("Knuckles Bronze", 2, "clothing", "armor_family", TAT_SUPPLY_BRONZE, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/knuckles = TAT_ITEM_ENTRY("Knuckles", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/knuckles/bronze = TAT_ITEM_ENTRY("Knuckles Bronze", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/angle = TAT_ITEM_ENTRY("Heavy Leather Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves = TAT_ITEM_ENTRY("Grenzelhoft Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/eastgloves1 = TAT_ITEM_ENTRY("Swordsman Gloves", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "gloves"), \
@@ -585,16 +588,16 @@
 	/obj/item/rogueweapon/stoneaxe/battle/steppesman = TAT_ITEM_ENTRY("Aavnic Valaška", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
 	/obj/item/rogueweapon/greataxe/steel/knight = TAT_ITEM_ENTRY("Poleaxe", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
 	/obj/item/rogueweapon/stoneaxe/woodcut/troll = TAT_ITEM_ENTRY("Crude Heavy Axe", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
-	/obj/item/rogueweapon/stoneaxe/battle/ice = TAT_ITEM_ENTRY("Deathfrost Axe", 10, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
+	/obj/item/rogueweapon/stoneaxe/battle/ice = TAT_ITEM_ENTRY("Deathfrost Axe", 10, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "axe"), \
 	/obj/item/rogueweapon/sword/falchion/militia/bronze = TAT_ITEM_ENTRY("kopis", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "sword"), \
 	/obj/item/rogueweapon/whip = TAT_ITEM_ENTRY("Leather Whip", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "whip"), \
 	/obj/item/rogueweapon/whip/nagaika = TAT_ITEM_ENTRY("Nagaika Whip", 2, "weapon", "weapon_supply", TAT_ARMOR_LEATHER, "whip"), \
 	/obj/item/rogueweapon/whip/psywhip_lesser = TAT_ITEM_ENTRY("Psydonic Whip", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "whip"), \
-	/obj/item/clothing/gloves/roguetown/knuckles/psydon = TAT_ITEM_ENTRY("Psydonic Knuckles", 3, "clothing", "armor_family", TAT_SUPPLY_SILVER, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/knuckles/psydon = TAT_ITEM_ENTRY("Psydonic Knuckles", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "gloves"), \
 	/obj/item/rogueweapon/handclaw = TAT_ITEM_ENTRY("Ravager Claws", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "claws"), \
 	/obj/item/rogueweapon/handclaw/gronn/silver = TAT_ITEM_ENTRY("Silver Claws", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "claws"), \
 	/obj/item/rogueweapon/sword/long/oldpsysword = TAT_ITEM_ENTRY("Enduring Longsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
-	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 15, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 15, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "sword"), \
 	/obj/item/quiver/javelin/bronze = TAT_ITEM_ENTRY("Bronze Javelins", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "munition"), \
 	/obj/item/quiver/javelin/iron = TAT_ITEM_ENTRY("Iron Javelins", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
 	/obj/item/quiver/javelin/steel = TAT_ITEM_ENTRY("Steel Javelins", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "munition"), \

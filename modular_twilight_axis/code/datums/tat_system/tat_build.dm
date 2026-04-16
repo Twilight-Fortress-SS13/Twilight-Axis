@@ -241,6 +241,8 @@
 			return !!traits[TAT_TRAIT_STEEL_SUPPLIER]
 		if(TAT_SUPPLY_FIREARMS)
 			return !!traits[TAT_TRAIT_FIREARMS_SUPPLIER]
+		if(TAT_SUPPLY_ARTIFACTS)
+			return !!traits[TAT_TRAIT_ARTIFACTS_SUPPLIER]
 	return FALSE
 
 /datum/tat_build/proc/can_use_armor_family(armor_family)
@@ -571,6 +573,8 @@
 		return TRUE
 	if((traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return TRUE
+	if(traits[TAT_TRAIT_ARTIFACTS_SUPPLIER] && !traits[TAT_TRAIT_PARTY_LEADER])
+		return TRUE
 
 	for(var/trait_a in traits)
 		for(var/trait_b in traits)
@@ -662,6 +666,10 @@
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_MAIL)
 	if(!traits[TAT_TRAIT_PLATE_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_PLATE)
+	if(!traits[TAT_TRAIT_FIREARMS_SUPPLIER])
+		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_FIREARMS)
+	if(!traits[TAT_TRAIT_ARTIFACTS_SUPPLIER])
+		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_ARTIFACTS)
 
 /datum/tat_build/proc/sanitize_magic()
 	if(!islist(magic_config))
@@ -1272,7 +1280,9 @@
 				TAT_TRAIT_DIVINE_INITIATE,
 				TAT_TRAIT_MAGE_INITIATE,
 				TAT_TRAIT_DRUID_INITIATE,
-				TAT_TRAIT_WITCH_INITIATE
+				TAT_TRAIT_WITCH_INITIATE,
+				TAT_TRAIT_ARTIFACTS_SUPPLIER,
+				TAT_TRAIT_FIREARMS_SUPPLIER
 			)
 				continue
 			else
