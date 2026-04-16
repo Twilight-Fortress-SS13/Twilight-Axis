@@ -132,8 +132,10 @@ const SLOT_LABELS: Record<string, string> = {
   neck: 'Neck',
   cloak: 'Cloak',
   armor: 'Armor',
+  suit: 'Suit',
   shirt: 'Shirt',
   pants: 'Pants',
+  under: 'Under',
   gloves: 'Gloves',
   shoes: 'Shoes',
   wrists: 'Wrists',
@@ -145,7 +147,60 @@ const SLOT_LABELS: Record<string, string> = {
   back_l: 'Back Left',
   back_r: 'Back Right',
   mouth: 'Mouth',
+  blackpowder: 'Blackpowder',
+  ranged: 'Ranged',
+  munition: 'Munition',
+  knife: 'Knives',
+  sword: 'Swords',
+  greatsword: 'Greatswords',
+  axe: 'Axes',
+  blunt: 'Blunt',
+  polearm: 'Polearms',
+  whip: 'Whips',
+  misc: 'Misc',
   other: 'Other',
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  clothing: 'Clothing',
+  weapon: 'Weapons',
+  other: 'Other',
+};
+
+const CATEGORY_ORDER: Record<string, number> = {
+  clothing: 0,
+  weapon: 1,
+  other: 2,
+};
+
+const SLOT_ORDER: Record<string, number> = {
+  head: 0,
+  mask: 1,
+  neck: 2,
+  cloak: 3,
+  armor: 4,
+  suit: 5,
+  shirt: 6,
+  under: 7,
+  gloves: 8,
+  wrists: 9,
+  belt: 10,
+  shoes: 11,
+  back: 12,
+
+  blackpowder: 20,
+  ranged: 21,
+  munition: 22,
+  knife: 23,
+  sword: 24,
+  greatsword: 25,
+  axe: 26,
+  blunt: 27,
+  polearm: 28,
+  whip: 29,
+  misc: 30,
+
+  other: 999,
 };
 
 const getSlotLabel = (slot?: string | null) => {
@@ -155,30 +210,64 @@ const getSlotLabel = (slot?: string | null) => {
   return SLOT_LABELS[slot.toLowerCase()] || slot;
 };
 
-const groupEntriesBySlot = <T extends { slot_group?: string | null; name?: string }>(
+const getCategoryLabel = (category?: string | null) => {
+  if (!category) {
+    return 'Other';
+  }
+  return CATEGORY_LABELS[category.toLowerCase()] || category;
+};
+
+const groupEntriesByCategoryAndSlot = <
+  T extends { slot_group?: string | null; category?: string | null; name?: string }
+>(
   entries: Record<string, T>,
-  search: string,
   matcher: (path: string, entry: T) => boolean
 ) => {
-  const grouped: Record<string, Array<[string, T]>> = {};
+  const grouped: Record<string, Record<string, Array<[string, T]>>> = {};
 
   Object.entries(entries || {})
     .filter(([path, entry]) => matcher(path, entry))
     .forEach(([path, entry]) => {
+      const categoryKey = (entry.category || 'other').toLowerCase();
       const slotKey = (entry.slot_group || 'other').toLowerCase();
-      if (!grouped[slotKey]) {
-        grouped[slotKey] = [];
+
+      if (!grouped[categoryKey]) {
+        grouped[categoryKey] = {};
       }
-      grouped[slotKey].push([path, entry]);
+      if (!grouped[categoryKey][slotKey]) {
+        grouped[categoryKey][slotKey] = [];
+      }
+
+      grouped[categoryKey][slotKey].push([path, entry]);
     });
 
-  Object.values(grouped).forEach((items) => {
-    items.sort((a, b) => (a[1].name || a[0]).localeCompare(b[1].name || b[0]));
+  Object.values(grouped).forEach((slotGroups) => {
+    Object.values(slotGroups).forEach((items) => {
+      items.sort((a, b) => (a[1].name || a[0]).localeCompare(b[1].name || b[0]));
+    });
   });
 
-  return Object.entries(grouped).sort((a, b) =>
-    getSlotLabel(a[0]).localeCompare(getSlotLabel(b[0]))
-  );
+  return Object.entries(grouped)
+    .sort(([catA], [catB]) => {
+      const aOrder = CATEGORY_ORDER[catA] ?? CATEGORY_ORDER.other;
+      const bOrder = CATEGORY_ORDER[catB] ?? CATEGORY_ORDER.other;
+      if (aOrder !== bOrder) {
+        return aOrder - bOrder;
+      }
+      return getCategoryLabel(catA).localeCompare(getCategoryLabel(catB));
+    })
+    .map(([categoryKey, slotGroups]) => {
+      const sortedSlots = Object.entries(slotGroups).sort(([slotA], [slotB]) => {
+        const aOrder = SLOT_ORDER[slotA] ?? SLOT_ORDER.other;
+        const bOrder = SLOT_ORDER[slotB] ?? SLOT_ORDER.other;
+        if (aOrder !== bOrder) {
+          return aOrder - bOrder;
+        }
+        return getSlotLabel(slotA).localeCompare(getSlotLabel(slotB));
+      });
+
+      return [categoryKey, sortedSlots] as const;
+    });
 };
 
 const NumericRow = ({
@@ -668,9 +757,8 @@ const ItemsTab = ({
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const groups = useMemo(() => {
-    return groupEntriesBySlot(
+    return groupEntriesByCategoryAndSlot(
       data.available_items || {},
-      search,
       (itemPath, entry) =>
         matchesSearch(
           search,
@@ -690,44 +778,59 @@ const ItemsTab = ({
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
         <Stack vertical>
-          {groups.map(([slotKey, items]) => (
-            <Box key={slotKey} mb={1}>
+          {groups.map(([categoryKey, slotGroups]) => (
+            <Box key={categoryKey} mb={2}>
               <Box
                 bold
-                mb={0.5}
+                mb={1}
                 style={{
-                  fontSize: '14px',
+                  fontSize: '16px',
                   letterSpacing: '0.5px',
-                  opacity: 0.9,
+                  color: '#f0c35a',
                 }}>
-                {getSlotLabel(slotKey)}
+                {getCategoryLabel(categoryKey)}
               </Box>
 
-              <Stack wrap>
-                {items.map(([itemPath, entry]) => (
-                  <ItemTile
-                    key={itemPath}
-                    name={entry.name || itemPath}
-                    topRightText={`${entry.cost || 0} pts`}
-                    bottomLeftText={(entry.amount || 0) > 0 ? entry.amount : undefined}
-                    icon={entry.icon}
-                    onLeftClick={() => act('add_item', { path: itemPath, amount: 1 })}
-                    onRightClick={() => act('remove_item', { path: itemPath, amount: 1 })}
-                    onHoverStart={() =>
-                      setHoveredItem({
-                        name: entry.name || itemPath,
-                        slot: getSlotLabel(entry.slot_group),
-                        category: entry.category || 'Unknown',
-                        costText: `${entry.cost || 0} pts`,
-                        total: entry.amount || 0,
-                        leftHelp: 'add item',
-                        rightHelp: 'remove item',
-                      })
-                    }
-                    onHoverEnd={() => setHoveredItem(null)}
-                  />
-                ))}
-              </Stack>
+              {slotGroups.map(([slotKey, items]) => (
+                <Box key={`${categoryKey}-${slotKey}`} mb={1}>
+                  <Box
+                    bold
+                    mb={0.5}
+                    style={{
+                      fontSize: '14px',
+                      letterSpacing: '0.5px',
+                      opacity: 0.9,
+                    }}>
+                    {getSlotLabel(slotKey)}
+                  </Box>
+
+                  <Stack wrap>
+                    {items.map(([itemPath, entry]) => (
+                      <ItemTile
+                        key={itemPath}
+                        name={entry.name || itemPath}
+                        topRightText={`${entry.cost || 0} pts`}
+                        bottomLeftText={(entry.amount || 0) > 0 ? entry.amount : undefined}
+                        icon={entry.icon}
+                        onLeftClick={() => act('add_item', { path: itemPath, amount: 1 })}
+                        onRightClick={() => act('remove_item', { path: itemPath, amount: 1 })}
+                        onHoverStart={() =>
+                          setHoveredItem({
+                            name: entry.name || itemPath,
+                            slot: getSlotLabel(entry.slot_group),
+                            category: getCategoryLabel(entry.category),
+                            costText: `${entry.cost || 0} pts`,
+                            total: entry.amount || 0,
+                            leftHelp: 'add item',
+                            rightHelp: 'remove item',
+                          })
+                        }
+                        onHoverEnd={() => setHoveredItem(null)}
+                      />
+                    ))}
+                  </Stack>
+                </Box>
+              ))}
             </Box>
           ))}
         </Stack>
@@ -748,9 +851,8 @@ const LoadoutTab = ({
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const groups = useMemo(() => {
-    return groupEntriesBySlot(
+    return groupEntriesByCategoryAndSlot(
       data.loadout || {},
-      search,
       (itemPath, entry) =>
         matchesSearch(search, itemPath, entry.name, entry.category, entry.slot_group)
     );
@@ -762,58 +864,73 @@ const LoadoutTab = ({
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
         <Stack vertical>
-          {groups.map(([slotKey, items]) => (
-            <Box key={slotKey} mb={1}>
+          {groups.map(([categoryKey, slotGroups]) => (
+            <Box key={categoryKey} mb={2}>
               <Box
                 bold
-                mb={0.5}
+                mb={1}
                 style={{
-                  fontSize: '14px',
+                  fontSize: '16px',
                   letterSpacing: '0.5px',
-                  opacity: 0.9,
+                  color: '#f0c35a',
                 }}>
-                {getSlotLabel(slotKey)}
+                {getCategoryLabel(categoryKey)}
               </Box>
 
-              <Stack wrap>
-                {items.map(([itemPath, entry]) => {
-                  const amount = entry.amount || 0;
-                  const bag = Math.max(0, Math.min(entry.bag || 0, amount));
-                  const equip = Math.max(0, amount - bag);
-                  const glow =
-                    bag <= 0
-                      ? 'rgba(80, 220, 120, 0.75)'
-                      : bag >= amount
-                        ? 'rgba(255, 160, 64, 0.8)'
-                        : 'rgba(180, 180, 180, 0.45)';
+              {slotGroups.map(([slotKey, items]) => (
+                <Box key={`${categoryKey}-${slotKey}`} mb={1}>
+                  <Box
+                    bold
+                    mb={0.5}
+                    style={{
+                      fontSize: '14px',
+                      letterSpacing: '0.5px',
+                      opacity: 0.9,
+                    }}>
+                    {getSlotLabel(slotKey)}
+                  </Box>
 
-                  return (
-                    <ItemTile
-                      key={itemPath}
-                      name={entry.name || itemPath}
-                      topRightText={amount}
-                      bottomLeftText={bag > 0 ? bag : undefined}
-                      icon={entry.icon}
-                      glow={glow}
-                      onLeftClick={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
-                      onRightClick={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
-                      onHoverStart={() =>
-                        setHoveredItem({
-                          name: entry.name || itemPath,
-                          slot: getSlotLabel(entry.slot_group),
-                          category: entry.category || 'Unknown',
-                          total: amount,
-                          bag,
-                          equip,
-                          leftHelp: '+1 to bag',
-                          rightHelp: '-1 from bag / back to equip',
-                        })
-                      }
-                      onHoverEnd={() => setHoveredItem(null)}
-                    />
-                  );
-                })}
-              </Stack>
+                  <Stack wrap>
+                    {items.map(([itemPath, entry]) => {
+                      const amount = entry.amount || 0;
+                      const bag = Math.max(0, Math.min(entry.bag || 0, amount));
+                      const equip = Math.max(0, amount - bag);
+                      const glow =
+                        bag <= 0
+                          ? 'rgba(80, 220, 120, 0.75)'
+                          : bag >= amount
+                            ? 'rgba(255, 160, 64, 0.8)'
+                            : 'rgba(180, 180, 180, 0.45)';
+
+                      return (
+                        <ItemTile
+                          key={itemPath}
+                          name={entry.name || itemPath}
+                          topRightText={amount}
+                          bottomLeftText={bag > 0 ? bag : undefined}
+                          icon={entry.icon}
+                          glow={glow}
+                          onLeftClick={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
+                          onRightClick={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
+                          onHoverStart={() =>
+                            setHoveredItem({
+                              name: entry.name || itemPath,
+                              slot: getSlotLabel(entry.slot_group),
+                              category: getCategoryLabel(entry.category),
+                              total: amount,
+                              bag,
+                              equip,
+                              leftHelp: '+1 to bag',
+                              rightHelp: '-1 from bag / back to equip',
+                            })
+                          }
+                          onHoverEnd={() => setHoveredItem(null)}
+                        />
+                      );
+                    })}
+                  </Stack>
+                </Box>
+              ))}
             </Box>
           ))}
         </Stack>
