@@ -614,3 +614,14 @@
 	/obj/item/rogueweapon/mace/mushroom = TAT_ITEM_ENTRY("Lithmyc Mace", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "blunt"), \
 	/obj/item/rogueweapon/stoneaxe/battle/ice = TAT_ITEM_ENTRY("Deathfrost Axe", 10, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "axe"), \
 	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 15, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "sword"), \
+	/obj/item/rope/chain = TAT_ITEM_ENTRY("Chain", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rope = TAT_ITEM_ENTRY("Rope", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/bomb/smoke = TAT_ITEM_ENTRY("Smoke Bomb", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/folding_alchstation_stored = TAT_ITEM_ENTRY("Rope", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Rope", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/ration = TAT_ITEM_ENTRY("Ration paper", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/natural/bundle/cloth/bandage/full = TAT_ITEM_ENTRY("Roll of Bandages", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/tent_kit = TAT_ITEM_ENTRY("Tent", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/tent_kit/ger = TAT_ITEM_ENTRY("Ger Tent", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/tent_kit/yurt = TAT_ITEM_ENTRY("Yurt Tent", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/reagent_containers/glass/bottle/waterskin = TAT_ITEM_ENTRY("Water Skin", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
