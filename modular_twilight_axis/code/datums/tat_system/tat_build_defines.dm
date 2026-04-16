@@ -180,7 +180,7 @@
 	TAT_TRAIT_MAGE_MINOR_SLOT = TAT_TRAIT_ENTRY("Arcane Minor Slot", 1, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Mage Initiate. Grants +1 minor spell slot."), \
 	TAT_TRAIT_MAGE_UTILITY_SLOT = TAT_TRAIT_ENTRY("Arcane Utility Slot", 1, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Mage Initiate. Grants +1 utility spell slot."), \
 	TAT_TRAIT_DRUID_INITIATE = TAT_TRAIT_ENTRY("Druid Initiate", 4, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants Dendor's druidic rites, direct druid spells, and wise tree alert."), \
-	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 1, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants witch trait and ability to shapeshift yourself into different small creatures."), \
+	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 3, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants witch trait and ability to shapeshift yourself into different small creatures."), \
 
 #define TAT_AVAILABLE_ITEMS_LIST \
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
