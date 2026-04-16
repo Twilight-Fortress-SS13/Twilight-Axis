@@ -181,6 +181,7 @@
 	TAT_TRAIT_MAGE_UTILITY_SLOT = TAT_TRAIT_ENTRY("Arcane Utility Slot", 1, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Mage Initiate. Grants +1 utility spell slot."), \
 	TAT_TRAIT_DRUID_INITIATE = TAT_TRAIT_ENTRY("Druid Initiate", 4, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants Dendor's druidic rites, direct druid spells, and wise tree alert."), \
 	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 3, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants witch trait and ability to shapeshift yourself into different small creatures."), \
+	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 3, TAT_CATEGORY_UTILITY, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants explosives gifts from your friends. Luck scaled."), \
 
 #define TAT_AVAILABLE_ITEMS_LIST \
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
@@ -208,8 +209,8 @@
 	/obj/item/quiver/bolt/pyro = TAT_ITEM_ENTRY("Pyro Bolts", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
 	/obj/item/quiver/bolt/water = TAT_ITEM_ENTRY("Water Bolts", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
 	/obj/item/quiver/bolt/light = TAT_ITEM_ENTRY("Light Bolts", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
-	/obj/item/quiver/silver = TAT_ITEM_ENTRY("Silver Arrows", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "munition"), \
-	/obj/item/quiver/bolt/silver = TAT_ITEM_ENTRY("Silver Bolts", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "munition"), \
+	/obj/item/quiver/silver = TAT_ITEM_ENTRY("Silver Arrows", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "munition"), \
+	/obj/item/quiver/bolt/silver = TAT_ITEM_ENTRY("Silver Bolts", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "munition"), \
 	/obj/item/rogueweapon/eaglebeak = TAT_ITEM_ENTRY("Eagle's Beak", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/eaglebeak/lucerne = TAT_ITEM_ENTRY("Lucerne", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/rogueweapon/shovel/silver/preblessed = TAT_ITEM_ENTRY("Silver Shovel", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "polearm"), \
@@ -244,7 +245,7 @@
 	/obj/item/rogueweapon/huntingknife/scissors/steel = TAT_ITEM_ENTRY("Steel Scissors", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
 	/obj/item/rogueweapon/katar = TAT_ITEM_ENTRY("Katar", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "knife"), \
 	/obj/item/rogueweapon/katar/bronze = TAT_ITEM_ENTRY("Bronze Katar", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "knife"), \
-	/obj/item/rogueweapon/katar/bronze/gladiator = TAT_ITEM_ENTRY("Bronze Gladiator Katar", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "knife"), \
+	/obj/item/rogueweapon/katar/bronze/gladiator = TAT_ITEM_ENTRY("Arbelos", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "knife"), \
 	/obj/item/rogueweapon/katar/punchdagger = TAT_ITEM_ENTRY("Punch Dagger", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
 	/obj/item/rogueweapon/katar/silver = TAT_ITEM_ENTRY("Silver Katar", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "knife"), \
 	/obj/item/rogueweapon/mace = TAT_ITEM_ENTRY("Mace", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
@@ -268,7 +269,7 @@
 	/obj/item/rogueweapon/flail/sflail = TAT_ITEM_ENTRY("Steel Flail", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/flail/sflail/silver = TAT_ITEM_ENTRY("Silver Morningstar", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "blunt"), \
 	/obj/item/rogueweapon/spear = TAT_ITEM_ENTRY("Spear", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
-	/obj/item/rogueweapon/spear/assegai = TAT_ITEM_ENTRY("Assegai", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
+	/obj/item/rogueweapon/spear/assegai = TAT_ITEM_ENTRY("Steel Assegai", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/assegai/iron = TAT_ITEM_ENTRY("Iron Assegai", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/rogueweapon/spear/boar = TAT_ITEM_ENTRY("Boar Spear", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/bronze = TAT_ITEM_ENTRY("Bronze Spear", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "polearm"), \
@@ -279,7 +280,7 @@
 	/obj/item/rogueweapon/spear/partizan = TAT_ITEM_ENTRY("Partizan", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/short = TAT_ITEM_ENTRY("Short Spear", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/silver = TAT_ITEM_ENTRY("Silver Spear", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "polearm"), \
-	/obj/item/rogueweapon/spear/trident = TAT_ITEM_ENTRY("Trident", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
+	/obj/item/rogueweapon/spear/trident = TAT_ITEM_ENTRY("BronzeTrident", 4, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "polearm"), \
 	/obj/item/rogueweapon/stoneaxe/battle = TAT_ITEM_ENTRY("Battle Axe", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
 	/obj/item/rogueweapon/stoneaxe/woodcut = TAT_ITEM_ENTRY("Woodcutter Axe", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "axe"), \
 	/obj/item/rogueweapon/stoneaxe/woodcut/bronze = TAT_ITEM_ENTRY("Bronze Axe", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "axe"), \
@@ -491,7 +492,7 @@
 	/obj/item/storage/belt/rogue/leather/knifebelt/black/steel = TAT_ITEM_ENTRY("Steel Tossblade Belt", 2, "clothing", "armor_family", TAT_SUPPLY_STEEL, "belt"), \
 	/obj/item/storage/belt/rogue/leather/knifebelt/black/silver = TAT_ITEM_ENTRY("Silver Tossblade belt", 3, "clothing", "armor_family", TAT_SUPPLY_SILVER, "belt"), \
 	/obj/item/storage/belt/rogue/leather/knifebelt/black/kazengun = TAT_ITEM_ENTRY("Easern tossbale belt", 3, "clothing", "armor_family", TAT_SUPPLY_STEEL, "belt"), \
-	/obj/item/rogueweapon/spear/psyspear/old = TAT_ITEM_ENTRY("Psydonic Spear", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "polearm"), \
+	/obj/item/rogueweapon/spear/psyspear/old = TAT_ITEM_ENTRY("Enduring Spear", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/mace/cudgel/psy/old = TAT_ITEM_ENTRY("Psydonic Cudgel", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm = TAT_ITEM_ENTRY("Psydonic Helm", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/psybucket = TAT_ITEM_ENTRY("Psydonic Bucket", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
@@ -586,3 +587,26 @@
 	/obj/item/rogueweapon/stoneaxe/woodcut/troll = TAT_ITEM_ENTRY("Crude Heavy Axe", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
 	/obj/item/rogueweapon/stoneaxe/battle/ice = TAT_ITEM_ENTRY("Deathfrost Axe", 7, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
 	/obj/item/rogueweapon/sword/falchion/militia/bronze = TAT_ITEM_ENTRY("kopis", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "sword"), \
+	/obj/item/rogueweapon/whip = TAT_ITEM_ENTRY("Leather Whip", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "whip"), \
+	/obj/item/rogueweapon/whip/nagaika = TAT_ITEM_ENTRY("Nagaika Whip", 2, "weapon", "weapon_supply", TAT_ARMOR_LEATHER, "whip"), \
+	/obj/item/rogueweapon/whip/psywhip_lesser = TAT_ITEM_ENTRY("Psydonic Whip", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "whip"), \
+	/obj/item/clothing/gloves/roguetown/knuckles/psydon = TAT_ITEM_ENTRY("Psydonic Knuckles", 3, "clothing", "armor_family", TAT_SUPPLY_SILVER, "gloves"), \
+	/obj/item/rogueweapon/handclaw = TAT_ITEM_ENTRY("Ravager Claws", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "claws"), \
+	/obj/item/rogueweapon/handclaw/gronn/silver = TAT_ITEM_ENTRY("Silver Claws", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "claws"), \
+	/obj/item/rogueweapon/sword/long/oldpsysword = TAT_ITEM_ENTRY("Enduring Longsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 15, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/quiver/javelin/bronze = TAT_ITEM_ENTRY("Bronze Javelins", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "munition"), \
+	/obj/item/quiver/javelin/iron = TAT_ITEM_ENTRY("Iron Javelins", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
+	/obj/item/quiver/javelin/steel = TAT_ITEM_ENTRY("Steel Javelins", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "munition"), \
+	/obj/item/quiver/bolt/bronze = TAT_ITEM_ENTRY("Bronze Bolts", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "munition"), \
+	/obj/item/quiver/Warrows = TAT_ITEM_ENTRY("Water Arrows", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
+	/obj/item/twstrap/bombstrap/firebomb = TAT_ITEM_ENTRY("Explosive's Belt", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "Back"), \
+	/obj/item/twstrap/bombstrap/bomb_and_fire = TAT_ITEM_ENTRY("Greater Explosive's Belt", 5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "Back"), \
+	/obj/item/quiver/sling/fire_pot = TAT_ITEM_ENTRY("Fire Pots for Slings", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
+	/obj/item/rogueweapon/wand = TAT_ITEM_ENTRY("Lesser Wand", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
+	/obj/item/rogueweapon/wand/greater = TAT_ITEM_ENTRY("Greater Wand", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
+	/obj/item/rogueweapon/woodstaff = TAT_ITEM_ENTRY("Wooden Staff", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
+	/obj/item/rogueweapon/woodstaff/implement = TAT_ITEM_ENTRY("Lesser Staff", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
+	/obj/item/rogueweapon/woodstaff/implement/greater = TAT_ITEM_ENTRY("Greater Staff", 5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
+	/obj/item/rogueweapon/spear/billhook = TAT_ITEM_ENTRY("Billhook", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
+	/obj/item/rogueweapon/spear/stone/copper = TAT_ITEM_ENTRY("Copper Spear", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
