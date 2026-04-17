@@ -146,7 +146,7 @@
 	desc = "Имеет шанс наложить стаггер."
 	color = "#8c7355"
 	cooldown = 30 SECONDS
-	proc_chance = 15
+	proc_chance = 5
 	is_persistent = FALSE
 	carve_ingredients = list(
 		/obj/item/natural/dirtclod = 1,
