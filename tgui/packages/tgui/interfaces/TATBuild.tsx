@@ -22,10 +22,14 @@ type StatEntry = {
 type SkillEntry = {
   name: string;
   desc?: string;
+  is_combat: boolean;
+  category?: string;
+};
+
+type SkillState = {
   level: number;
   cap: number;
   next_cost: number;
-  is_combat: boolean;
 };
 
 type TraitEntry = {
@@ -33,7 +37,6 @@ type TraitEntry = {
   cost: number;
   category: string;
   category_name: string;
-  selected: boolean;
   desc?: string;
 };
 
@@ -44,31 +47,27 @@ type ItemEntry = {
   unlock_type?: string;
   unlock_key?: string;
   slot_group?: string | null;
-  amount: number;
-  unlocked: boolean;
   icon?: string | null;
   icon_state?: string | null;
 };
 
-type LoadoutEntry = {
-  name: string;
-  cost: number;
-  category?: string;
-  slot_group?: string | null;
+type ItemState = {
+  amount: number;
+  unlocked: boolean;
+};
+
+type LoadoutState = {
   amount: number;
   equip: number;
   bag: number;
-  icon?: string | null;
-  icon_state?: string | null;
 };
 
 type Data = {
   stats: Record<string, number>;
-  skills: Record<string, SkillEntry>;
+  skills: Record<string, SkillState>;
   traits: string[];
-  trait_entries?: Record<string, TraitEntry>;
-  items: Record<string, ItemEntry>;
-  loadout: Record<string, LoadoutEntry>;
+  items: Record<string, ItemState>;
+  loadout: Record<string, LoadoutState>;
 
   available_stats: Record<string, StatEntry>;
   available_skills: Record<string, SkillEntry>;
@@ -111,6 +110,9 @@ type HoverCardData = {
   leftHelp: string;
   rightHelp: string;
 };
+
+type ItemViewEntry = ItemEntry & ItemState;
+type LoadoutViewEntry = ItemEntry & LoadoutState;
 
 const normalizeSearch = (value: unknown): string =>
   String(value ?? '')
@@ -187,7 +189,6 @@ const SLOT_ORDER: Record<string, number> = {
   belt: 10,
   shoes: 11,
   back: 12,
-
   blackpowder: 20,
   ranged: 21,
   munition: 22,
@@ -199,7 +200,6 @@ const SLOT_ORDER: Record<string, number> = {
   polearm: 28,
   whip: 29,
   misc: 30,
-
   other: 999,
 };
 
@@ -588,7 +588,8 @@ const SkillsTab = ({
           skillPath,
           entry.name,
           entry.desc,
-          entry.is_combat ? 'combat' : 'non-combat'
+          entry.is_combat ? 'combat' : 'non-combat',
+          entry.category
         )
       )
       .sort((a, b) => {
@@ -605,25 +606,32 @@ const SkillsTab = ({
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
         <Stack vertical>
-          {rows.map(([skillPath, entry]) => (
-            <NumericRow
-              key={skillPath}
-              title={entry.name || skillPath}
-              value={entry.level || 0}
-              onAdd={() => act('add_skill', { path: skillPath, amount: 1 })}
-              onRemove={() => act('remove_skill', { path: skillPath, amount: 1 })}
-              disabledAdd={(entry.level || 0) >= (entry.cap || 0)}
-              disabledRemove={(entry.level || 0) <= 0}
-              extra={
-                <>
-                  <Box>
-                    {entry.is_combat ? 'Combat' : 'Non-combat'} | Cap: {entry.cap} | Next cost: {entry.next_cost}
-                  </Box>
-                  {!!entry.desc && <Box mt={0.5}>{entry.desc}</Box>}
-                </>
-              }
-            />
-          ))}
+          {rows.map(([skillPath, entry]) => {
+            const state = data.skills?.[skillPath];
+            const level = state?.level || 0;
+            const cap = state?.cap || 0;
+            const nextCost = state?.next_cost || 1;
+
+            return (
+              <NumericRow
+                key={skillPath}
+                title={entry.name || skillPath}
+                value={level}
+                onAdd={() => act('add_skill', { path: skillPath, amount: 1 })}
+                onRemove={() => act('remove_skill', { path: skillPath, amount: 1 })}
+                disabledAdd={level >= cap}
+                disabledRemove={level <= 0}
+                extra={
+                  <>
+                    <Box>
+                      {entry.is_combat ? 'Combat' : 'Non-combat'} | Cap: {cap} | Next cost: {nextCost}
+                    </Box>
+                    {!!entry.desc && <Box mt={0.5}>{entry.desc}</Box>}
+                  </>
+                }
+              />
+            );
+          })}
         </Stack>
       )}
     </Section>
@@ -659,7 +667,8 @@ const TraitsTab = ({
   act: Function;
   search: string;
 }) => {
-  const traitEntries = data.available_traits || {};
+  const selectedTraits = useMemo(() => new Set(data.traits || []), [data.traits]);
+
   const grouped = useMemo(() => {
     const groups: Record<
       string,
@@ -670,7 +679,7 @@ const TraitsTab = ({
       }
     > = {};
 
-    Object.entries(traitEntries)
+    Object.entries(data.available_traits || {})
       .filter(([traitId, entry]) =>
         matchesSearch(search, traitId, entry.name, entry.desc, entry.category, entry.category_name)
       )
@@ -678,7 +687,7 @@ const TraitsTab = ({
         const category = entry.category || 'other';
         const categoryName = entry.category_name || 'Other';
         if (!groups[category]) groups[category] = { categoryName, available: [], selected: [] };
-        if (entry.selected) groups[category].selected.push([traitId, entry]);
+        if (selectedTraits.has(traitId)) groups[category].selected.push([traitId, entry]);
         else groups[category].available.push([traitId, entry]);
       });
 
@@ -688,7 +697,7 @@ const TraitsTab = ({
     });
 
     return Object.entries(groups).sort((a, b) => a[1].categoryName.localeCompare(b[1].categoryName));
-  }, [traitEntries, search]);
+  }, [data.available_traits, search, selectedTraits]);
 
   return (
     <Section title="Traits">
@@ -746,20 +755,21 @@ const TraitsTab = ({
 };
 
 const ItemsTab = ({
-  data,
+  itemEntries,
   act,
   search,
   setHoveredItem,
 }: {
-  data: Data;
+  itemEntries: Record<string, ItemViewEntry>;
   act: Function;
   search: string;
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const groups = useMemo(() => {
     return groupEntriesByCategoryAndSlot(
-      data.available_items || {},
+      itemEntries || {},
       (itemPath, entry) =>
+        !!entry.unlocked &&
         matchesSearch(
           search,
           itemPath,
@@ -770,7 +780,7 @@ const ItemsTab = ({
           entry.unlock_key
         )
     );
-  }, [data.available_items, search]);
+  }, [itemEntries, search]);
 
   return (
     <Section title="Items">
@@ -780,27 +790,13 @@ const ItemsTab = ({
         <Stack vertical>
           {groups.map(([categoryKey, slotGroups]) => (
             <Box key={categoryKey} mb={2}>
-              <Box
-                bold
-                mb={1}
-                style={{
-                  fontSize: '16px',
-                  letterSpacing: '0.5px',
-                  color: '#f0c35a',
-                }}>
+              <Box bold mb={1} style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
                 {getCategoryLabel(categoryKey)}
               </Box>
 
               {slotGroups.map(([slotKey, items]) => (
                 <Box key={`${categoryKey}-${slotKey}`} mb={1}>
-                  <Box
-                    bold
-                    mb={0.5}
-                    style={{
-                      fontSize: '14px',
-                      letterSpacing: '0.5px',
-                      opacity: 0.9,
-                    }}>
+                  <Box bold mb={0.5} style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
                     {getSlotLabel(slotKey)}
                   </Box>
 
@@ -840,23 +836,22 @@ const ItemsTab = ({
 };
 
 const LoadoutTab = ({
-  data,
+  loadoutEntries,
   act,
   search,
   setHoveredItem,
 }: {
-  data: Data;
+  loadoutEntries: Record<string, LoadoutViewEntry>;
   act: Function;
   search: string;
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const groups = useMemo(() => {
     return groupEntriesByCategoryAndSlot(
-      data.loadout || {},
-      (itemPath, entry) =>
-        matchesSearch(search, itemPath, entry.name, entry.category, entry.slot_group)
+      loadoutEntries || {},
+      (itemPath, entry) => matchesSearch(search, itemPath, entry.name, entry.category, entry.slot_group)
     );
-  }, [data.loadout, search]);
+  }, [loadoutEntries, search]);
 
   return (
     <Section title="Loadout">
@@ -866,27 +861,13 @@ const LoadoutTab = ({
         <Stack vertical>
           {groups.map(([categoryKey, slotGroups]) => (
             <Box key={categoryKey} mb={2}>
-              <Box
-                bold
-                mb={1}
-                style={{
-                  fontSize: '16px',
-                  letterSpacing: '0.5px',
-                  color: '#f0c35a',
-                }}>
+              <Box bold mb={1} style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
                 {getCategoryLabel(categoryKey)}
               </Box>
 
               {slotGroups.map(([slotKey, items]) => (
                 <Box key={`${categoryKey}-${slotKey}`} mb={1}>
-                  <Box
-                    bold
-                    mb={0.5}
-                    style={{
-                      fontSize: '14px',
-                      letterSpacing: '0.5px',
-                      opacity: 0.9,
-                    }}>
+                  <Box bold mb={0.5} style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
                     {getSlotLabel(slotKey)}
                   </Box>
 
@@ -945,6 +926,45 @@ export const TATBuild = () => {
   const [search, setSearch] = useState('');
   const [hoveredItem, setHoveredItem] = useState<HoverCardData | null>(null);
 
+  const itemEntries = useMemo<Record<string, ItemViewEntry>>(() => {
+    const result: Record<string, ItemViewEntry> = {};
+    const staticEntries = data.available_items || {};
+    const states = data.items || {};
+
+    Object.entries(staticEntries).forEach(([itemPath, entry]) => {
+      const state = states[itemPath];
+      result[itemPath] = {
+        ...entry,
+        amount: state?.amount || 0,
+        unlocked: !!state?.unlocked,
+      };
+    });
+
+    return result;
+  }, [data.available_items, data.items]);
+
+  const loadoutEntries = useMemo<Record<string, LoadoutViewEntry>>(() => {
+    const result: Record<string, LoadoutViewEntry> = {};
+    const staticEntries = data.available_items || {};
+    const loadoutStates = data.loadout || {};
+
+    Object.entries(loadoutStates).forEach(([itemPath, state]) => {
+      const entry = staticEntries[itemPath];
+      if (!entry) {
+        return;
+      }
+
+      result[itemPath] = {
+        ...entry,
+        amount: state.amount || 0,
+        equip: state.equip || 0,
+        bag: state.bag || 0,
+      };
+    });
+
+    return result;
+  }, [data.available_items, data.loadout]);
+
   return (
     <Window title="TAT Build" width={900} height={790}>
       <Window.Content scrollable>
@@ -954,12 +974,7 @@ export const TATBuild = () => {
           <Section title="Search">
             <Stack align="center">
               <Stack.Item grow>
-                <Input
-                  fluid
-                  placeholder={`Search in ${tab}...`}
-                  value={search}
-                  onChange={(value) => setSearch(String(value))}
-                />
+                <Input fluid placeholder={`Search in ${tab}...`} value={search} onChange={(value) => setSearch(String(value))} />
               </Stack.Item>
               <Stack.Item>
                 <Button disabled={!search} onClick={() => setSearch('')}>
@@ -969,87 +984,40 @@ export const TATBuild = () => {
             </Stack>
           </Section>
 
-          {data.dirty ? (
-            <NoticeBox>Build has unsaved changes.</NoticeBox>
-          ) : (
-            <NoticeBox>Build is saved.</NoticeBox>
-          )}
-
-          {!data.can_save && (
-            <NoticeBox>Current build is invalid or exceeds available points.</NoticeBox>
-          )}
+          {data.dirty ? <NoticeBox>Build has unsaved changes.</NoticeBox> : <NoticeBox>Build is saved.</NoticeBox>}
+          {!data.can_save && <NoticeBox>Current build is invalid or exceeds available points.</NoticeBox>}
 
           <Section>
             <Tabs fluid>
-              <Tabs.Tab selected={tab === 'stats'} onClick={() => setTab('stats')}>
-                Stats
-              </Tabs.Tab>
-              <Tabs.Tab selected={tab === 'skills'} onClick={() => setTab('skills')}>
-                Skills
-              </Tabs.Tab>
-              <Tabs.Tab selected={tab === 'traits'} onClick={() => setTab('traits')}>
-                Traits
-              </Tabs.Tab>
-              <Tabs.Tab selected={tab === 'items'} onClick={() => setTab('items')}>
-                Items
-              </Tabs.Tab>
-              <Tabs.Tab selected={tab === 'loadout'} onClick={() => setTab('loadout')}>
-                Loadout
-              </Tabs.Tab>
+              <Tabs.Tab selected={tab === 'stats'} onClick={() => setTab('stats')}>Stats</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'skills'} onClick={() => setTab('skills')}>Skills</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'traits'} onClick={() => setTab('traits')}>Traits</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'items'} onClick={() => setTab('items')}>Items</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'loadout'} onClick={() => setTab('loadout')}>Loadout</Tabs.Tab>
             </Tabs>
           </Section>
 
           {tab === 'stats' && <StatsTab data={data} act={act} search={search} />}
           {tab === 'skills' && <SkillsTab data={data} act={act} search={search} />}
           {tab === 'traits' && <TraitsTab data={data} act={act} search={search} />}
-          {tab === 'items' && (
-            <ItemsTab
-              data={data}
-              act={act}
-              search={search}
-              setHoveredItem={setHoveredItem}
-            />
-          )}
-          {tab === 'loadout' && (
-            <LoadoutTab
-              data={data}
-              act={act}
-              search={search}
-              setHoveredItem={setHoveredItem}
-            />
-          )}
+          {tab === 'items' && <ItemsTab itemEntries={itemEntries} act={act} search={search} setHoveredItem={setHoveredItem} />}
+          {tab === 'loadout' && <LoadoutTab loadoutEntries={loadoutEntries} act={act} search={search} setHoveredItem={setHoveredItem} />}
 
           <Section>
             <Stack justify="space-between" wrap>
               <Stack.Item>
                 <Stack wrap>
-                  <Stack.Item>
-                    <Button onClick={() => act('reset_stats')}>Reset Stats</Button>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Button onClick={() => act('reset_skills')}>Reset Skills</Button>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Button onClick={() => act('reset_traits')}>Reset Traits</Button>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Button onClick={() => act('reset_items')}>Reset Items</Button>
-                  </Stack.Item>
+                  <Stack.Item><Button onClick={() => act('reset_stats')}>Reset Stats</Button></Stack.Item>
+                  <Stack.Item><Button onClick={() => act('reset_skills')}>Reset Skills</Button></Stack.Item>
+                  <Stack.Item><Button onClick={() => act('reset_traits')}>Reset Traits</Button></Stack.Item>
+                  <Stack.Item><Button onClick={() => act('reset_items')}>Reset Items</Button></Stack.Item>
                 </Stack>
               </Stack.Item>
 
               <Stack.Item>
                 <Stack>
-                  <Stack.Item>
-                    <Button color="average" onClick={() => act('reset_all')}>
-                      Reset All
-                    </Button>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Button color="good" disabled={!data.can_save} onClick={() => act('save')}>
-                      Save
-                    </Button>
-                  </Stack.Item>
+                  <Stack.Item><Button color="average" onClick={() => act('reset_all')}>Reset All</Button></Stack.Item>
+                  <Stack.Item><Button color="good" disabled={!data.can_save} onClick={() => act('save')}>Save</Button></Stack.Item>
                 </Stack>
               </Stack.Item>
             </Stack>

@@ -374,18 +374,25 @@
 		result[stat_id] = available_stats[stat_id]
 	return result
 
-/datum/tat_build/proc/build_ui_skills()
+/datum/tat_build/proc/build_ui_skill_entries()
 	var/list/result = list()
 	for(var/skill_type in available_skills)
 		var/list/entry = available_skills[skill_type]
 		result["[skill_type]"] = list(
 			"name" = entry["name"],
 			"desc" = entry["desc"],
+			"category" = entry["category"],
+			"is_combat" = !!entry["is_combat"],
+		)
+	return result
+
+/datum/tat_build/proc/build_ui_skills()
+	var/list/result = list()
+	for(var/skill_type in available_skills)
+		result["[skill_type]"] = list(
 			"level" = get_skill_value(skill_type),
 			"cap" = get_skill_cap(skill_type),
 			"next_cost" = get_skill_next_cost(skill_type),
-			"is_combat" = !!entry["is_combat"],
-			"category" = entry["category"],
 		)
 	return result
 
@@ -395,7 +402,7 @@
 		result += trait_id
 	return result
 
-/datum/tat_build/proc/build_ui_traits()
+/datum/tat_build/proc/build_ui_trait_entries()
 	var/list/result = list()
 	for(var/trait_id in available_traits)
 		var/list/entry = available_traits[trait_id]
@@ -405,7 +412,6 @@
 			"category" = entry["category"],
 			"category_name" = entry["category_name"],
 			"desc" = entry["desc"],
-			"selected" = !!traits[trait_id],
 		)
 	return result
 
@@ -413,9 +419,6 @@
 	var/list/result = list()
 	for(var/item_path in available_items)
 		var/list/entry = available_items[item_path]
-		if(!can_use_item_entry(entry))
-			continue
-
 		var/list/icon_payload = get_item_icon_payload(item_path)
 		result["[item_path]"] = list(
 			"name" = entry["name"],
@@ -424,10 +427,18 @@
 			"unlock_type" = entry["unlock_type"],
 			"unlock_key" = entry["unlock_key"],
 			"slot_group" = entry["slot_group"],
-			"amount" = (items[item_path] || 0),
-			"unlocked" = TRUE,
 			"icon" = icon_payload ? icon_payload["icon"] : null,
 			"icon_state" = icon_payload ? icon_payload["icon_state"] : null,
+		)
+	return result
+
+/datum/tat_build/proc/build_ui_item_states()
+	var/list/result = list()
+	for(var/item_path in available_items)
+		var/list/entry = available_items[item_path]
+		result["[item_path]"] = list(
+			"amount" = (items[item_path] || 0),
+			"unlocked" = can_use_item_entry(entry),
 		)
 	return result
 
@@ -437,31 +448,17 @@
 		var/amount = items[item_path]
 		if(!isnum(amount) || amount <= 0)
 			continue
-
-		var/list/entry = get_item_entry(item_path)
-		if(!islist(entry))
-			continue
-
 		normalize_item_loadout(item_path)
-		var/list/icon_payload = get_item_icon_payload(item_path)
-
 		result["[item_path]"] = list(
-			"name" = entry["name"],
-			"cost" = entry["cost"],
-			"category" = entry["category"],
-			"slot_group" = entry["slot_group"],
 			"amount" = amount,
 			"equip" = get_item_equip_amount(item_path),
 			"bag" = get_item_bag_amount(item_path),
-			"icon" = icon_payload ? icon_payload["icon"] : null,
-			"icon_state" = icon_payload ? icon_payload["icon_state"] : null,
 		)
 	return result
 
 /datum/tat_build/proc/reset_items()
 	items = list()
 	item_loadout = list()
-	item_icon_cache = list()
 	dirty = TRUE
 
 /datum/tat_build/proc/set_stat_value(stat_id, value)
@@ -553,7 +550,6 @@
 		return TRUE
 	if((trait_a == TRAIT_MEDIUMARMOR && trait_b == TRAIT_CRITICAL_RESISTANCE) || (trait_b == TRAIT_MEDIUMARMOR && trait_a == TRAIT_CRITICAL_RESISTANCE))
 		return TRUE
-
 
 	if(is_magic_initiation_trait(trait_a) && is_magic_initiation_trait(trait_b))
 		return TRUE
@@ -717,11 +713,9 @@
 		if(is_skill_blocked(skill_type))
 			skills -= skill_type
 			continue
-
 		if(!(skill_type in available_skills))
 			skills -= skill_type
 			continue
-
 		var/value = round(skills[skill_type])
 		value = clamp(value, 0, get_skill_cap(skill_type))
 		if(value > 0)
@@ -825,17 +819,14 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
-
 	var/current = get_stat_value(id)
 	var/new_value = current + amount
 	if(new_value > get_stat_max(id))
 		return FALSE
-
 	var/old_delta = get_stat_point_delta_for_value(id, current)
 	var/new_delta = get_stat_point_delta_for_value(id, new_value)
 	if(get_remaining_stat_points() < (new_delta - old_delta))
 		return FALSE
-
 	set_stat_value(id, new_value)
 	dirty = TRUE
 	return TRUE
@@ -846,12 +837,10 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
-
 	var/current = get_stat_value(id)
 	var/new_value = current - amount
 	if(new_value < get_stat_min(id))
 		return FALSE
-
 	set_stat_value(id, new_value)
 	dirty = TRUE
 	return TRUE
@@ -862,19 +851,15 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
-
 	var/current = get_skill_value(skill_type)
 	var/new_value = current + amount
 	if(new_value > get_skill_cap(skill_type))
 		return FALSE
-
 	var/cost = 0
 	for(var/i in 1 to amount)
 		cost += current + i
-
 	if(get_remaining_skill_points() < cost)
 		return FALSE
-
 	skills[skill_type] = new_value
 	dirty = TRUE
 	return TRUE
@@ -885,24 +870,20 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
-
 	var/current = get_skill_value(skill_type)
 	if(current <= 0)
 		return FALSE
-
 	var/new_value = max(0, current - amount)
 	if(new_value > 0)
 		skills[skill_type] = new_value
 	else
 		skills -= skill_type
-
 	dirty = TRUE
 	return TRUE
 
 /datum/tat_build/proc/add_trait(trait_id)
 	if(!trait_id || !(trait_id in available_traits) || traits[trait_id])
 		return FALSE
-
 	if(trait_id == TAT_TRAIT_WARRIOR_MASTER && !traits[TAT_TRAIT_WARRIOR_EXPERT])
 		return FALSE
 	if(trait_id == TAT_TRAIT_ARTIFACTS_SUPPLIER && !traits[TAT_TRAIT_PARTY_LEADER])
@@ -917,14 +898,11 @@
 		return FALSE
 	if((trait_id == TAT_TRAIT_MAGE_MAJOR_SLOT || trait_id == TAT_TRAIT_MAGE_MINOR_SLOT || trait_id == TAT_TRAIT_MAGE_UTILITY_SLOT) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return FALSE
-
 	for(var/existing_trait in traits)
 		if(are_traits_mutually_exclusive(trait_id, existing_trait))
 			return FALSE
-
 	if(get_remaining_trait_points() < get_trait_cost(trait_id))
 		return FALSE
-
 	traits[trait_id] = TRUE
 	dirty = TRUE
 	return TRUE
@@ -944,9 +922,7 @@
 		return FALSE
 	if(trait_id == TAT_TRAIT_MAGE_INITIATE && (traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]))
 		return FALSE
-
 	traits -= trait_id
-
 	if(!traits[TAT_TRAIT_BRONZE_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_BRONZE)
 	if(!traits[TAT_TRAIT_SILVER_SUPPLIER])
@@ -959,9 +935,11 @@
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_MAIL)
 	if(!traits[TAT_TRAIT_PLATE_SUPPLIER])
 		remove_items_by_unlock(TAT_UNLOCK_TYPE_ARMOR_FAMILY, TAT_ARMOR_PLATE)
-
+	if(!traits[TAT_TRAIT_FIREARMS_SUPPLIER])
+		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_FIREARMS)
+	if(!traits[TAT_TRAIT_ARTIFACTS_SUPPLIER])
+		remove_items_by_unlock(TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_ARTIFACTS)
 	sanitize_magic()
-
 	for(var/skill_type in skills.Copy())
 		var/cap = get_skill_cap(skill_type)
 		if(get_skill_value(skill_type) > cap)
@@ -969,7 +947,6 @@
 				skills[skill_type] = cap
 			else
 				skills -= skill_type
-
 	dirty = TRUE
 	return TRUE
 
@@ -979,15 +956,12 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
-
 	var/list/entry = available_items[path]
 	if(!can_use_item_entry(entry))
 		return FALSE
-
 	var/cost = get_item_cost(path) * amount
 	if(get_remaining_item_points() < cost)
 		return FALSE
-
 	items[path] = (items[path] || 0) + amount
 	normalize_item_loadout(path)
 	dirty = TRUE
@@ -999,7 +973,6 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
-
 	var/current = items[path] - amount
 	if(current > 0)
 		items[path] = current
@@ -1007,7 +980,6 @@
 	else
 		items -= path
 		item_loadout -= path
-
 	dirty = TRUE
 	return TRUE
 
@@ -1017,13 +989,11 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
-
 	normalize_item_loadout(path)
 	var/list/loadout = get_item_loadout_entry(path)
 	var/bag_amount = loadout["bag"] || 0
 	if(bag_amount < amount)
 		return FALSE
-
 	loadout["bag"] = bag_amount - amount
 	loadout["equip"] = (loadout["equip"] || 0) + amount
 	dirty = TRUE
@@ -1035,13 +1005,11 @@
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
-
 	normalize_item_loadout(path)
 	var/list/loadout = get_item_loadout_entry(path)
 	var/equip_amount = loadout["equip"] || 0
 	if(equip_amount < amount)
 		return FALSE
-
 	loadout["equip"] = equip_amount - amount
 	loadout["bag"] = (loadout["bag"] || 0) + amount
 	dirty = TRUE
@@ -1069,38 +1037,32 @@
 	if(!islist(L))
 		dirty = FALSE
 		return
-
 	var/list/_stats = L["stats"]
 	var/list/_skills = L["skills"]
 	var/list/_traits = L["traits"]
 	var/list/_items = L["items"]
 	var/list/_item_loadout = L["item_loadout"]
 	var/list/_magic_config = L["magic_config"]
-
 	if(islist(_stats))
 		for(var/stat_id in available_stats)
 			if(isnum(_stats[stat_id]))
 				set_stat_value(stat_id, _stats[stat_id])
-
 	if(islist(_traits))
 		for(var/trait_id in _traits)
 			if(trait_id in available_traits)
 				traits[trait_id] = TRUE
-
 	if(islist(_skills))
 		for(var/skill_type in _skills)
 			if(ispath(skill_type) && isnum(_skills[skill_type]) && (skill_type in available_skills))
 				var/value = round(_skills[skill_type])
 				if(value > 0)
 					skills[skill_type] = value
-
 	if(islist(_items))
 		for(var/item_path in _items)
 			if(ispath(item_path) && isnum(_items[item_path]) && (item_path in available_items))
 				var/value = round(_items[item_path])
 				if(value > 0)
 					items[item_path] = value
-
 	if(islist(_item_loadout))
 		for(var/item_path in _item_loadout)
 			if(!(item_path in items))
@@ -1112,10 +1074,8 @@
 				"equip" = round(text2num("[saved_loadout["equip"]]")),
 				"bag" = round(text2num("[saved_loadout["bag"]]")),
 			)
-
 	if(islist(_magic_config))
 		magic_config = _magic_config.Copy()
-
 	sanitize_build()
 	dirty = FALSE
 
@@ -1148,92 +1108,70 @@
 /datum/tat_build/proc/apply_trait_skill_bonuses(mob/living/carbon/human/H)
 	if(!H)
 		return
-
 	if(traits[TRAIT_TRAINED_SMITH])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/smelting", 3)
-
 	if(traits[TRAIT_SMITHING_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/smithing", 3)
-
 	if(traits[TRAIT_ALCHEMY_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/alchemy", 3)
-
 	if(traits[TRAIT_MEDICINE_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/medicine", 3)
-
 	if(traits[TRAIT_HOMESTEAD_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/carpentry", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/masonry", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/crafting", 3)
-
 	if(traits[TRAIT_SURVIVAL_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/butchering", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/traps", 3)
-
 	if(traits[TRAIT_SEWING_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/sewing", 3)
-
 	if(traits[TRAIT_SEEDKNOW])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/farming", 3)
-
 	if(traits[TRAIT_CAUTIOUS_FISHER])
 		grant_skill_bonus_if_exists(H, "/datum/skill/labor/fishing", 3)
-
 	if(traits[TRAIT_SQUIRE_REPAIR])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/armorsmithing", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/weaponsmithing", 3)
-
 	if(traits[TRAIT_ARCYNE] || traits[TAT_TRAIT_SPELLBLADE] || traits[TAT_TRAIT_MAGE_INITIATE])
 		grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcane", 3)
 
 /datum/tat_build/proc/apply_divine_package(mob/living/carbon/human/H)
 	if(!H || !traits[TAT_TRAIT_DIVINE_INITIATE])
 		return
-
 	var/cleric_tier = get_effective_divine_tier()
 	var/passive_gain = get_divine_passive_gain_for_tier(cleric_tier)
 	var/devotion_limit = get_divine_devotion_limit_for_tier(cleric_tier)
-
 	var/datum/devotion/D = new /datum/devotion(H, H.patron)
 	D.grant_miracles(H, cleric_tier = cleric_tier, passive_gain = passive_gain, devotion_limit = devotion_limit)
 
 /datum/tat_build/proc/apply_mage_package(mob/living/carbon/human/H)
 	if(!H || !traits[TAT_TRAIT_MAGE_INITIATE] || !H.mind)
 		return
-
 	ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
-
 	var/list/aspects = build_mage_aspects(TRUE)
 	H.mind.setup_mage_aspects(aspects)
 	set_magic_value("mage_aspects", aspects.Copy())
-
 	if(get_magic_value("mage_spellbook", TRUE))
 		H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
 
 /datum/tat_build/proc/apply_druid_package(mob/living/carbon/human/H)
 	if(!H || !traits[TAT_TRAIT_DRUID_INITIATE])
 		return
-
 	if(get_magic_value("druid_force_dendor", TRUE))
 		H.set_patron(/datum/patron/divine/dendor)
-
 	if(get_magic_value("druid_alert", TRUE))
 		H.AddComponent(/datum/component/wise_tree_alert)
-
 	H.AddSpell(new /obj/effect/proc_holder/spell/targeted/create_seed)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_claws)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
-
 	var/datum/devotion/D = new /datum/devotion(H, H.patron)
 	D.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
 
 /datum/tat_build/proc/apply_witch_package(mob/living/carbon/human/H)
 	if(!H || !traits[TAT_TRAIT_WITCH_INITIATE])
 		return
-
 	ADD_TRAIT(H, TRAIT_WITCH, TAT_TRAIT_SOURCE)
 	ADD_TRAIT(H, TRAIT_DEATHSIGHT, TAT_TRAIT_SOURCE)
-	//ADD_TRAIT(H, TRAIT_RUNEMAKER, TAT_TRAIT_SOURCE)
 	var/shapeshifts = list("Zad", "Cat", "Cat (Black)", "Bat", "Lesser Volf", "Cabbit", "Small Rous", "Lesser Venard")
 	var/shapeshiftchoice = input("What form does your second skin take?", "THE OLD WAYS") as anything in shapeshifts
 	if(H.mind)
@@ -1258,7 +1196,6 @@
 /datum/tat_build/proc/apply_traits(mob/living/carbon/human/H)
 	if(!H)
 		return
-
 	for(var/trait_id in traits)
 		switch(trait_id)
 			if(
@@ -1289,10 +1226,8 @@
 				continue
 			else
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
-
 	if(traits[TAT_TRAIT_RESIDENT])
 		ADD_TRAIT(H, TRAIT_RESIDENT, TAT_TRAIT_SOURCE)
-
 	if(traits[TAT_TRAIT_SPELLBLADE])
 		ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
 		if(H.mind)
@@ -1301,32 +1236,25 @@
 			H.mind.AddSpell(new /datum/action/cooldown/spell/empower_weapon)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/bind_weapon)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
-
 	if(traits[TAT_TRAIT_SOUNDBREAKER])
 		H.LoadComponent(/datum/component/combo_core/soundbreaker)
-
 	if(traits[TAT_TRAIT_RONIN])
 		H.LoadComponent(/datum/component/combo_core/ronin)
-
 	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T1] || traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
 		var/bard_tier = BARD_T1
 		if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
 			bard_tier = BARD_T2
-
 		if(!H.inspiration)
 			var/datum/inspiration/I = new /datum/inspiration(H)
 			I.grant_inspiration(H, bard_tier)
 		else
 			H.inspiration.grant_inspiration(H, bard_tier)
-
 	if(traits[TAT_TRAIT_PARTY_LEADER])
 		H.LoadComponent(/datum/component/tat_party_leader)
-
 	if(traits[TAT_TRAIT_WANTED])
 		ADD_TRAIT(H, TRAIT_OUTLAW, TAT_TRAIT_SOURCE)
 		ADD_TRAIT(H, TRAIT_HERESIARCH, TAT_TRAIT_SOURCE)
 		wretch_select_bounty(H)
-
 	apply_divine_package(H)
 	apply_mage_package(H)
 	apply_druid_package(H)
@@ -1336,9 +1264,7 @@
 	var/list/slots = list()
 	if(!I)
 		return slots
-
 	var/flags = I.slot_flags
-
 	if(flags & ITEM_SLOT_WRISTS)
 		slots += SLOT_WRISTS
 	if(flags & ITEM_SLOT_GLOVES)
@@ -1357,14 +1283,12 @@
 		slots += SLOT_NECK
 	if(flags & ITEM_SLOT_CLOAK)
 		slots += SLOT_CLOAK
-
 	if(flags & ITEM_SLOT_ARMOR)
 		slots += SLOT_ARMOR
 	if(flags & ITEM_SLOT_SHIRT)
 		slots += SLOT_SHIRT
 	if(flags & ITEM_SLOT_PANTS)
 		slots += SLOT_PANTS
-
 	if(flags & ITEM_SLOT_OCLOTHING)
 		if(!(SLOT_ARMOR in slots))
 			slots += SLOT_ARMOR
@@ -1373,12 +1297,10 @@
 			slots += SLOT_SHIRT
 		if(!(SLOT_PANTS in slots))
 			slots += SLOT_PANTS
-
 	if(flags & ITEM_SLOT_BELT)
 		slots += SLOT_BELT_L
 		slots += SLOT_BELT_R
 		slots += SLOT_BELT
-
 	if(flags & ITEM_SLOT_HIP)
 		if(!(SLOT_BELT_L in slots))
 			slots += SLOT_BELT_L
@@ -1386,7 +1308,6 @@
 			slots += SLOT_BELT_R
 		if(!(SLOT_BELT in slots))
 			slots += SLOT_BELT
-
 	if(flags & ITEM_SLOT_BACK_L)
 		slots += SLOT_BACK_L
 	if(flags & ITEM_SLOT_BACK_R)
@@ -1398,102 +1319,80 @@
 			slots += SLOT_BACK_R
 		if(!(SLOT_BACK in slots))
 			slots += SLOT_BACK
-
 	return slots
 
 /datum/tat_build/proc/get_storage_targets(mob/living/carbon/human/H)
 	var/list/targets = list()
 	if(!H)
 		return targets
-
 	var/obj/item/I = H.get_item_by_slot(SLOT_BACK_L)
 	if(I)
 		targets += I
-
 	I = H.get_item_by_slot(SLOT_BACK_R)
 	if(I && !(I in targets))
 		targets += I
-
 	I = H.get_item_by_slot(SLOT_BELT_L)
 	if(I && !(I in targets))
 		targets += I
-
 	I = H.get_item_by_slot(SLOT_BELT_R)
 	if(I && !(I in targets))
 		targets += I
-
 	I = H.get_item_by_slot(SLOT_BACK)
 	if(I && !(I in targets))
 		targets += I
-
 	I = H.get_item_by_slot(SLOT_BELT)
 	if(I && !(I in targets))
 		targets += I
-
 	I = H.get_item_by_slot(SLOT_CLOAK)
 	if(I && !(I in targets))
 		targets += I
-
 	return targets
 
 /datum/tat_build/proc/try_insert_into_storage(obj/item/I, atom/storage_owner, mob/living/carbon/human/H)
 	if(!I || !storage_owner)
 		return FALSE
-
 	return !!SEND_SIGNAL(storage_owner, COMSIG_TRY_STORAGE_INSERT, I, null, TRUE, TRUE)
 
 /datum/tat_build/proc/try_put_into_any_storage_or_drop(obj/item/I, mob/living/carbon/human/H)
 	if(!I || !H)
 		return FALSE
-
 	for(var/storage_owner in get_storage_targets(H))
 		if(try_insert_into_storage(I, storage_owner, H))
 			return TRUE
-
 	I.forceMove(get_turf(H))
 	return TRUE
 
 /datum/tat_build/proc/spawn_item_into_bag_or_fallback(mob/living/carbon/human/H, path)
 	if(!H || !ispath(path))
 		return
-
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return
-
 	try_put_into_any_storage_or_drop(I, H)
 
 /datum/tat_build/proc/spawn_item_equipped_or_fallback(mob/living/carbon/human/H, path)
 	if(!H || !ispath(path))
 		return
-
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return
-
 	var/list/slots = get_equip_slots_for_item(I)
-
 	for(var/slot_id in slots)
 		if(H.equip_to_slot_if_possible(I, slot_id, FALSE, TRUE, TRUE, TRUE))
 			return
-
 	try_put_into_any_storage_or_drop(I, H)
 
 /datum/tat_build/proc/apply_items(mob/living/carbon/human/H)
 	if(!H)
 		return
-
 	for(var/path in items)
 		var/amount = items[path]
 		if(!isnum(amount) || amount <= 0)
 			continue
-
 		var/equip_amount = get_item_equip_amount(path)
 		var/bag_amount = get_item_bag_amount(path)
-
 		for(var/i in 1 to equip_amount)
 			spawn_item_equipped_or_fallback(H, path)
-
 		for(var/i in 1 to bag_amount)
 			spawn_item_into_bag_or_fallback(H, path)
 
@@ -1501,11 +1400,9 @@
 	if(!H)
 		return
 	sanitize_build()
-	
 	var/obj/item/storage/backpack/rogue/satchel/B = new /obj/item/storage/backpack/rogue/satchel(H)
 	H.equip_to_slot_if_possible(B, SLOT_BACK_R, TRUE, TRUE, TRUE, TRUE)
 	apply_items(H)
-
 	apply_stats(H)
 	apply_skills(H)
 	apply_trait_skill_bonuses(H)
@@ -1521,21 +1418,21 @@
 		ui.open()
 
 /datum/tat_build/ui_static_data(mob/user)
-	return list()
+	return list(
+		"available_stats" = build_ui_stat_entries(),
+		"available_skills" = build_ui_skill_entries(),
+		"available_traits" = build_ui_trait_entries(),
+		"available_items" = build_ui_items(),
+	)
 
 /datum/tat_build/ui_data(mob/user)
 	return list(
 		"stats" = build_ui_stats(),
 		"skills" = build_ui_skills(),
 		"traits" = build_ui_selected_traits(),
-		"trait_entries" = build_ui_traits(),
-		"items" = build_ui_items(),
+		"items" = build_ui_item_states(),
 		"loadout" = build_ui_loadout(),
 		"magic_config" = magic_config.Copy(),
-		"available_stats" = build_ui_stat_entries(),
-		"available_skills" = build_ui_skills(),
-		"available_traits" = build_ui_traits(),
-		"available_items" = build_ui_items(),
 		"points_stats" = get_effective_stat_points_total(),
 		"points_stats_remaining" = get_remaining_stat_points(),
 		"points_skills" = get_effective_skill_points_total(),
@@ -1552,7 +1449,6 @@
 	. = ..()
 	if(.)
 		return
-
 	switch(action)
 		if("add_stat")
 			return add_stat(params["id"], text2num(params["amount"]) || 1)
@@ -1596,7 +1492,6 @@
 				return FALSE
 			dirty = FALSE
 			return TRUE
-
 	return FALSE
 
 /datum/tat_build/proc/is_skill_blocked(skill_type)
@@ -1607,12 +1502,10 @@
 /datum/preferences/proc/sanitize_tat_build(list/tat_data)
 	if(!tat_build)
 		tat_build = new()
-
 	if(!islist(tat_data))
 		tat_build.reset_build()
 		tat_build.dirty = FALSE
 		return
-
 	tat_build.load_from_list(tat_data)
 	tat_build.dirty = FALSE
 
@@ -1632,49 +1525,34 @@
 	switch(skill_type)
 		if(/datum/skill/craft/cooking)
 			return !!traits[TRAIT_HOMESTEAD_EXPERT]
-
 		if(/datum/skill/craft/alchemy)
 			return !!traits[TRAIT_ALCHEMY_EXPERT]
-
 		if(/datum/skill/misc/medicine)
 			return !!traits[TRAIT_MEDICINE_EXPERT]
-
 		if(/datum/skill/craft/sewing)
 			return !!traits[TRAIT_SEWING_EXPERT]
-
 		if(/datum/skill/labor/farming)
 			return !!traits[TRAIT_SEEDKNOW]
-
 		if(/datum/skill/craft/blacksmithing)
 			return !!traits[TRAIT_SMITHING_EXPERT]
-
 		if(/datum/skill/craft/smelting)
 			return !!traits[TRAIT_TRAINED_SMITH]
-
 		if(/datum/skill/craft/carpentry)
 			return !!traits[TRAIT_HOMESTEAD_EXPERT]
-
 		if(/datum/skill/craft/masonry)
 			return !!traits[TRAIT_HOMESTEAD_EXPERT]
-
 		if(/datum/skill/craft/crafting)
 			return !!traits[TRAIT_HOMESTEAD_EXPERT]
-
 		if(/datum/skill/labor/butchering)
 			return !!traits[TRAIT_SURVIVAL_EXPERT]
-
 		if(/datum/skill/craft/traps)
 			return !!traits[TRAIT_SURVIVAL_EXPERT]
-
 		if(/datum/skill/labor/fishing)
 			return !!traits[TRAIT_CAUTIOUS_FISHER]
-
 		if(/datum/skill/craft/armorsmithing)
 			return !!traits[TRAIT_SQUIRE_REPAIR]
-
 		if(/datum/skill/craft/weaponsmithing)
 			return !!traits[TRAIT_SQUIRE_REPAIR]
-
 	return TRUE
 
 /datum/tat_build/proc/should_softcap_peaceful_skill(skill_type)
@@ -1697,33 +1575,26 @@
 			/datum/skill/craft/weaponsmithing
 		)
 			return TRUE
-
 	return FALSE
 
 /datum/tat_build/proc/get_item_icon_payload(item_path)
 	if(!ispath(item_path, /obj/item))
 		return null
-
 	if(!islist(item_icon_cache))
 		item_icon_cache = list()
-
 	if(item_path in item_icon_cache)
 		return item_icon_cache[item_path]
-
 	var/obj/item/I = new item_path
 	if(!I)
 		return null
-
 	var/icon/render_icon = icon(initial(I.icon), initial(I.icon_state), SOUTH, 1)
 	var/icon_b64 = null
 	if(render_icon)
 		icon_b64 = icon2base64(render_icon)
-
 	var/list/payload = list(
 		"icon" = icon_b64,
 		"icon_state" = "[initial(I.icon_state)]",
 	)
-
 	item_icon_cache[item_path] = payload
 	qdel(I)
 	return payload
