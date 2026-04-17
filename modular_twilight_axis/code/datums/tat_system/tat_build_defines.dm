@@ -627,3 +627,9 @@
 	/obj/item/reagent_containers/glass/bottle/waterskin = TAT_ITEM_ENTRY("Water Skin", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/clothing/gloves/roguetown/bandages/weighted = TAT_ITEM_ENTRY("Weighted Bandages", 4, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
 	/obj/item/clothing/suit/roguetown/shirt/robe/pointfex = TAT_ITEM_ENTRY("Pointfex's Qaba", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/heartfelt = TAT_ITEM_ENTRY("Lordly Plate", 3, "clothing", "armor_family", TAT_SUPPLY_ARTIFACTS, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/full/samsibsa = TAT_ITEM_ENTRY("Samsibsa Scaleplate", 4, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/brigandine/heavy = TAT_ITEM_ENTRY("Coat of Plates", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/gloves/roguetown/chain/gronn = TAT_ITEM_ENTRY("Gronn Byrine Gloves", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/chain = TAT_ITEM_ENTRY("Сhain Gauntlets", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/chain/iron = TAT_ITEM_ENTRY("Iron Сhain Gauntlets", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves"), \
