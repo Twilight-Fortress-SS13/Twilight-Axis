@@ -196,7 +196,7 @@
 	var/mob/living/carbon/human/pawn = controller.pawn
 	var/obj/item/quiver/Q = controller.blackboard[BB_ARCHER_NPC_QUIVER]
 
-	if(!succeeded || !length(Q.arrows))
+	if(!succeeded || !Q || !length(Q.arrows))
 		controller.clear_blackboard_key(target_key)
 		// Re-equip stashed melee weapon
 		var/obj/item/stashed = controller.blackboard[BB_ARCHER_NPC_STASHED_WEAPON]

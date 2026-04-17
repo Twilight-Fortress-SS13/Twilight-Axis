@@ -108,7 +108,8 @@
 		name = "shilling"
 		desc = "The shilling is a small copper coin minted by the Valorian Treasury. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided."
 		icon_state = "tc1"
-		sellprice = 1
+		if(sellprice != 0)
+			sellprice = 1
 		base_type = CTYPE_COPPER
 		plural_name = "shillings"
 		icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
@@ -131,7 +132,8 @@
 			name = "shilling"
 			desc = "The shilling is a small copper coin minted by the Valorian Treasury. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided."
 			icon_state = "tc1"
-			sellprice = 1
+			if(sellprice != 0)
+				sellprice = 1
 			base_type = CTYPE_COPPER
 			plural_name = "shillings"
 			icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
@@ -141,7 +143,8 @@
 			name = "krona"
 			desc = "The krona, or 'crown' in simplified Imperial, is a gold coin minted in the Valorian capital of Eterna, serving as the national currency of Valoria and several neighbouring realms. The coin bears the Crown of Most Serene Doge and the symbol of Ten Undivided."
 			icon_state = "tg1"
-			sellprice = 14
+			if(sellprice != 0)
+				sellprice = 14
 			base_type = CTYPE_GOLD
 			plural_name = "kronas"
 			icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
@@ -165,7 +168,8 @@
 		name = "krona"
 		desc = "The krona, or 'crown' in simplified Imperial, is a gold coin minted in the Valorian capital of Eterna, serving as the national currency of Valoria and several neighbouring realms. The coin bears the Crown of Most Serene Doge and the symbol of Ten Undivided."
 		icon_state = "tg1"
-		sellprice = 14
+		if(sellprice != 0)
+			sellprice = 14
 		base_type = CTYPE_GOLD
 		plural_name = "kronas"
 		icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
