@@ -207,7 +207,7 @@
 	/obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow = TAT_ITEM_ENTRY("Long Bow", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "ranged"), \
 	/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow = TAT_ITEM_ENTRY("Slurbow", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "ranged"), \
 	/obj/item/quiver/arrows = TAT_ITEM_ENTRY("Broadhead Arrows", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
-	/obj/item/quiver/bodkin = TAT_ITEM_ENTRY("Bodkin arrows", 3F, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "munition"), \
+	/obj/item/quiver/bodkin = TAT_ITEM_ENTRY("Bodkin arrows", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "munition"), \
 	/obj/item/quiver/bolt/standard = TAT_ITEM_ENTRY("Bolts", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "munition"), \
 	/obj/item/quiver/bolt/pyro = TAT_ITEM_ENTRY("Pyro Bolts", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
 	/obj/item/quiver/bolt/water = TAT_ITEM_ENTRY("Water Bolts", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
@@ -476,7 +476,7 @@
 	/obj/item/clothing/wrists/roguetown/bracers/cloth/monk = TAT_ITEM_ENTRY("Monk Wrapping", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/copper = TAT_ITEM_ENTRY("Copper Bracers", 1, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/iron = TAT_ITEM_ENTRY("Iron Bracers ", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
-	/obj/item/clothing/wrists/roguetown/bracers/leather = TAT_ITEM_ENTRY("Leather Bracers ", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
+	/obj/item/clothing/wrists/roguetown/bracers/leather = TAT_ITEM_ENTRY("Leather Bracers ", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/leather/heavy = TAT_ITEM_ENTRY("Heavy Leather Bracers", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/splint = TAT_ITEM_ENTRY("Splint Bracers", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/twilight_elven = TAT_ITEM_ENTRY("Elver Rider Bracers", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
