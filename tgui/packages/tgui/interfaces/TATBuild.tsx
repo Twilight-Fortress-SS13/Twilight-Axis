@@ -415,6 +415,7 @@ const ItemTile = ({
   name,
   topRightText,
   bottomLeftText,
+  bottomRightText,
   icon,
   onLeftClick,
   onRightClick,
@@ -425,6 +426,7 @@ const ItemTile = ({
   name: string;
   topRightText?: string | number;
   bottomLeftText?: string | number;
+  bottomRightText?: string | number;
   icon?: string | null;
   onLeftClick: () => void;
   onRightClick?: () => void;
@@ -433,7 +435,7 @@ const ItemTile = ({
   glow?: string;
 }) => {
   return (
-    <Box style={{ margin: '3px' }}>
+    <Box style={{ margin: '2px' }}>
       <div
         onClick={onLeftClick}
         onContextMenu={(event) => {
@@ -447,9 +449,10 @@ const ItemTile = ({
           position: 'relative',
           width: '88px',
           height: '88px',
-          borderRadius: '8px',
-          background: 'rgba(255,255,255,0.02)',
-          boxShadow: glow ? `0 0 10px ${glow}` : 'none',
+          borderRadius: '6px',
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: glow ? `inset 0 0 0 1px ${glow}` : 'none',
           cursor: 'pointer',
           userSelect: 'none',
           overflow: 'hidden',
@@ -489,12 +492,28 @@ const ItemTile = ({
               left: '6px',
               bottom: '4px',
               fontWeight: 700,
-              fontSize: '12px',
-              color: '#ffffff',
+              fontSize: '11px',
+              color: '#d9d9d9',
               textShadow: '0 1px 2px rgba(0,0,0,0.95)',
               pointerEvents: 'none',
             }}>
             {bottomLeftText}
+          </div>
+        )}
+
+        {bottomRightText !== undefined && bottomRightText !== null && bottomRightText !== '' && (
+          <div
+            style={{
+              position: 'absolute',
+              right: '6px',
+              bottom: '4px',
+              fontWeight: 700,
+              fontSize: '11px',
+              color: '#9fd6a8',
+              textShadow: '0 1px 2px rgba(0,0,0,0.95)',
+              pointerEvents: 'none',
+            }}>
+            {bottomRightText}
           </div>
         )}
       </div>
@@ -860,35 +879,66 @@ const LoadoutTab = ({
       ) : (
         <Stack vertical>
           {groups.map(([categoryKey, slotGroups]) => (
-            <Box key={categoryKey} mb={2}>
-              <Box bold mb={1} style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
+            <Box
+              key={categoryKey}
+              mb={1.5}
+              style={{
+                borderTop: '1px solid rgba(255,255,255,0.08)',
+                paddingTop: '8px',
+              }}>
+              <Box
+                bold
+                mb={0.75}
+                style={{
+                  fontSize: '14px',
+                  letterSpacing: '0.4px',
+                  color: 'rgba(240,195,90,0.9)',
+                  textTransform: 'uppercase',
+                }}>
                 {getCategoryLabel(categoryKey)}
               </Box>
 
               {slotGroups.map(([slotKey, items]) => (
-                <Box key={`${categoryKey}-${slotKey}`} mb={1}>
-                  <Box bold mb={0.5} style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
-                    {getSlotLabel(slotKey)}
+                <Box
+                  key={`${categoryKey}-${slotKey}`}
+                  mb={0.75}
+                  style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: '6px',
+                    padding: '6px 8px 8px 8px',
+                  }}>
+                  <Box
+                    bold
+                    mb={0.5}
+                    style={{
+                      fontSize: '12px',
+                      letterSpacing: '0.35px',
+                      opacity: 0.88,
+                    }}>
+                    {getSlotLabel(slotKey)} ({items.length})
                   </Box>
 
                   <Stack wrap>
                     {items.map(([itemPath, entry]) => {
                       const amount = entry.amount || 0;
                       const bag = Math.max(0, Math.min(entry.bag || 0, amount));
-                      const equip = Math.max(0, amount - bag);
+                      const equip = Math.max(0, entry.equip || 0);
+
                       const glow =
                         bag <= 0
-                          ? 'rgba(80, 220, 120, 0.75)'
+                          ? 'rgba(80, 220, 120, 0.45)'
                           : bag >= amount
-                            ? 'rgba(255, 160, 64, 0.8)'
-                            : 'rgba(180, 180, 180, 0.45)';
+                            ? 'rgba(255, 160, 64, 0.45)'
+                            : 'rgba(180, 180, 180, 0.3)';
 
                       return (
                         <ItemTile
                           key={itemPath}
                           name={entry.name || itemPath}
-                          topRightText={amount}
-                          bottomLeftText={bag > 0 ? bag : undefined}
+                          topRightText={`x${amount}`}
+                          bottomLeftText={bag > 0 ? `B${bag}` : undefined}
+                          bottomRightText={equip > 0 ? `E${equip}` : undefined}
                           icon={entry.icon}
                           glow={glow}
                           onLeftClick={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
