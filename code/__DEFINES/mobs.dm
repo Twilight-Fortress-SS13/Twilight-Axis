@@ -615,6 +615,12 @@
 #define AI_THINK(pawn, message)
 #endif
 
+// #define NPC_THINK_DEBUG_WORLD
+#ifdef NPC_THINK_DEBUG_WORLD
+#define AI_WORLD_THINK(pawn, message) to_chat(world, "<span class='boldannounce'>\[AI-WORLD\] [pawn]: [message]</span>")
+#else
+#define AI_WORLD_THINK(pawn, message)
+#endif
 GLOBAL_LIST_INIT(roman_cache, list(
 	"0","I","II","III","IV","V","VI","VII","VIII","IX","X",
 	"XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX",

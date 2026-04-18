@@ -26,7 +26,7 @@
 		),
 		//freely spawns 400 mammon!!! no wae! is this trve?!!?!??
 		"Pouch of Bribery" = list(
-			path = /obj/item/storage/belt/rogue/pouch/coins/matthios,
+			path = /obj/item/storage/belt/rogue/pouch/matthios,
 			m_cooldown = 5 MINUTES,
 			m_rank = SKILL_LEVEL_EXPERT,
 			category = "Rogue Arts",
