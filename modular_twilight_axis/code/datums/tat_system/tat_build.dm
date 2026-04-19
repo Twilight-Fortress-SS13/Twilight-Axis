@@ -776,6 +776,20 @@
 			item_loadout -= item_path
 			continue
 
+		var/max_allowed = get_max_amount_for_item(item_path)
+		if(max_allowed <= 0)
+			items -= item_path
+			item_loadout -= item_path
+			continue
+
+		if(max_allowed != INFINITY)
+			value = min(value, max_allowed)
+
+		if(value <= 0)
+			items -= item_path
+			item_loadout -= item_path
+			continue
+
 		items[item_path] = value
 		normalize_item_loadout(item_path)
 
@@ -792,11 +806,14 @@
 			else
 				items -= item_path
 				item_loadout -= item_path
+
 			if(item_path in items)
 				normalize_item_loadout(item_path)
+
 			changed = TRUE
 			if(get_remaining_item_points() >= 0)
 				break
+
 		if(!changed)
 			break
 
@@ -971,15 +988,27 @@
 /datum/tat_build/proc/add_item(path, amount = 1)
 	if(!ispath(path) || !isnum(amount) || !(path in available_items))
 		return FALSE
+
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
+
 	var/list/entry = available_items[path]
 	if(!can_use_item_entry(entry))
 		return FALSE
+
+	var/max_add = get_max_amount_for_item(path)
+	if(max_add <= 0)
+		return FALSE
+
+	amount = min(amount, max_add)
+	if(amount <= 0)
+		return FALSE
+
 	var/cost = get_item_cost(path) * amount
 	if(get_remaining_item_points() < cost)
 		return FALSE
+
 	items[path] = (items[path] || 0) + amount
 	normalize_item_loadout(path)
 	dirty = TRUE
@@ -1622,3 +1651,70 @@
 	item_icon_cache[item_path] = payload
 	qdel(I)
 	return payload
+
+/datum/tat_build/proc/is_item_slot_limited(list/entry)
+	if(!islist(entry))
+		return FALSE
+
+	var/category = lowertext("[entry["category"]]")
+
+	if(category == "weapon")
+		return FALSE
+
+	var/slot_group = lowertext("[entry["slot_group"]]")
+
+	if(slot_group == "misc")
+		return FALSE
+
+	return TRUE
+
+/datum/tat_build/proc/get_slot_group_item_count(slot_group, category, exclude_item_path = null)
+	if(!slot_group)
+		return 0
+
+	var/target_slot_group = lowertext("[slot_group]")
+	var/target_category = lowertext("[category]")
+
+	var/total = 0
+	for(var/item_path in items)
+		if(!ispath(item_path))
+			continue
+		if(!isnull(exclude_item_path) && item_path == exclude_item_path)
+			continue
+
+		var/list/entry = get_item_entry(item_path)
+		if(!islist(entry))
+			continue
+
+		var/entry_slot_group = lowertext("[entry["slot_group"]]")
+		var/entry_category = lowertext("[entry["category"]]")
+
+		if(entry_slot_group != target_slot_group)
+			continue
+		if(entry_category != target_category)
+			continue
+
+		var/amount = items[item_path]
+		if(!isnum(amount) || amount <= 0)
+			continue
+
+		total += amount
+
+	return total
+
+/datum/tat_build/proc/get_max_amount_for_item(path)
+	var/list/entry = get_item_entry(path)
+	if(!islist(entry))
+		return 0
+
+	if(!is_item_slot_limited(entry))
+		return INFINITY
+
+	var/slot_group = entry["slot_group"]
+	var/category = entry["category"]
+
+	if(!slot_group)
+		return INFINITY
+
+	var/already_taken = get_slot_group_item_count(slot_group, category, path)
+	return max(0, 1 - already_taken)
