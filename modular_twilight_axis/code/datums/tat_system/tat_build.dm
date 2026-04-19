@@ -559,6 +559,19 @@
 	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_TROPHY_BOUNTY) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_TROPHY_BOUNTY))
 		return TRUE
 
+	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_SOUNDBREAKER))
+		return TRUE
+	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_SPELLBLADE) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_SPELLBLADE))
+		return TRUE
+	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_RONIN))
+		return TRUE
+	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_DIVINE_BOON_3))
+		return TRUE
+	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_DIVINE_BOON_3))
+		return TRUE
+	if((trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_a == TAT_TRAIT_DIVINE_BOON_3))
+		return TRUE
+
 	return FALSE
 
 /datum/tat_build/proc/has_invalid_trait_dependencies()
