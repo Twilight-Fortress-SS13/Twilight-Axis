@@ -11,31 +11,11 @@
 	name = "ornate cross"
 	desc = "Golden scales dangle from rags and balance the scales. A monument to equality."
 
-/datum/crafting_recipe/roguetown/structure/zizo_cross_stone
-	always_availible = FALSE	//Has unique assign for certain roles.
-
-/datum/crafting_recipe/roguetown/structure/zizo_cross_gold
-	always_availible = FALSE	//Has unique assign for certain roles.
-
-/datum/crafting_recipe/roguetown/structure/graggar_cross_stone
-	always_availible = FALSE	//Has unique assign for certain roles.
-
-/datum/crafting_recipe/roguetown/structure/graggar_cross_meat
-	always_availible = FALSE	//Has unique assign for certain roles.
-
 /datum/crafting_recipe/roguetown/structure/matthios_cross_stone
 	name = "stone scales cross"
-	always_availible = FALSE	//Has unique assign for certain roles.
 
 /datum/crafting_recipe/roguetown/structure/matthios_cross_meat
 	name = "ornate scales cross"
-	always_availible = FALSE	//Has unique assign for certain roles.
-
-/datum/crafting_recipe/roguetown/structure/baotha_cross_stone
-	always_availible = FALSE	//Has unique assign for certain roles.
-
-/datum/crafting_recipe/roguetown/structure/baotha_cross_meat
-	always_availible = FALSE	//Has unique assign for certain roles.
 
 /datum/faith/inhumen
 	name = "Ascendents"
@@ -88,7 +68,6 @@
 		"Ткачиха", "Ткачихи", "Ткачихе", "Ткачиху", 
 		"Ткачихой", "Ткачихе"
 )
-	crafting_recipes = list(/datum/crafting_recipe/roguetown/structure/zizo_cross_stone, /datum/crafting_recipe/roguetown/structure/zizo_cross_gold)
 	domain = "Бессмертие, прогресс, кровь, тьма, запретные знания, амбиции."
 	desc = "Богиня нежизни, возмездия, метаморфозы и тьмы. Убийца Псайдона, Архивраг пантеона Десяти, презираемая всеми, кроме своих последователей, сама Зизо не видит в смертных объект своей ненависти. Это прекрасно демонстрируется ее главной заповедью, что часто звучит в молитвенных песнопениях её культистов: «Последний же враг истребится — смерть»."
 	associated_faith = /datum/faith/cult_of_salvation
@@ -106,8 +85,6 @@
 		if(human.mind)
 			human.mind.special_items["Lexicon of Her Truth"] = /obj/item/book/rogue/bibble/zizo
 			human.mind.special_items["Ritual's guide book"] = /obj/item/recipe_book/zizo
-			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/zizo_cross_stone)
-			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/zizo_cross_gold)
 
 /datum/patron/inhumen/graggar
 	name = "Graggar"
@@ -128,21 +105,12 @@
 	domain = "Власть, сила, превосходство, завоевание."
 	desc = "Бог силы и власти, которая приходит с нею. Пока другие божества обрекают свою паству на жалкое существование в мире, где власть приходит через их благословение и по праву рождения, Граггар провозглашает, что править может каждый, кто достаточно силен, чтобы забрать желаемое. «Слабые унаследуют лишь грязь», предупреждает он, напоминая о судьбе тех, кто не стремится стать сильнее."
 	undead_hater = TRUE
-	crafting_recipes = list(/datum/crafting_recipe/roguetown/structure/graggar_cross_stone, /datum/crafting_recipe/roguetown/structure/graggar_cross_meat)
 	worshippers = "Племенные народы, безумцы, маньяки, жестокий люд."
 	confess_lines = list(
 		"ГРАГГАР - ЗВЕРЬ, КОТОРОМУ Я ПОКЛОНЯЮСЬ!",
 		"ЧЕРЕЗ ПРЕВОСХОДСТВО - К БОЖЕСТВЕННОСТИ!",
 		"ЧЁРНОЕ СОЛНЦЕ ТРЕБУЕТ КРОВИ!",
 	)
-
-/datum/patron/inhumen/graggar/post_equip(mob/living/pious)
-	. = ..()
-	if(ishuman(pious))
-		var/mob/living/carbon/human/human = pious
-		if(human.mind)
-			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/graggar_cross_stone)
-			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/graggar_cross_meat)
 
 /datum/patron/inhumen/matthios
 	name = "Matthios"
@@ -170,11 +138,10 @@
 	domain = "Анархия, свобода, революция, равенство и братство."
 	desc = "Бог абсолютной свободы, анархии и восстания. «Через раздор к процветанию», обещает его главная заповедь, и его последователи пойдут на всё, чтобы претворить её в реальность, разрушив мировой порядок, каким мы его знаем."
 	undead_hater = TRUE
-	crafting_recipes = list(/datum/crafting_recipe/roguetown/structure/matthios_cross_stone, /datum/crafting_recipe/roguetown/structure/matthios_cross_meat)
 	worshippers = "Разбойники, наёмники, революционеры, свободолюбивый люд."
 	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison									= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/appraise										= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/self/twilight_shacklebreaker							= CLERIC_T0,
+					/datum/action/cooldown/spell/freemans_tools											= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/twilight_weightofchains						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/twilight_transact								= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/twilight_equalize								= CLERIC_T1,
@@ -197,14 +164,6 @@
 /datum/objective/hoard_mammons/update_explanation_text()
 	explanation_text = "Accumulate at least [target_mammons] mammons in your possession to be used for Freedom's unstoppable march."
 
-/datum/patron/inhumen/matthios/post_equip(mob/living/pious)
-	. = ..()
-	if(ishuman(pious))
-		var/mob/living/carbon/human/human = pious
-		if(human.mind)
-			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/matthios_cross_stone)
-			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/matthios_cross_meat)
-
 /datum/patron/inhumen/baotha
 	name = "Baotha"
 	translated_name = "Баота"
@@ -224,20 +183,11 @@
 	desc = "Баота — богиня гедонизма, мирских наслаждений и страстей. «Живи, люби, смейся!» — говорила она, глядя на суету вокруг себя и усилия окружающих, стремящихся двигать куда-то мир."
 	worshippers = "Избалованные богачи, маргиналы, эскаписты."
 	undead_hater = TRUE
-	crafting_recipes = list(/datum/crafting_recipe/roguetown/structure/baotha_cross_stone, /datum/crafting_recipe/roguetown/structure/baotha_cross_meat)
 	confess_lines = list(
 		"БАОТА ТРЕБУЕТ УДОВОЛЬСТВИЯ!",
 		"ЖИВИ, СМЕЙСЯ, ЛЮБИ!",
 		"БАОТА - МОЯ РАДОСТЬ!",
 	)
-
-/datum/patron/inhumen/baotha/post_equip(mob/living/pious)
-	. = ..()
-	if(ishuman(pious))
-		var/mob/living/carbon/human/human = pious
-		if(human.mind)
-			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/baotha_cross_stone)
-			human.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/structure/baotha_cross_meat)
 
 /////////////////////////////////
 // Does God Hear Your Prayer ? //

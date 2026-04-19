@@ -427,11 +427,6 @@
 	)
 	result_item = /obj/item/rogueweapon/eirenxiv/eirensword
 
-/obj/item/enchantingkit/eiren_helmet
-	name = "'strigidae armet' morphing elixir"
-	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet)
-	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/eiren_helmet
-
 //pretzel - custom steel greatsword. PSYDON LYVES. PSYDON ENDVRES.
 /obj/item/enchantingkit/weapon/waff
 	name = "'Weeper's Lathe' morphing elixir"
@@ -666,13 +661,15 @@
 
 /obj/item/enchantingkit/triumph_armorkit_drow
 	name = "'Drowcraft' armor morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of.. </br>..a set of Hardened Leather Armor.. </br>.. or a set of Studded Leather Armor."
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Hardened Leather Armor, Studded Leather Armor, Lightweight Brigandine, Cuirass or Scalemail"
 	target_items = list(
-		/obj/item/clothing/suit/roguetown/armor/leather/heavy 		= /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest,
-		/obj/item/clothing/suit/roguetown/armor/leather/studded		= /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy,
+		/obj/item/clothing/suit/roguetown/armor/leather/studded,
+		/obj/item/clothing/suit/roguetown/armor/brigandine/light,
+		/obj/item/clothing/suit/roguetown/armor/plate/cuirass,
+		/obj/item/clothing/suit/roguetown/armor/plate/scale
 	)
-	result_item = null
-	icon_loadout = /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest
+	result_item = /obj/item/clothing/suit/roguetown/armor/leather/heavy/shadowvest
 
 /obj/item/enchantingkit/triumph_weaponkit_axe
 	name = "'Valorian' axe morphing elixir"

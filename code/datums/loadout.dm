@@ -1575,6 +1575,25 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/duelhat/pretzel
 	donatitem = TRUE
+
+/datum/loadout_item/donator/porcelainmask
+	name = "Donator Item - Porcelain Mask"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/mask/rogue/iamcrystalclear
+	donatitem = TRUE
+
+/datum/loadout_item/donator_zydrashauberk
+	name = "Donator Kit - Iron Gardbrace & Fauld - Required: Iron Mailled Hauberk"
+	path = /obj/item/enchantingkit/zydrashauberk
+	category = list("Броня", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator_zydrasgreataxe
+	name = "Donator Kit - Bourreau - Required: Greataxe"
+	path = /obj/item/enchantingkit/zydrasgreataxe
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+
 /*
 /datum/loadout_item/donator_zydrasiconosash
 	name = "Donator Kit - Iconoclast Sash - Required: Hauberk(Only men, no small races)"
@@ -1817,7 +1836,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donator_drow_armorkit
-	name = "Donator Item - Drowcraft Armor - Required: Hardened Leather Armor Or Studded Leather Armor"
+	name = "Donator Item - Drowcraft Armor - Required: Hardened Leather Armor, Studded Leather Armor, Lightweight Brigandine, Cuirass or Scalemail"
 	path = /obj/item/enchantingkit/triumph_armorkit_drow
 	category = list("Броня", "Донат")
 	donatitem = TRUE
@@ -2403,6 +2422,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/mask/rogue/xylixmask
 	donatitem = TRUE
 
+/datum/loadout_item/weatheredmask
+	name = "Weathered Xylixian Mask"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/mask/rogue/xylixmask/weathered
+	donatitem = TRUE
+
 /datum/loadout_item/donat/eyepatchfake
 	name = "Повязка на правый глаз (ненастоящая)"
 	category = list("Головные уборы", "Донат")
@@ -2913,3 +2938,55 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donat_ignore = list("namenlos66")
 
 // Sanguine Kits End
+
+// Nightmare Kit Start
+
+/datum/loadout_item/donator_nightmare_armet
+	name = "Donator Kit - Nightmare Tears Helmet - Required: Armet"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/nightmare_armet
+	donatitem = TRUE
+	donat_tier = 3
+	donat_ignore = list("wrvxth", "murken4ik")
+
+/datum/loadout_item/donator_nightmare_scales
+	name = "Donator Kit - Nightmare Tears Scales - Required: Scalemail (Only Woman, No Small Races)"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/nightmare_scales
+	donatitem = TRUE
+	donat_tier = 3
+	donat_ignore = list("wrvxth", "murken4ik")
+
+/datum/loadout_item/donator_nightmare_gauntlets
+	name = "Donator Kit - Nightmare Tears Gauntlets - Required: Plate Gauntlets (Only Woman, No Small Races)"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/nightmare_gauntlets
+	donatitem = TRUE
+	donat_tier = 3
+	donat_ignore = list("wrvxth", "murken4ik")
+
+/datum/loadout_item/donator_nightmare_chausses
+	name = "Donator Kit - Nightmare Tears Chausses - Required: Steel Chain Chausses (Only Woman, No Small Races)"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/nightmare_chausses
+	donatitem = TRUE
+	donat_tier = 3
+	donat_ignore = list("wrvxth", "murken4ik")
+
+/datum/loadout_item/donator_nightmare_boots
+	name = "Donator Kit - Nightmare Tears Boots - Required: Steel Boots"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/nightmare_boots
+	donatitem = TRUE
+	donat_tier = 3
+	donat_ignore = list("wrvxth", "murken4ik")
+
+/datum/loadout_item/donator_nightmare_crown
+	name = "Donator Kit - Nightmare Tears Crown"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/nightmare_crown
+	donatitem = TRUE
+	donat_tier = 3
+	donat_ignore = list("wrvxth", "murken4ik")
+
+// Nightmare Kit End

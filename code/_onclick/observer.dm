@@ -26,31 +26,55 @@
 		return
 
 /mob/dead/observer/ClickOn(atom/A, params)
-	if(check_click_intercept(params,A))
+	if(check_click_intercept(params, A))
 		return
 
 	var/list/modifiers = params2list(params)
+
 	if(modifiers["shift"] && modifiers["middle"])
 		ShiftMiddleClickOn(A)
 		return
+
 	if(modifiers["shift"] && modifiers["ctrl"])
 		CtrlShiftClickOn(A)
 		return
-	if(modifiers["middle"])
-		MiddleClickOn(A)
+
+	// В AzurePeak observer имеет свой ClickOn override и без этого alt+right
+	// съедается общей alt-веткой ниже, так и не доходя до AltRightClickOn().
+	if(modifiers["alt"] && modifiers["left"])
+		if(client?.holder)
+			face_atom(A)
+			AltRightClickOn(A, params)
+		else
+			AltClickNoInteract(src, A)
 		return
+
+	// Если хочешь, чтобы aghost-админ и обычный RMB-маршрут тоже видел,
+	// а не только alt+right, оставляем отдельную ветку и для plain right.
+	if(modifiers["right"])
+		if(client?.holder)
+			RightClickOn(A, params)
+			return
+
+	if(modifiers["middle"])
+		MiddleClickOn(A, params)
+		return
+
 	if(modifiers["shift"])
 		ShiftClickOn(A)
 		return
+
 	if(modifiers["alt"])
 		AltClickNoInteract(src, A)
 		return
+
 	if(modifiers["ctrl"])
 		CtrlClickOn(A)
 		return
 
 	if(world.time <= next_move)
 		return
+
 	// You are responsible for checking config.ghost_interaction when you override this function
 	// Not all of them require checking, see below
 	A.attack_ghost(src)

@@ -744,7 +744,7 @@
 	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus_norod.dmi'
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle
-	name = "Jägerbüchse"
+	name = "jägerbüchse"
 	desc = "Редкая разновидность колесцовой аркебузы, изготавливаемая мастерами Грензельхофта для егерей Фрейкорпс, отличившихся в ходе боевых действий. Легче и менее подвержена износу в сравнении с серийными образцами."
 	icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle.dmi'
 	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle.dmi'
@@ -768,7 +768,7 @@
 	return ..()
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/jagerrifle
-	name = "Jägerbüchse"
+	name = "jägerbüchse"
 	desc = "Редкая разновидность колесцовой аркебузы, изготавливаемая мастерами Грензельхофта для егерей Фрейкорпс, отличившихся в ходе боевых действий. Легче и менее подвержена износу в сравнении с серийными образцами. Оснащена штыком для использования в ближнем бою."
 	icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerriflebayonet.dmi'
 	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerriflebayonet.dmi'
@@ -813,7 +813,7 @@
 				return list("shrink" = 0.4,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra
-	name = "Umbra"
+	name = "\"Umbra\""
 	desc = "Компактное огнестрельное оружие отаванского производства. Ствол изготовлен из вороненой стали, на которую нанесены несколько простых рун. Благодаря необычной конструкции и рунической магии, Умбра стреляет практически бесшумно, что делает её идеальным выбором для агентов Инквизиции."
 	silenced = TRUE
 	critfactor = 1
@@ -924,7 +924,7 @@
 	match_delay = 4
 
 /obj/item/gun/ballistic/twilight_firearm/handgonne/purgatory
-	name = "Purgatory"
+	name = "\"Purgatory\""
 	desc = "Передовое огнестрельное оружие отаванского ордена Чёрного Пороха, завоевашее зловещую славу на поле боя из-за своей разрушительной мощи. Эта ручная пушка вступает в игру, когда одиночного довода против ереси просто недостаточно."
 	icon = 'modular_twilight_axis/firearms/icons/purgatory/purgatory.dmi'
 	icon_state = "purgatory"

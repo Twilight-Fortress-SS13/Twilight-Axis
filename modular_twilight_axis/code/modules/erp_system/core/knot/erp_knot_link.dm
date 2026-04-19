@@ -57,7 +57,7 @@
 	return round((strength / ERP_KNOT_MAX_STRENGTH) * 30)
 
 /datum/erp_knot_link/proc/try_increase_strength_from_movement()
-	var/ch = strength
+	var/ch = strength / 10
 	if(prob(ch))
 		strength = ERP_KNOT_MAX_STRENGTH
 		note_activity()

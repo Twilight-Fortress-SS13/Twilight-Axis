@@ -139,6 +139,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["ambiencevol"]		>> ambiencevol
 	S["anonymize"]			>> anonymize
 	S["masked_examine"]		>> masked_examine
+	S["nsfw_examine_always"]>> nsfw_examine_always // TA EDIT
 	S["full_examine"]		>> full_examine
 	S["mute_animal_emotes"]	>> mute_animal_emotes
 	S["autoconsume"]		>> autoconsume
@@ -282,6 +283,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["ambiencevol"], ambiencevol)
 	WRITE_FILE(S["anonymize"], anonymize)
 	WRITE_FILE(S["masked_examine"], masked_examine)
+	WRITE_FILE(S["nsfw_examine_always"], nsfw_examine_always) // TA EDIT
 	WRITE_FILE(S["full_examine"], full_examine)
 	WRITE_FILE(S["mute_animal_emotes"], mute_animal_emotes)
 	WRITE_FILE(S["autoconsume"], autoconsume)
@@ -586,12 +588,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["taur_color"]			>> taur_color
 
 /datum/preferences/proc/_load_familiar_prefs(S)
-	S["familiar_name"]					>> familiar_prefs.familiar_name
+	S["familiar_names"]					>> familiar_prefs.familiar_names
 	S["familiar_pronouns"]				>> familiar_prefs.familiar_pronouns
-	S["familiar_specie"]				>> familiar_prefs.familiar_specie
-	S["familiar_headshot_link"]			>> familiar_prefs.familiar_headshot_link
+	S["familiar_species"]				>> familiar_prefs.familiar_species
 	S["familiar_flavortext"]			>> familiar_prefs.familiar_flavortext
+	S["familiar_flavortext_display"]	>> familiar_prefs.familiar_flavortext_display
+	S["familiar_headshot_link"]			>> familiar_prefs.familiar_headshot_link
 	S["familiar_ooc_notes"]				>> familiar_prefs.familiar_ooc_notes
+	S["familiar_ooc_notes_display"]		>> familiar_prefs.familiar_ooc_notes_display
 	S["familiar_ooc_extra"]				>> familiar_prefs.familiar_ooc_extra
 	S["familiar_ooc_extra_link"]		>> familiar_prefs.familiar_ooc_extra_link
 
@@ -1011,12 +1015,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["selected_loadout_items"], selected_loadout_items)
 
 	//Familiar Files
-	WRITE_FILE(S["familiar_name"] , familiar_prefs.familiar_name)
+	WRITE_FILE(S["familiar_names"] , familiar_prefs.familiar_names)
 	WRITE_FILE(S["familiar_pronouns"] , familiar_prefs.familiar_pronouns)
-	WRITE_FILE(S["familiar_specie"] , familiar_prefs.familiar_specie)
-	WRITE_FILE(S["familiar_headshot_link"] , familiar_prefs.familiar_headshot_link)
+	WRITE_FILE(S["familiar_species"] , familiar_prefs.familiar_species)
 	WRITE_FILE(S["familiar_flavortext"] , familiar_prefs.familiar_flavortext)
+	WRITE_FILE(S["familiar_flavortext_display"] , familiar_prefs.familiar_flavortext_display)
+	WRITE_FILE(S["familiar_headshot_link"] , familiar_prefs.familiar_headshot_link)
 	WRITE_FILE(S["familiar_ooc_notes"] , familiar_prefs.familiar_ooc_notes)
+	WRITE_FILE(S["familiar_ooc_notes_display"] , familiar_prefs.familiar_ooc_notes_display)
 	WRITE_FILE(S["familiar_ooc_extra"] , familiar_prefs.familiar_ooc_extra)
 	WRITE_FILE(S["familiar_ooc_extra_link"] , familiar_prefs.familiar_ooc_extra_link)
 
@@ -1029,7 +1035,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 
 	return TRUE
-
 
 #undef SAVEFILE_VERSION_MAX
 #undef SAVEFILE_VERSION_MIN

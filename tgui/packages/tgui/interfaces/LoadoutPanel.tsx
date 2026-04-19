@@ -229,6 +229,22 @@ export const LoadoutPanel = () => {
                       {item.triumphCost} триумфов
                     </Box>
                   ) : null}
+                  {item?.isDonatorItem ? (
+                    <Box
+                      style={{
+                        marginTop: '4px',
+                        width: '96px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        color: '#c084fc',
+                        textAlign: 'center',
+                        textShadow: '1px 1px 3px rgba(0,0,0,0.75)',
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      Донат тир {item.requiredTier && item.requiredTier > 0 ? item.requiredTier : 1}
+                    </Box>
+                  ) : null}
                 </Box>
                 <blockquote
                   style={{

@@ -27,7 +27,7 @@
 									/obj/item/alch/viscera = 2,
 									/obj/item/natural/bone = 4)
 	head_butcher = /obj/item/natural/head/direbear
-	faction = list("bears")		//This mf will kill undead - swapped to its own faction, doesn't trigger ambushes
+	faction = list(FACTION_BEARS)		//This mf will kill undead - swapped to its own faction, doesn't trigger ambushes
 	threat_point = THREAT_DANGEROUS
 	ambush_faction = "wildlife"
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
@@ -87,6 +87,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/direbear/Initialize(mapload)
 	. = ..()
+	AddComponent(/datum/component/ai_aggro_system)
 	var/datum/action/cooldown/mob_cooldown/bear_swipe/swipe = new(src)
 	swipe.Grant(src)
 	ai_controller.set_blackboard_key(BB_TARGETED_ACTION, swipe)

@@ -300,16 +300,17 @@
 				. += span_syndradio("[m1] struggling to hide the hangover, and the stench of spirits. We're alike.")
 
 			if(user.has_flaw(/datum/charflaw/addiction/paranoid))
-				var/datum/charflaw/addiction/paranoid/pflaw = user.get_flaw()
+				var/datum/charflaw/addiction/paranoid/pflaw = user.get_flaw(/datum/charflaw/addiction/paranoid)
 				if(ishuman(user))
 					if(has_flaw(/datum/charflaw/addiction/paranoid))
 						. += span_nicegreen("[m1] is the kind who sticks to their own. I understand.")
 						user.sate_addiction(/datum/charflaw/addiction/paranoid)
-					else if(pflaw.check_faction(src))
-						. += span_nicegreen("One of my own.")
-						user.sate_addiction(/datum/charflaw/addiction/paranoid)
-					else
-						user.add_stress(/datum/stressevent/paracrowd)
+					else if(pflaw)
+						if(pflaw.check_faction(src))
+							. += span_nicegreen("One of my own.")
+							user.sate_addiction(/datum/charflaw/addiction/paranoid)
+						else
+							user.add_stress(/datum/stressevent/paracrowd)
 
 			if(has_flaw(/datum/charflaw/addiction/masochist) && user.has_flaw(/datum/charflaw/addiction/sadist))
 				. += span_secradio("[m1] marked by scars inflicted for pleasure. A delectable target for my urges.")
@@ -391,11 +392,19 @@
 			if(L.STAINT > 9 && L.STAPER > 9)
 				. += span_redtext("<i>[m1] critically fragile!</i>")
 
-	if(user != src && HAS_TRAIT(user, TRAIT_MATTHIOS_EYES) && (!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS)))
+	if(user != src && HAS_TRAIT(user, TRAIT_MATTHIOS_EYES) && !HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
 		var/atom/item = get_most_expensive()
 		if(item)
-			. += span_notice("You get the feeling [m2] most valuable possession is \a [item].")
-
+			. += span_notice("You get the feeling [src]'s most valuable possession is \a [item].")
+		var/mammonsonperson = get_mammons_in_atom(src)
+		var/mammonsinbank = SStreasury.bank_accounts[src]
+		if(isnull(mammonsinbank))
+			mammonsinbank = 0
+		var/totalvalue = mammonsonperson + mammonsinbank
+		if(totalvalue && HAS_TRAIT(user, TRAIT_GILDED_SIGHT))
+			. += span_notice("They carry [mammonsonperson] mammons, with [mammonsinbank] stored away, totaling [totalvalue].")
+		else if(mammonsonperson && mammonsonperson >= 200)
+			. += span_notice("They carry about [mammonsonperson] mammons with them.")
 	var/obscured = check_obscured_slots()
 	var/skipface = (wear_mask && (wear_mask.flags_inv & HIDEFACE)) || (head && (head.flags_inv & HIDEFACE))
 	if(HAS_TRAIT(user, TRAIT_ROYALSERVANT))
@@ -643,8 +652,8 @@
 		. += str
 
 	//arcyne ward
-	if(istype(skin_armor, /obj/item/clothing/suit/roguetown/armor/regenerating/skin/arcyne_ward))
-		var/obj/item/clothing/suit/roguetown/armor/regenerating/skin/arcyne_ward/ward = skin_armor
+	if(istype(skin_armor, /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward))
+		var/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/ward = skin_armor
 		var/str = "[m3] <font color='[ward.ward_color]'>[ward.generate_tooltip(ward.get_examine_string(user))] shimmering around [user == src ? "me" : p_them()].</font>"
 		str += ward.integrity_check(is_smart)
 		if (is_stupid)

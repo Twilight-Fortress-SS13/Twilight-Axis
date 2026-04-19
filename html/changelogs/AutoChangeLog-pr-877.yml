@@ -1,0 +1,6 @@
+author: "UEDCommander"
+delete-after: True
+changes:
+  - rscdel: "Удалены псайдонистские чудеса"
+  - rscadd: "Вместо чудес, псайдониты-клирики получают трейты Psydonic Respite и My Hands are Steady by HIS Grace"
+  - balance: "Снижена эффективность Psydonic Endurance с 1.6 отрегенерированного урона в тик до 0.6."

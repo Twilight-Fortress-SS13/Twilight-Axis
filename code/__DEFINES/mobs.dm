@@ -607,9 +607,24 @@
 
 #define TYPING_INDICATOR_TIMEOUT 20 MINUTES
 
-// NPC Debugging
+// NPC Debugging - uncomment to enable AI debug runechat
+// #define NPC_THINK_DEBUG
 #ifdef NPC_THINK_DEBUG
-#define NPC_THINK(message) visible_message(message, runechat_message = message)
+#define AI_THINK(pawn, message) pawn.visible_message(message, runechat_message = message)
 #else
-#define NPC_THINK(message)
+#define AI_THINK(pawn, message)
 #endif
+
+// #define NPC_THINK_DEBUG_WORLD
+#ifdef NPC_THINK_DEBUG_WORLD
+#define AI_WORLD_THINK(pawn, message) to_chat(world, "<span class='boldannounce'>\[AI-WORLD\] [pawn]: [message]</span>")
+#else
+#define AI_WORLD_THINK(pawn, message)
+#endif
+GLOBAL_LIST_INIT(roman_cache, list(
+	"0","I","II","III","IV","V","VI","VII","VIII","IX","X",
+	"XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX",
+	"XXI","XXII","XXIII","XXIV","XXV","XXVI","XXVII","XXVIII","XXIX","XXX"
+))
+
+#define ROMAN(n) (GLOB.roman_cache[clamp((n)+1, 1, GLOB.roman_cache.len)])

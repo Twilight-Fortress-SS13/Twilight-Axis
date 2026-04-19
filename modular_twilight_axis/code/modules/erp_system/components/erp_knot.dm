@@ -60,14 +60,22 @@
 		stop_decay()
 		return
 
+	sanitize_links()
+
+	if(!active_links || !active_links.len)
+		stop_decay()
+		return
+
 	for(var/i = active_links.len; i >= 1; i--)
 		var/datum/erp_knot_link/L = active_links[i]
 		if(!istype(L) || !L.is_valid())
-			_unregister_btm_moved(L?.btm)
-			active_links.Cut(i, i + 1)
-			_remove_from_index(L)
+			if(istype(L))
+				remove_single_link(L, forceful = FALSE, who_pulled = null)
 			continue
+
 		L.decay_tick()
+		if(!L.is_valid())
+			remove_single_link(L, forceful = FALSE, who_pulled = null)
 
 	if(!active_links.len)
 		stop_decay()
@@ -131,6 +139,21 @@
 		return FALSE
 
 	var/max_units = max(1, penis_org.count_to_action)
+
+	// Если уже есть активный кнот на этой же паре — просто обновляем активность.
+	if(active_links && active_links.len)
+		for(var/datum/erp_knot_link/KL as anything in active_links)
+			if(!istype(KL) || !KL.is_valid())
+				continue
+			if(KL.penis_org != penis_org)
+				continue
+			if(KL.receiving_org != receiving_org)
+				continue
+			if(KL.btm != target)
+				continue
+
+			KL.note_activity()
+			return TRUE
 
 	var/requested_unit = penis_unit_id
 	if(!isnum(requested_unit))
@@ -413,3 +436,52 @@
 		if(L.btm == target)
 			count++
 	return count
+
+/datum/component/erp_knotting/proc/sanitize_links()
+	if(!active_links)
+		active_links = list()
+	if(!active_links_by_key)
+		active_links_by_key = list()
+	if(!btm_move_refcount)
+		btm_move_refcount = list()
+
+	if(!active_links.len)
+		stop_decay()
+		return FALSE
+
+	var/changed = FALSE
+
+	for(var/i = active_links.len; i >= 1; i--)
+		var/datum/erp_knot_link/L = active_links[i]
+		if(!istype(L) || !L.is_valid())
+			if(istype(L))
+				remove_single_link(L, forceful = FALSE, who_pulled = null)
+			else
+				active_links.Cut(i, i + 1)
+				changed = TRUE
+			continue
+
+		if(!L.penis_org || QDELETED(L.penis_org))
+			remove_single_link(L, forceful = FALSE, who_pulled = null)
+			changed = TRUE
+			continue
+
+		if(!L.receiving_org || QDELETED(L.receiving_org))
+			remove_single_link(L, forceful = FALSE, who_pulled = null)
+			changed = TRUE
+			continue
+
+		if(L.penis_org.get_owner() != parent)
+			remove_single_link(L, forceful = FALSE, who_pulled = null)
+			changed = TRUE
+			continue
+
+		if(!L.penis_org.have_knot)
+			remove_single_link(L, forceful = FALSE, who_pulled = null)
+			changed = TRUE
+			continue
+
+	if(!active_links.len)
+		stop_decay()
+
+	return changed

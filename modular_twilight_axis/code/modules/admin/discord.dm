@@ -137,6 +137,52 @@
 		admin_notes_channel
 	)
 
+
+/world/proc/TgsAnnounceTriumphChanges(value, player_ckey, admin_ckey, reason)
+	if(!TgsAvailable())
+		return
+
+	var/admin_notes_channel = CONFIG_GET(string/admin_notes_channel)
+
+	if(!admin_notes_channel)
+		return
+
+	var/datum/tgs_chat_embed/structure/embed = new()
+	embed.title = "Изменение триумфов"
+	embed.description = reason ? "**Причина**\n" + reason : "Причина не указана!"
+	embed.colour = value > 0 ? "#a6da95" : "#ed8796"
+	embed.footer = create_discord_embed_footer()
+
+	var/datum/tgs_chat_embed/field/field_player_ckey = new(
+		"Игрок", "`[player_ckey]`"
+	)
+
+	var/datum/tgs_chat_embed/field/field_admin_ckey = new(
+		"Администратор", "`[admin_ckey]`"
+	)
+
+	var/datum/tgs_chat_embed/field/field_changed_value = new(
+		"Изменено на", "`[value]`"
+	)
+
+	field_player_ckey.is_inline = TRUE
+	field_admin_ckey.is_inline = TRUE
+	field_changed_value.is_inline = TRUE
+
+	embed.fields = list(
+		field_player_ckey,
+		field_admin_ckey,
+		field_changed_value,
+	)
+
+	var/datum/tgs_message_content/message = new("")
+	message.embed = embed
+
+	send2chat(
+		message,
+		admin_notes_channel
+	)
+
 /world/proc/TgsAnnounceNote(note, player_ckey, admin_ckey)
 	if(!TgsAvailable())
 		return

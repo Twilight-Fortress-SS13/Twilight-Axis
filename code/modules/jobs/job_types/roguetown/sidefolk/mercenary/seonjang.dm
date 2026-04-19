@@ -45,7 +45,7 @@
 	H.adjust_blindness(-3)
 
 	if(should_wear_masc_clothes(H))
-		shirt = /obj/item/clothing/suit/roguetown/armor/regenerating/easttats
+		shirt = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/easttats
 		head = /obj/item/clothing/head/roguetown/eaststrawhat
 		cloak = /obj/item/clothing/cloak/eastcloak1
 		pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants1
@@ -57,7 +57,7 @@
 	else if(should_wear_femme_clothes(H))
 		head = /obj/item/clothing/head/roguetown/eaststrawhat
 		armor = /obj/item/clothing/suit/roguetown/armor/basiceast/captainrobe
-		shirt = /obj/item/clothing/suit/roguetown/armor/regenerating/easttats
+		shirt = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/easttats
 		gloves = /obj/item/clothing/gloves/roguetown/eastgloves2
 		cloak = /obj/item/clothing/cloak/eastcloak1
 	H.merctype = 9

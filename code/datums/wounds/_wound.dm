@@ -276,6 +276,21 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		if(!owner || QDELETED(owner) || QDELETED(src))
 			return FALSE
 
+	if(!HAS_TRAIT(owner, TRAIT_PARALYSIS) && owner.blood_volume > BLOOD_VOLUME_SURVIVE && owner.stat < UNCONSCIOUS) //TA EDIT START
+		var/healamount = 0
+		if(HAS_TRAIT(owner, TRAIT_PSYDONITE_4))
+			healamount = 0.4 + (owner.STAWIL * 0.1)
+		else if(HAS_TRAIT(owner, TRAIT_PSYDONITE_3))
+			healamount = 0.2 + (owner.STAWIL * 0.1)
+		else if(HAS_TRAIT(owner, TRAIT_PSYDONITE_2))
+			healamount = owner.STAWIL * 0.1
+
+		if(healamount > 0)
+			heal_wound(healamount)
+			if(!owner || QDELETED(owner) || QDELETED(src))
+				return FALSE
+		//TA EDIT END
+
 	if(HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing)
 		heal_wound(0.6)
 		if(!owner || QDELETED(owner) || QDELETED(src))
@@ -440,7 +455,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 #define CLOT_THRESHOLD_ARTERY 2
 
 /// Make sure this is called AFTER your child upgrade proc, unless you have a reason for the bleed rate to be above artery on a regular wound.
-/datum/wound/dynamic/upgrade(dam as num, armor, exposed = FALSE)
+/datum/wound/dynamic/upgrade(dam as num, armor, exposed = FALSE, pen_info)
 	if(!bodypart_owner.unlimited_bleeding)
 		if(bleed_rate >= ARTERY_LIMB_BLEEDRATE)
 			set_bleed_rate(ARTERY_LIMB_BLEEDRATE)

@@ -106,7 +106,7 @@
 				if("Bow")
 					H.adjust_skillrank(/datum/skill/combat/bows, 4, TRUE)
 					backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
-					beltl = /obj/item/quiver/arrows/bronze
+					beltl = /obj/item/quiver/arrows
 			backl = /obj/item/storage/backpack/rogue/satchel
 			neck = /obj/item/clothing/neck/roguetown/leather
 			shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/aalloy

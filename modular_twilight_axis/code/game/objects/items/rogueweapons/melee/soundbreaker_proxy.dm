@@ -220,7 +220,7 @@
 	target.send_item_attack_message(src, user, selzone)
 
 	target.next_attack_msg.Cut()
-	target.retaliate(user)
+//	target.retaliate(user)
 
 	last_attack_target = target
 	last_attack_success = TRUE

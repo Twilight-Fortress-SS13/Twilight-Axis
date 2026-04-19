@@ -1,7 +1,3 @@
-/datum/job/roguetown/orthodoxist/New()
-	job_subclasses += list(/datum/advclass/blackpowder_legionnaire)
-	. = ..()
-
 /datum/advclass/blackpowder_legionnaire
 	name = "Blackpowder Legionnaire"
 	tutorial = "In the Blackpowder Order, every fourth soldier is a sharpshooter, armed with advanced Otavan firearms. These Legionnaires are the very essence of the everchanging face of warfare, and when the Final War begins, it is with their power that the evil will be driven back."
@@ -24,22 +20,22 @@
 	)
 	subclass_skills = list(
 		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
-		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE
 	)
 	subclass_stashed_items = list(
 		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy
 	)
-	extra_context = "Legionnaire subclass can choose between light and medium armor options, gaining Dodge Expert or Maille Training, respectively."
+	extra_context = "This subclass can choose between two archetypes: Legionnaire and Otavan Volf. Legionnaire wield powerful blackpowder weapons and may select between light or medium armor, gaining Dodge Expert or Maille Training respectively. Otavan Volf specialize in stealth, rune magyck and silent firearms."
 
 /datum/outfit/job/roguetown/blackpowder_legionnaire
 	job_bitflag = BITFLAG_HOLY_WARRIOR
@@ -48,6 +44,7 @@
 	..()
 	backl = /obj/item/storage/backpack/rogue/satchel/otavan
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
+	cloak = /obj/item/clothing/cloak/bandolier
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
 	neck = /obj/item/clothing/neck/roguetown/leather/blackpowder
 	gloves = /obj/item/clothing/gloves/roguetown/chain/psydon
@@ -78,7 +75,7 @@
 							if("Cannonballs")
 								beltr = /obj/item/quiver/twilight_bullet/cannonball/lead
 					if("Runelock Pistol")
-						belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
+						belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder
 						beltr = /obj/item/quiver/twilight_bullet/runicbag/runed
 						l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock
 						backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
@@ -95,14 +92,11 @@
 						armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon
 						pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 						ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
-
-				cloak = /obj/item/clothing/cloak/tabard/psydontabard
 				head = /obj/item/clothing/head/roguetown/helmet/kettle
 				wrists = /obj/item/clothing/neck/roguetown/psicross/silver
 				beltl = /obj/item/rogueweapon/scabbard/sword
 				r_hand = /obj/item/rogueweapon/sword/short/psy
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
-
 			if ("Otavan Volf")
 				var/weapons = list("Dagger", "Knuckledbusters")
 				var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
@@ -119,18 +113,18 @@
 				head = /obj/item/clothing/head/roguetown/roguehood/psydon/confessor
 				wrists = /obj/item/clothing/neck/roguetown/psicross/silver
 				pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
-				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
+				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder
 				beltr = /obj/item/quiver/twilight_bullet/lead_ten
 				backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
-						/obj/item/paper/inqslip/arrival/ortho = 1,
-						/obj/item/twilight_powderflask/holyfyre = 1,
-						/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
-						/obj/item/inqarticles/garrote = 1)
+					/obj/item/paper/inqslip/arrival/ortho = 1,
+					/obj/item/twilight_powderflask/holyfyre = 1,
+					/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
+					/obj/item/inqarticles/garrote = 1)
 				H.adjust_skillrank_up_to(/datum/skill/magic/arcane, SKILL_LEVEL_APPRENTICE, TRUE)
 				H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/shadowstep)
 				H.mind?.RemoveSpell(H.mind.get_spell(/datum/action/cooldown/spell/touch/prestidigitation))
 				var/arcane = list("Fetch", "Invisibility", "Repulse", "Leap")
-				var/arcane_choice = input("TAKE YOUR RUNE", "PSYDON'S RUNE") as anything in arcane
+				var/arcane_choice = input("TAKE YOUR RUNE.", "PSYDON'S RUNE.") as anything in arcane
 				switch(arcane_choice)
 					if("Fetch")
 						H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/fetch)

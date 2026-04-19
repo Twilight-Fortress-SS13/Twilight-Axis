@@ -2,7 +2,9 @@
 	set waitfor = FALSE
 	set invisibility = 0
 
-	if(!client && ai_controller && ai_controller.ai_status == AI_STATUS_OFF)
+	// Sleep gate: skip Life() for AI-off NPCs to save cycles, but only if fully conscious.
+	// If not conscious, we must keep running Life() so wounds bleed, blood drops, and update_stat() can transition us.
+	if(!client && stat == CONSCIOUS && ai_controller && ai_controller.ai_status == AI_STATUS_OFF)
 		return
 
 	SEND_SIGNAL(src, COMSIG_LIVING_LIFE, seconds, times_fired)
@@ -46,12 +48,21 @@
 
 	/// ENDVRE AS HE DOES.
 	if(!stat && HAS_TRAIT(src, TRAIT_PSYDONITE) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
-		handle_wounds()
+		//handle_wounds() //TA EDIT
 		//passively heal wounds, when you're in trouble..
 		if(blood_volume > BLOOD_VOLUME_SURVIVE)
-			for(var/datum/wound/wound as anything in get_wounds())
+			/*for(var/datum/wound/wound as anything in get_wounds())//TA EDIT START
 				if(wound?.severity <= WOUND_SEVERITY_MODERATE)
-					wound.heal_wound(0.4)
+					wound.heal_wound(0.4)*/
+			if(HAS_TRAIT(src, TRAIT_PSYDONITE_4))
+				adjustBruteLoss(-5)
+				adjustFireLoss(-5)
+			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_3))
+				adjustBruteLoss(-2)
+				adjustFireLoss(-2)
+			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_2))
+				adjustBruteLoss(-1)
+				adjustFireLoss(-1) //TA EDIT END
 	if(HAS_TRAIT(src, TRAIT_WOUNDREGEN))
 		for(var/datum/wound/wound as anything in get_wounds())
 			wound.heal_wound(10)

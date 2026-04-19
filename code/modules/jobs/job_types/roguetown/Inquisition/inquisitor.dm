@@ -75,8 +75,8 @@
 	)
 	subclass_stashed_items = list(
 		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy,
-		"Branding letters" = /obj/item/branding_letters,
-		"Branding iron" = /obj/item/branding_iron
+		"Branding Letters" = /obj/item/branding_letters, //TA Branding
+		"Branding Iron" = /obj/item/branding_iron 
 	)
 
 /datum/outfit/job/roguetown/inquisitor/inspector/pre_equip(mob/living/carbon/human/H)
@@ -176,8 +176,8 @@
 	)
 	subclass_stashed_items = list(
 		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy,
-		"Branding letters" = /obj/item/branding_letters,
-		"Branding iron" = /obj/item/branding_iron
+		"Branding Letters" = /obj/item/branding_letters, // TA Branding
+		"Branding Iron" = /obj/item/branding_iron
 	)
 
 /datum/outfit/job/roguetown/inquisitor/ordinator/pre_equip(mob/living/carbon/human/H)

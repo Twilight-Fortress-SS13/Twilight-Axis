@@ -1,3 +1,13 @@
+/datum/supply_pack/rogue/light_armor/padded_gambeson_cuisses
+	name = "Padded Gamboised Cuisses"
+	cost = 60
+	contains = list(/obj/item/clothing/under/roguetown/gambeson/heavy)
+
+/datum/supply_pack/rogue/light_armor/gambeson_cuisses
+	name = "Gamboised Cuisses"
+	cost = 25
+	contains = list(/obj/item/clothing/under/roguetown/gambeson)
+
 /datum/supply_pack/rogue/ranged_weapons/twilight_flintgonne
 	name = "Hakenbüchse"
 	cost = 100

@@ -104,7 +104,11 @@
 	* mob/RangedAttack(atom,params) - used only ranged, only used for tk and laser eyes but could be changed
 */
 /mob/proc/ClickOn( atom/A, params )
-	var/list/modifiers = params2list(params)
+	var/list/modifiers
+	if(islist(params))
+		modifiers = params
+	else
+		modifiers = params2list(params)
 
 	if(curplaying)
 		curplaying.on_mouse_up()
@@ -122,6 +126,11 @@
 		return
 
 	if(SEND_SIGNAL(src, COMSIG_MOB_CLICKON, A, params) & COMSIG_MOB_CANCEL_CLICKON)
+		return
+	
+	var/mob/living/L = src
+	if(L?.wallpressed && L.m_intent == MOVE_INTENT_SNEAK && !istype(L.loc, /turf/open/transparent/openspace))
+		to_chat(src, span_warning("You need to step away from the wall first."))
 		return
 
 	if(modifiers["right"] && !modifiers["shift"] && !modifiers["alt"] && !modifiers["ctrl"])
@@ -776,9 +785,8 @@ GLOBAL_LIST_EMPTY(reach_dummy_pool)
 /atom/proc/AltRightClick(mob/user)
 //	SEND_SIGNAL(src, COMSIG_CLICK_ALT, user)
 	var/turf/T = get_turf(src)
-	if(T && (isturf(loc) || isturf(src)) && user.TurfAdjacent(T))
-		user.listed_turf = T
-		user.client.statpanel = T.name
+	if(T && (isturf(loc) || isturf(src)))
+		user.open_tile_panel_for(T)
 
 /mob/proc/CtrlRightClickOn(atom/A, params)
 	pointed(A)
@@ -914,9 +922,10 @@ GLOBAL_LIST_EMPTY(reach_dummy_pool)
 	var/list/modifiers = params2list(params)
 	if(modifiers["ctrl"])
 		var/obj/item/active_item = get_active_held_item()
-		if(active_item?.has_altgrip_modes())
-			active_item.cycle_altgrip(src, delta_y > 0 ? 1 : -1)
-			return
+		if(active_item)
+			if(active_item?.has_altgrip_modes())
+				active_item.cycle_altgrip(src, delta_y > 0 ? 1 : -1)
+				return
 	if(modifiers["shift"])
 		if(delta_y > 0)
 			aimheight_change("up")

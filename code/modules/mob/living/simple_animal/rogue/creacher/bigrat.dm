@@ -32,7 +32,7 @@
 							/obj/item/alch/viscera = 1,
 							/obj/item/natural/fur/rat = 1)
 	head_butcher = /obj/item/natural/head/rous
-	faction = list("rats")
+	faction = list(FACTION_RATS)
 	threat_point = THREAT_TRASH
 	ambush_faction = "wildlife"
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
@@ -83,6 +83,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/bigrat/Initialize()
 	. = ..()
+	AddComponent(/datum/component/ai_aggro_system)
 	gender = MALE
 	AddElement(/datum/element/ai_flee_while_injured, 0.75, 0.3)
 	if(prob(33))
