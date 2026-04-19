@@ -555,7 +555,7 @@
 	/obj/item/storage/backpack/rogue/backpack = TAT_ITEM_ENTRY("Backpack", 3, "clothing", "armor_family", TAT_ARMOR_CLOTH, "back"), \
 	/obj/item/storage/gadget/messkit = TAT_ITEM_ENTRY("Mess Kit", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/bedroll = TAT_ITEM_ENTRY("Bedroll", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "back"), \
-	/obj/item/rogueweapon/halberd/bardiche = TAT_ITEM_ENTRY("Bardiche", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
+	/obj/item/rogueweapon/halberd/bardiche = TAT_ITEM_ENTRY("Bardiche", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/rogueweapon/mace/goden/steel = TAT_ITEM_ENTRY("Grand Mace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/mace/cudgel = TAT_ITEM_ENTRY("Cudgel", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
 	/obj/item/rogueweapon/mace/cudgel/psyclassic/old = TAT_ITEM_ENTRY("Enduring Handmace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
@@ -587,7 +587,7 @@
 	/obj/item/rogueweapon/whip = TAT_ITEM_ENTRY("Leather Whip", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "whip"), \
 	/obj/item/rogueweapon/whip/nagaika = TAT_ITEM_ENTRY("Nagaika Whip", 2, "weapon", "weapon_supply", TAT_ARMOR_LEATHER, "whip"), \
 	/obj/item/rogueweapon/whip/psywhip_lesser = TAT_ITEM_ENTRY("Psydonic Whip", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "whip"), \
-	/obj/item/rogueweapon/handclaw = TAT_ITEM_ENTRY("Ravager Claws", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "claws"), \
+	/obj/item/rogueweapon/handclaw = TAT_ITEM_ENTRY("Ravager Claws", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "claws"), \
 	/obj/item/rogueweapon/handclaw/gronn/silver = TAT_ITEM_ENTRY("Silver Claws", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "claws"), \
 	/obj/item/rogueweapon/sword/long/oldpsysword = TAT_ITEM_ENTRY("Enduring Longsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/quiver/javelin/bronze = TAT_ITEM_ENTRY("Bronze Javelins", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "munition"), \
