@@ -481,12 +481,6 @@
 			items -= item_path
 			item_loadout -= item_path
 
-/datum/tat_build/proc/is_magic_initiation_trait(trait_id)
-	return (trait_id == TAT_TRAIT_DIVINE_INITIATE \
-		|| trait_id == TAT_TRAIT_MAGE_INITIATE \
-		|| trait_id == TAT_TRAIT_DRUID_INITIATE \
-		|| trait_id == TAT_TRAIT_WITCH_INITIATE)
-
 /datum/tat_build/proc/get_effective_divine_tier()
 	var/tier = CLERIC_T1
 	if(traits[TAT_TRAIT_DIVINE_BOON_1])
@@ -561,8 +555,6 @@
 	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_SOUNDBREAKER))
 		return TRUE
 	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_TROPHY_BOUNTY) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_TROPHY_BOUNTY))
-		return TRUE
-	if(is_magic_initiation_trait(trait_a) && is_magic_initiation_trait(trait_b))
 		return TRUE
 
 	return FALSE
