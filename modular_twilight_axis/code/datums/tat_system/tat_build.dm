@@ -1221,7 +1221,7 @@
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/weaponsmithing", 3)
 	if(traits[TRAIT_ARCYNE] && !has_defensive_trait_lockout())
 		var/current_arcane = get_skill_value(/datum/skill/magic/arcane)
-		var/target_arcane = min(5, current_arcane + 3)
+		var/target_arcane = min(5, current_arcane + 2)
 		var/bonus_arcane = max(0, target_arcane - current_arcane)
 		if(bonus_arcane > 0)
 			grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcane", bonus_arcane)
