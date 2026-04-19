@@ -536,6 +536,8 @@
 		return TRUE
 	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TAT_TRAIT_WANTED) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TAT_TRAIT_WANTED))
 		return TRUE
+	if((trait_a == TAT_TRAIT_BONUS_STAT_POOL && trait_b == TAT_TRAIT_WANTED) || (trait_b == TAT_TRAIT_BONUS_STAT_POOL && trait_a == TAT_TRAIT_WANTED))
+		return TRUE
 	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TAT_TRAIT_BONUS_STAT_POOL) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TAT_TRAIT_BONUS_STAT_POOL))
 		return TRUE
 	if((trait_a == TRAIT_DODGEEXPERT && trait_b == TRAIT_PARRYEXPERT) || (trait_b == TRAIT_DODGEEXPERT && trait_a == TRAIT_PARRYEXPERT))
