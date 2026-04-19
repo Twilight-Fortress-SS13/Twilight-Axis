@@ -419,7 +419,7 @@
 	/obj/item/clothing/suit/roguetown/armor/leather/cuirass = TAT_ITEM_ENTRY("Leather Cuirass", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy = TAT_ITEM_ENTRY("Hardened Leather Armor", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat = TAT_ITEM_ENTRY("Hardened Leather Coat", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
-	/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen = TAT_ITEM_ENTRY("Megarmach Scale Coat", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen = TAT_ITEM_ENTRY("Megarmach Scale Coat", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen/new_coat = TAT_ITEM_ENTRY("Raneshene Light Scale Coat", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/steppe = TAT_ITEM_ENTRY("Fur-Woven Hatanga Coat", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy/freifechter = TAT_ITEM_ENTRY("Freifechter Jacket", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
@@ -644,7 +644,7 @@
 	/obj/item/reagent_containers/glass/bottle/alchemical/lucpot = TAT_ITEM_ENTRY("Lucky Vial", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/reagent_containers/glass/bottle/rogue/manapot = TAT_ITEM_ENTRY("Mana Bottle", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/repair_kit/metal/bad = TAT_ITEM_ENTRY("Scrap Kit", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
-	/obj/item/repair_kit/metal = TAT_ITEM_ENTRY("Plate's kit", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/repair_kit/metal = TAT_ITEM_ENTRY("Plate's kit", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/repair_kit/bad = TAT_ITEM_ENTRY("Fabric Patch", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/storage/hip/headhook = TAT_ITEM_ENTRY("Head Hook", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/storage/hip/headhook/bronze = TAT_ITEM_ENTRY("Bronze Head Hook", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
