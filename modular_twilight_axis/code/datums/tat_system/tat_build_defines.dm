@@ -345,7 +345,7 @@
 	/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull = TAT_ITEM_ENTRY("Hounskull Bacinet", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/bronze = TAT_ITEM_ENTRY("Bronze Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/bronzegladiator = TAT_ITEM_ENTRY("Bronze Murmillo", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
-	/obj/item/clothing/head/roguetown/helmet/heavy/barbute = TAT_ITEM_ENTRY("Barbute", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/barbute = TAT_ITEM_ENTRY("Barbute", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/barbute/great = TAT_ITEM_ENTRY("Great Barbute", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor = TAT_ITEM_ENTRY("Visored Barbute", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/beakhelm = TAT_ITEM_ENTRY("Beak helmet", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
@@ -648,3 +648,9 @@
 	/obj/item/storage/hip/headhook = TAT_ITEM_ENTRY("Head Hook", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/storage/hip/headhook/bronze = TAT_ITEM_ENTRY("Bronze Head Hook", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate = TAT_ITEM_ENTRY("Psydonic Cuirass", 4, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/knight/old/iron = TAT_ITEM_ENTRY("Iron Knight's Helm", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/knight/old = TAT_ITEM_ENTRY("Knight's Helm", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet = TAT_ITEM_ENTRY("Armet", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/sheriff = TAT_ITEM_ENTRY("Barred Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/guard/bogman = TAT_ITEM_ENTRY("Steel Bogman's Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/guard = TAT_ITEM_ENTRY("Guard Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
