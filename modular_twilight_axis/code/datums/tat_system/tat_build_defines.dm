@@ -263,9 +263,9 @@
 	/obj/item/rogueweapon/mace/steel = TAT_ITEM_ENTRY("Steel Mace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/mace/steel/morningstar = TAT_ITEM_ENTRY("Morningstar", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/mace/steel/silver = TAT_ITEM_ENTRY("Silver Mace", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "blunt"), \
-	/obj/item/rogueweapon/mace/warhammer = TAT_ITEM_ENTRY("Warhammer", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
-	/obj/item/rogueweapon/mace/warhammer/bronze = TAT_ITEM_ENTRY("Bronze Warhammer", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "blunt"), \
-	/obj/item/rogueweapon/mace/warhammer/steel = TAT_ITEM_ENTRY("Steel Warhammer", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
+	/obj/item/rogueweapon/mace/warhammer = TAT_ITEM_ENTRY("Warhammer", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
+	/obj/item/rogueweapon/mace/warhammer/bronze = TAT_ITEM_ENTRY("Bronze Warhammer", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "blunt"), \
+	/obj/item/rogueweapon/mace/warhammer/steel = TAT_ITEM_ENTRY("Steel Warhammer", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/mace/warhammer/steel/silver = TAT_ITEM_ENTRY("Silver Warhammer", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "blunt"), \
 	/obj/item/rogueweapon/flail = TAT_ITEM_ENTRY("Flail", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
 	/obj/item/rogueweapon/flail/alt = TAT_ITEM_ENTRY("Flail, Studded", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
@@ -492,7 +492,7 @@
 	/obj/item/storage/belt/rogue/leather/knifebelt/black/silver = TAT_ITEM_ENTRY("Silver Tossblade belt", 3, "clothing", "armor_family", TAT_SUPPLY_SILVER, "belt"), \
 	/obj/item/storage/belt/rogue/leather/knifebelt/black/kazengun = TAT_ITEM_ENTRY("Easern tossbale belt", 3, "clothing", "armor_family", TAT_SUPPLY_STEEL, "belt"), \
 	/obj/item/rogueweapon/spear/psyspear/old = TAT_ITEM_ENTRY("Enduring Spear", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
-	/obj/item/rogueweapon/mace/cudgel/psy/old = TAT_ITEM_ENTRY("Enduring Flanged Mace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/rogueweapon/mace/cudgel/psy/old = TAT_ITEM_ENTRY("Enduring Flanged Mace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm = TAT_ITEM_ENTRY("Psydonic Helm", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/psybucket = TAT_ITEM_ENTRY("Psydonic Bucket", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/rogueweapon/huntingknife/idagger/silver/stake = TAT_ITEM_ENTRY("Silver Stake", 2, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "knife"), \
