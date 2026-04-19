@@ -550,7 +550,18 @@
 		return TRUE
 	if((trait_a == TRAIT_MEDIUMARMOR && trait_b == TRAIT_CRITICAL_RESISTANCE) || (trait_b == TRAIT_MEDIUMARMOR && trait_a == TRAIT_CRITICAL_RESISTANCE))
 		return TRUE
-
+	if((trait_a == TAT_TRAIT_TROPHY_BOUNTY && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_TROPHY_BOUNTY && trait_a == TAT_TRAIT_RONIN))
+		return TRUE
+	if((trait_a == TAT_TRAIT_TROPHY_BOUNTY && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_TROPHY_BOUNTY && trait_a == TAT_TRAIT_SOUNDBREAKER))
+		return TRUE
+	if((trait_a == TAT_TRAIT_SOUNDBREAKER && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_SOUNDBREAKER && trait_a == TAT_TRAIT_RONIN))
+		return TRUE
+	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_RONIN))
+		return TRUE
+	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_SOUNDBREAKER))
+		return TRUE
+	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_TROPHY_BOUNTY) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_TROPHY_BOUNTY))
+		return TRUE
 	if(is_magic_initiation_trait(trait_a) && is_magic_initiation_trait(trait_b))
 		return TRUE
 
@@ -1239,6 +1250,8 @@
 			H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 	if(traits[TAT_TRAIT_SOUNDBREAKER])
 		H.LoadComponent(/datum/component/combo_core/soundbreaker)
+	if(traits[TAT_TRAIT_TROPHY_BOUNTY])
+		H.LoadComponent(/datum/component/trophy_hunter)
 	if(traits[TAT_TRAIT_RONIN])
 		H.LoadComponent(/datum/component/combo_core/ronin)
 	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T1] || traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
