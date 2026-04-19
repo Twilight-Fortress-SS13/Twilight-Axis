@@ -470,7 +470,7 @@
 	/obj/item/clothing/under/roguetown/trou/leather/gronn = TAT_ITEM_ENTRY("Gronnic Fur Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/under/roguetown/trou/leather/pontifex/raneshen = TAT_ITEM_ENTRY("Baggy Desert Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/wrists/roguetown/bracers = TAT_ITEM_ENTRY("Steel Bracers ", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "wrists"), \
-	/obj/item/clothing/under/roguetown/trou/leathertights = TAT_ITEM_ENTRY("Leather tights", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
+	/obj/item/clothing/under/roguetown/trou/leathertights = TAT_ITEM_ENTRY("Leather tights", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/wrists/roguetown/bracers/brigandine = TAT_ITEM_ENTRY("Brigandine Rerebraces", 4, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/bronze = TAT_ITEM_ENTRY("Bronze Bracers ", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/cloth/monk = TAT_ITEM_ENTRY("Monk Wrapping", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
