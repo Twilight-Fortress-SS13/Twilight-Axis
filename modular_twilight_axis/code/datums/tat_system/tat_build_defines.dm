@@ -129,9 +129,9 @@
 	TAT_TRAIT_BARDIC_INSPIRATION_T1 = TAT_TRAIT_ENTRY("Bardic Inspiration I", 2, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain tier 1 bardic inspiration, audience management verbs, and a songbook."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T2 = TAT_TRAIT_ENTRY("Bardic Inspiration II", 2, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Upgrades bardic inspiration to tier 2, increasing audience size and songs known."), \
 	TAT_TRAIT_PARTY_LEADER = TAT_TRAIT_ENTRY("Party Leader", 3, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Can form a party through Leadership verbs. While the party has at least two willing members, gain +1 CON and +1 WIL."), \
-	TAT_TRAIT_BONUS_STAT_POOL = TAT_TRAIT_ENTRY("Natural Potential", 3, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain +3 stat points in the build pool."), \
+	TAT_TRAIT_BONUS_STAT_POOL = TAT_TRAIT_ENTRY("Natural Potential", 2, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain +3 stat points in the build pool."), \
 	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -1, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
-	TAT_TRAIT_TROPHY_BOUNTY = TAT_TRAIT_ENTRY("Trophy Bounty", 4, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "You can recieve additional bonuses when wearing a head hooks with monster heads."), \
+	TAT_TRAIT_TROPHY_BOUNTY = TAT_TRAIT_ENTRY("Trophy Bounty", 2, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "You can recieve additional bonuses when wearing a head hooks with monster heads."), \
 	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 4, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat skill cap from 3 to 4."), \
 	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 6, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat skill cap from 4 to 5. Requires Expert Warrior."), \
 	TRAIT_DODGEEXPERT = TAT_TRAIT_ENTRY("Expert Dodger", 3, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Much better at dodging incoming strikes in light armor or with little armor. Heavy armor is too cumbersome for this style."), \
@@ -169,7 +169,7 @@
 	TRAIT_SQUIRE_REPAIR = TAT_TRAIT_ENTRY("Squire Knowledge", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You can restore gear with time and polish it until it gleams like new."), \
 	TRAIT_CICERONE = TAT_TRAIT_ENTRY("Cicerone", 1, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You are well-versed in brews and spirits, and can tell them apart at a glance."), \
 	TRAIT_SEEPRICES = TAT_TRAIT_ENTRY("Appraiser", 1, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You can tell the prices of things down to the zenny."), \
-	TRAIT_OUTLANDER = TAT_TRAIT_ENTRY("Outlander", -1, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "The locals see you as not of their land."), \
+	TRAIT_OUTLANDER = TAT_TRAIT_ENTRY("Outlander", -2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "The locals see you as not of their land."), \
 	TRAIT_GRAVEROBBER = TAT_TRAIT_ENTRY("Experienced Grave Robber", 2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "Your experience with 'post-mortem artifact recovery' helps you resist Necra's curse placed on those who disturb resting places."), \
 	TRAIT_PURITAN_ADVENTURER = TAT_TRAIT_ENTRY("Interrogator", 2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "With a silver psycross, you can force the restrained to kneel before a crucifix and proclaim their true allegiance."), \
 	TRAIT_DECEIVING_MEEKNESS = TAT_TRAIT_ENTRY("Deceiving Meekness", 1, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "People think you are weak. They are mistaken. You have learned to hide your vices and true beliefs from others."), \
@@ -186,7 +186,7 @@
 	TAT_TRAIT_MAGE_UTILITY_SLOT = TAT_TRAIT_ENTRY("Arcane Utility Slot", 1, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Mage Initiate. Grants +1 utility spell slot."), \
 	TAT_TRAIT_DRUID_INITIATE = TAT_TRAIT_ENTRY("Druid Initiate", 4, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants Dendor's druidic rites, direct druid spells, and wise tree alert."), \
 	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 3, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants witch trait and ability to shapeshift yourself into different small creatures."), \
-	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 3, TAT_CATEGORY_UTILITY, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants explosives gifts from your friends. Luck scaled."), \
+	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants explosives gifts from your friends. Luck scaled."), \
 	TAT_TRAIT_ARTIFACTS_SUPPLIER = TAT_TRAIT_ENTRY("Artifacts Bearer", 6, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "You're one of the adventurers with stories about your raids. Now, you have one of the deadlist weapons in Grimmoria. REQUIRES: Party Leader"), \
 
 #define TAT_AVAILABLE_ITEMS_LIST \
@@ -302,8 +302,8 @@
 	/obj/item/rogueweapon/sword/long/broadsword = TAT_ITEM_ENTRY("Broadsword", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
 	/obj/item/rogueweapon/sword/long/broadsword/bronze = TAT_ITEM_ENTRY("Spatha", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "sword"), \
 	/obj/item/rogueweapon/sword/long/broadsword/steel = TAT_ITEM_ENTRY("Steel Broadsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
-	/obj/item/rogueweapon/sword/long/exe = TAT_ITEM_ENTRY("Executioner Sword", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
-	/obj/item/rogueweapon/sword/long/exe/silver = TAT_ITEM_ENTRY("Silver Executioner Sword", 5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
+	/obj/item/rogueweapon/sword/long/exe = TAT_ITEM_ENTRY("Executioner Sword", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
+	/obj/item/rogueweapon/sword/long/exe/silver = TAT_ITEM_ENTRY("Silver Executioner Sword", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
 	/obj/item/rogueweapon/sword/long/greatkhopesh = TAT_ITEM_ENTRY("Great Khopesh", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/long/kriegmesser = TAT_ITEM_ENTRY("Kriegmesser", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/long/kriegmesser/silver = TAT_ITEM_ENTRY("Silver Broadsword", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
@@ -646,3 +646,5 @@
 	/obj/item/repair_kit/metal/bad = TAT_ITEM_ENTRY("Scrap Kit", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/repair_kit/metal = TAT_ITEM_ENTRY("Plate's kit", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/repair_kit/bad = TAT_ITEM_ENTRY("Fabric Patch", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/storage/hip/headhook = TAT_ITEM_ENTRY("Head Hook", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/storage/hip/headhook/bronze = TAT_ITEM_ENTRY("Bronze Head Hook", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
