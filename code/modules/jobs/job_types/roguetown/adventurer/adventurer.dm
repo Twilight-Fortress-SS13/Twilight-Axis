@@ -106,7 +106,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 
 	var/player_count = length(GLOB.joined_player_list)
 	var/ready_player_count = length(GLOB.ready_player_list)
-	var/slots = 20
+	var/slots = 10 //Срез на время тестов - было 20, и ваще, заменить бы на макрос
 
 	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 	if(current_players > 70)

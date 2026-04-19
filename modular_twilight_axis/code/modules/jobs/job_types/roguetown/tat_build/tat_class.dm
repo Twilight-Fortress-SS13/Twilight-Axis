@@ -5,8 +5,8 @@
 	flag = SIDEFOLK
 	faction = "Station"
 
-	total_positions = 15
-	spawn_positions = 15
+	total_positions = 10
+	spawn_positions = 10
 
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
@@ -80,3 +80,7 @@
 		return
 
 	P.tat_build.apply_to_human(H)
+
+/datum/job/roguetown/adventurer
+	total_positions = 10 //На время тестов ТАТ - удалить позже (было 20)
+	spawn_positions = 10 //На время тестов ТАТ - удалить позже (было 20)
