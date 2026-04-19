@@ -59,18 +59,17 @@
 	if(!H || !H.mind)
 		return
 
-	addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_spawn), H), 1)
+	addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_spawn), H), 50)
 
 /datum/outfit/job/roguetown/tat_class/basic/proc/apply_tat_build_post_spawn(mob/living/carbon/human/H)
 	if(!H || !H.mind)
 		return
 
-	var/datum/preferences/P
-	if(H.client?.prefs)
-		P = H.client.prefs
-	else if(H.mind?.current?.client?.prefs)
-		P = H.mind.current.client.prefs
+	if(!H.client)
+		addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_spawn), H), 50)
+		return
 
+	var/datum/preferences/P = H.client?.prefs
 	if(!P?.tat_build)
 		return
 
