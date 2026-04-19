@@ -611,8 +611,8 @@
 	/obj/item/rope/chain = TAT_ITEM_ENTRY("Chain", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/rope = TAT_ITEM_ENTRY("Rope", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/bomb/smoke = TAT_ITEM_ENTRY("Smoke Bomb", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
-	/obj/item/folding_alchstation_stored = TAT_ITEM_ENTRY("Rope", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
-	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Rope", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/folding_alchstation_stored = TAT_ITEM_ENTRY("Alchemical Station Kit", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Folding Cauldron", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/ration = TAT_ITEM_ENTRY("Ration paper", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/natural/bundle/cloth/bandage/full = TAT_ITEM_ENTRY("Roll of Bandages", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/tent_kit = TAT_ITEM_ENTRY("Tent", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
