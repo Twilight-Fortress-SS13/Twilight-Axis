@@ -36,6 +36,21 @@
 /datum/job/roguetown/tat_class/after_spawn(mob/living/L, mob/M, latejoin = FALSE)
 	return ..()
 
+/datum/job/roguetown/tat_class/override_latejoin_spawn(mob/living/L)
+	if(!L)
+		return FALSE
+
+	var/list/choices = list()
+	for(var/obj/effect/landmark/start/adventurerlate/S in GLOB.start_landmarks_list)
+		choices += S
+
+	if(!length(choices))
+		return FALSE
+
+	var/obj/effect/landmark/start/adventurerlate/target = pick(choices)
+	target.JoinPlayerHere(L, FALSE)
+	return TRUE
+
 /datum/advclass/tat_class
 	name = "Pliant Soul"
 	tutorial = "A freeform class used for the TAT build system."
@@ -79,7 +94,31 @@
 	if(!P.tat_build?.can_save())
 		return
 
+	relocate_tat_spawn(H, P.tat_build)
 	P.tat_build.apply_to_human(H)
+
+/datum/outfit/job/roguetown/tat_class/basic/proc/get_tat_spawn_turf(mob/living/carbon/human/H, datum/tat_build/build)
+	if(!H || !build)
+		return null
+
+	if(build.traits[TAT_TRAIT_RESIDENT])
+		if(length(SSjob.latejoin_trackers))
+			return pick(SSjob.latejoin_trackers)
+
+	return null
+
+/datum/outfit/job/roguetown/tat_class/basic/proc/relocate_tat_spawn(mob/living/carbon/human/H, datum/tat_build/build)
+	if(!H || !build)
+		return FALSE
+
+	var/turf/T = get_tat_spawn_turf(H, build)
+	if(!T)
+		return FALSE
+
+	H.forceMove(T)
+
+/obj/effect/landmark/start/adventurerlate
+	jobspawn_override = list("Pilgrim", "Adventurer", "Migrant", "Trader", "Pliant Soul")
 
 /datum/job/roguetown/adventurer
 	total_positions = 10 //На время тестов ТАТ - удалить позже (было 20)

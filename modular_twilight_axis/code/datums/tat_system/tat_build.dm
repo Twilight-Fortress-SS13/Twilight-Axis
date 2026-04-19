@@ -966,9 +966,10 @@
 		return FALSE
 	if((trait_id == TAT_TRAIT_MAGE_MAJOR_SLOT || trait_id == TAT_TRAIT_MAGE_MINOR_SLOT || trait_id == TAT_TRAIT_MAGE_UTILITY_SLOT) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return FALSE
-
 	if(traits[TAT_TRAIT_WARRIOR_MASTER] && has_defensive_trait_lockout())
-		return TRUE
+		return FALSE
+	if(traits[TAT_TRAIT_WARRIOR_MASTER] && (trait_id == TRAIT_DODGEEXPERT || trait_id == TRAIT_PARRYEXPERT || trait_id == TRAIT_CRITICAL_RESISTANCE || trait_id == TRAIT_MEDIUMARMOR || trait_id == TRAIT_HEAVYARMOR))
+		return FALSE
 
 	for(var/existing_trait in traits)
 		if(are_traits_mutually_exclusive(trait_id, existing_trait))
@@ -1766,3 +1767,4 @@
 
 	var/already_taken = get_slot_group_item_count(slot_group, category, path)
 	return max(0, 1 - already_taken)
+
