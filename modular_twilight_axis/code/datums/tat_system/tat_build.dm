@@ -5,7 +5,7 @@
 	var/list/available_items = list()
 
 	var/points_stats = 4
-	var/points_skills = 35
+	var/points_skills = 40
 	var/points_traits = 12
 	var/points_items = 20
 
@@ -75,7 +75,7 @@
 	var/total = points_skills
 
 	if(traits[TRAIT_JACKOFALLTRADES])
-		total += points_skills
+		total += TRAIT_JACKOFALLTRADES_POINTS
 
 	return total
 
