@@ -561,7 +561,6 @@
 		return TRUE
 	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_TROPHY_BOUNTY) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_TROPHY_BOUNTY))
 		return TRUE
-
 	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_SOUNDBREAKER))
 		return TRUE
 	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_SPELLBLADE) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_SPELLBLADE))
@@ -574,22 +573,47 @@
 		return TRUE
 	if((trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_a == TAT_TRAIT_DIVINE_BOON_3))
 		return TRUE
+	if((trait_a == TAT_TRAIT_DRUID_INITIATE && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TAT_TRAIT_DRUID_INITIATE && trait_a == TAT_TRAIT_MAGE_INITIATE))
+		return TRUE
+	if((trait_a == TAT_TRAIT_DRUID_INITIATE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TAT_TRAIT_DRUID_INITIATE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
+		return TRUE
+	return FALSE
 
+/datum/tat_build/proc/has_defensive_trait_lockout()
+	if(traits[TRAIT_DODGEEXPERT])
+		return TRUE
+	if(traits[TRAIT_PARRYEXPERT])
+		return TRUE
+	if(traits[TRAIT_CRITICAL_RESISTANCE])
+		return TRUE
+	if(traits[TRAIT_MEDIUMARMOR])
+		return TRUE
+	if(traits[TRAIT_HEAVYARMOR])
+		return TRUE
 	return FALSE
 
 /datum/tat_build/proc/has_invalid_trait_dependencies()
 	if(traits[TAT_TRAIT_WARRIOR_MASTER] && !traits[TAT_TRAIT_WARRIOR_EXPERT])
 		return TRUE
+
 	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2] && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
 		return TRUE
+
 	if(traits[TAT_TRAIT_DIVINE_BOON_1] && !traits[TAT_TRAIT_DIVINE_INITIATE])
 		return TRUE
 	if(traits[TAT_TRAIT_DIVINE_BOON_2] && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_1]))
 		return TRUE
 	if(traits[TAT_TRAIT_DIVINE_BOON_3] && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_2]))
 		return TRUE
+
+	if(traits[TAT_TRAIT_MAGE_INITIATE] && !traits[TRAIT_ARCYNE])
+		return TRUE
+	if(traits[TAT_TRAIT_SPELLBLADE] && !traits[TAT_TRAIT_MAGE_INITIATE])
+		return TRUE
+
 	if((traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return TRUE
+
 	if(traits[TAT_TRAIT_ARTIFACTS_SUPPLIER] && !traits[TAT_TRAIT_PARTY_LEADER])
 		return TRUE
 
@@ -646,10 +670,12 @@
 
 	if(traits[TAT_TRAIT_WARRIOR_MASTER] && !traits[TAT_TRAIT_WARRIOR_EXPERT])
 		traits -= TAT_TRAIT_WARRIOR_MASTER
-
 	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2] && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
 		traits -= TAT_TRAIT_BARDIC_INSPIRATION_T2
-
+	if(traits[TAT_TRAIT_MAGE_INITIATE] && !traits[TRAIT_ARCYNE])
+		traits -= TAT_TRAIT_MAGE_INITIATE
+	if(traits[TAT_TRAIT_SPELLBLADE] && !traits[TAT_TRAIT_MAGE_INITIATE])
+		traits -= TAT_TRAIT_SPELLBLADE
 	if(traits[TAT_TRAIT_RESIDENT] && traits[TRAIT_OUTLANDER])
 		traits -= TRAIT_OUTLANDER
 	if(traits[TAT_TRAIT_RESIDENT] && traits[TAT_TRAIT_WANTED])
@@ -934,13 +960,20 @@
 		return FALSE
 	if(trait_id == TAT_TRAIT_DIVINE_BOON_3 && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_2]))
 		return FALSE
+	if(trait_id == TAT_TRAIT_MAGE_INITIATE && !traits[TRAIT_ARCYNE])
+		return FALSE
+	if(trait_id == TAT_TRAIT_SPELLBLADE && !traits[TAT_TRAIT_MAGE_INITIATE])
+		return FALSE
 	if((trait_id == TAT_TRAIT_MAGE_MAJOR_SLOT || trait_id == TAT_TRAIT_MAGE_MINOR_SLOT || trait_id == TAT_TRAIT_MAGE_UTILITY_SLOT) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return FALSE
+
 	for(var/existing_trait in traits)
 		if(are_traits_mutually_exclusive(trait_id, existing_trait))
 			return FALSE
+
 	if(get_remaining_trait_points() < get_trait_cost(trait_id))
 		return FALSE
+
 	traits[trait_id] = TRUE
 	dirty = TRUE
 	return TRUE
@@ -959,6 +992,10 @@
 	if(trait_id == TAT_TRAIT_DIVINE_BOON_2 && traits[TAT_TRAIT_DIVINE_BOON_3])
 		return FALSE
 	if(trait_id == TAT_TRAIT_MAGE_INITIATE && (traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]))
+		return FALSE
+	if(trait_id == TRAIT_ARCYNE && traits[TAT_TRAIT_MAGE_INITIATE])
+		return FALSE
+	if(trait_id == TAT_TRAIT_MAGE_INITIATE && traits[TAT_TRAIT_SPELLBLADE])
 		return FALSE
 	traits -= trait_id
 	if(!traits[TAT_TRAIT_BRONZE_SUPPLIER])
@@ -1182,8 +1219,12 @@
 	if(traits[TRAIT_SQUIRE_REPAIR])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/armorsmithing", 3)
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/weaponsmithing", 3)
-	if(traits[TRAIT_ARCYNE] || traits[TAT_TRAIT_SPELLBLADE] || traits[TAT_TRAIT_MAGE_INITIATE])
-		grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcane", 3)
+	if(traits[TRAIT_ARCYNE] && !has_defensive_trait_lockout())
+		var/current_arcane = get_skill_value(/datum/skill/magic/arcane)
+		var/target_arcane = min(5, current_arcane + 3)
+		var/bonus_arcane = max(0, target_arcane - current_arcane)
+		if(bonus_arcane > 0)
+			grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcane", bonus_arcane)
 
 /datum/tat_build/proc/apply_divine_package(mob/living/carbon/human/H)
 	if(!H || !traits[TAT_TRAIT_DIVINE_INITIATE])
@@ -1571,13 +1612,7 @@
 	tat_build.dirty = FALSE
 
 /datum/tat_build/proc/can_train_arcane()
-	if(traits[TAT_TRAIT_MAGE_INITIATE])
-		return TRUE
-	if(traits[TAT_TRAIT_SPELLBLADE])
-		return TRUE
-	if(traits[TRAIT_ARCYNE])
-		return TRUE
-	return FALSE
+	return !!traits[TRAIT_ARCYNE]
 
 /datum/tat_build/proc/can_train_holy()
 	return !!traits[TAT_TRAIT_DIVINE_INITIATE]
