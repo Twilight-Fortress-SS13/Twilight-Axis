@@ -967,6 +967,9 @@
 	if((trait_id == TAT_TRAIT_MAGE_MAJOR_SLOT || trait_id == TAT_TRAIT_MAGE_MINOR_SLOT || trait_id == TAT_TRAIT_MAGE_UTILITY_SLOT) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return FALSE
 
+	if(traits[TAT_TRAIT_WARRIOR_MASTER] && has_defensive_trait_lockout())
+		return TRUE
+
 	for(var/existing_trait in traits)
 		if(are_traits_mutually_exclusive(trait_id, existing_trait))
 			return FALSE
@@ -1221,7 +1224,7 @@
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/weaponsmithing", 3)
 	if(traits[TRAIT_ARCYNE] && !has_defensive_trait_lockout())
 		var/current_arcane = get_skill_value(/datum/skill/magic/arcane)
-		var/target_arcane = min(5, current_arcane + 2)
+		var/target_arcane = min(6, current_arcane + 2)
 		var/bonus_arcane = max(0, target_arcane - current_arcane)
 		if(bonus_arcane > 0)
 			grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcane", bonus_arcane)
