@@ -221,11 +221,14 @@
 		if(!can_train_holy())
 			return 0
 
-	if(ispath(skill_type, /datum/skill/combat))
+	if(ispath(skill_type, /datum/skill/combat) && !ispath(skill_type, /datum/skill/combat/twilight_firearms))
 		return get_combat_skill_cap()
 
 	if(should_softcap_peaceful_skill(skill_type) && !has_expert_trait_for_skill(skill_type))
 		return 2
+
+	if((skill_type == /datum/skill/combat/twilight_firearms) && !(has_expert_trait_for_skill(skill_type)))
+		return 3
 
 	return TAT_SKILL_NONCOMBAT_CAP
 
@@ -1606,6 +1609,8 @@
 			return !!traits[TRAIT_SQUIRE_REPAIR]
 		if(/datum/skill/craft/weaponsmithing)
 			return !!traits[TRAIT_SQUIRE_REPAIR]
+		if(/datum/skill/combat/twilight_firearms)
+			return !!traits[TRAIT_FIREARMS_MARKSMAN]
 	return TRUE
 
 /datum/tat_build/proc/should_softcap_peaceful_skill(skill_type)
