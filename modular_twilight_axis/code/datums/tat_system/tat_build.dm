@@ -228,7 +228,7 @@
 		return 2
 
 	if((skill_type == /datum/skill/combat/twilight_firearms) && !(has_expert_trait_for_skill(skill_type)))
-		return 3
+		return 2
 
 	return TAT_SKILL_NONCOMBAT_CAP
 
