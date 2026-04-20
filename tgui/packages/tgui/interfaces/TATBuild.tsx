@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useBackend } from 'tgui/backend';
 import { Window } from 'tgui/layouts';
 import {
@@ -62,6 +62,20 @@ type LoadoutState = {
   bag: number;
 };
 
+type SlotSummary = {
+  stats: number;
+  skills: number;
+  traits: number;
+  items: number;
+};
+
+type TatSlotEntry = {
+  id: number;
+  name: string;
+  active?: boolean;
+  summary?: SlotSummary;
+};
+
 type Data = {
   stats: Record<string, number>;
   skills: Record<string, SkillState>;
@@ -83,11 +97,16 @@ type Data = {
   points_items: number;
   points_items_remaining: number;
 
+  tat_slots?: TatSlotEntry[] | Record<string, TatSlotEntry>;
+  active_tat_slot?: number;
+
   can_save: boolean;
   dirty: boolean;
 };
 
 type TabKey = 'stats' | 'skills' | 'traits' | 'items' | 'loadout';
+
+type BackendAct = (action: string, payload?: Record<string, unknown>) => void;
 
 type NumericRowProps = {
   title: string;
@@ -268,6 +287,49 @@ const groupEntriesByCategoryAndSlot = <
 
       return [categoryKey, sortedSlots] as const;
     });
+};
+
+const normalizeTatSlots = (
+  raw: Data['tat_slots'],
+  activeSlotId?: number
+): TatSlotEntry[] => {
+  const makeSummary = (summary?: SlotSummary): SlotSummary => ({
+    stats: Number(summary?.stats) || 0,
+    skills: Number(summary?.skills) || 0,
+    traits: Number(summary?.traits) || 0,
+    items: Number(summary?.items) || 0,
+  });
+
+  if (!raw) {
+    return [];
+  }
+
+  if (Array.isArray(raw)) {
+    return raw
+      .filter(Boolean)
+      .map((slot, index) => {
+        const id = Number(slot?.id) || index + 1;
+        return {
+          id,
+          name: String(slot?.name || `Slot ${id}`),
+          active: Number(activeSlotId) === id || !!slot?.active,
+          summary: makeSummary(slot?.summary),
+        };
+      })
+      .sort((a, b) => a.id - b.id);
+  }
+
+  return Object.entries(raw)
+    .map(([key, slot], index) => {
+      const id = Number(slot?.id) || Number(key) || index + 1;
+      return {
+        id,
+        name: String(slot?.name || `Slot ${id}`),
+        active: Number(activeSlotId) === id || !!slot?.active,
+        summary: makeSummary(slot?.summary),
+      };
+    })
+    .sort((a, b) => a.id - b.id);
 };
 
 const NumericRow = ({
@@ -521,23 +583,163 @@ const ItemTile = ({
   );
 };
 
+const SlotCards = ({
+  slots,
+  act,
+}: {
+  slots: TatSlotEntry[];
+  act: BackendAct;
+}) => {
+  const [renameDrafts, setRenameDrafts] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    const nextDrafts: Record<number, string> = {};
+    slots.forEach((slot) => {
+      nextDrafts[slot.id] = slot.name || `Slot ${slot.id}`;
+    });
+    setRenameDrafts(nextDrafts);
+  }, [slots]);
+
+  return (
+    <Section
+      title="Slots"
+      buttons={
+        <Box style={{ opacity: 0.8, fontSize: '12px' }}>
+          Activate = load slot into current build
+        </Box>
+      }>
+      {!slots.length ? (
+        <NoticeBox>No slot data received from backend.</NoticeBox>
+      ) : (
+        <Stack wrap>
+          {slots.map((slot) => {
+            const draftName = renameDrafts[slot.id] ?? slot.name ?? `Slot ${slot.id}`;
+            const summary = slot.summary || {
+              stats: 0,
+              skills: 0,
+              traits: 0,
+              items: 0,
+            };
+
+            return (
+              <Stack.Item
+                key={slot.id}
+                grow
+                basis="31%"
+                style={{
+                  minWidth: '220px',
+                  maxWidth: '32%',
+                }}>
+                <Box
+                  style={{
+                    minHeight: '98px',
+                    padding: '6px',
+                    borderRadius: '6px',
+                    background: slot.active
+                      ? 'rgba(120, 180, 120, 0.08)'
+                      : 'rgba(255,255,255,0.02)',
+                    border: slot.active
+                      ? '1px solid rgba(120, 180, 120, 0.45)'
+                      : '1px solid rgba(255,255,255,0.08)',
+                  }}>
+                  <Stack justify="space-between" align="center">
+                    <Stack.Item>
+                      <Box bold>{slot.name}</Box>
+                    </Stack.Item>
+                    <Stack.Item>
+                      {slot.active ? (
+                        <Box
+                          px={0.75}
+                          py={0.2}
+                          style={{
+                            borderRadius: '4px',
+                            background: 'rgba(120,180,120,0.18)',
+                            border: '1px solid rgba(120,180,120,0.35)',
+                            fontSize: '10px',
+                            fontWeight: 700,
+                            letterSpacing: '0.3px',
+                          }}>
+                          ACTIVE
+                        </Box>
+                      ) : null}
+                    </Stack.Item>
+                  </Stack>
+
+                  <Box mt={0.5} style={{ fontSize: '11px', opacity: 0.88 }}>
+                    Spent: Stats - {summary.stats} | Skills - {summary.skills} | Traits - {summary.traits} | Items - {summary.items}
+                  </Box>
+
+                  <Box mt={0.75}>
+                    <Input
+                      fluid
+                      value={draftName}
+                      onChange={(value) =>
+                        setRenameDrafts((prev) => ({
+                          ...prev,
+                          [slot.id]: String(value),
+                        }))
+                      }
+                    />
+                  </Box>
+
+                  <Stack mt={0.75}>
+                    <Stack.Item grow>
+                      <Button
+                        fluid
+                        selected={slot.active}
+                        color={slot.active ? 'good' : undefined}
+                        onClick={() => act('activate_tat_slot', { slot_id: slot.id })}>
+                        Activate
+                      </Button>
+                    </Stack.Item>
+                    <Stack.Item grow>
+                      <Button
+                        fluid
+                        onClick={() =>
+                          act('rename_tat_slot', {
+                            slot_id: slot.id,
+                            name: draftName,
+                          })
+                        }>
+                        Rename
+                      </Button>
+                    </Stack.Item>
+                  </Stack>
+                </Box>
+              </Stack.Item>
+            );
+          })}
+        </Stack>
+      )}
+    </Section>
+  );
+};
+
 const PointsPanel = ({ data }: { data: Data }) => {
   return (
     <Section title="Points">
       <Stack>
         <Stack.Item grow>
-          <Box>Stats: {data.points_stats_remaining} / {data.points_stats}</Box>
+          <Box>
+            Stats: {data.points_stats_remaining} / {data.points_stats}
+          </Box>
         </Stack.Item>
         <Stack.Item grow>
-          <Box>Skills: {data.points_skills_remaining} / {data.points_skills}</Box>
+          <Box>
+            Skills: {data.points_skills_remaining} / {data.points_skills}
+          </Box>
         </Stack.Item>
       </Stack>
       <Stack mt={1}>
         <Stack.Item grow>
-          <Box>Traits: {data.points_traits_remaining} / {data.points_traits}</Box>
+          <Box>
+            Traits: {data.points_traits_remaining} / {data.points_traits}
+          </Box>
         </Stack.Item>
         <Stack.Item grow>
-          <Box>Items: {data.points_items_remaining} / {data.points_items}</Box>
+          <Box>
+            Items: {data.points_items_remaining} / {data.points_items}
+          </Box>
         </Stack.Item>
       </Stack>
     </Section>
@@ -550,7 +752,7 @@ const StatsTab = ({
   search,
 }: {
   data: Data;
-  act: (action: string, payload?: object) => void;
+  act: BackendAct;
   search: string;
 }) => {
   const rows = useMemo(() => {
@@ -578,7 +780,8 @@ const StatsTab = ({
                 disabledRemove={value <= entry.min}
                 extra={
                   <Box>
-                    Base: {entry.base} | Min: {entry.min} | Max: {entry.max} | Cost per step: {entry.cost}
+                    Base: {entry.base} | Min: {entry.min} | Max: {entry.max} | Cost per step:{' '}
+                    {entry.cost}
                   </Box>
                 }
               />
@@ -596,7 +799,7 @@ const SkillsTab = ({
   search,
 }: {
   data: Data;
-  act: Function;
+  act: BackendAct;
   search: string;
 }) => {
   const rows = useMemo(() => {
@@ -643,7 +846,8 @@ const SkillsTab = ({
                 extra={
                   <>
                     <Box>
-                      {entry.is_combat ? 'Combat' : 'Non-combat'} | Cap: {cap} | Next cost: {nextCost}
+                      {entry.is_combat ? 'Combat' : 'Non-combat'} | Cap: {cap} | Next cost:{' '}
+                      {nextCost}
                     </Box>
                     {!!entry.desc && <Box mt={0.5}>{entry.desc}</Box>}
                   </>
@@ -671,7 +875,11 @@ const TraitPill = ({
   onClick: () => void;
 }) => (
   <Box>
-    <Button selected={selected} color={selected ? 'good' : undefined} tooltip={desc || undefined} onClick={onClick}>
+    <Button
+      selected={selected}
+      color={selected ? 'good' : undefined}
+      tooltip={desc || undefined}
+      onClick={onClick}>
       {title} ({cost})
     </Button>
   </Box>
@@ -683,7 +891,7 @@ const TraitsTab = ({
   search,
 }: {
   data: Data;
-  act: Function;
+  act: BackendAct;
   search: string;
 }) => {
   const selectedTraits = useMemo(() => new Set(data.traits || []), [data.traits]);
@@ -705,9 +913,18 @@ const TraitsTab = ({
       .forEach(([traitId, entry]) => {
         const category = entry.category || 'other';
         const categoryName = entry.category_name || 'Other';
-        if (!groups[category]) groups[category] = { categoryName, available: [], selected: [] };
-        if (selectedTraits.has(traitId)) groups[category].selected.push([traitId, entry]);
-        else groups[category].available.push([traitId, entry]);
+        if (!groups[category]) {
+          groups[category] = {
+            categoryName,
+            available: [],
+            selected: [],
+          };
+        }
+        if (selectedTraits.has(traitId)) {
+          groups[category].selected.push([traitId, entry]);
+        } else {
+          groups[category].available.push([traitId, entry]);
+        }
       });
 
     Object.values(groups).forEach((group) => {
@@ -725,11 +942,20 @@ const TraitsTab = ({
       ) : (
         <Stack vertical>
           {grouped.map(([categoryKey, group]) => (
-            <Box key={categoryKey} mb={2} style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '10px' }}>
+            <Box
+              key={categoryKey}
+              mb={2}
+              style={{
+                borderBottom: '1px solid rgba(255,255,255,0.08)',
+                paddingBottom: '10px',
+              }}>
               <Box bold mb={1} style={{ fontSize: '18px', letterSpacing: '1px' }}>
                 {group.categoryName}
               </Box>
-              <Box bold mb={0.5}>Pool</Box>
+
+              <Box bold mb={0.5}>
+                Pool
+              </Box>
               {group.available.length ? (
                 <Stack wrap>
                   {group.available.map(([traitId, entry]) => (
@@ -747,7 +973,9 @@ const TraitsTab = ({
                 <NoticeBox>No available traits in this group.</NoticeBox>
               )}
 
-              <Box bold mt={1} mb={0.5}>Selected</Box>
+              <Box bold mt={1} mb={0.5}>
+                Selected
+              </Box>
               {group.selected.length ? (
                 <Stack wrap>
                   {group.selected.map(([traitId, entry]) => (
@@ -780,7 +1008,7 @@ const ItemsTab = ({
   setHoveredItem,
 }: {
   itemEntries: Record<string, ItemViewEntry>;
-  act: Function;
+  act: BackendAct;
   search: string;
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
@@ -809,13 +1037,19 @@ const ItemsTab = ({
         <Stack vertical>
           {groups.map(([categoryKey, slotGroups]) => (
             <Box key={categoryKey} mb={2}>
-              <Box bold mb={1} style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
+              <Box
+                bold
+                mb={1}
+                style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
                 {getCategoryLabel(categoryKey)}
               </Box>
 
               {slotGroups.map(([slotKey, items]) => (
                 <Box key={`${categoryKey}-${slotKey}`} mb={1}>
-                  <Box bold mb={0.5} style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
+                  <Box
+                    bold
+                    mb={0.5}
+                    style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
                     {getSlotLabel(slotKey)}
                   </Box>
 
@@ -861,14 +1095,15 @@ const LoadoutTab = ({
   setHoveredItem,
 }: {
   loadoutEntries: Record<string, LoadoutViewEntry>;
-  act: Function;
+  act: BackendAct;
   search: string;
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const groups = useMemo(() => {
     return groupEntriesByCategoryAndSlot(
       loadoutEntries || {},
-      (itemPath, entry) => matchesSearch(search, itemPath, entry.name, entry.category, entry.slot_group)
+      (itemPath, entry) =>
+        matchesSearch(search, itemPath, entry.name, entry.category, entry.slot_group)
     );
   }, [loadoutEntries, search]);
 
@@ -942,7 +1177,9 @@ const LoadoutTab = ({
                           icon={entry.icon}
                           glow={glow}
                           onLeftClick={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
-                          onRightClick={() => act('move_item_to_equip', { path: itemPath, amount: 1 })}
+                          onRightClick={() =>
+                            act('move_item_to_equip', { path: itemPath, amount: 1 })
+                          }
                           onHoverStart={() =>
                             setHoveredItem({
                               name: entry.name || itemPath,
@@ -975,6 +1212,11 @@ export const TATBuild = () => {
   const [tab, setTab] = useState<TabKey>('stats');
   const [search, setSearch] = useState('');
   const [hoveredItem, setHoveredItem] = useState<HoverCardData | null>(null);
+
+  const tatSlots = useMemo<TatSlotEntry[]>(
+    () => normalizeTatSlots(data.tat_slots, data.active_tat_slot),
+    [data.tat_slots, data.active_tat_slot]
+  );
 
   const itemEntries = useMemo<Record<string, ItemViewEntry>>(() => {
     const result: Record<string, ItemViewEntry> = {};
@@ -1016,15 +1258,22 @@ export const TATBuild = () => {
   }, [data.available_items, data.loadout]);
 
   return (
-    <Window title="TAT Build" width={900} height={790}>
+    <Window title="TAT Build" width={900} height={860}>
       <Window.Content scrollable>
         <Stack vertical>
+          <SlotCards slots={tatSlots} act={act} />
+
           <PointsPanel data={data} />
 
           <Section title="Search">
             <Stack align="center">
               <Stack.Item grow>
-                <Input fluid placeholder={`Search in ${tab}...`} value={search} onChange={(value) => setSearch(String(value))} />
+                <Input
+                  fluid
+                  placeholder={`Search in ${tab}...`}
+                  value={search}
+                  onChange={(value) => setSearch(String(value))}
+                />
               </Stack.Item>
               <Stack.Item>
                 <Button disabled={!search} onClick={() => setSearch('')}>
@@ -1034,40 +1283,92 @@ export const TATBuild = () => {
             </Stack>
           </Section>
 
-          {data.dirty ? <NoticeBox>Build has unsaved changes.</NoticeBox> : <NoticeBox>Build is saved.</NoticeBox>}
-          {!data.can_save && <NoticeBox>Current build is invalid or exceeds available points.</NoticeBox>}
+          {data.dirty ? (
+            <NoticeBox>Build has unsaved changes.</NoticeBox>
+          ) : (
+            <NoticeBox>Build is saved.</NoticeBox>
+          )}
+          {!data.can_save && (
+            <NoticeBox>Current build is invalid or exceeds available points.</NoticeBox>
+          )}
 
-          <Section>
+          <Section
+            title="Build"
+            buttons={
+              <Box style={{ opacity: 0.8, fontSize: '12px' }}>
+                Save writes current build into the active slot
+              </Box>
+            }>
             <Tabs fluid>
-              <Tabs.Tab selected={tab === 'stats'} onClick={() => setTab('stats')}>Stats</Tabs.Tab>
-              <Tabs.Tab selected={tab === 'skills'} onClick={() => setTab('skills')}>Skills</Tabs.Tab>
-              <Tabs.Tab selected={tab === 'traits'} onClick={() => setTab('traits')}>Traits</Tabs.Tab>
-              <Tabs.Tab selected={tab === 'items'} onClick={() => setTab('items')}>Items</Tabs.Tab>
-              <Tabs.Tab selected={tab === 'loadout'} onClick={() => setTab('loadout')}>Loadout</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'stats'} onClick={() => setTab('stats')}>
+                Stats
+              </Tabs.Tab>
+              <Tabs.Tab selected={tab === 'skills'} onClick={() => setTab('skills')}>
+                Skills
+              </Tabs.Tab>
+              <Tabs.Tab selected={tab === 'traits'} onClick={() => setTab('traits')}>
+                Traits
+              </Tabs.Tab>
+              <Tabs.Tab selected={tab === 'items'} onClick={() => setTab('items')}>
+                Items
+              </Tabs.Tab>
+              <Tabs.Tab selected={tab === 'loadout'} onClick={() => setTab('loadout')}>
+                Loadout
+              </Tabs.Tab>
             </Tabs>
           </Section>
 
           {tab === 'stats' && <StatsTab data={data} act={act} search={search} />}
           {tab === 'skills' && <SkillsTab data={data} act={act} search={search} />}
           {tab === 'traits' && <TraitsTab data={data} act={act} search={search} />}
-          {tab === 'items' && <ItemsTab itemEntries={itemEntries} act={act} search={search} setHoveredItem={setHoveredItem} />}
-          {tab === 'loadout' && <LoadoutTab loadoutEntries={loadoutEntries} act={act} search={search} setHoveredItem={setHoveredItem} />}
+          {tab === 'items' && (
+            <ItemsTab
+              itemEntries={itemEntries}
+              act={act}
+              search={search}
+              setHoveredItem={setHoveredItem}
+            />
+          )}
+          {tab === 'loadout' && (
+            <LoadoutTab
+              loadoutEntries={loadoutEntries}
+              act={act}
+              search={search}
+              setHoveredItem={setHoveredItem}
+            />
+          )}
 
           <Section>
             <Stack justify="space-between" wrap>
               <Stack.Item>
                 <Stack wrap>
-                  <Stack.Item><Button onClick={() => act('reset_stats')}>Reset Stats</Button></Stack.Item>
-                  <Stack.Item><Button onClick={() => act('reset_skills')}>Reset Skills</Button></Stack.Item>
-                  <Stack.Item><Button onClick={() => act('reset_traits')}>Reset Traits</Button></Stack.Item>
-                  <Stack.Item><Button onClick={() => act('reset_items')}>Reset Items</Button></Stack.Item>
+                  <Stack.Item>
+                    <Button onClick={() => act('reset_stats')}>Reset Stats</Button>
+                  </Stack.Item>
+                  <Stack.Item>
+                    <Button onClick={() => act('reset_skills')}>Reset Skills</Button>
+                  </Stack.Item>
+                  <Stack.Item>
+                    <Button onClick={() => act('reset_traits')}>Reset Traits</Button>
+                  </Stack.Item>
+                  <Stack.Item>
+                    <Button onClick={() => act('reset_items')}>Reset Items</Button>
+                  </Stack.Item>
                 </Stack>
               </Stack.Item>
 
               <Stack.Item>
                 <Stack>
-                  <Stack.Item><Button color="average" onClick={() => act('reset_all')}>Reset All</Button></Stack.Item>
-                  <Stack.Item><Button color="good" disabled={!data.can_save} onClick={() => act('save')}>Save</Button></Stack.Item>
+                  <Stack.Item>
+                    <Button color="average" onClick={() => act('reset_all')}>
+                      Reset All
+                    </Button>
+                  </Stack.Item>
+                  <Stack.Item>
+                    <Button color="good" disabled={!data.can_save} onClick={() => act('save')}>
+                      Save Active Slot
+                    </Button>
+                  </Stack.Item>
                 </Stack>
               </Stack.Item>
             </Stack>

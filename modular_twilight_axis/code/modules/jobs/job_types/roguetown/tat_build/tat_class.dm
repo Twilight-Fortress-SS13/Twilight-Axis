@@ -88,9 +88,6 @@
 	if(!P?.tat_build)
 		return
 
-	if(!P.tat_build.can_save())
-		P.sanitize_tat_build(P.tat_build.export_to_list())
-
 	if(!P.tat_build?.can_save())
 		return
 
