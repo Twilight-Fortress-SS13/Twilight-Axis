@@ -20,7 +20,7 @@
 	same_job_respawn_delay = 30 MINUTES
 
 	give_bank_account = TRUE
-	job_traits = list(TRAIT_RITUALIST, TRAIT_STEELHEARTED, TRAIT_CLERGY, TRAIT_MARRIAGE_CAPABLE)
+	job_traits = list(TRAIT_RITUALIST, TRAIT_STEELHEARTED, TRAIT_CLERGY)
 
 	//No nobility for you, being a member of the clergy means you gave UP your nobility. It says this in many of the church tutorial texts.
 	virtue_restrictions = list(/datum/virtue/utility/noble)
@@ -96,13 +96,13 @@
 			cloak = /obj/item/clothing/cloak/templar/xylixian
 			H.cmode_music = 'sound/music/combat_jester.ogg'
 		if(/datum/patron/divine/dendor)
-			mask = /obj/item/clothing/head/roguetown/roguehood
+			mask = /obj/item/clothing/head/roguetown/dendormask
 			neck = /obj/item/clothing/neck/roguetown/psicross/dendor
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/dendor
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
 			H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
 		if(/datum/patron/divine/necra)
-			mask = /obj/item/clothing/head/roguetown/necrahood
+			mask = /obj/item/clothing/head/roguetown/necramask
 			neck = /obj/item/clothing/neck/roguetown/psicross/necra
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/necra
 		if(/datum/patron/divine/pestra)
@@ -110,9 +110,9 @@
 			neck = /obj/item/clothing/neck/roguetown/psicross/pestra
 			cloak = /obj/item/clothing/cloak/templar/pestran
 		if(/datum/patron/divine/eora) //Eora content from stonekeep
-			mask = /obj/item/clothing/head/roguetown/roguehood
+			mask = /obj/item/clothing/head/roguetown/roguehood/eora
 			neck = /obj/item/clothing/neck/roguetown/psicross/eora
-			cloak = /obj/item/clothing/cloak/templar/eoran
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/eora
 		if(/datum/patron/divine/noc)
 			mask = /obj/item/clothing/head/roguetown/roguehood/nochood
 			neck = /obj/item/clothing/neck/roguetown/psicross/noc
@@ -120,7 +120,7 @@
 		if(/datum/patron/divine/ravox)
 			mask = /obj/item/clothing/head/roguetown/roguehood/ravox
 			neck = /obj/item/clothing/neck/roguetown/psicross/ravox
-			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/ravox
+			cloak = /obj/item/clothing/cloak/templar/ravox
 		if(/datum/patron/divine/malum)
 			mask = /obj/item/clothing/head/roguetown/roguehood
 			neck = /obj/item/clothing/neck/roguetown/psicross/malum
@@ -154,6 +154,8 @@
 			weapons += "Close Caress"
 		if(/datum/patron/divine/abyssor)
 			weapons += "Barotrauma"
+		if(/datum/patron/divine/ravox)
+			weapons += "Arbiter"
 
 	var/weapon_choice = input(H,"Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 	switch(weapon_choice)
@@ -182,6 +184,9 @@
 		if("Barotrauma")
 			H.put_in_hands(new /obj/item/rogueweapon/katar/abyssor(H))
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
+			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
+		if("Arbiter")
+			H.put_in_hands(new /obj/item/rogueweapon/katar/ravox(H))
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 
 	var/techniques = list("Dropkick - Pushback + Extra Damage", "Chokeslam - Stamina Damage", "Stunner - Dazed Debuff", "Headbutt - Vulnerable Debuff") // cool wrestling moves
