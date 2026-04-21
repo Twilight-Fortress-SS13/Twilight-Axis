@@ -172,8 +172,8 @@
 		if(H.mind)
 			to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
 
-			var/subclass_selected = list("Blade", "Phalangite", "Macebearer")
-			var/shapeshiftchoice = tgui_input_list(H, "Who are you?", "The spellblade specialization", shapeshifts)			
+			var/subclass_list = list("Blade", "Phalangite", "Macebearer")
+			var/subclass_selected = tgui_input_list(H, "Who are you?", "The spellblade specialization", subclass_list)			
 			switch(subclass_selected)
 				if("Blade")
 					H.mind.AddSpell(new /datum/action/cooldown/spell/caedo)
@@ -224,65 +224,68 @@
 	apply_druid_package(H)
 	apply_witch_package(H)
 
+/datum/tat_build/proc/append_unique_equip_slot(list/slots, slot_id)
+	if(!(slot_id in slots))
+		slots += slot_id
+
 /datum/tat_build/proc/get_equip_slots_for_item(obj/item/I)
 	var/list/slots = list()
 	if(!I)
 		return slots
+
 	var/flags = I.slot_flags
-	if(flags & ITEM_SLOT_WRISTS)
-		slots += SLOT_WRISTS
-	if(flags & ITEM_SLOT_GLOVES)
-		slots += SLOT_GLOVES
-	if(flags & ITEM_SLOT_SHOES)
-		slots += SLOT_SHOES
-	if(flags & ITEM_SLOT_RING)
-		slots += SLOT_RING
-	if(flags & ITEM_SLOT_HEAD)
-		slots += SLOT_HEAD
-	if(flags & ITEM_SLOT_MOUTH)
-		slots += SLOT_MOUTH
-	if(flags & ITEM_SLOT_MASK)
-		slots += SLOT_WEAR_MASK
-	if(flags & ITEM_SLOT_NECK)
-		slots += SLOT_NECK
-	if(flags & ITEM_SLOT_CLOAK)
-		slots += SLOT_CLOAK
-	if(flags & ITEM_SLOT_ARMOR)
-		slots += SLOT_ARMOR
-	if(flags & ITEM_SLOT_SHIRT)
-		slots += SLOT_SHIRT
-	if(flags & ITEM_SLOT_PANTS)
-		slots += SLOT_PANTS
-	if(flags & ITEM_SLOT_OCLOTHING)
-		if(!(SLOT_ARMOR in slots))
-			slots += SLOT_ARMOR
-	if(flags & ITEM_SLOT_ICLOTHING)
-		if(!(SLOT_SHIRT in slots))
-			slots += SLOT_SHIRT
-		if(!(SLOT_PANTS in slots))
-			slots += SLOT_PANTS
+
 	if(flags & ITEM_SLOT_BELT)
-		slots += SLOT_BELT_L
-		slots += SLOT_BELT_R
-		slots += SLOT_BELT
+		append_unique_equip_slot(slots, SLOT_BELT_L)
+		append_unique_equip_slot(slots, SLOT_BELT_R)
+		append_unique_equip_slot(slots, SLOT_BELT)
+
 	if(flags & ITEM_SLOT_HIP)
-		if(!(SLOT_BELT_L in slots))
-			slots += SLOT_BELT_L
-		if(!(SLOT_BELT_R in slots))
-			slots += SLOT_BELT_R
-		if(!(SLOT_BELT in slots))
-			slots += SLOT_BELT
+		append_unique_equip_slot(slots, SLOT_BELT_L)
+		append_unique_equip_slot(slots, SLOT_BELT_R)
+		append_unique_equip_slot(slots, SLOT_BELT)
+
 	if(flags & ITEM_SLOT_BACK_L)
-		slots += SLOT_BACK_L
+		append_unique_equip_slot(slots, SLOT_BACK_L)
 	if(flags & ITEM_SLOT_BACK_R)
-		slots += SLOT_BACK_R
+		append_unique_equip_slot(slots, SLOT_BACK_R)
 	if(flags & ITEM_SLOT_BACK)
-		if(!(SLOT_BACK_L in slots))
-			slots += SLOT_BACK_L
-		if(!(SLOT_BACK_R in slots))
-			slots += SLOT_BACK_R
-		if(!(SLOT_BACK in slots))
-			slots += SLOT_BACK
+		append_unique_equip_slot(slots, SLOT_BACK_L)
+		append_unique_equip_slot(slots, SLOT_BACK_R)
+		append_unique_equip_slot(slots, SLOT_BACK)
+
+	if(flags & ITEM_SLOT_SHIRT)
+		append_unique_equip_slot(slots, SLOT_SHIRT)
+	if(flags & ITEM_SLOT_PANTS)
+		append_unique_equip_slot(slots, SLOT_PANTS)
+	if(flags & ITEM_SLOT_ICLOTHING)
+		append_unique_equip_slot(slots, SLOT_SHIRT)
+		append_unique_equip_slot(slots, SLOT_PANTS)
+
+	if(flags & ITEM_SLOT_WRISTS)
+		append_unique_equip_slot(slots, SLOT_WRISTS)
+	if(flags & ITEM_SLOT_GLOVES)
+		append_unique_equip_slot(slots, SLOT_GLOVES)
+	if(flags & ITEM_SLOT_SHOES)
+		append_unique_equip_slot(slots, SLOT_SHOES)
+	if(flags & ITEM_SLOT_RING)
+		append_unique_equip_slot(slots, SLOT_RING)
+	if(flags & ITEM_SLOT_HEAD)
+		append_unique_equip_slot(slots, SLOT_HEAD)
+	if(flags & ITEM_SLOT_MOUTH)
+		append_unique_equip_slot(slots, SLOT_MOUTH)
+	if(flags & ITEM_SLOT_MASK)
+		append_unique_equip_slot(slots, SLOT_WEAR_MASK)
+	if(flags & ITEM_SLOT_NECK)
+		append_unique_equip_slot(slots, SLOT_NECK)
+	if(flags & ITEM_SLOT_CLOAK)
+		append_unique_equip_slot(slots, SLOT_CLOAK)
+
+	if(flags & ITEM_SLOT_ARMOR)
+		append_unique_equip_slot(slots, SLOT_ARMOR)
+	if(flags & ITEM_SLOT_OCLOTHING)
+		append_unique_equip_slot(slots, SLOT_ARMOR)
+
 	return slots
 
 /datum/tat_build/proc/get_storage_targets(mob/living/carbon/human/H)
