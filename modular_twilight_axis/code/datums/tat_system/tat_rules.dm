@@ -356,6 +356,12 @@
 	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_DIVINE_INITIATE))
 		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
 
+	if((trait_a == TRAIT_HEAVYARMOR && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_HEAVYARMOR && trait_a == TAT_TRAIT_MAGE_INITIATE))
+		return "\"[get_trait_display_name(TRAIT_HEAVYARMOR)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+	
+	if((trait_a == TRAIT_MEDIUMARMOR && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_MEDIUMARMOR && trait_a == TAT_TRAIT_MAGE_INITIATE))
+		return "\"[get_trait_display_name(TRAIT_MEDIUMARMOR)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+
 	return null
 
 /datum/tat_build/proc/has_defensive_trait_lockout()
