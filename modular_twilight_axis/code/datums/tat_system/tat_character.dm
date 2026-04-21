@@ -442,6 +442,7 @@
 	apply_skills(H)
 	apply_trait_skill_bonuses(H)
 	apply_traits(H)
+	apply_allowed_post_tat_virtues(H)
 
 /datum/tat_build/proc/apply_resident_package(mob/living/carbon/human/H)
 	if(!H || !H.mind || !traits[TAT_TRAIT_RESIDENT])
@@ -477,3 +478,33 @@
 		var/choice = get_resident_pugilist_spell_choice(H)
 		var/spell_type = get_resident_pugilist_spell_type(choice)
 		grant_mind_spell_if_missing(H, spell_type)
+
+/datum/tat_build/proc/apply_allowed_post_tat_virtues(mob/living/carbon/human/H)
+	if(!H)
+		return
+	var/player = H.client
+	if(!player)
+		return
+	if(!player.prefs)
+		return
+
+	var/virtuous = FALSE
+	var/heretic = FALSE
+	var/species = H.dna?.species
+
+	if(istype(player.prefs.selected_patron, /datum/patron/inhumen))
+		heretic = TRUE
+
+	if(player.prefs.statpack?.virtuous)
+		virtuous = TRUE
+
+	var/datum/virtue/virtue_type = player.prefs.virtue
+	var/datum/virtue/virtuetwo_type = player.prefs.virtuetwo
+
+	if(virtue_type && is_allowed_post_tat_virtue(virtue_type))
+		if(virtue_check(virtue_type, heretic, species))
+			apply_virtue(H, virtue_type)
+
+	if(virtuetwo_type && virtuous && is_allowed_post_tat_virtue(virtuetwo_type))
+		if(virtue_check(virtuetwo_type, heretic, species))
+			apply_virtue(H, virtuetwo_type)

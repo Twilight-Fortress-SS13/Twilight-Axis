@@ -763,3 +763,12 @@
 		issues += item_issues
 
 	return issues
+
+/datum/tat_build/proc/is_allowed_post_tat_virtue(datum/virtue/V)
+	if(!V)
+		return FALSE
+
+	if(istype(V, /datum/virtue/combat/bowman))
+		return TRUE
+
+	return FALSE
