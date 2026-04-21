@@ -162,13 +162,46 @@
 /datum/tat_build/proc/get_remaining_item_points()
 	return points_items - get_spent_item_points()
 
-/datum/tat_build/proc/get_combat_skill_cap()
-	var/cap = TAT_SKILL_COMBAT_CAP_DEFAULT
+/datum/tat_build/proc/get_primary_advanced_combat_skill()
+	var/primary_skill = null
+	var/primary_level = TAT_SKILL_COMBAT_CAP_DEFAULT
+
+	for(var/skill_type in skills)
+		if(!ispath(skill_type, /datum/skill/combat))
+			continue
+		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
+			continue
+
+		var/level = round(skills[skill_type])
+		if(level <= TAT_SKILL_COMBAT_CAP_DEFAULT)
+			continue
+
+		if(!primary_skill || level > primary_level || (level == primary_level && "[skill_type]" < "[primary_skill]"))
+			primary_skill = skill_type
+			primary_level = level
+
+	return primary_skill
+
+/datum/tat_build/proc/get_combat_skill_cap(skill_type)
+	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
+	var/advanced_cap = base_cap
+
 	if(traits[TAT_TRAIT_WARRIOR_EXPERT])
-		cap = max(cap, TAT_SKILL_COMBAT_CAP_TRAIT_1)
+		advanced_cap = max(advanced_cap, TAT_SKILL_COMBAT_CAP_TRAIT_1)
 	if(traits[TAT_TRAIT_WARRIOR_MASTER])
-		cap = max(cap, TAT_SKILL_COMBAT_CAP_TRAIT_2)
-	return cap
+		advanced_cap = max(advanced_cap, TAT_SKILL_COMBAT_CAP_TRAIT_2)
+
+	if(advanced_cap <= base_cap)
+		return base_cap
+
+	var/primary_skill = get_primary_advanced_combat_skill()
+	if(!primary_skill)
+		return advanced_cap
+
+	if(primary_skill == skill_type)
+		return advanced_cap
+
+	return base_cap
 
 /datum/tat_build/proc/get_skill_cap(skill_type)
 	if(skill_type == /datum/skill/magic/arcane)
@@ -176,15 +209,20 @@
 			return 0
 		else
 			return 4
+
 	if(skill_type == /datum/skill/magic/holy)
 		if(!can_train_holy())
 			return 0
+
 	if(ispath(skill_type, /datum/skill/combat) && !ispath(skill_type, /datum/skill/combat/twilight_firearms))
-		return get_combat_skill_cap()
+		return get_combat_skill_cap(skill_type)
+
 	if(should_softcap_peaceful_skill(skill_type) && !has_expert_trait_for_skill(skill_type))
 		return 2
+
 	if((skill_type == /datum/skill/combat/twilight_firearms) && !(has_expert_trait_for_skill(skill_type)))
 		return 2
+
 	return TAT_SKILL_NONCOMBAT_CAP
 
 /datum/tat_build/proc/can_use_weapon_supply_type(supply_type)
