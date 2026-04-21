@@ -108,14 +108,25 @@
 
 /datum/tat_build/proc/get_skill_next_cost(skill_type)
 	var/current = get_skill_value(skill_type)
-	return current + 1
+	return get_skill_step_cost(skill_type, current + 1)
 
-/datum/tat_build/proc/get_skill_total_cost_for_level(level)
-	if(!isnum(level) || level <= 0)
+/datum/tat_build/proc/get_skill_step_cost(skill_type, target_level)
+	if(!ispath(skill_type) || !isnum(target_level) || target_level <= 0)
 		return 0
+
+	if(traits[TAT_TRAIT_RESIDENT] && (ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft) || ispath(skill_type, /datum/skill/misc)))
+		return max(1, target_level - 1)
+
+	return target_level
+
+/datum/tat_build/proc/get_skill_total_cost_for_level(skill_type, level)
+	if(!ispath(skill_type) || !isnum(level) || level <= 0)
+		return 0
+
 	var/total = 0
 	for(var/i in 1 to level)
-		total += i
+		total += get_skill_step_cost(skill_type, i)
+
 	return total
 
 /datum/tat_build/proc/get_spent_skill_points()
@@ -124,7 +135,7 @@
 		var/level = skills[skill_type]
 		if(!isnum(level) || level <= 0)
 			continue
-		total += get_skill_total_cost_for_level(level)
+		total += get_skill_total_cost_for_level(skill_type, level)
 	return total
 
 /datum/tat_build/proc/get_remaining_skill_points()
@@ -338,6 +349,12 @@
 
 	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
 		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
+
+	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_INITIATE))
+		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+
+	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_DIVINE_INITIATE))
+		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
 
 	return null
 

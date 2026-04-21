@@ -165,7 +165,11 @@
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
 	if(traits[TAT_TRAIT_RESIDENT])
 		ADD_TRAIT(H, TRAIT_RESIDENT, TAT_TRAIT_SOURCE)
-		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")
+		if(H in SStreasury.bank_accounts)
+			SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")
+		else
+			SStreasury.create_bank_account(H, ECONOMIC_LOWER_MIDDLE_CLASS)
+		H.mind?.special_items["Resident Manuscript"] = /obj/item/book/granter/residentcardvirtue
 		apply_resident_package(H)
 	if(traits[TAT_TRAIT_SPELLBLADE])
 		ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
