@@ -45,10 +45,7 @@
 		if(user.m_intent == MOVE_INTENT_SNEAK)
 			hideinside(user)
 			return
-		//TA addition start - Bundle fixes
-		else
-			. = ..()
-		//TA addition end - Bundle fixes
+		return ..() //TA addition - Bed fixes
 
 /obj/structure/chair/bench/proc/hideinside(mob/living/user)
 	var/sneak_level = user.get_skill_level(/datum/skill/misc/sneaking) || 0
@@ -399,13 +396,11 @@
 	update_icon()
 
 /obj/structure/bed/rogue/attack_hand(mob/living/user)
-	if(user.m_intent == MOVE_INTENT_SNEAK)
-		hideinside(user)
-		return
-	//TA addition start - Bundle fixes
-	else
-		. = ..()
-	//TA addition end - Bundle fixes
+	if(isliving(user))
+		if(user.m_intent == MOVE_INTENT_SNEAK)
+			hideinside(user)
+			return
+		return ..() //TA addition - Bed fixes
 
 /obj/structure/bed/rogue/proc/hideinside(mob/living/user)
 	var/sneak_level = user.get_skill_level(/datum/skill/misc/sneaking) || 0
