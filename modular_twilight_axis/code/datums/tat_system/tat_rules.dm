@@ -307,6 +307,10 @@
 		return TRUE
 	if((trait_a == TAT_TRAIT_WARRIOR_MASTER && has_defensive_trait_lockout()) || (trait_b == TAT_TRAIT_WARRIOR_MASTER && has_defensive_trait_lockout()))
 		return TRUE
+	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_MAGE_INITIATE))
+		return TRUE
+	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
+		return TRUE
 	return FALSE
 
 /datum/tat_build/proc/has_defensive_trait_lockout()
