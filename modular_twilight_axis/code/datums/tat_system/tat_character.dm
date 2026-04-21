@@ -24,7 +24,7 @@
 	var/path = text2path(path_text)
 	if(!ispath(path, /datum/skill))
 		return
-	H.adjust_skillrank(path, amount, TRUE)
+	H.adjust_skillrank_up_to(path, amount, TRUE)
 
 /datum/tat_build/proc/apply_trait_skill_bonuses(mob/living/carbon/human/H)
 	if(!H)
