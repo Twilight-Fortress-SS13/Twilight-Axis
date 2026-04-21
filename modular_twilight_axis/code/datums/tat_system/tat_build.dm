@@ -459,12 +459,8 @@
 	dirty = TRUE
 	return TRUE
 
-/datum/tat_build/proc/validate_for_save()
-	sanitize_build()
-	return !has_invalid_trait_dependencies() && !has_invalid_supply_items() && is_budget_valid()
-
 /datum/tat_build/proc/can_save()
-	return validate_for_save()
+	return !length(get_validation_issues())
 
 /datum/tat_build/proc/export_to_list()
 	init_tat_slots()

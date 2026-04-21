@@ -161,6 +161,7 @@
 		"tat_slots" = build_ui_tat_slots(),
 		"active_tat_slot" = active_tat_slot,
 		"can_save" = can_save(),
+		"validation_issues" = get_validation_issues(),
 		"dirty" = dirty,
 	)
 
@@ -297,3 +298,9 @@
 	ui_item_cache_pending_states = FALSE
 
 	return packet
+
+/datum/tat_build/proc/get_trait_display_name(trait_id)
+	var/list/entry = get_trait_entry(trait_id)
+	if(islist(entry) && entry["name"])
+		return "[entry["name"]]"
+	return "[trait_id]"

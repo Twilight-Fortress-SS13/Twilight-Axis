@@ -268,54 +268,78 @@
 
 /datum/tat_build/proc/are_traits_mutually_exclusive(trait_a, trait_b)
 	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TRAIT_OUTLANDER) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TRAIT_OUTLANDER))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_RESIDENT)]\" conflicts with \"[get_trait_display_name(TRAIT_OUTLANDER)]\"."
+
 	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TAT_TRAIT_WANTED) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TAT_TRAIT_WANTED))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_RESIDENT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_WANTED)]\"."
+
 	if((trait_a == TAT_TRAIT_BONUS_STAT_POOL && trait_b == TAT_TRAIT_WANTED) || (trait_b == TAT_TRAIT_BONUS_STAT_POOL && trait_a == TAT_TRAIT_WANTED))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_BONUS_STAT_POOL)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_WANTED)]\"."
+
 	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TAT_TRAIT_BONUS_STAT_POOL) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TAT_TRAIT_BONUS_STAT_POOL))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_RESIDENT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_BONUS_STAT_POOL)]\"."
+
 	if((trait_a == TRAIT_DODGEEXPERT && trait_b == TRAIT_PARRYEXPERT) || (trait_b == TRAIT_DODGEEXPERT && trait_a == TRAIT_PARRYEXPERT))
-		return TRUE
+		return "\"[get_trait_display_name(TRAIT_DODGEEXPERT)]\" conflicts with \"[get_trait_display_name(TRAIT_PARRYEXPERT)]\"."
+
 	if((trait_a == TRAIT_HEAVYARMOR && trait_b == TRAIT_CRITICAL_RESISTANCE) || (trait_b == TRAIT_HEAVYARMOR && trait_a == TRAIT_CRITICAL_RESISTANCE))
-		return TRUE
+		return "\"[get_trait_display_name(TRAIT_HEAVYARMOR)]\" conflicts with \"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\"."
+
 	if((trait_a == TRAIT_MEDIUMARMOR && trait_b == TRAIT_CRITICAL_RESISTANCE) || (trait_b == TRAIT_MEDIUMARMOR && trait_a == TRAIT_CRITICAL_RESISTANCE))
-		return TRUE
+		return "\"[get_trait_display_name(TRAIT_MEDIUMARMOR)]\" conflicts with \"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\"."
+
 	if((trait_a == TAT_TRAIT_TROPHY_BOUNTY && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_TROPHY_BOUNTY && trait_a == TAT_TRAIT_RONIN))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_TROPHY_BOUNTY)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_RONIN)]\"."
+
 	if((trait_a == TAT_TRAIT_TROPHY_BOUNTY && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_TROPHY_BOUNTY && trait_a == TAT_TRAIT_SOUNDBREAKER))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_TROPHY_BOUNTY)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_SOUNDBREAKER)]\"."
+
 	if((trait_a == TAT_TRAIT_SOUNDBREAKER && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_SOUNDBREAKER && trait_a == TAT_TRAIT_RONIN))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_SOUNDBREAKER)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_RONIN)]\"."
+
 	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_RONIN))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_RONIN)]\"."
+
 	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_SOUNDBREAKER))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_SOUNDBREAKER)]\"."
+
 	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_TROPHY_BOUNTY) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_TROPHY_BOUNTY))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_TROPHY_BOUNTY)]\"."
+
 	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_SOUNDBREAKER))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_SOUNDBREAKER)]\"."
+
 	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_SPELLBLADE) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_SPELLBLADE))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\"."
+
 	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_RONIN))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_RONIN)]\"."
+
 	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_DIVINE_BOON_3))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\"."
+
 	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_DIVINE_BOON_3))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\"."
+
 	if((trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_a == TAT_TRAIT_DIVINE_BOON_3))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_MAGE_MAJOR_SLOT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\"."
+
 	if((trait_a == TAT_TRAIT_DRUID_INITIATE && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TAT_TRAIT_DRUID_INITIATE && trait_a == TAT_TRAIT_MAGE_INITIATE))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_DRUID_INITIATE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+
 	if((trait_a == TAT_TRAIT_DRUID_INITIATE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TAT_TRAIT_DRUID_INITIATE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_DRUID_INITIATE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
+
 	if((trait_a == TAT_TRAIT_WARRIOR_MASTER && has_defensive_trait_lockout()) || (trait_b == TAT_TRAIT_WARRIOR_MASTER && has_defensive_trait_lockout()))
-		return TRUE
+		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" conflicts with current defensive trait setup."
+
 	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_MAGE_INITIATE))
-		return TRUE
+		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+
 	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
-		return TRUE
-	return FALSE
+		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
+
+	return null
 
 /datum/tat_build/proc/has_defensive_trait_lockout()
 	if(traits[TRAIT_DODGEEXPERT])
@@ -331,40 +355,69 @@
 	return FALSE
 
 /datum/tat_build/proc/has_invalid_trait_dependencies()
+	var/list/issues = list()
+
 	if(traits[TAT_TRAIT_WARRIOR_MASTER] && !traits[TAT_TRAIT_WARRIOR_EXPERT])
-		return TRUE
+		issues += "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" requires \"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\"."
+
 	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2] && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
-		return TRUE
+		issues += "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\"."
+
 	if(traits[TAT_TRAIT_DIVINE_BOON_1] && !traits[TAT_TRAIT_DIVINE_INITIATE])
-		return TRUE
+		issues += "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_1)]\" requires \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
+
 	if(traits[TAT_TRAIT_DIVINE_BOON_2] && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_1]))
-		return TRUE
+		issues += "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_2)]\" requires previous divine progression."
+
 	if(traits[TAT_TRAIT_DIVINE_BOON_3] && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_2]))
-		return TRUE
+		issues += "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\" requires previous divine progression."
+
 	if(traits[TAT_TRAIT_MAGE_INITIATE] && !traits[TRAIT_ARCYNE])
-		return TRUE
+		issues += "\"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\" requires \"[get_trait_display_name(TRAIT_ARCYNE)]\"."
+
 	if(traits[TAT_TRAIT_SPELLBLADE] && (!traits[TAT_TRAIT_MAGE_INITIATE] || !traits[TRAIT_ARCYNE]))
-		return TRUE
+		issues += "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" requires mage initiation and arcyne."
+
 	if((traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT_1] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]) && !traits[TAT_TRAIT_MAGE_INITIATE])
-		return TRUE
+		issues += "Mage spell slots require \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+
 	if(traits[TAT_TRAIT_MAGE_MINOR_SLOT_2] && !traits[TAT_TRAIT_MAGE_MINOR_SLOT_1])
-		return TRUE
+		issues += "\"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_2)]\" requires \"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_1)]\"."
+
 	if(traits[TAT_TRAIT_ARTIFACTS_SUPPLIER] && !traits[TAT_TRAIT_PARTY_LEADER])
-		return TRUE
+		issues += "\"[get_trait_display_name(TAT_TRAIT_ARTIFACTS_SUPPLIER)]\" requires \"[get_trait_display_name(TAT_TRAIT_PARTY_LEADER)]\"."
+
 	for(var/trait_a in traits)
 		for(var/trait_b in traits)
 			if(trait_a == trait_b)
 				continue
-			if(are_traits_mutually_exclusive(trait_a, trait_b))
-				return TRUE
-	return FALSE
+
+			if("[trait_a]" >= "[trait_b]")
+				continue
+
+			var/reason = are_traits_mutually_exclusive(trait_a, trait_b)
+			if(reason)
+				issues += reason
+
+	return issues
 
 /datum/tat_build/proc/has_invalid_supply_items()
+	var/list/issues = list()
+
 	for(var/item_path in items)
+		var/amount = items[item_path]
+		if(!isnum(amount) || amount <= 0)
+			continue
+
 		var/list/entry = get_item_entry(item_path)
-		if(!islist(entry) || !can_use_item_entry(entry))
-			return TRUE
-	return FALSE
+		if(!islist(entry))
+			issues += "\"[item_path]\" is missing from item definitions."
+			continue
+
+		if(!can_use_item_entry(entry))
+			issues += "\"[entry["name"]]\" is no longer unlocked by current traits."
+
+	return issues
 
 /datum/tat_build/proc/is_budget_valid()
 	if(get_remaining_stat_points() < 0)
@@ -562,3 +615,27 @@
 				return -TAT_TRAIT_DISCOUNT
 
 	return 0
+
+/datum/tat_build/proc/get_validation_issues()
+	var/list/issues = list()
+
+	sanitize_build()
+
+	if(get_remaining_stat_points() < 0)
+		issues += "Spent too many stat points."
+	if(get_remaining_skill_points() < 0)
+		issues += "Spent too many skill points."
+	if(get_remaining_trait_points() < 0)
+		issues += "Spent too many trait points."
+	if(get_remaining_item_points() < 0)
+		issues += "Spent too many item points."
+
+	var/list/trait_issues = has_invalid_trait_dependencies()
+	if(length(trait_issues))
+		issues += trait_issues
+
+	var/list/item_issues = has_invalid_supply_items()
+	if(length(item_issues))
+		issues += item_issues
+
+	return issues

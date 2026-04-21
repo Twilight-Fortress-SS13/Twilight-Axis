@@ -109,6 +109,7 @@ type Data = {
   active_tat_slot?: number;
 
   can_save: boolean;
+  validation_issues?: string[];
   dirty: boolean;
 };
 
@@ -1341,8 +1342,23 @@ export const TATBuild = () => {
           ) : (
             <NoticeBox>Build is saved.</NoticeBox>
           )}
+
           {!data.can_save && (
-            <NoticeBox>Current build is invalid or exceeds available points.</NoticeBox>
+            <NoticeBox>
+              <Box bold mb={0.5}>
+                Current build is invalid:
+              </Box>
+
+              {data.validation_issues?.length ? (
+                <Stack vertical>
+                  {data.validation_issues.map((issue, index) => (
+                    <Box key={index}>• {issue}</Box>
+                  ))}
+                </Stack>
+              ) : (
+                <Box>Current build is invalid or exceeds available points.</Box>
+              )}
+            </NoticeBox>
           )}
 
           <Section
