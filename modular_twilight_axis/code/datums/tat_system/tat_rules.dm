@@ -430,10 +430,10 @@
 		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
 
 	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
-		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_2)]\"."
+		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
 
-	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_DIVINE_BOON_2) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_DIVINE_BOON_2))
-		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_2)]\"."
+	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_DIVINE_BOON_1) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_DIVINE_BOON_1))
+		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_1)]\"."
 
 	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_MINOR_SLOT_2) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_MINOR_SLOT_2))
 		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_2)]\"."
