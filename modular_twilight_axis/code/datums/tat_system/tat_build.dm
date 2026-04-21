@@ -191,20 +191,7 @@
 		if(trait_id in available_traits)
 			cleaned[trait_id] = TRUE
 	traits = cleaned
-	if(traits[TAT_TRAIT_WARRIOR_MASTER] && !traits[TAT_TRAIT_WARRIOR_EXPERT])
-		traits -= TAT_TRAIT_WARRIOR_MASTER
-	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2] && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
-		traits -= TAT_TRAIT_BARDIC_INSPIRATION_T2
-	if(traits[TAT_TRAIT_MAGE_INITIATE] && !traits[TRAIT_ARCYNE])
-		traits -= TAT_TRAIT_MAGE_INITIATE
-	if(traits[TAT_TRAIT_SPELLBLADE] && !traits[TAT_TRAIT_MAGE_INITIATE])
-		traits -= TAT_TRAIT_SPELLBLADE
-	if(traits[TAT_TRAIT_RESIDENT] && traits[TRAIT_OUTLANDER])
-		traits -= TRAIT_OUTLANDER
-	if(traits[TAT_TRAIT_RESIDENT] && traits[TAT_TRAIT_WANTED])
-		traits -= TAT_TRAIT_WANTED
-	if(traits[TAT_TRAIT_RESIDENT] && traits[TAT_TRAIT_BONUS_STAT_POOL])
-		traits -= TAT_TRAIT_BONUS_STAT_POOL
+	has_invalid_trait_dependencies()
 
 /datum/tat_build/proc/sanitize_magic()
 	if(!islist(magic_config))
