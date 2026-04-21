@@ -71,7 +71,7 @@
 	var/base_cost = isnum(entry["cost"]) ? entry["cost"] : 0
 	var/final_cost = base_cost + get_trait_cost_modifier(trait_id)
 
-	return max(0, final_cost)
+	return final_cost
 
 /datum/tat_build/proc/get_item_entry(item_path)
 	if(!ispath(item_path) || !(item_path in available_items))
