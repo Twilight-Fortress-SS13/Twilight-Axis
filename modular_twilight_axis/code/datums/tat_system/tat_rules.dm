@@ -602,12 +602,22 @@
 	var/list/entry = get_item_entry(path)
 	if(!islist(entry))
 		return 0
+
+	var/category = lowertext("[entry["category"]]")
+	var/cost = get_item_cost(path)
+	if(cost <= 0 && (category == "misc" || category == "weapon"))
+		var/already_taken = items[path]
+		if(!isnum(already_taken))
+			already_taken = 0
+		return max(0, 1 - already_taken)
+
 	if(!is_item_slot_limited(entry))
 		return INFINITY
+
 	var/slot_group = entry["slot_group"]
-	var/category = entry["category"]
 	if(!slot_group)
 		return INFINITY
+
 	var/already_taken = get_slot_group_item_count(slot_group, category, path)
 	return max(0, 1 - already_taken)
 
