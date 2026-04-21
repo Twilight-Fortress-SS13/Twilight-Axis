@@ -180,9 +180,9 @@
 	if(selection == "Player List")
 		for(var/client/C in GLOB.clients)
 			var/usedkey = C.ckey
-//			if(!check_rights(R_ADMIN,0))
-//				if(C.ckey in GLOB.anonymize)
-//					usedkey = get_fake_key(C.ckey)
+			if(!check_rights(R_ADMIN,0)) // Админ всё видит. Проверяет наличие прав админа.
+				if(C.ckey in GLOB.anonymize) // Админ всё видит. Проверяет видимый сикей на анонимность.
+					usedkey = get_fake_key(C.ckey) // Админ всё видит. Должно выдавать настоящий сикей?
 			selections[usedkey] = C.ckey
 		selection = input("Which Player?") as null|anything in sortList(selections)
 		if(!selection)

@@ -76,9 +76,9 @@
 //				WL = TRUE
 //			if(C.holder)
 //				continue
-			var/usedkey = C.key
-			/*if(C.ckey in GLOB.anonymize)
-				usedkey = get_fake_key(C.ckey)*/
+			var/usedkey = C.key 
+			if(C.ckey in GLOB.anonymize)
+				usedkey = get_fake_key(C.ckey) // Должно заменять используемый сикей на анонимный.
 /*			if(WL)
 				Lines += span_biginfo("[usedkey]")
 			else
