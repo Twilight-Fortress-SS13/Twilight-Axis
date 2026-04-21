@@ -343,11 +343,11 @@
 		return TRUE
 	if(traits[TAT_TRAIT_MAGE_INITIATE] && !traits[TRAIT_ARCYNE])
 		return TRUE
-	if(traits[TAT_TRAIT_SPELLBLADE] && !traits[TAT_TRAIT_MAGE_INITIATE])
+	if(traits[TAT_TRAIT_SPELLBLADE] && (!traits[TAT_TRAIT_MAGE_INITIATE] || !traits[TRAIT_ARCYNE]))
 		return TRUE
 	if((traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT_1] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return TRUE
-	if(traits[TAT_TRAIT_MAGE_MINOR_SLOT_2] || !traits[TAT_TRAIT_MAGE_MINOR_SLOT_1])
+	if(traits[TAT_TRAIT_MAGE_MINOR_SLOT_2] && !traits[TAT_TRAIT_MAGE_MINOR_SLOT_1])
 		return TRUE
 	if(traits[TAT_TRAIT_ARTIFACTS_SUPPLIER] && !traits[TAT_TRAIT_PARTY_LEADER])
 		return TRUE

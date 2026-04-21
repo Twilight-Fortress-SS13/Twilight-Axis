@@ -172,36 +172,20 @@
 		if(H.mind)
 			to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
 
-			var/subclass_selected = null
-			var/selection_html = get_spellblade_chant_html(src, H, "undead")
-			H << browse(selection_html, "window=spellblade_chant;size=1300x1000")
-			onclose(H, "spellblade_chant", src)
-
-			var/open_time = world.time
-			while(!subclass_selected && world.time - open_time < 5 MINUTES)
-				stoplag(1)
-			H << browse(null, "window=spellblade_chant")
-
-			if(!subclass_selected)
-				subclass_selected = "blade"
-
-			var/datum/status_effect/buff/arcyne_momentum/momentum = H.apply_status_effect(/datum/status_effect/buff/arcyne_momentum)
-			if(momentum)
-				momentum.chant = subclass_selected
-
-			
+			var/subclass_selected = list("Blade", "Phalangite", "Macebearer")
+			var/shapeshiftchoice = tgui_input_list(H, "Who are you?", "The spellblade specialization", shapeshifts)			
 			switch(subclass_selected)
-				if("blade")
+				if("Blade")
 					H.mind.AddSpell(new /datum/action/cooldown/spell/caedo)
 					H.mind.AddSpell(new /datum/action/cooldown/spell/air_strike)
 					H.mind.AddSpell(new /datum/action/cooldown/spell/leyline_anchor)
 					H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/blade_storm)
-				if("phalangite")
+				if("Phalangite")
 					H.mind.AddSpell(new /datum/action/cooldown/spell/azurean_phalanx)
 					H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/azurean_pilum)
 					H.mind.AddSpell(new /datum/action/cooldown/spell/advance)
 					H.mind.AddSpell(new /datum/action/cooldown/spell/gate_of_reckoning)
-				if("macebearer")
+				if("Macebearer")
 					H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/kastvyl)
 					H.mind.AddSpell(new /datum/action/cooldown/spell/tremor)
 					H.mind.AddSpell(new /datum/action/cooldown/spell/charge)
@@ -365,14 +349,74 @@
 /datum/tat_build/proc/apply_items(mob/living/carbon/human/H)
 	if(!H)
 		return
+
+	var/list/handled_groups = list(
+		"belt",
+		"back",
+		"armor",
+		"suit",
+	)
+
+	spawn_equipped_items_for_slot_group(H, "belt")
+	spawn_equipped_items_for_slot_group(H, "back")
+	spawn_equipped_items_for_slot_group(H, "armor")
+	spawn_equipped_items_for_slot_group(H, "suit")
+	spawn_equipped_items_except_slot_groups(H, handled_groups)
+
+	spawn_bag_items(H)
+
+/datum/tat_build/proc/get_item_slot_group_lower(path)
+	var/list/entry = get_item_entry(path)
+	if(!islist(entry))
+		return null
+	return lowertext("[entry["slot_group"]]")
+
+/datum/tat_build/proc/spawn_equipped_items_for_slot_group(mob/living/carbon/human/H, target_slot_group)
+	if(!H || !target_slot_group)
+		return
+
+	var/target_group = lowertext("[target_slot_group]")
+
 	for(var/path in items)
 		var/amount = items[path]
 		if(!isnum(amount) || amount <= 0)
 			continue
+
+		var/slot_group = get_item_slot_group_lower(path)
+		if(slot_group != target_group)
+			continue
+
 		var/equip_amount = get_item_equip_amount(path)
-		var/bag_amount = get_item_bag_amount(path)
 		for(var/i in 1 to equip_amount)
 			spawn_item_equipped_or_fallback(H, path)
+
+/datum/tat_build/proc/spawn_equipped_items_except_slot_groups(mob/living/carbon/human/H, list/excluded_groups)
+	if(!H)
+		return
+
+	for(var/path in items)
+		var/amount = items[path]
+		if(!isnum(amount) || amount <= 0)
+			continue
+
+		var/slot_group = get_item_slot_group_lower(path)
+		if(slot_group && islist(excluded_groups) && (slot_group in excluded_groups))
+			continue
+
+		var/equip_amount = get_item_equip_amount(path)
+		for(var/i in 1 to equip_amount)
+			spawn_item_equipped_or_fallback(H, path)
+
+/datum/tat_build/proc/spawn_bag_items(mob/living/carbon/human/H)
+	if(!H)
+		return
+
+	for(var/path in items)
+		var/amount = items[path]
+		if(!isnum(amount) || amount <= 0)
+			continue
+
+		var/bag_amount = get_item_bag_amount(path)
 		for(var/i in 1 to bag_amount)
 			spawn_item_into_bag_or_fallback(H, path)
 
