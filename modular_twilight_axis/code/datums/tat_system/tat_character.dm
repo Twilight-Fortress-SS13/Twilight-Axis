@@ -202,10 +202,13 @@
 			H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 	if(traits[TAT_TRAIT_SOUNDBREAKER])
 		H.LoadComponent(/datum/component/combo_core/soundbreaker)
+		H.equip_to_slot_or_del(new /obj/item/book/rogue/soundbreaker_codex(H), SLOT_IN_BACKPACK)
 	if(traits[TAT_TRAIT_TROPHY_BOUNTY])
 		H.LoadComponent(/datum/component/trophy_hunter)
+		H.equip_to_slot_or_del(new /obj/item/book/rogue/trophy_rules(H), SLOT_IN_BACKPACK)
 	if(traits[TAT_TRAIT_RONIN])
 		H.LoadComponent(/datum/component/combo_core/ronin)
+		H.equip_to_slot_or_del(new /obj/item/book/rogue/ronin_codex(H), SLOT_IN_BACKPACK)
 	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T1] || traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
 		var/bard_tier = BARD_T1
 		if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2])
