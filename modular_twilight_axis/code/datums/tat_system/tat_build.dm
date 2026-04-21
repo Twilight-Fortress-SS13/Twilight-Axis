@@ -332,18 +332,23 @@
 /datum/tat_build/proc/add_skill(skill_type, amount = 1)
 	if(!ispath(skill_type) || !isnum(amount) || !(skill_type in available_skills))
 		return FALSE
+
 	amount = round(amount)
 	if(amount <= 0)
 		return FALSE
+
 	var/current = get_skill_value(skill_type)
 	var/new_value = current + amount
 	if(new_value > get_skill_cap(skill_type))
 		return FALSE
+
 	var/cost = 0
 	for(var/i in 1 to amount)
-		cost += current + i
+		cost += get_skill_step_cost(skill_type, current + i)
+
 	if(get_remaining_skill_points() < cost)
 		return FALSE
+
 	skills[skill_type] = new_value
 	dirty = TRUE
 	invalidate_item_ui_cache()

@@ -108,14 +108,25 @@
 
 /datum/tat_build/proc/get_skill_next_cost(skill_type)
 	var/current = get_skill_value(skill_type)
-	return current + 1
+	return get_skill_step_cost(skill_type, current + 1)
 
-/datum/tat_build/proc/get_skill_total_cost_for_level(level)
-	if(!isnum(level) || level <= 0)
+/datum/tat_build/proc/get_skill_step_cost(skill_type, target_level)
+	if(!ispath(skill_type) || !isnum(target_level) || target_level <= 0)
 		return 0
+
+	if(traits[TAT_TRAIT_RESIDENT] && (ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft) || ispath(skill_type, /datum/skill/misc)))
+		return max(1, target_level - 1)
+
+	return target_level
+
+/datum/tat_build/proc/get_skill_total_cost_for_level(skill_type, level)
+	if(!ispath(skill_type) || !isnum(level) || level <= 0)
+		return 0
+
 	var/total = 0
 	for(var/i in 1 to level)
-		total += i
+		total += get_skill_step_cost(skill_type, i)
+
 	return total
 
 /datum/tat_build/proc/get_spent_skill_points()
@@ -124,7 +135,7 @@
 		var/level = skills[skill_type]
 		if(!isnum(level) || level <= 0)
 			continue
-		total += get_skill_total_cost_for_level(level)
+		total += get_skill_total_cost_for_level(skill_type, level)
 	return total
 
 /datum/tat_build/proc/get_remaining_skill_points()
@@ -151,13 +162,46 @@
 /datum/tat_build/proc/get_remaining_item_points()
 	return points_items - get_spent_item_points()
 
-/datum/tat_build/proc/get_combat_skill_cap()
-	var/cap = TAT_SKILL_COMBAT_CAP_DEFAULT
+/datum/tat_build/proc/get_primary_advanced_combat_skill()
+	var/primary_skill = null
+	var/primary_level = TAT_SKILL_COMBAT_CAP_DEFAULT
+
+	for(var/skill_type in skills)
+		if(!ispath(skill_type, /datum/skill/combat))
+			continue
+		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
+			continue
+
+		var/level = round(skills[skill_type])
+		if(level <= TAT_SKILL_COMBAT_CAP_DEFAULT)
+			continue
+
+		if(!primary_skill || level > primary_level || (level == primary_level && "[skill_type]" < "[primary_skill]"))
+			primary_skill = skill_type
+			primary_level = level
+
+	return primary_skill
+
+/datum/tat_build/proc/get_combat_skill_cap(skill_type)
+	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
+	var/advanced_cap = base_cap
+
 	if(traits[TAT_TRAIT_WARRIOR_EXPERT])
-		cap = max(cap, TAT_SKILL_COMBAT_CAP_TRAIT_1)
+		advanced_cap = max(advanced_cap, TAT_SKILL_COMBAT_CAP_TRAIT_1)
 	if(traits[TAT_TRAIT_WARRIOR_MASTER])
-		cap = max(cap, TAT_SKILL_COMBAT_CAP_TRAIT_2)
-	return cap
+		advanced_cap = max(advanced_cap, TAT_SKILL_COMBAT_CAP_TRAIT_2)
+
+	if(advanced_cap <= base_cap)
+		return base_cap
+
+	var/primary_skill = get_primary_advanced_combat_skill()
+	if(!primary_skill)
+		return advanced_cap
+
+	if(primary_skill == skill_type)
+		return advanced_cap
+
+	return base_cap
 
 /datum/tat_build/proc/get_skill_cap(skill_type)
 	if(skill_type == /datum/skill/magic/arcane)
@@ -165,15 +209,20 @@
 			return 0
 		else
 			return 4
+
 	if(skill_type == /datum/skill/magic/holy)
 		if(!can_train_holy())
 			return 0
+
 	if(ispath(skill_type, /datum/skill/combat) && !ispath(skill_type, /datum/skill/combat/twilight_firearms))
-		return get_combat_skill_cap()
+		return get_combat_skill_cap(skill_type)
+
 	if(should_softcap_peaceful_skill(skill_type) && !has_expert_trait_for_skill(skill_type))
 		return 2
+
 	if((skill_type == /datum/skill/combat/twilight_firearms) && !(has_expert_trait_for_skill(skill_type)))
 		return 2
+
 	return TAT_SKILL_NONCOMBAT_CAP
 
 /datum/tat_build/proc/can_use_weapon_supply_type(supply_type)
@@ -338,6 +387,18 @@
 
 	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
 		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
+
+	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_INITIATE))
+		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+
+	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_DIVINE_INITIATE))
+		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
+
+	if((trait_a == TRAIT_HEAVYARMOR && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_HEAVYARMOR && trait_a == TAT_TRAIT_MAGE_INITIATE))
+		return "\"[get_trait_display_name(TRAIT_HEAVYARMOR)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+	
+	if((trait_a == TRAIT_MEDIUMARMOR && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_MEDIUMARMOR && trait_a == TAT_TRAIT_MAGE_INITIATE))
+		return "\"[get_trait_display_name(TRAIT_MEDIUMARMOR)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
 
 	return null
 
