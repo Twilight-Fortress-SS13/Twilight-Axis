@@ -74,6 +74,9 @@
 	var/devotion_limit = get_divine_devotion_limit_for_tier(cleric_tier)
 	var/datum/devotion/D = new /datum/devotion(H, H.patron)
 	D.grant_miracles(H, cleric_tier = cleric_tier, passive_gain = passive_gain, devotion_limit = devotion_limit)
+	if(H.patron?.type ==/datum/patron/inhumen/zizo && cleric_tier >= CLERIC_T3)
+		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
+		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark)
 
 /datum/tat_build/proc/apply_mage_package(mob/living/carbon/human/H)
 	if(!H || !traits[TAT_TRAIT_MAGE_INITIATE] || !H.mind)
@@ -167,6 +170,43 @@
 	if(traits[TAT_TRAIT_SPELLBLADE])
 		ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
 		if(H.mind)
+			to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
+
+			var/subclass_selected = null
+			var/selection_html = get_spellblade_chant_html(src, H, "undead")
+			H << browse(selection_html, "window=spellblade_chant;size=1300x1000")
+			onclose(H, "spellblade_chant", src)
+
+			var/open_time = world.time
+			while(!subclass_selected && world.time - open_time < 5 MINUTES)
+				stoplag(1)
+			H << browse(null, "window=spellblade_chant")
+
+			if(!subclass_selected)
+				subclass_selected = "blade"
+
+			var/datum/status_effect/buff/arcyne_momentum/momentum = H.apply_status_effect(/datum/status_effect/buff/arcyne_momentum)
+			if(momentum)
+				momentum.chant = subclass_selected
+
+			
+			switch(subclass_selected)
+				if("blade")
+					H.mind.AddSpell(new /datum/action/cooldown/spell/caedo)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/air_strike)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/leyline_anchor)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/blade_storm)
+				if("phalangite")
+					H.mind.AddSpell(new /datum/action/cooldown/spell/azurean_phalanx)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/azurean_pilum)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/advance)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/gate_of_reckoning)
+				if("macebearer")
+					H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/kastvyl)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/tremor)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/charge)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/cataclysm)
+					
 			H.mind.setup_mage_aspects(build_mage_aspects(FALSE))
 			H.mind.AddSpell(new /datum/action/cooldown/spell/recall_weapon)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/empower_weapon)

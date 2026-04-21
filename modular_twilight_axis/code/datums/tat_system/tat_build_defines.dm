@@ -105,6 +105,7 @@
 #define TAT_RESIDENT_SKILL_UNARMED_MIN 3
 
 #define TAT_RESIDENT_PUGILIST_DEFAULT "Dropkick - Pushback + Extra Damage"
+#define TAT_TRAIT_DISCOUNT 0
 
 #define TAT_STAT_ENTRY(_name, _cost, _base, _min, _max) list("name" = (_name), "cost" = (_cost), "base" = (_base), "min" = (_min), "max" = (_max))
 #define TAT_TRAIT_ENTRY(_name, _cost, _category, _category_name, _desc) list("name" = (_name), "cost" = (_cost), "category" = (_category), "category_name" = (_category_name), "desc" = (_desc))

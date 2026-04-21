@@ -67,7 +67,11 @@
 	var/list/entry = get_trait_entry(trait_id)
 	if(!islist(entry))
 		return 0
-	return isnum(entry["cost"]) ? entry["cost"] : 0
+
+	var/base_cost = isnum(entry["cost"]) ? entry["cost"] : 0
+	var/final_cost = base_cost + get_trait_cost_modifier(trait_id)
+
+	return max(0, final_cost)
 
 /datum/tat_build/proc/get_item_entry(item_path)
 	if(!ispath(item_path) || !(item_path in available_items))
@@ -546,3 +550,15 @@
 		if("Headbutt - Vulnerable Debuff")
 			return /obj/effect/proc_holder/spell/invoked/headbutt
 	return /obj/effect/proc_holder/spell/invoked/dropkick
+
+/datum/tat_build/proc/get_trait_cost_modifier(trait_id)
+	switch(trait_id)
+		if(TAT_TRAIT_MAIL_SUPPLIER)
+			if(traits[TRAIT_MEDIUMARMOR])
+				return -TAT_TRAIT_DISCOUNT
+
+		if(TAT_TRAIT_PLATE_SUPPLIER)
+			if(traits[TRAIT_HEAVYARMOR] || traits[TRAIT_MEDIUMARMOR])
+				return -TAT_TRAIT_DISCOUNT
+
+	return 0
