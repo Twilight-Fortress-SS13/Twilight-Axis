@@ -159,6 +159,8 @@
 	if(skill_type == /datum/skill/magic/arcane)
 		if(!can_train_arcane())
 			return 0
+		else
+			return 4
 	if(skill_type == /datum/skill/magic/holy)
 		if(!can_train_holy())
 			return 0
@@ -218,7 +220,7 @@
 		tier++
 	if(traits[TAT_TRAIT_DIVINE_BOON_3])
 		tier++
-	return clamp(tier, CLERIC_T0, CLERIC_T3)
+	return clamp(tier, CLERIC_T0, CLERIC_T4)
 
 /datum/tat_build/proc/get_divine_passive_gain_for_tier(cleric_tier)
 	switch(cleric_tier)
@@ -300,6 +302,8 @@
 	if((trait_a == TAT_TRAIT_DRUID_INITIATE && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TAT_TRAIT_DRUID_INITIATE && trait_a == TAT_TRAIT_MAGE_INITIATE))
 		return TRUE
 	if((trait_a == TAT_TRAIT_DRUID_INITIATE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TAT_TRAIT_DRUID_INITIATE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
+		return TRUE
+	if((trait_a == TAT_TRAIT_WARRIOR_MASTER && has_defensive_trait_lockout()) || (trait_b == TAT_TRAIT_WARRIOR_MASTER && has_defensive_trait_lockout()))
 		return TRUE
 	return FALSE
 
@@ -477,3 +481,60 @@
 
 /datum/tat_build/proc/get_stat_hard_min(stat_id)
 	return 1
+
+/datum/tat_build/proc/has_mind_spell(mob/living/carbon/human/H, spell_type)
+	if(!H || !H.mind || !ispath(spell_type))
+		return FALSE
+
+	if(islist(H.mind.spell_list))
+		for(var/datum/existing_spell as anything in H.mind.spell_list)
+			if(istype(existing_spell, spell_type))
+				return TRUE
+
+	if(islist(H.actions))
+		for(var/datum/action/existing_action as anything in H.actions)
+			if(istype(existing_action, spell_type))
+				return TRUE
+
+	return FALSE
+
+/datum/tat_build/proc/grant_mind_spell_if_missing(mob/living/carbon/human/H, spell_type)
+	if(!H || !H.mind || !ispath(spell_type))
+		return FALSE
+	if(has_mind_spell(H, spell_type))
+		return FALSE
+
+	H.mind.AddSpell(new spell_type)
+	return TRUE
+
+/datum/tat_build/proc/get_resident_skill_value(skill_type)
+	if(!ispath(skill_type))
+		return 0
+	return get_skill_value(skill_type)
+
+/datum/tat_build/proc/get_resident_pugilist_spell_choice(mob/living/carbon/human/H)
+	var/list/choices = list(
+		"Dropkick - Pushback + Extra Damage",
+		"Chokeslam - Stamina Damage",
+		"Stunner - Dazed Debuff",
+		"Headbutt - Vulnerable Debuff",
+	)
+
+	if(H?.client)
+		var/choice = tgui_input_list(H, "Choose your resident pugilist technique.", "Resident Technique", choices)
+		if(choice in choices)
+			return choice
+
+	return TAT_RESIDENT_PUGILIST_DEFAULT
+
+/datum/tat_build/proc/get_resident_pugilist_spell_type(choice)
+	switch(choice)
+		if("Dropkick - Pushback + Extra Damage")
+			return /obj/effect/proc_holder/spell/invoked/dropkick
+		if("Chokeslam - Stamina Damage")
+			return /obj/effect/proc_holder/spell/invoked/chokeslam
+		if("Stunner - Dazed Debuff")
+			return /obj/effect/proc_holder/spell/invoked/stunner
+		if("Headbutt - Vulnerable Debuff")
+			return /obj/effect/proc_holder/spell/invoked/headbutt
+	return /obj/effect/proc_holder/spell/invoked/dropkick

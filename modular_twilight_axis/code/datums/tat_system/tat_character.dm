@@ -163,6 +163,7 @@
 	if(traits[TAT_TRAIT_RESIDENT])
 		ADD_TRAIT(H, TRAIT_RESIDENT, TAT_TRAIT_SOURCE)
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")
+		apply_resident_package(H)
 	if(traits[TAT_TRAIT_SPELLBLADE])
 		ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
 		if(H.mind)
@@ -346,3 +347,38 @@
 	apply_skills(H)
 	apply_trait_skill_bonuses(H)
 	apply_traits(H)
+
+/datum/tat_build/proc/apply_resident_package(mob/living/carbon/human/H)
+	if(!H || !H.mind || !traits[TAT_TRAIT_RESIDENT])
+		return
+
+	var/medicine_skill = get_resident_skill_value(/datum/skill/misc/medicine)
+	var/butchering_skill = get_resident_skill_value(/datum/skill/labor/butchering)
+	var/mining_skill = get_resident_skill_value(/datum/skill/labor/mining)
+	var/music_skill = get_resident_skill_value(/datum/skill/misc/music)
+	var/ceramics_skill = get_resident_skill_value(/datum/skill/craft/ceramics)
+	var/sewing_skill = get_resident_skill_value(/datum/skill/craft/sewing)
+	var/tanning_skill = get_resident_skill_value(/datum/skill/craft/tanning)
+	var/unarmed_skill = get_resident_skill_value(/datum/skill/combat/unarmed)
+	if(medicine_skill >= TAT_RESIDENT_SKILL_MEDICINE_MIN || traits[TRAIT_HOMESTEAD_EXPERT])
+		grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/invoked/diagnose/secular)
+
+	if(butchering_skill >= TAT_RESIDENT_SKILL_BUTCHERING_MIN)
+		grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/invoked/huntersyell)
+
+	if(mining_skill >= TAT_RESIDENT_SKILL_MINING_MIN)
+		grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/invoked/mineroresight)
+
+	if(music_skill >= TAT_RESIDENT_SKILL_MUSIC_MIN)
+		grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/projectile/vicious_mockery)
+
+	if(ceramics_skill >= TAT_RESIDENT_SKILL_CERAMICS_MIN)
+		grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/invoked/digclay)
+
+	if(sewing_skill >= TAT_RESIDENT_SKILL_SEWING_MIN || tanning_skill >= TAT_RESIDENT_SKILL_TANNING_MIN)
+		grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/invoked/fittedclothing)
+
+	if(unarmed_skill >= TAT_RESIDENT_SKILL_UNARMED_MIN && traits[TRAIT_CIVILIZEDBARBARIAN])
+		var/choice = get_resident_pugilist_spell_choice(H)
+		var/spell_type = get_resident_pugilist_spell_type(choice)
+		grant_mind_spell_if_missing(H, spell_type)
