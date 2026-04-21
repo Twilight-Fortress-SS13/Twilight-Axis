@@ -182,26 +182,27 @@
 
 	return primary_skill
 
-/datum/tat_build/proc/get_combat_skill_cap(skill_type)
-	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
-	var/advanced_cap = base_cap
+/datum/tat_build/proc/get_highest_advanced_combat_skill(exclude_skill = null)
+	var/best_skill = null
+	var/best_level = TAT_SKILL_COMBAT_CAP_DEFAULT
 
-	if(traits[TAT_TRAIT_WARRIOR_EXPERT])
-		advanced_cap = max(advanced_cap, TAT_SKILL_COMBAT_CAP_TRAIT_1)
-	if(traits[TAT_TRAIT_WARRIOR_MASTER])
-		advanced_cap = max(advanced_cap, TAT_SKILL_COMBAT_CAP_TRAIT_2)
+	for(var/skill_type in skills)
+		if(skill_type == exclude_skill)
+			continue
+		if(!ispath(skill_type, /datum/skill/combat))
+			continue
+		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
+			continue
 
-	if(advanced_cap <= base_cap)
-		return base_cap
+		var/level = round(skills[skill_type])
+		if(level <= TAT_SKILL_COMBAT_CAP_DEFAULT)
+			continue
 
-	var/primary_skill = get_primary_advanced_combat_skill()
-	if(!primary_skill)
-		return advanced_cap
+		if(!best_skill || level > best_level || (level == best_level && "[skill_type]" < "[best_skill]"))
+			best_skill = skill_type
+			best_level = level
 
-	if(primary_skill == skill_type)
-		return advanced_cap
-
-	return base_cap
+	return best_skill
 
 /datum/tat_build/proc/get_skill_cap(skill_type)
 	if(skill_type == /datum/skill/magic/arcane)
@@ -224,6 +225,49 @@
 		return 2
 
 	return TAT_SKILL_NONCOMBAT_CAP
+
+/datum/tat_build/proc/get_combat_skill_cap(skill_type)
+	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
+	var/has_expert = !!traits[TAT_TRAIT_WARRIOR_EXPERT]
+	var/has_master = !!traits[TAT_TRAIT_WARRIOR_MASTER]
+
+	if(!has_expert && !has_master)
+		return base_cap
+
+	var/master_skill = null
+	var/expert_skill = null
+
+	if(has_master)
+
+		master_skill = get_highest_advanced_combat_skill()
+		if(master_skill)
+			expert_skill = get_highest_advanced_combat_skill(master_skill)
+
+		if(master_skill == skill_type)
+			return TAT_SKILL_COMBAT_CAP_TRAIT_2
+
+		if(expert_skill == skill_type)
+			return TAT_SKILL_COMBAT_CAP_TRAIT_1
+
+		if(master_skill && !expert_skill)
+			return TAT_SKILL_COMBAT_CAP_TRAIT_1
+
+		if(!master_skill)
+			return TAT_SKILL_COMBAT_CAP_TRAIT_1
+
+		return base_cap
+
+	if(has_expert)
+		expert_skill = get_highest_advanced_combat_skill()
+		if(expert_skill == skill_type)
+			return TAT_SKILL_COMBAT_CAP_TRAIT_1
+
+		if(!expert_skill)
+			return TAT_SKILL_COMBAT_CAP_TRAIT_1
+
+		return base_cap
+
+	return base_cap
 
 /datum/tat_build/proc/can_use_weapon_supply_type(supply_type)
 	switch(supply_type)
@@ -386,13 +430,16 @@
 		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
 
 	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
-		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
+		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_2)]\"."
 
-	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_INITIATE))
-		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_DIVINE_BOON_2) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_DIVINE_BOON_2))
+		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_2)]\"."
 
-	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_DIVINE_INITIATE))
-		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
+	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_MINOR_SLOT_2) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_MINOR_SLOT_2))
+		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_2)]\"."
+
+	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT))
+		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_MAJOR_SLOT)]\"."
 
 	if((trait_a == TRAIT_HEAVYARMOR && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_HEAVYARMOR && trait_a == TAT_TRAIT_MAGE_INITIATE))
 		return "\"[get_trait_display_name(TRAIT_HEAVYARMOR)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
