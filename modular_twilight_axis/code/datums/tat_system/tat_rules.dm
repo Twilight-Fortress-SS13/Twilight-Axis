@@ -400,6 +400,12 @@
 	if((trait_a == TRAIT_MEDIUMARMOR && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_MEDIUMARMOR && trait_a == TAT_TRAIT_MAGE_INITIATE))
 		return "\"[get_trait_display_name(TRAIT_MEDIUMARMOR)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
 
+	if((trait_a == TRAIT_DODGEEXPERT && trait_b == TAT_TRAIT_MAGE_MINOR_SLOT_2) || (trait_b == TRAIT_DODGEEXPERT && trait_a == TAT_TRAIT_MAGE_MINOR_SLOT_2))
+		return "\"[get_trait_display_name(TRAIT_DODGEEXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_2)]\"."
+
+	if((trait_a == TRAIT_DODGEEXPERT && trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT) || (trait_b == TRAIT_DODGEEXPERT && trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT))
+		return "\"[get_trait_display_name(TRAIT_DODGEEXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
+
 	return null
 
 /datum/tat_build/proc/has_defensive_trait_lockout()
