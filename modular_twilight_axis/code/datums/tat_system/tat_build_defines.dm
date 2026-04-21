@@ -712,3 +712,10 @@
 	/obj/item/quiver/bolt/heavy/bronze = TAT_ITEM_ENTRY("Heavy Bronze Bolts", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "munition"), \
 	/obj/item/quiver/bolt/heavy/blunt = TAT_ITEM_ENTRY("Heavy Blunt Bolts", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
 	/obj/item/quiver/bolt/heavy/silver = TAT_ITEM_ENTRY("Heavy Silver Bolts", 2, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "munition"), \
+	/obj/item/needle = TAT_ITEM_ENTRY("Needle", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/needle/thorn = TAT_ITEM_ENTRY("Needle", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/needle/bronze = TAT_ITEM_ENTRY("Needle", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
+	/obj/item/skillbook/unfinished = TAT_ITEM_ENTRY("Unfinished Skill Book", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/pestle = TAT_ITEM_ENTRY("Pestle", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/reagent_containers/glass/mortar = TAT_ITEM_ENTRY("Mortar", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/chalk = TAT_ITEM_ENTRY("Chalk", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
