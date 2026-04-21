@@ -26,6 +26,14 @@
 	var/active_tat_slot = 1
 	var/datum/preferences/owner_preferences = null
 
+	var/list/ui_item_catalog_cache = null
+	var/list/ui_item_states_cache = null
+	var/ui_item_states_cache_dirty = TRUE
+
+	var/ui_item_cache_requested = FALSE
+	var/ui_item_cache_pending_full = FALSE
+	var/ui_item_cache_pending_states = FALSE
+
 /datum/tat_build/New()
 	. = ..()
 	init_available_stats()
@@ -147,6 +155,7 @@
 /datum/tat_build/proc/reset_items()
 	items = list()
 	item_loadout = list()
+	invalidate_item_ui_cache()
 	dirty = TRUE
 
 /datum/tat_build/proc/set_stat_value(stat_id, value)
@@ -267,6 +276,7 @@
 	reset_traits()
 	reset_items()
 	reset_magic()
+	invalidate_item_ui_cache()
 	dirty = TRUE
 
 /datum/tat_build/proc/reset_stats()
@@ -275,10 +285,12 @@
 
 /datum/tat_build/proc/reset_skills()
 	skills = list()
+	invalidate_item_ui_cache()
 	dirty = TRUE
 
 /datum/tat_build/proc/reset_traits()
 	traits = list()
+	invalidate_item_ui_cache()
 	dirty = TRUE
 
 /datum/tat_build/proc/reset_magic()
@@ -334,6 +346,7 @@
 		return FALSE
 	skills[skill_type] = new_value
 	dirty = TRUE
+	invalidate_item_ui_cache()
 	return TRUE
 
 /datum/tat_build/proc/remove_skill(skill_type, amount = 1)
@@ -351,6 +364,7 @@
 	else
 		skills -= skill_type
 	dirty = TRUE
+	invalidate_item_ui_cache()
 	return TRUE
 
 /datum/tat_build/proc/add_trait(trait_id)
@@ -360,6 +374,7 @@
 		return FALSE
 	traits[trait_id] = TRUE
 	dirty = TRUE
+	invalidate_item_ui_cache()
 	return TRUE
 
 /datum/tat_build/proc/remove_trait(trait_id)
@@ -368,6 +383,7 @@
 	traits -= trait_id
 	sanitize_magic()
 	dirty = TRUE
+	invalidate_item_ui_cache()
 	return TRUE
 
 /datum/tat_build/proc/add_item(path, amount = 1)
@@ -391,6 +407,7 @@
 	items[path] = (items[path] || 0) + amount
 	normalize_item_loadout(path)
 	dirty = TRUE
+	invalidate_item_ui_cache()
 	return TRUE
 
 /datum/tat_build/proc/remove_item(path, amount = 1)
@@ -407,6 +424,7 @@
 		items -= path
 		item_loadout -= path
 	dirty = TRUE
+	invalidate_item_ui_cache()
 	return TRUE
 
 /datum/tat_build/proc/move_item_to_equip(path, amount = 1)

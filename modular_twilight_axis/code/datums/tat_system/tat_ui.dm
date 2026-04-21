@@ -138,7 +138,7 @@
 		"available_stats" = build_ui_stat_entries(),
 		"available_skills" = build_ui_skill_entries(),
 		"available_traits" = build_ui_trait_entries(),
-		"available_items" = build_ui_items(),
+		"available_items" = null,
 	)
 
 /datum/tat_build/ui_data(mob/user)
@@ -146,7 +146,8 @@
 		"stats" = build_ui_stats(),
 		"skills" = build_ui_skills(),
 		"traits" = build_ui_selected_traits(),
-		"items" = build_ui_item_states(),
+		"items" = null,
+		"item_cache" = get_pending_item_ui_cache_packet(),
 		"loadout" = build_ui_loadout(),
 		"magic_config" = magic_config.Copy(),
 		"points_stats" = get_effective_stat_points_total(),
@@ -213,4 +214,86 @@
 			if(!can_save())
 				return FALSE
 			return save_current_to_active_slot()
+		if("request_item_cache")
+			return request_item_ui_cache(text2num(params["full"]) ? TRUE : FALSE)
 	return FALSE
+
+/datum/tat_build/proc/get_ui_item_catalog_cache()
+	if(islist(ui_item_catalog_cache))
+		return ui_item_catalog_cache
+
+	ui_item_catalog_cache = list()
+	for(var/item_path in available_items)
+		var/list/entry = available_items[item_path]
+		var/list/icon_payload = get_item_icon_payload(item_path)
+		ui_item_catalog_cache["[item_path]"] = list(
+			"name" = entry["name"],
+			"cost" = entry["cost"],
+			"category" = entry["category"],
+			"unlock_type" = entry["unlock_type"],
+			"unlock_key" = entry["unlock_key"],
+			"slot_group" = entry["slot_group"],
+			"icon" = icon_payload ? icon_payload["icon"] : null,
+			"icon_state" = icon_payload ? icon_payload["icon_state"] : null,
+		)
+
+	return ui_item_catalog_cache
+
+/datum/tat_build/proc/get_ui_item_states_cache()
+	if(islist(ui_item_states_cache) && !ui_item_states_cache_dirty)
+		return ui_item_states_cache
+
+	ui_item_states_cache = list()
+	for(var/item_path in available_items)
+		var/list/entry = available_items[item_path]
+		ui_item_states_cache["[item_path]"] = list(
+			"amount" = (items[item_path] || 0),
+			"unlocked" = can_use_item_entry(entry),
+		)
+
+	ui_item_states_cache_dirty = FALSE
+	return ui_item_states_cache
+
+/datum/tat_build/proc/invalidate_item_ui_cache(send_full = FALSE)
+	ui_item_states_cache_dirty = TRUE
+
+	if(!ui_item_cache_requested)
+		return
+
+	if(send_full || !islist(ui_item_catalog_cache))
+		ui_item_cache_pending_full = TRUE
+	else
+		ui_item_cache_pending_states = TRUE
+
+/datum/tat_build/proc/request_item_ui_cache(force_full = FALSE)
+	ui_item_cache_requested = TRUE
+
+	if(force_full || !islist(ui_item_catalog_cache))
+		ui_item_cache_pending_full = TRUE
+	else
+		ui_item_cache_pending_states = TRUE
+
+	return TRUE
+
+/datum/tat_build/proc/get_pending_item_ui_cache_packet()
+	if(!ui_item_cache_requested)
+		return null
+
+	if(!ui_item_cache_pending_full && !ui_item_cache_pending_states)
+		return null
+
+	var/list/packet = list()
+
+	if(ui_item_cache_pending_full)
+		packet["full"] = TRUE
+		packet["catalog"] = get_ui_item_catalog_cache()
+	else
+		packet["full"] = FALSE
+		packet["catalog"] = null
+
+	packet["states"] = get_ui_item_states_cache()
+
+	ui_item_cache_pending_full = FALSE
+	ui_item_cache_pending_states = FALSE
+
+	return packet

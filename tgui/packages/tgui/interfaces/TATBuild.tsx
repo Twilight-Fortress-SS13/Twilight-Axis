@@ -76,17 +76,25 @@ type TatSlotEntry = {
   summary?: SlotSummary;
 };
 
+type ItemCachePacket = {
+  full?: boolean;
+  catalog?: Record<string, ItemEntry> | null;
+  states?: Record<string, ItemState> | null;
+};
+
 type Data = {
   stats: Record<string, number>;
   skills: Record<string, SkillState>;
   traits: string[];
-  items: Record<string, ItemState>;
+  items: Record<string, ItemState> | null;
   loadout: Record<string, LoadoutState>;
 
   available_stats: Record<string, StatEntry>;
   available_skills: Record<string, SkillEntry>;
   available_traits: Record<string, TraitEntry>;
-  available_items: Record<string, ItemEntry>;
+  available_items: Record<string, ItemEntry> | null;
+
+  item_cache?: ItemCachePacket | null;
 
   points_stats: number;
   points_stats_remaining: number;
@@ -563,21 +571,23 @@ const ItemTile = ({
           </div>
         )}
 
-        {bottomRightText !== undefined && bottomRightText !== null && bottomRightText !== '' && (
-          <div
-            style={{
-              position: 'absolute',
-              right: '6px',
-              bottom: '4px',
-              fontWeight: 700,
-              fontSize: '11px',
-              color: '#9fd6a8',
-              textShadow: '0 1px 2px rgba(0,0,0,0.95)',
-              pointerEvents: 'none',
-            }}>
-            {bottomRightText}
-          </div>
-        )}
+        {bottomRightText !== undefined &&
+          bottomRightText !== null &&
+          bottomRightText !== '' && (
+            <div
+              style={{
+                position: 'absolute',
+                right: '6px',
+                bottom: '4px',
+                fontWeight: 700,
+                fontSize: '11px',
+                color: '#9fd6a8',
+                textShadow: '0 1px 2px rgba(0,0,0,0.95)',
+                pointerEvents: 'none',
+              }}>
+              {bottomRightText}
+            </div>
+          )}
       </div>
     </Box>
   );
@@ -666,7 +676,8 @@ const SlotCards = ({
                   </Stack>
 
                   <Box mt={0.5} style={{ fontSize: '11px', opacity: 0.88 }}>
-                    Spent: Stats - {summary.stats} | Skills - {summary.skills} | Traits - {summary.traits} | Items - {summary.items}
+                    Spent: Stats - {summary.stats} | Skills - {summary.skills} | Traits -{' '}
+                    {summary.traits} | Items - {summary.items}
                   </Box>
 
                   <Box mt={0.75}>
@@ -780,8 +791,8 @@ const StatsTab = ({
                 disabledRemove={value <= 1}
                 extra={
                   <Box>
-                    Base: {entry.base} | Refund floor: {entry.min} | Max: {entry.max} | Cost per step:{' '}
-                    {entry.cost}
+                    Base: {entry.base} | Refund floor: {entry.min} | Max: {entry.max} | Cost per
+                    step: {entry.cost}
                   </Box>
                 }
               />
@@ -1006,11 +1017,13 @@ const ItemsTab = ({
   act,
   search,
   setHoveredItem,
+  itemCacheLoaded,
 }: {
   itemEntries: Record<string, ItemViewEntry>;
   act: BackendAct;
   search: string;
   setHoveredItem: (value: HoverCardData | null) => void;
+  itemCacheLoaded: boolean;
 }) => {
   const groups = useMemo(() => {
     return groupEntriesByCategoryAndSlot(
@@ -1028,6 +1041,14 @@ const ItemsTab = ({
         )
     );
   }, [itemEntries, search]);
+
+  if (!itemCacheLoaded) {
+    return (
+      <Section title="Items">
+        <NoticeBox>Loading item cache...</NoticeBox>
+      </Section>
+    );
+  }
 
   return (
     <Section title="Items">
@@ -1213,15 +1234,45 @@ export const TATBuild = () => {
   const [search, setSearch] = useState('');
   const [hoveredItem, setHoveredItem] = useState<HoverCardData | null>(null);
 
+  const [cachedAvailableItems, setCachedAvailableItems] = useState<Record<string, ItemEntry>>({});
+  const [cachedItemStates, setCachedItemStates] = useState<Record<string, ItemState>>({});
+  const [hasRequestedItemCache, setHasRequestedItemCache] = useState(false);
+
   const tatSlots = useMemo<TatSlotEntry[]>(
     () => normalizeTatSlots(data.tat_slots, data.active_tat_slot),
     [data.tat_slots, data.active_tat_slot]
   );
 
+  useEffect(() => {
+    if (tab !== 'items') {
+      return;
+    }
+
+    if (!hasRequestedItemCache) {
+      act('request_item_cache', { full: 1 });
+      setHasRequestedItemCache(true);
+    }
+  }, [tab, hasRequestedItemCache, act]);
+
+  useEffect(() => {
+    const packet = data.item_cache;
+    if (!packet) {
+      return;
+    }
+
+    if (packet.full && packet.catalog) {
+      setCachedAvailableItems(packet.catalog);
+    }
+
+    if (packet.states) {
+      setCachedItemStates(packet.states);
+    }
+  }, [data.item_cache]);
+
   const itemEntries = useMemo<Record<string, ItemViewEntry>>(() => {
     const result: Record<string, ItemViewEntry> = {};
-    const staticEntries = data.available_items || {};
-    const states = data.items || {};
+    const staticEntries = cachedAvailableItems || {};
+    const states = cachedItemStates || {};
 
     Object.entries(staticEntries).forEach(([itemPath, entry]) => {
       const state = states[itemPath];
@@ -1233,11 +1284,11 @@ export const TATBuild = () => {
     });
 
     return result;
-  }, [data.available_items, data.items]);
+  }, [cachedAvailableItems, cachedItemStates]);
 
   const loadoutEntries = useMemo<Record<string, LoadoutViewEntry>>(() => {
     const result: Record<string, LoadoutViewEntry> = {};
-    const staticEntries = data.available_items || {};
+    const staticEntries = cachedAvailableItems || {};
     const loadoutStates = data.loadout || {};
 
     Object.entries(loadoutStates).forEach(([itemPath, state]) => {
@@ -1255,7 +1306,9 @@ export const TATBuild = () => {
     });
 
     return result;
-  }, [data.available_items, data.loadout]);
+  }, [cachedAvailableItems, data.loadout]);
+
+  const itemCacheLoaded = Object.keys(cachedAvailableItems).length > 0;
 
   return (
     <Window title="TAT Build" width={900} height={860}>
@@ -1327,6 +1380,7 @@ export const TATBuild = () => {
               act={act}
               search={search}
               setHoveredItem={setHoveredItem}
+              itemCacheLoaded={itemCacheLoaded}
             />
           )}
           {tab === 'loadout' && (
