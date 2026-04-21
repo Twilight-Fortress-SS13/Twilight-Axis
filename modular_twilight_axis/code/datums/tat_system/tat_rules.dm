@@ -83,7 +83,15 @@
 /datum/tat_build/proc/get_stat_point_delta_for_value(stat_id, value)
 	var/base = get_stat_base(stat_id)
 	var/cost = get_stat_cost(stat_id)
-	return (value - base) * cost
+	var/refund_floor = get_stat_min(stat_id)
+
+	value = clamp(value, get_stat_hard_min(stat_id), get_stat_max(stat_id))
+
+	if(value > base)
+		return (value - base) * cost
+
+	var/effective_value = max(value, refund_floor)
+	return (effective_value - base) * cost
 
 /datum/tat_build/proc/get_total_stat_point_delta()
 	var/total = 0
@@ -466,3 +474,6 @@
 		return INFINITY
 	var/already_taken = get_slot_group_item_count(slot_group, category, path)
 	return max(0, 1 - already_taken)
+
+/datum/tat_build/proc/get_stat_hard_min(stat_id)
+	return 1

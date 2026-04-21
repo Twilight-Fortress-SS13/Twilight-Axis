@@ -153,7 +153,7 @@
 	if(!(stat_id in available_stats))
 		return FALSE
 	value = round(value)
-	value = clamp(value, get_stat_min(stat_id), get_stat_max(stat_id))
+	value = clamp(value, get_stat_hard_min(stat_id), get_stat_max(stat_id))
 	if(value == get_stat_base(stat_id))
 		stats -= stat_id
 	else
@@ -311,7 +311,7 @@
 		return FALSE
 	var/current = get_stat_value(id)
 	var/new_value = current - amount
-	if(new_value < get_stat_min(id))
+	if(new_value < get_stat_hard_min(id))
 		return FALSE
 	set_stat_value(id, new_value)
 	dirty = TRUE

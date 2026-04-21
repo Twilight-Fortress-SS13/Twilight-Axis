@@ -777,10 +777,10 @@ const StatsTab = ({
                 onAdd={() => act('add_stat', { id: statId, amount: 1 })}
                 onRemove={() => act('remove_stat', { id: statId, amount: 1 })}
                 disabledAdd={value >= entry.max}
-                disabledRemove={value <= entry.min}
+                disabledRemove={value <= 1}
                 extra={
                   <Box>
-                    Base: {entry.base} | Min: {entry.min} | Max: {entry.max} | Cost per step:{' '}
+                    Base: {entry.base} | Refund floor: {entry.min} | Max: {entry.max} | Cost per step:{' '}
                     {entry.cost}
                   </Box>
                 }
