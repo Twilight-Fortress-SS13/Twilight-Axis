@@ -41,7 +41,8 @@
 
 #define TAT_TRAIT_MAGE_MAJOR_SLOT_1 "tat_mage_major_slot_1"
 #define TAT_TRAIT_MAGE_MAJOR_SLOT_2 "tat_mage_major_slot_2"
-#define TAT_TRAIT_MAGE_MINOR_SLOT "tat_mage_minor_slot"
+#define TAT_TRAIT_MAGE_MINOR_SLOT_1 "tat_mage_minor_slot_1"
+#define TAT_TRAIT_MAGE_MINOR_SLOT_2 "tat_mage_minor_slot_2"
 #define TAT_TRAIT_MAGE_UTILITY_SLOT "tat_mage_utility_slot"
 
 #define TAT_BUILD_STAT_BONUS_EXTRA_STATS 3
