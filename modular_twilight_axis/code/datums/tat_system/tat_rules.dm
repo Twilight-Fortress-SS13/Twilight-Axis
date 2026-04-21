@@ -241,11 +241,10 @@
 	return CLERIC_REQ_1
 
 /datum/tat_build/proc/build_mage_aspects(scale_with_arcane = TRUE)
+	var/major = 0
 	var/minor = 1
 	var/utilities = 3
-	if(traits[TAT_TRAIT_MAGE_MAJOR_SLOT_1])
-		major += 1
-	if(traits[TAT_TRAIT_MAGE_MAJOR_SLOT_2])
+	if(traits[TAT_TRAIT_MAGE_MAJOR_SLOT])
 		major += 1
 	if(traits[TAT_TRAIT_MAGE_MINOR_SLOT_1])
 		minor += 1
@@ -300,7 +299,7 @@
 		return TRUE
 	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_DIVINE_BOON_3))
 		return TRUE
-	if((trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT_2 && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT_2 && trait_a == TAT_TRAIT_DIVINE_BOON_3))
+	if((trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_a == TAT_TRAIT_DIVINE_BOON_3))
 		return TRUE
 	if((trait_a == TAT_TRAIT_DRUID_INITIATE && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TAT_TRAIT_DRUID_INITIATE && trait_a == TAT_TRAIT_MAGE_INITIATE))
 		return TRUE
@@ -338,9 +337,7 @@
 		return TRUE
 	if(traits[TAT_TRAIT_SPELLBLADE] && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return TRUE
-	if((traits[TAT_TRAIT_MAGE_MAJOR_SLOT_1] || traits[TAT_TRAIT_MAGE_MINOR_SLOT_1] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]) && !traits[TAT_TRAIT_MAGE_INITIATE])
-		return TRUE
-	if(traits[TAT_TRAIT_MAGE_MAJOR_SLOT_2] || !traits[TAT_TRAIT_MAGE_MAJOR_SLOT_1])
+	if((traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT_1] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		return TRUE
 	if(traits[TAT_TRAIT_MAGE_MINOR_SLOT_2] || !traits[TAT_TRAIT_MAGE_MINOR_SLOT_1])
 		return TRUE
