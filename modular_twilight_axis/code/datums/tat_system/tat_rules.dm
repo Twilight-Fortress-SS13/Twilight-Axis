@@ -374,7 +374,7 @@
 		if(/datum/skill/craft/blacksmithing)
 			return !!traits[TRAIT_SMITHING_EXPERT]
 		if(/datum/skill/craft/smelting)
-			return !!traits[TRAIT_TRAINED_SMITH]
+			return !!traits[TRAIT_SMITHING_EXPERT]
 		if(/datum/skill/craft/carpentry)
 			return !!traits[TRAIT_HOMESTEAD_EXPERT]
 		if(/datum/skill/craft/masonry)

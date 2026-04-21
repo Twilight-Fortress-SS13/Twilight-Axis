@@ -29,10 +29,9 @@
 /datum/tat_build/proc/apply_trait_skill_bonuses(mob/living/carbon/human/H)
 	if(!H)
 		return
-	if(traits[TRAIT_TRAINED_SMITH])
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/smelting", 3)
 	if(traits[TRAIT_SMITHING_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/smithing", 3)
+		grant_skill_bonus_if_exists(H, "/datum/skill/craft/smelting", 3)
 	if(traits[TRAIT_ALCHEMY_EXPERT])
 		grant_skill_bonus_if_exists(H, "/datum/skill/craft/alchemy", 3)
 	if(traits[TRAIT_MEDICINE_EXPERT])
