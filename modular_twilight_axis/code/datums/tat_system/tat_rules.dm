@@ -203,14 +203,14 @@
 	return FALSE
 
 /datum/tat_build/proc/get_effective_divine_tier()
-	var/tier = CLERIC_T1
+	var/tier = CLERIC_T0
 	if(traits[TAT_TRAIT_DIVINE_BOON_1])
 		tier++
 	if(traits[TAT_TRAIT_DIVINE_BOON_2])
 		tier++
 	if(traits[TAT_TRAIT_DIVINE_BOON_3])
 		tier++
-	return clamp(tier, CLERIC_T1, CLERIC_T4)
+	return clamp(tier, CLERIC_T0, CLERIC_T3)
 
 /datum/tat_build/proc/get_divine_passive_gain_for_tier(cleric_tier)
 	switch(cleric_tier)
