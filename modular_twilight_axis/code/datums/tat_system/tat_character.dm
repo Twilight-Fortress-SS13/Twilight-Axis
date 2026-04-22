@@ -482,24 +482,23 @@
 /datum/tat_build/proc/apply_allowed_post_tat_virtues(mob/living/carbon/human/H)
 	if(!H)
 		return
-	var/player = H.client
-	if(!player)
+	if(!H.client)
 		return
-	if(!player.prefs)
+	if(!H.client.prefs)
 		return
 
 	var/virtuous = FALSE
 	var/heretic = FALSE
 	var/species = H.dna?.species
 
-	if(istype(player.prefs.selected_patron, /datum/patron/inhumen))
+	if(istype(H.client.prefs.selected_patron, /datum/patron/inhumen))
 		heretic = TRUE
 
-	if(player.prefs.statpack?.virtuous)
+	if(H.client.prefs.statpack?.virtuous)
 		virtuous = TRUE
 
-	var/datum/virtue/virtue_type = player.prefs.virtue
-	var/datum/virtue/virtuetwo_type = player.prefs.virtuetwo
+	var/datum/virtue/virtue_type = H.client.prefs.virtue
+	var/datum/virtue/virtuetwo_type = H.client.prefs.virtuetwo
 
 	if(virtue_type && is_allowed_post_tat_virtue(virtue_type))
 		if(virtue_check(virtue_type, heretic, species))
