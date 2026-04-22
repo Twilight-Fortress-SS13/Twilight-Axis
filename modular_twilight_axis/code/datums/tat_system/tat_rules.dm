@@ -180,23 +180,30 @@
 
 	return primary_skill
 
-/datum/tat_build/proc/get_highest_advanced_combat_skill(exclude_skill = null)
+/datum/tat_build/proc/get_highest_advanced_combat_skill(excluded_skills = null)
 	var/best_skill = null
 	var/best_level = TAT_SKILL_COMBAT_CAP_DEFAULT
 
 	for(var/skill_type in skills)
-		if(skill_type == exclude_skill)
-			continue
 		if(!ispath(skill_type, /datum/skill/combat))
 			continue
 		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 			continue
 
-		var/level = round(skills[skill_type])
-		if(level <= TAT_SKILL_COMBAT_CAP_DEFAULT)
+		if(islist(excluded_skills))
+			if(skill_type in excluded_skills)
+				continue
+		else
+			if(skill_type == excluded_skills)
+				continue
+
+		var/level = skills[skill_type]
+		if(!isnum(level))
+			continue
+		if(level < best_level)
 			continue
 
-		if(!best_skill || level > best_level || (level == best_level && "[skill_type]" < "[best_skill]"))
+		if(level > best_level || !best_skill || "[skill_type]" < "[best_skill]")
 			best_skill = skill_type
 			best_level = level
 
@@ -226,46 +233,64 @@
 
 /datum/tat_build/proc/get_combat_skill_cap(skill_type)
 	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
+	var/expert_cap = TAT_SKILL_COMBAT_CAP_TRAIT_1
+	var/master_cap = TAT_SKILL_COMBAT_CAP_TRAIT_2
+
 	var/has_expert = !!traits[TAT_TRAIT_WARRIOR_EXPERT]
 	var/has_master = !!traits[TAT_TRAIT_WARRIOR_MASTER]
 
 	if(!has_expert && !has_master)
 		return base_cap
 
-	var/master_skill = null
-	var/expert_skill = null
-
-	if(has_master)
-
-		master_skill = get_highest_advanced_combat_skill()
-		if(master_skill)
-			expert_skill = get_highest_advanced_combat_skill(master_skill)
-
-		if(master_skill == skill_type)
-			return TAT_SKILL_COMBAT_CAP_TRAIT_2
-
-		if(expert_skill == skill_type)
-			return TAT_SKILL_COMBAT_CAP_TRAIT_1
-
-		if(master_skill && !expert_skill)
-			return TAT_SKILL_COMBAT_CAP_TRAIT_1
-
-		if(!master_skill)
-			return TAT_SKILL_COMBAT_CAP_TRAIT_1
-
+	if(!ispath(skill_type, /datum/skill/combat))
 		return base_cap
 
-	if(has_expert)
-		expert_skill = get_highest_advanced_combat_skill()
-		if(expert_skill == skill_type)
-			return TAT_SKILL_COMBAT_CAP_TRAIT_1
-
-		if(!expert_skill)
-			return TAT_SKILL_COMBAT_CAP_TRAIT_1
-
+	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 		return base_cap
 
-	return base_cap
+	var/current_level = skills[skill_type]
+	if(!isnum(current_level))
+		current_level = 0
+
+	var/advanced_count = 0
+	var/mastered_count = 0
+
+	for(var/other_skill in skills)
+		if(!ispath(other_skill, /datum/skill/combat))
+			continue
+		if(ispath(other_skill, /datum/skill/combat/twilight_firearms))
+			continue
+
+		var/other_level = skills[other_skill]
+		if(!isnum(other_level))
+			continue
+
+		if(other_level > base_cap)
+			advanced_count++
+
+		if(other_level > expert_cap)
+			mastered_count++
+
+	var/can_be_expert = FALSE
+
+	if(current_level > base_cap)
+		can_be_expert = TRUE
+	else if(advanced_count < 2)
+		can_be_expert = TRUE
+
+	if(!can_be_expert)
+		return base_cap
+
+	if(!has_master)
+		return expert_cap
+
+	if(current_level > expert_cap)
+		return master_cap
+
+	if(current_level >= expert_cap && mastered_count <= 0)
+		return master_cap
+
+	return expert_cap
 
 /datum/tat_build/proc/can_use_weapon_supply_type(supply_type)
 	switch(supply_type)
@@ -354,99 +379,208 @@
 		"ward" = TRUE,
 	)
 
+/datum/tat_build/proc/get_trait_conflict_map()
+	var/list/conflicts = list(
+		TAT_TRAIT_RESIDENT = list(
+			TRAIT_OUTLANDER,
+			TAT_TRAIT_WANTED,
+			TAT_TRAIT_BONUS_STAT_POOL,
+		),
+		TAT_TRAIT_BONUS_STAT_POOL = list(
+			TAT_TRAIT_WANTED,
+		),
+		TRAIT_DODGEEXPERT = list(
+			TRAIT_PARRYEXPERT,
+			TAT_TRAIT_MAGE_MINOR_SLOT_2,
+			TAT_TRAIT_MAGE_MAJOR_SLOT,
+		),
+		TRAIT_HEAVYARMOR = list(
+			TRAIT_CRITICAL_RESISTANCE,
+			TAT_TRAIT_MAGE_INITIATE,
+		),
+		TRAIT_MEDIUMARMOR = list(
+			TRAIT_CRITICAL_RESISTANCE,
+			TAT_TRAIT_MAGE_INITIATE,
+		),
+		TAT_TRAIT_TROPHY_BOUNTY = list(
+			TAT_TRAIT_RONIN,
+			TAT_TRAIT_SOUNDBREAKER,
+			TAT_TRAIT_SPELLBLADE,
+		),
+		TAT_TRAIT_SOUNDBREAKER = list(
+			TAT_TRAIT_RONIN,
+			TAT_TRAIT_SPELLBLADE,
+		),
+		TAT_TRAIT_SPELLBLADE = list(
+			TAT_TRAIT_RONIN,
+			TAT_TRAIT_DIVINE_BOON_3,
+		),
+		TAT_TRAIT_BARDIC_INSPIRATION_T2 = list(
+			TAT_TRAIT_SOUNDBREAKER,
+			TAT_TRAIT_SPELLBLADE,
+			TAT_TRAIT_RONIN,
+			TAT_TRAIT_DIVINE_BOON_3,
+		),
+		TAT_TRAIT_MAGE_MAJOR_SLOT = list(
+			TAT_TRAIT_DIVINE_BOON_3,
+		),
+		TAT_TRAIT_DRUID_INITIATE = list(
+			TAT_TRAIT_MAGE_INITIATE,
+			TAT_TRAIT_DIVINE_INITIATE,
+		),
+		TRAIT_CRITICAL_RESISTANCE = list(
+			TAT_TRAIT_MAGE_INITIATE,
+			TAT_TRAIT_DIVINE_INITIATE,
+		),
+		TAT_TRAIT_WARRIOR_EXPERT = list(
+			TAT_TRAIT_DIVINE_BOON_2,
+			TAT_TRAIT_MAGE_MINOR_SLOT_2,
+			TAT_TRAIT_MAGE_MAJOR_SLOT,
+		),
+	)
+
+	return conflicts
+
+/datum/tat_build/proc/get_trait_requirement_map()
+	var/list/requirements = list(
+		TAT_TRAIT_WARRIOR_MASTER = list(
+			"all" = list(TAT_TRAIT_WARRIOR_EXPERT),
+			"message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" requires \"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\".",
+		),
+		TAT_TRAIT_BARDIC_INSPIRATION_T2 = list(
+			"all" = list(TAT_TRAIT_BARDIC_INSPIRATION_T1),
+			"message" = "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\".",
+		),
+		TAT_TRAIT_DIVINE_BOON_1 = list(
+			"all" = list(TAT_TRAIT_DIVINE_INITIATE),
+			"message" = "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_1)]\" requires \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\".",
+		),
+		TAT_TRAIT_DIVINE_BOON_2 = list(
+			"all" = list(TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_DIVINE_BOON_1),
+			"message" = "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_2)]\" requires previous divine progression.",
+		),
+		TAT_TRAIT_DIVINE_BOON_3 = list(
+			"all" = list(TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_DIVINE_BOON_2),
+			"message" = "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\" requires previous divine progression.",
+		),
+		TAT_TRAIT_MAGE_INITIATE = list(
+			"all" = list(TRAIT_ARCYNE),
+			"message" = "\"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\" requires \"[get_trait_display_name(TRAIT_ARCYNE)]\".",
+		),
+		TAT_TRAIT_SPELLBLADE = list(
+			"all" = list(TAT_TRAIT_MAGE_INITIATE, TRAIT_ARCYNE),
+			"message" = "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" requires mage initiation and arcyne.",
+		),
+		TAT_TRAIT_MAGE_MINOR_SLOT_2 = list(
+			"all" = list(TAT_TRAIT_MAGE_MINOR_SLOT_1),
+			"message" = "\"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_2)]\" requires \"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_1)]\".",
+		),
+		TAT_TRAIT_ARTIFACTS_SUPPLIER = list(
+			"all" = list(TAT_TRAIT_PARTY_LEADER),
+			"message" = "\"[get_trait_display_name(TAT_TRAIT_ARTIFACTS_SUPPLIER)]\" requires \"[get_trait_display_name(TAT_TRAIT_PARTY_LEADER)]\".",
+		),
+	)
+
+	return requirements
+
+/datum/tat_build/proc/get_skill_rule(skill_type)
+	var/list/skill_rules = list(
+		/datum/skill/craft/cooking = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_HOMESTEAD_EXPERT,
+		),
+		/datum/skill/craft/alchemy = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_ALCHEMY_EXPERT,
+		),
+		/datum/skill/misc/medicine = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_MEDICINE_EXPERT,
+		),
+		/datum/skill/craft/sewing = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_SEWING_EXPERT,
+		),
+		/datum/skill/labor/farming = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_SEEDKNOW,
+		),
+		/datum/skill/craft/blacksmithing = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_SMITHING_EXPERT,
+		),
+		/datum/skill/craft/smelting = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_SMITHING_EXPERT,
+		),
+		/datum/skill/craft/carpentry = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_HOMESTEAD_EXPERT,
+		),
+		/datum/skill/craft/masonry = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_HOMESTEAD_EXPERT,
+		),
+		/datum/skill/craft/crafting = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_HOMESTEAD_EXPERT,
+		),
+		/datum/skill/labor/butchering = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_SURVIVAL_EXPERT,
+		),
+		/datum/skill/craft/traps = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_SURVIVAL_EXPERT,
+		),
+		/datum/skill/labor/fishing = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_CAUTIOUS_FISHER,
+		),
+		/datum/skill/craft/armorsmithing = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_SQUIRE_REPAIR,
+		),
+		/datum/skill/craft/weaponsmithing = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_SQUIRE_REPAIR,
+		),
+		/datum/skill/combat/twilight_firearms = list(
+			"softcap" = TRUE,
+			"expert_trait" = TRAIT_FIREARMS_MARKSMAN,
+		),
+	)
+
+	return skill_rules[skill_type]
+
+/datum/tat_build/proc/trait_requirement_is_met(list/rule)
+	if(!islist(rule))
+		return TRUE
+
+	var/list/all_requirements = rule["all"]
+	if(islist(all_requirements))
+		for(var/required_trait in all_requirements)
+			if(!traits[required_trait])
+				return FALSE
+
+	return TRUE
+
 /datum/tat_build/proc/are_traits_mutually_exclusive(trait_a, trait_b)
-	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TRAIT_OUTLANDER) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TRAIT_OUTLANDER))
-		return "\"[get_trait_display_name(TAT_TRAIT_RESIDENT)]\" conflicts with \"[get_trait_display_name(TRAIT_OUTLANDER)]\"."
+	if(!trait_a || !trait_b || trait_a == trait_b)
+		return null
 
-	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TAT_TRAIT_WANTED) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TAT_TRAIT_WANTED))
-		return "\"[get_trait_display_name(TAT_TRAIT_RESIDENT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_WANTED)]\"."
+	var/list/conflicts = get_trait_conflict_map()
 
-	if((trait_a == TAT_TRAIT_BONUS_STAT_POOL && trait_b == TAT_TRAIT_WANTED) || (trait_b == TAT_TRAIT_BONUS_STAT_POOL && trait_a == TAT_TRAIT_WANTED))
-		return "\"[get_trait_display_name(TAT_TRAIT_BONUS_STAT_POOL)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_WANTED)]\"."
+	var/list/a_conflicts = conflicts[trait_a]
+	if(islist(a_conflicts) && (trait_b in a_conflicts))
+		return "\"[get_trait_display_name(trait_a)]\" conflicts with \"[get_trait_display_name(trait_b)]\"."
 
-	if((trait_a == TAT_TRAIT_RESIDENT && trait_b == TAT_TRAIT_BONUS_STAT_POOL) || (trait_b == TAT_TRAIT_RESIDENT && trait_a == TAT_TRAIT_BONUS_STAT_POOL))
-		return "\"[get_trait_display_name(TAT_TRAIT_RESIDENT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_BONUS_STAT_POOL)]\"."
+	var/list/b_conflicts = conflicts[trait_b]
+	if(islist(b_conflicts) && (trait_a in b_conflicts))
+		return "\"[get_trait_display_name(trait_a)]\" conflicts with \"[get_trait_display_name(trait_b)]\"."
 
-	if((trait_a == TRAIT_DODGEEXPERT && trait_b == TRAIT_PARRYEXPERT) || (trait_b == TRAIT_DODGEEXPERT && trait_a == TRAIT_PARRYEXPERT))
-		return "\"[get_trait_display_name(TRAIT_DODGEEXPERT)]\" conflicts with \"[get_trait_display_name(TRAIT_PARRYEXPERT)]\"."
-
-	if((trait_a == TRAIT_HEAVYARMOR && trait_b == TRAIT_CRITICAL_RESISTANCE) || (trait_b == TRAIT_HEAVYARMOR && trait_a == TRAIT_CRITICAL_RESISTANCE))
-		return "\"[get_trait_display_name(TRAIT_HEAVYARMOR)]\" conflicts with \"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\"."
-
-	if((trait_a == TRAIT_MEDIUMARMOR && trait_b == TRAIT_CRITICAL_RESISTANCE) || (trait_b == TRAIT_MEDIUMARMOR && trait_a == TRAIT_CRITICAL_RESISTANCE))
-		return "\"[get_trait_display_name(TRAIT_MEDIUMARMOR)]\" conflicts with \"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\"."
-
-	if((trait_a == TAT_TRAIT_TROPHY_BOUNTY && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_TROPHY_BOUNTY && trait_a == TAT_TRAIT_RONIN))
-		return "\"[get_trait_display_name(TAT_TRAIT_TROPHY_BOUNTY)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_RONIN)]\"."
-
-	if((trait_a == TAT_TRAIT_TROPHY_BOUNTY && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_TROPHY_BOUNTY && trait_a == TAT_TRAIT_SOUNDBREAKER))
-		return "\"[get_trait_display_name(TAT_TRAIT_TROPHY_BOUNTY)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_SOUNDBREAKER)]\"."
-
-	if((trait_a == TAT_TRAIT_SOUNDBREAKER && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_SOUNDBREAKER && trait_a == TAT_TRAIT_RONIN))
-		return "\"[get_trait_display_name(TAT_TRAIT_SOUNDBREAKER)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_RONIN)]\"."
-
-	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_RONIN))
-		return "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_RONIN)]\"."
-
-	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_SOUNDBREAKER))
-		return "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_SOUNDBREAKER)]\"."
-
-	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_TROPHY_BOUNTY) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_TROPHY_BOUNTY))
-		return "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_TROPHY_BOUNTY)]\"."
-
-	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_SOUNDBREAKER) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_SOUNDBREAKER))
-		return "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_SOUNDBREAKER)]\"."
-
-	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_SPELLBLADE) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_SPELLBLADE))
-		return "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\"."
-
-	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_RONIN) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_RONIN))
-		return "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_RONIN)]\"."
-
-	if((trait_a == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_BARDIC_INSPIRATION_T2 && trait_a == TAT_TRAIT_DIVINE_BOON_3))
-		return "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\"."
-
-	if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_DIVINE_BOON_3))
-		return "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\"."
-
-	if((trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_b == TAT_TRAIT_DIVINE_BOON_3) || (trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT && trait_a == TAT_TRAIT_DIVINE_BOON_3))
-		return "\"[get_trait_display_name(TAT_TRAIT_MAGE_MAJOR_SLOT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\"."
-
-	if((trait_a == TAT_TRAIT_DRUID_INITIATE && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TAT_TRAIT_DRUID_INITIATE && trait_a == TAT_TRAIT_MAGE_INITIATE))
-		return "\"[get_trait_display_name(TAT_TRAIT_DRUID_INITIATE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
-
-	if((trait_a == TAT_TRAIT_DRUID_INITIATE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TAT_TRAIT_DRUID_INITIATE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
-		return "\"[get_trait_display_name(TAT_TRAIT_DRUID_INITIATE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
-
-	if((trait_a == TAT_TRAIT_WARRIOR_MASTER && has_defensive_trait_lockout()) || (trait_b == TAT_TRAIT_WARRIOR_MASTER && has_defensive_trait_lockout()))
+	if((trait_a == TAT_TRAIT_WARRIOR_MASTER || trait_b == TAT_TRAIT_WARRIOR_MASTER) && has_defensive_trait_lockout())
 		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" conflicts with current defensive trait setup."
-
-	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_MAGE_INITIATE))
-		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
-
-	if((trait_a == TRAIT_CRITICAL_RESISTANCE && trait_b == TAT_TRAIT_DIVINE_INITIATE) || (trait_b == TRAIT_CRITICAL_RESISTANCE && trait_a == TAT_TRAIT_DIVINE_INITIATE))
-		return "\"[get_trait_display_name(TRAIT_CRITICAL_RESISTANCE)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
-
-	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_DIVINE_BOON_1) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_DIVINE_BOON_1))
-		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_1)]\"."
-
-	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_MINOR_SLOT_2) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_MINOR_SLOT_2))
-		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_2)]\"."
-
-	if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT))
-		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_MAJOR_SLOT)]\"."
-
-	if((trait_a == TRAIT_HEAVYARMOR && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_HEAVYARMOR && trait_a == TAT_TRAIT_MAGE_INITIATE))
-		return "\"[get_trait_display_name(TRAIT_HEAVYARMOR)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
-	
-	if((trait_a == TRAIT_MEDIUMARMOR && trait_b == TAT_TRAIT_MAGE_INITIATE) || (trait_b == TRAIT_MEDIUMARMOR && trait_a == TAT_TRAIT_MAGE_INITIATE))
-		return "\"[get_trait_display_name(TRAIT_MEDIUMARMOR)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
-
-	if((trait_a == TRAIT_DODGEEXPERT && trait_b == TAT_TRAIT_MAGE_MINOR_SLOT_2) || (trait_b == TRAIT_DODGEEXPERT && trait_a == TAT_TRAIT_MAGE_MINOR_SLOT_2))
-		return "\"[get_trait_display_name(TRAIT_DODGEEXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_2)]\"."
-
-	if((trait_a == TRAIT_DODGEEXPERT && trait_b == TAT_TRAIT_MAGE_MAJOR_SLOT) || (trait_b == TRAIT_DODGEEXPERT && trait_a == TAT_TRAIT_MAGE_MAJOR_SLOT))
-		return "\"[get_trait_display_name(TRAIT_DODGEEXPERT)]\" conflicts with \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
 
 	return null
 
@@ -465,42 +599,29 @@
 
 /datum/tat_build/proc/has_invalid_trait_dependencies()
 	var/list/issues = list()
+	var/list/requirements = get_trait_requirement_map()
 
-	if(traits[TAT_TRAIT_WARRIOR_MASTER] && !traits[TAT_TRAIT_WARRIOR_EXPERT])
-		issues += "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" requires \"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\"."
+	for(var/trait_id in requirements)
+		if(!traits[trait_id])
+			continue
 
-	if(traits[TAT_TRAIT_BARDIC_INSPIRATION_T2] && !traits[TAT_TRAIT_BARDIC_INSPIRATION_T1])
-		issues += "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\"."
+		var/list/rule = requirements[trait_id]
+		if(trait_requirement_is_met(rule))
+			continue
 
-	if(traits[TAT_TRAIT_DIVINE_BOON_1] && !traits[TAT_TRAIT_DIVINE_INITIATE])
-		issues += "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_1)]\" requires \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."
-
-	if(traits[TAT_TRAIT_DIVINE_BOON_2] && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_1]))
-		issues += "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_2)]\" requires previous divine progression."
-
-	if(traits[TAT_TRAIT_DIVINE_BOON_3] && (!traits[TAT_TRAIT_DIVINE_INITIATE] || !traits[TAT_TRAIT_DIVINE_BOON_2]))
-		issues += "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\" requires previous divine progression."
-
-	if(traits[TAT_TRAIT_MAGE_INITIATE] && !traits[TRAIT_ARCYNE])
-		issues += "\"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\" requires \"[get_trait_display_name(TRAIT_ARCYNE)]\"."
-
-	if(traits[TAT_TRAIT_SPELLBLADE] && (!traits[TAT_TRAIT_MAGE_INITIATE] || !traits[TRAIT_ARCYNE]))
-		issues += "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" requires mage initiation and arcyne."
+		var/message = rule["message"]
+		if(message)
+			issues += message
+		else
+			issues += "\"[get_trait_display_name(trait_id)]\" has unmet requirements."
 
 	if((traits[TAT_TRAIT_MAGE_MAJOR_SLOT] || traits[TAT_TRAIT_MAGE_MINOR_SLOT_1] || traits[TAT_TRAIT_MAGE_UTILITY_SLOT]) && !traits[TAT_TRAIT_MAGE_INITIATE])
 		issues += "Mage spell slots require \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
-
-	if(traits[TAT_TRAIT_MAGE_MINOR_SLOT_2] && !traits[TAT_TRAIT_MAGE_MINOR_SLOT_1])
-		issues += "\"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_2)]\" requires \"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_1)]\"."
-
-	if(traits[TAT_TRAIT_ARTIFACTS_SUPPLIER] && !traits[TAT_TRAIT_PARTY_LEADER])
-		issues += "\"[get_trait_display_name(TAT_TRAIT_ARTIFACTS_SUPPLIER)]\" requires \"[get_trait_display_name(TAT_TRAIT_PARTY_LEADER)]\"."
 
 	for(var/trait_a in traits)
 		for(var/trait_b in traits)
 			if(trait_a == trait_b)
 				continue
-
 			if("[trait_a]" >= "[trait_b]")
 				continue
 
@@ -546,62 +667,22 @@
 	return !!traits[TAT_TRAIT_DIVINE_INITIATE]
 
 /datum/tat_build/proc/has_expert_trait_for_skill(skill_type)
-	switch(skill_type)
-		if(/datum/skill/craft/cooking)
-			return !!traits[TRAIT_HOMESTEAD_EXPERT]
-		if(/datum/skill/craft/alchemy)
-			return !!traits[TRAIT_ALCHEMY_EXPERT]
-		if(/datum/skill/misc/medicine)
-			return !!traits[TRAIT_MEDICINE_EXPERT]
-		if(/datum/skill/craft/sewing)
-			return !!traits[TRAIT_SEWING_EXPERT]
-		if(/datum/skill/labor/farming)
-			return !!traits[TRAIT_SEEDKNOW]
-		if(/datum/skill/craft/blacksmithing)
-			return !!traits[TRAIT_SMITHING_EXPERT]
-		if(/datum/skill/craft/smelting)
-			return !!traits[TRAIT_SMITHING_EXPERT]
-		if(/datum/skill/craft/carpentry)
-			return !!traits[TRAIT_HOMESTEAD_EXPERT]
-		if(/datum/skill/craft/masonry)
-			return !!traits[TRAIT_HOMESTEAD_EXPERT]
-		if(/datum/skill/craft/crafting)
-			return !!traits[TRAIT_HOMESTEAD_EXPERT]
-		if(/datum/skill/labor/butchering)
-			return !!traits[TRAIT_SURVIVAL_EXPERT]
-		if(/datum/skill/craft/traps)
-			return !!traits[TRAIT_SURVIVAL_EXPERT]
-		if(/datum/skill/labor/fishing)
-			return !!traits[TRAIT_CAUTIOUS_FISHER]
-		if(/datum/skill/craft/armorsmithing)
-			return !!traits[TRAIT_SQUIRE_REPAIR]
-		if(/datum/skill/craft/weaponsmithing)
-			return !!traits[TRAIT_SQUIRE_REPAIR]
-		if(/datum/skill/combat/twilight_firearms)
-			return !!traits[TRAIT_FIREARMS_MARKSMAN]
-	return TRUE
+	var/list/rule = get_skill_rule(skill_type)
+	if(!islist(rule))
+		return TRUE
+
+	var/expert_trait = rule["expert_trait"]
+	if(!expert_trait)
+		return TRUE
+
+	return !!traits[expert_trait]
 
 /datum/tat_build/proc/should_softcap_peaceful_skill(skill_type)
-	switch(skill_type)
-		if(
-			/datum/skill/craft/cooking,
-			/datum/skill/craft/alchemy,
-			/datum/skill/misc/medicine,
-			/datum/skill/craft/sewing,
-			/datum/skill/labor/farming,
-			/datum/skill/craft/blacksmithing,
-			/datum/skill/craft/smelting,
-			/datum/skill/craft/carpentry,
-			/datum/skill/craft/masonry,
-			/datum/skill/craft/crafting,
-			/datum/skill/labor/butchering,
-			/datum/skill/craft/traps,
-			/datum/skill/labor/fishing,
-			/datum/skill/craft/armorsmithing,
-			/datum/skill/craft/weaponsmithing
-		)
-			return TRUE
-	return FALSE
+	var/list/rule = get_skill_rule(skill_type)
+	if(!islist(rule))
+		return FALSE
+
+	return !!rule["softcap"]
 
 /datum/tat_build/proc/is_item_slot_limited(list/entry)
 	if(!islist(entry))
@@ -726,8 +807,6 @@
 /datum/tat_build/proc/get_validation_issues()
 	var/list/issues = list()
 
-	sanitize_build()
-
 	if(get_remaining_stat_points() < 0)
 		issues += "Spent too many stat points."
 	if(get_remaining_skill_points() < 0)
@@ -751,7 +830,7 @@
 	if(!virtue_type)
 		return FALSE
 
-	var/static/list/allowed_post_tat_virtues = list(
+	var/list/allowed_post_tat_virtues = list(
 		/datum/virtue/combat/bowman,
 		/datum/virtue/combat/crossbowman,
 	)
@@ -772,7 +851,7 @@
 	if(traits[TAT_TRAIT_RESIDENT] && (ispath(skill_type, /datum/skill/misc) || ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft)))
 		return 1
 
-	var/static/list/trait_skill_discounts = list(
+	var/list/trait_skill_discounts = list(
 		TAT_TRAIT_TRAINEE_SMITH = list(
 			/datum/skill/craft/blacksmithing,
 			/datum/skill/craft/smelting,
