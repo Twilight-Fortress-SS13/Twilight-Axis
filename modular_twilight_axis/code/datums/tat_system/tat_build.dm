@@ -43,7 +43,9 @@
 	init_available_items()
 	reset_build()
 	init_tat_slots()
-	init_tat_presets()
+
+	if(!GLOB.tat_item_icon_cache_ready && !GLOB.tat_item_icon_cache_warming)
+		prewarm_tat_item_cache()
 
 /datum/tat_build/proc/init_available_stats()
 	available_stats = list(
@@ -814,22 +816,25 @@
 /datum/tat_build/proc/get_item_icon_payload(item_path)
 	if(!ispath(item_path, /obj/item))
 		return null
-	if(!islist(item_icon_cache))
-		item_icon_cache = list()
-	if(item_path in item_icon_cache)
-		return item_icon_cache[item_path]
+
+	if(item_path in GLOB.tat_item_icon_cache)
+		return GLOB.tat_item_icon_cache[item_path]
+
 	var/obj/item/I = new item_path
 	if(!I)
 		return null
+
 	var/icon/render_icon = icon(initial(I.icon), initial(I.icon_state), SOUTH, 1)
 	var/icon_b64 = null
 	if(render_icon)
 		icon_b64 = icon2base64(render_icon)
+
 	var/list/payload = list(
 		"icon" = icon_b64,
 		"icon_state" = "[initial(I.icon_state)]",
 	)
-	item_icon_cache[item_path] = payload
+
+	GLOB.tat_item_icon_cache[item_path] = payload
 	qdel(I)
 	return payload
 
@@ -898,3 +903,37 @@
 
 	sanitize_build()
 	dirty = FALSE
+
+/proc/prewarm_tat_item_cache()
+	if(GLOB.tat_item_icon_cache_ready || GLOB.tat_item_icon_cache_warming)
+		return
+
+	GLOB.tat_item_icon_cache_warming = TRUE
+
+	var/list/source_items = list(TAT_AVAILABLE_ITEMS_LIST)
+	var/list/paths = list()
+	for(var/item_path in source_items)
+		paths += item_path
+
+	spawn(0)
+		var/processed = 0
+		for(var/item_path in paths)
+			if(!(item_path in GLOB.tat_item_icon_cache))
+				var/obj/item/I = new item_path
+				if(I)
+					var/icon/render_icon = icon(initial(I.icon), initial(I.icon_state), SOUTH, 1)
+					var/icon_b64 = null
+					if(render_icon)
+						icon_b64 = icon2base64(render_icon)
+					GLOB.tat_item_icon_cache[item_path] = list(
+						"icon" = icon_b64,
+						"icon_state" = "[initial(I.icon_state)]",
+					)
+					qdel(I)
+
+			processed++
+			if(processed % 10 == 0)
+				sleep(world.tick_lag)
+
+		GLOB.tat_item_icon_cache_ready = TRUE
+		GLOB.tat_item_icon_cache_warming = FALSE
