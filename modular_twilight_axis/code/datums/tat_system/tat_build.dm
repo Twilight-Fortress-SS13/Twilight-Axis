@@ -24,6 +24,7 @@
 
 	var/list/tat_slots = list()
 	var/active_tat_slot = 1
+	var/list/tat_presets = list()
 	var/datum/preferences/owner_preferences = null
 
 	var/list/ui_item_catalog_cache = null
@@ -42,6 +43,7 @@
 	init_available_items()
 	reset_build()
 	init_tat_slots()
+	init_tat_presets()
 
 /datum/tat_build/proc/init_available_stats()
 	available_stats = list(
@@ -556,6 +558,44 @@
 	if(!ispath(skill_type, /datum/skill))
 		return TRUE
 	return (skill_type in TAT_BLOCKED_SKILLS_LIST)
+
+
+/datum/tat_build/proc/init_tat_presets()
+	if(islist(tat_presets) && length(tat_presets))
+		return TRUE
+
+	tat_presets = list()
+	for(var/preset_type in subtypesof(/datum/tat_preset/sample))
+		if(preset_type == /datum/tat_preset/sample)
+			continue
+		var/datum/tat_preset/sample/preset = new preset_type
+		if(!preset)
+			continue
+		if(!istext(preset.id) || !length(preset.id))
+			preset.id = "[preset_type]"
+		tat_presets[preset.id] = preset
+	return TRUE
+
+/datum/tat_build/proc/get_tat_preset(preset_id) as /datum/tat_preset/sample
+	init_tat_presets()
+	if(!istext(preset_id) || !length(preset_id))
+		return null
+	return tat_presets[preset_id]
+
+/datum/tat_build/proc/load_preset_into_current(preset_id)
+	var/datum/tat_preset/sample/preset = get_tat_preset(preset_id)
+	if(!preset)
+		return FALSE
+
+	var/list/build_data = preset.get_build_data()
+	if(!islist(build_data) || !length(build_data))
+		reset_build()
+		dirty = TRUE
+		return TRUE
+
+	load_slot_build_from_list(build_data)
+	dirty = TRUE
+	return TRUE
 
 /datum/tat_build/proc/get_default_tat_slot_name(slot_id)
 	return "Slot [slot_id]"

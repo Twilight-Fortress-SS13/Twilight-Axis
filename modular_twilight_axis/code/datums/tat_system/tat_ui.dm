@@ -124,6 +124,16 @@
 	)
 	return build_list
 
+/datum/tat_build/proc/build_ui_tat_presets()
+	init_tat_presets()
+	var/list/result = list()
+	for(var/preset_id in tat_presets)
+		var/datum/tat_preset/sample/preset = tat_presets[preset_id]
+		if(!istype(preset, /datum/tat_preset/sample))
+			continue
+		result += list(preset.export_to_ui_payload(src))
+	return result
+
 /datum/tat_build/ui_state(mob/user)
 	return GLOB.always_state
 
@@ -160,6 +170,7 @@
 		"points_items_remaining" = get_remaining_item_points(),
 		"tat_slots" = build_ui_tat_slots(),
 		"active_tat_slot" = active_tat_slot,
+		"tat_presets" = build_ui_tat_presets(),
 		"can_save" = can_save(),
 		"validation_issues" = get_validation_issues(),
 		"dirty" = dirty,
@@ -217,6 +228,8 @@
 			return save_current_to_active_slot()
 		if("request_item_cache")
 			return request_item_ui_cache(text2num(params["full"]) ? TRUE : FALSE)
+		if("load_tat_preset")
+			return load_preset_into_current(params["preset_id"])
 	return FALSE
 
 /datum/tat_build/proc/get_ui_item_catalog_cache()

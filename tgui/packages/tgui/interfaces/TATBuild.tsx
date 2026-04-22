@@ -76,6 +76,12 @@ type TatSlotEntry = {
   summary?: SlotSummary;
 };
 
+type TatPresetEntry = {
+  id: string;
+  name: string;
+  summary?: SlotSummary;
+};
+
 type ItemCachePacket = {
   full?: boolean;
   catalog?: Record<string, ItemEntry> | null;
@@ -106,6 +112,7 @@ type Data = {
   points_items_remaining: number;
 
   tat_slots?: TatSlotEntry[] | Record<string, TatSlotEntry>;
+  tat_presets?: TatPresetEntry[] | null;
   active_tat_slot?: number;
 
   can_save: boolean;
@@ -154,6 +161,28 @@ const matchesSearch = (search: string, ...parts: Array<unknown>): boolean => {
 
   const normalized = normalizeSearch(search);
   return parts.some((part) => normalizeSearch(part).includes(normalized));
+};
+
+const normalizePresetSummary = (summary?: SlotSummary): SlotSummary => ({
+  stats: Number(summary?.stats) || 0,
+  skills: Number(summary?.skills) || 0,
+  traits: Number(summary?.traits) || 0,
+  items: Number(summary?.items) || 0,
+});
+
+const normalizeTatPresets = (raw?: TatPresetEntry[] | null): TatPresetEntry[] => {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+
+  return raw
+    .filter(Boolean)
+    .map((preset, index) => ({
+      id: String(preset?.id || `preset_${index + 1}`),
+      name: String(preset?.name || `Preset ${index + 1}`),
+      summary: normalizePresetSummary(preset?.summary),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 };
 
 const SLOT_LABELS: Record<string, string> = {
@@ -726,7 +755,9 @@ const SlotCards = ({
                         onClick={() =>
                           act('rename_tat_slot', {
                             slot_id: slot.id,
-                            name: String(renameDrafts[slot.id] ?? slot.name ?? `Slot ${slot.id}`).trim(),
+                            name: String(
+                              renameDrafts[slot.id] ?? slot.name ?? `Slot ${slot.id}`
+                            ).trim(),
                           })
                         }>
                         Rename
@@ -735,6 +766,73 @@ const SlotCards = ({
                   </Stack>
                 </Box>
               </Stack.Item>
+            );
+          })}
+        </Stack>
+      )}
+    </Section>
+  );
+};
+
+const PresetPicker = ({
+  presets,
+  act,
+  search,
+  onClose,
+}: {
+  presets: TatPresetEntry[];
+  act: BackendAct;
+  search: string;
+  onClose: () => void;
+}) => {
+  const rows = useMemo(() => {
+    return presets.filter((preset) => matchesSearch(search, preset.id, preset.name));
+  }, [presets, search]);
+
+  return (
+    <Section title="Presets" buttons={<Button onClick={onClose}>Close</Button>}>
+      {!rows.length ? (
+        <NoticeBox>No presets found.</NoticeBox>
+      ) : (
+        <Stack vertical>
+          {rows.map((preset) => {
+            const summary = preset.summary || {
+              stats: 0,
+              skills: 0,
+              traits: 0,
+              items: 0,
+            };
+
+            return (
+              <Box
+                key={preset.id}
+                mb={1}
+                style={{
+                  padding: '8px',
+                  borderRadius: '6px',
+                  background: 'rgba(255,255,255,0.02)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                }}>
+                <Stack align="center" justify="space-between">
+                  <Stack.Item grow>
+                    <Box bold>{preset.name}</Box>
+                    <Box mt={0.5} style={{ fontSize: '11px', opacity: 0.85 }}>
+                      Spent: Stats - {summary.stats} | Skills - {summary.skills} | Traits -{' '}
+                      {summary.traits} | Items - {summary.items}
+                    </Box>
+                  </Stack.Item>
+                  <Stack.Item>
+                    <Button
+                      color="good"
+                      onClick={() => {
+                        act('load_tat_preset', { preset_id: preset.id });
+                        onClose();
+                      }}>
+                      Load
+                    </Button>
+                  </Stack.Item>
+                </Stack>
+              </Box>
             );
           })}
         </Stack>
@@ -1250,6 +1348,7 @@ export const TATBuild = () => {
   const [tab, setTab] = useState<TabKey>('stats');
   const [search, setSearch] = useState('');
   const [hoveredItem, setHoveredItem] = useState<HoverCardData | null>(null);
+  const [showPresetPicker, setShowPresetPicker] = useState(false);
 
   const [cachedAvailableItems, setCachedAvailableItems] = useState<Record<string, ItemEntry>>({});
   const [cachedItemStates, setCachedItemStates] = useState<Record<string, ItemState>>({});
@@ -1258,6 +1357,11 @@ export const TATBuild = () => {
   const tatSlots = useMemo<TatSlotEntry[]>(
     () => normalizeTatSlots(data.tat_slots, data.active_tat_slot),
     [data.tat_slots, data.active_tat_slot]
+  );
+
+  const tatPresets = useMemo<TatPresetEntry[]>(
+    () => normalizeTatPresets(data.tat_presets),
+    [data.tat_presets]
   );
 
   useEffect(() => {
@@ -1352,14 +1456,21 @@ export const TATBuild = () => {
 
           <Section title="Search">
             <Stack align="center">
+              <Stack.Item>
+                <Button onClick={() => setShowPresetPicker((prev) => !prev)}>
+                  {showPresetPicker ? 'Hide presets' : 'Load preset'}
+                </Button>
+              </Stack.Item>
+
               <Stack.Item grow>
                 <Input
                   fluid
-                  placeholder={`Search in ${tab}...`}
+                  placeholder={showPresetPicker ? 'Search presets...' : `Search in ${tab}...`}
                   value={search}
                   onChange={(value) => setSearch(String(value))}
                 />
               </Stack.Item>
+
               <Stack.Item>
                 <Button disabled={!search} onClick={() => setSearch('')}>
                   Clear
@@ -1367,6 +1478,15 @@ export const TATBuild = () => {
               </Stack.Item>
             </Stack>
           </Section>
+
+          {showPresetPicker && (
+            <PresetPicker
+              presets={tatPresets}
+              act={act}
+              search={search}
+              onClose={() => setShowPresetPicker(false)}
+            />
+          )}
 
           {data.dirty ? (
             <NoticeBox>Build has unsaved changes.</NoticeBox>
