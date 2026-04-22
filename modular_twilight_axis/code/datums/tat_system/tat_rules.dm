@@ -114,7 +114,7 @@
 	if(!ispath(skill_type) || !isnum(target_level) || target_level <= 0)
 		return 0
 
-	var/discount = get_skill_discount_modifier(skill_type)
+	var/discount = get_skill_discount_modifier(skill_type, target_level)
 	return max(1, target_level - discount)
 
 /datum/tat_build/proc/get_skill_total_cost_for_level(skill_type, level)
