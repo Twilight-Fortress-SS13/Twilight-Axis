@@ -382,7 +382,6 @@
 	/obj/item/clothing/head/roguetown/helmet/sallet = TAT_ITEM_ENTRY("Sallet", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/sallet/beastskull = TAT_ITEM_ENTRY("Beastskull", 4, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/sallet/iron = TAT_ITEM_ENTRY("Iron Sallet", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
-	/obj/item/clothing/head/roguetown/helmet/sallet/morion = TAT_ITEM_ENTRY("Etruscan Morion", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/sallet/raneshen = TAT_ITEM_ENTRY("Kulah Khud", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/sallet/shishak = TAT_ITEM_ENTRY("Steel Shishak", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/sallet/visored = TAT_ITEM_ENTRY("Visored Sallet", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
