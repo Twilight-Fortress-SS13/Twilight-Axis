@@ -234,7 +234,7 @@
 	/obj/item/quiver/bolt/silver = TAT_ITEM_ENTRY("Silver Bolts", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "munition"), \
 	/obj/item/rogueweapon/eaglebeak = TAT_ITEM_ENTRY("Eagle's Beak", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/eaglebeak/lucerne = TAT_ITEM_ENTRY("Lucerne", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
-	/obj/item/rogueweapon/shovel/silver/preblessed = TAT_ITEM_ENTRY("Silver Shovel", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "polearm"), \
+	/obj/item/rogueweapon/shovel/silver/preblessed = TAT_ITEM_ENTRY("Silver Shovel", 2, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "polearm"), \
 	/obj/item/rogueweapon/greataxe = TAT_ITEM_ENTRY("Greataxe", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "axe"), \
 	/obj/item/rogueweapon/greataxe/bronze = TAT_ITEM_ENTRY("Bronze Greataxe", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "axe"), \
 	/obj/item/rogueweapon/greataxe/silver = TAT_ITEM_ENTRY("Silver Poleaxe", 5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "axe"), \
@@ -733,3 +733,7 @@
 	/obj/item/rogue/instrument/vocals = TAT_ITEM_ENTRY("Vocal's Talisman", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/rogue/instrument/viola = TAT_ITEM_ENTRY("Viola", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/clothing/suit/roguetown/armor/gambeson = TAT_ITEM_ENTRY("Gambeson", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/rogueweapon/hoe = TAT_ITEM_ENTRY("Hoe", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogueweapon/hoe/bronze = TAT_ITEM_ENTRY("Bronze Hoe", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
+	/obj/item/rogueweapon/shovel/bronze = TAT_ITEM_ENTRY("Bronze Shovel", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
+	/obj/item/rogueweapon/sickle = TAT_ITEM_ENTRY("Sickle", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
