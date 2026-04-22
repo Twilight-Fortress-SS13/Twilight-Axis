@@ -604,11 +604,27 @@ const SlotCards = ({
   const [renameDrafts, setRenameDrafts] = useState<Record<number, string>>({});
 
   useEffect(() => {
-    const nextDrafts: Record<number, string> = {};
-    slots.forEach((slot) => {
-      nextDrafts[slot.id] = slot.name || `Slot ${slot.id}`;
+    setRenameDrafts((prev) => {
+      const next = { ...prev };
+      const validIds = new Set<number>();
+
+      slots.forEach((slot) => {
+        validIds.add(slot.id);
+
+        if (!(slot.id in next)) {
+          next[slot.id] = slot.name || `Slot ${slot.id}`;
+        }
+      });
+
+      Object.keys(next).forEach((key) => {
+        const id = Number(key);
+        if (!validIds.has(id)) {
+          delete next[id];
+        }
+      });
+
+      return next;
     });
-    setRenameDrafts(nextDrafts);
   }, [slots]);
 
   return (
@@ -710,7 +726,7 @@ const SlotCards = ({
                         onClick={() =>
                           act('rename_tat_slot', {
                             slot_id: slot.id,
-                            name: draftName,
+                            name: String(renameDrafts[slot.id] ?? slot.name ?? `Slot ${slot.id}`).trim(),
                           })
                         }>
                         Rename
@@ -1262,11 +1278,22 @@ export const TATBuild = () => {
     }
 
     if (packet.full && packet.catalog) {
-      setCachedAvailableItems(packet.catalog);
+      setCachedAvailableItems((prev) => {
+        if (Object.keys(prev).length > 0) {
+          return prev;
+        }
+        return packet.catalog || {};
+      });
     }
 
     if (packet.states) {
-      setCachedItemStates(packet.states);
+      setCachedItemStates((prev) => {
+        const next = packet.states || {};
+        if (prev === next) {
+          return prev;
+        }
+        return next;
+      });
     }
   }, [data.item_cache]);
 
@@ -1288,6 +1315,10 @@ export const TATBuild = () => {
   }, [cachedAvailableItems, cachedItemStates]);
 
   const loadoutEntries = useMemo<Record<string, LoadoutViewEntry>>(() => {
+    if (tab !== 'loadout') {
+      return {};
+    }
+
     const result: Record<string, LoadoutViewEntry> = {};
     const staticEntries = cachedAvailableItems || {};
     const loadoutStates = data.loadout || {};
@@ -1307,7 +1338,7 @@ export const TATBuild = () => {
     });
 
     return result;
-  }, [cachedAvailableItems, data.loadout]);
+  }, [tab, cachedAvailableItems, data.loadout]);
 
   const itemCacheLoaded = Object.keys(cachedAvailableItems).length > 0;
 
