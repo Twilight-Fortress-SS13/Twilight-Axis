@@ -320,11 +320,8 @@
 	return clamp(tier, CLERIC_T0, CLERIC_T4)
 
 /datum/tat_build/proc/get_divine_passive_gain_for_tier(cleric_tier)
-	switch(cleric_tier)
-		if(CLERIC_T4)
-			return CLERIC_REGEN_MAJOR
-		if(CLERIC_T2)
-			return CLERIC_REGEN_MINOR
+	if(cleric_tier >= CLERIC_T1)
+		return CLERIC_REGEN_MINOR
 	return CLERIC_REGEN_WITCH
 
 /datum/tat_build/proc/get_divine_devotion_limit_for_tier(cleric_tier)

@@ -75,7 +75,7 @@
 	var/datum/devotion/D = new /datum/devotion(H, H.patron)
 	D.grant_miracles(H, cleric_tier = cleric_tier, passive_gain = passive_gain, devotion_limit = devotion_limit)
 	grant_skill_bonus_if_exists(H, "/datum/skill/magic/holy", 1)
-	if(H.patron?.type ==/datum/patron/inhumen/zizo && cleric_tier >= CLERIC_T3)
+	if(H.patron?.type ==/datum/patron/inhumen/zizo && cleric_tier >= CLERIC_T2)
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark)
 
