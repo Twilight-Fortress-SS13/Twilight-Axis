@@ -562,7 +562,7 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	/obj/item/clothing/suit/roguetown/armor/brigandine/gronn = TAT_ITEM_ENTRY("Gronn Byrine Hauberk", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine = TAT_ITEM_ENTRY("Steel Brigandine", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine/light = TAT_ITEM_ENTRY("Lightweight Brigandine", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
-	/obj/item/storage/belt/rogue/pouch/coins/poor = TAT_ITEM_ENTRY("Poor coins pouch", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "misc"), \
+	/obj/item/storage/belt/rogue/pouch/coins/poor = TAT_ITEM_ENTRY("Poor coins pouch", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "wealth"), \
 	/obj/item/rogueweapon/scabbard/sword = TAT_ITEM_ENTRY("Scabbard", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
 	/obj/item/rogueweapon/scabbard/sheath = TAT_ITEM_ENTRY("Sheath", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = TAT_ITEM_ENTRY("Tanto", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
