@@ -1,3 +1,8 @@
+GLOBAL_LIST_EMPTY(tat_item_icon_cache)
+GLOBAL_VAR_INIT(tat_item_icon_cache_ready, FALSE)
+GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
+GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
+
 #define TAT_TRAIT_SOURCE	"tat_build"
 #define CTAG_FREE_ROAM		"CTAG_FREE_ROAM"
 
