@@ -723,3 +723,13 @@
 	/obj/item/quiver/sling/stone = TAT_ITEM_ENTRY("Stone Slingshots", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
 	/obj/item/quiver/sling/bronze = TAT_ITEM_ENTRY("Bronze Slingshots", 1, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "munition"), \
 	/obj/item/gun/ballistic/revolver/grenadelauncher/sling = TAT_ITEM_ENTRY("Sling ", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "ranged"), \
+	/obj/item/rogue/instrument/lute = TAT_ITEM_ENTRY("Lute", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogue/instrument/accord = TAT_ITEM_ENTRY("Accord", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogue/instrument/guitar = TAT_ITEM_ENTRY("Guitar", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogue/instrument/harp = TAT_ITEM_ENTRY("Harp", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogue/instrument/flute = TAT_ITEM_ENTRY("Flute", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogue/instrument/drum = TAT_ITEM_ENTRY("Drum", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogue/instrument/shamisen = TAT_ITEM_ENTRY("Shamisen", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogue/instrument/vocals = TAT_ITEM_ENTRY("Vocal's Talisman", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/rogue/instrument/viola = TAT_ITEM_ENTRY("Viola", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/clothing/suit/roguetown/armor/gambeson = TAT_ITEM_ENTRY("Gambeson", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
