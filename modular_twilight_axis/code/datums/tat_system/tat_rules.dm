@@ -767,5 +767,7 @@
 
 	if(istype(V, /datum/virtue/combat/bowman))
 		return TRUE
+	if(istype(V, /datum/virtue/combat/crossbowman))
+		return TRUE
 
 	return FALSE
