@@ -220,13 +220,15 @@
 		if(!can_train_holy())
 			return 0
 
-	if(ispath(skill_type, /datum/skill/combat) && !ispath(skill_type, /datum/skill/combat/twilight_firearms))
+	if(skill_type == /datum/skill/combat/twilight_firearms)
+		if(has_expert_trait_for_skill(skill_type))
+			return 4
+		return 2
+
+	if(ispath(skill_type, /datum/skill/combat))
 		return get_combat_skill_cap(skill_type)
 
 	if(should_softcap_peaceful_skill(skill_type) && !has_expert_trait_for_skill(skill_type))
-		return 2
-
-	if((skill_type == /datum/skill/combat/twilight_firearms) && !(has_expert_trait_for_skill(skill_type)))
 		return 2
 
 	return TAT_SKILL_NONCOMBAT_CAP
@@ -246,7 +248,7 @@
 		return base_cap
 
 	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
-		return base_cap
+		return 2
 
 	var/current_level = skills[skill_type]
 	if(!isnum(current_level))
