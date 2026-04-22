@@ -114,10 +114,8 @@
 	if(!ispath(skill_type) || !isnum(target_level) || target_level <= 0)
 		return 0
 
-	if(traits[TAT_TRAIT_RESIDENT] && (ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft) || ispath(skill_type, /datum/skill/misc)))
-		return max(1, target_level - 1)
-
-	return target_level
+	var/discount = get_skill_discount_modifier(skill_type)
+	return max(1, target_level - discount)
 
 /datum/tat_build/proc/get_skill_total_cost_for_level(skill_type, level)
 	if(!ispath(skill_type) || !isnum(level) || level <= 0)
@@ -643,27 +641,15 @@
 	return total
 
 /datum/tat_build/proc/get_max_amount_for_item(path)
-	var/list/entry = get_item_entry(path)
-	if(!islist(entry))
+	var/total_allowed = get_item_total_allowed_amount(path)
+	if(total_allowed <= 0)
 		return 0
 
-	var/category = lowertext("[entry["category"]]")
-	var/cost = get_item_cost(path)
-	if(cost <= 0 && (category == "misc" || category == "weapon"))
-		var/already_taken = items[path]
-		if(!isnum(already_taken))
-			already_taken = 0
-		return max(0, 1 - already_taken)
+	var/already_taken = items[path]
+	if(!isnum(already_taken))
+		already_taken = 0
 
-	if(!is_item_slot_limited(entry))
-		return INFINITY
-
-	var/slot_group = entry["slot_group"]
-	if(!slot_group)
-		return INFINITY
-
-	var/already_taken = get_slot_group_item_count(slot_group, category, path)
-	return max(0, 1 - already_taken)
+	return max(0, total_allowed - already_taken)
 
 /datum/tat_build/proc/get_stat_hard_min(stat_id)
 	return 1
@@ -761,13 +747,140 @@
 
 	return issues
 
-/datum/tat_build/proc/is_allowed_post_tat_virtue(datum/virtue/V)
-	if(!V)
+/datum/tat_build/proc/is_allowed_post_tat_virtue(virtue_type)
+	if(!virtue_type)
 		return FALSE
 
-	if(istype(V, /datum/virtue/combat/bowman))
-		return TRUE
-	if(istype(V, /datum/virtue/combat/crossbowman))
-		return TRUE
+	var/static/list/allowed_post_tat_virtues = list(
+		/datum/virtue/combat/bowman,
+		/datum/virtue/combat/crossbowman,
+	)
+
+	for(var/allowed_type in allowed_post_tat_virtues)
+		if(ispath(virtue_type, allowed_type) || istype(virtue_type, allowed_type))
+			return TRUE
 
 	return FALSE
+
+/datum/tat_build/proc/get_skill_discount_modifier(skill_type, target_level)
+	if(!ispath(skill_type, /datum/skill))
+		return 0
+
+	if(!isnum(target_level) || target_level <= 0)
+		return 0
+
+	if(traits[TAT_TRAIT_RESIDENT] && (ispath(skill_type, /datum/skill/misc) || ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft)))
+		return 1
+
+	var/static/list/trait_skill_discounts = list(
+		TAT_TRAIT_TRAINEE_SMITH = list(
+			/datum/skill/craft/blacksmithing,
+			/datum/skill/craft/smelting,
+			/datum/skill/combat/maces,
+		),
+		TAT_TRAIT_TRAINEE_ARMORER = list(
+			/datum/skill/craft/armorsmithing,
+			/datum/skill/craft/masonry,
+			/datum/skill/combat/shields,
+		),
+		TAT_TRAIT_TRAINEE_WEAPONSMITH = list(
+			/datum/skill/craft/weaponsmithing,
+			/datum/skill/craft/engineering,
+			/datum/skill/combat/swords,
+		),
+		TAT_TRAIT_TRAINEE_WOODSMAN = list(
+			/datum/skill/labor/lumberjacking,
+			/datum/skill/craft/carpentry,
+			/datum/skill/combat/axes,
+		),
+		TAT_TRAIT_TRAINEE_SURVIVALIST = list(
+			/datum/skill/labor/butchering,
+			/datum/skill/craft/traps,
+			/datum/skill/combat/bows,
+		),
+		TAT_TRAIT_TRAINEE_POACHER = list(
+			/datum/skill/misc/tracking,
+			/datum/skill/craft/traps,
+			/datum/skill/combat/crossbows,
+		),
+		TAT_TRAIT_TRAINEE_SKULKER = list(
+			/datum/skill/misc/sneaking,
+			/datum/skill/misc/lockpicking,
+			/datum/skill/combat/knives,
+		),
+		TAT_TRAIT_TRAINEE_VAGABOND = list(
+			/datum/skill/misc/stealing,
+			/datum/skill/misc/climbing,
+			/datum/skill/combat/slings,
+		),
+		TAT_TRAIT_TRAINEE_RIDER = list(
+			/datum/skill/misc/riding,
+			/datum/skill/misc/athletics,
+			/datum/skill/combat/polearms,
+		),
+		TAT_TRAIT_TRAINEE_MARINER = list(
+			/datum/skill/misc/swimming,
+			/datum/skill/labor/fishing,
+			/datum/skill/combat/staves,
+		),
+		TAT_TRAIT_TRAINEE_CLOTHIER = list(
+			/datum/skill/craft/sewing,
+			/datum/skill/craft/tanning,
+			/datum/skill/combat/whipsflails,
+		),
+		TAT_TRAIT_TRAINEE_HOMESTEADER = list(
+			/datum/skill/labor/farming,
+			/datum/skill/craft/cooking,
+			/datum/skill/combat/wrestling,
+		),
+		TAT_TRAIT_TRAINEE_ARTISAN = list(
+			/datum/skill/craft/crafting,
+			/datum/skill/craft/ceramics,
+			/datum/skill/combat/unarmed,
+		),
+		TAT_TRAIT_TRAINEE_CHIRURGEON = list(
+			/datum/skill/misc/medicine,
+			/datum/skill/misc/reading,
+			/datum/skill/combat/staves,
+		),
+		TAT_TRAIT_TRAINEE_TROUBADOUR = list(
+			/datum/skill/misc/music,
+			/datum/skill/misc/reading,
+			/datum/skill/combat/knives,
+		),
+	)
+
+	for(var/trait_id in trait_skill_discounts)
+		if(!traits[trait_id])
+			continue
+
+		var/list/discounted_skills = trait_skill_discounts[trait_id]
+		if(!(skill_type in discounted_skills))
+			continue
+
+		if(ispath(skill_type, /datum/skill/combat))
+			return (target_level <= 2) ? 1 : 0
+
+		return 1
+
+	return 0
+
+/datum/tat_build/proc/get_item_total_allowed_amount(path)
+	var/list/entry = get_item_entry(path)
+	if(!islist(entry))
+		return 0
+
+	var/category = lowertext("[entry["category"]]")
+	var/cost = get_item_cost(path)
+
+	if(cost <= 0 && (category == "misc" || category == "weapon"))
+		return 1
+
+	if(!is_item_slot_limited(entry))
+		return INFINITY
+
+	var/slot_group = entry["slot_group"]
+	if(!slot_group)
+		return INFINITY
+
+	return 1

@@ -44,6 +44,22 @@
 #define TAT_TRAIT_MAGE_MINOR_SLOT_2 "tat_mage_minor_slot_2"
 #define TAT_TRAIT_MAGE_UTILITY_SLOT "tat_mage_utility_slot"
 
+#define TAT_TRAIT_TRAINEE_SMITH "tat_trainee_smith"
+#define TAT_TRAIT_TRAINEE_ARMORER "tat_trainee_armorer"
+#define TAT_TRAIT_TRAINEE_WEAPONSMITH "tat_trainee_weaponsmith"
+#define TAT_TRAIT_TRAINEE_WOODSMAN "tat_trainee_woodsman"
+#define TAT_TRAIT_TRAINEE_SURVIVALIST "tat_trainee_survivalist"
+#define TAT_TRAIT_TRAINEE_POACHER "tat_trainee_poacher"
+#define TAT_TRAIT_TRAINEE_SKULKER "tat_trainee_skulker"
+#define TAT_TRAIT_TRAINEE_VAGABOND "tat_trainee_vagabond"
+#define TAT_TRAIT_TRAINEE_RIDER "tat_trainee_rider"
+#define TAT_TRAIT_TRAINEE_MARINER "tat_trainee_mariner"
+#define TAT_TRAIT_TRAINEE_CLOTHIER "tat_trainee_clothier"
+#define TAT_TRAIT_TRAINEE_HOMESTEADER "tat_trainee_homesteader"
+#define TAT_TRAIT_TRAINEE_ARTISAN "tat_trainee_artisan"
+#define TAT_TRAIT_TRAINEE_CHIRURGEON "tat_trainee_chirurgeon"
+#define TAT_TRAIT_TRAINEE_TROUBADOUR "tat_trainee_troubadour"
+
 #define TAT_BUILD_STAT_BONUS_EXTRA_STATS 3
 #define TAT_BUILD_STAT_BONUS_WANTED 5
 
@@ -106,6 +122,9 @@
 
 #define TAT_RESIDENT_PUGILIST_DEFAULT "Dropkick - Pushback + Extra Damage"
 #define TAT_TRAIT_DISCOUNT 0
+
+#define TAT_CATEGORY_SKILL_DISCOUNT "skill_discount"
+#define TAT_CATEGORY_SKILL_DISCOUNT_NAME "Skill Discount"
 
 #define TAT_STAT_ENTRY(_name, _cost, _base, _min, _max) list("name" = (_name), "cost" = (_cost), "base" = (_base), "min" = (_min), "max" = (_max))
 #define TAT_TRAIT_ENTRY(_name, _cost, _category, _category_name, _desc) list("name" = (_name), "cost" = (_cost), "category" = (_category), "category_name" = (_category_name), "desc" = (_desc))
@@ -203,6 +222,21 @@
 	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants explosives gifts from your friends. Luck scaled."), \
 	TAT_TRAIT_ARTIFACTS_SUPPLIER = TAT_TRAIT_ENTRY("Artifacts Bearer", 6, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "You're one of the adventurers with stories about your raids. Now, you have one of the deadlist weapons in Grimmoria. REQUIRES: Party Leader"), \
 	TRAIT_FIREARMS_MARKSMAN = TAT_TRAIT_ENTRY("Firearms Training", 3, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat Firearms cap from 3 to 4."), \
+	TAT_TRAIT_TRAINEE_SMITH = TAT_TRAIT_ENTRY("Trainee Smith", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Blacksmithing, Smelting, and the first two levels of Maces by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_ARMORER = TAT_TRAIT_ENTRY("Trainee Armorer", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Armorsmithing, Masonry, and the first two levels of Shields by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_WEAPONSMITH = TAT_TRAIT_ENTRY("Trainee Weaponsmith", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Weaponsmithing, Engineering, and the first two levels of Swords by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_WOODSMAN = TAT_TRAIT_ENTRY("Trainee Woodsman", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Lumberjacking, Carpentry, and the first two levels of Axes by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_SURVIVALIST = TAT_TRAIT_ENTRY("Trainee Survivalist", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Butchering, Hunting, and the first two levels of Archery by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_POACHER = TAT_TRAIT_ENTRY("Trainee Poacher", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Tracking, Trapmaking, and the first two levels of Crossbows by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_SKULKER = TAT_TRAIT_ENTRY("Trainee Skulker", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Sneaking, Lockpicking, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_VAGABOND = TAT_TRAIT_ENTRY("Trainee Vagabond", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Pickpocketing, Climbing, and the first two levels of Slings by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_RIDER = TAT_TRAIT_ENTRY("Trainee Rider", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Riding, Athletics, and the first two levels of Polearms by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_MARINER = TAT_TRAIT_ENTRY("Trainee Mariner", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Swimming, Fishing, and the first two levels of Staves by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_CLOTHIER = TAT_TRAIT_ENTRY("Trainee Clothier", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Sewing, Skincrafting, and the first two levels of Whips & Flails by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_HOMESTEADER = TAT_TRAIT_ENTRY("Trainee Homesteader", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Farming, Cooking, and the first two levels of Wrestling by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_ARTISAN = TAT_TRAIT_ENTRY("Trainee Artisan", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Crafting, Pottery, and the first two levels of Unarmed by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_CHIRURGEON = TAT_TRAIT_ENTRY("Trainee Chirurgeon", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Medicine, Literacy, and the first two levels of Staves by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TAT_TRAIT_TRAINEE_TROUBADOUR = TAT_TRAIT_ENTRY("Trainee Troubadour", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Music, Literacy, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
 
 #define TAT_AVAILABLE_ITEMS_LIST \
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \

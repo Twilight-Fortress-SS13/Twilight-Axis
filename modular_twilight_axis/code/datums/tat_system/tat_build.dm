@@ -239,27 +239,33 @@
 			items -= item_path
 			item_loadout -= item_path
 			continue
+
 		var/value = round(items[item_path])
 		if(value <= 0)
 			items -= item_path
 			item_loadout -= item_path
 			continue
+
 		var/list/entry = available_items[item_path]
 		if(!can_use_item_entry(entry))
 			items -= item_path
 			item_loadout -= item_path
 			continue
-		var/max_allowed = get_max_amount_for_item(item_path)
-		if(max_allowed <= 0)
+
+		var/max_allowed_total = get_item_total_allowed_amount(item_path)
+		if(max_allowed_total <= 0)
 			items -= item_path
 			item_loadout -= item_path
 			continue
-		if(max_allowed != INFINITY)
-			value = min(value, max_allowed)
+
+		if(max_allowed_total != INFINITY)
+			value = min(value, max_allowed_total)
+
 		if(value <= 0)
 			items -= item_path
 			item_loadout -= item_path
 			continue
+
 		items[item_path] = value
 		normalize_item_loadout(item_path)
 

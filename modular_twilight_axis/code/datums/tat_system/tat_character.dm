@@ -18,64 +18,79 @@
 		if(level > 0)
 			H.adjust_skillrank_up_to(skill_type, level, TRUE)
 
-/datum/tat_build/proc/grant_skill_bonus_if_exists(mob/living/carbon/human/H, path_text, amount = 3)
-	if(!H || !path_text || !istext(path_text))
+/datum/tat_build/proc/grant_skill_bonus_if_exists(mob/living/carbon/human/H, skill_type, amount = 3)
+	if(!H)
 		return
-	var/path = text2path(path_text)
-	if(!ispath(path, /datum/skill))
+	if(!ispath(skill_type, /datum/skill))
 		return
-	H.adjust_skillrank_up_to(path, amount, TRUE)
+	if(!isnum(amount) || amount <= 0)
+		return
+
+	H.adjust_skillrank_up_to(skill_type, amount, TRUE)
 
 /datum/tat_build/proc/apply_trait_skill_bonuses(mob/living/carbon/human/H)
 	if(!H)
 		return
+
 	if(traits[TRAIT_SMITHING_EXPERT])
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/smithing", 3)
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/smelting", 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/blacksmithing, 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/smelting, 3)
+
 	if(traits[TRAIT_ALCHEMY_EXPERT])
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/alchemy", 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/alchemy, 3)
+
 	if(traits[TRAIT_MEDICINE_EXPERT])
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/medicine", 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/misc/medicine, 3)
+
 	if(traits[TRAIT_HOMESTEAD_EXPERT])
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/carpentry", 2)
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/masonry", 2)
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/crafting", 2)
-		grant_skill_bonus_if_exists(H, "/datum/skill/labor/farming", 2)
-		grant_skill_bonus_if_exists(H, "/datum/skill/labor/mining", 2)
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/cooking", 2)
-		grant_skill_bonus_if_exists(H, "/datum/skill/labor/fishing", 2)
-		grant_skill_bonus_if_exists(H, "/datum/skill/labor/butchering", 2)
-		grant_skill_bonus_if_exists(H, "/datum/skill/labor/lumberjacking", 2)
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/ceramics", 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/carpentry, 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/masonry, 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/crafting, 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/labor/farming, 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/labor/mining, 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/cooking, 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/labor/fishing, 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/labor/butchering, 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/labor/lumberjacking, 2)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/ceramics, 2)
+
 	if(traits[TRAIT_SURVIVAL_EXPERT])
-		grant_skill_bonus_if_exists(H, "/datum/skill/labor/butchering", 3)
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/traps", 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/labor/butchering, 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/traps, 3)
+
 	if(traits[TRAIT_SEWING_EXPERT])
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/sewing", 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/sewing, 3)
+
 	if(traits[TRAIT_SEEDKNOW])
-		grant_skill_bonus_if_exists(H, "/datum/skill/labor/farming", 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/labor/farming, 3)
+
 	if(traits[TRAIT_CAUTIOUS_FISHER])
-		grant_skill_bonus_if_exists(H, "/datum/skill/labor/fishing", 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/labor/fishing, 3)
+
 	if(traits[TRAIT_SQUIRE_REPAIR])
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/armorsmithing", 3)
-		grant_skill_bonus_if_exists(H, "/datum/skill/craft/weaponsmithing", 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/armorsmithing, 3)
+		grant_skill_bonus_if_exists(H, /datum/skill/craft/weaponsmithing, 3)
+
 	if(traits[TRAIT_ARCYNE] && !has_defensive_trait_lockout())
 		var/current_arcane = get_skill_value(/datum/skill/magic/arcane)
 		var/target_arcane = min(6, current_arcane + 2)
 		var/bonus_arcane = max(0, target_arcane - current_arcane)
 		if(bonus_arcane > 0)
-			grant_skill_bonus_if_exists(H, "/datum/skill/magic/arcane", bonus_arcane)
+			grant_skill_bonus_if_exists(H, /datum/skill/magic/arcane, bonus_arcane)
 
 /datum/tat_build/proc/apply_divine_package(mob/living/carbon/human/H)
 	if(!H || !traits[TAT_TRAIT_DIVINE_INITIATE])
 		return
+
 	var/cleric_tier = get_effective_divine_tier()
 	var/passive_gain = get_divine_passive_gain_for_tier(cleric_tier)
 	var/devotion_limit = get_divine_devotion_limit_for_tier(cleric_tier)
 	var/datum/devotion/D = new /datum/devotion(H, H.patron)
+
 	D.grant_miracles(H, cleric_tier = cleric_tier, passive_gain = passive_gain, devotion_limit = devotion_limit)
-	grant_skill_bonus_if_exists(H, "/datum/skill/magic/holy", 1)
-	if(H.patron?.type ==/datum/patron/inhumen/zizo && cleric_tier >= CLERIC_T2)
+	grant_skill_bonus_if_exists(H, /datum/skill/magic/holy, 1)
+
+	if(H.patron?.type == /datum/patron/inhumen/zizo && cleric_tier >= CLERIC_T2)
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark)
 
@@ -348,13 +363,21 @@
 /datum/tat_build/proc/spawn_item_equipped_or_fallback(mob/living/carbon/human/H, path)
 	if(!H || !ispath(path))
 		return
+
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return
+
 	var/list/slots = get_equip_slots_for_item(I)
 	for(var/slot_id in slots)
+		if(QDELETED(I))
+			return
 		if(H.equip_to_slot_if_possible(I, slot_id, FALSE, TRUE, TRUE, TRUE))
 			return
+
+	if(QDELETED(I))
+		return
+
 	try_put_into_any_storage_or_drop(I, H)
 
 /datum/tat_build/proc/apply_items(mob/living/carbon/human/H)
