@@ -10,13 +10,14 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 #define TAT_SKILL_COMBAT_CAP_TRAIT_1 4
 #define TAT_SKILL_COMBAT_CAP_TRAIT_2 5
 #define TAT_SKILL_NONCOMBAT_CAP 5
-#define TRAIT_JACKOFALLTRADES_POINTS 10
+#define TRAIT_MASTERYOFNOTHING_POINTS 20
 
 #define TAT_TRAIT_WARRIOR_EXPERT "tat_warrior_expert"
 #define TAT_TRAIT_WARRIOR_MASTER "tat_warrior_master"
 #define TAT_TRAIT_SOUNDBREAKER "tat_soundbreaker"
 #define TAT_TRAIT_RONIN "tat_ronin"
 #define TAT_TRAIT_RESIDENT "tat_resident"
+#define TAT_TRAIT_MASTER_OF_NOTHING "tat_master_of_nothing"
 
 #define TAT_TRAIT_STEEL_SUPPLIER "tat_steel_supplier"
 #define TAT_TRAIT_SILVER_SUPPLIER "tat_silver_supplier"
@@ -191,7 +192,8 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	TAT_TRAIT_PLATE_SUPPLIER = TAT_TRAIT_ENTRY("Plate Supplier", 3, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks plate gear in all supported slots."), \
 	TRAIT_INTELLECTUAL = TAT_TRAIT_ENTRY("Intellectual", 2, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You have a keen eye and can assess a person's prowess in wit and blade."), \
 	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 1, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You are trained in the Arcyne arts, allowing you to wield magyck. Basis trait for magic-build classes. Give +2 magic skill if there is no defense trait."), \
-	TRAIT_JACKOFALLTRADES = TAT_TRAIT_ENTRY("Jack of All Trades", 4, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Skills cost half as much for you to raise."), \
+	TRAIT_JACKOFALLTRADES = TAT_TRAIT_ENTRY("Jack of All Trades", 2, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Skills cost half as much for you to raise."), \
+	TAT_TRAIT_MASTER_OF_NOTHING = TAT_TRAIT_ENTRY("Master of nothing", 4, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gives +20 to skill points, gives discont on non-combat skills, blocks with Resident."), \
 	TRAIT_EMPATH = TAT_TRAIT_ENTRY("Empath", 1, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can notice when people are in pain."), \
 	TRAIT_NOSTINK = TAT_TRAIT_ENTRY("Dead Nose", 2, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Your nose is numb to the smell of decay."), \
 	TRAIT_NOBLE = TAT_TRAIT_ENTRY("Noble Blooded", 1, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You are of noble blood."), \

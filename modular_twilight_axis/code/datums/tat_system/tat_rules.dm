@@ -10,8 +10,8 @@
 
 /datum/tat_build/proc/get_effective_skill_points_total()
 	var/total = points_skills
-	if(traits[TRAIT_JACKOFALLTRADES])
-		total += TRAIT_JACKOFALLTRADES_POINTS
+	if(traits[TAT_TRAIT_MASTER_OF_NOTHING])
+		total += TRAIT_MASTERYOFNOTHING_POINTS
 	return total
 
 /datum/tat_build/proc/get_stat_entry(stat_id)
@@ -387,6 +387,7 @@
 			TRAIT_OUTLANDER,
 			TAT_TRAIT_WANTED,
 			TAT_TRAIT_BONUS_STAT_POOL,
+			TAT_TRAIT_MASTER_OF_NOTHING,
 		),
 		TAT_TRAIT_BONUS_STAT_POOL = list(
 			TAT_TRAIT_WANTED,
@@ -851,6 +852,9 @@
 		return 0
 
 	if(traits[TAT_TRAIT_RESIDENT] && (ispath(skill_type, /datum/skill/misc) || ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft)))
+		return 1
+
+	if(traits[TAT_TRAIT_MASTER_OF_NOTHING] && (ispath(skill_type, /datum/skill/misc) || ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft)))
 		return 1
 
 	var/list/trait_skill_discounts = list(
