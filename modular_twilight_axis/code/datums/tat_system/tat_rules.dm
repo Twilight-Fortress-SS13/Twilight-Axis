@@ -157,8 +157,14 @@
 		total += get_item_cost(item_path) * amount
 	return total
 
+/datum/tat_build/proc/get_max_item_points()
+	var/total_points = points_items
+	if(traits[TAT_TRAIT_WANTED])
+		total_points += TAT_BUILD_ITEM_BONUS_WANTED
+	return total_points
+
 /datum/tat_build/proc/get_remaining_item_points()
-	return points_items - get_spent_item_points()
+	return get_max_item_points() - get_spent_item_points()
 
 /datum/tat_build/proc/get_primary_advanced_combat_skill()
 	var/primary_skill = null
