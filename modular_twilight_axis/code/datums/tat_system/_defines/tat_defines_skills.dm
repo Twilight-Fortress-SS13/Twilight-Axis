@@ -100,3 +100,18 @@
 	if(skill_type in TAT_SKILLS_MISC)
 		return TAT_SKILL_DOMAIN_MISC
 	return null
+
+#define TAT_DEFAULT_SKILL_DOMAIN_POINTS list( \
+	TAT_SKILL_DOMAIN_COMBAT = 14, \
+	TAT_SKILL_DOMAIN_MAGIC = 0, \
+	TAT_SKILL_DOMAIN_WANDERING = 10, \
+	TAT_SKILL_DOMAIN_GATHERING = 6, \
+	TAT_SKILL_DOMAIN_CRAFTING = 6, \
+	TAT_SKILL_DOMAIN_MISC = 4 \
+)
+
+#define TAT_SKILLS_ALL (TAT_SKILLS_COMBAT + TAT_SKILLS_MAGIC + TAT_SKILLS_WANDERING + TAT_SKILLS_GATHERING + TAT_SKILLS_CRAFTING + TAT_SKILLS_MISC)
+#define TAT_VIRTUE_SKILL_BONUS_RULES list( \
+	/datum/virtue/combat/bowman = list(/datum/skill/combat/bows = 1), \
+	/datum/virtue/combat/crossbowman = list(/datum/skill/combat/crossbows = 1) \
+)

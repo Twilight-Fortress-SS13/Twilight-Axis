@@ -172,4 +172,60 @@
 	TAT_TRAIT_TRAINEE_ARTISAN = TAT_TRAIT_ENTRY("Trainee Artisan", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Crafting, Pottery, and the first two levels of Unarmed by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_CHIRURGEON = TAT_TRAIT_ENTRY("Trainee Chirurgeon", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Medicine, Literacy, and the first two levels of Staves by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_TROUBADOUR = TAT_TRAIT_ENTRY("Trainee Troubadour", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Music, Literacy, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
+	TRAIT_STRONGBITE = TAT_TRAIT_ENTRY("Strong Bite", 2, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Increases crit chance and damage from biting"), \
+	TRAIT_BITERHELM = TAT_TRAIT_ENTRY("Curse of Twisting Metall", 2, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Gives cursed skill to bite through your own helmet"), \
 
+#define TAT_TRAIT_POINT_SCALE 10
+
+#define TAT_TRAIT_STAT_POINT_RULES list( \
+	TAT_TRAIT_BONUS_STAT_POOL = TAT_BUILD_STAT_BONUS_EXTRA_STATS, \
+	TAT_TRAIT_WANTED = TAT_BUILD_STAT_BONUS_WANTED \
+)
+
+#define TAT_TRAIT_ITEM_POINT_RULES list( \
+	TAT_TRAIT_WANTED = TAT_BUILD_ITEM_BONUS_WANTED \
+)
+
+#define TAT_TRAIT_SKILL_POINT_RULES list( \
+	TAT_TRAIT_MASTER_OF_NOTHING = list( \
+		TAT_SKILL_DOMAIN_WANDERING = TRAIT_MASTERYOFNOTHING_POINTS, \
+		TAT_SKILL_DOMAIN_GATHERING = TRAIT_MASTERYOFNOTHING_POINTS, \
+		TAT_SKILL_DOMAIN_CRAFTING = TRAIT_MASTERYOFNOTHING_POINTS, \
+		TAT_SKILL_DOMAIN_MISC = TRAIT_MASTERYOFNOTHING_POINTS \
+	) \
+)
+
+#define TAT_TRAIT_SKILL_BONUS_RULES list( \
+	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = 3, /datum/skill/craft/smelting = 3), \
+	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = 3), \
+	TRAIT_MEDICINE_EXPERT = list(/datum/skill/misc/medicine = 3), \
+	TRAIT_HOMESTEAD_EXPERT = list(/datum/skill/craft/carpentry = 2, /datum/skill/craft/masonry = 2, /datum/skill/craft/crafting = 2, /datum/skill/labor/farming = 2, /datum/skill/labor/mining = 2, /datum/skill/craft/cooking = 2, /datum/skill/labor/fishing = 2, /datum/skill/labor/butchering = 2, /datum/skill/labor/lumberjacking = 2, /datum/skill/craft/ceramics = 2), \
+	TRAIT_SURVIVAL_EXPERT = list(/datum/skill/labor/butchering = 3, /datum/skill/craft/traps = 3), \
+	TRAIT_SEWING_EXPERT = list(/datum/skill/craft/sewing = 3), \
+	TRAIT_SEEDKNOW = list(/datum/skill/labor/farming = 3), \
+	TRAIT_CAUTIOUS_FISHER = list(/datum/skill/labor/fishing = 3), \
+	TRAIT_SQUIRE_REPAIR = list(/datum/skill/craft/armorsmithing = 3, /datum/skill/craft/weaponsmithing = 3) \
+)
+
+#define TAT_TRAIT_ITEM_UNLOCK_RULES list( \
+	TAT_UNLOCK_TYPE_WEAPON_SUPPLY = list(TAT_SUPPLY_BRONZE = TAT_TRAIT_BRONZE_SUPPLIER, TAT_SUPPLY_SILVER = TAT_TRAIT_SILVER_SUPPLIER, TAT_SUPPLY_STEEL = TAT_TRAIT_STEEL_SUPPLIER, TAT_SUPPLY_FIREARMS = TAT_TRAIT_FIREARMS_SUPPLIER, TAT_SUPPLY_ARTIFACTS = TAT_TRAIT_ARTIFACTS_SUPPLIER), \
+	TAT_UNLOCK_TYPE_ARMOR_FAMILY = list(TAT_ARMOR_LEATHER = TAT_TRAIT_LEATHER_SUPPLIER, TAT_ARMOR_MAIL = TAT_TRAIT_MAIL_SUPPLIER, TAT_ARMOR_PLATE = TAT_TRAIT_PLATE_SUPPLIER) \
+)
+
+#define TAT_TRAIT_SKILL_DISCOUNT_RULES list( \
+	TAT_TRAIT_TRAINEE_SMITH = list(/datum/skill/craft/blacksmithing, /datum/skill/craft/smelting, /datum/skill/combat/maces), \
+	TAT_TRAIT_TRAINEE_ARMORER = list(/datum/skill/craft/armorsmithing, /datum/skill/craft/masonry, /datum/skill/combat/shields), \
+	TAT_TRAIT_TRAINEE_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing, /datum/skill/craft/engineering, /datum/skill/combat/swords), \
+	TAT_TRAIT_TRAINEE_WOODSMAN = list(/datum/skill/labor/lumberjacking, /datum/skill/craft/carpentry, /datum/skill/combat/axes), \
+	TAT_TRAIT_TRAINEE_SURVIVALIST = list(/datum/skill/labor/butchering, /datum/skill/craft/traps, /datum/skill/combat/bows), \
+	TAT_TRAIT_TRAINEE_POACHER = list(/datum/skill/misc/tracking, /datum/skill/craft/traps, /datum/skill/combat/crossbows), \
+	TAT_TRAIT_TRAINEE_SKULKER = list(/datum/skill/misc/sneaking, /datum/skill/misc/lockpicking, /datum/skill/combat/knives), \
+	TAT_TRAIT_TRAINEE_VAGABOND = list(/datum/skill/misc/stealing, /datum/skill/misc/climbing, /datum/skill/combat/slings), \
+	TAT_TRAIT_TRAINEE_RIDER = list(/datum/skill/misc/riding, /datum/skill/misc/athletics, /datum/skill/combat/polearms), \
+	TAT_TRAIT_TRAINEE_MARINER = list(/datum/skill/misc/swimming, /datum/skill/labor/fishing, /datum/skill/combat/staves), \
+	TAT_TRAIT_TRAINEE_CLOTHIER = list(/datum/skill/craft/sewing, /datum/skill/craft/tanning, /datum/skill/combat/whipsflails), \
+	TAT_TRAIT_TRAINEE_HOMESTEADER = list(/datum/skill/labor/farming, /datum/skill/craft/cooking, /datum/skill/combat/wrestling), \
+	TAT_TRAIT_TRAINEE_ARTISAN = list(/datum/skill/craft/crafting, /datum/skill/craft/ceramics, /datum/skill/combat/unarmed), \
+	TAT_TRAIT_TRAINEE_CHIRURGEON = list(/datum/skill/misc/medicine, /datum/skill/misc/reading, /datum/skill/combat/staves), \
+	TAT_TRAIT_TRAINEE_TROUBADOUR = list(/datum/skill/misc/music, /datum/skill/misc/reading, /datum/skill/combat/knives) \
+)

@@ -30,6 +30,8 @@ type SkillState = {
   level: number;
   cap: number;
   next_cost: number;
+  bonus?: number;
+  invested?: number;
 };
 
 type TraitEntry = {
@@ -88,6 +90,14 @@ type ItemCachePacket = {
   states?: Record<string, ItemState> | null;
 };
 
+type SkillDomainKey =
+  | 'combat'
+  | 'magic'
+  | 'wandering'
+  | 'gathering'
+  | 'crafting'
+  | 'misc';
+
 type Data = {
   stats: Record<string, number>;
   skills: Record<string, SkillState>;
@@ -111,6 +121,9 @@ type Data = {
   points_items: number;
   points_items_remaining: number;
 
+  skill_points_by_domain?: Partial<Record<SkillDomainKey, number>>;
+  skill_points_remaining_by_domain?: Partial<Record<SkillDomainKey, number>>;
+
   tat_slots?: TatSlotEntry[] | Record<string, TatSlotEntry>;
   tat_presets?: TatPresetEntry[] | null;
   active_tat_slot?: number;
@@ -120,8 +133,7 @@ type Data = {
   dirty: boolean;
 };
 
-type TabKey = 'stats' | 'skills' | 'traits' | 'items' | 'loadout';
-
+type TabKey = 'control' | 'stats' | 'skills' | 'traits' | 'items' | 'loadout';
 type BackendAct = (action: string, payload?: Record<string, unknown>) => void;
 
 type NumericRowProps = {
@@ -149,6 +161,24 @@ type HoverCardData = {
 type ItemViewEntry = ItemEntry & ItemState;
 type LoadoutViewEntry = ItemEntry & LoadoutState;
 
+const SKILL_DOMAIN_TITLES: Record<SkillDomainKey, string> = {
+  combat: 'Combat',
+  magic: 'Magic',
+  wandering: 'Wandering',
+  gathering: 'Gathering',
+  crafting: 'Crafting',
+  misc: 'Misc',
+};
+
+const SKILL_DOMAIN_ORDER: SkillDomainKey[] = [
+  'combat',
+  'magic',
+  'wandering',
+  'gathering',
+  'crafting',
+  'misc',
+];
+
 const normalizeSearch = (value: unknown): string =>
   String(value ?? '')
     .toLowerCase()
@@ -158,7 +188,6 @@ const matchesSearch = (search: string, ...parts: Array<unknown>): boolean => {
   if (!search) {
     return true;
   }
-
   const normalized = normalizeSearch(search);
   return parts.some((part) => normalizeSearch(part).includes(normalized));
 };
@@ -183,6 +212,49 @@ const normalizeTatPresets = (raw?: TatPresetEntry[] | null): TatPresetEntry[] =>
       summary: normalizePresetSummary(preset?.summary),
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
+};
+
+const normalizeTatSlots = (
+  raw: Data['tat_slots'],
+  activeSlotId?: number
+): TatSlotEntry[] => {
+  const makeSummary = (summary?: SlotSummary): SlotSummary => ({
+    stats: Number(summary?.stats) || 0,
+    skills: Number(summary?.skills) || 0,
+    traits: Number(summary?.traits) || 0,
+    items: Number(summary?.items) || 0,
+  });
+
+  if (!raw) {
+    return [];
+  }
+
+  if (Array.isArray(raw)) {
+    return raw
+      .filter(Boolean)
+      .map((slot, index) => {
+        const id = Number(slot?.id) || index + 1;
+        return {
+          id,
+          name: String(slot?.name || `Slot ${id}`),
+          active: Number(activeSlotId) === id || !!slot?.active,
+          summary: makeSummary(slot?.summary),
+        };
+      })
+      .sort((a, b) => a.id - b.id);
+  }
+
+  return Object.entries(raw)
+    .map(([key, slot], index) => {
+      const id = Number(slot?.id) || Number(key) || index + 1;
+      return {
+        id,
+        name: String(slot?.name || `Slot ${id}`),
+        active: Number(activeSlotId) === id || !!slot?.active,
+        summary: makeSummary(slot?.summary),
+      };
+    })
+    .sort((a, b) => a.id - b.id);
 };
 
 const SLOT_LABELS: Record<string, string> = {
@@ -274,6 +346,43 @@ const getCategoryLabel = (category?: string | null) => {
   return CATEGORY_LABELS[category.toLowerCase()] || category;
 };
 
+const normalizeSkillDomain = (value?: string | null): SkillDomainKey => {
+  const normalized = normalizeSearch(value);
+  if (
+    normalized === 'combat' ||
+    normalized === 'magic' ||
+    normalized === 'wandering' ||
+    normalized === 'gathering' ||
+    normalized === 'crafting' ||
+    normalized === 'misc'
+  ) {
+    return normalized;
+  }
+  return 'misc';
+};
+
+const formatSkillDisplayValue = (state?: SkillState) => {
+  const total = Number(state?.level) || 0;
+  const bonus = Number(state?.bonus) || 0;
+  return bonus > 0 ? `${total}(${bonus})` : `${total}`;
+};
+
+const formatDomainPoints = (data: Data, domain: SkillDomainKey) => {
+  const total = data.skill_points_by_domain?.[domain];
+  const remaining = data.skill_points_remaining_by_domain?.[domain];
+
+  if (typeof total === 'number' && typeof remaining === 'number') {
+    return `${remaining} / ${total}`;
+  }
+
+  return '? / ?';
+};
+
+const getDomainRemainingPoints = (data: Data, domain: SkillDomainKey) => {
+  const remaining = data.skill_points_remaining_by_domain?.[domain];
+  return typeof remaining === 'number' ? remaining : null;
+};
+
 const groupEntriesByCategoryAndSlot = <
   T extends { slot_group?: string | null; category?: string | null; name?: string }
 >(
@@ -327,49 +436,6 @@ const groupEntriesByCategoryAndSlot = <
     });
 };
 
-const normalizeTatSlots = (
-  raw: Data['tat_slots'],
-  activeSlotId?: number
-): TatSlotEntry[] => {
-  const makeSummary = (summary?: SlotSummary): SlotSummary => ({
-    stats: Number(summary?.stats) || 0,
-    skills: Number(summary?.skills) || 0,
-    traits: Number(summary?.traits) || 0,
-    items: Number(summary?.items) || 0,
-  });
-
-  if (!raw) {
-    return [];
-  }
-
-  if (Array.isArray(raw)) {
-    return raw
-      .filter(Boolean)
-      .map((slot, index) => {
-        const id = Number(slot?.id) || index + 1;
-        return {
-          id,
-          name: String(slot?.name || `Slot ${id}`),
-          active: Number(activeSlotId) === id || !!slot?.active,
-          summary: makeSummary(slot?.summary),
-        };
-      })
-      .sort((a, b) => a.id - b.id);
-  }
-
-  return Object.entries(raw)
-    .map(([key, slot], index) => {
-      const id = Number(slot?.id) || Number(key) || index + 1;
-      return {
-        id,
-        name: String(slot?.name || `Slot ${id}`),
-        active: Number(activeSlotId) === id || !!slot?.active,
-        summary: makeSummary(slot?.summary),
-      };
-    })
-    .sort((a, b) => a.id - b.id);
-};
-
 const NumericRow = ({
   title,
   value,
@@ -399,8 +465,8 @@ const NumericRow = ({
       <Stack.Item>
         <Stack align="center">
           <Stack.Item>
-            <Button compact onClick={onAdd} disabled={disabledAdd}>
-              +
+            <Button compact onClick={onRemove} disabled={disabledRemove}>
+              -
             </Button>
           </Stack.Item>
 
@@ -411,8 +477,8 @@ const NumericRow = ({
           </Stack.Item>
 
           <Stack.Item>
-            <Button compact onClick={onRemove} disabled={disabledRemove}>
-              -
+            <Button compact onClick={onAdd} disabled={disabledAdd}>
+              +
             </Button>
           </Stack.Item>
         </Stack>
@@ -623,6 +689,25 @@ const ItemTile = ({
   );
 };
 
+const SectionTitleWithMeta = ({
+  title,
+  meta,
+}: {
+  title: string;
+  meta?: React.ReactNode;
+}) => {
+  return (
+    <Stack align="center" justify="space-between">
+      <Stack.Item>
+        <Box bold>{title}</Box>
+      </Stack.Item>
+      <Stack.Item>
+        <Box style={{ opacity: 0.8, fontSize: '12px' }}>{meta}</Box>
+      </Stack.Item>
+    </Stack>
+  );
+};
+
 const SlotCards = ({
   slots,
   act,
@@ -639,7 +724,6 @@ const SlotCards = ({
 
       slots.forEach((slot) => {
         validIds.add(slot.id);
-
         if (!(slot.id in next)) {
           next[slot.id] = slot.name || `Slot ${slot.id}`;
         }
@@ -774,23 +858,22 @@ const SlotCards = ({
   );
 };
 
-const PresetPicker = ({
+const PresetList = ({
   presets,
   act,
   search,
-  onClose,
 }: {
   presets: TatPresetEntry[];
   act: BackendAct;
   search: string;
-  onClose: () => void;
 }) => {
-  const rows = useMemo(() => {
-    return presets.filter((preset) => matchesSearch(search, preset.id, preset.name));
-  }, [presets, search]);
+  const rows = useMemo(
+    () => presets.filter((preset) => matchesSearch(search, preset.id, preset.name)),
+    [presets, search]
+  );
 
   return (
-    <Section title="Presets" buttons={<Button onClick={onClose}>Close</Button>}>
+    <Section title="Presets">
       {!rows.length ? (
         <NoticeBox>No presets found.</NoticeBox>
       ) : (
@@ -824,10 +907,7 @@ const PresetPicker = ({
                   <Stack.Item>
                     <Button
                       color="good"
-                      onClick={() => {
-                        act('load_tat_preset', { preset_id: preset.id });
-                        onClose();
-                      }}>
+                      onClick={() => act('load_tat_preset', { preset_id: preset.id })}>
                       Load
                     </Button>
                   </Stack.Item>
@@ -841,34 +921,36 @@ const PresetPicker = ({
   );
 };
 
-const PointsPanel = ({ data }: { data: Data }) => {
+const ControlTab = ({
+  slots,
+  presets,
+  act,
+  search,
+}: {
+  slots: TatSlotEntry[];
+  presets: TatPresetEntry[];
+  act: BackendAct;
+  search: string;
+}) => {
+  const [showPresets, setShowPresets] = useState(false);
+
   return (
-    <Section title="Points">
-      <Stack>
-        <Stack.Item grow>
-          <Box>
-            Stats: {data.points_stats_remaining} / {data.points_stats}
-          </Box>
-        </Stack.Item>
-        <Stack.Item grow>
-          <Box>
-            Skills: {data.points_skills_remaining} / {data.points_skills}
-          </Box>
-        </Stack.Item>
-      </Stack>
-      <Stack mt={1}>
-        <Stack.Item grow>
-          <Box>
-            Traits: {data.points_traits_remaining} / {data.points_traits}
-          </Box>
-        </Stack.Item>
-        <Stack.Item grow>
-          <Box>
-            Items: {data.points_items_remaining} / {data.points_items}
-          </Box>
-        </Stack.Item>
-      </Stack>
-    </Section>
+    <Stack vertical>
+      <SlotCards slots={slots} act={act} />
+      <Section
+        title="Preset Management"
+        buttons={
+          <Button onClick={() => setShowPresets((prev) => !prev)}>
+            {showPresets ? 'Hide presets' : 'Show presets'}
+          </Button>
+        }>
+        {showPresets ? (
+          <PresetList presets={presets} act={act} search={search} />
+        ) : (
+          <NoticeBox>Presets are hidden. Open them with the button above.</NoticeBox>
+        )}
+      </Section>
+    </Stack>
   );
 };
 
@@ -881,14 +963,22 @@ const StatsTab = ({
   act: BackendAct;
   search: string;
 }) => {
-  const rows = useMemo(() => {
-    return Object.entries(data.available_stats || {}).filter(([statId, entry]) =>
-      matchesSearch(search, entry.name, statId)
-    );
-  }, [data.available_stats, search]);
+  const rows = useMemo(
+    () =>
+      Object.entries(data.available_stats || {}).filter(([statId, entry]) =>
+        matchesSearch(search, entry.name, statId)
+      ),
+    [data.available_stats, search]
+  );
 
   return (
-    <Section title="Stats">
+    <Section
+      title={
+        <SectionTitleWithMeta
+          title="Stats"
+          meta={`Free: ${data.points_stats_remaining} / ${data.points_stats}`}
+        />
+      }>
       {!rows.length ? (
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
@@ -919,6 +1009,139 @@ const StatsTab = ({
   );
 };
 
+const SkillRow = ({
+  skillPath,
+  entry,
+  state,
+  act,
+  domainRemaining,
+}: {
+  skillPath: string;
+  entry: SkillEntry;
+  state?: SkillState;
+  act: BackendAct;
+  domainRemaining: number | null;
+}) => {
+  const totalLevel = Number(state?.level) || 0;
+  const invested = Number(state?.invested) || 0;
+  const cap = Number(state?.cap) || 0;
+  const nextCost = Number(state?.next_cost) || 0;
+  const bonus = Number(state?.bonus) || 0;
+  const displayValue = formatSkillDisplayValue(state);
+
+  const disableRemove = invested <= 0;
+  const disableAdd =
+    totalLevel >= cap ||
+    (domainRemaining !== null && domainRemaining < nextCost);
+
+  return (
+    <Stack
+      align="center"
+      justify="space-between"
+      style={{
+        padding: '4px 0',
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        minHeight: '34px',
+      }}>
+      <Stack.Item grow>
+        <div title={entry.desc || ''}>
+          <Box bold>{entry.name || skillPath}</Box>
+          <Box style={{ opacity: 0.72, fontSize: '11px' }}>
+            Cost: {nextCost} | Type: {entry.category || 'unknown'} | Cap: {cap}
+            {bonus > 0 ? ` | Bonus: ${bonus}` : ''}
+          </Box>
+        </div>
+      </Stack.Item>
+
+      <Stack.Item>
+        <Stack align="center">
+          <Stack.Item>
+            <Button
+              compact
+              onClick={() => act('remove_skill', { path: skillPath, amount: 1 })}
+              disabled={disableRemove}>
+              -
+            </Button>
+          </Stack.Item>
+
+          <Stack.Item>
+            <Box
+              width="56px"
+              textAlign="center"
+              bold
+              style={{
+                fontSize: '13px',
+              }}>
+              {displayValue}
+            </Box>
+          </Stack.Item>
+
+          <Stack.Item>
+            <Button
+              compact
+              onClick={() => act('add_skill', { path: skillPath, amount: 1 })}
+              disabled={disableAdd}>
+              +
+            </Button>
+          </Stack.Item>
+        </Stack>
+      </Stack.Item>
+    </Stack>
+  );
+};
+
+const SkillsDomainPanel = ({
+  domain,
+  rows,
+  data,
+  act,
+}: {
+  domain: SkillDomainKey;
+  rows: Array<[string, SkillEntry]>;
+  data: Data;
+  act: BackendAct;
+}) => {
+  const domainRemaining = getDomainRemainingPoints(data, domain);
+
+  return (
+    <Stack.Item grow basis="32%" style={{ minWidth: '270px' }}>
+      <Section
+        title={
+          <SectionTitleWithMeta
+            title={SKILL_DOMAIN_TITLES[domain]}
+            meta={formatDomainPoints(data, domain)}
+          />
+        }
+        fill
+        style={{
+          height: '320px',
+        }}>
+        {!rows.length ? (
+          <NoticeBox>No skills in this group.</NoticeBox>
+        ) : (
+          <Box
+            style={{
+              maxHeight: '260px',
+              overflowY: 'auto',
+              paddingRight: '4px',
+            }}>
+            {rows.map(([skillPath, entry]) => (
+              <SkillRow
+                key={skillPath}
+                skillPath={skillPath}
+                entry={entry}
+                state={data.skills?.[skillPath]}
+                act={act}
+                domainRemaining={domainRemaining}
+              />
+            ))}
+          </Box>
+        )}
+      </Section>
+    </Stack.Item>
+  );
+};
+
 const SkillsTab = ({
   data,
   act,
@@ -928,59 +1151,58 @@ const SkillsTab = ({
   act: BackendAct;
   search: string;
 }) => {
-  const rows = useMemo(() => {
-    return Object.entries(data.available_skills || {})
-      .filter(([skillPath, entry]) =>
-        matchesSearch(
+  const groups = useMemo(() => {
+    const byDomain: Record<SkillDomainKey, Array<[string, SkillEntry]>> = {
+      combat: [],
+      magic: [],
+      wandering: [],
+      gathering: [],
+      crafting: [],
+      misc: [],
+    };
+
+    Object.entries(data.available_skills || {}).forEach(([skillPath, entry]) => {
+      if (
+        !matchesSearch(
           search,
           skillPath,
           entry.name,
           entry.desc,
-          entry.is_combat ? 'combat' : 'non-combat',
-          entry.category
+          entry.category,
+          entry.is_combat ? 'combat' : 'non-combat'
         )
-      )
-      .sort((a, b) => {
-        const aCombat = a[1].is_combat ? 0 : 1;
-        const bCombat = b[1].is_combat ? 0 : 1;
-        if (aCombat !== bCombat) return aCombat - bCombat;
-        return (a[1].name || a[0]).localeCompare(b[1].name || b[0]);
-      });
+      ) {
+        return;
+      }
+
+      const domain = normalizeSkillDomain(entry.category);
+      byDomain[domain].push([skillPath, entry]);
+    });
+
+    SKILL_DOMAIN_ORDER.forEach((domain) => {
+      byDomain[domain].sort((a, b) => (a[1].name || a[0]).localeCompare(b[1].name || b[0]));
+    });
+
+    return byDomain;
   }, [data.available_skills, search]);
+
+  const hasAny = SKILL_DOMAIN_ORDER.some((domain) => groups[domain].length > 0);
 
   return (
     <Section title="Skills">
-      {!rows.length ? (
+      {!hasAny ? (
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
-        <Stack vertical>
-          {rows.map(([skillPath, entry]) => {
-            const state = data.skills?.[skillPath];
-            const level = state?.level || 0;
-            const cap = state?.cap || 0;
-            const nextCost = state?.next_cost || 1;
-
-            return (
-              <NumericRow
-                key={skillPath}
-                title={entry.name || skillPath}
-                value={level}
-                onAdd={() => act('add_skill', { path: skillPath, amount: 1 })}
-                onRemove={() => act('remove_skill', { path: skillPath, amount: 1 })}
-                disabledAdd={level >= cap}
-                disabledRemove={level <= 0}
-                extra={
-                  <>
-                    <Box>
-                      {entry.is_combat ? 'Combat' : 'Non-combat'} | Cap: {cap} | Next cost:{' '}
-                      {nextCost}
-                    </Box>
-                    {!!entry.desc && <Box mt={0.5}>{entry.desc}</Box>}
-                  </>
-                }
-              />
-            );
-          })}
+        <Stack wrap align="stretch">
+          {SKILL_DOMAIN_ORDER.map((domain) => (
+            <SkillsDomainPanel
+              key={domain}
+              domain={domain}
+              rows={groups[domain]}
+              data={data}
+              act={act}
+            />
+          ))}
         </Stack>
       )}
     </Section>
@@ -1062,7 +1284,13 @@ const TraitsTab = ({
   }, [data.available_traits, search, selectedTraits]);
 
   return (
-    <Section title="Traits">
+    <Section
+      title={
+        <SectionTitleWithMeta
+          title="Traits"
+          meta={`Free: ${data.points_traits_remaining} / ${data.points_traits}`}
+        />
+      }>
       {!grouped.length ? (
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
@@ -1133,12 +1361,14 @@ const ItemsTab = ({
   search,
   setHoveredItem,
   itemCacheLoaded,
+  data,
 }: {
   itemEntries: Record<string, ItemViewEntry>;
   act: BackendAct;
   search: string;
   setHoveredItem: (value: HoverCardData | null) => void;
   itemCacheLoaded: boolean;
+  data: Data;
 }) => {
   const groups = useMemo(() => {
     return groupEntriesByCategoryAndSlot(
@@ -1157,17 +1387,17 @@ const ItemsTab = ({
     );
   }, [itemEntries, search]);
 
-  if (!itemCacheLoaded) {
-    return (
-      <Section title="Items">
-        <NoticeBox>Loading item cache...</NoticeBox>
-      </Section>
-    );
-  }
-
   return (
-    <Section title="Items">
-      {!groups.length ? (
+    <Section
+      title={
+        <SectionTitleWithMeta
+          title="Items"
+          meta={`Free: ${data.points_items_remaining} / ${data.points_items}`}
+        />
+      }>
+      {!itemCacheLoaded ? (
+        <NoticeBox>Loading item cache...</NoticeBox>
+      ) : !groups.length ? (
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
         <Stack vertical>
@@ -1345,14 +1575,12 @@ const LoadoutTab = ({
 
 export const TATBuild = () => {
   const { act, data } = useBackend<Data>();
-  const [tab, setTab] = useState<TabKey>('stats');
+  const [tab, setTab] = useState<TabKey>('control');
   const [search, setSearch] = useState('');
   const [hoveredItem, setHoveredItem] = useState<HoverCardData | null>(null);
-  const [showPresetPicker, setShowPresetPicker] = useState(false);
 
   const [cachedAvailableItems, setCachedAvailableItems] = useState<Record<string, ItemEntry>>({});
   const [cachedItemStates, setCachedItemStates] = useState<Record<string, ItemState>>({});
-  const [hasRequestedItemCache, setHasRequestedItemCache] = useState(false);
 
   const tatSlots = useMemo<TatSlotEntry[]>(
     () => normalizeTatSlots(data.tat_slots, data.active_tat_slot),
@@ -1365,15 +1593,11 @@ export const TATBuild = () => {
   );
 
   useEffect(() => {
-    if (tab !== 'items') {
+    if (tab !== 'items' && tab !== 'loadout') {
       return;
     }
-
-    if (!hasRequestedItemCache) {
-      act('request_item_cache', { full: 1 });
-      setHasRequestedItemCache(true);
-    }
-  }, [tab, hasRequestedItemCache, act]);
+    act('request_item_cache', { full: 1 });
+  }, [tab, act]);
 
   useEffect(() => {
     const packet = data.item_cache;
@@ -1381,23 +1605,15 @@ export const TATBuild = () => {
       return;
     }
 
-    if (packet.full && packet.catalog) {
-      setCachedAvailableItems((prev) => {
-        if (Object.keys(prev).length > 0) {
-          return prev;
-        }
-        return packet.catalog || {};
-      });
+    if (packet.catalog) {
+      setCachedAvailableItems((prev) => ({
+        ...prev,
+        ...packet.catalog,
+      }));
     }
 
     if (packet.states) {
-      setCachedItemStates((prev) => {
-        const next = packet.states || {};
-        if (prev === next) {
-          return prev;
-        }
-        return next;
-      });
+      setCachedItemStates(packet.states || {});
     }
   }, [data.item_cache]);
 
@@ -1419,10 +1635,6 @@ export const TATBuild = () => {
   }, [cachedAvailableItems, cachedItemStates]);
 
   const loadoutEntries = useMemo<Record<string, LoadoutViewEntry>>(() => {
-    if (tab !== 'loadout') {
-      return {};
-    }
-
     const result: Record<string, LoadoutViewEntry> = {};
     const staticEntries = cachedAvailableItems || {};
     const loadoutStates = data.loadout || {};
@@ -1442,35 +1654,25 @@ export const TATBuild = () => {
     });
 
     return result;
-  }, [tab, cachedAvailableItems, data.loadout]);
+  }, [cachedAvailableItems, data.loadout]);
 
   const itemCacheLoaded = Object.keys(cachedAvailableItems).length > 0;
+  const searchPlaceholder = tab === 'control' ? 'Search presets...' : `Search in ${tab}...`;
 
   return (
-    <Window title="TAT Build" width={900} height={860}>
+    <Window title="TAT Build" width={980} height={900}>
       <Window.Content scrollable>
         <Stack vertical>
-          <SlotCards slots={tatSlots} act={act} />
-
-          <PointsPanel data={data} />
-
           <Section title="Search">
             <Stack align="center">
-              <Stack.Item>
-                <Button onClick={() => setShowPresetPicker((prev) => !prev)}>
-                  {showPresetPicker ? 'Hide presets' : 'Load preset'}
-                </Button>
-              </Stack.Item>
-
               <Stack.Item grow>
                 <Input
                   fluid
-                  placeholder={showPresetPicker ? 'Search presets...' : `Search in ${tab}...`}
+                  placeholder={searchPlaceholder}
                   value={search}
                   onChange={(value) => setSearch(String(value))}
                 />
               </Stack.Item>
-
               <Stack.Item>
                 <Button disabled={!search} onClick={() => setSearch('')}>
                   Clear
@@ -1478,15 +1680,6 @@ export const TATBuild = () => {
               </Stack.Item>
             </Stack>
           </Section>
-
-          {showPresetPicker && (
-            <PresetPicker
-              presets={tatPresets}
-              act={act}
-              search={search}
-              onClose={() => setShowPresetPicker(false)}
-            />
-          )}
 
           {data.dirty ? (
             <NoticeBox>Build has unsaved changes.</NoticeBox>
@@ -1520,6 +1713,9 @@ export const TATBuild = () => {
               </Box>
             }>
             <Tabs fluid>
+              <Tabs.Tab selected={tab === 'control'} onClick={() => setTab('control')}>
+                Control
+              </Tabs.Tab>
               <Tabs.Tab selected={tab === 'stats'} onClick={() => setTab('stats')}>
                 Stats
               </Tabs.Tab>
@@ -1538,6 +1734,9 @@ export const TATBuild = () => {
             </Tabs>
           </Section>
 
+          {tab === 'control' && (
+            <ControlTab slots={tatSlots} presets={tatPresets} act={act} search={search} />
+          )}
           {tab === 'stats' && <StatsTab data={data} act={act} search={search} />}
           {tab === 'skills' && <SkillsTab data={data} act={act} search={search} />}
           {tab === 'traits' && <TraitsTab data={data} act={act} search={search} />}
@@ -1548,6 +1747,7 @@ export const TATBuild = () => {
               search={search}
               setHoveredItem={setHoveredItem}
               itemCacheLoaded={itemCacheLoaded}
+              data={data}
             />
           )}
           {tab === 'loadout' && (

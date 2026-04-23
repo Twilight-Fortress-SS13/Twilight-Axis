@@ -88,8 +88,8 @@
 	if(!P?.tat_build)
 		return
 
-	if(!P.tat_build?.can_save())
-		return
+	// if(!P.tat_build?.can_save())
+	// 	return
 
 	relocate_tat_spawn(H, P.tat_build)
 	P.tat_build.apply_to_human(H)
@@ -98,9 +98,9 @@
 	if(!H || !build)
 		return null
 
-	if(build.traits[TAT_TRAIT_RESIDENT])
-		if(length(SSjob.latejoin_trackers))
-			return pick(SSjob.latejoin_trackers)
+	// if(build.traits[TAT_TRAIT_RESIDENT])
+	// 	if(length(SSjob.latejoin_trackers))
+	// 		return pick(SSjob.latejoin_trackers)
 
 	return null
 
