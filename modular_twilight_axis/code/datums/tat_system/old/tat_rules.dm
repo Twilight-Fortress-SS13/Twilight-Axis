@@ -394,6 +394,8 @@
 			TAT_TRAIT_WANTED,
 			TAT_TRAIT_BONUS_STAT_POOL,
 			TAT_TRAIT_MASTER_OF_NOTHING,
+			TAT_TRAIT_HERETIC,
+
 		),
 		TAT_TRAIT_BONUS_STAT_POOL = list(
 			TAT_TRAIT_WANTED,
@@ -494,6 +496,10 @@
 		TAT_TRAIT_ARTIFACTS_SUPPLIER = list(
 			"all" = list(TAT_TRAIT_PARTY_LEADER),
 			"message" = "\"[get_trait_display_name(TAT_TRAIT_ARTIFACTS_SUPPLIER)]\" requires \"[get_trait_display_name(TAT_TRAIT_PARTY_LEADER)]\".",
+		),
+		TRAIT_BITERHELM = list(
+			"all" = list(TAT_TRAIT_HERETIC),
+			"message" = "\"[get_trait_display_name(TRAIT_BITERHELM)]\" requires \"[get_trait_display_name(TAT_TRAIT_HERETIC)]\".",
 		),
 	)
 

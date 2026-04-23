@@ -176,6 +176,7 @@
 				TAT_TRAIT_FIREARMS_SUPPLIER,
 				TAT_TRAIT_TROPHY_BOUNTY,
 				TAT_TRAIT_MASTER_OF_NOTHING,
+				TAT_TRAIT_HERETIC,
 			)
 				continue
 			else
@@ -243,6 +244,8 @@
 		ADD_TRAIT(H, TRAIT_OUTLAW, TAT_TRAIT_SOURCE)
 		ADD_TRAIT(H, TRAIT_HERESIARCH, TAT_TRAIT_SOURCE)
 		wretch_select_bounty(H)
+	if(traits[TAT_TRAIT_HERETIC])
+		GLOB.excommunicated_players += H.real_name
 	apply_divine_package(H)
 	apply_mage_package(H)
 	apply_druid_package(H)
