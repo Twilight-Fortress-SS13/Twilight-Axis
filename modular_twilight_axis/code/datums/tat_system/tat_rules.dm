@@ -797,12 +797,8 @@
 
 /datum/tat_build/proc/get_trait_cost_modifier(trait_id)
 	switch(trait_id)
-		if(TAT_TRAIT_MAIL_SUPPLIER)
-			if(traits[TRAIT_MEDIUMARMOR])
-				return -TAT_TRAIT_DISCOUNT
-
-		if(TAT_TRAIT_PLATE_SUPPLIER)
-			if(traits[TRAIT_HEAVYARMOR] || traits[TRAIT_MEDIUMARMOR])
+		if(TAT_TRAIT_BONUS_STAT_POOL)
+			if(traits[TRAIT_OUTLANDER])
 				return -TAT_TRAIT_DISCOUNT
 
 	return 0

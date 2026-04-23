@@ -127,7 +127,7 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 #define TAT_RESIDENT_SKILL_UNARMED_MIN 3
 
 #define TAT_RESIDENT_PUGILIST_DEFAULT "Dropkick - Pushback + Extra Damage"
-#define TAT_TRAIT_DISCOUNT 0
+#define TAT_TRAIT_DISCOUNT 1
 
 #define TAT_CATEGORY_SKILL_DISCOUNT "skill_discount"
 #define TAT_CATEGORY_SKILL_DISCOUNT_NAME "Skill Discount"
@@ -169,7 +169,7 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	TAT_TRAIT_BARDIC_INSPIRATION_T2 = TAT_TRAIT_ENTRY("Bardic Inspiration II", 2, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Upgrades bardic inspiration to tier 2, increasing audience size and songs known."), \
 	TAT_TRAIT_PARTY_LEADER = TAT_TRAIT_ENTRY("Party Leader", 3, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Can form a party through Leadership verbs. While the party has at least two willing members, gain +1 CON and +1 WIL."), \
 	TAT_TRAIT_BONUS_STAT_POOL = TAT_TRAIT_ENTRY("Natural Potential", 2, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain +3 stat points in the build pool."), \
-	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -1, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
+	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -2, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
 	TAT_TRAIT_TROPHY_BOUNTY = TAT_TRAIT_ENTRY("Trophy Bounty", 2, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "You can recieve additional bonuses when wearing a head hooks with monster heads."), \
 	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 4, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat skill cap from 3 to 4."), \
 	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 5, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat skill cap from 4 to 5. Requires Expert Warrior."), \
@@ -208,7 +208,7 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	TRAIT_SQUIRE_REPAIR = TAT_TRAIT_ENTRY("Squire Knowledge", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You can restore gear with time and polish it until it gleams like new."), \
 	TRAIT_CICERONE = TAT_TRAIT_ENTRY("Cicerone", 1, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You are well-versed in brews and spirits, and can tell them apart at a glance."), \
 	TRAIT_SEEPRICES = TAT_TRAIT_ENTRY("Appraiser", 1, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You can tell the prices of things down to the zenny."), \
-	TRAIT_OUTLANDER = TAT_TRAIT_ENTRY("Outlander", -4, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "The locals see you as not of their land."), \
+	TRAIT_OUTLANDER = TAT_TRAIT_ENTRY("Outlander", -2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "The locals see you as not of their land."), \
 	TRAIT_GRAVEROBBER = TAT_TRAIT_ENTRY("Experienced Grave Robber", 2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "Your experience with 'post-mortem artifact recovery' helps you resist Necra's curse placed on those who disturb resting places."), \
 	TRAIT_PURITAN_ADVENTURER = TAT_TRAIT_ENTRY("Interrogator", 2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "With a silver psycross, you can force the restrained to kneel before a crucifix and proclaim their true allegiance."), \
 	TRAIT_DECEIVING_MEEKNESS = TAT_TRAIT_ENTRY("Deceiving Meekness", 2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "People think you are weak. They are mistaken. You have learned to hide your vices and true beliefs from others."), \
