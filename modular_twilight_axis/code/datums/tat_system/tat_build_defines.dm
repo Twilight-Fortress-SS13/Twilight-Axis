@@ -536,11 +536,11 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	/obj/item/clothing/wrists/roguetown/bracers/leather/heavy = TAT_ITEM_ENTRY("Heavy Leather Bracers", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/splint = TAT_ITEM_ENTRY("Splint Bracers", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/twilight_elven = TAT_ITEM_ENTRY("Elver Rider Bracers", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
-	/obj/item/storage/belt/rogue/leather = TAT_ITEM_ENTRY("Leather Belt", 0, "clothing", "armor_family", TAT_ARMOR_LEATHER, "belt"), \
+	/obj/item/storage/belt/rogue/leather = TAT_ITEM_ENTRY("Leather Belt", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "belt"), \
 	/obj/item/storage/belt/rogue/leather/plaquesilver = TAT_ITEM_ENTRY("Silver Belt", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "belt"), \
-	/obj/item/storage/belt/rogue/leather/steel/tasset = TAT_ITEM_ENTRY("Tasseted Belt", 0, "clothing", "armor_family", TAT_ARMOR_PLATE, "belt"), \
+	/obj/item/storage/belt/rogue/leather/steel/tasset = TAT_ITEM_ENTRY("Tasseted Belt", 1, "clothing", "armor_family", TAT_ARMOR_PLATE, "belt"), \
 	/obj/item/storage/belt/rogue/leather/rope = TAT_ITEM_ENTRY("Rope Belt", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "belt"), \
-	/obj/item/storage/belt/rogue/leather/black = TAT_ITEM_ENTRY("Black Leather Belt", 0, "clothing", "armor_family", TAT_ARMOR_LEATHER, "belt"), \
+	/obj/item/storage/belt/rogue/leather/black = TAT_ITEM_ENTRY("Black Leather Belt", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "belt"), \
 	/obj/item/storage/belt/rogue/leather/cloth = TAT_ITEM_ENTRY("Cloth Belt", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "belt"), \
  	/obj/item/clothing/suit/roguetown/shirt/undershirt/black = TAT_ITEM_ENTRY("Shirt", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/storage/belt/rogue/leather/knifebelt/black/iron = TAT_ITEM_ENTRY("Iron Tossblade belt", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "belt"), \
