@@ -90,7 +90,7 @@
 	force_wielded = 20
 	possible_item_intents = list(/datum/intent/lordbash, /datum/intent/lord_electrocute, /datum/intent/lord_silence)
 	gripped_intents = list(/datum/intent/lordbash)
-	name = "master's rod"
+	name = "Master's rod"
 	desc = "Bend the knee. Can't be used outside of the manor."
 	icon_state = "scepter"
 	icon = 'icons/roguetown/weapons/misc32.dmi'

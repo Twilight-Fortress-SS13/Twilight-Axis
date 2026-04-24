@@ -50,7 +50,7 @@
 /datum/keybinding/human/bag_equip_backl
 	hotkey_keys = list("ShiftQ")
 	name = "bag_equip_backl"
-	full_name = "Bag Equip Left"
+	full_name = "Bag equip left"
 	description = "Put held item in the left backpack slot or take out the most recent item from the left backpack slot"
 
 /datum/keybinding/human/bag_equip_backl/down(client/user)
@@ -64,7 +64,7 @@
 /datum/keybinding/human/bag_equip_backr
 	hotkey_keys = list("ShiftE")
 	name = "bag_equip_backr"
-	full_name = "Bag Equip Right"
+	full_name = "Bag equip right"
 	description = "Put held item in the right backpack slot or take out the most recent item from the right backpack slot"
 
 /datum/keybinding/human/bag_equip_backr/down(client/user)
@@ -78,7 +78,7 @@
 /datum/keybinding/human/bag_equip_beltl
 	hotkey_keys = list("CtrlQ")
 	name = "bag_equip_beltl"
-	full_name = "Belt Equip Left"
+	full_name = "Belt equip left"
 	description = "Put held item in the left belt slot or take out the most recent item from the left belt slot"
 
 /datum/keybinding/human/bag_equip_beltl/down(client/user)
@@ -92,7 +92,7 @@
 /datum/keybinding/human/bag_equip_beltr
 	hotkey_keys = list("CtrlE")
 	name = "bag_equip_beltr"
-	full_name = "Belt Equip Right"
+	full_name = "Belt equip right"
 	description = "Put held item in the right belt slot or take out the most recent item from the right belt slot"
 
 /datum/keybinding/human/bag_equip_beltr/down(client/user)

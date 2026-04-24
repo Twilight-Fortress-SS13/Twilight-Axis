@@ -23,7 +23,7 @@
 	return TRUE
 
 /datum/keybinding/client/communication/me_big
-	hotkey_keys = list(",")
+	hotkey_keys = list("ShiftM")
 	name = "Me (big)"
 	full_name = "Me (big emote)"
 	clientside = "me_big_verb_indicator"

@@ -4,8 +4,8 @@
 
 
 /datum/keybinding/living/swap_left
-	hotkey_keys = list()
-	classic_keys = list() // PAGEUP
+	hotkey_keys = list("Q")
+	classic_keys = list("Q") // PAGEUP
 	name = "swap_left"
 	full_name = "Swap to left hand"
 	description = ""
@@ -25,8 +25,8 @@
 	return TRUE
 
 /datum/keybinding/living/swap_right
-	hotkey_keys = list()
-	classic_keys = list() // PAGEUP
+	hotkey_keys = list("E")
+	classic_keys = list("E") // PAGEUP
 	name = "swap_right"
 	full_name = "Swap to right hand"
 	description = ""
@@ -46,8 +46,8 @@
 	return TRUE
 
 /datum/keybinding/living/swap_hands
-	hotkey_keys = list("X")
-	classic_keys = list("X")
+	hotkey_keys = list()
+	classic_keys = list()
 	name = "swap_hands"
 	full_name = "Swap hands"
 	description = ""
@@ -62,8 +62,8 @@
 	return TRUE
 
 /datum/keybinding/living/activate_inhand
-	hotkey_keys = list("Z")
-	classic_keys = list("Z")
+	hotkey_keys = list()
+	classic_keys = list()
 	name = "activate_inhand"
 	full_name = "Activate in-hand"
 	description = "Uses whatever item you have inhand"
@@ -78,7 +78,7 @@
 
 
 /datum/keybinding/living/drop_item
-	hotkey_keys = list("Q")
+	hotkey_keys = list("Z")
 	name = "drop_item"
 	full_name = "Drop Item"
 	description = ""
@@ -95,7 +95,7 @@
 	return TRUE
 
 /datum/keybinding/living/sprint
-	hotkey_keys = list("Alt")
+	hotkey_keys = list("Space")
 	name = "sprint"
 	full_name = "Sprint"
 	description = "Sprinting can be dangerous to your health if you aren't careful."
@@ -111,7 +111,7 @@
 	return TRUE
 
 /datum/keybinding/living/sneak
-	hotkey_keys = list()
+	hotkey_keys = list("ShiftSpace")
 	name = "sneak"
 	full_name = "Sneak"
 	description = "Press this hotkey to sneak around, which has many uses."
@@ -128,7 +128,7 @@
 
 
 /datum/keybinding/living/submit
-	hotkey_keys = list("ShiftX")
+	hotkey_keys = list("AltX")
 	name = "yield"
 	full_name = "Yield"
 	description = "Yield to your enemy, which may save your life or end it quicker."
@@ -143,7 +143,7 @@
 	return TRUE
 
 /datum/keybinding/living/toggle_compliance
-	hotkey_keys = list()
+	hotkey_keys = list("ShiftY")
 	name = "toggle_compliance"
 	full_name = "Toggle Compliance Mode"
 	description = "At-will, silent toggle to fail defense rolls, both when getting grabbed/tackled, and when others resist out your grabs. Additionally speeds up restraining you and stripping you. Dangerous in combat!"
@@ -156,7 +156,7 @@
 	return TRUE
 
 /datum/keybinding/living/resist
-	hotkey_keys = list("B")
+	hotkey_keys = list("X")
 	name = "cancelresist"
 	full_name = "Resist"
 	description = "Spam this to resist against a grab."
@@ -277,7 +277,7 @@
 		L.look_around()
 
 /datum/keybinding/living/alt_grip
-	hotkey_keys = list("B")
+	hotkey_keys = list("AltG")
 	name = "alt_grip"
 	full_name = "Alt Grip"
 	description = "Switch to an alternate grip on the held weapon, such as mordhau."
@@ -295,7 +295,7 @@
 //layer shifting
 
 /datum/keybinding/living/pixel_shift_layerup
-	hotkey_keys = list("CtrlShiftNortheast")
+	hotkey_keys = list("CtrlShiftE")
 	name = "pixel_shift_layerup"
 	full_name = "Pixel-Shift Layer Up"
 	description = ""
@@ -312,7 +312,7 @@
 	return TRUE
 
 /datum/keybinding/living/pixel_shift_layerdown
-	hotkey_keys = list("CtrlShiftSoutheast")
+	hotkey_keys = list("CtrlShiftQ")
 	name = "pixel_shift_layerdown"
 	full_name = "Pixel-Shift Layer Down"
 	description = ""

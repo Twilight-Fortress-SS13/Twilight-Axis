@@ -97,7 +97,7 @@
 	return TRUE
 */
 /datum/keybinding/mob/target_head_cycle
-	hotkey_keys = list("Numpad8")
+	hotkey_keys = list("AltW")
 	name = "target_head_cycle"
 	full_name = "Target: Cycle head"
 	description = ""
@@ -107,7 +107,7 @@
 	return TRUE
 
 /datum/keybinding/mob/target_eye_nose
-	hotkey_keys = list("Numpad7")
+	hotkey_keys = list("ShiftW")
 	name = "target_eye_nose"
 	full_name = "Target: Cycle eyes and nose"
 	description = ""
@@ -117,7 +117,7 @@
 	return TRUE
 
 /datum/keybinding/mob/target_mouth_ears
-	hotkey_keys = list("Numpad9")
+	hotkey_keys = list("ShiftS")
 	name = "target_mouth_ears"
 	full_name = "Target: Cycle mouth and ears"
 	description = ""
@@ -127,7 +127,7 @@
 	return TRUE
 
 /datum/keybinding/mob/target_r_arm
-	hotkey_keys = list("Numpad4")
+	hotkey_keys = list("AltE")
 	name = "target_r_arm"
 	full_name = "Target: right arm"
 	description = ""
@@ -137,7 +137,7 @@
 	return TRUE
 
 /datum/keybinding/mob/target_body_chest
-	hotkey_keys = list("Numpad5")
+	hotkey_keys = list("AltS")
 	name = "target_body_chest"
 	full_name = "Target: Body"
 	description = ""
@@ -147,7 +147,7 @@
 	return TRUE
 
 /datum/keybinding/mob/target_left_arm
-	hotkey_keys = list("Numpad6")
+	hotkey_keys = list("AltQ")
 	name = "target_left_arm"
 	full_name = "Target: left arm"
 	description = ""
@@ -157,7 +157,7 @@
 	return TRUE
 
 /datum/keybinding/mob/target_right_leg
-	hotkey_keys = list("Numpad1")
+	hotkey_keys = list("AltD")
 	name = "target_right_leg"
 	full_name = "Target: Right leg"
 	description = ""
@@ -167,7 +167,7 @@
 	return TRUE
 
 /datum/keybinding/mob/target_body_groin
-	hotkey_keys = list("Numpad2")
+	hotkey_keys = list("ShiftX")
 	name = "target_body_groin"
 	full_name = "Target: Groin"
 	description = ""
@@ -177,7 +177,7 @@
 	return TRUE
 
 /datum/keybinding/mob/target_left_leg
-	hotkey_keys = list("Numpad3")
+	hotkey_keys = list("AltA")
 	name = "target_left_leg"
 	full_name = "Target: left leg"
 	description = ""
