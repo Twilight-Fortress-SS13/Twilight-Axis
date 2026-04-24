@@ -5,8 +5,8 @@
 	flag = SIDEFOLK
 	faction = "Station"
 
-	total_positions = 10
-	spawn_positions = 10
+	total_positions = 20
+	spawn_positions = 20
 
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
@@ -15,7 +15,7 @@
 	display_order = JDO_MERCENARY
 	selection_color = JCOLOR_WANDERER
 
-	min_pq = 0
+	min_pq = 20
 	max_pq = null
 	round_contrib_points = 0
 
@@ -88,8 +88,8 @@
 	if(!P?.tat_build)
 		return
 
-	// if(!P.tat_build?.can_save())
-	// 	return
+	if(!P.tat_build?.can_save())
+		return
 
 	relocate_tat_spawn(H, P.tat_build)
 	P.tat_build.apply_to_human(H)
@@ -98,9 +98,18 @@
 	if(!H || !build)
 		return null
 
-	// if(build.traits[TAT_TRAIT_RESIDENT])
-	// 	if(length(SSjob.latejoin_trackers))
-	// 		return pick(SSjob.latejoin_trackers)
+	if(build.traits.selected[TAT_TRAIT_RESIDENT])
+		if(length(SSjob.latejoin_trackers))
+			return pick(SSjob.latejoin_trackers)
+
+	if(build.traits.selected[TAT_TRAIT_WANTED])
+		var/list/wretch_late_starts = list()
+
+		for(var/obj/effect/landmark/start/wretchlate/wretch_start in GLOB.landmarks_list)
+			wretch_late_starts += wretch_start
+
+		if(length(wretch_late_starts))
+			return pick(wretch_late_starts)
 
 	return null
 
