@@ -99,32 +99,113 @@
 
 #define TAT_VIRTUE_SKILL_BONUS_RULES list( \
 	/datum/virtue/combat/bowman = list(/datum/skill/combat/bows = 1), \
-	/datum/virtue/combat/crossbowman = list(/datum/skill/combat/crossbows = 1) \
+	/datum/virtue/combat/crossbowman = list(/datum/skill/combat/crossbows = 1), \
+	/datum/virtue/utility/homesteader = list(/datum/skill/labor/farming = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/cooking = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/fishing = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/lumberjacking = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/sewing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/tanning = TAT_SKILL_BASIC_BOOST) \
 )
 
-#define TAT_SKILL_RULE_ENTRY(_expert_trait, _trait_cap) list( \
-	"expert_trait" = (_expert_trait), \
-	"untraited_cap" = TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
-	"trait_cap" = (_trait_cap) \
+#define TAT_TRAIT_SKILL_CAP_BONUS_RULES list( \
+	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = 4, /datum/skill/craft/smelting = 4, /datum/skill/craft/engineering = 4, /datum/skill/labor/mining = 4, /datum/skill/craft/masonry = 4, /datum/skill/craft/ceramics = 4), \
+	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = 3, /datum/skill/craft/smelting = 3, /datum/skill/craft/engineering = 3), \
+	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = 3, /datum/skill/craft/masonry = 3), \
+	TAT_TRAIT_SKILLED_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = 3, /datum/skill/craft/engineering = 3), \
+	TAT_TRAIT_SKILLED_ARTISAN = list(/datum/skill/craft/crafting = 3, /datum/skill/craft/ceramics = 3), \
+	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = 3, /datum/skill/craft/ceramics = 3), \
+	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = 4), \
+	TAT_TRAIT_SKILLED_ALCHEMIST = list(/datum/skill/craft/alchemy = 3), \
+	TRAIT_MEDICINE_EXPERT = list(/datum/skill/misc/medicine = 4), \
+	TAT_TRAIT_SKILLED_PHYSICKER = list(/datum/skill/misc/medicine = 3), \
+	TRAIT_HOMESTEAD_EXPERT = list(/datum/skill/labor/farming = 4, /datum/skill/labor/mining = 4, /datum/skill/craft/cooking = 4, /datum/skill/labor/fishing = 4, /datum/skill/labor/butchering = 4, /datum/skill/labor/lumberjacking = 4, /datum/skill/craft/masonry = 4, /datum/skill/craft/ceramics = 4, /datum/skill/craft/sewing = 1, /datum/skill/craft/tanning = 1), \
+	TAT_TRAIT_SKILLED_HOMESTEADER = list(/datum/skill/labor/farming = 3, /datum/skill/craft/cooking = 3, /datum/skill/labor/fishing = 3), \
+	TRAIT_SURVIVAL_EXPERT = list(/datum/skill/craft/cooking = 4, /datum/skill/labor/fishing = 4, /datum/skill/labor/butchering = 4, /datum/skill/craft/tanning = 4, /datum/skill/craft/sewing = 1), \
+	TAT_TRAIT_SKILLED_SURVIVALIST = list(/datum/skill/labor/butchering = 3, /datum/skill/craft/traps = 3, /datum/skill/craft/tanning = 3), \
+	TRAIT_SEWING_EXPERT = list(/datum/skill/craft/sewing = 4, /datum/skill/craft/tanning = 4, /datum/skill/labor/butchering = 4), \
+	TAT_TRAIT_SKILLED_CLOTHIER = list(/datum/skill/craft/sewing = 3, /datum/skill/craft/tanning = 3), \
+	TRAIT_SEEDKNOW = list(/datum/skill/labor/farming = 3), \
+	TRAIT_CAUTIOUS_FISHER = list(/datum/skill/labor/fishing = 3), \
+	TRAIT_SQUIRE_REPAIR = list(/datum/skill/craft/armorsmithing = 3, /datum/skill/craft/weaponsmithing = 3), \
+	TRAIT_SELF_SUSTENANCE = list(/datum/skill/craft/crafting = 1, /datum/skill/craft/weaponsmithing = 1, /datum/skill/craft/armorsmithing = 1, /datum/skill/craft/blacksmithing = 1, /datum/skill/craft/smelting = 1, /datum/skill/craft/carpentry = 1, /datum/skill/craft/masonry = 1, /datum/skill/craft/traps = 1, /datum/skill/craft/engineering = 1, /datum/skill/craft/cooking = 1, /datum/skill/craft/sewing = 1, /datum/skill/craft/tanning = 1, /datum/skill/craft/ceramics = 1, /datum/skill/craft/alchemy = 1, /datum/skill/labor/farming = 1, /datum/skill/labor/mining = 1, /datum/skill/labor/fishing = 1, /datum/skill/labor/butchering = 1, /datum/skill/labor/lumberjacking = 1), \
+	TRAIT_MASTERFUL_HUNTER = list(/datum/skill/misc/hunting = 4, /datum/skill/misc/tracking = 4, /datum/skill/labor/butchering = 4), \
+	TRAIT_EXPERT_HUNTER = list(/datum/skill/misc/hunting = 3, /datum/skill/misc/tracking = 3), \
+	TRAIT_FIREARMS_MARKSMAN = list(/datum/skill/combat/twilight_firearms = 2) \
 )
 
-#define TAT_SKILL_RULES list( \
-	/datum/skill/craft/cooking = TAT_SKILL_RULE_ENTRY(TRAIT_HOMESTEAD_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/alchemy = TAT_SKILL_RULE_ENTRY(TRAIT_ALCHEMY_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/misc/medicine = TAT_SKILL_RULE_ENTRY(TRAIT_MEDICINE_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/sewing = TAT_SKILL_RULE_ENTRY(TRAIT_SEWING_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/labor/farming = TAT_SKILL_RULE_ENTRY(TRAIT_SEEDKNOW, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/blacksmithing = TAT_SKILL_RULE_ENTRY(TRAIT_SMITHING_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/smelting = TAT_SKILL_RULE_ENTRY(TRAIT_SMITHING_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/carpentry = TAT_SKILL_RULE_ENTRY(TRAIT_HOMESTEAD_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/masonry = TAT_SKILL_RULE_ENTRY(TRAIT_HOMESTEAD_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/crafting = TAT_SKILL_RULE_ENTRY(TRAIT_HOMESTEAD_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/labor/butchering = TAT_SKILL_RULE_ENTRY(TRAIT_SURVIVAL_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/traps = TAT_SKILL_RULE_ENTRY(TRAIT_SURVIVAL_EXPERT, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/labor/fishing = TAT_SKILL_RULE_ENTRY(TRAIT_CAUTIOUS_FISHER, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/armorsmithing = TAT_SKILL_RULE_ENTRY(TRAIT_SQUIRE_REPAIR, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/craft/weaponsmithing = TAT_SKILL_RULE_ENTRY(TRAIT_SQUIRE_REPAIR, TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM), \
-	/datum/skill/combat/twilight_firearms = TAT_SKILL_RULE_ENTRY(TRAIT_FIREARMS_MARKSMAN, TAT_SKILL_NONCOMBAT_CAP_SPECTRAIT) \
+#define TAT_SKILL_CAP_RULES list( \
+	/datum/skill/craft/cooking = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/craft/alchemy = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_ALCHEMY_EXPERT = 3) \
+	), \
+	/datum/skill/misc/medicine = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_MEDICINE_EXPERT = 3) \
+	), \
+	/datum/skill/craft/sewing = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_SEWING_EXPERT = 3) \
+	), \
+	/datum/skill/labor/farming = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_SEEDKNOW = 3, TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/craft/blacksmithing = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_HOMESTEAD_EXPERT = 3, TRAIT_SMITHING_EXPERT = 4) \
+	), \
+	/datum/skill/craft/smelting = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_SMITHING_EXPERT = 4) \
+	), \
+	/datum/skill/craft/carpentry = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/craft/masonry = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/craft/crafting = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/labor/mining = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/labor/lumberjacking = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/craft/ceramics = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/labor/butchering = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_SURVIVAL_EXPERT = 3, TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/craft/traps = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_SURVIVAL_EXPERT = 3) \
+	), \
+	/datum/skill/labor/fishing = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_CAUTIOUS_FISHER = 3, TRAIT_HOMESTEAD_EXPERT = 3) \
+	), \
+	/datum/skill/craft/armorsmithing = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_SQUIRE_REPAIR = 3, TRAIT_SMITHING_EXPERT = 4) \
+	), \
+	/datum/skill/craft/weaponsmithing = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_SQUIRE_REPAIR = 3, TRAIT_SMITHING_EXPERT = 4) \
+	), \
+	/datum/skill/combat/twilight_firearms = TAT_SKILL_CAP_RULE_ENTRY( \
+		TAT_SKILL_NONCOMBAT_CAP_UNTRAITED, \
+		list(TRAIT_FIREARMS_MARKSMAN = 2) \
+	) \
 )
 
 /proc/tat_get_skill_domain(skill_type)

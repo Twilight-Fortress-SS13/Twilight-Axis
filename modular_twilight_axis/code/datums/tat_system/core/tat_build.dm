@@ -116,7 +116,12 @@
 	return traits.get_bonus_skill_domain_points(domain)
 
 /datum/tat_build/proc/get_bonus_skill_value(skill_type)
-	return (traits.get_bonus_skill_value(skill_type) + skills.get_virtue_bonus_value(skill_type))
+	var/trait_bonus = traits.get_bonus_skill_value(skill_type)
+	var/virtue_bonus = skills.get_virtue_bonus_value(skill_type)
+	return max(trait_bonus, virtue_bonus)
+
+/datum/tat_build/proc/get_skill_cap_bonus_value(skill_type)
+	return traits.get_skill_cap_bonus_value(skill_type)
 
 /datum/tat_build/proc/get_skill_cost_discount(skill_type, target_level)
 	return traits.get_skill_cost_discount(skill_type, target_level)

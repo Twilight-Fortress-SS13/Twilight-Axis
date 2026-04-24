@@ -54,6 +54,20 @@
 #define TAT_TRAIT_TRAINEE_CHIRURGEON "tat_trainee_chirurgeon"
 #define TAT_TRAIT_TRAINEE_TROUBADOUR "tat_trainee_troubadour"
 
+#define TAT_TRAIT_MASTER_OF_CRAFTING "tat_master_of_crafting"
+#define TAT_TRAIT_STOCKPILER "tat_stockpiler"
+
+#define TAT_TRAIT_SKILLED_FORGEHAND "tat_skilled_forgehand"
+#define TAT_TRAIT_SKILLED_ARMORER "tat_skilled_armorer"
+#define TAT_TRAIT_SKILLED_WEAPONSMITH "tat_skilled_weaponsmith"
+#define TAT_TRAIT_SKILLED_ARTISAN "tat_skilled_artisan"
+#define TAT_TRAIT_SKILLED_MASON "tat_skilled_mason"
+#define TAT_TRAIT_SKILLED_CLOTHIER "tat_skilled_clothier"
+#define TAT_TRAIT_SKILLED_SURVIVALIST "tat_skilled_survivalist"
+#define TAT_TRAIT_SKILLED_HOMESTEADER "tat_skilled_homesteader"
+#define TAT_TRAIT_SKILLED_PHYSICKER "tat_skilled_physicker"
+#define TAT_TRAIT_SKILLED_ALCHEMIST "tat_skilled_alchemist"
+
 #define TAT_BUILD_STAT_BONUS_EXTRA_STATS 3
 #define TAT_BUILD_STAT_BONUS_WANTED 5
 #define TAT_BUILD_ITEM_BONUS_WANTED 10
@@ -125,15 +139,6 @@
 	TRAIT_EMPATH = TAT_TRAIT_ENTRY("Empath", 1, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can notice when people are in pain."), \
 	TRAIT_NOSTINK = TAT_TRAIT_ENTRY("Dead Nose", 2, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Your nose is numb to the smell of decay."), \
 	TRAIT_NOBLE = TAT_TRAIT_ENTRY("Noble Blooded", 1, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You are of noble blood."), \
-	TRAIT_SMITHING_EXPERT = TAT_TRAIT_ENTRY("Expert Forgehand", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with smithing and engineering. Smithing, Smelting, Engineering, Mining, Masonry and Pottery can progress to Legendary levels."), \
-	TRAIT_ALCHEMY_EXPERT = TAT_TRAIT_ENTRY("Expert Alchemist", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of the alchemical arts. Alchemy can progress to Expert and above levels."), \
-	TRAIT_MEDICINE_EXPERT = TAT_TRAIT_ENTRY("Expert Physicker", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of medicine. This skill can progress to Master and Legendary levels."), \
-	TRAIT_HOMESTEAD_EXPERT = TAT_TRAIT_ENTRY("Expert Homesteader", 3, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with the arts of homesteading. Farming, Mining, Cooking, Fishing, Butchering, Lumberjacking, Masonry and Pottery can progress to Legendary levels; Sewing and Skincrafting to Journeyman. Unlock carpentry, massonry and crafting to higher levels."), \
-	TRAIT_SURVIVAL_EXPERT = TAT_TRAIT_ENTRY("Expert Survivalist", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with survival in the wild. Cooking, Fishing, Butchering and Skincrafting can progress to Legendary levels; Sewing to Journeyman."), \
-	TRAIT_SEWING_EXPERT = TAT_TRAIT_ENTRY("Expert Clothier", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with sewing and leathercraft. Sewing, Skincrafting and Butchering can progress to Legendary levels."), \
-	TRAIT_SEEDKNOW = TAT_TRAIT_ENTRY("Seed Knower", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know which seeds grow which crops."), \
-	TRAIT_CAUTIOUS_FISHER = TAT_TRAIT_ENTRY("Cautious Fisher", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know the dangers of fishing and how to avoid unwanted attention from the depths."), \
-	TRAIT_SQUIRE_REPAIR = TAT_TRAIT_ENTRY("Squire Knowledge", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You can restore gear with time and polish it until it gleams like new."), \
 	TRAIT_CICERONE = TAT_TRAIT_ENTRY("Cicerone", 1, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You are well-versed in brews and spirits, and can tell them apart at a glance."), \
 	TRAIT_SEEPRICES = TAT_TRAIT_ENTRY("Appraiser", 1, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You can tell the prices of things down to the zenny."), \
 	TRAIT_OUTLANDER = TAT_TRAIT_ENTRY("Outlander", -2, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "The locals see you as not of their land."), \
@@ -174,6 +179,30 @@
 	TAT_TRAIT_TRAINEE_TROUBADOUR = TAT_TRAIT_ENTRY("Trainee Troubadour", 1, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Music, Literacy, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TRAIT_STRONGBITE = TAT_TRAIT_ENTRY("Strong Bite", 2, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Increases crit chance and damage from biting"), \
 	TRAIT_BITERHELM = TAT_TRAIT_ENTRY("Curse of Twisting Metall", 2, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Gives cursed skill to bite through your own helmet"), \
+	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 3, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Crafting skill-domain points."), \
+	TAT_TRAIT_STOCKPILER = TAT_TRAIT_ENTRY("Stockpiler", 3, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Gathering skill-domain points."), \
+	TRAIT_SMITHING_EXPERT = TAT_TRAIT_ENTRY("Expert Forgehand", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with smithing and engineering. Smithing, Smelting, Engineering, Mining, Masonry and Pottery can progress to Legendary levels."), \
+	TAT_TRAIT_SKILLED_FORGEHAND = TAT_TRAIT_ENTRY("Skilled Forgehand", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with forge-work. Smithing, Smelting and Engineering can progress to Master levels."), \
+	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with armor repair and fitting. Armorsmithing and Masonry can progress to Master levels."), \
+	TAT_TRAIT_SKILLED_WEAPONSMITH = TAT_TRAIT_ENTRY("Skilled Weaponsmith", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with weapon work. Weaponsmithing and Engineering can progress to Master levels."), \
+	TAT_TRAIT_SKILLED_ARTISAN = TAT_TRAIT_ENTRY("Skilled Artisan", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with general craftwork. Crafting and Pottery can progress to Master levels."), \
+	TAT_TRAIT_SKILLED_MASON = TAT_TRAIT_ENTRY("Skilled Mason", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with stone and kiln work. Masonry and Pottery can progress to Master levels."), \
+	TRAIT_ALCHEMY_EXPERT = TAT_TRAIT_ENTRY("Expert Alchemist", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of the alchemical arts. Alchemy can progress to Legendary levels."), \
+	TAT_TRAIT_SKILLED_ALCHEMIST = TAT_TRAIT_ENTRY("Skilled Alchemist", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with alchemical work. Alchemy can progress to Master levels."), \
+	TRAIT_MEDICINE_EXPERT = TAT_TRAIT_ENTRY("Expert Physicker", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of medicine. Medicine can progress to Legendary levels."), \
+	TAT_TRAIT_SKILLED_PHYSICKER = TAT_TRAIT_ENTRY("Skilled Physicker", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with medical practice. Medicine can progress to Master levels."), \
+	TRAIT_HOMESTEAD_EXPERT = TAT_TRAIT_ENTRY("Expert Homesteader", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with the arts of homesteading. Farming, Mining, Cooking, Fishing, Butchering, Lumberjacking, Masonry and Pottery can progress to Legendary levels. Sewing and Skincrafting can progress to Journeyman levels."), \
+	TRAIT_SELF_SUSTENANCE = TAT_TRAIT_ENTRY("Self-Sustenance", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Years of running from the law and living off the land have made you a jack of all trades. All crafting and labor skills can progress to Journeyman levels."), \
+	TRAIT_SURVIVAL_EXPERT = TAT_TRAIT_ENTRY("Expert Survivalist", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with survival in the wild. Cooking, Fishing, Butchering and Skincrafting can progress to Legendary levels. Sewing can progress to Journeyman levels."), \
+	TAT_TRAIT_SKILLED_SURVIVALIST = TAT_TRAIT_ENTRY("Skilled Survivalist", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with survival work. Butchering, Trapmaking and Skincrafting can progress to Master levels."), \
+	TRAIT_SEWING_EXPERT = TAT_TRAIT_ENTRY("Expert Clothier", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with sewing and leathercraft. Sewing, Skincrafting and Butchering can progress to Legendary levels."), \
+	TAT_TRAIT_SKILLED_CLOTHIER = TAT_TRAIT_ENTRY("Skilled Clothier", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with cloth and leather. Sewing and Skincrafting can progress to Master levels."), \
+	TRAIT_SEEDKNOW = TAT_TRAIT_ENTRY("Seed Knower", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know which seeds grow which crops."), \
+	TRAIT_CAUTIOUS_FISHER = TAT_TRAIT_ENTRY("Cautious Fisher", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know the dangers of fishing and how to avoid unwanted attention from the depths."), \
+	TRAIT_SQUIRE_REPAIR = TAT_TRAIT_ENTRY("Squire Knowledge", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You can restore gear with time and polish it until it gleams like new."), \
+	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 2, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know watering holes, feeding grounds and bent thickets."), \
+	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 1, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know the common signs of prey and trails."), \
+
 
 #define TAT_TRAIT_POINT_SCALE 10
 
@@ -195,19 +224,38 @@
 	TAT_TRAIT_MASTER_OF_WANDERING = list( \
 		TAT_SKILL_DOMAIN_WANDERING = TRAIT_MASTERYOFNOTHING_POINTS, \
 		TAT_SKILL_DOMAIN_MISC = TRAIT_MASTERYOFNOTHING_POINTS \
+	), \
+	TAT_TRAIT_MASTER_OF_CRAFTING = list( \
+		TAT_SKILL_DOMAIN_CRAFTING = TRAIT_MASTERYOFNOTHING_POINTS \
+	), \
+	TAT_TRAIT_STOCKPILER = list( \
+		TAT_SKILL_DOMAIN_GATHERING = TRAIT_MASTERYOFNOTHING_POINTS \
 	) \
 )
 
 #define TAT_TRAIT_SKILL_BONUS_RULES list( \
-	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/smelting = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/smelting = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/engineering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST), \
+	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/smelting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_ARTISAN = list(/datum/skill/craft/crafting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST), \
 	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = TAT_SKILL_BASIC_BOOST), \
+	TAT_TRAIT_SKILLED_ALCHEMIST = list(/datum/skill/craft/alchemy = TAT_SKILL_DISCOUNT_BOOST), \
 	TRAIT_MEDICINE_EXPERT = list(/datum/skill/misc/medicine = TAT_SKILL_BASIC_BOOST), \
-	TRAIT_HOMESTEAD_EXPERT = list(/datum/skill/craft/carpentry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/crafting = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/farming = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/cooking = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/fishing = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/lumberjacking = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST), \
-	TRAIT_SURVIVAL_EXPERT = list(/datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/traps = TAT_SKILL_BASIC_BOOST), \
-	TRAIT_SEWING_EXPERT = list(/datum/skill/craft/sewing = TAT_SKILL_BASIC_BOOST), \
-	TRAIT_SEEDKNOW = list(/datum/skill/labor/farming = TAT_SKILL_BASIC_BOOST), \
-	TRAIT_CAUTIOUS_FISHER = list(/datum/skill/labor/fishing = TAT_SKILL_BASIC_BOOST), \
+	TAT_TRAIT_SKILLED_PHYSICKER = list(/datum/skill/misc/medicine = TAT_SKILL_DISCOUNT_BOOST), \
+	TRAIT_HOMESTEAD_EXPERT = list(/datum/skill/labor/farming = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/cooking = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/fishing = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/lumberjacking = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/sewing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/tanning = TAT_SKILL_BASIC_BOOST), \
+	TAT_TRAIT_SKILLED_HOMESTEADER = list(/datum/skill/labor/farming = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/cooking = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/labor/fishing = TAT_SKILL_DISCOUNT_BOOST), \
+	TRAIT_SURVIVAL_EXPERT = list(/datum/skill/craft/cooking = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/fishing = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/tanning = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/sewing = TAT_SKILL_BASIC_BOOST), \
+	TAT_TRAIT_SKILLED_SURVIVALIST = list(/datum/skill/labor/butchering = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/traps = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/tanning = TAT_SKILL_DISCOUNT_BOOST), \
+	TRAIT_SEWING_EXPERT = list(/datum/skill/craft/sewing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/tanning = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST), \
+	TAT_TRAIT_SKILLED_CLOTHIER = list(/datum/skill/craft/sewing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/tanning = TAT_SKILL_DISCOUNT_BOOST), \
+	TRAIT_SEEDKNOW = list(/datum/skill/labor/farming = TAT_SKILL_DISCOUNT_BOOST), \
+	TRAIT_CAUTIOUS_FISHER = list(/datum/skill/labor/fishing = TAT_SKILL_DISCOUNT_BOOST), \
 	TRAIT_SQUIRE_REPAIR = list(/datum/skill/craft/armorsmithing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/weaponsmithing = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_SELF_SUSTENANCE = list(/datum/skill/craft/crafting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/weaponsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/blacksmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/smelting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/carpentry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/traps = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/cooking = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/sewing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/tanning = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/alchemy = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/labor/farming = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/labor/mining = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/labor/fishing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/labor/butchering = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/labor/lumberjacking = TAT_SKILL_DISCOUNT_BOOST), \
+	TRAIT_MASTERFUL_HUNTER = list(/datum/skill/misc/hunting = TAT_SKILL_BASIC_BOOST, /datum/skill/misc/tracking = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_EXPERT_HUNTER = list(/datum/skill/misc/hunting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/misc/tracking = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_TRAINEE_SMITH = list(/datum/skill/craft/blacksmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/smelting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/maces = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_TRAINEE_ARMORER = list(/datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/shields = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_TRAINEE_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/swords = TAT_SKILL_DISCOUNT_BOOST), \

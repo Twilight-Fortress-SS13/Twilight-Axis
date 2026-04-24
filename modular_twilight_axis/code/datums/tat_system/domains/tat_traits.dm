@@ -95,9 +95,23 @@
 			total += round(skill_map[skill_type] || 0)
 
 	if(has_trait(TRAIT_ARCYNE) && !has_defensive_trait_lockout() && skill_type == /datum/skill/magic/arcane)
-		var/current_arcane = owner_build?.get_invested_skill_value(/datum/skill/magic/arcane) || 0
-		var/target_arcane = min(TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE, current_arcane + 2)
-		total += max(0, target_arcane - current_arcane)
+		total += 2
+
+	if(has_trait(TAT_TRAIT_DIVINE_INITIATE) && skill_type == /datum/skill/magic/holy)
+		total += 1
+
+	return total
+
+/datum/tat_traits/proc/get_skill_cap_bonus_value(skill_type)
+	var/total = 0
+	var/list/rules = TAT_TRAIT_SKILL_CAP_BONUS_RULES
+
+	for(var/trait_id in selected)
+		var/list/skill_map = rules[trait_id]
+		if(!islist(skill_map))
+			continue
+
+		total += round(skill_map[skill_type] || 0)
 
 	return total
 
@@ -114,7 +128,11 @@
 
 	if(has_trait(TAT_TRAIT_RESIDENT) && (ispath(skill_type, /datum/skill/misc) || ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft)))
 		return 1
-	if(has_trait(TAT_TRAIT_MASTER_OF_WANDERING) && (ispath(skill_type, /datum/skill/misc)))
+
+	if(has_trait(TAT_TRAIT_MASTER_OF_WANDERING) && ispath(skill_type, /datum/skill/misc))
+		return 1
+
+	if(has_trait(TRAIT_SELF_SUSTENANCE) && (ispath(skill_type, /datum/skill/craft) || ispath(skill_type, /datum/skill/labor)))
 		return 1
 
 	var/list/rules = TAT_TRAIT_SKILL_DISCOUNT_RULES
