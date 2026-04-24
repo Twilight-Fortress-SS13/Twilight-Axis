@@ -142,6 +142,9 @@
 /datum/tat_build/proc/can_train_holy()
 	return traits.can_train_holy()
 
+/datum/tat_build/proc/can_train_druidic()
+	return traits.can_train_druidic()
+
 /datum/tat_build/proc/has_invalid_trait_dependencies()
 	return traits.has_invalid_trait_dependencies()
 

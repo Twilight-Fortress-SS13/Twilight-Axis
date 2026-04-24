@@ -88,14 +88,17 @@
 /datum/tat_traits/proc/get_bonus_skill_value(skill_type)
 	var/total = 0
 	var/list/rules = TAT_TRAIT_SKILL_BONUS_RULES
+
 	for(var/trait_id in selected)
 		var/list/skill_map = rules[trait_id]
 		if(islist(skill_map))
 			total += round(skill_map[skill_type] || 0)
+
 	if(has_trait(TRAIT_ARCYNE) && !has_defensive_trait_lockout() && skill_type == /datum/skill/magic/arcane)
 		var/current_arcane = owner_build?.get_invested_skill_value(/datum/skill/magic/arcane) || 0
-		var/target_arcane = min(6, current_arcane + 2)
+		var/target_arcane = min(TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE, current_arcane + 2)
 		total += max(0, target_arcane - current_arcane)
+
 	return total
 
 /datum/tat_traits/proc/get_required_trait_for_unlock(unlock_type, unlock_key)
@@ -111,7 +114,7 @@
 
 	if(has_trait(TAT_TRAIT_RESIDENT) && (ispath(skill_type, /datum/skill/misc) || ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft)))
 		return 1
-	if(has_trait(TAT_TRAIT_MASTER_OF_NOTHING) && (ispath(skill_type, /datum/skill/misc) || ispath(skill_type, /datum/skill/labor) || ispath(skill_type, /datum/skill/craft)))
+	if(has_trait(TAT_TRAIT_MASTER_OF_WANDERING) && (ispath(skill_type, /datum/skill/misc)))
 		return 1
 
 	var/list/rules = TAT_TRAIT_SKILL_DISCOUNT_RULES
@@ -135,7 +138,7 @@
 
 /datum/tat_traits/proc/get_trait_conflict_map()
 	return list(
-		TAT_TRAIT_RESIDENT = list(TRAIT_OUTLANDER, TAT_TRAIT_WANTED, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_MASTER_OF_NOTHING),
+		TAT_TRAIT_RESIDENT = list(TRAIT_OUTLANDER, TAT_TRAIT_WANTED, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_MASTER_OF_WANDERING),
 		TAT_TRAIT_BONUS_STAT_POOL = list(TAT_TRAIT_WANTED),
 		TRAIT_DODGEEXPERT = list(TRAIT_PARRYEXPERT, TAT_TRAIT_MAGE_MINOR_SLOT_2, TAT_TRAIT_MAGE_MAJOR_SLOT),
 		TRAIT_HEAVYARMOR = list(TRAIT_CRITICAL_RESISTANCE, TAT_TRAIT_MAGE_INITIATE),
@@ -270,6 +273,9 @@
 
 /datum/tat_traits/proc/can_train_holy()
 	return !!has_trait(TAT_TRAIT_DIVINE_INITIATE)
+
+/datum/tat_traits/proc/can_train_druidic()
+	return !!has_trait(TAT_TRAIT_DRUID_INITIATE)
 
 /datum/tat_traits/proc/sanitize()
 	for(var/trait_id in selected.Copy())
@@ -416,7 +422,7 @@
 		return FALSE
 	for(var/trait_id in selected)
 		switch(trait_id)
-			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_NOTHING)
+			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING)
 				continue
 			else
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)

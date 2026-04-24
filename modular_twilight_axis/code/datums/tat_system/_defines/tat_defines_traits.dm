@@ -1,11 +1,11 @@
-#define TRAIT_MASTERYOFNOTHING_POINTS 20
+#define TRAIT_MASTERYOFNOTHING_POINTS 25
 
 #define TAT_TRAIT_WARRIOR_EXPERT "tat_warrior_expert"
 #define TAT_TRAIT_WARRIOR_MASTER "tat_warrior_master"
 #define TAT_TRAIT_SOUNDBREAKER "tat_soundbreaker"
 #define TAT_TRAIT_RONIN "tat_ronin"
 #define TAT_TRAIT_RESIDENT "tat_resident"
-#define TAT_TRAIT_MASTER_OF_NOTHING "tat_master_of_nothing"
+#define TAT_TRAIT_MASTER_OF_WANDERING "tat_master_of_wandering"
 
 #define TAT_TRAIT_STEEL_SUPPLIER "tat_steel_supplier"
 #define TAT_TRAIT_SILVER_SUPPLIER "tat_silver_supplier"
@@ -121,7 +121,7 @@
 	TRAIT_INTELLECTUAL = TAT_TRAIT_ENTRY("Intellectual", 2, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You have a keen eye and can assess a person's prowess in wit and blade."), \
 	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 1, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You are trained in the Arcyne arts, allowing you to wield magyck. Basis trait for magic-build classes. Give +2 magic skill if there is no defense trait."), \
 	TRAIT_JACKOFALLTRADES = TAT_TRAIT_ENTRY("Jack of All Trades", 2, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Skills cost half as much for you to raise."), \
-	TAT_TRAIT_MASTER_OF_NOTHING = TAT_TRAIT_ENTRY("Master of nothing", 4, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gives +20 to skill points, gives discont on non-combat skills, blocks with Resident."), \
+	TAT_TRAIT_MASTER_OF_WANDERING = TAT_TRAIT_ENTRY("Master of wandering", 4, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gives +20 to skill points, gives discont on non-combat skills, blocks with Resident."), \
 	TRAIT_EMPATH = TAT_TRAIT_ENTRY("Empath", 1, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can notice when people are in pain."), \
 	TRAIT_NOSTINK = TAT_TRAIT_ENTRY("Dead Nose", 2, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Your nose is numb to the smell of decay."), \
 	TRAIT_NOBLE = TAT_TRAIT_ENTRY("Noble Blooded", 1, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You are of noble blood."), \
@@ -186,30 +186,43 @@
 	TAT_TRAIT_WANTED = TAT_BUILD_ITEM_BONUS_WANTED \
 )
 
+#define TAT_TRAIT_ITEM_UNLOCK_RULES list( \
+	TAT_UNLOCK_TYPE_WEAPON_SUPPLY = list(TAT_SUPPLY_BRONZE = TAT_TRAIT_BRONZE_SUPPLIER, TAT_SUPPLY_SILVER = TAT_TRAIT_SILVER_SUPPLIER, TAT_SUPPLY_STEEL = TAT_TRAIT_STEEL_SUPPLIER, TAT_SUPPLY_FIREARMS = TAT_TRAIT_FIREARMS_SUPPLIER, TAT_SUPPLY_ARTIFACTS = TAT_TRAIT_ARTIFACTS_SUPPLIER), \
+	TAT_UNLOCK_TYPE_ARMOR_FAMILY = list(TAT_ARMOR_LEATHER = TAT_TRAIT_LEATHER_SUPPLIER, TAT_ARMOR_MAIL = TAT_TRAIT_MAIL_SUPPLIER, TAT_ARMOR_PLATE = TAT_TRAIT_PLATE_SUPPLIER) \
+)
+
 #define TAT_TRAIT_SKILL_POINT_RULES list( \
-	TAT_TRAIT_MASTER_OF_NOTHING = list( \
+	TAT_TRAIT_MASTER_OF_WANDERING = list( \
 		TAT_SKILL_DOMAIN_WANDERING = TRAIT_MASTERYOFNOTHING_POINTS, \
-		TAT_SKILL_DOMAIN_GATHERING = TRAIT_MASTERYOFNOTHING_POINTS, \
-		TAT_SKILL_DOMAIN_CRAFTING = TRAIT_MASTERYOFNOTHING_POINTS, \
 		TAT_SKILL_DOMAIN_MISC = TRAIT_MASTERYOFNOTHING_POINTS \
 	) \
 )
 
 #define TAT_TRAIT_SKILL_BONUS_RULES list( \
-	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = 3, /datum/skill/craft/smelting = 3), \
-	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = 3), \
-	TRAIT_MEDICINE_EXPERT = list(/datum/skill/misc/medicine = 3), \
-	TRAIT_HOMESTEAD_EXPERT = list(/datum/skill/craft/carpentry = 2, /datum/skill/craft/masonry = 2, /datum/skill/craft/crafting = 2, /datum/skill/labor/farming = 2, /datum/skill/labor/mining = 2, /datum/skill/craft/cooking = 2, /datum/skill/labor/fishing = 2, /datum/skill/labor/butchering = 2, /datum/skill/labor/lumberjacking = 2, /datum/skill/craft/ceramics = 2), \
-	TRAIT_SURVIVAL_EXPERT = list(/datum/skill/labor/butchering = 3, /datum/skill/craft/traps = 3), \
-	TRAIT_SEWING_EXPERT = list(/datum/skill/craft/sewing = 3), \
-	TRAIT_SEEDKNOW = list(/datum/skill/labor/farming = 3), \
-	TRAIT_CAUTIOUS_FISHER = list(/datum/skill/labor/fishing = 3), \
-	TRAIT_SQUIRE_REPAIR = list(/datum/skill/craft/armorsmithing = 3, /datum/skill/craft/weaponsmithing = 3) \
-)
-
-#define TAT_TRAIT_ITEM_UNLOCK_RULES list( \
-	TAT_UNLOCK_TYPE_WEAPON_SUPPLY = list(TAT_SUPPLY_BRONZE = TAT_TRAIT_BRONZE_SUPPLIER, TAT_SUPPLY_SILVER = TAT_TRAIT_SILVER_SUPPLIER, TAT_SUPPLY_STEEL = TAT_TRAIT_STEEL_SUPPLIER, TAT_SUPPLY_FIREARMS = TAT_TRAIT_FIREARMS_SUPPLIER, TAT_SUPPLY_ARTIFACTS = TAT_TRAIT_ARTIFACTS_SUPPLIER), \
-	TAT_UNLOCK_TYPE_ARMOR_FAMILY = list(TAT_ARMOR_LEATHER = TAT_TRAIT_LEATHER_SUPPLIER, TAT_ARMOR_MAIL = TAT_TRAIT_MAIL_SUPPLIER, TAT_ARMOR_PLATE = TAT_TRAIT_PLATE_SUPPLIER) \
+	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/smelting = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_MEDICINE_EXPERT = list(/datum/skill/misc/medicine = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_HOMESTEAD_EXPERT = list(/datum/skill/craft/carpentry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/crafting = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/farming = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/cooking = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/fishing = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/lumberjacking = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_SURVIVAL_EXPERT = list(/datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/traps = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_SEWING_EXPERT = list(/datum/skill/craft/sewing = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_SEEDKNOW = list(/datum/skill/labor/farming = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_CAUTIOUS_FISHER = list(/datum/skill/labor/fishing = TAT_SKILL_BASIC_BOOST), \
+	TRAIT_SQUIRE_REPAIR = list(/datum/skill/craft/armorsmithing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/weaponsmithing = TAT_SKILL_BASIC_BOOST), \
+	TAT_TRAIT_TRAINEE_SMITH = list(/datum/skill/craft/blacksmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/smelting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/maces = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_ARMORER = list(/datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/shields = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/swords = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_WOODSMAN = list(/datum/skill/labor/lumberjacking = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/carpentry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/axes = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_SURVIVALIST = list(/datum/skill/labor/butchering = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/traps = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/bows = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_POACHER = list(/datum/skill/misc/tracking = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/traps = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/crossbows = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_SKULKER = list(/datum/skill/misc/sneaking = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/misc/lockpicking = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/knives = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_VAGABOND = list(/datum/skill/misc/stealing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/misc/climbing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/slings = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_RIDER = list(/datum/skill/misc/riding = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/misc/athletics = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/polearms = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_MARINER = list(/datum/skill/misc/swimming = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/labor/fishing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/staves = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_CLOTHIER = list(/datum/skill/craft/sewing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/tanning = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/whipsflails = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_HOMESTEADER = list(/datum/skill/labor/farming = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/cooking = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/wrestling = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_ARTISAN = list(/datum/skill/craft/crafting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/unarmed = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_CHIRURGEON = list(/datum/skill/misc/medicine = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/misc/reading = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/staves = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_TRAINEE_TROUBADOUR = list(/datum/skill/misc/music = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/misc/reading = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/knives = TAT_SKILL_DISCOUNT_BOOST) \
 )
 
 #define TAT_TRAIT_SKILL_DISCOUNT_RULES list( \

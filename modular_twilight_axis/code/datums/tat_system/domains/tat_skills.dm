@@ -22,40 +22,29 @@
 	return tat_get_skill_domain(skill_type)
 
 /datum/tat_skills/proc/get_skill_rule(skill_type)
-	var/list/skill_rules = list(
-		/datum/skill/craft/cooking = list("softcap" = TRUE, "expert_trait" = TRAIT_HOMESTEAD_EXPERT),
-		/datum/skill/craft/alchemy = list("softcap" = TRUE, "expert_trait" = TRAIT_ALCHEMY_EXPERT),
-		/datum/skill/misc/medicine = list("softcap" = TRUE, "expert_trait" = TRAIT_MEDICINE_EXPERT),
-		/datum/skill/craft/sewing = list("softcap" = TRUE, "expert_trait" = TRAIT_SEWING_EXPERT),
-		/datum/skill/labor/farming = list("softcap" = TRUE, "expert_trait" = TRAIT_SEEDKNOW),
-		/datum/skill/craft/blacksmithing = list("softcap" = TRUE, "expert_trait" = TRAIT_SMITHING_EXPERT),
-		/datum/skill/craft/smelting = list("softcap" = TRUE, "expert_trait" = TRAIT_SMITHING_EXPERT),
-		/datum/skill/craft/carpentry = list("softcap" = TRUE, "expert_trait" = TRAIT_HOMESTEAD_EXPERT),
-		/datum/skill/craft/masonry = list("softcap" = TRUE, "expert_trait" = TRAIT_HOMESTEAD_EXPERT),
-		/datum/skill/craft/crafting = list("softcap" = TRUE, "expert_trait" = TRAIT_HOMESTEAD_EXPERT),
-		/datum/skill/labor/butchering = list("softcap" = TRUE, "expert_trait" = TRAIT_SURVIVAL_EXPERT),
-		/datum/skill/craft/traps = list("softcap" = TRUE, "expert_trait" = TRAIT_SURVIVAL_EXPERT),
-		/datum/skill/labor/fishing = list("softcap" = TRUE, "expert_trait" = TRAIT_CAUTIOUS_FISHER),
-		/datum/skill/craft/armorsmithing = list("softcap" = TRUE, "expert_trait" = TRAIT_SQUIRE_REPAIR),
-		/datum/skill/craft/weaponsmithing = list("softcap" = TRUE, "expert_trait" = TRAIT_SQUIRE_REPAIR),
-		/datum/skill/combat/twilight_firearms = list("softcap" = TRUE, "expert_trait" = TRAIT_FIREARMS_MARKSMAN),
-	)
-	return skill_rules[skill_type]
+	var/list/rules = TAT_SKILL_RULES
+	return rules[skill_type]
 
 /datum/tat_skills/proc/has_expert_trait_for_skill(skill_type)
 	var/list/rule = get_skill_rule(skill_type)
 	if(!islist(rule))
-		return TRUE
+		return FALSE
 	var/expert_trait = rule["expert_trait"]
 	if(!expert_trait)
-		return TRUE
+		return FALSE
 	return !!owner_build?.has_trait(expert_trait)
 
-/datum/tat_skills/proc/should_softcap_peaceful_skill(skill_type)
+/datum/tat_skills/proc/get_rule_untraited_cap(skill_type)
 	var/list/rule = get_skill_rule(skill_type)
 	if(!islist(rule))
-		return FALSE
-	return !!rule["softcap"]
+		return null
+	return round(rule["untraited_cap"] || 0)
+
+/datum/tat_skills/proc/get_rule_trait_cap(skill_type)
+	var/list/rule = get_skill_rule(skill_type)
+	if(!islist(rule))
+		return null
+	return round(rule["trait_cap"] || 0)
 
 /datum/tat_skills/proc/get_invested_value(skill_type)
 	return round(invested[skill_type] || 0)
@@ -87,7 +76,7 @@
 	return TRUE
 
 /datum/tat_skills/proc/get_total_value(skill_type)
-	return get_invested_value(skill_type) + get_bonus_value(skill_type)
+	return min(TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE, get_invested_value(skill_type) + get_bonus_value(skill_type))
 
 /datum/tat_skills/proc/check_skill(skill_type)
 	return !!get_domain(skill_type)
@@ -95,40 +84,31 @@
 /datum/tat_skills/proc/get_total_maximum(domain)
 	return round((domain_points[domain] || 0) + (owner_build ? owner_build.get_bonus_skill_domain_points(domain) : 0))
 
-/datum/tat_skills/proc/get_primary_advanced_combat_skill()
-	var/primary_skill = null
-	var/primary_level = TAT_SKILL_COMBAT_CAP_DEFAULT
+/datum/tat_skills/proc/get_combat_expert_count()
+	var/count = 0
 	for(var/skill_type in TAT_SKILLS_COMBAT)
 		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 			continue
-		var/level = round(get_total_value(skill_type))
-		if(level <= TAT_SKILL_COMBAT_CAP_DEFAULT)
-			continue
-		if(!primary_skill || level > primary_level || (level == primary_level && "[skill_type]" < "[primary_skill]"))
-			primary_skill = skill_type
-			primary_level = level
-	return primary_skill
+		if(get_invested_value(skill_type) > TAT_SKILL_COMBAT_CAP_DEFAULT)
+			count++
+	return count
 
-/datum/tat_skills/proc/get_highest_advanced_combat_skill(excluded_skills = null)
-	var/best_skill = null
-	var/best_level = TAT_SKILL_COMBAT_CAP_DEFAULT
+/datum/tat_skills/proc/get_combat_master_count()
+	var/count = 0
 	for(var/skill_type in TAT_SKILLS_COMBAT)
 		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 			continue
-		if(islist(excluded_skills))
-			if(skill_type in excluded_skills)
-				continue
-		else if(skill_type == excluded_skills)
-			continue
-		var/level = get_total_value(skill_type)
-		if(level < best_level)
-			continue
-		if(level > best_level || !best_skill || "[skill_type]" < "[best_skill]")
-			best_skill = skill_type
-			best_level = level
-	return best_skill
+		if(get_invested_value(skill_type) > TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)
+			count++
+	return count
 
 /datum/tat_skills/proc/get_combat_skill_cap(skill_type)
+	if(!ispath(skill_type, /datum/skill/combat))
+		return TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM
+
+	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
+		return null
+
 	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
 	var/expert_cap = TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT
 	var/master_cap = TAT_SKILL_COMBAT_CAP_TRAIT_MASTER
@@ -138,38 +118,30 @@
 
 	if(!has_expert && !has_master)
 		return base_cap
-	if(!ispath(skill_type, /datum/skill/combat))
+
+	var/current_invested = get_invested_value(skill_type)
+	var/expert_count = get_combat_expert_count()
+	var/master_count = get_combat_master_count()
+
+	var/can_take_expert = FALSE
+	if(current_invested > base_cap)
+		can_take_expert = TRUE
+	else if(expert_count < TAT_COMBAT_EXPERT_SKILL_LIMIT)
+		can_take_expert = TRUE
+
+	if(!can_take_expert)
 		return base_cap
-	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
-		return 2
 
-	var/current_level = get_total_value(skill_type)
-	var/advanced_count = 0
-	var/mastered_count = 0
-
-	for(var/other_skill in TAT_SKILLS_COMBAT)
-		if(ispath(other_skill, /datum/skill/combat/twilight_firearms))
-			continue
-
-		var/other_level = get_total_value(other_skill)
-		if(other_level > base_cap)
-			advanced_count++
-		if(other_level > expert_cap)
-			mastered_count++
-
-	var/can_be_expert = FALSE
-	if(current_level > base_cap)
-		can_be_expert = TRUE
-	else if(advanced_count < 2)
-		can_be_expert = TRUE
-
-	if(!can_be_expert)
-		return base_cap
 	if(!has_master)
 		return expert_cap
-	if(current_level > expert_cap)
-		return master_cap
-	if(current_level >= expert_cap && mastered_count <= 0)
+
+	var/can_take_master = FALSE
+	if(current_invested > expert_cap)
+		can_take_master = TRUE
+	else if(master_count < TAT_COMBAT_MASTER_SKILL_LIMIT)
+		can_take_master = TRUE
+
+	if(can_take_master)
 		return master_cap
 
 	return expert_cap
@@ -182,27 +154,33 @@
 	if(skill_type == /datum/skill/magic/arcane)
 		if(!owner_build?.can_train_arcane())
 			return 0
-		return TAT_SKILL_NONCOMBAT_CAP_SPECTRAIT
 
 	if(skill_type == /datum/skill/magic/holy)
 		if(!owner_build?.can_train_holy())
 			return 0
 
-	if(skill_type == /datum/skill/combat/twilight_firearms)
+	if(skill_type == /datum/skill/magic/druidic)
+		if(!owner_build?.can_train_druidic())
+			return 0
+
+	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 		if(has_expert_trait_for_skill(skill_type))
-			return 4
-		return 2
+			return TAT_SKILL_NONCOMBAT_CAP_SPECTRAIT
+		return TAT_SKILL_NONCOMBAT_CAP_UNTRAITED
 
 	if(ispath(skill_type, /datum/skill/combat))
 		return get_combat_skill_cap(skill_type)
 
-	if(should_softcap_peaceful_skill(skill_type) && !has_expert_trait_for_skill(skill_type))
-		return TAT_SKILL_NONCOMBAT_CAP_UNTRAITED
+	var/list/rule = get_skill_rule(skill_type)
+	if(islist(rule))
+		if(has_expert_trait_for_skill(skill_type))
+			return get_rule_trait_cap(skill_type)
+		return get_rule_untraited_cap(skill_type)
 
 	return TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM
 
 /datum/tat_skills/proc/get_maximum(skill_type)
-	return get_invested_maximum(skill_type) + get_bonus_value(skill_type)
+	return min(TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE, get_invested_maximum(skill_type) + get_bonus_value(skill_type))
 
 /datum/tat_skills/proc/get_step_cost(skill_type, target_level)
 	if(target_level <= 0)
@@ -242,6 +220,9 @@
 	value = max(0, value)
 
 	var/invested_cap = get_invested_maximum(skill_type)
+	var/bonus_cap_room = max(0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE - get_bonus_value(skill_type))
+	invested_cap = min(invested_cap, bonus_cap_room)
+
 	if(value > invested_cap)
 		value = invested_cap
 
@@ -304,7 +285,7 @@
 	if(!H)
 		return FALSE
 	for(var/skill_type in TAT_SKILLS_ALL)
-		var/level = get_total_value(skill_type)
+		var/level = min(TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE, get_total_value(skill_type))
 		if(level > 0)
 			H.adjust_skillrank_up_to(skill_type, level, TRUE)
 	return TRUE
