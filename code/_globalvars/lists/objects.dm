@@ -34,6 +34,7 @@ GLOBAL_LIST_EMPTY(meteor_list)				// List of all meteors.
 GLOBAL_LIST_EMPTY(active_jammers)             // List of active radio jammers
 GLOBAL_LIST_EMPTY(ladders)
 GLOBAL_LIST_EMPTY(trophy_cases)
+GLOBAL_LIST_EMPTY(alch_grid_recipes)
 
 GLOBAL_LIST_EMPTY(stew_recipes) // list of all stew recipes
 

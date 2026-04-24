@@ -77,10 +77,23 @@
 	icon_state = "holsterbelt_full"
 	update_icon()
 
-/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/runelock/New()
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black
+	name = "black holster belt"
+	desc = "Чёрный ремень с кобурой. Пришлось пожертвовать местом на поясе ради возможности удобно носить пистоль."
+	icon = 'modular_twilight_axis/firearms/icons/obj_belts_black.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/firearms/icons/onmob_belts_black.dmi'
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock/New()
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/A = new()
 		pistol += A
 	icon_state = "holsterbelt_full"
 	update_icon()
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder
+	name = "blackpowder order holster belt"
+	desc = "Ремень с кобурой образца Ордена Чёрного Пороха. Улучшенная посадка позволяет носить пистоль без потери места на поясе."
+	icon = 'modular_twilight_axis/firearms/icons/obj_belts_blackpowder.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/firearms/icons/onmob_belts_blackpowder.dmi'
+	component_type = /datum/component/storage/concrete/roguetown/belt

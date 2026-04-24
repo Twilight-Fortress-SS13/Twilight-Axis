@@ -82,7 +82,6 @@
 		H = hud_used.hand_slots["[held_index]"]
 		if(H)
 			H.update_hand_vis()
-		H = hud_used.action_intent
 	oactive = FALSE
 	update_a_intents()
 	return TRUE
@@ -764,7 +763,7 @@
 		remove_movespeed_modifier(MOVESPEED_ID_CARBON_CRAWLING, TRUE)
 
 #define FIRE_HARDCRIT_DIVISOR 106 // 106 = 94.5% burn damage = hardcrit
-#define FIRE_HARDCRIT_DIVISOR_MINDLESS 200 // 200 = 50% burn damage = hardcrit for mindless mobs  
+#define FIRE_HARDCRIT_DIVISOR_MINDLESS 200 // 200 = 50% burn damage = hardcrit for mindless mobs
 
 //Updates the mob's health from bodyparts and mob damage variables
 /mob/living/carbon/updatehealth()
@@ -793,8 +792,11 @@
 	if(checked_lethal_zones)
 		var/avg_burn_factor = total_burn_percent / checked_lethal_zones
 		var/hardcrit_divisor = !mind ? FIRE_HARDCRIT_DIVISOR_MINDLESS : FIRE_HARDCRIT_DIVISOR
-		
+
 		used_damage = avg_burn_factor * hardcrit_divisor
+
+		if((HAS_TRAIT(src, TRAIT_NOPAIN) || HAS_TRAIT(src, TRAIT_NOPAINSTUN)) && !HAS_TRAIT(src, TRAIT_NOBURN_RESIST))
+			used_damage /= FIRE_HARDCRIT_NOPAIN_MULT
 
 	if(used_damage < total_tox)
 		used_damage = total_tox

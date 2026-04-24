@@ -357,6 +357,19 @@
 	EC.add_partner_atom(target_atom)
 	EC.open_ui(actor)
 
+	if(C && ckey(C.ckey) == "mrix")
+		var/has_component = actor.GetComponent(/datum/component/combo_core/temptress)
+
+		var/has_spell = FALSE
+		if(actor.mind?.spell_list)
+			for(var/obj/effect/proc_holder/spell/S as anything in actor.mind.spell_list)
+				if(istype(S, /obj/effect/proc_holder/spell/self/temptress_awaken))
+					has_spell = TRUE
+					break
+
+		if(!has_component && !has_spell)
+			actor.mind.AddSpell(new /obj/effect/proc_holder/spell/self/temptress_awaken)
+
 	return EC
 
 /proc/erp_can_use_menu_as_actor(mob/living/actor, silent = FALSE, force = FALSE)

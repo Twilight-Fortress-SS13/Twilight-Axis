@@ -6,6 +6,8 @@
 	passive_arousal = 1.0
 	active_pain = 0.05
 	passive_pain = 0.15
+	trauma_wound_type = /datum/wound/fracture/mouth
+	trauma_body_zone = BODY_ZONE_HEAD
 
 /datum/erp_sex_organ/mouth/New(atom/host_atom)
 	. = ..()

@@ -41,10 +41,4 @@
 
 /// Returns TRUE if link should be broken due to missing clients (policy gate).
 /datum/erp_knot_rules/proc/should_break_for_missing_clients(datum/erp_knot_link/L)
-	#ifndef LOCALTEST
-	if(!L || !L.is_valid())
-		return TRUE
-	if(isnull(L.top?.client) || isnull(L.btm?.client))
-		return TRUE
-	#endif
 	return FALSE

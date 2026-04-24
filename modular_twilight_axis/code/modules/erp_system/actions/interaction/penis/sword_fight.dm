@@ -5,6 +5,7 @@
 	name = "Фехтование"
 	required_target_organ = SEX_ORGAN_PENIS
 	require_same_tile = FALSE
+	action_tags = list("inject_outside_only")
 	message_start = "{actor} приставляет свой член к члену {partner}."
 	message_tick = "{actor} {force} и {speed} трётся членом об член {partner}."
 	message_finish =  "{actor} убирает член от члена {partner}."

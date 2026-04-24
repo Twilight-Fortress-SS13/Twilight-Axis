@@ -173,3 +173,10 @@
 	shortname = "OlNewDreamer"
 	credits = "Judge Bitch - Hot Plates"
 	musicpath = list('modular_twilight_axis/sound/music/combat_dreamerold.ogg')
+
+/datum/combat_music/ImperialSpellbade
+	name = "Imperial Spellblade combat song"
+	desc = "Вот и ты, грензельская свинья, предатель традиций и неверный ученик нашей школы. Я сражусь с тобой лишь из великой милости к твоей убогой жизни."
+	shortname = "ImperialSpellbade"
+	credits = "Оригинал: https://youtu.be/mhsFGJs8a3A?si=wR0c07aVHyqXOPUG"
+	musicpath = list('sound/music/combat_imperial_spellblade.ogg')

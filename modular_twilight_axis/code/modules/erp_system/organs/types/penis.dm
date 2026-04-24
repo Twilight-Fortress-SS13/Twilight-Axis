@@ -8,6 +8,7 @@
 	passive_arousal = 1.1
 	active_pain = 0.05
 	passive_pain = 0.15
+	trauma_wound_type = /datum/wound/cbt
 
 /datum/erp_sex_organ/penis/New(obj/item/organ/penis/P)
 	. = ..()
@@ -33,8 +34,12 @@
 	if(!P)
 		return
 
+	source_organ = P
+	host = P
 	var/mob/living/carbon/human/H = P.owner
 	if(!istype(H))
+		have_knot = FALSE
+		count_to_action = 1
 		return
 
 	switch(P.penis_type)
@@ -46,9 +51,11 @@
 	var/datum/component/erp_knotting/K = H.GetComponent(/datum/component/erp_knotting)
 	if(have_knot)
 		if(!K)
-			H.AddComponent(/datum/component/erp_knotting)
+			K = H.AddComponent(/datum/component/erp_knotting)
+		K?.sanitize_links()
 	else
 		if(K)
+			K.clear_all_links()
 			qdel(K)
 
 	var/double_count = (P.penis_type in list(PENIS_TYPE_TAPERED_DOUBLE, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED))
@@ -61,7 +68,6 @@
 	var/ball_size = T.ball_size
 	var/new_capacity = 12 + (3 * ball_size)
 	var/new_rate = ball_size * 0.25
-
 	if(!storage)
 		storage = new(new_capacity, src)
 
@@ -79,15 +85,29 @@
 
 /obj/item/organ/penis/Insert(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
+	if(!M)
+		return .
+
 	RegisterSignal(M, COMSIG_SEX_AROUSAL_CHANGED, PROC_REF(on_arousal_changed), TRUE)
 	refresh_sex_organ()
+	SEND_SIGNAL(M, COMSIG_ERP_ANATOMY_CHANGED)
+
+	return .
 
 /obj/item/organ/penis/Remove(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
+	if(!M)
+		return .
+
 	UnregisterSignal(M, COMSIG_SEX_AROUSAL_CHANGED)
 	var/datum/component/erp_knotting/knoting_object = M.GetComponent(/datum/component/erp_knotting)
 	if(knoting_object)
+		knoting_object.clear_all_links()
 		qdel(knoting_object)
+
+	SEND_SIGNAL(M, COMSIG_ERP_ANATOMY_CHANGED)
+
+	return .
 
 /obj/item/organ/penis/on_arousal_changed()
 	if(manual_erection_override)

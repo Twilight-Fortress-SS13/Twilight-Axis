@@ -3,6 +3,7 @@
 
 	name = "Использовать ягодицы"
 	required_target_organ = SEX_ORGAN_ANUS
+	action_tags = list("inject_outside_only")
 	message_start = "{actor} приставляет свой член между ягодиц {partner}."
 	message_tick = "{actor} {force} и {speed} водит членом между ягодиц {partner}."
 	message_finish =  "{actor} убирает член от попки {partner}."

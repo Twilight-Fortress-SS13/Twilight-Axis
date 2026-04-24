@@ -7,4 +7,4 @@
 	message_tick = "{actor} {force} и {speed} водит тестикулам по лицу {dullahan?отделенной головы :}{partner}."
 	message_finish =  "{actor} убирает тестикулы от лица {dullahan?отделенной головы :}{partner}."
 	message_climax_active = "{actor} кончает на лицо  {dullahan?отделенной головы :}{partner}."
-	action_tags = list("testicles")
+	action_tags = list("testicles","inject_outside_only")

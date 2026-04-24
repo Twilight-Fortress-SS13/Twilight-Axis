@@ -113,26 +113,6 @@
 
 			var/datum/erp_sex_link/best_link = null
 			var/best_score = -1
-			var/list/receiving_targets = list()
-			var/list/receiving_force = list()
-
-			for(var/datum/erp_sex_link/Lp in relevant_links)
-				if(Lp.init_organ != P && Lp.target_organ != P)
-					continue
-
-				var/sc = Lp.get_climax_score(who)
-				if(sc > best_score)
-					best_score = sc
-					best_link = Lp
-
-				var/datum/erp_sex_organ/other = (Lp.init_organ == P) ? Lp.target_organ : Lp.init_organ
-				if(!other || QDELETED(other))
-					continue
-				if(!(other.erp_organ_type in list(SEX_ORGAN_VAGINA, SEX_ORGAN_ANUS, SEX_ORGAN_MOUTH)))
-					continue
-
-				receiving_targets += other
-				receiving_force[other] = max(receiving_force[other] || 0, Lp.force)
 
 			var/mob/living/carbon/human/top = P.get_owner()
 			var/datum/component/erp_knotting/K = null
@@ -141,7 +121,43 @@
 				if(!K && P.have_knot)
 					K = top.AddComponent(/datum/component/erp_knotting)
 
-			if(controller.do_knot_action && P.have_knot && K && receiving_targets.len)
+			var/list/knot_candidates = list()
+			var/list/knot_force_by_target = list()
+
+			for(var/datum/erp_sex_link/Lp in relevant_links)
+				if(!Lp || QDELETED(Lp) || !Lp.is_valid())
+					continue
+
+				if(Lp.init_organ != P && Lp.target_organ != P)
+					continue
+
+				var/sc = Lp.get_climax_score(who)
+				if(sc > best_score)
+					best_score = sc
+					best_link = Lp
+
+				// Кнот ищем отдельно от best:
+				// только если член — именно инициатор линка.
+				if(Lp.init_organ != P)
+					continue
+
+				var/datum/erp_sex_organ/other = Lp.target_organ
+				if(!other || QDELETED(other))
+					continue
+
+				if(!(other.erp_organ_type in list(
+					SEX_ORGAN_VAGINA,
+					SEX_ORGAN_ANUS,
+					SEX_ORGAN_MOUTH
+				)))
+					continue
+
+				if(!(other in knot_candidates))
+					knot_candidates += other
+
+				knot_force_by_target[other] = max(knot_force_by_target[other] || 0, Lp.force)
+
+			if(controller.do_knot_action && P.have_knot && K && knot_candidates.len)
 				var/max_units = max(1, P.count_to_action)
 				var/list/free_units = list()
 
@@ -150,17 +166,39 @@
 					if(!occupied || !occupied.is_valid())
 						free_units += i
 
-				for(var/datum/erp_sex_organ/T as anything in receiving_targets)
-					if(!free_units.len)
-						break
-
+				for(var/datum/erp_sex_organ/T as anything in knot_candidates)
 					var/mob/living/btm = T.get_owner()
 					if(!istype(btm))
 						continue
 
+					var/already_knotted = FALSE
+					if(K.active_links && K.active_links.len)
+						for(var/datum/erp_knot_link/KL as anything in K.active_links)
+							if(!istype(KL) || !KL.is_valid())
+								continue
+							if(KL.penis_org != P)
+								continue
+							if(KL.receiving_org != T)
+								continue
+							if(KL.btm != btm)
+								continue
+
+							KL.note_activity()
+							already_knotted = TRUE
+							break
+
+					// Если уже есть активный кнот на этой паре,
+					// новый не создаём. На этом же оргазме доп. inject
+					// сработает ниже через knot_links.
+					if(already_knotted)
+						continue
+
+					if(!free_units.len)
+						break
+
 					var/slot = free_units[1]
 					free_units.Cut(1, 2)
-					K.try_knot_link(btm, P, T, penis_unit_id = slot, force_level = receiving_force[T])
+					K.try_knot_link(btm, P, T, penis_unit_id = slot, force_level = knot_force_by_target[T])
 
 			if(best_link?.action && best_link.action.inject_timing == INJECT_ON_FINISH)
 				best_link.action.handle_inject(best_link, who)

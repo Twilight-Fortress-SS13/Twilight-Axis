@@ -758,7 +758,6 @@ GLOBAL_LIST(teleport_runes)
 	var/datum/map_template/template
 	var/fortress = /datum/map_template/arcyne_fortress
 	var/list/barriers = list()
-	rituals = list(/datum/runeritual/other/wall/t3::name = /datum/runeritual/other/wall/t3)
 
 /obj/effect/decal/cleanable/roguerune/arcyne/wallgreater/New()
 	. = ..()
@@ -766,7 +765,6 @@ GLOBAL_LIST(teleport_runes)
 
 /obj/effect/decal/cleanable/roguerune/arcyne/wallgreater/proc/get_template(/datum/map_template/arcyne_fortress/fortress)
 
-	to_chat(usr, span_hierophant_warning("template retrieving"))
 	var/datum/map_template/temporary = new fortress
 	template = SSmapping.map_templates[temporary.id]
 	if(!template)
@@ -783,7 +781,6 @@ GLOBAL_LIST(teleport_runes)
 	get_template(template)
 
 	template.load(deploy_location, centered = TRUE)
-	to_chat(usr, span_hierophant_warning("template.load complete"))
 	if(ritual_result)
 		pickritual.cleanup_atoms(selected_atoms)
 	invoke_cleanup()
@@ -802,7 +799,7 @@ GLOBAL_LIST(teleport_runes)
 /obj/effect/decal/cleanable/roguerune/arcyne/teleport
 	name = "leyline teleportation matrix"
 	desc = "A matrix that allows teleportation between leylines, ducking into the leyline and then rematerializing in another spot. The matrix can carry up to five people, though no more than two may lack arcyne knowledge. Despite magos trying their best, no one has been able to conceive a way to teleport more than a mile at once in all of Psydonia. Repeated usages or chaining teleport out of a two mile radius appears to exhaust or degrade the body rapidly."
-	icon = 'icons/effects/160x160.dmi'
+	icon = 'icons/effects/96x96.dmi'
 	icon_state = "portal"
 	tier = 2
 	req_keyword = TRUE

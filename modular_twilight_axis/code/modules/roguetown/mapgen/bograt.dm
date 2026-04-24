@@ -50,7 +50,8 @@
 							/obj/structure/flora/rogueshroom = 1,
 							/obj/effect/decal/remains/bear = 0.5,
 							/obj/effect/decal/remains/human = 0.3,
-							/obj/structure/leyline/normal/coast = 0.1)
+							/obj/structure/leyline/normal/coast = 0.1,
+							/obj/effect/hunting_track = 3)
 	spawnableTurfs = list(/turf/open/floor/rogue/dirt/road=0.2,
 						/turf/open/water/swamp=1,)
 	allowed_areas = list(/area/rogue/outdoors/bograt)
@@ -96,7 +97,8 @@
 							/obj/effect/decal/remains/human = 2,
 							/obj/structure/zizo_bane = 3,
 							/obj/structure/leyline/normal/coast = 0.3,
-							/obj/structure/leyline/powerful = 0.3)
+							/obj/structure/leyline/powerful = 0.3,
+							/obj/effect/hunting_track = 3)
 	spawnableTurfs = list(/turf/open/floor/rogue/dirt/road=0.1,
 						/turf/open/water/swamp=0.1)
 
