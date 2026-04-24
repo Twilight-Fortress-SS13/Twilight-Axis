@@ -148,26 +148,20 @@ type NumericRowProps = {
 
 type HoverCardData = {
   name: string;
+  desc?: string;
   slot?: string | null;
   category?: string | null;
   costText?: string;
   total?: number;
   bag?: number;
   equip?: number;
-  leftHelp: string;
-  rightHelp: string;
-};
-
-type SkillHoverData = {
-  name: string;
-  desc?: string;
-  category?: string;
-  level: number;
-  cap: number;
-  cost: number;
-  bonus: number;
-  invested: number;
-  domainRemaining: number | null;
+  level?: number;
+  cap?: number;
+  bonus?: number;
+  invested?: number;
+  domainRemaining?: number | null;
+  leftHelp?: string;
+  rightHelp?: string;
 };
 
 type ItemViewEntry = ItemEntry & ItemState;
@@ -398,7 +392,7 @@ const getDomainRemainingPoints = (data: Data, domain: SkillDomainKey) => {
 };
 
 const groupEntriesByCategoryAndSlot = <
-  T extends { slot_group?: string | null; category?: string | null; name?: string }
+  T extends { slot_group?: string | null; category?: string | null; name?: string },
 >(
   entries: Record<string, T>,
   matcher: (path: string, entry: T) => boolean
@@ -540,9 +534,11 @@ const HoverCard = ({ data }: { data: HoverCardData | null }) => {
     <Box
       style={{
         position: 'fixed',
-        right: '24px',
-        top: '120px',
-        width: '250px',
+        left: '50%',
+        top: '72px',
+        transform: 'translateX(-50%)',
+        width: '720px',
+        maxWidth: 'calc(100vw - 48px)',
         padding: '10px 12px',
         borderRadius: '8px',
         background: 'rgba(10, 12, 22, 0.96)',
@@ -551,98 +547,87 @@ const HoverCard = ({ data }: { data: HoverCardData | null }) => {
         zIndex: 1000,
         pointerEvents: 'none',
       }}>
-      <Box bold style={{ fontSize: '15px', marginBottom: '6px' }}>
-        {data.name}
-      </Box>
+      <Stack>
+        <Stack.Item grow basis="55%">
+          <Box bold style={{ fontSize: '15px', marginBottom: '6px', color: '#f0c35a' }}>
+            {data.name}
+          </Box>
 
-      <Box style={{ opacity: 0.9 }}>
-        <b>Slot:</b> {data.slot || 'None'}
-      </Box>
+          {!!data.desc && (
+            <Box mb={0.75} style={{ opacity: 0.9, lineHeight: 1.35 }}>
+              {data.desc}
+            </Box>
+          )}
 
-      <Box style={{ opacity: 0.9 }}>
-        <b>Type:</b> {data.category || 'Unknown'}
-      </Box>
+          {!!data.slot && (
+            <Box style={{ opacity: 0.9 }}>
+              <b>Slot:</b> {data.slot}
+            </Box>
+          )}
 
-      {!!data.costText && (
-        <Box style={{ opacity: 0.9 }}>
-          <b>Cost:</b> {data.costText}
-        </Box>
-      )}
+          {!!data.category && (
+            <Box style={{ opacity: 0.9 }}>
+              <b>Type:</b> {data.category}
+            </Box>
+          )}
 
-      {typeof data.total === 'number' && (
-        <Box style={{ opacity: 0.9 }}>
-          <b>Total:</b> {data.total}
-        </Box>
-      )}
+          {typeof data.level === 'number' && (
+            <Box style={{ opacity: 0.9 }}>
+              <b>Level:</b> {data.level} / {data.cap}
+            </Box>
+          )}
 
-      {typeof data.bag === 'number' && typeof data.equip === 'number' && (
-        <Box style={{ opacity: 0.9 }}>
-          <b>Bag:</b> {data.bag} | <b>Equip:</b> {data.equip}
-        </Box>
-      )}
+          {typeof data.bonus === 'number' && data.bonus > 0 && (
+            <Box style={{ color: '#9fd6a8' }}>
+              <b>Bonus:</b> +{data.bonus}
+            </Box>
+          )}
+        </Stack.Item>
 
-      <Box mt={1} style={{ color: '#f0c35a' }}>
-        LMB: {data.leftHelp}
-      </Box>
-      <Box style={{ color: '#d7d7d7' }}>
-        RMB: {data.rightHelp}
-      </Box>
-    </Box>
-  );
-};
+        <Stack.Item grow basis="45%">
+          {!!data.costText && (
+            <Box style={{ opacity: 0.9 }}>
+              <b>Cost:</b> {data.costText}
+            </Box>
+          )}
 
-const SkillHoverCard = ({ data }: { data: SkillHoverData | null }) => {
-  if (!data) {
-    return null;
-  }
+          {typeof data.total === 'number' && (
+            <Box style={{ opacity: 0.9 }}>
+              <b>Total:</b> {data.total}
+            </Box>
+          )}
 
-  return (
-    <Box
-      style={{
-        position: 'fixed',
-        right: '24px',
-        top: '120px',
-        width: '280px',
-        padding: '10px 12px',
-        borderRadius: '8px',
-        background: 'rgba(10, 12, 22, 0.96)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '0 8px 20px rgba(0,0,0,0.45)',
-        zIndex: 1001,
-        pointerEvents: 'none',
-      }}>
-      <Box bold style={{ fontSize: '15px', marginBottom: '6px', color: '#f0c35a' }}>
-        {data.name}
-      </Box>
+          {typeof data.bag === 'number' && typeof data.equip === 'number' && (
+            <Box style={{ opacity: 0.9 }}>
+              <b>Bag:</b> {data.bag} | <b>Equip:</b> {data.equip}
+            </Box>
+          )}
 
-      {!!data.desc && (
-        <Box mb={1} style={{ opacity: 0.9, lineHeight: 1.35 }}>
-          {data.desc}
-        </Box>
-      )}
+          {typeof data.invested === 'number' && (
+            <Box style={{ opacity: 0.9 }}>
+              <b>Invested:</b> {data.invested}
+            </Box>
+          )}
 
-      <Box style={{ opacity: 0.9 }}>
-        <b>Type:</b> {data.category || 'unknown'}
-      </Box>
-      <Box style={{ opacity: 0.9 }}>
-        <b>Level:</b> {data.level} / {data.cap}
-      </Box>
-      <Box style={{ opacity: 0.9 }}>
-        <b>Next cost:</b> {data.cost}
-      </Box>
-      <Box style={{ opacity: 0.9 }}>
-        <b>Invested:</b> {data.invested}
-      </Box>
-      <Box style={{ opacity: 0.9 }}>
-        <b>Domain points left:</b>{' '}
-        {data.domainRemaining === null ? '?' : data.domainRemaining}
-      </Box>
+          {typeof data.domainRemaining === 'number' && (
+            <Box style={{ opacity: 0.9 }}>
+              <b>Free:</b> {data.domainRemaining}
+            </Box>
+          )}
 
-      {data.bonus > 0 && (
-        <Box mt={0.75} style={{ color: '#9fd6a8' }}>
-          Bonus: +{data.bonus}
-        </Box>
-      )}
+          {!!data.leftHelp && (
+            <Box mt={0.75} style={{ color: '#f0c35a' }}>
+              {data.leftHelp}
+            </Box>
+          )}
+
+          {!!data.rightHelp && (
+            <Box style={{ color: '#d7d7d7' }}>
+              {data.rightHelp}
+            </Box>
+          )}
+        </Stack.Item>
+      </Stack>
     </Box>
   );
 };
@@ -1085,14 +1070,14 @@ const SkillRow = ({
   state,
   act,
   domainRemaining,
-  setHoveredSkill,
+  setHoveredItem,
 }: {
   skillPath: string;
   entry: SkillEntry;
   state?: SkillState;
   act: BackendAct;
   domainRemaining: number | null;
-  setHoveredSkill: (value: SkillHoverData | null) => void;
+  setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const totalLevel = Number(state?.level) || 0;
   const invested = Number(state?.invested) || 0;
@@ -1108,70 +1093,72 @@ const SkillRow = ({
 
   return (
     <div
-    onMouseEnter={() =>
-      setHoveredSkill({
-        name: entry.name || skillPath,
-        desc: entry.desc,
-        category: entry.category,
-        level: totalLevel,
-        cap,
-        cost: nextCost,
-        bonus,
-        invested,
-        domainRemaining,
-      })
-    }
-    onMouseLeave={() => setHoveredSkill(null)}>
-    <Stack
-      align="center"
-      justify="space-between"
-      style={{
-        padding: '4px 0',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
-        minHeight: '34px',
-      }}>
-      <Stack.Item grow>
-        <Box bold>{entry.name || skillPath}</Box>
-        <Box style={{ opacity: 0.72, fontSize: '11px' }}>
-          Cost: {nextCost} | Type: {entry.category || 'unknown'} | Cap: {cap}
-          {bonus > 0 ? ` | Bonus: ${bonus}` : ''}
-        </Box>
-      </Stack.Item>
+      onMouseEnter={() =>
+        setHoveredItem({
+          name: entry.name || skillPath,
+          desc: entry.desc,
+          category: entry.category,
+          level: totalLevel,
+          cap,
+          costText: `${nextCost} pts`,
+          bonus,
+          invested,
+          domainRemaining,
+          leftHelp: 'Press + to increase',
+          rightHelp: 'Press - to refund',
+        })
+      }
+      onMouseLeave={() => setHoveredItem(null)}>
+      <Stack
+        align="center"
+        justify="space-between"
+        style={{
+          padding: '4px 0',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          minHeight: '34px',
+        }}>
+        <Stack.Item grow>
+          <Box bold>{entry.name || skillPath}</Box>
+          <Box style={{ opacity: 0.72, fontSize: '11px' }}>
+            Cost: {nextCost} | Type: {entry.category || 'unknown'} | Cap: {cap}
+            {bonus > 0 ? ` | Bonus: ${bonus}` : ''}
+          </Box>
+        </Stack.Item>
 
-      <Stack.Item>
-        <Stack align="center">
-          <Stack.Item>
-            <Button
-              compact
-              onClick={() => act('remove_skill', { path: skillPath, amount: 1 })}
-              disabled={disableRemove}>
-              -
-            </Button>
-          </Stack.Item>
+        <Stack.Item>
+          <Stack align="center">
+            <Stack.Item>
+              <Button
+                compact
+                onClick={() => act('remove_skill', { path: skillPath, amount: 1 })}
+                disabled={disableRemove}>
+                -
+              </Button>
+            </Stack.Item>
 
-          <Stack.Item>
-            <Box
-              width="56px"
-              textAlign="center"
-              bold
-              style={{
-                fontSize: '13px',
-              }}>
-              {displayValue}
-            </Box>
-          </Stack.Item>
+            <Stack.Item>
+              <Box
+                width="56px"
+                textAlign="center"
+                bold
+                style={{
+                  fontSize: '13px',
+                }}>
+                {displayValue}
+              </Box>
+            </Stack.Item>
 
-          <Stack.Item>
-            <Button
-              compact
-              onClick={() => act('add_skill', { path: skillPath, amount: 1 })}
-              disabled={disableAdd}>
-              +
-            </Button>
-          </Stack.Item>
-        </Stack>
-      </Stack.Item>
-    </Stack>
+            <Stack.Item>
+              <Button
+                compact
+                onClick={() => act('add_skill', { path: skillPath, amount: 1 })}
+                disabled={disableAdd}>
+                +
+              </Button>
+            </Stack.Item>
+          </Stack>
+        </Stack.Item>
+      </Stack>
     </div>
   );
 };
@@ -1181,13 +1168,13 @@ const SkillsDomainPanel = ({
   rows,
   data,
   act,
-  setHoveredSkill,
+  setHoveredItem,
 }: {
   domain: SkillDomainKey;
   rows: Array<[string, SkillEntry]>;
   data: Data;
   act: BackendAct;
-  setHoveredSkill: (value: SkillHoverData | null) => void;
+  setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const domainRemaining = getDomainRemainingPoints(data, domain);
 
@@ -1221,7 +1208,7 @@ const SkillsDomainPanel = ({
                 state={data.skills?.[skillPath]}
                 act={act}
                 domainRemaining={domainRemaining}
-                setHoveredSkill={setHoveredSkill}
+                setHoveredItem={setHoveredItem}
               />
             ))}
           </Box>
@@ -1235,12 +1222,12 @@ const SkillsTab = ({
   data,
   act,
   search,
-  setHoveredSkill,
+  setHoveredItem,
 }: {
   data: Data;
   act: BackendAct;
   search: string;
-  setHoveredSkill: (value: SkillHoverData | null) => void;
+  setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const groups = useMemo(() => {
     const byDomain: Record<SkillDomainKey, Array<[string, SkillEntry]>> = {
@@ -1292,7 +1279,7 @@ const SkillsTab = ({
               rows={groups[domain]}
               data={data}
               act={act}
-              setHoveredSkill={setHoveredSkill}
+              setHoveredItem={setHoveredItem}
             />
           ))}
         </Stack>
@@ -1511,7 +1498,7 @@ const ItemsTab = ({
                       bold
                       mb={0.5}
                       style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
-                      {getSlotLabel(slotKey)} ({items.length})
+                      {getSlotLabel(slotKey)}
                     </Box>
 
                     <Stack wrap>
@@ -1531,8 +1518,8 @@ const ItemsTab = ({
                               category: getCategoryLabel(entry.category),
                               costText: `${entry.cost || 0} pts`,
                               total: entry.amount || 0,
-                              leftHelp: 'add item',
-                              rightHelp: 'remove item',
+                              leftHelp: 'LMB: add item',
+                              rightHelp: 'RMB: remove item',
                             })
                           }
                           onHoverEnd={() => setHoveredItem(null)}
@@ -1602,83 +1589,72 @@ const LoadoutTab = ({
                 {getCategoryLabel(categoryKey)}
               </Box>
 
-              {slotGroups.map(([slotKey, items]) => {
-                const visibleItems = items.slice(0, MAX_RENDERED_ITEMS_PER_SLOT);
-
-                return (
+              {slotGroups.map(([slotKey, items]) => (
+                <Box
+                  key={`${categoryKey}-${slotKey}`}
+                  mb={0.75}
+                  style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: '6px',
+                    padding: '6px 8px 8px 8px',
+                  }}>
                   <Box
-                    key={`${categoryKey}-${slotKey}`}
-                    mb={0.75}
+                    bold
+                    mb={0.5}
                     style={{
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid rgba(255,255,255,0.06)',
-                      borderRadius: '6px',
-                      padding: '6px 8px 8px 8px',
+                      fontSize: '12px',
+                      letterSpacing: '0.35px',
+                      opacity: 0.88,
                     }}>
-                    <Box
-                      bold
-                      mb={0.5}
-                      style={{
-                        fontSize: '12px',
-                        letterSpacing: '0.35px',
-                        opacity: 0.88,
-                      }}>
-                      {getSlotLabel(slotKey)} ({items.length})
-                    </Box>
-
-                    <Stack wrap>
-                      {visibleItems.map(([itemPath, entry]) => {
-                        const amount = entry.amount || 0;
-                        const bag = Math.max(0, Math.min(entry.bag || 0, amount));
-                        const equip = Math.max(0, entry.equip || 0);
-
-                        const glow =
-                          bag <= 0
-                            ? 'rgba(80, 220, 120, 0.45)'
-                            : bag >= amount
-                              ? 'rgba(255, 160, 64, 0.45)'
-                              : 'rgba(180, 180, 180, 0.3)';
-
-                        return (
-                          <ItemTile
-                            key={itemPath}
-                            name={entry.name || itemPath}
-                            topRightText={`x${amount}`}
-                            bottomLeftText={bag > 0 ? `B${bag}` : undefined}
-                            bottomRightText={equip > 0 ? `E${equip}` : undefined}
-                            icon={entry.icon}
-                            glow={glow}
-                            onLeftClick={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
-                            onRightClick={() =>
-                              act('move_item_to_equip', { path: itemPath, amount: 1 })
-                            }
-                            onHoverStart={() =>
-                              setHoveredItem({
-                                name: entry.name || itemPath,
-                                slot: getSlotLabel(entry.slot_group),
-                                category: getCategoryLabel(entry.category),
-                                total: amount,
-                                bag,
-                                equip,
-                                leftHelp: '+1 to bag',
-                                rightHelp: '-1 from bag / back to equip',
-                              })
-                            }
-                            onHoverEnd={() => setHoveredItem(null)}
-                          />
-                        );
-                      })}
-                    </Stack>
-
-                    {items.length > MAX_RENDERED_ITEMS_PER_SLOT && (
-                      <NoticeBox>
-                        Showing first {MAX_RENDERED_ITEMS_PER_SLOT} items. Use search to narrow
-                        results.
-                      </NoticeBox>
-                    )}
+                    {getSlotLabel(slotKey)} ({items.length})
                   </Box>
-                );
-              })}
+
+                  <Stack wrap>
+                    {items.map(([itemPath, entry]) => {
+                      const amount = entry.amount || 0;
+                      const bag = Math.max(0, Math.min(entry.bag || 0, amount));
+                      const equip = Math.max(0, entry.equip || 0);
+
+                      const glow =
+                        bag <= 0
+                          ? 'rgba(80, 220, 120, 0.45)'
+                          : bag >= amount
+                            ? 'rgba(255, 160, 64, 0.45)'
+                            : 'rgba(180, 180, 180, 0.3)';
+
+                      return (
+                        <ItemTile
+                          key={itemPath}
+                          name={entry.name || itemPath}
+                          topRightText={`x${amount}`}
+                          bottomLeftText={bag > 0 ? `B${bag}` : undefined}
+                          bottomRightText={equip > 0 ? `E${equip}` : undefined}
+                          icon={entry.icon}
+                          glow={glow}
+                          onLeftClick={() => act('move_item_to_bag', { path: itemPath, amount: 1 })}
+                          onRightClick={() =>
+                            act('move_item_to_equip', { path: itemPath, amount: 1 })
+                          }
+                          onHoverStart={() =>
+                            setHoveredItem({
+                              name: entry.name || itemPath,
+                              slot: getSlotLabel(entry.slot_group),
+                              category: getCategoryLabel(entry.category),
+                              total: amount,
+                              bag,
+                              equip,
+                              leftHelp: 'LMB: +1 to bag',
+                              rightHelp: 'RMB: move to equip',
+                            })
+                          }
+                          onHoverEnd={() => setHoveredItem(null)}
+                        />
+                      );
+                    })}
+                  </Stack>
+                </Box>
+              ))}
             </Box>
           ))}
         </Stack>
@@ -1692,7 +1668,6 @@ export const TATBuild = () => {
   const [tab, setTab] = useState<TabKey>('control');
   const [search, setSearch] = useState('');
   const [hoveredItem, setHoveredItem] = useState<HoverCardData | null>(null);
-  const [hoveredSkill, setHoveredSkill] = useState<SkillHoverData | null>(null);
 
   const [cachedAvailableItems, setCachedAvailableItems] = useState<Record<string, ItemEntry>>({});
   const [cachedItemStates, setCachedItemStates] = useState<Record<string, ItemState>>({});
@@ -1707,20 +1682,18 @@ export const TATBuild = () => {
     [data.tat_presets]
   );
 
-  const hasCachedItems = Object.keys(cachedAvailableItems).length > 0;
-
   useEffect(() => {
     if (tab !== 'items' && tab !== 'loadout') {
       return;
     }
 
-    if (hasCachedItems) {
+    if (Object.keys(cachedAvailableItems).length > 0) {
       act('request_item_cache', { full: 0 });
       return;
     }
 
     act('request_item_cache', { full: 1 });
-  }, [tab, hasCachedItems]);
+  }, [tab]);
 
   useEffect(() => {
     const packet = data.item_cache;
@@ -1866,7 +1839,7 @@ export const TATBuild = () => {
               data={data}
               act={act}
               search={search}
-              setHoveredSkill={setHoveredSkill}
+              setHoveredItem={setHoveredItem}
             />
           )}
           {tab === 'traits' && <TraitsTab data={data} act={act} search={search} />}
@@ -1927,7 +1900,6 @@ export const TATBuild = () => {
         </Stack>
 
         <HoverCard data={hoveredItem} />
-        <SkillHoverCard data={hoveredSkill} />
       </Window.Content>
     </Window>
   );
