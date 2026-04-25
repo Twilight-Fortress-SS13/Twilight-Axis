@@ -5,7 +5,7 @@
 		"stats" = list(
 			STATKEY_STR = 12,
 			STATKEY_WIL = 12,
-			STATKEY_CON = 12,
+			STATKEY_CON = 11,
 			STATKEY_SPD = 11,
 		),
 
