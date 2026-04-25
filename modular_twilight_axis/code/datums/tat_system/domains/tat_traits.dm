@@ -33,13 +33,13 @@
 	var/list/entry = get_entry(trait_id)
 	if(!islist(entry))
 		return 0
-	return round((isnum(entry["cost"]) ? entry["cost"] : 0) * TAT_TRAIT_POINT_SCALE)
+	return round((isnum(entry["cost"]) ? entry["cost"] : 0))
 
 /datum/tat_traits/proc/get_cost_modifier(trait_id)
 	switch(trait_id)
 		if(TAT_TRAIT_BONUS_STAT_POOL)
 			if(has_trait(TRAIT_OUTLANDER))
-				return -(TAT_TRAIT_DISCOUNT * TAT_TRAIT_POINT_SCALE)
+				return -(TAT_TRAIT_DISCOUNT)
 	return 0
 
 /datum/tat_traits/proc/get_display_cost(trait_id)
