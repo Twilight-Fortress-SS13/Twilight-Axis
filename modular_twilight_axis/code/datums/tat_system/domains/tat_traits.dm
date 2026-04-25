@@ -94,10 +94,13 @@
 		if(islist(skill_map))
 			total += round(skill_map[skill_type] || 0)
 
-	if(has_trait(TRAIT_ARCYNE) && !has_defensive_trait_lockout() && skill_type == /datum/skill/magic/arcane)
-		total += 2
+	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && skill_type == /datum/skill/magic/arcane)
+		total += 1
 
 	if(has_trait(TAT_TRAIT_DIVINE_INITIATE) && skill_type == /datum/skill/magic/holy)
+		total += 1
+
+	if(has_trait(TAT_TRAIT_DRUID_INITIATE) && skill_type == /datum/skill/magic/druidic)
 		total += 1
 
 	return total
@@ -287,13 +290,13 @@
 	return list("mastery" = FALSE, "major" = major, "minor" = minor, "utilities" = utilities, "ward" = TRUE)
 
 /datum/tat_traits/proc/can_train_arcane()
-	return !!has_trait(TRAIT_ARCYNE)
+	return TRUE
 
 /datum/tat_traits/proc/can_train_holy()
-	return !!has_trait(TAT_TRAIT_DIVINE_INITIATE)
+	return TRUE
 
 /datum/tat_traits/proc/can_train_druidic()
-	return !!has_trait(TAT_TRAIT_DRUID_INITIATE)
+	return TRUE
 
 /datum/tat_traits/proc/sanitize()
 	for(var/trait_id in selected.Copy())

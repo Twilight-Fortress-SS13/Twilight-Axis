@@ -160,19 +160,29 @@
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_magic_skill_cap(skill_type)
+	var/cap = 1
+
 	if(skill_type == /datum/skill/magic/arcane)
-		if(!owner_build?.can_train_arcane())
-			return 0
+		if(owner_build?.has_trait(TAT_TRAIT_MAGE_MINOR_SLOT_2))
+			cap = 6
+		else if(owner_build?.has_trait(TAT_TRAIT_MAGE_MAJOR_SLOT))
+			cap = 5
+		else if(owner_build?.has_trait(TAT_TRAIT_MAGE_INITIATE))
+			cap = 3
 
-	if(skill_type == /datum/skill/magic/holy)
-		if(!owner_build?.can_train_holy())
-			return 0
+	else if(skill_type == /datum/skill/magic/holy)
+		if(owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_3))
+			cap = 6
+		else if(owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_2))
+			cap = 5
+		else if(owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_1))
+			cap = 3
 
-	if(skill_type == /datum/skill/magic/druidic)
-		if(!owner_build?.can_train_druidic())
-			return 0
+	else if(skill_type == /datum/skill/magic/druidic)
+		if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
+			cap = 6
 
-	return min(TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
+	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_noncombat_skill_cap(skill_type)
 	var/base_cap = TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM

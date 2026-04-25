@@ -11,8 +11,6 @@
 /datum/tat_build/proc/get_ui_skill_domain_key(domain)
 	if(domain == TAT_SKILL_DOMAIN_COMBAT)
 		return "combat"
-	if(domain == TAT_SKILL_DOMAIN_MAGIC)
-		return "magic"
 	if(domain == TAT_SKILL_DOMAIN_WANDERING)
 		return "wandering"
 	if(domain == TAT_SKILL_DOMAIN_GATHERING)
@@ -26,7 +24,6 @@
 /datum/tat_build/proc/get_all_ui_skill_types()
 	var/list/result = list()
 	result += TAT_SKILLS_COMBAT
-	result += TAT_SKILLS_MAGIC
 	result += TAT_SKILLS_WANDERING
 	result += TAT_SKILLS_GATHERING
 	result += TAT_SKILLS_CRAFTING
@@ -101,7 +98,6 @@
 /datum/tat_build/proc/build_ui_skill_points_by_domain()
 	var/list/result = list(
 		"combat" = 0,
-		"magic" = 0,
 		"wandering" = 0,
 		"gathering" = 0,
 		"crafting" = 0,
@@ -112,7 +108,6 @@
 		return result
 
 	result["combat"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_COMBAT)
-	result["magic"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_MAGIC)
 	result["wandering"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_WANDERING)
 	result["gathering"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_GATHERING)
 	result["crafting"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_CRAFTING)
@@ -123,7 +118,6 @@
 /datum/tat_build/proc/build_ui_skill_points_remaining_by_domain()
 	var/list/result = list(
 		"combat" = 0,
-		"magic" = 0,
 		"wandering" = 0,
 		"gathering" = 0,
 		"crafting" = 0,
@@ -134,7 +128,6 @@
 		return result
 
 	result["combat"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_COMBAT)
-	result["magic"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_MAGIC)
 	result["wandering"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_WANDERING)
 	result["gathering"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_GATHERING)
 	result["crafting"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_CRAFTING)
@@ -380,19 +373,24 @@
 	return result
 
 /datum/tat_build/proc/build_ui_tat_presets()
+	if(islist(ui_tat_presets_cache))
+		return ui_tat_presets_cache
+
 	init_tat_presets()
+
 	var/list/result = list()
 	for(var/preset_id in tat_presets)
 		var/datum/tat_preset/sample/preset = tat_presets[preset_id]
 		if(!istype(preset, /datum/tat_preset/sample))
 			continue
-		var/list/summary = build_slot_summary_from_data(preset.get_build_data())
 		result += list(list(
 			"id" = preset.id,
 			"name" = preset.name,
-			"summary" = summary,
+			"summary" = build_slot_summary_from_data(preset.get_build_data()),
 		))
-	return result
+
+	ui_tat_presets_cache = result
+	return ui_tat_presets_cache
 
 /datum/tat_build/ui_state(mob/user)
 	return GLOB.always_state
@@ -412,6 +410,9 @@
 	)
 
 /datum/tat_build/ui_data(mob/user)
+	var/list/validation = get_validation_issues()
+	var/can_save_build = !length(validation)
+
 	return list(
 		"stats" = build_ui_stats(),
 		"skills" = build_ui_skills(),
@@ -437,8 +438,8 @@
 		"tat_slots" = build_ui_tat_slots(),
 		"active_tat_slot" = active_tat_slot,
 		"tat_presets" = build_ui_tat_presets(),
-		"can_save" = can_save(),
-		"validation_issues" = get_validation_issues(),
+		"can_save" = can_save_build,
+		"validation_issues" = validation,
 		"dirty" = dirty,
 	)
 

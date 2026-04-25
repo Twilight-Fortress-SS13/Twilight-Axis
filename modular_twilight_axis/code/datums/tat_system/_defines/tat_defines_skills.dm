@@ -14,7 +14,6 @@
 #define TAT_COMBAT_MASTER_SKILL_LIMIT 1
 
 #define TAT_SKILL_DOMAIN_COMBAT "combat"
-#define TAT_SKILL_DOMAIN_MAGIC "magic"
 #define TAT_SKILL_DOMAIN_WANDERING "wandering"
 #define TAT_SKILL_DOMAIN_GATHERING "gathering"
 #define TAT_SKILL_DOMAIN_CRAFTING "crafting"
@@ -35,12 +34,6 @@
 	/datum/skill/combat/slings, \
 	/datum/skill/combat/staves, \
 	/datum/skill/combat/twilight_firearms \
-)
-
-#define TAT_SKILLS_MAGIC list( \
-	/datum/skill/magic/holy, \
-	/datum/skill/magic/arcane, \
-	/datum/skill/magic/druidic \
 )
 
 #define TAT_SKILLS_WANDERING list( \
@@ -83,14 +76,16 @@
 	/datum/skill/misc/sneaking, \
 	/datum/skill/misc/lockpicking, \
 	/datum/skill/misc/music, \
-	/datum/skill/misc/medicine \
+	/datum/skill/misc/medicine, \
+	/datum/skill/magic/holy, \
+	/datum/skill/magic/arcane, \
+	/datum/skill/magic/druidic \
 )
 
-#define TAT_SKILLS_ALL (TAT_SKILLS_COMBAT + TAT_SKILLS_MAGIC + TAT_SKILLS_WANDERING + TAT_SKILLS_GATHERING + TAT_SKILLS_CRAFTING + TAT_SKILLS_MISC)
+#define TAT_SKILLS_ALL (TAT_SKILLS_COMBAT + TAT_SKILLS_WANDERING + TAT_SKILLS_GATHERING + TAT_SKILLS_CRAFTING + TAT_SKILLS_MISC)
 
 #define TAT_DEFAULT_SKILL_DOMAIN_POINTS list( \
 	TAT_SKILL_DOMAIN_COMBAT = 9, \
-	TAT_SKILL_DOMAIN_MAGIC = 1, \
 	TAT_SKILL_DOMAIN_WANDERING = 9, \
 	TAT_SKILL_DOMAIN_GATHERING = 3, \
 	TAT_SKILL_DOMAIN_CRAFTING = 6, \
@@ -211,8 +206,6 @@
 /proc/tat_get_skill_domain(skill_type)
 	if(skill_type in TAT_SKILLS_COMBAT)
 		return TAT_SKILL_DOMAIN_COMBAT
-	if(skill_type in TAT_SKILLS_MAGIC)
-		return TAT_SKILL_DOMAIN_MAGIC
 	if(skill_type in TAT_SKILLS_WANDERING)
 		return TAT_SKILL_DOMAIN_WANDERING
 	if(skill_type in TAT_SKILLS_GATHERING)

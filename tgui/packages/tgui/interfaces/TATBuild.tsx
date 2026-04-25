@@ -92,7 +92,6 @@ type ItemCachePacket = {
 
 type SkillDomainKey =
   | 'combat'
-  | 'magic'
   | 'wandering'
   | 'gathering'
   | 'crafting'
@@ -171,7 +170,6 @@ const MAX_RENDERED_ITEMS_PER_SLOT = 80;
 
 const SKILL_DOMAIN_TITLES: Record<SkillDomainKey, string> = {
   combat: 'Combat',
-  magic: 'Magic',
   wandering: 'Wandering',
   gathering: 'Gathering',
   crafting: 'Crafting',
@@ -180,7 +178,6 @@ const SKILL_DOMAIN_TITLES: Record<SkillDomainKey, string> = {
 
 const SKILL_DOMAIN_ORDER: SkillDomainKey[] = [
   'combat',
-  'magic',
   'wandering',
   'gathering',
   'crafting',
@@ -358,7 +355,6 @@ const normalizeSkillDomain = (value?: string | null): SkillDomainKey => {
   const normalized = normalizeSearch(value);
   if (
     normalized === 'combat' ||
-    normalized === 'magic' ||
     normalized === 'wandering' ||
     normalized === 'gathering' ||
     normalized === 'crafting' ||
@@ -1232,7 +1228,6 @@ const SkillsTab = ({
   const groups = useMemo(() => {
     const byDomain: Record<SkillDomainKey, Array<[string, SkillEntry]>> = {
       combat: [],
-      magic: [],
       wandering: [],
       gathering: [],
       crafting: [],
