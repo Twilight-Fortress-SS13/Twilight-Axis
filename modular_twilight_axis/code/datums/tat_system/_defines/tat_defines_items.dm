@@ -271,7 +271,7 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted = TAT_ITEM_ENTRY("Fluted Plate", 4, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/full/iron = TAT_ITEM_ENTRY("Iron Plate Armor", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/full/raneshen_plated = TAT_ITEM_ENTRY("Ranesheni Rlate Armor", 5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
-	/obj/item/clothing/suit/roguetown/armor/plate/full/samsibsa = TAT_ITEM_ENTRY("Samsibsa Scaleplate", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/full/samsibsa = TAT_ITEM_ENTRY("Samsibsa Scaleplate", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/iron = TAT_ITEM_ENTRY("iron half-plate", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/raneshen_scale = TAT_ITEM_ENTRY("Ranesheni Medium Lamellar Armor", 4, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/scale = TAT_ITEM_ENTRY("Scalemail", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
