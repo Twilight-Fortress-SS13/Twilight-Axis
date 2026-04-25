@@ -1,4 +1,4 @@
-#define TRAIT_MASTERYOFNOTHING_POINTS 25
+#define TRAIT_MASTERYOFNOTHING_POINTS 24
 
 #define TAT_TRAIT_WARRIOR_EXPERT "tat_warrior_expert"
 #define TAT_TRAIT_WARRIOR_MASTER "tat_warrior_master"
