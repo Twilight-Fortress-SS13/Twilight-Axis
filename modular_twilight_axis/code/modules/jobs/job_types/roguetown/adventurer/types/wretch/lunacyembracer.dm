@@ -63,4 +63,4 @@
 
 	H.cmode_music = 'modular_twilight_axis/sound/music/combat_berserker.ogg'
 	to_chat(H, span_danger("You have abandoned your humanity to run wild under the moon. The call of nature fills your soul!"))
-	wretch_select_bounty(H)
+	bountychoice_lunacy(H)

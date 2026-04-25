@@ -137,7 +137,6 @@
 
 	var/datum/erp_sex_organ/penis/P = controller.get_owner_penis_organ()
 	if(!P || !P.have_knot)
-		controller.do_knot_action = FALSE
 		controller.ui?.request_update()
 		return FALSE
 
@@ -163,7 +162,6 @@
 
 	var/datum/erp_sex_organ/penis/P = controller.get_owner_penis_organ()
 	if(!P || !P.have_knot)
-		controller.do_knot_action = FALSE
 		return out
 
 	var/mob/living/carbon/human/top = P.get_owner()
@@ -176,16 +174,15 @@
 
 	var/max_units = max(1, P.count_to_action)
 	var/has_any_link = FALSE
+	var/used_units = 0
+
 	for(var/i = 0; i < max_units; i++)
-		if(K.get_link_for_penis_unit(P, i))
+		var/datum/erp_knot_link/L = K.get_link_for_penis_unit(P, i)
+		if(L && L.is_valid())
 			has_any_link = TRUE
-			break
+			used_units++
 
 	out["has_knotted_penis"] = has_any_link
-	var/used_units = 0
-	for(var/i = 0; i < max_units; i++)
-		if(K.get_link_for_penis_unit(P, i))
-			used_units++
 
 	if(used_units >= max_units)
 		out["can_knot_now"] = FALSE
@@ -198,23 +195,37 @@
 		if(L.actor_active != controller.owner)
 			continue
 
-		var/datum/erp_sex_organ/other = null
-
-		if(L.init_organ == P)
-			other = L.target_organ
-		else if(L.target_organ == P)
-			other = L.init_organ
-		else
+		if(L.init_organ != P)
 			continue
 
-		if(!other)
+		var/datum/erp_sex_organ/other = L.target_organ
+		if(!other || QDELETED(other))
 			continue
 
-		for(var/i = 0; i < max_units; i++)
-			if(!K.get_link_for_penis_unit(P, i))
-				if(K.can_start_action_with_penis(P, other, i))
-					out["can_knot_now"] = TRUE
-					return out
+		if(!(other.erp_organ_type in list(
+			SEX_ORGAN_VAGINA,
+			SEX_ORGAN_ANUS,
+			SEX_ORGAN_MOUTH
+		)))
+			continue
+
+		var/already_knotted = FALSE
+		if(K.active_links && K.active_links.len)
+			for(var/datum/erp_knot_link/KL as anything in K.active_links)
+				if(!istype(KL) || !KL.is_valid())
+					continue
+				if(KL.penis_org != P)
+					continue
+				if(KL.receiving_org != other)
+					continue
+				already_knotted = TRUE
+				break
+
+		if(already_knotted)
+			continue
+
+		out["can_knot_now"] = TRUE
+		return out
 
 	out["can_knot_now"] = FALSE
 	return out

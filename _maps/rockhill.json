@@ -2,10 +2,17 @@
     "map_name": "Rockhill",
     "map_path": "map_files/rockhill",
     "map_file": "rockhill.dmm",
-	"traits": [{"Up": true}, {"Up": true, "Down": true}, {"Up": true, "Down": true}, {"Up": true, "Down": true}, {"Down": true}],
-	"other_z": [
+	"traits": [
+		{"Up": true}, 
+		{"Up": true, "Down": true}, 
+		{"Up": true, "Down": true}, 
+		{"Up": true, "Down": true}, 
+		{"Down": true}
+	],
+	"other_z": 
+		[
 		"_maps/map_files/rockhill/rockhill_bases.json",
-		"_maps/map_files/otherz/goblin_cave.json"
+    "_maps/map_files/otherz/goblin_cave.json"
 	],
 	"space_empty_levels": 0,
 	"space_ruin_levels": 0,

@@ -186,3 +186,12 @@
 
 /obj/item/clothing/mask/rogue/lordmask/naledi/steel
 	max_integrity = 200
+
+/obj/item/clothing/mask/rogue/facemask/etrmask
+	name = "conquistador mask"
+	desc = "A steel mask replicating the face of a famous Etruscan captain."
+	icon_state = "etrmask"
+	max_integrity = 200
+	smeltresult = /obj/item/ingot/steel
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'

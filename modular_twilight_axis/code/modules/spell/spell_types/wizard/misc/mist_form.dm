@@ -20,17 +20,17 @@
 	ignore_los = FALSE
 	var/duration = 12 SECONDS
 
-/obj/effect/proc_holder/spell/self/mist_form/cast(list/targets, mob/living/user = usr)
-	if(user.has_status_effect(/datum/status_effect/buff/mist_form))
-		to_chat(user, span_warning("I am already in mist form!"))
-		revert_cast()
-		return FALSE
+//obj/effect/proc_holder/spell/self/mist_form/cast(list/targets, mob/living/user = usr) Эффект мист формы теперь необходимо выключать самостоятельно. Если хотите вернуть спелл в игру, то оформите отключение баффа.
+//	if(user.has_status_effect(/datum/status_effect/buff/mist_form))
+//		to_chat(user, span_warning("I am already in mist form!"))
+//		revert_cast()
+//		return FALSE
 
-	user.visible_message(span_warning("[user] dissolves into a ghostly mist!"), \
-						 span_notice("I shift my body into the ethereal plane."))
+//	user.visible_message(span_warning("[user] dissolves into a ghostly mist!"),
+						 //span_notice("I shift my body into the ethereal plane."))
 	
 
-	user.apply_status_effect(/datum/status_effect/buff/mist_form, duration)
+//	user.apply_status_effect(/datum/status_effect/buff/mist_form, duration)
 	
-	playsound(user, 'sound/magic/swap.ogg', 75, TRUE)
-	return TRUE
+//	playsound(user, 'sound/magic/swap.ogg', 75, TRUE)
+//	return TRUE

@@ -32,19 +32,21 @@
 	range = 12		
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
-	woundclass = BCLASS_STAB
-	flag = "stab"
-	armor_penetration = PEN_HEAVY
+	woundclass = BCLASS_PIERCE
+	flag = "bullet"
+	armor_penetration = PEN_NONE
 	speed = 0.1
+	intdamfactor = 1.5
 
 /obj/projectile/bullet/twilight_lead/silver
 	name = "silver sphere"
 	desc = "Небольшая серебряная сфера. Мягче, чем свинцовая пуля, но крайне эффективна против нежити."
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/silver
 	damage = 120
-	armor_penetration = PEN_MEDIUM
+	armor_penetration = PEN_NONE
 	silver = TRUE
 	critfactor = 0.8
+	intdamfactor = 1
 
 /obj/projectile/bullet/twilight_cannonball
 	name = "cannonball"
@@ -57,13 +59,14 @@
 	range = 16		
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 0
-	woundclass = BCLASS_STAB
-	flag = "stab"
-	armor_penetration = PEN_MEDIUM
+	woundclass = BCLASS_PIERCE
+	flag = "bullet"
+	armor_penetration = PEN_NONE
 	speed = 0.1
+	intdamfactor = 3
 	var/cannon_aoe_radius = 1
 	var/cannon_aoe_damage_ratio = 0.25
-	var/cannon_aoe_penetration = PEN_MEDIUM
+	var/cannon_aoe_penetration = PEN_NONE
 
 /obj/projectile/bullet/twilight_grapeshot
 	name = "grapeshot"
@@ -76,11 +79,12 @@
 	range = 10
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
-	woundclass = BCLASS_STAB
-	flag = "stab"
-	armor_penetration = PEN_HEAVY
+	woundclass = BCLASS_PIERCE
+	flag = "bullet"
+	armor_penetration = PEN_NONE
 	speed = 0.1
 	critfactor = 0.67
+	intdamfactor = 1.5
 
 /**
  * Special runelock ammo
@@ -99,9 +103,9 @@
 	range = 50
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	embedchance = 100
-	woundclass = BCLASS_STAB
-	flag = "stab"
-	armor_penetration = PEN_HEAVY
+	woundclass = BCLASS_PIERCE
+	flag = "bullet"
+	armor_penetration = PEN_NONE
 
 /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	name = "blessed sphere"

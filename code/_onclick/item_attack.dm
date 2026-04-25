@@ -25,6 +25,12 @@
 			if(istype(src, /obj/item/rogueweapon) && !istype(src, /obj/item/rogueweapon/werewolf_claw))
 				to_chat(user, span_warning("My fingers are too misshapen to use this puny implement."))
 				return
+		// even less aggressive; allows use of tools but not weapons
+		if(HAS_TRAIT(user, TRAIT_TINYPAWS))
+			var/obj/item/rogueweapon/weapon = src
+			if(istype(weapon) && !weapon.is_tool)
+				to_chat(user, span_warning("I am too small to properly wield a weapon."))
+				return
 	if(tool_behaviour && target.tool_act(user, src, tool_behaviour))
 		return
 	if(pre_attack(target, user, params))
@@ -87,11 +93,6 @@
 		worn_thing.hit_response(src, user) //checks if clothing has hit response. Refer to Items.dm
 	return I.attack(src, user)
 
-/mob/living
-	var/tempatarget = null
-	var/pegleg = 0			//Handles check & slowdown for peglegs. Fuckin' bootleg, literally, but hey it at least works.
-	var/construct = 0
-	var/burialrited = FALSE
 
 /obj/item/proc/attack(mob/living/M, mob/living/user)
 	var/override_status

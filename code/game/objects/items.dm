@@ -1617,6 +1617,15 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/on_embed(obj/item/bodypart/bp)
 	return
 
+/obj/item/proc/has_armor_value()
+	if(istype(src, /obj/item/clothing))
+		var/obj/item/clothing/C = src
+		if(C.armor)
+			var/datum/armor/def_armor = C.armor
+			return def_armor.blunt || def_armor.slash || def_armor.stab || def_armor.piercing
+
+	return FALSE
+
 /obj/item/proc/defense_examine()
 	var/list/str = list()
 	if(istype(src, /obj/item/clothing))
@@ -1630,6 +1639,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 				defense += "<br>"
 				defense += "[SPAN_TOOLTIP("Each tier reduces damage by 20% of base. Reduced damage still reaches HP. Armor absorbs what was blocked.", "<u><b>REDUCE:</b></u>")] [colorgrade_rating("BURN", def_armor.fire, elaborate = TRUE, max_tier = 5)]"
 				defense += " | [colorgrade_rating("ACID", def_armor.acid, elaborate = TRUE, max_tier = 5)]"
+				defense += " | [colorgrade_rating("BULLET", def_armor.bullet, elaborate = TRUE, max_tier = 5)]" //TA EDIT
 				defense += "<br>"
 				defense += "[SPAN_TOOLTIP("Blocks attacks below this tier (Armor takes all damage). Same tier penetrates 20% (80% goes to armor). Exceeding tier penetrates fully.", "<u><b>BLOCK:</b></u>")] "
 				defense += "[colorgrade_rating("SLASH", def_armor.slash, elaborate = TRUE)] | "
@@ -1720,3 +1730,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 /obj/item/proc/update_wdefense_dynamic()
 	wdefense_dynamic = (wielded ? (wdefense + wdefense_wbonus) : wdefense)
+
+/obj/item/proc/ai_get_custom_inventory()
+	return null
+
+/obj/item/proc/ai_withdraw_item(obj/item/it, mob/living/user)
+	return FALSE

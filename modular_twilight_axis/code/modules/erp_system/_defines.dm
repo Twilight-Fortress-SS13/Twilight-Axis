@@ -8,6 +8,8 @@
 #define SEX_ORGAN_PENIS   "penis"
 #define SEX_ORGAN_BODY    "body"
 
+#define ERP_ORGAN_SLEEP_TRAUMA_LOSS -2
+
 #define REL_LOVE_POTION (1<<0)
 
 #define SEX_SENSITIVITY_MAX 2

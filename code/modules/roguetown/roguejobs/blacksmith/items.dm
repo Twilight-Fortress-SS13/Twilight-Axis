@@ -279,3 +279,4 @@
 
 /datum/component/metal_glint/proc/stop_process()
 	STOP_PROCESSING(SSobj, src)
+ 

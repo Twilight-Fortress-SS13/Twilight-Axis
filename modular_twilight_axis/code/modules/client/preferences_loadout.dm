@@ -42,11 +42,11 @@
 	if(plevel == 2)
 		modifiers = 8
 	if(plevel == 3)
-		modifiers = 12
-	if(plevel == 4)
 		modifiers = 14
+	if(plevel == 4)
+		modifiers = 18
 	if(plevel == 5)
-		modifiers = 16
+		modifiers = 23
 
 	return modifiers ? max(loadout_size + modifiers, 1) : loadout_size
 

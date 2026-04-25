@@ -20,6 +20,10 @@
 	var/active_pain = 0.0
 	var/passive_pain = 0.0
 	var/allow_overflow_spill = FALSE
+	var/trauma = 0
+	var/trauma_threshold = 100
+	var/trauma_wound_type = null
+	var/trauma_body_zone = BODY_ZONE_CHEST
 
 /datum/erp_sex_organ/New(atom/A)
 	. = ..()
@@ -49,6 +53,7 @@
 	if(istype(H) && H.IsSleeping())
 		if(pain > 0)
 			pain = 0
+		adjust_trauma(ERP_ORGAN_SLEEP_TRAUMA_LOSS)
 
 	if(producing)
 		if(world.time >= last_process_time + process_interval)
@@ -209,17 +214,43 @@
 /// Returns links where this organ is init organ.
 /datum/erp_sex_organ/proc/get_active_links()
 	var/list/out = list()
+
+	if(!islist(links) || !links.len)
+		return out
+
 	for(var/datum/erp_sex_link/L in links)
-		if(L.init_organ == src)
-			out += L
+		if(!L || QDELETED(L))
+			continue
+		if(L.state != LINK_STATE_ACTIVE)
+			continue
+		if(L.init_organ != src)
+			continue
+		if(!L.is_valid())
+			continue
+
+		out += L
+
 	return out
 
 /// Returns links where this organ is target organ.
 /datum/erp_sex_organ/proc/get_passive_links()
 	var/list/out = list()
+
+	if(!islist(links) || !links.len)
+		return out
+
 	for(var/datum/erp_sex_link/L in links)
-		if(L.target_organ == src)
-			out += L
+		if(!L || QDELETED(L))
+			continue
+		if(L.state != LINK_STATE_ACTIVE)
+			continue
+		if(L.target_organ != src)
+			continue
+		if(!L.is_valid())
+			continue
+
+		out += L
+
 	return out
 
 /// Returns TRUE if organ has any liquid system enabled.
@@ -262,37 +293,111 @@
 	return
 
 /datum/erp_sex_organ/proc/sanitize_owner_links(datum/erp_controller/C)
-	if(!islist(links) || !links.len)
+	if(!C)
+		return FALSE
+	if(!links || !links.len)
 		return FALSE
 
-	var/list/new_links = list()
 	var/changed = FALSE
-
-	for(var/datum/erp_sex_link/L in links)
+	for(var/i = links.len; i >= 1; i--)
+		var/datum/erp_sex_link/L = links[i]
+		var/to_cut = FALSE
 		if(!L || QDELETED(L))
+			links.Cut(i, i + 1)
 			changed = TRUE
 			continue
 
-		if(L.init_organ != src && L.target_organ != src)
-			changed = TRUE
+		if(L.init_organ != src)
 			continue
 
-		if(C)
-			if(!islist(C.links) || !(L in C.links))
-				changed = TRUE
-				continue
+		if(L.state != LINK_STATE_ACTIVE)
+			to_cut = TRUE
+		if(!C.links || !(L in C.links))
+			to_cut = TRUE
+		if(!L.actor_active || QDELETED(L.actor_active))
+			to_cut = TRUE
+		if(!L.actor_passive || QDELETED(L.actor_passive))
+			to_cut = TRUE
+		if(!L.init_organ || QDELETED(L.init_organ))
+			to_cut = TRUE
+		if(!L.target_organ || QDELETED(L.target_organ))
+			to_cut = TRUE
+		if(!L.action || QDELETED(L.action))
+			to_cut = TRUE
 
-		if(!L.is_valid())
-			if(C?.links && (L in C.links))
+		if(to_cut)
+			links.Cut(i, i + 1)
+
+			if(C.links && (L in C.links))
 				C.links -= L
+
 			L.finish()
 			qdel(L)
+
 			changed = TRUE
-			continue
-
-		new_links += L
-
-	if(changed)
-		links = new_links
 
 	return changed
+
+/datum/erp_sex_organ/proc/adjust_trauma(amount)
+	if(amount == 0)
+		return
+
+	if(has_own_trauma_wound())
+		return
+
+	trauma = clamp(trauma + amount, 0, trauma_threshold * 2)
+
+	if(trauma >= trauma_threshold)
+		var/overflow = trauma - trauma_threshold
+		var/chance = 10 + overflow * 10
+		chance = clamp(chance, 10, 100)
+
+		if(prob(chance))
+			try_apply_trauma()
+
+/datum/erp_sex_organ/proc/try_apply_trauma()
+	if(has_own_trauma_wound())
+		return FALSE
+
+	var/obj/item/bodypart/part = get_trauma_bodypart()
+	if(!part)
+		return FALSE
+
+	if(!trauma_wound_type)
+		return FALSE
+
+	var/datum/wound/W = GLOB.primordial_wounds[trauma_wound_type]
+	if(!W)
+		return FALSE
+
+	if(!W.can_apply_to_bodypart(part))
+		return FALSE
+
+	var/datum/wound/new_wound = new trauma_wound_type()
+	if(!new_wound.apply_to_bodypart(part, FALSE, TRUE))
+		qdel(new_wound)
+		return FALSE
+
+	trauma = 0
+	return TRUE
+
+/datum/erp_sex_organ/proc/has_own_trauma_wound()
+	var/obj/item/bodypart/part = get_trauma_bodypart()
+	if(!part)
+		return TRUE
+
+	if(!trauma_wound_type)
+		return TRUE
+
+	for(var/datum/wound/W as anything in part.wounds)
+		if(istype(W, trauma_wound_type))
+			return TRUE
+
+	return FALSE
+
+/datum/erp_sex_organ/proc/get_trauma_bodypart()
+	var/mob/living/carbon/human/H = get_owner()
+	if(!H)
+		return null
+
+	return H.get_bodypart(trauma_body_zone)

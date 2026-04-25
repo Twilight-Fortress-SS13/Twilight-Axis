@@ -14,10 +14,12 @@
 	if(!M || !M.client)
 		return
 
-	if(controller.owner)
-		for(var/datum/erp_sex_organ/O in controller.owner.get_organs_ref())
+	var/datum/erp_actor/A = controller.get_actor_by_mob(M)
+	if(A)
+		for(var/datum/erp_sex_organ/O in A.get_organs_ref())
 			if(!O || QDELETED(O))
 				continue
+
 			O.sanitize_owner_links(controller)
 
 	controller.owner_client?.prefs?.apply_erp_kinks_to_mob(M)

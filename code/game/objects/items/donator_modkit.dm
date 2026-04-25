@@ -427,11 +427,6 @@
 	)
 	result_item = /obj/item/rogueweapon/eirenxiv/eirensword
 
-/obj/item/enchantingkit/eiren_helmet
-	name = "'strigidae armet' morphing elixir"
-	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet)
-	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/eiren_helmet
-
 //pretzel - custom steel greatsword. PSYDON LYVES. PSYDON ENDVRES.
 /obj/item/enchantingkit/weapon/waff
 	name = "'Weeper's Lathe' morphing elixir"
@@ -647,6 +642,34 @@
 		/obj/item/rogueweapon/greatsword/grenz/flamberge/blacksteel
 	)
 	result_item = /obj/item/rogueweapon/example/aeternum
+
+
+/obj/item/enchantingkit/weapon/darling
+	name = "'Darling' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long
+	)
+	result_item = /obj/item/rogueweapon/example/darling
+
+/obj/item/enchantingkit/weapon/sumquoderis
+	name = "'Vial of Crimson Ichor'"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Executioners sword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long/exe
+	)
+	result_item = /obj/item/rogueweapon/example/sumquoderis
+
+/obj/item/enchantingkit/weapon/euthanasia
+	name = "'Ritual Dagger Mould'"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Dagger or Seax"
+	target_items = list(
+		/obj/item/rogueweapon/huntingknife/combat,
+		/obj/item/rogueweapon/huntingknife/idagger,
+		/obj/item/rogueweapon/huntingknife/idagger/steel,
+	)
+	result_item = /obj/item/rogueweapon/example/euthanasia
+
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //

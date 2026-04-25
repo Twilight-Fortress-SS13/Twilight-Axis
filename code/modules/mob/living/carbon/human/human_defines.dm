@@ -189,6 +189,8 @@
 
 	var/list/charflaws = list()
 
+	var/list/feint_list = list()
+
 	// curse list and cooldown
 	var/list/curses = list()
 	COOLDOWN_DECLARE(priest_announcement)
@@ -216,3 +218,6 @@
 	var/can_do_sex = TRUE
 
 	fovangle = FOV_DEFAULT
+
+	/// Guarded Virtue (TRAIT_DECEIVING_MEEKNESS) exclusive variable for filtering out our descriptors from examine.
+	var/show_descriptors = TRUE

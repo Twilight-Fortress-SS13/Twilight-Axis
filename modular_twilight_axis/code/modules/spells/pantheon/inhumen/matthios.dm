@@ -26,7 +26,7 @@
 		),
 		//freely spawns 400 mammon!!! no wae! is this trve?!!?!??
 		"Pouch of Bribery" = list(
-			path = /obj/item/storage/belt/rogue/pouch/coins/matthios,
+			path = /obj/item/storage/belt/rogue/pouch/matthios,
 			m_cooldown = 5 MINUTES,
 			m_rank = SKILL_LEVEL_EXPERT,
 			category = "Rogue Arts",
@@ -656,7 +656,10 @@
 	/datum/status_effect/debuff/hereticsermon,
 	/datum/status_effect/debuff/mesmerised,
 	/datum/status_effect/debuff/necrandeathdoorwilloss,
-	/datum/status_effect/debuff/eoran_wilting,)
+	/datum/status_effect/debuff/eoran_wilting,
+	/datum/status_effect/debuff/netted/vile,
+	/datum/status_effect/debuff/bloody_mess,
+	/datum/status_effect/debuff/sensitive_nerves,)
 
 /obj/effect/proc_holder/spell/self/twilight_amongus/cast(list/targets,mob/living/user = usr)
 	for(var/mob/living/carbon/target in view(5, get_turf(user)))
@@ -1368,6 +1371,55 @@
 
 /obj/effect/proc_holder/spell/invoked/projectile/spitfire/matthios_dragon
 	invocation_type = "none"
+
+/obj/effect/proc_holder/spell/invoked/resurrect/twilight_matthios
+	name = "Shackles of Necra"
+	desc = "Invoke Matthios's power to rip the target's soul out of Necra's unholy grasp, reviving them. The strength of your returned comrade will depend on the number of freemen present during the ritual."
+	debuff_type = /datum/status_effect/debuff/twilight_matthios_revival
+	alt_required_items = list()
+	required_items = list()
+	sound = 'sound/magic/slimesquish.ogg'
+	chargedloop = /datum/looping_sound/invokelightning
+	recharge_time = 2 MINUTES //Anastasis Equivalent
+	overlay_icon = 'icons/mob/actions/matthiosmiracles.dmi'
+	overlay_state = "revival"
+	action_icon_state = "revival"
+	action_icon = 'icons/mob/actions/matthiosmiracles.dmi'
+	required_structure = /obj/structure/fluff/psycross/matthios
+
+/datum/status_effect/debuff/twilight_matthios_revival
+	id = "matthios_revival"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/twilight_matthios_revival
+	duration = 45 MINUTES
+	effectedstats = list(
+		STATKEY_STR = -3,
+		STATKEY_SPD = -6,
+		STATKEY_CON = -3
+	)
+
+/datum/status_effect/debuff/twilight_matthios_revival/on_creation(mob/living/new_owner, statchange = 1, stat_to_change = STATKEY_STR)
+	var/freemen = 0
+	for(var/mob/living/carbon/human/comrade in view(5, get_turf(new_owner)))
+		if(istype(comrade.patron, /datum/patron/inhumen/matthios) && comrade != new_owner)
+			freemen += 1
+	if(freemen <= 4)
+		effectedstats = list(
+			STATKEY_STR = (-4 + freemen),
+			STATKEY_SPD = (-8 + freemen * 2),
+			STATKEY_CON = (-4 + freemen)
+		)
+	else
+		effectedstats = list()
+	return ..()
+
+/atom/movable/screen/alert/status_effect/debuff/twilight_matthios_revival
+	name = "Shackles of Necra"
+	desc = "Matthios has cleaved a way for your soul to escape Necra's unholy grasp. Hopefully, enough of your comrades were there to light the path."
+	icon_state = "pom_regret"
+
+/datum/status_effect/debuff/twilight_matthios_revival/on_apply()
+	. = ..()
+	owner.visible_message("<font size=9 color=9c830b>Некра не властна над моими детьми. Восстань, сын Свободы.</font><br>", "<font size=9 color=9c830b>Твои товарищи нуждаются в тебе. Восстань, сын Свободы.</font><br>")
 
 #undef EQUALIZED_GLOW
 #undef FREEDOM_FILTER

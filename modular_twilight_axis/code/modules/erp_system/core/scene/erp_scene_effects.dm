@@ -1,6 +1,6 @@
 #define ERP_SCENE_AROUSAL_MULT 1.90
-#define ERP_SCENE_PAIN_MULT_PASSIVE 1.50
-#define ERP_SCENE_PAIN_MULT_ACTIVE 0.75
+#define ERP_SCENE_PAIN_MULT_PASSIVE 3.00
+#define ERP_SCENE_PAIN_MULT_ACTIVE 0.50
 
 #define INIT_OXYLOSS_MULT	1
 #define TARGET_OXYLOSS_MULT	1.5
@@ -73,15 +73,21 @@
 					if(Oa && !QDELETED(Oa))
 						Oa.add_pain(paA * active_pain_mult)
 						paA *= Oa.pain
+						if(f >= SEX_FORCE_EXTREME)
+							Oa.adjust_trauma(Oa.pain)
 
 				if(isnum(paP) && paP != 0)
 					var/datum/erp_sex_organ/Op = L.target_organ
 					if(Op && !QDELETED(Op))
 						Op.add_pain(paP * passive_pain_mult)
 						paP *= Op.pain
+						if(f >= SEX_FORCE_EXTREME)
+							Op.adjust_trauma(Op.pain)
 
 				a_pain_sum += paA
 				p_pain_sum += paP
+
+				
 
 		if(L.action && L.action.inject_timing == INJECT_CONTINUOUS)
 			L.action.handle_inject(L, null)

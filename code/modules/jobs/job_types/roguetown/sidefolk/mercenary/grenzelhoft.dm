@@ -168,6 +168,7 @@
 		/datum/skill/labor/lumberjacking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,	// crafting for pallisades, lumberjacking for not fucking up wood
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/hunting = SKILL_LEVEL_EXPERT,
 	)
 	extra_context = "Choose between Arquebus, Crossbow and Heavy Crossbow as your tool of the trade, gaining Mastery of selected weapon." //TA EDIT END
 
@@ -281,7 +282,8 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/book/spellbook = 1
+		/obj/item/book/spellbook = 1,
+		/obj/item/chalk = 1
 		)
 	ADD_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)
 	H.merctype = 7

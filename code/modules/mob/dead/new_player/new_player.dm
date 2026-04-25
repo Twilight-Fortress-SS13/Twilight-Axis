@@ -369,7 +369,10 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 	return JOB_AVAILABLE
 
 /mob/dead/new_player/proc/AttemptLateSpawn(rank)
-	var/error = IsJobUnavailable(rank, TRUE)
+	var/datum/job/selected_job = SSjob.GetJob(rank)
+	// TA EDIT: only force latejoin-specific checks for familytree-controlled royal partner jobs.
+	var/familytree_force_latejoin_check = istype(selected_job, /datum/job/roguetown/lady) || istype(selected_job, /datum/job/roguetown/suitor)
+	var/error = IsJobUnavailable(rank, familytree_force_latejoin_check)
 	if(error != JOB_AVAILABLE)
 		to_chat(src, span_warning("[get_job_unavailable_error_message(error, rank)]"))
 		return FALSE
