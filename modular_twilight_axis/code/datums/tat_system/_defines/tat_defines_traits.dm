@@ -100,7 +100,7 @@
 #define TAT_CATEGORY_SKILL_DISCOUNT_NAME "Skill Discount"
 
 #define TAT_RESIDENT_PUGILIST_DEFAULT "Dropkick - Pushback + Extra Damage"
-#define TAT_TRAIT_DISCOUNT 1
+#define TAT_TRAIT_DISCOUNT 10
 
 #define TAT_AVAILABLE_TRAITS_LIST \
 	TAT_TRAIT_SOUNDBREAKER = TAT_TRAIT_ENTRY("Soundbreaker", 10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the Soundbreaker combo style."), \
