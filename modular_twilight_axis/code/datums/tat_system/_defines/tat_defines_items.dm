@@ -166,7 +166,7 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	/obj/item/clothing/gloves/roguetown/leather = TAT_ITEM_ENTRY("Leather Gloves", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/otavan = TAT_ITEM_ENTRY("Otavan Leather Gloves", 3, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/plate = TAT_ITEM_ENTRY("Plate Gauntlets", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "gloves"), \
-	/obj/item/clothing/gloves/roguetown/plate/iron = TAT_ITEM_ENTRY("Iron Plate Armor", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/plate/iron = TAT_ITEM_ENTRY("Iron Gauntlets", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/plate/kote = TAT_ITEM_ENTRY("Jjajeungna Gauntlets", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "gloves"), \
 	/obj/item/clothing/head/roguetown/armingcap = TAT_ITEM_ENTRY("Arming cap", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
 	/obj/item/clothing/head/roguetown/armingcap/padded = TAT_ITEM_ENTRY("Padded Arming Cap", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
@@ -581,3 +581,8 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol = TAT_ITEM_ENTRY("Arquebus Pistol", 7, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/flintgonne = TAT_ITEM_ENTRY("Hakenbüchse", 6, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/natural/feather = TAT_ITEM_ENTRY("Feather", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/bucket/gronn = TAT_ITEM_ENTRY("Gronn Norsii horned helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Plate", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/gloves/roguetown/plate/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Gauntlets", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "gloves"), \
+	/obj/item/clothing/under/roguetown/platelegs/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Plate Legs", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "pants"), \
+	/obj/item/clothing/shoes/roguetown/boots/armor/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Plated Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "shoes"), \
