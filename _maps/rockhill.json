@@ -12,7 +12,7 @@
 	"other_z": 
 		[
 		"_maps/map_files/rockhill/rockhill_bases.json",
-    "_maps/map_files/otherz/goblin_cave.json"
+    	"_maps/map_files/otherz/goblin_cave.json"
 	],
 	"space_empty_levels": 0,
 	"space_ruin_levels": 0,
