@@ -8,7 +8,7 @@
 // TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/barbersurgeon
 	id = "barbersurgeon"
-	name = "Barber Surgeon"
+	name = "Towner: Barber Surgeon"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
@@ -73,7 +73,7 @@
 // TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/blacksmith
 	id = "blacksmith"
-	name = "Blacksmith"
+	name = "Towner: Blacksmith"
 	build_data = list(
 		"stats" = list(
 			STATKEY_WIL = 12,
@@ -126,7 +126,7 @@
 // TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/cheesemaker
 	id = "cheesemaker"
-	name = "Cheesemaker"
+	name = "Towner: Cheesemaker"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 12,
@@ -176,7 +176,7 @@
 // TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/drunkard
 	id = "drunkard"
-	name = "Gambler"
+	name = "Towner: Gambler"
 	build_data = list(
 		"stats" = list(
 			STATKEY_LCK = 12,
@@ -222,7 +222,7 @@
 // TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/fisher
 	id = "fisher"
-	name = "Fisher"
+	name = "Towner: Fisher"
 	build_data = list(
 		"stats" = list(
 			STATKEY_PER = 12,
@@ -280,7 +280,7 @@
 // TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/homesteader
 	id = "homesteader"
-	name = "Homesteader"
+	name = "Towner: Homesteader"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
@@ -355,7 +355,7 @@
 // TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/hunter
 	id = "hunter"
-	name = "Bow-Hunter"
+	name = "Towner: Bow-Hunter"
 	build_data = list(
 		"stats" = list(
 			STATKEY_PER = 13,
@@ -414,7 +414,7 @@
 // TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/hunter_spear
 	id = "hunter_spear"
-	name = "Spear-Hunter"
+	name = "Towner: Spear-Hunter"
 	build_data = list(
 		"stats" = list(
 			STATKEY_STR = 12,
@@ -472,7 +472,7 @@
 // TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/levy
 	id = "levy"
-	name = "Levy"
+	name = "Towner: Levy"
 	build_data = list(
 		"stats" = list(
 			STATKEY_CON = 11,
@@ -543,7 +543,7 @@
 // TAT finalization: remaining class-parity notes: stat total +7 exceeds base +4.
 /datum/tat_preset/sample/miner
 	id = "miner"
-	name = "Miner"
+	name = "Towner: Miner"
 	build_data = list(
 		"stats" = list(
 			STATKEY_STR = 12,
@@ -611,7 +611,7 @@
 // TAT finalization: remaining class-parity notes: bard/music chassis needs Bardic Inspiration I; master bard/music chassis needs Bardic Inspiration II.
 /datum/tat_preset/sample/minstrel
 	id = "minstrel"
-	name = "Minstrel"
+	name = "Towner: Minstrel"
 	build_data = list(
 		"stats" = list(
 			STATKEY_SPD = 11,
@@ -681,7 +681,7 @@
 // TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/peasant
 	id = "peasant"
-	name = "Farmer"
+	name = "Towner: Farmer"
 	build_data = list(
 		"stats" = list(
 			STATKEY_STR = 11,
@@ -733,7 +733,7 @@
 // TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/potter
 	id = "potter"
-	name = "Potter"
+	name = "Towner: Potter"
 	build_data = list(
 		"stats" = list(
 			STATKEY_PER = 12,
@@ -779,7 +779,7 @@
 // TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/seamstress
 	id = "seamstress"
-	name = "Seamster"
+	name = "Towner: Seamster"
 	build_data = list(
 		"stats" = list(
 			STATKEY_SPD = 12,
@@ -833,7 +833,7 @@
 // TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/thug_goon
 	id = "thug_goon"
-	name = "Goon"
+	name = "Towner: Goon"
 	build_data = list(
 		"stats" = list(
 			STATKEY_STR = 12,
@@ -906,7 +906,7 @@
 // TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/thug_wiseguy
 	id = "thug_wiseguy"
-	name = "Wise Guy"
+	name = "Towner: Wise Guy"
 	build_data = list(
 		"stats" = list(
 			STATKEY_WIL = 8,
@@ -978,7 +978,7 @@
 // TAT finalization: remaining class-parity notes: stat total +9 exceeds base +4.
 /datum/tat_preset/sample/thug_bigman
 	id = "thug_bigman"
-	name = "Big Fella"
+	name = "Towner: Big Fella"
 	build_data = list(
 		"stats" = list(
 			STATKEY_STR = 12,
@@ -1035,7 +1035,7 @@
 // TAT finalization: remaining class-parity notes: stat total +8 exceeds base +4.
 /datum/tat_preset/sample/elder
 	id = "elder"
-	name = "Town Elder"
+	name = "Towner: Town Elder"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
@@ -1099,7 +1099,7 @@
 // TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/witch
 	id = "witch"
-	name = "Witch"
+	name = "Towner: Witch"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
@@ -1157,7 +1157,7 @@
 // TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/woodworker
 	id = "woodworker"
-	name = "Woodworker"
+	name = "Towner: Woodworker"
 	build_data = list(
 		"stats" = list(
 			STATKEY_STR = 12,
@@ -1206,287 +1206,6 @@
 				"bag" = 1,
 			),
 			/obj/item/rogueweapon/huntingknife = list(
-				"equip" = 0,
-				"bag" = 1,
-			),
-			/obj/item/rogueweapon/scabbard/sheath = list(
-				"equip" = 0,
-				"bag" = 1,
-			),
-		),
-
-		"magic_config" = list(),
-	)
-
-// Source class: /datum/advclass/masterchef
-// Missing TAT traits: none
-// Missing TAT items: none
-// Missing/blocked TAT skills: none
-// Dynamic choices in original class not encoded into this single preset: Honey | Truffles | Bacon
-// Encoded TAT points snapshot: stats=5, traits=3, items_static=0
-// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
-// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
-/datum/tat_preset/sample/masterchef
-	id = "masterchef"
-	name = "Master Chef"
-	build_data = list(
-		"stats" = list(
-			STATKEY_INT = 13,
-			STATKEY_CON = 12,
-		),
-
-		"skills" = list(
-			/datum/skill/combat/unarmed = 1,
-			/datum/skill/combat/knives = 4,
-			/datum/skill/craft/sewing = 1,
-			/datum/skill/misc/climbing = 1,
-			/datum/skill/labor/farming = 3,
-			/datum/skill/misc/reading = 4,
-			/datum/skill/craft/crafting = 4,
-			/datum/skill/craft/cooking = 6,
-		),
-
-		"traits" = list(
-			TRAIT_HOMESTEAD_EXPERT = TRUE,
-			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
-			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
-		),
-
-		"items" = list(
-		),
-
-		"item_loadout" = list(
-		),
-
-		"magic_config" = list(),
-	)
-
-// Source class: /datum/advclass/fishermaster
-// Missing TAT traits: none
-// Missing TAT items: none
-// Missing/blocked TAT skills: none
-// Dynamic choices in original class not encoded into this single preset: none
-// Encoded TAT points snapshot: stats=8, traits=3, items_static=0
-// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
-// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
-/datum/tat_preset/sample/fishermaster
-	id = "fishermaster"
-	name = "Master Fisher"
-	build_data = list(
-		"stats" = list(
-			STATKEY_CON = 12,
-			STATKEY_PER = 12,
-			STATKEY_SPD = 12,
-		),
-
-		"skills" = list(
-			/datum/skill/combat/wrestling = 1,
-			/datum/skill/combat/unarmed = 1,
-			/datum/skill/combat/knives = 4,
-			/datum/skill/misc/swimming = 5,
-			/datum/skill/craft/cooking = 3,
-			/datum/skill/craft/crafting = 2,
-			/datum/skill/labor/fishing = 6,
-			/datum/skill/misc/medicine = 1,
-			/datum/skill/misc/athletics = 3,
-		),
-
-		"traits" = list(
-			TRAIT_HOMESTEAD_EXPERT = TRUE,
-			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
-			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
-		),
-
-		"items" = list(
-		),
-
-		"item_loadout" = list(
-		),
-
-		"magic_config" = list(),
-	)
-
-// Source class: /datum/advclass/minermaster
-// Missing TAT traits: TRAIT_DARKVISION
-// Missing TAT items: /obj/item/flint, /obj/item/rogueweapon/chisel, /obj/item/rogueweapon/hammer/wood, /obj/item/recipe_book/survival, /obj/item/recipe_book/builder, /obj/item/storage/hip/orestore/bronze
-// Missing/blocked TAT skills: none
-// Dynamic choices in original class not encoded into this single preset: none
-// Encoded TAT points snapshot: stats=12, traits=3, items_static=1
-// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
-// TAT finalization: remaining class-parity notes: stat total +12 exceeds base +4.
-/datum/tat_preset/sample/minermaster
-	id = "minermaster"
-	name = "Master Miner"
-	build_data = list(
-		"stats" = list(
-			STATKEY_LCK = 14,
-			STATKEY_STR = 12,
-			STATKEY_INT = 12,
-			STATKEY_WIL = 12,
-			STATKEY_CON = 11,
-			STATKEY_PER = 11,
-		),
-
-		"skills" = list(
-			/datum/skill/combat/axes = 3,
-			/datum/skill/misc/athletics = 4,
-			// Tough. Well fed. The strongest of the strong. /datum/skill/combat/wrestling = 2,
-			/datum/skill/combat/unarmed = 3,
-			/datum/skill/combat/knives = 1,
-			/datum/skill/combat/maces = 3,
-			/datum/skill/craft/traps = 2,
-			/datum/skill/craft/engineering = 1,
-			/datum/skill/craft/carpentry = 1,
-			/datum/skill/craft/masonry = 3,
-			/datum/skill/misc/medicine = 1,
-			/datum/skill/craft/crafting = 4,
-			/datum/skill/misc/swimming = 3,
-			/datum/skill/misc/climbing = 3,
-			/datum/skill/labor/mining = 6,
-			/datum/skill/craft/smelting = 6,
-			/datum/skill/misc/reading = 1,
-		),
-
-		"traits" = list(
-			TRAIT_SMITHING_EXPERT = TRUE,
-			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
-		),
-
-		"items" = list(
-			/obj/item/flashlight/flare/torch = 1,
-			/obj/item/rogueweapon/scabbard/sheath = 1,
-			/obj/item/rogueweapon/huntingknife = 1,
-		),
-
-		"item_loadout" = list(
-			/obj/item/flashlight/flare/torch = list(
-				"equip" = 0,
-				"bag" = 1,
-			),
-			/obj/item/rogueweapon/scabbard/sheath = list(
-				"equip" = 0,
-				"bag" = 1,
-			),
-			/obj/item/rogueweapon/huntingknife = list(
-				"equip" = 0,
-				"bag" = 1,
-			),
-		),
-
-		"magic_config" = list(),
-	)
-
-// Source class: /datum/advclass/farmermaster
-// Missing TAT traits: none
-// Missing TAT items: /obj/item/seeds/wheat, /obj/item/seeds/apple, /obj/item/ash
-// Missing/blocked TAT skills: none
-// Dynamic choices in original class not encoded into this single preset: none
-// Encoded TAT points snapshot: stats=12, traits=3, items_static=1
-// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
-// TAT finalization: remaining class-parity notes: stat total +12 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
-/datum/tat_preset/sample/farmermaster
-	id = "farmermaster"
-	name = "Master Farmer"
-	build_data = list(
-		"stats" = list(
-			STATKEY_LCK = 14,
-			STATKEY_STR = 12,
-			STATKEY_INT = 12,
-			STATKEY_WIL = 12,
-			STATKEY_CON = 11,
-			STATKEY_PER = 11,
-		),
-
-		"skills" = list(
-			/datum/skill/combat/wrestling = 2,
-			/datum/skill/combat/unarmed = 2,
-			/datum/skill/combat/polearms = 4,
-			/datum/skill/craft/crafting = 3,
-			/datum/skill/craft/sewing = 2,
-			/datum/skill/misc/climbing = 2,
-			/datum/skill/labor/farming = 6,
-			/datum/skill/craft/cooking = 2,
-			/datum/skill/misc/reading = 1,
-		),
-
-		"traits" = list(
-			TRAIT_HOMESTEAD_EXPERT = TRUE,
-			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
-			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
-		),
-
-		"items" = list(
-			/obj/item/flashlight/flare/torch = 1,
-			/obj/item/rogueweapon/huntingknife = 1,
-			/obj/item/rogueweapon/scabbard/sheath = 1,
-		),
-
-		"item_loadout" = list(
-			/obj/item/flashlight/flare/torch = list(
-				"equip" = 0,
-				"bag" = 1,
-			),
-			/obj/item/rogueweapon/huntingknife = list(
-				"equip" = 0,
-				"bag" = 1,
-			),
-			/obj/item/rogueweapon/scabbard/sheath = list(
-				"equip" = 0,
-				"bag" = 1,
-			),
-		),
-
-		"magic_config" = list(),
-	)
-
-// Source class: /datum/advclass/masterblacksmith
-// Missing TAT traits: TRAIT_TRAINED_SMITH
-// Missing TAT items: /obj/item/flint, /obj/item/rogueore/coal, /obj/item/rogueore/iron, /obj/item/rogueore/silver
-// Missing/blocked TAT skills: none
-// Dynamic choices in original class not encoded into this single preset: none
-// Encoded TAT points snapshot: stats=12, traits=3, items_static=0
-// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
-// TAT finalization: remaining class-parity notes: stat total +12 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
-/datum/tat_preset/sample/masterblacksmith
-	id = "masterblacksmith"
-	name = "Master Blacksmith"
-	build_data = list(
-		"stats" = list(
-			STATKEY_LCK = 14,
-			STATKEY_STR = 12,
-			STATKEY_INT = 12,
-			STATKEY_WIL = 12,
-			STATKEY_CON = 11,
-			STATKEY_PER = 11,
-		),
-
-		"skills" = list(
-			/datum/skill/combat/maces = 4,
-			/datum/skill/combat/axes = 2,
-			/datum/skill/combat/unarmed = 3,
-			/datum/skill/craft/crafting = 2,
-			/datum/skill/craft/masonry = 2,
-			/datum/skill/craft/carpentry = 2,
-			/datum/skill/craft/blacksmithing = 6,
-			/datum/skill/craft/armorsmithing = 6,
-			/datum/skill/craft/weaponsmithing = 6,
-			/datum/skill/craft/smelting = 6,
-			/datum/skill/misc/reading = 1,
-		),
-
-		"traits" = list(
-			TRAIT_SMITHING_EXPERT = TRUE,
-			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
-			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
-		),
-
-		"items" = list(
-			/obj/item/flashlight/flare/torch = 1,
-			/obj/item/rogueweapon/scabbard/sheath = 1,
-		),
-
-		"item_loadout" = list(
-			/obj/item/flashlight/flare/torch = list(
 				"equip" = 0,
 				"bag" = 1,
 			),

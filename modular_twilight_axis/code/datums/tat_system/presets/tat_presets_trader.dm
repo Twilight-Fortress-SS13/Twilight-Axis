@@ -8,7 +8,7 @@
 // TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_brewer
 	id = "trader_brewer"
-	name = "Brewer"
+	name = "Trader: Brewer"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
@@ -65,7 +65,7 @@
 // TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_cuisiner
 	id = "trader_cuisiner"
-	name = "Cuisiner"
+	name = "Trader: Cuisiner"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
@@ -122,7 +122,7 @@
 // TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_doomsayer
 	id = "trader_doomsayer"
-	name = "Doomsayer"
+	name = "Trader: Doomsayer"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
@@ -193,7 +193,7 @@
 // TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4; bard/music chassis needs Bardic Inspiration I; master bard/music chassis needs Bardic Inspiration II.
 /datum/tat_preset/sample/trader_harlequin
 	id = "trader_harlequin"
-	name = "Harlequin"
+	name = "Trader: Harlequin"
 	build_data = list(
 		"stats" = list(
 			STATKEY_SPD = 12,
@@ -249,7 +249,7 @@
 // TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_jeweler
 	id = "trader_jeweler"
-	name = "Jeweler"
+	name = "Trader: Jeweler"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
@@ -310,7 +310,7 @@
 // TAT finalization: remaining class-parity notes: trader preset should be Resident/city trade chassis.
 /datum/tat_preset/sample/trader_servant
 	id = "trader_servant"
-	name = "Wandering Servant"
+	name = "Trader: Wandering Servant"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 12,
@@ -364,7 +364,7 @@
 // TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_peddler
 	id = "trader_peddler"
-	name = "Peddler"
+	name = "Trader: Peddler"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
@@ -421,7 +421,7 @@
 // TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_scholar
 	id = "trader_scholar"
-	name = "Scholar"
+	name = "Trader: Scholar"
 	build_data = list(
 		"stats" = list(
 			STATKEY_INT = 13,
