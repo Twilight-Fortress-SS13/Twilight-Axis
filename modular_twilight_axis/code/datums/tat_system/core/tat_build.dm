@@ -531,10 +531,12 @@
 		var/datum/tat_slot/slot = new /datum/tat_slot(get_default_tat_slot_name(i))
 		var/list/raw_slot = null
 		if(islist(slots_data))
-			if(islist(slots_data[i]))
+			if(i <= length(slots_data) && islist(slots_data[i]))
 				raw_slot = slots_data[i]
-			else if(islist(slots_data["[i]"]))
-				raw_slot = slots_data["[i]"]
+			else
+				var/text_index = "[i]"
+				if(!isnull(slots_data[text_index]) && islist(slots_data[text_index]))
+					raw_slot = slots_data[text_index]
 		if(islist(raw_slot))
 			slot.load_from_list(raw_slot)
 		if(!istext(slot.name) || !length(slot.name))
