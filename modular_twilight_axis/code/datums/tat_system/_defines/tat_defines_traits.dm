@@ -21,6 +21,7 @@
 #define TAT_TRAIT_PARTY_LEADER "tat_party_leader"
 #define TAT_TRAIT_BONUS_STAT_POOL "tat_bonus_stat_pool"
 #define TAT_TRAIT_WANTED "tat_wanted"
+#define TAT_TRAIT_HERETIC "tat_heretic"
 
 #define TAT_TRAIT_DIVINE_INITIATE "tat_divine_initiate"
 #define TAT_TRAIT_MAGE_INITIATE "tat_mage_initiate"
@@ -202,6 +203,8 @@
 	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know watering holes, feeding grounds and bent thickets."), \
 	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know the common signs of prey and trails."), \
 	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Your feet walks a lot roads. Gives you +9 points in wandering skill tree."), \
+	TAT_TRAIT_HERETIC = TAT_TRAIT_ENTRY("Heretic", -10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain cool HERETIC mark on your face."), \
+
 
 #define TAT_TRAIT_STAT_POINT_RULES list( \
 	TAT_TRAIT_BONUS_STAT_POOL = TAT_BUILD_STAT_BONUS_EXTRA_STATS, \
