@@ -4,6 +4,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Longsword | Ancient Warhammer | Halberd | Black Jupon | Black Tabard
 // Encoded TAT points snapshot: stats=3, traits=4, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_ancient_deathknight
 	id = "wretch_ancient_deathknight"
 	name = "Unbound Ancient Death Knight"
@@ -30,6 +32,7 @@
 
 		"traits" = list(
 			TRAIT_HEAVYARMOR = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -52,6 +55,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: blade | phalangite | macebearer | blade | Ancient Khopesh | Sabre | Corroded Dagger | phalangite | Ancient Spear | Ancient Bardiche | Dory | macebearer | Ancient Mace | Ancient Warhammer | Ancient Grand Mace | Ancient Alloy Axe | Steel Greataxe | Black Jupon | Black Tabard
 // Encoded TAT points snapshot: stats=3, traits=4, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_MAGE_MINOR_SLOT_1, TAT_TRAIT_SPELLBLADE.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4; arcane access/skill 2 needs mage module progression; spellblade source gimmick needs Spellblade module.
 /datum/tat_preset/sample/wretch_ancient_spellblade
 	id = "wretch_ancient_spellblade"
 	name = "Unbound Ancient Azurcaephan"
@@ -76,6 +81,10 @@
 		"traits" = list(
 			TRAIT_MEDIUMARMOR = TRUE,
 			TRAIT_ARCYNE = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_MAGE_INITIATE = TRUE,
+			TAT_TRAIT_MAGE_MINOR_SLOT_1 = TRUE,
+			TAT_TRAIT_SPELLBLADE = TRUE,
 		),
 
 		"items" = list(
@@ -93,6 +102,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Unarmed Master | Discipline - Unarmed | Katar | Knuckledusters | Punch Dagger | Dropkick - Pushback + Extra Damage | Chokeslam - Stamina Damage | Stunner - Dazed Debuff | Headbutt - Vulnerable Debuff | Martial Expert | Discipline - Bodybuilder | Battle Axe | Grand Mace | Longsword | Iron Arming Sword | Iron Axe | Mace | Berserker's Volfskulle Bascinet | Steel Kettle + Wildguard
 // Encoded TAT points snapshot: stats=9, traits=7, items_static=6
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +7 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_berserker
 	id = "wretch_berserker"
 	name = "Berserker"
@@ -125,6 +136,8 @@
 		"traits" = list(
 			TRAIT_CRITICAL_RESISTANCE = TRUE,
 			TRAIT_NOPAINSTUN = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -162,6 +175,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Estoc | Stecher | Longsword + Shield | Mace + Shield | Flail + Shield | Lucerne | Battle Axe | Lance + Kite Shield | Samshir | Ssangsudo | Shashka + Shield | Steel Poleaxe
 // Encoded TAT points snapshot: stats=11.5, traits=5, items_static=3
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +10 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_deserter
 	id = "wretch_deserter"
 	name = "Disgraced Knight"
@@ -194,6 +209,8 @@
 		"traits" = list(
 			TRAIT_HEAVYARMOR = TRUE,
 			TRAIT_NOBLE = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -226,6 +243,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Warhammer & Shield | Sabre & Shield | Axe & Shield | Billhook | Halberd | Greataxe | Crossbow
 // Encoded TAT points snapshot: stats=9, traits=3, items_static=4
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +7 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_deserter_generic
 	id = "wretch_deserter_generic"
 	name = "Deserter"
@@ -258,6 +277,8 @@
 
 		"traits" = list(
 			TRAIT_MEDIUMARMOR = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -290,6 +311,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Longsword | Mace | Flail | Axe | Billhook
 // Encoded TAT points snapshot: stats=8.5, traits=4, items_static=6
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_DIVINE_BOON_1, TAT_TRAIT_DIVINE_BOON_2, TAT_TRAIT_DIVINE_BOON_3.
+// TAT finalization: remaining class-parity notes: stat total +7 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap; holy skill 4 needs divine module progression.
 /datum/tat_preset/sample/wretch_heretic
 	id = "wretch_heretic"
 	name = "Heretic"
@@ -320,6 +343,12 @@
 
 		"traits" = list(
 			TRAIT_HEAVYARMOR = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
+			TAT_TRAIT_DIVINE_INITIATE = TRUE,
+			TAT_TRAIT_DIVINE_BOON_1 = TRUE,
+			TAT_TRAIT_DIVINE_BOON_2 = TRUE,
+			TAT_TRAIT_DIVINE_BOON_3 = TRUE,
 		),
 
 		"items" = list(
@@ -357,6 +386,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Rapier | Sabre | Bow | Crossbow | Slurbow
 // Encoded TAT points snapshot: stats=9.5, traits=2, items_static=8
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_DIVINE_BOON_1, TAT_TRAIT_DIVINE_BOON_2, TAT_TRAIT_DIVINE_BOON_3.
+// TAT finalization: remaining class-parity notes: stat total +8 exceeds base +4; holy skill 4 needs divine module progression.
 /datum/tat_preset/sample/wretch_heretic_spy
 	id = "wretch_heretic_spy"
 	name = "Heretic Spy"
@@ -388,6 +419,11 @@
 
 		"traits" = list(
 			TRAIT_DODGEEXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_DIVINE_INITIATE = TRUE,
+			TAT_TRAIT_DIVINE_BOON_1 = TRUE,
+			TAT_TRAIT_DIVINE_BOON_2 = TRUE,
+			TAT_TRAIT_DIVINE_BOON_3 = TRUE,
 		),
 
 		"items" = list(
@@ -425,6 +461,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: blade | phalangite | macebearer | Discretion (Spellblade Disguise) | Confrontation (Medium Armor) | blade | Avantyne Longsword | Kriegmesser | Longsword | Rapier | Sabre | Steel Arming Sword | Steel Greatsword | Steel Dagger | phalangite | Halberd | Bardiche | Boar Spear | Dory | Naginata ...
 // Encoded TAT points snapshot: stats=7, traits=4, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_MAGE_MINOR_SLOT_1, TAT_TRAIT_SPELLBLADE.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4; holy skill 1 needs divine module progression; arcane access/skill 2 needs mage module progression; spellblade source gimmick needs Spellblade module.
 /datum/tat_preset/sample/wretch_heretic_spellblade
 	id = "wretch_heretic_spellblade"
 	name = "Heretic Azurcaephan"
@@ -452,6 +490,11 @@
 		"traits" = list(
 			TRAIT_MEDIUMARMOR = TRUE,
 			TRAIT_ARCYNE = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_DIVINE_INITIATE = TRUE,
+			TAT_TRAIT_MAGE_INITIATE = TRUE,
+			TAT_TRAIT_MAGE_MINOR_SLOT_1 = TRUE,
+			TAT_TRAIT_SPELLBLADE = TRUE,
 		),
 
 		"items" = list(
@@ -479,6 +522,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: katar | knuckledusters
 // Encoded TAT points snapshot: stats=8, traits=3, items_static=3
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_MAGE_MINOR_SLOT_1.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap; holy skill 1 needs divine module progression; arcane access/skill 2 needs mage module progression.
 /datum/tat_preset/sample/wretch_heretic_spellfist
 	id = "wretch_heretic_spellfist"
 	name = "Heretic Spellfist"
@@ -505,6 +550,11 @@
 		"traits" = list(
 			TRAIT_CIVILIZEDBARBARIAN = TRUE,
 			TRAIT_ARCYNE = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
+			TAT_TRAIT_DIVINE_INITIATE = TRUE,
+			TAT_TRAIT_MAGE_INITIATE = TRUE,
+			TAT_TRAIT_MAGE_MINOR_SLOT_1 = TRUE,
 		),
 
 		"items" = list(
@@ -542,6 +592,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=0, traits=1, items_static=0
+// TAT finalization: added/required gating traits: none.
+// TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/wretch_licker
 	id = "wretch_licker"
 	name = "Licker"
@@ -571,6 +623,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Ssangsudo +2 CON | Kanabo +1 STR | Naginata +2 PER | Hwando +2 WIL | Kodachi +1 SPD
 // Encoded TAT points snapshot: stats=6, traits=3, items_static=5
+// TAT finalization: added/required gating traits: TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_mistwalker
 	id = "wretch_mistwalker"
 	name = "Mistwalker" //works"
@@ -598,6 +652,7 @@
 
 		"traits" = list(
 			TRAIT_NOPAINSTUN = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -635,6 +690,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=8, traits=3, items_static=2
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/wretch_munitioneer
 	id = "wretch_munitioneer"
 	name = "Munitioneer"
@@ -671,6 +728,7 @@
 
 		"traits" = list(
 			TRAIT_SMITHING_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -698,6 +756,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=9, traits=11, items_static=6
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_MAGE_MINOR_SLOT_1, TAT_TRAIT_MAGE_MAJOR_SLOT, TAT_TRAIT_MAGE_MINOR_SLOT_2.
+// TAT finalization: remaining class-parity notes: stat total +8 exceeds base +4; arcane access/skill 4 needs mage module progression.
 /datum/tat_preset/sample/wretch_necromancer
 	id = "wretch_necromancer"
 	name = "Necromancer"
@@ -728,6 +788,11 @@
 			TRAIT_ARCYNE = TRUE,
 			TRAIT_ALCHEMY_EXPERT = TRUE,
 			TRAIT_MEDICINE_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_MAGE_INITIATE = TRUE,
+			TAT_TRAIT_MAGE_MINOR_SLOT_1 = TRUE,
+			TAT_TRAIT_MAGE_MAJOR_SLOT = TRUE,
+			TAT_TRAIT_MAGE_MINOR_SLOT_2 = TRUE,
 		),
 
 		"items" = list(
@@ -765,6 +830,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Rapier | Parrying Dagger | Fleet-Footed | Marksmanship | Athleticism | Night-Burglar | Master-Tracker | Dualist
 // Encoded TAT points snapshot: stats=9, traits=7, items_static=5
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_outlaw
 	id = "wretch_outlaw"
 	name = "Outlaw"
@@ -797,6 +864,8 @@
 			TRAIT_DODGEEXPERT = TRUE,
 			TRAIT_MEDIUMARMOR = TRUE,
 			TRAIT_GRAVEROBBER = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -829,6 +898,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: blade | phalangite | macebearer | blade | Elvish Longsword | Elvish Saber | Elvish Curveblade | Steel Dagger | phalangite | macebearer | Steel Mace | Steel Warhammer | Grand Mace | Battle Axe | Steel Greataxe | Woad Elven Barbute | Elven Barbute | Winged Elven Barbute
 // Encoded TAT points snapshot: stats=8, traits=3, items_static=6
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_MAGE_MINOR_SLOT_1.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4; arcane access/skill 2 needs mage module progression.
 /datum/tat_preset/sample/wretch_pariah
 	id = "wretch_pariah"
 	name = "Black Oaken Pariah"
@@ -865,6 +936,9 @@
 		"traits" = list(
 			TRAIT_DODGEEXPERT = TRUE,
 			TRAIT_ARCYNE = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_MAGE_INITIATE = TRUE,
+			TAT_TRAIT_MAGE_MINOR_SLOT_1 = TRUE,
 		),
 
 		"items" = list(
@@ -902,6 +976,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: A Poison Dagger and Arrows | A Rapier and Agility
 // Encoded TAT points snapshot: stats=9, traits=9, items_static=5
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +9 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_plaguebearer
 	id = "wretch_plaguebearer"
 	name = "Malpractitioner"
@@ -933,6 +1009,8 @@
 			TRAIT_NOSTINK = TRUE,
 			TRAIT_MEDICINE_EXPERT = TRUE,
 			TRAIT_ALCHEMY_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -960,6 +1038,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Dagger | Axe
 // Encoded TAT points snapshot: stats=10, traits=5, items_static=7
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER.
+// TAT finalization: remaining class-parity notes: stat total +8 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap; combat skill above Expert needs Master Warrior cap.
 /datum/tat_preset/sample/wretch_poacher
 	id = "wretch_poacher"
 	name = "Poacher"
@@ -995,6 +1075,9 @@
 		"traits" = list(
 			TRAIT_DODGEEXPERT = TRUE,
 			TRAIT_SURVIVAL_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
+			TAT_TRAIT_WARRIOR_MASTER = TRUE,
 		),
 
 		"items" = list(
@@ -1032,6 +1115,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Archery | Crossbows | BOMBS
 // Encoded TAT points snapshot: stats=9, traits=8, items_static=6
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +9 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_pyromaniac
 	id = "wretch_pyromaniac"
 	name = "Pyromaniac"
@@ -1063,6 +1148,8 @@
 			TRAIT_MEDIUMARMOR = TRUE,
 			TRAIT_ALCHEMY_EXPERT = TRUE,
 			TRAIT_EXPLOSIVE_SUPPLY = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -1095,6 +1182,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=9, traits=4, items_static=8
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_MAGE_MINOR_SLOT_1, TAT_TRAIT_MAGE_MAJOR_SLOT, TAT_TRAIT_MAGE_MINOR_SLOT_2.
+// TAT finalization: remaining class-parity notes: stat total +8 exceeds base +4; arcane access/skill 4 needs mage module progression.
 /datum/tat_preset/sample/wretch_roguemage
 	id = "wretch_roguemage"
 	name = "Rogue Mage"
@@ -1121,6 +1210,11 @@
 		"traits" = list(
 			TRAIT_ARCYNE = TRUE,
 			TRAIT_ALCHEMY_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_MAGE_INITIATE = TRUE,
+			TAT_TRAIT_MAGE_MINOR_SLOT_1 = TRUE,
+			TAT_TRAIT_MAGE_MAJOR_SLOT = TRUE,
+			TAT_TRAIT_MAGE_MINOR_SLOT_2 = TRUE,
 		),
 
 		"items" = list(
@@ -1168,6 +1262,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Executioner's Sword | Cudgel | Fast (Dodge Expert, Sneaking, +1 SPD) | Strong (No Pain Stun, Blood Resistance, +1 STR)
 // Encoded TAT points snapshot: stats=6, traits=3, items_static=3
+// TAT finalization: added/required gating traits: TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_slasher
 	id = "wretch_slasher"
 	name = "Disturbed"
@@ -1198,6 +1294,7 @@
 		"traits" = list(
 			TRAIT_DECEIVING_MEEKNESS = TRUE,
 			TRAIT_NASTY_EATER = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -1225,6 +1322,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: The Watchman | The Gadgeteer | I AM JUSTICE INCARNATE!!!
 // Encoded TAT points snapshot: stats=0, traits=1, items_static=6
+// TAT finalization: added/required gating traits: TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/wretch_vigilante
 	id = "wretch_vigilante"
 	name = "Masked Lunatic"
@@ -1247,6 +1346,7 @@
 
 		"traits" = list(
 			TRAIT_DECEIVING_MEEKNESS = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(

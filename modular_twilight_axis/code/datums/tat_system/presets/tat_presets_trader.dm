@@ -4,6 +4,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=7, traits=4, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_brewer
 	id = "trader_brewer"
 	name = "Brewer"
@@ -31,6 +33,7 @@
 		"traits" = list(
 			TRAIT_CICERONE = TRUE,
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -58,6 +61,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=7, traits=5, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_cuisiner
 	id = "trader_cuisiner"
 	name = "Cuisiner"
@@ -85,6 +90,7 @@
 		"traits" = list(
 			TRAIT_GOODLOVER = TRUE,
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -112,6 +118,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=7, traits=3, items_static=7
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_doomsayer
 	id = "trader_doomsayer"
 	name = "Doomsayer"
@@ -138,6 +146,7 @@
 
 		"traits" = list(
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -180,6 +189,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Harp | Lute | Accordion | Guitar | Hurdy-Gurdy | Viola | Vocal Talisman
 // Encoded TAT points snapshot: stats=7, traits=4, items_static=6
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4; bard/music chassis needs Bardic Inspiration I; master bard/music chassis needs Bardic Inspiration II.
 /datum/tat_preset/sample/trader_harlequin
 	id = "trader_harlequin"
 	name = "Harlequin"
@@ -204,6 +215,9 @@
 		"traits" = list(
 			TRAIT_NUTCRACKER = TRUE,
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_BARDIC_INSPIRATION_T1 = TRUE,
+			TAT_TRAIT_BARDIC_INSPIRATION_T2 = TRUE,
 		),
 
 		"items" = list(
@@ -231,6 +245,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=7, traits=3, items_static=3
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_jeweler
 	id = "trader_jeweler"
 	name = "Jeweler"
@@ -257,6 +273,7 @@
 
 		"traits" = list(
 			TRAIT_SMITHING_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -289,6 +306,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Maid | Butler
 // Encoded TAT points snapshot: stats=6, traits=3, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_RESIDENT.
+// TAT finalization: remaining class-parity notes: trader preset should be Resident/city trade chassis.
 /datum/tat_preset/sample/trader_servant
 	id = "trader_servant"
 	name = "Wandering Servant"
@@ -341,6 +360,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=7, traits=6, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_peddler
 	id = "trader_peddler"
 	name = "Peddler"
@@ -368,6 +389,7 @@
 		"traits" = list(
 			TRAIT_MEDICINE_EXPERT = TRUE,
 			TRAIT_ALCHEMY_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -395,6 +417,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=7, traits=3, items_static=3
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/trader_scholar
 	id = "trader_scholar"
 	name = "Scholar"
@@ -419,6 +443,7 @@
 
 		"traits" = list(
 			TRAIT_ALCHEMY_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(

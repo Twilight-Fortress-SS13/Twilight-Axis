@@ -352,12 +352,25 @@
 	reset()
 	if(!islist(data))
 		return FALSE
+
+	var/list/imported_selected = null
 	if(islist(data["selected"]))
-		for(var/item_path in data["selected"])
-			set_amount(item_path, data["selected"][item_path])
+		imported_selected = data["selected"]
+	else
+		imported_selected = data
+
+	for(var/item_path in imported_selected)
+		if(item_path == "selected")
+			continue
+		if(item_path == "item_loadout")
+			continue
+		set_amount(item_path, imported_selected[item_path])
+
 	if(islist(data["item_loadout"]))
 		var/list/temp = data["item_loadout"]
 		item_loadout = temp.Copy()
+
 	for(var/item_path in selected)
 		normalize_loadout(item_path)
+
 	return TRUE

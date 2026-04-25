@@ -4,6 +4,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=4.5, traits=9, items_static=6
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/barbersurgeon
 	id = "barbersurgeon"
 	name = "Barber Surgeon"
@@ -34,6 +36,7 @@
 			TRAIT_NOSTINK = TRUE,
 			TRAIT_MEDICINE_EXPERT = TRUE,
 			TRAIT_ALCHEMY_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -66,6 +69,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Ironworker | Bronzeworker
 // Encoded TAT points snapshot: stats=4.5, traits=3, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/blacksmith
 	id = "blacksmith"
 	name = "Blacksmith"
@@ -99,6 +104,7 @@
 
 		"traits" = list(
 			TRAIT_SMITHING_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -116,6 +122,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=5, traits=3, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/cheesemaker
 	id = "cheesemaker"
 	name = "Cheesemaker"
@@ -146,6 +154,7 @@
 
 		"traits" = list(
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -163,6 +172,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=4, traits=3, items_static=0
+// TAT finalization: added/required gating traits: none.
+// TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/drunkard
 	id = "drunkard"
 	name = "Gambler"
@@ -207,6 +218,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=5, traits=4, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/fisher
 	id = "fisher"
 	name = "Fisher"
@@ -245,6 +258,7 @@
 		"traits" = list(
 			TRAIT_CAUTIOUS_FISHER = TRUE,
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -262,6 +276,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=5.5, traits=16, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/homesteader
 	id = "homesteader"
 	name = "Homesteader"
@@ -312,6 +328,7 @@
 			TRAIT_SMITHING_EXPERT = TRUE,
 			TRAIT_SEWING_EXPERT = TRUE,
 			TRAIT_SURVIVAL_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -334,6 +351,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Recurve Bow | Crossbow
 // Encoded TAT points snapshot: stats=6, traits=3, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/hunter
 	id = "hunter"
 	name = "Bow-Hunter"
@@ -368,6 +387,7 @@
 
 		"traits" = list(
 			TRAIT_SURVIVAL_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -390,6 +410,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=6, traits=3, items_static=0
+// TAT finalization: added/required gating traits: none.
+// TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/hunter_spear
 	id = "hunter_spear"
 	name = "Spear-Hunter"
@@ -446,6 +468,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: MINE PITCHFORK | MINE THRESHER
 // Encoded TAT points snapshot: stats=3, traits=3, items_static=4
+// TAT finalization: added/required gating traits: none.
+// TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/levy
 	id = "levy"
 	name = "Levy"
@@ -515,6 +539,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=8, traits=3, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +7 exceeds base +4.
 /datum/tat_preset/sample/miner
 	id = "miner"
 	name = "Miner"
@@ -548,6 +574,7 @@
 
 		"traits" = list(
 			TRAIT_SMITHING_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -580,6 +607,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=2.5, traits=6, items_static=1.5
+// TAT finalization: added/required gating traits: TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2.
+// TAT finalization: remaining class-parity notes: bard/music chassis needs Bardic Inspiration I; master bard/music chassis needs Bardic Inspiration II.
 /datum/tat_preset/sample/minstrel
 	id = "minstrel"
 	name = "Minstrel"
@@ -604,6 +633,8 @@
 			TRAIT_EMPATH = TRUE,
 			TRAIT_GOODLOVER = TRUE,
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BARDIC_INSPIRATION_T1 = TRUE,
+			TAT_TRAIT_BARDIC_INSPIRATION_T2 = TRUE,
 		),
 
 		"items" = list(
@@ -646,6 +677,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=1, traits=3, items_static=0
+// TAT finalization: added/required gating traits: none.
+// TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/peasant
 	id = "peasant"
 	name = "Farmer"
@@ -696,6 +729,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=3, traits=3, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/potter
 	id = "potter"
 	name = "Potter"
@@ -722,6 +757,7 @@
 
 		"traits" = list(
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -739,6 +775,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: The Familiar | The Unfamiliar
 // Encoded TAT points snapshot: stats=5, traits=3, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/seamstress
 	id = "seamstress"
 	name = "Seamster"
@@ -763,6 +801,7 @@
 
 		"traits" = list(
 			TRAIT_SEWING_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -790,6 +829,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Frypan | Knuckles | Navaja | Bare Hands | My Trusty Cudgel | Whatever I Can Find
 // Encoded TAT points snapshot: stats=1, traits=0, items_static=4
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/thug_goon
 	id = "thug_goon"
 	name = "Goon"
@@ -823,6 +864,7 @@
 		),
 
 		"traits" = list(
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -860,6 +902,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Sling | Magic Bricks | Lockpicking Equipment
 // Encoded TAT points snapshot: stats=0, traits=2, items_static=4
+// TAT finalization: added/required gating traits: none.
+// TAT finalization: remaining class-parity notes: manual item/loadout parity review remains.
 /datum/tat_preset/sample/thug_wiseguy
 	id = "thug_wiseguy"
 	name = "Wise Guy"
@@ -930,6 +974,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Hands-On | Big Axe | Dropkick - Pushback + Extra Damage | Chokeslam - Stamina Damage | Stunner - Dazed Debuff | Headbutt - Vulnerable Debuff
 // Encoded TAT points snapshot: stats=2.5, traits=3, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +9 exceeds base +4.
 /datum/tat_preset/sample/thug_bigman
 	id = "thug_bigman"
 	name = "Big Fella"
@@ -957,6 +1003,7 @@
 		"traits" = list(
 			TRAIT_STEELHEARTED = TRUE,
 			TRAIT_HARDDISMEMBER = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -984,6 +1031,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=6, traits=19, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +8 exceeds base +4.
 /datum/tat_preset/sample/elder
 	id = "elder"
 	name = "Town Elder"
@@ -1028,6 +1077,7 @@
 			TRAIT_SMITHING_EXPERT = TRUE,
 			TRAIT_SEWING_EXPERT = TRUE,
 			TRAIT_SURVIVAL_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -1045,6 +1095,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Old Magick | Godsblood | Mystagogue | Zad | Cat | Cat (Black) | Bat | Lesser Volf | Lesser Venard | Small Rous | Cabbit | Mystagogue | Spitfire | Frost Bolt | Arc Bolt | Greater Arcyne Bolt | Stygian Efflorescence | Arcyne Lance | Lesser Gravel Blast
 // Encoded TAT points snapshot: stats=7.5, traits=3, items_static=2
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4.
 /datum/tat_preset/sample/witch
 	id = "witch"
 	name = "Witch"
@@ -1068,6 +1120,7 @@
 
 		"traits" = list(
 			TRAIT_ALCHEMY_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -1100,6 +1153,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=7, traits=3, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4.
 /datum/tat_preset/sample/woodworker
 	id = "woodworker"
 	name = "Woodworker"
@@ -1136,6 +1191,7 @@
 
 		"traits" = list(
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -1168,6 +1224,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Honey | Truffles | Bacon
 // Encoded TAT points snapshot: stats=5, traits=3, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +5 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/masterchef
 	id = "masterchef"
 	name = "Master Chef"
@@ -1190,6 +1248,8 @@
 
 		"traits" = list(
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -1207,6 +1267,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=8, traits=3, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +6 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/fishermaster
 	id = "fishermaster"
 	name = "Master Fisher"
@@ -1231,6 +1293,8 @@
 
 		"traits" = list(
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -1248,6 +1312,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=12, traits=3, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL.
+// TAT finalization: remaining class-parity notes: stat total +12 exceeds base +4.
 /datum/tat_preset/sample/minermaster
 	id = "minermaster"
 	name = "Master Miner"
@@ -1283,6 +1349,7 @@
 
 		"traits" = list(
 			TRAIT_SMITHING_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
 		"items" = list(
@@ -1315,6 +1382,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=12, traits=3, items_static=1
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +12 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/farmermaster
 	id = "farmermaster"
 	name = "Master Farmer"
@@ -1342,6 +1411,8 @@
 
 		"traits" = list(
 			TRAIT_HOMESTEAD_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(
@@ -1374,6 +1445,8 @@
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: none
 // Encoded TAT points snapshot: stats=12, traits=3, items_static=0
+// TAT finalization: added/required gating traits: TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WARRIOR_EXPERT.
+// TAT finalization: remaining class-parity notes: stat total +12 exceeds base +4; combat skill at Expert tier needs Expert Warrior cap.
 /datum/tat_preset/sample/masterblacksmith
 	id = "masterblacksmith"
 	name = "Master Blacksmith"
@@ -1403,6 +1476,8 @@
 
 		"traits" = list(
 			TRAIT_SMITHING_EXPERT = TRUE,
+			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
+			TAT_TRAIT_WARRIOR_EXPERT = TRUE,
 		),
 
 		"items" = list(

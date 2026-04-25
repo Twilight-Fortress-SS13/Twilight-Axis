@@ -338,9 +338,18 @@
 	if(!islist(data))
 		return FALSE
 
+	var/list/imported_invested = null
 	if(islist(data["invested"]))
-		for(var/skill_type in data["invested"])
-			set_invested_value(skill_type, data["invested"][skill_type])
+		imported_invested = data["invested"]
+	else
+		imported_invested = data
+
+	for(var/skill_type in imported_invested)
+		if(skill_type == "bonus")
+			continue
+		if(skill_type == "invested")
+			continue
+		set_invested_value(skill_type, imported_invested[skill_type])
 
 	rebuild_bonus_values()
 	sanitize()

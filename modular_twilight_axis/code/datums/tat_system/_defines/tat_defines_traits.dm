@@ -1,5 +1,3 @@
-#define TRAIT_MASTERYOFNOTHING_POINTS 24
-
 #define TAT_TRAIT_WARRIOR_EXPERT "tat_warrior_expert"
 #define TAT_TRAIT_WARRIOR_MASTER "tat_warrior_master"
 #define TAT_TRAIT_SOUNDBREAKER "tat_soundbreaker"
@@ -55,6 +53,7 @@
 #define TAT_TRAIT_TRAINEE_TROUBADOUR "tat_trainee_troubadour"
 
 #define TAT_TRAIT_MASTER_OF_CRAFTING "tat_master_of_crafting"
+#define TAT_TRAIT_STRAYING_SOUL "tat_straying_soul"
 #define TAT_TRAIT_STOCKPILER "tat_stockpiler"
 
 #define TAT_TRAIT_SKILLED_FORGEHAND "tat_skilled_forgehand"
@@ -202,6 +201,7 @@
 	TRAIT_SQUIRE_REPAIR = TAT_TRAIT_ENTRY("Squire Knowledge", 15, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You can restore gear with time and polish it until it gleams like new."), \
 	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know watering holes, feeding grounds and bent thickets."), \
 	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know the common signs of prey and trails."), \
+	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Your feet walks a lot roads. Gives you +9 points in wandering skill tree."), \
 
 #define TAT_TRAIT_STAT_POINT_RULES list( \
 	TAT_TRAIT_BONUS_STAT_POOL = TAT_BUILD_STAT_BONUS_EXTRA_STATS, \
@@ -219,39 +219,27 @@
 
 #define TAT_TRAIT_SKILL_POINT_RULES list( \
 	TAT_TRAIT_MASTER_OF_WANDERING = list( \
-		TAT_SKILL_DOMAIN_WANDERING = TRAIT_MASTERYOFNOTHING_POINTS, \
-		TAT_SKILL_DOMAIN_MISC = TRAIT_MASTERYOFNOTHING_POINTS \
+		TAT_SKILL_DOMAIN_WANDERING = 24, \
+		TAT_SKILL_DOMAIN_MISC = 18 \
+	), \
+	TAT_TRAIT_STRAYING_SOUL = list( \
+		TAT_SKILL_DOMAIN_WANDERING = 9, \
 	), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = list( \
-		TAT_SKILL_DOMAIN_CRAFTING = TRAIT_MASTERYOFNOTHING_POINTS \
+		TAT_SKILL_DOMAIN_CRAFTING = 25 \
 	), \
 	TAT_TRAIT_STOCKPILER = list( \
-		TAT_SKILL_DOMAIN_GATHERING = TRAIT_MASTERYOFNOTHING_POINTS \
-	), \
-	TAT_TRAIT_MAGE_INITIATE = list( \
-		TAT_SKILL_DOMAIN_MAGIC = 2 \
-	), \
-	TAT_TRAIT_MAGE_MAJOR_SLOT = list( \
-		TAT_SKILL_DOMAIN_MAGIC = 3 \
-	), \
-	TAT_TRAIT_MAGE_MINOR_SLOT_2 = list( \
-		TAT_SKILL_DOMAIN_MAGIC = 4 \
-	), \
-	TAT_TRAIT_DIVINE_INITIATE = list( \
-		TAT_SKILL_DOMAIN_MAGIC = 2 \
-	), \
-	TAT_TRAIT_DIVINE_BOON_1 = list( \
-		TAT_SKILL_DOMAIN_MAGIC = 3 \
-	), \
-	TAT_TRAIT_DIVINE_BOON_2 = list( \
-		TAT_SKILL_DOMAIN_MAGIC = 4 \
-	), \
-	TAT_TRAIT_DIVINE_BOON_3 = list( \
-		TAT_SKILL_DOMAIN_MAGIC = 5 \
+		TAT_SKILL_DOMAIN_GATHERING = 20 \
 	), \
 	TAT_TRAIT_DRUID_INITIATE = list( \
-		TAT_SKILL_DOMAIN_MAGIC = 5 \
-	) \
+		TAT_SKILL_DOMAIN_MAGIC = 6 \
+	), \
+	TAT_TRAIT_WARRIOR_EXPERT = list( \
+		TAT_SKILL_DOMAIN_COMBAT = 15 \
+	), \
+	TAT_TRAIT_WARRIOR_MASTER = list( \
+		TAT_SKILL_DOMAIN_COMBAT = 10 \
+	), \
 )
 
 #define TAT_TRAIT_SKILL_BONUS_RULES list( \
