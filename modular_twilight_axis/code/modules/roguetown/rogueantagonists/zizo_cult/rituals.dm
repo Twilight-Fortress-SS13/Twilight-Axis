@@ -853,6 +853,9 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if((!HAS_TRAIT(target, TRAIT_DNR) && !HAS_TRAIT(target, TRAIT_NECRAS_VOW)) || target.stat != DEAD)
 		if(target.stat == DEAD)
 			target.revive()
+			#ifdef REVIVE_GRACE
+			target.apply_status_effect(/datum/status_effect/debuff/revive_grace)
+			#endif
 		target.fully_heal()
 		target.regenerate_limbs()
 		target.heal_wounds(500)

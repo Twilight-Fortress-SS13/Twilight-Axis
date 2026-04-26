@@ -1550,6 +1550,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 2
 
+/datum/loadout_item/donator/euthanasia
+	name = "Donator Item - Euthanasia - Required: Dagger or Seax"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/euthanasia
+	donatitem = TRUE
+
 /*
 /datum/loadout_item/donator_zydrasiconocrown
 	name = "Donator Kit - Iconoclast Crown - Required: Barred Helmet(Only men, no small races)"
@@ -2195,6 +2201,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/matron
 	donatitem = TRUE
+
+/datum/loadout_item/donator/wyrd_cloak
+	name = "Wyrd Cloak"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/suit/roguetown/armor/longcoat/wyrd_cloak
+	donatitem = TRUE
+	donat_tier = 2
 
 /datum/loadout_item/donat/capeblkknight
 	name = "Кровавая мантия"

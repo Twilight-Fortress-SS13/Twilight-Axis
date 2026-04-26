@@ -1180,6 +1180,9 @@
 	target.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)
 	target.apply_status_effect(/datum/status_effect/debuff/revived)
 	target.apply_status_effect(/datum/status_effect/buff/healing, 14)
+	#ifdef REVIVE_GRACE
+	target.apply_status_effect(/datum/status_effect/debuff/revive_grace) // TA EDIT
+	#endif
 	target.add_stress(/datum/stressevent/necrarevive)
 	src.coinslot -= 1 // -1 coin, please insert more coins.
 	user.apply_status_effect(/datum/status_effect/debuff/ritesexpended) // only after a succesful revive
