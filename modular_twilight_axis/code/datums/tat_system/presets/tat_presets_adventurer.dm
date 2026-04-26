@@ -997,7 +997,7 @@
 		"magic_config" = list(),
 	)
 
-datum/tat_preset/sample/mystic_theurgist
+/datum/tat_preset/sample/mystic_theurgist
 	id = "mystic_theurgist"
 	name = "Adventurer: Theurgist"
 	build_data = list(
