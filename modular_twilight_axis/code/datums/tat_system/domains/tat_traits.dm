@@ -173,7 +173,7 @@
 		TAT_TRAIT_DRUID_INITIATE = list(TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DIVINE_INITIATE),
 		TRAIT_CRITICAL_RESISTANCE = list(TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DIVINE_INITIATE),
 		TAT_TRAIT_WARRIOR_EXPERT = list(TAT_TRAIT_DIVINE_BOON_2, TAT_TRAIT_MAGE_MINOR_SLOT_1, TAT_TRAIT_MAGE_MAJOR_SLOT),
-		TAT_TRAIT_WITCH_INITIATE = list(TAT_TRAIT_MAGE_MAJOR_SLOT, TRAIT_HEAVYARMOR, TRAIT_HEAVYARMOR, TRAIT_MEDIUMARMOR),
+		TAT_TRAIT_WITCH_INITIATE = list(TAT_TRAIT_MAGE_MAJOR_SLOT, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_DIVINE_BOON_2, TRAIT_OUTLANDER),
 	)
 
 /datum/tat_traits/proc/get_trait_requirement_map()
@@ -189,7 +189,6 @@
 		TRAIT_BITERHELM = list("all" = list(TAT_TRAIT_HERETIC), "message" = "\"[get_trait_display_name(TRAIT_BITERHELM)]\" requires \"[get_trait_display_name(TAT_TRAIT_HERETIC)]\"."),
 		TRAIT_RITUALIST = list("all" = list(TAT_TRAIT_HERETIC), "message" = "\"[get_trait_display_name(TRAIT_RITUALIST)]\" requires \"[get_trait_display_name(TAT_TRAIT_HERETIC)]\"."),
 		TAT_TRAIT_ARTIFACTS_SUPPLIER = list("all" = list(TAT_TRAIT_PARTY_LEADER), "message" = "\"[get_trait_display_name(TAT_TRAIT_ARTIFACTS_SUPPLIER)]\" requires \"[get_trait_display_name(TAT_TRAIT_PARTY_LEADER)]\"."),
-		TAT_TRAIT_WITCH_INITIATE = list("all" = list(TAT_TRAIT_DIVINE_INITIATE, TRAIT_ARCYNE), "message" = "\"[get_trait_display_name(TAT_TRAIT_WITCH_INITIATE)]\" requires mage initiation and divine initiation."),
 	)
 
 /datum/tat_traits/proc/trait_requirement_is_met(list/rule)
