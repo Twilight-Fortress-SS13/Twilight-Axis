@@ -495,9 +495,11 @@
 	if(!islist(build_data) || !length(build_data))
 		reset()
 		dirty = FALSE
+		queue_item_ui_states_full_refresh()
 		return TRUE
 	load_slot_build_from_list(build_data)
 	dirty = FALSE
+	queue_item_ui_states_full_refresh()
 	return TRUE
 
 /datum/tat_build/proc/set_active_tat_slot(slot_id)
@@ -637,7 +639,7 @@
 		magic_profile = profile.Copy()
 
 	sanitize()
-	invalidate_item_ui_cache()
+	queue_item_ui_states_full_refresh()
 	set_dirty(TRUE)
 
 	last_exported_json = raw

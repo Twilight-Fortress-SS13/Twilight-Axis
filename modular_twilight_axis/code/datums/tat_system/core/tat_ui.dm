@@ -5,8 +5,9 @@
 	var/list/ui_item_states_cache = null
 	var/ui_item_states_cache_dirty = TRUE
 	var/ui_item_cache_requested = FALSE
-	var/ui_item_cache_pending_full = FALSE
-	var/ui_item_cache_pending_states = FALSE
+	var/ui_item_cache_pending_catalog = FALSE
+	var/ui_item_cache_pending_states_full = FALSE
+	var/list/ui_item_cache_pending_state_paths = null
 
 /datum/tat_build/proc/get_ui_skill_domain_key(domain)
 	if(domain == TAT_SKILL_DOMAIN_COMBAT)
@@ -139,7 +140,10 @@
 	return is_budget_valid()
 
 /datum/tat_build/proc/reset_build()
-	return reset()
+	var/ok = reset()
+	if(ok)
+		queue_item_ui_states_full_refresh()
+	return ok
 
 /datum/tat_build/proc/reset_stats()
 	stats?.reset()
@@ -156,14 +160,14 @@
 /datum/tat_build/proc/reset_traits()
 	traits?.reset()
 	sanitize()
-	invalidate_item_ui_cache()
+	queue_item_ui_states_full_refresh()
 	set_dirty()
 	return TRUE
 
 /datum/tat_build/proc/reset_items()
 	items?.reset()
 	sanitize()
-	invalidate_item_ui_cache()
+	queue_item_ui_states_full_refresh()
 	set_dirty()
 	return TRUE
 
@@ -203,14 +207,14 @@
 	var/ok = traits?.add_trait(trait_id)
 	sanitize()
 	if(ok)
-		invalidate_item_ui_cache()
+		queue_item_ui_states_full_refresh()
 	return ok
 
 /datum/tat_build/proc/remove_trait(trait_id)
 	var/ok = traits?.remove_trait(trait_id)
 	sanitize()
 	if(ok)
-		invalidate_item_ui_cache()
+		queue_item_ui_states_full_refresh()
 	return ok
 
 /datum/tat_build/proc/add_item(path, amount = 1)
@@ -219,6 +223,8 @@
 	var/current = items.get_amount(path)
 	var/ok = items.set_amount(path, current + (text2num("[amount]") || 1))
 	sanitize()
+	if(ok)
+		queue_item_ui_state_refresh_for_related_paths(path)
 	return ok
 
 /datum/tat_build/proc/remove_item(path, amount = 1)
@@ -227,6 +233,8 @@
 	var/current = items.get_amount(path)
 	var/ok = items.set_amount(path, current - (text2num("[amount]") || 1))
 	sanitize()
+	if(ok)
+		queue_item_ui_state_refresh_for_related_paths(path)
 	return ok
 
 /datum/tat_build/proc/move_item_to_bag(path, amount = 1)
@@ -503,55 +511,151 @@
 		)
 	return ui_item_catalog_cache
 
+/datum/tat_build/proc/build_ui_item_state(item_path)
+	var/list/entry = get_item_entry(item_path)
+	if(!islist(entry))
+		return null
+
+	var/maximum = items.get_maximum(item_path)
+	var/amount = items.get_amount(item_path)
+	return list(
+		"amount" = amount,
+		"unlocked" = items.can_use_item_entry(entry),
+		"maximum" = maximum,
+		"can_add" = amount < maximum,
+	)
+
 /datum/tat_build/proc/get_ui_item_states_cache()
 	if(islist(ui_item_states_cache) && !ui_item_states_cache_dirty)
 		return ui_item_states_cache
 	ui_item_states_cache = list()
 	for(var/item_path in list(TAT_AVAILABLE_ITEMS_LIST))
-		var/list/entry = get_item_entry(item_path)
-		if(!islist(entry))
+		var/list/state = build_ui_item_state(item_path)
+		if(!islist(state))
 			continue
-		var/maximum = items.get_maximum(item_path)
-		var/amount = items.get_amount(item_path)
-		ui_item_states_cache["[item_path]"] = list(
-			"amount" = amount,
-			"unlocked" = items.can_use_item_entry(entry),
-			"maximum" = maximum,
-			"can_add" = amount < maximum,
-		)
+		ui_item_states_cache["[item_path]"] = state
 	ui_item_states_cache_dirty = FALSE
 	return ui_item_states_cache
 
-/datum/tat_build/proc/invalidate_item_ui_cache(send_full = FALSE)
+/datum/tat_build/proc/build_ui_item_states_for_paths(list/paths)
+	var/list/result = list()
+	if(!islist(paths))
+		return result
+
+	for(var/item_path in paths)
+		if(!ispath(item_path))
+			item_path = text2path("[item_path]")
+		if(!item_path)
+			continue
+		var/list/state = build_ui_item_state(item_path)
+		if(!islist(state))
+			continue
+		result["[item_path]"] = state
+	return result
+
+/datum/tat_build/proc/add_pending_item_state_path(item_path)
+	if(!item_path)
+		return FALSE
+	if(!ispath(item_path))
+		item_path = text2path("[item_path]")
+	if(!item_path)
+		return FALSE
+	if(!islist(ui_item_cache_pending_state_paths))
+		ui_item_cache_pending_state_paths = list()
+	if(!(item_path in ui_item_cache_pending_state_paths))
+		ui_item_cache_pending_state_paths += item_path
+	return TRUE
+
+/datum/tat_build/proc/get_item_ui_related_dynamic_paths(item_path)
+	var/list/result = list()
+	if(!item_path)
+		return result
+	if(!ispath(item_path))
+		item_path = text2path("[item_path]")
+	if(!item_path)
+		return result
+
+	result += item_path
+
+	var/list/entry = get_item_entry(item_path)
+	if(!islist(entry) || !items?.is_item_slot_limited(entry))
+		return result
+
+	var/slot_group = lowertext("[entry["slot_group"]]")
+	var/category = lowertext("[entry["category"]]")
+	if(!slot_group || !category)
+		return result
+
+	// For slot-limited clothing/armor, taking one item changes maximum/can_add only for items
+	// in the same logical slot bucket. Do not touch unrelated item states.
+	for(var/other_path in list(TAT_AVAILABLE_ITEMS_LIST))
+		if(other_path == item_path)
+			continue
+		var/list/other_entry = get_item_entry(other_path)
+		if(!islist(other_entry))
+			continue
+		if(lowertext("[other_entry["slot_group"]]") != slot_group)
+			continue
+		if(lowertext("[other_entry["category"]]") != category)
+			continue
+		result += other_path
+
+	return result
+
+/datum/tat_build/proc/queue_item_ui_state_refresh_for_related_paths(item_path)
 	ui_item_states_cache_dirty = TRUE
 	if(!ui_item_cache_requested)
 		return
-	if(send_full || !islist(ui_item_catalog_cache))
-		ui_item_cache_pending_full = TRUE
-	else
-		ui_item_cache_pending_states = TRUE
+	if(ui_item_cache_pending_states_full)
+		return
+
+	for(var/related_path in get_item_ui_related_dynamic_paths(item_path))
+		add_pending_item_state_path(related_path)
+
+/datum/tat_build/proc/queue_item_ui_states_full_refresh()
+	ui_item_states_cache_dirty = TRUE
+	if(!ui_item_cache_requested)
+		return
+	ui_item_cache_pending_states_full = TRUE
+	ui_item_cache_pending_state_paths = null
+
+/datum/tat_build/proc/invalidate_item_ui_cache(send_full = FALSE)
+	if(send_full)
+		ui_item_catalog_cache = null
+		if(ui_item_cache_requested)
+			ui_item_cache_pending_catalog = TRUE
+	queue_item_ui_states_full_refresh()
 
 /datum/tat_build/proc/request_item_ui_cache(force_full = FALSE)
 	ui_item_cache_requested = TRUE
 	if(force_full || !islist(ui_item_catalog_cache))
-		ui_item_cache_pending_full = TRUE
-	else
-		ui_item_cache_pending_states = TRUE
+		ui_item_cache_pending_catalog = TRUE
+		ui_item_cache_pending_states_full = TRUE
+		ui_item_cache_pending_state_paths = null
+	// Otherwise this is a lightweight poll. Do not manufacture a full dynamic refresh here:
+	// actual mutations queue their own precise dynamic patches.
 	return TRUE
 
 /datum/tat_build/proc/get_pending_item_ui_cache_packet()
 	if(!ui_item_cache_requested)
 		return null
-	if(!ui_item_cache_pending_full && !ui_item_cache_pending_states)
+	if(!ui_item_cache_pending_catalog && !ui_item_cache_pending_states_full && !length(ui_item_cache_pending_state_paths))
 		return null
+
 	var/list/packet = list()
-	if(ui_item_cache_pending_full)
-		packet["full"] = TRUE
+	packet["full"] = ui_item_cache_pending_catalog || ui_item_cache_pending_states_full
+
+	if(ui_item_cache_pending_catalog)
 		packet["catalog"] = get_ui_item_catalog_cache()
 	else
-		packet["full"] = FALSE
 		packet["catalog"] = null
-	packet["states"] = get_ui_item_states_cache()
-	ui_item_cache_pending_full = FALSE
-	ui_item_cache_pending_states = FALSE
+
+	if(ui_item_cache_pending_states_full)
+		packet["states"] = get_ui_item_states_cache()
+	else
+		packet["states"] = build_ui_item_states_for_paths(ui_item_cache_pending_state_paths)
+
+	ui_item_cache_pending_catalog = FALSE
+	ui_item_cache_pending_states_full = FALSE
+	ui_item_cache_pending_state_paths = null
 	return packet
