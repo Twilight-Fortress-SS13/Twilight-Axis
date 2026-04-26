@@ -9,6 +9,10 @@
 
 	var/list/magic_profile = list()
 
+	var/last_exported_json = null
+	var/last_json_error = null
+	var/last_json_notice = null
+
 	var/list/tat_slots = list()
 	var/active_tat_slot = 1
 	var/list/tat_presets = list()
@@ -25,7 +29,6 @@
 	skills = new(src)
 	reset()
 	init_tat_slots()
-	init_tat_presets()
 
 /datum/tat_build/proc/reset()
 	traits.reset()
@@ -33,7 +36,6 @@
 	skills.reset()
 	items.reset()
 	magic_profile = list()
-	invalidate_item_ui_cache(TRUE)
 	dirty = FALSE
 	return TRUE
 
@@ -256,7 +258,6 @@
 	stats.sanitize()
 	skills.sanitize()
 	items.sanitize()
-	invalidate_item_ui_cache()
 	dirty = FALSE
 	return TRUE
 
@@ -412,9 +413,9 @@
 	if(!H)
 		return FALSE
 	sanitize()
+	traits.apply_to_human(H)
 	stats.apply_to_human(H)
 	skills.apply_to_human(H)
-	traits.apply_to_human(H)
 	items.apply_to_human(H)
 	return TRUE
 
@@ -550,40 +551,6 @@
 	dirty = FALSE
 	return TRUE
 
-/datum/tat_build/proc/init_tat_presets()
-	if(islist(tat_presets) && length(tat_presets))
-		return TRUE
-	tat_presets = list()
-	for(var/preset_type in subtypesof(/datum/tat_preset/sample))
-		if(preset_type == /datum/tat_preset/sample)
-			continue
-		var/datum/tat_preset/sample/preset = new preset_type
-		if(!preset)
-			continue
-		if(!istext(preset.id) || !length(preset.id))
-			preset.id = "[preset_type]"
-		tat_presets[preset.id] = preset
-	return TRUE
-
-/datum/tat_build/proc/get_tat_preset(preset_id) as /datum/tat_preset/sample
-	init_tat_presets()
-	if(!istext(preset_id) || !length(preset_id))
-		return null
-	return tat_presets[preset_id]
-
-/datum/tat_build/proc/load_preset_into_current(preset_id)
-	var/datum/tat_preset/sample/preset = get_tat_preset(preset_id)
-	if(!preset)
-		return FALSE
-	var/list/build_data = preset.get_build_data()
-	if(!islist(build_data) || !length(build_data))
-		reset()
-		dirty = TRUE
-		return TRUE
-	load_slot_build_from_list(build_data)
-	dirty = TRUE
-	return TRUE
-
 /datum/tat_build/proc/load_from_preferences(datum/preferences/P)
 	if(!P)
 		return FALSE
@@ -614,3 +581,65 @@
 		tat_build.load_tat_slots_from_list(null, 1)
 		tat_build.reset()
 	tat_build.dirty = FALSE
+
+/datum/tat_build/proc/export_to_json()
+	last_json_error = null
+	last_json_notice = null
+
+	var/list/data = list()
+	data["version"] = 1
+	data["stats"] = stats?.export_to_json_list()
+	data["skills"] = skills?.export_to_json_list()
+	data["traits"] = traits?.export_to_json_list()
+	data["items"] = items?.export_to_json_list()
+	data["magic_profile"] = magic_profile?.Copy()
+
+	last_exported_json = json_encode(data)
+	last_json_notice = "Build exported."
+	return last_exported_json
+
+/datum/tat_build/proc/import_from_json(raw)
+	last_json_error = null
+	last_json_notice = null
+
+	if(!istext(raw) || !length(raw))
+		last_json_error = "Empty JSON."
+		return FALSE
+
+	var/list/data
+	try
+		data = json_decode(raw)
+	catch()
+		last_json_error = "Invalid JSON."
+		return FALSE
+
+	if(!islist(data))
+		last_json_error = "JSON root must be an object."
+		return FALSE
+
+	var/raw_version = data["version"]
+	var/version = round(text2num("[raw_version]") || 1)
+	if(version != 1)
+		last_json_error = "Unsupported TAT build JSON version: [version]."
+		return FALSE
+
+	reset()
+	traits.import_from_json_list(data["traits"])
+	stats.import_from_json_list(data["stats"])
+	skills.import_from_json_list(data["skills"])
+	items.import_from_json_list(data["items"])
+
+	if(islist(data["magic_profile"]))
+		var/list/profile = data["magic_profile"]
+		magic_profile = profile.Copy()
+	else if(islist(data["magic_config"]))
+		var/list/profile = data["magic_config"]
+		magic_profile = profile.Copy()
+
+	sanitize()
+	invalidate_item_ui_cache()
+	set_dirty(TRUE)
+
+	last_exported_json = raw
+	last_json_notice = "Build imported."
+	return TRUE

@@ -120,48 +120,31 @@
 	var/list/entry = get_entry(path)
 	if(!islist(entry))
 		return 0
-
 	var/category = lowertext("[entry["category"]]")
-	var/slot_group = lowertext("[entry["slot_group"]]")
 	var/cost = get_cost(path)
-	if(slot_group == "misc")
-		return cost > 0 ? INFINITY : 1
-
-	if(category == "weapon" && cost <= 0)
+	if(cost <= 0 && (category == "misc" || category == "weapon"))
 		return 1
-
 	if(!is_item_slot_limited(entry))
 		return INFINITY
-
+	var/slot_group = entry["slot_group"]
 	if(!slot_group)
 		return INFINITY
-
 	return 1
 
 /datum/tat_items/proc/get_maximum(item_path)
 	if(!check_item(item_path))
 		return 0
-
 	var/total_allowed = get_item_total_allowed_amount(item_path)
 	if(total_allowed <= 0)
 		return 0
-
-	var/list/entry = get_entry(item_path)
-	var/item_maximum = 0
 	if(total_allowed == INFINITY)
-		item_maximum = 99
-	else
-		var/already_taken_elsewhere = get_slot_group_item_count(entry["slot_group"], entry["category"], item_path)
-		item_maximum = max(0, total_allowed - already_taken_elsewhere)
-
-	var/cost = get_cost(item_path)
-	if(cost > 0)
-		var/current_amount = get_amount(item_path)
-		var/affordable_extra = max(0, round(get_remaining_points() / cost))
-		item_maximum = min(item_maximum, current_amount + affordable_extra)
-
-	return item_maximum
-
+		return 99
+	var/list/entry = get_entry(item_path)
+	var/category = lowertext("[entry["category"]]")
+	if(get_cost(item_path) <= 0 && (category == "misc" || category == "weapon"))
+		return total_allowed
+	var/already_taken_elsewhere = get_slot_group_item_count(entry["slot_group"], entry["category"], item_path)
+	return max(0, total_allowed - already_taken_elsewhere)
 
 /datum/tat_items/proc/set_amount(item_path, amount)
 	if(!islist(get_entry(item_path)))
@@ -320,7 +303,7 @@
 		return
 	var/list/slots = get_equip_slots_for_item(I)
 	for(var/slot_id in slots)
-		if(H.equip_to_slot_if_possible(I, slot_id, TRUE, TRUE, TRUE))
+		if(H.equip_to_slot(I, slot_id))
 			return
 	try_put_into_any_storage_or_drop(I, H)
 
@@ -353,9 +336,21 @@
 		for(var/i in 1 to round(loadout["bag"] || 0))
 			spawn_item_into_bag_or_fallback(H, item_path)
 
+/datum/tat_items/proc/has_selected_roundstart_backpack()
+	return get_amount(/obj/item/storage/backpack/rogue/backpack) > 0
+
+/datum/tat_items/proc/grant_default_roundstart_bag(mob/living/carbon/human/H)
+	if(!H)
+		return FALSE
+	if(has_selected_roundstart_backpack())
+		return FALSE
+	spawn_item_equipped_or_fallback(H, /obj/item/storage/backpack/rogue/satchel)
+	return TRUE
+
 /datum/tat_items/proc/apply_to_human(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
+	grant_default_roundstart_bag(H)
 	spawn_equipped_items_for_slot_group(H, "shirt")
 	spawn_equipped_items_for_slot_group(H, "pants")
 	spawn_equipped_items_except_slot_groups(H, list("shirt", "pants"))
@@ -389,6 +384,69 @@
 	if(islist(data["item_loadout"]))
 		var/list/temp = data["item_loadout"]
 		item_loadout = temp.Copy()
+
+	for(var/item_path in selected)
+		normalize_loadout(item_path)
+
+	return TRUE
+
+/datum/tat_items/proc/export_to_json_list()
+	var/list/exported_selected = list()
+	for(var/item_path in selected)
+		var/amount = get_amount(item_path)
+		if(amount > 0)
+			exported_selected["[item_path]"] = amount
+
+	var/list/exported_loadout = list()
+	for(var/item_path in item_loadout)
+		if(!(item_path in selected))
+			continue
+		var/list/loadout = item_loadout[item_path]
+		if(!islist(loadout))
+			continue
+		exported_loadout["[item_path]"] = list(
+			"equip" = round(loadout["equip"] || 0),
+			"bag" = round(loadout["bag"] || 0),
+		)
+
+	return list(
+		"selected" = exported_selected,
+		"item_loadout" = exported_loadout,
+	)
+
+/datum/tat_items/proc/import_from_json_list(list/data)
+	reset()
+	if(!islist(data))
+		return FALSE
+
+	var/list/imported_selected = null
+	if(islist(data["selected"]))
+		imported_selected = data["selected"]
+	else
+		imported_selected = data
+
+	for(var/raw_path in imported_selected)
+		if(raw_path == "selected" || raw_path == "item_loadout")
+			continue
+		var/item_path = ispath(raw_path) ? raw_path : text2path("[raw_path]")
+		if(!item_path)
+			continue
+		set_amount(item_path, text2num("[imported_selected[raw_path]]"))
+
+	if(islist(data["item_loadout"]))
+		for(var/raw_path in data["item_loadout"])
+			var/item_path = ispath(raw_path) ? raw_path : text2path("[raw_path]")
+			if(!item_path || !(item_path in selected))
+				continue
+			var/list/source_loadout = data["item_loadout"][raw_path]
+			if(!islist(source_loadout))
+				continue
+			var/raw_equip = source_loadout["equip"]
+			var/raw_bag = source_loadout["bag"]
+			item_loadout[item_path] = list(
+				"equip" = round(text2num("[raw_equip]") || 0),
+				"bag" = round(text2num("[raw_bag]") || 0),
+			)
 
 	for(var/item_path in selected)
 		normalize_loadout(item_path)

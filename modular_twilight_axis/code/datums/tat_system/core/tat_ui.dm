@@ -377,26 +377,6 @@
 		result += list(build_ui_tat_slot(i))
 	return result
 
-/datum/tat_build/proc/build_ui_tat_presets()
-	if(islist(ui_tat_presets_cache))
-		return ui_tat_presets_cache
-
-	init_tat_presets()
-
-	var/list/result = list()
-	for(var/preset_id in tat_presets)
-		var/datum/tat_preset/sample/preset = tat_presets[preset_id]
-		if(!istype(preset, /datum/tat_preset/sample))
-			continue
-		result += list(list(
-			"id" = preset.id,
-			"name" = preset.name,
-			"summary" = build_slot_summary_from_data(preset.get_build_data()),
-		))
-
-	ui_tat_presets_cache = result
-	return ui_tat_presets_cache
-
 /datum/tat_build/ui_state(mob/user)
 	return GLOB.always_state
 
@@ -442,9 +422,11 @@
 
 		"tat_slots" = build_ui_tat_slots(),
 		"active_tat_slot" = active_tat_slot,
-		"tat_presets" = build_ui_tat_presets(),
 		"can_save" = can_save_build,
 		"validation_issues" = validation,
+		"build_json" = last_exported_json,
+		"last_json_error" = last_json_error,
+		"last_json_notice" = last_json_notice,
 		"dirty" = dirty,
 	)
 
@@ -493,8 +475,12 @@
 			return save_current_to_active_slot()
 		if("request_item_cache")
 			return request_item_ui_cache(text2num(params["full"]) ? TRUE : FALSE)
-		if("load_tat_preset")
-			return load_preset_into_current(params["preset_id"])
+		if("export_json")
+			export_to_json()
+			return TRUE
+		if("import_json")
+			return import_from_json(params["json"])
+
 	return FALSE
 
 /datum/tat_build/proc/get_ui_item_catalog_cache()
@@ -526,12 +512,8 @@
 		var/list/entry = get_item_entry(item_path)
 		if(!islist(entry))
 			continue
-		var/amount = items.get_amount(item_path)
-		var/maximum = items.get_maximum(item_path)
 		ui_item_states_cache["[item_path]"] = list(
-			"amount" = amount,
-			"maximum" = maximum,
-			"can_add" = amount < maximum,
+			"amount" = items.get_amount(item_path),
 			"unlocked" = items.can_use_item_entry(entry),
 		)
 	ui_item_states_cache_dirty = FALSE

@@ -9,6 +9,7 @@ import {
   Section,
   Stack,
   Tabs,
+  TextArea,
 } from 'tgui-core/components';
 
 type StatEntry = {
@@ -56,6 +57,8 @@ type ItemEntry = {
 type ItemState = {
   amount: number;
   unlocked: boolean;
+  maximum?: number;
+  can_add?: boolean;
 };
 
 type LoadoutState = {
@@ -127,6 +130,10 @@ type Data = {
   tat_presets?: TatPresetEntry[] | null;
   active_tat_slot?: number;
 
+  build_json?: string | null;
+  last_json_error?: string | null;
+  last_json_notice?: string | null;
+
   can_save: boolean;
   validation_issues?: string[];
   dirty: boolean;
@@ -159,6 +166,8 @@ type HoverCardData = {
   bonus?: number;
   invested?: number;
   domainRemaining?: number | null;
+  maximum?: number;
+  canAdd?: boolean;
   leftHelp?: string;
   rightHelp?: string;
 };
@@ -593,6 +602,18 @@ const HoverCard = ({ data }: { data: HoverCardData | null }) => {
             </Box>
           )}
 
+          {typeof data.maximum === 'number' && data.maximum >= 0 && (
+            <Box style={{ opacity: 0.9 }}>
+              <b>Maximum:</b> {data.maximum}
+            </Box>
+          )}
+
+          {typeof data.canAdd === 'boolean' && (
+            <Box style={{ color: data.canAdd ? '#9fd6a8' : '#e8a0a0' }}>
+              <b>Can add:</b> {data.canAdd ? 'Yes' : 'No'}
+            </Box>
+          )}
+
           {typeof data.bag === 'number' && typeof data.equip === 'number' && (
             <Box style={{ opacity: 0.9 }}>
               <b>Bag:</b> {data.bag} | <b>Equip:</b> {data.equip}
@@ -639,6 +660,7 @@ const ItemTile = ({
   onHoverStart,
   onHoverEnd,
   glow,
+  disabled,
 }: {
   name: string;
   topRightText?: string | number;
@@ -650,11 +672,16 @@ const ItemTile = ({
   onHoverStart?: () => void;
   onHoverEnd?: () => void;
   glow?: string;
+  disabled?: boolean;
 }) => {
   return (
     <Box style={{ margin: '2px' }}>
       <div
-        onClick={onLeftClick}
+        onClick={() => {
+          if (!disabled) {
+            onLeftClick();
+          }
+        }}
         onContextMenu={(event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -667,12 +694,15 @@ const ItemTile = ({
           width: '88px',
           height: '88px',
           borderRadius: '6px',
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: disabled ? 'rgba(80,80,80,0.08)' : 'rgba(255,255,255,0.03)',
+          border: disabled
+            ? '1px solid rgba(255,255,255,0.04)'
+            : '1px solid rgba(255,255,255,0.08)',
           boxShadow: glow ? `inset 0 0 0 1px ${glow}` : 'none',
-          cursor: 'pointer',
+          cursor: disabled ? 'not-allowed' : 'pointer',
           userSelect: 'none',
           overflow: 'hidden',
+          opacity: disabled ? 0.55 : 1,
         }}>
         <div
           style={{
@@ -909,65 +939,71 @@ const SlotCards = ({
   );
 };
 
-const PresetList = ({
-  presets,
+const JsonExchangePanel = ({
   act,
-  search,
+  buildJson,
+  lastJsonError,
+  lastJsonNotice,
 }: {
-  presets: TatPresetEntry[];
   act: BackendAct;
-  search: string;
+  buildJson?: string | null;
+  lastJsonError?: string | null;
+  lastJsonNotice?: string | null;
 }) => {
-  const rows = useMemo(
-    () => presets.filter((preset) => matchesSearch(search, preset.id, preset.name)),
-    [presets, search]
-  );
+  const [jsonDraft, setJsonDraft] = useState('');
+
+  useEffect(() => {
+    if (typeof buildJson === 'string' && buildJson.length > 0) {
+      setJsonDraft(buildJson);
+    }
+  }, [buildJson]);
 
   return (
-    <Section title="Presets">
-      {!rows.length ? (
-        <NoticeBox>No presets found.</NoticeBox>
-      ) : (
-        <Stack vertical>
-          {rows.map((preset) => {
-            const summary = preset.summary || {
-              stats: 0,
-              skills: 0,
-              traits: 0,
-              items: 0,
-            };
-
-            return (
-              <Box
-                key={preset.id}
-                mb={1}
-                style={{
-                  padding: '8px',
-                  borderRadius: '6px',
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                }}>
-                <Stack align="center" justify="space-between">
-                  <Stack.Item grow>
-                    <Box bold>{preset.name}</Box>
-                    <Box mt={0.5} style={{ fontSize: '11px', opacity: 0.85 }}>
-                      Spent: Stats - {summary.stats} | Skills - {summary.skills} | Traits -{' '}
-                      {summary.traits} | Items - {summary.items}
-                    </Box>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Button
-                      color="good"
-                      onClick={() => act('load_tat_preset', { preset_id: preset.id })}>
-                      Load
-                    </Button>
-                  </Stack.Item>
-                </Stack>
-              </Box>
-            );
-          })}
+    <Section
+      title="JSON Exchange"
+      buttons={
+        <Stack>
+          <Stack.Item>
+            <Button onClick={() => act('export_json')}>Export current build</Button>
+          </Stack.Item>
+          <Stack.Item>
+            <Button
+              color="good"
+              disabled={!jsonDraft.trim()}
+              onClick={() => act('import_json', { json: jsonDraft })}>
+              Import from text
+            </Button>
+          </Stack.Item>
         </Stack>
-      )}
+      }>
+      {!!lastJsonNotice && <NoticeBox color="good">{lastJsonNotice}</NoticeBox>}
+      {!!lastJsonError && <NoticeBox color="bad">{lastJsonError}</NoticeBox>}
+
+      <Box mb={0.75} style={{ opacity: 0.85 }}>
+        Export creates a portable JSON build. Import rebuilds the current build through backend
+        validation, so invalid or outdated entries should be sanitized by the server.
+      </Box>
+
+      <TextArea
+        fluid
+        height="180px"
+        value={jsonDraft}
+        placeholder="Paste exported TAT build JSON here, or press Export current build."
+        onChange={(value) => setJsonDraft(String(value))}
+      />
+
+      <Stack mt={0.75} justify="space-between">
+        <Stack.Item>
+          <Button disabled={!jsonDraft} onClick={() => setJsonDraft('')}>
+            Clear JSON
+          </Button>
+        </Stack.Item>
+        <Stack.Item>
+          <Box style={{ opacity: 0.75, fontSize: '11px' }}>
+            Length: {jsonDraft.length} chars
+          </Box>
+        </Stack.Item>
+      </Stack>
     </Section>
   );
 };
@@ -977,30 +1013,27 @@ const ControlTab = ({
   presets,
   act,
   search,
+  buildJson,
+  lastJsonError,
+  lastJsonNotice,
 }: {
   slots: TatSlotEntry[];
   presets: TatPresetEntry[];
   act: BackendAct;
   search: string;
+  buildJson?: string | null;
+  lastJsonError?: string | null;
+  lastJsonNotice?: string | null;
 }) => {
-  const [showPresets, setShowPresets] = useState(false);
-
   return (
     <Stack vertical>
       <SlotCards slots={slots} act={act} />
-      <Section
-        title="Preset Management"
-        buttons={
-          <Button onClick={() => setShowPresets((prev) => !prev)}>
-            {showPresets ? 'Hide presets' : 'Show presets'}
-          </Button>
-        }>
-        {showPresets ? (
-          <PresetList presets={presets} act={act} search={search} />
-        ) : (
-          <NoticeBox>Presets are hidden. Open them with the button above.</NoticeBox>
-        )}
-      </Section>
+      <JsonExchangePanel
+        act={act}
+        buildJson={buildJson}
+        lastJsonError={lastJsonError}
+        lastJsonNotice={lastJsonNotice}
+      />
     </Stack>
   );
 };
@@ -1043,7 +1076,7 @@ const StatsTab = ({
                 value={value}
                 onAdd={() => act('add_stat', { id: statId, amount: 1 })}
                 onRemove={() => act('remove_stat', { id: statId, amount: 1 })}
-                disabledAdd={value >= entry.max}
+                disabledAdd={value >= entry.max || data.points_stats_remaining < entry.cost}
                 disabledRemove={value <= 1}
                 extra={
                   <Box>
@@ -1497,29 +1530,39 @@ const ItemsTab = ({
                     </Box>
 
                     <Stack wrap>
-                      {visibleItems.map(([itemPath, entry]) => (
-                        <ItemTile
-                          key={itemPath}
-                          name={entry.name || itemPath}
-                          topRightText={`${entry.cost || 0} pts`}
-                          bottomLeftText={(entry.amount || 0) > 0 ? entry.amount : undefined}
-                          icon={entry.icon}
-                          onLeftClick={() => act('add_item', { path: itemPath, amount: 1 })}
-                          onRightClick={() => act('remove_item', { path: itemPath, amount: 1 })}
-                          onHoverStart={() =>
-                            setHoveredItem({
-                              name: entry.name || itemPath,
-                              slot: getSlotLabel(entry.slot_group),
-                              category: getCategoryLabel(entry.category),
-                              costText: `${entry.cost || 0} pts`,
-                              total: entry.amount || 0,
-                              leftHelp: 'LMB: add item',
-                              rightHelp: 'RMB: remove item',
-                            })
-                          }
-                          onHoverEnd={() => setHoveredItem(null)}
-                        />
-                      ))}
+                      {visibleItems.map(([itemPath, entry]) => {
+                        const canAdd = entry.can_add !== false;
+                        const maximum = Number(entry.maximum);
+                        const amount = Number(entry.amount) || 0;
+
+                        return (
+                          <ItemTile
+                            key={itemPath}
+                            name={entry.name || itemPath}
+                            topRightText={`${entry.cost || 0} pts`}
+                            bottomLeftText={amount > 0 ? amount : undefined}
+                            bottomRightText={!canAdd ? 'MAX' : undefined}
+                            icon={entry.icon}
+                            disabled={!canAdd}
+                            onLeftClick={() => act('add_item', { path: itemPath, amount: 1 })}
+                            onRightClick={() => act('remove_item', { path: itemPath, amount: 1 })}
+                            onHoverStart={() =>
+                              setHoveredItem({
+                                name: entry.name || itemPath,
+                                slot: getSlotLabel(entry.slot_group),
+                                category: getCategoryLabel(entry.category),
+                                costText: `${entry.cost || 0} pts`,
+                                total: amount,
+                                maximum: Number.isFinite(maximum) ? maximum : undefined,
+                                canAdd,
+                                leftHelp: canAdd ? 'LMB: add item' : 'Cannot add more',
+                                rightHelp: 'RMB: remove item',
+                              })
+                            }
+                            onHoverEnd={() => setHoveredItem(null)}
+                          />
+                        );
+                      })}
                     </Stack>
 
                     {items.length > MAX_RENDERED_ITEMS_PER_SLOT && (
@@ -1708,6 +1751,12 @@ export const TATBuild = () => {
     }
   }, [data.item_cache]);
 
+  useEffect(() => {
+    if (tab === 'items' || tab === 'loadout') {
+      act('request_item_cache', { full: 0 });
+    }
+  }, [data.traits, data.points_items_remaining, data.items]);
+
   const itemEntries = useMemo<Record<string, ItemViewEntry>>(() => {
     const result: Record<string, ItemViewEntry> = {};
     const staticEntries = cachedAvailableItems || {};
@@ -1719,6 +1768,8 @@ export const TATBuild = () => {
         ...entry,
         amount: state?.amount || 0,
         unlocked: !!state?.unlocked,
+        maximum: state?.maximum,
+        can_add: state?.can_add,
       };
     });
 
@@ -1748,7 +1799,7 @@ export const TATBuild = () => {
   }, [cachedAvailableItems, data.loadout]);
 
   const itemCacheLoaded = Object.keys(cachedAvailableItems).length > 0;
-  const searchPlaceholder = tab === 'control' ? 'Search presets...' : `Search in ${tab}...`;
+  const searchPlaceholder = tab === 'control' ? 'Search legacy presets...' : `Search in ${tab}...`;
 
   return (
     <Window title="TAT Build" width={980} height={900}>
@@ -1826,7 +1877,15 @@ export const TATBuild = () => {
           </Section>
 
           {tab === 'control' && (
-            <ControlTab slots={tatSlots} presets={tatPresets} act={act} search={search} />
+            <ControlTab
+              slots={tatSlots}
+              presets={tatPresets}
+              act={act}
+              search={search}
+              buildJson={data.build_json}
+              lastJsonError={data.last_json_error}
+              lastJsonNotice={data.last_json_notice}
+            />
           )}
           {tab === 'stats' && <StatsTab data={data} act={act} search={search} />}
           {tab === 'skills' && (

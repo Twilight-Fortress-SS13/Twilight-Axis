@@ -52,11 +52,23 @@
 		return values[stat_id]
 	return get_base(stat_id)
 
-/datum/tat_stats/proc/set_value(stat_id, value)
+/datum/tat_stats/proc/set_value(stat_id, value, ignore_budget = FALSE)
 	if(!islist(get_entry(stat_id)))
 		return FALSE
 	value = round(value)
 	value = clamp(value, get_hard_minimum(stat_id), get_maximum(stat_id))
+
+	var/old_value = get_value(stat_id)
+	if(value == old_value)
+		return TRUE
+
+	if(!ignore_budget)
+		var/old_cost = get_point_delta_for_value(stat_id, old_value)
+		var/new_cost = get_point_delta_for_value(stat_id, value)
+		var/new_spent = get_spent_points() - old_cost + new_cost
+		if(new_spent > get_total_maximum())
+			return FALSE
+
 	if(value == get_base(stat_id))
 		values -= stat_id
 	else
@@ -91,14 +103,14 @@
 		if(!islist(get_entry(stat_id)))
 			values -= stat_id
 	for(var/stat_id in order)
-		set_value(stat_id, get_value(stat_id))
+		set_value(stat_id, get_value(stat_id), TRUE)
 	while(get_remaining_points() < 0)
 		var/changed = FALSE
 		for(var/stat_id in order)
 			var/current = get_value(stat_id)
 			var/base = get_base(stat_id)
 			if(current > base)
-				set_value(stat_id, current - 1)
+				set_value(stat_id, current - 1, TRUE)
 				changed = TRUE
 				if(get_remaining_points() >= 0)
 					break
@@ -132,5 +144,11 @@
 	if(!islist(data))
 		return FALSE
 	for(var/stat_id in data)
-		set_value(stat_id, data[stat_id])
+		set_value(stat_id, data[stat_id], TRUE)
 	return TRUE
+
+/datum/tat_stats/proc/export_to_json_list()
+	return export_to_list()
+
+/datum/tat_stats/proc/import_from_json_list(list/data)
+	return import_from_list(data)

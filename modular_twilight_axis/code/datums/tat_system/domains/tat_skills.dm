@@ -160,7 +160,7 @@
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_magic_skill_cap(skill_type)
-	var/cap = 1
+	var/cap = 0
 
 	if(skill_type == /datum/skill/magic/arcane)
 		if(owner_build?.has_trait(TAT_TRAIT_MAGE_MINOR_SLOT_2))
@@ -177,6 +177,8 @@
 			cap = 5
 		else if(owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_1))
 			cap = 3
+		else if(owner_build?.has_trait(TAT_TRAIT_DIVINE_INITIATE))
+			cap = 1
 
 	else if(skill_type == /datum/skill/magic/druidic)
 		if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
@@ -360,6 +362,37 @@
 		if(skill_type == "invested")
 			continue
 		set_invested_value(skill_type, imported_invested[skill_type])
+
+	rebuild_bonus_values()
+	sanitize()
+	return TRUE
+
+/datum/tat_skills/proc/export_to_json_list()
+	var/list/exported_invested = list()
+	for(var/skill_type in invested)
+		var/value = get_invested_value(skill_type)
+		if(value > 0)
+			exported_invested["[skill_type]"] = value
+	return list("invested" = exported_invested)
+
+/datum/tat_skills/proc/import_from_json_list(list/data)
+	reset()
+	if(!islist(data))
+		return FALSE
+
+	var/list/imported_invested = null
+	if(islist(data["invested"]))
+		imported_invested = data["invested"]
+	else
+		imported_invested = data
+
+	for(var/raw_path in imported_invested)
+		if(raw_path == "bonus" || raw_path == "invested")
+			continue
+		var/skill_type = ispath(raw_path) ? raw_path : text2path("[raw_path]")
+		if(!skill_type)
+			continue
+		set_invested_value(skill_type, text2num("[imported_invested[raw_path]]"))
 
 	rebuild_bonus_values()
 	sanitize()

@@ -173,7 +173,6 @@
 		TAT_TRAIT_DRUID_INITIATE = list(TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DIVINE_INITIATE),
 		TRAIT_CRITICAL_RESISTANCE = list(TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DIVINE_INITIATE),
 		TAT_TRAIT_WARRIOR_EXPERT = list(TAT_TRAIT_DIVINE_BOON_2, TAT_TRAIT_MAGE_MINOR_SLOT_1, TAT_TRAIT_MAGE_MAJOR_SLOT),
-		TAT_TRAIT_WITCH_INITIATE = list(TAT_TRAIT_MAGE_MAJOR_SLOT, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_DIVINE_BOON_2, TRAIT_OUTLANDER),
 	)
 
 /datum/tat_traits/proc/get_trait_requirement_map()
@@ -226,8 +225,6 @@
 		return "\"[get_trait_display_name(trait_a)]\" conflicts with \"[get_trait_display_name(trait_b)]\"."
 	if((trait_a == TAT_TRAIT_WARRIOR_MASTER || trait_b == TAT_TRAIT_WARRIOR_MASTER) && has_defensive_trait_lockout())
 		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" conflicts with current defensive trait setup."
-	if((trait_a == TAT_TRAIT_WITCH_INITIATE || trait_b == TAT_TRAIT_WITCH_INITIATE) && has_defensive_trait_lockout())
-		return "\"[get_trait_display_name(TAT_TRAIT_WITCH_INITIATE)]\" conflicts with current defensive trait setup."
 	return null
 
 /datum/tat_traits/proc/has_invalid_trait_dependencies()
@@ -513,4 +510,23 @@
 	for(var/trait_id in data)
 		if(data[trait_id])
 			add_trait(trait_id)
+	return TRUE
+
+/datum/tat_traits/proc/export_to_json_list()
+	var/list/result = list()
+	for(var/trait_id in selected)
+		if(selected[trait_id])
+			result += trait_id
+	return result
+
+/datum/tat_traits/proc/import_from_json_list(list/data)
+	reset()
+	if(!islist(data))
+		return FALSE
+	for(var/key in data)
+		if(check_trait(key))
+			add_trait(key)
+			continue
+		if(data[key] && check_trait("[key]"))
+			add_trait("[key]")
 	return TRUE
