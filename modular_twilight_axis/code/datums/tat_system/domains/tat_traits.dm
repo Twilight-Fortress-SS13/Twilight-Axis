@@ -36,10 +36,6 @@
 	return round((isnum(entry["cost"]) ? entry["cost"] : 0))
 
 /datum/tat_traits/proc/get_cost_modifier(trait_id)
-	switch(trait_id)
-		if(TAT_TRAIT_BONUS_STAT_POOL)
-			if(has_trait(TRAIT_OUTLANDER))
-				return -(TAT_TRAIT_DISCOUNT)
 	return 0
 
 /datum/tat_traits/proc/get_display_cost(trait_id)
@@ -173,6 +169,7 @@
 		TAT_TRAIT_DRUID_INITIATE = list(TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DIVINE_INITIATE),
 		TRAIT_CRITICAL_RESISTANCE = list(TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DIVINE_INITIATE),
 		TAT_TRAIT_WARRIOR_EXPERT = list(TAT_TRAIT_DIVINE_BOON_2, TAT_TRAIT_MAGE_MINOR_SLOT_1, TAT_TRAIT_MAGE_MAJOR_SLOT),
+		TAT_TRAIT_WITCH_INITIATE = list(TAT_TRAIT_MAGE_MINOR_SLOT_2, TAT_TRAIT_DIVINE_BOON_3, TAT_TRAIT_WANTED),
 	)
 
 /datum/tat_traits/proc/get_trait_requirement_map()
@@ -225,6 +222,8 @@
 		return "\"[get_trait_display_name(trait_a)]\" conflicts with \"[get_trait_display_name(trait_b)]\"."
 	if((trait_a == TAT_TRAIT_WARRIOR_MASTER || trait_b == TAT_TRAIT_WARRIOR_MASTER) && has_defensive_trait_lockout())
 		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" conflicts with current defensive trait setup."
+	if((trait_a == TAT_TRAIT_WITCH_INITIATE || trait_b == TAT_TRAIT_WITCH_INITIATE) && has_defensive_trait_lockout())
+		return "\"[get_trait_display_name(TAT_TRAIT_WITCH_INITIATE)]\" conflicts with current defensive trait setup."
 	return null
 
 /datum/tat_traits/proc/has_invalid_trait_dependencies()
@@ -374,17 +373,17 @@
 /datum/tat_traits/proc/apply_witch_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_WITCH_INITIATE))
 		return
-	if(!H.client)
-		return
 	ADD_TRAIT(H, TRAIT_WITCH, TAT_TRAIT_SOURCE)
 	ADD_TRAIT(H, TRAIT_DEATHSIGHT, TAT_TRAIT_SOURCE)
 	var/list/shapeshifts = list("Zad", "Cat", "Cat (Black)", "Bat", "Lesser Volf", "Cabbit", "Small Rous", "Lesser Venard")
-	var/shapeshiftchoice = owner_build?.get_magic_value("witch_shapeshift")
+	var/shapeshiftchoice = null
+	if(H.client)
+		shapeshiftchoice = tgui_input_list(H, "What form does your second skin take?", "THE OLD WAYS", shapeshifts)
 	if(!shapeshiftchoice || !(shapeshiftchoice in shapeshifts))
-		shapeshiftchoice = H.client ? tgui_input_list(H, "What form does your second skin take?", "THE OLD WAYS", shapeshifts) : null
-		if(!shapeshiftchoice)
-			shapeshiftchoice = "Zad"
-		owner_build?.set_magic_value("witch_shapeshift", shapeshiftchoice)
+		shapeshiftchoice = owner_build?.get_magic_value("witch_shapeshift")
+	if(!shapeshiftchoice || !(shapeshiftchoice in shapeshifts))
+		shapeshiftchoice = "Zad"
+	owner_build?.set_magic_value("witch_shapeshift", shapeshiftchoice)
 	if(H.mind)
 		switch(shapeshiftchoice)
 			if("Zad")

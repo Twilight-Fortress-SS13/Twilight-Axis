@@ -219,7 +219,6 @@
 	var/current = items.get_amount(path)
 	var/ok = items.set_amount(path, current + (text2num("[amount]") || 1))
 	sanitize()
-	invalidate_item_ui_cache()
 	return ok
 
 /datum/tat_build/proc/remove_item(path, amount = 1)
@@ -228,7 +227,6 @@
 	var/current = items.get_amount(path)
 	var/ok = items.set_amount(path, current - (text2num("[amount]") || 1))
 	sanitize()
-	invalidate_item_ui_cache()
 	return ok
 
 /datum/tat_build/proc/move_item_to_bag(path, amount = 1)
