@@ -15,7 +15,7 @@
 	display_order = JDO_MERCENARY
 	selection_color = JCOLOR_WANDERER
 
-	min_pq = 20
+	min_pq = -20
 	max_pq = null
 	round_contrib_points = 0
 
