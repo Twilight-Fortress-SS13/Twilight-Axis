@@ -3737,6 +3737,7 @@
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\projectiles_single\magic_icicle.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\buffs_debuffs\shrink.dm"
 #include "modular_twilight_axis\code\modules\spells\spell.dm"
+#include "modular_twilight_axis\code\modules\spells\runeblade.dm"
 #include "modular_twilight_axis\code\modules\spells\soundbreaker.dm"
 #include "modular_twilight_axis\code\modules\spells\ronin.dm"
 #include "modular_twilight_axis\code\modules\spells\pantheon\divine\astrata.dm"
