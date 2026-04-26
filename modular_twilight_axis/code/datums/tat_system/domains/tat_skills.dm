@@ -182,7 +182,7 @@
 
 	else if(skill_type == /datum/skill/magic/druidic)
 		if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
-			cap = 6
+			cap = 3
 
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
