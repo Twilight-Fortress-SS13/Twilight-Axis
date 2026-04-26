@@ -1747,7 +1747,16 @@ export const TATBuild = () => {
     }
 
     if (packet.states) {
-      setCachedItemStates(packet.states || {});
+      setCachedItemStates((prev) => {
+        if (packet.full) {
+          return packet.states || {};
+        }
+
+        return {
+          ...prev,
+          ...packet.states,
+        };
+      });
     }
   }, [data.item_cache]);
 
