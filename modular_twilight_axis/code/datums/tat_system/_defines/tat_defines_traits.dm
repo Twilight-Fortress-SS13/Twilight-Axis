@@ -126,9 +126,9 @@
 	TRAIT_CIVILIZEDBARBARIAN = TAT_TRAIT_ENTRY("Expert Pugilist", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Turns you into a living weapon: stronger unarmed strikes, broader unarmed reach, and much better parrying with bracers, knuckles, or bandages."), \
 	TRAIT_FENCERDEXTERITY = TAT_TRAIT_ENTRY("Fencer's Dexterity", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "I've trained my entire lyfe around the art of unarmoured fencing, affording myself unmatched speed when wearing very light armour. I'm very choosy otherwise."), \
 	TAT_TRAIT_BRONZE_SUPPLIER = TAT_TRAIT_ENTRY("Bronze Supplier", 10, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks bronze-tier weapons."), \
-	TAT_TRAIT_SILVER_SUPPLIER = TAT_TRAIT_ENTRY("Silver Supplier", 40, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks silver-tier weapons."), \
+	TAT_TRAIT_SILVER_SUPPLIER = TAT_TRAIT_ENTRY("Silver Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks silver-tier weapons."), \
 	TAT_TRAIT_STEEL_SUPPLIER = TAT_TRAIT_ENTRY("Steel Supplier", 15, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks steel-tier weapons."), \
-	TAT_TRAIT_FIREARMS_SUPPLIER = TAT_TRAIT_ENTRY("Firearms Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks blackpowder weapons and supplies."), \
+	TAT_TRAIT_FIREARMS_SUPPLIER = TAT_TRAIT_ENTRY("Firearms Supplier", 25, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks blackpowder weapons and supplies."), \
 	TAT_TRAIT_LEATHER_SUPPLIER = TAT_TRAIT_ENTRY("Leather Supplier", 15, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks leather gear in all supported slots."), \
 	TAT_TRAIT_MAIL_SUPPLIER = TAT_TRAIT_ENTRY("Mail Supplier", 20, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks mail gear in all supported slots."), \
 	TAT_TRAIT_PLATE_SUPPLIER = TAT_TRAIT_ENTRY("Plate Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks plate gear in all supported slots."), \
@@ -159,7 +159,7 @@
 	TAT_TRAIT_MAGE_UTILITY_SLOT = TAT_TRAIT_ENTRY("Arcane Utility Slot", 10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Mage Initiate. Grants +1 utility spell slot."), \
 	TAT_TRAIT_DRUID_INITIATE = TAT_TRAIT_ENTRY("Druid Initiate", 50, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants Dendor's druidic rites, direct druid spells, and wise tree alert."), \
 	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants witch trait and ability to shapeshift yourself into different small creatures."), \
-	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 20, TAT_CATEGORY_UTILITY, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants explosives gifts from your friends. Luck scaled."), \
+	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 10, TAT_CATEGORY_UTILITY, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants explosives gifts from your friends. Luck scaled."), \
 	TAT_TRAIT_ARTIFACTS_SUPPLIER = TAT_TRAIT_ENTRY("Artifacts Bearer", 50, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "You're one of the adventurers with stories about your raids. Now, you have one of the deadlist weapons in Grimmoria. REQUIRES: Party Leader"), \
 	TRAIT_FIREARMS_MARKSMAN = TAT_TRAIT_ENTRY("Firearms Training", 30, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat Firearms cap from 3 to 4."), \
 	TAT_TRAIT_TRAINEE_SMITH = TAT_TRAIT_ENTRY("Trainee Smith", 5, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Blacksmithing, Smelting, and the first two levels of Maces by 1. Does not stack with Resident or other discount traits on the same skill."), \
@@ -177,7 +177,7 @@
 	TAT_TRAIT_TRAINEE_ARTISAN = TAT_TRAIT_ENTRY("Trainee Artisan", 5, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Crafting, Pottery, and the first two levels of Unarmed by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_CHIRURGEON = TAT_TRAIT_ENTRY("Trainee Chirurgeon", 5, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Medicine, Literacy, and the first two levels of Staves by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_TROUBADOUR = TAT_TRAIT_ENTRY("Trainee Troubadour", 5, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Music, Literacy, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
-	TRAIT_STRONGBITE = TAT_TRAIT_ENTRY("Strong Bite", 25, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Increases crit chance and damage from biting"), \
+	TRAIT_STRONGBITE = TAT_TRAIT_ENTRY("Strong Bite", 30, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Increases crit chance and damage from biting"), \
 	TRAIT_BITERHELM = TAT_TRAIT_ENTRY("Curse of Twisting Metall", 20, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Gives cursed skill to bite through your own helmet"), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Crafting skill-domain points."), \
 	TAT_TRAIT_STOCKPILER = TAT_TRAIT_ENTRY("Stockpiler", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Gathering skill-domain points."), \

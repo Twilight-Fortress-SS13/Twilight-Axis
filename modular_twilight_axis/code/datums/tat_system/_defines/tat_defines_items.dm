@@ -439,8 +439,8 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	/obj/item/rope/chain = TAT_ITEM_ENTRY("Chain", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/rope = TAT_ITEM_ENTRY("Rope", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/bomb/smoke = TAT_ITEM_ENTRY("Smoke Bomb", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
-	/obj/item/folding_alchstation_stored = TAT_ITEM_ENTRY("Alchemical station", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
-	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Alchemical cauldron", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/folding_alchstation_stored = TAT_ITEM_ENTRY("Alchemical station", 4, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
+	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Alchemical cauldron", 4, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
 	/obj/item/ration = TAT_ITEM_ENTRY("Ration paper", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "food"), \
 	/obj/item/natural/bundle/cloth/bandage/full = TAT_ITEM_ENTRY("Roll of Bandages", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/tent_kit = TAT_ITEM_ENTRY("Tent", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
@@ -570,7 +570,7 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	/obj/item/heart_blood_canister/filled = TAT_ITEM_ENTRY("Heartblood Canister", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/bait/leech = TAT_ITEM_ENTRY("Leech Bait", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/flint = TAT_ITEM_ENTRY("Flint", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
-	/obj/structure/table/wood/folding = TAT_ITEM_ENTRY("Folding Table", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/structure/table/wood/folding = TAT_ITEM_ENTRY("Folding Table", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
 	/obj/item/rogueweapon/pick = TAT_ITEM_ENTRY("Pickaxe", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/rogueweapon/pick/steel = TAT_ITEM_ENTRY("Steel Pickaxe", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "misc"), \
 	/obj/item/rogueweapon/pick/copper = TAT_ITEM_ENTRY("Copper Pickaxe", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
@@ -586,3 +586,5 @@ GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
 	/obj/item/clothing/gloves/roguetown/plate/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Gauntlets", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "gloves"), \
 	/obj/item/clothing/under/roguetown/platelegs/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Plate Legs", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "pants"), \
 	/obj/item/clothing/shoes/roguetown/boots/armor/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Plated Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "shoes"), \
+	/obj/item/gun/ballistic/twilight_firearm/handgonne = TAT_ITEM_ENTRY("Culverin", 6, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
+	/obj/item/grapplinghook = TAT_ITEM_ENTRY("Grappling Hook", 7, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
