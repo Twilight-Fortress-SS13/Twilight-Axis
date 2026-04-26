@@ -300,7 +300,7 @@
 		return
 	var/list/slots = get_equip_slots_for_item(I)
 	for(var/slot_id in slots)
-		if(H.equip_to_slot_if_possible(I, slot_id, FALSE, FALSE, TRUE))
+		if(H.equip_to_slot_if_possible(I, slot_id, TRUE, TRUE, TRUE))
 			return
 	try_put_into_any_storage_or_drop(I, H)
 
