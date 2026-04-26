@@ -225,6 +225,8 @@
 		return "\"[get_trait_display_name(trait_a)]\" conflicts with \"[get_trait_display_name(trait_b)]\"."
 	if((trait_a == TAT_TRAIT_WARRIOR_MASTER || trait_b == TAT_TRAIT_WARRIOR_MASTER) && has_defensive_trait_lockout())
 		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" conflicts with current defensive trait setup."
+	if((trait_a == TAT_TRAIT_WITCH_INITIATE || trait_b == TAT_TRAIT_WITCH_INITIATE) && has_defensive_trait_lockout())
+		return "\"[get_trait_display_name(TAT_TRAIT_WITCH_INITIATE)]\" conflicts with current defensive trait setup."
 	return null
 
 /datum/tat_traits/proc/has_invalid_trait_dependencies()

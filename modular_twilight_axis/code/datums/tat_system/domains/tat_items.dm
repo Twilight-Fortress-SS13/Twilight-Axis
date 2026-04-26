@@ -120,28 +120,48 @@
 	var/list/entry = get_entry(path)
 	if(!islist(entry))
 		return 0
+
 	var/category = lowertext("[entry["category"]]")
+	var/slot_group = lowertext("[entry["slot_group"]]")
 	var/cost = get_cost(path)
-	if(cost <= 0 && (category == "misc" || category == "weapon"))
+	if(slot_group == "misc")
+		return cost > 0 ? INFINITY : 1
+
+	if(category == "weapon" && cost <= 0)
 		return 1
+
 	if(!is_item_slot_limited(entry))
 		return INFINITY
-	var/slot_group = entry["slot_group"]
+
 	if(!slot_group)
 		return INFINITY
+
 	return 1
 
 /datum/tat_items/proc/get_maximum(item_path)
 	if(!check_item(item_path))
 		return 0
+
 	var/total_allowed = get_item_total_allowed_amount(item_path)
 	if(total_allowed <= 0)
 		return 0
-	if(total_allowed == INFINITY)
-		return 99
+
 	var/list/entry = get_entry(item_path)
-	var/already_taken_elsewhere = get_slot_group_item_count(entry["slot_group"], entry["category"], item_path)
-	return max(0, total_allowed - already_taken_elsewhere)
+	var/item_maximum = 0
+	if(total_allowed == INFINITY)
+		item_maximum = 99
+	else
+		var/already_taken_elsewhere = get_slot_group_item_count(entry["slot_group"], entry["category"], item_path)
+		item_maximum = max(0, total_allowed - already_taken_elsewhere)
+
+	var/cost = get_cost(item_path)
+	if(cost > 0)
+		var/current_amount = get_amount(item_path)
+		var/affordable_extra = max(0, round(get_remaining_points() / cost))
+		item_maximum = min(item_maximum, current_amount + affordable_extra)
+
+	return item_maximum
+
 
 /datum/tat_items/proc/set_amount(item_path, amount)
 	if(!islist(get_entry(item_path)))

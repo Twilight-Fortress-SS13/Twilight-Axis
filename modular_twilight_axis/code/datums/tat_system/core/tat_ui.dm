@@ -521,8 +521,12 @@
 		var/list/entry = get_item_entry(item_path)
 		if(!islist(entry))
 			continue
+		var/amount = items.get_amount(item_path)
+		var/maximum = items.get_maximum(item_path)
 		ui_item_states_cache["[item_path]"] = list(
-			"amount" = items.get_amount(item_path),
+			"amount" = amount,
+			"maximum" = maximum,
+			"can_add" = amount < maximum,
 			"unlocked" = items.can_use_item_entry(entry),
 		)
 	ui_item_states_cache_dirty = FALSE

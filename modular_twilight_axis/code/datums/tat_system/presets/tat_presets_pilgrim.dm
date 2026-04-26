@@ -1090,7 +1090,7 @@
 	)
 
 // Source class: /datum/advclass/witch
-// Missing TAT traits: TRAIT_DEATHSIGHT, TRAIT_WITCH
+// Missing TAT traits: none (TRAIT_DEATHSIGHT and TRAIT_WITCH are granted by TAT_TRAIT_WITCH_INITIATE)
 // Missing TAT items: /obj/item/candle/yellow
 // Missing/blocked TAT skills: none
 // Dynamic choices in original class not encoded into this single preset: Old Magick | Godsblood | Mystagogue | Zad | Cat | Cat (Black) | Bat | Lesser Volf | Lesser Venard | Small Rous | Cabbit | Mystagogue | Spitfire | Frost Bolt | Arc Bolt | Greater Arcyne Bolt | Stygian Efflorescence | Arcyne Lance | Lesser Gravel Blast
@@ -1120,6 +1120,7 @@
 
 		"traits" = list(
 			TRAIT_ALCHEMY_EXPERT = TRUE,
+			TAT_TRAIT_WITCH_INITIATE = TRUE,
 			TAT_TRAIT_BONUS_STAT_POOL = TRUE,
 		),
 
