@@ -163,6 +163,7 @@
 /datum/tat_build/proc/reset_items()
 	items?.reset()
 	sanitize()
+	invalidate_item_ui_cache()
 	set_dirty()
 	return TRUE
 
@@ -512,9 +513,13 @@
 		var/list/entry = get_item_entry(item_path)
 		if(!islist(entry))
 			continue
+		var/maximum = items.get_maximum(item_path)
+		var/amount = items.get_amount(item_path)
 		ui_item_states_cache["[item_path]"] = list(
-			"amount" = items.get_amount(item_path),
+			"amount" = amount,
 			"unlocked" = items.can_use_item_entry(entry),
+			"maximum" = maximum,
+			"can_add" = amount < maximum,
 		)
 	ui_item_states_cache_dirty = FALSE
 	return ui_item_states_cache

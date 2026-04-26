@@ -2,6 +2,7 @@
 	var/datum/tat_build/owner_build
 	var/list/selected = list()
 	var/list/item_loadout = list()
+	var/list/applied_mob_refs = list()
 	var/base_points = 20
 
 /datum/tat_items/New(datum/tat_build/B)
@@ -231,10 +232,48 @@
 	if(!(slot_id in slots))
 		slots += slot_id
 
-/datum/tat_items/proc/get_equip_slots_for_item(obj/item/I)
+/datum/tat_items/proc/get_equip_slots_for_item(obj/item/I, item_path = null)
 	var/list/slots = list()
 	if(!I)
 		return slots
+
+	var/list/entry = item_path ? get_entry(item_path) : null
+	var/slot_group = islist(entry) ? lowertext("[entry["slot_group"]]") : null
+
+	// Prefer explicit TAT slot groups. Backpacks and satchels in RogueTown/Twilight Axis
+	// are shoulder/back items first, and slot_flags alone is not reliable enough here.
+	switch(slot_group)
+		if("back")
+			append_unique_equip_slot(slots, SLOT_BACK_L)
+			append_unique_equip_slot(slots, SLOT_BACK_R)
+			append_unique_equip_slot(slots, SLOT_BACK)
+		if("belt")
+			append_unique_equip_slot(slots, SLOT_BELT)
+			append_unique_equip_slot(slots, SLOT_BELT_L)
+			append_unique_equip_slot(slots, SLOT_BELT_R)
+		if("cloak")
+			append_unique_equip_slot(slots, SLOT_CLOAK)
+		if("neck")
+			append_unique_equip_slot(slots, SLOT_NECK)
+		if("head")
+			append_unique_equip_slot(slots, SLOT_HEAD)
+		if("mask")
+			append_unique_equip_slot(slots, SLOT_WEAR_MASK)
+		if("armor", "suit")
+			append_unique_equip_slot(slots, SLOT_ARMOR)
+		if("shirt", "under")
+			append_unique_equip_slot(slots, SLOT_SHIRT)
+		if("pants")
+			append_unique_equip_slot(slots, SLOT_PANTS)
+		if("wrists")
+			append_unique_equip_slot(slots, SLOT_WRISTS)
+		if("gloves")
+			append_unique_equip_slot(slots, SLOT_GLOVES)
+		if("shoes")
+			append_unique_equip_slot(slots, SLOT_SHOES)
+		if("ring")
+			append_unique_equip_slot(slots, SLOT_RING)
+
 	var/flags = I.slot_flags
 	if(flags & ITEM_SLOT_HEAD)
 		append_unique_equip_slot(slots, SLOT_HEAD)
@@ -297,15 +336,16 @@
 
 /datum/tat_items/proc/spawn_item_equipped_or_fallback(mob/living/carbon/human/H, path)
 	if(!H || !ispath(path))
-		return
+		return FALSE
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
-		return
-	var/list/slots = get_equip_slots_for_item(I)
+		return FALSE
+	var/list/slots = get_equip_slots_for_item(I, path)
 	for(var/slot_id in slots)
-		if(H.equip_to_slot(I, slot_id))
-			return
+		if(H.equip_to_slot_if_possible(I, slot_id, FALSE, TRUE, TRUE, TRUE))
+			return TRUE
 	try_put_into_any_storage_or_drop(I, H)
+	return FALSE
 
 /datum/tat_items/proc/get_item_slot_group_lower(path)
 	var/list/entry = get_entry(path)
@@ -350,6 +390,10 @@
 /datum/tat_items/proc/apply_to_human(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
+	var/mob_ref = "\ref[H]"
+	if(mob_ref in applied_mob_refs)
+		return FALSE
+	applied_mob_refs += mob_ref
 	grant_default_roundstart_bag(H)
 	spawn_equipped_items_for_slot_group(H, "shirt")
 	spawn_equipped_items_for_slot_group(H, "pants")
