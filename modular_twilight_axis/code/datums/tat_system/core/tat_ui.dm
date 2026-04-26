@@ -156,6 +156,7 @@
 /datum/tat_build/proc/reset_traits()
 	traits?.reset()
 	sanitize()
+	invalidate_item_ui_cache()
 	set_dirty()
 	return TRUE
 
@@ -200,11 +201,15 @@
 /datum/tat_build/proc/add_trait(trait_id)
 	var/ok = traits?.add_trait(trait_id)
 	sanitize()
+	if(ok)
+		invalidate_item_ui_cache()
 	return ok
 
 /datum/tat_build/proc/remove_trait(trait_id)
 	var/ok = traits?.remove_trait(trait_id)
 	sanitize()
+	if(ok)
+		invalidate_item_ui_cache()
 	return ok
 
 /datum/tat_build/proc/add_item(path, amount = 1)

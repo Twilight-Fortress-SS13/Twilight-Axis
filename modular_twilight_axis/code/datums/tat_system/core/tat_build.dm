@@ -33,6 +33,7 @@
 	skills.reset()
 	items.reset()
 	magic_profile = list()
+	invalidate_item_ui_cache(TRUE)
 	dirty = FALSE
 	return TRUE
 
@@ -255,6 +256,7 @@
 	stats.sanitize()
 	skills.sanitize()
 	items.sanitize()
+	invalidate_item_ui_cache()
 	dirty = FALSE
 	return TRUE
 
