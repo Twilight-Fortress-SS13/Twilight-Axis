@@ -365,7 +365,15 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define EXPOSED_INTEG_MOD 2.5	//Multiplier for integrity damage if we hit an Exposed target.
 #define VULN_INTEG_MOD 1.3		//Multiplier for integrity damage if we hit a Vulnerable target.
 #define BASE_RCLICK_CD 30 SECONDS
+#define BAIT_RCLICK_CD 20 SECONDS
+#define BIND_CD 15 SECONDS
 #define FEINT_RCLICK_CD 20 SECONDS
+
+#define BIND_HANDS 1
+#define BIND_FEET 2
+#define BIND_HEAD 3
+#define BIND_TORSO 4
+#define BIND_NECK 5
 
 /* TEMPO DEFINES */
 #define TEMPO_CULL_DELAY 	12 SECONDS	//Interval for checking our tempo lists. Only relevant to player mobs with TRAIT_TEMPO
@@ -392,14 +400,19 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 	#define TEMPO_DODGE_LOSS_NORMAL 0
 	#define TEMPO_DODGE_LOSS_LESS 1
 	#define TEMPO_DODGE_LOSS_NONE 2
-
+#define TEMPO_TAG_BINDABLE "defbindable"
 
 /*
 Medical defines
 */
 #define ARTERY_LIMB_BLEEDRATE 20	//This is used as a reference point for dynamic wounds, so it's better off as a define.
-#define CONSTITUTION_BLEEDRATE_MOD 0.1	//How much slower we'll be bleeding for every CON point. 0.1 = 10% slower.
-#define CONSTITUTION_BLEEDRATE_CAP 15	//The CON value up to which we get a bleedrate reduction.
+#define CONSTITUTION_BLEEDRATE_MOD 0.05	//How much slower we'll be bleeding for every CON point. 0.1 = 10% slower.
+#define CONSTITUTION_BLEEDRATE_CAP 20	//The CON value up to which we get a bleedrate reduction.
+
+#define WILLPOWER_STARTING_STAMINA 135	//Starting stamina (green bar) value. Before major changes this would represent Expert Athletics + ~11.5 WIL 
+#define WILLPOWER_MODIFIER	5	//How much stamina (flat value) we gain (or lose) for every WIL above / below 10.
+
+#define SPEED_MOVSPD_MOD 0.075	//Multiplicative modifier for our speed, per point (for both <10 and >10 values)
 
 /*
  Misc. Category. Spin it out if needed

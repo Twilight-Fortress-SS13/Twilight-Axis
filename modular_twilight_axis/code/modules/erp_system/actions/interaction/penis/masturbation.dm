@@ -4,6 +4,7 @@
 	name = "Мастурбировать на партнера"
 	required_target_organ = SEX_ORGAN_BODY
 	require_same_tile = FALSE
+	action_tags = list("inject_outside_only")
 	message_start = "{actor} хватает свой член, смотря на {partner}."
 	message_tick = "{actor} {force} и {speed} водит рукой по своему члена, направляя его на {partner}."
 	message_finish =  "{actor} убирает руки от своего члена."

@@ -27,6 +27,12 @@
 	ckeywhitelist = list("eekasqueak")
 	sort_category = "Donator"
 
+/datum/loadout_item/donator/ketrai
+	name = "Octopus hat"
+	path = /obj/item/clothing/head/roguetown/octopus
+	ckeywhitelist = list("ketrai", "alfalah")
+	sort_category = "Donator"
+
 /datum/loadout_item/donator/strudel1
 	name = "Donator Kit - Grenzelhoftian Mage Vest"
 	path = /obj/item/enchantingkit/strudel1
@@ -111,11 +117,6 @@
 	name = "Donator Kit - Stygian Longsword"
 	path = /obj/item/enchantingkit/weapon/eirensword
 	ckeywhitelist = list("eirenxiv", "muhsollini")
-
-/datum/loadout_item/donator/eiren7
-	name = "Donator Kit - Strigidae Armet"
-	path = /obj/item/enchantingkit/eiren_helmet
-	ckeywhitelist = list("eirenxiv") 
 
 /datum/loadout_item/donator/waff
 	name = "Donator Kit - Weeper's Lathe"
@@ -292,5 +293,15 @@
 	name = "Donator Item - Porcelain Mask"
 	path = /obj/item/clothing/mask/rogue/iamcrystalclear
 	ckeywhitelist = list("iamcrystalclear")
+
+/datum/loadout_item/donator/darling
+	name = "Donator Item - Darling"
+	path = /obj/item/enchantingkit/weapon/darling
+	ckeywhitelist = list("castortroy23")
+
+/datum/loadout_item/donator/sumquoderis
+	name = "Donator Item - Sum Quod Eris"
+	path = /obj/item/enchantingkit/weapon/sumquoderis
+	ckeywhitelist = list("rivercadaver")
 	sort_category = "Donator"
 */

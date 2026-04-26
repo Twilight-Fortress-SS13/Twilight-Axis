@@ -274,6 +274,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/smelted = FALSE
 	/// Determines whether this item is silver or not.
 	var/is_silver = FALSE
+	/// "Lesser" silver items still count as silver, but their bite against the silver-weak is muted: no pickup ignition,
+	/// no force-undisguise on hit, and only a slow accumulation of (non-igniting) sunder stacks while held/worn.
+	var/is_lesser_silver = FALSE
 	var/last_used = 0
 	var/toggle_state = null
 	var/icon_x_offset = 0
@@ -962,7 +965,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 //If you are making custom procs but would like to retain partial or complete functionality of this one, include a 'return ..()' to where you want this to happen.
 //Set disable_warning to TRUE if you wish it to not give you outputs.
 /obj/item/proc/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	if((is_silver || smeltresult == /obj/item/ingot/silver) && (HAS_TRAIT(M, TRAIT_SILVER_WEAK) &&  !M.has_status_effect(STATUS_EFFECT_ANTIMAGIC)))
+	if((is_silver || smeltresult == /obj/item/ingot/silver) && !is_lesser_silver && (HAS_TRAIT(M, TRAIT_SILVER_WEAK) &&  !M.has_status_effect(STATUS_EFFECT_ANTIMAGIC)))
 		var/datum/antagonist/vampire/V_lord = M.mind?.has_antag_datum(/datum/antagonist/vampire/)
 		if(V_lord?.generation >= GENERATION_METHUSELAH)
 			return
@@ -974,6 +977,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		M.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/sunder)
 		M.ignite_mob()
 		return FALSE
+	if(is_lesser_silver && HAS_TRAIT(M, TRAIT_SILVER_WEAK) && !M.has_status_effect(STATUS_EFFECT_ANTIMAGIC))
+		// Kick off the lesser silver exposure timer. The status effect handles grace period,
+		// stress event, and eventual ignition; it self-removes when no lesser silver remains.
+		if(!M.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/lesser))
+			M.apply_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/lesser, 1)
 	//else if(is_blessed && slot == SLOT_HANDS)
 	//	user.add_stress(/datum/stressevent/blessed_weapon)
 	if(twohands_required)
@@ -1609,6 +1617,15 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/on_embed(obj/item/bodypart/bp)
 	return
 
+/obj/item/proc/has_armor_value()
+	if(istype(src, /obj/item/clothing))
+		var/obj/item/clothing/C = src
+		if(C.armor)
+			var/datum/armor/def_armor = C.armor
+			return def_armor.blunt || def_armor.slash || def_armor.stab || def_armor.piercing
+
+	return FALSE
+
 /obj/item/proc/defense_examine()
 	var/list/str = list()
 	if(istype(src, /obj/item/clothing))
@@ -1622,6 +1639,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 				defense += "<br>"
 				defense += "[SPAN_TOOLTIP("Each tier reduces damage by 20% of base. Reduced damage still reaches HP. Armor absorbs what was blocked.", "<u><b>REDUCE:</b></u>")] [colorgrade_rating("BURN", def_armor.fire, elaborate = TRUE, max_tier = 5)]"
 				defense += " | [colorgrade_rating("ACID", def_armor.acid, elaborate = TRUE, max_tier = 5)]"
+				defense += " | [colorgrade_rating("BULLET", def_armor.bullet, elaborate = TRUE, max_tier = 5)]" //TA EDIT
 				defense += "<br>"
 				defense += "[SPAN_TOOLTIP("Blocks attacks below this tier (Armor takes all damage). Same tier penetrates 20% (80% goes to armor). Exceeding tier penetrates fully.", "<u><b>BLOCK:</b></u>")] "
 				defense += "[colorgrade_rating("SLASH", def_armor.slash, elaborate = TRUE)] | "
@@ -1712,3 +1730,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 /obj/item/proc/update_wdefense_dynamic()
 	wdefense_dynamic = (wielded ? (wdefense + wdefense_wbonus) : wdefense)
+
+/obj/item/proc/ai_get_custom_inventory()
+	return null
+
+/obj/item/proc/ai_withdraw_item(obj/item/it, mob/living/user)
+	return FALSE

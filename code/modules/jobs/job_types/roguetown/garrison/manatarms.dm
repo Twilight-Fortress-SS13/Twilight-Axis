@@ -375,9 +375,9 @@
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE
 	)
-	subclass_stashed_items = list(
-		"Branding letters" = /obj/item/branding_letters,
-		"Branding iron" = /obj/item/branding_iron
+	subclass_stashed_items = list( //TA Branding
+		"Branding Letters" = /obj/item/branding_letters,
+		"Branding Iron" = /obj/item/branding_iron
 	)
 
 /datum/outfit/job/roguetown/manorguard/bailiff/pre_equip(mob/living/carbon/human/H)

@@ -426,7 +426,6 @@
 	east_offset = 18
 	south_offset = 26
 
-
 /datum/map_template/dungeon/room/bathhouse_custom
 	width = 20
 	height = 20
@@ -435,14 +434,12 @@
 	west_offset = 9
 	east_offset = 9
 
-
 /datum/map_template/dungeon/hallway/t_junction_nse
 	width = 6
 	height = 6
 	north_offset = 2
 	south_offset = 2
 	east_offset = 2
-
 
 /datum/map_template/dungeon/hallway/t_junction_nwe
 	width = 6
@@ -458,7 +455,6 @@
 	north_offset = 2
 	south_offset = 2
 	west_offset = 3
-
 
 /datum/map_template/dungeon/hallway/filler/t_junction
 	width = 3

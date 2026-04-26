@@ -65,7 +65,7 @@
 
 /datum/status_effect/buff/mist_form 
 	id = "mist_form"
-	duration = 120
+	duration = 6666
 	alert_type = /atom/movable/screen/alert/status_effect/buff/dagger_dash
 
 /datum/status_effect/buff/mist_form/on_apply()

@@ -72,7 +72,7 @@
 	if(!isliving(user))
 		return base_duration
 
-	var/datum/component/combo_core/wanderer/W = wanderer_get_component_safe(user)
+	var/datum/component/combo_core/martial_master/W = martial_master_get_component_safe(user)
 	if(W)
 		return W.GetKickOffbalanceDuration(base_duration / 4)
 

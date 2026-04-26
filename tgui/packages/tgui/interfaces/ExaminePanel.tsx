@@ -20,6 +20,7 @@ export const ExaminePanel = (props) => {
   const { act, data } = useBackend<ExaminePanelData>();
   const {
     is_vet,
+    is_donator,
     character_name,
     is_playing,
     has_song,
@@ -73,6 +74,15 @@ export const ExaminePanel = (props) => {
       theme={examine_theme || undefined}
       buttons={
         <>
+          {!!is_donator && (
+            <Button
+              color="gold"
+              icon="heart"
+              tooltip="This player is a donator!"
+              tooltipPosition="bottom-start"
+              onClick={() => act('donator_chat')}
+            />
+          )}
           {!!is_vet && (
             <Button
               color="gold"

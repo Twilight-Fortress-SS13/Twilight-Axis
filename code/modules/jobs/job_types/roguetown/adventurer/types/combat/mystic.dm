@@ -14,7 +14,7 @@
 			STATKEY_PER = 2 // TA EDIT
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4, "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4)
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -46,6 +46,7 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
 		/obj/item/book/spellbook = 1,
+		/obj/item/chalk = 1,
 		)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1)
@@ -110,7 +111,7 @@
 			STATKEY_WIL = 2,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4, "locked_aspects" = list(/datum/magic_aspect/lesser_augmentation), "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4, "locked_aspects" = list(/datum/magic_aspect/lesser_augmentation))
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -145,10 +146,11 @@
 		/obj/item/reagent_containers/glass/bottle/alchemical = 3,
 		/obj/item/recipe_book/alchemy = 1,
 		/obj/item/book/spellbook = 1,
+		/obj/item/chalk = 1,
 		)
 	H.mind.AddSpell(new /datum/action/cooldown/spell/stoneskin)
 	H.mind.AddSpell(new /datum/action/cooldown/spell/bestow_ward)
-	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Gravel Blast", "Stygian Efflorescence", "Arcyne Lance")
+	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Greater Arcyne Bolt", "Stygian Efflorescence", "Arcyne Lance", "Lesser Gravel Blast")
 	var/poke_choice = input(H, "Choose your offensive cantrip.", "Arcyne Training") as anything in poke_options
 	switch(poke_choice)
 		if("Spitfire")
@@ -157,12 +159,14 @@
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/frost_bolt)
 		if("Arc Bolt")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arc_bolt)
-		if("Gravel Blast")
-			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast)
+		if("Greater Arcyne Bolt")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/greater_arcyne_bolt)
 		if("Stygian Efflorescence")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/stygian_efflorescence)
 		if("Arcyne Lance")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcyne_lance)
+		if("Lesser Gravel Blast")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast/lesser)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
@@ -239,7 +243,7 @@
 			STATKEY_WIL = 1,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 2, "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 2)
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -271,8 +275,9 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
 		/obj/item/book/spellbook = 1,
+		/obj/item/chalk = 1,
 		)
-	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Gravel Blast", "Stygian Efflorescence", "Arcyne Lance")
+	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Greater Arcyne Bolt", "Stygian Efflorescence", "Arcyne Lance", "Lesser Gravel Blast")
 	var/poke_choice = input(H, "Choose your offensive cantrip.", "Arcyne Training") as anything in poke_options
 	switch(poke_choice)
 		if("Spitfire")
@@ -281,12 +286,14 @@
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/frost_bolt)
 		if("Arc Bolt")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arc_bolt)
-		if("Gravel Blast")
-			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast)
+		if("Greater Arcyne Bolt")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/greater_arcyne_bolt)
 		if("Stygian Efflorescence")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/stygian_efflorescence)
 		if("Arcyne Lance")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcyne_lance)
+		if("Lesser Gravel Blast")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast/lesser)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)
 	if(H.mind)
@@ -371,7 +378,7 @@
 			STATKEY_WIL = 2,
 	)
 	age_mod = /datum/class_age_mod/mystic
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3, "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3)
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
@@ -403,9 +410,10 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/recipe_book/survival = 1,
 		/obj/item/book/spellbook = 1,
+		/obj/item/chalk = 1,
 		)
 
-	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Gravel Blast", "Stygian Efflorescence", "Arcyne Lance")
+	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Greater Arcyne Bolt", "Stygian Efflorescence", "Arcyne Lance", "Lesser Gravel Blast")
 	var/poke_choice = input(H, "Choose your offensive cantrip.", "Arcyne Training") as anything in poke_options
 	switch(poke_choice)
 		if("Spitfire")
@@ -414,12 +422,14 @@
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/frost_bolt)
 		if("Arc Bolt")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arc_bolt)
-		if("Gravel Blast")
-			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast)
+		if("Greater Arcyne Bolt")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/greater_arcyne_bolt)
 		if("Stygian Efflorescence")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/stygian_efflorescence)
 		if("Arcyne Lance")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcyne_lance)
+		if("Lesser Gravel Blast")
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast/lesser)
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_1)

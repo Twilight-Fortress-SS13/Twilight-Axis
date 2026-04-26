@@ -33,4 +33,5 @@
 							/obj/structure/flora/roguegrass = 5,
 							/obj/structure/flora/roguegrass/herb/random = 1,
 							/obj/structure/zizo_bane = 0.5,
-							/obj/structure/leyline/normal/coast = 0.3)
+							/obj/structure/leyline/normal/coast = 0.3,
+							/obj/effect/hunting_track = 3)

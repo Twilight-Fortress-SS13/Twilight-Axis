@@ -494,28 +494,32 @@
 		return
 	last_ejaculation_world_time = world.time
 
+	var/mob/living/carbon/human/H = parent
+	if(!istype(H))
+		return
+
 	var/list/L = get_erp_links()
 	var/datum/erp_sex_link/best = pick_best_erp_link(L)
 
-	if(best)
-		var/mob/living/carbon/human/H = parent
-		if(!istype(H))
-			return
+	var/mob/living/carbon/human/partner = null
+	var/climax_type = "self"
 
+	if(best)
 		if(best.action && best.action.inject_timing == INJECT_ON_FINISH)
 			best.action.handle_inject(best, H)
 
 		var/datum/erp_controller/C = SSerp.get_controller_for(H)
 		var/datum/erp_actor/me = C ? C.get_actor_by_mob(H) : null
 		var/list/info = me ? best.handle_climax(me) : null
-		var/climax_type = info?["type"] || "self"
-		var/mob/living/carbon/human/partner = info?["partner"]
+
+		climax_type = info?["type"] || "self"
+		partner = info?["partner"]
 
 		spread_chain_orgasm(H)
-		handle_climax(climax_type, H, partner, null)
-		award_satisfaction_on_climax(H, partner)
-		after_ejaculation(null, H, partner)
-		return
+
+	handle_climax(climax_type, H, partner, null)
+	award_satisfaction_on_climax(H, partner)
+	after_ejaculation(null, H, partner)
 
 /datum/component/arousal/handle_climax(climax_type, mob/living/carbon/human/climaxer, mob/living/carbon/human/partner, action)
 	switch(climax_type)
@@ -573,7 +577,7 @@
 	climaxer.emote("moan", forced = TRUE)
 	climaxer.playsound_local(climaxer, 'sound/misc/mat/end.ogg', 100)
 
-	if(HAS_TRAIT(partner, TRAIT_GOODLOVER))
+	if(partner && HAS_TRAIT(partner, TRAIT_GOODLOVER))
 		if(!climaxer.mob_timers["cumtri"])
 			climaxer.mob_timers["cumtri"] = world.time
 			climaxer.adjust_triumphs(1)

@@ -754,15 +754,6 @@
 						if(istype(vice, vicetype))
 							advdat += "[cf.name]<br>"
 							found_issue = TRUE
-			
-			if(length(subclass.origin_limits)) //TA EDIT START
-				var/correlation = FALSE
-				for(var/origintype in subclass.origin_limits)
-					if(istype(player.prefs.virtue_origin, origintype))
-						correlation = TRUE
-				if(!correlation)
-					advdat += "[player.prefs.virtue_origin.name]<br>"
-					found_issue = TRUE //TA EDIT END
 			if(found_issue)
 				dat += "<font color = '#e4e1e1'><b>[subclass::name]</b></font><br>"
 				dat += advdat
@@ -802,11 +793,3 @@
 				for(var/vice in player.prefs.charflaws)
 					if(istype(vice, vicetype))
 						return TRUE
-		
-		if(length(subclass.origin_limits)) //TA EDIT START
-			var/correlation = FALSE
-			for(var/origintype in subclass.origin_limits)
-				if(istype(player.prefs.virtue_origin, origintype))
-					correlation = TRUE
-			if(!correlation)
-				return TRUE //TA EDIT END

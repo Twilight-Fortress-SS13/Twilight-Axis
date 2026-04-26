@@ -226,7 +226,7 @@
 	return chargetime
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle
-	name = "Doomsdae"
+	name = "\"Doomsdae\""
 	desc = "Реликвия новой эпохи, созданная для войны, что положит конец истории мироздания, какой мы её знаем. Изготовленная отаванскими мастерами артефакторики, и зачарованная рунными магами Отавы, эта руническая винтовка - оружие, что сокрушит легионы тьмы в Конце Времен. Руны нанесены на ствол оружия кровью еретиков, поплатившихся за свое предательство истинной веры своими жизнями."
 	icon = 'modular_twilight_axis/firearms/icons/runelock_rifle.dmi'
 	icon_state = "runelock"
