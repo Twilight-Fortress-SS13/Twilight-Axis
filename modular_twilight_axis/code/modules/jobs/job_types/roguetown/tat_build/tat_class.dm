@@ -116,35 +116,4 @@
 	if(!human_has_tat_role_bucket(H, build.get_role_bucket()))
 		return
 
-	relocate_tat_spawn(H, build)
 	build.apply_to_human(H)
-
-/datum/outfit/job/roguetown/tat_class/basic/proc/get_tat_spawn_turf(mob/living/carbon/human/H, datum/tat_build/build)
-	if(!H || !build)
-		return null
-
-	if(build.traits?.has_trait(TAT_TRAIT_RESIDENT))
-		if(length(SSjob.latejoin_trackers))
-			return pick(SSjob.latejoin_trackers)
-
-	if(build.traits?.has_trait(TAT_TRAIT_WANTED) || build.traits?.has_trait(TRAIT_OUTLANDER))
-		var/list/wretch_late_starts = list()
-
-		for(var/obj/effect/landmark/start/wretchlate/wretch_start in GLOB.landmarks_list)
-			wretch_late_starts += wretch_start
-
-		if(length(wretch_late_starts))
-			return pick(wretch_late_starts)
-
-	return null
-
-/datum/outfit/job/roguetown/tat_class/basic/proc/relocate_tat_spawn(mob/living/carbon/human/H, datum/tat_build/build)
-	if(!H || !build)
-		return FALSE
-
-	var/turf/T = get_tat_spawn_turf(H, build)
-	if(!T)
-		return FALSE
-
-	H.forceMove(T)
-	return TRUE
