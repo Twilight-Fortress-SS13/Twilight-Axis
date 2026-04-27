@@ -15,10 +15,7 @@
 	return TRUE
 
 /datum/tat_items/proc/get_entry(item_path)
-	var/list/all = list(TAT_AVAILABLE_ITEMS_LIST)
-	if(!(item_path in all))
-		return null
-	return all[item_path]
+	return GLOB.tat_available_items[item_path]
 
 /datum/tat_items/proc/get_amount(item_path)
 	return round(selected[item_path] || 0)

@@ -329,3 +329,20 @@
 	TAT_TRAIT_TRAINEE_CHIRURGEON = list(/datum/skill/misc/medicine, /datum/skill/misc/reading, /datum/skill/combat/staves), \
 	TAT_TRAIT_TRAINEE_TROUBADOUR = list(/datum/skill/misc/music, /datum/skill/misc/reading, /datum/skill/combat/knives) \
 )
+
+GLOBAL_LIST_INIT(tat_available_traits, list(TAT_AVAILABLE_TRAITS_LIST))
+GLOBAL_LIST_INIT(tat_supplier_trait_unlocks, build_tat_supplier_trait_unlocks())
+
+/proc/build_tat_supplier_trait_unlocks()
+	var/list/result = list()
+	var/list/rules = TAT_TRAIT_ITEM_UNLOCK_RULES
+	for(var/unlock_type in rules)
+		var/list/keys = rules[unlock_type]
+		if(!islist(keys))
+			continue
+		for(var/unlock_key in keys)
+			var/trait_id = keys[unlock_key]
+			if(!trait_id)
+				continue
+			result[trait_id] = list("unlock_type" = unlock_type, "unlock_key" = unlock_key)
+	return result

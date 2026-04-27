@@ -12,10 +12,7 @@
 	return TRUE
 
 /datum/tat_traits/proc/get_entry(trait_id)
-	var/list/all = list(TAT_AVAILABLE_TRAITS_LIST)
-	if(!(trait_id in all))
-		return null
-	return all[trait_id]
+	return GLOB.tat_available_traits[trait_id]
 
 /datum/tat_traits/proc/has_trait(trait_id)
 	return !!selected[trait_id]

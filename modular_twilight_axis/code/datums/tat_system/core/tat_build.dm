@@ -308,7 +308,7 @@
 	var/list/trait_data = build_data["traits"]
 
 	if(islist(trait_data))
-		var/list/all_traits = list(TAT_AVAILABLE_TRAITS_LIST)
+		var/list/all_traits = GLOB.tat_available_traits
 		var/has_outlander = !!trait_data[TRAIT_OUTLANDER]
 
 		for(var/trait_id in trait_data)
@@ -337,8 +337,7 @@
 			selected_items = item_data
 
 	if(islist(selected_items))
-		var/list/all_items = list(TAT_AVAILABLE_ITEMS_LIST)
-
+		var/list/all_items = GLOB.tat_available_items
 		for(var/item_path in selected_items)
 			if(item_path == "selected" || item_path == "item_loadout")
 				continue
@@ -526,11 +525,9 @@
 	if(!islist(build_data) || !length(build_data))
 		reset()
 		dirty = FALSE
-		queue_item_ui_states_full_refresh()
 		return TRUE
 	load_slot_build_from_list(build_data)
 	dirty = FALSE
-	queue_item_ui_states_full_refresh()
 	return TRUE
 
 /datum/tat_build/proc/set_active_tat_slot(slot_id)
@@ -662,7 +659,6 @@
 	items.import_from_json_list(data["items"])
 	
 	sanitize()
-	queue_item_ui_states_full_refresh()
 	set_dirty(TRUE)
 
 	last_exported_json = raw

@@ -1,6 +1,6 @@
-GLOBAL_LIST_EMPTY(tat_item_icon_cache)
 GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
-GLOBAL_LIST_EMPTY(tat_item_related_paths_cache)
+GLOBAL_VAR_INIT(tat_item_icon_cache_ready, FALSE)
+GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 
 #define TAT_ITEM_CATEGORY_WEAPON "weapon"
 #define TAT_ITEM_CATEGORY_CLOTHING "clothing"
@@ -587,3 +587,49 @@ GLOBAL_LIST_EMPTY(tat_item_related_paths_cache)
 	/obj/item/clothing/shoes/roguetown/boots/armor/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Plated Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "shoes"), \
 	/obj/item/gun/ballistic/twilight_firearm/handgonne = TAT_ITEM_ENTRY("Culverin", 6, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/grapplinghook = TAT_ITEM_ENTRY("Grappling Hook", 5, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
+
+GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
+
+/proc/build_tat_item_icon_payload(item_path)
+	if(!ispath(item_path, /obj/item))
+		return null
+	var/obj/item/path = item_path
+	var/icon_file = initial(path.icon)
+	var/icon_state_value = initial(path.icon_state)
+	if(!icon_file)
+		return null
+	var/icon/render_icon = icon(icon_file, icon_state_value, SOUTH, 1)
+	if(!render_icon)
+		return null
+	return list(
+		"icon" = icon2base64(render_icon),
+		"icon_state" = "[icon_state_value]",
+	)
+
+/proc/warm_tat_item_catalog()
+	if(GLOB.tat_item_icon_cache_ready)
+		return
+	if(GLOB.tat_item_icon_cache_warming)
+		UNTIL(GLOB.tat_item_icon_cache_ready)
+		return
+	GLOB.tat_item_icon_cache_warming = TRUE
+	var/list/catalog = list()
+	for(var/item_path in GLOB.tat_available_items)
+		var/list/entry = GLOB.tat_available_items[item_path]
+		if(!islist(entry))
+			continue
+		var/list/icon_payload = build_tat_item_icon_payload(item_path)
+		catalog["[item_path]"] = list(
+			"name" = entry["name"],
+			"cost" = entry["cost"],
+			"category" = entry["category"],
+			"unlock_type" = entry["unlock_type"],
+			"unlock_key" = entry["unlock_key"],
+			"slot_group" = entry["slot_group"],
+			"icon" = icon_payload?["icon"],
+			"icon_state" = icon_payload?["icon_state"],
+		)
+		CHECK_TICK
+	GLOB.tat_item_catalog_cache = catalog
+	GLOB.tat_item_icon_cache_ready = TRUE
+	GLOB.tat_item_icon_cache_warming = FALSE

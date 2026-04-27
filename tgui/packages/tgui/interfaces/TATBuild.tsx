@@ -87,12 +87,6 @@ type TatPresetEntry = {
   summary?: SlotSummary;
 };
 
-type ItemCachePacket = {
-  full?: boolean;
-  catalog?: Record<string, ItemEntry> | null;
-  states?: Record<string, ItemState> | null;
-};
-
 type SkillDomainKey =
   | 'combat'
   | 'wandering'
@@ -104,15 +98,13 @@ type Data = {
   stats: Record<string, number>;
   skills: Record<string, SkillState>;
   traits: string[];
-  items: Record<string, ItemState> | null;
+  items_state: Record<string, ItemState>;
   loadout: Record<string, LoadoutState>;
 
   available_stats: Record<string, StatEntry>;
   available_skills: Record<string, SkillEntry>;
   available_traits: Record<string, TraitEntry>;
-  available_items: Record<string, ItemEntry> | null;
-
-  item_cache?: ItemCachePacket | null;
+  available_items: Record<string, ItemEntry>;
 
   points_stats: number;
   points_stats_remaining: number;
@@ -1467,14 +1459,14 @@ const ItemsTab = ({
   act,
   search,
   setHoveredItem,
-  itemCacheLoaded,
+  itemsAvailable,
   data,
 }: {
   itemEntries: Record<string, ItemViewEntry>;
   act: BackendAct;
   search: string;
   setHoveredItem: (value: HoverCardData | null) => void;
-  itemCacheLoaded: boolean;
+  itemsAvailable: boolean;
   data: Data;
 }) => {
   const groups = useMemo(() => {
@@ -1502,8 +1494,8 @@ const ItemsTab = ({
           meta={`Free: ${data.points_items_remaining} / ${data.points_items}`}
         />
       }>
-      {!itemCacheLoaded ? (
-        <NoticeBox>Loading item cache...</NoticeBox>
+      {!itemsAvailable ? (
+        <NoticeBox>Loading items...</NoticeBox>
       ) : !groups.length ? (
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
@@ -1707,9 +1699,6 @@ export const TATBuild = () => {
   const [search, setSearch] = useState('');
   const [hoveredItem, setHoveredItem] = useState<HoverCardData | null>(null);
 
-  const [cachedAvailableItems, setCachedAvailableItems] = useState<Record<string, ItemEntry>>({});
-  const [cachedItemStates, setCachedItemStates] = useState<Record<string, ItemState>>({});
-
   const tatSlots = useMemo<TatSlotEntry[]>(
     () => normalizeTatSlots(data.tat_slots, data.active_tat_slot),
     [data.tat_slots, data.active_tat_slot]
@@ -1720,56 +1709,10 @@ export const TATBuild = () => {
     [data.tat_presets]
   );
 
-  useEffect(() => {
-    if (tab !== 'items' && tab !== 'loadout') {
-      return;
-    }
-
-    if (Object.keys(cachedAvailableItems).length > 0) {
-      act('request_item_cache', { full: 0 });
-      return;
-    }
-
-    act('request_item_cache', { full: 1 });
-  }, [tab]);
-
-  useEffect(() => {
-    const packet = data.item_cache;
-    if (!packet) {
-      return;
-    }
-
-    if (packet.catalog) {
-      setCachedAvailableItems((prev) => ({
-        ...prev,
-        ...packet.catalog,
-      }));
-    }
-
-    if (packet.states) {
-      setCachedItemStates((prev) => {
-        if (packet.full) {
-          return packet.states || {};
-        }
-
-        return {
-          ...prev,
-          ...packet.states,
-        };
-      });
-    }
-  }, [data.item_cache]);
-
-  useEffect(() => {
-    if (tab === 'items' || tab === 'loadout') {
-      act('request_item_cache', { full: 0 });
-    }
-  }, [data.traits, data.points_items_remaining, data.items]);
-
   const itemEntries = useMemo<Record<string, ItemViewEntry>>(() => {
     const result: Record<string, ItemViewEntry> = {};
-    const staticEntries = cachedAvailableItems || {};
-    const states = cachedItemStates || {};
+    const staticEntries = data.available_items || {};
+    const states = data.items_state || {};
 
     Object.entries(staticEntries).forEach(([itemPath, entry]) => {
       const state = states[itemPath];
@@ -1783,11 +1726,11 @@ export const TATBuild = () => {
     });
 
     return result;
-  }, [cachedAvailableItems, cachedItemStates]);
+  }, [data.available_items, data.items_state]);
 
   const loadoutEntries = useMemo<Record<string, LoadoutViewEntry>>(() => {
     const result: Record<string, LoadoutViewEntry> = {};
-    const staticEntries = cachedAvailableItems || {};
+    const staticEntries = data.available_items || {};
     const loadoutStates = data.loadout || {};
 
     Object.entries(loadoutStates).forEach(([itemPath, state]) => {
@@ -1805,9 +1748,9 @@ export const TATBuild = () => {
     });
 
     return result;
-  }, [cachedAvailableItems, data.loadout]);
+  }, [data.available_items, data.loadout]);
 
-  const itemCacheLoaded = Object.keys(cachedAvailableItems).length > 0;
+  const itemsAvailable = !!data.available_items && Object.keys(data.available_items).length > 0;
   const searchPlaceholder = tab === 'control' ? 'Search legacy presets...' : `Search in ${tab}...`;
 
   return (
@@ -1912,7 +1855,7 @@ export const TATBuild = () => {
               act={act}
               search={search}
               setHoveredItem={setHoveredItem}
-              itemCacheLoaded={itemCacheLoaded}
+              itemsAvailable={itemsAvailable}
               data={data}
             />
           )}
