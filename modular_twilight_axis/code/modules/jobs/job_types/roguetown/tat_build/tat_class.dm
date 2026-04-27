@@ -43,8 +43,6 @@
 	traits_applied = list()
 
 	maximum_possible_slots = 20
-
-	same_job_respawn_delay = FALSE
 	var/required_tat_bucket = null
 
 /datum/advclass/tat_class/check_requirements(mob/living/carbon/human/H)
