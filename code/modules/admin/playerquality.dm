@@ -249,8 +249,8 @@
 			if(old_data > 0)
 				commend_data["last_pq_time"] = now
 
-	var/curcomm = text2num("[commend_data["count"]]")
-	var/last_pq_time = text2num("[commend_data["last_pq_time"]]")
+	var/curcomm = commend_data["count"] || 0
+	var/last_pq_time = commend_data["last_pq_time"] || 0
 
 	curcomm++
 
@@ -287,7 +287,7 @@
 		var/data = json[giver]
 
 		if(islist(data))
-			curcomm += text2num("[data["count"]]")
+			curcomm += data["count"] || 0
 		else if(isnum(data))
 			curcomm += data
 
