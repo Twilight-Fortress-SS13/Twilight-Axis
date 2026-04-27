@@ -27,7 +27,7 @@
 	var/list/entry = get_entry(item_path)
 	if(!islist(entry))
 		return 0
-	return round(entry["cost"] || 0)
+	return entry["cost"] || 0
 
 /datum/tat_items/proc/get_total_maximum()
 	return base_points + (owner_build ? owner_build.get_bonus_item_points() : 0)
