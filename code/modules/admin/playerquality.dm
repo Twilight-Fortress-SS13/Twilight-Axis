@@ -214,40 +214,85 @@
 			to_chat(C, "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">Your PQ has been adjusted by [amt2change] by [key] for reason: [raisin]</span></span>")
 			return
 
+#define COMMEND_PQ_COOLDOWN (30 DAYS)
+
 /proc/add_commend(key, giver)
 	if(!giver || !key)
 		return
-	var/curcomm = 0
-	var/json_file = file("data/player_saves/[copytext(key,1,2)]/[key]/commends.json")
+
+	key = ckey(key)
+	giver = ckey(giver)
+
+	var/json_file = file("data/player_saves/[copytext(key, 1, 2)]/[key]/commends.json")
 	if(!fexists(json_file))
 		WRITE_FILE(json_file, "{}")
+
 	var/list/json = json_decode(file2text(json_file))
-	if(json[giver])
-		curcomm = json[giver]
+	if(!islist(json))
+		json = list()
+
+	var/now = world.realtime
+	var/list/commend_data
+	var/old_data = json[giver]
+
+	if(islist(old_data))
+		commend_data = old_data
+	else
+		commend_data = list(
+			"count" = 0,
+			"last_pq_time" = 0,
+		)
+
+		if(isnum(old_data))
+			commend_data["count"] = old_data
+			if(old_data > 0)
+				commend_data["last_pq_time"] = now
+
+	var/curcomm = text2num("[commend_data["count"]]")
+	var/last_pq_time = text2num("[commend_data["last_pq_time"]]")
+
 	curcomm++
-	json[giver] = curcomm
+
+	var/award_pq = FALSE
+	if(!last_pq_time || now - last_pq_time >= COMMEND_PQ_COOLDOWN)
+		award_pq = TRUE
+		commend_data["last_pq_time"] = now
+
+	commend_data["count"] = curcomm
+	json[giver] = commend_data
+
 	fdel(json_file)
 	WRITE_FILE(json_file, json_encode(json))
 
-	//add the pq, only on the first commend
-	if(curcomm == 1)
-//	if(get_playerquality(key) < 29)
-		adjust_playerquality(1, ckey(key))
+	if(award_pq)
+		adjust_playerquality(1, key)
 
 /proc/get_commends(key)
 	if(!key)
 		return
+
+	key = ckey(key)
+
 	var/curcomm = 0
-	var/json_file = file("data/player_saves/[copytext(key,1,2)]/[key]/commends.json")
+	var/json_file = file("data/player_saves/[copytext(key, 1, 2)]/[key]/commends.json")
 	if(!fexists(json_file))
 		WRITE_FILE(json_file, "{}")
-	var/list/json = json_decode(file2text(json_file))
 
-	for(var/X in json)
-		curcomm += json[X]
-	if(!curcomm)
-		curcomm = 0
+	var/list/json = json_decode(file2text(json_file))
+	if(!islist(json))
+		return 0
+
+	for(var/giver in json)
+		var/data = json[giver]
+
+		if(islist(data))
+			curcomm += text2num("[data["count"]]")
+		else if(isnum(data))
+			curcomm += data
+
 	return curcomm
+
+#undef COMMEND_PQ_COOLDOWN
 
 /proc/add_roundpoints(amt, key) //Each round contributor point counts as 0.1 of a PQ.
 	if(!key)
