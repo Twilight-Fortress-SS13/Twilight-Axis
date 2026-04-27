@@ -74,7 +74,7 @@
 /datum/advclass/tat_class/adventurer
 	name = "Pliant Adventurer"
 	tutorial = "A custom-built wanderer, outlaw, outlander, or dangerous free soul. This path is for TAT builds with Wanted or Outlander."
-
+	class_select_category = CLASS_CAT_NOMAD
 	category_tags = list(CTAG_ADVENTURER)
 	required_tat_bucket = TAT_ROLE_BUCKET_ADVENTURER
 
