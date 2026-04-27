@@ -233,7 +233,7 @@
 /obj/structure/examine(mob/user)
 	. = ..()
 
-	if(in_range(user, src))
+	if(in_range(user, src) && istype(user, /mob/living))
 		if(occupied)
 			var/mob/living/M = locate() in src
 			if(M)

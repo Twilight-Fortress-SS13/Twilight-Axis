@@ -93,6 +93,8 @@
 /client/MouseDown(object, location, control, params)
 	charge_was_blocked_by_cooldown = FALSE
 	var/list/modifiers = params2list(params)
+	if(lmb_throttle(object, modifiers))
+		return
 
 	if(mob.incapacitated())
 		return
@@ -195,14 +197,14 @@
 			mouse_pointer_icon = mob.mmb_intent.pointer
 
 /client/proc/handle_left_click(atom/object, location, control, params, list/modifiers)
-	if(!modifiers["shift"] || mob.BehindAtom(object, mob.dir))
-		mob.face_atom(object, location, control, params)
-	if(modifiers["right"])
-		return
-
 	var/cooldown = (mob.active_hand_index == 1) ? mob.next_lmove : mob.next_rmove
 	if(cooldown > world.time)
 		charge_was_blocked_by_cooldown = TRUE
+		return
+
+	if(!modifiers["shift"] || mob.BehindAtom(object, mob.dir))
+		mob.face_atom(object, location, control, params)
+	if(modifiers["right"])
 		return
 
 	mob.atkswinging = "left"
@@ -220,6 +222,10 @@
 	return TRUE
 
 /client/MouseUp(object, location, control, params)
+	var/list/modifiers = params2list(params)
+	if(lmb_throttle(object, modifiers, no_swing = TRUE))
+		return
+
 	if(SEND_SIGNAL(src, COMSIG_CLIENT_MOUSEUP, object, location, control, params) & COMPONENT_CLIENT_MOUSEUP_INTERCEPT)
 		click_intercept_time = world.time
 
@@ -246,7 +252,6 @@
 	if(!mob.atkswinging)
 		return
 
-	var/list/modifiers = params2list(params)
 	if(modifiers["left"])
 		if(mob.atkswinging != "left")
 			mob.atkswinging = null

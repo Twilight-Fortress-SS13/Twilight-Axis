@@ -42,6 +42,7 @@
 #define TRAIT_RAGE "Rage"
 #define TRAIT_CRITICAL_WEAKNESS "Critical Weakness"
 #define TRAIT_DNR "Bane of Existence"
+#define TRAIT_PHILOSOPHER_BOUND "Philosopher bound"
 #define TRAIT_MANIAC_AWOKEN "Awoken"
 #define TRAIT_INFINITE_STAMINA "Indefatigable" //for ai
 #define TRAIT_NUDIST "Nudist" //you can't wear most clothes
@@ -275,6 +276,7 @@
 #define TRAIT_WEATHER_PROTECTED "Weather Protected"
 #define TRAIT_VAMPIRE_SPAWN_PROTECTION "Vampire Spawn Protection"
 #define TRAIT_WHITE_STAG "Stag Protection"
+#define TRAIT_EDIT_DESCRIPTORS "Edit Descriptors"
 
 #define TRAIT_ARTILLERY_EXPERT "Artillery Expert"
 
@@ -380,6 +382,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_RAGE = span_info ("PAIN AND INJURY FUELS MY BATTLERAGE!"),
 	TRAIT_CRITICAL_WEAKNESS = span_danger("I am weak to wounds that others could survive."),
 	TRAIT_DNR = span_danger("My lux' vigor is weak. There is no hope for me. This lyfe is all I have."),
+	TRAIT_PHILOSOPHER_BOUND = span_danger("I bound my soul."),
 	TRAIT_MANIAC_AWOKEN = span_danger("I am <b>WAKING UP</b> and the sheeple know this. They will resist."),
 	TRAIT_INFINITE_STAMINA = "I have boundless energy, I will never tire.",
 	TRAIT_NUDIST = "I <b>refuse</b> to wear clothes. They are a hindrance to my freedom.",
@@ -526,7 +529,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_SEWING_EXPERT = span_greentext("I'm experienced with the arts of sewing and leathercraft. Sewing, Skincrafting and Butchering can progress to Legendary levels."),
 	TRAIT_SURVIVAL_EXPERT = span_greentext("I'm experienced with the arts of survival in the wild. Cooking, Fishing, Butchering and Skincrafting can progress to Legendary levels. Sewing can progress to Journeyman levels."),
 	TRAIT_HOMESTEAD_EXPERT = span_greentext("I'm experienced with the arts of homesteading. Farming, Mining, Cooking, Fishing, Butchering, Lumberjacking, Masonry and Pottery can progress to Legendary levels. Sewing and Skincrafting can progress to Journeyman levels."),
-	TRAIT_SELF_SUSTENANCE = span_greentext("Yils of experience running from the law and living off the land have made me a jack of all trades. All crafting and labor skills can progress to Journeyman levels."),
+	TRAIT_SELF_SUSTENANCE = span_greentext("Yils of experience running from the law and living off the land have made me a jack of all trades. All crafting and labor skills can progress to Journeyman levels. I am also quite savvy at repairing damaged equipment."),
 	TRAIT_MASTERFUL_HUNTER = span_greentext("To hunt well, is to know the land. I have an advantage in becoming a masterful hunter here, for I know about the various watering holes, the feeding grounds, which thickets are bent by animal flanks."),
 	TRAIT_EXPERT_HUNTER = span_greentext("To hunt well, is to know the land. I have an advantage in becoming a expert hunter here, for I know about the various watering holes, the feeding grounds, which thickets are bent by animal flanks."),
 	TRAIT_SILVER_WEAK = span_warning("Silver is the greatest threat to my lyfe. Blows from silver weapons will set me alight, inhibit my ability to regenerate, and - if blessed - can outright destroy my vessel."),
@@ -563,6 +566,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_FEYTOUCHED = span_info("I've been influenced or created by fey, after offering lux to a heartroot, I can use it to travel."),
 	TRAIT_ROOT_WALKER = span_info("After offering lux, I can now travel along heartroot trees."),
 	TRAIT_WHITE_STAG = span_info("The power of the white stag lives on inside of me!"),
+	TRAIT_EDIT_DESCRIPTORS = span_info("I can change my appearance at a magic mirror in a thorough manner."),
  
 	TRAIT_CLERGY_TA = span_notice("My oath empowers me when I am within the Temple's walls, or near my spiritual guide, the Bishop."), //TA TRAITS FROM HERE
 	TRAIT_PSYDONITE_2 = span_info("My body is a temple of iron will; the stronger my willpower, the faster my flesh knits back together."),

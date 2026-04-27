@@ -67,6 +67,9 @@
 	L.mind.remove_antag_datum(/datum/antagonist/zombie)
 	L.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)
 	L.apply_status_effect(/datum/status_effect/debuff/hag_curse/storm_weakness)
+	#ifdef REVIVE_GRACE
+	L.apply_status_effect(/datum/status_effect/debuff/revive_grace) // TA EDIT
+	#endif
 	L.visible_message(span_boldnotice("[L] wakes up!"))
 
 	spawn_repel_blast(L)

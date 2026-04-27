@@ -1,0 +1,4 @@
+author: "Lunky-Dunk"
+delete-after: True
+changes:
+  - bugfix: "подвинул спрайт на 1 пиксель в сторону"

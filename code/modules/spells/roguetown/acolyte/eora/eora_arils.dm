@@ -297,6 +297,9 @@
 		ADD_TRAIT(target, TRAIT_IWASREVIVED, "ochre_aril")
 		target.apply_status_effect(/datum/status_effect/debuff/metabolic_acceleration)
 		target.mind.remove_antag_datum(/datum/antagonist/zombie)
+		#ifdef REVIVE_GRACE
+		target.apply_status_effect(/datum/status_effect/debuff/revive_grace) // TA EDIT
+		#endif
 		return TRUE
 	else
 		target.visible_message(span_warning("The magic falters, and nothing happens."))

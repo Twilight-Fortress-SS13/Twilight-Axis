@@ -1,0 +1,5 @@
+author: "namenlos66"
+delete-after: True
+changes:
+  - rscadd: "Новый класс наёмника"
+  - rscadd: "Новая музыка для нового класса."

@@ -1,0 +1,4 @@
+author: "WeNeedMorePhoron"
+delete-after: True
+changes:
+  - rscadd: "You always gain the arcyne ward paired regeneration spell with gain of any arcyne ward, which should hopefully fixes issues with gaining infinite regen spell and most cases of jankiness"

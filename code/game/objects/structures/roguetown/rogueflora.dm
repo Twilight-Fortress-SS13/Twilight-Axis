@@ -213,7 +213,7 @@
 	desc = "Someone cut this tree down."
 	icon_state = "t1stump"
 	opacity = 0
-	pass_flags = LETPASSTHROW
+	pass_flags_self = LETPASSTHROW
 	max_integrity = 100
 	climbable = TRUE
 	climb_time = 0

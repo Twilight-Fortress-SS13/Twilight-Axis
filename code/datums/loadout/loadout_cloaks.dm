@@ -171,7 +171,7 @@
 
 /datum/loadout_item/sleevedtabard
 	name = "Tabard, Sleeved"
-	path = /obj/item/clothing/cloak/tabard/sleevedtabard
+	path = /obj/item/clothing/cloak/sleevedtabard
 	sort_category = "Cloaks"
 
 */

@@ -86,6 +86,9 @@
 						// Apply debuffs
 						human_target.mind.remove_antag_datum(/datum/antagonist/zombie)
 						human_target.apply_status_effect(/datum/status_effect/debuff/revived)
+						#ifdef REVIVE_GRACE
+						human_target.apply_status_effect(/datum/status_effect/debuff/revive_grace) // TA EDIT
+						#endif
 						return
 				else
 					to_chat(user, span_warning("[human_target] got moved before I was finished!"))

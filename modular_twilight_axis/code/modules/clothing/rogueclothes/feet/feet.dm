@@ -28,8 +28,7 @@
 /obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots
 	name = "etruscan jackboots"
 	//dropshrink = 0.75
-	desc = "High boots that are both beautiful and comfortable"
-	gender = PLURAL
+	desc = "High boots that are both beautiful and comfortable."
 	icon_state = "etrboots"
 	item_state = "etrboots"
 	sewrepair = TRUE
@@ -38,8 +37,26 @@
 	salvage_result = /obj/item/natural/hide/cured
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	allowed_sex = list(FEMALE)
+	allowed_race = NON_DWARVEN_RACE_TYPES
 
 /obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots/heavy
 	max_integrity = 100
 	armor = ARMOR_LEATHER
 	color = null
+	allowed_sex = list(FEMALE)
+	allowed_race = NON_DWARVEN_RACE_TYPES
+
+/obj/item/clothing/shoes/roguetown/boots/leather/etrbootsm
+	name = "wanderer's boots"
+	desc = "A comfortable pair of boots for traveling and attending court events."
+	icon_state = "etrbootsm"
+	item_state = "etrbootsm"
+	sewrepair = TRUE
+	armor = ARMOR_LEATHER
+	salvage_amount = 1
+	salvage_result = /obj/item/natural/hide/cured
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	allowed_sex = list(MALE)
+	allowed_race = NON_DWARVEN_RACE_TYPES

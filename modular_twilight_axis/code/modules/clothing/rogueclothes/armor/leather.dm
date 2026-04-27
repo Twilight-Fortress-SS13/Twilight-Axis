@@ -41,3 +41,14 @@
 	icon_state = "light_armour"
 	item_state = "light_armour"
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+
+/obj/item/clothing/suit/roguetown/armor/leather/etrjacket
+	name = "wanderer's jacket"
+	desc = "A comfortable jacket, more suitable for court receptions than for hiking in the swamps."
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/noble.dmi'
+	icon_state = "etrjacket"
+	item_state = "etrjacket"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	allowed_sex = list(MALE)
+	allowed_race = NON_DWARVEN_RACE_TYPES

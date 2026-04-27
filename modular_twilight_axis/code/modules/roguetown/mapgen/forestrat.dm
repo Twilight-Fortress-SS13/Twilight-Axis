@@ -43,7 +43,8 @@
 							/obj/structure/closet/dirthole/closed/loot=1,
 							/obj/structure/flora/roguegrass/maneater/real/juvenile=1,
 							/obj/item/reagent_containers/food/snacks/smallrat = 0.3,
-							/obj/structure/leyline/normal/grove = 0.2)
+							/obj/structure/leyline/normal/grove = 0.2,
+							/obj/effect/hunting_track = 3)
 	spawnableTurfs = list(/turf/open/floor/rogue/dirt/road=0.1,
 						/turf/open/water/swamp=0.1)
 	allowed_areas = list(/area/rogue/outdoors/woodsrat)

@@ -1535,6 +1535,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 //shameless copypaste
 /datum/species/proc/kicked(mob/living/carbon/human/user, mob/living/carbon/human/target)
+	SEND_SIGNAL(user, COMSIG_MOB_KICK_ATTACK, target) //Ta edit
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_warning("I don't want to harm [target]!"))
 		return FALSE
@@ -1866,6 +1867,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(I)
 				I.remove_bintegrity(1)
 				I.take_damage(1, BRUTE, I.d_type)
+			
 			if(user.mind && user.goodluck(4) && user.d_intent == INTENT_DODGE)
 				user.changeNext_def(clamp(user.dodgetime - 1, 0, CLICK_CD_DODGE))
 				user.changeMaxDodge(1)

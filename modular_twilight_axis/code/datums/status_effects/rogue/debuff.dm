@@ -209,3 +209,57 @@
 	alert_type = /atom/movable/screen/alert/status_effect/shrink
 	effectedstats = list(STATKEY_SPD = -1, STATKEY_CON = -1)
 	duration = 2 MINUTES
+
+/datum/status_effect/debuff/revive_grace
+	id = "revive_grace"
+	duration = 5 MINUTES
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/revive_grace
+	var/died_again = FALSE
+
+/datum/status_effect/debuff/revive_dnr
+	id = "revive_dnr"
+	duration = 1 HOURS
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/revive_dnr
+
+/datum/status_effect/debuff/revive_dnr/on_apply()
+	. = ..()
+	if(owner)
+		ADD_TRAIT(owner, TRAIT_DNR, "revive_grace")
+
+/datum/status_effect/debuff/revive_dnr/on_remove()
+	. = ..()
+	if(owner)
+		REMOVE_TRAIT(owner, TRAIT_DNR, "revive_grace")
+
+/atom/movable/screen/alert/status_effect/debuff/revive_grace
+	name = "Lux Rush"
+	desc = "My Lux is strained from the recent resurrection, burning fiercely at its peak — but I can feel this surge will soon fade."
+	icon_state = "stressg"
+
+/atom/movable/screen/alert/status_effect/debuff/revive_dnr
+	name = "Lux Exaustion"
+	desc = "The strain of binding with Lux has left my body fractured and unready. It cannot accept another — not yet."
+	icon_state = "stressb"
+
+/datum/status_effect/debuff/revive_grace/on_apply()
+	. = ..()
+	var/mob/living/carbon/human/H = owner
+	if(!H)
+		return
+	RegisterSignal(H, COMSIG_MOB_DEATH, PROC_REF(on_death))
+
+/datum/status_effect/debuff/revive_grace/on_remove()
+	. = ..()
+	var/mob/living/carbon/human/H = owner
+	if(!H)
+		return
+	UnregisterSignal(H, COMSIG_MOB_DEATH)
+	if(!died_again)
+		H.apply_status_effect(/datum/status_effect/debuff/revive_dnr)
+
+/datum/status_effect/debuff/revive_grace/proc/on_death()
+	var/mob/living/carbon/human/H = owner
+	if(!H)
+		return
+	died_again = TRUE
+	H.remove_status_effect(type)

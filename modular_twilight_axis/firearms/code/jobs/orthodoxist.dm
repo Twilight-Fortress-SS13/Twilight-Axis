@@ -121,6 +121,7 @@
 					/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
 					/obj/item/inqarticles/garrote = 1)
 				H.adjust_skillrank_up_to(/datum/skill/magic/arcane, SKILL_LEVEL_APPRENTICE, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/misc/sneaking, SKILL_LEVEL_EXPERT, TRUE)
 				H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/shadowstep)
 				H.mind?.RemoveSpell(H.mind.get_spell(/datum/action/cooldown/spell/touch/prestidigitation))
 				var/arcane = list("Fetch", "Invisibility", "Repulse", "Leap")

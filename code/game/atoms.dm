@@ -427,11 +427,13 @@
 				if(user.can_see_reagents() || (user.Adjacent(src) && (user.get_skill_level(/datum/skill/craft/alchemy) >= 2 || HAS_TRAIT(user, TRAIT_CICERONE)))) //Show each individual reagent
 					. += "It contains:"
 					for(var/datum/reagent/R in reagents.reagent_list)
+						if(istype(R, /datum/reagent/advanced/hidden_dust)) continue //TA edit
 						. += "[round(R.volume, 0.1)] [UNIT_FORM_STRING(round(R.volume, 0.1))] of <font color=[R.color]>[R.name]</font>"
 				else //Otherwise, just show the total volume
 					var/total_volume = 0
 					var/reagent_color
 					for(var/datum/reagent/R in reagents.reagent_list)
+						if(istype(R, /datum/reagent/advanced/hidden_dust)) continue //Ta edit
 						total_volume += R.volume
 					reagent_color = mix_color_from_reagents(reagents.reagent_list)
 					if(total_volume < 1)
@@ -563,7 +565,7 @@
  */
 /atom/proc/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum, damage_flag = "blunt")
 	SEND_SIGNAL(src, COMSIG_ATOM_HITBY, AM, skipcatch, hitpush, blocked, throwingdatum, damage_flag)
-	if(density) //thrown stuff bounces off dense stuff in no grav, unless the thrown stuff ends up inside what it hit(embedding, bola, etc...).
+	if(density && !(pass_flags_self & LETPASSTHROW)) //thrown stuff bounces off dense stuff in no grav, unless the thrown stuff ends up inside what it hit(embedding, bola, etc...).
 		addtimer(CALLBACK(src, PROC_REF(hitby_react), AM), 2)
 
 /**
