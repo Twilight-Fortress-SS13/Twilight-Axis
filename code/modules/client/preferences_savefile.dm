@@ -197,7 +197,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["tat_build"] >> L
 
 	if(!tat_build)
-		tat_build = new()
+		tat_build = new(src)
 
 	//try to fix any outdated data if necessary
 	if(needs_update >= 0)

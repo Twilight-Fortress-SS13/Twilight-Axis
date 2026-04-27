@@ -47,31 +47,26 @@
 	dirty = !!flag
 	return dirty
 
+/datum/tat_build/proc/attach_preferences_from_mob(mob/user)
+	if(!user?.client?.prefs)
+		return FALSE
+	var/datum/preferences/P = user.client.prefs
+	if(P.tat_build != src)
+		return FALSE
+	attach_preferences(P)
+	return TRUE
+
 /datum/tat_build/proc/get_active_virtues()
 	var/list/result = list()
 	if(!owner_preferences)
 		return result
 
-	var/single_virtue = owner_preferences.vars["virtue"]
-	var/single_virtuetwo = owner_preferences.vars["virtuetwo"]
-	if(single_virtue)
-		result += single_virtue
-	if(single_virtuetwo)
-		result += single_virtuetwo
+	if(owner_preferences.virtue && !istype(owner_preferences.virtue, /datum/virtue/none))
+		result += owner_preferences.virtue
 
-	var/list/candidates = list(
-		owner_preferences.vars["virtues"],
-		owner_preferences.vars["selected_virtues"],
-		owner_preferences.vars["active_virtues"],
-		owner_preferences.vars["virtue_list"],
-	)
-
-	for(var/list/L as anything in candidates)
-		if(!islist(L))
-			continue
-		for(var/entry in L)
-			if(!(entry in result))
-				result += entry
+	if(owner_preferences.virtuetwo && !istype(owner_preferences.virtuetwo, /datum/virtue/none))
+		if(!(owner_preferences.virtuetwo in result))
+			result += owner_preferences.virtuetwo
 
 	return result
 
@@ -122,10 +117,12 @@
 /datum/tat_build/proc/get_bonus_skill_value(skill_type)
 	var/trait_bonus = traits.get_bonus_skill_value(skill_type)
 	var/virtue_bonus = skills.get_virtue_bonus_value(skill_type)
-	return max(trait_bonus, virtue_bonus)
+	return round(trait_bonus + virtue_bonus)
 
 /datum/tat_build/proc/get_skill_cap_bonus_value(skill_type)
-	return traits.get_skill_cap_bonus_value(skill_type)
+	var/trait_cap_bonus = traits.get_skill_cap_bonus_value(skill_type)
+	var/virtue_cap_bonus = skills.get_virtue_skill_cap_bonus(skill_type)
+	return round(trait_cap_bonus + virtue_cap_bonus)
 
 /datum/tat_build/proc/get_skill_cost_discount(skill_type, target_level)
 	return traits.get_skill_cost_discount(skill_type, target_level)
@@ -411,6 +408,7 @@
 	return TRUE
 
 /datum/tat_build/proc/apply_pre_client_to_human(mob/living/carbon/human/H)
+	attach_preferences_from_mob(H)
 	if(!H)
 		return FALSE
 	sanitize()
@@ -421,6 +419,7 @@
 	return TRUE
 
 /datum/tat_build/proc/apply_post_client_to_human(mob/living/carbon/human/H)
+	attach_preferences_from_mob(H)
 	if(!H || !H.client)
 		return FALSE
 	sanitize()
@@ -565,37 +564,6 @@
 	active_tat_slot = normalize_tat_slot_index(active_slot)
 	dirty = FALSE
 	return TRUE
-
-/datum/tat_build/proc/load_from_preferences(datum/preferences/P)
-	if(!P)
-		return FALSE
-	attach_preferences(P)
-	if(istype(P.tat_build, /datum/tat_build))
-		var/datum/tat_build/source_build = P.tat_build
-		if(source_build == src)
-			return TRUE
-		load_from_list(source_build.export_to_list())
-		dirty = FALSE
-		return TRUE
-	var/list/tat_data = P.tat_build
-	if(islist(tat_data))
-		load_from_list(tat_data)
-	else
-		load_tat_slots_from_list(null, 1)
-		reset()
-		dirty = FALSE
-	return TRUE
-
-/datum/preferences/proc/sanitize_tat_build(list/tat_data)
-	if(!tat_build)
-		tat_build = new()
-	tat_build.attach_preferences(src)
-	if(islist(tat_data))
-		tat_build.load_from_list(tat_data)
-	else
-		tat_build.load_tat_slots_from_list(null, 1)
-		tat_build.reset()
-	tat_build.dirty = FALSE
 
 /datum/tat_build/proc/export_to_json()
 	last_json_error = null

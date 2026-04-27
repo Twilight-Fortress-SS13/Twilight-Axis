@@ -281,7 +281,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	familiar_prefs = new /datum/familiar_prefs(src)
 
 	loadoutpanel = new(C.mob)
-	tat_build = new()
+	tat_build = new(src)
 
 	for(var/custom_name_id in GLOB.preferences_custom_names)
 		custom_names[custom_name_id] = get_default_name(custom_name_id)

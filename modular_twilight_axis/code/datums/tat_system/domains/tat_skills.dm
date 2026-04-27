@@ -25,19 +25,29 @@
 	return round(invested[skill_type] || 0)
 
 /datum/tat_skills/proc/get_bonus_value(skill_type)
+	if(!check_skill(skill_type))
+		return 0
+	if(owner_build)
+		return round(owner_build.get_bonus_skill_value(skill_type) || 0)
 	return round(bonus[skill_type] || 0)
 
-/datum/tat_skills/proc/get_virtue_bonus_value(skill_type)
-	var/total = 0
-	var/list/virtues = owner_build?.get_active_virtues()
-	var/list/rules = TAT_VIRTUE_SKILL_BONUS_RULES
+/datum/tat_skills/proc/virtue_matches_rule(virtue_entry, virtue_rule)
+	if(!virtue_entry || !virtue_rule)
+		return FALSE
+	if(ispath(virtue_entry))
+		return virtue_entry == virtue_rule || ispath(virtue_entry, virtue_rule)
+	if(istype(virtue_entry, /datum/virtue))
+		return istype(virtue_entry, virtue_rule)
+	return virtue_entry == virtue_rule
 
-	if(!islist(virtues) || !length(virtues))
+/datum/tat_skills/proc/add_virtue_rule_value(skill_type, list/rules, list/virtues)
+	var/total = 0
+	if(!islist(rules) || !islist(virtues) || !length(virtues))
 		return 0
 
 	for(var/virtue_entry in virtues)
 		for(var/virtue_rule in rules)
-			if(!(ispath(virtue_entry, virtue_rule) || istype(virtue_entry, virtue_rule) || virtue_entry == virtue_rule))
+			if(!virtue_matches_rule(virtue_entry, virtue_rule))
 				continue
 
 			var/list/skill_map = rules[virtue_rule]
@@ -46,8 +56,40 @@
 
 	return total
 
+/datum/tat_skills/proc/add_virtue_choice_rule_value(skill_type, list/rules, list/virtues)
+	var/total = 0
+	if(!islist(rules) || !islist(virtues) || !length(virtues))
+		return 0
+
+	for(var/virtue_entry in virtues)
+		if(!istype(virtue_entry, /datum/virtue))
+			continue
+		var/datum/virtue/virtue_datum = virtue_entry
+		if(!LAZYLEN(virtue_datum.picked_choices))
+			continue
+
+		for(var/virtue_rule in rules)
+			if(!virtue_matches_rule(virtue_datum, virtue_rule))
+				continue
+
+			var/list/choice_map = rules[virtue_rule]
+			if(!islist(choice_map))
+				continue
+
+			for(var/choice in virtue_datum.picked_choices)
+				var/list/skill_map = choice_map[choice]
+				if(islist(skill_map))
+					total += round(skill_map[skill_type] || 0)
+
+	return total
+
+/datum/tat_skills/proc/get_virtue_bonus_value(skill_type)
+	var/list/virtues = owner_build?.get_active_virtues()
+	return add_virtue_rule_value(skill_type, TAT_VIRTUE_SKILL_BONUS_RULES, virtues) + add_virtue_choice_rule_value(skill_type, TAT_VIRTUE_CHOICE_SKILL_BONUS_RULES, virtues)
+
 /datum/tat_skills/proc/get_virtue_skill_cap_bonus(skill_type)
-	return get_virtue_bonus_value(skill_type)
+	var/list/virtues = owner_build?.get_active_virtues()
+	return add_virtue_rule_value(skill_type, TAT_VIRTUE_SKILL_CAP_BONUS_RULES, virtues) + add_virtue_choice_rule_value(skill_type, TAT_VIRTUE_CHOICE_SKILL_CAP_BONUS_RULES, virtues)
 
 /datum/tat_skills/proc/rebuild_bonus_values()
 	bonus = list()
@@ -157,6 +199,10 @@
 		if(can_take_master)
 			cap = master_cap
 
+	var/cap_bonus = get_trait_cap_bonus(skill_type)
+	if(cap_bonus > 0)
+		cap = max(cap, base_cap + cap_bonus)
+
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_magic_skill_cap(skill_type)
@@ -184,6 +230,13 @@
 		if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
 			cap = 3
 
+	var/cap_bonus = get_trait_cap_bonus(skill_type)
+	if(cap_bonus > 0)
+		if(cap > 0)
+			cap += cap_bonus
+		else
+			cap = cap_bonus
+
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_noncombat_skill_cap(skill_type)
@@ -192,10 +245,7 @@
 	if(skill_has_trait_cap_rule(skill_type))
 		base_cap = TAT_SKILL_NONCOMBAT_CAP_UNTRAITED
 
-	var/trait_cap_bonus = get_trait_cap_bonus(skill_type)
-	var/virtue_cap_bonus = get_virtue_skill_cap_bonus(skill_type)
-
-	var/cap = base_cap + max(trait_cap_bonus, virtue_cap_bonus)
+	var/cap = base_cap + get_trait_cap_bonus(skill_type)
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_maximum(skill_type)
@@ -215,10 +265,10 @@
 	if(!domain)
 		return 0
 
-	return max(0, get_maximum(skill_type) - get_bonus_value(skill_type))
+	return max(0, get_maximum(skill_type))
 
 /datum/tat_skills/proc/get_total_value(skill_type)
-	return min(get_maximum(skill_type), get_invested_value(skill_type) + get_bonus_value(skill_type))
+	return clamp(get_invested_value(skill_type) + get_bonus_value(skill_type), 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_step_cost(skill_type, target_level)
 	if(target_level <= 0)

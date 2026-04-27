@@ -270,6 +270,9 @@
 	return result
 
 /datum/tat_build/proc/build_ui_skills()
+	attach_preferences_from_mob(usr)
+	skills?.rebuild_bonus_values()
+
 	var/list/result = list()
 	for(var/skill_type in get_all_ui_skill_types())
 		var/bonus_value = 0
@@ -374,12 +377,14 @@
 	return GLOB.always_state
 
 /datum/tat_build/ui_interact(mob/user, datum/tgui/ui)
+	attach_preferences_from_mob(user)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "TATBuild")
 		ui.open()
 
 /datum/tat_build/ui_static_data(mob/user)
+	attach_preferences_from_mob(user)
 	return list(
 		"available_stats" = build_ui_stat_entries(),
 		"available_skills" = build_ui_skill_entries(),
@@ -388,6 +393,7 @@
 	)
 
 /datum/tat_build/ui_data(mob/user)
+	attach_preferences_from_mob(user)
 	var/list/validation = get_validation_issues()
 	var/can_save_build = !length(validation)
 
@@ -423,6 +429,8 @@
 	)
 
 /datum/tat_build/ui_act(action, list/params)
+	if(usr)
+		attach_preferences_from_mob(usr)
 	. = ..()
 	if(.)
 		return
