@@ -186,7 +186,6 @@ GLOBAL_LIST_INIT(sidefolk_positions, list( //Weerdoes who hang around the town
 	"Pilgrim",
 	"Mercenary",	
 	"Veteran",
-	"Pliant Soul", //TA EDIT - TAT SYSTEM
 ))
 
 GLOBAL_LIST_INIT(wanderer_positions, list( //Homeless

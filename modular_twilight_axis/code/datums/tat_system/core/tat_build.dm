@@ -645,3 +645,12 @@
 	last_exported_json = raw
 	last_json_notice = "Build imported."
 	return TRUE
+
+/datum/tat_build/proc/get_role_bucket()
+	if(traits?.has_trait(TAT_TRAIT_RESIDENT))
+		return TAT_ROLE_BUCKET_TOWNER
+
+	if(traits?.has_trait(TAT_TRAIT_WANTED) || traits?.has_trait(TRAIT_OUTLANDER))
+		return TAT_ROLE_BUCKET_ADVENTURER
+
+	return TAT_ROLE_BUCKET_TRADER

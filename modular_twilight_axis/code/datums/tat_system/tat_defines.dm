@@ -1,5 +1,4 @@
 #define TAT_TRAIT_SOURCE	"tat_build"
-#define CTAG_FREE_ROAM		"CTAG_FREE_ROAM"
 
 #define TAT_PARTY_LEADER_MIN_MEMBERS 2
 #define TAT_PARTY_LEADER_BONUS_CON 1
@@ -12,3 +11,7 @@
 #define TAT_ITEM_ENTRY(_name, _cost, _category, _unlock_type, _unlock_key, _slot_group) list("name" = (_name), "cost" = (_cost), "category" = (_category), "unlock_type" = (_unlock_type), "unlock_key" = (_unlock_key), "slot_group" = (_slot_group))
 
 #define TAT_SLOT_COUNT 9
+
+#define TAT_ROLE_BUCKET_TOWNER "towner"
+#define TAT_ROLE_BUCKET_TRADER "trader"
+#define TAT_ROLE_BUCKET_ADVENTURER "adventurer"

@@ -1,68 +1,89 @@
-/datum/job/roguetown/tat_class
-	title = "Pliant Soul"
-	f_title = "Pliant Soul"
-	department_flag = SIDEFOLK
-	flag = SIDEFOLK
-	faction = "Station"
+/proc/get_client_active_tat_build(client/C)
+	if(!C?.prefs)
+		return null
 
-	total_positions = 20
-	spawn_positions = 20
+	return C.prefs.tat_build
 
-	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+/proc/client_has_tat_role_bucket(client/C, required_bucket)
+	if(!required_bucket)
+		return TRUE
 
-	tutorial = "Pliant soul in the rough Psydonia. Who you are? Deside by yourself, this is YOUR Journey."
-	display_order = JDO_MERCENARY
-	selection_color = JCOLOR_WANDERER
-
-	min_pq = -20
-	max_pq = null
-	round_contrib_points = 0
-
-	outfit = /datum/outfit/job/roguetown/tat_class/basic
-	outfit_female = /datum/outfit/job/roguetown/tat_class/basic
-
-	always_show_on_latechoices = TRUE
-	announce_latejoin = TRUE
-	class_categories = FALSE
-	wanderer_examine = TRUE
-	advjob_examine = TRUE
-	bypass_lastclass = TRUE
-	can_random = FALSE
-
-	advclass_cat_rolls = list(CTAG_FREE_ROAM = 1)
-	job_subclasses = list(/datum/advclass/tat_class)
-
-/datum/job/roguetown/tat_class/after_spawn(mob/living/L, mob/M, latejoin = FALSE)
-	return ..()
-
-/datum/job/roguetown/tat_class/override_latejoin_spawn(mob/living/L)
-	if(!L)
+	var/datum/tat_build/build = get_client_active_tat_build(C)
+	if(!build)
 		return FALSE
 
-	var/list/choices = list()
-	for(var/obj/effect/landmark/start/adventurerlate/S in GLOB.start_landmarks_list)
-		choices += S
-
-	if(!length(choices))
+	if(!build.can_save())
 		return FALSE
 
-	var/obj/effect/landmark/start/adventurerlate/target = pick(choices)
-	target.JoinPlayerHere(L, FALSE)
-	return TRUE
+	return build.get_role_bucket() == required_bucket
+
+/proc/human_has_tat_role_bucket(mob/living/carbon/human/H, required_bucket)
+	if(!H?.client)
+		return FALSE
+
+	return client_has_tat_role_bucket(H.client, required_bucket)
+
+/proc/get_human_active_tat_build(mob/living/carbon/human/H)
+	if(!H?.client)
+		return null
+
+	return get_client_active_tat_build(H.client)
 
 /datum/advclass/tat_class
 	name = "Pliant Soul"
 	tutorial = "A freeform class used for the TAT build system."
-	category_tags = list(CTAG_FREE_ROAM)
+
+	allowed_sexes = list(MALE, FEMALE)
+	allowed_races = RACES_ALL_KINDS
+
+	outfit = /datum/outfit/job/roguetown/tat_class/basic
 
 	subclass_stats = list()
 	subclass_skills = list()
 	traits_applied = list()
 
+	maximum_possible_slots = 20
+
+	same_job_respawn_delay = FALSE
+	var/required_tat_bucket = null
+
+/datum/advclass/tat_class/check_requirements(mob/living/carbon/human/H)
+	if(!..())
+		return FALSE
+
+	return human_has_tat_role_bucket(H, required_tat_bucket)
+
+/datum/advclass/tat_class/towner
+	name = "Pliant Towner"
+	tutorial = "A custom-built local resident of Psydonia. Your home, work, and place among the townfolk are defined by your active TAT build."
+
+	category_tags = list(CTAG_TOWNER)
+	required_tat_bucket = TAT_ROLE_BUCKET_TOWNER
+
+	maximum_possible_slots = 20
+
+
+/datum/advclass/tat_class/trader
+	name = "Pliant Trader"
+	tutorial = "A custom-built traveler, supplier, artisan, or free tradesoul. This path is for TAT builds without resident, wanted, or outlander status."
+
+	category_tags = list(CTAG_TRADER)
+	class_select_category = CLASS_CAT_TRADER
+	required_tat_bucket = TAT_ROLE_BUCKET_TRADER
+
+	maximum_possible_slots = 20
+
+/datum/advclass/tat_class/adventurer
+	name = "Pliant Adventurer"
+	tutorial = "A custom-built wanderer, outlaw, outlander, or dangerous free soul. This path is for TAT builds with Wanted or Outlander."
+
+	category_tags = list(CTAG_ADVENTURER)
+	required_tat_bucket = TAT_ROLE_BUCKET_ADVENTURER
+
+	maximum_possible_slots = 20
+
 /datum/outfit/job/roguetown/tat_class
 	name = "Pliant Soul"
-	jobtype = /datum/job/roguetown/tat_class
 
 /datum/outfit/job/roguetown/tat_class/basic/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -71,6 +92,7 @@
 	. = ..()
 	if(visualsOnly)
 		return
+
 	if(!H || !H.mind)
 		return
 
@@ -84,25 +106,28 @@
 		addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_spawn), H), 10)
 		return
 
-	var/datum/preferences/P = H.client?.prefs
-	if(!P?.tat_build)
+	var/datum/tat_build/build = get_human_active_tat_build(H)
+	if(!build)
 		return
 
-	if(!P.tat_build?.can_save())
+	if(!build.can_save())
 		return
 
-	relocate_tat_spawn(H, P.tat_build)
-	P.tat_build.apply_to_human(H)
+	if(!human_has_tat_role_bucket(H, build.get_role_bucket()))
+		return
+
+	relocate_tat_spawn(H, build)
+	build.apply_to_human(H)
 
 /datum/outfit/job/roguetown/tat_class/basic/proc/get_tat_spawn_turf(mob/living/carbon/human/H, datum/tat_build/build)
 	if(!H || !build)
 		return null
 
-	if(build.traits.selected[TAT_TRAIT_RESIDENT])
+	if(build.traits?.has_trait(TAT_TRAIT_RESIDENT))
 		if(length(SSjob.latejoin_trackers))
 			return pick(SSjob.latejoin_trackers)
 
-	if(build.traits.selected[TAT_TRAIT_WANTED])
+	if(build.traits?.has_trait(TAT_TRAIT_WANTED) || build.traits?.has_trait(TRAIT_OUTLANDER))
 		var/list/wretch_late_starts = list()
 
 		for(var/obj/effect/landmark/start/wretchlate/wretch_start in GLOB.landmarks_list)
@@ -122,10 +147,4 @@
 		return FALSE
 
 	H.forceMove(T)
-
-/obj/effect/landmark/start/adventurerlate
-	jobspawn_override = list("Pilgrim", "Adventurer", "Migrant", "Trader", "Pliant Soul")
-
-/datum/job/roguetown/adventurer
-	total_positions = 10 //На время тестов ТАТ - удалить позже (было 20)
-	spawn_positions = 10 //На время тестов ТАТ - удалить позже (было 20)
+	return TRUE

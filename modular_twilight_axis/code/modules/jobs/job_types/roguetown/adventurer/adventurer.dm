@@ -6,6 +6,7 @@
 		/datum/advclass/foreigner/ronin,
 		/datum/advclass/ranger/twilight_hunter,
 		/datum/advclass/foreigner/gronnadv,
-		/datum/advclass/foreigner/marinero
+		/datum/advclass/foreigner/marinero,
+		/datum/advclass/tat_class/adventurer
 	)
 	. = ..()
