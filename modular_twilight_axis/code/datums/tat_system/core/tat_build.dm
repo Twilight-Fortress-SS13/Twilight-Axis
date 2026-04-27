@@ -426,15 +426,29 @@
 	dirty = FALSE
 	return TRUE
 
-/datum/tat_build/proc/apply_to_human(mob/living/carbon/human/H)
+/datum/tat_build/proc/apply_pre_client_to_human(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
 	sanitize()
-	traits.apply_to_human(H)
+	traits.apply_instant_to_human(H)
+	items.apply_to_human(H)
 	stats.apply_to_human(H)
 	skills.apply_to_human(H)
-	items.apply_to_human(H)
 	return TRUE
+
+/datum/tat_build/proc/apply_post_client_to_human(mob/living/carbon/human/H)
+	if(!H || !H.client)
+		return FALSE
+	sanitize()
+	traits.apply_deferred_to_human(H)
+	return TRUE
+
+/datum/tat_build/proc/apply_to_human(mob/living/carbon/human/H)
+	if(!apply_pre_client_to_human(H))
+		return FALSE
+	if(!H.client)
+		return TRUE
+	return apply_post_client_to_human(H)
 
 /datum/tat_build/proc/disable_from_human(mob/living/carbon/human/H)
 	if(!H)

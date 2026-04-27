@@ -17,17 +17,44 @@
 
 	return build.get_role_bucket() == required_bucket
 
+/proc/tat_build_has_role_bucket(datum/tat_build/build, required_bucket)
+	if(!required_bucket)
+		return TRUE
+
+	if(!build)
+		return FALSE
+
+	if(!build.can_save())
+		return FALSE
+
+	return build.get_role_bucket() == required_bucket
+
 /proc/human_has_tat_role_bucket(mob/living/carbon/human/H, required_bucket)
+	if(H?.active_tat_build)
+		return tat_build_has_role_bucket(H.active_tat_build, required_bucket)
+
 	if(!H?.client)
 		return FALSE
 
 	return client_has_tat_role_bucket(H.client, required_bucket)
 
 /proc/get_human_active_tat_build(mob/living/carbon/human/H)
-	if(!H?.client)
+	if(!H)
 		return null
 
-	return get_client_active_tat_build(H.client)
+	if(H.active_tat_build)
+		return H.active_tat_build
+
+	if(!H.client)
+		return null
+
+	H.active_tat_build = get_client_active_tat_build(H.client)
+	return H.active_tat_build
+
+/mob/living/carbon/human
+	var/datum/tat_build/active_tat_build = null
+	var/tat_build_pre_client_applied = FALSE
+	var/tat_build_post_client_applied = FALSE
 
 /datum/advclass/tat_class
 	name = "Pliant Soul"
@@ -94,14 +121,37 @@
 	if(!H || !H.mind)
 		return
 
-	addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_spawn), H), 10)
+	apply_tat_build_pre_client(H)
 
-/datum/outfit/job/roguetown/tat_class/basic/proc/apply_tat_build_post_spawn(mob/living/carbon/human/H)
+/datum/outfit/job/roguetown/tat_class/basic/proc/apply_tat_build_pre_client(mob/living/carbon/human/H)
 	if(!H || !H.mind)
 		return
 
+	if(H.tat_build_pre_client_applied)
+		addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_client), H), 10)
+		return
+
+	var/datum/tat_build/build = get_human_active_tat_build(H)
+	if(!build)
+		addtimer(CALLBACK(src, PROC_REF(apply_tat_build_pre_client), H), 10)
+		return
+
+	if(!build.can_save())
+		return
+
+	H.tat_build_pre_client_applied = TRUE
+	build.apply_pre_client_to_human(H)
+	addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_client), H), 10)
+
+/datum/outfit/job/roguetown/tat_class/basic/proc/apply_tat_build_post_client(mob/living/carbon/human/H)
+	if(!H || !H.mind)
+		return
+
+	if(H.tat_build_post_client_applied)
+		return
+
 	if(!H.client)
-		addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_spawn), H), 10)
+		addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_client), H), 10)
 		return
 
 	var/datum/tat_build/build = get_human_active_tat_build(H)
@@ -114,4 +164,5 @@
 	if(!human_has_tat_role_bucket(H, build.get_role_bucket()))
 		return
 
-	build.apply_to_human(H)
+	H.tat_build_post_client_applied = TRUE
+	build.apply_post_client_to_human(H)
