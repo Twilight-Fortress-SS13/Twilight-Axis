@@ -135,7 +135,7 @@
 	TRAIT_INTELLECTUAL = TAT_TRAIT_ENTRY("Intellectual", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You have a keen eye and can assess a person's prowess in wit and blade."), \
 	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You are trained in the Arcyne arts, allowing you to wield magyck. Basis trait for magic-build classes. Give +2 magic skill if there is no defense trait."), \
 	TRAIT_JACKOFALLTRADES = TAT_TRAIT_ENTRY("Jack of All Trades", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Skills cost half as much for you to raise."), \
-	TAT_TRAIT_MASTER_OF_WANDERING = TAT_TRAIT_ENTRY("Master of wandering", 40, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gives +20 to skill points, gives discont on non-combat skills, blocks with Resident."), \
+	TAT_TRAIT_MASTER_OF_WANDERING = TAT_TRAIT_ENTRY("Master of wandering", 30, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gives +20 to skill points, gives discont on non-combat skills, blocks with Resident."), \
 	TRAIT_EMPATH = TAT_TRAIT_ENTRY("Empath", 5, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can notice when people are in pain."), \
 	TRAIT_NOSTINK = TAT_TRAIT_ENTRY("Dead Nose", 10, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Your nose is numb to the smell of decay."), \
 	TRAIT_NOBLE = TAT_TRAIT_ENTRY("Noble Blooded", 10, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You are of noble blood."), \
@@ -222,8 +222,8 @@
 
 #define TAT_TRAIT_SKILL_POINT_RULES list( \
 	TAT_TRAIT_MASTER_OF_WANDERING = list( \
-		TAT_SKILL_DOMAIN_WANDERING = 24, \
-		TAT_SKILL_DOMAIN_MISC = 18 \
+		TAT_SKILL_DOMAIN_WANDERING = 15, \
+		TAT_SKILL_DOMAIN_MISC = 10 \
 	), \
 	TAT_TRAIT_STRAYING_SOUL = list( \
 		TAT_SKILL_DOMAIN_WANDERING = 9, \

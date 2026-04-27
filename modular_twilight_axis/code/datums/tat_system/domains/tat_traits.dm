@@ -221,8 +221,8 @@
 		return "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" conflicts with current defensive trait setup."
 	if((trait_a == TAT_TRAIT_WITCH_INITIATE || trait_b == TAT_TRAIT_WITCH_INITIATE) && has_defensive_trait_lockout())
 		return "\"[get_trait_display_name(TAT_TRAIT_WITCH_INITIATE)]\" conflicts with current defensive trait setup."
-	if((trait_a == TAT_TRAIT_DIVINE_BOON_3 || trait_b == TAT_TRAIT_WITCH_INITIATE) && has_defensive_trait_lockout())
-		return "\"[get_trait_display_name(TAT_TRAIT_WITCH_INITIATE)]\" conflicts with current defensive trait setup."
+	if(((trait_a == TAT_TRAIT_DIVINE_BOON_3 || trait_b == TAT_TRAIT_DIVINE_BOON_3) && has_defensive_trait_lockout()) && !(has_trait(TAT_TRAIT_HERETIC) || has_trait(TAT_TRAIT_WANTED)))
+		return "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\" conflicts with current defensive trait setup or lack wanted/heretic traits."
 	return null
 
 /datum/tat_traits/proc/has_invalid_trait_dependencies()
