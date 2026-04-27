@@ -274,10 +274,12 @@
 			var/list/entry = all_stats[stat_id]
 			if(!islist(entry))
 				continue
+
 			var/base = isnum(entry["base"]) ? entry["base"] : 10
 			var/minimum = isnum(entry["min"]) ? entry["min"] : 1
 			var/cost = isnum(entry["cost"]) ? entry["cost"] : 0
 			var/value = isnum(stat_data[stat_id]) ? stat_data[stat_id] : base
+
 			if(value > base)
 				stats_spent += (value - base) * cost
 			else
@@ -286,6 +288,7 @@
 	var/skills_spent = 0
 	var/list/skill_data = build_data["skills"]
 	var/list/invested_skills = null
+
 	if(islist(skill_data))
 		if(islist(skill_data["invested"]))
 			invested_skills = skill_data["invested"]
@@ -296,29 +299,37 @@
 		for(var/skill_type in invested_skills)
 			if(skill_type == "bonus" || skill_type == "invested")
 				continue
+
 			var/level = round(invested_skills[skill_type] || 0)
 			for(var/i in 1 to level)
 				skills_spent += i
 
 	var/traits_spent = 0
 	var/list/trait_data = build_data["traits"]
+
 	if(islist(trait_data))
 		var/list/all_traits = list(TAT_AVAILABLE_TRAITS_LIST)
 		var/has_outlander = !!trait_data[TRAIT_OUTLANDER]
+
 		for(var/trait_id in trait_data)
 			if(!trait_data[trait_id])
 				continue
+
 			var/list/entry = all_traits[trait_id]
 			if(!islist(entry))
 				continue
-			var/cost = round(entry["cost"] || 0)
+
+			var/cost = isnum(entry["cost"]) ? entry["cost"] : 0
+
 			if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && has_outlander)
 				cost -= TAT_TRAIT_DISCOUNT
+
 			traits_spent += cost
 
 	var/items_spent = 0
 	var/list/item_data = build_data["items"]
 	var/list/selected_items = null
+
 	if(islist(item_data))
 		if(islist(item_data["selected"]))
 			selected_items = item_data["selected"]
@@ -327,13 +338,19 @@
 
 	if(islist(selected_items))
 		var/list/all_items = list(TAT_AVAILABLE_ITEMS_LIST)
+
 		for(var/item_path in selected_items)
 			if(item_path == "selected" || item_path == "item_loadout")
 				continue
+
 			var/list/entry = all_items[item_path]
 			if(!islist(entry))
 				continue
-			items_spent += round(entry["cost"] || 0) * round(selected_items[item_path] || 0)
+
+			var/cost = isnum(entry["cost"]) ? entry["cost"] : 0
+			var/amount = round(selected_items[item_path] || 0)
+
+			items_spent += cost * amount
 
 	return list(
 		"stats" = stats_spent,

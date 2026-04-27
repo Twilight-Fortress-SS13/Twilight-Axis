@@ -1,7 +1,4 @@
-/// UI-facing layer for TAT build (backend side).
-
 /datum/tat_build
-	var/list/ui_item_catalog_cache = null
 	var/list/ui_item_states_cache = null
 	var/ui_item_states_cache_dirty = TRUE
 	var/ui_item_cache_requested = FALSE
@@ -331,21 +328,6 @@
 		)
 	return result
 
-/datum/tat_build/proc/get_item_icon_payload(item_path)
-	if(!ispath(item_path, /obj/item))
-		return null
-	var/obj/item/I = new item_path
-	if(!I)
-		return null
-	var/icon/render_icon = icon(initial(I.icon), initial(I.icon_state), SOUTH, 1)
-	var/icon_b64 = render_icon ? icon2base64(render_icon) : null
-	var/list/payload = list(
-		"icon" = icon_b64,
-		"icon_state" = "[initial(I.icon_state)]",
-	)
-	qdel(I)
-	return payload
-
 /datum/tat_build/proc/build_ui_loadout()
 	var/list/result = list()
 	for(var/item_path in items.selected)
@@ -490,27 +472,6 @@
 
 	return FALSE
 
-/datum/tat_build/proc/get_ui_item_catalog_cache()
-	if(islist(ui_item_catalog_cache))
-		return ui_item_catalog_cache
-	ui_item_catalog_cache = list()
-	for(var/item_path in list(TAT_AVAILABLE_ITEMS_LIST))
-		var/list/entry = get_item_entry(item_path)
-		if(!islist(entry))
-			continue
-		var/list/icon_payload = get_item_icon_payload(item_path)
-		ui_item_catalog_cache["[item_path]"] = list(
-			"name" = entry["name"],
-			"cost" = entry["cost"],
-			"category" = entry["category"],
-			"unlock_type" = entry["unlock_type"],
-			"unlock_key" = entry["unlock_key"],
-			"slot_group" = entry["slot_group"],
-			"icon" = icon_payload ? icon_payload["icon"] : null,
-			"icon_state" = icon_payload ? icon_payload["icon_state"] : null,
-		)
-	return ui_item_catalog_cache
-
 /datum/tat_build/proc/build_ui_item_state(item_path)
 	var/list/entry = get_item_entry(item_path)
 	if(!islist(entry))
@@ -566,50 +527,13 @@
 		ui_item_cache_pending_state_paths += item_path
 	return TRUE
 
-/datum/tat_build/proc/get_item_ui_related_dynamic_paths(item_path)
-	var/list/result = list()
-	if(!item_path)
-		return result
-	if(!ispath(item_path))
-		item_path = text2path("[item_path]")
-	if(!item_path)
-		return result
-
-	result += item_path
-
-	var/list/entry = get_item_entry(item_path)
-	if(!islist(entry) || !items?.is_item_slot_limited(entry))
-		return result
-
-	var/slot_group = lowertext("[entry["slot_group"]]")
-	var/category = lowertext("[entry["category"]]")
-	if(!slot_group || !category)
-		return result
-
-	// For slot-limited clothing/armor, taking one item changes maximum/can_add only for items
-	// in the same logical slot bucket. Do not touch unrelated item states.
-	for(var/other_path in list(TAT_AVAILABLE_ITEMS_LIST))
-		if(other_path == item_path)
-			continue
-		var/list/other_entry = get_item_entry(other_path)
-		if(!islist(other_entry))
-			continue
-		if(lowertext("[other_entry["slot_group"]]") != slot_group)
-			continue
-		if(lowertext("[other_entry["category"]]") != category)
-			continue
-		result += other_path
-
-	return result
-
 /datum/tat_build/proc/queue_item_ui_state_refresh_for_related_paths(item_path)
 	ui_item_states_cache_dirty = TRUE
 	if(!ui_item_cache_requested)
 		return
 	if(ui_item_cache_pending_states_full)
 		return
-
-	for(var/related_path in get_item_ui_related_dynamic_paths(item_path))
+	for(var/related_path in tat_get_item_related_dynamic_paths(item_path))
 		add_pending_item_state_path(related_path)
 
 /datum/tat_build/proc/queue_item_ui_states_full_refresh()
@@ -621,24 +545,23 @@
 
 /datum/tat_build/proc/invalidate_item_ui_cache(send_full = FALSE)
 	if(send_full)
-		ui_item_catalog_cache = null
+		tat_clear_item_static_ui_cache()
 		if(ui_item_cache_requested)
 			ui_item_cache_pending_catalog = TRUE
 	queue_item_ui_states_full_refresh()
 
 /datum/tat_build/proc/request_item_ui_cache(force_full = FALSE)
 	ui_item_cache_requested = TRUE
-	if(force_full || !islist(ui_item_catalog_cache))
+	if(force_full || !length(GLOB.tat_item_catalog_cache))
 		ui_item_cache_pending_catalog = TRUE
 		ui_item_cache_pending_states_full = TRUE
 		ui_item_cache_pending_state_paths = null
-	// Otherwise this is a lightweight poll. Do not manufacture a full dynamic refresh here:
-	// actual mutations queue their own precise dynamic patches.
 	return TRUE
 
 /datum/tat_build/proc/get_pending_item_ui_cache_packet()
 	if(!ui_item_cache_requested)
 		return null
+
 	if(!ui_item_cache_pending_catalog && !ui_item_cache_pending_states_full && !length(ui_item_cache_pending_state_paths))
 		return null
 
@@ -646,7 +569,7 @@
 	packet["full"] = ui_item_cache_pending_catalog || ui_item_cache_pending_states_full
 
 	if(ui_item_cache_pending_catalog)
-		packet["catalog"] = get_ui_item_catalog_cache()
+		packet["catalog"] = tat_get_item_catalog_cache()
 	else
 		packet["catalog"] = null
 
@@ -658,4 +581,157 @@
 	ui_item_cache_pending_catalog = FALSE
 	ui_item_cache_pending_states_full = FALSE
 	ui_item_cache_pending_state_paths = null
+
 	return packet
+
+/proc/tat_item_entry_is_slot_limited(list/entry)
+	if(!islist(entry))
+		return FALSE
+
+	var/category = lowertext("[entry["category"]]")
+	if(category == TAT_ITEM_CATEGORY_WEAPON)
+		return FALSE
+
+	var/slot_group = lowertext("[entry["slot_group"]]")
+	if(!length(slot_group))
+		return FALSE
+	if(slot_group == "misc")
+		return FALSE
+
+	return TRUE
+
+/proc/tat_get_item_bucket_key(list/entry)
+	if(!islist(entry))
+		return null
+
+	var/category = lowertext("[entry["category"]]")
+	var/slot_group = lowertext("[entry["slot_group"]]")
+
+	if(!length(category) || !length(slot_group))
+		return null
+
+	return "[category]|[slot_group]"
+
+/proc/tat_get_item_icon_payload(item_path)
+	if(!ispath(item_path, /obj/item))
+		return null
+
+	var/cache_key = "[item_path]"
+	if(cache_key in GLOB.tat_item_icon_cache)
+		return GLOB.tat_item_icon_cache[cache_key]
+
+	var/obj/item/item_type = item_path
+
+	var/icon_file = initial(item_type.icon)
+	var/icon_state = initial(item_type.icon_state)
+
+	var/icon_b64 = null
+	if(icon_file)
+		var/icon/render_icon = icon(icon_file, icon_state, SOUTH, 1)
+		icon_b64 = render_icon ? icon2base64(render_icon) : null
+
+	var/list/payload = list(
+		"icon" = icon_b64,
+		"icon_state" = "[icon_state]",
+	)
+
+	GLOB.tat_item_icon_cache[cache_key] = payload
+	return payload
+
+/proc/tat_get_item_catalog_cache()
+	if(length(GLOB.tat_item_catalog_cache))
+		return GLOB.tat_item_catalog_cache
+
+	var/list/all_items = list(TAT_AVAILABLE_ITEMS_LIST)
+
+	for(var/item_path in all_items)
+		var/list/entry = all_items[item_path]
+		if(!islist(entry))
+			continue
+
+		var/list/icon_payload = tat_get_item_icon_payload(item_path)
+
+		GLOB.tat_item_catalog_cache["[item_path]"] = list(
+			"name" = entry["name"],
+			"cost" = entry["cost"],
+			"category" = entry["category"],
+			"unlock_type" = entry["unlock_type"],
+			"unlock_key" = entry["unlock_key"],
+			"slot_group" = entry["slot_group"],
+			"icon" = icon_payload ? icon_payload["icon"] : null,
+			"icon_state" = icon_payload ? icon_payload["icon_state"] : null,
+		)
+
+	return GLOB.tat_item_catalog_cache
+
+/proc/tat_ensure_item_related_paths_cache()
+	if(length(GLOB.tat_item_related_paths_cache))
+		return TRUE
+
+	var/list/all_items = list(TAT_AVAILABLE_ITEMS_LIST)
+	var/list/buckets = list()
+
+	for(var/item_path in all_items)
+		var/list/entry = all_items[item_path]
+		if(!tat_item_entry_is_slot_limited(entry))
+			continue
+
+		var/bucket_key = tat_get_item_bucket_key(entry)
+		if(!bucket_key)
+			continue
+
+		if(!islist(buckets[bucket_key]))
+			buckets[bucket_key] = list()
+
+		buckets[bucket_key] += item_path
+
+	for(var/item_path in all_items)
+		var/list/result = list(item_path)
+
+		var/list/entry = all_items[item_path]
+		if(tat_item_entry_is_slot_limited(entry))
+			var/bucket_key = tat_get_item_bucket_key(entry)
+			var/list/bucket = buckets[bucket_key]
+
+			if(islist(bucket))
+				for(var/related_path in bucket)
+					if(related_path == item_path)
+						continue
+					result += related_path
+
+		GLOB.tat_item_related_paths_cache[item_path] = result
+
+	return TRUE
+
+/proc/tat_get_item_related_dynamic_paths(item_path)
+	var/list/result = list()
+
+	if(!item_path)
+		return result
+
+	if(!ispath(item_path))
+		item_path = text2path("[item_path]")
+
+	if(!item_path)
+		return result
+
+	tat_ensure_item_related_paths_cache()
+
+	var/list/cached = GLOB.tat_item_related_paths_cache[item_path]
+	if(islist(cached))
+		return cached
+
+	result += item_path
+	return result
+
+/proc/tat_clear_item_static_ui_cache()
+	if(islist(GLOB.tat_item_icon_cache))
+		GLOB.tat_item_icon_cache.Cut()
+
+	if(islist(GLOB.tat_item_catalog_cache))
+		GLOB.tat_item_catalog_cache.Cut()
+
+	if(islist(GLOB.tat_item_related_paths_cache))
+		GLOB.tat_item_related_paths_cache.Cut()
+
+	return TRUE

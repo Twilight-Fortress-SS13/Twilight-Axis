@@ -27,7 +27,12 @@
 	var/list/entry = get_entry(item_path)
 	if(!islist(entry))
 		return 0
-	return entry["cost"] || 0
+
+	var/cost = entry["cost"]
+	if(!isnum(cost))
+		return 0
+
+	return cost
 
 /datum/tat_items/proc/get_total_maximum()
 	return base_points + (owner_build ? owner_build.get_bonus_item_points() : 0)
@@ -81,15 +86,7 @@
 	return TRUE
 
 /datum/tat_items/proc/is_item_slot_limited(list/entry)
-	if(!islist(entry))
-		return FALSE
-	var/category = lowertext("[entry["category"]]")
-	if(category == "weapon")
-		return FALSE
-	var/slot_group = lowertext("[entry["slot_group"]]")
-	if(slot_group == "misc")
-		return FALSE
-	return TRUE
+	return tat_item_entry_is_slot_limited(entry)
 
 /datum/tat_items/proc/get_slot_group_item_count(slot_group, category, exclude_item_path = null)
 	if(!slot_group)

@@ -1,7 +1,6 @@
 GLOBAL_LIST_EMPTY(tat_item_icon_cache)
-GLOBAL_VAR_INIT(tat_item_icon_cache_ready, FALSE)
-GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
+GLOBAL_LIST_EMPTY(tat_item_related_paths_cache)
 
 #define TAT_ITEM_CATEGORY_WEAPON "weapon"
 #define TAT_ITEM_CATEGORY_CLOTHING "clothing"
