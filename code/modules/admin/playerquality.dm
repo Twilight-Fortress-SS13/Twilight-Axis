@@ -214,7 +214,8 @@
 			to_chat(C, "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">Your PQ has been adjusted by [amt2change] by [key] for reason: [raisin]</span></span>")
 			return
 
-#define COMMEND_PQ_COOLDOWN (30 DAYS)
+//TA EDIT START - PQ Commends reabilitation
+#define COMMEND_PQ_COOLDOWN (720 HOURS)
 
 /proc/add_commend(key, giver)
 	if(!giver || !key)
@@ -293,6 +294,7 @@
 	return curcomm
 
 #undef COMMEND_PQ_COOLDOWN
+//TA EDIT END - PQ Commends reabilitation
 
 /proc/add_roundpoints(amt, key) //Each round contributor point counts as 0.1 of a PQ.
 	if(!key)
