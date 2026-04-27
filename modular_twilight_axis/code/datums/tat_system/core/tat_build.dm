@@ -594,7 +594,6 @@
 	data["skills"] = skills?.export_to_json_list()
 	data["traits"] = traits?.export_to_json_list()
 	data["items"] = items?.export_to_json_list()
-	data["magic_profile"] = magic_profile?.Copy()
 
 	last_exported_json = json_encode(data)
 	last_json_notice = "Build exported."
@@ -630,14 +629,7 @@
 	stats.import_from_json_list(data["stats"])
 	skills.import_from_json_list(data["skills"])
 	items.import_from_json_list(data["items"])
-
-	if(islist(data["magic_profile"]))
-		var/list/profile = data["magic_profile"]
-		magic_profile = profile.Copy()
-	else if(islist(data["magic_config"]))
-		var/list/profile = data["magic_config"]
-		magic_profile = profile.Copy()
-
+	
 	sanitize()
 	queue_item_ui_states_full_refresh()
 	set_dirty(TRUE)
