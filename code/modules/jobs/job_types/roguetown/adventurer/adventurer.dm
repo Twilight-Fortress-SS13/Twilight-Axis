@@ -31,7 +31,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 	advjob_examine = TRUE
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE
-	same_job_respawn_delay = 0
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
 
@@ -106,7 +106,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 
 	var/player_count = length(GLOB.joined_player_list)
 	var/ready_player_count = length(GLOB.ready_player_list)
-	var/slots = 10 //Срез на время тестов - было 20, и ваще, заменить бы на макрос
+	var/slots = 20
 
 	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 	if(current_players > 70)
