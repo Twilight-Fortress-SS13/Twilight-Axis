@@ -238,21 +238,6 @@
 			return /obj/effect/proc_holder/spell/invoked/stunner
 	return /obj/effect/proc_holder/spell/invoked/headbutt
 
-/datum/tat_build/proc/is_allowed_post_tat_virtue(virtue_type)
-	if(!virtue_type)
-		return FALSE
-
-	var/list/allowed_post_tat_virtues = list(
-		/datum/virtue/combat/bowman,
-		/datum/virtue/combat/crossbowman,
-	)
-
-	for(var/allowed_type in allowed_post_tat_virtues)
-		if(ispath(virtue_type, allowed_type) || istype(virtue_type, allowed_type))
-			return TRUE
-
-	return FALSE
-
 /datum/tat_build/proc/sanitize()
 	traits.sanitize()
 	stats.sanitize()
