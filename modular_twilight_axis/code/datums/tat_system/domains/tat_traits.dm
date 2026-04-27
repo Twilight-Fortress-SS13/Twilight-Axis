@@ -330,6 +330,10 @@
 	var/bonus_reading = owner_build?.get_resident_skill_value(/datum/skill/misc/reading) || 0
 	if(bonus_reading > 0)
 		H.adjust_skillrank_up_to(/datum/skill/misc/reading, bonus_reading, TRUE)
+
+/datum/tat_traits/proc/apply_resident_pugilist_package(mob/living/carbon/human/H)
+	if(!H || !has_trait(TAT_TRAIT_RESIDENT))
+		return
 	var/spell_type = owner_build?.get_resident_pugilist_spell_type(owner_build?.get_resident_pugilist_spell_choice(H))
 	if(spell_type)
 		owner_build?.grant_mind_spell_if_missing(H, spell_type)
@@ -370,11 +374,15 @@
 	var/datum/devotion/D = new /datum/devotion(H, H.patron)
 	D.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
 
-/datum/tat_traits/proc/apply_witch_package(mob/living/carbon/human/H)
+/datum/tat_traits/proc/apply_witch_base_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_WITCH_INITIATE))
 		return
 	ADD_TRAIT(H, TRAIT_WITCH, TAT_TRAIT_SOURCE)
 	ADD_TRAIT(H, TRAIT_DEATHSIGHT, TAT_TRAIT_SOURCE)
+
+/datum/tat_traits/proc/apply_witch_shapeshift_package(mob/living/carbon/human/H)
+	if(!H || !has_trait(TAT_TRAIT_WITCH_INITIATE))
+		return
 	var/list/shapeshifts = list("Zad", "Cat", "Cat (Black)", "Bat", "Lesser Volf", "Cabbit", "Small Rous", "Lesser Venard")
 	var/shapeshiftchoice = null
 	if(H.client)
@@ -403,10 +411,18 @@
 			if("Cabbit")
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/cabbit)
 
-/datum/tat_traits/proc/apply_spellblade_package(mob/living/carbon/human/H)
+/datum/tat_traits/proc/apply_witch_package(mob/living/carbon/human/H)
+	apply_witch_base_package(H)
+	apply_witch_shapeshift_package(H)
+
+/datum/tat_traits/proc/apply_spellblade_base_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SPELLBLADE))
 		return
 	ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
+
+/datum/tat_traits/proc/apply_spellblade_specialization_package(mob/living/carbon/human/H)
+	if(!H || !has_trait(TAT_TRAIT_SPELLBLADE))
+		return
 	if(!H.mind)
 		return
 	to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
@@ -439,7 +455,11 @@
 	H.mind.AddSpell(new /datum/action/cooldown/spell/bind_weapon)
 	H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 
-/datum/tat_traits/proc/apply_to_human(mob/living/carbon/human/H)
+/datum/tat_traits/proc/apply_spellblade_package(mob/living/carbon/human/H)
+	apply_spellblade_base_package(H)
+	apply_spellblade_specialization_package(H)
+
+/datum/tat_traits/proc/apply_instant_to_human(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
 	for(var/trait_id in selected)
@@ -452,7 +472,7 @@
 		apply_resident_package(H)
 		apply_resident_advjob(H)
 	if(has_trait(TAT_TRAIT_SPELLBLADE))
-		apply_spellblade_package(H)
+		apply_spellblade_base_package(H)
 	if(has_trait(TAT_TRAIT_SOUNDBREAKER))
 		H.LoadComponent(/datum/component/combo_core/soundbreaker)
 		H.equip_to_slot_or_del(new /obj/item/book/rogue/soundbreaker_codex(H), SLOT_IN_BACKPACK)
@@ -477,13 +497,31 @@
 	if(has_trait(TAT_TRAIT_WANTED))
 		ADD_TRAIT(H, TRAIT_OUTLAW, TAT_TRAIT_SOURCE)
 		ADD_TRAIT(H, TRAIT_HERESIARCH, TAT_TRAIT_SOURCE)
-		wretch_select_bounty(H)
 	if(has_trait(TAT_TRAIT_HERETIC))
 		GLOB.excommunicated_players += H.real_name
 	apply_divine_package(H)
 	apply_mage_package(H)
 	apply_druid_package(H)
-	apply_witch_package(H)
+	apply_witch_base_package(H)
+	return TRUE
+
+/datum/tat_traits/proc/apply_deferred_to_human(mob/living/carbon/human/H)
+	if(!H?.client)
+		return FALSE
+	if(has_trait(TAT_TRAIT_RESIDENT))
+		apply_resident_pugilist_package(H)
+	if(has_trait(TAT_TRAIT_SPELLBLADE))
+		apply_spellblade_specialization_package(H)
+	if(has_trait(TAT_TRAIT_WANTED))
+		wretch_select_bounty(H)
+	apply_witch_shapeshift_package(H)
+	return TRUE
+
+/datum/tat_traits/proc/apply_to_human(mob/living/carbon/human/H)
+	if(!H)
+		return FALSE
+	apply_instant_to_human(H)
+	apply_deferred_to_human(H)
 	return TRUE
 
 /datum/tat_traits/proc/disable_from_human(mob/living/carbon/human/H)
