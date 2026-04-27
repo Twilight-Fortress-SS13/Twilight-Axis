@@ -481,6 +481,8 @@
 	if(has_trait(TAT_TRAIT_RONIN))
 		H.LoadComponent(/datum/component/combo_core/ronin)
 		H.equip_to_slot_or_del(new /obj/item/book/rogue/ronin_codex(H), SLOT_IN_BACKPACK)
+	if(has_trait(TRAIT_RITUALIST))
+		H.mind?.special_items["Ritual chalk"] = /obj/item/ritechalk
 	if(has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T1) || has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T2))
 		var/bard_tier = BARD_T1
 		if(has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T2))
