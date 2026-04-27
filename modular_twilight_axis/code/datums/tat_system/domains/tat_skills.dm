@@ -265,13 +265,15 @@
 	if(!domain)
 		return 0
 
-	return max(0, get_maximum(skill_type))
+	return max(0, get_maximum(skill_type) - get_bonus_value(skill_type))
 
 /datum/tat_skills/proc/get_total_value(skill_type)
-	return clamp(get_invested_value(skill_type) + get_bonus_value(skill_type), 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
+	return clamp(get_invested_value(skill_type) + get_bonus_value(skill_type), 0, get_maximum(skill_type))
 
 /datum/tat_skills/proc/get_step_cost(skill_type, target_level)
 	if(target_level <= 0)
+		return 0
+	if(target_level > get_invested_maximum(skill_type))
 		return 0
 
 	var/discount = owner_build ? owner_build.get_skill_cost_discount(skill_type, target_level) : 0

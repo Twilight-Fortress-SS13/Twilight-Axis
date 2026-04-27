@@ -486,7 +486,7 @@
 		return FALSE
 
 	var/category = lowertext("[entry["category"]]")
-	if(category == TAT_ITEM_CATEGORY_WEAPON)
+	if(category != TAT_ITEM_CATEGORY_CLOTHING)
 		return FALSE
 
 	var/slot_group = lowertext("[entry["slot_group"]]")
