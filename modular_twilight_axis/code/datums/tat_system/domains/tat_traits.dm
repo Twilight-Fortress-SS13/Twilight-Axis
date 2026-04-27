@@ -450,6 +450,7 @@
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
 	if(has_trait(TAT_TRAIT_RESIDENT))
 		apply_resident_package(H)
+		apply_resident_advjob(H)
 	if(has_trait(TAT_TRAIT_SPELLBLADE))
 		apply_spellblade_package(H)
 	if(has_trait(TAT_TRAIT_SOUNDBREAKER))
@@ -529,3 +530,49 @@
 		if(data[key] && check_trait("[key]"))
 			add_trait("[key]")
 	return TRUE
+
+/datum/tat_traits/proc/get_tat_resident_advjob()
+	if(!has_trait(TAT_TRAIT_RESIDENT))
+		return null
+
+	var/stored_advjob = owner_build?.get_magic_value("resident_advjob")
+	if(stored_advjob)
+		return stored_advjob
+
+	if((owner_build?.get_skill_value(/datum/skill/craft/blacksmithing) || 0) > 0)
+		return /datum/advclass/blacksmith
+
+	if((owner_build?.get_skill_value(/datum/skill/labor/mining) || 0) > 0)
+		return /datum/advclass/miner
+
+	if((owner_build?.get_skill_value(/datum/skill/craft/carpentry) || 0) > 0)
+		return /datum/advclass/woodworker
+
+	if((owner_build?.get_skill_value(/datum/skill/labor/fishing) || 0) > 0)
+		return /datum/advclass/fisher
+
+	if((owner_build?.get_skill_value(/datum/skill/craft/sewing) || 0) > 0)
+		return /datum/advclass/seamstress
+
+	if(has_trait(TAT_TRAIT_WITCH_INITIATE))
+		return /datum/advclass/witch
+
+	return null
+
+/datum/tat_traits/proc/apply_resident_advjob(mob/living/carbon/human/H)
+	if(!H || !has_trait(TAT_TRAIT_RESIDENT))
+		return
+
+	if(H.advjob)
+		return
+
+	var/datum/advclass/resident_advjob = get_tat_resident_advjob()
+	if(!resident_advjob)
+		return
+
+	var/datum/advclass/advclass = SSrole_class_handler.get_advclass_by_name(resident_advjob)
+	if(!advclass)
+		return
+
+	H.advjob = resident_advjob
+	owner_build?.set_magic_value("resident_advjob", resident_advjob)
