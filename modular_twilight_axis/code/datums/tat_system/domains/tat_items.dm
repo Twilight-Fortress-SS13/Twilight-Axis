@@ -4,6 +4,7 @@
 	var/list/item_loadout = list()
 	var/list/applied_mob_refs = list()
 	var/base_points = 20
+	var/list/equip_slots_cache = list()
 
 /datum/tat_items/New(datum/tat_build/B)
 	. = ..()
@@ -529,6 +530,19 @@
 	if(category == TAT_ITEM_CATEGORY_WEAPON || is_weapon_loadout_group(slot_group))
 		append_weapon_loadout_ui_slots(slots, slot_group)
 
+/datum/tat_items/proc/get_cached_equip_slots_for_item(item_path)
+	if(item_path in equip_slots_cache)
+		return equip_slots_cache[item_path]
+
+	var/list/result = list()
+	if(ispath(item_path, /obj/item))
+		var/obj/item/I = new item_path(null)
+		if(I)
+			result = get_equip_slots_for_item(I, item_path)
+			qdel(I)
+	equip_slots_cache[item_path] = result
+	return result
+
 /datum/tat_items/proc/get_valid_loadout_ui_slots_for_item(item_path)
 	if(!ispath(item_path))
 		item_path = text2path("[item_path]")
@@ -546,13 +560,8 @@
 
 	append_loadout_ui_slots_for_slot_group(result, entry["slot_group"])
 
-	if(ispath(item_path, /obj/item))
-		var/obj/item/I = new item_path(null)
-		if(I)
-			var/list/equip_slots = get_equip_slots_for_item(I, item_path)
-			for(var/slot_id in equip_slots)
-				append_loadout_ui_slots_for_equip_slot(result, slot_id)
-			qdel(I)
+	for(var/slot_id in get_cached_equip_slots_for_item(item_path))
+		append_loadout_ui_slots_for_equip_slot(result, slot_id)
 
 	append_hand_slots_if_reasonable(result, item_path, entry)
 	GLOB.tat_item_loadout_slots_cache[item_path] = result
@@ -813,15 +822,10 @@
 		var/equip_slot = get_loadout_slot_equip_slot(ui_slot)
 		if(equip_slot)
 			append_unique_equip_slot(result, equip_slot)
-	if(ispath(item_path, /obj/item))
-		var/obj/item/I = new item_path(null)
-		if(I)
-			var/list/equip_slots = get_equip_slots_for_item(I, item_path)
-			for(var/equip_slot in equip_slots)
-				if(equip_slot == SLOT_HANDS)
-					continue
-				append_unique_equip_slot(result, equip_slot)
-			qdel(I)
+	for(var/equip_slot in get_cached_equip_slots_for_item(item_path))
+		if(equip_slot == SLOT_HANDS)
+			continue
+		append_unique_equip_slot(result, equip_slot)
 	return result
 
 /datum/tat_items/proc/try_equip_existing_item_to_hand_fallback_slot(mob/living/carbon/human/H, obj/item/I, item_path, preferred_hand_slot_id = null)

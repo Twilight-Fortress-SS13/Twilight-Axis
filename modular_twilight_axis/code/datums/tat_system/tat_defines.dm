@@ -15,3 +15,6 @@
 #define TAT_ROLE_BUCKET_TOWNER "towner"
 #define TAT_ROLE_BUCKET_TRADER "trader"
 #define TAT_ROLE_BUCKET_ADVENTURER "adventurer"
+
+GLOBAL_LIST_EMPTY(tat_skill_entry_cache)
+GLOBAL_VAR_INIT(tat_skill_entry_cache_ready, FALSE)

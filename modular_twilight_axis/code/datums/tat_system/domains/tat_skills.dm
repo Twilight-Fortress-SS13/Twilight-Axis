@@ -3,6 +3,7 @@
 	var/list/invested = list()
 	var/list/bonus = list()
 	var/list/domain_points = list()
+	var/list/spent_points_cache = list()
 	var/_cached_combat_expert_count = -1
 	var/_cached_combat_master_count = -1
 
@@ -19,10 +20,15 @@
 	invested = list()
 	bonus = list()
 	invalidate_combat_count_cache()
+	invalidate_spent_points_cache()
 
 	var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
 	domain_points = default_domain_points.Copy()
 
+	return TRUE
+
+/datum/tat_skills/proc/invalidate_spent_points_cache()
+	spent_points_cache = list()
 	return TRUE
 
 /datum/tat_skills/proc/get_domain(skill_type)
@@ -104,6 +110,7 @@
 
 /datum/tat_skills/proc/rebuild_bonus_values()
 	bonus = list()
+	invalidate_spent_points_cache()
 
 	for(var/skill_type in TAT_SKILLS_ALL)
 		var/value = owner_build ? owner_build.get_bonus_skill_value(skill_type) : 0
@@ -295,14 +302,16 @@
 	return total
 
 /datum/tat_skills/proc/get_spent_points(domain)
-	var/total = 0
+	if(domain in spent_points_cache)
+		return spent_points_cache[domain]
 
+	var/total = 0
 	for(var/skill_type in invested)
 		if(get_domain(skill_type) != domain)
 			continue
-
 		total += get_total_cost_for_level(skill_type, get_invested_value(skill_type))
 
+	spent_points_cache[domain] = total
 	return total
 
 /datum/tat_skills/proc/get_remaining_points(domain)
@@ -348,10 +357,13 @@
 		invested[skill_type] = value
 
 	invalidate_combat_count_cache()
+	invalidate_spent_points_cache()
 	owner_build?.set_dirty()
 	return TRUE
 
 /datum/tat_skills/proc/sanitize()
+	invalidate_combat_count_cache()
+	invalidate_spent_points_cache()
 	rebuild_bonus_values()
 
 	for(var/skill_type in invested.Copy())

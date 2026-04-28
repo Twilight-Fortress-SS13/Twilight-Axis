@@ -21,6 +21,11 @@
 	var/list/tat_presets = list()
 	var/list/ui_tat_presets_cache = null
 
+	var/list/ui_items_state_cache = null
+	var/list/ui_loadout_cache = null
+	var/list/ui_skills_cache = null
+	var/list/ui_tat_slots_cache = null
+
 	var/dirty = FALSE
 
 /datum/tat_build/New(datum/preferences/P)
@@ -68,6 +73,9 @@
 		return 0
 	return round(get_playerquality(key))
 
+/datum/tat_build/proc/invalidate_ui_caches()
+	return invalidate_ui_data_cache()
+
 /datum/tat_build/proc/get_active_tat_slot_name()
 	init_tat_slots()
 	var/datum/tat_slot/slot = get_tat_slot(active_tat_slot)
@@ -77,11 +85,17 @@
 
 /datum/tat_build/proc/set_dirty(flag = TRUE)
 	dirty = !!flag
-	_ui_data_cache_dirty = TRUE
+	invalidate_ui_data_cache()
 	return dirty
 
 /datum/tat_build/proc/invalidate_ui_data_cache()
+	_cached_ui_data = null
 	_ui_data_cache_dirty = TRUE
+	ui_items_state_cache = null
+	ui_loadout_cache = null
+	ui_skills_cache = null
+	ui_tat_slots_cache = null
+	return TRUE
 
 /datum/tat_build/proc/attach_preferences_from_mob(mob/user)
 	if(!user?.client?.prefs)
@@ -91,7 +105,7 @@
 		return FALSE
 	if(owner_preferences != P)
 		_cached_active_virtues = null
-		_ui_data_cache_dirty = TRUE
+		invalidate_ui_data_cache()
 		skills?.rebuild_bonus_values()
 	attach_preferences(P)
 	return TRUE
@@ -548,7 +562,8 @@
 	var/datum/tat_slot/slot = get_tat_slot(slot_id)
 	if(!slot)
 		return FALSE
-	slot.set_build_data(export_slot_build_to_list())
+	slot.set_build_data(export_slot_build_to_list(), src)
+	invalidate_ui_data_cache()
 	return TRUE
 
 /datum/tat_build/proc/save_current_to_active_slot()
@@ -580,7 +595,7 @@
 	if(!load_slot_into_current(active_tat_slot))
 		return FALSE
 	dirty = FALSE
-	_ui_data_cache_dirty = TRUE
+	invalidate_ui_data_cache()
 	return TRUE
 
 /datum/tat_build/proc/rename_tat_slot(slot_id, new_name)
@@ -593,7 +608,7 @@
 		return FALSE
 	new_name = copytext(new_name, 1, 33)
 	slot.name = new_name
-	_ui_data_cache_dirty = TRUE
+	invalidate_ui_data_cache()
 	return TRUE
 
 /datum/tat_build/proc/export_tat_slots_to_list()
@@ -617,7 +632,7 @@
 				if(!isnull(slots_data[text_index]) && islist(slots_data[text_index]))
 					raw_slot = slots_data[text_index]
 		if(islist(raw_slot))
-			slot.load_from_list(raw_slot)
+			slot.load_from_list(raw_slot, src)
 		if(!istext(slot.name) || !length(slot.name))
 			slot.name = get_default_tat_slot_name(i)
 		if(!islist(slot.build_data))
