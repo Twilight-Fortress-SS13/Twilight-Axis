@@ -385,6 +385,10 @@
 /datum/tat_traits/proc/try_apply_party_leader(mob/living/carbon/human/H)
 	if(has_trait(TAT_TRAIT_PARTY_LEADER))
 		H.LoadComponent(/datum/component/tat_party_leader)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/movemovemove)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/takeaim)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/hold)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/onfeet)
 
 /datum/tat_traits/proc/apply_resident_package(mob/living/carbon/human/H)
 	if(!H)
@@ -401,11 +405,20 @@
 	apply_resident_skill_spells(H)
 
 /datum/tat_traits/proc/apply_resident_pugilist_package(mob/living/carbon/human/H)
-	if(!H || !has_trait(TRAIT_CIVILIZEDBARBARIAN))
+	if(!H || !has_trait(TRAIT_CIVILIZEDBARBARIAN) || !owner_build)
 		return
-	var/spell_type = owner_build?.get_resident_pugilist_spell_type(owner_build?.get_resident_pugilist_spell_choice(H))
+
+	var/list/options = owner_build.get_resident_pugilist_spell_options()
+	if(!length(options))
+		return
+
+	var/choice = owner_build.get_resident_pugilist_spell_choice(H)
+	if(!(choice in options))
+		choice = options[1]
+
+	var/spell_type = owner_build.get_resident_pugilist_spell_type(choice)
 	if(spell_type)
-		owner_build?.grant_mind_spell_if_missing(H, spell_type)
+		owner_build.grant_mind_spell_if_missing(H, spell_type)
 
 /datum/tat_traits/proc/apply_divine_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_DIVINE_INITIATE))
