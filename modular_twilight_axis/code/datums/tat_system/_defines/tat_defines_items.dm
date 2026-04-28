@@ -281,6 +281,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/suit/roguetown/armor/plate/scale/steppe = TAT_ITEM_ENTRY("Steel Heavy Lamellar", 4, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/under/roguetown/brigandinelegs = TAT_ITEM_ENTRY("Chausses, Brigandine", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/chainlegs = TAT_ITEM_ENTRY("Steel Chain Chausses", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
+	/obj/item/clothing/under/roguetown/chainlegs/grenzelhoft = TAT_ITEM_ENTRY("Grenzelhoftian Paumpers w/chain Chausses", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/chainlegs/iron = TAT_ITEM_ENTRY("Iron Chain Chausses", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/chainlegs/iron/kilt = TAT_ITEM_ENTRY("Iron Chain Kilt", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/chainlegs/kilt = TAT_ITEM_ENTRY("Steel Chain Kilt", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
@@ -596,6 +597,11 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/shoes/roguetown/boots/armor/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Plated Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "shoes"), \
 	/obj/item/gun/ballistic/twilight_firearm/handgonne = TAT_ITEM_ENTRY("Culverin", 7, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/grapplinghook = TAT_ITEM_ENTRY("Grappling Hook", 5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/rogueweapon/chisel  = TAT_ITEM_ENTRY("Chisel", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "wood work"), \
+	/obj/item/rogueweapon/hammer/wood = TAT_ITEM_ENTRY("Wooden Hammer", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "wood work"), \
+	/obj/item/rogueweapon/chisel/bronze = TAT_ITEM_ENTRY("Bronze Chisel", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "wood work"), \
+	/obj/item/rogueweapon/handsaw = TAT_ITEM_ENTRY("Handsaw", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "wood work"), \
+	/obj/item/rogueweapon/handsaw/bronze = TAT_ITEM_ENTRY("Bronze Handsaw", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "wood work"), \
 
 GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 
