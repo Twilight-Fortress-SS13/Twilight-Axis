@@ -336,7 +336,7 @@
 			return CLERIC_REQ_2
 		if(CLERIC_T1)
 			return CLERIC_REQ_1
-	return (CLERIC_REQ_1 - 100)
+	return (CLERIC_REQ_1 - 50)
 
 /datum/tat_traits/proc/build_mage_aspects(scale_with_arcane = TRUE)
 	var/major = 0
