@@ -9,6 +9,8 @@
 
 	var/list/magic_profile = list()
 	var/list/_cached_active_virtues = null
+	var/list/_cached_ui_data = null
+	var/_ui_data_cache_dirty = TRUE
 
 	var/last_exported_json = null
 	var/last_json_error = null
@@ -38,6 +40,7 @@
 	items.reset()
 	magic_profile = list()
 	dirty = FALSE
+	invalidate_ui_data_cache()
 	return TRUE
 
 /datum/tat_build/proc/attach_preferences(datum/preferences/P)
@@ -74,7 +77,11 @@
 
 /datum/tat_build/proc/set_dirty(flag = TRUE)
 	dirty = !!flag
+	_ui_data_cache_dirty = TRUE
 	return dirty
+
+/datum/tat_build/proc/invalidate_ui_data_cache()
+	_ui_data_cache_dirty = TRUE
 
 /datum/tat_build/proc/attach_preferences_from_mob(mob/user)
 	if(!user?.client?.prefs)
@@ -84,6 +91,7 @@
 		return FALSE
 	if(owner_preferences != P)
 		_cached_active_virtues = null
+		_ui_data_cache_dirty = TRUE
 		skills?.rebuild_bonus_values()
 	attach_preferences(P)
 	return TRUE
@@ -108,6 +116,7 @@
 
 /datum/tat_build/proc/invalidate_active_virtues_cache()
 	_cached_active_virtues = null
+	invalidate_ui_data_cache()
 
 /datum/tat_build/proc/get_magic_value(key, default_value = null)
 	if(!istext(key) || !length(key))
@@ -280,6 +289,7 @@
 	skills.sanitize()
 	items.sanitize()
 	dirty = FALSE
+	invalidate_ui_data_cache()
 	return TRUE
 
 
@@ -451,6 +461,7 @@
 
 	sanitize()
 	dirty = FALSE
+	invalidate_ui_data_cache()
 	return TRUE
 
 /datum/tat_build/proc/apply_pre_client_to_human(mob/living/carbon/human/H)
@@ -544,6 +555,7 @@
 	if(!save_current_to_slot(active_tat_slot))
 		return FALSE
 	dirty = FALSE
+	invalidate_ui_data_cache()
 	return TRUE
 
 /datum/tat_build/proc/load_slot_into_current(slot_id)
@@ -555,9 +567,11 @@
 	if(!islist(build_data) || !length(build_data))
 		reset()
 		dirty = FALSE
+		invalidate_ui_data_cache()
 		return TRUE
 	load_slot_build_from_list(build_data)
 	dirty = FALSE
+	invalidate_ui_data_cache()
 	return TRUE
 
 /datum/tat_build/proc/set_active_tat_slot(slot_id)
@@ -566,6 +580,7 @@
 	if(!load_slot_into_current(active_tat_slot))
 		return FALSE
 	dirty = FALSE
+	_ui_data_cache_dirty = TRUE
 	return TRUE
 
 /datum/tat_build/proc/rename_tat_slot(slot_id, new_name)
@@ -578,6 +593,7 @@
 		return FALSE
 	new_name = copytext(new_name, 1, 33)
 	slot.name = new_name
+	_ui_data_cache_dirty = TRUE
 	return TRUE
 
 /datum/tat_build/proc/export_tat_slots_to_list()
@@ -609,9 +625,11 @@
 		tat_slots += slot
 	active_tat_slot = normalize_tat_slot_index(active_slot)
 	dirty = FALSE
+	invalidate_ui_data_cache()
 	return TRUE
 
 /datum/tat_build/proc/export_to_json()
+	invalidate_ui_data_cache()
 	last_json_error = null
 	last_json_notice = null
 
@@ -627,6 +645,7 @@
 	return last_exported_json
 
 /datum/tat_build/proc/import_from_json(raw)
+	invalidate_ui_data_cache()
 	last_json_error = null
 	last_json_notice = null
 

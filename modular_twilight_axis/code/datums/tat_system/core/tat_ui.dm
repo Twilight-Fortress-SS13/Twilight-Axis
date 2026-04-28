@@ -495,7 +495,8 @@
 
 /datum/tat_build/ui_data(mob/user)
 	attach_preferences_from_mob(user)
-	var/_t_pre = world.tick_usage
+	if(islist(_cached_ui_data) && !_ui_data_cache_dirty)
+		return _cached_ui_data
 	var/list/_skp_total = build_ui_skill_points_by_domain()
 	var/list/_skp_rem = build_ui_skill_points_remaining_by_domain()
 	var/_p_skills_total = 0
@@ -513,7 +514,6 @@
 	var/_p_traits_rem = get_remaining_trait_points()
 	var/_p_items_total = items.get_total_maximum()
 	var/_p_items_rem = get_remaining_item_points()
-	var/_t0 = world.tick_usage
 
 	var/list/validation = list()
 	if(_p_stats_rem < 0)
@@ -531,25 +531,16 @@
 	if(length(item_issues))
 		validation += item_issues
 
-	var/_t1 = world.tick_usage
 	var/can_save_build = !length(validation)
 	var/list/_stats = build_ui_stats()
-	var/_t2 = world.tick_usage
 	var/list/_skills = build_ui_skills()
-	var/_t3 = world.tick_usage
 	var/list/_sel_traits = build_ui_selected_traits()
 	var/list/_trait_counts = build_ui_trait_counts()
-	var/_t4 = world.tick_usage
 	var/list/_items_state = build_ui_items_state()
-	var/_t5 = world.tick_usage
 	var/list/_loadout = build_ui_loadout()
-	var/_t6 = world.tick_usage
 	var/list/_tat_slots = build_ui_tat_slots()
-	var/_t8 = world.tick_usage
 
-	log_world("TAT ui_data %: pre=[_t0-_t_pre] validation=[_t1-_t0] stats=[_t2-_t1] skills=[_t3-_t2] traits=[_t4-_t3] items_state=[_t5-_t4] loadout=[_t6-_t5] tat_slots=[_t8-_t6] TOTAL=[_t8-_t_pre] selected_items=[length(items.selected)] selected_traits=[length(traits.selected)]")
-
-	return list(
+	_cached_ui_data = list(
 		"stats" = _stats,
 		"skills" = _skills,
 		"traits" = _sel_traits,
@@ -580,6 +571,8 @@
 		"last_json_notice" = last_json_notice,
 		"dirty" = dirty,
 	)
+	_ui_data_cache_dirty = FALSE
+	return _cached_ui_data
 
 /datum/tat_build/ui_act(action, list/params)
 	if(usr)
