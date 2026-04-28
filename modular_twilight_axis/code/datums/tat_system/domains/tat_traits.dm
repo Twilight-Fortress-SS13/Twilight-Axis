@@ -57,8 +57,23 @@
 /datum/tat_traits/proc/check_trait(trait_id)
 	return islist(get_entry(trait_id))
 
-/datum/tat_traits/proc/add_trait(trait_id)
+/datum/tat_traits/proc/get_pq_lock_minimum(trait_id)
+	var/list/rules = TAT_TRAIT_PQ_LOCK_RULES
+	return round(rules[trait_id] || 0)
+
+/datum/tat_traits/proc/is_pq_locked_trait(trait_id)
+	return get_pq_lock_minimum(trait_id) > 0
+
+/datum/tat_traits/proc/can_select_trait(trait_id)
 	if(!check_trait(trait_id))
+		return FALSE
+	var/pq_minimum = get_pq_lock_minimum(trait_id)
+	if(pq_minimum > 0 && (owner_build?.get_owner_playerquality() || 0) < pq_minimum)
+		return FALSE
+	return TRUE
+
+/datum/tat_traits/proc/add_trait(trait_id)
+	if(!can_select_trait(trait_id))
 		return FALSE
 	if(is_repeatable_trait(trait_id))
 		var/current = get_trait_count(trait_id)
@@ -347,7 +362,7 @@
 
 /datum/tat_traits/proc/sanitize()
 	for(var/trait_id in selected.Copy())
-		if(!check_trait(trait_id))
+		if(!can_select_trait(trait_id))
 			selected -= trait_id
 			continue
 		var/count = get_trait_count(trait_id)
@@ -512,6 +527,34 @@
 	apply_spellblade_base_package(H)
 	apply_spellblade_specialization_package(H)
 
+/datum/tat_traits/proc/get_pliant_rename_prefix()
+	if(!has_trait(TRAIT_OUTLANDER) && !has_trait(TAT_TRAIT_RESIDENT))
+		return "Straying Pliant"
+	if(has_trait(TRAIT_OUTLANDER))
+		return "Wandering Pliant"
+	if(has_trait(TAT_TRAIT_RESIDENT))
+		return "Local Pliant"
+	return "Pliant"
+
+/datum/tat_traits/proc/get_pliant_rename_title()
+	var/slot_name = owner_build?.get_active_tat_slot_name() || "Towner"
+	slot_name = trim("[slot_name]")
+	if(!length(slot_name))
+		slot_name = "Towner"
+	slot_name = copytext(slot_name, 1, 33)
+	return "[get_pliant_rename_prefix()] [slot_name]"
+
+/datum/tat_traits/proc/apply_pliant_rename(mob/living/carbon/human/H)
+	if(!H || !has_trait(TAT_TRAIT_PLIANT_RENAME))
+		return FALSE
+	var/new_title = get_pliant_rename_title()
+	if(!length(new_title))
+		return FALSE
+	H.advjob = new_title
+	if(H.mind)
+		H.mind.assigned_role = new_title
+	return TRUE
+
 /datum/tat_traits/proc/apply_instant_to_human(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
@@ -519,7 +562,7 @@
 		if(is_repeatable_trait(trait_id))
 			continue
 		switch(trait_id)
-			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_HERETIC)
+			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_PLIANT_RENAME, TAT_TRAIT_HERETIC)
 				continue
 			else
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
@@ -575,6 +618,7 @@
 	if(has_trait(TAT_TRAIT_WANTED))
 		wretch_select_bounty(H)
 	apply_witch_shapeshift_package(H)
+	apply_pliant_rename(H)
 	return TRUE
 
 /datum/tat_traits/proc/apply_to_human(mob/living/carbon/human/H)

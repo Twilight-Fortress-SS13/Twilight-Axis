@@ -43,6 +43,34 @@
 	owner_preferences = P
 	return TRUE
 
+/datum/tat_build/proc/get_owner_ckey()
+	if(owner_preferences)
+		var/client/parent_client = owner_preferences.vars["parent"]
+		if(parent_client?.ckey)
+			return parent_client.ckey
+		var/client/direct_client = owner_preferences.vars["client"]
+		if(direct_client?.ckey)
+			return direct_client.ckey
+		var/stored_ckey = owner_preferences.vars["last_ckey"]
+		if(istext(stored_ckey) && length(stored_ckey))
+			return ckey(stored_ckey)
+	if(usr?.ckey)
+		return usr.ckey
+	return null
+
+/datum/tat_build/proc/get_owner_playerquality()
+	var/key = get_owner_ckey()
+	if(!key)
+		return 0
+	return round(get_playerquality(key))
+
+/datum/tat_build/proc/get_active_tat_slot_name()
+	init_tat_slots()
+	var/datum/tat_slot/slot = get_tat_slot(active_tat_slot)
+	if(!slot || !istext(slot.name) || !length(trim(slot.name)))
+		return get_default_tat_slot_name(active_tat_slot)
+	return trim(slot.name)
+
 /datum/tat_build/proc/set_dirty(flag = TRUE)
 	dirty = !!flag
 	return dirty

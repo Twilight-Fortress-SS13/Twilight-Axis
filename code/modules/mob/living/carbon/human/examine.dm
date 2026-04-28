@@ -72,6 +72,8 @@
 		on_examine_face(user)
 		var/used_name = name
 		var/used_title = get_role_title()
+		if(advjob && findtext(advjob, "Pliant")) // TA EDIT - TAT system
+			used_title = advjob // TA EDIT - TAT system
 		if(SSticker.regentmob == src)
 			used_title = "[used_title]" + " Regent"
 		var/display_as_wanderer = FALSE
@@ -86,7 +88,7 @@
 			if(!J || J.wanderer_examine)
 				display_as_wanderer = TRUE
 
-		if(display_as_wanderer)
+		if(display_as_wanderer && !used_title) // TA EDIT - TAT system
 			. = list(span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
 		else if(used_title)
 			. = list(span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))

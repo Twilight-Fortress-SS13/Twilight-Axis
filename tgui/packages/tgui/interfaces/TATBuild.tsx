@@ -1422,6 +1422,8 @@ const TraitsTab = ({
   search: string;
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
+  const [collapsedTraitCategories, setCollapsedTraitCategories] = useState<Record<string, boolean>>({});
+
   const grouped = useMemo(() => {
     const groups: Record<
       string,
@@ -1474,116 +1476,144 @@ const TraitsTab = ({
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
         <Stack vertical>
-          {grouped.map(([categoryKey, group]) => (
-            <Box
-              key={categoryKey}
-              mb={2}
-              style={{
-                borderBottom: '1px solid rgba(255,255,255,0.08)',
-                paddingBottom: '10px',
-              }}>
-              <Box bold mb={1} style={{ fontSize: '18px', letterSpacing: '1px' }}>
-                {group.categoryName}
+          {grouped.map(([categoryKey, group]) => {
+            const collapsed = !!collapsedTraitCategories[categoryKey];
+            const selectedCount = group.selected.length;
+            const availableCount = group.available.length;
+
+            return (
+              <Box
+                key={categoryKey}
+                mb={2}
+                style={{
+                  borderBottom: '1px solid rgba(255,255,255,0.08)',
+                  paddingBottom: '10px',
+                }}>
+                <Button
+                  fluid
+                  onClick={() =>
+                    setCollapsedTraitCategories((prev) => ({
+                      ...prev,
+                      [categoryKey]: !prev[categoryKey],
+                    }))
+                  }>
+                  <Stack align="center" justify="space-between">
+                    <Stack.Item>
+                      <Box bold style={{ fontSize: '18px', letterSpacing: '1px' }}>
+                        {collapsed ? '▸' : '▾'} {group.categoryName}
+                      </Box>
+                    </Stack.Item>
+                    <Stack.Item>
+                      <Box style={{ opacity: 0.8, fontSize: '11px' }}>
+                        Pool: {availableCount} | Selected: {selectedCount}
+                      </Box>
+                    </Stack.Item>
+                  </Stack>
+                </Button>
+
+                {!collapsed && (
+                  <Box mt={1}>
+                    <Box bold mb={0.5}>
+                      Pool
+                    </Box>
+                    {group.available.length ? (
+                      <Stack wrap>
+                        {group.available.map(([traitId, entry]) => {
+                          const amount = getTraitAmount(data, traitId);
+                          const canAdd = canAddTrait(data, traitId, entry);
+
+                          return (
+                            <Stack.Item key={traitId}>
+                              <TraitPill
+                                title={entry.name || traitId}
+                                cost={entry.cost || 0}
+                                desc={entry.desc}
+                                amount={amount}
+                                repeatable={!!entry.repeatable}
+                                disabledAdd={!canAdd}
+                                disabledRemove={amount <= 0}
+                                onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
+                                onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
+                                onHoverStart={() =>
+                                  setHoveredItem({
+                                    name: entry.name || traitId,
+                                    desc: entry.desc,
+                                    category: entry.category_name || entry.category,
+                                    costText: `${entry.cost || 0} pts`,
+                                    total: amount,
+                                    canAdd,
+                                    leftHelp: canAdd
+                                      ? 'LMB: add trait / increase stack'
+                                      : 'Cannot add more',
+                                    rightHelp:
+                                      amount > 0
+                                        ? 'RMB: remove trait / decrease stack'
+                                        : 'RMB: nothing to remove',
+                                  })
+                                }
+                                onHoverEnd={() => setHoveredItem(null)}
+                              />
+                            </Stack.Item>
+                          );
+                        })}
+                      </Stack>
+                    ) : (
+                      <NoticeBox>No available traits in this group.</NoticeBox>
+                    )}
+
+                    <Box bold mt={1} mb={0.5}>
+                      Selected
+                    </Box>
+                    {group.selected.length ? (
+                      <Stack wrap>
+                        {group.selected.map(([traitId, entry]) => {
+                          const amount = getTraitAmount(data, traitId);
+                          const canAdd = canAddTrait(data, traitId, entry);
+
+                          return (
+                            <Stack.Item key={traitId}>
+                              <TraitPill
+                                title={entry.name || traitId}
+                                cost={entry.cost || 0}
+                                desc={entry.desc}
+                                amount={amount}
+                                repeatable={!!entry.repeatable}
+                                selected
+                                disabledAdd={!canAdd}
+                                disabledRemove={amount <= 0}
+                                onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
+                                onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
+                                onHoverStart={() =>
+                                  setHoveredItem({
+                                    name: entry.name || traitId,
+                                    desc: entry.desc,
+                                    category: entry.category_name || entry.category,
+                                    costText: `${entry.cost || 0} pts`,
+                                    total: amount,
+                                    canAdd,
+                                    leftHelp: canAdd
+                                      ? 'LMB: add trait / increase stack'
+                                      : 'Cannot add more',
+                                    rightHelp:
+                                      amount > 0
+                                        ? 'RMB: remove trait / decrease stack'
+                                        : 'RMB: nothing to remove',
+                                  })
+                                }
+                                onHoverEnd={() => setHoveredItem(null)}
+                              />
+                            </Stack.Item>
+                          );
+                        })}
+                      </Stack>
+                    ) : (
+                      <NoticeBox>No selected traits in this group.</NoticeBox>
+                    )}
+                  </Box>
+                )}
               </Box>
-
-              <Box bold mb={0.5}>
-                Pool
-              </Box>
-              {group.available.length ? (
-                <Stack wrap>
-                  {group.available.map(([traitId, entry]) => {
-                    const amount = getTraitAmount(data, traitId);
-                    const canAdd = canAddTrait(data, traitId, entry);
-
-                    return (
-                      <Stack.Item key={traitId}>
-                        <TraitPill
-                          title={entry.name || traitId}
-                          cost={entry.cost || 0}
-                          desc={entry.desc}
-                          amount={amount}
-                          repeatable={!!entry.repeatable}
-                          disabledAdd={!canAdd}
-                          disabledRemove={amount <= 0}
-                          onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
-                          onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
-                          onHoverStart={() =>
-                            setHoveredItem({
-                              name: entry.name || traitId,
-                              desc: entry.desc,
-                              category: entry.category_name || entry.category,
-                              costText: `${entry.cost || 0} pts`,
-                              total: amount,
-                              canAdd,
-                              leftHelp: canAdd
-                                ? 'LMB: add trait / increase stack'
-                                : 'Cannot add more',
-                              rightHelp:
-                                amount > 0
-                                  ? 'RMB: remove trait / decrease stack'
-                                  : 'RMB: nothing to remove',
-                            })
-                          }
-                          onHoverEnd={() => setHoveredItem(null)}
-                        />
-                      </Stack.Item>
-                    );
-                  })}
-                </Stack>
-              ) : (
-                <NoticeBox>No available traits in this group.</NoticeBox>
-              )}
-
-              <Box bold mt={1} mb={0.5}>
-                Selected
-              </Box>
-              {group.selected.length ? (
-                <Stack wrap>
-                  {group.selected.map(([traitId, entry]) => {
-                    const amount = getTraitAmount(data, traitId);
-                    const canAdd = canAddTrait(data, traitId, entry);
-
-                    return (
-                      <Stack.Item key={traitId}>
-                        <TraitPill
-                          title={entry.name || traitId}
-                          cost={entry.cost || 0}
-                          desc={entry.desc}
-                          amount={amount}
-                          repeatable={!!entry.repeatable}
-                          selected
-                          disabledAdd={!canAdd}
-                          disabledRemove={amount <= 0}
-                          onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
-                          onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
-                          onHoverStart={() =>
-                            setHoveredItem({
-                              name: entry.name || traitId,
-                              desc: entry.desc,
-                              category: entry.category_name || entry.category,
-                              costText: `${entry.cost || 0} pts`,
-                              total: amount,
-                              canAdd,
-                              leftHelp: canAdd
-                                ? 'LMB: add trait / increase stack'
-                                : 'Cannot add more',
-                              rightHelp:
-                                amount > 0
-                                  ? 'RMB: remove trait / decrease stack'
-                                  : 'RMB: nothing to remove',
-                            })
-                          }
-                          onHoverEnd={() => setHoveredItem(null)}
-                        />
-                      </Stack.Item>
-                    );
-                  })}
-                </Stack>
-              ) : (
-                <NoticeBox>No selected traits in this group.</NoticeBox>
-              )}
-            </Box>
-          ))}
+            );
+          })}
         </Stack>
       )}
     </Section>
@@ -1605,6 +1635,9 @@ const ItemsTab = ({
   itemsAvailable: boolean;
   data: Data;
 }) => {
+  const [collapsedItemCategories, setCollapsedItemCategories] = useState<Record<string, boolean>>({});
+  const [collapsedItemSlots, setCollapsedItemSlots] = useState<Record<string, boolean>>({});
+
   const groups = useMemo(() => {
     return groupEntriesByCategoryAndSlot(
       itemEntries || {},
@@ -1636,74 +1669,131 @@ const ItemsTab = ({
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
         <Stack vertical>
-          {groups.map(([categoryKey, slotGroups]) => (
-            <Box key={categoryKey} mb={2}>
-              <Box
-                bold
-                mb={1}
-                style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
-                {getCategoryLabel(categoryKey)}
-              </Box>
+          {groups.map(([categoryKey, slotGroups]) => {
+            const categoryCollapsed = !!collapsedItemCategories[categoryKey];
+            const totalItems = slotGroups.reduce((sum, [, items]) => sum + items.length, 0);
 
-              {slotGroups.map(([slotKey, items]) => {
-                const visibleItems = items.slice(0, MAX_RENDERED_ITEMS_PER_SLOT);
+            return (
+              <Box key={categoryKey} mb={2}>
+                <Button
+                  fluid
+                  onClick={() =>
+                    setCollapsedItemCategories((prev) => ({
+                      ...prev,
+                      [categoryKey]: !prev[categoryKey],
+                    }))
+                  }>
+                  <Stack align="center" justify="space-between">
+                    <Stack.Item>
+                      <Box
+                        bold
+                        style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
+                        {categoryCollapsed ? '▸' : '▾'} {getCategoryLabel(categoryKey)}
+                      </Box>
+                    </Stack.Item>
+                    <Stack.Item>
+                      <Box style={{ opacity: 0.8, fontSize: '11px' }}>
+                        {slotGroups.length} groups | {totalItems} items
+                      </Box>
+                    </Stack.Item>
+                  </Stack>
+                </Button>
 
-                return (
-                  <Box key={`${categoryKey}-${slotKey}`} mb={1}>
-                    <Box
-                      bold
-                      mb={0.5}
-                      style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
-                      {getSlotLabel(slotKey)}
-                    </Box>
+                {!categoryCollapsed && (
+                  <Box mt={1}>
+                    {slotGroups.map(([slotKey, items]) => {
+                      const slotCollapseKey = `${categoryKey}:${slotKey}`;
+                      const slotCollapsed = !!collapsedItemSlots[slotCollapseKey];
+                      const visibleItems = items.slice(0, MAX_RENDERED_ITEMS_PER_SLOT);
 
-                    <Stack wrap>
-                      {visibleItems.map(([itemPath, entry]) => {
-                        const canAdd = entry.can_add !== false;
-                        const maximum = Number(entry.maximum);
-                        const amount = Number(entry.amount) || 0;
+                      return (
+                        <Box key={`${categoryKey}-${slotKey}`} mb={1}>
+                          <Button
+                            fluid
+                            onClick={() =>
+                              setCollapsedItemSlots((prev) => ({
+                                ...prev,
+                                [slotCollapseKey]: !prev[slotCollapseKey],
+                              }))
+                            }>
+                            <Stack align="center" justify="space-between">
+                              <Stack.Item>
+                                <Box
+                                  bold
+                                  style={{
+                                    fontSize: '14px',
+                                    letterSpacing: '0.5px',
+                                    opacity: 0.9,
+                                  }}>
+                                  {slotCollapsed ? '▸' : '▾'} {getSlotLabel(slotKey)}
+                                </Box>
+                              </Stack.Item>
+                              <Stack.Item>
+                                <Box style={{ opacity: 0.8, fontSize: '11px' }}>
+                                  {items.length} items
+                                </Box>
+                              </Stack.Item>
+                            </Stack>
+                          </Button>
 
-                        return (
-                          <ItemTile
-                            key={itemPath}
-                            name={entry.name || itemPath}
-                            topRightText={`${entry.cost || 0} pts`}
-                            bottomLeftText={amount > 0 ? amount : undefined}
-                            bottomRightText={!canAdd ? 'MAX' : undefined}
-                            icon={entry.icon}
-                            disabled={!canAdd}
-                            onLeftClick={() => act('add_item', { path: itemPath, amount: 1 })}
-                            onRightClick={() => act('remove_item', { path: itemPath, amount: 1 })}
-                            onHoverStart={() =>
-                              setHoveredItem({
-                                name: entry.name || itemPath,
-                                slot: getSlotLabel(entry.slot_group),
-                                category: getCategoryLabel(entry.category),
-                                costText: `${entry.cost || 0} pts`,
-                                total: amount,
-                                maximum: Number.isFinite(maximum) ? maximum : undefined,
-                                canAdd,
-                                leftHelp: canAdd ? 'LMB: add item' : 'Cannot add more',
-                                rightHelp: 'RMB: remove item',
-                              })
-                            }
-                            onHoverEnd={() => setHoveredItem(null)}
-                          />
-                        );
-                      })}
-                    </Stack>
+                          {!slotCollapsed && (
+                            <Box mt={0.5}>
+                              <Stack wrap>
+                                {visibleItems.map(([itemPath, entry]) => {
+                                  const canAdd = entry.can_add !== false;
+                                  const maximum = Number(entry.maximum);
+                                  const amount = Number(entry.amount) || 0;
 
-                    {items.length > MAX_RENDERED_ITEMS_PER_SLOT && (
-                      <NoticeBox>
-                        Showing first {MAX_RENDERED_ITEMS_PER_SLOT} items. Use search to narrow
-                        results.
-                      </NoticeBox>
-                    )}
+                                  return (
+                                    <ItemTile
+                                      key={itemPath}
+                                      name={entry.name || itemPath}
+                                      topRightText={`${entry.cost || 0} pts`}
+                                      bottomLeftText={amount > 0 ? amount : undefined}
+                                      bottomRightText={!canAdd ? 'MAX' : undefined}
+                                      icon={entry.icon}
+                                      disabled={!canAdd}
+                                      onLeftClick={() =>
+                                        act('add_item', { path: itemPath, amount: 1 })
+                                      }
+                                      onRightClick={() =>
+                                        act('remove_item', { path: itemPath, amount: 1 })
+                                      }
+                                      onHoverStart={() =>
+                                        setHoveredItem({
+                                          name: entry.name || itemPath,
+                                          slot: getSlotLabel(entry.slot_group),
+                                          category: getCategoryLabel(entry.category),
+                                          costText: `${entry.cost || 0} pts`,
+                                          total: amount,
+                                          maximum: Number.isFinite(maximum) ? maximum : undefined,
+                                          canAdd,
+                                          leftHelp: canAdd ? 'LMB: add item' : 'Cannot add more',
+                                          rightHelp: 'RMB: remove item',
+                                        })
+                                      }
+                                      onHoverEnd={() => setHoveredItem(null)}
+                                    />
+                                  );
+                                })}
+                              </Stack>
+
+                              {items.length > MAX_RENDERED_ITEMS_PER_SLOT && (
+                                <NoticeBox>
+                                  Showing first {MAX_RENDERED_ITEMS_PER_SLOT} items. Use search to
+                                  narrow results.
+                                </NoticeBox>
+                              )}
+                            </Box>
+                          )}
+                        </Box>
+                      );
+                    })}
                   </Box>
-                );
-              })}
-            </Box>
-          ))}
+                )}
+              </Box>
+            );
+          })}
         </Stack>
       )}
     </Section>
