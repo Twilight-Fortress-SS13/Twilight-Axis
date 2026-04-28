@@ -711,7 +711,7 @@
 
 	var/list/rules = get_resident_skill_spell_rules()
 	for(var/skill_type in rules)
-		if((owner_build?.get_skill_value(skill_type) || 0) <= 0)
+		if((owner_build?.get_skill_value(skill_type) || 0) <= 3)
 			continue
 
 		var/list/spell_types = rules[skill_type]
