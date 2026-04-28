@@ -520,11 +520,15 @@
 
 /datum/tat_build/ui_interact(mob/user, datum/tgui/ui)
 	attach_preferences_from_mob(user)
-	invalidate_active_virtues_cache()
-	skills?.rebuild_bonus_values()
+	if(!islist(_cached_active_virtues))
+		skills?.rebuild_bonus_values()
+		invalidate_ui_data_cache()
+	if(ui)
+		ui.set_autoupdate(FALSE)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "TATBuild")
+		ui.set_autoupdate(FALSE)
 		ui.open()
 
 /datum/tat_build/ui_static_data(mob/user)

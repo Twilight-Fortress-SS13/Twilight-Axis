@@ -9,6 +9,7 @@
 
 	var/list/magic_profile = list()
 	var/list/_cached_active_virtues = null
+	var/_cached_active_virtues_key = null
 	var/list/_cached_ui_data = null
 	var/_ui_data_cache_dirty = TRUE
 
@@ -97,25 +98,51 @@
 	ui_tat_slots_cache = null
 	return TRUE
 
+/datum/tat_build/proc/get_active_virtues_cache_key(datum/preferences/P)
+	if(!P)
+		return null
+
+	var/list/parts = list()
+	var/list/virtues = list(P.virtue, P.virtuetwo)
+	for(var/virtue_entry in virtues)
+		var/datum/virtue/virtue = virtue_entry
+		if(!virtue || istype(virtue, /datum/virtue/none))
+			parts += "none"
+			continue
+
+		var/part = "[virtue.type]:[REF(virtue)]"
+		if(islist(virtue.picked_choices))
+			for(var/choice in virtue.picked_choices)
+				part += ":[choice]"
+		parts += part
+	return parts.Join("|")
+
 /datum/tat_build/proc/attach_preferences_from_mob(mob/user)
 	if(!user?.client?.prefs)
 		return FALSE
 	var/datum/preferences/P = user.client.prefs
 	if(P.tat_build != src)
 		return FALSE
-	if(owner_preferences != P)
+
+	var/new_virtues_key = get_active_virtues_cache_key(P)
+	if(owner_preferences != P || _cached_active_virtues_key != new_virtues_key)
+		owner_preferences = P
 		_cached_active_virtues = null
-		invalidate_ui_data_cache()
+		_cached_active_virtues_key = null
 		skills?.rebuild_bonus_values()
-	attach_preferences(P)
+		invalidate_ui_data_cache()
+	else
+		attach_preferences(P)
 	return TRUE
 
 /datum/tat_build/proc/get_active_virtues()
-	if(islist(_cached_active_virtues))
+	var/cache_key = get_active_virtues_cache_key(owner_preferences)
+	if(islist(_cached_active_virtues) && _cached_active_virtues_key == cache_key)
 		return _cached_active_virtues
 	var/list/result = list()
 	if(!owner_preferences)
 		_cached_active_virtues = result
+		_cached_active_virtues_key = cache_key
 		return result
 
 	if(owner_preferences.virtue && !istype(owner_preferences.virtue, /datum/virtue/none))
@@ -126,11 +153,12 @@
 			result += owner_preferences.virtuetwo
 
 	_cached_active_virtues = result
+	_cached_active_virtues_key = cache_key
 	return result
 
 /datum/tat_build/proc/invalidate_active_virtues_cache()
 	_cached_active_virtues = null
-	invalidate_ui_data_cache()
+	_cached_active_virtues_key = null
 
 /datum/tat_build/proc/get_magic_value(key, default_value = null)
 	if(!istext(key) || !length(key))
