@@ -260,6 +260,32 @@
 	var/group = lowertext("[slot_group]")
 	return group in list("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact")
 
+/datum/tat_items/proc/is_light_loadout_group(slot_group)
+	var/group = lowertext("[slot_group]")
+	return group in list("adventur' supply", "adventur supply", "adventure supply", "light", "lamp", "lantern", "torch")
+
+/datum/tat_items/proc/is_light_loadout_item(item_path, list/entry = null)
+	if(ispath(item_path, /obj/item/flashlight/flare/torch))
+		return TRUE
+	if(ispath(item_path, /obj/item/flashlight))
+		return TRUE
+	if(islist(entry) && is_light_loadout_group(entry["slot_group"]))
+		return TRUE
+	return FALSE
+
+/datum/tat_items/proc/append_light_loadout_ui_slots(list/slots)
+	append_unique_text(slots, "belt")
+	append_unique_text(slots, "belt_l")
+	append_unique_text(slots, "belt_r")
+	append_unique_text(slots, "hand_l")
+	append_unique_text(slots, "hand_r")
+
+/datum/tat_items/proc/append_light_equip_slots(list/slots)
+	append_unique_equip_slot(slots, SLOT_BELT)
+	append_unique_equip_slot(slots, SLOT_BELT_L)
+	append_unique_equip_slot(slots, SLOT_BELT_R)
+	append_unique_equip_slot(slots, SLOT_HANDS)
+
 /datum/tat_items/proc/append_weapon_loadout_ui_slots(list/slots, slot_group = null)
 	var/group = lowertext("[slot_group]")
 	if(group in list("greatsword", "polearm"))
@@ -414,6 +440,8 @@
 			append_unique_text(slots, "belt_r")
 		if("music")
 			append_music_loadout_ui_slots(slots)
+		if("adventur' supply", "adventur supply", "adventure supply", "light", "lamp", "lantern", "torch")
+			append_light_loadout_ui_slots(slots)
 		if("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact")
 			append_weapon_loadout_ui_slots(slots, group)
 
@@ -465,6 +493,9 @@
 	var/slot_group = lowertext("[entry["slot_group"]]")
 	if(slot_group == "music" || ispath(item_path, /obj/item/rogue/instrument))
 		append_music_loadout_ui_slots(slots)
+		return
+	if(is_light_loadout_item(item_path, entry))
+		append_light_loadout_ui_slots(slots)
 		return
 	if(category == TAT_ITEM_CATEGORY_WEAPON || is_weapon_loadout_group(slot_group))
 		append_weapon_loadout_ui_slots(slots, slot_group)
@@ -602,11 +633,15 @@
 			append_unique_equip_slot(slots, SLOT_RING)
 		if("music")
 			append_music_equip_slots(slots)
+		if("adventur' supply", "adventur supply", "adventure supply", "light", "lamp", "lantern", "torch")
+			append_light_equip_slots(slots)
 		if("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact")
 			append_weapon_equip_slots(slots, slot_group)
 
 	if(ispath(item_path, /obj/item/rogue/instrument))
 		append_music_equip_slots(slots)
+	if(is_light_loadout_item(item_path, entry))
+		append_light_equip_slots(slots)
 	if(islist(entry) && lowertext("[entry["category"]]") == TAT_ITEM_CATEGORY_WEAPON)
 		append_weapon_equip_slots(slots, slot_group)
 
