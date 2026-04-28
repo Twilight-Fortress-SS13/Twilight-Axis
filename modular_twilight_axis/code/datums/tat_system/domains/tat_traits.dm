@@ -394,13 +394,14 @@
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")
 	else
 		SStreasury.create_bank_account(H, ECONOMIC_LOWER_MIDDLE_CLASS)
-	H.mind?.special_items["Resident Manuscript"] = /obj/item/book/granter/residentcardvirtue
 	var/bonus_reading = owner_build?.get_resident_skill_value(/datum/skill/misc/reading) || 0
 	if(bonus_reading > 0)
 		H.adjust_skillrank_up_to(/datum/skill/misc/reading, bonus_reading, TRUE)
 
+	apply_resident_skill_spells(H)
+
 /datum/tat_traits/proc/apply_resident_pugilist_package(mob/living/carbon/human/H)
-	if(!H || !has_trait(TAT_TRAIT_RESIDENT))
+	if(!H || !has_trait(TRAIT_CIVILIZEDBARBARIAN))
 		return
 	var/spell_type = owner_build?.get_resident_pugilist_spell_type(owner_build?.get_resident_pugilist_spell_choice(H))
 	if(spell_type)
@@ -677,6 +678,43 @@
 			var/count = isnum(data[key]) ? round(data[key]) : 1
 			for(var/i in 1 to count)
 				add_trait("[key]")
+	return TRUE
+
+/datum/tat_traits/proc/get_resident_skill_spell_rules()
+	return list(
+		/datum/skill/misc/medicine = list(
+			/obj/effect/proc_holder/spell/invoked/diagnose/secular,
+		),
+		/datum/skill/misc/hunting = list(
+			/obj/effect/proc_holder/spell/invoked/huntersyell,
+		),
+		/datum/skill/labor/mining = list(
+			/obj/effect/proc_holder/spell/invoked/mineroresight,
+		),
+		/datum/skill/craft/ceramics = list(
+			/obj/effect/proc_holder/spell/invoked/digclay,
+		),
+		/datum/skill/craft/sewing = list(
+			/obj/effect/proc_holder/spell/invoked/fittedclothing,
+		),
+	)
+
+/datum/tat_traits/proc/apply_resident_skill_spells(mob/living/carbon/human/H)
+	if(!H || !H.mind || !has_trait(TAT_TRAIT_RESIDENT))
+		return FALSE
+
+	var/list/rules = get_resident_skill_spell_rules()
+	for(var/skill_type in rules)
+		if((owner_build?.get_skill_value(skill_type) || 0) <= 0)
+			continue
+
+		var/list/spell_types = rules[skill_type]
+		if(!islist(spell_types))
+			continue
+
+		for(var/spell_type in spell_types)
+			owner_build?.grant_mind_spell_if_missing(H, spell_type)
+
 	return TRUE
 
 /datum/tat_traits/proc/get_tat_resident_advjob()

@@ -141,11 +141,14 @@
 	var/already_taken_elsewhere = get_slot_group_item_count(entry["slot_group"], entry["category"], item_path)
 	return max(0, total_allowed - already_taken_elsewhere)
 
-/datum/tat_items/proc/set_amount(item_path, amount)
+/datum/tat_items/proc/set_amount(item_path, amount, ignore_limits = FALSE)
 	if(!islist(get_entry(item_path)))
 		return FALSE
 	amount = round(amount)
-	amount = clamp(amount, 0, get_maximum(item_path))
+	if(ignore_limits)
+		amount = max(0, amount)
+	else
+		amount = clamp(amount, 0, get_maximum(item_path))
 	if(amount <= 0)
 		selected -= item_path
 		item_loadout -= item_path
@@ -157,7 +160,7 @@
 
 /datum/tat_items/proc/get_loadout(item_path)
 	if(!(item_path in item_loadout) || !islist(item_loadout[item_path]))
-		item_loadout[item_path] = list("equip" = get_amount(item_path), "bag" = 0)
+		item_loadout[item_path] = list("equip" = 0, "bag" = get_amount(item_path), "slots" = list())
 	return item_loadout[item_path]
 
 /datum/tat_items/proc/normalize_loadout(item_path)
@@ -166,16 +169,22 @@
 		item_loadout -= item_path
 		return
 	var/list/loadout = get_loadout(item_path)
-	var/equip = max(0, round(loadout["equip"] || 0))
-	var/bag = max(0, round(loadout["bag"] || 0))
-	if(equip > amount)
-		equip = amount
-	if(bag > (amount - equip))
-		bag = amount - equip
-	if(equip + bag < amount)
-		equip += amount - (equip + bag)
-	loadout["equip"] = equip
-	loadout["bag"] = bag
+	var/list/slots = loadout["slots"]
+	if(!islist(slots))
+		slots = list()
+		loadout["slots"] = slots
+
+	var/list/valid_slots = get_valid_loadout_ui_slots_for_item(item_path)
+	for(var/slot_id in slots.Copy())
+		if(!(slot_id in valid_slots))
+			slots -= slot_id
+
+	while(length(slots) > amount)
+		var/drop_slot = slots[length(slots)]
+		slots -= drop_slot
+
+	loadout["equip"] = length(slots)
+	loadout["bag"] = max(0, amount - length(slots))
 
 /datum/tat_items/proc/get_spent_points()
 	var/total = 0
@@ -222,6 +231,281 @@
 		normalize_loadout(item_path)
 	return TRUE
 
+/datum/tat_items/proc/append_unique_text(list/values, value)
+	if(!istext(value) || !length(value))
+		return
+	if(!(value in values))
+		values += value
+
+/datum/tat_items/proc/append_music_loadout_ui_slots(list/slots)
+	append_unique_text(slots, "shoulder_l")
+	append_unique_text(slots, "shoulder_r")
+	append_unique_text(slots, "belt")
+	append_unique_text(slots, "belt_l")
+	append_unique_text(slots, "belt_r")
+	append_unique_text(slots, "hand_l")
+	append_unique_text(slots, "hand_r")
+
+/datum/tat_items/proc/append_music_equip_slots(list/slots)
+	append_unique_equip_slot(slots, SLOT_BACK_L)
+	append_unique_equip_slot(slots, SLOT_BACK_R)
+	append_unique_equip_slot(slots, SLOT_BACK)
+	append_unique_equip_slot(slots, SLOT_BELT)
+	append_unique_equip_slot(slots, SLOT_BELT_L)
+	append_unique_equip_slot(slots, SLOT_BELT_R)
+	append_unique_equip_slot(slots, SLOT_HANDS)
+
+/datum/tat_items/proc/get_loadout_ui_slot_ids()
+	return list(
+		"neck",
+		"mask",
+		"head",
+		"mouth",
+		"cloak",
+		"armor",
+		"suit",
+		"belt",
+		"legs",
+		"boots",
+		"wrists",
+		"gloves",
+		"ring",
+		"shoulder_l",
+		"shoulder_r",
+		"belt_l",
+		"belt_r",
+		"hand_l",
+		"hand_r",
+	)
+
+/datum/tat_items/proc/get_loadout_slot_equip_slot(slot_id)
+	switch(slot_id)
+		if("neck")
+			return SLOT_NECK
+		if("mask")
+			return SLOT_WEAR_MASK
+		if("head")
+			return SLOT_HEAD
+		if("mouth")
+			return SLOT_MOUTH
+		if("cloak")
+			return SLOT_CLOAK
+		if("armor")
+			return SLOT_ARMOR
+		if("suit")
+			return SLOT_SHIRT
+		if("belt")
+			return SLOT_BELT
+		if("legs")
+			return SLOT_PANTS
+		if("boots")
+			return SLOT_SHOES
+		if("wrists")
+			return SLOT_WRISTS
+		if("gloves")
+			return SLOT_GLOVES
+		if("ring")
+			return SLOT_RING
+		if("shoulder_l")
+			return SLOT_BACK_L
+		if("shoulder_r")
+			return SLOT_BACK_R
+		if("belt_l")
+			return SLOT_BELT_L
+		if("belt_r")
+			return SLOT_BELT_R
+		if("hand_l", "hand_r")
+			return SLOT_HANDS
+	return null
+
+/datum/tat_items/proc/append_loadout_ui_slots_for_slot_group(list/slots, slot_group)
+	var/group = lowertext("[slot_group]")
+	switch(group)
+		if("neck")
+			append_unique_text(slots, "neck")
+		if("mask")
+			append_unique_text(slots, "mask")
+		if("head")
+			append_unique_text(slots, "head")
+		if("mouth")
+			append_unique_text(slots, "mouth")
+		if("cloak")
+			append_unique_text(slots, "cloak")
+		if("armor")
+			append_unique_text(slots, "armor")
+		if("suit", "shirt", "under")
+			append_unique_text(slots, "suit")
+		if("belt")
+			append_unique_text(slots, "belt")
+			append_unique_text(slots, "belt_l")
+			append_unique_text(slots, "belt_r")
+		if("pants")
+			append_unique_text(slots, "legs")
+		if("shoes")
+			append_unique_text(slots, "boots")
+		if("wrists")
+			append_unique_text(slots, "wrists")
+		if("gloves")
+			append_unique_text(slots, "gloves")
+		if("ring")
+			append_unique_text(slots, "ring")
+		if("back")
+			append_unique_text(slots, "shoulder_l")
+			append_unique_text(slots, "shoulder_r")
+		if("back_l")
+			append_unique_text(slots, "shoulder_l")
+		if("back_r")
+			append_unique_text(slots, "shoulder_r")
+		if("belt_l")
+			append_unique_text(slots, "belt_l")
+		if("belt_r")
+			append_unique_text(slots, "belt_r")
+		if("music")
+			append_music_loadout_ui_slots(slots)
+
+/datum/tat_items/proc/append_loadout_ui_slots_for_equip_slot(list/slots, slot_id)
+	switch(slot_id)
+		if(SLOT_NECK)
+			append_unique_text(slots, "neck")
+		if(SLOT_WEAR_MASK)
+			append_unique_text(slots, "mask")
+		if(SLOT_HEAD)
+			append_unique_text(slots, "head")
+		if(SLOT_MOUTH)
+			append_unique_text(slots, "mouth")
+		if(SLOT_CLOAK)
+			append_unique_text(slots, "cloak")
+		if(SLOT_ARMOR)
+			append_unique_text(slots, "armor")
+		if(SLOT_SHIRT)
+			append_unique_text(slots, "suit")
+		if(SLOT_BELT)
+			append_unique_text(slots, "belt")
+		if(SLOT_PANTS)
+			append_unique_text(slots, "legs")
+		if(SLOT_SHOES)
+			append_unique_text(slots, "boots")
+		if(SLOT_WRISTS)
+			append_unique_text(slots, "wrists")
+		if(SLOT_GLOVES)
+			append_unique_text(slots, "gloves")
+		if(SLOT_RING)
+			append_unique_text(slots, "ring")
+		if(SLOT_BACK_L)
+			append_unique_text(slots, "shoulder_l")
+		if(SLOT_BACK_R)
+			append_unique_text(slots, "shoulder_r")
+		if(SLOT_BACK)
+			append_unique_text(slots, "shoulder_l")
+			append_unique_text(slots, "shoulder_r")
+		if(SLOT_BELT_L)
+			append_unique_text(slots, "belt_l")
+		if(SLOT_BELT_R)
+			append_unique_text(slots, "belt_r")
+		if(SLOT_HANDS)
+			append_unique_text(slots, "hand_l")
+			append_unique_text(slots, "hand_r")
+
+/datum/tat_items/proc/append_hand_slots_if_reasonable(list/slots, item_path, list/entry)
+	var/category = lowertext("[entry["category"]]")
+	var/slot_group = lowertext("[entry["slot_group"]]")
+	if(slot_group == "music" || ispath(item_path, /obj/item/rogue/instrument))
+		append_music_loadout_ui_slots(slots)
+		return
+	if(category == TAT_ITEM_CATEGORY_WEAPON)
+		append_unique_text(slots, "hand_l")
+		append_unique_text(slots, "hand_r")
+		return
+	if(slot_group in list("blackpowder", "ranged", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip"))
+		append_unique_text(slots, "hand_l")
+		append_unique_text(slots, "hand_r")
+
+/datum/tat_items/proc/get_valid_loadout_ui_slots_for_item(item_path)
+	var/list/result = list()
+	var/list/entry = get_entry(item_path)
+	if(!islist(entry))
+		return result
+
+	append_loadout_ui_slots_for_slot_group(result, entry["slot_group"])
+
+	if(ispath(item_path, /obj/item))
+		var/obj/item/I = new item_path(null)
+		if(I)
+			var/list/equip_slots = get_equip_slots_for_item(I, item_path)
+			for(var/slot_id in equip_slots)
+				append_loadout_ui_slots_for_equip_slot(result, slot_id)
+			qdel(I)
+
+	append_hand_slots_if_reasonable(result, item_path, entry)
+	return result
+
+/datum/tat_items/proc/get_assigned_loadout_slot_count(item_path)
+	var/list/loadout = get_loadout(item_path)
+	var/list/slots = loadout["slots"]
+	if(!islist(slots))
+		return 0
+	return length(slots)
+
+/datum/tat_items/proc/clear_loadout_slot(slot_id)
+	if(!istext(slot_id) || !length(slot_id))
+		return FALSE
+	var/changed = FALSE
+	for(var/item_path in item_loadout)
+		var/list/loadout = item_loadout[item_path]
+		if(!islist(loadout))
+			continue
+		var/list/slots = loadout["slots"]
+		if(!islist(slots) || !(slot_id in slots))
+			continue
+		slots -= slot_id
+		normalize_loadout(item_path)
+		changed = TRUE
+	if(changed)
+		owner_build?.set_dirty()
+	return changed
+
+/datum/tat_items/proc/assign_item_to_loadout_slot(item_path, slot_id)
+	if(!istext(slot_id) || !length(slot_id))
+		return FALSE
+	if(!(slot_id in get_loadout_ui_slot_ids()))
+		return FALSE
+	if(get_amount(item_path) <= 0)
+		return FALSE
+	var/list/valid_slots = get_valid_loadout_ui_slots_for_item(item_path)
+	if(!(slot_id in valid_slots))
+		return FALSE
+
+	clear_loadout_slot(slot_id)
+
+	var/list/loadout = get_loadout(item_path)
+	var/list/slots = loadout["slots"]
+	if(!islist(slots))
+		slots = list()
+		loadout["slots"] = slots
+	if(!(slot_id in slots))
+		while(length(slots) >= get_amount(item_path))
+			var/drop_slot = slots[length(slots)]
+			slots -= drop_slot
+		slots[slot_id] = TRUE
+	normalize_loadout(item_path)
+	owner_build?.set_dirty()
+	return TRUE
+
+/datum/tat_items/proc/assign_item_to_first_available_loadout_slot(item_path)
+	var/list/valid_slots = get_valid_loadout_ui_slots_for_item(item_path)
+	for(var/slot_id in valid_slots)
+		var/taken = FALSE
+		for(var/other_path in item_loadout)
+			var/list/other_loadout = item_loadout[other_path]
+			var/list/other_slots = islist(other_loadout) ? other_loadout["slots"] : null
+			if(islist(other_slots) && (slot_id in other_slots))
+				taken = TRUE
+				break
+		if(taken)
+			continue
+		return assign_item_to_loadout_slot(item_path, slot_id)
+	return FALSE
+
 /datum/tat_items/proc/append_unique_equip_slot(list/slots, slot_id)
 	if(!(slot_id in slots))
 		slots += slot_id
@@ -267,6 +551,11 @@
 			append_unique_equip_slot(slots, SLOT_SHOES)
 		if("ring")
 			append_unique_equip_slot(slots, SLOT_RING)
+		if("music")
+			append_music_equip_slots(slots)
+
+	if(ispath(item_path, /obj/item/rogue/instrument))
+		append_music_equip_slots(slots)
 
 	var/flags = I.slot_flags
 	if(flags & ITEM_SLOT_HEAD)
@@ -355,6 +644,53 @@
 		return null
 	return lowertext("[entry["slot_group"]]")
 
+/datum/tat_items/proc/spawn_item_to_exact_slot_or_bag(mob/living/carbon/human/H, path, equip_slot)
+	if(!H || !ispath(path) || !equip_slot)
+		return FALSE
+	var/obj/item/I = new path(get_turf(H))
+	if(!I)
+		return FALSE
+	if(H.get_item_by_slot(equip_slot))
+		try_put_into_any_storage_or_drop(I, H)
+		return FALSE
+
+	// HARD LOADOUT CONTRACT:
+	// The UI slot maps to exactly one backend equip slot.
+	// Do not walk adjacent shoulders, belts, hands, or any auto-fit list here.
+	if(H.equip_to_slot_if_possible(I, equip_slot, FALSE, TRUE, TRUE, TRUE))
+		if(H.get_item_by_slot(equip_slot) == I)
+			return TRUE
+
+	// Some RogueTown/Twilight Axis items, especially instruments, can be visually valid
+	// for a slot but still fail the normal helper because of slot_flags/can_equip checks.
+	// This is still exact-slot only: force the same selected equip_slot, never a fallback.
+	if(!QDELETED(I) && !H.get_item_by_slot(equip_slot))
+		H.equip_to_slot(I, equip_slot, TRUE, TRUE)
+		if(H.get_item_by_slot(equip_slot) == I)
+			return TRUE
+
+	if(!QDELETED(I))
+		try_put_into_any_storage_or_drop(I, H)
+	return FALSE
+
+/datum/tat_items/proc/spawn_item_to_loadout_slot_or_bag(mob/living/carbon/human/H, path, slot_id)
+	if(!H || !ispath(path))
+		return FALSE
+	var/equip_slot = get_loadout_slot_equip_slot(slot_id)
+	if(!equip_slot)
+		return FALSE
+	return spawn_item_to_exact_slot_or_bag(H, path, equip_slot)
+
+/datum/tat_items/proc/spawn_assigned_loadout_items(mob/living/carbon/human/H)
+	for(var/slot_id in get_loadout_ui_slot_ids())
+		for(var/item_path in selected)
+			var/list/loadout = get_loadout(item_path)
+			var/list/slots = loadout["slots"]
+			if(!islist(slots) || !(slot_id in slots))
+				continue
+			spawn_item_to_loadout_slot_or_bag(H, item_path, slot_id)
+			break
+
 /datum/tat_items/proc/spawn_equipped_items_for_slot_group(mob/living/carbon/human/H, target_slot_group)
 	for(var/item_path in selected)
 		if(get_item_slot_group_lower(item_path) != lowertext("[target_slot_group]"))
@@ -396,10 +732,12 @@
 	if(mob_ref in applied_mob_refs)
 		return FALSE
 	applied_mob_refs += mob_ref
+
+	// Exact loadout slots must win over the free/default bag.
+	// If we spawn the default satchel first, it can occupy SLOT_BACK_L/SLOT_BACK_R
+	// before a player-assigned guitar/instrument/back item gets its selected slot.
+	spawn_assigned_loadout_items(H)
 	grant_default_roundstart_bag(H)
-	spawn_equipped_items_for_slot_group(H, "shirt")
-	spawn_equipped_items_for_slot_group(H, "pants")
-	spawn_equipped_items_except_slot_groups(H, list("shirt", "pants"))
 	spawn_bag_items(H)
 	return TRUE
 
@@ -450,9 +788,15 @@
 		var/list/loadout = item_loadout[item_path]
 		if(!islist(loadout))
 			continue
+		var/list/exported_slots = list()
+		var/list/slots = loadout["slots"]
+		if(islist(slots))
+			for(var/slot_id in slots)
+				exported_slots[slot_id] = TRUE
 		exported_loadout["[item_path]"] = list(
 			"equip" = round(loadout["equip"] || 0),
 			"bag" = round(loadout["bag"] || 0),
+			"slots" = exported_slots,
 		)
 
 	return list(
@@ -489,9 +833,16 @@
 				continue
 			var/raw_equip = source_loadout["equip"]
 			var/raw_bag = source_loadout["bag"]
+			var/list/imported_slots = list()
+			if(islist(source_loadout["slots"]))
+				var/list/source_slots = source_loadout["slots"]
+				for(var/slot_id in source_slots)
+					if(source_slots[slot_id])
+						imported_slots[slot_id] = TRUE
 			item_loadout[item_path] = list(
 				"equip" = round(text2num("[raw_equip]") || 0),
 				"bag" = round(text2num("[raw_bag]") || 0),
+				"slots" = imported_slots,
 			)
 
 	for(var/item_path in selected)

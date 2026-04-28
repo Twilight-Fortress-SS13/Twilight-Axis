@@ -308,7 +308,7 @@
 
 	return FALSE
 
-/datum/tat_skills/proc/set_invested_value(skill_type, value)
+/datum/tat_skills/proc/set_invested_value(skill_type, value, ignore_budget = FALSE)
 	var/domain = get_domain(skill_type)
 	if(!domain)
 		return FALSE
@@ -332,7 +332,7 @@
 	var/new_domain_spent = current_domain_spent - old_cost + new_cost
 	var/domain_max = get_total_maximum(domain)
 
-	if(new_domain_spent > domain_max)
+	if(!ignore_budget && new_domain_spent > domain_max)
 		return FALSE
 
 	if(value <= 0)

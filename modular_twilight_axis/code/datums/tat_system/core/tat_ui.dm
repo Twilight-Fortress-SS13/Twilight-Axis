@@ -169,8 +169,7 @@
 	if(!stats)
 		return FALSE
 	var/current = stats.get_value(id)
-	var/ok = stats.set_value(id, current - (text2num("[amount]") || 1))
-	sanitize()
+	var/ok = stats.set_value(id, current - (text2num("[amount]") || 1), TRUE)
 	return ok
 
 /datum/tat_build/proc/add_skill(skill_type, amount = 1)
@@ -185,8 +184,7 @@
 	if(!skills)
 		return FALSE
 	var/current = skills.get_invested_value(skill_type)
-	var/ok = skills.set_invested_value(skill_type, current - (text2num("[amount]") || 1))
-	sanitize()
+	var/ok = skills.set_invested_value(skill_type, current - (text2num("[amount]") || 1), TRUE)
 	return ok
 
 /datum/tat_build/proc/add_trait(trait_id)
@@ -194,10 +192,19 @@
 	sanitize()
 	return ok
 
-/datum/tat_build/proc/remove_trait(trait_id)
-	var/ok = traits?.remove_trait(trait_id)
-	sanitize()
-	return ok
+/datum/tat_build/proc/remove_trait(trait_id, amount = 1)
+	if(!traits)
+		return FALSE
+	var/count = max(1, text2num("[amount]") || 1)
+	var/changed = FALSE
+	for(var/i in 1 to count)
+		if(!traits.has_trait(trait_id))
+			break
+		if(traits.remove_trait(trait_id))
+			changed = TRUE
+		else
+			break
+	return changed
 
 /datum/tat_build/proc/add_item(path, amount = 1)
 	if(!items)
@@ -211,8 +218,7 @@
 	if(!items)
 		return FALSE
 	var/current = items.get_amount(path)
-	var/ok = items.set_amount(path, current - (text2num("[amount]") || 1))
-	sanitize()
+	var/ok = items.set_amount(path, current - (text2num("[amount]") || 1), TRUE)
 	return ok
 
 /datum/tat_build/proc/move_item_to_bag(path, amount = 1)
@@ -223,8 +229,16 @@
 	if(total <= 0)
 		return FALSE
 	var/list/loadout = items.get_loadout(path)
-	loadout["bag"] = min(total, round(loadout["bag"] || 0) + count)
-	loadout["equip"] = max(0, total - round(loadout["bag"] || 0))
+	var/list/slots = loadout["slots"]
+	if(!islist(slots) || !length(slots))
+		items.normalize_loadout(path)
+		set_dirty()
+		return TRUE
+	for(var/i in 1 to count)
+		if(!length(slots))
+			break
+		var/drop_slot = slots[length(slots)]
+		slots -= drop_slot
 	items.normalize_loadout(path)
 	set_dirty()
 	return TRUE
@@ -236,12 +250,34 @@
 	var/total = items.get_amount(path)
 	if(total <= 0)
 		return FALSE
-	var/list/loadout = items.get_loadout(path)
-	loadout["bag"] = max(0, round(loadout["bag"] || 0) - count)
-	loadout["equip"] = max(0, total - round(loadout["bag"] || 0))
+	var/changed = FALSE
+	for(var/i in 1 to count)
+		if(items.get_assigned_loadout_slot_count(path) >= total)
+			break
+		if(items.assign_item_to_first_available_loadout_slot(path))
+			changed = TRUE
+		else
+			break
 	items.normalize_loadout(path)
-	set_dirty()
-	return TRUE
+	if(changed)
+		set_dirty()
+	return changed
+
+/datum/tat_build/proc/assign_item_to_loadout_slot(path, slot_id)
+	if(!items)
+		return FALSE
+	var/ok = items.assign_item_to_loadout_slot(path, slot_id)
+	if(ok)
+		set_dirty()
+	return ok
+
+/datum/tat_build/proc/clear_loadout_slot(slot_id)
+	if(!items)
+		return FALSE
+	var/ok = items.clear_loadout_slot(slot_id)
+	if(ok)
+		set_dirty()
+	return ok
 
 /datum/tat_build/proc/build_ui_stats()
 	var/list/result = list()
@@ -357,10 +393,17 @@
 			continue
 		items.normalize_loadout(item_path)
 		var/list/loadout = items.get_loadout(item_path)
+		var/list/exported_slots = list()
+		var/list/slots = loadout["slots"]
+		if(islist(slots))
+			for(var/slot_id in slots)
+				exported_slots[slot_id] = TRUE
 		result["[item_path]"] = list(
 			"amount" = amount,
 			"equip" = round(loadout["equip"] || 0),
 			"bag" = round(loadout["bag"] || 0),
+			"slots" = exported_slots,
+			"valid_slots" = items.get_valid_loadout_ui_slots_for_item(item_path),
 		)
 	return result
 
@@ -461,7 +504,7 @@
 		if("add_trait")
 			return add_trait(params["id"])
 		if("remove_trait")
-			return remove_trait(params["id"])
+			return remove_trait(params["id"], text2num(params["amount"]) || 1)
 		if("add_item")
 			return add_item(text2path(params["path"]), text2num(params["amount"]) || 1)
 		if("remove_item")
@@ -470,6 +513,10 @@
 			return move_item_to_equip(text2path(params["path"]), text2num(params["amount"]) || 1)
 		if("move_item_to_bag")
 			return move_item_to_bag(text2path(params["path"]), text2num(params["amount"]) || 1)
+		if("assign_item_to_loadout_slot")
+			return assign_item_to_loadout_slot(text2path(params["path"]), params["slot_id"])
+		if("clear_loadout_slot")
+			return clear_loadout_slot(params["slot_id"])
 		if("activate_tat_slot")
 			return set_active_tat_slot(text2num(params["slot_id"]))
 		if("rename_tat_slot")

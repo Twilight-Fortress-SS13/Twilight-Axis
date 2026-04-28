@@ -224,7 +224,7 @@
 	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with armor repair and fitting. Armorsmithing and Masonry can progress to Master levels."), \
 	TAT_TRAIT_SKILLED_WEAPONSMITH = TAT_TRAIT_ENTRY("Skilled Weaponsmith", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with weapon work. Weaponsmithing and Engineering can progress to Master levels."), \
 	TAT_TRAIT_SKILLED_ARTISAN = TAT_TRAIT_ENTRY("Skilled Artisan", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with general craftwork. Crafting and Pottery can progress to Master levels."), \
-	TAT_TRAIT_SKILLED_MASON = TAT_TRAIT_ENTRY("Skilled Mason", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with stone and kiln work. Masonry and Pottery can progress to Master levels."), \
+	TAT_TRAIT_SKILLED_MASON = TAT_TRAIT_ENTRY("Skilled Architect", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with stone and kiln work. Masonry, Woodwork and Pottery can progress to Master levels."), \
 	TRAIT_ALCHEMY_EXPERT = TAT_TRAIT_ENTRY("Expert Alchemist", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of the alchemical arts. Alchemy can progress to Legendary levels."), \
 	TAT_TRAIT_SKILLED_ALCHEMIST = TAT_TRAIT_ENTRY("Skilled Alchemist", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with alchemical work. Alchemy can progress to Master levels."), \
 	TRAIT_MEDICINE_EXPERT = TAT_TRAIT_ENTRY("Expert Physicker", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of medicine. Medicine can progress to Legendary levels."), \
@@ -347,7 +347,7 @@
 	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_SKILLED_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_SKILLED_ARTISAN = list(/datum/skill/craft/crafting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST), \
-	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/carpentry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST), \
 	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = TAT_SKILL_BASIC_BOOST), \
 	TAT_TRAIT_SKILLED_ALCHEMIST = list(/datum/skill/craft/alchemy = TAT_SKILL_DISCOUNT_BOOST), \
 	TRAIT_MEDICINE_EXPERT = list(/datum/skill/misc/medicine = TAT_SKILL_BASIC_BOOST), \
