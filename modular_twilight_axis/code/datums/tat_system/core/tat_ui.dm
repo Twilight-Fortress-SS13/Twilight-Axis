@@ -294,7 +294,19 @@
 /datum/tat_build/proc/build_ui_selected_traits()
 	var/list/result = list()
 	for(var/trait_id in traits.selected)
-		result += trait_id
+		var/count = traits.get_trait_count(trait_id)
+		for(var/i in 1 to count)
+			result += trait_id
+	return result
+
+/datum/tat_build/proc/build_ui_trait_counts()
+	var/list/result = list()
+	if(!traits)
+		return result
+	for(var/trait_id in traits.selected)
+		var/count = traits.get_trait_count(trait_id)
+		if(count > 0)
+			result[trait_id] = count
 	return result
 
 /datum/tat_build/proc/build_ui_trait_entries()
@@ -309,6 +321,8 @@
 			"category" = entry["category"],
 			"category_name" = entry["category_name"],
 			"desc" = entry["desc"],
+			"repeatable" = traits?.is_repeatable_trait(trait_id),
+			"maximum" = traits?.get_trait_maximum(trait_id),
 		)
 	return result
 
@@ -401,6 +415,7 @@
 		"stats" = build_ui_stats(),
 		"skills" = build_ui_skills(),
 		"traits" = build_ui_selected_traits(),
+		"trait_counts" = build_ui_trait_counts(),
 		"items_state" = build_ui_items_state(),
 		"loadout" = build_ui_loadout(),
 

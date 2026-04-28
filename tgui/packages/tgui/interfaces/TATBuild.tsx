@@ -41,6 +41,14 @@ type TraitEntry = {
   category: string;
   category_name: string;
   desc?: string;
+  repeatable?: boolean;
+  maximum?: number;
+};
+
+type TraitState = {
+  amount: number;
+  can_add?: boolean;
+  maximum?: number;
 };
 
 type ItemEntry = {
@@ -98,6 +106,8 @@ type Data = {
   stats: Record<string, number>;
   skills: Record<string, SkillState>;
   traits: string[];
+  trait_counts?: Record<string, number>;
+  traits_state?: Record<string, TraitState>;
   items_state: Record<string, ItemState>;
   loadout: Record<string, LoadoutState>;
 
@@ -386,6 +396,41 @@ const formatDomainPoints = (data: Data, domain: SkillDomainKey) => {
 const getDomainRemainingPoints = (data: Data, domain: SkillDomainKey) => {
   const remaining = data.skill_points_remaining_by_domain?.[domain];
   return typeof remaining === 'number' ? remaining : null;
+};
+
+const getTraitAmount = (data: Data, traitId: string): number => {
+  const stateAmount = Number(data.traits_state?.[traitId]?.amount);
+  if (Number.isFinite(stateAmount) && stateAmount > 0) {
+    return stateAmount;
+  }
+
+  const countAmount = Number(data.trait_counts?.[traitId]);
+  if (Number.isFinite(countAmount) && countAmount > 0) {
+    return countAmount;
+  }
+
+  return (data.traits || []).filter((id) => id === traitId).length;
+};
+
+const canAddTrait = (data: Data, traitId: string, entry: TraitEntry): boolean => {
+  const state = data.traits_state?.[traitId];
+  if (typeof state?.can_add === 'boolean') {
+    return state.can_add;
+  }
+
+  const amount = getTraitAmount(data, traitId);
+  const maximum = Number(state?.maximum ?? entry.maximum);
+  const repeatable = !!entry.repeatable;
+
+  if (!repeatable && amount > 0) {
+    return false;
+  }
+
+  if (Number.isFinite(maximum) && maximum >= 0 && amount >= maximum) {
+    return false;
+  }
+
+  return data.points_traits_remaining >= (Number(entry.cost) || 0);
 };
 
 const groupEntriesByCategoryAndSlot = <
@@ -1110,6 +1155,7 @@ const SkillRow = ({
   const disableRemove = invested <= 0;
   const disableAdd =
     totalLevel >= cap ||
+    nextCost <= 0 ||
     (domainRemaining !== null && domainRemaining < nextCost);
 
   return (
@@ -1312,25 +1358,54 @@ const TraitPill = ({
   title,
   cost,
   desc,
+  amount,
+  repeatable,
+  maximum,
   selected,
-  onClick,
+  disabledAdd,
+  disabledRemove,
+  onAdd,
+  onRemove,
 }: {
   title: string;
   cost: number;
   desc?: string;
+  amount?: number;
+  repeatable?: boolean;
+  maximum?: number;
   selected?: boolean;
-  onClick: () => void;
-}) => (
-  <Box>
-    <Button
-      selected={selected}
-      color={selected ? 'good' : undefined}
-      tooltip={desc || undefined}
-      onClick={onClick}>
-      {title} ({cost})
-    </Button>
-  </Box>
-);
+  disabledAdd?: boolean;
+  disabledRemove?: boolean;
+  onAdd: () => void;
+  onRemove: () => void;
+}) => {
+  const countText = repeatable && amount && amount > 0 ? ` x${amount}` : '';
+  const maxText = repeatable && typeof maximum === 'number' && maximum >= 0 ? ` / ${maximum}` : '';
+
+  return (
+    <Box>
+      <Stack align="center">
+        <Stack.Item>
+          <Button
+            selected={selected}
+            color={selected ? 'good' : undefined}
+            tooltip={desc || undefined}
+            disabled={disabledAdd}
+            onClick={onAdd}>
+            {title}{countText}{maxText} ({cost})
+          </Button>
+        </Stack.Item>
+        {(repeatable || selected) && (
+          <Stack.Item>
+            <Button compact disabled={disabledRemove} onClick={onRemove}>
+              -
+            </Button>
+          </Stack.Item>
+        )}
+      </Stack>
+    </Box>
+  );
+};
 
 const TraitsTab = ({
   data,
@@ -1341,8 +1416,6 @@ const TraitsTab = ({
   act: BackendAct;
   search: string;
 }) => {
-  const selectedTraits = useMemo(() => new Set(data.traits || []), [data.traits]);
-
   const grouped = useMemo(() => {
     const groups: Record<
       string,
@@ -1367,7 +1440,8 @@ const TraitsTab = ({
             selected: [],
           };
         }
-        if (selectedTraits.has(traitId)) {
+
+        if (getTraitAmount(data, traitId) > 0) {
           groups[category].selected.push([traitId, entry]);
         } else {
           groups[category].available.push([traitId, entry]);
@@ -1380,7 +1454,7 @@ const TraitsTab = ({
     });
 
     return Object.entries(groups).sort((a, b) => a[1].categoryName.localeCompare(b[1].categoryName));
-  }, [data.available_traits, search, selectedTraits]);
+  }, [data, search]);
 
   return (
     <Section
@@ -1411,16 +1485,28 @@ const TraitsTab = ({
               </Box>
               {group.available.length ? (
                 <Stack wrap>
-                  {group.available.map(([traitId, entry]) => (
-                    <Stack.Item key={traitId}>
-                      <TraitPill
-                        title={entry.name || traitId}
-                        cost={entry.cost || 0}
-                        desc={entry.desc}
-                        onClick={() => act('add_trait', { id: traitId })}
-                      />
-                    </Stack.Item>
-                  ))}
+                  {group.available.map(([traitId, entry]) => {
+                    const amount = getTraitAmount(data, traitId);
+                    const maximum = data.traits_state?.[traitId]?.maximum ?? entry.maximum;
+                    const canAdd = canAddTrait(data, traitId, entry);
+
+                    return (
+                      <Stack.Item key={traitId}>
+                        <TraitPill
+                          title={entry.name || traitId}
+                          cost={entry.cost || 0}
+                          desc={entry.desc}
+                          amount={amount}
+                          repeatable={!!entry.repeatable}
+                          maximum={maximum}
+                          disabledAdd={!canAdd}
+                          disabledRemove={amount <= 0}
+                          onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
+                          onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
+                        />
+                      </Stack.Item>
+                    );
+                  })}
                 </Stack>
               ) : (
                 <NoticeBox>No available traits in this group.</NoticeBox>
@@ -1431,17 +1517,29 @@ const TraitsTab = ({
               </Box>
               {group.selected.length ? (
                 <Stack wrap>
-                  {group.selected.map(([traitId, entry]) => (
-                    <Stack.Item key={traitId}>
-                      <TraitPill
-                        title={entry.name || traitId}
-                        cost={entry.cost || 0}
-                        desc={entry.desc}
-                        selected
-                        onClick={() => act('remove_trait', { id: traitId })}
-                      />
-                    </Stack.Item>
-                  ))}
+                  {group.selected.map(([traitId, entry]) => {
+                    const amount = getTraitAmount(data, traitId);
+                    const maximum = data.traits_state?.[traitId]?.maximum ?? entry.maximum;
+                    const canAdd = canAddTrait(data, traitId, entry);
+
+                    return (
+                      <Stack.Item key={traitId}>
+                        <TraitPill
+                          title={entry.name || traitId}
+                          cost={entry.cost || 0}
+                          desc={entry.desc}
+                          amount={amount}
+                          repeatable={!!entry.repeatable}
+                          maximum={maximum}
+                          selected
+                          disabledAdd={!canAdd}
+                          disabledRemove={amount <= 0}
+                          onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
+                          onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
+                        />
+                      </Stack.Item>
+                    );
+                  })}
                 </Stack>
               ) : (
                 <NoticeBox>No selected traits in this group.</NoticeBox>

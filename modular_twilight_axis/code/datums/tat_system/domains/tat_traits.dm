@@ -14,8 +14,24 @@
 /datum/tat_traits/proc/get_entry(trait_id)
 	return GLOB.tat_available_traits[trait_id]
 
+/datum/tat_traits/proc/get_trait_count(trait_id)
+	var/value = selected[trait_id]
+	if(isnum(value))
+		return max(0, round(value))
+	return value ? 1 : 0
+
 /datum/tat_traits/proc/has_trait(trait_id)
-	return !!selected[trait_id]
+	return get_trait_count(trait_id) > 0
+
+/datum/tat_traits/proc/is_repeatable_trait(trait_id)
+	var/list/repeatables = TAT_TRAIT_REPEATABLE_MAXIMUMS
+	return !!repeatables[trait_id]
+
+/datum/tat_traits/proc/get_trait_maximum(trait_id)
+	if(!is_repeatable_trait(trait_id))
+		return 1
+	var/list/repeatables = TAT_TRAIT_REPEATABLE_MAXIMUMS
+	return max(1, round(repeatables[trait_id] || 1))
 
 /datum/tat_traits/proc/get_trait_display_name(trait_id)
 	var/list/entry = get_entry(trait_id)
@@ -44,12 +60,26 @@
 /datum/tat_traits/proc/add_trait(trait_id)
 	if(!check_trait(trait_id))
 		return FALSE
-	selected[trait_id] = TRUE
+	if(is_repeatable_trait(trait_id))
+		var/current = get_trait_count(trait_id)
+		var/maximum = get_trait_maximum(trait_id)
+		if(current >= maximum)
+			return FALSE
+		selected[trait_id] = current + 1
+	else
+		selected[trait_id] = TRUE
 	owner_build?.set_dirty()
 	return TRUE
 
 /datum/tat_traits/proc/remove_trait(trait_id)
-	selected -= trait_id
+	if(is_repeatable_trait(trait_id))
+		var/current = get_trait_count(trait_id)
+		if(current > 1)
+			selected[trait_id] = current - 1
+		else
+			selected -= trait_id
+	else
+		selected -= trait_id
 	owner_build?.set_dirty()
 	return TRUE
 
@@ -58,7 +88,7 @@
 	var/list/rules = TAT_TRAIT_STAT_POINT_RULES
 	for(var/trait_id in selected)
 		if(trait_id in rules)
-			total += round(rules[trait_id])
+			total += round(rules[trait_id]) * get_trait_count(trait_id)
 	return total
 
 /datum/tat_traits/proc/get_bonus_item_points()
@@ -66,7 +96,22 @@
 	var/list/rules = TAT_TRAIT_ITEM_POINT_RULES
 	for(var/trait_id in selected)
 		if(trait_id in rules)
-			total += round(rules[trait_id])
+			total += round(rules[trait_id]) * get_trait_count(trait_id)
+	return total
+
+/datum/tat_traits/proc/get_skill_domain_conversion_delta(domain)
+	var/total = 0
+	var/list/rules = TAT_TRAIT_SKILL_DOMAIN_CONVERSION_RULES
+	for(var/trait_id in selected)
+		var/list/conversion = rules[trait_id]
+		if(!islist(conversion))
+			continue
+		var/count = get_trait_count(trait_id)
+		var/amount = round(conversion["amount"] || 0) * count
+		if(conversion["to"] == domain)
+			total += amount
+		if(conversion["from"] == domain)
+			total -= amount
 	return total
 
 /datum/tat_traits/proc/get_bonus_skill_domain_points(domain)
@@ -75,7 +120,8 @@
 	for(var/trait_id in selected)
 		var/list/domain_map = rules[trait_id]
 		if(islist(domain_map))
-			total += round(domain_map[domain] || 0)
+			total += round(domain_map[domain] || 0) * get_trait_count(trait_id)
+	total += get_skill_domain_conversion_delta(domain)
 	return total
 
 /datum/tat_traits/proc/get_bonus_skill_value(skill_type)
@@ -147,7 +193,7 @@
 /datum/tat_traits/proc/get_spent_points()
 	var/total = 0
 	for(var/trait_id in selected)
-		total += get_display_cost(trait_id)
+		total += get_display_cost(trait_id) * get_trait_count(trait_id)
 	return total
 
 /datum/tat_traits/proc/get_remaining_points()
@@ -302,6 +348,13 @@
 	for(var/trait_id in selected.Copy())
 		if(!check_trait(trait_id))
 			selected -= trait_id
+			continue
+		var/count = get_trait_count(trait_id)
+		var/maximum = get_trait_maximum(trait_id)
+		if(count <= 0)
+			selected -= trait_id
+		else if(is_repeatable_trait(trait_id) && count > maximum)
+			selected[trait_id] = maximum
 	while(get_remaining_points() < 0)
 		var/changed = FALSE
 		for(var/trait_id in selected.Copy())
@@ -462,6 +515,8 @@
 	if(!H)
 		return FALSE
 	for(var/trait_id in selected)
+		if(is_repeatable_trait(trait_id))
+			continue
 		switch(trait_id)
 			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_HERETIC)
 				continue
@@ -550,14 +605,18 @@
 	if(!islist(data))
 		return FALSE
 	for(var/trait_id in data)
-		if(data[trait_id])
+		if(!check_trait(trait_id))
+			continue
+		var/count = isnum(data[trait_id]) ? round(data[trait_id]) : (data[trait_id] ? 1 : 0)
+		for(var/i in 1 to count)
 			add_trait(trait_id)
 	return TRUE
 
 /datum/tat_traits/proc/export_to_json_list()
 	var/list/result = list()
 	for(var/trait_id in selected)
-		if(selected[trait_id])
+		var/count = get_trait_count(trait_id)
+		for(var/i in 1 to count)
 			result += trait_id
 	return result
 
@@ -570,7 +629,9 @@
 			add_trait(key)
 			continue
 		if(data[key] && check_trait("[key]"))
-			add_trait("[key]")
+			var/count = isnum(data[key]) ? round(data[key]) : 1
+			for(var/i in 1 to count)
+				add_trait("[key]")
 	return TRUE
 
 /datum/tat_traits/proc/get_tat_resident_advjob()

@@ -312,11 +312,15 @@
 	return !!SEND_SIGNAL(storage_owner, COMSIG_TRY_STORAGE_INSERT, I, null, TRUE, TRUE)
 
 /datum/tat_items/proc/try_put_into_any_storage_or_drop(obj/item/I, mob/living/carbon/human/H)
-	if(!I || !H)
+	if(!I || !H || QDELETED(I))
 		return FALSE
 	for(var/storage_owner in get_storage_targets(H))
+		if(QDELETED(I))
+			return FALSE
 		if(try_insert_into_storage(I, storage_owner, H))
 			return TRUE
+	if(QDELETED(I))
+		return FALSE
 	I.forceMove(get_turf(H))
 	return TRUE
 
@@ -336,6 +340,10 @@
 		return FALSE
 	var/list/slots = get_equip_slots_for_item(I, path)
 	for(var/slot_id in slots)
+		if(QDELETED(I))
+			return FALSE
+		if(H.get_item_by_slot(slot_id))
+			continue
 		if(H.equip_to_slot_if_possible(I, slot_id, FALSE, TRUE, TRUE, TRUE))
 			return TRUE
 	try_put_into_any_storage_or_drop(I, H)

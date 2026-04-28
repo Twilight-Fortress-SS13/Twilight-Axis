@@ -291,14 +291,21 @@
 
 	if(islist(trait_data))
 		var/list/all_traits = GLOB.tat_available_traits
-		var/has_outlander = !!trait_data[TRAIT_OUTLANDER]
+		var/has_outlander = (TRAIT_OUTLANDER in trait_data) || !!trait_data[TRAIT_OUTLANDER]
 
-		for(var/trait_id in trait_data)
-			if(!trait_data[trait_id])
-				continue
+		for(var/key in trait_data)
+			var/trait_id = key
+			var/count = 1
+			if(!islist(all_traits[trait_id]))
+				trait_id = trait_data[key]
+				count = 1
+			else if(isnum(trait_data[key]))
+				count = max(0, round(trait_data[key]))
+			else if(!trait_data[key])
+				count = 0
 
 			var/list/entry = all_traits[trait_id]
-			if(!islist(entry))
+			if(!islist(entry) || count <= 0)
 				continue
 
 			var/cost = isnum(entry["cost"]) ? entry["cost"] : 0
@@ -306,7 +313,7 @@
 			if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && has_outlander)
 				cost -= TAT_TRAIT_DISCOUNT
 
-			traits_spent += cost
+			traits_spent += cost * count
 
 	var/items_spent = 0
 	var/list/item_data = build_data["items"]
