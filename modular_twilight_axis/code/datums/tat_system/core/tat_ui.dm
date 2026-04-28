@@ -29,6 +29,9 @@
 	if(!ispath(skill_type, /datum/skill))
 		return null
 
+	if(GLOB.tat_skill_entry_cache_ready && ("[skill_type]" in GLOB.tat_skill_entry_cache))
+		return GLOB.tat_skill_entry_cache["[skill_type]"]
+
 	var/datum/skill/S = new skill_type
 	if(!S)
 		return null
@@ -44,6 +47,7 @@
 	)
 
 	qdel(S)
+	GLOB.tat_skill_entry_cache["[skill_type]"] = result
 	return result
 
 /datum/tat_build/proc/get_trait_entry(trait_id)
@@ -162,7 +166,8 @@
 		return FALSE
 	var/current = stats.get_value(id)
 	var/ok = stats.set_value(id, current + (text2num("[amount]") || 1))
-	sanitize()
+	if(ok)
+		stats?.sanitize()
 	return ok
 
 /datum/tat_build/proc/remove_stat(id, amount = 1)
@@ -177,7 +182,8 @@
 		return FALSE
 	var/current = skills.get_invested_value(skill_type)
 	var/ok = skills.set_invested_value(skill_type, current + (text2num("[amount]") || 1))
-	sanitize()
+	if(ok)
+		skills?.sanitize()
 	return ok
 
 /datum/tat_build/proc/remove_skill(skill_type, amount = 1)
@@ -189,7 +195,11 @@
 
 /datum/tat_build/proc/add_trait(trait_id)
 	var/ok = traits?.add_trait(trait_id)
-	sanitize()
+	if(ok)
+		traits?.sanitize()
+		stats?.sanitize()
+		skills?.sanitize()
+		items?.sanitize()
 	return ok
 
 /datum/tat_build/proc/remove_trait(trait_id, amount = 1)
@@ -204,6 +214,11 @@
 			changed = TRUE
 		else
 			break
+	if(changed)
+		traits?.sanitize()
+		stats?.sanitize()
+		skills?.sanitize()
+		items?.sanitize()
 	return changed
 
 /datum/tat_build/proc/add_item(path, amount = 1)
@@ -211,7 +226,8 @@
 		return FALSE
 	var/current = items.get_amount(path)
 	var/ok = items.set_amount(path, current + (text2num("[amount]") || 1))
-	sanitize()
+	if(ok)
+		items?.sanitize()
 	return ok
 
 /datum/tat_build/proc/remove_item(path, amount = 1)
@@ -297,15 +313,24 @@
 	return result
 
 /datum/tat_build/proc/build_ui_skill_entries()
+	if(GLOB.tat_skill_entry_cache_ready)
+		return GLOB.tat_skill_entry_cache
+
 	var/list/result = list()
 	for(var/skill_type in get_all_ui_skill_types())
 		var/list/entry = get_skill_entry(skill_type)
 		if(!islist(entry))
 			continue
 		result["[skill_type]"] = entry
+
+	GLOB.tat_skill_entry_cache = result
+	GLOB.tat_skill_entry_cache_ready = TRUE
 	return result
 
 /datum/tat_build/proc/build_ui_skills()
+	if(islist(ui_skills_cache))
+		return ui_skills_cache
+
 	attach_preferences_from_mob(usr)
 	skills?.rebuild_bonus_values()
 
@@ -325,6 +350,7 @@
 			"bonus" = bonus_value,
 			"invested" = invested_value,
 		)
+	ui_skills_cache = result
 	return result
 
 /datum/tat_build/proc/build_ui_selected_traits()
@@ -368,8 +394,12 @@
 	return GLOB.tat_item_catalog_cache
 
 /datum/tat_build/proc/build_ui_items_state()
+	if(islist(ui_items_state_cache))
+		return ui_items_state_cache
+
 	var/list/result = list()
 	if(!items)
+		ui_items_state_cache = result
 		return result
 	for(var/item_path in GLOB.tat_available_items)
 		var/list/entry = GLOB.tat_available_items[item_path]
@@ -383,10 +413,17 @@
 			"maximum" = maximum,
 			"can_add" = amount < maximum,
 		)
+	ui_items_state_cache = result
 	return result
 
 /datum/tat_build/proc/build_ui_loadout()
+	if(islist(ui_loadout_cache))
+		return ui_loadout_cache
+
 	var/list/result = list()
+	if(!items)
+		ui_loadout_cache = result
+		return result
 	for(var/item_path in items.selected)
 		var/amount = items.get_amount(item_path)
 		if(amount <= 0)
@@ -405,11 +442,12 @@
 			"slots" = exported_slots,
 			"valid_slots" = items.get_valid_loadout_ui_slots_for_item(item_path),
 		)
+	ui_loadout_cache = result
 	return result
 
 /datum/tat_build/proc/build_ui_tat_slot(slot_id)
 	var/datum/tat_slot/slot = get_tat_slot(slot_id)
-	var/list/summary = build_slot_summary_from_data(slot.get_build_data())
+	var/list/summary = slot.get_summary(src)
 	var/name = istext(slot.name) && length(slot.name) ? slot.name : get_default_tat_slot_name(slot_id)
 	return list(
 		"id" = slot_id,
@@ -424,10 +462,14 @@
 	)
 
 /datum/tat_build/proc/build_ui_tat_slots()
+	if(islist(ui_tat_slots_cache))
+		return ui_tat_slots_cache
+
 	init_tat_slots()
 	var/list/result = list()
 	for(var/i in 1 to TAT_SLOT_COUNT)
 		result += list(build_ui_tat_slot(i))
+	ui_tat_slots_cache = result
 	return result
 
 /datum/tat_build/ui_state(mob/user)

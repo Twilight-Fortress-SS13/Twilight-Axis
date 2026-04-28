@@ -4,6 +4,9 @@
 	var/list/item_loadout = list()
 	var/list/applied_mob_refs = list()
 	var/base_points = 20
+	var/list/valid_loadout_ui_slots_cache = list()
+	var/list/equip_slots_cache = list()
+	var/list/hand_fallback_slots_cache = list()
 
 /datum/tat_items/New(datum/tat_build/B)
 	. = ..()
@@ -529,23 +532,36 @@
 	if(category == TAT_ITEM_CATEGORY_WEAPON || is_weapon_loadout_group(slot_group))
 		append_weapon_loadout_ui_slots(slots, slot_group)
 
+/datum/tat_items/proc/get_cached_equip_slots_for_item(item_path)
+	if(item_path in equip_slots_cache)
+		return equip_slots_cache[item_path]
+
+	var/list/result = list()
+	if(ispath(item_path, /obj/item))
+		var/obj/item/I = new item_path(null)
+		if(I)
+			result = get_equip_slots_for_item(I, item_path)
+			qdel(I)
+	equip_slots_cache[item_path] = result
+	return result
+
 /datum/tat_items/proc/get_valid_loadout_ui_slots_for_item(item_path)
+	if(item_path in valid_loadout_ui_slots_cache)
+		return valid_loadout_ui_slots_cache[item_path]
+
 	var/list/result = list()
 	var/list/entry = get_entry(item_path)
 	if(!islist(entry))
+		valid_loadout_ui_slots_cache[item_path] = result
 		return result
 
 	append_loadout_ui_slots_for_slot_group(result, entry["slot_group"])
 
-	if(ispath(item_path, /obj/item))
-		var/obj/item/I = new item_path(null)
-		if(I)
-			var/list/equip_slots = get_equip_slots_for_item(I, item_path)
-			for(var/slot_id in equip_slots)
-				append_loadout_ui_slots_for_equip_slot(result, slot_id)
-			qdel(I)
+	for(var/slot_id in get_cached_equip_slots_for_item(item_path))
+		append_loadout_ui_slots_for_equip_slot(result, slot_id)
 
 	append_hand_slots_if_reasonable(result, item_path, entry)
+	valid_loadout_ui_slots_cache[item_path] = result
 	return result
 
 /datum/tat_items/proc/get_assigned_loadout_slot_count(item_path)
@@ -736,15 +752,60 @@
 	I.forceMove(get_turf(H))
 	return TRUE
 
+/datum/tat_items/proc/get_unique_stash_item_name(list/special_items, item_name)
+	if(!islist(special_items))
+		return null
+	var/base_name = trim("[item_name]")
+	if(!length(base_name))
+		base_name = "Loadout item"
+	var/result = base_name
+	var/index = 2
+	while(result in special_items)
+		result = "[base_name] ([index])"
+		index++
+	return result
+
+/datum/tat_items/proc/try_put_into_special_items_stash(obj/item/I, mob/living/carbon/human/H, path)
+	if(!I || !H || QDELETED(I) || !H.mind)
+		return FALSE
+	var/item_type = ispath(path, /obj/item) ? path : I.type
+	if(!ispath(item_type, /obj/item))
+		return FALSE
+	if(!islist(H.mind.special_items))
+		H.mind.special_items = list()
+	var/stash_name = get_unique_stash_item_name(H.mind.special_items, I.name)
+	if(!length(stash_name))
+		return FALSE
+	H.mind.special_items[stash_name] = item_type
+	qdel(I)
+	return TRUE
+
+/datum/tat_items/proc/try_put_into_stash_or_storage_or_drop(obj/item/I, mob/living/carbon/human/H, path)
+	if(!I || !H || QDELETED(I))
+		return FALSE
+	if(try_put_into_special_items_stash(I, H, path))
+		return TRUE
+	return try_put_into_any_storage_or_drop(I, H)
+
 /datum/tat_items/proc/spawn_item_into_bag_or_fallback(mob/living/carbon/human/H, path)
 	if(!H || !ispath(path))
-		return
+		return FALSE
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
-		return
-	try_put_into_any_storage_or_drop(I, H)
+		return FALSE
+	for(var/storage_owner in get_storage_targets(H))
+		if(QDELETED(I))
+			return FALSE
+		if(try_insert_into_storage(I, storage_owner, H))
+			return TRUE
+	if(QDELETED(I))
+		return FALSE
+	if(try_put_into_special_items_stash(I, H, path))
+		return TRUE
+	I.forceMove(get_turf(H))
+	return TRUE
 
-/datum/tat_items/proc/spawn_item_equipped_or_fallback(mob/living/carbon/human/H, path)
+/datum/tat_items/proc/spawn_item_equipped_or_fallback(mob/living/carbon/human/H, path, use_stash_fallback = TRUE)
 	if(!H || !ispath(path))
 		return FALSE
 	var/obj/item/I = new path(get_turf(H))
@@ -758,7 +819,10 @@
 			continue
 		if(H.equip_to_slot_if_possible(I, slot_id, FALSE, TRUE, TRUE, TRUE))
 			return TRUE
-	try_put_into_any_storage_or_drop(I, H)
+	if(use_stash_fallback)
+		try_put_into_stash_or_storage_or_drop(I, H, path)
+	else
+		try_put_into_any_storage_or_drop(I, H)
 	return FALSE
 
 /datum/tat_items/proc/get_item_slot_group_lower(path)
@@ -794,6 +858,9 @@
 	return FALSE
 
 /datum/tat_items/proc/get_hand_loadout_wearable_fallback_slots(item_path, preferred_hand_slot_id = null)
+	if(item_path in hand_fallback_slots_cache)
+		return hand_fallback_slots_cache[item_path]
+
 	var/list/result = list()
 	var/list/valid_ui_slots = get_valid_loadout_ui_slots_for_item(item_path)
 	var/list/preferred_ui_slots = list("shoulder_l", "shoulder_r", "belt", "belt_l", "belt_r")
@@ -803,15 +870,11 @@
 		var/equip_slot = get_loadout_slot_equip_slot(ui_slot)
 		if(equip_slot)
 			append_unique_equip_slot(result, equip_slot)
-	if(ispath(item_path, /obj/item))
-		var/obj/item/I = new item_path(null)
-		if(I)
-			var/list/equip_slots = get_equip_slots_for_item(I, item_path)
-			for(var/equip_slot in equip_slots)
-				if(equip_slot == SLOT_HANDS)
-					continue
-				append_unique_equip_slot(result, equip_slot)
-			qdel(I)
+	for(var/equip_slot in get_cached_equip_slots_for_item(item_path))
+		if(equip_slot == SLOT_HANDS)
+			continue
+		append_unique_equip_slot(result, equip_slot)
+	hand_fallback_slots_cache[item_path] = result
 	return result
 
 /datum/tat_items/proc/try_equip_existing_item_to_hand_fallback_slot(mob/living/carbon/human/H, obj/item/I, item_path, preferred_hand_slot_id = null)
@@ -824,22 +887,31 @@
 			return TRUE
 	return FALSE
 
-/datum/tat_items/proc/spawn_item_to_exact_slot_or_bag(mob/living/carbon/human/H, path, equip_slot)
+/datum/tat_items/proc/spawn_item_to_exact_slot_or_bag(mob/living/carbon/human/H, path, equip_slot, use_stash_fallback = TRUE)
 	if(!H || !ispath(path) || !equip_slot)
 		return FALSE
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return FALSE
 	if(H.get_item_by_slot(equip_slot))
-		try_put_into_any_storage_or_drop(I, H)
+		if(use_stash_fallback)
+			try_put_into_stash_or_storage_or_drop(I, H, path)
+		else
+			try_put_into_any_storage_or_drop(I, H)
 		return FALSE
 	if(H.equip_to_slot_if_possible(I, equip_slot, FALSE, TRUE, TRUE, TRUE))
 		if(H.get_item_by_slot(equip_slot) == I)
 			return TRUE
 		if(!QDELETED(I))
-			try_put_into_any_storage_or_drop(I, H)
+			if(use_stash_fallback)
+				try_put_into_stash_or_storage_or_drop(I, H, path)
+			else
+				try_put_into_any_storage_or_drop(I, H)
 		return FALSE
-	try_put_into_any_storage_or_drop(I, H)
+	if(use_stash_fallback)
+		try_put_into_stash_or_storage_or_drop(I, H, path)
+	else
+		try_put_into_any_storage_or_drop(I, H)
 	return FALSE
 
 /datum/tat_items/proc/spawn_item_to_loadout_slot_or_bag(mob/living/carbon/human/H, path, slot_id)
@@ -853,7 +925,7 @@
 			return TRUE
 		if(try_equip_existing_item_to_hand_fallback_slot(H, I, path, slot_id))
 			return TRUE
-		try_put_into_any_storage_or_drop(I, H)
+		try_put_into_stash_or_storage_or_drop(I, H, path)
 		return FALSE
 	var/equip_slot = get_loadout_slot_equip_slot(slot_id)
 	if(!equip_slot)
@@ -920,9 +992,9 @@
 			continue
 		if(H.get_item_by_slot(equip_slot))
 			continue
-		if(spawn_item_to_exact_slot_or_bag(H, /obj/item/storage/backpack/rogue/satchel, equip_slot))
+		if(spawn_item_to_exact_slot_or_bag(H, /obj/item/storage/backpack/rogue/satchel, equip_slot, FALSE))
 			return TRUE
-	spawn_item_equipped_or_fallback(H, /obj/item/storage/backpack/rogue/satchel)
+	spawn_item_equipped_or_fallback(H, /obj/item/storage/backpack/rogue/satchel, FALSE)
 	return TRUE
 
 /datum/tat_items/proc/apply_to_human(mob/living/carbon/human/H)
