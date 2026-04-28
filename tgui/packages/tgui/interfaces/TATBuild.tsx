@@ -1360,50 +1360,54 @@ const TraitPill = ({
   desc,
   amount,
   repeatable,
-  maximum,
   selected,
   disabledAdd,
   disabledRemove,
   onAdd,
   onRemove,
+  onHoverStart,
+  onHoverEnd,
 }: {
   title: string;
   cost: number;
   desc?: string;
   amount?: number;
   repeatable?: boolean;
-  maximum?: number;
   selected?: boolean;
   disabledAdd?: boolean;
   disabledRemove?: boolean;
   onAdd: () => void;
   onRemove: () => void;
+  onHoverStart?: () => void;
+  onHoverEnd?: () => void;
 }) => {
   const countText = repeatable && amount && amount > 0 ? ` x${amount}` : '';
-  const maxText = repeatable && typeof maximum === 'number' && maximum >= 0 ? ` / ${maximum}` : '';
+  const fullyDisabled = !!disabledAdd && !!disabledRemove;
 
   return (
-    <Box>
-      <Stack align="center">
-        <Stack.Item>
-          <Button
-            selected={selected}
-            color={selected ? 'good' : undefined}
-            tooltip={desc || undefined}
-            disabled={disabledAdd}
-            onClick={onAdd}>
-            {title}{countText}{maxText} ({cost})
-          </Button>
-        </Stack.Item>
-        {(repeatable || selected) && (
-          <Stack.Item>
-            <Button compact disabled={disabledRemove} onClick={onRemove}>
-              -
-            </Button>
-          </Stack.Item>
-        )}
-      </Stack>
-    </Box>
+    <div
+      onContextMenu={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!disabledRemove) {
+          onRemove();
+        }
+      }}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+      style={{ display: 'inline-block' }}>
+      <Button
+        selected={selected}
+        color={selected ? 'good' : undefined}
+        disabled={fullyDisabled}
+        onClick={() => {
+          if (!disabledAdd) {
+            onAdd();
+          }
+        }}>
+        {title}{countText} ({cost})
+      </Button>
+    </div>
   );
 };
 
@@ -1411,10 +1415,12 @@ const TraitsTab = ({
   data,
   act,
   search,
+  setHoveredItem,
 }: {
   data: Data;
   act: BackendAct;
   search: string;
+  setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const grouped = useMemo(() => {
     const groups: Record<
@@ -1487,7 +1493,6 @@ const TraitsTab = ({
                 <Stack wrap>
                   {group.available.map(([traitId, entry]) => {
                     const amount = getTraitAmount(data, traitId);
-                    const maximum = data.traits_state?.[traitId]?.maximum ?? entry.maximum;
                     const canAdd = canAddTrait(data, traitId, entry);
 
                     return (
@@ -1498,11 +1503,28 @@ const TraitsTab = ({
                           desc={entry.desc}
                           amount={amount}
                           repeatable={!!entry.repeatable}
-                          maximum={maximum}
                           disabledAdd={!canAdd}
                           disabledRemove={amount <= 0}
                           onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
                           onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
+                          onHoverStart={() =>
+                            setHoveredItem({
+                              name: entry.name || traitId,
+                              desc: entry.desc,
+                              category: entry.category_name || entry.category,
+                              costText: `${entry.cost || 0} pts`,
+                              total: amount,
+                              canAdd,
+                              leftHelp: canAdd
+                                ? 'LMB: add trait / increase stack'
+                                : 'Cannot add more',
+                              rightHelp:
+                                amount > 0
+                                  ? 'RMB: remove trait / decrease stack'
+                                  : 'RMB: nothing to remove',
+                            })
+                          }
+                          onHoverEnd={() => setHoveredItem(null)}
                         />
                       </Stack.Item>
                     );
@@ -1519,7 +1541,6 @@ const TraitsTab = ({
                 <Stack wrap>
                   {group.selected.map(([traitId, entry]) => {
                     const amount = getTraitAmount(data, traitId);
-                    const maximum = data.traits_state?.[traitId]?.maximum ?? entry.maximum;
                     const canAdd = canAddTrait(data, traitId, entry);
 
                     return (
@@ -1530,12 +1551,29 @@ const TraitsTab = ({
                           desc={entry.desc}
                           amount={amount}
                           repeatable={!!entry.repeatable}
-                          maximum={maximum}
                           selected
                           disabledAdd={!canAdd}
                           disabledRemove={amount <= 0}
                           onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
                           onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
+                          onHoverStart={() =>
+                            setHoveredItem({
+                              name: entry.name || traitId,
+                              desc: entry.desc,
+                              category: entry.category_name || entry.category,
+                              costText: `${entry.cost || 0} pts`,
+                              total: amount,
+                              canAdd,
+                              leftHelp: canAdd
+                                ? 'LMB: add trait / increase stack'
+                                : 'Cannot add more',
+                              rightHelp:
+                                amount > 0
+                                  ? 'RMB: remove trait / decrease stack'
+                                  : 'RMB: nothing to remove',
+                            })
+                          }
+                          onHoverEnd={() => setHoveredItem(null)}
                         />
                       </Stack.Item>
                     );
@@ -1946,7 +1984,14 @@ export const TATBuild = () => {
               setHoveredItem={setHoveredItem}
             />
           )}
-          {tab === 'traits' && <TraitsTab data={data} act={act} search={search} />}
+          {tab === 'traits' && (
+            <TraitsTab
+              data={data}
+              act={act}
+              search={search}
+              setHoveredItem={setHoveredItem}
+            />
+          )}
           {tab === 'items' && (
             <ItemsTab
               itemEntries={itemEntries}
