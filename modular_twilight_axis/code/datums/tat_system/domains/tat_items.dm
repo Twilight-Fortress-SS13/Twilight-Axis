@@ -258,7 +258,7 @@
 
 /datum/tat_items/proc/is_weapon_loadout_group(slot_group)
 	var/group = lowertext("[slot_group]")
-	return group in list("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact")
+	return group in list("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact", "unarmed")
 
 /datum/tat_items/proc/is_light_loadout_group(slot_group)
 	var/group = lowertext("[slot_group]")
@@ -285,6 +285,30 @@
 	append_unique_equip_slot(slots, SLOT_BELT_L)
 	append_unique_equip_slot(slots, SLOT_BELT_R)
 	append_unique_equip_slot(slots, SLOT_HANDS)
+
+/datum/tat_items/proc/is_amulet_loadout_group(slot_group)
+	var/group = lowertext("[slot_group]")
+	return group in list("cross", "amulet", "amulets", "talisman", "talismans", "charm", "charms", "necklace", "necklaces")
+
+/datum/tat_items/proc/is_amulet_loadout_item(item_path, list/entry = null)
+	if(islist(entry) && is_amulet_loadout_group(entry["slot_group"]))
+		return TRUE
+	var/path_text = lowertext("[item_path]")
+	if(findtext(path_text, "amulet") || findtext(path_text, "talisman") || findtext(path_text, "charm") || findtext(path_text, "necklace") || findtext(path_text, "psicross") || findtext(path_text, "cross"))
+		return TRUE
+	if(islist(entry))
+		var/name_text = lowertext("[entry["name"]]")
+		if(findtext(name_text, "amulet") || findtext(name_text, "talisman") || findtext(name_text, "charm") || findtext(name_text, "necklace") || findtext(name_text, "cross"))
+			return TRUE
+	return FALSE
+
+/datum/tat_items/proc/append_amulet_loadout_ui_slots(list/slots)
+	append_unique_text(slots, "neck")
+	append_unique_text(slots, "ring")
+
+/datum/tat_items/proc/append_amulet_equip_slots(list/slots)
+	append_unique_equip_slot(slots, SLOT_NECK)
+	append_unique_equip_slot(slots, SLOT_RING)
 
 /datum/tat_items/proc/append_weapon_loadout_ui_slots(list/slots, slot_group = null)
 	var/group = lowertext("[slot_group]")
@@ -427,6 +451,8 @@
 			append_unique_text(slots, "gloves")
 		if("ring")
 			append_unique_text(slots, "ring")
+		if("cross", "amulet", "amulets", "talisman", "talismans", "charm", "charms", "necklace", "necklaces")
+			append_amulet_loadout_ui_slots(slots)
 		if("back")
 			append_unique_text(slots, "shoulder_l")
 			append_unique_text(slots, "shoulder_r")
@@ -442,7 +468,7 @@
 			append_music_loadout_ui_slots(slots)
 		if("adventur' supply", "adventur supply", "adventure supply", "light", "lamp", "lantern", "torch")
 			append_light_loadout_ui_slots(slots)
-		if("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact")
+		if("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact", "unarmed")
 			append_weapon_loadout_ui_slots(slots, group)
 
 /datum/tat_items/proc/append_loadout_ui_slots_for_equip_slot(list/slots, slot_id)
@@ -496,6 +522,9 @@
 		return
 	if(is_light_loadout_item(item_path, entry))
 		append_light_loadout_ui_slots(slots)
+		return
+	if(is_amulet_loadout_item(item_path, entry))
+		append_amulet_loadout_ui_slots(slots)
 		return
 	if(category == TAT_ITEM_CATEGORY_WEAPON || is_weapon_loadout_group(slot_group))
 		append_weapon_loadout_ui_slots(slots, slot_group)
@@ -631,17 +660,21 @@
 			append_unique_equip_slot(slots, SLOT_SHOES)
 		if("ring")
 			append_unique_equip_slot(slots, SLOT_RING)
+		if("cross", "amulet", "amulets", "talisman", "talismans", "charm", "charms", "necklace", "necklaces")
+			append_amulet_equip_slots(slots)
 		if("music")
 			append_music_equip_slots(slots)
 		if("adventur' supply", "adventur supply", "adventure supply", "light", "lamp", "lantern", "torch")
 			append_light_equip_slots(slots)
-		if("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact")
+		if("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact", "unarmed")
 			append_weapon_equip_slots(slots, slot_group)
 
 	if(ispath(item_path, /obj/item/rogue/instrument))
 		append_music_equip_slots(slots)
 	if(is_light_loadout_item(item_path, entry))
 		append_light_equip_slots(slots)
+	if(is_amulet_loadout_item(item_path, entry))
+		append_amulet_equip_slots(slots)
 	if(islist(entry) && lowertext("[entry["category"]]") == TAT_ITEM_CATEGORY_WEAPON)
 		append_weapon_equip_slots(slots, slot_group)
 
@@ -652,6 +685,8 @@
 		append_unique_equip_slot(slots, SLOT_WEAR_MASK)
 	if(flags & ITEM_SLOT_NECK)
 		append_unique_equip_slot(slots, SLOT_NECK)
+		if(is_amulet_loadout_item(item_path, entry))
+			append_unique_equip_slot(slots, SLOT_RING)
 	if(flags & ITEM_SLOT_CLOAK)
 		append_unique_equip_slot(slots, SLOT_CLOAK)
 	if(flags & ITEM_SLOT_ARMOR || flags & ITEM_SLOT_OCLOTHING)
@@ -749,6 +784,46 @@
 			return TRUE
 	return FALSE
 
+/datum/tat_items/proc/try_equip_existing_item_to_exact_slot(mob/living/carbon/human/H, obj/item/I, equip_slot)
+	if(!H || !I || QDELETED(I) || !equip_slot)
+		return FALSE
+	if(H.get_item_by_slot(equip_slot))
+		return FALSE
+	if(H.equip_to_slot_if_possible(I, equip_slot, FALSE, TRUE, TRUE, TRUE))
+		return H.get_item_by_slot(equip_slot) == I || I.loc == H
+	return FALSE
+
+/datum/tat_items/proc/get_hand_loadout_wearable_fallback_slots(item_path, preferred_hand_slot_id = null)
+	var/list/result = list()
+	var/list/valid_ui_slots = get_valid_loadout_ui_slots_for_item(item_path)
+	var/list/preferred_ui_slots = list("shoulder_l", "shoulder_r", "belt", "belt_l", "belt_r")
+	for(var/ui_slot in preferred_ui_slots)
+		if(!(ui_slot in valid_ui_slots))
+			continue
+		var/equip_slot = get_loadout_slot_equip_slot(ui_slot)
+		if(equip_slot)
+			append_unique_equip_slot(result, equip_slot)
+	if(ispath(item_path, /obj/item))
+		var/obj/item/I = new item_path(null)
+		if(I)
+			var/list/equip_slots = get_equip_slots_for_item(I, item_path)
+			for(var/equip_slot in equip_slots)
+				if(equip_slot == SLOT_HANDS)
+					continue
+				append_unique_equip_slot(result, equip_slot)
+			qdel(I)
+	return result
+
+/datum/tat_items/proc/try_equip_existing_item_to_hand_fallback_slot(mob/living/carbon/human/H, obj/item/I, item_path, preferred_hand_slot_id = null)
+	if(!H || !I || QDELETED(I) || !ispath(item_path))
+		return FALSE
+	for(var/equip_slot in get_hand_loadout_wearable_fallback_slots(item_path, preferred_hand_slot_id))
+		if(QDELETED(I))
+			return FALSE
+		if(try_equip_existing_item_to_exact_slot(H, I, equip_slot))
+			return TRUE
+	return FALSE
+
 /datum/tat_items/proc/spawn_item_to_exact_slot_or_bag(mob/living/carbon/human/H, path, equip_slot)
 	if(!H || !ispath(path) || !equip_slot)
 		return FALSE
@@ -775,6 +850,8 @@
 		if(!I)
 			return FALSE
 		if(try_put_into_loadout_hand(H, I, slot_id))
+			return TRUE
+		if(try_equip_existing_item_to_hand_fallback_slot(H, I, path, slot_id))
 			return TRUE
 		try_put_into_any_storage_or_drop(I, H)
 		return FALSE
@@ -819,11 +896,32 @@
 /datum/tat_items/proc/has_selected_roundstart_backpack()
 	return get_amount(/obj/item/storage/backpack/rogue/backpack) > 0
 
+/datum/tat_items/proc/get_reserved_loadout_equip_slots()
+	var/list/reserved = list()
+	for(var/item_path in selected)
+		var/list/loadout = get_loadout(item_path)
+		var/list/slots = loadout["slots"]
+		if(!islist(slots))
+			continue
+		for(var/slot_id in slots)
+			var/equip_slot = get_loadout_slot_equip_slot(slot_id)
+			if(equip_slot)
+				append_unique_equip_slot(reserved, equip_slot)
+	return reserved
+
 /datum/tat_items/proc/grant_default_roundstart_bag(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
 	if(has_selected_roundstart_backpack())
 		return FALSE
+	var/list/reserved_slots = get_reserved_loadout_equip_slots()
+	for(var/equip_slot in list(SLOT_BACK_L, SLOT_BACK_R, SLOT_BACK))
+		if(equip_slot in reserved_slots)
+			continue
+		if(H.get_item_by_slot(equip_slot))
+			continue
+		if(spawn_item_to_exact_slot_or_bag(H, /obj/item/storage/backpack/rogue/satchel, equip_slot))
+			return TRUE
 	spawn_item_equipped_or_fallback(H, /obj/item/storage/backpack/rogue/satchel)
 	return TRUE
 
