@@ -87,6 +87,9 @@
 		if(islist(skill_map))
 			total += round(skill_map[skill_type] || 0)
 
+	if(has_trait(TRAIT_ARCYNE) && skill_type == /datum/skill/magic/arcane && !has_defensive_trait_lockout())
+		total += 3
+	
 	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && skill_type == /datum/skill/magic/arcane)
 		total += 1
 
