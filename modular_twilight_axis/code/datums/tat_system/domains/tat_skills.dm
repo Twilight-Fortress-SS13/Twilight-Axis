@@ -209,8 +209,12 @@
 	var/cap = 0
 
 	if(skill_type == /datum/skill/magic/arcane)
-		if(owner_build?.has_trait(TRAIT_ARCYNE))
+		if(owner_build?.has_trait(TAT_TRAIT_MAGE_MINOR_SLOT_2))
 			cap = 6
+		else if(owner_build?.has_trait(TAT_TRAIT_MAGE_MAJOR_SLOT))
+			cap = 5
+		else if(owner_build?.has_trait(TAT_TRAIT_MAGE_INITIATE))
+			cap = 3
 
 	else if(skill_type == /datum/skill/magic/holy)
 		if(owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_3))

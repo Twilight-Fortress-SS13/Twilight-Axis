@@ -417,38 +417,28 @@
 
 /datum/tat_build/proc/load_from_list(list/data)
 	reset()
-
 	if(!islist(data))
 		load_tat_slots_from_list(null, 1)
-		dirty = FALSE
 		return FALSE
+	traits.import_from_list(data["traits"])
+	stats.import_from_list(data["stats"])
+	skills.import_from_list(data["skills"])
+	items.import_from_list(data["items"])
+	if(islist(data["magic_profile"]))
+		var/list/temp = data["magic_profile"]
+		magic_profile = temp.Copy()
+	else if(islist(data["magic_config"]))
+		var/list/temp = data["magic_config"]
+		magic_profile = temp.Copy()
 
 	var/list/_tat_slots = data["tat_slots"]
 	var/_active_tat_slot = data["active_tat_slot"]
-
 	if(islist(_tat_slots) || !isnull(_active_tat_slot))
 		load_tat_slots_from_list(_tat_slots, _active_tat_slot)
-		sanitize_tat_slots()
-		load_slot_into_current(active_tat_slot)
 	else
-		traits.import_from_list(data["traits"])
-		stats.import_from_list(data["stats"])
-		skills.import_from_list(data["skills"])
-		items.import_from_list(data["items"])
-
-		if(islist(data["magic_profile"]))
-			var/list/temp = data["magic_profile"]
-			magic_profile = temp.Copy()
-		else if(islist(data["magic_config"]))
-			var/list/temp = data["magic_config"]
-			magic_profile = temp.Copy()
-
-		sanitize()
-
 		load_tat_slots_from_list(null, 1)
-		save_current_to_slot(1)
-		active_tat_slot = 1
 
+	sanitize()
 	dirty = FALSE
 	return TRUE
 
@@ -547,26 +537,15 @@
 
 /datum/tat_build/proc/load_slot_into_current(slot_id)
 	init_tat_slots()
-
 	var/datum/tat_slot/slot = get_tat_slot(slot_id)
 	if(!slot)
 		return FALSE
-
 	var/list/build_data = slot.get_build_data()
 	if(!islist(build_data) || !length(build_data))
 		reset()
 		dirty = FALSE
 		return TRUE
-
 	load_slot_build_from_list(build_data)
-
-	if(length(get_validation_issues()))
-		slot.set_build_data(list())
-		reset()
-		dirty = FALSE
-		return TRUE
-
-	slot.set_build_data(export_slot_build_to_list())
 	dirty = FALSE
 	return TRUE
 
@@ -682,29 +661,3 @@
 		return TAT_ROLE_BUCKET_ADVENTURER
 
 	return TAT_ROLE_BUCKET_TRADER
-
-/datum/tat_build/proc/sanitize_tat_slots()
-	init_tat_slots()
-
-	var/list/current_build = export_slot_build_to_list()
-
-	for(var/i in 1 to TAT_SLOT_COUNT)
-		var/datum/tat_slot/slot = get_tat_slot(i)
-		if(!slot)
-			continue
-
-		var/list/build_data = slot.get_build_data()
-		if(!islist(build_data) || !length(build_data))
-			slot.set_build_data(list())
-			continue
-
-		load_slot_build_from_list(build_data)
-
-		if(length(get_validation_issues()))
-			slot.set_build_data(list())
-			continue
-
-		slot.set_build_data(export_slot_build_to_list())
-
-	load_slot_build_from_list(current_build)
-	return TRUE

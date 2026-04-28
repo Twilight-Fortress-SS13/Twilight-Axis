@@ -12,6 +12,7 @@
 /datum/tat_items/proc/reset()
 	selected = list()
 	item_loadout = list()
+	applied_mob_refs = list()
 	return TRUE
 
 /datum/tat_items/proc/get_entry(item_path)
@@ -255,6 +256,57 @@
 	append_unique_equip_slot(slots, SLOT_BELT_R)
 	append_unique_equip_slot(slots, SLOT_HANDS)
 
+/datum/tat_items/proc/is_weapon_loadout_group(slot_group)
+	var/group = lowertext("[slot_group]")
+	return group in list("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact")
+
+/datum/tat_items/proc/append_weapon_loadout_ui_slots(list/slots, slot_group = null)
+	var/group = lowertext("[slot_group]")
+	if(group in list("greatsword", "polearm"))
+		append_unique_text(slots, "shoulder_l")
+		append_unique_text(slots, "shoulder_r")
+		append_unique_text(slots, "hand_l")
+		append_unique_text(slots, "hand_r")
+		return
+	if(group == "sheath")
+		append_unique_text(slots, "belt")
+		append_unique_text(slots, "belt_l")
+		append_unique_text(slots, "belt_r")
+		append_unique_text(slots, "shoulder_l")
+		append_unique_text(slots, "shoulder_r")
+		return
+	append_unique_text(slots, "belt")
+	append_unique_text(slots, "belt_l")
+	append_unique_text(slots, "belt_r")
+	append_unique_text(slots, "shoulder_l")
+	append_unique_text(slots, "shoulder_r")
+	append_unique_text(slots, "hand_l")
+	append_unique_text(slots, "hand_r")
+
+/datum/tat_items/proc/append_weapon_equip_slots(list/slots, slot_group = null)
+	var/group = lowertext("[slot_group]")
+	if(group in list("greatsword", "polearm"))
+		append_unique_equip_slot(slots, SLOT_BACK_L)
+		append_unique_equip_slot(slots, SLOT_BACK_R)
+		append_unique_equip_slot(slots, SLOT_BACK)
+		append_unique_equip_slot(slots, SLOT_HANDS)
+		return
+	if(group == "sheath")
+		append_unique_equip_slot(slots, SLOT_BELT)
+		append_unique_equip_slot(slots, SLOT_BELT_L)
+		append_unique_equip_slot(slots, SLOT_BELT_R)
+		append_unique_equip_slot(slots, SLOT_BACK_L)
+		append_unique_equip_slot(slots, SLOT_BACK_R)
+		append_unique_equip_slot(slots, SLOT_BACK)
+		return
+	append_unique_equip_slot(slots, SLOT_BELT)
+	append_unique_equip_slot(slots, SLOT_BELT_L)
+	append_unique_equip_slot(slots, SLOT_BELT_R)
+	append_unique_equip_slot(slots, SLOT_BACK_L)
+	append_unique_equip_slot(slots, SLOT_BACK_R)
+	append_unique_equip_slot(slots, SLOT_BACK)
+	append_unique_equip_slot(slots, SLOT_HANDS)
+
 /datum/tat_items/proc/get_loadout_ui_slot_ids()
 	return list(
 		"neck",
@@ -362,6 +414,8 @@
 			append_unique_text(slots, "belt_r")
 		if("music")
 			append_music_loadout_ui_slots(slots)
+		if("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact")
+			append_weapon_loadout_ui_slots(slots, group)
 
 /datum/tat_items/proc/append_loadout_ui_slots_for_equip_slot(list/slots, slot_id)
 	switch(slot_id)
@@ -412,13 +466,8 @@
 	if(slot_group == "music" || ispath(item_path, /obj/item/rogue/instrument))
 		append_music_loadout_ui_slots(slots)
 		return
-	if(category == TAT_ITEM_CATEGORY_WEAPON)
-		append_unique_text(slots, "hand_l")
-		append_unique_text(slots, "hand_r")
-		return
-	if(slot_group in list("blackpowder", "ranged", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip"))
-		append_unique_text(slots, "hand_l")
-		append_unique_text(slots, "hand_r")
+	if(category == TAT_ITEM_CATEGORY_WEAPON || is_weapon_loadout_group(slot_group))
+		append_weapon_loadout_ui_slots(slots, slot_group)
 
 /datum/tat_items/proc/get_valid_loadout_ui_slots_for_item(item_path)
 	var/list/result = list()
@@ -553,9 +602,13 @@
 			append_unique_equip_slot(slots, SLOT_RING)
 		if("music")
 			append_music_equip_slots(slots)
+		if("blackpowder", "ranged", "munition", "knife", "sword", "greatsword", "axe", "blunt", "polearm", "whip", "sheath", "artifact")
+			append_weapon_equip_slots(slots, slot_group)
 
 	if(ispath(item_path, /obj/item/rogue/instrument))
 		append_music_equip_slots(slots)
+	if(islist(entry) && lowertext("[entry["category"]]") == TAT_ITEM_CATEGORY_WEAPON)
+		append_weapon_equip_slots(slots, slot_group)
 
 	var/flags = I.slot_flags
 	if(flags & ITEM_SLOT_HEAD)
@@ -644,6 +697,23 @@
 		return null
 	return lowertext("[entry["slot_group"]]")
 
+/datum/tat_items/proc/try_put_into_loadout_hand(mob/living/carbon/human/H, obj/item/I, slot_id)
+	if(!H || !I || QDELETED(I))
+		return FALSE
+	if(slot_id == "hand_l" && hascall(H, "put_in_l_hand"))
+		call(H, "put_in_l_hand")(I)
+		if(!QDELETED(I) && I.loc == H)
+			return TRUE
+	if(slot_id == "hand_r" && hascall(H, "put_in_r_hand"))
+		call(H, "put_in_r_hand")(I)
+		if(!QDELETED(I) && I.loc == H)
+			return TRUE
+	if(hascall(H, "put_in_hands"))
+		call(H, "put_in_hands")(I)
+		if(!QDELETED(I) && I.loc == H)
+			return TRUE
+	return FALSE
+
 /datum/tat_items/proc/spawn_item_to_exact_slot_or_bag(mob/living/carbon/human/H, path, equip_slot)
 	if(!H || !ispath(path) || !equip_slot)
 		return FALSE
@@ -653,28 +723,25 @@
 	if(H.get_item_by_slot(equip_slot))
 		try_put_into_any_storage_or_drop(I, H)
 		return FALSE
-
-	// HARD LOADOUT CONTRACT:
-	// The UI slot maps to exactly one backend equip slot.
-	// Do not walk adjacent shoulders, belts, hands, or any auto-fit list here.
 	if(H.equip_to_slot_if_possible(I, equip_slot, FALSE, TRUE, TRUE, TRUE))
 		if(H.get_item_by_slot(equip_slot) == I)
 			return TRUE
-
-	// Some RogueTown/Twilight Axis items, especially instruments, can be visually valid
-	// for a slot but still fail the normal helper because of slot_flags/can_equip checks.
-	// This is still exact-slot only: force the same selected equip_slot, never a fallback.
-	if(!QDELETED(I) && !H.get_item_by_slot(equip_slot))
-		H.equip_to_slot(I, equip_slot, TRUE, TRUE)
-		if(H.get_item_by_slot(equip_slot) == I)
-			return TRUE
-
-	if(!QDELETED(I))
-		try_put_into_any_storage_or_drop(I, H)
+		if(!QDELETED(I))
+			try_put_into_any_storage_or_drop(I, H)
+		return FALSE
+	try_put_into_any_storage_or_drop(I, H)
 	return FALSE
 
 /datum/tat_items/proc/spawn_item_to_loadout_slot_or_bag(mob/living/carbon/human/H, path, slot_id)
 	if(!H || !ispath(path))
+		return FALSE
+	if(slot_id == "hand_l" || slot_id == "hand_r")
+		var/obj/item/I = new path(get_turf(H))
+		if(!I)
+			return FALSE
+		if(try_put_into_loadout_hand(H, I, slot_id))
+			return TRUE
+		try_put_into_any_storage_or_drop(I, H)
 		return FALSE
 	var/equip_slot = get_loadout_slot_equip_slot(slot_id)
 	if(!equip_slot)
@@ -728,16 +795,16 @@
 /datum/tat_items/proc/apply_to_human(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
+	if(!length(selected))
+		return TRUE
 	var/mob_ref = "\ref[H]"
 	if(mob_ref in applied_mob_refs)
 		return FALSE
+	for(var/item_path in selected)
+		normalize_loadout(item_path)
 	applied_mob_refs += mob_ref
-
-	// Exact loadout slots must win over the free/default bag.
-	// If we spawn the default satchel first, it can occupy SLOT_BACK_L/SLOT_BACK_R
-	// before a player-assigned guitar/instrument/back item gets its selected slot.
-	spawn_assigned_loadout_items(H)
 	grant_default_roundstart_bag(H)
+	spawn_assigned_loadout_items(H)
 	spawn_bag_items(H)
 	return TRUE
 
