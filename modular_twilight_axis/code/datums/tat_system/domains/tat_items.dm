@@ -89,22 +89,16 @@
 /datum/tat_items/proc/get_slot_group_item_count(slot_group, category, exclude_item_path = null)
 	if(!slot_group)
 		return 0
-	var/target_slot_group = lowertext("[slot_group]")
-	var/target_category = lowertext("[category]")
 	var/total = 0
 	for(var/item_path in selected)
-		if(!ispath(item_path))
-			continue
 		if(!isnull(exclude_item_path) && item_path == exclude_item_path)
 			continue
-		var/list/entry = get_entry(item_path)
+		var/list/entry = GLOB.tat_available_items[item_path]
 		if(!islist(entry))
 			continue
-		var/entry_slot_group = lowertext("[entry["slot_group"]]")
-		var/entry_category = lowertext("[entry["category"]]")
-		if(entry_slot_group != target_slot_group)
+		if(entry["slot_group"] != slot_group)
 			continue
-		if(entry_category != target_category)
+		if(entry["category"] != category)
 			continue
 		var/amount = selected[item_path]
 		if(!isnum(amount) || amount <= 0)
@@ -116,31 +110,37 @@
 	var/list/entry = get_entry(path)
 	if(!islist(entry))
 		return 0
-	var/category = lowertext("[entry["category"]]")
-	var/cost = get_cost(path)
+	var/cost = entry["cost"]
+	if(!isnum(cost))
+		cost = 0
+	var/category = entry["category"]
 	if(cost <= 0 && (category == "misc" || category == "weapon"))
 		return 1
-	if(!is_item_slot_limited(entry))
+	if(!tat_item_entry_is_slot_limited(entry))
 		return INFINITY
-	var/slot_group = entry["slot_group"]
-	if(!slot_group)
+	if(!entry["slot_group"])
 		return INFINITY
 	return 1
 
 /datum/tat_items/proc/get_maximum(item_path)
-	if(!check_item(item_path))
-		return 0
-	var/total_allowed = get_item_total_allowed_amount(item_path)
-	if(total_allowed <= 0)
-		return 0
-	if(total_allowed == INFINITY)
-		return 99
 	var/list/entry = get_entry(item_path)
-	var/category = lowertext("[entry["category"]]")
-	if(get_cost(item_path) <= 0 && (category == "misc" || category == "weapon"))
-		return total_allowed
-	var/already_taken_elsewhere = get_slot_group_item_count(entry["slot_group"], entry["category"], item_path)
-	return max(0, total_allowed - already_taken_elsewhere)
+	if(!islist(entry))
+		return 0
+	if(!can_use_item_entry(entry))
+		return 0
+	var/cost = entry["cost"]
+	if(!isnum(cost))
+		cost = 0
+	var/category = entry["category"]
+	if(cost <= 0 && (category == "misc" || category == "weapon"))
+		return 1
+	if(!tat_item_entry_is_slot_limited(entry))
+		return 99
+	var/slot_group = entry["slot_group"]
+	if(!slot_group)
+		return 99
+	var/already_taken_elsewhere = get_slot_group_item_count(slot_group, category, item_path)
+	return max(0, 1 - already_taken_elsewhere)
 
 /datum/tat_items/proc/set_amount(item_path, amount, ignore_limits = FALSE)
 	if(!islist(get_entry(item_path)))
@@ -530,6 +530,15 @@
 		append_weapon_loadout_ui_slots(slots, slot_group)
 
 /datum/tat_items/proc/get_valid_loadout_ui_slots_for_item(item_path)
+	if(!ispath(item_path))
+		item_path = text2path("[item_path]")
+	if(!item_path)
+		return list()
+
+	var/list/cached = GLOB.tat_item_loadout_slots_cache[item_path]
+	if(islist(cached))
+		return cached
+
 	var/list/result = list()
 	var/list/entry = get_entry(item_path)
 	if(!islist(entry))
@@ -546,6 +555,7 @@
 			qdel(I)
 
 	append_hand_slots_if_reasonable(result, item_path, entry)
+	GLOB.tat_item_loadout_slots_cache[item_path] = result
 	return result
 
 /datum/tat_items/proc/get_assigned_loadout_slot_count(item_path)

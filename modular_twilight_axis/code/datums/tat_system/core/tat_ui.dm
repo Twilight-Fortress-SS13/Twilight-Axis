@@ -306,22 +306,27 @@
 	return result
 
 /datum/tat_build/proc/build_ui_skills()
-	attach_preferences_from_mob(usr)
-	skills?.rebuild_bonus_values()
-
 	var/list/result = list()
-	for(var/skill_type in get_all_ui_skill_types())
-		var/bonus_value = 0
-		var/invested_value = 0
+	if(!skills)
+		for(var/skill_type in get_all_ui_skill_types())
+			result["[skill_type]"] = list("level" = 0, "cap" = 0, "next_cost" = 0, "bonus" = 0, "invested" = 0)
+		return result
 
-		if(skills)
-			bonus_value = skills.get_bonus_value(skill_type)
-			invested_value = skills.get_invested_value(skill_type)
+	for(var/skill_type in get_all_ui_skill_types())
+		var/cap = skills.get_maximum(skill_type)
+		var/bonus_value = round(skills.bonus[skill_type] || 0)
+		var/invested_value = round(skills.invested[skill_type] || 0)
+		var/total_value = clamp(invested_value + bonus_value, 0, cap)
+		var/invested_cap = max(0, cap - bonus_value)
+		var/next_target = invested_value + 1
+		var/next_cost = 0
+		if(next_target > 0 && next_target <= invested_cap)
+			next_cost = max(1, next_target - get_skill_cost_discount(skill_type, next_target))
 
 		result["[skill_type]"] = list(
-			"level" = get_skill_value(skill_type),
-			"cap" = get_skill_cap(skill_type),
-			"next_cost" = get_skill_next_cost(skill_type),
+			"level" = total_value,
+			"cap" = cap,
+			"next_cost" = next_cost,
 			"bonus" = bonus_value,
 			"invested" = invested_value,
 		)
@@ -371,15 +376,52 @@
 	var/list/result = list()
 	if(!items)
 		return result
+
+	var/list/selected = items.selected
+	var/list/bucket_totals = list()
+	for(var/item_path in selected)
+		var/list/entry = GLOB.tat_available_items[item_path]
+		if(!islist(entry))
+			continue
+		if(entry["category"] != TAT_ITEM_CATEGORY_CLOTHING)
+			continue
+		var/slot_group = entry["slot_group"]
+		if(!slot_group || slot_group == "misc")
+			continue
+		var/amount = selected[item_path]
+		if(!isnum(amount) || amount <= 0)
+			continue
+		var/bucket_key = "[entry["category"]]|[slot_group]"
+		bucket_totals[bucket_key] = (bucket_totals[bucket_key] || 0) + amount
+
 	for(var/item_path in GLOB.tat_available_items)
 		var/list/entry = GLOB.tat_available_items[item_path]
 		if(!islist(entry))
 			continue
-		var/maximum = items.get_maximum(item_path)
-		var/amount = items.get_amount(item_path)
+
+		var/unlocked = items.can_use_item_entry(entry)
+		var/amount = round(selected[item_path] || 0)
+		var/maximum = 0
+
+		if(unlocked)
+			var/cost = entry["cost"]
+			if(!isnum(cost))
+				cost = 0
+			var/category = entry["category"]
+			var/slot_group = entry["slot_group"]
+			if(cost <= 0 && (category == "misc" || category == "weapon"))
+				maximum = 1
+			else if(category != TAT_ITEM_CATEGORY_CLOTHING || !slot_group || slot_group == "misc")
+				maximum = 99
+			else
+				var/bucket_key = "[category]|[slot_group]"
+				var/already_taken = bucket_totals[bucket_key] || 0
+				var/own = amount
+				maximum = max(0, 1 - (already_taken - own))
+
 		result["[item_path]"] = list(
 			"amount" = amount,
-			"unlocked" = items.can_use_item_entry(entry),
+			"unlocked" = unlocked,
 			"maximum" = maximum,
 			"can_add" = amount < maximum,
 		)
@@ -435,6 +477,8 @@
 
 /datum/tat_build/ui_interact(mob/user, datum/tgui/ui)
 	attach_preferences_from_mob(user)
+	invalidate_active_virtues_cache()
+	skills?.rebuild_bonus_values()
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "TATBuild")
@@ -451,32 +495,83 @@
 
 /datum/tat_build/ui_data(mob/user)
 	attach_preferences_from_mob(user)
-	var/list/validation = get_validation_issues()
+	var/_t_pre = world.tick_usage
+	var/list/_skp_total = build_ui_skill_points_by_domain()
+	var/list/_skp_rem = build_ui_skill_points_remaining_by_domain()
+	var/_p_skills_total = 0
+	var/_p_skills_rem = 0
+	var/_skills_any_negative = FALSE
+	for(var/_d in _skp_total)
+		_p_skills_total += _skp_total[_d]
+	for(var/_d in _skp_rem)
+		_p_skills_rem += _skp_rem[_d]
+		if(_skp_rem[_d] < 0)
+			_skills_any_negative = TRUE
+	var/_p_stats_total = get_effective_stat_points_total()
+	var/_p_stats_rem = get_remaining_stat_points()
+	var/_p_traits_total = traits.get_total_maximum()
+	var/_p_traits_rem = get_remaining_trait_points()
+	var/_p_items_total = items.get_total_maximum()
+	var/_p_items_rem = get_remaining_item_points()
+	var/_t0 = world.tick_usage
+
+	var/list/validation = list()
+	if(_p_stats_rem < 0)
+		validation += "Spent too many stat points."
+	if(_skills_any_negative)
+		validation += "Spent too many skill points."
+	if(_p_traits_rem < 0)
+		validation += "Spent too many trait points."
+	if(_p_items_rem < 0)
+		validation += "Spent too many item points."
+	var/list/trait_issues = traits.has_invalid_trait_dependencies()
+	if(length(trait_issues))
+		validation += trait_issues
+	var/list/item_issues = items.has_invalid_supply_items()
+	if(length(item_issues))
+		validation += item_issues
+
+	var/_t1 = world.tick_usage
 	var/can_save_build = !length(validation)
+	var/list/_stats = build_ui_stats()
+	var/_t2 = world.tick_usage
+	var/list/_skills = build_ui_skills()
+	var/_t3 = world.tick_usage
+	var/list/_sel_traits = build_ui_selected_traits()
+	var/list/_trait_counts = build_ui_trait_counts()
+	var/_t4 = world.tick_usage
+	var/list/_items_state = build_ui_items_state()
+	var/_t5 = world.tick_usage
+	var/list/_loadout = build_ui_loadout()
+	var/_t6 = world.tick_usage
+	var/list/_tat_slots = build_ui_tat_slots()
+	var/_t8 = world.tick_usage
+
+	log_world("TAT ui_data %: pre=[_t0-_t_pre] validation=[_t1-_t0] stats=[_t2-_t1] skills=[_t3-_t2] traits=[_t4-_t3] items_state=[_t5-_t4] loadout=[_t6-_t5] tat_slots=[_t8-_t6] TOTAL=[_t8-_t_pre] selected_items=[length(items.selected)] selected_traits=[length(traits.selected)]")
 
 	return list(
-		"stats" = build_ui_stats(),
-		"skills" = build_ui_skills(),
-		"traits" = build_ui_selected_traits(),
-		"trait_counts" = build_ui_trait_counts(),
-		"items_state" = build_ui_items_state(),
-		"loadout" = build_ui_loadout(),
+		"stats" = _stats,
+		"skills" = _skills,
+		"traits" = _sel_traits,
+		"trait_counts" = _trait_counts,
+		"items_state" = _items_state,
+		"loadout" = _loadout,
 
-		"points_stats" = get_effective_stat_points_total(),
-		"points_stats_remaining" = get_remaining_stat_points(),
+		"points_stats" = _p_stats_total,
+		"points_stats_remaining" = _p_stats_rem,
 
-		"points_skills" = get_effective_skill_points_total(),
-		"points_skills_remaining" = get_remaining_skill_points(),
-		"skill_points_by_domain" = build_ui_skill_points_by_domain(),
-		"skill_points_remaining_by_domain" = build_ui_skill_points_remaining_by_domain(),
+		"points_skills" = _p_skills_total,
+		"points_skills_remaining" = _p_skills_rem,
+		"skill_points_by_domain" = _skp_total,
+		"skill_points_remaining_by_domain" = _skp_rem,
 
-		"points_traits" = traits.get_total_maximum(),
-		"points_traits_remaining" = get_remaining_trait_points(),
+		"points_traits" = _p_traits_total,
+		"points_traits_remaining" = _p_traits_rem,
 
-		"points_items" = items.get_total_maximum(),
-		"points_items_remaining" = get_remaining_item_points(),
+		"points_items" = _p_items_total,
+		"points_items_remaining" = _p_items_rem,
 
-		"tat_slots" = build_ui_tat_slots(),
+		"tat_slots" = _tat_slots,
 		"active_tat_slot" = active_tat_slot,
 		"can_save" = can_save_build,
 		"validation_issues" = validation,
@@ -547,12 +642,11 @@
 	if(!islist(entry))
 		return FALSE
 
-	var/category = lowertext("[entry["category"]]")
-	if(category != TAT_ITEM_CATEGORY_CLOTHING)
+	if(entry["category"] != TAT_ITEM_CATEGORY_CLOTHING)
 		return FALSE
 
-	var/slot_group = lowertext("[entry["slot_group"]]")
-	if(!length(slot_group))
+	var/slot_group = entry["slot_group"]
+	if(!slot_group)
 		return FALSE
 	if(slot_group == "misc")
 		return FALSE

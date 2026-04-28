@@ -3,6 +3,12 @@
 	var/list/invested = list()
 	var/list/bonus = list()
 	var/list/domain_points = list()
+	var/_cached_combat_expert_count = -1
+	var/_cached_combat_master_count = -1
+
+/datum/tat_skills/proc/invalidate_combat_count_cache()
+	_cached_combat_expert_count = -1
+	_cached_combat_master_count = -1
 
 /datum/tat_skills/New(datum/tat_build/B)
 	. = ..()
@@ -12,6 +18,7 @@
 /datum/tat_skills/proc/reset()
 	invested = list()
 	bonus = list()
+	invalidate_combat_count_cache()
 
 	var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
 	domain_points = default_domain_points.Copy()
@@ -85,11 +92,15 @@
 
 /datum/tat_skills/proc/get_virtue_bonus_value(skill_type)
 	var/list/virtues = owner_build?.get_active_virtues()
-	return add_virtue_rule_value(skill_type, TAT_VIRTUE_SKILL_BONUS_RULES, virtues) + add_virtue_choice_rule_value(skill_type, TAT_VIRTUE_CHOICE_SKILL_BONUS_RULES, virtues)
+	if(!length(virtues))
+		return 0
+	return add_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_bonus_rules, virtues) + add_virtue_choice_rule_value(skill_type, GLOB.tat_virtue_choice_skill_bonus_rules, virtues)
 
 /datum/tat_skills/proc/get_virtue_skill_cap_bonus(skill_type)
 	var/list/virtues = owner_build?.get_active_virtues()
-	return add_virtue_rule_value(skill_type, TAT_VIRTUE_SKILL_CAP_BONUS_RULES, virtues) + add_virtue_choice_rule_value(skill_type, TAT_VIRTUE_CHOICE_SKILL_CAP_BONUS_RULES, virtues)
+	if(!length(virtues))
+		return 0
+	return add_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_cap_bonus_rules, virtues) + add_virtue_choice_rule_value(skill_type, GLOB.tat_virtue_choice_skill_cap_bonus_rules, virtues)
 
 /datum/tat_skills/proc/rebuild_bonus_values()
 	bonus = list()
@@ -108,34 +119,34 @@
 	return round((domain_points[domain] || 0) + (owner_build ? owner_build.get_bonus_skill_domain_points(domain) : 0))
 
 /datum/tat_skills/proc/get_combat_expert_count()
+	if(_cached_combat_expert_count >= 0)
+		return _cached_combat_expert_count
 	var/count = 0
-
 	for(var/skill_type in TAT_SKILLS_COMBAT)
 		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 			continue
-
 		if(get_invested_value(skill_type) > TAT_SKILL_COMBAT_CAP_DEFAULT)
 			count++
-
+	_cached_combat_expert_count = count
 	return count
 
 /datum/tat_skills/proc/get_combat_master_count()
+	if(_cached_combat_master_count >= 0)
+		return _cached_combat_master_count
 	var/count = 0
-
 	for(var/skill_type in TAT_SKILLS_COMBAT)
 		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 			continue
-
 		if(get_invested_value(skill_type) > TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)
 			count++
-
+	_cached_combat_master_count = count
 	return count
 
 /datum/tat_skills/proc/get_trait_cap_bonus(skill_type)
 	return owner_build ? owner_build.get_skill_cap_bonus_value(skill_type) : 0
 
 /datum/tat_skills/proc/skill_has_trait_cap_rule(skill_type)
-	var/list/rules = TAT_TRAIT_SKILL_CAP_BONUS_RULES
+	var/list/rules = GLOB.tat_trait_skill_cap_bonus_rules
 
 	for(var/trait_id in rules)
 		var/list/skill_map = rules[trait_id]
@@ -336,6 +347,7 @@
 	else
 		invested[skill_type] = value
 
+	invalidate_combat_count_cache()
 	owner_build?.set_dirty()
 	return TRUE
 

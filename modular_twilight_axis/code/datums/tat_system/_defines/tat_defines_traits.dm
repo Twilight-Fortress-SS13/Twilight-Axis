@@ -400,6 +400,16 @@
 )
 
 GLOBAL_LIST_INIT(tat_available_traits, list(TAT_AVAILABLE_TRAITS_LIST))
+GLOBAL_LIST_EMPTY(tat_trait_conflict_map)
+GLOBAL_LIST_EMPTY(tat_trait_requirement_map)
+GLOBAL_LIST_INIT(tat_trait_stat_point_rules, TAT_TRAIT_STAT_POINT_RULES)
+GLOBAL_LIST_INIT(tat_trait_item_point_rules, TAT_TRAIT_ITEM_POINT_RULES)
+GLOBAL_LIST_INIT(tat_trait_item_unlock_rules, TAT_TRAIT_ITEM_UNLOCK_RULES)
+GLOBAL_LIST_INIT(tat_trait_skill_point_rules, TAT_TRAIT_SKILL_POINT_RULES)
+GLOBAL_LIST_INIT(tat_trait_skill_bonus_rules, TAT_TRAIT_SKILL_BONUS_RULES)
+GLOBAL_LIST_INIT(tat_trait_skill_discount_rules, TAT_TRAIT_SKILL_DISCOUNT_RULES)
+GLOBAL_LIST_INIT(tat_trait_skill_domain_conversion_rules, TAT_TRAIT_SKILL_DOMAIN_CONVERSION_RULES)
+GLOBAL_LIST_INIT(tat_trait_pq_lock_rules, TAT_TRAIT_PQ_LOCK_RULES)
 GLOBAL_LIST_INIT(tat_supplier_trait_unlocks, build_tat_supplier_trait_unlocks())
 
 /proc/build_tat_supplier_trait_unlocks()

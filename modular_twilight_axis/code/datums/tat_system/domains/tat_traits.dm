@@ -58,7 +58,7 @@
 	return islist(get_entry(trait_id))
 
 /datum/tat_traits/proc/get_pq_lock_minimum(trait_id)
-	var/list/rules = TAT_TRAIT_PQ_LOCK_RULES
+	var/list/rules = GLOB.tat_trait_pq_lock_rules
 	return round(rules[trait_id] || 0)
 
 /datum/tat_traits/proc/is_pq_locked_trait(trait_id)
@@ -100,7 +100,7 @@
 
 /datum/tat_traits/proc/get_bonus_stat_points()
 	var/total = 0
-	var/list/rules = TAT_TRAIT_STAT_POINT_RULES
+	var/list/rules = GLOB.tat_trait_stat_point_rules
 	for(var/trait_id in selected)
 		if(trait_id in rules)
 			total += round(rules[trait_id]) * get_trait_count(trait_id)
@@ -108,7 +108,7 @@
 
 /datum/tat_traits/proc/get_bonus_item_points()
 	var/total = 0
-	var/list/rules = TAT_TRAIT_ITEM_POINT_RULES
+	var/list/rules = GLOB.tat_trait_item_point_rules
 	for(var/trait_id in selected)
 		if(trait_id in rules)
 			total += round(rules[trait_id]) * get_trait_count(trait_id)
@@ -116,7 +116,7 @@
 
 /datum/tat_traits/proc/get_skill_domain_conversion_delta(domain)
 	var/total = 0
-	var/list/rules = TAT_TRAIT_SKILL_DOMAIN_CONVERSION_RULES
+	var/list/rules = GLOB.tat_trait_skill_domain_conversion_rules
 	for(var/trait_id in selected)
 		var/list/conversion = rules[trait_id]
 		if(!islist(conversion))
@@ -131,7 +131,7 @@
 
 /datum/tat_traits/proc/get_bonus_skill_domain_points(domain)
 	var/total = 0
-	var/list/rules = TAT_TRAIT_SKILL_POINT_RULES
+	var/list/rules = GLOB.tat_trait_skill_point_rules
 	for(var/trait_id in selected)
 		var/list/domain_map = rules[trait_id]
 		if(islist(domain_map))
@@ -141,7 +141,7 @@
 
 /datum/tat_traits/proc/get_bonus_skill_value(skill_type)
 	var/total = 0
-	var/list/rules = TAT_TRAIT_SKILL_BONUS_RULES
+	var/list/rules = GLOB.tat_trait_skill_bonus_rules
 
 	for(var/trait_id in selected)
 		var/list/skill_map = rules[trait_id]
@@ -164,7 +164,7 @@
 
 /datum/tat_traits/proc/get_skill_cap_bonus_value(skill_type)
 	var/total = 0
-	var/list/rules = TAT_TRAIT_SKILL_CAP_BONUS_RULES
+	var/list/rules = GLOB.tat_trait_skill_cap_bonus_rules
 
 	for(var/trait_id in selected)
 		var/list/skill_map = rules[trait_id]
@@ -176,7 +176,7 @@
 	return total
 
 /datum/tat_traits/proc/get_required_trait_for_unlock(unlock_type, unlock_key)
-	var/list/rules = TAT_TRAIT_ITEM_UNLOCK_RULES
+	var/list/rules = GLOB.tat_trait_item_unlock_rules
 	var/list/type_rules = rules[unlock_type]
 	if(!islist(type_rules))
 		return null
@@ -195,7 +195,7 @@
 	if(has_trait(TRAIT_SELF_SUSTENANCE) && (ispath(skill_type, /datum/skill/craft) || ispath(skill_type, /datum/skill/labor)))
 		return 1
 
-	var/list/rules = TAT_TRAIT_SKILL_DISCOUNT_RULES
+	var/list/rules = GLOB.tat_trait_skill_discount_rules
 	for(var/trait_id in selected)
 		var/list/discounted = rules[trait_id]
 		if(!islist(discounted) || !(skill_type in discounted))
@@ -215,7 +215,9 @@
 	return get_total_maximum() - get_spent_points()
 
 /datum/tat_traits/proc/get_trait_conflict_map()
-	return list(
+	if(length(GLOB.tat_trait_conflict_map))
+		return GLOB.tat_trait_conflict_map
+	GLOB.tat_trait_conflict_map = list(
 		TAT_TRAIT_RESIDENT = list(TRAIT_OUTLANDER, TAT_TRAIT_WANTED, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_HERETIC),
 		TAT_TRAIT_BONUS_STAT_POOL = list(TAT_TRAIT_WANTED),
 		TRAIT_DODGEEXPERT = list(TRAIT_PARRYEXPERT, TAT_TRAIT_MAGE_MINOR_SLOT_2, TAT_TRAIT_MAGE_MAJOR_SLOT),
@@ -233,9 +235,12 @@
 		TAT_TRAIT_WITCH_INITIATE = list(TAT_TRAIT_MAGE_MINOR_SLOT_2, TAT_TRAIT_DIVINE_BOON_3, TAT_TRAIT_WANTED, TRAIT_DODGEEXPERT, TRAIT_PARRYEXPERT, TRAIT_CRITICAL_RESISTANCE, TRAIT_MEDIUMARMOR, TRAIT_HEAVYARMOR),
 		TAT_TRAIT_WARRIOR_MASTER = list(TRAIT_DODGEEXPERT, TRAIT_PARRYEXPERT, TRAIT_CRITICAL_RESISTANCE, TRAIT_MEDIUMARMOR, TRAIT_HEAVYARMOR),
 	)
+	return GLOB.tat_trait_conflict_map
 
 /datum/tat_traits/proc/get_trait_requirement_map()
-	return list(
+	if(length(GLOB.tat_trait_requirement_map))
+		return GLOB.tat_trait_requirement_map
+	GLOB.tat_trait_requirement_map = list(
 		TAT_TRAIT_WARRIOR_MASTER = list("all" = list(TAT_TRAIT_WARRIOR_EXPERT), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" requires \"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\"."),
 		TAT_TRAIT_BARDIC_INSPIRATION_T2 = list("all" = list(TAT_TRAIT_BARDIC_INSPIRATION_T1), "message" = "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\"."),
 		TAT_TRAIT_DRUID_INITIATE = list("all" = list(TAT_TRAIT_DIVINE_INITIATE), "message" = "\"[get_trait_display_name(TAT_TRAIT_DRUID_INITIATE)]\" requires \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."),
@@ -249,6 +254,7 @@
 		TRAIT_RITUALIST = list("all" = list(TAT_TRAIT_HERETIC), "message" = "\"[get_trait_display_name(TRAIT_RITUALIST)]\" requires \"[get_trait_display_name(TAT_TRAIT_HERETIC)]\"."),
 		TAT_TRAIT_ARTIFACTS_SUPPLIER = list("all" = list(TAT_TRAIT_PARTY_LEADER), "message" = "\"[get_trait_display_name(TAT_TRAIT_ARTIFACTS_SUPPLIER)]\" requires \"[get_trait_display_name(TAT_TRAIT_PARTY_LEADER)]\"."),
 	)
+	return GLOB.tat_trait_requirement_map
 
 /datum/tat_traits/proc/trait_requirement_is_met(list/rule)
 	if(!islist(rule))

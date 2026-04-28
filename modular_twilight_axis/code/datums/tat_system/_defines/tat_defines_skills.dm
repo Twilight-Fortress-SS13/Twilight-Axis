@@ -286,6 +286,12 @@
 	) \
 )
 
+GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULES)
+GLOBAL_LIST_INIT(tat_virtue_skill_bonus_rules, TAT_VIRTUE_SKILL_BONUS_RULES)
+GLOBAL_LIST_INIT(tat_virtue_skill_cap_bonus_rules, TAT_VIRTUE_SKILL_CAP_BONUS_RULES)
+GLOBAL_LIST_INIT(tat_virtue_choice_skill_bonus_rules, TAT_VIRTUE_CHOICE_SKILL_BONUS_RULES)
+GLOBAL_LIST_INIT(tat_virtue_choice_skill_cap_bonus_rules, TAT_VIRTUE_CHOICE_SKILL_CAP_BONUS_RULES)
+
 /proc/tat_get_skill_domain(skill_type)
 	if(skill_type in TAT_SKILLS_COMBAT)
 		return TAT_SKILL_DOMAIN_COMBAT

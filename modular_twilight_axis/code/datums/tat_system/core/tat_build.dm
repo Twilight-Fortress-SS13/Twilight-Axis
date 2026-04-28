@@ -8,6 +8,7 @@
 	var/datum/tat_skills/skills
 
 	var/list/magic_profile = list()
+	var/list/_cached_active_virtues = null
 
 	var/last_exported_json = null
 	var/last_json_error = null
@@ -81,12 +82,18 @@
 	var/datum/preferences/P = user.client.prefs
 	if(P.tat_build != src)
 		return FALSE
+	if(owner_preferences != P)
+		_cached_active_virtues = null
+		skills?.rebuild_bonus_values()
 	attach_preferences(P)
 	return TRUE
 
 /datum/tat_build/proc/get_active_virtues()
+	if(islist(_cached_active_virtues))
+		return _cached_active_virtues
 	var/list/result = list()
 	if(!owner_preferences)
+		_cached_active_virtues = result
 		return result
 
 	if(owner_preferences.virtue && !istype(owner_preferences.virtue, /datum/virtue/none))
@@ -96,7 +103,11 @@
 		if(!(owner_preferences.virtuetwo in result))
 			result += owner_preferences.virtuetwo
 
+	_cached_active_virtues = result
 	return result
+
+/datum/tat_build/proc/invalidate_active_virtues_cache()
+	_cached_active_virtues = null
 
 /datum/tat_build/proc/get_magic_value(key, default_value = null)
 	if(!istext(key) || !length(key))

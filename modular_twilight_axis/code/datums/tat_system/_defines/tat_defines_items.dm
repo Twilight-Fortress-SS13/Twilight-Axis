@@ -1,4 +1,5 @@
 GLOBAL_LIST_EMPTY(tat_item_catalog_cache)
+GLOBAL_LIST_EMPTY(tat_item_loadout_slots_cache)
 GLOBAL_VAR_INIT(tat_item_icon_cache_ready, FALSE)
 GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 
