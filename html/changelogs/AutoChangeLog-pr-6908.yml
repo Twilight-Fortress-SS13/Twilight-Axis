@@ -1,4 +1,0 @@
-author: "FreeStylaLT"
-delete-after: True
-changes:
-  - bugfix: "Fixed Bait Cooldown being set incorrectly at 30 seconds. It is now the intended 20 seconds."

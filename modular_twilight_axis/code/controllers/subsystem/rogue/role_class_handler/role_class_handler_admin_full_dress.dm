@@ -1,3 +1,4 @@
+/*
 /datum/class_select_handler
 	var/skip_slot_accounting = FALSE
 
@@ -82,3 +83,4 @@
 
 	if(!related_handler.skip_slot_accounting)
 		adjust_class_amount(picked_class, 1) // adjust the amount here, we are handling one guy right now.
+*/

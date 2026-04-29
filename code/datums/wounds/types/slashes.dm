@@ -340,7 +340,7 @@
 
 /datum/wound/slash/boar_gore
 	name = "tusk shaped wound"
-	check_name = span_userdanger("<B>GUTS</B>")
+	check_name = span_userdanger("<B>GORED</B>")
 	severity = WOUND_SEVERITY_FATAL
 	crit_message = list(
 		"%VICTIM is gored!",

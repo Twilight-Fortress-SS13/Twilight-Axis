@@ -186,7 +186,7 @@ GLOBAL_LIST_EMPTY(virtues)
 		REMOVE_TRAIT(recipient, TRAIT_OUTLANDER, ADVENTURER_TRAIT) //TA EDIT
 		REMOVE_TRAIT(recipient, TRAIT_OUTLANDER, JOB_TRAIT) //TA EDIT
 		REMOVE_TRAIT(recipient, TRAIT_OUTLANDER, TRAIT_GENERIC) //TA EDIT
-		if(recipient in SStreasury.bank_accounts)
+		if(SStreasury.has_account(recipient))
 			SStreasury.generate_money_account(20, recipient)
 		else
 			SStreasury.create_bank_account(recipient, 20)
@@ -199,6 +199,7 @@ GLOBAL_LIST_EMPTY(virtues)
 		if(istype(recipient.client?.prefs?.virtue, recipient.client?.prefs?.virtuetwo))
 			stacked = TRUE
 		record_featured_object_stat(FEATURED_STATS_VIRTUES, (stacked ? "[virtue_type.name] (Stacked)" : virtue_type.name), stacked ? 0.5 : 1)
+
 /datum/virtue/none
 	name = "None"
 	desc = "Without virtue."

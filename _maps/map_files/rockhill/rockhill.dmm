@@ -42082,7 +42082,7 @@
 "jdg" = (
 /obj/structure/rogue/trophy/deer,
 /obj/structure/table/wood/long_table/mid/alt,
-/obj/structure/roguemachine/contractledger/rockhill{
+/obj/structure/roguemachine/contractledger{
 	layer = 3
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
@@ -51831,7 +51831,7 @@
 /turf/open/floor/rogue/church,
 /area/rogue/outdoors/town/rockhill)
 "lnR" = (
-/obj/structure/roguemachine/contractledger/rockhill,
+/obj/structure/roguemachine/contractledger,
 /obj/structure/roguemachine/talkstatue/mercenary/rockhill{
 	pixel_y = 32
 	},
@@ -93264,7 +93264,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/obj/structure/roguemachine/contractledger/rockhill,
+/obj/structure/roguemachine/contractledger,
 /turf/open/floor/rogue/church,
 /area/rogue/indoors/town/shop)
 "uGJ" = (

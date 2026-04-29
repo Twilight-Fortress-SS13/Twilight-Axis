@@ -1,8 +1,0 @@
-author: "FreeStylaLT"
-delete-after: True
-changes:
-  - rscadd: "Having the Smithing Expert trait will now allow the user to automatically scoop up the next item in a smithing recipe from their own tile, or the anvil's tile."
-  - balance: "Gave some Guild roles athletics that were missing it before."
-  - balance: "Removed Guildmaster's ability to make Announcements."
-  - balance: "Gave Guildmaster a scomstone."
-  - balance: "Gave every Guild role a serfstone."

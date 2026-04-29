@@ -38,6 +38,7 @@
 	The forest is the most comfortable place for you, toiling alongside soilsons and soilbrides...although sometimes what lies beyond the gates fills your soul with a feral yearning."
 	outfit = /datum/outfit/job/roguetown/druid/basic
 	category_tags = list(CTAG_DRUID)
+	traits_applied = list(TRAIT_ALCHEMY_EXPERT)
 	subclass_languages = list(/datum/language/beast)
 	subclass_stats = list(
 		STATKEY_INT = 2,

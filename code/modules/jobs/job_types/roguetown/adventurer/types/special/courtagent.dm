@@ -13,6 +13,7 @@
 	show_in_credits = TRUE
 	advclass_cat_rolls = list(CTAG_COURTAGENT = 20)
 	obsfuscated_job = TRUE
+	townie_contract_gate_exempt = TRUE
 	class_setup_examine = FALSE
 	same_job_respawn_delay = 30 MINUTES
 

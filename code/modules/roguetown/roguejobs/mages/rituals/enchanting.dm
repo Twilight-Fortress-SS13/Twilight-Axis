@@ -218,7 +218,7 @@
 	tier = 4
 	required_atoms = list(/obj/item/rogueore/cinnabar = 1, /obj/item/paper/scroll = 1, /obj/item/magic/leyline = 1, /obj/item/magic/fae/sylvanessence = 1)
 	result_atoms = list(/obj/item/enchantmentscroll/rewind)
-
+/*
 /datum/runeritual/enchanting/chaosstorm
 	name = "Chaos Storm"
 	desc = "Causes random powerful effects."
@@ -226,3 +226,4 @@
 	tier = 4
 	required_atoms = list(/obj/item/rogueore/cinnabar = 1, /obj/item/paper/scroll = 1, /obj/item/magic/leyline = 1, /obj/item/magic/voidstone = 1)
 	result_atoms = list(/obj/item/enchantmentscroll/chaos_storm)
+*/
