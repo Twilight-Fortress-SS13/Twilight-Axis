@@ -543,18 +543,26 @@
 		return "Local Pliant"
 	return "Pliant"
 
-/datum/tat_traits/proc/get_pliant_rename_title()
+/datum/tat_traits/proc/get_pliant_rename_title(mob/living/carbon/human/H)
 	var/slot_name = owner_build?.get_active_tat_slot_name() || "Towner"
 	slot_name = trim("[slot_name]")
 	if(!length(slot_name))
 		slot_name = "Towner"
-	slot_name = copytext(slot_name, 1, 33)
-	return "[get_pliant_rename_prefix()] [slot_name]"
+	slot_name = copytext(slot_name, 1, 50)
+	var/choices = list(slot_name, "Input class name")
+	var/choose = slot_name
+	var/class_name = ""
+	choose = tgui_input_list(H, "Would you like to change your class name?","CHOOSE YOUR DESTINY", choices)
+	if(choose == "Input class name")
+		class_name = H.client ? tgui_input_text(H, "What is name of your destiny?", "YOUR CLASS NAME", encode = FALSE) : slot_name
+	else
+		class_name = slot_name
+	return "[get_pliant_rename_prefix()] [class_name]"
 
 /datum/tat_traits/proc/apply_pliant_rename(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_PLIANT_RENAME))
 		return FALSE
-	var/new_title = get_pliant_rename_title()
+	var/new_title = get_pliant_rename_title(H)
 	if(!length(new_title))
 		return FALSE
 	H.advjob = new_title

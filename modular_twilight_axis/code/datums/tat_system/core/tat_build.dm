@@ -634,7 +634,7 @@
 	new_name = trim(new_name)
 	if(!length(new_name))
 		return FALSE
-	new_name = copytext(new_name, 1, 33)
+	new_name = copytext(new_name, 1, 50)
 	slot.name = new_name
 	invalidate_ui_data_cache()
 	return TRUE
