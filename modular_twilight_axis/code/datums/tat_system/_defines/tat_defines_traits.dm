@@ -143,8 +143,8 @@
 	TRAIT_HEAVYARMOR = TAT_TRAIT_ENTRY("Plate Training", 30, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Can move freely in heavy armor."), \
 	TRAIT_MEDIUMARMOR = TAT_TRAIT_ENTRY("Maille Training", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Can move freely in medium armor."), \
 	TRAIT_NOPAINSTUN = TAT_TRAIT_ENTRY("Enduring", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Pain does not impair you as easily. You can endure more burns before collapsing."), \
-	TAT_TRAIT_SAVAGE_SKIN = TAT_TRAIT_ENTRY("Savage Skin", 0, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Requires Enduring. Starts you with barbarian regenerating skin equipped in the armor slot."), \
-	TAT_TRAIT_SAVAGE_RAGE = TAT_TRAIT_ENTRY("Savage Rage", 0, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Requires Savage Skin. Grants the Rage ability."), \
+	TAT_TRAIT_SAVAGE_SKIN = TAT_TRAIT_ENTRY("Savage Skin", 5, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Requires Enduring. Starts you with barbarian regenerating skin equipped in the armor slot."), \
+	TAT_TRAIT_SAVAGE_RAGE = TAT_TRAIT_ENTRY("Savage Rage", 5, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Requires Savage Skin. Grants the Rage ability."), \
 	TRAIT_CRITICAL_RESISTANCE = TAT_TRAIT_ENTRY("Critical Resistance", 30, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Your constitution is iron-clad. You can resist the first critical wounds that would fell others, though repeated punishment will overwhelm you."), \
 	TRAIT_HARDDISMEMBER = TAT_TRAIT_ENTRY("Hard Dismemberment", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Your limbs are harder to dismember."), \
 	TRAIT_STEELHEARTED = TAT_TRAIT_ENTRY("Steelhearted", 5, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Hardened nerves. You do not waiver from the sight of violence in battle."), \
@@ -186,7 +186,7 @@
 	TAT_TRAIT_DRUID_INITIATE = TAT_TRAIT_ENTRY("Druid Initiate", 40, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants Dendor's druidic rites, direct druid spells, and wise tree alert."), \
 	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants witch trait and ability to shapeshift yourself into different small creatures."), \
 	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 10, TAT_CATEGORY_UTILITY, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants explosives gifts from your friends. Luck scaled."), \
-	TAT_TRAIT_ARTIFACTS_SUPPLIER = TAT_TRAIT_ENTRY("Artifacts Bearer", 50, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "You're one of the adventurers with stories about your raids. Now, you have one of the deadlist weapons in Grimmoria. REQUIRES: Party Leader"), \
+	TAT_TRAIT_ARTIFACTS_SUPPLIER = TAT_TRAIT_ENTRY("Artifacts Bearer", 50, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "You're one of the adventurers with stories about your raids. Now, you have one of the deadliest weapons in Grimmoria. REQUIRES: Party Leader"), \
 	TRAIT_FIREARMS_MARKSMAN = TAT_TRAIT_ENTRY("Firearms Training", 30, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat Firearms cap from 3 to 4."), \
 	TAT_TRAIT_TRAINEE_SMITH = TAT_TRAIT_ENTRY("Trainee Smith", 10, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Blacksmithing, Smelting, and the first two levels of Maces by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_ARMORER = TAT_TRAIT_ENTRY("Trainee Armorer", 10, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Armorsmithing, Masonry, and the first two levels of Shields by 1. Does not stack with Resident or other discount traits on the same skill."), \
