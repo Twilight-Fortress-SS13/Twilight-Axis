@@ -579,11 +579,11 @@
 		return FALSE
 	var/skin_path = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
 	if(owner_build?.items)
-		return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
+		return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_SHIRT)
 	var/obj/item/I = new skin_path(get_turf(H))
 	if(!I)
 		return FALSE
-	if(H.equip_to_slot_if_possible(I, SLOT_ARMOR, FALSE, TRUE, TRUE, TRUE))
+	if(H.equip_to_slot_if_possible(I, SLOT_SHIRT, FALSE, TRUE, TRUE, TRUE))
 		return TRUE
 	if(!QDELETED(I))
 		I.forceMove(get_turf(H))
