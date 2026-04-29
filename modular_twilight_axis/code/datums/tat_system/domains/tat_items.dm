@@ -788,6 +788,7 @@
 	var/list/entry = get_entry(path)
 	if(!islist(entry))
 		return null
+	return lowertext("[entry["slot_group"]]")
 
 /datum/tat_items/proc/try_put_into_loadout_hand(mob/living/carbon/human/H, obj/item/I, slot_id)
 	if(!H || !I || QDELETED(I))
@@ -974,8 +975,39 @@
 		for(var/i in 1 to round(loadout["bag"] || 0))
 			spawn_item_into_bag_or_fallback(H, item_path)
 
+/datum/tat_items/proc/is_roundstart_bag_path(path)
+	if(!ispath(path))
+		return FALSE
+	return ispath(path, /obj/item/storage/backpack/rogue)
+
 /datum/tat_items/proc/has_selected_roundstart_backpack()
-	return get_amount(/obj/item/storage/backpack/rogue/backpack) > 0
+	for(var/item_path in selected)
+		if(get_amount(item_path) <= 0)
+			continue
+		if(is_roundstart_bag_path(item_path))
+			return TRUE
+	return FALSE
+
+/datum/tat_items/proc/has_existing_roundstart_bag(mob/living/carbon/human/H)
+	if(!H)
+		return FALSE
+	for(var/equip_slot in list(SLOT_BACK_L, SLOT_BACK_R, SLOT_BACK))
+		var/obj/item/I = H.get_item_by_slot(equip_slot)
+		if(I && is_roundstart_bag_path(I.type))
+			return TRUE
+	return FALSE
+
+/datum/tat_items/proc/spawn_roundstart_bag_to_slot_or_drop(mob/living/carbon/human/H, path, equip_slot)
+	if(!H || !ispath(path))
+		return FALSE
+	var/obj/item/I = new path(get_turf(H))
+	if(!I)
+		return FALSE
+	if(equip_slot && !H.get_item_by_slot(equip_slot) && H.equip_to_slot_if_possible(I, equip_slot, FALSE, TRUE, TRUE, TRUE))
+		return TRUE
+	if(!QDELETED(I))
+		I.forceMove(get_turf(H))
+	return TRUE
 
 /datum/tat_items/proc/get_reserved_loadout_equip_slots()
 	var/list/reserved = list()
@@ -993,7 +1025,7 @@
 /datum/tat_items/proc/grant_default_roundstart_bag(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
-	if(has_selected_roundstart_backpack())
+	if(has_selected_roundstart_backpack() || has_existing_roundstart_bag(H))
 		return FALSE
 	var/list/reserved_slots = get_reserved_loadout_equip_slots()
 	for(var/equip_slot in list(SLOT_BACK_L, SLOT_BACK_R, SLOT_BACK))
@@ -1001,10 +1033,8 @@
 			continue
 		if(H.get_item_by_slot(equip_slot))
 			continue
-		if(spawn_item_to_exact_slot_or_bag(H, /obj/item/storage/backpack/rogue/satchel, equip_slot))
-			return TRUE
-	spawn_item_equipped_or_fallback(H, /obj/item/storage/backpack/rogue/satchel)
-	return TRUE
+		return spawn_roundstart_bag_to_slot_or_drop(H, /obj/item/storage/backpack/rogue/satchel, equip_slot)
+	return spawn_roundstart_bag_to_slot_or_drop(H, /obj/item/storage/backpack/rogue/satchel, null)
 
 /datum/tat_items/proc/apply_to_human(mob/living/carbon/human/H)
 	if(!H)
@@ -1017,8 +1047,8 @@
 	for(var/item_path in selected)
 		normalize_loadout(item_path)
 	applied_mob_refs += mob_ref
-	grant_default_roundstart_bag(H)
 	spawn_assigned_loadout_items(H, FALSE)
+	grant_default_roundstart_bag(H)
 	spawn_bag_items(H)
 	apply_deferred_to_human(H)
 	return TRUE
