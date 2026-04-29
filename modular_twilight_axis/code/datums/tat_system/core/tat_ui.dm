@@ -608,6 +608,7 @@
 		"skills" = _skills,
 		"traits" = _sel_traits,
 		"trait_counts" = _trait_counts,
+		"available_traits" = build_ui_trait_entries(),
 		"items_state" = _items_state,
 		"loadout" = _loadout,
 

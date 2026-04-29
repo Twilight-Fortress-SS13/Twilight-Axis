@@ -51,11 +51,49 @@
 		return 0
 	return round((isnum(entry["cost"]) ? entry["cost"] : 0))
 
-/datum/tat_traits/proc/get_cost_modifier(trait_id)
+/datum/tat_traits/proc/is_armor_supplier_trait(trait_id)
+	return trait_id in GLOB.tat_armor_supplier_traits
+
+/datum/tat_traits/proc/get_armor_supplier_cross_discount(trait_id)
+	if(!is_armor_supplier_trait(trait_id))
+		return 0
+
+	for(var/selected_trait_id in selected)
+		if(selected_trait_id == trait_id)
+			continue
+		if(!is_armor_supplier_trait(selected_trait_id))
+			continue
+		if(get_trait_count(selected_trait_id) <= 0)
+			continue
+		return TAT_ARMOR_SUPPLIER_CROSS_DISCOUNT
+
 	return 0
 
+/datum/tat_traits/proc/get_armor_training_supplier_discount(trait_id)
+	if(!is_armor_supplier_trait(trait_id))
+		return 0
+
+	var/list/rules = GLOB.tat_trait_armor_training_supplier_discount_rules
+	for(var/training_trait_id in selected)
+		if(rules[training_trait_id] != trait_id)
+			continue
+		if(get_trait_count(training_trait_id) <= 0)
+			continue
+		return TAT_ARMOR_TRAINING_SUPPLIER_DISCOUNT
+
+	return 0
+
+/datum/tat_traits/proc/get_cost_modifier(trait_id)
+	var/modifier = 0
+	modifier -= get_armor_supplier_cross_discount(trait_id)
+	modifier -= get_armor_training_supplier_discount(trait_id)
+	return modifier
+
 /datum/tat_traits/proc/get_display_cost(trait_id)
-	return get_base_cost(trait_id) + get_cost_modifier(trait_id)
+	var/cost = get_base_cost(trait_id) + get_cost_modifier(trait_id)
+	if(is_armor_supplier_trait(trait_id))
+		return max(0, cost)
+	return cost
 
 /datum/tat_traits/proc/check_trait(trait_id)
 	return islist(get_entry(trait_id))
