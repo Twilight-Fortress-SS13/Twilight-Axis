@@ -627,7 +627,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/cloak/templar/undivided_alt = TAT_ITEM_ENTRY("Undivided Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/eastcloak1 = TAT_ITEM_ENTRY("Leather Cloak", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/psydontabard = TAT_ITEM_ENTRY("Psydon Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
-
+	/obj/item/clothing/cloak/kazengun = TAT_ITEM_ENTRY("Jinbaori", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
+	
 GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 
 /proc/build_tat_item_icon_payload(item_path)
