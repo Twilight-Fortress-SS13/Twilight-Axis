@@ -562,12 +562,12 @@
 /datum/tat_traits/proc/apply_pliant_rename(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_PLIANT_RENAME))
 		return FALSE
+
 	var/new_title = get_pliant_rename_title(H)
 	if(!length(new_title))
 		return FALSE
-	H.advjob = new_title
-	if(H.mind)
-		H.mind.assigned_role = new_title
+
+	H.tat_pliant_title = new_title
 	return TRUE
 
 /datum/tat_traits/proc/apply_instant_to_human(mob/living/carbon/human/H)

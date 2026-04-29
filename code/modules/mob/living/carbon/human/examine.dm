@@ -72,8 +72,8 @@
 		on_examine_face(user)
 		var/used_name = name
 		var/used_title = get_role_title()
-		if(advjob && findtext(advjob, "Pliant")) // TA EDIT - TAT system
-			used_title = advjob // TA EDIT - TAT system
+		if(tat_pliant_title) // TA EDIT - TAT system
+			used_title = tat_pliant_title // TA EDIT - TAT system
 		if(SSticker.regentmob == src)
 			used_title = "[used_title]" + " Regent"
 		var/display_as_wanderer = FALSE

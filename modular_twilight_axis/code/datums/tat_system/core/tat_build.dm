@@ -1,4 +1,6 @@
-
+/mob/living/carbon/human
+	var/tat_pliant_title
+	
 /datum/tat_build
 	var/datum/preferences/owner_preferences = null
 
