@@ -132,6 +132,8 @@
 	return result
 
 /datum/tat_build/proc/can_save()
+	if(is_owner_tat_banned())
+		return FALSE
 	return is_budget_valid()
 
 /datum/tat_build/proc/reset_build()
@@ -520,6 +522,9 @@
 
 /datum/tat_build/ui_interact(mob/user, datum/tgui/ui)
 	attach_preferences_from_mob(user)
+	if(is_owner_tat_banned(user))
+		tat_tell_banned(user)
+		return
 	if(!islist(_cached_active_virtues))
 		skills?.rebuild_bonus_values()
 		invalidate_ui_data_cache()
@@ -533,6 +538,8 @@
 
 /datum/tat_build/ui_static_data(mob/user)
 	attach_preferences_from_mob(user)
+	if(is_owner_tat_banned(user))
+		return list()
 	return list(
 		"available_stats" = build_ui_stat_entries(),
 		"available_skills" = build_ui_skill_entries(),
@@ -542,6 +549,12 @@
 
 /datum/tat_build/ui_data(mob/user)
 	attach_preferences_from_mob(user)
+	if(is_owner_tat_banned(user))
+		return list(
+			"disabled" = TRUE,
+			"disabled_reason" = tat_get_ban_reason(user?.ckey) || TAT_BAN_DEFAULT_REASON,
+			"can_save" = FALSE,
+		)
 	if(islist(_cached_ui_data) && !_ui_data_cache_dirty)
 		return _cached_ui_data
 	var/list/_skp_total = build_ui_skill_points_by_domain()
@@ -577,6 +590,9 @@
 	var/list/item_issues = items.has_invalid_supply_items()
 	if(length(item_issues))
 		validation += item_issues
+
+	if(is_owner_tat_role_locked(user))
+		validation += get_owner_tat_role_lock_message(user)
 
 	var/can_save_build = !length(validation)
 	var/list/_stats = build_ui_stats()
@@ -624,6 +640,11 @@
 /datum/tat_build/ui_act(action, list/params)
 	if(usr)
 		attach_preferences_from_mob(usr)
+		if(is_owner_tat_banned(usr))
+			tat_tell_banned(usr)
+			return FALSE
+	else if(is_owner_tat_banned())
+		return FALSE
 	. = ..()
 	if(.)
 		return
@@ -667,6 +688,9 @@
 		if("reset_items")
 			return reset_items()
 		if("save")
+			if(is_owner_tat_role_locked(usr))
+				to_chat(usr, span_warning(get_owner_tat_role_lock_message(usr)))
+				return FALSE
 			if(!can_save())
 				return FALSE
 			return save_current_to_active_slot()

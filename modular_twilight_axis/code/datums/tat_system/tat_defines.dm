@@ -16,5 +16,16 @@
 #define TAT_ROLE_BUCKET_TRADER "trader"
 #define TAT_ROLE_BUCKET_ADVENTURER "adventurer"
 
+#define TAT_SQL_ROLE_TOWNER "TAT Towner"
+#define TAT_SQL_ROLE_TRADER "TAT Trader"
+#define TAT_SQL_ROLE_ADVENTURER "TAT Adventurer"
+#define TAT_SQL_ROLE_SYSTEM "TAT System"
+
+#define TAT_BAN_DEFAULT_REASON "TAT system access revoked."
+#define TAT_ROLE_LOCK_DEFAULT_REASON "TAT role access revoked."
+#define TAT_ROLE_LOCK_DEFAULT_SEVERITY "Medium"
+#define TAT_ROLE_LOCK_DEFAULT_DURATION 10080
+#define TAT_ROLE_LOCK_DEFAULT_INTERVAL "MINUTE"
+
 GLOBAL_LIST_EMPTY(tat_skill_entry_cache)
 GLOBAL_VAR_INIT(tat_skill_entry_cache_ready, FALSE)

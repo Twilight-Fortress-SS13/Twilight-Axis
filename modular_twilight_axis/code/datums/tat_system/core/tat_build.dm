@@ -1,4 +1,3 @@
-
 /datum/tat_build
 	var/datum/preferences/owner_preferences = null
 
@@ -67,6 +66,29 @@
 	if(usr?.ckey)
 		return usr.ckey
 	return null
+
+/datum/tat_build/proc/is_owner_tat_banned(mob/user = null)
+	if(user?.ckey)
+		return tat_is_ckey_banned(user.ckey)
+	var/key = get_owner_ckey()
+	if(!key)
+		return FALSE
+	return tat_is_ckey_banned(key)
+
+/datum/tat_build/proc/is_owner_tat_role_locked(mob/user = null)
+	var/key = user?.ckey || get_owner_ckey()
+	if(!key)
+		return FALSE
+	return tat_is_role_bucket_locked(key, get_role_bucket())
+
+/datum/tat_build/proc/get_owner_tat_role_lock_message(mob/user = null)
+	var/key = user?.ckey || get_owner_ckey()
+	var/bucket = get_role_bucket()
+	var/bucket_name = tat_role_bucket_display_name(bucket)
+	var/reason = key ? tat_get_role_lock_reason(key, bucket) : null
+	if(!reason)
+		reason = TAT_ROLE_LOCK_DEFAULT_REASON
+	return "You are locked out of the TAT [bucket_name] role bucket. Reason: [reason]"
 
 /datum/tat_build/proc/get_owner_playerquality()
 	var/key = get_owner_ckey()
@@ -510,6 +532,12 @@
 	attach_preferences_from_mob(H)
 	if(!H)
 		return FALSE
+	if(is_owner_tat_banned(H))
+		tat_tell_banned(H)
+		return FALSE
+	if(is_owner_tat_role_locked(H))
+		to_chat(H, span_warning(get_owner_tat_role_lock_message(H)))
+		return FALSE
 	sanitize()
 	traits.apply_instant_to_human(H)
 	items.apply_to_human(H)
@@ -520,6 +548,12 @@
 /datum/tat_build/proc/apply_post_client_to_human(mob/living/carbon/human/H)
 	attach_preferences_from_mob(H)
 	if(!H || !H.client)
+		return FALSE
+	if(is_owner_tat_banned(H))
+		tat_tell_banned(H)
+		return FALSE
+	if(is_owner_tat_role_locked(H))
+		to_chat(H, span_warning(get_owner_tat_role_lock_message(H)))
 		return FALSE
 	sanitize()
 	traits.apply_deferred_to_human(H)
