@@ -239,6 +239,8 @@
 			cap = 3
 		else if(owner_build?.has_trait(TAT_TRAIT_DIVINE_INITIATE))
 			cap = 1
+		else if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
+			cap = 3
 
 	else if(skill_type == /datum/skill/magic/druidic)
 		if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
