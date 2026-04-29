@@ -1,3 +1,6 @@
+/mob/living/carbon/human
+	var/tat_pliant_title
+
 /datum/tat_traits
 	var/datum/tat_build/owner_build
 	var/list/selected = list()
@@ -242,8 +245,6 @@
 		return GLOB.tat_trait_requirement_map
 	GLOB.tat_trait_requirement_map = list(
 		TAT_TRAIT_WARRIOR_MASTER = list("all" = list(TAT_TRAIT_WARRIOR_EXPERT), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" requires \"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\"."),
-		TAT_TRAIT_SAVAGE_SKIN = list("all" = list(TRAIT_NOPAINSTUN), "message" = "\"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\" requires \"[get_trait_display_name(TRAIT_NOPAINSTUN)]\"."),
-		TAT_TRAIT_SAVAGE_RAGE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN), "message" = "\"[get_trait_display_name(TAT_TRAIT_SAVAGE_RAGE)]\" requires \"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\"."),
 		TAT_TRAIT_BARDIC_INSPIRATION_T2 = list("all" = list(TAT_TRAIT_BARDIC_INSPIRATION_T1), "message" = "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\"."),
 		TAT_TRAIT_DRUID_INITIATE = list("all" = list(TAT_TRAIT_DIVINE_INITIATE), "message" = "\"[get_trait_display_name(TAT_TRAIT_DRUID_INITIATE)]\" requires \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."),
 		TAT_TRAIT_DIVINE_BOON_1 = list("all" = list(TAT_TRAIT_DIVINE_INITIATE), "message" = "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_1)]\" requires \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."),
@@ -255,6 +256,8 @@
 		TRAIT_BITERHELM = list("all" = list(TAT_TRAIT_HERETIC), "message" = "\"[get_trait_display_name(TRAIT_BITERHELM)]\" requires \"[get_trait_display_name(TAT_TRAIT_HERETIC)]\"."),
 		TRAIT_RITUALIST = list("all" = list(TAT_TRAIT_HERETIC), "message" = "\"[get_trait_display_name(TRAIT_RITUALIST)]\" requires \"[get_trait_display_name(TAT_TRAIT_HERETIC)]\"."),
 		TAT_TRAIT_ARTIFACTS_SUPPLIER = list("all" = list(TAT_TRAIT_PARTY_LEADER), "message" = "\"[get_trait_display_name(TAT_TRAIT_ARTIFACTS_SUPPLIER)]\" requires \"[get_trait_display_name(TAT_TRAIT_PARTY_LEADER)]\"."),
+		TAT_TRAIT_SAVAGE_SKIN = list("all" = list(TRAIT_NOPAINSTUN), "message" = "\"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\" requires \"[get_trait_display_name(TRAIT_NOPAINSTUN)]\"."),
+		TAT_TRAIT_SAVAGE_RAGE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN), "message" = "\"[get_trait_display_name(TAT_TRAIT_SAVAGE_RAGE)]\" requires \"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\"."),
 	)
 	return GLOB.tat_trait_requirement_map
 
@@ -564,27 +567,37 @@
 /datum/tat_traits/proc/apply_pliant_rename(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_PLIANT_RENAME))
 		return FALSE
-
 	var/new_title = get_pliant_rename_title(H)
 	if(!length(new_title))
 		return FALSE
-
 	H.tat_pliant_title = new_title
 	return TRUE
+
 
 /datum/tat_traits/proc/apply_savage_skin_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_SKIN))
 		return FALSE
 	var/skin_path = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
-	if(!owner_build || !owner_build.items)
+	if(owner_build?.items)
+		return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
+	var/obj/item/I = new skin_path(get_turf(H))
+	if(!I)
 		return FALSE
-	return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
+	if(H.equip_to_slot_if_possible(I, SLOT_ARMOR, FALSE, TRUE, TRUE, TRUE))
+		return TRUE
+	if(!QDELETED(I))
+		I.forceMove(get_turf(H))
+	return FALSE
 
 /datum/tat_traits/proc/apply_savage_rage_package(mob/living/carbon/human/H)
-	if(!H || !H.mind || !has_trait(TAT_TRAIT_SAVAGE_RAGE))
+	if(!H || !has_trait(TAT_TRAIT_SAVAGE_RAGE) || !H.mind)
 		return FALSE
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/ragebad)
-	return TRUE
+	if(owner_build?.grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/self/ragebad))
+		return TRUE
+	if(!owner_build)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/ragebad)
+		return TRUE
+	return FALSE
 
 /datum/tat_traits/proc/apply_instant_to_human(mob/living/carbon/human/H)
 	if(!H)
@@ -593,7 +606,7 @@
 		if(is_repeatable_trait(trait_id))
 			continue
 		switch(trait_id)
-			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_PLIANT_RENAME, TAT_TRAIT_HERETIC, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_SAVAGE_RAGE)
+			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_PLIANT_RENAME, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_SAVAGE_RAGE, TAT_TRAIT_HERETIC)
 				continue
 			else
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
@@ -611,8 +624,6 @@
 	if(has_trait(TAT_TRAIT_RONIN))
 		H.LoadComponent(/datum/component/combo_core/ronin)
 		H.equip_to_slot_or_del(new /obj/item/book/rogue/ronin_codex(H), SLOT_IN_BACKPACK)
-	apply_savage_skin_package(H)
-	apply_savage_rage_package(H)
 	if(has_trait(TRAIT_RITUALIST))
 		H.mind?.special_items["Ritual chalk"] = /obj/item/ritechalk
 	if(has_trait(TAT_TRAIT_MAGE_INITIATE))
@@ -628,6 +639,8 @@
 		else
 			H.inspiration.grant_inspiration(H, bard_tier)
 	try_apply_party_leader(H)
+	apply_savage_skin_package(H)
+	apply_savage_rage_package(H)
 	if(has_trait(TAT_TRAIT_WARRIOR_MASTER))
 		ADD_TRAIT(H, TRAIT_BADTRAINER, TAT_TRAIT_SOURCE)
 	if(has_trait(TAT_TRAIT_WANTED))

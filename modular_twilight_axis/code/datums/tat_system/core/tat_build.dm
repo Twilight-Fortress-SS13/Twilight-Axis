@@ -1,6 +1,4 @@
-/mob/living/carbon/human
-	var/tat_pliant_title
-	
+
 /datum/tat_build
 	var/datum/preferences/owner_preferences = null
 
@@ -525,6 +523,7 @@
 		return FALSE
 	sanitize()
 	traits.apply_deferred_to_human(H)
+	items.apply_deferred_to_human(H)
 	return TRUE
 
 /datum/tat_build/proc/apply_to_human(mob/living/carbon/human/H)

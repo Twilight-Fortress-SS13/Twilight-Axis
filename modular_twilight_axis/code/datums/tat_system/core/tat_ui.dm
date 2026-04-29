@@ -198,7 +198,7 @@
 	if(ok)
 		traits?.sanitize()
 		stats?.sanitize()
-		skills?.sanitize()
+		skills?.refresh_after_trait_change()
 		items?.sanitize()
 	return ok
 
@@ -217,7 +217,7 @@
 	if(changed)
 		traits?.sanitize()
 		stats?.sanitize()
-		skills?.sanitize()
+		skills?.refresh_after_trait_change()
 		items?.sanitize()
 	return changed
 

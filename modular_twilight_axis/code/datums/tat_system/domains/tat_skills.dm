@@ -363,7 +363,10 @@
 	owner_build?.set_dirty()
 	return TRUE
 
-/datum/tat_skills/proc/sanitize()
+/datum/tat_skills/proc/refresh_after_trait_change()
+	return sanitize(FALSE)
+
+/datum/tat_skills/proc/sanitize(enforce_budget = TRUE)
 	invalidate_combat_count_cache()
 	invalidate_spent_points_cache()
 	rebuild_bonus_values()
@@ -375,6 +378,9 @@
 
 		var/current = get_invested_value(skill_type)
 		set_invested_value(skill_type, current)
+
+	if(!enforce_budget)
+		return TRUE
 
 	for(var/domain in domain_points)
 		while(get_remaining_points(domain) < 0)
