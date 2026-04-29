@@ -88,6 +88,34 @@
 #define TAT_TRAIT_SKILLED_PHYSICKER "tat_skilled_physicker"
 #define TAT_TRAIT_SKILLED_ALCHEMIST "tat_skilled_alchemist"
 
+#define TAT_TRAIT_SKILL_CAP_BONUS_RULES list( \
+	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = 6, /datum/skill/craft/smelting = 6, /datum/skill/craft/engineering = 6, /datum/skill/labor/mining = 6, /datum/skill/craft/masonry = 6, /datum/skill/craft/ceramics = 6), \
+	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = 5, /datum/skill/craft/smelting = 5, /datum/skill/craft/engineering = 5), \
+	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = 5, /datum/skill/craft/masonry = 5), \
+	TAT_TRAIT_SKILLED_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = 5, /datum/skill/craft/engineering = 5), \
+	TAT_TRAIT_SKILLED_ARTISAN = list(/datum/skill/craft/crafting = 5, /datum/skill/craft/ceramics = 5), \
+	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = 5, /datum/skill/craft/ceramics = 5), \
+	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = 6), \
+	TAT_TRAIT_SKILLED_ALCHEMIST = list(/datum/skill/craft/alchemy = 5), \
+	TRAIT_MEDICINE_EXPERT = list(/datum/skill/misc/medicine = 6), \
+	TAT_TRAIT_SKILLED_PHYSICKER = list(/datum/skill/misc/medicine = 5), \
+	TRAIT_HOMESTEAD_EXPERT = list(/datum/skill/labor/farming = 6, /datum/skill/labor/mining = 6, /datum/skill/craft/cooking = 6, /datum/skill/labor/fishing = 6, /datum/skill/labor/butchering = 6, /datum/skill/labor/lumberjacking = 6, /datum/skill/craft/masonry = 6, /datum/skill/craft/ceramics = 6, /datum/skill/craft/sewing = 3, /datum/skill/craft/tanning = 3), \
+	TAT_TRAIT_SKILLED_HOMESTEADER = list(/datum/skill/labor/farming = 5, /datum/skill/craft/cooking = 5, /datum/skill/labor/fishing = 5), \
+	TRAIT_SURVIVAL_EXPERT = list(/datum/skill/craft/cooking = 6, /datum/skill/labor/fishing = 6, /datum/skill/labor/butchering = 6, /datum/skill/craft/tanning = 6, /datum/skill/craft/sewing = 3), \
+	TAT_TRAIT_SKILLED_SURVIVALIST = list(/datum/skill/labor/butchering = 5, /datum/skill/craft/traps = 5, /datum/skill/craft/tanning = 5), \
+	TRAIT_SEWING_EXPERT = list(/datum/skill/craft/sewing = 6, /datum/skill/craft/tanning = 6, /datum/skill/labor/butchering = 6), \
+	TAT_TRAIT_SKILLED_CLOTHIER = list(/datum/skill/craft/sewing = 5, /datum/skill/craft/tanning = 5), \
+	TRAIT_SEEDKNOW = list(/datum/skill/labor/farming = 5), \
+	TRAIT_CAUTIOUS_FISHER = list(/datum/skill/labor/fishing = 5), \
+	TRAIT_SQUIRE_REPAIR = list(/datum/skill/craft/armorsmithing = 5, /datum/skill/craft/weaponsmithing = 5), \
+	TRAIT_SELF_SUSTENANCE = list(/datum/skill/craft/crafting = 3, /datum/skill/craft/weaponsmithing = 3, /datum/skill/craft/armorsmithing = 3, /datum/skill/craft/blacksmithing = 3, /datum/skill/craft/smelting = 3, /datum/skill/craft/carpentry = 3, /datum/skill/craft/masonry = 3, /datum/skill/craft/traps = 3, /datum/skill/craft/engineering = 3, /datum/skill/craft/cooking = 3, /datum/skill/craft/sewing = 3, /datum/skill/craft/tanning = 3, /datum/skill/craft/ceramics = 3, /datum/skill/craft/alchemy = 3, /datum/skill/labor/farming = 3, /datum/skill/labor/mining = 3, /datum/skill/labor/fishing = 3, /datum/skill/labor/butchering = 3, /datum/skill/labor/lumberjacking = 3), \
+	TRAIT_MASTERFUL_HUNTER = list(/datum/skill/misc/hunting = 6, /datum/skill/misc/tracking = 6, /datum/skill/labor/butchering = 6), \
+	TRAIT_EXPERT_HUNTER = list(/datum/skill/misc/hunting = 5, /datum/skill/misc/tracking = 5), \
+	TRAIT_FIREARMS_MARKSMAN = list(/datum/skill/combat/twilight_firearms = 4) \
+)
+
+GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULES)
+
 #define TAT_BUILD_STAT_BONUS_EXTRA_STATS 3
 #define TAT_BUILD_STAT_BONUS_WANTED 5
 #define TAT_BUILD_ITEM_BONUS_WANTED 10

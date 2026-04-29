@@ -232,9 +232,9 @@
 	return round(trait_bonus + virtue_bonus)
 
 /datum/tat_build/proc/get_skill_cap_bonus_value(skill_type)
-	var/trait_cap_bonus = traits.get_skill_cap_bonus_value(skill_type)
-	var/virtue_cap_bonus = skills.get_virtue_skill_cap_bonus(skill_type)
-	return round(trait_cap_bonus + virtue_cap_bonus)
+	var/trait_cap = traits.get_skill_cap_bonus_value(skill_type)
+	var/virtue_cap = skills.get_virtue_skill_cap_bonus(skill_type)
+	return round(max(trait_cap, virtue_cap))
 
 /datum/tat_build/proc/get_skill_cost_discount(skill_type, target_level)
 	return traits.get_skill_cost_discount(skill_type, target_level)

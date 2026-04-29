@@ -204,17 +204,23 @@
 	return total
 
 /datum/tat_traits/proc/get_skill_cap_bonus_value(skill_type)
-	var/total = 0
+	var/highest_cap = 0
+	var/has_rule = FALSE
 	var/list/rules = GLOB.tat_trait_skill_cap_bonus_rules
 
-	for(var/trait_id in selected)
+	for(var/trait_id in rules)
 		var/list/skill_map = rules[trait_id]
-		if(!islist(skill_map))
+		if(!islist(skill_map) || !(skill_type in skill_map))
 			continue
 
-		total += round(skill_map[skill_type] || 0)
+		has_rule = TRUE
+		if(has_trait(trait_id))
+			highest_cap = max(highest_cap, round(skill_map[skill_type] || 0))
 
-	return total
+	if(highest_cap > 0)
+		return highest_cap
+
+	return has_rule ? TAT_SKILL_NONCOMBAT_CAP_UNTRAITED : 0
 
 /datum/tat_traits/proc/get_required_trait_for_unlock(unlock_type, unlock_key)
 	var/list/rules = GLOB.tat_trait_item_unlock_rules
