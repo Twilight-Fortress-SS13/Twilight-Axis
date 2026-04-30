@@ -553,10 +553,6 @@
 			if("Cabbit")
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/shapeshift/witch/cabbit)
 
-/datum/tat_traits/proc/apply_witch_package(mob/living/carbon/human/H)
-	apply_witch_base_package(H)
-	apply_witch_shapeshift_package(H)
-
 /datum/tat_traits/proc/apply_spellblade_base_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SPELLBLADE))
 		return
@@ -569,12 +565,9 @@
 		return
 	to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
 	var/list/subclass_list = list("Blade", "Phalangite", "Macebearer")
-	var/subclass_selected = owner_build?.get_magic_value("spellblade_subclass")
-	if(!subclass_selected || !(subclass_selected in subclass_list))
-		subclass_selected = H.client ? tgui_input_list(H, "Who are you?", "The spellblade specialization", subclass_list) : null
-		if(!subclass_selected)
-			subclass_selected = "Blade"
-		owner_build?.set_magic_value("spellblade_subclass", subclass_selected)
+	var/subclass_selected = H.client ? tgui_input_list(H, "Who are you?", "The spellblade specialization", subclass_list) : null
+	if(!subclass_selected)
+		subclass_selected = "Blade"
 	switch(subclass_selected)
 		if("Blade")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/caedo)
@@ -596,10 +589,6 @@
 	H.mind.AddSpell(new /datum/action/cooldown/spell/empower_weapon)
 	H.mind.AddSpell(new /datum/action/cooldown/spell/bind_weapon)
 	H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
-
-/datum/tat_traits/proc/apply_spellblade_package(mob/living/carbon/human/H)
-	apply_spellblade_base_package(H)
-	apply_spellblade_specialization_package(H)
 
 /datum/tat_traits/proc/get_pliant_rename_prefix()
 	if(!has_trait(TRAIT_OUTLANDER) && !has_trait(TAT_TRAIT_RESIDENT))
