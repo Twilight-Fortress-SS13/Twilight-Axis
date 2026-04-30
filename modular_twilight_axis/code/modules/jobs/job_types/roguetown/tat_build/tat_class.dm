@@ -125,8 +125,6 @@
 	category_tags = list(CTAG_TOWNER)
 	required_tat_bucket = TAT_ROLE_BUCKET_TOWNER
 
-	maximum_possible_slots = 20
-
 /datum/advclass/tat_class/trader
 	name = "Pliant Trader"
 	tutorial = "A custom-built traveler, supplier, artisan, or free tradesoul. This path is for TAT builds without resident, wanted, or outlander status."
@@ -134,8 +132,6 @@
 	category_tags = list(CTAG_TRADER)
 	class_select_category = CLASS_CAT_TRADER
 	required_tat_bucket = TAT_ROLE_BUCKET_TRADER
-
-	maximum_possible_slots = 20
 
 /datum/advclass/tat_class/adventurer
 	name = "Pliant Adventurer"
@@ -145,7 +141,6 @@
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	required_tat_bucket = TAT_ROLE_BUCKET_ADVENTURER
 
-	maximum_possible_slots = 20
 
 /datum/outfit/job/roguetown/tat_class
 	name = "Pliant Soul"
