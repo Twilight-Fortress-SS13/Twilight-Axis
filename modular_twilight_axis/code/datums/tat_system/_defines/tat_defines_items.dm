@@ -453,8 +453,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/bomb/smoke = TAT_ITEM_ENTRY("Smoke Bomb", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
 	/obj/item/bomb = TAT_ITEM_ENTRY("Bottle Bomb", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
 	/obj/item/impact_grenade = TAT_ITEM_ENTRY("Impact Bomb", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
-	/obj/item/folding_alchstation_stored = TAT_ITEM_ENTRY("Alchemical station", 4, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
-	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Alchemical cauldron", 4, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/folding_alchstation_stored = TAT_ITEM_ENTRY("Alchemical station", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Alchemical cauldron", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/ration = TAT_ITEM_ENTRY("Ration paper", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "food"), \
 	/obj/item/natural/bundle/cloth/bandage/full = TAT_ITEM_ENTRY("Roll of Bandages", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/tent_kit = TAT_ITEM_ENTRY("Tent", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
@@ -493,7 +493,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/head/roguetown/helmet/heavy/knight/old = TAT_ITEM_ENTRY("Knight's Helm", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/knight = TAT_ITEM_ENTRY("Knight Armet", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet = TAT_ITEM_ENTRY("Armet", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
-		/obj/item/clothing/head/roguetown/helmet/heavy/knight/iron = TAT_ITEM_ENTRY("Knight Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/knight/iron = TAT_ITEM_ENTRY("Knight Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/sheriff = TAT_ITEM_ENTRY("Barred Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/guard/bogman = TAT_ITEM_ENTRY("Steel Bogman's Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/guard = TAT_ITEM_ENTRY("Guard Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
@@ -569,7 +569,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/hoe/bronze = TAT_ITEM_ENTRY("Bronze Hoe", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
 	/obj/item/rogueweapon/shovel/bronze = TAT_ITEM_ENTRY("Bronze Shovel", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
 	/obj/item/rogueweapon/sickle = TAT_ITEM_ENTRY("Sickle", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
-	/datum/crafting_recipe/roguetown/survival/rod = TAT_ITEM_ENTRY("Fishing Rod", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
+	/obj/item/fishingrod/crafted = TAT_ITEM_ENTRY("Fishing Rod", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/fishingrod/bronze = TAT_ITEM_ENTRY("Bronze Fishing Rod", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "lyfe"), \
 	/obj/item/cooking/pan = TAT_ITEM_ENTRY("Frying Pan", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/cooking/pan/bronze = TAT_ITEM_ENTRY("Bronze Frying Pan", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
