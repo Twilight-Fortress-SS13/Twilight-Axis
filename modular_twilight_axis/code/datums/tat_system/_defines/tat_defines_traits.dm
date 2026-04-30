@@ -8,6 +8,7 @@
 #define TAT_TRAIT_PLIANT_RENAME "tat_pliant_rename"
 #define TAT_TRAIT_SAVAGE_SKIN "tat_savage_skin"
 #define TAT_TRAIT_SAVAGE_RAGE "tat_savage_rage"
+#define TAT_TRAIT_BERSERKER_RAGE "tat_berserker_rage"
 
 #define TAT_TRAIT_STEEL_SUPPLIER "tat_steel_supplier"
 #define TAT_TRAIT_SILVER_SUPPLIER "tat_silver_supplier"
@@ -194,8 +195,9 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_HEAVYARMOR = TAT_TRAIT_ENTRY("Plate Training", 30, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Can move freely in heavy armor."), \
 	TRAIT_MEDIUMARMOR = TAT_TRAIT_ENTRY("Maille Training", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Can move freely in medium armor."), \
 	TRAIT_NOPAINSTUN = TAT_TRAIT_ENTRY("Enduring", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Pain does not impair you as easily. You can endure more burns before collapsing."), \
-	TAT_TRAIT_SAVAGE_SKIN = TAT_TRAIT_ENTRY("Savage Skin", 5, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Requires Enduring. Starts you with barbarian regenerating skin equipped in the armor slot."), \
+	TAT_TRAIT_SAVAGE_SKIN = TAT_TRAIT_ENTRY("Savage Skin", 0, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Requires Enduring. Starts you with barbarian regenerating skin equipped in the armor slot."), \
 	TAT_TRAIT_SAVAGE_RAGE = TAT_TRAIT_ENTRY("Savage Rage", 5, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Requires Savage Skin. Grants the Rage ability."), \
+	TAT_TRAIT_BERSERKER_RAGE = TAT_TRAIT_ENTRY("Berserkers Rage", 10, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Requires Savage Skin and Heretic. Grants the Berserkers Rage ability."), \
 	TRAIT_CRITICAL_RESISTANCE = TAT_TRAIT_ENTRY("Critical Resistance", 30, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Your constitution is iron-clad. You can resist the first critical wounds that would fell others, though repeated punishment will overwhelm you."), \
 	TRAIT_HARDDISMEMBER = TAT_TRAIT_ENTRY("Hard Dismemberment", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Your limbs are harder to dismember."), \
 	TRAIT_STEELHEARTED = TAT_TRAIT_ENTRY("Steelhearted", 5, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Hardened nerves. You do not waiver from the sight of violence in battle."), \
