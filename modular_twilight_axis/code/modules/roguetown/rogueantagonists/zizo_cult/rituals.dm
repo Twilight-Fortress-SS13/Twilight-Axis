@@ -762,21 +762,21 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	S.set_up(1, 1, center)
 	S.start()
 
-	new /obj/item/clothing/suit/roguetown/armor/plate/full/zizo(center)
+	new /obj/item/clothing/suit/roguetown/armor/plate/full/avantyne(center)
 
-	new /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/zizo(center)
+	new /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/avantyne/heavy(center)
 
-	new /obj/item/clothing/under/roguetown/platelegs/zizo(center)
+	new /obj/item/clothing/under/roguetown/platelegs/avantyne/heavy(center)
 
-	new /obj/item/clothing/shoes/roguetown/boots/armor/zizo(center)
+	new /obj/item/clothing/shoes/roguetown/boots/armor/avantyne/heavy(center)
 
-	new /obj/item/clothing/wrists/roguetown/bracers/zizo(center)
+	new /obj/item/clothing/wrists/roguetown/bracers/avantyne/heavy(center)
 
-	new /obj/item/clothing/gloves/roguetown/plate/zizo(center)
+	new /obj/item/clothing/gloves/roguetown/plate/avantyne/heavy(center)
 
 	new /obj/item/clothing/head/roguetown/helmet/heavy/zizo(center)
 
-	new /obj/item/clothing/neck/roguetown/bevor/zizo(center)
+	new /obj/item/clothing/neck/roguetown/bevor/avantyne/heavy(center)
 
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 	ADD_TRAIT(target,TRAIT_HEAVYARMOR, TRAIT_GENERIC)
@@ -797,7 +797,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	S.set_up(1, 1, center)
 	S.start()
 
-	new /obj/item/rogueweapon/sword/long/zizo(center)
+	new /obj/item/rogueweapon/sword/avantyne(center)
 
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 

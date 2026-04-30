@@ -12,6 +12,7 @@
 		"Pocket Sand" = list(
 			path = /obj/item/impact_grenade/pocketsand,
 			m_cooldown = 60 SECONDS,
+			m_devotion = 10,
 			m_rank = SKILL_LEVEL_NOVICE,
 			category = "Rogue Arts",
 			lines = list("Попробуй увернись!", "Горсть свободы!", "Лови подарочек!", "Береги глаза!", "Работает просто чудесно!")
@@ -20,22 +21,25 @@
 		"Gilded Lockpick" = list(
 			path = /obj/item/melee/touch_attack/lesserknock/matthios,
 			m_cooldown = 5 SECONDS,
+			m_devotion = 10,
 			m_rank = SKILL_LEVEL_NOVICE,
 			category = "Gilded Tools",
 			lines = list("+Направь мою руку, Маттиос.", "+Ни один замок не удержит тех, кто свободен!", "+Твой инструмент приведет нас к свободе!")
 		),
 		//freely spawns 400 mammon!!! no wae! is this trve?!!?!??
-		"Pouch of Bribery" = list(
+		"Pouch of Smuggling" = list(
 			path = /obj/item/storage/belt/rogue/pouch/matthios,
-			m_cooldown = 5 MINUTES,
-			m_rank = SKILL_LEVEL_EXPERT,
+			m_cooldown = 10 MINUTES,
+			m_devotion = 100,
+			m_rank = SKILL_LEVEL_NOVICE,
 			category = "Rogue Arts",
-			lines = list("+Средства из наших запасов!", "+Богатство для жадных, инструмент для свободных...", "+Это нужно нам на дело, Батюшка.")
+			lines = list("+Маттиос, убереги наши запасы.", "+Жадные охочи до наших богатств, но не видать им злата свободного люда...", "+Твои инструменты да уберегут наши трофеи...")
 		),
 		//makes failed lockpicking attempts muffled
 		"Gilded Dexterous Gloves" = list(
 			path = /obj/item/clothing/gloves/roguetown/fingerless_leather/muffle_matthios,
 			m_cooldown = 5 MINUTES,
+			m_devotion = 100,
 			m_rank = SKILL_LEVEL_JOURNEYMAN,
 			category = "Gilded Tools",
 			lines = list("+Руки мастера действуют бесшумно.", "+В тишине мы готовим наш удар по тирании.", "+Ловкость рук и никакого мошенничества.")
@@ -44,6 +48,7 @@
 		"Gilded Muffled Boots" = list(
 			path = /obj/item/clothing/shoes/roguetown/boots/muffle_matthios,
 			m_cooldown = 5 MINUTES,
+			m_devotion = 100,
 			m_rank = SKILL_LEVEL_APPRENTICE,
 			category = "Gilded Tools",
 			lines = list("+Я иду в Его тени, неслышим и незрим.", "+Они не смогут сковать того, кого не услышат.")
@@ -51,7 +56,8 @@
 		//enables piss night vision and sets your lockpick timer to 3 secs, makes you insane over time and prolonged use
 		"Gilded Lockpicking Specs" = list(
 			path = /obj/item/clothing/mask/rogue/spectacles/matthios,
-			m_cooldown = -1, // this is too stronk, so only 1 allowed
+			m_cooldown = -1, // this is too stronk, so only 1 allowed now
+			m_devotion = 200,
 			m_rank = SKILL_LEVEL_EXPERT,
 			category = "Gilded Tools",
 			lines = list("+Маттиос, укажи мне путь.","+Сквозь засовы и замки, я вижу цель нашей борьбы.","+Маттиос, открой мне истину во тьме.")
@@ -60,6 +66,7 @@
 		"Gilded Chains" = list(
 			path = /obj/item/rope/chain/matthios,
 			m_cooldown = 10 MINUTES,
+			m_devotion = 200,
 			m_rank = SKILL_LEVEL_JOURNEYMAN,
 			category = "Gilded Tools",
 			lines = list("Маттиос! Оковы для хозяев!", "Ты не уйдешь от справедливости народа!", "Скуем же тиранов их же цепями!")
@@ -68,7 +75,8 @@
 		"Gilded Amulet of Matthios" = list(
 			path = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded,
 			m_cooldown = 30 MINUTES,
-			m_rank = SKILL_LEVEL_NOVICE,
+			m_devotion = 50,
+			m_rank = SKILL_LEVEL_NONE,
 			category = "Gilded Tools",
 			lines = list("+Маттиос, я вверяю себя в твои руки.", "+Господин Ничего, я несу твое знамя с гордостью.", "+Отец Свободы, твоя воля да будет исполнена.")
 		),
@@ -76,6 +84,7 @@
 		"Vial of Firstlaw" = list(
 			path = /obj/item/matthios_canister/firstlaw,
 			m_cooldown = 1 MINUTES,
+			m_devotion = 75,
 			m_rank = SKILL_LEVEL_NOVICE,
 			category = "Malchem Vials",
 			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
@@ -84,6 +93,7 @@
 		"Vial of Kingsfeast Base" = list(
 			path = /obj/item/matthios_canister/kingsfeast,
 			m_cooldown = 2 MINUTES,
+			m_devotion = 25,
 			m_rank = SKILL_LEVEL_NOVICE,
 			category = "Malchem Vials",
 			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
@@ -92,6 +102,7 @@
 		"Vial of Kingswine Base" = list(
 			path = /obj/item/matthios_canister/kingswine,
 			m_cooldown = 2 MINUTES,
+			m_devotion = 25,
 			m_rank = SKILL_LEVEL_NOVICE,
 			category = "Malchem Vials",
 			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
@@ -100,6 +111,7 @@
 		"Vial of Goodnite Base" = list(
 			path = /obj/item/matthios_canister/goodnite,
 			m_cooldown = 2 MINUTES,
+			m_devotion = 50,
 			m_rank = SKILL_LEVEL_APPRENTICE,
 			category = "Malchem Vials",
 			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
@@ -108,6 +120,7 @@
 		"Vial of Warsmith Base" = list(
 			path = /obj/item/matthios_canister/warsmith,
 			m_cooldown = 2 MINUTES,
+			m_devotion = 50,
 			m_rank = SKILL_LEVEL_JOURNEYMAN,
 			category = "Malchem Vials",
 			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
@@ -149,6 +162,7 @@
 		"Vial of Lyfestruth Base" = list(
 			path = /obj/item/matthios_canister/lyfestruth,
 			m_cooldown = 30 MINUTES,
+			m_devotion = 100,
 			m_rank = SKILL_LEVEL_EXPERT,
 			category = "Malchem Vials",
 			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
@@ -501,7 +515,7 @@
 			revert_cast()
 			return FALSE
 		var/mammonsonperson = get_mammons_in_atom(target)
-		var/mammonsinbank = SStreasury.bank_accounts[target]
+		var/mammonsinbank = SStreasury.get_balance(target)
 		var/totalvalue = mammonsinbank + mammonsonperson
 		if(HAS_TRAIT(target, TRAIT_NOBLE))
 			totalvalue += 101 // We're ALWAYS going to do a medium level smite minimum to nobles.
@@ -525,7 +539,7 @@
 			user.say("Жадность есть препятствие для свободы!")
 			target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I feel the weight of my wealth burning at my soul!"))
 			target.adjustFireLoss(80)
-			target.Stun(20)
+			//target.Stun(20)
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
 			return TRUE
 		if(totalvalue <=200)
@@ -533,7 +547,7 @@
 			target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I feel the weight of my wealth tearing at my soul!"))
 			target.adjustFireLoss(100)
 			target.adjust_fire_stacks(7, /datum/status_effect/fire_handler/fire_stacks/divine)
-			target.Stun(20)
+			//target.Stun(20)
 			target.ignite_mob()
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
 			return TRUE
@@ -543,13 +557,13 @@
 			target.adjustFireLoss(120)
 			target.adjust_fire_stacks(9, /datum/status_effect/fire_handler/fire_stacks/divine)
 			target.ignite_mob()
-			target.Stun(40)
+			//.Stun(40)
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
 			return TRUE
 		if(totalvalue <= 2500)
 			target.visible_message(span_danger("[target] is smited with holy light!"), span_userdanger("I feel the weight of my wealth rend my soul apart!"))
 			user.say("Твоя последняя транзакция! Бог Свободы отвергает тебя!!")
-			target.Stun(60)
+			//target.Stun(60)
 			target.emote("agony")
 			target.adjustFireLoss(140)
 			target.adjust_fire_stacks(9, /datum/status_effect/fire_handler/fire_stacks/divine)

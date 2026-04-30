@@ -53,13 +53,13 @@ NECRO SKELETONS
 
 
 /datum/outfit/job/roguetown/cult/skeleton/zizoid
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/zizo
-	armor =  /obj/item/clothing/suit/roguetown/armor/plate/full/zizo
-	pants = /obj/item/clothing/under/roguetown/platelegs/zizo
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/avantyne/heavy
+	armor =  /obj/item/clothing/suit/roguetown/armor/plate/full/avantyne
+	pants = /obj/item/clothing/under/roguetown/platelegs/avantyne/heavy
 	head = /obj/item/clothing/head/roguetown/helmet/skullcap/cult
-	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/zizo
-	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
-	gloves = /obj/item/clothing/gloves/roguetown/plate/zizo
+	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/avantyne/heavy
+	neck = /obj/item/clothing/neck/roguetown/bevor/avantyne/heavy
+	gloves = /obj/item/clothing/gloves/roguetown/plate/avantyne/heavy
 
 /datum/advclass/cult/skeleton/zizoid/raider
 	name = "Cult skeleton raider"
@@ -95,7 +95,7 @@ NECRO SKELETONS
 	H.STALUC = rand(8, 12)
 
 	shirt = prob(50) ? /obj/item/clothing/suit/roguetown/armor/chainmail/aalloy : /obj/item/clothing/suit/roguetown/armor/chainmail/paalloy
-	r_hand = /obj/item/rogueweapon/sword/long/zizo
+	r_hand = /obj/item/rogueweapon/sword/avantyne
 
 	H.energy = H.max_energy
 	H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
