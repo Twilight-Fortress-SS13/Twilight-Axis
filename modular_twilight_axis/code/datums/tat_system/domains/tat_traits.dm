@@ -679,7 +679,6 @@
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
 	if(has_trait(TAT_TRAIT_RESIDENT))
 		apply_resident_package(H)
-		apply_resident_advjob(H)
 	if(has_trait(TAT_TRAIT_SPELLBLADE))
 		apply_spellblade_base_package(H)
 	if(has_trait(TAT_TRAIT_SOUNDBREAKER))
@@ -729,6 +728,7 @@
 		return FALSE
 	if(has_trait(TAT_TRAIT_RESIDENT))
 		apply_resident_pugilist_package(H)
+		apply_resident_advjob(H)
 	if(has_trait(TAT_TRAIT_SPELLBLADE))
 		apply_spellblade_specialization_package(H)
 	if(has_trait(TAT_TRAIT_WANTED))
@@ -864,15 +864,16 @@
 	if(!H || !has_trait(TAT_TRAIT_RESIDENT))
 		return
 
-	var/datum/advclass/resident_advjob = get_tat_resident_advjob()
-	if(!resident_advjob)
+	var/resident_advjob_type = get_tat_resident_advjob()
+	if(!resident_advjob_type)
 		return
 
-	var/datum/advclass/advclass = SSrole_class_handler.get_advclass_by_name(resident_advjob.name)
+	var/datum/advclass/advclass = new resident_advjob_type
 	if(!advclass)
 		return
 
-	H.advjob = resident_advjob.name
+	H.advjob = advclass.name
+	qdel(advclass)
 
 /datum/tat_traits/proc/get_outlander_natural_potential_discount(trait_id)
 	if(trait_id != TAT_TRAIT_BONUS_STAT_POOL)
