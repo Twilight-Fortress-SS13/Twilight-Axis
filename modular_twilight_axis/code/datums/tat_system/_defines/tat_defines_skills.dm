@@ -172,12 +172,12 @@
 
 #define TAT_VIRTUE_CHOICE_SKILL_CAP_BONUS_RULES list( \
 	/datum/virtue/utility/apprentice = list( \
-		TAT_VIRTUE_CHOICE_APPRENTICE_MINING = list(/datum/skill/labor/mining = 4), \
-		TAT_VIRTUE_CHOICE_APPRENTICE_LUMBERJACKING = list(/datum/skill/labor/lumberjacking = 4) \
+		TAT_VIRTUE_CHOICE_APPRENTICE_MINING = list(/datum/skill/labor/mining = SKILL_LEVEL_LEGENDARY), \
+		TAT_VIRTUE_CHOICE_APPRENTICE_LUMBERJACKING = list(/datum/skill/labor/lumberjacking = SKILL_LEVEL_LEGENDARY) \
 	), \
 	/datum/virtue/utility/prowler = list( \
-		TAT_VIRTUE_CHOICE_PROWLER_SNEAKING = list(/datum/skill/misc/sneaking = 4), \
-		TAT_VIRTUE_CHOICE_PROWLER_LOCKPICKING = list(/datum/skill/misc/lockpicking = 3) \
+		TAT_VIRTUE_CHOICE_PROWLER_SNEAKING = list(/datum/skill/misc/sneaking = SKILL_LEVEL_LEGENDARY), \
+		TAT_VIRTUE_CHOICE_PROWLER_LOCKPICKING = list(/datum/skill/misc/lockpicking = SKILL_LEVEL_LEGENDARY) \
 	) \
 )
 
