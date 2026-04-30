@@ -25,8 +25,8 @@
 	requires_bodypart = FALSE
 	requires_missing_bodypart = FALSE
 	requires_bodypart_type = NONE
-	skill_min = SKILL_LEVEL_JOURNEYMAN
-	skill_median = SKILL_LEVEL_EXPERT
+	skill_min = SKILL_LEVEL_LEGENDARY
+	skill_median = SKILL_LEVEL_LEGENDARY
 	visible_required_skill = TRUE
 
 /datum/surgery_step/add_taur/validate_bodypart(mob/user, mob/living/carbon/target, obj/item/bodypart/bodypart, target_zone)
@@ -76,10 +76,10 @@
 	)
 	target_mobtypes = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
 	possible_locs = list(
-	//	BODY_ZONE_R_ARM,
-	//	BODY_ZONE_L_ARM,
-	//	BODY_ZONE_L_LEG,
-	//	BODY_ZONE_R_LEG,
+		BODY_ZONE_R_ARM,
+		BODY_ZONE_L_ARM,
+		BODY_ZONE_L_LEG,
+		BODY_ZONE_R_LEG,
 		BODY_ZONE_HEAD,
 	)
 	time = 3 SECONDS
