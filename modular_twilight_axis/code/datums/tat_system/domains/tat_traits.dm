@@ -105,6 +105,7 @@
 	modifier -= get_armor_supplier_cross_discount(trait_id)
 	modifier -= get_material_supplier_cross_discount(trait_id)
 	modifier -= get_armor_training_supplier_discount(trait_id)
+	modifier -= get_outlander_natural_potential_discount(trait_id)
 	return modifier
 
 /datum/tat_traits/proc/get_display_cost(trait_id)
@@ -872,3 +873,10 @@
 		return
 
 	H.advjob = resident_advjob.name
+
+/datum/tat_traits/proc/get_outlander_natural_potential_discount(trait_id)
+	if(trait_id != TAT_TRAIT_BONUS_STAT_POOL)
+		return 0
+	if(!has_trait(TRAIT_OUTLANDER))
+		return 0
+	return 10
