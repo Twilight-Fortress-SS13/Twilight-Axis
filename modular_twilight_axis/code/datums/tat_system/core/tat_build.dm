@@ -541,8 +541,6 @@
 	sanitize()
 	traits.apply_instant_to_human(H)
 	items.apply_to_human(H)
-	stats.apply_to_human(H)
-	skills.apply_to_human(H)
 	return TRUE
 
 /datum/tat_build/proc/apply_post_client_to_human(mob/living/carbon/human/H)
@@ -558,6 +556,8 @@
 	sanitize()
 	traits.apply_deferred_to_human(H)
 	items.apply_deferred_to_human(H)
+	stats.apply_to_human(H)
+	skills.apply_to_human(H)
 	return TRUE
 
 /datum/tat_build/proc/apply_to_human(mob/living/carbon/human/H)
