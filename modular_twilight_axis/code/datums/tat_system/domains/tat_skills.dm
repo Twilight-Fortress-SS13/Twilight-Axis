@@ -96,49 +96,6 @@
 
 	return total
 
-/datum/tat_skills/proc/max_virtue_rule_value(skill_type, list/rules, list/virtues)
-	var/highest_cap = 0
-	if(!islist(rules) || !islist(virtues) || !length(virtues))
-		return 0
-
-	for(var/virtue_entry in virtues)
-		for(var/virtue_rule in rules)
-			if(!virtue_matches_rule(virtue_entry, virtue_rule))
-				continue
-
-			var/list/skill_map = rules[virtue_rule]
-			if(islist(skill_map))
-				highest_cap = max(highest_cap, round(skill_map[skill_type] || 0))
-
-	return highest_cap
-
-/datum/tat_skills/proc/max_virtue_choice_rule_value(skill_type, list/rules, list/virtues)
-	var/highest_cap = 0
-	if(!islist(rules) || !islist(virtues) || !length(virtues))
-		return 0
-
-	for(var/virtue_entry in virtues)
-		if(!istype(virtue_entry, /datum/virtue))
-			continue
-		var/datum/virtue/virtue_datum = virtue_entry
-		if(!LAZYLEN(virtue_datum.picked_choices))
-			continue
-
-		for(var/virtue_rule in rules)
-			if(!virtue_matches_rule(virtue_datum, virtue_rule))
-				continue
-
-			var/list/choice_map = rules[virtue_rule]
-			if(!islist(choice_map))
-				continue
-
-			for(var/choice in virtue_datum.picked_choices)
-				var/list/skill_map = choice_map[choice]
-				if(islist(skill_map))
-					highest_cap = max(highest_cap, round(skill_map[skill_type] || 0))
-
-	return highest_cap
-
 /datum/tat_skills/proc/get_virtue_bonus_value(skill_type)
 	var/list/virtues = owner_build?.get_active_virtues()
 	if(!length(virtues))
@@ -149,7 +106,7 @@
 	var/list/virtues = owner_build?.get_active_virtues()
 	if(!length(virtues))
 		return 0
-	return max(max_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_cap_bonus_rules, virtues), max_virtue_choice_rule_value(skill_type, GLOB.tat_virtue_choice_skill_cap_bonus_rules, virtues))
+	return add_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_cap_bonus_rules, virtues) + add_virtue_choice_rule_value(skill_type, GLOB.tat_virtue_choice_skill_cap_bonus_rules, virtues)
 
 /datum/tat_skills/proc/rebuild_bonus_values()
 	bonus = list()
@@ -168,32 +125,55 @@
 /datum/tat_skills/proc/get_total_maximum(domain)
 	return round((domain_points[domain] || 0) + (owner_build ? owner_build.get_bonus_skill_domain_points(domain) : 0))
 
-/datum/tat_skills/proc/get_combat_expert_count()
-	if(_cached_combat_expert_count >= 0)
+/datum/tat_skills/proc/get_combat_expert_count(except_skill_type = null)
+	if(!except_skill_type && _cached_combat_expert_count >= 0)
 		return _cached_combat_expert_count
+
 	var/count = 0
 	for(var/skill_type in TAT_SKILLS_COMBAT)
+		if(skill_type == except_skill_type)
+			continue
 		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 			continue
-		if(get_invested_value(skill_type) > TAT_SKILL_COMBAT_CAP_DEFAULT)
+		if((get_invested_value(skill_type) + get_bonus_value(skill_type)) >= TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)
 			count++
-	_cached_combat_expert_count = count
+
+	if(!except_skill_type)
+		_cached_combat_expert_count = count
 	return count
 
-/datum/tat_skills/proc/get_combat_master_count()
-	if(_cached_combat_master_count >= 0)
+/datum/tat_skills/proc/get_combat_master_count(except_skill_type = null)
+	if(!except_skill_type && _cached_combat_master_count >= 0)
 		return _cached_combat_master_count
+
 	var/count = 0
 	for(var/skill_type in TAT_SKILLS_COMBAT)
+		if(skill_type == except_skill_type)
+			continue
 		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 			continue
-		if(get_invested_value(skill_type) > TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)
+		if((get_invested_value(skill_type) + get_bonus_value(skill_type)) >= TAT_SKILL_COMBAT_CAP_TRAIT_MASTER)
 			count++
-	_cached_combat_master_count = count
+
+	if(!except_skill_type)
+		_cached_combat_master_count = count
 	return count
 
 /datum/tat_skills/proc/get_trait_cap_bonus(skill_type)
 	return owner_build ? owner_build.get_skill_cap_bonus_value(skill_type) : 0
+
+/datum/tat_skills/proc/skill_has_trait_cap_rule(skill_type)
+	var/list/rules = GLOB.tat_trait_skill_cap_bonus_rules
+
+	for(var/trait_id in rules)
+		var/list/skill_map = rules[trait_id]
+		if(!islist(skill_map))
+			continue
+
+		if(skill_type in skill_map)
+			return TRUE
+
+	return FALSE
 
 /datum/tat_skills/proc/get_firearms_skill_cap(skill_type)
 	var/cap = TAT_SKILL_NONCOMBAT_CAP_UNTRAITED
@@ -201,7 +181,7 @@
 	if(owner_build?.has_trait(TRAIT_FIREARMS_MARKSMAN))
 		cap = TAT_SKILL_NONCOMBAT_CAP_SPECTRAIT
 	else
-		cap = max(cap, get_trait_cap_bonus(skill_type))
+		cap += get_trait_cap_bonus(skill_type)
 
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
@@ -219,16 +199,16 @@
 	var/has_expert = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_EXPERT)
 	var/has_master = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_MASTER)
 
-	var/current_invested = get_invested_value(skill_type)
-	var/expert_count = get_combat_expert_count()
-	var/master_count = get_combat_master_count()
+	var/current_total = get_invested_value(skill_type) + get_bonus_value(skill_type)
+	var/expert_count = get_combat_expert_count(skill_type)
+	var/master_count = get_combat_master_count(skill_type)
 
 	var/cap = base_cap
 
 	if(has_expert)
 		var/can_take_expert = FALSE
 
-		if(current_invested > base_cap)
+		if(current_total >= expert_cap)
 			can_take_expert = TRUE
 		else if(expert_count < TAT_COMBAT_EXPERT_SKILL_LIMIT)
 			can_take_expert = TRUE
@@ -239,7 +219,7 @@
 	if(has_master && cap >= expert_cap)
 		var/can_take_master = FALSE
 
-		if(current_invested > expert_cap)
+		if(current_total >= master_cap)
 			can_take_master = TRUE
 		else if(master_count < TAT_COMBAT_MASTER_SKILL_LIMIT)
 			can_take_master = TRUE
@@ -249,7 +229,7 @@
 
 	var/cap_bonus = get_trait_cap_bonus(skill_type)
 	if(cap_bonus > 0)
-		cap = max(cap, cap_bonus)
+		cap = max(cap, base_cap + cap_bonus)
 
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
@@ -278,15 +258,20 @@
 
 	var/cap_bonus = get_trait_cap_bonus(skill_type)
 	if(cap_bonus > 0)
-		cap = max(cap, cap_bonus)
+		if(cap > 0)
+			cap += cap_bonus
+		else
+			cap = cap_bonus
 
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_noncombat_skill_cap(skill_type)
-	var/cap = get_trait_cap_bonus(skill_type)
-	if(cap <= 0)
-		cap = TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM
+	var/base_cap = TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM
 
+	if(skill_has_trait_cap_rule(skill_type))
+		base_cap = TAT_SKILL_NONCOMBAT_CAP_UNTRAITED
+
+	var/cap = base_cap + get_trait_cap_bonus(skill_type)
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_maximum(skill_type)
