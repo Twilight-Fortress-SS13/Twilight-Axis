@@ -54,20 +54,37 @@
 /datum/tat_traits/proc/is_armor_supplier_trait(trait_id)
 	return trait_id in GLOB.tat_armor_supplier_traits
 
-/datum/tat_traits/proc/get_armor_supplier_cross_discount(trait_id)
-	if(!is_armor_supplier_trait(trait_id))
-		return 0
+/datum/tat_traits/proc/is_material_supplier_trait(trait_id)
+	return trait_id in GLOB.tat_material_supplier_traits
+
+/datum/tat_traits/proc/get_first_selected_supplier_trait(list/supplier_traits)
+	if(!islist(supplier_traits))
+		return null
 
 	for(var/selected_trait_id in selected)
-		if(selected_trait_id == trait_id)
-			continue
-		if(!is_armor_supplier_trait(selected_trait_id))
+		if(!(selected_trait_id in supplier_traits))
 			continue
 		if(get_trait_count(selected_trait_id) <= 0)
 			continue
-		return TAT_ARMOR_SUPPLIER_CROSS_DISCOUNT
+		return selected_trait_id
 
-	return 0
+	return null
+
+/datum/tat_traits/proc/get_supplier_cross_discount(trait_id, list/supplier_traits, discount)
+	if(!(trait_id in supplier_traits))
+		return 0
+
+	var/first_selected_trait_id = get_first_selected_supplier_trait(supplier_traits)
+	if(!first_selected_trait_id || first_selected_trait_id == trait_id)
+		return 0
+
+	return discount
+
+/datum/tat_traits/proc/get_armor_supplier_cross_discount(trait_id)
+	return get_supplier_cross_discount(trait_id, GLOB.tat_armor_supplier_traits, TAT_ARMOR_SUPPLIER_CROSS_DISCOUNT)
+
+/datum/tat_traits/proc/get_material_supplier_cross_discount(trait_id)
+	return get_supplier_cross_discount(trait_id, GLOB.tat_material_supplier_traits, TAT_MATERIAL_SUPPLIER_CROSS_DISCOUNT)
 
 /datum/tat_traits/proc/get_armor_training_supplier_discount(trait_id)
 	if(!is_armor_supplier_trait(trait_id))
@@ -86,12 +103,13 @@
 /datum/tat_traits/proc/get_cost_modifier(trait_id)
 	var/modifier = 0
 	modifier -= get_armor_supplier_cross_discount(trait_id)
+	modifier -= get_material_supplier_cross_discount(trait_id)
 	modifier -= get_armor_training_supplier_discount(trait_id)
 	return modifier
 
 /datum/tat_traits/proc/get_display_cost(trait_id)
 	var/cost = get_base_cost(trait_id) + get_cost_modifier(trait_id)
-	if(is_armor_supplier_trait(trait_id))
+	if(is_armor_supplier_trait(trait_id) || is_material_supplier_trait(trait_id))
 		return max(0, cost)
 	return cost
 
