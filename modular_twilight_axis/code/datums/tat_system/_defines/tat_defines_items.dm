@@ -235,7 +235,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/neck/roguetown/coif/heavypadding = TAT_ITEM_ENTRY("Heavy Padded Coif", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/coif/padded = TAT_ITEM_ENTRY("Padded Coif", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "neck"), \
 	/obj/item/clothing/neck/roguetown/gorget = TAT_ITEM_ENTRY("Iron Gorget", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
-	/obj/item/clothing/neck/roguetown/gorget/forlorncollar = TAT_ITEM_ENTRY("Forlorn Gorget", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "neck"), \
+	/obj/item/clothing/neck/roguetown/gorget/forlorncollar = TAT_ITEM_ENTRY("Forlorn Gorget", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/gorget/bronze = TAT_ITEM_ENTRY("Bronze Gorget", 0.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/gorget/copper = TAT_ITEM_ENTRY("Copper Gorget", 0.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/gorget/steel = TAT_ITEM_ENTRY("Steel Gorget", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "neck"), \
