@@ -292,7 +292,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/bronzeskirt = TAT_ITEM_ENTRY("Bronze skirt", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants = TAT_ITEM_ENTRY("Grenzelhoftian Paumpers", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/shadowpants = TAT_ITEM_ENTRY("Silk Tights", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
-	/obj/item/clothing/under/roguetown/heavy_leather_pants/shorts = TAT_ITEM_ENTRY("Leather Shorts", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
+	/obj/item/clothing/under/roguetown/heavy_leather_pants/shorts = TAT_ITEM_ENTRY("Leather Shorts", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/under/roguetown/platelegs = TAT_ITEM_ENTRY("Plate legs", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "pants"), \
 	/obj/item/clothing/under/roguetown/platelegs/iron = TAT_ITEM_ENTRY("Iron Plate legs", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "pants"), \
 	/obj/item/clothing/under/roguetown/splintlegs = TAT_ITEM_ENTRY("Chausses, Splinted", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
@@ -457,6 +457,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Alchemical cauldron", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/ration = TAT_ITEM_ENTRY("Ration paper", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "food"), \
 	/obj/item/natural/bundle/cloth/bandage/full = TAT_ITEM_ENTRY("Roll of Bandages", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
+	/obj/item/natural/bundle/cloth/bandage = TAT_ITEM_ENTRY("Dirty Brown Bandage", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/tent_kit = TAT_ITEM_ENTRY("Tent", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/tent_kit/ger = TAT_ITEM_ENTRY("Ger Tent", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/tent_kit/yurt = TAT_ITEM_ENTRY("Yurt Tent", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
