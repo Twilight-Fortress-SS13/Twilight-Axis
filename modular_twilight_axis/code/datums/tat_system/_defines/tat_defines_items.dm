@@ -459,6 +459,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/spear/stone/copper = TAT_ITEM_ENTRY("Copper Spear", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/rogueweapon/mace/mushroom = TAT_ITEM_ENTRY("Lithmyc Mace", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/huntingknife/idagger/steel/fire = TAT_ITEM_ENTRY("Fire Dagger", 5, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
+	/obj/item/rogueweapon/mace/goden/deepduke = TAT_ITEM_ENTRY("Duke's Mace", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/stoneaxe/battle/ice = TAT_ITEM_ENTRY("Deathfrost Axe", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/sword/long/exe/berserk = TAT_ITEM_ENTRY("Berserk Sword", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
