@@ -297,8 +297,8 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_SEEDKNOW = TAT_TRAIT_ENTRY("Seed Knower", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know which seeds grow which crops."), \
 	TRAIT_CAUTIOUS_FISHER = TAT_TRAIT_ENTRY("Cautious Fisher", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know the dangers of fishing and how to avoid unwanted attention from the depths."), \
 	TRAIT_SQUIRE_REPAIR = TAT_TRAIT_ENTRY("Squire Knowledge", 15, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You can restore gear with time and polish it until it gleams like new."), \
-	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know watering holes, feeding grounds and bent thickets."), \
-	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know the common signs of prey and trails."), \
+	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know watering holes, feeding grounds and bent thickets."), \
+	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know the common signs of prey and trails."), \
 	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Your feet walks a lot roads. Gives you +9 points in wandering skill tree."), \
 	TAT_TRAIT_HERETIC = TAT_TRAIT_ENTRY("Heretic", -10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain cool HERETIC mark on your face."), \
 	TRAIT_RITUALIST = TAT_TRAIT_ENTRY("Ritualist", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gives God's favour for thy's rituals. Adds ritual chalk to your stash."), \
