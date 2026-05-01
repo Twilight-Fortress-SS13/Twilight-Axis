@@ -180,8 +180,6 @@
 
 	if(owner_build?.has_trait(TRAIT_FIREARMS_MARKSMAN))
 		cap = TAT_SKILL_NONCOMBAT_CAP_SPECTRAIT
-	else
-		cap += get_trait_cap_bonus(skill_type)
 
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
