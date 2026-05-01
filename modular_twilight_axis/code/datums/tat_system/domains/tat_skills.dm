@@ -256,7 +256,7 @@
 		if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
 			cap = 3
 
-	var/cap_bonus = get_trait_cap_bonus(skill_type)
+	var/cap_bonus = get_trait_cap_bonus(skill_type) + get_virtue_skill_cap_bonus(skill_type)
 	if(cap_bonus > 0)
 		if(cap > 0)
 			cap += cap_bonus

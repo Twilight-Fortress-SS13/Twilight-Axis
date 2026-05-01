@@ -136,7 +136,9 @@
 
 #define TAT_VIRTUE_SKILL_CAP_BONUS_RULES list( \
 	/datum/virtue/combat/bowman = list(/datum/skill/combat/bows = 3), \
-	/datum/virtue/combat/crossbowman = list(/datum/skill/combat/crossbows = 3) \
+	/datum/virtue/combat/crossbowman = list(/datum/skill/combat/crossbows = 3), \
+	/datum/virtue/combat/magical_potential = list(/datum/skill/magic/arcane = 1), \
+	/datum/virtue/combat/devotee = list(/datum/skill/magic/holy = 1) \
 )
 
 #define TAT_VIRTUE_CHOICE_SKILL_BONUS_RULES list( \
