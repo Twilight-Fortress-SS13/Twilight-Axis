@@ -9,6 +9,7 @@
 #define TAT_TRAIT_SAVAGE_SKIN "tat_savage_skin"
 #define TAT_TRAIT_SAVAGE_RAGE "tat_savage_rage"
 #define TAT_TRAIT_BERSERKER_RAGE "tat_berserker_rage"
+#define TAT_TRAIT_TRADER_LICENSE "tat_trader_license"
 
 #define TAT_TRAIT_STEEL_SUPPLIER "tat_steel_supplier"
 #define TAT_TRAIT_SILVER_SUPPLIER "tat_silver_supplier"
@@ -182,6 +183,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_RONIN = TAT_TRAIT_ENTRY("Ronin", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the Ronin combo style."), \
 	TAT_TRAIT_SPELLBLADE = TAT_TRAIT_ENTRY("Spellblade", 10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants a set of weapon-binding spells."), \
 	TAT_TRAIT_RESIDENT = TAT_TRAIT_ENTRY("Resident", 10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants a Meister account and ownership of a house in the city."), \
+	TAT_TRAIT_TRADER_LICENSE = TAT_TRAIT_ENTRY("Merchant's Writ", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks sealed trader caches in the TAT item list. Conflicts with Resident, Wanted, Outlander, and Heretic."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T1 = TAT_TRAIT_ENTRY("Bardic Inspiration I", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain tier 1 bardic inspiration, audience management verbs, and a songbook."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T2 = TAT_TRAIT_ENTRY("Bardic Inspiration II", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Upgrades bardic inspiration to tier 2, increasing audience size and songs known."), \
 	TAT_TRAIT_PARTY_LEADER = TAT_TRAIT_ENTRY("Party Leader", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Improves the core Fellowship: nearby fellows gain +1 CON; while at least one fellow is nearby, the leader gains +1 CON, +1 WIL, and +0.5 Fortune per nearby fellow."), \

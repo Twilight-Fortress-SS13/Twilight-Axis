@@ -3463,6 +3463,7 @@
 #include "modular_twilight_axis\code\datums\tat_system\core\tat_admin_panel.dm"
 #include "modular_twilight_axis\code\datums\tat_system\core\tat_bans.dm"
 #include "modular_twilight_axis\code\datums\tat_system\domains\tat_items.dm"
+#include "modular_twilight_axis\code\datums\tat_system\domains\tat_trader_lootboxes.dm"
 #include "modular_twilight_axis\code\datums\tat_system\domains\tat_party_leader.dm"
 #include "modular_twilight_axis\code\datums\tat_system\domains\tat_skills.dm"
 #include "modular_twilight_axis\code\datums\tat_system\domains\tat_stats.dm"

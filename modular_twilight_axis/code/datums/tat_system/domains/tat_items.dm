@@ -78,6 +78,8 @@
 			return can_use_weapon_supply_type(unlock_key)
 		if(TAT_UNLOCK_TYPE_ARMOR_FAMILY)
 			return can_use_armor_family(unlock_key)
+		if(TAT_UNLOCK_TYPE_TRAIT)
+			return !!owner_build?.has_trait(unlock_key)
 	return TRUE
 
 /datum/tat_items/proc/check_item(item_path)
