@@ -106,7 +106,6 @@
 	subclass_skills = list()
 	traits_applied = list()
 
-	maximum_possible_slots = 20
 	var/required_tat_bucket = null
 
 /datum/advclass/tat_class/check_requirements(mob/living/carbon/human/H)
