@@ -178,7 +178,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/legacy = 1,
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/paalloy = 1,
 	/obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate = 1,
-	/obj/item/clothing/suit/roguetown/armor/plate/full/avantyne = 1,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy = 1,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate = 1,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate/ordinator = 1,
