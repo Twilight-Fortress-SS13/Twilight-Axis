@@ -69,3 +69,6 @@
 
 /obj/item/rogueweapon/sword/long/exe/silver
 	is_silver = TRUE
+
+/obj/item/rogueweapon/sword/long/exe/berserk
+	special = /datum/special_intent/greatsword_swing

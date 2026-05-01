@@ -156,6 +156,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/sword/short/messer/bronze = TAT_ITEM_ENTRY("Makhaira", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "sword"), \
 	/obj/item/rogueweapon/sword/short/messer/iron = TAT_ITEM_ENTRY("Iron Messer", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
 	/obj/item/rogueweapon/sword/short/silver = TAT_ITEM_ENTRY("Silver Shortsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
+	/obj/item/rogueweapon/sword/short/psy = TAT_ITEM_ENTRY("Psydonic Shortsword", 3.5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
 	/obj/item/rogueweapon/sword/silver = TAT_ITEM_ENTRY("Silver Arming Sword", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
 	/obj/item/rogueweapon/whip/bronze = TAT_ITEM_ENTRY("Bronze Whip", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "whip"), \
 	/obj/item/rogueweapon/whip/silver = TAT_ITEM_ENTRY("Silver Whip", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "whip"), \
@@ -188,6 +189,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/head/roguetown/helmet/heavy/bucket/iron = TAT_ITEM_ENTRY("Iron Bucket Helmet", 1, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/frogmouth = TAT_ITEM_ENTRY("Frogmouth", 4, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/kabuto = TAT_ITEM_ENTRY("Kabuto", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/kabuto/zunari = TAT_ITEM_ENTRY("Light Kabuto", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/psysallet = TAT_ITEM_ENTRY("Psydonic Sallet", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/volfplate = TAT_ITEM_ENTRY("Volf-face Helm", 4, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/horned = TAT_ITEM_ENTRY("Horned Cap", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
@@ -208,11 +210,15 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/head/roguetown/helmet/skullcap = TAT_ITEM_ENTRY("Skull cap", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/winged = TAT_ITEM_ENTRY("Winged Cap", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/mask/rogue/facemask = TAT_ITEM_ENTRY("Iron Mask", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "mask"), \
+	/obj/item/clothing/mask/rogue/facemask/psydonmask = TAT_ITEM_ENTRY("Psydonic Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
+	/obj/item/clothing/mask/rogue/facemask/steel/miragefen_rogue = TAT_ITEM_ENTRY("Migarefen Mask", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/bronze = TAT_ITEM_ENTRY("Mouthless Bronze Mask", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/bronze/classic = TAT_ITEM_ENTRY("Bronze Mask", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/copper = TAT_ITEM_ENTRY("Copper Mask", 1, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/steel = TAT_ITEM_ENTRY("Steel Mask", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "mask"), \
+	/obj/item/clothing/mask/rogue/wildguard = TAT_ITEM_ENTRY("Wildguard Mask", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/steel/kazengun = TAT_ITEM_ENTRY("Soldier's Half-Mask", 1, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
+	/obj/item/clothing/mask/rogue/facemask/steel/kazengun/yohei = TAT_ITEM_ENTRY("Demon's Half-Mask", 1, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/steel/kazengun/full = TAT_ITEM_ENTRY("Soldier's Mask", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/steel/steppesman = TAT_ITEM_ENTRY("Steppesman Mask", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "mask"), \
 	/obj/item/clothing/neck/roguetown/bevor = TAT_ITEM_ENTRY("Bevor", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "neck"), \
@@ -224,11 +230,11 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/neck/roguetown/chaincoif/iron = TAT_ITEM_ENTRY("Iron Chaincoif", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/coif/heavypadding = TAT_ITEM_ENTRY("Heavy Padded Coif", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/coif/padded = TAT_ITEM_ENTRY("Padded Coif", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "neck"), \
-	/obj/item/clothing/neck/roguetown/gorget = TAT_ITEM_ENTRY("Iron Gorget", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "neck"), \
+	/obj/item/clothing/neck/roguetown/gorget = TAT_ITEM_ENTRY("Iron Gorget", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/gorget/forlorncollar = TAT_ITEM_ENTRY("Forlorn Gorget", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "neck"), \
-	/obj/item/clothing/neck/roguetown/gorget/bronze = TAT_ITEM_ENTRY("Bronze Gorget", 1, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
+	/obj/item/clothing/neck/roguetown/gorget/bronze = TAT_ITEM_ENTRY("Bronze Gorget", 0.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/gorget/copper = TAT_ITEM_ENTRY("Copper Gorget", 0.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
-	/obj/item/clothing/neck/roguetown/gorget/steel = TAT_ITEM_ENTRY("Steel Gorget", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "neck"), \
+	/obj/item/clothing/neck/roguetown/gorget/steel = TAT_ITEM_ENTRY("Steel Gorget", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "neck"), \
 	/obj/item/clothing/shoes/roguetown/boots = TAT_ITEM_ENTRY("Dark Boots", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/armor = TAT_ITEM_ENTRY("Plated Boots", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/armor/bronze = TAT_ITEM_ENTRY("Bronze Sandals", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "shoes"), \
@@ -341,6 +347,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/under/roguetown/trou/leather/atgervi = TAT_ITEM_ENTRY("Fur Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/shoes/roguetown/boots/leather= TAT_ITEM_ENTRY("Leather Boots", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/clothing/gloves/roguetown/angle/atgervi = TAT_ITEM_ENTRY("Fur-Lined Leather Gloves ", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/angle/feld = TAT_ITEM_ENTRY("Stranger Doc Gloves ", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/angle/phys = TAT_ITEM_ENTRY("Straying Surg Gloves ", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
 	/obj/item/clothing/shoes/roguetown/boots/leather/atgervi = TAT_ITEM_ENTRY("Atgervi Leather Boots", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn = TAT_ITEM_ENTRY("Gronnic Ravager Mantle", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/gloves/roguetown/angle/gronn = TAT_ITEM_ENTRY("Ravager Fur-Lined Leather Gloves", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
@@ -365,7 +373,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/head/roguetown/helmet = TAT_ITEM_ENTRY("Steel Nasal Helmet", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/rogueweapon/scabbard/sword/kazengun/noparry = TAT_ITEM_ENTRY("Ceremonial Kazengun Scabbard for Ssangsudo", 0, "misc", "weapon_supply", TAT_SUPPLY_STEEL, "sheath"), \
 	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = TAT_ITEM_ENTRY("Padded Gambeson", 3, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
-	/obj/item/clothing/suit/roguetown/shirt/robe/monk = TAT_ITEM_ENTRY("Monk Vestments", 3, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/shirt/robe/monk = TAT_ITEM_ENTRY("Monk Vestments", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/otavan = TAT_ITEM_ENTRY("fencing gambeson", 3, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/freifechter = TAT_ITEM_ENTRY("Padded Fencing Shirt", 3, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/chargah = TAT_ITEM_ENTRY("Padded Caftan", 3, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
@@ -379,6 +387,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/suit/roguetown/armor/basiceast = TAT_ITEM_ENTRY("Simple Dobo Robe", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/basiceast/captainrobe = TAT_ITEM_ENTRY("Foreign Robes", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine/haraate = TAT_ITEM_ENTRY("Hansimhae Cuirass", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/brigandine/harayoroi = TAT_ITEM_ENTRY("Light Hansimhae Cuirass", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute = TAT_ITEM_ENTRY("Psydonic Barbute", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants2 = TAT_ITEM_ENTRY("Strange Ripped Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/shepherd = TAT_ITEM_ENTRY("Shepherd Leather Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
@@ -425,7 +434,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/whip = TAT_ITEM_ENTRY("Leather Whip", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "whip"), \
 	/obj/item/rogueweapon/whip/nagaika = TAT_ITEM_ENTRY("Nagaika Whip", 2, "weapon", "weapon_supply", TAT_ARMOR_LEATHER, "whip"), \
 	/obj/item/rogueweapon/whip/psywhip_lesser = TAT_ITEM_ENTRY("Psydonic Whip", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "whip"), \
-	/obj/item/rogueweapon/handclaw = TAT_ITEM_ENTRY("Ravager Claws", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "unarmed"), \
+	/obj/item/rogueweapon/handclaw = TAT_ITEM_ENTRY("Ravager Claws", 2.5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "unarmed"), \
 	/obj/item/rogueweapon/handclaw/gronn/silver = TAT_ITEM_ENTRY("Silver Claws", 5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "unarmed"), \
 	/obj/item/rogueweapon/sword/long/oldpsysword = TAT_ITEM_ENTRY("Enduring Longsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/quiver/javelin/bronze = TAT_ITEM_ENTRY("Bronze Javelins", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "munition"), \
@@ -445,8 +454,9 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/spear/billhook = TAT_ITEM_ENTRY("Billhook", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/stone/copper = TAT_ITEM_ENTRY("Copper Spear", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/rogueweapon/mace/mushroom = TAT_ITEM_ENTRY("Lithmyc Mace", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
-	/obj/item/rogueweapon/stoneaxe/battle/ice = TAT_ITEM_ENTRY("Deathfrost Axe", 10, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
-	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 15, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
+	/obj/item/rogueweapon/stoneaxe/battle/ice = TAT_ITEM_ENTRY("Deathfrost Axe", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
+	/obj/item/rogueweapon/sword/long/exe/berserk = TAT_ITEM_ENTRY("Berserk Sword", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
+	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/shield/tower/metal/psy = TAT_ITEM_ENTRY("Psydonic Shield", 5, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rope/chain = TAT_ITEM_ENTRY("Chain", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rope = TAT_ITEM_ENTRY("Rope", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
@@ -493,6 +503,9 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/head/roguetown/helmet/heavy/knight/old/iron = TAT_ITEM_ENTRY("Iron Knight's Helm", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/knight/old = TAT_ITEM_ENTRY("Knight's Helm", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/knight = TAT_ITEM_ENTRY("Knight Armet", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/knight/raneshi_hmamluk = TAT_ITEM_ENTRY("Mamluk", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/heavy/knight/raneshi_hmamluk/raneshi_vmamluk = TAT_ITEM_ENTRY("Beastish Mamluk", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/raneshi_jarhelmet = TAT_ITEM_ENTRY("Jar Helmet", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet = TAT_ITEM_ENTRY("Armet", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/knight/iron = TAT_ITEM_ENTRY("Knight Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/sheriff = TAT_ITEM_ENTRY("Barred Helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
@@ -505,6 +518,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/neck/roguetown/psicross/noc = TAT_ITEM_ENTRY("Noc Amulet", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/naledi = TAT_ITEM_ENTRY("Naledian Bracelet", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/noc/bronze = TAT_ITEM_ENTRY("Bronze Noc Amulet", 0, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "cross"),\
+	/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta = TAT_ITEM_ENTRY("Pierced Coin Amulet", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/noc/aalloy = TAT_ITEM_ENTRY("Decreipt Noc Amulet", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross = TAT_ITEM_ENTRY("Psycross", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/reform = TAT_ITEM_ENTRY("Reformist Cross", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
@@ -603,6 +617,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/head/roguetown/helmet/heavy/bucket/gronn = TAT_ITEM_ENTRY("Gronn Norsii horned helmet", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Plate", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
 	/obj/item/clothing/gloves/roguetown/plate/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Gauntlets", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/plate/iron/banded = TAT_ITEM_ENTRY("Branded Iron Gauntlets", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "gloves"), \
 	/obj/item/clothing/under/roguetown/platelegs/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Plate Legs", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "pants"), \
 	/obj/item/clothing/shoes/roguetown/boots/armor/iron/gronn = TAT_ITEM_ENTRY("Gronn Norsii Iron Plated Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "shoes"), \
 	/obj/item/gun/ballistic/twilight_firearm/handgonne = TAT_ITEM_ENTRY("Culverin", 7, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
@@ -612,7 +627,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/chisel/bronze = TAT_ITEM_ENTRY("Bronze Chisel", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "wood work"), \
 	/obj/item/rogueweapon/handsaw = TAT_ITEM_ENTRY("Handsaw", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "wood work"), \
 	/obj/item/rogueweapon/handsaw/bronze = TAT_ITEM_ENTRY("Bronze Handsaw", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "wood work"), \
-	/obj/item/clothing/neck/roguetown/psicross/weeping = TAT_ITEM_ENTRY("Weeping Cross", 31, "misc", "weapon_supply", TAT_SUPPLY_IRON, "amulet"), \
+	/obj/item/clothing/neck/roguetown/psicross/weeping = TAT_ITEM_ENTRY("Weeping Cross", 31, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
+	/obj/item/rogueweapon/sword/long/exe/berserk/dragonslayer = TAT_ITEM_ENTRY("Daemon Slayer", 31, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
 	/obj/item/clothing/cloak/tabard = TAT_ITEM_ENTRY("Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/stabard = TAT_ITEM_ENTRY("Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/stabard/surcoat = TAT_ITEM_ENTRY("Surcoat", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
@@ -630,10 +646,12 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/cloak/eastcloak1 = TAT_ITEM_ENTRY("Leather Cloak", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/psydontabard = TAT_ITEM_ENTRY("Psydon Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/kazengun = TAT_ITEM_ENTRY("Jinbaori", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
-	/obj/item/rogueweapon/handclaw/steel = TAT_ITEM_ENTRY("Steel Mantis Claws", 5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "unarmed"), \
+	/obj/item/rogueweapon/handclaw/steel = TAT_ITEM_ENTRY("Steel Mantis Claws", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "unarmed"), \
 	/obj/item/storage/magebag = TAT_ITEM_ENTRY("Scholar's Pouch", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/clothing/head/roguetown/spellcasterhat = TAT_ITEM_ENTRY("Spellsinger Hat", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "head"), \
 	/obj/item/clothing/suit/roguetown/shirt/robe/spellcasterrobe = TAT_ITEM_ENTRY("Spellsinger Robes", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/rogueweapon/sword/sabre/shamshir = TAT_ITEM_ENTRY("Shamshir", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/rogueweapon/sword/long/marlin = TAT_ITEM_ENTRY("Shalal", 3.5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 
 GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 
