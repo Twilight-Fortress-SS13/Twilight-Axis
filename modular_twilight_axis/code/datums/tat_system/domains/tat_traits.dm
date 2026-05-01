@@ -608,20 +608,144 @@
 		return "Local Pliant"
 	return "Pliant"
 
-/datum/tat_traits/proc/get_pliant_rename_title(mob/living/carbon/human/H)
-	var/slot_name = owner_build?.get_active_tat_slot_name() || "Towner"
-	slot_name = trim("[slot_name]")
+/datum/tat_traits/proc/get_pliant_default_class_name()
+	return "Towner"
+
+/datum/tat_traits/proc/get_pliant_current_class_name(mob/living/carbon/human/H)
+	var/class_name = trim("[H?.advjob]")
+	if(!length(class_name))
+		class_name = get_pliant_default_class_name()
+	return get_pliant_safe_class_name(class_name)
+
+/datum/tat_traits/proc/get_pliant_slot_class_name(fallback = null)
+	var/slot_name = trim("[owner_build?.get_active_tat_slot_name()]")
 	if(!length(slot_name))
-		slot_name = "Towner"
-	slot_name = copytext(slot_name, 1, 50)
-	var/choices = list(slot_name, "Input class name")
-	var/choose = slot_name
-	var/class_name = ""
-	choose = tgui_input_list(H, "Would you like to change your class name?","CHOOSE YOUR DESTINY", choices)
-	if(choose == "Input class name")
-		class_name = H.client ? tgui_input_text(H, "What is name of your destiny?", "YOUR CLASS NAME", encode = FALSE) : slot_name
-	else
-		class_name = slot_name
+		if(length("[fallback]"))
+			return get_pliant_safe_class_name(fallback)
+		return get_pliant_default_class_name()
+	return get_pliant_safe_class_name(slot_name)
+
+/datum/tat_traits/proc/get_pliant_safe_class_name(class_name, fallback = null)
+	class_name = trim("[class_name]")
+	if(!length(class_name))
+		if(length("[fallback]"))
+			class_name = fallback
+		else
+			class_name = get_pliant_default_class_name()
+	return copytext(class_name, 1, 50)
+
+/datum/tat_traits/proc/get_pliant_skill_role_rules()
+	return list(
+		list("title" = "Sellsword", "minimum" = 3, "skills" = list(/datum/skill/combat/swords, /datum/skill/combat/knives, /datum/skill/combat/maces, /datum/skill/combat/axes, /datum/skill/combat/polearms, /datum/skill/combat/whipsflails, /datum/skill/combat/staves, /datum/skill/combat/shields)),
+		list("title" = "Archer", "minimum" = 3, "skills" = list(/datum/skill/combat/bows, /datum/skill/combat/crossbows, /datum/skill/combat/slings)),
+		list("title" = "Pugilist", "minimum" = 3, "skills" = list(/datum/skill/combat/unarmed, /datum/skill/combat/wrestling)),
+		list("title" = "Gunslinger", "minimum" = 3, "skills" = list(/datum/skill/combat/twilight_firearms)),
+		list("title" = "Hunter", "minimum" = 3, "skills" = list(/datum/skill/misc/hunting, /datum/skill/misc/tracking, /datum/skill/labor/butchering, /datum/skill/combat/bows, /datum/skill/combat/crossbows)),
+		list("title" = "Forester", "minimum" = 3, "skills" = list(/datum/skill/labor/lumberjacking, /datum/skill/misc/tracking, /datum/skill/misc/climbing, /datum/skill/misc/athletics)),
+		list("title" = "Miner", "minimum" = 3, "skills" = list(/datum/skill/labor/mining, /datum/skill/craft/smelting, /datum/skill/craft/masonry)),
+		list("title" = "Farmer", "minimum" = 3, "skills" = list(/datum/skill/labor/farming, /datum/skill/craft/cooking)),
+		list("title" = "Fisher", "minimum" = 3, "skills" = list(/datum/skill/labor/fishing, /datum/skill/craft/cooking)),
+		list("title" = "Cook", "minimum" = 3, "skills" = list(/datum/skill/craft/cooking, /datum/skill/labor/fishing, /datum/skill/labor/butchering)),
+		list("title" = "Blacksmith", "minimum" = 3, "skills" = list(/datum/skill/craft/blacksmithing, /datum/skill/craft/weaponsmithing, /datum/skill/craft/armorsmithing, /datum/skill/craft/smelting)),
+		list("title" = "Tailor", "minimum" = 3, "skills" = list(/datum/skill/craft/sewing, /datum/skill/craft/tanning)),
+		list("title" = "Carpenter", "minimum" = 3, "skills" = list(/datum/skill/craft/carpentry, /datum/skill/craft/masonry, /datum/skill/craft/crafting)),
+		list("title" = "Engineer", "minimum" = 3, "skills" = list(/datum/skill/craft/engineering, /datum/skill/craft/traps, /datum/skill/craft/carpentry)),
+		list("title" = "Alchemist", "minimum" = 3, "skills" = list(/datum/skill/craft/alchemy, /datum/skill/misc/medicine, /datum/skill/misc/reading)),
+		list("title" = "Physician", "minimum" = 3, "skills" = list(/datum/skill/misc/medicine, /datum/skill/craft/alchemy, /datum/skill/misc/reading)),
+		list("title" = "Scholar", "minimum" = 3, "skills" = list(/datum/skill/misc/reading, /datum/skill/magic/arcane, /datum/skill/magic/holy, /datum/skill/magic/druidic)),
+		list("title" = "Bard", "minimum" = 3, "skills" = list(/datum/skill/misc/music, /datum/skill/misc/reading)),
+		list("title" = "Rogue", "minimum" = 3, "skills" = list(/datum/skill/misc/stealing, /datum/skill/misc/sneaking, /datum/skill/misc/lockpicking)),
+		list("title" = "Scout", "minimum" = 3, "skills" = list(/datum/skill/misc/athletics, /datum/skill/misc/climbing, /datum/skill/misc/swimming, /datum/skill/misc/riding, /datum/skill/misc/tracking)),
+		list("title" = "Acolyte", "minimum" = 1, "skills" = list(/datum/skill/magic/holy)),
+		list("title" = "Mage", "minimum" = 1, "skills" = list(/datum/skill/magic/arcane)),
+		list("title" = "Druid", "minimum" = 1, "skills" = list(/datum/skill/magic/druidic))
+	)
+
+/datum/tat_traits/proc/get_pliant_skill_role_score(list/rule)
+	if(!owner_build || !islist(rule))
+		return 0
+
+	var/list/skills = rule["skills"]
+	if(!islist(skills) || !length(skills))
+		return 0
+
+	var/highest_skill = 0
+	var/total_skill = 0
+	for(var/skill_type in skills)
+		var/skill_value = owner_build.get_skill_value(skill_type)
+		if(skill_value <= 0)
+			continue
+		highest_skill = max(highest_skill, skill_value)
+		total_skill += skill_value
+
+	var/minimum = round(rule["minimum"] || 3)
+	if(highest_skill < minimum)
+		return 0
+
+	return total_skill
+
+/datum/tat_traits/proc/build_pliant_skill_role_choices(current_class_name)
+	var/list/choices = list()
+	var/list/rules = get_pliant_skill_role_rules()
+	for(var/rule_entry in rules)
+		var/list/rule = rule_entry
+		var/title = get_pliant_safe_class_name(rule["title"], current_class_name)
+		var/score = get_pliant_skill_role_score(rule)
+		if(score <= 0 || !length(title))
+			continue
+		if(lowertext(title) == lowertext(current_class_name))
+			continue
+		choices["[title] ([score])"] = title
+	return choices
+
+/datum/tat_traits/proc/get_pliant_base_class_title(mob/living/carbon/human/H)
+	var/current_class_name = get_pliant_current_class_name(H)
+	var/list/skill_choices = build_pliant_skill_role_choices(current_class_name)
+	if(!length(skill_choices))
+		return current_class_name
+
+	var/current_choice = "Current class ([current_class_name])"
+	var/list/display_to_title = list()
+	display_to_title[current_choice] = current_class_name
+	var/list/options = list(current_choice)
+
+	for(var/choice in skill_choices)
+		options += choice
+		display_to_title[choice] = skill_choices[choice]
+
+	var/choice = H.client ? tgui_input_list(H, "Choose which class title should be used as the base for your TAT class rename.", "CHOOSE YOUR CLASS", options) : null
+	if(choice && display_to_title[choice])
+		return get_pliant_safe_class_name(display_to_title[choice], current_class_name)
+	return current_class_name
+
+/datum/tat_traits/proc/get_pliant_rename_title(mob/living/carbon/human/H)
+	var/base_class_name = get_pliant_base_class_title(H)
+	var/slot_name = get_pliant_slot_class_name(base_class_name)
+
+	var/current_choice = "Use selected class ([base_class_name])"
+	var/slot_choice = "Use active TAT slot ([slot_name])"
+	var/input_choice = "Input class name"
+	var/list/display_to_title = list()
+	display_to_title[current_choice] = base_class_name
+	var/list/options = list(current_choice)
+
+	if(lowertext(slot_name) != lowertext(base_class_name))
+		options += slot_choice
+		display_to_title[slot_choice] = slot_name
+
+	options += input_choice
+
+	var/choice = H.client ? tgui_input_list(H, "Choose how your displayed class name should be written.", "CHOOSE YOUR DESTINY", options) : null
+	var/class_name = base_class_name
+
+	if(choice == input_choice)
+		class_name = H.client ? tgui_input_text(H, "What is name of your destiny?", "YOUR CLASS NAME", encode = FALSE) : base_class_name
+		if(!length(trim("[class_name]")))
+			class_name = base_class_name
+	else if(choice && display_to_title[choice])
+		class_name = display_to_title[choice]
+
+	class_name = get_pliant_safe_class_name(class_name, base_class_name)
 	return "[get_pliant_rename_prefix()] [class_name]"
 
 /datum/tat_traits/proc/apply_pliant_rename(mob/living/carbon/human/H)
@@ -632,7 +756,6 @@
 		return FALSE
 	H.tat_pliant_title = new_title
 	return TRUE
-
 
 /datum/tat_traits/proc/apply_savage_skin_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_SKIN))
