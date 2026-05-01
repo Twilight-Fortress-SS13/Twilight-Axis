@@ -23,9 +23,9 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 #define TAT_ARMOR_PLATE "plate"
 
 #define TAT_AVAILABLE_ITEMS_LIST \
-	/obj/item/tat_trader_lootbox/cheap = TAT_ITEM_ENTRY("Cheap Trader Cache", 2, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
-	/obj/item/tat_trader_lootbox/medium = TAT_ITEM_ENTRY("Merchant Trader Cache", 5, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
-	/obj/item/tat_trader_lootbox/expensive = TAT_ITEM_ENTRY("Luxury Trader Cache", 10, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
+	/obj/item/tat_trader_lootbox/cheap = TAT_ITEM_ENTRY("Cheap Trader Cache", 1, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
+	/obj/item/tat_trader_lootbox/medium = TAT_ITEM_ENTRY("Merchant Trader Cache", 3, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
+	/obj/item/tat_trader_lootbox/expensive = TAT_ITEM_ENTRY("Luxury Trader Cache", 8, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/barker = TAT_ITEM_ENTRY("Barker", 2, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar = TAT_ITEM_ENTRY("Hand Mortar", 6, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \

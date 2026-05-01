@@ -414,7 +414,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_stat_jewelry_pool, list(
 	desc = "A sealed cache of uncertain wares. Only someone with a merchant's writ should break the seal."
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "chest1"
-	w_class = WEIGHT_CLASS_NORMAL
+	w_class = WEIGHT_CLASS_SMALL
 	var/tier = TAT_TRADER_LOOTBOX_CHEAP
 	var/opened = FALSE
 
