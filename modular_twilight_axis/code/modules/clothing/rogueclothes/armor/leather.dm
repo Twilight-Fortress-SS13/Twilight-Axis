@@ -50,5 +50,4 @@
 	item_state = "etrjacket"
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
-	allowed_sex = list(MALE)
 	allowed_race = NON_DWARVEN_RACE_TYPES

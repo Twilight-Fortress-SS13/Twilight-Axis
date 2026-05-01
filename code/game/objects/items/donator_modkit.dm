@@ -552,7 +552,11 @@
 /obj/item/enchantingkit/weapon/koruu_kukri/warden
 	name = "'Warden Leachwhacker' morphing elixir"
 	target_items = list(
-		/obj/item/rogueweapon/huntingknife/idagger/warden_machete
+		/obj/item/rogueweapon/huntingknife/idagger/warden_machete,
+		/obj/item/rogueweapon/huntingknife/idagger,
+		/obj/item/rogueweapon/huntingknife/idagger/steel,
+		/obj/item/rogueweapon/huntingknife/combat,
+		/obj/item/rogueweapon/huntingknife
 		)
 	result_item = /obj/item/rogueweapon/koruu/kukri/warden
 
@@ -669,6 +673,14 @@
 		/obj/item/rogueweapon/huntingknife/idagger/steel,
 	)
 	result_item = /obj/item/rogueweapon/example/euthanasia
+
+/obj/item/enchantingkit/weapon/nicksonessang
+	name = "'Dark Delight' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Ssangsudo or Longsword"
+	target_items = list(
+	/obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo,
+	/obj/item/rogueweapon/sword/long)
+	result_item = /obj/item/rogueweapon/example/ssangsudo_long
 
 
 /////////////////////////////

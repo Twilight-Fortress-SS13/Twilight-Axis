@@ -448,7 +448,7 @@
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	tiled_dirt = FALSE
 	landsound = 'sound/foley/jumpland/dirtland.wav'
-	slowdown = 2
+	slowdown = 1
 	smooth = SMOOTH_TRUE
 	canSmoothWith = list(/turf/open/floor/rogue/grass,
 						/turf/open/floor/rogue/grassgrey,
@@ -475,7 +475,7 @@
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	tiled_dirt = FALSE
 	landsound = 'sound/foley/jumpland/dirtland.wav'
-	slowdown = 2
+	slowdown = 1
 	smooth = SMOOTH_TRUE
 	canSmoothWith = list(/turf/open/floor/rogue/grass,
 						/turf/open/floor/rogue/grassgrey,
@@ -496,11 +496,6 @@
 /turf/open/floor/rogue/dirt/get_slowdown(mob/user)
 	. = ..()
 	var/negate_slowdown = FALSE
-
-	for(var/obj/item/stick in user.held_items)
-		if(stick.walking_stick && !stick.wielded && !user.cmode)
-			negate_slowdown = TRUE
-			break
 
 	if((isliving(user))&&(user?.movement_type == FLYING))
 		negate_slowdown = TRUE
@@ -603,7 +598,7 @@
 		muddy = TRUE
 		icon_state = "mud[rand (1,3)]"
 		name = "mud"
-		slowdown = 2
+		slowdown = 1
 		footstep = FOOTSTEP_MUD
 		barefootstep = FOOTSTEP_MUD
 		heavyfootstep = FOOTSTEP_MUD

@@ -53,13 +53,13 @@ NECRO SKELETONS
 
 
 /datum/outfit/job/roguetown/cult/skeleton/zizoid
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/avantyne/heavy
-	armor =  /obj/item/clothing/suit/roguetown/armor/plate/full/avantyne
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/zizo/heavy
+	armor =  /obj/item/clothing/suit/roguetown/armor/plate/full/zizo
 	pants = /obj/item/clothing/under/roguetown/platelegs/avantyne/heavy
 	head = /obj/item/clothing/head/roguetown/helmet/skullcap/cult
-	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/avantyne/heavy
-	neck = /obj/item/clothing/neck/roguetown/bevor/avantyne/heavy
-	gloves = /obj/item/clothing/gloves/roguetown/plate/avantyne/heavy
+	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/zizo/heavy
+	neck = /obj/item/clothing/neck/roguetown/bevor/zizo/heavy
+	gloves = /obj/item/clothing/gloves/roguetown/plate/zizo/heavy
 
 /datum/advclass/cult/skeleton/zizoid/raider
 	name = "Cult skeleton raider"
