@@ -502,13 +502,16 @@
 
 /datum/tat_build/proc/load_from_list(list/data)
 	reset()
+
 	if(!islist(data))
 		load_tat_slots_from_list(null, 1)
 		return FALSE
+
 	traits.import_from_list(data["traits"])
 	stats.import_from_list(data["stats"])
 	skills.import_from_list(data["skills"])
 	items.import_from_list(data["items"])
+
 	if(islist(data["magic_profile"]))
 		var/list/temp = data["magic_profile"]
 		magic_profile = temp.Copy()
@@ -518,46 +521,56 @@
 
 	var/list/_tat_slots = data["tat_slots"]
 	var/_active_tat_slot = data["active_tat_slot"]
+
 	if(islist(_tat_slots) || !isnull(_active_tat_slot))
 		load_tat_slots_from_list(_tat_slots, _active_tat_slot)
+		var/datum/tat_slot/active_slot = get_tat_slot(active_tat_slot)
+		var/list/active_data = active_slot?.get_build_data()
+
+		if(islist(active_data) && length(active_data))
+			load_slot_build_from_list(active_data)
 	else
 		load_tat_slots_from_list(null, 1)
 
 	sanitize()
 	dirty = FALSE
 	invalidate_ui_data_cache()
+
 	return TRUE
 
 /datum/tat_build/proc/apply_pre_client_to_human(mob/living/carbon/human/H)
 	attach_preferences_from_mob(H)
+
 	if(!H)
 		return FALSE
+
 	if(is_owner_tat_banned(H))
 		tat_tell_banned(H)
 		return FALSE
-	if(is_owner_tat_role_locked(H))
-		to_chat(H, span_warning(get_owner_tat_role_lock_message(H)))
-		return FALSE
+
 	sanitize()
+
 	traits.apply_instant_to_human(H)
 	items.apply_to_human(H)
+
 	return TRUE
 
 /datum/tat_build/proc/apply_post_client_to_human(mob/living/carbon/human/H)
 	attach_preferences_from_mob(H)
+
 	if(!H || !H.client)
 		return FALSE
+
 	if(is_owner_tat_banned(H))
 		tat_tell_banned(H)
 		return FALSE
-	if(is_owner_tat_role_locked(H))
-		to_chat(H, span_warning(get_owner_tat_role_lock_message(H)))
-		return FALSE
+
 	sanitize()
+
 	traits.apply_deferred_to_human(H)
-	items.apply_deferred_to_human(H)
 	stats.apply_to_human(H)
 	skills.apply_to_human(H)
+
 	return TRUE
 
 /datum/tat_build/proc/apply_to_human(mob/living/carbon/human/H)

@@ -79,13 +79,9 @@
 	if(!H)
 		return null
 
-	if(H.active_tat_build)
-		return H.active_tat_build
+	if(H.client)
+		H.active_tat_build = get_client_active_tat_build(H.client)
 
-	if(!H.client)
-		return null
-
-	H.active_tat_build = get_client_active_tat_build(H.client)
 	return H.active_tat_build
 
 /mob/living/carbon/human
@@ -173,15 +169,11 @@
 	if(!build.can_save())
 		return
 
-	var/build_bucket = build.get_role_bucket()
-	if(!human_can_use_tat_role_bucket(H, build_bucket))
-		return
-
-	if(!human_has_tat_role_bucket(H, build_bucket))
+	if(!build.apply_pre_client_to_human(H))
 		return
 
 	H.tat_build_pre_client_applied = TRUE
-	build.apply_pre_client_to_human(H)
+
 	addtimer(CALLBACK(src, PROC_REF(apply_tat_build_post_client), H), 10)
 
 /datum/outfit/job/roguetown/tat_class/basic/proc/apply_tat_build_post_client(mob/living/carbon/human/H)
@@ -202,12 +194,7 @@
 	if(!build.can_save())
 		return
 
-	var/build_bucket = build.get_role_bucket()
-	if(!human_can_use_tat_role_bucket(H, build_bucket))
-		return
-
-	if(!human_has_tat_role_bucket(H, build_bucket))
+	if(!build.apply_post_client_to_human(H))
 		return
 
 	H.tat_build_post_client_applied = TRUE
-	build.apply_post_client_to_human(H)

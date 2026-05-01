@@ -2,9 +2,6 @@
 	var/datum/tat_build/owner_build
 	var/list/selected = list()
 	var/list/item_loadout = list()
-	var/list/applied_mob_refs = list()
-	var/list/applied_hand_slot_refs = list()
-	var/list/pending_hand_mob_refs = list()
 	var/base_points = 20
 	var/list/equip_slots_cache = list()
 
@@ -15,9 +12,6 @@
 /datum/tat_items/proc/reset()
 	selected = list()
 	item_loadout = list()
-	applied_mob_refs = list()
-	applied_hand_slot_refs = list()
-	pending_hand_mob_refs = list()
 	return TRUE
 
 /datum/tat_items/proc/get_entry(item_path)
@@ -913,46 +907,21 @@
 			return item_path
 	return null
 
-/datum/tat_items/proc/spawn_deferred_hand_loadout(mob/living/carbon/human/H, expected_mob_ref, attempt = 1)
-	if(!H || QDELETED(H) || "\ref[H]" != expected_mob_ref)
+/datum/tat_items/proc/spawn_hand_loadout_items(mob/living/carbon/human/H)
+	if(!H || QDELETED(H))
 		return FALSE
 
-	var/mob_ref = "\ref[H]"
-	var/any_pending = FALSE
 	var/any_success = FALSE
-	var/final_attempt = attempt >= 8
 
 	for(var/slot_id in list("hand_l", "hand_r"))
-		var/slot_ref = "[mob_ref]|[slot_id]"
-		if(slot_ref in applied_hand_slot_refs)
-			continue
 		var/item_path = get_assigned_item_for_loadout_slot(slot_id)
 		if(!item_path)
 			continue
-		if(spawn_item_to_loadout_hand(H, item_path, slot_id, final_attempt))
-			applied_hand_slot_refs += slot_ref
+
+		if(spawn_item_to_loadout_hand(H, item_path, slot_id, TRUE))
 			any_success = TRUE
-		else if(final_attempt)
-			applied_hand_slot_refs += slot_ref
-		else
-			any_pending = TRUE
 
-	if(any_pending)
-		addtimer(CALLBACK(src, PROC_REF(spawn_deferred_hand_loadout), H, expected_mob_ref, attempt + 1), 2)
-		return TRUE
-
-	pending_hand_mob_refs -= mob_ref
 	return any_success
-
-/datum/tat_items/proc/apply_deferred_to_human(mob/living/carbon/human/H)
-	if(!H || QDELETED(H))
-		return FALSE
-	var/mob_ref = "\ref[H]"
-	if(mob_ref in pending_hand_mob_refs)
-		return FALSE
-	pending_hand_mob_refs += mob_ref
-	addtimer(CALLBACK(src, PROC_REF(spawn_deferred_hand_loadout), H, mob_ref, 1), 1)
-	return TRUE
 
 /datum/tat_items/proc/spawn_equipped_items_for_slot_group(mob/living/carbon/human/H, target_slot_group)
 	for(var/item_path in selected)
@@ -1041,18 +1010,18 @@
 /datum/tat_items/proc/apply_to_human(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
+
 	if(!length(selected))
 		return TRUE
-	var/mob_ref = "\ref[H]"
-	if(mob_ref in applied_mob_refs)
-		return FALSE
+
 	for(var/item_path in selected)
 		normalize_loadout(item_path)
-	applied_mob_refs += mob_ref
+
 	spawn_assigned_loadout_items(H, FALSE)
 	grant_default_roundstart_bag(H)
 	spawn_bag_items(H)
-	apply_deferred_to_human(H)
+	spawn_hand_loadout_items(H)
+
 	return TRUE
 
 /datum/tat_items/proc/disable_from_human(mob/living/carbon/human/H)
