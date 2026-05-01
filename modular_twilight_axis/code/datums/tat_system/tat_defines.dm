@@ -1,10 +1,11 @@
 #define TAT_TRAIT_SOURCE	"tat_build"
 
-#define TAT_PARTY_LEADER_MIN_MEMBERS 2
+#define TAT_PARTY_LEADER_AURA_RANGE 7
+#define TAT_PARTY_LEADER_REFRESH_INTERVAL (2 SECONDS)
 #define TAT_PARTY_LEADER_BONUS_CON 1
 #define TAT_PARTY_LEADER_BONUS_WIL 1
-#define TAT_PARTY_LEADER_INVITE_RANGE 7
-#define TAT_PARTY_LEADER_VERB_CATEGORY "IC"
+#define TAT_PARTY_LEADER_MEMBER_CON 1
+#define TAT_PARTY_LEADER_LUCK_PER_MEMBER 0.5
 
 #define TAT_STAT_ENTRY(_name, _cost, _base, _min, _max) list("name" = (_name), "cost" = (_cost), "base" = (_base), "min" = (_min), "max" = (_max))
 #define TAT_TRAIT_ENTRY(_name, _cost, _category, _category_name, _desc) list("name" = (_name), "cost" = (_cost), "category" = (_category), "category_name" = (_category_name), "desc" = (_desc))
