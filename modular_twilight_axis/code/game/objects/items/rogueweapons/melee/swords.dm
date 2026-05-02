@@ -72,3 +72,15 @@
 
 /obj/item/rogueweapon/sword/long/exe/berserk
 	special = /datum/special_intent/greatsword_swing
+
+/obj/item/rogueweapon/shield/iron/bone
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/shields.dmi'
+
+/obj/item/rogueweapon/shield/bronze
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/shields.dmi'
+
+/obj/item/rogueweapon/shield/tower/metal/gold
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/shields.dmi'
+
+/obj/item/rogueweapon/shield/bronze/great
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/shields.dmi'
