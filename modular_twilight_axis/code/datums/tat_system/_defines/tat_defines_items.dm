@@ -232,7 +232,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/neck/roguetown/chaincoif/chainmantle = TAT_ITEM_ENTRY("Chainmantle", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/chaincoif/full = TAT_ITEM_ENTRY("Chaincoif Full", 3, "clothing", "armor_family", TAT_ARMOR_PLATE, "neck"), \
 	/obj/item/clothing/neck/roguetown/chaincoif/iron = TAT_ITEM_ENTRY("Iron Chaincoif", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
-	/obj/item/clothing/neck/roguetown/coif/heavypadding = TAT_ITEM_ENTRY("Heavy Padded Coif", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
+	/obj/item/clothing/neck/roguetown/coif/heavypadding = TAT_ITEM_ENTRY("Heavy Padded Coif", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "neck"), \
 	/obj/item/clothing/neck/roguetown/coif/padded = TAT_ITEM_ENTRY("Padded Coif", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "neck"), \
 	/obj/item/clothing/neck/roguetown/gorget = TAT_ITEM_ENTRY("Iron Gorget", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/gorget/forlorncollar = TAT_ITEM_ENTRY("Forlorn Gorget", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
@@ -457,6 +457,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/woodstaff/implement/greater = TAT_ITEM_ENTRY("Greater Staff", 5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/spear/billhook = TAT_ITEM_ENTRY("Billhook", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/stone/copper = TAT_ITEM_ENTRY("Copper Spear", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
+	/obj/item/clothing/gloves/roguetown/chain/contraption/voltic = TAT_ITEM_ENTRY("Voltic Gauntlet", 7, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
+	/obj/item/flashlight/flare/torch/lantern/bronzelamptern/malums_lamptern = TAT_ITEM_ENTRY("Malum's Shield", 5, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/mace/mushroom = TAT_ITEM_ENTRY("Lithmyc Mace", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/huntingknife/idagger/steel/fire = TAT_ITEM_ENTRY("Fire Dagger", 5, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/mace/goden/deepduke = TAT_ITEM_ENTRY("Duke's Mace", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
@@ -658,6 +660,11 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/suit/roguetown/shirt/robe/spellcasterrobe = TAT_ITEM_ENTRY("Spellsinger Robes", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/rogueweapon/sword/sabre/shamshir = TAT_ITEM_ENTRY("Shamshir", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/long/marlin = TAT_ITEM_ENTRY("Shalal", 3.5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/roguegear = TAT_ITEM_ENTRY("Cog", 1, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/contraption/linker = TAT_ITEM_ENTRY("Wrench", 1, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/reagent_containers/glass/bottle/waterskin/purifier = TAT_ITEM_ENTRY("Purifier", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/mobilestove = TAT_ITEM_ENTRY("Stove Kit", 2, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/contraption/wood_metalizer = TAT_ITEM_ENTRY("Metallizer", 5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 
 GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 
