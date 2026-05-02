@@ -428,7 +428,7 @@
 	if(!A)
 		return
 	// TA Add start - SOUNDBREAKER
-	if(used_intent.is_attack_swing())
+	if(used_intent.is_attack_swing() && !(istype(used_intent, /datum/intent/unarmed/shove)))
 		if(try_consume_attack_effects(src, A, zone_selected, W))
 			atkswinging = null
 			return
