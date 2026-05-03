@@ -66,21 +66,3 @@
 	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
 	icon_state = "ast_kriegmesser"
 	sheathe_icon = "bs_swordregal" 
-
-/obj/item/rogueweapon/sword/long/exe/silver
-	is_silver = TRUE
-
-/obj/item/rogueweapon/sword/long/exe/berserk
-	special = /datum/special_intent/greatsword_swing
-
-/obj/item/rogueweapon/shield/iron/bone
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/shields.dmi'
-
-/obj/item/rogueweapon/shield/bronze
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/shields.dmi'
-
-/obj/item/rogueweapon/shield/tower/metal/gold
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/shields.dmi'
-
-/obj/item/rogueweapon/shield/bronze/great
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/shields.dmi'
