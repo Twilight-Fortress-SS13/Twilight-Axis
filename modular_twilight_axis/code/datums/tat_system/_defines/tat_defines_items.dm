@@ -136,6 +136,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/sword/cutlass = TAT_ITEM_ENTRY("Cutlass", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/falx = TAT_ITEM_ENTRY("Falx", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/iron = TAT_ITEM_ENTRY("Iron Arming Sword", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
+	/obj/item/rogueweapon/sword/long/fencerguy = TAT_ITEM_ENTRY("Frei Longsword", 3.5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/long = TAT_ITEM_ENTRY("Longsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/long/broadsword = TAT_ITEM_ENTRY("Broadsword", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
 	/obj/item/rogueweapon/sword/long/broadsword/bronze = TAT_ITEM_ENTRY("Spatha", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "sword"), \
@@ -150,6 +151,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/sword/rapier = TAT_ITEM_ENTRY("Rapier", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/rapier/silver = TAT_ITEM_ENTRY("Silver Rapier", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
 	/obj/item/rogueweapon/sword/saber/iron = TAT_ITEM_ENTRY("Iron Saber", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
+	/obj/item/rogueweapon/sword/long/shotel = TAT_ITEM_ENTRY("Shotel", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
+	/obj/item/rogueweapon/sword/long/shotel/iron = TAT_ITEM_ENTRY("Iron Shotel", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
 	/obj/item/rogueweapon/sword/sabre = TAT_ITEM_ENTRY("Sabre", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/sabre/bronzekhopesh = TAT_ITEM_ENTRY("Bronze Khopesh", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "sword"), \
 	/obj/item/rogueweapon/sword/sabre/mulyeog = TAT_ITEM_ENTRY("Hwando", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
