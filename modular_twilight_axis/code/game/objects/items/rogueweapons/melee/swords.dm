@@ -65,4 +65,12 @@
 	desc = "Wielded by the Paladins of the Punishing Light, these swords are forged from the same alloy of steel and silver used in the Eclipsum blades. While effective on the field of battle, this weapon is primarily known for it's use public executions.</br>'In the light of your rays I stand before you..' </br>'..with my blade raised and my soul bare..' </br>'..let you judge my verdict, and find it true..' </br>'..and let you guide my hand, O Radiant One.'"
 	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
 	icon_state = "ast_kriegmesser"
-	sheathe_icon = "bs_swordregal" 
+	sheathe_icon = "bs_swordregal"
+
+/obj/item/rogueweapon/greatsword/grenz/flamberge/relevement
+	name = "relevement"
+	desc = "The grave wounds caused by flame-bladed swords make them a highly sought-after weapon among the Dark Elves - the charges of dishonorable warfare notwithstanding. Consequentially, these weapons are often wielded by both sides of the Underdark Feud Wars."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "drowflamberge"
+	item_state = "drowflamberge"
+	smeltresult = /obj/item/ingot/drow
