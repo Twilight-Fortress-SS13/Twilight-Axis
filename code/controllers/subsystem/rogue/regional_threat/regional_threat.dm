@@ -1,10 +1,11 @@
 GLOBAL_LIST_INIT(threat_region_templates, list(
-	//Dunworld
+	// Dunworld
 	THREAT_REGION_AZURE_BASIN = /datum/threat_region/azure_basin,
 	THREAT_REGION_AZURE_GROVE = /datum/threat_region/azure_grove,
 	THREAT_REGION_TERRORBOG = /datum/threat_region/terrorbog,
 	THREAT_REGION_AZUREAN_COAST = /datum/threat_region/azure_coast,
 	THREAT_REGION_MOUNT_DECAP = /datum/threat_region/mount_decap,
+	THREAT_REGION_UNDERDARK = /datum/threat_region/underdark,
 
 	// Rockhill
 	THREAT_REGION_ROCKHILL_BASIN = /datum/threat_region/rockhill_basin,
@@ -24,7 +25,7 @@ SUBSYSTEM_DEF(regionthreat)
 	wait = 30 MINUTES
 	flags = SS_KEEP_TIMING | SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME
-	// The first four regions are meant to be "tameable" for towner purposes
+	// Regions are loaded from the active map_adjustment template in on_map_ready().
 	var/list/threat_regions
 
 /datum/controller/subsystem/regionthreat/fire(resumed)
@@ -44,10 +45,35 @@ SUBSYSTEM_DEF(regionthreat)
 			return TR
 	return null
 
+/// Weighted pick of a region that allows the given quest type, weighted by fill ratio
+/// (latent_ambush / max_ambush). Regions with more relative threat are picked more often, so
+/// as adventurers clear a region its quest share naturally drops. Returns null if no region
+/// allows the type.
+/datum/controller/subsystem/regionthreat/proc/pick_region_for_quest(quest_type)
+	var/list/weights = list()
+	for(var/T in threat_regions)
+		var/datum/threat_region/TR = T
+		if(!TR.allows_quest_type(quest_type))
+			continue
+		var/weight = TR.get_threat_weight()
+		if(weight <= 0)
+			continue
+		weights[TR] = weight
+	if(!length(weights))
+		// Fall back: any region that allows the type, ignoring fill ratio.
+		for(var/T in threat_regions)
+			var/datum/threat_region/TR = T
+			if(TR.allows_quest_type(quest_type))
+				weights[TR] = 1
+		if(!length(weights))
+			return null
+	return pickweight(weights)
+
 /datum/threat_region_display
 	var/region_name
 	var/danger_level
 	var/danger_color
+	var/list/ic_description = list()
 	var/can_be_cleared = FALSE //TA EDIT
 
 /datum/controller/subsystem/regionthreat/proc/get_threat_regions_for_display()
@@ -58,6 +84,7 @@ SUBSYSTEM_DEF(regionthreat)
 		TRS.region_name = TR.region_name
 		TRS.danger_level = TR.get_danger_level()
 		TRS.danger_color = TR.get_danger_color()
+		TRS.ic_description = TR.get_ic_description()
 		if(TR.min_ambush == 0) //TA EDIT
 			TRS.can_be_cleared = TRUE //TA EDIT
 		threat_region_displays += TRS

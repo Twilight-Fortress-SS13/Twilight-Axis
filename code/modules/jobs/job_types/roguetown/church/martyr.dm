@@ -193,6 +193,11 @@
 				to_chat(H, span_warn("It burns and sizzles! It does not tolerate my pallid flesh!"))
 				H.dropItemToGround(parent)
 				return
+			if(H.real_name in GLOB.excommunicated_players)
+				if(ispath(H.patron?.type, /datum/patron/divine))
+					to_chat(H, span_warning("It slips from my grasp. I can't get a hold."))
+					H.dropItemToGround(parent)
+					return
 			var/datum/job/J = SSjob.GetJob(H.mind?.assigned_role)
 			if(J.title != "Martyr" && J.title != "Bishop")		//Can't be a Martyr if you're not a Martyr. Or a Bishop.
 				to_chat(H, span_warn("It slips from my grasp. I can't get a hold."))

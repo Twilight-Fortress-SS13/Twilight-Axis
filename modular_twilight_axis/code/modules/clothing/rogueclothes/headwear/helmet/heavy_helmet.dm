@@ -170,3 +170,25 @@
 	icon_state = "sheriff_helm"
 	item_state = "sheriff_helm"
 
+/obj/item/clothing/head/roguetown/helmet/heavy/twilight_drow
+	name = "scourge barbute"
+	desc = "This helmet is a reluctant concession to the reality of modern warfare. No self-respecting Dark Elf would ever wear this into battle unless absolutely necessary. Naturally, it is usually donned by Drow males."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	icon_state = "shadowbarbute"
+	item_state = "shadowbarbute"
+	smeltresult = /obj/item/ingot/drow
+	adjustable = CAN_CADJUST
+	material_category = ARMOR_MAT_PLATE
+	toggle_icon_state = TRUE
+	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDESNOUT
+
+/obj/item/clothing/head/roguetown/helmet/heavy/twilight_drow/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
+
+/obj/item/clothing/head/roguetown/helmet/heavy/twilight_drow/volf
+	name = "razormaw helm"
+	desc = "As if facing a Dark Elf raider was not intimidating enough by itself, this helmet, designed to resemble the head of a giant lizard hailing from the Underdark, is meant to invoke primal terror in men and creechers alike."
+	icon_state = "shadowvolf"
+	item_state = "shadowvolf"

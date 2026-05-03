@@ -273,6 +273,20 @@
 #define BITFLAG_CITYWATCH (1<<5)
 #define BITFLAG_VANGUARD (1<<6)
 
+#define ANNOUNCE_ON_FAR_TRAVEL_ROLES list( \
+	"Grand Duke", \
+	"Marshal", \
+	"Merchant", \
+	"Bathmaster", \
+	"Court Magician", \
+	"Steward", \
+	"Guildsman", \
+	"Guildmaster", \
+	"Hand", \
+	"Bishop", \
+	"Martyr", \
+)
+
 // START OF THE ECONOMY SECTION 
 #define ECONOMIC_RICH rand(120, 140)
 #define ECONOMIC_UPPER_CLASS rand(100, 120)

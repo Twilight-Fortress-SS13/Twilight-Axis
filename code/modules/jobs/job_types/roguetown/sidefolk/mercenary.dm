@@ -12,6 +12,7 @@
 	selection_color = JCOLOR_WANDERER
 	min_pq = 25		//Will be handled by classes if PQ limiting is needed. --But Until then, learn escalation, mercs.
 	max_pq = null
+	townie_contract_gate_exempt = TRUE
 	round_contrib_points = null
 	outfit = null	//Handled by classes
 	outfit_female = null

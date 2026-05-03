@@ -960,8 +960,8 @@
 	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_JINGLE_BELLS) */ // TA EDIT END
 
 /obj/item/clothing/neck/roguetown/collar/feldcollar
-	name = "feldcollar"
-	desc = "A sturdy collar made of leather, commonly worn by field workers."
+	name = "feldsher's collar"
+	desc = "Dilligence pays dividends. An errant stroke of the scalpel is all it takes to lose everything, after all."
 	icon_state = "feldcollar"
 	item_state = "feldcollar"
 	resistance_flags = FIRE_PROOF
@@ -970,8 +970,8 @@
 	body_parts_covered = NECK|FACE
 
 /obj/item/clothing/neck/roguetown/collar/surgcollar
-	name = "surgcollar"
-	desc = "A specialized collar designed for medical practitioners, with reinforced padding."
+	name = "physicker's collar"
+	desc = "Medicine is more of an art than anything else; and what better canvas to practice one's brushstrokes on, than the body itself?"
 	icon_state = "surgcollar"
 	item_state = "surgcollar"
 	resistance_flags = FIRE_PROOF
@@ -1056,6 +1056,7 @@
 	name = "gilded chain mantle"
 	desc = "The world is yours, as they say - yet, why doth the Gods still led us astray?"
 	color = "#ffc960"
+	smeltresult = /obj/item/ingot/component/matthios
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/matthios/Initialize()
 	. = ..()
@@ -1065,14 +1066,29 @@
 
 /obj/item/clothing/neck/roguetown/bevor/zizo
 	name = "avantyne bevor"
-	desc = "The edge of reality, though unknown to many, favors Her acolytes above all else. This avantyne neckguard wards off the unenlightened's flailing."
+	desc = "An avantyne neckguard cut for the medium rite, still protective without becoming impossible to remove."
 	color = "#c1b18d"
 	chunkcolor = "#363030"
 	material_category = ARMOR_MAT_PLATE
+	armor_class = ARMOR_CLASS_MEDIUM
+	smeltresult = /obj/item/ingot/component/zizo
 
 /obj/item/clothing/neck/roguetown/bevor/zizo/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/neck/roguetown/bevor/zizo/heavy
+	name = "fused avantyne bevor"
+
+/obj/item/clothing/neck/roguetown/bevor/zizo/heavy/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/neck/roguetown/bevor/zizo/heavy/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
 
 //
 
@@ -1080,6 +1096,7 @@
 	name = "vicious gorget"
 	desc = "Curled plate, cradling the neck. Once, they were chains - now, they've allowed you to break free."
 	color = "#ddc0a7"
+	smeltresult = /obj/item/ingot/component/graggar
 
 /obj/item/clothing/neck/roguetown/gorget/graggar/Initialize()
 	. = ..()
