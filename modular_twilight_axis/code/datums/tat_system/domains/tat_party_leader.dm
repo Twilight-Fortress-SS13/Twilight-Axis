@@ -155,10 +155,8 @@
 		return FALSE
 	if(target.stat == DEAD)
 		return FALSE
-	if(hascall(target, "add_stress"))
-		call(target, "add_stress")(/datum/stressevent/fellowship_headpat)
-		return TRUE
-	return FALSE
+	target.add_stress(/datum/stressevent/fellowship_headpat)
+	return TRUE
 
 /datum/stressevent/fellowship_headpat
 	timer = 5 MINUTES
