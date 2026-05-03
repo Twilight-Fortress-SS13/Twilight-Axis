@@ -433,7 +433,7 @@
 
 /datum/contractor_contract/proc/item_value_from_ui(kind)
 	switch(kind)
-		if("strpot", "perpot", "intpot", "conpot", "endpot", "spdpot", "lucpot")
+		if("strpot", "perpot", "intpot", "conpot", "spdpot", "lucpot")
 			return 30
 		if("antidote")
 			return 10
@@ -453,8 +453,6 @@
 			return /obj/item/reagent_containers/glass/bottle/alchemical/intpot
 		if("conpot")
 			return /obj/item/reagent_containers/glass/bottle/alchemical/conpot
-		if("endpot")
-			return /obj/item/reagent_containers/glass/bottle/alchemical/endpot
 		if("spdpot")
 			return /obj/item/reagent_containers/glass/bottle/alchemical/spdpot
 		if("lucpot")
