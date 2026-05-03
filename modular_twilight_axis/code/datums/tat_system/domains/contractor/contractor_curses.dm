@@ -291,8 +291,13 @@
 	var/mob/living/carbon/human/H = source_contract?.contractee?.owner
 	if(!H)
 		return FALSE
+
 	H.apply_status_effect(/datum/status_effect/debuff/contractor_emotion_pressure, emotion_text)
 	to_chat(H, span_notice("You feel a strange [emotion_text] settle in your chest."))
+
+	if(length(emotion_text))
+		H.me_verb(emotion_text)
+
 	return TRUE
 
 /datum/contractor_curse/emotion/get_ui_data(datum/contractor_contract/contract)
