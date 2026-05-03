@@ -62,8 +62,12 @@
 	icon_state = "graggarplategloves"
 	smeltresult = /obj/item/ingot/component/graggar
 
+/obj/item/clothing/gloves/roguetown/plate/graggar/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "ARMOR", "RENDERED ASUNDER")
+
 /obj/item/clothing/gloves/roguetown/plate/graggar/heavy
-	name = "vicious bone-gauntlets"
+	name = "vicious plated gauntlets"
 	desc = "Steel plated gauntlets overlaid by an ornamental imagery of fractured bone and entrails. The violet smears; a tether to the lyfe that once was - and now, a stinging reminder of what could've been."
 	icon_state = "graggarplategloves_heavy"
 	smeltresult = /obj/item/ingot/component/graggar
@@ -77,10 +81,6 @@
 	if(QDELETED(src))
 		return
 	qdel(src)
-
-/obj/item/clothing/gloves/roguetown/plate/graggar/Initialize()
-	. = ..()
-	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "ARMOR", "RENDERED ASUNDER")
 
 /obj/item/clothing/gloves/roguetown/plate/matthios
 	name = "gilded gauntlets"
@@ -104,15 +104,15 @@
 	name = "avantyne gauntlets"
 	desc = "A razor-tipped finger was all it took to splay the divine fillament; now, it is time to bring down the wrath of God's hand in full. </br> Do mind the forearm's guards, however - they \
 	tend to leave a stinging bruise, whenever used to parry an incoming strike."
-	icon_state = "zizogauntlets_med"
+	icon_state = "zizoplategauntlets_med"
 	max_integrity = ARMOR_INT_SIDE_STEEL
 	chunkcolor = "#363030"
 	material_category = ARMOR_MAT_PLATE
 	armor_class = ARMOR_CLASS_MEDIUM
 	smeltresult = /obj/item/ingot/component/zizo
 
-/obj/item/clothing/gloves/roguetown/plate/zizo/heavy
-	name = "heavy avantyne gauntlets"
+/obj/item/clothing/gloves/roguetown/plate/avantyne/heavy
+	name = "avantyne plate gauntlets"
 	desc = "Unknowing truths, veiling the hands that prayed. Called forth from the edge of what should be known, in Her name."
 	icon_state = "zizogauntlets"
 	max_integrity = ARMOR_INT_SIDE_ANTAG

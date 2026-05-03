@@ -10,6 +10,9 @@
 	var/last_induced_ambush_time = 0 // Time between now and the previous ambush triggered by horn
 	var/list/faction_weights = list()
 	var/tp_budget_multiplier = 1.0
+	/// Multiplier on the threat-scaled bonus paid to retrieval/courier quests.
+	/// Independent of tp_budget_multiplier so reward and combat scaling tune separately.
+	var/delivery_reward_multiplier = 1.0
 	// Ambush budget percent - uses the higher one for safer region so that they can still spawn some relevant ambushes without needing to adjust the max_ambush downward
 	var/ambush_budget_pct = AMBUSH_BUDGET_PCT_REGULAR
 	/// Quest types this region will host. Default is everything; set per region to restrict (e.g. a dangerous region that won't host trivial kill-easy quests).
@@ -17,7 +20,7 @@
 	var/kill_target_floor = 2
 	var/evergreen_target = 0
 
-/datum/threat_region/New(_region_name = null, _latent_ambush = null, _min_ambush = null, _max_ambush = null, _fixed_ambush = null, _lowpop_tick = null, _highpop_tick = null, _ambush_budget_pct = null, _faction_weights = null, _tp_budget_multiplier = null, _allowed_quest_types = null, _kill_target_floor = null, _evergreen_target = null)
+/datum/threat_region/New(_region_name = null, _latent_ambush = null, _min_ambush = null, _max_ambush = null, _fixed_ambush = null, _lowpop_tick = null, _highpop_tick = null, _ambush_budget_pct = null, _faction_weights = null, _tp_budget_multiplier = null, _allowed_quest_types = null, _kill_target_floor = null, _evergreen_target = null, _delivery_reward_multiplier = null)
 	. = ..()
 
 	// Supports both old argument-based construction and TA map-template subtypes created with new path().
@@ -42,6 +45,8 @@
 		faction_weights = _faction_weights
 	if(!isnull(_tp_budget_multiplier))
 		tp_budget_multiplier = _tp_budget_multiplier
+	if(!isnull(_delivery_reward_multiplier))
+		delivery_reward_multiplier = _delivery_reward_multiplier
 	if(!isnull(_allowed_quest_types))
 		allowed_quest_types = _allowed_quest_types
 	else if(isnull(allowed_quest_types))

@@ -36,7 +36,7 @@
 	flag = "bullet"
 	armor_penetration = PEN_NONE
 	speed = 0.1
-	intdamfactor = 1.5
+	intdamfactor = 2
 
 /obj/projectile/bullet/twilight_lead/silver
 	name = "silver sphere"
@@ -46,7 +46,7 @@
 	armor_penetration = PEN_NONE
 	silver = TRUE
 	critfactor = 0.8
-	intdamfactor = 1
+	intdamfactor = 1.5
 
 /obj/projectile/bullet/twilight_cannonball
 	name = "cannonball"
@@ -84,7 +84,7 @@
 	armor_penetration = PEN_NONE
 	speed = 0.1
 	critfactor = 0.67
-	intdamfactor = 1.5
+	intdamfactor = 2
 
 /**
  * Special runelock ammo

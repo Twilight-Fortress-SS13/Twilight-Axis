@@ -602,9 +602,6 @@
 		return 0
 	return ..()
 
-/mob/living/carbon
-	var/nausea = 0
-	var/bleeding_tier = 0
 
 /mob/living/carbon/proc/add_nausea(amt)
 	nausea = clamp(nausea + amt, 0, 300)
@@ -815,10 +812,6 @@
 
 #undef FIRE_HARDCRIT_DIVISOR
 #undef FIRE_HARDCRIT_DIVISOR_MINDLESS
-
-/mob/living/carbon
-	var/lightning_flashing = FALSE
-	var/burn_warning_shown = FALSE
 
 /mob/living/carbon/update_sight()
 	if(!client)
@@ -1386,7 +1379,7 @@
 			return
 		cure_all_traumas(TRAUMA_RESILIENCE_ABSOLUTE)
 		log_admin("[key_name(usr)] has cured all traumas from [key_name(src)].")
-		message_admins("<span class='notice'>[key_name_admin(usr)] has cured all traumas from [key_name_admin(src)].</span>")
+		message_admins("<span class='notice'>[key_name_admin(usr)] has cured all traumas from [key_name(src)].</span>")
 	if(href_list[VV_HK_HALLUCINATION])
 		if(!check_rights(NONE))
 			return
