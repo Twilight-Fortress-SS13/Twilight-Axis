@@ -505,7 +505,6 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/reagent_containers/glass/bottle/alchemical/strpot = TAT_ITEM_ENTRY("Strength Vial", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/reagent_containers/glass/bottle/alchemical/perpot = TAT_ITEM_ENTRY("Perception Vial", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/reagent_containers/glass/bottle/alchemical/conpot = TAT_ITEM_ENTRY("Constitution Vial", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
-	/obj/item/reagent_containers/glass/bottle/alchemical/endpot = TAT_ITEM_ENTRY("Willpower Vial", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/reagent_containers/glass/bottle/alchemical/spdpot = TAT_ITEM_ENTRY("Haste Vial", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/reagent_containers/glass/bottle/alchemical/lucpot = TAT_ITEM_ENTRY("Lucky Vial", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/reagent_containers/glass/bottle/rogue/manapot = TAT_ITEM_ENTRY("Mana Bottle", 3, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
