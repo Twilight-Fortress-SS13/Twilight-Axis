@@ -160,10 +160,6 @@
 			owner.mind.RemoveSpell(S)
 			continue
 
-		if(istype(S, /obj/effect/proc_holder/spell/self/temptress))
-			owner.mind.RemoveSpell(S)
-			continue
-
 		if(istype(S, /obj/effect/proc_holder/spell/self/soundbreaker))
 			owner.mind.RemoveSpell(S)
 			continue

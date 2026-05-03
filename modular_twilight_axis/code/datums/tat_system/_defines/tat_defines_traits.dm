@@ -33,6 +33,7 @@
 #define TAT_TRAIT_MAGE_INITIATE "tat_mage_initiate"
 #define TAT_TRAIT_DRUID_INITIATE "tat_druid_initiate"
 #define TAT_TRAIT_WITCH_INITIATE "tat_witch_initiate"
+#define TAT_TRAIT_SUCCUBUS "tat_succubus"
 
 #define TAT_TRAIT_DIVINE_BOON_1 "tat_divine_boon_1"
 #define TAT_TRAIT_DIVINE_BOON_2 "tat_divine_boon_2"
@@ -177,7 +178,8 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_MEDIUMARMOR = TAT_TRAIT_MAIL_SUPPLIER, \
 	TRAIT_HEAVYARMOR = TAT_TRAIT_PLATE_SUPPLIER \
 )
-
+	
+// TAT_TRAIT_SUCCUBUS = TAT_TRAIT_ENTRY("Contractor", 80, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Awakens the contract-bearing curse in your veins. The whole world is waiting your gifts and deals."),
 #define TAT_AVAILABLE_TRAITS_LIST \
 	TAT_TRAIT_SOUNDBREAKER = TAT_TRAIT_ENTRY("Soundbreaker", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the Soundbreaker combo style."), \
 	TAT_TRAIT_MARTIAL_MASTER = TAT_TRAIT_ENTRY("Martial Master", 60, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the Martial CQC combo styles. Requires Pugilist."), \

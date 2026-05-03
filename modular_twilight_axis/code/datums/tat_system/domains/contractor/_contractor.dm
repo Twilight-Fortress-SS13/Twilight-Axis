@@ -1,0 +1,23 @@
+// contractor_contracts/_contractor.dm
+// Include this file from the TAT/domain include list after tat_defines.dm.
+
+#include "_contractor_defines.dm"
+#include "contractor_helpers.dm"
+
+#include "contractor_component.dm"
+#include "contractee_component.dm"
+#include "status_effects.dm"
+
+#include "contractor_bonuses.dm"
+#include "contractor_curses.dm"
+#include "contractor_contract.dm"
+#include "contractor_contract_ui.dm"
+
+#include "contractor_world.dm"
+#include "contractor_seal.dm"
+#include "contractor_actions.dm"
+
+#include "contractor_patches_mob.dm"
+#include "contractor_patches_atoms.dm"
+#include "contractor_patches_mirror.dm"
+#include "contractor_patches_erp.dm"
