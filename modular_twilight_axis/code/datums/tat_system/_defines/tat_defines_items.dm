@@ -315,6 +315,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/under/roguetown/tights/sailor = TAT_ITEM_ENTRY("Sailor Pants", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/under/roguetown/trou = TAT_ITEM_ENTRY("Work Trousers", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/under/roguetown/trou/leather = TAT_ITEM_ENTRY("Leather Trousers", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
+	/obj/item/clothing/under/roguetown/gambeson = TAT_ITEM_ENTRY("Gamboised Cuisses", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
+	/obj/item/clothing/under/roguetown/gambeson/heavy = TAT_ITEM_ENTRY("Padded Gamboised Cuisses", 1.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/under/roguetown/trou/leather/gronn = TAT_ITEM_ENTRY("Gronnic Fur Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/under/roguetown/trou/leather/pontifex/raneshen = TAT_ITEM_ENTRY("Baggy Desert Pants", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/wrists/roguetown/bracers = TAT_ITEM_ENTRY("Steel Bracers ", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "wrists"), \

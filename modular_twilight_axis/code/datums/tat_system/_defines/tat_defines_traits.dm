@@ -210,7 +210,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_SILVER_SUPPLIER = TAT_TRAIT_ENTRY("Silver Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks silver-tier weapons."), \
 	TAT_TRAIT_STEEL_SUPPLIER = TAT_TRAIT_ENTRY("Steel Supplier", 15, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks steel-tier weapons."), \
 	TAT_TRAIT_FIREARMS_SUPPLIER = TAT_TRAIT_ENTRY("Firearms Supplier", 25, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks blackpowder weapons and supplies."), \
-	TAT_TRAIT_LEATHER_SUPPLIER = TAT_TRAIT_ENTRY("Leather Supplier", 15, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks leather gear in all supported slots."), \
+	TAT_TRAIT_LEATHER_SUPPLIER = TAT_TRAIT_ENTRY("Leather Supplier", 10, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks leather gear in all supported slots."), \
 	TAT_TRAIT_MAIL_SUPPLIER = TAT_TRAIT_ENTRY("Mail Supplier", 20, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks mail gear in all supported slots."), \
 	TAT_TRAIT_PLATE_SUPPLIER = TAT_TRAIT_ENTRY("Plate Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks plate gear in all supported slots."), \
 	TRAIT_INTELLECTUAL = TAT_TRAIT_ENTRY("Intellectual", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You have a keen eye and can assess a person's prowess in wit and blade."), \
