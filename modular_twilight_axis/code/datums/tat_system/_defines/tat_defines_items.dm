@@ -59,6 +59,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/greataxe = TAT_ITEM_ENTRY("Greataxe", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "axe"), \
 	/obj/item/rogueweapon/greataxe/bronze = TAT_ITEM_ENTRY("Bronze Greataxe", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "axe"), \
 	/obj/item/rogueweapon/greataxe/silver = TAT_ITEM_ENTRY("Silver Poleaxe", 5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "axe"), \
+	/obj/item/rogueweapon/halberd/psyhalberd = TAT_ITEM_ENTRY("Psydonic Halberd", 5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "axe"), \
 	/obj/item/rogueweapon/greataxe/steel = TAT_ITEM_ENTRY("Steel Greataxe", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
 	/obj/item/rogueweapon/woodstaff/quarterstaff/silver = TAT_ITEM_ENTRY("Silver Staff", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "polearm"), \
 	/obj/item/rogueweapon/greataxe/steel/doublehead = TAT_ITEM_ENTRY("Double-Headed Steel Greataxe", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
@@ -67,7 +68,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/greatsword/grenz/flamberge = TAT_ITEM_ENTRY("Flamberge", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
 	/obj/item/rogueweapon/greatsword/iron = TAT_ITEM_ENTRY("Iron Greatsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword"), \
 	/obj/item/rogueweapon/estoc = TAT_ITEM_ENTRY("Estoc", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
-	/obj/item/rogueweapon/greatsword/miaodao = TAT_ITEM_ENTRY("Miaodao", 5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
+	/obj/item/rogueweapon/greatsword/miaodao = TAT_ITEM_ENTRY("Miaodao", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
 	/obj/item/rogueweapon/greatsword/silver = TAT_ITEM_ENTRY("Silver Greatsword", 5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "greatsword"), \
 	/obj/item/rogueweapon/greatsword/zwei = TAT_ITEM_ENTRY("Claymore", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword"), \
 	/obj/item/rogueweapon/halberd = TAT_ITEM_ENTRY("Halberd", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
@@ -83,6 +84,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/huntingknife/idagger/navaja = TAT_ITEM_ENTRY("Navaja", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger/silver = TAT_ITEM_ENTRY("Silver Dagger", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger/steel = TAT_ITEM_ENTRY("Steel Dagger", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
+	/obj/item/rogueweapon/huntingknife/idagger/steel/rondel = TAT_ITEM_ENTRY("Steel Dagger", 2.5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger/steel/parrying = TAT_ITEM_ENTRY("Parrying Dagger", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
 	/obj/item/rogueweapon/huntingknife/scissors = TAT_ITEM_ENTRY("Scissors", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/rogueweapon/huntingknife/scissors/steel = TAT_ITEM_ENTRY("Steel Scissors", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "misc"), \
@@ -418,9 +420,11 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/shield/wood = TAT_ITEM_ENTRY("Wooden Shield", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
 	/obj/item/rogueweapon/shield/wood/deprived = TAT_ITEM_ENTRY("Ghastly Shield", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
 	/obj/item/rogueweapon/shield/tower/metal = TAT_ITEM_ENTRY("Kite Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "shield"), \
+	/obj/item/rogueweapon/shield/tower/raneshen = TAT_ITEM_ENTRY("Rider Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "shield"), \
 	/obj/item/rogueweapon/shield/buckler = TAT_ITEM_ENTRY("Iron Buckler", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
 	/obj/item/rogueweapon/shield/heater = TAT_ITEM_ENTRY("Heater Shield", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
 	/obj/item/rogueweapon/shield/iron = TAT_ITEM_ENTRY("Iron Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
+	/obj/item/rogueweapon/shield/iron/bone = TAT_ITEM_ENTRY("Iron Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
 	/obj/item/rogueweapon/shield/bronze = TAT_ITEM_ENTRY("Hoplon Shield", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "shield"), \
 	/obj/item/rogueweapon/shield/bronze/great = TAT_ITEM_ENTRY("Hoplon Greatshield", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "shield"), \
 	/obj/item/rogueweapon/shield/iron/steppesman = TAT_ITEM_ENTRY("Steppesman Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
