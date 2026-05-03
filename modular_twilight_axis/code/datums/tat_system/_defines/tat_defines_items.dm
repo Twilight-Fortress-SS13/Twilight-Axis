@@ -428,7 +428,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/shield/buckler = TAT_ITEM_ENTRY("Iron Buckler", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
 	/obj/item/rogueweapon/shield/heater = TAT_ITEM_ENTRY("Heater Shield", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
 	/obj/item/rogueweapon/shield/iron = TAT_ITEM_ENTRY("Iron Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
-	/obj/item/rogueweapon/shield/iron/bone = TAT_ITEM_ENTRY("Iron Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
+	/obj/item/rogueweapon/shield/iron/bone = TAT_ITEM_ENTRY("Bone Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
 	/obj/item/rogueweapon/shield/bronze = TAT_ITEM_ENTRY("Hoplon Shield", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "shield"), \
 	/obj/item/rogueweapon/shield/bronze/great = TAT_ITEM_ENTRY("Hoplon Greatshield", 3, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "shield"), \
 	/obj/item/rogueweapon/shield/iron/steppesman = TAT_ITEM_ENTRY("Steppesman Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
