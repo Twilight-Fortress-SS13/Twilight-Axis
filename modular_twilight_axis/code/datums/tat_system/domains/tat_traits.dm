@@ -932,14 +932,14 @@
 		/datum/skill/misc/hunting = list(
 			/obj/effect/proc_holder/spell/invoked/huntersyell,
 		),
-		/datum/skill/labor/mining = list(
-			/obj/effect/proc_holder/spell/invoked/mineroresight,
-		),
 		/datum/skill/craft/ceramics = list(
 			/obj/effect/proc_holder/spell/invoked/digclay,
 		),
 		/datum/skill/craft/sewing = list(
 			/obj/effect/proc_holder/spell/invoked/fittedclothing,
+		),
+		/datum/skill/labor/mining = list(
+			/datum/component/ore_sight,
 		),
 	)
 
@@ -949,6 +949,10 @@
 
 	var/list/rules = get_resident_skill_spell_rules()
 	for(var/skill_type in rules)
+		if((owner_build?.get_skill_value(/datum/skill/labor/mining) || 0) > 3)
+			owner_build.AddComponent(rules[skill_type])
+			continue
+		
 		if((owner_build?.get_skill_value(skill_type) || 0) <= 3)
 			continue
 
@@ -957,7 +961,7 @@
 			continue
 
 		for(var/spell_type in spell_types)
-			owner_build?.grant_mind_spell_if_missing(H, spell_type)
+			owner_build.grant_mind_spell_if_missing(H, spell_type)
 
 	return TRUE
 
