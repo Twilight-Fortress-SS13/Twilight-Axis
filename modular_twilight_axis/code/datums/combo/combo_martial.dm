@@ -68,6 +68,8 @@
 
 	var/last_balloon_at = 0
 
+	var/obj/item/martial_master_proxy/proxy
+
 /datum/component/combo_core/martial_master/Initialize(_combo_window, _max_history)
 	. = ..(_combo_window || MARTIAL_MASTER_COMBO_WINDOW, _max_history || MARTIAL_MASTER_MAX_HISTORY)
 	if(. == COMPONENT_INCOMPATIBLE)
@@ -92,6 +94,14 @@
 		UnregisterSignal(owner, COMSIG_MOB_PARRY_SUCCESS)
 
 		RevokeSpells()
+
+	if(proxy)
+		if(!QDELETED(proxy))
+			proxy.force = 0
+			proxy.force_dynamic = 0
+			proxy.last_attack_target = null
+			qdel(proxy)
+	proxy = null
 
 	owner = null
 	granted_spells = null
@@ -215,24 +225,50 @@
 	if(W)
 		return 0
 
+	if(!isliving(target_atom))
+		return 0
+
 	var/skill_id = forced_skill_id || ResolveAttackInput(target_atom, W)
 	if(!IsBaseInput(skill_id))
 		return 0
 
-	var/mob/living/target = null
-	if(isliving(target_atom))
-		target = target_atom
+	var/mob/living/target = target_atom
+	if(!target || target.stat == DEAD)
+		return 0
 
 	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target, zone)
-	return 0
+
+	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
+		return 0
+
+	return COMPONENT_ATTACK_CONSUMED
 
 /datum/component/combo_core/martial_master/proc/_handle_try_consume_async(skill_id, mob/living/target, zone)
 	if(!owner)
 		return
 
+	if(!target || target.stat == DEAD)
+		return
+
+	var/zone_used = zone || BODY_ZONE_CHEST
+
+	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
+		if(!CheckMartialContact(target))
+			last_action_success = FALSE
+			last_finisher_success = FALSE
+			last_matched_rule = null
+			return
+	else
+		var/dmg = CalcPureDamage()
+		if(!AttackViaPipeline(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+			last_action_success = FALSE
+			last_finisher_success = FALSE
+			last_matched_rule = null
+			return
+
 	last_action_success = TRUE
 	last_action_skill = skill_id
-	last_action_zone = zone || BODY_ZONE_CHEST
+	last_action_zone = zone_used
 	last_action_target = target
 	last_finisher_success = FALSE
 	last_matched_rule = null
@@ -248,17 +284,17 @@
 			chain_step_expires_at = 0
 			chain_step_target = null
 		else if(target == chain_step_target)
-			target.adjustBruteLoss(max(1, round(GetComboDamageMultiplier() * 1.5)))
-			ApplyArmorDamageToZone(target, last_action_zone, GetPressureDamage() * 2)
+			if(AttackMartialAreaTarget(target, max(1, round(GetComboDamageMultiplier() * 1.5)), BCLASS_PUNCH, BRUTE, last_action_zone, 0))
+				ApplyArmorDamageToZone(target, last_action_zone, GetPressureDamage() * 2)
 
-			if(HasStrongKick())
-				_throw_target_dir(target, get_dir(owner, target), MARTIAL_MASTER_STRONG_KICK_THROW, TRUE)
+				if(HasStrongKick())
+					_throw_target_dir(target, get_dir(owner, target), MARTIAL_MASTER_STRONG_KICK_THROW, TRUE)
+
+				_balloon("chain-step hit")
 
 			chain_step_ready = FALSE
 			chain_step_expires_at = 0
 			chain_step_target = null
-
-			_balloon("chain-step hit")
 
 	RegisterInput(skill_id, target, last_action_zone)
 	SpendArousalStack(1)
@@ -295,8 +331,8 @@
 			MartialMasterAfterimage(my_turf, 0.8 SECONDS)
 			owner.forceMove(back)
 
-	ProcStrike(attacker, BODY_ZONE_CHEST, 1.40, 1.25)
-	attacker.Knockdown(1 SECONDS)
+	if(ProcStrike(attacker, BODY_ZONE_CHEST, 1.40, 1.25))
+		attacker.Knockdown(1 SECONDS)
 
 /datum/component/combo_core/martial_master/proc/ToggleStance()
 	if(current_stance == MARTIAL_MASTER_STANCE_PROC)
@@ -336,8 +372,8 @@
 
 	if(success)
 		_balloon_combo(rule_id)
+		ConsumeOnCombo(rule_id)
 
-	ConsumeOnCombo(rule_id)
 	return success
 
 /datum/component/combo_core/martial_master/proc/_balloon_combo(rule_id)
@@ -377,10 +413,12 @@
 	if(ComboUsesKick(rule_id) && HasStrongKick())
 		mult += MARTIAL_MASTER_STRONG_KICK_BONUS
 
-	var/dmg = max(1, round(mult * GetComboBaseDamage(rule_id, TRUE)))
-	target.adjustBruteLoss(dmg)
-	ApplyPreciseFinisher(target, zone_used, last_action_skill, rule_id)
+	var/dmg = max(1, round(mult * GetComboBaseDamage(rule_id, TRUE) * CalcPureDamage()))
 
+	if(!AttackMartialAreaTarget(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+		return FALSE
+
+	ApplyPreciseFinisher(target, zone_used, last_action_skill, rule_id)
 	return TRUE
 
 /datum/component/combo_core/martial_master/proc/ExecuteProcCombo(rule_id, mob/living/target, zone)
@@ -451,6 +489,220 @@
 	return precise ? 1.0 : 1.2
 
 // ------------------------------------------------------------
+// proxy / damage pipeline
+// ------------------------------------------------------------
+
+/datum/component/combo_core/martial_master/proc/GetProxy()
+	if(!owner)
+		return null
+
+	if(proxy && QDELETED(proxy))
+		proxy = null
+
+	if(!proxy)
+		proxy = new /obj/item/martial_master_proxy(owner)
+
+	return proxy
+
+/datum/component/combo_core/martial_master/proc/GetDamageFlag(bclass, damage_type)
+	switch(bclass)
+		if(BCLASS_BLUNT, BCLASS_SMASH, BCLASS_TWIST, BCLASS_PUNCH)
+			return "blunt"
+		if(BCLASS_CHOP, BCLASS_CUT, BCLASS_LASHING, BCLASS_PUNISH)
+			return "slash"
+		if(BCLASS_PICK, BCLASS_STAB, BCLASS_PIERCE)
+			return "stab"
+
+	switch(damage_type)
+		if(BRUTE)
+			return "blunt"
+		if(BURN)
+			return "fire"
+		if(TOX)
+			return "bio"
+		if(OXY)
+			return "oxy"
+
+	return "blunt"
+
+/datum/component/combo_core/martial_master/proc/AttackViaPipeline(mob/living/target, damage, bclass = BCLASS_PUNCH, damage_type = BRUTE, zone = BODY_ZONE_CHEST, armor_penetration = 0, params = null)
+	if(!owner || !target)
+		return FALSE
+
+	zone = TryGetZone(zone)
+
+	var/obj/item/martial_master_proxy/P = GetProxy()
+	if(!P)
+		return FALSE
+
+	if(P.loc != owner)
+		P.forceMove(owner)
+
+	if(!islist(params))
+		params = list()
+
+	P.force = damage
+	P.force_dynamic = damage
+	P.damtype = damage_type
+	P.thrown_bclass = bclass
+	P.d_type = GetDamageFlag(bclass, damage_type)
+	P.armor_penetration = armor_penetration
+
+	P.name = "martial strike"
+
+	P.last_attack_success = FALSE
+	P.last_attack_target = null
+
+	owner.face_atom(target)
+	owner.do_attack_animation(target, ATTACK_EFFECT_DISARM)
+	P.melee_attack_chain(owner, target, params)
+
+	return P.last_attack_success
+
+/datum/component/combo_core/martial_master/proc/CheckMartialContact(mob/living/target)
+	if(!owner || !target)
+		return FALSE
+
+	if(target.stat == DEAD)
+		return FALSE
+
+	if((target.mobility_flags & MOBILITY_STAND))
+		if(target.checkmiss(owner))
+			return FALSE
+
+	if(target.checkdefense(owner.used_intent, owner))
+		return FALSE
+
+	return TRUE
+
+/datum/component/combo_core/martial_master/proc/AttackMartialAreaTarget(mob/living/target, damage, bclass = BCLASS_PUNCH, damage_type = BRUTE, zone = BODY_ZONE_CHEST, armor_penetration = 0)
+	if(!owner || !target)
+		return FALSE
+
+	if(target.stat == DEAD)
+		return FALSE
+
+	zone = TryGetZone(zone)
+
+	if((target.mobility_flags & MOBILITY_STAND))
+		if(target.checkmiss(owner))
+			return FALSE
+
+	if(target.checkdefense(owner.used_intent, owner))
+		return FALSE
+
+	var/obj/item/martial_master_proxy/P = GetProxy()
+	if(!P)
+		return FALSE
+
+	if(P.loc != owner)
+		P.forceMove(owner)
+
+	P.force = damage
+	P.force_dynamic = damage
+	P.damtype = damage_type
+	P.thrown_bclass = bclass
+	P.d_type = GetDamageFlag(bclass, damage_type)
+	P.armor_penetration = armor_penetration
+
+	P.last_attack_success = FALSE
+	P.last_attack_target = null
+
+	SEND_SIGNAL(P, COMSIG_ITEM_ATTACK_SUCCESS, target, owner)
+	SEND_SIGNAL(target, COMSIG_ITEM_ATTACKED_SUCCESS, P, owner)
+
+	if(!iscarbon(target))
+		var/nodmg = FALSE
+		var/success = !!target.attacked_by(P, owner)
+		if(!success)
+			nodmg = TRUE
+
+		SEND_SIGNAL(target, COMSIG_ATOM_ATTACK_HAND, owner)
+
+		P.last_attack_success = success
+		P.last_attack_target = target
+
+		if(owner?.used_intent)
+			if(!nodmg)
+				if(owner.used_intent.hitsound)
+					playsound(target.loc, owner.used_intent.hitsound, 100, FALSE, -1)
+			else
+				playsound(target.loc, "nodmg", 100, FALSE, -1)
+
+		return success
+
+	var/mob/living/carbon/C = target
+	var/obj/item/bodypart/affecting = C.get_bodypart(check_zone(zone) || BODY_ZONE_CHEST)
+	if(!affecting)
+		return FALSE
+
+	var/mob/living/carbon/human/H = C
+	if(!H)
+		return FALSE
+
+	if(!H.lying_attack_check(owner))
+		return FALSE
+
+	if(H.has_status_effect(/datum/status_effect/buff/clash) && H.get_active_held_item() && ishuman(owner))
+		var/obj/item/IM = H.get_active_held_item()
+		H.process_clash(owner, IM)
+		return FALSE
+
+	var/attack_flag = "blunt"
+	switch(bclass)
+		if(BCLASS_BLUNT, BCLASS_SMASH, BCLASS_TWIST, BCLASS_PUNCH)
+			attack_flag = "blunt"
+		if(BCLASS_CHOP, BCLASS_CUT, BCLASS_LASHING, BCLASS_PUNISH)
+			attack_flag = "slash"
+		if(BCLASS_PICK, BCLASS_STAB, BCLASS_PIERCE)
+			attack_flag = "stab"
+
+	var/armor_block = H.run_armor_check(
+		zone,
+		attack_flag,
+		armor_penetration = armor_penetration,
+		blade_dulling = owner.used_intent?.blade_class,
+		damage = damage,
+		intdamfactor = owner.used_intent?.intent_intdamage_factor
+	)
+
+	H.next_attack_msg.Cut()
+	var/nodmg = FALSE
+	if(!H.apply_damage(damage, damage_type, affecting, armor_block))
+		nodmg = TRUE
+		H.next_attack_msg += VISMSG_ARMOR_BLOCKED
+	else
+		affecting.bodypart_attacked_by(
+			bclass,
+			damage,
+			owner,
+			zone,
+			crit_message = TRUE,
+			armor = armor_block,
+			weapon = P
+		)
+
+		SEND_SIGNAL(H, COMSIG_ATOM_ATTACK_HAND, owner)
+		if(affecting.body_zone == BODY_ZONE_HEAD)
+			SEND_SIGNAL(owner, COMSIG_HEAD_PUNCHED, H)
+
+	H.send_item_attack_message(P, owner, zone)
+
+	H.next_attack_msg.Cut()
+
+	P.last_attack_target = H
+	P.last_attack_success = TRUE
+
+	if(owner?.used_intent)
+		if(!nodmg)
+			if(owner.used_intent.hitsound)
+				playsound(H.loc, owner.used_intent.hitsound, 100, FALSE, -1)
+		else
+			playsound(H.loc, "nodmg", 100, FALSE, -1)
+
+	return TRUE
+
+// ------------------------------------------------------------
 // proc stance forms
 // ------------------------------------------------------------
 
@@ -499,10 +751,9 @@
 
 	var/dmg = max(1, round(dmg_mult * pure_damage))
 
-	owner.face_atom(target)
-	owner.do_attack_animation(target, ATTACK_EFFECT_DISARM)
+	if(!AttackMartialAreaTarget(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+		return FALSE
 
-	target.adjustBruteLoss(dmg)
 	ApplyArmorDamageToZone(target, zone_used, max(1, round(GetPressureDamage() * armor_mult)))
 
 	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK && HasStrongKick())
@@ -531,7 +782,6 @@
 				continue
 			if(ProcStrike(L, zone, 1.35, 1.0))
 				any = TRUE
-			break
 
 	return any
 
@@ -552,7 +802,6 @@
 				continue
 			if(ProcStrike(L, zone, 1.15, 0.8))
 				any = TRUE
-			break
 
 	return any
 
@@ -613,7 +862,6 @@
 		if(L == owner || L.stat == DEAD)
 			continue
 		ProcStrike(L, zone, 1.10, 0.8)
-		break
 
 /datum/component/combo_core/martial_master/proc/ProcComboCharge(zone)
 	if(!owner)
@@ -668,7 +916,6 @@
 			if(ProcStrike(L, zone, 1.10, 1.0))
 				_throw_target_dir(L, hit_dir, 1, TRUE)
 				any = TRUE
-			break
 
 	return any
 
@@ -742,6 +989,7 @@
 	if(!origin)
 		return FALSE
 
+	var/any = FALSE
 	var/d = owner.dir
 	var/turf/front = get_step(origin, d)
 	if(front)
@@ -749,11 +997,11 @@
 		for(var/mob/living/L in front)
 			if(L == owner || L.stat == DEAD)
 				continue
-			ProcStrike(L, zone, 1.00, 1.0)
-			break
+			if(ProcStrike(L, zone, 1.00, 1.0))
+				any = TRUE
 
 	addtimer(CALLBACK(src, PROC_REF(_cross_followup), d, zone), 0.25 SECONDS)
-	return TRUE
+	return any
 
 /datum/component/combo_core/martial_master/proc/_cross_followup(d, zone)
 	if(!owner)
@@ -779,7 +1027,6 @@
 			if(L == owner || L.stat == DEAD)
 				continue
 			ProcStrike(L, zone, 0.90, 0.8)
-			break
 
 /datum/component/combo_core/martial_master/proc/FindFrontTarget(max_range = 8)
 	if(!owner)
@@ -1170,7 +1417,7 @@
 	duration = 10
 	randomdir = FALSE
 
-/datum/component/combo_core/martial_master/proc/MartialMasterWaveUp(color = "#6b1f2b")
+/datum/component/combo_core/martial_master/proc/MartialMasterWaveUp(color = "#5a0f1f")
 	if(!owner)
 		return
 

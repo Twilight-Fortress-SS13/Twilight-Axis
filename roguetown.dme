@@ -3515,6 +3515,7 @@
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\rogueweapons.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\church_weapon.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\knives.dm"
+#include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\martial_proxy.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\polearms.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\soundbreaker_proxy.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\swords.dm"
