@@ -253,7 +253,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/shoes/roguetown/boots/armor/iron = TAT_ITEM_ENTRY("Light Plated Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = TAT_ITEM_ENTRY("Heavy Leather Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/armor/rumaclan = TAT_ITEM_ENTRY("Heavy Sandals", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
-	/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/kazengun = TAT_ITEM_ENTRY("Kazengun Armored Sandals", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "shoes"), \
+	/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/kazengun = TAT_ITEM_ENTRY("Kazengun Armored Sandals", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/short = TAT_ITEM_ENTRY("Short Leather Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/nobleboot/steppesman = TAT_ITEM_ENTRY("Aavnic Riding Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/otavan = TAT_ITEM_ENTRY("Otavan Leather Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
