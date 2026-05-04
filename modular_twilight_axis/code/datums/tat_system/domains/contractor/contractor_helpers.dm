@@ -1,8 +1,8 @@
-// contractor helpers
-// Consolidated helper layer: core lookup, Lux economy, stat/skill helpers, seal/contract helpers, items/enchantments.
 
-// --- BEGIN contractor_helpers_core.dm ---
-// Contractor helper procs: core.
+
+
+
+
 
 /proc/is_contractor_mob(mob/living/carbon/human/H)
 	return H?.GetComponent(/datum/component/contractor)
@@ -139,10 +139,10 @@
 	return TRUE
 
 
-// --- END contractor_helpers_core.dm ---
 
-// --- BEGIN contractor_helpers_lux.dm ---
-// Contractor helper procs: lux.
+
+
+
 
 /proc/contractor_get_lux_amount(mob/living/carbon/human/H)
 	if(!H)
@@ -193,10 +193,10 @@
 	return TRUE
 
 
-// --- END contractor_helpers_lux.dm ---
 
-// --- BEGIN contractor_helpers_stats_skills.dm ---
-// Contractor helper procs: stats_skills.
+
+
+
 
 /proc/contractor_apply_all_stat_delta(mob/living/carbon/human/H, amount)
 	if(!H || !amount)
@@ -380,7 +380,7 @@
 
 
 
-// Character flaw helpers used by contractor vice clauses.
+
 /proc/contractor_charflaw_catalog()
 	var/list/out = list()
 	var/list/flaws = GLOB.character_flaws
@@ -481,19 +481,19 @@
 
 	H.charflaws.Add(flaw)
 
-	// Character flaws already have the authoritative runtime hooks.
-	// Do not guess proc names, do not fake traits, do not silently mark it as applied.
-	// Apply the exact same hooks the character setup pipeline uses.
+	
+	
+	
 	flaw.on_mob_creation(H)
 	flaw.apply_post_equipment(H)
 	flaw.flaw_on_life(H)
 
 	return TRUE
 
-// --- END contractor_helpers_stats_skills.dm ---
 
-// --- BEGIN contractor_helpers_seal_contract.dm ---
-// Contractor helper procs: seal_contract.
+
+
+
 
 /proc/contractor_find_person_by_name(query)
 	if(!query)
@@ -613,10 +613,10 @@
 	return FALSE
 
 
-// --- END contractor_helpers_seal_contract.dm ---
 
-// --- BEGIN contractor_helpers_items_enchantments.dm ---
-// Contractor helper procs: items_enchantments.
+
+
+
 
 /proc/contractor_is_contract_weapon_path(item_path, list/entry = null)
 	if(!ispath(item_path, /obj/item))
@@ -704,14 +704,14 @@
 			return item_path
 	return null
 
-// Contractor pricing metadata for TA magic item enchantments.
-//
-// The base /datum/magic_item definitions do not expose a tier var, while
-// contractor contracts need a stable boon-price multiplier for enchanted gear.
-// Real enchantment subtypes may override tier here later.
+
+
+
+
+
 
 /datum/magic_item
-	/// Contractor boon pricing tier for enchanted items.
+	
 	var/tier = 1
 
 /proc/contractor_magic_item_base_path()
@@ -787,5 +787,28 @@
 	return 20 + (contractor_magic_item_tier(path_value) * 20)
 
 
-// --- END contractor_helpers_items_enchantments.dm ---
 
+
+
+/proc/contractor_normalize_true_form_type(value)
+	if(!value)
+		return null
+	switch("[value]")
+		if("Обычная", "обычная")
+			return "1"
+		if("Красная", "красная")
+			return "2"
+		if("Фиолетовая", "фиолетовая")
+			return "3"
+		if("Альбинос", "альбинос")
+			return "4"
+	switch(lowertext("[value]"))
+		if("1", "normal")
+			return "1"
+		if("2", "red")
+			return "2"
+		if("3", "purple")
+			return "3"
+		if("4", "albino")
+			return "4"
+	return null

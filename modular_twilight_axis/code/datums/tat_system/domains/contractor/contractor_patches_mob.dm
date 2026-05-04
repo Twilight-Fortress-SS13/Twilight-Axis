@@ -1,25 +1,25 @@
-// contractor mob patches
-// Consolidated mob-facing patches: dodge signal, true-form direction/examine/wildshape.
 
-// --- BEGIN contractor_patch_mob_dodge_signal.dm ---
+
+
+
 /mob/do_dodge(mob/user, turf/turfy)
 	. = ..()
 	if(.)
 		SEND_SIGNAL(src, COMSIG_MOB_DODGE_SUCCESS, user, turfy)
 	return .
 
-// --- END contractor_patch_mob_dodge_signal.dm ---
 
-// --- BEGIN contractor_patch_mob_true_form_direction.dm ---
+
+
 /mob/living/setDir(newdir)
 	. = ..()
 	var/datum/component/contractor/S = src.GetComponent(/datum/component/contractor)
 	S?.update_true_form_visuals()
 	return .
 
-// --- END contractor_patch_mob_true_form_direction.dm ---
 
-// --- BEGIN contractor_patch_mob_true_form_examine.dm ---
+
+
 /mob/living/carbon/human/examine(mob/user)
 	. = ..()
 	var/datum/component/contractor/core = GetComponent(/datum/component/contractor)
@@ -39,12 +39,12 @@
 		else
 			to_chat(user, text)
 
-// --- END contractor_patch_mob_true_form_examine.dm ---
 
-// --- BEGIN contractor_patch_mob_true_form_wildshape.dm ---
-/// True Form body swap.
-/// This follows the same broad trick as Twilight wildshape: the old human body is
-/// stored safely inside a temporary carbon/human body with its own species icon.
+
+
+
+
+
 
 /mob/living/carbon/human/species/wildshape/contractor_trueform
 	name = "Contractor"
@@ -92,15 +92,24 @@
 	)
 
 /datum/species/contractor_trueform/regenerate_icons(mob/living/carbon/human/human)
-	// True form uses a complete directional mob icon.
-	// Keep this intentionally small and non-invasive: do NOT cut overlays_standing.
-	// That list is an internal indexed overlay cache in this codebase; clearing it causes runtime spam
-	// when later systems try to remove/apply overlays by layer.
+	
+	
+	
+	
 	if(!human)
 		return FALSE
 
 	human.icon = CONTRACTOR_TRUE_FORM_ICON
-	human.icon_state = CONTRACTOR_TRUE_FORM_ICON_STATE
+	var/base_state = CONTRACTOR_TRUE_FORM_ICON_STATE
+	var/form_gender = "f"
+	switch(lowertext("[human.gender]"))
+		if("male")
+			form_gender = "m"
+		if("female")
+			form_gender = "f"
+	var/datum/component/contractor/core = human.GetComponent(/datum/component/contractor)
+	var/form_type = contractor_normalize_true_form_type(core?.true_form_type) || "1"
+	human.icon_state = "[base_state]_[form_gender]_[form_type]"
 	if(islist(human.overlays))
 		human.overlays.Cut()
 	if(islist(human.underlays))
@@ -109,10 +118,10 @@
 	return TRUE
 
 /datum/species/contractor_trueform/update_damage_overlays(mob/living/carbon/human/human)
-	// Full-body trueform icon already contains the whole silhouette.
-	// Do not call remove_overlay(DAMAGE_LAYER) here: during transform some overlay caches may not be ready,
-	// and regenerate_icons() already gives us a clean full-body icon.
+	
+	
+	
 	return TRUE
 
-// --- END contractor_patch_mob_true_form_wildshape.dm ---
+
 

@@ -1,6 +1,6 @@
-// Consolidated contractor boons/bonuses.
 
-// ---- _contractor_bonus.dm ----
+
+
 
 /datum/contractor_bonus
 	var/name = "infernal bonus"
@@ -27,7 +27,7 @@
 	return list("name" = name, "desc" = desc, "power" = power_cost)
 
 
-// ---- information_bonus.dm ----
+
 
 /datum/contractor_bonus/information
 	name = "revealed mark"
@@ -57,7 +57,7 @@
 	return TRUE
 
 
-// ---- item_bonus.dm ----
+
 
 /datum/contractor_bonus/item
 	name = "granted item"
@@ -89,7 +89,7 @@
 	return TRUE
 
 
-// ---- enchanted_item_bonus.dm ----
+
 /datum/contractor_bonus/enchanted_item
 	name = "contract-forged item"
 	desc = "Creates one selected TAT item with optional contract enchantments."
@@ -155,8 +155,8 @@
 	return TRUE
 
 /datum/contractor_bonus/enchanted_item/remove(datum/contractor_contract/contract)
-	// A fulfilled contract must not delete the granted item when the contract datum qdels.
-	// Broken/cancelled/rollback contracts still clean it up.
+	
+	
 	if(contract?.status == CONTRACTOR_CONTRACT_FULFILLED)
 		created_item = null
 		return TRUE
@@ -178,7 +178,7 @@
 	return list("name" = name, "desc" = "[template_name][weapon_text], passive [passive_name] +[passive_stat_bonus], enchantment: [enchant_name]", "power" = power_cost)
 
 
-// ---- orgasm_bonus.dm ----
+
 
 /datum/contractor_bonus/orgasm
 	name = "promised climax"
@@ -215,7 +215,7 @@
 		source_contract.fulfill("orgasm_boon_complete")
 
 
-// ---- body_change_bonus.dm ----
+
 
 /datum/contractor_bonus/body_change
 	name = "body alteration"
@@ -239,7 +239,7 @@
 	return TRUE
 
 
-// ---- stat_bonus.dm ----
+
 
 /datum/contractor_bonus/stat
 	name = "stat boon"
@@ -252,7 +252,7 @@
 	return contractor_apply_stat_delta(contract.contractee?.owner, stat_key, amount)
 
 
-// ---- skill_bonus.dm ----
+
 
 /datum/contractor_bonus/skill
 	name = "skill boon"

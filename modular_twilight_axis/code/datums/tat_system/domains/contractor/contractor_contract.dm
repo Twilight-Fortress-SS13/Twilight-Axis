@@ -184,10 +184,10 @@
 	reward_recorded = TRUE
 	fulfilled_time = world.time
 
-	// Fire fulfillment prices before any cleanup/qdel path can remove their state.
-	// This is the actual "price on contract completion" pulse. It must not
-	// depend on normal signal-trigger checks, because instant contracts and
-	// self-test contracts finish during the finalize stack.
+	
+	
+	
+	
 	for(var/datum/contractor_curse/curse as anything in curses)
 		curse.fire_contract_fulfillment(src, reason)
 
@@ -207,7 +207,7 @@
 
 /datum/contractor_contract/proc/has_ongoing_clauses()
 	for(var/datum/contractor_curse/conditional/curse as anything in curses)
-		// Fulfillment-only prices fire once during fulfill(); they are not ongoing.
+		
 		if(curse.trigger_key == "fulfillment")
 			continue
 		return TRUE

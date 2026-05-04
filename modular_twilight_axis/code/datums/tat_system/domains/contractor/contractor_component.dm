@@ -8,7 +8,7 @@
 	var/list/contractees = list()
 	var/list/imprinted_targets = list()
 	var/true_form = FALSE
-	var/true_name = "demon-contractor"
+	var/true_form_type
 	var/tmp/true_form_original_name
 	var/tmp/true_form_original_real_name
 	var/tmp/true_form_original_color
@@ -62,7 +62,7 @@
 	next_seal_decay = world.time + CONTRACTOR_SEAL_DECAY_INTERVAL
 	START_PROCESSING(SSprocessing, src)
 	if(!istype(owner, /mob/living/carbon/human/species/wildshape/contractor_trueform))
-		prompt_true_name()
+		prompt_true_type()
 	grant_contractor_actions()
 	addtimer(CALLBACK(src, PROC_REF(grant_contractor_actions)), 1 SECONDS)
 
@@ -201,9 +201,9 @@
 		if(feedback && user)
 			to_chat(user, span_warning("Your contractor nature is not awake enough for this."))
 		return FALSE
-	// Fresh seals suppress awakened/active powers, but they do not block
-	// the basic contract pipeline: drinking/kissing Lux and offering/signing
-	// contracts are the one thing a trapped contractor must still be able to do.
+	
+	
+	
 	if(required_level > CONTRACTOR_LEVEL_SLEEPING && is_inside_active_seal())
 		if(feedback && user)
 			to_chat(user, span_warning("The seal suppresses your power."))
@@ -307,9 +307,9 @@
 	var/requested_amount = CONTRACTOR_MOB_LUX_BASE_POWER + (CONTRACTOR_MOB_LUX_LEVEL_BONUS * level)
 	var/drunk_amount = contractor_drain_lux(target, requested_amount)
 	if(drunk_amount <= 0)
-		// Living targets in this codebase often do not expose a dedicated Lux pool.
-		// Consent to absorption must still produce the promised contract fuel from the target's vital Lux,
-		// otherwise the automatic contract opens with 0 Lux and immediately fails with "not enough".
+		
+		
+		
 		drunk_amount = requested_amount
 		try_imprint_from(target)
 
@@ -431,7 +431,7 @@
 		return FALSE
 	if(enabled && !forced && !can_use_contractor_power(owner, CONTRACTOR_LEVEL_AWAKENED, FALSE))
 		return FALSE
-	if(enabled && !ensure_true_name(!forced))
+	if(enabled && !ensure_true_form_type(!forced))
 		return FALSE
 	if(enabled)
 		return enter_true_form_body(forced)
@@ -445,7 +445,6 @@
 	if(istype(owner, /mob/living/carbon/human/species/wildshape/contractor_trueform))
 		true_form = TRUE
 		cache_true_form_identity()
-		apply_true_form_identity()
 		apply_true_form_visuals()
 		update_true_form_embrace_trait()
 		if(!true_form_bonus_applied)
@@ -465,16 +464,16 @@
 
 	body.stored_mob = original
 	body.gender = original.gender
-	body.name = true_name
-	body.real_name = true_name
+	body.name = original.name
+	body.real_name = original.real_name
 	body.dir = original.dir
 	body.pixel_x = CONTRACTOR_TRUE_FORM_PIXEL_X
 	body.pixel_y = CONTRACTOR_TRUE_FORM_PIXEL_Y
 	body.set_patron(original.patron)
 	body.regenerate_icons()
 	body.after_creation()
-	// after_creation may install organs/features and request appearance rebuilds.
-	// Force the trueform species icon once more after that setup, without touching internal overlay caches.
+	
+	
 	body.regenerate_icons()
 
 	true_form_original_invisibility = original.invisibility
@@ -517,7 +516,6 @@
 	body_core.true_form_original_invisibility = true_form_original_invisibility
 	body_core.true_form_original_status_flags = true_form_original_status_flags
 	body_core.true_form_body = null
-	body_core.apply_true_form_identity()
 	body_core.update_true_form_embrace_trait()
 	if(!body_core.true_form_bonus_applied)
 		contractor_apply_all_stat_delta(body, 1)
@@ -628,7 +626,7 @@
 	target.level = level
 	target.lux_power = lux_power
 	target.completed_contracts = completed_contracts
-	target.true_name = true_name
+	target.true_form_type = true_form_type
 	target.last_return_turf = last_return_turf
 	target.return_action_expires_at = return_action_expires_at
 	target.allow_erp_training = allow_erp_training
@@ -655,21 +653,23 @@
 		return FALSE
 	return target.sync_devotion_from(src)
 
-/datum/component/contractor/proc/ensure_true_name(allow_prompt = TRUE)
-	if(length(true_name))
+/datum/component/contractor/proc/ensure_true_form_type(allow_prompt = TRUE)
+	true_form_type = contractor_normalize_true_form_type(true_form_type)
+	if(length(true_form_type))
 		return TRUE
 	if(!allow_prompt)
 		return FALSE
-	return prompt_true_name(TRUE)
+	return prompt_true_type()
 
-/datum/component/contractor/proc/prompt_true_name(require_name = FALSE)
+/datum/component/contractor/proc/prompt_true_type()
+	true_form_type = contractor_normalize_true_form_type(true_form_type)
 	if(!owner?.client)
-		return length(true_name) > 0
-	var/chosen_name = stripped_input(owner, "Name the entity shown in your true form.", "Contractor True Name", true_name, MAX_NAME_LEN)
-	if(chosen_name)
-		true_name = chosen_name
-		return TRUE
-	return !require_name && length(true_name) > 0
+		return length(true_form_type) > 0
+	var/list/valid_cats = list("Normal", "Red", "Purple", "Albino")
+	var/selection = tgui_input_list(owner, "Choose a true form type:", "True Form", valid_cats)
+	if(selection)
+		true_form_type = contractor_normalize_true_form_type(selection)
+	return length(true_form_type) > 0
 
 /datum/component/contractor/proc/cache_true_form_identity()
 	if(true_form_identity_cached || !owner)
@@ -681,10 +681,6 @@
 	return TRUE
 
 /datum/component/contractor/proc/apply_true_form_identity()
-	if(!owner || !length(true_name))
-		return FALSE
-	owner.name = true_name
-	owner.real_name = true_name
 	return TRUE
 
 /datum/component/contractor/proc/restore_true_form_identity()
@@ -1199,7 +1195,7 @@
 		contract.break_contract("contractor_death")
 
 
-// ---- contractor_devotion.dm ----
+
 /datum/devotion/contractor
 	max_devotion = CONTRACTOR_DEFAULT_MAX_DEVOTION
 	devotion = CONTRACTOR_DEFAULT_DEVOTION
