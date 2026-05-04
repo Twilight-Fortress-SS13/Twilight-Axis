@@ -187,7 +187,7 @@
 		return
 
 	var/tier = get_satisfaction_buff_tier()
-	if(tier <= 0)
+	if(tier <= 5)
 		H.remove_status_effect(/datum/status_effect/buff/erp_satisfaction)
 		return
 
