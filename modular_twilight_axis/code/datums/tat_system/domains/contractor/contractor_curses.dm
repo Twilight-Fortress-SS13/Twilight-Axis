@@ -1,6 +1,6 @@
-// Consolidated contractor curses/price clauses.
 
-// ---- _contractor_curse.dm ----
+
+
 
 /datum/contractor_curse
 	var/name = "infernal curse"
@@ -130,9 +130,9 @@
 		return TRUE
 	fulfillment_price_fired = TRUE
 
-	// Fulfillment is not a normal mob signal. It happens inside the contract
-	// completion stack, including instant contracts and self-test contracts, so
-	// it must bypass condition_matches()/is_active() entirely.
+	
+	
+	
 	source_contract = contract
 	return on_condition_met()
 
@@ -168,7 +168,7 @@
 	return trigger_key
 
 
-// ---- submission_curse.dm ----
+
 
 /datum/contractor_curse/submission
 	name = "obedience clause"
@@ -181,7 +181,7 @@
 	return TRUE
 
 
-// ---- stat_transfer_curse.dm ----
+
 
 /datum/contractor_curse/stat_transfer
 	name = "attribute tithe"
@@ -204,7 +204,7 @@
 	return TRUE
 
 
-// ---- orgasm_curse.dm ----
+
 
 /datum/contractor_curse/orgasm
 	parent_type = /datum/contractor_curse/conditional
@@ -233,7 +233,7 @@
 	return list("name" = name, "desc" = "Trigger: [trigger_summary()], forces [max(1, count)] climax[ max(1, count) == 1 ? "" : "es" ]", "power" = get_power_value(contract), "hidden" = hidden)
 
 
-// ---- skill_transfer_curse.dm ----
+
 
 /datum/contractor_curse/skill_transfer
 	name = "skill tithe"
@@ -256,7 +256,7 @@
 	return TRUE
 
 
-// ---- phrase_curse.dm ----
+
 
 /datum/contractor_curse/phrase
 	parent_type = /datum/contractor_curse/effect
@@ -275,7 +275,7 @@
 	return TRUE
 
 
-// ---- emotion_curse.dm ----
+
 
 /datum/contractor_curse/emotion
 	parent_type = /datum/contractor_curse/conditional
@@ -304,7 +304,7 @@
 	return list("name" = name, "desc" = "Trigger: [trigger_summary()], emotion: [emotion_text]. No timer; once triggered, it remains as a contract price.", "power" = get_power_value(contract), "hidden" = hidden)
 
 
-// ---- action_curse.dm ----
+
 
 /datum/contractor_curse/action
 	parent_type = /datum/contractor_curse/conditional
@@ -327,7 +327,7 @@
 	return TRUE
 
 
-// ---- body_curse.dm ----
+
 
 /datum/contractor_curse/body
 	name = "body mark"
@@ -345,7 +345,7 @@
 	return contractor_grant_body_mark_spell(editor, target, CONTRACTOR_BODY_CHANGE_PERMISSION_TIME)
 
 
-// ---- effect_curse.dm ----
+
 
 /datum/contractor_curse/effect
 	parent_type = /datum/contractor_curse/conditional
@@ -369,7 +369,7 @@
 	return list("name" = name, "desc" = "Trigger: [trigger_summary()], [chunks >= 0 ? "+" : ""][2 * chunks] submission", "power" = get_power_value(contract), "hidden" = hidden)
 
 
-// ---- arousal_curse.dm ----
+
 
 /datum/contractor_curse/arousal
 	parent_type = /datum/contractor_curse/conditional
@@ -398,7 +398,7 @@
 	return list("name" = name, "desc" = "Trigger: [trigger_summary()], [chunks >= 0 ? "+" : ""][5 * chunks] arousal for [5 * max(1, abs(chunks))] minutes", "power" = get_power_value(contract), "hidden" = hidden)
 
 
-// ---- stat_loss_curse.dm ----
+
 
 /datum/contractor_curse/stat_loss
 	parent_type = /datum/contractor_curse/conditional
@@ -417,7 +417,7 @@
 	return list("name" = name, "desc" = "Trigger: [trigger_summary()], [amount >= 0 ? "+" : ""][amount] [stat_key]", "power" = get_power_value(contract), "hidden" = hidden)
 
 
-// ---- skill_loss_curse.dm ----
+
 
 /datum/contractor_curse/skill_loss
 	parent_type = /datum/contractor_curse/conditional
@@ -438,7 +438,7 @@
 
 
 
-// ---- flaw_curse.dm ----
+
 
 /datum/contractor_curse/flaw
 	parent_type = /datum/contractor_curse/conditional

@@ -1,9 +1,3 @@
-// ============================================================
-// ronin.dm
-// Refactored to inherit from /datum/component/combo_core/combat_style
-// Logic preserved, visuals/messages preserved.
-// ============================================================
-
 #define RONIN_STACK_TICK             (1 SECONDS)
 #define RONIN_MAX_STACKS_NORMAL      5
 #define RONIN_MAX_STACKS_OVERDRIVE   20
@@ -21,6 +15,8 @@
 
 #define RONIN_TANUKI_PER_BONUS       4
 #define RONIN_TANUKI_PER_HITS        4
+
+#define RONIN_COUNTER_COOLDOWN       (3 SECONDS)
 
 /proc/ronin_on_parry_success(mob/living/defender, mob/living/attacker)
 	if(!isliving(defender))
@@ -60,6 +56,7 @@
 	/// Tanuki (minor): +4 PER на 4 успешных удара
 	var/tanuki_per_hits_left = 0
 	var/elder_tanuki_riposte_ready = FALSE
+	var/counter_cooldown_until = 0
 
 /datum/component/combo_core/ronin/Initialize(_combo_window, _max_history)
 	. = ..(_combo_window, _max_history)
@@ -396,12 +393,19 @@
 	if(!W || !sheath_item || !H)
 		return FALSE
 
-	var/free_hand = 0
-	if(owner.get_item_for_held_index(1) == null)
-		free_hand = 1
-	else if(owner.get_item_for_held_index(2) == null)
-		free_hand = 2
-	if(!free_hand)
+	var/dominant_hand = 0
+	if(ishuman(owner))
+		var/mob/living/carbon/human/human_owner = owner
+		if(human_owner.domhand)
+			dominant_hand = human_owner.domhand
+
+	if(!dominant_hand)
+		dominant_hand = owner.active_hand_index
+
+	if(!dominant_hand)
+		return FALSE
+
+	if(owner.get_item_for_held_index(dominant_hand))
 		return FALSE
 
 	H.sheathed = null
@@ -409,11 +413,13 @@
 
 	W.forceMove(owner.loc)
 	W.pickup(owner)
-	owner.put_in_hand(W, free_hand)
+	owner.put_in_hand(W, dominant_hand)
 
 	active_blade = W
-	UpdateAttackSuccessListener()
+	if(in_counter_stance)
+		ExitCounterStance(TRUE)
 
+	UpdateAttackSuccessListener()
 	if(consume_stacks)
 		_set_ronin_stacks(0)
 	else
@@ -714,16 +720,18 @@
 		d = owner.dir
 
 	var/turf/t1 = get_step(start, d)
-	if(!t1 || t1.density)
+	if(!t1 || _turf_is_dash_blocked(t1))
 		return
 
-	var/turf/t2 = get_step(t1, d)
 	owner.forceMove(t1)
 	_RonSlashOnTurf(t1, force, zone)
 
-	if(t2 && !t2.density)
-		owner.forceMove(t2)
-		_RonSlashOnTurf(t2, force, zone)
+	var/turf/t2 = get_step(t1, d)
+	if(!t2 || _turf_is_dash_blocked(t2))
+		return
+
+	owner.forceMove(t2)
+	_RonSlashOnTurf(t2, force, zone)
 
 /datum/component/combo_core/ronin/proc/_RonSlashOnTurf(turf/T, force, zone)
 	if(!T)
@@ -877,23 +885,41 @@
 // ------------------------------------------------------------
 
 /datum/component/combo_core/ronin/proc/EnterCounterStance()
+	if(!owner)
+		return FALSE
+
+	if(world.time < counter_cooldown_until)
+		if(owner.client)
+			owner.balloon_alert(owner, "stance not ready")
+		return FALSE
+
 	if(in_counter_stance)
-		return
+		return FALSE
 
 	UpdateActiveBlade()
 	if(active_blade)
-		return
+		counter_cooldown_until = world.time + RONIN_COUNTER_COOLDOWN
+		if(owner.client)
+			owner.balloon_alert(owner, "blade is drawn")
+		return FALSE
 
 	in_counter_stance = TRUE
 	counter_expires_at = world.time + RONIN_COUNTER_WINDOW
+	return TRUE
 
-/datum/component/combo_core/ronin/proc/ExitCounterStance()
+/datum/component/combo_core/ronin/proc/ExitCounterStance(apply_cooldown = TRUE)
+	if(!in_counter_stance)
+		return
+
 	in_counter_stance = FALSE
 	counter_expires_at = 0
 
+	if(apply_cooldown)
+		counter_cooldown_until = world.time + RONIN_COUNTER_COOLDOWN
+
 /datum/component/combo_core/ronin/proc/CheckCounterExpire()
 	if(in_counter_stance && world.time >= counter_expires_at)
-		ExitCounterStance()
+		ExitCounterStance(TRUE)
 
 /datum/component/combo_core/ronin/proc/TryCounterInstantStrike(mob/living/attacker)
 	if(!owner || !attacker)
@@ -1009,7 +1035,7 @@
 /// async resolution of successful defensive trigger
 /datum/component/combo_core/ronin/proc/_async_counter_defense_success(mob/living/attacker)
 	if(QDELETED(src) || !owner || QDELETED(owner) || !isliving(attacker) || attacker.stat == DEAD)
-		in_counter_stance = FALSE
+		ExitCounterStance(TRUE)
 		return
 
 	UpdateActiveBlade()
@@ -1076,3 +1102,4 @@
 #undef RONIN_GLOW_PREP_COLOR
 #undef RONIN_GLOW_SIZE_BOUND
 #undef RONIN_GLOW_SIZE_PREP
+#undef RONIN_COUNTER_COOLDOWN

@@ -1,5 +1,5 @@
-// contractor_contracts/_contractor.dm
-// Include this file from the TAT/domain include list after tat_defines.dm.
+
+
 
 #include "_contractor_defines.dm"
 #include "contractor_helpers.dm"

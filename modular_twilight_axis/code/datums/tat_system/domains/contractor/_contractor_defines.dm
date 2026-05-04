@@ -1,5 +1,5 @@
-/// Contractor contracts module - Twilight Axis linked MVP.
-/// Drop under your modular folder and include _contractor.dm from your .dme.
+
+
 
 #define CONTRACTOR_LEVEL_SLEEPING 0
 #define CONTRACTOR_LEVEL_AWAKENED 1
@@ -7,7 +7,7 @@
 #define CONTRACTOR_LEVEL_WATCHFUL 3
 #define CONTRACTOR_LEVEL_COMPLETE 4
 
-// Backward-compatible aliases used by older module files.
+
 #define CONTRACTOR_LEVEL_LESSER CONTRACTOR_LEVEL_SLEEPING
 #define CONTRACTOR_LEVEL_CONTRACTEE CONTRACTOR_LEVEL_AWAKENED
 #define CONTRACTOR_LEVEL_VELVET CONTRACTOR_LEVEL_AWARE

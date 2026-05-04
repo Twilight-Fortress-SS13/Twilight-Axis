@@ -49,7 +49,7 @@
 	data["phase"] = phase
 	data["status"] = status
 	data["gift_contract"] = gift_contract
-	data["succubus_name"] = contractor?.true_name || contractor?.owner?.real_name || contractor?.owner?.name || "Unknown"
+	data["succubus_name"] = contractor?.owner?.real_name || contractor?.owner?.name || "Unknown"
 	data["contractor_name"] = contractee?.owner?.real_name || contractee?.owner?.name || "Unknown"
 	data["can_edit_bonuses"] = (phase == "contractor_boons" || phase == "succubus_gift_boons")
 	data["can_edit_curses"] = (phase == "succubus_curses")

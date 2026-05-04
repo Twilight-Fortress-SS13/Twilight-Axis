@@ -59,6 +59,8 @@
 	L.finish()
 	qdel(L)
 
+	controller.knot_d?.sync_do_knot_action_state()
+
 /// Finds link datum by UI id.
 /datum/erp_controller_links/proc/find_link(link_id)
 	if(!link_id)

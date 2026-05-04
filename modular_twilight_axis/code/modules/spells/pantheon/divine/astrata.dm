@@ -229,7 +229,7 @@
 	if(revive_pq && !HAS_TRAIT(target, TRAIT_IWASREVIVED) && user?.ckey)
 		adjust_playerquality(revive_pq, user.ckey)
 		ADD_TRAIT(target, TRAIT_IWASREVIVED, "[type]")
-	if(!HAS_TRAIT(target, TRAIT_NOBLE) || !HAS_TRAIT(target, TRAIT_DEFILED_NOBLE) || (target.get_skill_level(associated_skill)) <= 1)
+	if(!HAS_TRAIT(target, TRAIT_NOBLE) && !HAS_TRAIT(target, TRAIT_DEFILED_NOBLE) && (target.get_skill_level(associated_skill)) <= 1)
 		user.add_stress(/datum/stressevent/bad_revive)
 		user.apply_status_effect(/datum/status_effect/debuff/bad_revive)
 		user.adjust_fire_stacks(5)

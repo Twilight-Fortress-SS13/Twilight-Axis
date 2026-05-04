@@ -318,27 +318,26 @@
 
 /datum/status_effect/debuff/erp_overload
 	id = "erp_overload"
-	status_type = STATUS_EFFECT_REFRESH
+	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/erp_overload
 	duration = -1
-	var/stacks = 0
+	effectedstats = list(STATKEY_WIL = -1, STATKEY_INT = -1, STATKEY_PER = -1, STATKEY_CON = -1)
 
-/datum/status_effect/debuff/erp_overload/proc/set_stacks(new_stacks)
-	if(owner && islist(effectedstats))
-		for(var/S in effectedstats)
-			owner.change_stat(S, -(effectedstats[S]))
+	var/stacks = 1
 
-	stacks = clamp(new_stacks, 0, ERP_OVERLOAD_MAX_OP)
-	var/con_bonus = CEILING(stacks / 2, 1)
+/datum/status_effect/debuff/erp_overload/on_apply()
+	sync_effectedstats_from_owner()
+	return ..()
+
+/datum/status_effect/debuff/erp_overload/proc/sync_effectedstats_from_owner()
+	var/datum/component/arousal/A = owner?.GetComponent(/datum/component/arousal)
+	stacks = clamp(A ? A.overload_points : 1, 1, ERP_OVERLOAD_MAX_OP)
 	effectedstats = list(
 		STATKEY_WIL = -stacks,
 		STATKEY_INT = -stacks,
 		STATKEY_PER = -stacks,
-		STATKEY_CON = con_bonus
+		STATKEY_CON = -CEILING(stacks / 2, 1),
 	)
-	if(owner)
-		for(var/S in effectedstats)
-			owner.change_stat(S, effectedstats[S])
 
 /atom/movable/screen/alert/status_effect/debuff/erp_overload
 	name = "Overstimulated"

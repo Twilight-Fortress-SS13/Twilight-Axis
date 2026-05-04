@@ -735,9 +735,12 @@
 	return TRUE
 
 /datum/erp_controller/proc/rebind_owner(atom/new_owner, client/C, mob/living/effect_mob = null)
-	if(C && C != owner_client)
+	if(C)
 		owner_client = C
 		owner?.attach_client(owner_client)
+
+	if(owner && effect_mob)
+		owner.set_effect_mob(effect_mob)
 
 	if(new_owner && !QDELETED(new_owner))
 		if(owner && owner.active_actor != new_owner)
@@ -746,16 +749,33 @@
 
 			var/datum/erp_actor/old_owner = owner
 			actors -= old_owner
+
 			owner = SSerp.create_actor(new_owner, owner_client, effect_mob)
+
 			if(old_owner)
-				qdel(old_owner)
+				SSerp.release_actor(old_owner)
 
 			if(owner)
 				actors += owner
 				if(owner_client)
 					owner.attach_client(owner_client)
+				if(effect_mob)
+					owner.set_effect_mob(effect_mob)
+
+				owner.mark_organs_dirty()
+				owner.rebuild_organs()
+
 				if(owner.can_register_signals())
 					register_actor_signals(owner)
+
+		else if(owner)
+			if(owner_client)
+				owner.attach_client(owner_client)
+			if(effect_mob)
+				owner.set_effect_mob(effect_mob)
+
+			owner.mark_organs_dirty()
+			owner.rebuild_organs()
 
 	var/mob/ui_host = owner?.get_control_mob(owner_client)
 	if(!ui_host || !ui_host.client)

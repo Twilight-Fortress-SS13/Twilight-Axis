@@ -1,6 +1,6 @@
-// Consolidated contractor actions.
 
-// ---- _contractor_action.dm ----
+
+
 /datum/action/cooldown/spell/contractor
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "spell_default"
@@ -51,7 +51,7 @@
 	return TRUE
 
 
-// ---- status.dm ----
+
 /datum/action/cooldown/spell/contractor/status
 	name = "Состояние контрактника"
 	desc = "Показать уровень, devotion, силу Lux, форму и контракты."
@@ -69,7 +69,7 @@
 	return TRUE
 
 
-// ---- drink_lux.dm ----
+
 /datum/action/cooldown/spell/contractor/drink_lux
 	name = "Поглощение"
 	desc = "Поглотить Lux с земли или из живого существа."
@@ -97,7 +97,7 @@
 	return core.try_drink_lux(cast_on)
 
 
-// ---- offer_contract.dm ----
+
 /datum/action/cooldown/spell/contractor/offer_contract
 	name = "Заключить контракт"
 	desc = "Предложить двусторонний контракт цели, тратя накопленную силу Lux."
@@ -123,7 +123,7 @@
 	return core.open_contract(cast_on)
 
 
-// ---- test_level_up.dm ----
+
 /datum/action/cooldown/spell/contractor/test_level_up
 	name = "TEST: Awaken Contractor"
 	desc = "Debug spell: raises contractor level by one step and refreshes unlocked skills. Removes itself at level 4."
@@ -140,7 +140,7 @@
 	return core.test_level_up(owner)
 
 
-// ---- test_pipeline.dm ----
+
 /datum/action/cooldown/spell/contractor/test_pipeline
 	name = "TEST: Self Contract Pipeline"
 	desc = "Debug spell: self-kiss, generate Lux from yourself, apply the drink debuff, and run the full contract pipeline on yourself."
@@ -159,7 +159,7 @@
 	return core.test_self_contract_pipeline(owner)
 
 
-// ---- return_to_summon.dm ----
+
 /datum/action/cooldown/spell/contractor/return_to_summon
 	name = "Вернуться"
 	desc = "Вернуться туда, где контрактник согласилась на призыв."
@@ -174,7 +174,7 @@
 	return core?.return_to_summon_origin()
 
 
-// ---- change_form.dm ----
+
 /datum/action/cooldown/spell/contractor/change_form
 	name = "Смена формы"
 	desc = "Переключиться между оболочкой и истинной формой."
@@ -197,7 +197,7 @@
 	return success
 
 
-// ---- evasion.dm ----
+
 /datum/action/cooldown/spell/contractor/evasion
 	name = "Уклонение"
 	desc = "На короткое время усиливает уклонения; при атаке телепортирует за спину атакующего."
@@ -217,7 +217,7 @@
 	return success
 
 
-// ---- exchange.dm ----
+
 /datum/action/cooldown/spell/contractor/exchange
 	name = "Обмен"
 	desc = "На короткое время усиливает парирования; при атаке меняется местами с атакующим."
@@ -237,7 +237,7 @@
 	return success
 
 
-// ---- invisibility.dm ----
+
 /datum/action/cooldown/spell/contractor/invisibility
 	name = "Невидимость"
 	desc = "Стать невидимой на короткое время. Атака должна прервать эффект."
@@ -257,7 +257,7 @@
 	return success
 
 
-// ---- gift_contractee.dm ----
+
 /datum/action/cooldown/spell/contractor/gift_contractee
 	name = "Подготовка дара"
 	desc = "Открыть/изменить контракт полностью подчинённого контрактника."
@@ -288,7 +288,7 @@
 	return success
 
 
-// ---- body_change.dm ----
+
 /datum/action/cooldown/spell/contractor/body_change
 	name = "Изменение тела"
 	desc = "Изменить тело цели через контрактную силу."
@@ -317,7 +317,7 @@
 	return success
 
 
-// ---- contract_body_mark.dm ----
+
 /datum/action/cooldown/spell/contractor/body_mark_contract
 	name = "Body Mark"
 	desc = "Temporary contract price: reshape the marked contractee."
@@ -353,7 +353,7 @@
 	return core?.alter_body(mark_target)
 
 
-// ---- incorporeal.dm ----
+
 /datum/action/cooldown/spell/contractor/incorporeal
 	name = "Бестелесность"
 	desc = "На короткое время пройти сквозь препятствия и игнорировать немагический урон."
@@ -373,7 +373,7 @@
 	return success
 
 
-// ---- paralytic_embrace.dm ----
+
 /datum/action/cooldown/spell/contractor/paralytic_embrace
 	name = "Сплетение"
 	desc = "Сковать себя и цель станом до отмены повторным применением."

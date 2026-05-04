@@ -1,6 +1,6 @@
-// Contractor true-form ERP training bridge.
-// This intentionally replaces the old Temptress training hook when Temptress is removed.
-// Only /datum/component/contractor/entity can teach through ERP links.
+
+
+
 
 GLOBAL_LIST_INIT(contractor_erp_training_map, list(
 	/datum/skill/labor/farming = list("action" = /datum/erp_action/other/hands/milking_breasts, "passive" = "contractor"),
