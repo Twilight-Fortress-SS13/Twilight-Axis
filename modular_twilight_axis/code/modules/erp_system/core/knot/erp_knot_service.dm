@@ -137,6 +137,7 @@
 
 	var/datum/erp_sex_organ/penis/P = controller.get_owner_penis_organ()
 	if(!P || !P.have_knot)
+		controller.do_knot_action = FALSE
 		controller.ui?.request_update()
 		return FALSE
 
@@ -145,6 +146,11 @@
 		new_state = !controller.do_knot_action
 	else
 		new_state = value ? TRUE : FALSE
+
+	if(new_state && !has_knot_capable_link_for_owner_penis())
+		controller.do_knot_action = FALSE
+		controller.ui?.request_update()
+		return FALSE
 
 	controller.do_knot_action = new_state
 	controller.ui?.request_update()
@@ -251,3 +257,62 @@
 			return TRUE
 
 	return FALSE
+
+/datum/erp_knot_service/proc/has_knot_capable_link_for_owner_penis()
+	if(!controller || QDELETED(controller))
+		return FALSE
+
+	var/datum/erp_sex_organ/penis/P = controller.get_owner_penis_organ()
+	if(!P || !P.have_knot)
+		return FALSE
+
+	if(!controller.links || !controller.links.len)
+		return FALSE
+
+	for(var/datum/erp_sex_link/L in controller.links)
+		if(!L || QDELETED(L) || !L.is_valid())
+			continue
+
+		if(L.actor_active != controller.owner)
+			continue
+
+		if(L.init_organ != P)
+			continue
+
+		if(!L.action)
+			continue
+
+		if(L.action.has_action_tag("testicles"))
+			continue
+
+		if(L.action.has_action_tag("inject_outside_only"))
+			continue
+
+		var/datum/erp_sex_organ/other = L.target_organ
+		if(!other || QDELETED(other))
+			continue
+
+		if(!(other.erp_organ_type in list(
+			SEX_ORGAN_VAGINA,
+			SEX_ORGAN_ANUS,
+			SEX_ORGAN_MOUTH
+		)))
+			continue
+
+		return TRUE
+
+	return FALSE
+
+/datum/erp_knot_service/proc/sync_do_knot_action_state()
+	if(!controller || QDELETED(controller))
+		return FALSE
+
+	if(!controller.do_knot_action)
+		return FALSE
+
+	if(has_knot_capable_link_for_owner_penis())
+		return FALSE
+
+	controller.do_knot_action = FALSE
+	controller.ui?.request_update()
+	return TRUE
