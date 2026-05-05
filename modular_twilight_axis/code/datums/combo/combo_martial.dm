@@ -225,19 +225,15 @@
 	if(W)
 		return 0
 
-	if(!isliving(target_atom))
-		return 0
-
 	var/skill_id = forced_skill_id || ResolveAttackInput(target_atom, W)
 	if(!IsBaseInput(skill_id))
 		return 0
 
-	var/mob/living/target = target_atom
-	if(!target || target.stat == DEAD)
+	
+	if(!isliving(target_atom) && skill_id != MARTIAL_MASTER_INPUT_GRAB)
 		return 0
 
-	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target, zone)
-
+	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target_atom, zone)
 	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
 		return 0
 
@@ -258,6 +254,9 @@
 			last_finisher_success = FALSE
 			last_matched_rule = null
 			return
+
+	else if(skill_id == MARTIAL_MASTER_INPUT_KICK)
+		
 	else
 		var/dmg = CalcPureDamage()
 		if(!AttackViaPipeline(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
