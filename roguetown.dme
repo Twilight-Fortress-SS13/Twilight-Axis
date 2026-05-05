@@ -3823,7 +3823,6 @@
 #include "modular_twilight_axis\code\modules\roguetown\structures\onager_unfinished.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\runes.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\newspell.dm"
-#include "modular_twilight_axis\code\modules\spell\spell_types\wizard\battlewardry\battle_ward.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\invoked_aoe\magicshield.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\invoked_aoe\meteor.dm"
 #include "modular_twilight_axis\code\modules\spell\spell_types\wizard\invoked_aoe\rotting_cloud.dm"
