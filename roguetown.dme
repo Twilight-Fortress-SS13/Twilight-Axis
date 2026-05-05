@@ -3913,5 +3913,4 @@
 #include "modular_twilight_axis\lore\code\tips\time.dm"
 #include "modular_twilight_axis\modular\Neu_food\code\cookware\cup.dm"
 #include "modular_twilight_axis\code\datums\flaws\gefheretic.dm"
-#include "modular_twilight_axis\code\modules\spell\spell_types\wizard\battlewardry\battle_ward.dm"
 // END_INCLUDE
