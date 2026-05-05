@@ -130,12 +130,19 @@
 
 /datum/advclass/tat_class/adventurer
 	name = "Pliant Adventurer"
-	tutorial = "A custom-built wanderer, outlaw, outlander, or dangerous free soul. This path is for TAT builds with Wanted or Outlander."
+	tutorial = "A custom-built wanderer-outlander, or dangerous free soul. This path is for TAT builds with Outlander."
 
 	class_select_category = CLASS_CAT_NOMAD
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	required_tat_bucket = TAT_ROLE_BUCKET_ADVENTURER
 
+/datum/advclass/tat_class/wretch
+	name = "Pliant Wretch"
+	tutorial = "A custom-built outlaw, a nightmare free soul. This path is for TAT builds with Wanted."
+
+	class_select_category = CLASS_CAT_NOMAD
+	category_tags = list(CTAG_WRETCH)
+	required_tat_bucket = TAT_ROLE_BUCKET_WRETCH
 
 /datum/outfit/job/roguetown/tat_class
 	name = "Pliant Soul"

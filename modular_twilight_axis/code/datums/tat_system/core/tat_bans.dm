@@ -11,6 +11,7 @@
 	names[TAT_ROLE_BUCKET_TOWNER] = "Towner"
 	names[TAT_ROLE_BUCKET_TRADER] = "Trader"
 	names[TAT_ROLE_BUCKET_ADVENTURER] = "Adventurer"
+	names[TAT_ROLE_BUCKET_WRETCH] = "Wretch"
 	return names
 
 /proc/tat_is_valid_role_bucket(bucket)
@@ -30,6 +31,8 @@
 			return TAT_SQL_ROLE_TRADER
 		if(TAT_ROLE_BUCKET_ADVENTURER)
 			return TAT_SQL_ROLE_ADVENTURER
+		if(TAT_ROLE_BUCKET_WRETCH)
+			return TAT_SQL_ROLE_WRETCH
 	return null
 
 /proc/tat_ban_role_to_role_bucket(role)
@@ -40,10 +43,12 @@
 			return TAT_ROLE_BUCKET_TRADER
 		if(TAT_SQL_ROLE_ADVENTURER)
 			return TAT_ROLE_BUCKET_ADVENTURER
+		if(TAT_SQL_ROLE_WRETCH)
+			return TAT_ROLE_BUCKET_WRETCH
 	return null
 
 /proc/tat_all_sql_role_locks()
-	return list(TAT_SQL_ROLE_TOWNER, TAT_SQL_ROLE_TRADER, TAT_SQL_ROLE_ADVENTURER)
+	return list(TAT_SQL_ROLE_TOWNER, TAT_SQL_ROLE_TRADER, TAT_SQL_ROLE_ADVENTURER, TAT_SQL_ROLE_WRETCH)
 
 /proc/tat_is_ckey_banned(raw_key)
 	var/key = tat_normalize_ckey(raw_key)

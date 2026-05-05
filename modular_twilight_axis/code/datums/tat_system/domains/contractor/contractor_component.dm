@@ -30,6 +30,7 @@
 	var/tmp/last_embrace_pulse = 0
 	var/tmp/last_embrace_gain = 0
 	var/allow_erp_training = FALSE
+	var/tmp/entity_erp_training_enabled = FALSE
 	var/tmp/last_return_turf
 	var/tmp/return_action_expires_at = 0
 	var/tmp/evasion_active = FALSE
@@ -61,7 +62,7 @@
 	next_devotion_drain = world.time + 1 MINUTES
 	next_seal_decay = world.time + CONTRACTOR_SEAL_DECAY_INTERVAL
 	START_PROCESSING(SSprocessing, src)
-	if(!istype(owner, /mob/living/carbon/human/species/wildshape/contractor_trueform))
+	if(!istype(owner, /mob/living/carbon/human/species/wildshape/contractor_trueform) && !is_entity_subclass())
 		prompt_true_type()
 	grant_contractor_actions()
 	addtimer(CALLBACK(src, PROC_REF(grant_contractor_actions)), 1 SECONDS)
@@ -94,21 +95,25 @@
 	if(true_form_suspended)
 		return
 
-	if(world.time >= next_devotion_drain)
-		handle_devotion_decay()
-		next_devotion_drain = world.time + 1 MINUTES
+	if(!is_entity_subclass())
+		if(world.time >= next_devotion_drain)
+			handle_devotion_decay()
+			next_devotion_drain = world.time + 1 MINUTES
 
-	if(world.time >= next_seal_decay)
-		handle_seal_decay()
-		next_seal_decay = world.time + CONTRACTOR_SEAL_DECAY_INTERVAL
+		if(world.time >= next_seal_decay)
+			handle_seal_decay()
+			next_seal_decay = world.time + CONTRACTOR_SEAL_DECAY_INTERVAL
 
-	apply_hunger_penalties()
+		apply_hunger_penalties()
 	if(invisibility_active)
 		refresh_invisibility()
 	if(last_return_turf && return_action_expires_at && world.time >= return_action_expires_at)
 		clear_return_to_summon(TRUE)
 	process_true_form_embrace()
 	grant_contractor_actions()
+
+/datum/component/contractor/proc/is_entity_subclass()
+	return istype(src, /datum/component/contractor/entity)
 
 /datum/component/contractor/proc/ensure_contractor_devotion()
 	if(!owner)
@@ -201,6 +206,8 @@
 		if(feedback && user)
 			to_chat(user, span_warning("Your contractor nature is not awake enough for this."))
 		return FALSE
+	if(is_entity_subclass())
+		return TRUE
 	
 	
 	
@@ -219,6 +226,8 @@
 /datum/component/contractor/proc/grant_contractor_actions()
 	if(!owner?.mind)
 		return FALSE
+	if(is_entity_subclass())
+		return grant_entity_actions()
 	var/list/spells = list(
 		/datum/action/cooldown/spell/contractor/status,
 		/datum/action/cooldown/spell/contractor/drink_lux,
@@ -630,6 +639,7 @@
 	target.last_return_turf = last_return_turf
 	target.return_action_expires_at = return_action_expires_at
 	target.allow_erp_training = allow_erp_training
+	target.entity_erp_training_enabled = entity_erp_training_enabled
 	target.contracts = contracts.Copy()
 	target.contractees = contractees.Copy()
 	target.imprinted_targets = imprinted_targets.Copy()
@@ -760,16 +770,23 @@
 	return span_warning("There is something witchlike and wrong beneath [owner.p_their()] mortal shell.")
 
 /datum/component/contractor/proc/can_true_form_examine_embrace()
+	if(is_entity_subclass())
+		return FALSE
 	return is_true_form_active() && level >= CONTRACTOR_LEVEL_WATCHFUL
 
 /datum/component/contractor/proc/can_true_form_pulse_embrace()
+	if(is_entity_subclass())
+		return FALSE
 	return is_true_form_active() && level >= CONTRACTOR_LEVEL_COMPLETE
 
 /datum/component/contractor/proc/can_contractor_train_erp()
+	if(is_entity_subclass())
+		return allow_erp_training && entity_erp_training_enabled
 	return allow_erp_training && is_true_form_active()
 
 /datum/component/contractor/proc/update_true_form_embrace_trait()
-	if(!owner)
+	if(!owner || is_entity_subclass())
+		clear_true_form_embrace_trait()
 		return FALSE
 	if(is_true_form_active() && level >= CONTRACTOR_LEVEL_WATCHFUL)
 		if(!true_form_embrace_trait_applied)
@@ -837,6 +854,83 @@
 
 /datum/component/contractor/entity
 	allow_erp_training = TRUE
+	entity_erp_training_enabled = FALSE
+
+/datum/component/contractor/entity/ensure_contractor_devotion()
+	return FALSE
+
+/datum/component/contractor/entity/get_devotion_datum()
+	return null
+
+/datum/component/contractor/entity/get_devotion()
+	return CONTRACTOR_DEFAULT_MAX_DEVOTION
+
+/datum/component/contractor/entity/adjust_devotion(amount, silent = TRUE)
+	return TRUE
+
+/datum/component/contractor/entity/fill_devotion(silent = TRUE)
+	return TRUE
+
+/datum/component/contractor/entity/pay_ability_cost(required_level)
+	return TRUE
+
+/datum/component/contractor/entity/handle_devotion_decay()
+	return FALSE
+
+/datum/component/contractor/entity/apply_hunger_penalties()
+	return FALSE
+
+/datum/component/contractor/entity/handle_seal_decay()
+	return FALSE
+
+/datum/component/contractor/entity/is_inside_active_seal()
+	return FALSE
+
+/datum/component/contractor/entity/get_or_create_contractee(mob/living/carbon/human/target)
+	return null
+
+/datum/component/contractor/entity/try_drink_lux(atom/target)
+	return FALSE
+
+/datum/component/contractor/entity/try_drink_loose_lux(atom/target)
+	return FALSE
+
+/datum/component/contractor/entity/try_drink_mob_lux(mob/living/carbon/human/target)
+	return FALSE
+
+/datum/component/contractor/entity/test_self_contract_pipeline(mob/user)
+	return FALSE
+
+/datum/component/contractor/entity/open_contract(mob/living/carbon/human/target)
+	return FALSE
+
+/datum/component/contractor/entity/prepare_gift(mob/living/carbon/human/target)
+	return FALSE
+
+/datum/component/contractor/proc/grant_entity_actions()
+	if(!owner?.mind)
+		return FALSE
+	var/list/remove_spells = list(
+		/datum/action/cooldown/spell/contractor/status,
+		/datum/action/cooldown/spell/contractor/drink_lux,
+		/datum/action/cooldown/spell/contractor/offer_contract,
+		/datum/action/cooldown/spell/contractor/test_pipeline,
+		/datum/action/cooldown/spell/contractor/test_level_up,
+		/datum/action/cooldown/spell/contractor/return_to_summon,
+		/datum/action/cooldown/spell/contractor/change_form,
+		/datum/action/cooldown/spell/contractor/evasion,
+		/datum/action/cooldown/spell/contractor/exchange,
+		/datum/action/cooldown/spell/contractor/invisibility,
+		/datum/action/cooldown/spell/contractor/gift_contractee,
+		/datum/action/cooldown/spell/contractor/body_change,
+		/datum/action/cooldown/spell/contractor/incorporeal,
+		/datum/action/cooldown/spell/contractor/paralytic_embrace,
+	)
+	for(var/spell_type in remove_spells)
+		contractor_remove_mind_spell(owner, spell_type)
+	contractor_grant_mind_spell_if_missing(owner, /datum/action/cooldown/spell/contractor/entity_training_toggle)
+	contractor_grant_mind_spell_if_missing(owner, /datum/action/cooldown/spell/contractor/entity_body_change)
+	return TRUE
 
 /datum/component/contractor/proc/show_status(mob/user)
 	if(!user)
@@ -1237,3 +1331,14 @@
 /datum/devotion/contractor/proc/fill_contractor_devotion(silent = TRUE)
 	set_contractor_devotion(max_devotion, silent)
 
+
+
+
+/datum/component/contractor/entity/accept_summon(mob/living/carbon/human/summoner, obj/item/offering)
+	return FALSE
+
+/datum/component/contractor/entity/set_summon_return_point(turf/origin, duration = CONTRACTOR_RETURN_TO_SUMMON_DURATION)
+	return FALSE
+
+/datum/component/contractor/entity/return_to_summon_origin()
+	return FALSE

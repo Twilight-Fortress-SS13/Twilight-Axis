@@ -127,6 +127,8 @@
 /datum/tat_traits/proc/can_select_trait(trait_id)
 	if(!check_trait(trait_id))
 		return FALSE
+	if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && owner_build?.get_owner_ckey() != "mrix")
+		return FALSE
 	var/pq_minimum = get_pq_lock_minimum(trait_id)
 	if(pq_minimum > 0 && (owner_build?.get_owner_playerquality() || 0) < pq_minimum)
 		return FALSE
@@ -850,6 +852,8 @@
 	apply_witch_base_package(H)
 	if(has_trait(TAT_TRAIT_SUCCUBUS))
 		H.LoadComponent(/datum/component/contractor, 0)
+	if(has_trait(TAT_TRAIT_CONTRACTOR_ENTITY))
+		H.LoadComponent(/datum/component/contractor/entity, 4)
 	return TRUE
 
 /datum/tat_traits/proc/apply_deferred_to_human(mob/living/carbon/human/H)

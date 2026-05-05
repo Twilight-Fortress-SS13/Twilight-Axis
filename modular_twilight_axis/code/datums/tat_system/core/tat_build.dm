@@ -778,7 +778,10 @@
 	if(traits?.has_trait(TAT_TRAIT_RESIDENT))
 		return TAT_ROLE_BUCKET_TOWNER
 
-	if(traits?.has_trait(TAT_TRAIT_WANTED) || traits?.has_trait(TRAIT_OUTLANDER))
+	if(traits?.has_trait(TRAIT_OUTLANDER))
 		return TAT_ROLE_BUCKET_ADVENTURER
+
+	if(traits?.has_trait(TAT_TRAIT_WANTED))
+		return TAT_ROLE_BUCKET_WRETCH
 
 	return TAT_ROLE_BUCKET_TRADER

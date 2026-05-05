@@ -16,10 +16,12 @@
 #define TAT_ROLE_BUCKET_TOWNER "towner"
 #define TAT_ROLE_BUCKET_TRADER "trader"
 #define TAT_ROLE_BUCKET_ADVENTURER "adventurer"
+#define TAT_ROLE_BUCKET_WRETCH "wretch"
 
 #define TAT_SQL_ROLE_TOWNER "TAT Towner"
 #define TAT_SQL_ROLE_TRADER "TAT Trader"
 #define TAT_SQL_ROLE_ADVENTURER "TAT Adventurer"
+#define TAT_SQL_ROLE_WRETCH "TAT Wretch"
 #define TAT_SQL_ROLE_SYSTEM "TAT System"
 
 #define TAT_BAN_DEFAULT_REASON "TAT system access revoked."

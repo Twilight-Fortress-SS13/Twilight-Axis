@@ -50,8 +50,6 @@
 	core.adjust_devotion(CONTRACTOR_ABILITY_DEVOTION_COST, TRUE)
 	return TRUE
 
-
-
 /datum/action/cooldown/spell/contractor/status
 	name = "Состояние контрактника"
 	desc = "Показать уровень, devotion, силу Lux, форму и контракты."
@@ -67,8 +65,6 @@
 		return FALSE
 	core.show_status(owner)
 	return TRUE
-
-
 
 /datum/action/cooldown/spell/contractor/drink_lux
 	name = "Поглощение"
@@ -96,8 +92,6 @@
 		return FALSE
 	return core.try_drink_lux(cast_on)
 
-
-
 /datum/action/cooldown/spell/contractor/offer_contract
 	name = "Заключить контракт"
 	desc = "Предложить двусторонний контракт цели, тратя накопленную силу Lux."
@@ -122,8 +116,6 @@
 		return FALSE
 	return core.open_contract(cast_on)
 
-
-
 /datum/action/cooldown/spell/contractor/test_level_up
 	name = "TEST: Awaken Contractor"
 	desc = "Debug spell: raises contractor level by one step and refreshes unlocked skills. Removes itself at level 4."
@@ -138,8 +130,6 @@
 	if(!core)
 		return FALSE
 	return core.test_level_up(owner)
-
-
 
 /datum/action/cooldown/spell/contractor/test_pipeline
 	name = "TEST: Self Contract Pipeline"
@@ -158,8 +148,6 @@
 		return FALSE
 	return core.test_self_contract_pipeline(owner)
 
-
-
 /datum/action/cooldown/spell/contractor/return_to_summon
 	name = "Вернуться"
 	desc = "Вернуться туда, где контрактник согласилась на призыв."
@@ -172,8 +160,6 @@
 	. = ..()
 	var/datum/component/contractor/core = get_core()
 	return core?.return_to_summon_origin()
-
-
 
 /datum/action/cooldown/spell/contractor/change_form
 	name = "Смена формы"
@@ -196,8 +182,6 @@
 		refund_contractor_cost()
 	return success
 
-
-
 /datum/action/cooldown/spell/contractor/evasion
 	name = "Уклонение"
 	desc = "На короткое время усиливает уклонения; при атаке телепортирует за спину атакующего."
@@ -215,8 +199,6 @@
 	if(!success)
 		refund_contractor_cost()
 	return success
-
-
 
 /datum/action/cooldown/spell/contractor/exchange
 	name = "Обмен"
@@ -236,8 +218,6 @@
 		refund_contractor_cost()
 	return success
 
-
-
 /datum/action/cooldown/spell/contractor/invisibility
 	name = "Невидимость"
 	desc = "Стать невидимой на короткое время. Атака должна прервать эффект."
@@ -255,8 +235,6 @@
 	if(!success)
 		refund_contractor_cost()
 	return success
-
-
 
 /datum/action/cooldown/spell/contractor/gift_contractee
 	name = "Подготовка дара"
@@ -287,8 +265,6 @@
 		refund_contractor_cost()
 	return success
 
-
-
 /datum/action/cooldown/spell/contractor/body_change
 	name = "Изменение тела"
 	desc = "Изменить тело цели через контрактную силу."
@@ -315,8 +291,6 @@
 	if(!success)
 		refund_contractor_cost()
 	return success
-
-
 
 /datum/action/cooldown/spell/contractor/body_mark_contract
 	name = "Body Mark"
@@ -352,8 +326,6 @@
 	var/datum/component/contractor/core = get_core()
 	return core?.alter_body(mark_target)
 
-
-
 /datum/action/cooldown/spell/contractor/incorporeal
 	name = "Бестелесность"
 	desc = "На короткое время пройти сквозь препятствия и игнорировать немагический урон."
@@ -371,8 +343,6 @@
 	if(!success)
 		refund_contractor_cost()
 	return success
-
-
 
 /datum/action/cooldown/spell/contractor/paralytic_embrace
 	name = "Сплетение"
@@ -405,4 +375,114 @@
 		refund_contractor_cost()
 	return success
 
+/datum/action/cooldown/spell/contractor/entity_training_toggle
+	name = "Share pleasure"
+	desc = "Toggle Tempress training."
+	button_icon_state = "spell_default"
+	cooldown_time = 5 SECONDS
+	required_contractor_level = CONTRACTOR_LEVEL_SLEEPING
+	devotion_cost_on_success = FALSE
 
+/datum/action/cooldown/spell/contractor/entity_training_toggle/cast(atom/cast_on)
+	. = ..()
+	var/datum/component/contractor/entity/core = get_core()
+	if(!istype(core, /datum/component/contractor/entity))
+		return FALSE
+
+
+	core.entity_erp_training_enabled = !core.entity_erp_training_enabled
+	core.set_body_empowered(core.entity_erp_training_enabled)
+	return TRUE
+
+/datum/action/cooldown/spell/contractor/entity_body_change
+	name = "Shape Body"
+	desc = "Change your own or another nearby body."
+	button_icon_state = "spell_default"
+	cooldown_time = 5 SECONDS
+	click_to_activate = TRUE
+	self_cast_possible = TRUE
+	cast_range = 1
+	aim_assist = TRUE
+	required_contractor_level = CONTRACTOR_LEVEL_SLEEPING
+	devotion_cost_on_success = FALSE
+
+/datum/action/cooldown/spell/contractor/entity_body_change/is_valid_target(atom/cast_on)
+	if(!..())
+		return FALSE
+	return ishuman(cast_on)
+
+/datum/action/cooldown/spell/contractor/entity_body_change/cast(atom/cast_on)
+	. = ..()
+	var/datum/component/contractor/core = get_core()
+	if(!istype(core, /datum/component/contractor/entity))
+		return FALSE
+	return core.alter_body(cast_on)
+
+/datum/action/cooldown/spell/contractor/entity_training_toggle/cast(atom/cast_on)
+	. = ..()
+	
+	return TRUE
+
+#define TEMPRESS_BODY_POWER_TRAIT_SOURCE "tempress_body_power"
+#define TEMPRESS_BODY_POWER_PUNCH_DAMAGE 100
+
+/datum/component/contractor/entity/proc/set_body_empowered(enabled)
+	var/mob/living/L = parent
+	if(!isliving(L))
+		return
+
+	if(entity_erp_training_enabled)
+		ADD_TRAIT(L, TRAIT_STRONGKICK, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
+		RegisterSignal(L, COMSIG_ATTACK_TRY_CONSUME, PROC_REF(on_body_power_unarmed_hit))
+		to_chat(L, span_notice("You feel power inside you."))
+	else
+		REMOVE_TRAIT(L, TRAIT_STRONGKICK, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
+		UnregisterSignal(L, COMSIG_ATTACK_TRY_CONSUME)
+		to_chat(L, span_notice("Your body returns to normal."))
+
+/datum/component/contractor/entity/proc/on_body_power_unarmed_hit(datum/source, mob/living/target, zone)
+	SIGNAL_HANDLER
+
+	if(!entity_erp_training_enabled)
+		return
+	if(!isliving(target))
+		return
+	if(target.stat == DEAD)
+		return
+
+	INVOKE_ASYNC(src, PROC_REF(apply_body_power_punch_damage_async), target, zone)
+
+/datum/component/contractor/entity/proc/apply_body_power_punch_damage_async(mob/living/target, zone)
+	if(!entity_erp_training_enabled)
+		return
+	if(!isliving(target))
+		return
+	if(target.stat == DEAD)
+		return
+
+	apply_body_power_punch_damage(target, zone)
+
+/datum/component/contractor/entity/proc/apply_body_power_punch_damage(mob/living/target, zone)
+	var/mob/living/L = parent
+	if(!isliving(L))
+		return FALSE
+
+	if(iscarbon(target))
+		var/mob/living/carbon/C = target
+		var/obj/item/bodypart/affecting = C.get_bodypart(check_zone(zone) || BODY_ZONE_CHEST)
+		if(!affecting)
+			return FALSE
+
+		C.apply_damage(TEMPRESS_BODY_POWER_PUNCH_DAMAGE, BRUTE, affecting, 0)
+	else
+		target.apply_damage(TEMPRESS_BODY_POWER_PUNCH_DAMAGE, BRUTE)
+
+	target.visible_message(
+		span_danger("[L]'s empowered strike drives force straight into [target]'s body!"),
+		span_userdanger("The empowered strike drives force straight through your body!")
+	)
+
+	return TRUE
+
+#undef TEMPRESS_BODY_POWER_TRAIT_SOURCE
+#undef TEMPRESS_BODY_POWER_PUNCH_DAMAGE
