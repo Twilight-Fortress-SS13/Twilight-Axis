@@ -216,6 +216,9 @@
 	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && skill_type == /datum/skill/magic/arcane)
 		total += 1
 
+	if(has_trait(TAT_TRAIT_SADDLEBORN) && skill_type == /datum/skill/misc/riding)
+		total += 1
+
 	if(has_trait(TAT_TRAIT_DIVINE_INITIATE) && skill_type == /datum/skill/magic/holy)
 		total += 1
 
@@ -867,6 +870,10 @@
 		apply_spellblade_specialization_package(H)
 	if(has_trait(TAT_TRAIT_WANTED))
 		wretch_select_bounty(H)
+	if(has_trait(TAT_TRAIT_SADDLEBORN))
+		if(!H.HasSpell(/obj/effect/proc_holder/spell/self/choose_riding_virtue_mount))
+			H.AddSpell(new /obj/effect/proc_holder/spell/self/choose_riding_virtue_mount)
+		ADD_TRAIT(H, TRAIT_EQUESTRIAN, TAT_TRAIT_SOURCE)
 	apply_witch_shapeshift_package(H)
 	apply_pliant_rename(H)
 	return TRUE

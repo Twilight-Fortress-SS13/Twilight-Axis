@@ -10,6 +10,7 @@
 #define TAT_TRAIT_SAVAGE_RAGE "tat_savage_rage"
 #define TAT_TRAIT_BERSERKER_RAGE "tat_berserker_rage"
 #define TAT_TRAIT_TRADER_LICENSE "tat_trader_license"
+#define TAT_TRAIT_SADDLEBORN "tat_saddleborn"
 
 #define TAT_TRAIT_STEEL_SUPPLIER "tat_steel_supplier"
 #define TAT_TRAIT_SILVER_SUPPLIER "tat_silver_supplier"
@@ -116,7 +117,8 @@
 	TRAIT_SELF_SUSTENANCE = list(/datum/skill/craft/crafting = 3, /datum/skill/craft/weaponsmithing = 3, /datum/skill/craft/armorsmithing = 3, /datum/skill/craft/blacksmithing = 3, /datum/skill/craft/smelting = 3, /datum/skill/craft/carpentry = 3, /datum/skill/craft/masonry = 3, /datum/skill/craft/traps = 3, /datum/skill/craft/engineering = 3, /datum/skill/craft/cooking = 3, /datum/skill/craft/sewing = 3, /datum/skill/craft/tanning = 3, /datum/skill/craft/ceramics = 3, /datum/skill/craft/alchemy = 3, /datum/skill/labor/farming = 3, /datum/skill/labor/mining = 3, /datum/skill/labor/fishing = 3, /datum/skill/labor/butchering = 3, /datum/skill/labor/lumberjacking = 3), \
 	TRAIT_MASTERFUL_HUNTER = list(/datum/skill/misc/hunting = 6, /datum/skill/misc/tracking = 6, /datum/skill/labor/butchering = 6), \
 	TRAIT_EXPERT_HUNTER = list(/datum/skill/misc/hunting = 5, /datum/skill/misc/tracking = 5), \
-	TRAIT_FIREARMS_MARKSMAN = list(/datum/skill/combat/twilight_firearms = 4) \
+	TRAIT_FIREARMS_MARKSMAN = list(/datum/skill/combat/twilight_firearms = 4), \
+	TAT_TRAIT_SADDLEBORN = list(/datum/skill/misc/riding = 6), \
 )
 
 GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULES)
@@ -302,6 +304,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_SEEDKNOW = TAT_TRAIT_ENTRY("Seed Knower", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know which seeds grow which crops."), \
 	TRAIT_CAUTIOUS_FISHER = TAT_TRAIT_ENTRY("Cautious Fisher", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know the dangers of fishing and how to avoid unwanted attention from the depths."), \
 	TRAIT_SQUIRE_REPAIR = TAT_TRAIT_ENTRY("Squire Knowledge", 15, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You can restore gear with time and polish it until it gleams like new."), \
+	TAT_TRAIT_SADDLEBORN = TAT_TRAIT_ENTRY("Saddleborn", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can select and mount a specific mount."), \
 	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know watering holes, feeding grounds and bent thickets."), \
 	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know the common signs of prey and trails."), \
 	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Your feet walks a lot roads. Gives you +9 points in wandering skill tree."), \
