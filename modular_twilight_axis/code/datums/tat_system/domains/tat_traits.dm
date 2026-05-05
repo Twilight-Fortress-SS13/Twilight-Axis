@@ -816,7 +816,6 @@
 		apply_spellblade_base_package(H)
 	if(has_trait(TAT_TRAIT_SOUNDBREAKER))
 		H.LoadComponent(/datum/component/combo_core/soundbreaker)
-		H.mind?.special_items["Soundbreaker codex"] = /obj/item/book/rogue/soundbreaker_codex
 	if(has_trait(TAT_TRAIT_MARTIAL_MASTER))
 		H.LoadComponent(/datum/component/combo_core/martial_master)
 	if(has_trait(TAT_TRAIT_TROPHY_BOUNTY))
@@ -824,7 +823,6 @@
 		H.mind?.special_items["Trophy diary"] = /obj/item/book/rogue/trophy_rules
 	if(has_trait(TAT_TRAIT_RONIN))
 		H.LoadComponent(/datum/component/combo_core/ronin)
-		H.mind?.special_items["Ronin codex"] = /obj/item/book/rogue/ronin_codex
 	if(has_trait(TRAIT_RITUALIST))
 		H.mind?.special_items["Ritual chalk"] = /obj/item/ritechalk
 	if(has_trait(TAT_TRAIT_MAGE_INITIATE))

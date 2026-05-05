@@ -114,7 +114,6 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/basiceast
 	backpack_contents = list(
 		/obj/item/recipe_book/survival = 1,
-		/obj/item/book/rogue/ronin_codex = 1,
 		/obj/item/flashlight/flare/torch/lantern,
 		)
 	H.set_blindness(0)

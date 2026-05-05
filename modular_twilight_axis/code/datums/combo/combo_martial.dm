@@ -1,7 +1,7 @@
 #define MARTIAL_MASTER_COMBO_WINDOW            (7 SECONDS)
 #define MARTIAL_MASTER_MAX_HISTORY             6
-#define MARTIAL_MASTER_MAX_AROUSAL_STACKS      10
-#define MARTIAL_MASTER_AROUSAL_DMG_PER_STACK   0.05
+#define MARTIAL_MASTER_MAX_STACKS		      	10
+#define MARTIAL_MASTER_DMG_PER_STACK   0.05
 #define MARTIAL_MASTER_KICK_MIN_RECOVERY       (0.5 SECONDS)
 
 #define MARTIAL_MASTER_INPUT_PUNCH             1
@@ -45,8 +45,8 @@
 
 	var/current_stance = MARTIAL_MASTER_STANCE_PROC
 
-	var/arousal_stacks = 0
-	var/max_arousal_stacks = MARTIAL_MASTER_MAX_AROUSAL_STACKS
+	var/stacks = 0
+	var/max_stacks = MARTIAL_MASTER_MAX_STACKS
 
 	var/last_action_success = FALSE
 	var/last_action_skill = 0
@@ -1299,19 +1299,19 @@
 	if(amount <= 0)
 		return
 
-	arousal_stacks = clamp(arousal_stacks + amount, 0, max_arousal_stacks)
+	stacks = clamp(stacks + amount, 0, max_stacks)
 
 /datum/component/combo_core/martial_master/proc/SpendArousalStack(amount = 1)
 	if(amount <= 0)
 		return
-	if(arousal_stacks <= 0)
+	if(stacks <= 0)
 		return
 
-	arousal_stacks = clamp(arousal_stacks - amount, 0, max_arousal_stacks)
+	stacks = clamp(stacks - amount, 0, max_stacks)
 
 /datum/component/combo_core/martial_master/proc/GetComboDamageMultiplier()
 	var/mult = 1
-	mult += (arousal_stacks * MARTIAL_MASTER_AROUSAL_DMG_PER_STACK)
+	mult += (stacks * MARTIAL_MASTER_DMG_PER_STACK)
 	return max(1, mult)
 
 // ------------------------------------------------------------
@@ -1349,7 +1349,7 @@
 	if(zone_precise != BODY_ZONE_PRECISE_GROIN)
 		return FALSE
 
-	var/chance = C.arousal_stacks * 5
+	var/chance = C.stacks * 5
 
 	switch(C.last_matched_rule)
 		if("reverse", "chain_step")
@@ -1500,8 +1500,8 @@
 
 #undef MARTIAL_MASTER_COMBO_WINDOW
 #undef MARTIAL_MASTER_MAX_HISTORY
-#undef MARTIAL_MASTER_MAX_AROUSAL_STACKS
-#undef MARTIAL_MASTER_AROUSAL_DMG_PER_STACK
+#undef MARTIAL_MASTER_MAX_STACKS
+#undef MARTIAL_MASTER_DMG_PER_STACK
 #undef MARTIAL_MASTER_KICK_MIN_RECOVERY
 #undef MARTIAL_MASTER_INPUT_PUNCH
 #undef MARTIAL_MASTER_INPUT_KICK
