@@ -209,7 +209,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_HARDDISMEMBER = TAT_TRAIT_ENTRY("Hard Dismemberment", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Your limbs are harder to dismember."), \
 	TRAIT_STEELHEARTED = TAT_TRAIT_ENTRY("Steelhearted", 5, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Hardened nerves. You do not waiver from the sight of violence in battle."), \
 	TRAIT_CIVILIZEDBARBARIAN = TAT_TRAIT_ENTRY("Expert Pugilist", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Turns you into a living weapon: stronger unarmed strikes, broader unarmed reach, and much better parrying with bracers, knuckles, or bandages."), \
-	TRAIT_FENCERDEXTERITY = TAT_TRAIT_ENTRY("Fencer's Dexterity", 10, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "I've trained my entire lyfe around the art of unarmoured fencing, affording myself unmatched speed when wearing very light armour. I'm very choosy otherwise."), \
+	TRAIT_FENCERDEXTERITY = TAT_TRAIT_ENTRY("Fencer's Dexterity", 10, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "I've trained my entire lyfe around the art of unarmoured fencing, affording myself unmatched speed when wearing very light armour. I'm very choosy otherwise. WARNING: YOU CAN WEAR ONLY LIGHT ARMOR"), \
 	TAT_TRAIT_BRONZE_SUPPLIER = TAT_TRAIT_ENTRY("Bronze Supplier", 10, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks bronze-tier weapons."), \
 	TAT_TRAIT_SILVER_SUPPLIER = TAT_TRAIT_ENTRY("Silver Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks silver-tier weapons."), \
 	TAT_TRAIT_STEEL_SUPPLIER = TAT_TRAIT_ENTRY("Steel Supplier", 15, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks steel-tier weapons."), \
@@ -279,7 +279,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_CONVERT_MISC_TO_WANDERING = TAT_TRAIT_ENTRY("Convert Misc -> Wandering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Misc to Wandering."), \
 	TAT_TRAIT_CONVERT_MISC_TO_GATHERING = TAT_TRAIT_ENTRY("Convert Misc -> Gathering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Misc to Gathering."), \
 	TAT_TRAIT_CONVERT_MISC_TO_CRAFTING = TAT_TRAIT_ENTRY("Convert Misc -> Crafting", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Misc to Crafting."), \
-	TRAIT_STRONGBITE = TAT_TRAIT_ENTRY("Strong Bite", 30, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Increases crit chance and damage from biting"), \
+	TRAIT_STRONGBITE = TAT_TRAIT_ENTRY("Strong Bite", 35, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Increases crit chance and damage from biting"), \
 	TRAIT_BITERHELM = TAT_TRAIT_ENTRY("Curse of Twisting Metall", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Gives cursed skill to bite through your own helmet"), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Crafting skill-domain points."), \
 	TAT_TRAIT_STOCKPILER = TAT_TRAIT_ENTRY("Stockpiler", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Gathering skill-domain points."), \

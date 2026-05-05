@@ -68,7 +68,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/greatsword/grenz/flamberge = TAT_ITEM_ENTRY("Flamberge", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
 	/obj/item/rogueweapon/greatsword/iron = TAT_ITEM_ENTRY("Iron Greatsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword"), \
 	/obj/item/rogueweapon/estoc = TAT_ITEM_ENTRY("Estoc", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
-	/obj/item/rogueweapon/greatsword/miaodao = TAT_ITEM_ENTRY("Miaodao", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
+	/obj/item/rogueweapon/greatsword/miaodao = TAT_ITEM_ENTRY("Miaodao", 5.5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
+	/obj/item/rogueweapon/scabbard/sword/miaodao = TAT_ITEM_ENTRY("Miaodao Scabbard", 0, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sheath"), \
 	/obj/item/rogueweapon/greatsword/silver = TAT_ITEM_ENTRY("Silver Greatsword", 5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "greatsword"), \
 	/obj/item/rogueweapon/greatsword/zwei = TAT_ITEM_ENTRY("Claymore", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword"), \
 	/obj/item/rogueweapon/halberd = TAT_ITEM_ENTRY("Halberd", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
@@ -467,6 +468,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/woodstaff = TAT_ITEM_ENTRY("Wooden Staff", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/woodstaff/implement = TAT_ITEM_ENTRY("Lesser Staff", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/woodstaff/implement/greater = TAT_ITEM_ENTRY("Greater Staff", 5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
+	/obj/item/rogueweapon/woodstaff/implement/grand/naledi = TAT_ITEM_ENTRY("Naledi Staff", 8, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/spear/billhook = TAT_ITEM_ENTRY("Billhook", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/stone/copper = TAT_ITEM_ENTRY("Copper Spear", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/clothing/gloves/roguetown/chain/contraption/voltic = TAT_ITEM_ENTRY("Voltic Gauntlet", 7, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \

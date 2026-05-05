@@ -72,8 +72,8 @@
 	switch(weapon_choice)
 		if ("Great Sword")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
-			H.put_in_hands(new /obj/item/rogueweapon/greatsword/miaodao)
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap, SLOT_BACK_R, TRUE)
+			H.put_in_hands(new /obj/item/rogueweapon/sword/miaodao)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword/miaodao, SLOT_BELT_R, TRUE)
 		if ("Great Mace")
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/mace/goden/steel/tetsubo)
@@ -167,7 +167,8 @@
 	switch(weapon_choice) //A large selection of exotic starter options, as per the class gimmick.
 		if ("Great Sword")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
-			H.put_in_hands(new /obj/item/rogueweapon/greatsword/miaodao)
+			H.put_in_hands(new /obj/item/rogueweapon/sword/miaodao)
+			H.put_in_hands(new /obj/item/rogueweapon/scabbard/sword/miaodao)
 			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap, SLOT_BACK_R, TRUE)
 		if ("Dual Wield Hookswords")
 			ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
@@ -205,21 +206,56 @@
 	name = "long sword armor peel"
 	reach = 2
 
-/obj/item/rogueweapon/greatsword/miaodao
+/obj/item/rogueweapon/sword/miaodao
 	name = "miaodao"
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "odachi"
+	sheathe_icon = "odachi"
 	desc = "An unusually long saber of Kazengunese origin. The lighter blade lends itself to one-handed use better than a zweihander, but maintaining edge alignment is tricky and requires experience."
-	force = 24
+	gripsprite = TRUE
+	force = 25
 	force_wielded = 30
 	minstr = 8
 	wdefense = 6
 	wdefense_wbonus = 1
 	max_blade_int = 150 
+	bigboy = TRUE
+	swingsound = BLADEWOOSH_HUGE
+	wlength = WLENGTH_GREAT
+	w_class = WEIGHT_CLASS_BULKY
 	wbalance = WBALANCE_SWIFT
-	possible_item_intents = list(/datum/intent/sword/cut/miaodao, /datum/intent/sword/strike)
-	gripped_intents = list(/datum/intent/sword/cut/miaodao/fast, /datum/intent/sword/thrust/zwei, /datum/intent/sword/peel/miaodao, /datum/intent/sword/chop/long)
+	possible_item_intents = list(/datum/intent/sword/cut/miaodao, /datum/intent/sword/strike, /datum/intent/sword/cut/sabre/heavy)
+	gripped_intents = list(/datum/intent/sword/cut/miaodao/fast, /datum/intent/sword/thrust/zwei, /datum/intent/sword/cut/rend)
 	alt_grips = null
+	slot_flags = null
+	vorpal = TRUE
+
+/obj/item/rogueweapon/sword/miaodao/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.55,"sx" = 7,"sy" = -8,"nx" = -7,"ny" = -9,"wx" = -16,"wy" = -9,"ex" = 10,"ey" = -8,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -70,"sturn" = 65,"wturn" = -68,"eturn" = 66,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
+			if("wielded")
+				return list("shrink" = 0.65,"sx" = 10,"sy" = 0,"nx" = -12,"ny" = 2,"wx" = -10,"wy" = 8,"ex" = 14,"ey" = 4,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 27,"sturn" = -21,"wturn" = 46,"eturn" = -46,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
+
+/obj/item/rogueweapon/scabbard/sword/miaodao
+	name = "miaodao scabbard"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "odscabbard"
+	item_state = "odscabbard"
+	pixel_y = 0
+	pixel_x = 0
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	valid_blade = /obj/item/rogueweapon/sword/miaodao
+	slot_flags = ITEM_SLOT_HIP
+
+/obj/item/rogueweapon/scabbard/sword/miaodao/getonmobprop(tag)
+	if(tag)
+		switch(tag)
+			if("onbelt")
+				return list("shrink" = 0.6,"sx" = -2,"sy" = -4,"nx" = 3,"ny" = -1,"wx" = -6,"wy" = -4,"ex" = 6,"ey" = -3,"northabove" = 1,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 12,"sturn" = -26,"wturn" = -32,"eturn" = 29,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/yohei
 	name = "black dobo robe"
