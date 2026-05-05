@@ -233,6 +233,10 @@
 	if(!isliving(target_atom) && skill_id != MARTIAL_MASTER_INPUT_GRAB)
 		return 0
 
+	var/mob/living/target = target_atom
+	if(!istype(target))
+		return 0
+
 	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target_atom, zone)
 	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
 		return 0
