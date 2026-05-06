@@ -542,10 +542,6 @@
 	owner.remove_status_effect(/datum/status_effect/buff/tanuki_insight)
 	to_chat(owner, span_notice("Tanuki's insight fades."))
 
-/datum/component/combo_core/ronin/proc/_StartElderTanukiRiposte()
-	elder_tanuki_riposte_ready = TRUE
-	OnComboPrepared("tanuki_riposte", null)
-
 /datum/component/combo_core/ronin/proc/_HandleElderTanukiRiposteOnHit(mob/living/target, zone)
 	if(!owner || !target || !elder_tanuki_riposte_ready)
 		return
@@ -554,8 +550,13 @@
 	OnComboConsumed("tanuki_riposte", target)
 
 	var/fail_chance = (RONIN_MAX_STACKS_OVERDRIVE - ronin_stacks) * 4
-	fail_chance -= (10 - owner.get_stat(STATKEY_PER)) * 2
+	fail_chance -= (owner.get_stat(STATKEY_PER) - 10) * 2
 	if(prob(fail_chance))
+		owner.visible_message(
+			span_danger("[owner] fails to riposte!"),
+			span_notice("They failed!"),
+		)
+		_set_ronin_stacks(0)
 		return
 
 	_set_ronin_stacks(0)
@@ -865,16 +866,13 @@
 			if(isnull(stam))
 				target.OffBalance(1.5 SECONDS)
 			else if(force > stam)
-				target.OffBalance(2 SECONDS)
+				target.OffBalance(3 SECONDS)
 			else
 				_set_ronin_stacks(min(ronin_stacks + 2, RONIN_MAX_STACKS_OVERDRIVE))
 				ApplyBoundForceMultiplier()
 
 		if("kitsune")
 			_ApplyArmorWearForward(1.2, 2, zone)
-
-		if("tanuki")
-			_StartElderTanukiRiposte()
 
 		if("tengu")
 			if(target)
@@ -969,13 +967,6 @@
 		if(tanuki_per_hits_left <= 0)
 			_EndTanukiPerBuff()
 
-	if(elder_tanuki_riposte_ready)
-		var/mob/living/L = target_atom
-		if(isliving(L))
-			_HandleElderTanukiRiposteOnHit(L, zone)
-		else
-			elder_tanuki_riposte_ready = FALSE
-
 	return 0
 
 /datum/component/combo_core/ronin/proc/_sig_item_attack_success(datum/source, mob/living/target, mob/living/user)
@@ -1003,10 +994,17 @@
 	var/obj/item/rogueweapon/W = source
 	if(istype(W) && W.ronin_prepared_combo)
 		var/rule_id = W.ronin_prepared_combo
+		
+		if(elder_tanuki_riposte_ready)
+			_HandleElderTanukiRiposteOnHit(target, user.zone_selected)
+		else
+			elder_tanuki_riposte_ready = TRUE
+			return
+			
 		W.ronin_prepared_combo = null
 		W.ronin_prepared_at = 0
 		_ronin_apply_weapon_glow(W)
-		to_chat(owner, span_danger("ELDER COMBO RELEASED: [rule_id]!"))
+		to_chat(owner, span_danger("ELDER COMBO RELEAS0.ED: [rule_id]!"))
 		OnComboConsumed(rule_id, W)
 		ExecuteElderCombo(rule_id, target, user.zone_selected)
 
