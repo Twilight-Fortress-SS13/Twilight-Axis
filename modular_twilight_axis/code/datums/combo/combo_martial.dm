@@ -21,8 +21,6 @@
 #define MARTIAL_MASTER_CONE_RANGE              2
 
 #define MARTIAL_MASTER_BALLOON_COOLDOWN        (0.5 SECONDS)
-#define MARTIAL_MASTER_STRONG_KICK_THROW       1
-#define MARTIAL_MASTER_STRONG_KICK_BONUS       0.20
 
 /proc/martial_master_get_component(mob/living/user)
 	if(!isliving(user))
@@ -289,10 +287,6 @@
 		else if(target == chain_step_target)
 			if(AttackMartialAreaTarget(target, max(1, round(GetComboDamageMultiplier() * 1.5)), BCLASS_PUNCH, BRUTE, last_action_zone, 0))
 				ApplyArmorDamageToZone(target, last_action_zone, GetPressureDamage() * 2)
-
-				if(HasStrongKick())
-					_throw_target_dir(target, get_dir(owner, target), MARTIAL_MASTER_STRONG_KICK_THROW, TRUE)
-
 				_balloon("chain-step hit")
 
 			chain_step_ready = FALSE
@@ -412,10 +406,6 @@
 
 	var/zone_used = TryGetZone(zone)
 	var/mult = GetComboDamageMultiplier()
-
-	if(ComboUsesKick(rule_id) && HasStrongKick())
-		mult += MARTIAL_MASTER_STRONG_KICK_BONUS
-
 	var/dmg = max(1, round(mult * GetComboBaseDamage(rule_id, TRUE) * CalcPureDamage()))
 
 	if(!AttackMartialAreaTarget(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
@@ -749,19 +739,12 @@
 	var/pure_damage = CalcPureDamage()
 	var/dmg_mult = GetComboDamageMultiplier() * damage_mult
 
-	if((last_action_skill == MARTIAL_MASTER_INPUT_KICK || ComboUsesKick(last_matched_rule)) && HasStrongKick())
-		dmg_mult += MARTIAL_MASTER_STRONG_KICK_BONUS
-
 	var/dmg = max(1, round(dmg_mult * pure_damage))
 
 	if(!AttackMartialAreaTarget(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
 		return FALSE
 
 	ApplyArmorDamageToZone(target, zone_used, max(1, round(GetPressureDamage() * armor_mult)))
-
-	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK && HasStrongKick())
-		_try_strong_kick_throw(target)
-
 	return TRUE
 
 /datum/component/combo_core/martial_master/proc/ProcComboLine(zone)
@@ -1262,15 +1245,6 @@
 		return FALSE
 	return HAS_TRAIT(owner, TRAIT_STRONGKICK)
 
-/// kept small and only for direct kick hits
-/datum/component/combo_core/martial_master/proc/_try_strong_kick_throw(mob/living/target)
-	if(!target || !HasStrongKick())
-		return FALSE
-	if(prob(30))
-		_throw_target_dir(target, get_dir(owner, target), MARTIAL_MASTER_STRONG_KICK_THROW, TRUE)
-		return TRUE
-	return FALSE
-
 /datum/component/combo_core/martial_master/proc/ComboUsesKick(rule_id)
 	switch(rule_id)
 		if("cone", "spear", "push", "spin", "swap", "chain_step", "silence", "cross")
@@ -1517,5 +1491,3 @@
 #undef MARTIAL_MASTER_LINE_RANGE
 #undef MARTIAL_MASTER_CONE_RANGE
 #undef MARTIAL_MASTER_BALLOON_COOLDOWN
-#undef MARTIAL_MASTER_STRONG_KICK_THROW
-#undef MARTIAL_MASTER_STRONG_KICK_BONUS

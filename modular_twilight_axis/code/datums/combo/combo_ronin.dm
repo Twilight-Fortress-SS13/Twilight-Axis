@@ -553,6 +553,10 @@
 	elder_tanuki_riposte_ready = FALSE
 	OnComboConsumed("tanuki_riposte", target)
 
+	var/fail_chance = (RONIN_MAX_STACKS_OVERDRIVE - ronin_stacks) * 5
+	if(prob(fail_chance))
+		return
+
 	target.Immobilize(2 SECONDS)
 	var/obj/item/in_hand = target.get_active_held_item()
 	var/mob/living/carbon/human/target_mob = target
