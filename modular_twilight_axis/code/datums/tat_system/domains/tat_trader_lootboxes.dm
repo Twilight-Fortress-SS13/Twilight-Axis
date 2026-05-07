@@ -491,7 +491,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 
 	if(roll <= 80)
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_medium_base_pool, 3)
-	else if(roll <= 98)
+	else if(roll <= 95)
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_cheap_base_pool, 5)
 	else
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_expensive_base_pool, 1)
@@ -501,11 +501,11 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 /obj/item/tat_trader_lootbox/proc/generate_expensive_rewards(list/rewards)
 	var/roll = rand(1, 100)
 
-	if(roll <= 40)
+	if(roll <= 20)
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_cheap_base_pool, 7)
-	else if(roll <= 60)
+	else if(roll <= 50)
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_medium_base_pool, 5)
-	else if(roll <= 80)
+	else if(roll <= 90)
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_expensive_base_pool, 3)
 	else
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_jackpot_pool, 1)
