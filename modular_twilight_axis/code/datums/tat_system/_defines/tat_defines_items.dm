@@ -693,6 +693,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/neck/roguetown/psicross/dendor/gronn = TAT_ITEM_ENTRY("Volfskinned Talisman", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/abyssor/gronn = TAT_ITEM_ENTRY("Hadal Talisman", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special = TAT_ITEM_ENTRY("Familial Talisman", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
+	/obj/item/book_crafting_kit = TAT_ITEM_ENTRY("Book kit", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"),\
+	/obj/item/paper = TAT_ITEM_ENTRY("Paper sheet", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"),\
 
 GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 
