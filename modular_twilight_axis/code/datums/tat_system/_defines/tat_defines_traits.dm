@@ -312,6 +312,23 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Your feet walks a lot roads. Gives you +9 points in wandering skill tree."), \
 	TAT_TRAIT_HERETIC = TAT_TRAIT_ENTRY("Heretic", 0, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain cool HERETIC mark on your face."), \
 	TRAIT_RITUALIST = TAT_TRAIT_ENTRY("Ritualist", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gives God's favour for thy's rituals. Adds ritual chalk to your stash."), \
+	TRAIT_TECHNOPHOBE = TAT_TRAIT_ENTRY("Technophobe", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot use Meister devices."), \
+	TRAIT_BAD_MOOD = TAT_TRAIT_ENTRY("Bad Mood", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "All stress you receive is doubled."), \
+	TRAIT_PACIFISM = TAT_TRAIT_ENTRY("Pacifist", -20, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot harm living beings."), \
+	TRAIT_CRITICAL_WEAKNESS = TAT_TRAIT_ENTRY("Critical Weakness", -15, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You are far more vulnerable to critical wounds."), \
+	TRAIT_NUDIST = TAT_TRAIT_ENTRY("Nudist", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You refuse to wear clothes."), \
+	TRAIT_INHUMEN_ANATOMY = TAT_TRAIT_ENTRY("Inhumen Anatomy", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Your anatomy prevents you from wearing hats and boots."), \
+	TRAIT_DISFIGURED = TAT_TRAIT_ENTRY("Disfigured", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You are unknowned to everyone."), \
+	TRAIT_SPELLCOCKBLOCK = TAT_TRAIT_ENTRY("Bewitched", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot cast spells."), \
+	TRAIT_NOSLEEP = TAT_TRAIT_ENTRY("Sleepless", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot fall asleep without drugs or a blow to the head."), \
+	TRAIT_NORUN = TAT_TRAIT_ENTRY("No Running", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot run."), \
+	TRAIT_NUDE_SLEEPER = TAT_TRAIT_ENTRY("Nude Sleeper", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You can only sleep while fully naked."), \
+	TRAIT_EASYDISMEMBER = TAT_TRAIT_ENTRY("Easy Dismemberment", -15, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Your limbs are much easier to dismember."), \
+	TRAIT_PERMAMUTE = TAT_TRAIT_ENTRY("Permanent Mute", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You are permanently mute and cannot speak."), \
+	TRAIT_SHIRTLESS = TAT_TRAIT_ENTRY("Shirtless", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot bear covering your upper body."), \
+	TRAIT_NODEF = TAT_TRAIT_ENTRY("No Defense", -20, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You expose yourself completely in battle."), \
+	TRAIT_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Reverse Guidance", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Something hinders you in battle. Anti-guidance: 10%."), \
+	TRAIT_LESSER_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Lesser Reverse Guidance", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Something faintly hinders you in battle. Anti-guidance: 20%."), \
 
 #define TAT_TRAIT_STAT_POINT_RULES list( \
 	TAT_TRAIT_BONUS_STAT_POOL = TAT_BUILD_STAT_BONUS_EXTRA_STATS, \
