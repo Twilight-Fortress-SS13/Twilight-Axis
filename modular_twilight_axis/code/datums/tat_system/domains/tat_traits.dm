@@ -796,7 +796,8 @@
 		return FALSE
 
 	var/skin_path = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
-	return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
+	if(owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR))
+		ADD_TRAIT(H, TRAIT_SHIRTLESS, TAT_TRAIT_SOURCE)
 
 /datum/tat_traits/proc/apply_savage_rage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_RAGE) || !H.mind)
@@ -858,8 +859,6 @@
 			H.inspiration.grant_inspiration(H, bard_tier)
 	try_apply_party_leader(H)
 	apply_savage_skin_package(H)
-	if(has_trait(TRAIT_SHIRTLESS))
-		ADD_TRAIT(H, TRAIT_SHIRTLESS, TAT_TRAIT_SOURCE)
 	apply_savage_rage_package(H)
 	apply_berserker_rage_package(H)
 	if(has_trait(TAT_TRAIT_WARRIOR_MASTER))
