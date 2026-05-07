@@ -276,10 +276,33 @@
 		return 1
 	return 0
 
-/datum/tat_traits/proc/get_spent_points()
+/datum/tat_traits/proc/is_capped_negative_credit_trait(trait_id)
+	return trait_id in GLOB.tat_capped_negative_traits
+
+/datum/tat_traits/proc/get_capped_negative_credit_raw()
 	var/total = 0
 	for(var/trait_id in selected)
-		total += get_display_cost(trait_id) * get_trait_count(trait_id)
+		if(!is_capped_negative_credit_trait(trait_id))
+			continue
+		var/cost = get_display_cost(trait_id) * get_trait_count(trait_id)
+		if(cost >= 0)
+			continue
+		total += -cost
+	return total
+
+/datum/tat_traits/proc/get_capped_negative_credit_used()
+	return min(get_capped_negative_credit_raw(), TAT_NEGATIVE_TRAIT_CREDIT_CAP)
+
+/datum/tat_traits/proc/get_spent_points()
+	var/total = 0
+	var/capped_negative_credit = 0
+	for(var/trait_id in selected)
+		var/cost = get_display_cost(trait_id) * get_trait_count(trait_id)
+		if(is_capped_negative_credit_trait(trait_id) && cost < 0)
+			capped_negative_credit += -cost
+			continue
+		total += cost
+	total -= min(capped_negative_credit, TAT_NEGATIVE_TRAIT_CREDIT_CAP)
 	return total
 
 /datum/tat_traits/proc/get_remaining_points()
@@ -293,7 +316,7 @@
 		TAT_TRAIT_TRADER_LICENSE = list(TAT_TRAIT_RESIDENT, TAT_TRAIT_WANTED, TRAIT_OUTLANDER, TAT_TRAIT_HERETIC),
 		TRAIT_OUTLANDER = list(TAT_TRAIT_WANTED),
 		TAT_TRAIT_WANTED = list(TRAIT_OUTLANDER, TAT_TRAIT_RESIDENT, TRAIT_TECHNOPHOBE),
-		TAT_TRAIT_SUCCUBUS = list(TRAIT_OUTLANDER, TAT_TRAIT_WANTED, TAT_TRAIT_HERETIC, TAT_TRAIT_RESIDENT, TAT_TRAIT_TRADER_LICENSE, TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_BONUS_STAT_POOL, TRAIT_PARRYEXPERT, TRAIT_DODGEEXPERT, TRAIT_CRITICAL_RESISTANCE, TRAIT_MEDIUMARMOR, TRAIT_HEAVYARMOR, TRAIT_CIVILIZEDBARBARIAN),
+		TAT_TRAIT_CONTRACTOR = list(TRAIT_OUTLANDER, TAT_TRAIT_WANTED, TAT_TRAIT_HERETIC, TAT_TRAIT_RESIDENT, TAT_TRAIT_TRADER_LICENSE, TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_BONUS_STAT_POOL, TRAIT_PARRYEXPERT, TRAIT_DODGEEXPERT, TRAIT_CRITICAL_RESISTANCE, TRAIT_MEDIUMARMOR, TRAIT_HEAVYARMOR, TRAIT_CIVILIZEDBARBARIAN),
 		TAT_TRAIT_BONUS_STAT_POOL = list(TAT_TRAIT_WANTED),
 		TRAIT_DODGEEXPERT = list(TRAIT_PARRYEXPERT, TAT_TRAIT_MAGE_MINOR_SLOT_2, TAT_TRAIT_MAGE_MAJOR_SLOT),
 		TRAIT_HEAVYARMOR = list(TRAIT_CRITICAL_RESISTANCE, TAT_TRAIT_MAGE_INITIATE),
@@ -314,6 +337,7 @@
 		TRAIT_FENCERDEXTERITY = list(TAT_TRAIT_SAVAGE_SKIN),
 		TRAIT_NUDE_SLEEPER = list(TRAIT_NUDIST, TAT_TRAIT_SAVAGE_SKIN, TRAIT_NOSLEEP),
 		TAT_TRAIT_LOOTRAT = list(TAT_TRAIT_WANTED),
+		TRAIT_NOSLEEP = list(TAT_TRAIT_HERETIC),
 		TRAIT_REVERSE_GUIDANCE = list(TRAIT_LESSER_REVERSE_GUIDANCE),
 	)
 	return GLOB.tat_trait_conflict_map
@@ -770,17 +794,9 @@
 /datum/tat_traits/proc/apply_savage_skin_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_SKIN))
 		return FALSE
+
 	var/skin_path = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
-	if(owner_build?.items)
-		return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_SHIRT)
-	var/obj/item/I = new skin_path(get_turf(H))
-	if(!I)
-		return FALSE
-	if(H.equip_to_slot_if_possible(I, SLOT_SHIRT, FALSE, TRUE, TRUE, TRUE))
-		return TRUE
-	if(!QDELETED(I))
-		I.forceMove(get_turf(H))
-	return FALSE
+	return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
 
 /datum/tat_traits/proc/apply_savage_rage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_RAGE) || !H.mind)
@@ -809,7 +825,7 @@
 		if(is_repeatable_trait(trait_id))
 			continue
 		switch(trait_id)
-			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_MARTIAL_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_SUCCUBUS, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_PLIANT_RENAME, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_SAVAGE_RAGE, TAT_TRAIT_HERETIC, TAT_TRAIT_BERSERKER_RAGE, TAT_TRAIT_TRADER_LICENSE, TAT_TRAIT_LOOTRAT)
+			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_MARTIAL_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_CONTRACTOR, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_PLIANT_RENAME, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_SAVAGE_RAGE, TAT_TRAIT_HERETIC, TAT_TRAIT_BERSERKER_RAGE, TAT_TRAIT_TRADER_LICENSE, TAT_TRAIT_LOOTRAT, TRAIT_SHIRTLESS)
 				continue
 			else
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
@@ -842,6 +858,8 @@
 			H.inspiration.grant_inspiration(H, bard_tier)
 	try_apply_party_leader(H)
 	apply_savage_skin_package(H)
+	if(has_trait(TRAIT_SHIRTLESS))
+		ADD_TRAIT(H, TRAIT_SHIRTLESS, TAT_TRAIT_SOURCE)
 	apply_savage_rage_package(H)
 	apply_berserker_rage_package(H)
 	if(has_trait(TAT_TRAIT_WARRIOR_MASTER))
@@ -855,7 +873,7 @@
 	apply_mage_package(H)
 	apply_druid_package(H)
 	apply_witch_base_package(H)
-	if(has_trait(TAT_TRAIT_SUCCUBUS))
+	if(has_trait(TAT_TRAIT_CONTRACTOR))
 		H.LoadComponent(/datum/component/contractor, 0)
 	if(has_trait(TAT_TRAIT_CONTRACTOR_ENTITY))
 		H.LoadComponent(/datum/component/contractor/entity, 4)

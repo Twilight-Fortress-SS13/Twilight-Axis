@@ -400,6 +400,7 @@
 				skills_spent += i
 
 	var/traits_spent = 0
+	var/capped_negative_trait_credit = 0
 	var/list/trait_data = build_data["traits"]
 
 	if(islist(trait_data))
@@ -426,7 +427,13 @@
 			if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && has_outlander)
 				cost -= TAT_TRAIT_DISCOUNT
 
-			traits_spent += cost * count
+			var/total_cost = cost * count
+			if((trait_id in GLOB.tat_capped_negative_traits) && total_cost < 0)
+				capped_negative_trait_credit += -total_cost
+			else
+				traits_spent += total_cost
+
+	traits_spent -= min(capped_negative_trait_credit, TAT_NEGATIVE_TRAIT_CREDIT_CAP)
 
 	var/items_spent = 0
 	var/list/item_data = build_data["items"]

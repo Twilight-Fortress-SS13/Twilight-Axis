@@ -35,7 +35,7 @@
 #define TAT_TRAIT_MAGE_INITIATE "tat_mage_initiate"
 #define TAT_TRAIT_DRUID_INITIATE "tat_druid_initiate"
 #define TAT_TRAIT_WITCH_INITIATE "tat_witch_initiate"
-#define TAT_TRAIT_SUCCUBUS "tat_succubus"
+#define TAT_TRAIT_CONTRACTOR "tat_contractor"
 #define TAT_TRAIT_CONTRACTOR_ENTITY "tat_contractor_entity"
 
 #define TAT_TRAIT_DIVINE_BOON_1 "tat_divine_boon_1"
@@ -154,6 +154,31 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 #define TAT_CATEGORY_ODDITY "oddity"
 #define TAT_CATEGORY_ODDITY_NAME "Oddities"
 
+#define TAT_CATEGORY_MAJOR_FLAW "major_flaw"
+#define TAT_CATEGORY_MAJOR_FLAW_NAME "Major Flaws"
+
+#define TAT_NEGATIVE_TRAIT_CREDIT_CAP 20
+#define TAT_CAPPED_NEGATIVE_TRAITS list( \
+	TAT_TRAIT_HERETIC, \
+	TRAIT_TECHNOPHOBE, \
+	TRAIT_BAD_MOOD, \
+	TRAIT_PACIFISM, \
+	TRAIT_CRITICAL_WEAKNESS, \
+	TRAIT_NUDIST, \
+	TRAIT_INHUMEN_ANATOMY, \
+	TRAIT_DISFIGURED, \
+	TRAIT_SPELLCOCKBLOCK, \
+	TRAIT_NOSLEEP, \
+	TRAIT_NORUN, \
+	TRAIT_NUDE_SLEEPER, \
+	TRAIT_EASYDISMEMBER, \
+	TRAIT_PERMAMUTE, \
+	TRAIT_SHIRTLESS, \
+	TRAIT_NODEF, \
+	TRAIT_REVERSE_GUIDANCE, \
+	TRAIT_LESSER_REVERSE_GUIDANCE \
+)
+
 #define TAT_CATEGORY_SKILL_DISCOUNT "skill_discount"
 #define TAT_CATEGORY_SKILL_DISCOUNT_NAME "Skill Discount"
 #define TAT_CATEGORY_SKILL_CONVERSION "skill_conversion"
@@ -183,20 +208,20 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_HEAVYARMOR = TAT_TRAIT_PLATE_SUPPLIER \
 )
 	
-// TAT_TRAIT_SUCCUBUS = TAT_TRAIT_ENTRY("Contractor", 80, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Awakens the contract-bearing curse in your veins. The whole world is waiting your gifts and deals."),
+// TAT_TRAIT_CONTRACTOR = TAT_TRAIT_ENTRY("Contractor", 80, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Awakens the contract-bearing curse in your veins. The whole world is waiting your gifts and deals."),
 #define TAT_AVAILABLE_TRAITS_LIST \
 	TAT_TRAIT_SOUNDBREAKER = TAT_TRAIT_ENTRY("Soundbreaker", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the Soundbreaker combo style."), \
 	TAT_TRAIT_MARTIAL_MASTER = TAT_TRAIT_ENTRY("Martial Master", 60, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the Martial CQC combo styles. Requires Pugilist."), \
 	TAT_TRAIT_RONIN = TAT_TRAIT_ENTRY("Ronin", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the Ronin combo style."), \
 	TAT_TRAIT_SPELLBLADE = TAT_TRAIT_ENTRY("Spellblade", 10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants a set of weapon-binding spells."), \
-	TAT_TRAIT_RESIDENT = TAT_TRAIT_ENTRY("Resident", 10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants a Meister account and ownership of a house in the city."), \
+	TAT_TRAIT_RESIDENT = TAT_TRAIT_ENTRY("Resident", 10, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "Grants a Meister account and ownership of a house in the city."), \
 	TAT_TRAIT_TRADER_LICENSE = TAT_TRAIT_ENTRY("Merchant's Writ", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks sealed trader caches in the TAT item list. Conflicts with Resident, Wanted, Outlander, and Heretic."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T1 = TAT_TRAIT_ENTRY("Bardic Inspiration I", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain tier 1 bardic inspiration, audience management verbs, and a songbook."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T2 = TAT_TRAIT_ENTRY("Bardic Inspiration II", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Upgrades bardic inspiration to tier 2, increasing audience size and songs known."), \
 	TAT_TRAIT_PARTY_LEADER = TAT_TRAIT_ENTRY("Party Leader", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Improves the core Fellowship: nearby fellows gain +1 CON; while at least one fellow is nearby, the leader gains +1 CON, +1 WIL, and +0.5 Fortune per nearby fellow."), \
 	TAT_TRAIT_BONUS_STAT_POOL = TAT_TRAIT_ENTRY("Natural Potential", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain +3 stat points in the build pool."), \
 	TAT_TRAIT_CONTRACTOR_ENTITY = TAT_TRAIT_ENTRY("Tempress Entity", 0, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the special Tempress entity subclass."), \
-	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
+	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -30, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
 	TAT_TRAIT_TROPHY_BOUNTY = TAT_TRAIT_ENTRY("Trophy Bounty", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "You can receive additional bonuses when wearing a headhook with monster heads."), \
 	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 40, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat skill cap from 3 to 4."), \
 	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 30, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat skill cap from 4 to 5. Requires Expert Warrior."), \
@@ -231,7 +256,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_NOBLE = TAT_TRAIT_ENTRY("Noble Blooded", 10, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You are of noble blood."), \
 	TRAIT_CICERONE = TAT_TRAIT_ENTRY("Cicerone", 5, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You are well-versed in brews and spirits, and can tell them apart at a glance."), \
 	TRAIT_SEEPRICES = TAT_TRAIT_ENTRY("Appraiser", 10, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You can tell the prices of things down to the zenny."), \
-	TRAIT_OUTLANDER = TAT_TRAIT_ENTRY("Outlander", -20, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "The locals see you as not of their land."), \
+	TRAIT_OUTLANDER = TAT_TRAIT_ENTRY("Outlander", -20, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "The locals see you as not of their land."), \
 	TRAIT_GRAVEROBBER = TAT_TRAIT_ENTRY("Experienced Grave Robber", 20, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "Your experience with 'post-mortem artifact recovery' helps you resist Necra's curse placed on those who disturb resting places."), \
 	TRAIT_PURITAN_ADVENTURER = TAT_TRAIT_ENTRY("Interrogator", 20, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "With a silver psycross, you can force the restrained to kneel before a crucifix and proclaim their true allegiance."), \
 	TRAIT_DECEIVING_MEEKNESS = TAT_TRAIT_ENTRY("Deceiving Meekness", 15, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "People think you are weak. They are mistaken. You have learned to hide your vices and true beliefs from others."), \
@@ -320,7 +345,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_INHUMEN_ANATOMY = TAT_TRAIT_ENTRY("Inhumen Anatomy", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Your anatomy prevents you from wearing hats and boots."), \
 	TRAIT_DISFIGURED = TAT_TRAIT_ENTRY("Disfigured", 5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You are unknowned to everyone."), \
 	TRAIT_SPELLCOCKBLOCK = TAT_TRAIT_ENTRY("Bewitched", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot cast spells."), \
-	TRAIT_NOSLEEP = TAT_TRAIT_ENTRY("Sleepless", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot fall asleep without drugs or a blow to the head."), \
+	TRAIT_NOSLEEP = TAT_TRAIT_ENTRY("Sleepless", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot fall asleep without drugs or a blow to the head."), \
 	TRAIT_NORUN = TAT_TRAIT_ENTRY("No Running", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot run."), \
 	TRAIT_NUDE_SLEEPER = TAT_TRAIT_ENTRY("Nude Sleeper", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You can only sleep while fully naked."), \
 	TRAIT_EASYDISMEMBER = TAT_TRAIT_ENTRY("Easy Dismemberment", -15, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Your limbs are much easier to dismember."), \
@@ -487,6 +512,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 )
 
 GLOBAL_LIST_INIT(tat_available_traits, list(TAT_AVAILABLE_TRAITS_LIST))
+GLOBAL_LIST_INIT(tat_capped_negative_traits, TAT_CAPPED_NEGATIVE_TRAITS)
 GLOBAL_LIST_EMPTY(tat_trait_conflict_map)
 GLOBAL_LIST_EMPTY(tat_trait_requirement_map)
 GLOBAL_LIST_INIT(tat_trait_stat_point_rules, TAT_TRAIT_STAT_POINT_RULES)

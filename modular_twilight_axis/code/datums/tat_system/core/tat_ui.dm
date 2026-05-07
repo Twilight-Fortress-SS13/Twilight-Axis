@@ -574,6 +574,8 @@
 	var/_p_stats_rem = get_remaining_stat_points()
 	var/_p_traits_total = traits.get_total_maximum()
 	var/_p_traits_rem = get_remaining_trait_points()
+	var/_p_traits_capped_negative_raw = traits.get_capped_negative_credit_raw()
+	var/_p_traits_capped_negative_used = traits.get_capped_negative_credit_used()
 	var/_p_items_total = items.get_total_maximum()
 	var/_p_items_rem = get_remaining_item_points()
 
@@ -624,6 +626,9 @@
 
 		"points_traits" = _p_traits_total,
 		"points_traits_remaining" = _p_traits_rem,
+		"negative_trait_credit_raw" = _p_traits_capped_negative_raw,
+		"negative_trait_credit_used" = _p_traits_capped_negative_used,
+		"negative_trait_credit_cap" = TAT_NEGATIVE_TRAIT_CREDIT_CAP,
 
 		"points_items" = _p_items_total,
 		"points_items_remaining" = _p_items_rem,
