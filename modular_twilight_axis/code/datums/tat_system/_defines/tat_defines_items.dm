@@ -68,7 +68,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/greatsword/grenz/flamberge = TAT_ITEM_ENTRY("Flamberge", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
 	/obj/item/rogueweapon/greatsword/iron = TAT_ITEM_ENTRY("Iron Greatsword", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword"), \
 	/obj/item/rogueweapon/estoc = TAT_ITEM_ENTRY("Estoc", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
-	/obj/item/rogueweapon/greatsword/miaodao = TAT_ITEM_ENTRY("Miaodao", 5.5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
+	/obj/item/rogueweapon/sword/miaodao = TAT_ITEM_ENTRY("Miaodao", 5.5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "greatsword"), \
 	/obj/item/rogueweapon/scabbard/sword/miaodao = TAT_ITEM_ENTRY("Miaodao Scabbard", 0, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sheath"), \
 	/obj/item/rogueweapon/greatsword/silver = TAT_ITEM_ENTRY("Silver Greatsword", 5, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "greatsword"), \
 	/obj/item/rogueweapon/greatsword/zwei = TAT_ITEM_ENTRY("Claymore", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "greatsword"), \
