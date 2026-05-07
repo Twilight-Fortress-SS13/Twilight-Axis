@@ -627,7 +627,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/heart_blood_canister/filled = TAT_ITEM_ENTRY("Heartblood Canister", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/bait/leech = TAT_ITEM_ENTRY("Leech Bait", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/flint = TAT_ITEM_ENTRY("Flint", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
-	/obj/item/folding_table_stored = TAT_ITEM_ENTRY("Folding Table", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/folding_table_stored = TAT_ITEM_ENTRY("Folding Table", 1.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/rogueweapon/pick = TAT_ITEM_ENTRY("Pickaxe", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/rogueweapon/pick/steel = TAT_ITEM_ENTRY("Steel Pickaxe", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "misc"), \
 	/obj/item/rogueweapon/pick/copper = TAT_ITEM_ENTRY("Copper Pickaxe", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
