@@ -94,7 +94,6 @@
 	tutorial = "A freeform class used for the TAT build system."
 
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
 
 	outfit = /datum/outfit/job/roguetown/tat_class/basic
 
