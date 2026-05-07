@@ -5,7 +5,7 @@
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-	allowed_races = ACCEPTED_RACES
+	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
 	allowed_sexes = list(MALE, FEMALE)
 	display_order = JDO_COURTPHYSICIAN
 	tutorial = "You are a court physician and the current head of the clinic. \

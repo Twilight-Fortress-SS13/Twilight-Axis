@@ -1,9 +1,7 @@
 /datum/advclass/mercenary/anthrax
 	name = "Underdark Pursuer" //TA EDIT
 	tutorial = "Frontline shock troopers of Her blessed legions, Pursuers are clad in darksteel armor and are first to march into the fray when the Spider Queen demands it. You have been chosen for a mission to the surface, and while out there, you will have to earn coin to sustain yourself. Regardless of whom you work for, never forget where your true allegiance lies." //TA EDIT
-	allowed_races = list(
-		/datum/species/elf/dark
-	)
+	forbidden_races = list(RACES_ANTHRAX)
 	outfit = /datum/outfit/job/roguetown/mercenary/anthrax
 	class_select_category = CLASS_CAT_RACIAL
 	category_tags = list(CTAG_MERCENARY)
@@ -99,9 +97,7 @@
 	from afar or take a second sabre and weave a beautiful dance of death. All that matters is \
 	that your contract is fulfilled and your pockets heavy with mammon."
 	outfit = /datum/outfit/job/roguetown/mercenary/anthrax_assassin
-	allowed_races = list(
-		/datum/species/elf/dark
-	)
+	forbidden_races = list(RACES_ANTHRAX)
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_RACIAL
 	cmode_music = 'sound/music/combat_delf.ogg'
@@ -199,9 +195,7 @@
 /datum/advclass/mercenary/anthrax_paladin //TA EDIT START
 	name = "Spider Queen Baneblade"
 	tutorial = "Hailing primarily from the Undercity of Faerlin, the Baneblades are the Spider Queen's warrior-priests, wielding both Her blades and Her gifts with great proficiency. You have been chosen for a mission to the surface, and while you earn your bread and gather the information your clan requires, you are also expected to ensure the thoughts of your comrades stay true to the cause."
-	allowed_races = list(
-		/datum/species/elf/dark
-	)
+	forbidden_races = list(RACES_ANTHRAX)
 	outfit = /datum/outfit/job/roguetown/mercenary/anthrax_paladin
 	class_select_category = CLASS_CAT_RACIAL
 	category_tags = list(CTAG_MERCENARY)

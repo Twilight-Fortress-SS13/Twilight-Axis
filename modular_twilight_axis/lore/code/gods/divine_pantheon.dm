@@ -37,7 +37,7 @@
 		"ебать", "ебаный", "ебать", "ебать", "ебаным", "ебать",
 		"залупа", "залупы", "залупе", "залупу", "залупой", "залупе",
 		"залупенец", "залупенца", "залупенцу", "залупенца", "залупенцем", "залупенце"
-)
+	)
 
 /datum/patron/divine/undivided
 	translated_name = "Пантеон Неделимый"
@@ -63,20 +63,20 @@
 		"Первородная Дочь", "Первородной Дочери", "Первородной Дочери", "Первородную Дочь", 
 		"Первородной Дочерью", "Первородной Дочери"
 	)
-	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison			= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/TAignition				= CLERIC_T0,
-					/obj/effect/proc_holder/spell/self/TAastrata_gaze				= CLERIC_T0,
+	miracles = list(/datum/action/cooldown/spell/touch/orison								= CLERIC_ORI,
+					/obj/effect/proc_holder/spell/invoked/TAignition						= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/TAastrata_gaze						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAastratagrasp = CLERIC_T0,
-					/obj/effect/proc_holder/spell/self/TAastrata_fireresist       = CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/lesser_heal 			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/blood_heal			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/projectile/TAsacred_flame	= CLERIC_T1,
-					/obj/effect/proc_holder/spell/self/TAastrata_sword			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/TAastrataspark          = CLERIC_T2,
-					/obj/effect/proc_holder/spell/invoked/heal/astrata			= CLERIC_T2,
-					/obj/effect/proc_holder/spell/invoked/TArevive				= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/immolation			= CLERIC_T4,
-					/obj/effect/proc_holder/spell/invoked/TAsunstrike 			= CLERIC_T4,
+					/obj/effect/proc_holder/spell/self/TAastrata_fireresist					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/projectile/TAsacred_flame			= CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/TAastrata_sword						= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/TAastrataspark					= CLERIC_T2,
+					/datum/action/cooldown/spell/miracle/fortify/astrata					= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/TArevive							= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/immolation						= CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/TAsunstrike						= CLERIC_T4,
 	)
 
 	domain = "Солнце, порядок, правосудие, вера, тактика и стратегия, плодородие."
@@ -101,20 +101,19 @@
 	domain = "Луна, знания, сумерки, аркана, контроль, сны."
 	desc = "Богиня знаний, ночи, Луны, и тайн. Первая владыка Арканы. Нок сестра-близнец перворожденной Астраты. Увидав впервые Луну, она нарекла её своим владением, и каждый раз возносит ее в небеса над Гриморией, чтобы осветить темную ночь для тех кто следует ей."
 	worshippers = "Жрецы Патриархата Двергейла, маги, ученые, писцы, амбициозные личности, исследователи."
-	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison			= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/noc_sight				= CLERIC_T0,
-					/datum/action/cooldown/spell/darkvision/miracle				= CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/moondream             = CLERIC_T0,
-					/obj/effect/proc_holder/spell/self/wise_moon                = CLERIC_T1,
-					/obj/effect/proc_holder/spell/self/moon_light     			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/lesser_heal 			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/blood_heal			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/invisibility/miracle	= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/silence/miracle	    = CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/blindness         	= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/old_blindness		    = CLERIC_T3,
-					/obj/effect/proc_holder/spell/self/noc_spell_bundle			= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/resurrect/noc			= CLERIC_T4,
+	miracles = list(/datum/action/cooldown/spell/touch/orison				= CLERIC_ORI,
+					/datum/action/cooldown/spell/noc/sight					= CLERIC_T0,
+					/datum/action/cooldown/spell/darkvision/miracle			= CLERIC_T0,
+					/datum/action/cooldown/spell/miracle/heal				= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle		= CLERIC_T1,
+					/datum/action/cooldown/spell/noc/enlightenment			= CLERIC_T1,
+					/datum/action/cooldown/spell/noc/inspiration			= CLERIC_T1,
+					/datum/action/cooldown/spell/noc/invisibility			= CLERIC_T2,
+					/datum/action/cooldown/spell/noc/blindness				= CLERIC_T2,
+					/datum/action/cooldown/spell/noc/moonscorch				= CLERIC_T3,
+					/datum/action/cooldown/spell/noc/spellpack				= CLERIC_T3,
+					/datum/action/cooldown/spell/noc/grimoire				= CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/resurrect/noc		= CLERIC_T4,
 	)
 	confess_lines = list(
 		"НОК - ЭТО НОЧЬ!",
@@ -182,19 +181,19 @@
 	domain = "Война, мужество, справедливость, сила, гордость."
 	desc = "Смертный, что своей непоколебимой волей, решимостью, честным словом и мужество по праву удостоился места в Пантеоне. Герой божественной войны и тот, кто в час нужды встал на защиту смертных."
 	worshippers = "Воины, солдаты, наёмники, странствующие рыцари, судьи."
-	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison			= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAravoxgrasp			= CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/TAtug_of_war			= CLERIC_T0,
-					/obj/effect/proc_holder/spell/self/TAprovocation	       		= CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/lesser_heal 			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/blood_heal			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/self/TAdivine_strike			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/self/TAbalance_immune   		= CLERIC_T2,
-					/obj/effect/proc_holder/spell/self/TAcall_to_arms				= CLERIC_T2,
-					/obj/effect/proc_holder/spell/invoked/TAchallenge				= CLERIC_T2,
-					/obj/effect/proc_holder/spell/invoked/TApersistence			= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/TAraise_warrior_spirits = CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/resurrect/ravox		= CLERIC_T4,
+	miracles = list(/datum/action/cooldown/spell/touch/orison								= CLERIC_ORI,
+					/obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAravoxgrasp = CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/TAtug_of_war					= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/TAprovocation						= CLERIC_T0,
+					/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/TAdivine_strike						= CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/TAbalance_immune					= CLERIC_T2,
+					/obj/effect/proc_holder/spell/self/TAcall_to_arms						= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/TAchallenge						= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/TApersistence					= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/TAraise_warrior_spirits			= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/resurrect/ravox					= CLERIC_T4,
 	)
 	confess_lines = list(
 		"РАВОКС - ЭТО СПРАВЕДЛИВОСТЬ!",
@@ -288,15 +287,15 @@
 	domain = "Огонь, сталь, труд, ремесло, терпение, упорство."
 	desc = "Огненный Бог-Кузнец, первый из вознесённых смертных, покровитель трудящихся, тот, что несет ремесло и создание наравне с закалкой своей души. «Труд - уже награда». Малум известен как своим равнодушием, так и строгостью к последователям, куда более его радуют их творения."
 	worshippers = "Кузнецы, строители, архитекторы, каменщики, рабочие."
-	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison			= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/TArestoration           = CLERIC_T0,
-					/obj/effect/proc_holder/spell/self/TArepair                   = CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/TArework                = CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/lesser_heal 			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/blood_heal			= CLERIC_T1,
+	miracles = list(/datum/action/cooldown/spell/touch/orison					= CLERIC_ORI,
+					/obj/effect/proc_holder/spell/invoked/TArestoration		= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/TArepair				= CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/TArework				= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
 					/datum/action/cooldown/spell/arcyne_forge/miracle			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/TAvigorousexchange		= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/TAheatmetal				= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/TAvigorousexchange	= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/TAheatmetal			= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/TAhammerfall			= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/TAcraftercovenant		= CLERIC_T4,
 					/obj/effect/proc_holder/spell/invoked/resurrect/malum		= CLERIC_T4,

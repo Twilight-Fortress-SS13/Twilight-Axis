@@ -26,7 +26,7 @@ SUBSYSTEM_DEF(regionthreat)
 	flags = SS_KEEP_TIMING | SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME
 	// Regions are loaded from the active map_adjustment template in on_map_ready().
-	var/list/threat_regions
+	var/list/threat_regions = list()
 
 /datum/controller/subsystem/regionthreat/fire(resumed)
 	var/player_count = GLOB.player_list.len

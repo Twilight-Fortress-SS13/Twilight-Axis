@@ -2,7 +2,6 @@
 	name = "Naledian Psydon Mage"
 	tutorial = "The Neledian mage, who had studied the arcana from a young age, also studied the teachings of the church. After long and meticulous preparation, the secrets of the elements were revealed to him — secrets he was destined to take with him to the grave."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/naledimage
 	category_tags = list(CTAG_ORTHODOXIST)
 	subclass_languages = list(/datum/language/otavan, /datum/language/raneshi)

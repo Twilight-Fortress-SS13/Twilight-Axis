@@ -7,7 +7,7 @@
 
 	if(consort_job)
 		royal_partner_job_baselines["consort"] = list(
-			"allowed_races" = islist(consort_job.allowed_races) ? consort_job.allowed_races.Copy() : list(),
+//			"allowed_races" = islist(consort_job.allowed_races) ? consort_job.allowed_races.Copy() : list(),
 			"allowed_sexes" = islist(consort_job.allowed_sexes) ? consort_job.allowed_sexes.Copy() : list(),
 			"total_positions" = consort_job.total_positions,
 			"spawn_positions" = consort_job.spawn_positions,
@@ -15,7 +15,7 @@
 
 	if(suitor_job)
 		royal_partner_job_baselines["suitor"] = list(
-			"allowed_races" = islist(suitor_job.allowed_races) ? suitor_job.allowed_races.Copy() : list(),
+//			"allowed_races" = islist(suitor_job.allowed_races) ? suitor_job.allowed_races.Copy() : list(),
 			"allowed_sexes" = islist(suitor_job.allowed_sexes) ? suitor_job.allowed_sexes.Copy() : list(),
 			"total_positions" = suitor_job.total_positions,
 			"spawn_positions" = suitor_job.spawn_positions,
@@ -135,13 +135,13 @@
 
 	var/list/baseline_allowed_races = baseline["allowed_races"]
 	var/list/baseline_allowed_sexes = baseline["allowed_sexes"]
-	job.allowed_races = islist(baseline_allowed_races) ? baseline_allowed_races.Copy() : list()
+//	job.allowed_races = islist(baseline_allowed_races) ? baseline_allowed_races.Copy() : list()
 	job.allowed_sexes = islist(baseline_allowed_sexes) ? baseline_allowed_sexes.Copy() : list()
 	job.total_positions = baseline["total_positions"]
 	job.spawn_positions = baseline["spawn_positions"]
 
 	if(enabled)
-		job.allowed_races = islist(allowed_races) ? allowed_races.Copy() : list()
+	//	job.allowed_races = islist(allowed_races) ? allowed_races.Copy() : list()
 		job.allowed_sexes = islist(allowed_sexes) ? allowed_sexes.Copy() : list()
 		job.total_positions = open_slots
 		job.spawn_positions = open_slots

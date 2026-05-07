@@ -22,5 +22,3 @@ GLOBAL_LIST_INIT(character_accents, list("Без акцента",
 //	"Gronn accent",
 	//"Axian accent"
 ))
-/mob/living/carbon/human
-	var/char_accent = "No accent"

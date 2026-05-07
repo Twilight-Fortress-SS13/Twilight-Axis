@@ -522,7 +522,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/reform
 	name = "reformist psycross"
-	desc = "'It occured to me that our God had left us, but not our ability to endure hardship. We shall make something out of this world, I said, before we pass onto the next.'"
+	desc = "'It matters not whether Psydon is alive or has been slain by the Archenemy—for the gods, life and death do not hold the same meaning as they do for mortals, and the Almighty Father's influence on the world endures so long as there are those who believe in Him.'" //TA EDIT
 	sellprice = 0	//Heresy of the highest order. Unless...
 	icon_state = "reformistcross"
 

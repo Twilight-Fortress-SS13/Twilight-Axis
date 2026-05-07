@@ -10,7 +10,7 @@
 	tutorial = "You're a shkeleton! You already forgot how you got all these bones, but people fears you, they want to dig you down. Do it first."
 	outfit = /datum/outfit/job/roguetown/wretch/hero
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_NO_CONSTRUCT
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_ACCURSED
 	cmode_music = "modular_twilight_axis/sound/music/combat_skeleton.ogg"
