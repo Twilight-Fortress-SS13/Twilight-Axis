@@ -1,7 +1,7 @@
 /datum/tat_stats
 	var/datum/tat_build/owner_build
 	var/list/values = list()
-	var/base_points = 4
+	var/base_points = TAT_BASIC_STAT_POINTS
 
 /datum/tat_stats/New(datum/tat_build/B)
 	. = ..()

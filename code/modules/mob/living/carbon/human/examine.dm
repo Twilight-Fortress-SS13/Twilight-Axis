@@ -88,7 +88,7 @@
 			if(!J || J.wanderer_examine)
 				display_as_wanderer = TRUE
 
-		if(display_as_wanderer && !used_title) // TA EDIT - TAT system
+		if(display_as_wanderer && !tat_pliant_title) // TA EDIT - TAT system
 			. = list(span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
 		else if(used_title)
 			. = list(span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
