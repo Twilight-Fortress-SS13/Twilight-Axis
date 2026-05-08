@@ -44,11 +44,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
 
-	//TA edit start- TAT System (moved from apply_character_post_equipment to tat_apply_legacy_preference_loadout)
-	if(!tat_build_handles_preference_loadout(character, player))
-		tat_apply_legacy_preference_loadout(character, player)
+	tat_apply_legacy_preference_loadout(character, player) //TA edit - TAT System (moved from apply_character_post_equipment to tat_apply_legacy_preference_loadout)
 
-	//TA edit end - TAT System
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	if(assigned_job)
 		assigned_job.clamp_stats(character)

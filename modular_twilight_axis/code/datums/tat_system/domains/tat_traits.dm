@@ -1,5 +1,6 @@
 /mob/living/carbon/human
 	var/tat_pliant_title
+	var/tat_handles_preference_loadout = FALSE
 
 /datum/tat_traits
 	var/datum/tat_build/owner_build
@@ -974,64 +975,153 @@
 
 	var/list/rules = get_resident_skill_spell_rules()
 	for(var/skill_type in rules)
-		if((owner_build?.get_skill_value(/datum/skill/labor/mining) || 0) > 3)
-			owner_build.AddComponent(rules[skill_type])
-			continue
-		
 		if((owner_build?.get_skill_value(skill_type) || 0) <= 3)
 			continue
 
-		var/list/spell_types = rules[skill_type]
-		if(!islist(spell_types))
+		var/list/rewards = rules[skill_type]
+		if(!islist(rewards))
 			continue
 
-		for(var/spell_type in spell_types)
-			owner_build.grant_mind_spell_if_missing(H, spell_type)
+		for(var/reward_type in rewards)
+			if(ispath(reward_type, /datum/component))
+				H.AddComponent(reward_type)
+				continue
+
+			owner_build.grant_mind_spell_if_missing(H, reward_type)
 
 	return TRUE
 
-/datum/tat_traits/proc/get_tat_resident_advjob()
+/datum/tat_traits/proc/get_tat_resident_advjob_title_to_path_map()
+	return list(
+		"Blacksmith" = "/datum/advclass/blacksmith",
+		"Miner" = "/datum/advclass/miner",
+		"Farmer" = "/datum/advclass/farmer",
+		"Fisher" = "/datum/advclass/fisher",
+		"Cook" = "/datum/advclass/cook",
+		"Tailor" = "/datum/advclass/seamstress",
+		"Carpenter" = "/datum/advclass/woodworker",
+		"Engineer" = "/datum/advclass/engineer",
+		"Alchemist" = "/datum/advclass/alchemist",
+		"Physician" = "/datum/advclass/physician",
+		"Scholar" = "/datum/advclass/scholar",
+		"Bard" = "/datum/advclass/bard",
+		"Rogue" = "/datum/advclass/rogue",
+	)
+
+/datum/tat_traits/proc/get_tat_resident_special_role_titles()
+	return list(
+		"Sellsword",
+		"Archer",
+		"Pugilist",
+		"Gunslinger",
+		"Hunter",
+		"Forester",
+		"Scout",
+		"Acolyte",
+		"Mage",
+		"Druid",
+	)
+
+/datum/tat_traits/proc/is_tat_resident_special_role_title(title)
+	if(!istext(title) || !length(title))
+		return FALSE
+	return title in get_tat_resident_special_role_titles()
+
+/datum/tat_traits/proc/get_tat_resident_advjob_path_for_title(title)
+	if(!istext(title) || !length(title))
+		return null
+	var/list/title_to_path = get_tat_resident_advjob_title_to_path_map()
+	var/path_text = title_to_path[title]
+	if(!istext(path_text) || !length(path_text))
+		return null
+	return text2path(path_text)
+
+/datum/tat_traits/proc/get_tat_resident_role_choice()
 	if(!has_trait(TAT_TRAIT_RESIDENT))
 		return null
 
-	var/stored_advjob = owner_build?.get_magic_value("resident_advjob")
-	if(stored_advjob)
-		return stored_advjob
-
 	if(has_trait(TAT_TRAIT_WITCH_INITIATE))
-		return /datum/advclass/witch
+		return list(
+			"title" = "Witch",
+			"path" = /datum/advclass/witch,
+			"score" = INFINITY,
+		)
 
-	if((owner_build?.get_skill_value(/datum/skill/craft/blacksmithing) || 0) > 0)
-		return /datum/advclass/blacksmith
+	var/list/rules = get_pliant_skill_role_rules()
+	var/list/best_choice = null
+	var/best_score = 0
+	var/stored_title = owner_build?.get_magic_value("resident_advjob_title")
 
-	if((owner_build?.get_skill_value(/datum/skill/labor/mining) || 0) > 0)
-		return /datum/advclass/miner
+	for(var/rule_entry in rules)
+		var/list/rule = rule_entry
+		if(!islist(rule))
+			continue
 
-	if((owner_build?.get_skill_value(/datum/skill/craft/carpentry) || 0) > 0)
-		return /datum/advclass/woodworker
+		var/title = get_pliant_safe_class_name(rule["title"])
+		if(!length(title))
+			continue
 
-	if((owner_build?.get_skill_value(/datum/skill/labor/fishing) || 0) > 0)
-		return /datum/advclass/fisher
+		// Combat/magic/specialist titles can be used for Pliant naming, but should not
+		// silently assign restricted advclasses as Resident jobs.
+		if(is_tat_resident_special_role_title(title))
+			continue
 
-	if((owner_build?.get_skill_value(/datum/skill/craft/sewing) || 0) > 0)
-		return /datum/advclass/seamstress
+		var/score = get_pliant_skill_role_score(rule)
+		if(score <= 0)
+			continue
 
-	return null
+		var/advjob_path = get_tat_resident_advjob_path_for_title(title)
+		var/list/choice = list(
+			"title" = title,
+			"path" = advjob_path,
+			"score" = score,
+		)
+
+		if(score > best_score)
+			best_score = score
+			best_choice = choice
+			continue
+
+		// Stable tie-breaker: if the player already had this exact title stored and it
+		// is still equally valid, keep it instead of flipping by list order.
+		if(score == best_score && stored_title && lowertext("[stored_title]") == lowertext(title))
+			best_choice = choice
+
+	return best_choice
+
+/datum/tat_traits/proc/get_tat_resident_advjob()
+	var/list/choice = get_tat_resident_role_choice()
+	if(!islist(choice))
+		return null
+	return choice["path"]
 
 /datum/tat_traits/proc/apply_resident_advjob(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_RESIDENT))
 		return
 
-	var/resident_advjob_type = get_tat_resident_advjob()
-	if(!resident_advjob_type)
+	var/list/choice = get_tat_resident_role_choice()
+	if(!islist(choice))
 		return
 
-	var/datum/advclass/advclass = new resident_advjob_type
-	if(!advclass)
+	var/title = get_pliant_safe_class_name(choice["title"])
+	var/resident_advjob_type = choice["path"]
+	var/applied_name = title
+
+	if(resident_advjob_type)
+		var/datum/advclass/advclass = new resident_advjob_type
+		if(advclass)
+			applied_name = get_pliant_safe_class_name(advclass.name, title)
+			qdel(advclass)
+
+	if(!length(applied_name))
 		return
 
-	H.advjob = advclass.name
-	qdel(advclass)
+	H.advjob = applied_name
+	owner_build?.set_magic_value("resident_advjob_title", title)
+	if(resident_advjob_type)
+		owner_build?.set_magic_value("resident_advjob", resident_advjob_type)
+	else
+		owner_build?.set_magic_value("resident_advjob", null)
 
 /datum/tat_traits/proc/get_outlander_natural_potential_discount(trait_id)
 	if(trait_id != TAT_TRAIT_BONUS_STAT_POOL)

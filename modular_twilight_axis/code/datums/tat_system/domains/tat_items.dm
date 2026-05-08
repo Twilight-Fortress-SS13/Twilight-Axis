@@ -1214,6 +1214,62 @@
 		added = TRUE
 	return added
 
+/datum/tat_items/proc/remove_item_path_from_mind_stash(mob/living/carbon/human/H, item_path, amount = 1)
+	if(!H?.mind || !ispath(item_path, /obj/item) || !islist(H.mind.special_items))
+		return FALSE
+	var/count = max(0, round(amount || 0))
+	if(count <= 0)
+		return FALSE
+	var/removed = 0
+	for(var/key in H.mind.special_items.Copy())
+		if(removed >= count)
+			break
+		if(H.mind.special_items[key] != item_path)
+			continue
+		H.mind.special_items -= key
+		removed++
+	return removed > 0
+
+/datum/tat_items/proc/get_loadout_assigned_slot_count(item_path)
+	var/list/loadout = get_loadout(item_path)
+	var/list/slots = loadout["slots"]
+	if(!islist(slots))
+		return 0
+	return length(slots)
+
+/datum/tat_items/proc/get_consumed_donor_loadout_amount(item_path)
+	var/donor_amount = get_granted_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT)
+	if(donor_amount <= 0)
+		return 0
+	var/list/loadout = get_loadout(item_path)
+	var/assigned = get_loadout_assigned_slot_count(item_path)
+	var/bag = max(0, round(loadout["bag"] || 0))
+	return min(donor_amount, assigned + bag)
+
+/datum/tat_items/proc/remove_consumed_preference_loadout_from_mind_stash(mob/living/carbon/human/H)
+	if(!H?.mind || !islist(H.mind.special_items))
+		return FALSE
+	var/changed = FALSE
+	for(var/item_path in get_all_item_paths())
+		var/consumed = get_consumed_donor_loadout_amount(item_path)
+		if(consumed <= 0)
+			continue
+		if(remove_item_path_from_mind_stash(H, item_path, consumed))
+			changed = TRUE
+	return changed
+
+/datum/tat_items/proc/get_effective_stash_spawn_amount(item_path)
+	if(get_amount(item_path) <= 0)
+		return 0
+	normalize_loadout(item_path)
+	var/list/loadout = get_loadout(item_path)
+	var/amount = get_amount(item_path)
+	var/assigned = get_loadout_assigned_slot_count(item_path)
+	var/bag = max(0, round(loadout["bag"] || 0))
+	var/stash = max(0, round(loadout["stash"] || 0))
+	var/max_stash = max(0, amount - assigned - bag)
+	return min(stash, max_stash)
+
 /datum/tat_items/proc/stash_existing_item_for_later(obj/item/I, mob/living/carbon/human/H, item_path = null)
 	if(!I || QDELETED(I))
 		return FALSE
@@ -1518,8 +1574,7 @@
 		return FALSE
 	var/added = FALSE
 	for(var/item_path in get_all_item_paths())
-		var/list/loadout = get_loadout(item_path)
-		var/stash_amount = round(loadout["stash"] || 0)
+		var/stash_amount = get_effective_stash_spawn_amount(item_path)
 		if(stash_amount <= 0)
 			continue
 		if(add_item_path_to_mind_stash(H, item_path, stash_amount))
@@ -1537,6 +1592,10 @@
 	for(var/item_path in get_all_item_paths())
 		normalize_loadout(item_path)
 
+	// If the legacy preference-loadout block already placed donor items into
+	// mind.special_items, remove copies that the TAT loadout will spawn in bag or
+	// equipped slots. This keeps old integration order from duplicating Pliant gear.
+	remove_consumed_preference_loadout_from_mind_stash(H)
 	spawn_stash_items(H)
 	spawn_assigned_loadout_items(H, FALSE)
 	grant_default_roundstart_bag(H)
@@ -1716,7 +1775,23 @@
 	if(isnull(value))
 		return FALSE
 	var/text = lowertext("[value]")
-	return !!findtext(text, "pliant")
+	if(findtext(text, "pliant"))
+		return TRUE
+	// TAT roundstart roles may be stored as SQL buckets or job titles rather than
+	// literally containing "Pliant". Treat those as TAT-managed loadout roles too.
+	if(text == lowertext(TAT_SQL_ROLE_TOWNER))
+		return TRUE
+	if(text == lowertext(TAT_SQL_ROLE_TRADER))
+		return TRUE
+	if(text == lowertext(TAT_SQL_ROLE_ADVENTURER))
+		return TRUE
+	if(text == lowertext(TAT_SQL_ROLE_WRETCH))
+		return TRUE
+	if(findtext(text, "tat "))
+		return TRUE
+	if(findtext(text, "tat_"))
+		return TRUE
+	return FALSE
 
 /proc/tat_is_pliant_roundstart_character(mob/living/carbon/human/character)
 	if(!character)
@@ -1749,7 +1824,9 @@
 	if(!player?.prefs?.tat_build)
 		return FALSE
 
-	if(!tat_is_pliant_roundstart_character(character))
+	// Preferred path: the actual TAT build application has marked the character.
+	// Fallback path: detect TAT/Pliant roundstart roles before the build flag exists.
+	if(!character.tat_handles_preference_loadout && !tat_is_pliant_roundstart_character(character))
 		return FALSE
 
 	var/datum/tat_build/build = player.prefs.tat_build
@@ -1757,6 +1834,7 @@
 	if(build.is_owner_tat_banned(character))
 		return FALSE
 
+	character.tat_handles_preference_loadout = TRUE
 	build.items?.sync_donor_loadout_from_preferences()
 	return TRUE
 

@@ -581,6 +581,9 @@
 		tat_tell_banned(H)
 		return FALSE
 
+	H.tat_handles_preference_loadout = TRUE
+	items?.sync_external_grants()
+
 	sanitize()
 
 	traits.apply_instant_to_human(H)
