@@ -1712,12 +1712,44 @@
 
 	return TRUE
 
+/proc/tat_role_text_matches_pliant(value)
+	if(isnull(value))
+		return FALSE
+	var/text = lowertext("[value]")
+	return !!findtext(text, "pliant")
+
+/proc/tat_is_pliant_roundstart_character(mob/living/carbon/human/character)
+	if(!character)
+		return FALSE
+
+	if(tat_role_text_matches_pliant(character.mind?.assigned_role))
+		return TRUE
+
+	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
+	if(assigned_job)
+		if(tat_role_text_matches_pliant(assigned_job.type))
+			return TRUE
+		if(tat_role_text_matches_pliant(assigned_job.vars["title"]))
+			return TRUE
+		if(tat_role_text_matches_pliant(assigned_job.vars["name"]))
+			return TRUE
+
+	if(tat_role_text_matches_pliant(character.vars["job"]))
+		return TRUE
+	if(tat_role_text_matches_pliant(character.vars["mind_role"]))
+		return TRUE
+
+	return FALSE
+
 /proc/tat_build_handles_preference_loadout(mob/living/carbon/human/character, client/player)
 	if(!character)
 		return FALSE
 	if(!player)
 		player = character.client
 	if(!player?.prefs?.tat_build)
+		return FALSE
+
+	if(!tat_is_pliant_roundstart_character(character))
 		return FALSE
 
 	var/datum/tat_build/build = player.prefs.tat_build
@@ -1735,6 +1767,8 @@
 		player = character.client
 	if(!player?.prefs)
 		return FALSE
+	if(tat_build_handles_preference_loadout(character, player))
+		return TRUE
 
 	var/triumph_discount_remaining = is_donator(player.ckey) ? 3 : 0 // donators get first 3 triumph points free
 	if(player.prefs.selected_loadout_items)
