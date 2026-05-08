@@ -23,8 +23,8 @@
 /obj/item/rug_stored
 	name = "red rug roll"
 	desc = "A roll of beautifull rug."
-	icon = 'icons/roguetown/topadd/johnie/amulets backpacks.dmi'
-	icon_state = "bedroll"
+	icon = 'modular_twilight_axis/icons/roguetown/items/kover_ahuy.dmi'
+	icon_state = "kovr_red"
 	w_class = WEIGHT_CLASS_SMALL
 	resistance_flags = FIRE_PROOF
 	grid_height = 32
@@ -32,7 +32,6 @@
 
 /obj/item/rug_stored/attack_self(mob/user)
 	. = ..()
-	//deploy the table if the user clicks on it with an open turf in front of them
 	var/turf/target_turf = get_step(user,user.dir)
 	if(target_turf.is_blocked_turf(TRUE) || (locate(/mob/living) in target_turf))
 		to_chat(user, span_danger("I can't deploy the Rug here!"))
@@ -66,3 +65,119 @@
 		new /obj/item/rug_stored(drop_location())
 		qdel(src)
 		return ..()
+
+/obj/item/rug_purple_stored
+	name = "purple rug roll"
+	desc = "A roll of beautifull rug."
+	icon_state = "kovr_purple"
+	icon = 'modular_twilight_axis/icons/roguetown/items/kover_ahuy.dmi'
+	w_class = WEIGHT_CLASS_SMALL
+	resistance_flags = FIRE_PROOF
+	grid_height = 32
+	grid_width = 64
+
+/obj/item/rug_purple_stored/attack_self(mob/user)
+	. = ..()
+	var/turf/target_turf = get_step(user,user.dir)
+	if(target_turf.is_blocked_turf(TRUE) || (locate(/mob/living) in target_turf))
+		to_chat(user, span_danger("I can't deploy the Rug here!"))
+		return NONE
+	if(isopenturf(target_turf))
+		if(do_after(user, 2 SECONDS, TRUE, src))
+			deploy_rug_purple(user, target_turf)
+			return TRUE
+	return NONE
+
+/obj/item/rug_purple_stored/proc/deploy_rug_purple(mob/user, atom/location)
+	to_chat(user, "<span class='notice'>You deploy the Rug.</span>")
+	new /obj/effect/decal/carpet/kover_purple/foldable(location)
+	qdel(src)
+
+/obj/effect/decal/carpet/kover_purple/foldable
+	name = "Purple Rug"
+	desc = "A beautifull purple rug which can be rolled up."
+	resistance_flags = FLAMMABLE
+	max_integrity = 50
+	smooth = 0
+	debris = list(/obj/item/grown/log/tree/small = 1)
+
+/obj/effect/decal/carpet/kover_purple/foldable/examine()
+	. = ..()
+	. += span_blue("Right-Click to fold the table.")
+
+/obj/effect/decal/carpet/kover_purple/foldable/attack_right(mob/user)
+	user.visible_message(span_notice("[user] folds [src]."), span_notice("You fold [src]."))
+	if(do_after(user, 2 SECONDS, TRUE, src))
+		new /obj/item/rug_purple_stored(drop_location())
+		qdel(src)
+		return ..()
+
+/obj/item/rug_black_stored
+	name = "black rug roll"
+	desc = "A roll of beautifull rug."
+	icon = 'modular_twilight_axis/icons/roguetown/items/kover_ahuy.dmi'
+	icon_state = "kovr_black"
+	w_class = WEIGHT_CLASS_SMALL
+	resistance_flags = FIRE_PROOF
+	grid_height = 32
+	grid_width = 64
+
+/obj/item/rug_black_stored/attack_self(mob/user)
+	. = ..()
+	var/turf/target_turf = get_step(user,user.dir)
+	if(target_turf.is_blocked_turf(TRUE) || (locate(/mob/living) in target_turf))
+		to_chat(user, span_danger("I can't deploy the Rug here!"))
+		return NONE
+	if(isopenturf(target_turf))
+		if(do_after(user, 2 SECONDS, TRUE, src))
+			deploy_rug_black(user, target_turf)
+			return TRUE
+	return NONE
+
+/obj/item/rug_black_stored/proc/deploy_rug_black(mob/user, atom/location)
+	to_chat(user, "<span class='notice'>You deploy the Rug.</span>")
+	new /obj/effect/decal/carpet/kover_black/foldable(location)
+	qdel(src)
+
+/obj/effect/decal/carpet/kover_black/foldable
+	name = "Black Rug"
+	desc = "A beautifull black rug which can be rolled up."
+	resistance_flags = FLAMMABLE
+	max_integrity = 50
+	smooth = 0
+	debris = list(/obj/item/grown/log/tree/small = 1)
+
+/obj/effect/decal/carpet/kover_black/foldable/examine()
+	. = ..()
+	. += span_blue("Right-Click to fold the table.")
+
+/obj/effect/decal/carpet/kover_black/foldable/attack_right(mob/user)
+	user.visible_message(span_notice("[user] folds [src]."), span_notice("You fold [src]."))
+	if(do_after(user, 2 SECONDS, TRUE, src))
+		new /obj/item/rug_black_stored(drop_location())
+		qdel(src)
+		return ..()
+
+/datum/crafting_recipe/roguetown/sewing/red_kovr
+    name = "Red Rug Roll"
+    category = "Misc"
+    tools = list(/obj/item/needle)
+    result = list(/obj/item/rug_stored)
+    reqs = list(/obj/item/natural/cloth = 2, /obj/item/natural/fibers = 3, /obj/item/natural/silk = 6)
+    craftdiff = 4
+
+/datum/crafting_recipe/roguetown/sewing/gerkit/purple_kovr
+    name = "Purple Rug Roll"
+    category = "Misc"
+    tools = list(/obj/item/needle)
+    result = list(/obj/item/rug_purple_stored)
+    reqs = list(/obj/item/natural/cloth = 2, /obj/item/natural/fibers = 3, /obj/item/natural/silk = 6)
+    craftdiff = 4
+
+/datum/crafting_recipe/roguetown/sewing/gerkit/black_kor
+    name = "Black Rug Roll"
+    category = "Misc"
+    tools = list(/obj/item/needle)
+    result = list(/obj/item/rug_black_stored)
+    reqs = list(/obj/item/natural/cloth = 2, /obj/item/natural/fibers = 3, /obj/item/natural/silk = 6)
+    craftdiff = 4
