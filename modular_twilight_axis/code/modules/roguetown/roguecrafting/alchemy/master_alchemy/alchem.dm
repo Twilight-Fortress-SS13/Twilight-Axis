@@ -846,6 +846,16 @@
 	icon_state = "labs_0"
 	base_desc = "An unfinished alchemy workbench."
 
+	density = TRUE
+	anchored = TRUE
+
+	bound_width = 64
+	bound_height = 32
+	bound_x = 0
+	bound_y = 0
+	pixel_x = 0
+	pixel_y = -16    
+
 	stage_types = list(
 		/datum/crafting_stage/alch_workbench/stage_1
 	)

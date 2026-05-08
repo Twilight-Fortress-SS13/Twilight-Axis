@@ -174,6 +174,7 @@
 	. = ..()
 	client?.prefs?.apply_erp_kinks_to_mob(src)
 	SSerp.apply_prefs_for_mob(src)
+	erp_resync_after_body_restore()
 
 /obj/item/bodypart/head/dullahan/MiddleMouseDrop_T(atom/movable/dragged, mob/living/user)
 	if(user.mmb_intent)
@@ -185,51 +186,12 @@
 	return erp_try_start(user, src, user)
 
 /obj/item/bodypart/head/dullahan/drop_limb(special)
-	var/mob/living/carbon/human/user = original_owner
-	var/datum/species/dullahan/user_species = user.dna.species
-
-	user_species.soul_light_on(user)
-	user_species.headless = TRUE
-	SEND_SIGNAL(user, COMSIG_ERP_ANATOMY_CHANGED)
-	
-	grabbedby = SANITIZE_LIST(grabbedby)
-	if(grabbedby)
-		for(var/obj/item/grabbing/grab in grabbedby)
-			if(grab.grab_state != GRAB_AGGRESSIVE)
-				continue
-
-			var/mob/living/carbon/human = grab.grabbee
-			var/hand_index = human.get_held_index_of_item(grab)
-			human.dropItemToGround(grab)
-
-			if(!special)
-				insert_worn_items()
-
-			. = ..()
-
-			human.put_in_hand(src, hand_index)
-			grabbedby.Cut()
-			return
-
-		grabbedby.Cut()
-
-	if(!special)
-		insert_worn_items()
-
 	. = ..()
+	SEND_SIGNAL(original_owner, COMSIG_ERP_ANATOMY_CHANGED)
 
 /obj/item/bodypart/head/dullahan/attach_limb(mob/living/carbon/human/user)
-	var/mob/living/carbon/human/user_dullahan = original_owner ? original_owner : user
-	var/datum/species/dullahan/user_species = user_dullahan.dna.species
-	user_species.soul_light_off()
-	user_species.headless = FALSE
-	SEND_SIGNAL(user, COMSIG_ERP_ANATOMY_CHANGED)
-	for(var/item_slot in head_items)
-		var/obj/item/worn_item = head_items[item_slot]
-		if(worn_item)
-			user_dullahan.equip_to_slot(worn_item, text2num(item_slot))
-	head_items = list()
-	return ..()
+	. = ..()
+	SEND_SIGNAL((original_owner ? original_owner : user), COMSIG_ERP_ANATOMY_CHANGED)
 
 /mob/living/carbon/human/species/wildshape
 	var/added_penis = FALSE
@@ -356,20 +318,6 @@
 
 	EC.add_partner_atom(target_atom)
 	EC.open_ui(actor)
-
-	if(C && ckey(C.ckey) == "mrix")
-		var/has_component = actor.GetComponent(/datum/component/combo_core/temptress)
-
-		var/has_spell = FALSE
-		if(actor.mind?.spell_list)
-			for(var/obj/effect/proc_holder/spell/S as anything in actor.mind.spell_list)
-				if(istype(S, /obj/effect/proc_holder/spell/self/temptress_awaken))
-					has_spell = TRUE
-					break
-
-		if(!has_component && !has_spell)
-			actor.mind.AddSpell(new /obj/effect/proc_holder/spell/self/temptress_awaken)
-
 	return EC
 
 /proc/erp_can_use_menu_as_actor(mob/living/actor, silent = FALSE, force = FALSE)
@@ -471,3 +419,50 @@
 
 	EC.open_ui(actor)
 	return EC
+
+/mob/living/proc/erp_resync_after_body_restore()
+	if(!SSerp)
+		return
+
+	var/client/C = client
+
+	var/datum/erp_controller/EC = null
+	if(C)
+		EC = SSerp.get_controller_for_client(C)
+
+	if(!EC)
+		EC = SSerp.get_controller_for(src)
+
+	if(EC)
+		EC.rebind_owner(src, C, src)
+
+		if(EC.owner)
+			EC.owner.attach_client(C)
+			EC.owner.set_effect_mob(src)
+			EC.owner.mark_organs_dirty()
+			EC.owner.rebuild_organs()
+
+		for(var/datum/erp_actor/A as anything in EC.actors)
+			if(!A || QDELETED(A))
+				continue
+
+			if(A.active_actor == src || A.physical == src || A.get_signal_mob() == src)
+				A.attach_client(C)
+				A.set_effect_mob(src)
+				A.mark_organs_dirty()
+				A.rebuild_organs()
+
+		EC.request_ui_update()
+
+	SSerp.apply_prefs_for_mob(src)
+	SEND_SIGNAL(src, COMSIG_ERP_ANATOMY_CHANGED)
+
+/obj/effect/proc_holder/spell/invoked/resurrect/cast(list/targets, mob/living/user)
+	. = ..()
+
+	if(!. || !length(targets))
+		return
+
+	if(isliving(targets[1]))
+		var/mob/living/target = targets[1]
+		target.erp_resync_after_body_restore()

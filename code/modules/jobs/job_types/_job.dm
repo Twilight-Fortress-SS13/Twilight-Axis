@@ -72,7 +72,7 @@
 
 	//allowed sex/race for picking
 	var/list/allowed_sexes = list(MALE, FEMALE)
-	var/list/allowed_races = RACES_ALL_KINDS
+	var/list/forbidden_races
 	var/list/allowed_patrons
 	var/list/allowed_ages = ALL_AGES_LIST
 
@@ -201,7 +201,7 @@
 
 /datum/job/proc/validate_prefs_for_job(datum/preferences/P) //TA EDIT START
 	if(!P) return FALSE
-	if(length(allowed_races) && !(P.pref_species.type in allowed_races)) return FALSE
+	if(length(forbidden_races) && (P.pref_species.type in forbidden_races)) return FALSE
 	if(length(allowed_patrons) && !(P.selected_patron.type in allowed_patrons)) return FALSE
 	if(length(allowed_ages) && !(P.age in allowed_ages)) return FALSE
 	if(length(allowed_sexes) && !(P.gender in allowed_sexes)) return FALSE

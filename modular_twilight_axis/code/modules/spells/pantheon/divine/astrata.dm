@@ -4,8 +4,9 @@
 	name = "Sacred Flame"
 	desc = "Deals damage and ignites target, with extra damage done to undead."
 	clothes_req = FALSE
-	overlay_state = "sacredflame"
-	base_icon_state = "regalyscroll"
+	action_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_state = "bolt"
 	sound = 'sound/magic/lightning.ogg'
 	range = 8
 	projectile_type = /obj/projectile/magic/TAsacred_flame
@@ -74,8 +75,9 @@
 /obj/effect/proc_holder/spell/invoked/TAignition
 	name = "Ignition"
 	desc = "Ignites target, living or object. No cooldown on objects."
-	overlay_state = "sacredflame"
-	base_icon_state = "regalyscroll"
+	action_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_state = "ignite"
 	releasedrain = 15
 	chargedrain = 0
 	chargetime = 0
@@ -116,7 +118,7 @@
 			L.adjust_fire_stacks(firebust, /datum/status_effect/fire_handler/fire_stacks/divine)
 			L.ignite_mob()
 		if(!L.mind || istype(L, /mob/living/simple_animal)) //Firestacks not effective VS carbon-AL enemy. Simple mobs don't take fire damage.
-			L.adjustFireLoss(10*firebust) //10 * skill-1. Legendary cast take 50 burn damage for non-minded creatures. 
+			L.adjustFireLoss(10*firebust) //10 * skill-1. Legendary cast take 50 burn damage for non-minded creatures.
 
 		return TRUE
 
@@ -150,8 +152,9 @@
 /obj/effect/proc_holder/spell/invoked/TArevive
 	name = "Anastasis"
 	desc = "Focus Astratas energy through a stationary psycross, reviving the target from death. If target not noble, or not cleric - Sun will punish you"
+	action_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_icon = 'icons/mob/actions/astratamiracles.dmi'
 	overlay_state = "revive"
-	base_icon_state = "regalyscroll"
 	releasedrain = 90
 	chargedrain = 0
 	chargetime = 50
@@ -229,7 +232,7 @@
 	if(revive_pq && !HAS_TRAIT(target, TRAIT_IWASREVIVED) && user?.ckey)
 		adjust_playerquality(revive_pq, user.ckey)
 		ADD_TRAIT(target, TRAIT_IWASREVIVED, "[type]")
-	if(!HAS_TRAIT(target, TRAIT_NOBLE) || !HAS_TRAIT(target, TRAIT_DEFILED_NOBLE) || (target.get_skill_level(associated_skill)) <= 1)
+	if(!HAS_TRAIT(target, TRAIT_NOBLE) && !HAS_TRAIT(target, TRAIT_DEFILED_NOBLE) && (target.get_skill_level(associated_skill)) <= 1)
 		user.add_stress(/datum/stressevent/bad_revive)
 		user.apply_status_effect(/datum/status_effect/debuff/bad_revive)
 		user.adjust_fire_stacks(5)
@@ -252,7 +255,7 @@
 	icon_state = "gallows"
 
 /datum/stressevent/bad_revive
-	timer = 20 MINUTES 
+	timer = 20 MINUTES
 	stressadd = 5
 	desc = span_boldred("I revive ugly peasant!")
 
@@ -282,8 +285,9 @@
 	Casting on a burning mob will double their fire stacks.\n\
 	Casting on yourself will ignite any flammable object in a 3x3 area around yourself."
 	clothes_req = FALSE
-	overlay_state = "astraflame"
-	base_icon_state = "regalyscroll"
+	action_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_state = "pyre"
 	sound = 'sound/magic/whiteflame.ogg'
 	range = 8
 	releasedrain = 30
@@ -359,8 +363,9 @@
 /obj/effect/proc_holder/spell/self/TAastrata_gaze
 	name = "Astratan Gaze"
 	desc = "Removes the limit on your vision, letting you see behind you for a time, lasts longer during the dae and gives a perception bonus to those skilled and holy arts."
-	overlay_state = "astrata_gaze"
-	base_icon_state = "regalyscroll"
+	action_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_state = "gaze"
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 0
@@ -386,7 +391,8 @@
 /atom/movable/screen/alert/status_effect/buff/TAastrata_gaze
 	name = "Astratan's Gaze"
 	desc = "She shines through me, illuminating all injustice."
-	icon_state = "astrata_gaze"
+	icon = 'icons/mob/actions/astratamiracles.dmi'
+	icon_state = "gaze"
 
 /datum/status_effect/buff/TAastrata_gaze
 	id = "astratagaze"
@@ -401,7 +407,7 @@
 	.=..()
 
 /datum/status_effect/buff/TAastrata_gaze/on_apply()
-	// Reset base values because the miracle can 
+	// Reset base values because the miracle can
 	// now actually be recast at high enough skill and during day time
 	// This is a safeguard because buff code makes my head hurt
 	var/per_bonus = 0
@@ -440,8 +446,9 @@
 /obj/effect/proc_holder/spell/self/TAastrata_fireresist
 	name = "Flame Body"
 	desc = "Grants you a temporary resistance to flame... for a small price of your constitution."
-	overlay_state = "createlight"
-	base_icon_state = "regalyscroll"
+	action_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_state = "cloak"
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 0
@@ -477,12 +484,13 @@
 /atom/movable/screen/alert/status_effect/buff/dragonhide/TAfireresist
 	name = "Fire Resistance"
 	desc = "Flames dance at my heels, yet do not sting!"
-	icon_state = "fire"
+	icon = 'icons/mob/actions/astratamiracles.dmi'
+	icon_state = "cloak"
 
 /datum/status_effect/buff/dragonhide/TAfireresist
 	id = "fireresist"
 	examine_text = "<font color='red'>SUBJECTPRONOUN is shielded by a veil of sacred flame!</font>"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/dragonhide/fireresist
+	alert_type = /atom/movable/screen/alert/status_effect/buff/dragonhide/TAfireresist
 	effectedstats = list(STATKEY_CON = -1) //Target body loosing CON, but getting fireresist.
 	duration = 11 SECONDS
 
@@ -537,10 +545,11 @@
 	name = "Astrata's Grasp"
 	desc = "HER fire burnet eaternae. Summon Her flame from your soul and let it envelop your hand. Use on ashes, fire dust and fyritius flowers to convert them into devotion. Can ignite objects. Consumes fire stacks on people to do extra damage."
 	clothes_req = FALSE
+	action_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_state = "grasp"
 	drawmessage = "I prepare to perform a divine incantation."
 	dropmessage = "I release my divine focus."
-	overlay_state = "astratagrasp"
-	base_icon_state = "regalyscroll"
 	chargedrain = 0
 	chargetime = 0
 	releasedrain = 5 // this influences -every- cost involved in the spell's functionality, if you want to edit specific features, do so in handle_cost
@@ -951,8 +960,9 @@
 /obj/effect/proc_holder/spell/invoked/TAsunstrike
 	name = "Sun Strike"
 	desc = "Focus Astratas energy through a stationary Psycross or Bishop's hands. Call down the mercy of the Sun Goddess upon the enemy."
+	action_icon = 'modular_twilight_axis/icons/mob/actions/astrataspells.dmi'
+	action_icon = 'modular_twilight_axis/icons/mob/actions/astrataspells.dmi'
 	overlay_state = "sunstrike"
-	base_icon_state = "regalyscroll"
 	releasedrain = 200
 	chargedrain = 0
 	chargetime = 50
@@ -1035,7 +1045,7 @@
 		revert_cast()
 		return FALSE
 	return TRUE
-/*
+
 /obj/effect/temp_visual/firewave/sun_mark
 	icon = 'icons/effects/160x160.dmi'
 	icon_state = "sun"
@@ -1066,7 +1076,7 @@
 
 /obj/effect/temp_visual/firewave/sunstrike/primary/proc/pre_strike()
 	var/turf/T = get_turf(src)
-	playsound(T,'sound/magic/revive.ogg', 80, TRUE)
+	playsound(T, 'sound/magic/revive.ogg', 80, TRUE)
 	loud_message("<font size = 9>[span_purple("THE SKY IS FLOODED WITH WHITE FIRE!!")]</font><br>", hearing_distance = 14)
 
 	for(var/turf/Target_turf in range(1, get_turf(src)))
@@ -1075,7 +1085,7 @@
 
 /obj/effect/temp_visual/firewave/sunstrike/primary/proc/strike()
 	var/turf/T = get_turf(src)
-	playsound(T,'sound/magic/astrata_choir.ogg', 100, TRUE)
+	playsound(T, 'sound/magic/astrata_choir.ogg', 100, TRUE)
 	explosion(T, -1, 0, 0, 0, 0, flame_range = 0, soundin = 'sound/misc/explode/incendiary (1).ogg')
 	var/obj/effect/temp_visual/mark = new /obj/effect/temp_visual/firewave/sunbeam(T)
 
@@ -1087,7 +1097,7 @@
 		for(var/mob/living/L in Target_turf.contents)
 			to_chat(L, span_userdanger("The sun crushes you!!"))
 			var/dist_to_epicenter = get_dist(T, L)
-			var/firedamage = 200 - (dist_to_epicenter*15)
+			var/firedamage = 200 - (dist_to_epicenter * 15)
 			var/firestack = 10 - dist_to_epicenter
 			L.adjustFireLoss(firedamage)
 			L.adjust_fire_stacks(firestack)
@@ -1102,28 +1112,30 @@
 			if(dist_to_epicenter == 0) //center
 				explosion(T, -1, 1, 1, 0, 0, flame_range = 1, soundin = 'sound/misc/explode/incendiary (1).ogg')
 				new /obj/effect/hotspot(get_turf(L))
-				if(!((L.patron?.type) == /datum/patron/divine))
+				if(!istype(L.patron, /datum/patron/divine))
 					L.gib()
 				else
 					L.adjustFireLoss(500)
 					L.stat = DEAD
 	for(var/obj/item/I in range(1, T))
 		qdel(I)
-	for (var/obj/structure/damaged in view(2, T))
+	for(var/obj/structure/damaged in view(2, T))
 		if(!istype(damaged, /obj/structure/flora/newbranch))
-			damaged.take_damage(500,BRUTE,"blunt",1)
-	for (var/turf/closed/wall/damagedwalls in view(1, T))
-		damagedwalls.take_damage(1100,BRUTE,"blunt",1)
-	for (var/turf/closed/mineral/aoemining in view(2, T))
+			damaged.take_damage(500, BRUTE, "blunt", 1)
+	for(var/turf/closed/wall/damagedwalls in view(1, T))
+		damagedwalls.take_damage(1100, BRUTE, "blunt", 1)
+	for(var/turf/closed/mineral/aoemining in view(2, T))
 		aoemining.lastminer = usr
-		aoemining.take_damage(1100,BRUTE,"blunt",1)
+		aoemining.take_damage(1100, BRUTE, "blunt", 1)
 	sleep(10)
 	animate(mark, alpha = 5, time = 10, flags = ANIMATION_PARALLEL)
-*/
+
 /obj/effect/proc_holder/spell/self/TAastrata_sword
 	name = "Solar Blade"
 	desc = "Call for a blade to preserve light and order in Psydonia. Its strength is middling, but it glows fiercely and can be used to cauterize wounds."
-	overlay_state = "sacredflame"
+	action_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_icon = 'icons/mob/actions/astratamiracles.dmi'
+	overlay_state = "blade"
 	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
 	associated_skill = /datum/skill/magic/holy
 	recharge_time = 5 MINUTES

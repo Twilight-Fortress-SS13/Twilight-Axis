@@ -62,6 +62,18 @@
 	tranged = TRUE
 	noaa = TRUE
 
+/datum/intent/knuckles/sear
+	name = "sear"
+	blade_class = BCLASS_BURN
+	attack_verb = list("chars", "sears")
+	hitsound = list('sound/combat/hits/punch/punch_hard (1).ogg', 'sound/combat/hits/punch/punch_hard (2).ogg', 'sound/combat/hits/punch/punch_hard (3).ogg')
+	chargetime = 0
+	penfactor = PEN_NONE
+	clickcd = 8
+	swingdelay = 0
+	icon_state = "incrack"
+	item_d_type = BURN
+
 /datum/intent/knuckles/strike
 	name = "punch"
 	blade_class = BCLASS_BLUNT
@@ -466,7 +478,7 @@
 	name = "vicious sickleclaw"
 	desc = "A tainted mimicry of Ravox's falx, forever stained with the blood of the one they both cherished above all else. The fury of God, for \
 	just a moment, wilted before the sorrow of Man; before the wounded champion lept forth and drove His blade straight into the Sinistar's eye."
-	icon_state = "gheretic_patasickle"
+	icon_state = "graggarpatasickle"
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
 	wdefense = 3
 	force = 35
@@ -485,7 +497,7 @@
 	name = "vicious mantlebreaker"
 	desc = "A tainted mimicry of Astrata's staff, studded with the remains of divine bone and gristle. By His command, the Apotheosis rose; and with His \
 	final heartbeat, the Sinistar fell. How little He could've known, that it would ultimately be a tragedy without purpose - a war without reason."
-	icon_state = "gheretic_pataclub"
+	icon_state = "graggarpataclub"
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
 	wdefense = 3
 	force = 35
@@ -784,6 +796,24 @@
 				return list("shrink" = 0.7,"sx" = 5,"sy" = -3,"nx" = -5,"ny" = -2,"wx" = -5,"wy" = -1,"ex" = 3,"ey" = -2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 7,"sturn" = -7,"wturn" = 16,"eturn" = -22,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
 
 
+/obj/item/rogueweapon/scythe/silver
+	name = "silver scythe"
+	is_silver = TRUE
+	desc = "The bane of fields, the trimmer of grass, the harvester of wheat, and - depending on who you ask - the shepherd of souls to the afterlyfe. This one is made of silver."
+	icon_state = "silverpeasantscythe"
+	smeltresult = /obj/item/ingot/silver
+
+/obj/item/rogueweapon/scythe/silver/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_NONE,\
+		silver_type = SILVER_TENNITE,\
+		added_force = 0,\
+		added_blade_int = 0,\
+		added_int = 50,\
+		added_def = 2,\
+	)
+
 /obj/item/rogueweapon/pick/militia
 	name = "militia warpick"
 	desc = "At the end of the dae, a knight's bascinet isn't much different than a particularly large stone. After all, both tend to rupture with sobering ease when introduced to a sharpened pickend."
@@ -966,13 +996,13 @@
 	damfactor = 1.2
 	swingdelay = 8
 	clickcd = CLICK_CD_MELEE
-	penfactor = PEN_MEDIUM
+	penfactor = PEN_HEAVY
 
 /datum/intent/claw/lunge/steel
 	damfactor = 1.2
 	swingdelay = 12
 	clickcd = CLICK_CD_HEAVY
-	penfactor = PEN_MEDIUM
+	penfactor = PEN_HEAVY
 
 /datum/intent/claw/lunge/gronn
 	damfactor = 1.1
@@ -990,13 +1020,12 @@
 	item_d_type = "slash"
 
 /datum/intent/claw/cut/iron
-	penfactor = PEN_LIGHT
-	swingdelay = 8
-	damfactor = 1.4
+	penfactor = PEN_MEDIUM
+	damfactor = 1.1
 	clickcd = CLICK_CD_HEAVY
 
 /datum/intent/claw/cut/steel
-	penfactor = PEN_NONE
+	penfactor = PEN_MEDIUM
 	swingdelay = 4
 	damfactor = 1.3
 	clickcd = CLICK_CD_HEAVY

@@ -2,7 +2,6 @@
 	name = "Imperial Spellblade"
 	tutorial = "Зибантийские воины клинка и арканы ещё давным давно привлекли внимание Грензельхофта и вы, подражая и пародируя их манере, отточили свои навыки владения клинком и арканой в Имперской Академии Арканы в соответствии с учениями Зибантиийских орденов Нок, после чего отправились на большак зарабатывать средства к существованию за счёт применения своих незаурядных способностей."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
 	allowed_patrons = list(/datum/patron/inhumen/zizo, /datum/patron/divine/noc)
 	outfit = /datum/outfit/job/roguetown/mercenary/imperial_spellblade
 	maximum_possible_slots = 1 

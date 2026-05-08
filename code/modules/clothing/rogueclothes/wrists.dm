@@ -11,6 +11,7 @@
 	grid_width = 32
 	grid_height = 64
 	var/overarmor
+	throw_on_break = TRUE
 	equip_delay_self = 2.5 SECONDS
 	unequip_delay_self = 2.5 SECONDS
 
@@ -151,7 +152,6 @@
 	armor = ARMOR_PADDED
 	max_integrity = ARMOR_INT_SIDE_HARDLEATHER
 	blocksound = SOFTHIT
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	anvilrepair = null
@@ -216,7 +216,6 @@
 	desc = "This shouldn't be used in code."
 	smeltresult = null
 	armor = ARMOR_PADDED
-	blade_dulling = DULLING_BASHCHOP
 	icon_state = "nocwrappings"
 	item_state = "nocwrappings"
 	max_integrity = ARMOR_INT_SIDE_STEEL //Heavy leather-tier protection and critical resistances, steel-tier integrity. Integrity boost encourages hand-to-hand parrying. Weaker than the Psydonic Thorns. Uncraftable.
@@ -420,9 +419,6 @@
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
 
-/obj/item/clothing/wrists/roguetown/bracers/zizo/heavy
-	name = "fused avantyne bracers"
-
 /obj/item/clothing/wrists/roguetown/bracers/zizo/heavy/Initialize()
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
@@ -439,6 +435,10 @@
 	desc = "Oh, to plunge hands into cold water; to play a melody upon an ivory-keyed piano; to watch steam rise from boiling, twisting entrails.."
 	color = "#ddc0a7"
 	smeltresult = /obj/item/ingot/component/graggar
+
+/obj/item/clothing/wrists/roguetown/bracers/graggar/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "ARMOR", "RENDERED ASUNDER")
 
 /obj/item/clothing/wrists/roguetown/bracers/graggar/heavy
 	name = "vicious wristguards"
@@ -460,10 +460,6 @@
 	if(QDELETED(src))
 		return
 	qdel(src)
-
-/obj/item/clothing/wrists/roguetown/bracers/graggar/Initialize()
-	. = ..()
-	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "ARMOR", "RENDERED ASUNDER")
 
 /obj/item/clothing/wrists/roguetown/bracers/hand
 	name = "hand's bracers"

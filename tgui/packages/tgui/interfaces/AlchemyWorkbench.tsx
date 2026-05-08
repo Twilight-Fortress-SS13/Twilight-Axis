@@ -107,7 +107,7 @@ export const AlchemyWorkbench = (props) => {
   const isMaxLevel = data.upgrade_lvl >= 4;
 
   return (
-    <Window title="Великая Алхимическая Лаборатория" width={680} height={600}>
+    <Window title="Великая Алхимическая Лаборатория" width={800} height={750}>
       <Window.Content>
         <Stack vertical fill>
           <Stack.Item>

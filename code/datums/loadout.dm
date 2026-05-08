@@ -810,9 +810,15 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/fancymaiddress
-	name = "maid dress"
+	name = "Valorian Maid Dress"
 	category = list("Одежда", "Донат")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/maidfancy
+	donatitem = TRUE
+
+/datum/loadout_item/maiddress
+	name = "Maid Dress"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/maid
 	donatitem = TRUE
 
 //PANTS
@@ -2703,6 +2709,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Головные уборы", "Донат")
 	donatitem = TRUE
 	donat_tier = 2	
+
+/datum/loadout_item/maidband
+	name = "Maid Headdress"
+	path = /obj/item/clothing/head/roguetown/maidhead
+	category = list("Головные уборы", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/maidbandfancy
+	name = "Valorian Maid Headband"
+	path = /obj/item/clothing/head/roguetown/maidband
+	category = list("Головные уборы", "Донат")
+	donatitem = TRUE
 
 // Обувь
 

@@ -633,6 +633,12 @@ h2.alert {
 	color: #bb4e28;
 	font-size: 75%;
 }
+
+.warningbig {
+	color: #ad1f1a;
+	font-size: 110%;
+}
+
 .boldwarning {
 	color: #bb4e28;
 	font-weight: bold;
@@ -1064,9 +1070,19 @@ h2.alert {
 	font-size: 75%;
 }
 
-.lovebold	{
-  color: #e7bed8;	
-  font-weight: bold;
+.astrata {
+	color: #FFCC33;
+	font-size: 75%;
+}
+
+.undivided {
+	color: #28908C;
+	font-size: 75%;
+}
+
+.lovebold {
+	color: #e7bed8;
+	font-weight: bold;
 }
 
 /*

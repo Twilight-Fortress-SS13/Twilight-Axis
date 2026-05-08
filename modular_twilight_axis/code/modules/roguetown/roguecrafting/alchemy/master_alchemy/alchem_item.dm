@@ -76,6 +76,9 @@
 	
 	template_human.dna.transfer_identity(clone)
 
+	if(clone.dna && clone.dna.body_markings)
+		apply_markings_to_body_parts(clone.dna.body_markings, clone)
+
 	clone.real_name = template_human.real_name
 	clone.name = clone.real_name
 	clone.nickname = template_human.nickname

@@ -73,7 +73,7 @@
 	name = "Ronin"
 	tutorial = "An adventurer hailing from the distant land of Kazengun, left without a home and without a master."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = NON_DWARVEN_RACE_TYPES
+	forbidden_races = list(RACES_SMALL)
 	outfit = /datum/outfit/job/roguetown/adventurer/ronin
 	class_select_category = CLASS_CAT_NOMAD
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_PARRYEXPERT)
@@ -125,7 +125,6 @@
 	name = "Etruscan Marinero"
 	tutorial = "You once served in the Etruscan navy \"Nauticon\", but now that the company in Lirvas has ended for you and your earned gold has come to an end, you are on the path of fortune. Perhaps you will be lucky enough to meet one of your old commanders. But something remains with you - the memory of colonization..."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
 	subclass_languages = list(/datum/language/etruscan)
 	outfit = /datum/outfit/job/roguetown/adventurer/marinero
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg'

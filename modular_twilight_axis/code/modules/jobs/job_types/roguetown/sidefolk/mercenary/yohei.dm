@@ -2,7 +2,6 @@
 	name = "Heishi-Yōhei"
 	tutorial = "Battle is a craft, and you have honed it well, you are. A steady hand, a tempered spirit, and armor worn not for glory, but for duty - this is the measure of a true mercenary. Steel meets steel at your command, and you endure where lighter warriors break and heavier ones slow. Every contract, every fight, every scar is for your family. The honor of your clan is your guide, and their legacy moves with you into every battle."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = list(/datum/species/aura)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_heishi
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_RACIAL
@@ -39,6 +38,10 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 	)
 	extra_context = "This subclass is race-limited to: Au Ra Only."
+
+/datum/advclass/mercenary/twilight_heishi/New()
+	..()
+	forbidden_races = ALL_RACES_TYPES - /datum/species/aura
 
 /datum/outfit/job/roguetown/mercenary/twilight_heishi/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -104,7 +107,6 @@
 	name = "Kagekiri-Yōhei"
 	tutorial = "A worthy conflict tempers the spirit and sharpens the body. Strength alone does not win wars - precision does. Speed is mercy; hesitation is death. You move where steel is slow, strike where armor is thin, and end fights before they can drag into slaughter. Above all stands family. Clan is not a memory left behind, but a presence carried with every step."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = list(/datum/species/aura)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_yohei
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_RACIAL
@@ -135,6 +137,10 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE
 	)
 	extra_context = "This subclass is race-limited to: Au Ra Only."
+
+/datum/advclass/mercenary/twilight_yohei/New()
+	..()
+	forbidden_races = ALL_RACES_TYPES - /datum/species/aura
 
 /datum/outfit/job/roguetown/mercenary/twilight_yohei/pre_equip(mob/living/carbon/human/H)
 	..()
