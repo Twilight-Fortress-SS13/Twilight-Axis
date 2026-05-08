@@ -351,8 +351,8 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_EASYDISMEMBER = TAT_TRAIT_ENTRY("Easy Dismemberment", -15, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Your limbs are much easier to dismember."), \
 	TRAIT_PERMAMUTE = TAT_TRAIT_ENTRY("Permanent Mute", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You are permanently mute and cannot speak."), \
 	TRAIT_NODEF = TAT_TRAIT_ENTRY("No Defense", -20, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You expose yourself completely in battle."), \
-	TRAIT_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Reverse Guidance", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Something hinders you in battle. Anti-guidance: 10%."), \
-	TRAIT_LESSER_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Lesser Reverse Guidance", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Something faintly hinders you in battle. Anti-guidance: 20%."), \
+	TRAIT_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Reverse Guidance", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Something hinders you in battle. Anti-guidance: 20%."), \
+	TRAIT_LESSER_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Lesser Reverse Guidance", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Something faintly hinders you in battle. Anti-guidance: 10%."), \
 
 #define TAT_TRAIT_STAT_POINT_RULES list( \
 	TAT_TRAIT_BONUS_STAT_POOL = TAT_BUILD_STAT_BONUS_EXTRA_STATS, \
