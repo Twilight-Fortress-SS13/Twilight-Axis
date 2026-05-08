@@ -11,6 +11,7 @@
 	grid_width = 32
 	grid_height = 64
 	var/overarmor
+	throw_on_break = TRUE
 	equip_delay_self = 2.5 SECONDS
 	unequip_delay_self = 2.5 SECONDS
 
