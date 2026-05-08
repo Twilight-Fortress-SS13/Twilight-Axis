@@ -67,6 +67,32 @@
 		return usr.ckey
 	return null
 
+/datum/tat_build/proc/get_owner_client()
+	if(owner_preferences)
+		var/client/parent_client = owner_preferences.vars["parent"]
+		if(parent_client)
+			return parent_client
+		var/client/direct_client = owner_preferences.vars["client"]
+		if(direct_client)
+			return direct_client
+	if(usr?.client)
+		return usr.client
+	return null
+
+/datum/tat_build/proc/is_owner_admin()
+	var/client/owner_client = get_owner_client()
+	if(owner_client?.holder)
+		return TRUE
+
+	var/owner_ckey = get_owner_ckey()
+	if(owner_ckey && usr?.client?.holder && usr.ckey == owner_ckey)
+		return TRUE
+
+	return FALSE
+
+/datum/tat_build/proc/can_select_contractor_trait()
+	return is_owner_admin() //TRUE для фулланлока
+
 /datum/tat_build/proc/is_owner_tat_banned(mob/user = null)
 	if(user?.ckey)
 		return tat_is_ckey_banned(user.ckey)

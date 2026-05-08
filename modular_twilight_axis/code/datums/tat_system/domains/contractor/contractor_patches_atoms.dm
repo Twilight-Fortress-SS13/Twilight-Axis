@@ -58,3 +58,26 @@
 	var/datum/component/contractor/S = src.GetComponent(/datum/component/contractor)
 	S?.update_true_form_visuals()
 	return .
+
+/obj/item/equipped(mob/living/user, slot)
+	. = ..()
+	SEND_SIGNAL(src, COMSIG_CONTRACTOR_ITEM_EQUIPPED, user, slot)
+	return .
+
+/obj/item/dropped(mob/living/user, silent)
+	. = ..()
+	SEND_SIGNAL(src, COMSIG_CONTRACTOR_ITEM_DROPPED, user)
+	return .
+
+/obj/item/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+	. = ..()
+	if(proximity_flag && ishuman(user) && isliving(target))
+		SEND_SIGNAL(user, COMSIG_ATTACK_TRY_CONSUME, target, user?.zone_selected, src)
+	return .
+
+/obj/item/melee_attack_chain(mob/user, atom/target, params)
+	. = ..()
+	if(ishuman(user) && isliving(target))
+		SEND_SIGNAL(user, COMSIG_ATTACK_TRY_CONSUME, target, user?.zone_selected, src)
+	return .
+

@@ -40,6 +40,7 @@
 	var/trigger_chance = 100
 	var/tmp/datum/contractor_contract/source_contract
 	var/tmp/fulfillment_price_fired = FALSE
+	var/tmp/last_attack_trigger_time = -1
 
 /datum/contractor_curse/conditional/apply(datum/contractor_contract/contract)
 	source_contract = contract
@@ -76,6 +77,9 @@
 	SIGNAL_HANDLER
 	if(!condition_matches("attack"))
 		return 0
+	if(last_attack_trigger_time == world.time)
+		return 0
+	last_attack_trigger_time = world.time
 	if(!prob(trigger_chance))
 		return 0
 	on_condition_met()
@@ -411,7 +415,7 @@
 	return apply_trigger_power(max(1, abs(amount)) * 10)
 
 /datum/contractor_curse/stat_loss/on_condition_met()
-	return contractor_apply_stat_delta(source_contract.contractee.owner, stat_key, amount)
+	return contractor_apply_stat_delta(source_contract?.contractee?.owner, stat_key, amount)
 
 /datum/contractor_curse/stat_loss/get_ui_data(datum/contractor_contract/contract)
 	return list("name" = name, "desc" = "Trigger: [trigger_summary()], [amount >= 0 ? "+" : ""][amount] [stat_key]", "power" = get_power_value(contract), "hidden" = hidden)
@@ -430,7 +434,7 @@
 	return apply_trigger_power(contractor_contract_power_for_skill(skill_key, abs(amount)))
 
 /datum/contractor_curse/skill_loss/on_condition_met()
-	return contractor_apply_skill_delta(source_contract.contractee.owner, skill_key, amount)
+	return contractor_apply_skill_delta(source_contract?.contractee?.owner, skill_key, amount)
 
 /datum/contractor_curse/skill_loss/get_ui_data(datum/contractor_contract/contract)
 	return list("name" = name, "desc" = "Trigger: [trigger_summary()], [amount >= 0 ? "+" : ""][amount] [skill_key]", "power" = get_power_value(contract), "hidden" = hidden)

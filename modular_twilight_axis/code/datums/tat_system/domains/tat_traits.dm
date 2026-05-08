@@ -127,6 +127,8 @@
 /datum/tat_traits/proc/can_select_trait(trait_id)
 	if(!check_trait(trait_id))
 		return FALSE
+	if(trait_id == TAT_TRAIT_CONTRACTOR && !owner_build?.can_select_contractor_trait())
+		return FALSE
 	if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && owner_build?.get_owner_ckey() != "mrix")
 		return FALSE
 	var/pq_minimum = get_pq_lock_minimum(trait_id)

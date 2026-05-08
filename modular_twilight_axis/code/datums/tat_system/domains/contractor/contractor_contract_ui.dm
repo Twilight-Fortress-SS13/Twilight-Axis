@@ -333,10 +333,12 @@
 			if(contractor_is_contract_weapon_path(B.item_template))
 				B.force_bonus = max(0, ui_param_num(params, "force_bonus", 0))
 				B.defense_bonus = max(0, ui_param_num(params, "defense_bonus", 0))
-			B.passive_stat_key = ui_param_text(params, "passive_stat_key", "")
 			B.passive_stat_bonus = max(0, ui_param_num(params, "passive_stat_bonus", 0))
-			B.enchantment_spell_path = ui_param_text(params, "enchantment_spell_path", "")
-			if(B.enchantment_spell_path == "none")
+			B.passive_stat_key = ui_param_text(params, "passive_stat_key", B.passive_stat_bonus ? STATKEY_STR : "")
+			if(B.passive_stat_bonus)
+				B.passive_stat_key = contractor_normalize_stat_key(B.passive_stat_key, STATKEY_STR)
+			B.enchantment_spell_path = ui_param_text(params, "enchantment_spell_path", "none")
+			if(!B.enchantment_spell_path || B.enchantment_spell_path == "none")
 				B.enchantment_spell_path = null
 			B.recalculate_power()
 			return B
@@ -417,18 +419,23 @@
 			ui_apply_trigger(C, params)
 			C.flaw_type = contractor_charflaw_path(ui_param_text(params, "flaw_type"))
 			if(!C.flaw_type)
+				var/list/flaw_catalog = contractor_charflaw_catalog()
+				if(length(flaw_catalog))
+					var/list/first_flaw = flaw_catalog[1]
+					C.flaw_type = contractor_charflaw_path(first_flaw?["id"])
+			if(!C.flaw_type)
 				qdel(C)
 				return null
 			return C
 	return null
 
 /datum/contractor_contract/proc/ui_apply_trigger(datum/contractor_curse/conditional/C, list/params)
-	C.trigger_key = ui_param_text(params, "trigger_key", "sex_process")
+	C.trigger_key = ui_param_text(params, "trigger_key", ui_param_text(params, "action_id", "attack"))
 	if(!(C.trigger_key in list("attack", "sex_process", "climax", "phrase", "eat", "sleep", "fulfillment")))
-		C.trigger_key = "sex_process"
-	C.climax_source = ui_param_text(params, "source_type", CONTRACTOR_CLIMAX_SOURCE_ANY)
+		C.trigger_key = "attack"
+	C.climax_source = ui_param_text(params, "source_type", ui_param_text(params, "climax_source", CONTRACTOR_CLIMAX_SOURCE_ANY))
 	C.required_phrase = copytext(ui_param_text(params, "required_phrase", C.required_phrase), 1, 1024)
-	C.trigger_chance = clamp(ui_param_num(params, "trigger_chance", C.trigger_chance), CONTRACTOR_ATTACK_TRIGGER_CHANCE_MIN, CONTRACTOR_ATTACK_TRIGGER_CHANCE_MAX)
+	C.trigger_chance = clamp(ui_param_num(params, "trigger_chance", ui_param_num(params, "chance", C.trigger_chance)), CONTRACTOR_ATTACK_TRIGGER_CHANCE_MIN, CONTRACTOR_ATTACK_TRIGGER_CHANCE_MAX)
 	return C
 
 /datum/contractor_contract/proc/item_value_from_ui(kind)

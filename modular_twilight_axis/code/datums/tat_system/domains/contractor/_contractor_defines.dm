@@ -116,6 +116,24 @@
 #define COMSIG_SEX_CLIMAX "sex_climax"
 #endif
 
+
+#ifndef COMSIG_ITEM_EQUIPPED
+#define COMSIG_ITEM_EQUIPPED "item_equipped"
+#endif
+#ifndef COMSIG_ITEM_DROPPED
+#define COMSIG_ITEM_DROPPED "item_dropped"
+#endif
+#ifndef COMSIG_CONTRACTOR_ITEM_EQUIPPED
+#define COMSIG_CONTRACTOR_ITEM_EQUIPPED "contractor_item_equipped"
+#endif
+#ifndef COMSIG_CONTRACTOR_ITEM_DROPPED
+#define COMSIG_CONTRACTOR_ITEM_DROPPED "contractor_item_dropped"
+#endif
+#ifndef COMSIG_PARENT_QDELETING
+#define COMSIG_PARENT_QDELETING "parent_qdeleting"
+#endif
+#define CONTRACTOR_PASSIVE_ITEM_TRAIT_SOURCE "contractor_passive_item"
+
 #define CONTRACTOR_EFFECT_BASE_DURATION (10 SECONDS)
 #define CONTRACTOR_EFFECT_LEVEL_DURATION (5 SECONDS)
 #define CONTRACTOR_STEALTH_REFRESH_INTERVAL (1 SECONDS)

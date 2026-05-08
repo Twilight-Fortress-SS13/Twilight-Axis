@@ -141,8 +141,9 @@
 			contractor_apply_weapon_defense_bonus(I, defense_bonus)
 
 	if(passive_stat_key && passive_stat_bonus)
-		I.desc += " While worn, it is meant to grant +[passive_stat_bonus] [passive_stat_key]."
-		to_chat(H, span_notice("[I] hums with a passive +[passive_stat_bonus] [passive_stat_key] enchantment."))
+		passive_stat_key = contractor_normalize_stat_key(passive_stat_key, STATKEY_STR)
+		contractor_apply_passive_stat_item(I, passive_stat_key, passive_stat_bonus)
+		to_chat(H, span_notice("[I] hums with a passive +[passive_stat_bonus] [contractor_pretty_stat(passive_stat_key)] enchantment."))
 
 	if(enchantment_spell_path)
 		contractor_apply_magic_item_enchantment(I, enchantment_spell_path, H)

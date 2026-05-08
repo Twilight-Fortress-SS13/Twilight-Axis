@@ -812,3 +812,82 @@
 		if("4", "albino")
 			return "4"
 	return null
+
+/proc/contractor_normalize_stat_key(stat_key, fallback = STATKEY_STR)
+	if(!stat_key || stat_key == "none")
+		return fallback
+	var/text_key = "[stat_key]"
+	for(var/known_stat in contractor_get_tat_stat_ids())
+		if("[known_stat]" == text_key)
+			return known_stat
+	return fallback
+
+/proc/contractor_apply_passive_stat_item(obj/item/I, stat_key, amount)
+	if(!I || !stat_key || !amount)
+		return FALSE
+	stat_key = contractor_normalize_stat_key(stat_key, STATKEY_STR)
+	I.AddComponent(/datum/component/contractor_passive_stat_item, stat_key, amount)
+	I.desc += " While equipped, it grants +[amount] [contractor_pretty_stat(stat_key)]."
+	return TRUE
+
+/datum/component/contractor_passive_stat_item
+	var/stat_key = STATKEY_STR
+	var/amount = 0
+	var/mob/living/carbon/human/current_holder
+
+/datum/component/contractor_passive_stat_item/Initialize(_stat_key = STATKEY_STR, _amount = 0)
+	if(!isitem(parent))
+		return COMPONENT_INCOMPATIBLE
+	stat_key = contractor_normalize_stat_key(_stat_key, STATKEY_STR)
+	amount = max(0, round(_amount))
+	if(!amount)
+		return COMPONENT_INCOMPATIBLE
+	RegisterSignal(parent, COMSIG_CONTRACTOR_ITEM_EQUIPPED, PROC_REF(on_equipped))
+	RegisterSignal(parent, COMSIG_CONTRACTOR_ITEM_DROPPED, PROC_REF(on_dropped))
+	RegisterSignal(parent, COMSIG_ITEM_EQUIPPED, PROC_REF(on_equipped))
+	RegisterSignal(parent, COMSIG_ITEM_DROPPED, PROC_REF(on_dropped))
+	RegisterSignal(parent, COMSIG_PARENT_QDELETING, PROC_REF(on_parent_qdeleting))
+	return ..()
+
+/datum/component/contractor_passive_stat_item/Destroy(force, ...)
+	remove_from_current_holder()
+	return ..()
+
+/datum/component/contractor_passive_stat_item/proc/on_parent_qdeleting(datum/source)
+	SIGNAL_HANDLER
+	remove_from_current_holder()
+	return 0
+
+/datum/component/contractor_passive_stat_item/proc/on_equipped(datum/source, mob/living/carbon/human/user, slot)
+	SIGNAL_HANDLER
+	if(!ishuman(user))
+		return 0
+	if(isnull(slot))
+		return 0
+	apply_to_holder(user)
+	return 0
+
+/datum/component/contractor_passive_stat_item/proc/on_dropped(datum/source, mob/living/carbon/human/user)
+	SIGNAL_HANDLER
+	if(!user || user == current_holder)
+		remove_from_current_holder()
+	return 0
+
+/datum/component/contractor_passive_stat_item/proc/apply_to_holder(mob/living/carbon/human/user)
+	if(!user || QDELETED(user) || current_holder == user)
+		return FALSE
+	remove_from_current_holder()
+	current_holder = user
+	current_holder.change_stat(stat_key, amount)
+	to_chat(current_holder, span_notice("[parent] empowers your [contractor_pretty_stat(stat_key)]."))
+	return TRUE
+
+/datum/component/contractor_passive_stat_item/proc/remove_from_current_holder()
+	if(!current_holder || QDELETED(current_holder))
+		current_holder = null
+		return FALSE
+	current_holder.change_stat(stat_key, -amount)
+	to_chat(current_holder, span_notice("[parent]'s [contractor_pretty_stat(stat_key)] enchantment fades."))
+	current_holder = null
+	return TRUE
+

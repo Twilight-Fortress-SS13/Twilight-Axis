@@ -384,6 +384,8 @@
 /datum/tat_build/proc/build_ui_trait_entries()
 	var/list/result = list()
 	for(var/trait_id in GLOB.tat_available_traits)
+		if(trait_id == TAT_TRAIT_CONTRACTOR && !can_select_contractor_trait())
+			continue
 		if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && get_owner_ckey() != "mrix")
 			continue
 		var/list/entry = get_trait_entry(trait_id)
