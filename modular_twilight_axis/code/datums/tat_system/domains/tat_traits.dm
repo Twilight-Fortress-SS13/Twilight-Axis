@@ -796,7 +796,7 @@
 		return FALSE
 
 	var/skin_path = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
-	if(owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR))
+	return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
 
 /datum/tat_traits/proc/apply_savage_rage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_RAGE) || !H.mind)
