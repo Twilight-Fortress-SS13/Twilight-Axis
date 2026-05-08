@@ -648,7 +648,12 @@
 	return "Towner"
 
 /datum/tat_traits/proc/get_pliant_current_class_name(mob/living/carbon/human/H)
-	var/class_name = trim("[H?.advjob]")
+	// Automatic, silent base title generation.
+	// Used by Pliant Rename as the "current/selected class" option.
+	// Do not open choice dialogs here.
+	var/class_name = get_pliant_best_role_title()
+	if(!length(class_name))
+		class_name = trim("[H?.advjob]")
 	if(!length(class_name))
 		class_name = get_pliant_default_class_name()
 	return get_pliant_safe_class_name(class_name)
@@ -697,6 +702,34 @@
 		list("title" = "Druid", "minimum" = 1, "skills" = list(/datum/skill/magic/druidic))
 	)
 
+/datum/tat_traits/proc/get_pliant_trait_role_scores()
+	var/list/roles = list()
+	if(has_trait(TAT_TRAIT_WITCH_INITIATE))
+		roles["Witch"] = 1000000
+	if(has_trait(TAT_TRAIT_CONTRACTOR_ENTITY))
+		roles["Tempress Entity"] = 950000
+	if(has_trait(TAT_TRAIT_CONTRACTOR))
+		roles["Contractor"] = 900000
+	if(has_trait(TAT_TRAIT_SPELLBLADE))
+		roles["Spellblade"] = 850000
+	if(has_trait(TAT_TRAIT_DRUID_INITIATE))
+		roles["Druid"] = 820000
+	if(has_trait(TAT_TRAIT_MAGE_INITIATE))
+		roles["Mage"] = 810000
+	if(has_trait(TAT_TRAIT_DIVINE_INITIATE))
+		roles["Acolyte"] = 800000
+	if(has_trait(TAT_TRAIT_SOUNDBREAKER))
+		roles["Soundbreaker"] = 760000
+	if(has_trait(TAT_TRAIT_MARTIAL_MASTER))
+		roles["Martial Master"] = 750000
+	if(has_trait(TAT_TRAIT_RONIN))
+		roles["Ronin"] = 740000
+	if(has_trait(TAT_TRAIT_TROPHY_BOUNTY))
+		roles["Hunter"] = 650000
+	if(has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T1) || has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T2))
+		roles["Bard"] = 600000
+	return roles
+
 /datum/tat_traits/proc/get_pliant_skill_role_score(list/rule)
 	if(!owner_build || !islist(rule))
 		return 0
@@ -720,39 +753,116 @@
 
 	return total_skill
 
-/datum/tat_traits/proc/build_pliant_skill_role_choices(current_class_name)
-	var/list/choices = list()
-	var/list/rules = get_pliant_skill_role_rules()
-	for(var/rule_entry in rules)
+/datum/tat_traits/proc/get_pliant_skill_role_title_score(title)
+	if(!istext(title) || !length(title))
+		return 0
+	for(var/rule_entry in get_pliant_skill_role_rules())
 		var/list/rule = rule_entry
-		var/title = get_pliant_safe_class_name(rule["title"], current_class_name)
+		if(!islist(rule))
+			continue
+		var/rule_title = get_pliant_safe_class_name(rule["title"])
+		if(lowertext(rule_title) != lowertext(title))
+			continue
+		return get_pliant_skill_role_score(rule)
+	return 0
+
+/datum/tat_traits/proc/get_pliant_role_title_score(title)
+	if(!istext(title) || !length(title))
+		return 0
+	var/list/trait_roles = get_pliant_trait_role_scores()
+	if(title in trait_roles)
+		return round(trait_roles[title] || 0)
+	return get_pliant_skill_role_title_score(title)
+
+/datum/tat_traits/proc/get_pliant_best_role_title()
+	var/best_title = null
+	var/best_score = 0
+
+	var/list/trait_roles = get_pliant_trait_role_scores()
+	for(var/title in trait_roles)
+		var/score = round(trait_roles[title] || 0)
+		if(score <= best_score)
+			continue
+		best_score = score
+		best_title = title
+
+	for(var/rule_entry in get_pliant_skill_role_rules())
+		var/list/rule = rule_entry
+		if(!islist(rule))
+			continue
+		var/title = get_pliant_safe_class_name(rule["title"])
+		var/score = get_pliant_skill_role_score(rule)
+		if(score <= best_score)
+			continue
+		best_score = score
+		best_title = title
+
+	return best_title
+
+/datum/tat_traits/proc/add_pliant_role_choice(list/display_to_title, title, score, source_label = null, excluded_title = null)
+	if(!islist(display_to_title) || !istext(title) || !length(title))
+		return FALSE
+	if(istext(excluded_title) && length(excluded_title) && lowertext(title) == lowertext(excluded_title))
+		return FALSE
+
+	var/display = source_label ? "[title] ([source_label])" : "[title] ([score])"
+	if(display in display_to_title)
+		return FALSE
+	display_to_title[display] = title
+	return TRUE
+
+/datum/tat_traits/proc/build_pliant_role_title_choices(excluded_title = null)
+	var/list/display_to_title = list()
+
+	var/list/trait_roles = get_pliant_trait_role_scores()
+	for(var/title in trait_roles)
+		add_pliant_role_choice(display_to_title, title, trait_roles[title], "trait", excluded_title)
+
+	for(var/rule_entry in get_pliant_skill_role_rules())
+		var/list/rule = rule_entry
+		if(!islist(rule))
+			continue
+		var/title = get_pliant_safe_class_name(rule["title"])
 		var/score = get_pliant_skill_role_score(rule)
 		if(score <= 0 || !length(title))
 			continue
-		if(lowertext(title) == lowertext(current_class_name))
-			continue
-		choices["[title] ([score])"] = title
-	return choices
+		add_pliant_role_choice(display_to_title, title, score, null, excluded_title)
+
+	return display_to_title
+
+/datum/tat_traits/proc/build_pliant_skill_role_choices(current_class_name)
+	return build_pliant_role_title_choices(current_class_name)
+
+/datum/tat_traits/proc/get_single_pliant_role_choice(list/display_to_title)
+	if(!islist(display_to_title) || length(display_to_title) != 1)
+		return null
+	for(var/display in display_to_title)
+		return display_to_title[display]
+	return null
 
 /datum/tat_traits/proc/get_pliant_base_class_title(mob/living/carbon/human/H)
-	var/current_class_name = get_pliant_current_class_name(H)
-	var/list/skill_choices = build_pliant_skill_role_choices(current_class_name)
-	if(!length(skill_choices))
-		return current_class_name
+	// Pliant Rename uses this silently. The actual dialog for rename must only ask
+	// between current/slot/custom, not open a separate role picker first.
+	return get_pliant_current_class_name(H)
 
-	var/current_choice = "Current class ([current_class_name])"
-	var/list/display_to_title = list()
-	display_to_title[current_choice] = current_class_name
-	var/list/options = list(current_choice)
+/datum/tat_traits/proc/get_pliant_plain_class_title(mob/living/carbon/human/H)
+	var/fallback = get_pliant_current_class_name(H)
+	var/list/display_to_title = build_pliant_role_title_choices()
+	if(!length(display_to_title))
+		return fallback
 
-	for(var/choice in skill_choices)
-		options += choice
-		display_to_title[choice] = skill_choices[choice]
+	var/single_title = get_single_pliant_role_choice(display_to_title)
+	if(single_title)
+		return get_pliant_safe_class_name(single_title, fallback)
 
-	var/choice = H.client ? tgui_input_list(H, "Choose which class title should be used as the base for your TAT class rename.", "CHOOSE YOUR CLASS", options) : null
+	var/list/options = list()
+	for(var/display in display_to_title)
+		options += display
+
+	var/choice = H.client ? tgui_input_list(H, "Choose which class title should be used for your Pliant identity.", "CHOOSE YOUR CLASS", options) : null
 	if(choice && display_to_title[choice])
-		return get_pliant_safe_class_name(display_to_title[choice], current_class_name)
-	return current_class_name
+		return get_pliant_safe_class_name(display_to_title[choice], fallback)
+	return fallback
 
 /datum/tat_traits/proc/get_pliant_rename_title(mob/living/carbon/human/H)
 	var/base_class_name = get_pliant_base_class_title(H)
@@ -784,14 +894,34 @@
 	class_name = get_pliant_safe_class_name(class_name, base_class_name)
 	return "[get_pliant_rename_prefix()] [class_name]"
 
-/datum/tat_traits/proc/apply_pliant_rename(mob/living/carbon/human/H)
-	if(!H || !has_trait(TAT_TRAIT_PLIANT_RENAME))
+/datum/tat_traits/proc/get_pliant_default_title(mob/living/carbon/human/H)
+	var/class_name = get_pliant_plain_class_title(H)
+	class_name = get_pliant_safe_class_name(class_name)
+	return "[get_pliant_rename_prefix()] [class_name]"
+
+/datum/tat_traits/proc/apply_pliant_title(mob/living/carbon/human/H)
+	if(!H)
 		return FALSE
-	var/new_title = get_pliant_rename_title(H)
+
+	var/class_name = null
+	var/new_title = null
+	if(has_trait(TAT_TRAIT_PLIANT_RENAME))
+		new_title = get_pliant_rename_title(H)
+		class_name = copytext(new_title, length(get_pliant_rename_prefix()) + 2)
+	else
+		class_name = get_pliant_plain_class_title(H)
+		new_title = "[get_pliant_rename_prefix()] [get_pliant_safe_class_name(class_name)]"
+
 	if(!length(new_title))
 		return FALSE
+
 	H.tat_pliant_title = new_title
+	if(length(class_name))
+		owner_build?.set_magic_value("pliant_selected_role_title", get_pliant_safe_class_name(class_name))
 	return TRUE
+
+/datum/tat_traits/proc/apply_pliant_rename(mob/living/carbon/human/H)
+	return apply_pliant_title(H)
 
 /datum/tat_traits/proc/apply_savage_skin_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_SKIN))
@@ -879,7 +1009,6 @@
 		return FALSE
 	if(has_trait(TAT_TRAIT_RESIDENT))
 		apply_resident_pugilist_package(H)
-		apply_resident_advjob(H)
 	if(has_trait(TAT_TRAIT_SPELLBLADE))
 		apply_spellblade_specialization_package(H)
 	if(has_trait(TAT_TRAIT_WANTED))
@@ -889,7 +1018,9 @@
 			H.AddSpell(new /obj/effect/proc_holder/spell/self/choose_riding_virtue_mount)
 		ADD_TRAIT(H, TRAIT_EQUESTRIAN, TAT_TRAIT_SOURCE)
 	apply_witch_shapeshift_package(H)
-	apply_pliant_rename(H)
+	apply_pliant_title(H)
+	if(has_trait(TAT_TRAIT_RESIDENT))
+		apply_resident_advjob(H)
 	return TRUE
 
 /datum/tat_traits/proc/apply_to_human(mob/living/carbon/human/H)
@@ -1006,6 +1137,7 @@
 		"Scholar" = "/datum/advclass/scholar",
 		"Bard" = "/datum/advclass/bard",
 		"Rogue" = "/datum/advclass/rogue",
+		"Witch" = "/datum/advclass/witch",
 	)
 
 /datum/tat_traits/proc/get_tat_resident_special_role_titles()
@@ -1036,21 +1168,48 @@
 		return null
 	return text2path(path_text)
 
+/datum/tat_traits/proc/get_tat_resident_role_choice_for_title(title)
+	if(!has_trait(TAT_TRAIT_RESIDENT) || !istext(title) || !length(title))
+		return null
+
+	title = get_pliant_safe_class_name(title)
+	if(title == "Witch")
+		if(!has_trait(TAT_TRAIT_WITCH_INITIATE))
+			return null
+		return list(
+			"title" = "Witch",
+			"path" = get_tat_resident_advjob_path_for_title("Witch"),
+			"score" = 1000000,
+		)
+
+	if(is_tat_resident_special_role_title(title))
+		return null
+
+	var/score = get_pliant_skill_role_title_score(title)
+	if(score <= 0)
+		return null
+
+	return list(
+		"title" = title,
+		"path" = get_tat_resident_advjob_path_for_title(title),
+		"score" = score,
+	)
+
 /datum/tat_traits/proc/get_tat_resident_role_choice()
 	if(!has_trait(TAT_TRAIT_RESIDENT))
 		return null
 
+	var/selected_title = owner_build?.get_magic_value("pliant_selected_role_title")
+	var/list/selected_choice = get_tat_resident_role_choice_for_title(selected_title)
+	if(islist(selected_choice))
+		return selected_choice
+
 	if(has_trait(TAT_TRAIT_WITCH_INITIATE))
-		return list(
-			"title" = "Witch",
-			"path" = /datum/advclass/witch,
-			"score" = INFINITY,
-		)
+		return get_tat_resident_role_choice_for_title("Witch")
 
 	var/list/rules = get_pliant_skill_role_rules()
 	var/list/best_choice = null
 	var/best_score = 0
-	var/stored_title = owner_build?.get_magic_value("resident_advjob_title")
 
 	for(var/rule_entry in rules)
 		var/list/rule = rule_entry
@@ -1058,34 +1217,19 @@
 			continue
 
 		var/title = get_pliant_safe_class_name(rule["title"])
-		if(!length(title))
-			continue
-
-		// Combat/magic/specialist titles can be used for Pliant naming, but should not
-		// silently assign restricted advclasses as Resident jobs.
-		if(is_tat_resident_special_role_title(title))
+		if(!length(title) || is_tat_resident_special_role_title(title))
 			continue
 
 		var/score = get_pliant_skill_role_score(rule)
-		if(score <= 0)
+		if(score <= best_score)
 			continue
 
-		var/advjob_path = get_tat_resident_advjob_path_for_title(title)
-		var/list/choice = list(
+		best_score = score
+		best_choice = list(
 			"title" = title,
-			"path" = advjob_path,
+			"path" = get_tat_resident_advjob_path_for_title(title),
 			"score" = score,
 		)
-
-		if(score > best_score)
-			best_score = score
-			best_choice = choice
-			continue
-
-		// Stable tie-breaker: if the player already had this exact title stored and it
-		// is still equally valid, keep it instead of flipping by list order.
-		if(score == best_score && stored_title && lowertext("[stored_title]") == lowertext(title))
-			best_choice = choice
 
 	return best_choice
 
@@ -1117,11 +1261,6 @@
 		return
 
 	H.advjob = applied_name
-	owner_build?.set_magic_value("resident_advjob_title", title)
-	if(resident_advjob_type)
-		owner_build?.set_magic_value("resident_advjob", resident_advjob_type)
-	else
-		owner_build?.set_magic_value("resident_advjob", null)
 
 /datum/tat_traits/proc/get_outlander_natural_potential_discount(trait_id)
 	if(trait_id != TAT_TRAIT_BONUS_STAT_POOL)
