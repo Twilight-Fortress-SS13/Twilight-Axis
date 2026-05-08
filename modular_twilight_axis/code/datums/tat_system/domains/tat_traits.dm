@@ -793,8 +793,11 @@
 	return TRUE
 
 /datum/tat_traits/proc/apply_savage_skin_package(mob/living/carbon/human/H)
-	// Savage skin armor is synchronized into the TAT loadout stash by /datum/tat_items.
-	return FALSE
+	if(!H || !has_trait(TAT_TRAIT_SAVAGE_SKIN))
+		return FALSE
+
+	var/skin_path = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
+	return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
 
 /datum/tat_traits/proc/apply_savage_rage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_RAGE) || !H.mind)
@@ -850,6 +853,7 @@
 		else
 			H.inspiration.grant_inspiration(H, bard_tier)
 	try_apply_party_leader(H)
+	apply_savage_skin_package(H)
 	apply_savage_rage_package(H)
 	apply_berserker_rage_package(H)
 	if(has_trait(TAT_TRAIT_WARRIOR_MASTER))

@@ -334,8 +334,6 @@
 	if(owner_build.has_trait(TAT_TRAIT_MAGE_INITIATE))
 		add_grant_amount(result, /obj/item/book/spellbook)
 		add_grant_amount(result, /obj/item/chalk)
-	if(owner_build.has_trait(TAT_TRAIT_SAVAGE_SKIN))
-		add_grant_amount(result, /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian)
 	return result
 
 /datum/tat_items/proc/sync_trait_granted_items()
