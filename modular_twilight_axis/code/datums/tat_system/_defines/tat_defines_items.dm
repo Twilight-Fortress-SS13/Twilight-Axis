@@ -420,6 +420,9 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/storage/belt/rogue/surgery_bag = TAT_ITEM_ENTRY("Surgeon's Bag", 3, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/storage/backpack/rogue/backpack = TAT_ITEM_ENTRY("Backpack", 3, "clothing", "armor_family", TAT_ARMOR_CLOTH, "back"), \
 	/obj/item/storage/gadget/messkit = TAT_ITEM_ENTRY("Mess Kit", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
+	/obj/item/reagent_containers/glass/cup/tin/small = TAT_ITEM_ENTRY("Tin Cup", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
+	/obj/item/reagent_containers/glass/cup/wooden = TAT_ITEM_ENTRY("Wooden Cup", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
+	/obj/item/reagent_containers/glass/cup/tin = TAT_ITEM_ENTRY("Tin Goblet", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/bedroll = TAT_ITEM_ENTRY("Bedroll", 1.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rogueweapon/halberd/bardiche = TAT_ITEM_ENTRY("Bardiche", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/rogueweapon/mace/goden/steel = TAT_ITEM_ENTRY("Grand Mace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
