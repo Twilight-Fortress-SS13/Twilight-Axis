@@ -226,7 +226,7 @@
 /datum/tat_build/proc/add_item(path, amount = 1)
 	if(!items)
 		return FALSE
-	var/current = items.get_amount(path)
+	var/current = items.get_paid_amount(path)
 	var/ok = items.set_amount(path, current + (text2num("[amount]") || 1))
 	if(ok)
 		items?.sanitize()
@@ -235,31 +235,33 @@
 /datum/tat_build/proc/remove_item(path, amount = 1)
 	if(!items)
 		return FALSE
-	var/current = items.get_amount(path)
+	var/current = items.get_paid_amount(path)
 	var/ok = items.set_amount(path, current - (text2num("[amount]") || 1), TRUE)
 	return ok
 
 /datum/tat_build/proc/move_item_to_bag(path, amount = 1)
 	if(!items)
 		return FALSE
-	var/count = max(1, text2num("[amount]") || 1)
-	var/total = items.get_amount(path)
-	if(total <= 0)
-		return FALSE
-	var/list/loadout = items.get_loadout(path)
-	var/list/slots = loadout["slots"]
-	if(!islist(slots) || !length(slots))
-		items.normalize_loadout(path)
+	var/ok = items.move_item_from_stash_to_bag(path, text2num("[amount]") || 1)
+	if(ok)
 		set_dirty()
-		return TRUE
-	for(var/i in 1 to count)
-		if(!length(slots))
-			break
-		var/drop_slot = slots[length(slots)]
-		slots -= drop_slot
-	items.normalize_loadout(path)
-	set_dirty()
-	return TRUE
+	return ok
+
+/datum/tat_build/proc/move_item_to_stash(path, amount = 1)
+	if(!items)
+		return FALSE
+	var/ok = items.move_item_from_bag_to_stash(path, text2num("[amount]") || 1)
+	if(ok)
+		set_dirty()
+	return ok
+
+/datum/tat_build/proc/paint_loadout_item(path, mob/user = null)
+	if(!items)
+		return FALSE
+	var/ok = items.paint_loadout_item(path, user || usr)
+	if(ok)
+		set_dirty()
+	return ok
 
 /datum/tat_build/proc/move_item_to_equip(path, amount = 1)
 	if(!items)
@@ -399,6 +401,7 @@
 	return result
 
 /datum/tat_build/proc/build_ui_items_static()
+	items?.sync_external_grants()
 	if(!GLOB.tat_item_icon_cache_ready)
 		warm_tat_item_catalog()
 	return GLOB.tat_item_catalog_cache
@@ -412,9 +415,9 @@
 		ui_items_state_cache = result
 		return result
 
-	var/list/selected = items.selected
+	items.sync_external_grants()
 	var/list/bucket_totals = list()
-	for(var/item_path in selected)
+	for(var/item_path in items.get_all_item_paths())
 		var/list/entry = GLOB.tat_available_items[item_path]
 		if(!islist(entry))
 			continue
@@ -423,8 +426,8 @@
 		var/slot_group = entry["slot_group"]
 		if(!slot_group || slot_group == "misc")
 			continue
-		var/amount = selected[item_path]
-		if(!isnum(amount) || amount <= 0)
+		var/amount = items.get_amount(item_path)
+		if(amount <= 0)
 			continue
 		var/bucket_key = "[entry["category"]]|[slot_group]"
 		bucket_totals[bucket_key] = (bucket_totals[bucket_key] || 0) + amount
@@ -435,7 +438,7 @@
 			continue
 
 		var/unlocked = items.can_use_item_entry(entry)
-		var/amount = round(selected[item_path] || 0)
+		var/amount = items.get_amount(item_path)
 		var/maximum = 0
 
 		if(unlocked)
@@ -471,7 +474,8 @@
 	if(!items)
 		ui_loadout_cache = result
 		return result
-	for(var/item_path in items.selected)
+	items.sync_external_grants()
+	for(var/item_path in items.get_all_item_paths())
 		var/amount = items.get_amount(item_path)
 		if(amount <= 0)
 			continue
@@ -482,12 +486,18 @@
 		if(islist(slots))
 			for(var/slot_id in slots)
 				exported_slots[slot_id] = TRUE
+		var/list/icon_payload = items.build_loadout_item_icon_payload(item_path)
 		result["[item_path]"] = list(
 			"amount" = amount,
 			"equip" = round(loadout["equip"] || 0),
 			"bag" = round(loadout["bag"] || 0),
+			"stash" = round(loadout["stash"] || 0),
 			"slots" = exported_slots,
 			"valid_slots" = items.get_valid_loadout_ui_slots_for_item(item_path),
+			"sources" = items.get_source_counts_for_ui(item_path),
+			"paint" = items.get_paint_data_for_ui(item_path),
+			"icon" = icon_payload?["icon"],
+			"icon_state" = icon_payload?["icon_state"],
 		)
 	ui_loadout_cache = result
 	return result
@@ -527,6 +537,11 @@
 	if(is_owner_tat_banned(user))
 		tat_tell_banned(user)
 		return
+	// Opening the window must sync external loadout grants immediately.
+	// Otherwise donor/preference loadout changes can stay hidden behind a valid cached UI payload
+	// until Save or another action forces sanitize/cache invalidation.
+	items?.sync_external_grants()
+	invalidate_ui_data_cache()
 	if(!islist(_cached_active_virtues))
 		skills?.rebuild_bonus_values()
 		invalidate_ui_data_cache()
@@ -542,6 +557,7 @@
 	attach_preferences_from_mob(user)
 	if(is_owner_tat_banned(user))
 		return list()
+	items?.sync_external_grants()
 	return list(
 		"available_stats" = build_ui_stat_entries(),
 		"available_skills" = build_ui_skill_entries(),
@@ -576,6 +592,7 @@
 	var/_p_traits_rem = get_remaining_trait_points()
 	var/_p_traits_capped_negative_raw = traits.get_capped_negative_credit_raw()
 	var/_p_traits_capped_negative_used = traits.get_capped_negative_credit_used()
+	items?.sync_external_grants()
 	var/_p_items_total = items.get_total_maximum()
 	var/_p_items_rem = get_remaining_item_points()
 
@@ -677,6 +694,10 @@
 			return move_item_to_equip(text2path(params["path"]), text2num(params["amount"]) || 1)
 		if("move_item_to_bag")
 			return move_item_to_bag(text2path(params["path"]), text2num(params["amount"]) || 1)
+		if("move_item_to_stash")
+			return move_item_to_stash(text2path(params["path"]), text2num(params["amount"]) || 1)
+		if("paint_loadout_item")
+			return paint_loadout_item(text2path(params["path"]), usr)
 		if("assign_item_to_loadout_slot")
 			return assign_item_to_loadout_slot(text2path(params["path"]), params["slot_id"])
 		if("clear_loadout_slot")

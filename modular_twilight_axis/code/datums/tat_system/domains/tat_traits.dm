@@ -543,8 +543,7 @@
 	var/list/aspects = build_mage_aspects(TRUE)
 	H.mind.setup_mage_aspects(aspects)
 	owner_build?.set_magic_value("mage_aspects", aspects.Copy())
-	if(owner_build?.get_magic_value("mage_spellbook", TRUE))
-		H.equip_to_slot_or_del(new /obj/item/book/spellbook(H), SLOT_IN_BACKPACK)
+	// Spellbook/chalk are synchronized into the TAT loadout stash by /datum/tat_items.
 
 /datum/tat_traits/proc/apply_druid_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_DRUID_INITIATE))
@@ -792,11 +791,8 @@
 	return TRUE
 
 /datum/tat_traits/proc/apply_savage_skin_package(mob/living/carbon/human/H)
-	if(!H || !has_trait(TAT_TRAIT_SAVAGE_SKIN))
-		return FALSE
-
-	var/skin_path = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
-	return owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
+	// Savage skin armor is synchronized into the TAT loadout stash by /datum/tat_items.
+	return FALSE
 
 /datum/tat_traits/proc/apply_savage_rage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_RAGE) || !H.mind)
@@ -839,14 +835,9 @@
 		H.LoadComponent(/datum/component/combo_core/martial_master)
 	if(has_trait(TAT_TRAIT_TROPHY_BOUNTY))
 		H.LoadComponent(/datum/component/trophy_hunter)
-		H.mind?.special_items["Trophy diary"] = /obj/item/book/rogue/trophy_rules
 	if(has_trait(TAT_TRAIT_RONIN))
 		H.LoadComponent(/datum/component/combo_core/ronin)
-	if(has_trait(TRAIT_RITUALIST))
-		H.mind?.special_items["Ritual chalk"] = /obj/item/ritechalk
-	if(has_trait(TAT_TRAIT_MAGE_INITIATE))
-		H.mind?.special_items["Arcyne book"] = /obj/item/book/spellbook
-		H.mind?.special_items["Chalk"] = /obj/item/chalk
+	// Ritual chalk, spellbook and chalk are synchronized into the TAT loadout stash by /datum/tat_items.
 	if(has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T1) || has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T2))
 		var/bard_tier = BARD_T1
 		if(has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T2))
@@ -857,7 +848,6 @@
 		else
 			H.inspiration.grant_inspiration(H, bard_tier)
 	try_apply_party_leader(H)
-	apply_savage_skin_package(H)
 	apply_savage_rage_package(H)
 	apply_berserker_rage_package(H)
 	if(has_trait(TAT_TRAIT_WARRIOR_MASTER))

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { ReactNode } from 'react';
 import { useBackend } from 'tgui/backend';
 import { Window } from 'tgui/layouts';
 import {
@@ -69,12 +70,23 @@ type ItemState = {
   can_add?: boolean;
 };
 
+type LoadoutPaintState = {
+  primary?: string;
+  detail?: string;
+  altdetail?: string;
+};
+
 type LoadoutState = {
   amount: number;
   equip: number;
   bag: number;
+  stash: number;
   slots?: Record<string, boolean>;
   valid_slots?: string[];
+  sources?: Record<string, number>;
+  paint?: LoadoutPaintState | null;
+  icon?: string | null;
+  icon_state?: string | null;
 };
 
 type SlotSummary = {
@@ -91,11 +103,6 @@ type TatSlotEntry = {
   summary?: SlotSummary;
 };
 
-type TatPresetEntry = {
-  id: string;
-  name: string;
-  summary?: SlotSummary;
-};
 
 type SkillDomainKey =
   | 'combat'
@@ -131,7 +138,6 @@ type Data = {
   skill_points_remaining_by_domain?: Partial<Record<SkillDomainKey, number>>;
 
   tat_slots?: TatSlotEntry[] | Record<string, TatSlotEntry>;
-  tat_presets?: TatPresetEntry[] | null;
   active_tat_slot?: number;
 
   build_json?: string | null;
@@ -153,7 +159,7 @@ type NumericRowProps = {
   onRemove: () => void;
   disabledAdd?: boolean;
   disabledRemove?: boolean;
-  extra?: React.ReactNode;
+  extra?: ReactNode;
 };
 
 type HoverCardData = {
@@ -164,6 +170,7 @@ type HoverCardData = {
   costText?: string;
   total?: number;
   bag?: number;
+  stash?: number;
   equip?: number;
   level?: number;
   cap?: number;
@@ -216,21 +223,6 @@ const normalizePresetSummary = (summary?: SlotSummary): SlotSummary => ({
   traits: Number(summary?.traits) || 0,
   items: Number(summary?.items) || 0,
 });
-
-const normalizeTatPresets = (raw?: TatPresetEntry[] | null): TatPresetEntry[] => {
-  if (!Array.isArray(raw)) {
-    return [];
-  }
-
-  return raw
-    .filter(Boolean)
-    .map((preset, index) => ({
-      id: String(preset?.id || `preset_${index + 1}`),
-      name: String(preset?.name || `Preset ${index + 1}`),
-      summary: normalizePresetSummary(preset?.summary),
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-};
 
 const normalizeTatSlots = (
   raw: Data['tat_slots'],
@@ -314,12 +306,14 @@ const CATEGORY_LABELS: Record<string, string> = {
   clothing: 'Clothing',
   weapon: 'Weapons',
   other: 'Other',
+  misc: 'Misc',
 };
 
 const CATEGORY_ORDER: Record<string, number> = {
   clothing: 0,
   weapon: 1,
-  other: 2,
+  misc: 2,
+  other: 3,
 };
 
 const SLOT_ORDER: Record<string, number> = {
@@ -446,177 +440,25 @@ type LoadoutDollSlot = {
 };
 
 const LOADOUT_DOLL_SLOTS: LoadoutDollSlot[] = [
-  {
-    id: 'mask',
-    label: 'Mask',
-    shortLabel: 'Mask',
-    top: '16px',
-    left: '24px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'head',
-    label: 'Head',
-    shortLabel: 'Head',
-    top: '16px',
-    left: '144px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'mouth',
-    label: 'Mouth',
-    shortLabel: 'Mouth',
-    top: '16px',
-    left: '264px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'shoulder_r',
-    label: 'Right Shoulder',
-    shortLabel: 'R Sh',
-    top: '114px',
-    left: '24px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'cloak',
-    label: 'Cloak',
-    shortLabel: 'Cloak',
-    top: '114px',
-    left: '144px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'shoulder_l',
-    label: 'Left Shoulder',
-    shortLabel: 'L Sh',
-    top: '114px',
-    left: '264px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'neck',
-    label: 'Neck',
-    shortLabel: 'Neck',
-    top: '212px',
-    left: '24px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'armor',
-    label: 'Armor',
-    shortLabel: 'Armor',
-    top: '212px',
-    left: '144px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'wrists',
-    label: 'Wrists',
-    shortLabel: 'Wrst',
-    top: '212px',
-    left: '264px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'ring',
-    label: 'Ring',
-    shortLabel: 'Ring',
-    top: '310px',
-    left: '24px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'suit',
-    label: 'Suit',
-    shortLabel: 'Suit',
-    top: '310px',
-    left: '144px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'gloves',
-    label: 'Gloves',
-    shortLabel: 'Glv',
-    top: '310px',
-    left: '264px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'belt_r',
-    label: 'Right Belt Pocket',
-    shortLabel: 'R Belt',
-    top: '408px',
-    left: '24px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'belt',
-    label: 'Belt',
-    shortLabel: 'Belt',
-    top: '408px',
-    left: '144px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'belt_l',
-    label: 'Left Belt Pocket',
-    shortLabel: 'L Belt',
-    top: '408px',
-    left: '264px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'hand_r',
-    label: 'Right Hand',
-    shortLabel: 'R Hand',
-    top: '506px',
-    left: '24px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'legs',
-    label: 'Legs',
-    shortLabel: 'Legs',
-    top: '506px',
-    left: '144px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'hand_l',
-    label: 'Left Hand',
-    shortLabel: 'L Hand',
-    top: '506px',
-    left: '264px',
-    width: '88px',
-    height: '88px',
-  },
-  {
-    id: 'boots',
-    label: 'Boots',
-    shortLabel: 'Boots',
-    top: '604px',
-    left: '144px',
-    width: '88px',
-    height: '88px',
-  },
+  { id: 'mask', label: 'Mask', shortLabel: 'Mask', top: '16px', left: '24px', width: '88px', height: '88px' },
+  { id: 'head', label: 'Head', shortLabel: 'Head', top: '16px', left: '144px', width: '88px', height: '88px' },
+  { id: 'mouth', label: 'Mouth', shortLabel: 'Mouth', top: '16px', left: '264px', width: '88px', height: '88px' },
+  { id: 'shoulder_r', label: 'Right Shoulder', shortLabel: 'R Sh', top: '114px', left: '24px', width: '88px', height: '88px' },
+  { id: 'cloak', label: 'Cloak', shortLabel: 'Cloak', top: '114px', left: '144px', width: '88px', height: '88px' },
+  { id: 'shoulder_l', label: 'Left Shoulder', shortLabel: 'L Sh', top: '114px', left: '264px', width: '88px', height: '88px' },
+  { id: 'neck', label: 'Neck', shortLabel: 'Neck', top: '212px', left: '24px', width: '88px', height: '88px' },
+  { id: 'armor', label: 'Armor', shortLabel: 'Armor', top: '212px', left: '144px', width: '88px', height: '88px' },
+  { id: 'wrists', label: 'Wrists', shortLabel: 'Wrst', top: '212px', left: '264px', width: '88px', height: '88px' },
+  { id: 'ring', label: 'Ring', shortLabel: 'Ring', top: '310px', left: '24px', width: '88px', height: '88px' },
+  { id: 'suit', label: 'Suit', shortLabel: 'Suit', top: '310px', left: '144px', width: '88px', height: '88px' },
+  { id: 'gloves', label: 'Gloves', shortLabel: 'Glv', top: '310px', left: '264px', width: '88px', height: '88px' },
+  { id: 'belt_r', label: 'Right Belt Pocket', shortLabel: 'R Belt', top: '408px', left: '24px', width: '88px', height: '88px' },
+  { id: 'belt', label: 'Belt', shortLabel: 'Belt', top: '408px', left: '144px', width: '88px', height: '88px' },
+  { id: 'belt_l', label: 'Left Belt Pocket', shortLabel: 'L Belt', top: '408px', left: '264px', width: '88px', height: '88px' },
+  { id: 'hand_r', label: 'Right Hand', shortLabel: 'R Hand', top: '506px', left: '24px', width: '88px', height: '88px' },
+  { id: 'legs', label: 'Legs', shortLabel: 'Legs', top: '506px', left: '144px', width: '88px', height: '88px' },
+  { id: 'hand_l', label: 'Left Hand', shortLabel: 'L Hand', top: '506px', left: '264px', width: '88px', height: '88px' },
+  { id: 'boots', label: 'Boots', shortLabel: 'Boots', top: '604px', left: '144px', width: '88px', height: '88px' },
 ];
 
 const getLoadoutValidSlots = (entry?: LoadoutViewEntry): string[] => {
@@ -653,9 +495,10 @@ const getLoadoutSlotCounts = (
         acc.equip += 1;
       }
       acc.bag += Number(entry.bag) || 0;
+      acc.stash += Number(entry.stash) || 0;
       return acc;
     },
-    { total: 0, equip: 0, bag: 0 }
+    { total: 0, equip: 0, bag: 0, stash: 0 }
   );
 };
 
@@ -664,6 +507,38 @@ const getLoadoutSlotLabel = (slotId: string): string => {
   return slot?.shortLabel || slot?.label || slotId;
 };
 
+const getLoadoutSourceText = (entry: LoadoutViewEntry): string => {
+  const sources = entry.sources || {};
+  const parts: string[] = [];
+  if (sources.tat) {
+    parts.push(`TAT ${sources.tat}`);
+  }
+  if (sources.trait) {
+    parts.push(`Trait ${sources.trait}`);
+  }
+  if (sources.donor_loadout) {
+    parts.push(`Donor ${sources.donor_loadout}`);
+  }
+  return parts.join(' · ');
+};
+
+const getLoadoutPaintText = (entry: LoadoutViewEntry): string => {
+  const paint = entry.paint;
+  if (!paint) {
+    return '';
+  }
+  const parts: string[] = [];
+  if (paint.primary) {
+    parts.push(`P ${paint.primary}`);
+  }
+  if (paint.detail) {
+    parts.push(`D ${paint.detail}`);
+  }
+  if (paint.altdetail) {
+    parts.push(`A ${paint.altdetail}`);
+  }
+  return parts.join(' · ');
+};
 
 const groupEntriesByCategoryAndSlot = <
   T extends { slot_group?: string | null; category?: string | null; name?: string },
@@ -751,13 +626,11 @@ const NumericRow = ({
               -
             </Button>
           </Stack.Item>
-
           <Stack.Item>
             <Box width="34px" textAlign="center" bold>
               {value}
             </Box>
           </Stack.Item>
-
           <Stack.Item>
             <Button compact onClick={onAdd} disabled={disabledAdd}>
               +
@@ -830,7 +703,7 @@ const HoverCard = ({ data }: { data: HoverCardData | null }) => {
           </Box>
 
           {!!data.desc && (
-            <Box mb={0.75} style={{ opacity: 0.9, lineHeight: 1.35 }}>
+            <Box mb={0.75} style={{ opacity: 0.9, lineHeight: 1.35, whiteSpace: 'pre-line' }}>
               {data.desc}
             </Box>
           )}
@@ -887,7 +760,8 @@ const HoverCard = ({ data }: { data: HoverCardData | null }) => {
 
           {typeof data.bag === 'number' && typeof data.equip === 'number' && (
             <Box style={{ opacity: 0.9 }}>
-              <b>Bag:</b> {data.bag} | <b>Equip:</b> {data.equip}
+              <b>Bag:</b> {data.bag} | <b>Stash:</b> {data.stash || 0} | <b>Equip:</b>{' '}
+              {data.equip}
             </Box>
           )}
 
@@ -1019,23 +893,21 @@ const ItemTile = ({
           </div>
         )}
 
-        {bottomRightText !== undefined &&
-          bottomRightText !== null &&
-          bottomRightText !== '' && (
-            <div
-              style={{
-                position: 'absolute',
-                right: '6px',
-                bottom: '4px',
-                fontWeight: 700,
-                fontSize: '11px',
-                color: '#9fd6a8',
-                textShadow: '0 1px 2px rgba(0,0,0,0.95)',
-                pointerEvents: 'none',
-              }}>
-              {bottomRightText}
-            </div>
-          )}
+        {bottomRightText !== undefined && bottomRightText !== null && bottomRightText !== '' && (
+          <div
+            style={{
+              position: 'absolute',
+              right: '6px',
+              bottom: '4px',
+              fontWeight: 700,
+              fontSize: '11px',
+              color: '#9fd6a8',
+              textShadow: '0 1px 2px rgba(0,0,0,0.95)',
+              pointerEvents: 'none',
+            }}>
+            {bottomRightText}
+          </div>
+        )}
       </div>
     </Box>
   );
@@ -1046,7 +918,7 @@ const SectionTitleWithMeta = ({
   meta,
 }: {
   title: string;
-  meta?: React.ReactNode;
+  meta?: ReactNode;
 }) => {
   return (
     <Stack align="center" justify="space-between">
@@ -1060,13 +932,7 @@ const SectionTitleWithMeta = ({
   );
 };
 
-const SlotCards = ({
-  slots,
-  act,
-}: {
-  slots: TatSlotEntry[];
-  act: BackendAct;
-}) => {
+const SlotCards = ({ slots, act }: { slots: TatSlotEntry[]; act: BackendAct }) => {
   const [renameDrafts, setRenameDrafts] = useState<Record<number, string>>({});
 
   useEffect(() => {
@@ -1106,33 +972,17 @@ const SlotCards = ({
         <Stack wrap>
           {slots.map((slot) => {
             const draftName = renameDrafts[slot.id] ?? slot.name ?? `Slot ${slot.id}`;
-            const summary = slot.summary || {
-              stats: 0,
-              skills: 0,
-              traits: 0,
-              items: 0,
-            };
+            const summary = slot.summary || { stats: 0, skills: 0, traits: 0, items: 0 };
 
             return (
-              <Stack.Item
-                key={slot.id}
-                grow
-                basis="31%"
-                style={{
-                  minWidth: '220px',
-                  maxWidth: '32%',
-                }}>
+              <Stack.Item key={slot.id} grow basis="31%" style={{ minWidth: '220px', maxWidth: '32%' }}>
                 <Box
                   style={{
                     minHeight: '98px',
                     padding: '6px',
                     borderRadius: '6px',
-                    background: slot.active
-                      ? 'rgba(120, 180, 120, 0.08)'
-                      : 'rgba(255,255,255,0.02)',
-                    border: slot.active
-                      ? '1px solid rgba(120, 180, 120, 0.45)'
-                      : '1px solid rgba(255,255,255,0.08)',
+                    background: slot.active ? 'rgba(120, 180, 120, 0.08)' : 'rgba(255,255,255,0.02)',
+                    border: slot.active ? '1px solid rgba(120, 180, 120, 0.45)' : '1px solid rgba(255,255,255,0.08)',
                   }}>
                   <Stack justify="space-between" align="center">
                     <Stack.Item>
@@ -1167,10 +1017,7 @@ const SlotCards = ({
                       fluid
                       value={draftName}
                       onChange={(value) =>
-                        setRenameDrafts((prev) => ({
-                          ...prev,
-                          [slot.id]: String(value),
-                        }))
+                        setRenameDrafts((prev) => ({ ...prev, [slot.id]: String(value) }))
                       }
                     />
                   </Box>
@@ -1191,9 +1038,7 @@ const SlotCards = ({
                         onClick={() =>
                           act('rename_tat_slot', {
                             slot_id: slot.id,
-                            name: String(
-                              renameDrafts[slot.id] ?? slot.name ?? `Slot ${slot.id}`
-                            ).trim(),
+                            name: String(renameDrafts[slot.id] ?? slot.name ?? `Slot ${slot.id}`).trim(),
                           })
                         }>
                         Rename
@@ -1238,10 +1083,7 @@ const JsonExchangePanel = ({
             <Button onClick={() => act('export_json')}>Export current build</Button>
           </Stack.Item>
           <Stack.Item>
-            <Button
-              color="good"
-              disabled={!jsonDraft.trim()}
-              onClick={() => act('import_json', { json: jsonDraft })}>
+            <Button color="good" disabled={!jsonDraft.trim()} onClick={() => act('import_json', { json: jsonDraft })}>
               Import from text
             </Button>
           </Stack.Item>
@@ -1270,9 +1112,7 @@ const JsonExchangePanel = ({
           </Button>
         </Stack.Item>
         <Stack.Item>
-          <Box style={{ opacity: 0.75, fontSize: '11px' }}>
-            Length: {jsonDraft.length} chars
-          </Box>
+          <Box style={{ opacity: 0.75, fontSize: '11px' }}>Length: {jsonDraft.length} chars</Box>
         </Stack.Item>
       </Stack>
     </Section>
@@ -1281,17 +1121,13 @@ const JsonExchangePanel = ({
 
 const ControlTab = ({
   slots,
-  presets,
   act,
-  search,
   buildJson,
   lastJsonError,
   lastJsonNotice,
 }: {
   slots: TatSlotEntry[];
-  presets: TatPresetEntry[];
   act: BackendAct;
-  search: string;
   buildJson?: string | null;
   lastJsonError?: string | null;
   lastJsonNotice?: string | null;
@@ -1309,15 +1145,7 @@ const ControlTab = ({
   );
 };
 
-const StatsTab = ({
-  data,
-  act,
-  search,
-}: {
-  data: Data;
-  act: BackendAct;
-  search: string;
-}) => {
+const StatsTab = ({ data, act, search }: { data: Data; act: BackendAct; search: string }) => {
   const rows = useMemo(
     () =>
       Object.entries(data.available_stats || {}).filter(([statId, entry]) =>
@@ -1327,13 +1155,7 @@ const StatsTab = ({
   );
 
   return (
-    <Section
-      title={
-        <SectionTitleWithMeta
-          title="Stats"
-          meta={`Free: ${data.points_stats_remaining} / ${data.points_stats}`}
-        />
-      }>
+    <Section title={<SectionTitleWithMeta title="Stats" meta={`Free: ${data.points_stats_remaining} / ${data.points_stats}`} />}>
       {!rows.length ? (
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
@@ -1349,12 +1171,7 @@ const StatsTab = ({
                 onRemove={() => act('remove_stat', { id: statId, amount: 1 })}
                 disabledAdd={value >= entry.max || data.points_stats_remaining < entry.cost}
                 disabledRemove={value <= 1}
-                extra={
-                  <Box>
-                    Base: {entry.base} | Refund floor: {entry.min} | Max: {entry.max} | Cost per
-                    step: {entry.cost}
-                  </Box>
-                }
+                extra={<Box>Base: {entry.base} | Refund floor: {entry.min} | Max: {entry.max} | Cost per step: {entry.cost}</Box>}
               />
             );
           })}
@@ -1387,10 +1204,7 @@ const SkillRow = ({
   const displayValue = formatSkillDisplayValue(state);
 
   const disableRemove = invested <= 0;
-  const disableAdd =
-    totalLevel >= cap ||
-    nextCost <= 0 ||
-    (domainRemaining !== null && domainRemaining < nextCost);
+  const disableAdd = totalLevel >= cap || nextCost <= 0 || (domainRemaining !== null && domainRemaining < nextCost);
 
   return (
     <div
@@ -1413,11 +1227,7 @@ const SkillRow = ({
       <Stack
         align="center"
         justify="space-between"
-        style={{
-          padding: '4px 0',
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
-          minHeight: '34px',
-        }}>
+        style={{ padding: '4px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', minHeight: '34px' }}>
         <Stack.Item grow>
           <Box bold>{entry.name || skillPath}</Box>
           <Box style={{ opacity: 0.72, fontSize: '11px' }}>
@@ -1425,35 +1235,20 @@ const SkillRow = ({
             {bonus > 0 ? ` | Bonus: ${bonus}` : ''}
           </Box>
         </Stack.Item>
-
         <Stack.Item>
           <Stack align="center">
             <Stack.Item>
-              <Button
-                compact
-                onClick={() => act('remove_skill', { path: skillPath, amount: 1 })}
-                disabled={disableRemove}>
+              <Button compact onClick={() => act('remove_skill', { path: skillPath, amount: 1 })} disabled={disableRemove}>
                 -
               </Button>
             </Stack.Item>
-
             <Stack.Item>
-              <Box
-                width="56px"
-                textAlign="center"
-                bold
-                style={{
-                  fontSize: '13px',
-                }}>
+              <Box width="56px" textAlign="center" bold style={{ fontSize: '13px' }}>
                 {displayValue}
               </Box>
             </Stack.Item>
-
             <Stack.Item>
-              <Button
-                compact
-                onClick={() => act('add_skill', { path: skillPath, amount: 1 })}
-                disabled={disableAdd}>
+              <Button compact onClick={() => act('add_skill', { path: skillPath, amount: 1 })} disabled={disableAdd}>
                 +
               </Button>
             </Stack.Item>
@@ -1482,25 +1277,13 @@ const SkillsDomainPanel = ({
   return (
     <Stack.Item grow basis="32%" style={{ minWidth: '270px' }}>
       <Section
-        title={
-          <SectionTitleWithMeta
-            title={SKILL_DOMAIN_TITLES[domain]}
-            meta={formatDomainPoints(data, domain)}
-          />
-        }
+        title={<SectionTitleWithMeta title={SKILL_DOMAIN_TITLES[domain]} meta={formatDomainPoints(data, domain)} />}
         fill
-        style={{
-          height: '320px',
-        }}>
+        style={{ height: '320px' }}>
         {!rows.length ? (
           <NoticeBox>No skills in this group.</NoticeBox>
         ) : (
-          <Box
-            style={{
-              maxHeight: '260px',
-              overflowY: 'auto',
-              paddingRight: '4px',
-            }}>
+          <Box style={{ maxHeight: '260px', overflowY: 'auto', paddingRight: '4px' }}>
             {rows.map(([skillPath, entry]) => (
               <SkillRow
                 key={skillPath}
@@ -1540,19 +1323,9 @@ const SkillsTab = ({
     };
 
     Object.entries(data.available_skills || {}).forEach(([skillPath, entry]) => {
-      if (
-        !matchesSearch(
-          search,
-          skillPath,
-          entry.name,
-          entry.desc,
-          entry.category,
-          entry.is_combat ? 'combat' : 'non-combat'
-        )
-      ) {
+      if (!matchesSearch(search, skillPath, entry.name, entry.desc, entry.category, entry.is_combat ? 'combat' : 'non-combat')) {
         return;
       }
-
       const domain = normalizeSkillDomain(entry.category);
       byDomain[domain].push([skillPath, entry]);
     });
@@ -1573,14 +1346,7 @@ const SkillsTab = ({
       ) : (
         <Stack wrap align="stretch">
           {SKILL_DOMAIN_ORDER.map((domain) => (
-            <SkillsDomainPanel
-              key={domain}
-              domain={domain}
-              rows={groups[domain]}
-              data={data}
-              act={act}
-              setHoveredItem={setHoveredItem}
-            />
+            <SkillsDomainPanel key={domain} domain={domain} rows={groups[domain]} data={data} act={act} setHoveredItem={setHoveredItem} />
           ))}
         </Stack>
       )}
@@ -1591,7 +1357,6 @@ const SkillsTab = ({
 const TraitPill = ({
   title,
   cost,
-  desc,
   amount,
   repeatable,
   selected,
@@ -1604,7 +1369,6 @@ const TraitPill = ({
 }: {
   title: string;
   cost: number;
-  desc?: string;
   amount?: number;
   repeatable?: boolean;
   selected?: boolean;
@@ -1657,30 +1421,16 @@ const TraitsTab = ({
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const grouped = useMemo(() => {
-    const groups: Record<
-      string,
-      {
-        categoryName: string;
-        available: Array<[string, TraitEntry]>;
-        selected: Array<[string, TraitEntry]>;
-      }
-    > = {};
+    const groups: Record<string, { categoryName: string; available: Array<[string, TraitEntry]>; selected: Array<[string, TraitEntry]> }> = {};
 
     Object.entries(data.available_traits || {})
-      .filter(([traitId, entry]) =>
-        matchesSearch(search, traitId, entry.name, entry.desc, entry.category, entry.category_name)
-      )
+      .filter(([traitId, entry]) => matchesSearch(search, traitId, entry.name, entry.desc, entry.category, entry.category_name))
       .forEach(([traitId, entry]) => {
         const category = entry.category || 'other';
         const categoryName = entry.category_name || 'Other';
         if (!groups[category]) {
-          groups[category] = {
-            categoryName,
-            available: [],
-            selected: [],
-          };
+          groups[category] = { categoryName, available: [], selected: [] };
         }
-
         if (getTraitAmount(data, traitId) > 0) {
           groups[category].selected.push([traitId, entry]);
         } else {
@@ -1699,7 +1449,6 @@ const TraitsTab = ({
   const buildTraitHover = (traitId: string, entry: TraitEntry): HoverCardData => {
     const amount = getTraitAmount(data, traitId);
     const canAdd = canAddTrait(data, traitId, entry);
-
     return {
       name: entry.name || traitId,
       desc: entry.desc,
@@ -1713,44 +1462,28 @@ const TraitsTab = ({
   };
 
   return (
-    <Section
-      title={
-        <SectionTitleWithMeta
-          title="Traits"
-          meta={`Free: ${data.points_traits_remaining} / ${data.points_traits}`}
-        />
-      }>
+    <Section title={<SectionTitleWithMeta title="Traits" meta={`Free: ${data.points_traits_remaining} / ${data.points_traits}`} />}>
       {!grouped.length ? (
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
         <Stack vertical>
           {grouped.map(([categoryKey, group]) => (
-            <Box
-              key={categoryKey}
-              mb={2}
-              style={{
-                borderBottom: '1px solid rgba(255,255,255,0.08)',
-                paddingBottom: '10px',
-              }}>
+            <Box key={categoryKey} mb={2} style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '10px' }}>
               <Box bold mb={1} style={{ fontSize: '18px', letterSpacing: '1px' }}>
                 {group.categoryName}
               </Box>
 
-              <Box bold mb={0.5}>
-                Pool
-              </Box>
+              <Box bold mb={0.5}>Pool</Box>
               {group.available.length ? (
                 <Stack wrap>
                   {group.available.map(([traitId, entry]) => {
                     const amount = getTraitAmount(data, traitId);
                     const canAdd = canAddTrait(data, traitId, entry);
-
                     return (
                       <Stack.Item key={traitId}>
                         <TraitPill
                           title={entry.name || traitId}
                           cost={entry.cost || 0}
-                          desc={entry.desc}
                           amount={amount}
                           repeatable={!!entry.repeatable}
                           disabledAdd={!canAdd}
@@ -1768,21 +1501,17 @@ const TraitsTab = ({
                 <NoticeBox>No available traits in this group.</NoticeBox>
               )}
 
-              <Box bold mt={1} mb={0.5}>
-                Selected
-              </Box>
+              <Box bold mt={1} mb={0.5}>Selected</Box>
               {group.selected.length ? (
                 <Stack wrap>
                   {group.selected.map(([traitId, entry]) => {
                     const amount = getTraitAmount(data, traitId);
                     const canAdd = canAddTrait(data, traitId, entry);
-
                     return (
                       <Stack.Item key={traitId}>
                         <TraitPill
                           title={entry.name || traitId}
                           cost={entry.cost || 0}
-                          desc={entry.desc}
                           amount={amount}
                           repeatable={!!entry.repeatable}
                           selected
@@ -1827,27 +1556,12 @@ const ItemsTab = ({
     return groupEntriesByCategoryAndSlot(
       itemEntries || {},
       (itemPath, entry) =>
-        !!entry.unlocked &&
-        matchesSearch(
-          search,
-          itemPath,
-          entry.name,
-          entry.category,
-          entry.slot_group,
-          entry.unlock_type,
-          entry.unlock_key
-        )
+        !!entry.unlocked && matchesSearch(search, itemPath, entry.name, entry.category, entry.slot_group, entry.unlock_type, entry.unlock_key)
     );
   }, [itemEntries, search]);
 
   return (
-    <Section
-      title={
-        <SectionTitleWithMeta
-          title="Items"
-          meta={`Free: ${data.points_items_remaining} / ${data.points_items}`}
-        />
-      }>
+    <Section title={<SectionTitleWithMeta title="Items" meta={`Free: ${data.points_items_remaining} / ${data.points_items}`} />}>
       {!itemsAvailable ? (
         <NoticeBox>Loading items...</NoticeBox>
       ) : !groups.length ? (
@@ -1856,22 +1570,15 @@ const ItemsTab = ({
         <Stack vertical>
           {groups.map(([categoryKey, slotGroups]) => (
             <Box key={categoryKey} mb={2}>
-              <Box
-                bold
-                mb={1}
-                style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
+              <Box bold mb={1} style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
                 {getCategoryLabel(categoryKey)}
               </Box>
 
               {slotGroups.map(([slotKey, items]) => {
                 const visibleItems = items.slice(0, MAX_RENDERED_ITEMS_PER_SLOT);
-
                 return (
                   <Box key={`${categoryKey}-${slotKey}`} mb={1}>
-                    <Box
-                      bold
-                      mb={0.5}
-                      style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
+                    <Box bold mb={0.5} style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
                       {getSlotLabel(slotKey)}
                     </Box>
 
@@ -1880,7 +1587,6 @@ const ItemsTab = ({
                         const canAdd = entry.can_add !== false;
                         const maximum = Number(entry.maximum);
                         const amount = Number(entry.amount) || 0;
-
                         return (
                           <ItemTile
                             key={itemPath}
@@ -1912,10 +1618,7 @@ const ItemsTab = ({
                     </Stack>
 
                     {items.length > MAX_RENDERED_ITEMS_PER_SLOT && (
-                      <NoticeBox>
-                        Showing first {MAX_RENDERED_ITEMS_PER_SLOT} items. Use search to narrow
-                        results.
-                      </NoticeBox>
+                      <NoticeBox>Showing first {MAX_RENDERED_ITEMS_PER_SLOT} items. Use search to narrow results.</NoticeBox>
                     )}
                   </Box>
                 );
@@ -1950,13 +1653,17 @@ const LoadoutTab = ({
     [loadoutEntries, search]
   );
 
-  const selectedSlot =
-    LOADOUT_DOLL_SLOTS.find((slot) => slot.id === selectedSlotId) || LOADOUT_DOLL_SLOTS[0];
+  const selectedSlot = LOADOUT_DOLL_SLOTS.find((slot) => slot.id === selectedSlotId) || LOADOUT_DOLL_SLOTS[0];
 
   const selectedSlotEntries = useMemo(
     () =>
       visibleEntries
-        .filter(([, entry]) => entryCanUseLoadoutSlot(entry, selectedSlot.id))
+        .filter(([, entry]) => {
+          if (!entryCanUseLoadoutSlot(entry, selectedSlot.id)) {
+            return false;
+          }
+          return (Number(entry.bag) || 0) > 0 || entryIsAssignedToLoadoutSlot(entry, selectedSlot.id);
+        })
         .sort((a, b) => {
           const assignedA = entryIsAssignedToLoadoutSlot(a[1], selectedSlot.id) ? 1 : 0;
           const assignedB = entryIsAssignedToLoadoutSlot(b[1], selectedSlot.id) ? 1 : 0;
@@ -1980,6 +1687,14 @@ const LoadoutTab = ({
     [visibleEntries]
   );
 
+  const stashEntries = useMemo(
+    () =>
+      visibleEntries
+        .filter(([, entry]) => (Number(entry.stash) || 0) > 0)
+        .sort((a, b) => (a[1].name || a[0]).localeCompare(b[1].name || b[0])),
+    [visibleEntries]
+  );
+
   const hasAnyEntries = visibleEntries.length > 0;
   const selectedAssignedEntry = getAssignedEntryForLoadoutSlot(visibleEntries, selectedSlot.id);
 
@@ -1988,97 +1703,82 @@ const LoadoutTab = ({
     setChooserOpen(true);
   };
 
-  const renderBackpackRow = (itemPath: string, entry: LoadoutViewEntry) => {
+  const buildInventoryHover = (itemPath: string, entry: LoadoutViewEntry, area: 'bag' | 'stash'): HoverCardData => {
     const amount = Number(entry.amount) || 0;
     const bag = Math.max(0, Math.min(Number(entry.bag) || 0, amount));
+    const stash = Math.max(0, Math.min(Number(entry.stash) || 0, amount));
+    const equip = Math.max(0, Number(entry.equip) || 0);
+    const sourceText = getLoadoutSourceText(entry);
+    const paintText = getLoadoutPaintText(entry);
+
+    return {
+      name: entry.name || itemPath,
+      slot: area === 'bag' ? 'Backpack' : 'Stash',
+      category: getCategoryLabel(entry.category),
+      total: amount,
+      bag,
+      stash,
+      equip,
+      desc: [sourceText, paintText].filter(Boolean).join('\n'),
+      leftHelp: area === 'bag' ? 'LMB: move to stash' : 'LMB: move to backpack',
+      rightHelp: 'RMB: dye / repaint item',
+    };
+  };
+
+  const renderInventoryRow = (itemPath: string, entry: LoadoutViewEntry, area: 'bag' | 'stash') => {
+    const amount = Number(entry.amount) || 0;
+    const bag = Math.max(0, Math.min(Number(entry.bag) || 0, amount));
+    const stash = Math.max(0, Math.min(Number(entry.stash) || 0, amount));
     const equip = Math.max(0, Number(entry.equip) || 0);
     const validSlotLabels = getLoadoutValidSlots(entry).map(getLoadoutSlotLabel).join(', ');
-    const canUseTarget = entryCanUseLoadoutSlot(entry, selectedSlot.id);
-    const assignedToTarget = entryIsAssignedToLoadoutSlot(entry, selectedSlot.id);
+    const sourceText = getLoadoutSourceText(entry);
+    const paintText = getLoadoutPaintText(entry);
+    const count = area === 'bag' ? bag : stash;
 
     return (
       <div
-        key={`bag-${itemPath}`}
-        onClick={() => {
-          if (canUseTarget) {
-            act('assign_item_to_loadout_slot', { path: itemPath, slot_id: selectedSlot.id });
-            setChooserOpen(false);
-          }
-        }}
+        key={`${area}-${itemPath}`}
+        onClick={() =>
+          act(area === 'bag' ? 'move_item_to_stash' : 'move_item_to_bag', { path: itemPath, amount: 1 })
+        }
         onContextMenu={(event) => {
           event.preventDefault();
           event.stopPropagation();
-          act('move_item_to_bag', { path: itemPath, amount: 1 });
+          act('paint_loadout_item', { path: itemPath });
         }}
-        onMouseEnter={() =>
-          setHoveredItem({
-            name: entry.name || itemPath,
-            slot: selectedSlot.label,
-            category: getCategoryLabel(entry.category),
-            total: amount,
-            bag,
-            equip,
-            leftHelp: canUseTarget
-              ? `LMB: equip to ${selectedSlot.label}`
-              : `Select another slot (${validSlotLabels || 'no compatible slots'})`,
-            rightHelp: 'RMB: return one equipped copy to backpack',
-          })
-        }
+        onMouseEnter={() => setHoveredItem(buildInventoryHover(itemPath, entry, area))}
         onMouseLeave={() => setHoveredItem(null)}
         style={{
           display: 'flex',
           alignItems: 'center',
-          minHeight: '88px',
+          minHeight: '82px',
           gap: '10px',
           padding: '6px 8px',
           marginBottom: '8px',
           borderRadius: '6px',
-          background: assignedToTarget
-            ? 'rgba(80,160,90,0.14)'
-            : canUseTarget
-              ? 'rgba(80,110,170,0.12)'
-              : 'rgba(255,255,255,0.03)',
-          border: assignedToTarget
-            ? '1px solid rgba(120,200,120,0.55)'
-            : canUseTarget
-              ? '1px solid rgba(130,160,220,0.4)'
-              : '1px solid rgba(255,255,255,0.08)',
-          cursor: canUseTarget ? 'pointer' : 'default',
+          background: area === 'bag' ? 'rgba(80,110,170,0.12)' : 'rgba(150,120,70,0.12)',
+          border: area === 'bag' ? '1px solid rgba(130,160,220,0.4)' : '1px solid rgba(220,180,110,0.35)',
+          cursor: 'pointer',
           userSelect: 'none',
         }}>
-        <div
-          style={{
-            width: '72px',
-            height: '72px',
-            flex: '0 0 72px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden',
-          }}>
+        <div style={{ width: '68px', height: '68px', flex: '0 0 68px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
           <TileIcon icon={entry.icon} name={entry.name || itemPath} />
         </div>
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 700, fontSize: '13px' }}>{entry.name || itemPath}</div>
           <div style={{ fontSize: '11px', opacity: 0.78 }}>
-            Bag {bag} · Equip {equip} · Total {amount}
+            Bag {bag} · Stash {stash} · Equip {equip} · Total {amount}
           </div>
-          {!!validSlotLabels && (
-            <div style={{ fontSize: '10px', opacity: 0.62 }}>Slots: {validSlotLabels}</div>
-          )}
+          {!!validSlotLabels && <div style={{ fontSize: '10px', opacity: 0.62 }}>Slots: {validSlotLabels}</div>}
+          {!!sourceText && <div style={{ fontSize: '10px', opacity: 0.7 }}>{sourceText}</div>}
+          {!!paintText && <div style={{ fontSize: '10px', opacity: 0.72 }}>Paint: {paintText}</div>}
         </div>
 
-        <div
-          style={{
-            textAlign: 'right',
-            fontSize: '11px',
-            lineHeight: 1.35,
-            opacity: 0.9,
-            minWidth: '82px',
-          }}>
-          <div>{canUseTarget ? 'LMB: equip' : 'No fit'}</div>
-          <div>RMB: bag</div>
+        <div style={{ textAlign: 'right', fontSize: '11px', lineHeight: 1.35, opacity: 0.9, minWidth: '84px' }}>
+          <div>{count} here</div>
+          <div>{area === 'bag' ? 'LMB: stash' : 'LMB: bag'}</div>
+          <div>RMB: dye</div>
         </div>
       </div>
     );
@@ -2089,21 +1789,9 @@ const LoadoutTab = ({
       {!hasAnyEntries ? (
         <NoticeBox>No matches found.</NoticeBox>
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'stretch',
-            gap: '10px',
-            flexWrap: 'nowrap',
-          }}>
+        <div style={{ display: 'flex', alignItems: 'stretch', gap: '10px', flexWrap: 'nowrap' }}>
           <div style={{ flex: '0 0 414px', minWidth: '414px' }}>
-            <Section
-              title={
-                <SectionTitleWithMeta
-                  title="Paper Doll"
-                  meta="LMB slot: choose · RMB slot: clear"
-                />
-              }>
+            <Section title={<SectionTitleWithMeta title="Paper Doll" meta="LMB slot: choose · RMB equipped item: dye" />}>
               <Box
                 style={{
                   position: 'relative',
@@ -2111,8 +1799,7 @@ const LoadoutTab = ({
                   height: '708px',
                   margin: '0 auto',
                   borderRadius: '10px',
-                  background:
-                    'linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.01))',
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.01))',
                   border: '1px solid rgba(255,255,255,0.08)',
                   overflow: 'hidden',
                 }}>
@@ -2130,10 +1817,10 @@ const LoadoutTab = ({
                       onContextMenu={(event) => {
                         event.preventDefault();
                         event.stopPropagation();
-                        if (hasEquipped) {
-                          act('clear_loadout_slot', { slot_id: slot.id });
-                        }
                         setSelectedSlotId(slot.id);
+                        if (assigned) {
+                          act('paint_loadout_item', { path: assigned[0] });
+                        }
                       }}
                       onMouseEnter={() => {
                         if (assigned) {
@@ -2143,9 +1830,11 @@ const LoadoutTab = ({
                             category: getCategoryLabel(assigned[1].category),
                             total: Number(assigned[1].amount) || 0,
                             bag: Number(assigned[1].bag) || 0,
+                            stash: Number(assigned[1].stash) || 0,
                             equip: Number(assigned[1].equip) || 0,
+                            desc: [getLoadoutSourceText(assigned[1]), getLoadoutPaintText(assigned[1])].filter(Boolean).join('\n'),
                             leftHelp: `LMB: choose item for ${slot.label}`,
-                            rightHelp: hasEquipped ? 'RMB: clear this slot' : undefined,
+                            rightHelp: 'RMB: dye / repaint equipped item',
                           });
                         } else {
                           setHoveredItem({
@@ -2154,9 +1843,9 @@ const LoadoutTab = ({
                             category: 'Loadout slot',
                             total: counts.total,
                             bag: counts.bag,
+                            stash: counts.stash,
                             equip: counts.equip,
                             leftHelp: `LMB: choose item for ${slot.label}`,
-                            rightHelp: hasEquipped ? 'RMB: clear this slot' : undefined,
                           });
                         }
                       }}
@@ -2186,59 +1875,22 @@ const LoadoutTab = ({
                         boxShadow: isSelected ? '0 0 0 1px rgba(240,195,90,0.25)' : 'none',
                         overflow: 'hidden',
                       }}>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          inset: '0',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          pointerEvents: 'none',
-                        }}>
+                      <div style={{ position: 'absolute', inset: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
                         {assigned ? (
-                          <div
-                            style={{
-                              width: '72px',
-                              height: '72px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              overflow: 'hidden',
-                            }}>
+                          <div style={{ width: '72px', height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                             <TileIcon icon={assigned[1].icon} name={assigned[1].name || assigned[0]} />
                           </div>
                         ) : (
-                          <div style={{ fontSize: '11px', fontWeight: 700, opacity: 0.9 }}>
-                            {slot.shortLabel || slot.label}
-                          </div>
+                          <div style={{ fontSize: '11px', fontWeight: 700, opacity: 0.9 }}>{slot.shortLabel || slot.label}</div>
                         )}
                       </div>
 
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '4px',
-                          left: '5px',
-                          fontSize: '10px',
-                          fontWeight: 700,
-                          textShadow: '0 1px 2px rgba(0,0,0,0.95)',
-                          pointerEvents: 'none',
-                        }}>
+                      <div style={{ position: 'absolute', top: '4px', left: '5px', fontSize: '10px', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.95)', pointerEvents: 'none' }}>
                         {slot.shortLabel || slot.label}
                       </div>
 
                       {hasCompatible && (
-                        <div
-                          style={{
-                            position: 'absolute',
-                            right: '5px',
-                            bottom: '3px',
-                            fontSize: '10px',
-                            fontWeight: 700,
-                            color: hasEquipped ? '#9fd6a8' : '#d9d9d9',
-                            textShadow: '0 1px 2px rgba(0,0,0,0.95)',
-                            pointerEvents: 'none',
-                          }}>
+                        <div style={{ position: 'absolute', right: '5px', bottom: '3px', fontSize: '10px', fontWeight: 700, color: hasEquipped ? '#9fd6a8' : '#d9d9d9', textShadow: '0 1px 2px rgba(0,0,0,0.95)', pointerEvents: 'none' }}>
                           {hasEquipped ? 'EQ' : counts.total}
                         </div>
                       )}
@@ -2263,48 +1915,32 @@ const LoadoutTab = ({
                     <Stack align="center" justify="space-between">
                       <Stack.Item>
                         <Box bold>{selectedSlot.label}</Box>
-                        <Box style={{ opacity: 0.72, fontSize: '11px' }}>
-                          {selectedSlotEntries.length} compatible item(s)
-                        </Box>
+                        <Box style={{ opacity: 0.72, fontSize: '11px' }}>{selectedSlotEntries.length} compatible bag item(s)</Box>
                       </Stack.Item>
                       <Stack.Item>
                         <Stack>
                           {!!selectedAssignedEntry && (
                             <Stack.Item>
-                              <Button
-                                compact
-                                onClick={() => act('clear_loadout_slot', { slot_id: selectedSlot.id })}>
+                              <Button compact onClick={() => act('clear_loadout_slot', { slot_id: selectedSlot.id })}>
                                 Clear slot
                               </Button>
                             </Stack.Item>
                           )}
                           <Stack.Item>
-                            <Button compact onClick={() => setChooserOpen(false)}>
-                              Close
-                            </Button>
+                            <Button compact onClick={() => setChooserOpen(false)}>Close</Button>
                           </Stack.Item>
                         </Stack>
                       </Stack.Item>
                     </Stack>
 
                     {!selectedSlotEntries.length ? (
-                      <NoticeBox mt={1}>No selected items can be equipped into this slot.</NoticeBox>
+                      <NoticeBox mt={1}>No backpack items can be equipped into this slot.</NoticeBox>
                     ) : (
-                      <Box
-                        mt={1}
-                        style={{
-                          flex: 1,
-                          overflowY: 'auto',
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          alignContent: 'flex-start',
-                          justifyContent: 'center',
-                        }}>
+                      <Box mt={1} style={{ flex: 1, overflowY: 'auto', display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start', justifyContent: 'center' }}>
                         {selectedSlotEntries.slice(0, MAX_RENDERED_ITEMS_PER_SLOT).map(([itemPath, entry]) => {
                           const assigned = entryIsAssignedToLoadoutSlot(entry, selectedSlot.id);
                           const bag = Number(entry.bag) || 0;
                           const equip = Number(entry.equip) || 0;
-
                           return (
                             <ItemTile
                               key={`chooser-${selectedSlot.id}-${itemPath}`}
@@ -2314,14 +1950,14 @@ const LoadoutTab = ({
                               bottomLeftText={equip > 0 ? `E${equip}` : ''}
                               bottomRightText={assigned ? selectedSlot.shortLabel || 'SET' : ''}
                               glow={assigned ? 'rgba(120,200,120,0.65)' : 'rgba(130,160,220,0.35)'}
+                              disabled={!assigned && bag <= 0}
                               onLeftClick={() => {
-                                act('assign_item_to_loadout_slot', {
-                                  path: itemPath,
-                                  slot_id: selectedSlot.id,
-                                });
-                                setChooserOpen(false);
+                                if (bag > 0 || assigned) {
+                                  act('assign_item_to_loadout_slot', { path: itemPath, slot_id: selectedSlot.id });
+                                  setChooserOpen(false);
+                                }
                               }}
-                              onRightClick={assigned ? () => act('clear_loadout_slot', { slot_id: selectedSlot.id }) : undefined}
+                              onRightClick={() => act('paint_loadout_item', { path: itemPath })}
                               onHoverStart={() =>
                                 setHoveredItem({
                                   name: entry.name || itemPath,
@@ -2329,9 +1965,11 @@ const LoadoutTab = ({
                                   category: getCategoryLabel(entry.category),
                                   total: Number(entry.amount) || 0,
                                   bag,
+                                  stash: Number(entry.stash) || 0,
                                   equip,
-                                  leftHelp: `LMB: equip to ${selectedSlot.label}`,
-                                  rightHelp: assigned ? 'RMB: clear this slot' : undefined,
+                                  desc: [getLoadoutSourceText(entry), getLoadoutPaintText(entry)].filter(Boolean).join('\n'),
+                                  leftHelp: bag > 0 ? `LMB: equip to ${selectedSlot.label}` : 'No copy in backpack',
+                                  rightHelp: 'RMB: dye / repaint item',
                                 })
                               }
                               onHoverEnd={() => setHoveredItem(null)}
@@ -2342,7 +1980,7 @@ const LoadoutTab = ({
                     )}
 
                     <Box mt={0.5} style={{ opacity: 0.76, fontSize: '11px' }}>
-                      LMB item: equip to slot. RMB slot or (Clear slot): move assigned item back to bag.
+                      LMB item: equip from backpack. Clear slot: moves equipped item back to backpack. RMB item: dye.
                     </Box>
                   </div>
                 )}
@@ -2350,23 +1988,32 @@ const LoadoutTab = ({
             </Section>
           </div>
 
-          <div style={{ flex: '1 1 auto', minWidth: '410px' }}>
-            <Section
-              title={
-                <SectionTitleWithMeta
-                  title={`Backpack → selected slot: ${selectedSlot.label}`}
-                  meta={`${backpackEntries.length} item type(s) currently in bag`}
-                />
-              }
-              fill>
-              {!backpackEntries.length ? (
-                <NoticeBox>Backpack is empty.</NoticeBox>
-              ) : (
-                <Box style={{ maxHeight: '720px', overflowY: 'auto' }}>
-                  {backpackEntries.map(([itemPath, entry]) => renderBackpackRow(itemPath, entry))}
-                </Box>
-              )}
-            </Section>
+          <div style={{ flex: '1 1 auto', minWidth: '410px', height: '764px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%' }}>
+              <div style={{ flex: '2 1 0', minHeight: 0 }}>
+                <Section title={<SectionTitleWithMeta title="Backpack" meta={`${backpackEntries.length} item type(s) · LMB moves to stash`} />} fill>
+                  {!backpackEntries.length ? (
+                    <NoticeBox>Backpack is empty.</NoticeBox>
+                  ) : (
+                    <Box style={{ height: '100%', maxHeight: '456px', overflowY: 'auto' }}>
+                      {backpackEntries.map(([itemPath, entry]) => renderInventoryRow(itemPath, entry, 'bag'))}
+                    </Box>
+                  )}
+                </Section>
+              </div>
+
+              <div style={{ flex: '1 1 0', minHeight: 0 }}>
+                <Section title={<SectionTitleWithMeta title="Stash" meta={`${stashEntries.length} item type(s) · LMB moves to backpack`} />} fill>
+                  {!stashEntries.length ? (
+                    <NoticeBox>Stash is empty.</NoticeBox>
+                  ) : (
+                    <Box style={{ height: '100%', maxHeight: '218px', overflowY: 'auto' }}>
+                      {stashEntries.map(([itemPath, entry]) => renderInventoryRow(itemPath, entry, 'stash'))}
+                    </Box>
+                  )}
+                </Section>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -2380,15 +2027,7 @@ export const TATBuild = () => {
   const [search, setSearch] = useState('');
   const [hoveredItem, setHoveredItem] = useState<HoverCardData | null>(null);
 
-  const tatSlots = useMemo<TatSlotEntry[]>(
-    () => normalizeTatSlots(data.tat_slots, data.active_tat_slot),
-    [data.tat_slots, data.active_tat_slot]
-  );
-
-  const tatPresets = useMemo<TatPresetEntry[]>(
-    () => normalizeTatPresets(data.tat_presets),
-    [data.tat_presets]
-  );
+  const tatSlots = useMemo<TatSlotEntry[]>(() => normalizeTatSlots(data.tat_slots, data.active_tat_slot), [data.tat_slots, data.active_tat_slot]);
 
   const itemEntries = useMemo<Record<string, ItemViewEntry>>(() => {
     const result: Record<string, ItemViewEntry> = {};
@@ -2425,8 +2064,13 @@ export const TATBuild = () => {
         amount: state.amount || 0,
         equip: state.equip || 0,
         bag: state.bag || 0,
+        stash: state.stash || 0,
         slots: state.slots || {},
         valid_slots: state.valid_slots || [],
+        sources: state.sources || {},
+        paint: state.paint || null,
+        icon: state.icon || entry.icon,
+        icon_state: state.icon_state || entry.icon_state,
       };
     });
 
@@ -2443,33 +2087,19 @@ export const TATBuild = () => {
           <Section title="Search">
             <Stack align="center">
               <Stack.Item grow>
-                <Input
-                  fluid
-                  placeholder={searchPlaceholder}
-                  value={search}
-                  onChange={(value) => setSearch(String(value))}
-                />
+                <Input fluid placeholder={searchPlaceholder} value={search} onChange={(value) => setSearch(String(value))} />
               </Stack.Item>
               <Stack.Item>
-                <Button disabled={!search} onClick={() => setSearch('')}>
-                  Clear
-                </Button>
+                <Button disabled={!search} onClick={() => setSearch('')}>Clear</Button>
               </Stack.Item>
             </Stack>
           </Section>
 
-          {data.dirty ? (
-            <NoticeBox>Build has unsaved changes.</NoticeBox>
-          ) : (
-            <NoticeBox>Build is saved.</NoticeBox>
-          )}
+          {data.dirty ? <NoticeBox>Build has unsaved changes.</NoticeBox> : <NoticeBox>Build is saved.</NoticeBox>}
 
           {!data.can_save && (
             <NoticeBox>
-              <Box bold mb={0.5}>
-                Current build is invalid:
-              </Box>
-
+              <Box bold mb={0.5}>Current build is invalid:</Box>
               {data.validation_issues?.length ? (
                 <Stack vertical>
                   {data.validation_issues.map((issue, index) => (
@@ -2484,61 +2114,29 @@ export const TATBuild = () => {
 
           <Section
             title="Build"
-            buttons={
-              <Box style={{ opacity: 0.8, fontSize: '12px' }}>
-                Save writes current build into the active slot
-              </Box>
-            }>
+            buttons={<Box style={{ opacity: 0.8, fontSize: '12px' }}>Save writes current build into the active slot</Box>}>
             <Tabs fluid>
-              <Tabs.Tab selected={tab === 'control'} onClick={() => setTab('control')}>
-                Control
-              </Tabs.Tab>
-              <Tabs.Tab selected={tab === 'stats'} onClick={() => setTab('stats')}>
-                Stats
-              </Tabs.Tab>
-              <Tabs.Tab selected={tab === 'skills'} onClick={() => setTab('skills')}>
-                Skills
-              </Tabs.Tab>
-              <Tabs.Tab selected={tab === 'traits'} onClick={() => setTab('traits')}>
-                Traits
-              </Tabs.Tab>
-              <Tabs.Tab selected={tab === 'items'} onClick={() => setTab('items')}>
-                Items
-              </Tabs.Tab>
-              <Tabs.Tab selected={tab === 'loadout'} onClick={() => setTab('loadout')}>
-                Loadout
-              </Tabs.Tab>
+              <Tabs.Tab selected={tab === 'control'} onClick={() => setTab('control')}>Control</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'stats'} onClick={() => setTab('stats')}>Stats</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'skills'} onClick={() => setTab('skills')}>Skills</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'traits'} onClick={() => setTab('traits')}>Traits</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'items'} onClick={() => setTab('items')}>Items</Tabs.Tab>
+              <Tabs.Tab selected={tab === 'loadout'} onClick={() => setTab('loadout')}>Loadout</Tabs.Tab>
             </Tabs>
           </Section>
 
           {tab === 'control' && (
             <ControlTab
               slots={tatSlots}
-              presets={tatPresets}
               act={act}
-              search={search}
               buildJson={data.build_json}
               lastJsonError={data.last_json_error}
               lastJsonNotice={data.last_json_notice}
             />
           )}
           {tab === 'stats' && <StatsTab data={data} act={act} search={search} />}
-          {tab === 'skills' && (
-            <SkillsTab
-              data={data}
-              act={act}
-              search={search}
-              setHoveredItem={setHoveredItem}
-            />
-          )}
-          {tab === 'traits' && (
-            <TraitsTab
-              data={data}
-              act={act}
-              search={search}
-              setHoveredItem={setHoveredItem}
-            />
-          )}
+          {tab === 'skills' && <SkillsTab data={data} act={act} search={search} setHoveredItem={setHoveredItem} />}
+          {tab === 'traits' && <TraitsTab data={data} act={act} search={search} setHoveredItem={setHoveredItem} />}
           {tab === 'items' && (
             <ItemsTab
               itemEntries={itemEntries}
@@ -2550,44 +2148,27 @@ export const TATBuild = () => {
             />
           )}
           {tab === 'loadout' && (
-            <LoadoutTab
-              loadoutEntries={loadoutEntries}
-              act={act}
-              search={search}
-              setHoveredItem={setHoveredItem}
-            />
+            <LoadoutTab loadoutEntries={loadoutEntries} act={act} search={search} setHoveredItem={setHoveredItem} />
           )}
 
           <Section>
             <Stack justify="space-between" wrap>
               <Stack.Item>
                 <Stack wrap>
-                  <Stack.Item>
-                    <Button onClick={() => act('reset_stats')}>Reset Stats</Button>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Button onClick={() => act('reset_skills')}>Reset Skills</Button>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Button onClick={() => act('reset_traits')}>Reset Traits</Button>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Button onClick={() => act('reset_items')}>Reset Items</Button>
-                  </Stack.Item>
+                  <Stack.Item><Button onClick={() => act('reset_stats')}>Reset Stats</Button></Stack.Item>
+                  <Stack.Item><Button onClick={() => act('reset_skills')}>Reset Skills</Button></Stack.Item>
+                  <Stack.Item><Button onClick={() => act('reset_traits')}>Reset Traits</Button></Stack.Item>
+                  <Stack.Item><Button onClick={() => act('reset_items')}>Reset Items</Button></Stack.Item>
                 </Stack>
               </Stack.Item>
 
               <Stack.Item>
                 <Stack>
                   <Stack.Item>
-                    <Button color="average" onClick={() => act('reset_all')}>
-                      Reset All
-                    </Button>
+                    <Button color="average" onClick={() => act('reset_all')}>Reset All</Button>
                   </Stack.Item>
                   <Stack.Item>
-                    <Button color="good" disabled={!data.can_save} onClick={() => act('save')}>
-                      Save Active Slot
-                    </Button>
+                    <Button color="good" disabled={!data.can_save} onClick={() => act('save')}>Save Active Slot</Button>
                   </Stack.Item>
                 </Stack>
               </Stack.Item>

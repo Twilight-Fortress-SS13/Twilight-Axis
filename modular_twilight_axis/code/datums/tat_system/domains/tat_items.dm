@@ -2,6 +2,8 @@
 	var/datum/tat_build/owner_build
 	var/list/selected = list()
 	var/list/item_loadout = list()
+	var/list/item_grants = list()
+	var/list/item_paint = list()
 	var/base_points = 20
 	var/list/equip_slots_cache = list()
 
@@ -12,13 +14,57 @@
 /datum/tat_items/proc/reset()
 	selected = list()
 	item_loadout = list()
+	item_grants = list()
+	item_paint = list()
 	return TRUE
 
 /datum/tat_items/proc/get_entry(item_path)
 	return GLOB.tat_available_items[item_path]
 
-/datum/tat_items/proc/get_amount(item_path)
+/datum/tat_items/proc/get_paid_amount(item_path)
 	return round(selected[item_path] || 0)
+
+/datum/tat_items/proc/get_granted_amount(item_path, source = null)
+	var/list/sources = item_grants[item_path]
+	if(!islist(sources))
+		return 0
+	if(!isnull(source))
+		return round(sources[source] || 0)
+	var/total = 0
+	for(var/source_key in sources)
+		total += round(sources[source_key] || 0)
+	return total
+
+/datum/tat_items/proc/get_amount(item_path)
+	return get_paid_amount(item_path) + get_granted_amount(item_path)
+
+/datum/tat_items/proc/get_non_donor_amount(item_path)
+	return get_paid_amount(item_path) + get_granted_amount(item_path, TAT_ITEM_SOURCE_TRAIT)
+
+/datum/tat_items/proc/get_all_item_paths()
+	var/list/result = list()
+	for(var/item_path in selected)
+		if(!(item_path in result))
+			result += item_path
+	for(var/item_path in item_grants)
+		if(get_granted_amount(item_path) <= 0)
+			continue
+		if(!(item_path in result))
+			result += item_path
+	return result
+
+/datum/tat_items/proc/get_source_counts_for_ui(item_path)
+	var/list/result = list()
+	var/paid = get_paid_amount(item_path)
+	if(paid > 0)
+		result[TAT_ITEM_SOURCE_PAID] = paid
+	var/list/sources = item_grants[item_path]
+	if(islist(sources))
+		for(var/source_key in sources)
+			var/count = round(sources[source_key] || 0)
+			if(count > 0)
+				result[source_key] = count
+	return result
 
 /datum/tat_items/proc/get_cost(item_path)
 	var/list/entry = get_entry(item_path)
@@ -91,7 +137,7 @@
 	if(!slot_group)
 		return 0
 	var/total = 0
-	for(var/item_path in selected)
+	for(var/item_path in get_all_item_paths())
 		if(!isnull(exclude_item_path) && item_path == exclude_item_path)
 			continue
 		var/list/entry = GLOB.tat_available_items[item_path]
@@ -101,8 +147,8 @@
 			continue
 		if(entry["category"] != category)
 			continue
-		var/amount = selected[item_path]
-		if(!isnum(amount) || amount <= 0)
+		var/amount = get_amount(item_path)
+		if(amount <= 0)
 			continue
 		total += amount
 	return total
@@ -146,6 +192,7 @@
 /datum/tat_items/proc/set_amount(item_path, amount, ignore_limits = FALSE)
 	if(!islist(get_entry(item_path)))
 		return FALSE
+	var/old_total = get_amount(item_path)
 	amount = round(amount)
 	if(ignore_limits)
 		amount = max(0, amount)
@@ -153,22 +200,38 @@
 		amount = clamp(amount, 0, get_maximum(item_path))
 	if(amount <= 0)
 		selected -= item_path
-		item_loadout -= item_path
 	else
 		selected[item_path] = amount
+	var/new_total = get_amount(item_path)
+	if(new_total <= 0)
+		item_loadout -= item_path
+		item_paint -= item_path
+	else
+		var/list/loadout = get_loadout(item_path)
+		if(new_total > old_total)
+			// Newly acquired TAT item copies start in stash. The player explicitly moves
+			// them to backpack before equipping or spawning them into the round.
+			loadout["stash"] = round(loadout["stash"] || 0) + (new_total - old_total)
 		normalize_loadout(item_path)
 	owner_build?.set_dirty()
 	return TRUE
 
 /datum/tat_items/proc/get_loadout(item_path)
 	if(!(item_path in item_loadout) || !islist(item_loadout[item_path]))
-		item_loadout[item_path] = list("equip" = 0, "bag" = get_amount(item_path), "slots" = list())
+		// Unknown/fresh loadout state must not silently dump items into backpack.
+		// Stash is the safe default; backpack is opt-in via move_item_from_stash_to_bag().
+		item_loadout[item_path] = list("equip" = 0, "bag" = 0, "stash" = get_amount(item_path), "slots" = list())
+	if(isnull(item_loadout[item_path]["bag"]))
+		item_loadout[item_path]["bag"] = 0
+	if(isnull(item_loadout[item_path]["stash"]))
+		item_loadout[item_path]["stash"] = 0
 	return item_loadout[item_path]
 
 /datum/tat_items/proc/normalize_loadout(item_path)
 	var/amount = get_amount(item_path)
 	if(amount <= 0)
 		item_loadout -= item_path
+		item_paint -= item_path
 		return
 	var/list/loadout = get_loadout(item_path)
 	var/list/slots = loadout["slots"]
@@ -185,13 +248,155 @@
 		var/drop_slot = slots[length(slots)]
 		slots -= drop_slot
 
-	loadout["equip"] = length(slots)
-	loadout["bag"] = max(0, amount - length(slots))
+	var/equip = length(slots)
+	var/non_slot_amount = max(0, amount - equip)
+	var/bag = max(0, round(loadout["bag"] || 0))
+	var/stash = max(0, round(loadout["stash"] || 0))
+
+	while((bag + stash) > non_slot_amount)
+		if(stash > 0)
+			stash--
+		else if(bag > 0)
+			bag--
+		else
+			break
+
+	if((bag + stash) < non_slot_amount)
+		// Any missing loose copies are restored into stash, never backpack.
+		stash += non_slot_amount - (bag + stash)
+
+	loadout["equip"] = equip
+	loadout["bag"] = bag
+	loadout["stash"] = stash
+
+/datum/tat_items/proc/set_item_grant_amount(item_path, source, amount, default_to_stash = TRUE)
+	if(!ispath(item_path) || !istext(source) || !length(source))
+		return FALSE
+	ensure_runtime_item_entry(item_path)
+	amount = max(0, round(amount || 0))
+	var/list/sources = item_grants[item_path]
+	if(!islist(sources))
+		sources = list()
+		item_grants[item_path] = sources
+	var/old_source_amount = round(sources[source] || 0)
+	if(amount <= 0)
+		sources -= source
+	else
+		sources[source] = amount
+	if(!length(sources))
+		item_grants -= item_path
+	var/new_total = get_amount(item_path)
+	if(new_total <= 0)
+		item_loadout -= item_path
+		item_paint -= item_path
+	else
+		var/list/loadout = get_loadout(item_path)
+		var/source_delta = amount - old_source_amount
+		if(source_delta > 0)
+			// Trait and donor-loadout grants are born in stash. They never appear in
+			// backpack unless the player explicitly moves them there from the loadout UI.
+			if(default_to_stash)
+				loadout["stash"] = round(loadout["stash"] || 0) + source_delta
+			else
+				loadout["bag"] = round(loadout["bag"] || 0) + source_delta
+		normalize_loadout(item_path)
+	return TRUE
+
+/datum/tat_items/proc/add_grant_amount(list/result, item_path, amount = 1)
+	if(!ispath(item_path) || amount <= 0)
+		return
+	result[item_path] = round(result[item_path] || 0) + round(amount)
+
+/datum/tat_items/proc/build_trait_granted_item_amounts()
+	var/list/result = list()
+	if(!owner_build?.traits)
+		return result
+	if(owner_build.has_trait(TAT_TRAIT_TROPHY_BOUNTY))
+		add_grant_amount(result, /obj/item/book/rogue/trophy_rules)
+	if(owner_build.has_trait(TRAIT_RITUALIST))
+		add_grant_amount(result, /obj/item/ritechalk)
+	if(owner_build.has_trait(TAT_TRAIT_MAGE_INITIATE))
+		add_grant_amount(result, /obj/item/book/spellbook)
+		add_grant_amount(result, /obj/item/chalk)
+	if(owner_build.has_trait(TAT_TRAIT_SAVAGE_SKIN))
+		add_grant_amount(result, /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian)
+	return result
+
+/datum/tat_items/proc/sync_trait_granted_items()
+	var/list/wanted = build_trait_granted_item_amounts()
+	var/list/current_trait_grants = list()
+	for(var/item_path in item_grants)
+		if(get_granted_amount(item_path, TAT_ITEM_SOURCE_TRAIT) > 0)
+			current_trait_grants += item_path
+	for(var/item_path in wanted)
+		set_item_grant_amount(item_path, TAT_ITEM_SOURCE_TRAIT, wanted[item_path], TRUE)
+	for(var/item_path in current_trait_grants)
+		if(!(item_path in wanted))
+			set_item_grant_amount(item_path, TAT_ITEM_SOURCE_TRAIT, 0, TRUE)
+	return TRUE
+
+/datum/tat_items/proc/infer_runtime_item_category(item_path)
+	if(ispath(item_path, /obj/item/clothing))
+		return TAT_ITEM_CATEGORY_CLOTHING
+	if(ispath(item_path, /obj/item/rogueweapon) || ispath(item_path, /obj/item/gun) || ispath(item_path, /obj/item/ammo_casing) || ispath(item_path, /obj/item/quiver))
+		return TAT_ITEM_CATEGORY_WEAPON
+	return "misc"
+
+/datum/tat_items/proc/get_runtime_item_name(item_path)
+	if(!ispath(item_path, /obj/item))
+		return "Unknown item"
+	var/obj/item/I = item_path
+	return initial(I.name) || "Unknown item"
+
+/datum/tat_items/proc/ensure_runtime_item_entry(item_path, override_name = null)
+	if(!ispath(item_path, /obj/item))
+		return FALSE
+	if(islist(GLOB.tat_available_items[item_path]))
+		return TRUE
+	GLOB.tat_available_items[item_path] = list(
+		"name" = istext(override_name) && length(override_name) ? override_name : get_runtime_item_name(item_path),
+		"cost" = 0,
+		"category" = infer_runtime_item_category(item_path),
+		"unlock_type" = null,
+		"unlock_key" = null,
+		"slot_group" = "misc",
+	)
+	GLOB.tat_item_icon_cache_ready = FALSE
+	return TRUE
+
+/datum/tat_items/proc/sync_donor_loadout_from_preferences()
+	var/list/wanted = list()
+	var/datum/preferences/P = owner_build?.owner_preferences
+	if(P && islist(P.selected_loadout_items))
+		for(var/key in P.selected_loadout_items)
+			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
+			if(!item?.path)
+				continue
+			ensure_runtime_item_entry(item.path, item.name)
+			add_grant_amount(wanted, item.path)
+
+	var/list/current_donor_grants = list()
+	for(var/item_path in item_grants)
+		if(get_granted_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT) > 0)
+			current_donor_grants += item_path
+	for(var/item_path in wanted)
+		set_item_grant_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT, wanted[item_path], TRUE)
+	for(var/item_path in current_donor_grants)
+		if(!(item_path in wanted))
+			set_item_grant_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT, 0, TRUE)
+	return TRUE
+
+/datum/tat_items/proc/sync_external_grants()
+	sync_trait_granted_items()
+	sync_donor_loadout_from_preferences()
+	for(var/item_path in get_all_item_paths())
+		normalize_loadout(item_path)
+	return TRUE
 
 /datum/tat_items/proc/get_spent_points()
 	var/total = 0
 	for(var/item_path in selected)
-		total += get_cost(item_path) * get_amount(item_path)
+		total += get_cost(item_path) * get_paid_amount(item_path)
 	return total
 
 /datum/tat_items/proc/get_remaining_points()
@@ -212,16 +417,18 @@
 	return issues
 
 /datum/tat_items/proc/sanitize()
+	sync_external_grants()
 	for(var/item_path in selected.Copy())
 		if(!check_item(item_path))
 			selected -= item_path
-			item_loadout -= item_path
+			if(get_amount(item_path) <= 0)
+				item_loadout -= item_path
 			continue
-		set_amount(item_path, get_amount(item_path))
+		set_amount(item_path, get_paid_amount(item_path))
 	while(get_remaining_points() < 0)
 		var/changed = FALSE
 		for(var/item_path in selected.Copy())
-			var/amount = get_amount(item_path)
+			var/amount = get_paid_amount(item_path)
 			if(amount > 0)
 				set_amount(item_path, amount - 1)
 				changed = TRUE
@@ -229,7 +436,7 @@
 					break
 		if(!changed)
 			break
-	for(var/item_path in selected)
+	for(var/item_path in get_all_item_paths())
 		normalize_loadout(item_path)
 	return TRUE
 
@@ -586,6 +793,9 @@
 		if(!islist(slots) || !(slot_id in slots))
 			continue
 		slots -= slot_id
+		// Clearing an equipped slot is the one explicit path that returns that copy
+		// to backpack; all other newly loose copies default to stash.
+		loadout["bag"] = round(loadout["bag"] || 0) + 1
 		normalize_loadout(item_path)
 		changed = TRUE
 	if(changed)
@@ -603,9 +813,13 @@
 	if(!(slot_id in valid_slots))
 		return FALSE
 
+	var/list/loadout = get_loadout(item_path)
+	if(round(loadout["bag"] || 0) <= 0)
+		return FALSE
+
 	clear_loadout_slot(slot_id)
 
-	var/list/loadout = get_loadout(item_path)
+	loadout = get_loadout(item_path)
 	var/list/slots = loadout["slots"]
 	if(!islist(slots))
 		slots = list()
@@ -614,7 +828,34 @@
 		while(length(slots) >= get_amount(item_path))
 			var/drop_slot = slots[length(slots)]
 			slots -= drop_slot
+		loadout["bag"] = max(0, round(loadout["bag"] || 0) - 1)
 		slots[slot_id] = TRUE
+	normalize_loadout(item_path)
+	owner_build?.set_dirty()
+	return TRUE
+
+/datum/tat_items/proc/move_item_from_bag_to_stash(item_path, amount = 1)
+	if(get_amount(item_path) <= 0)
+		return FALSE
+	var/list/loadout = get_loadout(item_path)
+	var/count = min(max(1, round(amount || 1)), round(loadout["bag"] || 0))
+	if(count <= 0)
+		return FALSE
+	loadout["bag"] = round(loadout["bag"] || 0) - count
+	loadout["stash"] = round(loadout["stash"] || 0) + count
+	normalize_loadout(item_path)
+	owner_build?.set_dirty()
+	return TRUE
+
+/datum/tat_items/proc/move_item_from_stash_to_bag(item_path, amount = 1)
+	if(get_amount(item_path) <= 0)
+		return FALSE
+	var/list/loadout = get_loadout(item_path)
+	var/count = min(max(1, round(amount || 1)), round(loadout["stash"] || 0))
+	if(count <= 0)
+		return FALSE
+	loadout["stash"] = round(loadout["stash"] || 0) - count
+	loadout["bag"] = round(loadout["bag"] || 0) + count
 	normalize_loadout(item_path)
 	owner_build?.set_dirty()
 	return TRUE
@@ -727,6 +968,169 @@
 		append_unique_equip_slot(slots, SLOT_RING)
 	return slots
 
+
+/datum/tat_items/proc/get_paint_data(item_path)
+	var/list/paint = item_paint[item_path]
+	if(!islist(paint))
+		paint = list()
+		item_paint[item_path] = paint
+	return paint
+
+/datum/tat_items/proc/get_paint_data_for_ui(item_path)
+	var/list/paint = item_paint[item_path]
+	if(!islist(paint) || !length(paint))
+		return null
+	return paint.Copy()
+
+/datum/tat_items/proc/build_loadout_item_icon_payload(item_path)
+	if(!ispath(item_path, /obj/item))
+		return null
+	var/obj/item/preview_item = new item_path(null)
+	if(!preview_item)
+		return null
+
+	var/list/paint = item_paint[item_path]
+	if(islist(paint) && length(paint))
+		apply_paint_to_item(item_path, preview_item)
+
+	var/icon/preview_icon = new /icon()
+	preview_icon.Insert(new /icon(preview_item.icon, preview_item.icon_state), "", SOUTH, 0)
+
+	if(islist(paint) && istext(paint["primary"]))
+		preview_icon.Blend(paint["primary"], ICON_MULTIPLY)
+
+	if(islist(paint) && istext(paint["detail"]) && preview_item.detail_tag && preview_item.detail_color)
+		var/icon/detail_overlay = new /icon()
+		detail_overlay.Insert(new /icon(preview_item.icon, "[preview_item.icon_state][preview_item.detail_tag]"), "", SOUTH, 0)
+		detail_overlay.Blend(paint["detail"], ICON_MULTIPLY)
+		preview_icon.Blend(detail_overlay, ICON_OVERLAY)
+
+	if(islist(paint) && istext(paint["altdetail"]) && preview_item.altdetail_tag && preview_item.altdetail_color)
+		var/icon/altdetail_overlay = new /icon()
+		altdetail_overlay.Insert(new /icon(preview_item.icon, "[preview_item.icon_state][preview_item.altdetail_tag]"), "", SOUTH, 0)
+		altdetail_overlay.Blend(paint["altdetail"], ICON_MULTIPLY)
+		preview_icon.Blend(altdetail_overlay, ICON_OVERLAY)
+
+	var/list/result = list(
+		"icon" = icon2base64(preview_icon),
+		"icon_state" = "[preview_item.icon_state]",
+	)
+	qdel(preview_item)
+	return result
+
+/datum/tat_items/proc/can_paint_item_path(item_path)
+	if(!ispath(item_path, /obj/item))
+		return FALSE
+	var/obj/item/I = new item_path(null)
+	if(!I)
+		return FALSE
+	var/can_paint = is_type_in_list(I, list(
+		/obj/item/clothing,
+		/obj/item/storage,
+		/obj/item/bedroll,
+		/obj/item/flowercrown,
+		/obj/item/legwears,
+		/obj/item/undies,
+		/obj/item/natural/cloth,
+		/obj/item/caparison,
+		/obj/item/reagent_containers/glass/bottle/clayvase,
+		/obj/item/reagent_containers/glass/bottle/clayfancyvase,
+		/obj/item/reagent_containers/glass/cup/claycup,
+		/obj/item/reagent_containers/glass/bottle/claybottle,
+		/obj/item/roguestatue/clay,
+		/obj/item/roguestatue/glass,
+	))
+	qdel(I)
+	return can_paint
+
+/datum/tat_items/proc/pick_tat_dye(mob/user, current_color = "#FFFFFF", prompt_title = "Loadout Dye")
+	if(!user)
+		return null
+	if(alert(user, "Input Choice", prompt_title, "Color Wheel", "Color Preset") == "Color Wheel")
+		var/c = sanitize_hexcolor(color_pick_sanitized(user, "Choose your dye:", "Dyes", current_color), 6, TRUE)
+		return (c == "#000000") ? "#FFFFFF" : c
+
+	var/list/colors_to_pick = list()
+	if(GLOB.lordprimary)
+		colors_to_pick["Primary Keep Color"] = GLOB.lordprimary
+	if(GLOB.lordsecondary)
+		colors_to_pick["Secondary Keep Color"] = GLOB.lordsecondary
+	colors_to_pick += COLOR_MAP
+	colors_to_pick += pridelist
+	var/picked = input(user, "Choose your dye:", "Dyes", null) as null|anything in colors_to_pick
+	if(!picked)
+		return null
+	return colors_to_pick[picked]
+
+/datum/tat_items/proc/paint_loadout_item(item_path, mob/user)
+	if(get_amount(item_path) <= 0)
+		return FALSE
+	if(!can_paint_item_path(item_path))
+		to_chat(user, span_warning("This loadout item cannot be dyed."))
+		return FALSE
+
+	var/obj/item/preview = new item_path(null)
+	var/list/options = list("Primary color", "Clear primary", "Clear all")
+	if(preview?.detail_color)
+		options += "Detail color"
+		options += "Clear detail"
+	if(preview?.altdetail_color)
+		options += "Alt detail color"
+		options += "Clear alt detail"
+	qdel(preview)
+
+	var/choice = tgui_input_list(user, "Choose which loadout dye to edit.", "Loadout Dye", options)
+	if(!choice)
+		return FALSE
+
+	var/list/paint = get_paint_data(item_path)
+	switch(choice)
+		if("Primary color")
+			var/color = pick_tat_dye(user, paint["primary"] || "#FFFFFF", "Primary Dye")
+			if(!color)
+				return FALSE
+			paint["primary"] = color
+		if("Detail color")
+			var/color = pick_tat_dye(user, paint["detail"] || "#FFFFFF", "Secondary Dye")
+			if(!color)
+				return FALSE
+			paint["detail"] = color
+		if("Alt detail color")
+			var/color = pick_tat_dye(user, paint["altdetail"] || "#FFFFFF", "Tertiary Dye")
+			if(!color)
+				return FALSE
+			paint["altdetail"] = color
+		if("Clear primary")
+			paint -= "primary"
+		if("Clear detail")
+			paint -= "detail"
+		if("Clear alt detail")
+			paint -= "altdetail"
+		if("Clear all")
+			item_paint -= item_path
+			owner_build?.set_dirty()
+			return TRUE
+
+	if(islist(paint) && !length(paint))
+		item_paint -= item_path
+	owner_build?.set_dirty()
+	return TRUE
+
+/datum/tat_items/proc/apply_paint_to_item(item_path, obj/item/I)
+	if(!I || QDELETED(I))
+		return FALSE
+	var/list/paint = item_paint[item_path]
+	if(!islist(paint) || !length(paint))
+		return FALSE
+	if(istext(paint["primary"]))
+		I.add_atom_colour(paint["primary"], FIXED_COLOUR_PRIORITY)
+	if(istext(paint["detail"]) && I.detail_color)
+		I.detail_color = paint["detail"]
+	if(istext(paint["altdetail"]) && I.altdetail_color)
+		I.altdetail_color = paint["altdetail"]
+	I.update_icon()
+	return TRUE
+
 /datum/tat_items/proc/get_storage_targets(mob/living/carbon/human/H)
 	var/list/targets = list()
 	if(!H)
@@ -761,6 +1165,7 @@
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return
+	apply_paint_to_item(path, I)
 	try_put_into_any_storage_or_drop(I, H)
 
 /datum/tat_items/proc/spawn_item_equipped_or_fallback(mob/living/carbon/human/H, path)
@@ -769,6 +1174,7 @@
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return FALSE
+	apply_paint_to_item(path, I)
 	var/list/slots = get_equip_slots_for_item(I, path)
 	for(var/slot_id in slots)
 		if(QDELETED(I))
@@ -841,6 +1247,7 @@
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return FALSE
+	apply_paint_to_item(path, I)
 	if(H.get_item_by_slot(equip_slot))
 		try_put_into_any_storage_or_drop(I, H)
 		return FALSE
@@ -859,6 +1266,7 @@
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return FALSE
+	apply_paint_to_item(path, I)
 	if(try_put_into_loadout_hand(H, I, slot_id))
 		return TRUE
 	if(allow_fallback)
@@ -886,7 +1294,7 @@
 	for(var/slot_id in get_loadout_ui_slot_ids())
 		if(is_hand_loadout_slot(slot_id) != hands_only)
 			continue
-		for(var/item_path in selected)
+		for(var/item_path in get_all_item_paths())
 			var/list/loadout = get_loadout(item_path)
 			var/list/slots = loadout["slots"]
 			if(!islist(slots) || !(slot_id in slots))
@@ -900,7 +1308,7 @@
 /datum/tat_items/proc/get_assigned_item_for_loadout_slot(slot_id)
 	if(!is_hand_loadout_slot(slot_id))
 		return null
-	for(var/item_path in selected)
+	for(var/item_path in get_all_item_paths())
 		var/list/loadout = get_loadout(item_path)
 		var/list/slots = loadout["slots"]
 		if(islist(slots) && (slot_id in slots))
@@ -924,7 +1332,7 @@
 	return any_success
 
 /datum/tat_items/proc/spawn_equipped_items_for_slot_group(mob/living/carbon/human/H, target_slot_group)
-	for(var/item_path in selected)
+	for(var/item_path in get_all_item_paths())
 		if(get_item_slot_group_lower(item_path) != lowertext("[target_slot_group]"))
 			continue
 		var/list/loadout = get_loadout(item_path)
@@ -932,7 +1340,7 @@
 			spawn_item_equipped_or_fallback(H, item_path)
 
 /datum/tat_items/proc/spawn_equipped_items_except_slot_groups(mob/living/carbon/human/H, list/excluded_groups)
-	for(var/item_path in selected)
+	for(var/item_path in get_all_item_paths())
 		var/slot_group = get_item_slot_group_lower(item_path)
 		if(islist(excluded_groups) && (slot_group in excluded_groups))
 			continue
@@ -941,7 +1349,7 @@
 			spawn_item_equipped_or_fallback(H, item_path)
 
 /datum/tat_items/proc/spawn_bag_items(mob/living/carbon/human/H)
-	for(var/item_path in selected)
+	for(var/item_path in get_all_item_paths())
 		var/list/loadout = get_loadout(item_path)
 		for(var/i in 1 to round(loadout["bag"] || 0))
 			spawn_item_into_bag_or_fallback(H, item_path)
@@ -952,7 +1360,7 @@
 	return ispath(path, /obj/item/storage/backpack/rogue)
 
 /datum/tat_items/proc/has_selected_roundstart_backpack()
-	for(var/item_path in selected)
+	for(var/item_path in get_all_item_paths())
 		if(get_amount(item_path) <= 0)
 			continue
 		if(is_roundstart_bag_path(item_path))
@@ -974,6 +1382,7 @@
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return FALSE
+	apply_paint_to_item(path, I)
 	if(equip_slot && !H.get_item_by_slot(equip_slot) && H.equip_to_slot_if_possible(I, equip_slot, FALSE, TRUE, TRUE, TRUE))
 		return TRUE
 	if(!QDELETED(I))
@@ -982,7 +1391,7 @@
 
 /datum/tat_items/proc/get_reserved_loadout_equip_slots()
 	var/list/reserved = list()
-	for(var/item_path in selected)
+	for(var/item_path in get_all_item_paths())
 		var/list/loadout = get_loadout(item_path)
 		var/list/slots = loadout["slots"]
 		if(!islist(slots))
@@ -1011,10 +1420,11 @@
 	if(!H)
 		return FALSE
 
-	if(!length(selected))
+	sync_external_grants()
+	if(!length(get_all_item_paths()))
 		return TRUE
 
-	for(var/item_path in selected)
+	for(var/item_path in get_all_item_paths())
 		normalize_loadout(item_path)
 
 	spawn_assigned_loadout_items(H, FALSE)
@@ -1028,7 +1438,12 @@
 	return TRUE
 
 /datum/tat_items/proc/export_to_list()
-	return list("selected" = selected.Copy(), "item_loadout" = item_loadout.Copy())
+	return list(
+		"selected" = selected.Copy(),
+		"item_loadout" = item_loadout.Copy(),
+		"item_grants" = item_grants.Copy(),
+		"item_paint" = item_paint.Copy(),
+	)
 
 /datum/tat_items/proc/import_from_list(list/data)
 	reset()
@@ -1042,17 +1457,22 @@
 		imported_selected = data
 
 	for(var/item_path in imported_selected)
-		if(item_path == "selected")
-			continue
-		if(item_path == "item_loadout")
+		if(item_path == "selected" || item_path == "item_loadout" || item_path == "item_grants" || item_path == "item_paint")
 			continue
 		set_amount(item_path, imported_selected[item_path])
 
+	if(islist(data["item_grants"]))
+		var/list/temp_grants = data["item_grants"]
+		item_grants = temp_grants.Copy()
 	if(islist(data["item_loadout"]))
-		var/list/temp = data["item_loadout"]
-		item_loadout = temp.Copy()
+		var/list/temp_loadout = data["item_loadout"]
+		item_loadout = temp_loadout.Copy()
+	if(islist(data["item_paint"]))
+		var/list/temp_paint = data["item_paint"]
+		item_paint = temp_paint.Copy()
 
-	for(var/item_path in selected)
+	sync_external_grants()
+	for(var/item_path in get_all_item_paths())
 		normalize_loadout(item_path)
 
 	return TRUE
@@ -1060,13 +1480,26 @@
 /datum/tat_items/proc/export_to_json_list()
 	var/list/exported_selected = list()
 	for(var/item_path in selected)
-		var/amount = get_amount(item_path)
+		var/amount = get_paid_amount(item_path)
 		if(amount > 0)
 			exported_selected["[item_path]"] = amount
 
+	var/list/exported_grants = list()
+	for(var/item_path in item_grants)
+		var/list/sources = item_grants[item_path]
+		if(!islist(sources))
+			continue
+		var/list/exported_sources = list()
+		for(var/source_key in sources)
+			var/count = round(sources[source_key] || 0)
+			if(count > 0)
+				exported_sources[source_key] = count
+		if(length(exported_sources))
+			exported_grants["[item_path]"] = exported_sources
+
 	var/list/exported_loadout = list()
 	for(var/item_path in item_loadout)
-		if(!(item_path in selected))
+		if(get_amount(item_path) <= 0)
 			continue
 		var/list/loadout = item_loadout[item_path]
 		if(!islist(loadout))
@@ -1079,12 +1512,21 @@
 		exported_loadout["[item_path]"] = list(
 			"equip" = round(loadout["equip"] || 0),
 			"bag" = round(loadout["bag"] || 0),
+			"stash" = round(loadout["stash"] || 0),
 			"slots" = exported_slots,
 		)
 
+	var/list/exported_paint = list()
+	for(var/item_path in item_paint)
+		var/list/paint = item_paint[item_path]
+		if(islist(paint) && length(paint))
+			exported_paint["[item_path]"] = paint.Copy()
+
 	return list(
 		"selected" = exported_selected,
+		"item_grants" = exported_grants,
 		"item_loadout" = exported_loadout,
+		"item_paint" = exported_paint,
 	)
 
 /datum/tat_items/proc/import_from_json_list(list/data)
@@ -1099,23 +1541,35 @@
 		imported_selected = data
 
 	for(var/raw_path in imported_selected)
-		if(raw_path == "selected" || raw_path == "item_loadout")
+		if(raw_path == "selected" || raw_path == "item_loadout" || raw_path == "item_grants" || raw_path == "item_paint")
 			continue
 		var/item_path = ispath(raw_path) ? raw_path : text2path("[raw_path]")
 		if(!item_path)
 			continue
 		set_amount(item_path, text2num("[imported_selected[raw_path]]"))
 
+	if(islist(data["item_grants"]))
+		for(var/raw_path in data["item_grants"])
+			var/item_path = ispath(raw_path) ? raw_path : text2path("[raw_path]")
+			if(!item_path)
+				continue
+			var/list/source_data = data["item_grants"][raw_path]
+			if(!islist(source_data))
+				continue
+			for(var/source_key in source_data)
+				set_item_grant_amount(item_path, source_key, text2num("[source_data[source_key]]"), TRUE)
+
 	if(islist(data["item_loadout"]))
 		for(var/raw_path in data["item_loadout"])
 			var/item_path = ispath(raw_path) ? raw_path : text2path("[raw_path]")
-			if(!item_path || !(item_path in selected))
+			if(!item_path)
 				continue
 			var/list/source_loadout = data["item_loadout"][raw_path]
 			if(!islist(source_loadout))
 				continue
 			var/raw_equip = source_loadout["equip"]
 			var/raw_bag = source_loadout["bag"]
+			var/raw_stash = source_loadout["stash"]
 			var/list/imported_slots = list()
 			if(islist(source_loadout["slots"]))
 				var/list/source_slots = source_loadout["slots"]
@@ -1125,10 +1579,65 @@
 			item_loadout[item_path] = list(
 				"equip" = round(text2num("[raw_equip]") || 0),
 				"bag" = round(text2num("[raw_bag]") || 0),
+				"stash" = round(text2num("[raw_stash]") || 0),
 				"slots" = imported_slots,
 			)
 
-	for(var/item_path in selected)
+	if(islist(data["item_paint"]))
+		for(var/raw_path in data["item_paint"])
+			var/item_path = ispath(raw_path) ? raw_path : text2path("[raw_path]")
+			if(!item_path)
+				continue
+			var/list/source_paint = data["item_paint"][raw_path]
+			if(islist(source_paint))
+				item_paint[item_path] = source_paint.Copy()
+
+	sync_external_grants()
+	for(var/item_path in get_all_item_paths())
 		normalize_loadout(item_path)
 
+	return TRUE
+
+/proc/tat_build_handles_preference_loadout(mob/living/carbon/human/character, client/player)
+	if(!character)
+		return FALSE
+	if(!player)
+		player = character.client
+	if(!player?.prefs?.tat_build)
+		return FALSE
+
+	var/datum/tat_build/build = player.prefs.tat_build
+	build.attach_preferences(player.prefs)
+	if(build.is_owner_tat_banned(character))
+		return FALSE
+
+	build.items?.sync_donor_loadout_from_preferences()
+	return TRUE
+
+/proc/tat_apply_legacy_preference_loadout(mob/living/carbon/human/character, client/player)
+	if(!character)
+		return FALSE
+	if(!player)
+		player = character.client
+	if(!player?.prefs)
+		return FALSE
+
+	var/triumph_discount_remaining = is_donator(player.ckey) ? 3 : 0 // donators get first 3 triumph points free
+	if(player.prefs.selected_loadout_items)
+		for(var/key in player.prefs.selected_loadout_items)
+			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
+			if(!item)
+				continue
+
+			if(item.triumph_cost)
+				var/discounted_cost = max(0, item.triumph_cost - triumph_discount_remaining)
+				if(discounted_cost > 0 && character.get_triumphs() < discounted_cost)
+					to_chat(character, span_warning("Недостаточно триумфов для [item.name]."))
+					continue
+
+				triumph_discount_remaining = max(0, triumph_discount_remaining - item.triumph_cost)
+				if(discounted_cost > 0)
+					character.adjust_triumphs(-discounted_cost)
+
+			character.mind.special_items[item.name] = item.path
 	return TRUE

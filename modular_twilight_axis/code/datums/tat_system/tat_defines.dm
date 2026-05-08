@@ -1,4 +1,8 @@
 #define TAT_TRAIT_SOURCE	"tat_build"
+#define TAT_ITEM_SOURCE_PAID "tat"
+#define TAT_ITEM_SOURCE_TRAIT "trait"
+#define TAT_ITEM_SOURCE_DONOR_LOADOUT "donor_loadout"
+
 
 #define TAT_PARTY_LEADER_AURA_RANGE 7
 #define TAT_PARTY_LEADER_REFRESH_INTERVAL (2 SECONDS)
