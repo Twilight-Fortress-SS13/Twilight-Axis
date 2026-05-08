@@ -737,6 +737,7 @@ GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 			"unlock_type" = entry["unlock_type"],
 			"unlock_key" = entry["unlock_key"],
 			"slot_group" = entry["slot_group"],
+			"loadout_only" = !!entry["loadout_only"],
 			"icon" = icon_payload?["icon"],
 			"icon_state" = icon_payload?["icon_state"],
 		)

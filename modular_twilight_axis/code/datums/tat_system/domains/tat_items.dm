@@ -41,6 +41,19 @@
 /datum/tat_items/proc/get_non_donor_amount(item_path)
 	return get_paid_amount(item_path) + get_granted_amount(item_path, TAT_ITEM_SOURCE_TRAIT)
 
+/datum/tat_items/proc/get_external_granted_amount(item_path)
+	return get_granted_amount(item_path, TAT_ITEM_SOURCE_TRAIT) + get_granted_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT)
+
+/datum/tat_items/proc/get_purchase_limit_amount(item_path)
+	// Donor/preference loadout grants are external freebies. They must be visible in
+	// the loadout stash, but must never count as TAT-purchased items and must not
+	// consume the category/slot caps used by the Items purchase tab. Trait grants
+	// still count here because they are part of the TAT build itself.
+	return get_non_donor_amount(item_path)
+
+/datum/tat_items/proc/is_loadout_only_entry(list/entry)
+	return islist(entry) && !!entry["loadout_only"]
+
 /datum/tat_items/proc/get_all_item_paths()
 	var/list/result = list()
 	for(var/item_path in selected)
@@ -111,6 +124,8 @@
 /datum/tat_items/proc/can_use_item_entry(list/entry)
 	if(!islist(entry))
 		return FALSE
+	if(is_loadout_only_entry(entry))
+		return FALSE
 	var/unlock_type = entry["unlock_type"]
 	var/unlock_key = entry["unlock_key"]
 	switch(unlock_type)
@@ -147,7 +162,7 @@
 			continue
 		if(entry["category"] != category)
 			continue
-		var/amount = get_amount(item_path)
+		var/amount = get_purchase_limit_amount(item_path)
 		if(amount <= 0)
 			continue
 		total += amount
@@ -155,7 +170,7 @@
 
 /datum/tat_items/proc/get_item_total_allowed_amount(path)
 	var/list/entry = get_entry(path)
-	if(!islist(entry))
+	if(!islist(entry) || is_loadout_only_entry(entry))
 		return 0
 	var/cost = entry["cost"]
 	if(!isnum(cost))
@@ -175,19 +190,20 @@
 		return 0
 	if(!can_use_item_entry(entry))
 		return 0
+	var/trait_granted = get_granted_amount(item_path, TAT_ITEM_SOURCE_TRAIT)
 	var/cost = entry["cost"]
 	if(!isnum(cost))
 		cost = 0
 	var/category = entry["category"]
 	if(cost <= 0 && (category == "misc" || category == "weapon"))
-		return 1
+		return max(0, 1 - trait_granted)
 	if(!tat_item_entry_is_slot_limited(entry))
-		return 99
+		return max(0, 99 - trait_granted)
 	var/slot_group = entry["slot_group"]
 	if(!slot_group)
-		return 99
+		return max(0, 99 - trait_granted)
 	var/already_taken_elsewhere = get_slot_group_item_count(slot_group, category, item_path)
-	return max(0, 1 - already_taken_elsewhere)
+	return max(0, 1 - already_taken_elsewhere - trait_granted)
 
 /datum/tat_items/proc/set_amount(item_path, amount, ignore_limits = FALSE)
 	if(!islist(get_entry(item_path)))
@@ -272,7 +288,7 @@
 /datum/tat_items/proc/set_item_grant_amount(item_path, source, amount, default_to_stash = TRUE)
 	if(!ispath(item_path) || !istext(source) || !length(source))
 		return FALSE
-	ensure_runtime_item_entry(item_path)
+	ensure_runtime_item_entry(item_path, null, TRUE)
 	amount = max(0, round(amount || 0))
 	var/list/sources = item_grants[item_path]
 	if(!islist(sources))
@@ -348,7 +364,7 @@
 	var/obj/item/I = item_path
 	return initial(I.name) || "Unknown item"
 
-/datum/tat_items/proc/ensure_runtime_item_entry(item_path, override_name = null)
+/datum/tat_items/proc/ensure_runtime_item_entry(item_path, override_name = null, loadout_only = FALSE)
 	if(!ispath(item_path, /obj/item))
 		return FALSE
 	if(islist(GLOB.tat_available_items[item_path]))
@@ -360,6 +376,7 @@
 		"unlock_type" = null,
 		"unlock_key" = null,
 		"slot_group" = "misc",
+		"loadout_only" = !!loadout_only,
 	)
 	GLOB.tat_item_icon_cache_ready = FALSE
 	return TRUE
@@ -372,7 +389,7 @@
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
 			if(!item?.path)
 				continue
-			ensure_runtime_item_entry(item.path, item.name)
+			ensure_runtime_item_entry(item.path, item.name, TRUE)
 			add_grant_amount(wanted, item.path)
 
 	var/list/current_donor_grants = list()
@@ -386,9 +403,34 @@
 			set_item_grant_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT, 0, TRUE)
 	return TRUE
 
+/datum/tat_items/proc/ensure_external_grants_start_in_stash()
+	for(var/item_path in get_all_item_paths())
+		var/external_amount = get_external_granted_amount(item_path)
+		if(external_amount <= 0)
+			continue
+		var/list/loadout = get_loadout(item_path)
+		var/already_initialized = round(loadout["external_stash_initialized"] || 0)
+		if(already_initialized >= external_amount)
+			continue
+
+		var/missing_external = external_amount - already_initialized
+		var/bag = max(0, round(loadout["bag"] || 0))
+		var/stash = max(0, round(loadout["stash"] || 0))
+		var/move_from_bag = min(missing_external, bag)
+		if(move_from_bag > 0)
+			loadout["bag"] = bag - move_from_bag
+			loadout["stash"] = stash + move_from_bag
+
+		// Mark only after the first automatic stash placement. From this point on,
+		// player-made bag/stash choices are preserved across normal UI syncs.
+		loadout["external_stash_initialized"] = external_amount
+		normalize_loadout(item_path)
+	return TRUE
+
 /datum/tat_items/proc/sync_external_grants()
 	sync_trait_granted_items()
 	sync_donor_loadout_from_preferences()
+	ensure_external_grants_start_in_stash()
 	for(var/item_path in get_all_item_paths())
 		normalize_loadout(item_path)
 	return TRUE
@@ -1131,6 +1173,59 @@
 	I.update_icon()
 	return TRUE
 
+
+/datum/tat_items/proc/get_mind_stash_item_name(item_path)
+	var/list/entry = get_entry(item_path)
+	if(islist(entry) && istext(entry["name"]) && length(entry["name"]))
+		return entry["name"]
+	if(ispath(item_path, /obj/item))
+		var/obj/item/I = item_path
+		return initial(I.name) || "[item_path]"
+	return "[item_path]"
+
+/datum/tat_items/proc/get_unique_mind_stash_key(mob/living/carbon/human/H, item_path)
+	if(!H?.mind)
+		return null
+	var/base_name = get_mind_stash_item_name(item_path)
+	if(!istext(base_name) || !length(base_name))
+		base_name = "[item_path]"
+	if(!islist(H.mind.special_items))
+		H.mind.special_items = list()
+	if(!(base_name in H.mind.special_items))
+		return base_name
+	for(var/index in 2 to 999)
+		var/candidate = "[base_name] ([index])"
+		if(!(candidate in H.mind.special_items))
+			return candidate
+	return "[base_name] ([world.time])"
+
+/datum/tat_items/proc/add_item_path_to_mind_stash(mob/living/carbon/human/H, item_path, amount = 1)
+	if(!H?.mind || !ispath(item_path, /obj/item))
+		return FALSE
+	if(!islist(H.mind.special_items))
+		H.mind.special_items = list()
+	var/count = max(0, round(amount || 0))
+	if(count <= 0)
+		return FALSE
+	var/added = FALSE
+	for(var/i in 1 to count)
+		var/key = get_unique_mind_stash_key(H, item_path)
+		if(!key)
+			continue
+		H.mind.special_items[key] = item_path
+		added = TRUE
+	return added
+
+/datum/tat_items/proc/stash_existing_item_for_later(obj/item/I, mob/living/carbon/human/H, item_path = null)
+	if(!I || QDELETED(I))
+		return FALSE
+	if(!ispath(item_path, /obj/item))
+		item_path = I.type
+	if(add_item_path_to_mind_stash(H, item_path, 1))
+		qdel(I)
+		return TRUE
+	return FALSE
+
 /datum/tat_items/proc/get_storage_targets(mob/living/carbon/human/H)
 	var/list/targets = list()
 	if(!H)
@@ -1146,7 +1241,7 @@
 		return FALSE
 	return !!SEND_SIGNAL(storage_owner, COMSIG_TRY_STORAGE_INSERT, I, null, TRUE, TRUE)
 
-/datum/tat_items/proc/try_put_into_any_storage_or_drop(obj/item/I, mob/living/carbon/human/H)
+/datum/tat_items/proc/try_put_into_any_storage_or_drop(obj/item/I, mob/living/carbon/human/H, item_path = null)
 	if(!I || !H || QDELETED(I))
 		return FALSE
 	for(var/storage_owner in get_storage_targets(H))
@@ -1156,8 +1251,10 @@
 			return TRUE
 	if(QDELETED(I))
 		return FALSE
+	if(stash_existing_item_for_later(I, H, item_path))
+		return TRUE
 	I.forceMove(get_turf(H))
-	return TRUE
+	return FALSE
 
 /datum/tat_items/proc/spawn_item_into_bag_or_fallback(mob/living/carbon/human/H, path)
 	if(!H || !ispath(path))
@@ -1166,7 +1263,7 @@
 	if(!I)
 		return
 	apply_paint_to_item(path, I)
-	try_put_into_any_storage_or_drop(I, H)
+	try_put_into_any_storage_or_drop(I, H, path)
 
 /datum/tat_items/proc/spawn_item_equipped_or_fallback(mob/living/carbon/human/H, path)
 	if(!H || !ispath(path))
@@ -1183,7 +1280,7 @@
 			continue
 		if(H.equip_to_slot_if_possible(I, slot_id, FALSE, TRUE, TRUE, TRUE))
 			return TRUE
-	try_put_into_any_storage_or_drop(I, H)
+	try_put_into_any_storage_or_drop(I, H, path)
 	return FALSE
 
 /datum/tat_items/proc/get_item_slot_group_lower(path)
@@ -1196,15 +1293,16 @@
 	if(!H || !I || QDELETED(I))
 		return FALSE
 
-	var/free_hand = 0
 	if(slot_id == "hand_l")
 		H.put_in_l_hand(I, TRUE)
 	else if(slot_id == "hand_r")
 		H.put_in_r_hand(I, TRUE)
-	if(!free_hand)
-		return TRUE
+	else
+		return FALSE
 
-	return FALSE
+	if(QDELETED(I))
+		return TRUE
+	return I.loc == H
 
 /datum/tat_items/proc/try_equip_existing_item_to_exact_slot(mob/living/carbon/human/H, obj/item/I, equip_slot)
 	if(!H || !I || QDELETED(I) || !equip_slot)
@@ -1249,15 +1347,15 @@
 		return FALSE
 	apply_paint_to_item(path, I)
 	if(H.get_item_by_slot(equip_slot))
-		try_put_into_any_storage_or_drop(I, H)
+		try_put_into_any_storage_or_drop(I, H, path)
 		return FALSE
 	if(H.equip_to_slot_if_possible(I, equip_slot, FALSE, TRUE, TRUE, TRUE))
 		if(H.get_item_by_slot(equip_slot) == I)
 			return TRUE
 		if(!QDELETED(I))
-			try_put_into_any_storage_or_drop(I, H)
+			try_put_into_any_storage_or_drop(I, H, path)
 		return FALSE
-	try_put_into_any_storage_or_drop(I, H)
+	try_put_into_any_storage_or_drop(I, H, path)
 	return FALSE
 
 /datum/tat_items/proc/spawn_item_to_loadout_hand(mob/living/carbon/human/H, path, slot_id, allow_fallback = TRUE)
@@ -1272,7 +1370,7 @@
 	if(allow_fallback)
 		if(try_equip_existing_item_to_hand_fallback_slot(H, I, path, slot_id))
 			return TRUE
-		try_put_into_any_storage_or_drop(I, H)
+		try_put_into_any_storage_or_drop(I, H, path)
 	else
 		qdel(I)
 	return FALSE
@@ -1416,6 +1514,20 @@
 		return spawn_roundstart_bag_to_slot_or_drop(H, /obj/item/storage/backpack/rogue/satchel, equip_slot)
 	return spawn_roundstart_bag_to_slot_or_drop(H, /obj/item/storage/backpack/rogue/satchel, null)
 
+
+/datum/tat_items/proc/spawn_stash_items(mob/living/carbon/human/H)
+	if(!H?.mind)
+		return FALSE
+	var/added = FALSE
+	for(var/item_path in get_all_item_paths())
+		var/list/loadout = get_loadout(item_path)
+		var/stash_amount = round(loadout["stash"] || 0)
+		if(stash_amount <= 0)
+			continue
+		if(add_item_path_to_mind_stash(H, item_path, stash_amount))
+			added = TRUE
+	return added
+
 /datum/tat_items/proc/apply_to_human(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
@@ -1427,6 +1539,7 @@
 	for(var/item_path in get_all_item_paths())
 		normalize_loadout(item_path)
 
+	spawn_stash_items(H)
 	spawn_assigned_loadout_items(H, FALSE)
 	grant_default_roundstart_bag(H)
 	spawn_bag_items(H)
@@ -1513,6 +1626,7 @@
 			"equip" = round(loadout["equip"] || 0),
 			"bag" = round(loadout["bag"] || 0),
 			"stash" = round(loadout["stash"] || 0),
+			"external_stash_initialized" = round(loadout["external_stash_initialized"] || 0),
 			"slots" = exported_slots,
 		)
 
@@ -1570,6 +1684,7 @@
 			var/raw_equip = source_loadout["equip"]
 			var/raw_bag = source_loadout["bag"]
 			var/raw_stash = source_loadout["stash"]
+			var/raw_external_stash_initialized = source_loadout["external_stash_initialized"]
 			var/list/imported_slots = list()
 			if(islist(source_loadout["slots"]))
 				var/list/source_slots = source_loadout["slots"]
@@ -1580,6 +1695,7 @@
 				"equip" = round(text2num("[raw_equip]") || 0),
 				"bag" = round(text2num("[raw_bag]") || 0),
 				"stash" = round(text2num("[raw_stash]") || 0),
+				"external_stash_initialized" = round(text2num("[raw_external_stash_initialized]") || 0),
 				"slots" = imported_slots,
 			)
 

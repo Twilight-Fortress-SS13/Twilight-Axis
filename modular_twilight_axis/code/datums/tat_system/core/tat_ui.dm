@@ -416,46 +416,17 @@
 		return result
 
 	items.sync_external_grants()
-	var/list/bucket_totals = list()
-	for(var/item_path in items.get_all_item_paths())
-		var/list/entry = GLOB.tat_available_items[item_path]
-		if(!islist(entry))
-			continue
-		if(entry["category"] != TAT_ITEM_CATEGORY_CLOTHING)
-			continue
-		var/slot_group = entry["slot_group"]
-		if(!slot_group || slot_group == "misc")
-			continue
-		var/amount = items.get_amount(item_path)
-		if(amount <= 0)
-			continue
-		var/bucket_key = "[entry["category"]]|[slot_group]"
-		bucket_totals[bucket_key] = (bucket_totals[bucket_key] || 0) + amount
-
 	for(var/item_path in GLOB.tat_available_items)
 		var/list/entry = GLOB.tat_available_items[item_path]
 		if(!islist(entry))
 			continue
 
+		// The Items tab is the TAT purchase shop, not the full roundstart loadout.
+		// Donor/preference loadout copies are stored and shown in the Loadout stash,
+		// but they do not count as bought items and do not consume slot/category caps.
 		var/unlocked = items.can_use_item_entry(entry)
-		var/amount = items.get_amount(item_path)
-		var/maximum = 0
-
-		if(unlocked)
-			var/cost = entry["cost"]
-			if(!isnum(cost))
-				cost = 0
-			var/category = entry["category"]
-			var/slot_group = entry["slot_group"]
-			if(cost <= 0 && (category == "misc" || category == "weapon"))
-				maximum = 1
-			else if(category != TAT_ITEM_CATEGORY_CLOTHING || !slot_group || slot_group == "misc")
-				maximum = 99
-			else
-				var/bucket_key = "[category]|[slot_group]"
-				var/already_taken = bucket_totals[bucket_key] || 0
-				var/own = amount
-				maximum = max(0, 1 - (already_taken - own))
+		var/amount = items.get_paid_amount(item_path)
+		var/maximum = unlocked ? items.get_maximum(item_path) : 0
 
 		result["[item_path]"] = list(
 			"amount" = amount,
