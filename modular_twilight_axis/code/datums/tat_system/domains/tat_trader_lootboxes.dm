@@ -59,7 +59,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_cheap_base_pool, list(
 	/obj/item/rogueweapon/spear/bronze/winged = 5,
 	/obj/item/rogueweapon/spear/bronze/winged/strapless = 5,
 	/obj/item/rogueweapon/spear/trident = 2,
-	/obj/item/rogueweapon/stoneaxe/woodcut/bronze = 9,
 	/obj/item/rogueweapon/stoneaxe/woodcut/bronzebattleaxe = 9,
 	/obj/item/rogueweapon/sword/bronze = 9,
 	/obj/item/rogueweapon/sword/falchion/militia/bronze = 9,
@@ -482,6 +481,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 	else if(roll <= 90)
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_expensive_base_pool, 3)
 	else
-		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_jackpot_pool, 1)
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_jackpot_pool, 2)
 
 	return TRUE
