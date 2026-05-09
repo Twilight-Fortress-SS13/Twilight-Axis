@@ -1857,22 +1857,25 @@
 	if(!character)
 		return FALSE
 
-	if(tat_role_text_matches_pliant(character.mind?.assigned_role))
+	if(character.tat_handles_preference_loadout)
 		return TRUE
 
-	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
+	if(tat_role_text_matches_pliant(character.tat_pliant_title))
+		return TRUE
+
+	if(tat_role_text_matches_pliant(character.advjob))
+		return TRUE
+
+	var/assigned_role = character.mind?.assigned_role
+	if(tat_role_text_matches_pliant(assigned_role))
+		return TRUE
+
+	var/datum/job/assigned_job = SSjob.GetJob(assigned_role)
 	if(assigned_job)
-		if(tat_role_text_matches_pliant(assigned_job.type))
+		if(tat_role_text_matches_pliant("[assigned_job.type]"))
 			return TRUE
-		if(tat_role_text_matches_pliant(assigned_job.vars["title"]))
+		if(tat_role_text_matches_pliant(assigned_job.title))
 			return TRUE
-		if(tat_role_text_matches_pliant(assigned_job.vars["name"]))
-			return TRUE
-
-	if(tat_role_text_matches_pliant(character.vars["job"]))
-		return TRUE
-	if(tat_role_text_matches_pliant(character.vars["mind_role"]))
-		return TRUE
 
 	return FALSE
 
