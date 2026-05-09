@@ -6,7 +6,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_cheap_base_pool, list(
 	/obj/item/clothing/neck/roguetown/bevor/bronze = 10,
 	/obj/item/clothing/neck/roguetown/gorget/bronze = 10,
 	/obj/item/clothing/neck/roguetown/gorget/copper = 10,
-	/obj/item/clothing/neck/roguetown/luckcharm = 10,ze = 10,
+	/obj/item/clothing/neck/roguetown/luckcharm = 10,
 	/obj/item/clothing/neck/roguetown/psicross/shell = 10,
 	/obj/item/clothing/neck/roguetown/psicross/shell/bracelet = 10,
 	/obj/item/clothing/neck/roguetown/shalal = 10,
