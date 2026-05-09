@@ -349,6 +349,7 @@
 	if(length(GLOB.tat_trait_requirement_map))
 		return GLOB.tat_trait_requirement_map
 	GLOB.tat_trait_requirement_map = list(
+		TAT_TRAIT_SOUNDBREAKER = list("all" = list(TAT_TRAIT_BARDIC_INSPIRATION_T1), "message" = "\"[get_trait_display_name(TAT_TRAIT_SOUNDBREAKER)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\"."),
 		TAT_TRAIT_WARRIOR_MASTER = list("all" = list(TAT_TRAIT_WARRIOR_EXPERT), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" requires \"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\"."),
 		TAT_TRAIT_MARTIAL_MASTER = list("all" = list(TRAIT_CIVILIZEDBARBARIAN), "message" = "\"[get_trait_display_name(TAT_TRAIT_MARTIAL_MASTER)]\" requires \"[get_trait_display_name(TRAIT_CIVILIZEDBARBARIAN)]\"."),
 		TAT_TRAIT_BARDIC_INSPIRATION_T2 = list("all" = list(TAT_TRAIT_BARDIC_INSPIRATION_T1), "message" = "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\"."),
