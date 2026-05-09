@@ -706,28 +706,8 @@
 	var/list/roles = list()
 	if(has_trait(TAT_TRAIT_WITCH_INITIATE))
 		roles["Witch"] = 1000000
-	if(has_trait(TAT_TRAIT_CONTRACTOR_ENTITY))
-		roles["Tempress Entity"] = 950000
-	if(has_trait(TAT_TRAIT_CONTRACTOR))
-		roles["Contractor"] = 900000
-	if(has_trait(TAT_TRAIT_SPELLBLADE))
-		roles["Spellblade"] = 850000
-	if(has_trait(TAT_TRAIT_DRUID_INITIATE))
-		roles["Druid"] = 820000
-	if(has_trait(TAT_TRAIT_MAGE_INITIATE))
-		roles["Mage"] = 810000
-	if(has_trait(TAT_TRAIT_DIVINE_INITIATE))
-		roles["Acolyte"] = 800000
-	if(has_trait(TAT_TRAIT_SOUNDBREAKER))
-		roles["Soundbreaker"] = 760000
-	if(has_trait(TAT_TRAIT_MARTIAL_MASTER))
-		roles["Martial Master"] = 750000
-	if(has_trait(TAT_TRAIT_RONIN))
-		roles["Ronin"] = 740000
-	if(has_trait(TAT_TRAIT_TROPHY_BOUNTY))
-		roles["Hunter"] = 650000
 	if(has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T1) || has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T2))
-		roles["Bard"] = 600000
+		roles["Minstrel"] = 600000
 	return roles
 
 /datum/tat_traits/proc/get_pliant_skill_role_score(list/rule)
