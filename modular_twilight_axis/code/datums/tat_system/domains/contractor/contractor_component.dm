@@ -767,7 +767,7 @@
 	if(is_true_form_active())
 		trigger_true_form_examine_embrace(user)
 		return span_userdanger("There is no mortal soul behind [owner.p_their()] gaze. This is a demonic entity wearing flesh like a promise.")
-	return span_warning("There is something witchlike and wrong beneath [owner.p_their()] mortal shell.")
+	return null
 
 /datum/component/contractor/proc/can_true_form_examine_embrace()
 	if(is_entity_subclass())
