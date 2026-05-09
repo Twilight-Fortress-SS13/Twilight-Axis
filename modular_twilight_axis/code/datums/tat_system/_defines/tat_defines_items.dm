@@ -510,7 +510,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants1 = TAT_ITEM_ENTRY("Cut-throat pants", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/neck/roguetown/leather = TAT_ITEM_ENTRY("Hardened Leather Gorget", 0.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "neck"), \
 	/obj/item/gun/ballistic/revolver/grenadelauncher/bow = TAT_ITEM_ENTRY("Crude Selfbow", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "ranged"), \
-	/obj/item/rogueweapon/shield/atgervi = TAT_ITEM_ENTRY("Gronnic Kite Shield", 4, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
+	/obj/item/rogueweapon/shield/atgervi = TAT_ITEM_ENTRY("Gronnic Kite Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "shield"), \
 	/obj/item/clothing/head/roguetown/helmet/bascinet/atgervi = TAT_ITEM_ENTRY("Owl Helmet", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "head"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/atgervi = TAT_ITEM_ENTRY("Varangian Hauberk", 3.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "unterarmor"), \
 	/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = TAT_ITEM_ENTRY("Health Vial", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
