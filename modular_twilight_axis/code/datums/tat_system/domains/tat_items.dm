@@ -351,10 +351,47 @@
 	return TRUE
 
 /datum/tat_items/proc/infer_runtime_item_category(item_path)
-	if(ispath(item_path, /obj/item/clothing))
+	if(ispath(item_path, /obj/item/clothing) || ispath(item_path, /obj/item/storage/belt))
 		return TAT_ITEM_CATEGORY_CLOTHING
 	if(ispath(item_path, /obj/item/rogueweapon) || ispath(item_path, /obj/item/gun) || ispath(item_path, /obj/item/ammo_casing) || ispath(item_path, /obj/item/quiver))
 		return TAT_ITEM_CATEGORY_WEAPON
+	return "misc"
+
+/datum/tat_items/proc/infer_runtime_item_slot_group(item_path)
+	if(!ispath(item_path, /obj/item))
+		return "misc"
+
+	var/obj/item/I = item_path
+	var/flags = initial(I.slot_flags)
+
+	if(flags & ITEM_SLOT_BELT)
+		return "belt"
+	if(flags & ITEM_SLOT_NECK)
+		return "neck"
+	if(flags & ITEM_SLOT_MASK)
+		return "mask"
+	if(flags & ITEM_SLOT_HEAD)
+		return "head"
+	if(flags & ITEM_SLOT_CLOAK)
+		return "cloak"
+	if(flags & ITEM_SLOT_ARMOR || flags & ITEM_SLOT_OCLOTHING)
+		return "armor"
+	if(flags & ITEM_SLOT_SHIRT || flags & ITEM_SLOT_ICLOTHING)
+		return "shirt"
+	if(flags & ITEM_SLOT_PANTS)
+		return "pants"
+	if(flags & ITEM_SLOT_WRISTS)
+		return "wrists"
+	if(flags & ITEM_SLOT_GLOVES)
+		return "gloves"
+	if(flags & ITEM_SLOT_SHOES)
+		return "shoes"
+	if(flags & ITEM_SLOT_RING)
+		return "ring"
+
+	if(ispath(item_path, /obj/item/storage/belt))
+		return "belt"
+
 	return "misc"
 
 /datum/tat_items/proc/get_runtime_item_name(item_path)
@@ -366,15 +403,35 @@
 /datum/tat_items/proc/ensure_runtime_item_entry(item_path, override_name = null, loadout_only = FALSE)
 	if(!ispath(item_path, /obj/item))
 		return FALSE
-	if(islist(GLOB.tat_available_items[item_path]))
+
+	var/inferred_category = infer_runtime_item_category(item_path)
+	var/inferred_slot_group = infer_runtime_item_slot_group(item_path)
+	var/list/existing_entry = GLOB.tat_available_items[item_path]
+	if(islist(existing_entry))
+		if(is_loadout_only_entry(existing_entry))
+			var/changed = FALSE
+			if((!existing_entry["slot_group"] || existing_entry["slot_group"] == "misc") && inferred_slot_group != "misc")
+				existing_entry["slot_group"] = inferred_slot_group
+				changed = TRUE
+			if((!existing_entry["category"] || existing_entry["category"] == "misc") && inferred_category != "misc")
+				existing_entry["category"] = inferred_category
+				changed = TRUE
+			if(istext(override_name) && length(override_name) && existing_entry["name"] != override_name)
+				existing_entry["name"] = override_name
+				changed = TRUE
+			if(changed)
+				GLOB.tat_item_loadout_slots_cache -= item_path
+				equip_slots_cache -= item_path
+				GLOB.tat_item_icon_cache_ready = FALSE
 		return TRUE
+
 	GLOB.tat_available_items[item_path] = list(
 		"name" = istext(override_name) && length(override_name) ? override_name : get_runtime_item_name(item_path),
 		"cost" = 0,
-		"category" = infer_runtime_item_category(item_path),
+		"category" = inferred_category,
 		"unlock_type" = null,
 		"unlock_key" = null,
-		"slot_group" = "misc",
+		"slot_group" = inferred_slot_group,
 		"loadout_only" = !!loadout_only,
 	)
 	GLOB.tat_item_icon_cache_ready = FALSE
@@ -1007,6 +1064,8 @@
 		append_unique_equip_slot(slots, SLOT_SHOES)
 	if(flags & ITEM_SLOT_RING)
 		append_unique_equip_slot(slots, SLOT_RING)
+	if(flags & ITEM_SLOT_BELT)
+		append_unique_equip_slot(slots, SLOT_BELT)
 	return slots
 
 
