@@ -920,9 +920,6 @@
 		return FALSE
 
 	var/push_dist = 3
-	if(HasStrongKick())
-		push_dist++
-
 	_throw_target_dir(target, get_dir(owner, target), push_dist, TRUE)
 	return TRUE
 
@@ -1092,9 +1089,7 @@
 // ------------------------------------------------------------
 
 /datum/component/combo_core/martial_master/proc/GetPressureChance()
-	var/chance = 25
-	if(HasStrongKick())
-		chance += 10
+	var/chance = 10
 	return clamp(chance, 0, 100)
 
 /datum/component/combo_core/martial_master/proc/GetPressureDamage()
@@ -1102,7 +1097,7 @@
 		return 1
 
 	var/amount = max(1, round(owner.get_stat(STAT_STRENGTH) / 2))
-	if(HasStrongKick() && last_action_skill == MARTIAL_MASTER_INPUT_KICK)
+	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK)
 		amount += 1
 	return amount
 
@@ -1156,7 +1151,7 @@
 		return 1
 
 	var/amount = max(1, round(owner.get_stat(STAT_STRENGTH) / 2))
-	if(HasStrongKick() && last_action_skill == MARTIAL_MASTER_INPUT_KICK)
+	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK)
 		amount += 1
 	return amount
 
@@ -1164,8 +1159,10 @@
 	if(!owner || !target)
 		return
 
-	var/zone_used = TryGetZone(zone)
+	if(!prob(10))
+		return
 
+	var/zone_used = TryGetZone(zone)
 	if(IsMouthZone(zone_used))
 		if(prob(40))
 			target.apply_status_effect(/datum/status_effect/silenced, 3 SECONDS)
@@ -1173,34 +1170,31 @@
 
 	switch(zone_used)
 		if(BODY_ZONE_HEAD)
-			if(prob(25))
-				target.Dizzy(1 SECONDS)
+			target.Dizzy(1 SECONDS)
 
 		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-			if(prob(25))
-				SafeSlow(target, HasStrongKick() ? 1.5 : 1)
+			SafeSlow(target, 1)
 
 		if(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)
-			if(prob(25))
-				if(ishuman(target))
-					var/mob/living/carbon/human/H = target
-					H.drop_all_held_items()
-				else
-					target.Immobilize(0.5 SECONDS)
+			if(ishuman(target))
+				var/mob/living/carbon/human/H = target
+				H.drop_all_held_items()
+			else
+				target.Immobilize(0.5 SECONDS)
 
 		if(BODY_ZONE_CHEST)
-			if(prob(25))
-				target.stamina_add(GetPreciseStaminaDamage())
+			target.stamina_add(GetPreciseStaminaDamage())
 
 /datum/component/combo_core/martial_master/proc/ApplyPreciseFinisher(mob/living/target, zone, finisher_skill, rule_id)
 	if(!target)
 		return
 
+	if(!prob(50))
+		return
+	
 	var/zone_used = TryGetZone(zone)
-
 	if(IsMouthZone(zone_used))
-		if(prob(80))
-			target.apply_status_effect(/datum/status_effect/silenced, 5 SECONDS)
+		target.apply_status_effect(/datum/status_effect/silenced, 5 SECONDS)
 		return
 
 	switch(zone_used)
@@ -1222,9 +1216,9 @@
 
 		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 			if(finisher_skill == MARTIAL_MASTER_INPUT_KICK)
-				SafeOffbalance(target, HasStrongKick() ? 2.5 SECONDS : 2 SECONDS)
+				SafeOffbalance(target, 2 SECONDS)
 			else
-				SafeSlow(target, HasStrongKick() ? 2 : 1.5)
+				SafeSlow(target, 1.5)
 
 		if(BODY_ZONE_CHEST)
 			target.stamina_add(round(target.max_stamina * 0.12))
@@ -1236,14 +1230,7 @@
 // ------------------------------------------------------------
 
 /datum/component/combo_core/martial_master/proc/GetKickOffbalanceDuration(base_duration = 3 SECONDS)
-	if(HasStrongKick())
-		return max(MARTIAL_MASTER_KICK_MIN_RECOVERY, round(base_duration * 0.7))
-	return base_duration
-
-/datum/component/combo_core/martial_master/proc/HasStrongKick()
-	if(!owner)
-		return FALSE
-	return HAS_TRAIT(owner, TRAIT_STRONGKICK)
+	return max(MARTIAL_MASTER_KICK_MIN_RECOVERY, round(base_duration * 0.7))
 
 /datum/component/combo_core/martial_master/proc/ComboUsesKick(rule_id)
 	switch(rule_id)
@@ -1331,7 +1318,7 @@
 		if("charge", "spin", "push")
 			chance += 40
 
-	if(C.HasStrongKick() && skill_id == MARTIAL_MASTER_INPUT_KICK)
+	if(skill_id == MARTIAL_MASTER_INPUT_KICK)
 		chance += 15
 
 	var/obj/item/bodypart/chest/CH = target.get_bodypart(BODY_ZONE_CHEST)
