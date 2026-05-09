@@ -9,6 +9,7 @@
 	var/list/magic_profile = list()
 	var/list/_cached_active_virtues = null
 	var/_cached_active_virtues_key = null
+	var/_cached_preference_loadout_key = null
 	var/list/_cached_ui_data = null
 	var/_ui_data_cache_dirty = TRUE
 
@@ -44,6 +45,7 @@
 	skills.reset()
 	items.reset()
 	magic_profile = list()
+	_cached_preference_loadout_key = null
 	dirty = FALSE
 	invalidate_ui_data_cache()
 	return TRUE
@@ -165,6 +167,14 @@
 		parts += part
 	return parts.Join("|")
 
+/datum/tat_build/proc/get_preference_loadout_cache_key(datum/preferences/P)
+	if(!P || !islist(P.selected_loadout_items))
+		return ""
+	var/list/parts = list()
+	for(var/key in P.selected_loadout_items)
+		parts += "[key]"
+	return parts.Join("|")
+
 /datum/tat_build/proc/attach_preferences_from_mob(mob/user)
 	if(!user?.client?.prefs)
 		return FALSE
@@ -173,14 +183,27 @@
 		return FALSE
 
 	var/new_virtues_key = get_active_virtues_cache_key(P)
-	if(owner_preferences != P || _cached_active_virtues_key != new_virtues_key)
-		owner_preferences = P
+	var/new_loadout_key = get_preference_loadout_cache_key(P)
+	var/preferences_changed = owner_preferences != P
+	var/virtues_changed = _cached_active_virtues_key != new_virtues_key
+	var/loadout_changed = _cached_preference_loadout_key != new_loadout_key
+
+	owner_preferences = P
+
+	if(preferences_changed || virtues_changed)
 		_cached_active_virtues = null
 		_cached_active_virtues_key = null
 		skills?.rebuild_bonus_values()
 		invalidate_ui_data_cache()
-	else
+
+	if(loadout_changed)
+		_cached_preference_loadout_key = new_loadout_key
+		items?.sync_external_grants()
+		invalidate_ui_data_cache()
+
+	if(!preferences_changed && !virtues_changed && !loadout_changed)
 		attach_preferences(P)
+
 	return TRUE
 
 /datum/tat_build/proc/get_active_virtues()

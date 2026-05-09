@@ -285,7 +285,7 @@
 	loadout["bag"] = bag
 	loadout["stash"] = stash
 
-/datum/tat_items/proc/set_item_grant_amount(item_path, source, amount, default_to_stash = TRUE)
+/datum/tat_items/proc/set_item_grant_amount(item_path, source, amount, default_to_stash = TRUE, preserve_loadout_on_zero = FALSE)
 	if(!ispath(item_path) || !istext(source) || !length(source))
 		return FALSE
 	ensure_runtime_item_entry(item_path, null, TRUE)
@@ -303,8 +303,9 @@
 		item_grants -= item_path
 	var/new_total = get_amount(item_path)
 	if(new_total <= 0)
-		item_loadout -= item_path
-		item_paint -= item_path
+		if(!preserve_loadout_on_zero)
+			item_loadout -= item_path
+			item_paint -= item_path
 	else
 		var/list/loadout = get_loadout(item_path)
 		var/source_delta = amount - old_source_amount
@@ -395,10 +396,10 @@
 		if(get_granted_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT) > 0)
 			current_donor_grants += item_path
 	for(var/item_path in wanted)
-		set_item_grant_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT, wanted[item_path], TRUE)
+		set_item_grant_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT, wanted[item_path], TRUE, TRUE)
 	for(var/item_path in current_donor_grants)
 		if(!(item_path in wanted))
-			set_item_grant_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT, 0, TRUE)
+			set_item_grant_amount(item_path, TAT_ITEM_SOURCE_DONOR_LOADOUT, 0, TRUE, TRUE)
 	return TRUE
 
 /datum/tat_items/proc/ensure_external_grants_start_in_stash()
