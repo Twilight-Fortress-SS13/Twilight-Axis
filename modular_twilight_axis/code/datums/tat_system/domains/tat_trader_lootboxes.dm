@@ -258,6 +258,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/rogueweapon/shield/tower/metal/psy = 4,
 	/obj/item/rogueweapon/stoneaxe/battle/ice = 4,
 	/obj/item/rogueweapon/sword/sabre/bane = 4,
+	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon = 2,
 	/obj/item/quiver/bolt/heavy/silver = 5,
 	/obj/item/quiver/bolt/silver = 5,
 	/obj/item/quiver/silver = 5,
@@ -282,6 +283,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/rogueweapon/sword/long/silver = 3,
 	/obj/item/rogueweapon/sword/rapier/silver = 3,
 	/obj/item/rogueweapon/sword/short/silver = 5,
+	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/legacy = 2,
 	/obj/item/rogueweapon/sword/silver = 3,
 	/obj/item/rogueweapon/whip/psywhip_lesser = 5,
 	/obj/item/rogueweapon/whip/silver = 5,
@@ -312,9 +314,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 	/obj/item/clothing/suit/roguetown/armor/plate/aalloy = 2,
 	/obj/item/clothing/shoes/roguetown/boots/armor/gold = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/blacksteel/modern = 1,
-	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon = 1,
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate = 1,
-	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/legacy = 1,
 	/obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate = 2,
@@ -462,7 +462,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 	else if(roll <= 95)
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_cheap_base_pool, 5)
 	else
-		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_expensive_base_pool, 1)
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_expensive_base_pool, 2)
 
 	return TRUE
 
