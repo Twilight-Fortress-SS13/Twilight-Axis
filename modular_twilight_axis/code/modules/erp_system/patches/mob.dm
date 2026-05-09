@@ -335,6 +335,7 @@
 		return FALSE
 
 	if(human_actor.is_erp_blocked_as_target())
+		to_chat(actor, span_warning("Blocked by leprosy or defiant combat mode."))
 		return FALSE
 
 	if(actor.client && actor.client.prefs && !actor.client.prefs.sexable)
@@ -357,6 +358,8 @@
 		return TRUE
 
 	if(consent.is_erp_blocked_as_target())
+		to_chat(actor, span_warning("Blocked by leprosy or defiant combat mode."))
+		to_chat(consent, span_warning("Blocked by leprosy or defiant combat mode."))
 		return FALSE
 
 	if(!consent.client)
