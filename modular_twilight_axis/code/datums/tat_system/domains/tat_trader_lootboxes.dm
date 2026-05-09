@@ -322,11 +322,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 	/obj/item/clothing/suit/roguetown/armor/plate/full/legacy = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/legacy = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer = 3,
-	/obj/item/clothing/neck/roguetown/psicross/silver = 8,
-	/obj/item/clothing/neck/roguetown/psicross/silver/astrata = 8,
-	/obj/item/clothing/neck/roguetown/psicross/silver/necra = 8,
-	/obj/item/clothing/neck/roguetown/psicross/silver/noc = 8,
-	/obj/item/clothing/neck/roguetown/psicross/silver/undivided = 8
 ))
 
 /proc/tat_pick_weighted_lootbox_path(list/weighted_paths)
