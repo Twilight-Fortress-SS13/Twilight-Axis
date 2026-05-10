@@ -389,7 +389,6 @@
 	if(!istype(core, /datum/component/contractor/entity))
 		return FALSE
 
-
 	core.entity_erp_training_enabled = !core.entity_erp_training_enabled
 	core.set_body_empowered(core.entity_erp_training_enabled)
 	return TRUE
@@ -433,22 +432,25 @@
 
 	if(entity_erp_training_enabled)
 		ADD_TRAIT(L, TRAIT_STRONGKICK, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
-		RegisterSignal(L, COMSIG_ATTACK_TRY_CONSUME, PROC_REF(on_body_power_unarmed_hit))
+		RegisterSignal(L, COMSIG_MOB_ATTACK_HAND, PROC_REF(on_body_power_unarmed_hit))
 		to_chat(L, span_notice("You feel power inside you."))
 	else
 		REMOVE_TRAIT(L, TRAIT_STRONGKICK, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
-		UnregisterSignal(L, COMSIG_ATTACK_TRY_CONSUME)
+		UnregisterSignal(L, COMSIG_MOB_ATTACK_HAND)
 		to_chat(L, span_notice("Your body returns to normal."))
 
-/datum/component/contractor/entity/proc/on_body_power_unarmed_hit(datum/source, mob/living/target, zone)
+/datum/component/contractor/entity/proc/on_body_power_unarmed_hit(datum/source, mob/living/attacker, mob/living/target)
 	SIGNAL_HANDLER
 
 	if(!entity_erp_training_enabled)
 		return
 	if(!isliving(target))
 		return
-	if(target.stat == DEAD)
+	if(istype(attacker.used_intent, /datum/intent/unarmed/help))
 		return
+	if(istype(attacker.used_intent, /datum/intent/unarmed/shove))
+		return
+	var/zone = attacker.zone_selected
 
 	INVOKE_ASYNC(src, PROC_REF(apply_body_power_punch_damage_async), target, zone)
 
@@ -456,8 +458,6 @@
 	if(!entity_erp_training_enabled)
 		return
 	if(!isliving(target))
-		return
-	if(target.stat == DEAD)
 		return
 
 	apply_body_power_punch_damage(target, zone)
