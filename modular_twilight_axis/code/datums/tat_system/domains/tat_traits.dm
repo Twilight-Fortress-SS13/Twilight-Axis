@@ -918,6 +918,7 @@
 		return TRUE
 	if(!owner_build)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/ragebad)
+		ADD_TRAIT(H, TRAIT_RAGE, TAT_TRAIT_SOURCE)
 		return TRUE
 	return FALSE
 
@@ -928,6 +929,7 @@
 		return TRUE
 	if(!owner_build)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/rage)
+		ADD_TRAIT(H, TRAIT_RAGE, TAT_TRAIT_SOURCE)
 		return TRUE
 	return FALSE
 
