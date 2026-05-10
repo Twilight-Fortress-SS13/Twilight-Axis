@@ -183,7 +183,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/rogueweapon/mace/steel/morningstar = 6,
 	/obj/item/rogueweapon/mace/warhammer/steel = 6,
 	/obj/item/rogueweapon/pick/steel = 6,
-	/obj/item/clothing/neck/roguetown/gorget/paalloy = 6,
 	/obj/item/rogueweapon/scabbard/sheath/kazengun = 9,
 	/obj/item/rogueweapon/scabbard/sword/kazengun = 3,
 	/obj/item/rogueweapon/scabbard/sword/kazengun/kodachi = 9,
@@ -224,9 +223,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/storage/belt/rogue/leather/knifebelt/black/steel = 9,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/bronze = 4,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/bronze/alt = 4,
-	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/paalloy = 4,
-	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/paalloy/heavy = 4,
-	/obj/item/clothing/suit/roguetown/armor/chainmail/paalloy = 4,
 ))
 
 GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
@@ -293,7 +289,8 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/clothing/ring/statgemerald = 2,
 	/obj/item/clothing/ring/statonyx = 2,
 	/obj/item/clothing/ring/statrontz = 2,
-	/obj/item/clothing/ring/statdorpel = 2
+	/obj/item/clothing/ring/statdorpel = 2,
+	/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard/silver = 8,
 ))
 
 GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
@@ -322,6 +319,8 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 	/obj/item/clothing/suit/roguetown/armor/plate/full/legacy = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/legacy = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer = 3,
+	/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard/blacksteel = 5
+
 ))
 
 /proc/tat_pick_weighted_lootbox_path(list/weighted_paths)
