@@ -27,6 +27,58 @@
 /datum/tat_traits/proc/has_trait(trait_id)
 	return get_trait_count(trait_id) > 0
 
+/datum/tat_traits/proc/get_external_traits()
+	var/list/result = list()
+	var/list/virtues = owner_build?.get_active_virtues()
+	if(!length(virtues))
+		return result
+
+	for(var/virtue_entry in virtues)
+		if(!istype(virtue_entry, /datum/virtue))
+			continue
+
+		var/datum/virtue/virtue = virtue_entry
+		if(!("added_traits" in virtue.vars))
+			continue
+
+		var/list/added_traits = virtue.vars["added_traits"]
+		if(!islist(added_traits))
+			continue
+
+		for(var/trait_id in added_traits)
+			if(!check_trait(trait_id))
+				continue
+			result[trait_id] = TRUE
+
+	return result
+
+/datum/tat_traits/proc/get_external_trait_count(trait_id)
+	var/list/external_traits = get_external_traits()
+	return external_traits[trait_id] ? 1 : 0
+
+/datum/tat_traits/proc/has_external_trait(trait_id)
+	return get_external_trait_count(trait_id) > 0
+
+/datum/tat_traits/proc/get_effective_trait_count(trait_id)
+	return max(get_trait_count(trait_id), get_external_trait_count(trait_id))
+
+/datum/tat_traits/proc/has_effective_trait(trait_id)
+	return get_effective_trait_count(trait_id) > 0
+
+/datum/tat_traits/proc/get_effective_trait_counts()
+	var/list/result = list()
+
+	for(var/trait_id in selected)
+		var/count = get_trait_count(trait_id)
+		if(count > 0)
+			result[trait_id] = count
+
+	var/list/external_traits = get_external_traits()
+	for(var/trait_id in external_traits)
+		result[trait_id] = max(round(result[trait_id] || 0), 1)
+
+	return result
+
 /datum/tat_traits/proc/is_repeatable_trait(trait_id)
 	var/list/repeatables = TAT_TRAIT_REPEATABLE_MAXIMUMS
 	return !!repeatables[trait_id]
@@ -134,6 +186,11 @@
 		return FALSE
 	var/pq_minimum = get_pq_lock_minimum(trait_id)
 	if(pq_minimum > 0 && (owner_build?.get_owner_playerquality() || 0) < pq_minimum)
+		return FALSE
+	// Virtue-granted flaws are already real character traits. Do not allow buying
+	// the same negative TAT trait again just to farm trait points. Positive
+	// traits stay buyable: external traits must not satisfy requirement chains.
+	if(has_external_trait(trait_id) && get_base_cost(trait_id) < 0)
 		return FALSE
 	return TRUE
 
@@ -337,6 +394,8 @@
 		TAT_TRAIT_WITCH_INITIATE = list(TAT_TRAIT_MAGE_MINOR_SLOT_2, TAT_TRAIT_DIVINE_BOON_3, TAT_TRAIT_WANTED, TRAIT_DODGEEXPERT, TRAIT_PARRYEXPERT, TRAIT_CRITICAL_RESISTANCE, TRAIT_MEDIUMARMOR, TRAIT_HEAVYARMOR),
 		TAT_TRAIT_WARRIOR_MASTER = list(TRAIT_DODGEEXPERT, TRAIT_PARRYEXPERT, TRAIT_CRITICAL_RESISTANCE, TRAIT_MEDIUMARMOR, TRAIT_HEAVYARMOR, TAT_TRAIT_RONIN),
 		TAT_TRAIT_SAVAGE_RAGE = list(TAT_TRAIT_BERSERKER_RAGE),
+		TRAIT_EASYDISMEMBER = list(TRAIT_HARDDISMEMBER),
+		TRAIT_HARDDISMEMBER = list(TRAIT_EASYDISMEMBER),
 		TRAIT_FENCERDEXTERITY = list(TAT_TRAIT_SAVAGE_SKIN),
 		TRAIT_NUDE_SLEEPER = list(TRAIT_NUDIST, TAT_TRAIT_SAVAGE_SKIN, TRAIT_NOSLEEP),
 		TAT_TRAIT_LOOTRAT = list(TAT_TRAIT_WANTED),
@@ -381,15 +440,15 @@
 	return TRUE
 
 /datum/tat_traits/proc/has_defensive_trait_lockout()
-	if(has_trait(TRAIT_DODGEEXPERT))
+	if(has_effective_trait(TRAIT_DODGEEXPERT))
 		return TRUE
-	if(has_trait(TRAIT_PARRYEXPERT))
+	if(has_effective_trait(TRAIT_PARRYEXPERT))
 		return TRUE
-	if(has_trait(TRAIT_CRITICAL_RESISTANCE))
+	if(has_effective_trait(TRAIT_CRITICAL_RESISTANCE))
 		return TRUE
-	if(has_trait(TRAIT_MEDIUMARMOR))
+	if(has_effective_trait(TRAIT_MEDIUMARMOR))
 		return TRUE
-	if(has_trait(TRAIT_HEAVYARMOR))
+	if(has_effective_trait(TRAIT_HEAVYARMOR))
 		return TRUE
 	return FALSE
 
@@ -419,8 +478,9 @@
 		issues += (rule["message"] || "Trait has unmet requirements.")
 	if((has_trait(TAT_TRAIT_MAGE_MAJOR_SLOT) || has_trait(TAT_TRAIT_MAGE_MINOR_SLOT_1) || has_trait(TAT_TRAIT_MAGE_UTILITY_SLOT)) && !has_trait(TAT_TRAIT_MAGE_INITIATE))
 		issues += "Mage spell slots require \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."
-	for(var/trait_a in selected)
-		for(var/trait_b in selected)
+	var/list/effective_traits = get_effective_trait_counts()
+	for(var/trait_a in effective_traits)
+		for(var/trait_b in effective_traits)
 			if(trait_a == trait_b)
 				continue
 			if("[trait_a]" >= "[trait_b]")
