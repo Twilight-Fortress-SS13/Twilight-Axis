@@ -1,6 +1,3 @@
-
-
-
 /datum/action/cooldown/spell/contractor
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "spell_default"

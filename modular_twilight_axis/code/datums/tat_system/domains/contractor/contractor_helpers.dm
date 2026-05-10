@@ -1,9 +1,3 @@
-
-
-
-
-
-
 /proc/is_contractor_mob(mob/living/carbon/human/H)
 	return H?.GetComponent(/datum/component/contractor)
 
@@ -138,12 +132,6 @@
 		to_chat(user, span_notice("[I] accepts a magic item enchantment: [enchant_name]."))
 	return TRUE
 
-
-
-
-
-
-
 /proc/contractor_get_lux_amount(mob/living/carbon/human/H)
 	if(!H)
 		return 0
@@ -191,12 +179,6 @@
 	if(L.lux_power <= 0)
 		qdel(L)
 	return TRUE
-
-
-
-
-
-
 
 /proc/contractor_apply_all_stat_delta(mob/living/carbon/human/H, amount)
 	if(!H || !amount)
@@ -378,9 +360,6 @@
 		text = copytext(text, slash + 1)
 	return capitalize(replacetext(text, "_", " "))
 
-
-
-
 /proc/contractor_charflaw_catalog()
 	var/list/out = list()
 	var/list/flaws = GLOB.character_flaws
@@ -464,8 +443,6 @@
 				return TRUE
 	return FALSE
 
-
-
 /proc/contractor_apply_charflaw_once(mob/living/carbon/human/H, flaw_type)
 	if(!H || !ispath(flaw_type, /datum/charflaw))
 		return FALSE
@@ -480,20 +457,11 @@
 		return FALSE
 
 	H.charflaws.Add(flaw)
-
-	
-	
-	
 	flaw.on_mob_creation(H)
 	flaw.apply_post_equipment(H)
 	flaw.flaw_on_life(H)
 
 	return TRUE
-
-
-
-
-
 
 /proc/contractor_find_person_by_name(query)
 	if(!query)
@@ -612,12 +580,6 @@
 		return TRUE
 	return FALSE
 
-
-
-
-
-
-
 /proc/contractor_is_contract_weapon_path(item_path, list/entry = null)
 	if(!ispath(item_path, /obj/item))
 		return FALSE
@@ -704,12 +666,6 @@
 			return item_path
 	return null
 
-
-
-
-
-
-
 /datum/magic_item
 	
 	var/tier = 1
@@ -785,10 +741,6 @@
 		return 35
 	var/path_value = text2path("[enchantment_spell_path]")
 	return 20 + (contractor_magic_item_tier(path_value) * 20)
-
-
-
-
 
 /proc/contractor_normalize_true_form_type(value)
 	if(!value)

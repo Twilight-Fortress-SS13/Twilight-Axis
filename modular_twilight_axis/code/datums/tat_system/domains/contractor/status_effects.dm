@@ -93,7 +93,6 @@
 	desc = "Infernal contract power lets you reshape yourself through mirrors."
 	icon_state = "buff"
 
-
 /datum/status_effect/debuff/contractor_emotion_pressure
 	id = "contractor_emotion_pressure"
 	duration = INFINITY

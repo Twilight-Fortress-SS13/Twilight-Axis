@@ -1,7 +1,3 @@
-
-
-
-
 /obj/item/contractor_loose_lux
 	name = "loose Lux"
 	desc = "Condensed loose Lux, suitable for infernal absorption."

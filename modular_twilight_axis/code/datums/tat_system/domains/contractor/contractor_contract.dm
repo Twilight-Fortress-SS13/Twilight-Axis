@@ -1,4 +1,3 @@
-
 /datum/contractor_contract
 	var/datum/component/contractor/contractor
 	var/datum/component/contractee/contractee

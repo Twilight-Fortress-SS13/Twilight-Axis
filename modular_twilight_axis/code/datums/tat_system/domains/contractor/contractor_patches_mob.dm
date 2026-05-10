@@ -1,24 +1,14 @@
-
-
-
-
 /mob/do_dodge(mob/user, turf/turfy)
 	. = ..()
 	if(.)
 		SEND_SIGNAL(src, COMSIG_MOB_DODGE_SUCCESS, user, turfy)
 	return .
 
-
-
-
 /mob/living/setDir(newdir)
 	. = ..()
 	var/datum/component/contractor/S = src.GetComponent(/datum/component/contractor)
 	S?.update_true_form_visuals()
 	return .
-
-
-
 
 /mob/living/carbon/human/examine(mob/user)
 	. = ..()
@@ -38,13 +28,6 @@
 			. += text
 		else
 			to_chat(user, text)
-
-
-
-
-
-
-
 
 /mob/living/carbon/human/species/wildshape/contractor_trueform
 	name = "Contractor"
@@ -92,10 +75,6 @@
 	)
 
 /datum/species/contractor_trueform/regenerate_icons(mob/living/carbon/human/human)
-	
-	
-	
-	
 	if(!human)
 		return FALSE
 
@@ -118,9 +97,6 @@
 	return TRUE
 
 /datum/species/contractor_trueform/update_damage_overlays(mob/living/carbon/human/human)
-	
-	
-	
 	return TRUE
 
 

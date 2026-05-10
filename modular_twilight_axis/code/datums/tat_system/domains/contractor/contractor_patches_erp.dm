@@ -1,7 +1,3 @@
-
-
-
-
 GLOBAL_LIST_INIT(contractor_erp_training_map, list(
 	/datum/skill/labor/farming = list("action" = /datum/erp_action/other/hands/milking_breasts, "passive" = "contractor"),
 	/datum/skill/labor/mining = list("action" = /datum/erp_action/other/mouth/rimming, "passive" = "contractor"),

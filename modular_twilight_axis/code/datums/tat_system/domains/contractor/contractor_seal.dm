@@ -70,8 +70,6 @@
 	visible_message(span_danger("[src] cracks and burns away."))
 	qdel(src)
 
-
-
 /obj/effect/decal/cleanable/roguerune/arcyne/contractor_seal
 	name = "contractor binding seal"
 	desc = "Arcane script curls into a hungry seal meant to suppress a contractor standing upon it."
@@ -100,9 +98,6 @@
 			arcana_power = contractor_get_arcana_power(H)
 	max_seal_power = CONTRACTOR_SEAL_BASE_POWER + (CONTRACTOR_SEAL_ARCANA_POWER * arcana_power)
 	seal_power = max_seal_power
-	
-	
-	
 	addtimer(CALLBACK(src, PROC_REF(bind_contractors_on_turf)), 1)
 
 /obj/effect/decal/cleanable/roguerune/arcyne/contractor_seal/proc/bind_contractors_on_turf()

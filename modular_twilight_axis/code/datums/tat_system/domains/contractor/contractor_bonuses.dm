@@ -1,7 +1,3 @@
-
-
-
-
 /datum/contractor_bonus
 	var/name = "infernal bonus"
 	var/desc = "A granted benefit from an infernal contract."
@@ -25,9 +21,6 @@
 
 /datum/contractor_bonus/proc/get_ui_data(datum/contractor_contract/contract)
 	return list("name" = name, "desc" = desc, "power" = power_cost)
-
-
-
 
 /datum/contractor_bonus/information
 	name = "revealed mark"
@@ -55,9 +48,6 @@
 		to_chat(succubus, span_notice("The contract marks [marked_target] for you: [A?.name || "unknown lands"], [direction][T ? " ([T.x], [T.y], [T.z])" : ""]."))
 	addtimer(CALLBACK(contract, TYPE_PROC_REF(/datum/contractor_contract, fulfill), "information_confirmed"), CONTRACTOR_CONTRACT_INFORMATION_CONFIRM_TIME)
 	return TRUE
-
-
-
 
 /datum/contractor_bonus/item
 	name = "granted item"
@@ -87,8 +77,6 @@
 		return FALSE
 	to_chat(H, span_notice("The contract creates [spawned] item[spawned == 1 ? "" : "s"] for you."))
 	return TRUE
-
-
 
 /datum/contractor_bonus/enchanted_item
 	name = "contract-forged item"
@@ -215,9 +203,6 @@
 	if(current_count >= max(1, count))
 		source_contract.fulfill("orgasm_boon_complete")
 
-
-
-
 /datum/contractor_bonus/body_change
 	name = "body alteration"
 	desc = "Grants temporary mirror-changing permission."
@@ -239,9 +224,6 @@
 		H.remove_status_effect(/datum/status_effect/buff/contractor_mirror_permission)
 	return TRUE
 
-
-
-
 /datum/contractor_bonus/stat
 	name = "stat boon"
 	desc = "Improves a stat."
@@ -251,9 +233,6 @@
 
 /datum/contractor_bonus/stat/apply(datum/contractor_contract/contract)
 	return contractor_apply_stat_delta(contract.contractee?.owner, stat_key, amount)
-
-
-
 
 /datum/contractor_bonus/skill
 	name = "skill boon"
@@ -269,5 +248,3 @@
 	var/current = H.get_skill_level(skill_type)
 	H.adjust_skillrank_up_to(skill_type, current + amount, TRUE)
 	return TRUE
-
-

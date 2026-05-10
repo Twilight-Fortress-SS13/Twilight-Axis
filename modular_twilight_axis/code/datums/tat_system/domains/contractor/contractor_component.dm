@@ -165,7 +165,6 @@
 		decay += CONTRACTOR_TRUE_FORM_MINUTE_DRAIN
 	adjust_devotion(-decay, TRUE)
 
-
 /datum/component/contractor/proc/apply_hunger_penalties()
 	if(get_devotion() > 0)
 		clear_hunger_penalty()
@@ -186,7 +185,6 @@
 		return
 	contractor_apply_all_stat_delta(owner, hunger_penalty_applied)
 	hunger_penalty_applied = 0
-
 
 /datum/component/contractor/proc/handle_seal_decay()
 	var/atom/seal = contractor_find_nearby_seal(owner)
@@ -341,7 +339,6 @@
 	contractor_imprint_best_from(owner, target)
 	to_chat(owner, span_notice("No devotion yields, so you steal an echo of [target]'s strongest nature."))
 	return TRUE
-
 
 /datum/component/contractor/proc/open_contract(mob/living/carbon/human/target)
 	if(!can_use_contractor_power(owner, CONTRACTOR_LEVEL_SLEEPING, FALSE))

@@ -1,4 +1,3 @@
-
 /datum/component/contractee
 	var/mob/living/carbon/human/owner
 	var/datum/component/contractor/contractor
