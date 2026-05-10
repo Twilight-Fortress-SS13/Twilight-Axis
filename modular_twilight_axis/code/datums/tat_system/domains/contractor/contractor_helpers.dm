@@ -164,21 +164,13 @@
 /proc/contractor_get_loose_lux_amount(atom/A)
 	if(!A)
 		return 0
-	if(!istype(A, /obj/item/contractor_loose_lux))
-		return 0
-	var/obj/item/contractor_loose_lux/L = A
-	return L.lux_power || 0
-
-/proc/contractor_consume_loose_lux(atom/A, amount)
-	if(!A || amount <= 0)
-		return FALSE
-	if(!istype(A, /obj/item/contractor_loose_lux))
-		return FALSE
-	var/obj/item/contractor_loose_lux/L = A
-	L.lux_power = max(0, (L.lux_power || 0) - amount)
-	if(L.lux_power <= 0)
-		qdel(L)
-	return TRUE
+	if(istype(A, /obj/item/reagent_containers/lux))
+		return 100
+	if(istype(A, /obj/item/reagent_containers/lux_impure))
+		return 50
+	if(istype(A, /obj/item/reagent_containers/lux/moss))
+		return 100
+	return 0
 
 /proc/contractor_apply_all_stat_delta(mob/living/carbon/human/H, amount)
 	if(!H || !amount)

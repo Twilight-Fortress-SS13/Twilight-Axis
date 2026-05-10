@@ -48,8 +48,8 @@
 	return TRUE
 
 /datum/action/cooldown/spell/contractor/status
-	name = "Состояние контрактника"
-	desc = "Показать уровень, devotion, силу Lux, форму и контракты."
+	name = "Contractor Status"
+	desc = "Show your contractor level, devotion, Lux power, form, and contracts."
 	button_icon_state = "spell_default"
 	cooldown_time = 1 SECONDS
 	required_contractor_level = CONTRACTOR_LEVEL_SLEEPING
@@ -64,8 +64,8 @@
 	return TRUE
 
 /datum/action/cooldown/spell/contractor/drink_lux
-	name = "Поглощение"
-	desc = "Поглотить Lux с земли или из живого существа."
+	name = "Absorb Lux"
+	desc = "Absorb Lux from the ground or from a living being."
 	button_icon_state = "spell_default"
 	cooldown_time = 10 SECONDS
 	click_to_activate = TRUE
@@ -80,6 +80,8 @@
 		return FALSE
 	if(ishuman(cast_on))
 		return TRUE
+	if(istype(cast_on, /obj/item/reagent_containers/lux))
+		return TRUE
 	return contractor_get_loose_lux_amount(cast_on) > 0
 
 /datum/action/cooldown/spell/contractor/drink_lux/cast(atom/cast_on)
@@ -90,8 +92,8 @@
 	return core.try_drink_lux(cast_on)
 
 /datum/action/cooldown/spell/contractor/offer_contract
-	name = "Заключить контракт"
-	desc = "Предложить двусторонний контракт цели, тратя накопленную силу Lux."
+	name = "Form Contract"
+	desc = "Form a two-sided contract with the target, spending accumulated Lux power."
 	button_icon_state = "spell_default"
 	cooldown_time = 10 SECONDS
 	click_to_activate = TRUE
@@ -146,8 +148,8 @@
 	return core.test_self_contract_pipeline(owner)
 
 /datum/action/cooldown/spell/contractor/return_to_summon
-	name = "Вернуться"
-	desc = "Вернуться туда, где контрактник согласилась на призыв."
+	name = "Return"
+	desc = "Return to the place where the contractor accepted the summoning."
 	button_icon_state = "spell_default"
 	cooldown_time = 30 SECONDS
 	required_contractor_level = CONTRACTOR_LEVEL_SLEEPING
@@ -159,8 +161,8 @@
 	return core?.return_to_summon_origin()
 
 /datum/action/cooldown/spell/contractor/change_form
-	name = "Смена формы"
-	desc = "Переключиться между оболочкой и истинной формой."
+	name = "Change Form"
+	desc = "Switch between your shell and your true form."
 	button_icon_state = "spell_default"
 	cooldown_time = 30 SECONDS
 	required_contractor_level = CONTRACTOR_LEVEL_AWAKENED
@@ -180,8 +182,8 @@
 	return success
 
 /datum/action/cooldown/spell/contractor/evasion
-	name = "Уклонение"
-	desc = "На короткое время усиливает уклонения; при атаке телепортирует за спину атакующего."
+	name = "Evasion"
+	desc = "Briefly enhances your dodges; when attacked, teleport behind the attacker."
 	button_icon_state = "spell_default"
 	cooldown_time = 90 SECONDS
 	required_contractor_level = CONTRACTOR_LEVEL_AWARE
@@ -198,8 +200,8 @@
 	return success
 
 /datum/action/cooldown/spell/contractor/exchange
-	name = "Обмен"
-	desc = "На короткое время усиливает парирования; при атаке меняется местами с атакующим."
+	name = "Exchange"
+	desc = "Briefly enhances your parries; when attacked, swap places with the attacker."
 	button_icon_state = "spell_default"
 	cooldown_time = 90 SECONDS
 	required_contractor_level = CONTRACTOR_LEVEL_AWARE
@@ -216,8 +218,8 @@
 	return success
 
 /datum/action/cooldown/spell/contractor/invisibility
-	name = "Невидимость"
-	desc = "Стать невидимой на короткое время. Атака должна прервать эффект."
+	name = "Invisibility"
+	desc = "Become invisible for a short time. Attacking should break the effect."
 	button_icon_state = "spell_default"
 	cooldown_time = 1 MINUTES
 	required_contractor_level = CONTRACTOR_LEVEL_WATCHFUL
@@ -234,8 +236,8 @@
 	return success
 
 /datum/action/cooldown/spell/contractor/gift_contractee
-	name = "Подготовка дара"
-	desc = "Открыть/изменить контракт полностью подчинённого контрактника."
+	name = "Prepare Gift"
+	desc = "Open or change the contract gift of a fully bound contractee."
 	button_icon_state = "spell_default"
 	cooldown_time = 30 SECONDS
 	click_to_activate = TRUE
@@ -263,8 +265,8 @@
 	return success
 
 /datum/action/cooldown/spell/contractor/body_change
-	name = "Изменение тела"
-	desc = "Изменить тело цели через контрактную силу."
+	name = "Alter Body"
+	desc = "Alter the target's body through contractual power."
 	button_icon_state = "spell_default"
 	cooldown_time = 2 MINUTES
 	click_to_activate = TRUE
@@ -324,8 +326,8 @@
 	return core?.alter_body(mark_target)
 
 /datum/action/cooldown/spell/contractor/incorporeal
-	name = "Бестелесность"
-	desc = "На короткое время пройти сквозь препятствия и игнорировать немагический урон."
+	name = "Incorporeal"
+	desc = "Briefly pass through obstacles and ignore non-magical damage."
 	button_icon_state = "spell_default"
 	cooldown_time = 2 MINUTES
 	required_contractor_level = CONTRACTOR_LEVEL_COMPLETE
@@ -342,8 +344,8 @@
 	return success
 
 /datum/action/cooldown/spell/contractor/paralytic_embrace
-	name = "Сплетение"
-	desc = "Сковать себя и цель станом до отмены повторным применением."
+	name = "Paralytic Embrace"
+	desc = "Stun yourself and the target until cancelled by using this again."
 	button_icon_state = "spell_default"
 	cooldown_time = 2 MINUTES
 	click_to_activate = TRUE
@@ -373,7 +375,7 @@
 	return success
 
 /datum/action/cooldown/spell/contractor/entity_training_toggle
-	name = "Share pleasure"
+	name = "Share Pleasure"
 	desc = "Toggle Tempress training."
 	button_icon_state = "spell_default"
 	cooldown_time = 5 SECONDS
@@ -409,15 +411,10 @@
 
 /datum/action/cooldown/spell/contractor/entity_body_change/cast(atom/cast_on)
 	. = ..()
-	var/datum/component/contractor/core = get_core()
+	var/datum/component/contractor/entity/core = get_core()
 	if(!istype(core, /datum/component/contractor/entity))
 		return FALSE
 	return core.alter_body(cast_on)
-
-/datum/action/cooldown/spell/contractor/entity_training_toggle/cast(atom/cast_on)
-	. = ..()
-	
-	return TRUE
 
 #define TEMPRESS_BODY_POWER_TRAIT_SOURCE "tempress_body_power"
 #define TEMPRESS_BODY_POWER_PUNCH_DAMAGE 100
@@ -447,6 +444,7 @@
 		return
 	if(istype(attacker.used_intent, /datum/intent/unarmed/shove))
 		return
+
 	var/zone = attacker.zone_selected
 
 	INVOKE_ASYNC(src, PROC_REF(apply_body_power_punch_damage_async), target, zone)
@@ -483,3 +481,95 @@
 
 #undef TEMPRESS_BODY_POWER_TRAIT_SOURCE
 #undef TEMPRESS_BODY_POWER_PUNCH_DAMAGE
+
+// /mob/living/carbon/human/verb/call_contractor()
+// 	set name = "Offering"
+// 	set category = "IC"
+// 	set desc = "Call a contractor by presenting the item in your active hand."
+
+// 	var/obj/item/held_item = get_active_held_item()
+// 	if(!held_item)
+// 		to_chat(src, span_warning("You need to hold something in your active hand."))
+// 		return
+
+// 	var/list/contractors = list()
+
+// 	for(var/mob/living/carbon/human/contractor in GLOB.player_list)
+// 		if(contractor == src)
+// 			continue
+// 		if(QDELETED(contractor))
+// 			continue
+// 		if(contractor.stat == DEAD)
+// 			continue
+// 		if(!contractor.client)
+// 			continue
+// 		if(!contractor.GetComponent(/datum/component/contractor))
+// 			continue
+
+// 		contractors += contractor
+
+// 	if(!length(contractors))
+// 		to_chat(src, span_warning("No contractor answers your call."))
+// 		return
+
+// 	to_chat(src, span_notice("You raise [held_item] and call for a contractor."))
+
+// 	var/answered = FALSE
+// 	var/declined = 0
+// 	var/mob/living/carbon/human/summoner = src
+// 	var/obj/item/tribute = held_item
+
+// 	for(var/mob/living/carbon/human/contractor as anything in contractors)
+// 		spawn(0)
+// 			if(answered)
+// 				return
+
+// 			var/choice = alert(
+// 				contractor,
+// 				"[summoner] calls for a contractor and presents [tribute].",
+// 				"Contractor Call",
+// 				"Answer",
+// 				"Ignore"
+// 			)
+
+// 			if(answered)
+// 				return
+
+// 			if(choice != "Answer")
+// 				declined++
+// 				if(declined >= length(contractors) && !answered && !QDELETED(summoner))
+// 					to_chat(summoner, span_warning("No contractor answers your call."))
+// 				return
+
+// 			answered = TRUE
+
+// 			if(QDELETED(summoner) || QDELETED(contractor) || QDELETED(tribute))
+// 				return
+
+// 			if(summoner.get_active_held_item() != tribute)
+// 				to_chat(summoner, span_warning("The item is no longer in your hand."))
+// 				to_chat(contractor, span_warning("The item is no longer in [summoner]'s hand."))
+// 				return
+
+// 			for(var/mob/living/carbon/human/other_contractor as anything in contractors)
+// 				if(other_contractor == contractor)
+// 					continue
+// 				if(QDELETED(other_contractor))
+// 					continue
+// 				to_chat(other_contractor, span_warning("Another contractor has already answered the call."))
+
+// 			var/turf/target_turf = get_step(summoner, summoner.dir)
+// 			if(!target_turf)
+// 				target_turf = get_turf(summoner)
+
+// 			contractor.forceMove(target_turf)
+
+// 			if(!summoner.dropItemToGround(tribute, TRUE))
+// 				to_chat(summoner, span_warning("You fail to release [tribute]."))
+// 				to_chat(contractor, span_warning("[summoner] fails to release [tribute]."))
+// 				return
+
+// 			if(!contractor.put_in_hands(tribute))
+// 				tribute.forceMove(get_turf(contractor))
+
+// 			contractor.visible_message(span_notice("[contractor] answers [summoner]'s call and takes [tribute]."))

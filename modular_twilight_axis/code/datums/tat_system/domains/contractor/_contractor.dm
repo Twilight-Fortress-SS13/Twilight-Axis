@@ -7,7 +7,6 @@
 #include "contractor_curses.dm"
 #include "contractor_contract.dm"
 #include "contractor_contract_ui.dm"
-#include "contractor_world.dm"
 #include "contractor_seal.dm"
 #include "contractor_actions.dm"
 #include "contractor_patches_mob.dm"

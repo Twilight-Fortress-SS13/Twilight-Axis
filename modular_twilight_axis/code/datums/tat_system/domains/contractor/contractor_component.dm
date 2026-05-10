@@ -279,8 +279,6 @@
 	var/amount = min(available, max(0, CONTRACTOR_LOOSE_LUX_BASE_POWER - (CONTRACTOR_LOOSE_LUX_LEVEL_PENALTY * level)))
 	if(amount <= 0)
 		return FALSE
-	if(!contractor_consume_loose_lux(target, amount))
-		return FALSE
 	lux_power += amount
 	to_chat(owner, span_notice("You drink [amount] loose Lux. Lux power: [lux_power]."))
 	return TRUE
