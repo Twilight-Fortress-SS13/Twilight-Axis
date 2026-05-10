@@ -135,7 +135,7 @@
 			continue
 		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 			continue
-		if((get_invested_value(skill_type) + get_bonus_value(skill_type)) >= TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)
+		if(get_raw_total_value(skill_type) >= TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)
 			count++
 
 	if(!except_skill_type)
@@ -152,12 +152,122 @@
 			continue
 		if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 			continue
-		if((get_invested_value(skill_type) + get_bonus_value(skill_type)) >= TAT_SKILL_COMBAT_CAP_TRAIT_MASTER)
+		if(get_raw_total_value(skill_type) >= TAT_SKILL_COMBAT_CAP_TRAIT_MASTER)
 			count++
 
 	if(!except_skill_type)
 		_cached_combat_master_count = count
 	return count
+
+/datum/tat_skills/proc/get_raw_total_value(skill_type, invested_override = null)
+	var/invested_value = isnull(invested_override) ? get_invested_value(skill_type) : max(0, round(invested_override))
+	return invested_value + get_bonus_value(skill_type)
+
+/datum/tat_skills/proc/is_limited_combat_skill(skill_type)
+	if(!ispath(skill_type, /datum/skill/combat))
+		return FALSE
+	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
+		return FALSE
+	return TRUE
+
+/datum/tat_skills/proc/get_hypothetical_combat_threshold_count(threshold, changed_skill_type = null, changed_invested_value = null)
+	var/count = 0
+	for(var/skill_type in TAT_SKILLS_COMBAT)
+		if(!is_limited_combat_skill(skill_type))
+			continue
+
+		var/invested_override = null
+		if(skill_type == changed_skill_type)
+			invested_override = changed_invested_value
+
+		if(get_raw_total_value(skill_type, invested_override) >= threshold)
+			count++
+
+	return count
+
+/datum/tat_skills/proc/would_violate_combat_hardcaps(skill_type, invested_value)
+	if(!is_limited_combat_skill(skill_type))
+		return FALSE
+
+	var/expert_count = get_hypothetical_combat_threshold_count(TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT, skill_type, invested_value)
+	if(expert_count > TAT_COMBAT_EXPERT_SKILL_LIMIT)
+		return TRUE
+
+	var/master_count = get_hypothetical_combat_threshold_count(TAT_SKILL_COMBAT_CAP_TRAIT_MASTER, skill_type, invested_value)
+	if(master_count > TAT_COMBAT_MASTER_SKILL_LIMIT)
+		return TRUE
+
+	return FALSE
+
+/datum/tat_skills/proc/get_combat_threshold_overflow_skill(threshold)
+	var/limit = (threshold >= TAT_SKILL_COMBAT_CAP_TRAIT_MASTER) ? TAT_COMBAT_MASTER_SKILL_LIMIT : TAT_COMBAT_EXPERT_SKILL_LIMIT
+	if(get_hypothetical_combat_threshold_count(threshold) <= limit)
+		return null
+
+	var/best_skill = null
+	var/best_score = -999999999
+	for(var/skill_type in TAT_SKILLS_COMBAT)
+		if(!is_limited_combat_skill(skill_type))
+			continue
+
+		var/invested_value = get_invested_value(skill_type)
+		if(invested_value <= 0)
+			continue
+
+		var/total_value = get_raw_total_value(skill_type)
+		if(total_value < threshold)
+			continue
+
+		// Prefer removing the point that actually drops the skill below the overflowing threshold.
+		// Bonus-only skills still count against the quota, but they cannot be fixed by stripping TAT points.
+		var/drops_below_threshold = (get_raw_total_value(skill_type, invested_value - 1) < threshold)
+		var/score = 0
+		if(drops_below_threshold)
+			score += 10000
+		score += get_bonus_value(skill_type) * 100
+		score += invested_value
+
+		if(score > best_score)
+			best_score = score
+			best_skill = skill_type
+
+	return best_skill
+
+/datum/tat_skills/proc/enforce_combat_hardcaps()
+	var/changed = FALSE
+
+	while(get_hypothetical_combat_threshold_count(TAT_SKILL_COMBAT_CAP_TRAIT_MASTER) > TAT_COMBAT_MASTER_SKILL_LIMIT)
+		var/skill_type = get_combat_threshold_overflow_skill(TAT_SKILL_COMBAT_CAP_TRAIT_MASTER)
+		if(!skill_type)
+			break
+		var/current = get_invested_value(skill_type)
+		if(current <= 0)
+			break
+		invested[skill_type] = current - 1
+		if(invested[skill_type] <= 0)
+			invested -= skill_type
+		changed = TRUE
+		invalidate_combat_count_cache()
+		invalidate_spent_points_cache()
+
+	while(get_hypothetical_combat_threshold_count(TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT) > TAT_COMBAT_EXPERT_SKILL_LIMIT)
+		var/skill_type = get_combat_threshold_overflow_skill(TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)
+		if(!skill_type)
+			break
+		var/current = get_invested_value(skill_type)
+		if(current <= 0)
+			break
+		invested[skill_type] = current - 1
+		if(invested[skill_type] <= 0)
+			invested -= skill_type
+		changed = TRUE
+		invalidate_combat_count_cache()
+		invalidate_spent_points_cache()
+
+	if(changed)
+		owner_build?.set_dirty()
+
+	return changed
 
 /datum/tat_skills/proc/get_trait_cap_bonus(skill_type)
 	return owner_build ? owner_build.get_skill_cap_bonus_value(skill_type) : 0
@@ -197,32 +307,19 @@
 	var/has_expert = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_EXPERT)
 	var/has_master = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_MASTER)
 
-	var/current_total = get_invested_value(skill_type) + get_bonus_value(skill_type)
-	var/expert_count = get_combat_expert_count(skill_type)
-	var/master_count = get_combat_master_count(skill_type)
+	var/current_invested = get_invested_value(skill_type)
+	var/bonus_value = get_bonus_value(skill_type)
 
 	var/cap = base_cap
 
 	if(has_expert)
-		var/can_take_expert = FALSE
-
-		if(current_total >= expert_cap)
-			can_take_expert = TRUE
-		else if(expert_count < TAT_COMBAT_EXPERT_SKILL_LIMIT)
-			can_take_expert = TRUE
-
-		if(can_take_expert)
+		var/expert_invested_target = max(current_invested, expert_cap - bonus_value)
+		if(expert_invested_target >= 0 && get_raw_total_value(skill_type, expert_invested_target) >= expert_cap && !would_violate_combat_hardcaps(skill_type, expert_invested_target))
 			cap = expert_cap
 
 	if(has_master && cap >= expert_cap)
-		var/can_take_master = FALSE
-
-		if(current_total >= master_cap)
-			can_take_master = TRUE
-		else if(master_count < TAT_COMBAT_MASTER_SKILL_LIMIT)
-			can_take_master = TRUE
-
-		if(can_take_master)
+		var/master_invested_target = max(current_invested, master_cap - bonus_value)
+		if(master_invested_target >= 0 && get_raw_total_value(skill_type, master_invested_target) >= master_cap && !would_violate_combat_hardcaps(skill_type, master_invested_target))
 			cap = master_cap
 
 	var/cap_bonus = get_trait_cap_bonus(skill_type)
@@ -351,6 +448,9 @@
 	if(value == old_value)
 		return TRUE
 
+	if(value > old_value && would_violate_combat_hardcaps(skill_type, value))
+		return FALSE
+
 	var/old_cost = get_total_cost_for_level(skill_type, old_value)
 	var/new_cost = get_total_cost_for_level(skill_type, value)
 
@@ -386,6 +486,8 @@
 
 		var/current = get_invested_value(skill_type)
 		set_invested_value(skill_type, current)
+
+	enforce_combat_hardcaps()
 
 	if(!enforce_budget)
 		return TRUE

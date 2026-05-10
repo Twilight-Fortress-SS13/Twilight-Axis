@@ -516,7 +516,7 @@
 	items?.sync_external_grants()
 	invalidate_ui_data_cache()
 	if(!islist(_cached_active_virtues))
-		skills?.rebuild_bonus_values()
+		skills?.sanitize(FALSE)
 		invalidate_ui_data_cache()
 	if(ui)
 		ui.set_autoupdate(FALSE)

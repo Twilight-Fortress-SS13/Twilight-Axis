@@ -193,7 +193,7 @@
 	if(preferences_changed || virtues_changed)
 		_cached_active_virtues = null
 		_cached_active_virtues_key = null
-		skills?.rebuild_bonus_values()
+		skills?.sanitize(FALSE)
 		invalidate_ui_data_cache()
 
 	if(loadout_changed)
