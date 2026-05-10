@@ -266,6 +266,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/shoes/roguetown/grenzelhoft = TAT_ITEM_ENTRY("Grenzelhoft Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/shortboots = TAT_ITEM_ENTRY("Short Boots", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail = TAT_ITEM_ENTRY("Steel Haubergeon", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "suit"), \
+	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ornate = TAT_ITEM_ENTRY("Psydonic Hauberk", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "unterarmor"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk = TAT_ITEM_ENTRY("Steel Hauberk", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "unterarmor"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/grenzelhoft = TAT_ITEM_ENTRY("Grenzelhoftian Hip-Shirt w/hauberk", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "unterarmor"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron = TAT_ITEM_ENTRY("Iron Hauberk", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "unterarmor"), \
@@ -425,7 +426,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/reagent_containers/glass/cup/tin/small = TAT_ITEM_ENTRY("Tin Cup", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/reagent_containers/glass/cup/wooden = TAT_ITEM_ENTRY("Wooden Cup", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/reagent_containers/glass/cup/tin = TAT_ITEM_ENTRY("Tin Goblet", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
-	/obj/item/bedroll = TAT_ITEM_ENTRY("Bedroll", 1.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
+	/obj/item/bedroll = TAT_ITEM_ENTRY("Bedroll", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rogueweapon/halberd/bardiche = TAT_ITEM_ENTRY("Bardiche", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/rogueweapon/mace/goden/steel = TAT_ITEM_ENTRY("Grand Mace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/mace/cudgel = TAT_ITEM_ENTRY("Cudgel", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
@@ -619,6 +620,10 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/fishingrod/crafted = TAT_ITEM_ENTRY("Fishing Rod", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/fishingrod/bronze = TAT_ITEM_ENTRY("Bronze Fishing Rod", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "lyfe"), \
 	/obj/item/cooking/pan = TAT_ITEM_ENTRY("Frying Pan", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/reagent_containers/glass/bucket/pot/bronze = TAT_ITEM_ENTRY("Bronze Pot", 0, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
+	/obj/item/reagent_containers/glass/bucket/pot/stone = TAT_ITEM_ENTRY("Stone Pot", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/reagent_containers/glass/bucket/pot = TAT_ITEM_ENTRY("Iron Pot", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
+	/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard = TAT_ITEM_ENTRY("Stein", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/cooking/pan/bronze = TAT_ITEM_ENTRY("Bronze Frying Pan", 0, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
 	/obj/item/cooking/pan/aalloy = TAT_ITEM_ENTRY("Frying Pan", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/reagent_containers/glass/bottle/waterskin/milk = TAT_ITEM_ENTRY("Not Milk....", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "food"), \
@@ -636,7 +641,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/heart_blood_canister/filled = TAT_ITEM_ENTRY("Heartblood Canister", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/bait/leech = TAT_ITEM_ENTRY("Leech Bait", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/flint = TAT_ITEM_ENTRY("Flint", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
-	/obj/item/folding_table_stored = TAT_ITEM_ENTRY("Folding Table", 1.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/folding_table_stored = TAT_ITEM_ENTRY("Folding Table", 1, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/rug_stored = TAT_ITEM_ENTRY("Rug Roll", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rug_black_stored = TAT_ITEM_ENTRY("Black Rug Roll", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rug_purple_stored = TAT_ITEM_ENTRY("Purple Rug Roll", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
