@@ -80,7 +80,7 @@
 		return FALSE
 	if(ishuman(cast_on))
 		return TRUE
-	if(istype(cast_on, /obj/item/reagent_containers/lux))
+	if(istype(cast_on, /obj/item/reagent_containers/lux) || istype(cast_on, /obj/item/reagent_containers/lux_impure) || istype(cast_on, /obj/item/reagent_containers/lux_moss) )
 		return TRUE
 	return contractor_get_loose_lux_amount(cast_on) > 0
 

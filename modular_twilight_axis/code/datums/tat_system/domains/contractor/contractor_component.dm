@@ -276,11 +276,9 @@
 	if(available <= 0)
 		to_chat(owner, span_warning("There is no loose Lux to drink."))
 		return FALSE
-	var/amount = min(available, max(0, CONTRACTOR_LOOSE_LUX_BASE_POWER - (CONTRACTOR_LOOSE_LUX_LEVEL_PENALTY * level)))
-	if(amount <= 0)
-		return FALSE
-	lux_power += amount
-	to_chat(owner, span_notice("You drink [amount] loose Lux. Lux power: [lux_power]."))
+	lux_power += available
+	to_chat(owner, span_notice("You drink [available] loose Lux. Lux power: [lux_power]."))
+	qdel(target)
 	return TRUE
 
 /datum/component/contractor/proc/try_drink_mob_lux(mob/living/carbon/human/target)
@@ -312,9 +310,6 @@
 	var/requested_amount = CONTRACTOR_MOB_LUX_BASE_POWER + (CONTRACTOR_MOB_LUX_LEVEL_BONUS * level)
 	var/drunk_amount = contractor_drain_lux(target, requested_amount)
 	if(drunk_amount <= 0)
-		
-		
-		
 		drunk_amount = requested_amount
 		try_imprint_from(target)
 
