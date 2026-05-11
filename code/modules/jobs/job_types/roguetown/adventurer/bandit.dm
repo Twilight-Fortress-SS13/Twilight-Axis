@@ -6,7 +6,7 @@
 	total_positions = 0
 	spawn_positions = 0
 	antag_job = TRUE
-	allowed_races = RACES_ALL_KINDS
+	
 	tutorial = "Long ago you did a crime worthy of your bounty being hung on the wall outside of the local inn. You now live with your fellow freemen in the bog, and generally get up to no good."
 
 	outfit = null
@@ -124,6 +124,11 @@
 /proc/update_bandits_slots()
 	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
 	if(!bandit_job)
+		return
+
+	if(is_storyteller_soft_antag_blocked())
+		bandit_job.total_positions = 0
+		bandit_job.spawn_positions = 0
 		return
 
 	var/player_count = length(GLOB.joined_player_list)

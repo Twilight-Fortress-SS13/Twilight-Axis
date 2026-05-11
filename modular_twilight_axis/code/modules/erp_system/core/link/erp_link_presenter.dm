@@ -19,15 +19,6 @@
 
 	return "ритмично"
 
-/// Human-readable pose text for templates/UI.
-/datum/erp_link_presenter/proc/get_pose_text(pose_state)
-	switch(pose_state)
-		if(SEX_POSE_BOTH_STANDING)	return "стоя"
-		if(SEX_POSE_USER_LYING)		return "снизу"
-		if(SEX_POSE_TARGET_LYING)	return "нависая"
-		if(SEX_POSE_BOTH_LYING)		return "лежа"
-	return "стоя"
-
 /// Zone text routed via actor API (single source of truth for zone normalization).
 /datum/erp_link_presenter/proc/get_target_zone_text(datum/erp_sex_link/L)
 	return L?.actor_active?.get_target_zone_text_for(L?.actor_passive) || "тело"
@@ -41,7 +32,6 @@
 		"active" = (L.state == LINK_STATE_ACTIVE),
 		"force" = L.force,
 		"speed" = L.speed,
-		"pose" = L.pose_state,
 		"action" = L.action?.name,
 		"actor_active" = L.actor_active?.get_display_name(),
 		"actor_passive" = L.actor_passive?.get_display_name()

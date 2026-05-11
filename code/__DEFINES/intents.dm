@@ -29,8 +29,8 @@
 #define SWORD_CUT		 /datum/intent/sword/cut
 #define SWORD_THRUST	 /datum/intent/sword/thrust
 #define SWORD_CHOP		 /datum/intent/sword/chop //2h swords only
-#define SWORD_STRIKE	 /datum/intent/sword/strike //mordhau grip
-#define SWORD_PEEL		/datum/intent/sword/peel
+#define SWORD_STRIKE	 /datum/intent/sword/strike
+#define SWORD_BASH		 /datum/intent/sword/strike/bash // alternate sword bash, e.g. mordhau
 
 #define ELFSWORD_CUT		/datum/intent/sword/cut/elf
 #define ELFSWORD_THRUST		/datum/intent/sword/thrust/elf
@@ -45,7 +45,6 @@
 #define SPEAR_CUT_1H		/datum/intent/spear/cut/oneh
 #define SPEAR_CAST          /datum/intent/spear/cast
 #define PARTIZAN_REND		/datum/intent/rend/reach/partizan
-#define PARTIZAN_PEEL		/datum/intent/partizan/peel
 #define SHORT_SPEAR_THRUST /datum/intent/spear/thrust/short
 #define SHORT_SPEAR_CUT /datum/intent/spear/cut/short
 #define SPEAR_TRAINER_THRUST /datum/intent/spear/thrust/training

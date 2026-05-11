@@ -1,0 +1,9 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - rscadd: "Inspector's choice between crossbow and runelock"
+  - rscadd: "Black holster belt"
+  - rscadd: "Unique Blackpowder Order holster belt"
+  - balance: "Runed Volf no longer has the Sleuth trait, instead, Black Bagger"
+  - balance: "Inquisitor's Blackpowder class has the Sleuth trait"
+  - code_imp: "Minor code cleanups and changes"

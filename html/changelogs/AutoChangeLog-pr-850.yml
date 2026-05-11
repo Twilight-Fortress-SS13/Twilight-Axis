@@ -1,0 +1,6 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - rscadd: "Добавлена коса мученику, переработан призыв оружия."
+  - balance: "Добавлены новые спешиалы для мученика."
+  - image: "нарисован спрайт косы (спасибо SayonaraEcho)"

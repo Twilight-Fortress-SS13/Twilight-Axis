@@ -11,7 +11,6 @@
 	var/state = LINK_STATE_ACTIVE
 	var/last_tick = 0
 	var/tick_interval = 2 SECONDS
-	var/pose_state = SEX_POSE_BOTH_STANDING
 	var/datum/erp_controller/session
 
 	var/finish_mode = "until_climax"
@@ -44,10 +43,16 @@
 		speed = session.default_link_speed
 
 	last_tick = world.time
+	var/mob/actor_mob = actor_active.get_mob()
+	var/mob/partner_mob = actor_passive.get_mob()
+	actor_mob.log_message("([key_name(actor_passive.client)]) started erp action with [partner_mob] ([key_name(actor_passive.client)])", LOG_ATTACK, color="red")
 	. = ..()
 
 /datum/erp_sex_link/Destroy()
 	finish()
+	var/mob/actor_mob = actor_active.get_mob()
+	var/mob/partner_mob = actor_passive.get_mob()
+	actor_mob.log_message("([key_name(actor_passive.client)]) started erp action with [partner_mob] ([key_name(actor_passive.client)])", LOG_ATTACK, color="red")
 	actor_active = null
 	actor_passive = null
 	action = null
@@ -111,6 +116,9 @@
 /datum/erp_sex_link/proc/is_dullahan_scene()
 	return SSerp?.link_rules?.is_dullahan_scene(src)
 
+/datum/erp_sex_link/proc/is_knot_scene()
+	return SSerp?.link_rules?.is_knot_scene(src)
+
 /// Keyword replacement helper for templates: {zone}.
 /datum/erp_sex_link/proc/get_target_zone_text()
 	return SSerp?.link_presenter?.get_target_zone_text(src) || "тело"
@@ -126,10 +134,6 @@
 /// Keyword replacement helper for templates: {speed}.
 /datum/erp_sex_link/proc/get_speed_text()
 	return SSerp?.link_presenter?.get_speed_text(speed) || "ритмично"
-
-/// Keyword replacement helper for templates: {pose}.
-/datum/erp_sex_link/proc/get_pose_text()
-	return SSerp?.link_presenter?.get_pose_text(pose_state) || "стоя"
 
 /// Minimal UI state used by UI/debug displays.
 /datum/erp_sex_link/proc/get_ui_state()
@@ -158,3 +162,101 @@
 /// Wraps text in a styled span (kept because controller calls it).
 /datum/erp_sex_link/proc/spanify_sex(text)
 	return SSerp?.link_presenter?.spanify_sex(src, text)
+
+/// Always returns the first valid matching object.
+/datum/erp_sex_link/proc/get_furniture_for_scene()
+	var/mob/living/active_mob = actor_active?.physical
+	var/mob/living/passive_mob = actor_passive?.physical
+
+	var/turf/active_turf = get_turf(active_mob)
+	var/turf/passive_turf = get_turf(passive_mob)
+
+	if(active_turf && passive_turf && active_turf == passive_turf)
+		var/atom/movable/shared_furniture = find_furniture_on_turf(active_turf)
+		if(shared_furniture)
+			return shared_furniture
+
+	if(active_turf)
+		var/atom/movable/active_furniture = find_furniture_on_turf(active_turf)
+		if(active_furniture)
+			return active_furniture
+
+	if(passive_turf)
+		var/atom/movable/passive_furniture = find_furniture_on_turf(passive_turf)
+		if(passive_furniture)
+			return passive_furniture
+
+	return null
+
+/// Finds first valid furniture object on turf by scene priority
+/datum/erp_sex_link/proc/find_furniture_on_turf(turf/T)
+	if(!T)
+		return null
+
+	var/atom/movable/furniture
+
+	furniture = find_closet_on_turf(T)
+	if(furniture)
+		return furniture
+
+	furniture = find_bed_on_turf(T)
+	if(furniture)
+		return furniture
+
+	furniture = find_chair_on_turf(T)
+	if(furniture)
+		return furniture
+
+	furniture = find_table_on_turf(T)
+	if(furniture)
+		return furniture
+
+	return null
+
+/// Finds closet on turf.
+/datum/erp_sex_link/proc/find_closet_on_turf(turf/T)
+	if(!T)
+		return null
+
+	for(var/obj/structure/closet/C in T)
+		if(QDELETED(C))
+			continue
+		return C
+
+	return null
+
+/// Finds rogue bed on turf.
+/datum/erp_sex_link/proc/find_bed_on_turf(turf/T)
+	if(!T)
+		return null
+
+	for(var/obj/structure/bed/rogue/B in T)
+		if(QDELETED(B))
+			continue
+		return B
+
+	return null
+
+/// Finds chair on turf.
+/datum/erp_sex_link/proc/find_chair_on_turf(turf/T)
+	if(!T)
+		return null
+
+	for(var/obj/structure/chair/C in T)
+		if(QDELETED(C))
+			continue
+		return C
+
+	return null
+
+/// Finds table on turf.
+/datum/erp_sex_link/proc/find_table_on_turf(turf/T)
+	if(!T)
+		return null
+
+	for(var/obj/structure/table/TB in T)
+		if(QDELETED(TB))
+			continue
+		return TB
+
+	return null

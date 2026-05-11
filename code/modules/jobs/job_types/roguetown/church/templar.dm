@@ -7,7 +7,7 @@
 	faction = "Station"
 	tutorial = "Templars are warriors who have forsaken wealth and title in lieu of service to the church, due to either zealotry or a past shame. They guard the church and its bishop while keeping a watchful eye against heresy and nite-creechers. Within troubled dreams, they wonder if the blood they shed makes them holy or stained."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = ACCEPTED_RACES
+	forbidden_races = list(RACES_DESPISED)
 	allowed_patrons = ALL_DIVINE_PATRONS
 	outfit = /datum/outfit/job/roguetown/templar
 	min_pq = 10 //Deus vult, but only according to the proper escalation rules
@@ -26,10 +26,8 @@
 	virtue_restrictions = list(/datum/virtue/utility/noble)
 	job_subclasses = list(
 		/datum/advclass/templar/monk,
-		/datum/advclass/templar/crusader,
-//		/datum/advclass/templar/noc_spellblade,
-		/datum/advclass/templar/vigilant,
-		/datum/advclass/noctite_spellblade //TA EDIT
+		/datum/advclass/templar/crusader
+//		/datum/advclass/templar/noc_spellblade, //TA EDIT
 	)
 
 /datum/outfit/job/roguetown/templar
@@ -81,49 +79,58 @@
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
 		if(/datum/patron/divine/undivided)
+			mask = /obj/item/clothing/head/roguetown/roguehood/undivided
 			neck = /obj/item/clothing/neck/roguetown/psicross/undivided
-			if(H.mind)
-				var/cloaks = list("Cloak", "Tabard")
-				var/cloakchoice = input(H,"Choose your covering", "TAKE UP FASHION") as anything in cloaks
-				switch(cloakchoice)
-					if("Cloak")
-						cloak = /obj/item/clothing/cloak/undivided
-					if("Tabard")
-						cloak = /obj/item/clothing/cloak/templar/undivided
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/undivided
 		if(/datum/patron/divine/astrata)
+			mask = /obj/item/clothing/head/roguetown/roguehood/astrata
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/astrata
 		if(/datum/patron/divine/abyssor)
+			mask = /obj/item/clothing/head/roguetown/roguehood/abyssor
 			neck = /obj/item/clothing/neck/roguetown/psicross/abyssor
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/abyssor
 		if(/datum/patron/divine/xylix)
+			mask = /obj/item/clothing/head/roguetown/roguehood/black
 			neck = /obj/item/clothing/neck/roguetown/psicross/xylix
 			cloak = /obj/item/clothing/cloak/templar/xylixian
 			H.cmode_music = 'sound/music/combat_jester.ogg'
 		if(/datum/patron/divine/dendor)
+			mask = /obj/item/clothing/head/roguetown/dendormask
 			neck = /obj/item/clothing/neck/roguetown/psicross/dendor
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/dendor
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
 			H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
 		if(/datum/patron/divine/necra)
+			mask = /obj/item/clothing/head/roguetown/necramask
 			neck = /obj/item/clothing/neck/roguetown/psicross/necra
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/necra
 		if(/datum/patron/divine/pestra)
+			mask = /obj/item/clothing/head/roguetown/roguehood/phys
 			neck = /obj/item/clothing/neck/roguetown/psicross/pestra
 			cloak = /obj/item/clothing/cloak/templar/pestran
 		if(/datum/patron/divine/eora) //Eora content from stonekeep
+			mask = /obj/item/clothing/head/roguetown/roguehood/eora
 			neck = /obj/item/clothing/neck/roguetown/psicross/eora
-			cloak = /obj/item/clothing/cloak/templar/eoran
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/eora
 		if(/datum/patron/divine/noc)
+			mask = /obj/item/clothing/head/roguetown/roguehood/nochood
 			neck = /obj/item/clothing/neck/roguetown/psicross/noc
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc
 		if(/datum/patron/divine/ravox)
+			mask = /obj/item/clothing/head/roguetown/roguehood/ravox
 			neck = /obj/item/clothing/neck/roguetown/psicross/ravox
 			cloak = /obj/item/clothing/cloak/templar/ravox
-			backpack_contents = list(/obj/item/ritechalk, /obj/item/book/rogue/law)
 		if(/datum/patron/divine/malum)
+			mask = /obj/item/clothing/head/roguetown/roguehood
 			neck = /obj/item/clothing/neck/roguetown/psicross/malum
 			cloak = /obj/item/clothing/cloak/templar/malumite
+	// Patron dagger + sheath in satchel
+	var/patron_dagger = get_templar_patron_dagger(H)
+	if(patron_dagger)
+		backpack_contents += patron_dagger
+		backpack_contents += /obj/item/rogueweapon/scabbard/sheath
+
 	head = /obj/item/clothing/head/roguetown/headband/monk
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/cloth/monk
 	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/black
@@ -147,6 +154,8 @@
 			weapons += "Close Caress"
 		if(/datum/patron/divine/abyssor)
 			weapons += "Barotrauma"
+		if(/datum/patron/divine/ravox)
+			weapons += "Arbiter"
 
 	var/weapon_choice = input(H,"Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 	switch(weapon_choice)
@@ -159,41 +168,58 @@
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Knuckledusters")
-			H.put_in_hands(new /obj/item/rogueweapon/knuckles(H))
+			H.put_in_hands(new /obj/item/clothing/gloves/roguetown/knuckles(H))
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Quarterstaff")
-			H.adjust_skillrank_up_to(/datum/skill/combat/staves, 4, TRUE) //Tested with Disciples, first. Should hopefully be not too busted - reduce to Journeyman, otherwise.
-			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 3, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_EXPERT, TRUE) //Tested with Disciples, first. Should hopefully be not too busted - reduce to Journeyman, otherwise.
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/woodstaff/quarterstaff/steel(H))
-			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
 			H.change_stat(STATKEY_PER, 1) //Matches the Disciple's balance; exchanges the 'dodge expert' trait for additional accuracy with the staff.
 		if("Close Caress")
-			H.put_in_hands(new /obj/item/rogueweapon/knuckles/eora(H))
+			H.put_in_hands(new /obj/item/clothing/gloves/roguetown/knuckles/eora(H))
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 		if("Barotrauma")
 			H.put_in_hands(new /obj/item/rogueweapon/katar/abyssor(H))
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/bandages/weighted, SLOT_GLOVES, TRUE)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
+		if("Arbiter")
+			H.put_in_hands(new /obj/item/rogueweapon/katar/ravox(H))
+			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
+
+	var/techniques = list("Dropkick - Pushback + Extra Damage", "Chokeslam - Stamina Damage", "Stunner - Dazed Debuff", "Headbutt - Vulnerable Debuff") // cool wrestling moves
+	var/technique_choice = input(H,"Choose your TECHNIQUE.", "TOSS THEM.") as anything in techniques
+	switch(technique_choice)
+		if("Dropkick - Pushback + Extra Damage")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dropkick)
+		if("Chokeslam - Stamina Damage")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/chokeslam)
+		if("Stunner - Dazed Debuff")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stunner)
+		if("Headbutt - Vulnerable Debuff")
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/headbutt)
 
 	// -- Start of section for god specific bonuses --
 	if(H.patron?.type == /datum/patron/divine/undivided)
-		H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 	if(H.patron?.type == /datum/patron/divine/astrata)
-		H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 		H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
 	if(H.patron?.type == /datum/patron/divine/dendor)
-		H.adjust_skillrank(/datum/skill/labor/farming, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
-		H.AddSpell(new /obj/effect/proc_holder/spell/self/conjure_armor/vines)
+		H.adjust_skillrank(/datum/skill/labor/farming, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/hunting, SKILL_LEVEL_NOVICE, TRUE)
+		ADD_TRAIT(H, TRAIT_EXPERT_HUNTER, TRAIT_GENERIC)
+		//H.AddSpell(new /obj/effect/proc_holder/spell/self/conjure_armor/vines)
 	if(H.patron?.type == /datum/patron/divine/noc)
-		H.adjust_skillrank(/datum/skill/misc/reading, 3, TRUE) // Really good at reading... does this really do anything? No. BUT it's soulful.
-		H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/reading, SKILL_LEVEL_JOURNEYMAN, TRUE) // Really good at reading... does this really do anything? No. BUT it's soulful.
+		H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
+		ADD_TRAIT(H, TRAIT_ALCHEMY_EXPERT, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/abyssor)
-		H.adjust_skillrank(/datum/skill/labor/fishing, 2, TRUE)
+		H.adjust_skillrank(/datum/skill/labor/fishing, SKILL_LEVEL_APPRENTICE, TRUE)
 		ADD_TRAIT(H, TRAIT_WATERBREATHING, TRAIT_GENERIC)
 		H.grant_language(/datum/language/abyssal)
 	if(H.patron?.type == /datum/patron/divine/necra)
@@ -201,26 +227,30 @@
 		ADD_TRAIT(H, TRAIT_SOUL_EXAMINE, TRAIT_GENERIC)
 		H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
 	if(H.patron?.type == /datum/patron/divine/pestra)
-		H.adjust_skillrank(/datum/skill/misc/medicine, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
+		ADD_TRAIT(H, TRAIT_ALCHEMY_EXPERT, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/eora)
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
 		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+		// see acolyte.dm's eora page. they dont get farming bc they dont have a tree.
+		H.adjust_skillrank(/datum/skill/craft/sewing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/cooking, SKILL_LEVEL_NOVICE, TRUE)
 		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt
 	if(H.patron?.type == /datum/patron/divine/malum)
 		ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC) // ONE exception for the "no combat role get this" rules
-		H.adjust_skillrank(/datum/skill/craft/blacksmithing, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/craft/armorsmithing, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/craft/weaponsmithing, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/blacksmithing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/armorsmithing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/weaponsmithing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/smelting, SKILL_LEVEL_NOVICE, TRUE)
 	if(H.patron?.type == /datum/patron/divine/xylix)
-		H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/misc/music, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/lockpicking, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/music, SKILL_LEVEL_NOVICE, TRUE)
 	if(H.patron?.type == /datum/patron/divine/ravox)
-		H.adjust_skillrank_up_to(/datum/skill/misc/athletics, 5, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_NOVICE, TRUE)
 	// -- End of section for god specific bonuses --
 
 /datum/advclass/templar/crusader
@@ -233,7 +263,8 @@
 	subclass_stats = list(
 		STATKEY_WIL = 3,
 		STATKEY_STR = 2,
-		STATKEY_CON = 2,
+		STATKEY_CON = 3, //TA 2 -> 3
+		STATKEY_INT = 1, //TA 0 -> 1
 	)
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
@@ -246,6 +277,7 @@
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
@@ -274,7 +306,7 @@
 	switch(H.patron?.type)
 		if(/datum/patron/divine/undivided)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/undivided
-			head = /obj/item/clothing/head/roguetown/helmet/heavy/bucket
+			head = /obj/item/clothing/head/roguetown/helmet/heavy/undivided
 			backr = /obj/item/rogueweapon/shield/tower/holysee
 			if(H.mind)
 				var/cloaks = list("Cloak", "Tabard")
@@ -291,13 +323,11 @@
 		if(/datum/patron/divine/abyssor)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/abyssor
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/abyssorgreathelm
-			cloak = /obj/item/clothing/cloak/tabard/abyssortabard
+			cloak = /obj/item/clothing/cloak/tabard/abyssorite
 		if(/datum/patron/divine/xylix)
 			cloak = /obj/item/clothing/cloak/templar/xylixian
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/xylixhelm
 			H.cmode_music = 'sound/music/combat_jester.ogg'
-			var/datum/inspiration/I = new /datum/inspiration(H)
-			I.grant_inspiration(H, bard_tier = BARD_T1)
 		if(/datum/patron/divine/dendor)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/dendor
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/dendorhelm
@@ -324,7 +354,6 @@
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/ravoxhelm
 			cloak = /obj/item/clothing/cloak/templar/ravox
 			mask = /obj/item/clothing/head/roguetown/roguehood/ravoxgorget
-			backpack_contents = list(/obj/item/ritechalk, /obj/item/book/rogue/law, /obj/item/rogueweapon/scabbard/sheath, /obj/item/storage/belt/rogue/pouch/coins/mid, /obj/item/storage/keyring/acolyte)
 		if(/datum/patron/divine/malum)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/malum
 			cloak = /obj/item/clothing/cloak/templar/malumite
@@ -332,6 +361,11 @@
 		if(/datum/patron/old_god)
 			wrists = /obj/item/clothing/neck/roguetown/psicross
 			cloak = /obj/item/clothing/cloak/tabard/crusader/psydon
+	// Patron dagger in satchel
+	var/patron_dagger = get_templar_patron_dagger(H)
+	if(patron_dagger)
+		backpack_contents += patron_dagger
+
 	gloves = /obj/item/clothing/gloves/roguetown/chain
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
 	pants = /obj/item/clothing/under/roguetown/chainlegs
@@ -355,6 +389,7 @@
 			weapons += "Decablade"
 		if(/datum/patron/divine/noc)
 			weapons += "Moonlight Khopesh"
+			weapons += "Moonlight Kriegmesser"
 		if(/datum/patron/divine/necra)
 			weapons += "Swift End"
 			weapons += "The Equipoise" //TA EDIT
@@ -380,49 +415,53 @@
 	switch(weapon_choice)
 		if("Longsword")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/church(H))
-			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE) //Halfplate, not fullplate.
 		if("Spear")
 			H.put_in_hands(new /obj/item/rogueweapon/spear/holysee(H))
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
-			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Flail")
 			H.put_in_hands(new /obj/item/rogueweapon/flail/sflail(H))
-			H.adjust_skillrank(/datum/skill/combat/whipsflails, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/whipsflails, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Mace")
 			H.put_in_hands(new /obj/item/rogueweapon/mace/steel(H))
-			H.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/maces, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Battle Axe")
 			H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/battle(H))
-			H.adjust_skillrank(/datum/skill/combat/axes, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/axes, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Crossbow + Shortsword")
 			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/standard, SLOT_BELT_R, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/cuirass, SLOT_ARMOR, TRUE) //Cuirass, not halfplate. Slightly reduced starting armor.
 			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow(H))
 			H.put_in_hands(new /obj/item/rogueweapon/sword/short(H), TRUE)
-			H.adjust_skillrank(/datum/skill/combat/crossbows, 2, TRUE) //Expert Crossbow, but Journeyman Swords and Apprentice-level combat skills elsewhere.
-			H.adjust_skillrank(/datum/skill/combat/maces, -1, TRUE)
-			H.adjust_skillrank(/datum/skill/combat/axes, -1, TRUE)
-			H.adjust_skillrank(/datum/skill/combat/whipsflails, -1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/crossbows, SKILL_LEVEL_APPRENTICE, TRUE) //Expert Crossbow, but Journeyman Swords and Apprentice-level combat skills elsewhere.
+			H.adjust_skillrank(/datum/skill/combat/maces, -SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/axes, -SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/whipsflails, -SKILL_LEVEL_NOVICE, TRUE)
 		if("Decablade")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/undivided(H))
-			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Solar Judgement")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/exe/astrata(H))
-			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Moonlight Khopesh")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/sabre/nockhopesh(H))
+			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
+		if("Moonlight Kriegmesser")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/long/kriegmesser/noc(H))
 			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Swift End")
 			H.put_in_hands(new /obj/item/rogueweapon/flail/sflail/necraflail(H))
-			H.adjust_skillrank(/datum/skill/combat/whipsflails, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/whipsflails, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("The Equipoise") //TA EDIT
 			H.put_in_hands(new /obj/item/rogueweapon/halberd/bardiche/twilight_necrascythe/preblessed(H), TRUE)
@@ -432,69 +471,70 @@
 		if("Plaguebringer Sickles")
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle(H))
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle(H))
-			H.adjust_skillrank_up_to(/datum/skill/combat/knives, 4, TRUE) // actually makes them usable for the templar.
+			H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE) // actually makes them usable for the templar.
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Lance of Boils")
 			H.put_in_hands(new /obj/item/rogueweapon/halberd/pestran(H))
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
-			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Cleansing Edge")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/kriegmesser/pestran(H))
-			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Forgefiend")
 			H.put_in_hands(new /obj/item/rogueweapon/greatsword/grenz/flamberge/malum(H))
-			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Kargrund Maul")
 			H.put_in_hands(new /obj/item/rogueweapon/mace/maul/grand/malum(H), TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H), FALSE)
-			H.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/maces, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Summer Scythe")
 			H.put_in_hands(new /obj/item/rogueweapon/halberd/bardiche/scythe(H))
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
-			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE) // again, needs skill to actually use the weapon
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE) // again, needs skill to actually use the weapon
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Cackle Lash")
 			H.put_in_hands(new /obj/item/rogueweapon/whip/xylix(H))
-			H.adjust_skillrank(/datum/skill/combat/whipsflails, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/whipsflails, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Duel Settler")
 			H.put_in_hands(new /obj/item/rogueweapon/mace/goden/steel/ravox(H))
-			H.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/maces, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Censure")
 			H.put_in_hands(new /obj/item/rogueweapon/greatsword/grenz/flamberge/ravox(H), TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H), FALSE)
-			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("The Heartstring")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/rapier/eora(H))
-			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Tidecleaver")
 			H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/battle/abyssoraxe(H))
-			H.adjust_skillrank(/datum/skill/combat/axes, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/axes, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 
 	// -- Start of section for god specific bonuses --
 	if(H.patron?.type == /datum/patron/divine/undivided)
-		H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 	if(H.patron?.type == /datum/patron/divine/astrata)
-		H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 		H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
 	if(H.patron?.type == /datum/patron/divine/dendor)
-		H.adjust_skillrank(/datum/skill/labor/farming, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/labor/farming, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_NOVICE, TRUE)
 	if(H.patron?.type == /datum/patron/divine/noc)
-		H.adjust_skillrank(/datum/skill/misc/reading, 3, TRUE) // Really good at reading... does this really do anything? No. BUT it's soulful.
-		H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/reading, SKILL_LEVEL_JOURNEYMAN, TRUE) // Really good at reading... does this really do anything? No. BUT it's soulful.
+		H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
+		ADD_TRAIT(H, TRAIT_ALCHEMY_EXPERT, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/abyssor)
-		H.adjust_skillrank(/datum/skill/labor/fishing, 2, TRUE)
-		H.adjust_skillrank(/datum/skill/misc/swimming, 3, TRUE)
+		H.adjust_skillrank(/datum/skill/labor/fishing, SKILL_LEVEL_APPRENTICE, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/swimming, SKILL_LEVEL_NOVICE, TRUE)
 		ADD_TRAIT(H, TRAIT_WATERBREATHING, TRAIT_GENERIC)
 		H.grant_language(/datum/language/abyssal)
 	if(H.patron?.type == /datum/patron/divine/necra)
@@ -502,8 +542,9 @@
 		ADD_TRAIT(H, TRAIT_SOUL_EXAMINE, TRAIT_GENERIC)
 		H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
 	if(H.patron?.type == /datum/patron/divine/pestra)
-		H.adjust_skillrank(/datum/skill/misc/medicine, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
+		ADD_TRAIT(H, TRAIT_ALCHEMY_EXPERT, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/eora)
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
@@ -512,15 +553,15 @@
 		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt
 		H.mind.special_items["Helmet Morphing Elixer"] = /obj/item/enchantingkit/eoran_helm_resprite
 	if(H.patron?.type == /datum/patron/divine/malum)
-		H.adjust_skillrank(/datum/skill/craft/blacksmithing, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/craft/armorsmithing, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/craft/weaponsmithing, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/blacksmithing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/armorsmithing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/weaponsmithing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/smelting, SKILL_LEVEL_NOVICE, TRUE)
 	if(H.patron?.type == /datum/patron/divine/ravox)
-		H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_NOVICE, TRUE)
 	if(H.patron?.type == /datum/patron/divine/xylix)
-		H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/misc/music, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/lockpicking, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/misc/music, SKILL_LEVEL_NOVICE, TRUE)
 	// -- End of section for god specific bonuses --
 

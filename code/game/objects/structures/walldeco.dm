@@ -137,6 +137,8 @@
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
 	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop bleeding. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/barbersignreverse
@@ -153,6 +155,8 @@
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
 	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop bleeding. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/sparrowflag
@@ -226,6 +230,38 @@
 
 /obj/structure/fluff/walldeco/psybanner/red
 	icon_state = "Psybanner-RED"
+
+/obj/structure/fluff/walldeco/psybanner/tennite
+	name = "ten undivided banner"
+	icon_state = "unibanner_purple"
+	desc = "A banner depicting a circle over a cross; the symbolism of the Ten Undivided, the sphere of \
+	Tennite religious practice dedicated to the entirety of the pantheon without favour or preference. \
+	Particularly strongly associated with the Grenzelhoftian Holy See."
+
+/obj/structure/fluff/walldeco/psybanner/tennite/red
+	icon_state = "unibanner_red"
+
+/obj/structure/fluff/walldeco/psybanner/astrata
+	name = "astratan banner"
+	icon_state = "astratabanner_purple"
+	desc = "The six-pronged cross of Astrata, embroidered upon fine fabric. It is Her will that \
+	suspends the heavens and the earth, and it is Her light that maintains life upon the abandoned \
+	surface of Psydonia. An image associated with the nobility of all lands, and with the \
+	highest echelons of church leadership."
+
+/obj/structure/fluff/walldeco/psybanner/astrata/red
+	icon_state = "astratabanner_red"
+
+/obj/structure/fluff/walldeco/psybanner/zizo
+	name = "zizite banner"
+	icon_state = "zizobanner_purple"
+	desc = "A carefully made banner bearing the inverted cross of Zizo, Dame of Progress. Banners such \
+	as this one are wildly dangerous to fly in any Tennite or Psydonite nation, in which the worship \
+	of the progenitor of undeath is harshly criminalised, but may be commonly found in more remote \
+	areas of the world."
+
+/obj/structure/fluff/walldeco/psybanner/zizo/red
+	icon_state = "zizobanner_red"
 
 /obj/structure/fluff/walldeco/psybanner/get_mechanics_examine(mob/user)
 	. = ..()
@@ -343,7 +379,9 @@
 	add_overlay(M)
 
 /obj/structure/fluff/walldeco/moon
-	name = "banner"
+	name = "noccite banner"
+	desc = "An embroidered banner depicting Noc, the Brother Moon, brother of Astrata and progenitor of \
+	all knowledge. A favourite decoration of magicians and learned folk."
 	icon_state = "moon"
 
 /obj/structure/fluff/walldeco/rpainting
@@ -371,6 +409,8 @@
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
 	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop bleeding. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/med2
@@ -385,6 +425,8 @@
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
 	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop bleeding. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/med3
@@ -399,6 +441,8 @@
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
 	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop bleeding. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/med4
@@ -503,7 +547,7 @@
 		if(HU.anti_magic_check()) //are we shielded?
 			return
 
-		if(!(HU in SStreasury.bank_accounts)) //first off- do we not have an account? we'll ALWAYS scream if that's the case
+		if(!SStreasury.has_account(HU)) //first off- do we not have an account? we'll ALWAYS scream if that's the case
 			playsound(loc, 'sound/misc/gold_license.ogg', 100, TRUE, -1)
 			say("INTRUS! ARRESTEZ-VOUS! GARDES! GARDES! MAROUFLE A MORTIR!!")
 			next_yap = world.time + 6 SECONDS
@@ -533,7 +577,7 @@
 			next_yap = world.time + 30 SECONDS
 			return
 
-		if((HU in SStreasury.bank_accounts)) //Anyone else
+		if(SStreasury.has_account(HU)) //Anyone else
 			playsound(loc, 'sound/misc/gold_menu.ogg', 100, TRUE, -1)
 			say("[user.real_name] logged entering zone securisee.")
 			return

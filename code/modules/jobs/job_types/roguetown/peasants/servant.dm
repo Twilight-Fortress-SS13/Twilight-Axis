@@ -7,7 +7,7 @@
 	total_positions = 6
 	spawn_positions = 6
 
-	allowed_races = ACCEPTED_RACES
+	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = ALL_AGES_LIST
 
 	tutorial = "Granted a life of comfortable servitude in the Duke's manor, you follow the Seneschal's commands and spend your day performing necessary but menial tasks. This role offers an aesthetic choice between labor-servant, maid, and footman."
@@ -68,7 +68,7 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/workervest
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_WORKING_CLASS, H, "Savings.")
+		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)
 
 /datum/advclass/servant/maid
 	name = "Maid"
@@ -96,16 +96,16 @@
 
 /datum/outfit/job/roguetown/servant/maid/pre_equip(mob/living/carbon/human/H)
 	..()
-	head = /obj/item/clothing/head/roguetown/maidhead
-	armor = /obj/item/clothing/suit/roguetown/shirt/dress/maid
-	cloak = /obj/item/clothing/cloak/apron/waist/maid
+	head = /obj/item/clothing/head/roguetown/maidband
+	armor = /obj/item/clothing/suit/roguetown/shirt/dress/maidfancy
+	cloak = /obj/item/clothing/cloak/apron/waist/fancymaid
 	belt = /obj/item/storage/belt/rogue/leather/sash/maid
 	shoes = /obj/item/clothing/shoes/roguetown/simpleshoes
 	backl = /obj/item/storage/backpack/rogue/satchel
 	beltr = /obj/item/roguekey/manor
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_WORKING_CLASS, H, "Savings.")
+		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)
 
 /datum/advclass/servant/manservant
 	name = "Manservant"
@@ -133,13 +133,13 @@
 
 /datum/outfit/job/roguetown/servant/butler/pre_equip(mob/living/carbon/human/H)
 	..()
-	pants = /obj/item/clothing/under/roguetown/tights/black
-	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
+	pants = /obj/item/clothing/under/roguetown/tights/shorts
+	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/formal
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	backl = /obj/item/storage/backpack/rogue/satchel
-	belt = /obj/item/storage/belt/rogue/leather
+	belt = /obj/item/storage/belt/rogue/leather/suspenders
 	beltr = /obj/item/roguekey/manor
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/black
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_WORKING_CLASS, H, "Savings.")
+		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)

@@ -162,6 +162,16 @@
 		)
 	craftdiff = 1
 
+/datum/crafting_recipe/roguetown/survival/peasantry/silverscythe
+	name = "silver scythe"
+	result = /obj/item/rogueweapon/scythe/silver
+	reqs = list(
+		/obj/item/ingot/silver = 1,
+		/obj/item/grown/log/tree/small = 2,
+		/obj/item/rope = 1,
+		)
+	craftdiff = 2
+
 /datum/crafting_recipe/roguetown/survival/peasantry/warflail
 	name = "militia flail"
 	result = /obj/item/rogueweapon/flail/militia
@@ -551,8 +561,10 @@
 /datum/crafting_recipe/roguetown/survival/strucrepairkit
 	name = "Structure Repair Kit"
 	category = "Tools"
-	result = /obj/item/construction/repairkit/structure
-	reqs = list(/obj/item/construction/nail = 3,
+	result = list(/obj/item/construction/repairkit/structure,
+				  /obj/item/construction/repairkit/structure,
+				  /obj/item/construction/repairkit/structure)
+	reqs = list(/obj/item/construction/nail = 6,
 				/obj/item/natural/wood/plank = 3,
 				/obj/item/natural/stoneblock = 3)
 	skillcraft = /datum/skill/craft/carpentry

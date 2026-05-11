@@ -2,12 +2,13 @@ GLOBAL_LIST_EMPTY(ghost_images_default) //this is a list of the default (non-acc
 GLOBAL_LIST_EMPTY(ghost_images_simple) //this is a list of all ghost images as the simple white ghost
 
 GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
-
+GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 /mob/dead/observer
 	name = "ghost"
 	desc = "" //jinkies!
 	icon = 'icons/mob/mob.dmi'
 	icon_state = ""
+	pass_flags = PASS_ALL
 	layer = GHOST_LAYER
 	stat = DEAD
 	density = FALSE
@@ -22,6 +23,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 	var/can_reenter_corpse
 	var/datum/hud/living/carbon/hud = null // hud
 	var/bootime = 0
+	var/next_gmove = 0
 	var/started_as_observer //This variable is set to 1 when you enter the game as an observer.
 							//If you died in the game and are a ghsot - this will remain as null.
 							//Note that this is not a reliable way to determine if admins started as observers, since they change mobs a lot.
@@ -66,7 +68,6 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 //	see_invisible = SEE_INVISIBLE_LIVING
 	sight = 0
 	see_in_dark = 10
-	var/next_gmove
 	var/misting = 0
 	draw_icon = TRUE
 
@@ -82,7 +83,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 /mob/dead/observer/rogue/Move(n, direct)
 	if(world.time < next_gmove)
 		return
-	next_gmove = world.time + 1
+	next_gmove = world.time + 3
 
 	setDir(direct)
 
@@ -381,6 +382,13 @@ Works together with spawning an observer, noted above.
 	ghost.ghostize_time = world.time
 	SStgui.on_transfer(src, ghost) // Transfer NanoUIs.
 	ghost.can_reenter_corpse = can_reenter_corpse
+	ghost.advjob = src.advjob
+	// Clear any active spell click intercept before the client transfers to the ghost.
+	// Without this, the client keeps signal registrations from the old body's active spell,
+	// causing the ghost to cast the old body's last spell on click.
+	if(click_intercept && istype(click_intercept, /datum/action/cooldown))
+		var/datum/action/cooldown/active_ability = click_intercept
+		active_ability.unset_click_ability(src, refund_cooldown = FALSE)
 	ghost.key = key
 	return ghost
 
@@ -447,23 +455,18 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/dead/observer/Move(NewLoc, direct)
 	if(updatedir)
 		setDir(direct)//only update dir if we actually need it, so overlays won't spin on base sprites that don't have directions of their own
-	var/oldloc = loc
-
 	if(NewLoc)
-		forceMove(NewLoc)
-		update_parallax_contents()
-	else
-		forceMove(get_turf(src))  //Get out of closets and such as a ghost
-		if((direct & NORTH) && y < world.maxy)
-			y++
-		else if((direct & SOUTH) && y > 1)
-			y--
-		if((direct & EAST) && x < world.maxx)
-			x++
-		else if((direct & WEST) && x > 1)
-			x--
-
-	Moved(oldloc, direct)
+		var/turf/target_turf = get_turf(NewLoc)
+		if(target_turf)
+			return forceMove(target_turf)
+		return FALSE
+	var/turf/current_turf = get_turf(src)
+	if(!current_turf)
+		return FALSE
+	var/turf/step_turf = get_step(current_turf, direct)
+	if(step_turf)
+		return forceMove(step_turf)
+	return FALSE
 
 /mob/dead/observer/proc/reenter_corpse()
 	set category = "Ghost"
@@ -609,7 +612,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return
 
 	usr.forceMove(pick(L))
-	update_parallax_contents()
 
 /mob/dead/observer/verb/follow()
 	set category = "Ghost"
@@ -691,7 +693,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 			if(T && isturf(T))	//Make sure the turf exists, then move the source to that destination.
 				A.forceMove(T)
-				A.update_parallax_contents()
 			else
 				to_chat(A, span_danger("This mob is not located in the game world."))
 
@@ -846,7 +847,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return FALSE
 
 	target.key = key
-	target.faction = list("neutral")
+	target.faction = list(FACTION_NEUTRAL)
 	return TRUE
 
 /mob/dead/observer/verb/view_manifest()

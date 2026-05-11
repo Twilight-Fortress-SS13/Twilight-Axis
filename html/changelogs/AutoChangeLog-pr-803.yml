@@ -1,0 +1,4 @@
+author: "Noname995"
+delete-after: True
+changes:
+  - code_imp: "Added Lowmemory build&launch setting"

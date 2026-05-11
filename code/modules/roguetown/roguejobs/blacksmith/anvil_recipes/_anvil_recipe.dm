@@ -27,12 +27,13 @@
 	var/bypass_dupe_test = FALSE
 	var/required_tech_node = null // String ID of required tech node, or null if no tech required
 	var/tech_unlocked = TRUE // Set to TRUE when the required tech is unlocked
+	var/rotations_required = 1
 
 /datum/anvil_recipe/New(datum/P, ...)
 	parent = P
 	. = ..()
 
-/datum/anvil_recipe/proc/advance(mob/user, breakthrough = FALSE, advance_multiplier = 1)
+/datum/anvil_recipe/proc/advance(mob/user, breakthrough = FALSE, advance_multiplier = 1, obj/machinery/anvil/source)
 	if(!isliving(user))
 		return
 	var/mob/living/L = user
@@ -44,9 +45,52 @@
 		user.visible_message(span_warning("[user] strikes the bar!"))
 		return FALSE
 	if(needed_item)
-		to_chat(user, span_info("Now it's time to add a [needed_item_text]."))
-		user.visible_message(span_warning("[user] strikes the bar!"))
-		return FALSE
+		var/auto_success = FALSE
+		if(source && HAS_TRAIT(user, TRAIT_TRAINED_SMITH))
+			var/turf/T = get_turf(source)
+			var/turf/TU = get_turf(user)
+			var/list/conts = T.GetAllContents()
+			if(TU)
+				var/list/contsuser = TU.GetAllContents()
+				if(length(contsuser))
+					conts += contsuser
+			if(length(conts))
+				for(var/atom/O in conts)
+					if(!isturf(O.loc) || (!istype(O, needed_item) && !istype(O, /obj/item/natural/bundle)))	// We don't want to use the ingot we are actively hammering, which would be in the Anvil's contents.
+						LAZYREMOVE(conts, O)
+						continue
+					if(isitem(O))
+						var/obj/item/IO = O
+						if(!IO.can_craft_with())
+							LAZYREMOVE(conts, O)
+				if(length(conts))
+					var/obj_to_use
+					for(var/candidate in conts)
+						if(istype(candidate, /obj/item/natural/bundle))
+							var/obj/item/natural/bundle/B = candidate
+							if(B.stacktype == needed_item)
+								if(B.amount > 1)
+									B.amount -= 1
+									B.update_bundle()
+									var/turf/newloc = get_turf(B)
+									obj_to_use = new B.stacktype(newloc)
+									if(B.amount == 1)
+										new B.stacktype(newloc)
+										qdel(B)
+									else if(B.amount <= 0)
+										qdel(B)
+									break
+						else if(istype(candidate, needed_item))
+							obj_to_use = candidate
+							break
+					user.visible_message(span_warning("[user] strikes the bar, inserting a [needed_item_text] into the recipe!"))
+					source.attackby(obj_to_use, user)	//We grab the first one we find.
+					auto_success = TRUE
+					playsound(source, 'sound/items/bsmithadvance.ogg', 100, TRUE)
+		if(!auto_success)
+			to_chat(user, span_info("Now it's time to add a [needed_item_text]."))
+			user.visible_message(span_warning("[user] strikes the bar!"))
+			return FALSE
 	// Calculate probability of a successful strike, based on smith's skill level
 	if(!skill_level && !craftdiff)
 		proab = 35
@@ -189,30 +233,8 @@
 		if(C.body_parts_covered)
 			html += "\n<b>COVERAGE: </b>"
 			html += " | "
-			if(C.body_parts_covered == C.body_parts_covered_dynamic)
-				for(var/zone in body_parts_covered2organ_names(C.body_parts_covered))
-					html += "<b>[capitalize(zone)]</b> | "
-			else
-				var/list/zones = list()
-				//We have some part peeled, so we turn the printout into precise mode and highlight the missing coverage.
-				for(var/zoneorg in body_parts_covered2organ_names(C.body_parts_covered, precise = TRUE))
-					zones += zoneorg
-				for(var/zonedyn in body_parts_covered2organ_names(C.body_parts_covered_dynamic, precise = TRUE))
-					html += "<b>[capitalize(zonedyn)]</b> | "
-					if(zonedyn in zones)
-						zones.Remove(zonedyn)
-				for(var/zone in zones)
-					html += "<b><font color = '#470000'>[capitalize(zone)]</font></b> | "
-			html += "<br>"
-		if(C.body_parts_inherent)
-			html += "<b>CANNOT BE PEELED: </b>"
-			var/list/inherentList = body_parts_covered2organ_names(C.body_parts_inherent)
-			if(length(inherentList) == 1)
-				html += "<b><font color = '#000833'>[capitalize(inherentList[1])]</font></b><br>"
-			else
-				html += "| "
-				for(var/zone in inherentList)
-					html += "<b><font color = '#000833'>[capitalize(zone)]</b></font> | "
+			for(var/zone in body_parts_covered2organ_names(C.body_parts_covered))
+				html += "<b>[capitalize(zone)]</b> | "
 			html += "<br>"
 		html += "INTEGRITY: [bookarmor.max_integrity]<br>"
 		if(bookarmor.armor_class == ARMOR_CLASS_HEAVY)
@@ -250,8 +272,12 @@
 				if(WLENGTH_GREAT)
 					html += "Great<br>"
 
-		if(bookweapon.alt_intents)
-			html += "\n<b>GRIP: ALT-GRIP (right click while in hand)</b><br>"
+		if(bookweapon.has_altgrip_modes())
+			var/alt_grip_names = bookweapon.get_altgrip_names()
+			html += "\n<b>GRIP: ALT-GRIP (Inhand RMB / Hotkey)"
+			if(alt_grip_names)
+				html += ": [alt_grip_names]"
+			html += "</b><br>"
 		if(bookweapon.gripped_intents)
 			html += "\n<b>TWO-HANDED: Yes</b><br>"
 

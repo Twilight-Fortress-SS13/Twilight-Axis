@@ -4,12 +4,12 @@
 	You run wild under the moon, a terror to the townsfolk and a champion of Dendor's wild domain. \
 	Clergy of Azuria assume you are a radical dendorite and rejected you, your connection with Treefather is weaken but you will serve him whatever it takes."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_NO_CONSTRUCT
+	forbidden_races = list(RACES_CONSTRUCT)
 	min_pq = 30
 	maximum_possible_slots = 2
-
 	outfit = /datum/outfit/job/roguetown/wretch/lunacyembracer
 	category_tags = list(CTAG_WRETCH)
+	class_select_category = CLASS_CAT_CLERIC
 	extra_context = "Minimum PQ Required: 30"
 	subclass_languages = list(/datum/language/beast)
 
@@ -24,7 +24,6 @@
 		TRAIT_WOODWALKER,
 		TRAIT_NASTY_EATER,
 		TRAIT_OUTDOORSMAN,
-		TRAIT_NOFALLDAMAGE1,
 		TRAIT_SLEUTH
 	)
 
@@ -56,7 +55,12 @@
 	neck = /obj/item/clothing/neck/roguetown/psicross/dendor
 	armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/berserker
 	head = /obj/item/flowercrown/briar
+	
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dropkick)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/chokeslam)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/headbutt)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stunner)
 
 	H.cmode_music = 'modular_twilight_axis/sound/music/combat_berserker.ogg'
 	to_chat(H, span_danger("You have abandoned your humanity to run wild under the moon. The call of nature fills your soul!"))
-	wretch_select_bounty(H)
+	bountychoice_lunacy(H)

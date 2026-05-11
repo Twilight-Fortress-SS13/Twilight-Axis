@@ -52,9 +52,6 @@
 	 * do NOT add channels to this for little reason as it can add considerable memory usage.
 	 */
 	var/list/important_recursive_contents
-	///contains every client mob corresponding to every client eye in this container. lazily updated by SSparallax and is sparse:
-	///only the last container of a client eye has this list assuming no movement since SSparallax's last fire
-	var/list/client_mobs_in_contents
 
 	/// String representing the spatial grid groups we want to be held in.
 	/// acts as a key to the list of spatial grid contents types we exist in via SSspatial_grid.spatial_grid_categories.
@@ -181,7 +178,7 @@
 		if(isliving(src))
 			var/mob/living/L = src
 			if(M.cmode || L.cmode)	//We're in combat, so we apply clickcds
-				var/clickcd = CLICK_CD_TRACKING
+				var/clickcd = CLICK_CD_WRESTLING
 				var/spdbonus = (10 - L.get_stat(STATKEY_SPD)) * 2
 				clickcd -= spdbonus
 				if(M.mind)	//No clickcd if we're grabbing a mindless mob, just frag the stupid AI
@@ -445,9 +442,6 @@
 	SEND_SIGNAL(src, COMSIG_MOVABLE_MOVED, OldLoc, Dir, Forced)
 	if (!inertia_moving)
 		inertia_next_move = world.time + inertia_move_delay
-	if (length(client_mobs_in_contents))
-		update_parallax_contents()
-
 	var/turf/old_turf = get_turf(OldLoc)
 	var/turf/new_turf = get_turf(src)
 
@@ -493,8 +487,6 @@
 	if(orbiting)
 		orbiting.end_orbit(src)
 		orbiting = null
-
-	LAZYNULL(client_mobs_in_contents)
 
 // Make sure you know what you're doing if you call this, this is intended to only be called by byond directly.
 // You probably want CanPass()
@@ -802,17 +794,9 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 /atom/movable/proc/do_attack_animation(atom/A, visual_effect_icon, obj/item/used_item, no_effect, item_animation_override = null, datum/intent/used_intent = null, simplified = FALSE)
 	if(used_item || !simplified)
 		var/animation_type = item_animation_override || used_intent?.get_attack_animation_type()
-		if(used_intent?.swingdelay)
-			//draw_swingdelay(A, used_intent.custom_swingdelay, used_intent.swingdelay)
-			if(isliving(src))
-				var/mob/living/L = src
-				L.play_overhead_indicator_flick('icons/mob/mob_effects.dmi', "eff_swingdelay", used_intent?.swingdelay, MOB_EFFECT_LAYER_SWINGDELAY, y_offset = 3)
-				addtimer(CALLBACK(src, PROC_REF(do_item_attack_animation), A, visual_effect_icon, used_item, animation_type, used_intent), used_intent.swingdelay)
-		else
-			do_item_attack_animation(A, visual_effect_icon, used_item, animation_type = animation_type, used_intent = used_intent)
-			return
+		do_item_attack_animation(A, visual_effect_icon, used_item, animation_type = animation_type, used_intent = used_intent)
+		return
 	wiggle(A)
-
 
 /atom/movable/proc/do_item_attack_animation(atom/A, visual_effect_icon, obj/item/used_item, animation_type = ATTACK_ANIMATION_SWIPE, datum/intent/used_intent)
 	if(used_item)

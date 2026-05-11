@@ -1,9 +1,9 @@
 /obj/item/clothing
 	name = "clothing"
 	resistance_flags = FLAMMABLE
-	obj_flags = CAN_BE_HIT | UNIQUE_RENAME
+	obj_flags = CAN_BE_HIT | UNIQUE_RENAME | CLAMP_BREAK
 	break_sound = 'sound/foley/cloth_rip.ogg'
-	blade_dulling = DULLING_CUT
+	blade_dulling = FALSE
 	max_integrity = 200
 	integrity_failure = ARMOR_INTEG_FAILURE
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
@@ -26,7 +26,6 @@
 	var/cooldown = 0
 
 	var/emote_environment = -1
-	var/prevent_crits = PREVENT_CRITS_MOST
 	var/clothing_flags = NONE
 	var/stack_fovs = FALSE
 
@@ -58,6 +57,7 @@
 	var/naledicolor = FALSE
 	var/chunkcolor = "#5e5e5e"
 	var/material_category = ARMOR_MAT_LEATHER
+	var/throw_on_break = FALSE
 
 /obj/item
 	var/blocking_behavior
@@ -306,6 +306,28 @@
 				if(variable in user.vars)
 					LAZYSET(user_vars_remembered, variable, user.vars[variable])
 					user.vv_edit_var(variable, user_vars_to_edit[variable])
+		warn_armor_class(user)
+
+/obj/item/clothing/proc/warn_armor_class(mob/living/carbon/human/user, removed = FALSE)
+	if(armor_class <= ARMOR_CLASS_NONE)
+		return
+	if(!ishuman(user))
+		return
+	// Was this item's armor class actually beyond the user's training?
+	var/dominated = FALSE
+	if(armor_class == ARMOR_CLASS_HEAVY && !HAS_TRAIT(user, TRAIT_HEAVYARMOR))
+		dominated = TRUE
+	else if(armor_class == ARMOR_CLASS_MEDIUM && !HAS_TRAIT(user, TRAIT_HEAVYARMOR) && !HAS_TRAIT(user, TRAIT_MEDIUMARMOR))
+		dominated = TRUE
+	if(!dominated)
+		return
+	if(removed)
+		if(user.check_armor_skill())
+			to_chat(user, span_info("I feel lighter and more agile without that armor weighing me down."))
+		else
+			to_chat(user, span_info("I feel the weight lessens, but another piece of armor is still impairing my movements."))
+		return
+	to_chat(user, span_warning("I'm not trained to wear armor of this weight. My ability to parry, dodge, run and cast spells will be greatly impaired."))
 
 /obj/item/clothing/examine(mob/user)
 	. = ..()
@@ -337,6 +359,27 @@
 		. += how_cool_are_your_threads.Join()
 */
 
+/obj/item/clothing/proc/get_flung_off()
+	if(ishuman(loc))
+		var/mob/living/carbon/human/H = loc
+		if(!H.get_tempo_bonus(TEMPO_TAG_EQUIPTOSS))
+			return
+		var/max_range = (H.mind ? 2 : 3)
+		var/throwprob = (H.mind ? 8 : 80) + ((10 - H.STALUC))	// More FOR we have the less likely it is to happen.
+		if(!prob(throwprob))
+			return
+		if(H.dropItemToGround(src, silent = TRUE))
+			H.update_fov_angles()
+			if(material_category == ARMOR_MAT_PLATE || material_category == ARMOR_MAT_CHAINMAIL)
+				do_sparks(2, TRUE, get_turf(H))
+			var/turnangle = (prob(10) ? 180 : prob(50) ? 270 : 90)
+			var/turndir = turn(H.dir, turnangle)
+			var/dist = rand(1, max_range)
+			var/current_turf = get_turf(H)
+			var/target_turf = get_ranged_target_turf(current_turf, turndir, dist)
+			playsound(get_turf(H), 'sound/misc/obj_toss.ogg', 100, TRUE)
+			throw_at(target_turf, dist, 6, H, FALSE)
+
 /obj/item/clothing/obj_break(damage_flag)
 	original_armor = armor
 	var/list/armorlist = armor.getList()
@@ -344,6 +387,8 @@
 		if(armorlist[x] > 0)
 			armorlist[x] = 0
 	..()
+	if(throw_on_break && !HAS_TRAIT(src, TRAIT_NODROP))
+		get_flung_off()
 
 /obj/item/clothing/obj_fix(mob/user, full_repair = TRUE)
 	..()
@@ -484,7 +529,7 @@ BLIND     // can't see anything
 		C.head_update(src, forced = 1)
 	for(var/X in actions)
 		var/datum/action/A = X
-		A.UpdateButtonIcon()
+		A.build_all_button_icons()
 	return TRUE
 
 /obj/item/clothing/proc/visor_toggling() //handles all the actual toggling of flags
@@ -582,10 +627,10 @@ BLIND     // can't see anything
 	. = ..()
 
 
-/obj/proc/generate_tooltip(examine_text, showcrits)
+/obj/proc/generate_tooltip(examine_text)
 	return examine_text
 
-/obj/item/clothing/generate_tooltip(examine_text, showcrits)
+/obj/item/clothing/generate_tooltip(examine_text)
 	if(!armor)	// No armor
 		return examine_text
 
@@ -594,19 +639,21 @@ BLIND     // can't see anything
 		return examine_text
 
 	var/str
-	str += "[colorgrade_rating("🔨 BLUNT ", armor.blunt, elaborate = TRUE)] | "
-	str += "[colorgrade_rating("🪓 SLASH ", armor.slash, elaborate = TRUE)]"
-	str += "<br>"
-	str += "[colorgrade_rating("🗡️ STAB ", armor.stab, elaborate = TRUE)] | "
-	str += "[colorgrade_rating("🏹 PIERCE ", armor.piercing, elaborate = TRUE)] "
-
-	if(showcrits)
-		if(!prevent_crits)
-			str += "<text-align: center>"
-			str += "<b><font color = '#aa2121'>CRIT SUSCEPTIBLE!</font></b>"
-		else if(prevent_crits == PREVENT_CRITS_ALL)
-			str += "<text-align: center>"
-			str += "<b><font color = '#6890a7'>PICK RESISTANT</font></b>"
+	str += "<b>ABSORPTION:</b> [colorgrade_rating("🔨 BLUNT", armor.blunt, elaborate = TRUE, max_tier = 5)]<br>"
+	str += "<b>BLOCK:</b> "
+	str += "[colorgrade_rating("🪓 SLASH", armor.slash, elaborate = TRUE)] | "
+	str += "[colorgrade_rating("🗡️ STAB", armor.stab, elaborate = TRUE)] | "
+	str += "[colorgrade_rating("🏹 PIERCE", armor.piercing, elaborate = TRUE)]"
+	if(armor.fire > NONE || armor.acid > NONE || armor.bullet > NONE) //TA EDIT
+		str += "<br><b>RESIST:</b> "
+		var/list/resists = list()
+		if(armor.fire > NONE)
+			resists += colorgrade_rating("🔥 FIRE", armor.fire, elaborate = TRUE)
+		if(armor.acid > NONE)
+			resists += colorgrade_rating("🧪 ACID", armor.acid, elaborate = TRUE)
+		if(armor.bullet > NONE) //TA EDIT
+			resists += colorgrade_rating("💣 BULLET", armor.bullet, elaborate = TRUE) //TA EDIT
+		str += resists.Join(" | ")
 
 	//This makes it appear darker than the rest of examine text. Draws the cursor to it like to a Wetsquires.rt link.
 	examine_text = "<font color = '#808080'>[examine_text]</font>"

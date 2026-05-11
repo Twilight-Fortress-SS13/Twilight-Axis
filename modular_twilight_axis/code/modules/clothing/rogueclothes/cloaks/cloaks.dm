@@ -291,3 +291,47 @@
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/citywatch_armor.dmi'
 	icon_state = "sheriffcloak"
 	alternate_worn_layer = CLOAK_BEHIND_LAYER
+
+/obj/item/clothing/cloak/duelcape
+	name = "duelist cape"
+	desc = "A cape designed for mercenary bands hailing from far away."
+	alternate_worn_layer = CLOAK_BEHIND_LAYER
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "duelistcape"
+	item_state = "duelistcape"
+	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
+	inhand_mod = FALSE
+	color = null
+
+/obj/item/clothing/cloak/etrcape
+	name = "wanderer's cape"
+	desc = "A stylish raincoat that protects you from the rain and makes you look great"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "etrcape"
+	item_state = "etrcape"
+	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
+	inhand_mod = FALSE
+	color = null
+	allowed_race = NON_DWARVEN_RACE_TYPES
+
+// /obj/item/clothing/cloak/etrmantle до обновления спрайта
+//	name = "Etruscan mantle"
+//	desc = "A pleasant-looking and -feeling mantle and expensive fabric, a frequent decoration of the overall attire of the sun elves in Etrusca"
+//	color = null
+//	icon_state = "etrmantle"
+//	item_state = "etrmantle"
+//	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+//	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+//	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+//	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
+//	allowed_sex = list(FEMALE)
+//	alternate_worn_layer = TABARD_LAYER
+//	body_parts_covered = CHEST|GROIN
+//	boobed = TRUE
+//	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
+//	flags_inv = HIDECROTCH|HIDEBOOB
+//	var/custom_design = FALSE

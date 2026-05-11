@@ -27,6 +27,9 @@ jobs:
     # For example, `Run Tests (runtimestation; 515)`.
     name: Run Tests (${{ inputs.major && format('{0}.{1}; ', inputs.major, inputs.minor) || '' }}${{ inputs.map }}; ${{ inputs.max_required_byond_client }})
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -52,7 +55,10 @@ jobs:
         id: run_tests
         run: |
           source $HOME/BYOND/byond/bin/byondsetup
-          bash tools/ci/run_server.sh ${{ inputs.map }}
+          /usr/bin/time -v bash tools/ci/run_server.sh ${{ inputs.map }} 2> metrics.txt
+          MEM_KB=$(grep "Maximum resident set size" metrics.txt | awk '{print $6}')
+          echo "max_mem=$((MEM_KB / 1024))MB" >> $GITHUB_OUTPUT
+          
       # - name: On test fail, write a step summary
       #   if: always() && steps.run_tests.outcome == 'failure'
       #   run: |

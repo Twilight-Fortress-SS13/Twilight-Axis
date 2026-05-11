@@ -71,3 +71,8 @@
 	name = "Elver Rider Gloves"
 	cost = 25
 	contains = list(/obj/item/clothing/gloves/roguetown/angle/twilight_elven)
+
+/datum/supply_pack/rogue/luxury/chess
+	name = "Chessboard"
+	cost = 80
+	contains = list(/obj/item/chessboard_folded)

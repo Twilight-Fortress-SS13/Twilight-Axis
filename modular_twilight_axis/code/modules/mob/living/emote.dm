@@ -155,20 +155,20 @@
 /datum/emote/living/slap
 	key_third_person = "шлепает"
 	message = ""
-	message_param = "отвешивает пощечину %t"
+	message_param = "отвешивает пощечину %t."
 
 /datum/emote/living/slap/run_emote(mob/user, params, type_override, intentional)
 	message_param = initial(message_param)
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.zone_selected == BODY_ZONE_PRECISE_GROIN)
-			message_param = "шлепает %t' по заднице!"
+			message_param = "шлепает %t' по заднице."
 		else if(H.zone_selected == BODY_ZONE_PRECISE_SKULL)
-			message_param = "отвешивает подзатыльник %t"
+			message_param = "отвешивает подзатыльник %t."
 		else if(H.zone_selected == BODY_ZONE_PRECISE_L_HAND || H.zone_selected == BODY_ZONE_PRECISE_R_HAND)
-			message_param = "шлепает по руке %t"
+			message_param = "шлепает по руке %t."
 		else if(H.zone_selected == BODY_ZONE_CHEST)
-			message_param = "шлепает грудь %t'"
+			message_param = "шлепает грудь %t."
 	..()
 
 /datum/emote/living/pinch
@@ -180,11 +180,11 @@
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.zone_selected == BODY_ZONE_HEAD)
-			message_param = "щипает %t за шеку"
+			message_param = "щипает %t за шеку."
 		else if(H.zone_selected == BODY_ZONE_PRECISE_L_HAND || H.zone_selected == BODY_ZONE_PRECISE_R_HAND)
-			message_param = "щипает %t за руку"
+			message_param = "щипает %t за руку."
 		else if(H.zone_selected == BODY_ZONE_CHEST)
-			message_param = "шлепает грудь %t'"
+			message_param = "щипает грудь %t."
 		else
 			var/ru_zone_selected = zone_translations[user.zone_selected]
 			message_param = "щипает %t за [ru_zone_selected]."
@@ -251,7 +251,7 @@
 	message = "кричит в ярости!"
 
 /datum/emote/living/attnwhistle
-	message = "привлекает внимание свистом"
+	message = "привлекает внимание свистом!"
 	message_muffled = "издает приглушенный звук." 
 
 /datum/emote/living/scowl
@@ -430,7 +430,7 @@
 
 /datum/emote/living/squint
 	key_third_person = "щурится"
-	message = "щурится"
+	message = "щурится."
 
 /datum/emote/living/snap
 	key_third_person = "щелкает пальцем"
@@ -537,6 +537,55 @@
 /datum/emote/living/carbon/human/wing
 	key_third_person = "машет крыльями"
 	message = "хлопает своими крыльями."
+
+/datum/emote/living/softmoan
+	key = "softmoan"
+	key_third_person = "мягко стонет"
+	message = "мягко стонет."
+	message_muffled = "приглушенно стонет."
+	emote_type = EMOTE_AUDIBLE
+	show_runechat = TRUE
+
+/mob/living/carbon/human/verb/emote_softmoan()
+	set name = "Мягко стонать"
+	set category = "Noises"
+
+	emote("softmoan", intentional = TRUE)
+
+/datum/emote/living/moan
+	key = "moan"
+	key_third_person = "стонет"
+	message = "стонет."
+	message_muffled = "приглушенно стонет."
+	emote_type = EMOTE_AUDIBLE
+	show_runechat = TRUE
+
+/mob/living/carbon/human/verb/emote_moan()
+	set name = "Стонать"
+	set category = "Noises"
+
+	emote("moan", intentional = TRUE)
+
+/datum/emote/living/pat
+	key = "pat"
+	key_third_person = "гладит по голове"
+	message = ""
+	message_param = "гладит по голове %t."
+	emote_type = EMOTE_VISIBLE
+	restraint_check = TRUE
+
+/mob/living/carbon/human/verb/emote_pat()
+	set name = "Гладить"
+	set category = "Emotes"
+
+	emote("pat", intentional = TRUE, targetted = TRUE)
+
+/datum/emote/living/pat/adjacentaction(mob/user, mob/target)
+	. = ..()
+	if(!user || !target)
+		return
+	if(ishuman(target))
+		playsound(target.loc, 'sound/vo/hug.ogg', 100, FALSE, -1)
 
 /*
 /datum/emote/living/stat_roll/strength

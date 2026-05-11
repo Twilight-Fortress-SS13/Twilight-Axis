@@ -134,7 +134,7 @@
 /obj/item/clothing/head/roguetown/chaperon/greyscale/shepherd
 	name = "mountaineer's chaperon"
 	desc = "A fashionable citygoer's chaperon worn around an insconspicuous iron skullcap. It has a cute little Mamük brooch on the tip of the hood. Szöréndnížine shepherds spend plenty of time in the city and have taken a liking to the chaperon's exaggerated swagger."
-	armor = ARMOR_LEATHER_STUDDED
+	armor = ARMOR_LEATHER
 	max_integrity = ARMOR_INT_HELMET_IRON - 25
 
 /obj/item/clothing/head/roguetown/chaperon/noble
@@ -200,6 +200,9 @@
 /obj/item/clothing/head/roguetown/cap
 	name = "cap"
 	desc = "A light cap made of cloth, usually worn under a helmet."
+	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HEAD //Meant to be worn under helmets pmuch
+	icon = 'icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head.dmi' //Overrides slot icon behavior
 	icon_state = "armingcap"
 	item_state = "armingcap"
 	flags_inv = HIDEEARS
@@ -216,6 +219,26 @@
 /obj/item/clothing/head/roguetown/cap/dwarf
 	color = "#cb3434"
 
+/obj/item/clothing/head/roguetown/tiyon
+	name = "tiyon"
+	desc = "A fancy cloth headdress."
+	icon_state = "tiyon"
+	sewrepair = TRUE
+
+/obj/item/clothing/head/roguetown/durag
+	name = "durag"
+	desc = "A fashionable garment worn to protect one's hair."
+	icon_state = "durag"
+	sewrepair = TRUE
+
+/obj/item/clothing/head/roguetown/longveil
+	name = "long veil"
+	desc = "A long, trailing veil made of cloth meant to conceal ones hair. OFten worn by soilbrides and the devout."
+	icon_state = "headveil"
+	detail_tag = "_detail"
+	detail_color = CLOTHING_CHALK_WHITE
+	sewrepair = TRUE
+
 /obj/item/clothing/head/roguetown/headband
 	name = "headband"
 	desc = "A simple headband to keep sweat out of your eyes."
@@ -231,10 +254,9 @@
 	icon_state = "headband"
 	item_state = "headband"
 	color = "#851a16"
-	armor = ARMOR_LEATHER_GOOD
+	armor = ARMOR_LEATHER
 	max_integrity = ARMOR_INT_HELMET_LEATHER
 	body_parts_covered = HEAD|HAIR|EARS
-	prevent_crits = PREVENT_CRITS_MOST
 	sewrepair = TRUE
 	//dropshrink = 0.75
 	dynamic_hair_suffix = null
@@ -261,8 +283,7 @@
 	color = "#48443b"
 	sewrepair = TRUE
 	resistance_flags = FIRE_PROOF
-	armor = ARMOR_SPELLSINGER //Higher-tier protection for pugilist-centric classes. Fits the 'glass cannon' style, and prevents instant death through a glancing headshot on the intended archetype. 
-	blade_dulling = DULLING_BASHCHOP
+	armor = ARMOR_LEATHER //Higher-tier protection for pugilist-centric classes. Fits the 'glass cannon' style, and prevents instant death through a glancing headshot on the intended archetype. 
 	body_parts_covered = HEAD|HAIR|EARS
 	max_integrity = ARMOR_INT_SIDE_STEEL //High leather-tier protection and critical resistances, steel-tier integrity. Integrity boost encourages hand-to-hand parrying. Weaker than the Psydonic Thorns.
 	blocksound = SOFTHIT
@@ -276,7 +297,7 @@
 	color = "#bfb8a9"
 	sewrepair = TRUE
 	resistance_flags = FIRE_PROOF
-	armor = ARMOR_SPELLSINGER //Highest preset protection value for head armor, without leaving people unable to sleep with the headband on. Should be appropriate for the Monk's role.
+	armor = ARMOR_LEATHER //Highest preset protection value for head armor, without leaving people unable to sleep with the headband on. Should be appropriate for the Monk's role.
 	body_parts_covered = HEAD|HAIR|EARS
 	max_integrity = ARMOR_INT_SIDE_STEEL //High leather-tier protection and critical resistances, steel-tier integrity.
 	blocksound = SOFTHIT
@@ -294,10 +315,10 @@
 	icon_state = "inqhat"
 	item_state = "inqhat"
 	max_integrity = 200
-	armor = ARMOR_SPELLSINGER
+	armor = ARMOR_LEATHER
 	body_parts_covered = HEAD|HAIR|EARS
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_TWIST)
 	sewrepair = TRUE
+	resistance_flags = FIRE_PROOF
 
 /obj/item/clothing/head/roguetown/inqhat/gravehat
 	name = "gravetender's hat"
@@ -479,7 +500,6 @@
 	icon_state = "tricorn"
 	armor = ARMOR_CLOTHING
 	max_integrity = 100
-	prevent_crits = list(BCLASS_BLUNT, BCLASS_TWIST)
 	anvilrepair = null
 	smeltresult = null
 	sewrepair = TRUE
@@ -505,7 +525,6 @@
 	body_parts_covered = HEAD|HAIR|EARS|NOSE
 	icon_state = "bandana"
 	armor = ARMOR_CLOTHING
-	prevent_crits = list(BCLASS_TWIST)
 	anvilrepair = null
 	smeltresult = null
 	sewrepair = TRUE
@@ -551,6 +570,7 @@
 	icon_state = "loudmouth"
 	item_state = "loudmouth"
 	color = CLOTHING_RED
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head.dmi'
 
 /obj/item/clothing/head/roguetown/maidhead
 	name = "maid headdress"
@@ -605,3 +625,9 @@
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
+
+/obj/item/clothing/head/roguetown/maidband
+	name = "valorian maid headband"
+	desc = "A pleated cloth headband. It has gained widespread popularity from Valorian nobles travelling with their servants."
+	icon_state = "maidband"
+	body_parts_covered = NONE

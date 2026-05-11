@@ -4,7 +4,7 @@
  * @license MIT
  */
 
-import { storage } from 'common/storage';
+import { storage, IMPL_HUB_STORAGE, IMPL_MEMORY } from 'common/storage';
 
 import {
   addHighlightSetting,
@@ -56,7 +56,6 @@ function setGlobalFontSize(
 ) {
   overrideFontSize = `${fontSize}px`;
 
-  // Used solution from theme.ts
   clearInterval(statFontTimer);
   Byond.command(
     `.output statbrowser:set_font_size ${statLinked ? fontSize : statFontSize}px`,
@@ -80,27 +79,54 @@ function setStatTabsStyle(style: string) {
   }, 1500);
 }
 
+function getStorageImplName() {
+  if (storage.impl === IMPL_HUB_STORAGE) {
+    return 'HUB_STORAGE';
+  }
+  if (storage.impl === IMPL_MEMORY) {
+    return 'MEMORY';
+  }
+  return `UNKNOWN(${storage.impl})`;
+}
+
 export function settingsMiddleware(store) {
   let initialized = false;
 
   return (next) => (action) => {
-    const { type, payload } = action;
+    const { type } = action;
 
     if (!initialized) {
       initialized = true;
 
+      console.log('[panel-settings] middleware init');
+      console.log('[panel-settings] storage impl:', getStorageImplName());
+
       setDisplayScaling();
 
       storage.get('panel-settings').then((settings) => {
+        console.log('[panel-settings] loaded from storage:', settings);
+
+        if (!settings || typeof settings !== 'object') {
+          console.warn('[panel-settings] no valid stored settings found, using reducer defaults');
+          store.dispatch(loadSettings(undefined));
+          return;
+        }
+
         store.dispatch(loadSettings(settings));
+      }).catch((error) => {
+        console.error('[panel-settings] failed to load settings:', error);
+        store.dispatch(loadSettings(undefined));
       });
     }
+
     if (type === exportSettings.type) {
       const state = store.getState();
       const settings = selectSettings(state);
+      console.log('[panel-settings] export settings:', settings);
       exportChatSettings(settings, state.chat.pageById);
       return;
     }
+
     if (
       type !== updateSettings.type &&
       type !== loadSettings.type &&
@@ -112,25 +138,14 @@ export function settingsMiddleware(store) {
       return next(action);
     }
 
-    // Set client theme
-    // const theme = payload?.theme;
-    // if (theme) {
-    //   setClientTheme(theme);
-    // }
-
-    // Pass action to get an updated state
     next(action);
 
     const settings = selectSettings(store.getState());
 
-    // if (importSettings.type) {
-    //   setClientTheme(settings.theme);
-    // }
+    console.log('[panel-settings] applying settings after action:', type, settings);
 
-    // Update stat panel settings
     setStatTabsStyle(settings.statTabsStyle);
 
-    // Update global UI font size
     setGlobalFontSize(
       settings.fontSize,
       settings.statFontSize,
@@ -139,8 +154,10 @@ export function settingsMiddleware(store) {
     setGlobalFontFamily(settings.fontFamily);
     updateGlobalOverrideRule();
 
-    // Save settings to the web storage
-    storage.set('panel-settings', settings);
+    console.log('[panel-settings] saving to storage:', settings);
+    storage.set('panel-settings', settings).catch((error) => {
+      console.error('[panel-settings] failed to save settings:', error);
+    });
 
     return;
   };

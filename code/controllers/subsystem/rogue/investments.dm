@@ -1,13 +1,14 @@
 SUBSYSTEM_DEF(investments)
 	name = "investments"
-	wait = 60 SECONDS 
+	wait = 1 MINUTES 
 	flags = SS_KEEP_TIMING
 	var/max_available_investments = 20
 	var/list/available_investments = list()
 	var/list/awaiting_investments = list()
 	var/list/active_investments = list()
-	var/fire_num_before_regen = 4
-	var/fire_num_before_hard = 6
+	var/fire_num_before_regen = 10
+	var/fire_num_before_hard = 15
+	var/generated_through_round = 0
 
 /datum/controller/subsystem/investments/Initialize(start_timeofday)
 	regenerate_investments()
@@ -19,7 +20,33 @@ SUBSYSTEM_DEF(investments)
 		regenerate_investments()
 	else if(times_fired % fire_num_before_hard)
 		regenerate_investments(TRUE)
-	
+
+
+/datum/controller/subsystem/investments/proc/get_treasury_rate()
+	if(generated_through_round <= 2500)
+		return 1
+
+	if(generated_through_round >= 15000)
+		return 0
+
+	if(generated_through_round >= 5000)
+		return 1 - ((generated_through_round - 5000) / (15000 - 5000))
+
+	return 1
+
+
+/datum/controller/subsystem/investments/proc/get_investment_rate()
+	var/count = length(active_investments)
+	if(count < 2)
+		return 2
+
+	if(count <= 7)
+		return 2 - ((count - 2) / (7 - 2))
+
+	if(count <= 20)
+		return 1 - ((count - 7) * (0.75 / (20 - 7)))
+
+	return 0.25
 
 /datum/controller/subsystem/investments/proc/regenerate_investments(force_reload = FALSE)
 	if(force_reload)
@@ -35,11 +62,15 @@ SUBSYSTEM_DEF(investments)
 			var/datum/investment/investment = new random_investment
 			if(investment.random_values)
 				investment.price = floor(investment.price * (rand(80, 130) / 100))
+
 				if(investment.onetime_payment > 0)
 					investment.onetime_payment = max(floor(investment.onetime_payment * (rand(90, 130) / 100)),investment.price+5)
+					
 				investment.pay_eta = floor(investment.pay_eta * (rand(50, 150) / 100))
-				investment.regular_payment = floor(investment.regular_payment * (rand(80, 130) / 100))
 				investment.fail_chance = floor(investment.fail_chance * (rand(80, 120) / 100))
+
+				investment.regular_payment = ceil(investment.regular_payment * (rand(80, 110) / 100))
+				
 			available_investments += investment
 	else 
 		return FALSE
@@ -78,11 +109,11 @@ SUBSYSTEM_DEF(investments)
 					awaiting_investments -= investment
 					qdel(investment)
 
+	var/treasury_rate = get_treasury_rate()
+	var/invest_rate = get_investment_rate()
 	for(var/datum/investment/investment in active_investments)
-		money_earned += investment.regular_payment
-		if((SStreasury.treasury_value > 80000) && ((world.time - investment.time_purchased) > 60 MINUTES))
-			if(prob(10))
-				active_investments -= investment
+		money_earned += investment.regular_payment * treasury_rate * invest_rate
+		generated_through_round += investment.regular_payment
 
 	if(money_earned != 0)
 		SStreasury.give_money_treasury(money_earned, "Инвестиции")
@@ -122,30 +153,6 @@ SUBSYSTEM_DEF(investments)
 	regular_payment = 267
 	fail_chance = 7
 
-/datum/investment/royal_bond_low
-	investment_name = "Выпустить дешевую облигацию"
-	price = -250
-	pay_eta = 30 MINUTES
-	onetime_payment = -350
-	fail_chance = 0
-	random_values = FALSE
-
-/datum/investment/royal_bond_mid
-	investment_name = "Выпустить среднюю облигацию"
-	price = -1000
-	pay_eta = 30 MINUTES
-	onetime_payment = -1500
-	fail_chance = 0
-	random_values = FALSE
-
-/datum/investment/royal_bond_large
-	investment_name = "Выпустить дорогую облигацию"
-	price = -2000
-	pay_eta = 30 MINUTES
-	onetime_payment = -3000
-	fail_chance = 0
-	random_values = FALSE
-
 /datum/investment/repair_bridge
 	investment_name = "Профинансировать ремонт торговых путей"
 	price = 100
@@ -158,14 +165,14 @@ SUBSYSTEM_DEF(investments)
 	price = 200
 	pay_eta = 5 MINUTES
 	onetime_payment = 300
-	fail_chance = 3
+	fail_chance = 20
 
 /datum/investment/trade_loan_merc
 	investment_name = "Заем гильдии наемников"
 	price = 100
 	pay_eta = 5 MINUTES
 	onetime_payment = 120
-	fail_chance = 3
+	fail_chance = 20
 
 /datum/investment/trade_loan_unknown
 	investment_name = "Срочный заем ненадежному лицу"
@@ -179,42 +186,42 @@ SUBSYSTEM_DEF(investments)
 	price = 45
 	pay_eta = 2 MINUTES
 	onetime_payment = 60
-	fail_chance = 10
+	fail_chance = 30
 
 /datum/investment/silver
 	investment_name = "Инвестиция в серебро"
 	price = 60
 	pay_eta = 2 MINUTES
 	onetime_payment = 90
-	fail_chance = 10
+	fail_chance = 30
 
 /datum/investment/gems
 	investment_name = "Инвестиция в драгоценные камни"
 	price = 60
 	pay_eta = 2 MINUTES
 	onetime_payment = 70
-	fail_chance = 10
+	fail_chance = 30
 
 /datum/investment/gold_x5
 	investment_name = "Инвестиция в золото x5"
 	price = 225
 	pay_eta = 3 MINUTES
 	onetime_payment = 300
-	fail_chance = 10
+	fail_chance = 30
 
 /datum/investment/silver_x5
 	investment_name = "Инвестиция в серебро x5"
 	price = 300
 	pay_eta = 3 MINUTES
 	onetime_payment = 450
-	fail_chance = 10
+	fail_chance = 30
 
 /datum/investment/gems_x5
 	investment_name = "Инвестиция в драгоценные камни x5"
 	price = 225
 	pay_eta = 3 MINUTES
 	onetime_payment = 350
-	fail_chance = 10
+	fail_chance = 30
 
 /datum/investment/feodal_lands
 	investment_name = "Инвестиция в местные феодальные земли"
@@ -228,7 +235,7 @@ SUBSYSTEM_DEF(investments)
 	price = 850
 	pay_eta = 7.5 MINUTES
 	regular_payment = 29
-	fail_chance = 20
+	fail_chance = 10
 
 /datum/investment/salt_mine
     investment_name = "Доля в соляной шахте"

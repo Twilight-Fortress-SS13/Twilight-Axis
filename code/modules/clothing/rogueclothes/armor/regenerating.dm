@@ -133,7 +133,6 @@
 	l_sleeve_status = SLEEVE_NORMAL
 	armor_class = ARMOR_CLASS_LIGHT
 	blocksound = SOFTUNDERHIT
-	blade_dulling = DULLING_BASHCHOP
 	armor = ARMOR_PADDED
 
 	repairmsg_begin = "My skin begins to slowly mend its abuse.."
@@ -160,8 +159,7 @@
 	</br>To give into despair and hopelessness, however, is to rob all meaning from His sacrifice. \
 	</br>Heaven's gate closed to us long ago, yet His children persist; as as long as they do, so must I. \
 	</br>Happiness must be fought for."
-	armor = list("blunt" = 30, "slash" = 50, "stab" = 50, "piercing" = 20, "fire" = 0, "acid" = 0) //Custom value; padded gambeson's slash- and stab- armor.
-	prevent_crits = PREVENT_CRITS_ALL 
+	armor = ARMOR_PADDED
 	max_integrity = 400
 	repair_time = 20 SECONDS
 
@@ -173,8 +171,7 @@
 	I thought you died alone, a long, long time ago.</br> \
 	Oh no, not me, I never lost control.</br> \
 	You're face to face, with the man who sold the world."
-	armor = list("blunt" = 40, "slash" = 60, "stab" = 50, "piercing" = 40, "fire" = 50, "acid" = 0) //Fire resistance unlike the disciple one
-	prevent_crits = PREVENT_CRITS_ALL 
+	armor = ARMOR_DRAGONSKIN 
 	max_integrity = 450
 	repair_time = 20 SECONDS
 
@@ -196,17 +193,17 @@
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/skin/easttats
 	name = "bouhoi bujeog tattoos"
-	desc = "A mystic style of tattoos adopted by the Ruma Clan, emulating a practice performed by warrior monks of the Xinyi Dynasty. They are your way of identifying fellow clan members, an sign of companionship and secretive brotherhood. These are styled into the shape of clouds, created by a mystical ink which shifts and moves in ripples like a pond to harden where your skin is struck. It's movement causes you to shudder."
+	desc = "A mystic style of tattoos adopted by the Ruma Clan, emulating a practice performed by warrior monks of the Xinyi Dynasty. They are your way of identifying fellow clan members, a sign of companionship and secretive brotherhood. These are styled into the shape of clouds, created by a mystical ink which shifts and moves in ripples like a pond to harden where your skin is struck. Its movement causes you to shudder."
 	resistance_flags = FIRE_PROOF
 	icon_state = "easttats"
-	armor = ARMOR_RUMACLAN
-	body_parts_covered = COVERAGE_FULL
-	body_parts_inherent = COVERAGE_FULL
+	armor = ARMOR_PLATE
+	body_parts_covered = COVERAGE_NEARLY_FULL
+	body_parts_inherent = COVERAGE_NEARLY_FULL
 	icon = 'icons/roguetown/clothing/shirts.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/shirts.dmi'
 	sleeved = 'icons/roguetown/clothing/onmob/helpers/sleeves_shirts.dmi'
 	allowed_race = NON_DWARVEN_RACE_TYPES
-	max_integrity = 270
+	max_integrity = 350
 
 	repairmsg_begin = "The tattoos begin to slowly mend their abuse..."
 	repairmsg_continue = "The tattoos mend some of their abuse..."
@@ -214,4 +211,10 @@
 	repairmsg_end = "The tattoos flow more calmly, as they finish resting and regain their strength."
 
 	interrupt_damount = 20
-	repair_time = 35 SECONDS
+	repair_time = 30 SECONDS
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/gladiator
+	name = "gladiator's skin"
+	desc = "Are you not entertained?!"
+	max_integrity = 200
+	repair_time = 25 SECONDS

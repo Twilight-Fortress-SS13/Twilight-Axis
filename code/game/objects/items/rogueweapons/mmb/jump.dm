@@ -11,6 +11,10 @@
 	user.jump_action(target)
 
 /mob/living/proc/jump_action(atom/A)
+	if(src.stat == DEAD || src.stat == UNCONSCIOUS)
+		to_chat(src, span_warning("What?"))
+		return FALSE
+
 	if(istype(get_turf(src), /turf/open/water))
 		to_chat(src, span_warning("I can't jump while floating."))
 		return FALSE
@@ -83,6 +87,7 @@
 		if(!H.check_armor_skill() || H.legcuffed)
 			jadded += 50
 			jrange = 1
+			to_chat(H, span_warning("My armor is too heavy to jump effectively!"))
 
 	jump_action_resolve(A, jadded, jrange, jextra, jroot)
 	return TRUE

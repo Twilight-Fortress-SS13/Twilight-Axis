@@ -26,7 +26,9 @@
 	if (notransform)
 		return
 
-	if(!client && mode == NPC_AI_SLEEP)
+	// Sleep gate: skip Life() for idle NPCs to save cycles, but only if fully conscious.
+	// If not conscious, we must run Life() so update_stat() can transition us back and re-wake the AI.
+	if(!client && stat == CONSCIOUS && ai_controller?.ai_status != AI_STATUS_ON)
 		return
 
 	. = ..()
@@ -35,9 +37,6 @@
 		return 0
 
 	SEND_SIGNAL(src, COMSIG_HUMAN_LIFE)
-
-	if(. && (mode != NPC_AI_OFF))
-		handle_ai()
 
 	if(advsetup)
 		Stun(50)
@@ -55,7 +54,6 @@
 				remove_stress(/datum/stressevent/sleepytime)
 				if(mind)
 					mind.sleep_adv.advance_cycle()
-					handle_sleep_triumphs()
 	if(leprosy == 1)
 		adjustToxLoss(2)
 	else if(leprosy == 2)
@@ -77,7 +75,7 @@
 			cf.flaw_on_life(src)
 	if(health <= 0)
 		adjustOxyLoss(0.5)
-	if(mode == NPC_AI_OFF && !client && !HAS_TRAIT(src, TRAIT_NOSLEEP))
+	if(!client && !ai_controller && !HAS_TRAIT(src, TRAIT_NOSLEEP))
 		if(mob_timers["slo"])
 			if(world.time > mob_timers["slo"] + 90 SECONDS)
 				Sleeping(100)
@@ -114,7 +112,6 @@
 
 	. = ..()
 	name = get_visible_name()
-
 /mob/living/carbon/human/proc/on_daypass()
 	if(dna?.species)
 		if(STUBBLE in dna.species.species_traits)
@@ -147,6 +144,8 @@
 			var/datum/status_effect/fire_handler/fire_stacks/divine_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks/divine)
 			var/datum/status_effect/fire_handler/fire_stacks/sunder/blessed/blessed_sunder = has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
 			if(fire_status?.stacks + sunder_status?.stacks + divine_status?.stacks + blessed_sunder?.stacks > 10)
+				if(has_status_effect(/atom/movable/screen/alert/status_effect/buff/dragonhide))
+					return ..()
 				Immobilize(30)
 				emote("firescream", TRUE)
 			else

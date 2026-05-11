@@ -1,7 +1,7 @@
 /datum/advclass/crusader
 	name = "Crusader"
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/adventurer/crusader
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_MEDIUMARMOR)
 
@@ -43,7 +43,6 @@
 
 /datum/outfit/job/roguetown/adventurer/crusader/pre_equip(mob/living/carbon/human/H)
 	..()
-	H.mind?.current.faction += "[H.name]_faction"
 	belt = /obj/item/storage/belt/rogue/leather/plaquegold
 	pants = /obj/item/clothing/under/roguetown/chainlegs
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor

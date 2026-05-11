@@ -55,6 +55,7 @@
 	/// Whether to grant a resident_key
 	var/grant_resident_key = FALSE
 	var/resident_key_amount = 1
+	var/require_noble_trait = FALSE
 	/// The type of a key the resident will get
 	var/resident_key_type
 	/// The required role of the resident
@@ -116,6 +117,7 @@
 	air_update_turf(1)
 	update_icon()
 	isSwitchingStates = FALSE
+	alert_ai_visibility_change(src)
 
 	if(close_delay != -1)
 		addtimer(CALLBACK(src, PROC_REF(Close)), close_delay)
@@ -163,6 +165,9 @@
 		return FALSE
 	if(!ishuman(user))
 		return FALSE
+	if(require_noble_trait && !HAS_TRAIT(user, TRAIT_NOBLE))
+		to_chat(user, span_boldnotice("Only those of noble blood can inherit this house."))
+		return FALSE
 	var/mob/living/carbon/human/human = user
 	if(human.received_resident_key)
 		return FALSE
@@ -170,6 +175,7 @@
 		var/datum/job/job = SSjob.name_occupations[human.job]
 		if(job.type != resident_role)
 			if(!HAS_TRAIT(human, TRAIT_RESIDENT))
+				to_chat(user, span_boldnotice("Only town residents can claim this house."))
 				return FALSE
 	if(resident_advclass)
 		if(!human.advjob)
@@ -302,7 +308,7 @@
 	if(ishuman(user))
 		var/mob/living/carbon/human/human_user = user
 		// must have a client or be trying to pass through the door
-		if(!human_user.client && !length(human_user.myPath))
+		if(!human_user.client && !human_user.ai_controller)
 			return FALSE
 		if(human_user.handcuffed)
 			return FALSE
@@ -331,6 +337,7 @@
 	air_update_turf(1)
 	update_icon()
 	isSwitchingStates = FALSE
+	alert_ai_visibility_change(src)
 
 	if(close_delay != -1)
 		addtimer(CALLBACK(src, PROC_REF(Close)), close_delay)
@@ -387,8 +394,7 @@
 	user.changeNext_move(CLICK_CD_FAST)
 	if(istype(I, /obj/item/roguekey) || istype(I, /obj/item/storage/keyring))
 		if(!locked)
-			to_chat(user, span_warning("It won't turn this way. Try turning to the right."))
-			door_rattle()
+			TryToSwitchState(user) //try to open/close
 			return
 		if(autobump == TRUE) //Attackby passes UI coordinate onclick stuff, so forcing check to TRUE
 			trykeylock(I, user, autobump)
@@ -491,7 +497,7 @@
 	var/obj/item = user.get_active_held_item()
 	if(istype(item, /obj/item/roguekey) || istype(item, /obj/item/storage/keyring))
 		if(locked)
-			to_chat(user, span_warning("It won't turn this way. Try turning to the left."))
+			to_chat(user, span_warning("The lock won't turn this way. Try turning to the left."))
 			door_rattle()
 			return
 		trykeylock(item, user)
@@ -564,6 +570,9 @@
 		var/pickchance = 35
 		var/moveup = 10
 
+		var/silentpick = HAS_TRAIT(user, TRAIT_SILENT_LOCKPICK)
+		var/gildedeyes = HAS_TRAIT(user, TRAIT_GILDED_SIGHT)
+
 		picktime -= (pickskill * 10)
 		picktime = clamp(picktime, 10, 70)
 
@@ -586,6 +595,9 @@
 			to_chat(user, "<span class='warning'>Clack.</span>")
 			return
 
+		if(gildedeyes)
+			picktime = clamp(picktime, 10, 15)
+
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
 			message_admins("[H.real_name]([key_name(user)]) is attempting to lockpick [src.name]. [ADMIN_JMP(src)]")
@@ -596,7 +608,10 @@
 				break
 			if(prob(pickchance))
 				lockprogress += moveup
-				playsound(src.loc, pick('sound/items/pickgood1.ogg','sound/items/pickgood2.ogg'), 5, TRUE)
+				if(silentpick)
+					playsound(src.loc, pick('sound/items/pickgood1.ogg','sound/items/pickgood2.ogg'), 2, TRUE)
+				else
+					playsound(src.loc, pick('sound/items/pickgood1.ogg','sound/items/pickgood2.ogg'), 5, TRUE)
 				to_chat(user, "<span class='warning'>Click...</span>")
 				if(L.mind)
 					add_sleep_experience(L, /datum/skill/misc/lockpicking, L.STAINT/2)
@@ -615,7 +630,10 @@
 				else
 					continue
 			else
-				playsound(loc, 'sound/items/pickbad.ogg', 40, TRUE)
+				if(silentpick)
+					playsound(loc, 'sound/items/pickbad.ogg', 2, TRUE)
+				else
+					playsound(loc, 'sound/items/pickbad.ogg', 40, TRUE)
 				I.take_damage(1, BRUTE, "blunt")
 				to_chat(user, "<span class='warning'>Clack.</span>")
 				add_sleep_experience(L, /datum/skill/misc/lockpicking, L.STAINT/4)
@@ -628,7 +646,10 @@
 	if(locked)
 		user?.visible_message(span_warning("[user] unlocks [src]."), \
 			span_notice("I unlock [src]."))
-		playsound(src, unlocksound, 100)
+		if(HAS_TRAIT(user, TRAIT_SILENT_LOCKPICK))
+			playsound(src, unlocksound, 25)
+		else
+			playsound(src, unlocksound, 100)
 		locked = 0
 	else
 		user?.visible_message(span_warning("[user] locks [src]."), \
@@ -1014,6 +1035,9 @@
 
 /obj/structure/mineral_door/wood/towner/generic/two_keys
 	resident_key_amount = 2
+
+/obj/structure/mineral_door/wood/towner/generic/two_keys/noble
+	require_noble_trait = TRUE
 
 /obj/structure/mineral_door/wood/towner/blacksmith
 	resident_advclass = list(/datum/advclass/blacksmith)

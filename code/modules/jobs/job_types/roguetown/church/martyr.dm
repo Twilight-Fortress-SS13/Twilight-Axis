@@ -10,7 +10,7 @@
 	var/next_activation = 0
 	var/end_activation = 0
 	var/ignite_chance = 2
-	var/traits_applied = list(TRAIT_NOPAIN, TRAIT_NOPAINSTUN, TRAIT_NOMOOD, TRAIT_NOHUNGER, TRAIT_NOBREATH, TRAIT_BLOODLOSS_IMMUNE, TRAIT_LONGSTRIDER, TRAIT_STRONGBITE, TRAIT_STRENGTH_UNCAPPED, TRAIT_GRABIMMUNE, TRAIT_TEMPO)
+	var/traits_applied = list(TRAIT_NOPAIN, TRAIT_NOPAINSTUN, TRAIT_NOMOOD, TRAIT_NOHUNGER, TRAIT_NOBREATH, TRAIT_DEATHLESS, TRAIT_BLOODLOSS_IMMUNE, TRAIT_LONGSTRIDER, TRAIT_STRONGBITE, TRAIT_STRENGTH_UNCAPPED, TRAIT_GRABIMMUNE, TRAIT_TEMPO)
 	var/stat_bonus_martyr = 3
 	var/mob/living/current_holder
 	var/is_active = FALSE
@@ -137,7 +137,7 @@
 		mob_ignite(M)
 		if(isfinal)
 			if(ishuman(M))
-				var/mob/living/carbon/human/H
+				var/mob/living/carbon/human/H = M
 				var/type = H.patron?.type
 				if(istype(type, /datum/patron/inhumen))
 					H.electrocution_animation(20)
@@ -189,10 +189,15 @@
 	if(!allow_all)
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
-			if(HAS_TRAIT(user, TRAIT_ROTMAN) || HAS_TRAIT(user, TRAIT_NOBREATH))	//Can't be a Martyr if you're undead already.
+			if(HAS_TRAIT(user, TRAIT_ROTMAN) || HAS_TRAIT(user, TRAIT_DEATHLESS))	//Can't be a Martyr if you're undead already.
 				to_chat(H, span_warn("It burns and sizzles! It does not tolerate my pallid flesh!"))
 				H.dropItemToGround(parent)
 				return
+			if(H.real_name in GLOB.excommunicated_players)
+				if(ispath(H.patron?.type, /datum/patron/divine))
+					to_chat(H, span_warning("It slips from my grasp. I can't get a hold."))
+					H.dropItemToGround(parent)
+					return
 			var/datum/job/J = SSjob.GetJob(H.mind?.assigned_role)
 			if(J.title != "Martyr" && J.title != "Bishop")		//Can't be a Martyr if you're not a Martyr. Or a Bishop.
 				to_chat(H, span_warn("It slips from my grasp. I can't get a hold."))
@@ -382,14 +387,14 @@
 				adjust_stats(current_state)	//Lowers the damage of the sword due to safe activation.
 				current_holder.energy = current_holder.max_energy
 				current_holder.stamina = 0
-				I.sharpness = I.max_blade_int
+				I.blade_int = I.max_blade_int
 			if(STATE_MARTYR)
 				end_activation = world.time + martyr_duration
 				I.max_integrity = 2000				//If you're committing, we repair the weapon and give it a boost so it lasts the whole fight
 				I.obj_integrity = I.max_integrity
 
 				I.max_blade_int = 9999
-				I.sharpness = I.max_blade_int
+				I.blade_int = I.max_blade_int
 				adjust_stats(current_state)	//Gives them extra stats.
 
 				current_holder.stamina = 0
@@ -402,7 +407,7 @@
 				I.obj_integrity = I.max_integrity
 
 				I.max_blade_int = 9999
-				I.sharpness = I.max_blade_int
+				I.blade_int = I.max_blade_int
 				
 				current_holder.adjust_skillrank(/datum/skill/misc/athletics, 6, FALSE)
 
@@ -463,7 +468,7 @@
 	faction = "Station"
 	tutorial = "Martyrs are hand-picked among the most devout of the Holy See. They are given one of the See's cherished relics to protect the Church, and to inspire hope and lead by example of grace, kindness and vicious intolerance to any who do not share the belief of the Ten. They have sworn an Oath in the sight of the gods, and will fulfill it to the bitter end."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_NO_CONSTRUCT
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	allowed_patrons = list(/datum/patron/divine/undivided)
 	outfit = /datum/outfit/job/roguetown/martyr
 	min_pq = 15 //Cus it's a Martyr of the Ten. Get it.
@@ -481,7 +486,7 @@
 	//No undeath-adjacent virtues for a role that can sacrifice itself. The Ten like their sacrifices 'pure'. (I actually didn't want to code returning those virtue traits post-sword use)
 	//They get those traits during sword activation, anyway.
 	//Dual wielder is there to stand-in for ambidextrous in case they activate their sword in their off-hand.
-	virtue_restrictions = list(/datum/virtue/utility/noble, /datum/virtue/combat/rotcured, /datum/virtue/utility/deadened, /datum/virtue/utility/deathless, /datum/virtue/combat/dualwielder, /datum/virtue/heretic/zchurch_keyholder)
+	virtue_restrictions = list(/datum/virtue/utility/noble, /datum/virtue/combat/rotcured, /datum/virtue/utility/hollow, /datum/virtue/combat/dualwielder, /datum/virtue/heretic/zchurch_keyholder)
 
 	advclass_cat_rolls = list(CTAG_MARTYR = 2)
 	job_subclasses = list(
@@ -546,7 +551,8 @@
 	id = /obj/item/clothing/neck/roguetown/psicross/undivided
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/silver = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1
+		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/mini_flagpole/church,
 		)
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
 	H.AddComponent(/datum/component/wise_tree_alert)
@@ -561,7 +567,14 @@
 				head = /obj/item/clothing/head/roguetown/helmet/heavy/holysee/alt
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_UPPER_CLASS, H, "Church Funding.")
+		var/obj/effect/proc_holder/spell/targeted/martyr_select_weapon/sel = new
+		var/obj/effect/proc_holder/spell/invoked/martyr_summon_weapon/sum = new
 
+		sel.summon_weapon = sum
+		sum.weapon_select = sel
+
+		H.AddSpell(sel)
+		H.AddSpell(sum)
 
 /obj/item/rogueweapon/sword/long/martyr
 	force = 30
@@ -594,7 +607,7 @@
 	is_silver = TRUE
 	toggle_state = null
 	is_important = TRUE
-	special = /datum/special_intent/martyr_blazing_sweep_sword
+	special = /datum/special_intent/martyr_astrata_verdict
 
 /obj/item/rogueweapon/sword/long/martyr/ComponentInitialize()
 	AddComponent(\
@@ -660,8 +673,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -694,6 +707,7 @@
 	item_state = "martyraxe"
 	name = "divine axe"
 	desc = "A relic from the Holy See's own vaults; a blessed silver axe, marked with the ten-pointed sigil of Astrata's undivided might. </br>It simmers with godly energies, and will only yield to the hands of those who have taken the Oath."
+	minstr = 12
 	max_blade_int = 250
 	max_integrity = 9999
 	bigboy = 1
@@ -703,7 +717,7 @@
 	is_silver = TRUE
 	toggle_state = null
 	is_important = TRUE
-	special = /datum/special_intent/martyr_blazing_sweep
+	special = /datum/special_intent/martyr_ravox_charge
 
 /obj/item/rogueweapon/greataxe/steel/doublehead/martyr/ComponentInitialize()
 	AddComponent(\
@@ -777,8 +791,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -809,7 +823,7 @@
 	is_silver = TRUE
 	toggle_state = null
 	is_important = TRUE
-	special = /datum/special_intent/martyr_volcano_slam
+	special = /datum/special_intent/martyr_malum_hammerfall
 
 /obj/item/rogueweapon/mace/goden/martyr/ComponentInitialize()
 	AddComponent(\
@@ -879,8 +893,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -897,7 +911,7 @@
 	force_wielded = 35
 	max_blade_int = 250
 	possible_item_intents = list(SPEAR_THRUST_1H, /datum/intent/spear/bash)
-	gripped_intents = list(/datum/intent/spear/thrust, /datum/intent/rend/reach/partizan, /datum/intent/partizan/peel, /datum/intent/spear/bash)
+	gripped_intents = list(/datum/intent/spear/thrust, /datum/intent/spear/cut, /datum/intent/rend/reach/partizan, /datum/intent/spear/bash)
 	icon_state = "martyrtrident"
 	icon = 'icons/roguetown/weapons/polearms64.dmi'
 	item_state = "martyrtrident"
@@ -912,7 +926,8 @@
 	toggle_state = null
 	is_important = TRUE
 	throwforce = 40
-	special = /datum/special_intent/martyr_blazing_trident
+	var/is_being_thrown_by_special = FALSE
+	special = /datum/special_intent/martyr_abyssor_harpoon
 
 /obj/item/rogueweapon/spear/partizan/martyr/ComponentInitialize()
 	AddComponent(\
@@ -939,7 +954,7 @@
 /datum/intent/rend/reach/partizan/martyr
 		item_d_type = "fire"
 
-/datum/intent/partizan/peel/martyr
+/datum/intent/spear/cut/martyr
 		item_d_type = "fire"
 
 
@@ -951,7 +966,7 @@
 		SSroguemachine.martyrweapon = src
 	if(!gc_destroyed)
 		var/list/active_intents = list(/datum/intent/spear/thrust/oneh/martyr, /datum/intent/spear/bash/martyr)
-		var/list/active_intents_wielded = list(/datum/intent/spear/thrust/martyr, /datum/intent/rend/reach/partizan/martyr, /datum/intent/partizan/peel/martyr, /datum/intent/spear/bash/martyr)
+		var/list/active_intents_wielded = list(/datum/intent/spear/thrust/martyr, /datum/intent/spear/cut/martyr, /datum/intent/rend/reach/partizan/martyr, /datum/intent/spear/bash/martyr)
 		var/safe_damage = 20
 		var/safe_damage_wielded = 25
 		AddComponent(/datum/component/martyrweapon, active_intents, active_intents_wielded, safe_damage, safe_damage_wielded)
@@ -982,8 +997,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1045,8 +1060,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1092,8 +1107,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1140,8 +1155,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1187,8 +1202,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1196,7 +1211,7 @@
 
 /obj/item/clothing/head/roguetown/helmet/heavy/holysee
 	name = "holy silver bascinet"
-	desc = "Branded by the Holy See, these helms are worn by it's chosen warriors. A bastion of hope in the dark nite."
+	desc = "Branded by the Holy See, these helms are worn by its chosen warriors. A bastion of hope in the dark nite."
 	icon = 'icons/roguetown/clothing/special/martyr.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/martyrhelmets.dmi'
 	bloody_icon = 'icons/effects/blood64.dmi'
@@ -1238,19 +1253,19 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
 		return FALSE
-		
+
 /obj/item/clothing/head/roguetown/helmet/heavy/holysee/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
 
 /obj/item/clothing/head/roguetown/helmet/heavy/holysee/alt
 	name = "holy silver armet"
-	desc = "Branded by the Holy See, these helms are worn by it's chosen warriors. A bastion of hope in the dark nite."
+	desc = "Branded by the Holy See, these helms are worn by its chosen warriors. A bastion of hope in the dark nite."
 	icon = 'icons/roguetown/clothing/special/martyr.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/martyrhelmets.dmi'
 	bloody_icon = 'icons/effects/blood64.dmi'
@@ -1281,6 +1296,119 @@
 	storage = TRUE
 	sellprice = 300
 
+// Helpers
+
+/proc/get_martyr_component_for(mob/living/carbon/human/H)
+	if(!H)
+		return null
+
+	var/obj/item/I = SSroguemachine.martyrweapon
+	if(!I)
+		return null
+
+	var/datum/component/martyrweapon/C = I.GetComponent(/datum/component/martyrweapon)
+	if(!C)
+		return null
+
+	if(C.current_holder != H)
+		return null
+
+	return C
+
+/proc/martyr_ult_active(mob/living/carbon/human/H)
+	var/datum/component/martyrweapon/C = get_martyr_component_for(H)
+	if(!C)
+		return FALSE
+	return (C.is_active && C.current_state == STATE_MARTYRULT)
+
 #undef STATE_SAFE
 #undef STATE_MARTYR
 #undef STATE_MARTYRULT
+
+
+///////////////////////////////////
+// Versions for UNDIVIDED ritual //
+///////////////////////////////////
+
+///////////
+// PLATE //
+///////////
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/holysee/ritual
+	name = "crusader silver plate"
+	armor_class = ARMOR_CLASS_MEDIUM
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/holysee/ritual/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	return TRUE
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/holysee/ritual/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/holysee/ritual/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+////////////
+// GLOVES //
+////////////
+
+/obj/item/clothing/gloves/roguetown/plate/holysee/ritual
+	name = "crusader silver plate gauntlets"
+
+/obj/item/clothing/gloves/roguetown/plate/holysee/ritual/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	return TRUE
+
+/obj/item/clothing/gloves/roguetown/plate/holysee/ritual/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/gloves/roguetown/plate/holysee/ritual/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+///////////
+// PANTS //
+///////////
+
+/obj/item/clothing/under/roguetown/platelegs/holysee/ritual
+	name = "crusader silver chausses"
+	armor_class = ARMOR_CLASS_MEDIUM
+
+/obj/item/clothing/under/roguetown/platelegs/holysee/ritual/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	return TRUE
+
+/obj/item/clothing/under/roguetown/platelegs/holysee/ritual/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/under/roguetown/platelegs/holysee/ritual/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+///////////
+// BOOTS //
+///////////
+
+/obj/item/clothing/shoes/roguetown/boots/armor/holysee/ritual
+	name = "crusader silver plated boots"
+
+/obj/item/clothing/shoes/roguetown/boots/armor/holysee/ritual/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	return TRUE
+
+/obj/item/clothing/shoes/roguetown/boots/armor/holysee/ritual/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/shoes/roguetown/boots/armor/holysee/ritual/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+

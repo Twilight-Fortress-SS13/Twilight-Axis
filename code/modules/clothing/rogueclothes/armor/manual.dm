@@ -15,7 +15,6 @@
     l_sleeve_status = SLEEVE_NORMAL
     armor_class = ARMOR_CLASS_LIGHT
     blocksound = SOFTUNDERHIT
-    blade_dulling = DULLING_BASHCHOP
     armor = ARMOR_PADDED
 
     var/repairmsg_end = "My skin has become taut with newfound vigor!"
@@ -57,10 +56,11 @@
 	. += span_info("Repairable via push-up emotes.")
 
 /obj/item/clothing/suit/roguetown/armor/manual/pushups/leather
-    armor = ARMOR_LEATHER
+	armor = ARMOR_LEATHER
 
-/obj/item/clothing/suit/roguetown/armor/manual/pushups/leather/good
-    armor = ARMOR_LEATHER_GOOD
+/obj/item/clothing/suit/roguetown/armor/manual/pushups/leather/good // Honestly wasn't even sure what the diff was to the parent of this subtype, this one actually is GOOD and it's for Berzerker
+	armor = ARMOR_LEATHER
+	max_integrity = 400 //Now actually matches desciple and bersekers unarmed discpline armor int, drawback is it doesnt natrually regen without push-ups
 
 
 /*
@@ -115,9 +115,8 @@
 /obj/item/clothing/suit/roguetown/armor/manual/sewable/confessor
 	name = "arbalist's skin"
 	desc = "Taut lyke the bow I draw."
-	armor = ARMOR_CLOTHING_GOOD
+	armor = ARMOR_PADDED_BAD
 	max_integrity = ARMOR_INT_CHEST_CIVILIAN
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT)
 	repair_items = list(
 		/obj/item/needle = 'sound/foley/sewflesh.ogg',
 		/obj/item/needle/thorn = 'sound/foley/sewflesh.ogg',

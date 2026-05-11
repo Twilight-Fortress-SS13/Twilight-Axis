@@ -2,7 +2,7 @@
 	name = "Minstrel"
 	tutorial = "Unlike those so-called 'bards' who traipse around in fancy cloth and swordfight in the woods, you follow the calling of a true musician. You've simply... yet to find a receptive audience."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/adventurer/minstrel
 
 	category_tags = list(CTAG_TOWNER)
@@ -27,9 +27,10 @@
 	..()
 	neck = /obj/item/storage/belt/rogue/pouch/coins/poor
 	cloak = /obj/item/clothing/cloak/half
-	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/white
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
+	armor = /obj/item/clothing/suit/roguetown/shirt/tunic/white
 	r_hand = /obj/item/rogue/instrument/accord
-	pants = /obj/item/clothing/under/roguetown/tights/random
+	pants = /obj/item/clothing/under/roguetown/trou/leather
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	belt = /obj/item/storage/belt/rogue/leather/cloth
 	beltr = /obj/item/rogueweapon/huntingknife/idagger
@@ -42,6 +43,7 @@
 						/obj/item/rogueweapon/scabbard/sheath = 1
 						)
 	var/datum/inspiration/I = new /datum/inspiration(H)
-	I.grant_inspiration(H, bard_tier = BARD_T3)
+	I.grant_inspiration(H, bard_tier = BARD_T2)
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")
+		H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/vicious_mockery)
+		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)

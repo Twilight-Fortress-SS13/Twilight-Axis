@@ -83,7 +83,7 @@ SUBSYSTEM_DEF(nightshift)
 		if(!cmode)
 			SSdroning.play_area_sound(areal, src.client)
 		SSdroning.play_loop(areal, src.client)
-	if(mode != NPC_AI_OFF)
+	if(ai_controller)
 		return
 	switch(todd)
 		if("day")
@@ -91,14 +91,9 @@ SUBSYSTEM_DEF(nightshift)
 				apply_status_effect(/datum/status_effect/debuff/vamp_dreams)
 			if(HAS_TRAIT(src, TRAIT_NIGHT_OWL))
 				apply_status_effect(/datum/status_effect/debuff/sleepytime)
-			if(HAS_TRAIT(src, TRAIT_INFINITE_STAMINA))
-				handle_sleep_triumphs()
-			if(HAS_TRAIT(src, TRAIT_NOSLEEP))
-				if(prob(30))
-					handle_sleep_triumphs()
-
-			remove_status_effect(/datum/status_effect/buff/noc_light_blessing)
 		if("night")
+			SEND_SIGNAL(src, COMSIG_SLEEPY_TIME)
+			handle_sleep_triumphs()
 			if(HAS_TRAIT(src, TRAIT_INFINITE_STAMINA) || HAS_TRAIT(src, TRAIT_NOSLEEP))
 				return ..()
 			if(HAS_TRAIT(src, TRAIT_NIGHT_OWL))
@@ -107,19 +102,18 @@ SUBSYSTEM_DEF(nightshift)
 				apply_status_effect(/datum/status_effect/debuff/sleepytime)
 				add_stress(/datum/stressevent/sleepytime)
 
+	//TA EDIT BEGIN
+	if(todd != "day")
+		if(HAS_TRAIT(src, TRAIT_NOC_LIGHT_BLESSING))
+			apply_status_effect(/datum/status_effect/buff/noc_light_blessing)
+	else 
+		remove_status_effect(/datum/status_effect/buff/noc_light_blessing)
 
-			if(HAS_TRAIT(src, TRAIT_NOC_LIGHT_BLESSING))
-				apply_status_effect(/datum/status_effect/buff/noc_light_blessing)
-
+	//TA EDIT END
 
 /mob/living/carbon/human/proc/handle_sleep_triumphs()
 	if(!mind)
 		return
 	allmig_reward++
-	var/triumphs_to_add = 1
-	var/static/list/towner_jobs
-	towner_jobs = GLOB.peasant_positions | GLOB.burgher_positions | GLOB.sidefolk_positions
-	if(mind.assigned_role != "Unassigned" && istype(mind.assigned_role, /datum/job) && (mind.assigned_role.title in towner_jobs)) //If you play a towner-related role, you get an additonal triumph
-		triumphs_to_add++
-	adjust_triumphs(triumphs_to_add)
-	to_chat(src, span_danger("Nights Survived: \Roman[allmig_reward]"))
+	adjust_triumphs(1)
+	to_chat(src, span_danger("Days Survived: \Roman[allmig_reward]"))

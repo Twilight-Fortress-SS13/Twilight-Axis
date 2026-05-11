@@ -45,7 +45,7 @@
 	victim.blood_volume = max(victim.blood_volume - 5, 0)
 	victim.handle_blood()
 
-	playsound(loc, 'sound/misc/drink_blood.ogg', 100, FALSE, -4)
+	playsound(loc, 'sound/misc/drink_blood.ogg', vol = 50, vary = FALSE, extrarange = -4, ignore_walls = FALSE, quiet = TRUE)
 
 	SEND_SIGNAL(src, COMSIG_LIVING_DRINKED_LIMB_BLOOD, victim)
 	victim.visible_message(span_danger("[src] drinks from [victim]'s [parse_zone(sublimb_grabbed)]!"), \
@@ -57,6 +57,9 @@
 		if(!HAS_TRAIT(src, TRAIT_HORDE) && !HAS_TRAIT(src, TRAIT_NASTY_EATER))
 			to_chat(src, span_warning("I'm going to puke..."))
 			addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/carbon, vomit), 0, TRUE), rand(8 SECONDS, 15 SECONDS))
+		src.reagents.add_reagent(/datum/reagent/medicine/strongmana, 5) //TA EDIT START
+		src.reagents.add_reagent(/datum/reagent/water, 5)                //
+		src.reagents.add_reagent(/datum/reagent/medicine/stronghealth, 5) //TA EDIT END
 		return
 
 	if(victim.mind?.has_antag_datum(/datum/antagonist/werewolf) || (victim.stat != DEAD && victim.mind?.has_antag_datum(/datum/antagonist/zombie)))
@@ -75,6 +78,8 @@
 
 	if(HAS_TRAIT(victim, TRAIT_CLERGY) || HAS_TRAIT(victim, TRAIT_INQUISITION))
 		blood_handle |= BLOOD_PREFERENCE_HOLY
+	if(HAS_TRAIT(victim, TRAIT_CLERGY) || HAS_TRAIT(victim, TRAIT_INQUISITION) || HAS_TRAIT(victim, TRAIT_NOBLE))
+		blood_handle |= BLOOD_PREFERENCE_FANCY //More variety
 	if(VVictim)
 		blood_handle |= BLOOD_PREFERENCE_KIN
 		blood_handle  &= ~BLOOD_PREFERENCE_LIVING

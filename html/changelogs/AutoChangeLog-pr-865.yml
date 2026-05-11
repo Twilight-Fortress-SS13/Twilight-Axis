@@ -1,0 +1,4 @@
+author: "Antoonij"
+delete-after: True
+changes:
+  - bugfix: "блесс дринк баоты теперь работает"

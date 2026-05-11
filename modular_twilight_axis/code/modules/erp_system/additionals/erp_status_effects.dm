@@ -7,6 +7,8 @@
 /atom/movable/screen/alert/status_effect/mouth_full
 	name = "Full Mouth"
 	desc = "Click to swallow a bit."
+	icon = 'modular_twilight_axis/icons/roguetown/misc/screen_alert.dmi'
+	icon_state = "full_in"
 
 /atom/movable/screen/alert/status_effect/mouth_full/Click(location, control, params)
 	..()
@@ -110,6 +112,8 @@
 /atom/movable/screen/alert/status_effect/love_potion
 	name = "love sickness"
 	desc = "Непреодолимая тяга к тому, кого вы любите."
+	icon = 'modular_twilight_axis/icons/roguetown/misc/screen_alert.dmi'
+	icon_state = "full_in"
 
 #define ERP_COATING_ZONE_GROIN "groin"
 #define ERP_COATING_ZONE_CHEST "chest"
@@ -202,6 +206,12 @@
 	id = "erp_coating_face"
 	coating_zone = "face"
 
+/atom/movable/screen/alert/status_effect/erp_coating
+	name = "Coated"
+	desc = "Something is smeared over your body."
+	icon = 'modular_twilight_axis/icons/roguetown/misc/screen_alert.dmi'
+	icon_state = "full_in"
+
 #undef ERP_COATING_ZONE_GROIN
 #undef ERP_COATING_ZONE_CHEST
 #undef ERP_COATING_ZONE_BODY
@@ -215,7 +225,7 @@
 /atom/movable/screen/alert/status_effect/knot_tied
 	name = "Knotted"
 	icon_state = "knotted"
-
+	icon = 'modular_twilight_axis/icons/roguetown/misc/screen_alert.dmi'
 
 /datum/status_effect/knot_fucked_stupid
 	id = "knot_fucked_stupid"
@@ -300,36 +310,37 @@
 /atom/movable/screen/alert/status_effect/buff/erp_satisfaction
 	name = "Satisfied"
 	desc = "A warm afterglow lingers."
-	icon_state = "buff"
+	icon_state = "full_in"
+	icon = 'modular_twilight_axis/icons/roguetown/misc/screen_alert.dmi'
 
 /datum/status_effect/buff/erp_satisfaction/proc/set_tier(new_tier)
 	tier = clamp(new_tier, 0, ERP_SATISFY_MAX_TIER)
 
 /datum/status_effect/debuff/erp_overload
 	id = "erp_overload"
-	status_type = STATUS_EFFECT_REFRESH
+	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/erp_overload
-	duration = ERP_OVERLOAD_DECAY_INTERVAL
-	var/stacks = 0
+	duration = -1
+	effectedstats = list(STATKEY_WIL = -1, STATKEY_INT = -1, STATKEY_PER = -1, STATKEY_CON = -1)
 
-/datum/status_effect/debuff/erp_overload/proc/set_stacks(new_stacks)
-	if(owner && islist(effectedstats))
-		for(var/S in effectedstats)
-			owner.change_stat(S, -(effectedstats[S]))
+	var/stacks = 1
 
-	stacks = clamp(new_stacks, 0, ERP_OVERLOAD_MAX_OP)
-	var/con_bonus = CEILING(stacks / 2, 1)
+/datum/status_effect/debuff/erp_overload/on_apply()
+	sync_effectedstats_from_owner()
+	return ..()
+
+/datum/status_effect/debuff/erp_overload/proc/sync_effectedstats_from_owner()
+	var/datum/component/arousal/A = owner?.GetComponent(/datum/component/arousal)
+	stacks = clamp(A ? A.overload_points : 1, 1, ERP_OVERLOAD_MAX_OP)
 	effectedstats = list(
-		STATKEY_WIL = stacks,
-		STATKEY_INT = stacks,
-		STATKEY_ACC = stacks,
-		STATKEY_CON = -con_bonus
+		STATKEY_WIL = -stacks,
+		STATKEY_INT = -stacks,
+		STATKEY_PER = -stacks,
+		STATKEY_CON = -CEILING(stacks / 2, 1),
 	)
-	if(owner)
-		for(var/S in effectedstats)
-			owner.change_stat(S, effectedstats[S])
 
 /atom/movable/screen/alert/status_effect/debuff/erp_overload
 	name = "Overstimulated"
 	desc = "Too much pleasure. My mind is foggy and my body is heavy."
-	icon_state = "debuff"
+	icon = 'modular_twilight_axis/icons/roguetown/misc/screen_alert.dmi'
+	icon_state = "full_in"

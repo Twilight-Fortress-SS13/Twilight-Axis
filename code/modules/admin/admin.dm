@@ -5,6 +5,13 @@
 		if(check_rights_for(C, R_ADMIN))
 			to_chat(C, msg)
 
+/proc/message_admins_without(msg, toexcl)
+	var/list/adminlist = GLOB.admins - toexcl
+	msg = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">[msg]</span></span>"
+	for(var/client/C in adminlist)
+		if(check_rights_for(C, R_ADMIN))
+			to_chat(C, msg)
+
 /proc/spawn_message_admins(msg)
 	msg = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">[msg]</span></span>"
 	for(var/client/C in GLOB.admins)
@@ -68,7 +75,7 @@
 		body += " played by <b>[M.client]</b> "
 		body += "\[<A href='?_src_=holder;[HrefToken()];editrights=[(GLOB.admin_datums[M.client.ckey] || GLOB.deadmins[M.client.ckey]) ? "rank" : "add"];key=[M.key]'>[M.client.holder ? M.client.holder.rank : "Player"]</A>\]"
 		if(CONFIG_GET(flag/use_exp_tracking))
-			body += "\[<A href='?_src_=holder;[HrefToken()];getplaytimewindow=[REF(M)]'>" + M.client.get_exp_living() + "</a>\]"
+			body += " \[<A href='?_src_=holder;[HrefToken()];getplaytimewindow=[REF(M)]'>View Playtime</A>\]"
 
 	if(isnewplayer(M))
 		body += " <B>Hasn't Entered Game</B> "

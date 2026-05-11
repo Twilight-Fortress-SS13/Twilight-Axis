@@ -2,7 +2,6 @@
 	name = "Heishi-Yōhei"
 	tutorial = "Battle is a craft, and you have honed it well, you are. A steady hand, a tempered spirit, and armor worn not for glory, but for duty - this is the measure of a true mercenary. Steel meets steel at your command, and you endure where lighter warriors break and heavier ones slow. Every contract, every fight, every scar is for your family. The honor of your clan is your guide, and their legacy moves with you into every battle."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = list(/datum/species/aura)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_heishi
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_RACIAL
@@ -40,6 +39,10 @@
 	)
 	extra_context = "This subclass is race-limited to: Au Ra Only."
 
+/datum/advclass/mercenary/twilight_heishi/New()
+	..()
+	forbidden_races = ALL_RACES_TYPES - /datum/species/aura
+
 /datum/outfit/job/roguetown/mercenary/twilight_heishi/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_blindness(-3)
@@ -60,7 +63,8 @@
 		/obj/item/roguekey/mercenary,
 		/obj/item/flashlight/flare/torch/lantern,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun,
-		/obj/item/rogueweapon/scabbard/sheath/kazengun
+		/obj/item/rogueweapon/scabbard/sheath/kazengun,
+		/obj/item/storage/belt/rogue/pouch/coins/poor
 		)
 	H.merctype = 2
 
@@ -103,7 +107,6 @@
 	name = "Kagekiri-Yōhei"
 	tutorial = "A worthy conflict tempers the spirit and sharpens the body. Strength alone does not win wars - precision does. Speed is mercy; hesitation is death. You move where steel is slow, strike where armor is thin, and end fights before they can drag into slaughter. Above all stands family. Clan is not a memory left behind, but a presence carried with every step."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = list(/datum/species/aura)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_yohei
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_RACIAL
@@ -134,6 +137,10 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE
 	)
 	extra_context = "This subclass is race-limited to: Au Ra Only."
+
+/datum/advclass/mercenary/twilight_yohei/New()
+	..()
+	forbidden_races = ALL_RACES_TYPES - /datum/species/aura
 
 /datum/outfit/job/roguetown/mercenary/twilight_yohei/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -195,7 +202,7 @@
 ///////////////////////////
 /datum/intent/sword/cut/miaodao
 	reach = 2
-	penfactor = 20
+	penfactor = PEN_LIGHT
 
 /datum/intent/sword/cut/miaodao/fast
 	clickcd = 9
@@ -218,7 +225,7 @@
 	wbalance = WBALANCE_SWIFT
 	possible_item_intents = list(/datum/intent/sword/cut/miaodao, /datum/intent/sword/strike)
 	gripped_intents = list(/datum/intent/sword/cut/miaodao/fast, /datum/intent/sword/thrust/zwei, /datum/intent/sword/peel/miaodao, /datum/intent/sword/chop/long)
-	alt_intents = null
+	alt_grips = null
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/yohei
 	name = "black dobo robe"
@@ -226,13 +233,13 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
 	icon_state = "yoheisuit"
-	armor = ARMOR_LEATHER_STUDDED
+	armor = ARMOR_BRIGANDINE
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 25
 
 /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/yohei
 	name = "shadowed hood"
 	max_integrity = 100
-	armor = ARMOR_SPELLSINGER
+	armor = ARMOR_LEATHER
 	color = CLOTHING_BLACK
 	desc = "A traditional Kazengunese hood, dyed in dark colors."
 

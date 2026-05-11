@@ -13,7 +13,7 @@
 	obj_flags = UNIQUE_RENAME
 
 
-/obj/item/cooking/platter/examine()
+/obj/item/cooking/platter/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Left-click a platter with food to 'plate' it up. This will also effectively prevent the food from rotting, while plated.")
 	. += span_info("Can be renamed with a feather. Name will be overridden by plating or finishing food.")
@@ -138,7 +138,8 @@ What it does:
 	desc = "A fancy silver plate often used by the nobility as a symbol of class."
 	icon_state = "platter_silver"
 	sellprice = 30
-	is_silver = FALSE
+	is_silver = TRUE
+	is_lesser_silver = TRUE
 
 /obj/item/cooking/platter/gold
 	name = "gold platter"

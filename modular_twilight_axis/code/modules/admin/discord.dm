@@ -1,6 +1,9 @@
 /datum/config_entry/string/admin_bans_channel
 	default = null
 
+/datum/config_entry/string/admin_bans_channel2
+	default = null
+
 /datum/config_entry/string/admin_notes_channel
 	default = null
 
@@ -17,8 +20,10 @@
 		return
 
 	var/admin_bans_channel = CONFIG_GET(string/admin_bans_channel)
+	var/admin_bans_channel2 = CONFIG_GET(string/admin_bans_channel2)
+	
 
-	if(!admin_bans_channel)
+	if(!admin_bans_channel && !admin_bans_channel2)
 		return
 
 	var/severity_dict = list(
@@ -80,10 +85,11 @@
 		field_reason,
 	)
 
-	send2chat(
-		message,
-		admin_bans_channel
-	)
+	if(admin_bans_channel)
+		send2chat(message, admin_bans_channel)
+
+	if(admin_bans_channel2)
+		send2chat(message, admin_bans_channel2)
 
 /// Отправляет средствами TGS сообщение в дискорд об изменении PQ игрока.
 /world/proc/TgsAnnouncePQChanges(value, player_ckey, admin_ckey, reason)
@@ -97,6 +103,52 @@
 
 	var/datum/tgs_chat_embed/structure/embed = new()
 	embed.title = "Изменение PQ"
+	embed.description = reason ? "**Причина**\n" + reason : "Причина не указана!"
+	embed.colour = value > 0 ? "#a6da95" : "#ed8796"
+	embed.footer = create_discord_embed_footer()
+
+	var/datum/tgs_chat_embed/field/field_player_ckey = new(
+		"Игрок", "`[player_ckey]`"
+	)
+
+	var/datum/tgs_chat_embed/field/field_admin_ckey = new(
+		"Администратор", "`[admin_ckey]`"
+	)
+
+	var/datum/tgs_chat_embed/field/field_changed_value = new(
+		"Изменено на", "`[value]`"
+	)
+
+	field_player_ckey.is_inline = TRUE
+	field_admin_ckey.is_inline = TRUE
+	field_changed_value.is_inline = TRUE
+
+	embed.fields = list(
+		field_player_ckey,
+		field_admin_ckey,
+		field_changed_value,
+	)
+
+	var/datum/tgs_message_content/message = new("")
+	message.embed = embed
+
+	send2chat(
+		message,
+		admin_notes_channel
+	)
+
+
+/world/proc/TgsAnnounceTriumphChanges(value, player_ckey, admin_ckey, reason)
+	if(!TgsAvailable())
+		return
+
+	var/admin_notes_channel = CONFIG_GET(string/admin_notes_channel)
+
+	if(!admin_notes_channel)
+		return
+
+	var/datum/tgs_chat_embed/structure/embed = new()
+	embed.title = "Изменение триумфов"
 	embed.description = reason ? "**Причина**\n" + reason : "Причина не указана!"
 	embed.colour = value > 0 ? "#a6da95" : "#ed8796"
 	embed.footer = create_discord_embed_footer()
@@ -223,8 +275,9 @@
 		return
 
 	var/admin_bans_channel = CONFIG_GET(string/admin_bans_channel)
+	var/admin_bans_channel2 = CONFIG_GET(string/admin_bans_channel2)
 
-	if(!admin_bans_channel)
+	if(!admin_bans_channel && !admin_bans_channel2)
 		return
 
 	var/description = "Игроку доступна роль `[role]`!"
@@ -256,7 +309,51 @@
 		field_admin_ckey,
 	)
 
-	send2chat(
-		message,
-		admin_bans_channel
+	if(admin_bans_channel)
+		send2chat(message, admin_bans_channel)
+
+	if(admin_bans_channel2)
+		send2chat(message, admin_bans_channel2)
+
+
+/world/proc/TgsAnnounceAdminMessageDeletion(admin_ckey, target_key, type, text)
+	if(!TgsAvailable())
+		return
+
+	var/admin_notes_channel = CONFIG_GET(string/admin_notes_channel)
+	if(!admin_notes_channel)
+		return
+
+	var/pretty_type = capitalize("[type]")
+	var/datum/tgs_chat_embed/structure/embed = new()
+	embed.title = "Удаление [pretty_type]"
+	embed.description = copytext_char("[text]", 1, 4000)
+	embed.colour = "#ed8796"
+	embed.footer = create_discord_embed_footer()
+
+	var/datum/tgs_chat_embed/field/field_player_ckey = new(
+		"Игрок", "`[target_key]`"
 	)
+
+	var/datum/tgs_chat_embed/field/field_admin_ckey = new(
+		"Удалил", "`[admin_ckey]`"
+	)
+
+	var/datum/tgs_chat_embed/field/field_type = new(
+		"Тип", "`[type]`"
+	)
+
+	field_player_ckey.is_inline = TRUE
+	field_admin_ckey.is_inline = TRUE
+	field_type.is_inline = TRUE
+
+	embed.fields = list(
+		field_player_ckey,
+		field_admin_ckey,
+		field_type,
+	)
+
+	var/datum/tgs_message_content/message = new("")
+	message.embed = embed
+
+	send2chat(message, admin_notes_channel)

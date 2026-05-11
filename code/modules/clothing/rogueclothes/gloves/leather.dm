@@ -4,16 +4,14 @@
 	desc = "A pair of gloves, stitched together from cured leather."
 	icon_state = "leather_gloves"
 	armor = ARMOR_LEATHER
-	prevent_crits = PREVENT_CRITS_NONE
 	max_integrity = ARMOR_INT_SIDE_LEATHER
 	resistance_flags = FIRE_PROOF
 	blocksound = SOFTHIT
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	anvilrepair = null
 	sewrepair = TRUE
-	unarmed_bonus = 1.1
+	unarmed_bonus = 1
 	color = "#66584c"
 	salvage_result = null // Recipe makes 2 so we cannot make this salvageable
 	cold_protection = 3
@@ -31,7 +29,6 @@
 	icon_state = "fingerless_gloves"
 	resistance_flags = FIRE_PROOF
 	blocksound = SOFTHIT
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	anvilrepair = null
@@ -56,11 +53,10 @@
 	desc = "A pair of protective gloves favored by lockshimmers, laborers, and smokers for maintaining \
 	manual dexterity over regular gloves."
 	icon_state = "roguegloves"
-	armor = ARMOR_LEATHER_GOOD
+	armor = ARMOR_LEATHER
 	resistance_flags = FIRE_PROOF
 	blocksound = SOFTHIT
 	max_integrity = ARMOR_INT_SIDE_CLOTH
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	anvilrepair = null
@@ -76,7 +72,6 @@
 	resistance_flags = FIRE_PROOF
 	blocksound = SOFTHIT
 	max_integrity = ARMOR_INT_SIDE_HARDLEATHER
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	anvilrepair = null
@@ -93,7 +88,7 @@
 /obj/item/clothing/gloves/roguetown/otavan/psygloves
 	name = "psydonic leather gloves"
 	desc = "Thick leather mittens, stitched and cuffed to guard His children's palms from perforation."
-	armor = ARMOR_LEATHER_GOOD
+	armor = ARMOR_LEATHER
 	icon_state = "psydongloves"
 	item_state = "psydongloves"
 	salvage_result = /obj/item/natural/hide/cured	
@@ -106,10 +101,8 @@
 	icon_state = "eastgloves1"
 	item_state = "eastgloves1"
 	armor = ARMOR_LEATHER
-	prevent_crits = PREVENT_CRITS_NONE
 	resistance_flags = null
 	blocksound = SOFTHIT
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	anvilrepair = null
@@ -121,10 +114,8 @@
 	icon_state = "eastgloves2"
 	item_state = "eastgloves2"
 	armor = ARMOR_LEATHER
-	prevent_crits = PREVENT_CRITS_NONE
 	resistance_flags = null
 	blocksound = SOFTHIT
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	anvilrepair = null
@@ -141,10 +132,8 @@
 	detail_tag = "_detail"
 	detail_color = CLOTHING_RED
 	armor = ARMOR_LEATHER
-	prevent_crits = PREVENT_CRITS_NONE
 	resistance_flags = null
 	blocksound = SOFTHIT
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	anvilrepair = null

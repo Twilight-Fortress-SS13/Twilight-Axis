@@ -2,7 +2,7 @@
 	name = "Forlorn Hope Mercenary"
 	tutorial = "The Order of the Forlorn Hope, a order formed off the back of a Ranesheni slave revolt. Drawing from all walks of life, this mercenary company now takes ranks from both purchased and liberated slaves. Coin is power, and power is the path to freedom."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/mercenary/forlorn
 	class_select_category = CLASS_CAT_RANESHENI
 	min_pq = 2
@@ -100,4 +100,4 @@
 		if("Militia Goedendag (Pair)")
 			H.put_in_hands(new /obj/item/rogueweapon/woodstaff/militia)
 			H.equip_to_slot_or_del(new /obj/item/rogueweapon/woodstaff/militia, SLOT_BACK_L)
-			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT)
+			H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_EXPERT)

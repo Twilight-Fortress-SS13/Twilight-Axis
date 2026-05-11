@@ -2,12 +2,14 @@
 	name = "Battlemaster"
 	tutorial = "You are a seasoned weapon specialist, clad in maille, with years of experience in warfare and battle under your belt."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/adventurer/sfighter
 	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	class_select_category = CLASS_CAT_WARRIOR
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
+	townie_contract_gate_exempt = TRUE
+	townie_contract_gate_hide_in_list = TRUE
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_WIL = 1,
@@ -222,7 +224,8 @@
 	tutorial = "You are a brutal warrior, who has foregone armor in favor of pure strength. Crush your enemies, see them driven before you, and hear the lamentations of their women! Oh, and you can specialize in unarmed combat and wrestling."
 	outfit = /datum/outfit/job/roguetown/adventurer/barbarian
 	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_RAGE)
+	extra_context = "This subclass gains access to the RAGE ability."
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 2,
@@ -248,10 +251,11 @@
 	to_chat(H, span_warning("You are a brutal warrior, who has foregone armor in favor of pure strength. Crush your enemies, see them driven before you, and hear the lamentations of their women! Oh, and you can specialize in unarmed combat and wrestling."))
 	H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
 	H.set_blindness(0)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/ragebad)
 	if(!H.mind)
 		return
 
-	var/weapons = list("Bronze Katar","Bronze Sword","Bronze Axe","Bronze Mace","Bronze Spear","Bronze Flail","Discipline - Whiphunter (+I PER / -I SPD)","Discipline - Unarmed","Discipline - Bodybuilder (-III INT)")
+	var/weapons = list("Bronze Katar","Bronze Sword","Bronze Axe","Bronze Mace","Bronze Spear","Bronze Flail","Discipline - Whiphunter (+I PER / -I SPD)","Discipline - Unarmed","Discipline - Bodybuilder")
 	var/weapon_choice = input(H, "Choose your WEAPON.", "TAKE UP ARMS.") as anything in weapons
 	switch(weapon_choice)
 		if("Bronze Katar")
@@ -276,7 +280,10 @@
 			r_hand = /obj/item/rogueweapon/mace/bronze
 			gloves = /obj/item/clothing/gloves/roguetown/bandages
 		if("Bronze Spear")
+			// Boar huntah
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/hunting, SKILL_LEVEL_NOVICE, TRUE)
+			ADD_TRAIT(H, TRAIT_EXPERT_HUNTER, TRAIT_GENERIC)
 			head = /obj/item/clothing/head/roguetown/helmet/leather/volfhelm
 			r_hand = /obj/item/rogueweapon/spear/bronze
 			gloves = /obj/item/clothing/gloves/roguetown/bandages
@@ -299,12 +306,11 @@
 			head = /obj/item/clothing/head/roguetown/helmet/leather/volfhelm
 			gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
 			armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/barbarian
-		if ("Discipline - Bodybuilder (-III INT)")
+		if ("Discipline - Bodybuilder") //its really not that good
 			H.adjust_skillrank_up_to(/datum/skill.combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			armor = /obj/item/clothing/suit/roguetown/armor/manual/pushups/leather
 			r_hand = /obj/item/rogueweapon/greatsword/iron
 			backr = /obj/item/rogueweapon/scabbard/gwstrap
-			H.change_stat(STATKEY_INT, -3) ///This is probably waaay too much and makes this subclass completely unviable, but admins are concerned the armor might be OP.
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt/barbarian
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/bronzeskirt
 	shoes = /obj/item/clothing/shoes/roguetown/boots/furlinedboots
@@ -312,8 +318,7 @@
 	if(should_wear_masc_clothes(H))
 		H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
 	if(should_wear_femme_clothes(H))
-		if(weapon_choice != "Discipline - Unarmed" && weapon_choice != "Discipline - Bodybuilder (-III INT)")
-			armor = /obj/item/clothing/suit/roguetown/armor/leather/bikini
+		H.dna.species.soundpack_f = new /datum/voicepack/female/warrior()
 	backl = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
@@ -360,6 +365,7 @@
 			"Knight's Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/iron,
 			"Knight's Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old/iron,
 			"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/iron/greatplume,
+			"Banded Iron Helmet"			=	/obj/item/clothing/head/roguetown/helmet/sallet/iron/banded,
 			"None"
 			)
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
@@ -367,26 +373,31 @@
 			head = helmets[helmchoice]
 
 		var/armors = list(
-			"Breastplate + Hauberk",
-			"Half-Plate + Light Gambeson"
+			"Breastplate, Hauberk, & Kilt",
+			"Half-Plate, Gambeson, & Chausses",
+			"Banded Iron, Light Gambeson, & Pants"
 			)
 		var/armorchoice = input(H, "Choose your armor.", "TAKE UP ARMOR") as anything in armors
 		switch(armorchoice)
-			if("Breastplate + Hauberk")
+			if("Breastplate, Hauberk, & Kilt")
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/iron
 				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron
-			if("Half-Plate + Light Gambeson")
+				gloves = /obj/item/clothing/gloves/roguetown/chain/iron
+				neck = /obj/item/clothing/neck/roguetown/bevor/iron
+				pants = /obj/item/clothing/under/roguetown/chainlegs/iron/kilt
+			if("Half-Plate, Gambeson, & Chausses")
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/iron
+				shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
+				gloves = /obj/item/clothing/gloves/roguetown/chain/iron
+				neck = /obj/item/clothing/neck/roguetown/bevor/iron
+				pants = /obj/item/clothing/under/roguetown/chainlegs/iron
+			if("Banded Iron, Light Gambeson, & Pants")
+				armor = /obj/item/clothing/suit/roguetown/armor/plate/iron/banded
 				shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
+				gloves = /obj/item/clothing/gloves/roguetown/plate/iron/banded
+				neck = /obj/item/clothing/neck/roguetown/gorget
+				pants = /obj/item/clothing/under/roguetown/tights/black
 
-		var/legs = list(
-			"Chain Chausses"	= /obj/item/clothing/under/roguetown/chainlegs/iron,
-			"Chain Kilt"		= /obj/item/clothing/under/roguetown/chainlegs/iron/kilt
-			)
-		var/legschoice = input(H, "Choose your Pants.", "TAKE UP PANTS") as anything in legs
-		pants = legs[legschoice]
-	gloves = /obj/item/clothing/gloves/roguetown/chain/iron
-	neck = /obj/item/clothing/neck/roguetown/bevor/iron
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/iron
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt/black
@@ -400,7 +411,7 @@
 	H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
 	H.set_blindness(0)
 	if(H.mind)
-		var/weapons = list("Executioner's Sword","Broadsword","Warhammer + Shield","Flail + Shield","Studded Flail + Shield","Lucerne","Greataxe","Greatflail")
+		var/weapons = list("Executioner's Sword","Broadsword","Warhammer + Shield","Flail + Shield","Studded Flail + Shield","Lucerne","Greataxe","Greatflail","Banded Sword + Shield")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
 			if("Executioner's Sword")
@@ -437,6 +448,11 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				r_hand = /obj/item/rogueweapon/greataxe
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
+			if("Banded Sword + Shield")
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				beltr = /obj/item/rogueweapon/sword/short/iron/banded
+				backr = /obj/item/rogueweapon/shield/iron
 
 /datum/advclass/sfighter/mhunter
 	name = "Exorcist"
@@ -444,7 +460,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/mhunter
 	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_PURITAN_ADVENTURER, TRAIT_ALCHEMY_EXPERT)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_PURITAN_ADVENTURER, TRAIT_ALCHEMY_EXPERT, TRAIT_EXPERT_HUNTER)
 	maximum_possible_slots = 5 //Not a Wretch or Towner, but still conditionally lethal for an Adventurer - especially with steel coverage and round-start access to silver weapons. Adjust the amount of available slots as needed.
 	subclass_stats = list(
 		STATKEY_STR = 2,
@@ -463,6 +479,7 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/hunting = SKILL_LEVEL_APPRENTICE,
 		)
 	extra_context = "This subclass can choose a silver weapon to spawn with, and has three disciplines to pick from: each one provides a different level of armor training, a unique trait, and a minor one-point boon to certain stats. 'Old' characters are more proficient in this subclass."
 
@@ -473,7 +490,7 @@
 	H.verbs |= /mob/living/carbon/human/proc/faith_test //Allows the Exorcist to interrogate others for their faith. Trait's agnostically worded, to allow more flexiable usage by Pantheoneers and Ascendants in this role.
 	H.verbs |= /mob/living/carbon/human/proc/torture_victim //Not as scary as it sounds. Mostly. Okay, just a little bit.
 	if(H.mind)
-		var/silver = list("Silver Dagger","Silver Shortsword","Silver Arming Sword","Silver Rapier","Silver Longsword","Silver Broadsword","Silver Mace","Silver Warhammer","Silver Morningstar","Silver Whip","Silver War Axe","Silver Poleaxe","Silver Spear","Silver Quarterstaff","Broadsword - Steel")
+		var/silver = list("Silver Dagger","Silver Shortsword","Silver Arming Sword","Silver Rapier","Silver Longsword","Silver Broadsword","Silver Mace","Silver Warhammer","Silver Morningstar","Silver Whip","Silver War Axe","Silver Poleaxe","Silver Spear","Silver Quarterstaff","Silver Katar (+1 Athletics)","Silver Claws (+1 Athletics)","Broadsword - Steel")
 		var/silver_choice = input(H, "Choose your WEAPON.", "PREPARE YOUR ARMS.") as anything in silver //Trim down to five or six choices, later? See what's the most popular, first. Gives people a chance to experiment with all of the new silver weapons.
 		switch(silver_choice)
 			if("Silver Dagger")
@@ -527,6 +544,14 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/silver
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
+			if("Silver Katar (+1 Athletics)")  //For these 2 unarmed weapon options, get a level of athletics as a consolation prize, since this class gets jman unarmed already, and expert would be OP.
+				if(H.age != AGE_OLD)  //BUT ONLY IF THE CHARACTER IS NOT OLD, because old exorcists get expert EVERYTHING anyway, no need for compensation.
+					H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_EXPERT, TRUE)  
+				r_hand = /obj/item/rogueweapon/katar/silver
+			if("Silver Claws (+1 Athletics)")
+				if(H.age != AGE_OLD)
+					H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_EXPERT, TRUE)
+				r_hand = /obj/item/rogueweapon/handclaw/gronn/silver
 			if("Broadsword - Steel")
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				r_hand = /obj/item/rogueweapon/sword/long/broadsword/steel
@@ -568,7 +593,7 @@
 				beltl = pick(
 					/obj/item/reagent_containers/glass/bottle/alchemical/strpot,
 					/obj/item/reagent_containers/glass/bottle/alchemical/conpot,
-					/obj/item/reagent_containers/glass/bottle/alchemical/endpot,
+					/obj/item/reagent_containers/glass/bottle/alchemical/willpot,
 					/obj/item/reagent_containers/glass/bottle/alchemical/spdpot,
 					/obj/item/reagent_containers/glass/bottle/alchemical/perpot,
 					/obj/item/reagent_containers/glass/bottle/alchemical/intpot,
@@ -590,7 +615,7 @@
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted
 				shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/puritan
 				belt = /obj/item/storage/belt/rogue/leather/black
-				var/helmets = list("Puritan's Armored Hat", "Visored Sallet", "Volfskulle Bascinet", "Fluted Armet", "Fluted Armet With Greatplume", "Sugarloaf Greathelm", "Barbute Greathelm")
+				var/helmets = list("Puritan's Armored Hat", "Visored Sallet", "Volfskulle Bascinet", "Fluted Armet", "Fluted Armet With Greatplume", "Sugarloaf Greathelm", "Barbute Greathelm", "Pigface Bascinet")
 				var/helmet_choice = input(H, "Choose your VISAGE.", "GET PSYCHED.") as anything in helmets
 				switch(helmet_choice)
 					if("Puritan's Armored Hat")
@@ -607,6 +632,8 @@
 						head = /obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader
 					if("Barbute Greathelm")
 						head = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great
+					if("Pigface Bascinet")
+						head = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface
 
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	pants = /obj/item/clothing/under/roguetown/tights/puritan
@@ -644,7 +671,7 @@
 	tutorial = "You are a vagrant. Your skin itches at the thought of wearing proper armor. Not after everything was taken from you. Armed with a piece of wood, it's only through your body that you endure. At least you aren't bothered by the lack of comfort like most others."
 	outfit = /datum/outfit/job/roguetown/adventurer/deprived
 	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_SHIRTLESS, TRAIT_WILD_EATER, TRAIT_OUTDOORSMAN, TRAIT_HOMESTEAD_EXPERT)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_SHIRTLESS, TRAIT_WILD_EATER, TRAIT_OUTDOORSMAN, TRAIT_HOMESTEAD_EXPERT, TRAIT_TECHNOPHOBE)
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 2,

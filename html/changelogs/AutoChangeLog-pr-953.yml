@@ -1,0 +1,5 @@
+author: "PatapoIIIa"
+delete-after: True
+changes:
+  - rscadd: "Добавлена возможность покрыть руки кровью"
+  - rscadd: "Некроманту добавлено до 3х скелетов-игроков"

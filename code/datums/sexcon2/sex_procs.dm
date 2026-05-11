@@ -8,7 +8,7 @@
 			grabstate = l_grab.grab_state
 	return grabstate
 
-/proc/do_thrust_animate(atom/movable/user, atom/movable/target, datum/sex_session/sex_session, pixels = 4, time = 2.7)
+/proc/do_thrust_animate(atom/movable/user, atom/movable/target, pixels = 4, time = 2.7)
 	var/oldx = user.pixel_x
 	var/oldy = user.pixel_y
 	var/target_x = oldx
@@ -148,9 +148,6 @@
 /mob/living/carbon/human/has_hands() // technically should be an and but i'll replicate original behavior
 	return get_bodypart(BODY_ZONE_L_ARM) || get_bodypart(BODY_ZONE_R_ARM)
 
-/mob/living/carbon/human/Initialize()
-	. = ..()
-	AddComponent(/datum/component/arousal)
 
 /mob/living/proc/return_character_information()
 	var/list/data = list()

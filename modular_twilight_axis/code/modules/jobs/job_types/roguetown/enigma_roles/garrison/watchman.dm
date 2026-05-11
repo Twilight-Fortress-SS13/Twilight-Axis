@@ -5,7 +5,7 @@
 	faction = "Station"
 	total_positions = 4
 	spawn_positions = 4
-	allowed_races = RACES_TOLERATED_UP
+	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
 	allowed_ages = list(AGE_ADULT, AGE_MIDDLEAGED)
 	display_order = JDO_TOWNWATCH
 	tutorial = "Отвечая за безопасность города и соблюдение закона, вы ходите среди угнетенных, неся справедливость и боль. \
@@ -21,6 +21,8 @@
 	give_bank_account = TRUE
 	min_pq = 6
 	max_pq = null
+	round_contrib_points = 2
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'modular_twilight_axis/sound/music/combat/combat_watchman.ogg'
 	job_subclasses = list(

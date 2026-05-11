@@ -75,13 +75,15 @@
 	if(!controller.active_partner)
 		return "Нет партнёра."
 
-	if(ctx.distance > 1)
+	var/in_shared_closet = is_shared_closet_context()
+	
+	if(!in_shared_closet && ctx.distance > 1)
 		return "Слишком далеко."
 
-	if(A.require_same_tile && !(ctx.same_tile || ctx.has_passive_grab))
+	if(!in_shared_closet && A.require_same_tile && !(ctx.same_tile || ctx.has_passive_grab))
 		return "Нужно быть на одном тайле или держать партнёра."
 
-	if(A.require_grab && !ctx.has_aggressive_grab)
+	if(!in_shared_closet && A.require_grab && !ctx.has_aggressive_grab)
 		return "Нужен более сильный захват."
 
 	if(A.required_init_organ && init.erp_organ_type != A.required_init_organ)
@@ -90,7 +92,7 @@
 	if(A.required_target_organ && target.erp_organ_type != A.required_target_organ)
 		return "Нужна другая цель."
 
-	if(!ctx.has_passive_grab)
+	if(!ctx.has_passive_grab && !in_shared_closet)
 		var/it = init.erp_organ_type
 		if(!(it in ctx.self_access))
 			ctx.self_access[it] = controller.owner.is_organ_accessible_for(controller.owner, it, FALSE)
@@ -144,57 +146,75 @@
 /datum/erp_controller_actions/proc/get_action_list_ui(actor_type, partner_type)
 	var/list/out = list()
 
-	if(!controller.active_partner)
+	if(!controller || !controller.owner || !controller.active_partner)
 		return out
 
-	// собираем контекст один раз
+	var/normalized_actor_type = normalize_organ_type(actor_type)
+	var/normalized_partner_type = normalize_organ_type(partner_type)
 	var/datum/erp_action_context/ctx = build_action_context()
-
-	var/list/p1 = pick_first_by_type(controller.owner, TRUE)
-	var/list/p2 = pick_first_by_type(controller.active_partner, FALSE)
-
-	var/datum/erp_sex_organ/any_init = p1["any"]
-	var/list/init_by = p1["by"]
-
-	var/datum/erp_sex_organ/any_tgt = p2["any"]
-	var/list/tgt_by = p2["by"]
-
-	var/datum/erp_sex_organ/forced_init = null
-	if(actor_type)
-		forced_init = init_by[actor_type]
-
-	var/datum/erp_sex_organ/forced_tgt = null
-	if(partner_type)
-		forced_tgt = tgt_by[partner_type]
 
 	for(var/datum/erp_action/Act in get_all_actions_for_ui(controller.owner, controller.active_partner))
 		if(!Act || Act.abstract)
 			continue
 
-		// фильтр по выбранному типу органов
-		if(actor_type && Act.required_init_organ && Act.required_init_organ != actor_type)
-			continue
-		if(partner_type && Act.required_target_organ && Act.required_target_organ != partner_type)
+		var/datum/erp_actor/source_actor = controller.owner
+		var/datum/erp_actor/target_actor = controller.active_partner
+
+		if(Act.action_scope == ERP_SCOPE_SELF)
+			target_actor = controller.owner
+
+		if(!source_actor || !target_actor)
 			continue
 
-		// подбираем орган-инициатор
+		var/list/p1 = pick_first_by_type(source_actor, TRUE)
+		var/list/p2 = pick_first_by_type(target_actor, FALSE)
+
+		if(!islist(p1) || !islist(p2))
+			continue
+
+		var/datum/erp_sex_organ/any_init = p1["any"]
+		var/list/init_by = p1["by"]
+		var/datum/erp_sex_organ/any_tgt = p2["any"]
+		var/list/tgt_by = p2["by"]
+
+		if(!islist(init_by))
+			init_by = list()
+		if(!islist(tgt_by))
+			tgt_by = list()
+
+		if(normalized_actor_type && Act.required_init_organ && normalize_organ_type(Act.required_init_organ) != normalized_actor_type)
+			continue
+		if(normalized_partner_type && Act.required_target_organ && normalize_organ_type(Act.required_target_organ) != normalized_partner_type)
+			continue
+
+		var/datum/erp_sex_organ/forced_init = null
+		if(normalized_actor_type)
+			forced_init = init_by[normalized_actor_type]
+
+		var/datum/erp_sex_organ/forced_tgt = null
+		if(normalized_partner_type)
+			forced_tgt = tgt_by[normalized_partner_type]
+
 		var/datum/erp_sex_organ/init = forced_init
 		if(!init)
 			if(Act.required_init_organ)
-				init = init_by[Act.required_init_organ]
+				init = init_by[normalize_organ_type(Act.required_init_organ)]
 			else
 				init = any_init
 
-		// подбираем орган-цель
 		var/datum/erp_sex_organ/tgt = forced_tgt
 		if(!tgt)
 			if(Act.required_target_organ)
-				tgt = tgt_by[Act.required_target_organ]
+				tgt = tgt_by[normalize_organ_type(Act.required_target_organ)]
 			else
 				tgt = any_tgt
 
-		var/reason = validate_action(Act, init, tgt, ctx)
+		if(Act.required_init_organ && !init)
+			continue
+		if(Act.required_target_organ && !tgt)
+			continue
 
+		var/reason = validate_action(Act, init, tgt, ctx)
 		out += list(list(
 			"id" = Act.id,
 			"name" = Act.name,
@@ -294,3 +314,22 @@
 		return n
 
 	return t
+
+/datum/erp_controller_actions/proc/is_shared_closet_context()
+	var/mob/living/A = controller.owner?.get_effect_mob()
+	var/mob/living/B = controller.active_partner?.get_effect_mob()
+
+	if(!A || !B)
+		return FALSE
+
+	return (istype(A.loc, /obj/structure/closet) && A.loc == B.loc)
+
+/datum/erp_controller_actions/proc/is_organ_hidden_by_clothes(datum/erp_actor/A, datum/erp_sex_organ/O)
+	if(!A || !O)
+		return TRUE
+
+	var/mob/living/M = A.get_effect_mob()
+	if(!M)
+		return TRUE
+
+	return !A.is_organ_accessible_for(controller.owner, O.erp_organ_type, FALSE)

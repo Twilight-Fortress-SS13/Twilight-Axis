@@ -9,7 +9,8 @@
 #define TICK_LIMIT_TO_RUN 70
 /// Tick limit for MC while running
 #define TICK_LIMIT_MC 70
-/// Tick limit while initializing
+/// Tick limit while initializing - Useless according to TG but we'll port init stage
+// later instead
 #define TICK_LIMIT_MC_INIT_DEFAULT 98
 
 /// for general usage of tick_usage

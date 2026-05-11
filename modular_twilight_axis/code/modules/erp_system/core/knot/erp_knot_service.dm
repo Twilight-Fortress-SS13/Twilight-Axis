@@ -61,15 +61,15 @@
 		return FALSE
 
 	var/datum/erp_sex_organ/init = L.init_organ
-	var/datum/erp_sex_organ/tgt  = L.target_organ
+	var/datum/erp_sex_organ/tgt = L.target_organ
 
 	var/datum/erp_sex_organ/penis/P = null
 	var/datum/erp_sex_organ/other = null
 
-	if(istype(init,/datum/erp_sex_organ/penis))
+	if(istype(init, /datum/erp_sex_organ/penis))
 		P = init
 		other = tgt
-	else if(istype(tgt,/datum/erp_sex_organ/penis))
+	else if(istype(tgt, /datum/erp_sex_organ/penis))
 		P = tgt
 		other = init
 	else
@@ -80,15 +80,18 @@
 
 	var/mob/living/carbon/human/top = P.get_owner()
 	var/datum/component/erp_knotting/K = get_knotting_component(top)
-	if(!K)
+	if(!K || !islist(K.active_links) || !K.active_links.len)
 		return FALSE
 
-	var/unit = get_penis_unit_id_for_link(L)
-	var/datum/erp_sex_organ/forced = K.get_forced_inject_target(P, unit)
-	if(!forced)
-		return FALSE
+	for(var/datum/erp_knot_link/KL as anything in K.active_links)
+		if(!istype(KL) || !KL.is_valid())
+			continue
+		if(KL.penis_org != P)
+			continue
+		if(KL.receiving_org == other)
+			return TRUE
 
-	return (forced == other)
+	return FALSE
 
 /// Notes knot activity for penis/other pair.
 /datum/erp_knot_service/proc/note_knot_activity_from_link(datum/erp_sex_link/L)
@@ -96,15 +99,15 @@
 		return
 
 	var/datum/erp_sex_organ/init = L.init_organ
-	var/datum/erp_sex_organ/tgt  = L.target_organ
+	var/datum/erp_sex_organ/tgt = L.target_organ
 
 	var/datum/erp_sex_organ/penis/P = null
 	var/datum/erp_sex_organ/other = null
 
-	if(istype(init,/datum/erp_sex_organ/penis))
+	if(istype(init, /datum/erp_sex_organ/penis))
 		P = init
 		other = tgt
-	else if(istype(tgt,/datum/erp_sex_organ/penis))
+	else if(istype(tgt, /datum/erp_sex_organ/penis))
 		P = tgt
 		other = init
 	else
@@ -115,11 +118,17 @@
 
 	var/mob/living/carbon/human/top = P.get_owner()
 	var/datum/component/erp_knotting/K = get_knotting_component(top)
-	if(!K)
+	if(!K || !islist(K.active_links) || !K.active_links.len)
 		return
 
-	var/unit = get_penis_unit_id_for_link(L)
-	K.note_activity_between(P, other, unit)
+	for(var/datum/erp_knot_link/KL as anything in K.active_links)
+		if(!istype(KL) || !KL.is_valid())
+			continue
+		if(KL.penis_org != P)
+			continue
+		if(KL.receiving_org != other)
+			continue
+		KL.note_activity()
 
 /// Toggles do_knot_action state (owner only).
 /datum/erp_knot_service/proc/set_do_knot_action(mob/living/carbon/human/H, value)
@@ -138,6 +147,11 @@
 	else
 		new_state = value ? TRUE : FALSE
 
+	if(new_state && !has_knot_capable_link_for_owner_penis())
+		controller.do_knot_action = FALSE
+		controller.ui?.request_update()
+		return FALSE
+
 	controller.do_knot_action = new_state
 	controller.ui?.request_update()
 	return TRUE
@@ -154,7 +168,6 @@
 
 	var/datum/erp_sex_organ/penis/P = controller.get_owner_penis_organ()
 	if(!P || !P.have_knot)
-		controller.do_knot_action = FALSE
 		return out
 
 	var/mob/living/carbon/human/top = P.get_owner()
@@ -167,16 +180,15 @@
 
 	var/max_units = max(1, P.count_to_action)
 	var/has_any_link = FALSE
+	var/used_units = 0
+
 	for(var/i = 0; i < max_units; i++)
-		if(K.get_link_for_penis_unit(P, i))
+		var/datum/erp_knot_link/L = K.get_link_for_penis_unit(P, i)
+		if(L && L.is_valid())
 			has_any_link = TRUE
-			break
+			used_units++
 
 	out["has_knotted_penis"] = has_any_link
-	var/used_units = 0
-	for(var/i = 0; i < max_units; i++)
-		if(K.get_link_for_penis_unit(P, i))
-			used_units++
 
 	if(used_units >= max_units)
 		out["can_knot_now"] = FALSE
@@ -189,23 +201,37 @@
 		if(L.actor_active != controller.owner)
 			continue
 
-		var/datum/erp_sex_organ/other = null
-
-		if(L.init_organ == P)
-			other = L.target_organ
-		else if(L.target_organ == P)
-			other = L.init_organ
-		else
+		if(L.init_organ != P)
 			continue
 
-		if(!other)
+		var/datum/erp_sex_organ/other = L.target_organ
+		if(!other || QDELETED(other))
 			continue
 
-		for(var/i = 0; i < max_units; i++)
-			if(!K.get_link_for_penis_unit(P, i))
-				if(K.can_start_action_with_penis(P, other, i))
-					out["can_knot_now"] = TRUE
-					return out
+		if(!(other.erp_organ_type in list(
+			SEX_ORGAN_VAGINA,
+			SEX_ORGAN_ANUS,
+			SEX_ORGAN_MOUTH
+		)))
+			continue
+
+		var/already_knotted = FALSE
+		if(K.active_links && K.active_links.len)
+			for(var/datum/erp_knot_link/KL as anything in K.active_links)
+				if(!istype(KL) || !KL.is_valid())
+					continue
+				if(KL.penis_org != P)
+					continue
+				if(KL.receiving_org != other)
+					continue
+				already_knotted = TRUE
+				break
+
+		if(already_knotted)
+			continue
+
+		out["can_knot_now"] = TRUE
+		return out
 
 	out["can_knot_now"] = FALSE
 	return out
@@ -231,3 +257,62 @@
 			return TRUE
 
 	return FALSE
+
+/datum/erp_knot_service/proc/has_knot_capable_link_for_owner_penis()
+	if(!controller || QDELETED(controller))
+		return FALSE
+
+	var/datum/erp_sex_organ/penis/P = controller.get_owner_penis_organ()
+	if(!P || !P.have_knot)
+		return FALSE
+
+	if(!controller.links || !controller.links.len)
+		return FALSE
+
+	for(var/datum/erp_sex_link/L in controller.links)
+		if(!L || QDELETED(L) || !L.is_valid())
+			continue
+
+		if(L.actor_active != controller.owner)
+			continue
+
+		if(L.init_organ != P)
+			continue
+
+		if(!L.action)
+			continue
+
+		if(L.action.has_action_tag("testicles"))
+			continue
+
+		if(L.action.has_action_tag("inject_outside_only"))
+			continue
+
+		var/datum/erp_sex_organ/other = L.target_organ
+		if(!other || QDELETED(other))
+			continue
+
+		if(!(other.erp_organ_type in list(
+			SEX_ORGAN_VAGINA,
+			SEX_ORGAN_ANUS,
+			SEX_ORGAN_MOUTH
+		)))
+			continue
+
+		return TRUE
+
+	return FALSE
+
+/datum/erp_knot_service/proc/sync_do_knot_action_state()
+	if(!controller || QDELETED(controller))
+		return FALSE
+
+	if(!controller.do_knot_action)
+		return FALSE
+
+	if(has_knot_capable_link_for_owner_penis())
+		return FALSE
+
+	controller.do_knot_action = FALSE
+	controller.ui?.request_update()
+	return TRUE

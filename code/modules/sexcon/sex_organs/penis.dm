@@ -1,6 +1,7 @@
 /obj/item/organ/penis
 	name = "penis"
-	icon_state = "severedtail" //placeholder
+	icon = 'modular_twilight_axis/icons/roguetown/items/surgery.dmi' //TA_EDIT
+	icon_state = "penis" //TA_EDIT
 	visible_organ = TRUE
 	zone = BODY_ZONE_PRECISE_GROIN
 	slot = ORGAN_SLOT_PENIS
@@ -97,6 +98,7 @@
 
 /obj/item/organ/penis/knotted
 	name = "knotted penis"
+	icon_state = "knotpenis" //TA_EDIT
 	penis_type = PENIS_TYPE_KNOTTED
 	sheath_type = SHEATH_TYPE_NORMAL
 
@@ -105,40 +107,62 @@
 
 /obj/item/organ/penis/equine
 	name = "equine penis"
+	icon_state = "equinepenis" //TA_EDIT
 	penis_type = PENIS_TYPE_EQUINE
 	sheath_type = SHEATH_TYPE_NORMAL
 
+//TA Add start - NEW ERP SYSTEM
+/obj/item/organ/penis/equine_knotted
+	name = "equine knotted penis"
+	icon_state = "hemipenis" //TA_EDIT
+	penis_type = PENIS_TYPE_EQUINE_KNOTTED
+	sheath_type = SHEATH_TYPE_NORMAL
+
+/obj/item/organ/penis/tapered_knot
+	name = "tapered penis"
+	icon_state = "knotpenis" //TA_EDIT
+	penis_type = PENIS_TYPE_TAPERED_KNOTTED
+	sheath_type = SHEATH_TYPE_SLIT
+//TA Add end - NEW ERP SYSTEM
+
 /obj/item/organ/penis/tapered_mammal
 	name = "tapered penis"
+	icon_state = "taperedpenis" //TA_EDIT
 	penis_type = PENIS_TYPE_TAPERED
 	sheath_type = SHEATH_TYPE_NORMAL
 
 /obj/item/organ/penis/tapered
 	name = "tapered penis"
+	icon_state = "taperedpenis" //TA_EDIT
 	penis_type = PENIS_TYPE_TAPERED
 	sheath_type = SHEATH_TYPE_SLIT
 
 /obj/item/organ/penis/tapered_double
 	name = "hemi tapered penis"
+	icon_state = "hemipenis" //TA_EDIT
 	penis_type = PENIS_TYPE_TAPERED_DOUBLE
 	sheath_type = SHEATH_TYPE_SLIT
 
 /obj/item/organ/penis/tapered_double_knotted
 	name = "hemi knotted tapered penis"
+	icon_state = "hemiknotpenis" //TA_EDIT
 	penis_type = PENIS_TYPE_TAPERED_DOUBLE_KNOTTED
 	sheath_type = SHEATH_TYPE_SLIT
 
 /obj/item/organ/penis/barbed
 	name = "barbed penis"
+	icon_state = "barbpenis" //TA_EDIT
 	penis_type = PENIS_TYPE_BARBED
 	sheath_type = SHEATH_TYPE_NORMAL
 
 /obj/item/organ/penis/barbed_knotted
 	name = "barbed knotted penis"
+	icon_state = "hemiknotpenis" //TA_EDIT
 	penis_type = PENIS_TYPE_BARBED_KNOTTED
 	sheath_type = SHEATH_TYPE_NORMAL
 
 /obj/item/organ/penis/tentacle
 	name = "tentacle penis"
+	icon_state = "tentapenis" //TA_EDIT
 	penis_type = PENIS_TYPE_TENTACLE
 	sheath_type = SHEATH_TYPE_NONE

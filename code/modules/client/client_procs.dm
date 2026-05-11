@@ -122,6 +122,23 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		cmd_admin_pm(href_list["priv_msg"],null)
 		return
 
+	// Adminhelp ticket shortcuts
+	// Open the current adminhelp ticket chat window
+	if(href_list["viewticket"])
+		get_adminhelp()
+		return
+
+	// Quick reply to the current ticket using the adminhelp system
+	if(href_list["replyticket"])
+		if(!current_ticket)
+			to_chat(src, span_notice("You don't have an active admin help ticket to reply to."))
+			return
+		var/msg = input(src, "Reply to the admin team:", "Adminhelp reply") as message|null
+		if(!msg)
+			return
+		current_ticket.MessageNoRecipient(msg, FALSE)
+		return
+
 	if(href_list["playerlistrogue"])
 		if(SSticker.current_state != GAME_STATE_FINISHED)
 			return
@@ -252,6 +269,17 @@ GLOBAL_LIST_EMPTY(respawncounts)
 
 	show_round_stats(pick_assoc(GLOB.featured_stats))
 
+/client/proc/cmd_admin_view_chronicle()
+	set category = "Debug"
+	set name = "View Chronicle"
+	set desc = "Open the Chronicle / roundend statistics panel without waiting for round end."
+
+	if(!check_rights(R_ADMIN|R_DEBUG))
+		return
+	show_round_stats(pick_assoc(GLOB.featured_stats))
+	log_admin("[key_name(src)] opened the Chronicle preview.")
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "View Chronicle")
+
 /client/proc/is_content_unlocked()
 	if(!prefs.unlock_content)
 		to_chat(src, "Become a BYOND member to access member-perks and features, as well as support the engine that makes this game possible. Only 10 bucks for 3 months! <a href=\"https://secure.byond.com/membership\">Click Here to find out more</a>.")
@@ -356,6 +384,8 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		if(isnull(address) || (address in localhost_addresses))
 			var/datum/admin_rank/localhost_rank = new("!localhost!", R_EVERYTHING, R_DBRANKS, R_EVERYTHING) //+EVERYTHING -DBRANKS *EVERYTHING
 			new /datum/admins(localhost_rank, ckey, 1, 1)
+	check_localhost_command_bar()
+
 	//preferences datum - also holds some persistent data for the client (because we may as well keep these datums to a minimum)
 	prefs = GLOB.preferences_datums[ckey]
 	if(prefs)
@@ -370,6 +400,8 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	prefs.last_ip = address				//these are gonna be used for banning
 	prefs.last_id = computer_id			//these are gonna be used for banning
 	fps = prefs.clientfps
+	preferred_ui_language = sanitize_preferred_ui_language(prefs.preferred_ui_language)
+	prefs.preferred_ui_language = preferred_ui_language
 
 	// Instantiate tgui panel
 	tgui_panel = new(src, "browseroutput")
@@ -502,16 +534,16 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		add_admin_verbs()
 		to_chat(src, get_message_output("memo"))
 		adminGreet()
-	if(mob && reconnecting)
-		var/area/joined_area = get_area(mob.loc)
-		if(joined_area)
-			joined_area.reconnect_game(mob)
-	else if(!BC_IsKeyAllowedToConnect(ckey))
+	if(!BC_IsKeyAllowedToConnect(ckey))
 		src << "Sorry, but the server is currently only accepting whitelisted players.  Please see the discord to be whitelisted."
 		message_admins("[ckey] was denied a connection due to not being whitelisted.")
 		log_admin("[ckey] was denied a connection due to not being whitelisted.")
 		qdel(src)
 		return 0
+	if(mob && reconnecting)
+		var/area/joined_area = get_area(mob.loc)
+		if(joined_area)
+			joined_area.reconnect_game(mob)
 
 	add_verbs_from_config()
 	var/cached_player_age = set_client_age_from_db(tdata) //we have to cache this because other shit may change it and we need it's current value now down below.
@@ -641,9 +673,6 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	GLOB.clients -= src
 	QDEL_NULL(tgui_panel)
 	QDEL_LIST_ASSOC_VAL(char_render_holders)
-	if(movingmob != null)
-		movingmob.client_mobs_in_contents -= mob
-		UNSETEMPTY(movingmob.client_mobs_in_contents)
 	Master.UpdateTickRate()
 	return ..()
 
@@ -955,7 +984,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			qdel(query_get_notes)
 			return
 	qdel(query_get_notes)
-	create_message("note", key, system_ckey, message, null, null, 0, 0, null, 0, 0)
+	create_message("note", key, system_ckey, message, logged = FALSE, note_severity = "none")
 
 
 /client/proc/check_ip_intel()
@@ -975,6 +1004,9 @@ GLOBAL_LIST_EMPTY(respawncounts)
 
 	var/dragged = L["drag"]
 	if(dragged && !L[dragged])
+		return
+
+	if(lmb_throttle(object, L))
 		return
 
 	if (object && object == middragatom && L["left"])

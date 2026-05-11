@@ -12,7 +12,7 @@
 	craftdiff = 0
 
 /datum/crafting_recipe/roguetown/leather/container/magepouch
-	name = "summoner's pouch"
+	name = "scholar's pouch"
 	reqs = list(
 		/obj/item/natural/hide/cured = 2,
 		/obj/item/natural/fibers = 1,
@@ -84,8 +84,14 @@
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/rope = 1)
 
-/datum/crafting_recipe/roguetown/leather/container/twstrap
+/datum/crafting_recipe/roguetown/leather/container/bandolier
 	name = "bandolier"
+	result = /obj/item/clothing/cloak/bandolier
+	reqs = list(/obj/item/natural/hide/cured = 2,
+				/obj/item/rope = 1)
+
+/datum/crafting_recipe/roguetown/leather/container/twstrap
+	name = "tossblade bandolier"
 	result = /obj/item/twstrap
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/rope = 1)

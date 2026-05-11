@@ -72,8 +72,7 @@
 /mob/living/carbon/check_projectile_wounding(obj/projectile/P, def_zone, blocked)
 	var/obj/item/bodypart/BP = get_bodypart(check_zone(def_zone))
 	if(BP)
-
-		var/newdam = P.damage * (100-blocked)/100
+		var/newdam = max(0, P.damage - blocked)
 		BP.bodypart_attacked_by(P.woundclass, newdam, zone_precise = def_zone, crit_message = TRUE, weapon = P)
 		return TRUE
 
@@ -81,7 +80,7 @@
 	var/obj/item/bodypart/BP = get_bodypart(check_zone(def_zone))
 	if(!BP)
 		return FALSE
-	var/newdam = P.damage * (100-blocked)/100
+	var/newdam = max(0, P.damage - blocked)
 	if(newdam <= 8)
 		return FALSE
 	if(prob(P.embedchance) && P.dropped)
@@ -226,7 +225,8 @@
 				if(get_dist(user, src) <= 1)	//people with TK won't get smeared with blood
 					user.add_mob_blood(src)
 				var/splatter_dir = get_dir(user, src)
-				new /obj/effect/temp_visual/dir_setting/bloodsplatter(loc, splatter_dir)
+				var/obj/effect/temp_visual/dir_setting/bloodsplatter/splatter = new(loc, splatter_dir)
+				splatter.set_blood_color(get_blood_color())
 				if(affecting.body_zone == BODY_ZONE_HEAD)
 					if(wear_mask)
 						wear_mask.add_mob_blood(src)

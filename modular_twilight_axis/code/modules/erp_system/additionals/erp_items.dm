@@ -50,7 +50,6 @@
 	icon_state = "harms"
 	item_state = "harms"
 	armor = ARMOR_LEATHER
-	prevent_crits = PREVENT_CRITS_NONE
 	max_integrity = ARMOR_INT_SIDE_LEATHER
 	resistance_flags = FIRE_PROOF
 	blocksound = SOFTHIT
@@ -79,6 +78,7 @@
 	sewrepair = TRUE
 	salvage_amount = 1
 	salvage_result = /obj/item/natural/hide/cured
+	smeltresult = null
 	icon = 'modular_twilight_axis/icons/clothing/erp_cloth.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/erp_cloth.dmi'
 	propagade_kink = list(

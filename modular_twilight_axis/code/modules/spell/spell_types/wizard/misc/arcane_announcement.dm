@@ -20,6 +20,11 @@
 	associated_skill = /datum/skill/magic/arcane
 
 /obj/effect/proc_holder/spell/self/arcane_announcement/cast(list/targets, mob/living/user = usr)
+	var/area/current_area = get_area(user)
+	if(!istype(current_area, /area/rogue/indoors/town/magician))
+		to_chat(user, span_warning("I have to be at the academy."))
+		revert_cast()
+		return FALSE
 
 	if(!SScommunications.can_announce(user, FALSE))
 		to_chat(user, span_warning("The arcane winds are too turbulent for a proclamation right now!"))

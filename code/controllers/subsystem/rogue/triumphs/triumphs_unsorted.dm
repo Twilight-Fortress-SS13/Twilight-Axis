@@ -10,7 +10,7 @@
 	if(!ckey)
 		return
 	return SStriumphs.get_triumphs(ckey)
-
+/*
 /client/proc/adjusttriumph()
 	set category = "-Special Verbs-"
 	set name = "Adjust Own Triumphs"
@@ -19,7 +19,7 @@
 		mob.adjust_triumphs(input)
 		log_admin("[key_name(usr)]: modified his triumphs [input]")
 		message_admins(span_adminnotice("[key_name(usr)]: modified his triumphs [input]"))
-
+*/
 
 
 

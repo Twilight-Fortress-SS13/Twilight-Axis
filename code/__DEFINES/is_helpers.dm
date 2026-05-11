@@ -79,6 +79,7 @@ GLOBAL_LIST_INIT(our_forest_sex, typecacheof(list(
 #define ishumannorthern(A) (is_species(A, /datum/species/human/northern))
 #define isdwarf(A) (is_species(A, /datum/species/dwarf))
 #define isdwarfmountain(A) (is_species(A, /datum/species/dwarf/mountain))
+#define isgnome(A) (is_species(A, /datum/species/dwarf/gnome))
 #define iself(A) (is_species(A, /datum/species/elf))
 #define isdarkelf(A) (is_species(A, /datum/species/elf/dark))
 #define iswoodelf(A) (is_species(A, /datum/species/elf/wood))
@@ -157,6 +158,12 @@ GLOBAL_LIST_INIT(our_forest_sex, typecacheof(list(
 #define isobj(A) istype(A, /obj) //override the byond proc because it returns true on children of /atom/movable that aren't objs
 
 #define isitem(A) (istype(A, /obj/item))
+
+#define isweapon(A) (istype(A, /obj/item/rogueweapon))
+
+#define isammo(A) (istype(A, /obj/item/ammo_casing))
+
+#define isreagentcontainer(A) (istype(A, /obj/item/reagent_containers))
 
 #define isidcard(I) (istype(I, /obj/item/card/id))
 

@@ -419,11 +419,11 @@
 /datum/crafting_recipe/roguetown/turfs/twigplatform
 	name = "platform (twig)"
 	result = /turf/open/floor/rogue/twig/platform
-	reqs = list(/obj/item/grown/log/tree/stick = 3)
+	reqs = list(/obj/item/grown/log/tree/stick = 4, /obj/item/rope = 2)
 	skillcraft = /datum/skill/craft/crafting
 	verbage_simple = "assemble"
 	verbage = "assembles"
-	craftdiff = 1
+	craftdiff = 2
 	loud = TRUE
 	category = "Floors"
 
@@ -438,12 +438,13 @@
 /datum/crafting_recipe/roguetown/turfs/tentwall
 	name = "tent wall"
 	result = /turf/closed/wall/mineral/rogue/tent
-	reqs = list(/obj/item/grown/log/tree/stick = 1,
-				/obj/item/natural/cloth = 1)
+	reqs = list(/obj/item/grown/log/tree/stick = 3,
+				/obj/item/natural/cloth = 3,
+				/obj/item/rope = 1)
 	skillcraft = /datum/skill/craft/crafting
 	verbage_simple = "set up"	
 	verbage = "sets up"
-	craftdiff = 1
+	craftdiff = 2
 	category = "Walls"
 
 /datum/crafting_recipe/roguetown/turfs/tentwall/TurfCheck(mob/user, turf/T)

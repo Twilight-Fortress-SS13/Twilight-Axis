@@ -6,7 +6,7 @@
 	total_positions = 2
 	spawn_positions = 2
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = ACCEPTED_RACES
+	forbidden_races = list(RACES_DESPISED)
 	tutorial = "You are a Sexton, an apprentice, helping hand or aide for the local church. Your responsibilities are little, but so are your obligations."
 	outfit = /datum/outfit/job/roguetown/sexton/
 	display_order = JDO_SEXTON
@@ -41,7 +41,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
+		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/labor/butchering = SKILL_LEVEL_NOVICE,
@@ -122,6 +122,7 @@
 		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/holy = SKILL_LEVEL_NOVICE,
+		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 	) //practically only combat skills. Exchanges all of its homesteading (and even T1 Miracles!) for minor combat skills.
 
 /datum/outfit/job/roguetown/sexton/gravetender
@@ -151,11 +152,12 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_ORI, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_0)	//Orison and Locate Dead only.
 	if(H.mind)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/locate_dead) //Gives Grovetender no healing nor combat miracles. Fetch them bodies, boy!
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/locate_dead) //Gives Grovetender no healing nor combat miracles. Fetch them bodies, boy!
 
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_LOWER_CLASS, H, "Church Funding.")
-		
+	if(H.patron?.type == /datum/patron/divine/abyssor)
+		H.grant_language(/datum/language/abyssal)
 	var/prev_real_name = H.real_name
 	var/prev_name = H.name
 	var/prefix = "Gravetender" // similar to Big Man: prefix so it's easier to tell who this guy is.

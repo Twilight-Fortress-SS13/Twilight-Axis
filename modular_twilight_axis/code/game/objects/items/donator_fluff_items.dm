@@ -40,8 +40,7 @@
 	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/aristocratic/heavy
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_CHOP)
-	armor = ARMOR_PADDED_GOOD
+	armor = ARMOR_PADDED
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
 	sellprice = 25
 
@@ -224,3 +223,53 @@
 	resistance_flags = FIRE_PROOF
 
 // Aria Mrix End
+
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/nightmare
+	name = "nightmare tears helmet"
+	desc = ""
+	icon_state = "nightmare_armet"
+	item_state = "nightmare_armet"
+	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
+
+/obj/item/clothing/suit/roguetown/armor/plate/scale/nightmare
+	name = "nightmare tears scales"
+	desc = ""
+	icon_state = "nightmare_scales"
+	item_state = "nightmare_scales"
+	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi' 
+
+/obj/item/clothing/gloves/roguetown/plate/nightmare
+	name = "nightmare tears gauntlets"
+	desc = ""
+	icon_state = "nightmare_gauntlets"
+	item_state = "nightmare_gauntlets"
+	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi' 
+
+/obj/item/clothing/under/roguetown/chainlegs/nightmare
+	name = "nightmare tears chausses"
+	desc = ""
+	icon_state = "nightmare_chausses"
+	item_state = "nightmare_chausses"
+	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
+
+/obj/item/clothing/shoes/roguetown/boots/armor/nightmare
+	name = "nightmare tears boots"
+	desc = ""
+	icon_state = "nightmare_boots"
+	item_state = "nightmare_boots"
+	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
+
+/obj/item/clothing/head/roguetown/nightmare_crown
+	name = "nightmare tears crown"
+	desc = ""
+	icon_state = "nightmare_crown"
+	item_state = "nightmare_crown"
+	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'

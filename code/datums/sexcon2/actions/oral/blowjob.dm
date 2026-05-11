@@ -44,7 +44,6 @@
 	user.visible_message(span_warning("[user] stops sucking [target]'s pintle ..."))
 
 /datum/sex_action/oral/blowjob/lock_sex_object(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	sex_locks |= new /datum/sex_session_lock(target, ORGAN_SLOT_PENIS)
 	sex_locks |= new /datum/sex_session_lock(user, BODY_ZONE_PRECISE_MOUTH)
 
 /datum/sex_action/oral/blowjob/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -58,6 +57,6 @@
 	// you want to know how i got these scars?
 	if(istype(user.head, /obj/item/clothing/head/roguetown/jester))
 		playsound(user, SFX_JINGLE_BELLS, 30, TRUE, -2, ignore_walls = FALSE)
+	do_thrust_animate(user, target)
 
-	do_thrust_animate(user, target, sex_session)
 	sex_session.perform_sex_action(target, 2, 0, TRUE)

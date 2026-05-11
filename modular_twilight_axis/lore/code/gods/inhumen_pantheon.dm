@@ -2,21 +2,20 @@
 /datum/crafting_recipe/roguetown/structure/zizo_shrine/graggar
 	name = "Shrine of Blood"
 	always_availible = FALSE	//Has unique assign for certain roles.
-	reqs = list(
-		/obj/item/bodypart = 2,
-		/obj/item/organ/stomach = 1,
-	)
-	result = /obj/structure/fluff/psycross/zizocross/graggar
-	verbage_simple = "construct"
-	verbage = "constructs"
-	craftsound = 'sound/foley/Building-01.ogg'
 
-/obj/structure/fluff/psycross/zizocross/graggar
-	name = "shrine of blood"
-	desc = "What a disgusting thing, what type of maniac would make this!?"
-	icon = 'icons/roguetown/maniac/creations.dmi'
-	icon_state = "creation1"
-	divine = FALSE
+/obj/structure/fluff/psycross/matthios
+	name = "cross of scales"
+	desc = "An unholy stone cross bearing the likeness of scales, perfectly balanced in their equality."
+
+/obj/structure/fluff/psycross/matthios/decorated
+	name = "ornate cross"
+	desc = "Golden scales dangle from rags and balance the scales. A monument to equality."
+
+/datum/crafting_recipe/roguetown/structure/matthios_cross_stone
+	name = "stone scales cross"
+
+/datum/crafting_recipe/roguetown/structure/matthios_cross_meat
+	name = "ornate scales cross"
 
 /datum/faith/inhumen
 	name = "Ascendents"
@@ -69,7 +68,6 @@
 		"Ткачиха", "Ткачихи", "Ткачихе", "Ткачиху", 
 		"Ткачихой", "Ткачихе"
 )
-
 	domain = "Бессмертие, прогресс, кровь, тьма, запретные знания, амбиции."
 	desc = "Богиня нежизни, возмездия, метаморфозы и тьмы. Убийца Псайдона, Архивраг пантеона Десяти, презираемая всеми, кроме своих последователей, сама Зизо не видит в смертных объект своей ненависти. Это прекрасно демонстрируется ее главной заповедью, что часто звучит в молитвенных песнопениях её культистов: «Последний же враг истребится — смерть»."
 	associated_faith = /datum/faith/cult_of_salvation
@@ -107,8 +105,21 @@
 	domain = "Власть, сила, превосходство, завоевание."
 	desc = "Бог силы и власти, которая приходит с нею. Пока другие божества обрекают свою паству на жалкое существование в мире, где власть приходит через их благословение и по праву рождения, Граггар провозглашает, что править может каждый, кто достаточно силен, чтобы забрать желаемое. «Слабые унаследуют лишь грязь», предупреждает он, напоминая о судьбе тех, кто не стремится стать сильнее."
 	undead_hater = TRUE
-	crafting_recipes = list(/datum/crafting_recipe/roguetown/structure/zizo_shrine/graggar)
 	worshippers = "Племенные народы, безумцы, маньяки, жестокий люд."
+	miracles = list(/datum/action/cooldown/spell/touch/orison					        = CLERIC_ORI,
+					/obj/effect/proc_holder/spell/self/graggar_bloodrage				= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/graggar_chainbreak				= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/heavy_stomp 		       			= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/blood_call 		       		= CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/graggar_regenerate 		       	= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 				        	= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T1,
+					/datum/action/cooldown/spell/graggar/graggar_battlecry		 		= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/projectile/graggar_blood_net 	= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/silence/graggar				= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/revel_in_slaughter 			= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/resurrect/graggar				= CLERIC_T4,
+	)
 	confess_lines = list(
 		"ГРАГГАР - ЗВЕРЬ, КОТОРОМУ Я ПОКЛОНЯЮСЬ!",
 		"ЧЕРЕЗ ПРЕВОСХОДСТВО - К БОЖЕСТВЕННОСТИ!",
@@ -141,20 +152,21 @@
 	domain = "Анархия, свобода, революция, равенство и братство."
 	desc = "Бог абсолютной свободы, анархии и восстания. «Через раздор к процветанию», обещает его главная заповедь, и его последователи пойдут на всё, чтобы претворить её в реальность, разрушив мировой порядок, каким мы его знаем."
 	undead_hater = TRUE
-	crafting_recipes = list()
 	worshippers = "Разбойники, наёмники, революционеры, свободолюбивый люд."
-	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison									= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/appraise										= CLERIC_ORI,
+	miracles = list(/datum/action/cooldown/spell/touch/orison									        = CLERIC_ORI,
 					/obj/effect/proc_holder/spell/self/twilight_shacklebreaker							= CLERIC_T0,
+					/datum/action/cooldown/spell/freemans_tools											= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/twilight_weightofchains						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/twilight_transact								= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/twilight_equalize								= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/lesser_heal 									= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/blood_heal									= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 								        	= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle									= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/twilight_churnwealthy							= CLERIC_T2,
 					/obj/effect/proc_holder/spell/self/twilight_amongus									= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/projectile/twilight_crownfortheking			= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/barter										= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/twilight_commieflag							= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/resurrect/twilight_matthios					= CLERIC_T3,
 					/obj/effect/proc_holder/spell/self/wildshape_twilight_wingsoffreedom				= CLERIC_T4,
 	)
 	confess_lines = list(
@@ -185,7 +197,23 @@
 	desc = "Баота — богиня гедонизма, мирских наслаждений и страстей. «Живи, люби, смейся!» — говорила она, глядя на суету вокруг себя и усилия окружающих, стремящихся двигать куда-то мир."
 	worshippers = "Избалованные богачи, маргиналы, эскаписты."
 	undead_hater = TRUE
-	crafting_recipes = list()
+	miracles = list(/datum/action/cooldown/spell/touch/orison					        = CLERIC_ORI,
+					/obj/effect/proc_holder/spell/invoked/TAbaothavice					= CLERIC_T0,
+					//obj/effect/proc_holder/spell/self/TAbless_drink					= CLERIC_T0,
+					/obj/effect/proc_holder/spell/targeted/touch/TAloversruin			= CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/TAbaothablessings				= CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/TAinsufflation					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 						  	= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/TAgriefflower					= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/projectile/TAblowingdust		= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/TAlasthigh					= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/TAjoyride						= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/TApainkiller					= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/lux_steal                     = CLERIC_T3,
+					/obj/effect/proc_holder/spell/self/mirage                           = CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/resurrect/baotha				= CLERIC_T4,
+	)
 	confess_lines = list(
 		"БАОТА ТРЕБУЕТ УДОВОЛЬСТВИЯ!",
 		"ЖИВИ, СМЕЙСЯ, ЛЮБИ!",
@@ -215,7 +243,7 @@
 		if(cross.divine == TRUE)
 			to_chat(follower, span_danger("That acursed cross interupts my prayers!"))
 			return FALSE
-	for(var/obj/structure/fluff/psycross/zizocross/graggar/cross in view(4, get_turf(follower)))
+	for(var/obj/structure/fluff/psycross/graggar/cross in view(4, get_turf(follower)))
 		if(cross.divine == TRUE)
 			to_chat(follower, span_danger("This altar has been corrupted by the Ten! It blocks my prayers!"))
 			return FALSE
@@ -239,12 +267,17 @@
 		if(cross.divine == TRUE)
 			to_chat(follower, span_danger("That acursed cross interupts my prayers!"))
 			return FALSE
+	for(var/obj/structure/fluff/psycross/matthios/cross in view(4, get_turf(follower)))
+		if(cross.divine == TRUE)
+			to_chat(follower, span_danger("This altar has been corrupted by the Ten! It blocks my prayers!"))
+			return FALSE
+		return TRUE
 	for(var/mob/living/carbon/human/comrade in view(4, get_turf(follower)))
 		if(istype(comrade.patron, /datum/patron/inhumen/matthios) && comrade != follower)
 			return TRUE
 	for(var/obj/structure/ritualcircle/matthios in view(1, get_turf(follower)))
 		return TRUE
-	to_chat(follower, span_danger("Matthios will hear any prayer I offer, so long as I have at least one comrade near me!"))
+	to_chat(follower, span_danger("Matthios will hear any prayer I offer, so long as I stand near one of my comrades or one of His altars!"))
 	return FALSE
 
 // Baotha 
@@ -254,6 +287,11 @@
 		if(cross.divine == TRUE)
 			to_chat(follower, span_danger("That acursed cross interupts my prayers!"))
 			return FALSE
+	for(var/obj/structure/fluff/psycross/baotha/cross in view(4, get_turf(follower)))
+		if(cross.divine == TRUE)
+			to_chat(follower, span_danger("This altar has been corrupted by the Ten! It blocks my prayers!"))
+			return FALSE
+		return TRUE
 	// Allows prayers in the bath house - whore.
 	if(istype(get_area(follower), /area/rogue/indoors/town/bath))
 		return TRUE

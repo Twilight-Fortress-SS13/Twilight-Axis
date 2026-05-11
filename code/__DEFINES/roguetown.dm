@@ -28,6 +28,7 @@
 #define COVERAGE_ALL_BUT_ARMFEET	( CHEST | GROIN | VITALS | LEGS )
 #define COVERAGE_FULL				( CHEST | GROIN | VITALS | LEGS | ARMS | HANDS | FEET)
 #define COVERAGE_NEARLY_FULL		( HEAD | CHEST | GROIN | VITALS | LEGS | ARMS | HANDS | FEET)
+#define COVERAGE_FULL_BODY_ACTUAL	( HEAD | HAIR | EARS | EYES | NOSE | MOUTH | NECK | CHEST | GROIN | VITALS | LEGS | ARMS | HANDS | FEET)
 
 #define COVERAGE_PANTS			( GROIN | LEGS )
 #define COVERAGE_ALL_BUT_HANDFEET_LEG		( LEGS | FEET )
@@ -81,6 +82,18 @@ Balloon Alert / Floating Text defines
 	/datum/species/dwarf/gnome,\
 	/datum/species/aura,\
 
+#define RACES_RESPECTED_NO_AASIMAR \
+	/datum/species/human/northern,\
+	/datum/species/elf/wood,\
+	/datum/species/elf/sun,\
+	/datum/species/human/halfelf,\
+	/datum/species/dwarf/mountain,\
+	/datum/species/lupian,\
+	/datum/species/vulpkanin,\
+	/datum/species/moth,\
+	/datum/species/dracon,\
+	/datum/species/dwarf/gnome\
+
 #define RACES_TOLERATED \
 	/datum/species/elf/dark,\
 	/datum/species/tieberian,\
@@ -104,15 +117,134 @@ Balloon Alert / Floating Text defines
 #define RACES_CONSTRUCT \
 	/datum/species/construct/metal,\
 
-#define RACES_ALL_KINDS list(RACES_DESPISED, RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED, RACES_CONSTRUCT)	//Truely no restrictions
+#define RACES_AASIMAR \
+	/datum/species/aasimar, \
 
-#define ACCEPTED_RACES list(RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED, RACES_CONSTRUCT)	//Allows all races except dallahun
+// Small races, usually applied due to sprite limits.
+#define RACES_SMALL \
+	/datum/species/dwarf/mountain,\
+	/datum/species/kobold,\
+	/datum/species/anthromorphsmall,\
+	/datum/species/dwarf/gnome,\
 
-#define RACES_NO_CONSTRUCT list(RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED)
+// All but d. elves.
+#define RACES_ANTHRAX \
+	/datum/species/human/northern,\
+	/datum/species/human/halfelf,\
+	/datum/species/elf/wood,\
+	/datum/species/elf/sun,\
+	/datum/species/dwarf/mountain,\
+	/datum/species/tieberian,\
+	/datum/species/aasimar,\
+	/datum/species/lizardfolk,\
+	/datum/species/lupian,\
+	/datum/species/tabaxi,\
+	/datum/species/vulpkanin,\
+	/datum/species/akula,\
+	/datum/species/moth,\
+	/datum/species/dracon,\
+	/datum/species/anthromorph,\
+	/datum/species/anthromorphsmall,\
+	/datum/species/demihuman,\
+	/datum/species/halforc,\
+	/datum/species/kobold,\
+	/datum/species/goblinp,\
+	/datum/species/dullahan,\
+	/datum/species/dwarf/gnome,\
 
-#define RACES_SHUNNED_UP list(RACES_SHUNNED, RACES_TOLERATED, RACES_RESPECTED)
+// All but elves & half-elves.
+#define RACES_BLACKOAK \
+	/datum/species/human/northern,\
+	/datum/species/elf/dark/raider,\
+	/datum/species/dwarf/mountain,\
+	/datum/species/tieberian,\
+	/datum/species/aasimar,\
+	/datum/species/lizardfolk,\
+	/datum/species/lupian,\
+	/datum/species/tabaxi,\
+	/datum/species/vulpkanin,\
+	/datum/species/akula,\
+	/datum/species/moth,\
+	/datum/species/dracon,\
+	/datum/species/anthromorph,\
+	/datum/species/anthromorphsmall,\
+	/datum/species/demihuman,\
+	/datum/species/halforc,\
+	/datum/species/kobold,\
+	/datum/species/goblinp,\
+	/datum/species/dullahan,\
+	/datum/species/dwarf/gnome,\
 
-#define RACES_TOLERATED_UP list(RACES_TOLERATED, RACES_RESPECTED)
+// All but dwarves.
+#define RACES_GRUDGE \
+	/datum/species/human/northern,\
+	/datum/species/human/halfelf,\
+	/datum/species/elf/dark,\
+	/datum/species/elf/dark/raider,\
+	/datum/species/elf/wood,\
+	/datum/species/elf/sun,\
+	/datum/species/tieberian,\
+	/datum/species/aasimar,\
+	/datum/species/lizardfolk,\
+	/datum/species/lupian,\
+	/datum/species/tabaxi,\
+	/datum/species/vulpkanin,\
+	/datum/species/akula,\
+	/datum/species/moth,\
+	/datum/species/dracon,\
+	/datum/species/anthromorph,\
+	/datum/species/anthromorphsmall,\
+	/datum/species/demihuman,\
+	/datum/species/halforc,\
+	/datum/species/kobold,\
+	/datum/species/goblinp,\
+	/datum/species/dullahan,\
+
+// Dwarves, Gnomes, Kobolds, D. Elves, Moths & Anthrosmall
+#define RACES_UNDERDARK \
+	/datum/species/human/northern,\
+	/datum/species/human/halfelf,\
+	/datum/species/elf/dark/raider,\
+	/datum/species/elf/wood,\
+	/datum/species/elf/sun,\
+	/datum/species/tieberian,\
+	/datum/species/aasimar,\
+	/datum/species/lizardfolk,\
+	/datum/species/lupian,\
+	/datum/species/tabaxi,\
+	/datum/species/vulpkanin,\
+	/datum/species/akula,\
+	/datum/species/dracon,\
+	/datum/species/anthromorph,\
+	/datum/species/demihuman,\
+	/datum/species/halforc,\
+	/datum/species/dullahan,\
+
+
+// All but Dracon, Lizardfolk, Kobolds.
+#define RACES_LIRVAS\
+	/datum/species/human/northern,\
+	/datum/species/human/halfelf,\
+	/datum/species/elf/dark,\
+	/datum/species/elf/dark/raider,\
+	/datum/species/elf/wood,\
+	/datum/species/elf/sun,\
+	/datum/species/dwarf/mountain,\
+	/datum/species/tieberian,\
+	/datum/species/aasimar,\
+	/datum/species/lupian,\
+	/datum/species/tabaxi,\
+	/datum/species/vulpkanin,\
+	/datum/species/akula,\
+	/datum/species/moth,\
+	/datum/species/anthromorph,\
+	/datum/species/anthromorphsmall,\
+	/datum/species/demihuman,\
+	/datum/species/halforc,\
+	/datum/species/goblinp,\
+	/datum/species/dullahan,\
+	/datum/species/dwarf/gnome,\
+
 
 #define NOBLE_RACES_TYPES list(\
 	/datum/species/human/northern,\
@@ -228,6 +360,8 @@ Balloon Alert / Floating Text defines
 
 #define ALL_SLAYER_PATRONS list(/datum/patron/divine/malum, /datum/patron/divine/ravox)
 
+#define ALL_KAZENGUN_PATRONS list(/datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/abyssor, /datum/patron/divine/dendor, /datum/patron/divine/necra, /datum/patron/divine/pestra, /datum/patron/divine/ravox, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/divine/xylix, /datum/patron/old_god, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha) //the twelve + saidon
+
 #define PLATEHIT "plate"
 #define CHAINHIT "chain"
 #define SOFTHIT "soft"
@@ -310,9 +444,13 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_TRADER			"CAT_TRADER"		// Trader classes untethered from adventurer
 #define CTAG_LSKELETON		"CAT_LSKELETON"		// Lich Fortified Skeleton classes
 #define CTAG_NSKELETON		"CAT_NSKELETON"		// Necromancer Greater Skeleton classes
+#define CTAG_VAMPSERVANT	"CAT_VAMPSERVANT"	// Vampire lord bloodpool servant classes
+#define CTAG_VAMPGUARD		"CAT_VAMPGUARD"		// Vampire Lord bloodpool guard classes
+#define CTAG_VAMPSPAWN		"CAT_VAMPSPAWN"		// Vampire Lord bloodpool elite classes
 #define CTAG_LICKER_WRETCH  "CAT_LICKER_WRETCH" // Licker wretch. Nuff said.
 #define CTAG_GNOLL			"CAT_GNOLL"			// Wretch-esque gnolls, graggar's chosen.
 #define CTAG_GNOLL_IMPURE	"CAT_GNOLL_IMPURE"	// Reward for beating enough gnolls.
+#define CTAG_HAG			"CAT_HAG"
 
 #define CTAG_WARDEN			"CAT_WARDEN"		// Warden class - Handles warden class selector.
 #define CTAG_WATCH			"CAT_WATCH"			// Watch class - Handles Town Watch class selector

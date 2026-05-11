@@ -35,62 +35,26 @@
 /obj/item/roguegem/green
 	name = "gemerald"
 	icon_state = "emerald_cut"
-	sellprice = 42
+	sellprice = SELLPRICE_GEMERALD
 	desc = "Glints with verdant brilliance."
-
-/obj/item/roguegem/green/Initialize()
-	. = ..()
-	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/gemstaff/emerald_staff,)
-
-	AddElement(
-		/datum/element/slapcrafting,\
-		slapcraft_recipes = slapcraft_recipe_list,\
-	)
 
 /obj/item/roguegem/blue
 	name = "blortz"
 	icon_state = "quartz_cut"
-	sellprice = 88
+	sellprice = SELLPRICE_BLORTZ
 	desc = "Pale blue, like a frozen tear."
-
-/obj/item/roguegem/blue/Initialize()
-	. = ..()
-	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/gemstaff/quartz_staff,)
-
-	AddElement(
-		/datum/element/slapcrafting,\
-		slapcraft_recipes = slapcraft_recipe_list,\
-	)
 
 /obj/item/roguegem/yellow
 	name = "toper"
 	icon_state = "topaz_cut"
-	sellprice = 34
+	sellprice = SELLPRICE_TOPER
 	desc = "Its amber hues remind you of the sunset."
-
-/obj/item/roguegem/yellow/Initialize()
-	. = ..()
-	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/gemstaff/toper_staff,)
-
-	AddElement(
-		/datum/element/slapcrafting,\
-		slapcraft_recipes = slapcraft_recipe_list,\
-	)
 
 /obj/item/roguegem/violet
 	name = "saffira"
 	icon_state = "sapphire_cut"
-	sellprice = 56
+	sellprice = SELLPRICE_SAFFIRA
 	desc = "This gem is admired by many wizards."
-
-/obj/item/roguegem/violet/Initialize()
-	. = ..()
-	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/gemstaff/sapphire_staff,)
-
-	AddElement(
-		/datum/element/slapcrafting,\
-		slapcraft_recipes = slapcraft_recipe_list,\
-	)
 
 /obj/item/roguegem/ruby
 	name = "rontz"
@@ -98,19 +62,10 @@
 	sellprice = 100
 	desc = "Its facets shine so brightly..."
 
-/obj/item/roguegem/ruby/Initialize()
-	. = ..()
-	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/gemstaff/ruby_staff,)
-
-	AddElement(
-		/datum/element/slapcrafting,\
-		slapcraft_recipes = slapcraft_recipe_list,\
-	)
-
 /obj/item/roguegem/diamond
 	name = "dorpel"
 	icon_state = "diamond_cut"
-	sellprice = 121
+	sellprice = SELLPRICE_DORPEL
 	desc = "Beautifully clear, it demands respect."
 
 /obj/item/roguegem/onyxa
@@ -162,20 +117,11 @@
 	icon_state = "raw_opal"
 	sellprice = 80
 
-/obj/item/roguegem/diamond/Initialize()
-	. = ..()
-	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/gemstaff/diamond_staff,)
-
-	AddElement(
-		/datum/element/slapcrafting,\
-		slapcraft_recipes = slapcraft_recipe_list,\
-	)
-
 // Do NOT add these to the stockpile treasures list, they have other uses.
 /obj/item/roguegem/blood_diamond
 	name = "glut"
 	icon_state = "blood"
-	sellprice = 188
+	sellprice = SELLPRICE_BLOOD_DIAMOND
 	desc = "Something about this gem just doesn't sit right with you. Holding it makes the blood leave your fingertips."
 	smeltresult = /obj/item/ingot/component/glutcrystal
 	dropshrink = 1
@@ -194,16 +140,7 @@
 /obj/item/roguegem/amethyst
 	name = "amythortz"
 	icon_state = "amethyst"
-	desc = "A deep lavender crystal, it surges with magical energy, yet it's artificial nature means it is worth little."
-
-/obj/item/roguegem/amethyst/Initialize()
-	. = ..()
-	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/gemstaff/amethyst_staff,)
-
-	AddElement(
-		/datum/element/slapcrafting,\
-		slapcraft_recipes = slapcraft_recipe_list,\
-	)
+	desc = "A deep lavender crystal, it surges with magical energy, yet its artificial nature means it is worth little."
 
 /obj/item/roguegem/amethyst/naledi
 	name = "naledic amythortz"
@@ -278,13 +215,6 @@
 /obj/item/riddleofsteel/Initialize()
 	. = ..()
 	set_light(2, 2, 1, l_color = "#ff0d0d")
-
-	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/gemstaff/quartz_staff,)
-
-	AddElement(
-		/datum/element/slapcrafting,\
-		slapcraft_recipes = slapcraft_recipe_list,\
-	)
 
 /obj/item/pearl
 	name = "pearl"

@@ -23,7 +23,7 @@
 	if(in_range(user, src) || isobserver(user))
 		user.changeNext_move(CLICK_CD_MELEE)
 		var/list/choices = list("Левит", "Деканомикон", "Новый Рассвет")
-		var/section_choice = input(user,"Мудростью какого Завета я буду делиться?", "БОЖЕСТВЕННОЕ ПРОСВЕЩЕНИЕ") as anything in choices
+		var/section_choice = tgui_input_list(user, "Мудростью какого Завета я буду делиться?", "БОЖЕСТВЕННОЕ ПРОСВЕЩЕНИЕ", choices)
 		var/chosentxt
 		switch(section_choice)
 			if("Левит")
@@ -32,12 +32,15 @@
 				chosentxt = 'modular_twilight_axis/lore/strings/decanomicon.txt'
 			if("Новый Рассвет")
 				chosentxt = 'modular_twilight_axis/lore/strings/newdawn.txt'
-		var/m
+			else
+				return
 		var/list/verses = world.file2list(chosentxt)
-		m = pick(verses)
+		var/m = tgui_input_list(user, "Какой стих я зачитаю?", "БОЖЕСТВЕННОЕ ПРОСВЕЩЕНИЕ", verses)
 		if(m)
 			user.say(m)
-
+		else
+			m = pick(verses)
+			user.say(m)
 
 /obj/item/book/rogue/bibble/psy
 	desc = "'И Он плачет. Не за тебя, не за себя, но за всех нас.' </br>Том в кожаном переплете, содержащий учения Церкви Всеотца. Книга разделена на четыре Завета, отражающих верования наиболее крупных и значимых конфессий псайдонитской веры. </br>ЗАВЕТ ПСАЙДОНА есть учение Старой Веры, что вело праведных во времена до Архипредательства. </br>ЖИТИЁ ПСАЙДОНА описывает сотворение Псайдонии такой, какой мы её знаем. </br>ЗАВЕТ ОТАВИКА есть истина новой эпохи, поведанная нам Великим Магистром Отаванским. </br>ЗАВЕТ СУДЬБЫ есть учение жителей Наледи, союзников в борьбе со злом, что захватило наш грешный мир. "
@@ -54,16 +57,22 @@
 		return
 	if(in_range(user, src) || isobserver(user))
 		user.changeNext_move(CLICK_CD_MELEE)
-		var/m
 		if(sect)
 			var/list/verses = world.file2list("modular_twilight_axis/lore/strings/psy[sect].txt")
-			m = pick(verses)
+			var/m = tgui_input_list(user, "Какой стих я зачитаю?", "БОЖЕСТВЕННОЕ ПРОСВЕЩЕНИЕ", verses)
 			if(m)
 				if(prob(1) && sect == "sect1")
 					user.playsound_local(user, 'sound/misc/psydong.ogg', 100, FALSE)
 					user.say("ПСАЙ 66:6... +_Всеотец_+ изрёк: «Я прощаю тебя, ибо люблю тебя как отец любит свою дочь». И кровь стекала по лезвию и из груди е- Откуда это здесь?!")
 				else
-					user.say(m)	
+					user.say(m)
+			else
+				m = pick(verses)
+				if(prob(1) && sect == "sect1")
+					user.playsound_local(user, 'sound/misc/psydong.ogg', 100, FALSE)
+					user.say("ПСАЙ 66:6... +_Всеотец_+ изрёк: «Я прощаю тебя, ибо люблю тебя как отец любит свою дочь». И кровь стекала по лезвию и из груди е- Откуда это здесь?!")
+				else
+					user.say(m)
 
 /obj/item/book/rogue/bibble/psy/MiddleClick(mob/user, params)
 	var/sects = list("Завет Псайдона", "Житиё Псайдона", "Завет Отавика", "Завет Судьбы")
@@ -106,7 +115,10 @@
 		return
 	if(in_range(user, src) || isobserver(user))
 		user.changeNext_move(CLICK_CD_MELEE)
-		var/m
 		var/list/verses = world.file2list("modular_twilight_axis/lore/strings/zizo.txt")
-		m = pick(verses)
-		user.say(m)
+		var/m = tgui_input_list(user, "Какой стих я зачитаю?", "БОЖЕСТВЕННОЕ ПРОСВЕЩЕНИЕ", verses)
+		if(m)
+			user.say(m)
+		else
+			m = pick(verses)
+			user.say(m)

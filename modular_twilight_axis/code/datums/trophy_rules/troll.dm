@@ -7,10 +7,10 @@
 
 /datum/trophy_rule/troll_armor/get_score(obj/item/I)
 	if(istype(I, /obj/item/natural/head/troll/cave))
-		return 20
+		return 3
 	if(istype(I, /obj/item/natural/head/troll/axe))
-		return 15
-	return 10
+		return 2
+	return 1
 
 /datum/trophy_rule/troll_armor/build_effect(obj/item/I)
 	var/datum/trophy_effect/E = new

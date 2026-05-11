@@ -21,7 +21,7 @@ A LITTLE MORE CONSISTENT IN HERE. PLEASE DO YOUR BEST. THANKS.
 									)
 
 /datum/supply_pack/rogue/wardrobe/hat/physicianhat
-	name = "Physician's Hat"
+	name = "Doctor's Hat"
 	cost = 25
 	contains = list(
 					/obj/item/clothing/head/roguetown/physician
@@ -35,7 +35,7 @@ A LITTLE MORE CONSISTENT IN HERE. PLEASE DO YOUR BEST. THANKS.
 				)
 
 /datum/supply_pack/rogue/wardrobe/hat/bardhat
-	name = "Minstrel's Hat"
+	name = "Bard's Hat"
 	cost = 25
 	contains = list(
 					/obj/item/clothing/head/roguetown/bardhat,
@@ -250,6 +250,11 @@ A LITTLE MORE CONSISTENT IN HERE. PLEASE DO YOUR BEST. THANKS.
 	cost = 30
 	contains = list(/obj/item/clothing/cloak/poncho)
 
+/datum/supply_pack/rogue/wardrobe/cloaks/bandolier
+	name = "Bandolier"
+	cost = 30
+	contains = list(/obj/item/clothing/cloak/bandolier)
+
 /datum/supply_pack/rogue/wardrobe/cloaks/bcloaks
 	name = "Raincloak, Blue"
 	cost = 30
@@ -287,13 +292,6 @@ A LITTLE MORE CONSISTENT IN HERE. PLEASE DO YOUR BEST. THANKS.
 
 /datum/supply_pack/rogue/wardrobe/cloaks/scarletshroud
 	name = "Tabard, Scarlet Shroud"
-	cost = 30
-	contains = list(
-					/obj/item/clothing/head/roguetown/roguehood/shroudscarlet,
-				)
-
-/datum/supply_pack/rogue/wardrobe/cloaks/blacktabard
-	name = "Shroud, Scarlet Tabard"
 	cost = 30
 	contains = list(
 					/obj/item/clothing/head/roguetown/roguehood/shroudscarlet,
@@ -694,32 +692,32 @@ A LITTLE MORE CONSISTENT IN HERE. PLEASE DO YOUR BEST. THANKS.
 /// WEIRD SHIT / MISC!!! //
 ///////////////////////////
 
-/datum/supply_pack/rogue/wardrobe/suits/exoticsilkbra
-	name = "Exotic Silk Bra"
+/datum/supply_pack/rogue/wardrobe/suits/silkbra
+	name = "Giltsilk Bra"
 	cost = 40
 	contains = list(
-					/obj/item/clothing/suit/roguetown/shirt/exoticsilkbra,
+					/obj/item/clothing/suit/roguetown/shirt/silkbra,
 				)
 
 /datum/supply_pack/rogue/wardrobe/suits/anklets
-	name = "Exotic Silk Anklets"
+	name = "Giltsilk Anklets"
 	cost = 40
 	contains = list(
 					/obj/item/clothing/shoes/roguetown/anklets,
 				)
 
-/datum/supply_pack/rogue/wardrobe/suits/exoticsilkbelt
-	name = "Exotic Silk Belt"
+/datum/supply_pack/rogue/wardrobe/suits/silkbelt
+	name = "Giltsilk Belt"
 	cost = 40
 	contains = list(
-					/obj/item/storage/belt/rogue/leather/exoticsilkbelt,
+					/obj/item/storage/belt/rogue/leather/silkbelt,
 				)
 
-/datum/supply_pack/rogue/wardrobe/suits/exoticsilkmask
-	name = "Exotic Silk Mask"
+/datum/supply_pack/rogue/wardrobe/suits/silkmask
+	name = "Giltsilk Mask"
 	cost = 40
 	contains = list(
-					/obj/item/clothing/mask/rogue/exoticsilkmask,
+					/obj/item/clothing/mask/rogue/silkmask,
 				)
 
 /datum/supply_pack/rogue/wardrobe/caparison/caparison

@@ -1,10 +1,7 @@
 /datum/advclass/mercenary/trollslayer
 	name = "Trollslayer" // barbarian-like subclass with soft-nudist (no armor) and no Fast Reflexes, supposed to soak up damage with their con and skinarmor and chop shit up with class-exclusive axes
 	tutorial = "Atop the windy peaks of the dwarven Mountainhomes, you swore an Oath, vowing to cleanse the land of monsters or die trying. You give yourself wholly to the Battlefather’s judgment, bearing your devotion as armor and your rage as a weapon. No creacher upon this world is safe from your divine wrath."
-	allowed_races = list(
-		/datum/species/dwarf,
-		/datum/species/dwarf/mountain
-		)
+	forbidden_races = list(RACES_GRUDGE)
 	outfit = /datum/outfit/job/roguetown/mercenary/trollslayer
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_RACIAL
@@ -124,7 +121,7 @@
 	name = "rough skin"
 	desc = ""
 	icon_state = null
-	armor = ARMOR_RUMACLAN
+	armor = ARMOR_MAILLE
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
@@ -212,6 +209,8 @@
 	ADD_TRAIT(owner, TRAIT_NODEF, STATUS_EFFECT_TRAIT)
 	ADD_TRAIT(owner, TRAIT_NOPAINSTUN, STATUS_EFFECT_TRAIT)
 
+#define STAMINA_AFTER_RAGE_SPENT_PERCENT 0.8 //TA add - slayer balance
+
 /datum/status_effect/buff/axedance/on_remove()
 	. = ..()
 	to_chat(owner, span_warning("My rage subsides. I feel exhausted."))
@@ -223,8 +222,9 @@
 	REMOVE_TRAIT(owner, TRAIT_NODEF, STATUS_EFFECT_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_NOPAINSTUN, STATUS_EFFECT_TRAIT)
 	owner.apply_status_effect(/datum/status_effect/debuff/axe_exhaustion)
-	owner.stamina = 400
+	owner.stamina = owner.max_stamina * STAMINA_AFTER_RAGE_SPENT_PERCENT //TA add - slayer balance
 
+#undef STAMINA_AFTER_RAGE_SPENT_PERCENT //TA add - slayer balance
 #undef AXEDANCE_FILTER
 
 /atom/movable/screen/alert/status_effect/debuff/axe_exhaustion
@@ -236,7 +236,7 @@
 	var/outline_colour = "#EB4445"
 	id = "axe_axhaustion"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/axe_exhaustion
-	duration = 8 SECONDS // actually let people get away from him after the rage.
+	duration = 15 SECONDS // actually let people get away from him after the rage.  //TA edit - buindle fix
 	effectedstats = list("speed" = -5)
 
 /obj/item/storage/belt/rogue/leather/slayer

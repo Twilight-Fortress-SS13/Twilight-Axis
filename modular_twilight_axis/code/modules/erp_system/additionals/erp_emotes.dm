@@ -15,10 +15,10 @@
 
 		if(do_change)
 			if(J.zone_selected == BODY_ZONE_PRECISE_MOUTH)
-				message_param = "licks %t lips."
+				message_param = "лижет губы %t."
 
 			else if(J.zone_selected == BODY_ZONE_PRECISE_EARS)
-				message_param = "licks the ear of %t."
+				message_param = "лижет ушко %t."
 				var/mob/living/carbon/human/O = target
 				if(iself(O) || ishalfelf(O) || isdarkelf(O))
 					if(!O.cmode)
@@ -26,14 +26,14 @@
 					SEND_SIGNAL(O, COMSIG_SEX_RECEIVE_ACTION, user, 1, 0, FALSE, SEX_FORCE_LOW, SEX_SPEED_LOW, null)
 
 			else if(J.zone_selected == BODY_ZONE_PRECISE_GROIN)
-				message_param = "licks %t between the legs."
+				message_param = "лижет %t между ног."
 				to_chat(target, span_love("That feels nice..."))
 				SEND_SIGNAL(target, COMSIG_SEX_RECEIVE_ACTION, user, 2, 0, FALSE, SEX_FORCE_LOW, SEX_SPEED_LOW, null)
 
 			else if(J.zone_selected == BODY_ZONE_HEAD)
-				message_param = "licks %t cheek"
+				message_param = "лижет щечку %t"
 			else
-				message_param = "licks %t [parse_zone(J.zone_selected)]."
+				message_param = "облизывает %t [parse_zone(J.zone_selected)]."
 
 	if(user != target)
 		var/mob/living/U = user

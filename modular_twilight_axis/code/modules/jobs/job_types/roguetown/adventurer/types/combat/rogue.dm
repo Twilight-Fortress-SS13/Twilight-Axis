@@ -46,7 +46,7 @@
 	)
 
 	var/datum/inspiration/I = new /datum/inspiration(H)
-	I.grant_inspiration(H, bard_tier = BARD_T2)
+	I.grant_inspiration(H, bard_tier = BARD_T1)
 
 	if(H.mind)
 		H.AddComponent(/datum/component/combo_core/soundbreaker, SB_COMBO_WINDOW, SB_MAX_HISTORY, SB_MAX_VISIBLE_NOTES)

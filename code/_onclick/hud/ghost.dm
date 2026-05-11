@@ -42,7 +42,6 @@
 					if(target_job.same_job_respawn_delay)
 						// Store the current time for the player
 						GLOB.job_respawn_delays[G.ckey] = world.time + target_job.same_job_respawn_delay
-
 				G.returntolobby(0)
 
 /atom/movable/screen/ghost/reenter_corpse
@@ -88,16 +87,8 @@
 	..()
 	var/atom/movable/screen/using
 
-	using = new /atom/movable/screen/ghost/orbit(null, src)
-	using.screen_loc = ui_ghost_orbit
-	static_inventory += using
-
 	using = new /atom/movable/screen/ghost/reenter_corpse(null, src)
 	using.screen_loc = ui_ghost_reenter_corpse
-	static_inventory += using
-
-	using = new /atom/movable/screen/ghost/teleport(null, src)
-	using.screen_loc = ui_ghost_teleport
 	static_inventory += using
 
 	using =  new /atom/movable/screen/backhudl/ghost()

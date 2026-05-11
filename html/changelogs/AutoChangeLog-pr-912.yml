@@ -1,0 +1,5 @@
+author: "Daburuu"
+delete-after: True
+changes:
+  - rscadd: "Добавлены эмоции стонов"
+  - rscadd: "Добавлена эмоция поглаживания по голове"

@@ -5,18 +5,17 @@
 	icon_state = "longcoat"
 	item_state = "longcoat"
 	body_parts_covered = COVERAGE_ALL_BUT_ARMS
-	armor = ARMOR_LEATHER_GOOD
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_BLUNT, BCLASS_CHOP, BCLASS_SMASH)
+	armor = ARMOR_LEATHER
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
 	sellprice = 25
 
 /datum/advclass/wretch/twilight_corsair
-	name = "Sea Rogue"
-	tutorial = "You spent your entire lyfe making a living through piracy in the seas of Grimoria, where gunpowder and steel were always your loyal companions."
+	name = "Corsair"
+	tutorial = "During the Twilight War, you served aboard a Reichsmarine warship, intercepting, boarding and ravaging Golden Empire's trade vessels on Kaiser's orders. After the war ended, your crew saw it fit to continue with the practice, flying a flag with a different shade of black."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_corsair
 	category_tags = list(CTAG_WRETCH)
+	class_select_category = CLASS_CAT_RANGER
 	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_DODGEEXPERT)
 	maximum_possible_slots = 2
 	classes = list("Kaper" = "During the Twilight War, you served aboard a Reichsmarine warship, intercepting, \
@@ -58,7 +57,8 @@
 	H.adjust_blindness(-3)
 	var/classes = list("Kaper", "Wōkòu")
 	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
-
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
 	switch(classchoice)
 		if("Kaper")
 			H.set_blindness(0)
@@ -74,12 +74,17 @@
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 			shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft
 			gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
-			backr = /obj/item/gun/ballistic/twilight_firearm/flintgonne
 			r_hand = /obj/item/rogueweapon/sword/cutlass
 			mask = /obj/item/clothing/mask/rogue/facemask/steel
 			backpack_contents = list(/obj/item/twilight_powderflask = 1, /obj/item/bomb = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
 			H.grant_language(/datum/language/grenzelhoftian)
-
+			switch(crimeschoice)
+				if("I'm nobody")
+					backr = /obj/item/gun/ballistic/twilight_firearm/flintgonne
+				if("They fear me")
+					wretch_select_bounty(H)
+					H.put_in_hands(new /obj/item/grapplinghook)
+					backr = /obj/item/gun/ballistic/twilight_firearm/arquebus
 		if("Wōkòu")
 			H.set_blindness(0)
 			mask = /obj/item/clothing/mask/rogue/facemask/steel/kazengun
@@ -98,4 +103,11 @@
 			backl = /obj/item/storage/backpack/rogue/satchel
 			backpack_contents = list(/obj/item/bomb/smoke = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = 1, /obj/item/twilight_powderflask = 1, /obj/item/rope/chain = 1)
 			H.grant_language(/datum/language/kazengunese)
-	wretch_select_bounty(H)
+			switch(crimeschoice)
+				if("I'm nobody")
+					return
+				if("They fear me")
+					wretch_select_bounty(H)
+					H.put_in_hands(new /obj/item/grapplinghook)
+					H.change_stat(STATKEY_PER, 1)
+					H.change_stat(STATKEY_SPD, 1)

@@ -1,15 +1,18 @@
+/datum/supply_pack/rogue/light_armor/padded_gambeson_cuisses
+	name = "Padded Gamboised Cuisses"
+	cost = 60
+	contains = list(/obj/item/clothing/under/roguetown/gambeson/heavy)
+
+/datum/supply_pack/rogue/light_armor/gambeson_cuisses
+	name = "Gamboised Cuisses"
+	cost = 25
+	contains = list(/obj/item/clothing/under/roguetown/gambeson)
+
 /datum/supply_pack/rogue/ranged_weapons/twilight_flintgonne
 	name = "Hakenbüchse"
 	cost = 100
 	contains = list(
 					/obj/item/gun/ballistic/twilight_firearm/flintgonne,
-				)
-
-/datum/supply_pack/rogue/ranged_weapons/mortar
-	name = "Hand mortar"
-	cost = 110
-	contains = list(
-					/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar,
 				)
 
 /datum/supply_pack/rogue/ranged_weapons/twilight_barker
@@ -317,7 +320,7 @@
 /datum/supply_pack/rogue/Afreet/twilight_silver
 	name = "Silver bullet"
 	cost = 10
-	contains = list(/obj/item/ammo_casing/caseless/twilight_lead/silver)
+	contains = list(/obj/item/ammo_casing/caseless/rogue/twilight_lead/silver)
 
 /datum/supply_pack/rogue/Afreet/Mancatcher
 	name = "Mancatcher"

@@ -17,6 +17,11 @@
 	smeltresult = /obj/item/ingot/iron
 	grid_width = 64
 	grid_height = 64
+	/// Whether we will automatically deconstruct boulders we mine out of rock. Blacksteel / highest tier only.
+	var/auto_boulder = FALSE
+	/// Whether the boulder we mine out will be far weaker to destroy (usually with one hit). Steel / mid-tier.
+	var/weak_boulders = FALSE
+	is_tool = TRUE
 
 /obj/item/rogueweapon/pick/getonmobprop(tag)
 	. = ..()
@@ -37,7 +42,7 @@
 
 /obj/item/rogueweapon/pick/steel
 	name = "steel pick"
-	desc = "With a reinforced handle and sturdy shaft, this is a superior tool for delving in the darkness."
+	desc = "With a reinforced handle and sturdy shaft, this is a superior tool for delving in the darkness. It will leave boulders weaker and susceptible to just one strike."
 	force = 21
 	force_wielded = 28
 	icon_state = "steelpick"
@@ -45,6 +50,7 @@
 	gripped_intents = list(/datum/intent/pick)
 	max_integrity = 600
 	smeltresult = /obj/item/ingot/steel
+	weak_boulders = TRUE
 
 /obj/item/rogueweapon/pick/bronze
 	name = "dolabra"
@@ -60,15 +66,16 @@
 
 /obj/item/rogueweapon/pick/blacksteel
 	name = "blacksteel pick"
-	desc = "Glimmering with silvered blackness, this is a pretigious tool for miners delving into the darkness."
+	desc = "Glimmering with silvered blackness, this is a pretigious tool for miners delving into the darkness. It looks like it will strike hard enough to shatter any boulders within a rocky surface instantly."
 	possible_item_intents = list(/datum/intent/pick/bad)
-	gripped_intents = list(/datum/intent/pick/good)
+	gripped_intents = list(/datum/intent/pick)
 	force = 25
 	force_wielded = 32
 	icon_state = "blacksteelpick1"
 	item_state = "blacksteelpick1"
 	max_integrity = 800
 	smeltresult = /obj/item/ingot/blacksteel
+	auto_boulder = TRUE
 
 /obj/item/rogueweapon/pick/stone
 	name = "stone pick"

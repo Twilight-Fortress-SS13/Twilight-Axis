@@ -77,7 +77,7 @@
 
 	var/text = null
 	if(SSerp?.action_message_renderer && L.action.message_start)
-		text = SSerp.action_message_renderer.build_message(L.action.message_start, L)
+		text = SSerp.action_message_renderer.build_message(L.action.message_start, L, allow_knot_suffix = FALSE)
 
 	if(!text)
 		text = "Начинается: [L.action.name]."
@@ -91,7 +91,7 @@
 
 	var/text = null
 	if(SSerp?.action_message_renderer && L.action.message_finish)
-		text = SSerp.action_message_renderer.build_message(L.action.message_finish, L)
+		text = SSerp.action_message_renderer.build_message(L.action.message_finish, L, allow_knot_suffix = FALSE)
 
 	if(!text)
 		text = "Заканчивается: [L.action.name]."

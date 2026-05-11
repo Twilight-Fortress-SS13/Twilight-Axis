@@ -1,8 +1,9 @@
+/*
 /datum/advclass/wretch/ancient_deathknight
 	name = "Unbound Ancient Death Knight"
 	tutorial = "You were once a Death Knight - a warrior risen from death to serve a master. How long you have been dead - you do not remember anymore. And you find yourself severed from any master's command. Why do you fight? Does it matter? All that you know is to move forward. The world sees you as an abomination. Seek your own path."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/wretch/ancient_deathknight
 	class_select_category = CLASS_CAT_ACCURSED
 	category_tags = list(CTAG_WRETCH)
@@ -82,10 +83,11 @@
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/corroded = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/book/spellbook = 1,
 	)
 
 	if(H.mind)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/mending)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/suicidebomb/lesser)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/bonemend)
 
@@ -102,3 +104,5 @@
 	H.energy = H.max_energy
 
 	to_chat(H, span_danger("You are playing an Antagonist role. Your very existence is an abomination — everyone is justified in laying you down. You are an ancient warrior risen from death, not a comedic skeleton. Having fun with your character is encouraged, but do not use the role to grief or disregard the setting — play it with gravitas and create memorable moments. Failure to maintain High Roleplay standards may result in punishment."))
+	H.select_skeleton_features()
+*/

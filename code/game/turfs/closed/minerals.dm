@@ -64,43 +64,110 @@
 		return TRUE
 	return ..()
 
+// This is snowflaked bump code for mineral walls. Bumping into walls allows you to mine them, if you have apprentice+ skill.
+// My wrists hurt. Let us have this. okay?
+/turf/closed/mineral/Bumped(atom/movable/AM)
+	. = ..()
+
+	if(!ishuman(AM))
+		return
+	var/mob/living/carbon/human/user = AM
+	var/obj/item = user.get_active_held_item()
+
+	if(istype(user.used_intent, /datum/intent/pick) && (user.get_skill_level(/datum/skill/labor/mining) >= SKILL_LEVEL_APPRENTICE))
+		if(!do_after(user, 1 SECONDS, TRUE, src, TRUE, null, TRUE))
+			return
+		if(!ismineralturf(src))
+			return
+		attackby(item, user, multiplier = 2)
+	if(user.used_intent.type == /datum/intent/drill && (user.get_skill_level(/datum/skill/labor/mining) >= SKILL_LEVEL_APPRENTICE) && (istype(item, /obj/item/contraption/pick/drill)))
+		var/obj/item/contraption/pick/drill/drillitem = item
+		if(drillitem.current_charge < 10)
+			to_chat(user, span_notice("Not enough fuel!"))
+			return
+		if(!do_after(user, 1 SECONDS, TRUE, src, TRUE, null, TRUE))
+			return
+		if(!ismineralturf(src))
+			return
+		attackby(drillitem, user, multiplier = 2) //higherimpact
+		drillitem.current_charge -= 10
+
+	return
+
 /turf/closed/mineral/attackby(obj/item/I, mob/user, params, multiplier)
 	if (!user.IsAdvancedToolUser())
 		to_chat(usr, span_warning("I don't have the dexterity to do this!"))
 		return
 	lastminer = user
 	..()
-	if(istype(I, /obj/item/rogueweapon/pick))
+	if(istype(I, /obj/item/rogueweapon/pick)||istype(I, /obj/item/contraption/pick/drill))
 		if(!isliving(user))
 			return
 
 		var/mob/living/L = user
 		user.doing = FALSE
-		// Makes more sense for the check since they always
-		// become an open tile afterwards
-		while(density && user.Adjacent(src))
-			if((L.energy > 0) && (do_after(user, CLICK_CD_MELEE, TRUE, src)))
-				..()
-				var/olddam = turf_integrity
-				if(turf_integrity && turf_integrity > 10)
-					if(turf_integrity < olddam)
-						if(prob(50))
-							if(user.Adjacent(src))
-								var/obj/item/natural/stone/S = new(src)
-								S.forceMove(get_turf(user))
-					if(!density)
-						break
-			else
-				break
+		if(istype(I, /obj/item/contraption/pick/drill)&& L.used_intent.type == /datum/intent/drill)
+			var/obj/item/contraption/pick/drill/drillitem = I
+			// we're holding a drill and on drill intent
+			if (drillitem.current_charge < 1)
+				to_chat(user, span_warning("Not enough fuel."))
+				drillitem.ungrip(user)
+				return
+			while(density && user.Adjacent(src))
+				if((L.energy > 0) && (do_after(user, CLICK_CD_RANGE, TRUE, src))&&(drillitem.current_charge > 2))
+					..()
+					drillitem.current_charge -= 1
+					user.stamina_add(-10)//not using up as much stamina for a drill, instead using up charges
+					if (drillitem.current_charge < 1)
+						drillitem.ungrip(user, "it ran out of fuel")
+					var/olddam = turf_integrity
+					if(turf_integrity && turf_integrity > 10)
+						if(turf_integrity < olddam)
+							if(prob(50))
+								if(user.Adjacent(src))
+									var/obj/item/natural/stone/S = new(src)
+									S.forceMove(get_turf(user))
+						if(!density)
+							break
+				else
+					break
+		else
+			// Makes more sense for the check since they always
+			// become an open tile afterwards
+			while(density && user.Adjacent(src))
+				if((L.energy > 0) && (do_after(user, CLICK_CD_MELEE, TRUE, src)))
+					..()
+					var/olddam = turf_integrity
+					if(turf_integrity && turf_integrity > 10)
+						if(turf_integrity < olddam)
+							if(prob(50))
+								if(user.Adjacent(src))
+									var/obj/item/natural/stone/S = new(src)
+									S.forceMove(get_turf(user))
+						if(!density)
+							break
+				else
+					break
 
 /turf/closed/mineral/attack_right(mob/user)
 	var/obj/item = user.get_active_held_item()
-	if(user.used_intent.type == /datum/intent/pick && (user.get_skill_level(/datum/skill/labor/mining) >= SKILL_LEVEL_JOURNEYMAN))
-		if(do_after(user, 4 SECONDS, TRUE, src))
+	if(istype(user.used_intent, /datum/intent/pick) && (user.get_skill_level(/datum/skill/labor/mining) >= SKILL_LEVEL_APPRENTICE))
+		if(do_after(user, 2 SECONDS, TRUE, src))
 			if(!ismineralturf(src))
 				return
 			src.attackby(item, user, multiplier = 4)
 			user.stamina_add(25)
+	if(user.used_intent.type == /datum/intent/drill && (user.get_skill_level(/datum/skill/craft/engineering) >= SKILL_LEVEL_APPRENTICE) && (istype(item, /obj/item/contraption/pick/drill)))
+		var/obj/item/contraption/pick/drill/drillitem = item
+		if(drillitem.current_charge < 10)
+			to_chat(user, span_notice("Not enough fuel!"))
+			return
+		if(do_after(user, 1.5 SECONDS, TRUE, src))
+			if(!ismineralturf(src))
+				return
+			src.attackby(drillitem, user, multiplier = 5) //higherimpact
+			user.stamina_add(5) //less stamina
+			drillitem.current_charge -= 10
 	..()
 
 /turf/closed/mineral/turf_destruction(damage_flag)
@@ -137,20 +204,29 @@
 
 /turf/closed/mineral/proc/gets_drilled(mob/living/user, triggered_by_explosion = FALSE, give_exp = TRUE)
 	new /obj/item/natural/stone(src)
+	var/autodestroy = FALSE
+	var/weak_hp = FALSE
+	if(!isnull(user))
+		var/held = user.get_active_held_item()
+		if(istype(held, /obj/item/rogueweapon/pick))
+			var/obj/item/rogueweapon/pick/P = held
+			autodestroy = P.auto_boulder
+			if(P.weak_boulders)
+				weak_hp = 20
 	if(prob(30))
 		new /obj/item/natural/stone(src)
 	if (mineralType && (mineralAmt > 0))
 		if(prob(33)) //chance to spawn ore directly
 			new mineralType(src)
 		if(rockType) //always spawn at least 1 rock
-			new rockType(src)
+			new rockType(src, autodestroy, weak_hp)
 			if(prob(23))
-				new rockType(src)
+				new rockType(src, autodestroy, weak_hp)
 		SSblackbox.record_feedback("tally", "ore_mined", mineralAmt, mineralType)
 	else if(user?.goodluck(2))
 		var/newthing = pickweight(list(/obj/item/natural/rock/salt = 2, /obj/item/natural/rock/iron = 1, /obj/item/natural/rock/coal = 2))
 //		to_chat(user, "<span class='notice'>Bonus ducks!</span>")
-		new newthing(src)
+		new newthing(src, autodestroy, weak_hp)
 	var/flags = NONE
 	if(defer_change) // TODO: make the defer change var a var for any changeturf flag
 		flags = CHANGETURF_DEFER_CHANGE

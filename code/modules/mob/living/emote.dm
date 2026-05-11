@@ -418,6 +418,7 @@ var/list/zone_translations = list(
 	message_muffled = "makes a muffled groan."
 	emote_type = EMOTE_AUDIBLE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 // Attack blip played randomly.
 /datum/emote/living/attack
@@ -723,6 +724,7 @@ var/list/zone_translations = list(
 	message_muffled = "makes a muffled laugh."
 	emote_type = EMOTE_AUDIBLE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /datum/emote/living/laugh/can_run_emote(mob/living/user, status_check = TRUE , intentional)
 	. = ..()
@@ -801,6 +803,7 @@ var/list/zone_translations = list(
 	message_muffled = "makes a muffled noise in attempt to scream!"
 	emote_type = EMOTE_AUDIBLE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /mob/living/carbon/human/verb/emote_scream()
 	set name = "Кричать"
@@ -828,6 +831,7 @@ var/list/zone_translations = list(
 	emote_type = EMOTE_AUDIBLE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /datum/emote/living/scream/painscream/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
@@ -842,7 +846,7 @@ var/list/zone_translations = list(
 
 /datum/emote/living/scream/strain
 	key = "strain"
-	message = "strains themselves!"
+	message = "strains themself!"
 	emote_type = EMOTE_AUDIBLE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
@@ -853,6 +857,7 @@ var/list/zone_translations = list(
 	emote_type = EMOTE_AUDIBLE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /datum/emote/living/scream/agony/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
@@ -870,6 +875,7 @@ var/list/zone_translations = list(
 	emote_type = EMOTE_AUDIBLE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /datum/emote/living/scream/firescream/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
@@ -910,6 +916,7 @@ var/list/zone_translations = list(
 	nomsg = TRUE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /datum/emote/living/drown
 	key = "drown"
@@ -925,6 +932,7 @@ var/list/zone_translations = list(
 	nomsg = TRUE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /datum/emote/living/paincrit/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
@@ -943,6 +951,7 @@ var/list/zone_translations = list(
 	nomsg = TRUE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /datum/emote/living/painmoan
 	key = "painmoan"
@@ -950,6 +959,7 @@ var/list/zone_translations = list(
 	nomsg = TRUE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /datum/emote/living/groin
 	key = "groin"
@@ -957,6 +967,7 @@ var/list/zone_translations = list(
 	nomsg = TRUE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
+	needs_emotion = TRUE
 
 /datum/emote/living/fatigue
 	key = "fatigue"
@@ -1519,7 +1530,7 @@ var/list/zone_translations = list(
 
 /datum/emote/living/fsalute/run_emote(mob/living/user, params, type_override, intentional, targetted, animal)
 	. = ..()
-	if(. && !isnull(user.patron) && !HAS_TRAIT(user, TRAIT_DECEIVING_MEEKNESS))	//Guarded doesn't show an icon to anyone.
+	if(. && !isnull(user.patron))
 		user.play_overhead_indicator('icons/mob/overhead_effects.dmi', "stress", 15, MUTATIONS_LAYER, private = user.patron.type, soundin = 'sound/magic/holyshield.ogg', y_offset = 32)
 
 /mob/living/carbon/human/verb/emote_fsalute()
@@ -1638,7 +1649,10 @@ var/list/zone_translations = list(
 			pre_color_msg = trim(pre_color_msg, MAX_MESSAGE_LEN)
 		// Checks to see if we're emoting on the body while we have a head, or if we're emoting on the head.
 		if(human && human.voice_color)
-			msg = "<span style='color:#[human.voice_color];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[emotelocation]</b></span> " + msg
+			var/color_to_use = human.voice_color
+			if(human.voicecolor_override)
+				color_to_use = human.voicecolor_override
+			msg = "<span style='color:#[color_to_use];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[emotelocation]</b></span> " + msg
 		else
 			msg = "<b>[emotelocation]</b> " + msg
 		for(var/mob/M in GLOB.dead_mob_list)
@@ -1708,7 +1722,7 @@ var/list/zone_translations = list(
 	failure_message_list = list(
 		"видимо страдает близорукостью!",
 		"похоже обладает катарактой!",
-		"слеп....",
+		"слеп...",
 	)
 
 /mob/living/carbon/human/verb/emote_perception_roll()
@@ -1734,12 +1748,12 @@ var/list/zone_translations = list(
 	success_message_list = list(
 		"доказывает, что в рядах одних из умнейших!",
 		"доказывает остроту своего ума!",
-		"что знает, что делает!",
+		"знает что делает!",
 	)
 
 	failure_message_list = list(
-		"вообще не понимает где находиться...",
-		"голова, как кочерыжка",
+		"совсем не понимает где находится...",
+		"голова как кочерыжка",
 		"как сложить два плюс два - осталось загадкой...",
 	)
 
@@ -1764,14 +1778,14 @@ var/list/zone_translations = list(
 
 	success_message_list = list(
 		"даже не дрогнул!",
-		"крепок, как дуб!",
+		"крепок как дуб!",
 		"даже не повел и бровью!",
 	)
 
 	failure_message_list = list(
 		"одни кожа, да кости...",
-		"покачивается, как травинка на ветру",
-		"кости хруки, как хрусталь",
+		"покачивается как травинка на ветру",
+		"кости хруки как хрусталь",
 	)
 
 /mob/living/carbon/human/verb/emote_constitution_roll()
@@ -1790,7 +1804,7 @@ var/list/zone_translations = list(
 	attempt_message_list = list(
 		"испытывает свою силу воли...",
 		"собирается с мыслями...",
-		"готовиться доказать свою решимость...",
+		"готовится доказать свою решимость...",
 	)
 
 	success_message_list = list(
@@ -1802,7 +1816,7 @@ var/list/zone_translations = list(
 	failure_message_list = list(
 		"труслив как цыпленок",
 		"руки опускаются...",
-		"испугается, даже, если никто не крикнет",
+		"испугается, даже если никто не крикнет",
 	)
 
 /mob/living/carbon/human/verb/emote_willpower_roll()
@@ -1828,7 +1842,7 @@ var/list/zone_translations = list(
 
 	success_message_list = list(
 		"показывает блестящий контроль своего тела",
-		"изгибается, словно кошка",
+		"изгибается словно кошка",
 		"невероятная гибкость",
 	)
 
@@ -1855,8 +1869,8 @@ var/list/zone_translations = list(
 
 	success_message_list = list(
 		"мог бы найти слиток в луже",
-		"будто бы, кроличья лапка в кармане!",
-		"светиться истинной удачей!",
+		"будто бы кроличья лапка в кармане!",
+		"светится истинной удачей!",
 	)
 
 	failure_message_list = list(
@@ -1894,7 +1908,7 @@ var/list/zone_translations = list(
 	)
 
 	failure_message_list = list(
-		"кипит от неуверенности...",
+		"дрожит от неуверенности...",
 		"не очень-то убедительно...",
 		"собранность висит на честном слове...",
 	)
@@ -1904,3 +1918,57 @@ var/list/zone_translations = list(
 	set category = "Emotes"
 
 	emote("charisma", intentional = TRUE)
+
+/mob/living/carbon/human/verb/dive()
+	set name = "Dive"
+	set category = "Swimming"
+	
+	var/turf/T = get_turf(src)
+	if(!istype(T, /turf/open/water/transparent))
+		to_chat(src, span_warning("You must be in deep water to dive!"))
+		return
+	
+	var/turf/below = GET_TURF_BELOW(T)
+	if(!below || !istype(below, /turf/open/water/transparent))
+		to_chat(src, span_warning("It's not deep enough here to dive."))
+		return
+
+	src.swim_z(DOWN)
+
+/mob/living/carbon/human/verb/surface()
+	set name = "Surface"
+	set category = "Swimming"
+	
+	var/turf/T = get_turf(src)
+	
+	if(!istype(T, /turf/open/water/transparent/inner))
+		to_chat(src, span_warning("You are already at the surface!"))
+		return
+
+	var/turf/above = GET_TURF_ABOVE(T)
+	if(!above || !istype(above, /turf/open/water/transparent))
+		to_chat(src, span_warning("Something is blocking you from surfacing here."))
+		return
+
+	src.swim_z(UP)
+
+/mob/living/carbon/human/proc/swim_z(direction)
+	if(stat || IsKnockdown() || IsParalyzed()) 
+		to_chat(src, span_warning("You are too incapacitated to move!"))
+		return FALSE
+	
+	var/turf/current_T = get_turf(src)
+	var/target_z = (direction == UP) ? (z + 1) : (z - 1)
+	var/turf/target_T = locate(current_T.x, current_T.y, target_z)
+
+	if(istype(target_T, /turf/open/water))
+		if(!stamina_add(direction == DOWN ? 20 : 10)) 
+			to_chat(src, span_warning("You are too exhausted to [direction == UP ? "surface" : "dive"]!"))
+			return FALSE
+
+		visible_message(span_notice("[src] [direction == UP ? "emerges to the surface" : "dives into the depths"]."))
+		forceMove(target_T)
+		return TRUE
+		
+	to_chat(src, span_warning("You can't [direction == UP ? "emerge" : "dive"] here."))
+	return FALSE

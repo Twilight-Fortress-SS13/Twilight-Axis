@@ -2,18 +2,18 @@
 	name = "Pestra"
 	domain = "Goddess of Decay, Disease and Medicine"
 	desc = "Goddess that blessed many a saint with healing hands, Pestra taught man the arts of medicine and its benefits."
-	worshippers = "The Sick, Phyicians, Apothecaries"
+	worshippers = "Physicians, Apotecharies, The Sick"
 	mob_traits = list(TRAIT_EMPATH, TRAIT_ROT_EATER)
-	miracles = list(/obj/effect/proc_holder/spell/targeted/touch/orison			= CLERIC_ORI,
+	miracles = list(/datum/action/cooldown/spell/touch/orison					= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/invoked/diagnose				= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/invoked/pestra_leech			= CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/lesser_heal 			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/blood_heal			= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/infestation			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/pestilent_blade		= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/pestra_heal			= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/attach_bodypart		= CLERIC_T2,
-					/obj/effect/proc_holder/spell/invoked/heal					= CLERIC_T3,
+					/datum/action/cooldown/spell/miracle/fortify				= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/cure_rot				= CLERIC_T3,
 				//	/obj/effect/proc_holder/spell/invoked/resurrect/pestra		= CLERIC_T4, TA EDIT
 	)
@@ -24,7 +24,7 @@
 	)
 	storyteller = /datum/storyteller/pestra
 
-// Near a well, cross, within the physicians, or within the church
+// Near a well, cross, within the physicians, within the heartbeast's sanctum, or within the church
 /datum/patron/divine/pesta/can_pray(mob/living/follower)
 	. = ..()
 	// Allows prayer near psycross
@@ -36,8 +36,11 @@
 	// Allows prayer in the church
 	if(istype(get_area(follower), /area/rogue/indoors/town/church))
 		return TRUE
-	// Allows prayer in the appothocary's building.
+	// Allows prayer in the apothecary's building.
 	if(istype(get_area(follower), /area/rogue/indoors/town/physician))
+		return TRUE
+	// Allows prayer in the heartbeast's sanctum.
+	if(istype(get_area(follower), /area/rogue/indoors/town/pestra_sanctum))
 		return TRUE
 	// Allows prayer near wells. Weird one, but makes sense for health and disease. Miasma, water, etc.
 	for(var/obj/structure/well/W in view(4, get_turf(follower)))

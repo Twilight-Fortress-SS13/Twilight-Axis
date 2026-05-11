@@ -2,7 +2,7 @@
 	name = "Fisher"
 	tutorial = "You are a fisherman, with your bag of bait and your fishing rod, you are one of few who can reliably get a stable source of meat around here"
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/adventurer/fisher
 
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
@@ -59,7 +59,8 @@
 							/obj/item/rogueweapon/shovel/small = 1,
 							/obj/item/flashlight/flare/torch = 1,
 							/obj/item/recipe_book/survival = 1,
-							/obj/item/rogueweapon/scabbard/sheath = 1
+							/obj/item/rogueweapon/scabbard/sheath = 1,
+							/obj/item/mini_flagpole/fisher,
 							)
 	else
 		armor = /obj/item/clothing/suit/roguetown/shirt/dress/gen/random
@@ -79,4 +80,4 @@
 							/obj/item/rogueweapon/scabbard/sheath = 1
 							)
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_WORKING_CLASS, H, "Savings.")
+		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)

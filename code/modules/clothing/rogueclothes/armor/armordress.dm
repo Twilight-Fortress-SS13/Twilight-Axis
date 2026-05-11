@@ -10,11 +10,9 @@
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
 	icon_state = "armordress"
 	armor = ARMOR_LEATHER
-	prevent_crits = PREVENT_CRITS_NONE
 	blocksound = SOFTHIT
 	allowed_sex = list(MALE, FEMALE)
 	allowed_race = NON_DWARVEN_RACE_TYPES
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	sewrepair = TRUE
@@ -55,9 +53,8 @@
 
 /obj/item/clothing/suit/roguetown/armor/armordress/winterdress/monarch //For the consort and apparently one migrant wave
 	desc = "A thick, padded, and comfortable dress to maintain both temperature and safety when leaving the keep."
-	armor = ARMOR_PADDED_GOOD
+	armor = ARMOR_PADDED
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
-	prevent_crits = PREVENT_CRITS_MOST //equal to a padded gambeson
 
 /obj/item/clothing/suit/roguetown/armor/armordress/winterdress/monarch/lordcolor(primary,secondary)
 	detail_color = primary

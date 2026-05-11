@@ -60,6 +60,33 @@
 		else
 			to_chat(src, "Your character information will no longer be viewable when masked.")
 
+/client/verb/nsfw_examine_always()
+	set category = "Options"
+	set name = "Toggle NSFW Examine"
+	if(prefs)
+		prefs.nsfw_examine_always = !prefs.nsfw_examine_always
+		prefs.save_preferences()
+		if(prefs.nsfw_examine_always)
+			to_chat(src, "Your character NSFW information will always be visible.")
+		else
+			to_chat(src, "Your character NSFW information will only be visible when nude.")
+
+/client/verb/toggle_instruments()
+	set category = "Options"
+	set name = "Toggle Instrument Sounds"
+	if(prefs)
+		prefs.toggles ^= SOUND_INSTRUMENTS
+		prefs.save_preferences()
+	to_chat(src, "You will[(prefs.toggles & SOUND_INSTRUMENTS) ? "" : " no longer"] hear instrument-played songs.")
+
+/client/verb/toggle_midis()
+	set category = "Options"
+	set name = "Toggle Admin Midis"
+	if(prefs)
+		prefs.toggles ^= SOUND_MIDI
+		prefs.save_preferences()
+	to_chat(src, "You will[prefs.toggles & SOUND_MIDI ? "" : " no longer"] hear admin-played sounds.")
+
 /client/verb/mute_animal_emotes()
 	set category = "Options"
 	set name = "Toggle Animal Noise Emotes"
@@ -189,6 +216,20 @@
 	set desc = ""
 	if(mob)
 		SEND_SOUND(mob, sound(null))
+
+/client/verb/toggle_area_music()
+	set category = "Options"
+	set name = "Toggle Area Music"
+	if(prefs)
+		prefs.stopdroning = !prefs.stopdroning
+		prefs.save_preferences()
+
+		if(prefs.stopdroning)
+			to_chat(src, "You will no longer hear looping area music.")
+			SSdroning.kill_droning(src)
+			SSdroning.kill_loop(src)
+		else
+			to_chat(src, "You will now hear looping area music.")
 
 /client/verb/cmode_strip()
 	set name = "Combat Mode Stripping"

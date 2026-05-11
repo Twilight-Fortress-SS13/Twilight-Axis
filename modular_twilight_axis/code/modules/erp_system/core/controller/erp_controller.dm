@@ -104,18 +104,13 @@
 		qdel(ui)
 		ui = null
 
-	var/datum/erp_actor/old_owner = owner
-	owner = null
-
 	if(actors)
 		for(var/datum/erp_actor/A2 in actors)
-			if(A2 && A2 != old_owner)
-				qdel(A2)
+			if(A2)
+				SSerp.release_actor(A2)
 		actors = null
 
-	if(old_owner)
-		qdel(old_owner)
-
+	owner = null
 	active_partner = null
 	owner_client = null
 
@@ -190,7 +185,10 @@
 /// Handles climax signal and schedules effects.
 /datum/erp_controller/proc/on_arousal_climax(datum/source)
 	SIGNAL_HANDLER
-	climax_d?.on_arousal_climax(source)
+	if(!climax_d)
+		return
+
+	INVOKE_ASYNC(climax_d, TYPE_PROC_REF(/datum/erp_climax_service, on_arousal_climax), source)
 
 /// Runs delayed climax effects (async).
 /datum/erp_controller/proc/handle_arousal_climax_effects(mob/living/carbon/human/who, list/active_links)
@@ -576,26 +574,6 @@
 /datum/erp_controller/proc/get_actor_by_mob(mob/living/M)
 	return partners_d ? partners_d.get_actor_by_mob(M) : null
 
-/// Picks best link for climax context.
-/datum/erp_controller/proc/pick_best_climax_link(mob/living/carbon/human/who, list/active_links)
-	return climax_d ? climax_d.pick_best_climax_link(who, active_links) : null
-
-/// Computes orgasm context for who+link.
-/datum/erp_controller/proc/get_orgasm_context(mob/living/carbon/human/who, datum/erp_sex_link/best)
-	return climax_d ? climax_d.get_orgasm_context(who, best) : null
-
-/// Applies coating status effect.
-/datum/erp_controller/proc/apply_coating(mob/living/carbon/human/target, zone, datum/reagents/R, capacity = 30)
-	return climax_d ? climax_d.apply_coating(target, zone, R, capacity) : FALSE
-
-/// Applies coating and creates puddle.
-/datum/erp_controller/proc/apply_coating_and_puddle(datum/erp_sex_organ/source_organ, mob/living/carbon/human/coat_mob, zone, mob/living/carbon/human/feet_mob, amount, capacity = 30)
-	return climax_d ? climax_d.apply_coating_and_puddle(source_organ, coat_mob, zone, feet_mob, amount, capacity) : FALSE
-
-/// Executes climax effects for who+best.
-/datum/erp_controller/proc/do_climax_effects(mob/living/carbon/human/who, datum/erp_sex_link/best)
-	return climax_d ? climax_d.do_climax_effects(who, best) : FALSE
-
 /// Gets knotting component for human.
 /datum/erp_controller/proc/_get_knotting_component(mob/living/carbon/human/H)
 	return knot_d ? knot_d.get_knotting_component(H) : null
@@ -679,18 +657,6 @@
 /datum/erp_controller/proc/_zone_key_to_bodyzone(zone)
 	return vfx_d ? vfx_d.zone_key_to_bodyzone(zone) : null
 
-/// Tries to break bed on strong thrust.
-/datum/erp_controller/proc/_erp_try_bed_break(datum/erp_sex_link/L, mob/living/user, atom/movable/target, time)
-	vfx_d?.try_bed_break(L, user, target, time)
-
-/// Finds bed near thrust.
-/datum/erp_controller/proc/_erp_find_bed_for_thrust(datum/erp_sex_link/L, mob/living/user, atom/movable/target)
-	return vfx_d ? vfx_d.find_bed_for_thrust(L, user, target) : null
-
-/// Finds bed on turf.
-/datum/erp_controller/proc/_erp_find_bed_on_turf(turf/T)
-	return vfx_d ? vfx_d.find_bed_on_turf(T) : null
-
 #undef ERP_AROUSAL_HEARTS_THRESHOLD
 #undef ERP_TICK_EFFECT_COOLDOWN
 
@@ -769,9 +735,12 @@
 	return TRUE
 
 /datum/erp_controller/proc/rebind_owner(atom/new_owner, client/C, mob/living/effect_mob = null)
-	if(C && C != owner_client)
+	if(C)
 		owner_client = C
 		owner?.attach_client(owner_client)
+
+	if(owner && effect_mob)
+		owner.set_effect_mob(effect_mob)
 
 	if(new_owner && !QDELETED(new_owner))
 		if(owner && owner.active_actor != new_owner)
@@ -780,16 +749,33 @@
 
 			var/datum/erp_actor/old_owner = owner
 			actors -= old_owner
+
 			owner = SSerp.create_actor(new_owner, owner_client, effect_mob)
+
 			if(old_owner)
-				qdel(old_owner)
+				SSerp.release_actor(old_owner)
 
 			if(owner)
 				actors += owner
 				if(owner_client)
 					owner.attach_client(owner_client)
+				if(effect_mob)
+					owner.set_effect_mob(effect_mob)
+
+				owner.mark_organs_dirty()
+				owner.rebuild_organs()
+
 				if(owner.can_register_signals())
 					register_actor_signals(owner)
+
+		else if(owner)
+			if(owner_client)
+				owner.attach_client(owner_client)
+			if(effect_mob)
+				owner.set_effect_mob(effect_mob)
+
+			owner.mark_organs_dirty()
+			owner.rebuild_organs()
 
 	var/mob/ui_host = owner?.get_control_mob(owner_client)
 	if(!ui_host || !ui_host.client)
@@ -803,3 +789,11 @@
 		ui = new(ui_host, src)
 
 	request_ui_update()
+
+/datum/erp_controller/proc/force_stop_all_links(reason = "forced")
+	if(links && links.len)
+		var/list/ls = links.Copy()
+		for(var/datum/erp_sex_link/L in ls)
+			if(L)
+				stop_link_runtime(L)
+	links?.Cut()

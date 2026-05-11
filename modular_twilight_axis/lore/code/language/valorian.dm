@@ -4,10 +4,11 @@
 	speech_verb = "remarks"
 	ask_verb = "inquires"
 	exclaim_verb = "asserts"
-	key = "r"
+	key = "p"
 	space_chance = 66
 	default_priority = 90
-	icon_state = "celestial"
+	icon = 'modular_twilight_axis/lore/icons/language.dmi'
+	icon_state = "valorian"
 	spans = list("valorian")
 	mutually_intelligible = list(/datum/language/grenzelhoftian)
 	syllables = list(

@@ -28,9 +28,8 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define PROCESSING_HUMANNPC		(1<<8)
 #define PROCESSING_WATERLEVEL	(1<<9)
 #define PROCESSING_LIGHTING		(1<<10)
-#define PROCESSING_LOBBY		(1<<11)
+#define PROCESSING_LOBBY	(1<<11)
 #define PROCESSING_DAMOVERLAYS	(1<<12)
-#define PROCESSING_ICON_UPDATES	(1<<13)
 
 //FLAGS BITMASK
 
@@ -81,6 +80,7 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define PASSBLOB		(1<<3)
 #define PASSMOB			(1<<4)
 #define PASSCLOSEDTURF	(1<<5)
+#define PASS_ALL		(PASSTABLE | PASSGLASS | PASSGRILLE | PASSBLOB | PASSMOB | PASSCLOSEDTURF)
 /// Let thrown things past us. **ONLY MEANINGFUL ON pass_flags_self!**
 #define LETPASSTHROW	(1<<6)
 

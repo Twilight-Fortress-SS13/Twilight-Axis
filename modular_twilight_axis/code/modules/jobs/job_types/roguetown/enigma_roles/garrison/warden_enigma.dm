@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = JCOLOR_VANGUARD
-	allowed_races = RACES_TOLERATED_UP
+	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
 	allowed_ages = list(AGE_MIDDLEAGED, AGE_OLD)
 	display_order = JDO_OVERSEER
 	tutorial = "Вам, как опытному солдату из свиты Его Величества, поручено наблюдать за недавно построенным Бастионом. \
@@ -19,6 +19,8 @@
 	give_bank_account = TRUE
 	min_pq = 10
 	max_pq = null
+	round_contrib_points = 3
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'modular_twilight_axis/sound/music/combat/combat_vanguard.ogg'
 	job_subclasses = list(
@@ -93,7 +95,7 @@
 /datum/outfit/job/roguetown/overseer/pre_equip(mob/living/carbon/human/H)
 	..()
 	if(H.mind)
-		backpack_contents = list(/obj/item/storage/keyring/warden_enigma = 1, /obj/item/signal_hornn/green = 1, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/rogueweapon/huntingknife/idagger/steel = 1)
+		backpack_contents = list(/obj/item/storage/keyring/warden_enigma = 1, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/rogueweapon/huntingknife/idagger/steel = 1)
 		SStreasury.give_money_account(ECONOMIC_UPPER_MIDDLE_CLASS, H, "Savings.")
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/movemovemove)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/takeaim)

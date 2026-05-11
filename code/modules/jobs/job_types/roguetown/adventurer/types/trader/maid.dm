@@ -5,7 +5,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	category_tags = list(CTAG_TRADER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
 	class_select_category = CLASS_CAT_TRADER
-	allowed_races = RACES_ALL_KINDS
+	
 	traits_applied = list(TRAIT_HOMESTEAD_EXPERT, TRAIT_KEENEARS)
 	subclass_stats = list(
 		STATKEY_INT = 2,
@@ -34,17 +34,17 @@
 
 	switch(choice)
 		if("Maid")
-			head = /obj/item/clothing/head/roguetown/maidhead
-			armor = /obj/item/clothing/suit/roguetown/shirt/dress/maid
-			cloak = /obj/item/clothing/cloak/apron/waist/maid
+			head = /obj/item/clothing/head/roguetown/maidband
+			armor = /obj/item/clothing/suit/roguetown/shirt/dress/maidfancy
+			cloak = /obj/item/clothing/cloak/apron/waist/fancymaid
 			belt = /obj/item/storage/belt/rogue/leather/sash/maid
 			shoes = /obj/item/clothing/shoes/roguetown/simpleshoes
 		if("Butler")
-			pants = /obj/item/clothing/under/roguetown/tights/black
-			shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
+			pants = /obj/item/clothing/under/roguetown/tights/shorts
+			shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/formal
 			shoes = /obj/item/clothing/shoes/roguetown/shortboots
 			armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/black
-			belt = /obj/item/storage/belt/rogue/leather
+			belt = /obj/item/storage/belt/rogue/leather/suspenders
 
 	backl = /obj/item/storage/backpack/rogue/satchel
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor

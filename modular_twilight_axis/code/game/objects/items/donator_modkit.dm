@@ -67,6 +67,15 @@
 		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle)
 	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle
 
+//Her Verdict - Kriegmesser
+/obj/item/enchantingkit/weapon/herverdict
+	name = "'Her Verdict' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Kriegmesser or Longsword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long/kriegmesser,
+		/obj/item/rogueweapon/sword/long)
+	result_item = /obj/item/rogueweapon/sword/long/kriegmesser/donat_astrata
+
 //Zydras donator item - bathmatron padded dress
 /obj/item/enchantingkit/zydras
 	name = "'Gold-Black silky dress morphing elixir"
@@ -89,3 +98,90 @@
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Coat"
 	target_items = list(/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat)
 	result_item = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat/heavy
+
+// Sanguine Set
+
+/obj/item/enchantingkit/sanguine_vest
+	name = "'Sanguine Vest' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Gambeson or Padded Gambeson"
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/shirt/courtphysician,
+		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/shirt/courtphysician,
+		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/otavan = /obj/item/clothing/suit/roguetown/shirt/courtphysician,
+		/obj/item/clothing/suit/roguetown/shirt/freifechter = /obj/item/clothing/suit/roguetown/shirt/courtphysician)
+	icon_loadout = /obj/item/clothing/suit/roguetown/shirt/courtphysician
+
+/obj/item/enchantingkit/sanguine_heels
+	name = "'Sanguine Heels' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Heavy Leather Boots"
+	target_items = list(
+		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/courtphysician/female,
+		/obj/item/clothing/shoes/roguetown/boots/leather = /obj/item/clothing/shoes/courtphysician/female,
+		/obj/item/clothing/shoes/roguetown/boots/otavan = /obj/item/clothing/shoes/courtphysician/female)
+	icon_loadout = /obj/item/clothing/shoes/courtphysician/female
+
+/obj/item/enchantingkit/sanguine_trousers
+	name = "'Sanguine Trousers' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Trousers or Fencing Breeches"
+	target_items = list(
+		/obj/item/clothing/under/roguetown/heavy_leather_pants = /obj/item/clothing/under/roguetown/trou/leather/courtphysician,
+		/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan = /obj/item/clothing/under/roguetown/trou/leather/courtphysician,
+		/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/generic = /obj/item/clothing/under/roguetown/trou/leather/courtphysician)
+	icon_loadout = /obj/item/clothing/under/roguetown/trou/leather/courtphysician
+
+/obj/item/enchantingkit/sanguine_jacket
+	name = "'Sanguine Jacket' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Jacket or Fencing Jacket"
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female,
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy/freifechter = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female,
+		/obj/item/clothing/suit/roguetown/armor/gambeson/lord/heavy = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female
+
+/obj/item/enchantingkit/sanguine_coat
+	name = "'Sanguine Coat' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Coat"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat)
+	result_item = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician
+
+// Etrusca
+/obj/item/enchantingkit/etruscan_boots
+	name = "'Etruscan jackboots' morphing elixer (Only woman, no small races)"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Leather Boots or Heavy Leather Boots"
+	target_items = list(/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots/heavy,
+	/obj/item/clothing/shoes/roguetown/boots/leather = /obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots)
+	icon_loadout = /obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots
+
+// NIGHTMARE SET START
+
+/obj/item/enchantingkit/nightmare_armet
+	name = "Nightmare Tears Helmet morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Armet"
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet, /obj/item/clothing/head/roguetown/helmet/heavy/knight)
+	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/nightmare
+
+/obj/item/enchantingkit/nightmare_scales
+	name = "Nightmare Tears Scales morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Scalemail"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/plate/scale)
+	result_item = /obj/item/clothing/suit/roguetown/armor/plate/scale/nightmare
+
+/obj/item/enchantingkit/nightmare_gauntlets
+	name = "Nightmare Tears Gauntlets morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Plate Gauntlets"
+	target_items = list(/obj/item/clothing/gloves/roguetown/plate)
+	result_item = /obj/item/clothing/gloves/roguetown/plate/nightmare
+
+/obj/item/enchantingkit/nightmare_chausses
+	name = "Nightmare Tears Chausses morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Steel Chain or Steel plate Chausses"
+	target_items = list(/obj/item/clothing/under/roguetown/chainlegs, /obj/item/clothing/under/roguetown/platelegs)
+	result_item = /obj/item/clothing/under/roguetown/chainlegs/nightmare
+
+/obj/item/enchantingkit/nightmare_boots
+	name = "Nightmare Tears Boots morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Steel Boots"
+	target_items = list(/obj/item/clothing/shoes/roguetown/boots/armor)
+	result_item = /obj/item/clothing/shoes/roguetown/boots/armor/nightmare
+
+// NIGHTMARE SET END

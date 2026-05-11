@@ -45,8 +45,8 @@
 
 	return zone
 
-///Returns a TRUE / FALSE if the zone is a FACE coverage subzone. Used mainly by accuracy_check & bait.
-/proc/check_face_subzone(zone)
+///Returns a TRUE / FALSE if the zone is a FACE / HEAD coverage subzone. Used mainly by accuracy_check & bait.
+/proc/check_face_subzone(zone, check_head = TRUE)
 	if(!zone)
 		return FALSE
 	switch(zone)
@@ -60,12 +60,69 @@
 			return TRUE
 		if(BODY_ZONE_PRECISE_EARS)
 			return TRUE
-		//--Optional Neck & Skull Additions--
+		if(BODY_ZONE_PRECISE_SKULL)
+			return TRUE
+		if(BODY_ZONE_HEAD)
+			if(check_head)
+				return TRUE
+		//--Optional Neck Addition--
 		//if(BODY_ZONE_PRECISE_NECK)
 		//	return TRUE
-		//if(BODY_ZONE_PRECISE_SKULL)
-		//	return TRUE
 
+	return FALSE
+
+/proc/check_bait_subzone(zone)
+	if(!zone)
+		return FALSE
+	if(check_face_subzone(zone))
+		return BODY_ZONE_HEAD
+	return zone
+		
+/proc/check_bind_subzone(zone_def)
+	if(!zone_def)
+		return FALSE
+	if(check_face_subzone(zone_def))
+		return BIND_HEAD
+	switch(zone_def)
+		if(BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_L_ARM)
+			return BIND_HAND_L
+		if(BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_R_ARM)
+			return BIND_HAND_R
+		if(BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_L_LEG)
+			return BIND_FOOT_L
+		if(BODY_ZONE_PRECISE_R_FOOT, BODY_ZONE_R_LEG)
+			return BIND_FOOT_R
+		if(BODY_ZONE_PRECISE_GROIN, BODY_ZONE_PRECISE_STOMACH, BODY_ZONE_CHEST)
+			return BIND_TORSO
+		if(BODY_ZONE_PRECISE_NECK)
+			return BIND_NECK
+	return FALSE
+
+/proc/check_bind(bindzone, attzone)
+	if(!bindzone || !attzone)
+		return FALSE
+	switch(bindzone)
+		if(BIND_HEAD)
+			return check_face_subzone(attzone, check_head = FALSE)
+		if(BIND_HAND_L)
+			if(attzone == BODY_ZONE_PRECISE_L_HAND)
+				return TRUE
+		if(BIND_HAND_R)
+			if(attzone == BODY_ZONE_PRECISE_R_HAND)
+				return TRUE
+		if(BIND_FOOT_L)
+			if(attzone == BODY_ZONE_PRECISE_L_FOOT)
+				return TRUE
+		if(BIND_FOOT_R)
+			if(attzone == BODY_ZONE_PRECISE_R_FOOT)
+				return TRUE
+		if(BIND_TORSO)
+			switch(attzone)
+				if(BODY_ZONE_PRECISE_STOMACH, BODY_ZONE_PRECISE_GROIN)
+					return TRUE
+		if(BIND_NECK)
+			if(attzone == BODY_ZONE_PRECISE_NECK)
+				return TRUE
 	return FALSE
 
 /// Returns the targeting zone equivalent of a given bodypart. Kudos to you if you find a use for this.
@@ -522,7 +579,7 @@
 		if(Masteritem.wielded)
 			intents = Masteritem.gripped_intents
 		if(Masteritem.altgripped)
-			intents = Masteritem.alt_intents
+			intents = Masteritem.get_altgrip_intents()
 	else
 		if(active_hand_index == 1)
 			l_index = l_ua_index
@@ -540,7 +597,7 @@
 		if(Masteritem.wielded)
 			intents = Masteritem.gripped_intents
 		if(Masteritem.altgripped)
-			intents = Masteritem.alt_intents
+			intents = Masteritem.get_altgrip_intents()
 	else
 		if(active_hand_index == 1)
 			r_index = r_ua_index
@@ -591,6 +648,10 @@
 	if(input != QINTENT_SPELL)
 		if(ranged_ability)
 			ranged_ability.deactivate()
+		// Also clear new-style cooldown spells set on click_intercept
+		var/datum/action/cooldown/active_cooldown = click_intercept
+		if(istype(active_cooldown))
+			active_cooldown.unset_click_ability(src, refund_cooldown = TRUE)
 	switch(input)
 		if(QINTENT_KICK)
 			if(mmb_intent?.type == INTENT_KICK)
@@ -637,7 +698,6 @@
 				qdel(mmb_intent)
 
 			mmb_intent = new INTENT_SPELL(src)
-			mmb_intent.releasedrain = ranged_ability.get_fatigue_drain()
 			mmb_intent.chargedrain = ranged_ability.chargedrain
 			mmb_intent.chargetime = ranged_ability.get_chargetime()
 			mmb_intent.warnie = ranged_ability.warnie
@@ -776,7 +836,7 @@
 		playsound_local(src, 'sound/misc/click.ogg', 50, TRUE)
 		if(hud_used)
 			if(hud_used.zone_select)
-				hud_used.zone_select.update_icon()
+				hud_used.zone_select.update_selection()
 
 /mob/proc/select_organ_slot(choice)
 	organ_slot_selected = choice
@@ -1003,7 +1063,10 @@
 		return
 
 	// Cannot use the list as a map if the key is a number, so we stringify it (thank you BYOND)
-	var/smessage_type = num2text(message_type)
+	// Use string interpolation instead of num2text to avoid scientific notation for large numbers.
+	// num2text(1048576) produces "1.04858e+06" which text2num() parses as 1048580,
+	// causing LOG_NPC_SAY (1<<20 = 1048576) to be stored incorrectly and match against wrong filters.
+	var/smessage_type = "[message_type]"
 
 	if(client)
 		if(!islist(client.player_details.logging[smessage_type]))

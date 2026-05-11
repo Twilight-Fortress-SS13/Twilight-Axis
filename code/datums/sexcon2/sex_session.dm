@@ -23,16 +23,18 @@
 	var/just_climaxed = FALSE
 	/// Whether to use knot when fucking (for knotted penis types)
 	var/do_knot_action = FALSE
-	/// The bed (if) we're occupying, update on starting an action
-	var/obj/structure/bed/rogue/bed = null
-	var/target_on_bed = FALSE
 
 	var/static/sex_id = 0
 	var/our_sex_id = 0 //this is so we can have more then 1 sex id open at once
 
+	// Moved here from proc/get_generic_force_adjective to reduce list initialization/destruction
+	var/static/list/low_force_adjectives 		= list("gently", "carefully", "tenderly", "gingerly", "delicately", "lazily")
+	var/static/list/mid_force_adjectives 		= list("firmly", "vigorously", "eagerly", "steadily", "intently")
+	var/static/list/high_force_adjectives 		= list("roughly", "carelessly", "forcefully", "fervently", "fiercely")
+	var/static/list/extreme_force_adjectives 	= list("brutally", "violently", "relentlessly", "savagely", "mercilessly")
+
 	/// Show progress bar
 	var/show_progress = 1
-
 
 /datum/sex_session/New(mob/living/carbon/human/session_user, mob/living/carbon/human/session_target)
 	user = session_user
@@ -40,16 +42,12 @@
 	sex_id++
 	our_sex_id = sex_id
 	assign_to_collective()
-	find_bed()
 
 	RegisterSignal(user, COMSIG_SEX_CLIMAX, PROC_REF(on_climax))
 	RegisterSignal(user, COMSIG_SEX_AROUSAL_CHANGED, PROC_REF(on_arousal_changed), TRUE)
-	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
-	RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
 
 /datum/sex_session/Destroy(force, ...)
-	UnregisterSignal(user, list(COMSIG_SEX_CLIMAX, COMSIG_SEX_AROUSAL_CHANGED, COMSIG_MOVABLE_MOVED))
-	UnregisterSignal(target, COMSIG_MOVABLE_MOVED)
+	UnregisterSignal(user, list(COMSIG_SEX_CLIMAX, COMSIG_SEX_AROUSAL_CHANGED))
 	if(collective)
 		collective.sessions -= src
 		// If this was the last session in the collective, remove the collective
@@ -57,41 +55,9 @@
 			LAZYREMOVE(GLOB.sex_collectives, collective)
 			qdel(collective)
 
-	user = null
-	target = null
-	collective = null
-	bed = null
-	current_action = null
-
 	GLOB.sex_sessions -= src
-	return ..()
+	. = ..()
 
-/datum/sex_session/proc/on_moved()
-	SIGNAL_HANDLER
-	find_bed()
-
-/datum/sex_session/proc/on_bed_qdel()
-	SIGNAL_HANDLER
-	bed = null
-	find_bed()
-
-/// Finds a bed we are having fun on, if any
-/datum/sex_session/proc/find_bed()
-	if(bed)
-		if(target.loc == bed.loc)
-			target_on_bed = TRUE
-		else
-			target_on_bed = FALSE
-		return
-	if(target && !(target.mobility_flags & MOBILITY_STAND) && isturf(target.loc)) // find target's bed
-		bed = locate(/obj/structure/bed/rogue) in target.loc
-		target_on_bed = TRUE
-	if(!bed && !(user.mobility_flags & MOBILITY_STAND) && isturf(user.loc)) // find our bed
-		bed = locate(/obj/structure/bed/rogue) in user.loc
-		target_on_bed = FALSE
-
-	if(!bed)
-		target_on_bed = FALSE
 
 /datum/sex_session/proc/assign_to_collective()
 	// Check if we can merge with an existing collective
@@ -127,7 +93,6 @@
 	if(!can_perform_action(action_type))
 		return
 
-	find_bed()
 	desire_stop = FALSE
 	current_action = action_type
 	inactivity = 0
@@ -138,8 +103,6 @@
 /datum/sex_session/proc/try_stop_current_action()
 	if(!current_action)
 		return
-
-	find_bed()
 	desire_stop = TRUE
 
 /datum/sex_session/proc/considered_limp(mob/limper)
@@ -332,16 +295,17 @@
 			return "<font color='#f05ee1'>НОРМАЛЬНАЯ ЭРЕКЦИЯ</font>"
 		if(SEX_MANUAL_AROUSAL_FULL)
 			return "<font color='#d146f5'>СИЛЬНАЯ ЭРЕКЦИЯ</font>"
+
 /datum/sex_session/proc/get_generic_force_adjective()
 	switch(force)
 		if(SEX_FORCE_LOW)
-			return pick(list("нежно", "заботливо", "ласково", "мягко", "осторожно", "неторопливо"))
+			return pick(low_force_adjectives)
 		if(SEX_FORCE_MID)
-			return pick(list("решительно", "энергично", "страстно", "уверенно", "увлеченно"))
+			return pick(mid_force_adjectives)
 		if(SEX_FORCE_HIGH)
-			return pick(list("грубо", "небрежно", "жестко", "пылко", "свирепо"))
+			return pick(high_force_adjectives)
 		if(SEX_FORCE_EXTREME)
-			return pick(list("жестоко", "неистово", "неумолимо", "свирепо", "безжалостно"))
+			return pick(extreme_force_adjectives)
 
 /datum/sex_session/proc/spanify_force(string)
 	switch(force)

@@ -174,6 +174,7 @@
 	. = ..()
 	client?.prefs?.apply_erp_kinks_to_mob(src)
 	SSerp.apply_prefs_for_mob(src)
+	erp_resync_after_body_restore()
 
 /obj/item/bodypart/head/dullahan/MiddleMouseDrop_T(atom/movable/dragged, mob/living/user)
 	if(user.mmb_intent)
@@ -185,69 +186,12 @@
 	return erp_try_start(user, src, user)
 
 /obj/item/bodypart/head/dullahan/drop_limb(special)
-	var/mob/living/carbon/human/user = original_owner
-	var/datum/species/dullahan/user_species = user.dna.species
-
-	user_species.soul_light_on(user)
-	user_species.headless = TRUE
-	SEND_SIGNAL(user, COMSIG_ERP_ANATOMY_CHANGED)
-	
-	grabbedby = SANITIZE_LIST(grabbedby)
-	if(grabbedby)
-		for(var/obj/item/grabbing/grab in grabbedby)
-			if(grab.grab_state != GRAB_AGGRESSIVE)
-				continue
-
-			var/mob/living/carbon/human = grab.grabbee
-			var/hand_index = human.get_held_index_of_item(grab)
-			human.dropItemToGround(grab)
-
-			if(!special)
-				insert_worn_items()
-
-			. = ..()
-
-			human.put_in_hand(src, hand_index)
-			grabbedby.Cut()
-			return
-
-		grabbedby.Cut()
-
-	if(!special)
-		insert_worn_items()
-
 	. = ..()
+	SEND_SIGNAL(original_owner, COMSIG_ERP_ANATOMY_CHANGED)
 
 /obj/item/bodypart/head/dullahan/attach_limb(mob/living/carbon/human/user)
-	var/mob/living/carbon/human/user_dullahan = original_owner ? original_owner : user
-	var/datum/species/dullahan/user_species = user_dullahan.dna.species
-	user_species.soul_light_off()
-	user_species.headless = FALSE
-	SEND_SIGNAL(user, COMSIG_ERP_ANATOMY_CHANGED)
-	for(var/item_slot in head_items)
-		var/obj/item/worn_item = head_items[item_slot]
-		if(worn_item)
-			user_dullahan.equip_to_slot(worn_item, text2num(item_slot))
-	head_items = list()
-	return ..()
-
-/datum/species/gnoll/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
-	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
-	C.icon_state = "firepelt"
-	C.base_pixel_x = -8
-	C.pixel_x = -8
-	C.base_pixel_y = -4
-	C.pixel_y = -4
-
-	var/mob/living/carbon/human/H = C
-	if(istype(H))
-		var/datum/preferences/P = H.client?.prefs
-		if(P)
-			P.validate_customizer_entries()
-			P.apply_customizer_organs_to_mob(H)
-
-		SEND_SIGNAL(H, COMSIG_ERP_ANATOMY_CHANGED)
+	SEND_SIGNAL((original_owner ? original_owner : user), COMSIG_ERP_ANATOMY_CHANGED)
 
 /mob/living/carbon/human/species/wildshape
 	var/added_penis = FALSE
@@ -336,7 +280,6 @@
 		to_chat(src, span_warning("Only http/https links are allowed."))
 		return FALSE
 
-	nsfw_headshot_link = url
 	update_body()
 	update_body_parts()
 
@@ -350,47 +293,23 @@
 	if(!target_atom || QDELETED(target_atom))
 		return null
 
-	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
-
-	if(!consent)
-		return null
+	if(istype(target_atom, /obj/structure/closet))
+		return erp_try_start_container(initiator, target_atom, actor, silent)
 
 	var/force = FALSE
 	#ifdef LOCALTEST
 		force = TRUE
 	#endif
 
-	// ACTOR CHECKS
-	if(!force)
-		var/mob/living/carbon/human/human_actor = actor
-		if(!human_actor.can_do_sex)
-			if(!silent)
-				to_chat(actor, span_warning("I can't do this."))
-			return null
+	if(!erp_can_use_menu_as_actor(actor, silent, force))
+		return null
 
-		if(human_actor.is_erp_blocked_as_target())
-			return null
+	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
+	if(!consent)
+		return null
 
-		if(actor.client && actor.client.prefs && !actor.client.prefs.sexable)
-			if(!silent)
-				to_chat(actor, span_warning("You don't want to do this. (ERP preference)"))
-			return null
-
-	// CONSENT CHECKS
-	if(!force)
-		if(consent.is_erp_blocked_as_target())
-			return null
-
-		if(!consent.client)
-			to_chat(actor, span_warning("You can't do this."))
-			return null //Ранний возврат до ввода хедлесс-клиентов для мобов и объектов
-
-		if(consent.client && consent.client.prefs && !consent.client.prefs.sexable)
-			if(!silent)
-				to_chat(actor, span_warning("[consent] doesn't wish to be touched. (Their ERP preference)"))
-				to_chat(consent, span_warning("[actor] failed to touch you. (Your ERP preference)"))
-			log_combat(actor, consent, "tried unwanted ERP menu against")
-			return null
+	if(!erp_can_target_atom_for_menu(actor, target_atom, silent, force))
+		return null
 
 	var/client/C = actor.client
 	var/datum/erp_controller/EC = SSerp.get_or_create_controller(initiator, C, actor)
@@ -399,5 +318,151 @@
 
 	EC.add_partner_atom(target_atom)
 	EC.open_ui(actor)
-
 	return EC
+
+/proc/erp_can_use_menu_as_actor(mob/living/actor, silent = FALSE, force = FALSE)
+	if(!actor || !istype(actor))
+		return FALSE
+
+	if(force)
+		return TRUE
+
+	var/mob/living/carbon/human/human_actor = actor
+	if(!human_actor.can_do_sex)
+		if(!silent)
+			to_chat(actor, span_warning("I can't do this."))
+		return FALSE
+
+	if(human_actor.is_erp_blocked_as_target())
+		return FALSE
+
+	if(actor.client && actor.client.prefs && !actor.client.prefs.sexable)
+		if(!silent)
+			to_chat(actor, span_warning("You don't want to do this. (ERP preference)"))
+		return FALSE
+
+	return TRUE
+
+
+/proc/erp_can_target_atom_for_menu(mob/living/actor, atom/target_atom, silent = FALSE, force = FALSE)
+	if(!actor || !target_atom || QDELETED(target_atom))
+		return FALSE
+
+	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
+	if(!consent)
+		return FALSE
+
+	if(force)
+		return TRUE
+
+	if(consent.is_erp_blocked_as_target())
+		return FALSE
+
+	if(!consent.client)
+		return FALSE
+
+	if(consent.client && consent.client.prefs && !consent.client.prefs.sexable)
+		if(!silent)
+			to_chat(actor, span_warning("[consent] doesn't wish to be touched. (Their ERP preference)"))
+			to_chat(consent, span_warning("[actor] failed to touch you. (Your ERP preference)"))
+		log_combat(actor, consent, "tried unwanted ERP menu against")
+		return FALSE
+
+	return TRUE
+
+
+/proc/erp_collect_valid_targets_from_container(atom/container, atom/initiator, mob/living/actor, silent = FALSE, force = FALSE)
+	var/list/out = list()
+
+	if(!container || QDELETED(container) || !actor)
+		return out
+
+	for(var/atom/movable/AM in container.contents)
+		if(!AM || QDELETED(AM))
+			continue
+
+		if(!erp_can_target_atom_for_menu(actor, AM, TRUE, force))
+			continue
+
+		out += AM
+
+	return out
+
+
+/proc/erp_try_start_container(atom/initiator, atom/container, mob/living/actor, silent = FALSE)
+	if(!actor || !container || QDELETED(container))
+		return null
+
+	var/force = FALSE
+	#ifdef LOCALTEST
+		force = TRUE
+	#endif
+
+	if(!erp_can_use_menu_as_actor(actor, silent, force))
+		return null
+
+	var/list/targets = erp_collect_valid_targets_from_container(container, initiator, actor, silent, force)
+	if(!targets.len)
+		if(!silent)
+			to_chat(actor, span_warning("There is no valid partner inside."))
+		return null
+
+	var/client/C = actor.client
+	var/datum/erp_controller/EC = SSerp.get_or_create_controller(initiator, C, actor)
+	if(!EC)
+		return null
+
+	var/first = TRUE
+	for(var/atom/target_atom as anything in targets)
+		EC.add_partner_atom(target_atom, first)
+		first = FALSE
+
+	EC.open_ui(actor)
+	return EC
+
+/mob/living/proc/erp_resync_after_body_restore()
+	if(!SSerp)
+		return
+
+	var/client/C = client
+
+	var/datum/erp_controller/EC = null
+	if(C)
+		EC = SSerp.get_controller_for_client(C)
+
+	if(!EC)
+		EC = SSerp.get_controller_for(src)
+
+	if(EC)
+		EC.rebind_owner(src, C, src)
+
+		if(EC.owner)
+			EC.owner.attach_client(C)
+			EC.owner.set_effect_mob(src)
+			EC.owner.mark_organs_dirty()
+			EC.owner.rebuild_organs()
+
+		for(var/datum/erp_actor/A as anything in EC.actors)
+			if(!A || QDELETED(A))
+				continue
+
+			if(A.active_actor == src || A.physical == src || A.get_signal_mob() == src)
+				A.attach_client(C)
+				A.set_effect_mob(src)
+				A.mark_organs_dirty()
+				A.rebuild_organs()
+
+		EC.request_ui_update()
+
+	SSerp.apply_prefs_for_mob(src)
+	SEND_SIGNAL(src, COMSIG_ERP_ANATOMY_CHANGED)
+
+/obj/effect/proc_holder/spell/invoked/resurrect/cast(list/targets, mob/living/user)
+	. = ..()
+
+	if(!. || !length(targets))
+		return
+
+	if(isliving(targets[1]))
+		var/mob/living/target = targets[1]
+		target.erp_resync_after_body_restore()

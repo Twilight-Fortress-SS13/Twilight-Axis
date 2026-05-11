@@ -394,8 +394,11 @@ Inquisitorial armory down here
 				M.update_inv_hands()
 			START_PROCESSING(SSobj, src)
 	else if(fuel <= 0 && user.used_intent.type == /datum/intent/weep)
-		to_chat(user, span_info("It is gone. You weep."))
-		user.emote("cry")
+		if(!HAS_TRAIT(user, TRAIT_NOMOOD))
+			to_chat(user, span_info("It is gone. You weep."))
+			user.emote("cry")
+		else
+			to_chat(user, span_info("It is gone. You feel nothing."))
 
 /obj/item/flashlight/flare/torch/lantern/psycenser/process()
 	if(on && next_smoke < world.time)
@@ -760,12 +763,6 @@ Inquisitorial armory down here
 		visible_message(span_info("[user] warms [src] with [I]."))
 		update_icon()
 
-	if(istype(I, /obj/item/clothing/ring/signet))	
-		if(tallow && heatedup)	
-			var/obj/item/clothing/ring/signet/ring = I
-			ring.tallowed = TRUE
-			ring.update_icon()	
-		
 
 /obj/item/inqarticles/tallowpot/update_icon()
 	. = ..()	
@@ -780,7 +777,6 @@ Inquisitorial armory down here
     . = ..()
     . += span_info("Left click with a chunk of redtallow to fill it up.")
     . += span_info("Once filled, left-clicking the tallowpot with a torch, lamptern, candle, or any other handheld source of heat will temporarily melt the redtallow inside.")
-    . += span_info("Heated tallowpots can be left-clicked with a signet ring to prepare a stamp, which can be used to seal certain foldable letters.")
 
 /obj/item/rope/inqarticles/inquirycord
 	name = "inquiry cordage"
@@ -1097,7 +1093,7 @@ Inquisitorial armory down here
 	var/timetobag = 8 SECONDS
 	if(HAS_TRAIT(user, TRAIT_BLACKBAGGER))
 		trained = TRUE
-		timetobag = 4 SECONDS
+		timetobag = 3 SECONDS
 	user.visible_message(span_danger("[user] goes to [trained ? "expertly" : "clumsily"] black bag [M]!"))
 	if(HAS_TRAIT(M, TRAIT_GRABIMMUNE))
 		user.visible_message(span_danger("[M] slips past [user]'s attempt to black bag them!"))

@@ -8,6 +8,7 @@
 	passive_arousal = 1.1
 	active_pain = 0.05
 	passive_pain = 0.15
+	trauma_wound_type = /datum/wound/cbt
 
 /datum/erp_sex_organ/penis/New(obj/item/organ/penis/P)
 	. = ..()
@@ -33,12 +34,16 @@
 	if(!P)
 		return
 
+	source_organ = P
+	host = P
 	var/mob/living/carbon/human/H = P.owner
 	if(!istype(H))
+		have_knot = FALSE
+		count_to_action = 1
 		return
 
 	switch(P.penis_type)
-		if(PENIS_TYPE_KNOTTED, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED, PENIS_TYPE_BARBED_KNOTTED)
+		if(PENIS_TYPE_KNOTTED, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED, PENIS_TYPE_BARBED_KNOTTED, PENIS_TYPE_TAPERED_KNOTTED, PENIS_TYPE_EQUINE_KNOTTED)
 			have_knot = TRUE
 		else
 			have_knot = FALSE
@@ -46,15 +51,15 @@
 	var/datum/component/erp_knotting/K = H.GetComponent(/datum/component/erp_knotting)
 	if(have_knot)
 		if(!K)
-			H.AddComponent(/datum/component/erp_knotting)
+			K = H.AddComponent(/datum/component/erp_knotting)
+		K?.sanitize_links()
 	else
 		if(K)
+			K.clear_all_links()
 			qdel(K)
 
-	var/double_count = (P.penis_type in list(PENIS_TYPE_TAPERED_DOUBLE,	PENIS_TYPE_TAPERED_DOUBLE_KNOTTED))
-
-	if(double_count)
-		count_to_action = 2
+	var/double_count = (P.penis_type in list(PENIS_TYPE_TAPERED_DOUBLE, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED))
+	count_to_action = double_count ? 2 : 1
 
 	var/obj/item/organ/testicles/T = H.getorganslot(ORGAN_SLOT_TESTICLES)
 	if(!T)
@@ -63,7 +68,6 @@
 	var/ball_size = T.ball_size
 	var/new_capacity = 12 + (3 * ball_size)
 	var/new_rate = ball_size * 0.25
-
 	if(!storage)
 		storage = new(new_capacity, src)
 
@@ -75,21 +79,35 @@
 	producing.production_rate = new_rate
 	if(storage.total_volume() > new_capacity)
 		storage.drain(storage.total_volume() - new_capacity)
-
+		
 /obj/item/organ/penis
 	var/manual_erection_override = FALSE
 
 /obj/item/organ/penis/Insert(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
+	if(!M)
+		return .
+
 	RegisterSignal(M, COMSIG_SEX_AROUSAL_CHANGED, PROC_REF(on_arousal_changed), TRUE)
 	refresh_sex_organ()
+	SEND_SIGNAL(M, COMSIG_ERP_ANATOMY_CHANGED)
+
+	return .
 
 /obj/item/organ/penis/Remove(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
+	if(!M)
+		return .
+
 	UnregisterSignal(M, COMSIG_SEX_AROUSAL_CHANGED)
 	var/datum/component/erp_knotting/knoting_object = M.GetComponent(/datum/component/erp_knotting)
 	if(knoting_object)
+		knoting_object.clear_all_links()
 		qdel(knoting_object)
+
+	SEND_SIGNAL(M, COMSIG_ERP_ANATOMY_CHANGED)
+
+	return .
 
 /obj/item/organ/penis/on_arousal_changed()
 	if(manual_erection_override)

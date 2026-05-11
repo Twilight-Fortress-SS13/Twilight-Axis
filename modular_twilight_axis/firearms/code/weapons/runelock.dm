@@ -25,9 +25,9 @@
 	var/misfire_chance = 0
 	/// Reload time, in SECONDS
 	var/reload_time = 8
-	damfactor = 0.8
+	damfactor = 1
 	var/critfactor = 0.7
-	var/npcdamfactor = 2
+	var/npcdamfactor = 4
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/getonmobprop(tag)
 	. = ..()
@@ -69,7 +69,7 @@
 		else
 			to_chat(user, "<span class='warning'>Я совершенно не понимаю, как этим пользоваться!</span>")
 	else
-		if(alt_intents)
+		if(alt_grips)
 			altgrip(user)
 		if(gripped_intents)
 			wield(user)
@@ -172,7 +172,8 @@
 		var/obj/projectile/bullet/BB = CB.BB
 		BB.gunpowder_npc_critfactor *= npcdamfactor
 		BB.critfactor *= critfactor
-		BB.damage *= damfactor * (user.STAPER > 10 ? user.STAPER / 10 : 1)
+		var/per_scaling = 1 + ((min(user.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+		BB.damage *= damfactor * per_scaling
 	cocked = FALSE
 	update_icon()
 	var/dir = get_dir(src, target)
@@ -182,7 +183,7 @@
 	..()
 
 /obj/item/ammo_box/magazine/internal/shot/twilight_runelock
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead/runelock
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock
 	caliber = "runed_sphere"
 	max_ammo = 1
 	start_empty = TRUE
@@ -225,7 +226,7 @@
 	return chargetime
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle
-	name = "Doomsdae"
+	name = "\"Doomsdae\""
 	desc = "Реликвия новой эпохи, созданная для войны, что положит конец истории мироздания, какой мы её знаем. Изготовленная отаванскими мастерами артефакторики, и зачарованная рунными магами Отавы, эта руническая винтовка - оружие, что сокрушит легионы тьмы в Конце Времен. Руны нанесены на ствол оружия кровью еретиков, поплатившихся за свое предательство истинной веры своими жизнями."
 	icon = 'modular_twilight_axis/firearms/icons/runelock_rifle.dmi'
 	icon_state = "runelock"

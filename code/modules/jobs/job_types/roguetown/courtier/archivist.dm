@@ -6,9 +6,9 @@
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-	spells = list(/obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
+	spells = list()
 	vice_restrictions = list(/datum/charflaw/unintelligible)
-	allowed_races = ACCEPTED_RACES
+	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = ALL_AGES_LIST
 	cmode_music = 'sound/music/cmode/towner/combat_towner3.ogg'
 
@@ -20,8 +20,7 @@
 	round_contrib_points = 3
 
 	job_traits = list(
-		TRAIT_ARCYNE_T2,
-		TRAIT_MAGEARMOR,
+		TRAIT_ARCYNE,
 		TRAIT_INTELLECTUAL,
 		TRAIT_SEEPRICES_SHITTY,
 		TRAIT_MEDICINE_EXPERT,
@@ -67,7 +66,7 @@
 		STATKEY_STR = -1
 	)
 	age_mod = /datum/class_age_mod/archivist
-	subclass_spellpoints = 12
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 2, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/misc/reading = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_LEGENDARY,
@@ -105,7 +104,8 @@
 		/obj/item/natural/feather,
 		/obj/item/paper,
 		/obj/item/paper,
-		/obj/item/paper
+		/obj/item/paper,
+		/obj/item/book/spellbook
 	)
 
 	if(H.mind)
@@ -115,4 +115,4 @@
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/learn)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/silence/archivist_silence)
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_UPPER_CLASS, H, "Savings.")
+		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)

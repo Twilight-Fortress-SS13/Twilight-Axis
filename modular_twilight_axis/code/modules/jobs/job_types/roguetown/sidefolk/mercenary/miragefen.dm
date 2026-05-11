@@ -2,7 +2,6 @@
 	name = "Miragefen Rogue"
 	tutorial = "With their eloquence and thieving skills, some Tabaxi from Miragefen began offering their services to obtain necessary items or assist in combat due to their agility."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = list(/datum/species/tabaxi)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_miragefen_rogue
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_RACIAL
@@ -34,6 +33,10 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE
 	)
 	extra_context = "This subclass is race-limited to: Tabaxi Only."
+
+/datum/advclass/mercenary/twilight_miragefen_rogue/New()
+	..()
+	forbidden_races = ALL_RACES_TYPES - /datum/species/tabaxi
 
 /datum/outfit/job/roguetown/mercenary/twilight_miragefen_rogue/pre_equip(mob/living/carbon/human/H) //Без защиты рук и лап, хех, кошки в сапожках...
 	..()

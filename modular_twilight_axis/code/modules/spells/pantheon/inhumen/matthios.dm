@@ -5,6 +5,184 @@
 
 //T0
 
+/datum/action/cooldown/spell/freemans_tools
+	desc = "A simple prayer to the Free-God Matthios, for tools of liberation and struggle.<br><br>His will manifests in three forms: gutter-born arts of the freemen, gilded tools of blessed liberation, or by granting the bases of Malchem, a form of primordial alchemy so impossible it is oft mistaken for sorcery."
+	options = list(
+		//a simple 'blinds u for 1 sec' throwable
+		"Pocket Sand" = list(
+			path = /obj/item/impact_grenade/pocketsand,
+			m_cooldown = 60 SECONDS,
+			m_devotion = 10,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Rogue Arts",
+			lines = list("Попробуй увернись!", "Горсть свободы!", "Лови подарочек!", "Береги глаза!", "Работает просто чудесно!")
+		),
+		//basically just lesser knock
+		"Gilded Lockpick" = list(
+			path = /obj/item/melee/touch_attack/lesserknock/matthios,
+			m_cooldown = 5 SECONDS,
+			m_devotion = 10,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Gilded Tools",
+			lines = list("+Направь мою руку, Маттиос.", "+Ни один замок не удержит тех, кто свободен!", "+Твой инструмент приведет нас к свободе!")
+		),
+		//freely spawns 400 mammon!!! no wae! is this trve?!!?!??
+		"Pouch of Smuggling" = list(
+			path = /obj/item/storage/belt/rogue/pouch/matthios,
+			m_cooldown = 10 MINUTES,
+			m_devotion = 100,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Rogue Arts",
+			lines = list("+Маттиос, убереги наши запасы.", "+Жадные охочи до наших богатств, но не видать им злата свободного люда...", "+Твои инструменты да уберегут наши трофеи...")
+		),
+		//makes failed lockpicking attempts muffled
+		"Gilded Dexterous Gloves" = list(
+			path = /obj/item/clothing/gloves/roguetown/fingerless_leather/muffle_matthios,
+			m_cooldown = 5 MINUTES,
+			m_devotion = 100,
+			m_rank = SKILL_LEVEL_JOURNEYMAN,
+			category = "Gilded Tools",
+			lines = list("+Руки мастера действуют бесшумно.", "+В тишине мы готовим наш удар по тирании.", "+Ловкость рук и никакого мошенничества.")
+		),
+		//makes your footsteps muffled
+		"Gilded Muffled Boots" = list(
+			path = /obj/item/clothing/shoes/roguetown/boots/muffle_matthios,
+			m_cooldown = 5 MINUTES,
+			m_devotion = 100,
+			m_rank = SKILL_LEVEL_APPRENTICE,
+			category = "Gilded Tools",
+			lines = list("+Я иду в Его тени, неслышим и незрим.", "+Они не смогут сковать того, кого не услышат.")
+		),
+		//enables piss night vision and sets your lockpick timer to 3 secs, makes you insane over time and prolonged use
+		"Gilded Lockpicking Specs" = list(
+			path = /obj/item/clothing/mask/rogue/spectacles/matthios,
+			m_cooldown = -1, // this is too stronk, so only 1 allowed now
+			m_devotion = 200,
+			m_rank = SKILL_LEVEL_EXPERT,
+			category = "Gilded Tools",
+			lines = list("+Маттиос, укажи мне путь.","+Сквозь засовы и замки, я вижу цель нашей борьбы.","+Маттиос, открой мне истину во тьме.")
+		),
+		//normal chains that bind nobility faster
+		"Gilded Chains" = list(
+			path = /obj/item/rope/chain/matthios,
+			m_cooldown = 10 MINUTES,
+			m_devotion = 200,
+			m_rank = SKILL_LEVEL_JOURNEYMAN,
+			category = "Gilded Tools",
+			lines = list("Маттиос! Оковы для хозяев!", "Ты не уйдешь от справедливости народа!", "Скуем же тиранов их же цепями!")
+		),
+		//enables thieves' cant when worn on neck
+		"Gilded Amulet of Matthios" = list(
+			path = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded,
+			m_cooldown = 30 MINUTES,
+			m_devotion = 50,
+			m_rank = SKILL_LEVEL_NONE,
+			category = "Gilded Tools",
+			lines = list("+Маттиос, я вверяю себя в твои руки.", "+Господин Ничего, я несу твое знамя с гордостью.", "+Отец Свободы, твоя воля да будет исполнена.")
+		),
+		//miralchemy mode on
+		"Vial of Firstlaw" = list(
+			path = /obj/item/matthios_canister/firstlaw,
+			m_cooldown = 1 MINUTES,
+			m_devotion = 75,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		//turns 10 organic items into 1 rich food of choice (that will often be burned mess or bread if you're not starving to death)
+		"Vial of Kingsfeast Base" = list(
+			path = /obj/item/matthios_canister/kingsfeast,
+			m_cooldown = 2 MINUTES,
+			m_devotion = 25,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		//basically turns water or fruits into wine, if used with blood or lux instead, becomes Kingsblood
+		"Vial of Kingswine Base" = list(
+			path = /obj/item/matthios_canister/kingswine,
+			m_cooldown = 2 MINUTES,
+			m_devotion = 25,
+			m_rank = SKILL_LEVEL_NOVICE,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		//makes you honk shoo mimimi, while restoring energy over time
+		"Vial of Goodnite Base" = list(
+			path = /obj/item/matthios_canister/goodnite,
+			m_cooldown = 2 MINUTES,
+			m_devotion = 50,
+			m_rank = SKILL_LEVEL_APPRENTICE,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		//a 4 use vial of mending
+		"Vial of Warsmith Base" = list(
+			path = /obj/item/matthios_canister/warsmith,
+			m_cooldown = 2 MINUTES,
+			m_devotion = 50,
+			m_rank = SKILL_LEVEL_JOURNEYMAN,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		// idk what else, but it should be used by baothans, something they'll want a lot
+/*		"Vial of Liquid Desire Base" = list(
+			path = /obj/item/matthios_canister/baotha,
+			m_cooldown = 10 MINUTES,
+			m_rank = SKILL_LEVEL_MASTER,
+			category = "Malchem Vials",
+			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+		),
+		// same idea but graggarites
+		"Vial of Liquid Bloodlust Base" = list(
+			path = /obj/item/matthios_canister/graggar,
+			m_cooldown = 10 MINUTES,
+			m_rank = SKILL_LEVEL_MASTER,
+			category = "Malchem Vials",
+			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+		),
+		// same idea but zizoids
+		"Vial of Liquid Progress Base" = list(
+			path = /obj/item/matthios_canister/zizo,
+			m_cooldown = 10 MINUTES,
+			m_rank = SKILL_LEVEL_MASTER,
+			category = "Malchem Vials",
+			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+		),
+		// the og idea was to make this deconvert nobles but idk now
+		"Vial of Liquid Freedom Base" = list(
+			path = /obj/item/matthios_canister/matthios,
+			m_cooldown = 10 MINUTES,
+			m_rank = SKILL_LEVEL_MASTER,
+			category = "Malchem Vials",
+			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+		),*/
+
+		// a spicy, explosive, very, very difficult-to-make revive vial, uses all herbs in the world and 1 of any lux type
+		"Vial of Lyfestruth Base" = list(
+			path = /obj/item/matthios_canister/lyfestruth,
+			m_cooldown = 30 MINUTES,
+			m_devotion = 100,
+			m_rank = SKILL_LEVEL_EXPERT,
+			category = "Malchem Vials",
+			lines = list("+Маттиос, дай мне основу, и я закончу твою работу!", "+Маттиос, ниспошли мне истину алхимии!", "+О Маттиос, я закончу то, что ты начал!")
+		),
+		// a spicy, explosive grenade that ignites over a massive area, making tennites and nobles roll in agony and go insane
+		// but in my BETTER JUDGEMENT, this is just my early april fools joke, go to sleep my child
+//		"Vial of Truthsnuke Base" = list(
+//			path = /obj/item/matthios_canister/truthsnuke,
+//			m_cooldown = -1, // single use
+//			m_rank = SKILL_LEVEL_MASTER, // exclusive to devotee missionary/heretics
+//			category = "Malchem Vials",
+//			lines = list("Matthios, provide the base, I shall complete thy work!", "Matthios! Deliver unto me the truth of alchemy!", "Lord of Exchange, I shall finish thy work!")
+//		),
+		// MIGHT be enough tools but this thing here lets anyone add anything as much as they want, have fun!
+		// I'll probably reuse this as a template for a Zizo Artificery miracle in the future.
+	)
+
+/obj/item/roguecoin/gold/matthios
+	desc = "A gold coin bearing a stylized portrait of Kaiser Alister II Grenzelhoft and the Cross of the Eleven. Minted by the Imperial Treasury, these coins can be found all across the Western Kingdoms."
+
 /obj/effect/proc_holder/spell/invoked/appraise
 	overlay_state = "apprise"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
@@ -337,7 +515,7 @@
 			revert_cast()
 			return FALSE
 		var/mammonsonperson = get_mammons_in_atom(target)
-		var/mammonsinbank = SStreasury.bank_accounts[target]
+		var/mammonsinbank = SStreasury.get_balance(target)
 		var/totalvalue = mammonsinbank + mammonsonperson
 		if(HAS_TRAIT(target, TRAIT_NOBLE))
 			totalvalue += 101 // We're ALWAYS going to do a medium level smite minimum to nobles.
@@ -361,7 +539,7 @@
 			user.say("Жадность есть препятствие для свободы!")
 			target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I feel the weight of my wealth burning at my soul!"))
 			target.adjustFireLoss(80)
-			target.Stun(20)
+			//target.Stun(20)
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
 			return TRUE
 		if(totalvalue <=200)
@@ -369,7 +547,7 @@
 			target.visible_message(span_danger("[target] is burned by holy light!"), span_userdanger("I feel the weight of my wealth tearing at my soul!"))
 			target.adjustFireLoss(100)
 			target.adjust_fire_stacks(7, /datum/status_effect/fire_handler/fire_stacks/divine)
-			target.Stun(20)
+			//target.Stun(20)
 			target.ignite_mob()
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
 			return TRUE
@@ -379,13 +557,13 @@
 			target.adjustFireLoss(120)
 			target.adjust_fire_stacks(9, /datum/status_effect/fire_handler/fire_stacks/divine)
 			target.ignite_mob()
-			target.Stun(40)
+			//.Stun(40)
 			playsound(user, 'sound/magic/churn.ogg', 100, TRUE)
 			return TRUE
 		if(totalvalue <= 2500)
 			target.visible_message(span_danger("[target] is smited with holy light!"), span_userdanger("I feel the weight of my wealth rend my soul apart!"))
 			user.say("Твоя последняя транзакция! Бог Свободы отвергает тебя!!")
-			target.Stun(60)
+			//target.Stun(60)
 			target.emote("agony")
 			target.adjustFireLoss(140)
 			target.adjust_fire_stacks(9, /datum/status_effect/fire_handler/fire_stacks/divine)
@@ -458,8 +636,6 @@
 	/datum/status_effect/buff/refocus,
 	/datum/status_effect/buff/healing,
 	/datum/status_effect/buff/psyhealing,
-	/datum/status_effect/buff/convergence,
-	/datum/status_effect/buff/stasis,
 	/datum/status_effect/buff/order/movemovemove,
 	/datum/status_effect/buff/order/takeaim,
 	/datum/status_effect/buff/order/hold,
@@ -481,7 +657,8 @@
 	/datum/status_effect/noc_favor,
 	/datum/status_effect/ravox_favor,
 	/datum/status_effect/malum_favor,
-	/datum/status_effect/eora_favor,)
+	/datum/status_effect/eora_favor,
+	/datum/status_effect/buff/smartium)
 	var/static/list/debuffs_to_dispel = list(
 	/datum/status_effect/incapacitating/immobilized,
 	/datum/status_effect/incapacitating/paralyzed,
@@ -495,7 +672,17 @@
 	/datum/status_effect/debuff/mesmerised,
 	/datum/status_effect/debuff/necrandeathdoorwilloss,
 	/datum/status_effect/debuff/eoran_wilting,
-	/datum/status_effect/debuff/viciousmockery,)
+	/datum/status_effect/debuff/netted/vile,
+	/datum/status_effect/debuff/bloody_mess,
+	/datum/status_effect/debuff/sensitive_nerves,
+	/datum/status_effect/debuff/smartium,
+	/datum/status_effect/debuff/heavy_stomp,
+	/datum/status_effect/debuff/heavy_stomp/i,
+	/datum/status_effect/debuff/heavy_stomp/ii,
+	/datum/status_effect/debuff/heavy_stomp/iii,
+	/datum/status_effect/debuff/blood_call,
+	/datum/status_effect/debuff/blood_call/i,
+	/datum/status_effect/debuff/blood_call/ii)
 
 /obj/effect/proc_holder/spell/self/twilight_amongus/cast(list/targets,mob/living/user = usr)
 	for(var/mob/living/carbon/target in view(5, get_turf(user)))
@@ -664,7 +851,7 @@
 	force = 0
 	force_wielded = 0
 	wdefense = 1
-	possible_item_intents = list(/datum/intent/spear/thrust/ducal_standard)
+	possible_item_intents = list(/datum/intent/spear/thrust)
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "matthios_standard"
 	resistance_flags = FIRE_PROOF
@@ -808,7 +995,7 @@
 	race = /datum/species/dragon_matthios
 	footstep_type = FOOTSTEP_MOB_HEAVY
 	ambushable = FALSE
-	skin_armor = new /obj/item/clothing/suit/roguetown/armor/skin_armor/twilight_dragon_skin
+	skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/twilight_dragon_skin
 	wildshape_icon = 'modular/icons/mob/96x96/ratwood_dragon.dmi'
 	wildshape_icon_state = "dragon_cool"
 	pixel_x = -32
@@ -830,8 +1017,14 @@
 		STAINT = 15
 
 		AddSpell(new /obj/effect/proc_holder/spell/self/twilight_dragonclaws)
-		AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/fireball/greater/matthios_dragon)
-		AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/spitfire/matthios_dragon)
+
+		var/datum/action/cooldown/spell/projectile/fireball/fireball = new /datum/action/cooldown/spell/projectile/fireball
+		var/datum/action/cooldown/spell/projectile/spitfire/spitfire = new /datum/action/cooldown/spell/projectile/spitfire
+		
+		fireball.Grant(src)
+		spitfire.Grant(src)
+
+		AddSpell(new /obj/effect/proc_holder/spell/targeted/woundlick)
 		src.apply_status_effect(/datum/status_effect/buff/twilight_dragon_form)
 
 		real_name = "Dragon"
@@ -858,7 +1051,6 @@
 		TRAIT_NOFALLDAMAGE1,
 	)
 	inherent_biotypes = MOB_HUMANOID
-	armor = 5
 	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_R, SLOT_BACK_L, SLOT_S_STORE, SLOT_RING, SLOT_NECK)
 	nojumpsuit = 1
 	sexes = 1
@@ -898,7 +1090,7 @@
 	human.remove_overlay(DAMAGE_LAYER)
 	return TRUE
 
-/obj/item/clothing/suit/roguetown/armor/skin_armor/twilight_dragon_skin
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/twilight_dragon_skin
 	slot_flags = null
 	name = "draconic scales"
 	desc = "All but impenetrable."
@@ -906,14 +1098,17 @@
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
 	armor = ARMOR_PLATE
-	prevent_crits = PREVENT_CRITS_NONE
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	sewrepair = FALSE
-	max_integrity = 120
+	max_integrity = 600 //plate armor
 	item_flags = DROPDEL
 
-/datum/intent/simple/twilight_dragon
+	auto_repair_mode = TRUE
+	relative_repair_interval = 15 SECONDS
+	interrupt_damount = 15
+
+/datum/intent/simple/twilight_dragon_cut
 	name = "claw"
 	clickcd = 10
 	icon_state = "incut"
@@ -921,7 +1116,7 @@
 	attack_verb = list("claws", "mauls", "eviscerates")
 	animname = "cut"
 	hitsound = "genslash"
-	penfactor = 60
+	penfactor = PEN_MEDIUM
 	reach = 2
 	candodge = TRUE
 	canparry = TRUE
@@ -929,16 +1124,45 @@
 	miss_sound = "bluntswoosh"
 	item_d_type = "slash"
 
+/datum/intent/simple/twilight_dragon_chop
+	name = "claw"
+	icon_state = "inchop"
+	blade_class = BCLASS_CHOP
+	attack_verb = list("claws", "mauls", "eviscerates")
+	animname = "chop"
+	hitsound = "genslash"
+	penfactor = PEN_HEAVY
+	candodge = TRUE
+	canparry = TRUE
+	miss_text = "slashes the air!"
+	miss_sound = "bluntwooshlarge"
+	item_d_type = "slash"
+	damfactor = 1.2
+
+/datum/intent/mace/smash/twilight_dragon_smash
+	name = "thrash"
+	desc = "A powerful, smash of dragon muscle that deals normal damage but can throw a standing opponent back and slow them down, based on your strength. Ineffective below 10 strength. Slowdown & Knockback scales to your Strength up to 15 (1 - 5 tiles). Cannot be used consecutively more than every 5 seconds on the same target. Prone targets halve the knockback distance."
+	icon_state = "insmash"
+	maxrange = 5
+	chargetime = 1
+	penfactor = PEN_LIGHT
+
+/datum/intent/mace/strike/twilight_dragon_strike
+	name = "armor rending strike"
+	miss_text = "strikes the air!"
+	miss_sound = "bluntwooshlarge"
+	attack_verb = list("punches", "strikes", "tears")
+
 /obj/item/rogueweapon/twilight_dragon_claw
 	name = "dragon claw"
 	desc = "It is said that true dragons used to infuse their claws with metal alloys to make them more dangerous in combat. Regardless of whether that's true, those talons, blessed by Matthios, are no less powerful."
 	item_state = null
 	lefthand_file = null
 	righthand_file = null
-	icon = 'icons/roguetown/weapons/misc32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
 	max_blade_int = 600
 	max_integrity = 600
-	force = 25
+	force = 28
 	block_chance = 0
 	wdefense = 6
 	blade_dulling = DULLING_SHAFT_WOOD
@@ -950,7 +1174,7 @@
 	sharpness = IS_SHARP
 	parrysound = "bladedmedium"
 	swingsound = list('sound/combat/hits/blunt/genblunt (1).ogg','sound/combat/hits/blunt/genblunt (2).ogg','sound/combat/hits/blunt/genblunt (3).ogg','sound/combat/hits/blunt/flailhit.ogg')
-	possible_item_intents = list(/datum/intent/simple/twilight_dragon)
+	possible_item_intents = list(/datum/intent/simple/twilight_dragon_cut, /datum/intent/simple/twilight_dragon_chop, /datum/intent/mace/smash/twilight_dragon_smash, /datum/intent/mace/strike/twilight_dragon_strike)
 	parrysound = list('sound/combat/parry/parrygen.ogg')
 	embedding = list("embedded_pain_multiplier" = 0, "embed_chance" = 0, "embedded_fall_chance" = 0)
 	item_flags = DROPDEL
@@ -1170,6 +1394,55 @@
 
 /obj/effect/proc_holder/spell/invoked/projectile/spitfire/matthios_dragon
 	invocation_type = "none"
+
+/obj/effect/proc_holder/spell/invoked/resurrect/twilight_matthios
+	name = "Shackles of Necra"
+	desc = "Invoke Matthios's power to rip the target's soul out of Necra's unholy grasp, reviving them. The strength of your returned comrade will depend on the number of freemen present during the ritual."
+	debuff_type = /datum/status_effect/debuff/twilight_matthios_revival
+	alt_required_items = list()
+	required_items = list()
+	sound = 'sound/magic/slimesquish.ogg'
+	chargedloop = /datum/looping_sound/invokelightning
+	recharge_time = 2 MINUTES //Anastasis Equivalent
+	overlay_icon = 'icons/mob/actions/matthiosmiracles.dmi'
+	overlay_state = "revival"
+	action_icon_state = "revival"
+	action_icon = 'icons/mob/actions/matthiosmiracles.dmi'
+	required_structure = /obj/structure/fluff/psycross/matthios
+
+/datum/status_effect/debuff/twilight_matthios_revival
+	id = "matthios_revival"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/twilight_matthios_revival
+	duration = 45 MINUTES
+	effectedstats = list(
+		STATKEY_STR = -3,
+		STATKEY_SPD = -6,
+		STATKEY_CON = -3
+	)
+
+/datum/status_effect/debuff/twilight_matthios_revival/on_creation(mob/living/new_owner, statchange = 1, stat_to_change = STATKEY_STR)
+	var/freemen = 0
+	for(var/mob/living/carbon/human/comrade in view(5, get_turf(new_owner)))
+		if(istype(comrade.patron, /datum/patron/inhumen/matthios) && comrade != new_owner)
+			freemen += 1
+	if(freemen <= 4)
+		effectedstats = list(
+			STATKEY_STR = (-4 + freemen),
+			STATKEY_SPD = (-8 + freemen * 2),
+			STATKEY_CON = (-4 + freemen)
+		)
+	else
+		effectedstats = list()
+	return ..()
+
+/atom/movable/screen/alert/status_effect/debuff/twilight_matthios_revival
+	name = "Shackles of Necra"
+	desc = "Matthios has cleaved a way for your soul to escape Necra's unholy grasp. Hopefully, enough of your comrades were there to light the path."
+	icon_state = "pom_regret"
+
+/datum/status_effect/debuff/twilight_matthios_revival/on_apply()
+	. = ..()
+	owner.visible_message("<font size=9 color=9c830b>Некра не властна над моими детьми. Восстань, сын Свободы.</font><br>", "<font size=9 color=9c830b>Твои товарищи нуждаются в тебе. Восстань, сын Свободы.</font><br>")
 
 #undef EQUALIZED_GLOW
 #undef FREEDOM_FILTER

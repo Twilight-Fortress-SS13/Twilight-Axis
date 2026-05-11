@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = ACCEPTED_RACES
+	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
 	allowed_ages = list(AGE_MIDDLEAGED, AGE_OLD)
 	tutorial = "Большую часть своей жизни ты прослужил в лейб-гвардии Его Величества и тебе была удостоина величайшая честь вести твоих товарищей в бой во славу Короны, \
 	хоть и первостепенной твоей целью является защита дворца, семьи монарха и его свиты на этом проклятом острове.  \
@@ -63,7 +63,6 @@
 		/obj/item/storage/keyring/sergeant = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
-		/obj/item/signal_hornn/red = 1,
 		)
 
 //Rare-ish anti-armor two hander sword. Kinda alternative of a bastard sword type. Could be cool.

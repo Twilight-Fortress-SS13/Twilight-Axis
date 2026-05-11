@@ -1,8 +1,20 @@
+// Storyteller scaling (roundstart, storyteller_scale_slots path):
+// scaling=2, min_players=25, default_cap=2
+//  Storyteller    | Cap | <25 | 25-40 | 41+
+//  Noc            |  1  |  0  |   1   |  1
+//  Dendor/Others  |  2  |  0  |   2   |  2
 /datum/antagonist/werewolf
 	name = "Verewolf"
 	roundend_category = "Werewolves"
 	antagpanel_category = "Werewolf"
 	job_rank = ROLE_WEREWOLF
+	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
+	storyteller_favor_flags = STORYTELLER_FAVOR_WEREWOLF
+	override_candidatereq = TRUE
+	storyteller_min_players = 25
+	storyteller_slot_scaling = 2
+	storyteller_slot_default_cap = 2
+	storyteller_maxcaps = list(/datum/storyteller/noc = 1, /datum/storyteller/dendor = 2)
 	var/list/inherent_traits = list(
 		TRAIT_IGNORESLOWDOWN,
 		TRAIT_IGNOREDAMAGESLOWDOWN,
@@ -46,6 +58,7 @@
 	var/transforming
 	var/untransforming
 	var/wolfname = "Verewolf"
+	has_tempo = TRUE
 	var/static/list/dendor_cries = list('sound/effects/werewolf_sounds/wscream1.ogg',
 								'sound/effects/werewolf_sounds/wscream2.ogg',
 								'sound/effects/werewolf_sounds/wscream3.ogg',
@@ -186,7 +199,6 @@
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
 	armor = ARMOR_WWOLF
-	prevent_crits = PREVENT_CRITS_ALL
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	sewrepair = FALSE
@@ -202,7 +214,7 @@
 	attack_verb = list("claws", "mauls", "eviscerates")
 	animname = "chop"
 	hitsound = "genslash"
-	penfactor = 60
+	penfactor = PEN_HEAVY
 	candodge = TRUE
 	canparry = TRUE
 	miss_text = "slashes the air!"
@@ -215,7 +227,7 @@
 	icon_state = "insmash"
 	maxrange = 5
 	chargetime = 1
-	penfactor = 60
+	penfactor = PEN_HEAVY
 
 /obj/item/rogueweapon/werewolf_claw
 	name = "Verevolf Claw"

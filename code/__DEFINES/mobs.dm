@@ -283,6 +283,8 @@
 #define SHOCK_ILLUSION (1 << 2)
 ///The shock doesn't stun.
 #define SHOCK_NOSTUN (1 << 3)
+///Visual and sound effects only, no damage applied.
+#define SHOCK_VISUAL_ONLY (1 << 4)
 
 #define INCORPOREAL_MOVE_BASIC 1
 #define INCORPOREAL_MOVE_SHADOW 2 // leaves a trail of shadows
@@ -373,22 +375,6 @@
 // /obj/item/bodypart on_mob_life() retval flag
 #define BODYPART_LIFE_UPDATE_HEALTH (1<<0)
 
-// Pending icon update bitflags for deferred batching
-#define PENDING_UPDATE_BODY       (1<<0)
-#define PENDING_UPDATE_HAIR       (1<<1)
-#define PENDING_UPDATE_DAMAGE     (1<<2)
-#define PENDING_UPDATE_INV_HANDS  (1<<3)
-#define PENDING_UPDATE_INV_GLOVES (1<<4)
-#define PENDING_UPDATE_INV_SHOES  (1<<5)
-#define PENDING_UPDATE_INV_HEAD   (1<<6)
-#define PENDING_UPDATE_INV_BELT   (1<<7)
-#define PENDING_UPDATE_INV_BACK   (1<<8)
-#define PENDING_UPDATE_INV_ARMOR  (1<<9)
-#define PENDING_UPDATE_INV_SHIRT  (1<<10)
-#define PENDING_UPDATE_INV_PANTS  (1<<11)
-#define PENDING_UPDATE_INV_CLOAK  (1<<12)
-#define PENDING_UPDATE_INV_ALL    (PENDING_UPDATE_INV_HANDS|PENDING_UPDATE_INV_GLOVES|PENDING_UPDATE_INV_SHOES|PENDING_UPDATE_INV_HEAD|PENDING_UPDATE_INV_BELT|PENDING_UPDATE_INV_BACK|PENDING_UPDATE_INV_ARMOR|PENDING_UPDATE_INV_SHIRT|PENDING_UPDATE_INV_PANTS|PENDING_UPDATE_INV_CLOAK)
-
 #define MAX_REVIVE_FIRE_DAMAGE 180
 #define MAX_REVIVE_BRUTE_DAMAGE 180
 
@@ -468,7 +454,6 @@
 #define SKIN_COLOR_NALEDI_COAST "4e3729"
 #define SKIN_COLOR_TIMBERBORN "5d4c41"
 #define SKIN_COLOR_LOTUS_COAST "eae1C8"
-
 
 //SUN ELF SKIN TONES
 #define SKIN_COLOR_DAWN "eaCebe"
@@ -622,9 +607,24 @@
 
 #define TYPING_INDICATOR_TIMEOUT 20 MINUTES
 
-// NPC Debugging
+// NPC Debugging - uncomment to enable AI debug runechat
+// #define NPC_THINK_DEBUG
 #ifdef NPC_THINK_DEBUG
-#define NPC_THINK(message) visible_message(message, runechat_message = message)
+#define AI_THINK(pawn, message) pawn.visible_message(message, runechat_message = message)
 #else
-#define NPC_THINK(message)
+#define AI_THINK(pawn, message)
 #endif
+
+// #define NPC_THINK_DEBUG_WORLD
+#ifdef NPC_THINK_DEBUG_WORLD
+#define AI_WORLD_THINK(pawn, message) to_chat(world, "<span class='boldannounce'>\[AI-WORLD\] [pawn]: [message]</span>")
+#else
+#define AI_WORLD_THINK(pawn, message)
+#endif
+GLOBAL_LIST_INIT(roman_cache, list(
+	"0","I","II","III","IV","V","VI","VII","VIII","IX","X",
+	"XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX",
+	"XXI","XXII","XXIII","XXIV","XXV","XXVI","XXVII","XXVIII","XXIX","XXX"
+))
+
+#define ROMAN(n) (GLOB.roman_cache[clamp((n)+1, 1, GLOB.roman_cache.len)])

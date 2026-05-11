@@ -7,3 +7,4 @@
 	allowed_race = NON_DWARVEN_RACE_TYPES
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/gloves.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/gloves.dmi'
+	color = null

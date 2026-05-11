@@ -1,0 +1,6 @@
+author: "Daburuu"
+delete-after: True
+changes:
+  - rscadd: "Добавлен новый класс наемника."
+  - rscadd: "Портирован сет дуэлянта с Вандерлина."
+  - rscadd: "Новый уникальный шлем"

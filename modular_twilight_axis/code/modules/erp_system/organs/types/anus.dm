@@ -6,6 +6,7 @@
 	passive_arousal = 1.2
 	active_pain = 0.02
 	passive_pain = 0.2
+	trauma_wound_type = /datum/wound/fracture/groin
 
 /datum/erp_sex_organ/anus/New(atom/host_atom)
 	. = ..()

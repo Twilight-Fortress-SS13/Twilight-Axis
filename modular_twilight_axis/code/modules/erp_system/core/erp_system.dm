@@ -7,6 +7,8 @@ SUBSYSTEM_DEF(erp)
 	var/list/datum/erp_sex_organ/organs = list()
 	var/list/datum/erp_controller/controllers = list()
 	var/list/decaying_knotting = list()
+	var/list/actors_by_owner_ref = list()
+	var/list/actors_refcount = list()
 
 	// Services (created once in Initialize)
 	var/datum/erp_actor_custom_actions_service/actor_custom_actions
@@ -172,7 +174,45 @@ SUBSYSTEM_DEF(erp)
 
 /// Creates an ERP actor for the given atom via actor factory.
 /datum/controller/subsystem/erp/proc/create_actor(atom/A, client/C = null, mob/living/effect_mob = null)
-	return actor_factory ? actor_factory.create_actor(A, C, effect_mob) : null
+	if(!A || QDELETED(A))
+		return null
+
+	var/key = "\ref[A]"
+	var/datum/erp_actor/existing = actors_by_owner_ref[key]
+	if(existing && !QDELETED(existing))
+		actors_refcount[key] = (actors_refcount[key] || 0) + 1
+		if(C)
+			existing.attach_client(C)
+		if(effect_mob)
+			existing.set_effect_mob(effect_mob)
+		return existing
+
+	var/datum/erp_actor/new_actor = actor_factory ? actor_factory.create_actor(A, C, effect_mob) : null
+	if(!new_actor)
+		return null
+
+	actors_by_owner_ref[key] = new_actor
+	actors_refcount[key] = 1
+	return new_actor
+
+/datum/controller/subsystem/erp/proc/release_actor(datum/erp_actor/A)
+	if(!A || QDELETED(A))
+		return
+
+	var/atom/owner_atom = A.active_actor // у тебя get_controller_for() сравнивает с owner.active_actor
+	if(!owner_atom)
+		qdel(A)
+		return
+
+	var/key = "\ref[owner_atom]"
+	var/n = (actors_refcount[key] || 0) - 1
+
+	if(n <= 0)
+		actors_refcount -= key
+		actors_by_owner_ref -= key
+		qdel(A)
+	else
+		actors_refcount[key] = n
 
 /// Resolves the mob that should provide consent for a target atom (policy).
 /datum/controller/subsystem/erp/proc/get_consent_mob_for_target(atom/target_atom)
@@ -195,3 +235,30 @@ SUBSYSTEM_DEF(erp)
 		if(EC.owner_client == C)
 			return EC
 	return null
+
+/datum/controller/subsystem/erp/proc/get_actor_for_mob(mob/living/M)
+	if(!M)
+		return null
+
+	for(var/datum/erp_controller/C in controllers)
+		if(!C || QDELETED(C))
+			continue
+		var/datum/erp_actor/A = C.get_actor_by_mob(M)
+		if(A && !QDELETED(A))
+			return A
+
+	return null
+
+/datum/controller/subsystem/erp/proc/hard_shutdown_all(reason = "roundend")
+	if(!controllers || !controllers.len)
+		return
+
+	var/list/to_kill = controllers.Copy()
+
+	for(var/datum/erp_controller/C in to_kill)
+		if(!C)
+			continue
+		C.force_stop_all_links(reason)
+		qdel(C)
+
+	controllers.Cut()

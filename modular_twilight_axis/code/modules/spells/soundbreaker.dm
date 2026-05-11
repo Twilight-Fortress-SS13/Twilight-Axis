@@ -51,25 +51,25 @@
 
 /obj/effect/proc_holder/spell/self/soundbreaker/bare
 	name = "Barre"
-	desc = "Prepare a wave note for your next blow. Does 75% damage in front long range."
+	desc = "Prepare a wave note for your next blow. Does 85% damage in front long range."
 	note_id = SOUNDBREAKER_NOTE_BARE
-	damage_mult = 0.75
+	damage_mult = 0.85
 	damage_type = BRUTE
 	overlay_state = "active_wave"
 
 /obj/effect/proc_holder/spell/self/soundbreaker/shed
 	name = "Shred"
-	desc = "Prepare an overload note for your next blow. Does 60% damage and weakens target armor."
+	desc = "Prepare an overload note for your next blow. Does 90% damage and weakens target armor."
 	note_id = SOUNDBREAKER_NOTE_SHED
-	damage_mult = 0.6
+	damage_mult = 0.9
 	damage_type = BRUTE
 	overlay_state = "active_encore"
 
 
 /obj/effect/proc_holder/spell/self/soundbreaker/riff
 	name = "Riff"
-	desc = "Prepare a Riff chord for your next blow. Does 40% damage, puts you in a Riff stance, that will generate addition combo-point if you will block your opponent next attack."
+	desc = "Prepare a Riff chord for your next blow. Does 80% damage, puts you in a Riff stance, that will generate addition combo-point if you will block your opponent next attack."
 	note_id = SOUNDBREAKER_NOTE_RIFF
-	damage_mult = 0.4
+	damage_mult = 0.8
 	damage_type = BRUTE
 	overlay_state = "active_riff"

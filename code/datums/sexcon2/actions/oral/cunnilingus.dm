@@ -43,7 +43,6 @@
 	user.visible_message(span_warning("[user] stops sucking [target]'s clit ..."))
 
 /datum/sex_action/oral/cunnilingus/lock_sex_object(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	sex_locks |= new /datum/sex_session_lock(target, ORGAN_SLOT_VAGINA)
 	sex_locks |= new /datum/sex_session_lock(user, BODY_ZONE_PRECISE_MOUTH)
 
 /datum/sex_action/oral/cunnilingus/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -57,6 +56,6 @@
 	// my father. birthed me into the class of yeoman.
 	if(istype(user.head, /obj/item/clothing/head/roguetown/jester))
 		playsound(user, SFX_JINGLE_BELLS, 30, TRUE, -2, ignore_walls = FALSE)
-	do_thrust_animate(user, target, sex_session)
+	do_thrust_animate(user, target)
 
 	sex_session.perform_sex_action(target, 2, 3, TRUE)

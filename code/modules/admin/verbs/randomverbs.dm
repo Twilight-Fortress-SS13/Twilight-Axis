@@ -423,24 +423,83 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	log_admin("[key_name(usr)] healed / revived [key_name(M)]")
 	var/msg = span_danger("Admin [key_name_admin(usr)] healed / revived [ADMIN_LOOKUPFLW(M)]!")
 	message_admins(msg)
-	admin_ticket_log(M, msg)
+	// Friendlier ticket-log line for the player
+	admin_ticket_log(M, "<font color='green'>[key_name_admin(usr)] has fully healed you in relation to this ticket.</font>")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Rejuvinate") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/client/proc/cmd_admin_create_centcom_report()
-	set category = "-Server-"
-	set name = "Create Command Report"
+/client/proc/admin_spawn_cake(mob/living/M in GLOB.mob_list)
+	set category = "-GameMaster-"
+	set name = "Give Cake Slice"
 
 	if(!check_rights(R_ADMIN))
+		return
+	if(!M)
+		return
+
+	var/turf/T = get_turf(M)
+	if(!T)
+		return
+
+	var/list/cake_types = list(
+		/obj/item/reagent_containers/food/snacks/rogue/cakeslice,
+		/obj/item/reagent_containers/food/snacks/rogue/frostedcakeslice,
+	)
+	var/cake_type = pick(cake_types)
+	new cake_type(T)
+
+	log_admin("[key_name(usr)] gave a cake slice ([cake_type]) to [key_name(M)].")
+	var/msg = span_adminnotice("[key_name_admin(usr)] gave a cake slice to [ADMIN_LOOKUPFLW(M)].")
+	message_admins(msg)
+	// Tell the player (and ticket) in a friendly way
+	to_chat(M, span_notice("[key_name_admin(usr)] has given you a cake slice. How nice!"))
+	admin_ticket_log(M, "<font color='green'>[key_name_admin(usr)] has given you a cake slice. How nice!</font>")
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Cake Slice") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
+/client/proc/cmd_admin_create_centcom_report()
+	set category = "-Special Verbs-"
+	set name = "Make IC Announcement"
+
+	if(!check_rights(R_ADMIN))
+		return
+
+	var/title = input(usr, "Заголовок объявления?", "Announcement Title", "") as text|null
+	if(!title)
 		return
 
 	var/input = input(usr, "Enter a Command Report. Ensure it makes sense IC.", "What?", "") as message|null
 	if(!input)
 		return
 
+	var/list/sound_options = list("Bell(Base)", "Alert", "HorrorWhispers", "TerribleHorn", "EvilLaugh", "NecromancerLaugh", "Monsters", "OtavaComing", "Custom(file)")
+	var/sound_choice = input(src, "Какой звук?", "Announcement Sound", "Bell(Base)") as null|anything in sound_options
+	if(!sound_choice)
+		return
+
+	var/announce_sound = 'sound/misc/bell.ogg'
+	switch(sound_choice)
+		if("Alert")
+			announce_sound = 'sound/misc/alert.ogg'
+		if("HorrorWhispers")
+			announce_sound = 'sound/misc/carriage3.ogg'
+		if("TerribleHorn")
+			announce_sound = 'sound/misc/carriage4.ogg'
+		if("EvilLaugh")
+			announce_sound = 'sound/misc/HL (1).ogg'
+		if("NecromancerLaugh")
+			announce_sound = 'sound/misc/zizo.ogg'
+		if("Monsters")
+			announce_sound = 'sound/misc/kybraxor.ogg'
+		if("OtavaComing")
+			announce_sound = 'sound/misc/otavanlament.ogg'
+		if("Custom(file)")
+			announce_sound = input(src, "Выберите звуковой файл", "Custom Announcement Sound") as sound|null
+			if(!announce_sound)
+				return
+
 	var/confirm = alert(src, "Do you want to announce the contents of the report to the crew?", "Announce", "Yes", "No", "Cancel")
 	switch(confirm)
 		if("Yes")
-			priority_announce(input, null, 'sound/blank.ogg')
+			priority_announce(input, "<span class='reallybig'>[html_encode(title)]</span>", announce_sound, sender = usr)
 		if("Cancel")
 			return
 
@@ -683,7 +742,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	set desc = "Sends a tip (that you specify) to all players. After all \
 		you're the experienced player here."
 
-	if(!check_rights(R_ADMIN))
+	if(!check_rights(R_ADMIN|R_DEBUG))
 		return
 
 	var/input = input(usr, "Please specify your tip that you want to send to the players.", "Tip", "") as message|null
@@ -693,12 +752,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	if(!SSticker)
 		return
 
-	SSticker.selected_tip = input
-
-	// If we've already tipped, then send it straight away.
-	if(SSticker.tipped)
-		SSticker.send_tip_of_the_round()
-
+	SSticker.send_tip_of_the_round(input)
 
 	message_admins("[key_name_admin(usr)] sent a tip of the round.")
 	log_admin("[key_name(usr)] sent \"[input]\" as the Tip of the Round.")
@@ -886,13 +940,13 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		return
 
 	var/list/msg = list()
-	msg += "<html><head><title>Playtime Report</title></head><body>Playtime:<BR><UL>"
+	msg += "<html><head><title>Playtime Report</title></head><body><b>Player Playtime</b><BR><UL>"
 	for(var/client/C in GLOB.clients)
-		msg += "<LI> - [key_name_admin(C)]: <A href='?_src_=holder;[HrefToken()];getplaytimewindow=[REF(C.mob)]'>" + C.get_exp_living() + "</a></LI>"
+		msg += "<LI> - [key_name_admin(C)]: <A href='?_src_=holder;[HrefToken()];getplaytimewindow=[REF(C.mob)]'>View Playtime</A></LI>"
 	msg += "</UL></BODY></HTML>"
 	src << browse(msg.Join(), "window=Player_playtime_check")
 
-/datum/admins/proc/cmd_show_exp_panel(client/C)
+/datum/admins/proc/show_exp_panel(client/C)
 	if(!check_rights(R_ADMIN))
 		return
 	if(!C)
@@ -903,9 +957,9 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		return
 
 	var/list/body = list()
-	body += "<html><head><title>Playtime for [C.key]</title></head><BODY><BR>Playtime:"
-	body += C.get_exp_report()
-	body += "<A href='?_src_=holder;[HrefToken()];toggleexempt=[REF(C)]'>Toggle Exempt status</a>"
+	body += "<html><head><title>Playtime for [C.key]</title></head><BODY>"
+	body += C.get_exp_breakdown()
+	body += "<BR><A href='?_src_=holder;[HrefToken()];toggleexempt=[REF(C)]'>Toggle Exempt status</A>"
 	body += "</BODY></HTML>"
 	usr << browse(body.Join(), "window=playerplaytime[C.ckey];size=550x615")
 

@@ -8,8 +8,7 @@
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-	spells = list(/obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
-	allowed_races = ALL_RACES_TYPES
+	spells = list()
 	allowed_ages = ALL_AGES_LIST
 
 	outfit = /datum/outfit/job/roguetown/loudmouth
@@ -19,7 +18,7 @@
 	max_pq = null
 	round_contrib_points = 3
 
-	job_traits = list(TRAIT_INTELLECTUAL, TRAIT_ARCYNE_T1, TRAIT_MAGEARMOR, TRAIT_SEEPRICES_SHITTY, TRAIT_HOMESTEAD_EXPERT)
+	job_traits = list(TRAIT_INTELLECTUAL, TRAIT_ARCYNE, TRAIT_SEEPRICES_SHITTY, TRAIT_HOMESTEAD_EXPERT)
 
 	advclass_cat_rolls = list(CTAG_TOWNCRIER = 2)
 	job_subclasses = list(
@@ -32,6 +31,7 @@
 	From your desk in the SCOM atelier, you decide which words will thunder across the realm and which will die in the throats of petitioners who didn't pay enough ratfeed. \
 	In your upstairs studio, you host debates, recite gossip, and spin tales that will ripple through every corner of town. All ears are turned toward you - so speak wisely."
 	outfit = /datum/outfit/job/roguetown/loudmouth/basic
+	traits_applied = list(TRAIT_ALCHEMY_EXPERT)
 	subclass_languages = list(
 		/datum/language/elvish,
 		/datum/language/dwarvish,
@@ -87,10 +87,10 @@
 	backpack_contents = list(
 		/obj/item/recipe_book/alchemy
 	)
-	if (H && H.mind)
-		H.mind.adjust_spellpoints(6)
+	if(H?.mind)
+		H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3))
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_UPPER_CLASS, H, "Savings.")
+		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
 
 /mob/living/carbon/human/proc/crier_announcement()
 	set name = "Announcement"

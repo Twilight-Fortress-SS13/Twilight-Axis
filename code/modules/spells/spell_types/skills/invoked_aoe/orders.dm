@@ -21,6 +21,8 @@
 	if(!single_target) //We want one spell to use the old method so we'll separate this out
 		if(user.job == "Sergeant")
 			affectedjobs = list("Man at Arms")
+		else if(user.job == "Royal Guard Sergeant")
+			affectedjobs = list("Royal Guard")
 		else if((user.job == "Knight") || (user.job == "Royal Knight"))
 			affectedjobs = list("Knight", "Squire", "Royal Knight")
 		else if(user.job == "Wretch")
@@ -46,7 +48,7 @@
 			revert_cast()
 			return FALSE
 		else
-			user.say("[msg]")
+			user.say("[msg]", language = /datum/language/common)
 			for(var/mob/living/carbon/target in affectedtargets)
 				target.apply_status_effect(buff_given)
 			return TRUE
@@ -152,6 +154,11 @@
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
 				revert_cast()
 				return
+		if(user.job == "Royal Guard Sergeant")
+			if(!(target.job in list("Royal Guard")))
+				to_chat(user, span_alert("I cannot order one not of my ranks!"))
+				revert_cast()
+				return
 		if((user.job == "Knight") || (user.job == "Royal Knight"))
 			if(!(target.job in list("Knight", "Squire", "Royal Knight")))
 				to_chat(user, span_alert("I cannot order one not of my ranks!"))
@@ -175,7 +182,7 @@
 			to_chat(user, span_alert("I cannot order myself!"))
 			revert_cast()
 			return
-		user.say("[msg]")
+		user.say("[msg]", language = /datum/language/common)
 		target.apply_status_effect(/datum/status_effect/buff/order/onfeet)
 		if(!(target.mobility_flags & MOBILITY_STAND))
 			target.SetUnconscious(0)

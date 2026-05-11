@@ -21,6 +21,10 @@
 	crossfire = TRUE
 	fueluse = 0
 	no_refuel = TRUE
+	max_integrity = 200
+	can_damage = TRUE
+	flags_1 = NONE
+	damtype = BURN
 
 /obj/machinery/light/rogue/get_mechanics_examine(mob/user)
 	. = ..()
@@ -71,6 +75,7 @@
 	icon_state = "stumpfire1"
 	base_state = "stumpfire"
 	desc = "Somewhat crude, but it lights the long winding paths throughout the land."
+	max_integrity = 100
 
 /obj/machinery/light/rogue/firebowl/church
 	desc = "A wide metal bowl mounted on a stand for a healthy roaring flame."
@@ -92,6 +97,7 @@
 	bulb_colour = "#ff9648"
 	cookonme = FALSE
 	crossfire = FALSE
+	max_integrity = 80
 
 
 /obj/machinery/light/rogue/firebowl/standing/blue
@@ -419,6 +425,7 @@
 	layer = TABLE_LAYER
 	climb_offset = 14
 	on = FALSE
+	max_integrity = 200
 	roundstart_forbid = TRUE
 	cookonme = TRUE
 	soundloop = /datum/looping_sound/fireloop

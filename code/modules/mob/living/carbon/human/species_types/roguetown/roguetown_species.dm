@@ -41,7 +41,7 @@
 
 #define UNIVERSAL_ACCENT_FILENAME "accent_universal.json"
 
-/datum/species/proc/handle_speech(datum/source, mob/speech_args)
+/datum/species/proc/handle_speech(datum/source, list/speech_args)
 	var/message = speech_args[SPEECH_MESSAGE]
 
 	if(!GLOB.string_cache[UNIVERSAL_ACCENT_FILENAME])

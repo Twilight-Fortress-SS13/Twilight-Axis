@@ -150,8 +150,15 @@
 	if(!relations || !relations.len)
 		return null
 
+	if(!isliving(parent))
+		return null
+
 	var/mob/living/me = parent
-	if(!istype(me) || QDELETED(me) || me.stat == DEAD)
+	if(QDELETED(me) || me.stat == DEAD)
+		return null
+
+	var/turf/my_turf = get_turf(me)
+	if(!my_turf)
 		return null
 
 	_cleanup_invalid()
@@ -168,38 +175,53 @@
 		if(!T)
 			continue
 
-		if(!(T in view(REL_OBSERVE_RADIUS, me)))
+		if(get_dist(me, T) > REL_OBSERVE_RADIUS)
 			continue
 
-		for(var/flag in GLOB.relationship_settings)
-			if(!(R.flags & flag))
+		for(var/id in GLOB.relationship_settings)
+			var/list/cfg = GLOB.relationship_settings[id]
+			if(!cfg)
 				continue
 
-			var/list/cfg = GLOB.relationship_settings[flag]
-			if(!cfg)
+			var/flag = cfg["flag"]
+			if(!isnum(flag))
+				continue
+
+			if(!(R.flags & flag))
 				continue
 
 			if(isnum(cfg["observe_min"]))
 				best_min = max(best_min, cfg["observe_min"])
+
 			if(isnum(cfg["observe_gain"]))
 				best_gain = max(best_gain, cfg["observe_gain"])
+
 			if(isnum(cfg["observe_cap"]))
 				best_cap = max(best_cap, cfg["observe_cap"])
 
 	if(best_gain <= 0 || best_cap <= 0)
 		return null
 
-	return list("observe_min" = best_min, "observe_gain" = best_gain, "observe_cap" = best_cap)
+	return list(
+		"observe_min" = best_min,
+		"observe_gain" = best_gain,
+		"observe_cap" = best_cap,
+	)
 
 /datum/component/relationships/process(dt)
 	if(!relations || !relations.len)
 		return
 
+	if(!isliving(parent))
+		return
+
 	var/mob/living/me = parent
-	if(!istype(me) || QDELETED(me) || me.stat == DEAD)
+	if(QDELETED(me) || me.stat == DEAD)
 		return
 
 	_cleanup_invalid()
+	if(!relations || !relations.len)
+		return
 
 	var/list/p = get_observe_params()
 	if(!p)
@@ -207,12 +229,13 @@
 
 	var/minv = p["observe_min"] || 0
 	var/gain = p["observe_gain"] || 0
-	var/cap  = p["observe_cap"] || 0
+	var/cap = p["observe_cap"] || 0
 	if(gain <= 0 || cap <= 0)
 		return
 
 	var/list/ad = list()
 	SEND_SIGNAL(me, COMSIG_SEX_GET_AROUSAL, ad)
+
 	var/current = ad["arousal"]
 	if(!isnum(current))
 		return

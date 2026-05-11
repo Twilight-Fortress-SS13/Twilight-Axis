@@ -2,17 +2,17 @@
 	name = "Heretic"
 	tutorial = "You father your unholy cause through the most time-tested of ways: hard, heavy steel in both arms and armor."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/wretch/heretic
 	class_select_category = CLASS_CAT_CLERIC
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_RITUALIST, TRAIT_HEAVYARMOR)
 	maximum_possible_slots = 2 //Ppl dont like heavy armor antags.
-	// Heretic is by far the best class with access to rituals (as long as they play a god with ritual), holy and heavy armor. So they keep 7 points.
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_CON = 2,
-		STATKEY_WIL = 1
+		STATKEY_WIL = 2,
+		STATKEY_LCK = 1
 	)
 	subclass_skills = list(
 		/datum/skill/magic/holy = SKILL_LEVEL_EXPERT,
@@ -44,7 +44,6 @@
 	to_chat(H, span_warning("You father your unholy cause through the most time-tested of ways: hard, heavy steel in both arms and armor."))
 	H.set_blindness(0)
 	if(H.mind)
-		H.mind?.current.faction += "[H.name]_faction"
 		var/weapons = list("Longsword", "Mace", "Flail", "Axe", "Billhook")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
@@ -82,17 +81,16 @@
 					r_hand = /obj/item/rogueweapon/spear/billhook
 		var/datum/devotion/C = new /datum/devotion(H, H.patron)
 		C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, start_maxed = TRUE)	//Minor regen, starts maxed out.
-		wretch_select_bounty(H)
+	bountychoice_heretic(H)			//TA - EDIT
 
 	// You can convert those the church has shunned.
 	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/convert_heretic)
-	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/wound_heal)
+	H.mind?.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 	if (istype (H.patron, /datum/patron/inhumen/zizo))
 		if(H.mind)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
 			H.verbs |= /mob/living/carbon/human/proc/revelations
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark)
-			H.mind?.current.faction += "[H.name]_faction"
 		ADD_TRAIT(H, TRAIT_GRAVEROBBER, TRAIT_GENERIC)
 	mask = /obj/item/clothing/mask/rogue/facemask/steel
 	neck = /obj/item/clothing/neck/roguetown/gorget
@@ -131,6 +129,7 @@
 			"Slitted Kettle" = /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
+			"Volfskulle Bascinet" = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
 			"None"
 		)
 
@@ -138,76 +137,102 @@
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = 'sound/music/combat_heretic.ogg'
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy, SLOT_RING, TRUE)
+			H.change_stat(STATKEY_CON, 1)
+			H.change_stat(STATKEY_STR, 1)
+			H.change_stat(STATKEY_PER, 1)
 		if(/datum/patron/inhumen/matthios)
 			H.cmode_music = 'sound/music/combat_matthios.ogg'
 			helmets += list("Decorated Bucket Helmet" = /obj/item/clothing/head/roguetown/helmet/heavy/bucket/gold/cleric,) // This is so stupid. - Just a little, but it does look cool!
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios, SLOT_RING, TRUE)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_STR, 1)
 		if(/datum/patron/inhumen/baotha)
 			H.cmode_music = 'sound/music/combat_baotha.ogg'
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/baotha, SLOT_RING, TRUE)
+			H.change_stat(STATKEY_INT, 1)
+			H.change_stat(STATKEY_PER, 3)
 		if(/datum/patron/inhumen/graggar)
 			H.cmode_music = 'sound/music/combat_graggar.ogg'
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar, SLOT_RING, TRUE)
+			H.change_stat(STATKEY_STR, 2)
+			H.change_stat(STATKEY_WIL, 1)
 		if(/datum/patron/divine/astrata)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/astrata, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/templar/astratan, SLOT_CLOAK, TRUE)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
-			H.mind?.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/astratagrasp)
 			helmets += list("Old Astratan Helm" = /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm)
 		if(/datum/patron/divine/abyssor)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/abyssor, SLOT_RING, TRUE)
-			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/tabard/abyssortabard, SLOT_CLOAK, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/tabard/abyssorite, SLOT_CLOAK, TRUE)
 			H.adjust_skillrank(/datum/skill/labor/fishing, 2, TRUE)
 			H.grant_language(/datum/language/abyssal)
 			ADD_TRAIT(H, TRAIT_WATERBREATHING, TRAIT_GENERIC)
 		if(/datum/patron/divine/xylix)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/xylix, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/templar/xylixian, SLOT_CLOAK, TRUE)
 			H.cmode_music = 'sound/music/combat_jester.ogg'
 			H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/music, 1, TRUE)
-			var/datum/inspiration/I = new /datum/inspiration(H) // Ordinary templars also have it. Xylix doesn't have any special miracles for T4 anyway.
-			I.grant_inspiration(H, bard_tier = BARD_T1)
 		if(/datum/patron/divine/dendor)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/dendor, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/tabard/crusader/dendor, SLOT_CLOAK, TRUE)
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
 			H.adjust_skillrank(/datum/skill/labor/farming, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 		if(/datum/patron/divine/necra)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/necra, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/templar/necran, SLOT_CLOAK, TRUE)
 			ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 			ADD_TRAIT(H, TRAIT_SOUL_EXAMINE, TRAIT_GENERIC)
 			helmets += list("Old Necran Helm" = /obj/item/clothing/head/roguetown/helmet/heavy/necrahelm)
 		if(/datum/patron/divine/pestra)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/pestra, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/templar/pestran, SLOT_CLOAK, TRUE)
 			ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_ALCHEMY_EXPERT, TRAIT_GENERIC)
 			H.adjust_skillrank_up_to(/datum/skill/misc/medicine, 2, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, 2, TRUE)
 		if(/datum/patron/divine/eora)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/eora, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/templar/eoran, SLOT_CLOAK, TRUE)
 			ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 			ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
 			helmets += list("Old Eoran Sallet" = /obj/item/clothing/head/roguetown/helmet/sallet/eoran)
 		if(/datum/patron/divine/noc)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/noc, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/tabard/crusader/noc, SLOT_CLOAK, TRUE)
+			ADD_TRAIT(H, TRAIT_ALCHEMY_EXPERT, TRAIT_GENERIC)
 			H.adjust_skillrank(/datum/skill/misc/reading, 3, TRUE) // Really good at reading... does this really do anything? No. BUT it's soulful.
 			H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
-			H.mind?.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/nocgrasp)
 		if(/datum/patron/divine/ravox)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/ravox, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/templar/ravox, SLOT_CLOAK, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
-			H.mind?.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/ravoxgrasp)
 		if(/datum/patron/divine/malum)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/malum, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/templar/malumite, SLOT_CLOAK, TRUE)
 			H.adjust_skillrank(/datum/skill/craft/blacksmithing, 1, TRUE)
@@ -216,6 +241,8 @@
 			H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
 			ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC)
 		if(/datum/patron/divine/undivided)
+			H.change_stat(STATKEY_INT, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/undivided, SLOT_RING, TRUE)
 			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
 			if(H.mind)
@@ -232,8 +259,9 @@
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq, SLOT_SHIRT, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/chain/psydon, SLOT_GLOVES, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/shoes/roguetown/boots/psydonboots, SLOT_SHOES, TRUE)
-			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/tabard/psydontabard, SLOT_CLOAK, TRUE)
-			H.change_stat(STATKEY_WIL, 2) //ENDVRE
+			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/tabard/psydontabard/black, SLOT_CLOAK, TRUE)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_CON, 2)
 			helmets += list("Psydonic Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute,
 				"Psydonic Sallet" = /obj/item/clothing/head/roguetown/helmet/heavy/psysallet,
 				"Psydonic Armet" = /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm,
@@ -255,12 +283,12 @@
 	outfit = /datum/outfit/job/roguetown/wretch/hereticspy
 	maximum_possible_slots = 2 //Ppl dont like rogue antags.
 	traits_applied = list(TRAIT_RITUALIST, TRAIT_DODGEEXPERT)
-	//Slower than outlaw, but a bit more PER and INT
 	subclass_stats = list(
 		STATKEY_PER = 2,
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 2,
-		STATKEY_INT = 1
+		STATKEY_INT = 1,
+		STATKEY_LCK = 1
 	)
 	subclass_skills = list(
 		/datum/skill/magic/holy = SKILL_LEVEL_EXPERT,
@@ -306,7 +334,6 @@
 		)
 	H.cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
 	if(H.mind)
-		H.mind?.current.faction += "[H.name]_faction"
 		var/weapons = list("Rapier", "Sabre", "Bow", "Crossbow", "Slurbow")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)
@@ -330,6 +357,8 @@
 				beltl = /obj/item/rogueweapon/scabbard/sheath
 				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
 					l_hand = /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger
+				else if(istype(H.patron, /datum/patron/inhumen/zizo))
+					l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/zizo
 				else
 					l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel
 			if("Crossbow")
@@ -340,6 +369,8 @@
 				beltl = /obj/item/rogueweapon/scabbard/sheath
 				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
 					l_hand = /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger
+				else if(istype(H.patron, /datum/patron/inhumen/zizo))
+					l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/zizo
 				else
 					l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel
 			if("Slurbow")
@@ -350,20 +381,21 @@
 				beltl = /obj/item/rogueweapon/scabbard/sheath
 				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
 					l_hand = /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger
+				else if(istype(H.patron, /datum/patron/inhumen/zizo))
+					l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/zizo
 				else
 					l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel
 		var/datum/devotion/C = new /datum/devotion(H, H.patron)
 		C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, start_maxed = TRUE)	//Minor regen, starts maxed out.
-		wretch_select_bounty(H)
+	bountychoice_hereticspy(H)			//TA - EDIT
 
 	if (istype (H.patron, /datum/patron/inhumen/zizo))
 		if(H.mind)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark)
-			H.mind?.current.faction += "[H.name]_faction"
 		ADD_TRAIT(H, TRAIT_GRAVEROBBER, TRAIT_GENERIC)
 	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/convert_heretic)
-	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/wound_heal)
+	H.mind?.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
 /datum/outfit/job/roguetown/wretch/hereticspy/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
@@ -383,7 +415,6 @@
 		if(/datum/patron/divine/astrata)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/astrata, SLOT_RING, TRUE)
 			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
-			H.mind?.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/astratagrasp)
 		if(/datum/patron/divine/abyssor)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/abyssor, SLOT_RING, TRUE)
 			H.adjust_skillrank(/datum/skill/labor/fishing, 2, TRUE)
@@ -394,8 +425,6 @@
 			H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/music, 1, TRUE)
-			var/datum/inspiration/I = new /datum/inspiration(H) // Ordinary templars also have it. Xylix doesn't have any special miracles for T4 anyway.
-			I.grant_inspiration(H, bard_tier = BARD_T1)
 		if(/datum/patron/divine/dendor)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/dendor, SLOT_RING, TRUE)
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
@@ -408,6 +437,7 @@
 		if(/datum/patron/divine/pestra)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/pestra, SLOT_RING, TRUE)
 			ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_ALCHEMY_EXPERT, TRAIT_GENERIC)
 			H.adjust_skillrank_up_to(/datum/skill/misc/medicine, 2, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, 2, TRUE)
 		if(/datum/patron/divine/eora)
@@ -416,6 +446,7 @@
 			ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
 		if(/datum/patron/divine/noc)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/noc, SLOT_RING, TRUE)
+			ADD_TRAIT(H, TRAIT_ALCHEMY_EXPERT, TRAIT_GENERIC)
 			H.adjust_skillrank(/datum/skill/misc/reading, 3, TRUE) // Really good at reading... does this really do anything? No. BUT it's soulful.
 			H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
@@ -439,7 +470,6 @@
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/otavan/psygloves, SLOT_GLOVES, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/shoes/roguetown/boots/psydonboots, SLOT_SHOES, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan, SLOT_PANTS, TRUE)
-			H.change_stat(STATKEY_WIL, 2) //ENDVRE
 	H.equip_to_slot_or_del(new /obj/item/clothing/under/roguetown/heavy_leather_pants, SLOT_PANTS, TRUE)
 	H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat, SLOT_ARMOR, TRUE)
 	H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/gambeson, SLOT_SHIRT, TRUE)

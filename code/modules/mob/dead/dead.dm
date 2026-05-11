@@ -50,24 +50,36 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 
 /mob/dead/new_player/proc/lobby_refresh()
 	set waitfor = 0
-	if(!client)
+	var/client/C = client
+	if(!C)
 		return
 
-	if(client.is_new_player())
+	if(C.is_new_player())
 		return
 
 	var/time_remaining = SSticker.GetTimeLeft()
 	if(SSticker.HasRoundStarted() || time_remaining <= 0)
-		client << browse(null, "window=lobby_window")
+		C << browse(null, "window=lobby_window")
 		return
-	if(!winexists(client, "lobby_window"))
-		open_lobby()
+	if(!winexists(C, "lobby_window"))
+		open_lobby(C)
 		sleep(0)
-	var/lobby_visible = winget(client, "lobby_window", "is-visible")
+		C = client
+		if(!C)
+			return
+		if(C.is_new_player())
+			return
+
+	var/lobby_visible = winget(C, "lobby_window", "is-visible")
 	if(lobby_visible == "false")
-		client << browse(null, "window=lobby_window")
-		open_lobby()
+		C << browse(null, "window=lobby_window")
+		open_lobby(C)
 		sleep(0)
+		C = client
+		if(!C)
+			return
+		if(C.is_new_player())
+			return
 
 	var/timer_text
 	if (time_remaining > 0)
@@ -76,11 +88,11 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		timer_text = "Time To Start: DELAYED"
 	else
 		timer_text = "Time To Start: SOON"
-		client << browse(null, "window=lobby_window")
+		C << browse(null, "window=lobby_window")
 		return
-	client << output(timer_text, "lobby_window.browser:update_timer")
+	C << output(timer_text, "lobby_window.browser:update_timer")
 
-	client << output(
+	C << output(
 	"Total players ready: [SSticker.totalPlayersReady]",
 	"lobby_window.browser:update_ready_count"
 	)
@@ -90,14 +102,18 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		bonus_html = span_good("Ready Bonus!")
 	else
 		bonus_html = span_highlight("No bonus! Ready up!")
-	client << output(bonus_html, "lobby_window.browser:update_ready_bonus")
+	C << output(bonus_html, "lobby_window.browser:update_ready_bonus")
 
 	var/list/dat = list()
 	var/list/ready_players_by_job = list()
 	var/list/wanderer_jobs = list(
 		"Adventurer",
 		"Wretch",
-		"Court Agent"
+		"Court Agent",
+		"Bandit"
+	)
+	var/list/count_only_job = list(
+		"Hag"
 	)
 
 	dat += "<center><b>Classes:</b></center><hr>"
@@ -143,28 +159,32 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 			key = "Garrison"
 
 		var/list/job_players = ready_players_by_job[job_name]
-		
+
 		if(!job_list_by_department[key])
 			job_list_by_department[key] = list()
-			
-		job_list_by_department[key] += "<B>[display_name]</B> ([job_players.len]) - [job_players.Join(", ")]<br>"
+
+		if(job_name in count_only_job)
+			job_list_by_department[key] += "<B>[display_name]</B> ([job_players.len])<br>"
+		else
+			job_list_by_department[key] += "<B>[display_name]</B> ([job_players.len]) - [job_players.Join(", ")]<br>"
 
 	for(var/department in job_list_by_department)
 		var/list/jobs_under_department = job_list_by_department[department]
 		if(jobs_under_department.len)
 			sortTim(jobs_under_department, cmp = GLOBAL_PROC_REF(cmp_text_asc))
-			
+
 			dat += "<h3><center><font color='[JCOLOR_BY_DEPARTMENT[department]]'>----- [department] -----</font></center></h3>"
-			
+
 			dat += "<div class='block'>"
 			dat += jobs_under_department.Join("")
 			dat += "</div>"
 
-	client << output(dat.Join(), "lobby_window.browser:update_jobs")
-/mob/dead/new_player/proc/open_lobby()
-	if (!client)
+	C << output(dat.Join(), "lobby_window.browser:update_jobs")
+
+/mob/dead/new_player/proc/open_lobby(client/C = client)
+	if (!C)
 		return
-	client << browse(
+	C << browse(
 		file("html/lobby/lobby.html"),
 		"window=lobby_window;size=330x830"
 	)

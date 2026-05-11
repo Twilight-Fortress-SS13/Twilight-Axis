@@ -62,3 +62,10 @@
 		else
 			desc = "A simple luck charm - a zenny, pierced by a blade and hanging on a thin iron chain. A tiny inscription upon the amulet's edge reads: «All tyrants will die alone.»"
 	. = ..()
+
+/obj/item/clothing/neck/roguetown/chaincoif/full/iron
+	name = "iron full chain coif"
+	icon_state = "fchaincoif"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/neck.dmi'
+	max_integrity = ARMOR_INT_SIDE_IRON

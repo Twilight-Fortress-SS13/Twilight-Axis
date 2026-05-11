@@ -25,7 +25,7 @@
 		"Ganesha Type.ttf" = 'interface/fonts/languages/Ganesha Type.ttf', // Казенгунский Не работает
     "lingyuese.ttf" = 'interface/fonts/languages/lingyuese.ttf',
 		"Deutsch Gothic.ttf" = 'interface/fonts/languages/Deutsch Gothic.ttf', // Отава
-		"TolkienCyr.ttf" = 'interface/fonts/languages/TolkienCyr.ttf', // Этрусский 
+		"TolkienCyr.ttf" = 'interface/fonts/languages/TolkienCyr.ttf', // Этруский 
 		"RUSNeverwinter.ttf" = 'interface/fonts/languages/RUSNeverwinter.ttf', // Гронновский
 		"Arabic Cyr (kerning fixed).ttf" = 'interface/fonts/languages/Arabic Cyr (kerning fixed).ttf', // Аавианский Не работает
 	)

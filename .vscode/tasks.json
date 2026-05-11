@@ -63,6 +63,48 @@
 			"label": "Build All (Local Testing - No Dungeon)"
 		},
 		{
+            "type": "process",
+            "command": "tools/build/build.sh",
+            "args": ["-DLOCALTEST", "-DLOWMEMORYMODE", "-DNO_DUNGEON"],
+            "windows": {
+                "command": ".\\tools\\build\\build.bat",
+                "args": ["-DLOCALTEST", "-DLOWMEMORYMODE", "-DNO_DUNGEON"]
+            },
+            "options": {
+                "env": {
+                    "DM_EXE": "${config:dreammaker.byondPath}"
+                }
+            },
+            "problemMatcher": ["$dreammaker", "$tsc", "$eslint-stylish"],
+            "group": {
+                "kind": "build",
+				"isDefault": true
+            },
+            "dependsOn": "dm: reparse",
+            "label": "Build All (Low Memory Mode - No Dungeons)"
+        },
+        {
+            "type": "process",
+            "command": "tools/build/build.sh",
+            "args": ["-DLOCALTEST", "-DLOWMEMORYMODE", "-DNO_DUNGEON"],
+            "windows": {
+                "command": ".\\tools\\build\\build.bat",
+                "args": ["-DLOCALTEST", "-DLOWMEMORYMODE", "-DNO_DUNGEON"]
+            },
+            "options": {
+                "env": {
+                    "DM_EXE": "${config:dreammaker.byondPath}"
+                }
+            },
+            "problemMatcher": ["$dreammaker", "$tsc", "$eslint-stylish"],
+            "group": {
+                "kind": "build",
+				"isDefault": true
+            },
+            "dependsOn": "dm: reparse",
+            "label": "Build All (Low Memory Mode - No Dungeons)"
+        },
+		{
 			"type": "dreammaker",
 			"dme": "roguetown.dme",
 			"problemMatcher": ["$dreammaker"],

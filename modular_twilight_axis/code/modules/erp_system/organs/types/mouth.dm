@@ -6,6 +6,8 @@
 	passive_arousal = 1.0
 	active_pain = 0.05
 	passive_pain = 0.15
+	trauma_wound_type = /datum/wound/fracture/mouth
+	trauma_body_zone = BODY_ZONE_HEAD
 
 /datum/erp_sex_organ/mouth/New(atom/host_atom)
 	. = ..()
@@ -28,6 +30,11 @@
 	if(milk_amt > 0)
 		storage.reagents.remove_reagent(/datum/reagent/consumable/milk/erp, milk_amt)
 		H.reagents.add_reagent(/datum/reagent/consumable/milk/erp, milk_amt)
+
+	var/lube_amt = storage.reagents.get_reagent_amount(/datum/reagent/erpjuice/lube)
+	if(lube_amt > 0)
+		storage.reagents.remove_reagent(/datum/reagent/erpjuice/lube, lube_amt)
+		H.reagents.add_reagent(/datum/reagent/erpjuice/lube, lube_amt)
 
 	if(has_liquid())
 		if(!H.has_status_effect(/datum/status_effect/mouth_full))
@@ -75,6 +82,19 @@
 
 	H.visible_message(span_notice("[H] сплевывает."), span_notice("Я сплевываю семя из рта."))
 	return TRUE
+
+/datum/erp_sex_organ/mouth/apply_contact_effect(datum/erp_sex_link/L, mult = 1)
+	var/add = 0
+
+	if(L.force >= SEX_FORCE_HIGH)
+		add = L.force * mult
+
+	if(add <= 0)
+		return
+
+	var/mob/living/carbon/human/H = get_owner()
+	if(H)
+		H.adjustOxyLoss(add)
 
 /obj/item/bodypart/head/Initialize()
 	. = ..()

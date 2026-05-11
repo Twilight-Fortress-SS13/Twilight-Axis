@@ -1,3 +1,7 @@
+/datum/job/roguetown/marshal/New()
+	job_traits += list(TRAIT_ARTILLERY_EXPERT)
+	. = ..()
+
 /datum/outfit/job/roguetown/marshal/classic/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 4, TRUE)

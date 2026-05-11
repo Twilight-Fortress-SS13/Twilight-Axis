@@ -2,7 +2,7 @@
 	var/mob/living/carbon/follower = user
 	var/datum/patron/patron = follower.patron
 
-	var/prayer = input("Whisper your prayer:", "Prayer") as text|null
+	var/prayer = tgui_input_text(user, "Whisper your Prayer", "Prayer", multiline = TRUE)
 	if(!prayer)
 		return
 	

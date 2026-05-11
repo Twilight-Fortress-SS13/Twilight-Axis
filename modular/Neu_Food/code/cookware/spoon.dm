@@ -6,7 +6,7 @@
 	force = 0
 	w_class = WEIGHT_CLASS_TINY
 
-/obj/item/kitchen/spoon/examine()
+/obj/item/kitchen/spoon/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Left-click a bowl with the spoon to drink from its contents.")
 	. += span_info("Nobler appetites prefer utensils over simply eating and drinking with one's bare hands.")
@@ -37,7 +37,8 @@
 /obj/item/kitchen/spoon/silver
 	name = "silver spoon"
 	icon_state = "spoon_silver"
-	is_silver = FALSE //temporary measure to prevent people from easily metachecking vampyres. Replace with a more sophisticated alternative if-or-when available.
+	is_silver = TRUE
+	is_lesser_silver = TRUE
 	sellprice = 20
 
 /obj/item/kitchen/spoon/carved

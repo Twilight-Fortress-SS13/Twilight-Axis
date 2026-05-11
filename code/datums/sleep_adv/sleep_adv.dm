@@ -7,6 +7,7 @@
 	var/retained_dust = 0
 	var/list/sleep_exp = list()
 	var/datum/mind/mind = null
+	var/woke_up = TRUE
 	COOLDOWN_DECLARE(xp_show)
 	COOLDOWN_DECLARE(level_up)
 
@@ -75,8 +76,31 @@
 	if(!(L.client?.prefs.combat_toggles & XP_TEXT))
 		show_xp = FALSE
 	if((L.get_skill_level(skill) < SKILL_LEVEL_APPRENTICE) && (!is_considered_sleeping()|| HAS_TRAIT(mind.current, TRAIT_VAMP_DREAMS)))
+		// Check skill cap even below apprentice (e.g. alchemy with max_untraited_level = SKILL_LEVEL_NONE)
+		var/datum/skill/pre_skillref = GetSkillRef(skill)
+		var/pre_cap = pre_skillref.max_untraited_level
+		#ifdef USES_TRAIT_SKILL_GATING
+		for(var/trait in pre_skillref.trait_uncap)
+			if(HAS_TRAIT(mind.current, trait) && (pre_skillref.trait_uncap[trait] > pre_cap))
+				pre_cap = pre_skillref.trait_uncap[trait]
+		#endif
+		#ifndef USES_TRAIT_SKILL_GATING
+		pre_cap = SKILL_LEVEL_LEGENDARY
+		#endif
+		if(pre_cap < SKILL_LEVEL_APPRENTICE && L.get_skill_level(skill) >= pre_cap)
+			var/skillname = pre_skillref.name ? pre_skillref.name : "ERROR"
+			var/captimer = LAZYACCESS(L.mob_timers, "skillcap_[skillname]")
+			if(!captimer || world.time > (captimer + SKILLCAP_NOTIF_COOLDOWN))
+				L.mob_timers["skillcap_[skillname]"] = world.time
+				to_chat(L, span_warning("I can't learn anything more about [skillname]."))
+				if(show_xp)
+					L.balloon_alert(L, "<font color = '#bb2b2b'>Skill cap!</font>")
+			return
 		var/org_lvl = L.get_skill_level(skill)
 		L.adjust_experience(skill, amt)
+		// Clamp level to cap if XP pushed us past it (e.g. cap at Novice, XP jumped us to Apprentice)
+		if(pre_cap < SKILL_LEVEL_APPRENTICE && L.get_skill_level(skill) > pre_cap)
+			L.adjust_skillrank_down_to(skill, pre_cap, TRUE)
 		var/new_lvl = L.get_skill_level(skill)
 		var/capped_post_check = enough_sleep_xp_to_advance(skill, 2)
 		if(COOLDOWN_FINISHED(src, xp_show))
@@ -226,10 +250,21 @@
 
 /datum/sleep_adv/proc/process_sleep()
 	if(is_considered_sleeping())
+		woke_up = FALSE // Reset flag while sleeping so on_wake can fire on next transition
 		return
 	if(mind.current.eyesclosed)
 		return
+	on_wake()
 	close_ui()
+
+/// Called when the player wakes up, whether voluntarily (clicking continue) or involuntarily (being woken).
+/// Guarded by woke_up flag to ensure it only fires once per sleep session.
+/datum/sleep_adv/proc/on_wake()
+	if(woke_up)
+		return
+	woke_up = TRUE
+	if(mind.aspect_resets_used > 0)
+		mind.aspect_resets_used = 0
 
 /datum/sleep_adv/proc/is_considered_sleeping()
 	if(!mind.current)
@@ -329,16 +364,7 @@
 /datum/sleep_adv/proc/finish()
 	if(!mind.current)
 		return
-	if(mind.has_changed_spell)
-		mind.has_changed_spell = FALSE
-		to_chat(mind.current, span_smallnotice("I feel like I can change my spells again."))
-	if(mind.has_rituos)
-		mind.has_rituos = FALSE
-		to_chat(mind.current, span_smallnotice("The toil of invoking Her Lesser Work has fled my feeble form. I can continue my transfiguration..."))
-	if (mind.rituos_spell)
-		to_chat(mind.current, span_warning("My glimpse of [mind.rituos_spell.name] flees my slumbering mind..."))
-		mind.RemoveSpell(mind.rituos_spell)
-		mind.rituos_spell = null
+	on_wake()
 	to_chat(mind.current, span_notice("...and that's all I dreamt of."))
 	if(HAS_TRAIT(mind.current, TRAIT_STUDENT))
 		REMOVE_TRAIT(mind.current, TRAIT_STUDENT, TRAIT_GENERIC)

@@ -160,6 +160,7 @@
 	desc = "A bolt of woven fibers. Useful as bandages and in dozens upon dozens of crafts."
 	force = 0
 	throwforce = 0
+	flags_ai_inventory = AI_ITEM_BANDAGE
 	obj_flags = null
 	bundling_time = 2 SECONDS
 	firefuel = 5 MINUTES
@@ -192,7 +193,8 @@
 	. += span_info("Left-clicking someone will banadage the targeted limb. Examine yourself - or click the heart on your HUD - to check your limbs, and click any highlighted mentions of the bandaging to remove it.")
 	. += span_info("Bandaged limbs will bleed much slower. If the underlying wounds are severe enough, however, the bandagings'll eventually bleed through and negate its effectiveness.")
 	. += span_info("This scales with the bandaged individual's Constitution. The higher their Constitution is, the longer it'll take for the effects of blood loss to be felt.")
-	. += span_info("Drinking water and lifeblood can help counteract the effects of blood loss. Needles, cauteries, and miracles can stop a wound from bleeding.")
+	. += span_info("Drinking water and, to a lesser extent, lifeblood can help counteract the effects of blood loss. Lifeblood, needles, cauteries, and miracles can stop a wound from bleeding.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss.")
 
 /obj/item/natural/cloth/Initialize()
 	. = ..()
@@ -562,6 +564,9 @@
 	icon2 = "stickbundle2"
 	icon2step = 7
 	icon3 = "stickbundle3"
+
+/obj/item/natural/bundle/stick/full
+	amount = 10
 
 /obj/item/natural/bundle/stick/attackby(obj/item/W, mob/living/user)
 	. = ..()

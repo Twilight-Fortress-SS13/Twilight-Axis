@@ -162,7 +162,7 @@
 	var/spread_num = 10
 	var/damfactor = 1
 	var/critfactor = 1
-	var/npcdamfactor = 1.3
+	var/npcdamfactor = 2
 	var/reloaded = FALSE
 	var/silenced = FALSE
 	var/load_time = 50
@@ -290,7 +290,7 @@
 	if(altgripped || wielded) //Trying to unwield it
 		ungrip(user)
 		return
-	if(alt_intents)
+	if(alt_grips)
 		altgrip(user)
 	if(gripped_intents)
 		wield(user)
@@ -696,7 +696,7 @@
 
 /obj/item/ammo_box/magazine/internal/twilight_firearm
 	name = "firearm internal magazine"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_lead
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead
 	caliber = "lead_sphere"
 	max_ammo = 1
 	start_empty = TRUE
@@ -744,7 +744,7 @@
 	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus_norod.dmi'
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle
-	name = "Jägerbüchse"
+	name = "jägerbüchse"
 	desc = "Редкая разновидность колесцовой аркебузы, изготавливаемая мастерами Грензельхофта для егерей Фрейкорпс, отличившихся в ходе боевых действий. Легче и менее подвержена износу в сравнении с серийными образцами."
 	icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle.dmi'
 	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle.dmi'
@@ -768,7 +768,7 @@
 	return ..()
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/jagerrifle
-	name = "Jägerbüchse"
+	name = "jägerbüchse"
 	desc = "Редкая разновидность колесцовой аркебузы, изготавливаемая мастерами Грензельхофта для егерей Фрейкорпс, отличившихся в ходе боевых действий. Легче и менее подвержена износу в сравнении с серийными образцами. Оснащена штыком для использования в ближнем бою."
 	icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerriflebayonet.dmi'
 	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerriflebayonet.dmi'
@@ -781,6 +781,8 @@
 	icon = 'modular_twilight_axis/firearms/icons/pistol/pistol.dmi'
 	icon_state = "pistol"
 	item_state = "pistol"
+	pixel_y = 0
+	pixel_x = 0
 	force = 10
 	possible_item_intents = list(/datum/intent/shoot/twilight_firearm, /datum/intent/arc/twilight_firearm, /datum/intent/mace/strike/wood)
 	associated_skill = /datum/skill/combat/maces
@@ -799,18 +801,19 @@
 	advanced_icon_norod	= 'modular_twilight_axis/firearms/icons/pistol/pistol_norod.dmi'
 	advanced_icon_r_norod = 'modular_twilight_axis/firearms/icons/pistol/pistol_r_norod.dmi'
 	locktype = "Wheellock"
+	inv_storage_delay = 1 SECONDS
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/getonmobprop(tag)
 	. = ..()
 	if(tag)
 		switch(tag)
 			if("gen")
-				return list("shrink" = 0.4,"sx" = -10,"sy" = -8,"nx" = 13,"ny" = -8,"wx" = -8,"wy" = -7,"ex" = 7,"ey" = -8,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 30,"sturn" = -30,"wturn" = -30,"eturn" = 30,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+				return list("shrink" = 0.4,"sx" = -10,"sy" = -4,"nx" = 10,"ny" = -4,"wx" = -4,"wy" = -4,"ex" = 2,"ey" = -4, "northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 30,"sturn" = -30,"wturn" = -30,"eturn" = 30,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
 			if("onbelt")
-				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
+				return list("shrink" = 0.4,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra
-	name = "Umbra"
+	name = "\"Umbra\""
 	desc = "Компактное огнестрельное оружие отаванского производства. Ствол изготовлен из вороненой стали, на которую нанесены несколько простых рун. Благодаря необычной конструкции и рунической магии, Умбра стреляет практически бесшумно, что делает её идеальным выбором для агентов Инквизиции."
 	silenced = TRUE
 	critfactor = 1
@@ -834,11 +837,11 @@
 	advanced_icon_r = 'modular_twilight_axis/firearms/icons/handgonne/handgonne_r.dmi'
 	advanced_icon_f	= 'modular_twilight_axis/firearms/icons/handgonne/handgonne_f.dmi'
 	advanced_icon_s = 'modular_twilight_axis/firearms/icons/handgonne/handgonne_s.dmi'
-	npcdamfactor = 1
+	npcdamfactor = 3
 
 /obj/item/ammo_box/magazine/internal/twilight_firearm/handgonne
 	name = "handgonne internal magazine"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball
 	caliber = "cannonball"
 	max_ammo = 1
 	start_empty = TRUE
@@ -915,12 +918,12 @@
 	smeltresult = /obj/item/ingot/iron
 	damfactor = 0.7
 	critfactor = 0.3
-	npcdamfactor = 2.5
+	npcdamfactor = 4
 	effective_range = 3
 	match_delay = 4
 
 /obj/item/gun/ballistic/twilight_firearm/handgonne/purgatory
-	name = "Purgatory"
+	name = "\"Purgatory\""
 	desc = "Передовое огнестрельное оружие отаванского ордена Чёрного Пороха, завоевашее зловещую славу на поле боя из-за своей разрушительной мощи. Эта ручная пушка вступает в игру, когда одиночного довода против ереси просто недостаточно."
 	icon = 'modular_twilight_axis/firearms/icons/purgatory/purgatory.dmi'
 	icon_state = "purgatory"
@@ -940,8 +943,10 @@
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar
 	name = "hand mortar"
 	desc = "Ручная мортирка со стволом из бронзы, дополнительно прижатым к лафету крепким ремнём из кожи. Стреляет картечью и ядрами на малые расстояния и с меньшей силой. Такие часто использовали каперы под флагами Грензельхофта"
+	pixel_y = 0
+	pixel_x = 0
 	damfactor = 0.8
-	npcdamfactor = 1.5
+	npcdamfactor = 2
 	mag_type = /obj/item/ammo_box/magazine/internal/twilight_firearm/mortar
 	cartridge_wording = "cannonball"
 	smeltresult = /obj/item/ingot/bronze
@@ -957,7 +962,7 @@
 
 /obj/item/ammo_box/magazine/internal/twilight_firearm/mortar
 	name = "mortar internal magazine"
-	ammo_type = /obj/item/ammo_casing/caseless/twilight_cannonball/grapeshot
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot
 	caliber = "cannonball"
 	max_ammo = 1
 	start_empty = TRUE
@@ -998,7 +1003,7 @@
 	desc = "Довольно удобный вариант колесцовой аркебузы со штыком, довольно тонким и длинным дабы использовать его как копьё. Удлинённый ствол позволяет стрелять на большие расстояния, но забирает добротную часть убойной силы у пули. Частый выбор у знати."
 	damfactor = 0.7
 	critfactor = 0.4
-	npcdamfactor = 2.7
+	npcdamfactor = 4
 	effective_range = 4
 	wdefense = 5
 	walking_stick = FALSE

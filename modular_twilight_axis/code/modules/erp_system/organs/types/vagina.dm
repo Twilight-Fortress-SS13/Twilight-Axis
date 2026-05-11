@@ -10,6 +10,7 @@
 	passive_arousal = 1.15
 	active_pain = 0.1
 	passive_pain = 0.2
+	trauma_wound_type = /datum/wound/fracture/groin
 
 /datum/erp_sex_organ/vagina/New(obj/item/organ/vagina/V)
 	. = ..()
@@ -39,6 +40,11 @@
 	. = ..()
 	if(!sex_organ)
 		sex_organ = new /datum/erp_sex_organ/vagina(src)
+
+	if(M)
+		SEND_SIGNAL(M, COMSIG_ERP_ANATOMY_CHANGED)
+
+	return .
 
 /datum/erp_sex_organ/vagina/extract_reagents(amount)
 	if(amount <= 0)

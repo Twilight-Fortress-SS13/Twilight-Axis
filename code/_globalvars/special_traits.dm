@@ -41,19 +41,27 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	apply_voicepacks(character, player)
 	if(player.prefs.dnr_pref)
 		apply_dnr_trait(character, player)
+	if(player.prefs.qsr_pref)
+		apply_qsr_trait(character, player)
+
+	var/triumph_discount_remaining = is_donator(player.ckey) ? 3 : 0 // donators get first 3 triumph points free
 	if(player.prefs.selected_loadout_items)
 		for(var/key in player.prefs.selected_loadout_items)
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
 			if(!item)
 				continue
-			// Проверка на триумфы
-			if(item.triumph_cost == 0)
-				character.mind.special_items[item.name] = item.path
-			else if(character.get_triumphs() >= item.triumph_cost)
-				character.adjust_triumphs(-item.triumph_cost)
-				character.mind.special_items[item.name] = item.path
-			else
-				to_chat(character, span_warning("Недостаточно триумфов для [item.name]."))
+
+			if(item.triumph_cost)
+				var/discounted_cost = max(0, item.triumph_cost - triumph_discount_remaining)
+				if(discounted_cost > 0 && character.get_triumphs() < discounted_cost)
+					to_chat(character, span_warning("Недостаточно триумфов для [item.name]."))
+					continue
+
+				triumph_discount_remaining = max(0, triumph_discount_remaining - item.triumph_cost)
+				if(discounted_cost > 0)
+					character.adjust_triumphs(-discounted_cost)
+
+			character.mind.special_items[item.name] = item.path
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	if(assigned_job)
 		assigned_job.clamp_stats(character)
@@ -69,6 +77,13 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		REMOVE_TRAIT(H, TRAIT_EASYDISMEMBER, null) // Doesn't care for source, they ARE getting canceled
 		REMOVE_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, null)
 		to_chat(H, span_warning("My limbs are too frail and my body too tough... the contradiction leaves me unable to resist critical wounds."))
+		
+	if((H.advjob != "Knight Banneret" && H.mind.assigned_role != "Court Agent" && H.mind.assigned_role != "Adventurer" && H.mind.assigned_role != "Prince" && H.mind.assigned_role != "Court Magician" && H.mind.assigned_role != "Inquisitor"))
+		if(!H.mind.has_antag_datum(/datum/antagonist/skeleton) && !H.mind.has_antag_datum(/datum/antagonist/lich) && !H.mind.has_antag_datum(/datum/antagonist/vampire) && !H.mind.has_antag_datum(/datum/antagonist/vampire/lord))
+			ADD_TRAIT(H, TRAIT_TEMPO, SPECIES_TRAIT)		
+	
+	if(HAS_TRAIT(H, TRAIT_PSYDONIC_MEDICINE)) //TA EDIT
+		H.adjust_skillrank(/datum/skill/misc/medicine, 2, TRUE) //TA EDIT
 	return TRUE
 
 /proc/apply_voicepacks(mob/living/carbon/human/character, client/player)
@@ -88,7 +103,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 
 	var/virtuous = FALSE
 	var/heretic = FALSE
-	var/species = character.dna.species.type
+	var/species = character.dna.species
 
 	if(istype(player.prefs.selected_patron, /datum/patron/inhumen))
 		heretic = TRUE
@@ -130,15 +145,17 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 				origin_type = new character.dna.species.origin_default
 				apply_virtue(character, origin_type)
 
-/proc/origin_check(var/datum/virtue/V, species)
+/proc/origin_check(var/datum/virtue/V, datum/species/species)
+	if(!species || !V)
+		return
 	if(V)
 		if(!istype(V,/datum/virtue/origin))
 			return FALSE
 		if(V.restricted == TRUE)
-			if((species in V.races))
+			if((species.type in V.races))
 				return FALSE
 		if(istype(V,/datum/virtue/origin/racial))
-			if(!(species in V.races))
+			if(!(species.type in V.races))
 				return FALSE
 		return TRUE
 	return FALSE
@@ -181,9 +198,14 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	if(bonus in GLOB.roguetraits)
 		ADD_TRAIT(character, bonus, SPECIES_TRAIT)
 
-/proc/virtue_check(var/datum/virtue/V, heretic = FALSE)
+/proc/virtue_check(var/datum/virtue/V, heretic = FALSE, datum/species/species)
 	if(V)
 		if(istype(V,/datum/virtue/heretic) && !heretic)
+			return FALSE
+		if(V.restricted)
+			if((species.type in V.races))
+				return FALSE
+		if(V.type in species.restricted_virtues)
 			return FALSE
 		return TRUE
 	return FALSE
@@ -191,6 +213,10 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 /proc/apply_charflaw_equipment(mob/living/carbon/human/character, client/player)
 	for(var/datum/charflaw/cf in character.charflaws)
 		cf.apply_post_equipment(character)
+		if(cf.needs_extra_vice && character.charflaws.len < 2)
+			var/datum/charflaw/randflaw/rf = new()
+			character.charflaws.Add(rf)
+			rf.apply_post_equipment(character)
 		record_featured_object_stat(FEATURED_STATS_VICES, cf.name)
 
 /proc/apply_dnr_trait(mob/living/carbon/human/character, client/player)

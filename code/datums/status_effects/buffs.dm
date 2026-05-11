@@ -394,7 +394,7 @@
 		var/filter = owner.get_filter(TEMPO_MAX_FILTER)
 		if (!filter)
 			owner.add_filter(TEMPO_MAX_FILTER, 2, list("type" = "outline", "color" = outline_color, "alpha" = 80, "size" = 1))
-		owner.playsound_local(owner, 'sound/combat/tempo_max.ogg', 35, TRUE)
+		owner.playsound_local(owner, 'sound/combat/tempo_max.ogg', 85, TRUE)
 		to_chat(owner, span_notice("<b>TEMPO!!!</b>"))
 		owner.stamina = 0
 		ADD_TRAIT(owner, TRAIT_GRABIMMUNE, TRAIT_STATUS_EFFECT)
@@ -404,3 +404,21 @@
 	owner.remove_filter(TEMPO_MAX_FILTER)
 	REMOVE_TRAIT(owner, TRAIT_GRABIMMUNE,  TRAIT_STATUS_EFFECT)
 #undef TEMPO_MAX_FILTER
+
+/datum/status_effect/buff/weapon_binded
+	id = "wep_bind_buff"
+	duration = 10 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/buff/weapon_bind_buff
+	mob_effect_layer = MOB_EFFECT_LAYER_BINDED
+	mob_effect_icon_state = "eff_binded"
+
+/datum/status_effect/buff/weapon_binded/on_apply()
+	. = ..()
+	owner.stamina_add(-20)
+
+/atom/movable/screen/alert/status_effect/buff/weapon_bind_buff
+	name = "Weapon Bind"
+	desc = "Our weapons binded in my favour! I knew right where they were gonna hit me! My parrying is improved for a short while!"
+	icon = 'icons/mob/combat_debuffs.dmi'
+	icon_state = "weapon_bind_buff"

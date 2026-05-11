@@ -1,0 +1,1005 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"cy" = (
+/obj/structure/fluff/railing/border{
+	dir = 4
+	},
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/bograt/north)
+"cC" = (
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/rogue/ruinedwood/turned,
+/area/rogue/outdoors/bograt/north)
+"dc" = (
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/bograt/north)
+"fa" = (
+/turf/closed/wall/mineral/rogue/roofwall/middle/dir8,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"gs" = (
+/obj/structure/fluff/railing/wood/west,
+/turf/open/floor/rogue/ruinedwood/turned,
+/area/rogue/outdoors/rtfield/rockhill)
+"hy" = (
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/rtfield/rockhill)
+"hE" = (
+/turf/closed/wall/mineral/rogue/stone/moss,
+/area/rogue/outdoors/bograt/north)
+"iH" = (
+/turf/open/floor/rogue/ruinedwood/turned,
+/area/rogue/outdoors/rtfield/rockhill)
+"iU" = (
+/turf/open/floor/rogue/ruinedwood/turned,
+/area/rogue/outdoors/bograt/north)
+"jn" = (
+/turf/closed/wall/mineral/rogue/roofwall/outercorner,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"jY" = (
+/turf/closed/wall/mineral/rogue/roofwall/outercorner/dir4,
+/area/rogue/outdoors/bograt/above)
+"ko" = (
+/obj/machinery/light/rogue/firebowl/standing/blue,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/cavewet)
+"kE" = (
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/bograt/north)
+"kS" = (
+/obj/structure/fluff/railing/border{
+	dir = 4
+	},
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/rtfield/rockhill)
+"lc" = (
+/turf/open/floor/rogue/rooftop/green/west,
+/area/rogue/outdoors/bograt/above)
+"nd" = (
+/turf/closed/mineral/random/rogue,
+/area/rogue/under/cavewet)
+"os" = (
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/under/cavewet)
+"pz" = (
+/turf/closed/wall/mineral/rogue/roofwall/center,
+/area/rogue/outdoors/bograt/above)
+"pH" = (
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield/rockhill)
+"pW" = (
+/obj/structure/flora/roguetree,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield/rockhill)
+"qp" = (
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/bograt/north)
+"qP" = (
+/turf/open/floor/rogue/rooftop/green/east,
+/area/rogue/outdoors/bograt/above)
+"qR" = (
+/turf/open/water/river{
+	dir = 4;
+	icon_state = "rockwd"
+	},
+/area/rogue/under/cavewet/river)
+"sH" = (
+/obj/structure/fluff/railing/border{
+	dir = 4
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/bograt/north)
+"tt" = (
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/bograt/north)
+"uc" = (
+/obj/structure/fluff/railing/border{
+	dir = 4
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield/rockhill)
+"uW" = (
+/turf/open/floor/rogue/rooftop/green/north,
+/area/rogue/outdoors/bograt/above)
+"vK" = (
+/turf/closed/wall/mineral/rogue/roofwall/outercorner/dir1,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"xD" = (
+/obj/structure/stairs{
+	dir = 2
+	},
+/turf/open/floor/rogue/ruinedwood/turned,
+/area/rogue/outdoors/rtfield/rockhill)
+"xN" = (
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/cavewet)
+"xV" = (
+/turf/closed/wall/mineral/rogue/roofwall/center,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"yj" = (
+/turf/open/floor/rogue/rooftop/green/east,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"zD" = (
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield/rockhill)
+"zO" = (
+/obj/structure/flora/rogueshroom{
+	icon_state = "mush2"
+	},
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/under/cavewet)
+"Eo" = (
+/turf/open/floor/rogue/rooftop/green/west,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"Ff" = (
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/bograt/north)
+"Fk" = (
+/turf/closed/wall/mineral/rogue/roofwall/outercorner/dir8,
+/area/rogue/outdoors/bograt/above)
+"Go" = (
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/cavewet/river)
+"GS" = (
+/turf/closed/wall/mineral/rogue/stonebrick,
+/area/rogue/outdoors/rtfield/rockhill)
+"Hi" = (
+/turf/closed/wall/mineral/rogue/roofwall/middle/dir4,
+/area/rogue/outdoors/bograt/above)
+"If" = (
+/obj/structure/fluff/railing/border{
+	dir = 8
+	},
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/rtfield/rockhill)
+"LQ" = (
+/turf/open/floor/rogue/blocks/platform,
+/area/rogue/outdoors/bograt/above)
+"Nv" = (
+/obj/effect/landmark/events/haunts,
+/turf/open/floor/rogue/ruinedwood/turned,
+/area/rogue/outdoors/rtfield/rockhill)
+"OG" = (
+/turf/closed/wall/mineral/rogue/roofwall/middle/dir4,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"ON" = (
+/obj/structure/fluff/railing/border{
+	dir = 8
+	},
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/bograt/north)
+"Pj" = (
+/turf/closed/wall/mineral/rogue/roofwall/middle/dir1,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"PI" = (
+/obj/structure/flora/roguegrass/water/reeds,
+/turf/open/water/river{
+	dir = 4;
+	icon_state = "rockwd"
+	},
+/area/rogue/under/cavewet/river)
+"Rx" = (
+/turf/closed/wall/mineral/rogue/stonebrick,
+/area/rogue/outdoors/bograt/north)
+"Sb" = (
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield/rockhill)
+"Sg" = (
+/turf/closed/wall/mineral/rogue/stone/moss,
+/area/rogue/under/cavewet)
+"So" = (
+/turf/closed/wall/mineral/rogue/roofwall/middle,
+/area/rogue/outdoors/bograt/above)
+"Sz" = (
+/obj/machinery/light/rogue/firebowl/stump,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/bograt/north)
+"Ts" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/turf/open/floor/rogue/ruinedwood/turned,
+/area/rogue/outdoors/bograt/north)
+"Ue" = (
+/obj/structure/fluff/railing/border{
+	dir = 8
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield/rockhill)
+"UA" = (
+/turf/open/floor/rogue/rooftop/green/north,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"UG" = (
+/obj/structure/fluff/railing/wood/west,
+/turf/open/floor/rogue/ruinedwood/turned,
+/area/rogue/outdoors/bograt/north)
+"Vo" = (
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/rtfield/rockhill/above)
+"VF" = (
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/rogue/ruinedwood/turned,
+/area/rogue/outdoors/rtfield/rockhill)
+"VJ" = (
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/rtfield/rockhill)
+"VK" = (
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield/rockhill)
+"Xs" = (
+/turf/closed/wall/mineral/rogue/roofwall/middle/dir8,
+/area/rogue/outdoors/bograt/above)
+"XK" = (
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/cavewet)
+"YW" = (
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/bograt/above)
+
+(1,1,1) = {"
+XK
+XK
+os
+Sg
+qR
+qR
+qR
+qR
+qR
+qR
+qR
+xN
+xN
+os
+os
+"}
+(2,1,1) = {"
+XK
+XK
+os
+Sg
+qR
+qR
+qR
+qR
+PI
+qR
+qR
+xN
+xN
+os
+os
+"}
+(3,1,1) = {"
+nd
+zO
+os
+os
+qR
+qR
+qR
+qR
+Go
+qR
+qR
+xN
+xN
+os
+XK
+"}
+(4,1,1) = {"
+nd
+nd
+os
+os
+qR
+Go
+Go
+PI
+Go
+Go
+qR
+xN
+xN
+os
+ko
+"}
+(5,1,1) = {"
+nd
+nd
+nd
+nd
+qR
+qR
+qR
+qR
+qR
+qR
+qR
+xN
+xN
+os
+nd
+"}
+(6,1,1) = {"
+nd
+nd
+nd
+nd
+qR
+qR
+qR
+qR
+qR
+qR
+qR
+qR
+xN
+nd
+nd
+"}
+(7,1,1) = {"
+nd
+nd
+nd
+nd
+qR
+Go
+qR
+qR
+qR
+qR
+qR
+qR
+xN
+nd
+nd
+"}
+(8,1,1) = {"
+nd
+nd
+nd
+nd
+PI
+Go
+Go
+PI
+qR
+Go
+PI
+qR
+nd
+nd
+nd
+"}
+(9,1,1) = {"
+nd
+nd
+nd
+nd
+qR
+PI
+PI
+qR
+qR
+PI
+qR
+qR
+nd
+nd
+nd
+"}
+
+(1,1,2) = {"
+zD
+VK
+VK
+pH
+hy
+hy
+hy
+hy
+hy
+hy
+Ff
+kE
+hE
+kE
+tt
+"}
+(2,1,2) = {"
+VK
+zD
+pH
+pH
+hy
+hy
+hy
+hy
+hy
+hy
+Ff
+kE
+tt
+Sz
+dc
+"}
+(3,1,2) = {"
+VJ
+GS
+uc
+uc
+kS
+kS
+kS
+kS
+kS
+kS
+cy
+sH
+Rx
+dc
+dc
+"}
+(4,1,2) = {"
+VJ
+xD
+gs
+gs
+gs
+gs
+gs
+gs
+gs
+gs
+UG
+UG
+UG
+Ts
+qp
+"}
+(5,1,2) = {"
+VJ
+xD
+iH
+iH
+iH
+iH
+iH
+Nv
+iH
+iH
+iU
+iU
+iU
+Ts
+dc
+"}
+(6,1,2) = {"
+Sb
+xD
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+cC
+cC
+cC
+Ts
+dc
+"}
+(7,1,2) = {"
+VJ
+GS
+Ue
+Ue
+If
+If
+If
+If
+If
+If
+ON
+ON
+Rx
+dc
+dc
+"}
+(8,1,2) = {"
+VK
+VK
+pH
+pH
+hy
+hy
+hy
+hy
+hy
+hy
+hy
+Ff
+tt
+Sz
+dc
+"}
+(9,1,2) = {"
+pW
+VK
+pH
+VK
+hy
+hy
+hy
+hy
+hy
+hy
+hy
+Ff
+hE
+tt
+tt
+"}
+
+(1,1,3) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+LQ
+YW
+YW
+"}
+(2,1,3) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(3,1,3) = {"
+Vo
+Eo
+Eo
+Eo
+Eo
+Eo
+Eo
+Eo
+Eo
+Eo
+lc
+lc
+lc
+YW
+YW
+"}
+(4,1,3) = {"
+Vo
+jn
+fa
+fa
+fa
+fa
+fa
+fa
+fa
+fa
+Xs
+Xs
+jY
+YW
+YW
+"}
+(5,1,3) = {"
+Vo
+Pj
+xV
+xV
+xV
+xV
+xV
+xV
+xV
+xV
+pz
+pz
+So
+YW
+YW
+"}
+(6,1,3) = {"
+Vo
+vK
+OG
+OG
+OG
+OG
+OG
+OG
+OG
+OG
+Hi
+Hi
+Fk
+YW
+YW
+"}
+(7,1,3) = {"
+Vo
+yj
+yj
+yj
+yj
+yj
+yj
+yj
+yj
+yj
+qP
+qP
+qP
+YW
+YW
+"}
+(8,1,3) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+"}
+(9,1,3) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+LQ
+YW
+YW
+"}
+
+(1,1,4) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(2,1,4) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(3,1,4) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(4,1,4) = {"
+Vo
+Eo
+Eo
+Eo
+Eo
+Eo
+Eo
+Eo
+Eo
+Eo
+lc
+lc
+lc
+YW
+YW
+"}
+(5,1,4) = {"
+Vo
+UA
+UA
+UA
+UA
+UA
+UA
+UA
+UA
+UA
+uW
+uW
+uW
+YW
+YW
+"}
+(6,1,4) = {"
+Vo
+yj
+yj
+yj
+yj
+yj
+yj
+yj
+yj
+yj
+qP
+qP
+qP
+YW
+YW
+"}
+(7,1,4) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(8,1,4) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+"}
+(9,1,4) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+"}
+
+(1,1,5) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(2,1,5) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(3,1,5) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(4,1,5) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(5,1,5) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(6,1,5) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(7,1,5) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+YW
+"}
+(8,1,5) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+"}
+(9,1,5) = {"
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+Vo
+YW
+YW
+YW
+YW
+"}

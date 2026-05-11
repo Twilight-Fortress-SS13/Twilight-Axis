@@ -1,5 +1,6 @@
 #define NYMPHO_AROUSAL_SOFT_CAP ERP_NYMPHO_SOFT_CAP
 #define MOAN_THRESHOLD 4.0
+#define ERP_NYMPHO_SATED_GRACE 90 MINUTES
 
 /datum/component/arousal
 	var/tmp/last_ejaculation_world_time = -1
@@ -11,6 +12,7 @@
 	var/tmp/chain_lock_until = 0
 	var/last_overload_sleep_decay_time = 0
 	var/tmp/nympho_sp_floor_until = 0
+	var/erp_last_climax_fx_time = 0
 
 /datum/component/arousal/RegisterWithParent()
 	. = ..()
@@ -28,6 +30,7 @@
 	else
 		satisfaction_points = 3.0
 	last_sp_decay_time = world.time
+	update_satisfaction_buff()
 
 /datum/component/arousal/proc/get_erp_links()
 	var/list/L = list()
@@ -121,7 +124,7 @@
 /datum/component/arousal/proc/get_nympho_hunger_level()
 	if(!is_lovefiend())
 		return 0
-	if(is_nympho_sated())
+	if(is_nympho_sated() || is_nympho_sp_floor_active())
 		return 0
 	if(satisfaction_points < ERP_NYMPHO_HARD_HUNGER_SP)
 		return 2
@@ -140,16 +143,18 @@
 		return
 
 	var/was_sated = A.sated
-	var/now_sated = is_nympho_sated()
+	var/now_sated = is_nympho_sated() || is_nympho_sp_floor_active()
 	if(was_sated == now_sated)
 		return
 
 	A.sated = now_sated
 	A.unsate_time = world.time
+
 	if(now_sated)
-		nympho_sp_floor_until = world.time + 48 MINUTES
-		if(A.sated_text)
-			to_chat(H, span_blue(A.sated_text))
+		if(is_nympho_sated())
+			nympho_sp_floor_until = world.time + ERP_NYMPHO_SATED_GRACE
+			if(A.sated_text)
+				to_chat(H, span_blue(A.sated_text))
 
 		H.remove_stress(/datum/stressevent/vice)
 		if(A.debuff)
@@ -211,13 +216,12 @@
 	if(!istype(H))
 		return
 
+	H.remove_status_effect(/datum/status_effect/debuff/erp_overload)
+
 	if(overload_points <= 0)
-		H.remove_status_effect(/datum/status_effect/debuff/erp_overload)
 		return
 
-	var/datum/status_effect/debuff/erp_overload/E = H.apply_status_effect(/datum/status_effect/debuff/erp_overload)
-	if(E)
-		E.set_stacks(overload_points)
+	H.apply_status_effect(/datum/status_effect/debuff/erp_overload)
 
 /datum/component/arousal/proc/clear_overload_points(reason = null)
 	overload_points = 0
@@ -246,11 +250,9 @@
 
 /datum/component/arousal/proc/adjust_satisfaction(delta)
 	satisfaction_points = clamp(satisfaction_points + delta, 0.0, ERP_SP_MAX)
-	if(is_nympho_sp_floor_active())
-		satisfaction_points = max(satisfaction_points, 2.0)
-
 	last_sp_decay_time = world.time
 	sync_lovefiend_sated_from_sp()
+	update_satisfaction_buff()
 
 /datum/component/arousal/proc/handle_satisfaction_decay()
 	if(!last_sp_decay_time)
@@ -270,11 +272,16 @@
 /datum/component/arousal/proc/award_satisfaction_on_climax(mob/living/carbon/human/climaxer, mob/living/carbon/human/partner)
 	if(!climaxer || climaxer != parent)
 		return
+
 	var/is_masturbation = (!istype(partner) || partner == climaxer)
-	if(is_masturbation)
-		adjust_satisfaction(ERP_SP_GAIN_MASTURBATE)
-	else
-		adjust_satisfaction(ERP_SP_GAIN_PARTNER)
+	var/gain = is_masturbation ? ERP_SP_GAIN_MASTURBATE : ERP_SP_GAIN_PARTNER
+
+	if(is_lovefiend() && !is_nympho_sated() && !is_nympho_sp_floor_active())
+		gain *= 2
+
+	adjust_satisfaction(gain)
+	if(gain > 0 && satisfaction_points >= ERP_OVERLOAD_SP_TRIGGER)
+		try_gain_overload_point()
 
 /datum/component/arousal/proc/get_climax_stress_event(mob/living/carbon/human/partner, is_masturbation)
 	var/is_nympho = is_lovefiend()
@@ -490,28 +497,34 @@
 		return
 	last_ejaculation_world_time = world.time
 
+	var/mob/living/carbon/human/H = parent
+	if(!istype(H))
+		return
+
 	var/list/L = get_erp_links()
 	var/datum/erp_sex_link/best = pick_best_erp_link(L)
+	var/datum/erp_controller/C = best ? SSerp.get_controller_for(H) : null
+	var/erp_service_will_handle_climax = !!C
+
+	var/mob/living/carbon/human/partner = null
+	var/climax_type = "self"
 
 	if(best)
-		var/mob/living/carbon/human/H = parent
-		if(!istype(H))
-			return
-
 		if(best.action && best.action.inject_timing == INJECT_ON_FINISH)
 			best.action.handle_inject(best, H)
 
-		var/datum/erp_controller/C = SSerp.get_controller_for(H)
 		var/datum/erp_actor/me = C ? C.get_actor_by_mob(H) : null
 		var/list/info = me ? best.handle_climax(me) : null
-		var/climax_type = info?["type"] || "self"
-		var/mob/living/carbon/human/partner = info?["partner"]
+
+		climax_type = info?["type"] || "self"
+		partner = info?["partner"]
 
 		spread_chain_orgasm(H)
-		handle_climax(climax_type, H, partner, null)
+
+	handle_climax(climax_type, H, partner, null)
+	if(!erp_service_will_handle_climax)
 		award_satisfaction_on_climax(H, partner)
-		after_ejaculation(null, H, partner)
-		return
+	after_ejaculation(null, H, partner, erp_service_will_handle_climax)
 
 /datum/component/arousal/handle_climax(climax_type, mob/living/carbon/human/climaxer, mob/living/carbon/human/partner, action)
 	switch(climax_type)
@@ -554,22 +567,21 @@
 		cost = round(cost * 0.75)
 	return max(1, cost)
 
-/datum/component/arousal/after_ejaculation(datum/sex_action/action, mob/living/carbon/human/climaxer, mob/living/carbon/human/partner)
+/datum/component/arousal/after_ejaculation(datum/sex_action/action, mob/living/carbon/human/climaxer, mob/living/carbon/human/partner, erp_service_will_handle_climax = FALSE)
 	SEND_SIGNAL(climaxer, COMSIG_SEX_SET_AROUSAL, 20)
 	SEND_SIGNAL(climaxer, COMSIG_SEX_CLIMAX)
 
-	apply_climax_stress(climaxer, partner)
+	if(!erp_service_will_handle_climax)
+		apply_climax_stress(climaxer, partner)
+
 	var/cost = get_charge_cost_for_climax()
 	charge = max(0, charge - cost)
-
-	if(satisfaction_points >= ERP_OVERLOAD_SP_TRIGGER)
-		try_gain_overload_point()
 
 	apply_post_climax_multiplier_gain()
 	climaxer.emote("moan", forced = TRUE)
 	climaxer.playsound_local(climaxer, 'sound/misc/mat/end.ogg', 100)
 
-	if(HAS_TRAIT(partner, TRAIT_GOODLOVER))
+	if(partner && HAS_TRAIT(partner, TRAIT_GOODLOVER) && partner != climaxer)
 		if(!climaxer.mob_timers["cumtri"])
 			climaxer.mob_timers["cumtri"] = world.time
 			climaxer.adjust_triumphs(1)

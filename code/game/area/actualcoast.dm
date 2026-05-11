@@ -1,6 +1,7 @@
 // Actual coastal coastal area - this is for the harbour, which has no ambushes.
 /area/rogue/outdoors/beach
 	name = "City Harbor"
+	loot_budget = LOOT_BUDGET_AZURE_COAST
 	icon_state = "beach"
 	warden_area = TRUE
 	ambientsounds = AMB_BEACH
@@ -19,6 +20,7 @@
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/goblin/npc/ambush/sea = 20,
 		/mob/living/simple_animal/hostile/retaliate/rogue/mossback = 10,
+		/mob/living/simple_animal/hostile/rogue/deepone = 15,
 		new /datum/ambush_config/triple_deepone = 30,
 		new /datum/ambush_config/deepone_party = 20,
 	)
@@ -40,6 +42,7 @@
 		/mob/living/carbon/human/species/human/northern/searaider/ambush = 5,
 		/mob/living/carbon/human/species/goblin/npc/ambush/sea = 20,
 		/mob/living/simple_animal/hostile/retaliate/rogue/mossback = 10,
+		/mob/living/simple_animal/hostile/rogue/deepone = 15,
 		new /datum/ambush_config/triple_deepone = 30,
 		new /datum/ambush_config/deepone_party = 20,
 	)

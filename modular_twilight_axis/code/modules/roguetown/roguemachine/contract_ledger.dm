@@ -1,3 +1,4 @@
+/*
 /obj/structure/roguemachine/contractledger/rockhill/cash_in(reward, original_reward, tax_amt)
 	var/list/coin_types = list(
 		/obj/item/roguecoin/goldkrona = FLOOR(reward / 14, 1),
@@ -16,3 +17,4 @@
 		say(reward > original_reward ? \
 			"Your handler assistance-increased reward of [reward] mammons has been dispensed! The difference is [reward - original_reward] mammons. ([tax_amt] mammons taxed.)" : \
 			"Your reward of [reward] mammons has been dispensed. ([tax_amt] mammons taxed.)")
+*/

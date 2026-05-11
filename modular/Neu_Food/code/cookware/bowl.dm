@@ -18,7 +18,7 @@
 	drinksounds = list('sound/items/drink_cup (1).ogg','sound/items/drink_cup (2).ogg','sound/items/drink_cup (3).ogg','sound/items/drink_cup (4).ogg','sound/items/drink_cup (5).ogg')
 	fillsounds = list('sound/items/fillcup.ogg')
 
-/obj/item/reagent_containers/glass/bowl/examine()
+/obj/item/reagent_containers/glass/bowl/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Left-click an appropriate source of liquids while the 'FILL' intent is selected to fill the bowl.")
 	. += span_info("Some containers have to be manually poured into the bowl, instead. This can be done by left-clicking the bowl while the container's 'FEED' intent is selected.")
@@ -45,7 +45,8 @@
 	name = "silver bowl"
 	icon_state = "bowl_silver"
 	sellprice = 60
-	is_silver = FALSE //temporary measure to prevent people from easily metachecking vampyres. Replace with a more sophisticated alternative if-or-when available.
+	is_silver = TRUE
+	is_lesser_silver = TRUE
 
 /obj/item/reagent_containers/glass/bowl/carved
 	name = "carved bowl"

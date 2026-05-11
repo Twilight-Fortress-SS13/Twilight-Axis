@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = JCOLOR_CITYWATCH
-	allowed_races = RACES_TOLERATED_UP
+	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
 	allowed_ages = list(AGE_MIDDLEAGED, AGE_OLD)
 	display_order = JDO_SHERIFF
 	tutorial = "Преступность всегда была постоянной составляющей вашей жизни, и вы всегда выбирали сторону справедливости. \
@@ -20,6 +20,8 @@
 	give_bank_account = TRUE
 	min_pq = 10
 	max_pq = null
+	round_contrib_points = 3
+	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'modular_twilight_axis/sound/music/combat/combat_watchman.ogg'
 	job_subclasses = list(
@@ -89,7 +91,7 @@
 	beltr = /obj/item/rogueweapon/mace/stunmace
 	cloak = /obj/item/clothing/cloak/sheriff
 	r_hand = /obj/item/rogueweapon/sword/sabre
-	backpack_contents = list(/obj/item/storage/keyring/sheriff = 1, /obj/item/signal_hornn/blue = 1, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/rogueweapon/huntingknife/idagger/steel = 1)
+	backpack_contents = list(/obj/item/storage/keyring/sheriff = 1, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/rogueweapon/huntingknife/idagger/steel = 1)
 
 /datum/outfit/job/roguetown/sheriff/pre_equip(mob/living/carbon/human/H)
 	..()

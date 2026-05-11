@@ -430,3 +430,6 @@
 		used[O2] = TRUE
 
 	organs = ordered
+
+/datum/erp_actor/proc/get_strength(var/stat)
+	return 10

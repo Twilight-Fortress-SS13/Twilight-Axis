@@ -26,7 +26,7 @@
 	is_subrace = TRUE
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,STUBBLE,OLDGREY,MUTCOLORS)
 	default_features = MANDATORY_FEATURE_LIST
-	inherent_traits = list(TRAIT_EASYDECAPITATION, TRAIT_NOHUNGER, TRAIT_NOBREATH, TRAIT_ZOMBIE_IMMUNE) //Given the deathless traits inherently as part of their nature as pseudo-undead.
+	inherent_traits = list(TRAIT_EASYDECAPITATION, TRAIT_NOHUNGER, TRAIT_NOBREATH, TRAIT_DEATHLESS, TRAIT_ZOMBIE_IMMUNE) //Given the deathless traits inherently as part of their nature as pseudo-undead.
 	use_skintones = TRUE
 	disliked_food = NONE
 	liked_food = NONE
@@ -141,7 +141,7 @@
 		/datum/language/hellspeak,
 	)
 
-	restricted_virtues = list(/datum/virtue/utility/noble, /datum/virtue/utility/deathless, /datum/virtue/utility/resident)
+	restricted_virtues = list(/datum/virtue/utility/noble, /datum/virtue/utility/hollow)
 
 	stress_examine = TRUE
 	stress_desc = span_red("Accursed. I should keep my distance...")
@@ -265,14 +265,15 @@
 	UnregisterSignal(user, COMSIG_MOB_SAY)
 	UnregisterSignal(user, COMSIG_MOB_SAY_POSTPROCESS)
 	//UnregisterSignal(user, COMSIG_ERP_LOCATION_ACCESSIBLE) // TODO SEXCON2
-	if(my_head.owner ~= user)
+	if(my_head && my_head.owner ~= user)
 		// Give their head back instead?
 		// In TG Dullahan heads are always off, thus they give back heads.
 		// Warn that they're going to die?
 		if(!(user.status_flags & GODMODE))
 			user.death()
 
-	UnregisterSignal(my_head, COMSIG_QDELETING)
+	if(my_head)
+		UnregisterSignal(my_head, COMSIG_QDELETING)
 	my_head = null
 	soul_light_off()
 	mob_light_obj = null

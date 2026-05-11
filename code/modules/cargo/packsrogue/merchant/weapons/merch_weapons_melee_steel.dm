@@ -16,7 +16,7 @@
 	name = "Chef's Knife"
 	cost = 40 // 1 Steel Ingot
 	contains = list(
-					/obj/item/rogueweapon/huntingknife/idagger/steel,
+					/obj/item/rogueweapon/huntingknife/chefknife,
 				)
 
 /datum/supply_pack/rogue/steel_weapons/chefcleaver
@@ -44,7 +44,7 @@
 	name = "Steel Knuckle"
 	cost = 40 // 1 Steel Ingot
 	contains = list(
-					/obj/item/rogueweapon/knuckles
+					/obj/item/clothing/gloves/roguetown/knuckles
 				)
 
 /datum/supply_pack/rogue/steel_weapons/rapier
@@ -173,6 +173,13 @@
 					/obj/item/rogueweapon/estoc,
 				)
 
+/datum/supply_pack/rogue/steel_weapons/aplongsword
+	name = "Stecher"
+	cost = 75 // 2 Steel Ingot, 1 Small Log
+	contains = list(
+					/obj/item/rogueweapon/sword/long/ap,
+				)
+
 /datum/supply_pack/rogue/steel_weapons/greataxe
 	name = "Greataxe"
 	cost = 75 // 2 Steel Ingot, 1 Small Log
@@ -261,11 +268,4 @@
 	cost = 40 // 1 Steel Ingot
 	contains = list(
 					/obj/item/rogueweapon/sword/falx,
-				)
-
-/datum/supply_pack/rogue/steel_weapons/flail
-	name = "Flail"
-	cost = 40 // 1 Steel Ingot
-	contains = list(
-					/obj/item/rogueweapon/flail/sflail,
 				)

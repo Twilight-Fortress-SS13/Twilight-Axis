@@ -11,6 +11,7 @@
 	passive_arousal = 1.1
 	active_pain = 0.02
 	passive_pain = 0.4
+	trauma_wound_type = /datum/wound/fracture/chest
 
 /datum/erp_sex_organ/breasts/New(obj/item/organ/breasts/B)
 	. = ..(B)
@@ -46,6 +47,11 @@
 	if(!sex_organ)
 		sex_organ = new /datum/erp_sex_organ/breasts(src)
 
+	if(M)
+		SEND_SIGNAL(M, COMSIG_ERP_ANATOMY_CHANGED)
+
+	return .
+
 /datum/erp_sex_organ/breasts/on_inject(datum/erp_sex_link/link, inject_mode, target, datum/reagents/R, mob/living/carbon/human/who)
 	. = ..()
 	if(!link || !R)
@@ -66,8 +72,9 @@
 	if(!istype(partner))
 		return
 
-	to_chat(me, span_warning("Я чувствую, как молоко покидает мою грудь."))
-	to_chat(partner, span_warning("Я чувствую, как молоко [me] попадает мне в рот."))
+	to_chat(me, span_warning("Я чувствую, как моя грудь выплескивает молоко."))
+	if(me != partner)
+		to_chat(partner, span_warning("Я чувствую, как грудь [me] выпускает молоко."))
 
 #undef BREAST_BASE_PROD_PER_SIZE
 #undef BREAST_STORAGE_PER_SIZE

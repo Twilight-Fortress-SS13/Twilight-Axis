@@ -35,3 +35,13 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/pants.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/pants.dmi'
 	salvage_result = null
+
+/obj/item/clothing/under/roguetown/chainlegs/twilight_drow
+	name = "scourge chain chausses"
+	desc = "The Dark Elves rarely don chainmail, preferring much more comfortable leathers and spider silk. Still, it is not unheard of, especially among the shock troops embedded with the raiding parties that venture into the surface world."
+	icon_state = "shadowchains"
+	item_state = "shadowchains"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/pants.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/pants.dmi'
+	smeltresult = /obj/item/ingot/drow
+	smelt_bar_num = 2

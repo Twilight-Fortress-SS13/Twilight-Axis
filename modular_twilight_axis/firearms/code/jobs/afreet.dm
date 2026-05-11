@@ -3,15 +3,13 @@
 	desc = "A loose garment that is usually draped across ones upper body. No one's quite sure of its cultural origin but it does look fancy."
 	color = "#B36A57"
 	body_parts_covered = COVERAGE_ALL_BUT_ARMS
-	armor = ARMOR_LEATHER_GOOD
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_BLUNT, BCLASS_CHOP, BCLASS_SMASH)
+	armor = ARMOR_LEATHER
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
 
 /datum/advclass/twilight_afreet
 	name = "Afreet"
 	tutorial = "'Demon of Fire', the slaves used to call you, when you, dressed in black uniform, emerged from the sands, having shot their masters dead with weapons they could not comprehend. During the War, you were deployed deep within the Naledi lands, tasked with plundering Golden Empire's slave trade routes. Perhaps you found it too profitable and enjoyable to leave behind, or perhaps you still wage your war to this day — either way, you no longer answer to the Kaiser or his lackeys."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/bandit/twilight_afreet
 	category_tags = list(CTAG_BANDIT)
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_corsair.ogg'
@@ -52,7 +50,7 @@
 
 /datum/outfit/job/roguetown/bandit/twilight_afreet/pre_equip(mob/living/carbon/human/H) //Basically an evil jager
 	..()
-	if (!(istype(H.patron, /datum/patron/inhumen/zizo) || istype(H.patron, /datum/patron/inhumen/matthios) || istype(H.patron, /datum/patron/inhumen/graggar) || istype(H.patron, /datum/patron/inhumen/baotha)))
+	if (!istype(H.patron, /datum/patron/inhumen/matthios))
 		to_chat(H, span_warning("My former deity has abandoned me.. Matthios is my new master."))
 		H.set_patron(/datum/patron/inhumen/matthios)	//We allow other heretics into the cool-kids club, but if you are a tennite/psydonian it sets you to matthiosan.
 	beltl = /obj/item/quiver/twilight_bullet/lead

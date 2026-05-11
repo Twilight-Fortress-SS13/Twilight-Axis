@@ -10,6 +10,5 @@
 	body_parts_inherent = NECK
 	slot_flags = ITEM_SLOT_NECK
 	body_parts_covered = NECK
-	prevent_crits = PREVENT_CRITS_MOST
 	equip_delay_self = 7 SECONDS
 	unequip_delay_self = 7 SECONDS
