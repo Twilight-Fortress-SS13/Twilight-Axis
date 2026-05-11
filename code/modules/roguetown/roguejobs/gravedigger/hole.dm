@@ -132,7 +132,11 @@
 		if(corpse.stat != DEAD)
 			to_chat(user, "This grave is restless with lyfe, as if its denizen is not dead.")
 			return
-
+		// TA EDIT
+		if(!corpse.mind)
+			to_chat(user, "This burried-one's lux is to weak to weave.")
+			return
+		//TA EDIT
 		if(corpse.burialrited)
 			has_consecrated = TRUE
 			continue
