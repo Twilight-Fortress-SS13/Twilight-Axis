@@ -16,7 +16,7 @@
 					/datum/action/cooldown/spell/noc/moonscorch     			= CLERIC_T3,
 					/datum/action/cooldown/spell/noc/spellpack					= CLERIC_T3,
 					/datum/action/cooldown/spell/noc/grimoire					= CLERIC_T4,
-//      			/obj/effect/proc_holder/spell/invoked/resurrect/noc			= CLERIC_T4, // TA EDIT
+	      		//	/obj/effect/proc_holder/spell/invoked/resurrect/noc			= CLERIC_T4, // TA EDIT
 
 	)
 	confess_lines = list(

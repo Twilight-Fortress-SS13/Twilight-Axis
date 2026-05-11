@@ -16,7 +16,7 @@
 					/datum/action/cooldown/spell/ravox/persistence			= CLERIC_T3,
 					/datum/action/cooldown/spell/ravox/battlecry			= CLERIC_T3,
 					/datum/action/cooldown/spell/ravox/spirits 				= CLERIC_T4,
-				//	/obj/effect/proc_holder/spell/invoked/resurrect/ravox		= CLERIC_T4, // TA EDIT
+				//	/obj/effect/proc_holder/spell/invoked/resurrect/ravox	= CLERIC_T4, // TA EDIT
 	)
 	confess_lines = list(
 		"RAVOX IS JUSTICE!",

@@ -118,7 +118,7 @@
 					/obj/effect/proc_holder/spell/invoked/projectile/graggar_blood_net 	= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/silence/graggar				= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/revel_in_slaughter 			= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/resurrect/graggar				= CLERIC_T4,
+				//	/obj/effect/proc_holder/spell/invoked/resurrect/graggar				= CLERIC_T4,
 	)
 	confess_lines = list(
 		"ГРАГГАР - ЗВЕРЬ, КОТОРОМУ Я ПОКЛОНЯЮСЬ!",
@@ -212,7 +212,7 @@
 					/obj/effect/proc_holder/spell/invoked/TApainkiller					= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/lux_steal                     = CLERIC_T3,
 					/obj/effect/proc_holder/spell/self/mirage                           = CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/resurrect/baotha				= CLERIC_T4,
+				//	/obj/effect/proc_holder/spell/invoked/resurrect/baotha				= CLERIC_T4,
 	)
 	confess_lines = list(
 		"БАОТА ТРЕБУЕТ УДОВОЛЬСТВИЯ!",

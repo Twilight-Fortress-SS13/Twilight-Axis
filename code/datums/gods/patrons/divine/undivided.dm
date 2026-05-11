@@ -16,7 +16,7 @@
 					/datum/action/cooldown/spell/miracle/fortify/undivided				= CLERIC_T3,
 					/datum/action/cooldown/spell/undivided/gallow_humor					= CLERIC_T3,
 					/datum/action/cooldown/spell/undivided/undivided_battlecry			= CLERIC_T4,
-				//	/obj/effect/proc_holder/spell/invoked/resurrect/undivided	= CLERIC_T4 // TA EDIT
+				//	/obj/effect/proc_holder/spell/invoked/resurrect/undivided			= CLERIC_T4 // TA EDIT
 	)
 	confess_lines = list(
 		"THE HOLY DECAGRAM SHALL SHIELD MY SOUL!",
