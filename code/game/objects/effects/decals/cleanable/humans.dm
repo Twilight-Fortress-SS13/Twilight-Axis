@@ -33,12 +33,6 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	appearance_flags = NO_CLIENT_COLOR
 	var/blood_timer
-	var/blood_color
-
-/obj/effect/decal/cleanable/blood/proc/set_blood_color(new_blood_color)
-	blood_color = new_blood_color
-	icon = initial(icon)
-	color = blood_color || initial(color)
 
 /obj/effect/decal/cleanable/blood/Initialize(mapload)
 	. = ..()
@@ -54,18 +48,16 @@
 	if(QDELETED(src))
 		return
 	name = "dry [initial(name)]"
-	icon = initial(icon)
 	color = "#967c69"
 	bloodiness = 0
 
 /obj/effect/decal/cleanable/blood/replace_decal(obj/effect/decal/cleanable/C)
 	. = ..()
 	if(C)
-		var/obj/effect/decal/cleanable/blood/B = C
 		C.alpha = initial(alpha)
 		C.bloodiness = initial(bloodiness)
 		C.name = initial(name)
-		B.set_blood_color(blood_color)
+		C.color = initial(color)
 
 /obj/effect/decal/cleanable/blood/Destroy()
 	GLOB.weather_act_upon_list -= src
@@ -101,8 +93,7 @@
 		if(P.drips > 2)
 			var/turf/T = loc
 			if(istype(T))
-				var/obj/effect/decal/cleanable/blood/B = new(T)
-				B.set_blood_color(P.blood_color)
+				new /obj/effect/decal/cleanable/blood(T)
 				qdel(P)
 		return TRUE
 
@@ -246,7 +237,6 @@
 			if(!PUD)
 				PUD = new(T)
 				PUD.blood_vol = blood_vol
-				PUD.set_blood_color(blood_color)
 
 /obj/effect/decal/cleanable/blood/drip/replace_decal(obj/effect/decal/cleanable/C) // Returns true if we should give up in favor of the pre-existing decal
 	if(..())
@@ -257,7 +247,6 @@
 			if(istype(T))
 				var/obj/effect/decal/cleanable/blood/puddle/PUD = new(T)
 				PUD.blood_vol = blood_vol
-				PUD.set_blood_color(P.blood_color)
 				qdel(P)
 		else
 			P.update_icon()
@@ -284,7 +273,6 @@
 			icon_state = "pool2"
 		if(1 to 50)
 			icon_state = "pool1"
-	set_blood_color(blood_color)
 
 /obj/effect/decal/cleanable/blood/puddle/replace_decal(obj/effect/decal/cleanable/C) // Returns true if we should give up in favor of the pre-existing decal
 	if(..())

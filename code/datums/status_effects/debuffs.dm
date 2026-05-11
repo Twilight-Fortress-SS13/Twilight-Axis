@@ -265,9 +265,7 @@
 	var/turf/T = get_turf(owner)
 	new /obj/effect/temp_visual/bleed/explode(T)
 	for(var/d in GLOB.alldirs)
-		var/obj/effect/temp_visual/dir_setting/bloodsplatter/splatter = new(T, d)
-		var/mob/living/L = owner
-		splatter.set_blood_color(L?.get_blood_color())
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, d)
 	playsound(T, "desceration", 100, TRUE, -1)
 
 /datum/status_effect/neck_slice

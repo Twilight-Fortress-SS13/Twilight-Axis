@@ -225,8 +225,7 @@
 				if(get_dist(user, src) <= 1)	//people with TK won't get smeared with blood
 					user.add_mob_blood(src)
 				var/splatter_dir = get_dir(user, src)
-				var/obj/effect/temp_visual/dir_setting/bloodsplatter/splatter = new(loc, splatter_dir)
-				splatter.set_blood_color(get_blood_color())
+				new /obj/effect/temp_visual/dir_setting/bloodsplatter(loc, splatter_dir)
 				if(affecting.body_zone == BODY_ZONE_HEAD)
 					if(wear_mask)
 						wear_mask.add_mob_blood(src)

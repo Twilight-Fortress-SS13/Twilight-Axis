@@ -269,12 +269,6 @@
 	blood_volume = BLOOD_VOLUME_NORMAL
 	bleed_rate = 0
 
-/mob/living/proc/get_blood_color()
-	return
-
-/mob/living/carbon/human/get_blood_color()
-	return dna?.species?.blood_color
-
 /****************************************************
 				BLOOD TRANSFERS
 ****************************************************/
@@ -408,12 +402,6 @@
 		W.update_icon()
 		return
 	new /obj/effect/decal/cleanable/blood/splatter(T)
-	var/current_blood_color = get_blood_color()
-	if(current_blood_color)
-		for(var/obj/effect/decal/cleanable/blood/B in T)
-			if(istype(B, /obj/effect/decal/cleanable/blood/footprints))
-				continue
-			B.set_blood_color(current_blood_color)
 	T?.pollute_turf(/datum/pollutant/metallic_scent, 30)
 
 //to add splatters of blood onto nearby walls. When provided a certain force amount, also increases the range at which blood can appear on the walls.
@@ -431,8 +419,7 @@
 		T = get_turf(src)
 	for(var/turf/closed/w in orange(abs(force_distance), T))
 		var/loc = get_step(T, M)
-		var/obj/effect/decal/cleanable/blood/splatter/walls/wall_blood = new(loc)
-		wall_blood.set_blood_color(get_blood_color())
+		new /obj/effect/decal/cleanable/blood/splatter/walls(loc)
 		if(spill_amount > 0)
 			spill_amount--
 			continue
@@ -459,19 +446,16 @@
 			return
 	var/obj/effect/decal/cleanable/blood/puddle/P = locate() in T
 	if(P)
-		P.set_blood_color(get_blood_color())
 		P.blood_vol += amt
 		P.update_icon()
 	else
 		var/obj/effect/decal/cleanable/blood/drip/D = locate() in T
 		if(D)
-			D.set_blood_color(get_blood_color())
 			D.blood_vol += amt
 			D.drips++
 			D.update_icon()
 		else
-			D = new(T)
-			D.set_blood_color(get_blood_color())
+			new /obj/effect/decal/cleanable/blood/drip(T)
 
 /mob/living/carbon/human/add_splatter_floor(turf/T, small_drip)
 	if(!(NOBLOOD in dna.species.species_traits))

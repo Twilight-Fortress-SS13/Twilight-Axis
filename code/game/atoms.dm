@@ -609,9 +609,7 @@
 	var/list/blood_dna = M.get_blood_dna_list()
 	if(!blood_dna)
 		return FALSE
-	. = add_blood_DNA(blood_dna)
-	var/datum/component/decal/blood/B = GetComponent(/datum/component/decal/blood)
-	B?.set_blood_color(M.get_blood_color())
+	return add_blood_DNA(blood_dna)
 
 ///Called when gravity returns after floating I think
 /atom/proc/handle_fall()
