@@ -211,17 +211,12 @@
 	if(W)
 		return 0
 
-	owner.stamina_add(4)
 	var/skill_id = forced_skill_id || ResolveAttackInput(target_atom, W)
 	if(!IsBaseInput(skill_id))
 		return 0
 
 	
 	if(!isliving(target_atom) && skill_id != MARTIAL_MASTER_INPUT_GRAB)
-		return 0
-
-	var/mob/living/target = target_atom
-	if(!istype(target))
 		return 0
 
 	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target_atom, zone)
@@ -234,7 +229,12 @@
 	if(!owner)
 		return
 
-	if(!target || target.stat == DEAD)
+	owner.stamina_add(4)
+	var/mob/living/target = target_atom
+	if(!istype(target))
+		return 0
+
+	if(target.stat == DEAD)
 		return
 
 	var/zone_used = zone || BODY_ZONE_CHEST
