@@ -1,7 +1,5 @@
 #define MARTIAL_MASTER_COMBO_WINDOW            (7 SECONDS)
 #define MARTIAL_MASTER_MAX_HISTORY             6
-#define MARTIAL_MASTER_MAX_STACKS		      	10
-#define MARTIAL_MASTER_DMG_PER_STACK   0.05
 #define MARTIAL_MASTER_KICK_MIN_RECOVERY       (0.5 SECONDS)
 
 #define MARTIAL_MASTER_INPUT_PUNCH             1
@@ -42,30 +40,20 @@
 	dupe_mode = COMPONENT_DUPE_UNIQUE
 
 	var/current_stance = MARTIAL_MASTER_STANCE_PROC
-
-	var/stacks = 0
-	var/max_stacks = MARTIAL_MASTER_MAX_STACKS
-
 	var/last_action_success = FALSE
 	var/last_action_skill = 0
 	var/last_action_zone = BODY_ZONE_CHEST
 	var/mob/living/last_action_target = null
-
 	var/last_finisher_success = FALSE
 	var/last_matched_rule = null
-
 	var/reverse_ready = FALSE
 	var/reverse_expires_at = 0
-
 	var/chain_step_ready = FALSE
 	var/chain_step_expires_at = 0
 	var/mob/living/chain_step_target = null
-
 	var/list/granted_spells = list()
 	var/spells_granted = FALSE
-
 	var/last_balloon_at = 0
-
 	var/obj/item/martial_master_proxy/proxy
 
 /datum/component/combo_core/martial_master/Initialize(_combo_window, _max_history)
@@ -285,7 +273,7 @@
 			chain_step_expires_at = 0
 			chain_step_target = null
 		else if(target == chain_step_target)
-			if(AttackMartialAreaTarget(target, max(1, round(GetComboDamageMultiplier() * 1.5)), BCLASS_PUNCH, BRUTE, last_action_zone, 0))
+			if(AttackMartialAreaTarget(target, max(1, 1.5), BCLASS_PUNCH, BRUTE, last_action_zone, 0))
 				ApplyArmorDamageToZone(target, last_action_zone, GetPressureDamage() * 2)
 				_balloon("chain-step hit")
 
@@ -294,8 +282,6 @@
 			chain_step_target = null
 
 	RegisterInput(skill_id, target, last_action_zone)
-	SpendArousalStack(1)
-
 	datum_component_combo_martial_master_check_nutcracker(src, target, last_action_zone, skill_id)
 
 /datum/component/combo_core/martial_master/proc/_sig_reverse_defense_success(datum/source, mob/living/attacker)
@@ -405,7 +391,7 @@
 		return FALSE
 
 	var/zone_used = TryGetZone(zone)
-	var/mult = GetComboDamageMultiplier()
+	var/mult = 1.2
 	var/dmg = max(1, round(mult * GetComboBaseDamage(rule_id, TRUE) * CalcPureDamage()))
 
 	if(!AttackMartialAreaTarget(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
@@ -737,7 +723,7 @@
 
 	var/zone_used = TryGetZone(zone)
 	var/pure_damage = CalcPureDamage()
-	var/dmg_mult = GetComboDamageMultiplier() * damage_mult
+	var/dmg_mult = 1.1 * damage_mult
 
 	var/dmg = max(1, round(dmg_mult * pure_damage))
 
@@ -1253,29 +1239,6 @@
 	return TRUE
 
 // ------------------------------------------------------------
-// arousal / resources
-// ------------------------------------------------------------
-
-/datum/component/combo_core/martial_master/proc/AddArousalStack(amount = 1)
-	if(amount <= 0)
-		return
-
-	stacks = clamp(stacks + amount, 0, max_stacks)
-
-/datum/component/combo_core/martial_master/proc/SpendArousalStack(amount = 1)
-	if(amount <= 0)
-		return
-	if(stacks <= 0)
-		return
-
-	stacks = clamp(stacks - amount, 0, max_stacks)
-
-/datum/component/combo_core/martial_master/proc/GetComboDamageMultiplier()
-	var/mult = 1
-	mult += (stacks * MARTIAL_MASTER_DMG_PER_STACK)
-	return max(1, mult)
-
-// ------------------------------------------------------------
 // utils
 // ------------------------------------------------------------
 
@@ -1310,7 +1273,7 @@
 	if(zone_precise != BODY_ZONE_PRECISE_GROIN)
 		return FALSE
 
-	var/chance = C.stacks * 5
+	var/chance = 15
 
 	switch(C.last_matched_rule)
 		if("reverse", "chain_step")
@@ -1461,8 +1424,6 @@
 
 #undef MARTIAL_MASTER_COMBO_WINDOW
 #undef MARTIAL_MASTER_MAX_HISTORY
-#undef MARTIAL_MASTER_MAX_STACKS
-#undef MARTIAL_MASTER_DMG_PER_STACK
 #undef MARTIAL_MASTER_KICK_MIN_RECOVERY
 #undef MARTIAL_MASTER_INPUT_PUNCH
 #undef MARTIAL_MASTER_INPUT_KICK
@@ -1470,7 +1431,6 @@
 #undef MARTIAL_MASTER_STANCE_PROC
 #undef MARTIAL_MASTER_STANCE_PRECISE
 #undef MARTIAL_MASTER_BUTTON_SWITCH_STANCE
-
 #undef MARTIAL_MASTER_REVERSE_WINDOW
 #undef MARTIAL_MASTER_CHAIN_STEP_WINDOW
 #undef MARTIAL_MASTER_CHARGE_RANGE
