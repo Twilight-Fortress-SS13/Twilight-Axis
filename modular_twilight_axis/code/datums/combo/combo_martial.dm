@@ -211,6 +211,7 @@
 	if(W)
 		return 0
 
+	owner.stamina_add(4)
 	var/skill_id = forced_skill_id || ResolveAttackInput(target_atom, W)
 	if(!IsBaseInput(skill_id))
 		return 0
