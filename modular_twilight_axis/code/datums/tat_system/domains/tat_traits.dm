@@ -1169,6 +1169,7 @@
 	return list(
 		"Blacksmith" = "/datum/advclass/blacksmith",
 		"Miner" = "/datum/advclass/miner",
+		"Hunter" = "/datum/advclass/hunter",
 		"Farmer" = "/datum/advclass/farmer",
 		"Fisher" = "/datum/advclass/fisher",
 		"Cook" = "/datum/advclass/cook",
