@@ -107,7 +107,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/clothing/ring/sapphire = 7,
 	/obj/item/clothing/ring/sapphires = 7,
 	/obj/item/clothing/ring/signet = 7,
-	/obj/item/clothing/ring/signet/alt = 7,
 	/obj/item/clothing/ring/signet/silver = 7,
 	/obj/item/clothing/ring/silver/cleric = 7,
 	/obj/item/clothing/ring/topaz = 7,
