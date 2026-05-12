@@ -1189,7 +1189,6 @@
 		"Archer",
 		"Pugilist",
 		"Gunslinger",
-		"Hunter",
 		"Forester",
 		"Scout",
 		"Acolyte",
