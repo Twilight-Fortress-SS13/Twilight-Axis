@@ -131,18 +131,41 @@
 /datum/controller/subsystem/familytree/proc/offer_setspouse_reset(mob/living/carbon/human/H, status)
 	if(!H?.client)
 		return
-	var/result = tgui_alert(H, "Вы уже 30 минут ожидаете фаворита '[H.setspouse]', но он не найден.\n\nХотите сбросить предпочтение по нику и искать пару по текущим настройкам?", "Семейная система", list("Да, сбросить", "Нет, продолжить ждать"))
+	var/offered_target = familytree_get_target_name(H)
+	if(!offered_target || !length(offered_target))
+		return
+	var/result = tgui_alert(H, "Вы уже 30 минут ожидаете фаворита '[offered_target]', но он не найден.\n\nХотите сбросить предпочтение по нику и искать пару по текущим настройкам?", "Семейная система", list("Да, сбросить", "Нет, продолжить ждать"), 60 SECONDS)
 
 	if(!H || QDELETED(H))
 		return
 
+	var/current_target = familytree_get_target_name(H)
+	if(current_target != offered_target)
+		ftlog("SETSPOUSE RESET STALE: [H.real_name] target changed from '[offered_target]' to '[current_target]'")
+		H.familytree_setspouse_retries = 0
+		H.familytree_setspouse_timeout_offered = FALSE
+		if(!H.familytree_assignment_scheduled && !H.familytree_confirmation_pending && !H.family_datum && !H.familytree_opted_out && familytree_pref_enabled(H.familytree_pref))
+			H.familytree_assignment_scheduled = TRUE
+			addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), 1 SECONDS)
+		return
+
 	if(result == "Да, сбросить")
-		ftlog("SETSPOUSE RESET: [H.real_name] cleared setspouse '[H.setspouse]'")
+		ftlog("SETSPOUSE RESET: [H.real_name] cleared setspouse '[offered_target]'")
 		H.setspouse = ""
+		var/datum/preferences/P = H.client?.prefs
+		if(P)
+			P.familytree_module_load_character()
+			P.setspouse = ""
+			P.familytree_module_save_character()
+			load_familytree_runtime_preferences(H, P)
+		else
+			H.familytree_setspouse_retries = 0
+			H.familytree_setspouse_timeout_offered = FALSE
 		H.familytree_assignment_scheduled = FALSE
 		run_local_assignment(H, status)
 	else
-		ftlog("SETSPOUSE KEEP: [H.real_name] continues waiting for '[H.setspouse]'")
+		var/reset_result = result ? result : "timeout"
+		ftlog("SETSPOUSE KEEP: [H.real_name] continues waiting for '[offered_target]' result=[reset_result]")
 		H.familytree_assignment_scheduled = TRUE
 		addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, status), 60 SECONDS)
 
@@ -171,9 +194,9 @@
 /datum/family_confirm_session/Destroy()
 	if(timerid)
 		deltimer(timerid)
-	if(person_a && !QDELETED(person_a) && result_a != CONFIRM_PENDING)
+	if(person_a && !QDELETED(person_a))
 		person_a.familytree_confirmation_pending = FALSE
-	if(person_b && !QDELETED(person_b) && result_b != CONFIRM_PENDING)
+	if(person_b && !QDELETED(person_b))
 		person_b.familytree_confirmation_pending = FALSE
 	person_a = null
 	person_b = null
@@ -220,6 +243,10 @@
 	if((refuser == person_a ? result_a : result_b) == CONFIRM_TIMEOUT)
 		reason = "timeout"
 	SSfamilytree.ftlog("MUTUAL CONFIRM: [refuser.real_name] [reason] type=[confirm_type]")
+	if(refuser.know_your_fate && other && SSfamilytree.familytree_record_blocked_pair(refuser, other))
+		to_chat(refuser, span_warning("Вы больше не будете матчиться с этим персонажем в этом раунде."))
+		SSfamilytree.try_queue_assignment(refuser)
+		return
 	refuser.familytree_opted_out = TRUE
 	SSfamilytree.unsubscribe_familytree_human(refuser, "player [reason] [confirm_type]")
 	to_chat(refuser, span_warning("Вы отказались от участия в семейной системе на этот раунд."))
@@ -238,26 +265,69 @@
 		return
 	SSfamilytree.ftlog("MUTUAL CONFIRM: [person.real_name] cancelled (other side refused) type=[confirm_type]")
 	to_chat(person, span_warning("Другая сторона отказалась от вступления в семью. Ваш запрос отменён. Система попробует найти вам новую пару."))
-	if(!person.familytree_opted_out && !person.family_datum && !person.spouse_mob && person.familytree_pref && person.familytree_pref != FAMILY_NONE)
+	if(!person.familytree_opted_out && !person.family_datum && !person.spouse_mob && familytree_pref_enabled(person.familytree_pref))
 		person.familytree_assignment_scheduled = TRUE
 		addtimer(CALLBACK(SSfamilytree, TYPE_PROC_REF(/datum/controller/subsystem/familytree, run_local_assignment), person, person.familytree_pref), 10 SECONDS)
 
-/datum/controller/subsystem/familytree/proc/request_family_confirmation(mob/living/carbon/human/H, datum/callback/on_accept, confirm_type = "family")
+/datum/controller/subsystem/familytree/proc/request_family_confirmation(mob/living/carbon/human/H, datum/callback/on_accept, confirm_type = "family", busy_attempt = 0, busy_deferred = FALSE)
 	if(!H || QDELETED(H))
 		return
 	if(H?.familytree_opted_out)
+		if(busy_deferred)
+			H.familytree_confirmation_pending = FALSE
 		ftlog("CONFIRM SKIP: [H?.real_name] opted out")
 		return
-	if(H?.familytree_confirmation_pending)
+	if(H?.familytree_confirmation_pending && !busy_deferred)
 		ftlog("CONFIRM SKIP: [H?.real_name] already has pending confirmation")
 		return
 	if(!H?.client)
+		H.familytree_confirmation_pending = FALSE
 		on_accept.Invoke()
+		return
+	var/busy_reason = is_familytree_player_busy(H)
+	if(busy_reason)
+		H.familytree_confirmation_pending = TRUE
+		if(busy_attempt >= familytree_busy_retry_limit)
+			ftlog("CONFIRM SKIP: [H.real_name] still busy ([busy_reason]) after [familytree_busy_retry_limit] retries type=[confirm_type]", "WARN")
+			H.familytree_confirmation_pending = FALSE
+			return
+		ftlog("CONFIRM DEFER: [H.real_name] busy=[busy_reason] retry=[busy_attempt + 1]/[familytree_busy_retry_limit] type=[confirm_type]")
+		addtimer(CALLBACK(src, PROC_REF(request_family_confirmation), H, on_accept, confirm_type, busy_attempt + 1, TRUE), familytree_busy_retry_delay)
 		return
 	H.familytree_confirmation_pending = TRUE
 	INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), H, on_accept, confirm_type)
 
-/datum/controller/subsystem/familytree/proc/do_solo_confirmation(mob/living/carbon/human/H, datum/callback/on_accept, confirm_type)
+/datum/controller/subsystem/familytree/proc/familytree_confirmation_found_text(confirm_type, mob/living/carbon/human/person, mob/living/carbon/human/partner = null, mutual = FALSE)
+	var/base_text
+	if(confirm_type == "targeted_spouse" && partner)
+		base_text = "Ваша судьба сошлась с [partner.real_name]!"
+	else if(confirm_type == "spouse" || confirm_type == "targeted_spouse")
+		base_text = "Вам нашли пару!"
+	else if(confirm_type == "family")
+		base_text = mutual ? "Система нашла для вас семейную связь!" : "Система нашла для вас семью!"
+	else
+		base_text = "Система нашла для вас семью!"
+	if(person?.know_your_fate && partner)
+		base_text += familytree_format_fate_reveal(partner)
+	return base_text
+
+/datum/controller/subsystem/familytree/proc/familytree_confirmation_prompt_body(found_text, mob/living/carbon/human/person, mob/living/carbon/human/partner)
+	if(person?.know_your_fate && partner)
+		return "[found_text]\n\nХотите продолжить?\n\nЕсли вы не сделаете выбор — он будет засчитан как отказ.\nОтказавшись, вы больше не будете матчиться с этим персонажем в этом раунде."
+	return "[found_text]\n\nХотите продолжить?\n\nЕсли вы не сделаете выбор — он будет засчитан как отказ.\nОтказавшись, вы потеряете возможность найти семью в этом раунде."
+
+/datum/controller/subsystem/familytree/proc/familytree_record_blocked_pair(mob/living/carbon/human/refuser, mob/living/carbon/human/other)
+	if(!refuser || !other || !other.ckey)
+		return FALSE
+	if(!islist(refuser.familytree_blocked_ckeys))
+		refuser.familytree_blocked_ckeys = list()
+	refuser.familytree_blocked_ckeys |= other.ckey
+	return TRUE
+
+/datum/controller/subsystem/familytree/proc/familytree_confirmation_should_chat(confirm_type)
+	return confirm_type != "targeted_spouse"
+
+/datum/controller/subsystem/familytree/proc/do_solo_confirmation(mob/living/carbon/human/H, datum/callback/on_accept, confirm_type, mob/living/carbon/human/context_person = null)
 	if(!H || QDELETED(H))
 		return
 	if(!H?.client)
@@ -266,10 +336,11 @@
 		on_accept.Invoke()
 		return
 
-	var/found_text = (confirm_type == "spouse") ? "Вам нашли пару!" : "Система нашла для вас семью!"
-	to_chat(H, span_love(found_text))
+	var/found_text = familytree_confirmation_found_text(confirm_type, H, context_person)
+	if(familytree_confirmation_should_chat(confirm_type))
+		to_chat(H, span_love(found_text))
 
-	var/result = tgui_alert(H, "[found_text]\n\nХотите продолжить?\n\nЕсли вы не сделаете выбор — он будет засчитан как отказ.\nОтказавшись, вы потеряете возможность найти семью в этом раунде.", "Семейная система", list("Да", "Нет"), 60 SECONDS)
+	var/result = tgui_alert(H, familytree_confirmation_prompt_body(found_text, H, context_person), "Семейная система", list("Да", "Нет"), 60 SECONDS)
 
 	if(!H || QDELETED(H))
 		return
@@ -281,31 +352,63 @@
 		on_accept.Invoke()
 	else
 		ftlog("CONFIRM REJECT: [H.real_name] type=[confirm_type] result=[result || "timeout"]")
-		to_chat(H, span_warning("Вы отказались от участия в семейной системе на этот раунд."))
-		H.familytree_opted_out = TRUE
-		unsubscribe_familytree_human(H, "player declined [confirm_type]")
+		if(H.know_your_fate && context_person && familytree_record_blocked_pair(H, context_person))
+			to_chat(H, span_warning("Вы больше не будете матчиться с этим персонажем в этом раунде."))
+			try_queue_assignment(H)
+		else
+			to_chat(H, span_warning("Вы отказались от участия в семейной системе на этот раунд."))
+			H.familytree_opted_out = TRUE
+			unsubscribe_familytree_human(H, "player declined [confirm_type]")
 
-/datum/controller/subsystem/familytree/proc/request_mutual_confirmation(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/callback/on_both_accept, confirm_type = "family")
+/datum/controller/subsystem/familytree/proc/request_mutual_confirmation(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/callback/on_both_accept, confirm_type = "family", busy_attempt = 0, busy_deferred = FALSE)
 	if(!person_a || QDELETED(person_a) || !person_b || QDELETED(person_b))
+		if(busy_deferred)
+			if(person_a && !QDELETED(person_a))
+				person_a.familytree_confirmation_pending = FALSE
+			if(person_b && !QDELETED(person_b))
+				person_b.familytree_confirmation_pending = FALSE
 		ftlog("MUTUAL SKIP: invalid participant a=[person_a?.real_name] b=[person_b?.real_name]")
 		return
 	if(person_a?.familytree_opted_out || person_b?.familytree_opted_out)
+		if(busy_deferred)
+			person_a.familytree_confirmation_pending = FALSE
+			person_b.familytree_confirmation_pending = FALSE
 		ftlog("MUTUAL SKIP: opted out a=[person_a?.real_name] b=[person_b?.real_name]")
 		return
-	if(person_a?.familytree_confirmation_pending || person_b?.familytree_confirmation_pending)
+	if((person_a?.familytree_confirmation_pending || person_b?.familytree_confirmation_pending) && !busy_deferred)
 		ftlog("MUTUAL SKIP: pending confirmation a=[person_a?.real_name] b=[person_b?.real_name]")
 		return
 
+	var/busy_reason_a = person_a?.client ? is_familytree_player_busy(person_a) : null
+	var/busy_reason_b = person_b?.client ? is_familytree_player_busy(person_b) : null
+	if(busy_reason_a || busy_reason_b)
+		if(person_a.client)
+			person_a.familytree_confirmation_pending = TRUE
+		if(person_b.client)
+			person_b.familytree_confirmation_pending = TRUE
+		if(busy_attempt >= familytree_busy_retry_limit)
+			ftlog("MUTUAL SKIP: busy after [familytree_busy_retry_limit] retries type=[confirm_type] a=[person_a.real_name] busy=[busy_reason_a || "no"] b=[person_b.real_name] busy=[busy_reason_b || "no"]", "WARN")
+			person_a.familytree_confirmation_pending = FALSE
+			person_b.familytree_confirmation_pending = FALSE
+			return
+		ftlog("MUTUAL DEFER: type=[confirm_type] retry=[busy_attempt + 1]/[familytree_busy_retry_limit] a=[person_a.real_name] busy=[busy_reason_a || "no"] b=[person_b.real_name] busy=[busy_reason_b || "no"]")
+		addtimer(CALLBACK(src, PROC_REF(request_mutual_confirmation), person_a, person_b, on_both_accept, confirm_type, busy_attempt + 1, TRUE), familytree_busy_retry_delay)
+		return
+
 	if(!person_a?.client && !person_b?.client)
+		person_a.familytree_confirmation_pending = FALSE
+		person_b.familytree_confirmation_pending = FALSE
 		on_both_accept.Invoke()
 		return
 	if(!person_a?.client)
+		person_a.familytree_confirmation_pending = FALSE
 		person_b.familytree_confirmation_pending = TRUE
-		INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), person_b, on_both_accept, confirm_type)
+		INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), person_b, on_both_accept, confirm_type, person_a)
 		return
 	if(!person_b?.client)
+		person_b.familytree_confirmation_pending = FALSE
 		person_a.familytree_confirmation_pending = TRUE
-		INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), person_a, on_both_accept, confirm_type)
+		INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), person_a, on_both_accept, confirm_type, person_b)
 		return
 
 	person_a.familytree_confirmation_pending = TRUE
@@ -338,15 +441,17 @@
 		else if(!is_person_a && session.result_b == CONFIRM_PENDING)
 			session.result_b = CONFIRM_ACCEPTED
 		person.familytree_confirmation_pending = FALSE
-		retry_local_assignment(person, "mutual confirmation cancelled")
+		session.notify_cancelled(person)
 		if(session.result_a != CONFIRM_PENDING && session.result_b != CONFIRM_PENDING)
 			qdel(session)
 		return
 
-	var/found_text = (session.confirm_type == "spouse") ? "Вам нашли пару!" : "Система нашла для вас семейную связь!"
-	to_chat(person, span_love(found_text))
+	var/mob/living/carbon/human/partner = is_person_a ? session.person_b : session.person_a
+	var/found_text = familytree_confirmation_found_text(session.confirm_type, person, partner, TRUE)
+	if(familytree_confirmation_should_chat(session.confirm_type))
+		to_chat(person, span_love(found_text))
 
-	var/result = tgui_alert(person, "[found_text]\n\nХотите продолжить?\n\nЕсли вы не сделаете выбор — он будет засчитан как отказ.\nОтказавшись, вы потеряете возможность найти семью в этом раунде.", "Семейная система", list("Да", "Нет"), 60 SECONDS)
+	var/result = tgui_alert(person, familytree_confirmation_prompt_body(found_text, person, partner), "Семейная система", list("Да", "Нет"), 60 SECONDS)
 
 	if(!person || QDELETED(person))
 		return
@@ -360,12 +465,16 @@
 			session.result_b = accepted ? CONFIRM_ACCEPTED : (result ? CONFIRM_REJECTED : CONFIRM_TIMEOUT)
 		person.familytree_confirmation_pending = FALSE
 		if(accepted)
-			retry_local_assignment(person, "mutual confirmation cancelled")
+			session.notify_cancelled(person)
 		else if(!person.familytree_opted_out)
 			ftlog("MUTUAL CONFIRM: [person.real_name] declined cancelled type=[session.confirm_type] result=[result || "timeout"]")
-			to_chat(person, span_warning("Вы отказались от участия в семейной системе на этот раунд."))
-			person.familytree_opted_out = TRUE
-			unsubscribe_familytree_human(person, "player declined [session.confirm_type]")
+			if(person.know_your_fate && partner && familytree_record_blocked_pair(person, partner))
+				to_chat(person, span_warning("Вы больше не будете матчиться с этим персонажем в этом раунде."))
+				try_queue_assignment(person)
+			else
+				to_chat(person, span_warning("Вы отказались от участия в семейной системе на этот раунд."))
+				person.familytree_opted_out = TRUE
+				unsubscribe_familytree_human(person, "player declined [session.confirm_type]")
 		if(session.result_a != CONFIRM_PENDING && session.result_b != CONFIRM_PENDING)
 			qdel(session)
 		return

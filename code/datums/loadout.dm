@@ -1618,6 +1618,34 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 2
 
+/datum/loadout_item/donator/koruu_silver_kukri
+	name = "Donator Kit - Psydonic Leachwhacker - Required: Psydonic Dagger"
+	path = /obj/item/enchantingkit/weapon/koruu_kukri_silver
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/koruu_longsword
+	name = "Donator Kit - Excaliber - Required: Longsword"
+	path = /obj/item/enchantingkit/weapon/koruu_longsword
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/koruu_etrusc
+	name = "Donator Kit - Colada - Required: Longsword Or Judgement"
+	path = /obj/item/enchantingkit/weapon/koruu_etrusc
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/koruu_judgement
+	name = "Donator Kit - A Durthurian Tale - Required: Longsword"
+	path = /obj/item/enchantingkit/weapon/koruu_judgement
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+	donat_tier = 2
+
 /datum/loadout_item/donator_eiren6
 	name = "Donator Kit - Stygian Longsword - Required: Longsword"
 	path = /obj/item/enchantingkit/weapon/eirensword

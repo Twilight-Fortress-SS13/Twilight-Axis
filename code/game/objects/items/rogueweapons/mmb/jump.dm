@@ -11,6 +11,10 @@
 	user.jump_action(target)
 
 /mob/living/proc/jump_action(atom/A)
+	if(src.stat == DEAD || src.stat == UNCONSCIOUS)
+		to_chat(src, span_warning("What?"))
+		return FALSE
+
 	if(istype(get_turf(src), /turf/open/water))
 		to_chat(src, span_warning("I can't jump while floating."))
 		return FALSE

@@ -106,6 +106,20 @@
 	desc = "Бог силы и власти, которая приходит с нею. Пока другие божества обрекают свою паству на жалкое существование в мире, где власть приходит через их благословение и по праву рождения, Граггар провозглашает, что править может каждый, кто достаточно силен, чтобы забрать желаемое. «Слабые унаследуют лишь грязь», предупреждает он, напоминая о судьбе тех, кто не стремится стать сильнее."
 	undead_hater = TRUE
 	worshippers = "Племенные народы, безумцы, маньяки, жестокий люд."
+	miracles = list(/datum/action/cooldown/spell/touch/orison					        = CLERIC_ORI,
+					/obj/effect/proc_holder/spell/self/graggar_bloodrage				= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/graggar_chainbreak				= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/heavy_stomp 		       			= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/blood_call 		       		= CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/graggar_regenerate 		       	= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 				        	= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T1,
+					/datum/action/cooldown/spell/graggar/graggar_battlecry		 		= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/projectile/graggar_blood_net 	= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/silence/graggar				= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/revel_in_slaughter 			= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/resurrect/graggar				= CLERIC_T4,
+	)
 	confess_lines = list(
 		"ГРАГГАР - ЗВЕРЬ, КОТОРОМУ Я ПОКЛОНЯЮСЬ!",
 		"ЧЕРЕЗ ПРЕВОСХОДСТВО - К БОЖЕСТВЕННОСТИ!",
@@ -139,13 +153,13 @@
 	desc = "Бог абсолютной свободы, анархии и восстания. «Через раздор к процветанию», обещает его главная заповедь, и его последователи пойдут на всё, чтобы претворить её в реальность, разрушив мировой порядок, каким мы его знаем."
 	undead_hater = TRUE
 	worshippers = "Разбойники, наёмники, революционеры, свободолюбивый люд."
-	miracles = list(/datum/action/cooldown/spell/touch/orison									= CLERIC_ORI,
+	miracles = list(/datum/action/cooldown/spell/touch/orison									        = CLERIC_ORI,
 					/obj/effect/proc_holder/spell/self/twilight_shacklebreaker							= CLERIC_T0,
 					/datum/action/cooldown/spell/freemans_tools											= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/twilight_weightofchains						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/twilight_transact								= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/twilight_equalize								= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/heal 									= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 								        	= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle									= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/twilight_churnwealthy							= CLERIC_T2,
 					/obj/effect/proc_holder/spell/self/twilight_amongus									= CLERIC_T2,
@@ -183,6 +197,23 @@
 	desc = "Баота — богиня гедонизма, мирских наслаждений и страстей. «Живи, люби, смейся!» — говорила она, глядя на суету вокруг себя и усилия окружающих, стремящихся двигать куда-то мир."
 	worshippers = "Избалованные богачи, маргиналы, эскаписты."
 	undead_hater = TRUE
+	miracles = list(/datum/action/cooldown/spell/touch/orison					        = CLERIC_ORI,
+					/obj/effect/proc_holder/spell/invoked/TAbaothavice					= CLERIC_T0,
+					//obj/effect/proc_holder/spell/self/TAbless_drink					= CLERIC_T0,
+					/obj/effect/proc_holder/spell/targeted/touch/TAloversruin			= CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/TAbaothablessings				= CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/TAinsufflation					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 						  	= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/TAgriefflower					= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/projectile/TAblowingdust		= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/TAlasthigh					= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/TAjoyride						= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/TApainkiller					= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/lux_steal                     = CLERIC_T3,
+					/obj/effect/proc_holder/spell/self/mirage                           = CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/resurrect/baotha				= CLERIC_T4,
+	)
 	confess_lines = list(
 		"БАОТА ТРЕБУЕТ УДОВОЛЬСТВИЯ!",
 		"ЖИВИ, СМЕЙСЯ, ЛЮБИ!",

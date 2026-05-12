@@ -50,8 +50,46 @@ type LayoutResult = {
   height: number;
 };
 
+type ChildTarget = {
+  x: number;
+  y: number;
+};
+
 const clamp = (v: number, lo: number, hi: number) =>
   Math.max(lo, Math.min(hi, v));
+
+function collectGenerationMin(
+  nodes: FamilyTreeNode[],
+  current = Number.POSITIVE_INFINITY,
+): number {
+  let min = current;
+  for (const node of nodes) {
+    if (
+      typeof node.generation === 'number' &&
+      Number.isFinite(node.generation)
+    ) {
+      min = Math.min(min, node.generation);
+    }
+    min = collectGenerationMin(node.children || [], min);
+  }
+  return min;
+}
+
+function generationRow(
+  node: FamilyTreeNode,
+  generationMin: number,
+  fallbackRow: number,
+  minimumRow: number,
+): number {
+  if (
+    typeof node.generation === 'number' &&
+    Number.isFinite(node.generation) &&
+    Number.isFinite(generationMin)
+  ) {
+    return Math.max(minimumRow, node.generation - generationMin);
+  }
+  return Math.max(minimumRow, fallbackRow);
+}
 
 function selfRowWidth(node: FamilyTreeNode): number {
   const count = 1 + (node.spouses?.length || 0);
@@ -66,18 +104,22 @@ function placeSubtree(
   edges: LaidEdge[],
   pathKey: string,
   maxDepthRef: { v: number },
-): { width: number; selfCenterX: number } {
+  generationMin: number,
+  minimumRow = 0,
+): { width: number; selfCenterX: number; y: number } {
   const spouses = node.spouses || [];
   const children = node.children || [];
+  const row = generationRow(node, generationMin, depth, minimumRow);
+  const y = row * ROW_H;
   const ownRow = selfRowWidth(node);
 
   let childrenWidth = 0;
-  const childCenters: number[] = [];
+  const childTargets: ChildTarget[] = [];
   let cursor = xStart;
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
     const childKey = `${pathKey}/c${i}:${child.name}`;
-    const { width: cw, selfCenterX: ccx } = placeSubtree(
+    const { width: cw, selfCenterX: ccx, y: cy } = placeSubtree(
       child,
       depth + 1,
       cursor,
@@ -85,8 +127,10 @@ function placeSubtree(
       edges,
       childKey,
       maxDepthRef,
+      generationMin,
+      row + 1,
     );
-    childCenters.push(ccx);
+    childTargets.push({ x: ccx, y: cy });
     cursor += cw + CARD_GAP_X;
   }
   if (children.length > 0) {
@@ -95,15 +139,13 @@ function placeSubtree(
 
   const subtreeWidth = Math.max(ownRow, childrenWidth);
   const rowLeft = xStart + (subtreeWidth - ownRow) / 2;
-  const y = depth * ROW_H;
-  if (depth > maxDepthRef.v) {
-    maxDepthRef.v = depth;
+  if (row > maxDepthRef.v) {
+    maxDepthRef.v = row;
   }
 
   const selfX = rowLeft;
   const selfKey = `${pathKey}:self`;
   const selfAnchorX = selfX + CARD_W / 2;
-  const selfAnchorY = y + CARD_W * 0;
   out.push({
     key: selfKey,
     node,
@@ -142,7 +184,6 @@ function placeSubtree(
 
   if (children.length > 0) {
     const parentBottomX = selfCenterX;
-    const parentBottomY = y + ROW_H - ROW_GAP_PAD;
     const busY = y + ROW_H - ROW_GAP_PAD / 2;
 
     edges.push({
@@ -154,6 +195,7 @@ function placeSubtree(
       y2: busY,
     });
 
+    const childCenters = childTargets.map((child) => child.x);
     const leftBus = Math.min(parentBottomX, ...childCenters);
     const rightBus = Math.max(parentBottomX, ...childCenters);
     edges.push({
@@ -165,25 +207,26 @@ function placeSubtree(
       y2: busY,
     });
 
-    for (let i = 0; i < childCenters.length; i++) {
+    for (let i = 0; i < childTargets.length; i++) {
       edges.push({
         type: 'parent',
         key: `${selfKey}:cdrop${i}`,
-        x1: childCenters[i],
+        x1: childTargets[i].x,
         y1: busY,
-        x2: childCenters[i],
-        y2: (depth + 1) * ROW_H,
+        x2: childTargets[i].x,
+        y2: childTargets[i].y,
       });
     }
   }
 
-  return { width: subtreeWidth, selfCenterX };
+  return { width: subtreeWidth, selfCenterX, y };
 }
 
 function computeLayout(roots: FamilyTreeNode[]): LayoutResult {
   const nodes: LaidNode[] = [];
   const edges: LaidEdge[] = [];
   const maxDepthRef = { v: 0 };
+  const generationMin = collectGenerationMin(roots);
   let cursor = 0;
   for (let i = 0; i < roots.length; i++) {
     const r = roots[i];
@@ -195,6 +238,7 @@ function computeLayout(roots: FamilyTreeNode[]): LayoutResult {
       edges,
       `r${i}:${r.name}`,
       maxDepthRef,
+      generationMin,
     );
     cursor += width + CARD_GAP_X * 2;
   }

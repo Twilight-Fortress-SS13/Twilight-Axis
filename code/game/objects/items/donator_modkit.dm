@@ -682,6 +682,38 @@
 	/obj/item/rogueweapon/sword/long)
 	result_item = /obj/item/rogueweapon/example/ssangsudo_long
 
+//more koruu stuff below
+/obj/item/enchantingkit/weapon/koruu_kukri_silver
+	name = "'Psydonic Leachwhacker' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger
+	)
+	result_item = /obj/item/rogueweapon/koruu/kukri/silver
+
+/obj/item/enchantingkit/weapon/koruu_longsword
+	name = "'Excaliber' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/etruscan)
+	result_item = /obj/item/rogueweapon/koruu/longsword
+
+/obj/item/enchantingkit/weapon/koruu_etrusc
+	name = "'Colada' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/etruscan)
+	result_item = /obj/item/rogueweapon/koruu/etrusca
+
+/obj/item/enchantingkit/weapon/koruu_judgement
+	name = "'A Durthurian Tale' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/etruscan,
+		/obj/item/rogueweapon/sword/long/judgement)
+	result_item = /obj/item/rogueweapon/koruu/judgement
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //

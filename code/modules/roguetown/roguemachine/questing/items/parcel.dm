@@ -61,7 +61,7 @@
 		/area/rogue/indoors/town/shop = list("Merchant", "Shophand"),
 		/area/rogue/indoors/town/manor = list("Councillor", "Seneschal", "Servant", "Hand", "Knight", "Royal Knight", "Prince", "Marshal", "Steward", "Clerk", "Grand Duke"),
 		/area/rogue/indoors/town/magician = list("Court Magician", "Magicians Associate", "Archivist"),
-		/area/rogue/indoors/town/physician = list("Head Physician", "Apothecary"),
+		/area/rogue/indoors/town/physician = list("Head Physician", "Apothecary", "Court Physician"), //TA_EDIT
 		/area/rogue/indoors/town = list("Guild Handler")
 	)
 	return area_jobs[area_type] || list("Town Crier", "Steward", "Merchant")

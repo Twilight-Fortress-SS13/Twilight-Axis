@@ -48,6 +48,7 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 #define FTDBG_SCENARIO_ISOLATED   "isolated"
 #define FTDBG_SCENARIO_EDGE       "edge_cases"
 #define FTDBG_SCENARIO_STRESS     "stress"
+#define FTDBG_SCENARIO_ELITE      "elite_family_control"
 
 /datum/controller/subsystem/familytree
 	var/list/debug_entities = list()
@@ -69,9 +70,59 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 	if(apply_ckey)
 		H.ckey = "FTDEBUG_[debug_session_id]_[debug_entities.len + 1]"
+		ftdebug_ensure_mind(H, H.ckey)
 
 	debug_entities += H
 	return H
+
+/datum/controller/subsystem/familytree/proc/ftdebug_ensure_mind(mob/living/carbon/human/H, key_override = null)
+	if(!H)
+		return null
+	var/mind_key = key_override || H.ckey || H.key
+	if(!mind_key)
+		mind_key = "FTDEBUG_[debug_session_id]_[debug_entities.Find(H) || (debug_entities.len + 1)]"
+	if(!H.ckey)
+		H.ckey = mind_key
+	if(!H.mind)
+		H.mind = new /datum/mind(mind_key)
+	else
+		H.mind.key = mind_key
+	if(SSticker && !(H.mind in SSticker.minds))
+		SSticker.minds += H.mind
+	if(!H.mind.name)
+		H.mind.name = H.real_name
+	H.mind.current = H
+	return H.mind
+
+/datum/controller/subsystem/familytree/proc/ftdebug_cleanup_mind(mob/living/carbon/human/H)
+	if(!H?.mind)
+		return
+	var/datum/mind/M = H.mind
+	if(M.current == H)
+		M.current = null
+	H.mind = null
+	if(SSticker)
+		SSticker.minds -= M
+	qdel(M)
+
+/datum/controller/subsystem/familytree/proc/ftdebug_create_house_for(mob/living/carbon/human/H, house_name = null)
+	if(!H)
+		return null
+	if(H.family_datum)
+		return H.family_datum
+	ftdebug_ensure_mind(H, H.ckey || H.key)
+	var/datum/heritage/house = new /datum/heritage(H, house_name)
+	if(!(house in families))
+		families += house
+	house.closed = FALSE
+	house.SelectReplacementHouseHead()
+	if(house.founder)
+		house.founder.generation = 0
+	if(!house.house_leader)
+		house.house_leader = house.founder
+	stop_tracking_human(H, "debug direct house")
+	ftlog("DBGSIM: direct-created house '[house.housename || "no name"]' for [H.real_name]", FTLOG_INFO)
+	return house
 
 /datum/controller/subsystem/familytree/proc/ftdebug_apply_random_props(mob/living/carbon/human/H, species_type = null)
 	if(!H)
@@ -99,9 +150,7 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	var/datum/job/J = find_job_by_type(job_type)
 	if(!J)
 		return
-	if(!H.mind)
-		H.mind = new /datum/mind(H.ckey)
-		H.mind.current = H
+	ftdebug_ensure_mind(H, H.ckey || H.key)
 	H.mind.assigned_role = J
 	H.job = J.title
 
@@ -326,7 +375,7 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	F.gender = MALE
 	F.pronouns = HE_HIM
 	F.age = AGE_MIDDLEAGED
-	AssignToHouse(F)
+	ftdebug_create_house_for(F)
 	results += "6. F in house: [ftdebug_result_string(F)]"
 
 	E.setspouse = F.real_name
@@ -346,7 +395,7 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	ftdebug_apply_random_props(founder, /datum/species/human/northern)
 	founder.age = AGE_OLD
 	founder.familytree_pref = FAMILY_PARTIAL
-	AssignToHouse(founder)
+	ftdebug_create_house_for(founder)
 	results += "0. Founder: [ftdebug_result_string(founder)]"
 
 	var/mob/living/carbon/human/sib = ftdebug_spawn_entity(spawn_loc)
@@ -416,7 +465,7 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	var/mob/living/carbon/human/gnoll2 = ftdebug_spawn_entity(spawn_loc)
 	ftdebug_apply_random_props(gnoll2, /datum/species/gnoll)
 	gnoll2.familytree_pref = FAMILY_PARTIAL
-	AssignToHouse(gnoll1)
+	ftdebug_create_house_for(gnoll1)
 	AssignToHouse(gnoll2)
 	results += "2. Gnoll1: [ftdebug_result_string(gnoll1)]"
 	results += "3. Gnoll2: [ftdebug_result_string(gnoll2)] same_house=[gnoll1.family_datum == gnoll2.family_datum]"
@@ -506,7 +555,7 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	var/mob/living/carbon/human/already_fam = ftdebug_spawn_entity(spawn_loc)
 	ftdebug_apply_random_props(already_fam, /datum/species/human/northern)
 	already_fam.familytree_pref = FAMILY_PARTIAL
-	AssignToHouse(already_fam)
+	ftdebug_create_house_for(already_fam)
 	var/fam_before = already_fam.family_datum
 	register_human(already_fam)
 	try_queue_assignment(already_fam)
@@ -566,13 +615,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	wretch.allow_low_status_marriage = TRUE
 	var/tier_compat_allow = familytree_role_tiers_compatible(noble, wretch)
 	results += "7d. Knight+Wretch with allow_low: tier_compat=[tier_compat_allow]"
-
-	var/saved_xylix = xylix_roulette_active
-	xylix_roulette_active = TRUE
-	var/xylix_estate = familytree_estates_compatible(noble, wretch)
-	var/xylix_tier = familytree_role_tiers_compatible(noble, wretch)
-	xylix_roulette_active = saved_xylix
-	results += "7e. Xylix override: estate=[xylix_estate] tier=[xylix_tier] (both TRUE)"
 
 	var/mob/living/carbon/human/elf = ftdebug_spawn_entity(spawn_loc)
 	ftdebug_apply_random_props(elf, /datum/species/elf/dark)
@@ -712,6 +754,8 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 			results = ftdebug_scenario_edge(spawn_loc)
 		if(FTDBG_SCENARIO_STRESS)
 			results = ftdebug_scenario_stress(spawn_loc, count)
+		if(FTDBG_SCENARIO_ELITE)
+			results = ftdebug_scenario_elite_family_control(spawn_loc)
 		else
 			results = list("Unknown scenario: [scenario]")
 
@@ -745,6 +789,7 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 			H.spouse_mob = null
 		viable_spouses -= H
 		stop_tracking_human(H, "debug cleanup")
+		ftdebug_cleanup_mind(H)
 		qdel(H)
 		cleaned++
 	debug_entities.Cut()
@@ -855,6 +900,10 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 			var/list/data = SSfamilytree.ftdebug_run_scenario(mob, FTDBG_SCENARIO_STRESS, count)
 			mob << browse(SSfamilytree.ftdebug_report_html(data), "window=ftdebug;size=700x600")
 
+		if("Elite Family Control (new logic)")
+			var/list/data = SSfamilytree.ftdebug_run_scenario(mob, FTDBG_SCENARIO_ELITE)
+			mob << browse(SSfamilytree.ftdebug_report_html(data), "window=ftdebug;size=700x600")
+
 		if("Run ALL scenarios")
 			var/list/all_html = list()
 			var/list/scenario_list = list(
@@ -866,6 +915,7 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 				FTDBG_SCENARIO_EDGE,
 				FTDBG_SCENARIO_RANDOM,
 				FTDBG_SCENARIO_STRESS,
+				FTDBG_SCENARIO_ELITE,
 			)
 			for(var/sc in scenario_list)
 				SSfamilytree.ftdebug_cleanup()
@@ -924,10 +974,25 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	if(!istype(user, /mob/living/carbon/human))
 		return FALSE
 	var/count = 5
-	if(params && text2num(params))
-		count = clamp(text2num(params), 1, 30)
+	var/to_house = FALSE
+	if(params)
+		var/params_lower = lowertext(params)
+		to_house = findtext(params_lower, "house") || findtext(params_lower, "family")
+		for(var/part in splittext(params, " "))
+			var/parsed = text2num(part)
+			if(parsed)
+				count = clamp(parsed, 1, 30)
+				break
 	var/turf/spawn_loc = get_turf(user)
 	var/added = 0
+	if(to_house)
+		var/mob/living/carbon/human/H_user = user
+		for(var/i = 1 to count)
+			var/result = SSfamilytree.ftpop_add_house_member(H_user)
+			if(istype(result, /mob/living/carbon/human))
+				added++
+		to_chat(user, span_notice("FT: Spawned [added] NPCs into your house."))
+		return TRUE
 	for(var/i = 1 to count)
 		var/mob/living/carbon/human/H = SSfamilytree.ftdebug_spawn_entity(spawn_loc)
 		SSfamilytree.ftdebug_apply_random_props(H)
@@ -941,32 +1006,40 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 #endif
 
+#ifdef FAMILYTREE_DEBUG_LOGGING
+
 /datum/controller/subsystem/familytree/proc/ftdebug_scenario_elite_family_control(turf/spawn_loc)
 	ftlog("=== DBGSIM ELITE_FAMILY_CONTROL START ===", FTLOG_INFO)
 	var/list/results = list()
 
-	var/mob/living/carbon/human/knight1 = new /mob/living/carbon/human(spawn_loc)
+	var/mob/living/carbon/human/knight1 = ftdebug_spawn_entity(spawn_loc)
 	knight1.real_name = "Sir Knight1"
+	knight1.name = knight1.real_name
 	knight1.familytree_pref = FAMILY_NEWLYWED
 	knight1.allow_low_status_marriage = 1
 	knight1.allow_relatives_in_family = 1
-	knight1.mind = new /datum/mind("debug_knight1")
-	knight1.mind.assigned_role = "Knight"
+	ftdebug_ensure_mind(knight1, knight1.ckey || "debug_knight1")
+	knight1.mind.name = knight1.real_name
+	ftdebug_set_job(knight1, /datum/job/roguetown/knight)
 
-	var/mob/living/carbon/human/knight2 = new /mob/living/carbon/human(spawn_loc)
+	var/mob/living/carbon/human/knight2 = ftdebug_spawn_entity(spawn_loc)
 	knight2.real_name = "Sir Knight2"
+	knight2.name = knight2.real_name
 	knight2.familytree_pref = FAMILY_NEWLYWED
 	knight2.allow_low_status_marriage = 1
 	knight2.allow_relatives_in_family = 1
-	knight2.mind = new /datum/mind("debug_knight2")
-	knight2.mind.assigned_role = "Knight"
+	ftdebug_ensure_mind(knight2, knight2.ckey || "debug_knight2")
+	knight2.mind.name = knight2.real_name
+	ftdebug_set_job(knight2, /datum/job/roguetown/knight)
 
-	var/mob/living/carbon/human/wretch = new /mob/living/carbon/human(spawn_loc)
+	var/mob/living/carbon/human/wretch = ftdebug_spawn_entity(spawn_loc)
 	wretch.real_name = "Wretch Low"
+	wretch.name = wretch.real_name
 	wretch.familytree_pref = FAMILY_PARTIAL
 	wretch.allow_low_status_marriage = 1
-	wretch.mind = new /datum/mind("debug_wretch")
-	wretch.mind.assigned_role = "Wretch"
+	ftdebug_ensure_mind(wretch, wretch.ckey || "debug_wretch")
+	wretch.mind.name = wretch.real_name
+	ftdebug_set_job(wretch, /datum/job/roguetown/wretch)
 
 	results += "Created: Knight1, Knight2, Wretch (low-tier)"
 
@@ -983,3 +1056,5 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	ftlog("Results: " + results.Join(" | "), FTLOG_INFO)
 
 	return results
+
+#endif

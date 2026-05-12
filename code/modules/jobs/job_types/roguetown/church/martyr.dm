@@ -673,8 +673,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -791,8 +791,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -893,8 +893,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -997,8 +997,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1060,8 +1060,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1107,8 +1107,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1155,8 +1155,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1202,8 +1202,8 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
@@ -1253,13 +1253,13 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch this thing."))
-			H.emote("groan")
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
 	else
 		return FALSE
-		
+
 /obj/item/clothing/head/roguetown/helmet/heavy/holysee/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
 

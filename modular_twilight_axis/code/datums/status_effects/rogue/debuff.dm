@@ -210,36 +210,90 @@
 	effectedstats = list(STATKEY_SPD = -1, STATKEY_CON = -1)
 	duration = 2 MINUTES
 
+/atom/movable/screen/alert/status_effect/debuff/smartium
+	name = "Smartium"
+	desc = "My mind cracked!"
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+	icon_state = "smartium_bad"
+
+/datum/status_effect/debuff/smartium
+	id = "smartium_bad"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/smartium
+	effectedstats = list(STATKEY_INT = -10)
+	var/psycho = 0
+	duration = 30 SECONDS
+
+/datum/status_effect/debuff/smartium/on_apply()
+	. = ..()
+	if(owner)
+		to_chat(owner, span_warning("AHAHAHA!! AHAHAHAHAHAHAHAH!!!!"))
+		if(!HAS_TRAIT(owner, TRAIT_PSYCHOSIS))
+			psycho = 1
+			owner.hallucination = min(owner.hallucination + 10, 30) MINUTES
+			ADD_TRAIT(owner, TRAIT_PSYCHOSIS, TRAIT_GENERIC)
+		if(owner.has_status_effect(/datum/status_effect/buff/smartium))
+			owner.remove_status_effect(/datum/status_effect/buff/smartium)
+			owner.apply_status_effect(/datum/status_effect/debuff/smartium)
+
+/datum/status_effect/debuff/smartium/on_remove()
+	. = ..()
+	if(owner)
+		to_chat(owner, span_notice("Ugh... Whats happen?.."))
+		if(psycho == 1)
+			REMOVE_TRAIT(owner, TRAIT_PSYCHOSIS, TRAIT_GENERIC)
+
+/datum/status_effect/debuff/heavy_stomp
+	id = "heavy_stomp"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/heavy_stomp
+	effectedstats = list(STATKEY_CON = -1, STATKEY_SPD = -1)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/heavy_stomp/i
+	id = "heavy_stomp_i"
+	effectedstats = list(STATKEY_STR = -1, STATKEY_WIL = -1, STATKEY_SPD = -1)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/heavy_stomp/ii
+	id = "heavy_stomp_ii"
+	effectedstats = list(STATKEY_STR = -1, STATKEY_WIL = -1, STATKEY_CON = -1, STATKEY_SPD = -1)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/heavy_stomp/iii
+	id = "heavy_stomp_iii"
+	effectedstats = list(STATKEY_WIL = -1, STATKEY_CON = -1, STATKEY_SPD = -1, STATKEY_LCK = -1)
+	duration = 15 SECONDS
+
+/atom/movable/screen/alert/status_effect/debuff/heavy_stomp
+	name = "Off-balance Tremor"
+	desc = "Fuck, this really heavy!"
+
+/datum/status_effect/debuff/blood_call
+	id = "blood_call"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blood_call
+	effectedstats = list(STATKEY_INT = -2)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/blood_call/on_creation(mob/living/new_owner, newduration)
+	duration = newduration SECONDS
+
+/datum/status_effect/debuff/blood_call/i
+	id = "blood_call_i"
+	effectedstats = list(STATKEY_SPD = -2)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/blood_call/ii
+	id = "blood_call_ii"
+	effectedstats = list(STATKEY_CON = -2)
+	duration = 15 SECONDS
+
+/atom/movable/screen/alert/status_effect/debuff/blood_call
+	name = "Blood Call"
+	desc = "Hard to concentrate!"
 /datum/status_effect/debuff/revive_grace
 	id = "revive_grace"
 	duration = 5 MINUTES
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/revive_grace
 	var/died_again = FALSE
-
-/datum/status_effect/debuff/revive_dnr
-	id = "revive_dnr"
-	duration = 1 HOURS
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/revive_dnr
-
-/datum/status_effect/debuff/revive_dnr/on_apply()
-	. = ..()
-	if(owner)
-		ADD_TRAIT(owner, TRAIT_DNR, "revive_grace")
-
-/datum/status_effect/debuff/revive_dnr/on_remove()
-	. = ..()
-	if(owner)
-		REMOVE_TRAIT(owner, TRAIT_DNR, "revive_grace")
-
-/atom/movable/screen/alert/status_effect/debuff/revive_grace
-	name = "Lux Rush"
-	desc = "My Lux is strained from the recent resurrection, burning fiercely at its peak — but I can feel this surge will soon fade."
-	icon_state = "stressg"
-
-/atom/movable/screen/alert/status_effect/debuff/revive_dnr
-	name = "Lux Exaustion"
-	desc = "The strain of binding with Lux has left my body fractured and unready. It cannot accept another — not yet."
-	icon_state = "stressb"
 
 /datum/status_effect/debuff/revive_grace/on_apply()
 	. = ..()
@@ -263,3 +317,41 @@
 		return
 	died_again = TRUE
 	H.remove_status_effect(type)
+
+/atom/movable/screen/alert/status_effect/debuff/revive_grace
+	name = "Lux Rush"
+	desc = "My Lux is strained from the recent resurrection, burning fiercely at its peak — but I can feel this surge will soon fade."
+	icon_state = "stressg"
+
+/datum/status_effect/debuff/revive_dnr
+	id = "revive_dnr"
+	duration = 1 HOURS
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/revive_dnr
+	var/permanent = FALSE
+
+/datum/status_effect/debuff/revive_dnr/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	ADD_TRAIT(owner, TRAIT_DNR, "revive_grace")
+	RegisterSignal(owner, COMSIG_MOB_DEATH, PROC_REF(on_death))
+
+/datum/status_effect/debuff/revive_dnr/on_remove()
+	. = ..()
+	if(!owner)
+		return
+	if(!permanent)
+		REMOVE_TRAIT(owner, TRAIT_DNR, "revive_grace")
+	UnregisterSignal(owner, COMSIG_MOB_DEATH)
+
+/datum/status_effect/debuff/revive_dnr/proc/on_death()
+	var/mob/living/carbon/human/H = owner
+	if(!H)
+		return
+	permanent = TRUE
+	H.remove_status_effect(type)
+
+/atom/movable/screen/alert/status_effect/debuff/revive_dnr
+	name = "Lux Exhaustion"
+	desc = "The strain of binding with Lux has left my body fractured and unready. It cannot accept another — not yet."
+	icon_state = "stressb"

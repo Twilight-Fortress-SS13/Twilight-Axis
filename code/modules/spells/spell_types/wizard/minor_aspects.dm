@@ -48,9 +48,8 @@
 		"I set aside the shield, peace be with me.",
 		"Aegis, me relinquere!",
 	)
-	choice_spells = list(
+	fixed_spells = list(
 		/datum/action/cooldown/spell/conjure_aegis,
-		/obj/effect/proc_holder/spell/self/magic_shield, // ta edit
 	)
 
 /datum/magic_aspect/displacement

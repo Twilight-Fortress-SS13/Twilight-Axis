@@ -241,6 +241,9 @@
 		target.ignite_mob()
 	target.mind.remove_antag_datum(/datum/antagonist/zombie)
 	target.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)	//Removes the rotted-zombie debuff if they have it - Failsafe for it.
+	#ifdef REVIVE_GRACE
+	target.apply_status_effect(/datum/status_effect/debuff/revive_grace)
+	#endif
 	target.apply_status_effect(/datum/status_effect/debuff/revived)	//Temp debuff on revive, your stats get hit temporarily. Doubly so if having rotted.
 	return TRUE
 
@@ -328,6 +331,10 @@
 		if(L == user)
 			var/checkrange = 3 + user.get_skill_level(/datum/skill/magic/holy)
 			for(var/obj/machinery/light/rogue/O in range(checkrange, user))
+				O.fire_act()
+			for(var/obj/item/candle/O in range(checkrange, user))
+				O.fire_act()
+			for(var/obj/item/flashlight/flare/torch/O in range(checkrange, user))
 				O.fire_act()
 			return TRUE
 		if(L.anti_magic_check())

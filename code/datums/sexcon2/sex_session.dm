@@ -27,9 +27,14 @@
 	var/static/sex_id = 0
 	var/our_sex_id = 0 //this is so we can have more then 1 sex id open at once
 
+	// Moved here from proc/get_generic_force_adjective to reduce list initialization/destruction
+	var/static/list/low_force_adjectives 		= list("gently", "carefully", "tenderly", "gingerly", "delicately", "lazily")
+	var/static/list/mid_force_adjectives 		= list("firmly", "vigorously", "eagerly", "steadily", "intently")
+	var/static/list/high_force_adjectives 		= list("roughly", "carelessly", "forcefully", "fervently", "fiercely")
+	var/static/list/extreme_force_adjectives 	= list("brutally", "violently", "relentlessly", "savagely", "mercilessly")
+
 	/// Show progress bar
 	var/show_progress = 1
-
 
 /datum/sex_session/New(mob/living/carbon/human/session_user, mob/living/carbon/human/session_target)
 	user = session_user
@@ -290,16 +295,17 @@
 			return "<font color='#f05ee1'>НОРМАЛЬНАЯ ЭРЕКЦИЯ</font>"
 		if(SEX_MANUAL_AROUSAL_FULL)
 			return "<font color='#d146f5'>СИЛЬНАЯ ЭРЕКЦИЯ</font>"
+
 /datum/sex_session/proc/get_generic_force_adjective()
 	switch(force)
 		if(SEX_FORCE_LOW)
-			return pick(list("нежно", "заботливо", "ласково", "мягко", "осторожно", "неторопливо"))
+			return pick(low_force_adjectives)
 		if(SEX_FORCE_MID)
-			return pick(list("решительно", "энергично", "страстно", "уверенно", "увлеченно"))
+			return pick(mid_force_adjectives)
 		if(SEX_FORCE_HIGH)
-			return pick(list("грубо", "небрежно", "жестко", "пылко", "свирепо"))
+			return pick(high_force_adjectives)
 		if(SEX_FORCE_EXTREME)
-			return pick(list("жестоко", "неистово", "неумолимо", "свирепо", "безжалостно"))
+			return pick(extreme_force_adjectives)
 
 /datum/sex_session/proc/spanify_force(string)
 	switch(force)

@@ -657,7 +657,8 @@
 	/datum/status_effect/noc_favor,
 	/datum/status_effect/ravox_favor,
 	/datum/status_effect/malum_favor,
-	/datum/status_effect/eora_favor,)
+	/datum/status_effect/eora_favor,
+	/datum/status_effect/buff/smartium)
 	var/static/list/debuffs_to_dispel = list(
 	/datum/status_effect/incapacitating/immobilized,
 	/datum/status_effect/incapacitating/paralyzed,
@@ -673,7 +674,15 @@
 	/datum/status_effect/debuff/eoran_wilting,
 	/datum/status_effect/debuff/netted/vile,
 	/datum/status_effect/debuff/bloody_mess,
-	/datum/status_effect/debuff/sensitive_nerves,)
+	/datum/status_effect/debuff/sensitive_nerves,
+	/datum/status_effect/debuff/smartium,
+	/datum/status_effect/debuff/heavy_stomp,
+	/datum/status_effect/debuff/heavy_stomp/i,
+	/datum/status_effect/debuff/heavy_stomp/ii,
+	/datum/status_effect/debuff/heavy_stomp/iii,
+	/datum/status_effect/debuff/blood_call,
+	/datum/status_effect/debuff/blood_call/i,
+	/datum/status_effect/debuff/blood_call/ii)
 
 /obj/effect/proc_holder/spell/self/twilight_amongus/cast(list/targets,mob/living/user = usr)
 	for(var/mob/living/carbon/target in view(5, get_turf(user)))

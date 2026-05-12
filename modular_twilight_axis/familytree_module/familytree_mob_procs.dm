@@ -61,35 +61,12 @@
 	if(primary_family)
 		SSfamilytree.register_family(primary_family)
 
-	if(SSfamilytree.xylix_roulette_active)
-		var/xylix_msg = span_danger("<font size='2'>Ксайликс пошутил над вашей судьбой, подтасовав карты.</font>")
-		to_chat(src, xylix_msg)
-		to_chat(spouse, xylix_msg)
-
 	return primary_family
 
 /mob/living/carbon/human/proc/ReturnRelation(mob/living/carbon/human/stranger)
 	return family_datum.ReturnRelation(src, stranger)
 
 /mob/living/carbon/human/proc/familytree_get_parental_style()
-	var/has_penis = getorganslot(ORGAN_SLOT_PENIS) != null
-	var/has_vagina = getorganslot(ORGAN_SLOT_VAGINA) != null
-
-	if(has_penis && !has_vagina)
-		return "masculine"
-	if(has_vagina && !has_penis)
-		return "feminine"
-	if(has_penis && has_vagina)
-		if(titles_pref == TITLES_M)
-			return "masculine"
-		if(titles_pref == TITLES_F)
-			return "feminine"
-
-	if(titles_pref == TITLES_M)
-		return "masculine"
-	if(titles_pref == TITLES_F)
-		return "feminine"
-
 	switch(pronouns)
 		if(HE_HIM)
 			return "masculine"
@@ -99,6 +76,11 @@
 			return "neutral"
 		if(IT_ITS)
 			return "neuter"
+
+	if(titles_pref == TITLES_M)
+		return "masculine"
+	if(titles_pref == TITLES_F)
+		return "feminine"
 
 	switch(gender)
 		if(MALE)
@@ -344,3 +326,95 @@
 		client.images.Remove(spouse_indicator)
 		return
 	client.images.Add(spouse_indicator)
+
+/mob/dead/new_player/IsJobUnavailable(rank, latejoin = FALSE)
+	if(QDELETED(src))
+		return JOB_UNAVAILABLE_GENERIC
+	if(has_world_trait(/datum/world_trait/skeleton_siege))
+		if(rank != "Greater Skeleton")
+			return JOB_UNAVAILABLE_GENERIC
+		else
+			return JOB_AVAILABLE
+	else
+		if(rank == "Greater Skeleton")
+			return JOB_UNAVAILABLE_GENERIC
+
+	if(has_world_trait(/datum/world_trait/goblin_siege))
+		if(rank != "Goblin")
+			return JOB_UNAVAILABLE_GENERIC
+		else
+			return JOB_AVAILABLE
+	else
+		if(rank == "Goblin")
+			return JOB_UNAVAILABLE_GENERIC
+
+	var/datum/job/job = SSjob.GetJob(rank)
+	if(!job)
+		return JOB_UNAVAILABLE_GENERIC
+	var/datum/preferences/job_prefs = client.prefs.get_job_prefs(rank)
+	if(CONFIG_GET(flag/usewhitelist))
+		if(job.whitelist_req && !client.whitelisted())
+			return JOB_UNAVAILABLE_GENERIC
+	if(!job.bypass_jobban)
+		if(is_banned_from(ckey, rank))
+			return JOB_UNAVAILABLE_BANNED
+		if(client.blacklisted())
+			return JOB_UNAVAILABLE_BANNED
+	if(!job.player_old_enough(client))
+		return JOB_UNAVAILABLE_ACCOUNTAGE
+	if(job.required_playtime_remaining(client))
+		return JOB_UNAVAILABLE_PLAYTIME
+	if(job.plevel_req > client.patreonlevel())
+		return JOB_UNAVAILABLE_GENERIC
+	#ifdef USES_PQ
+	if(!job.required || latejoin)
+		if(!isnull(job.min_pq) && (get_playerquality(ckey) < job.min_pq))
+			return JOB_UNAVAILABLE_PQ
+		if(!isnull(job.max_pq) && (get_playerquality(ckey) > job.max_pq))
+			return JOB_UNAVAILABLE_PQ
+	#endif
+	var/datum/species/pref_species = job_prefs.pref_species
+	if(length(job.forbidden_races) && (pref_species.type in job.forbidden_races))
+		return JOB_UNAVAILABLE_RACE
+	var/list/allowed_sexes = list()
+	if(length(job.allowed_sexes))
+		allowed_sexes |= job.allowed_sexes
+	if(!job.immune_to_genderswap && pref_species?.gender_swapping)
+		if(MALE in job.allowed_sexes)
+			allowed_sexes -= MALE
+			allowed_sexes += FEMALE
+		if(FEMALE in job.allowed_sexes)
+			allowed_sexes -= FEMALE
+			allowed_sexes += MALE
+	if(length(allowed_sexes) && !(job_prefs.gender in allowed_sexes))
+		return JOB_UNAVAILABLE_SEX
+	if(length(job.allowed_ages) && !(job_prefs.age in job.allowed_ages))
+		return JOB_UNAVAILABLE_AGE
+	if(length(job.allowed_patrons) && !(job_prefs.selected_patron.type in job.allowed_patrons))
+		return JOB_UNAVAILABLE_PATRON
+	if((client.prefs.lastclass == job.title) && !job.bypass_lastclass)
+		return JOB_UNAVAILABLE_LASTCLASS
+	if((job.same_job_respawn_delay) && (ckey in GLOB.job_respawn_delays))
+		if(world.time < GLOB.job_respawn_delays[ckey])
+			return JOB_UNAVAILABLE_JOB_COOLDOWN
+	if((job.current_positions >= job.total_positions) && job.total_positions != -1)
+		if(job.title == "Assistant")
+			if(isnum(client.player_age) && client.player_age <= 14)
+				return JOB_AVAILABLE
+			for(var/datum/job/J in SSjob.occupations)
+				if(J && J.current_positions < J.total_positions && J.title != job.title)
+					return JOB_UNAVAILABLE_SLOTFULL
+		else
+			return JOB_UNAVAILABLE_SLOTFULL
+	if(length(job.vice_restrictions) || length(job.virtue_restrictions))
+		var/has_restricted_virtue = (job_prefs.virtue?.type in job.virtue_restrictions) || (job_prefs.virtuetwo?.type in job.virtue_restrictions)
+		var/has_restricted_vice = FALSE
+		for(var/datum/charflaw/cf in job_prefs.charflaws)
+			if(cf.type in job.vice_restrictions)
+				has_restricted_vice = TRUE
+				break
+		if(has_restricted_virtue || has_restricted_vice)
+			return JOB_UNAVAILABLE_VIRTUESVICE
+	if(latejoin && !job.special_check_latejoin(client))
+		return JOB_UNAVAILABLE_GENERIC
+	return JOB_AVAILABLE

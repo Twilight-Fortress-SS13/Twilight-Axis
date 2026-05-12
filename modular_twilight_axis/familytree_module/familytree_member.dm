@@ -67,6 +67,20 @@
 			out += sm
 	return out
 
+/datum/family_member/proc/get_sworn_sibling_members() as /list
+	var/list/out = list()
+	if(!person)
+		return out
+	var/datum/family_node/node = SSfamilytree.get_family_node(person)
+	if(!node)
+		return out
+	for(var/datum/family_edge/edge as anything in node.get_edges_of_type("sworn_sibling"))
+		var/datum/family_node/other = edge.other_end(node)
+		var/datum/family_member/sm = other?.person?.family_member_datum
+		if(sm && !(sm in out))
+			out += sm
+	return out
+
 /datum/family_member/proc/get_former_spouse_members() as /list
 	var/list/out = list()
 	if(!person)
@@ -91,6 +105,12 @@
 		return FALSE
 	if(IsAncestorOf(parent))
 		return FALSE
+	if(person && parent.person && !adoption_status && !SSfamilytree.familytree_biological_parent_allowed(parent.person, person, family))
+		return FALSE
+	if(person && parent.person && !adoption_status)
+		for(var/datum/family_member/existing_parent as anything in current_parents)
+			if(existing_parent?.person && !SSfamilytree.familytree_biological_parent_pair_allowed(parent.person, existing_parent.person, person, family))
+				return FALSE
 
 	if(parent.phantom || !parent.person)
 		phantom_parent_members += parent
@@ -142,6 +162,15 @@
 
 	SSfamilytree.graph_on_spouse_added(person, spouse.person, family)
 	HandleBiologicalChildren(spouse)
+	return TRUE
+
+/datum/family_member/proc/AddSwornSibling(datum/family_member/sibling)
+	if(!sibling || sibling == src || !person || !sibling.person)
+		return FALSE
+	if(sibling in get_sworn_sibling_members())
+		return TRUE
+
+	SSfamilytree.graph_on_sworn_sibling_added(person, sibling.person, family)
 	return TRUE
 
 /datum/family_member/proc/RemoveSpouse(datum/family_member/spouse, divorce = FALSE, skip_reciprocal = FALSE)
@@ -206,7 +235,7 @@
 	var/list/spouse_children = spouse.get_child_members()
 	for(var/datum/family_member/child as anything in get_child_members())
 		if(child in spouse_children)
-			if(family.SpeciesCalculation(child.person, person, spouse.person))
+			if(SSfamilytree.familytree_biological_parent_pair_allowed(person, spouse.person, child.person, family))
 				child.adoption_status = FALSE
 				SSfamilytree.graph_sync_adoption_status(child.person, FALSE)
 
@@ -269,6 +298,14 @@
 			return "sister"
 	return "sibling"
 
+/datum/family_member/proc/GetSwornSiblingTerm()
+	switch(GetRelationshipStyle())
+		if("masculine")
+			return "sworn brother"
+		if("feminine")
+			return "sworn sister"
+	return "sworn sibling"
+
 /datum/family_member/proc/GetParentInLawTerm()
 	switch(GetRelationshipStyle())
 		if("masculine")
@@ -308,6 +345,77 @@
 		if("feminine")
 			return "grandmother-in-law"
 	return "grandparent-in-law"
+
+/datum/family_member/proc/GetParentInLawTermForSpouse(datum/family_member/spouse)
+	switch(spouse?.GetRelationshipStyle())
+		if("masculine")
+			switch(GetRelationshipStyle())
+				if("masculine")
+					return "father-in-law"
+				if("feminine")
+					return "mother-in-law"
+		if("feminine")
+			switch(GetRelationshipStyle())
+				if("masculine")
+					return "father-in-law"
+				if("feminine")
+					return "mother-in-law"
+	return GetParentInLawTerm()
+
+/datum/family_member/proc/GetSpouseSiblingInLawTerm(datum/family_member/spouse)
+	switch(spouse?.GetRelationshipStyle())
+		if("masculine")
+			switch(GetRelationshipStyle())
+				if("masculine")
+					return "brother-in-law"
+				if("feminine")
+					return "sister-in-law"
+		if("feminine")
+			switch(GetRelationshipStyle())
+				if("masculine")
+					return "brother-in-law"
+				if("feminine")
+					return "sister-in-law"
+	return GetSiblingInLawTerm()
+
+/datum/family_member/proc/GetSpouseOfSpousesSiblingInLawTerm(datum/family_member/spouse, datum/family_member/spouse_sibling)
+	if(spouse?.GetRelationshipStyle() == "masculine" && spouse_sibling?.GetRelationshipStyle() == "masculine" && GetRelationshipStyle() == "feminine")
+		return "sister-in-law"
+	if(spouse?.GetRelationshipStyle() == "feminine" && spouse_sibling?.GetRelationshipStyle() == "feminine" && GetRelationshipStyle() == "masculine")
+		return "brother-in-law"
+	return GetSpouseOfSiblingTerm()
+
+/datum/family_member/proc/GetSpouseOfSiblingTerm()
+	switch(GetRelationshipStyle())
+		if("masculine")
+			return "brother-in-law"
+		if("feminine")
+			return "sister-in-law"
+	return GetSiblingInLawTerm()
+
+/datum/family_member/proc/GetSpouseOfChildTerm()
+	switch(GetRelationshipStyle())
+		if("masculine")
+			return "son-in-law"
+		if("feminine")
+			return "daughter-in-law"
+	return GetChildInLawTerm()
+
+/datum/family_member/proc/GetStepChildTerm()
+	switch(GetRelationshipStyle())
+		if("masculine")
+			return "stepson"
+		if("feminine")
+			return "stepdaughter"
+	return "stepchild"
+
+/datum/family_member/proc/GetCoParentInLawTerm()
+	switch(GetRelationshipStyle())
+		if("masculine")
+			return "co-father-in-law"
+		if("feminine")
+			return "co-mother-in-law"
+	return "co-parent-in-law"
 
 /datum/family_member/proc/GetGrandchildTerm()
 	switch(GetRelationshipStyle())
@@ -349,24 +457,71 @@
 			return "great-granddaughter"
 	return "great-grandchild"
 
+/datum/family_member/proc/HasAdoptiveParent(datum/family_member/parent)
+	if(!parent)
+		return FALSE
+	if(!person || !parent.person)
+		return adoption_status && (parent in get_parent_members())
+	var/datum/family_node/parent_node = SSfamilytree.get_family_node(parent.person)
+	var/datum/family_node/child_node = SSfamilytree.get_family_node(person)
+	if(!parent_node || !child_node)
+		return adoption_status && (parent in get_parent_members())
+	return parent_node.find_edge_to(child_node, "adoptive_parent_child", TRUE) ? TRUE : FALSE
+
+/datum/family_member/proc/get_blood_parent_members() as /list
+	var/list/out = list()
+	for(var/datum/family_member/parent as anything in get_parent_members())
+		if(!HasAdoptiveParent(parent))
+			out += parent
+	return out
+
+/datum/family_member/proc/get_blood_child_members() as /list
+	var/list/out = list()
+	for(var/datum/family_member/child as anything in get_child_members())
+		if(!child.HasAdoptiveParent(src))
+			out += child
+	return out
+
+/datum/family_member/proc/GetSwornSiblingRelation(datum/family_member/other)
+	if(!other || other == src)
+		return null
+	if(other in get_sworn_sibling_members())
+		return other.GetSwornSiblingTerm()
+	var/list/my_parents = get_parent_members()
+	var/list/other_parents = other.get_parent_members()
+	for(var/datum/family_member/parent as anything in my_parents)
+		if(!(parent in other_parents))
+			continue
+		if(HasAdoptiveParent(parent) || other.HasAdoptiveParent(parent))
+			return other.GetSwornSiblingTerm()
+	return null
+
 /datum/family_member/proc/GetRelationshipTo(datum/family_member/other)
 	if(!other || other == src)
 		return null
 
 	var/list/my_parents = get_parent_members()
 	if(other in my_parents)
-		if(adoption_status)
+		if(HasAdoptiveParent(other))
 			return "adoptive [other.GetParentTerm()]"
 		return other.GetParentTerm()
 
 	var/list/my_children = get_child_members()
 	if(other in my_children)
-		if(other.adoption_status)
+		if(other.HasAdoptiveParent(src))
 			return "adopted [other.GetChildTerm()]"
 		return other.GetChildTerm()
 
 	if(other in get_spouse_members())
 		return other.GetSpouseTerm()
+
+	var/sworn_sibling_rel = GetSwornSiblingRelation(other)
+	if(sworn_sibling_rel)
+		return sworn_sibling_rel
+
+	var/inlaw_rel = GetInLawRelation(other)
+	if(inlaw_rel)
+		return inlaw_rel
 
 	if(AreSiblings(other))
 		if(AreFullSiblings(other))
@@ -381,13 +536,21 @@
 	if(grandchild_rel)
 		return grandchild_rel
 
-	var/great_aunt_uncle_rel = GetGreatAuntUncleRelation(other)
-	if(great_aunt_uncle_rel)
-		return great_aunt_uncle_rel
+	var/great_grandparent_rel = GetGreatGrandparentRelation(other)
+	if(great_grandparent_rel)
+		return great_grandparent_rel
+
+	var/great_grandchild_rel = GetGreatRelation(other)
+	if(great_grandchild_rel)
+		return great_grandchild_rel
 
 	var/great_niece_nephew_rel = GetGreatNieceNephewRelation(other)
 	if(great_niece_nephew_rel)
 		return great_niece_nephew_rel
+
+	var/great_aunt_uncle_rel = GetGreatAuntUncleRelation(other)
+	if(great_aunt_uncle_rel)
+		return great_aunt_uncle_rel
 
 	var/aunt_uncle_rel = GetAuntUncleRelation(other)
 	if(aunt_uncle_rel)
@@ -397,33 +560,34 @@
 	if(niece_nephew_rel)
 		return niece_nephew_rel
 
-	var/cousin_once_removed_rel = GetCousinOnceRemovedRelation(other)
-	if(cousin_once_removed_rel)
-		return cousin_once_removed_rel
-
 	var/cousin_rel = GetCousinRelation(other)
 	if(cousin_rel)
 		return cousin_rel
+
+	var/cousin_once_removed_rel = GetCousinOnceRemovedRelation(other)
+	if(cousin_once_removed_rel)
+		return cousin_once_removed_rel
 
 	var/second_cousin_rel = GetSecondCousinRelation(other)
 	if(second_cousin_rel)
 		return second_cousin_rel
 
-	var/great_rel = GetGreatRelation(other)
-	if(great_rel)
-		return great_rel
-
-	var/inlaw_rel = GetInLawRelation(other)
-	if(inlaw_rel)
-		return inlaw_rel
+	var/preserved_rel = GetPreservedRelationshipTo(other)
+	if(preserved_rel)
+		return preserved_rel
 
 	return "distant relative"
+
+/datum/family_member/proc/GetPreservedRelationshipTo(datum/family_member/other)
+	if(!person || !other?.person)
+		return null
+	return SSfamilytree.get_preserved_relationship(person, other)
 
 /datum/family_member/proc/AreFullSiblings(datum/family_member/other)
 	if(!other || other == src)
 		return FALSE
-	var/list/my_parents = get_parent_members()
-	var/list/other_parents = other.get_parent_members()
+	var/list/my_parents = get_blood_parent_members()
+	var/list/other_parents = other.get_blood_parent_members()
 	if(my_parents.len < 2 || other_parents.len < 2)
 		return FALSE
 	var/shared = 0
@@ -434,8 +598,8 @@
 
 /datum/family_member/proc/GetHalfSiblingTerm(datum/family_member/other)
 	var/shared_style = null
-	var/list/my_parents = get_parent_members()
-	var/list/other_parents = other.get_parent_members()
+	var/list/my_parents = get_blood_parent_members()
+	var/list/other_parents = other.get_blood_parent_members()
 	for(var/datum/family_member/p as anything in my_parents)
 		if(p in other_parents)
 			shared_style = p.GetRelationshipStyle()
@@ -471,8 +635,8 @@
 	return "great-niece/nephew"
 
 /datum/family_member/proc/GetGreatAuntUncleRelation(datum/family_member/other)
-	for(var/datum/family_member/parent as anything in get_parent_members())
-		for(var/datum/family_member/grandparent as anything in parent.get_parent_members())
+	for(var/datum/family_member/parent as anything in get_blood_parent_members())
+		for(var/datum/family_member/grandparent as anything in parent.get_blood_parent_members())
 			if(other.AreSiblings(grandparent) && other != grandparent)
 				return other.GetGreatAuntUncleTerm()
 	return null
@@ -481,29 +645,25 @@
 	for(var/datum/family_member/sibling as anything in family.members)
 		if(!AreSiblings(sibling) || sibling == src)
 			continue
-		for(var/datum/family_member/niblingchild as anything in sibling.get_child_members())
-			if(other in niblingchild.get_child_members())
+		for(var/datum/family_member/niblingchild as anything in sibling.get_blood_child_members())
+			if(other in niblingchild.get_blood_child_members())
 				return other.GetGreatNieceNephewTerm()
 	return null
 
 /datum/family_member/proc/GetCousinOnceRemovedRelation(datum/family_member/other)
-	for(var/datum/family_member/parent as anything in get_parent_members())
-		for(var/datum/family_member/their_parent as anything in other.get_parent_members())
-			for(var/datum/family_member/their_grandparent as anything in their_parent.get_parent_members())
-				if(parent.AreSiblings(their_grandparent))
-					return "first cousin once removed"
-	for(var/datum/family_member/grandparent as anything in get_parent_members())
-		for(var/datum/family_member/gp_parent as anything in grandparent.get_parent_members())
-			for(var/datum/family_member/their_parent as anything in other.get_parent_members())
-				if(gp_parent.AreSiblings(their_parent))
-					return "first cousin once removed"
+	for(var/datum/family_member/parent as anything in get_blood_parent_members())
+		if(parent.GetCousinRelation(other))
+			return "first cousin once removed"
+	for(var/datum/family_member/their_parent as anything in other.get_blood_parent_members())
+		if(GetCousinRelation(their_parent))
+			return "first cousin once removed"
 	return null
 
 /datum/family_member/proc/GetSecondCousinRelation(datum/family_member/other)
-	for(var/datum/family_member/parent as anything in get_parent_members())
-		for(var/datum/family_member/grandparent as anything in parent.get_parent_members())
-			for(var/datum/family_member/their_parent as anything in other.get_parent_members())
-				for(var/datum/family_member/their_grandparent as anything in their_parent.get_parent_members())
+	for(var/datum/family_member/parent as anything in get_blood_parent_members())
+		for(var/datum/family_member/grandparent as anything in parent.get_blood_parent_members())
+			for(var/datum/family_member/their_parent as anything in other.get_blood_parent_members())
+				for(var/datum/family_member/their_grandparent as anything in their_parent.get_blood_parent_members())
 					if(grandparent.AreSiblings(their_grandparent))
 						return "second cousin"
 	return null
@@ -512,34 +672,41 @@
 	for(var/datum/family_member/spouse as anything in get_spouse_members())
 		var/list/spouse_parents = spouse.get_parent_members()
 		if(other in spouse_parents)
-			return other.GetParentInLawTerm()
+			return other.GetParentInLawTermForSpouse(spouse)
 		var/list/spouse_children = spouse.get_child_members()
 		if(other in spouse_children)
-			return other.GetChildInLawTerm()
+			return other.GetStepChildTerm()
 		if(spouse.AreSiblings(other))
-			return other.GetSiblingInLawTerm()
+			return other.GetSpouseSiblingInLawTerm(spouse)
 
-		for(var/datum/family_member/spouse_parent as anything in spouse_parents)
-			if(other in spouse_parent.get_parent_members())
-				return other.GetGrandparentInLawTerm()
+		for(var/datum/family_member/spouse_sibling as anything in family.members)
+			if(!spouse.AreSiblings(spouse_sibling) || spouse_sibling == spouse)
+				continue
+			if(other in spouse_sibling.get_spouse_members())
+				return other.GetSpouseOfSpousesSiblingInLawTerm(spouse, spouse_sibling)
+			if(other in spouse_sibling.get_blood_child_members())
+				return other.GetNieceNephewTerm()
 
 	for(var/datum/family_member/member as anything in family.members)
 		if(AreSiblings(member) && (other in member.get_spouse_members()))
-			return other.GetSiblingInLawTerm()
+			return other.GetSpouseOfSiblingTerm()
 
 	for(var/datum/family_member/child as anything in get_child_members())
 		if(other in child.get_spouse_members())
-			return other.GetChildInLawTerm()
+			return other.GetSpouseOfChildTerm()
+		for(var/datum/family_member/child_spouse as anything in child.get_spouse_members())
+			if(other in child_spouse.get_parent_members())
+				return other.GetCoParentInLawTerm()
 
 	return null
 
 /datum/family_member/proc/AreSiblings(datum/family_member/other)
 	if(!other || other == src)
 		return FALSE
-	var/list/my_parents = get_parent_members()
+	var/list/my_parents = get_blood_parent_members()
 	if(!my_parents.len)
 		return FALSE
-	var/list/other_parents = other.get_parent_members()
+	var/list/other_parents = other.get_blood_parent_members()
 	if(!other_parents.len)
 		return FALSE
 
@@ -549,46 +716,48 @@
 	return FALSE
 
 /datum/family_member/proc/GetAuntUncleRelation(datum/family_member/other)
-	for(var/datum/family_member/parent as anything in get_parent_members())
+	for(var/datum/family_member/parent as anything in get_blood_parent_members())
 		if(other.AreSiblings(parent) && other != parent)
 			return other.GetAuntUncleTerm()
 	return null
 
 /datum/family_member/proc/GetNieceNephewRelation(datum/family_member/other)
 	for(var/datum/family_member/sibling as anything in family.members)
-		if(AreSiblings(sibling) && (sibling != src) && (other in sibling.get_child_members()))
+		if(AreSiblings(sibling) && (sibling != src) && (other in sibling.get_blood_child_members()))
 			return other.GetNieceNephewTerm()
 	return null
 
 /datum/family_member/proc/GetGrandparentRelation(datum/family_member/other)
-	for(var/datum/family_member/parent as anything in get_parent_members())
-		if(other in parent.get_parent_members())
+	for(var/datum/family_member/parent as anything in get_blood_parent_members())
+		if(other in parent.get_blood_parent_members())
 			return other.GetGrandparentTerm()
 	return null
 
 /datum/family_member/proc/GetGrandchildRelation(datum/family_member/other)
-	for(var/datum/family_member/child as anything in get_child_members())
-		if(other in child.get_child_members())
+	for(var/datum/family_member/child as anything in get_blood_child_members())
+		if(other in child.get_blood_child_members())
 			return other.GetGrandchildTerm()
 	return null
 
+/datum/family_member/proc/GetGreatGrandparentRelation(datum/family_member/other)
+	for(var/datum/family_member/parent as anything in get_blood_parent_members())
+		for(var/datum/family_member/grandparent as anything in parent.get_blood_parent_members())
+			if(other in grandparent.get_blood_parent_members())
+				return other.GetGreatGrandparentTerm()
+	return null
+
 /datum/family_member/proc/GetCousinRelation(datum/family_member/other)
-	var/list/other_parents = other.get_parent_members()
-	for(var/datum/family_member/my_parent as anything in get_parent_members())
+	var/list/other_parents = other.get_blood_parent_members()
+	for(var/datum/family_member/my_parent as anything in get_blood_parent_members())
 		for(var/datum/family_member/their_parent as anything in other_parents)
 			if(my_parent.AreSiblings(their_parent))
 				return "cousin"
 	return null
 
 /datum/family_member/proc/GetGreatRelation(datum/family_member/other)
-	for(var/datum/family_member/parent as anything in get_parent_members())
-		for(var/datum/family_member/grandparent as anything in parent.get_parent_members())
-			if(other in grandparent.get_parent_members())
-				return other.GetGreatGrandparentTerm()
-
-	for(var/datum/family_member/child as anything in get_child_members())
-		for(var/datum/family_member/grandchild as anything in child.get_child_members())
-			if(other in grandchild.get_child_members())
+	for(var/datum/family_member/child as anything in get_blood_child_members())
+		for(var/datum/family_member/grandchild as anything in child.get_blood_child_members())
+			if(other in grandchild.get_blood_child_members())
 				return other.GetGreatGrandchildTerm()
 
 	return null

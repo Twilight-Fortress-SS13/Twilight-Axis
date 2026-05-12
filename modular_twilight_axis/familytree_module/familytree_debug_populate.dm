@@ -13,6 +13,7 @@
 	H.real_name = debug_name
 	H.name = debug_name
 	H.ckey = "FTPOP_[debug_session_id]_[debug_entities.len + 1]"
+	ftdebug_ensure_mind(H, H.ckey)
 	debug_entities += H
 	if(!species_type)
 		species_type = pick(GLOB.ftdebug_species_pool)
@@ -38,15 +39,15 @@
 	if(user.family_datum)
 		ftpop_log("user [user.real_name] already has house '[user.family_datum.housename]'", FTLOG_DEBUG)
 		return user.family_datum
-	ftpop_log("user [user.real_name] has no house, calling AssignToHouse to create one", FTLOG_INFO)
+	ftpop_log("user [user.real_name] has no house, creating direct debug house", FTLOG_INFO)
 	user.familytree_pref = FAMILY_PARTIAL
 	user.allow_low_status_marriage = TRUE
 	user.allow_relatives_in_family = TRUE
-	AssignToHouse(user)
+	ftdebug_create_house_for(user)
 	if(user.family_datum)
-		ftpop_log("user assigned to house '[user.family_datum.housename]' ok", FTLOG_INFO)
+		ftpop_log("user direct-created house '[user.family_datum.housename]' ok", FTLOG_INFO)
 	else
-		ftpop_log("ERR: AssignToHouse did not produce a house for user", FTLOG_ERROR)
+		ftpop_log("ERR: direct debug house creation failed for user", FTLOG_ERROR)
 	return user.family_datum
 
 /datum/controller/subsystem/familytree/proc/ftpop_member_for(mob/living/carbon/human/person, datum/heritage/house)
@@ -55,6 +56,102 @@
 	if(person.family_member_datum && person.family_member_datum.family == house)
 		return person.family_member_datum
 	return house.CreateFamilyMember(person)
+
+/datum/controller/subsystem/familytree/proc/ftpop_house_label(datum/heritage/house)
+	if(!house)
+		return null
+	var/list/names = list()
+	for(var/datum/family_node/node as anything in house.member_nodes)
+		if(node.person)
+			names += node.person.real_name
+		if(names.len >= 3)
+			break
+	var/member_preview = names.len ? names.Join(", ") : "no visible members"
+	return "[house.housename || "Nameless"] ([house.member_nodes.len] nodes, [house.members.len] members) - [member_preview]"
+
+/datum/controller/subsystem/familytree/proc/ftpop_house_choices(mob/living/carbon/human/user)
+	var/list/choices = list()
+	for(var/datum/heritage/house as anything in families)
+		if(!house || house == user?.family_datum)
+			continue
+		if(!house.member_nodes.len && !house.members.len)
+			continue
+		var/label = ftpop_house_label(house)
+		if(!label)
+			continue
+		var/base_label = label
+		var/dupe = 2
+		while(choices[label])
+			label = "[base_label] #[dupe]"
+			dupe++
+		choices[label] = house
+	return choices
+
+/datum/controller/subsystem/familytree/proc/ftpop_join_house_direct(mob/living/carbon/human/user, datum/heritage/house, forced_role = null)
+	if(!user)
+		return "no_user"
+	if(!house)
+		return "no_house"
+	if(user.family_datum == house)
+		return "OK: already in house '[house.housename || "Nameless"]'"
+	ftdebug_ensure_mind(user, user.ckey || user.key)
+	user.familytree_pref = FAMILY_PARTIAL
+	user.allow_low_status_marriage = TRUE
+	user.allow_relatives_in_family = TRUE
+
+	var/used_fallback = FALSE
+	var/role_attempted = forced_role && forced_role != "direct"
+	var/datum/family_member/member = null
+	if(forced_role == "spouse")
+		var/datum/family_member/spouse_target = null
+		for(var/datum/family_member/candidate as anything in house.members)
+			if(candidate?.person && candidate.person != user)
+				spouse_target = candidate
+				break
+		if(spouse_target)
+			member = house.CreateFamilyMember(user)
+			if(!member || !member.AddSpouse(spouse_target))
+				used_fallback = TRUE
+		else
+			used_fallback = TRUE
+	else if(role_attempted)
+		var/assigned = AddPersonToHouse(house, user, FALSE, forced_role)
+		if(!assigned)
+			used_fallback = TRUE
+
+	if(!member && user.family_datum == house)
+		member = user.family_member_datum
+	if(!member)
+		member = house.CreateFamilyMember(user)
+	if(!member)
+		ftpop_log("ERR join_house_direct: could not add [user.real_name] to '[house.housename || "Nameless"]'", FTLOG_ERROR)
+		return "join_failed"
+
+	if(!house.house_leader)
+		house.SelectReplacementHouseHead()
+	stop_tracking_human(user, "ftpop join existing house")
+	wake_waiting_relative_seekers(house)
+	var/join_summary = role_attempted ? "debug direct join as [forced_role]" : "debug direct join as member"
+	if(role_attempted && used_fallback)
+		join_summary += " (fallback direct member)"
+	familytree_admin_log_house_assignment(user, house, join_summary, member)
+	ftpop_log("OK join_house_direct user=[user.real_name] house='[house.housename || "Nameless"]' role=[forced_role || "direct"] fallback=[used_fallback]", FTLOG_INFO)
+	var/result_role_text = role_attempted && !used_fallback ? forced_role : "direct member"
+	return "OK: joined '[house.housename || "Nameless"]' as [result_role_text]"
+
+/datum/controller/subsystem/familytree/proc/ftpop_add_house_member(mob/living/carbon/human/user, datum/species/species_type = null, desired_gender = null)
+	var/datum/heritage/house = ftpop_ensure_user_house(user)
+	if(!house)
+		return "no_house"
+	var/mob/living/carbon/human/npc = ftpop_spawn_relative(get_turf(user), species_type, desired_gender, AGE_ADULT, "house_member")
+	if(!npc)
+		return "spawn_failed"
+	var/datum/family_member/npc_member = ftpop_member_for(npc, house)
+	if(!npc_member)
+		return "no_npc_member"
+	stop_tracking_human(npc, "ftpop house member")
+	ftpop_log("OK house_member [npc.real_name] joined '[house.housename || "Nameless"]'", FTLOG_INFO)
+	return npc
 
 /datum/controller/subsystem/familytree/proc/ftpop_add_parent(mob/living/carbon/human/user, datum/species/species_type = null, desired_gender = null, adopted = FALSE)
 	var/datum/heritage/house = ftpop_ensure_user_house(user)
@@ -312,6 +409,8 @@
 		return "has_2_parents"
 	var/datum/family_member/phantom = new /datum/family_member(null, house)
 	phantom.phantom = TRUE
+	if(!(phantom in house.members))
+		house.members += phantom
 	user_member.AddParent(phantom)
 	ftpop_log("OK phantom parent added to [user.real_name]", FTLOG_INFO)
 	return phantom
@@ -386,6 +485,7 @@
 		viable_spouses -= H
 		stop_tracking_human(H, "ftpop_clear")
 		debug_entities -= H
+		ftdebug_cleanup_mind(H)
 		qdel(H)
 		cleaned++
 		ftpop_log("CLEAR removed [removed_name]", FTLOG_DEBUG)
@@ -451,10 +551,13 @@
 	if(!result)
 		return "(null)"
 	if(istext(result))
-		return "FAIL: [result]"
+		return findtext(result, "OK:") == 1 ? result : "FAIL: [result]"
 	if(istype(result, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = result
 		return "OK: spawned [H.real_name] ([H.gender == MALE ? "M" : "F"], [H.dna?.species?.name || "?"])"
+	if(istype(result, /datum/heritage))
+		var/datum/heritage/house = result
+		return "OK: house '[house.housename || "Nameless"]' members=[house.members.len]"
 	if(istype(result, /datum/family_member))
 		return "OK: phantom member"
 	if(islist(result))
@@ -484,6 +587,10 @@
 		"Nuclear family (2 parents + 2 siblings)",
 		"Extended family (3 generations + spouse + child + in-law)",
 		"ALL variations (every relation type at once)",
+		"=== MEMBERSHIP ===",
+		"Create my debug house (direct)",
+		"Join existing house (direct)",
+		"Spawn NPC house member",
 		"=== SINGLE RELATIVE ===",
 		"Add father",
 		"Add mother",
@@ -524,6 +631,31 @@
 			result = SSfamilytree.ftpop_quick_extended(user)
 		if("ALL variations (every relation type at once)")
 			result = SSfamilytree.ftpop_variation_all(user)
+		if("Create my debug house (direct)")
+			result = SSfamilytree.ftpop_ensure_user_house(user)
+		if("Join existing house (direct)")
+			var/list/house_choices = SSfamilytree.ftpop_house_choices(user)
+			if(!house_choices.len)
+				result = "no_other_houses"
+			else
+				var/house_choice = tgui_input_list(user, "Choose a house to join directly", "FT Populate", house_choices)
+				if(!house_choice)
+					result = "OK: cancelled"
+				else
+					var/list/role_choices = list(
+						"Direct member (guaranteed)" = "direct",
+						"Child (try relation)" = "child",
+						"Sibling (try relation)" = "sibling",
+						"Parent (try relation)" = "parent",
+						"Spouse (try relation)" = "spouse",
+					)
+					var/role_choice = tgui_input_list(user, "How should you join?", "FT Populate", role_choices)
+					if(!role_choice)
+						result = "OK: cancelled"
+					else
+						result = SSfamilytree.ftpop_join_house_direct(user, house_choices[house_choice], role_choices[role_choice])
+		if("Spawn NPC house member")
+			result = SSfamilytree.ftpop_add_house_member(user)
 		if("Add father")
 			result = SSfamilytree.ftpop_add_parent(user, null, MALE, FALSE)
 		if("Add mother")
@@ -557,10 +689,10 @@
 		if("Dump my house state")
 			result = SSfamilytree.ftpop_dump_user_house(user)
 		if("Clear debug NPCs from my house")
-			result = "Cleared [SSfamilytree.ftpop_clear_user_house(user)] debug NPCs"
+			result = "OK: Cleared [SSfamilytree.ftpop_clear_user_house(user)] debug NPCs"
 		if("Full log state snapshot")
 			SSfamilytree.ftlog_state("ADMIN_SNAPSHOT")
-			result = "Snapshot written to ss_family.log"
+			result = "OK: Snapshot written to ss_family.log"
 
 	var/summary = istype(result, /list) ? result : SSfamilytree.ftpop_result_to_summary(result)
 	SSfamilytree.ftpop_log("=== POPULATE action='[choice]' DONE result=[SSfamilytree.ftpop_result_to_summary(result)] ===", FTLOG_INFO)

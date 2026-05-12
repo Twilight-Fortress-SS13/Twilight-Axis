@@ -48,6 +48,17 @@
 
 #define FAMILYTREE_BOND_RANGE 7
 
+/proc/familytree_priest_can_perform_bond(mob/living/carbon/human/priest)
+	if(!priest?.devotion || !priest.patron)
+		return FALSE
+	if(istype(priest.patron, /datum/patron/divine/eora))
+		return TRUE
+	if(istype(priest.patron, /datum/patron/divine/astrata))
+		return priest.devotion.level >= CLERIC_T3
+	if(istype(priest.patron, /datum/patron/inhumen/zizo))
+		return priest.devotion.level >= CLERIC_T3
+	return FALSE
+
 /mob/living/carbon/human/proc/familytree_establish_bond()
 	set name = "Establish Bond"
 	set category = "Cleric"
@@ -57,8 +68,8 @@
 	if(!priest.mind || !priest.client)
 		return
 
-	if(!priest.devotion)
-		to_chat(priest, span_warning("Лишь служитель богов может провести такой обряд."))
+	if(!familytree_priest_can_perform_bond(priest))
+		to_chat(priest, span_warning("Лишь последователи Эоры или высшие служители Астраты и Зизо могут провести такой обряд."))
 		return
 
 	if(priest.stat != CONSCIOUS)
@@ -166,7 +177,6 @@
 		if(family)
 			success = TRUE
 			SSfamilytree.on_family_formed(family)
-			SSfamilytree.check_bond_divine_wrath(priest, person1, person2)
 
 	else if(bond_type_is_adoption(bond_type))
 		success = familytree_holy_adopt(person1, person2)
@@ -193,8 +203,8 @@
 	if(!priest.mind || !priest.client)
 		return
 
-	if(!priest.devotion)
-		to_chat(priest, span_warning("Лишь служитель богов может провести такой обряд."))
+	if(!familytree_priest_can_perform_bond(priest))
+		to_chat(priest, span_warning("Лишь последователи Эоры или высшие служители Астраты и Зизо могут провести такой обряд."))
 		return
 
 	if(priest.stat != CONSCIOUS)
@@ -263,7 +273,8 @@
 	if(!parent_member)
 		return FALSE
 
-	parent.family_datum.AddToFamily(child, parent_member, null, TRUE)
+	var/datum/family_member/coparent_member = familytree_get_ritual_adoptive_coparent(parent_member, child)
+	parent.family_datum.AddToFamily(child, parent_member, coparent_member, TRUE)
 	return (child.family_datum != null)
 
 /proc/familytree_holy_sibling(mob/living/carbon/human/person1, mob/living/carbon/human/person2)
@@ -287,94 +298,11 @@
 	if(!existing_member)
 		return FALSE
 
-	var/list/existing_parents = existing_member.get_parent_members()
-	var/datum/family_member/parent1 = existing_parents.len > 0 ? existing_parents[1] : null
-	var/datum/family_member/parent2 = existing_parents.len > 1 ? existing_parents[2] : null
-	if(!parent1)
-		var/datum/family_member/phantom_parent = new /datum/family_member(null, target_house)
-		phantom_parent.generation = -1
-		phantom_parent.phantom = TRUE
-		target_house.members += phantom_parent
-		existing_member.AddParent(phantom_parent)
-		parent1 = phantom_parent
+	var/datum/family_member/new_member = target_house.GetFamilyMember(new_sibling)
+	if(!new_member)
+		new_member = target_house.CreateFamilyMember(new_sibling)
+	if(!new_member)
+		return FALSE
 
-	target_house.AddToFamily(new_sibling, parent1, parent2, FALSE)
-	return (new_sibling.family_datum == target_house)
+	return new_member.AddSwornSibling(existing_member)
 
-/datum/controller/subsystem/familytree/proc/evaluate_pair_negative_influence(mob/living/carbon/human/A, mob/living/carbon/human/B)
-	var/list/harmed_patrons = list()
-
-	var/datum/patron/patron_a = A.patron
-	var/datum/patron/patron_b = B.patron
-	var/has_inhumen = istype(patron_a, /datum/patron/inhumen) || istype(patron_b, /datum/patron/inhumen)
-
-	if(has_inhumen)
-		harmed_patrons += /datum/patron/old_god
-
-	var/a_noble = HAS_TRAIT(A, TRAIT_NOBLE)
-	var/b_noble = HAS_TRAIT(B, TRAIT_NOBLE)
-
-	var/has_matthios_patron = istype(patron_a, /datum/patron/inhumen/matthios) || istype(patron_b, /datum/patron/inhumen/matthios)
-	if(has_matthios_patron && (a_noble || b_noble))
-		harmed_patrons += /datum/patron/inhumen/matthios
-
-	var/same_race = (A.dna?.species?.type == B.dna?.species?.type)
-	var/same_genitals = check_same_genitals(A, B)
-	if(!same_race || same_genitals)
-		if(!has_inhumen)
-			harmed_patrons += /datum/patron/divine/astrata
-
-	return harmed_patrons
-
-/datum/controller/subsystem/familytree/proc/get_patron_names(list/patron_types)
-	var/list/names = list()
-	for(var/patron_type in patron_types)
-		var/datum/patron/P = GLOB.patronlist[patron_type]
-		if(P)
-			names += P.name
-		else
-			names += "[patron_type]"
-	return names
-
-/datum/controller/subsystem/familytree/proc/check_bond_divine_wrath(mob/living/carbon/human/priest, mob/living/carbon/human/person1, mob/living/carbon/human/person2)
-	if(!priest || !person1 || !person2)
-		return
-
-	if(istype(priest.patron, /datum/patron/old_god))
-		return
-
-	if(!priest.patron)
-		return
-
-	var/list/harmed = evaluate_pair_negative_influence(person1, person2)
-	if(!harmed.len)
-		return
-
-	var/priest_patron_harmed = FALSE
-	for(var/patron_type in harmed)
-		if(istype(priest.patron, patron_type) || priest.patron.type == patron_type)
-			priest_patron_harmed = TRUE
-			break
-
-	if(!priest_patron_harmed)
-		return
-
-	var/wrath_msg = span_danger("<font size='2'>Такой союз прогневил вашего покровителя [priest.patron.name]. Проклятье пало на вас!</font>")
-	to_chat(priest, wrath_msg)
-
-	for(var/mob/living/carbon/human/M in view(7, priest))
-		if(M != priest)
-			to_chat(M, span_warning("Тёмная тень пробежала по лицу [priest.real_name]..."))
-
-	priest.apply_status_effect(/datum/status_effect/divine_wrath)
-
-/datum/status_effect/divine_wrath
-	id = "divine_wrath"
-	duration = 15 MINUTES
-	alert_type = /atom/movable/screen/alert/status_effect/divine_wrath
-	effectedstats = list(STATKEY_LCK = -2)
-
-/atom/movable/screen/alert/status_effect/divine_wrath
-	name = "Divine Wrath"
-	desc = "Вы провели обряд, прогневивший богов. Удача отвернулась от вас."
-	icon_state = "debuff"

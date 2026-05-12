@@ -192,7 +192,7 @@
 					/obj/effect/proc_holder/spell/self/TAcall_to_arms						= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/TAchallenge						= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/TApersistence					= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/TAraise_warrior_spirits			= CLERIC_T3,
+					/datum/action/cooldown/spell/ravox/TAraise_warrior_spirits			= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/resurrect/ravox					= CLERIC_T4,
 	)
 	confess_lines = list(

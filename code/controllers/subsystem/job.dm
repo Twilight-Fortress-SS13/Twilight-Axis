@@ -111,11 +111,13 @@ SUBSYSTEM_DEF(job)
 				old_job.current_positions = max(old_job.current_positions - 1, 0)
 				
 		
-		if(!latejoin && player.client && player.client.prefs) //TA EDIT START
+		// TA EDIT START - load the character slot mapped to the assigned job for roundstart and latejoin.
+		if(player.client && player.client.prefs)
 			var/assigned_slot = player.client.prefs.job_characters[rank]
 			if(assigned_slot && assigned_slot != player.client.prefs.loaded_slot)
 				player.client.prefs.load_character(assigned_slot)
-				player.client.prefs.save_preferences() //TA EDIT END
+				player.client.prefs.save_preferences()
+		// TA EDIT END
 				
 		player.mind.assigned_role = rank
 		unassigned -= player

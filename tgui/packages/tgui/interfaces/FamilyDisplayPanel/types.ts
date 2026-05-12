@@ -15,6 +15,8 @@ export type FamilyTreeNode = FamilyDisplayEntry & {
   children?: FamilyTreeNode[];
   isSelf?: boolean;
   phantom?: boolean;
+  generation?: number | null;
+  parents?: string[];
 };
 
 export type FamilyDisplayData = {

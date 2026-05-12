@@ -64,13 +64,13 @@
 /obj/item/reagent_containers/food/snacks/jamtallow/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 1)
+		if(bitecount == 1 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 2)
+		if(bitecount == 2 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 5)
 			changefood(slice_path, eater)
@@ -109,13 +109,13 @@
 /obj/item/reagent_containers/food/snacks/marmalade/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 1)
+		if(bitecount == 1 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 2)
+		if(bitecount == 2 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 5)
 			changefood(slice_path, eater)
