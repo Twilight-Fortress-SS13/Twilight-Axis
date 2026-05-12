@@ -225,7 +225,7 @@
 
 	return COMPONENT_ATTACK_CONSUMED
 
-/datum/component/combo_core/martial_master/proc/_handle_try_consume_async(skill_id, mob/living/target, zone)
+/datum/component/combo_core/martial_master/proc/_handle_try_consume_async(skill_id, atom/target_atom,, zone)
 	if(!owner)
 		return
 
