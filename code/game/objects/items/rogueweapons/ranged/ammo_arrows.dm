@@ -128,8 +128,8 @@
 /obj/projectile/bullet/reusable/arrow/iron
 	name = "broadhead arrow"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/iron
-	damage = 50
-	armor_penetration = PEN_LIGHT
+	damage = 40 // TA EDIT 50 —> 40
+	armor_penetration = PEN_MEDIUM // TA EDIT PEN_LIGHT —> PEN_MEDIUM
 	flag = "piercing"
 	embedchance = 30
 	npc_simple_damage_mult = 2
@@ -139,8 +139,8 @@
 	name = "decrepit broadhead arrow"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/iron/aalloy
 	icon_state = "ancientarrow_proj"
-	damage = 50
-	armor_penetration = PEN_LIGHT
+	damage = 40 // TA EDIT 50 —> 40
+	armor_penetration = PEN_MEDIUM // TA EDIT PEN_LIGHT —> PEN_MEDIUM
 	flag = "piercing"
 
 // Bodkins should penetrate essentially any armour in the game with decent perception, as
