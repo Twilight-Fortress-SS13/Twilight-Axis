@@ -458,6 +458,11 @@
 /datum/tat_traits/proc/are_traits_mutually_exclusive(trait_a, trait_b)
 	if(!trait_a || !trait_b || trait_a == trait_b)
 		return null
+
+	if(has_trait(TAT_TRAIT_WANTED))
+		if((trait_a == TRAIT_NOPAINSTUN && (trait_b == TAT_TRAIT_MAGE_INITIATE || trait_b == TAT_TRAIT_DIVINE_BOON_2)) || (trait_b == TRAIT_NOPAINSTUN && (trait_a == TAT_TRAIT_MAGE_INITIATE || trait_a == TAT_TRAIT_DIVINE_BOON_2)))
+			return null
+
 	var/list/conflicts = get_trait_conflict_map()
 	var/list/a_conflicts = conflicts[trait_a]
 	if(islist(a_conflicts) && (trait_b in a_conflicts))
