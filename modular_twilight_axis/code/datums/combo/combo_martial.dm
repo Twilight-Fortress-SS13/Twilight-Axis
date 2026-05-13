@@ -229,7 +229,7 @@
 	if(!owner)
 		return
 
-	owner.stamina_add(6)
+	owner.stamina_add(3)
 	var/mob/living/target = target_atom
 	if(!istype(target))
 		return 0
