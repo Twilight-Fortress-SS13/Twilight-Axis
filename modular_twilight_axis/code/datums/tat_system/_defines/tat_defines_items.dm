@@ -637,6 +637,11 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/suit/roguetown/shirt/shadowshirt = TAT_ITEM_ENTRY("Silk Shirt", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/robe = TAT_ITEM_ENTRY("Robe", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/undershirt/lowcut = TAT_ITEM_ENTRY("Low-cut Tunic", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/shirt/robe/necra = TAT_ITEM_ENTRY("Mourning Robe", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under cloak"), \
+	/obj/item/clothing/suit/roguetown/shirt/robe/dendor = TAT_ITEM_ENTRY("Dendorit Robe", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under cloak"), \
+	/obj/item/clothing/suit/roguetown/shirt/robe/abyssor = TAT_ITEM_ENTRY("Abyssor Robe", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under cloak"), \
+	/obj/item/clothing/suit/roguetown/shirt/robe/noc = TAT_ITEM_ENTRY("Noc Robe", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under cloak"), \
+	/obj/item/clothing/suit/roguetown/shirt/robe/astrata = TAT_ITEM_ENTRY("Astratan Robe", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under cloak"), \
 	/obj/item/clothing/suit/roguetown/shirt/tunic = TAT_ITEM_ENTRY("Tunic", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/undershirt/artificer = TAT_ITEM_ENTRY("Tinker Jacket", 0, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket = TAT_ITEM_ENTRY("Tinker Suit", 1, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "armor"), \
@@ -689,11 +694,13 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/cloak/templar/necran = TAT_ITEM_ENTRY("Necran Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/suit/roguetown/shirt/robe/eora = TAT_ITEM_ENTRY("Eoran Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/abyssorite = TAT_ITEM_ENTRY("Abyssor Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
+	/obj/item/clothing/cloak/tabard/devotee/ravox = TAT_ITEM_ENTRY("Ravox Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/templar/astratan = TAT_ITEM_ENTRY("Astratan Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/templar/undivided = TAT_ITEM_ENTRY("Undivided Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/templar/undivided_alt = TAT_ITEM_ENTRY("Undivided Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/eastcloak1 = TAT_ITEM_ENTRY("Leather Cloak", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/psydontabard = TAT_ITEM_ENTRY("Psydon Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
+	/obj/item/clothing/cloak/tabard/psydontabard/black = TAT_ITEM_ENTRY("Psydon Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/rogueweapon/handclaw/steel = TAT_ITEM_ENTRY("Steel Mantis Claws", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "unarmed"), \
 	/obj/item/storage/magebag = TAT_ITEM_ENTRY("Scholar's Pouch", 1.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/clothing/head/roguetown/spellcasterhat = TAT_ITEM_ENTRY("Spellsinger Hat", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "head"), \
