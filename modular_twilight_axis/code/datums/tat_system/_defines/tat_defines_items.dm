@@ -644,7 +644,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/suit/roguetown/shirt/robe/astrata = TAT_ITEM_ENTRY("Astratan Robe", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "under cloak"), \
 	/obj/item/clothing/suit/roguetown/shirt/tunic = TAT_ITEM_ENTRY("Tunic", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/undershirt/artificer = TAT_ITEM_ENTRY("Tinker Jacket", 0, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "suit"), \
-	/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket = TAT_ITEM_ENTRY("Tinker Suit", 1, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket = TAT_ITEM_ENTRY("Tinker Suit", 0, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "armor"), \
 	/obj/item/bottle_kit = TAT_ITEM_ENTRY("Bottling Kit", 4, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/natural/worms/leech/cheele = TAT_ITEM_ENTRY("Cheele", 3, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/heart_blood_canister/filled = TAT_ITEM_ENTRY("Heartblood Canister", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
@@ -678,9 +678,9 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/rogueweapon/chisel/bronze = TAT_ITEM_ENTRY("Bronze Chisel", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "wood work"), \
 	/obj/item/rogueweapon/handsaw = TAT_ITEM_ENTRY("Handsaw", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "wood work"), \
 	/obj/item/rogueweapon/handsaw/bronze = TAT_ITEM_ENTRY("Bronze Handsaw", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "wood work"), \
-	/obj/item/clothing/neck/roguetown/psicross/weeping = TAT_ITEM_ENTRY("Weeping Cross", 31, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
-	/obj/item/clothing/neck/roguetown/psicross/hag = TAT_ITEM_ENTRY("Wyrd Cross", 31, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
-	/obj/item/rogueweapon/sword/long/exe/berserk/dragonslayer = TAT_ITEM_ENTRY("Daemon Slayer", 31, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
+	/obj/item/clothing/neck/roguetown/psicross/weeping = TAT_ITEM_ENTRY("Weeping Cross", 50, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
+	/obj/item/clothing/neck/roguetown/psicross/hag = TAT_ITEM_ENTRY("Wyrd Cross", 50, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
+	/obj/item/rogueweapon/sword/long/exe/berserk/dragonslayer = TAT_ITEM_ENTRY("Daemon Slayer", 50, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
 	/obj/item/clothing/cloak/tabard = TAT_ITEM_ENTRY("Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/stabard = TAT_ITEM_ENTRY("Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/stabard/surcoat = TAT_ITEM_ENTRY("Surcoat", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \

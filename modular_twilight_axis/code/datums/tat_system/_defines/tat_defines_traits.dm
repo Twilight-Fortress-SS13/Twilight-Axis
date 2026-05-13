@@ -30,6 +30,7 @@
 #define TAT_TRAIT_WANTED "tat_wanted"
 #define TAT_TRAIT_HERETIC "tat_heretic"
 #define TAT_TRAIT_LOOTRAT "tat_lootrat"
+#define TAT_TRAIT_LOOTRAT_2 "tat_lootrat_2"
 
 #define TAT_TRAIT_DIVINE_INITIATE "tat_divine_initiate"
 #define TAT_TRAIT_MAGE_INITIATE "tat_mage_initiate"
@@ -128,6 +129,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 #define TAT_BUILD_STAT_BONUS_WANTED 5
 #define TAT_BUILD_ITEM_BONUS_WANTED 10
 #define TAT_BUILD_ITEM_BONUS_LOOTRAT 10
+#define TAT_BUILD_ITEM_BONUS_LOOTRAT_2 15
 #define TAT_TRAIT_PLIANT_RENAME_PQ_MINIMUM 50
 
 #define TAT_CATEGORY_CLASS_MODULE "class_module"
@@ -215,7 +217,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_RONIN = TAT_TRAIT_ENTRY("Ronin", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the Ronin combo style."), \
 	TAT_TRAIT_SPELLBLADE = TAT_TRAIT_ENTRY("Spellblade", 10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants a set of weapon-binding spells."), \
 	TAT_TRAIT_RESIDENT = TAT_TRAIT_ENTRY("Resident", 10, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "Grants a Meister account and ownership of a house in the city."), \
-	TAT_TRAIT_TRADER_LICENSE = TAT_TRAIT_ENTRY("Merchant's Writ", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks sealed trader caches in the TAT item list. Conflicts with Resident, Wanted, Outlander, and Heretic."), \
+	TAT_TRAIT_TRADER_LICENSE = TAT_TRAIT_ENTRY("Merchant's Writ", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_MAJOR_FLAW_NAME, "Unlocks sealed trader caches in the TAT item list. Conflicts with Resident, Wanted, Outlander, and Heretic."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T1 = TAT_TRAIT_ENTRY("Bardic Inspiration I", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain tier 1 bardic inspiration, audience management verbs, and a songbook."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T2 = TAT_TRAIT_ENTRY("Bardic Inspiration II", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Upgrades bardic inspiration to tier 2, increasing audience size and songs known."), \
 	TAT_TRAIT_PARTY_LEADER = TAT_TRAIT_ENTRY("Party Leader", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Improves the core Fellowship: nearby fellows gain +1 CON; while at least one fellow is nearby, the leader gains +1 CON, +1 WIL, and +0.5 Fortune per nearby fellow."), \
@@ -247,6 +249,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_PLATE_SUPPLIER = TAT_TRAIT_ENTRY("Plate Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks plate gear in all supported slots."), \
 	TRAIT_INTELLECTUAL = TAT_TRAIT_ENTRY("Intellectual", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You have a keen eye and can assess a person's prowess in wit and blade."), \
 	TAT_TRAIT_LOOTRAT = TAT_TRAIT_ENTRY("Loot Rat", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "Somehow in your journeys or life you collect a lot of different things and exotic treasures. Increase loot points by 10."), \
+	TAT_TRAIT_LOOTRAT_2 = TAT_TRAIT_ENTRY("Enormous Rat", 20, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You work on Guild with mountains of gold or you're just a lucky dungeon mudskipper. Increase loot points by 15."), \
 	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You are trained in the Arcyne arts, allowing you to wield magyck. Basis trait for magic-build classes. Gives +3 Arcane skill if there is no defensive lockout trait."), \
 	TRAIT_JACKOFALLTRADES = TAT_TRAIT_ENTRY("Jack of All Trades", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Skills cost half as much for you to raise."), \
 	TAT_TRAIT_MASTER_OF_WANDERING = TAT_TRAIT_ENTRY("Master of Wandering", 30, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gives +20 Misc skill points and a discount on Misc skills. Conflicts with Resident."), \
@@ -363,6 +366,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 #define TAT_TRAIT_ITEM_POINT_RULES list( \
 	TAT_TRAIT_WANTED = TAT_BUILD_ITEM_BONUS_WANTED, \
 	TAT_TRAIT_LOOTRAT = TAT_BUILD_ITEM_BONUS_LOOTRAT, \
+	TAT_TRAIT_LOOTRAT_2 = TAT_BUILD_ITEM_BONUS_LOOTRAT_2, \
 	TAT_TRAIT_CONTRACTOR_ENTITY = TAT_BUILD_ITEM_BONUS_LOOTRAT \
 )
 
