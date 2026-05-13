@@ -128,7 +128,7 @@
 /obj/projectile/bullet/reusable/arrow/iron
 	name = "broadhead arrow"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/iron
-	damage = 40 // TA EDIT 50 —> 40
+	damage = 35 // TA EDIT 50 —> 35
 	armor_penetration = PEN_MEDIUM // TA EDIT PEN_LIGHT —> PEN_MEDIUM
 	flag = "piercing"
 	embedchance = 30
