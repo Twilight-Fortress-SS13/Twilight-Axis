@@ -181,3 +181,41 @@
     result = list(/obj/item/rug_black_stored)
     reqs = list(/obj/item/natural/cloth = 2, /obj/item/natural/fibers = 3, /obj/item/natural/silk = 6)
     craftdiff = 4
+
+/obj/item/storage/backpack/rogue/backpack_trader
+	name = "traders chests"
+	desc = "Bulky, heavy, enormous. You're the rat in the world with a lot of shinies in your pockets for sell."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/back.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/back.dmi'
+	icon_state = "backpack_trader"
+	item_state = "backpack_trader"
+	w_class = WEIGHT_CLASS_BULKY
+	slot_flags = ITEM_SLOT_BACK_L
+	resistance_flags = FIRE_PROOF
+	equip_delay_self = 5 SECONDS
+	unequip_delay_self = 10 SECONDS
+	strip_delay = 5 SECONDS
+	max_integrity = 400
+	sellprice = 15
+	pickup_sound = 'sound/foley/equip/equip_armor.ogg'
+	equip_sound = 'sound/foley/equip/equip_armor.ogg'
+	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
+	bloody_icon_state = "bodyblood"
+	sewrepair = TRUE
+	component_type = /datum/component/storage/concrete/roguetown/trader
+
+/obj/item/storage/backpack/rogue/backpack_trader/equipped(mob/living/carbon/human/user, slot)
+	. = ..()
+	to_chat(user, span_monkeyhive("uGH! I hate this thing....my back"))
+	user.change_stat(STATKEY_SPD, -4)
+
+/obj/item/clothing/neck/roguetown/blkknight/dropped(mob/living/user)
+	..()
+	to_chat(user, span_monkeyhive("Finally....some rest"))
+	user.change_stat(STATKEY_SPD, 4)
+
+/datum/component/storage/concrete/roguetown/trader
+	screen_max_rows = 8
+	screen_max_columns = 8
+	max_w_class = WEIGHT_CLASS_BULKY
+	not_while_equipped = TRUE
