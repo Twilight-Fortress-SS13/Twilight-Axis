@@ -261,8 +261,30 @@
 	if(tag)
 		switch(tag)
 			if("onbelt")
-				return list("shrink" = 0.6,"sx" = -2,"sy" = -4,"nx" = 3,"ny" = -1,"wx" = -6,"wy" = -4,"ex" = 6,"ey" = -3,"northabove" = 1,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 12,"sturn" = -26,"wturn" = -32,"eturn" = 29,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
-
+				return list(
+			"shrink" = 0.6,
+			"sx" = -1,
+			"sy" = -3,
+			"nx" = 2,
+			"ny" = -3,
+			"wx" = -4,
+			"wy" = -2,
+			"ex" = 3,
+			"ey" = -2,
+			"northabove" = 1,
+			"southabove" = 0,
+			"eastabove" = 0,
+			"westabove" = 0,
+			"nturn" = 34,
+			"sturn" = -26,
+			"wturn" = -16,
+			"eturn" = 20,
+			"nflip" = 0,
+			"sflip" = 8,
+			"wflip" = 8,
+			"eflip" = 0,
+			)
+			
 /obj/item/clothing/suit/roguetown/armor/basiceast/yohei
 	name = "black dobo robe"
 	desc = "A dark dobo robe with reinforced leather inlays. Offers decent protection while allowing for ease of movement."
