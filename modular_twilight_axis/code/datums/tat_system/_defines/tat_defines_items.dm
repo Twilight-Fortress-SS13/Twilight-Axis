@@ -645,6 +645,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/suit/roguetown/shirt/tunic = TAT_ITEM_ENTRY("Tunic", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/undershirt/artificer = TAT_ITEM_ENTRY("Tinker Jacket", 0, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket = TAT_ITEM_ENTRY("Tinker Suit", 0, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "armor"), \
+	/obj/item/book/rogue/bibble/psy = TAT_ITEM_ENTRY("Psy Bible", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
+	/obj/item/book/rogue/bibble = TAT_ITEM_ENTRY("Tennit Bible", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/bottle_kit = TAT_ITEM_ENTRY("Bottling Kit", 4, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/natural/worms/leech/cheele = TAT_ITEM_ENTRY("Cheele", 3, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/heart_blood_canister/filled = TAT_ITEM_ENTRY("Heartblood Canister", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
