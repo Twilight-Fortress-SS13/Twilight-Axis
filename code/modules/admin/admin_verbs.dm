@@ -219,6 +219,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/toggle_medal_disable,
 	/client/proc/view_runtimes,
 	/client/proc/pump_random_event,
+	/client/proc/show_tip,
 	/client/proc/cmd_display_init_log,
 	/client/proc/cmd_display_overlay_log,
 	/client/proc/reload_configuration,
@@ -228,6 +229,8 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/stresstest_chat,
 	/client/proc/performance_stress_test, // Uncomment these if you tick the performance stress test .dm file
 	/client/proc/cleanup_stress_test_mobs,
+	/client/proc/cmd_admin_economic_panel,
+	/client/proc/cmd_admin_view_chronicle,
 	/client/proc/link_ckey2discord
 	)
 GLOBAL_LIST_INIT(admin_verbs_possess, list(/proc/possess, GLOBAL_PROC_REF(release)))

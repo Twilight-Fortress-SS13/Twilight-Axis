@@ -103,11 +103,77 @@
 		house_leader = replacement
 	return replacement
 
+/datum/heritage/proc/IsPreservablePlayerMember(datum/family_member/member)
+	if(!member?.person || member.phantom)
+		return FALSE
+	if(!member.person.ckey || istype(member.person, /mob/living/carbon/human/dummy))
+		return FALSE
+	return TRUE
+
+/datum/heritage/proc/FamilyTreeMembersConnectedWithoutBridge(datum/family_member/start, datum/family_member/target, datum/family_member/bridge)
+	if(!start || !target)
+		return FALSE
+	if(start == target)
+		return TRUE
+	var/list/seen = list()
+	var/list/queue = list(start)
+	seen[start] = TRUE
+	if(bridge)
+		seen[bridge] = TRUE
+
+	while(queue.len)
+		var/datum/family_member/current = queue[1]
+		queue.Cut(1, 2)
+		if(!current)
+			continue
+
+		var/list/neighbors = list()
+		neighbors += current.get_parent_members()
+		neighbors += current.get_child_members()
+		neighbors += current.get_spouse_members()
+		neighbors += current.get_sworn_sibling_members()
+
+		for(var/datum/family_member/neighbor as anything in neighbors)
+			if(!neighbor || seen[neighbor] || !(neighbor in members))
+				continue
+			if(neighbor == target)
+				return TRUE
+			seen[neighbor] = TRUE
+			queue += neighbor
+
+	return FALSE
+
+/datum/heritage/proc/PreservePlayerRelationshipsThroughDepartingMember(datum/family_member/departing)
+	if(!IsPreservablePlayerMember(departing))
+		return FALSE
+
+	var/list/player_members = list()
+	for(var/datum/family_member/member as anything in members)
+		if(member == departing || !IsPreservablePlayerMember(member))
+			continue
+		player_members += member
+
+	var/preserved = 0
+	var/player_count = player_members.len
+	for(var/i = 1, i < player_count, i++)
+		var/datum/family_member/member_a = player_members[i]
+		for(var/j = i + 1, j <= player_count, j++)
+			var/datum/family_member/member_b = player_members[j]
+			if(FamilyTreeMembersConnectedWithoutBridge(member_a, member_b, departing))
+				continue
+			var/relation_a_to_b = member_a.GetRelationshipTo(member_b)
+			var/relation_b_to_a = member_b.GetRelationshipTo(member_a)
+			if(SSfamilytree.preserve_player_relationship(member_a, member_b, relation_a_to_b, relation_b_to_a, src))
+				preserved++
+
+	return preserved
+
 /datum/heritage/proc/RemoveFamilyMember(datum/family_member/member, clear_person_refs = TRUE)
 	if(!member || !(member in members))
 		return FALSE
 
 	var/mob/living/carbon/human/person = member.person
+	PreservePlayerRelationshipsThroughDepartingMember(member)
 
 	var/list/member_parents = member.get_parent_members()
 	for(var/datum/family_member/parent as anything in member_parents)
@@ -194,6 +260,7 @@
 	IntroduceFamilyMember(person)
 	AddFamilyIcon(person)
 	LateJoinAddToUI(person)
+	SSfamilytree.schedule_house_member_resync(src)
 
 	return new_member
 
@@ -210,22 +277,21 @@
 	if(!new_member)
 		return FALSE
 
-	new_member.adoption_status = adopt
+	var/biological_parentage_allowed = TRUE
+	if(!adopt)
+		if(parent1 && parent2)
+			biological_parentage_allowed = SSfamilytree.familytree_biological_parent_pair_allowed(parent1.person, parent2.person, person, src)
+		else
+			var/datum/family_member/known_parent = parent1 ? parent1 : parent2
+			if(known_parent)
+				biological_parentage_allowed = SSfamilytree.familytree_biological_parent_allowed(known_parent.person, person, src)
+
+	new_member.adoption_status = adopt || !biological_parentage_allowed
 
 	if(parent1)
 		new_member.AddParent(parent1)
 	if(parent2)
 		new_member.AddParent(parent2)
-
-	if(!adopt && parent1 && parent2)
-		if(!SpeciesCalculation(person, parent1.person, parent2.person))
-			new_member.adoption_status = TRUE
-			SSfamilytree.graph_sync_adoption_status(person, TRUE)
-	else if(!adopt)
-		var/datum/family_member/known_parent = parent1 ? parent1 : parent2
-		if(known_parent && !SingleParentSpeciesCalculation(person, known_parent.person))
-			new_member.adoption_status = TRUE
-			SSfamilytree.graph_sync_adoption_status(person, TRUE)
 
 	AddFamilyIcon(person)
 	to_chat(person, span_notice("Вы были добавлены в семью [housename]."))
@@ -298,6 +364,45 @@
 			return "#FF69B4"
 	return "#9370DB"
 
+/datum/heritage/proc/FamilyTreeMemberDisplayName(datum/family_member/member)
+	if(!member)
+		return null
+	if(member.person?.real_name)
+		return member.person.real_name
+	if(member.phantom)
+		return "Unknown"
+	return null
+
+/datum/heritage/proc/BuildFamilyTreeParentNames(datum/family_member/member)
+	var/list/parent_names = list()
+	if(!member || member.phantom)
+		return parent_names
+	var/has_real_parent = FamilyTreeHasRealParent(member)
+	for(var/datum/family_member/parent as anything in member.get_parent_members())
+		if(has_real_parent && !parent?.person)
+			continue
+		var/parent_name = FamilyTreeMemberDisplayName(parent)
+		if(parent_name && !(parent_name in parent_names))
+			parent_names += parent_name
+	return parent_names
+
+/datum/heritage/proc/FamilyTreeHasRealParent(datum/family_member/member, datum/family_member/ignore_parent = null)
+	if(!member)
+		return FALSE
+	for(var/datum/family_member/parent as anything in member.get_parent_members())
+		if(parent == ignore_parent)
+			continue
+		if(parent?.person)
+			return TRUE
+	return FALSE
+
+/datum/heritage/proc/FamilyTreeShouldDisplayChild(datum/family_member/parent, datum/family_member/child, list/visited)
+	if(!parent || !child || visited?[child])
+		return FALSE
+	if(parent.phantom && FamilyTreeHasRealParent(child, parent))
+		return FALSE
+	return TRUE
+
 /datum/heritage/proc/BuildFamilyDisplayEntry(datum/family_member/checker_member, datum/family_member/member)
 	if(!member?.person)
 		return null
@@ -309,6 +414,9 @@
 	var/list/details = list()
 	if(member.adoption_status)
 		details += "Adopted"
+	var/list/parent_names = BuildFamilyTreeParentNames(member)
+	if(parent_names.len)
+		details += "Parents: [jointext(parent_names, ", ")]"
 	var/list/member_spouses_list = member.get_spouse_members()
 	if(member_spouses_list.len)
 		var/list/spouse_names = list()
@@ -385,11 +493,13 @@
 		else
 			return "Generation [generation]"
 
-/datum/heritage/proc/BuildFamilyTree(datum/family_member/root_member, datum/family_member/checker_member, list/visited = null, depth = 0, include_spouses = TRUE, include_children = TRUE)
+/datum/heritage/proc/BuildFamilyTree(datum/family_member/root_member, datum/family_member/checker_member, list/visited = null, depth = 0, include_spouses = TRUE, include_children = TRUE, list/spouse_seen = null)
 	if(!root_member)
 		return null
 	if(!visited)
 		visited = list()
+	if(!spouse_seen)
+		spouse_seen = list()
 	if(visited[root_member])
 		return null
 	visited[root_member] = TRUE
@@ -404,6 +514,7 @@
 		details += "Unrecorded ancestor"
 	if(root_member.person?.dna?.species?.name)
 		details += root_member.person.dna.species.name
+	var/list/parent_names = BuildFamilyTreeParentNames(root_member)
 
 	var/list/node = list(
 		"name" = root_member.person ? root_member.person.real_name : "Unknown",
@@ -412,6 +523,8 @@
 		"accentColor" = GetRelationColor(relation_text),
 		"isSelf" = (root_member == checker_member),
 		"phantom" = root_member.phantom,
+		"generation" = root_member.generation,
+		"parents" = parent_names,
 		"spouses" = list(),
 		"children" = list(),
 	)
@@ -425,19 +538,60 @@
 		for(var/datum/family_member/spouse as anything in root_member.get_spouse_members())
 			if(!spouse || visited[spouse])
 				continue
-			var/list/spouse_node = BuildFamilyTree(spouse, checker_member, visited, depth + 1, FALSE, FALSE)
+			var/list/spouse_visited = visited.Copy()
+			var/list/spouse_node = BuildFamilyTree(spouse, checker_member, spouse_visited, depth + 1, FALSE, FALSE, spouse_seen)
 			if(spouse_node)
+				spouse_seen[spouse] = TRUE
 				node["spouses"] += list(spouse_node)
 
 	if(include_children)
 		for(var/datum/family_member/child as anything in root_member.get_child_members())
-			if(!child || visited[child])
+			if(!FamilyTreeShouldDisplayChild(root_member, child, visited))
 				continue
-			var/list/child_node = BuildFamilyTree(child, checker_member, visited, depth + 1, TRUE, TRUE)
+			var/list/child_node = BuildFamilyTree(child, checker_member, visited, depth + 1, TRUE, TRUE, spouse_seen)
 			if(child_node)
 				node["children"] += list(child_node)
 
+	var/list/node_spouses = node["spouses"]
+	var/list/node_children = node["children"]
+	if(root_member.phantom && !node_spouses.len && !node_children.len)
+		return null
+
 	return node
+
+/datum/heritage/proc/FamilyTreeHasUnvisitedDisplayContent(datum/family_member/member, list/visited, list/spouse_seen, include_self = TRUE, list/checking = null, depth = 0)
+	if(!member || depth > 24)
+		return FALSE
+	if(!visited)
+		visited = list()
+	if(!spouse_seen)
+		spouse_seen = list()
+	if(!checking)
+		checking = list()
+	if(checking[member])
+		return FALSE
+	checking[member] = TRUE
+
+	if(include_self && !visited[member] && !spouse_seen[member])
+		return TRUE
+
+	for(var/datum/family_member/child as anything in member.get_child_members())
+		if(!child)
+			continue
+		if(!visited[child] && !spouse_seen[child])
+			return TRUE
+		if(FamilyTreeHasUnvisitedDisplayContent(child, visited, spouse_seen, FALSE, checking, depth + 1))
+			return TRUE
+
+	for(var/datum/family_member/spouse as anything in member.get_spouse_members())
+		if(!spouse)
+			continue
+		if(!visited[spouse] && !spouse_seen[spouse])
+			return TRUE
+		if(FamilyTreeHasUnvisitedDisplayContent(spouse, visited, spouse_seen, FALSE, checking, depth + 1))
+			return TRUE
+
+	return FALSE
 
 /datum/heritage/proc/SortFamilyTreeRoots(list/candidates)
 	if(!length(candidates))
@@ -459,6 +613,24 @@
 				sorted[j] = b
 				sorted[j + 1] = a
 	return sorted
+
+/datum/heritage/proc/PrioritizeFamilyTreeRootsForChecker(list/candidates, datum/family_member/checker_member)
+	if(!length(candidates) || !checker_member)
+		return candidates
+
+	var/list/checker_roots = list()
+	var/list/other_roots = list()
+	for(var/datum/family_member/root as anything in candidates)
+		if(root == checker_member || checker_member.IsDescendantOf(root))
+			checker_roots += root
+		else
+			other_roots += root
+
+	if(!checker_roots.len)
+		return candidates
+
+	checker_roots += other_roots
+	return checker_roots
 
 /datum/heritage/proc/FamilyRootSortLess(datum/family_member/a, datum/family_member/b, list/depth_cache)
 	var/a_gen = a?.generation
@@ -503,6 +675,7 @@
 
 	var/datum/family_member/checker_member = GetMemberForPerson(checker)
 	var/list/visited = list()
+	var/list/spouse_seen = list()
 	var/list/root_candidates = list()
 
 	for(var/datum/family_member/member as anything in members)
@@ -523,16 +696,21 @@
 			root_candidates += members[1]
 
 	root_candidates = SortFamilyTreeRoots(root_candidates)
+	root_candidates = PrioritizeFamilyTreeRootsForChecker(root_candidates, checker_member)
 
 	for(var/datum/family_member/root as anything in root_candidates)
-		var/list/root_node = BuildFamilyTree(root, checker_member, visited)
+		if(spouse_seen[root] && !FamilyTreeHasUnvisitedDisplayContent(root, visited, spouse_seen, FALSE))
+			continue
+		var/list/root_node = BuildFamilyTree(root, checker_member, visited, 0, TRUE, TRUE, spouse_seen)
 		if(root_node)
 			tree_roots += list(root_node)
 
 	for(var/datum/family_member/member as anything in members)
 		if(!member?.person || visited[member])
 			continue
-		var/list/orphan_node = BuildFamilyTree(member, checker_member, visited)
+		if(spouse_seen[member] && !FamilyTreeHasUnvisitedDisplayContent(member, visited, spouse_seen, FALSE))
+			continue
+		var/list/orphan_node = BuildFamilyTree(member, checker_member, visited, 0, TRUE, TRUE, spouse_seen)
 		if(orphan_node)
 			tree_roots += list(orphan_node)
 
@@ -705,6 +883,9 @@
 		if(H && H.family_UI && H.client && H != new_fam)
 			if(new_fam in family_icons)
 				H.client.images.Add(family_icons[new_fam])
+		if(new_fam?.family_UI && new_fam.client && H && H != new_fam)
+			if(H in family_icons)
+				new_fam.client.images.Add(family_icons[H])
 
 /datum/heritage/proc/AddFamilyIcon(mob/living/carbon/human/famicon)
 	var/datum/family_member/member = GetFamilyMember(famicon)

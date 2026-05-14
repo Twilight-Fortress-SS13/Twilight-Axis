@@ -10,6 +10,7 @@
 	var/tmp/familytree_module_loaded_slot
 	var/tmp/familytree_module_loaded_path
 	var/allow_relatives_in_family = TRUE
+	var/know_your_fate = FALSE
 
 /mob/living/carbon/human
 	var/family_UI = TRUE
@@ -17,6 +18,9 @@
 	var/image/spouse_indicator
 	var/setspouse
 	var/gender_choice_pref = ANY_GENDER
+	var/species_preference_mode = "ANY"
+	var/list/preferred_species_types = list()
+	var/preferred_species_anatomy = 0
 	var/familytree_pref = FAMILY_NONE
 	var/datum/heritage/family_datum
 	var/datum/family_member/family_member_datum
@@ -29,6 +33,49 @@
 	var/tmp/familytree_setspouse_timeout_offered = FALSE
 	var/tmp/familytree_setspouse_retries = 0
 	var/allow_relatives_in_family = TRUE
+	var/know_your_fate = FALSE
+	var/tmp/list/familytree_blocked_ckeys = list()
+
+/proc/familytree_pref_mask(pref)
+	if(isnum(pref))
+		var/runtime_mode = pref & FAMILYTREE_MODE_ALL
+		if(runtime_mode)
+			return runtime_mode
+	switch(pref)
+		if(FAMILY_PARTIAL)
+			return FAMILYTREE_MODE_JOIN
+		if(FAMILY_NEWLYWED)
+			return FAMILYTREE_MODE_CREATE
+		if(FAMILY_FULL)
+			return FAMILYTREE_MODE_LEGACY_SPOUSE
+	return FAMILYTREE_MODE_DISABLED
+
+/proc/familytree_pref_enabled(pref)
+	return !!familytree_pref_mask(pref)
+
+/proc/familytree_pref_is_join(pref)
+	return !!(familytree_pref_mask(pref) & FAMILYTREE_MODE_JOIN)
+
+/proc/familytree_pref_is_join_only(pref)
+	return familytree_pref_mask(pref) == FAMILYTREE_MODE_JOIN
+
+/proc/familytree_pref_is_create(pref)
+	return !!(familytree_pref_mask(pref) & FAMILYTREE_MODE_CREATE)
+
+/proc/familytree_pref_is_legacy_spouse(pref)
+	return !!(familytree_pref_mask(pref) & FAMILYTREE_MODE_LEGACY_SPOUSE)
+
+/proc/familytree_pref_uses_relative_role(pref)
+	var/mode = familytree_pref_mask(pref)
+	return !!(mode & (FAMILYTREE_MODE_JOIN | FAMILYTREE_MODE_CREATE))
+
+/proc/familytree_sanitize_pref(pref)
+	var/mode = familytree_pref_mask(pref)
+	if(mode & FAMILYTREE_MODE_CREATE)
+		return FAMILY_NEWLYWED
+	if(mode & (FAMILYTREE_MODE_JOIN | FAMILYTREE_MODE_LEGACY_SPOUSE))
+		return FAMILY_PARTIAL
+	return FAMILY_NONE
 
 /proc/familytree_module_get_selectable_species() as /list
 	if(!GLOB.roundstart_races.len)
@@ -70,7 +117,43 @@
 
 /datum/preferences/proc/familytree_module_get_cd(slot)
 	slot = familytree_module_get_slot(slot)
-	return "/familytree_module/character[slot]"
+	return "/character[slot]"
+
+/datum/preferences/proc/familytree_module_save_key_map() as /list
+	var/static/list/key_map
+	if(!key_map)
+		key_map = list(
+			"family" = "family",
+			"gender_choice_pref" = "gender_choice_pref",
+			"setspouse" = "setspouse",
+			"species_preference_mode" = "species_preference_mode",
+			"preferred_species_types" = "preferred_species_types",
+			"preferred_species_anatomy" = "preferred_species_anatomy",
+			"polygamy_mode" = "polygamy_mode",
+			"desired_relative_role" = "desired_relative_role",
+			"allow_low_status_marriage" = "allow_low_status_marriage",
+			"allow_relatives_in_family" = "allow_relatives_in_family",
+			"know_your_fate" = "know_your_fate",
+		)
+	return key_map
+
+/datum/preferences/proc/familytree_module_read_savefile(savefile/S)
+	if(!S)
+		return FALSE
+	var/list/key_map = familytree_module_save_key_map()
+	for(var/save_key in key_map)
+		var/var_name = key_map[save_key]
+		S[save_key] >> vars[var_name]
+	return TRUE
+
+/datum/preferences/proc/familytree_module_write_savefile(savefile/S)
+	if(!S)
+		return FALSE
+	var/list/key_map = familytree_module_save_key_map()
+	for(var/save_key in key_map)
+		var/var_name = key_map[save_key]
+		WRITE_FILE(S[save_key], vars[var_name])
+	return TRUE
 
 /datum/preferences/proc/familytree_module_reset_character()
 	family = initial(family)
@@ -83,11 +166,11 @@
 	desired_relative_role = initial(desired_relative_role)
 	allow_low_status_marriage = initial(allow_low_status_marriage)
 	allow_relatives_in_family = initial(allow_relatives_in_family)
+	know_your_fate = initial(know_your_fate)
 
 /datum/preferences/proc/familytree_module_sanitize_character()
 	family = sanitize_integer(family, FAMILY_NONE, FAMILY_NEWLYWED, FAMILY_NONE)
-	if(family == FAMILY_FULL)
-		family = FAMILY_PARTIAL
+	family = familytree_sanitize_pref(family)
 	gender_choice_pref = sanitize_integer(gender_choice_pref, ANY_GENDER, DIFFERENT_GENDER, ANY_GENDER)
 	species_preference_mode = sanitize_text(species_preference_mode, "ANY")
 
@@ -126,10 +209,11 @@
 
 	polygamy_mode = sanitize_integer(polygamy_mode, POLYGAMY_DISABLED, POLYGAMY_ALLOW_BOTH, POLYGAMY_DISABLED)
 	desired_relative_role = sanitize_integer(desired_relative_role, RELATIVE_ANY, RELATIVE_SPOUSE, RELATIVE_ANY)
-	if(!(family in list(FAMILY_PARTIAL, FAMILY_NEWLYWED)))
+	if(!familytree_pref_uses_relative_role(family))
 		desired_relative_role = RELATIVE_ANY
 	allow_low_status_marriage = sanitize_integer(allow_low_status_marriage, 0, 1, 0)
 	allow_relatives_in_family = sanitize_integer(allow_relatives_in_family, 0, 1, TRUE)
+	know_your_fate = sanitize_integer(know_your_fate, 0, 1, 0)
 
 /datum/preferences/proc/familytree_module_has_enabled_customizer_entry(entry_type)
 	validate_customizer_entries()
@@ -152,17 +236,24 @@
 	if(path && fexists(path))
 		var/savefile/S = new /savefile(path)
 		if(S)
-			S.cd = familytree_module_get_cd(slot)
-			S["family"] >> family
-			S["gender_choice_pref"] >> gender_choice_pref
-			S["setspouse"] >> setspouse
-			S["species_preference_mode"] >> species_preference_mode
-			S["preferred_species_types"] >> preferred_species_types
-			S["preferred_species_anatomy"] >> preferred_species_anatomy
-			S["polygamy_mode"] >> polygamy_mode
-			S["desired_relative_role"] >> desired_relative_role
-			S["allow_low_status_marriage"] >> allow_low_status_marriage
-			S["allow_relatives_in_family"] >> allow_relatives_in_family
+			familytree_module_load_character_from_savefile(S, slot, force)
+
+	familytree_module_sanitize_character()
+	familytree_module_loaded_slot = slot
+	familytree_module_loaded_path = path
+	return TRUE
+
+/datum/preferences/proc/familytree_module_load_character_from_savefile(savefile/S, slot, force = FALSE)
+	slot = familytree_module_get_slot(slot)
+	if(!force && (familytree_module_loaded_path == path) && (familytree_module_loaded_slot == slot))
+		return TRUE
+
+	familytree_module_reset_character()
+
+	if(S)
+		S.cd = familytree_module_get_cd(slot)
+		if(S["family"])
+			familytree_module_read_savefile(S)
 
 	familytree_module_sanitize_character()
 	familytree_module_loaded_slot = slot
@@ -181,16 +272,21 @@
 		return FALSE
 
 	S.cd = familytree_module_get_cd(slot)
-	WRITE_FILE(S["family"], family)
-	WRITE_FILE(S["gender_choice_pref"], gender_choice_pref)
-	WRITE_FILE(S["setspouse"], setspouse)
-	WRITE_FILE(S["species_preference_mode"], species_preference_mode)
-	WRITE_FILE(S["preferred_species_types"], preferred_species_types)
-	WRITE_FILE(S["preferred_species_anatomy"], preferred_species_anatomy)
-	WRITE_FILE(S["polygamy_mode"], polygamy_mode)
-	WRITE_FILE(S["desired_relative_role"], desired_relative_role)
-	WRITE_FILE(S["allow_low_status_marriage"], allow_low_status_marriage)
-	WRITE_FILE(S["allow_relatives_in_family"], allow_relatives_in_family)
+	familytree_module_write_savefile(S)
+
+	familytree_module_loaded_slot = slot
+	familytree_module_loaded_path = path
+	return TRUE
+
+/datum/preferences/proc/familytree_module_save_character_to_savefile(savefile/S, slot)
+	if(!S)
+		return FALSE
+
+	slot = familytree_module_get_slot(slot)
+	familytree_module_sanitize_character()
+
+	S.cd = familytree_module_get_cd(slot)
+	familytree_module_write_savefile(S)
 
 	familytree_module_loaded_slot = slot
 	familytree_module_loaded_path = path
@@ -300,7 +396,8 @@
 		"polygamyMode" = P.polygamy_mode,
 		"desiredRelativeRole" = P.desired_relative_role,
 		"allowLowStatusMarriage" = P.allow_low_status_marriage,
-		"allowRelativesInFamily" = P.allow_relatives_in_family
+		"allowRelativesInFamily" = P.allow_relatives_in_family,
+		"knowYourFate" = P.know_your_fate
 	)
 
 	var/list/species_names = list()
@@ -322,6 +419,12 @@
 
 	switch(action)
 		if("save")
+			var/old_setspouse = null
+			var/mob/living/carbon/human/H = null
+			if(ishuman(user))
+				H = user
+				old_setspouse = SSfamilytree.familytree_get_target_name(H)
+
 			var/new_family = _ui_to_family(params["familyType"])
 
 			P.family = new_family
@@ -341,9 +444,13 @@
 			P.desired_relative_role = text2num("[params["desiredRelativeRole"]]")
 			P.allow_low_status_marriage = text2num("[params["allowLowStatusMarriage"]]")
 			P.allow_relatives_in_family = text2num("[params["allowRelativesInFamily"]]")
+			P.know_your_fate = text2num("[params["knowYourFate"]]")
 
 			P.familytree_module_sanitize_character()
 			P.familytree_module_save_character()
+			if(H)
+				SSfamilytree.load_familytree_runtime_preferences(H, P)
+				SSfamilytree.on_familytree_target_preference_changed(H, old_setspouse)
 
 			SStgui.update_uis(src)
 			return TRUE
@@ -351,10 +458,10 @@
 	return FALSE
 
 /datum/family_options/proc/_family_to_ui(val)
-	switch(val)
-		if(FAMILY_PARTIAL) return "member"
-		if(FAMILY_NEWLYWED) return "couple"
-		if(FAMILY_FULL) return "member"
+	if(familytree_pref_is_join(val) || familytree_pref_is_legacy_spouse(val))
+		return "member"
+	if(familytree_pref_is_create(val))
+		return "couple"
 	return "none"
 
 /datum/family_options/proc/_gender_to_ui(val)

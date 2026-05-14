@@ -90,6 +90,7 @@
 				icon_state = "fullpadded_down"
 			flags_inv = HIDEEARS|HIDEHAIR
 			body_parts_covered = NECK|HAIR|EARS|HEAD
+			body_parts_covered_dynamic = body_parts_covered
 			if(ishuman(user))
 				var/mob/living/carbon/H = user
 				H.update_inv_neck()
@@ -100,6 +101,7 @@
 				icon_state = "fullpadded_neck"
 			flags_inv = null
 			body_parts_covered = NECK
+			body_parts_covered_dynamic = body_parts_covered
 			if(ishuman(user))
 				var/mob/living/carbon/H = user
 				H.update_inv_neck()
@@ -225,6 +227,7 @@
 				icon_state = "chaincoif"
 			flags_inv = HIDEEARS|HIDEHAIR
 			body_parts_covered = NECK|HAIR|EARS|HEAD
+			body_parts_covered_dynamic = body_parts_covered
 			if(ishuman(user))
 				var/mob/living/carbon/H = user
 				H.update_inv_neck()
@@ -235,6 +238,7 @@
 				icon_state = "chaincoif_t"
 			flags_inv = null
 			body_parts_covered = NECK
+			body_parts_covered_dynamic = body_parts_covered
 			if(ishuman(user))
 				var/mob/living/carbon/H = user
 				H.update_inv_neck()
@@ -292,7 +296,7 @@
 
 /obj/item/clothing/neck/roguetown/gorget
 	name = "gorget"
-	desc = "A series of iron plates designed to protect the neck, traditionally atop a jacket or cuirass. While it lacks a coif's coverage, it is more-than-capable of thwarting a dagger's viscous bite."
+	desc = "A series of iron plates designed to protect the neck, traditionally atop a jacket or cuirass. While it lacks a coif's coverage, it is more-than-capable of thwarting a dagger's vicious bite."
 	icon_state = "gorget"
 	armor = ARMOR_PLATE
 	smeltresult = /obj/item/ingot/iron
@@ -463,6 +467,7 @@
 	blocksound = PLATEHIT
 
 /obj/item/clothing/neck/roguetown/psicross
+	obj_flags = CAN_BE_HIT | UNIQUE_RENAME
 	name = "psycross"
 	desc = "'With every broken bone, I swore I lived!'"
 	icon_state = "psycross"
@@ -517,7 +522,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/reform
 	name = "reformist psycross"
-	desc = "'It occured to me that our God had left us, but not our ability to endure hardship. We shall make something out of this world, I said, before we pass onto the next.'"
+	desc = "'It matters not whether Psydon is alive or has been slain by the Archenemy—for the gods, life and death do not hold the same meaning as they do for mortals, and the Almighty Father's influence on the world endures so long as there are those who believe in Him.'" //TA EDIT
 	sellprice = 0	//Heresy of the highest order. Unless...
 	icon_state = "reformistcross"
 
@@ -956,8 +961,8 @@
 	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_JINGLE_BELLS) */ // TA EDIT END
 
 /obj/item/clothing/neck/roguetown/collar/feldcollar
-	name = "feldcollar"
-	desc = "A sturdy collar made of leather, commonly worn by field workers."
+	name = "feldsher's collar"
+	desc = "Dilligence pays dividends. An errant stroke of the scalpel is all it takes to lose everything, after all."
 	icon_state = "feldcollar"
 	item_state = "feldcollar"
 	resistance_flags = FIRE_PROOF
@@ -966,8 +971,8 @@
 	body_parts_covered = NECK|FACE
 
 /obj/item/clothing/neck/roguetown/collar/surgcollar
-	name = "surgcollar"
-	desc = "A specialized collar designed for medical practitioners, with reinforced padding."
+	name = "physicker's collar"
+	desc = "Medicine is more of an art than anything else; and what better canvas to practice one's brushstrokes on, than the body itself?"
 	icon_state = "surgcollar"
 	item_state = "surgcollar"
 	resistance_flags = FIRE_PROOF
@@ -1052,6 +1057,8 @@
 	name = "gilded chain mantle"
 	desc = "The world is yours, as they say - yet, why doth the Gods still led us astray?"
 	color = "#ffc960"
+	smeltresult = /obj/item/ingot/component/matthios
+	unenchantable = TRUE
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/matthios/Initialize()
 	. = ..()
@@ -1061,14 +1068,27 @@
 
 /obj/item/clothing/neck/roguetown/bevor/zizo
 	name = "avantyne bevor"
-	desc = "The edge of reality, though unknown to many, favors Her acolytes above all else. This avantyne neckguard wards off the unenlightened's flailing."
+	desc = "An avantyne neckguard cut for the medium rite, still protective without becoming impossible to remove."
 	color = "#c1b18d"
 	chunkcolor = "#363030"
 	material_category = ARMOR_MAT_PLATE
+	armor_class = ARMOR_CLASS_MEDIUM
+	smeltresult = /obj/item/ingot/component/zizo
+	unenchantable = TRUE
 
 /obj/item/clothing/neck/roguetown/bevor/zizo/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/neck/roguetown/bevor/zizo/heavy/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/neck/roguetown/bevor/zizo/heavy/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
 
 //
 
@@ -1076,10 +1096,22 @@
 	name = "vicious gorget"
 	desc = "Curled plate, cradling the neck. Once, they were chains - now, they've allowed you to break free."
 	color = "#ddc0a7"
+	smeltresult = /obj/item/ingot/component/graggar
+	unenchantable = TRUE
 
-/obj/item/clothing/neck/roguetown/gorget/graggar/Initialize()
+/obj/item/clothing/neck/roguetown/gorget/steel/graggar/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "ARMOR", "RENDERED ASUNDER")
+
+/obj/item/clothing/neck/roguetown/gorget/steel/graggar/heavy/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/neck/roguetown/gorget/steel/graggar/heavy/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
 
 //
 

@@ -34,6 +34,7 @@ export const FamilyTreeCard = ({
 }) => {
   const accentColor = node.accentColor || DEFAULT_ACCENT;
   const details = node.details || [];
+  const parents = node.parents || [];
   const backgroundColor = node.isSelf
     ? BG_SELF
     : node.phantom
@@ -47,7 +48,7 @@ export const FamilyTreeCard = ({
         border: `1px solid ${accentColor}`,
         borderRadius: '6px',
         boxShadow: node.isSelf ? `0 0 12px ${accentColor}` : SHADOW_DEFAULT,
-        minHeight: '72px',
+        minHeight: parents.length ? '88px' : '72px',
         minWidth: isSpouse ? '132px' : '150px',
         maxWidth: '180px',
         padding: '8px 10px',
@@ -68,6 +69,11 @@ export const FamilyTreeCard = ({
       {!!node.label && (
         <Box mt={0.5} style={labelStyle}>
           {node.label}
+        </Box>
+      )}
+      {!!parents.length && (
+        <Box mt={0.5} style={detailsStyle}>
+          Parents: {parents.join(' / ')}
         </Box>
       )}
       {!!details.length && (

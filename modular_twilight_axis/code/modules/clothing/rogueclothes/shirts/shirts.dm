@@ -650,3 +650,28 @@
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
 	allowed_sex = list(MALE)
 	allowed_race = NON_DWARVEN_RACE_TYPES
+
+/obj/item/clothing/suit/roguetown/shirt/dress/etrdress3
+	name = "strapless gown"
+	desc = "Despite not actually being made of silk, the legendary expertise needed to sew this puts the quality on par."
+	body_parts_covered = CHEST|GROIN|ARMS|VITALS
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
+	icon_state = "etrdress3"
+	item_state = "etrdress3"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
+	flags_inv = HIDECROTCH|HIDEBOOB
+	allowed_sex = list(FEMALE)
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	detail_tag = "_detail"
+	boobed = FALSE
+	detail_color = CLOTHING_WHITE	
+/obj/item/clothing/suit/roguetown/shirt/dress/etrdress3/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)

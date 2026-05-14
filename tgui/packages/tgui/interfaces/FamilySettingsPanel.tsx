@@ -31,6 +31,7 @@ type FamilySettingsData = {
   desiredRelativeRole?: RelativeRole;
   allowLowStatusMarriage?: number;
   allowRelativesInFamily?: number;
+  knowYourFate?: number;
 };
 
 type BackendData = {
@@ -308,6 +309,9 @@ export const FamilySettingsPanel = () => {
   const [allowRelativesInFamily, setAllowRelativesInFamily] = useState<number>(
     () => settings?.allowRelativesInFamily ?? 1,
   );
+  const [knowYourFate, setKnowYourFate] = useState<number>(
+    () => settings?.knowYourFate ?? 0,
+  );
   const [speciesPickerOpen, setSpeciesPickerOpen] = useState(false);
   const speciesPickerRef = useRef<HTMLDivElement | null>(null);
   const didInitFromBackendRef = useRef<boolean>(!!settings);
@@ -340,6 +344,7 @@ export const FamilySettingsPanel = () => {
     setDesiredRelativeRole(settings.desiredRelativeRole ?? 0);
     setAllowLowStatusMarriage(settings.allowLowStatusMarriage ?? 0);
     setAllowRelativesInFamily(settings.allowRelativesInFamily ?? 1);
+    setKnowYourFate(settings.knowYourFate ?? 0);
     didInitFromBackendRef.current = true;
   }, [settings]);
 
@@ -385,6 +390,7 @@ export const FamilySettingsPanel = () => {
     setDesiredRelativeRole(0);
     setAllowLowStatusMarriage(0);
     setAllowRelativesInFamily(1);
+    setKnowYourFate(0);
   };
 
   const handleCancel = () => {
@@ -403,6 +409,7 @@ export const FamilySettingsPanel = () => {
     setDesiredRelativeRole(settings.desiredRelativeRole ?? 0);
     setAllowLowStatusMarriage(settings.allowLowStatusMarriage ?? 0);
     setAllowRelativesInFamily(settings.allowRelativesInFamily ?? 1);
+    setKnowYourFate(settings.knowYourFate ?? 0);
   };
 
   const handleSave = () => {
@@ -417,6 +424,7 @@ export const FamilySettingsPanel = () => {
       desiredRelativeRole: usesRelativeRole ? desiredRelativeRole : 0,
       allowLowStatusMarriage,
       allowRelativesInFamily,
+      knowYourFate,
     });
   };
 
@@ -668,6 +676,15 @@ export const FamilySettingsPanel = () => {
                           setAllowRelativesInFamily(
                             allowRelativesInFamily === 1 ? 0 : 1,
                           )
+                        }
+                      />
+                      <CheckboxRow
+                        icon="eye"
+                        label="Знать свою судьбу"
+                        tooltip="Включено: при матче вы видите расу, пол и анатомию пары; нажав «Нет», вы лишь блокируете эту пару на раунд. Выключено: «Нет» автоматически выключит вас из семейной системы."
+                        checked={knowYourFate === 1}
+                        onToggle={() =>
+                          setKnowYourFate(knowYourFate === 1 ? 0 : 1)
                         }
                       />
                     </div>

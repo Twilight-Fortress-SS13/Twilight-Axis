@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 
-	allowed_races = RACES_SHUNNED_UP		//Nobility, no construct
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)		//Nobility, no construct
 	allowed_sexes = list(MALE, FEMALE)
 	spells = list()
 	display_order = JDO_MAGICIAN
@@ -121,7 +121,7 @@
 		/obj/item/chalk
 	)
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_RICH, H, "Savings.")
+		SStreasury.grant_savings(ECONOMIC_RICH, H)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/arcane_announcement) //TA EDIT
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/shrink) //TA EDIT
 	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT

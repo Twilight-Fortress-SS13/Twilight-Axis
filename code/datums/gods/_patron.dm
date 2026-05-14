@@ -9,6 +9,8 @@ GLOBAL_LIST_EMPTY(prayers)
 /datum/patron
 	/// Name of the god
 	var/name
+	/// Common titles of the god - used for prayers
+	var/list/titles = list()
 	/// Domain of the god, such as earth, fire, water, murder etc
 	var/domain = "Bad coding practices"
 	/// Description of the god
@@ -112,13 +114,14 @@ GLOBAL_LIST_EMPTY(prayers)
 	else
 		follower.mob_timers[MT_PSYPRAY] = world.time
 
-	. = TRUE //the prayer has succeeded by this point forward
+	. = TRUE
 	GLOB.prayers |= prayer 
 	record_round_statistic(STATS_PRAYERS_MADE)
 	for(var/patron_namerus in rusgodnames)
 		var/regex/p_name = regex("([patron_namerus])", "im")
 		if(p_name.Find(prayer))
 			reward_prayer(follower)
+	return .
 
 /// The follower has somehow offended the patron and is now being punished.
 /datum/patron/proc/punish_prayer(mob/living/follower)

@@ -552,7 +552,11 @@
 /obj/item/enchantingkit/weapon/koruu_kukri/warden
 	name = "'Warden Leachwhacker' morphing elixir"
 	target_items = list(
-		/obj/item/rogueweapon/huntingknife/idagger/warden_machete
+		/obj/item/rogueweapon/huntingknife/idagger/warden_machete,
+		/obj/item/rogueweapon/huntingknife/idagger,
+		/obj/item/rogueweapon/huntingknife/idagger/steel,
+		/obj/item/rogueweapon/huntingknife/combat,
+		/obj/item/rogueweapon/huntingknife
 		)
 	result_item = /obj/item/rogueweapon/koruu/kukri/warden
 
@@ -670,6 +674,46 @@
 	)
 	result_item = /obj/item/rogueweapon/example/euthanasia
 
+/obj/item/enchantingkit/weapon/nicksonessang
+	name = "'Dark Delight' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Ssangsudo or Longsword"
+	target_items = list(
+	/obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo,
+	/obj/item/rogueweapon/sword/long)
+	result_item = /obj/item/rogueweapon/example/ssangsudo_long
+
+//more koruu stuff below
+/obj/item/enchantingkit/weapon/koruu_kukri_silver
+	name = "'Psydonic Leachwhacker' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger
+	)
+	result_item = /obj/item/rogueweapon/koruu/kukri/silver
+
+/obj/item/enchantingkit/weapon/koruu_longsword
+	name = "'Excaliber' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/etruscan)
+	result_item = /obj/item/rogueweapon/koruu/longsword
+
+/obj/item/enchantingkit/weapon/koruu_etrusc
+	name = "'Colada' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/etruscan)
+	result_item = /obj/item/rogueweapon/koruu/etrusca
+
+/obj/item/enchantingkit/weapon/koruu_judgement
+	name = "'A Durthurian Tale' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/etruscan,
+		/obj/item/rogueweapon/sword/long/judgement)
+	result_item = /obj/item/rogueweapon/koruu/judgement
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //

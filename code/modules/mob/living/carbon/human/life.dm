@@ -144,6 +144,8 @@
 			var/datum/status_effect/fire_handler/fire_stacks/divine_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks/divine)
 			var/datum/status_effect/fire_handler/fire_stacks/sunder/blessed/blessed_sunder = has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
 			if(fire_status?.stacks + sunder_status?.stacks + divine_status?.stacks + blessed_sunder?.stacks > 10)
+				if(has_status_effect(/atom/movable/screen/alert/status_effect/buff/dragonhide))
+					return ..()
 				Immobilize(30)
 				emote("firescream", TRUE)
 			else

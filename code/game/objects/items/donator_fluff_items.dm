@@ -220,6 +220,8 @@
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 
+
+// ZoeTheOrc
 /obj/item/clothing/cloak/raincloak/feather_cloak
 	name = "Shroud of the Undermaiden"
 	desc = "A fine cloak made from the feathers of Necra's servants, each gifted to a favoured child of the Lady of Veils. While it offers no physical protection, perhaps it ensures that the Undermaiden's gaze is never far from its wearer..."
@@ -237,6 +239,34 @@
 	desc = "This one will shelter me from the weather and my identity too."
 	icon_state = "feather_hood"
 	item_state = "feather_hood"
+	slot_flags = ITEM_SLOT_HEAD
+	dynamic_hair_suffix = ""
+	edelay_type = 1
+	body_parts_covered = HEAD
+	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDETAIL
+	block2add = FOV_BEHIND
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+
+/obj/item/clothing/suit/roguetown/armor/longcoat/wyrd_cloak
+	name = "Cloak of the Wyrd"
+	desc = "Sewn by ways unknown to the land, what may have been garbs fitting for royalty once now lays aged beyond measure. However, it would surely provide much needed warmth for the cold and uncaring bog..."
+	icon_state = "wyrd_cloak"
+	item_state = "wyrd_cloak"
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	armor = ARMOR_CLOTHING
+	boobed = FALSE
+	toggle_icon_state = FALSE
+	flags_inv = HIDEBOOB|HIDECROTCH
+	color = null
+	hoodtype = /obj/item/clothing/head/hooded/rainhood/wyrd_hood
+
+/obj/item/clothing/head/hooded/rainhood/wyrd_hood
+	name = "Hood of the Wyrd"
+	desc = "Heavy is the head that hides beneath this shadowy hood, for what knowledge lays inside ought to never come into the light..."
+	icon_state = "wyrd_hood"
+	item_state = "wyrd_hood"
 	slot_flags = ITEM_SLOT_HEAD
 	dynamic_hair_suffix = ""
 	edelay_type = 1
@@ -406,6 +436,36 @@
 	icon_state = "koruu_kukri_warden"
 	icon = 'icons/obj/items/donor_weapons.dmi'
 	sheathe_icon = "koruu_kukri_warden"
+
+/obj/item/rogueweapon/koruu/kukri/silver
+	name = "psydonic leachwhacker"
+	desc = "Sometimes... I still hear her voice in the darkness, when the lampterns are out. \
+	Verzeih mir, Erika."
+	icon_state = "wazia_kukri_silver"
+	icon = 'icons/obj/items/donor_weapons.dmi'
+	sheathe_icon = "wazia_kukri_silver"
+
+/obj/item/rogueweapon/koruu/longsword
+	name = "Excaliber"
+	desc = "One day...I'll craft a legendary weapon, a truly legendary sword. One that shall be known. \
+As Excaliber."
+	icon_state = "wazialong"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	sheathe_icon = "wazialong"
+
+/obj/item/rogueweapon/koruu/etrusca
+	name = "Colada"
+	desc = "The wounds received in battle bestow honor, they do not take it away..."
+	icon_state = "waziaetrusc"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	sheathe_icon = "waziaetrusc"
+
+/obj/item/rogueweapon/koruu/judgement
+	name = "A Durthurian Tale"
+	desc = "Strength Above All. To Protect What We Love."
+	icon_state = "waziajudgement"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	sheathe_icon = "waziajudgement"
 
 //DAKKEN12
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/dakken

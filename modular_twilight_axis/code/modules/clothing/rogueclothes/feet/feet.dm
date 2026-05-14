@@ -60,3 +60,13 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
 	allowed_sex = list(MALE)
 	allowed_race = NON_DWARVEN_RACE_TYPES
+
+/obj/item/clothing/shoes/roguetown/boots/armor/twilight_drow
+	name = "scourge plated boots"
+	desc = "Sabatons forged of blessed avantyne, to be donned by those who would be Her vanguard in the End of Times. Whether they actually are is another matter entirely."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	icon_state = "shadowboots"
+	item_state = "shadowboots"
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	smeltresult = /obj/item/ingot/drow

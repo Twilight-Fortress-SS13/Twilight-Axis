@@ -41,7 +41,7 @@
 	var/mob/living/carbon/human/HU = user
 	var/target_zone = HT.zone_selected
 	var/user_zone = HU.zone_selected
-	var/newcd = (BASE_RCLICK_CD - HU.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS))
+	var/newcd = (BAIT_RCLICK_CD - HU.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS))
 
 	if(HT.has_status_effect(/datum/status_effect/debuff/baited) || user.has_status_effect(/datum/status_effect/debuff/baitcd))
 		return	//We don't do anything if either of us is affected by bait statuses
@@ -64,7 +64,7 @@
 		if(guaranteed_fail)
 			to_chat(HU, span_danger("It didn't work! [HT.p_their(TRUE)] footing returned!"))
 			to_chat(HT, span_notice("I fooled [HU.p_them()]! I've regained my footing!"))
-			HU.emote("groan")
+			HU.emote("groan", forced = TRUE)
 			HU.stamina_add(HU.max_stamina * 0.2)
 			HT.bait_stacks = 0
 			return
@@ -79,6 +79,8 @@
 		if(ARMOR_CLASS_HEAVY)
 			fatiguemod = 3
 
+
+	HT.interrupt_spell_channel()
 
 	HT.apply_status_effect(/datum/status_effect/debuff/baited)
 	HT.apply_status_effect(/datum/status_effect/debuff/exposed)
@@ -228,7 +230,7 @@
 		newcd = 5 SECONDS
 		special_msg = span_warning("They need to see me for me to feint them!")
 
-	perc = CLAMP(perc, 0, 90)
+	perc = CLAMP(perc, 10, 90)
 
 	if(L.has_status_effect(/datum/status_effect/buff/clash))
 		L.remove_status_effect(/datum/status_effect/buff/clash)
@@ -247,7 +249,10 @@
 			L.changeNext_def(clamp(L.dodgetime - 2, 0, CLICK_CD_DODGE))
 			L.changeMaxDodge(-2)
 		return
-	
+
+	L.interrupt_spell_channel()
+
+
 	var/effect_to_apply = (L.mind ? /datum/status_effect/debuff/vulnerable : /datum/status_effect/debuff/exposed)
 
 	L.apply_status_effect(effect_to_apply, feintdur)

@@ -2,7 +2,7 @@
 	name = "Сonquistador Adelantado"
 	tutorial = "A fallen etruscan grandee and a hardened veteran of the Lirvas colonization. Tempered by the deadly wilds and terrors of the eastern jungles, he reclaims his lost glory through rapier and pistol, forging a path for the crown amidst gunpowder and cold steel."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = list(\
+	var/list/allowed_races = list(\
 	/datum/species/human/northern,\
 	/datum/species/aasimar,\
 	/datum/species/anthromorph,\
@@ -40,6 +40,10 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 	)
+
+/datum/advclass/mercenary/twilight_conquistador/New()
+	..()
+	forbidden_races = ALL_RACES_TYPES - allowed_races
 
 /datum/outfit/job/roguetown/mercenary/twilight_conquistador/pre_equip(mob/living/carbon/human/H)
 	..()

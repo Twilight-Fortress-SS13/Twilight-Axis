@@ -29,3 +29,34 @@ map_files = ["bridge1.dmm","bridge2.dmm","bridge3.dmm","bridge4.dmm","bridge5.dm
 directory = "_maps/twilight_axis/templates/rockhill/bridge/"
 required_map = "rockhill.dmm"
 coordinates = [145, 190, 1]
+
+# dunworld towner house
+[templates.towner_house1]
+map_files = ["Bashna.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
+required_map = "dun_world.dmm"
+coordinates = [163, 124, 2]
+
+[templates.towner_house2]
+map_files = ["Dvadoma.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
+required_map = "dun_world.dmm"
+coordinates = [124, 133, 1]
+
+[templates.towner_house3]
+map_files = ["eoradom.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
+required_map = "dun_world.dmm"
+coordinates = [156, 146, 2]
+
+[templates.towner_house4]
+map_files = ["Hunterhouse.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
+required_map = "dun_world.dmm"
+coordinates = [160, 254, 2]
+
+[templates.towner_house5]
+map_files = ["Ydvorcha.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
+required_map = "dun_world.dmm"
+coordinates = [106, 104, 2]

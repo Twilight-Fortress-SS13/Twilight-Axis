@@ -7,7 +7,7 @@
 
 	if(consort_job)
 		royal_partner_job_baselines["consort"] = list(
-			"allowed_races" = islist(consort_job.allowed_races) ? consort_job.allowed_races.Copy() : list(),
+			"forbidden_races" = islist(consort_job.forbidden_races) ? consort_job.forbidden_races.Copy() : list(),
 			"allowed_sexes" = islist(consort_job.allowed_sexes) ? consort_job.allowed_sexes.Copy() : list(),
 			"total_positions" = consort_job.total_positions,
 			"spawn_positions" = consort_job.spawn_positions,
@@ -15,7 +15,7 @@
 
 	if(suitor_job)
 		royal_partner_job_baselines["suitor"] = list(
-			"allowed_races" = islist(suitor_job.allowed_races) ? suitor_job.allowed_races.Copy() : list(),
+			"forbidden_races" = islist(suitor_job.forbidden_races) ? suitor_job.forbidden_races.Copy() : list(),
 			"allowed_sexes" = islist(suitor_job.allowed_sexes) ? suitor_job.allowed_sexes.Copy() : list(),
 			"total_positions" = suitor_job.total_positions,
 			"spawn_positions" = suitor_job.spawn_positions,
@@ -30,30 +30,26 @@
 	if(duke_forced_hetero_mode(P))
 		return "consort"
 
-	switch(P.family)
-		if(FAMILY_NEWLYWED, FAMILY_NONE)
-			return "consort"
-		if(FAMILY_PARTIAL, FAMILY_FULL)
-			return "suitor"
+	if(familytree_pref_is_join(P.family) || familytree_pref_is_legacy_spouse(P.family))
+		return "suitor"
+	if(familytree_pref_is_create(P.family) || !familytree_pref_enabled(P.family))
+		return "consort"
 
 	return "consort"
 
 /datum/controller/subsystem/familytree/proc/duke_forced_hetero_mode(datum/preferences/P)
 	if(!P)
 		return FALSE
-	if(P.family != FAMILY_NONE)
+	if(familytree_pref_enabled(P.family))
 		return FALSE
 	return allow_nobles_in_ruling_family
 
-/datum/controller/subsystem/familytree/proc/get_preference_species_type_list(datum/preferences/P) as /list
+/datum/controller/subsystem/familytree/proc/get_familytree_species_type_list(list/preferred_species_types) as /list
 	var/list/result = list()
-	if(!P)
+	if(!islist(preferred_species_types))
 		return result
 
-	if(!islist(P.preferred_species_types))
-		return result
-
-	for(var/entry in P.preferred_species_types)
+	for(var/entry in preferred_species_types)
 		var/species_type = entry
 		if(istext(species_type))
 			species_type = GLOB.species_list[species_type]
@@ -65,19 +61,23 @@
 
 	return result
 
-/datum/controller/subsystem/familytree/proc/get_royal_partner_allowed_races(mob/living/carbon/human/duke, datum/preferences/P, list/default_races) as /list
-	var/list/allowed_races = islist(default_races) ? default_races.Copy() : list()
+/datum/controller/subsystem/familytree/proc/get_preference_species_type_list(datum/preferences/P) as /list
 	if(!P)
-		return allowed_races
+		return list()
+	return get_familytree_species_type_list(P.preferred_species_types)
 
-	var/duke_species_type = duke?.client?.prefs?.pref_species?.type
+/datum/controller/subsystem/familytree/proc/get_royal_partner_allowed_races(mob/living/carbon/human/duke, datum/preferences/P) as /list
+	if(!P)
+		return list()
+
+	var/duke_species_type = duke?.dna?.species?.type
 	if(!ispath(duke_species_type, /datum/species))
-		duke_species_type = duke?.dna?.species?.type
+		duke_species_type = P?.pref_species?.type
 
 	if(duke_forced_hetero_mode(P))
 		if(ispath(duke_species_type, /datum/species))
 			return list(duke_species_type)
-		return allowed_races
+		return list()
 
 	switch(P.species_preference_mode)
 		if("SAME_TYPE")
@@ -88,16 +88,16 @@
 			if(preferred_species.len)
 				return preferred_species
 
-	return allowed_races
+	return list()
 
 /datum/controller/subsystem/familytree/proc/get_royal_partner_allowed_sexes(mob/living/carbon/human/duke, datum/preferences/P, list/default_sexes) as /list
 	var/list/allowed_sexes = islist(default_sexes) ? default_sexes.Copy() : list()
 	if(!P)
 		return allowed_sexes
 
-	var/duke_body_type = duke?.client?.prefs?.gender
+	var/duke_body_type = duke?.gender
 	if(duke_body_type != MALE && duke_body_type != FEMALE)
-		duke_body_type = duke?.gender
+		duke_body_type = P?.gender
 
 	if(duke_forced_hetero_mode(P))
 		if(duke_body_type == MALE)
@@ -118,6 +118,16 @@
 
 	return allowed_sexes
 
+/datum/controller/subsystem/familytree/proc/compute_royal_forbidden_races(list/baseline_forbidden, list/allowed_races) as /list
+	var/list/result = islist(baseline_forbidden) ? baseline_forbidden.Copy() : list()
+	if(!islist(allowed_races) || !allowed_races.len)
+		return result
+	var/list/all_selectable = familytree_module_get_selectable_species_types()
+	for(var/species_type in all_selectable)
+		if(!(species_type in allowed_races))
+			result |= species_type
+	return result
+
 /datum/controller/subsystem/familytree/proc/apply_royal_partner_job_state(job_key, enabled, open_slots = 0, list/allowed_races, list/allowed_sexes)
 	if(!ensure_royal_partner_job_baselines())
 		return FALSE
@@ -133,15 +143,15 @@
 	if(!job || !baseline)
 		return FALSE
 
-	var/list/baseline_allowed_races = baseline["allowed_races"]
+	var/list/baseline_forbidden_races = baseline["forbidden_races"]
 	var/list/baseline_allowed_sexes = baseline["allowed_sexes"]
-	job.allowed_races = islist(baseline_allowed_races) ? baseline_allowed_races.Copy() : list()
+	job.forbidden_races = islist(baseline_forbidden_races) ? baseline_forbidden_races.Copy() : list()
 	job.allowed_sexes = islist(baseline_allowed_sexes) ? baseline_allowed_sexes.Copy() : list()
 	job.total_positions = baseline["total_positions"]
 	job.spawn_positions = baseline["spawn_positions"]
 
 	if(enabled)
-		job.allowed_races = islist(allowed_races) ? allowed_races.Copy() : list()
+		job.forbidden_races = compute_royal_forbidden_races(baseline_forbidden_races, allowed_races)
 		job.allowed_sexes = islist(allowed_sexes) ? allowed_sexes.Copy() : list()
 		job.total_positions = open_slots
 		job.spawn_positions = open_slots
@@ -177,7 +187,7 @@
 	if(current_royal_partner_owner && current_royal_partner_owner != duke)
 		return FALSE
 
-	P.familytree_module_load_character()
+	load_familytree_runtime_preferences(duke, P)
 
 	var/mode = get_royal_partner_mode_from_preferences(P)
 	var/list/consort_baseline = royal_partner_job_baselines["consort"]
@@ -185,9 +195,9 @@
 	if(!consort_baseline || !suitor_baseline)
 		return FALSE
 
-	var/list/consort_allowed_races = get_royal_partner_allowed_races(duke, P, consort_baseline["allowed_races"])
+	var/list/consort_allowed_races = get_royal_partner_allowed_races(duke, P)
 	var/list/consort_allowed_sexes = get_royal_partner_allowed_sexes(duke, P, consort_baseline["allowed_sexes"])
-	var/list/suitor_allowed_races = get_royal_partner_allowed_races(duke, P, suitor_baseline["allowed_races"])
+	var/list/suitor_allowed_races = get_royal_partner_allowed_races(duke, P)
 	var/list/suitor_allowed_sexes = get_royal_partner_allowed_sexes(duke, P, suitor_baseline["allowed_sexes"])
 
 	switch(mode)
@@ -212,15 +222,15 @@
 	current_royal_partner_owner = duke
 	current_royal_partner_mode = mode
 	current_royal_partner_snapshot = list(
-		"family" = P.family,
-		"duke_gender" = duke.client?.prefs?.gender,
-		"duke_pronouns" = duke.client?.prefs?.pronouns,
-		"duke_species_type" = duke.client?.prefs?.pref_species?.type,
+		"family" = duke.familytree_pref,
+		"duke_gender" = duke.gender,
+		"duke_pronouns" = duke.pronouns,
+		"duke_species_type" = duke.dna?.species?.type,
 		"gender_choice_pref" = effective_gender_pref,
 		"species_preference_mode" = effective_species_mode,
-		"preferred_species_types" = islist(P.preferred_species_types) ? P.preferred_species_types.Copy() : list(),
+		"preferred_species_types" = islist(duke.preferred_species_types) ? duke.preferred_species_types.Copy() : list(),
 		"preferred_species_anatomy" = effective_anatomy,
-		"setspouse" = P.setspouse,
+		"setspouse" = duke.setspouse,
 	)
 	return TRUE
 
@@ -322,6 +332,9 @@
 		return FALSE
 
 	var/datum/preferences/P = C.prefs
+	var/datum/job/job = resolve_job_datum(role_or_job)
+	if(job?.title)
+		P = C.prefs.get_job_prefs(job.title)
 	if(!royal_partner_species_match(P))
 		return FALSE
 	if(!royal_partner_gender_match(P))
@@ -380,7 +393,7 @@
 	if(!H || QDELETED(H) || H.family_datum)
 		return
 	H.familytree_assignment_scheduled = FALSE
-	if(H.familytree_pref != FAMILY_NONE)
+	if(familytree_pref_enabled(H.familytree_pref))
 		var/timer = rand(1, 10)
 		ftlog("ROYAL HAND FALLBACK: [H.real_name] normal pref=[H.familytree_pref] timer=[timer]s reason=[reason]")
 		H.familytree_assignment_scheduled = TRUE

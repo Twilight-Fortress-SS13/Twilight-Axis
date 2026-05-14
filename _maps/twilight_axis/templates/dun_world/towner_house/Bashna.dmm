@@ -1,0 +1,370 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/machinery/light/rogue/candle/l{
+	pixel_x = 32;
+	pixel_y = 0
+	},
+/obj/structure/fluff/wallclock/l{
+	pixel_x = -1;
+	pixel_y = 32
+	},
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"c" = (
+/obj/structure/chair/bench/coucha/r,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"d" = (
+/turf/closed/wall/mineral/rogue/stone,
+/area/rogue/indoors/town)
+"e" = (
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"f" = (
+/turf/closed/wall/mineral/rogue/stone/moss,
+/area/rogue/indoors/town)
+"g" = (
+/obj/structure/table/wood/poor,
+/obj/item/reagent_containers/glass/bucket/pot{
+	pixel_x = 0;
+	pixel_y = 10
+	},
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"h" = (
+/obj/structure/table/wood/long_table,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"i" = (
+/turf/closed/wall/mineral/rogue/wooddark/window,
+/area/rogue/indoors/town)
+"j" = (
+/obj/machinery/light/rogue/candle/r,
+/obj/structure/chair/stool/rogue,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"k" = (
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"l" = (
+/obj/machinery/light/rogue/oven/south,
+/obj/structure/table/wood/long_table/right,
+/obj/item/cooking/platter{
+	pixel_x = -1;
+	pixel_y = 2
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"m" = (
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/town)
+"n" = (
+/obj/machinery/light/rogue/candle/l,
+/obj/structure/closet/crate/chest/neu,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"o" = (
+/obj/machinery/light/rogue/candle/l{
+	pixel_x = 33;
+	pixel_y = -1
+	},
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"u" = (
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"x" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"z" = (
+/obj/structure/fluff/railing/border{
+	dir = 5
+	},
+/obj/structure/fermentation_keg/water,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"A" = (
+/obj/structure/fluff/railing/border{
+	dir = 9
+	},
+/obj/structure/rack/rogue/shelf/biggest{
+	pixel_x = 0;
+	pixel_y = 0
+	},
+/obj/item/millstone{
+	pixel_x = -4;
+	pixel_y = 16
+	},
+/obj/item/flint{
+	pixel_x = 8;
+	pixel_y = 2
+	},
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"C" = (
+/obj/structure/closet/crate/drawer,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"D" = (
+/obj/machinery/tanningrack,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"E" = (
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/town)
+"G" = (
+/obj/structure/fluff/littlebanners/bluewhite,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/town)
+"H" = (
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"I" = (
+/obj/structure/mineral_door/wood/towner/generic,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"J" = (
+/obj/structure/ladder,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"M" = (
+/obj/structure/table/wood/long_table/right,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"N" = (
+/obj/structure/table/wood/long_table,
+/obj/machinery/light/rogue/candle/l,
+/obj/item/kitchen/rollingpin{
+	pixel_x = -5;
+	pixel_y = 2
+	},
+/obj/item/rogueweapon/huntingknife/chefknife{
+	pixel_y = 4;
+	pixel_x = 4
+	},
+/obj/structure/rack/rogue/shelf,
+/obj/item/reagent_containers/glass/bowl{
+	pixel_x = -7;
+	pixel_y = 37
+	},
+/obj/item/reagent_containers/glass/bowl{
+	pixel_x = 7;
+	pixel_y = 37
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"O" = (
+/obj/structure/chair/bench/coucha,
+/obj/effect/decal/carpet/kover_black{
+	pixel_x = 16;
+	pixel_y = -9
+	},
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"Q" = (
+/obj/structure/closet/crate/roguecloset/inn,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"S" = (
+/obj/machinery/light/rogue/torchholder/r,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/town)
+"T" = (
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"U" = (
+/obj/item/candle/yellow{
+	pixel_x = 0;
+	pixel_y = 12
+	},
+/obj/item/candle/yellow{
+	pixel_x = -7;
+	pixel_y = 17
+	},
+/obj/structure/table/wood/poor,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"V" = (
+/obj/structure/table/wood/poor,
+/obj/item/kitchen/spoon{
+	pixel_x = -11;
+	pixel_y = 2
+	},
+/obj/item/kitchen/fork{
+	pixel_x = -3;
+	pixel_y = 4
+	},
+/obj/item/reagent_containers/glass/cup/wooden{
+	pixel_x = 9;
+	pixel_y = 1
+	},
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"W" = (
+/obj/structure/bed/rogue/inn/double,
+/obj/item/bedsheet/rogue/fabric_double,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"X" = (
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/rtfield)
+"Y" = (
+/obj/machinery/light/rogue/hearth,
+/obj/item/cooking/pan,
+/obj/structure/rack/rogue/shelf,
+/obj/item/reagent_containers/glass/cup{
+	pixel_x = -6;
+	pixel_y = 39
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+
+(1,1,1) = {"
+E
+E
+S
+G
+S
+E
+E
+"}
+(2,1,1) = {"
+E
+f
+d
+I
+d
+d
+m
+"}
+(3,1,1) = {"
+f
+f
+z
+T
+D
+d
+d
+"}
+(4,1,1) = {"
+f
+N
+k
+T
+T
+n
+d
+"}
+(5,1,1) = {"
+f
+l
+k
+J
+T
+U
+f
+"}
+(6,1,1) = {"
+d
+Y
+k
+T
+T
+j
+i
+"}
+(7,1,1) = {"
+d
+d
+A
+g
+V
+f
+f
+"}
+(8,1,1) = {"
+E
+d
+d
+d
+i
+f
+X
+"}
+
+(1,1,2) = {"
+u
+u
+u
+u
+u
+u
+u
+"}
+(2,1,2) = {"
+u
+f
+i
+d
+i
+f
+u
+"}
+(3,1,2) = {"
+f
+f
+x
+T
+e
+f
+f
+"}
+(4,1,2) = {"
+f
+O
+h
+T
+e
+H
+f
+"}
+(5,1,2) = {"
+f
+c
+M
+J
+T
+T
+d
+"}
+(6,1,2) = {"
+d
+a
+e
+e
+e
+o
+d
+"}
+(7,1,2) = {"
+d
+d
+C
+W
+Q
+d
+d
+"}
+(8,1,2) = {"
+u
+d
+i
+d
+i
+d
+u
+"}

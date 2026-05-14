@@ -50,21 +50,33 @@
 	if(!C || QDELETED(C))
 		return FALSE
 
-	var/mob/living/carbon/human/H = C.owner?.get_effect_mob()
-	if(!istype(H))
+	if(!C.do_knot_action)
 		return FALSE
 
-	var/datum/erp_sex_organ/penis/P = null
-	if(istype(L.init_organ, /datum/erp_sex_organ/penis))
-		P = L.init_organ
-	else if(istype(L.target_organ, /datum/erp_sex_organ/penis))
-		P = L.target_organ
-
-	if(!P)
+	if(!L.action)
 		return FALSE
 
-	if(!P.have_knot)
+	if(L.action.has_action_tag("testicles"))
 		return FALSE
 
-	C.knot_d?.get_penis_knot_ui_state(H)
-	return C.do_knot_action
+	if(L.action.has_action_tag("inject_outside_only"))
+		return FALSE
+
+	if(!istype(L.init_organ, /datum/erp_sex_organ/penis))
+		return FALSE
+
+	var/datum/erp_sex_organ/penis/P = L.init_organ
+	if(!P || !P.have_knot)
+		return FALSE
+
+	if(!L.target_organ || QDELETED(L.target_organ))
+		return FALSE
+
+	if(!(L.target_organ.erp_organ_type in list(
+		SEX_ORGAN_VAGINA,
+		SEX_ORGAN_ANUS,
+		SEX_ORGAN_MOUTH
+	)))
+		return FALSE
+
+	return TRUE

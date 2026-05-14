@@ -162,7 +162,7 @@
 	var/spread_num = 10
 	var/damfactor = 1
 	var/critfactor = 1
-	var/npcdamfactor = 1.3
+	var/npcdamfactor = 2
 	var/reloaded = FALSE
 	var/silenced = FALSE
 	var/load_time = 50
@@ -837,7 +837,7 @@
 	advanced_icon_r = 'modular_twilight_axis/firearms/icons/handgonne/handgonne_r.dmi'
 	advanced_icon_f	= 'modular_twilight_axis/firearms/icons/handgonne/handgonne_f.dmi'
 	advanced_icon_s = 'modular_twilight_axis/firearms/icons/handgonne/handgonne_s.dmi'
-	npcdamfactor = 1
+	npcdamfactor = 3
 
 /obj/item/ammo_box/magazine/internal/twilight_firearm/handgonne
 	name = "handgonne internal magazine"
@@ -918,7 +918,7 @@
 	smeltresult = /obj/item/ingot/iron
 	damfactor = 0.7
 	critfactor = 0.3
-	npcdamfactor = 2.5
+	npcdamfactor = 4
 	effective_range = 3
 	match_delay = 4
 
@@ -946,7 +946,7 @@
 	pixel_y = 0
 	pixel_x = 0
 	damfactor = 0.8
-	npcdamfactor = 1.5
+	npcdamfactor = 2
 	mag_type = /obj/item/ammo_box/magazine/internal/twilight_firearm/mortar
 	cartridge_wording = "cannonball"
 	smeltresult = /obj/item/ingot/bronze
@@ -1003,7 +1003,7 @@
 	desc = "Довольно удобный вариант колесцовой аркебузы со штыком, довольно тонким и длинным дабы использовать его как копьё. Удлинённый ствол позволяет стрелять на большие расстояния, но забирает добротную часть убойной силы у пули. Частый выбор у знати."
 	damfactor = 0.7
 	critfactor = 0.4
-	npcdamfactor = 2.7
+	npcdamfactor = 4
 	effective_range = 4
 	wdefense = 5
 	walking_stick = FALSE

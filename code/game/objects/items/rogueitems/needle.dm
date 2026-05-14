@@ -1,6 +1,10 @@
-#define SEW_HP_EXP_NORMALIZER 600
-#define SEW_EXP_PER_STEP 0.05
-#define SEW_EXP_FINISH 2.5
+#define SEW_HP_EXP_NORMALIZER 100
+// How much EXP per sewing action per intelligence
+// 0.6 EXP at 10 INT
+#define SEW_EXP_PER_STEP 0.06
+// How much EXP per 100 sew threshold fixed per intelligence
+// 7.5 EXP at 10 INT for 100 sew treshold
+#define SEW_EXP_FINISH 0.75
 
 /obj/item/needle
 	name = "needle"
@@ -138,7 +142,7 @@
 			// The more knowlegeable we are the less chance we damage the object
 			var/failed = prob(BASE_FAIL_CHANCE - (skill * FAIL_REDUCTION_PER_LEVEL))
 			var/sewtime = max(SEW_MIN_TIME, BASE_SEW_TIME - (SEW_TIME_REDUCTION_PER_LEVEL * skill))
-			if(HAS_TRAIT(user, TRAIT_SQUIRE_REPAIR))
+			if(HAS_TRAIT(user, TRAIT_SQUIRE_REPAIR) || HAS_TRAIT(user, TRAIT_SELF_SUSTENANCE))
 				failed = FALSE // Make sure they can't fail but let them suffer sewtime
 			if(!do_after(user, sewtime, target = I))
 				return
@@ -218,8 +222,6 @@
 				sewing_start_delay = 1 SECONDS
 		if(!do_after(doctor, sewing_start_delay, target = patient))
 			break
-		if(doctor.mind)
-			doctor.mind.add_sleep_experience(/datum/skill/misc/medicine, doctor.STAINT * SEW_EXP_PER_STEP)
 		playsound(loc, 'sound/foley/sewflesh.ogg', 100, TRUE, -2)
 		target_wound.sew_progress = min(target_wound.sew_progress + moveup, target_wound.sew_threshold)
 		var/bleedreduction = max((0.5 * medskill), 0.5)
@@ -242,6 +244,8 @@
 			if(dynwound.is_armor_maxed)
 				dynwound.is_armor_maxed = FALSE
 		if(target_wound.sew_progress < target_wound.sew_threshold)
+			if(doctor.mind)
+				doctor.mind.add_sleep_experience(/datum/skill/misc/medicine, doctor.STAINT * SEW_EXP_PER_STEP)
 			continue
 		if(doctor.mind)
 			var/exp_scale = target_wound.sew_threshold / SEW_HP_EXP_NORMALIZER

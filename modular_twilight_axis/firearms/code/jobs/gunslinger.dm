@@ -2,7 +2,6 @@
 	name = "Gunslinger"
 	tutorial = "As gunpowder becomes more widespread accross Psydonia, so do the Gunslingers - those who earn their living through their skill with those advanced weapons. Excelling both with your pistol and your trusty saber, you count yourself as one of these fine gentlemen, travelling the land with but a gun in your hand."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_gunslinger
 	maximum_possible_slots = 2
 	min_pq = 25 // Все мерки в данный момент с 25 открываются

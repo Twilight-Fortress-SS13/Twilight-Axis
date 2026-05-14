@@ -926,8 +926,13 @@
 		if(mind)
 			if(admin_revive)
 				mind.remove_antag_datum(/datum/antagonist/zombie)
-			for(var/obj/effect/proc_holder/spell/spell as anything in mind.spell_list)
-				spell.action?.build_all_button_icons()
+			for(var/spell as anything in mind.spell_list)
+				var/obj/effect/proc_holder/spell/newspell = spell
+				var/datum/action/cooldown/spell/oldspell = spell
+				if(istype(newspell))
+					newspell.action?.build_all_button_icons()
+				else if (istype(oldspell))
+					oldspell.build_all_button_icons()
 			// Reapply arcyne momentum if this mind had it before death
 			if(mind.has_arcyne_momentum && !has_status_effect(/datum/status_effect/buff/arcyne_momentum))
 				apply_status_effect(/datum/status_effect/buff/arcyne_momentum)
@@ -1267,6 +1272,25 @@
 /mob/living/stop_attack(message = FALSE)
 	..()
 	update_charging_movespeed()
+
+/// Cancels a spell currently being channeled, covering both the old proc_holder system
+/// (which sets client.charging during mouse-hold) and the new spell_cooldown datum system
+/// (tracked via /mob/channeling_spell set in on_start_charge).
+/// Returns TRUE if a channel was actually interrupted.
+/mob/living/proc/interrupt_spell_channel()
+	. = FALSE
+	if(channeling_spell)
+		channeling_spell.cancel_casting()
+		// before_cast drives non-click charge spells through do_after; cancel_casting alone
+		// sets currently_charging=FALSE but the do_after loop only breaks on user.doing=FALSE
+		// or movement, so we need to explicitly break it.
+		stop_all_doing()
+		. = TRUE
+	if(client?.charging && used_intent?.tranged && !used_intent.tshield)
+		stop_attack()
+		. = TRUE
+	if(.)
+		to_chat(src, span_danger("My spell is disrupted!"))
 
 /mob/proc/resist_grab(moving_resist)
 	return TRUE //returning 0 means we successfully broke free

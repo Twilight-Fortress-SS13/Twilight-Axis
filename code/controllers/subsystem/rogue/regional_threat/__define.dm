@@ -2,8 +2,15 @@
 #define AMBUSH_REGION_COOLDOWN (5 MINUTES)
 
 /// Fraction of the latent_ambush pool spent as budget per ambush.
-/// 0.03 = 3% -> ~33 solo ambushes to drain a region from full.
-#define AMBUSH_BUDGET_PCT 0.03
+/// Paired with 1.5x region max_ambush so ambush size at full fill matches the old 3% model,
+/// but there is more pool depth to drain before a region is cleared.
+#define AMBUSH_BUDGET_PCT_REGULAR 0.03
+
+/// Safe regions have proportionally lower budget so that they can still spawn some ambushes without needing to adjust the max_ambush downward.
+#define AMBUSH_BUDGET_PCT_SAFE_REGION 0.02
+
+/// Backwards-compatible default budget percentage for older TA code paths.
+#define AMBUSH_BUDGET_PCT AMBUSH_BUDGET_PCT_REGULAR
 
 /// Minimum budget (in TP) for the signal horn's budget_floor parameter.
 /// budget_floor of N guarantees at least (N * AMBUSH_BUDGET_FLOOR_UNIT) TP budget.

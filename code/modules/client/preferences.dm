@@ -69,6 +69,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/preferred_map = null
 	var/pda_style = MONO
 	var/pda_color = "#808000"
+	var/topjob = null
 
 	var/uses_glasses_colour = 0
 
@@ -380,6 +381,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	reset_descriptors()
 	virtue_origin = new pref_species.origin_default
 	taur_type = null
+	var/datum/charflaw/no_flaw = new /datum/charflaw/noflaw()
+	charflaws = list(no_flaw)
 
 #define APPEARANCE_CATEGORY_COLUMN "<td valign='top' width='14%'>"
 #define MAX_MUTANT_ROWS 4
@@ -1152,7 +1155,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					prefUpperLevel = 4
 					prefLowerLevel = 2
 					var/mob/dead/new_player/P = user
-					if(istype(P)) P.topjob = job.title
+					if(istype(P))
+						P.topjob = job.title
+						topjob = job.title
 				if(JP_MEDIUM)
 					prefLevelLabel = "Medium"
 					prefLevelColor = "green"
@@ -1582,7 +1587,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			for(var/key in cf_list)
 				if(cf_list[key] == /datum/charflaw/noflaw)
 					cf_list.Remove(key)
-					break
+				else
+					var/datum/charflaw/cf = cf_list[key]
+					cf = new cf()
+					if(length(cf.restricted_species) && (pref_species.type in cf.restricted_species))
+						cf_list.Remove(key)
 
 			for(var/datum/charflaw/cf in charflaws)
 				for(var/key in cf_list)
@@ -3050,10 +3059,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						if(S)
 							for(var/i=1, i<=max_save_slots, i++)
 								var/name
+								var/suffix
 								S.cd = "/character[i]"
 								S["real_name"] >> name
+								S["topjob"] >> suffix
 								if(!name)
 									name = "Slot[i]"
+								if(suffix)
+									name += " — [suffix]"
 								choices[name] = i
 					var/choice = tgui_input_list(user, "CHOOSE A HERO","ROGUETOWN", choices)
 					if(choice)
@@ -3388,8 +3401,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 /datum/preferences/proc/LorePopup(mob/user)
 	if(!user || !user.client)
 		return
-	var/list/dat = list()
 	var/datum/browser/noclose/popup  = new(user, "lore_primer", "<div align='center'>Lore Primer</div>", 650, 900)
-	dat += GLOB.roleplay_readme
-	popup.set_content(dat.Join())
+	popup.set_content(build_lore_primer_content())
 	popup.open(FALSE)

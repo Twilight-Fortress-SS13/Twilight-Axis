@@ -152,6 +152,31 @@
 			else
 				. += span_notice("A noble!")
 
+		if(HAS_TRAIT(src, TRAIT_RESIDENT))
+			. += span_notice("A chartered resident.")
+
+		if(HAS_TRAIT(src, TRAIT_DEBTOR))
+			// Defaulted-loan debtor: a serious civic brand. Authority roles see the full banner.
+			if(ishuman(user))
+				var/mob/living/carbon/human/viewer = user
+				if((viewer.job in GLOB.garrison_positions) || (viewer.job in GLOB.retinue_positions) || (viewer.job in GLOB.courtier_positions) || (viewer.job in GLOB.noble_positions))
+					. += span_userdanger("DEFAULT DEBTOR OF THE CROWN!")
+
+		if(HAS_TRAIT(src, TRAIT_ARREARS))
+			// Poll-tax arrears: a soft mark. Authority roles can read it off a subject.
+			if(ishuman(user))
+				var/mob/living/carbon/human/viewer = user
+				if((viewer.job in GLOB.garrison_positions) || (viewer.job in GLOB.retinue_positions) || (viewer.job in GLOB.courtier_positions) || (viewer.job in GLOB.noble_positions))
+					. += span_smallred("Destitute..")
+
+		if(src.job in GLOB.church_positions)
+			. += span_notice("A member of the Church of the Ten.")
+		else if(HAS_TRAIT(src, TRAIT_DECLARED_BENEFACTOR))
+			. += span_notice("A benefactor of the Church of the Ten.")
+
+		if(src.job in GLOB.inquisition_positions)
+			. += span_notice("A member of the Holy Otavan Inquisition.")
+
 		if((HAS_TRAIT(src, TRAIT_OUTLANDER) && !HAS_TRAIT(user, TRAIT_OUTLANDER)) || (HAS_TRAIT(user, TRAIT_BLACKOAK) && !(src.dna.species.name == "Elf" || src.dna.species.name == "Dark Elf" || src.dna.species.name == "Half Elf"))) //TA EDIT
 			. += span_phobia("A foreigner...") //TA EDIT
 
@@ -159,35 +184,6 @@
 		if(has_status_effect(/datum/status_effect/knot_tied))
 			. += span_warning("A knot is locked inside them. They're being pulled around like a pet.")
 
-		// Facial/Creampie effect message
-		// var/datum/status_effect/facial/facial = has_status_effect(/datum/status_effect/facial)
-		// var/datum/status_effect/facial/internal/creampie = null
-		// if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
-		// 	creampie = has_status_effect(/datum/status_effect/facial/internal)
-		// if(facial && creampie)
-		// 	var/facial_wet_or_dry = !facial?.has_dried_up ? "glazed" : "plastered"
-		// 	var/creampie_wet_or_dry = !creampie?.has_dried_up ? "dripping out" : "stained with"
-		// 	var/we_wet_or_dry = facial?.has_dried_up && creampie?.has_dried_up ? "dried cum" : "cum" // only show dried if both status are set to dry
-		// 	if(user != src && isliving(user))
-		// 		var/mob/living/L = user
-		// 		. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!") : span_warning("[m1] covered in something glossy!")
-		// 	else
-		// 		. += span_aiprivradio("[m1] [facial_wet_or_dry] and [creampie_wet_or_dry] [we_wet_or_dry]!")
-		// else if(facial)
-		// 	var/wet_or_dry = !facial?.has_dried_up ? "glazed with cum" : "plastered with dried cum"
-		// 	if(user != src && isliving(user))
-		// 		var/mob/living/L = user
-		// 		. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] smeared with something glossy!")
-		// 	else
-		// 		. += span_aiprivradio("[m1] [wet_or_dry]!")
-		// else if(creampie)
-		// 	var/wet_or_dry = !creampie?.has_dried_up ? "dripping out cum" : "stained with dried cum"
-		// 	if(user != src && isliving(user))
-		// 		var/mob/living/L = user
-		// 		. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [wet_or_dry]!") : span_warning("[m1] letting out some glossy stuff!")
-		// 	else
-		// 		. += span_aiprivradio("[m1] [wet_or_dry]!")
-		
 		// ERP: coating + active partner (hidden-mode aware)
 		var/datum/erp_controller/erpC = SSerp?.get_controller_for(src)
 		var/erp_hidden = erpC?.hidden_mode
@@ -217,7 +213,7 @@
 
 			var/datum/status_effect/erp_coating/face/B = has_status_effect(/datum/status_effect/erp_coating/face)
 			if(G)
-				var/txt = !G.has_dried_up ? "имеет влажные стекающие следы выделений на паху" : "имеет влажные подсхощие следы выделений на паху"
+				var/txt = !G.has_dried_up ? "имеет влажные стекающие следы выделений на паху" : "имеет влажные подсыхающие следы выделений на паху"
 				if(user != src && isliving(user))
 					var/mob/living/L = user
 					. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] выглядит грязно в районе паха.")
@@ -225,7 +221,7 @@
 					. += span_aiprivradio("[m1] [txt].")
 
 			if(CH)
-				var/txt = !CH.has_dried_up ? "имеет влажные следы выделений на груди" : "имеет подсхохшие выделения на груди"
+				var/txt = !CH.has_dried_up ? "имеет влажные следы выделений на груди" : "имеет подсохшие выделения на груди"
 				if(user != src && isliving(user))
 					var/mob/living/L = user
 					. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] имеет чем-то запачканную грудь.")
@@ -397,13 +393,11 @@
 		if(item)
 			. += span_notice("You get the feeling [src]'s most valuable possession is \a [item].")
 		var/mammonsonperson = get_mammons_in_atom(src)
-		var/mammonsinbank = SStreasury.bank_accounts[src]
-		if(isnull(mammonsinbank))
-			mammonsinbank = 0
+		var/mammonsinbank = SStreasury.get_balance(src)
 		var/totalvalue = mammonsonperson + mammonsinbank
 		if(totalvalue && HAS_TRAIT(user, TRAIT_GILDED_SIGHT))
 			. += span_notice("They carry [mammonsonperson] mammons, with [mammonsinbank] stored away, totaling [totalvalue].")
-		else if(mammonsonperson && mammonsonperson >= 200)
+		else if(mammonsonperson && mammonsonperson >= 100) // worth a whole mission board!
 			. += span_notice("They carry about [mammonsonperson] mammons with them.")
 	var/obscured = check_obscured_slots()
 	var/skipface = (wear_mask && (wear_mask.flags_inv & HIDEFACE)) || (head && (head.flags_inv & HIDEFACE))
@@ -859,6 +853,10 @@
 				if(91.01 to INFINITY)
 					msg += "[m1] a shitfaced, slobbering wreck."
 
+			//Deadened
+			if(HAS_TRAIT(user, TRAIT_EMPATH) && HAS_TRAIT(src, TRAIT_DETACHED))
+				msg += "[m1] completely hollow inside, radiating a deep, tragic silence."
+
 			//Stress
 			var/stress = get_stress_amount()
 			if(HAS_TRAIT(user, TRAIT_EMPATH))
@@ -1074,7 +1072,10 @@
 						if(I.associated_skill)
 							src_skill = I.associated_skill
 					var/skilldiff = user.get_skill_level(user_skill) - get_skill_level(src_skill)
-					. += "<font size = 3><i>[skilldiff_report(skilldiff)] in my wielded skill than they are in theirs.</i></font>"
+					if(!skilldiff)
+						. += "<font size = 3><i>[skilldiff_report(skilldiff)] in our wielded skills.</i></font>"
+					else
+						. += "<font size = 3><i>[skilldiff_report(skilldiff)] in my wielded skill than they are in theirs.</i></font>"
 
 	/// Rumours & Gossip
 //	if(length(rumour) || length(noble_gossip)) TA EDIT START

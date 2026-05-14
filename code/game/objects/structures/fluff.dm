@@ -139,6 +139,10 @@
 		dest = src.loc
 	if(!dest)
 		return
+	if(dest.is_blocked_turf(source_atom = A))
+		if(ismob(A))
+			to_chat(A, span_warning("Something is blocking the way."))
+		return
 	. = A.forceMove(dest)
 
 /obj/structure/fluff/railing/Initialize()
@@ -711,7 +715,7 @@
 
 /obj/structure/fluff/signage
 	name = "sign"
-	desc = ""
+	desc = "It's a sign! It seems to be pointing somewhere."
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "shitsign"
 	density = TRUE
@@ -730,11 +734,18 @@
 	else
 		. += "It says \"Twilight Axis\""
 
+/obj/structure/fluff/sign
+	icon_state = "signwrote"
+	name = "sign"
+	desc = "It's a sign! These usually have words carved into them."
+	icon = 'icons/roguetown/misc/structure.dmi'
+
 /obj/structure/fluff/buysign
 	icon_state = "signwrote"
 	name = "sign"
 	desc = ""
 	icon = 'icons/roguetown/misc/structure.dmi'
+
 /obj/structure/fluff/buysign/examine(mob/user)
 	. = ..()
 	if(!user.is_literate())
@@ -745,19 +756,13 @@
 /obj/structure/fluff/sellsign
 	icon_state = "signwrote"
 	name = "sign"
-	desc = ""
+	desc = "It's a sign! These usually have words carved into them."
 	icon = 'icons/roguetown/misc/structure.dmi'
-/obj/structure/fluff/sellsign/examine(mob/user)
-	. = ..()
-	if(!user.is_literate())
-		. += "I have no idea what it says."
-	else
-		. += "It says \"EXPORTS\""
-
 
 /obj/structure/fluff/customsign
 	name = "sign"
-	desc = ""
+	desc = "It's a sign! It looks like it'd be quite easy to carve your \
+	own message into this one, were you so inclined."
 	icon_state = "sign"
 	var/wrotesign
 	max_integrity = 500
@@ -771,6 +776,10 @@
 			. += "I have no idea what it says."
 		else
 			. += "It says \"[wrotesign]\"."
+
+/obj/structure/fluff/customsign/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Left clicking on the sign with a dagger on STAB intent allows you to carve a message into it!")
 
 /obj/structure/fluff/customsign/attackby(obj/item/W, mob/user, params)
 	if(!user.cmode)
@@ -1287,7 +1296,7 @@
 /obj/structure/fluff/psycross/astrata/golden
 	name = "golden astratan cross"
 	icon_state = "cross_astrata_u"
-	desc = "A radiant monument of gold, devoted to Astrata in her full glory. It's surface gleams with an almost blinding brilliance, catching even the faintest light and casting it forth as a warm, unwavering glow."
+	desc = "A radiant monument of gold, devoted to Astrata in her full glory. Its surface gleams with an almost blinding brilliance, catching even the faintest light and casting it forth as a warm, unwavering glow."
 	attacked_sound = list("sound/combat/hits/onmetal/metalimpact (1).ogg", "sound/combat/hits/onmetal/metalimpact (2).ogg")
 	max_integrity = 400
 	chance2hear = 20
