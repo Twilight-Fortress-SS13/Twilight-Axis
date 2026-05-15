@@ -229,7 +229,7 @@
 	if(!owner)
 		return
 
-	owner.stamina_add(3)
+	owner.stamina_add(1)
 	var/mob/living/target = target_atom
 	if(!istype(target))
 		return 0
@@ -1137,7 +1137,7 @@
 	if(!owner)
 		return 1
 
-	var/amount = max(1, round(owner.get_stat(STAT_STRENGTH) / 2))
+	var/amount = max(1, round(owner.get_stat(STAT_STRENGTH) / 4))
 	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK)
 		amount += 1
 	return amount
@@ -1208,7 +1208,7 @@
 				SafeSlow(target, 1.5)
 
 		if(BODY_ZONE_CHEST)
-			target.stamina_add(round(target.max_stamina * 0.12))
+			target.stamina_add(round(target.max_stamina * 0.05))
 			if(finisher_skill == MARTIAL_MASTER_INPUT_GRAB)
 				target.Knockdown(1.5 SECONDS)
 
