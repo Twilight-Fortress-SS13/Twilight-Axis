@@ -26,6 +26,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/tat_trader_lootbox/cheap = TAT_ITEM_ENTRY("Cheap Trader Cache", 1, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/tat_trader_lootbox/medium = TAT_ITEM_ENTRY("Merchant Trader Cache", 3, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/tat_trader_lootbox/expensive = TAT_ITEM_ENTRY("Luxury Trader Cache", 8, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
+	/obj/item/storage/backpack/rogue/backpack_trader = TAT_ITEM_ENTRY("Trader's backpack", 7, "clothing", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "back"), \
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/barker = TAT_ITEM_ENTRY("Barker", 2, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar = TAT_ITEM_ENTRY("Hand Mortar", 6, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
@@ -629,7 +630,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/cooking/pan/bronze = TAT_ITEM_ENTRY("Bronze Frying Pan", 0, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "misc"), \
 	/obj/item/cooking/pan/aalloy = TAT_ITEM_ENTRY("Frying Pan", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "misc"), \
 	/obj/item/reagent_containers/glass/bottle/waterskin/milk = TAT_ITEM_ENTRY("Not Milk....", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "food"), \
-	/obj/item/storage/backpack/rogue/satchel/short = TAT_ITEM_ENTRY("Short Satchel", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "back"), \
+	/obj/item/storage/backpack/rogue/satchel/short = TAT_ITEM_ENTRY("Short Satchel", 1.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "back"), \
 	/obj/item/storage/backpack/rogue/satchel = TAT_ITEM_ENTRY("Satchel", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "back"), \
 	/obj/item/clothing/gloves/roguetown/fingerless = TAT_ITEM_ENTRY("Fingerless Gloves", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/fingerless_leather = TAT_ITEM_ENTRY("Fingerless Leather Gloves", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "gloves"), \
@@ -645,6 +646,8 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/suit/roguetown/shirt/tunic = TAT_ITEM_ENTRY("Tunic", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/undershirt/artificer = TAT_ITEM_ENTRY("Tinker Jacket", 0, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket = TAT_ITEM_ENTRY("Tinker Suit", 0, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "armor"), \
+	/obj/item/book/rogue/bibble/psy = TAT_ITEM_ENTRY("Psy Bible", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
+	/obj/item/book/rogue/bibble = TAT_ITEM_ENTRY("Tennit Bible", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/bottle_kit = TAT_ITEM_ENTRY("Bottling Kit", 4, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/natural/worms/leech/cheele = TAT_ITEM_ENTRY("Cheele", 3, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/heart_blood_canister/filled = TAT_ITEM_ENTRY("Heartblood Canister", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
