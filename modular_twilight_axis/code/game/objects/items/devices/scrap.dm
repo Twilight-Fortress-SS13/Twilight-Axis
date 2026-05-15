@@ -196,7 +196,7 @@
 	unequip_delay_self = 10 SECONDS
 	strip_delay = 5 SECONDS
 	max_integrity = 400
-	sellprice = 15
+	sellprice = 150
 	pickup_sound = 'sound/foley/equip/equip_armor.ogg'
 	equip_sound = 'sound/foley/equip/equip_armor.ogg'
 	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
