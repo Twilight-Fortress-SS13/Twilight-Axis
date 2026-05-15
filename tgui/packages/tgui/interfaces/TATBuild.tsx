@@ -103,13 +103,19 @@ type TatSlotEntry = {
   summary?: SlotSummary;
 };
 
-
 type SkillDomainKey =
   | 'combat'
   | 'wandering'
   | 'gathering'
   | 'crafting'
   | 'misc';
+
+type SkillConversionDomainState = {
+  can_give?: boolean;
+  can_take?: boolean;
+  give_text?: string;
+  take_text?: string;
+};
 
 type Data = {
   stats: Record<string, number>;
@@ -136,6 +142,8 @@ type Data = {
 
   skill_points_by_domain?: Partial<Record<SkillDomainKey, number>>;
   skill_points_remaining_by_domain?: Partial<Record<SkillDomainKey, number>>;
+  skill_conversion_pool?: number;
+  skill_conversion_state?: Partial<Record<SkillDomainKey, SkillConversionDomainState>>;
 
   tat_slots?: TatSlotEntry[] | Record<string, TatSlotEntry>;
   active_tat_slot?: number;
@@ -216,13 +224,6 @@ const matchesSearch = (search: string, ...parts: Array<unknown>): boolean => {
   const normalized = normalizeSearch(search);
   return parts.some((part) => normalizeSearch(part).includes(normalized));
 };
-
-const normalizePresetSummary = (summary?: SlotSummary): SlotSummary => ({
-  stats: Number(summary?.stats) || 0,
-  skills: Number(summary?.skills) || 0,
-  traits: Number(summary?.traits) || 0,
-  items: Number(summary?.items) || 0,
-});
 
 const normalizeTatSlots = (
   raw: Data['tat_slots'],
@@ -1259,6 +1260,62 @@ const SkillRow = ({
   );
 };
 
+const SkillDomainTitle = ({
+  domain,
+  data,
+  act,
+}: {
+  domain: SkillDomainKey;
+  data: Data;
+  act: BackendAct;
+}) => {
+  const domainState = data.skill_conversion_state?.[domain];
+  const pool = Number(data.skill_conversion_pool) || 0;
+  const remaining = getDomainRemainingPoints(data, domain) || 0;
+  const canGive = typeof domainState?.can_give === 'boolean' ? domainState.can_give : remaining > 0;
+  const canTake =
+    typeof domainState?.can_take === 'boolean'
+      ? domainState.can_take
+      : domain !== 'combat' && pool > 0;
+
+  return (
+    <Stack align="center" justify="space-between">
+      <Stack.Item>
+        <Box bold>{SKILL_DOMAIN_TITLES[domain]}</Box>
+      </Stack.Item>
+      <Stack.Item>
+        <Stack align="center">
+          <Stack.Item>
+            <Box style={{ opacity: 0.8, fontSize: '12px' }}>
+              {formatDomainPoints(data, domain)}
+            </Box>
+          </Stack.Item>
+          <Stack.Item>
+            <Button
+              compact
+              tooltip={domainState?.give_text || 'Give 1 free point from this domain to conversion pool'}
+              disabled={!canGive}
+              onClick={() => act('give_skill_domain_points', { domain })}>
+              -
+            </Button>
+          </Stack.Item>
+          {domain !== 'combat' && (
+            <Stack.Item>
+              <Button
+                compact
+                tooltip={domainState?.take_text || 'Take 1 point from conversion pool into this domain'}
+                disabled={!canTake}
+                onClick={() => act('take_skill_domain_points', { domain })}>
+                +
+              </Button>
+            </Stack.Item>
+          )}
+        </Stack>
+      </Stack.Item>
+    </Stack>
+  );
+};
+
 const SkillsDomainPanel = ({
   domain,
   rows,
@@ -1277,7 +1334,7 @@ const SkillsDomainPanel = ({
   return (
     <Stack.Item grow basis="32%" style={{ minWidth: '270px' }}>
       <Section
-        title={<SectionTitleWithMeta title={SKILL_DOMAIN_TITLES[domain]} meta={formatDomainPoints(data, domain)} />}
+        title={<SkillDomainTitle domain={domain} data={data} act={act} />}
         fill
         style={{ height: '320px' }}>
         {!rows.length ? (
@@ -1340,7 +1397,13 @@ const SkillsTab = ({
   const hasAny = SKILL_DOMAIN_ORDER.some((domain) => groups[domain].length > 0);
 
   return (
-    <Section title="Skills">
+    <Section
+      title={
+        <SectionTitleWithMeta
+          title="Skills"
+          meta={`Conversion pool: ${Number(data.skill_conversion_pool) || 0}`}
+        />
+      }>
       {!hasAny ? (
         <NoticeBox>No matches found.</NoticeBox>
       ) : (

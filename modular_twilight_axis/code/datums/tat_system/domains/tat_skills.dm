@@ -3,6 +3,7 @@
 	var/list/invested = list()
 	var/list/bonus = list()
 	var/list/domain_points = list()
+	var/skill_point_conversion_pool = 0
 	var/list/spent_points_cache = list()
 	var/_cached_combat_expert_count = -1
 	var/_cached_combat_master_count = -1
@@ -24,6 +25,7 @@
 
 	var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
 	domain_points = default_domain_points.Copy()
+	skill_point_conversion_pool = 0
 
 	return TRUE
 
@@ -33,6 +35,71 @@
 
 /datum/tat_skills/proc/get_domain(skill_type)
 	return tat_get_skill_domain(skill_type)
+
+/datum/tat_skills/proc/normalize_skill_domain(domain)
+	if(domain == TAT_SKILL_DOMAIN_COMBAT)
+		return TAT_SKILL_DOMAIN_COMBAT
+	if(domain == TAT_SKILL_DOMAIN_WANDERING)
+		return TAT_SKILL_DOMAIN_WANDERING
+	if(domain == TAT_SKILL_DOMAIN_GATHERING)
+		return TAT_SKILL_DOMAIN_GATHERING
+	if(domain == TAT_SKILL_DOMAIN_CRAFTING)
+		return TAT_SKILL_DOMAIN_CRAFTING
+	if(domain == TAT_SKILL_DOMAIN_MISC)
+		return TAT_SKILL_DOMAIN_MISC
+	return null
+
+/datum/tat_skills/proc/can_give_skill_domain_points(domain, amount = 1)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return FALSE
+	amount = max(1, round(amount || 1))
+	if(round(domain_points[domain] || 0) < amount)
+		return FALSE
+	return get_remaining_points(domain) >= amount
+
+/datum/tat_skills/proc/can_take_skill_domain_points(domain, amount = 1)
+	domain = normalize_skill_domain(domain)
+	if(!domain || domain == TAT_SKILL_DOMAIN_COMBAT)
+		return FALSE
+	amount = max(1, round(amount || 1))
+	return skill_point_conversion_pool >= amount
+
+/datum/tat_skills/proc/give_skill_domain_points(domain, amount = 1)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return FALSE
+	amount = max(1, round(amount || 1))
+	if(!can_give_skill_domain_points(domain, amount))
+		return FALSE
+	domain_points[domain] = round(domain_points[domain] || 0) - amount
+	skill_point_conversion_pool += amount
+	invalidate_spent_points_cache()
+	owner_build?.set_dirty()
+	return TRUE
+
+/datum/tat_skills/proc/take_skill_domain_points(domain, amount = 1)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return FALSE
+	amount = max(1, round(amount || 1))
+	if(!can_take_skill_domain_points(domain, amount))
+		return FALSE
+	domain_points[domain] = round(domain_points[domain] || 0) + amount
+	skill_point_conversion_pool -= amount
+	invalidate_spent_points_cache()
+	owner_build?.set_dirty()
+	return TRUE
+
+/datum/tat_skills/proc/build_skill_conversion_state()
+	var/list/result = list()
+	for(var/domain in list(TAT_SKILL_DOMAIN_COMBAT, TAT_SKILL_DOMAIN_WANDERING, TAT_SKILL_DOMAIN_GATHERING, TAT_SKILL_DOMAIN_CRAFTING, TAT_SKILL_DOMAIN_MISC))
+		result[domain] = list(
+			"can_give" = can_give_skill_domain_points(domain),
+			"can_take" = can_take_skill_domain_points(domain),
+		)
+	return result
+
 
 /datum/tat_skills/proc/get_invested_value(skill_type)
 	return round(invested[skill_type] || 0)
@@ -532,6 +599,8 @@
 	return list(
 		"invested" = invested.Copy(),
 		"bonus" = bonus.Copy(),
+		"domain_points" = domain_points.Copy(),
+		"skill_point_conversion_pool" = skill_point_conversion_pool,
 	)
 
 /datum/tat_skills/proc/import_from_list(list/data)
@@ -539,6 +608,15 @@
 
 	if(!islist(data))
 		return FALSE
+
+	if(islist(data["domain_points"]))
+		var/list/imported_domains = data["domain_points"]
+		for(var/domain in imported_domains)
+			var/normalized_domain = normalize_skill_domain(domain)
+			if(normalized_domain)
+				domain_points[normalized_domain] = max(0, round(text2num("[imported_domains[domain]]") || 0))
+	var/raw_conversion_pool = data["skill_point_conversion_pool"]
+	skill_point_conversion_pool = max(0, round(text2num("[raw_conversion_pool]") || 0))
 
 	var/list/imported_invested = null
 	if(islist(data["invested"]))
@@ -563,12 +641,25 @@
 		var/value = get_invested_value(skill_type)
 		if(value > 0)
 			exported_invested["[skill_type]"] = value
-	return list("invested" = exported_invested)
+	return list(
+		"invested" = exported_invested,
+		"domain_points" = domain_points.Copy(),
+		"skill_point_conversion_pool" = skill_point_conversion_pool,
+	)
 
 /datum/tat_skills/proc/import_from_json_list(list/data)
 	reset()
 	if(!islist(data))
 		return FALSE
+
+	if(islist(data["domain_points"]))
+		var/list/imported_domains = data["domain_points"]
+		for(var/domain in imported_domains)
+			var/normalized_domain = normalize_skill_domain(domain)
+			if(normalized_domain)
+				domain_points[normalized_domain] = max(0, round(text2num("[imported_domains[domain]]") || 0))
+	var/raw_conversion_pool = data["skill_point_conversion_pool"]
+	skill_point_conversion_pool = max(0, round(text2num("[raw_conversion_pool]") || 0))
 
 	var/list/imported_invested = null
 	if(islist(data["invested"]))

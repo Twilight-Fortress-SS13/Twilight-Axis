@@ -85,6 +85,29 @@
 		total += skills.get_remaining_points(domain)
 	return total
 
+/datum/tat_build/proc/give_skill_domain_points(domain, amount = 1)
+	if(!skills)
+		return FALSE
+	var/ok = skills.give_skill_domain_points(domain, text2num("[amount]") || 1)
+	if(ok)
+		skills.sanitize(FALSE)
+		invalidate_ui_data_cache()
+	return ok
+
+/datum/tat_build/proc/take_skill_domain_points(domain, amount = 1)
+	if(!skills)
+		return FALSE
+	var/ok = skills.take_skill_domain_points(domain, text2num("[amount]") || 1)
+	if(ok)
+		skills.sanitize(FALSE)
+		invalidate_ui_data_cache()
+	return ok
+
+/datum/tat_build/proc/build_ui_skill_conversion_state()
+	if(!skills)
+		return list()
+	return skills.build_skill_conversion_state()
+
 /datum/tat_build/proc/get_remaining_trait_points()
 	return traits?.get_remaining_points() || 0
 
@@ -422,6 +445,8 @@
 		if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && get_owner_ckey() != "mrix")
 			continue
 		var/list/entry = get_trait_entry(trait_id)
+		if(islist(entry) && entry["category"] == TAT_CATEGORY_SKILL_CONVERSION)
+			continue
 		if(!islist(entry))
 			continue
 		result[trait_id] = list(
@@ -584,6 +609,8 @@
 		return _cached_ui_data
 	var/list/_skp_total = build_ui_skill_points_by_domain()
 	var/list/_skp_rem = build_ui_skill_points_remaining_by_domain()
+	var/list/_skp_conversion_state = build_ui_skill_conversion_state()
+	var/_skp_conversion_pool = skills?.skill_point_conversion_pool || 0
 	var/_p_skills_total = 0
 	var/_p_skills_rem = 0
 	var/_skills_any_negative = FALSE
@@ -653,6 +680,8 @@
 		"points_skills_remaining" = _p_skills_rem,
 		"skill_points_by_domain" = _skp_total,
 		"skill_points_remaining_by_domain" = _skp_rem,
+		"skill_conversion_pool" = _skp_conversion_pool,
+		"skill_conversion_state" = _skp_conversion_state,
 
 		"points_traits" = _p_traits_total,
 		"points_traits_remaining" = _p_traits_rem,
@@ -695,6 +724,10 @@
 			return add_skill(text2path(params["path"]), text2num(params["amount"]) || 1)
 		if("remove_skill")
 			return remove_skill(text2path(params["path"]), text2num(params["amount"]) || 1)
+		if("give_skill_domain_points")
+			return give_skill_domain_points(params["domain"], text2num(params["amount"]) || 1)
+		if("take_skill_domain_points")
+			return take_skill_domain_points(params["domain"], text2num(params["amount"]) || 1)
 		if("add_trait")
 			return add_trait(params["id"])
 		if("remove_trait")

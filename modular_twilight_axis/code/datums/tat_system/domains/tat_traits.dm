@@ -236,21 +236,6 @@
 			total += round(rules[trait_id]) * get_trait_count(trait_id)
 	return total
 
-/datum/tat_traits/proc/get_skill_domain_conversion_delta(domain)
-	var/total = 0
-	var/list/rules = GLOB.tat_trait_skill_domain_conversion_rules
-	for(var/trait_id in selected)
-		var/list/conversion = rules[trait_id]
-		if(!islist(conversion))
-			continue
-		var/count = get_trait_count(trait_id)
-		var/amount = round(conversion["amount"] || 0) * count
-		if(conversion["to"] == domain)
-			total += amount
-		if(conversion["from"] == domain)
-			total -= amount
-	return total
-
 /datum/tat_traits/proc/get_bonus_skill_domain_points(domain)
 	var/total = 0
 	var/list/rules = GLOB.tat_trait_skill_point_rules
@@ -258,7 +243,6 @@
 		var/list/domain_map = rules[trait_id]
 		if(islist(domain_map))
 			total += round(domain_map[domain] || 0) * get_trait_count(trait_id)
-	total += get_skill_domain_conversion_delta(domain)
 	return total
 
 /datum/tat_traits/proc/get_bonus_skill_value(skill_type)

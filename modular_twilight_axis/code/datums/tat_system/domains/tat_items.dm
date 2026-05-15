@@ -1370,14 +1370,98 @@
 	I.forceMove(get_turf(H))
 	return FALSE
 
-/datum/tat_items/proc/spawn_item_into_bag_or_fallback(mob/living/carbon/human/H, path)
+
+/datum/tat_items/proc/is_coin_pouch_path(path)
+	if(!ispath(path))
+		return FALSE
+	return ispath(path, /obj/item/storage/belt/rogue/pouch/coins)
+
+/datum/tat_items/proc/merge_coin_stacks_in_container(atom/container)
+	if(!container)
+		return FALSE
+
+	var/list/coins_by_type = list()
+	for(var/obj/item/roguecoin/coin in container.contents)
+		if(QDELETED(coin))
+			continue
+		if(!coin.base_type)
+			continue
+
+		var/coin_type = coin.type
+		if(!coins_by_type[coin_type])
+			coins_by_type[coin_type] = list()
+		coins_by_type[coin_type] += coin
+
+	for(var/coin_type in coins_by_type)
+		var/list/coins = coins_by_type[coin_type]
+		var/list/active_stacks = list()
+
+		for(var/obj/item/roguecoin/coin as anything in coins)
+			if(QDELETED(coin) || coin.quantity <= 0)
+				continue
+
+			var/was_merged = FALSE
+			for(var/obj/item/roguecoin/target as anything in active_stacks)
+				if(QDELETED(target) || target.quantity >= 20)
+					continue
+
+				target.merge(coin, null)
+				was_merged = TRUE
+
+				if(QDELETED(coin) || coin.quantity <= 0)
+					break
+
+			if(!was_merged && !QDELETED(coin) && coin.quantity > 0)
+				active_stacks += coin
+
+	return TRUE
+
+/datum/tat_items/proc/spawn_stacked_coin_pouch_into_bag_or_fallback(mob/living/carbon/human/H, path, amount = 1)
+	if(!H || !is_coin_pouch_path(path))
+		return FALSE
+
+	amount = max(1, round(amount || 1))
+
+	var/turf/drop_turf = get_turf(H)
+	if(!drop_turf)
+		return FALSE
+
+	var/obj/item/storage/belt/rogue/pouch/coins/pouch = new path(drop_turf)
+	if(!pouch || QDELETED(pouch))
+		return FALSE
+
+	// The first pouch has already populated itself during normal initialization.
+	// Additional purchased pouch copies are represented by repeating the native
+	// pouch population on this same pouch. This preserves map-specific currency
+	// logic, SSwardrobe use, random pile sizes, and Rockhill goldkrona behavior.
+	if(amount > 1)
+		for(var/i in 2 to amount)
+			if(QDELETED(pouch))
+				return FALSE
+			pouch.PopulateContents()
+
+	merge_coin_stacks_in_container(pouch)
+	apply_paint_to_item(path, pouch)
+	try_put_into_any_storage_or_drop(pouch, H, path)
+	return TRUE
+
+/datum/tat_items/proc/spawn_item_into_bag_or_fallback(mob/living/carbon/human/H, path, amount = 1)
 	if(!H || !ispath(path))
-		return
-	var/obj/item/I = new path(get_turf(H))
-	if(!I)
-		return
-	apply_paint_to_item(path, I)
-	try_put_into_any_storage_or_drop(I, H, path)
+		return FALSE
+
+	amount = max(1, round(amount || 1))
+	if(is_coin_pouch_path(path))
+		return spawn_stacked_coin_pouch_into_bag_or_fallback(H, path, amount)
+
+	var/success = FALSE
+	for(var/i in 1 to amount)
+		var/obj/item/I = new path(get_turf(H))
+		if(!I)
+			continue
+		apply_paint_to_item(path, I)
+		try_put_into_any_storage_or_drop(I, H, path)
+		success = TRUE
+	return success
 
 /datum/tat_items/proc/spawn_item_equipped_or_fallback(mob/living/carbon/human/H, path)
 	if(!H || !ispath(path))
@@ -1563,8 +1647,10 @@
 /datum/tat_items/proc/spawn_bag_items(mob/living/carbon/human/H)
 	for(var/item_path in get_all_item_paths())
 		var/list/loadout = get_loadout(item_path)
-		for(var/i in 1 to round(loadout["bag"] || 0))
-			spawn_item_into_bag_or_fallback(H, item_path)
+		var/bag_amount = round(loadout["bag"] || 0)
+		if(bag_amount <= 0)
+			continue
+		spawn_item_into_bag_or_fallback(H, item_path, bag_amount)
 
 /datum/tat_items/proc/is_roundstart_bag_path(path)
 	if(!ispath(path))
