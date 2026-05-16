@@ -96,7 +96,6 @@ GLOBAL_VAR_INIT(donor_job_boost_round_index_loaded, FALSE)
 	if(boost_job && !donor_job_boost_job_eligible(boost_job, ckey, user?.client))
 		job_preferences[boost_job.title] = JP_HIGH
 
-/// For tier 5 on a filled single-slot role, returns the incumbent to the unassigned pool.
 /datum/controller/subsystem/job/proc/donor_boost_clear_slot_for_lord(datum/job/job, mob/dead/new_player/claimer)
 	if(!job || job.spawn_positions != 1)
 		return TRUE
