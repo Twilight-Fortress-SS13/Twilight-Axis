@@ -123,7 +123,7 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		var/job_choice = player.client?.prefs?.job_preferences
 		if (job_choice)
 			for (var/job_name in job_choice)
-				if (job_choice[job_name] == JP_HIGH)
+				if (job_pref_shows_in_lobby(job_choice[job_name])) // TA EDIT чтобы отображало HIGH + 
 					if (job_name in wanderer_jobs)
 						job_name = "Wanderer"
 					if (player.ready == PLAYER_READY_TO_PLAY)

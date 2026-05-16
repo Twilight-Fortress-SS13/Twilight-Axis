@@ -356,6 +356,7 @@ SUBSYSTEM_DEF(ticker)
 	gnollslot_update()
 //	update_scaling_slots(estimated_pop)
 
+	donor_job_boost_round_tick() // TA EDIT
 	can_continue = can_continue && SSjob.DivideOccupations(list()) 				//Distribute jobs
 
 	CHECK_TICK

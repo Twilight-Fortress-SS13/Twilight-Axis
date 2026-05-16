@@ -157,6 +157,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["shake"]				>> shake
 	S["mastervol"]			>> mastervol
 	S["lastclass"]			>> lastclass
+	load_donor_job_boost_prefs(S) // TA EDIT
 	S["compliance_notifs"]  >> compliance_notifs
 
 
@@ -297,6 +298,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["sexable"], sexable)
 	WRITE_FILE(S["shake"], shake)
 	WRITE_FILE(S["lastclass"], lastclass)
+	save_donor_job_boost_prefs(S) // TA EDIT
 	WRITE_FILE(S["mastervol"], mastervol)
 	WRITE_FILE(S["ooccolor"], ooccolor)
 	WRITE_FILE(S["lastchangelog"], lastchangelog)
@@ -842,9 +844,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["topjob"] >> topjob
 	var/topjob_found = FALSE
 	for(var/j in job_preferences)
-		if(job_preferences[j] != JP_LOW && job_preferences[j] != JP_MEDIUM && job_preferences[j] != JP_HIGH)
+		if(job_preferences[j] != JP_LOW && job_preferences[j] != JP_MEDIUM && job_preferences[j] != JP_HIGH && job_preferences[j] != JP_BOOST) // TA EDIT
 			job_preferences -= j
-		if(job_preferences[j] == JP_HIGH)
+		if(job_preferences[j] == JP_HIGH || job_preferences[j] == JP_BOOST) // TA EDIT
 			topjob_found = TRUE
 			var/datum/job/prefjob = SSjob.GetJob(j)
 			if(prefjob)
@@ -853,6 +855,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!topjob_found && topjob)	// Fallback in case we load a slot that had HIGH set but then it got unset / job got altered.
 		topjob = null
 		WRITE_FILE(S["topjob"], topjob)
+
+	if(parent) // TA EDIT
+		sanitize_donor_job_boost(parent.mob) // TA EDIT
 
 	if(!islist(job_characters)) //TA EDIT START
 		job_characters = list()
