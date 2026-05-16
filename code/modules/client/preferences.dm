@@ -1146,11 +1146,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				continue
 
 		
-			var/list/pref_ui = job_pref_display_data(job, user) // TA EDIT
+			var/list/pref_ui = job_pref_display_data(job, user) // TA EDIT START
 			var/prefLevelLabel = pref_ui["label"] // TA EDIT
 			var/prefLevelColor = pref_ui["color"] // TA EDIT
 			var/prefUpperLevel = pref_ui["upper"] // TA EDIT
-			var/prefLowerLevel = pref_ui["lower"] // TA EDIT
+			var/prefLowerLevel = pref_ui["lower"] // TA EDIT END
 
 			HTML += "<a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
 			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font></a>"

@@ -131,7 +131,6 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 					selected_is_boost = TRUE
 					break
 
-			// Если HIGH+ нет, ищем обычный HIGH
 			if(!selected_job_name)
 				for(var/job_name in job_choice)
 					if(job_choice[job_name] == JP_HIGH)
