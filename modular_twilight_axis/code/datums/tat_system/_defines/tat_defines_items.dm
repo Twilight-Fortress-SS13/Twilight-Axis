@@ -513,6 +513,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/gloves/roguetown/bandages/weighted = TAT_ITEM_ENTRY("Weighted Bandages", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "gloves"), \
 	/obj/item/clothing/suit/roguetown/shirt/robe/pointfex = TAT_ITEM_ENTRY("Pointfex's Qaba", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "cloak"), \
 	/obj/item/clothing/suit/roguetown/armor/heartfelt = TAT_ITEM_ENTRY("Lordly Plate", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/heartfelt/hand = TAT_ITEM_ENTRY("Coat of Plate", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine/heavy = TAT_ITEM_ENTRY("Coat of Plates", 2.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
 	/obj/item/clothing/gloves/roguetown/chain/gronn = TAT_ITEM_ENTRY("Gronn Byrine Gloves", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/chain = TAT_ITEM_ENTRY("Сhain Gauntlets", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves"), \
