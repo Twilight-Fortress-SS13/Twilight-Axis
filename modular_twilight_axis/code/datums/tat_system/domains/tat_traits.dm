@@ -590,6 +590,7 @@
 	H.adjust_skillrank_up_to(/datum/skill/magic/holy, max(1, owner_build?.get_skill_value(/datum/skill/magic/holy) || 1), TRUE)
 	if(H.patron?.type == /datum/patron/inhumen/zizo && cleric_tier >= CLERIC_T2)
 		owner_build?.grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/invoked/minion_order)
+		owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/gravemark)
 
 /datum/tat_traits/proc/apply_mage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_MAGE_INITIATE) || !H.mind)
