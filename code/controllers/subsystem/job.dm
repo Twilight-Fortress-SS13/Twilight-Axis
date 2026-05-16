@@ -13,7 +13,8 @@ SUBSYSTEM_DEF(job)
 	var/list/latejoin_trackers = list()	//Don't read this list, use GetLateJoinTurfs() instead
 
 	var/overflow_role = "Fuckyou"
-	var/list/level_order = list(JP_BOOST, JP_HIGH, JP_MEDIUM, JP_LOW) // TA EDIT
+	var/list/level_order = list(JP_HIGH, JP_MEDIUM, JP_LOW)
+	var/list/lobby_level_order = list(JP_BOOST, JP_HIGH, JP_MEDIUM, JP_LOW) // TA EDIT
 
 /datum/controller/subsystem/job/Initialize(timeofday)
 	SSmapping.HACK_LoadMapConfig()

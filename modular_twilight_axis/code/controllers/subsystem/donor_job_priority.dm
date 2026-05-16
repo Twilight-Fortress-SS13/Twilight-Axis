@@ -1,7 +1,27 @@
 GLOBAL_VAR_INIT(donor_job_boost_round_index, 0)
+GLOBAL_VAR_INIT(donor_job_boost_round_index_loaded, FALSE)
+
+/proc/donor_job_boost_load_round_index()
+	if(GLOB.donor_job_boost_round_index_loaded)
+		return
+
+	GLOB.donor_job_boost_round_index_loaded = TRUE
+
+	if(fexists(DONOR_JOB_BOOST_ROUND_INDEX_FILE))
+		var/savefile/S = new /savefile(DONOR_JOB_BOOST_ROUND_INDEX_FILE)
+		if(S)
+			S["round_index"] >> GLOB.donor_job_boost_round_index
+
+	GLOB.donor_job_boost_round_index = max(0, GLOB.donor_job_boost_round_index)
 
 /proc/donor_job_boost_round_tick()
+	donor_job_boost_load_round_index()
+
 	GLOB.donor_job_boost_round_index++
+
+	var/savefile/S = new /savefile(DONOR_JOB_BOOST_ROUND_INDEX_FILE)
+	if(S)
+		WRITE_FILE(S["round_index"], GLOB.donor_job_boost_round_index)
 
 /proc/donor_job_boost_has_no_cooldown(patreon_level)
 	return patreon_level >= DONOR_JOB_BOOST_NO_COOLDOWN_LEVEL
@@ -10,12 +30,25 @@ GLOBAL_VAR_INIT(donor_job_boost_round_index, 0)
 	return patreon_level >= DONOR_JOB_BOOST_ANY_JOB_LEVEL
 
 /proc/donor_job_boost_rounds_remaining(datum/preferences/prefs, ckey = null, client/owner = null)
+	donor_job_boost_load_round_index()
+
 	if(donor_job_boost_has_no_cooldown(donor_job_boost_patreon_level(ckey, owner)))
 		return 0
+
 	if(!prefs)
 		return DONOR_JOB_BOOST_COOLDOWN_ROUNDS
+
+	if(!prefs.donor_priority_last_round_index)
+		return 0
+
+	if(GLOB.donor_job_boost_round_index < prefs.donor_priority_last_round_index)
+		GLOB.donor_job_boost_round_index = prefs.donor_priority_last_round_index
+		var/savefile/S = new /savefile(DONOR_JOB_BOOST_ROUND_INDEX_FILE)
+		if(S)
+			WRITE_FILE(S["round_index"], GLOB.donor_job_boost_round_index)
+
 	var/rounds_since = GLOB.donor_job_boost_round_index - prefs.donor_priority_last_round_index
-	return max(DONOR_JOB_BOOST_COOLDOWN_ROUNDS - rounds_since, 0)
+	return max((DONOR_JOB_BOOST_COOLDOWN_ROUNDS) - rounds_since, 0)
 
 /proc/donor_job_boost_available(datum/preferences/prefs, ckey = null, client/owner = null)
 	if(!prefs)
@@ -144,40 +177,58 @@ GLOBAL_VAR_INIT(donor_job_boost_round_index, 0)
 
 
 /datum/controller/subsystem/job/proc/FinalizeDonorJobBoostCooldowns()
-	for(var/mob/dead/new_player/player in GLOB.new_player_list)
+	for(var/mob/dead/new_player/player as anything in GLOB.donor_job_boost_pending_cooldowns)
 		if(!player?.client?.prefs || !player.mind)
 			continue
+
 		var/datum/job/boost_job = player.client.prefs.get_donor_boost_job()
 		if(!boost_job)
 			continue
+
 		if(player.client.prefs.job_preferences[boost_job.title] != JP_BOOST)
 			continue
+
 		if(player.mind.assigned_role != boost_job.title)
 			continue
+
 		mark_donor_job_boost_used(player)
+
+	GLOB.donor_job_boost_pending_cooldowns.Cut()
 
 
 /datum/controller/subsystem/job/proc/AssignDonorPriorityJobs()
 	var/assigned = 0
+	GLOB.donor_job_boost_pending_cooldowns.Cut()
+
 	var/list/candidates = shuffle(unassigned.Copy())
+
 	for(var/mob/dead/new_player/player as anything in candidates)
 		if(QDELETED(player) || !player.client?.prefs)
 			continue
+
 		if(!donor_job_boost_ckey_eligible(player.ckey, player.client))
 			continue
+
 		if(!donor_job_boost_available(player.client.prefs, player.ckey, player.client))
 			continue
+
 		var/datum/job/job = player.client.prefs.get_donor_boost_job()
 		if(!job)
 			continue
+
 		if(!donor_job_boost_job_eligible(job, player.ckey, player.client))
 			continue
+
 		if(player.client.prefs.job_preferences[job.title] != JP_BOOST)
 			continue
+
 		if(!player_eligible_for_donor_boost(player, job))
 			continue
+
 		if(AssignRole(player, job.title))
 			unassigned -= player
+			GLOB.donor_job_boost_pending_cooldowns |= player
 			assigned++
 			JobDebug("Donor boost assigned [player] to [job.title]")
+
 	return assigned
