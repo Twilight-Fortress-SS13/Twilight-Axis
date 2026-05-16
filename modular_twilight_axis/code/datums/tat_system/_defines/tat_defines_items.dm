@@ -268,6 +268,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/clothing/shoes/roguetown/shortboots = TAT_ITEM_ENTRY("Short Boots", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail = TAT_ITEM_ENTRY("Steel Haubergeon", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ornate = TAT_ITEM_ENTRY("Psydonic Hauberk", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/heavy = TAT_ITEM_ENTRY("Mailled Hauberk", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk = TAT_ITEM_ENTRY("Steel Hauberk", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "unterarmor"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/grenzelhoft = TAT_ITEM_ENTRY("Grenzelhoftian Hip-Shirt w/hauberk", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "unterarmor"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron = TAT_ITEM_ENTRY("Iron Hauberk", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "unterarmor"), \
