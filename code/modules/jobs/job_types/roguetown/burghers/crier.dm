@@ -8,7 +8,7 @@
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-	spells = list()
+	spells = list(/obj/effect/proc_holder/spell/self/crier_announcement)
 	allowed_ages = ALL_AGES_LIST
 
 	outfit = /datum/outfit/job/roguetown/loudmouth
@@ -91,30 +91,34 @@
 		H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3))
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/crier_announcement)
 
-/mob/living/carbon/human/proc/crier_announcement()
-	set name = "Announcement"
-	set category = "CRIER"
-	if(stat)
-		return
+/obj/effect/proc_holder/spell/self/crier_announcement
+	name = "Announcement"
+	desc = "Bellow to the Peaks. Make an Announcement to the whole town."
+	recharge_time = CRIER_ANNOUNCEMENT_COOLDOWN
+	clothes_req = FALSE
+	action_icon = 'modular_twilight_axis/icons/mob/actions/roguespells.dmi'
+
+/obj/effect/proc_holder/spell/self/crier_announcement/cast(list/targets, mob/living/carbon/human/user)
+	if(!istype(user) || user.stat)
+		return FALSE
 	var/announcementinput = input("Bellow to the Peaks", "Make an Announcement") as text|null
 	if(announcementinput)
-		if(!src.can_speak_vocal())
-			to_chat(src,span_warning("I can't speak!"))
+		if(!user.can_speak_vocal())
+			to_chat(user,span_warning("I can't speak!"))
+			revert_cast()
 			return FALSE
-		if(!istype(get_area(src), /area/rogue/outdoors/town))//Go touch grass
-			to_chat(src, span_warning("I can only speak from within premises of the Town."))
-			return FALSE
-		if(!COOLDOWN_FINISHED(src, crier_announcement))
-			to_chat(src, span_warning("You must wait before speaking again."))
-			return FALSE
-		visible_message(span_warning("[src] takes a deep breath, preparing to make an announcement.."))
-		if(do_after(src, 15 SECONDS, target = src)) // Reduced to 15 seconds from 30 on the original Herald PR. 15 is well enough time for sm1 to shove you.
-			say(announcementinput)
-			priority_announce("[announcementinput]", "The Crier Pontificates", 'sound/misc/bell.ogg', sender = src)
-			COOLDOWN_START(src, crier_announcement, CRIER_ANNOUNCEMENT_COOLDOWN)
+		user.visible_message(span_warning("[user] takes a deep breath, preparing to make an announcement.."))
+		if(do_after(user, 15 SECONDS, target = user)) // Reduced to 15 seconds from 30 on the original Herald PR. 15 is well enough time for sm1 to shove you.
+			user.say(announcementinput)
+			priority_announce("[announcementinput]", "The Crier Pontificates", 'sound/misc/bell.ogg', sender = user)
 		else
-			to_chat(src, span_warning("Your announcement was interrupted!"))
+			to_chat(user, span_warning("Your announcement was interrupted!"))
+			revert_cast()
 			return FALSE
+	else
+		revert_cast()
+		return FALSE
 
 #undef CRIER_ANNOUNCEMENT_COOLDOWN
