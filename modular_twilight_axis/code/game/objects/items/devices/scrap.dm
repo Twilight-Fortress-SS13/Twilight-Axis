@@ -203,19 +203,28 @@
 	bloody_icon_state = "bodyblood"
 	sewrepair = TRUE
 	component_type = /datum/component/storage/concrete/roguetown/trader
+	var/active_item = FALSE
 
-/obj/item/storage/backpack/rogue/backpack_trader/equipped(mob/living/carbon/human/user, slot)
+/obj/item/storage/backpack/rogue/backpack_trader/equipped(mob/living/user, slot)
 	. = ..()
-	to_chat(user, span_monkeyhive("uGH! I hate this thing....my back"))
-	user.change_stat(STATKEY_SPD, -4)
+	if(active_item)
+		return
+	if(slot == SLOT_BACK_L)
+		active_item = TRUE
+		user.change_stat(STATKEY_SPD, -4)
+		to_chat(user, span_monkeyhive("uGH! I hate this thing....my back"))
 
-/obj/item/clothing/neck/roguetown/blkknight/dropped(mob/living/user)
+/obj/item/storage/backpack/rogue/backpack_trader/dropped(mob/living/user)
 	..()
-	to_chat(user, span_monkeyhive("Finally....some rest"))
+	if(!active_item)
+		return
+	active_item = FALSE
 	user.change_stat(STATKEY_SPD, 4)
+	to_chat(user, span_monkeyhive("Finally....some rest"))
 
 /datum/component/storage/concrete/roguetown/trader
 	screen_max_rows = 8
 	screen_max_columns = 8
 	max_w_class = WEIGHT_CLASS_BULKY
 	not_while_equipped = TRUE
+
