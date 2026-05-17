@@ -104,6 +104,10 @@
 	var/required_tat_bucket = null
 
 /datum/advclass/tat_class/check_requirements(mob/living/carbon/human/H)
+	var/key = H?.ckey || H?.client?.ckey
+	if(key)
+		tat_refresh_ban_cache_for_ckey(key)
+
 	if(!..())
 		return FALSE
 

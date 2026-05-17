@@ -518,7 +518,7 @@ const getLoadoutSourceText = (entry: LoadoutViewEntry): string => {
     parts.push(`Trait ${sources.trait}`);
   }
   if (sources.donor_loadout) {
-    parts.push(`Donor ${sources.donor_loadout}`);
+    parts.push(`Donor`);
   }
   return parts.join(' · ');
 };

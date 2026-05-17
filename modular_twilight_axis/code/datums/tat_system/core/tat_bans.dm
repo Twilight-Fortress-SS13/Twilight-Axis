@@ -123,7 +123,55 @@
 	var/key = tat_normalize_ckey(raw_key)
 	if(!key || !tat_is_valid_role_bucket(bucket))
 		return FALSE
-	return is_banned_from(key, tat_role_bucket_to_ban_role(bucket))
+
+	return islist(tat_get_locked_role_entry(key, bucket))
+
+/proc/tat_get_sql_ban_history_entry(raw_key, role)
+	var/key = tat_normalize_ckey(raw_key)
+	if(!key || !istext(role) || !length(role))
+		return null
+	if(!SSdbcore.Connect())
+		return null
+
+	var/datum/DBQuery/query_get_tat_ban_history = SSdbcore.NewQuery({"
+		SELECT id, bantime, round_id, role, expiration_time, TIMESTAMPDIFF(MINUTE, bantime, expiration_time), reason, a_ckey, unbanned_datetime, unbanned_ckey
+		FROM [format_table_name("ban")]
+		WHERE ckey = :ckey
+			AND role = :role
+		ORDER BY bantime DESC
+		LIMIT 1
+	"}, list(
+		"ckey" = key,
+		"role" = role,
+	))
+
+	if(!query_get_tat_ban_history.warn_execute())
+		qdel(query_get_tat_ban_history)
+		return null
+
+	var/list/result
+	if(query_get_tat_ban_history.NextRow())
+		result = list(
+			"id" = query_get_tat_ban_history.item[1],
+			"bantime" = query_get_tat_ban_history.item[2],
+			"round_id" = query_get_tat_ban_history.item[3],
+			"role" = query_get_tat_ban_history.item[4],
+			"expiration_time" = query_get_tat_ban_history.item[5],
+			"duration_minutes" = query_get_tat_ban_history.item[6],
+			"reason" = query_get_tat_ban_history.item[7],
+			"locked_by" = query_get_tat_ban_history.item[8],
+			"unbanned_datetime" = query_get_tat_ban_history.item[9],
+			"unbanned_by" = query_get_tat_ban_history.item[10],
+		)
+
+	qdel(query_get_tat_ban_history)
+	return result
+
+
+/proc/tat_get_role_lock_history_entry(raw_key, bucket)
+	if(!tat_is_valid_role_bucket(bucket))
+		return null
+	return tat_get_sql_ban_history_entry(raw_key, tat_role_bucket_to_ban_role(bucket))
 
 /proc/tat_get_role_lock_reason(raw_key, bucket)
 	var/list/entry = tat_get_locked_role_entry(raw_key, bucket)
@@ -202,7 +250,7 @@
 
 	return parts.Join(" / ")
 
-/proc/tat_create_role_lock(client/admin, raw_key, bucket, duration = TAT_ROLE_LOCK_DEFAULT_DURATION, interval = TAT_ROLE_LOCK_DEFAULT_INTERVAL, severity = TAT_ROLE_LOCK_DEFAULT_SEVERITY, reason = TAT_ROLE_LOCK_DEFAULT_REASON, applies_to_admins = FALSE)
+/proc/tat_create_role_lock(client/admin, raw_key, bucket, duration = null, interval = TAT_ROLE_LOCK_DEFAULT_INTERVAL, severity = TAT_ROLE_LOCK_DEFAULT_SEVERITY, reason = TAT_ROLE_LOCK_DEFAULT_REASON, applies_to_admins = FALSE)
 	if(!admin?.holder || !check_rights_for(admin, R_BAN))
 		return FALSE
 
@@ -306,7 +354,8 @@
 		)
 	return TRUE
 
-/proc/tat_remove_role_lock(client/admin, raw_key, bucket, reason = null)
+/proc/tat_remove_role_lock(raw_key, bucket, reason = null)
+	var/client/admin = usr.client
 	if(!admin?.holder || !check_rights_for(admin, R_BAN))
 		return FALSE
 
@@ -315,7 +364,7 @@
 		return FALSE
 
 	if(!SSdbcore.Connect())
-		to_chat(admin, span_danger("Failed to establish database connection."))
+		to_chat(usr, span_danger("Failed to establish database connection."))
 		return FALSE
 
 	var/sql_role = tat_role_bucket_to_ban_role(bucket)
@@ -366,12 +415,6 @@
 			sql_role
 		)
 	return TRUE
-
-/proc/tat_set_role_bucket_locked(raw_key, bucket, lock_role, client/admin = null, reason = null, duration = TAT_ROLE_LOCK_DEFAULT_DURATION, interval = TAT_ROLE_LOCK_DEFAULT_INTERVAL, severity = TAT_ROLE_LOCK_DEFAULT_SEVERITY, applies_to_admins = FALSE)
-	if(lock_role)
-		return tat_create_role_lock(admin, raw_key, bucket, duration, interval, severity, reason, applies_to_admins)
-
-	return tat_remove_role_lock(admin, raw_key, bucket, reason)
 
 /proc/tat_admin_can_manage_role_locks(client/C)
 	return C?.holder && check_rights_for(C, R_BAN)

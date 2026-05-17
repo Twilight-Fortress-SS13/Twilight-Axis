@@ -40,7 +40,7 @@
 
 	return FALSE
 
-/client/proc/tat_admin_set_role_bucket_for_ckey(raw_key, bucket, allow_role = null, reason = null, duration = TAT_ROLE_LOCK_DEFAULT_DURATION, interval = TAT_ROLE_LOCK_DEFAULT_INTERVAL, severity = TAT_ROLE_LOCK_DEFAULT_SEVERITY, applies_to_admins = FALSE)
+/client/proc/tat_admin_set_role_bucket_for_ckey(raw_key, bucket, allow_role = null, reason = null, duration = null, interval = TAT_ROLE_LOCK_DEFAULT_INTERVAL, severity = TAT_ROLE_LOCK_DEFAULT_SEVERITY, applies_to_admins = FALSE)
 	if(!tat_admin_can_manage_role_locks(src))
 		return FALSE
 
@@ -197,22 +197,43 @@
 	var/list/names = tat_role_bucket_names()
 
 	for(var/bucket in names)
-		var/list/entry = key ? tat_get_locked_role_entry(key, bucket) : null
+		var/list/active_entry = key ? tat_get_locked_role_entry(key, bucket) : null
+		var/list/history_entry = key ? tat_get_role_lock_history_entry(key, bucket) : null
+		var/active_lock = islist(active_entry)
+
+		var/list/display_entry = active_lock ? active_entry : history_entry
 
 		var/expires = ""
-		if(islist(entry))
-			expires = entry["expiration_time"] ? "Expires [entry["expiration_time"]]" : "Permanent"
+		if(active_lock)
+			expires = active_entry["expiration_time"] ? "Expires [active_entry["expiration_time"]]" : "Permanent"
+		else if(islist(history_entry))
+			if(history_entry["unbanned_datetime"])
+				expires = "Removed [history_entry["unbanned_datetime"]]"
+			else if(history_entry["expiration_time"])
+				expires = "Expired [history_entry["expiration_time"]]"
+			else
+				expires = "Inactive"
+
+		var/reason = "Open"
+		if(active_lock)
+			reason = active_entry["reason"] || TAT_ROLE_LOCK_DEFAULT_REASON
+		else if(islist(history_entry))
+			if(history_entry["reason"])
+				reason = "Previous: [history_entry["reason"]]"
+			else
+				reason = "Previous lock exists"
 
 		result += list(list(
 			"id" = bucket,
 			"name" = names[bucket],
-			"locked" = !!entry,
-			"state" = tat_get_role_lock_state_text(key, bucket),
-			"reason" = islist(entry) ? (entry["reason"] || TAT_ROLE_LOCK_DEFAULT_REASON) : "",
-			"locked_by" = islist(entry) ? (entry["locked_by"] || "") : "",
-			"locked_at" = islist(entry) ? (entry["bantime"] || "") : "",
+			"locked" = active_lock,
+			"state" = active_lock ? "Locked" : "Open",
+			"reason" = reason,
+			"locked_by" = islist(display_entry) ? (display_entry["locked_by"] || "") : "",
+			"locked_at" = islist(display_entry) ? (display_entry["bantime"] || "") : "",
 			"expires" = expires,
-			"ban_id" = islist(entry) ? (entry["id"] || "") : "",
+			"ban_id" = islist(display_entry) ? (display_entry["id"] || "") : "",
+			"expired_entry" = islist(history_entry) && !active_lock,
 		))
 
 	return result
@@ -294,6 +315,9 @@
 			var/allow_role = tat_is_role_bucket_locked(key, bucket)
 			var/reason = params["reason"] || default_reason || TAT_ROLE_LOCK_DEFAULT_REASON
 			var/actual_duration = permanent ? null : duration
+
+			if(allow_role)
+				return tat_remove_role_lock(key, bucket, reason)
 
 			return usr.client.tat_admin_set_role_bucket_for_ckey(key, bucket, allow_role, reason, actual_duration, interval, severity, applies_to_admins)
 
