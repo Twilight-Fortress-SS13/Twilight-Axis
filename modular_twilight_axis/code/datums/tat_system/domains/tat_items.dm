@@ -1660,8 +1660,11 @@
 /datum/tat_items/proc/is_roundstart_bag_replacer_path(path)
 	if(!ispath(path))
 		return FALSE
-
-	return ispath(path, /obj/item/storage/backpack/rogue/backpack)
+	if(ispath(path, /obj/item/storage/backpack/rogue/backpack))
+		return TRUE
+	if(path == /obj/item/storage/backpack/rogue/backpack_trader)
+		return TRUE
+	return FALSE
 
 /datum/tat_items/proc/has_selected_roundstart_backpack()
 	for(var/item_path in get_all_item_paths())
