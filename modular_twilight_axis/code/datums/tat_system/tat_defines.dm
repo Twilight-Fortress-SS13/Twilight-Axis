@@ -14,6 +14,8 @@
 #define TAT_STAT_ENTRY(_name, _cost, _base, _min, _max) list("name" = (_name), "cost" = (_cost), "base" = (_base), "min" = (_min), "max" = (_max))
 #define TAT_TRAIT_ENTRY(_name, _cost, _category, _category_name, _desc) list("name" = (_name), "cost" = (_cost), "category" = (_category), "category_name" = (_category_name), "desc" = (_desc))
 #define TAT_ITEM_ENTRY(_name, _cost, _category, _unlock_type, _unlock_key, _slot_group) list("name" = (_name), "cost" = (_cost), "category" = (_category), "unlock_type" = (_unlock_type), "unlock_key" = (_unlock_key), "slot_group" = (_slot_group))
+#define TAT_DONATION_ITEM_ENTRY_EX(_name, _cost, _category, _unlock_type, _unlock_key, _slot_group, _donat_tier, _donat_ignore) list("name" = (_name), "cost" = (_cost), "category" = (_category), "unlock_type" = (_unlock_type), "unlock_key" = (_unlock_key), "slot_group" = (_slot_group), "donat_tier" = (_donat_tier), "donat_ignore" = (_donat_ignore))
+#define TAT_DONATION_ITEM_ENTRY(_name, _cost, _category, _unlock_type, _unlock_key, _slot_group, _donat_tier) list("name" = (_name), "cost" = (_cost), "category" = (_category), "unlock_type" = (_unlock_type), "unlock_key" = (_unlock_key), "slot_group" = (_slot_group), "donat_tier" = (_donat_tier), "donat_ignore" = null)
 
 #define TAT_SLOT_COUNT 9
 

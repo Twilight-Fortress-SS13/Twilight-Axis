@@ -121,10 +121,39 @@
 			return !!owner_build?.has_trait(TAT_TRAIT_PLATE_SUPPLIER)
 	return FALSE
 
+/proc/tat_ckey_in_ckey_list(key, list/ckey_list)
+	key = ckey(key)
+	if(!key || !islist(ckey_list))
+		return FALSE
+	if(key in ckey_list)
+		return TRUE
+	for(var/list_key in ckey_list)
+		if(ckey(list_key) == key)
+			return TRUE
+	return FALSE
+
+/proc/tat_can_ckey_use_donation_item(key, required_tier, list/entry = null)
+	required_tier = round(required_tier || 0)
+	if(required_tier <= 0)
+		return TRUE
+
+	key = ckey(key)
+	if(!key)
+		return FALSE
+	if(tat_ckey_in_ckey_list(key, GLOB.tat_donation_access_all_ckeys))
+		return TRUE
+	if(islist(entry) && tat_ckey_in_ckey_list(key, entry["donat_ignore"]))
+		return TRUE
+
+	return round(check_patreon_lvl(key) || 0) >= required_tier
+
 /datum/tat_items/proc/can_use_item_entry(list/entry)
 	if(!islist(entry))
 		return FALSE
 	if(is_loadout_only_entry(entry))
+		return FALSE
+	var/donat_tier = round(entry["donat_tier"] || 0)
+	if(donat_tier > 0 && !tat_can_ckey_use_donation_item(owner_build?.get_owner_ckey(), donat_tier, entry))
 		return FALSE
 	var/unlock_type = entry["unlock_type"]
 	var/unlock_key = entry["unlock_key"]
