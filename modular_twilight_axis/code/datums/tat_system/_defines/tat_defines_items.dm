@@ -604,6 +604,7 @@ GLOBAL_VAR_INIT(tat_item_icon_cache_warming, FALSE)
 	/obj/item/needle/thorn = TAT_ITEM_ENTRY("Needle", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/needle/bronze = TAT_ITEM_ENTRY("Needle", 0, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "medical"), \
 	/obj/item/skillbook/unfinished = TAT_ITEM_ENTRY("Unfinished Skill Book", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
+	/obj/item/storage/meatbag = TAT_ITEM_ENTRY("Game Satchel", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/pestle = TAT_ITEM_ENTRY("Pestle", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/reagent_containers/glass/mortar = TAT_ITEM_ENTRY("Mortar", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/chalk = TAT_ITEM_ENTRY("Chalk", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
