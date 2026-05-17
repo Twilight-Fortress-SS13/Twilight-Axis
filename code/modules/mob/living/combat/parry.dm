@@ -8,7 +8,7 @@
 	var/mob/living/U = user
 	if(H && U)
 		prob2defend = 0
-	
+
 	if(!can_see_cone(user))
 		if(!H.get_tempo_bonus(TEMPO_TAG_NOLOS_PARRY))
 			return FALSE
@@ -47,7 +47,7 @@
 		var/parrytime = setparrytime
 		parrytime -= get_tempo_bonus(TEMPO_TAG_PARRYCD_BONUS)
 		changeNext_def(parrytime)
-	
+
 	var/drained = BASE_PARRY_STAMINA_DRAIN
 	var/weapon_parry = FALSE
 	var/offhand_defense = 0
@@ -55,6 +55,10 @@
 	var/highest_defense = 0
 	var/obj/item/mainhand = get_active_held_item()
 	var/obj/item/offhand = get_inactive_held_item()
+	if(!istype(mainhand))
+		mainhand = null
+	if(!istype(offhand))
+		offhand = null
 	var/obj/item/used_weapon = mainhand
 
 	// TA Edit start - new Ronin Class
@@ -148,7 +152,7 @@
 
 	var/att_swift_capable = U.check_dodge_skill(check_trait = FALSE)
 	var/def_swift_capable = H.check_dodge_skill(check_trait = FALSE)
-	
+
 	if(used_weapon)
 		if(used_weapon.wbalance == WBALANCE_SWIFT)
 			if(mainhand && !offhand && def_swift_capable) // We're one-handing a swift-balanced weapon (rapiers, sabers, etc). Small parry boost (1 wdef equiv.)
@@ -232,7 +236,7 @@
 		prob2defend += FULL_GUIDANCE_CHANCE
 	else if(HAS_TRAIT(user, TRAIT_LESSER_REVERSE_GUIDANCE))
 		prob2defend += LESSER_GUIDANCE_CHANCE
-	
+
 	if(HAS_TRAIT(user, TRAIT_CURSE_RAVOX))
 		prob2defend -= 40
 

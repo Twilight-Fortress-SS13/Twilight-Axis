@@ -666,6 +666,8 @@
 		if(QDELETED(src))
 			return
 		trajectory.increment(trajectory_multiplier)
+		if(!trajectory)
+			return
 		var/turf/T = trajectory.return_turf()
 		if(!istype(T))
 			qdel(src)
@@ -676,6 +678,8 @@
 			trajectory_ignore_forcemove = TRUE
 			forceMove(T)
 			trajectory_ignore_forcemove = FALSE
+			if(!trajectory)
+				return
 			after_z_change(old, loc)
 			if(!hitscanning)
 				pixel_x = trajectory.return_px()
@@ -684,6 +688,8 @@
 			hitscan_last = loc
 		else if(T != loc)
 			step_towards(src, T)
+			if(!trajectory)
+				return
 			hitscan_last = loc
 		
 		if(arcshot && starting && target_z && z > target_z)
@@ -698,11 +704,16 @@
 					trajectory_ignore_forcemove = TRUE
 					forceMove(below)
 					trajectory_ignore_forcemove = FALSE
+					if(!trajectory)
+						return
 					after_z_change(old, loc)
 					if(trajectory)
 						trajectory.z = below.z
 					forcemoved = TRUE
 					hitscan_last = loc
+
+	if(!trajectory)
+		return
 
 	if(!hitscanning && !forcemoved)
 		pixel_x = trajectory.return_px() - trajectory.mpx * trajectory_multiplier * SSprojectiles.global_iterations_per_move

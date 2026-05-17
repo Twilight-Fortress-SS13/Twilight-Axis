@@ -529,6 +529,9 @@ GLOBAL_LIST_INIT(find_and_set_interested_atoms, typecacheof(list(/obj/item, /mob
 	controller.set_blackboard_key(BB_FIND_TARGETS_FIELD(type), detection_field)
 
 /datum/ai_behavior/find_and_set/proc/new_turf_found(turf/found, datum/ai_controller/controller)
+	if(!controller || !controller.pawn)
+		return FALSE
+
 	var/valid_found = FALSE
 	var/atom/pawn = controller.pawn
 	for(var/maybe_item as anything in found)
@@ -553,6 +556,9 @@ GLOBAL_LIST_INIT(find_and_set_interested_atoms, typecacheof(list(/obj/item, /mob
 	controller.modify_cooldown(src, world.time)
 
 /datum/ai_behavior/find_and_set/proc/new_atoms_found(list/atom/movable/found, datum/ai_controller/controller)
+	if(!controller || !controller.pawn)
+		return FALSE
+
 	var/atom/pawn = controller.pawn
 	var/list/accepted_items = list()
 
