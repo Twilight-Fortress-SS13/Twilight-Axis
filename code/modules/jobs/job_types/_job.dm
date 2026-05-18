@@ -278,6 +278,10 @@
 		if (HAS_TRAIT(H, TRAIT_EXPLOSIVE_SUPPLY))
 			H.mind.has_bomb = TRUE
 
+	// Выдаем слушатель продаж. Саму роль и квоты он проверит в момент сдачи предметов в стокпайл
+	if(H.mind)
+		H.AddComponent(/datum/component/pq_seller)
+
 	if(!H.islatejoin)
 		H.adjust_triumphs(1)
 		H.apply_status_effect(/datum/status_effect/buff/mealbuff)

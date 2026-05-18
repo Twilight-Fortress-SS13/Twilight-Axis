@@ -48,3 +48,6 @@
 
 /// From /obj/item/organ/proc/Remove() (mob/living/carbon/lost_organ, obj/item/organ/removed, special, drop_if_replaced)
 #define COMSIG_MOB_ORGAN_REMOVED "mob_organ_removed"
+
+/// Called when a mob successfully sells an item to the stockpile: (mob/living/seller, obj/item/sold_item)
+#define COMSIG_MOB_SOLD_TO_STOCKPILE "mob_sold_to_stockpile"

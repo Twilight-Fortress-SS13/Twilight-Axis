@@ -183,6 +183,7 @@
 					return
 				var/bundle_amt = B.amount
 				R.stockpile_amount += bundle_amt
+				SEND_SIGNAL(H, COMSIG_MOB_SOLD_TO_STOCKPILE, B)
 				if(message == TRUE)
 					stock_announce("[bundle_amt] units of [R.name] has been stockpiled.")
 				qdel(B)
@@ -230,6 +231,7 @@
 					SStreasury.minted += mint_amt
 					SStreasury.mint(SStreasury.discretionary_fund, mint_amt, "Gem overflow mint: [tg_overflow.name]")
 					record_round_statistic(STATS_MINTED_TREASURE_GROSS, mint_amt)
+					SEND_SIGNAL(H, COMSIG_MOB_SOLD_TO_STOCKPILE, I)
 					qdel(I)
 					if(sound == TRUE)
 						playsound(loc, 'sound/misc/hiss.ogg', 100, FALSE, -1)
@@ -243,6 +245,7 @@
 			R.refresh_auto_price()
 			var/amt = R.get_payout_price(I)
 			var/true_value = I.get_real_price()
+			SEND_SIGNAL(H, COMSIG_MOB_SOLD_TO_STOCKPILE, I)
 			if(!R.mint_item)
 				R.stockpile_amount += 1 //stacked logs need to check for multiple
 				qdel(I)
@@ -291,5 +294,3 @@
 		say("Bulk selling in progress...")
 		playsound(loc, 'sound/misc/hiss.ogg', 100, FALSE, -1)
 		playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-
-

@@ -509,6 +509,9 @@
 #define CALTROP_BYPASS_SHOES 1
 #define CALTROP_IGNORE_WALKERS 2
 
+// pq_seller
+#define PQ_SELL_QUOTA 100
+
 //Xenobio hotkeys
 #define COMSIG_XENO_SLIME_CLICK_CTRL "xeno_slime_click_ctrl"				//from slime CtrlClickOn(): (/mob)
 #define COMSIG_XENO_SLIME_CLICK_ALT "xeno_slime_click_alt"					//from slime AltClickOn(): (/mob)
