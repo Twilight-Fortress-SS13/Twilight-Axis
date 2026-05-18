@@ -3970,4 +3970,5 @@
 #include "modular_twilight_axis\modular\Neu_food\code\cookware\cup.dm"
 #include "modular_twilight_axis\code\datums\flaws\gefheretic.dm"
 #include "modular_twilight_axis\code\datums\magic_items\mythical_items\mythic.dm"
+#include "modular_twilight_axis\code\game\objects\items\rogueweapons\all_weapon_rebalance.dm"
 // END_INCLUDE
