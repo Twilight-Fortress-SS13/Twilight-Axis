@@ -38,7 +38,8 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/tat_trader_lootbox/cheap = TAT_ITEM_ENTRY("Cheap Trader Cache", 1, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/tat_trader_lootbox/medium = TAT_ITEM_ENTRY("Merchant Trader Cache", 3, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/tat_trader_lootbox/expensive = TAT_ITEM_ENTRY("Luxury Trader Cache", 8, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
-	/obj/item/storage/backpack/rogue/backpack_trader = TAT_ITEM_ENTRY("Trader's backpack", 7, "clothing", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "back"), \
+	/obj/item/tat_trader_lootbox/potion = TAT_ITEM_ENTRY("Alchemical Trader Cache", 4, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
+	/obj/item/storage/backpack/rogue/backpack_trader = TAT_ITEM_ENTRY("Trader's backpack", 3, "clothing", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "back"), \
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/barker = TAT_ITEM_ENTRY("Barker", 2, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar = TAT_ITEM_ENTRY("Hand Mortar", 6, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
@@ -497,7 +498,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/woodstaff/implement/grand/naledi = TAT_ITEM_ENTRY("Naledi Staff", 8, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/spear/billhook = TAT_ITEM_ENTRY("Billhook", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/stone/copper = TAT_ITEM_ENTRY("Copper Spear", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
-	/obj/item/clothing/gloves/roguetown/chain/contraption/voltic = TAT_ITEM_ENTRY("Voltic Gauntlet", 7, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
+	/obj/item/clothing/gloves/roguetown/chain/contraption/voltic = TAT_ITEM_ENTRY("Voltic Gauntlet", 4, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/clothing/ring/active/shimmeringlens = TAT_ITEM_ENTRY("Shimmering Lens", 6, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/lantern/fog_repelling/empty = TAT_ITEM_ENTRY("Necran Lamptern", 1, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/reagent_containers/glass/bottle/sanctified_oil = TAT_ITEM_ENTRY("Sacrificed Oil", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \

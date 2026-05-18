@@ -1,8 +1,11 @@
 #define TAT_TRADER_LOOTBOX_CHEAP 1
 #define TAT_TRADER_LOOTBOX_MEDIUM 2
 #define TAT_TRADER_LOOTBOX_EXPENSIVE 3
+#define TAT_TRADER_LOOTBOX_POTION 4
 
 GLOBAL_LIST_INIT(tat_trader_lootbox_cheap_base_pool, list(
+	/obj/item/clothing/suit/roguetown/armor/plate/full/bronze = 4,
+	/obj/item/clothing/suit/roguetown/armor/plate/full/bronze/alt = 4,
 	/obj/item/clothing/neck/roguetown/bevor/bronze = 10,
 	/obj/item/clothing/neck/roguetown/gorget/bronze = 10,
 	/obj/item/clothing/neck/roguetown/gorget/copper = 10,
@@ -10,6 +13,12 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_cheap_base_pool, list(
 	/obj/item/clothing/neck/roguetown/psicross/shell = 10,
 	/obj/item/clothing/neck/roguetown/psicross/shell/bracelet = 10,
 	/obj/item/clothing/neck/roguetown/shalal = 10,
+	/obj/item/storage/gadget/messkit = 13,
+	/obj/item/mobilestove = 13,
+	/obj/item/tent_kit = 11,
+	/obj/item/tent_kit/ger = 12,
+	/obj/item/tent_kit/yurt = 9,
+	/obj/item/folding_table_stored = 13,
 	/obj/item/clothing/ring/aalloy = 10,
 	/obj/item/clothing/ring/amber = 10,
 	/obj/item/clothing/ring/band = 10,
@@ -182,7 +191,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/rogueweapon/scabbard/sheath/kazengun = 9,
 	/obj/item/rogueweapon/scabbard/sword/kazengun = 3,
 	/obj/item/rogueweapon/scabbard/sword/kazengun/kodachi = 9,
-	/obj/item/rogueweapon/scabbard/sword/kazengun/noparry = 9,
 	/obj/item/rogueweapon/shield/tower/metal = 6,
 	/obj/item/rogueweapon/spear/assegai = 6,
 	/obj/item/rogueweapon/spear/billhook = 6,
@@ -190,17 +198,12 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/rogueweapon/spear/naginata = 6,
 	/obj/item/rogueweapon/spear/partizan = 3,
 	/obj/item/rogueweapon/spear/psyspear/old = 6,
-	/obj/item/rogueweapon/spear/short = 9,
 	/obj/item/rogueweapon/stoneaxe/battle = 6,
 	/obj/item/rogueweapon/stoneaxe/battle/steppesman/chupa = 3,
 	/obj/item/rogueweapon/stoneaxe/oath = 1,
-	/obj/item/rogueweapon/stoneaxe/woodcut/steel = 6,
-	/obj/item/rogueweapon/stoneaxe/woodcut/steel/woodcutter = 9,
 	/obj/item/rogueweapon/stoneaxe/woodcut/troll = 6,
-	/obj/item/rogueweapon/sword = 9,
 	/obj/item/rogueweapon/sword/cutlass = 6,
 	/obj/item/rogueweapon/sword/falx = 6,
-	/obj/item/rogueweapon/sword/long = 6,
 	/obj/item/rogueweapon/sword/long/broadsword/steel = 6,
 	/obj/item/rogueweapon/sword/long/greatkhopesh = 6,
 	/obj/item/rogueweapon/sword/long/kriegmesser = 3,
@@ -209,7 +212,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/rogueweapon/sword/rapier = 6,
 	/obj/item/rogueweapon/sword/sabre = 6,
 	/obj/item/rogueweapon/sword/sabre/mulyeog = 6,
-	/obj/item/rogueweapon/sword/short = 6,
 	/obj/item/rogueweapon/sword/short/falchion = 6,
 	/obj/item/rogueweapon/sword/short/kazengun = 6,
 	/obj/item/rogueweapon/sword/short/messer = 9,
@@ -217,11 +219,10 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/rogueweapon/woodstaff/quarterstaff/steel = 6,
 	/obj/item/storage/belt/rogue/leather/knifebelt/black/kazengun = 9,
 	/obj/item/storage/belt/rogue/leather/knifebelt/black/steel = 9,
-	/obj/item/clothing/suit/roguetown/armor/plate/full/bronze = 4,
-	/obj/item/clothing/suit/roguetown/armor/plate/full/bronze/alt = 4,
 ))
 
 GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
+	/obj/item/clothing/ring/amber = 10,
 	/obj/item/clothing/neck/roguetown/gorget/gold = 4,
 	/obj/item/clothing/neck/roguetown/gorget/gold/king = 4,
 	/obj/item/clothing/neck/roguetown/gorget/steel/kazengun = 4,
@@ -286,6 +287,10 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/clothing/ring/statrontz = 2,
 	/obj/item/clothing/ring/statdorpel = 2,
 	/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard/silver = 8,
+	/obj/item/clothing/suit/roguetown/armor/plate/full/legacy = 2,
+	/obj/item/clothing/suit/roguetown/armor/plate/legacy = 2,
+	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy = 2,
+	/obj/item/clothing/suit/roguetown/armor/plate/aalloy = 2,
 ))
 
 GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
@@ -304,18 +309,51 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 	/obj/item/clothing/ring/rubybs = 1,
 	/obj/item/clothing/ring/sapphirebs = 1,
 	/obj/item/clothing/ring/topazbs = 1,
-	/obj/item/clothing/suit/roguetown/armor/plate/aalloy = 2,
 	/obj/item/clothing/shoes/roguetown/boots/armor/gold = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate = 1,
 	/obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate = 2,
-	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate/ordinator = 2,
-	/obj/item/clothing/suit/roguetown/armor/plate/full/legacy = 2,
-	/obj/item/clothing/suit/roguetown/armor/plate/legacy = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer = 3,
-	/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard/blacksteel = 5
+	/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard/blacksteel = 5,
+	/obj/item/clothing/gloves/roguetown/chain/contraption/voltic = 3,
+	/obj/item/clothing/ring/active/shimmeringlens = 4,
+	/obj/item/flashlight/flare/torch/lantern/bronzelamptern/malums_lamptern = 2,
+	/obj/item/rogueweapon/mace/mushroom = 2,
+	/obj/item/rogueweapon/huntingknife/idagger/steel/fire = 3,
+	/obj/item/rogueweapon/mace/goden/deepduke = 3,
+	/obj/item/rogueweapon/stoneaxe/battle/ice = 3,
+	/obj/item/rogueweapon/sword/long/exe/berserk = 2,
+	/obj/item/rogueweapon/sword/sabre/bane = 2,
 
+))
+
+GLOBAL_LIST_INIT(tat_trader_lootbox_potion_heal_pool, list(
+	/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 3,
+	/obj/item/reagent_containers/glass/bottle/rogue/healthpotnew = 2,
+	/obj/item/reagent_containers/glass/bottle/rogue/manapot = 3,
+	/obj/item/reagent_containers/glass/bottle/rogue/strongmanapot = 2,
+	/obj/item/reagent_containers/glass/bottle/rogue/stampot = 3,
+	/obj/item/reagent_containers/glass/bottle/rogue/strongstampot = 2,
+	/obj/item/reagent_containers/food/snacks/grown/apple/gold = 1,
+	/obj/item/reagent_containers/glass/bottle/alchemical/strpot = 2,
+	/obj/item/reagent_containers/glass/bottle/alchemical/perpot = 2,
+	/obj/item/reagent_containers/glass/bottle/alchemical/conpot = 2,
+	/obj/item/reagent_containers/glass/bottle/alchemical/spdpot = 2,
+	/obj/item/reagent_containers/glass/bottle/alchemical/lucpot = 2,
+	/obj/item/reagent_containers/powder/ozium = 3,
+	/obj/item/reagent_containers/powder/moondust = 3,
+	/obj/item/reagent_containers/powder/moondust_purest = 3,
+	/obj/item/reagent_containers/powder/spice = 3,
+	/obj/item/reagent_containers/powder/starsugar = 3,
+	/obj/item/reagent_containers/powder/herozium = 3,
+))
+
+GLOBAL_LIST_INIT(tat_trader_lootbox_potion_poison_pool, list(
+	/obj/item/reagent_containers/glass/bottle/rogue/stampoison = 3,
+	/obj/item/reagent_containers/glass/bottle/rogue/strongpoison = 3,
+	/obj/item/reagent_containers/glass/bottle/rogue/poison = 1,
+	/obj/item/reagent_containers/glass/bottle/rogue/berrypoison = 4,
 ))
 
 /proc/tat_pick_weighted_lootbox_path(list/weighted_paths)
@@ -377,8 +415,15 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 /obj/item/tat_trader_lootbox/expensive
 	name = "luxury trader cache"
 	icon_state = "chestweird1"
-	desc = "An expensive sealed cache. It may contain silver arms, rare TAT gear, party-leader artifacts, or relic-grade treasures."
+	desc = "An expensive sealed cache. It may contain silver arms, rare gear, artifacts, or relic-grade treasures."
 	tier = TAT_TRADER_LOOTBOX_EXPENSIVE
+
+/obj/item/tat_trader_lootbox/potion
+	name = "Alchemical trader cache"
+	icon = 'modular/Neu_food/icons/cookware/ration.dmi'
+	icon_state = "ration_large"
+	desc = "A paper sealed cache. Mostly Good or Bad potions."
+	tier = TAT_TRADER_LOOTBOX_POTION
 
 /obj/item/tat_trader_lootbox/attack_self(mob/living/user)
 	. = ..()
@@ -431,6 +476,8 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 			generate_medium_rewards(rewards)
 		if(TAT_TRADER_LOOTBOX_EXPENSIVE)
 			generate_expensive_rewards(rewards)
+		if(TAT_TRADER_LOOTBOX_POTION)
+			generate_potion_rewards(rewards)
 		else
 			generate_cheap_rewards(rewards)
 
@@ -463,13 +510,21 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_jackpot_pool, list(
 /obj/item/tat_trader_lootbox/proc/generate_expensive_rewards(list/rewards)
 	var/roll = rand(1, 100)
 
-	if(roll <= 20)
-		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_cheap_base_pool, 7)
-	else if(roll <= 50)
+	if(roll <= 50)
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_medium_base_pool, 5)
 	else if(roll <= 90)
-		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_expensive_base_pool, 3)
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_expensive_base_pool, 4)
 	else
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_jackpot_pool, 2)
+
+	return TRUE
+
+/obj/item/tat_trader_lootbox/proc/generate_potion_rewards(list/rewards)
+	var/roll = rand(1, 100)
+
+	if(roll <= 85)
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_potion_heal_pool, 6)
+	else
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_potion_poison_pool, 4)
 
 	return TRUE
