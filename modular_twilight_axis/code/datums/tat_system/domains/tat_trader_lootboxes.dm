@@ -2,6 +2,7 @@
 #define TAT_TRADER_LOOTBOX_MEDIUM 2
 #define TAT_TRADER_LOOTBOX_EXPENSIVE 3
 #define TAT_TRADER_LOOTBOX_POTION 4
+#define TAT_TRADER_LOOTBOX_CLOTHES 5
 
 GLOBAL_LIST_INIT(tat_trader_lootbox_cheap_base_pool, list(
 	/obj/item/clothing/suit/roguetown/armor/plate/full/bronze = 4,
@@ -269,6 +270,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/rogueweapon/mace/warhammer/steel/silver = 3,
 	/obj/item/rogueweapon/shovel/silver/preblessed = 8,
 	/obj/item/rogueweapon/spear/silver = 3,
+	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/grenzelhoft = 3,
 	/obj/item/rogueweapon/stoneaxe/woodcut/silver = 3,
 	/obj/item/rogueweapon/sword/long/exe/silver = 3,
 	/obj/item/rogueweapon/sword/long/kriegmesser/silver = 3,
@@ -354,6 +356,61 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_potion_poison_pool, list(
 	/obj/item/reagent_containers/glass/bottle/rogue/strongpoison = 3,
 	/obj/item/reagent_containers/glass/bottle/rogue/poison = 1,
 	/obj/item/reagent_containers/glass/bottle/rogue/berrypoison = 4,
+	/obj/item/reagent_containers/powder/sleep_powder = 2,
+	/obj/item/reagent_containers/powder/corps_dust = 2,
+	/obj/item/reagent_containers/powder/grave_powder = 2,
+	/obj/item/reagent_containers/powder/inferrum = 2,
+))
+
+GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_grenzel_pool, list(
+	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves = 2,
+	/obj/item/clothing/shoes/roguetown/grenzelhoft = 2,
+	/obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants = 2,
+	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft = 2,
+	/obj/item/clothing/head/roguetown/grenzelhofthat = 2
+))
+
+GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_kazengun_pool, list(
+	/obj/item/clothing/gloves/roguetown/eastgloves1 = 2,
+	/obj/item/clothing/gloves/roguetown/eastgloves2= 2,
+	/obj/item/clothing/head/roguetown/mentorhat = 2,
+	/obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit = 2,
+	/obj/item/clothing/suit/roguetown/armor/basiceast = 2,
+	/obj/item/clothing/suit/roguetown/armor/basiceast/captainrobe = 1,
+	/obj/item/clothing/shoes/roguetown/armor/rumaclan = 2,
+	/obj/item/clothing/cloak/eastcloak1 = 2,
+	/obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt1 = 1,
+	/obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt2 = 1
+))
+
+GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_aavnr_pool, list(
+	/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/shepherd = 2,
+	/obj/item/clothing/suit/roguetown/armor/leather/heavy/shepherd = 2,
+	/obj/item/clothing/shoes/roguetown/grenzelhoft/freifechter = 2,
+	/obj/item/clothing/neck/roguetown/fencerguard = 2,
+	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves/freifechter = 2,
+	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer = 1,
+	/obj/item/clothing/shoes/roguetown/boots/nobleboot/steppesman = 2,
+	/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/steppe = 2,
+	/obj/item/clothing/suit/roguetown/shirt/freifechter = 1,
+	/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/generic = 2
+))
+
+GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_gronn_pool, list(
+	/obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn = 2,
+	/obj/item/clothing/gloves/roguetown/angle/gronn = 2,
+	/obj/item/clothing/under/roguetown/trou/leather/gronn = 2,
+	/obj/item/clothing/shoes/roguetown/boots/leather/atgervi = 2,
+	/obj/item/clothing/gloves/roguetown/angle/atgervi = 2
+))
+
+GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_otava_pool, list(
+	/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/otavan = 2,
+	/obj/item/clothing/gloves/roguetown/otavan = 2,
+	/obj/item/clothing/shoes/roguetown/boots/otavan = 2,
+	/obj/item/clothing/gloves/roguetown/chain/psydon = 2,
+	/obj/item/clothing/shoes/roguetown/boots/psydonboots = 2,
+	/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan = 2
 ))
 
 /proc/tat_pick_weighted_lootbox_path(list/weighted_paths)
@@ -425,6 +482,12 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_potion_poison_pool, list(
 	desc = "A paper sealed cache. Mostly Good or Bad potions."
 	tier = TAT_TRADER_LOOTBOX_POTION
 
+/obj/item/tat_trader_lootbox/clothes
+	name = "Sewing trader cache"
+	icon_state = "chestfancy_neu"
+	desc = "A paper sealed cache. Mostly Good or Bad potions."
+	tier = TAT_TRADER_LOOTBOX_CLOTHES
+
 /obj/item/tat_trader_lootbox/attack_self(mob/living/user)
 	. = ..()
 	if(opened)
@@ -478,6 +541,8 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_potion_poison_pool, list(
 			generate_expensive_rewards(rewards)
 		if(TAT_TRADER_LOOTBOX_POTION)
 			generate_potion_rewards(rewards)
+		if(TAT_TRADER_LOOTBOX_CLOTHES)
+			generate_clothes_rewards(rewards)
 		else
 			generate_cheap_rewards(rewards)
 
@@ -527,4 +592,19 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_potion_poison_pool, list(
 	else
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_potion_poison_pool, 4)
 
+	return TRUE
+
+/obj/item/tat_trader_lootbox/proc/generate_clothes_rewards(list/rewards)
+	var/roll = rand(1, 100)
+
+	if(roll <= 20)
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_clothing_grenzel_pool, 5)
+	else if(roll <= 40)
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_clothing_kazengun_pool, 5)
+	else if(roll <= 60)
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_clothing_gronn_pool, 5)
+	else if(roll <= 80)
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_clothing_otava_pool, 5)
+	else
+		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_clothing_aavnr_pool, 5)
 	return TRUE

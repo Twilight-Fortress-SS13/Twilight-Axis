@@ -38,6 +38,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/tat_trader_lootbox/cheap = TAT_ITEM_ENTRY("Cheap Trader Cache", 1, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/tat_trader_lootbox/medium = TAT_ITEM_ENTRY("Merchant Trader Cache", 3, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/tat_trader_lootbox/expensive = TAT_ITEM_ENTRY("Luxury Trader Cache", 8, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
+	/obj/item/tat_trader_lootbox/clothes = TAT_ITEM_ENTRY("Sewing Trader Cache", 5, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/tat_trader_lootbox/potion = TAT_ITEM_ENTRY("Alchemical Trader Cache", 4, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/storage/backpack/rogue/backpack_trader = TAT_ITEM_ENTRY("Trader's backpack", 3, "clothing", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "back"), \
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
@@ -535,7 +536,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants1 = TAT_ITEM_ENTRY("Cut-throat pants", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/neck/roguetown/leather = TAT_ITEM_ENTRY("Hardened Leather Gorget", 0.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "neck"), \
 	/obj/item/gun/ballistic/revolver/grenadelauncher/bow = TAT_ITEM_ENTRY("Crude Selfbow", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "ranged"), \
-	/obj/item/rogueweapon/shield/atgervi = TAT_DONATION_ITEM_ENTRY("Gronnic Kite Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "shield", TAT_DONATION_TIER_TWO), \
+	/obj/item/rogueweapon/shield/atgervi = TAT_ITEM_ENTRY("Gronnic Kite Shield", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "shield"), \
 	/obj/item/clothing/head/roguetown/helmet/bascinet/atgervi = TAT_DONATION_ITEM_ENTRY("Owl Helmet", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "head", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/atgervi = TAT_DONATION_ITEM_ENTRY("Varangian Hauberk", 3.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "unterarmor", TAT_DONATION_TIER_TWO), \
 	/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = TAT_ITEM_ENTRY("Health Vial", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
