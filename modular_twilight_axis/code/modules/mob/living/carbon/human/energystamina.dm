@@ -1,4 +1,4 @@
-/mob/living/stamina_add(added as num, emote_override, force_emote = TRUE) //call update_stamina here and set last_fatigued, return false when not enough fatigue left
+/mob/living/stamina_add(added as num, emote_override, force_emote = TRUE)
 	if(HAS_TRAIT(src, TRAIT_INFINITE_STAMINA))
 		return TRUE
 
@@ -10,23 +10,21 @@
 		added = 0
 
 	if(mind && true_added > 0)
-		// the amount of athletics skill gained is proportional to how much stamina is used
-		// using a tenth of the bar gives 1 XP point of athletics skill, multiplied by your constitution divided by 10
 		mind.add_sleep_experience(/datum/skill/misc/athletics, (STACON / 10) * ((true_added / max_stamina) * 10), show_xp = m_intent == MOVE_INTENT_RUN)
 
 	stamina = CLAMP(stamina+added, 0, max_stamina)
 	if(added > 0)
-		energy_add(added * -200)
-		adjust_nutrition(-stamina_nutrition_mod(added) * 10000000000)
-	if(added >= 5)
-		if(energy <= 0)
-			if(iscarbon(src))
-				var/mob/living/carbon/C = src
-				if(!HAS_TRAIT(C, TRAIT_NOHUNGER))
-					if(C.nutrition <= 0)
-						if(C.hydration <= 0)
-							C.heart_attack()
-							return FALSE
+		energy_add(added * -0.6)
+		adjust_nutrition(-stamina_nutrition_mod(added) * 0.5)
+		if(added >= 5)
+			if(energy <= 0)
+				if(iscarbon(src))
+					var/mob/living/carbon/C = src
+					if(!HAS_TRAIT(C, TRAIT_NOHUNGER))
+						if(C.nutrition <= 0)
+							if(C.hydration <= 0)
+								C.heart_attack()
+								return FALSE
 
 	if(ishuman(src) && mind && added > 0)
 		var/mob/living/carbon/human/H = src
@@ -54,7 +52,7 @@
 	if(stamina >= max_stamina)
 		stamina = max_stamina
 		update_health_hud()
-		if(m_intent == MOVE_INTENT_RUN) //can't sprint at full fatigue
+		if(m_intent == MOVE_INTENT_RUN)
 			toggle_rogmove_intent(MOVE_INTENT_WALK, TRUE)
 		if(!emote_override)
 			emote("fatigue", forced = force_emote)
@@ -68,12 +66,12 @@
 				visible_message(span_danger("[src] loses all stamina and sinks into the depths!"))
 				forceMove(below)
 				set_resting(TRUE)
-			else
-				
-				set_resting(TRUE)
+		else
+
+			set_resting(TRUE)
 
 		blur_eyes(2)
-		last_fatigued = world.time + 3 SECONDS //extra time before fatigue regen sets in
+		last_fatigued = world.time + 3 SECONDS
 		stop_attack()
 		changeNext_move(CLICK_CD_EXHAUSTED)
 		flash_fullscreen("blackflash")
@@ -88,16 +86,16 @@
 			var/area/rogue/our_area = get_area(src)
 			if(our_area && our_area.necra_area)
 				src.extract_from_deaths_edge()
-		addtimer(CALLBACK(src, PROC_REF(Immobilize), 30), 1 SECONDS)
-		if(iscarbon(src))
-			var/mob/living/carbon/C = src
-			if(C.get_stress_amount() >= 30)
-				C.heart_attack()
-			if(!HAS_TRAIT(C, TRAIT_NOHUNGER))
-				if(C.nutrition <= 0)
-					if(C.hydration <= 0)
-						C.heart_attack()
-		return FALSE
+			addtimer(CALLBACK(src, PROC_REF(Immobilize), 30), 1 SECONDS)
+			if(iscarbon(src))
+				var/mob/living/carbon/C = src
+				if(C.get_stress_amount() >= 30)
+					C.heart_attack()
+				if(!HAS_TRAIT(C, TRAIT_NOHUNGER))
+					if(C.nutrition <= 0)
+						if(C.hydration <= 0)
+							C.heart_attack()
+							return FALSE
 	else
 		last_fatigued = world.time
 		update_health_hud()
