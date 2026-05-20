@@ -37,6 +37,13 @@
 	. = ..()
 	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 
+/datum/advclass/templar/guardian
+	subclass_languages = list(/datum/language/valorian)
+
+/datum/outfit/job/roguetown/templar/guardian/pre_equip(mob/living/carbon/human/H)
+	. = ..()
+	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
+
 /* < pathfinder subclass > */
 
 /datum/advclass/templar/pathfinder

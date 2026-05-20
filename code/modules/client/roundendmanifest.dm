@@ -9,6 +9,8 @@
 	popup.open(FALSE)
 
 /client/proc/view_actors_manifest()
+	set category = "OOC"
+	set name = "View Actors"
 	var/list/dat = list()
 	var/list/department_display_order = list(
 		"Noblemen",

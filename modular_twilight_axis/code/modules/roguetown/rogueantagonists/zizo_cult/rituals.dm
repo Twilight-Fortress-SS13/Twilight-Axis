@@ -768,7 +768,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 
 	new /obj/item/clothing/under/roguetown/platelegs/zizo/heavy(center)
 
-	new /obj/item/clothing/shoes/roguetown/boots/armor/zizo/heavy(center)
+	new /obj/item/clothing/shoes/roguetown/boots/armor/zizo(center)
 
 	new /obj/item/clothing/wrists/roguetown/bracers/zizo/heavy(center)
 
@@ -851,14 +851,14 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		return
 	target.playsound_local(target, 'sound/misc/vampirespell.ogg', 100, FALSE, pressure_affected = FALSE)
 	if((!HAS_TRAIT(target, TRAIT_DNR) && !HAS_TRAIT(target, TRAIT_NECRAS_VOW)) || target.stat != DEAD)
+		target.fully_heal()
+		target.regenerate_limbs()
+		target.heal_wounds(500)
 		if(target.stat == DEAD)
 			target.revive()
 			#ifdef REVIVE_GRACE
 			target.apply_status_effect(/datum/status_effect/debuff/revive_grace)
 			#endif
-		target.fully_heal()
-		target.regenerate_limbs()
-		target.heal_wounds(500)
 		target.apply_status_effect(/datum/status_effect/debuff/fleshmend_exhaustion)
 		to_chat(target, span_notice("ZIZO EMPOWERS ME!"))
 

@@ -33,6 +33,8 @@
 	
 	var/flour_efficiency = 0
 	var/datum/reagents/pill_buffer
+	var/lux_charges = 0
+	var/max_lux_charges = 1000 
 
 /obj/machinery/alch_workbench/Initialize(mapload)
 	. = ..()
@@ -174,6 +176,12 @@
 	var/list/data = list()
 	data["upgrade_lvl"] = upgrade_level
 	var/list/reagent_data = list()
+
+	data["lux_tank"] = list(
+		"charges" = lux_charges, 
+		"max" = max_lux_charges
+		)
+		
 	if(reagents && reagents.reagent_list.len)
 		for(var/datum/reagent/R in reagents.reagent_list)
 			reagent_data += list(list(
@@ -190,7 +198,7 @@
 	switch(upgrade_level)
 		if(1) req_text = "Требуется: 1 Железный слиток (положите в склад стола)"
 		if(2) req_text = "Требуется: 1 Золотой слиток (положите в склад стола)"
-		if(3) req_text = "Требуется: 1 Алмаз (положите в склад стола)"
+		if(3) req_text = "Требуется: 1 Алмаз, 1 Загадка Стали, 2 Синих самоцвета, 4 Огненной пыли 2 чистых люкса (положите в склад стола)"
 	data["next_upgrade_req"] = req_text
 
 
@@ -366,23 +374,10 @@
 		))
 
 	data["knowledge"] = knowledge
-	
-	var/obj/item/philosophers_stone/PS = locate(/obj/item/philosophers_stone) in src.contents
-	if(PS)
-		data["p_stone"] = list(
-			"charges" = round(PS.charges), 
-			"max" = PS.max_charges, 
-			"owner" = PS.bound_soul ? PS.bound_soul.name : "Никто"
-		)
-	else
-		data["p_stone"] = null
 
-	if(transmute_slot && (transmute_slot in src.contents))
+	if(transmute_slot && STR && (transmute_slot in STR.real_location()))
 		var/icon/T_IMG = icon(transmute_slot.icon, transmute_slot.icon_state, frame = 1)
-		data["transmute_item"] = list(
-			"name" = transmute_slot.name, 
-			"image" = "data:image/png;base64,[icon2base64(T_IMG)]"
-		)
+		data["transmute_item"] = list("name" = transmute_slot.name, "image" = "data:image/png;base64,[icon2base64(T_IMG)]")
 	else
 		transmute_slot = null
 		data["transmute_item"] = null
@@ -500,49 +495,62 @@
 
 		if("upgrade")
 			if(!STR) return TRUE
+			if(upgrade_level >= 4) return TRUE
 			
-			if(upgrade_level >= 4)
-				return TRUE
+			var/list/requirements = list()
+			switch(upgrade_level)
+				if(1)
+					requirements[/obj/item/ingot/iron] = 1
+				if(2)
+					requirements[/obj/item/ingot/gold] = 1
+				if(3)
+					requirements[/obj/item/roguegem/diamond] = 1
+					requirements[/obj/item/riddleofsteel] = 1
+					requirements[/obj/item/roguegem/blue] = 2
+					requirements[/obj/item/alch/firedust] = 4
+					requirements[/obj/item/reagent_containers/lux] = 2
+
+
+			var/list/items_to_consume = list()
+			var/has_everything = TRUE
 			
-			var/upgraded = FALSE
-			
-			if(upgrade_level == 1)
-				var/obj/item/ingot/iron/I = locate() in STR.real_location()
-				if(I)
+			for(var/req_type in requirements)
+				var/needed_amount = requirements[req_type]
+				var/found_amount = 0
+				
+
+				for(var/obj/item/I in STR.real_location())
+					if((I.type == req_type) && !(I in items_to_consume))
+						items_to_consume += I
+						found_amount++
+						if(found_amount >= needed_amount)
+							break
+
+				if(found_amount < needed_amount)
+					has_everything = FALSE
+					break
+
+			if(has_everything)
+				for(var/obj/item/I in items_to_consume)
 					STR.remove_from_storage(I, null)
 					qdel(I)
-					upgrade_level = 2
-					to_chat(user, span_notice("Вы усилили котел железными креплениями!"))
-					upgraded = TRUE
-				else
-					to_chat(user, span_warning("Вам нужен Железный слиток внутри склада лаборатории!"))
 
-			else if(upgrade_level == 2)
-				var/obj/item/ingot/gold/G = locate() in STR.real_location()
-				if(G)
-					STR.remove_from_storage(G, null)
-					qdel(G)
-					upgrade_level = 3
-					to_chat(user, span_notice("Вы установили золотые змеевики. Теперь доступна Инфузия!"))
-					upgraded = TRUE
-				else
-					to_chat(user, span_warning("Вам нужен Золотой слиток внутри склада лаборатории!"))
-					
-			else if(upgrade_level == 3)
-				var/obj/item/roguegem/diamond/D = locate() in STR.real_location()
-				if(D)
-					STR.remove_from_storage(D, null)
-					qdel(D)
-					upgrade_level = 4
-					to_chat(user, span_notice("Вы встроили Алмазную Линзу. Лаборатория достигла пика могущества!"))
-					upgraded = TRUE
-				else
-					to_chat(user, span_warning("Вам нужен Алмаз внутри склада лаборатории!"))
-
-			if(upgraded)
-				update_icon_state()
+				upgrade_level++
 				update_icon()
 				
+				var/msg = ""
+				if(upgrade_level == 2) msg = "Вы укрепили стол железными креплениями. Доступна Лаборатория!"
+				if(upgrade_level == 3) msg = "Вы установили золотые змеевики. Теперь доступна Инфузия!"
+				if(upgrade_level == 4) msg = "Вы встроили Призматическую Линзу. Лаборатория достигла пика могущества!"
+				to_chat(user, span_notice(msg))
+			else
+				var/req_text = ""
+				switch(upgrade_level)
+					if(1) req_text = "1 Железный слиток"
+					if(2) req_text = "1 Золотой слиток"
+					if(3) req_text = "1 Алмаз, 1 Загадка Стали, 2 Синих самоцвета, 4 Огненной пыли 2 чистых люкса."
+				to_chat(user, span_warning("Не хватает компонентов! Требуется: [req_text]."))
+
 			return TRUE
 
 		if("mix")
@@ -561,33 +569,57 @@
 			update_icon()
 			return TRUE
 
+		if("consume_lux")
+			if(!STR) return TRUE
+			var/obj/item/reagent_containers/lux/L = locate(/obj/item/reagent_containers/lux) in STR.real_location()
+			var/obj/item/reagent_containers/lux_impure/LI = locate(/obj/item/reagent_containers/lux_impure) in STR.real_location()
+			
+			var/obj/item/consumed = null
+			var/charge_gain = 0
+			
+			if(L)
+				consumed = L
+				charge_gain = 15
+			else if(LI)
+				consumed = LI
+				charge_gain = 5
+				
+			if(consumed)
+				if(lux_charges + charge_gain > max_lux_charges)
+					to_chat(usr, span_warning("Бак энергии лаборатории полон!"))
+					return TRUE
+					
+				STR.remove_from_storage(consumed, null)
+				qdel(consumed)
+				lux_charges += charge_gain
+				to_chat(usr, span_notice("Лаборатория успешно расщепила [consumed.name] на чистую энергию."))
+			else
+				to_chat(usr, span_warning("На складе стола нет Люкса для поглощения!"))
+			return TRUE
+
+
 		if("do_transmute")
 			var/recipe_ref = params["recipe_ref"]
 			var/list/R_DATA = GLOB.alchemy_recipe_lookup[recipe_ref]
-			
-			if(!R_DATA)
-				return TRUE
-
-			var/obj/item/philosophers_stone/PS = locate(/obj/item/philosophers_stone) in STR.real_location()
-			if(!PS || !PS.bound_soul)
-				to_chat(usr, span_warning("Камень не активен!"))
-				return TRUE
+			if(!R_DATA) return TRUE
 
 			var/cost = R_DATA["cost"]
 			var/atom/out_type = R_DATA["result_type"]
 
+			if(lux_charges < cost)
+				to_chat(usr, span_warning("Недостаточно энергии Люкса для этой формы!"))
+				return TRUE
+
 			if(transmute_slot && out_type)
-				if(STR)
-					STR.remove_from_storage(transmute_slot, null)
-				PS.charges -= cost
-				qdel(transmute_slot)   
+				lux_charges -= cost
+				if(STR) STR.remove_from_storage(transmute_slot, null)
+				
+				qdel(transmute_slot)
 				transmute_slot = null
 				new out_type(get_turf(src))
-				
-				if(PS.charges <= 0)
-					PS.consume_soul()
 				update_icon()
 			return TRUE
+
 	var/obj/item/reagent_containers/target_beaker = (params["slot"] == "1") ? beaker_1 : beaker_2
 
 	switch(action)

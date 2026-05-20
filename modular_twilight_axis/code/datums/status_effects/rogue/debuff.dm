@@ -10,22 +10,6 @@
 	duration = 1 MINUTES
 	alert_type = /atom/movable/screen/alert/status_effect/emberwine
 
-/datum/status_effect/debuff/nekoldun
-	id = "Psydon's Music"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/nekoldun
-	duration = 70 SECONDS
-
-/datum/status_effect/debuff/nekoldun/on_apply()
-	. = ..()
-	ADD_TRAIT(owner, TRAIT_SPELLCOCKBLOCK, id)
-
-/datum/status_effect/debuff/nekoldun/on_remove()
-	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_SPELLCOCKBLOCK, id)
-
-/atom/movable/screen/alert/status_effect/debuff/nekoldun
-	name = "Psydon's Music"
-
 /* Kockout */
 /datum/status_effect/debuff/knockout
 	id = "knockout"

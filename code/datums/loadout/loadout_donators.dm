@@ -152,6 +152,10 @@
 	name = "Donator Item - Royal Sleeves"
 	path = /obj/item/clothing/wrists/roguetown/royalsleeves
 
+/datum/loadout_item/donator/willmbrink/padded_dress
+	name = "Donator Item - Padded Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/willmbrink
+
 /datum/loadout_item/donator/dasfox
 	name = "Donator Kit - Archaic Ceremonial Valkyrhelm"
 	path = /obj/item/enchantingkit/dasfox_helm
@@ -338,5 +342,14 @@
 	name = "Donator Kit - A Durthurian Tale"
 	path = /obj/item/enchantingkit/weapon/koruu_judgement
 	ckeywhitelist = list("koruu", "pneumothorax")
+
+/datum/loadout_item/donator/magi1138
+	name = "Donator Kit - Stolen Xylix Cloak"
+	path = /obj/item/clothing/cloak/magi1138
+	ckeywhitelist = list("magi1138")
+
+/datum/loadout_item/donator/magi1138/specs
+	name = "Donator Kit - Modified Nocshade Lens-pair"
+	path = /obj/item/clothing/mask/rogue/spectacles/magi1138
 	sort_category = "Donator"
 */

@@ -160,6 +160,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/no_language_fonts = FALSE
 	var/no_language_icon = FALSE
 	var/no_redflash = FALSE
+	var/no_storyteller_events = FALSE
 
 	var/lastclass
 
@@ -804,6 +805,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						dat += "<b>[capitalize(i)]:</b> <font color=red> \[IN [days_remaining] DAYS]</font><br>"
 					else
 						dat += "<b>[capitalize(i)]:</b> <a href='?_src_=prefs;preference=be_special;be_special_type=[i]'>[(i in be_special) ? "Enabled" : "Disabled"]</a><br>"
+			dat += "<br><b>Storyteller:</b> <a href='?_src_=prefs;preference=storyteller'>[no_storyteller_events ? "Disabled" : "Enabled"]</a><br>"
+
 //			dat += "<br>"
 //			dat += "<b>Midround Antagonist:</b> <a href='?_src_=prefs;preference=allow_midround_antag'>[(toggles & MIDROUND_ANTAG) ? "Enabled" : "Disabled"]</a><br>"
 
@@ -2944,6 +2947,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					else
 						be_special += be_special_type
 
+				if("storyteller")
+					no_storyteller_events = !no_storyteller_events
+
 				if("toggle_random")
 					var/random_type = href_list["random_type"]
 					if(randomise[random_type])
@@ -3251,7 +3257,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	character.char_accent = char_accent
 
-	apply_customizers_to_character(character)
+	// Customizers are already applied inside set_species() (both the species-change path via
+	// on_species_gain, and the same-species short-circuit). Re-applying here doubled the work.
 
 	if(culinary_preferences)
 		apply_culinary_preferences(character)

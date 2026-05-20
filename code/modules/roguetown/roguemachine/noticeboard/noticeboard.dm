@@ -97,14 +97,14 @@
 
 	return attack_hand(usr)
 
-/obj/structure/roguemachine/noticeboard/attack_hand(mob/living/carbon/human/user)
-	if(!ishuman(user))
-		return
+/obj/structure/roguemachine/noticeboard/attack_hand(mob/living/user)
+	var/can_addremove = ishuman(user)
+	var/mob/living/carbon/human/human_user = user
 	var/can_remove = FALSE
 	var/can_premium = FALSE
-	if(user.job in list("Man at Arms", "Royal Guard", "Town Sheriff", "Town Watch", "Inquisitor", "Knight", "Royal Knight", "Sergeant", "Royal Guard Sergeant", "Orthodoxist", "Absolver", "Marshal", "Hand", "Grand Duke", "Mayor", "Bailiff")) //why was KC here but not marshal ?
+	if(can_addremove && (human_user.job in list("Man at Arms", "Royal Guard", "Town Sheriff", "Town Watch", "Inquisitor", "Knight", "Royal Knight", "Sergeant", "Royal Guard Sergeant", "Orthodoxist", "Absolver", "Marshal", "Hand", "Grand Duke", "Mayor", "Bailiff"))) //why was KC here but not marshal ?
 		can_remove = TRUE
-	if(user.job in list("Bathmaster","Merchant", "Innkeeper", "Steward", "Court Magician", "Town Crier", "Keeper", "Grand Duke", "Mayor"))
+	if(can_addremove && (human_user.job in list("Bathmaster","Merchant", "Innkeeper", "Steward", "Court Magician", "Town Crier", "Keeper", "Grand Duke", "Mayor")))
 		can_premium = TRUE
 	var/contents
 	contents += "<center>NOTICEBOARD<BR>"
@@ -120,14 +120,15 @@
 			selection += "<a href='?src=[REF(src)];changecategory=[category]'>[category]</a> "
 	contents += selection + "<BR>"
 	if(current_category in list("Postings", "Premium Postings"))
-		contents += "<a href='?src=[REF(src)];makepost=1'>Make a Posting</a>"
-		if(can_premium)
-			contents += " | <a href='?src=[REF(src)];premiumpost=1'>Make a Premium Posting</a><br>"
-		else
-			contents += "<br>"
-		contents += "<a href='?src=[REF(src)];removepost=1'>Remove my Posting</a><br>"
-		if(can_remove)
-			contents += "<a href='?src=[REF(src)];authorityremovepost=1'>Authority: Remove a Posting</a>"
+		if(can_addremove)
+			contents += "<a href='?src=[REF(src)];makepost=1'>Make a Posting</a>"
+			if(can_premium)
+				contents += " | <a href='?src=[REF(src)];premiumpost=1'>Make a Premium Posting</a><br>"
+			else
+				contents += "<br>"
+			contents += "<a href='?src=[REF(src)];removepost=1'>Remove my Posting</a><br>"
+			if(can_remove)
+				contents += "<a href='?src=[REF(src)];authorityremovepost=1'>Authority: Remove a Posting</a>"
 		var/board_empty = TRUE
 		switch(current_category)
 			if("Postings")
@@ -178,9 +179,6 @@
 		contents += "<hr></center>"
 		for(var/id in SStreasury.decrees)
 			var/datum/decree/D = SStreasury.decrees[id]
-			// Dormant charters (never activated this round) are hidden from the public Charters
-			// listing. A charter the Lord has never pressed doesn't exist as far as the town is
-			// concerned - the Notice Board only reflects what's in actual force or was recently.
 			if(!D.has_ever_been_active)
 				continue
 			var/state_color = D.active ? "#2a8a2a" : "#8a2a2a"
@@ -395,8 +393,6 @@
 			GLOB.noticeboard_posts -= removing_post
 			message_admins("[ADMIN_LOOKUPFLW(guy)] has authoritavely removed a post, the message was [removing_post.message]")
 
-
-
 /proc/add_post(message, chosentitle, chosenname, chosenrole, truename, premium)
 	var/datum/noticeboardpost/new_post = new /datum/noticeboardpost
 	new_post.poster = chosenname
@@ -410,8 +406,6 @@
 		GLOB.noticeboard_posts += new_post
 	else
 		GLOB.premium_noticeboardposts += new_post
-
-
 
 /proc/compose_post(datum/noticeboardpost/new_post)
 	new_post.banner += "<center><b>[new_post.title]</b><BR>"
