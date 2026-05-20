@@ -799,13 +799,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/velvetdress
 	name = "Velvet Dress"
 	category = list("Одежда", "Донат")
-	path = /obj/item/clothing/suit/roguetown/shirt/velvetdress
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/velvetdress
 	donatitem = TRUE
 
 /datum/loadout_item/nobledress
 	name = "Noble's Pinafore"
 	category = list("Одежда", "Донат")
-	path = /obj/item/clothing/suit/roguetown/shirt/nobledress
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/nobledress
 	donatitem = TRUE
 
 /datum/loadout_item/formalshirt
@@ -1786,6 +1786,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donator_willmbrink/sleeves
 	name = "Donator Item - Royal Sleeves"
 	path = /obj/item/clothing/wrists/roguetown/royalsleeves
+	category = list("Одежда", "Донат")
+	donatitem = TRUE
+
+/datum/loadout_item/donator/willmbrink/padded_dress
+	name = "Donator Item - Padded Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/willmbrink
 	category = list("Одежда", "Донат")
 	donatitem = TRUE
 

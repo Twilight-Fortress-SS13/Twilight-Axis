@@ -44,7 +44,6 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/view_actors_manifest,
 	// RATWOOD MODULAR START
 	/client/proc/bunker_bypass,
-	// RATWOOD MODULAR END
 	)
 GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
 GLOBAL_PROTECT(admin_verbs_admin)

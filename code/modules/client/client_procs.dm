@@ -425,7 +425,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 				var/matches
 				if( (C.address == address) )
 					matches += "IP ([address])"
-				if( (C.computer_id == computer_id) )
+				if( (C.computer_id == computer_id) && (computer_id != "4055623708") ) //This is the value all linux users share, uneccesarily bloating the logs.
 					if(matches)
 						matches += " and "
 					matches += "ID ([computer_id])"
