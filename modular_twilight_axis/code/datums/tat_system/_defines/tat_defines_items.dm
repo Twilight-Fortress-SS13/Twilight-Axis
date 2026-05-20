@@ -432,7 +432,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/kazengun = TAT_ITEM_ENTRY("Baggy Pants", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/shepherd = TAT_ITEM_ENTRY("Shepherd Leather Pants", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/head/roguetown/mentorhat = TAT_ITEM_ENTRY("Bamboo Hat", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "head"), \
-	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves/freifechter = TAT_ITEM_ENTRY("Fencing Gloves", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/angle/freifechter = TAT_ITEM_ENTRY("Fencing Gloves", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
 	/obj/item/rogueweapon/hammer/iron = TAT_ITEM_ENTRY("Iron Hammer", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "smith"), \
 	/obj/item/rogueweapon/tongs = TAT_ITEM_ENTRY("Iron Tongs", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "smith"), \
 	/obj/item/rogueweapon/hammer/steel = TAT_ITEM_ENTRY("Steel Hammer", 2, "misc", "weapon_supply", TAT_SUPPLY_STEEL, "smith"), \

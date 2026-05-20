@@ -388,7 +388,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_aavnr_pool, list(
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy/shepherd = 2,
 	/obj/item/clothing/shoes/roguetown/grenzelhoft/freifechter = 2,
 	/obj/item/clothing/neck/roguetown/fencerguard = 2,
-	/obj/item/clothing/gloves/roguetown/angle/grenzelgloves/freifechter = 2,
+	/obj/item/clothing/gloves/roguetown/angle/freifechter = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer = 1,
 	/obj/item/clothing/shoes/roguetown/boots/nobleboot/steppesman = 2,
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/steppe = 2,
