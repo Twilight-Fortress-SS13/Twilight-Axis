@@ -1,6 +1,6 @@
 /datum/element/tipped_item
 	element_flags = ELEMENT_DETACH
-
+/*
 /datum/element/tipped_item/Attach(atom/movable/target, amount)
 	. = ..()
 	if(!ismovableatom(target))
@@ -49,3 +49,5 @@
 	if(source.reagents.total_volume)
 		var/reagent_color = mix_color_from_reagents(source.reagents.reagent_list)
 		examine_list += span_red("Has been dipped in <font color=[reagent_color]>something</font>!")
+
+*/
