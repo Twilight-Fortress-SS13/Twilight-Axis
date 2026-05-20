@@ -528,6 +528,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/reagent_containers/glass/bottle/waterskin = TAT_ITEM_ENTRY("Water Skin", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/clothing/gloves/roguetown/bandages/weighted = TAT_ITEM_ENTRY("Weighted Bandages", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "gloves"), \
 	/obj/item/clothing/suit/roguetown/shirt/robe/pointfex = TAT_ITEM_ENTRY("Pointfex's Qaba", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "cloak"), \
+	/obj/item/clothing/suit/roguetown/shirt/robe/hierophant = TAT_DONATION_ITEM_ENTRY("Hierophant's Handys", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "cloak", TAT_DONATION_TIER_ONE), \
 	/obj/item/clothing/suit/roguetown/armor/heartfelt = TAT_DONATION_ITEM_ENTRY("Lordly Plate", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/suit/roguetown/armor/heartfelt/hand = TAT_DONATION_ITEM_ENTRY("Coat of Plate", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine/heavy = TAT_ITEM_ENTRY("Coat of Plates", 2.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
