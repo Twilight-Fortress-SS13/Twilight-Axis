@@ -491,7 +491,7 @@
 		tier++
 	if(has_trait(TAT_TRAIT_DIVINE_BOON_3))
 		tier++
-	return clamp(tier, CLERIC_T0, CLERIC_T4)
+	return clamp(tier, CLERIC_T0, CLERIC_T3)
 
 /datum/tat_traits/proc/get_divine_passive_gain_for_tier(cleric_tier)
 	if(cleric_tier >= CLERIC_T1)
