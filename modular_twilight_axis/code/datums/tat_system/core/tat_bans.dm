@@ -342,16 +342,17 @@
 
 	if(target_client)
 		to_chat(target_client, span_boldannounce("You have been [applies_to_admins ? "admin " : ""]banned by [admin.key] from TAT [bucket_name].<br>Reason: [reason]<br>This ban is [isnull(duration) ? "permanent." : "temporary, it will be removed in [time_message]."] The round ID is [round_id]."))
-		world.TgsAnnounceBan(
-			key,
-			admin.ckey,
-			isnull(duration) ? 0 : duration,
-			isnull(duration) ? "НАВСЕГДА" : time_message,
-			list(sql_role),
-			reason,
-			severity,
-			applies_to_admins
-		)
+		
+	world.TgsAnnounceBan(
+		key,
+		admin.ckey,
+		isnull(duration) ? 0 : duration,
+		isnull(duration) ? "НАВСЕГДА" : time_message,
+		list(sql_role),
+		reason,
+		severity,
+		applies_to_admins
+	)
 	return TRUE
 
 /proc/tat_remove_role_lock(raw_key, bucket, reason = null)
