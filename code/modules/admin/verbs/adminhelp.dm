@@ -1183,7 +1183,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	adminhelp(msg)
 
 /client/verb/adminhelp(msg as message)
-	set category = "-Admin-"
+	set category = "ADMIN"
 	set name = "Adminhelp"
 
 	if(GLOB.say_disabled)	//This is here to try to identify lag problems
@@ -1224,7 +1224,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	new /datum/admin_help(msg, src, FALSE)
 
 /client/verb/reopenticket()
-	set category = "-Admin-"
+	set category = "ADMIN"
 	set name = "View Ticket"
 	set desc = "Reopen your admin help ticket chat window"
 	

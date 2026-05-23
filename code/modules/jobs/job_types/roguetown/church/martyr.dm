@@ -347,15 +347,15 @@
 	var/obj/item/I = parent
 	if(!tonormal)
 		if(current_state == STATE_MARTYR || current_state == STATE_MARTYRULT)
-			I.toggle_state = "[initial(I.icon_state)]_ulton"
+			I.override_state = "[initial(I.icon_state)]_ulton"
 		else
-			I.toggle_state = "[initial(I.icon_state)]_on"
-		I.item_state = "[I.toggle_state][I.wielded ? "1" : ""]"
-		I.icon_state = "[I.toggle_state][I.wielded ? "1" : ""]"
+			I.override_state = "[initial(I.icon_state)]_on"
+		I.item_state = "[I.override_state][I.wielded ? "1" : ""]"
+		I.icon_state = "[I.override_state][I.wielded ? "1" : ""]"
 	else
 		I.icon_state = initial(I.icon_state)
 		I.item_state = initial(I.item_state)
-		I.toggle_state = null
+		I.override_state = null
 
 	current_holder.regenerate_icons()
 
@@ -605,7 +605,7 @@
 	dropshrink = 1
 	smeltresult = null
 	is_silver = TRUE
-	toggle_state = null
+	override_state = null
 	is_important = TRUE
 	special = /datum/special_intent/martyr_astrata_verdict
 
@@ -715,7 +715,7 @@
 	associated_skill = /datum/skill/combat/axes
 	smeltresult = null
 	is_silver = TRUE
-	toggle_state = null
+	override_state = null
 	is_important = TRUE
 	special = /datum/special_intent/martyr_ravox_charge
 
@@ -821,7 +821,7 @@
 	associated_skill = /datum/skill/combat/maces
 	smeltresult = null
 	is_silver = TRUE
-	toggle_state = null
+	override_state = null
 	is_important = TRUE
 	special = /datum/special_intent/martyr_malum_hammerfall
 
@@ -923,7 +923,7 @@
 	associated_skill = /datum/skill/combat/polearms
 	smeltresult = null
 	is_silver = TRUE
-	toggle_state = null
+	override_state = null
 	is_important = TRUE
 	throwforce = 40
 	var/is_being_thrown_by_special = FALSE
@@ -1324,91 +1324,3 @@
 #undef STATE_SAFE
 #undef STATE_MARTYR
 #undef STATE_MARTYRULT
-
-
-///////////////////////////////////
-// Versions for UNDIVIDED ritual //
-///////////////////////////////////
-
-///////////
-// PLATE //
-///////////
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/holysee/ritual
-	name = "crusader silver plate"
-	armor_class = ARMOR_CLASS_MEDIUM
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/holysee/ritual/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	return TRUE
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/holysee/ritual/Initialize()
-	. = ..()
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/holysee/ritual/dropped(mob/living/carbon/human/user)
-	. = ..()
-	if(QDELETED(src))
-		return
-	qdel(src)
-
-////////////
-// GLOVES //
-////////////
-
-/obj/item/clothing/gloves/roguetown/plate/holysee/ritual
-	name = "crusader silver plate gauntlets"
-
-/obj/item/clothing/gloves/roguetown/plate/holysee/ritual/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	return TRUE
-
-/obj/item/clothing/gloves/roguetown/plate/holysee/ritual/Initialize()
-	. = ..()
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
-
-/obj/item/clothing/gloves/roguetown/plate/holysee/ritual/dropped(mob/living/carbon/human/user)
-	. = ..()
-	if(QDELETED(src))
-		return
-	qdel(src)
-
-///////////
-// PANTS //
-///////////
-
-/obj/item/clothing/under/roguetown/platelegs/holysee/ritual
-	name = "crusader silver chausses"
-	armor_class = ARMOR_CLASS_MEDIUM
-
-/obj/item/clothing/under/roguetown/platelegs/holysee/ritual/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	return TRUE
-
-/obj/item/clothing/under/roguetown/platelegs/holysee/ritual/Initialize()
-	. = ..()
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
-
-/obj/item/clothing/under/roguetown/platelegs/holysee/ritual/dropped(mob/living/carbon/human/user)
-	. = ..()
-	if(QDELETED(src))
-		return
-	qdel(src)
-
-///////////
-// BOOTS //
-///////////
-
-/obj/item/clothing/shoes/roguetown/boots/armor/holysee/ritual
-	name = "crusader silver plated boots"
-
-/obj/item/clothing/shoes/roguetown/boots/armor/holysee/ritual/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	return TRUE
-
-/obj/item/clothing/shoes/roguetown/boots/armor/holysee/ritual/Initialize()
-	. = ..()
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
-
-/obj/item/clothing/shoes/roguetown/boots/armor/holysee/ritual/dropped(mob/living/carbon/human/user)
-	. = ..()
-	if(QDELETED(src))
-		return
-	qdel(src)
-

@@ -89,7 +89,7 @@ type Data = {
   pill_mix: { name: string; vol: number; id: string }[];
   pill_mix_total: number;
   flour_count: number;
-  p_stone: { charges: number; max: number; owner: string } | null;
+  lux_tank: { charges: number; max: number } | null;
   transmute_item: { name: string; image: string } | null;
   transmute_recipes: { 
     name: string; 
@@ -456,57 +456,27 @@ const TransmutationTab = () => {
   const { act, data } = useBackend<Data>();
   const [selecting, setSelecting] = useState(false);
 
-  const isCritical = data.p_stone ? data.p_stone.charges < 20 : false;
-
   return (
-    <Section title="Трансмутация" fill scrollable>
+    <Section title="Трансмутация Материи" fill scrollable>
       <Stack vertical fill>
         <Stack.Item>
-          {data.p_stone ? (
-            <Box 
-              p={1} 
-              style={{ 
-                border: isCritical ? '2px solid #ff0000' : '1px solid gold', 
-                borderRadius: '4px', 
-                backgroundColor: isCritical ? 'rgba(255, 0, 0, 0.1)' : 'rgba(255, 215, 0, 0.1)',
-                boxShadow: isCritical ? '0 0 10px rgba(255, 0, 0, 0.5)' : 'none'
-              }}
-            >
-              <Stack align="center">
-                <Icon 
-                  name="gem" 
-                  color={isCritical ? "red" : "gold"} 
-                  size={2} 
-                  mr={1} 
-                  style={{ animation: isCritical ? 'blink 1s infinite' : 'none' }}
-                />
-                <Stack.Item grow>
-                  <Box bold color={isCritical ? "red" : "gold"} fontSize="1.1em">
-                    {isCritical ? "КАМЕНЬ ИСТОЩЕН" : "ФИЛОСОФСКИЙ КАМЕНЬ"}
+          <Box p={1} style={{ border: '1px solid #00ffcc', borderRadius: '4px', backgroundColor: 'rgba(0, 255, 204, 0.05)' }}>
+            <Stack align="center">
+              <Icon name="bolt" color="teal" size={2} mr={1} />
+              <Stack.Item grow>
+                <Box bold color="teal" fontSize="1.1em">Накопитель Энергии</Box>
+                <ProgressBar value={data.lux_tank?.charges || 0} maxValue={data.lux_tank?.max || 1000} color="teal" mt={0.5} />
+                <Stack justify="space-between" mt={0.5} align="center">
+                  <Box fontSize="0.9em" color="white">
+                    Зарядов Люкса: {data.lux_tank?.charges || 0} / {data.lux_tank?.max || 1000}
                   </Box>
-                  <ProgressBar 
-                    value={data.p_stone.charges} 
-                    maxValue={data.p_stone.max} 
-                    color={isCritical ? "danger" : "red"} 
-                    mt={0.5} 
-                  />
-                  <Stack justify="space-between" mt={0.5}>
-                    <Box fontSize="0.9em">Зарядов: {Math.round(data.p_stone.charges)} / {data.p_stone.max}</Box>
-                    <Box fontSize="0.9em">Душа: {data.p_stone.owner}</Box>
-                  </Stack>
-                </Stack.Item>
-              </Stack>
-            </Box>
-          ) : (
-            <Box 
-              p={2} 
-              textAlign="center" 
-              color="gray" 
-              style={{ fontStyle: 'italic', border: '1px dashed gray', borderRadius: '4px' }}
-            >
-              Положите привязанный Философский Камень в склад стола для активации...
-            </Box>
-          )}
+                  <Button icon="battery-full" color="good" onClick={() => act('consume_lux')}>
+                    Поглотить Люкс из склада
+                  </Button>
+                </Stack>
+              </Stack.Item>
+            </Stack>
+          </Box>
         </Stack.Item>
 
         <Stack.Item mt={2} mb={2}>
@@ -514,10 +484,9 @@ const TransmutationTab = () => {
             <Box 
               onClick={() => data.transmute_item ? act('transmute_eject') : setSelecting(true)}
               style={{ 
-                width: '80px', height: '80px', border: '2px dashed gold', 
+                width: '80px', height: '80px', border: '2px dashed #00ffcc', 
                 display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: '8px',
-                boxShadow: data.transmute_item ? '0 0 15px rgba(255, 215, 0, 0.3)' : 'none'
+                backgroundColor: 'rgba(0, 255, 204, 0.05)', borderRadius: '8px'
               }}
             >
               {data.transmute_item ? (
@@ -527,7 +496,7 @@ const TransmutationTab = () => {
               )}
             </Box>
             
-            <Icon name="arrow-right" size={3} mx={4} color="gold" />
+            <Icon name="arrow-right" size={3} mx={4} color="teal" />
             
             <Box style={{ 
               width: '80px', height: '80px', border: '2px solid #555', 
@@ -542,16 +511,12 @@ const TransmutationTab = () => {
         <Stack.Item grow>
           {data.transmute_recipes?.length > 0 ? (
             data.transmute_recipes.map((recipe, i) => {
-
-              const isLethal = data.p_stone && data.p_stone.charges < recipe.cost;
+              const hasEnergy = data.lux_tank && data.lux_tank.charges >= recipe.cost;
               
               return (
                 <Button 
-                  key={i} 
-                  fluid 
-                  mb={1} 
-                  color={isLethal ? "danger" : "gold"}
-                  disabled={!data.p_stone} 
+                  key={i} fluid mb={1} color={hasEnergy ? "teal" : "gray"}
+                  disabled={!hasEnergy} 
                   onClick={() => act('do_transmute', { recipe_ref: recipe.ref })}
                   style={{ height: '42px' }}
                 >
@@ -560,17 +525,10 @@ const TransmutationTab = () => {
                       <img src={recipe.icon} style={{ width: '32px', height: '32px', imageRendering: 'pixelated' }} />
                     </Stack.Item>
                     <Stack.Item grow textAlign="left">
-                      <Box bold fontSize="1.1em">
-                        {recipe.name}
-                        {isLethal && (
-                          <Box inline ml={1} color="red" fontSize="0.8em" style={{ textShadow: '0 0 5px black' }}>
-                            [СМЕРТЕЛЬНО]
-                          </Box>
-                        )}
-                      </Box>
+                      <Box bold fontSize="1.1em" color="white">{recipe.name}</Box>
                     </Stack.Item>
                     <Stack.Item>
-                      <Box bold color={isLethal ? "red" : "yellow"} fontSize="1.1em">
+                      <Box bold color={hasEnergy ? "yellow" : "gray"} fontSize="1.1em">
                         <Icon name="bolt" mr={0.5} /> {recipe.cost}
                       </Box>
                     </Stack.Item>
@@ -579,12 +537,7 @@ const TransmutationTab = () => {
               );
             })
           ) : (
-            <Box 
-              textAlign="center" 
-              color="gray" 
-              mt={2} 
-              style={{ fontStyle: 'italic' }}
-            >
+            <Box textAlign="center" color="gray" mt={2} style={{ fontStyle: 'italic' }}>
               {data.transmute_item 
                 ? "Нет доступных трансмутаций для этой материи." 
                 : "Положите базовый материал (слиток, ткань, кожу) в слот."}
@@ -594,27 +547,11 @@ const TransmutationTab = () => {
       </Stack>
 
       {selecting && (
-        <Box 
-          style={{ 
-            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
-            backgroundColor: 'rgba(0,0,0,0.95)', zIndex: 100, padding: '15px',
-            border: '2px solid gold', borderRadius: '4px'
-          }}
-        >
-          <Section 
-            title="Выберите материал" 
-            fill 
-            scrollable 
-            buttons={<Button icon="times" color="transparent" onClick={() => setSelecting(false)} />}
-          >
-            {data.available_all_items.length > 0 ? (
+        <Box style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.95)', zIndex: 100, padding: '15px' }}>
+          <Section title="Выберите материал" fill scrollable buttons={<Button icon="times" color="transparent" onClick={() => setSelecting(false)} />}>
+          {data.available_all_items.length > 0 ? (
               data.available_all_items.map((item, i) => (
-                <Button 
-                  key={i} 
-                  fluid 
-                  mb={1} 
-                  onClick={() => { act('transmute_assign', { item_ref: item.ref }); setSelecting(false); }}
-                >
+                <Button key={i} fluid mb={1} onClick={() => { act('transmute_assign', { item_ref: item.ref }); setSelecting(false); }}>
                   <Stack align="center">
                     <img src={item.image} style={{ width: '24px', height: '24px', marginRight: '8px' }} />
                     <Box>{item.name}</Box>
@@ -627,14 +564,6 @@ const TransmutationTab = () => {
           </Section>
         </Box>
       )}
-
-      <style>{`
-        @keyframes blink {
-          0% { opacity: 1; }
-          50% { opacity: 0.3; }
-          100% { opacity: 1; }
-        }
-      `}</style>
     </Section>
   );
 };

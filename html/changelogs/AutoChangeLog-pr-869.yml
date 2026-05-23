@@ -1,5 +1,0 @@
-author: "G9ose"
-delete-after: True
-changes:
-  - rscadd: "Loadout items"
-  - bugfix: "beak parent"

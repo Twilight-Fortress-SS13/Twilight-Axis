@@ -68,7 +68,7 @@
 	if(H.has_status_effect(/datum/status_effect/buff/ozium))
 		to_chat(user, span_love("My pray has under ozium!"))
 		point_count += 1
-	if(point_count < 2)
+	if(point_count <= 2)
 		revert_cast()
 		return FALSE
 	user.visible_message(span_love("[user] brings his lips close to [H]'s, capturing [H] in a passionate kiss!"))

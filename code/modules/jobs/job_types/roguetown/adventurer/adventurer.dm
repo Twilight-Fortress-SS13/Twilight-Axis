@@ -111,7 +111,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 
 	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 	if(current_players > 70)
-		var/extra = floor((current_players - 70) / 5)
+		var/extra = floor((current_players - 80) / 5)
 		slots += extra
 	slots = min(slots, 30)
 
