@@ -2035,7 +2035,7 @@
 	if(tat_build_handles_preference_loadout(character, player))
 		return TRUE
 
-	var/triumph_discount_remaining = is_donator(player.ckey) ? 3 : 0 // donators get first 3 triumph points free
+	var/triumph_discount_remaining = get_donator_triumph_discount(player.ckey) // TA EDIT - donor triumph discount scales by Patreon tier
 	if(player.prefs.selected_loadout_items)
 		for(var/key in player.prefs.selected_loadout_items)
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
