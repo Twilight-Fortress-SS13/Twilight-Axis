@@ -1,0 +1,4 @@
+author: "rarytech"
+delete-after: True
+changes:
+  - balance: "added battleward rune owner for caster"

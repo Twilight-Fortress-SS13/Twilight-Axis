@@ -14,7 +14,10 @@ import {
 
 interface Data {
   categories: Record<string, Record<string, Item>>;
-  isDonator: number;
+  isDonator: boolean | number;
+  donatTier: number;
+  triumphDiscount: number;
+  triumphDiscountUsed: number;
   curLoadoutSlots: number;
   maxLoadoutSlots: number;
 }
@@ -75,6 +78,14 @@ export const LoadoutPanel = () => {
     }
   };
 
+  const slotRatio =
+    data.maxLoadoutSlots > 0
+      ? data.curLoadoutSlots / data.maxLoadoutSlots
+      : 0;
+
+  const hasDonatorTriumphDiscount =
+    !!data.isDonator && data.triumphDiscount > 0;
+
   return (
     <Window title="Лодаут" width={1000} height={700}>
       <Window.Content>
@@ -126,10 +137,31 @@ export const LoadoutPanel = () => {
                 average: [0.25, 0.75],
                 good: [-Infinity, 0.25],
               }}
-              value={data.curLoadoutSlots / data.maxLoadoutSlots}
+              value={slotRatio}
               width="300px"
             />
           </Stack.Item>
+
+          {hasDonatorTriumphDiscount ? (
+            <Stack.Item>
+              <Box
+                style={{
+                  display: 'inline-block',
+                  padding: '8px 14px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(212, 175, 55, 0.14)',
+                  border: '1px solid rgba(212, 175, 55, 0.55)',
+                  color: '#facc15',
+                  fontWeight: 'bold',
+                  textShadow: '1px 1px 3px rgba(0,0,0,0.75)',
+                }}
+              >
+                ★ Скидочные триумфы: занято {data.triumphDiscountUsed} из{' '}
+                {data.triumphDiscount}
+              </Box>
+            </Stack.Item>
+          ) : null}
+
           <Stack.Item
             style={{
               display: 'flex',

@@ -89,12 +89,12 @@
 /datum/heritage/proc/SelectReplacementHouseHead()
 	var/datum/family_member/replacement = null
 	for(var/datum/family_member/member as anything in members)
-		if(member?.person && !member.phantom)
+		if(member?.person && !member.phantom && !member.cosmetic)
 			replacement = member
 			break
 	if(!replacement)
 		for(var/datum/family_member/member as anything in members)
-			if(member)
+			if(member && !member.cosmetic)
 				replacement = member
 				break
 	if(!founder || !(founder in members))
@@ -237,6 +237,15 @@
 	if(!member)
 		return FALSE
 	return RemoveFamilyMember(member, clear_person_refs)
+
+/datum/heritage/proc/CreateCosmeticFamilyMember(mob/living/carbon/human/person)
+	if(!ishuman(person))
+		return null
+	var/datum/family_member/new_member = new(person, src)
+	new_member.cosmetic = TRUE
+	members += new_member
+	person?.family_datum = src
+	return new_member
 
 /datum/heritage/proc/CreateFamilyMember(mob/living/carbon/human/person)
 	if(!ishuman(person))
@@ -386,6 +395,34 @@
 			parent_names += parent_name
 	return parent_names
 
+/datum/heritage/proc/BuildInLawParentNode(datum/family_member/member, datum/family_member/checker_member)
+	if(!member || (!member.person && !member.phantom) || (!member.cosmetic && !member.phantom))
+		return null
+
+	var/relation_text = checker_member ? checker_member.GetRelationshipTo(member) : null
+	var/list/details = list()
+	if(member.phantom)
+		details += "Unrecorded ancestor"
+	if(member.person?.dna?.species?.name)
+		details += member.person.dna.species.name
+	var/list/parent_names = BuildFamilyTreeParentNames(member)
+
+	return list(
+		"name" = FamilyTreeMemberDisplayName(member) || "Unknown",
+		"label" = relation_text ? uppertext(relation_text) : null,
+		"details" = details,
+		"accentColor" = GetRelationColor(relation_text),
+		"isSelf" = FALSE,
+		"phantom" = member.phantom,
+		"cosmetic" = member.cosmetic,
+		"generation" = member.generation,
+		"parents" = parent_names,
+		"spouses" = list(),
+		"children" = list(),
+		"personRef" = null,
+		"descriptor" = SSfamilytree.familytree_build_member_descriptor(member),
+	)
+
 /datum/heritage/proc/FamilyTreeHasRealParent(datum/family_member/member, datum/family_member/ignore_parent = null)
 	if(!member)
 		return FALSE
@@ -412,8 +449,10 @@
 		relation_text = checker_member.GetRelationshipTo(member)
 
 	var/list/details = list()
-	if(member.adoption_status)
+	if(member.adoption_status && !member.cosmetic)
 		details += "Adopted"
+	if(member.cosmetic)
+		details += "NPC"
 	var/list/parent_names = BuildFamilyTreeParentNames(member)
 	if(parent_names.len)
 		details += "Parents: [jointext(parent_names, ", ")]"
@@ -426,11 +465,16 @@
 		if(spouse_names.len)
 			details += "Married to: [jointext(spouse_names, ", ")]"
 
+	var/entry_ref = (!member.cosmetic && !member.phantom) ? REF(member.person) : null
+	var/entry_descriptor = SSfamilytree.familytree_build_member_descriptor(member)
+
 	return list(
 		"name" = member.person.real_name,
 		"label" = relation_text ? uppertext(relation_text) : null,
 		"details" = details,
 		"accentColor" = GetRelationColor(relation_text),
+		"personRef" = entry_ref,
+		"descriptor" = entry_descriptor,
 	)
 
 /datum/heritage/proc/OpenCursePanel(mob/living/carbon/human/user)
@@ -508,13 +552,15 @@
 	var/list/details = list()
 	if(root_member == checker_member)
 		details += "You"
-	if(root_member.adoption_status)
+	if(root_member.adoption_status && !root_member.cosmetic)
 		details += "Adopted"
 	if(root_member.phantom)
 		details += "Unrecorded ancestor"
 	if(root_member.person?.dna?.species?.name)
 		details += root_member.person.dna.species.name
 	var/list/parent_names = BuildFamilyTreeParentNames(root_member)
+	var/node_ref = (root_member.person && !root_member.cosmetic && !root_member.phantom) ? REF(root_member.person) : null
+	var/node_descriptor = (root_member.person && !root_member.phantom) ? SSfamilytree.familytree_build_member_descriptor(root_member) : null
 
 	var/list/node = list(
 		"name" = root_member.person ? root_member.person.real_name : "Unknown",
@@ -523,10 +569,13 @@
 		"accentColor" = GetRelationColor(relation_text),
 		"isSelf" = (root_member == checker_member),
 		"phantom" = root_member.phantom,
+		"cosmetic" = root_member.cosmetic,
 		"generation" = root_member.generation,
 		"parents" = parent_names,
 		"spouses" = list(),
 		"children" = list(),
+		"personRef" = node_ref,
+		"descriptor" = node_descriptor,
 	)
 
 	if(depth >= 24)
@@ -538,10 +587,22 @@
 		for(var/datum/family_member/spouse as anything in root_member.get_spouse_members())
 			if(!spouse || visited[spouse])
 				continue
-			var/list/spouse_visited = visited.Copy()
-			var/list/spouse_node = BuildFamilyTree(spouse, checker_member, spouse_visited, depth + 1, FALSE, FALSE, spouse_seen)
+			var/list/spouse_node = BuildFamilyTree(spouse, checker_member, visited, depth + 1, FALSE, FALSE, spouse_seen)
 			if(spouse_node)
 				spouse_seen[spouse] = TRUE
+				var/list/spouse_parent_nodes = list()
+				for(var/datum/family_member/sp_parent as anything in spouse.get_parent_members())
+					if(!sp_parent?.cosmetic && !sp_parent?.phantom)
+						continue
+					if(visited[sp_parent])
+						continue
+					var/list/sp_parent_node = BuildInLawParentNode(sp_parent, checker_member)
+					if(!sp_parent_node)
+						continue
+					visited[sp_parent] = TRUE
+					spouse_parent_nodes += list(sp_parent_node)
+				if(spouse_parent_nodes.len)
+					spouse_node["parentNodes"] = spouse_parent_nodes
 				node["spouses"] += list(spouse_node)
 
 	if(include_children)
@@ -554,7 +615,7 @@
 
 	var/list/node_spouses = node["spouses"]
 	var/list/node_children = node["children"]
-	if(root_member.phantom && !node_spouses.len && !node_children.len)
+	if(root_member.phantom && !root_member.cosmetic && !node_spouses.len && !node_children.len)
 		return null
 
 	return node

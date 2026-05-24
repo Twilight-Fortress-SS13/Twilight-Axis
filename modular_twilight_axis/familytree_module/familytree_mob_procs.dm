@@ -156,10 +156,15 @@
 			details += "[fage]"
 
 		var/fheresy = person_info["FHERESY"]
+		var/known_ref = istype(H, /mob/living/carbon/human/dummy) ? null : REF(H)
+		var/datum/family_member/known_member = H.family_member_datum
+		var/known_descriptor = known_member ? SSfamilytree.familytree_build_member_descriptor(known_member) : null
 		entries += list(list(
 			"name" = H.real_name,
 			"label" = fheresy,
 			"details" = details,
+			"personRef" = known_ref,
+			"descriptor" = known_descriptor,
 		))
 
 	if(!house_names.len)
@@ -230,11 +235,18 @@
 	if(title)
 		details += "[title]"
 
+	var/is_dummy = istype(bonded_person, /mob/living/carbon/human/dummy)
+	var/bond_ref = is_dummy ? null : REF(bonded_person)
+	var/datum/family_member/bond_member = bonded_person.family_member_datum
+	var/bond_descriptor = bond_member ? SSfamilytree.familytree_build_member_descriptor(bond_member) : null
+
 	return list(
 		"name" = bonded_person.real_name,
 		"label" = uppertext(relation_text),
 		"details" = details,
 		"accentColor" = "#FF69B4",
+		"personRef" = bond_ref,
+		"descriptor" = bond_descriptor,
 	)
 
 /mob/living/carbon/human/proc/familytree_build_bond_display_entries()

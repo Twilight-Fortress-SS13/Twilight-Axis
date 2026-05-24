@@ -53,7 +53,7 @@ GLOBAL_VAR_INIT(whitelistLoaded, 0)
 /*/datum/admins/proc/BC_WhitelistKeyVerb()
 
 	set name = "BC - Whitelist Key"
-	set category = "-Server-"
+	set category = "SERVER"
 
 	var/key = input("CKey to Whitelist", "Whitelist Key") as null|text
 
@@ -92,8 +92,9 @@ GLOBAL_VAR_INIT(whitelistLoaded, 0)
 //ADMIN_VERB_ADD(/client/proc/BC_RemoveKeyVerb, R_ADMIN, FALSE)
 ///client/proc/BC_RemoveKeyVerb()
 /*/datum/admins/proc/BC_RemoveKeyVerb()
-	set name = "Border Control - Remove Key"
-	set category = "Admin.Border Control"
+	set name = "BC - Remove Whitelist Key"
+	set category = "SERVER"
+
 	var/keyToRemove = input("CKey to Remove", "Remove Key") as null|anything in GLOB.whitelistedCkeys
 
 	if(keyToRemove)
@@ -127,7 +128,7 @@ GLOBAL_VAR_INIT(whitelistLoaded, 0)
 /*/datum/admins/proc/BC_ToggleState()
 
 	set name = "BC - Toggle Mode"
-	set category = "-Server-"
+	set category = "SERVER"
 	set desc= "Enables or disables border control"
 
 	var/borderControlMode = CONFIG_GET(number/border_control)

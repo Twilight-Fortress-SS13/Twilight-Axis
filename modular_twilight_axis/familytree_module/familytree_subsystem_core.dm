@@ -161,6 +161,16 @@ SUBSYSTEM_DEF(familytree)
 	H.allow_low_status_marriage = P.allow_low_status_marriage
 	H.allow_relatives_in_family = P.allow_relatives_in_family
 	H.know_your_fate = P.know_your_fate
+	H.familytree_father_name = istext(P.familytree_father_name) ? P.familytree_father_name : ""
+	H.familytree_mother_name = istext(P.familytree_mother_name) ? P.familytree_mother_name : ""
+	H.familytree_father_species = istext(P.familytree_father_species) ? P.familytree_father_species : ""
+	H.familytree_mother_species = istext(P.familytree_mother_species) ? P.familytree_mother_species : ""
+	if(familytree_donator_relatives_enabled(H.ckey))
+		H.familytree_random_siblings = sanitize_integer(text2num("[P.familytree_random_siblings]"), 0, FAMILYTREE_MAX_RANDOM_RELATIVES, 0)
+		H.familytree_random_children = sanitize_integer(text2num("[P.familytree_random_children]"), 0, FAMILYTREE_MAX_RANDOM_RELATIVES, 0)
+	else
+		H.familytree_random_siblings = 0
+		H.familytree_random_children = 0
 	return TRUE
 
 /datum/controller/subsystem/familytree/proc/on_familytree_target_preference_changed(mob/living/carbon/human/H, old_setspouse)
@@ -358,7 +368,8 @@ SUBSYSTEM_DEF(familytree)
 		return
 
 	if(H in viable_spouses)
-		ftlog("try_queue SKIP: [H.real_name] already in viable_spouses")
+		ftlog("try_queue WAIT: [H.real_name] already in viable_spouses; scheduling recheck")
+		wait_for_new_family_match(H, "queue requested while already waiting in new-family pool")
 		return
 
 	if(!P)

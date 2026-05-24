@@ -1,6 +1,6 @@
 /client/proc/link_ckey2discord()
 	set name = "Link discord to admin ckey"
-	set category = "-Special Verbs-"
+	set category = "SPECIAL VERBS"
 	if(!holder || !check_rights(R_DEBUG))
 		return
 	var/select = input("Select type of data for link (and open DM)", "Data") in list("Account ID", "Name")

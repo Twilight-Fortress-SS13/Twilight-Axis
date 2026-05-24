@@ -136,6 +136,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	var/list/personal_objectives = list()
 
 	var/has_bomb = FALSE
+	var/has_drug_delivery = FALSE
 
 /datum/mind/New(key)
 	key = key
@@ -604,11 +605,19 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 /datum/mind/proc/recall_targets(mob/recipient, window=1)
 	var/output = "<B>[recipient.real_name]'s Hitlist:</B><br>"
 	for(var/mob/living/carbon in GLOB.mob_living_list) // Iterate through all mobs in the world
-		if((carbon.real_name != recipient.real_name) && ((carbon.has_flaw(/datum/charflaw/hunted)) || HAS_TRAIT(carbon, TRAIT_ZIZOID_HUNTED) && (!istype(carbon, /mob/living/carbon/human/dummy))))//To be on the list they must be hunted, not be the user and not be a dummy (There is a dummy that has all vices for some reason)
-			output += "<br>[carbon.real_name]"
-			output += "<br>[carbon.real_name]"
-			if (carbon.job)
-				output += " - [carbon.job]"
+		if(carbon.real_name == recipient.real_name)
+			continue
+		if(istype(carbon, /mob/living/carbon/human/dummy))
+			continue
+		if(carbon.job in GLOB.hunted_protected_roles)
+			continue
+		if(!(carbon.has_flaw(/datum/charflaw/hunted) || HAS_TRAIT(carbon, TRAIT_ZIZOID_HUNTED)))
+			continue
+
+		output += "<br>[carbon.real_name]"
+		if(carbon.job)
+			output += " - [carbon.job]"
+
 	output += "<br>Your creed is blood, your faith is steel. You will not rest until these souls are yours. Use the profane dagger to trap their souls for Graggar."
 
 	if(window)
@@ -867,6 +876,12 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	// New action-based spell system
 	if(istype(spell_or_action, /datum/action/cooldown/spell))
 		var/datum/action/cooldown/spell/new_spell = spell_or_action
+
+		// check exclusivity
+		for(var/datum/action/cooldown/spell/S in spell_list)
+			if(S.exclusive_group && S.exclusive_group == new_spell.exclusive_group)
+				return // already have one of this group
+
 		for(var/datum/action/cooldown/spell/present in spell_list)
 			if(present.name == new_spell.name && present.type == new_spell.type)
 				return

@@ -30,4 +30,9 @@
 	sort_category = "Miscellaneous"
 	cost = 2
 
+/datum/loadout_item/bandolier
+	name = "Bandolier"
+	path = /obj/item/clothing/cloak/bandolier
+	sort_category = "Miscellaneous"
+	cost = 2
 */

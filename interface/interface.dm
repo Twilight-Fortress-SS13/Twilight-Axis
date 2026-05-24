@@ -59,7 +59,7 @@
 /client/verb/mentorhelp()
 	set name = "Mentorhelp"
 	set desc = ""
-	set category = "-Admin-"
+	set category = "ADMIN"
 	if(mob)
 		var/msg = input("Submit your question to the Voices:", "Mentorhelp Input") as text|null
 		if(msg)
@@ -70,7 +70,7 @@
 /client/verb/mentor_stats()
 	set name = "Mentor Statistics"
 	set desc = ""
-	set category = "-Admin-"
+	set category = "ADMIN"
 	check_mentor_stats_menu(src.ckey)
 
 /client/verb/reportissue()
