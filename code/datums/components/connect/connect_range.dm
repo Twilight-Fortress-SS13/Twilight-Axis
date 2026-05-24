@@ -69,9 +69,6 @@
 	qdel(src)
 
 /datum/component/connect_range/proc/update_signals(atom/target, atom/old_loc)
-	if(!parent || QDELETED(parent) || !target || QDELETED(target))
-		return
-
 	var/turf/current_turf = get_turf(target)
 	if(isnull(current_turf))
 		unregister_signals(old_loc, turfs)
@@ -85,48 +82,33 @@
 			return
 		//Keep track of possible movement of all movables the target is in.
 		for(var/atom/movable/container as anything in get_nested_locs(target))
-			if(!container || QDELETED(container))
-				continue
 			RegisterSignal(container, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
 
 	//Only register/unregister turf signals if it's moved to a new turf.
 	if(current_turf == get_turf(old_loc))
 		unregister_signals(old_loc, null)
 		return
-
 	var/list/old_turfs = turfs
 	turfs = RANGE_TURFS(range, current_turf)
 	unregister_signals(old_loc, old_turfs - turfs)
-
-	if(!length(connections) || !parent || QDELETED(parent))
-		return
-
 	for(var/turf/target_turf as anything in turfs - old_turfs)
-		if(!target_turf || QDELETED(target_turf))
-			continue
 		for(var/signal in connections)
 			parent.RegisterSignal(target_turf, signal, connections[signal])
 
 /datum/component/connect_range/proc/unregister_signals(atom/location, list/remove_from)
-	if(!parent || QDELETED(parent))
-		return
-
 	//The location is null or is a container and the component shouldn't have register signals on it
 	if(isnull(location) || (!works_in_containers && !isturf(location)))
 		return
 
 	if(ismovable(location))
 		for(var/atom/movable/target as anything in (get_nested_locs(location) + location))
-			if(!target || QDELETED(target))
-				continue
 			UnregisterSignal(target, COMSIG_MOVABLE_MOVED)
 
-	if(!length(remove_from) || !length(connections))
+	if(!length(remove_from))
 		return
-
+	if(!length(remove_from))
+		return
 	for(var/turf/target_turf as anything in remove_from)
-		if(!target_turf || QDELETED(target_turf))
-			continue
 		parent.UnregisterSignal(target_turf, connections)
 
 /datum/component/connect_range/proc/on_moved(atom/movable/movable, atom/old_loc)
