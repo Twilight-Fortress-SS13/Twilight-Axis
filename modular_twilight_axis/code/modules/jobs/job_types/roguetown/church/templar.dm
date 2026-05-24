@@ -130,7 +130,7 @@
 			cloak = /obj/item/clothing/cloak/tabard/crusader/dendor
 			mask = /obj/item/clothing/head/roguetown/dendormask/armored
 			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
-//			H.AddSpell(new /obj/effect/proc_holder/spell/self/conjure_armor/vines)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/conjure_arcyne_ward/druid)
 		if(/datum/patron/divine/necra)
 			head = /obj/item/clothing/head/roguetown/necrahood
 			wrists = /obj/item/clothing/neck/roguetown/psicross/necra

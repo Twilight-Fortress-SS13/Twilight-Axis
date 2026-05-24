@@ -26,7 +26,7 @@
 	same_job_respawn_delay = 30 MINUTES
 
 	cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
-	job_traits = list(TRAIT_AZURENATIVE, TRAIT_OUTDOORSMAN, TRAIT_WOODSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_EXPERT_HUNTER)
+	job_traits = list(TRAIT_LONGSTRIDER, TRAIT_OUTDOORSMAN, TRAIT_WOODSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_EXPERT_HUNTER) // TA EDIT TRAIT_AZURENATIVE —> TRAIT_LONGSTRIDER
 	job_subclasses = list(/datum/advclass/warden/warden)
 
 /datum/outfit/job/roguetown/warden

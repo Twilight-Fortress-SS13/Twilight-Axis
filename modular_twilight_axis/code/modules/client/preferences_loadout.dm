@@ -34,7 +34,7 @@
 /datum/preferences/proc/get_loadout_size(mob/user)
 	var/loadout_size = 3
 	var/modifiers = 0
-	
+
 	var/plevel = check_patreon_lvl(user.ckey)
 
 	if(plevel == 1)
@@ -96,7 +96,18 @@
 	var/list/categories = list()
 	var/datum/preferences/user_prefs = user.client.prefs
 	var/list/selected_loadout_items = user_prefs.selected_loadout_items
+
 	var/donat_level = check_patreon_lvl(user.ckey)
+	var/triumph_discount = get_donator_triumph_discount(user.ckey)
+	var/is_donator_status = (triumph_discount > 0) || is_donator(user.ckey)
+
+	var/total_triumph_cost = 0
+	for(var/item_name in selected_loadout_items)
+		var/datum/loadout_item/selected_item = GLOB.loadout_items_by_name[item_name]
+		if(selected_item?.triumph_cost)
+			total_triumph_cost += selected_item.triumph_cost
+
+	var/triumph_discount_used = min(triumph_discount, total_triumph_cost)
 
 	for(var/cat_name in GLOB.loadout_items_by_category)
 		var/list/items_in_cat = GLOB.loadout_items_by_category[cat_name]
@@ -140,7 +151,10 @@
 			)
 
 	data["categories"] = categories
-	data["isDonator"] = donat_level
+	data["isDonator"] = is_donator_status
+	data["donatTier"] = donat_level
+	data["triumphDiscount"] = triumph_discount
+	data["triumphDiscountUsed"] = triumph_discount_used
 	data["curLoadoutSlots"] = selected_loadout_items.len
 	data["maxLoadoutSlots"] = user_prefs.get_loadout_size(user)
 

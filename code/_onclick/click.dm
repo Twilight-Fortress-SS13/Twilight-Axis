@@ -803,8 +803,7 @@ GLOBAL_LIST_EMPTY(reach_dummy_pool)
 /atom/proc/AltClickNoInteract(mob/user, atom/A)
 	var/turf/T = get_turf(A)
 	if(T && user.TurfAdjacent(T))
-		user.listed_turf = T
-		user.client.statpanel = T.name
+		user.client.browserpanel_open_turf(T)
 
 /mob/proc/TurfAdjacent(turf/T)
 	return T.Adjacent(src)
@@ -831,8 +830,8 @@ GLOBAL_LIST_EMPTY(reach_dummy_pool)
 /atom/proc/AltRightClick(mob/user)
 //	SEND_SIGNAL(src, COMSIG_CLICK_ALT, user)
 	var/turf/T = get_turf(src)
-	if(T && (isturf(loc) || isturf(src)))
-		user.open_tile_panel_for(T)
+	if(T && (isturf(loc) || isturf(src)) && user.TurfAdjacent(T))
+		user.client.browserpanel_open_turf(T)
 
 /mob/proc/CtrlRightClickOn(atom/A, params)
 	pointed(A)

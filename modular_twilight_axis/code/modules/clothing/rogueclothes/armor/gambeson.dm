@@ -20,7 +20,6 @@
 	salvage_result = /obj/item/reagent_containers/lux
 	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE + 200
 	armor = ARMOR_BRIGANDINE
-	allowed_race = NON_DWARVEN_RACE_TYPES
 	auto_repair_mode = TRUE
 	relative_repair_interval = 15 SECONDS
 	interrupt_damount = 15
@@ -106,6 +105,11 @@
 				name = realname
 				desc = realdesc
 				icon_state = realstate
+
+		if(loc == user)
+			user.update_inv_armor()
+			user.update_inv_shirt()
+
 		playsound(user, pick('sound/magic/magic_nulled.ogg'), 20, TRUE)
 
 /obj/item/clothing/suit/roguetown/shirt/padedetrshirt

@@ -119,7 +119,7 @@
 
 /client/proc/tat_role_locks_panel()
 	set name = "TAT Role Locks"
-	set category = "Admin"
+	set category = "ADMIN"
 
 	tat_open_role_locks_panel()
 

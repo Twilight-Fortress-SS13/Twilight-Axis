@@ -13,7 +13,7 @@
 	associated_skill = /datum/skill/magic/arcane
 	chargedrain = 1
 	chargetime = 0 SECONDS
-	recharge_time = 30 SECONDS
+	recharge_time = 20 SECONDS
 	hide_charge_effect = TRUE
 	gesture_required = TRUE // Mobility spell
 	spell_tier = 2
