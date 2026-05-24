@@ -116,6 +116,17 @@
 	silver = TRUE
 	blessed = TRUE
 
+/atom/movable/screen/alert/status_effect/debuff/psypowder
+	name = "Runed Poison"
+	desc = "This powder is killing my eyes and body. I cant see and move..."
+	icon_state = "blind"
+
+/datum/status_effect/debuff/psypowder
+	id = "blind"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/psypowder
+	effectedstats = list(STATKEY_STR = -5, STATKEY_SPD = -5, STATKEY_CON = -3)
+	duration = 15 SECONDS
+
 /atom/movable/screen/alert/status_effect/debuff/thunderpowder
 	name = "Struck by Thunder"
 	desc = "I was struck by a Thunderpowder shot. My muscles are tense, and it's difficult to move."
@@ -209,6 +220,9 @@
 						if("thunderpowder")
 							T.Immobilize(30)
 							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
+						if("psypowder")
+							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
+							T.apply_status_effect(/datum/status_effect/debuff/blindness)
 						if("corrosive gunpowder")
 							playsound(src, 'sound/misc/drink_blood.ogg', 100)
 							T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
@@ -251,6 +265,9 @@
 						if("thunderpowder")
 							T.Immobilize(10)
 							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
+						if("psypowder")
+							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
+							T.apply_status_effect(/datum/status_effect/debuff/blindness/psy)
 						if("terrorpowder")
 							gunpowder_npc_critfactor += 1
 				if(!T.mind)
@@ -364,7 +381,9 @@
 		if("thunderpowder")
 			L.Immobilize(10)
 			L.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
-
+		if("psypowder")
+			L.apply_status_effect(/datum/status_effect/debuff/psypowder)
+			L.apply_status_effect(/datum/status_effect/debuff/blindness)
 		if("arcyne gunpowder")
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L

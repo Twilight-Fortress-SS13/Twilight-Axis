@@ -6,6 +6,7 @@
 	var/adoption_status = FALSE
 	var/generation = 0
 	var/phantom = FALSE
+	var/cosmetic = FALSE
 	var/tmp/recalculating_generation = FALSE
 	var/mutable_appearance/cloned_look
 
@@ -105,14 +106,14 @@
 		return FALSE
 	if(IsAncestorOf(parent))
 		return FALSE
-	if(person && parent.person && !adoption_status && !SSfamilytree.familytree_biological_parent_allowed(parent.person, person, family))
+	if(person && parent.person && !adoption_status && !parent.cosmetic && !cosmetic && !SSfamilytree.familytree_biological_parent_allowed(parent.person, person, family))
 		return FALSE
-	if(person && parent.person && !adoption_status)
+	if(person && parent.person && !adoption_status && !parent.cosmetic && !cosmetic)
 		for(var/datum/family_member/existing_parent as anything in current_parents)
-			if(existing_parent?.person && !SSfamilytree.familytree_biological_parent_pair_allowed(parent.person, existing_parent.person, person, family))
+			if(existing_parent?.person && !existing_parent.cosmetic && !SSfamilytree.familytree_biological_parent_pair_allowed(parent.person, existing_parent.person, person, family))
 				return FALSE
 
-	if(parent.phantom || !parent.person)
+	if(parent.phantom || parent.cosmetic || cosmetic || !parent.person)
 		phantom_parent_members += parent
 		if(!(src in parent.phantom_child_members))
 			parent.phantom_child_members += src
@@ -400,6 +401,14 @@
 		if("feminine")
 			return "daughter-in-law"
 	return GetChildInLawTerm()
+
+/datum/family_member/proc/GetSpouseOfNieceNephewTerm()
+	switch(GetRelationshipStyle())
+		if("masculine")
+			return "nephew-in-law"
+		if("feminine")
+			return "niece-in-law"
+	return "niece/nephew-in-law"
 
 /datum/family_member/proc/GetStepChildTerm()
 	switch(GetRelationshipStyle())
@@ -690,6 +699,13 @@
 	for(var/datum/family_member/member as anything in family.members)
 		if(AreSiblings(member) && (other in member.get_spouse_members()))
 			return other.GetSpouseOfSiblingTerm()
+
+	for(var/datum/family_member/sibling as anything in family.members)
+		if(!AreSiblings(sibling) || sibling == src)
+			continue
+		for(var/datum/family_member/nibling as anything in sibling.get_blood_child_members())
+			if(other in nibling.get_spouse_members())
+				return other.GetSpouseOfNieceNephewTerm()
 
 	for(var/datum/family_member/child as anything in get_child_members())
 		if(other in child.get_spouse_members())

@@ -140,6 +140,8 @@
 				/obj/item/twilight_powderflask = 1,
 				/obj/item/clothing/gloves/roguetown/knuckles/ancient = 1
 			)
+	
+	H.select_skeleton_features()
 
 /datum/outfit/job/roguetown/wretch/hero/post_equip(mob/living/carbon/human/H)
 	..()

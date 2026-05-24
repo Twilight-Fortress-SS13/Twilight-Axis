@@ -32,6 +32,8 @@
 	var/hides_from_books = FALSE 
 	/// Whether this recipe will transmit a message in a 7x7 column around the source.
 	var/loud = FALSE
+	/// Whether this recipe will log for admins, use for structures and anything that can cause grief.
+	var/adminlog = FALSE
 	//crafting diff, every diff removes 25% chance to craft
 	var/required_tech_node = null // String ID of required tech node, or null if no tech required
 	var/tech_unlocked = TRUE // Set to TRUE when the required tech is unlocked
@@ -215,7 +217,7 @@
 				if(WLENGTH_GREAT)
 					html += "Great<br>"
 
-		if(bookweapon.has_altgrip_modes())
+		if(!ispath(bookweapon) && bookweapon.has_altgrip_modes())
 			html += "\n<b>GRIP: ALT-GRIP (RCLICK/HOTKEY(B)/CTRL+SCRLWHL)</b><br>"
 			var/list/alt_grip_lines = bookweapon.get_altgrip_lines(src, user)
 			if(length(alt_grip_lines))

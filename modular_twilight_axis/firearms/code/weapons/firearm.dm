@@ -46,6 +46,8 @@
 			. += span_bold("Накладывает на цель онемение. Если у цели есть магический барьер, он будет мгновенно уничтожен.")
 		if("terrorpowder")
 			. += span_bold("Наносит удвоенный урон всем существам, не контролируемым игроком.")
+		if("psypowder")
+			. += span_bold("Ослабляет и ослепляет цель ядовитыми парами на несколько секунд.")
 	. += span_bold("Пороха осталось на [charges] перезарядок.")
 
 /obj/item/twilight_powderflask/fyre
@@ -89,6 +91,13 @@
 	icon_state = "powderflask_holyfyre"
 	gunpowder = "holy fyrepowder"
 	charges = 16
+
+/obj/item/twilight_powderflask/volf
+	name = "powderflask"
+	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит порох смешанный с ядовитыми порошками, изготовленными специально для волков. В нём нет благословлений, его существование столь же омерзительно как и существование рунных волков."
+	icon_state = "powderflask_psy"
+	gunpowder = "psypowder"
+	charges = 30
 
 /obj/effect/particle_effect/smoke/arquebus
 	name = "smoke"
@@ -200,10 +209,10 @@
 
 /obj/item/gun/ballistic/twilight_firearm/shoot_live_shot(mob/living/user as mob|obj, pointblank = 0, mob/pbtarget = null, message = 1)
 	if(silenced)
-		fire_sound = "modular_twilight_axis/firearms/sound/umbra_fire.ogg"
+		fire_sound = "modular_twilight_axis/firearms/sound/umbra_fire2.ogg"
 	else
 		switch(gunpowder)
-			if("fyrepowder", "holy fyrepowder")
+			if("fyrepowder", "holy fyrepowder", "psypowder")
 				fire_sound = pick("modular_twilight_axis/firearms/sound/fyrepowder/arquefire.ogg", "modular_twilight_axis/firearms/sound/fyrepowder/arquefire2.ogg", "modular_twilight_axis/firearms/sound/fyrepowder/arquefire3.ogg",
 							"modular_twilight_axis/firearms/sound/fyrepowder/arquefire4.ogg", "modular_twilight_axis/firearms/sound/fyrepowder/arquefire5.ogg")
 			if("thunderpowder")
@@ -343,7 +352,7 @@
 			return
 		else
 			switch(W.gunpowder)
-				if("fyrepowder", "holy fyrepowder")
+				if("fyrepowder", "holy fyrepowder", "psypowder")
 					playsound(src, "modular_twilight_axis/firearms/sound/fyrepowder/pour_powder.ogg",  100, FALSE)
 				if("thunderpowder")
 					playsound(src, "modular_twilight_axis/firearms/sound/thunderpowder/pour_powder.ogg",  100, FALSE)
@@ -546,7 +555,7 @@
 						new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 2))
 					spawn (16)
 						new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 1))
-				if("thunderpowder")
+				if("thunderpowder", "psypowder")
 					spawn (5)
 						new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 1))
 					spawn (10)
@@ -623,7 +632,7 @@
 							new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 2))
 						spawn (12)
 							new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 1))
-					if("thunderpowder")
+					if("thunderpowder", "psypowder")
 						spawn (1)
 							new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 1))
 						spawn (5)

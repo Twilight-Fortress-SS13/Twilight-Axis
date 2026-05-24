@@ -63,6 +63,7 @@
 	beltr = /obj/item/rogueweapon/whip/spiderwhip	
 	beltl = /obj/item/rope/chain
 
+
 	//H.faction += "spider_lowers" //TA EDIT
 
 	if(H.mind)

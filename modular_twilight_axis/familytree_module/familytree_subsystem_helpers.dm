@@ -589,6 +589,105 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 		return TRUE
 	return FALSE
 
+/proc/familytree_donator_relatives_enabled(ckey)
+	if(!ckey)
+		return FALSE
+	var/plevel = check_patreon_lvl(ckey)
+	if(!isnum(plevel))
+		return FALSE
+	return plevel >= FAMILYTREE_DONATOR_RELATIVES_TIER
+
+/proc/familytree_role_text_ru(role)
+	switch(role)
+		if("spouse")
+			return "супруг(а)"
+		if("sibling")
+			return "брат/сестра"
+		if("child")
+			return "ребёнок"
+		if("parent")
+			return "родитель"
+		if("uncle_aunt")
+			return "дядя/тётя"
+		if("nibling")
+			return "племянник(ца)"
+		if("relative")
+			return "родственник"
+	return null
+
+/proc/familytree_new_family_role_text_ru(relation, is_a)
+	switch(relation)
+		if("spouse")
+			return familytree_role_text_ru("spouse")
+		if("sibling")
+			return familytree_role_text_ru("sibling")
+		if("a_parent")
+			return is_a ? familytree_role_text_ru("parent") : familytree_role_text_ru("child")
+		if("b_parent")
+			return is_a ? familytree_role_text_ru("child") : familytree_role_text_ru("parent")
+		if("a_uncle_aunt")
+			return is_a ? familytree_role_text_ru("uncle_aunt") : familytree_role_text_ru("nibling")
+		if("b_uncle_aunt")
+			return is_a ? familytree_role_text_ru("nibling") : familytree_role_text_ru("uncle_aunt")
+	return null
+
+/proc/familytree_forced_role_text_ru(forced_role)
+	switch(forced_role)
+		if("sibling")
+			return familytree_role_text_ru("sibling")
+		if("parent")
+			return familytree_role_text_ru("parent")
+		if("child")
+			return familytree_role_text_ru("child")
+		if("uncle_aunt")
+			return familytree_role_text_ru("uncle_aunt")
+	return null
+
+/proc/familytree_desired_role_text_ru(desired_role)
+	switch(desired_role)
+		if(RELATIVE_SIBLING)
+			return familytree_role_text_ru("sibling")
+		if(RELATIVE_PARENT)
+			return familytree_role_text_ru("parent")
+		if(RELATIVE_CHILD)
+			return familytree_role_text_ru("child")
+		if(RELATIVE_UNCLE_AUNT)
+			return familytree_role_text_ru("uncle_aunt")
+		if(RELATIVE_SPOUSE)
+			return familytree_role_text_ru("spouse")
+	return null
+
+/datum/controller/subsystem/familytree/proc/familytree_build_member_descriptor(datum/family_member/member)
+	if(!member?.person)
+		return null
+	var/mob/living/carbon/human/H = member.person
+	var/list/descriptors = H.get_mob_descriptors(FALSE, H)
+	if(!descriptors?.len)
+		return null
+
+	var/list/lines = list()
+	var/list/desc_copy = descriptors.Copy()
+
+	var/first_line = build_coalesce_description(desc_copy, H, list(MOB_DESCRIPTOR_SLOT_HEIGHT, MOB_DESCRIPTOR_SLOT_BODY, MOB_DESCRIPTOR_SLOT_STATURE, MOB_DESCRIPTOR_SLOT_FACE_SHAPE, MOB_DESCRIPTOR_SLOT_FACE_EXPRESSION), "You see %DESC1%, %DESC2% %DESC3% with %DESC4%, %DESC5%.")
+	if(first_line)
+		lines += first_line
+
+	var/second_line = build_coalesce_description(desc_copy, H, list(MOB_DESCRIPTOR_SLOT_AGE, MOB_DESCRIPTOR_SLOT_SKIN, MOB_DESCRIPTOR_SLOT_VOICE), "%THEY% %DESC1%, %DESC2% and %DESC3%.")
+	if(second_line)
+		lines += second_line
+
+	var/third_line = build_coalesce_description(desc_copy, H, list(MOB_DESCRIPTOR_SLOT_PROMINENT, MOB_DESCRIPTOR_SLOT_PROMINENT), "%THEY% %DESC1% and %DESC2%.")
+	if(third_line)
+		lines += third_line
+
+	var/fourth_line = build_coalesce_description(desc_copy, H, list(MOB_DESCRIPTOR_SLOT_PROMINENT, MOB_DESCRIPTOR_SLOT_PROMINENT), "%THEY% %DESC1% and %DESC2%.")
+	if(fourth_line)
+		lines += fourth_line
+
+	if(!lines.len)
+		return null
+	return lines.Join("\n")
+
 /datum/controller/subsystem/familytree/proc/familytree_format_fate_reveal(mob/living/carbon/human/partner)
 	if(!partner)
 		return ""

@@ -66,6 +66,28 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 	return null
 
+/proc/get_donator_triumph_discount(key)
+	key = ckey(key)
+	if(!key)
+		return 0
+
+	switch(check_patreon_lvl(key))
+		if(1)
+			return 3
+		if(2)
+			return 5
+		if(3)
+			return 7
+		if(4)
+			return 10
+		if(5)
+			return 15
+
+	if(is_donator(key))
+		return 3
+
+	return 0
+
 //Miscellaneous
 
 /datum/loadout_item/card_deck
@@ -799,13 +821,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/velvetdress
 	name = "Velvet Dress"
 	category = list("Одежда", "Донат")
-	path = /obj/item/clothing/suit/roguetown/shirt/velvetdress
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/velvetdress
 	donatitem = TRUE
 
 /datum/loadout_item/nobledress
 	name = "Noble's Pinafore"
 	category = list("Одежда", "Донат")
-	path = /obj/item/clothing/suit/roguetown/shirt/nobledress
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/nobledress
 	donatitem = TRUE
 
 /datum/loadout_item/formalshirt
@@ -1410,6 +1432,88 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Триумфы")
 	triumph_cost = 5
 
+//////////////////
+//  PERFUMES !  //
+//////////////////
+
+/datum/loadout_item/triumph_perfume_lavender
+	name = "Lavender Perfume"
+	path = /obj/item/perfume/lavender
+	category = list("Триумфы")
+	triumph_cost = 2
+
+/datum/loadout_item/triumph_perfume_cherry
+	name = "Cherry Perfume"
+	path = /obj/item/perfume/cherry
+	category = list("Триумфы")
+	triumph_cost = 2
+
+/datum/loadout_item/triumph_perfume_rose
+	name = "Rose Perfume"
+	path = /obj/item/perfume/rose
+	category = list("Триумфы")
+	triumph_cost = 2
+
+/datum/loadout_item/triumph_perfume_jasmine
+	name = "Jasmine Perfume"
+	path = /obj/item/perfume/jasmine
+	category = list("Триумфы")
+	triumph_cost = 2
+
+/datum/loadout_item/triumph_perfume_mint
+	name = "Mint Perfume"
+	path = /obj/item/perfume/mint
+	category = list("Триумфы")
+	triumph_cost = 2
+
+/datum/loadout_item/triumph_perfume_vanilla
+	name = "Vanilla Perfume"
+	path = /obj/item/perfume/vanilla
+	category = list("Триумфы")
+	triumph_cost = 2
+
+/datum/loadout_item/triumph_perfume_pear
+	name = "Pear Perfume"
+	path = /obj/item/perfume/pear
+	category = list("Триумфы")
+	triumph_cost = 2
+
+/datum/loadout_item/triumph_perfume_strawberry
+	name = "Strawberry Perfume"
+	path = /obj/item/perfume/strawberry
+	category = list("Триумфы")
+	triumph_cost = 2
+
+/datum/loadout_item/triumph_perfume_cinnamon
+	name = "Cinnamon Perfume"
+	path = /obj/item/perfume/cinnamon
+	category = list("Триумфы")
+	triumph_cost = 2
+
+/datum/loadout_item/triumph_perfume_frankincense
+	name = "Frankincense Perfume"
+	path = /obj/item/perfume/frankincense
+	category = list("Триумфы")
+	triumph_cost = 3
+
+/datum/loadout_item/triumph_perfume_sandalwood
+	name = "Sandalwood Perfume"
+	path = /obj/item/perfume/sandalwood
+	category = list("Триумфы")
+	triumph_cost = 3
+
+/datum/loadout_item/triumph_perfume_myrrh
+	name = "Myrrh Perfume"
+	path = /obj/item/perfume/myrrh
+	category = list("Триумфы")
+	triumph_cost = 3
+
+/datum/loadout_item/triumph_fermented_crab
+	name = "Fermented Crab"
+	path = /obj/item/reagent_containers/glass/bottle/alchemical/fermented_crab
+	category = list("Триумфы")
+	triumph_cost = 5
+
 // -7 TRI Minisection.
 /*
 /datum/loadout_item/triumph_buttpack
@@ -1789,6 +1893,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Одежда", "Донат")
 	donatitem = TRUE
 
+/datum/loadout_item/donator/willmbrink/padded_dress
+	name = "Donator Item - Padded Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/willmbrink
+	category = list("Одежда", "Донат")
+	donatitem = TRUE
+
 /datum/loadout_item/donator_dasfox
 	name = "Donator Kit - Archaic Ceremonial Valkyrhelm - Required: Armet"
 	path = /obj/item/enchantingkit/dasfox_helm
@@ -1860,6 +1970,27 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/weapon/noire_flsword
 	donatitem = TRUE
+
+/datum/loadout_item/donator/nero_sword
+	name = "Donator Kit - Sylvan Longsword - Required: Longsword"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/nero_lsword
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/nero_dagger
+	name = "Donator Kit - Sylvan Dagger - Required: Dagger"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/nero_dagger
+	donatitem = TRUE
+	donat_tier = 2
+	
+/datum/loadout_item/donator/nero_sabre
+	name = "Donator Kit - Sylvan Sabre - Required: Sabre"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/nero_sabre
+	donatitem = TRUE
+	donat_tier = 2
 
 /datum/loadout_item/donator_dasfox/periapt
 	name = "Donator Item - Defiled Astratan Periapt"

@@ -559,6 +559,146 @@
 	H.set_species(S)
 	H.dna.species = S
 
+/datum/controller/subsystem/familytree/proc/familytree_species_type_from_name(species_name)
+	if(!istext(species_name) || !length(species_name))
+		return null
+	var/species_type = GLOB.species_list[species_name]
+	if(ispath(species_type, /datum/species))
+		return species_type
+	return null
+
+/datum/controller/subsystem/familytree/proc/familytree_create_commoner_parent(datum/heritage/house, parent_name, parent_species_name, parent_gender, default_species_type, parent_generation)
+	if(!house || !istext(parent_name) || !length(parent_name))
+		return null
+	var/chosen_species_type = familytree_species_type_from_name(parent_species_name) || default_species_type
+	var/mob/living/carbon/human/dummy/parent_mob = new()
+	parent_mob.gender = parent_gender
+	parent_mob.age = AGE_MIDDLEAGED
+	parent_mob.real_name = parent_name
+	if(chosen_species_type)
+		set_species_type(parent_mob, chosen_species_type)
+
+	var/datum/family_member/parent_member = house.CreateCosmeticFamilyMember(parent_mob)
+	if(!parent_member)
+		return null
+	parent_member.generation = parent_generation
+	return parent_member
+
+/datum/controller/subsystem/familytree/proc/GenerateCommonerParents(datum/heritage/house, datum/family_member/founder_member)
+	if(!house || !founder_member?.person)
+		return
+	if(istype(founder_member.person, /mob/living/carbon/human/dummy))
+		return
+	if(founder_member.get_parent_members().len)
+		return
+
+	var/mob/living/carbon/human/founder_human = founder_member.person
+	var/father_name = istext(founder_human.familytree_father_name) ? founder_human.familytree_father_name : ""
+	var/mother_name = istext(founder_human.familytree_mother_name) ? founder_human.familytree_mother_name : ""
+	var/father_species_name = istext(founder_human.familytree_father_species) ? founder_human.familytree_father_species : ""
+	var/mother_species_name = istext(founder_human.familytree_mother_species) ? founder_human.familytree_mother_species : ""
+
+	if(!length(father_name) && !length(mother_name))
+		return
+
+	var/default_species_type = founder_human.dna?.species?.type
+	var/parent_generation = founder_member.generation - 1
+	var/list/created_parents = list()
+
+	var/datum/family_member/father_member = familytree_create_commoner_parent(house, father_name, father_species_name, MALE, default_species_type, parent_generation)
+	if(father_member)
+		created_parents += father_member
+
+	var/datum/family_member/mother_member = familytree_create_commoner_parent(house, mother_name, mother_species_name, FEMALE, default_species_type, parent_generation)
+	if(mother_member)
+		created_parents += mother_member
+
+	for(var/datum/family_member/parent_member as anything in created_parents)
+		founder_member.AddParent(parent_member)
+
+	if(father_member && mother_member)
+		father_member.AddSpouse(mother_member)
+
+/datum/controller/subsystem/familytree/proc/familytree_get_or_create_shared_parent(datum/heritage/house, datum/family_member/anchor_member)
+	if(!house || !anchor_member)
+		return null
+	var/list/anchor_parents = anchor_member.get_parent_members()
+	if(anchor_parents.len)
+		return anchor_parents[1]
+	var/datum/family_member/phantom = familytree_create_phantom_member(house, anchor_member.generation - 1)
+	if(!phantom)
+		return null
+	if(!anchor_member.AddParent(phantom))
+		house.RemoveFamilyMember(phantom)
+		return null
+	return phantom
+
+/datum/controller/subsystem/familytree/proc/GenerateRandomSiblings(datum/heritage/house, datum/family_member/founder_member, count)
+	if(!house || !founder_member?.person || count <= 0)
+		return
+	if(istype(founder_member.person, /mob/living/carbon/human/dummy))
+		return
+
+	var/mob/living/carbon/human/founder_human = founder_member.person
+	var/datum/species/founder_species = founder_human.dna?.species
+	var/species_type = founder_species?.type
+	if(!species_type)
+		return
+
+	var/datum/family_member/shared_parent = familytree_get_or_create_shared_parent(house, founder_member)
+	if(!shared_parent)
+		return
+
+	for(var/i in 1 to count)
+		var/sibling_gender = prob(50) ? MALE : FEMALE
+		var/sibling_name = founder_species.random_name(sibling_gender, TRUE) || "Unknown"
+
+		var/mob/living/carbon/human/dummy/sibling = new()
+		sibling.gender = sibling_gender
+		sibling.age = founder_human.age
+		sibling.real_name = sibling_name
+		set_species_type(sibling, species_type)
+
+		var/datum/family_member/sibling_member = house.CreateCosmeticFamilyMember(sibling)
+		if(!sibling_member)
+			qdel(sibling)
+			continue
+		sibling_member.generation = founder_member.generation
+		sibling_member.adoption_status = TRUE
+		if(!sibling_member.AddParent(shared_parent))
+			house.RemoveFamilyMember(sibling_member)
+
+/datum/controller/subsystem/familytree/proc/GenerateRandomChildren(datum/heritage/house, datum/family_member/founder_member, count)
+	if(!house || !founder_member?.person || count <= 0)
+		return
+	if(istype(founder_member.person, /mob/living/carbon/human/dummy))
+		return
+
+	var/mob/living/carbon/human/founder_human = founder_member.person
+	var/datum/species/founder_species = founder_human.dna?.species
+	var/species_type = founder_species?.type
+	if(!species_type)
+		return
+
+	for(var/i in 1 to count)
+		var/child_gender = prob(50) ? MALE : FEMALE
+		var/child_name = founder_species.random_name(child_gender, TRUE) || "Unknown"
+
+		var/mob/living/carbon/human/dummy/child = new()
+		child.gender = child_gender
+		child.age = AGE_ADULT
+		child.real_name = child_name
+		set_species_type(child, species_type)
+
+		var/datum/family_member/child_member = house.CreateCosmeticFamilyMember(child)
+		if(!child_member)
+			qdel(child)
+			continue
+		child_member.generation = founder_member.generation + 1
+		child_member.adoption_status = TRUE
+		if(!child_member.AddParent(founder_member))
+			house.RemoveFamilyMember(child_member)
+
 /datum/controller/subsystem/familytree/proc/GenerateRoyalName(gender, generation)
 	var/list/male_names = list(
 		"King" = list("Otto", "Arnulf", "Ludwig", "Henri", "Louis", "Francois"),

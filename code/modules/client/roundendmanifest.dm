@@ -11,8 +11,6 @@
 /client/proc/view_actors_manifest()
 	set category = "OOC"
 	set name = "View Actors"
-	if(!holder)
-		return
 	var/list/dat = list()
 	var/list/department_display_order = list(
 		"Noblemen",
