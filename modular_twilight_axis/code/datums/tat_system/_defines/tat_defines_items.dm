@@ -742,7 +742,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/shoes/roguetown/horseshoes = TAT_ITEM_ENTRY("Horseshoes", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/horseshoes/steel = TAT_ITEM_ENTRY("Horseshoes", 1.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/customlock = TAT_ITEM_ENTRY("Unfinished Lock", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
-	/obj/item/roguekey/custom = TAT_ITEM_ENTRY("Custom Key", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
+	/obj/item/customblank = TAT_ITEM_ENTRY("Custom Key", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn = TAT_ITEM_ENTRY("Plotting Talisman", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/inhumen/baothagronn = TAT_ITEM_ENTRY("Relishing Talisman", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn = TAT_ITEM_ENTRY("Starving Talisman", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
