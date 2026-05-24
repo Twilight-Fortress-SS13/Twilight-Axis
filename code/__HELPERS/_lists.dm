@@ -191,13 +191,13 @@
 /proc/typecache_filter_list(list/atoms, list/typecache)
 	RETURN_TYPE(/list)
 	. = list()
-	if(!length(atoms) || !length(typecache))
-		return
+	if(isnull(atoms) || !length(typecache))
+		return .
 	for(var/thing in atoms)
 		var/atom/A = thing
 		if(!A)
 			continue
-		if (typecache[A.type])
+		if(typecache[A.type])
 			. += A
 
 /proc/typecache_filter_list_reverse(list/atoms, list/typecache)
