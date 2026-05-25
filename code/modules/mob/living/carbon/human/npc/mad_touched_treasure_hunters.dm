@@ -104,6 +104,7 @@
 
 /obj/item/clothing/mask/rogue/facemask/steel/paalloy/mad_touched/equipped(mob/user, slot)
 	. = ..()
+	flags_cover = null // TA EDIT
 	if(slot == SLOT_WEAR_MASK)
 		ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 		var/mob/living/carbon/human/mad_touched = user
