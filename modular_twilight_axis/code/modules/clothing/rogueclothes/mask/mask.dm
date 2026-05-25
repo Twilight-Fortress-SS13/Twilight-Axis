@@ -10,6 +10,7 @@
 	desc = "A ceramic mask, forever stuck with the joyful smile its patron god favors. While it will shatter easily from blows, its smug countenance shall taunt its foes."
 	max_integrity = 50
 	armor = null
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH
 	drop_sound = 'sound/foley/brickdrop.ogg'
 	pickup_sound = 'sound/foley/brickdrop.ogg'
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
@@ -175,12 +176,14 @@
 /obj/item/clothing/mask/rogue/yoruku_oni
 	name = "oni mask"
 	desc = "A wood mask carved in the visage of demons said to stalk the mountains of Kazengun."
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH
 	icon_state = "oni"
 	stack_fovs = FALSE
 
 /obj/item/clothing/mask/rogue/yoruku_kitsune
 	name = "kitsune mask"
 	desc = "A wood mask carved in the visage of the fox spirits said to ply their tricks in the forests of Kazengun."
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH
 	icon_state = "kitsune"
 	stack_fovs = FALSE
 

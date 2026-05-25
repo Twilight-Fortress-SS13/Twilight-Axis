@@ -235,6 +235,7 @@
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	max_integrity = 200
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH // TA EDIT
 	flags_inv = HIDEFACE|HIDESNOUT|HIDEHAIR|HIDEEARS
 	body_parts_covered = FACE|HEAD
 	block2add = FOV_BEHIND
@@ -331,6 +332,7 @@
 	resistance_flags = FIRE_PROOF
 	armor = ARMOR_PLATE
 	flags_inv = HIDEFACE|HIDESNOUT
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH //TA EDIT
 	body_parts_covered = FACE
 	block2add = FOV_BEHIND
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
@@ -349,6 +351,7 @@
 	resistance_flags = FIRE_PROOF
 	armor = ARMOR_PLATE
 	flags_inv = HIDEFACE|HIDESNOUT
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH // TA EDIT
 	body_parts_covered = FACE
 	block2add = FOV_BEHIND
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
@@ -499,6 +502,7 @@
 	name = "halfmask"
 	icon_state = "shepherd"
 	flags_inv = HIDEFACE|HIDEFACIALHAIR|HIDESNOUT
+	flags_cover = MASKCOVERSMOUTH
 	block2add = null
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
 	adjustable = CAN_CADJUST
@@ -524,6 +528,7 @@
 	desc = "What better laboratory than the blood-soaked battlefield?"
 	icon_state = "physmask"
 	flags_inv = HIDEFACE|HIDEFACIALHAIR|HIDESNOUT
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH // TA EDIT
 	body_parts_covered = FACE|EYES|MOUTH
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
 	sewrepair = TRUE
@@ -558,6 +563,7 @@
 	resistance_flags = FIRE_PROOF
 	armor = ARMOR_PADDED_BAD
 	flags_inv = HIDEFACE|HIDESNOUT
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH // TA EDIT
 	body_parts_covered = FACE
 	block2add = FOV_BEHIND
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
@@ -570,6 +576,7 @@
 	name = "rag mask"
 	icon_state = "ragmask"
 	flags_inv = HIDEFACE|HIDEFACIALHAIR|HIDESNOUT
+	flags_cover = MASKCOVERSMOUTH
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
 	adjustable = CAN_CADJUST
 	toggle_icon_state = TRUE
@@ -591,6 +598,7 @@
 	name = "war scholar's mask"
 	item_state = "naledimask"
 	icon_state = "naledimask"
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH // TA EDIT
 	desc = "Runes and wards, meant for daemons; the gold has somehow rusted in unnatural, impossible agony. The most prominent of these etchings is in the shape of the Naledian psycross. Armored to protect the wearer's face."
 	max_integrity = 100
 	armor = ARMOR_PLATE
@@ -618,6 +626,7 @@
 	name = "giltsilk mask"
 	icon_state = "silkmask"
 	flags_inv = HIDEFACE|HIDEFACIALHAIR
+	flags_cover = MASKCOVERSMOUTH
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
 	sewrepair = TRUE
 	adjustable = CAN_CADJUST
@@ -664,6 +673,7 @@
 /obj/item/clothing/mask/rogue/courtphysician
 	name = "head physician's mask"
 	desc = "This one is made with actual bone! Don't ask whose."
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH // TA EDIT
 	icon = 'icons/roguetown/clothing/special/courtphys.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/courtphys.dmi'
 	icon_state = "docmask"
@@ -685,6 +695,7 @@
 	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
 	armor = ARMOR_PLATE
 	flags_inv = HIDEFACE
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH // TA EDIT
 	body_parts_covered = FACE
 	block2add = FOV_BEHIND
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
@@ -756,6 +767,7 @@
 	max_integrity = 50
 	armor = null
 	flags_inv = HIDEFACE|HIDESNOUT
+	flags_cover = MASKCOVERSEYES | MASKCOVERSMOUTH // TA EDIT
 	body_parts_covered = FACE
 	block2add = FOV_BEHIND
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP

@@ -68,6 +68,7 @@
 	item_state = "fullpadded"
 	color = "#976E6B"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
+	flags_cover = HEADCOVERSMOUTH // TA EDIT
 	slot_flags = ITEM_SLOT_NECK|ITEM_SLOT_HEAD
 	blocksound = SOFTHIT
 	body_parts_covered = NECK|MOUTH|NOSE|HAIR|EARS|HEAD
@@ -190,6 +191,7 @@
 	armor = ARMOR_MAILLE
 	body_parts_covered = NECK|MOUTH
 	slot_flags = ITEM_SLOT_NECK
+	flags_cover = MASKCOVERSMOUTH // TA EDIT
 	flags_inv = HIDEFACE|HIDEFACIALHAIR|HIDESNOUT
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/ComponentInitialize()
@@ -209,6 +211,7 @@
 	name = "full chain coif"
 	icon_state = "fchaincoif"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
+	flags_cover = HEADCOVERSMOUTH // TA EDIT
 	resistance_flags = FIRE_PROOF
 	body_parts_covered = NECK|MOUTH|NOSE|HAIR|EARS|HEAD
 	adjustable = CAN_CADJUST
