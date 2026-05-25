@@ -182,7 +182,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/rogueweapon/mace/cudgel/flanged = 6,
 	/obj/item/rogueweapon/mace/cudgel/psy/old = 6,
 	/obj/item/rogueweapon/mace/cudgel/psyclassic/old = 6,
-	/obj/item/rogueweapon/mace/goden/kanabo = 6,
+	/obj/item/rogueweapon/mace/goden/steel/kanabo = 6,
 	/obj/item/rogueweapon/mace/goden/steel = 6,
 	/obj/item/rogueweapon/mace/maul/grand = 3,
 	/obj/item/rogueweapon/mace/steel = 6,

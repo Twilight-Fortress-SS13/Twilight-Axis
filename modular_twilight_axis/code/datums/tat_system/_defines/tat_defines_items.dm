@@ -452,7 +452,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/mace/cudgel/psyclassic/old = TAT_ITEM_ENTRY("Enduring Handmace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/mace/cudgel/copper = TAT_ITEM_ENTRY("Copper Bludgeon", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
 	/obj/item/rogueweapon/mace/goden = TAT_ITEM_ENTRY("Goedendag", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
-	/obj/item/rogueweapon/mace/goden/kanabo = TAT_ITEM_ENTRY("Kanabo", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
+	/obj/item/rogueweapon/mace/goden/steel/kanabo = TAT_ITEM_ENTRY("Kanabo", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/mace/goden/psymace  = TAT_ITEM_ENTRY("Psydonic Mace", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "blunt"), \
 	/obj/item/rogueweapon/shield/wood = TAT_ITEM_ENTRY("Wooden Shield", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
 	/obj/item/rogueweapon/shield/wood/deprived = TAT_ITEM_ENTRY("Ghastly Shield", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "shield"), \
