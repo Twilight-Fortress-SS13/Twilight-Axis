@@ -100,6 +100,84 @@
 		)
 	return result
 
+/datum/tat_skills/proc/sanitize_skill_domain_points()
+	if(!islist(domain_points))
+		domain_points = list()
+
+	var/list/domains = list(
+		TAT_SKILL_DOMAIN_COMBAT,
+		TAT_SKILL_DOMAIN_WANDERING,
+		TAT_SKILL_DOMAIN_GATHERING,
+		TAT_SKILL_DOMAIN_CRAFTING,
+		TAT_SKILL_DOMAIN_MISC
+	)
+	var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
+
+	for(var/domain in domain_points.Copy())
+		if(!(domain in domains))
+			domain_points -= domain
+
+	var/legal_total = 0
+	for(var/domain in domains)
+		var/default_value = max(0, round(default_domain_points[domain] || 0))
+		legal_total += default_value
+
+		var/current_value = text2num("[domain_points[domain]]")
+		domain_points[domain] = max(0, round(current_value || 0))
+
+	var/combat_default = max(0, round(default_domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0))
+	if(round(domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0) > combat_default)
+		domain_points[TAT_SKILL_DOMAIN_COMBAT] = combat_default
+
+	skill_point_conversion_pool = max(0, round(text2num("[skill_point_conversion_pool]") || 0))
+
+	var/current_total = skill_point_conversion_pool
+	for(var/domain in domains)
+		current_total += round(domain_points[domain] || 0)
+
+	if(current_total > legal_total)
+		var/excess = current_total - legal_total
+
+		var/pool_cut = min(skill_point_conversion_pool, excess)
+		if(pool_cut > 0)
+			skill_point_conversion_pool -= pool_cut
+			excess -= pool_cut
+
+		if(excess > 0)
+			for(var/domain in domains)
+				if(domain == TAT_SKILL_DOMAIN_COMBAT)
+					continue
+
+				var/default_value = max(0, round(default_domain_points[domain] || 0))
+				var/current_value = round(domain_points[domain] || 0)
+				var/surplus = max(0, current_value - default_value)
+				var/cut = min(surplus, excess)
+				if(cut <= 0)
+					continue
+
+				domain_points[domain] = current_value - cut
+				excess -= cut
+				if(excess <= 0)
+					break
+
+		if(excess > 0)
+			for(var/domain in domains)
+				var/current_value = round(domain_points[domain] || 0)
+				var/cut = min(current_value, excess)
+				if(cut <= 0)
+					continue
+
+				domain_points[domain] = current_value - cut
+				excess -= cut
+				if(excess <= 0)
+					break
+
+	else if(current_total < legal_total)
+		skill_point_conversion_pool += legal_total - current_total
+
+	invalidate_spent_points_cache()
+	return TRUE
+
 
 /datum/tat_skills/proc/get_invested_value(skill_type)
 	return round(invested[skill_type] || 0)
@@ -545,6 +623,7 @@
 	invalidate_combat_count_cache()
 	invalidate_spent_points_cache()
 	rebuild_bonus_values()
+	sanitize_skill_domain_points()
 
 	for(var/skill_type in invested.Copy())
 		if(!check_skill(skill_type))
@@ -579,6 +658,7 @@
 			if(!changed)
 				break
 
+	sanitize_skill_domain_points()
 	return TRUE
 
 /datum/tat_skills/proc/apply_to_human(mob/living/carbon/human/H)
