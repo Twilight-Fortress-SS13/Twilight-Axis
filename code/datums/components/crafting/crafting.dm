@@ -438,34 +438,68 @@
 						surroundings -= RC
 			else if(ispath(A, /obj/item/natural) || A == /obj/item/grown/log/tree/stick)
 				while(amt > 0)
-					for(var/obj/item/natural/bundle/B in get_environment(user))
-						if(B.stacktype == A)
-							if(B.amount > amt)
-								B.amount -= amt
-								B.update_bundle()
-								switch(B.amount)
-									if(1)
-										var/mob/living/carbon/old_loc = B.loc
-										qdel(B)
-										var/new_item = new B.stacktype(old_loc)
-										// Put in the person's hands if there were holding it.
-										if(ishuman(old_loc))
-											old_loc.put_in_hands(new_item)
-									if(0)
-										qdel(B)
-								amt = 0
-								continue main_loop
-							else
-								qdel(B)
-								amt -= B.amount
-						else
+					var/found_bundle = FALSE
+
+					for(var/obj/item/natural/bundle/B in surroundings)
+						if(!B.stacktype || !ispath(B.stacktype, A))
 							continue
-					var/atom/movable/I
-					while(amt > 0)
-						I = locate(A) in surroundings
-						Deletion += I
+
+						if(!R.subtype_reqs && (B.stacktype in subtypesof(A)))
+							continue
+
+						if(R.blacklist.Find(B.stacktype))
+							continue
+
+						found_bundle = TRUE
+						surroundings -= B
+
+						if(B.amount > amt)
+							var/stacktype = B.stacktype
+							B.amount -= amt
+							B.update_bundle()
+
+							switch(B.amount)
+								if(1)
+									var/atom/old_loc = B.loc
+									qdel(B)
+									var/obj/item/new_item = new stacktype(old_loc)
+
+									if(ishuman(old_loc))
+										var/mob/living/carbon/human/H = old_loc
+										H.put_in_hands(new_item)
+
+								if(0)
+									qdel(B)
+
+							amt = 0
+							continue main_loop
+
+						else
+							var/used_amount = B.amount
+							amt -= used_amount
+							qdel(B)
+
+							if(amt <= 0)
+								continue main_loop
+
+							break
+
+					if(!found_bundle)
+						break
+
+				var/atom/movable/I
+				while(amt > 0)
+					I = locate(A) in surroundings
+					if(!I)
+						break
+
+					if(R.blacklist.Find(I.type))
 						surroundings -= I
-						amt--
+						continue
+
+					Deletion += I
+					surroundings -= I
+					amt--
 			else if(ispath(A, /obj/item/reagent_containers/glass)) //Don't eat bottles with reagents in them
 				var/atom/movable/I
 				while(amt > 0)
