@@ -71,6 +71,10 @@
 		covered = "headgear"
 	else if(C.is_mouth_covered(mask_only = 1))
 		covered = "mask"
+	//TA EDIT START
+	else if(C.is_mouth_covered(coif_only = 1))
+		covered = "coif"
+	//TA EDIT END
 	if(C != user)
 		if((C.mobility_flags & MOBILITY_STAND) && eaterrelay)
 			if(get_dir(eater, user) != eater.dir)

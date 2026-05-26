@@ -68,7 +68,7 @@
 	item_state = "fullpadded"
 	color = "#976E6B"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
-	flags_cover = HEADCOVERSMOUTH // TA EDIT
+	flags_cover = COIFCOVERSMOUTH|HEADCOVERSMOUTH // TA EDIT
 	slot_flags = ITEM_SLOT_NECK|ITEM_SLOT_HEAD
 	blocksound = SOFTHIT
 	body_parts_covered = NECK|MOUTH|NOSE|HAIR|EARS|HEAD
@@ -90,6 +90,7 @@
 			if(toggle_icon_state)
 				icon_state = "fullpadded_down"
 			flags_inv = HIDEEARS|HIDEHAIR
+			flags_cover = null //TA EDIT
 			body_parts_covered = NECK|HAIR|EARS|HEAD
 			body_parts_covered_dynamic = body_parts_covered
 			if(ishuman(user))
@@ -101,6 +102,7 @@
 			if(toggle_icon_state)
 				icon_state = "fullpadded_neck"
 			flags_inv = null
+			flags_cover = null //TA EDIT
 			body_parts_covered = NECK
 			body_parts_covered_dynamic = body_parts_covered
 			if(ishuman(user))
@@ -191,7 +193,7 @@
 	armor = ARMOR_MAILLE
 	body_parts_covered = NECK|MOUTH
 	slot_flags = ITEM_SLOT_NECK
-	flags_cover = MASKCOVERSMOUTH // TA EDIT
+	flags_cover = COIFCOVERSMOUTH // TA EDIT
 	flags_inv = HIDEFACE|HIDEFACIALHAIR|HIDESNOUT
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/ComponentInitialize()
@@ -211,7 +213,7 @@
 	name = "full chain coif"
 	icon_state = "fchaincoif"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
-	flags_cover = HEADCOVERSMOUTH // TA EDIT
+	flags_cover = COIFCOVERSMOUTH|HEADCOVERSMOUTH // TA EDIT
 	resistance_flags = FIRE_PROOF
 	body_parts_covered = NECK|MOUTH|NOSE|HAIR|EARS|HEAD
 	adjustable = CAN_CADJUST
@@ -229,6 +231,7 @@
 			if(toggle_icon_state)
 				icon_state = "chaincoif"
 			flags_inv = HIDEEARS|HIDEHAIR
+			flags_cover = null //TA EDIT
 			body_parts_covered = NECK|HAIR|EARS|HEAD
 			body_parts_covered_dynamic = body_parts_covered
 			if(ishuman(user))
@@ -240,6 +243,7 @@
 			if(toggle_icon_state)
 				icon_state = "chaincoif_t"
 			flags_inv = null
+			flags_cover = null //TA EDIT
 			body_parts_covered = NECK
 			body_parts_covered_dynamic = body_parts_covered
 			if(ishuman(user))

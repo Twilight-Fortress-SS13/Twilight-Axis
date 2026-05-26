@@ -20,8 +20,8 @@
 	else
 		. += E.bang_protect
 
-/mob/living/carbon/is_mouth_covered(head_only = 0, mask_only = 0)
-	if( (!mask_only && head && (head.flags_cover & HEADCOVERSMOUTH)) || (!head_only && wear_mask && (wear_mask.flags_cover & MASKCOVERSMOUTH)) )
+/mob/living/carbon/is_mouth_covered(head_only = 0, mask_only = 0, coif_only = 0)
+	if( (!mask_only && !coif_only && head && (head.flags_cover & HEADCOVERSMOUTH)) || (!head_only && !coif_only && wear_mask && (wear_mask.flags_cover & MASKCOVERSMOUTH)) || (!mask_only && !head_only && wear_neck && (wear_neck.flags_cover & COIFCOVERSMOUTH))) // TA_EDIT
 		return TRUE
 
 /mob/living/carbon/is_eyes_covered(check_glasses = TRUE, check_head = TRUE, check_mask = TRUE)

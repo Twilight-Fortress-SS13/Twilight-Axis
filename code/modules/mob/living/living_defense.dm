@@ -151,7 +151,7 @@
 /mob/living/proc/get_ear_protection()
 	return 0
 
-/mob/living/proc/is_mouth_covered(head_only = 0, mask_only = 0)
+/mob/living/proc/is_mouth_covered(head_only = 0, mask_only = 0, coif_only = 0) // TA_EDIT
 	return FALSE
 
 /mob/living/proc/is_eyes_covered(check_glasses = 1, check_head = 1, check_mask = 1)
