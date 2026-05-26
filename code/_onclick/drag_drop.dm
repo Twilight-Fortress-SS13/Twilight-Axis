@@ -92,6 +92,8 @@
 	set_new_hud(hud_owner = null)
 
 /client/MouseDown(object, location, control, params)
+	if(browserpanel_dragatom && browserpanel_consume_drag(object, location, control, params))
+		return
 	charge_was_blocked_by_cooldown = FALSE
 	var/list/modifiers = params2list(params)
 	var/lmb_blocked = FALSE
@@ -244,6 +246,8 @@
 	return TRUE
 
 /client/MouseUp(object, location, control, params)
+	if(browserpanel_dragatom && browserpanel_consume_drag(object, location, control, params))
+		return
 	var/list/modifiers = params2list(params)
 	if(modifiers["left"])
 		blocked_lmb = FALSE
@@ -332,9 +336,12 @@
 		chargedprog = 0
 		START_PROCESSING(SSmousecharge, src)
 
-/* /client/Destroy() // TA EDIT START
+/client/Destroy()
 	STOP_PROCESSING(SSmousecharge, src)
-	return ..() */ //TA EDIT END
+	if(mob?.listed_turf)
+		LAZYREMOVE(mob.listed_turf.panel_listeners, src)
+	clear_browserpanel_drag()
+	return ..()
 
 /client/process()
 	if(!isliving(mob))

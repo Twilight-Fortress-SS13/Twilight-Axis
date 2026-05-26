@@ -542,7 +542,7 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	viable_spouses += dup1
 	var/pre_viable = viable_spouses.len
 	try_queue_assignment(dup1)
-	results += "3. Already in viable: pre_count=[pre_viable] post_count=[viable_spouses.len] (should skip)"
+	results += "3. Already in viable: pre_count=[pre_viable] post_count=[viable_spouses.len] scheduled=[dup1.familytree_assignment_scheduled] (should schedule recheck)"
 
 	var/mob/living/carbon/human/sched = ftdebug_spawn_entity(spawn_loc)
 	ftdebug_apply_random_props(sched, /datum/species/human/northern)

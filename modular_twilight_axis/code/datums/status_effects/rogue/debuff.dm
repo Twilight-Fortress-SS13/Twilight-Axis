@@ -9,7 +9,7 @@
 	effectedstats = list(STATKEY_LCK = -1)
 	duration = 1 MINUTES
 	alert_type = /atom/movable/screen/alert/status_effect/emberwine
-
+/*
 /* Kockout */
 /datum/status_effect/debuff/knockout
 	id = "knockout"
@@ -51,7 +51,7 @@
 
 /atom/movable/screen/alert/status_effect/debuff/knockout
 	name = "Drowsy"
-
+*/
 /datum/status_effect/debuff/vampiric_slowdown 
 	id = "vampiric_slowdown"
 	duration = 120 

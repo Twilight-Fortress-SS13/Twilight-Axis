@@ -15,7 +15,6 @@
 	associated_skill = /datum/skill/combat/polearms
 	smeltresult = null
 	is_silver = TRUE
-	toggle_state = null
 	is_important = TRUE
 	special = /datum/special_intent/martyr_dendor_vine_reap
 

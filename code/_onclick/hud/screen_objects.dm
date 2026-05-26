@@ -79,6 +79,17 @@
 /atom/movable/screen/skills/Click(location, control, params)
 	var/list/modifiers = params2list(params)
 
+	if(modifiers["middle"])
+		if(ishuman(usr))
+			var/mob/living/carbon/human/H = usr
+		
+			if(H.get_skill_level(/datum/skill/combat/bows) < SKILL_LEVEL_EXPERT)
+				return
+		
+			var/datum/archery_perk_menu/menu = new(H)
+			menu.ui_interact(H)
+		return
+
 	if(modifiers["right"])
 		var/ht
 		var/mob/living/L = usr

@@ -11,6 +11,12 @@
 	var/tmp/familytree_module_loaded_path
 	var/allow_relatives_in_family = TRUE
 	var/know_your_fate = FALSE
+	var/familytree_father_name = ""
+	var/familytree_mother_name = ""
+	var/familytree_father_species = ""
+	var/familytree_mother_species = ""
+	var/familytree_random_siblings = 0
+	var/familytree_random_children = 0
 
 /mob/living/carbon/human
 	var/family_UI = TRUE
@@ -34,6 +40,12 @@
 	var/tmp/familytree_setspouse_retries = 0
 	var/allow_relatives_in_family = TRUE
 	var/know_your_fate = FALSE
+	var/familytree_father_name = ""
+	var/familytree_mother_name = ""
+	var/familytree_father_species = ""
+	var/familytree_mother_species = ""
+	var/familytree_random_siblings = 0
+	var/familytree_random_children = 0
 	var/tmp/list/familytree_blocked_ckeys = list()
 
 /proc/familytree_pref_mask(pref)
@@ -43,9 +55,9 @@
 			return runtime_mode
 	switch(pref)
 		if(FAMILY_PARTIAL)
-			return FAMILYTREE_MODE_JOIN
+			return FAMILYTREE_MODE_JOIN | FAMILYTREE_MODE_CREATE
 		if(FAMILY_NEWLYWED)
-			return FAMILYTREE_MODE_CREATE
+			return FAMILYTREE_MODE_JOIN | FAMILYTREE_MODE_CREATE
 		if(FAMILY_FULL)
 			return FAMILYTREE_MODE_LEGACY_SPOUSE
 	return FAMILYTREE_MODE_DISABLED
@@ -71,9 +83,7 @@
 
 /proc/familytree_sanitize_pref(pref)
 	var/mode = familytree_pref_mask(pref)
-	if(mode & FAMILYTREE_MODE_CREATE)
-		return FAMILY_NEWLYWED
-	if(mode & (FAMILYTREE_MODE_JOIN | FAMILYTREE_MODE_LEGACY_SPOUSE))
+	if(mode & (FAMILYTREE_MODE_JOIN | FAMILYTREE_MODE_CREATE | FAMILYTREE_MODE_LEGACY_SPOUSE))
 		return FAMILY_PARTIAL
 	return FAMILY_NONE
 
@@ -134,6 +144,12 @@
 			"allow_low_status_marriage" = "allow_low_status_marriage",
 			"allow_relatives_in_family" = "allow_relatives_in_family",
 			"know_your_fate" = "know_your_fate",
+			"familytree_father_name" = "familytree_father_name",
+			"familytree_mother_name" = "familytree_mother_name",
+			"familytree_father_species" = "familytree_father_species",
+			"familytree_mother_species" = "familytree_mother_species",
+			"familytree_random_siblings" = "familytree_random_siblings",
+			"familytree_random_children" = "familytree_random_children",
 		)
 	return key_map
 
@@ -167,6 +183,12 @@
 	allow_low_status_marriage = initial(allow_low_status_marriage)
 	allow_relatives_in_family = initial(allow_relatives_in_family)
 	know_your_fate = initial(know_your_fate)
+	familytree_father_name = initial(familytree_father_name)
+	familytree_mother_name = initial(familytree_mother_name)
+	familytree_father_species = initial(familytree_father_species)
+	familytree_mother_species = initial(familytree_mother_species)
+	familytree_random_siblings = initial(familytree_random_siblings)
+	familytree_random_children = initial(familytree_random_children)
 
 /datum/preferences/proc/familytree_module_sanitize_character()
 	family = sanitize_integer(family, FAMILY_NONE, FAMILY_NEWLYWED, FAMILY_NONE)
@@ -214,6 +236,29 @@
 	allow_low_status_marriage = sanitize_integer(allow_low_status_marriage, 0, 1, 0)
 	allow_relatives_in_family = sanitize_integer(allow_relatives_in_family, 0, 1, TRUE)
 	know_your_fate = sanitize_integer(know_your_fate, 0, 1, 0)
+
+	if(!istext(familytree_father_name))
+		familytree_father_name = ""
+	else
+		familytree_father_name = copytext(familytree_father_name, 1, 65)
+	if(!istext(familytree_mother_name))
+		familytree_mother_name = ""
+	else
+		familytree_mother_name = copytext(familytree_mother_name, 1, 65)
+
+	if(desired_relative_role == RELATIVE_CHILD && (length(familytree_father_name) || length(familytree_mother_name)))
+		desired_relative_role = RELATIVE_ANY
+
+	if(!istext(familytree_father_species) || !(familytree_father_species in valid_species))
+		familytree_father_species = ""
+	if(!istext(familytree_mother_species) || !(familytree_mother_species in valid_species))
+		familytree_mother_species = ""
+
+	familytree_random_siblings = sanitize_integer(text2num("[familytree_random_siblings]"), 0, FAMILYTREE_MAX_RANDOM_RELATIVES, 0)
+	familytree_random_children = sanitize_integer(text2num("[familytree_random_children]"), 0, FAMILYTREE_MAX_RANDOM_RELATIVES, 0)
+	if(!familytree_donator_relatives_enabled(parent?.ckey))
+		familytree_random_siblings = 0
+		familytree_random_children = 0
 
 /datum/preferences/proc/familytree_module_has_enabled_customizer_entry(entry_type)
 	validate_customizer_entries()
@@ -347,6 +392,13 @@
 		"tree" = tree_data,
 	)
 
+/datum/familytree_display_panel/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	. = ..()
+	if(.)
+		return
+
+	return FALSE
+
 /datum/familytree_display_panel/ui_close()
 	QDEL_NULL(src)
 
@@ -397,7 +449,15 @@
 		"desiredRelativeRole" = P.desired_relative_role,
 		"allowLowStatusMarriage" = P.allow_low_status_marriage,
 		"allowRelativesInFamily" = P.allow_relatives_in_family,
-		"knowYourFate" = P.know_your_fate
+		"knowYourFate" = P.know_your_fate,
+		"fatherName" = istext(P.familytree_father_name) ? P.familytree_father_name : "",
+		"motherName" = istext(P.familytree_mother_name) ? P.familytree_mother_name : "",
+		"fatherSpecies" = istext(P.familytree_father_species) ? P.familytree_father_species : "",
+		"motherSpecies" = istext(P.familytree_mother_species) ? P.familytree_mother_species : "",
+		"randomSiblings" = P.familytree_random_siblings,
+		"randomChildren" = P.familytree_random_children,
+		"isDonator" = familytree_donator_relatives_enabled(user?.ckey) ? 1 : 0,
+		"maxRandomRelatives" = FAMILYTREE_MAX_RANDOM_RELATIVES,
 	)
 
 	var/list/species_names = list()
@@ -445,6 +505,12 @@
 			P.allow_low_status_marriage = text2num("[params["allowLowStatusMarriage"]]")
 			P.allow_relatives_in_family = text2num("[params["allowRelativesInFamily"]]")
 			P.know_your_fate = text2num("[params["knowYourFate"]]")
+			P.familytree_father_name = istext(params["fatherName"]) ? params["fatherName"] : ""
+			P.familytree_mother_name = istext(params["motherName"]) ? params["motherName"] : ""
+			P.familytree_father_species = istext(params["fatherSpecies"]) ? params["fatherSpecies"] : ""
+			P.familytree_mother_species = istext(params["motherSpecies"]) ? params["motherSpecies"] : ""
+			P.familytree_random_siblings = text2num("[params["randomSiblings"]]")
+			P.familytree_random_children = text2num("[params["randomChildren"]]")
 
 			P.familytree_module_sanitize_character()
 			P.familytree_module_save_character()
@@ -458,10 +524,8 @@
 	return FALSE
 
 /datum/family_options/proc/_family_to_ui(val)
-	if(familytree_pref_is_join(val) || familytree_pref_is_legacy_spouse(val))
+	if(familytree_pref_enabled(val))
 		return "member"
-	if(familytree_pref_is_create(val))
-		return "couple"
 	return "none"
 
 /datum/family_options/proc/_gender_to_ui(val)
@@ -473,7 +537,7 @@
 /datum/family_options/proc/_ui_to_family(val)
 	switch(val)
 		if("member") return FAMILY_PARTIAL
-		if("couple") return FAMILY_NEWLYWED
+		if("couple") return FAMILY_PARTIAL
 		if("parent") return FAMILY_PARTIAL
 	return FAMILY_NONE
 

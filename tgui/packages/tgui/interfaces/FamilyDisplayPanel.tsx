@@ -20,7 +20,7 @@ export const FamilyDisplayPanel = () => {
 
   return (
     <Window title={title} width={860} height={620}>
-      <Window.Content scrollable>
+      <Window.Content scrollable style={{ backgroundImage: 'none' }}>
         <Stack vertical fill>
           {!!subtitle && (
             <Stack.Item>

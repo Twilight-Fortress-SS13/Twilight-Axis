@@ -254,7 +254,7 @@
 	TI.icon = RI::icon
 	TI.icon_state = RI::icon_state
 	TI.item_state = RI::item_state
-	TI.toggle_state = RI::icon_state
+	TI.override_state = RI::icon_state
 	TI.lefthand_file = RI::lefthand_file
 	TI.righthand_file = RI::righthand_file
 	TI.sheathe_icon = RI::sheathe_icon ? RI::sheathe_icon : TI.sheathe_icon
@@ -308,8 +308,9 @@
 /obj/item/enchantingkit/strudel1
 	name = "'Grenzelhoft Mage Vest' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Robe"
-	target_items = list(/obj/item/clothing/suit/roguetown/shirt/robe)
-	result_item = /obj/item/clothing/suit/roguetown/shirt/robe/sofiavest
+	target_items = list(/obj/item/clothing/suit/roguetown/shirt/robe,
+						/obj/item/clothing/suit/roguetown/shirt/robe)
+	result_item = /obj/item/clothing/suit/roguetown/shirt/sofiavest
 
 /obj/item/enchantingkit/strudel2
 	name = "'Xylixian Fasching Leotard' morphing elixir"
@@ -686,7 +687,9 @@
 /obj/item/enchantingkit/weapon/koruu_kukri_silver
 	name = "'Psydonic Leachwhacker' morphing elixir"
 	target_items = list(
-		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger
+		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger,
+		/obj/item/rogueweapon/huntingknife/idagger/silver
+
 	)
 	result_item = /obj/item/rogueweapon/koruu/kukri/silver
 
@@ -714,6 +717,36 @@
 		/obj/item/rogueweapon/sword/long/etruscan,
 		/obj/item/rogueweapon/sword/long/judgement)
 	result_item = /obj/item/rogueweapon/koruu/judgement
+
+// Nerocavalier
+/obj/item/enchantingkit/weapon/nero_lsword
+	name = "Sylvan Longsword morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/ap
+	)
+	result_item = /obj/item/rogueweapon/example/nero_sylvanlsword
+
+/obj/item/enchantingkit/weapon/nero_sabre
+	name = "Sylvan Sabre morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/sabre,
+		/obj/item/rogueweapon/sword/sabre/elf,
+		/obj/item/rogueweapon/sword/sabre/dec,
+		/obj/item/rogueweapon/sword/sabre/banneret
+	)
+	result_item = /obj/item/rogueweapon/example/nero_sylvansabre
+
+/obj/item/enchantingkit/weapon/nero_dagger
+	name = "Sylvan Dagger morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/huntingknife/idagger,
+		/obj/item/rogueweapon/huntingknife/idagger/steel,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/special
+	)
+	result_item = /obj/item/rogueweapon/example/nero_sylvandagger
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
