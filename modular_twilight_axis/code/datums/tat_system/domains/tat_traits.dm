@@ -610,7 +610,7 @@
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_claws)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
 	var/datum/devotion/D = new /datum/devotion(H, H.patron)
-	D.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
+	D.grant_miracles(H, cleric_tier = CLERIC_T3, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
 
 /datum/tat_traits/proc/apply_witch_base_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_WITCH_INITIATE))
