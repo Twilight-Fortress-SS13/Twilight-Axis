@@ -108,7 +108,7 @@
 /datum/component/combo_core/martial_master/DefineRules()
 	RegisterRule("line",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH), 40, PROC_REF(_cb_combo))
 	RegisterRule("cone",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK),  45, PROC_REF(_cb_combo))
-	RegisterRule("charge",     list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_GRAB),  50, PROC_REF(_cb_combo))
+	RegisterRule("charge",     list(MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB),  50, PROC_REF(_cb_combo))
 
 	RegisterRule("spear",      list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH), 45, PROC_REF(_cb_combo))
 	RegisterRule("push",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_KICK),  50, PROC_REF(_cb_combo))
@@ -120,7 +120,7 @@
 	RegisterRule("silence",    list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK),  45, PROC_REF(_cb_combo))
 	RegisterRule("cross",      list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH), 45, PROC_REF(_cb_combo))
 
-	RegisterRule("reverse",    list(MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB),  55, PROC_REF(_cb_combo))
+	RegisterRule("reverse",    list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_GRAB),  55, PROC_REF(_cb_combo))
 
 /datum/component/combo_core/martial_master/OnHistoryChanged()
 	return
@@ -1060,7 +1060,7 @@
 
 	return null
 
-/// GGG - reverse
+/// PPG - reverse
 /datum/component/combo_core/martial_master/proc/ProcComboReverse()
 	if(!owner)
 		return FALSE

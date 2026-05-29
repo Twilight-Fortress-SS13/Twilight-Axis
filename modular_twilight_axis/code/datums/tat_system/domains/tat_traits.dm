@@ -939,7 +939,7 @@
 	if(has_trait(TAT_TRAIT_PLIANT_RENAME))
 		new_title = get_pliant_rename_title(H)
 		class_name = copytext(new_title, length(get_pliant_rename_prefix()) + 2)
-	else
+	else if(has_trait(TAT_TRAIT_RESIDENT))
 		class_name = get_pliant_plain_class_title(H)
 		new_title = "[get_pliant_rename_prefix()] [get_pliant_safe_class_name(class_name)]"
 
