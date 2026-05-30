@@ -315,6 +315,8 @@ SUBSYSTEM_DEF(job)
 			key = "Church"
 		if(BURGHERS)
 			key = "Burghers"
+		if(ATC)
+			key = "Azurian Trading Company"
 		if(PEASANTS)
 			key = "Peasants"
 		if(INQUISITION)
@@ -323,6 +325,8 @@ SUBSYSTEM_DEF(job)
 			key = "Sidefolk"
 		if(WANDERERS)
 			key = "Wanderers"
+		if(ANTAGONIST)
+			key = "Antagonists"
 		else
 			key = "Wanderers"
 	return key

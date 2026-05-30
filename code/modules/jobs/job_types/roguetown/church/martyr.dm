@@ -566,7 +566,7 @@
 			if("Holy Silver Armet")
 				head = /obj/item/clothing/head/roguetown/helmet/heavy/holysee/alt
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_UPPER_CLASS, H, "Church Funding.")
+		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
 		var/obj/effect/proc_holder/spell/targeted/martyr_select_weapon/sel = new
 		var/obj/effect/proc_holder/spell/invoked/martyr_summon_weapon/sum = new
 

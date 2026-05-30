@@ -126,25 +126,55 @@
 	if(!bandit_job)
 		return
 
-	if(is_storyteller_soft_antag_blocked())
+	var/slots = 0
+
+	if(!SSgamemode)
 		bandit_job.total_positions = 0
 		bandit_job.spawn_positions = 0
 		return
 
-	var/player_count = length(GLOB.joined_player_list)
-	var/ready_player_count = length(GLOB.ready_player_list)
-	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+	var/player_count = SSgamemode.get_correct_popcount()
 
-	var/slots = 0
+	if(!SSgamemode.story_antag_open_slots(/datum/antagonist/bandit, player_count))
+		bandit_job.total_positions = 0
+		bandit_job.spawn_positions = 0
+		return
 
-	if(SSmapping.config.map_name == "Rockhill")
-		if(current_players > 60)
-			// На Рокхилле - 5 бандитов с 60 онлайна и +1 слот за каждые 40 сверху
-			slots = 5 + round((current_players - 60) / 40)
-	else
-		// Дун ворлд - всегда 5 бандитов
-		if(current_players > 60)
-			slots = 5
+	var/storyteller_type = SSgamemode.story_policy_type(TRUE)
+	var/min_players = SSgamemode.story_antag_min_players(/datum/antagonist/bandit)
+
+	if(storyteller_type == /datum/storyteller/ravox)
+		if(player_count >= 41)
+			slots = 4
+		else if(player_count >= min_players)
+			slots = 2
+		slots = SSgamemode.story_antag_slots(slots, /datum/antagonist/bandit, player_count)
+		bandit_job.total_positions = slots
+		bandit_job.spawn_positions = slots
+		return
+
+	var/unlocks_bandits = SSgamemode.storyteller_unlocks_scaled_antag_slots(/datum/antagonist/bandit)
+
+	if(!unlocks_bandits && (SSgamemode.story_favor_flags(storyteller_type) & STORYTELLER_FAVOR_HARD_ANTAGS))
+		unlocks_bandits = TRUE
+
+	if(!unlocks_bandits)
+		bandit_job.total_positions = 0
+		bandit_job.spawn_positions = 0
+		return
+
+	var/max_slots = SSgamemode.story_antag_slot_cap(/datum/antagonist/bandit, TRUE, storyteller_type)
+	var/slot_scaling = SSgamemode.story_antag_scaling_step(/datum/antagonist/bandit)
+
+	slots = SSgamemode.storyteller_scale_slots(
+		max_slots,
+		player_count,
+		FALSE,
+		slot_scaling,
+		min_players,
+	)
+
+	slots = SSgamemode.story_antag_slots(slots, /datum/antagonist/bandit, player_count)
 
 	bandit_job.total_positions = slots
 	bandit_job.spawn_positions = slots

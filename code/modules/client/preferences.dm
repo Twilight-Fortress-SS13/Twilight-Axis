@@ -52,6 +52,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/tgui_fancy = TRUE
 	var/tgui_lock = TRUE
 	var/tgui_theme = "azure_default"
+	var/parchment_skin = "parchment"
 	var/windowflashing = TRUE
 	var/toggles = TOGGLES_DEFAULT
 	var/ghost_toggles
@@ -150,6 +151,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/stopdroning = FALSE
 
 	var/anonymize = TRUE
+	var/donor_ooc_color = TRUE // TA EDIT 
+	var/donor_ooc_icon = TRUE // TA EDIT 
+	var/donor_examine_icon = TRUE // TA EDIT
 	var/masked_examine = FALSE
 	var/nsfw_examine_always = FALSE // TA EDIT
 	var/full_examine = FALSE
@@ -182,6 +186,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/static/default_cmusic_type = /datum/combat_music/default
 	var/datum/combat_music/combat_music
 	var/combat_music_helptext_shown = FALSE
+	var/custom_cmode_name // TA EDIT START
+	var/custom_cmode_file
+	var/custom_cmode_enabled = FALSE
+	var/tmp/last_custom_cmode_upload = 0 // TA EDIT END
 
 	var/family = FAMILY_NONE
 
@@ -345,6 +353,169 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	save_character()		//let's save this new random character so it doesn't keep generating new ones.
 	menuoptions = list()
 	return
+
+/datum/preferences/proc/can_use_custom_combat_music(key) // TA EDIT START
+	if(!key && parent)
+		key = parent.ckey
+	key = ckey(key)
+	if(!key)
+		return FALSE
+	return check_patreon_lvl(key) >= 2
+
+/datum/preferences/proc/build_custom_combat_music(key)
+	if(!can_use_custom_combat_music(key))
+		custom_cmode_enabled = FALSE
+		return FALSE
+
+	if(!custom_cmode_file || !is_valid_custom_combat_music_path(custom_cmode_file))
+		custom_cmode_file = null
+		custom_cmode_name = null
+		custom_cmode_enabled = FALSE
+		return FALSE
+
+	if(!fexists(custom_cmode_file))
+		custom_cmode_file = null
+		custom_cmode_name = null
+		custom_cmode_enabled = FALSE
+		return FALSE
+
+	var/datum/combat_music/custom_track = new /datum/combat_music
+	custom_track.name = custom_cmode_name || "Custom Combat Music"
+	custom_track.desc = "A custom combat music track uploaded by the player."
+	custom_track.shortname = custom_track.name
+	custom_track.credits = "Player-uploaded custom combat music."
+	custom_track.musicpath = list(file(custom_cmode_file))
+
+	combat_music = custom_track
+	custom_cmode_enabled = TRUE
+	return TRUE
+
+/datum/preferences/proc/clear_custom_combat_music(mob/user)
+	if(custom_cmode_file && is_valid_custom_combat_music_path(custom_cmode_file) && fexists(custom_cmode_file))
+		fdel(custom_cmode_file)
+
+	custom_cmode_file = null
+	custom_cmode_name = null
+	custom_cmode_enabled = FALSE
+
+	if(!combat_music || !(combat_music.type in GLOB.cmode_tracks_by_type))
+		combat_music = GLOB.cmode_tracks_by_type[default_cmusic_type]
+
+	if(user)
+		to_chat(user, span_notice("Custom combat music cleared."))
+
+/datum/preferences/proc/upload_custom_combat_music(mob/user)
+	if(!user?.client)
+		return FALSE
+
+	if(!can_use_custom_combat_music(user.ckey))
+		to_chat(user, span_warning("Custom combat music uploads are available to tier 2+ patrons only."))
+		return FALSE
+
+	if(last_custom_cmode_upload && world.time < last_custom_cmode_upload + (3 MINUTES))
+		to_chat(user, span_warning("You need to wait before uploading another custom combat music track."))
+		return FALSE
+
+	var/infile = input(user, "Choose a new custom combat music .ogg file. 4 MB or less.", "Custom Combat Music") as null|file
+	if(!infile)
+		return FALSE
+
+	var/filename = sanitize_custom_combat_music_filename("[infile]")
+	var/file_error = check_custom_combat_music_file(infile, filename, user)
+	if(file_error)
+		to_chat(user, span_warning(file_error))
+		return FALSE
+
+	var/upload_ckey = user.ckey
+	if(parent?.ckey)
+		upload_ckey = parent.ckey
+	var/upload_path = "data/combat_music_uploads/[upload_ckey]/custom_cmode_[default_slot]_[world.realtime]_[filename]"
+
+	if(custom_cmode_file && is_valid_custom_combat_music_path(custom_cmode_file) && fexists(custom_cmode_file))
+		fdel(custom_cmode_file)
+
+	if(!fcopy(infile, upload_path))
+		to_chat(user, span_warning("Failed to save custom combat music file."))
+		return FALSE
+
+	custom_cmode_file = upload_path
+
+	var/songname = input(user, "Name your custom combat music:", "Song Name", filename) as text|null
+	if(songname)
+		custom_cmode_name = sanitize_custom_combat_music_display_name(songname)
+	else
+		custom_cmode_name = sanitize_custom_combat_music_display_name(filename)
+
+	last_custom_cmode_upload = world.time
+
+	if(build_custom_combat_music(user.ckey))
+		to_chat(user, span_notice("Selected custom combat music: <b>[custom_cmode_name]</b>."))
+		return TRUE
+
+	to_chat(user, span_warning("Failed to select uploaded custom combat music."))
+	return FALSE
+
+/datum/preferences/proc/select_combat_music(mob/user)
+	if(!user)
+		return
+
+	if(!combat_music_helptext_shown)
+		to_chat(user, span_notice("<span class='bold'>Combat Music Override</span><br>Options other than 'Default' override whatever the game dynamically sets for you, which is influenced by your job class, villain status, or certain events.<br>You can change this later through 'Combat Mode Music' in the Options tab.</span>"))
+		combat_music_helptext_shown = TRUE
+
+	var/list/track_options = GLOB.cmode_tracks_by_name.Copy()
+	var/can_custom_cmode = can_use_custom_combat_music(user.ckey)
+
+	if(can_custom_cmode && custom_cmode_file && is_valid_custom_combat_music_path(custom_cmode_file) && fexists(custom_cmode_file))
+		var/custom_option_name = "Use Uploaded Custom Song"
+		if(custom_cmode_name)
+			custom_option_name = "Use Uploaded Custom Song: [custom_cmode_name]"
+		track_options[custom_option_name] = "__custom_cmode_select"
+
+	if(can_custom_cmode)
+		track_options["Upload Custom Song"] = "__custom_cmode_upload"
+
+	if(custom_cmode_file)
+		track_options["Clear Uploaded Custom Song"] = "__custom_cmode_clear"
+
+	var/current_track_name = combat_music?.name
+	var/track_select = tgui_input_list(user, "To you, the Signal sounds like:", "COMBAT MUSIC", track_options, current_track_name)
+	if(!track_select)
+		return
+
+	var/selected_value = track_options[track_select]
+
+	if(selected_value == "__custom_cmode_upload")
+		upload_custom_combat_music(user)
+		return
+
+	if(selected_value == "__custom_cmode_select")
+		if(!can_custom_cmode)
+			to_chat(user, span_warning("Custom combat music is available to tier 2+ patrons only."))
+			return
+		if(build_custom_combat_music(user.ckey))
+			to_chat(user, span_notice("Selected custom combat music: <b>[combat_music.name]</b>."))
+		else
+			to_chat(user, span_warning("Custom combat music file is missing."))
+		return
+
+	if(selected_value == "__custom_cmode_clear")
+		clear_custom_combat_music(user)
+		return
+
+	var/datum/combat_music/selected_track = selected_value
+	if(!istype(selected_track))
+		return
+
+	combat_music = selected_track
+	custom_cmode_enabled = FALSE
+	to_chat(user, span_notice("Selected track: <b>[track_select]</b>."))
+
+	if(combat_music.desc)
+		to_chat(user, "<i>[combat_music.desc]</i>")
+
+	if(combat_music.credits)
+		to_chat(user, span_info("Song name: <b>[combat_music.credits]</b>")) // TA EDIT END
 
 /datum/preferences/proc/get_job_prefs(job_title, forced_slot = null) //TA EDIT start
 	var/slot = forced_slot ? forced_slot : job_characters[job_title]
@@ -776,6 +947,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<table><tr><td width='340px' valign='top'>"
 			dat += "<h2>Display</h2>"
 			dat += "<b>TGUI Theme:</b> <a href='?_src_=prefs;preference=tgui_theme'>[get_tgui_theme_display_name()]</a><br>"
+			dat += "<b>Parchment Theme:</b> <a href='?_src_=prefs;preference=parchment_skin'>[get_parchment_skin_display_name()]</a><br>"
 			dat += "<b>UI Mode:</b> <a href='?_src_=prefs;preference=tgui_ui_prefs;task=menu'>[tgui_pref ? "TGUI" : "Legacy"]</a><br>"
 			dat += "<b>tgui Monitors:</b> <a href='?_src_=prefs;preference=tgui_lock'>[(tgui_lock) ? "Primary" : "All"]</a><br>"
 			dat += "<b>Ambient Occlusion:</b> <a href='?_src_=prefs;preference=ambientocclusion'>[ambientocclusion ? "Enabled" : "Disabled"]</a><br>"
@@ -874,6 +1046,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 				if(unlock_content || check_rights_for(user.client, R_ADMIN))
 					dat += "<b>OOC Color:</b> <span style='border: 1px solid #161616; background-color: [ooccolor ? ooccolor : GLOB.normal_ooc_colour];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=ooccolor;task=input'>Change</a><br>"
+
+				if(ta_is_donor_visual_ckey(user.ckey)) // TA EDIT START
+					dat += "<br><h2>Donator Visuals</h2>"
+					dat += "<b>OOC Donator Color:</b> <a href='?_src_=prefs;preference=donor_ooc_color'>[donor_ooc_color ? "Enabled" : "Disabled"]</a><br>"
+					dat += "<b>OOC Donator Icon:</b> <a href='?_src_=prefs;preference=donor_ooc_icon'>[donor_ooc_icon ? "Enabled" : "Disabled"]</a><br>"
+					dat += "<b>Examine Donator Icon:</b> <a href='?_src_=prefs;preference=donor_examine_icon'>[donor_examine_icon ? "Enabled" : "Disabled"]</a><br>" // TA EDIT END
 
 			dat += "</td>"
 
@@ -1031,7 +1209,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	popup.open(FALSE)
 	onclose(user, "capturekeypress", src)
 
-/datum/preferences/proc/SetChoices(mob/user, limit = 14, list/splitJobs = list("Court Magician", "Bishop", "Merchant", "Archivist", "Towner", "Grenzelhoft Mercenary", "Beggar", "Prisoner", "Goblin King"), widthPerColumn = 350, height = 620)
+/datum/preferences/proc/SetChoices(mob/user, limit = 14, list/splitJobs = list("Court Magician", "Bishop", "Merchant", "Guildmaster", "Archivist", "Towner", "Grenzelhoft Mercenary", "Beggar", "Prisoner", "Goblin King"), widthPerColumn = 295, height = 620)
 	if(!SSjob)
 		return
 
@@ -1985,20 +2163,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						to_chat(user, "<font color='red'>Последователи: [selected_patron.worshippers]</font>") //		TA EDIT
 
 				if("combat_music") // if u change shit here look at /client/verb/combat_music() too
-					if(!combat_music_helptext_shown)
-						to_chat(user, span_notice("<span class='bold'>Combat Music Override</span>\n") + \
-						"Options other than \"Default\" override whatever the game dynamically sets for you, \
-						which is influenced by your job class, villain status, or certain events.\n\
-						You can change this later through \"Combat Mode Music\" in the Options tab.\"</span>")
-						combat_music_helptext_shown = TRUE
-					var/track_select = tgui_input_list(user, "To you, the Signal sounds like:", "COMBAT MUSIC", GLOB.cmode_tracks_by_name, combat_music?.name)
-					if(track_select)
-						combat_music = GLOB.cmode_tracks_by_name[track_select]
-						to_chat(user, span_notice("Selected track: <b>[track_select]</b>."))
-						if(combat_music.desc)
-							to_chat(user, "<i>[combat_music.desc]</i>")
-						if(combat_music.credits)
-							to_chat(user, span_info("Song name: <b>[combat_music.credits]</b>"))
+					select_combat_music(user) // TA EDIT
 
 				if("bdetail")
 					var/list/loly = list("Not yet.","Work in progress.","Don't click me.","Stop clicking this.","Nope.","Be patient.","Sooner or later.")
@@ -2927,6 +3092,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					tgui_lock = !tgui_lock
 				if("tgui_theme")
 					setTguiStyle(user)
+				if("parchment_skin")
+					cycle_parchment_skin()
 				if("winflash")
 					windowflashing = !windowflashing
 
@@ -3000,6 +3167,27 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 				if("pull_requests")
 					chat_toggles ^= CHAT_PULLR
+
+				if("donor_ooc_color") // TA EDIT START
+					if(ta_is_donor_visual_ckey(user.ckey))
+						donor_ooc_color = !donor_ooc_color
+						save_preferences()
+					else
+						to_chat(user, span_warning("This option is only available to donators."))
+
+				if("donor_ooc_icon")
+					if(ta_is_donor_visual_ckey(user.ckey))
+						donor_ooc_icon = !donor_ooc_icon
+						save_preferences()
+					else
+						to_chat(user, span_warning("This option is only available to donators."))
+
+				if("donor_examine_icon")
+					if(ta_is_donor_visual_ckey(user.ckey))
+						donor_examine_icon = !donor_examine_icon
+						save_preferences()
+					else
+						to_chat(user, span_warning("This option is only available to donators.")) // TA EDIT END
 
 				if("allow_midround_antag")
 					toggles ^= MIDROUND_ANTAG

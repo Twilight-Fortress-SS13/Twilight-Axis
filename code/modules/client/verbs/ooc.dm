@@ -1,6 +1,79 @@
 GLOBAL_VAR_INIT(OOC_COLOR, null)//If this is null, use the CSS for OOC. Otherwise, use a custom colour.
 GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 
+
+/proc/ta_is_donor_visual_ckey(key) // TA EDIT START
+	key = ckey(key)
+	if(!key)
+		return FALSE
+	if(is_donator(key))
+		return TRUE
+	var/tier = check_patreon_lvl(key)
+	return round(tier ? tier : 0) > 0
+
+/proc/ta_should_show_donor_examine_icon(mob/M)
+	if(!M?.ckey)
+		return FALSE
+	if(!ta_is_donor_visual_ckey(M.ckey))
+		return FALSE
+	if(!M.client?.prefs)
+		return TRUE
+	return M.client.prefs.donor_examine_icon
+
+/client/proc/get_ooc_staff_badge_icon()
+	if(!holder)
+		return null
+
+	var/rank_name = "[holder.rank]"
+	switch(rank_name)
+		if("Host")
+			return 'icons/tgui/chat_badges/host.png'
+		if("Head Admin")
+			return 'icons/tgui/chat_badges/headadmin.png'
+		if("Game Admin")
+			return 'icons/tgui/chat_badges/admin.png'
+		if("Trial Admin")
+			return 'icons/tgui/chat_badges/trial_admin.png'
+		if("Eventmin")
+			return 'icons/tgui/chat_badges/eventmin.png'
+		if("Coder", "Developer", "!localhost!")
+			return 'icons/tgui/chat_badges/coder.png'
+
+	return null
+
+/client/proc/get_ooc_donor_badge_icon()
+	if(!prefs?.donor_ooc_icon)
+		return null
+	if(!ta_is_donor_visual_ckey(ckey))
+		return null
+
+	var/tier = check_patreon_lvl(ckey)
+	tier = round(tier ? tier : 0)
+	if(tier >= 4)
+		return 'icons/tgui/chat_badges/filantrop.png'
+	return 'icons/tgui/chat_badges/mechenat.png'
+
+/client/proc/get_ooc_badge_html(client/viewer)
+	var/badge_icon = get_ooc_staff_badge_icon()
+	if(!badge_icon)
+		badge_icon = get_ooc_donor_badge_icon()
+	if(!badge_icon)
+		return ""
+	return "[icon2html(badge_icon, viewer)] "
+
+/client/proc/get_ooc_name_color(default_color)
+	return default_color
+
+/client/proc/get_ooc_message_color(default_color)
+	if(holder)
+		return "#4972bc"
+
+	if(prefs?.donor_ooc_color && ta_is_donor_visual_ckey(ckey))
+		return "#ffde90"
+
+	return default_color // TA EDIT END
+
+
 //client/verb/ooc(msg as text)
 
 /client/verb/ooc(msg as text)
@@ -95,13 +168,17 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 				continue
 		if(!(C.prefs.chat_toggles & CHAT_OOC))
 			continue
-		var/real_key = C.holder ? "([key])" : ""
+		var/real_key = "" // TA EDIT START
+		if(C.holder && keyname != key)
+			real_key = "([key])" // TA EDIT END
 		// Precedence: sender-admin (blue) > recipient-admin non-lobby (green/small) > default gray
 		var/is_admin_nonlobby = (C.holder && !istype(C.mob, /mob/dead/new_player) && !post_round)
-		var/sender_is_admin = holder
-		// Choose color: admin-sent stays blue; otherwise if admin recipient non-lobby, use green; else default gray
-		var/message_color = sender_is_admin ? "#4972bc" : (is_admin_nonlobby ? "#4CAF50" : chat_color)
-		var/base_msg = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <font color='[message_color]'><span class='message linkify'>[msg]</span></font>"
+		var/name_color = get_ooc_name_color(color2use) // TA EDIT START
+		var/message_color = get_ooc_message_color(chat_color)
+		if(is_admin_nonlobby && message_color == chat_color)
+			message_color = "#4CAF50"
+		var/badge_html = get_ooc_badge_html(C)
+		var/base_msg = "[badge_html]<font color='[name_color]'><EM>[keyname][real_key]:</EM></font> <font color='[message_color]'><span class='message linkify'>[msg]</span></font>" // TA EDIT END
 		// Apply size reduction only if recipient is admin spectating (not in lobby)
 		if(is_admin_nonlobby)
 			msg_to_send = "<span style='font-size:70%'>[base_msg]</span>"
@@ -213,12 +290,17 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 				continue
 			if(C.holder && !C.show_lobby_ooc && !istype(C.mob, /mob/dead/new_player))
 				continue
-		var/real_key = C.holder ? "([key])" : ""
+		var/real_key = "" // TA EDIT START
+		if(C.holder && keyname != key)
+			real_key = "([key])" // TA EDIT END
 		// Precedence: sender-admin (blue) > recipient-admin non-lobby (green/small) > default gray
-		var/is_admin_nonlobby = (C.holder && !istype(C.mob, /mob/dead/new_player) && !post_round)
-		var/sender_is_admin = holder
-		var/message_color = sender_is_admin ? "#4972bc" : (is_admin_nonlobby ? "#4CAF50" : chat_color)
-		var/base_msg = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <font color='[message_color]'><span class='message linkify'>[msg]</span></font>"
+		var/is_admin_nonlobby = (C.holder && !istype(C.mob, /mob/dead/new_player) && !post_round) // TA EDIT START
+		var/name_color = get_ooc_name_color(color2use)
+		var/message_color = get_ooc_message_color(chat_color)
+		if(is_admin_nonlobby && message_color == chat_color)
+			message_color = "#4CAF50"
+		var/badge_html = get_ooc_badge_html(C)
+		var/base_msg = "[badge_html]<font color='[name_color]'><EM>[keyname][real_key]:</EM></font> <font color='[message_color]'><span class='message linkify'>[msg]</span></font>"  // TA EDIT END
 		// Apply size reduction only if recipient is admin spectating (not in lobby)
 		if(is_admin_nonlobby)
 			msg_to_send = "<span style='font-size:70%'>[base_msg]</span>"
