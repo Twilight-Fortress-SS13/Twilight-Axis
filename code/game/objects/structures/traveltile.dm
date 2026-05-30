@@ -1,4 +1,3 @@
-
 /obj/structure/fluff/testportal
 	name = "portal"
 	icon_state = "shitportal"
@@ -40,6 +39,9 @@
 	var/aportalid = "REPLACETHIS"
 	var/aportalgoesto = "REPLACETHIS"
 	var/aallmig
+	// Traits that allow you to use the tile, having any one of them grants access.
+	var/list/required_traits = null
+	// Legacy single-trait var. Kept so old map edits or subtypes using required_trait do not silently break.
 	var/required_trait = null
 	var/grants_access_on_use = TRUE // 16.02.2026 TA edit for Corde50 shitportals. Adds proverku daet li traveltile trait dlya zritelya
 	var/list/required_jobs = null
@@ -145,16 +147,26 @@
 		return TRUE
 	return FALSE
 
+/obj/structure/fluff/traveltile/proc/get_required_traits()
+	var/list/access_traits = list()
+	if(length(required_traits))
+		access_traits |= required_traits
+	if(required_trait)
+		access_traits |= required_trait
+	return access_traits
+
 /obj/structure/fluff/traveltile/proc/perform_travel(obj/structure/fluff/traveltile/T, mob/living/L)
-	if(watchable && grants_access_on_use && !L.restrained(ignore_grab = TRUE)) // 16.02.2026 TA Edit for Corde50 shitportals. Heavy-handedly prevents using prisoners to metagame camp locations. pulledby would stop this but prisoners can also be kicked/thrown into the tile repeatedly 
+	var/list/access_traits = get_required_traits()
+	if(watchable && grants_access_on_use && !L.restrained(ignore_grab = TRUE) && length(access_traits)) // Heavy-handedly prevents using prisoners to metagame camp locations. pulledby would stop this but prisoners can also be kicked/thrown into the tile repeatedly
+		var/watch_trait = access_traits[1]
 		for(var/mob/living/carbon/human/H in hearers(6,src))
 			if(H == L)
 				continue
-			if(!H.IsUnconscious() && H.stat == CONSCIOUS && !HAS_TRAIT(H, TRAIT_PARALYSIS) && !HAS_TRAIT(H, required_trait) && !HAS_TRAIT(H, TRAIT_BLIND))
+			if(!H.IsUnconscious() && H.stat == CONSCIOUS && !HAS_TRAIT(H, TRAIT_PARALYSIS) && !HAS_TRAIT(H, watch_trait) && !HAS_TRAIT(H, TRAIT_BLIND))
 				to_chat(H, "<b>I watch [L.name? L : "someone"] go through a well-hidden entrance.</b>")
 				if(!(H.m_intent == MOVE_INTENT_SNEAK))
 					to_chat(L, "<b>[H.name ? H : "Someone"] watches me pass through the entrance.</b>")
-				ADD_TRAIT(H, required_trait, TRAIT_GENERIC)
+				ADD_TRAIT(H, watch_trait, TRAIT_GENERIC)
 
 	/*
 	Prior to writing:
@@ -202,12 +214,24 @@
 	return
 
 /obj/structure/fluff/traveltile/proc/has_access(atom/movable/AM)
-	if(required_jobs && ishuman(AM))
+	var/has_job_restrictions = length(required_jobs)
+	var/list/access_traits = get_required_traits()
+	var/has_trait_restrictions = length(access_traits)
+
+	if(!has_job_restrictions && !has_trait_restrictions)
+		return TRUE
+
+	if(has_job_restrictions && ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		return (H.job in required_jobs)
-	if(required_trait && isliving(AM))
-		return HAS_TRAIT(AM, required_trait)
-	return TRUE
+		if(H.job in required_jobs)
+			return TRUE
+
+	if(has_trait_restrictions && isliving(AM))
+		for(var/trait in access_traits)
+			if(HAS_TRAIT(AM, trait))
+				return TRUE
+
+	return FALSE
 
 /obj/structure/fluff/traveltile/proc/can_go(atom/movable/AM)
 	if(AM.recent_travel)
@@ -263,15 +287,20 @@
 	return TRUE
 
 /obj/structure/fluff/traveltile/bandit
-	required_trait = TRAIT_BANDITCAMP
+	required_traits = list(TRAIT_BANDITCAMP)
+
 /obj/structure/fluff/traveltile/vampire
-	required_trait = TRAIT_VAMPMANSION
+	required_traits = list(TRAIT_VAMPMANSION)
+
 /obj/structure/fluff/traveltile/lich
-	required_trait = TRAIT_LICHLAIR
+	required_traits = list(TRAIT_LICHLAIR)
+
 /obj/structure/fluff/traveltile/wretch
-	required_trait = TRAIT_ZURCH //I'd tie this to trait_outlaw but unfortunately the heresiarch virtue exists so we're making a new trait instead.
+	required_traits = list(TRAIT_ZURCH) //I'd tie this to trait_outlaw but unfortunately the heresiarch virtue exists so we're making a new trait instead.
+
 /obj/structure/fluff/traveltile/drow
-	required_trait = TRAIT_CAVEDWELLER
+	required_traits = list(TRAIT_CAVEDWELLER)
+	
 /obj/structure/fluff/traveltile/dungeon
 	name = "gate"
 	desc = "This gate's enveloping darkness is so opressive you dread to step through it."
@@ -293,7 +322,7 @@
 /obj/structure/fluff/traveltile/bathhouse_passage // this is IN the bathhouse
 	name = "suspicious passage"
 	desc = "A crevice in the wall. It looks like it leads somewhere."
-	required_trait = "bathhouse_passage_seen"
+	required_traits = list(TRAIT_AGENT_BATHHOUSE)
 	required_jobs = list("Bathmaster", "Bathhouse Attendant")
 	travel_time = 30 SECONDS // If there's an active chase you basically cannot use it to escape quickly
 	travel_message = "I begin to squeeze through the passage..."

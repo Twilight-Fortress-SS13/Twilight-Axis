@@ -97,8 +97,7 @@
 /obj/structure/roguemachine/atm/rockhill/drill(obj/structure/roguemachine/atm)
 	if(!drilling)
 		return
-
-	if(SStreasury.discretionary_fund.balance < 50)
+	if(SStreasury.discretionary_fund.balance <50)
 		new /obj/item/coveter(loc)
 		loc.visible_message(span_warning("The Crown grinds to a halt as the last of the treasury spills from the meister!"))
 		playsound(src, 'sound/misc/DrillDone.ogg', 70, TRUE)
@@ -106,8 +105,7 @@
 		drilling = FALSE
 		has_reported = FALSE
 		return
-
-	if(mammonsiphoned > 199) // The cap variable for siphoning.
+	if(mammonsiphoned >199) // The cap variable for siphoning. 
 		new /obj/item/coveter(loc)
 		loc.visible_message(span_warning("Maximum withdrawal reached! The meister weeps."))
 		playsound(src, 'sound/misc/DrillDone.ogg', 70, TRUE)
@@ -124,12 +122,8 @@
 		playsound(src, 'sound/misc/TheDrill.ogg', 70, TRUE)
 		spawn(100) // The time it takes to complete an interval. If you adjust this, please adjust the sound too. It's 'about' perfect at 100. Anything less It'll start overlapping.
 			loc.visible_message(span_warning("The meister spills its bounty!"))
-			if(!SStreasury.withdraw_money_treasury(28, "Freefolk drill"))
-				drilling = FALSE
-				has_reported = FALSE
-				return
+			SStreasury.burn(SStreasury.discretionary_fund, 28, "ATM drill - Freefolk")
 			mammonsiphoned += 28
 			budget2change(28, null, "GOLD")
 			playsound(src, 'sound/misc/coindispense.ogg', 70, TRUE)
-			SStreasury.log_to_steward("-[28] exported mammon to the Freefolks!")
 			drill(src)

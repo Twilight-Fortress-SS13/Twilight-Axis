@@ -342,6 +342,7 @@
 
 /datum/crafting_recipe/roguetown/turfs/brick/window/openclose
 	name = "reinforced window (brick)"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/openclose/reinforced/brick
 	reqs = list(
 	  /obj/item/natural/brick = 2,
@@ -361,6 +362,7 @@
 
 /datum/crafting_recipe/roguetown/turfs/roguewindow
 	name = "wooden window"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow
 	reqs = list(/obj/item/grown/log/tree/small = 2)
 	skillcraft = /datum/skill/craft/carpentry
@@ -373,6 +375,7 @@
 
 /datum/crafting_recipe/roguetown/turfs/fancywindow/openclose
 	name = "fancy window"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/openclose
 	reqs = list(
 	  /obj/item/grown/log/tree/small = 2,
@@ -390,6 +393,7 @@
 
 /datum/crafting_recipe/roguetown/turfs/reinforcedwindow/openclose
 	name = "reinforced window"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/openclose/reinforced
 	reqs = list(
 		/obj/item/grown/log/tree/small = 2,
@@ -500,6 +504,7 @@
 // Normal, non-openable window
 /datum/crafting_recipe/roguetown/turfs/roguewindow
 	name = "static glass window"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow
 	reqs = list(/obj/item/grown/log/tree/small = 2, /obj/item/natural/glass = 1)
 	skillcraft = /datum/skill/craft/carpentry
@@ -525,6 +530,7 @@
 // The windows you can open and close
 /datum/crafting_recipe/roguetown/turfs/roguewindow/dynamic
 	name = "openable glass window"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/openclose
 	reqs = list(/obj/item/grown/log/tree/small = 2, /obj/item/natural/glass = 1)
 	craftdiff = 3
@@ -533,6 +539,7 @@
 
 /datum/crafting_recipe/roguetown/turfs/roguewindow/stone_psydon
 	name = "static psydonic church window"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/stained/silver
 	reqs = list(/obj/item/natural/stone = 2, /obj/item/natural/glass = 1)
 	skillcraft = /datum/skill/craft/masonry
@@ -542,6 +549,7 @@
 
 /datum/crafting_recipe/roguetown/turfs/roguewindow/stone_astrata
 	name = "static astratan church window"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/stained/yellow
 	reqs = list(/obj/item/natural/stone = 2, /obj/item/natural/glass = 1)
 	skillcraft = /datum/skill/craft/masonry
@@ -551,6 +559,7 @@
 
 /datum/crafting_recipe/roguetown/turfs/roguewindow/stone_zizo
 	name = "static ecclesial church window"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/stained/zizo
 	reqs = list(/obj/item/natural/stone = 2, /obj/item/natural/glass = 1)
 	skillcraft = /datum/skill/craft/masonry
@@ -561,6 +570,7 @@
 // Reinfored windows
 /datum/crafting_recipe/roguetown/turfs/roguewindow/reinforced
 	name = "reinforced glass window"
+	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/openclose/reinforced
 	reqs = list(/obj/item/grown/log/tree/small = 2, /obj/item/natural/glass = 1, /obj/item/ingot/iron = 1)
 	craftdiff = 3

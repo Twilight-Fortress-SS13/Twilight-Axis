@@ -5,7 +5,7 @@
 
 //T0
 
-/datum/action/cooldown/spell/freemans_tools
+/datum/action/cooldown/spell/matthios/freemans_tools
 	desc = "A simple prayer to the Free-God Matthios, for tools of liberation and struggle.<br><br>His will manifests in three forms: gutter-born arts of the freemen, gilded tools of blessed liberation, or by granting the bases of Malchem, a form of primordial alchemy so impossible it is oft mistaken for sorcery."
 	options = list(
 		//a simple 'blinds u for 1 sec' throwable
