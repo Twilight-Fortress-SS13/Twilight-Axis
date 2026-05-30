@@ -73,6 +73,8 @@
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "drowflamberge"
 	item_state = "drowflamberge"
+	max_integrity = 240
+	max_blade_int = 240
 	smeltresult = /obj/item/ingot/drow
 
 /obj/item/rogueweapon/sword/long/exe/silver

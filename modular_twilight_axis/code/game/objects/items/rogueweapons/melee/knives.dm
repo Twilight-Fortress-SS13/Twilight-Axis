@@ -3,7 +3,7 @@
 	intent_intdamage_factor = 1.35 // I HAVE NO PICK BUT I MUST KILL
 	swingdelay = 10
 	clickcd = 10
-	penfactor = 30
+	penfactor = PEN_MEDIUM
 
 /datum/intent/dagger/cut/dendor // me like cut
 	damfactor = 1.1

@@ -22,6 +22,8 @@
 	cmode_music = 'sound/music/cmode/nobility/combat_spymaster.ogg'
 	job_traits = list(TRAIT_NOBLE, TRAIT_EXPERT_HUNTER)
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible) //Needs to use the throat - sometimes
+	peopleiknow = list("Court Agent") // TA EDIT
+	peopleknowme = list("Court Agent") // TA EDIT
 	job_subclasses = list(
 		/datum/advclass/hand/blademaster,
 		/datum/advclass/hand/spymaster,

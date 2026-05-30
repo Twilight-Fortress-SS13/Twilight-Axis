@@ -89,7 +89,7 @@
 		"nsfw_ooc_extra_image" = nsfw_ooc_extra_image,
 		"has_song" = has_song,
 		"is_vet" = is_vet,
-		"is_donator" = is_donator(holder.ckey),
+		"is_donator" = ta_should_show_donor_examine_icon(holder), // TA EDIT
 		"is_naked" = is_naked,
 	)
 
@@ -208,7 +208,7 @@
 		"nsfw_ooc_extra_image" = nsfw_ooc_extra_image,
 		"has_song" = has_song,
 		"is_vet" = is_vet,
-		"is_donator" = is_donator(holder.ckey),
+		"is_donator" = ta_should_show_donor_examine_icon(holder), // TA EDIT
 		"is_naked" = is_naked,
 		"nsfw_examine_always" = nsfw_examine_always, // TA EDIT
 		"examine_theme" = char_examine_theme,

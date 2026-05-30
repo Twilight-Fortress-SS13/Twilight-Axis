@@ -284,7 +284,7 @@
 	force = 10 //Doubled from the regular torch, to reflect its sturdier construction. Classified as an improvised weapon, as it shouldn't scale off any weapon skill.
 	on_damage = 15
 	wdefense = 1 //Metal rod. Offers a pittance-of-a-chance to parry an incoming strike.
-	smeltresult = /obj/item/rogueore/coal
+	smeltresult = null
 	max_integrity = 100	
 	fuel = 120 MINUTES
 	should_self_destruct = FALSE

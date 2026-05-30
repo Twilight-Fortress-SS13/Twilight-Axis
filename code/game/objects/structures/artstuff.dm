@@ -132,14 +132,37 @@
 		used_canvas.is_drawing = FALSE
 		used_canvas.last_draw_x = null
 		used_canvas.last_draw_y = null
-		used_canvas.finalize_painting()
+		used_canvas.drawing_is_erasing = FALSE
+		used_canvas.shade_adjustment_mode = FALSE
+		used_canvas.finalize_painting(source)
 
-/obj/item/canvas/proc/update_drawing(x, y, current_color)
+/obj/item/canvas/proc/update_drawing(x, y, current_color, mob/user)
+	var/pos_key = "[x][y]"
+	if(pos_key in overlay_to_index)
+		cut_overlay(overlay_to_index[pos_key])
+		overlay_to_index -= pos_key
+	var/mutable_appearance/MA = mutable_appearance('icons/roguetown/items/paint_supplies/pixel.dmi', "pixel")
+	MA.color = current_color
+	MA.pixel_x = x
+	MA.pixel_y = y
+	add_overlay(MA)
+	overlay_to_index[pos_key] = MA
+	current_overlays++
+	if(current_overlays > 150 && user?.client)
+		var/icon/rendered = user.client.RenderIcon(src)
+		if(rendered)
+			icon = rendered
+			draw = icon(rendered)
+		current_overlays = 0
+		cut_overlays()
+		overlay_to_index = list()
 
-/obj/item/canvas/proc/upload_painting()
+/obj/item/canvas/proc/upload_painting(mob/user)
 	if(!author || !title)
 		return
-	var/icon/rendered = usr.client.RenderIcon(src)
+	if(!user?.client)
+		return
+	var/icon/rendered = user.client.RenderIcon(src)
 	cut_overlays()
 	if(rendered)
 		icon = rendered
@@ -215,7 +238,7 @@
 	if(is_drawing)
 		current_ink = 0
 	else
-		finalize_painting()
+		finalize_painting(usr)
 
 /atom/movable/screen/canvas/proc/draw_pixel(x, y, color, is_erasing)
 	if(!host || !is_drawing) return
@@ -254,7 +277,19 @@
 				
 				add_overlay(MA)
 				overlay_to_index[pos_key] = MA
+				current_overlays++
 				current_ink++
+
+				if(current_overlays > 150 && usr?.client)
+					var/icon/rendered = usr.client.RenderIcon(src)
+					if(rendered)
+						icon = rendered
+						draw = icon(rendered)
+					current_overlays = 0
+					cut_overlays()
+					overlay_to_index = list()
+
+				host.update_drawing(px, py, color, usr)
 
 /atom/movable/screen/canvas/proc/finalize_painting(mob/user)
 	if(!user || !user.client) return
@@ -276,7 +311,6 @@
 
 	current_ink = 0
 	current_overlays = 0
-
 
 /atom/movable/screen/canvas/proc/draw_line(start_x, start_y, end_x, end_y, color, is_erasing)
 	// AI suggested implementing bresenham and it blew my mind because i hadn't done that shit since college lol - Ryan FUCK YOU RYAN

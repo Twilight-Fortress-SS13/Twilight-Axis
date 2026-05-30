@@ -18,3 +18,16 @@
 
 /obj/item/rogueweapon/greatsword/bsword/psy/unforgotten
 	desc = "It is said that this weapon once belonged to one Magister Laruelle, an Ordinator who led an expedition into the Underdark, intending to root out the Archenemy's evil. It is said that he held on for seven daes and seven nights against darksteel-clad heretics before Psydon acknowledged his endurance. Nothing but his blade remained - his psycross wrapped around its hilt in rememberance."
+
+/obj/structure/globe
+	desc = "A wooden globe representing the world. Key landmarks are indicated by adjacent \
+	annotations; at a glance you can pick out 'Otava', 'Grenzelhoft', 'Kazengun', 'Zybantu', \
+	and on the northern half of the western continent, a modest valley marked as 'Azuria'."
+
+/obj/structure/globe/attack_hand(mob/user)
+	if(!ishuman(user))
+		return
+
+	var/mob/living/carbon/human/H = user
+	var/random_message = pick("You spin the globe!", "You land on Azuria!", "You land on Raneshen!", "You land on Grenzelhoft!", "You land on Otava!", "You land on Naledi!", "You land on Kazengun!", "You land on Valoria!", "You land on Gronn!", "You land on the Fjalls!", "You land on Lirvas!", "You land on Zybantu!", "You land on Hammerhold!", "You land on Etruscea!", "You land on Aavnr!", "You land on Port Izekyube!", "You land on Port Thornvale!", "You land on Syon's Rest!", "You land on Mount Decapitation!", "You land on Rockhill!", "You land on an unmarked squiggle of land - perhaps another spin?", "You land on an unmarked patch of sea - perhaps another spin?")
+	to_chat(H, span_notice("[random_message]"))

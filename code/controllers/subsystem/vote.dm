@@ -50,7 +50,7 @@ SUBSYSTEM_DEF(vote)
 /datum/controller/subsystem/vote/proc/show_vote(client/C)
 	if(!C)
 		return
-	var/datum/browser/noclose/client_popup = new(C, "vote", "Voting Panel", nwidth = vote_width, nheight = vote_height)
+	var/datum/browser/noclose/client_popup = new(C, "vote", "Голосование", nwidth = vote_width, nheight = vote_height)
 	client_popup.set_window_options("can_close=0")
 	client_popup.width = vote_width
 	client_popup.height = vote_height
@@ -161,6 +161,16 @@ SUBSYSTEM_DEF(vote)
 			return "Ascendants"
 	return "The Ten"
 
+/datum/controller/subsystem/vote/proc/get_storyteller_vote_pool_display_name(pool_name)
+	switch(pool_name)
+		if("Psydon")
+			return "Псайдон"
+		if("Ascendants")
+			return "Презренные"
+		if("The Ten")
+			return "Десять"
+	return pool_name
+
 /datum/controller/subsystem/vote/proc/get_storyteller_pool_totals()
 	var/list/pool_totals = list()
 	for(var/option in choices)
@@ -251,8 +261,9 @@ SUBSYSTEM_DEF(vote)
 	var/list/pool_totals = get_storyteller_pool_totals()
 	var/pool_votes = pool_totals[pool_name] || 0
 	var/list/theme = get_storyteller_pool_theme(pool_name)
+	var/pool_display_name = get_storyteller_vote_pool_display_name(pool_name)
 	var/dat = "<div style='border:1px solid [theme["border"]];border-radius:8px;padding:7px 8px;background:[theme["background"]];min-height:100%;box-sizing:border-box;'>"
-	dat += "<div style='font-size:0.96rem;font-weight:bold;margin-bottom:6px;color:[theme["title"]];'>[pool_name] <span style='float:right;font-size:0.78rem;color:[theme["meta"]];'>[format_vote_power(pool_votes)] votepwr</span></div>"
+	dat += "<div style='font-size:0.96rem;font-weight:bold;margin-bottom:6px;color:[theme["title"]];'>[pool_display_name] <span style='float:right;font-size:0.78rem;color:[theme["meta"]];'>Вес: [format_vote_power(pool_votes)]</span></div>"
 	dat += "<div style='display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:6px;'>"
 	for(var/index in choice_indices)
 		var/option_index = text2num(index)
@@ -261,13 +272,13 @@ SUBSYSTEM_DEF(vote)
 		var/votes = choices[choice_text] || 0
 		var/is_selected = (selected_option == choice_text)
 		var/selected_color = theme["selection_color"]
-		var/selected_text = is_selected ? " <span style='color:[selected_color];font-size:0.76rem;font-weight:bold;'>(current)</span>" : ""
+		var/selected_text = is_selected ? " <span style='color:[selected_color];font-size:0.76rem;font-weight:bold;'>(выбрано)</span>" : ""
 		var/entry = "<div style='padding:5px 6px;border-radius:6px;background:[theme["entry"]];min-width:0;'>"
 		var/details_link = "<a href='?src=[REF(SSgamemode)];storyboy_details=[storyteller_type]' style='display:inline-block;margin-left:4px;color:[theme["meta"]];font-size:0.75rem;text-decoration:none;'>(?)</a>"
 		if(can_vote)
-			entry += "<div><a href='?src=[REF(src)];vote=[option_index]' style='font-size:0.9rem;color:[theme["link"]];font-weight:bold;'>[choice_text]</a>[details_link][selected_text]</div><div style='color:[theme["meta"]];font-size:0.76rem;'>[format_vote_power(votes)] votepwr</div>"
+			entry += "<div><a href='?src=[REF(src)];vote=[option_index]' style='font-size:0.9rem;color:[theme["link"]];font-weight:bold;'>[choice_text]</a>[details_link][selected_text]</div><div style='color:[theme["meta"]];font-size:0.76rem;'>Вес: [format_vote_power(votes)]</div>"
 		else
-			entry += "<div><span style='font-size:0.9rem;font-weight:bold;'>[choice_text]</span>[details_link][selected_text]</div><div style='color:[theme["meta"]];font-size:0.76rem;'>[format_vote_power(votes)] votepwr</div>"
+			entry += "<div><span style='font-size:0.9rem;font-weight:bold;'>[choice_text]</span>[details_link][selected_text]</div><div style='color:[theme["meta"]];font-size:0.76rem;'>Вес: [format_vote_power(votes)]</div>"
 		entry += "</div>"
 		dat += entry
 	dat += "</div></div>"
@@ -371,9 +382,9 @@ SUBSYSTEM_DEF(vote)
 		if(mode == "storyteller")
 			var/list/pool_totals = get_storyteller_pool_totals()
 			if(pool_totals.len)
-				text += "\n<hr><b>Pool Totals</b>"
+				text += "\n<hr><b>Итоги:</b>"
 				for(var/pool_name in pool_totals)
-					text += "\n<b>[pool_name]:</b> [format_vote_power(pool_totals[pool_name])]"
+					text += "\n<b>[get_storyteller_vote_pool_display_name(pool_name)]:</b> [format_vote_power(pool_totals[pool_name])]"
 		if(mode != "custom")
 			if(winners.len > 1)
 				if(mode == "storyteller")
@@ -735,19 +746,21 @@ SUBSYSTEM_DEF(vote)
 	if(mode)
 		if(question)
 			. += "<h2>Vote: '[question]'</h2>"
+		else if(mode == "storyteller")
+			. += "<h2>Голосование: Рассказчик</h2>"
 		else
 			. += "<h2>Vote: [capitalize(mode)]</h2>"
-		. += "Time Left: [time_remaining] s<hr>"
+		. += "[mode == "storyteller" ? "Осталось" : "Time Left"]: [time_remaining] s<hr>"
 		var/can_vote = can_client_vote(C)
 		if(mode == "storyteller")
 			if(!length(storyteller_vote_log))
 				load_storyteller_vote_log()
-			var/pool_text = "Check the (?) for a description of each storyteller. Roundstart hard antags require [HARD_ANTAG_MIN_POP] active pop. Successful votes remove the storyteller pool."
+			var/pool_text = "Нажмите на (?) для получения описания рассказчика. Раундстартовые антагонисты требуют [HARD_ANTAG_MIN_POP] людей. Успешное голосование удаляет блок рассказчиков из доступных в следующем раунде."
 			. += "<div style='color:#992414;font-size:0.9rem;margin-bottom:6px;'>[pool_text]</div>"
 			. += render_storyteller_choices(can_vote, C)
 		else
 			if(mode == "map")
-				. += "<div style='color:#5a9f54;font-size:0.95rem;margin-bottom:6px;'>Все карты, кроме той, что была в прошлом раунде, получают +25% к весу голоса(бонус суммируется до бесконечности).</div>"
+				. += "<div style='color:#5a9f54;font-size:0.95rem;margin-bottom:6px;'>Все карты, кроме той, что была в прошлом раунде, получают +25% к Весу голоса(бонус суммируется до бесконечности).</div>"
 			. += "<ul>"
 			var/selected_option = vote_selections[C.ckey]
 			for(var/i=1,i<=choices.len,i++)
@@ -764,7 +777,7 @@ SUBSYSTEM_DEF(vote)
 			. += "</ul>"
 		. += "<hr>"
 		if(admin)
-			. += "(<a href='?src=[REF(src)];vote=cancel'>Cancel Vote</a>) "
+			. += "(<a href='?src=[REF(src)];vote=cancel'>[mode == "storyteller" ? "Отменить голосование" : "Cancel Vote"]</a>) "
 	else
 		. += "<h2>Start a vote:</h2><hr><ul><li>"
 		//restart
@@ -800,7 +813,7 @@ SUBSYSTEM_DEF(vote)
 		if(trialmin)
 			. += "<li><a href='?src=[REF(src)];vote=custom'>Custom</a></li>"
 		. += "</ul><hr>"
-	. += "<a href='?src=[REF(src)];vote=close' style='position:absolute;top:8px;right:18px;padding:3px 8px;border:1px solid #6e2b33;border-radius:999px;background:rgba(18,12,14,0.96);color:#e06b75;font-size:0.8rem;font-weight:bold;text-decoration:none;line-height:1.2;'>Close</a>"
+	. += "<a href='?src=[REF(src)];vote=close' style='position:absolute;top:8px;right:18px;padding:3px 8px;border:1px solid #6e2b33;border-radius:999px;background:rgba(18,12,14,0.96);color:#e06b75;font-size:0.8rem;font-weight:bold;text-decoration:none;line-height:1.2;'>Закрыть</a>"
 	return .
 
 /datum/controller/subsystem/vote/Topic(href,href_list[],hsrc)

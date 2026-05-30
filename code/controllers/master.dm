@@ -666,6 +666,15 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 /// `reason_tag` is a short filename-safe identifier (e.g. "stall", "sustainedTD").
 /// `reason_detail` is the human-readable explanation shown in logs and admin chat.
 /datum/controller/master/proc/AttemptProfileDump(delay, reason_tag = "emergency", reason_detail = "unspecified")
+	if(!CONFIG_GET(flag/profile_emergency_dumps)) // TA EDIT START
+		return FALSE
+
+	if(!CONFIG_GET(flag/auto_profile))
+		return FALSE
+
+	if(!SSprofiler)
+		return FALSE // TA EDIT END
+
 	if(REALTIMEOFDAY - last_profiled <= delay)
 		return FALSE
 	last_profiled = REALTIMEOFDAY
@@ -674,3 +683,4 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	log_game(msg)
 	message_admins("<span class='boldannounce'>\[PERF] [msg]</span>")
 	SSprofiler.DumpFile(allow_yield = FALSE, reason = reason_tag)
+	return TRUE
