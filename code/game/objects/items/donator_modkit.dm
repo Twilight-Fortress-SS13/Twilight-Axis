@@ -308,8 +308,9 @@
 /obj/item/enchantingkit/strudel1
 	name = "'Grenzelhoft Mage Vest' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Robe"
-	target_items = list(/obj/item/clothing/suit/roguetown/shirt/robe)
-	result_item = /obj/item/clothing/suit/roguetown/shirt/robe/sofiavest
+	target_items = list(/obj/item/clothing/suit/roguetown/shirt/robe,
+						/obj/item/clothing/suit/roguetown/shirt/robe)
+	result_item = /obj/item/clothing/suit/roguetown/shirt/sofiavest
 
 /obj/item/enchantingkit/strudel2
 	name = "'Xylixian Fasching Leotard' morphing elixir"
@@ -359,7 +360,7 @@
 
 //Zydras donator items - Ironclad baddie
 /obj/item/enchantingkit/zydrashauberk
-	name = "Mailled Hauberk morphing elixir"
+	name = "Mailled Cuirass morphing elixir"
 	target_items = list(/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy)
 	result_item = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy/zycuirass
 
@@ -746,6 +747,29 @@
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special
 	)
 	result_item = /obj/item/rogueweapon/example/nero_sylvandagger
+
+// Desminus
+/obj/item/enchantingkit/weapon/des_gaebolg
+	name = "'Gae Bolg' morphing elixer"
+	target_items = list(
+		/obj/item/rogueweapon/spear,
+		/obj/item/rogueweapon/spear/partizan,
+		/obj/item/rogueweapon/halberd,
+		/obj/item/rogueweapon/halberd/glaive,
+		/obj/item/rogueweapon/eaglebeak
+	)
+	result_item = /obj/item/rogueweapon/example/des_gaebolg
+
+// inverserun
+/obj/item/enchantingkit/weapon/arra_amdir
+	name = "'Amdir' morphing elixir"
+	target_items = list(
+	/obj/item/rogueweapon/greataxe/steel/knight,
+	/obj/item/rogueweapon/greataxe/silver,
+	/obj/item/rogueweapon/greataxe/psy
+
+	)
+	result_item = /obj/item/rogueweapon/example/arra_amdir
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //

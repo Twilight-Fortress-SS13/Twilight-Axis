@@ -15,6 +15,8 @@
 	obsfuscated_job = TRUE
 	townie_contract_gate_exempt = TRUE
 	class_setup_examine = FALSE
+	peopleiknow = list("Hand") // TA EDIT
+	peopleknowme = list("Hand") // TA EDIT
 	same_job_respawn_delay = 30 MINUTES
 
 //Hooking in here does not mess with their equipment procs

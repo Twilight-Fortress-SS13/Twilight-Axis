@@ -108,7 +108,7 @@
 /datum/component/combo_core/martial_master/DefineRules()
 	RegisterRule("line",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH), 40, PROC_REF(_cb_combo))
 	RegisterRule("cone",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK),  45, PROC_REF(_cb_combo))
-	RegisterRule("charge",     list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_GRAB),  50, PROC_REF(_cb_combo))
+	RegisterRule("charge",     list(MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB),  50, PROC_REF(_cb_combo))
 
 	RegisterRule("spear",      list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH), 45, PROC_REF(_cb_combo))
 	RegisterRule("push",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_KICK),  50, PROC_REF(_cb_combo))
@@ -120,7 +120,7 @@
 	RegisterRule("silence",    list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK),  45, PROC_REF(_cb_combo))
 	RegisterRule("cross",      list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH), 45, PROC_REF(_cb_combo))
 
-	RegisterRule("reverse",    list(MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB),  55, PROC_REF(_cb_combo))
+	RegisterRule("reverse",    list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_GRAB),  55, PROC_REF(_cb_combo))
 
 /datum/component/combo_core/martial_master/OnHistoryChanged()
 	return
@@ -220,7 +220,7 @@
 		return 0
 
 	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target_atom, zone)
-	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
+	if(skill_id == MARTIAL_MASTER_INPUT_GRAB && target_atom && !isliving(target_atom) && !isturf(target_atom) && !isarea(target_atom))
 		return 0
 
 	return COMPONENT_ATTACK_CONSUMED
@@ -230,31 +230,42 @@
 		return
 
 	owner.stamina_add(1)
-	var/mob/living/target = target_atom
-	if(!istype(target))
-		return 0
-
-	if(target.stat == DEAD)
-		return
-
 	var/zone_used = zone || BODY_ZONE_CHEST
+	var/mob/living/target = target_atom
 
 	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
-		if(!CheckMartialContact(target))
+		if(istype(target))
+			if(target.stat == DEAD)
+				ClearHistory("invalid")
+				last_action_success = FALSE
+				last_finisher_success = FALSE
+				last_matched_rule = null
+				return
+		else if(isturf(target_atom) || isarea(target_atom) || !target_atom)
+			target = null
+		else
+			ClearHistory("invalid")
 			last_action_success = FALSE
 			last_finisher_success = FALSE
 			last_matched_rule = null
 			return
 
-	else if(skill_id == MARTIAL_MASTER_INPUT_KICK)
-		
 	else
-		var/dmg = CalcPureDamage()
-		if(!AttackViaPipeline(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
-			last_action_success = FALSE
-			last_finisher_success = FALSE
-			last_matched_rule = null
+		if(!istype(target))
 			return
+
+		if(target.stat == DEAD)
+			return
+
+		if(skill_id == MARTIAL_MASTER_INPUT_KICK)
+			
+		else
+			var/dmg = CalcPureDamage()
+			if(!AttackViaPipeline(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+				last_action_success = FALSE
+				last_finisher_success = FALSE
+				last_matched_rule = null
+				return
 
 	last_action_success = TRUE
 	last_action_skill = skill_id
@@ -263,12 +274,13 @@
 	last_finisher_success = FALSE
 	last_matched_rule = null
 
-	if(current_stance == MARTIAL_MASTER_STANCE_PROC)
-		ApplyProcPressureOnHit(target, last_action_zone, FALSE)
-	else
-		ApplyPreciseOnHit(target, last_action_zone)
+	if(target && skill_id != MARTIAL_MASTER_INPUT_GRAB)
+		if(current_stance == MARTIAL_MASTER_STANCE_PROC)
+			ApplyProcPressureOnHit(target, last_action_zone, FALSE)
+		else
+			ApplyPreciseOnHit(target, last_action_zone)
 
-	if(chain_step_ready)
+	if(target && chain_step_ready)
 		if(world.time >= chain_step_expires_at || !chain_step_target)
 			chain_step_ready = FALSE
 			chain_step_expires_at = 0
@@ -283,7 +295,8 @@
 			chain_step_target = null
 
 	RegisterInput(skill_id, target, last_action_zone)
-	datum_component_combo_martial_master_check_nutcracker(src, target, last_action_zone, skill_id)
+	if(target)
+		datum_component_combo_martial_master_check_nutcracker(src, target, last_action_zone, skill_id)
 
 /datum/component/combo_core/martial_master/proc/_sig_reverse_defense_success(datum/source, mob/living/attacker)
 	SIGNAL_HANDLER
@@ -342,6 +355,14 @@
 	if(!owner)
 		return FALSE
 
+	switch(rule_id)
+		if("chain_step", "reverse")
+			if(!LastInputHadTarget(TRUE))
+				return FALSE
+		if("charge")
+			if(!LastInputsHaveNoTarget(3, TRUE))
+				return FALSE
+
 	if(!target)
 		target = last_action_target
 	if(!zone)
@@ -359,6 +380,36 @@
 		ConsumeOnCombo(rule_id)
 
 	return success
+
+/datum/component/combo_core/martial_master/proc/LastInputHadTarget(clear_on_fail = FALSE)
+	if(!length(history))
+		if(clear_on_fail)
+			ClearHistory("invalid")
+		return FALSE
+
+	var/datum/combo_input_entry/E = history[length(history)]
+	if(E?.target)
+		return TRUE
+
+	if(clear_on_fail)
+		ClearHistory("invalid")
+	return FALSE
+
+/datum/component/combo_core/martial_master/proc/LastInputsHaveNoTarget(count, clear_on_fail = FALSE)
+	if(!length(history) || length(history) < count)
+		if(clear_on_fail)
+			ClearHistory("invalid")
+		return FALSE
+
+	var/start_index = length(history) - count + 1
+	for(var/i in start_index to length(history))
+		var/datum/combo_input_entry/E = history[i]
+		if(E?.target)
+			if(clear_on_fail)
+				ClearHistory("invalid")
+			return FALSE
+
+	return TRUE
 
 /datum/component/combo_core/martial_master/proc/_balloon_combo(rule_id)
 	switch(rule_id)
@@ -1060,7 +1111,7 @@
 
 	return null
 
-/// GGG - reverse
+/// PPG - reverse
 /datum/component/combo_core/martial_master/proc/ProcComboReverse()
 	if(!owner)
 		return FALSE

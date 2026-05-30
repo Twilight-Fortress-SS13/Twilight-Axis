@@ -52,6 +52,7 @@
 				var/pos = length(file_data["[escaped]"]["[category]"]) + 1
 				file_data["[escaped]"]["[category]"]["[pos]"] = mob_data
 	WRITE_FILE(json_file, json_encode(file_data))
+	dump_chronicle_stats()
 	SSblackbox.record_feedback("nested tally", "round_end_stats", num_survivors, list("survivors", "total"))
 	SSblackbox.record_feedback("nested tally", "round_end_stats", num_escapees, list("escapees", "total"))
 	SSblackbox.record_feedback("nested tally", "round_end_stats", GLOB.joined_player_list.len, list("players", "total"))
@@ -171,6 +172,7 @@
 					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend5.ogg', 100, FALSE)
 		if(isliving(C.mob) && C.ckey)
 			key_list += C.ckey
+	var/favor_bonus = SSmerchant_trade ? SSmerchant_trade.favor_triumph_bonus() : 0
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		if(H.stat != DEAD)
 			if(H.get_triumphs() < 0)
@@ -181,6 +183,9 @@
 				if(job && job.round_contrib_points)
 					to_chat(H, "\n<font color='purple'><b>[job.round_contrib_points]</b> ROUND CONTRIBUTOR POINTS AWARDED. Thank you for playing!</font>")
 					add_roundpoints(job.round_contrib_points, H.ckey)
+		if(favor_bonus > 0 && H.ckey && H.job && (H.job == "Merchant" || H.job == "Shophand"))
+			H.adjust_triumphs(favor_bonus)
+			to_chat(H, "\n<font color='purple'><b>+[favor_bonus] TRIUMPHS</b> awarded for trade volume earned with the Azurian Trading Company.</font>")
 	add_roundplayed(key_list)
 
 	update_god_rankings()

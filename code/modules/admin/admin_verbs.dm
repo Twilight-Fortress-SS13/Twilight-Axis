@@ -41,7 +41,6 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/admin_spread_effect,
 	/client/proc/open_bounty_menu,
 	/client/proc/remove_bounty,
-	/client/proc/view_actors_manifest,
 	// RATWOOD MODULAR START
 	/client/proc/bunker_bypass,
 	)

@@ -391,7 +391,7 @@
 	list_item_order = 1
 	name = "Akhdruki"
 	added_languages = list(/datum/language/dwarvish)
-	origin_name = "Drud Ahkdruk"
+	origin_name = "Drud Akhdruk"
 	desc = "Я происхожу из Друд Акхдрук, единого королевства дворфов, объединяющего десятки крепостей по всей Гримории.<br>"
 	races = list(/datum/species/dwarf/mountain,
 				/datum/species/dwarf/gnome)

@@ -13,6 +13,67 @@
 GLOBAL_LIST_EMPTY(cmode_tracks_by_type)
 GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 
+
+/proc/get_custom_combat_music_extension(filename)
+	if(!istext(filename) || !length(filename))
+		return ""
+	return lowertext(copytext(filename, max(length(filename) - 3, 1)))
+
+/proc/is_valid_custom_combat_music_path(path)
+	if(!istext(path) || !length(path))
+		return FALSE
+
+	if(findtext(path, "data/combat_music_uploads/") != 1)
+		return FALSE
+
+	if(findtext(path, "..") || findtext(path, ascii2text(92)))
+		return FALSE
+
+	return get_custom_combat_music_extension(path) == ".ogg"
+
+/proc/sanitize_custom_combat_music_filename(filename)
+	filename = "[filename]"
+	filename = replacetext(filename, ascii2text(92), "_")
+	filename = replacetext(filename, "/", "_")
+	filename = replacetext(filename, ":", "_")
+	filename = replacetext(filename, "*", "_")
+	filename = replacetext(filename, "?", "_")
+	filename = replacetext(filename, ascii2text(34), "_")
+	filename = replacetext(filename, "<", "_")
+	filename = replacetext(filename, ">", "_")
+	filename = replacetext(filename, "|", "_")
+	filename = replacetext(filename, " ", "_")
+	filename = replacetext(filename, ascii2text(10), "_")
+	filename = replacetext(filename, ascii2text(13), "_")
+	filename = copytext(filename, 1, 96)
+	if(!length(filename))
+		filename = "custom_combat_music.ogg"
+	return filename
+
+/proc/sanitize_custom_combat_music_display_name(name)
+	name = "[name]"
+	name = replacetext(name, "<", "")
+	name = replacetext(name, ">", "")
+	name = replacetext(name, ascii2text(10), " ")
+	name = replacetext(name, ascii2text(13), " ")
+	name = copytext(name, 1, 65)
+	if(!length(name))
+		name = "Custom Combat Music"
+	return name
+
+/proc/check_custom_combat_music_file(infile, filename, mob/user)
+	var/file_ext = get_custom_combat_music_extension(filename)
+	var/file_size = length(infile)
+
+	if(file_ext != ".ogg")
+		return "Combat music must be an .ogg file."
+
+	if(file_size > (4 * 1024 * 1024))
+		return "Combat music file is too large. 4 MB or less."
+
+	message_admins("[ADMIN_LOOKUPFLW(user)] uploaded custom combat music [filename] of size [file_size / 1000000] (~MB).")
+	return null // TA EDIT END
+
 // People make mistakes. This should help catch when that happens.
 /proc/cmode_track_to_namelist(var/datum/combat_music/track)
 	if(!track)

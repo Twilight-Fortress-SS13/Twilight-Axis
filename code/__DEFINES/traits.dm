@@ -42,6 +42,7 @@
 #define TRAIT_JOURNEYS_END "Journey's End"
 #define TRAIT_RAGE "Rage"
 #define TRAIT_CRITICAL_WEAKNESS "Critical Weakness"
+#define TRAIT_SHATTER_KILL "Shatterable Form" //Lesser ver of critical weakness that only instantly kills on chest fractures/paralysis.
 #define TRAIT_DNR "Bane of Existence"
 #define TRAIT_PHILOSOPHER_BOUND "Philosopher bound"
 #define TRAIT_MANIAC_AWOKEN "Awoken"
@@ -230,6 +231,13 @@
 #define TRAIT_BIGGUY "Big Guy"
 #define TRAIT_RESIDENT "Resident"
 #define TRAIT_DEBTOR "Default Debtor"
+#define TRAIT_DEBTOR_CROWN "Default Debtor (Crown)"
+#define TRAIT_DEBTOR_CHURCH "Default Debtor (Church)"
+#define TRAIT_DEBTOR_MERCHANT "Default Debtor (Merchant)"
+#define TRAIT_DEBTOR_BATHHOUSE "Default Debtor (Bathhouse)"
+#define TRAIT_AGENT_MERCHANT "Agent of the Trading Company"
+#define TRAIT_AGENT_BATHHOUSE "Agent of the Bathhouse"
+#define TRAIT_AGENT_CHURCH "Ecclesiastical Benefactor"
 #define TRAIT_ARREARS "Poll Tax Arrears"
 #define TRAIT_DECLARED_BENEFACTOR "Ecclesiastical Benefactor"
 #define TRAIT_PATRONAGE_GRANT "patronage_grant"
@@ -402,6 +410,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_JOURNEYS_END = span_info ("As the lyfe ebbs from my veins, my resolve hardens to push through. Do not go quietly into that good nite."),
 	TRAIT_RAGE = span_info ("PAIN AND INJURY FUELS MY BATTLERAGE!"),
 	TRAIT_CRITICAL_WEAKNESS = span_danger("I am weak to wounds that others could survive."),
+	TRAIT_SHATTER_KILL = span_danger("My form is vulnerable to chest fractures and paralysis, I will die instantly if my ribs shatter or I am paralyised."),
 	TRAIT_DNR = span_danger("My lux' vigor is weak. There is no hope for me. This lyfe is all I have."),
 	TRAIT_PHILOSOPHER_BOUND = span_danger("I bound my soul."),
 	TRAIT_MANIAC_AWOKEN = span_danger("I am <b>WAKING UP</b> and the sheeple know this. They will resist."),
@@ -508,6 +517,14 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_DARKVISION = span_info("I can see better in the dark."),
 	TRAIT_NITEVISION = span_info("I can see perfectly in the dark."),
 	TRAIT_NOCSHADES = span_info("The lens I look through allows me to see in the dark clear as dae, at the cost of greater vision."),
+	TRAIT_DEBTOR = span_danger("I have defaulted on a loan. My name is writ red in the ledger until the debt is cleared."),
+	TRAIT_DEBTOR_CROWN = span_danger("My defaulted debt is owed to the Crown. The Steward keeps the tally."),
+	TRAIT_DEBTOR_CHURCH = span_danger("My defaulted debt is owed to the Church. The faithful keep the tally."),
+	TRAIT_DEBTOR_MERCHANT = span_danger("My defaulted debt is owed to the Merchant. The trading company keeps the tally."),
+	TRAIT_DEBTOR_BATHHOUSE = span_danger("My defaulted debt is owed to the Bathhouse. The bathmasters keep the tally."),
+	TRAIT_AGENT_MERCHANT = span_info("I am a chartered agent of the Azurian Trading Company. I keep its tally and ledger."),
+	TRAIT_AGENT_BATHHOUSE = span_info("I am an agent of the Bathhouse. I keep its tally and ledger."),
+	TRAIT_AGENT_CHURCH = span_info("I am a Benefactor of the Church of Azuria. The faithful know my name."),
 	TRAIT_RESIDENT = span_info("I've been granted a Meister account, and the ownership of a house in city."), //TA_EDIT
 	TRAIT_DEBTOR = span_danger("I have defaulted on a Crown loan. My name is writ red in the ledger until the Steward clears it."),
 	TRAIT_ARREARS = span_smallred("I am behind on my poll tax. The Stewardry keeps the tally; the garrison may mark my destitution."),

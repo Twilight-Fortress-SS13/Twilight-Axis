@@ -170,7 +170,7 @@
 	animname = "claw"
 	blade_class = BCLASS_CHOP
 	hitsound = "genslash"
-	penfactor = 131
+	penfactor = PEN_BSTEEL
 	damfactor = 40
 	candodge = TRUE
 	canparry = TRUE
