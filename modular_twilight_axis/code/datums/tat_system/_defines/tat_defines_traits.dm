@@ -96,6 +96,8 @@
 #define TAT_TRAIT_SKILLED_PHYSICKER "tat_skilled_physicker"
 #define TAT_TRAIT_SKILLED_ALCHEMIST "tat_skilled_alchemist"
 
+#define TAT_TRAIT_ACCURSED "tat_trait_accursed"
+
 #define TAT_TRAIT_SKILL_CAP_BONUS_RULES list( \
 	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = 6, /datum/skill/craft/smelting = 6, /datum/skill/craft/engineering = 6, /datum/skill/labor/mining = 6, /datum/skill/craft/masonry = 6, /datum/skill/craft/ceramics = 6), \
 	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = 5, /datum/skill/craft/smelting = 5, /datum/skill/craft/engineering = 5), \
@@ -241,7 +243,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_CIVILIZEDBARBARIAN = TAT_TRAIT_ENTRY("Expert Pugilist", 20, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Turns you into a living weapon: stronger unarmed strikes, broader unarmed reach, and much better parrying with bracers, knuckles, or bandages."), \
 	TRAIT_FENCERDEXTERITY = TAT_TRAIT_ENTRY("Fencer's Dexterity", 10, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "I've trained my entire lyfe around the art of unarmoured fencing, affording myself unmatched speed when wearing very light armour. I'm very choosy otherwise. WARNING: YOU CAN WEAR ONLY LIGHT ARMOR"), \
 	TAT_TRAIT_BRONZE_SUPPLIER = TAT_TRAIT_ENTRY("Bronze Supplier", 10, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks bronze-tier weapons."), \
-	TAT_TRAIT_SILVER_SUPPLIER = TAT_TRAIT_ENTRY("Silver Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks silver-tier weapons."), \
+	TAT_TRAIT_SILVER_SUPPLIER = TAT_TRAIT_ENTRY("Silver Supplier", 25, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks silver-tier weapons."), \
 	TAT_TRAIT_STEEL_SUPPLIER = TAT_TRAIT_ENTRY("Steel Supplier", 15, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks steel-tier weapons."), \
 	TAT_TRAIT_FIREARMS_SUPPLIER = TAT_TRAIT_ENTRY("Firearms Supplier", 25, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks blackpowder weapons and supplies."), \
 	TAT_TRAIT_LEATHER_SUPPLIER = TAT_TRAIT_ENTRY("Leather Supplier", 10, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks leather gear in all supported slots."), \
@@ -356,6 +358,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_NODEF = TAT_TRAIT_ENTRY("No Defense", -20, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You expose yourself completely in battle."), \
 	TRAIT_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Reverse Guidance", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Something hinders you in battle. Anti-guidance: 20%."), \
 	TRAIT_LESSER_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Lesser Reverse Guidance", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Something faintly hinders you in battle. Anti-guidance: 10%."), \
+	TAT_TRAIT_ACCURSED = TAT_TRAIT_ENTRY("Dendor's Curse", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You're cursed by the Sleeping Volf. Now you're shapshift to lesser creachure every nite.")
 
 #define TAT_TRAIT_STAT_POINT_RULES list( \
 	TAT_TRAIT_BONUS_STAT_POOL = TAT_BUILD_STAT_BONUS_EXTRA_STATS, \
