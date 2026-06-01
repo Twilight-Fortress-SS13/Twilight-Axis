@@ -1076,7 +1076,7 @@
 
 	return null
 
-/datum/component/combo_core/martial_master/proc/FindFrontConeTarget(max_range = 8)
+/datum/component/combo_core/martial_master/proc/FindFrontConeTarget(max_range = 5)
 	if(!owner)
 		return null
 
