@@ -220,8 +220,11 @@
 		return 0
 
 	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target_atom, zone)
-	if(skill_id == MARTIAL_MASTER_INPUT_GRAB && target_atom && !isliving(target_atom) && !isturf(target_atom) && !isarea(target_atom))
-		return 0
+	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
+		if(isliving(target_atom))
+			return 0
+		if(target_atom && !isturf(target_atom) && !isarea(target_atom))
+			return 0
 
 	return COMPONENT_ATTACK_CONSUMED
 
@@ -242,6 +245,9 @@
 				last_matched_rule = null
 				return
 		else if(isturf(target_atom) || isarea(target_atom) || !target_atom)
+			var/turf/target_turf = GetTargetTurf(target_atom)
+			if(target_turf)
+				FaceTurf(target_turf)
 			target = null
 		else
 			ClearHistory("invalid")
@@ -891,7 +897,7 @@
 	if(!owner)
 		return FALSE
 
-	var/mob/living/target = FindFrontTarget(MARTIAL_MASTER_CHARGE_RANGE)
+	var/mob/living/target = FindFrontConeTarget(MARTIAL_MASTER_CHARGE_RANGE)
 	if(!target)
 		return FALSE
 
@@ -1069,6 +1075,41 @@
 			return L
 
 	return null
+
+/datum/component/combo_core/martial_master/proc/FindFrontConeTarget(max_range = 8)
+	if(!owner)
+		return null
+
+	var/turf/origin = get_turf(owner)
+	if(!origin)
+		return null
+
+	var/base_dir = owner.dir
+	if(!base_dir)
+		return null
+
+	var/list/valid_dirs = list(base_dir, turn(base_dir, 45), turn(base_dir, -45))
+	var/mob/living/best_target = null
+	var/best_dist = INFINITY
+
+	for(var/mob/living/L in view(max_range, owner))
+		if(L == owner || L.stat == DEAD)
+			continue
+
+		var/turf/target_turf = get_turf(L)
+		if(!target_turf)
+			continue
+
+		var/target_dir = get_dir(origin, target_turf)
+		if(!(target_dir in valid_dirs))
+			continue
+
+		var/target_dist = get_dist(origin, target_turf)
+		if(target_dist < best_dist)
+			best_target = L
+			best_dist = target_dist
+
+	return best_target
 
 /datum/component/combo_core/martial_master/proc/ProcComboChainStep()
 	if(!owner)
