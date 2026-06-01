@@ -44,14 +44,23 @@
 			return TRUE
 	return FALSE
 
+/datum/component/arousal/proc/get_actor_from_erp_link(datum/erp_sex_link/link, mob/living/carbon/human/H)
+	if(!link || !istype(H))
+		return null
+
+	var/datum/erp_actor/A = link.actor_active
+	if(A && (A.physical == H || A.get_signal_mob() == H || A.get_effect_mob() == H))
+		return A
+
+	A = link.actor_passive
+	if(A && (A.physical == H || A.get_signal_mob() == H || A.get_effect_mob() == H))
+		return A
+
+	return null
+
 /datum/component/arousal/proc/pick_best_erp_link(list/L)
 	var/mob/living/carbon/human/H = parent
 	if(!istype(H) || !length(L))
-		return null
-
-	var/datum/erp_controller/C = SSerp.get_controller_for(H)
-	var/datum/erp_actor/me = C ? C.get_actor_by_mob(H) : null
-	if(!me)
 		return null
 
 	var/datum/erp_sex_link/best = null
@@ -59,7 +68,9 @@
 	for(var/datum/erp_sex_link/link in L)
 		if(!link || QDELETED(link) || !link.is_valid() || link.state != LINK_STATE_ACTIVE)
 			continue
-		var/sc = link.get_climax_score(me)
+		if(!get_actor_from_erp_link(link, H))
+			continue
+		var/sc = link.get_climax_score()
 		if(sc > best_score)
 			best_score = sc
 			best = link
@@ -503,7 +514,7 @@
 
 	var/list/L = get_erp_links()
 	var/datum/erp_sex_link/best = pick_best_erp_link(L)
-	var/datum/erp_controller/C = best ? SSerp.get_controller_for(H) : null
+	var/datum/erp_controller/C = best?.session
 	var/erp_service_will_handle_climax = !!C
 
 	var/mob/living/carbon/human/partner = null
