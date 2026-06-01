@@ -508,7 +508,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/gloves/roguetown/chain/contraption/voltic = TAT_ITEM_ENTRY("Voltic Gauntlet", 4, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock = TAT_ITEM_ENTRY("Runelock Pistol", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/blessed = TAT_ITEM_ENTRY("Silver Bullet", 0, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
-	/obj/projectile/bullet/twilight_lead/twilight_runelock = TAT_ITEM_ENTRY("Blessed Bullet", 0, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
+	/obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock = TAT_ITEM_ENTRY("Blessed Bullet", 0, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/clothing/ring/active/shimmeringlens = TAT_ITEM_ENTRY("Shimmering Lens", 6, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/lantern/fog_repelling/empty = TAT_ITEM_ENTRY("Necran Lamptern", 1, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/reagent_containers/glass/bottle/sanctified_oil = TAT_ITEM_ENTRY("Sacrificed Oil", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
