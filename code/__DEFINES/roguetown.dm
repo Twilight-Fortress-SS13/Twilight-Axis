@@ -64,7 +64,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
-  /datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
+	/datum/species/dwarf/gnome,\
 	/datum/species/aura,\
 )
 
@@ -110,12 +111,17 @@ Balloon Alert / Floating Text defines
 	/datum/species/anthromorphsmall,\
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
+	/datum/species/ooze,\
 
 #define RACES_DESPISED \
 	/datum/species/dullahan,\
 
 #define RACES_CONSTRUCT \
 	/datum/species/construct/metal,\
+
+#define RACES_OOZE \
+	/datum/species/ooze,\
+
 
 #define RACES_AASIMAR \
 	/datum/species/aasimar, \
@@ -151,6 +157,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
 
 // All but elves & half-elves.
 #define RACES_BLACKOAK \
@@ -174,6 +181,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
 
 // All but dwarves.
 #define RACES_GRUDGE \
@@ -199,8 +207,9 @@ Balloon Alert / Floating Text defines
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
+	/datum/species/ooze,\
 
-// Dwarves, Gnomes, Kobolds, D. Elves, Moths & Anthrosmall
+// All but Dwarves, Gnomes, Kobolds, D. Elves, Oozes, Moths & Anthrosmall
 #define RACES_UNDERDARK \
 	/datum/species/human/northern,\
 	/datum/species/human/halfelf,\
@@ -244,6 +253,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
 
 
 #define NOBLE_RACES_TYPES list(\
@@ -298,6 +308,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/construct/metal,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
 	/datum/species/aura,\
 )
 // Non-dwarf non-kobold non-goblin mostly
@@ -322,6 +333,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/halforc,\
 	/datum/species/construct/metal,\
 	/datum/species/dullahan,\
+	/datum/species/ooze,\
 	/datum/species/aura,\
 )
 // Non-elf non-dwarf non-kobold non-goblin mostly
@@ -340,6 +352,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/demihuman,\
 	/datum/species/construct/metal,\
 	/datum/species/dullahan,\
+	/datum/species/ooze,\
 	/datum/species/aura,\
 )
 #define ALL_CLERIC_PATRONS list(/datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/necra, /datum/patron/divine/pestra, /datum/patron/divine/ravox, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/divine/undivided) // Currently unused.

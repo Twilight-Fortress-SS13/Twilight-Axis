@@ -28,6 +28,8 @@
 			return REALM_ZYBANTU
 		if("Valoria") //TA EDIT
 			return REALM_VALORIA
+		if("Hammerhold") //TA EDIT
+			return REALM_HAMMERHOLD_TA
 	return null
 
 /datum/controller/subsystem/merchant_trade/proc/try_claim_kinship_for(mob/living/carbon/human/H)

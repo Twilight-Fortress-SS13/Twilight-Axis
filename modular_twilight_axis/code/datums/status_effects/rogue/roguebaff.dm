@@ -208,7 +208,7 @@
 		to_chat(owner, span_warning("AHAHAHA!! AHAHAHAHAHAHAHAH!!!!"))
 		if(owner.cmode)
 			return
-		if(owner.construct)
+		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
 			return
 		owner.hallucination = min(owner.hallucination + 10, 50)
 
@@ -216,7 +216,7 @@
 	if(owner) //heal and immobilize owner
 		if(owner.cmode)
 			return
-		if(owner.construct)
+		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
 			return
 		var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_blood(get_turf(owner))
 		H.color = "#fbbebe"

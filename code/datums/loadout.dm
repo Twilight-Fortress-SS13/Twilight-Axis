@@ -2673,6 +2673,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 2
 
+/datum/loadout_item/donator_vakiova
+	name = "Donator Item - Gravetender Coat"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/vaki_gravetender
+	donatitem = TRUE
+	donat_tier = 2
+
 // Маски
 
 /datum/loadout_item/naledimask
