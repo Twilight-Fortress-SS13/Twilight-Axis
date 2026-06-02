@@ -1399,6 +1399,19 @@
 	I.forceMove(get_turf(H))
 	return FALSE
 
+/datum/tat_items/proc/try_put_into_any_storage_or_drop_no_stash(obj/item/I, mob/living/carbon/human/H)
+	if(!I || !H || QDELETED(I))
+		return FALSE
+	for(var/storage_owner in get_storage_targets(H))
+		if(QDELETED(I))
+			return FALSE
+		if(try_insert_into_storage(I, storage_owner, H))
+			return TRUE
+	if(QDELETED(I))
+		return FALSE
+	I.forceMove(get_turf(H))
+	return FALSE
+
 
 /datum/tat_items/proc/is_coin_pouch_path(path)
 	if(!ispath(path))
@@ -1445,34 +1458,164 @@
 
 	return TRUE
 
-/datum/tat_items/proc/spawn_stacked_coin_pouch_into_bag_or_fallback(mob/living/carbon/human/H, path, amount = 1)
-	if(!H || !is_coin_pouch_path(path))
+/datum/tat_items/proc/get_coin_stack_path_for_value(value)
+	value = round(value || 0)
+	if(value <= 0)
+		return null
+
+	if(SSmapping.config.map_name == "Rockhill")
+		if(value >= 14)
+			return /obj/item/roguecoin/goldkrona
+		return /obj/item/roguecoin/copper
+
+	if(value >= 10)
+		return /obj/item/roguecoin/gold
+	if(value >= 5)
+		return /obj/item/roguecoin/silver
+	return /obj/item/roguecoin/copper
+
+/datum/tat_items/proc/insert_coin_stack_into_pouch(obj/item/storage/belt/rogue/pouch/pouch, coin_path, amount)
+	if(!pouch || !ispath(coin_path, /obj/item/roguecoin))
 		return FALSE
 
-	amount = max(1, round(amount || 1))
+	amount = round(amount || 0)
+	if(amount <= 0)
+		return FALSE
+
+	var/success = FALSE
+	while(amount > 0)
+		var/stack_amount = min(amount, 20)
+		var/obj/item/roguecoin/coin = new coin_path(get_turf(pouch))
+		if(!coin)
+			return success
+
+		coin.set_quantity(stack_amount)
+		if(!SEND_SIGNAL(pouch, COMSIG_TRY_STORAGE_INSERT, coin, null, TRUE, TRUE))
+			qdel(coin)
+			return success
+
+		success = TRUE
+		amount -= stack_amount
+
+	return success
+
+/datum/tat_items/proc/collect_coin_pouch_value(obj/item/storage/belt/rogue/pouch/pouch)
+	if(!pouch)
+		return 0
+
+	var/total_value = 0
+	for(var/obj/item/roguecoin/coin in pouch.contents)
+		if(QDELETED(coin))
+			continue
+		total_value += round(coin.get_real_price() || 0)
+		qdel(coin)
+
+	return total_value
+
+/datum/tat_items/proc/fill_coin_pouch_from_value(obj/item/storage/belt/rogue/pouch/pouch, total_value)
+	if(!pouch)
+		return FALSE
+
+	total_value = round(total_value || 0)
+	if(total_value <= 0)
+		return FALSE
+
+	var/list/coin_values = list()
+	if(SSmapping.config.map_name == "Rockhill")
+		coin_values += 14
+		coin_values += 1
+	else
+		coin_values += 10
+		coin_values += 5
+		coin_values += 1
+
+	for(var/value in coin_values)
+		if(total_value <= 0)
+			break
+
+		value = round(value || 0)
+		if(value <= 0)
+			continue
+
+		var/coin_amount = floor(total_value / value)
+		if(coin_amount <= 0)
+			continue
+
+		var/coin_path = get_coin_stack_path_for_value(value)
+		if(insert_coin_stack_into_pouch(pouch, coin_path, coin_amount))
+			total_value -= coin_amount * value
+
+	return TRUE
+
+/datum/tat_items/proc/normalize_coin_pouch_value(obj/item/storage/belt/rogue/pouch/pouch)
+	if(!pouch)
+		return FALSE
+
+	return fill_coin_pouch_from_value(pouch, collect_coin_pouch_value(pouch))
+
+/datum/tat_items/proc/spawn_combined_coin_pouches_into_bag_or_fallback(mob/living/carbon/human/H, list/pouch_amounts)
+	if(!H || !islist(pouch_amounts) || !length(pouch_amounts))
+		return FALSE
 
 	var/turf/drop_turf = get_turf(H)
 	if(!drop_turf)
 		return FALSE
 
-	var/obj/item/storage/belt/rogue/pouch/coins/pouch = new path(drop_turf)
+	var/primary_path = null
+	for(var/path in pouch_amounts)
+		if(is_coin_pouch_path(path) && round(pouch_amounts[path] || 0) > 0)
+			primary_path = path
+			break
+	if(!primary_path)
+		return FALSE
+
+	var/obj/item/storage/belt/rogue/pouch/coins/pouch = new primary_path(drop_turf)
 	if(!pouch || QDELETED(pouch))
 		return FALSE
 
-	// The first pouch has already populated itself during normal initialization.
-	// Additional purchased pouch copies are represented by repeating the native
-	// pouch population on this same pouch. This preserves map-specific currency
-	// logic, SSwardrobe use, random pile sizes, and Rockhill goldkrona behavior.
-	if(amount > 1)
-		for(var/i in 2 to amount)
-			if(QDELETED(pouch))
-				return FALSE
-			pouch.PopulateContents()
+	var/total_value = collect_coin_pouch_value(pouch)
+	var/primary_consumed = FALSE
 
+	for(var/path in pouch_amounts)
+		if(!is_coin_pouch_path(path))
+			continue
+
+		var/amount = max(0, round(pouch_amounts[path] || 0))
+		if(amount <= 0)
+			continue
+
+		var/start_index = 1
+		if(path == primary_path && !primary_consumed)
+			start_index = 2
+			primary_consumed = TRUE
+		if(start_index > amount)
+			continue
+
+		for(var/i in start_index to amount)
+			var/obj/item/storage/belt/rogue/pouch/coins/temp_pouch = new path(drop_turf)
+			if(!temp_pouch || QDELETED(temp_pouch))
+				continue
+
+			total_value += collect_coin_pouch_value(temp_pouch)
+			qdel(temp_pouch)
+
+	if(total_value <= 0)
+		qdel(pouch)
+		return FALSE
+
+	fill_coin_pouch_from_value(pouch, total_value)
 	merge_coin_stacks_in_container(pouch)
-	apply_paint_to_item(path, pouch)
-	try_put_into_any_storage_or_drop(pouch, H, path)
+	apply_paint_to_item(primary_path, pouch)
+	try_put_into_any_storage_or_drop_no_stash(pouch, H)
 	return TRUE
+
+/datum/tat_items/proc/spawn_stacked_coin_pouch_into_bag_or_fallback(mob/living/carbon/human/H, path, amount = 1)
+	if(!H || !is_coin_pouch_path(path))
+		return FALSE
+
+	var/list/pouch_amounts = list()
+	pouch_amounts[path] = max(1, round(amount || 1))
+	return spawn_combined_coin_pouches_into_bag_or_fallback(H, pouch_amounts)
 
 /datum/tat_items/proc/spawn_item_into_bag_or_fallback(mob/living/carbon/human/H, path, amount = 1)
 	if(!H || !ispath(path))
@@ -1757,11 +1900,18 @@
 	if(!H?.mind)
 		return FALSE
 	var/added = FALSE
+	var/list/coin_pouch_amounts = list()
 	for(var/item_path in get_all_item_paths())
 		var/stash_amount = get_effective_stash_spawn_amount(item_path)
 		if(stash_amount <= 0)
 			continue
+		if(is_coin_pouch_path(item_path))
+			coin_pouch_amounts[item_path] = round(coin_pouch_amounts[item_path] || 0) + stash_amount
+			continue
 		if(add_item_path_to_mind_stash(H, item_path, stash_amount))
+			added = TRUE
+	if(length(coin_pouch_amounts))
+		if(spawn_combined_coin_pouches_into_bag_or_fallback(H, coin_pouch_amounts))
 			added = TRUE
 	return added
 
@@ -1780,9 +1930,9 @@
 	// mind.special_items, remove copies that the TAT loadout will spawn in bag or
 	// equipped slots. This keeps old integration order from duplicating Pliant gear.
 	remove_consumed_preference_loadout_from_mind_stash(H)
-	spawn_stash_items(H)
 	spawn_assigned_loadout_items(H, FALSE)
 	grant_default_roundstart_bag(H)
+	spawn_stash_items(H)
 	spawn_bag_items(H)
 	spawn_hand_loadout_items(H)
 
