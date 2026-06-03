@@ -536,12 +536,22 @@
 
 /datum/tat_build/proc/build_ui_tat_slot(slot_id)
 	var/datum/tat_slot/slot = get_tat_slot(slot_id)
-	var/list/summary = slot.get_summary(src)
+	var/list/build_data = slot.get_build_data()
+	var/list/summary = build_slot_summary_from_data(build_data)
+	var/list/role_status = build_ui_role_status_for_data(build_data)
 	var/name = istext(slot.name) && length(slot.name) ? slot.name : get_default_tat_slot_name(slot_id)
 	return list(
 		"id" = slot_id,
 		"name" = name,
 		"active" = (active_tat_slot == slot_id),
+		"role_bucket" = role_status["role_bucket"],
+		"role_name" = role_status["role_name"],
+		"role_text" = role_status["role_text"],
+		"min_pq" = role_status["min_pq"],
+		"player_pq" = role_status["player_pq"],
+		"pq_missing" = role_status["pq_missing"],
+		"pq_locked" = role_status["pq_locked"],
+		"pq_lock_text" = role_status["pq_lock_text"],
 		"summary" = list(
 			"stats" = isnum(summary["stats"]) ? summary["stats"] : 0,
 			"skills" = isnum(summary["skills"]) ? summary["skills"] : 0,

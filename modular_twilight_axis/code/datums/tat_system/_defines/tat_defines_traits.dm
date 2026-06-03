@@ -258,7 +258,6 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_PLIANT_RENAME = TAT_TRAIT_ENTRY("Pliant Class Name", 0, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Requires 50+ player quality. Lets you rename your displayed class while keeping the Pliant admin marker prefix. Resident class selection is applied first, then you may choose the current class or a matching skill title as the base, and finally use that name, your active TAT slot name, or custom input."), \
 	TRAIT_EMPATH = TAT_TRAIT_ENTRY("Empath", 5, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can notice when people are in pain."), \
 	TRAIT_NOSTINK = TAT_TRAIT_ENTRY("Dead Nose", 10, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Your nose is numb to the smell of decay."), \
-	TRAIT_NOBLE = TAT_TRAIT_ENTRY("Noble Blooded", 10, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You are of noble blood."), \
 	TRAIT_CICERONE = TAT_TRAIT_ENTRY("Cicerone", 5, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You are well-versed in brews and spirits, and can tell them apart at a glance."), \
 	TRAIT_SEEPRICES = TAT_TRAIT_ENTRY("Appraiser", 10, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "You can tell the prices of things down to the zenny."), \
 	TRAIT_OUTLANDER = TAT_TRAIT_ENTRY("Outlander", -20, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "The locals see you as not of their land."), \
@@ -313,7 +312,6 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_CONVERT_MISC_TO_WANDERING = TAT_TRAIT_ENTRY("Convert Misc -> Wandering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Misc to Wandering."), \
 	TAT_TRAIT_CONVERT_MISC_TO_GATHERING = TAT_TRAIT_ENTRY("Convert Misc -> Gathering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Misc to Gathering."), \
 	TAT_TRAIT_CONVERT_MISC_TO_CRAFTING = TAT_TRAIT_ENTRY("Convert Misc -> Crafting", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Misc to Crafting."), \
-	TRAIT_STRONGBITE = TAT_TRAIT_ENTRY("Strong Bite", 35, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Increases crit chance and damage from biting"), \
 	TRAIT_BITERHELM = TAT_TRAIT_ENTRY("Curse of Twisting Metall", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Gives cursed skill to bite through your own helmet"), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Crafting skill-domain points."), \
 	TAT_TRAIT_STOCKPILER = TAT_TRAIT_ENTRY("Stockpiler", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Gathering skill-domain points."), \

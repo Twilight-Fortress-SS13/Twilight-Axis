@@ -101,6 +101,14 @@ type TatSlotEntry = {
   name: string;
   active?: boolean;
   summary?: SlotSummary;
+  role_text?: string;
+  role_name?: string;
+  role_bucket?: string | null;
+  min_pq?: number;
+  player_pq?: number;
+  pq_missing?: number;
+  pq_locked?: boolean;
+  pq_lock_text?: string | null;
 };
 
 type SkillDomainKey =
@@ -236,6 +244,21 @@ const normalizeTatSlots = (
     items: Number(summary?.items) || 0,
   });
 
+  const makeSlot = (slot: TatSlotEntry | undefined, id: number): TatSlotEntry => ({
+    id,
+    name: String(slot?.name || `Slot ${id}`),
+    active: Number(activeSlotId) === id || !!slot?.active,
+    summary: makeSummary(slot?.summary),
+    role_text: String(slot?.role_text || ''),
+    role_name: String(slot?.role_name || ''),
+    role_bucket: slot?.role_bucket ?? null,
+    min_pq: Number(slot?.min_pq) || 0,
+    player_pq: Number(slot?.player_pq) || 0,
+    pq_missing: Number(slot?.pq_missing) || 0,
+    pq_locked: !!slot?.pq_locked,
+    pq_lock_text: slot?.pq_lock_text ? String(slot.pq_lock_text) : null,
+  });
+
   if (!raw) {
     return [];
   }
@@ -243,28 +266,12 @@ const normalizeTatSlots = (
   if (Array.isArray(raw)) {
     return raw
       .filter(Boolean)
-      .map((slot, index) => {
-        const id = Number(slot?.id) || index + 1;
-        return {
-          id,
-          name: String(slot?.name || `Slot ${id}`),
-          active: Number(activeSlotId) === id || !!slot?.active,
-          summary: makeSummary(slot?.summary),
-        };
-      })
+      .map((slot, index) => makeSlot(slot, Number(slot?.id) || index + 1))
       .sort((a, b) => a.id - b.id);
   }
 
   return Object.entries(raw)
-    .map(([key, slot], index) => {
-      const id = Number(slot?.id) || Number(key) || index + 1;
-      return {
-        id,
-        name: String(slot?.name || `Slot ${id}`),
-        active: Number(activeSlotId) === id || !!slot?.active,
-        summary: makeSummary(slot?.summary),
-      };
-    })
+    .map(([key, slot], index) => makeSlot(slot, Number(slot?.id) || Number(key) || index + 1))
     .sort((a, b) => a.id - b.id);
 };
 
@@ -974,12 +981,13 @@ const SlotCards = ({ slots, act }: { slots: TatSlotEntry[]; act: BackendAct }) =
           {slots.map((slot) => {
             const draftName = renameDrafts[slot.id] ?? slot.name ?? `Slot ${slot.id}`;
             const summary = slot.summary || { stats: 0, skills: 0, traits: 0, items: 0 };
+            const roleText = slot.pq_locked && slot.pq_lock_text ? slot.pq_lock_text : slot.role_text;
 
             return (
               <Stack.Item key={slot.id} grow basis="31%" style={{ minWidth: '220px', maxWidth: '32%' }}>
                 <Box
                   style={{
-                    minHeight: '98px',
+                    minHeight: '112px',
                     padding: '6px',
                     borderRadius: '6px',
                     background: slot.active ? 'rgba(120, 180, 120, 0.08)' : 'rgba(255,255,255,0.02)',
@@ -988,6 +996,17 @@ const SlotCards = ({ slots, act }: { slots: TatSlotEntry[]; act: BackendAct }) =
                   <Stack justify="space-between" align="center">
                     <Stack.Item>
                       <Box bold>{slot.name}</Box>
+                      {!!roleText && (
+                        <Box
+                          mt={0.25}
+                          style={{
+                            fontSize: '11px',
+                            color: slot.pq_locked ? '#e8a0a0' : '#9fd6a8',
+                            opacity: slot.pq_locked ? 1 : 0.9,
+                          }}>
+                          {roleText}
+                        </Box>
+                      )}
                     </Stack.Item>
                     <Stack.Item>
                       {slot.active ? (

@@ -844,3 +844,88 @@
 		return TAT_ROLE_BUCKET_WRETCH
 
 	return TAT_ROLE_BUCKET_TRADER
+
+/datum/tat_build/proc/trait_data_has_trait(list/trait_data, trait_id)
+	if(!islist(trait_data) || isnull(trait_id))
+		return FALSE
+
+	var/value = trait_data[trait_id]
+	if(isnum(value))
+		return round(value) > 0
+
+	if(!isnull(value))
+		return !!value
+
+	return (trait_id in trait_data)
+
+/datum/tat_build/proc/get_role_bucket_from_data(list/build_data)
+	var/list/trait_data = islist(build_data) ? build_data["traits"] : null
+
+	if(trait_data_has_trait(trait_data, TAT_TRAIT_RESIDENT))
+		return TAT_ROLE_BUCKET_TOWNER
+
+	if(trait_data_has_trait(trait_data, TRAIT_OUTLANDER))
+		return TAT_ROLE_BUCKET_ADVENTURER
+
+	if(trait_data_has_trait(trait_data, TAT_TRAIT_WANTED))
+		return TAT_ROLE_BUCKET_WRETCH
+
+	return TAT_ROLE_BUCKET_TRADER
+
+/datum/tat_build/proc/get_tat_role_class_path(bucket)
+	switch(bucket)
+		if(TAT_ROLE_BUCKET_TOWNER)
+			return /datum/advclass/tat_class/towner
+		if(TAT_ROLE_BUCKET_TRADER)
+			return /datum/advclass/tat_class/trader
+		if(TAT_ROLE_BUCKET_ADVENTURER)
+			return /datum/advclass/tat_class/adventurer
+		if(TAT_ROLE_BUCKET_WRETCH)
+			return /datum/advclass/tat_class/wretch
+
+	return null
+
+/datum/tat_build/proc/get_tat_role_class_name(bucket)
+	var/class_path = get_tat_role_class_path(bucket)
+	if(!class_path)
+		return tat_role_bucket_display_name(bucket)
+
+	var/datum/advclass/class_datum = new class_path
+	var/class_name = class_datum?.name || tat_role_bucket_display_name(bucket)
+	qdel(class_datum)
+	return class_name
+
+/datum/tat_build/proc/get_tat_role_min_pq(bucket)
+	var/class_path = get_tat_role_class_path(bucket)
+	if(!class_path)
+		return 0
+
+	var/datum/advclass/class_datum = new class_path
+	var/minimum = round(class_datum?.min_pq || 0)
+	qdel(class_datum)
+	return minimum
+
+/datum/tat_build/proc/build_ui_role_status_for_data(list/build_data)
+	var/bucket = get_role_bucket_from_data(build_data)
+	var/role_name = get_tat_role_class_name(bucket)
+	var/minimum_pq = get_tat_role_min_pq(bucket)
+	var/current_pq = get_owner_playerquality()
+	var/missing_pq = max(0, minimum_pq - current_pq)
+	var/pq_locked = missing_pq > 0
+	var/role_text = role_name
+	var/pq_lock_text = null
+
+	if(pq_locked)
+		pq_lock_text = "[role_name] — not enough PQ ([current_pq]/[minimum_pq])"
+		role_text = pq_lock_text
+
+	return list(
+		"role_bucket" = bucket,
+		"role_name" = role_name,
+		"role_text" = role_text,
+		"min_pq" = minimum_pq,
+		"player_pq" = current_pq,
+		"pq_missing" = missing_pq,
+		"pq_locked" = pq_locked,
+		"pq_lock_text" = pq_lock_text,
+	)
