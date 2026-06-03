@@ -122,7 +122,7 @@
 
 	category_tags = list(CTAG_TOWNER)
 	required_tat_bucket = TAT_ROLE_BUCKET_TOWNER
-	min_pq = 45
+	min_pq = 40
 
 /datum/advclass/tat_class/trader
 	name = "Pliant Trader"
@@ -131,7 +131,7 @@
 	category_tags = list(CTAG_TRADER)
 	class_select_category = CLASS_CAT_TRADER
 	required_tat_bucket = TAT_ROLE_BUCKET_TRADER
-	min_pq = 45
+	min_pq = 40
 
 /datum/advclass/tat_class/adventurer
 	name = "Pliant Adventurer"
@@ -140,7 +140,7 @@
 	class_select_category = CLASS_CAT_NOMAD
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	required_tat_bucket = TAT_ROLE_BUCKET_ADVENTURER
-	min_pq = 45
+	min_pq = 40
 
 /datum/advclass/tat_class/wretch
 	name = "Pliant Wretch"
@@ -149,7 +149,7 @@
 	class_select_category = CLASS_CAT_NOMAD
 	category_tags = list(CTAG_WRETCH)
 	required_tat_bucket = TAT_ROLE_BUCKET_WRETCH
-	min_pq = 55
+	min_pq = 50
 
 /datum/outfit/job/roguetown/tat_class
 	name = "Pliant Soul"
