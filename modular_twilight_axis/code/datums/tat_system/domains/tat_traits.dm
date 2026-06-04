@@ -282,7 +282,7 @@
 			continue
 
 		has_rule = TRUE
-		if(has_trait(trait_id))
+		if(has_effective_trait(trait_id))
 			highest_cap = max(highest_cap, round(skill_map[skill_type] || 0))
 
 	if(highest_cap > 0)

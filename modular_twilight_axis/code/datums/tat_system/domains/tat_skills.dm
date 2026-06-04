@@ -415,7 +415,7 @@
 	return changed
 
 /datum/tat_skills/proc/get_trait_cap_bonus(skill_type)
-	return owner_build ? owner_build.get_skill_cap_bonus_value(skill_type) : 0
+	return owner_build?.traits ? owner_build.traits.get_skill_cap_bonus_value(skill_type) : 0
 
 /datum/tat_skills/proc/skill_has_trait_cap_rule(skill_type)
 	var/list/rules = GLOB.tat_trait_skill_cap_bonus_rules
@@ -429,6 +429,24 @@
 			return TRUE
 
 	return FALSE
+
+/datum/tat_skills/proc/get_base_noncombat_skill_cap(skill_type)
+	if(!ispath(skill_type, /datum/skill))
+		return 0
+
+	var/static/list/base_caps = list()
+	if(skill_type in base_caps)
+		return base_caps[skill_type]
+
+	var/cap = TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM
+	var/datum/skill/S = new skill_type
+	if(S)
+		cap = round(S.max_untraited_level || 0)
+		qdel(S)
+
+	cap = clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
+	base_caps[skill_type] = cap
+	return cap
 
 /datum/tat_skills/proc/get_firearms_skill_cap(skill_type)
 	var/cap = TAT_SKILL_NONCOMBAT_CAP_UNTRAITED
@@ -467,7 +485,7 @@
 		if(master_invested_target >= 0 && get_raw_total_value(skill_type, master_invested_target) >= master_cap && !would_violate_combat_hardcaps(skill_type, master_invested_target))
 			cap = master_cap
 
-	var/cap_bonus = get_trait_cap_bonus(skill_type)
+	var/cap_bonus = get_trait_cap_bonus(skill_type) + get_virtue_skill_cap_bonus(skill_type)
 	if(cap_bonus > 0)
 		cap = max(cap, base_cap + cap_bonus)
 
@@ -506,12 +524,12 @@
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_noncombat_skill_cap(skill_type)
-	var/base_cap = TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM
+	var/base_cap = get_base_noncombat_skill_cap(skill_type)
+	var/cap = base_cap
+	var/unlock_cap = max(get_trait_cap_bonus(skill_type), get_virtue_skill_cap_bonus(skill_type))
+	if(unlock_cap > 0)
+		cap = max(cap, unlock_cap)
 
-	if(skill_has_trait_cap_rule(skill_type))
-		base_cap = TAT_SKILL_NONCOMBAT_CAP_UNTRAITED
-
-	var/cap = base_cap + get_trait_cap_bonus(skill_type)
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_maximum(skill_type)
