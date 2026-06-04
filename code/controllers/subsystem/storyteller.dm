@@ -956,10 +956,6 @@ SUBSYSTEM_DEF(gamemode)
 		selected_storyteller = /datum/storyteller/astrata
 		SSgnoll_scaling.get_gnoll_scaling()
 
-	var/datum/storyteller/storytypecasted = selected_storyteller
-	var/datum/storyteller/selected_storyteller_instance = storytellers[selected_storyteller]
-	to_chat(world, span_notice("<b>Storyteller is [selected_storyteller_instance ? selected_storyteller_instance.get_display_name() : initial(storytypecasted.name)]!</b>"))
-	to_chat(world, span_notice("[selected_storyteller_instance ? selected_storyteller_instance.vote_desc : initial(storytypecasted.vote_desc)]"))
 
 /datum/controller/subsystem/gamemode/proc/get_last_storyteller_vote()
 	var/json_file = file(LAST_ROUND_STATS_FILE)
@@ -1507,9 +1503,6 @@ SUBSYSTEM_DEF(gamemode)
 		update_bandits_slots()
 //		update_scaling_slots()
 		enforce_storyteller_soft_antag_slots()
-	if(!secret_storyteller)
-		send_to_playing_players(span_notice("<b>Storyteller is [current_storyteller.get_display_name()]!</b>"))
-		send_to_playing_players(span_notice("[current_storyteller.welcome_text]"))
 
 /datum/controller/subsystem/gamemode/proc/apply_storyteller_bonus_roundstart_antags()
 	return
