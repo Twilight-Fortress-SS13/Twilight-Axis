@@ -137,8 +137,4 @@ GLOBAL_LIST_INIT(contractor_erp_combat_skills, list(
 			if(!skill_type)
 				continue
 
-			if(skill_type in GLOB.contractor_erp_combat_skills)
-				if(L.force < SEX_FORCE_HIGH)
-					continue
-
 			receiver.mind.add_sleep_experience(skill_type, CONTRACTOR_ENTITY_ERP_TRAINING_XP, FALSE)

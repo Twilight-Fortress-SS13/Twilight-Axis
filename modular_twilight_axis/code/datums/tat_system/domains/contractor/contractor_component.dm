@@ -628,7 +628,6 @@
 	target.true_form_type = true_form_type
 	target.last_return_turf = last_return_turf
 	target.return_action_expires_at = return_action_expires_at
-	target.allow_erp_training = allow_erp_training
 	target.entity_erp_training_enabled = entity_erp_training_enabled
 	target.contracts = contracts.Copy()
 	target.contractees = contractees.Copy()
@@ -843,7 +842,6 @@
 	return TRUE
 
 /datum/component/contractor/entity
-	allow_erp_training = TRUE
 	entity_erp_training_enabled = FALSE
 
 /datum/component/contractor/entity/ensure_contractor_devotion()

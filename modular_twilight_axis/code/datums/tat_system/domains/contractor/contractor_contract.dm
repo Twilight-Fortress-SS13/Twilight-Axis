@@ -182,10 +182,6 @@
 
 	reward_recorded = TRUE
 	fulfilled_time = world.time
-
-	
-	
-	
 	
 	for(var/datum/contractor_curse/curse as anything in curses)
 		curse.fire_contract_fulfillment(src, reason)
