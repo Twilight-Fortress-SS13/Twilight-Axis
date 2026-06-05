@@ -20,7 +20,8 @@
 
 /atom/movable/screen/ghost/orbit/Click()
 	var/mob/dead/observer/G = usr
-	G.follow()
+	G.open_orbit_menu()
+
 //skull
 /atom/movable/screen/ghost/orbit/rogue
 	name = "AFTER LIFE"

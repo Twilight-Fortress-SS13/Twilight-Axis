@@ -67,6 +67,7 @@ GLOBAL_LIST_INIT(browserpanel_hidden_verbs, list(
 	"/datum/verbs/menu/Settings/verb/setup_character" = TRUE,
 	"/mob/camera/verb/ghost" = TRUE,
 	"/mob/dead/observer/proc/dead_tele" = TRUE,
+	"/mob/dead/observer/proc/open_orbit_menu" = TRUE,
 	"/mob/dead/observer/proc/open_spawners_menu" = TRUE,
 	"/mob/dead/observer/proc/reenter_corpse" = TRUE,
 	"/mob/dead/observer/proc/tray_view" = TRUE,
