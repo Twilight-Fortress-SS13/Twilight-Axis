@@ -1318,7 +1318,7 @@ const SkillDomainTitle = ({
               -
             </Button>
           </Stack.Item>
-          {domain !== 'combat' && (
+          {(domain !== 'combat' || canTake) && (
             <Stack.Item>
               <Button
                 compact

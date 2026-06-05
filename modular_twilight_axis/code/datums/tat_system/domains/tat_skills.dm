@@ -60,10 +60,16 @@
 
 /datum/tat_skills/proc/can_take_skill_domain_points(domain, amount = 1)
 	domain = normalize_skill_domain(domain)
-	if(!domain || domain == TAT_SKILL_DOMAIN_COMBAT)
+	if(!domain)
 		return FALSE
 	amount = max(1, round(amount || 1))
-	return skill_point_conversion_pool >= amount
+	if(skill_point_conversion_pool < amount)
+		return FALSE
+	if(domain == TAT_SKILL_DOMAIN_COMBAT)
+		var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
+		var/default_value = max(0, round(default_domain_points[domain] || 0))
+		return round(domain_points[domain] || 0) + amount <= default_value
+	return TRUE
 
 /datum/tat_skills/proc/give_skill_domain_points(domain, amount = 1)
 	domain = normalize_skill_domain(domain)
