@@ -501,7 +501,7 @@
 	var/cap = 0
 
 	if(skill_type == /datum/skill/magic/arcane)
-		if(owner_build?.has_trait(TRAIT_ARCYNE))
+		if(owner_build?.traits?.has_effective_trait(TRAIT_ARCYNE))
 			cap = 6
 
 	else if(skill_type == /datum/skill/magic/holy)

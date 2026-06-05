@@ -50,6 +50,28 @@
 				continue
 			result[trait_id] = TRUE
 
+		var/list/choice_rules = GLOB.tat_virtue_choice_trait_rules
+		if(!islist(choice_rules) || !LAZYLEN(virtue.picked_choices))
+			continue
+
+		for(var/virtue_rule in choice_rules)
+			if(!owner_build?.skills?.virtue_matches_rule(virtue, virtue_rule))
+				continue
+
+			var/list/choice_trait_map = choice_rules[virtue_rule]
+			if(!islist(choice_trait_map))
+				continue
+
+			for(var/choice in virtue.picked_choices)
+				var/list/choice_traits = choice_trait_map[choice]
+				if(!islist(choice_traits))
+					continue
+
+				for(var/trait_id in choice_traits)
+					if(!check_trait(trait_id))
+						continue
+					result[trait_id] = TRUE
+
 	return result
 
 /datum/tat_traits/proc/get_external_trait_count(trait_id)
