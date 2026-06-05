@@ -64,23 +64,6 @@
 #define TAT_TRAIT_TRAINEE_CHIRURGEON "tat_trainee_chirurgeon"
 #define TAT_TRAIT_TRAINEE_TROUBADOUR "tat_trainee_troubadour"
 
-#define TAT_TRAIT_CONVERT_COMBAT_TO_WANDERING "tat_convert_combat_to_wandering"
-#define TAT_TRAIT_CONVERT_COMBAT_TO_GATHERING "tat_convert_combat_to_gathering"
-#define TAT_TRAIT_CONVERT_COMBAT_TO_CRAFTING "tat_convert_combat_to_crafting"
-#define TAT_TRAIT_CONVERT_COMBAT_TO_MISC "tat_convert_combat_to_misc"
-#define TAT_TRAIT_CONVERT_WANDERING_TO_GATHERING "tat_convert_wandering_to_gathering"
-#define TAT_TRAIT_CONVERT_WANDERING_TO_CRAFTING "tat_convert_wandering_to_crafting"
-#define TAT_TRAIT_CONVERT_WANDERING_TO_MISC "tat_convert_wandering_to_misc"
-#define TAT_TRAIT_CONVERT_GATHERING_TO_WANDERING "tat_convert_gathering_to_wandering"
-#define TAT_TRAIT_CONVERT_GATHERING_TO_CRAFTING "tat_convert_gathering_to_crafting"
-#define TAT_TRAIT_CONVERT_GATHERING_TO_MISC "tat_convert_gathering_to_misc"
-#define TAT_TRAIT_CONVERT_CRAFTING_TO_WANDERING "tat_convert_crafting_to_wandering"
-#define TAT_TRAIT_CONVERT_CRAFTING_TO_GATHERING "tat_convert_crafting_to_gathering"
-#define TAT_TRAIT_CONVERT_CRAFTING_TO_MISC "tat_convert_crafting_to_misc"
-#define TAT_TRAIT_CONVERT_MISC_TO_WANDERING "tat_convert_misc_to_wandering"
-#define TAT_TRAIT_CONVERT_MISC_TO_GATHERING "tat_convert_misc_to_gathering"
-#define TAT_TRAIT_CONVERT_MISC_TO_CRAFTING "tat_convert_misc_to_crafting"
-
 #define TAT_TRAIT_MASTER_OF_CRAFTING "tat_master_of_crafting"
 #define TAT_TRAIT_STRAYING_SOUL "tat_straying_soul"
 #define TAT_TRAIT_STOCKPILER "tat_stockpiler"
@@ -95,6 +78,7 @@
 #define TAT_TRAIT_SKILLED_HOMESTEADER "tat_skilled_homesteader"
 #define TAT_TRAIT_SKILLED_PHYSICKER "tat_skilled_physicker"
 #define TAT_TRAIT_SKILLED_ALCHEMIST "tat_skilled_alchemist"
+#define TAT_TRAIT_SKILLED_LOCKER "tat_skilled_locker"
 
 #define TAT_TRAIT_ACCURSED "tat_trait_accursed"
 
@@ -109,6 +93,7 @@
 	TAT_TRAIT_SKILLED_ALCHEMIST = list(/datum/skill/craft/alchemy = 5), \
 	TRAIT_MEDICINE_EXPERT = list(/datum/skill/misc/medicine = 6), \
 	TAT_TRAIT_SKILLED_PHYSICKER = list(/datum/skill/misc/medicine = 5), \
+	TAT_TRAIT_SKILLED_LOCKER = list(/datum/skill/misc/stealing = 5, /datum/skill/misc/lockpicking = 5), \
 	TRAIT_HOMESTEAD_EXPERT = list(/datum/skill/labor/farming = 6, /datum/skill/labor/mining = 6, /datum/skill/craft/cooking = 6, /datum/skill/labor/fishing = 6, /datum/skill/labor/butchering = 6, /datum/skill/labor/lumberjacking = 6, /datum/skill/craft/masonry = 6, /datum/skill/craft/ceramics = 6, /datum/skill/craft/sewing = 3, /datum/skill/craft/tanning = 3), \
 	TAT_TRAIT_SKILLED_HOMESTEADER = list(/datum/skill/labor/farming = 5, /datum/skill/craft/cooking = 5, /datum/skill/labor/fishing = 5), \
 	TRAIT_SURVIVAL_EXPERT = list(/datum/skill/craft/cooking = 6, /datum/skill/labor/fishing = 6, /datum/skill/labor/butchering = 6, /datum/skill/craft/tanning = 6, /datum/skill/craft/sewing = 3), \
@@ -296,22 +281,6 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_TRAINEE_ARTISAN = TAT_TRAIT_ENTRY("Trainee Artisan", 10, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Crafting, Pottery, and the first two levels of Unarmed by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_CHIRURGEON = TAT_TRAIT_ENTRY("Trainee Chirurgeon", 10, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Medicine, Literacy, and the first two levels of Staves by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_TROUBADOUR = TAT_TRAIT_ENTRY("Trainee Troubadour", 10, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Music, Literacy, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
-	TAT_TRAIT_CONVERT_COMBAT_TO_WANDERING = TAT_TRAIT_ENTRY("Convert Combat -> Wandering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Combat to Wandering."), \
-	TAT_TRAIT_CONVERT_COMBAT_TO_GATHERING = TAT_TRAIT_ENTRY("Convert Combat -> Gathering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Combat to Gathering."), \
-	TAT_TRAIT_CONVERT_COMBAT_TO_CRAFTING = TAT_TRAIT_ENTRY("Convert Combat -> Crafting", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Combat to Crafting."), \
-	TAT_TRAIT_CONVERT_COMBAT_TO_MISC = TAT_TRAIT_ENTRY("Convert Combat -> Misc", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Combat to Misc."), \
-	TAT_TRAIT_CONVERT_WANDERING_TO_GATHERING = TAT_TRAIT_ENTRY("Convert Wandering -> Gathering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Wandering to Gathering."), \
-	TAT_TRAIT_CONVERT_WANDERING_TO_CRAFTING = TAT_TRAIT_ENTRY("Convert Wandering -> Crafting", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Wandering to Crafting."), \
-	TAT_TRAIT_CONVERT_WANDERING_TO_MISC = TAT_TRAIT_ENTRY("Convert Wandering -> Misc", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Wandering to Misc."), \
-	TAT_TRAIT_CONVERT_GATHERING_TO_WANDERING = TAT_TRAIT_ENTRY("Convert Gathering -> Wandering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Gathering to Wandering."), \
-	TAT_TRAIT_CONVERT_GATHERING_TO_CRAFTING = TAT_TRAIT_ENTRY("Convert Gathering -> Crafting", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Gathering to Crafting."), \
-	TAT_TRAIT_CONVERT_GATHERING_TO_MISC = TAT_TRAIT_ENTRY("Convert Gathering -> Misc", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Gathering to Misc."), \
-	TAT_TRAIT_CONVERT_CRAFTING_TO_WANDERING = TAT_TRAIT_ENTRY("Convert Crafting -> Wandering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Crafting to Wandering."), \
-	TAT_TRAIT_CONVERT_CRAFTING_TO_GATHERING = TAT_TRAIT_ENTRY("Convert Crafting -> Gathering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Crafting to Gathering."), \
-	TAT_TRAIT_CONVERT_CRAFTING_TO_MISC = TAT_TRAIT_ENTRY("Convert Crafting -> Misc", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Crafting to Misc."), \
-	TAT_TRAIT_CONVERT_MISC_TO_WANDERING = TAT_TRAIT_ENTRY("Convert Misc -> Wandering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Misc to Wandering."), \
-	TAT_TRAIT_CONVERT_MISC_TO_GATHERING = TAT_TRAIT_ENTRY("Convert Misc -> Gathering", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Misc to Gathering."), \
-	TAT_TRAIT_CONVERT_MISC_TO_CRAFTING = TAT_TRAIT_ENTRY("Convert Misc -> Crafting", 0, TAT_CATEGORY_SKILL_CONVERSION, TAT_CATEGORY_SKILL_CONVERSION_NAME, "Repeatable. Move 1 skill point from Misc to Crafting."), \
 	TRAIT_BITERHELM = TAT_TRAIT_ENTRY("Curse of Twisting Metall", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Gives cursed skill to bite through your own helmet"), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Crafting skill-domain points."), \
 	TAT_TRAIT_STOCKPILER = TAT_TRAIT_ENTRY("Stockpiler", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Gathering skill-domain points."), \
@@ -324,6 +293,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_ALCHEMY_EXPERT = TAT_TRAIT_ENTRY("Expert Alchemist", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of the alchemical arts. Alchemy can progress to Legendary levels."), \
 	TAT_TRAIT_SKILLED_ALCHEMIST = TAT_TRAIT_ENTRY("Skilled Alchemist", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with alchemical work. Alchemy can progress to Master levels."), \
 	TRAIT_MEDICINE_EXPERT = TAT_TRAIT_ENTRY("Expert Physicker", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of medicine. Medicine can progress to Legendary levels."), \
+	TAT_TRAIT_SKILLED_LOCKER = TAT_TRAIT_ENTRY("Lock pocket", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Hands know how to work. Increase points availabe to pick in lockpicking and pickpocketing to master levels."), \
 	TAT_TRAIT_SKILLED_PHYSICKER = TAT_TRAIT_ENTRY("Skilled Physicker", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with medical practice. Medicine can progress to Master levels."), \
 	TRAIT_HOMESTEAD_EXPERT = TAT_TRAIT_ENTRY("Expert Homesteader", 25, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with the arts of homesteading. Farming, Mining, Cooking, Fishing, Butchering, Lumberjacking, Masonry and Pottery can progress to Legendary levels. Sewing and Skincrafting can progress to Journeyman levels."), \
 	TRAIT_SELF_SUSTENANCE = TAT_TRAIT_ENTRY("Self-Sustenance", 15, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Years of running from the law and living off the land have made you a jack of all trades. All crafting and labor skills can progress to Journeyman levels."), \
@@ -380,32 +350,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TAT_TRAIT_PLIANT_RENAME = TAT_TRAIT_PLIANT_RENAME_PQ_MINIMUM \
 )
 
-#define TAT_TRAIT_REPEATABLE_MAXIMUMS list( \
-	TAT_TRAIT_CONVERT_COMBAT_TO_WANDERING = 99, TAT_TRAIT_CONVERT_COMBAT_TO_GATHERING = 99, TAT_TRAIT_CONVERT_COMBAT_TO_CRAFTING = 99, TAT_TRAIT_CONVERT_COMBAT_TO_MISC = 99, \
-	TAT_TRAIT_CONVERT_WANDERING_TO_GATHERING = 99, TAT_TRAIT_CONVERT_WANDERING_TO_CRAFTING = 99, TAT_TRAIT_CONVERT_WANDERING_TO_MISC = 99, \
-	TAT_TRAIT_CONVERT_GATHERING_TO_WANDERING = 99, TAT_TRAIT_CONVERT_GATHERING_TO_CRAFTING = 99, TAT_TRAIT_CONVERT_GATHERING_TO_MISC = 99, \
-	TAT_TRAIT_CONVERT_CRAFTING_TO_WANDERING = 99, TAT_TRAIT_CONVERT_CRAFTING_TO_GATHERING = 99, TAT_TRAIT_CONVERT_CRAFTING_TO_MISC = 99, \
-	TAT_TRAIT_CONVERT_MISC_TO_WANDERING = 99, TAT_TRAIT_CONVERT_MISC_TO_GATHERING = 99, TAT_TRAIT_CONVERT_MISC_TO_CRAFTING = 99 \
-)
-
-#define TAT_TRAIT_SKILL_DOMAIN_CONVERSION_RULES list( \
-	TAT_TRAIT_CONVERT_COMBAT_TO_WANDERING = list("from" = TAT_SKILL_DOMAIN_COMBAT, "to" = TAT_SKILL_DOMAIN_WANDERING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_COMBAT_TO_GATHERING = list("from" = TAT_SKILL_DOMAIN_COMBAT, "to" = TAT_SKILL_DOMAIN_GATHERING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_COMBAT_TO_CRAFTING = list("from" = TAT_SKILL_DOMAIN_COMBAT, "to" = TAT_SKILL_DOMAIN_CRAFTING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_COMBAT_TO_MISC = list("from" = TAT_SKILL_DOMAIN_COMBAT, "to" = TAT_SKILL_DOMAIN_MISC, "amount" = 1), \
-	TAT_TRAIT_CONVERT_WANDERING_TO_GATHERING = list("from" = TAT_SKILL_DOMAIN_WANDERING, "to" = TAT_SKILL_DOMAIN_GATHERING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_WANDERING_TO_CRAFTING = list("from" = TAT_SKILL_DOMAIN_WANDERING, "to" = TAT_SKILL_DOMAIN_CRAFTING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_WANDERING_TO_MISC = list("from" = TAT_SKILL_DOMAIN_WANDERING, "to" = TAT_SKILL_DOMAIN_MISC, "amount" = 1), \
-	TAT_TRAIT_CONVERT_GATHERING_TO_WANDERING = list("from" = TAT_SKILL_DOMAIN_GATHERING, "to" = TAT_SKILL_DOMAIN_WANDERING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_GATHERING_TO_CRAFTING = list("from" = TAT_SKILL_DOMAIN_GATHERING, "to" = TAT_SKILL_DOMAIN_CRAFTING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_GATHERING_TO_MISC = list("from" = TAT_SKILL_DOMAIN_GATHERING, "to" = TAT_SKILL_DOMAIN_MISC, "amount" = 1), \
-	TAT_TRAIT_CONVERT_CRAFTING_TO_WANDERING = list("from" = TAT_SKILL_DOMAIN_CRAFTING, "to" = TAT_SKILL_DOMAIN_WANDERING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_CRAFTING_TO_GATHERING = list("from" = TAT_SKILL_DOMAIN_CRAFTING, "to" = TAT_SKILL_DOMAIN_GATHERING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_CRAFTING_TO_MISC = list("from" = TAT_SKILL_DOMAIN_CRAFTING, "to" = TAT_SKILL_DOMAIN_MISC, "amount" = 1), \
-	TAT_TRAIT_CONVERT_MISC_TO_WANDERING = list("from" = TAT_SKILL_DOMAIN_MISC, "to" = TAT_SKILL_DOMAIN_WANDERING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_MISC_TO_GATHERING = list("from" = TAT_SKILL_DOMAIN_MISC, "to" = TAT_SKILL_DOMAIN_GATHERING, "amount" = 1), \
-	TAT_TRAIT_CONVERT_MISC_TO_CRAFTING = list("from" = TAT_SKILL_DOMAIN_MISC, "to" = TAT_SKILL_DOMAIN_CRAFTING, "amount" = 1) \
-)
+#define TAT_TRAIT_REPEATABLE_MAXIMUMS list()
 
 #define TAT_TRAIT_SKILL_POINT_RULES list( \
 	TAT_TRAIT_MASTER_OF_WANDERING = list( \
@@ -527,7 +472,6 @@ GLOBAL_LIST_INIT(tat_trait_item_unlock_rules, TAT_TRAIT_ITEM_UNLOCK_RULES)
 GLOBAL_LIST_INIT(tat_trait_skill_point_rules, TAT_TRAIT_SKILL_POINT_RULES)
 GLOBAL_LIST_INIT(tat_trait_skill_bonus_rules, TAT_TRAIT_SKILL_BONUS_RULES)
 GLOBAL_LIST_INIT(tat_trait_skill_discount_rules, TAT_TRAIT_SKILL_DISCOUNT_RULES)
-GLOBAL_LIST_INIT(tat_trait_skill_domain_conversion_rules, TAT_TRAIT_SKILL_DOMAIN_CONVERSION_RULES)
 GLOBAL_LIST_INIT(tat_trait_pq_lock_rules, TAT_TRAIT_PQ_LOCK_RULES)
 GLOBAL_LIST_INIT(tat_armor_supplier_traits, TAT_ARMOR_SUPPLIER_TRAITS)
 GLOBAL_LIST_INIT(tat_material_supplier_traits, TAT_MATERIAL_SUPPLIER_TRAITS)
