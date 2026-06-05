@@ -391,8 +391,6 @@ SUBSYSTEM_DEF(timer)
 /datum/timedevent/New(datum/callback/callBack, wait, flags, datum/controller/subsystem/timer/timer_subsystem, hash, source)
 	// TA EDIT START
 	if(isnull(callBack))
-		src.timer_subsystem = timer_subsystem || SStimer
-		spent = world.time || TRUE
 		return
 	// TA EDIT END
 	var/static/nextid = 1
