@@ -759,7 +759,11 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special = TAT_ITEM_ENTRY("Familial Talisman", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/book_crafting_kit = TAT_ITEM_ENTRY("Book kit", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"),\
 	/obj/item/paper = TAT_ITEM_ENTRY("Paper sheet", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"),\
-
+	/obj/item/clothing/suit/roguetown/armor/plate/bikini = TAT_ITEM_ENTRY("Plate Bikini Armor", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/chainmail/bikini = TAT_ITEM_ENTRY("Chainmail Bikini Armor", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/leather/hide/bikini = TAT_ITEM_ENTRY("Hide Bikini Armor", 2.0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/leather/studded/bikini = TAT_ITEM_ENTRY("Studded Bikini Armor", 2.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	
 GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 
 /proc/build_tat_item_icon_payload(item_path)
