@@ -6,6 +6,8 @@ GLOBAL_VAR(restart_counter)
 //https://github.com/Cyberboss/tgstation/blob/1afa69d66adfc810ab68c45a4fa5985c780ba6ff/code/game/world.dm#L10
 //But note that not all of this necessarily applies to us(particularly proccalls)
 
+#define USE_BYOND_TRACY
+
 /world/proc/Genesis(tracy_initialized = FALSE)
 	#ifdef USE_BYOND_TRACY
 	#warn USE_BYOND_TRACY is enabled
@@ -36,7 +38,6 @@ GLOBAL_VAR(restart_counter)
   */
 
 /world/New()
-	byond_tracy_init()
 	log_world("World loaded at [time_stamp()]!")
 
 	GLOB.config_error_log = GLOB.world_manifest_log = GLOB.world_pda_log = GLOB.world_job_debug_log = GLOB.sql_error_log = GLOB.world_href_log = GLOB.world_runtime_log = GLOB.world_attack_log = GLOB.world_game_log = "data/logs/config_error.[GUID()].log" //temporary file used to record errors with loading config, moved to log directory once logging is set bl
