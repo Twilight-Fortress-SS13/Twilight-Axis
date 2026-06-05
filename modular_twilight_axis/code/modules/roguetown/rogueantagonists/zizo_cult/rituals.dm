@@ -80,6 +80,8 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 			ritual_categories = subtypesof(/datum/ritual/fleshcrafting)
 		if("Servantry")
 			ritual_categories = subtypesof(/datum/ritual/servantry)
+		if("Weaponary")
+			ritual_categories = subtypesof(/datum/ritual/weaponary)
 	
 	if(!length(ritual_categories))
 		return
@@ -116,8 +118,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	// Специальная проверка для ритуала ASCEND
 	var/required_cultists = pickritual.cultist_number
 	if(istype(pickritual, /datum/ritual/fleshcrafting/ascend))
-		var/player_count = length(GLOB.joined_player_list)
-		required_cultists = max(1, round(player_count / 6))
+		required_cultists = SSmapping.retainer.get_cult_ascension_required_cultists()
 		
 		if(current_cultists < required_cultists)
 			to_chat(user, span_danger("This ritual requires at least [required_cultists] cultists, but there are only [current_cultists]. You need [required_cultists - current_cultists] more cultists."))
@@ -255,28 +256,6 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/datum/antagonist/zizocultist/PR = user.mind.has_antag_datum(/datum/antagonist/zizocultist)
 	if(!PR)
 		return
-
-	to_chat(user, "[target.real_name] было предложено стать лакеем...")
-	to_chat(target, span_notice("Вам предлагается путь культа Возвышения. Выбирайте мудро."))
-
-	var/list/options = list(
-		"Yield",
-		"Resist"
-	)
-
-	var/chosen = tgui_input_list(target, "Do you yield to the darkness?", "You are shown the path of Zizo.", options)
-
-	if(!chosen)
-		convert_resist(target)
-		return
-
-	if(chosen == "Yield")
-		convert_yield(target, PR)
-	else if(chosen == "Resist")
-		convert_resist(target)
-
-
-/datum/ritual/servantry/convert/proc/convert_yield(mob/living/carbon/human/target, datum/antagonist/zizocultist/PR)
 	target.Immobilize(3 SECONDS)
 	to_chat(target, span_notice("Правда! Она.. ОНА ОТРКЫЛАСЬ МНЕ! Они совсем не плохие... Я... Должен помогать им!"))
 	PR.add_cultist(target.mind)
@@ -285,14 +264,6 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	target.whisper("O'vena tesa...")
 	log_game("[key_name(target)] was converted to Zizoid Lackey by [key_name(PR.owner.current)]")
 	message_admins("[key_name(target)] was converted to Zizoid Lackey by [key_name(PR.owner.current)]")
-
-/datum/ritual/servantry/convert/proc/convert_resist(mob/living/carbon/human/target)
-	target.Immobilize(3 SECONDS)
-	target.visible_message(span_danger("[target] трясется, отказываясь помогать нам!"))
-	to_chat(target, span_reallybigredtext("СМЕРТНЫЙ! Я ТРЕБУЮ, ЧТОБЫ ТЫ СТАЛ МОИМ ЛАКЕЕМ ДЛЯ НАШЕГО БУДУЩЕГО!"))
-	if(target.electrocute_act(10))
-		target.emote("painscream")
-	log_game("[key_name(target)] was resist to convert by cultist")
 
 /datum/ritual/servantry/zizofication
 	name = "Ритуал Просветления"
@@ -304,6 +275,10 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/mob/living/carbon/human/target = locate() in center.contents
 
 	if(!target)
+		return
+
+	if(target.stat == DEAD)
+		to_chat(user, span_danger("Он должен быть живым..."))
 		return
 	
 	var/list/options = list(
@@ -526,9 +501,41 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	w_req = /obj/item/alch/viscera
 	e_req = /obj/item/alch/taraxacum
 
+	is_cultist_ritual = TRUE
+
 /datum/ritual/servantry/heartache/invoke(mob/user, turf/center)
 	new /obj/item/corruptedheart(center)
 	to_chat(user, span_notice("A corrupted heart. When used on a non-enlightened mortal their heart shall ache and they will be immobilized and too stunned to speak. Perfect for getting new soon-to-be enlightened. Now, just don't use it at the combat ready."))
+
+/datum/ritual/servantry/luxstol
+	name = "Кража частички души"
+	desk = "Жестокий ритуал, который отнимает частичку души жертвы."
+	center_requirement = /mob/living/carbon/human // One to be gutted.human
+	center_book = "Мертвое тело"
+
+/datum/ritual/servantry/luxstol/invoke(mob/living/user, turf/center)
+	. = ..()
+	var/mob/living/carbon/human/target = locate() in center.contents
+	if(target.mind && target.mind.has_antag_datum(/datum/antagonist/skeleton))
+		to_chat(user, span_danger("Это скелет, в нем уже не может быть частички души..."))
+		return
+	if(!target.mind)
+		to_chat(user, span_danger("Зизо отвергает это тело."))
+		return
+	if(is_zizocultist(target.mind) || is_zizolackey(target.mind))
+		to_chat(user, span_danger("Зизо не может отдать частичку души своего же последователя..."))
+		return
+	if(target.patron.type == /datum/patron/inhumen/zizo)
+		to_chat(user, span_danger("Зизо не может отдать частичку души своего же последователя..."))
+		return
+	if(target.has_status_effect(/datum/status_effect/debuff/ritualdefiled/cult))
+		to_chat(user, span_danger("Его душа уже осквернена..."))
+		return
+	target.Stun(30)
+	target.Knockdown(30)
+	target.Sleeping(60)
+	new /obj/item/reagent_containers/lux(center)
+	target.apply_status_effect(/datum/status_effect/debuff/ritualdefiled/cult)
 
 /obj/item/corruptedheart
 	name = "corrupted heart"
@@ -545,14 +552,14 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		to_chat(target, span_notice("My elixir of life is stagnant once again."))
 		qdel(src)
 		return
-	if(!do_after(user, 2 SECONDS, target))
+	if(!do_after(user, 1 SECONDS, target))
 		return
 	if(target.cmode)
-		user.electrocute_act(30)
-	target.Stun(10 SECONDS)
+		to_chat(user, span_danger("Невозможно использовать сердце, когда цель напряжена"))
+	target.Sleeping(40)
 	if(iscarbon(target))
 		var/mob/living/carbon/carbon_target = target
-		carbon_target.silent += 30
+		carbon_target.silent += 80
 	qdel(src)
 
 /*/datum/ritual/servantry/darksunmark //Надо будет переделать мб, или хуй забить
@@ -592,6 +599,17 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	qdel(D)
 	target.playsound_local(target, 'sound/magic/marked.ogg', 100) */
 
+/datum/ritual/servantry/devotionretrv
+	name = "Восполнение просветления"
+	desk = "Восполняет святую энергию Зизо у клириков."
+	center_book = "Клирик"
+	center_requirement = /mob/living/carbon/human
+	n_req = /obj/item/natural/bone
+	s_req = /obj/item/natural/bone
+
+/datum/ritual/servantry/devotionretrv/invoke(mob/living/user, turf/center)
+	var/mob/living/carbon/human/target = locate() in center.contents
+	target.devotion?.update_devotion(250)
 // TRANSMUTATION
 /datum/ritual/transmutation
 	abstract_type = /datum/ritual/transmutation
@@ -617,40 +635,6 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	new /obj/item/recipe_book/zizo(center)
 
 	to_chat(user, span_notice("Now you know how to make another ritual..."))
-
-/datum/ritual/transmutation/cross
-	name = "Призыв амулета Зизо"
-	desk = "Призывает особый крест Зизо, который и защитит, и одарит Её милостинью."
-	center_requirement = /obj/item/clothing/neck/roguetown/psicross
-
-	n_req = /obj/item/natural/bone
-	s_req = /obj/item/natural/bone
-	w_req = /obj/item/natural/bone
-	e_req = /obj/item/natural/bone
-
-/datum/ritual/transmutation/cross/invoke(mob/living/user, turf/center)
-	. = ..()
-	new /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult(center)
-	to_chat(user, span_notice("The psycross is transmuted into an amulet of Zizo."))
-
-/datum/ritual/transmutation/repaircross
-	name = "Восполнить амулет"
-	desk = "Восполняет амулет зизо, возвращая его защиту."
-	center_requirement = /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult
-
-	w_req = /obj/item/natural/bone
-	e_req = /obj/item/natural/bone
-
-/datum/ritual/transmutation/repaircross/invoke(mob/living/user, turf/center)
-	. = ..()
-	var/datum/effect_system/spark_spread/S = new(center)
-	S.set_up(1, 1, center)
-	S.start()
-
-	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
-
-	new /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult(center)
-	to_chat(user, span_notice("Крест вновь может защитить вас.."))
 
 /datum/ritual/transmutation/criminalstool
 	name = "Призыв мыла Зизо"
@@ -696,111 +680,6 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		if(HL.real_name == input)
 			to_chat(HL, "<i>You hear a voice in your head... <b>[text]</i></b>")
 
-/datum/ritual/transmutation/summonoutfit
-	name = "Призыв снаряжения культа"
-	desk = "Призывает снаряжение культа. Легкая броня и цепь."
-	center_requirement = /obj/item/natural/cloth
-
-	n_req = /obj/item/ingot/iron
-
-/datum/ritual/transmutation/summonoutfit/invoke(mob/living/user, turf/center)
-	var/datum/effect_system/spark_spread/S = new(center)
-	S.set_up(1, 1, center)
-	S.start()
-
-	new /obj/item/clothing/head/roguetown/helmet/skullcap/cult(center)
-
-	new /obj/item/clothing/cloak/half/shadowcloak/cult(center)
-
-	new /obj/item/clothing/suit/roguetown/armor/brigandine/light/cult(center)
-
-	new /obj/item/rope/chain(center)
-
-	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
-
-/datum/ritual/transmutation/summonneant
-	name = "Призыв Косы"
-	desk = "Призывает Особую косу Зизо."
-	center_requirement = /obj/item/reagent_containers/lux
-
-	w_req = /obj/item/ingot/steel
-	e_req = /obj/item/ingot/steel
-
-	is_cultist_ritual = TRUE
-
-/datum/ritual/transmutation/summonneant/invoke(mob/living/user, turf/center)
-
-	var/datum/effect_system/spark_spread/S = new(center)
-	S.set_up(1, 1, center)
-	S.start()
-
-	new /obj/item/rogueweapon/zizo/neant(center)
-
-	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
-
-/datum/ritual/transmutation/summonarmor
-	name = "Призыв доспехов Зизо"
-	desk = "Призывает доспехи Зизо."
-	cultist_number = 3
-	number_cultist_for_add_limit = 1
-	ritual_limit = 1
-	center_book = "Культист"
-	
-	center_requirement = /mob/living/carbon/human
-	n_req = /obj/item/ingot/steel
-	s_req = /obj/item/ingot/steel
-
-	is_cultist_ritual = TRUE
-
-/datum/ritual/transmutation/summonarmor/invoke(mob/living/user, turf/center)
-	var/mob/living/carbon/human/target = locate() in center.contents
-	if(!target)
-		return
-	if(target.stat == DEAD)
-		target.gib(FALSE, FALSE, FALSE)
-	var/datum/effect_system/spark_spread/S = new(center)
-	S.set_up(1, 1, center)
-	S.start()
-
-	new /obj/item/clothing/suit/roguetown/armor/plate/full/zizo(center)
-
-	new /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/zizo/heavy(center)
-
-	new /obj/item/clothing/under/roguetown/platelegs/zizo/heavy(center)
-
-	new /obj/item/clothing/shoes/roguetown/boots/armor/zizo(center)
-
-	new /obj/item/clothing/wrists/roguetown/bracers/zizo/heavy(center)
-
-	new /obj/item/clothing/gloves/roguetown/plate/zizo/heavy(center)
-
-	new /obj/item/clothing/head/roguetown/helmet/heavy/zizo(center)
-
-	new /obj/item/clothing/neck/roguetown/bevor/zizo/heavy(center)
-
-	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
-	ADD_TRAIT(target,TRAIT_HEAVYARMOR, TRAIT_GENERIC)
-	target.mind.AddSpell(new /datum/action/cooldown/spell/mending)
-
-/datum/ritual/transmutation/summonweapon
-	name = "Призыв Оружия"
-	desk = "Призывает набор оружия, включая меч Зизо."
-	center_requirement = /obj/item/rogueweapon/sword
-
-	n_req = /obj/item/natural/bundle/bone
-	e_req = /obj/item/natural/bundle/bone
-	s_req = /obj/item/natural/bundle/bone
-	w_req = /obj/item/natural/bundle/bone
-
-/datum/ritual/transmutation/summonweapon/invoke(mob/living/user, turf/center)
-	var/datum/effect_system/spark_spread/S = new(center)
-	S.set_up(1, 1, center)
-	S.start()
-
-	new /obj/item/rogueweapon/sword/avantyne(center)
-
-	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
-
 // FLESH CRAFTING
 /datum/ritual/fleshcrafting
 	abstract_type = /datum/ritual/fleshcrafting
@@ -808,16 +687,15 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 /datum/ritual/fleshcrafting/bunnylegs
 	name = "Сильные ноги"
 	desk = "Даёт возможность прыгать довольно-таки высоко.."
-	cultist_number = 2
-	number_cultist_for_add_limit = 1
-	ritual_limit = 1
+	cultist_number = 6
+	//number_cultist_for_add_limit = 1
+	//ritual_limit = 1
 	center_book = "Культист"
 	center_requirement = /mob/living/carbon/human
 
 	w_req = /obj/item/bodypart/l_leg
 	e_req = /obj/item/bodypart/r_leg
-	n_req = /obj/item/alch/horn
-	s_req = /obj/item/reagent_containers/food/snacks/grown/rogue/fyritius
+	n_req = /obj/item/alch/airdust
 
 	is_cultist_ritual = TRUE
 
@@ -966,24 +844,33 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 
 /datum/ritual/fleshcrafting/nopain
 	name = "Безболезненный бой"
-	desk = "Вы перестанете чувствовать боль... Но какой ценой?"
+	desk = "Вы перестанете чувствовать боль за счет сильной веры своей жертвы в Псайдона"
 	center_requirement = /mob/living/carbon/human
 	center_book = "Культист"
+	north_book = "Верующий-клирик в Псайдона"
+	center_requirement = /mob/living/carbon/human
 
-	w_req = /obj/item/organ/heart
-	e_req = /obj/item/organ/brain
-	n_req = /obj/item/reagent_containers/food/snacks/rogue/meat/steak
-	s_req = /obj/item/alch/horn
+	n_req = /mob/living/carbon/human
 
 /datum/ritual/fleshcrafting/nopain/invoke(mob/living/user, turf/center)
 	var/mob/living/carbon/human/target = locate() in center.contents
-	if(!target)
+	var/mob/living/carbon/human/victim = locate() in get_step(center, NORTH)
+
+	if(victim.has_status_effect(/datum/status_effect/debuff/ritualdefiled/cult))
+		to_chat(target, span_danger("Его душа уже осквернена..."))
 		return
-	ADD_TRAIT(user, TRAIT_NOPAIN, TRAIT_GENERIC)
-	to_chat(target, span_notice("I no longer feel pain, but it has come at a terrible cost."))
-	target.change_stat(STATKEY_STR, -2)
-	target.change_stat(STATKEY_CON, -1)
-	target.change_stat(STATKEY_WIL, -2)
+	if(victim.patron.type != /datum/patron/old_god)
+		to_chat(target, span_danger("Нужен тот, кто верует в Псайдона..."))
+		return
+	if(victim.patron.type == /datum/patron/old_god)
+		ADD_TRAIT(target, TRAIT_NOPAIN, TRAIT_GENERIC)
+		to_chat(target, span_notice("За счет его силы люкса, я теперь не чувствую боли!"))
+		to_chat(victim, span_danger("О нет.. За счет силы моей веры они стали сильнее.. Что же мне делать дальше.."))
+		target.change_stat(STATKEY_WIL, 1)
+		victim.apply_status_effect(/datum/status_effect/debuff/ritualdefiled/cult)
+		victim.Stun(30)
+		victim.Knockdown(30)
+		victim.Sleeping(60)
 
 /datum/ritual/fleshcrafting/immortality
 	name = "Несовершенное бессмертие"
@@ -1029,14 +916,11 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 /datum/ritual/fleshcrafting/fleshform
 	name = "Форма Плоти"
 	desk = "Превращает жертву в глупую живую плоть."
-	cultist_number = 4
+	cultist_number = 5
 	center_requirement = /mob/living/carbon/human
 	center_book = "Жертва"
 
-	w_req = /obj/item/organ/heart
-	e_req = /obj/item/organ/heart
-	n_req = /obj/item/reagent_containers/food/snacks/rogue/meat
-	s_req = /obj/item/reagent_containers/food/snacks/rogue/meat
+	n_req = /obj/item/organ/heart
 	is_cultist_ritual = TRUE
 
 /datum/ritual/fleshcrafting/fleshform/invoke(mob/living/user, turf/center)
@@ -1046,9 +930,23 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(is_zizocultist(target.mind))
 		to_chat(target, span_danger("I'm not letting my strongest follower become a mindless brute."))
 		return
-	if(!target.mind)
-		to_chat(target, span_warning("A mindless beast will not serve our cause."))
-		return
+	
+	if(!target.ckey || !target.mind)
+		var/list/candidates = pollGhostCandidates("Do you want to play as cultistic flesh?", null, null, null, 10 SECONDS, POLL_IGNORE_LICH_SKELETON)
+		if(!LAZYLEN(candidates))
+			to_chat(user, span_warning("The depths are hollow."))
+			return
+
+		var/mob/dead/mob = pick(candidates)
+		if(!istype(mob))
+			return
+
+		if(istype(mob, /mob/dead/new_player))
+			var/mob/dead/new_player/new_player = mob
+			new_player.close_spawn_windows()
+
+		target.key = mob.key
+
 	to_chat(target, span_warning("SOON I WILL BECOME A HIGHER FORM!"))
 	addtimer(CALLBACK(src, PROC_REF(flesh_convert), target, center), 5 SECONDS)
 
@@ -1087,6 +985,12 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		cavity.cavity_item = null
 	for(var/obj/item/bodypart/part as anything in target.bodyparts)
 		part.drop_limb()
+	if(target.has_status_effect(/datum/status_effect/debuff/ritualdefiled/cult))
+		to_chat(user, span_danger("Он уже выпотрошен"))
+		return
+	new /obj/item/natural/bundle/bone(center)
+	new /obj/item/natural/bundle/bone(center)
+	target.apply_status_effect(/datum/status_effect/debuff/ritualdefiled/cult)
 
 /* /datum/ritual/fleshcrafting/badomen
 	name = "Bad Omen"
@@ -1112,9 +1016,8 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	is_cultist_ritual = TRUE
 
 /datum/ritual/fleshcrafting/ascend/invoke(mob/living/user, turf/center)
-	// Динамический расчет требуемых культистов. Формулу можно поменять как угодно. Пока затычка на 1/6
-	var/player_count = length(GLOB.joined_player_list)
-	var/required_cultists = max(1, round(player_count / 6))
+	// Требование культистов фиксируется на раундстарте и больше не растет по ходу раунда.
+	var/required_cultists = SSmapping.retainer.get_cult_ascension_required_cultists()
 	// Меняя формулу и требование меняйте это все и в /mob/living/carbon/human/proc/ascension_check() чтобы оно совпадало и не псиопило культистов
 	var/current_cultists = length(SSmapping.retainer.cultists)
 	
@@ -1133,32 +1036,32 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/target_role = null
 	var/obj/item/clothing/head/roguetown/crown/crown_target = null
 	
-	// Приоритет 1: Герцог (SSticker.rulermob)
-	if(SSticker.rulermob && istype(SSticker.rulermob, /mob/living/carbon/human))
-		var/mob/living/carbon/human/ruler = SSticker.rulermob
-		if(ruler.stat != DEAD)
-			sacrifice_target = ruler
-			target_role = "Ruler"
-	
-	// Приоритет 2: Епископ
-	if(!sacrifice_target)
-		for(var/mob/living/carbon/human/H in GLOB.human_list)
-			if(H.stat == DEAD)
-				continue
-			var/role_title
-			if(H.mind && H.mind.assigned_role)
-				if(istext(H.mind.assigned_role))
-					role_title = H.mind.assigned_role
-				else if(istype(H.mind.assigned_role))
-					role_title = H.mind.assigned_role.title
-				else
-					role_title = null
+	// Приоритет 1: Епископ
+	for(var/mob/living/carbon/human/H in GLOB.human_list)
+		if(H.stat == DEAD)
+			continue
+		var/role_title
+		if(H.mind && H.mind.assigned_role)
+			if(istext(H.mind.assigned_role))
+				role_title = H.mind.assigned_role
+			else if(istype(H.mind.assigned_role))
+				role_title = H.mind.assigned_role.title
 			else
 				role_title = null
-			if(role_title == "Bishop")
-				sacrifice_target = H
-				target_role = "Bishop"
-				break
+		else
+			role_title = null
+		if(role_title == "Bishop")
+			sacrifice_target = H
+			target_role = "Bishop"
+			break
+	
+	// Приоритет 2: Герцог/Король
+	if(!sacrifice_target)
+		if(SSticker.rulermob && istype(SSticker.rulermob, /mob/living/carbon/human))
+			var/mob/living/carbon/human/ruler = SSticker.rulermob
+			if(ruler.stat != DEAD)
+				sacrifice_target = ruler
+				target_role = "Ruler"
 	
 	// Приоритет 3: Десница
 	if(!sacrifice_target)
@@ -1321,3 +1224,197 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 			V.add_stress(/datum/stressevent/hatezizo)
 	SSvote.started_time = world.time - CONFIG_GET(number/vote_delay) - 10
 	SSvote.initiate_vote("endround", "AHAHAHAHAHAHAHAHAHHA")
+
+/datum/ritual/weaponary
+	abstract_type = /datum/ritual/weaponary
+
+/datum/ritual/weaponary/zsteel
+	name = "Создание стали"
+	desk = "Ритуал, который позволяет создать сталь из простых кусочков"
+	center_requirement = /obj/item/scrap
+
+	n_req = /obj/item/scrap
+	s_req = /obj/item/scrap
+	w_req = /obj/item/scrap
+	e_req = /obj/item/scrap
+
+/datum/ritual/weaponary/zsteel/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+	new /obj/item/ingot/steel(center)
+
+/datum/ritual/weaponary/zingot
+	name = "Создание проклятого слитка"
+	desk = "Ритуал, который позволяет призвать древние слитки, которые могут быть полезны.."
+	center_requirement = /obj/item/ingot/steel
+
+	n_req = /obj/item/natural/bone
+	s_req = /obj/item/natural/bone
+	e_req = /obj/item/natural/bone
+	w_req = /obj/item/natural/bone
+
+/datum/ritual/weaponary/zingot/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+	new /obj/item/ingot/steel/zizo(center)
+
+/datum/ritual/weaponary/cross
+	name = "Призыв амулета Зизо"
+	desk = "Призывает особый крест Зизо, который и защитит, и одарит Её милостинью."
+	center_requirement = /obj/item/clothing/neck/roguetown/psicross
+
+	n_req = /obj/item/natural/bone
+	s_req = /obj/item/natural/bone
+	w_req = /obj/item/natural/bone
+	e_req = /obj/item/natural/bone
+
+/datum/ritual/weaponary/cross/invoke(mob/living/user, turf/center)
+	. = ..()
+	new /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult(center)
+	to_chat(user, span_notice("The psycross is transmuted into an amulet of Zizo."))
+
+/datum/ritual/weaponary/repaircross
+	name = "Восполнить амулет"
+	desk = "Восполняет амулет зизо, возвращая его защиту."
+	center_requirement = /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult
+
+	w_req = /obj/item/natural/bone
+	e_req = /obj/item/natural/bone
+
+/datum/ritual/weaponary/repaircross/invoke(mob/living/user, turf/center)
+	. = ..()
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+	new /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult(center)
+	to_chat(user, span_notice("Крест вновь может защитить вас.."))
+
+/datum/ritual/weaponary/zdagger
+	name = "Создание проклятого кинжала Зизо"
+	desk = "Призывает кинжал Зизо, который может содержать в себе яд."
+	center_requirement = /obj/item/rogueweapon/huntingknife/idagger
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/zdagger/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+	new /obj/item/rogueweapon/huntingknife/idagger/steel/zizo(center)
+
+/datum/ritual/weaponary/summonweapon
+	name = "Создание длинного меча"
+	desk = "Призывает длинный меч Зизо."
+	center_requirement = /obj/item/rogueweapon/sword/long
+	
+	e_req = /obj/item/ingot/steel/zizo
+	w_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/summonweapon/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/sword/long/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/summonaxe
+	name = "Создание боевого топора"
+	desk = "Призывает особо-острый боевой топор."
+	center_requirement = /obj/item/rogueweapon/stoneaxe
+	
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/summonaxe/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/stoneaxe/battle/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/summonasword
+	name = "Создание поглощающего меча"
+	desk = "Призывает меч, который ворует жизненную энергию."
+	center_requirement = /obj/item/rogueweapon/sword
+	
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/summonasword/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/sword/sabre/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/summonshield
+	name = "Создание щита"
+	desk = "Призывает длинный меч Зизо."
+	center_requirement = /obj/item/rogueweapon/shield/tower
+	
+	e_req = /obj/item/ingot/steel/zizo
+	w_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/summonshield/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/shield/tower/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/summonneant
+	name = "Призыв Косы"
+	desk = "Призывает Особую косу Зизо."
+	center_requirement = /obj/item/rogueweapon/scythe
+
+	w_req = /obj/item/ingot/steel/zizo
+	e_req = /obj/item/ingot/steel/zizo
+	n_req = /obj/item/reagent_containers/lux
+	s_req = /obj/item/natural/bone
+
+/datum/ritual/weaponary/summonneant/invoke(mob/living/user, turf/center)
+
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/zizo/neant(center)
+
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/summonoutfit
+	name = "Призыв робы культа и веревки"
+	desk = "Призывает снаряжение культа. Легкая роба, капюшон и веревка."
+	center_requirement = /obj/item/natural/cloth
+
+	n_req = /obj/item/natural/hide
+
+/datum/ritual/weaponary/summonoutfit/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/head/roguetown/helmet/skullcap/cult(center)
+
+	//new /obj/item/clothing/cloak/shadowcloak/cult(center)
+
+	new /obj/item/clothing/suit/roguetown/armor/leather/studded/cult(center)
+
+	new /obj/item/rope(center)
+
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+

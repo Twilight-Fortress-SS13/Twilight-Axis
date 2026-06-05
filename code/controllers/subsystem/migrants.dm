@@ -258,7 +258,6 @@ SUBSYSTEM_DEF(migrants)
 
 	SSticker.minds += character.mind
 	GLOB.joined_player_list += character.ckey
-	update_bandits_slots()
 	update_wretch_slots()
 	update_mercenary_slots()
 	update_adventurer_slots()

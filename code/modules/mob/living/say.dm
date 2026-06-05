@@ -131,7 +131,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	#if DM_VERSION < 513
 		var/randomnote = "~"
 	#else
-		var/randomnote = pick("&#9835;", "&#9834;", "&#9836;")
+		var/randomnote = pick(9835, 9834, 9836)
+		randomnote = ascii2text(randomnote)
 	#endif
 		spans |= SPAN_SINGING
 		message = "[randomnote] [message] [randomnote]"

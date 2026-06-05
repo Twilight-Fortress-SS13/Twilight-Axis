@@ -218,7 +218,7 @@
 	narcolepsy_drug_up(M)
 	M.sate_addiction(/datum/charflaw/addiction/junkie)
 	M.adjustFireLoss(0.2)
-	M.apply_status_effect(/datum/status_effect/buff/dragonhide/TAfireresist)
+	M.apply_status_effect(/datum/status_effect/buff/dragonhide/TAfireresistinferrum)
 
 	..()
 

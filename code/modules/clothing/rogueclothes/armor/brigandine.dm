@@ -137,14 +137,6 @@
 
 /obj/item/clothing/suit/roguetown/armor/brigandine/banneret
 	name = "knight banneret's brigandine"
-/obj/item/clothing/suit/roguetown/armor/brigandine/light/cult
-	name = "Cultistic's robe"
-	icon_state = "warlock"
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS
-
-/obj/item/clothing/suit/roguetown/armor/brigandine/light/cult/Initialize(mapload, ...)
-	. = ..()
-	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ROBE")
 
 /obj/item/clothing/suit/roguetown/armor/brigandine/captain
 	name = "captain's brigandine"

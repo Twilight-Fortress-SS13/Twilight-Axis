@@ -29,28 +29,12 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	// Track selected ticket per user
 	var/list/selected_tickets = list()  // Maps ckey -> ticket_id
 
-	/// Ckeys of admins who have opted to hide their character name in ticket messages. Persisted to disk.
-	var/list/admin_hide_charname = list()
-
 	var/obj/effect/statclick/ticket_list/astatclick = new(null, null, AHELP_ACTIVE)
 	var/obj/effect/statclick/ticket_list/cstatclick = new(null, null, AHELP_CLOSED)
 	var/obj/effect/statclick/ticket_list/rstatclick = new(null, null, AHELP_RESOLVED)
 
-/datum/admin_help_tickets/New()
-	var/json_data = file2text("data/admin_hide_charname.json")
-	if(json_data)
-		var/list/loaded = safe_json_decode(json_data)
-		if(islist(loaded))
-			admin_hide_charname = loaded
-	. = ..()
-
 /datum/admin_help_tickets/proc/IsAdminInHideCharname(ckey)
-	return (ckey in admin_hide_charname)
-
-/datum/admin_help_tickets/proc/SaveHideCharname()
-	var/path = "data/admin_hide_charname.json"
-	fdel(path)
-	WRITE_FILE(path, json_encode(admin_hide_charname))
+	return TRUE
 
 /datum/admin_help_tickets/Destroy()
 	QDEL_LIST(active_tickets)
@@ -96,8 +80,10 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			var/datum/admin_help/AH = ticket_list[I]
 			if(AH.id > new_ticket.id)
 				ticket_list.Insert(I, new_ticket)
+				SStgui.update_uis(GLOB.ahelp_tickets) // TA EDIT
 				return
 	ticket_list += new_ticket
+	SStgui.update_uis(GLOB.ahelp_tickets) // TA EDIT
 
 //opens the ticket listings for one of the 3 states
 /datum/admin_help_tickets/proc/BrowseTickets(state)
@@ -199,8 +185,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			full_ticket["initiator_connected"] = selected.initiator ? TRUE : FALSE
 			data["selected_ticket"] = full_ticket
 
-	// Whether this admin has opted to hide their character name in ticket messages
-	data["admin_hide_charname"] = (user.ckey in admin_hide_charname)
+	// Whether this admin is currently in stealth mode
+	data["admin_hide_charname"] = user.client?.holder?.fakekey ? TRUE : FALSE
 
 	return data
 
@@ -228,12 +214,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			return TRUE
 
 		if("toggle_charname")
-			// Toggle whether this admin's character name is hidden in ticket messages.
-			if(user.ckey in admin_hide_charname)
-				admin_hide_charname -= user.ckey
-			else
-				admin_hide_charname += user.ckey
-			SaveHideCharname()
+			if(user.client)
+				INVOKE_ASYNC(user.client, TYPE_PROC_REF(/client, stealth))
 			return TRUE
 
 		if("send_message")
@@ -486,7 +468,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			if(embed_type != "image" && embed_type != "video")
 				return FALSE
 			var/prefix = embed_type == "image" ? "EMBED_IMAGE:" : "EMBED_VIDEO:"
-			var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname()
+			var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(user.ckey) // TA EDIT
 			ticket.AddInteraction("<font color='blue'>PM from [key_name_admin(user, show_charname)]: [prefix][url]</font>")
 			// Notify the player if connected
 			if(ticket.initiator)
@@ -597,15 +579,16 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		MessageNoRecipient(msg, newticket = TRUE)
 
 	GLOB.ahelp_tickets.active_tickets += src
-	
-	// Open the TGUI chat window for the initiator
-	if(C && C.mob)
-		ui_interact(C.mob)
+	SStgui.update_uis(GLOB.ahelp_tickets) // TA EDIT
 
+	// Open the TGUI chat window for the initiator
+	if(C && C.mob && !is_bwoink) // TA EDIT
+		ui_interact(C.mob)
 /datum/admin_help/Destroy()
 	RemoveActive()
 	GLOB.ahelp_tickets.closed_tickets -= src
 	GLOB.ahelp_tickets.resolved_tickets -= src
+	SStgui.update_uis(GLOB.ahelp_tickets) // TA EDIT
 	return ..()
 
 /datum/admin_help/proc/AddInteraction(formatted_message, player_message)
@@ -657,8 +640,15 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 /datum/admin_help/proc/MessageNoRecipient(msg, play_sound = TRUE, newticket = FALSE)
 	msg = copytext_char(msg, 1, MAX_MESSAGE_LEN)
 	var/ref_src = "[REF(src)]"
+// TA EDIT BEGIN
+	var/display_ckey = initiator_ckey
+	if(initiator && initiator.holder && initiator.holder.fakekey && !GLOB.ahelp_tickets.IsAdminInHideCharname(initiator_ckey))
+		display_ckey = initiator.holder.fakekey
+	else if(initiator && initiator.holder && initiator.holder.fakekey)
+		display_ckey = initiator.holder.fakekey
+// TA EDIT END
 	// Simplified message to be sent to all admins, including title and action links
-	var/admin_msg = span_adminnotice("<font color='#c87941'><b>Ticket #[id]: ([initiator_ckey]) - [TicketHref("Show Ticket", ref_src)]</b><br><span class='linkify' style='font-weight:normal;color:#c87941'>[msg]</span></font>")
+	var/admin_msg = span_adminnotice("<font color='#c87941'><b>Ticket #[id]: ([display_ckey]) - [TicketHref("Show Ticket", ref_src)]</b><br><span class='linkify' style='font-weight:normal;color:#c87941'>[msg]</span></font>")
 
 	AddInteraction("<font color='red'>[LinkedReplyName(ref_src)]: [msg]</font>", player_message = "<font color='red'>[LinkedReplyName(ref_src)]: [msg]</font>")
 
@@ -703,6 +693,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	GLOB.ahelp_tickets.active_tickets += src
 	GLOB.ahelp_tickets.closed_tickets -= src
 	GLOB.ahelp_tickets.resolved_tickets -= src
+	SStgui.update_uis(GLOB.ahelp_tickets) // TA EDIT
 	switch(state)
 		if(AHELP_CLOSED)
 			SSblackbox.record_feedback("tally", "ahelp_stats", -1, "closed")
@@ -884,10 +875,13 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(new_title)
 		name = new_title
 		//not saying the original name cause it could be a long ass message
-		var/msg = "Ticket [TicketHref("#[id]")] titled [name] by [key_name_admin(usr)]"
+// TA EDIT BEGIN
+		var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr.ckey)
+		var/msg = "Ticket [TicketHref("#[id]")] titled [name] by [key_name_admin(usr, show_charname)]"
 		message_admins(msg)
 		log_admin_private(msg)
-		AddInteraction("Retitled by [key_name_admin(usr)]")
+		AddInteraction("Retitled by [key_name_admin(usr, show_charname)]")
+// TA EDIT END
 
 //Forwarded action from admin/Topic
 /datum/admin_help/proc/Action(action)
@@ -1132,9 +1126,12 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			if(embed_type != "image" && embed_type != "video")
 				return FALSE
 			var/prefix = embed_type == "image" ? "EMBED_IMAGE:" : "EMBED_VIDEO:"
-			AddInteraction("<font color='blue'>PM from [key_name_admin(usr)]: [prefix][url]</font>")
+// TA EDIT BEGIN
+			var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr.ckey)
+			AddInteraction("<font color='blue'>PM from [key_name_admin(usr, show_charname)]: [prefix][url]</font>")
 			if(initiator)
-				to_chat(initiator, span_adminhelp("<b>Admin [key_name_admin(usr)] embedded a [embed_type] in your ticket.</b>"))
+				to_chat(initiator, span_adminhelp("<b>Admin [key_name_admin(usr, show_charname)] embedded a [embed_type] in your ticket.</b>"))
+// TA EDIT END
 			log_admin_private("Ticket #[id]: [key_name(usr)] embedded [embed_type]: [url]")
 			return TRUE
 
@@ -1218,7 +1215,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			else
 				to_chat(usr, span_warning("Ticket not found, creating new one..."))
 		else
-			current_ticket.AddInteraction("[key_name_admin(usr)] opened a new ticket.", player_message = "opened a new ticket.")
+			var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(usr.ckey) // TA EDIT
+			current_ticket.AddInteraction("[key_name_admin(usr, show_charname)] opened a new ticket.", player_message = "opened a new ticket.") // TA EDIT
 			current_ticket.Close()
 
 	new /datum/admin_help(msg, src, FALSE)

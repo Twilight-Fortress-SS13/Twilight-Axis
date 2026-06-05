@@ -438,7 +438,6 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 			give_madness(humanc, GLOB.curse_of_madness_triggered)
 */
 	GLOB.joined_player_list += character.ckey
-	update_bandits_slots()
 	update_wretch_slots()
 	update_mercenary_slots()
 	update_adventurer_slots()

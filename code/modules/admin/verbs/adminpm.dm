@@ -52,12 +52,12 @@
 		return
 
 	var/datum/admin_help/AH = C.current_ticket
-
+	var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(src.ckey) // TA EDIT
 	if(AH)
-		message_admins("[key_name_admin(src)] has started replying to [key_name_admin(C, 0, 0)]'s admin help.")
+		message_admins("[key_name_admin(src, show_charname)] has started replying to [key_name_admin(C, 0, 0)]'s admin help.") // TA EDIT
 	var/msg = input(src,"Message:", "Private message to [C.holder?.fakekey ? "an Administrator" : key_name(C, 0, 0)].") as message|null
 	if (!msg)
-		message_admins("[key_name_admin(src)] has cancelled their reply to [key_name_admin(C, 0, 0)]'s admin help.")
+		message_admins("[key_name_admin(src, show_charname)] has cancelled their reply to [key_name_admin(C, 0, 0)]'s admin help.") // TA EDIT
 		return
 	cmd_admin_pm(whom, msg)
 	. = list(AH, msg)
@@ -118,13 +118,14 @@
 		//get message text, limit it's length.and clean/escape html
 		if(!msg)
 			var/datum/admin_help/sender_ticket = !holder ? current_ticket : null
+			var/show_charname_prompt = !GLOB.ahelp_tickets.IsAdminInHideCharname(src.ckey) // TA EDIT
 			if(sender_ticket)
-				message_admins("[key_name_admin(src)] has started replying to their admin help.")
+				message_admins("[key_name_admin(src, show_charname_prompt)] has started replying to their admin help.") // TA EDIT
 			msg = input(src,"Message:", "Private message to [recipient.holder?.fakekey ? "an Administrator" : key_name(recipient, 0, 0)].") as message|null
 			msg = trim(msg)
 			if(!msg)
 				if(sender_ticket)
-					message_admins("[key_name_admin(src)] has cancelled their reply to their admin help.")
+					message_admins("[key_name_admin(src, show_charname_prompt)] has cancelled their reply to their admin help.") // TA EDIT
 				return
 
 			if(prefs.muted & MUTE_ADMINHELP)
@@ -156,8 +157,9 @@
 		//msg = emoji_parse(msg)
 
 	var/keywordparsedmsg = keywords_lookup(msg)
+	var/show_charname = !GLOB.ahelp_tickets.IsAdminInHideCharname(src.ckey) // TA EDIT
 	/// Stores a bit of html with our ckey, name, and a linkified string to click and rely to us with
-	var/name_key_with_link = key_name(src, TRUE, TRUE)
+	var/name_key_with_link = key_name_admin(src, show_charname) // TA EDIT
 
 	if(irc)
 		to_chat(src, span_notice("PM to-<b>Admins</b>: <span class='linkify'>[rawmsg]</span>"))
@@ -209,9 +211,9 @@
 			to_chat(recipient, span_adminsay("<i><a href='?viewticket=1'>View ticket</a></i>"))
 			to_chat(src, span_notice("Admin PM to-<b>[key_name(recipient, src, 1)]</b>: <span class='linkify'>[msg]</span>"))
 
-			message_admins_without(span_notice("Admin PM from <b>[src]</b> to-<b>[key_name(recipient)]</b>: <span class='linkify'>[msg]</span>"), src)
+			message_admins_without(span_notice("Admin PM from <b>[name_key_with_link]</b> to-<b>[key_name(recipient)]</b>: <span class='linkify'>[msg]</span>"), src) // TA EDIT
 
-			admin_ticket_log(recipient, "<font color='purple'>PM From [key_name_admin(src)]: [keywordparsedmsg]</font>")
+			admin_ticket_log(recipient, "<font color='purple'>PM From [name_key_with_link]: [keywordparsedmsg]</font>") // TA EDIT
 			//always play non-admin recipients the adminhelp sound
 			SEND_SOUND(recipient, sound('sound/adminhelp.ogg'))
 
@@ -225,7 +227,7 @@
 				GLOB.ahelp_tickets.selected_tickets[usr.ckey] = created_ticket.id
 				GLOB.ahelp_tickets.ui_interact(usr)
 			if(!newticket)
-				created_ticket.AddInteraction("<font color='blue'>PM from [key_name_admin(src)]: [msg]</font")
+				created_ticket.AddInteraction("<font color='blue'>PM from [name_key_with_link]: [msg]</font>") // TA EDIT
 				var/list/data = list(
 					"type"= "areply",
 					"id"= "[created_ticket.id]",

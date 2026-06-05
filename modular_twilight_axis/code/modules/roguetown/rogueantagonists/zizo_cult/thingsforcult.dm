@@ -51,25 +51,55 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "EYE")
 
-//шадоу плащ но без уникального спрайта, бяка
-/obj/item/clothing/cloak/half/shadowcloak/cult
-	name = "Zizo cultistic's cloak"
+
+/obj/item/clothing/cloak/shadowcloak/cult
+	name = "Ascension's cloak"
 	desc = "Those who wear, thy should beware, for those who do; never come back as who they once were again."
-	allowed_race = NON_DWARVEN_RACE_TYPES
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/zcloakicon.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/on_mob/zcloakonmob.dmi'
+	icon_state = "zcloak"
 	body_parts_covered = ARMS|CHEST|VITALS
 	armor = ARMOR_PADDED
 
-/obj/item/clothing/cloak/half/shadowcloak/cult/Initialize(mapload, ...)
+/obj/item/clothing/cloak/shadowcloak/cult/Initialize(mapload, ...)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "CLOAK")
+
+/obj/item/clothing/suit/roguetown/armor/leather/studded/cult
+	name = "Ascension's robe"
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM
+	allowed_sex = list(MALE, FEMALE)
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/zrobeicon.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/on_mob/zrobeonmob.dmi'
+	icon_state = "zonmod"
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+	sellprice = 0
+	smeltresult = null
+
+/obj/item/clothing/suit/roguetown/armor/leather/studded/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ROBE")
+
+/obj/item/clothing/suit/roguetown/armor/leather/studded/cult/equipped(mob/living/carbon/human/user, slot)
+	. = ..()
+	if(slot == SLOT_ARMOR)
+		user.apply_status_effect(/datum/status_effect/buff/cultlight)
+
+/obj/item/clothing/suit/roguetown/armor/leather/studded/cult/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(istype(user) && user?.wear_armor == src)
+		user.remove_status_effect(/datum/status_effect/buff/cultlight)
+
 //котелок, но культа
 /obj/item/clothing/head/roguetown/helmet/skullcap/cult
-	name = "Zizo cultistic's hood"
+	name = "Ascension's hood"
 	desc = "It echoes with ominous laughter. Worn over a skullcap"
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/warlock.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/on_mob/warlock.dmi'
 	icon_state = "warlockhood"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR
+	smeltresult = null
+	sellprice = 0
 
 	body_parts_covered = NECK|HAIR|EARS|HEAD
 
@@ -78,30 +108,37 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "HOOD")
 //коса культа.. дайте две
 /obj/item/rogueweapon/zizo/neant
-	name = "neant"
+	name = "Ascend's neant"
 	desc = "A dark scythe with a long chain, used to cut the life essence from people, or whip them into shape. The blade is an ominous purple."
 	icon_state = "neant"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/polearms64.dmi'
 	drop_sound = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sounds/blade_drop.ogg'
 	slot_flags = ITEM_SLOT_BACK
 	resistance_flags = FIRE_PROOF
 	dropshrink = 0.75
 	max_blade_int = 200
-	max_integrity = 720
-	possible_item_intents = list(/datum/intent/spear/cut/bardiche)
-	gripped_intents = list(/datum/intent/axe/chop/scythe, /datum/intent/whip, /datum/intent/shoot/neant)
+	max_integrity = 400
+	possible_item_intents = list(/datum/intent/spear/cut/oneh)
+	gripped_intents = list(/datum/intent/spear/cut/bardiche/cult, /datum/intent/spear/cut/bardiche/cleave, /datum/intent/spear/bash, /datum/intent/shoot/neant)
 	thrown_bclass = BCLASS_CUT
 	blade_dulling = DULLING_BASHCHOP
 	wdefense = 8
-	force = 25
-	force_wielded = 25
+	force = 28
+	force_wielded = 38
 	throwforce = 25
-	minstr = 10
-	sellprice = 550
+	minstr = 13
+	sellprice = 0
 	wbalance = WBALANCE_HEAVY
 	associated_skill = /datum/skill/combat/polearms
+	wlength = WLENGTH_GREAT
 
 	COOLDOWN_DECLARE(fire_projectile)
+
+/datum/intent/spear/cut/bardiche/cult
+	penfactor = PEN_MEDIUM
+
+/datum/intent/spear/cut/bardiche/cleave/cult
+	penfactor = PEN_MEDIUM
 
 /obj/item/rogueweapon/zizo/neant/getonmobprop(tag)
 	. = ..()
@@ -200,7 +237,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	icon_state = "neantprojectile"
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	range = 8
-	damage = 20
+	damage = 25
 	armor_penetration = 30
 	damage_type = BRUTE
 	woundclass = BCLASS_CUT
@@ -226,6 +263,117 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 /datum/intent/shoot/neant/prewarning()
 	if(mastermob)
 		mastermob.visible_message(span_warning("[mastermob] draws [masteritem]!"))
+
+/obj/item/rogueweapon/sword/sabre/zizo
+	name = "cursed sword"
+	desc = "An cursed sword, which can steal life power"
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
+	icon_state = "Zsword"
+	smeltresult = /obj/item/ingot/steel/zizo
+
+/obj/item/rogueweapon/sword/sabre/zizo/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SWORD")
+	AddComponent(/datum/component/lifesteal, 15)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/zizo
+	name = "cursed dagger"
+	desc = "This is a dagger made of cursed steel... What's this smell?"
+	force = 23
+	max_blade_int = 250
+	max_integrity = 200
+	wdefense = 6
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
+	icon_state = "Zdagger"
+	smeltresult = /obj/item/ingot/steel/zizo
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/zizo/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "DAGGER")
+	AddElement(/datum/element/tipped_item)
+
+/obj/item/rogueweapon/stoneaxe/battle/zizo
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
+	icon_state = "Zaxe"
+	name = "cursed battle axe"
+	desc = "An axe for battles, which was maden by cursed steel."
+	wdefense = 5
+	max_blade_int = 350
+	max_integrity = 300
+	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop)
+	gripped_intents = list(/datum/intent/axe/cut/cult, /datum/intent/axe/chop/cult, /datum/intent/axe/chop/heavy, /datum/intent/axe/bash/battle)
+	smeltresult = /obj/item/ingot/steel/zizo
+
+/datum/intent/axe/chop/cult
+	intent_intdamage_factor = 1.3
+	demolition_mod = 6
+	swingdelay = 5
+	damfactor = 1.6
+
+/datum/intent/axe/cut/cult
+	demolition_mod = 3
+	damfactor = 1.4
+
+/obj/item/rogueweapon/stoneaxe/battle/zizo/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "AXE")
+
+/obj/item/rogueweapon/mace/steel/zizo
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
+	icon_state = "Zmaul"
+
+/obj/item/rogueweapon/mace/steel/zizo/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "MACE")
+
+/obj/item/rogueweapon/shield/tower/zizo
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
+	icon_state = "Zshield"
+	name = "cursed shield"
+	desc = "A gigantic cursed tower shield, which was maden by cursed steel."
+	force = 10
+	throwforce = 10
+	wdefense = 12
+	coverage = 85
+	max_integrity = 350
+	smeltresult = /obj/item/ingot/steel/zizo
+
+/obj/item/rogueweapon/shield/tower/zizo/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SHIELD")
+
+/obj/item/rogueweapon/spear/zizo
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
+	icon_state = "Zspear"
+
+/obj/item/rogueweapon/spear/zizo/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SPEAR")
+	AddElement(/datum/element/tipped_item)
+
+/obj/item/rogueweapon/greataxe/steel/doublehead/zizo
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
+	icon_state = "Ztaxe"
+
+/obj/item/rogueweapon/greataxe/steel/doublehead/zizo/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "AXE")
+
+/obj/item/rogueweapon/halberd/glaive/zizo
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
+	icon_state = "Zglaive"
+
+/obj/item/rogueweapon/halberd/glaive/zizo/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "GLAIVE")
+
+/obj/item/ingot/steel/zizo
+	name = "cursed ancient ingot"
+	desc = "There are legends about the appearance of this ingot..."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zingot.dmi'
+	icon_state = "zalloy"
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
 
 /// Fully randomizes everything in the character.
 // Reflect changes in [datum/preferences/proc/randomise_appearance_prefs]
@@ -358,7 +506,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 
 /datum/status_effect/debuff/fleshmend_exhaustion 
 	id = "fleshmend_tax"
-	duration = 6000
+	duration = 15 MINUTES
 	alert_type = /atom/movable/screen/alert/status_effect/fleshmend_tax
 	effectedstats = list(STATKEY_STR = -2, STATKEY_SPD = -2, STATKEY_CON = -2)
 
@@ -366,6 +514,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	name = "Истощение плоти"
 	desc = "Ваше тело было исцелено магией Зизо, но цена была высока. Сила, выносливость и скорость снижены."
 	icon_state = "debuff"
+
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult
 	name = "Reverted psycross of ascension's"
@@ -375,9 +524,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	icon_state = "zcross"
 	slot_flags = ITEM_SLOT_NECK
 	sellprice = 0
-	max_integrity = 100
+	max_integrity = 160
 	body_parts_covered = COVERAGE_FULL | COVERAGE_HEAD_NOSE | NECK | HANDS | FEET 
-	armor = ARMOR_DRAGONSKIN 
+	armor = ARMOR_CULTNECK 
 	blade_dulling = DULLING_BASHCHOP
 	blocksound = PLATEHIT
 	break_sound = 'sound/foley/breaksound.ogg'
@@ -437,3 +586,13 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 /atom/movable/screen/alert/status_effect/debuff/arcynestolen
 	name = "Stolen arcyne"
 	desc = "This cultists is stolen my magic.. Maybe it will come back later.."
+
+/datum/status_effect/buff/cultlight
+	id = "cultlight"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/cultlight
+	effectedstats = list(STATKEY_SPD = 1)
+
+/atom/movable/screen/alert/status_effect/buff/cultlight
+	name = "Cult light armor"
+	desc = "Robe of my queen makes me speedy!"
+	icon_state = "buff"

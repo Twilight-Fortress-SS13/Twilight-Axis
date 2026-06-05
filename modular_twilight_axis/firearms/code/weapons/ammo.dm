@@ -4,6 +4,10 @@
 #define AP_FALLOFF_BULLET		0.5
 #define DMG_FALLOFF_BULLET		0.5
 
+/obj/projectile
+	var/secondary_damage
+	var/secondary_damage_type
+
 /obj/projectile/bullet
 	var/silver = FALSE
 	var/blessed = FALSE
@@ -24,7 +28,7 @@
 /obj/projectile/bullet/twilight_lead
 	name = "lead sphere"
 	desc = "Небольшая свинцовая сфера. Хорошо сочетается с порохом."
-	damage = 100
+	damage = 120
 	damage_type = BRUTE
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
@@ -37,6 +41,8 @@
 	armor_penetration = PEN_NONE
 	speed = 0.1
 	intdamfactor = 2
+	secondary_damage = 30
+	secondary_damage_type = BURN
 
 /obj/projectile/bullet/twilight_lead/silver
 	name = "silver sphere"
@@ -85,6 +91,8 @@
 	speed = 0.1
 	critfactor = 0.67
 	intdamfactor = 2
+	secondary_damage = 5
+	secondary_damage_type = BURN
 
 /**
  * Special runelock ammo
@@ -106,6 +114,8 @@
 	woundclass = BCLASS_PIERCE
 	flag = "bullet"
 	armor_penetration = PEN_NONE
+	secondary_damage = 0
+	secondary_damage_type = null
 
 /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	name = "blessed sphere"
@@ -186,14 +196,16 @@
 		max_range = gun.effective_range
 	..()
 
-/obj/projectile/bullet/on_hit(atom/target)
+/obj/projectile/bullet/on_hit(atom/target, blocked = FALSE)
 	if(isliving(target))
 		var/mob/living/T = target
 		if(istype(fired_from, /obj/item/gun/ballistic/twilight_firearm)) //Double damage in close range
 			var/is_within_effective_range = !check_range(get_turf(target))
 			if(is_within_effective_range)
-				if(!istype(T.get_inactive_held_item(), /obj/item/rogueweapon/shield) && !istype(T.get_active_held_item(), /obj/item/rogueweapon/shield))
-					switch(gunpowder) //Hande gunpowder types that are BLOCKED by shields and armor
+				var/has_projectile_shield = istype(T.get_inactive_held_item(), /obj/item/rogueweapon/shield) || istype(T.get_active_held_item(), /obj/item/rogueweapon/shield)
+				var/armor_softened = blocked > 0
+				if(!has_projectile_shield && !armor_softened)
+					switch(gunpowder) //Handle gunpowder types that are BLOCKED by shields and armor
 						if("fyrepowder")
 							if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
 								T.adjust_fire_stacks(2)
@@ -234,7 +246,7 @@
 						if("terrorpowder")
 							gunpowder_npc_critfactor += 1
 				else
-					switch(gunpowder) //Hande gunpowder types that are NOT BLOCKED by shields and armor
+					switch(gunpowder) //Handle gunpowder types that are NOT BLOCKED by shields and armor
 						if("fyrepowder")
 							if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
 								T.adjust_fire_stacks(1)
@@ -390,7 +402,7 @@
 				H.set_silence(5 SECONDS)
 
 /obj/projectile/bullet/twilight_cannonball/on_hit(atom/target, blocked = FALSE)
-	. = ..()
+	. = ..(target, blocked)
 
 	var/turf/epicenter = get_turf(target)
 	if(!epicenter)

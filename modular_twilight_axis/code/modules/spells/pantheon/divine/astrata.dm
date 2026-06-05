@@ -548,6 +548,13 @@
 	. = ..()
 	owner.weather_immunities -= "lava"
 
+/datum/status_effect/buff/dragonhide/TAfireresistinferrum
+	id = "fireresist"
+	examine_text = "<font color='red'>SUBJECTPRONOUN is shielded by a veil of sacred flame!</font>"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/dragonhide/TAfireresist
+	effectedstats = list(STATKEY_CON = -1) //Target body loosing CON, but getting fireresist.
+	duration = 11 SECONDS
+
 /obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAastratagrasp
 	name = "Astrata's Grasp"
 	desc = "HER fire burnet eaternae. Summon Her flame from your soul and let it envelop your hand. Use on ashes, fire dust and fyritius flowers to convert them into devotion. Can ignite objects. Consumes fire stacks on people to do extra damage."

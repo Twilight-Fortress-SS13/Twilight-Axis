@@ -121,16 +121,31 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		if (player.client?.ckey in GLOB.hiderole)
 			continue
 		var/job_choice = player.client?.prefs?.job_preferences
-		if (job_choice)
-			for (var/job_name in job_choice)
-				if (job_choice[job_name] == JP_HIGH)
-					if (job_name in wanderer_jobs)
-						job_name = "Wanderer"
-					if (player.ready == PLAYER_READY_TO_PLAY)
-						if (!ready_players_by_job[job_name])
-							ready_players_by_job[job_name] = list()
-						ready_players_by_job[job_name] += player.client.prefs.real_name
+		if(job_choice) // TA EDIT START
+			var/selected_job_name
+
+			for(var/job_name in job_choice)
+				if(job_choice[job_name] == JP_BOOST)
+					selected_job_name = job_name
+					break
+
+			if(!selected_job_name)
+				for(var/job_name in job_choice)
+					if(job_choice[job_name] == JP_HIGH)
+						selected_job_name = job_name
 						break
+
+			if(selected_job_name)
+				if(selected_job_name in wanderer_jobs)
+					selected_job_name = "Wanderer"
+
+				if(player.ready == PLAYER_READY_TO_PLAY)
+					if(!ready_players_by_job[selected_job_name])
+						ready_players_by_job[selected_job_name] = list()
+
+					var/player_display_name = player.client.prefs.real_name
+
+					ready_players_by_job[selected_job_name] += player_display_name // TA EDIT END
 
 	var/list/job_list_by_department = list(
 		"Noblemen" = list(),

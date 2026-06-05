@@ -49,8 +49,9 @@
 		/datum/advclass/wretch/pariah,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
-		/datum/advclass/wretch/slasher
-//		/datum/advclass/wretch/ancient_deathknight,
+	//	/datum/advclass/wretch/ancient_deathknight,
+		/datum/advclass/wretch/slasher,
+		/datum/advclass/wretch/maestro
 	)
 
 /datum/job/roguetown/wretch/special_job_check(mob/dead/new_player/player)

@@ -52,7 +52,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/tgui_fancy = TRUE
 	var/tgui_lock = TRUE
 	var/tgui_theme = "azure_default"
-	var/parchment_skin = "parchment"
+	var/parchment_skin = "leatherbound"
 	var/windowflashing = TRUE
 	var/toggles = TOGGLES_DEFAULT
 	var/ghost_toggles
@@ -167,6 +167,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/no_storyteller_events = FALSE
 
 	var/lastclass
+
+	var/donor_priority_last_round_index = 0 // TA EDIT
 
 	var/uplink_spawn_loc = UPLINK_PDA
 
@@ -1224,6 +1226,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		if(joblessrole != RETURNTOLOBBY && joblessrole != BERANDOMJOB)
 			joblessrole = RETURNTOLOBBY
 		HTML += "<i>Click on an unlocked Class to get more information</i><br>"
+		HTML += donor_job_boost_prefs_banner(user) // TA EDIT
 		HTML += "<b>If Role Unavailable:</b><font color='purple'><a href='?_src_=prefs;preference=job;task=nojob'>[joblessrole]</a></font><BR>"
 		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
 		HTML += "<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>"
@@ -1327,36 +1330,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				continue
 
 		
-			var/prefLevelLabel = "ERROR"
-			var/prefLevelColor = "pink"
-			var/prefUpperLevel = -1 
-			var/prefLowerLevel = -1 
-
-			switch(job_preferences[job.title])
-				if(JP_HIGH)
-					prefLevelLabel = "High"
-					prefLevelColor = "slateblue"
-					prefUpperLevel = 4
-					prefLowerLevel = 2
-					var/mob/dead/new_player/P = user
-					if(istype(P))
-						P.topjob = job.title
-						topjob = job.title
-				if(JP_MEDIUM)
-					prefLevelLabel = "Medium"
-					prefLevelColor = "green"
-					prefUpperLevel = 1
-					prefLowerLevel = 3
-				if(JP_LOW)
-					prefLevelLabel = "Low"
-					prefLevelColor = "orange"
-					prefUpperLevel = 2
-					prefLowerLevel = 4
-				else
-					prefLevelLabel = "NEVER"
-					prefLevelColor = "red"
-					prefUpperLevel = 3
-					prefLowerLevel = 1
+			var/list/pref_ui = job_pref_display_data(job, user) // TA EDIT START
+			var/prefLevelLabel = pref_ui["label"] // TA EDIT
+			var/prefLevelColor = pref_ui["color"] // TA EDIT
+			var/prefUpperLevel = pref_ui["upper"] // TA EDIT
+			var/prefLowerLevel = pref_ui["lower"] // TA EDIT END
 
 			HTML += "<a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
 			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font></a>"
@@ -1393,6 +1371,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				job_preferences[j] = JP_MEDIUM
 				//technically break here
 
+	if(level == JP_BOOST) // TA EDIT START
+		for(var/j in job_preferences)
+			if(job_preferences[j] == JP_BOOST)
+				job_preferences[j] = JP_HIGH // TA EDIT END
+
 	job_preferences[job.title] = level
 	return TRUE
 
@@ -1411,15 +1394,15 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		ShowChoices(user,4)
 		return
 
-	var/jpval = null
-	switch(desiredLvl)
-		if(3)
-			jpval = JP_LOW
-		if(2)
-			jpval = JP_MEDIUM
-		if(1)
-			jpval = JP_HIGH
+	if(desiredLvl == JOB_PREF_UI_NEVER)
+		clear_job_preference(job)
+		SetChoices(user)
+		return 1
 
+	var/jpval = desired_lvl_to_job_pref(desiredLvl, job, user)
+	if(!jpval)
+		SetChoices(user)
+		return
 
 	SetJobPreferenceLevel(job, jpval)
 	SetChoices(user)

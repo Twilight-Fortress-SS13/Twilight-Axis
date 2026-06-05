@@ -133,8 +133,9 @@
 /obj/item/rogueweapon/huntingknife/idagger/steel/baotha/Initialize()
 	. = ..()
 	icon_state = "baotha_knife1"
-	addtimer(CALLBACK(src, PROC_REF(icon_proc)), wait = (1 SECONDS))
+	addtimer(CALLBACK(src, "icon_proc"), wait = (1 SECONDS))
 	AddComponent(/datum/component/cursed_item, TRAIT_CRACKHEAD, "KNIFE")
+	RegisterSignal(src, COMSIG_ITEM_ATTACK_EFFECT_SELF, PROC_REF(on_hit_effects))
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/icon_proc()
 	icon_state = "baotha_knife2"
@@ -151,31 +152,46 @@
 		else
 			to_chat(user, "<span class='notice'>I losing concentration!</span>")
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/pre_attack(mob/living/carbon/human/target, mob/living/user = usr, params)
-	if(!istype(target))
-		return FALSE
-	var/list/drugs = list(/datum/reagent/ozium,
-						/datum/reagent/moondust)
-	var/random_drug = pick(drugs)
-	if(HAS_TRAIT(target, TRAIT_PSYCHOSIS))
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/on_hit_effects(obj/item/source, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
+	SIGNAL_HANDLER
+	
+	if(!istype(victim, /mob/living/carbon))
+		return
+
+	var/mob/living/carbon/human/target = victim
+	var/random_drug = pick(list(/datum/reagent/ozium, /datum/reagent/moondust))
+	var/selected_hallucination = pick(list(
+		"Is this TRVE??", "IDDQD", "DAFUQ?", "I am NOT meant to see this.",
+		"What... WHAT is this?", "This doesn't make SENSE.", "I don't UNDERSTAND.",
+		"Why does it LOOK like that?", "Something is WRONG here.", "This isn't RIGHT.",
+		"What am I looking at?", "None of THIS adds up.", "I shouldn't be SEEING this.",
+		"This feels... INCORRECT.", "Why is everything like this?", "I CAN'T process this.",
+		"This ISN'T how it should be.", "I don't get it.", "What is happening?",
+		"This is all WRONG.", "I CAN'T tell what's REAL.", "Why does it feel off?",
+		"I don't recognize this.", "This SHOULDN'T exist.", "What is THIS supposed to be?",
+		"I can't FOLLOW this.", "This isn't making sense anymore.", "I think SOMETHING is broke.",
+		"Why can't I understand THIS?", "This feels IMPOSSIBLE.", "I don't KNOW what I'm seeing."
+	))
+
+	if(!HAS_TRAIT(target, TRAIT_PSYCHOSIS))
 		ADD_TRAIT(target, TRAIT_PSYCHOSIS, "baothaknife")
 		addtimer(CALLBACK(src, PROC_REF(baothapsychosis), target), wait = (1 MINUTES))
-	target.hallucination += rand(1,60)
-	to_chat(target, span_warning(pick("Is this TRVE??","IDDQD","DAFUQ?","I am NOT meant to see this.","What... WHAT is this?","This doesn't make SENSE.","I don't UNDERSTAND.","Why does it LOOK like that?","Something is WRONG here.","I can't make SENSE of this.","This isn't RIGHT.","What am I looking at?","None of THIS adds up.","I shouldn't be SEEING this.","This feels... INCORRECT.","Why is everything like this?","I CAN'T process this.","This ISN'T how it should be.","I don't get it.","What is happening?","This is all WRONG.","I CAN'T tell what's REAL.","Why does it feel off?","I don't recognize this.","This SHOULDN'T exist.","What is THIS supposed to be?","I can't FOLLOW this.","This isn't making sense anymore.","I think SOMETHING is broke.", "Why can't I understand THIS?", "This feels IMPOSSIBLE.", "I don't KNOW what I'm seeing.")))
+
+	target.hallucination = rand(1,60)
+	to_chat(target, span_warning(selected_hallucination))
 	target.Jitter(5)
+
 	if(prob(50))
-		target.emote(pick("giggle","laugh","chuckle"))
-	if(last_cut + 10 SECONDS >= world.time)
-		return FALSE
+		addtimer(CALLBACK(target, "emote", pick("giggle","laugh","chuckle")), 0)
+
+	if(last_cut + 10 SECONDS >= world.time) return
 	target.blur_eyes(5)
 	target.adjust_blurriness(10)
 	target.adjustToxLoss(10)
 	last_cut = world.time
-	if(last_drug + 1 MINUTES >= world.time)
-		return FALSE
+	if(last_drug + 1 MINUTES >= world.time) return
 	target.reagents.add_reagent(random_drug, 2)
 	last_drug = world.time
-	return FALSE
 
 /proc/baothapsychosis(var/mob/living/carbon/human/target)
 	REMOVE_TRAIT(target, TRAIT_PSYCHOSIS, "baothaknife")

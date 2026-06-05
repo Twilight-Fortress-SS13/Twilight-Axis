@@ -773,6 +773,15 @@
 	)
 	result_item = /obj/item/rogueweapon/example/arra_amdir
 
+//sakuyzo
+/obj/item/enchantingkit/weapon/sakuyzo
+	name = "'Hævatein' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long/kriegmesser/noc,
+		/obj/item/rogueweapon/sword/long/kriegmesser
+	)
+	result_item = /obj/item/rogueweapon/sakuyzo/sword
+
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
 /////////////////////////////

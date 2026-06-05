@@ -824,6 +824,24 @@
 	desc = "You are feeling something... Interesting.."
 	icon_state = "acid"
 
+//TA EDIT
+/datum/status_effect/debuff/impure_vitae
+	id = "impurevitae"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/impure_vitae
+	effectedstats = list(STATKEY_CON = -1, STATKEY_INT = -1)
+	duration = 1 MINUTES
+
+/datum/status_effect/debuff/impure_vitae/on_apply()
+	. = ..()
+	owner.add_stress(/datum/stressevent/high)
+	
+/datum/status_effect/debuff/impure_vitae/on_remove()
+	owner.remove_stress(/datum/stressevent/high)
+
+/atom/movable/screen/alert/status_effect/debuff/impure_vitae
+	name = "Invigorated"
+	desc = "AGH.. My heart is hurt... My head... This sinful soul stirs my thoughts and body in sin.."
+
 /datum/status_effect/debuff/joybringer_druqks
 	id = "joybringer_druqks"
 	effectedstats = list(STATKEY_LCK = -2)
@@ -1070,7 +1088,7 @@
 /atom/movable/screen/alert/status_effect/debuff/weapon_bind_debuff
 	name = "Weapon Binded"
 	desc = "Our weapons binded! That conniving sod knew right where I was aiming! I can't benefit from a weapon bind!"
-	icon = 'icons/mob/combat_debuffs.dmi'
+	icon = 'icons/mob/screen_alert_combat.dmi'
 	icon_state = "weapon_bind_debuff"
 
 /datum/status_effect/debuff/knockout

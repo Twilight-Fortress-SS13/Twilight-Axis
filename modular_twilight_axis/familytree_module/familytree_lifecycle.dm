@@ -15,7 +15,6 @@
 		/datum/job/roguetown/town_watch,
 		/datum/job/roguetown/vanguard,
 		/datum/job/roguetown/overseer,
-		/datum/job/roguetown/dungeoneer,
 	)
 
 	// Retinue (military)

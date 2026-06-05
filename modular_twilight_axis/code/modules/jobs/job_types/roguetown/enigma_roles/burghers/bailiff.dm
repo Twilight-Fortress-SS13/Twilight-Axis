@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 	allowed_sexes = list(MALE, FEMALE)
-	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
+	forbidden_races = list(RACES_DESPISED)
 	job_traits = list(TRAIT_SEEPRICES)
 	tutorial = "Вы - пристав, верный слуга мэра. Вы его глаза и уши, а если потребуется - крепкие руки и быстрые ноги."
 	display_order = JDO_BAILIFF

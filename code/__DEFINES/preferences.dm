@@ -99,6 +99,14 @@
 #define JP_LOW 1
 #define JP_MEDIUM 2
 #define JP_HIGH 3
+#define JP_BOOST 4 // TA EDIT
+
+// TA EDIT START
+#define JOB_PREF_UI_HIGH 1
+#define JOB_PREF_UI_MEDIUM 2
+#define JOB_PREF_UI_LOW 3
+#define JOB_PREF_UI_NEVER 4
+#define JOB_PREF_UI_BOOST 5 // TA EDIT END
 
 //randomised elements
 #define RANDOM_NAME "random_name"
