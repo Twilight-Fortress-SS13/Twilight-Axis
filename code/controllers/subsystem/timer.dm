@@ -389,6 +389,10 @@ SUBSYSTEM_DEF(timer)
 	var/bucket_pos = -1
 
 /datum/timedevent/New(datum/callback/callBack, wait, flags, datum/controller/subsystem/timer/timer_subsystem, hash, source)
+	// TA EDIT START
+	if(isnull(callBack))
+		return
+	// TA EDIT END
 	var/static/nextid = 1
 	id = TIMER_ID_NULL
 	src.callBack = callBack
