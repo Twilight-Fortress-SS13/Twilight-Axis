@@ -78,22 +78,23 @@
 #define TAT_TRAIT_SKILLED_COOK "tat_skilled_cook"
 #define TAT_TRAIT_SKILLED_PHYSICKER "tat_skilled_physicker"
 #define TAT_TRAIT_SKILLED_ALCHEMIST "tat_skilled_alchemist"
-#define TAT_TRAIT_SKILLED_LOCKER "tat_skilled_locker"
+#define TAT_TRAIT_MASTER_CRAFTSMAN "tat_master_craftsman"
 
 #define TAT_TRAIT_ACCURSED "tat_trait_accursed"
 
 #define TAT_TRAIT_SKILL_CAP_BONUS_RULES list( \
-	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = 6, /datum/skill/craft/smelting = 6, /datum/skill/craft/engineering = 6, /datum/skill/labor/mining = 6, /datum/skill/craft/masonry = 6, /datum/skill/craft/ceramics = 6), \
+	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/weaponsmithing = 6, /datum/skill/craft/armorsmithing = 6, /datum/skill/craft/blacksmithing = 6, /datum/skill/craft/smelting = 6, /datum/skill/craft/engineering = 6, /datum/skill/labor/mining = 6, /datum/skill/craft/masonry = 6, /datum/skill/craft/ceramics = 6), \
+	TRAIT_ENCHANTING_EXPERT = list(/datum/skill/craft/blacksmithing = 6, /datum/skill/craft/smelting = 6, /datum/skill/craft/engineering = 6), \
 	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = 5, /datum/skill/craft/smelting = 5, /datum/skill/craft/engineering = 5), \
 	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = 5, /datum/skill/craft/masonry = 5), \
 	TAT_TRAIT_SKILLED_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = 5, /datum/skill/craft/engineering = 5), \
 	TAT_TRAIT_SKILLED_ARTISAN = list(/datum/skill/craft/crafting = 5, /datum/skill/craft/ceramics = 5), \
-	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = 5, /datum/skill/craft/ceramics = 5), \
+	TAT_TRAIT_MASTER_CRAFTSMAN = list(/datum/skill/craft/crafting = 5, /datum/skill/craft/carpentry = 5, /datum/skill/craft/traps = 5), \
+	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = 5, /datum/skill/craft/carpentry = 5, /datum/skill/craft/ceramics = 5), \
 	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = 6), \
 	TAT_TRAIT_SKILLED_ALCHEMIST = list(/datum/skill/craft/alchemy = 5), \
 	TRAIT_MEDICINE_EXPERT = list(/datum/skill/misc/medicine = 6), \
 	TAT_TRAIT_SKILLED_PHYSICKER = list(/datum/skill/misc/medicine = 5), \
-	TAT_TRAIT_SKILLED_LOCKER = list(/datum/skill/misc/stealing = 5, /datum/skill/misc/lockpicking = 5), \
 	TRAIT_HOMESTEAD_EXPERT = list(/datum/skill/labor/farming = 6, /datum/skill/labor/mining = 6, /datum/skill/craft/cooking = 6, /datum/skill/labor/fishing = 6, /datum/skill/labor/butchering = 6, /datum/skill/labor/lumberjacking = 6, /datum/skill/craft/masonry = 6, /datum/skill/craft/ceramics = 6, /datum/skill/craft/sewing = 3, /datum/skill/craft/tanning = 3), \
 	TAT_TRAIT_SKILLED_COOK = list(/datum/skill/labor/farming = 5, /datum/skill/craft/cooking = 5, /datum/skill/labor/fishing = 5), \
 	TRAIT_SURVIVAL_EXPERT = list(/datum/skill/craft/cooking = 6, /datum/skill/labor/fishing = 6, /datum/skill/labor/butchering = 6, /datum/skill/craft/tanning = 6, /datum/skill/craft/sewing = 3), \
@@ -107,7 +108,7 @@
 	TRAIT_MASTERFUL_HUNTER = list(/datum/skill/misc/hunting = 6, /datum/skill/misc/tracking = 6, /datum/skill/labor/butchering = 6), \
 	TRAIT_EXPERT_HUNTER = list(/datum/skill/misc/hunting = 5, /datum/skill/misc/tracking = 5), \
 	TRAIT_FIREARMS_MARKSMAN = list(/datum/skill/combat/twilight_firearms = 4), \
-	TAT_TRAIT_SADDLEBORN = list(/datum/skill/misc/riding = 6), \
+	TAT_TRAIT_SADDLEBORN = list(/datum/skill/misc/riding = 5), \
 )
 
 GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULES)
@@ -284,29 +285,29 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 	TRAIT_BITERHELM = TAT_TRAIT_ENTRY("Curse of Twisting Metall", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Gives cursed skill to bite through your own helmet"), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Crafting skill-domain points."), \
 	TAT_TRAIT_STOCKPILER = TAT_TRAIT_ENTRY("Stockpiler", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Gathering skill-domain points."), \
-	TRAIT_SMITHING_EXPERT = TAT_TRAIT_ENTRY("Expert Forgehand", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with smithing and engineering. Smithing, Smelting, Engineering, Mining, Masonry and Pottery can progress to Legendary levels."), \
-	TAT_TRAIT_SKILLED_FORGEHAND = TAT_TRAIT_ENTRY("Skilled Forgehand", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with forge-work. Smithing, Smelting and Engineering can be picked to Master levels."), \
-	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with armor repair and fitting. Armorsmithing and Masonry can be picked to Master levels."), \
-	TAT_TRAIT_SKILLED_WEAPONSMITH = TAT_TRAIT_ENTRY("Skilled Weaponsmith", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with weapon work. Weaponsmithing and Engineering can be picked to Master levels."), \
-	TAT_TRAIT_SKILLED_ARTISAN = TAT_TRAIT_ENTRY("Skilled Artisan", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with general craftwork. Crafting and Pottery can be picked to Master levels."), \
-	TAT_TRAIT_SKILLED_MASON = TAT_TRAIT_ENTRY("Skilled Architect", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with stone and kiln work. Masonry, Woodwork and Pottery can be picked to Master levels."), \
-	TAT_TRAIT_SKILLED_COOK = TAT_TRAIT_ENTRY("Skilled Cook", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Rod and steak, brothers! Cooking, Farming and Fishering can be picked to Master levels."), \
+	TRAIT_SMITHING_EXPERT = TAT_TRAIT_ENTRY("Expert Forgehand", 30, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with smithing and engineering. Weaponsmithing, Armorsmithing, Smithing, Smelting, Engineering, Mining, Masonry and Pottery can progress to Legendary levels."), \
+	TAT_TRAIT_SKILLED_FORGEHAND = TAT_TRAIT_ENTRY("Skilled Forgehand", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with forge-work. Smithing, Smelting and Engineering can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with armor repair and fitting. Armorsmithing and Masonry can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_WEAPONSMITH = TAT_TRAIT_ENTRY("Skilled Weaponsmith", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with weapon work. Weaponsmithing and Engineering can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_ARTISAN = TAT_TRAIT_ENTRY("Skilled Artisan", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with general craftwork. Crafting and Pottery can be picked to Master levels."), \
+	TAT_TRAIT_MASTER_CRAFTSMAN = TAT_TRAIT_ENTRY("Master Craftsman", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with general craftwork. Crafting, Woodwork and Trapmaking can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_MASON = TAT_TRAIT_ENTRY("Skilled Architect", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with stone and kiln work. Masonry, Woodwork and Pottery can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_COOK = TAT_TRAIT_ENTRY("Skilled Cook", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Rod and steak, brothers! Cooking, Farming and Fishering can be picked to Master levels."), \
 	TRAIT_ALCHEMY_EXPERT = TAT_TRAIT_ENTRY("Expert Alchemist", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of the alchemical arts. Alchemy can progress to Legendary levels."), \
-	TAT_TRAIT_SKILLED_ALCHEMIST = TAT_TRAIT_ENTRY("Skilled Alchemist", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with alchemical work. Alchemy can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_ALCHEMIST = TAT_TRAIT_ENTRY("Skilled Alchemist", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with alchemical work. Alchemy can be picked to Master levels."), \
 	TRAIT_MEDICINE_EXPERT = TAT_TRAIT_ENTRY("Expert Physicker", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of medicine. Medicine can progress to Legendary levels."), \
-	TAT_TRAIT_SKILLED_LOCKER = TAT_TRAIT_ENTRY("Lock pocket", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Hands know how to work. Increase points availabe to pick in lockpicking and pickpocketing to master levels."), \
-	TAT_TRAIT_SKILLED_PHYSICKER = TAT_TRAIT_ENTRY("Skilled Physicker", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with medical practice. Medicine can be picked to Master levels."), \
-	TRAIT_HOMESTEAD_EXPERT = TAT_TRAIT_ENTRY("Expert Homesteader", 25, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with the arts of homesteading. Farming, Mining, Cooking, Fishing, Butchering, Lumberjacking, Masonry and Pottery can progress to Legendary levels. Sewing and Skincrafting can progress to Journeyman levels."), \
+	TAT_TRAIT_SKILLED_PHYSICKER = TAT_TRAIT_ENTRY("Skilled Physicker", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with medical practice. Medicine can be picked to Master levels."), \
+	TRAIT_HOMESTEAD_EXPERT = TAT_TRAIT_ENTRY("Expert Homesteader", 30, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with the arts of homesteading. Farming, Mining, Cooking, Fishing, Butchering, Lumberjacking, Masonry and Pottery can progress to Legendary levels. Sewing and Skincrafting can progress to Journeyman levels."), \
 	TRAIT_SELF_SUSTENANCE = TAT_TRAIT_ENTRY("Self-Sustenance", 15, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Years of running from the law and living off the land have made you a jack of all trades. All crafting and labor skills can progress to Journeyman levels."), \
-	TRAIT_SURVIVAL_EXPERT = TAT_TRAIT_ENTRY("Expert Survivalist", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with survival in the wild. Cooking, Fishing, Butchering and Skincrafting can progress to Legendary levels. Sewing can progress to Journeyman levels."), \
-	TAT_TRAIT_SKILLED_SURVIVALIST = TAT_TRAIT_ENTRY("Skilled Survivalist", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with survival work. Butchering, Trapmaking and Skincrafting can be picked to Master levels."), \
+	TRAIT_SURVIVAL_EXPERT = TAT_TRAIT_ENTRY("Expert Survivalist", 25, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with survival in the wild. Cooking, Fishing, Butchering and Skincrafting can progress to Legendary levels. Sewing can progress to Journeyman levels."), \
+	TAT_TRAIT_SKILLED_SURVIVALIST = TAT_TRAIT_ENTRY("Skilled Survivalist", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with survival work. Butchering, Trapmaking and Skincrafting can be picked to Master levels."), \
 	TRAIT_SEWING_EXPERT = TAT_TRAIT_ENTRY("Expert Clothier", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with sewing and leathercraft. Sewing, Skincrafting and Butchering can progress to Legendary levels."), \
-	TAT_TRAIT_SKILLED_CLOTHIER = TAT_TRAIT_ENTRY("Skilled Clothier", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with cloth and leather. Sewing and Skincrafting can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_CLOTHIER = TAT_TRAIT_ENTRY("Skilled Clothier", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with cloth and leather. Sewing and Skincrafting can be picked to Master levels."), \
 	TRAIT_SEEDKNOW = TAT_TRAIT_ENTRY("Seed Knower", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know which seeds grow which crops."), \
 	TRAIT_CAUTIOUS_FISHER = TAT_TRAIT_ENTRY("Cautious Fisher", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You know the dangers of fishing and how to avoid unwanted attention from the depths."), \
 	TRAIT_SQUIRE_REPAIR = TAT_TRAIT_ENTRY("Squire Knowledge", 15, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "You can restore gear with time and polish it until it gleams like new."), \
-	TAT_TRAIT_SADDLEBORN = TAT_TRAIT_ENTRY("Saddleborn", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can select and mount a specific mount."), \
-	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know watering holes, feeding grounds and bent thickets."), \
+	TAT_TRAIT_SADDLEBORN = TAT_TRAIT_ENTRY("Saddleborn", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can select and mount a specific mount. Riding can progress to Master levels."), \
+	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. Hunting, Tracking and Butchering can progress to Legendary levels."), \
 	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know the common signs of prey and trails."), \
 	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Your feet walks a lot roads. Gives you +9 points in wandering skill tree."), \
 	TAT_TRAIT_HERETIC = TAT_TRAIT_ENTRY("Heretic", 0, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain cool HERETIC mark on your face."), \

@@ -176,6 +176,14 @@
 )
 
 #define TAT_VIRTUE_CHOICE_SKILL_CAP_BONUS_RULES list( \
+	/datum/virtue/utility/skilled = list( \
+		TAT_VIRTUE_CHOICE_SKILLED_BSMITH = list(/datum/skill/craft/weaponsmithing = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/armorsmithing = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/blacksmithing = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/smelting = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/engineering = SKILL_LEVEL_LEGENDARY, /datum/skill/labor/mining = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/masonry = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/ceramics = SKILL_LEVEL_LEGENDARY), \
+		TAT_VIRTUE_CHOICE_SKILLED_TAILOR = list(/datum/skill/craft/sewing = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/tanning = SKILL_LEVEL_LEGENDARY, /datum/skill/labor/butchering = SKILL_LEVEL_LEGENDARY), \
+		TAT_VIRTUE_CHOICE_SKILLED_HUNTER = list(/datum/skill/craft/cooking = SKILL_LEVEL_LEGENDARY, /datum/skill/labor/fishing = SKILL_LEVEL_LEGENDARY, /datum/skill/labor/butchering = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/tanning = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/sewing = SKILL_LEVEL_JOURNEYMAN, /datum/skill/misc/hunting = SKILL_LEVEL_LEGENDARY, /datum/skill/misc/tracking = SKILL_LEVEL_LEGENDARY), \
+		TAT_VIRTUE_CHOICE_SKILLED_PHYS = list(/datum/skill/craft/alchemy = SKILL_LEVEL_LEGENDARY, /datum/skill/misc/medicine = SKILL_LEVEL_LEGENDARY), \
+		TAT_VIRTUE_CHOICE_SKILLED_ARTIF = list(/datum/skill/craft/weaponsmithing = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/armorsmithing = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/blacksmithing = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/smelting = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/engineering = SKILL_LEVEL_LEGENDARY, /datum/skill/labor/mining = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/masonry = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/ceramics = SKILL_LEVEL_LEGENDARY), \
+		TAT_VIRTUE_CHOICE_SKILLED_ENCHANT = list(/datum/skill/craft/blacksmithing = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/smelting = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/engineering = SKILL_LEVEL_LEGENDARY, /datum/skill/craft/alchemy = SKILL_LEVEL_LEGENDARY) \
+	), \
 	/datum/virtue/utility/apprentice = list( \
 		TAT_VIRTUE_CHOICE_APPRENTICE_MINING = list(/datum/skill/labor/mining = SKILL_LEVEL_LEGENDARY), \
 		TAT_VIRTUE_CHOICE_APPRENTICE_LUMBERJACKING = list(/datum/skill/labor/lumberjacking = SKILL_LEVEL_LEGENDARY) \

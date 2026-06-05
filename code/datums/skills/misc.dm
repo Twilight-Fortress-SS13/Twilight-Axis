@@ -68,7 +68,6 @@
 		"...the old woman fumbles at her empty pockets, her face etched with worry. With a deft hand and a keen ear the lock yields and you push the door open, returning her to the warmth of her home..."
 	)
 	expert_name = "Locksmith"
-	max_untraited_level = SKILL_LEVEL_APPRENTICE
 
 /datum/skill/misc/riding
 	name = "Riding"
