@@ -247,11 +247,43 @@
 
 	return total
 
+/datum/tat_skills/proc/get_virtue_choice_floor_value(skill_type)
+	var/highest = 0
+	var/list/virtues = owner_build?.get_active_virtues()
+	if(!islist(virtues) || !length(virtues))
+		return 0
+
+	var/list/rules = GLOB.tat_virtue_choice_skill_bonus_rules
+	if(!islist(rules))
+		return 0
+
+	for(var/virtue_entry in virtues)
+		if(!istype(virtue_entry, /datum/virtue))
+			continue
+		var/datum/virtue/virtue_datum = virtue_entry
+		if(!LAZYLEN(virtue_datum.picked_choices))
+			continue
+
+		for(var/virtue_rule in rules)
+			if(!virtue_matches_rule(virtue_datum, virtue_rule))
+				continue
+
+			var/list/choice_map = rules[virtue_rule]
+			if(!islist(choice_map))
+				continue
+
+			for(var/choice in virtue_datum.picked_choices)
+				var/list/skill_map = choice_map[choice]
+				if(islist(skill_map))
+					highest = max(highest, round(skill_map[skill_type] || 0))
+
+	return highest
+
 /datum/tat_skills/proc/get_virtue_bonus_value(skill_type)
 	var/list/virtues = owner_build?.get_active_virtues()
 	if(!length(virtues))
 		return 0
-	return add_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_bonus_rules, virtues) + add_virtue_choice_rule_value(skill_type, GLOB.tat_virtue_choice_skill_bonus_rules, virtues)
+	return add_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_bonus_rules, virtues)
 
 /datum/tat_skills/proc/get_virtue_skill_cap_bonus(skill_type)
 	var/list/virtues = owner_build?.get_active_virtues()
@@ -558,7 +590,10 @@
 	return max(0, get_maximum(skill_type) - get_bonus_value(skill_type))
 
 /datum/tat_skills/proc/get_total_value(skill_type)
-	return clamp(get_invested_value(skill_type) + get_bonus_value(skill_type), 0, get_maximum(skill_type))
+	var/cap = get_maximum(skill_type)
+	var/additive_total = get_invested_value(skill_type) + get_bonus_value(skill_type)
+	var/floor_total = get_virtue_choice_floor_value(skill_type)
+	return clamp(max(additive_total, floor_total), 0, cap)
 
 /datum/tat_skills/proc/get_step_cost(skill_type, target_level)
 	if(target_level <= 0)

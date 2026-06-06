@@ -369,7 +369,7 @@
 		var/cap = skills.get_maximum(skill_type)
 		var/bonus_value = round(skills.bonus[skill_type] || 0)
 		var/invested_value = round(skills.invested[skill_type] || 0)
-		var/total_value = clamp(invested_value + bonus_value, 0, cap)
+		var/total_value = skills.get_total_value(skill_type)
 		var/invested_cap = max(0, cap - bonus_value)
 		var/next_target = invested_value + 1
 		var/next_cost = 0
