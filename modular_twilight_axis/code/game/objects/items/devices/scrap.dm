@@ -228,3 +228,94 @@
 	max_w_class = WEIGHT_CLASS_BULKY
 	not_while_equipped = TRUE
 
+/obj/item/giantfur_stored
+	name = "fur roll"
+	desc = "A roll of beautifull fur of unknown beast."
+	icon = 'modular_twilight_axis/icons/roguetown/items/kover_ahuy.dmi'
+	icon_state = "fur_vertical"
+	w_class = WEIGHT_CLASS_SMALL
+	resistance_flags = FIRE_PROOF
+	grid_height = 32
+	grid_width = 64
+
+/obj/item/giantfur_stored/attack_self(mob/user)
+	. = ..()
+	var/turf/target_turf = get_step(user,user.dir)
+	if(target_turf.is_blocked_turf(TRUE) || (locate(/mob/living) in target_turf))
+		to_chat(user, span_danger("I can't deploy the it here!"))
+		return NONE
+	if(isopenturf(target_turf))
+		if(do_after(user, 2 SECONDS, TRUE, src))
+			deploy_fur(user, target_turf)
+			return TRUE
+	return NONE
+
+/obj/item/giantfur_stored/proc/deploy_fur(mob/user, atom/location)
+	to_chat(user, "<span class='notice'>You deploy the Rug.</span>")
+	new /obj/structure/giantfur/foldable(location)
+	qdel(src)
+
+/obj/structure/giantfur/foldable
+	name = "giant fur"
+	desc = "Pelt of some gigantic animal, can be rolled up."
+	resistance_flags = FLAMMABLE
+	max_integrity = 50
+	smooth = 0
+	debris = list(/obj/item/natural/fur/wolf = 1)
+
+/obj/structure/giantfur/foldable/examine()
+	. = ..()
+	. += span_blue("Right-Click to fold the table.")
+
+/obj/structure/giantfur/foldable/attack_right(mob/user)
+	user.visible_message(span_notice("[user] folds [src]."), span_notice("You fold [src]."))
+	if(do_after(user, 2 SECONDS, TRUE, src))
+		new /obj/item/giantfur_stored(drop_location())
+		qdel(src)
+		return ..()
+
+/obj/item/giantfur_small_stored
+	name = "small fur roll"
+	desc = "A small roll of beautifull fur of unknown beast."
+	icon = 'modular_twilight_axis/icons/roguetown/items/kover_ahuy.dmi'
+	icon_state = "fur_horizontal"
+	w_class = WEIGHT_CLASS_SMALL
+	resistance_flags = FIRE_PROOF
+	grid_height = 32
+	grid_width = 64
+
+/obj/item/giantfur_small_stored/attack_self(mob/user)
+	. = ..()
+	var/turf/target_turf = get_step(user,user.dir)
+	if(target_turf.is_blocked_turf(TRUE) || (locate(/mob/living) in target_turf))
+		to_chat(user, span_danger("I can't deploy the it here!"))
+		return NONE
+	if(isopenturf(target_turf))
+		if(do_after(user, 2 SECONDS, TRUE, src))
+			deploy_fur_small(user, target_turf)
+			return TRUE
+	return NONE
+
+/obj/item/giantfur_small_stored/proc/deploy_fur_small(mob/user, atom/location)
+	to_chat(user, "<span class='notice'>You deploy the Rug.</span>")
+	new /obj/structure/giantfur/small/foldable(location)
+	qdel(src)
+
+/obj/structure/giantfur/small/foldable
+	name = "fur pelt"
+	desc = "Pelt of some animal, can be rolled up."
+	resistance_flags = FLAMMABLE
+	max_integrity = 50
+	smooth = 0
+	debris = list(/obj/item/natural/fur/wolf = 1)
+
+/obj/structure/giantfur/small/foldable/examine()
+	. = ..()
+	. += span_blue("Right-Click to fold the table.")
+
+/obj/structure/giantfur/small/foldable/attack_right(mob/user)
+	user.visible_message(span_notice("[user] folds [src]."), span_notice("You fold [src]."))
+	if(do_after(user, 2 SECONDS, TRUE, src))
+		new /obj/item/giantfur_small_stored(drop_location())
+		qdel(src)
+		return ..()

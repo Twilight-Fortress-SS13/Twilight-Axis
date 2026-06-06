@@ -425,7 +425,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit = TAT_ITEM_ENTRY("Old Dobo Robe", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/basiceast = TAT_ITEM_ENTRY("Simple Dobo Robe", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/basiceast/captainrobe = TAT_ITEM_ENTRY("Foreign Robes", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
-	/obj/item/clothing/cloak/absolutionistrobe/black = TAT_ITEM_ENTRY("Blessed Robe", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "armor"), \
+	/obj/item/clothing/cloak/absolutionistrobe/black = TAT_ITEM_ENTRY("Blessed Robe", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine/haraate = TAT_DONATION_ITEM_ENTRY("Hansimhae Cuirass", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine/harayoroi = TAT_DONATION_ITEM_ENTRY("Light Hansimhae Cuirass", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute = TAT_DONATION_ITEM_ENTRY("Psydonic Barbute", 2.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "head", TAT_DONATION_TIER_ONE), \
@@ -681,6 +681,8 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/bait/leech = TAT_ITEM_ENTRY("Leech Bait", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
 	/obj/item/flint = TAT_ITEM_ENTRY("Flint", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/folding_table_stored = TAT_ITEM_ENTRY("Folding Table", 1, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
+	/obj/item/giantfur_stored = TAT_ITEM_ENTRY("Giant Fur Roll", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
+	/obj/item/giantfur_small_stored = TAT_ITEM_ENTRY("Fur Roll", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rug_stored = TAT_ITEM_ENTRY("Rug Roll", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rug_black_stored = TAT_ITEM_ENTRY("Black Rug Roll", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rug_purple_stored = TAT_ITEM_ENTRY("Purple Rug Roll", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
