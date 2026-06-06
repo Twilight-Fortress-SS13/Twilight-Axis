@@ -396,6 +396,11 @@ SUBSYSTEM_DEF(timer)
 	src.flags = flags
 	src.hash = hash
 	src.source = source
+
+	if(!callBack || isnull(wait) || isnull(flags))
+		spent = TRUE
+		return
+
 	src.timer_subsystem = timer_subsystem || SStimer
 
 	// Determine time at which the timer's callback should be invoked

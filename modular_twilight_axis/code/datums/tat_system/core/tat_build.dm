@@ -56,27 +56,18 @@
 
 /datum/tat_build/proc/get_owner_ckey()
 	if(owner_preferences)
-		var/client/parent_client = owner_preferences.vars["parent"]
+		var/client/parent_client = owner_preferences.parent
 		if(parent_client?.ckey)
 			return parent_client.ckey
-		var/client/direct_client = owner_preferences.vars["client"]
-		if(direct_client?.ckey)
-			return direct_client.ckey
-		var/stored_ckey = owner_preferences.vars["last_ckey"]
-		if(istext(stored_ckey) && length(stored_ckey))
-			return ckey(stored_ckey)
 	if(usr?.ckey)
 		return usr.ckey
 	return null
 
 /datum/tat_build/proc/get_owner_client()
 	if(owner_preferences)
-		var/client/parent_client = owner_preferences.vars["parent"]
+		var/client/parent_client = owner_preferences.parent
 		if(parent_client)
 			return parent_client
-		var/client/direct_client = owner_preferences.vars["client"]
-		if(direct_client)
-			return direct_client
 	if(usr?.client)
 		return usr.client
 	return null
