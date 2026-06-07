@@ -292,7 +292,7 @@
 			continue
 
 		for(var/virtue_rule in rules)
-			if(virtue_rule == /datum/virtue/utility/prowler || virtue_rule == /datum/virtue/utility/apprentice)
+			if(virtue_rule == /datum/virtue/combat/combat_virtue || virtue_rule == /datum/virtue/utility/prowler || virtue_rule == /datum/virtue/utility/apprentice)
 				continue
 			if(!virtue_matches_rule(virtue_datum, virtue_rule))
 				continue
@@ -312,7 +312,7 @@
 	var/list/virtues = owner_build?.get_active_virtues()
 	if(!length(virtues))
 		return 0
-	var/list/additive_choice_rules = list(/datum/virtue/utility/prowler, /datum/virtue/utility/apprentice)
+	var/list/additive_choice_rules = list(/datum/virtue/combat/combat_virtue, /datum/virtue/utility/prowler, /datum/virtue/utility/apprentice)
 	return add_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_bonus_rules, virtues) + add_virtue_choice_rule_value_for(skill_type, GLOB.tat_virtue_choice_skill_bonus_rules, virtues, additive_choice_rules)
 
 /datum/tat_skills/proc/get_virtue_skill_cap_bonus(skill_type)

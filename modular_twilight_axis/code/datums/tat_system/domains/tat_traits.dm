@@ -1017,6 +1017,53 @@
 		return TRUE
 	return FALSE
 
+/datum/tat_traits/proc/get_polyglot_language_choices(mob/living/carbon/human/H)
+	var/static/list/selectable_languages = list(
+		/datum/language/elvish,
+		/datum/language/dwarvish,
+		/datum/language/orcish,
+		/datum/language/hellspeak,
+		/datum/language/draconic,
+		/datum/language/raneshi,
+		/datum/language/grenzelhoftian,
+		/datum/language/kazengunese,
+		/datum/language/lingyuese,
+		/datum/language/gyedzenese,
+		/datum/language/valorian,
+		/datum/language/etruscan,
+		/datum/language/gronnic,
+		/datum/language/otavan,
+		/datum/language/aavnic,
+		/datum/language/undercommon,
+	)
+	var/list/choices = list()
+	for(var/language_type in selectable_languages)
+		if(H?.has_language(language_type))
+			continue
+		var/datum/language/language = new language_type()
+		if(language?.name)
+			choices[language.name] = language_type
+		qdel(language)
+	return choices
+
+/datum/tat_traits/proc/apply_polyglot_package(mob/living/carbon/human/H)
+	if(!H?.client || !has_trait(TAT_TRAIT_POLYGLOT))
+		return FALSE
+
+	var/list/choices = get_polyglot_language_choices(H)
+	if(!length(choices))
+		to_chat(H, span_notice("I already know every language my Polyglot training could teach me."))
+		return FALSE
+
+	var/chosen_language = tgui_input_list(H, "Choose one additional language to learn.", "Polyglot", choices)
+	var/language_type = choices[chosen_language]
+	if(!language_type)
+		return FALSE
+
+	H.grant_language(language_type)
+	to_chat(H, span_notice("My Polyglot training lets me speak [chosen_language]."))
+	return TRUE
+
 /datum/tat_traits/proc/apply_instant_to_human(mob/living/carbon/human/H)
 	if(!H)
 		return FALSE
@@ -1024,7 +1071,7 @@
 		if(is_repeatable_trait(trait_id))
 			continue
 		switch(trait_id)
-			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_MARTIAL_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_CONTRACTOR, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_PLIANT_RENAME, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_SAVAGE_RAGE, TAT_TRAIT_HERETIC, TAT_TRAIT_BERSERKER_RAGE, TAT_TRAIT_LOOTRAT, TRAIT_SHIRTLESS, TAT_TRAIT_LOOTRAT_2, TAT_TRAIT_ACCURSED)
+			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_MARTIAL_MASTER, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_CONTRACTOR, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_PLIANT_RENAME, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_SAVAGE_RAGE, TAT_TRAIT_HERETIC, TAT_TRAIT_BERSERKER_RAGE, TAT_TRAIT_LOOTRAT, TRAIT_SHIRTLESS, TAT_TRAIT_LOOTRAT_2, TAT_TRAIT_ACCURSED, TAT_TRAIT_POLYGLOT)
 				continue
 			else
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
@@ -1087,6 +1134,7 @@
 		ADD_TRAIT(H, TRAIT_EQUESTRIAN, TAT_TRAIT_SOURCE)
 	apply_witch_shapeshift_package(H)
 	apply_pliant_title(H)
+	apply_polyglot_package(H)
 	if(has_trait(TAT_TRAIT_RESIDENT))
 		apply_resident_advjob(H)
 	return TRUE
