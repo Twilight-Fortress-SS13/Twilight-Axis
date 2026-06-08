@@ -392,6 +392,9 @@
 /datum/component/arousal/receive_sex_action(datum/source, arousal_amt, pain_amt, giving, applied_force, applied_speed, organ_id = null)
 	var/mob/user = parent
 
+	arousal_amt = isnum(arousal_amt) ? arousal_amt : 0
+	pain_amt = isnum(pain_amt) ? pain_amt : 0
+
 	arousal_amt *= get_force_pleasure_multiplier(applied_force, giving)
 	pain_amt *= get_force_pain_multiplier(applied_force)
 	pain_amt *= get_speed_pain_multiplier(applied_speed)
@@ -752,6 +755,42 @@
 		return arousal
 	var/effective = amount * arousal_multiplier
 	return set_arousal(source, arousal + effective, forced)
+
+/datum/component/arousal/get_force_pleasure_multiplier(passed_force, giving)
+	switch(passed_force)
+		if(SEX_FORCE_LOW)
+			return 0.8
+		if(SEX_FORCE_MID)
+			return 1.2
+		if(SEX_FORCE_HIGH)
+			return giving ? 1.6 : 1.2
+		if(SEX_FORCE_EXTREME)
+			return giving ? 2.0 : 0.8
+	return 1
+
+/datum/component/arousal/get_force_pain_multiplier(passed_force)
+	switch(passed_force)
+		if(SEX_FORCE_LOW)
+			return 0.5
+		if(SEX_FORCE_MID)
+			return 1.0
+		if(SEX_FORCE_HIGH)
+			return 2.0
+		if(SEX_FORCE_EXTREME)
+			return 3.0
+	return 1
+
+/datum/component/arousal/get_speed_pain_multiplier(passed_speed)
+	switch(passed_speed)
+		if(SEX_SPEED_LOW)
+			return 0.8
+		if(SEX_SPEED_MID)
+			return 1.0
+		if(SEX_SPEED_HIGH)
+			return 1.2
+		if(SEX_SPEED_EXTREME)
+			return 1.4
+	return 1
 
 /datum/component/arousal/proc/apply_post_climax_multiplier_gain()
 	var/delta = 0.0
