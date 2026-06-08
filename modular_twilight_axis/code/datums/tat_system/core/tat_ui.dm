@@ -370,6 +370,7 @@
 		var/bonus_value = round(skills.bonus[skill_type] || 0)
 		var/invested_value = round(skills.invested[skill_type] || 0)
 		var/total_value = skills.get_total_value(skill_type)
+		var/display_bonus = max(bonus_value, total_value - invested_value)
 		var/invested_cap = max(0, cap - bonus_value)
 		var/next_target = invested_value + 1
 		var/next_cost = 0
@@ -380,7 +381,7 @@
 			"level" = total_value,
 			"cap" = cap,
 			"next_cost" = next_cost,
-			"bonus" = bonus_value,
+			"bonus" = display_bonus,
 			"invested" = invested_value,
 		)
 	ui_skills_cache = result
