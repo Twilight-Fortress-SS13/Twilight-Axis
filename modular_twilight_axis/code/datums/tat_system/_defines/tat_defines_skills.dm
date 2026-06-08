@@ -132,6 +132,7 @@
 	/datum/virtue/utility/homesteader = list(/datum/skill/labor/farming = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/cooking = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/fishing = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/lumberjacking = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/sewing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/tanning = TAT_SKILL_BASIC_BOOST), \
 	/datum/virtue/utility/tracker = list(/datum/skill/misc/tracking = 3), \
 	/datum/virtue/utility/bronzelimbs = list(/datum/skill/craft/engineering = 1), \
+	/datum/virtue/thief/drug_runner = list(/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN), \
 	/datum/virtue/utility/feytouched = list(/datum/skill/misc/medicine = 1, /datum/skill/craft/alchemy = 1) \
 )
 
