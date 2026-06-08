@@ -87,7 +87,7 @@
 	H.mind.special_items["Steward Silktunic"] = /obj/item/clothing/suit/roguetown/shirt/tunic/silktunic
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/appraise/secular)
-	H.verbs |= /mob/living/carbon/human/proc/adjust_taxes
+	add_verb(H, /mob/living/carbon/human/proc/adjust_taxes)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_RICH, H)
 	backpack_contents = list(
@@ -98,7 +98,7 @@
 
 /mob/living/carbon/human/proc/adjust_taxes()
 	set name = "Adjust Taxes"
-	set category = "Stewardry"
+	set category = "RoleUnique.Stewardry"
 	if(stat)
 		return
 	var/datum/taxsetter/taxsetter = new("The Diligent Steward Intervenes", "The Greedy Steward Imposes")

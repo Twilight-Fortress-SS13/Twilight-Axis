@@ -9,6 +9,8 @@
 #define REALM_LINGYUE "gyedzai" //TA EDIT
 #define REALM_NALEDI "naledi"
 #define REALM_RANESHEN "raneshen"
+#define REALM_AZURIA "azuria"
+#define REALM_UNDERDARK "underdark"
 #define REALM_ZYBANTU "zybantu" //TA EDIT
 #define REALM_VALORIA "valoria" //TA EDIT
 #define REALM_HAMMERHOLD_TA "hammerhold" //TA EDIT

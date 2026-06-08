@@ -228,7 +228,7 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 
 /mob/dead/new_player/verb/do_rp_prompt()
 	set name = "Lore Primer"
-	set category = "Memory"
+	set category = "IC.Memory"
 	var/datum/browser/popup = new(src, "Primer", "TWILIGHT AXIS", 460, 550)
 	popup.set_content(build_lore_primer_content())
 	popup.open()

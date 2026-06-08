@@ -119,10 +119,29 @@
 */
 
 /obj/item/reagent_containers/food/snacks/tallow/attackby(obj/item/I, mob/living/user, params)
+	if(try_handle_tallow_interaction(I, user))
+		return TRUE
+
+	return ..()
+
+/obj/item/reagent_containers/food/snacks/tallow/attacked_by(obj/item/I, mob/living/user)
+	if(try_handle_tallow_interaction(I, user))
+		return TRUE
+
+	return ..()
+
+/obj/item/reagent_containers/food/snacks/tallow/proc/try_handle_tallow_interaction(obj/item/I, mob/living/user)
+	if(!I || !user)
+		return FALSE
+
+	if(I == src)
+		return TRUE
+
 	// Try to make blacktallow with ash
 	if(istype(I, /obj/item/ash))
 		if(tgui_alert(user, "Soak the tallow in ash to make blacktallow?", "Make Blacktallow", list("Yes", "No")) != "Yes")
 			return TRUE
+
 		changefood(/obj/item/reagent_containers/food/snacks/tallow/black, user)
 		qdel(I)
 		to_chat(user, span_notice("You stain the tallow with ash, turning it into blacktallow."))
@@ -130,10 +149,8 @@
 
 	if(try_make_redtallow(I, user))
 		return TRUE
-	return ..()
 
-/obj/item/reagent_containers/food/snacks/tallow/attacked_by(obj/item/I, mob/living/user)
-	return attackby(I, user, null)
+	return FALSE
 
 /obj/item/reagent_containers/food/snacks/tallow/proc/try_make_redtallow(obj/item/I, mob/living/user)
 	if(!I || !user)

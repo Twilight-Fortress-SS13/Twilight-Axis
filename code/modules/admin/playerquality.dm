@@ -96,7 +96,7 @@
 			world.TgsAnnouncePQChanges(amt, key, admin, reason)
 
 /client/proc/check_pq()
-	set category = "SPECIAL VERBS"
+	set category = "Admin.Special"
 	set name = "PQ - Check"
 	if(!holder)
 		return
@@ -160,7 +160,7 @@
 	popup.open()
 
 /client/proc/adjust_pq()
-	set category = "SPECIAL VERBS"
+	set category = "Admin.Special"
 	set name = "PQ - Adjust"
 	if(!holder)
 		return

@@ -121,7 +121,7 @@
 /datum/outfit/job/roguetown/knight/heavy/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
-	H.verbs |= /mob/proc/haltyell
+	add_verb(H, /mob/proc/haltyell)
 
 	H.adjust_blindness(-3)
 	if(H.mind)
@@ -255,7 +255,7 @@
 /datum/outfit/job/roguetown/knight/footknight/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
-	H.verbs |= /mob/proc/haltyell
+	add_verb(H, /mob/proc/haltyell)
 
 	H.adjust_blindness(-3)
 	if(H.mind)
@@ -385,7 +385,7 @@
 /datum/outfit/job/roguetown/knight/mountedknight/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
-	H.verbs |= /mob/proc/haltyell
+	add_verb(H, /mob/proc/haltyell)
 
 	if(H.mind)
 		H.adjust_blindness(-3)
@@ -534,12 +534,13 @@
 /datum/outfit/job/roguetown/knight/irregularknight/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
-	H.verbs |= /mob/proc/haltyell
+	add_verb(H, /mob/proc/haltyell)
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rope/chain = 1,
 		/obj/item/rogueweapon/scabbard/sheath/noble = 1
 	)
+
 
 	H.adjust_blindness(-3)
 	if(H.mind)
@@ -737,11 +738,11 @@
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/onfeet)
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
 
-	H.verbs |= list(
+	add_verb(H, list(
 		/mob/living/carbon/human/proc/request_outlaw,
 		/mob/proc/haltyell,
 		/mob/living/carbon/human/mind/proc/setorders
-	)
+	))
 
 	SStreasury.grant_savings(ECONOMIC_RICH, H)
 

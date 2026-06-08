@@ -1,5 +1,5 @@
 /client/proc/cmd_admin_dress_full(mob/M in GLOB.mob_list)
-	set category = "ADMIN"
+	set category = "Game Master"
 	set name = "Select equipment (full)"
 	if(!(ishuman(M) || isobserver(M)))
 		alert("Invalid mob")

@@ -3422,10 +3422,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 1
 
-/datum/loadout_item/fancymaidapron
-	name = "Fancy Maid Apron"
+
+/datum/loadout_item/wicker
+	name = "Wicker Cloak"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/apron/waist/fancymaid
+	path = /obj/item/clothing/cloak/wickercloak
 	donatitem = TRUE
 
 /datum/loadout_item/donat/etrpants

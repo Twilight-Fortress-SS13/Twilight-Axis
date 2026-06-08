@@ -165,7 +165,7 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_burp()
 	set name = "Рыгать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
 
 	emote("burp", intentional = TRUE)
 
@@ -179,7 +179,7 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_choke()
 	set name = "Задыхаться"
-	set category = "Noises"
+	set category = "Emotes.Noises"
 
 	emote("choke", intentional = TRUE)
 
@@ -235,7 +235,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_cough()
 	set name = "Кашлять"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("cough", intentional = TRUE)
 
@@ -249,7 +250,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_clearthroat()
 	set name = "Прочистить горло"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("clearthroat", intentional = TRUE)
 
@@ -343,7 +345,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_gag()
 	set name = "Подавиться"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("gag", intentional = TRUE)
 
@@ -358,7 +361,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_gasp()
 	set name = "Вздохнуть!"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("gasp", intentional = TRUE)
 
@@ -392,7 +396,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_giggle()
 	set name = "Хихикать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("giggle", intentional = TRUE)
 
@@ -418,7 +423,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_chuckle()
 	set name = "Усмехнуться"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("chuckle", intentional = TRUE)
 
@@ -467,7 +473,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_groan()
 	set name = "Тяжело вздохнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("groan", intentional = TRUE)
 
@@ -781,7 +788,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_laugh()
 	set name = "Смеяться"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("laugh", intentional = TRUE)
 
@@ -842,7 +850,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_scream()
 	set name = "Кричать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("scream", intentional = TRUE)
 
@@ -1051,7 +1060,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_rage()
 	set name = "Ярость"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("rage", intentional = TRUE)
 
@@ -1069,7 +1079,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_attnwhistle()
 	set name = "Привлечь свистом"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("attnwhistle", intentional = TRUE)
 
@@ -1123,7 +1134,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_sigh()
 	set name = "Вздохнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("sigh", intentional = TRUE)
 
@@ -1142,7 +1154,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_whistle()
 	set name = "Свистеть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("whistle", intentional = TRUE)
 
@@ -1156,7 +1169,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_hmm()
 	set name = "Хмм"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("hmm", intentional = TRUE)
 
@@ -1170,7 +1184,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_huh()
 	set name = "Хах?"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("huh", intentional = TRUE)
 
@@ -1184,7 +1199,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_hum()
 	set name = "Напевать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("hum", intentional = TRUE)
 
@@ -1233,7 +1249,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_shh()
 	set name = "Шикнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("shh", intentional = TRUE)
 
@@ -1261,7 +1278,7 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_snore()
 	set name = "Snore"
-	set category = "Noises"
+	set category = "Emotes.Noises"
 	emote("snore", intentional = TRUE)
 
 /datum/emote/living/stare
@@ -1316,7 +1333,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_warcry()
 	set name = "Боевой клич"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("warcry", intentional = TRUE)
 
@@ -1336,7 +1354,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_whimper()
 	set name = "Хныкать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("whimper", intentional = TRUE)
 
@@ -1355,7 +1374,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_yawn()
 	set name = "Зевать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("yawn", intentional = TRUE)
 
@@ -1518,7 +1538,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_snap()
 	set name = "Щелкнуть 1"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("snap", intentional = TRUE)
 
@@ -1531,7 +1552,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_blink()
 	set name = "Моргнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("blink", intentional = TRUE)
 
@@ -1544,7 +1566,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_stomp()
 	set name = "Топнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("stomp", intentional = TRUE)
 
@@ -1557,7 +1580,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_snap2()
 	set name = "Щелкнуть 2"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("snap2", intentional = TRUE)
 
@@ -1570,7 +1594,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_snap3()
 	set name = "Щелкнуть 3"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("snap3", intentional = TRUE)
 
@@ -1971,57 +1996,3 @@ var/list/zone_translations = list(
 	set category = "Emotes"
 
 	emote("charisma", intentional = TRUE)
-
-/mob/living/carbon/human/verb/dive()
-	set name = "Dive"
-	set category = "Swimming"
-	
-	var/turf/T = get_turf(src)
-	if(!istype(T, /turf/open/water/transparent))
-		to_chat(src, span_warning("You must be in deep water to dive!"))
-		return
-	
-	var/turf/below = GET_TURF_BELOW(T)
-	if(!below || !istype(below, /turf/open/water/transparent))
-		to_chat(src, span_warning("It's not deep enough here to dive."))
-		return
-
-	src.swim_z(DOWN)
-
-/mob/living/carbon/human/verb/surface()
-	set name = "Surface"
-	set category = "Swimming"
-	
-	var/turf/T = get_turf(src)
-	
-	if(!istype(T, /turf/open/water/transparent/inner))
-		to_chat(src, span_warning("You are already at the surface!"))
-		return
-
-	var/turf/above = GET_TURF_ABOVE(T)
-	if(!above || !istype(above, /turf/open/water/transparent))
-		to_chat(src, span_warning("Something is blocking you from surfacing here."))
-		return
-
-	src.swim_z(UP)
-
-/mob/living/carbon/human/proc/swim_z(direction)
-	if(stat || IsKnockdown() || IsParalyzed()) 
-		to_chat(src, span_warning("You are too incapacitated to move!"))
-		return FALSE
-	
-	var/turf/current_T = get_turf(src)
-	var/target_z = (direction == UP) ? (z + 1) : (z - 1)
-	var/turf/target_T = locate(current_T.x, current_T.y, target_z)
-
-	if(istype(target_T, /turf/open/water))
-		if(!stamina_add(direction == DOWN ? 20 : 10)) 
-			to_chat(src, span_warning("You are too exhausted to [direction == UP ? "surface" : "dive"]!"))
-			return FALSE
-
-		visible_message(span_notice("[src] [direction == UP ? "emerges to the surface" : "dives into the depths"]."))
-		forceMove(target_T)
-		return TRUE
-		
-	to_chat(src, span_warning("You can't [direction == UP ? "emerge" : "dive"] here."))
-	return FALSE

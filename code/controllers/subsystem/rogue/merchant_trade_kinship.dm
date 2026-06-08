@@ -24,6 +24,10 @@
 			return REALM_LINGYUE
 		if("Naledi")
 			return REALM_NALEDI
+		if("Azuria")
+			return REALM_AZURIA
+		if("the Underdark")
+			return REALM_UNDERDARK
 		if("Zybantu") //TA EDIT
 			return REALM_ZYBANTU
 		if("Valoria") //TA EDIT
@@ -32,10 +36,11 @@
 			return REALM_HAMMERHOLD_TA
 	return null
 
-/datum/controller/subsystem/merchant_trade/proc/try_claim_kinship_for(mob/living/carbon/human/H)
-	if(!H?.client?.prefs)
+/datum/controller/subsystem/merchant_trade/proc/try_claim_kinship_for(mob/living/carbon/human/H, client/source)
+	var/datum/preferences/prefs = source?.prefs || H?.client?.prefs
+	if(!prefs)
 		return
-	var/datum/virtue/origin/O = H.client.prefs.virtue_origin
+	var/datum/virtue/origin/O = prefs.virtue_origin
 	if(!istype(O))
 		return
 	var/new_realm = origin_name_to_realm_id(O.origin_name)

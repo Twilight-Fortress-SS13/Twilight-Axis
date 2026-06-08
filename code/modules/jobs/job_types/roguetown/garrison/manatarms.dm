@@ -133,7 +133,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
 		)
-	H.verbs |= /mob/proc/haltyell
+	add_verb(H, /mob/proc/haltyell)
 
 	if(H.mind)
 		var/armor_options = list("Light Brigandine Set", "Maille Set")
@@ -245,7 +245,7 @@
 			/obj/item/rogueweapon/scabbard/sheath = 1,
 			/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
 			)
-		H.verbs |= /mob/proc/haltyell
+		add_verb(H, /mob/proc/haltyell)
 
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
@@ -325,7 +325,7 @@
 			/obj/item/rogueweapon/scabbard/sheath = 1,
 			/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1
 			)
-		H.verbs |= /mob/proc/haltyell
+		add_verb(H, /mob/proc/haltyell)
 
 		var/helmets = list(
 		"Simple Helmet" 	= /obj/item/clothing/head/roguetown/helmet,
@@ -404,7 +404,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1
 		)
-	H.verbs |= /mob/proc/haltyell
+	add_verb(H, /mob/proc/haltyell)
 
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
@@ -459,7 +459,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
 	)
-	H.verbs |= /mob/proc/haltyell
+	add_verb(H, /mob/proc/haltyell)
 
 	H.adjust_blindness(-3)
 	if(H.mind)

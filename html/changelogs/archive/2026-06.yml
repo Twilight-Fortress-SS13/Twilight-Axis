@@ -152,16 +152,38 @@
   Ryan180602:
   - bugfix: optimise rain
   SillyMoff:
-  - bugfix: "Пофикшен ритуал баоты и спелл на кражу люкса"
+  - bugfix: "\u041F\u043E\u0444\u0438\u043A\u0448\u0435\u043D \u0440\u0438\u0442\u0443\
+      \u0430\u043B \u0431\u0430\u043E\u0442\u044B \u0438 \u0441\u043F\u0435\u043B\u043B\
+      \ \u043D\u0430 \u043A\u0440\u0430\u0436\u0443 \u043B\u044E\u043A\u0441\u0430"
   UEDCommander:
-  - balance: "Свинцовая пуля - +20 урона"
-  - balance: "Максимальный запас пуль в фаретре 4 -> 6"
-  - balance: "Добавлен вторичный урон от огня свинцовым пулям, серебряным пулям, картечи. Оставляет ожоги и снижается защитой брони от огня."
-  - balance: "Множитель урона у Думсдае 1 -> 1.5"
-  - balance: "Размер пояса с кобурой 2х2 -> 3x3"
+  - balance: "\u0421\u0432\u0438\u043D\u0446\u043E\u0432\u0430\u044F \u043F\u0443\u043B\
+      \u044F - +20 \u0443\u0440\u043E\u043D\u0430"
+  - balance: "\u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439\
+      \ \u0437\u0430\u043F\u0430\u0441 \u043F\u0443\u043B\u044C \u0432 \u0444\u0430\
+      \u0440\u0435\u0442\u0440\u0435 4 -> 6"
+  - balance: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432\u0442\u043E\u0440\
+      \u0438\u0447\u043D\u044B\u0439 \u0443\u0440\u043E\u043D \u043E\u0442 \u043E\u0433\
+      \u043D\u044F \u0441\u0432\u0438\u043D\u0446\u043E\u0432\u044B\u043C \u043F\u0443\
+      \u043B\u044F\u043C, \u0441\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u044B\u043C\
+      \ \u043F\u0443\u043B\u044F\u043C, \u043A\u0430\u0440\u0442\u0435\u0447\u0438\
+      . \u041E\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u043E\u0436\u043E\u0433\
+      \u0438 \u0438 \u0441\u043D\u0438\u0436\u0430\u0435\u0442\u0441\u044F \u0437\u0430\
+      \u0449\u0438\u0442\u043E\u0439 \u0431\u0440\u043E\u043D\u0438 \u043E\u0442 \u043E\
+      \u0433\u043D\u044F."
+  - balance: "\u041C\u043D\u043E\u0436\u0438\u0442\u0435\u043B\u044C \u0443\u0440\u043E\
+      \u043D\u0430 \u0443 \u0414\u0443\u043C\u0441\u0434\u0430\u0435 1 -> 1.5"
+  - balance: "\u0420\u0430\u0437\u043C\u0435\u0440 \u043F\u043E\u044F\u0441\u0430\
+      \ \u0441 \u043A\u043E\u0431\u0443\u0440\u043E\u0439 2\u04452 -> 3x3"
   Vladmar11:
-  - bugfix: "Исправлен пофигизм пуль на броню, броня снова режет урон от пуль и получает от них дамаг"
-  - rscadd: "HIGH+ приоритет для донатеров от Т3"
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D \u043F\u043E\u0444\
+      \u0438\u0433\u0438\u0437\u043C \u043F\u0443\u043B\u044C \u043D\u0430 \u0431\u0440\
+      \u043E\u043D\u044E, \u0431\u0440\u043E\u043D\u044F \u0441\u043D\u043E\u0432\u0430\
+      \ \u0440\u0435\u0436\u0435\u0442 \u0443\u0440\u043E\u043D \u043E\u0442 \u043F\
+      \u0443\u043B\u044C \u0438 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u043E\
+      \u0442 \u043D\u0438\u0445 \u0434\u0430\u043C\u0430\u0433"
+  - rscadd: "HIGH+ \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 \u0434\u043B\
+      \u044F \u0434\u043E\u043D\u0430\u0442\u0435\u0440\u043E\u0432 \u043E\u0442 \u0422\
+      3"
   WeNeedMorePhoron:
   - rscadd: Renamed and repathed the old "Cooking" book, which was left unfinished,
       to a Brewing book
@@ -201,7 +223,13 @@
   changelingonberry:
   - rscadd: Maestro Bard Wretch class
   namenlos66:
-  - bugfix: "Пофикшена анонимность администратора через стелс-мод и анонимность ТГУИ-панельки тикетов."
+  - bugfix: "\u041F\u043E\u0444\u0438\u043A\u0448\u0435\u043D\u0430 \u0430\u043D\u043E\
+      \u043D\u0438\u043C\u043D\u043E\u0441\u0442\u044C \u0430\u0434\u043C\u0438\u043D\
+      \u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430 \u0447\u0435\u0440\u0435\
+      \u0437 \u0441\u0442\u0435\u043B\u0441-\u043C\u043E\u0434 \u0438 \u0430\u043D\
+      \u043E\u043D\u0438\u043C\u043D\u043E\u0441\u0442\u044C \u0422\u0413\u0423\u0418\
+      -\u043F\u0430\u043D\u0435\u043B\u044C\u043A\u0438 \u0442\u0438\u043A\u0435\u0442\
+      \u043E\u0432."
   radarseas:
   - balance: portal goblins are slightly tougher, can use specials and always spawn
       with armor.
@@ -209,8 +237,11 @@
       worse stats.
   - bugfix: no expert skill gobins from latejoining ancient issues. F U C K.
   sadsadpart-cyber:
-  - bugfix: "Попытка починки пения"
-  - bugfix: "Акценты работают со знаками препинания"
+  - bugfix: "\u041F\u043E\u043F\u044B\u0442\u043A\u0430 \u043F\u043E\u0447\u0438\u043D\
+      \u043A\u0438 \u043F\u0435\u043D\u0438\u044F"
+  - bugfix: "\u0410\u043A\u0446\u0435\u043D\u0442\u044B \u0440\u0430\u0431\u043E\u0442\
+      \u0430\u044E\u0442 \u0441\u043E \u0437\u043D\u0430\u043A\u0430\u043C\u0438 \u043F\
+      \u0440\u0435\u043F\u0438\u043D\u0430\u043D\u0438\u044F"
   sakke03:
   - balance: Maneaters are no longer revealed by walking over them in cases where
       they won't attack
@@ -239,4 +270,141 @@
   - balance: For balance purpose due to multiple complaints about mid combat regeneration,
       the conjure time for regen / conjuring ward has been changed from 6 seconds
       to 10 seconds
-  - bugfix: Maneaters no longer refuse to eat ambush NPCs
+2026-06-06:
+  Ryan180602:
+  - bugfix: weeping cross now needs you to be a psydonite to work.
+  Vladmar11:
+  - bugfix: "\u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u0441\u043B\
+      \u043E\u043C\u0430\u043D\u043D\u044B\u0435 \u0432\u0438\u0440\u0442\u0443\u0435\
+      \ \u0432 \u043F\u0440\u0435\u0444\u0435\u043D\u0441\u0430\u0445 \u043F\u0435\
+      \u0440\u0441\u043E\u043D\u0430\u0436\u0435\u0439"
+2026-06-07:
+  FeniaFox:
+  - rscadd: Added leather helms to tailor silverface as sidegrade vs headbands, trading
+      integ to get nose coverage.
+  - rscadd: Added light arming jackets, with identical stats to current arming jacket.
+  - balance: rebalanced arming jackets to not just be worse gambesons, now they have
+      a noticable integ advantage to make up for lack of leg coverage. Adjusted role
+      starter gear to be untouched in effectiveness by this change.
+  KatTheFox:
+  - rscadd: Simplemobs can now be riposted with guard stance
+  - rscadd: Paladins who pick the spear loadout now get a greatweapon strap instead
+      of a shield
+  - rscadd: Hags now get some thematic languages for free, as well as a hand mirror
+      in their bag
+  - rscadd: New trait that exempts hags from PVE entirely
+  - rscdel: Removed counter counterspell boon, since that trait does literally nothing
+      - counterspell was removed from the game!
+  - bugfix: Hag scrying should no longer break when your target goes AFK or dies
+  Ollanius:
+  - rscadd: The Staker, a PVE-centric ranged weapon that can either be acquired by
+      the Exorcist or produced by the Artificer. Deals the lowest damage out of any
+      ranged weapon in the game, in exchange for minor anti-unholy properties, easier
+      handling, and a very easily-sourced type of ammunition.
+  - rscadd: Shotstakes, a new proprietary caliber exclusively used by the Staker.
+      Inherits the heavy penetration of regular crossbow bolts, but has the lowest
+      damage out of any ranged weapon in the game. These can be made by introducing
+      any stake (carved, sharpened, hand- or silver-tipped) to a brazier, hearth,
+      or campfire.
+  - balance: Adds the Silver Halberd, Executioner Sword, Knuckledusters, Hunting Knife,
+      Tomahawk, and Staker to the Exorcist's loadout.
+  - balance: Moved the Steel Broadsword to the Exorcist's sidearm options, alongside
+      the rest of the non-silvered weapons.
+  - balance: Partially restored the damage multiplier of most axes - chiefly, the
+      Silver Poleaxe - with the 'long-' chopping and cutting intents. These should
+      now match the Halberd's 1.3x damage modiifer.
+  - rscadd: The Roundface Bascinet, as donated by Noire.
+  PepegaSandwich:
+  - rscadd: Added wicker cloak to loadout
+  Randall:
+  - rscadd: Added the Stecher to Battlemaster's loadout options
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u043D\u0435\
+      \ \u0441\u043E\u0432\u0441\u0435\u043C \u0440\u0430\u0431\u043E\u0447\u0438\u0439\
+      \ \u0431\u0430\u043D \u0430\u043D\u0442\u0430\u0433\u043E\u0432"
+  WeNeedMorePhoron:
+  - rscadd: Added noc shine as a three steps distillation recipe
+  - rscdel: Removed the Z level swim feature and swimming tab. The two test ponds
+      has been restored to z levelless state.
+  - bugfix: Fix kinship not applying on roundstart merchant
+  - rscadd: Updated the agent mechanics to surface it better, and make sure Agent
+      have a banner telling them they can access Rosawood / Anthraxi with discount
+      as an agent instantly, and buy at 10% off.
+  - balance: SCREW YOU NO MORE LOCKING COMMISSIONER
+  - bugfix: Blacksteel Bar now show correct price from pricing engine. oops.
+  - rscadd: Tapster and Cook may now also access institutional inn fund
+  borneblood:
+  - balance: Deadites who are freshly raised go on an overdrive for a minute or so,
+      making them extremely dangerous.
+2026-06-08:
+  FreeStylaLT:
+  - rscadd: Added three new Taunt animations. (Rclicking someone with PUNCH intent.)
+  - refactor: You can now see your own rclick interaction animation.
+  - balance: Armament Rites now has its own cooldown separate from the general ritual
+      rites CD.
+  - rscadd: Graggar's War Ritual will now cause a blood rain.
+  - bugfix: Fixed uncanny beauty not working correctly for Revenants.
+  KatTheFox:
+  - rscdel: Removed (bugged) hag grand rite
+  Ollanius:
+  - code_imp: Atgrevi Kite Shields should now properly be offset when worn on the
+      back, instead of visibly floating off the wearer.
+  - bugfix: Roundface bascinets now properly display orles and greatplumes in the
+      correct order.
+  - code_imp: All crafting recipes for shotstake ammunition now list what crafting
+      station's used for each specific variation.
+  Ryan180602:
+  - balance: replace zpellblade Zizo longsword with arming sword.
+  - balance: change profane shard into a high pen, 100% embed instacast.
+  VanessaCoding:
+  - qol: autochiseling.
+  WeNeedMorePhoron:
+  - rscadd: You need to arc your projectiles (spells or bow) to shoot across elevations,
+      removing the z-level shooting functionalities that let you shoot straight across
+      Z level. Arced mode while you are looking at a z level below will also arc,
+      instead of arc symmetrically only works if you arc at an open space.
+  - rscadd: Fire Curtain, Ensnare and spells etc. can no longer be cast across Z level
+      by default. Projectiles can, excepting fetch / repel.
+  - rscadd: Being hit while climbing will interrupt the climb
+  - bugfix: Pricing engine now accounts for multiple output in income.
+  - rscadd: Repathed glass batch which was inheriting from clay, to avoid issues in
+      the stockpile and because it does not inherit any clay function and is meant
+      to be smelted. Rewrote the desc to make it obvious you should smelt them and
+      also made it more medieval (no reference to silica)
+  - rscadd: Keyrings and keys are now IS_IMPORTANT and cannot be sold by accident
+      at the navigator. Thank you downstream for report
+  - rscadd: Stockpiles now accept copper and tin ingots by default and there's demands
+      for them
+  - rscadd: Pork belly and ham added to stockpile. If this become too bloated I will
+      figure out. For now this is acceptable.
+  - rscadd: Scrapper / Rag Picker now scrap / pick the items pulled into them into
+      its results instead of having to manually scrap it. The Economy Will Go On
+  - rscadd: Scrapper / Rag Picker can now take a sack emptying into them and give
+      you reason for why it cannot take anymore.
+  - rscadd: Rag Picker now take cloth, fibers and leather again, but with lowered
+      price, because 95% of cloth items scrap into them and I overreacted to feedback
+      on these items being useless as they are unlikely to be sold as scrap ever.
+  - rscadd: Labourious Apprentice gives Expert Homesteader now
+  - rscadd: Fixes an issue with Shortage scaling to stockpile limit instead of regional
+      demands
+  - rscadd: Redid the stat panel again to improve performance. It can also select
+      the Leatherbound theme. Admin verbs and verbs in general has been rearranged
+      and reorganized to lower tab spam. For example, memory and IC has been consolidated
+      into one tab. Admin Preferences and such has been consolidated too. Suggestions
+      welcome on what verbs to remove and how to organize it better.
+  - rscadd: ' Rename "Atheism" in code to "Godless", which is the actual in game handler,
+      reflavored it and the description to fit with not following gods, and remove
+      anachronistic quotes and kept it as a fallback for no religion'
+  borneblood:
+  - rscadd: Ley Line unique spell for Hierophant-only.
+  - rscadd: Dissonance and Acceleration unique spells for Vizier-only.
+  - rscadd: 'Naledi Refugee merc-adjacent subclasses: Dropout/Ascetic/Wanderer.'
+  - rscadd: New animation for Restoration Origin Magic.
+  - balance: Slightly buffed Restoration, it now works on Constructs too.
+  - refactor: Removed a lot of spaghetti code repetitions and standardized Poke Spell
+      granting to a single centralized /proc.
+  saltprjak:
+  - balance: Church Templars that receive patron daggers now have Journeyman skills
+      to use them.
+  scarrmu:
+  - rscadd: light armour option for sojourner + jman sneak
