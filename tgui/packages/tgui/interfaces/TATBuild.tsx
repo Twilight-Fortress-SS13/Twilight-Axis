@@ -33,6 +33,7 @@ type SkillState = {
   cap: number;
   next_cost: number;
   bonus?: number;
+  floor?: number;
   invested?: number;
 };
 
@@ -191,6 +192,7 @@ type HoverCardData = {
   level?: number;
   cap?: number;
   bonus?: number;
+  floor?: number;
   invested?: number;
   domainRemaining?: number | null;
   maximum?: number;
@@ -739,6 +741,12 @@ const HoverCard = ({ data }: { data: HoverCardData | null }) => {
               <b>Bonus:</b> +{data.bonus}
             </Box>
           )}
+
+          {typeof data.floor === 'number' && data.floor > 0 && (
+            <Box style={{ color: '#9fd6a8' }}>
+              <b>Minimum:</b> {data.floor}
+            </Box>
+          )}
         </Stack.Item>
 
         <Stack.Item grow basis="45%">
@@ -1221,6 +1229,7 @@ const SkillRow = ({
   const cap = Number(state?.cap) || 0;
   const nextCost = Number(state?.next_cost) || 0;
   const bonus = Number(state?.bonus) || 0;
+  const floor = Number(state?.floor) || 0;
   const displayValue = formatSkillDisplayValue(state);
 
   const disableRemove = invested <= 0;
@@ -1237,6 +1246,7 @@ const SkillRow = ({
           cap,
           costText: `${nextCost} pts`,
           bonus,
+          floor,
           invested,
           domainRemaining,
           leftHelp: 'Press + to increase',
@@ -1253,6 +1263,7 @@ const SkillRow = ({
           <Box style={{ opacity: 0.72, fontSize: '11px' }}>
             Cost: {nextCost} | Type: {entry.category || 'unknown'} | Cap: {cap}
             {bonus > 0 ? ` | Bonus: ${bonus}` : ''}
+            {floor > 0 ? ` | Min: ${floor}` : ''}
           </Box>
         </Stack.Item>
         <Stack.Item>
