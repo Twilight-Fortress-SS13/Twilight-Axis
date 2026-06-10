@@ -257,7 +257,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/quiver/silver = 5,
 	/obj/item/quiver/twilight_bullet/silver = 5,
 	/obj/item/rogueweapon/flail/sflail/silver = 3,
-	/obj/item/rogueweapon/greataxe/silver = 3,
+	/obj/item/rogueweapon/greataxe/steel/knight/psy = 3,
 	/obj/item/rogueweapon/greatsword/bsword/psy = 5,
 	/obj/item/rogueweapon/greatsword/silver = 3,
 	/obj/item/rogueweapon/handclaw/gronn/silver = 3,
