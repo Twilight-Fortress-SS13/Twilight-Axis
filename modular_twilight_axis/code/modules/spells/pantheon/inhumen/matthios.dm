@@ -858,7 +858,9 @@
 	
 /obj/item/rogueweapon/spear/matthios_standard/Initialize()
 	. = ..()
-	for(var/mob/living/carbon/human/H in view(7, get_turf(src)))
+	for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(src, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+		if(get_dist(src, H) > 7)
+			continue
 		if(istype(H.patron, /datum/patron/inhumen/matthios))
 			H.apply_status_effect(/datum/status_effect/buff/twilight_peoplesbanner)
 
@@ -884,7 +886,9 @@
 	if(!(world.time < lastcheck + 5 SECONDS))
 		lastcheck = world.time
 		var/preserve = FALSE
-		for(var/mob/living/carbon/human/H in view(7, owner))
+		for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(owner, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+			if(get_dist(owner, H) > 7)
+				continue
 			if(istype(H.get_inactive_held_item(), /obj/item/rogueweapon/spear/matthios_standard) || istype(H.get_active_held_item(), /obj/item/rogueweapon/spear/matthios_standard))
 				preserve = TRUE
 		if(!preserve)
@@ -910,7 +914,9 @@
 	if(!(world.time < lastcheck + 5 SECONDS))
 		lastcheck = world.time
 		var/preserve = FALSE
-		for(var/mob/living/carbon/human/H in view(7, owner))
+		for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(owner, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+			if(get_dist(owner, H) > 7)
+				continue
 			if(istype(H.get_inactive_held_item(), /obj/item/rogueweapon/spear/matthios_standard) || istype(H.get_active_held_item(), /obj/item/rogueweapon/spear/matthios_standard))
 				preserve = TRUE
 		if(!preserve)

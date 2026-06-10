@@ -10,7 +10,7 @@
 
 /datum/emote/living/pray
 	key_third_person = "молится"
-	message = "прозносит молитву."
+	message = "произносит молитву."
 	
 /datum/emote/living/meditate
 	key_third_person = "медитирует"
@@ -48,7 +48,6 @@
 	message = "кашляет."
 
 /datum/emote/living/clearthroat
-	key = "clearthroat"
 	key_third_person = "прочищает горло"
 	message = "прочищает горло."
 	message_muffled = "издает приглушенный звук." 
@@ -75,9 +74,9 @@
 	message = "давится."
 
 /datum/emote/living/gasp
-	key_third_person = "вздыхает!"
-	message = "вздыхает!"
-	message_muffled = "издает приглушенный звук." 
+	key_third_person = "ахает"
+	message = "ахает!"
+	message_muffled = "издает приглушенный звук в попытке закричать." 
 
 /datum/emote/living/breathgasp
 	key_third_person = "ловит ртом воздух"
@@ -104,7 +103,7 @@
 /datum/emote/living/groan
 	key_third_person = "тяжело вздыхает"
 	message = "тяжело вздыхает."
-	message_muffled = "издает приглушенный вздох" 
+	message_muffled = "издает приглушенный вздох." 
 
 /datum/emote/living/grimace
 	key_third_person = "морщится"
@@ -142,7 +141,7 @@
 		var/mob/living/carbon/human/H = user
 		if(H.mouth)
 			if(H.mouth.spitoutmouth)
-				H.visible_message(span_warning("[H] выплеывает [H.mouth]."))
+				H.visible_message(span_warning("[H] выплевывает [H.mouth]."))
 				H.dropItemToGround(H.mouth, silent = FALSE)
 			return
 	..()
@@ -198,7 +197,7 @@
 
 /datum/emote/living/look
 	key_third_person = "смотрит"
-	message = "смотрит"
+	message = "смотрит."
 	message_param = "разглядывает %t."
 /mob/living/carbon/human/verb/emote_look()
 	set name = "Смотреть"
@@ -231,7 +230,7 @@
 	key_third_person = "кричит"
 	message = "кричит!"
 	message_mime = "делает вид, что кричит!"
-	message_muffled = "издает сдавленный звук в попытке закричать"
+	message_muffled = "издает сдавленный звук в попытке закричать."
 	emote_type = EMOTE_AUDIBLE
 	show_runechat = FALSE
 
@@ -321,7 +320,7 @@
 	message = "хмыкает!"
 	message_muffled = "приглушенно хмыкает."
 /mob/living/carbon/human/verb/emote_hmph()
-	set name = "Хмыкать!"
+	set name = "Хмыкнуть!"
 	set category = "Emotes.Noises"
 
 	emote("hmph", intentional = TRUE)
@@ -394,7 +393,7 @@
 
 /datum/emote/living/twitch
 	key_third_person = "дергается"
-	message = "судорожно подёргивается."
+	message = "судорожно подергивается."
 
 /datum/emote/living/twitch_s
 	message = "дергается."
@@ -402,7 +401,7 @@
 /datum/emote/living/warcry
 	key_third_person = "издает боевой клич!"
 	message = "выкрикивает вдохновляющий боевой клич!"
-	message_muffled = "издает приглушенный крик"
+	message_muffled = "издает приглушенный крик."
 
 /datum/emote/living/wave
 	key_third_person = "машет"
@@ -429,8 +428,8 @@
 	message_muffled = "приглушенно зевает."
 
 /datum/emote/living/squint
-	key_third_person = "щурится"
-	message = "щурится."
+	key_third_person = "прищуривается"
+	message = "прищуривается."
 
 /datum/emote/living/snap
 	key_third_person = "щелкает пальцем"
@@ -744,3 +743,11 @@
 		"собранность висит на честном слове...",
 	)
 */
+
+/datum/emote/living/carbon/slowclap
+	key_third_person = "хлопает"
+	message = "медленно хлопает."
+
+/datum/emote/living/carbon/clap1
+	key_third_person = "хлопает"
+	message = "хлопает в ладоши."

@@ -75,7 +75,7 @@
 	nomsg = TRUE
 
 /mob/living/carbon/human/verb/emote_psst()
-	set name = "Псс!"
+	set name = "Пс-ст!"
 	set category = "Emotes.Noises"
 
 	emote("psst", intentional = TRUE)
@@ -172,7 +172,7 @@
 	return
 
 /mob/living/carbon/human/verb/hand_games()
-	set name = "Handgames"
+	set name = "Игры руками"
 	set desc = "Challenge another to a variety of handgames, which can either be done while standing next to each other or while across a table."
 	set category = "Emotes"
 

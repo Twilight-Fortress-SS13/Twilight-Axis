@@ -242,12 +242,12 @@
 	make_outlaw(requested_outlaw)
 
 /mob/proc/haltyell()
-	set name = "HALT!"
+	set name = "СТОЯТЬ!"
 	set category = "Emotes.Noises"
 	emote("haltyell")
 
 /mob/proc/haltyell_exhausting()
-	set name = "HALT!"
+	set name = "СТОЯТЬ!"
 	set category = "Emotes.Noises"
 
 	emote("haltyell")

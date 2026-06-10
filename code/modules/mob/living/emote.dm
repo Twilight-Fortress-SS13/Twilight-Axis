@@ -39,7 +39,7 @@ var/list/zone_translations = list(
 	show_runechat = TRUE
 
 /mob/living/carbon/human/verb/emote_vomit()
-	set name = "Vomit"
+	set name = "Блевать"
 	set category = "Emotes"
 	emote("vomit", intentional = TRUE)
 
@@ -360,7 +360,7 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_gasp()
-	set name = "Вздохнуть!"
+	set name = "Ах!"
 	set category = "Emotes.Noises"
 
 
@@ -1078,7 +1078,7 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_attnwhistle()
-	set name = "Привлечь свистом"
+	set name = "Свистнуть"
 	set category = "Emotes.Noises"
 
 
@@ -1153,7 +1153,7 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_whistle()
-	set name = "Свистеть"
+	set name = "Насвистывать"
 	set category = "Emotes.Noises"
 
 
@@ -1168,7 +1168,7 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_hmm()
-	set name = "Хмм"
+	set name = "Хмыкнуть"
 	set category = "Emotes.Noises"
 
 
@@ -1183,7 +1183,7 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_huh()
-	set name = "Хах?"
+	set name = "Что?"
 	set category = "Emotes.Noises"
 
 
@@ -1277,7 +1277,7 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_snore()
-	set name = "Snore"
+	set name = "Храпеть"
 	set category = "Emotes.Noises"
 	emote("snore", intentional = TRUE)
 
@@ -1698,7 +1698,7 @@ var/list/zone_translations = list(
 		chance -= modifier_sum
 		chance *= chance_per_point
 
-		var/msg = success ? span_green("УСПЕШНО [pick(success_message_list)]") : span_danger("ПРОВАЛ: [pick(failure_message_list)] [chance]%")
+		var/msg = success ? span_green("УСПЕШНО: [pick(success_message_list)]") : span_danger("ПРОВАЛ: [pick(failure_message_list)] [chance]%")
 
 		msg = replace_pronoun(user, msg)
 
@@ -1767,9 +1767,9 @@ var/list/zone_translations = list(
 	)
 
 	failure_message_list = list(
-		"руки похожи на ветки",
-		"не сможет поднять даже стул",
-		"стоило есть больше мяса",
+		"руки похожи на ветки...",
+		"не сможет поднять даже стул...",
+		"стоило есть больше мяса...",
 	)
 
 /mob/living/carbon/human/verb/emote_strength_roll()
@@ -1798,8 +1798,8 @@ var/list/zone_translations = list(
 	)
 
 	failure_message_list = list(
-		"видимо страдает близорукостью!",
-		"похоже обладает катарактой!",
+		"видимо страдает близорукостью...",
+		"похоже обладает катарактой...",
 		"слеп...",
 	)
 
@@ -1831,8 +1831,8 @@ var/list/zone_translations = list(
 
 	failure_message_list = list(
 		"совсем не понимает где находится...",
-		"голова как кочерыжка",
-		"как сложить два плюс два - осталось загадкой...",
+		"голова как кочерыжка...",
+		"как сложить два плюс два — осталось загадкой...",
 	)
 
 /mob/living/carbon/human/verb/emote_intelligence_roll()
@@ -1849,7 +1849,7 @@ var/list/zone_translations = list(
 	)
 
 	attempt_message_list = list(
-		"испытывает свою крепость",
+		"испытывает свою крепость...",
 		"готовится к удару...",
 		"готовится терпеть...",
 	)
@@ -1862,8 +1862,8 @@ var/list/zone_translations = list(
 
 	failure_message_list = list(
 		"одни кожа, да кости...",
-		"покачивается как травинка на ветру",
-		"кости хруки как хрусталь",
+		"покачивается как травинка на ветру...",
+		"кости хрупки как хрусталь...",
 	)
 
 /mob/living/carbon/human/verb/emote_constitution_roll()
@@ -1886,19 +1886,19 @@ var/list/zone_translations = list(
 	)
 
 	success_message_list = list(
-		"преодолевает это",
+		"преодолевает это!",
 		"никогда не сдается!",
-		"пройдет сквозь огонь и воду",
+		"пройдет сквозь огонь и воду!",
 	)
 
 	failure_message_list = list(
-		"труслив как цыпленок",
+		"труслив как цыпленок...",
 		"руки опускаются...",
-		"испугается, даже если никто не крикнет",
+		"испугается, даже если никто не крикнет...",
 	)
 
 /mob/living/carbon/human/verb/emote_willpower_roll()
-	set name = "%Проверка силы воли"
+	set name = "%Проверка воли"
 	set category = "Emotes"
 
 	emote("willpower", intentional = TRUE)
@@ -1913,20 +1913,20 @@ var/list/zone_translations = list(
 	)
 
 	attempt_message_list = list(
-		"готовит свой лучшее движение...",
+		"готовит свое лучшее движение...",
 		"демонстрирует свою гибкость...",
 		"пытается разогнаться...",
 	)
 
 	success_message_list = list(
-		"показывает блестящий контроль своего тела",
-		"изгибается словно кошка",
-		"невероятная гибкость",
+		"показывает блестящий контроль своего тела!",
+		"изгибается словно кошка!",
+		"невероятная гибкость!",
 	)
 
 	failure_message_list = list(
-		"похоже владеет двумя левыми",
-		"переигрывает себя",
+		"похоже владеет двумя левыми...",
+		"переигрывает себя...",
 		"медленнее улитки...",
 	)
 
@@ -1946,14 +1946,14 @@ var/list/zone_translations = list(
 	)
 
 	success_message_list = list(
-		"мог бы найти слиток в луже",
+		"мог бы найти слиток в луже!",
 		"будто бы кроличья лапка в кармане!",
 		"светится истинной удачей!",
 	)
 
 	failure_message_list = list(
 		"понимает, что игра была проигрышной с самого начала...",
-		"удача явно не на твоей стороне",
+		"удача явно не на твоей стороне...",
 		"все ставки против...",
 	)
 
@@ -1981,8 +1981,8 @@ var/list/zone_translations = list(
 
 	success_message_list = list(
 		"переполнен непоколебимой уверенностью!",
-		"- лицо, подобно каменной маске",
-		"... лик подобен богу",
+		"— лицо, подобно каменной маске!",
+		"...лик подобен богу!",
 	)
 
 	failure_message_list = list(

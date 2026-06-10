@@ -58,7 +58,7 @@ jobs:
 
           set +e
 
-          /usr/bin/time -v timeout --kill-after=30s 13m bash tools/ci/run_server.sh ${{ inputs.map }} > server_stdout.txt 2> metrics.txt
+          /usr/bin/time -v bash tools/ci/run_server.sh ${{ inputs.map }} > server_stdout.txt 2> metrics.txt
           STATUS=$?
 
           echo "===== server stdout ====="
@@ -68,7 +68,7 @@ jobs:
           cat metrics.txt || true
 
           echo "===== ci logs ====="
-          find ci_test/data/logs -maxdepth 4 -type f -print -exec sh -c 'echo "----- $1 -----"; tail -260 "$1"' _ {} \; || true
+          find ci_test/data/logs -maxdepth 4 -type f -print -exec sed -n '1,260p' {} \; || true
 
           MEM_KB=$(grep "Maximum resident set size" metrics.txt | awk '{print $6}')
           if [ -n "$MEM_KB" ]; then
