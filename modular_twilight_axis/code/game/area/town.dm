@@ -171,3 +171,205 @@
 	droning_sound_night = null
 	warden_area = FALSE
 	town_area = FALSE
+
+/area/rogue/outdoors/town/karnfels
+	name = "Die Zitadelle von Karnfels"
+	first_time_text = "DIE ZITADELLE VON KARNFELS"
+	town_area = TRUE
+	deathsight_message = "the streets of Karnfels, pulsing with the breath of the living"
+	converted_type = /area/rogue/indoors/shelter/town/karnfels
+
+/area/rogue/indoors/shelter/town/karnfels
+	name = "Die Zitadelle von Karnfels (indoors)"
+	first_time_text = "Die Zitadelle von Karnfels"
+	town_area = TRUE
+
+/area/rogue/indoors/town/adventure_guild
+	name = "Adventure Guild"
+	first_time_text = "Adventure Guild"
+	droning_sound = 'sound/music/area/townstreets.ogg'
+	town_area = TRUE
+	keep_area = TRUE
+
+/area/rogue/under/cave/kerker
+	name = "Kerker der Verdammten"
+	first_time_text = "KERKER DER VERDAMMTEN"
+	icon_state = "cave"
+	ceiling_protected = TRUE
+	deathsight_message = "the forgotten deeps of the dungeon of the damned"
+	ambientsounds = list('sound/ambience/cavewater (1).ogg','sound/ambience/cavewater (2).ogg')
+	droning_sound = 'sound/music/area/underworlddrone.ogg'
+	ambush_times = list("night", "dawn", "dusk", "day")
+	ambush_mobs = list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/mole = 40,
+		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 40,
+		/mob/living/carbon/human/species/skeleton/npc/easy = 20,
+	)
+
+/area/rogue/outdoors/town/schmutzbezirk
+	name = "Der Schmutzbezirk"
+	first_time_text = "DER SCHMUTZBEZIRK"
+	icon_state = "town"
+	town_area = TRUE
+	converted_type = /area/rogue/indoors/shelter/town/schmutzbezirk
+	deathsight_message = "the forgotten gutters of the filthy quarter"
+	ambush_times = list("night", "dawn", "dusk", "day")
+	ambush_mobs = list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 30,
+		/mob/living/carbon/human/species/goblin/npc/ambush/moon = 30,
+		/mob/living/carbon/human/species/human/northern/highwayman/ambush = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/spider/rock = 20
+	)
+
+/area/rogue/indoors/shelter/town/schmutzbezirk
+	name = "Der Schmutzbezirk (indoors)"
+	town_area = TRUE
+
+/area/rogue/indoors/town/church_of_eleven
+	name = "Church of the Eleven"
+	first_time_text = "CHURCH OF THE ELEVEN"
+	icon_state = "magician"
+	holy_area = TRUE
+	town_area = TRUE
+	droning_sound = 'sound/music/area/magiciantower.ogg'
+	deathsight_message = "the hollow echo of silent prayers to the Eleven"
+
+/area/rogue/indoors/town/wechselstube
+	name = "Wechselstube"
+	first_time_text = "WECHSELSTUBE"
+	town_area = TRUE
+	keep_area = TRUE
+
+/area/rogue/outdoors/town/masons_guild
+	name = "Mason's Guild Yards"
+	first_time_text = "MASON'S GUILD"
+	town_area = TRUE
+	converted_type = /area/rogue/indoors/shelter/town/masons_guild
+
+/area/rogue/indoors/shelter/town/masons_guild
+	name = "Mason's Guild"
+	first_time_text = "MASON'S GUILD"
+	town_area = TRUE
+
+/area/rogue/indoors/town/miners_guild
+	name = "Miner's Guild"
+	first_time_text = "MINER'S GUILD"
+	town_area = TRUE
+
+/area/rogue/outdoors/town/marktplatz
+	name = "Marktplatz"
+	first_time_text = "MARKTPLATZ"
+	town_area = TRUE
+	converted_type = /area/rogue/indoors/shelter/town/marktplatz
+
+/area/rogue/indoors/shelter/town/marktplatz
+	name = "Marktplatz (shops)"
+	town_area = TRUE
+
+/area/rogue/outdoors/graveyard
+	name = "Graveyard"
+	first_time_text = "THE GRAVEYARD"
+	icon_state = "bog"
+	spookysounds = SPOOKY_GEN
+	spookynight = SPOOKY_GEN
+	ambientsounds = AMB_FORESTDAY
+	ambientnight = AMB_FORESTNIGHT
+	deathsight_message = "the cold soil of the final resting place"
+
+/area/rogue/outdoors/town/rattengasse
+	name = "Rattengasse"
+	first_time_text = "RATTENGASSE"
+	town_area = TRUE
+	deathsight_message = "a dark alleyway, where only vermin watch your passing"
+	ambush_times = list("night", "dawn", "dusk", "day")
+	ambush_mobs = list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 100
+	)
+
+/area/rogue/outdoors/town/dreckwacht
+	name = "Dreckwacht Outpost"
+	first_time_text = "DRECKWACHT"
+	warden_area = TRUE
+	town_area = FALSE
+	converted_type = /area/rogue/indoors/shelter/town/dreckwacht
+
+/area/rogue/indoors/shelter/town/dreckwacht
+	name = "Dreckwacht Barracks"
+	warden_area = TRUE
+	town_area = FALSE
+
+/area/rogue/outdoors/town/kolosseum
+	name = "Kolosseum von Karnfels"
+	first_time_text = "KOLOSSEUM VON KARNFELS"
+	deathsight_message = "the blood-soaked sands of the grand amphitheatre"
+	converted_type = /area/rogue/indoors/town/kolosseum
+
+/area/rogue/outdoors/town/kolosseum/can_craft_here()
+	return FALSE
+
+/area/rogue/indoors/town/kolosseum
+	name = "Kolosseum Chambers"
+	first_time_text = "Kolosseum von Karnfels"
+	deathsight_message = "the shadowy holding cells beneath the coliseum"
+
+/area/rogue/indoors/town/kolosseum/can_craft_here()
+	return FALSE
+
+/area/rogue/outdoors/schwarzwassergraben
+	name = "Schwarzwassergraben"
+	first_time_text = "SCHWARZWASSERGRABEN"
+	icon_state = "river"
+	ambientsounds = AMB_RIVERDAY
+	ambientnight = AMB_RIVERNIGHT
+	deathsight_message = "the dark, stagnant waters of the city moat"
+
+/area/rogue/outdoors/town/roofs/endlose_mauer
+	name = "Endlose Mauer"
+	first_time_text = "ENDLOSE MAUER"
+	icon_state = "roofs"
+	warden_area = TRUE
+	town_area = TRUE
+	deathsight_message = "the dizzying heights of the endless fortifications"
+
+
+/area/rogue/outdoors/town/oberstadt
+	name = "Oberstadt"
+	first_time_text = "OBERSTADT"
+	town_area = TRUE
+	converted_type = /area/rogue/indoors/shelter/town/oberstadt
+	deathsight_message = "the pristine, well-guarded stone paths of the high quarter"
+
+/area/rogue/indoors/shelter/town/oberstadt
+	name = "Oberstadt (indoors)"
+	town_area = TRUE
+
+/area/rogue/indoors/town/ueberzauberturm
+	name = "Der Überzauberturm"
+	first_time_text = "DER ÜBERZAUBERTURM"
+	icon_state = "magician"
+	droning_sound = 'sound/music/area/magiciantower.ogg'
+	deathsight_message = "the heavy scent of ozone and forgotten spells"
+	keep_area = TRUE
+
+/area/rogue/indoors/town/diebesgilde
+	name = "Diebesgilde"
+	first_time_text = "DIEBESGILDE"
+	icon_state = "basement"
+	ceiling_protected = TRUE
+	deathsight_message = "the hidden shadows where secrets are traded"
+
+/area/rogue/indoors/town/burggrafensitz
+	name = "Burggrafensitz"
+	first_time_text = "BURGGRAFENSITZ"
+	icon_state = "manor"
+	keep_area = TRUE
+	town_area = TRUE
+	deathsight_message = "the luxurious halls of Astrata's direct representative"
+
+/area/rogue/under/cave/dwarffortress
+	name = "Dwarf Fortress"
+	first_time_text = "DWARF FORTRESS"
+	icon_state = "under"
+	ceiling_protected = TRUE
+	droning_sound = 'sound/music/area/dwarf.ogg'
+	deathsight_message = "the deep, root-bound halls carved from solid granite"
