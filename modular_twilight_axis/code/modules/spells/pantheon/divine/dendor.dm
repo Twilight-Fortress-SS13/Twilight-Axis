@@ -146,7 +146,6 @@
 /datum/status_effect/buff/beast_rage/on_remove()
 	. = ..()
 	owner.apply_status_effect(/datum/status_effect/debuff/beast_rage_weakness)
-	owner.apply_status_effect(/datum/status_effect/debuff/sleepytime)
 	owner.clear_fullscreen("beast_mode")
 
 // -- Spell
@@ -166,7 +165,6 @@
 
 /obj/effect/proc_holder/spell/self/beast_rage/cast(mob/living/user = usr)
 	. = ..()
-	user.remove_status_effect(/datum/status_effect/debuff/sleepytime)
 	user.apply_status_effect(/datum/status_effect/buff/beast_rage)
 	user.overlay_fullscreen("beast_mode", /atom/movable/screen/fullscreen/color_vision/red)
 	user.Dizzy(10)

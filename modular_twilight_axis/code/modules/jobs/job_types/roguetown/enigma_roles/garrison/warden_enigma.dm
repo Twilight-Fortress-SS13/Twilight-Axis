@@ -24,7 +24,7 @@
 
 	cmode_music = 'modular_twilight_axis/sound/music/combat/combat_vanguard.ogg'
 	job_subclasses = list(
-		/datum/job/roguetown/overseer,
+		/datum/advclass/overseer,,
 	)
 
 /datum/job/roguetown/overseer/after_spawn(mob/living/L, mob/M, latejoin = TRUE)

@@ -175,7 +175,7 @@
 
 	if(!HAS_TRAIT(target, TRAIT_PSYCHOSIS))
 		ADD_TRAIT(target, TRAIT_PSYCHOSIS, "baothaknife")
-		addtimer(CALLBACK(src, PROC_REF(baothapsychosis), target), wait = (1 MINUTES))
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(baothapsychosis), target), wait = 1 MINUTES)
 
 	target.hallucination = rand(1,60)
 	to_chat(target, span_warning(selected_hallucination))
@@ -193,6 +193,9 @@
 	target.reagents.add_reagent(random_drug, 2)
 	last_drug = world.time
 
-/proc/baothapsychosis(var/mob/living/carbon/human/target)
+/proc/baothapsychosis(mob/living/carbon/target)
+	if(QDELETED(target))
+		return
+
 	REMOVE_TRAIT(target, TRAIT_PSYCHOSIS, "baothaknife")
 

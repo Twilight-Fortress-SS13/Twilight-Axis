@@ -97,6 +97,7 @@
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE, 
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 	)
+	origin_limits = list(/datum/virtue/origin/kazengun, /datum/virtue/origin/lingyue)
 
 /datum/outfit/job/roguetown/adventurer/ronin/pre_equip(mob/living/carbon/human/H)
 	..()

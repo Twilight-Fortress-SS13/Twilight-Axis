@@ -322,7 +322,7 @@
 	message_muffled = "приглушенно хмыкает."
 /mob/living/carbon/human/verb/emote_hmph()
 	set name = "Хмыкать!"
-	set category = "Noises"
+	set category = "Emotes.Noises"
 
 	emote("hmph", intentional = TRUE)
 
@@ -548,7 +548,7 @@
 
 /mob/living/carbon/human/verb/emote_softmoan()
 	set name = "Мягко стонать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
 
 	emote("softmoan", intentional = TRUE)
 
@@ -562,7 +562,7 @@
 
 /mob/living/carbon/human/verb/emote_moan()
 	set name = "Стонать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
 
 	emote("moan", intentional = TRUE)
 

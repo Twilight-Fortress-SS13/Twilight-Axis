@@ -579,8 +579,6 @@
 /obj/item/rogueweapon/sword/long/martyr
 	force = 30
 	force_wielded = 36
-	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust, /datum/intent/sword/strike)
-	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust, /datum/intent/sword/strike, /datum/intent/sword/chop)
 	icon_state = "martyrsword"
 	item_state = "martyrsword"
 	lefthand_file = 'icons/mob/inhands/weapons/roguemartyr_lefthand.dmi'
@@ -607,6 +605,7 @@
 	is_silver = TRUE
 	override_state = null
 	is_important = TRUE
+	alt_grips = list(/datum/alt_grip/mordhau/sword/lesser, /datum/alt_grip/halfsword/lesser)
 	special = /datum/special_intent/martyr_astrata_verdict
 
 /obj/item/rogueweapon/sword/long/martyr/ComponentInitialize()
