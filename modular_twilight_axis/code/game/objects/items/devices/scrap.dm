@@ -252,22 +252,21 @@
 
 /obj/item/giantfur_stored/proc/deploy_fur(mob/user, atom/location)
 	to_chat(user, "<span class='notice'>You deploy the Rug.</span>")
-	new /obj/structure/giantfur/foldable(location)
+	new /obj/effect/decal/carpet/fur/foldable(location)
 	qdel(src)
 
-/obj/structure/giantfur/foldable
+/obj/effect/decal/carpet/fur/foldable
 	name = "giant fur"
-	desc = "Pelt of some gigantic animal, can be rolled up."
-	resistance_flags = FLAMMABLE
-	max_integrity = 50
-	smooth = 0
+	desc = "Pelt of some gigantic animal, made into a mat."
+	icon = 'icons/roguetown/misc/96x96.dmi'
+	icon_state = "fur"
 	debris = list(/obj/item/natural/fur/wolf = 1)
 
-/obj/structure/giantfur/foldable/examine()
+/obj/effect/decal/carpet/fur/foldable/examine()
 	. = ..()
 	. += span_blue("Right-Click to fold the table.")
 
-/obj/structure/giantfur/foldable/attack_right(mob/user)
+/obj/effect/decal/carpet/fur/foldable/attack_right(mob/user)
 	user.visible_message(span_notice("[user] folds [src]."), span_notice("You fold [src]."))
 	if(do_after(user, 2 SECONDS, TRUE, src))
 		new /obj/item/giantfur_stored(drop_location())
@@ -298,22 +297,21 @@
 
 /obj/item/giantfur_small_stored/proc/deploy_fur_small(mob/user, atom/location)
 	to_chat(user, "<span class='notice'>You deploy the Rug.</span>")
-	new /obj/structure/giantfur/small/foldable(location)
+	new /obj/effect/decal/carpet/fur/small/foldable(location)
 	qdel(src)
 
-/obj/structure/giantfur/small/foldable
+/obj/effect/decal/carpet/fur/small/foldable
 	name = "fur pelt"
-	desc = "Pelt of some animal, can be rolled up."
-	resistance_flags = FLAMMABLE
-	max_integrity = 50
-	smooth = 0
+	desc = "Pelt of some animal, now the mat!"
+	icon = 'icons/roguetown/misc/96x96.dmi'
+	icon_state = "fur_alt"
 	debris = list(/obj/item/natural/fur/wolf = 1)
 
-/obj/structure/giantfur/small/foldable/examine()
+/obj/effect/decal/carpet/fur/small/foldable/examine()
 	. = ..()
-	. += span_blue("Right-Click to fold the table.")
+	. += span_blue("Right-Click to roll the fur.")
 
-/obj/structure/giantfur/small/foldable/attack_right(mob/user)
+/obj/effect/decal/carpet/fur/small/foldable/attack_right(mob/user)
 	user.visible_message(span_notice("[user] folds [src]."), span_notice("You fold [src]."))
 	if(do_after(user, 2 SECONDS, TRUE, src))
 		new /obj/item/giantfur_small_stored(drop_location())
