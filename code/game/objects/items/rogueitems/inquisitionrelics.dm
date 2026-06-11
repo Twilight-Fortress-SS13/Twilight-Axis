@@ -466,10 +466,11 @@ Inquisitorial armory down here
 		return
 	new /obj/effect/temp_visual/censer_dust(get_turf(attacker))
 	new /obj/effect/temp_visual/censer_dust(get_turf(attacker))
+	new /obj/effect/temp_visual/frozen_mist_tile(get_turf(attacker))
 	if(issimple(attacker) || !attacker.mind)
 		attacker.apply_status_effect(/datum/status_effect/syonchurn, src)
 	
-	attacker.adjustFireLoss(9)
+	attacker.adjustFireLoss(10)
 
 #define SYONCHURN_FILTER "syonchurn glow"
 
@@ -482,7 +483,7 @@ Inquisitorial armory down here
 	id = "syon_churned"
 	alert_type = /atom/movable/screen/alert/status_effect/syonchurn
 	duration = -1
-	tick_interval = 1 SECONDS
+	tick_interval = 2 SECONDS
 	examine_text = "<font color='#00fff2'><b>SUBJECTPRONOUN is seared in body and soul by motes of lingering comet dust!</b></font>"
 	status_type = STATUS_EFFECT_REFRESH
 	effectedstats = list(STATKEY_LCK = -2, STATKEY_SPD = -2)
@@ -509,8 +510,10 @@ Inquisitorial armory down here
 
 /datum/status_effect/syonchurn/refresh()
 	. = ..()
-	intensity++
-	to_chat(owner, span_boldwarning("The shard's radiance intensifies, scourging me for my aggression!"))
+	if(intensity <= 10)
+		intensity++
+		if(prob(25))
+			to_chat(owner, span_boldwarning("The shard's radiance intensifies, scourging me for my aggression!"))
 
 /datum/status_effect/syonchurn/process()
 	. = ..()
@@ -529,9 +532,6 @@ Inquisitorial armory down here
 		to_chat(owner, span_blue("Away from the Golgatha's radiance, the searing dust fades into nothing."))
 		qdel(src)
 		return
-
-	if(!owner.mind)
-		owner.adjustFireLoss((damage_per_tick * intensity) * 3)
 
 	owner.adjustFireLoss(damage_per_tick * intensity)
 
