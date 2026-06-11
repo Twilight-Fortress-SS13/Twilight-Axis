@@ -362,6 +362,11 @@
 /mob/living/carbon/proc/lying_attack_check(mob/living/L, obj/item/I)
 	if(L == src)
 		return TRUE
+	if(L.zone_selected == BODY_ZONE_PRECISE_R_INHAND || L.zone_selected == BODY_ZONE_PRECISE_L_INHAND)
+		if(!I || istype(I, /obj/item/bodypart))
+			try_inhand_disarm(L, I, TRUE)
+			return FALSE
+		return TRUE
 	var/CZ = FALSE
 	var/list/acceptable = list(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_HEAD, BODY_ZONE_R_ARM, BODY_ZONE_CHEST, BODY_ZONE_L_ARM)
 	if((L.mobility_flags & MOBILITY_STAND) && (mobility_flags & MOBILITY_STAND)) //we are both standing

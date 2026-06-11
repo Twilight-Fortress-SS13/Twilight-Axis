@@ -179,7 +179,13 @@
 		return
 	if(QDELETED(src) || QDELETED(M))
 		return
-	if(!user.CanReach(M,src))
+	var/inhand_disarm_attempt = user.zone_selected == BODY_ZONE_PRECISE_R_INHAND || user.zone_selected == BODY_ZONE_PRECISE_L_INHAND
+	if(inhand_disarm_attempt)
+		var/turf/user_turf = get_turf(user)
+		var/turf/target_turf = get_turf(M)
+		if(!user_turf || !target_turf || get_dist(user_turf, target_turf) > 1)
+			return
+	else if(!user.CanReach(M,src))
 		return
 	if(user.get_active_held_item() != src && !HAS_TRAIT(user, TRAIT_DUALWIELDER))
 		return
@@ -239,28 +245,8 @@
 
 	SEND_SIGNAL(src, COMSIG_ITEM_ATTACK_SUCCESS, M, user)
 	SEND_SIGNAL(M, COMSIG_ITEM_ATTACKED_SUCCESS, src, user)
-	if(user.zone_selected == BODY_ZONE_PRECISE_R_INHAND)
-		var/offh = 0
-		var/obj/item/W = M.held_items[1]
-		if(W)
-			if(!(M.mobility_flags & MOBILITY_STAND))
-				M.throw_item(get_step(M,turn(M.dir, 90)), offhand = offh)
-			else
-				M.dropItemToGround(W)
-			M.visible_message(span_notice("[user] disarms [M]!"), \
-							span_boldwarning("I'm disarmed by [user]!"))
-			return
-
-	if(user.zone_selected == BODY_ZONE_PRECISE_L_INHAND)
-		var/offh = 0
-		var/obj/item/W = M.held_items[2]
-		if(W)
-			if(!(M.mobility_flags & MOBILITY_STAND))
-				M.throw_item(get_step(M,turn(M.dir, 270)), offhand = offh)
-			else
-				M.dropItemToGround(W)
-			M.visible_message(span_notice("[user] disarms [M]!"), \
-							span_boldwarning("I'm disarmed by [user]!"))
+	if(user.zone_selected == BODY_ZONE_PRECISE_R_INHAND || user.zone_selected == BODY_ZONE_PRECISE_L_INHAND)
+		if(M.try_inhand_disarm(user, src))
 			return
 
 	if(M.attacked_by(src, user))
@@ -290,6 +276,248 @@
 
 	add_fingerprint(user)
 
+
+/mob/living/proc/is_inhand_disarm_zone(zone)
+	return zone == BODY_ZONE_PRECISE_R_INHAND || zone == BODY_ZONE_PRECISE_L_INHAND
+
+/mob/living/proc/get_inhand_disarm_selected_hand_index(mob/living/user)
+	if(!user)
+		return 0
+	if(user.zone_selected == BODY_ZONE_PRECISE_R_INHAND)
+		return 2
+	if(user.zone_selected == BODY_ZONE_PRECISE_L_INHAND)
+		return 1
+	return 0
+
+/mob/living/proc/get_inhand_disarm_target(mob/living/user, unarmed = FALSE)
+	if(!user)
+		return null
+
+	var/selected_hand_index = get_inhand_disarm_selected_hand_index(user)
+	if(!selected_hand_index)
+		return null
+
+	var/obj/item/selected_item = held_items[selected_hand_index]
+	if(unarmed)
+		if(!selected_item)
+			var/other_hand_index = selected_hand_index == 1 ? 2 : 1
+			selected_item = held_items[other_hand_index]
+		if(istype(selected_item, /obj/item/rogueweapon))
+			return null
+		return selected_item
+
+	if(istype(selected_item, /obj/item/rogueweapon/shield))
+		return selected_item
+	if(selected_item?.wielded)
+		return selected_item
+
+	for(var/obj/item/held as anything in held_items)
+		if(istype(held, /obj/item/rogueweapon/shield))
+			return held
+
+	for(var/obj/item/held as anything in held_items)
+		if(held?.wielded)
+			return held
+
+	return selected_item
+
+/mob/living/proc/get_inhand_disarm_skill_diff_bonus(skill_diff)
+	var/skill_gap = abs(skill_diff)
+	var/bonus = 0
+	switch(skill_gap)
+		if(0)
+			bonus = 0
+		if(1)
+			bonus = 2
+		if(2)
+			bonus = 4
+		if(3)
+			bonus = 8
+		if(4)
+			bonus = 16
+		if(5)
+			bonus = 32
+		else
+			bonus = 64
+	if(skill_diff < 0)
+		bonus *= -1
+	return bonus
+
+/mob/living/proc/inhand_disarm_target_in_combat()
+	return cmode ? TRUE : FALSE
+
+/mob/living/proc/get_strong_heavy_inhand_disarm_bonus(mob/living/user, obj/item/source_item)
+	if(!user || !source_item)
+		return 0
+	if(source_item.wbalance != WBALANCE_HEAVY)
+		return 0
+	if(!istype(user.rmb_intent, /datum/rmb_intent/strong))
+		return 0
+
+	var/bonus = round(source_item.force_dynamic / 10)
+	bonus += max(user.STASTR - STASTR, 0)
+	return bonus
+
+/mob/living/proc/get_inhand_disarm_chance(mob/living/user, obj/item/source_item, obj/item/held_item, unarmed = FALSE)
+	if(!user || !held_item)
+		return 0
+
+	if(unarmed)
+		return get_unarmed_inhand_disarm_chance(user, held_item)
+
+	if(!source_item)
+		return 0
+
+	if(!istype(held_item, /obj/item/rogueweapon))
+		return get_inhand_item_disarm_chance(user, source_item, held_item)
+
+	var/attacker_skill = 0
+	if(source_item.associated_skill)
+		attacker_skill = user.get_skill_level(source_item.associated_skill)
+
+	var/defender_skill = 0
+	if(held_item.associated_skill)
+		defender_skill = get_skill_level(held_item.associated_skill)
+
+	var/skill_diff = attacker_skill - defender_skill
+	var/wdefense_diff = source_item.wdefense_dynamic - held_item.wdefense_dynamic
+	var/force_bonus = round(source_item.force_dynamic / 15)
+
+	if(held_item.force_dynamic)
+		force_bonus -= round(held_item.force_dynamic / 30)
+
+	var/chance = 2
+	chance += get_inhand_disarm_skill_diff_bonus(skill_diff)
+	chance += round(wdefense_diff / 2)
+	chance += force_bonus
+	chance += clamp(user.STASTR - STASTR, -1, 1)
+	chance += get_strong_heavy_inhand_disarm_bonus(user, source_item)
+
+	if(source_item.wbalance == WBALANCE_SWIFT && user.STASPD > STASPD)
+		chance += 1
+	if(held_item.wbalance == WBALANCE_SWIFT && STASPD >= user.STASPD)
+		chance -= 1
+
+	var/max_chance = 10
+	if(!inhand_disarm_target_in_combat())
+		chance *= 2
+		max_chance *= 2
+
+	return clamp(chance, 2, max_chance)
+
+/mob/living/proc/get_inhand_item_disarm_chance(mob/living/user, obj/item/source_item, obj/item/held_item)
+	var/skill_diff = 0
+	if(source_item?.associated_skill)
+		skill_diff = user.get_skill_level(source_item.associated_skill) - get_skill_level(source_item.associated_skill)
+
+	var/str_diff = user.STASTR - STASTR
+	var/spd_diff = user.STASPD - STASPD
+	var/physical_diff = max(str_diff, spd_diff)
+
+	var/chance = 18
+	chance += get_inhand_disarm_skill_diff_bonus(skill_diff)
+	chance += max(physical_diff, 0) * 5
+	if(source_item)
+		chance += round(source_item.force_dynamic / 7)
+
+	if(held_item.w_class)
+		chance -= max(held_item.w_class - 2, 0)
+
+	var/max_chance = 65
+	if(!inhand_disarm_target_in_combat())
+		chance *= 2
+		max_chance = 95
+
+	return clamp(chance, 12, max_chance)
+
+/mob/living/proc/get_unarmed_inhand_disarm_chance(mob/living/user, obj/item/held_item)
+	var/skill_diff = 0
+	if(user.mind)
+		skill_diff += user.get_skill_level(/datum/skill/combat/wrestling)
+	if(mind)
+		skill_diff -= get_skill_level(/datum/skill/combat/wrestling)
+
+	var/str_diff = user.STASTR - STASTR
+	var/spd_diff = user.STASPD - STASPD
+	var/physical_diff = max(str_diff, spd_diff)
+
+	var/chance = 18
+	chance += get_inhand_disarm_skill_diff_bonus(skill_diff)
+	chance += max(physical_diff, 0) * 5
+
+	if(held_item.w_class)
+		chance -= max(held_item.w_class - 2, 0)
+
+	var/max_chance = 65
+	if(!inhand_disarm_target_in_combat())
+		chance *= 2
+		max_chance = 95
+
+	return clamp(chance, 12, max_chance)
+
+/mob/living/proc/should_steal_inhand_item(mob/living/user, obj/item/source_item, unarmed = FALSE)
+	if(!user)
+		return FALSE
+
+	var/skill_diff = 0
+	if(unarmed)
+		if(user.mind)
+			skill_diff += user.get_skill_level(/datum/skill/combat/wrestling)
+		if(mind)
+			skill_diff -= get_skill_level(/datum/skill/combat/wrestling)
+	else if(source_item?.associated_skill)
+		skill_diff = user.get_skill_level(source_item.associated_skill) - get_skill_level(source_item.associated_skill)
+
+	var/str_diff = user.STASTR - STASTR
+	var/spd_diff = user.STASPD - STASPD
+
+	return spd_diff > 0 && spd_diff > str_diff && spd_diff >= skill_diff
+
+/mob/living/proc/try_inhand_disarm(mob/living/user, obj/item/source_item, unarmed = FALSE)
+	if(!user)
+		return FALSE
+	if(!is_inhand_disarm_zone(user.zone_selected))
+		return FALSE
+
+	var/turf/user_turf = get_turf(user)
+	var/turf/target_turf = get_turf(src)
+	if(!user_turf || !target_turf || get_dist(user_turf, target_turf) > 1)
+		return TRUE
+
+	var/obj/item/held_item = get_inhand_disarm_target(user, unarmed)
+	if(!held_item)
+		return FALSE
+	if(unarmed && istype(held_item, /obj/item/rogueweapon))
+		return TRUE
+
+	var/chance = get_inhand_disarm_chance(user, source_item, held_item, unarmed)
+	var/resist_chance = 100 - chance
+	to_chat(src, span_info("Roll to resist disarm... [resist_chance]%"))
+
+	if(prob(chance))
+		if(istype(held_item, /obj/item/rogueweapon))
+			if(dropItemToGround(held_item))
+				visible_message(span_notice("[user] disarms [src]!"), \
+						span_boldwarning("I'm disarmed by [user]!"))
+				return TRUE
+		else
+			if(should_steal_inhand_item(user, source_item, unarmed))
+				if(transferItemToLoc(held_item, user))
+					if(user.put_in_hands(held_item))
+						visible_message(span_notice("[user] snatches [held_item] from [src]!"), \
+								span_boldwarning("[user] snatches [held_item] from my hand!"))
+					else
+						visible_message(span_notice("[user] knocks [held_item] from [src]'s hand!"), \
+								span_boldwarning("[user] knocks [held_item] from my hand!"))
+					return TRUE
+			else if(dropItemToGround(held_item))
+				visible_message(span_notice("[user] knocks [held_item] from [src]'s hand!"), \
+						span_boldwarning("[user] knocks [held_item] from my hand!"))
+				return TRUE
+
+	to_chat(user, span_warning("I fail to disarm [src]."))
+	to_chat(src, span_warning("[user] tries to disarm me, but I keep hold of [held_item]!"))
+	return TRUE
 
 //the equivalent of the standard version of attack() but for object targets.
 /obj/item/proc/attack_obj(obj/O, mob/living/user)

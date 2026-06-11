@@ -1147,24 +1147,28 @@
 	var/list/PL = params2list(params)
 	var/icon_x = text2num(PL["icon-x"])
 	var/icon_y = text2num(PL["icon-y"])
-	var/choice = get_zone_at(icon_x, icon_y)
-	choice = "m_[choice]"
+	var/gender_prefix = "m"
+	var/gender = MALE
 	if(ismob(hud.mymob))
 		var/mob/M = hud.mymob
 		if(M.gender == FEMALE)
-			choice = get_zone_at(icon_x, icon_y, FEMALE)
-			choice = "f_[choice]"
+			gender_prefix = "f"
+			gender = FEMALE
+
+	var/zone = get_zone_at(icon_x, icon_y, gender)
+	if(!zone)
+		return
+	var/choice = get_zone_selection_icon_state(zone, gender_prefix)
 
 	if(hovering == choice)
 		return
 	vis_contents -= hover_overlays_cache[hovering]
 	hovering = choice
 
-
 	var/obj/effect/overlay/zone_sel/overlay_object = hover_overlays_cache[choice]
 	if(!overlay_object)
 		overlay_object = new
-		overlay_object.icon_state = "[choice]"
+		overlay_object.icon_state = choice
 		hover_overlays_cache[choice] = overlay_object
 	vis_contents += overlay_object
 
@@ -1186,37 +1190,37 @@
 		switch(icon_y)
 			if(1 to 3)
 				switch(icon_x)
-					if(5 to 7)
+					if(5 to 10)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(17 to 28)
 						return BODY_ZONE_PRECISE_R_FOOT
 					if(38 to 49)
 						return BODY_ZONE_PRECISE_L_FOOT
-					if(59 to 61)
+					if(57 to 61)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(4 to 5)
 				switch(icon_x)
-					if(5 to 7)
+					if(5 to 10)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(17 to 28)
 						return BODY_ZONE_PRECISE_R_FOOT
 					if(38 to 49)
 						return BODY_ZONE_PRECISE_L_FOOT
-					if(59 to 61)
+					if(57 to 61)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(6 to 15)
 				switch(icon_x)
-					if(5 to 7)
+					if(5 to 10)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(20 to 29)
 						return BODY_ZONE_R_LEG
 					if(37 to 46)
 						return BODY_ZONE_L_LEG
-					if(59 to 61)
+					if(57 to 61)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(16 to 21)
 				switch(icon_x)
-					if(5 to 7)
+					if(5 to 10)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(12 to 18)
 						return BODY_ZONE_PRECISE_R_HAND
@@ -1226,11 +1230,11 @@
 						return BODY_ZONE_L_LEG
 					if(48 to 54)
 						return BODY_ZONE_PRECISE_L_HAND
-					if(59 to 61)
+					if(57 to 61)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(22 to 24)
 				switch(icon_x)
-					if(5 to 7)
+					if(5 to 10)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(12 to 18)
 						return BODY_ZONE_PRECISE_R_HAND
@@ -1242,7 +1246,7 @@
 						return BODY_ZONE_L_LEG
 					if(48 to 54)
 						return BODY_ZONE_PRECISE_L_HAND
-					if(59 to 61)
+					if(57 to 61)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(25 to 29)
 				switch(icon_x)
@@ -1309,27 +1313,27 @@
 		switch(icon_y)
 			if(1 to 7)
 				switch(icon_x)
-					if(12 to 14)
+					if(11 to 16)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(26 to 32)
 						return BODY_ZONE_PRECISE_R_FOOT
 					if(34 to 40)
 						return BODY_ZONE_PRECISE_L_FOOT
-					if(52 to 54)
+					if(50 to 55)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(8 to 16)
 				switch(icon_x)
-					if(12 to 14)
+					if(11 to 16)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(24 to 31)
 						return BODY_ZONE_R_LEG
 					if(35 to 42)
 						return BODY_ZONE_L_LEG
-					if(52 to 54)
+					if(50 to 55)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(17 to 20)
 				switch(icon_x)
-					if(12 to 14)
+					if(11 to 16)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(20 to 23)
 						return BODY_ZONE_PRECISE_R_HAND
@@ -1339,11 +1343,11 @@
 						return BODY_ZONE_L_LEG
 					if(43 to 46)
 						return BODY_ZONE_PRECISE_L_HAND
-					if(52 to 54)
+					if(50 to 55)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(21)
 				switch(icon_x)
-					if(12 to 14)
+					if(11 to 16)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(20 to 23)
 						return BODY_ZONE_PRECISE_R_HAND
@@ -1351,11 +1355,11 @@
 						return BODY_ZONE_PRECISE_GROIN
 					if(43 to 46)
 						return BODY_ZONE_PRECISE_L_HAND
-					if(52 to 54)
+					if(50 to 55)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(22 to 23)
 				switch(icon_x)
-					if(12 to 14)
+					if(11 to 16)
 						return BODY_ZONE_PRECISE_R_INHAND
 					if(20 to 25)
 						return BODY_ZONE_R_ARM
@@ -1363,7 +1367,7 @@
 						return BODY_ZONE_PRECISE_GROIN
 					if(41 to 46)
 						return BODY_ZONE_L_ARM
-					if(52 to 54)
+					if(50 to 55)
 						return BODY_ZONE_PRECISE_L_INHAND
 			if(24 to 29)
 				switch(icon_x)
@@ -1427,12 +1431,33 @@
 				if(icon_x in 30 to 36)
 					return BODY_ZONE_PRECISE_SKULL
 
+/atom/movable/screen/zone_sel/proc/is_inhand_zone(zone)
+	return zone == BODY_ZONE_PRECISE_R_INHAND || zone == BODY_ZONE_PRECISE_L_INHAND
+
+/atom/movable/screen/zone_sel/proc/get_zone_selection_icon_state(zone, gender_prefix)
+	switch(zone)
+		if(BODY_ZONE_PRECISE_R_INHAND)
+			return "[gender_prefix]_inhand_r"
+		if(BODY_ZONE_PRECISE_L_INHAND)
+			return "[gender_prefix]_inhand_l"
+	return "[gender_prefix]_[zone]"
+
+/atom/movable/screen/zone_sel/proc/get_zone_flash_icon_state(zone, gender_prefix)
+	switch(zone)
+		if(BODY_ZONE_PRECISE_R_INHAND)
+			return "[gender_prefix]_inhand_r"
+		if(BODY_ZONE_PRECISE_L_INHAND)
+			return "[gender_prefix]_inhand_l"
+	return "[gender_prefix]-[zone]"
+
 /atom/movable/screen/zone_sel/proc/set_selected_zone(choice, mob/user)
 	if(user != hud?.mymob)
 		return
 
 	if(choice != hud.mymob.zone_selected)
 		hud.mymob.select_zone(choice)
+		if(is_inhand_zone(choice))
+			hud.mymob.zone_selected = choice
 		update_selection()
 
 	return TRUE
@@ -1612,7 +1637,7 @@
 		return
 	var/gender_prefix = hud.mymob.gender == "male" ? "m" : "f"
 	selection_vis.icon = 'icons/mob/roguehud64.dmi'
-	selection_vis.icon_state = "[gender_prefix]_[hud.mymob.zone_selected]"
+	selection_vis.icon_state = get_zone_selection_icon_state(hud.mymob.zone_selected, gender_prefix)
 
 /atom/movable/screen/zone_sel/proc/flash_limb(zone, limb_color="#FF0000")
 	if(!zone || !hud?.mymob)
@@ -1630,7 +1655,7 @@
 		highlight.plane = plane
 		flash_vis[zone] = highlight
 		flash_layer.vis_contents += highlight
-	highlight.icon_state = "[gender_prefix]-[zone]"
+	highlight.icon_state = get_zone_flash_icon_state(zone, gender_prefix)
 	highlight.color = limb_color
 	highlight.alpha = 180
 
