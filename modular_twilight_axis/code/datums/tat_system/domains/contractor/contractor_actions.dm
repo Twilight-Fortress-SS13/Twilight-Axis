@@ -426,10 +426,12 @@
 
 	if(entity_erp_training_enabled)
 		ADD_TRAIT(L, TRAIT_STRONGKICK, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
+		ADD_TRAIT(L, TRAIT_PARRYEXPERT, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
 		RegisterSignal(L, COMSIG_MOB_ATTACK_HAND, PROC_REF(on_body_power_unarmed_hit))
 		to_chat(L, span_notice("You feel power inside you."))
 	else
 		REMOVE_TRAIT(L, TRAIT_STRONGKICK, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
+		REMOVE_TRAIT(L, TRAIT_PARRYEXPERT, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
 		UnregisterSignal(L, COMSIG_MOB_ATTACK_HAND)
 		to_chat(L, span_notice("Your body returns to normal."))
 
