@@ -86,6 +86,18 @@
 	name = "Blessed"
 	prefix = "%ARE%"
 
+/datum/mob_descriptor/trait/holy
+	name = "Holy"
+	prefix = "%ARE%"
+
+/datum/mob_descriptor/trait/unholy
+	name = "Unholy"
+	prefix = "%ARE%"
+
+/datum/mob_descriptor/trait/sacrificial
+	name = "Sacrificial"
+	prefix = "%ARE%"
+
 /datum/mob_descriptor/trait/accursed
 	name = "Accursed"
 	prefix = "%ARE%"
@@ -238,3 +250,55 @@
 /datum/mob_descriptor/trait/volfish
 	name = "Volfish"
 	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/radiant
+	name = "Radiant"
+	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/bountiful
+	name = "Bountiful"
+	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/trembling
+	name = "Trembling"
+	prefix = "%ARE%"
+
+/datum/mob_descriptor/trait/magnificent
+	name = "Magnificent"
+	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/esteemed
+	name = "Esteemed"
+	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/regal
+	name = "Regal"
+	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/decadent
+	name = "Decadent"
+	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/lavish
+	name = "Lavish"
+	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/pompous
+	name = "Pompous"
+	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/dashing
+	name = "Dashing"
+	prefix = "%ARE% very"
+
+/datum/mob_descriptor/trait/gravid
+	name = "Gravid"
+	prefix = "%ARE%"
+
+/datum/mob_descriptor/trait/fecund
+	name = "Fecund"
+	prefix = "%ARE%"
+
+/datum/mob_descriptor/trait/vainglorious
+	name = "Vainglorious"
+	prefix = "%ARE%"

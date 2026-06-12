@@ -11,6 +11,7 @@ PROCESSING_SUBSYSTEM_DEF(roguemachine)
 	var/list/stock_machines = list()
 	var/list/noticeboards = list()
 	var/hermailermaster
+	var/list/secret_mail = list() // TA EDIT 
 	var/list/death_queue = list()
 	var/last_death_report
 	var/obj/item/clothing/head/roguetown/crown/serpcrown/crown
@@ -48,6 +49,18 @@ PROCESSING_SUBSYSTEM_DEF(roguemachine)
 					if(is_in_roguetown(M))
 						M.playsound_local(M.loc, the_track, 100, FALSE)
 				death_queue.Cut()
+// TA EDIT BEGIN
+/datum/controller/subsystem/processing/roguemachine/proc/add_secret_mail(obj/item/P)
+	if(!P)
+		return
+	secret_mail += P
+	RegisterSignal(P, COMSIG_PARENT_QDELETING, PROC_REF(remove_secret_mail))
+
+/datum/controller/subsystem/processing/roguemachine/proc/remove_secret_mail(datum/source)
+	SIGNAL_HANDLER
+	secret_mail -= source
+	UnregisterSignal(source, COMSIG_PARENT_QDELETING) 
+// TA EDIT END
 
 /proc/is_in_roguetown(atom/A)
 	if(!A)

@@ -6,6 +6,8 @@
 	var/datum/heritage/house
 	var/created_at = 0
 	var/source = "system"
+	var/preserved_relation_a_to_b
+	var/preserved_relation_b_to_a
 
 /datum/family_edge/New(datum/family_node/from_node, datum/family_node/to_node, rel_type, datum/heritage/edge_house, flags = 0, edge_source = "system")
 	a = from_node

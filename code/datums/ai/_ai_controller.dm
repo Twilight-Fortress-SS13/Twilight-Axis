@@ -338,9 +338,7 @@ have ways of interacting with a specific atom and control it. They posses a blac
 
 	if(new_z)
 		GLOB.ai_controllers_by_zlevel[new_z] += src
-		var/new_level_clients = SSmobs.clients_by_zlevel[new_z].len
-		if(new_level_clients)
-			set_ai_status(AI_STATUS_IDLE)
+		reset_ai_status()
 
 ///Abstract proc for initializing the pawn to the new controller
 /datum/ai_controller/proc/TryPossessPawn(atom/new_pawn)
@@ -913,6 +911,11 @@ have ways of interacting with a specific atom and control it. They posses a blac
 			// assoc list
 			CLEAR_AI_DATUM_TARGET(thing, key)
 			associated_value -= inner_key
+			return
+
+	if(isdatum(thing))
+		var/datum/dthing = thing
+		if(QDELETED(dthing))
 			return
 
 	CRASH("remove_thing_from_blackboard_key called with an invalid \"thing\" argument ([thing]). \

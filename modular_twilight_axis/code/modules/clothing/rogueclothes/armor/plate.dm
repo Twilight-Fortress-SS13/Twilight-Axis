@@ -115,3 +115,21 @@
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
+/obj/item/clothing/suit/roguetown/armor/plate/fluted/shadowplate
+	name = "scourge pouncer"
+	desc = "Segmented armour set consisting of overlapping avantyne plates riveted inside a Drow-crafted hide garment. While less sophisticated than the armor of Her true champions, this set is favoured by the Drow legionnaires who venture into the surface world."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	icon_state = "shadowfullplate"
+	item_state = "shadowfullplate"
+
+/obj/item/clothing/suit/roguetown/armor/plate/twilight_shadowplate
+	name = "scourge half-plate"
+	desc = "As close as most Dark Elves are willing to get to actual plate armor. This set consists of an avantyne cuirass and pauldrons with an underlying layer of sturdy Drow-crafted leather."
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	icon_state = "shadowplate"
+	item_state = "shadowplate"
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	smeltresult = /obj/item/ingot/drow
+	smelt_bar_num = 2
+	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS

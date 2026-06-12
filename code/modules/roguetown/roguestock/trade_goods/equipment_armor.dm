@@ -2,134 +2,134 @@
 // ARMOR - PADDED / LEATHER
 // ============================================================================
 
-/datum/trade_good/equipment/padded_gambeson
+/datum/trade_good/equipment/crafted/padded_gambeson
 	id = TRADE_GOOD_PADDED_GAMBESON
 	name = "padded gambeson"
-	base_price = 65
 	item_type = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
+	base_price = SELLPRICE_CLOTH * 6
 
-/datum/trade_good/equipment/heavy_leather_coat
+/datum/trade_good/equipment/crafted/heavy_leather_coat
 	id = TRADE_GOOD_HEAVY_LEATHER_COAT
 	name = "hardened leather coat"
-	base_price = 65
 	item_type = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
+	base_price = SELLPRICE_CURED_LEATHER * 10
 
-/datum/trade_good/equipment/hardened_leather_helmet
+/datum/trade_good/equipment/crafted/hardened_leather_helmet
 	id = TRADE_GOOD_HARDENED_LEATHER_HELMET
 	name = "hardened leather helmet"
-	base_price = 50
 	item_type = /obj/item/clothing/head/roguetown/helmet/leather/advanced
+	base_price = SELLPRICE_CURED_LEATHER * 5
 
-/datum/trade_good/equipment/hardened_leather_gorget
+/datum/trade_good/equipment/crafted/hardened_leather_gorget
 	id = TRADE_GOOD_HARDENED_LEATHER_GORGET
 	name = "hardened leather gorget"
-	base_price = 35
 	item_type = /obj/item/clothing/neck/roguetown/leather
+	base_price = SELLPRICE_CURED_LEATHER * 4
 
-/datum/trade_good/equipment/heavy_leather_gloves
+/datum/trade_good/equipment/crafted/heavy_leather_gloves
 	id = TRADE_GOOD_HEAVY_LEATHER_GLOVES
 	name = "heavy leather gloves"
-	base_price = 35
 	item_type = /obj/item/clothing/gloves/roguetown/angle
+	base_price = SELLPRICE_CURED_LEATHER * 4
 
 // ============================================================================
 // ARMOR - STEEL CHAIN / BRIGANDINE
 // ============================================================================
 
-/datum/trade_good/equipment/steel_chainmail
+/datum/trade_good/equipment/crafted/steel_chainmail
 	id = TRADE_GOOD_STEEL_CHAINMAIL
 	name = "steel haubergeon"
-	base_price = 65
 	item_type = /obj/item/clothing/suit/roguetown/armor/chainmail
+	base_price = SELLPRICE_STEEL_INGOT * 4
 
-/datum/trade_good/equipment/steel_hauberk
+/datum/trade_good/equipment/crafted/steel_hauberk
 	id = TRADE_GOOD_STEEL_HAUBERK
 	name = "steel hauberk"
-	base_price = 100
 	item_type = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
+	base_price = SELLPRICE_STEEL_INGOT * 5
 
-/datum/trade_good/equipment/brigandine
+/datum/trade_good/equipment/crafted/brigandine
 	id = TRADE_GOOD_BRIGANDINE
 	name = "brigandine"
-	base_price = 110
 	item_type = /obj/item/clothing/suit/roguetown/armor/brigandine
+	base_price = SELLPRICE_STEEL_INGOT * 6
 
-/datum/trade_good/equipment/brigandine_heavy
+/datum/trade_good/equipment/crafted/brigandine_heavy
 	id = TRADE_GOOD_BRIGANDINE_HEAVY
 	name = "coat of plates"
-	base_price = 110
 	item_type = /obj/item/clothing/suit/roguetown/armor/brigandine/heavy
+	base_price = SELLPRICE_STEEL_INGOT * 7
 
 // ============================================================================
 // ARMOR - STEEL PLATE
 // ============================================================================
 
-/datum/trade_good/equipment/steel_cuirass
+/datum/trade_good/equipment/crafted/steel_cuirass
 	id = TRADE_GOOD_STEEL_CUIRASS
 	name = "steel cuirass"
-	base_price = 100
 	item_type = /obj/item/clothing/suit/roguetown/armor/plate/cuirass
+	base_price = SELLPRICE_STEEL_INGOT * 6
 
-/datum/trade_good/equipment/steel_halfplate
+/datum/trade_good/equipment/crafted/steel_halfplate
 	id = TRADE_GOOD_STEEL_HALFPLATE
 	name = "steel halfplate"
-	base_price = 145
 	item_type = /obj/item/clothing/suit/roguetown/armor/plate
+	base_price = SELLPRICE_STEEL_INGOT * 9
 
-/datum/trade_good/equipment/steel_halfplate_fluted
+/datum/trade_good/equipment/crafted/steel_halfplate_fluted
 	id = TRADE_GOOD_STEEL_COATPLATES
 	name = "fluted halfplate"
-	base_price = 175
 	item_type = /obj/item/clothing/suit/roguetown/armor/plate/fluted
+	base_price = SELLPRICE_STEEL_INGOT * 10
 
-/datum/trade_good/equipment/steel_fullplate
+/datum/trade_good/equipment/crafted/steel_fullplate
 	id = TRADE_GOOD_STEEL_FULLPLATE
 	name = "steel plate armor"
-	base_price = 300
 	item_type = /obj/item/clothing/suit/roguetown/armor/plate/full
+	base_price = SELLPRICE_STEEL_INGOT * 13
 
 // ============================================================================
 // ARMOR - EXTREMITIES
 // ============================================================================
 
-/datum/trade_good/equipment/helm_knight
+/datum/trade_good/equipment/crafted/helm_knight
 	id = TRADE_GOOD_STEEL_HELM_KNIGHT
 	name = "knight's armet"
-	base_price = 120
 	item_type = /obj/item/clothing/head/roguetown/helmet/heavy/knight
+	base_price = SELLPRICE_STEEL_INGOT * 3
 
-/datum/trade_good/equipment/helm_bascinet
+/datum/trade_good/equipment/crafted/helm_bascinet
 	id = TRADE_GOOD_STEEL_HELM_BASCINET
 	name = "bascinet"
-	base_price = 120
 	item_type = /obj/item/clothing/head/roguetown/helmet/bascinet
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
-/datum/trade_good/equipment/helm_kettle
+/datum/trade_good/equipment/crafted/helm_kettle
 	id = TRADE_GOOD_STEEL_HELM_KETTLE
 	name = "steel kettle helmet"
-	base_price = 80
 	item_type = /obj/item/clothing/head/roguetown/helmet/kettle
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
-/datum/trade_good/equipment/steel_mask
+/datum/trade_good/equipment/crafted/steel_mask
 	id = TRADE_GOOD_STEEL_MASK
 	name = "steel mask"
-	base_price = 55
 	item_type = /obj/item/clothing/mask/rogue/facemask/steel
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
-/datum/trade_good/equipment/chain_gloves
+/datum/trade_good/equipment/crafted/chain_gloves
 	id = TRADE_GOOD_CHAIN_GLOVES
 	name = "chain gauntlets"
-	base_price = 55
 	item_type = /obj/item/clothing/gloves/roguetown/chain
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
-/datum/trade_good/equipment/plate_gauntlets
+/datum/trade_good/equipment/crafted/plate_gauntlets
 	id = TRADE_GOOD_PLATE_GAUNTLETS
 	name = "plate gauntlets"
-	base_price = 55
 	item_type = /obj/item/clothing/gloves/roguetown/plate
+	base_price = SELLPRICE_STEEL_INGOT * 3
 
-/datum/trade_good/equipment/plate_legs
+/datum/trade_good/equipment/crafted/plate_legs
 	id = TRADE_GOOD_STEEL_PLATE_LEGS
 	name = "steel plate chausses"
-	base_price = 100
 	item_type = /obj/item/clothing/under/roguetown/platelegs
+	base_price = SELLPRICE_STEEL_INGOT * 4

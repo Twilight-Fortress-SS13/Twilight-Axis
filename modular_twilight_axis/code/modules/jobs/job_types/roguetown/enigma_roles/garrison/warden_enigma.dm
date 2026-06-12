@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = JCOLOR_VANGUARD
-	allowed_races = RACES_TOLERATED_UP
+	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = list(AGE_MIDDLEAGED, AGE_OLD)
 	display_order = JDO_OVERSEER
 	tutorial = "Вам, как опытному солдату из свиты Его Величества, поручено наблюдать за недавно построенным Бастионом. \
@@ -24,7 +24,7 @@
 
 	cmode_music = 'modular_twilight_axis/sound/music/combat/combat_vanguard.ogg'
 	job_subclasses = list(
-		/datum/job/roguetown/overseer,
+		/datum/advclass/overseer,,
 	)
 
 /datum/job/roguetown/overseer/after_spawn(mob/living/L, mob/M, latejoin = TRUE)

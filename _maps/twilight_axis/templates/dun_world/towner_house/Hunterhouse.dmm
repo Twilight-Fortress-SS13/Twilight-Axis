@@ -1,0 +1,444 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"b" = (
+/obj/structure/roguewindow,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"d" = (
+/obj/structure/mineral_door/wood/towner/hunter,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"e" = (
+/turf/closed/wall/mineral/rogue/decowood/vert,
+/area/rogue/indoors/town)
+"f" = (
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"g" = (
+/obj/effect/decal/cobbleedge{
+	dir = 10
+	},
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"h" = (
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"i" = (
+/obj/structure/roguewindow/openclose{
+	dir = 1
+	},
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"j" = (
+/obj/structure/table/wood,
+/obj/item/reagent_containers/glass/cup/wooden,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"k" = (
+/turf/open/transparent/openspace,
+/area/rogue/indoors/town)
+"l" = (
+/obj/structure/fluff/railing/corner/south_east,
+/obj/structure/fermentation_keg/water,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"m" = (
+/obj/machinery/tanningrack,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"n" = (
+/turf/closed/wall/mineral/rogue/wooddark,
+/area/rogue/indoors/town)
+"o" = (
+/obj/structure/chair/bench/ultimacouch/r,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"p" = (
+/obj/structure/roguemachine/scomm/r{
+	scom_tag = "Hunter's House"
+	},
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"q" = (
+/obj/structure/bed/rogue/inn/wool,
+/obj/item/bedsheet/rogue/pelt,
+/obj/machinery/light/rogue/candle/r,
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+"r" = (
+/turf/closed/wall/mineral/rogue/craftstone,
+/area/rogue/indoors/town)
+"s" = (
+/turf/open/floor/rogue/blocks,
+/area/rogue/outdoors/mountains)
+"t" = (
+/obj/machinery/light/rogue/hearth,
+/obj/machinery/light/rogue/oven/south,
+/obj/effect/decal/cobbleedge{
+	dir = 10
+	},
+/obj/item/cooking/pan,
+/turf/open/floor/rogue/cobble,
+/area/rogue/indoors/town)
+"u" = (
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+"v" = (
+/turf/closed/wall/mineral/rogue/craftstone,
+/area/rogue/outdoors/mountains)
+"w" = (
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"x" = (
+/obj/structure/fluff/railing/border,
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+"y" = (
+/obj/structure/chair/bench/ultimacouch,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"z" = (
+/obj/structure/rack/rogue,
+/obj/item/gun/ballistic/revolver/grenadelauncher/bow,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"A" = (
+/obj/structure/fluff/clock,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"B" = (
+/obj/structure/table/wood/poor,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"C" = (
+/turf/open/floor/rogue/grassred,
+/area/rogue/outdoors/woods/south)
+"D" = (
+/obj/structure/chair/wood/rogue,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"E" = (
+/turf/open/floor/rogue/rooftop{
+	icon_state = "roofg"
+	},
+/area/rogue/outdoors/mountains)
+"F" = (
+/obj/structure/roguewindow/openclose{
+	dir = 8
+	},
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"G" = (
+/obj/structure/closet/crate/roguecloset,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"H" = (
+/obj/structure/stairs{
+	dir = 8
+	},
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"I" = (
+/obj/effect/decal/cobbleedge{
+	dir = 6
+	},
+/obj/structure/rack/rogue/shelf,
+/obj/structure/rack/rogue/shelf/big,
+/obj/item/reagent_containers/glass/cup/wooden{
+	pixel_x = 5;
+	pixel_y = 39
+	},
+/obj/item/reagent_containers/glass/cup/wooden{
+	pixel_x = -5;
+	pixel_y = 39
+	},
+/obj/item/cooking/platter{
+	pixel_y = 10
+	},
+/obj/item/cooking/platter{
+	pixel_y = 12
+	},
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"J" = (
+/obj/structure/roguewindow/openclose,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"K" = (
+/obj/structure/table/wood,
+/obj/item/rogueweapon/huntingknife/stoneknife,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"L" = (
+/obj/structure/bed/rogue/inn/wool,
+/obj/item/bedsheet/rogue/pelt,
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+"M" = (
+/obj/structure/fluff/railing/border/west,
+/obj/item/roguebin/water,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"N" = (
+/obj/effect/spawner/roguemap/stump,
+/turf/open/floor/rogue/grassred,
+/area/rogue/outdoors/woods/south)
+"O" = (
+/obj/structure/stairs{
+	dir = 8
+	},
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"P" = (
+/obj/structure/rogue/trophy/deer,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"Q" = (
+/obj/structure/fluff/railing/corner/south_west,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"R" = (
+/obj/structure/fluff/railing/border,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"S" = (
+/obj/effect/decal/cobbleedge{
+	pixel_y = 1
+	},
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"T" = (
+/obj/structure/chair/wood/rogue{
+	dir = 1
+	},
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"V" = (
+/obj/structure/rack/rogue,
+/obj/item/quiver,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town)
+"X" = (
+/obj/effect/spawner/roguemap/stump,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/woods/south)
+"Z" = (
+/obj/structure/closet/crate/drawer,
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+
+(1,1,1) = {"
+N
+n
+d
+b
+e
+b
+e
+n
+"}
+(2,1,1) = {"
+X
+e
+f
+D
+B
+T
+n
+e
+"}
+(3,1,1) = {"
+r
+r
+g
+u
+u
+x
+H
+e
+"}
+(4,1,1) = {"
+r
+t
+S
+u
+u
+u
+f
+e
+"}
+(5,1,1) = {"
+r
+r
+I
+u
+u
+u
+f
+e
+"}
+(6,1,1) = {"
+C
+e
+p
+m
+V
+z
+l
+e
+"}
+(7,1,1) = {"
+C
+n
+e
+b
+e
+b
+e
+n
+"}
+
+(1,1,2) = {"
+a
+n
+e
+e
+e
+e
+e
+n
+"}
+(2,1,2) = {"
+a
+e
+y
+j
+w
+h
+O
+e
+"}
+(3,1,2) = {"
+s
+J
+o
+K
+h
+R
+k
+i
+"}
+(4,1,2) = {"
+v
+e
+P
+h
+h
+Q
+M
+e
+"}
+(5,1,2) = {"
+s
+J
+u
+u
+u
+h
+A
+i
+"}
+(6,1,2) = {"
+a
+e
+L
+Z
+q
+h
+G
+e
+"}
+(7,1,2) = {"
+a
+n
+e
+F
+e
+F
+e
+n
+"}
+
+(1,1,3) = {"
+a
+E
+E
+E
+E
+E
+E
+E
+"}
+(2,1,3) = {"
+a
+E
+E
+E
+E
+E
+E
+E
+"}
+(3,1,3) = {"
+a
+E
+E
+E
+E
+E
+E
+E
+"}
+(4,1,3) = {"
+a
+E
+E
+E
+E
+E
+E
+E
+"}
+(5,1,3) = {"
+a
+E
+E
+E
+E
+E
+E
+E
+"}
+(6,1,3) = {"
+a
+E
+E
+E
+E
+E
+E
+E
+"}
+(7,1,3) = {"
+a
+E
+E
+E
+E
+E
+E
+E
+"}

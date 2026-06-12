@@ -5,7 +5,9 @@ import { groupByCategory } from './helpers';
 import type { Data, MarketRegionOption, MarketRow } from './types';
 import {
   badgeStyle,
+  BUTTON_BG,
   cardStyle,
+  FONT_BODY,
   INK,
   INK_FAINT,
   INK_SOFT,
@@ -43,7 +45,6 @@ const promptMultiplier = (label: string): number | null => {
   return n;
 };
 
-// ── Market view ──────────────────────────────────────────────────
 export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
   const { act } = useBackend<Data>();
   const {
@@ -53,6 +54,9 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
     autoexport_percentage,
   } = props.data;
   const { onTrade } = props;
+  const aldermanActing = !!props.data.is_alderman_acting;
+  const aldermanBlockTitle =
+    "Reserved to the Steward's office - the Alderman has no say in the Crown's stockpile.";
 
   const groups = groupByCategory(market_rows, good_catalog);
   const [activeCategory, setActiveCategory] = useState<string>(
@@ -60,7 +64,6 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
   );
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
-  // If the selected category disappears (e.g. good toggled off mid-session), fall back.
   const activeGroup =
     groups.find((g) => g.category === activeCategory) ?? groups[0];
 
@@ -85,10 +88,10 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
           justifyContent: 'space-between',
           gap: '12px',
           marginBottom: '6px',
-          fontSize: '12px',
+          fontSize: FONT_BODY,
         }}
       >
-        <div style={{ color: INK_SOFT, fontStyle: 'italic' }}>
+        <div style={{ color: INK_SOFT }}>
           Crown spread on held stockpile:{' '}
           <span style={{ color: SEAL_AMBER, fontWeight: 'bold' }}>
             {total_arbitrage_potential}m
@@ -98,7 +101,8 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
         <div style={{ display: 'flex', gap: '6px' }}>
           <button
             type="button"
-            style={inkButtonStyle({ color: SEAL_AMBER })}
+            style={inkButtonStyle({ color: SEAL_AMBER, disabled: aldermanActing })}
+            disabled={aldermanActing}
             onClick={() => {
               const raw = window.prompt(
                 'Surplus threshold (0-100%). Stock above (limit × threshold) is "surplus" - the daily Crown sweep and the Export Surplus button move that excess to the highest-paying region, capped at that region\'s daily demand. Lower = more aggressive export.',
@@ -109,64 +113,93 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
               if (isNaN(n) || n < 0 || n > 100) return;
               act('set_autoexport_percentage', { pct: n });
             }}
-            title={`Surplus threshold: ${autoexport_percentage}%. Click to change.`}
+            title={
+              aldermanActing
+                ? aldermanBlockTitle
+                : `Surplus threshold: ${autoexport_percentage}%. Click to change.`
+            }
           >
             Threshold {autoexport_percentage}%
           </button>
           <button
             type="button"
-            style={inkButtonStyle({ color: SEAL_GREEN })}
+            style={inkButtonStyle({ color: SEAL_GREEN, disabled: aldermanActing })}
+            disabled={aldermanActing}
             onClick={() => act('export_surplus_all')}
-            title="Export every auto-priced entry's stock above the threshold to its best-paying region, capped at remaining daily demand. Manual-priced entries are skipped."
+            title={
+              aldermanActing
+                ? aldermanBlockTitle
+                : "Export every auto-priced entry's stock above the threshold to its best-paying region, capped at remaining daily demand. Manual-priced entries are skipped."
+            }
           >
             Export Surplus
           </button>
           <button
             type="button"
-            style={inkButtonStyle({ color: INK })}
+            style={inkButtonStyle({ color: INK, disabled: aldermanActing })}
+            disabled={aldermanActing}
             onClick={() => act('autoprice_all')}
-            title="Reset every stockpile entry to automatic pricing (snaps to current market, ratchets engaged)."
+            title={
+              aldermanActing
+                ? aldermanBlockTitle
+                : 'Reset every stockpile entry to automatic pricing (snaps to current market, ratchets engaged).'
+            }
           >
             Auto-Price All
           </button>
           <button
             type="button"
-            style={inkButtonStyle({ color: INK })}
+            style={inkButtonStyle({ color: INK, disabled: aldermanActing })}
+            disabled={aldermanActing}
             onClick={() => act('autolimit_all')}
-            title="Recompute every stockpile cap from total demand × pop × 2 days."
+            title={
+              aldermanActing
+                ? aldermanBlockTitle
+                : 'Recompute every stockpile cap from total demand × pop × 2 days.'
+            }
           >
             Auto-Limit All
           </button>
           <button
             type="button"
-            style={inkButtonStyle({ color: SEAL_BLUE })}
+            style={inkButtonStyle({ color: SEAL_BLUE, disabled: aldermanActing })}
+            disabled={aldermanActing}
             onClick={() => {
               const m = promptMultiplier(
                 'Multiply ALL buy prices by (e.g. 0.8 to slash bid 20%). Sets each entry to manual.',
               );
               if (m !== null) act('multiply_all_buy', { multiplier: m });
             }}
-            title="Bulk-multiply every buy price (Crown's bid). Flips affected entries to manual."
+            title={
+              aldermanActing
+                ? aldermanBlockTitle
+                : "Bulk-multiply every buy price (Crown's bid). Flips affected entries to manual."
+            }
           >
             Buy ×
           </button>
           <button
             type="button"
-            style={inkButtonStyle({ color: SEAL_GREEN })}
+            style={inkButtonStyle({ color: SEAL_GREEN, disabled: aldermanActing })}
+            disabled={aldermanActing}
             onClick={() => {
               const m = promptMultiplier(
                 'Multiply ALL sell prices by (e.g. 0.8 to discount ask 20%). Sets each entry to manual.',
               );
               if (m !== null) act('multiply_all_sell', { multiplier: m });
             }}
-            title="Bulk-multiply every sell price (Crown's ask). Flips affected entries to manual."
+            title={
+              aldermanActing
+                ? aldermanBlockTitle
+                : "Bulk-multiply every sell price (Crown's ask). Flips affected entries to manual."
+            }
           >
             Sell ×
           </button>
         </div>
       </div>
       {market_rows.length === 0 ? (
-        <div style={{ textAlign: 'center', fontStyle: 'italic', color: INK_SOFT }}>
+        <div style={{ textAlign: 'center', color: INK_SOFT }}>
           No goods accepted at present.
         </div>
       ) : (
@@ -191,48 +224,64 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
                   justifyContent: 'flex-end',
                   gap: '6px',
                   marginBottom: '6px',
-                  fontSize: '11px',
+                  fontSize: FONT_BODY,
                   color: INK_SOFT,
                 }}
               >
-                <span style={{ fontStyle: 'italic' }}>
+                <span>
                   {activeGroup.label}:
                 </span>
                 <button
                   type="button"
-                  style={inkButtonStyle({ color: SEAL_GREEN })}
+                  style={inkButtonStyle({ color: SEAL_GREEN, disabled: aldermanActing })}
+                  disabled={aldermanActing}
                   onClick={() =>
                     act('export_surplus_category', {
                       category: activeGroup.category,
                     })
                   }
-                  title={`Export ${activeGroup.label} surplus (stock over threshold) to best-paying regions.`}
+                  title={
+                    aldermanActing
+                      ? aldermanBlockTitle
+                      : `Export ${activeGroup.label} surplus (stock over threshold) to best-paying regions.`
+                  }
                 >
                   Export Surplus
                 </button>
                 <button
                   type="button"
-                  style={inkButtonStyle({ color: INK })}
+                  style={inkButtonStyle({ color: INK, disabled: aldermanActing })}
+                  disabled={aldermanActing}
                   onClick={() =>
                     act('autoprice_category', { category: activeGroup.category })
                   }
-                  title={`Reset all ${activeGroup.label} entries to automatic pricing.`}
+                  title={
+                    aldermanActing
+                      ? aldermanBlockTitle
+                      : `Reset all ${activeGroup.label} entries to automatic pricing.`
+                  }
                 >
                   Auto-Price
                 </button>
                 <button
                   type="button"
-                  style={inkButtonStyle({ color: INK })}
+                  style={inkButtonStyle({ color: INK, disabled: aldermanActing })}
+                  disabled={aldermanActing}
                   onClick={() =>
                     act('autolimit_category', { category: activeGroup.category })
                   }
-                  title={`Recompute all ${activeGroup.label} stockpile caps from demand.`}
+                  title={
+                    aldermanActing
+                      ? aldermanBlockTitle
+                      : `Recompute all ${activeGroup.label} stockpile caps from demand.`
+                  }
                 >
                   Auto-Limit
                 </button>
                 <button
                   type="button"
-                  style={inkButtonStyle({ color: SEAL_BLUE })}
+                  style={inkButtonStyle({ color: SEAL_BLUE, disabled: aldermanActing })}
+                  disabled={aldermanActing}
                   onClick={() => {
                     const m = promptMultiplier(
                       `Multiply ${activeGroup.label} buy prices by (e.g. 0.8 to slash bid 20%). Sets each to manual.`,
@@ -243,13 +292,18 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
                         multiplier: m,
                       });
                   }}
-                  title={`Bulk-multiply ${activeGroup.label} buy prices. Flips affected entries to manual.`}
+                  title={
+                    aldermanActing
+                      ? aldermanBlockTitle
+                      : `Bulk-multiply ${activeGroup.label} buy prices. Flips affected entries to manual.`
+                  }
                 >
                   Buy ×
                 </button>
                 <button
                   type="button"
-                  style={inkButtonStyle({ color: SEAL_GREEN })}
+                  style={inkButtonStyle({ color: SEAL_GREEN, disabled: aldermanActing })}
+                  disabled={aldermanActing}
                   onClick={() => {
                     const m = promptMultiplier(
                       `Multiply ${activeGroup.label} sell prices by (e.g. 0.8 to discount ask 20%). Sets each to manual.`,
@@ -260,27 +314,41 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
                         multiplier: m,
                       });
                   }}
-                  title={`Bulk-multiply ${activeGroup.label} sell prices. Flips affected entries to manual.`}
+                  title={
+                    aldermanActing
+                      ? aldermanBlockTitle
+                      : `Bulk-multiply ${activeGroup.label} sell prices. Flips affected entries to manual.`
+                  }
                 >
                   Sell ×
                 </button>
                 <button
                   type="button"
-                  style={inkButtonStyle({ color: SEAL_GREEN })}
+                  style={inkButtonStyle({ color: SEAL_GREEN, disabled: aldermanActing })}
+                  disabled={aldermanActing}
                   onClick={() =>
                     act('accept_category', { category: activeGroup.category })
                   }
-                  title={`Accept deposits for all ${activeGroup.label}.`}
+                  title={
+                    aldermanActing
+                      ? aldermanBlockTitle
+                      : `Accept deposits for all ${activeGroup.label}.`
+                  }
                 >
                   Open All
                 </button>
                 <button
                   type="button"
-                  style={inkButtonStyle({ color: SEAL_RED })}
+                  style={inkButtonStyle({ color: SEAL_RED, disabled: aldermanActing })}
+                  disabled={aldermanActing}
                   onClick={() =>
                     act('reject_category', { category: activeGroup.category })
                   }
-                  title={`Reject deposits for all ${activeGroup.label}.`}
+                  title={
+                    aldermanActing
+                      ? aldermanBlockTitle
+                      : `Reject deposits for all ${activeGroup.label}.`
+                  }
                 >
                   Close All
                 </button>
@@ -302,7 +370,7 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
                       {eventColor && (
                         <span style={badgeStyle(eventColor)}>{row.event_tag}</span>
                       )}
-                      <span style={{ color: INK_FAINT, marginLeft: '8px', fontSize: '11px' }}>
+                      <span style={{ color: INK_FAINT, marginLeft: '8px', fontSize: FONT_BODY }}>
                         Stock: {row.stock}/{row.stock_limit}
                       </span>
                     </div>
@@ -330,7 +398,7 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
                       onToggle={() => toggleExpanded(`${row.good_id}-export`)}
                       onTrade={onTrade}
                     />
-                    <StockpileStrip row={row} />
+                    <StockpileStrip row={row} aldermanActing={aldermanActing} />
                   </div>
                 );
               })}
@@ -342,7 +410,6 @@ export const MarketView = (props: { data: Data; onTrade: OnTrade }) => {
   );
 };
 
-// ── Per-side block (buy or sell) ─────────────────────────────────
 const SideBlock = (props: {
   side: Side;
   label: string;
@@ -369,7 +436,7 @@ const SideBlock = (props: {
   if (regions.length === 0) {
     return (
       <div style={sideLineStyle}>
-        <span style={{ color: INK_FAINT, fontVariant: 'small-caps', width: '34px' }}>
+        <span style={{ color: INK_FAINT, width: '34px' }}>
           {label}:
         </span>
         <span style={{ fontStyle: 'italic', color: INK_FAINT, marginLeft: '6px' }}>
@@ -385,7 +452,7 @@ const SideBlock = (props: {
   return (
     <>
       <div style={sideLineStyle}>
-        <span style={{ color: INK_FAINT, fontVariant: 'small-caps', width: '34px' }}>
+        <span style={{ color: INK_FAINT, width: '34px' }}>
           {label}:
         </span>
         <RegionRow
@@ -396,7 +463,7 @@ const SideBlock = (props: {
           isPrimary
           onTrade={onTrade}
         />
-        <span style={{ color: INK_FAINT, fontSize: '11px', marginLeft: '8px' }}>
+        <span style={{ color: INK_FAINT, fontSize: FONT_BODY, marginLeft: '8px' }}>
           ({regions.length} region{regions.length === 1 ? '' : 's'})
         </span>
         {others.length > 0 && (
@@ -427,7 +494,6 @@ const SideBlock = (props: {
   );
 };
 
-// ── One region line (used for primary + expanded entries) ────────
 const RegionRow = (props: {
   side: Side;
   color: string;
@@ -462,7 +528,7 @@ const RegionRow = (props: {
             style={{
               color: capacityColor,
               marginLeft: '4px',
-              fontSize: '11px',
+              fontSize: FONT_BODY,
             }}
           >
             [{region.capacity_today}/{region.capacity_total}]
@@ -496,23 +562,22 @@ const sideLineStyle = {
   display: 'flex',
   flexWrap: 'wrap' as const,
   alignItems: 'center',
-  fontSize: '12px',
+  fontSize: FONT_BODY,
   marginBottom: '3px',
 };
 
 const chevronStyle = {
   fontFamily: 'inherit',
-  fontSize: '12px',
+  fontSize: FONT_BODY,
   padding: '1px 6px',
   marginLeft: '6px',
   border: `1px solid ${INK_FAINT}`,
-  background: 'rgba(255,248,220,0.5)',
+  background: BUTTON_BG,
   color: INK_SOFT,
   cursor: 'pointer',
   borderRadius: '2px',
 };
 
-// ── Stockpile management strip (Steward-only controls; visible to Alderman) ──
 const stripStyle: React.CSSProperties = {
   display: 'flex',
   flexWrap: 'wrap',
@@ -521,7 +586,7 @@ const stripStyle: React.CSSProperties = {
   marginTop: '6px',
   paddingTop: '6px',
   borderTop: `1px dashed ${INK_FAINT}`,
-  fontSize: '11px',
+  fontSize: FONT_BODY,
   color: INK_SOFT,
 };
 
@@ -544,13 +609,11 @@ const stripValueButtonStyle: React.CSSProperties = {
   cursor: 'pointer',
   textDecoration: 'underline dotted',
   fontFamily: 'inherit',
-  fontSize: '11px',
+  fontSize: FONT_BODY,
 };
 
 const flagPillStyle = (active: boolean): React.CSSProperties => ({
-  fontSize: '9px',
-  fontVariant: 'small-caps',
-  letterSpacing: '1px',
+  fontSize: FONT_BODY,
   padding: '0 4px',
   border: `1px solid ${active ? SEAL_GREEN : INK_FAINT}`,
   color: active ? SEAL_GREEN : INK_FAINT,
@@ -560,9 +623,12 @@ const flagPillStyle = (active: boolean): React.CSSProperties => ({
   fontFamily: 'inherit',
 });
 
-const StockpileStrip = (props: { row: MarketRow }) => {
+const StockpileStrip = (props: {
+  row: MarketRow;
+  aldermanActing: boolean;
+}) => {
   const { act } = useBackend<Data>();
-  const { row } = props;
+  const { row, aldermanActing } = props;
   const goodId = row.good_id;
   const isAuto = !!row.automatic_price;
   const limitAuto = !!row.automatic_limit;
@@ -570,35 +636,54 @@ const StockpileStrip = (props: { row: MarketRow }) => {
   const withdrawDisabled = !!row.withdraw_disabled;
   const margin = row.margin_per_unit;
   const potential = row.arbitrage_potential;
+  const blockTitle =
+    "Reserved to the Steward's office - the Alderman has no say in the Crown's stockpile.";
+  const stripStyleEffective: React.CSSProperties = aldermanActing
+    ? { ...stripStyle, opacity: 0.55, textDecoration: 'line-through' }
+    : stripStyle;
+  const valueBtnStyle: React.CSSProperties = aldermanActing
+    ? { ...stripValueButtonStyle, cursor: 'not-allowed' }
+    : stripValueButtonStyle;
 
   const editBuy = () => {
+    if (aldermanActing) return;
     const n = promptNumber(`Set buy price for ${goodId}`, row.buy_price);
     if (n !== null) act('set_buy_price', { good_id: goodId, price: n });
   };
   const editSell = () => {
+    if (aldermanActing) return;
     const n = promptNumber(`Set sell price for ${goodId}`, row.sell_price);
     if (n !== null) act('set_sell_price', { good_id: goodId, price: n });
   };
   const editLimit = () => {
+    if (aldermanActing) return;
     const n = promptNumber(`Set stockpile limit for ${goodId}`, row.stock_limit);
     if (n !== null) act('set_stockpile_limit', { good_id: goodId, limit: n });
   };
 
   return (
-    <div style={stripStyle}>
+    <div style={stripStyleEffective} title={aldermanActing ? blockTitle : undefined}>
       <span style={stripCellStyle}>
         Buy:{' '}
-        <button type="button" style={stripValueButtonStyle} onClick={editBuy}>
+        <button
+          type="button"
+          style={valueBtnStyle}
+          disabled={aldermanActing}
+          onClick={editBuy}
+        >
           {row.buy_price}m
         </button>
         <button
           type="button"
           style={flagPillStyle(isAuto)}
+          disabled={aldermanActing}
           onClick={() => act('toggle_auto_price', { good_id: goodId })}
           title={
-            isAuto
-              ? 'Automatic — deposit ratchets up only, withdraw ratchets down only.'
-              : 'Manual — Steward set this price by hand.'
+            aldermanActing
+              ? blockTitle
+              : isAuto
+                ? 'Automatic — deposit ratchets up only, withdraw ratchets down only.'
+                : 'Manual — Steward set this price by hand.'
           }
         >
           {isAuto ? 'Auto' : 'Manual'}
@@ -606,23 +691,36 @@ const StockpileStrip = (props: { row: MarketRow }) => {
       </span>
       <span style={stripCellStyle}>
         Sell:{' '}
-        <button type="button" style={stripValueButtonStyle} onClick={editSell}>
+        <button
+          type="button"
+          style={valueBtnStyle}
+          disabled={aldermanActing}
+          onClick={editSell}
+        >
           {row.sell_price}m
         </button>
       </span>
       <span style={stripCellStyle}>
         Limit:{' '}
-        <button type="button" style={stripValueButtonStyle} onClick={editLimit}>
+        <button
+          type="button"
+          style={valueBtnStyle}
+          disabled={aldermanActing}
+          onClick={editLimit}
+        >
           {row.stock_limit}
         </button>
         <button
           type="button"
           style={flagPillStyle(limitAuto)}
+          disabled={aldermanActing}
           onClick={() => act('toggle_auto_limit', { good_id: goodId })}
           title={
-            limitAuto
-              ? 'Automatic — total demand × pop × 2 days.'
-              : 'Manual — Steward set this cap by hand.'
+            aldermanActing
+              ? blockTitle
+              : limitAuto
+                ? 'Automatic — total demand × pop × 2 days.'
+                : 'Manual — Steward set this cap by hand.'
           }
         >
           {limitAuto ? 'Auto' : 'Manual'}
@@ -637,16 +735,18 @@ const StockpileStrip = (props: { row: MarketRow }) => {
       <button
         type="button"
         style={flagPillStyle(accepting)}
+        disabled={aldermanActing}
         onClick={() => act('toggle_stockpile_accept', { good_id: goodId })}
-        title="Accept player deposits."
+        title={aldermanActing ? blockTitle : 'Accept player deposits.'}
       >
         {accepting ? 'Accept' : 'Reject'}
       </button>
       <button
         type="button"
         style={flagPillStyle(!withdrawDisabled)}
+        disabled={aldermanActing}
         onClick={() => act('toggle_withdraw_disabled', { good_id: goodId })}
-        title="Allow player withdraws."
+        title={aldermanActing ? blockTitle : 'Allow player withdraws.'}
       >
         {withdrawDisabled ? 'No-W' : 'W-OK'}
       </button>

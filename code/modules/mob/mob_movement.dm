@@ -583,6 +583,8 @@
 
 //* Updates a mob's sneaking status, rendering them invisible or visible in accordance to their status. TODO:Fix people bypassing the sneak fade by turning, and add a proc var to have a timer after resetting visibility.
 /mob/living/update_sneak_invis(reset = FALSE) //Why isn't this in mob/living/living_movements.dm? Why, I'm glad you asked!
+	if(has_status_effect(/datum/status_effect/stealth_revealed) && !reset)
+		return
 	if(!reset && world.time < mob_timers[MT_INVISIBILITY]) // Check if the mob is affected by the invisibility spell
 		rogue_sneaking = TRUE
 		return
@@ -700,8 +702,10 @@
 	if(!is_mounted)
 		switch(intent)
 			if(MOVE_INTENT_SNEAK)
-				m_intent = MOVE_INTENT_SNEAK
-				update_sneak_invis()
+				var/mob/living/L = src
+				if(!L.has_status_effect(/datum/status_effect/stealth_revealed))
+					m_intent = MOVE_INTENT_SNEAK
+					update_sneak_invis()
 
 			if(MOVE_INTENT_WALK)
 				m_intent = MOVE_INTENT_WALK
@@ -772,29 +776,24 @@
 					return FALSE
 	return TRUE
 
-/mob/living/proc/check_dodge_skill()
+/mob/living/proc/check_dodge_skill(check_trait = TRUE)
 	return TRUE
 
-/mob/living/carbon/human/check_dodge_skill()
-	if(!HAS_TRAIT(src, TRAIT_DODGEEXPERT))
-		return FALSE
+/mob/living/carbon/human/check_dodge_skill(check_trait = TRUE)
+	if(check_trait)
+		if(!HAS_TRAIT(src, TRAIT_DODGEEXPERT))
+			return FALSE
 	if(istype(src.wear_armor, /obj/item/clothing))
 		var/obj/item/clothing/CL = src.wear_armor
-		if(CL.armor_class == ARMOR_CLASS_HEAVY)
-			return FALSE
-		if(CL.armor_class == ARMOR_CLASS_MEDIUM)
+		if(CL.armor_class > ARMOR_CLASS_LIGHT)
 			return FALSE
 	if(istype(src.wear_shirt, /obj/item/clothing))
 		var/obj/item/clothing/CL = src.wear_shirt
-		if(CL.armor_class == ARMOR_CLASS_HEAVY)
-			return FALSE
-		if(CL.armor_class == ARMOR_CLASS_MEDIUM)
+		if(CL.armor_class > ARMOR_CLASS_LIGHT)
 			return FALSE
 	if(istype(src.wear_pants, /obj/item/clothing))
 		var/obj/item/clothing/CL = src.wear_pants
-		if(CL.armor_class == ARMOR_CLASS_HEAVY)
-			return FALSE
-		if(CL.armor_class == ARMOR_CLASS_MEDIUM)
+		if(CL.armor_class > ARMOR_CLASS_LIGHT)
 			return FALSE
 	if(istype(src.head, /obj/item/clothing))
 		var/obj/item/clothing/CL = src.head

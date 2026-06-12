@@ -15,6 +15,10 @@
 	path = /obj/item/toy/cards/deck/tarot
 	sort_category = "Miscellaneous"
 
+/datum/loadout_item/tarot_deck_majorarcana
+	name = "Tarot Deck (Major Arcana)"
+	path = /obj/item/toy/cards/deck/tarot/majorarcana
+
 /datum/loadout_item/custom_book
 	name = "Custom Book"
 	path = /obj/item/book/rogue/loadoutbook
@@ -26,4 +30,15 @@
 	sort_category = "Miscellaneous"
 	cost = 2
 
+/datum/loadout_item/triumph_satchelalt
+	name = "Black Satchel"
+	path = /obj/item/storage/backpack/rogue/satchel/black
+	sort_category = "Miscellaneous"
+	cost = 2
+
+/datum/loadout_item/bandolier
+	name = "Bandolier"
+	path = /obj/item/clothing/cloak/bandolier
+	sort_category = "Miscellaneous"
+	cost = 2
 */

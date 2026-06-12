@@ -1,5 +1,6 @@
 /datum/round_event_control/antagonist/solo
 	typepath = /datum/round_event/antagonist/solo
+
 	/// How many baseline antags do we spawn
 	var/base_antags = 1
 	/// How many maximum antags can we spawn
@@ -18,11 +19,40 @@
 	/// Similar to extra_spawned_events however these are only used by roundstart events and will only try and run if we have the points to do so
 	var/list/preferred_events
 
+/datum/round_event_control/antagonist/solo/proc/candidate_is_antag_banned(mob/M)
+	if(!M || QDELETED(M) || !M.ckey)
+		return TRUE
+
+	var/list/ban_checks = list(ROLE_SYNDICATE)
+	if(antag_flag)
+		ban_checks += antag_flag
+
+	if(is_banned_from(M.ckey, ban_checks))
+		return TRUE
+
+	if(!antag_datum)
+		return FALSE
+
+	var/datum/antagonist/antag = new antag_datum
+	. = antag.is_banned(M)
+	qdel(antag)
+
+/datum/round_event_control/antagonist/solo/proc/filter_antag_banned_candidates(list/candidates)
+	if(!length(candidates))
+		return candidates
+
+	var/list/filtered_candidates = candidates.Copy()
+	for(var/mob/M as anything in candidates)
+		if(candidate_is_antag_banned(M))
+			filtered_candidates -= M
+
+	return filtered_candidates
+
 /datum/round_event_control/antagonist/solo/from_ghosts/get_candidates()
 	var/round_started = SSticker.HasRoundStarted() || SSgamemode?.roundstart_live
 	var/midround_antag_pref_arg = round_started ? FALSE : TRUE
-
 	var/list/candidates = SSgamemode.get_candidates(antag_flag, antag_flag, observers = TRUE, midround_antag_pref = midround_antag_pref_arg, restricted_roles = restricted_roles)
+	candidates = filter_antag_banned_candidates(candidates)
 	candidates = trim_candidates(candidates)
 	return candidates
 
@@ -30,12 +60,15 @@
 	. = ..()
 	if(!.)
 		return
+
 	var/is_hard_roundstart = roundstart && (storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN)
 	if(is_hard_roundstart && players_amt < HARD_ANTAG_MIN_POP)
 		return FALSE
+
 	var/antag_amt = get_antag_amount()
 	if(antag_amt <= 0)
 		return FALSE
+
 	var/list/candidates = get_candidates()
 	if(!length(candidates))
 		return FALSE
@@ -45,6 +78,7 @@
 	var/storyteller_cap = SSgamemode.story_antag_slot_cap(antag_datum, roundstart = roundstart)
 	if(storyteller_cap > 0)
 		return SSgamemode.storyteller_scale_slots(storyteller_cap, people, !roundstart, SSgamemode.story_antag_scaling_step(antag_datum), SSgamemode.story_antag_min_players(antag_datum))
+
 	var/amount = base_antags + FLOOR(people / denominator, 1)
 	return min(amount, maximum_antags)
 
@@ -53,21 +87,21 @@
 	var/new_players_arg = round_started ? FALSE : TRUE
 	var/living_players_arg = round_started ? TRUE : FALSE
 	var/midround_antag_pref_arg = round_started ? FALSE : TRUE
-
 	var/list/candidates = SSgamemode.get_candidates(antag_flag, antag_flag, FALSE, new_players_arg, living_players_arg, midround_antag_pref = midround_antag_pref_arg, \
-													restricted_roles = restricted_roles, required_roles = exclusive_roles)
+		restricted_roles = restricted_roles, required_roles = exclusive_roles)
+	candidates = filter_antag_banned_candidates(candidates)
 	candidates = trim_candidates(candidates)
 	return candidates
 
-
 /datum/round_event_control/antagonist/solo/return_failure_string(players_amt)
-	. =..()
+	. = ..()
 	var/is_hard_roundstart = roundstart && (storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN)
 	if(is_hard_roundstart && players_amt < HARD_ANTAG_MIN_POP)
 		if(.)
 			. += ", "
 		. += "Needs [HARD_ANTAG_MIN_POP] pop for a hard antag"
 		return .
+
 	var/list/candidates = get_candidates() //we should optimize this
 	if(!length(candidates))
 		if(.)
@@ -75,7 +109,6 @@
 		. += "No Candidates!"
 
 	return .
-
 
 /datum/round_event/antagonist/solo
 	// ALL of those variables are internal. Check the control event to change them
@@ -106,6 +139,28 @@
 			if(antag_event_controller.preferred_events)
 				preferred_events = fill_with_ones(antag_event_controller.preferred_events)
 
+/datum/round_event/antagonist/solo/proc/candidate_is_antag_banned(mob/M)
+	var/datum/round_event_control/antagonist/solo/cast_control = control
+	if(cast_control)
+		return cast_control.candidate_is_antag_banned(M)
+
+	if(!M || QDELETED(M) || !M.ckey)
+		return TRUE
+
+	var/list/ban_checks = list(ROLE_SYNDICATE)
+	if(antag_flag)
+		ban_checks += antag_flag
+
+	if(is_banned_from(M.ckey, ban_checks))
+		return TRUE
+
+	if(!antag_datum)
+		return FALSE
+
+	var/datum/antagonist/antag = new antag_datum
+	. = antag.is_banned(M)
+	qdel(antag)
+
 /datum/round_event/antagonist/solo/setup()
 	var/datum/round_event_control/antagonist/solo/cast_control = control
 	var/requested_antag_count = cast_control.get_antag_amount()
@@ -116,15 +171,26 @@
 	prompted_picking = cast_control.prompted_picking
 	var/list/possible_candidates = cast_control.get_candidates()
 	var/list/candidates = list()
+
 	if(cast_control == SSgamemode.current_roundstart_event && length(SSgamemode.roundstart_antag_minds))
 		log_storyteller("Running roundstart antagonist assignment, event: [src], roundstart_antag_minds: [english_list(SSgamemode.roundstart_antag_minds)]")
 		for(var/datum/mind/antag_mind in SSgamemode.roundstart_antag_minds)
 			if(!antag_mind.current)
 				log_storyteller("Roundstart antagonist setup error: antag_mind([antag_mind]) in roundstart_antag_minds without a set mob")
 				continue
+			if(candidate_is_antag_banned(antag_mind.current))
+				log_storyteller("Roundstart antagonist setup skipped banned candidate: [antag_mind]")
+				SSgamemode.roundstart_antag_minds -= antag_mind
+				continue
 			candidates += antag_mind.current
 			SSgamemode.roundstart_antag_minds -= antag_mind
 			log_storyteller("Roundstart antag_mind, [antag_mind]")
+
+	if(prompted_picking)
+		// Trying a callback here to avoid hanging the event logic.
+		INVOKE_ASYNC(src, PROC_REF(poll_and_assign), possible_candidates)
+		setup = TRUE // We tell the controller we started successfully
+		return
 
 	//guh
 	var/list/cliented_list = list()
@@ -137,6 +203,8 @@
 		if(QDELETED(picked_client))
 			continue
 		var/mob/picked_mob = picked_client.mob
+		if(candidate_is_antag_banned(picked_mob))
+			continue
 		picked_mob?.mind?.picking = TRUE
 		log_storyteller("Picked antag event mob: [picked_mob], special role: [picked_mob.mind?.special_role ? picked_mob.mind.special_role : "none"]")
 		candidates |= picked_mob
@@ -146,6 +214,7 @@
 		message_admins("STORYTELLER:[cast_control.name] failed to spawn because it had no valid candidates at setup.")
 		log_storyteller("STORYTELLER:[cast_control.name] failed to spawn because it had no valid candidates at setup.")
 		return
+
 	if(antag_count < requested_antag_count)
 		message_admins("STORYTELLER:[cast_control.name] partially filled from [requested_antag_count] to [antag_count] due to limited valid candidates.")
 		log_storyteller("STORYTELLER:[cast_control.name] partially filled from [requested_antag_count] to [antag_count] due to limited valid candidates.")
@@ -157,19 +226,19 @@
 		if(!length(candidates))
 			message_admins("A roleset event got fewer antags then its antag_count and may not function correctly.")
 			break
-
 		var/mob/candidate = pick_n_take(candidates)
+		if(candidate_is_antag_banned(candidate))
+			continue
 		log_storyteller("Antag event spawned mob: [candidate], special role: [candidate.mind?.special_role ? candidate.mind.special_role : "none"]")
-
 		if(!candidate.mind)
 			candidate.mind = new /datum/mind(candidate.key)
-
 		setup_minds += candidate.mind
 		candidate.mind.special_role = antag_flag
 		candidate.mind.restricted_roles = restricted_roles
 		picked_mobs += WEAKREF(candidate.client)
 
 	setup = TRUE
+
 	if(LAZYLEN(extra_spawned_events))
 		var/event_type = pickweight(extra_spawned_events)
 		if(!event_type)
@@ -194,11 +263,9 @@
 /datum/round_event/antagonist/solo/proc/create_human_mob_copy(turf/create_at, mob/living/carbon/human/old_mob, qdel_old_mob = TRUE)
 	if(!old_mob?.client)
 		return
-
 	var/mob/living/carbon/human/new_character = new(create_at)
 	if(!create_at)
 		SSjob.SendToLateJoin(new_character)
-
 	old_mob.client.prefs.copy_to(new_character)
 	new_character.dna.update_dna_identity()
 	old_mob.mind.transfer_to(new_character)
@@ -245,7 +312,8 @@
 		if(QDELETED(candidate_client) || QDELETED(candidate_client.mob))
 			continue
 		var/mob/candidate = candidate_client.mob
-
+		if(candidate_is_antag_banned(candidate))
+			continue
 		if(!candidate.mind)
 			candidate.mind = new /datum/mind(candidate.key)
 		var/mob/living/carbon/human/new_human = make_body(candidate)
@@ -253,20 +321,61 @@
 		new_human.mind.restricted_roles = restricted_roles
 		setup_minds += new_human.mind
 		selected_count++
-	setup = TRUE
 
+	setup = TRUE
 
 ///Uses stripped down and bastardized code from respawn character
 /proc/make_body(mob/dead/observer/ghost_player)
 	if(!ghost_player || !ghost_player.key)
 		return
-
 	//First we spawn a dude.
 	var/mob/living/carbon/human/new_character = new//The mob being spawned.
 	SSjob.SendToLateJoin(new_character)
-
 	ghost_player.client.prefs.copy_to(new_character)
 	new_character.dna.update_dna_identity()
 	new_character.key = ghost_player.key
-
 	return new_character
+
+/// POLLING LOGIC BELOW.
+/datum/round_event/antagonist/solo/proc/poll_and_assign(list/mob/living/possible_candidates)
+	var/datum/round_event_control/antagonist/solo/cast_control = control
+	var/list/willing_candidates = list()
+	var/poll_time = 20 SECONDS
+
+	for(var/mob/living/L in possible_candidates)
+		if(!L.client || candidate_is_antag_banned(L))
+			continue
+		INVOKE_ASYNC(src, PROC_REF(ask_candidate), L, willing_candidates, poll_time)
+
+	sleep(poll_time)
+
+	for(var/mob/M in willing_candidates)
+		if(QDELETED(M) || !M.client || (M.stat == DEAD && !istype(M, /mob/dead/observer)) || candidate_is_antag_banned(M))
+			willing_candidates -= M
+
+	if(!length(willing_candidates))
+		message_admins("STORYTELLER: [cast_control.name] failed - poll returned no willing candidates.")
+		return
+
+	var/requested_count = cast_control.get_antag_amount()
+	while(length(willing_candidates) && setup_minds.len < requested_count)
+		var/mob/chosen = pick_n_take(willing_candidates)
+		if(candidate_is_antag_banned(chosen))
+			continue
+		if(!chosen.mind)
+			chosen.mind = new /datum/mind(chosen.key)
+		setup_minds += chosen.mind
+		chosen.mind.special_role = antag_flag
+		chosen.mind.restricted_roles = restricted_roles
+		add_datum_to_mind(chosen.mind)
+
+	message_admins("STORYTELLER: [cast_control.name] poll finished. [setup_minds.len] antags spawned.")
+
+/datum/round_event/antagonist/solo/proc/ask_candidate(mob/M, list/willing_list, poll_time)
+	if(candidate_is_antag_banned(M))
+		return
+
+	var/ask_text = "The storyteller is requesting a [antag_flag]. Would you like to play this role?"
+	var/choice = tgui_alert(M, ask_text, "Antagonist Request", list("Yes", "No"), poll_time)
+	if(choice == "Yes" && !candidate_is_antag_banned(M))
+		willing_list += M

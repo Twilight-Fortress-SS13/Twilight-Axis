@@ -39,7 +39,6 @@
 	name = "plaque belt"
 	desc = "An exquisite belt, decorated with studdings of gold."
 	icon_state = "goldplaque"
-	sellprice = 50
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/armorsmithing
 
@@ -64,7 +63,6 @@
 	name = "plaque belt"
 	desc = "An exquisite belt, decorated with studdings of silver."
 	icon_state = "silverplaque"
-	sellprice = 30
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/armorsmithing
 
@@ -126,7 +124,6 @@
 	name = "steel belt"
 	desc = "A fine leather belt that's been sleeved within many segments of steel, protecting its delicate innards from prying hands-and-blades."
 	icon_state = "steelplaque"
-	sellprice = 30
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/armorsmithing
 
@@ -134,7 +131,6 @@
 	name = "tasseted belt"
 	desc = "A fine leather belt that's been sleeved within many segments of steel, and further reinforced with the tassets of a fluted cuirass."
 	icon_state = "steeltasset"
-	sellprice = 35
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/armorsmithing
 
@@ -175,7 +171,6 @@
 	slot_flags = ITEM_SLOT_BACK
 	resistance_flags = FIRE_PROOF
 	max_integrity = 300
-	sellprice = 10
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
 	alternate_worn_layer = UNDER_CLOAK_LAYER
@@ -197,10 +192,17 @@
 	)
 
 /obj/item/storage/backpack/rogue/satchel/otavan
-	name = "otavan leather satchel"
+	name = "otavan satchel"
 	desc = "A sleek, stylish, and surprisingly sturdy satchel that hails straight from the Sovereignty of Otava. It is made to endure, first and foremost."
 	icon_state = "osatchel"
 	item_state = "osatchel"
+
+/obj/item/storage/backpack/rogue/satchel/otavan/short
+	name = "otavan short satchel"
+	desc = "A sleek, stylish, and surprisingly sturdy satchel that hails straight from the Sovereignty of Otava. This one is made to clip to a belt or to a pair of pants, freeing the shoulders from any weight."
+	icon_state = "osatchelshort"
+	item_state = "osatchelshort"
+	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP
 
 /obj/item/storage/backpack/rogue/satchel/mule/PopulateContents()
 	for(var/i in 1 to 3)
@@ -215,7 +217,10 @@
 				new /obj/item/reagent_containers/powder/spice(src)
 
 /obj/item/storage/backpack/rogue/satchel/black
-	color = CLOTHING_BLACK
+	name = "black satchel"
+	icon_state = "bsatchel"
+	item_state = "bsatchel"
+	sellprice = 10
 
 /obj/item/storage/backpack/rogue/attack_right(mob/user)
 	var/datum/component/storage/CP = GetComponent(/datum/component/storage)
@@ -261,7 +266,6 @@
 	slot_flags = ITEM_SLOT_BACK_L
 	resistance_flags = FIRE_PROOF
 	max_integrity = 300
-	sellprice = 15
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
 	sewrepair = TRUE
@@ -433,10 +437,24 @@
 		knives += K
 	update_icon()
 
+/obj/item/storage/belt/rogue/leather/knifebelt/black/silver_blessed/Initialize()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/rogueweapon/huntingknife/throwingknife/silver/preblessed/K = new()
+		knives += K
+	update_icon()
+
 /obj/item/storage/belt/rogue/leather/knifebelt/black/psydon/Initialize()
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/psydon/K = new()
+		knives += K
+	update_icon()
+
+/obj/item/storage/belt/rogue/leather/knifebelt/black/psydon_blessed/Initialize()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/rogueweapon/huntingknife/throwingknife/psydon/preblessed/K = new()
 		knives += K
 	update_icon()
 
@@ -451,6 +469,7 @@
 	name = "giltsilk belt"
 	desc = "A gold adorned belt with the softest of silks barely concealing one's bits."
 	icon_state = "silkbelt"
+	flags_inv = HIDECROTCH
 	var/max_storage = 5
 	sewrepair = TRUE
 
@@ -544,6 +563,53 @@
 	anvilrepair = /datum/skill/craft/blacksmithing
 	smeltresult = /obj/item/ingot/bronze
 	component_type = /datum/component/storage/concrete/grid/orestore/bronze
+	var/current_choice_index = 1
+	var/static/list/filter_options = list(
+	list(/obj/item/rogueore, /obj/item/ingot, /obj/item/roguegem, /obj/item/riddleofsteel, /obj/item/pearl),
+	list(/obj/item/rogueore),
+	list(/obj/item/ingot),
+	list(/obj/item/roguegem, /obj/item/riddleofsteel, /obj/item/pearl)
+	)
+
+/obj/item/storage/hip/orestore/bronze/examine(mob/user)
+	. = ..()
+	var/str = "The bag is set to collect: "
+	switch(current_choice_index)
+		if(1)
+			str += "Everything"
+		if(2)
+			str += "Ore Only"
+		if(3)
+			str += "Ingots Only"
+		if(4)
+			str += "Gems Only"
+	. += span_notice(str)
+
+/obj/item/storage/hip/orestore/bronze/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_notice("Walking over or clicking on the tiles with selected items will automatically scoop them into the bag.")
+	. += span_notice("Right clicking the bag while it's outside of your active hand will toggle through various scoop filters.")
+
+/obj/item/storage/hip/orestore/bronze/attack_right(mob/user)
+	if(current_choice_index < length(filter_options))
+		current_choice_index++
+	else
+		current_choice_index = 1
+	var/list/filters = filter_options[current_choice_index]
+	var/datum/component/storage/concrete/grid/orestore/OS = GetComponent(/datum/component/storage/concrete/grid/orestore)
+	if(OS)
+		OS.set_holdable(filters)
+	var/str = "\The [src] will now collect: "
+	switch(current_choice_index)
+		if(1)
+			str += "Everything"
+		if(2)
+			str += "Ore Only"
+		if(3)
+			str += "Ingots Only"
+		if(4)
+			str += "Gems Only"
+	to_chat(user, span_notice(str))
 
 // I Do Not 100% understand how this works. This is probably buggy as fuck.
 /obj/item/storage/hip/orestore/bronze/equipped(mob/user, slot)

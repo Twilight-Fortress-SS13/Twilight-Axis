@@ -9,16 +9,17 @@
 	standard 0 if fail
 */
 /mob/living/proc/apply_damage(damage = 0, damagetype = BRUTE, def_zone = null, blocked = 0, forced = FALSE, spread_damage = FALSE)
-
 	if(HAS_TRAIT(src, "ethereal") && !forced) //TA EDIT
 		return 0
-	
-	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMGE, damage, damagetype, def_zone)
+
+	var/signal_result = SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMGE, damage, damagetype, def_zone)
+	if(signal_result & COMPONENT_DAMAGE_HANDLED)
+		return 0
+
 	var/hit_percent = 1
 	damage = max(damage-blocked,0)
 //	var/hit_percent = (100-blocked)/100
 	if(!damage || (!forced && hit_percent <= 0))
-
 		return 0
 	clear_typing_indicator()
 	var/damage_amount =  forced ? damage : damage * hit_percent
@@ -174,6 +175,8 @@
 		return FALSE
 	if(mob_timers && amount > 0)
 		mob_timers["lastoxydam"] = world.time
+	if(HAS_TRAIT(src, TRAIT_NOBREATH)) // kinda needed here since we don't breathe at all nor suffocate to death on bloodloss, we die on integrity critzapping us to death
+		amount = min(amount, 0)
 	if(has_status_effect(/datum/status_effect/buff/fortify) && amount < 0)
 		amount *= 1.5
 

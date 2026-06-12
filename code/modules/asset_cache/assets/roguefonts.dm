@@ -3,6 +3,11 @@
 	assets = list(
 		"Mookmania.otf" = 'interface/fonts/Mookmania.otf', // Основной
 		"pterra.ttf" = 'interface/fonts/pterra.ttf',
+		"lora-regular.ttf" = 'interface/fonts/lora-regular.ttf',
+		"lora-italic.ttf" = 'interface/fonts/lora-italic.ttf',
+		"lora-bold.ttf" = 'interface/fonts/lora-bold.ttf',
+		"lora-medium.ttf" = 'interface/fonts/lora-medium.ttf',
+		"medievalsharp.ttf" = 'interface/fonts/medievalsharp.ttf',
 		"newrocker.ttf" = 'interface/fonts/newrocker.ttf',
 		"nosfer.ttf" = 'interface/fonts/nosfer.ttf',
 		"chiseld.ttf" = 'interface/fonts/chiseld.ttf',

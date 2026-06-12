@@ -4,7 +4,9 @@ import { useBackend } from '../../backend';
 import { groupByCategory } from './helpers';
 import {
   badgeStyle,
+  BUTTON_BG,
   cardStyle,
+  FONT_BODY,
   INK,
   INK_FAINT,
   INK_SOFT,
@@ -32,6 +34,9 @@ export const AutoImportView = (props: { data: Data }) => {
     others,
     history,
   } = auto_import;
+  const aldermanActing = !!props.data.is_alderman_acting;
+  const aldermanBlockTitle =
+    "Reserved to the Steward's office - the Alderman has no say in the Crown's stockpile.";
 
   const [floorDraft, setFloorDraft] = useState<string>(String(purse_floor));
 
@@ -61,7 +66,7 @@ export const AutoImportView = (props: { data: Data }) => {
           }}
         >
           <div>
-            <div style={{ fontSize: '12px', color: INK_SOFT }}>
+            <div style={{ fontSize: FONT_BODY, color: INK_SOFT }}>
               Today&apos;s spend:{' '}
               <span style={{ color: SEAL_AMBER, fontWeight: 'bold' }}>
                 {today_spent}m
@@ -69,46 +74,56 @@ export const AutoImportView = (props: { data: Data }) => {
               &middot; Goods on standing import:{' '}
               <span style={{ fontWeight: 'bold' }}>{activeCount}</span>
             </div>
-            <div style={{ fontSize: '11px', color: INK_FAINT, fontStyle: 'italic' }}>
+            <div style={{ fontSize: FONT_BODY, color: INK_SOFT }}>
               Tops up each good by {batch_size} units every 6 minutes when stock is
               below {floor_target}, skipping when a unit would cost more than{' '}
               {max_price_mult}x its base price.
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ color: INK_FAINT, fontSize: '12px' }}>Purse floor:</span>
+            <span style={{ color: INK_FAINT, fontSize: FONT_BODY }}>Purse floor:</span>
             <input
               type="number"
               value={floorDraft}
               min={0}
               max={99999}
+              disabled={aldermanActing}
               style={{
                 width: '80px',
                 fontFamily: 'inherit',
-                fontSize: '12px',
+                fontSize: FONT_BODY,
                 padding: '2px 4px',
                 border: `1px solid ${INK_FAINT}`,
-                background: 'rgba(255,248,220,0.55)',
+                background: BUTTON_BG,
                 color: INK,
+                opacity: aldermanActing ? 0.55 : 1,
               }}
+              title={aldermanActing ? aldermanBlockTitle : undefined}
               onChange={(e) => setFloorDraft(e.target.value)}
             />
             <button
               type="button"
-              style={inkButtonStyle({ color: SEAL_BLUE })}
+              style={inkButtonStyle({ color: SEAL_BLUE, disabled: aldermanActing })}
+              disabled={aldermanActing}
               onClick={() => {
                 const amount = Number(floorDraft);
                 if (!Number.isFinite(amount)) return;
                 act('set_auto_import_purse_floor', { amount });
               }}
+              title={aldermanActing ? aldermanBlockTitle : undefined}
             >
               Set
             </button>
             <button
               type="button"
-              style={inkButtonStyle({ color: SEAL_RED })}
+              style={inkButtonStyle({ color: SEAL_RED, disabled: aldermanActing })}
+              disabled={aldermanActing}
               onClick={() => act('kill_switch_auto_import')}
-              title="Strike every standing import from the ledger at once."
+              title={
+                aldermanActing
+                  ? aldermanBlockTitle
+                  : 'Strike every standing import from the ledger at once.'
+              }
             >
               Strike All
             </button>
@@ -128,6 +143,8 @@ export const AutoImportView = (props: { data: Data }) => {
             row={row}
             name={good_catalog[row.good_id]?.name ?? row.good_id}
             floorTarget={floor_target}
+            disabled={aldermanActing}
+            disabledTitle={aldermanBlockTitle}
             onToggle={() =>
               act('toggle_auto_import', { good_id: row.good_id })
             }
@@ -161,6 +178,8 @@ export const AutoImportView = (props: { data: Data }) => {
                   row={row}
                   name={good_catalog[row.good_id]?.name ?? row.good_id}
                   floorTarget={floor_target}
+                  disabled={aldermanActing}
+                  disabledTitle={aldermanBlockTitle}
                   onToggle={() =>
                     act('toggle_auto_import', { good_id: row.good_id })
                   }
@@ -172,7 +191,7 @@ export const AutoImportView = (props: { data: Data }) => {
       )}
 
       <div style={sectionHeaderStyle}>
-        Recent Activity (last {history.length || 0} day{history.length === 1 ? '' : 's'})
+        Tally (last {history.length || 0} day{history.length === 1 ? '' : 's'})
       </div>
       {history.length === 0 ? (
         <div style={{ textAlign: 'center', fontStyle: 'italic', color: INK_SOFT }}>
@@ -194,11 +213,11 @@ export const AutoImportView = (props: { data: Data }) => {
               </span>
             </div>
             {entry.lines.length === 0 ? (
-              <div style={{ color: INK_FAINT, fontSize: '11px', fontStyle: 'italic' }}>
+              <div style={{ color: INK_FAINT, fontSize: FONT_BODY, fontStyle: 'italic' }}>
                 No auto-import activity.
               </div>
             ) : (
-              <div style={{ fontSize: '11px', color: INK_SOFT }}>
+              <div style={{ fontSize: FONT_BODY, color: INK_SOFT }}>
                 {entry.lines.map((line, i) => (
                   <div key={i}>{line}</div>
                 ))}
@@ -215,9 +234,11 @@ const ToggleRow = (props: {
   row: AutoImportRow;
   name: string;
   floorTarget: number;
+  disabled?: boolean;
+  disabledTitle?: string;
   onToggle: () => void;
 }) => {
-  const { row, name, floorTarget, onToggle } = props;
+  const { row, name, floorTarget, disabled, disabledTitle, onToggle } = props;
   const low = row.stock < floorTarget;
   return (
     <div
@@ -227,14 +248,17 @@ const ToggleRow = (props: {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '6px 12px',
+        opacity: disabled ? 0.55 : 1,
       }}
+      title={disabled ? disabledTitle : undefined}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <input
           type="checkbox"
           checked={!!row.active}
+          disabled={disabled}
           onChange={onToggle}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
         />
         <span style={{ fontWeight: 'bold' }}>{name}</span>
         {row.active && low && (
@@ -244,7 +268,7 @@ const ToggleRow = (props: {
           <span style={badgeStyle(INK_FAINT)}>off</span>
         )}
       </div>
-      <div style={{ fontSize: '11px', color: INK_FAINT }}>
+      <div style={{ fontSize: FONT_BODY, color: INK_FAINT }}>
         Stock:{' '}
         <span style={{ color: low ? SEAL_RED : SEAL_GREEN, fontWeight: 'bold' }}>
           {row.stock}

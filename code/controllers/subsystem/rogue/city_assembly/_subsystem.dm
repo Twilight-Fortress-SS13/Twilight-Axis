@@ -144,6 +144,8 @@ SUBSYSTEM_DEF(city_assembly)
 		return FALSE
 	if(HAS_TRAIT(user, TRAIT_ALDERMAN_CENSURED))
 		return FALSE
+	if(user.job in ASSEMBLY_OFFICE_INELIGIBLE_JOBS)
+		return FALSE
 	return TRUE
 
 /datum/controller/subsystem/city_assembly/proc/get_vote_weight(mob/living/carbon/human/user)
@@ -190,7 +192,7 @@ SUBSYSTEM_DEF(city_assembly)
 			if(choice == "NO_ALDERMAN")
 				return TRUE
 			for(var/datum/weakref/wr in current_session.candidates)
-				if("[wr]" == choice)
+				if(REF(wr) == choice)
 					return TRUE
 			return FALSE
 		if(ASSEMBLY_MOTION_TRADE_AUTH)

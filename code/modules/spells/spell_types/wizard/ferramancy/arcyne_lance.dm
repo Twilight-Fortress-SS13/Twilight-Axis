@@ -32,6 +32,8 @@
 	spell_tier = 2
 	spell_impact_intensity = SPELL_IMPACT_MEDIUM
 
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN
+
 // --- Arcyne spear projectile ---
 
 /obj/projectile/magic/arcyne_lance
@@ -39,7 +41,7 @@
 	icon = 'icons/obj/magic_projectiles.dmi'
 	icon_state = "air_blade_stab"
 	guard_deflectable = TRUE
-	damage = 55
+	damage = 66
 	damage_type = BRUTE
 	woundclass = BCLASS_STAB
 	npc_simple_damage_mult = 1.5
@@ -48,7 +50,7 @@
 	armor_penetration = PEN_LIGHT
 	movement_type = UNSTOPPABLE
 	range = SPELL_RANGE_PROJECTILE
-	flag = "piercing"
+	flag = "stab"
 	hitsound = 'sound/combat/hits/bladed/genthrust (1).ogg'
 	/// How many mob targets have been pierced
 	var/hits = 0
@@ -57,7 +59,7 @@
 
 /obj/projectile/magic/arcyne_lance/arc
 	name = "arced arcyne lance"
-	damage = 41
+	damage = 50
 	arcshot = TRUE
 	max_hits = 1 // Arced version does not pierce
 

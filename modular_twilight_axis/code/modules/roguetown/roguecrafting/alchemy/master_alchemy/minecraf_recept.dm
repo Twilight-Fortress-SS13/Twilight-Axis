@@ -22,17 +22,6 @@
 		/obj/item/rogueore/iron, /obj/item/rogueore/iron, /obj/item/rogueore/iron 
 	)
 
-/datum/alch_grid_recipe/philosophorum
-	name = "Философский камень"
-	result_type = /obj/item/philosophers_stone
-	result_icon = 'modular_twilight_axis/code/modules/roguetown/roguecrafting/alchemy/master_alchemy/alch.dmi'
-	result_icon_state = "soulstone"
-	grid = list(
-		/obj/item/alch/waterdust, /obj/item/reagent_containers/lux_impure, /obj/item/alch/earthdust,
-		/obj/item/alch/magicdust, /obj/item/riddleofsteel, /obj/item/alch/magicdust,
-		/obj/item/alch/airdust, /obj/item/reagent_containers/lux, /obj/item/alch/firedust
-
-	)
 
 /datum/alch_grid_recipe/infernaldust
 	name = "Инфернальная пыль"
@@ -68,8 +57,9 @@
 		null, /obj/item/alch/rosa, null,
 		null, /obj/item/alch/firedust, null
 	)
+
 /datum/alch_grid_recipe/homunculus_clay
-	name = "Mirror Clay"
+	name = "Зеркальная глина"
 	result_type = /obj/item/alch/mirror_clay
 	result_icon = 'icons/roguetown/items/natural.dmi'
 	result_icon_state = "clay"
@@ -77,4 +67,15 @@
 		/obj/item/natural/clay, /obj/item/natural/clay, /obj/item/natural/clay,
 		/obj/item/natural/clay, /obj/item/reagent_containers/lux, /obj/item/natural/clay,
 		/obj/item/natural/clay, /obj/item/natural/clay, /obj/item/natural/clay
+	)
+
+/datum/alch_grid_recipe/sinew
+	name = "Сухожилия"
+	result_type = /obj/item/alch/sinew
+	result_icon = 'icons/roguetown/misc/alchemy.dmi'
+	result_icon_state = "sinew"
+	grid = list(
+		null, null, null,
+		null, /obj/item/alch/viscera, null,
+		null, /obj/item/alch/viscera, null
 	)

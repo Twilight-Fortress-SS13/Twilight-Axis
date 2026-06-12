@@ -2,12 +2,12 @@
 	name = "Poacher"
 	tutorial = "You have rejected society and its laws, choosing life in the wilderness instead. Simple thieving highwayman or freedom fighter, you take from those who have and give to the have-nots. Fancy, how the latter includes yourself!"
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/wretch/poacher
 	cmode_music = 'sound/music/combat_poacher.ogg'
 	class_select_category = CLASS_CAT_RANGER
 	category_tags = list(CTAG_WRETCH)
-	traits_applied = list(TRAIT_AZURENATIVE, TRAIT_DODGEEXPERT, TRAIT_WOODSMAN, TRAIT_OUTDOORSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_EXPERT_HUNTER)
+	traits_applied = list(TRAIT_LONGSTRIDER, TRAIT_DODGEEXPERT, TRAIT_WOODSMAN, TRAIT_OUTDOORSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_EXPERT_HUNTER) // TA EDIT TRAIT_AZURENATIVE —> TRAIT_LONGSTRIDER
 	// No straight upgrade to perception / speed to not stack one stat too high, but still stronger than MAA Skirm out of town.
 	subclass_stats = list(
 		STATKEY_PER = 3,

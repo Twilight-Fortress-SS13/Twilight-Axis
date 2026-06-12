@@ -4,7 +4,7 @@
 	tutorial = "You are the Jester of Heartfelt, a bringer of laughter in brighter days. \
 	Though grief weighs heavy beneath your painted smile, you turn your steps toward the Peak—hoping your wit, charm, and cunning may yet carve out a place for joy."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_SHUNNED_UP
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/heartfelt/retinue/jester
 	maximum_possible_slots = 1
 	pickprob = 100
@@ -48,8 +48,8 @@
 		else
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/telljoke)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/telltragedy)
-	H.verbs |= /mob/living/carbon/human/proc/ventriloquate
-	H.verbs |= /mob/living/carbon/human/proc/ear_trick
+	add_verb(H, /mob/living/carbon/human/proc/ventriloquate)
+	add_verb(H, /mob/living/carbon/human/proc/ear_trick)
 	if(!istype(H.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
 		H.internal_organs_slot[ORGAN_SLOT_TONGUE] = new /obj/item/organ/tongue/wild_tongue
 	if(prob(50))

@@ -84,10 +84,14 @@
 	if(check_face_subzone(zone_def))
 		return BIND_HEAD
 	switch(zone_def)
-		if(BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)
-			return BIND_HANDS
-		if(BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_PRECISE_R_FOOT, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-			return BIND_FEET
+		if(BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_L_ARM)
+			return BIND_HAND_L
+		if(BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_R_ARM)
+			return BIND_HAND_R
+		if(BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_L_LEG)
+			return BIND_FOOT_L
+		if(BODY_ZONE_PRECISE_R_FOOT, BODY_ZONE_R_LEG)
+			return BIND_FOOT_R
 		if(BODY_ZONE_PRECISE_GROIN, BODY_ZONE_PRECISE_STOMACH, BODY_ZONE_CHEST)
 			return BIND_TORSO
 		if(BODY_ZONE_PRECISE_NECK)
@@ -100,14 +104,18 @@
 	switch(bindzone)
 		if(BIND_HEAD)
 			return check_face_subzone(attzone, check_head = FALSE)
-		if(BIND_HANDS)
-			switch(attzone)
-				if(BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND)
-					return TRUE
-		if(BIND_FEET)
-			switch(attzone)
-				if(BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_PRECISE_R_FOOT)
-					return TRUE
+		if(BIND_HAND_L)
+			if(attzone == BODY_ZONE_PRECISE_L_HAND)
+				return TRUE
+		if(BIND_HAND_R)
+			if(attzone == BODY_ZONE_PRECISE_R_HAND)
+				return TRUE
+		if(BIND_FOOT_L)
+			if(attzone == BODY_ZONE_PRECISE_L_FOOT)
+				return TRUE
+		if(BIND_FOOT_R)
+			if(attzone == BODY_ZONE_PRECISE_R_FOOT)
+				return TRUE
 		if(BIND_TORSO)
 			switch(attzone)
 				if(BODY_ZONE_PRECISE_STOMACH, BODY_ZONE_PRECISE_GROIN)
@@ -627,6 +635,19 @@
 		rog_intent_change(r_index)
 		rog_intent_change(l_index, 1)
 
+/mob/proc/cycle_mmb_intent()
+	if(!possible_mmb_intents?.len)
+		return
+	var/next_qintent
+	switch(mmb_intent?.type)
+		if(null)         next_qintent = QINTENT_BITE
+		if(INTENT_BITE)  next_qintent = QINTENT_JUMP
+		if(INTENT_JUMP)  next_qintent = QINTENT_KICK
+		if(INTENT_KICK)  next_qintent = QINTENT_SPECIAL
+		if(INTENT_SPECIAL) next_qintent = null
+		else             next_qintent = QINTENT_BITE
+	mmb_intent_change(next_qintent)
+
 /mob/verb/mmb_intent_change(input as text)
 	set name = "mmb-change"
 	set hidden = 1
@@ -883,6 +904,10 @@
 			return TRUE
 		return B.eye_blind
 	return FALSE
+
+///TRUE if the mob's sight is obscured enough to sense footsteps - fully blind (see [is_blind]) or has the clouding Blindness vice.
+/proc/vision_obscured(mob/M)
+	return is_blind(M) || M.has_flaw(/datum/charflaw/noeyeall)
 
 ///Is the mob hallucinating?
 /mob/proc/hallucinating()

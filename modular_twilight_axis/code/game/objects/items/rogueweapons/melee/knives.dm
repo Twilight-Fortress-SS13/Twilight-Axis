@@ -3,7 +3,7 @@
 	intent_intdamage_factor = 1.35 // I HAVE NO PICK BUT I MUST KILL
 	swingdelay = 10
 	clickcd = 10
-	penfactor = 30
+	penfactor = PEN_MEDIUM
 
 /datum/intent/dagger/cut/dendor // me like cut
 	damfactor = 1.1
@@ -117,3 +117,85 @@
 		added_int = 50,\
 		added_def = 2,\
 	)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha
+	name = "snakes sting"
+	desc = "The blade is skillfully crafted and appears to be designed for stealthy assassinations. There are visible streaks of a bubbling substance on its blade."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon_state = "baotha_knife1"
+	max_blade_int = 300
+	throwforce = 40
+	force = 25
+	wdefense = 4
+	var/last_cut = 0
+	var/last_drug = 0
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/Initialize()
+	. = ..()
+	icon_state = "baotha_knife1"
+	addtimer(CALLBACK(src, "icon_proc"), wait = (1 SECONDS))
+	AddComponent(/datum/component/cursed_item, TRAIT_CRACKHEAD, "KNIFE")
+	RegisterSignal(src, COMSIG_ITEM_ATTACK_EFFECT_SELF, PROC_REF(on_hit_effects))
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/icon_proc()
+	icon_state = "baotha_knife2"
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/attack_self(var/mob/living/carbon/human/user)
+	if(user.patron.type == /datum/patron/inhumen/baotha)
+		if(do_after(user, 10, target = src))
+			var/obj/item/clothing/ring/baotha/S = new/obj/item/clothing/ring/baotha(get_turf(src.loc))
+			if(user.is_holding(src))
+				user.dropItemToGround(src)
+				user.put_in_hands(S)
+			qdel(src)
+			playsound(user, pick('sound/magic/magic_nulled.ogg'), 20, TRUE)
+		else
+			to_chat(user, "<span class='notice'>I losing concentration!</span>")
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/on_hit_effects(obj/item/source, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
+	SIGNAL_HANDLER
+	
+	if(!istype(victim, /mob/living/carbon))
+		return
+
+	var/mob/living/carbon/human/target = victim
+	var/random_drug = pick(list(/datum/reagent/ozium, /datum/reagent/moondust))
+	var/selected_hallucination = pick(list(
+		"Is this TRVE??", "IDDQD", "DAFUQ?", "I am NOT meant to see this.",
+		"What... WHAT is this?", "This doesn't make SENSE.", "I don't UNDERSTAND.",
+		"Why does it LOOK like that?", "Something is WRONG here.", "This isn't RIGHT.",
+		"What am I looking at?", "None of THIS adds up.", "I shouldn't be SEEING this.",
+		"This feels... INCORRECT.", "Why is everything like this?", "I CAN'T process this.",
+		"This ISN'T how it should be.", "I don't get it.", "What is happening?",
+		"This is all WRONG.", "I CAN'T tell what's REAL.", "Why does it feel off?",
+		"I don't recognize this.", "This SHOULDN'T exist.", "What is THIS supposed to be?",
+		"I can't FOLLOW this.", "This isn't making sense anymore.", "I think SOMETHING is broke.",
+		"Why can't I understand THIS?", "This feels IMPOSSIBLE.", "I don't KNOW what I'm seeing."
+	))
+
+	if(!HAS_TRAIT(target, TRAIT_PSYCHOSIS))
+		ADD_TRAIT(target, TRAIT_PSYCHOSIS, "baothaknife")
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(baothapsychosis), target), wait = 1 MINUTES)
+
+	target.hallucination = rand(1,60)
+	to_chat(target, span_warning(selected_hallucination))
+	target.Jitter(5)
+
+	if(prob(50))
+		addtimer(CALLBACK(target, "emote", pick("giggle","laugh","chuckle")), 0)
+
+	if(last_cut + 10 SECONDS >= world.time) return
+	target.blur_eyes(5)
+	target.adjust_blurriness(10)
+	target.adjustToxLoss(10)
+	last_cut = world.time
+	if(last_drug + 1 MINUTES >= world.time) return
+	target.reagents.add_reagent(random_drug, 2)
+	last_drug = world.time
+
+/proc/baothapsychosis(mob/living/carbon/target)
+	if(QDELETED(target))
+		return
+
+	REMOVE_TRAIT(target, TRAIT_PSYCHOSIS, "baothaknife")
+

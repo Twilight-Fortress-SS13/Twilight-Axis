@@ -2,7 +2,7 @@
 	name = "Pyromaniac"
 	tutorial = "A notorious arsonist with a penchant for fire, you wield your own personal vendetta against the chaotic forces within Azuria. Bring mayhem and destruction with flame and misfortune! Just... try not to hit yourself with your explosives - you aren't fireproof, after all."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/wretch/pyromaniac
 	cmode_music = 'sound/music/Iconoclast.ogg'
 	class_select_category = CLASS_CAT_ROGUE
@@ -24,9 +24,9 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/traps = SKILL_LEVEL_EXPERT,
-		/datum/skill/craft/alchemy = SKILL_LEVEL_EXPERT,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/craft/engineering = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/engineering = SKILL_LEVEL_EXPERT,
 		/datum/skill/labor/farming = SKILL_LEVEL_NOVICE,
 	)
 	subclass_stashed_items = list(

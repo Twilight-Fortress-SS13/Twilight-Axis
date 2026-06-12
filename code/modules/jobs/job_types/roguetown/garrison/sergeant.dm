@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = ACCEPTED_RACES
+	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
 	tutorial = "You are the most experienced of the Crown's Soldiery, leading the Watch in maintaining order and attending to threats and crimes below the court's attention. \
 				See to those under your command and fill in the gaps knights leave in their wake. Obey the orders of your Marshal and the Crown."
@@ -104,7 +104,7 @@
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/hold)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/onfeet)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/guard) // We'll just use Watchmen as sorta conscripts yeag?
-	H.verbs |= list(/mob/living/carbon/human/proc/request_outlaw, /mob/proc/haltyell, /mob/living/carbon/human/mind/proc/setorders)
+	add_verb(H, list(/mob/living/carbon/human/proc/request_outlaw, /mob/proc/haltyell, /mob/living/carbon/human/mind/proc/setorders))
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rope/chain = 1,

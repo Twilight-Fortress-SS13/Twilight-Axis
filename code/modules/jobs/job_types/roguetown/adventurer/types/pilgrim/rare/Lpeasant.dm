@@ -4,9 +4,9 @@
 	You, a simple peasent, through sheer determination have conquered nature \
 	and made it bow before your green thumb."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/adventurer/farmermaster
-	traits_applied = list(TRAIT_HOMESTEAD_EXPERT)
+	traits_applied = list(TRAIT_HOMESTEAD_EXPERT, TRAIT_SEEDKNOW)
 
 	maximum_possible_slots = 1
 	pickprob = 5
@@ -59,3 +59,5 @@
 	beltl = /obj/item/rogueweapon/sickle
 	beltr = /obj/item/flint
 	backr = /obj/item/rogueweapon/hoe
+	if(H.mind)
+		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)

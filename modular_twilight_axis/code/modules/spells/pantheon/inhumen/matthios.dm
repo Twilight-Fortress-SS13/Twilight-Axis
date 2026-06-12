@@ -5,7 +5,7 @@
 
 //T0
 
-/datum/action/cooldown/spell/freemans_tools
+/datum/action/cooldown/spell/matthios/freemans_tools
 	desc = "A simple prayer to the Free-God Matthios, for tools of liberation and struggle.<br><br>His will manifests in three forms: gutter-born arts of the freemen, gilded tools of blessed liberation, or by granting the bases of Malchem, a form of primordial alchemy so impossible it is oft mistaken for sorcery."
 	options = list(
 		//a simple 'blinds u for 1 sec' throwable
@@ -657,7 +657,8 @@
 	/datum/status_effect/noc_favor,
 	/datum/status_effect/ravox_favor,
 	/datum/status_effect/malum_favor,
-	/datum/status_effect/eora_favor,)
+	/datum/status_effect/eora_favor,
+	/datum/status_effect/buff/smartium)
 	var/static/list/debuffs_to_dispel = list(
 	/datum/status_effect/incapacitating/immobilized,
 	/datum/status_effect/incapacitating/paralyzed,
@@ -673,7 +674,15 @@
 	/datum/status_effect/debuff/eoran_wilting,
 	/datum/status_effect/debuff/netted/vile,
 	/datum/status_effect/debuff/bloody_mess,
-	/datum/status_effect/debuff/sensitive_nerves,)
+	/datum/status_effect/debuff/sensitive_nerves,
+	/datum/status_effect/debuff/smartium,
+	/datum/status_effect/debuff/heavy_stomp,
+	/datum/status_effect/debuff/heavy_stomp/i,
+	/datum/status_effect/debuff/heavy_stomp/ii,
+	/datum/status_effect/debuff/heavy_stomp/iii,
+	/datum/status_effect/debuff/blood_call,
+	/datum/status_effect/debuff/blood_call/i,
+	/datum/status_effect/debuff/blood_call/ii)
 
 /obj/effect/proc_holder/spell/self/twilight_amongus/cast(list/targets,mob/living/user = usr)
 	for(var/mob/living/carbon/target in view(5, get_turf(user)))
@@ -849,7 +858,9 @@
 	
 /obj/item/rogueweapon/spear/matthios_standard/Initialize()
 	. = ..()
-	for(var/mob/living/carbon/human/H in view(7, get_turf(src)))
+	for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(src, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+		if(get_dist(src, H) > 7)
+			continue
 		if(istype(H.patron, /datum/patron/inhumen/matthios))
 			H.apply_status_effect(/datum/status_effect/buff/twilight_peoplesbanner)
 
@@ -875,7 +886,9 @@
 	if(!(world.time < lastcheck + 5 SECONDS))
 		lastcheck = world.time
 		var/preserve = FALSE
-		for(var/mob/living/carbon/human/H in view(7, owner))
+		for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(owner, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+			if(get_dist(owner, H) > 7)
+				continue
 			if(istype(H.get_inactive_held_item(), /obj/item/rogueweapon/spear/matthios_standard) || istype(H.get_active_held_item(), /obj/item/rogueweapon/spear/matthios_standard))
 				preserve = TRUE
 		if(!preserve)
@@ -901,7 +914,9 @@
 	if(!(world.time < lastcheck + 5 SECONDS))
 		lastcheck = world.time
 		var/preserve = FALSE
-		for(var/mob/living/carbon/human/H in view(7, owner))
+		for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(owner, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+			if(get_dist(owner, H) > 7)
+				continue
 			if(istype(H.get_inactive_held_item(), /obj/item/rogueweapon/spear/matthios_standard) || istype(H.get_active_held_item(), /obj/item/rogueweapon/spear/matthios_standard))
 				preserve = TRUE
 		if(!preserve)

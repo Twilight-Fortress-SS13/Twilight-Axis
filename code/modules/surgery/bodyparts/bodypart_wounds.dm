@@ -65,6 +65,12 @@
 /obj/item/bodypart/proc/add_wound(datum/wound/wound, silent = FALSE, crit_message = FALSE)
 	if(!wound || !owner || (owner.status_flags & GODMODE))
 		return
+	if(isooze(owner) && wound.severity >= WOUND_SEVERITY_MODERATE) // Handles wounds for murklings.
+		if(ispath(wound, /datum/wound))
+			wound = new wound()
+		if(is_ooze_wound(wound))
+			handle_ooze_wounds(wound, silent, crit_message)
+			return
 	if(ispath(wound, /datum/wound))
 		var/datum/wound/primordial_wound = GLOB.primordial_wounds[wound]
 		if(!primordial_wound.can_apply_to_bodypart(src))
@@ -72,7 +78,7 @@
 		wound = new wound()
 	else if(!istype(wound))
 		return
-	else if(!wound.can_apply_to_bodypart(src))
+	if(!wound.can_apply_to_bodypart(src))
 		qdel(wound)
 		return
 	if(!wound.apply_to_bodypart(src, silent, crit_message))
@@ -150,13 +156,15 @@
 			acheck_dflag = "fire"
 	if(!armor)
 		armor = owner.run_armor_check(zone_precise, acheck_dflag, damage = 0)
-	if(get_damage() <= (max_damage * CRIT_DISMEMBER_DAMAGE_THRESHOLD)) //No crits unless the limb is at 90%+ damage.
-		do_crit = FALSE
-	if(do_crit && ishuman(owner) && bclass != BCLASS_PICK) // Armor with integrity prevents crits
+	if(ishuman(owner) && bclass != BCLASS_PICK)
 		var/mob/living/carbon/human/H = owner
 		var/obj/item/clothing/worn_armor = H.get_best_worn_armor(zone_precise, acheck_dflag)
-		if(worn_armor)
-			do_crit = FALSE
+		if(worn_armor && !worn_armor.obj_broken)
+			var/ratio = (worn_armor.obj_integrity / worn_armor.max_integrity)
+			if(ratio <= CRIT_ARMOUR_THRESHOLD)
+				do_crit = TRUE
+	if(do_crit && get_damage() <= (max_damage * CRIT_DISMEMBER_DAMAGE_THRESHOLD)) //No crits unless the limb is at 90%+ damage.
+		do_crit = FALSE
 	if(user)
 		if(user.goodluck(2))
 			dam += 10
@@ -235,6 +243,8 @@
 			woundtype = /datum/wound/dynamic/punish
 		else	//Wrong bclass type for wounds, skip adding this.
 			return
+	if(isooze(owner) && is_ooze_wound(woundtype))
+		woundtype = /datum/wound/dynamic/ooze
 	var/datum/wound/dynwound = has_wound(woundtype)
 	var/exposed = owner.has_status_effect(/datum/status_effect/debuff/exposed)
 	if(!isnull(dynwound))
@@ -290,13 +300,20 @@
 			else if(istype(user.rmb_intent, /datum/rmb_intent/aimed))
 				used += 10
 		if(prob(used))
-			attempted_wounds += /datum/wound/artery
+			if(HAS_TRAIT(src, TRAIT_IRONMAN))
+				attempted_wounds += /datum/wound/integrity
+			else
+				attempted_wounds += /datum/wound/artery
+
 	if(bclass in GLOB.whipping_bclasses)
 		used = round(damage_dividend * 20 + (dam / 3))
 		if(user && istype(user.rmb_intent, /datum/rmb_intent/strong))
 			dam += 10
 		if(HAS_TRAIT(src, TRAIT_CRITICAL_WEAKNESS))
-			attempted_wounds += /datum/wound/artery		//basically does sword-tier wounds.
+			if(HAS_TRAIT(src, TRAIT_IRONMAN))
+				attempted_wounds += /datum/wound/integrity	
+			else
+				attempted_wounds += /datum/wound/artery		//basically does sword-tier wounds.
 		if(prob(used))
 			attempted_wounds += /datum/wound/scarring
 	if((bclass in GLOB.sunder_bclasses))
@@ -363,11 +380,18 @@
 				used += 10
 		if(prob(used))
 			if(zone_precise == BODY_ZONE_PRECISE_STOMACH)
-				attempted_wounds += /datum/wound/slash/disembowel
+				if(!HAS_TRAIT(owner, TRAIT_IRONMAN)) // pointless to disembowel them, as they don't die to tox anyway
+					attempted_wounds += /datum/wound/slash/disembowel
 			if(owner.has_wound(/datum/wound/fracture/chest) || (bclass in GLOB.artery_heart_bclasses) || HAS_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS))
-				attempted_wounds += /datum/wound/artery/chest
+				if(HAS_TRAIT(owner, TRAIT_IRONMAN))			
+					attempted_wounds += /datum/wound/integrity/chest
+				else
+					attempted_wounds += /datum/wound/artery/chest
 			else
-				attempted_wounds += /datum/wound/artery
+				if(HAS_TRAIT(owner, TRAIT_IRONMAN))			
+					attempted_wounds += /datum/wound/integrity
+				else
+					attempted_wounds += /datum/wound/artery
 	if(bclass in GLOB.whipping_bclasses)
 		used = round(damage_dividend * 20 + (dam / 4))
 		if(user)
@@ -375,7 +399,10 @@
 				dam += 10
 		if(prob(used))
 			if(HAS_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS))
-				attempted_wounds += /datum/wound/artery/chest
+				if(HAS_TRAIT(owner, TRAIT_IRONMAN))			
+					attempted_wounds += /datum/wound/integrity/chest
+				else
+					attempted_wounds += /datum/wound/artery/chest
 			else
 				attempted_wounds += /datum/wound/scarring
 	if(bclass in GLOB.sunder_bclasses)
@@ -477,7 +504,10 @@
 					used += 10
 		var/artery_type = /datum/wound/artery
 		if(zone_precise == BODY_ZONE_PRECISE_NECK)
-			artery_type = /datum/wound/artery/neck
+			if(HAS_TRAIT(owner, TRAIT_IRONMAN))			
+				artery_type = /datum/wound/integrity/neck
+			else
+				artery_type = /datum/wound/artery/neck
 		if(prob(used))
 			attempted_wounds += artery_type
 			if(bclass in GLOB.stab_bclasses)
@@ -755,3 +785,18 @@
 		var/datum/status_effect/debuff/crit_resistance_cd/crit_resist_tracker_actual = crit_resist_tracker
 		// Iterate stack by 1 and then see if we can crit this hit
 		return !crit_resist_tracker_actual.try_crit()
+
+/obj/item/bodypart/proc/handle_ooze_wounds(datum/wound/wound, silent = FALSE, crit_message = FALSE)
+	if(!wound.handle_ooze_wound(src))
+		return
+	if(!istype(src, /obj/item/bodypart/head/))
+		if(crit_message)
+			var/message = "<span class='crit'><b>Critical hit!</b> The [src] melts apart into goop!</span>"
+			if(message)
+				owner.next_attack_msg += " [message]"
+		src.dismember()
+	else
+		if(has_wound(/datum/wound/slime/knockout))
+			add_wound(/datum/wound/slime/paralyze, silent, crit_message)
+		else
+			add_wound(/datum/wound/slime/knockout, silent, crit_message)

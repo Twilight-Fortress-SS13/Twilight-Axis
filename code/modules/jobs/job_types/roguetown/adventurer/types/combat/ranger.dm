@@ -2,7 +2,7 @@
 	name = "Sentinel"
 	tutorial = "You are a ranger well-versed in traversing untamed lands, with years of experience taking odd jobs as a pathfinder and bodyguard in areas of wilderness untraversable to common soldiery."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/adventurer/ranger
 	class_select_category = CLASS_CAT_RANGER
 	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
@@ -140,8 +140,9 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/traps = SKILL_LEVEL_EXPERT,
-		/datum/skill/craft/alchemy = SKILL_LEVEL_EXPERT,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/engineering = SKILL_LEVEL_EXPERT,
 	)
 
 /datum/outfit/job/roguetown/adventurer/bombadier/pre_equip(mob/living/carbon/human/H)
@@ -221,10 +222,10 @@
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
 			if("Axe")
-				H.adjust_skillrank_up_to(/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				beltr = /obj/item/rogueweapon/stoneaxe/woodcut
 			if("Sword")
-				H.adjust_skillrank_up_to(/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				beltr = /obj/item/rogueweapon/sword/short/messer/iron
 		var/altweapons = list("Recurve Bow","Billhook","Sling","Crossbow")
 		var/altweapon_choice = input(H, "Choose your additional weapon.", "TAKE UP ARMS") as anything in altweapons

@@ -89,6 +89,51 @@
 		return node.edges.Copy()
 	return node.get_edges_of_type(relation_type)
 
+/datum/controller/subsystem/familytree/proc/is_preservable_relationship_label(relation)
+	return istext(relation) && length(relation) && relation != "distant relative"
+
+/datum/controller/subsystem/familytree/proc/preserve_player_relationship(datum/family_member/member_a, datum/family_member/member_b, relation_a_to_b, relation_b_to_a, datum/heritage/house)
+	if(!member_a?.person || !member_b?.person || member_a == member_b)
+		return FALSE
+	if(!is_preservable_relationship_label(relation_a_to_b) && !is_preservable_relationship_label(relation_b_to_a))
+		return FALSE
+	var/datum/family_node/node_a = get_or_create_family_node(member_a.person, house)
+	var/datum/family_node/node_b = get_or_create_family_node(member_b.person, house)
+	if(!node_a || !node_b)
+		return FALSE
+	var/datum/family_edge/edge = find_family_edge(node_a, node_b, "preserved_relation", FALSE)
+	if(!edge)
+		edge = add_family_edge(node_a, node_b, "preserved_relation", house, 0, "player_bridge_removed", FALSE)
+	if(!edge)
+		return FALSE
+	if(edge.a == node_a)
+		if(is_preservable_relationship_label(relation_a_to_b))
+			edge.preserved_relation_a_to_b = relation_a_to_b
+		if(is_preservable_relationship_label(relation_b_to_a))
+			edge.preserved_relation_b_to_a = relation_b_to_a
+	else
+		if(is_preservable_relationship_label(relation_a_to_b))
+			edge.preserved_relation_b_to_a = relation_a_to_b
+		if(is_preservable_relationship_label(relation_b_to_a))
+			edge.preserved_relation_a_to_b = relation_b_to_a
+	mark_family_dirty(node_a, node_b, house)
+	return TRUE
+
+/datum/controller/subsystem/familytree/proc/get_preserved_relationship(mob/living/carbon/human/from_person, mob/living/carbon/human/to_person)
+	if(!from_person || !to_person || from_person == to_person)
+		return null
+	var/datum/family_node/from_node = get_family_node(from_person)
+	var/datum/family_node/to_node = get_family_node(to_person)
+	if(!from_node || !to_node)
+		return null
+	for(var/datum/family_edge/edge as anything in from_node.get_edges_of_type("preserved_relation"))
+		if(edge.other_end(from_node) != to_node)
+			continue
+		if(edge.a == from_node)
+			return edge.preserved_relation_a_to_b
+		return edge.preserved_relation_b_to_a
+	return null
+
 /datum/controller/subsystem/familytree/proc/get_family_graph_cache(datum/heritage/house, create_if_missing = TRUE)
 	if(!house)
 		return null
@@ -184,7 +229,13 @@
 	var/datum/family_node/node = family_nodes_by_person[person]
 	if(!node)
 		return
+	var/datum/heritage/house = person.family_datum || person.family_member_datum?.family || node.primary_house
+	if(house)
+		ftlog("graph_on_person_qdeleting: removing [person.real_name] from house '[house.housename || "no name"]'")
+		house.RemovePersonFromFamily(person, TRUE)
+	node = family_nodes_by_person[person] || node
 	remove_family_node(node)
+	stop_tracking_human(person, "human deleted or far traveled")
 
 /datum/controller/subsystem/familytree/proc/graph_on_member_removed(mob/living/carbon/human/person, datum/heritage/house)
 	if(!person)
@@ -255,6 +306,13 @@
 	var/datum/family_node/node_a = get_or_create_family_node(person_a, house)
 	var/datum/family_node/node_b = get_or_create_family_node(person_b, house)
 	return add_family_edge(node_a, node_b, "spouse", house, 0, "legacy_hook", FALSE)
+
+/datum/controller/subsystem/familytree/proc/graph_on_sworn_sibling_added(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/heritage/house)
+	if(!person_a || !person_b || person_a == person_b)
+		return null
+	var/datum/family_node/node_a = get_or_create_family_node(person_a, house)
+	var/datum/family_node/node_b = get_or_create_family_node(person_b, house)
+	return add_family_edge(node_a, node_b, "sworn_sibling", house, 0, "legacy_hook", FALSE)
 
 /datum/controller/subsystem/familytree/proc/graph_on_spouse_removed(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, divorce = FALSE)
 	if(!person_a || !person_b)

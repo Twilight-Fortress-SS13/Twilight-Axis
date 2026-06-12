@@ -174,6 +174,10 @@
 	if(!user)
 		return
 
+	if(user.real_name in GLOB.excommunicated_players)
+		to_chat(user, span_warning("Десять отвернулись от меня. Реликвия не ответит мне."))
+		return
+
 	if(!weapon_select || !weapon_select.selected_weapon)
 		to_chat(user, span_warning("Я не могу сосредоточиться на реликвии."))
 		return

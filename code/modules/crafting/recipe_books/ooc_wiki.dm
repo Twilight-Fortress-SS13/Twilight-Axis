@@ -44,15 +44,15 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	return GLOB.recipe_wiki
 
 /// Open the recipe viewer for a specific book's types. Used by physical recipe book items.
-/datum/recipe_wiki/proc/show_to_user(mob/user, list/type_filter, title = "Recipe Book", book_type_path, locked_book = FALSE)
+/datum/recipe_wiki/proc/show_to_user(mob/user, list/type_filter, title = "Recipe Book", book_type_path, locked_book = FALSE, preselect_category, preselect_entry)
 	if(!user?.client)
 		return
 	var/ckey = user.client.ckey
 	if(!user_states[ckey])
 		user_states[ckey] = list()
 	var/list/state = user_states[ckey]
-	state["recipe"] = null
-	state["category"] = "All"
+	state["recipe"] = preselect_entry
+	state["category"] = preselect_category || "All"
 	state["filter"] = type_filter
 	state["title"] = title
 	state["page"] = "book"
@@ -150,6 +150,7 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 		data["current_book_title"] = ""
 		data["current_recipe"] = null
 		data["recipe_detail_html"] = ""
+		data["initial_category"] = "All"
 		data["locked_book"] = FALSE
 		return data
 
@@ -157,6 +158,7 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	data["page"] = state["page"] || "library"
 	data["current_book"] = state["book_path"]
 	data["current_book_title"] = state["title"] || "Guidebook"
+	data["initial_category"] = state["category"] || "All"
 	data["locked_book"] = state["locked_book"] || FALSE
 	var/cur_recipe = state["recipe"]
 	data["current_recipe"] = cur_recipe ? "[cur_recipe]" : null
@@ -240,13 +242,13 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 			for(var/atom/sub_path as anything in subtypesof(path))
 				if(is_abstract(sub_path))
 					continue
-				if(!sub_path.name)
+				if(!recipe_path_name(sub_path))
 					continue
 				if(should_hide_recipe(sub_path))
 					continue
 				valid_paths += sub_path
 		else
-			if(!initial(path.name))
+			if(!recipe_path_name(path))
 				continue
 			if(should_hide_recipe(path))
 				continue
@@ -257,11 +259,22 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	for(var/atom/entry_path as anything in valid_paths)
 		var/recipe_category = get_recipe_category(entry_path) || "All"
 		recipes += list(list(
-			"name" = initial(entry_path.name),
+			"name" = recipe_path_name(entry_path),
 			"path" = "[entry_path]",
 			"category" = recipe_category
 		))
 	return recipes
+
+/proc/recipe_path_name(atom/path)
+	var/static_name = initial(path.name)
+	if(static_name)
+		return static_name
+	if(!ispath(path, /datum))
+		return null
+	var/datum/temp = new path()
+	var/derived = temp:name
+	qdel(temp)
+	return derived
 
 /// Build miracle list with entries duplicated per patron, sorted by tier then name.
 /datum/recipe_wiki/proc/build_miracle_list(list/types)

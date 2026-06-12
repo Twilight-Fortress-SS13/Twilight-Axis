@@ -7,7 +7,7 @@
 	spawn_positions = 0
 
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_SHUNNED_UP
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	advclass_cat_rolls = list(CTAG_CONSORT = 20)
 	tutorial = "You are a noble from a foreign house who has travelled to Twilight Axis in order to win favour of the court nobles and secure a political ally for your house. Competition is fierce, and it seems you're not the only one vying for the courts favor..."
 
@@ -21,6 +21,7 @@
 	round_contrib_points = 3
 	cmode_music = 'sound/music/combat_noble.ogg'
 	job_traits = list(TRAIT_NOBLE)
+
 
 /datum/outfit/job/roguetown/suitor
 	job_bitflag = BITFLAG_ROYALTY
@@ -108,7 +109,7 @@
 	head = /obj/item/clothing/head/roguetown/nyle/consortcrown
 	pants = /obj/item/clothing/under/roguetown/tights/black
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/lord/heavy
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/lord
 	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/gold
 	belt = /obj/item/storage/belt/rogue/leather/black

@@ -10,6 +10,7 @@
 	icon_gib = "saiga_gib"
 	gender = FEMALE
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
+	blood_toll_bucket = STATS_KILLED_GREATER_BEASTS
 	emote_see = list("looks around.", "chews some leaves.")
 	speak_chance = 1
 	turns_per_move = 5
@@ -250,13 +251,13 @@
 		if(BODY_ZONE_HEAD, BODY_ZONE_PRECISE_R_EYE, BODY_ZONE_PRECISE_L_EYE, BODY_ZONE_PRECISE_SKULL, BODY_ZONE_PRECISE_EARS)
 			return "head"
 		if(BODY_ZONE_PRECISE_NOSE, BODY_ZONE_PRECISE_MOUTH)
-			return "snout"
+			return "mouth"
 		if(BODY_ZONE_PRECISE_NECK)
 			return "neck"
-		if(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND)
-			return "foreleg"
-		if(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG, BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_PRECISE_R_FOOT)
-			return "leg"
+		if(BODY_ZONE_R_LEG, BODY_ZONE_PRECISE_R_FOOT, BODY_ZONE_R_ARM, BODY_ZONE_PRECISE_R_HAND)
+			return "r_leg"
+		if(BODY_ZONE_L_LEG, BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_L_ARM, BODY_ZONE_PRECISE_L_HAND)
+			return "l_leg"
 		if(BODY_ZONE_PRECISE_STOMACH)
 			return "stomach"
 	return ..()

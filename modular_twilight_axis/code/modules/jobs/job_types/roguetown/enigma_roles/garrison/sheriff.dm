@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = JCOLOR_CITYWATCH
-	allowed_races = RACES_TOLERATED_UP
+	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = list(AGE_MIDDLEAGED, AGE_OLD)
 	display_order = JDO_SHERIFF
 	tutorial = "Преступность всегда была постоянной составляющей вашей жизни, и вы всегда выбирали сторону справедливости. \

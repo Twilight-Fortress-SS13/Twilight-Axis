@@ -1,11 +1,11 @@
 /datum/action/cooldown/spell/mirror_transform
 	name = "Mirror Transform"
 	desc = "Temporarily grants you the ability to use mirrors to change your appearance."
-	button_icon = 'icons/mob/actions/roguespells.dmi'
+	button_icon = 'icons/mob/actions/mage_augmentation.dmi'
 	button_icon_state = "mirror"
 	sound = 'sound/magic/whiteflame.ogg'
 
-	click_to_activate = FALSE
+	click_to_activate = TRUE
 	self_cast_possible = TRUE
 
 	primary_resource_type = SPELL_COST_STAMINA
@@ -374,7 +374,9 @@
 
 		if("Penis")
 			var/list/valid_penis_organs = list("none")
-			for(var/penis_type in subtypesof(/obj/item/organ/penis))
+			var/list/penis_paths = list(/obj/item/organ/penis) + subtypesof(/obj/item/organ/penis)
+
+			for(var/penis_type in penis_paths)
 				var/obj/item/organ/penis/temp_penis = new penis_type
 				valid_penis_organs[temp_penis.name] = penis_type
 				qdel(temp_penis)
@@ -898,3 +900,9 @@
 
 		A2.mark_organs_dirty()
 		C2.ui?.request_update()
+
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		var/obj/item/organ/penis/penis = H.getorganslot(ORGAN_SLOT_PENIS)
+		if(penis)
+			penis.refresh_sex_organ()

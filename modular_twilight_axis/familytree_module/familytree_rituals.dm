@@ -49,6 +49,17 @@
 
 	return SOCIAL_RANK_MID
 
+/proc/familytree_get_ritual_adoptive_coparent(datum/family_member/parent_member, mob/living/carbon/human/child)
+	if(!parent_member || !child)
+		return null
+	for(var/datum/family_member/spouse_member as anything in parent_member.get_spouse_members())
+		if(!spouse_member?.person || spouse_member.family != parent_member.family)
+			continue
+		if(!SSfamilytree.CanBeParentOf(spouse_member.person, child))
+			continue
+		return spouse_member
+	return null
+
 /proc/familytree_ritual_adopt(mob/living/carbon/human/parent, mob/living/carbon/human/child)
 	if(!parent || !child)
 		return FALSE
@@ -61,7 +72,8 @@
 	if(!parent_member)
 		return FALSE
 
-	parent.family_datum.AddToFamily(child, parent_member, null, TRUE)
+	var/datum/family_member/coparent_member = familytree_get_ritual_adoptive_coparent(parent_member, child)
+	parent.family_datum.AddToFamily(child, parent_member, coparent_member, TRUE)
 	return TRUE
 
 /proc/familytree_vampire_bind(mob/living/carbon/human/sire, mob/living/carbon/human/progeny)
@@ -90,9 +102,9 @@
 		if(RELATIVE_CHILD)
 			AssignToHouse(H, "child")
 		if(RELATIVE_UNCLE_AUNT)
-			AssignAuntUncle(H)
+			AssignToHouse(H, "uncle_aunt")
 		if(RELATIVE_SPOUSE)
-			if(H.familytree_pref == FAMILY_NEWLYWED)
+			if(familytree_pref_is_create(H.familytree_pref))
 				AssignNewlyWed(H)
 			else
 				AssignToFamily(H)
@@ -109,7 +121,7 @@
 	for(var/datum/heritage/house as anything in families)
 		if(!house.housename || !house.member_nodes.len)
 			continue
-		if(!house_race_compatible(house, our_race, our_isolated))
+		if(!house_race_compatible(house, our_race, our_isolated, H))
 			continue
 
 		for(var/datum/family_member/member as anything in house.members)
@@ -142,7 +154,7 @@
 	for(var/datum/heritage/house as anything in families)
 		if(!house.housename || !house.member_nodes.len)
 			continue
-		if(!house_race_compatible(house, our_race, our_isolated))
+		if(!house_race_compatible(house, our_race, our_isolated, H))
 			continue
 
 		for(var/datum/family_member/member as anything in house.members)
@@ -150,7 +162,16 @@
 				continue
 			if(!CanBeParentOf(H, member.person))
 				continue
+			if(!familytree_biological_parent_allowed(H, member.person, house))
+				continue
 			if(member.get_parent_members().len >= 2)
+				continue
+			var/parent_pair_allowed = TRUE
+			for(var/datum/family_member/existing_parent as anything in member.get_parent_members())
+				if(existing_parent?.person && !familytree_biological_parent_pair_allowed(H, existing_parent.person, member.person, house))
+					parent_pair_allowed = FALSE
+					break
+			if(!parent_pair_allowed)
 				continue
 			if(GetSpeciesCompatibilityFailureReason(H, member.person))
 				continue

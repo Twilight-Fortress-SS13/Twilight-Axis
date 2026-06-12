@@ -261,7 +261,7 @@
 	loot = list(
 		/obj/item/rogueweapon/sword/silver = 1,
 		/obj/item/rogueweapon/mace/steel/silver = 1,
-		/obj/item/rogueweapon/greataxe/silver = 1,
+		/obj/item/rogueweapon/greataxe/steel/knight/silver = 1,
 		/obj/item/rogueweapon/flail/sflail/silver = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/silver = 3,
 		/obj/item/rogueweapon/mace/warhammer/steel/silver = 1,
@@ -276,6 +276,7 @@
 		/obj/item/rogueweapon/sword/long/exe/silver = 1,
 		/obj/item/rogueweapon/greatsword/silver = 1,
 		/obj/item/rogueweapon/handclaw/gronn/silver = 1,
+		/obj/item/rogueweapon/katar/silver = 1,
 	)
 
 /obj/effect/spawner/lootdrop/decrepit_equipment_spawner

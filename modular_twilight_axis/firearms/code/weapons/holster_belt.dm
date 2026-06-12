@@ -10,6 +10,8 @@
 	var/list/pistol = list()
 	sewrepair = TRUE
 	component_type = /datum/component/storage/concrete/roguetown/belt/holster_belt
+	grid_width = 96
+	grid_height = 96
 
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/proc/eatpistol(obj/A)
 	if((A.type in typesof(/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock)) || (A.type in typesof(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol)))

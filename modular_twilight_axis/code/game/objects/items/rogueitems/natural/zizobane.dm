@@ -1,3 +1,4 @@
+/*
 /obj/structure/zizo_bane
     name = "Zizo's bane"
     desc = "A small purple mushroom that has been growing in areas of rot."
@@ -48,3 +49,4 @@
     mill_result = /obj/item/reagent_containers/powder/sleep_powder
     grind_results = list(/datum/reagent/consumable/nutriment = 1, /datum/reagent/sleep_powder = 5)
     rotprocess = 30 MINUTES
+*/

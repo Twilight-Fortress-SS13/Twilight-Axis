@@ -226,8 +226,8 @@
 	var/is_forsaken = (!is_player)
 	if(minutes_dead < 5 && is_earthbound) // fresh + earthbound = VERY BAD
 		score -= 15
-	if(is_forsaken || is_departed) // forsaken or departed = good, this means it's only 2 minutes till they're valid
-		score += 3
+	if(is_forsaken || is_departed) // forsaken or departed are now instantly valid because dear lord these corpses be vanishin
+		score += 10
 	if(is_skeleton) // skeletons start on neutral, unless they're players
 		score += 2
 
@@ -681,7 +681,7 @@ var/global/mob/_corpse_sort_ref = null
 						"I CAN'T PUT IT OUT!"
 					)
 					to_chat(src, span_red(pick(fire_reactions)))
-					src.emote("agony")
+					src.emote("superagony")
 				if(2)
 					src.adjustToxLoss(rand(1, 20))
 
@@ -723,7 +723,7 @@ var/global/mob/_corpse_sort_ref = null
 								"I'M SORRY, UNDERMAIDEN, I'M SORRY!"
 							)
 							to_chat(src, span_red(pick(wound_reactions)))
-							src.emote("agony")
+							src.emote("superagony")
 					else
 						src.adjustBruteLoss(rand(15, 25))
 

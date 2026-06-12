@@ -157,3 +157,6 @@
 
 /obj/effect/spawner/lootdrop/mobtreasure/lucky
 	lootcount = 2
+
+/mob/living/carbon/human/species/skeleton/npc/bogguard/necromancer
+	faction = list()

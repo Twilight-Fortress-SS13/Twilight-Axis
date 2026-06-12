@@ -31,6 +31,8 @@
 	associated_skill = /datum/skill/magic/arcane
 	spell_impact_intensity = SPELL_IMPACT_LOW
 
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN
+
 /obj/projectile/magic/arc_bolt
 	name = "arc bolt"
 	tracer_type = /obj/effect/projectile/tracer/wormhole
@@ -39,7 +41,7 @@
 	hitscan = TRUE
 	movement_type = UNSTOPPABLE
 	light_color = LIGHT_COLOR_WHITE
-	damage = 35
+	damage = 42
 	npc_simple_damage_mult = 2
 	damage_type = BURN
 	woundclass = BCLASS_BURN
@@ -52,7 +54,7 @@
 
 /obj/projectile/magic/arc_bolt/arc
 	name = "arced arc bolt"
-	damage = 26
+	damage = 32
 	arcshot = TRUE
 
 /obj/projectile/magic/arc_bolt/on_hit(target)

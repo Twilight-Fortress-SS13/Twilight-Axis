@@ -93,6 +93,11 @@
 	note_history = null
 	return ..()
 
+/datum/component/combo_core/soundbreaker/proc/_turf_blocks_note_path(turf/T)
+	if(!T)
+		return TRUE
+	return T.density
+
 // ------------------------------------------------------------
 // combo_core overrides
 // ------------------------------------------------------------
@@ -975,10 +980,10 @@
 
 	for(var/i in 1 to 2)
 		var/turf/next = get_step(T, aim_dir)
-		if(!next)
+		if(!next || _turf_blocks_note_path(next))
 			break
-		T = next
 
+		T = next
 		sb_fx_wave_forward(T, aim_dir)
 
 		var/mob/living/M = null
@@ -997,6 +1002,7 @@
 			return M
 
 		return null
+
 	return null
 
 /datum/component/combo_core/soundbreaker/proc/NoteShedPlay(atom/target_atom, aim_dir, damage_mult, damage_type, zone)

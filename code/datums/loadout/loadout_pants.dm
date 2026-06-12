@@ -43,4 +43,9 @@
 	name = "Explorer Pants"
 	path = /obj/item/clothing/under/roguetown/tights/explorerpants
 	sort_category = "Pants"
+
+/datum/loadout_item/formaltrousers
+	name = "Formal Trousers"
+	path = /obj/item/clothing/under/roguetown/tights/formalfancy
+	sort_category = "Pants"	
 */

@@ -40,8 +40,8 @@
 	. += span_info("To <b>turn in</b> a completed contract, click the ledger while holding the quest scroll.")
 	. += span_info("Retrieval-quest items should be <b>dropped onto the marked tile</b> in front of the ledger.")
 	. += span_info("Abandoning a contract forfeits its deposit to the treasury and places you under a brief guild cooldown before you may abandon another.")
-	. += span_info("The <b>Innkeeper</b> may compose rumor contracts here, spending Rumor Points to seed retrieval, courier, and light kill jobs across the realm.")
-	. += span_info("The <b>[english_list(GLOB.contract_ledger_commission_roles)]</b> may commission defense writs here - paid from the Burgher Pledge, the Crown's Purse, or issued as an unfunded Request. The Steward is the primary commissioner; the others substitute if the Steward is absent. A Regent sitting in the Lord's absence inherits commission authority for the duration of their regency.")
+	. += span_info("The <b>Innkeeper and their tavern staff</b> (Cook, Tapster) may compose rumor contracts here, spending Rumor Points to seed retrieval, courier, and light kill jobs across the realm.")
+	. += span_info("The <b>[english_list(GLOB.crown_authority_roles)]</b> may commission defense writs here - paid from the Burgher Pledge, the Crown's Purse, or issued as an unfunded Request. The Steward is the primary commissioner; the others substitute if the Steward is absent. A Regent sitting in the Lord's absence inherits commission authority for the duration of their regency.")
 
 /obj/structure/roguemachine/contractledger/attackby(obj/item/P, mob/living/carbon/human/user, params)
 	. = ..()
@@ -70,7 +70,11 @@
 	data["is_handler"] = !!mob_job?.is_quest_giver
 	data["balance"] = SStreasury.get_balance(user)
 	data["has_account"] = SStreasury.has_account(user)
-	data["active_max"] = mob_job?.max_active_quests || QUEST_MAX_ACTIVE_PER_PLAYER
+	var/active_base = mob_job?.max_active_quests || QUEST_MAX_ACTIVE_PER_PLAYER
+	var/active_bonus = get_active_quest_fellowship_bonus(user)
+	data["active_max"] = active_base + active_bonus
+	data["active_max_base"] = active_base
+	data["active_fellowship_bonus"] = active_bonus
 	data["active_count"] = count_user_active_contracts(user)
 	var/gate_remaining = 0
 	if(!is_townie_contract_gate_exempt(user))
@@ -88,8 +92,10 @@
 	data["regions"] = build_region_listing()
 	data["tax_rate"] = SStreasury.get_tax_rate(TAX_CATEGORY_CONTRACT_LEVY)
 	data["guild_cut_rate"] = GUILD_REFERRAL_FEE_PCT
-	data["dynamic_role"] = resolve_dynamic_role(user)
-	if(data["dynamic_role"] == "innkeeper")
+	var/list/dynamic_roles = resolve_dynamic_roles(user)
+	data["dynamic_roles"] = dynamic_roles
+	data["dynamic_role"] = length(dynamic_roles) ? dynamic_roles[1] : null
+	if("innkeeper" in dynamic_roles)
 		data["rumor_points"] = round(SStreasury.rumor_points, 0.1)
 		data["rumor_refill_base"] = RUMOR_POINTS_BASE_REFILL
 		data["rumor_refill_per_player"] = RUMOR_POINTS_PER_PLAYER
@@ -99,7 +105,8 @@
 		data["rumor_destinations"] = build_rumor_destinations()
 		data["rumor_log"] = SStreasury.rumor_log
 		data["rumor_lucrative_mult"] = RUMOR_LUCRATIVE_MULT
-	if(data["dynamic_role"] == "steward")
+	if("steward" in dynamic_roles)
+		data["is_alderman_acting"] = (SScity_assembly?.is_alderman(user) && user.job != "Steward") ? TRUE : FALSE
 		data["pledge_balance"] = SStreasury.burgher_pledge_fund ? SStreasury.burgher_pledge_fund.balance : 0
 		data["pledge_refill_base"] = BURGHER_PLEDGE_BASE_REFILL
 		data["pledge_refill_per_player"] = BURGHER_PLEDGE_PER_PLAYER
@@ -113,7 +120,7 @@
 		data["crown_purse_balance"] = SStreasury?.discretionary_fund?.balance || 0
 		data["defense_costs"] = GLOB.defense_quest_tier_costs.Copy()
 		data["defense_regions_by_type"] = build_defense_regions_by_type()
-		data["region_tp_multipliers"] = build_region_tp_multipliers()
+		data["blockade_region_labels"] = build_blockade_region_labels()
 		data["defense_destinations"] = build_rumor_destinations()
 		data["defense_log"] = SStreasury.defense_log
 		data["blockade_recall_list"] = build_blockade_recall_list()
@@ -123,18 +130,18 @@
 		refresh_directive_quota()
 		data["directives_per_day"] = COMMISSION_REQUESTS_PER_DAY
 		data["directives_issued_today"] = directives_issued_today
+	if("towner" in dynamic_roles)
+		data["towner_postings"] = build_towner_posting_listing(user)
 	return data
 
-/// Jobs that can access the Steward commission panel. The Steward is the primary commissioner;
-/// the rest are substitutes so that blockade defense doesn't get crippled when the Steward is
-/// absent, dead, or otherwise occupied. Expand here if more authority roles need standing.
-GLOBAL_LIST_INIT(contract_ledger_commission_roles, list(
+GLOBAL_LIST_INIT(crown_authority_roles, list(
 	"Steward",
 	"Grand Duke",
 	"Hand",
 	"Clerk",
 	"Marshal",
 	"Councillor",
+	"Prince",
 ))
 
 /// TRUE if the user has standing to commission defense writs - either by job, or by sitting as
@@ -143,7 +150,7 @@ GLOBAL_LIST_INIT(contract_ledger_commission_roles, list(
 /obj/structure/roguemachine/contractledger/proc/can_commission(mob/user)
 	if(!user)
 		return FALSE
-	if(user.job in GLOB.contract_ledger_commission_roles)
+	if(user.job in GLOB.crown_authority_roles)
 		return TRUE
 	if(SSticker?.regentmob == user)
 		return TRUE
@@ -151,14 +158,14 @@ GLOBAL_LIST_INIT(contract_ledger_commission_roles, list(
 		return TRUE
 	return FALSE
 
-/// Return the dynamic-tab role key for this user, or null. Extend here when a new job earns its
-/// own ledger panel (e.g. steward).
-/obj/structure/roguemachine/contractledger/proc/resolve_dynamic_role(mob/user)
-	if(user?.job == "Innkeeper")
-		return "innkeeper"
+/obj/structure/roguemachine/contractledger/proc/resolve_dynamic_roles(mob/user)
+	var/list/roles = list()
+	if(user?.job in GLOB.tavern_positions)
+		roles += "innkeeper"
 	if(can_commission(user))
-		return "steward"
-	return null
+		roles += "steward"
+	roles += "towner"
+	return roles
 
 /obj/structure/roguemachine/contractledger/proc/build_region_listing() // TA EDIT START
 	var/list/known = get_active_map_threat_regions()
@@ -203,8 +210,11 @@ GLOBAL_LIST_INIT(contract_ledger_commission_roles, list(
 			"expected_count" = expected_count,
 			"threat_bands" = threat_bands,
 			"levy_exempt" = Q.levy_exempt,
+			"guild_cut_exempt" = Q.guild_cut_exempt,
 			"is_rumor" = Q.source == QUEST_SOURCE_RUMOR,
 			"is_defense" = Q.source == QUEST_SOURCE_DEFENSE,
+			"is_towner" = Q.source == QUEST_SOURCE_TOWNER,
+			"is_standing" = Q.source == QUEST_SOURCE_RUMOR || Q.source == QUEST_SOURCE_DEFENSE || Q.source == QUEST_SOURCE_TOWNER,
 			"required_fellowship_size" = Q.required_fellowship_size,
 		))
 	return listing
@@ -230,6 +240,25 @@ GLOBAL_LIST_INIT(contract_ledger_commission_roles, list(
 			"complete" = Q.complete,
 		))
 	return listing
+
+/proc/get_active_quest_fellowship_bonus(mob/user)
+	var/mob/living/L = user
+	if(!istype(L))
+		return 0
+	var/datum/fellowship/F = L.current_fellowship
+	if(!F || !F.is_leader(L))
+		return 0
+	var/size = length(F.get_members())
+	if(size >= 3)
+		return QUEST_ACTIVE_FELLOWSHIP_BONUS_BAND
+	if(size >= 2)
+		return QUEST_ACTIVE_FELLOWSHIP_BONUS_PAIR
+	return 0
+
+/proc/get_active_quest_cap(mob/user)
+	var/datum/job/J = user?.job ? SSjob.GetJob(user.job) : null
+	var/base = J?.max_active_quests || QUEST_MAX_ACTIVE_PER_PLAYER
+	return base + get_active_quest_fellowship_bonus(user)
 
 /obj/structure/roguemachine/contractledger/proc/count_user_active_contracts(mob/user)
 	var/datum/weakref/user_ref = WEAKREF(user)
@@ -264,4 +293,7 @@ GLOBAL_LIST_INIT(contract_ledger_commission_roles, list(
 			return TRUE
 		if("recall_blockade_writ")
 			recall_blockade_writ_from_tgui(user, params)
+			return TRUE
+		if("compose_towner")
+			compose_towner_from_tgui(user, params)
 			return TRUE

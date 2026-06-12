@@ -247,8 +247,7 @@
 
 	var/mob/living/carbon/human/H = src
 
-	var/player_count = length(GLOB.joined_player_list)
-	var/required_cultists = max(1, round(player_count / 6))
+	var/required_cultists = SSmapping.retainer.get_cult_ascension_required_cultists()
 
 	var/sacrifice_info = "the Crown"
 	var/target_role = "Crown"
@@ -533,7 +532,7 @@
 	if(mind && mind.has_antag_datum(/datum/antagonist/skeleton))
 		return
 
-	var/list/runes = list("Servantry", "Transmutation", "Fleshcrafting")
+	var/list/runes = list("Servantry", "Transmutation", "Fleshcrafting", "Weaponary")
 
 	if(!bloody_hands)
 		to_chat(src, span_danger("My hands aren't bloody enough."))

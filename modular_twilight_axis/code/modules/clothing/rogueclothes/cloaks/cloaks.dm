@@ -316,7 +316,6 @@
 	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
 	inhand_mod = FALSE
 	color = null
-	allowed_sex = list(MALE)
 	allowed_race = NON_DWARVEN_RACE_TYPES
 
 // /obj/item/clothing/cloak/etrmantle до обновления спрайта

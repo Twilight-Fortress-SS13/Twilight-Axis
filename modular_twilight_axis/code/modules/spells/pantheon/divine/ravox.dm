@@ -26,11 +26,17 @@
 	user.apply_status_effect(/datum/status_effect/TAdivine_strike, user.get_active_held_item())
 	return TRUE
 
+/atom/movable/screen/alert/status_effect/buff/TAdivine_strike
+	name = "Divine Strike"
+	desc = "Your next attack slows your target, lowering their WIL and SPD."
+	icon = 'icons/mob/actions/ravoxmiracles.dmi'
+	icon_state = "divine_strike"
+
 /datum/status_effect/TAdivine_strike
 	id = "divine_strike"
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = 15 SECONDS
-	alert_type = /atom/movable/screen/alert/status_effect/buff/divine_strike
+	alert_type = /atom/movable/screen/alert/status_effect/buff/TAdivine_strike
 	on_remove_on_mob_delete = TRUE
 	var/datum/weakref/buffed_item
 
@@ -53,7 +59,7 @@
 		var/obj/item/I = buffed_item.resolve()
 		if(istype(I))
 			I.set_light(0)
-		UnregisterSignal(I, COMSIG_ITEM_AFTERATTACK)
+			UnregisterSignal(I, COMSIG_ITEM_AFTERATTACK)
 
 /datum/status_effect/TAdivine_strike/proc/item_afterattack(obj/item/source, atom/target, mob/user, proximity_flag, click_parameters)
 	if(!proximity_flag)
@@ -79,13 +85,31 @@
 /datum/status_effect/debuff/TAravox_burden
 	id = "ravox_burden"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/TAravox_burden
-	effectedstats = list(STATKEY_SPD = -2, STATKEY_WIL = -3)
-	duration = 12 SECONDS
+	effectedstats = list(STATKEY_SPD = -2, STATKEY_WIL = -1)
+	duration = 20 SECONDS
 
 /atom/movable/screen/alert/status_effect/debuff/TAravox_burden
 	name = "Ravox's Burden"
 	desc = "My arms and legs are restrained by divine chains!\n"
 	icon_state = "restrained"
+
+/datum/status_effect/debuff/TAravox_burden/on_apply()
+		. = ..()
+		var/mob/living/carbon/C = owner
+		C.add_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN, multiplicative_slowdown = 1.5)
+
+/datum/status_effect/debuff/TAravox_burden/on_remove()
+	. = ..()
+	if(iscarbon(owner))
+		var/mob/living/carbon/C = owner
+		C.remove_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN)
+
+/atom/movable/screen/alert/status_effect/debuff/ravox_burden
+	parent_type = /atom/movable/screen/alert/status_effect/debuff/TAravox_burden
+
+/datum/status_effect/debuff/ravox_burden
+	parent_type = /datum/status_effect/debuff/TAravox_burden
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/ravox_burden
 
 //Call to Arms - AoE buff for all people surrounding you.
 /obj/effect/proc_holder/spell/self/TAcall_to_arms
@@ -190,18 +214,13 @@
 	physiology.bleed_mod /= 1.5
 	physiology.pain_mod /= 1.5
 
-/atom/movable/screen/alert/status_effect/buff/TAdivine_strike
-	name = "Divine Strike"
-	desc = "Your next attack slows your target, lowering their WIL and SPD."
-	icon_state = "divine_strike"
-
 /obj/effect/proc_holder/spell/invoked/TAtug_of_war
 	name = "Tug of War"
 	desc = "Casts out a chain that tries to pull the target closer."
 	action_icon = 'icons/mob/actions/ravoxmiracles.dmi'
 	overlay_icon = 'icons/mob/actions/ravoxmiracles.dmi'
 	overlay_state = "ravox_tug"
-	recharge_time = 1 MINUTES
+	recharge_time = 30 SECONDS
 	movement_interrupt = FALSE //WTF, targeted fetch and one minute recharge
 	chargedrain = 0
 	chargetime = 5
@@ -231,12 +250,9 @@
 		if(ishuman(target))
 			var/mob/living/carbon/human/H = target
 			var/strdiff = user.STASTR - H.STASTR
-			var/enddiff = user.STAWIL - H.STAWIL
 			var/condiff = user.STACON - H.STACON
-			var/spddiff = user.STASPD - H.STASPD
-			var/fordiff = user.STALUC - H.STALUC
 
-			var/list/statdiffs = list(strdiff, enddiff, condiff, spddiff, fordiff)
+			var/list/statdiffs = list(strdiff, condiff)
 			var/count = 0
 			for(var/diff in statdiffs)
 				if(diff > 0)
@@ -254,7 +270,7 @@
 			if(prob(chance))
 				H.throw_at(user, pull_distance, 1, H, FALSE)
 				H.visible_message(span_warning("[H]'s body moves on its own!"))
-				user.Beam(target,icon_state="chain",time=5)
+				user.Beam(target, icon_state = "chain", time = 5)
 			else
 				H.visible_message(span_warning("[H] holds firm!"))
 			H.Slowdown(slowdown)
@@ -263,7 +279,6 @@
 		return FALSE
 	revert_cast()
 	return FALSE
-
 
 /obj/effect/proc_holder/spell/invoked/TAchallenge
 	name = "Challenge"
@@ -356,12 +371,12 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 	addtimer(CALLBACK(user, GLOBAL_PROC_REF(do_teleport), user, storedchallengerturf), 3 MINUTES)
 	addtimer(CALLBACK(target, GLOBAL_PROC_REF(do_teleport), target, storedchallengedturf), 3 MINUTES)
 	addtimer(CALLBACK(user, TYPE_PROC_REF(/mob, cmode_change), originalcmodeuser), 3 MINUTES)
-	addtimer(CALLBACK(target,TYPE_PROC_REF(/mob, cmode_change), originalcmodetarget), 3 MINUTES)
-	addtimer(CALLBACK(thearena,TYPE_PROC_REF(/area/rogue/indoors/ravoxarena, cleanthearena), storedchallengedturf), 3 MINUTES) // shunt all items from the arena out onto the challenged spot.
+	addtimer(CALLBACK(target, TYPE_PROC_REF(/mob, cmode_change), originalcmodetarget), 3 MINUTES)
+	addtimer(CALLBACK(thearena, TYPE_PROC_REF(/area/rogue/indoors/ravoxarena, cleanthearena), storedchallengedturf), 3 MINUTES) // shunt all items from the arena out onto the challenged spot.
 
 	if(iscarbon(target))
 		var/mob/living/carbon/human/spawnprotectiontarget = target
-		addtimer(CALLBACK(spawnprotectiontarget,TYPE_PROC_REF(/mob/living/carbon/human, do_invisibility), 10 SECONDS), 3 MINUTES)
+		addtimer(CALLBACK(spawnprotectiontarget, TYPE_PROC_REF(/mob/living/carbon/human, do_invisibility), 10 SECONDS), 3 MINUTES)
 
 	return TRUE
 
@@ -404,17 +419,17 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 				var/mob/living/M = AM
 				M.Paralyze(5)
 				to_chat(M, "<span class='danger'>You're thrown back by Ravox's strength!!</span>")
-			AM.safe_throw_at(throwtarget, ((CLAMP((maxthrow - (CLAMP(distfromflag - 2, 0, distfromflag))), 3, maxthrow))), 1,null, force = repulse_force)
+			AM.safe_throw_at(throwtarget, ((CLAMP((maxthrow - (CLAMP(distfromflag - 2, 0, distfromflag))), 3, maxthrow))), 1, null, force = repulse_force)
 
 /obj/structure/fluff/ravox/challenger/recall/Initialize()
 	. = ..()
 	addtimer(CALLBACK(src, GLOBAL_PROC_REF(qdel), src), 3 MINUTES)
-	addtimer(CALLBACK(src,TYPE_PROC_REF(/obj/structure/fluff/ravox, spawnprotection)), 179 SECONDS)
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/structure/fluff/ravox, spawnprotection)), 179 SECONDS)
 
 /obj/structure/fluff/ravox/challenged/recall/Initialize()
 	. = ..()
 	addtimer(CALLBACK(src, GLOBAL_PROC_REF(qdel), src), 3 MINUTES)
-	addtimer(CALLBACK(src,TYPE_PROC_REF(/obj/structure/fluff/ravox, spawnprotection)), 179 SECONDS)
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/structure/fluff/ravox, spawnprotection)), 179 SECONDS)
 
 //T0
 
@@ -459,11 +474,17 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 		user.apply_status_effect(/datum/status_effect/buff/order/onfeet)
 	return TRUE
 
+/atom/movable/screen/alert/status_effect/buff/TAbalance_immune
+	name = "Strong Stance"
+	desc = "I stand firm for Ravox."
+	icon = 'icons/mob/actions/ravoxmiracles.dmi'
+	icon_state = "balance_immune"
+
 /datum/status_effect/TAbalance_immune
 	id = "balance_immune"
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = 10 SECONDS
-	alert_type = /atom/movable/screen/alert/status_effect/buff/divine_strike
+	alert_type = /atom/movable/screen/alert/status_effect/buff/TAbalance_immune
 	on_remove_on_mob_delete = TRUE
 	var/datum/weakref/buffed_item
 
@@ -525,71 +546,179 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 		if(assocskill == 1)
 			duration = duration
 		else
-			duration *= assocskill-1
-		con_bonus = assocskill-1
+			duration *= assocskill - 1
+		con_bonus = assocskill - 1
 	if(con_bonus > 0)
 		effectedstats = list(STATKEY_CON = con_bonus, STATKEY_WIL = con_bonus)
 	. = ..()
 
-/obj/effect/proc_holder/spell/invoked/TAraise_warrior_spirits
-	name = "Warrior Spirits"
-	desc = "Summon Elder Warrior spirits to tear at an opponent!"
-	range = 7
-	sound = list('sound/magic/magnet.ogg')
-	action_icon = 'icons/mob/actions/ravoxmiracles.dmi'
-	overlay_icon = 'icons/mob/actions/ravoxmiracles.dmi'
-	overlay_state = "warriors"
-	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
-	releasedrain = 40
-	chargetime = 30
-	warnie = "spellwarning"
-	no_early_release = TRUE
-	charging_slowdown = 1
-	chargedloop = /datum/looping_sound/invokeholy
-	gesture_required = TRUE 
-	associated_skill = /datum/skill/magic/holy
-	recharge_time = 5 MINUTES
-	hide_charge_effect = TRUE
-	miracle = TRUE
-	devotion_cost = 50
-	invocations = list("Soldiers of Ravox, come to me!!")
-	invocation_type = "shout"
+#define RAVOX_SIMPLE "SIMPLE"
+#define RAVOX_CARBON "CARBON"
 
-/obj/effect/proc_holder/spell/invoked/TAraise_warrior_spirits/cast(list/targets, mob/living/user)
+/datum/action/cooldown/spell/ravox/TAraise_warrior_spirits
+	name = "Warrior Spirits"
+	desc = "Tear out part of your spirit, and manifest it into a spectral warrior! Toggle spell mode, to choise - One Carbon Warrior or Three Siple Spirits"
+	button_icon_state = "warriors"
+	sound = 'sound/magic/magnet.ogg'
+
+	click_to_activate = TRUE
+	cast_range = SPELL_RANGE_GROUND
+	self_cast_possible = FALSE
+
+	primary_resource_cost = SPELLCOST_MIRACLE_LEGENDARY
+
+	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
+
+	invocation_type = INVOCATION_SHOUT
+	invocations = list("Ravox calls upon you once more!")
+
+	charge_required = TRUE
+	charge_time = 3 SECONDS
+	charge_drain = 0
+	charge_slowdown = CHARGING_SLOWDOWN_SMALL
+	charge_sound = 'sound/magic/holycharging.ogg'
+	cooldown_time = 5 MINUTES
+
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+	var/spell_mode = RAVOX_SIMPLE
+	var/list/spell_modes = list(RAVOX_SIMPLE, RAVOX_CARBON)
+	var/static/list/spell_mode_labels = list(RAVOX_SIMPLE = "SIMPLE", RAVOX_CARBON = "CARBON")
+
+/datum/action/cooldown/spell/ravox/TAraise_warrior_spirits/cast(atom/cast_on)
 	. = ..()
-	if(!("[user.mind.current.real_name]_faction" in user.faction))  //FUCK VVV
+
+	var/mob/living/carbon/human/user = owner
+	if(!istype(user))
+		return FALSE
+
+	if(istype(get_area(user), /area/rogue/indoors/ravoxarena))
+		to_chat(user, span_userdanger("I reach for outer help, but something rebukes me! This challenge is only for me to overcome!"))
+		return FALSE
+
+	if(!("[user.mind.current.real_name]_faction" in user.faction))
 		user.faction |= "[user.mind.current.real_name]_faction"
 
-	if(!locate(/obj/effect/proc_holder/spell/invoked/gravemark) in user.mind?.spell_list) //OFF VVV
-		user.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark/no_sprite)
+	if(!locate(/datum/action/cooldown/spell/gravemark) in user.mind?.spell_list)
+		user.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark/no_sprite)
 
-	if(!locate(/obj/effect/proc_holder/spell/invoked/minion_order) in user.mind?.spell_list)  //SPELLGRANT IN CLASS FILE
-		user.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
+	if(!locate(/datum/action/cooldown/spell/minion_order) in user.mind?.spell_list) 
+		user.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order)
 
+	var/spirit_type = get_spirit_type()
 	var/skill = user.get_skill_level(/datum/skill/magic/holy)
 	var/time = 1 MINUTES
 	time *= skill
 
-	if(isliving(targets[1]))
-		var/mob/living/target = targets[1]
-		if(user.dir == SOUTH || user.dir == NORTH)
-			new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/spear(get_turf(user),user)
-			new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/axe(get_step(user, EAST),user)
-			new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/sword(get_step(user, WEST),user)
-		else
-			new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/spear(get_turf(user),user)
-			new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/axe(get_step(user, NORTH),user)
-			new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/sword(get_step(user, SOUTH),user)
-		for(var/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/swarm in view(3, user))
-			swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target) 
-			if(swarm.buffed_r == FALSE)
-				swarm.maxHealth *= skill
-				swarm.health *= skill
-				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
-				swarm.buffed_r = TRUE
-		return TRUE
-	revert_cast()
+	var/turf/spawn_turf = get_step(user, user.dir)
+
+	if(!spawn_turf)
+		spawn_turf = get_turf(user)
+
+	if(isliving(cast_on))
+		var/mob/living/target = cast_on
+		if(spirit_type == "carbon")
+			new /mob/living/carbon/human/species/human/northern/ravox_spirit(spawn_turf, user)
+			for(var/mob/living/carbon/human/species/human/northern/ravox_spirit/swarm in view(6, user))
+				swarm.faction |= list("ravox_spirit", "[user.mind.current.real_name]_faction")
+				swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
+				swarm.ai_controller.set_blackboard_key(BB_MAIN_TARGET, target)
+				swarm.ai_controller.insert_blackboard_key_lazylist(BB_BASIC_MOB_RETALIATE_LIST, target)
+				swarm.visible_message(span_notice("A [swarm] manifests following after [target]... !"))
+				if(swarm.buffed_r == FALSE)
+					addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
+					swarm.buffed_r = TRUE
+					swarm.name = "[user.real_name]'s Spirit"
+			return TRUE
+		if(spirit_type == "simple")
+			if(user.dir == SOUTH || user.dir == NORTH)
+				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/spear(spawn_turf, user)
+				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/axe(get_step(spawn_turf, EAST),user)
+				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/sword(get_step(spawn_turf, WEST),user)
+			else
+				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/spear(spawn_turf,user)
+				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/axe(get_step(spawn_turf, NORTH),user)
+				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/sword(get_step(spawn_turf, SOUTH),user)
+			for(var/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/swarm in view(6, user))
+				swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target) 
+				if(swarm.buffed_r == FALSE)
+					swarm.maxHealth *= skill
+					swarm.health *= skill
+					addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
+					swarm.buffed_r = TRUE
+			return TRUE
 	return FALSE
+
+
+/datum/action/cooldown/spell/ravox/TAraise_warrior_spirits/proc/get_spirit_type()
+	switch(spell_mode)
+		if(RAVOX_SIMPLE)
+			return "simple"
+		if(RAVOX_CARBON)
+			return "carbon"
+	return null
+
+/datum/action/cooldown/spell/ravox/TAraise_warrior_spirits/toggle_alt_mode(mob/user)
+	var/current_index = spell_modes.Find(spell_mode)
+	current_index = (current_index % length(spell_modes)) + 1
+	spell_mode = spell_modes[current_index]
+	var/label = spell_mode_labels[spell_mode] || uppertext(spell_mode)
+	to_chat(user, span_notice("Spell mode set to: [label]."))
+	return TRUE
+
+/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost
+	name = "Ravoxian Soul"
+	desc = "A portion of a Ravoxian's soul. Kill it to damage and stun them. Metal."
+	icon = 'icons/roguetown/mob/monster/ravoxghost.dmi'
+	icon_state = "rghost"
+	icon_living = "rghost"
+	STACON = 10
+	STASTR = 10
+	STASPD = 8
+	maxHealth = 60 //summoned with 60 + 10 hp per skill lvl
+	health = 50
+	pixel_x = -16
+	pixel_y = -16
+	harm_intent_damage = 10
+	melee_damage_lower = 25
+	melee_damage_upper = 30
+	icon_dead = ""
+	loot = list(/obj/item/ash,	/obj/item/ash)
+	can_have_ai = FALSE //disable native ai
+	AIStatus = AI_OFF
+	var/buffed_r = FALSE
+
+/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/Initialize(mapload, mob/user, cabal_affine = FALSE, is_summoned = FALSE)
+	. = ..(mapload, user, cabal_affine, is_summoned)
+
+/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/spear
+	icon_state = "rghost_s"
+	icon_living = "rghost_s"
+	attack_sound = 'sound/foley/pierce.ogg'
+	base_intents = list(/datum/intent/simple/spear/skeleton)
+	ai_controller = /datum/ai_controller/skeleton_spear
+
+/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/axe
+	icon_state = "rghost_a"
+	icon_living = "rghost_a"
+	base_intents = list(/datum/intent/simple/axe/skeleton)
+
+/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/sword
+	icon_state = "rghost_sw"
+	icon_living = "rghost_sw"
+	base_intents = list(/datum/intent/simple/axe/skeleton)
+
+/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/get_sound(input)
+	switch(input)
+		if("laugh")
+			return pick('sound/vo/mobs/ghost/laugh (1).ogg','sound/vo/mobs/ghost/laugh (2).ogg','sound/vo/mobs/ghost/laugh (3).ogg','sound/vo/mobs/ghost/laugh (4).ogg','sound/vo/mobs/ghost/laugh (5).ogg','sound/vo/mobs/ghost/laugh (6).ogg')
+		if("moan")
+			return pick('sound/vo/mobs/ghost/moan (1).ogg','sound/vo/mobs/ghost/laugh (2).ogg','sound/vo/mobs/ghost/laugh (3).ogg')
+		if("death")
+			return 'sound/vo/mobs/ghost/death.ogg'
+		if("whisper")
+			return pick('sound/vo/mobs/ghost/whisper (1).ogg','sound/vo/mobs/ghost/whisper (2).ogg','sound/vo/mobs/ghost/whisper (3).ogg')
+		if("aggro")
+			return pick('sound/vo/mobs/ghost/aggro (1).ogg','sound/vo/mobs/ghost/aggro (2).ogg','sound/vo/mobs/ghost/aggro (3).ogg','sound/vo/mobs/ghost/aggro (4).ogg','sound/vo/mobs/ghost/aggro (5).ogg','sound/vo/mobs/ghost/aggro (6).ogg')
 
 /obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAravoxgrasp
 	name = "Ravox Grasp"
@@ -626,7 +755,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 	wbalance = WBALANCE_HEAVY
 	force = 0
 	damtype = BURN
-	wdefense = 0
+	wdefense = 7
 	associated_skill = /datum/skill/magic/holy //EHEHEHEHEHEH
 	can_parry = TRUE
 
@@ -669,8 +798,9 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 /obj/item/melee/touch_attack/rogueweapon/TAravoxgrasp/pre_attack(atom/target, mob/living/user, params)
 	if(isliving(target))
 		var/mob/living/L = target
-		if (do_after(user, 1 SECONDS, target = L))
+		if(do_after(user, 1 SECONDS, target = L))
 			wash_atom(target, 1)
 			to_chat(user, span_notice("I render \the [target.name] clean."))
 			return TRUE
 	return ..()
+

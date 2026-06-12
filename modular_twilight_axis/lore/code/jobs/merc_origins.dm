@@ -4,6 +4,9 @@
 /datum/advclass/mercenary/anthrax_assassin
 	origin_limits = list(/datum/virtue/origin/racial/underdark, /datum/virtue/origin/racial/underdark_drow)
 
+/datum/advclass/mercenary/anthrax_paladin
+	origin_limits = list(/datum/virtue/origin/racial/underdark, /datum/virtue/origin/racial/underdark_drow)
+
 /datum/advclass/mercenary/grenzelhoft
 	origin_limits = list(/datum/virtue/origin/grenzelhoft)
 
@@ -102,3 +105,6 @@
 
 /datum/advclass/mercenary/underdweller
 	origin_limits = list(/datum/virtue/origin/racial/underdark, /datum/virtue/origin/racial/underdark_drow, /datum/virtue/origin/racial/akhdruk)
+
+/datum/advclass/mercenary/twilight_conquistador
+	origin_limits = list(/datum/virtue/origin/etrusca)

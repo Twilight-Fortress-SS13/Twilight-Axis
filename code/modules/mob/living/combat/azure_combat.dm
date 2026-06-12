@@ -60,6 +60,39 @@
 		apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
 		H.reset_desert_rider_momentum_tier()
 
+/mob/living/carbon/human/proc/simple_clash(mob/user, obj/item/IM)
+	if(!isliving(user))
+		return
+	var/mob/living/L = user
+	if(user == src)
+		bad_guard(span_warning("I hit myself."))
+		return
+	if(!IM)	
+		visible_message(span_warning("[src] deflects [L]'s strike with [p_their()] bare hands!"))
+		playsound(src, 'sound/combat/clash_struck.ogg', 100)
+		L.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
+		L.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
+		if(L.mind)
+			L.dodgetime = clamp(L.dodgetime + 5, 0, CLICK_CD_HEAVY)
+		L.Slowdown(3)
+		to_chat(src, span_notice("[capitalize(L.p_theyre())] exposed!"))
+		remove_status_effect(/datum/status_effect/buff/clash)
+		apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+		return
+	visible_message(span_suicide("[src] ripostes [L] with \the [IM]!"))
+	playsound(src, 'sound/combat/clash_struck.ogg', 100)
+	L.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
+	L.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
+	if(L.mind)
+		L.dodgetime = clamp(L.dodgetime + 5, 0, CLICK_CD_HEAVY)
+	dodgetime = clamp(dodgetime - 5, 0, CLICK_CD_DODGE)
+	user.Slowdown(3)
+		
+	to_chat(src, span_notice("[capitalize(L.p_theyre())] exposed!"))
+	remove_status_effect(/datum/status_effect/buff/clash)
+	apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+	return
+
 //This is a gargantuan, clunky proc that is meant to tally stats and weapon properties for the potential disarm.
 //For future coders: Feel free to change this, just make sure someone like Struggler statpack doesn't get 3-fold advantage.
 /mob/living/carbon/human/proc/clash(mob/user, obj/item/IM, obj/item/IU)
@@ -202,6 +235,9 @@
 	if(has_status_effect(/datum/status_effect/debuff/exposed))
 		return FALSE
 
+	if(get_skill_level(/datum/skill/misc/sneaking) >= SKILL_LEVEL_JOURNEYMAN || HAS_TRAIT(src, TRAIT_LIGHT_STEP))
+		apply_status_effect(/datum/status_effect/stealth_revealed)
+
 	apply_status_effect(/datum/status_effect/buff/clash)
 	return TRUE
 
@@ -275,11 +311,14 @@
 	return FALSE
 
 /// Returns the highest AC worn, or held in hands.
-/mob/living/carbon/human/proc/highest_ac_worn(check_hands)
+/mob/living/carbon/human/proc/highest_ac_worn(check_hands, check_helmet = TRUE)
 	var/list/slots = list(wear_armor, wear_pants, wear_wrists, wear_shirt, gloves, head, shoes, wear_neck, wear_mask, wear_ring)
+	if(!check_helmet)
+		slots.Remove(head)
 	for(var/slot in slots)
 		if(isnull(slot) || !istype(slot, /obj/item/clothing))
 			slots.Remove(slot)
+
 	
 	var/highest_ac = ARMOR_CLASS_NONE
 
@@ -305,6 +344,8 @@
 
 /mob/living/carbon/human/proc/process_tempo_attack(mob/living/carbon/attacker)
 	if(iscarbon(attacker) && attacker != src && attacker.mind)
+		if(tempo_faction_flag && (tempo_faction_flag & attacker.tempo_faction_flag))
+			return
 		if(length(tempo_attackers) <= TEMPO_CAP || (REF(attacker) in tempo_attackers))	//This list auto-culls so we don't need to flood it. If you're fighting 7 dudes at the same time you've got other problems.
 			var/newtime
 			var/att_count = length(tempo_attackers)
@@ -466,6 +507,16 @@
 				return FALSE
 			else
 				return TRUE
+		//Whether we can lose our equipment at all when its integrity breaks.
+		if(TEMPO_TAG_EQUIPTOSS)
+			if(has_status_effect(/datum/status_effect/buff/tempo_one))
+				return FALSE
+			if(has_status_effect(/datum/status_effect/buff/tempo_two))
+				return FALSE
+			if(has_status_effect(/datum/status_effect/buff/tempo_three))
+				return FALSE
+			else
+				return TRUE
 
 
 /// A defensive boon from matching subzones.
@@ -478,7 +529,7 @@
 		return
 	if(has_status_effect(/datum/status_effect/debuff/bindcd))
 		return
-	if(check_bind(check_bind_subzone(zone_selected), user.zone_selected) || (!user.mind && (check_zone(zone_selected) == check_zone(user.zone_selected))) || (vuln_exception && zone_selected != BODY_ZONE_CHEST))
+	if(check_bind(check_bind_subzone(zone_selected), user.zone_selected) || (!user.mind && (check_zone(zone_selected) == check_zone(user.zone_selected))))
 		var/chance = 100	//Only here so chest vs chest has a smaller chance to trigger a bind.
 		if(zone_selected == user.zone_selected && zone_selected == BODY_ZONE_CHEST)
 			chance = 3
@@ -530,3 +581,25 @@
 			return TRUE
 		else
 			return FALSE
+
+/mob/living/proc/attempt_disarm(mob/living/user, obj/item/O) //Codeblock for handling weapon-based disarming checks. 
+	var/obj/item/I
+	if(!IsOffBalanced(src))
+		to_chat(user, span_warning("They must be off-balanced before I can disarm them!"))
+		return
+	I = get_active_held_item()
+	if(!I)
+		I = get_inactive_held_item()
+	if(I)
+		var/mob/living/carbon/human/target = src
+		target.disarmed(I)
+		playsound(src, 'sound/combat/clash_struck.ogg', 100)
+		flash_fullscreen("whiteflash")
+		user.flash_fullscreen("whiteflash")
+		var/datum/effect_system/spark_spread/S = new()
+		var/turf/front = get_step(src,src.dir)
+		S.set_up(1, 1, front)
+		S.start() //In essence; requires the same conditions to knock someone down via a kick. The difference is that this replaces the knockdown with a far more pronounced 'disarming' effect.
+	else
+		to_chat(user, span_warning("They aren't holding anything that can be disarmed!"))
+		return

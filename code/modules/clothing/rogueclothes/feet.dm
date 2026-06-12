@@ -28,8 +28,14 @@
 	salvage_amount = 1
 	armor = ARMOR_CLOTHING
 
+/obj/item/clothing/shoes/roguetown/boots/examine(mob/user)
+	. = ..()
+	if(holdingknife)
+		. += span_notice("There is a knife tucked into the side of the boot.")
+
 /obj/item/clothing/shoes/roguetown/boots/attackby(obj/item/W, mob/living/carbon/user, params)
-	if(istype(W, /obj/item/rogueweapon/huntingknife/throwingknife))
+	// Special exception for rotfang to help deal with inventory woes / make it harder to steal.
+	if(istype(W, /obj/item/rogueweapon/huntingknife/throwingknife) || istype(W, /obj/item/rogueweapon/huntingknife/idagger/steel/rotfang))
 		if(holdingknife == null)
 			for(var/obj/item/clothing/shoes/roguetown/boots/B in user.get_equipped_items(TRUE))
 				to_chat(loc, span_warning("I quickly slot [W] into [B]!"))
@@ -270,6 +276,15 @@
 	item_state = "freiboots"
 	max_integrity = ARMOR_INT_SIDE_HARDLEATHER + 50
 
+/obj/item/clothing/shoes/roguetown/boots/armor/dwarven
+	name = "grudgebearer dwarven boots"
+	desc = "Clatters mightily."
+	icon = 'icons/roguetown/clothing/special/race_armor.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/race_armor.dmi'
+	allowed_race = list(/datum/species/dwarf, /datum/species/dwarf/mountain)
+	icon_state = "dwarfshoe"
+	item_state = "dwarfshoe"
+
 /obj/item/clothing/shoes/roguetown/boots/elven_boots
 	name = "woad elven boots"
 	desc = "'Tread lightly, for the ground remembers every footfall.'"
@@ -325,7 +340,6 @@
 	smelt_bar_num = 1
 	grid_height = 96
 	grid_width = 96
-	sellprice = 200
 	unenchantable = TRUE
 
 /obj/item/clothing/shoes/roguetown/boots/armor/gold/king
@@ -349,6 +363,8 @@
 	max_integrity = ARMOR_INT_SIDE_ANTAG
 	armor = ARMOR_PLATE_BSTEEL
 	icon_state = "graggarplateboots"
+	smeltresult = /obj/item/ingot/component/graggar
+	unenchantable = TRUE
 
 /obj/item/clothing/shoes/roguetown/boots/armor/graggar/Initialize()
 	. = ..()
@@ -361,6 +377,8 @@
 	desc = "Gilded tombs do worm enfold."
 	icon_state = "matthiosboots"
 	armor = ARMOR_PLATE_BSTEEL
+	smeltresult = /obj/item/ingot/component/matthios
+	unenchantable = TRUE
 
 /obj/item/clothing/shoes/roguetown/boots/armor/matthios/Initialize()
 	. = ..()
@@ -372,7 +390,7 @@
 		return
 	qdel(src)
 
-/obj/item/clothing/shoes/roguetown/boots/armor/avantyne
+/obj/item/clothing/shoes/roguetown/boots/armor/zizo
 	name = "avantyne boots"
 	desc = "Bolstered by threads of avantyne, these lighter sabatons remain practical enough to be removed once the rite is done."
 	icon_state = "zizoboots"
@@ -381,23 +399,24 @@
 	material_category = ARMOR_MAT_PLATE
 	armor = ARMOR_PLATE_BSTEEL
 	armor_class = ARMOR_CLASS_MEDIUM
+	smeltresult = /obj/item/ingot/component/zizo
+	unenchantable = TRUE
 
-/obj/item/clothing/shoes/roguetown/boots/armor/avantyne/heavy
-	name = "fused avantyne boots"
-
-/obj/item/clothing/shoes/roguetown/boots/armor/avantyne/Initialize(mapload)
+/obj/item/clothing/shoes/roguetown/boots/armor/zizo/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
 
-/obj/item/clothing/shoes/roguetown/boots/armor/avantyne/heavy/Initialize()
-	. = ..()
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
-
-/obj/item/clothing/shoes/roguetown/boots/armor/avantyne/heavy/dropped(mob/living/carbon/human/user)
-	. = ..()
-	if(QDELETED(src))
-		return
-	qdel(src)
+/obj/item/clothing/shoes/roguetown/boots/armor/avantyne
+	name = "avantyne-threaded sabatons"
+	desc = "Marrow, flesh, ash; the bedrock of a new reality, fated to suffer until the final breath. It is this prognosis that commands Her disciples to \
+	work towards ascensionism - for no sacrifice is too great, in the pursuit of bringing lyfe back to this dying world."
+	icon_state = "zizoboots"
+	max_integrity = ARMOR_INT_SIDE_STEEL
+	chunkcolor = "#363030"
+	material_category = ARMOR_MAT_PLATE
+	armor = ARMOR_PLATE_BSTEEL
+	armor_class = ARMOR_CLASS_MEDIUM
+	smeltresult = /obj/item/ingot/avantyne
 
 /obj/item/clothing/shoes/roguetown/boots/armor/iron
 	name = "light plated boots"

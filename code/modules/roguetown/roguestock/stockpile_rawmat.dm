@@ -46,7 +46,7 @@
 /datum/roguestock/stockpile/glass
 	name = "Glass Batch"	//'Raw' glass
 	desc = "A mixture of finely ground materials that is used to make glass."
-	item_type = /obj/item/natural/clay/glassbatch
+	item_type = /obj/item/natural/glassbatch
 	trade_good_id = TRADE_GOOD_GLASS_BATCH
 	stockpile_amount = 5
 	importexport_amt = 5
@@ -84,6 +84,7 @@
 	desc = "Chunks of unrefined gold."
 	item_type = /obj/item/rogueore/gold
 	trade_good_id = TRADE_GOOD_GOLD_ORE
+	stockpile_amount = 4
 	stockpile_limit = 50
 	importexport_amt = 10
 
@@ -101,6 +102,7 @@
 	desc = "A red mineral used to make quicksilver."
 	item_type = /obj/item/rogueore/cinnabar
 	trade_good_id = TRADE_GOOD_CINNABAR
+	stockpile_amount = 20
 	stockpile_limit = 50
 	importexport_amt = 5
 
@@ -109,6 +111,7 @@
 	desc = "Lengths of cloth for sewing and tailoring."
 	item_type = /obj/item/natural/cloth
 	trade_good_id = TRADE_GOOD_CLOTH
+	stockpile_amount = 10
 	importexport_amt = 10
 	stockpile_limit = 100
 
@@ -117,6 +120,7 @@
 	desc = "Strands used to make cloth and other items."
 	item_type = /obj/item/natural/fibers
 	trade_good_id = TRADE_GOOD_FIBERS
+	stockpile_amount = 10
 	importexport_amt = 10
 	stockpile_limit = 50
 
@@ -152,5 +156,6 @@
 	desc = "Hide with a long winter coat from animals."
 	item_type = /obj/item/natural/fur
 	trade_good_id = TRADE_GOOD_FUR
+	stockpile_amount = 10
 	importexport_amt = 5
 	stockpile_limit = 25

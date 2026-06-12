@@ -10,6 +10,7 @@
 	faction = list(FACTION_TROLLS)
 	threat_point = THREAT_DANGEROUS
 	ambush_faction = "trolls"
+	blood_toll_bucket = STATS_KILLED_TROLLMINOTAUR
 	footstep_type = FOOTSTEP_MOB_HEAVY
 	emote_hear = null
 	emote_see = null
@@ -92,6 +93,8 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/troll/death(gibbed)
 	..()
 	update_icon()
+	if(!QDELETED(src))
+		src.AddComponent(/datum/component/deadite_animal_reanimation)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/troll/get_sound(input)
 	switch(input)

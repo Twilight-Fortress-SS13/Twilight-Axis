@@ -60,6 +60,12 @@
 		out[TR.region_name] = TR.tp_budget_multiplier
 	return out
 
+/obj/structure/roguemachine/contractledger/proc/build_region_delivery_multipliers()
+	var/list/out = list()
+	for(var/datum/threat_region/TR as anything in SSregionthreat.threat_regions)
+		out[TR.region_name] = TR.delivery_reward_multiplier
+	return out
+
 /obj/structure/roguemachine/contractledger/proc/build_defense_regions_by_type()
 	var/list/out = list()
 	for(var/qtype in GLOB.defense_quest_tier_costs)
@@ -79,6 +85,16 @@
 					continue
 				regions += TR.region_name
 		out[qtype] = regions
+	return out
+
+/obj/structure/roguemachine/contractledger/proc/build_blockade_region_labels()
+	var/list/out = list()
+	for(var/datum/blockade/B as anything in GLOB.active_blockades)
+		var/datum/economic_region/ER = B.get_region()
+		if(!ER)
+			continue
+		var/datum/threat_region/TR = B.get_threat_region()
+		out[ER.name] = TR ? "[ER.name] ([TR.region_name])" : ER.name
 	return out
 
 /obj/structure/roguemachine/contractledger/proc/commission_defense_from_tgui(mob/user, list/params)

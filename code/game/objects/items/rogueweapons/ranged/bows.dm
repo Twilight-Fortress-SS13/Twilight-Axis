@@ -91,6 +91,7 @@
 //bow objs ฅ^•ﻌ•^ฅ
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow
+	has_item_quality = TRUE
 	name = "crude selfbow"
 	desc = "This roughly hewn selfbow is just a bit too little of everything. Too little length, \
 	too little poundage, too slow a shot."
@@ -119,6 +120,36 @@
 	obj_flags = UNIQUE_RENAME
 	var/heavy_bow = FALSE //used for adding a STR check to the charge time of a bow
 	cartridge_articles = "an"
+	var/datum/special_intent/special
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/bow/equipped(mob/user, slot) //TA EDIT START
+	. = ..()
+	if(slot == ITEM_SLOT_HANDS)
+		if(HAS_TRAIT(user, TRAIT_BOW_DOUBLESHOT))
+			if(!istype(special, /datum/special_intent/range_special/bow_doubleshot))
+				special = new /datum/special_intent/range_special/bow_doubleshot()
+				
+		else if(HAS_TRAIT(user, TRAIT_BOW_LONGSHOT))
+			if(!istype(special, /datum/special_intent/range_special/bow_longshot))
+				special = new /datum/special_intent/range_special/bow_longshot()
+		
+		else if(HAS_TRAIT(user, TRAIT_BOW_BACKSTEP))
+			if(!istype(special, /datum/special_intent/range_special/bow_backstep))
+				special = new /datum/special_intent/range_special/bow_backstep()
+
+		else
+			special = null
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/bow/dropped(mob/user, silent)
+	. = ..()
+	special = null 
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/bow/Destroy()
+	if(special)
+		qdel(special)
+		special = null
+
+	return ..()//TA EDIT END
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/get_mechanics_examine(mob/user)
 	. += span_info("Bows increase in damage and accuracy the higher your <b>PERCEPTION</b>.")

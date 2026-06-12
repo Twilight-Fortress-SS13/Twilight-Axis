@@ -46,6 +46,8 @@
 			. += span_bold("Накладывает на цель онемение. Если у цели есть магический барьер, он будет мгновенно уничтожен.")
 		if("terrorpowder")
 			. += span_bold("Наносит удвоенный урон всем существам, не контролируемым игроком.")
+		if("psypowder")
+			. += span_bold("Ослабляет и ослепляет цель ядовитыми парами на несколько секунд.")
 	. += span_bold("Пороха осталось на [charges] перезарядок.")
 
 /obj/item/twilight_powderflask/fyre
@@ -89,6 +91,13 @@
 	icon_state = "powderflask_holyfyre"
 	gunpowder = "holy fyrepowder"
 	charges = 16
+
+/obj/item/twilight_powderflask/volf
+	name = "powderflask"
+	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит порох смешанный с ядовитыми порошками, изготовленными специально для волков. В нём нет благословлений, его существование столь же омерзительно как и существование рунных волков."
+	icon_state = "powderflask_psy"
+	gunpowder = "psypowder"
+	charges = 30
 
 /obj/effect/particle_effect/smoke/arquebus
 	name = "smoke"
@@ -162,7 +171,7 @@
 	var/spread_num = 10
 	var/damfactor = 1
 	var/critfactor = 1
-	var/npcdamfactor = 1.3
+	var/npcdamfactor = 2
 	var/reloaded = FALSE
 	var/silenced = FALSE
 	var/load_time = 50
@@ -200,10 +209,10 @@
 
 /obj/item/gun/ballistic/twilight_firearm/shoot_live_shot(mob/living/user as mob|obj, pointblank = 0, mob/pbtarget = null, message = 1)
 	if(silenced)
-		fire_sound = "modular_twilight_axis/firearms/sound/umbra_fire.ogg"
+		fire_sound = "modular_twilight_axis/firearms/sound/umbra_fire2.ogg"
 	else
 		switch(gunpowder)
-			if("fyrepowder", "holy fyrepowder")
+			if("fyrepowder", "holy fyrepowder", "psypowder")
 				fire_sound = pick("modular_twilight_axis/firearms/sound/fyrepowder/arquefire.ogg", "modular_twilight_axis/firearms/sound/fyrepowder/arquefire2.ogg", "modular_twilight_axis/firearms/sound/fyrepowder/arquefire3.ogg",
 							"modular_twilight_axis/firearms/sound/fyrepowder/arquefire4.ogg", "modular_twilight_axis/firearms/sound/fyrepowder/arquefire5.ogg")
 			if("thunderpowder")
@@ -343,7 +352,7 @@
 			return
 		else
 			switch(W.gunpowder)
-				if("fyrepowder", "holy fyrepowder")
+				if("fyrepowder", "holy fyrepowder", "psypowder")
 					playsound(src, "modular_twilight_axis/firearms/sound/fyrepowder/pour_powder.ogg",  100, FALSE)
 				if("thunderpowder")
 					playsound(src, "modular_twilight_axis/firearms/sound/thunderpowder/pour_powder.ogg",  100, FALSE)
@@ -546,7 +555,7 @@
 						new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 2))
 					spawn (16)
 						new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 1))
-				if("thunderpowder")
+				if("thunderpowder", "psypowder")
 					spawn (5)
 						new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 1))
 					spawn (10)
@@ -623,7 +632,7 @@
 							new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 2))
 						spawn (12)
 							new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 1))
-					if("thunderpowder")
+					if("thunderpowder", "psypowder")
 						spawn (1)
 							new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 1))
 						spawn (5)
@@ -837,7 +846,7 @@
 	advanced_icon_r = 'modular_twilight_axis/firearms/icons/handgonne/handgonne_r.dmi'
 	advanced_icon_f	= 'modular_twilight_axis/firearms/icons/handgonne/handgonne_f.dmi'
 	advanced_icon_s = 'modular_twilight_axis/firearms/icons/handgonne/handgonne_s.dmi'
-	npcdamfactor = 1
+	npcdamfactor = 3
 
 /obj/item/ammo_box/magazine/internal/twilight_firearm/handgonne
 	name = "handgonne internal magazine"
@@ -918,7 +927,7 @@
 	smeltresult = /obj/item/ingot/iron
 	damfactor = 0.7
 	critfactor = 0.3
-	npcdamfactor = 2.5
+	npcdamfactor = 4
 	effective_range = 3
 	match_delay = 4
 
@@ -946,7 +955,7 @@
 	pixel_y = 0
 	pixel_x = 0
 	damfactor = 0.8
-	npcdamfactor = 1.5
+	npcdamfactor = 2
 	mag_type = /obj/item/ammo_box/magazine/internal/twilight_firearm/mortar
 	cartridge_wording = "cannonball"
 	smeltresult = /obj/item/ingot/bronze
@@ -1003,7 +1012,7 @@
 	desc = "Довольно удобный вариант колесцовой аркебузы со штыком, довольно тонким и длинным дабы использовать его как копьё. Удлинённый ствол позволяет стрелять на большие расстояния, но забирает добротную часть убойной силы у пули. Частый выбор у знати."
 	damfactor = 0.7
 	critfactor = 0.4
-	npcdamfactor = 2.7
+	npcdamfactor = 4
 	effective_range = 4
 	wdefense = 5
 	walking_stick = FALSE

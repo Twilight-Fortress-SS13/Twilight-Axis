@@ -25,9 +25,9 @@
 	var/misfire_chance = 0
 	/// Reload time, in SECONDS
 	var/reload_time = 8
-	damfactor = 0.8
+	damfactor = 1
 	var/critfactor = 0.7
-	var/npcdamfactor = 2
+	var/npcdamfactor = 4
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/getonmobprop(tag)
 	. = ..()
@@ -248,7 +248,7 @@
 	slot_flags = ITEM_SLOT_BACK
 	w_class = WEIGHT_CLASS_BULKY
 	wdefense = 3
-	damfactor = 1
+	damfactor = 1.5
 	critfactor = 1
 	reload_time = 12
 

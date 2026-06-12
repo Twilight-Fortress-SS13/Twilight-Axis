@@ -13,6 +13,7 @@
 	var/lit = FALSE
 	var/prob2fail = 5
 	var/PVE_damage = 160
+	var/spawn_shard = TRUE
 	grid_width = 32
 	grid_height = 64
 
@@ -77,7 +78,8 @@
 			if(SA.can_buckle) // rideable/saddleborn animals are excluded
 				continue
 			target.adjustFireLoss(PVE_damage)
-	new /obj/item/natural/glass_shard(T)
+	if(spawn_shard)
+		new /obj/item/natural/glass_shard(T)
 	explosion(T, light_impact_range = 1, flame_range = 2, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
 	return TRUE
 
@@ -133,6 +135,9 @@
 		span_notice("I finish setting up [trip]. I can extend it by one step longer.")
 	)
 	return
+
+/obj/item/bomb/noshard
+	spawn_shard = FALSE
 
 /obj/item/bomb/tripbomb
 	name = "trip bomb"
@@ -436,8 +441,10 @@
 
 //admin only mega bomb, should never be made craftable
 /obj/item/satchel_bomb/mega
-	name = "MEGA blastpowder satchel"
-	desc = "An over filled satchel of Blastpowder originally made by Lubbin' Bleat, Octava's Famed sheep-kin bathhouse attendant and ruler of the slumber beat... this type of bomb has been banned by all nations and labeled as a threat by both the church of the ten and Pysdonia. IF YOU SEE A LIT WICK, YOU BEST RUN AWAY QUICK!"
+	name = "mega blastpowder satchel"
+	desc = "An overfilled satchel of blastpowder originally made by Lubbin Bleat, Otava's famed sheep-kin bathhouse attendant and ruler of the slumberbeat.. \
+	</br>This bomb has been outlawed by all of Psydonia's kingdoms, and labled as a threat by both the Churches of the Pantheon and Orthodoxy. \
+	</br> <font color='FF0000'>IF YOU SEE A LIT WICK, YOU BEST RUN AWAY QUICK!</font>"
 	icon_state = "satchel_bomb"
 	lit_state = "satchel_bomb-lit"
 	icon = 'icons/roguetown/items/misc.dmi'

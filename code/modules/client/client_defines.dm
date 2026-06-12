@@ -138,6 +138,15 @@
 
 	var/list/current_weathers = list()
 	var/last_lighting_update = 0
+	/// our current tab
+	var/stat_tab
+
+	/// list of all tabs
+	var/list/panel_tabs = list()
+	/// Signature of the last listed-turf contents sent, to skip redundant rebuilds.
+	var/listedturf_sig
+	/// Whether the living-only Stats tab is currently shown in the statbrowser.
+	var/statbrowser_stats_shown = FALSE
 
 	var/list/open_popups = list()
 

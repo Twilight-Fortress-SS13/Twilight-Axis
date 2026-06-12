@@ -29,6 +29,7 @@ And it also helps for the character set panel
 		TRAIT_LIMBATTACHMENT,
 		TRAIT_SILVER_WEAK,
 		TRAIT_VAMPMANSION,
+		TRAIT_ZOMBIE_IMMUNE,
 	)
 
 	var/blood_preference = BLOOD_PREFERENCE_ALL
@@ -275,7 +276,8 @@ And it also helps for the character set panel
 	if(disguise_comp)
 		qdel(disguise_comp)
 
-	vampire.verbs -= /mob/living/carbon/human/proc/disguise_verb
+	remove_verb(vampire, /mob/living/carbon/human/proc/disguise_verb)
+	remove_verb(vampire, /mob/living/carbon/human/proc/vampire_telepathy)
 
 
 	// Restore normal eyes
@@ -365,9 +367,8 @@ And it also helps for the character set panel
 	H.process_vampire_life()
 
 /datum/clan/proc/setup_vampire_abilities(mob/living/carbon/human/H)
-	H.verbs |= /mob/living/carbon/human/proc/disguise_verb
-
-	H.cmode_music = 'sound/music/cmode/antag/combat_thrall.ogg'
+	add_verb(H, /mob/living/carbon/human/proc/disguise_verb)
+	add_verb(H, /mob/living/carbon/human/proc/vampire_telepathy)
 
 	H.adjust_skillrank_up_to(/datum/skill/magic/blood, 2, TRUE)
 

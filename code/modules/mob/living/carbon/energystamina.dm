@@ -10,15 +10,6 @@
 	if(world.time > last_fatigued + delay) //regen fatigue 
 		var/added = energy / max_energy
 		added = round(-10 + (added * - 40))
-	
-		if(ishuman(src))
-			var/mob/living/carbon/human/H = src
-			if(H.breath_remaining <= 0) added = 0 
-			
-			else if((H.is_swimming || H.is_underwater) && !H.resting && H.stat == CONSCIOUS)
-				added = 0 
-		
-		
 		if(src.climbing) // no stam regen while climbing guh
 			added = 0
 		if(HAS_TRAIT(src, TRAIT_MISSING_NOSE))
@@ -171,17 +162,6 @@
 		else
 			emote(emote_override, forced = force_emote)
 
-		var/turf/T = get_turf(src)
-		if(istype(T, /turf/open/water/transparent))
-			var/turf/below = GET_TURF_BELOW(T)
-			if(below && istype(below, /turf/open/water/transparent))
-				visible_message(span_danger("[src] loses all stamina and sinks into the depths!"))
-				forceMove(below)
-				set_resting(TRUE)
-			else
-				
-				set_resting(TRUE)
-
 		blur_eyes(2)
 		last_fatigued = world.time + 3 SECONDS //extra time before fatigue regen sets in
 		stop_attack()
@@ -231,14 +211,13 @@
 /mob/living/proc/freak_out()
 	return
 
-/mob/proc/do_freakout_scream()
-	emote("scream", forced=TRUE)
-
 /mob/living/carbon/freak_out() // currently solely used for vampire snowflake stuff
 	if(mob_timers["freakout"])
 		if(world.time < mob_timers["freakout"] + 10 SECONDS)
 			flash_fullscreen("stressflash")
 			return
+	if(HAS_TRAIT(src, TRAIT_NOMOOD))
+		return
 	mob_timers["freakout"] = world.time
 	shake_camera(src, 1, 3)
 	flash_fullscreen("stressflash")

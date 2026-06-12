@@ -9,7 +9,7 @@
 	name = "Heretic Azurcaephan"
 	tutorial = "Branded a heretic for your unorthodox beliefs, you turned to an ancient art native to Azurea — the way of the Azurcaephan, a Spellblade. You combined your patron's gifts with martial discipline, forging yourself into a warrior-mage unlike any other. Unlike other spellblades, you know how to wield such terrifying power together with armor. The Church brands you a heretic, the Necromancers call you a fool, the Oaks see only deviation. Let them. One cut at a time, you shall carve your mark upon this world."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	allowed_patrons = list(/datum/patron/inhumen/zizo, /datum/patron/divine/noc)
 	outfit = /datum/outfit/job/roguetown/wretch/heretic_spellblade
 	maximum_possible_slots = 2 // Team rocket!!!
@@ -75,7 +75,7 @@
 	var/chant_faction = "zizite"
 	var/extra_blade_weapon
 	if(istype(H.patron, /datum/patron/inhumen/zizo))
-		extra_blade_weapon = "Avantyne Longsword"
+		extra_blade_weapon = "Avantyne Arming Sword"
 	else if(istype(H.patron, /datum/patron/divine/noc))
 		chant_faction = "noccite"
 	var/selection_html = get_spellblade_chant_html(src, H, chant_faction, extra_blade_weapon)
@@ -157,12 +157,12 @@
 			var/list/weapons = list("Kriegmesser", "Longsword", "Rapier", "Sabre", "Steel Arming Sword", "Steel Greatsword", "Steel Dagger")
 			// Inject patron-specific weapon
 			if(istype(H.patron, /datum/patron/inhumen/zizo))
-				weapons.Insert(1, "Avantyne Longsword")
+				weapons.Insert(1, "Avantyne Arming Sword")
 			var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 			beltr = /obj/item/rogueweapon/scabbard/sword
 			switch(weapon_choice)
-				if("Avantyne Longsword")
-					r_hand = /obj/item/rogueweapon/sword/long/avantyne
+				if("Avantyne Arming Sword")
+					r_hand = /obj/item/rogueweapon/sword/zizo
 				if("Kriegmesser")
 					r_hand = /obj/item/rogueweapon/sword/long/kriegmesser
 					backr = /obj/item/rogueweapon/scabbard/gwstrap

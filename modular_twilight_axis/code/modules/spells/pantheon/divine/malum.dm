@@ -49,6 +49,26 @@
 	chargedloop = /datum/looping_sound/invokegen
 	devotion_cost = 40
 
+/obj/effect/proc_holder/spell/invoked/TAheatmetal/cast(list/targets, mob/user = usr)
+	. = ..()
+	var/list/nosmeltore = list(/obj/item/rogueore/coal)
+	var/datum/effect_system/spark_spread/sparks = new()
+	var/target
+	for(var/i in targets)
+		target = i
+	if (!target)
+		return
+	if(target in nosmeltore)
+		return
+	if (istype(target, /obj/item))
+		handle_item_smelting_TA(target, user, sparks, nosmeltore)
+	else if (iscarbon(target))
+		if(spell_guard_check(target, TRUE))
+			var/mob/living/carbon/C = target
+			C.visible_message(span_warning("[target] resists the searing heat!"))
+			return
+		handle_living_entity_TA(target, user, nosmeltore)
+
 /obj/effect/proc_holder/spell/invoked/TAhammerfall
 	name = "Hammerfall"
 	desc = "Damages structures in an area while possibly knocking down mobs in the area."
@@ -78,7 +98,7 @@
 /obj/effect/proc_holder/spell/invoked/TAhammerfall/cast(list/targets, mob/user = usr)
 	var/turf/fallzone = null
 	var/skill = user.get_skill_level(/datum/skill/magic/holy)
-	var/damage = 150 + (skill * 100) //So weak damage for this cooldown. Upped
+	var/damage = 500 + (skill * 100) //So weak damage for this cooldown. Upped
 	var/const/radius = 1 //Radius of the spell
 	var/const/shakeradius = 7 //Radius of the quake
 	var/diceroll = 0
@@ -101,10 +121,10 @@
 			continue
 		diceroll = roll(2,20) + shaken.STAPER + shaken.STASPD
 		if (diceroll > dc)
-			shaken.apply_effect(1 SECONDS, EFFECT_IMMOBILIZE, 0)
+			shaken.apply_effect(5 SECONDS, EFFECT_IMMOBILIZE, 0)
 			show_visible_message_TA(shaken, null, "The ground quakes but I manage to keep my footing.")
 		else
-			shaken.apply_effect(1 SECONDS, EFFECT_KNOCKDOWN, 0)		
+			shaken.apply_effect(5 SECONDS, EFFECT_KNOCKDOWN, 0)		
 			show_visible_message_TA(shaken, null, "The ground quakes, making me fall over.")
 	for (var/obj/structure/damaged in view(radius, fallzone))
 		if(!istype(damaged, /obj/structure/flora/newbranch))
@@ -113,7 +133,7 @@
 		damagedwalls.take_damage(damage,BRUTE,"blunt",1)
 	for (var/turf/closed/mineral/aoemining in view(radius, fallzone))
 		aoemining.lastminer = usr
-		aoemining.take_damage(damage,BRUTE,"blunt",1)
+		aoemining.take_damage(damage*5,BRUTE,"blunt",1)
 	return TRUE
 
 /obj/effect/temp_visual/lavastaff
@@ -145,26 +165,6 @@
 	charging_slowdown = 3
 	chargedloop = /datum/looping_sound/invokegen
 	devotion_cost = 100
-
-/obj/effect/proc_holder/spell/invoked/TAheatmetal/cast(list/targets, mob/user = usr)
-	. = ..()
-	var/list/nosmeltore = list(/obj/item/rogueore/coal)
-	var/datum/effect_system/spark_spread/sparks = new()
-	var/target
-	for(var/i in targets)
-		target = i
-	if (!target)
-		return
-	if(target in nosmeltore)
-		return
-	if (istype(target, /obj/item))
-		handle_item_smelting_TA(target, user, sparks, nosmeltore)
-	else if (iscarbon(target))
-		if(spell_guard_check(target, TRUE))
-			var/mob/living/carbon/C = target
-			C.visible_message(span_warning("[target] resists the searing heat!"))
-			return
-		handle_living_entity_TA(target, user, nosmeltore)
 
 /proc/show_visible_message_TA(mob/user, text, selftext)
 	var/text_to_send = addtext("<font color='yellow'>", text, "</font>")

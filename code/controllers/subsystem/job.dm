@@ -13,7 +13,8 @@ SUBSYSTEM_DEF(job)
 	var/list/latejoin_trackers = list()	//Don't read this list, use GetLateJoinTurfs() instead
 
 	var/overflow_role = "Fuckyou"
-	var/list/level_order = list(JP_HIGH,JP_MEDIUM,JP_LOW)
+	var/list/level_order = list(JP_HIGH, JP_MEDIUM, JP_LOW)
+	var/list/lobby_level_order = list(JP_BOOST, JP_HIGH, JP_MEDIUM, JP_LOW) // TA EDIT
 
 /datum/controller/subsystem/job/Initialize(timeofday)
 	SSmapping.HACK_LoadMapConfig()
@@ -111,11 +112,13 @@ SUBSYSTEM_DEF(job)
 				old_job.current_positions = max(old_job.current_positions - 1, 0)
 				
 		
-		if(!latejoin && player.client && player.client.prefs) //TA EDIT START
+		// TA EDIT START - load the character slot mapped to the assigned job for roundstart and latejoin.
+		if(player.client && player.client.prefs)
 			var/assigned_slot = player.client.prefs.job_characters[rank]
 			if(assigned_slot && assigned_slot != player.client.prefs.loaded_slot)
 				player.client.prefs.load_character(assigned_slot)
-				player.client.prefs.save_preferences() //TA EDIT END
+				player.client.prefs.save_preferences()
+		// TA EDIT END
 				
 		player.mind.assigned_role = rank
 		unassigned -= player
@@ -157,7 +160,7 @@ SUBSYSTEM_DEF(job)
 		if(player.mind && (job.title in player.mind.restricted_roles))
 			JobDebug("FOC incompatible with antagonist role, Player: [player]")
 			continue
-		if(length(job.allowed_races) && !(player.client.prefs.pref_species.type in job.allowed_races))
+		if(length(job.forbidden_races) && (player.client.prefs.pref_species.type in job.forbidden_races))
 			JobDebug("FOC incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 		if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron?.type in job.allowed_patrons))
@@ -231,7 +234,7 @@ SUBSYSTEM_DEF(job)
 			JobDebug("GRJ incompatible with antagonist role, Player: [player], Job: [job.title]")
 			continue
 
-		if(length(job.allowed_races) && !(player.client.prefs.pref_species.type in job.allowed_races))
+		if(length(job.forbidden_races) && (player.client.prefs.pref_species.type in job.forbidden_races))
 			JobDebug("GRJ incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 
@@ -313,6 +316,8 @@ SUBSYSTEM_DEF(job)
 			key = "Church"
 		if(BURGHERS)
 			key = "Burghers"
+		if(ATC)
+			key = "Azurian Trading Company"
 		if(PEASANTS)
 			key = "Peasants"
 		if(INQUISITION)
@@ -321,6 +326,8 @@ SUBSYSTEM_DEF(job)
 			key = "Sidefolk"
 		if(WANDERERS)
 			key = "Wanderers"
+		if(ANTAGONIST)
+			key = "Antagonists"
 		else
 			key = "Wanderers"
 	return key
@@ -431,6 +438,10 @@ SUBSYSTEM_DEF(job)
 	do_required_jobs()
 	JobDebug("DO, Required Jobs Check end")
 
+	JobDebug("DO, Running Donor Priority Jobs") // TA EDIT
+	AssignDonorPriorityJobs() // TA EDIT
+	JobDebug("DO, Donor Priority Jobs end") // TA EDIT
+
 	//Other jobs are now checked
 	JobDebug("DO, Running Standard Check")
 
@@ -468,7 +479,7 @@ SUBSYSTEM_DEF(job)
 					JobDebug("DO incompatible with antagonist role, Player: [player], Job:[job.title]")
 					continue
 
-				if(length(job.allowed_races) && !(player.client.prefs.pref_species.type in job.allowed_races))
+				if(length(job.forbidden_races) && (player.client.prefs.pref_species.type in job.forbidden_races))
 					JobDebug("DO incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 					continue
 
@@ -528,6 +539,8 @@ SUBSYSTEM_DEF(job)
 	for(var/mob/dead/new_player/player in unassigned) //Players that wanted to back out but couldn't because they're antags (can you feel the edge case?)
 		RejectPlayer(player)
 
+	FinalizeDonorJobBoostCooldowns() // TA EDIT
+
 	return validate_required_jobs(required_jobs)
 
 
@@ -564,7 +577,7 @@ SUBSYSTEM_DEF(job)
 				if(player.mind && (job.title in player.mind.restricted_roles))
 					continue
 
-				if(length(job.allowed_races) && !(player.client.prefs.pref_species.type in job.allowed_races))
+				if(length(job.forbidden_races) && (player.client.prefs.pref_species.type in job.forbidden_races))
 					continue
 				
 				if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron?.type in job.allowed_patrons))
@@ -769,6 +782,8 @@ SUBSYSTEM_DEF(job)
 				young++
 				continue
 			switch(player.client.prefs.job_preferences[job.title])
+				if(JP_BOOST) // TA EDIT
+					high++ // TA EDIT
 				if(JP_HIGH)
 					high++
 				if(JP_MEDIUM)

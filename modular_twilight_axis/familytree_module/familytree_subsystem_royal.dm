@@ -7,7 +7,7 @@
 
 	if(consort_job)
 		royal_partner_job_baselines["consort"] = list(
-			"allowed_races" = islist(consort_job.allowed_races) ? consort_job.allowed_races.Copy() : list(),
+			"forbidden_races" = islist(consort_job.forbidden_races) ? consort_job.forbidden_races.Copy() : list(),
 			"allowed_sexes" = islist(consort_job.allowed_sexes) ? consort_job.allowed_sexes.Copy() : list(),
 			"total_positions" = consort_job.total_positions,
 			"spawn_positions" = consort_job.spawn_positions,
@@ -15,7 +15,7 @@
 
 	if(suitor_job)
 		royal_partner_job_baselines["suitor"] = list(
-			"allowed_races" = islist(suitor_job.allowed_races) ? suitor_job.allowed_races.Copy() : list(),
+			"forbidden_races" = islist(suitor_job.forbidden_races) ? suitor_job.forbidden_races.Copy() : list(),
 			"allowed_sexes" = islist(suitor_job.allowed_sexes) ? suitor_job.allowed_sexes.Copy() : list(),
 			"total_positions" = suitor_job.total_positions,
 			"spawn_positions" = suitor_job.spawn_positions,
@@ -30,30 +30,26 @@
 	if(duke_forced_hetero_mode(P))
 		return "consort"
 
-	switch(P.family)
-		if(FAMILY_NEWLYWED, FAMILY_NONE)
-			return "consort"
-		if(FAMILY_PARTIAL, FAMILY_FULL)
-			return "suitor"
+	if(familytree_pref_is_join(P.family) || familytree_pref_is_legacy_spouse(P.family))
+		return "suitor"
+	if(familytree_pref_is_create(P.family) || !familytree_pref_enabled(P.family))
+		return "consort"
 
 	return "consort"
 
 /datum/controller/subsystem/familytree/proc/duke_forced_hetero_mode(datum/preferences/P)
 	if(!P)
 		return FALSE
-	if(P.family != FAMILY_NONE)
+	if(familytree_pref_enabled(P.family))
 		return FALSE
 	return allow_nobles_in_ruling_family
 
-/datum/controller/subsystem/familytree/proc/get_preference_species_type_list(datum/preferences/P) as /list
+/datum/controller/subsystem/familytree/proc/get_familytree_species_type_list(list/preferred_species_types) as /list
 	var/list/result = list()
-	if(!P)
+	if(!islist(preferred_species_types))
 		return result
 
-	if(!islist(P.preferred_species_types))
-		return result
-
-	for(var/entry in P.preferred_species_types)
+	for(var/entry in preferred_species_types)
 		var/species_type = entry
 		if(istext(species_type))
 			species_type = GLOB.species_list[species_type]
@@ -65,19 +61,23 @@
 
 	return result
 
-/datum/controller/subsystem/familytree/proc/get_royal_partner_allowed_races(mob/living/carbon/human/duke, datum/preferences/P, list/default_races) as /list
-	var/list/allowed_races = islist(default_races) ? default_races.Copy() : list()
+/datum/controller/subsystem/familytree/proc/get_preference_species_type_list(datum/preferences/P) as /list
 	if(!P)
-		return allowed_races
+		return list()
+	return get_familytree_species_type_list(P.preferred_species_types)
 
-	var/duke_species_type = duke?.client?.prefs?.pref_species?.type
+/datum/controller/subsystem/familytree/proc/get_royal_partner_allowed_races(mob/living/carbon/human/duke, datum/preferences/P) as /list
+	if(!P)
+		return list()
+
+	var/duke_species_type = duke?.dna?.species?.type
 	if(!ispath(duke_species_type, /datum/species))
-		duke_species_type = duke?.dna?.species?.type
+		duke_species_type = P?.pref_species?.type
 
 	if(duke_forced_hetero_mode(P))
 		if(ispath(duke_species_type, /datum/species))
 			return list(duke_species_type)
-		return allowed_races
+		return list()
 
 	switch(P.species_preference_mode)
 		if("SAME_TYPE")
@@ -88,16 +88,16 @@
 			if(preferred_species.len)
 				return preferred_species
 
-	return allowed_races
+	return list()
 
 /datum/controller/subsystem/familytree/proc/get_royal_partner_allowed_sexes(mob/living/carbon/human/duke, datum/preferences/P, list/default_sexes) as /list
 	var/list/allowed_sexes = islist(default_sexes) ? default_sexes.Copy() : list()
 	if(!P)
 		return allowed_sexes
 
-	var/duke_body_type = duke?.client?.prefs?.gender
+	var/duke_body_type = duke?.gender
 	if(duke_body_type != MALE && duke_body_type != FEMALE)
-		duke_body_type = duke?.gender
+		duke_body_type = P?.gender
 
 	if(duke_forced_hetero_mode(P))
 		if(duke_body_type == MALE)
@@ -118,6 +118,16 @@
 
 	return allowed_sexes
 
+/datum/controller/subsystem/familytree/proc/compute_royal_forbidden_races(list/baseline_forbidden, list/allowed_races) as /list
+	var/list/result = islist(baseline_forbidden) ? baseline_forbidden.Copy() : list()
+	if(!islist(allowed_races) || !allowed_races.len)
+		return result
+	var/list/all_selectable = familytree_module_get_selectable_species_types()
+	for(var/species_type in all_selectable)
+		if(!(species_type in allowed_races))
+			result |= species_type
+	return result
+
 /datum/controller/subsystem/familytree/proc/apply_royal_partner_job_state(job_key, enabled, open_slots = 0, list/allowed_races, list/allowed_sexes)
 	if(!ensure_royal_partner_job_baselines())
 		return FALSE
@@ -133,15 +143,15 @@
 	if(!job || !baseline)
 		return FALSE
 
-	var/list/baseline_allowed_races = baseline["allowed_races"]
+	var/list/baseline_forbidden_races = baseline["forbidden_races"]
 	var/list/baseline_allowed_sexes = baseline["allowed_sexes"]
-	job.allowed_races = islist(baseline_allowed_races) ? baseline_allowed_races.Copy() : list()
+	job.forbidden_races = islist(baseline_forbidden_races) ? baseline_forbidden_races.Copy() : list()
 	job.allowed_sexes = islist(baseline_allowed_sexes) ? baseline_allowed_sexes.Copy() : list()
 	job.total_positions = baseline["total_positions"]
 	job.spawn_positions = baseline["spawn_positions"]
 
 	if(enabled)
-		job.allowed_races = islist(allowed_races) ? allowed_races.Copy() : list()
+		job.forbidden_races = compute_royal_forbidden_races(baseline_forbidden_races, allowed_races)
 		job.allowed_sexes = islist(allowed_sexes) ? allowed_sexes.Copy() : list()
 		job.total_positions = open_slots
 		job.spawn_positions = open_slots
@@ -177,7 +187,7 @@
 	if(current_royal_partner_owner && current_royal_partner_owner != duke)
 		return FALSE
 
-	P.familytree_module_load_character()
+	load_familytree_runtime_preferences(duke, P)
 
 	var/mode = get_royal_partner_mode_from_preferences(P)
 	var/list/consort_baseline = royal_partner_job_baselines["consort"]
@@ -185,9 +195,9 @@
 	if(!consort_baseline || !suitor_baseline)
 		return FALSE
 
-	var/list/consort_allowed_races = get_royal_partner_allowed_races(duke, P, consort_baseline["allowed_races"])
+	var/list/consort_allowed_races = get_royal_partner_allowed_races(duke, P)
 	var/list/consort_allowed_sexes = get_royal_partner_allowed_sexes(duke, P, consort_baseline["allowed_sexes"])
-	var/list/suitor_allowed_races = get_royal_partner_allowed_races(duke, P, suitor_baseline["allowed_races"])
+	var/list/suitor_allowed_races = get_royal_partner_allowed_races(duke, P)
 	var/list/suitor_allowed_sexes = get_royal_partner_allowed_sexes(duke, P, suitor_baseline["allowed_sexes"])
 
 	switch(mode)
@@ -212,15 +222,15 @@
 	current_royal_partner_owner = duke
 	current_royal_partner_mode = mode
 	current_royal_partner_snapshot = list(
-		"family" = P.family,
-		"duke_gender" = duke.client?.prefs?.gender,
-		"duke_pronouns" = duke.client?.prefs?.pronouns,
-		"duke_species_type" = duke.client?.prefs?.pref_species?.type,
+		"family" = duke.familytree_pref,
+		"duke_gender" = duke.gender,
+		"duke_pronouns" = duke.pronouns,
+		"duke_species_type" = duke.dna?.species?.type,
 		"gender_choice_pref" = effective_gender_pref,
 		"species_preference_mode" = effective_species_mode,
-		"preferred_species_types" = islist(P.preferred_species_types) ? P.preferred_species_types.Copy() : list(),
+		"preferred_species_types" = islist(duke.preferred_species_types) ? duke.preferred_species_types.Copy() : list(),
 		"preferred_species_anatomy" = effective_anatomy,
-		"setspouse" = P.setspouse,
+		"setspouse" = duke.setspouse,
 	)
 	return TRUE
 
@@ -322,6 +332,9 @@
 		return FALSE
 
 	var/datum/preferences/P = C.prefs
+	var/datum/job/job = resolve_job_datum(role_or_job)
+	if(job?.title)
+		P = C.prefs.get_job_prefs(job.title)
 	if(!royal_partner_species_match(P))
 		return FALSE
 	if(!royal_partner_gender_match(P))
@@ -380,7 +393,7 @@
 	if(!H || QDELETED(H) || H.family_datum)
 		return
 	H.familytree_assignment_scheduled = FALSE
-	if(H.familytree_pref != FAMILY_NONE)
+	if(familytree_pref_enabled(H.familytree_pref))
 		var/timer = rand(1, 10)
 		ftlog("ROYAL HAND FALLBACK: [H.real_name] normal pref=[H.familytree_pref] timer=[timer]s reason=[reason]")
 		H.familytree_assignment_scheduled = TRUE
@@ -545,6 +558,146 @@
 	var/datum/species/S = new species_type
 	H.set_species(S)
 	H.dna.species = S
+
+/datum/controller/subsystem/familytree/proc/familytree_species_type_from_name(species_name)
+	if(!istext(species_name) || !length(species_name))
+		return null
+	var/species_type = GLOB.species_list[species_name]
+	if(ispath(species_type, /datum/species))
+		return species_type
+	return null
+
+/datum/controller/subsystem/familytree/proc/familytree_create_commoner_parent(datum/heritage/house, parent_name, parent_species_name, parent_gender, default_species_type, parent_generation)
+	if(!house || !istext(parent_name) || !length(parent_name))
+		return null
+	var/chosen_species_type = familytree_species_type_from_name(parent_species_name) || default_species_type
+	var/mob/living/carbon/human/dummy/parent_mob = new()
+	parent_mob.gender = parent_gender
+	parent_mob.age = AGE_MIDDLEAGED
+	parent_mob.real_name = parent_name
+	if(chosen_species_type)
+		set_species_type(parent_mob, chosen_species_type)
+
+	var/datum/family_member/parent_member = house.CreateCosmeticFamilyMember(parent_mob)
+	if(!parent_member)
+		return null
+	parent_member.generation = parent_generation
+	return parent_member
+
+/datum/controller/subsystem/familytree/proc/GenerateCommonerParents(datum/heritage/house, datum/family_member/founder_member)
+	if(!house || !founder_member?.person)
+		return
+	if(istype(founder_member.person, /mob/living/carbon/human/dummy))
+		return
+	if(founder_member.get_parent_members().len)
+		return
+
+	var/mob/living/carbon/human/founder_human = founder_member.person
+	var/father_name = istext(founder_human.familytree_father_name) ? founder_human.familytree_father_name : ""
+	var/mother_name = istext(founder_human.familytree_mother_name) ? founder_human.familytree_mother_name : ""
+	var/father_species_name = istext(founder_human.familytree_father_species) ? founder_human.familytree_father_species : ""
+	var/mother_species_name = istext(founder_human.familytree_mother_species) ? founder_human.familytree_mother_species : ""
+
+	if(!length(father_name) && !length(mother_name))
+		return
+
+	var/default_species_type = founder_human.dna?.species?.type
+	var/parent_generation = founder_member.generation - 1
+	var/list/created_parents = list()
+
+	var/datum/family_member/father_member = familytree_create_commoner_parent(house, father_name, father_species_name, MALE, default_species_type, parent_generation)
+	if(father_member)
+		created_parents += father_member
+
+	var/datum/family_member/mother_member = familytree_create_commoner_parent(house, mother_name, mother_species_name, FEMALE, default_species_type, parent_generation)
+	if(mother_member)
+		created_parents += mother_member
+
+	for(var/datum/family_member/parent_member as anything in created_parents)
+		founder_member.AddParent(parent_member)
+
+	if(father_member && mother_member)
+		father_member.AddSpouse(mother_member)
+
+/datum/controller/subsystem/familytree/proc/familytree_get_or_create_shared_parent(datum/heritage/house, datum/family_member/anchor_member)
+	if(!house || !anchor_member)
+		return null
+	var/list/anchor_parents = anchor_member.get_parent_members()
+	if(anchor_parents.len)
+		return anchor_parents[1]
+	var/datum/family_member/phantom = familytree_create_phantom_member(house, anchor_member.generation - 1)
+	if(!phantom)
+		return null
+	if(!anchor_member.AddParent(phantom))
+		house.RemoveFamilyMember(phantom)
+		return null
+	return phantom
+
+/datum/controller/subsystem/familytree/proc/GenerateRandomSiblings(datum/heritage/house, datum/family_member/founder_member, count)
+	if(!house || !founder_member?.person || count <= 0)
+		return
+	if(istype(founder_member.person, /mob/living/carbon/human/dummy))
+		return
+
+	var/mob/living/carbon/human/founder_human = founder_member.person
+	var/datum/species/founder_species = founder_human.dna?.species
+	var/species_type = founder_species?.type
+	if(!species_type)
+		return
+
+	var/datum/family_member/shared_parent = familytree_get_or_create_shared_parent(house, founder_member)
+	if(!shared_parent)
+		return
+
+	for(var/i in 1 to count)
+		var/sibling_gender = prob(50) ? MALE : FEMALE
+		var/sibling_name = founder_species.random_name(sibling_gender, TRUE) || "Unknown"
+
+		var/mob/living/carbon/human/dummy/sibling = new()
+		sibling.gender = sibling_gender
+		sibling.age = founder_human.age
+		sibling.real_name = sibling_name
+		set_species_type(sibling, species_type)
+
+		var/datum/family_member/sibling_member = house.CreateCosmeticFamilyMember(sibling)
+		if(!sibling_member)
+			qdel(sibling)
+			continue
+		sibling_member.generation = founder_member.generation
+		sibling_member.adoption_status = TRUE
+		if(!sibling_member.AddParent(shared_parent))
+			house.RemoveFamilyMember(sibling_member)
+
+/datum/controller/subsystem/familytree/proc/GenerateRandomChildren(datum/heritage/house, datum/family_member/founder_member, count)
+	if(!house || !founder_member?.person || count <= 0)
+		return
+	if(istype(founder_member.person, /mob/living/carbon/human/dummy))
+		return
+
+	var/mob/living/carbon/human/founder_human = founder_member.person
+	var/datum/species/founder_species = founder_human.dna?.species
+	var/species_type = founder_species?.type
+	if(!species_type)
+		return
+
+	for(var/i in 1 to count)
+		var/child_gender = prob(50) ? MALE : FEMALE
+		var/child_name = founder_species.random_name(child_gender, TRUE) || "Unknown"
+
+		var/mob/living/carbon/human/dummy/child = new()
+		child.gender = child_gender
+		child.age = AGE_ADULT
+		child.real_name = child_name
+		set_species_type(child, species_type)
+
+		var/datum/family_member/child_member = house.CreateCosmeticFamilyMember(child)
+		if(!child_member)
+			qdel(child)
+			continue
+		child_member.generation = founder_member.generation + 1
+		child_member.adoption_status = TRUE
+		if(!child_member.AddParent(founder_member))
+			house.RemoveFamilyMember(child_member)
 
 /datum/controller/subsystem/familytree/proc/GenerateRoyalName(gender, generation)
 	var/list/male_names = list(

@@ -57,7 +57,6 @@
 	wlength = WLENGTH_LONG
 	associated_skill = /datum/skill/combat/polearms
 	smeltresult = null
-	toggle_state = null
 	throwforce = 24
 	is_silver = TRUE
 	minstr = 1

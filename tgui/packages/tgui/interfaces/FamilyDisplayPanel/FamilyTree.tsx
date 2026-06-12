@@ -50,12 +50,70 @@ type LayoutResult = {
   height: number;
 };
 
+type ChildTarget = {
+  x: number;
+  y: number;
+};
+
 const clamp = (v: number, lo: number, hi: number) =>
   Math.max(lo, Math.min(hi, v));
 
+function collectGenerationMin(
+  nodes: FamilyTreeNode[],
+  current = Number.POSITIVE_INFINITY,
+): number {
+  let min = current;
+  for (const node of nodes) {
+    if (
+      typeof node.generation === 'number' &&
+      Number.isFinite(node.generation)
+    ) {
+      min = Math.min(min, node.generation);
+    }
+    min = collectGenerationMin(node.parentNodes || [], min);
+    min = collectGenerationMin(node.spouses || [], min);
+    min = collectGenerationMin(node.children || [], min);
+  }
+  return min;
+}
+
+function generationRow(
+  node: FamilyTreeNode,
+  generationMin: number,
+  fallbackRow: number,
+  minimumRow: number,
+): number {
+  if (
+    typeof node.generation === 'number' &&
+    Number.isFinite(node.generation) &&
+    Number.isFinite(generationMin)
+  ) {
+    return Math.max(minimumRow, node.generation - generationMin);
+  }
+  return Math.max(minimumRow, fallbackRow);
+}
+
 function selfRowWidth(node: FamilyTreeNode): number {
-  const count = 1 + (node.spouses?.length || 0);
-  return count * CARD_W + (count - 1) * CARD_GAP_X;
+  const slots = rowSlotWidths(node);
+  return (
+    slots.reduce((sum, width) => sum + width, 0) +
+    (slots.length - 1) * CARD_GAP_X
+  );
+}
+
+function parentRowWidth(nodes: FamilyTreeNode[]): number {
+  if (!nodes.length) {
+    return 0;
+  }
+  return nodes.length * CARD_W + (nodes.length - 1) * CARD_GAP_X;
+}
+
+function spouseSlotWidth(spouse: FamilyTreeNode): number {
+  return Math.max(CARD_W, parentRowWidth(spouse.parentNodes || []));
+}
+
+function rowSlotWidths(node: FamilyTreeNode): number[] {
+  return [CARD_W, ...(node.spouses || []).map(spouseSlotWidth)];
 }
 
 function placeSubtree(
@@ -66,18 +124,24 @@ function placeSubtree(
   edges: LaidEdge[],
   pathKey: string,
   maxDepthRef: { v: number },
-): { width: number; selfCenterX: number } {
+  minDepthRef: { v: number },
+  generationMin: number,
+  minimumRow = 0,
+): { width: number; selfCenterX: number; y: number } {
   const spouses = node.spouses || [];
   const children = node.children || [];
+  const row = generationRow(node, generationMin, depth, minimumRow);
+  const y = row * ROW_H;
+  const slotWidths = rowSlotWidths(node);
   const ownRow = selfRowWidth(node);
 
   let childrenWidth = 0;
-  const childCenters: number[] = [];
+  const childTargets: ChildTarget[] = [];
   let cursor = xStart;
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
     const childKey = `${pathKey}/c${i}:${child.name}`;
-    const { width: cw, selfCenterX: ccx } = placeSubtree(
+    const { width: cw, selfCenterX: ccx, y: cy } = placeSubtree(
       child,
       depth + 1,
       cursor,
@@ -85,8 +149,11 @@ function placeSubtree(
       edges,
       childKey,
       maxDepthRef,
+      minDepthRef,
+      generationMin,
+      row + 1,
     );
-    childCenters.push(ccx);
+    childTargets.push({ x: ccx, y: cy });
     cursor += cw + CARD_GAP_X;
   }
   if (children.length > 0) {
@@ -95,15 +162,16 @@ function placeSubtree(
 
   const subtreeWidth = Math.max(ownRow, childrenWidth);
   const rowLeft = xStart + (subtreeWidth - ownRow) / 2;
-  const y = depth * ROW_H;
-  if (depth > maxDepthRef.v) {
-    maxDepthRef.v = depth;
+  if (row > maxDepthRef.v) {
+    maxDepthRef.v = row;
+  }
+  if (row < minDepthRef.v) {
+    minDepthRef.v = row;
   }
 
-  const selfX = rowLeft;
+  const selfX = rowLeft + (slotWidths[0] - CARD_W) / 2;
   const selfKey = `${pathKey}:self`;
   const selfAnchorX = selfX + CARD_W / 2;
-  const selfAnchorY = y + CARD_W * 0;
   out.push({
     key: selfKey,
     node,
@@ -114,9 +182,11 @@ function placeSubtree(
   });
 
   let lastSpouseRight = selfX + CARD_W;
+  let slotLeft = rowLeft + slotWidths[0] + CARD_GAP_X;
   for (let i = 0; i < spouses.length; i++) {
     const spouse = spouses[i];
-    const sx = rowLeft + (i + 1) * (CARD_W + CARD_GAP_X);
+    const slotWidth = slotWidths[i + 1];
+    const sx = slotLeft + (slotWidth - CARD_W) / 2;
     const skey = `${pathKey}:sp${i}:${spouse.name}`;
     out.push({
       key: skey,
@@ -136,13 +206,71 @@ function placeSubtree(
       y2: y + 40,
     });
     lastSpouseRight = sx + CARD_W;
+
+    const parentNodes = spouse.parentNodes || [];
+    if (parentNodes.length > 0) {
+      const parentRow = row - 1;
+      const parentY = parentRow * ROW_H;
+      if (parentRow < minDepthRef.v) {
+        minDepthRef.v = parentRow;
+      }
+      const parentWidth = parentRowWidth(parentNodes);
+      const parentLeft = slotLeft + (slotWidth - parentWidth) / 2;
+      const parentTargets: ChildTarget[] = [];
+      for (let j = 0; j < parentNodes.length; j++) {
+        const parent = parentNodes[j];
+        const px = parentLeft + j * (CARD_W + CARD_GAP_X);
+        const pkey = `${skey}:parent${j}:${parent.name}`;
+        out.push({
+          key: pkey,
+          node: parent,
+          x: px,
+          y: parentY,
+          anchorCX: px + CARD_W / 2,
+          anchorCY: parentY,
+        });
+        parentTargets.push({ x: px + CARD_W / 2, y: parentY });
+      }
+
+      const spouseCenterX = sx + CARD_W / 2;
+      const busY = y - ROW_GAP_PAD / 2;
+      for (let j = 0; j < parentTargets.length; j++) {
+        edges.push({
+          type: 'parent',
+          key: `${skey}:parentdrop${j}`,
+          x1: parentTargets[j].x,
+          y1: parentTargets[j].y + 80,
+          x2: parentTargets[j].x,
+          y2: busY,
+        });
+      }
+      const parentCenters = parentTargets.map((parent) => parent.x);
+      edges.push({
+        type: 'parent',
+        key: `${skey}:parentbus`,
+        x1: Math.min(spouseCenterX, ...parentCenters),
+        y1: busY,
+        x2: Math.max(spouseCenterX, ...parentCenters),
+        y2: busY,
+      });
+      edges.push({
+        type: 'parent',
+        key: `${skey}:spousedrop`,
+        x1: spouseCenterX,
+        y1: busY,
+        x2: spouseCenterX,
+        y2: y,
+      });
+    }
+
+    slotLeft += slotWidth + CARD_GAP_X;
   }
 
-  const selfCenterX = selfX + ownRow / 2;
+  const selfCenterX = selfAnchorX;
+  const familyCenterX = selfX + ownRow / 2;
 
   if (children.length > 0) {
-    const parentBottomX = selfCenterX;
-    const parentBottomY = y + ROW_H - ROW_GAP_PAD;
+    const parentBottomX = familyCenterX;
     const busY = y + ROW_H - ROW_GAP_PAD / 2;
 
     edges.push({
@@ -154,6 +282,7 @@ function placeSubtree(
       y2: busY,
     });
 
+    const childCenters = childTargets.map((child) => child.x);
     const leftBus = Math.min(parentBottomX, ...childCenters);
     const rightBus = Math.max(parentBottomX, ...childCenters);
     edges.push({
@@ -165,25 +294,27 @@ function placeSubtree(
       y2: busY,
     });
 
-    for (let i = 0; i < childCenters.length; i++) {
+    for (let i = 0; i < childTargets.length; i++) {
       edges.push({
         type: 'parent',
         key: `${selfKey}:cdrop${i}`,
-        x1: childCenters[i],
+        x1: childTargets[i].x,
         y1: busY,
-        x2: childCenters[i],
-        y2: (depth + 1) * ROW_H,
+        x2: childTargets[i].x,
+        y2: childTargets[i].y,
       });
     }
   }
 
-  return { width: subtreeWidth, selfCenterX };
+  return { width: subtreeWidth, selfCenterX, y };
 }
 
 function computeLayout(roots: FamilyTreeNode[]): LayoutResult {
   const nodes: LaidNode[] = [];
   const edges: LaidEdge[] = [];
   const maxDepthRef = { v: 0 };
+  const minDepthRef = { v: 0 };
+  const generationMin = collectGenerationMin(roots);
   let cursor = 0;
   for (let i = 0; i < roots.length; i++) {
     const r = roots[i];
@@ -195,11 +326,24 @@ function computeLayout(roots: FamilyTreeNode[]): LayoutResult {
       edges,
       `r${i}:${r.name}`,
       maxDepthRef,
+      minDepthRef,
+      generationMin,
     );
     cursor += width + CARD_GAP_X * 2;
   }
+  const yShift = minDepthRef.v < 0 ? -minDepthRef.v * ROW_H : 0;
+  if (yShift > 0) {
+    for (const node of nodes) {
+      node.y += yShift;
+      node.anchorCY += yShift;
+    }
+    for (const edge of edges) {
+      edge.y1 += yShift;
+      edge.y2 += yShift;
+    }
+  }
   const totalWidth = Math.max(0, cursor - CARD_GAP_X * 2);
-  const totalHeight = (maxDepthRef.v + 1) * ROW_H;
+  const totalHeight = (maxDepthRef.v - minDepthRef.v + 1) * ROW_H;
   return {
     nodes,
     edges,

@@ -2,7 +2,7 @@
 	name = "Atgervi"
 	tutorial = "You are a Varangian of the Gronn Highlands. Warrior-Traders most known for their exploits into the Raneshen Empire, which will be forever remembered by historians."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/mercenary/atgervi
 	subclass_languages = list(/datum/language/gronnic)
 	cmode_music = 'sound/music/combat_vagarian.ogg'
@@ -40,7 +40,6 @@
 /datum/outfit/job/roguetown/mercenary/atgervi/pre_equip(mob/living/carbon/human/H)
 	..()
 	to_chat(H, span_warning("You are a Varangian of the Gronn Highlands. Warrior-Traders whose exploits into the Raneshen Empire will be forever remembered by historians."))
-	H.mind?.current.faction += "[H.name]_faction"
 	head = /obj/item/clothing/head/roguetown/helmet/bascinet/atgervi
 	gloves = /obj/item/clothing/gloves/roguetown/angle/atgervi
 	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/atgervi
@@ -84,7 +83,7 @@
 	name = "Atgervi Shaman"
 	tutorial = "You are a Shaman of the Fjall, The Northern Empty. Shamans are savage combatants who commune with the Ecclesical Beast Gods through ritualistic violence, rather than idle prayer."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
+	
 	outfit = /datum/outfit/job/roguetown/mercenary/atgervi_shaman
 	subclass_languages = list(/datum/language/gronnic)
 	cmode_music = 'sound/music/combat_shaman2.ogg'
@@ -112,13 +111,12 @@
 	)
 
 /datum/outfit/job/roguetown/mercenary/atgervi_shaman
-	allowed_patrons = ALL_GRONNIC_PATRONS //Subvariant of the 'ALL_INHUMEN_PATRONS' tag, with Abyssor and Dendor as situational additions. Do not add any more to this, no matter what.
+	allowed_patrons = ALL_GRONNIC_PATRONS //Variant of the 'ALL_INHUMEN_PATRONS' tag, with Abyssor and Dendor as situational additions. Do not add any more to this, no matter what.
 
 /datum/outfit/job/roguetown/mercenary/atgervi_shaman/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.set_blindness(0)
 	to_chat(H, span_warning("You are a Shaman of the Fjall, The Northern Empty. Shamans are savage combatants who commune with the Ecclesical Beast gods through ritualistic violence, rather than idle prayer."))
-	H.mind?.current.faction += "[H.name]_faction"
 	H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
 
 	head = /obj/item/clothing/head/roguetown/helmet/leather/shaman_hood
@@ -251,13 +249,14 @@
 	parrysound = list('sound/combat/parry/shield/towershield (1).ogg','sound/combat/parry/shield/towershield (2).ogg','sound/combat/parry/shield/towershield (3).ogg')
 	max_integrity = 300
 	experimental_inhand = FALSE
+	slot_flags = ITEM_SLOT_BACK_R
 
 /obj/item/rogueweapon/shield/atgervi/getonmobprop(tag)
 	. = ..()
 	if(tag)
 		switch(tag)
 			if("onback")
-				return list("shrink" = 0.7,"sx" = -17,"sy" = -15,"nx" = -15,"ny" = -15,"wx" = -12,"wy" = -15,"ex" = -18,"ey" = -15,"nturn" = 0,"sturn" = 0,"wturn" = 180,"eturn" = 0,"nflip" = 8,"sflip" = 0,"wflip" = 1,"eflip" = 0,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
+				return list("shrink" = 0.6,"sx" = -16,"sy" = -16,"nx" = -16,"ny" = -16,"wx" = -16,"wy" = -16,"ex" = -16,"ey" = -16,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 8,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
 
 /obj/item/rogueweapon/stoneaxe/woodcut/steel/atgervi
 	name = "bearded axe"

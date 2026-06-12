@@ -49,6 +49,8 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 		TRADE_GOOD_RICE = TG_SUPPLY_FOREIGN_GRAIN,
 		TRADE_GOOD_MEAT = TG_SUPPLY_MEAT_BULK,
 		TRADE_GOOD_PORK = TG_SUPPLY_MEAT_STAPLE,
+		TRADE_GOOD_HAM = TG_SUPPLY_MEAT_STAPLE,
+		TRADE_GOOD_PORK_BELLY = TG_SUPPLY_MEAT_STAPLE,
 		TRADE_GOOD_POULTRY = TG_SUPPLY_MEAT_STAPLE,
 		TRADE_GOOD_RABBIT = TG_SUPPLY_MEAT_STAPLE,
 		TRADE_GOOD_EGG = TG_SUPPLY_MEAT_BULK,
@@ -74,21 +76,21 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 		TRADE_GOOD_COAL = TG_DEMAND_CHEAP_RAW_MAT,
 		TRADE_GOOD_STONE = TG_DEMAND_CHEAP_RAW_MAT,
 		TRADE_GOOD_CLAY = TG_DEMAND_CHEAP_RAW_MAT,
-		TRADE_GOOD_CINNABAR = TG_DEMAND_PRECIOUS_METAL,
+		TRADE_GOOD_CINNABAR = TG_DEMAND_IRON,
+		TRADE_GOOD_SILVER_INGOT = TG_DEMAND_PRECIOUS_METAL,
 		TRADE_GOOD_GOLD_ORE = TG_DEMAND_PRECIOUS_METAL,
 		TRADE_GOOD_SILK = TG_DEMAND_SILK,
 		TRADE_GOOD_CALENDULA = TG_DEMAND_SPECIALTY_HERB,
 		TRADE_GOOD_POPPY = TG_DEMAND_SPECIALTY_HERB,
-		TRADE_GOOD_DENDOR_ESSENCE = 1, // literal: deliberately scarce, not category-bound
+		TRADE_GOOD_DENDOR_ESSENCE = 3, // literal: deliberately scarce, not category-bound
 		TRADE_GOOD_VISCERA = TG_DEMAND_SPECIALTY_HERB,
+		TRADE_GOOD_SINEW = TG_DEMAND_SPECIALTY_HERB,
 		TRADE_GOOD_HIDE = TG_DEMAND_LEATHER,
 		TRADE_GOOD_FUR = TG_DEMAND_LEATHER,
 		TRADE_GOOD_CURED_LEATHER = TG_DEMAND_LEATHER,
-		TRADE_GOOD_WOOD = TG_DEMAND_CHEAP_RAW_MAT,
+		TRADE_GOOD_WOOD = TG_DEMAND_CHEAP_RAW_MAT * 2,
 		TRADE_GOOD_FIBERS = TG_DEMAND_CLOTH,
 		TRADE_GOOD_GLASS_BATCH = TG_DEMAND_GLASS,
-		TRADE_GOOD_TOPER = TG_DEMAND_GEM,
-		TRADE_GOOD_GEMERALD = TG_DEMAND_GEM,
 		TRADE_GOOD_FISH_FILET = TG_DEMAND_FISH_BULK,
 		TRADE_GOOD_FISH_MINCE = TG_DEMAND_FISH_BULK,
 		TRADE_GOOD_SALMON = TG_DEMAND_FISH_SPECIALTY,
@@ -126,7 +128,7 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 	name = "Rockhill"
 	subtitle = "The Orchards, Vintners and Herbalists of the Ridge"
 	description = "A cluster of orchards and herb gardens to the north of Azuria, sheltered by a ridge that makes the climate there milder than it has any right to be. The many rolling hills of the county make for poor grain land but excellent orchard land. Rockhill wine and liquor are renowned throughout Azuria, and some are exported beyond. It is a quiet, quaint, agricultural county, dotted with noble estates. Rockhill apple brandy is the realm's most counterfeited drink. Every other inn from Bleakcoast to Heartfelt claims to serve it, but perhaps only a third of them actually do. The county is also known for its many country manor, with perhaps three quarter of the noble houses of the realm owning at least one in Rockhill."
-	threat_region_id = THREAT_REGION_MOUNT_DECAP
+	threat_region_id = THREAT_REGION_AZUREAN_COAST
 	produces = list(
 		TRADE_GOOD_APPLE = TG_SUPPLY_LOCAL_FRUIT,
 		TRADE_GOOD_PEAR = TG_SUPPLY_LOCAL_FRUIT,
@@ -146,7 +148,7 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 	region_id = TRADE_REGION_DAFTSMARCH
 	name = "Daftsmarch"
 	subtitle = "The Mining March, Ores of the Mount"
-	description = "The County of Daftsmarch is the heart of Azuria's mining industry, a long strip of land hugging the southern end of Mount Decapitation. It produces most of the raw ore and salt that Azuria depends on. The work pays well, and the veins are plentiful. But Daftsmarch sits uncomfortably close to the ruins of Tarichea, and the various denizens of the Underdark. The dangers posed by the drows and their ilk are a constant threat - many of them seeing Daftsmarch as a convenient source of slaves. But the ore vein are even richer - and the Crown is loathe to keep them up - sending adventurers, mercenaries and garrison alike to do battle with the Underdark's denizens and keep them at bay."
+	description = "The County of Daftsmarch is the heart of Azuria's mining industry, a long strip of land hugging the southern end of Mount Decapitation. It produces most of the raw ore and salt that Azuria depends on. The work pays well, and the veins are plentiful. But Daftsmarch sits uncomfortably close to the ruins of Tarichea, and the various denizens of the Underdark. The dangers posed by the drows and their ilk are a constant threat - many of them seeing Daftsmarch as a convenient source of slaves. But the ore vein are even richer - and the Crown is loathe to keep them unused - sending adventurers, mercenaries and garrison alike to do battle with the Underdark's denizens and keep them at bay."
 	threat_region_id = THREAT_REGION_UNDERDARK
 	produces = list(
 		TRADE_GOOD_IRON_ORE = TG_SUPPLY_IRON,
@@ -174,6 +176,7 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 	produces = list(
 		TRADE_GOOD_SILK = TG_SUPPLY_SILK,
 		TRADE_GOOD_VISCERA = TG_SUPPLY_SPECIALTY_HERB,
+		TRADE_GOOD_SINEW = TG_SUPPLY_SPECIALTY_HERB,
 		TRADE_GOOD_DENDOR_ESSENCE = 1, // literal: deliberately scarce, not category-bound
 		TRADE_GOOD_CALENDULA = TG_SUPPLY_SPECIALTY_HERB,
 		TRADE_GOOD_CLAY = TG_SUPPLY_CHEAP_RAW_MAT,
@@ -188,7 +191,7 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 	region_id = TRADE_REGION_SALTWICK
 	name = "Saltwick"
 	subtitle = "The Coastal Town, Fisheries of the Realm"
-	description = "A settlement southeast of Azure Peak, around a day's ride. Located along the Azurian coast, it was settled first by immigrants from Hammerhold and later by settlers from southern Gronn. The town is divided starkly into two parts: The curing houses and salt farms owned mostly by the town's dwarven and Hammerholdian settlers, while those of Gronnic descent makes up most of the fishermen and sailors. The two groups marry eachother rarely and argue often - but coexists somewhat harmoniously in the same town either way. Of course, Hammerholdian and Gronnmen are not the only inhabitants - many people down on their luck or seeking work also reside. Salt is imported from Daftsmarch, used to preserve the fish caught by local fishermen, and then exported throughout Azuria and Psydonia."
+	description = "A settlement southeast of Azure Peak, around a day's ride away, located on the coast of Kingsfield. It was settled first by immigrants from Hammerhold and later by settlers from southern Gronn. The town is divided starkly into two parts: The curing houses and salt farms owned mostly by the town's dwarven and Hammerholdian settlers, while those of Gronnic descent makes up most of the fishermen and sailors. The two groups marry eachother rarely and argue often - but coexists somewhat harmoniously in the same town either way. Of course, Hammerholdian and Gronnmen are not the only inhabitants - many people down on their luck or seeking work also reside. Salt is imported from Daftsmarch, used to preserve the fish caught by local fishermen, and then exported throughout Azuria and Psydonia."
 	threat_region_id = THREAT_REGION_AZUREAN_COAST
 	produces = list(
 		TRADE_GOOD_FISH_FILET = TG_SUPPLY_FISH_BULK,
@@ -207,7 +210,7 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 		TRADE_GOOD_SALT = TG_DEMAND_SALT,
 		TRADE_GOOD_FIBERS = TG_DEMAND_CLOTH,
 		TRADE_GOOD_CLOTH = TG_DEMAND_CLOTH,
-		TRADE_GOOD_WOOD = TG_DEMAND_CHEAP_RAW_MAT,
+		TRADE_GOOD_WOOD = TG_DEMAND_CHEAP_RAW_MAT * 2, // wood draws 2x raw-mat baseline: building, firewood, charring
 		TRADE_GOOD_IRON_INGOT = TG_DEMAND_REFINED_INGOTS,
 		TRADE_GOOD_PUMPKIN = 2, // literal: small local appetite for eating
 	)
@@ -222,9 +225,13 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 	demands = list(
 		TRADE_GOOD_STEEL_INGOT = TG_DEMAND_REFINED_INGOTS,
 		TRADE_GOOD_IRON_INGOT = TG_DEMAND_REFINED_INGOTS,
+		TRADE_GOOD_COPPER_INGOT = TG_DEMAND_REFINED_INGOTS,
+		TRADE_GOOD_TIN_INGOT = TG_DEMAND_REFINED_INGOTS,
 		TRADE_GOOD_CLOTH = TG_DEMAND_CLOTH,
 		TRADE_GOOD_MEAT = TG_DEMAND_MEAT_BULK,
 		TRADE_GOOD_PORK = TG_DEMAND_MEAT_STAPLE,
+		TRADE_GOOD_HAM = TG_DEMAND_MEAT_STAPLE,
+		TRADE_GOOD_PORK_BELLY = TG_DEMAND_MEAT_STAPLE,
 		TRADE_GOOD_POULTRY = TG_DEMAND_MEAT_STAPLE,
 		TRADE_GOOD_EGG = TG_DEMAND_MEAT_BULK,
 		TRADE_GOOD_FAT = TG_DEMAND_MEAT_STAPLE,
@@ -254,6 +261,8 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 	demands = list(
 		TRADE_GOOD_IRON_INGOT = TG_DEMAND_REFINED_INGOTS,
 		TRADE_GOOD_STEEL_INGOT = TG_DEMAND_REFINED_INGOTS,
+		TRADE_GOOD_COPPER_INGOT = TG_DEMAND_REFINED_INGOTS,
+		TRADE_GOOD_TIN_INGOT = TG_DEMAND_REFINED_INGOTS,
 		TRADE_GOOD_FUR = TG_DEMAND_LEATHER,
 		TRADE_GOOD_HIDE = TG_DEMAND_LEATHER,
 		TRADE_GOOD_CURED_LEATHER = TG_DEMAND_LEATHER,
@@ -262,6 +271,8 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 		TRADE_GOOD_OATS = TG_DEMAND_LOCAL_GRAIN,
 		TRADE_GOOD_MEAT = TG_DEMAND_MEAT_BULK,
 		TRADE_GOOD_PORK = TG_DEMAND_MEAT_STAPLE,
+		TRADE_GOOD_HAM = TG_DEMAND_MEAT_STAPLE,
+		TRADE_GOOD_PORK_BELLY = TG_DEMAND_MEAT_STAPLE,
 		TRADE_GOOD_POULTRY = TG_DEMAND_MEAT_STAPLE,
 		TRADE_GOOD_BUTTER = TG_DEMAND_MEAT_STAPLE,
 		TRADE_GOOD_CHEESE = TG_DEMAND_MEAT_STAPLE,
@@ -288,6 +299,7 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 	demands = list(
 		TRADE_GOOD_STEEL_INGOT = TG_DEMAND_REFINED_INGOTS,
 		TRADE_GOOD_IRON_INGOT = TG_DEMAND_REFINED_INGOTS,
+		TRADE_GOOD_SILVER_INGOT = TG_DEMAND_PRECIOUS_METAL,
 		TRADE_GOOD_MEAT = TG_DEMAND_MEAT_BULK,
 		TRADE_GOOD_POULTRY = TG_DEMAND_MEAT_STAPLE,
 		TRADE_GOOD_RABBIT = TG_DEMAND_MEAT_STAPLE,
@@ -325,7 +337,9 @@ GLOBAL_LIST_INIT(economic_regions, init_economic_regions())
 		TRADE_GOOD_IRON_ORE = TG_DEMAND_IRON,
 		TRADE_GOOD_COPPER_ORE = TG_DEMAND_TIN_BRONZE,
 		TRADE_GOOD_TIN_ORE = TG_DEMAND_TIN_BRONZE,
-		TRADE_GOOD_WOOD = TG_DEMAND_CHEAP_RAW_MAT,
+		TRADE_GOOD_SILVER_ORE = TG_DEMAND_PRECIOUS_METAL,
+		TRADE_GOOD_CINNABAR = TG_DEMAND_IRON,
+		TRADE_GOOD_WOOD = TG_DEMAND_CHEAP_RAW_MAT * 2, // wood draws 2x raw-mat baseline: building, firewood, charring
 		TRADE_GOOD_GRAIN = TG_DEMAND_LOCAL_GRAIN,
 		TRADE_GOOD_MEAT = TG_DEMAND_MEAT_BULK,
 		TRADE_GOOD_SILK = TG_DEMAND_SILK,

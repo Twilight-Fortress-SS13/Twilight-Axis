@@ -24,9 +24,14 @@
 	var/protection = 0
 	var/intdamage = damage
 	var/consume_debuff = TRUE
+	
+	if(HAS_TRAIT(src, TRAIT_IRONMAN)) // free clongo noise when hit
+		playsound(loc, get_armor_sound(PLATEHIT, blade_dulling), 100) // SOVLNUKE!!!
+
 	if(!(d_type in ARMOR_DR_TYPES))
 		// Penetration types: slash, stab, piercing
 		used = get_best_worn_armor(def_zone, d_type)
+
 		if(used)
 			protection = used.armor.getRating(d_type)
 			protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
@@ -863,7 +868,7 @@
 			var/obj/item/clothing/C = bp
 			if(zone2covered(def_zone, C.body_parts_covered_dynamic))
 				if(C.max_integrity)
-					if(C.obj_integrity <= 0)
+					if(C.obj_integrity <= 0 || C.obj_broken)
 						continue
 				var/val = C.armor.getRating(d_type)
 				if(val > 0)
@@ -891,7 +896,7 @@
 			var/obj/item/clothing/C = bp
 			if(zone2covered(def_zone, C.body_parts_covered_dynamic))
 				if(C.max_integrity)
-					if(C.obj_integrity <= 0)
+					if(C.obj_integrity <= 0 || C.obj_broken)
 						continue
 				var/val = C.armor.getRating(d_type)
 				if(val > 0)

@@ -28,10 +28,19 @@
 #define TRADE_GOOD_SAFFIRA "SAFFIRA"
 #define TRADE_GOOD_BLORTZ "BLORTZ"
 #define TRADE_GOOD_DORPEL "DORPEL"
+#define TRADE_GOOD_JADE "JADE"
+#define TRADE_GOOD_OPAL "OPAL"
+#define TRADE_GOOD_ONYXA "ONYXA"
+#define TRADE_GOOD_CERULITE "CERULITE"
+#define TRADE_GOOD_HEARTSTONE "HEARTSTONE"
+#define TRADE_GOOD_AMBER "AMBER"
+#define TRADE_GOOD_CLAMSHELL "CLAMSHELL"
+#define TRADE_GOOD_ROSESTONE "ROSESTONE"
 
 #define TRADE_GOOD_WOOD "WOOD"
 #define TRADE_GOOD_DENDOR_ESSENCE "DENDOR_ESSENCE"
 #define TRADE_GOOD_VISCERA "VISCERA"
+#define TRADE_GOOD_SINEW "SINEW"
 
 #define TRADE_GOOD_FIBERS "FIBERS"
 #define TRADE_GOOD_CLOTH "CLOTH"
@@ -39,6 +48,8 @@
 #define TRADE_GOOD_HIDE "HIDE"
 #define TRADE_GOOD_FUR "FUR"
 #define TRADE_GOOD_CURED_LEATHER "CURED_LEATHER"
+#define TRADE_GOOD_ROPE "ROPE"
+#define TRADE_GOOD_PAPER "PAPER"
 
 #define TRADE_GOOD_GRAIN "GRAIN"
 #define TRADE_GOOD_OATS "OATS"
@@ -46,6 +57,8 @@
 
 #define TRADE_GOOD_MEAT "MEAT"
 #define TRADE_GOOD_PORK "PORK"
+#define TRADE_GOOD_HAM "HAM"
+#define TRADE_GOOD_PORK_BELLY "PORK_BELLY"
 #define TRADE_GOOD_POULTRY "POULTRY"
 #define TRADE_GOOD_RABBIT "RABBIT"
 #define TRADE_GOOD_EGG "EGG"
@@ -170,6 +183,12 @@
 #define TRADE_GOOD_TROPHY_DIREBEAR "TROPHY_DIREBEAR"
 #define TRADE_GOOD_TROPHY_TROLL "TROPHY_TROLL"
 
+// Magical (finished arcana, fulfilled via warehouse — any subtype of the tier parent
+// counts as that tier's good).
+#define TRADE_GOOD_ENCHSCROLL_BASIC "ENCHSCROLL_BASIC"
+#define TRADE_GOOD_ENCHSCROLL_SUPERIOR "ENCHSCROLL_SUPERIOR"
+#define TRADE_GOOD_ENCHSCROLL_GREATER "ENCHSCROLL_GREATER"
+
 // Potions (finished alchemy, fulfilled via warehouse by reagent volume, any container)
 #define TRADE_GOOD_HEALTH_POTION "HEALTH_POTION"
 #define TRADE_GOOD_STRONG_HEALTH_POTION "STRONG_HEALTH_POTION"
@@ -216,6 +235,14 @@
 #define SELLPRICE_BLORTZ 88
 #define SELLPRICE_DORPEL 121
 #define SELLPRICE_BLOOD_DIAMOND 188
+#define SELLPRICE_JADE 50
+#define SELLPRICE_OPAL 80
+#define SELLPRICE_ONYXA 30
+#define SELLPRICE_CERULITE 75
+#define SELLPRICE_HEARTSTONE 60
+#define SELLPRICE_AMBER 50
+#define SELLPRICE_CLAMSHELL 5
+#define SELLPRICE_ROSESTONE 15
 
 // Artisan raws
 #define SELLPRICE_WOOD 3
@@ -229,6 +256,8 @@
 #define SELLPRICE_HIDE 8
 #define SELLPRICE_FUR 10
 #define SELLPRICE_CURED_LEATHER 3
+#define SELLPRICE_ROPE 6
+#define SELLPRICE_PAPER 6
 
 // Grains
 #define SELLPRICE_GRAIN 3
@@ -238,6 +267,8 @@
 // Animal foods
 #define SELLPRICE_MEAT 4
 #define SELLPRICE_PORK 4
+#define SELLPRICE_HAM 6
+#define SELLPRICE_PORK_BELLY 5
 #define SELLPRICE_POULTRY 4
 #define SELLPRICE_RABBIT 3
 #define SELLPRICE_EGG 2
@@ -313,3 +344,10 @@
 // Stat-buff potions are showpiece alchemy. Uniform price - all four buff this round are
 // of equal mechanical weight, and pricing them differently invites min-maxing the petition.
 #define SELLPRICE_BUFF_POTION 48
+
+// Enchantment scrolls. Tier-priced — basic scrolls are a routine commission, greater
+// scrolls represent serious leyline-tier work. Mythics aren't shippable: they're bespoke
+// gear, not commodity output.
+#define SELLPRICE_ENCHSCROLL_BASIC 50
+#define SELLPRICE_ENCHSCROLL_SUPERIOR 100
+#define SELLPRICE_ENCHSCROLL_GREATER 150

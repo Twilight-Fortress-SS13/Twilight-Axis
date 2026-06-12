@@ -56,7 +56,11 @@
 					(isnull(bullet) ? src.bullet : bullet))
 
 /datum/armor/proc/getRating(rating)
-	return vars[rating]
+	switch(rating)
+		if("blunt", "slash", "stab", "piercing", "fire", "acid", "magic", "bullet") // TA EDIT
+			return vars[rating]
+	stack_trace("getRating called with unknown rating key [rating] — fix the caller")
+	return 0
 
 /datum/armor/proc/getList()
 	return list("blunt" = blunt, "slash" = slash, "stab" = stab, "piercing" = piercing, "fire" = fire, "acid" = acid, "magic" = magic, "bullet" = bullet)

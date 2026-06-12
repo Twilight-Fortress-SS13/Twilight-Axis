@@ -5,7 +5,7 @@
 	However, with the increase in banditry, necromancy, deadite risings, and increasing sea raider raids, there are rumors abound that Heartfelt is not what it used to be. \
 	Travellers often warn of Heartfelt having fallen already, and words of secretive cultists isn't unheard of."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = ACCEPTED_RACES
+	forbidden_races = list(RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/heartfelt/retinue/houseguard
 	maximum_possible_slots = 4
 	pickprob = 100
@@ -79,7 +79,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
 	)
-	H.verbs |= /mob/proc/haltyell
+	add_verb(H, /mob/proc/haltyell)
 
 	var/helmet = list("Etruscan Bascinet","Volf Plate Helmet","Visored Sallet","Slitted Kettle","Simple Helmet","Kettle Helmet","Sallet Helmet","Winged Helmet",)
 	var/helmet_choice = input("Choose your Helm.", "TAKE UP HELMS") as anything in helmet
@@ -149,7 +149,7 @@
 	l_hand = /obj/item/rogueweapon/sword
 	belt = /obj/item/storage/belt/rogue/leather/black
 	backr = /obj/item/storage/backpack/rogue/satchel/black
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/lord
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/lord/light
 	armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 	neck = /obj/item/clothing/neck/roguetown/gorget/
@@ -182,7 +182,7 @@
 		/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 	)
-	H.verbs |= /mob/proc/haltyell
+	add_verb(H, /mob/proc/haltyell)
 
 	var/helmet = list("Etruscan Bascinet","Volf Plate Helmet","Visored Sallet","Slitted Kettle","Simple Helmet","Kettle Helmet","Sallet Helmet","Winged Helmet",)
 	var/helmet_choice = input("Choose your Helm.", "TAKE UP HELMS") as anything in helmet
@@ -216,7 +216,7 @@
 	However, with the increase in banditry, necromancy, deadite risings, and increasing sea raider raids, there are rumors abound that Heartfelt is not what it used to be. \
 	Travellers often warn of Heartfelt having fallen already, and words of secretive cultists isn't unheard of."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_SHUNNED_UP
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/heartfelt/retinue/squire
 	maximum_possible_slots = 2
 	pickprob = 100

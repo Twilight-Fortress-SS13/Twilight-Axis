@@ -16,7 +16,9 @@
 		return
 
 	A.mark_organs_dirty()
-	controller.ui?.request_update()
+	A.rebuild_organs()
+	SSerp.apply_prefs_for_mob(M)
+	controller?.request_ui_update()
 
 /// Builds partners list for UI.
 /datum/erp_controller_partners/proc/get_partners_ui()

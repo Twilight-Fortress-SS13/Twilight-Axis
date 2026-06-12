@@ -47,7 +47,6 @@
 	resistance_flags = FIRE_PROOF
 	blocksound = CHAINHIT
 	max_integrity = ARMOR_INT_SIDE_BRONZE
-	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/breaksound.ogg'
 	drop_sound = 'sound/foley/dropsound/chain_drop.ogg'
 	pickup_sound = 'sound/foley/equip/equip_armor_chain.ogg'
@@ -61,7 +60,6 @@
 	var/activate_sound = 'sound/items/stunmace_gen (2).ogg'
 	var/cdtime = 1.5 MINUTES
 	var/activetime = 5 SECONDS
-	sellprice = 100
 	var/delay = 5 SECONDS
 	var/sprite_changes = 10
 	var/datum/beam/current_beam = null

@@ -254,7 +254,7 @@
 	TI.icon = RI::icon
 	TI.icon_state = RI::icon_state
 	TI.item_state = RI::item_state
-	TI.toggle_state = RI::icon_state
+	TI.override_state = RI::icon_state
 	TI.lefthand_file = RI::lefthand_file
 	TI.righthand_file = RI::righthand_file
 	TI.sheathe_icon = RI::sheathe_icon ? RI::sheathe_icon : TI.sheathe_icon
@@ -308,8 +308,9 @@
 /obj/item/enchantingkit/strudel1
 	name = "'Grenzelhoft Mage Vest' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Robe"
-	target_items = list(/obj/item/clothing/suit/roguetown/shirt/robe)
-	result_item = /obj/item/clothing/suit/roguetown/shirt/robe/sofiavest
+	target_items = list(/obj/item/clothing/suit/roguetown/shirt/robe,
+						/obj/item/clothing/suit/roguetown/shirt/robe)
+	result_item = /obj/item/clothing/suit/roguetown/shirt/sofiavest
 
 /obj/item/enchantingkit/strudel2
 	name = "'Xylixian Fasching Leotard' morphing elixir"
@@ -359,7 +360,7 @@
 
 //Zydras donator items - Ironclad baddie
 /obj/item/enchantingkit/zydrashauberk
-	name = "Mailled Hauberk morphing elixir"
+	name = "Mailled Cuirass morphing elixir"
 	target_items = list(/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy)
 	result_item = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy/zycuirass
 
@@ -552,7 +553,11 @@
 /obj/item/enchantingkit/weapon/koruu_kukri/warden
 	name = "'Warden Leachwhacker' morphing elixir"
 	target_items = list(
-		/obj/item/rogueweapon/huntingknife/idagger/warden_machete
+		/obj/item/rogueweapon/huntingknife/idagger/warden_machete,
+		/obj/item/rogueweapon/huntingknife/idagger,
+		/obj/item/rogueweapon/huntingknife/idagger/steel,
+		/obj/item/rogueweapon/huntingknife/combat,
+		/obj/item/rogueweapon/huntingknife
 		)
 	result_item = /obj/item/rogueweapon/koruu/kukri/warden
 
@@ -670,6 +675,129 @@
 	)
 	result_item = /obj/item/rogueweapon/example/euthanasia
 
+/obj/item/enchantingkit/weapon/nicksonessang
+	name = "'Dark Delight' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Ssangsudo or Longsword"
+	target_items = list(
+	/obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo,
+	/obj/item/rogueweapon/sword/long,
+	/obj/item/rogueweapon/sword/long/ap,
+	/obj/item/rogueweapon/sword/long/dec,
+	/obj/item/rogueweapon/sword/long/etruscan)
+	result_item = /obj/item/rogueweapon/example/ssangsudo_long
+
+//more koruu stuff below
+/obj/item/enchantingkit/weapon/koruu_kukri_silver
+	name = "'Psydonic Leachwhacker' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Dagger"
+	target_items = list(
+		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger,
+		/obj/item/rogueweapon/huntingknife/idagger/silver
+
+	)
+	result_item = /obj/item/rogueweapon/koruu/kukri/silver
+
+/obj/item/enchantingkit/weapon/koruu_longsword
+	name = "'Excaliber' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/etruscan,
+		/obj/item/rogueweapon/sword/long/ap)
+	result_item = /obj/item/rogueweapon/koruu/longsword
+
+/obj/item/enchantingkit/weapon/koruu_etrusc
+	name = "'Colada' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/etruscan,
+		/obj/item/rogueweapon/sword/long/ap)
+	result_item = /obj/item/rogueweapon/koruu/etrusca
+
+/obj/item/enchantingkit/weapon/koruu_judgement
+	name = "'A Durthurian Tale' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword or Judgement"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/etruscan,
+		/obj/item/rogueweapon/sword/long/judgement,
+		/obj/item/rogueweapon/sword/long/ap)
+	result_item = /obj/item/rogueweapon/koruu/judgement
+
+// Nerocavalier
+/obj/item/enchantingkit/weapon/nero_lsword
+	name = "Sylvan Longsword morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long,
+		/obj/item/rogueweapon/sword/long/dec,
+		/obj/item/rogueweapon/sword/long/ap,
+		/obj/item/rogueweapon/sword/long/etruscan,
+	)
+	result_item = /obj/item/rogueweapon/example/nero_sylvanlsword
+
+/obj/item/enchantingkit/weapon/nero_sabre
+	name = "Sylvan Sabre morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Sabre"
+	target_items = list(
+		/obj/item/rogueweapon/sword/sabre,
+		/obj/item/rogueweapon/sword/sabre/elf,
+		/obj/item/rogueweapon/sword/sabre/dec,
+		/obj/item/rogueweapon/sword/sabre/banneret
+	)
+	result_item = /obj/item/rogueweapon/example/nero_sylvansabre
+
+/obj/item/enchantingkit/weapon/nero_dagger
+	name = "Sylvan Dagger morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Dagger"
+	target_items = list(
+		/obj/item/rogueweapon/huntingknife/idagger,
+		/obj/item/rogueweapon/huntingknife/idagger/steel,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/special
+	)
+	result_item = /obj/item/rogueweapon/example/nero_sylvandagger
+
+// Desminus
+/obj/item/enchantingkit/weapon/des_gaebolg
+	name = "'Gae Bolg' morphing elixer"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Spear, Partizan, Halberd, Glaive or Eaglebeak"
+	target_items = list(
+		/obj/item/rogueweapon/spear,
+		/obj/item/rogueweapon/spear/partizan,
+		/obj/item/rogueweapon/halberd,
+		/obj/item/rogueweapon/halberd/glaive,
+		/obj/item/rogueweapon/eaglebeak
+	)
+	result_item = /obj/item/rogueweapon/example/des_gaebolg
+
+// inverserun
+/obj/item/enchantingkit/weapon/arra_amdir
+	name = "'Amdir' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Greataxe or Poleaxe"
+	target_items = list(
+	/obj/item/rogueweapon/greataxe/steel/knight,
+	/obj/item/rogueweapon/greataxe/steel/knight/silver,
+	/obj/item/rogueweapon/greataxe/steel/knight/psy,
+	/obj/item/rogueweapon/greataxe/bronze,
+	/obj/item/rogueweapon/greataxe/
+
+	)
+	result_item = /obj/item/rogueweapon/example/arra_amdir
+
+//sakuyzo
+/obj/item/enchantingkit/weapon/sakuyzo
+	name = "'Hævatein' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Kriegmesser"
+	target_items = list(
+		/obj/item/rogueweapon/sword/long/kriegmesser/noc,
+		/obj/item/rogueweapon/sword/long/kriegmesser
+	)
+	result_item = /obj/item/rogueweapon/sakuyzo/sword
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
