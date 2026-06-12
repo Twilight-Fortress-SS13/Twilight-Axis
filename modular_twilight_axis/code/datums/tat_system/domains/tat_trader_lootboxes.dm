@@ -423,7 +423,6 @@ GLOBAL_LIST_INIT(tat_trader_chest_premium_pool, list(
 #define TAT_TRADER_CHEST_PRICE_SWING_MAX 50
 #define TAT_TRADER_CHEST_PREMIUM_MARKET_COUNT 10
 #define TAT_TRADER_CHEST_PREMIUM_HISTORY_ITERATIONS 4
-#define TAT_TRADER_CHEST_SEEN_WEIGHT_DIVISOR 2
 #define TAT_TRADER_CHEST_SPECIAL_PREMIUM_PRICE_MULTIPLIER 1.75
 #define TAT_TRADER_CHEST_ITEM_DEPOSIT_MULTIPLIER 0.75
 #define TAT_TRADER_CHEST_MAX_COIN_STACK 20
@@ -656,6 +655,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	tat_trader_chest_collect_rare_silver_and_enduring_tat_items(result)
 	tat_trader_chest_collect_tat_items_by_slot_group(result, "soon...")
 	tat_trader_chest_collect_enchantment_scroll_paths(result)
+	tat_trader_chest_collect_pool_paths(result, GLOB.tat_trader_chest_special_premium_items)
 
 	for(var/item_path in GLOB.tat_trader_chest_disabled_premium_items)
 		result -= item_path
@@ -888,7 +888,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	var/list/current_premium_paths
 	var/list/sold_premium_paths
 	var/list/premium_market_history
-	var/list/premium_seen_paths
+	var/list/premium_purchase_counts
 	var/next_market_reroll = 0
 	var/last_market_reroll = 0
 
@@ -935,7 +935,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	var/list/current_premium_paths = list()
 	var/list/sold_premium_paths = list()
 	var/list/premium_market_history = list()
-	var/list/premium_seen_paths = list()
+	var/list/premium_purchase_counts = list()
 	var/next_market_reroll = 0
 	var/last_market_reroll = 0
 	var/obj/structure/tat_trader_display_case/display_case
@@ -975,8 +975,8 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 		sold_premium_paths = source.sold_premium_paths.Copy()
 	if(islist(source.premium_market_history) && length(source.premium_market_history))
 		premium_market_history = source.premium_market_history.Copy()
-	if(islist(source.premium_seen_paths) && length(source.premium_seen_paths))
-		premium_seen_paths = source.premium_seen_paths.Copy()
+	if(islist(source.premium_purchase_counts) && length(source.premium_purchase_counts))
+		premium_purchase_counts = source.premium_purchase_counts.Copy()
 	if(source.next_market_reroll)
 		next_market_reroll = source.next_market_reroll
 	if(source.last_market_reroll)
@@ -993,7 +993,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	target.current_premium_paths = islist(current_premium_paths) ? current_premium_paths.Copy() : list()
 	target.sold_premium_paths = islist(sold_premium_paths) ? sold_premium_paths.Copy() : list()
 	target.premium_market_history = islist(premium_market_history) ? premium_market_history.Copy() : list()
-	target.premium_seen_paths = islist(premium_seen_paths) ? premium_seen_paths.Copy() : list()
+	target.premium_purchase_counts = islist(premium_purchase_counts) ? premium_purchase_counts.Copy() : list()
 	target.next_market_reroll = next_market_reroll
 	target.last_market_reroll = last_market_reroll
 	return TRUE
@@ -1097,6 +1097,19 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 
 	return TRUE
 
+/obj/structure/tat_trader_chest/proc/get_premium_purchase_count(item_path)
+	if(!islist(premium_purchase_counts) || !ispath(item_path, /obj/item))
+		return 0
+	return max(0, round(premium_purchase_counts[item_path] || 0))
+
+/obj/structure/tat_trader_chest/proc/record_premium_purchase(item_path)
+	if(!ispath(item_path, /obj/item) || tat_trader_chest_is_special_premium_item(item_path))
+		return FALSE
+	if(!islist(premium_purchase_counts))
+		premium_purchase_counts = list()
+	premium_purchase_counts[item_path] = get_premium_purchase_count(item_path) + 1
+	return TRUE
+
 /obj/structure/tat_trader_chest/proc/select_premium_market_paths()
 	var/list/all_candidates = tat_trader_chest_get_premium_catalog_paths()
 	var/list/catalog_weights = tat_trader_chest_get_premium_catalog_weights()
@@ -1114,8 +1127,8 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 		var/weight = max(1, round(catalog_weights[item_path] || 1))
 		if(tat_trader_chest_is_special_premium_item(item_path))
 			weight = 1
-		else if(islist(premium_seen_paths) && (item_path in premium_seen_paths))
-			weight = max(1, round(weight / TAT_TRADER_CHEST_SEEN_WEIGHT_DIVISOR))
+		else
+			weight = max(1, weight - get_premium_purchase_count(item_path))
 		valid_candidates[item_path] = weight
 		CHECK_TICK
 
@@ -1169,7 +1182,6 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 		if(!ispath(item_path, /obj/item))
 			continue
 		tat_trader_chest_add_unique_path(history_entry, item_path)
-		tat_trader_chest_add_unique_path(premium_seen_paths, item_path)
 
 	if(!length(history_entry))
 		return FALSE
@@ -1424,6 +1436,8 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 				tat_trader_chest_add_unique_path(sold_premium_paths, item_path)
 				if(tat_trader_chest_is_special_premium_item(item_path))
 					tat_trader_chest_add_unique_path(GLOB.tat_trader_chest_round_sold_special_premium, item_path)
+				else
+					record_premium_purchase(item_path)
 				invalidate_market_catalog_cache()
 
 			if(!usr.put_in_hands(purchased))
@@ -1524,7 +1538,6 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 #undef TAT_TRADER_CHEST_PRICE_SWING_MAX
 #undef TAT_TRADER_CHEST_PREMIUM_MARKET_COUNT
 #undef TAT_TRADER_CHEST_PREMIUM_HISTORY_ITERATIONS
-#undef TAT_TRADER_CHEST_SEEN_WEIGHT_DIVISOR
 #undef TAT_TRADER_CHEST_SPECIAL_PREMIUM_PRICE_MULTIPLIER
 #undef TAT_TRADER_CHEST_ITEM_DEPOSIT_MULTIPLIER
 #undef TAT_TRADER_CHEST_MAX_COIN_STACK
