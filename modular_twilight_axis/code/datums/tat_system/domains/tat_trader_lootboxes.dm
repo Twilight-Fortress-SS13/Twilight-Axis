@@ -424,6 +424,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_premium_pool, list(
 #define TAT_TRADER_CHEST_PREMIUM_MARKET_COUNT 10
 #define TAT_TRADER_CHEST_PREMIUM_HISTORY_ITERATIONS 4
 #define TAT_TRADER_CHEST_SEEN_WEIGHT_DIVISOR 2
+#define TAT_TRADER_CHEST_SPECIAL_PREMIUM_PRICE_MULTIPLIER 1.75
 #define TAT_TRADER_CHEST_ITEM_DEPOSIT_MULTIPLIER 0.75
 #define TAT_TRADER_CHEST_MAX_COIN_STACK 20
 #define TAT_TRADER_CHEST_ROCKHILL_KRONA_VALUE 14
@@ -1188,6 +1189,8 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	var/uses_fixed_price = tat_trader_chest_path_uses_fixed_market_price(item_path)
 	var/change_percent = uses_fixed_price ? 0 : rand(TAT_TRADER_CHEST_PRICE_SWING_MIN, TAT_TRADER_CHEST_PRICE_SWING_MAX)
 	var/market_price = uses_fixed_price ? base_price : max(TAT_TRADER_CHEST_MIN_LIST_PRICE, round(base_price * (100 + change_percent) / 100))
+	if(premium && tat_trader_chest_is_special_premium_item(item_path))
+		market_price = max(TAT_TRADER_CHEST_MIN_LIST_PRICE, round(base_price * TAT_TRADER_CHEST_SPECIAL_PREMIUM_PRICE_MULTIPLIER))
 	market_price_modifiers[item_path] = change_percent
 	market_prices[item_path] = market_price
 	return TRUE
@@ -1522,6 +1525,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 #undef TAT_TRADER_CHEST_PREMIUM_MARKET_COUNT
 #undef TAT_TRADER_CHEST_PREMIUM_HISTORY_ITERATIONS
 #undef TAT_TRADER_CHEST_SEEN_WEIGHT_DIVISOR
+#undef TAT_TRADER_CHEST_SPECIAL_PREMIUM_PRICE_MULTIPLIER
 #undef TAT_TRADER_CHEST_ITEM_DEPOSIT_MULTIPLIER
 #undef TAT_TRADER_CHEST_MAX_COIN_STACK
 #undef TAT_TRADER_CHEST_ROCKHILL_KRONA_VALUE
