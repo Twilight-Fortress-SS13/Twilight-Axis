@@ -212,3 +212,6 @@
 		return
 
 	H.tat_build_post_client_applied = TRUE
+	var/final_title = H.tat_pliant_title || H.advjob || H.mind.assigned_role
+	if(H.job == "Towner" && length(final_title))
+		SSrole_class_handler.add_class_register_msg("towner", "[H.real_name] is the [final_title]", H)

@@ -144,7 +144,7 @@ SUBSYSTEM_DEF(role_class_handler)
 	if(plus_factor)
 		picked_class.boost_by_plus_power(plus_factor, H)
 
-	if(related_handler.register_id)
+	if(related_handler.register_id && !istype(picked_class, /datum/advclass/tat_class)) //Twilight Axis Edit - TAT
 		add_class_register_msg(related_handler.register_id, "[H.real_name] is the [picked_class.name]", related_handler.linked_client.mob)
 
 
