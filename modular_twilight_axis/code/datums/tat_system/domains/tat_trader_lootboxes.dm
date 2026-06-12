@@ -278,7 +278,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_premium_pool, list(
 	/obj/item/clothing/ring/statgemerald = 2,
 	/obj/item/clothing/ring/statonyx = 2,
 	/obj/item/clothing/ring/statrontz = 2,
-	/obj/item/clothing/ring/statdorpel = 2,
+	/obj/item/clothing/ring/statdorpel = 1,
 	/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard/silver = 8,
 	/obj/item/clothing/suit/roguetown/armor/plate/full/legacy = 2,
 	/obj/item/clothing/suit/roguetown/armor/plate/legacy = 2,
@@ -448,6 +448,8 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 GLOBAL_LIST_EMPTY(tat_trader_chest_round_sold_special_premium)
 GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	/obj/item/clothing/neck/roguetown/psicross/weeping,
+	/obj/item/clothing/ring/statdorpel,
+	/obj/item/clothing/ring/dragon_ring,
 	/obj/item/rogueweapon/sword/long/exe/berserk,
 ))
 
