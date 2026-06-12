@@ -309,6 +309,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_premium_pool, list(
 	/obj/item/clothing/gloves/roguetown/chain/contraption/voltic = 3,
 	/obj/item/clothing/ring/active/shimmeringlens = 4,
 	/obj/item/flashlight/flare/torch/lantern/bronzelamptern/malums_lamptern = 2,
+	/obj/item/clothing/neck/roguetown/psicross/weeping = 1,
 	/obj/item/rogueweapon/huntingknife/idagger/steel/fire = 3,
 	/obj/item/rogueweapon/mace/goden/deepduke = 3,
 	/obj/item/rogueweapon/sword/long/exe/berserk = 2,
@@ -421,7 +422,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_premium_pool, list(
 #define TAT_TRADER_CHEST_DEFAULT_WITHDRAW 10
 #define TAT_TRADER_CHEST_MAX_WITHDRAW 5000
 #define TAT_TRADER_CHEST_MIN_LIST_PRICE 2
-#define TAT_TRADER_CHEST_WRIT_PRICE 500
+#define TAT_TRADER_CHEST_WRIT_PRICE 1000
 #define TAT_TRADER_CHEST_ARTIFACT_BEARER_ITEM_PRICE 800
 #define TAT_TRADER_CHEST_SOON_ITEM_PRICE 800
 #define TAT_TRADER_CHEST_RARE_PREMIUM_ITEM_PRICE 800
@@ -429,7 +430,10 @@ GLOBAL_LIST_INIT(tat_trader_chest_premium_pool, list(
 #define TAT_TRADER_CHEST_PRICE_SWING_MIN -50
 #define TAT_TRADER_CHEST_PRICE_SWING_MAX 50
 #define TAT_TRADER_CHEST_PREMIUM_MARKET_COUNT 10
-#define TAT_TRADER_CHEST_PREMIUM_HISTORY_ITERATIONS 3
+#define TAT_TRADER_CHEST_PREMIUM_HISTORY_ITERATIONS 4
+#define TAT_TRADER_CHEST_SEEN_WEIGHT_DIVISOR 2
+#define TAT_TRADER_CHEST_SPECIAL_PREMIUM_PRICE_MULTIPLIER 1.2
+#define TAT_TRADER_CHEST_ITEM_DEPOSIT_MULTIPLIER 0.75
 #define TAT_TRADER_CHEST_MAX_COIN_STACK 20
 #define TAT_TRADER_CHEST_ROCKHILL_KRONA_VALUE 14
 #define TAT_TRADER_CHEST_ZENAR_VALUE 10
@@ -441,6 +445,11 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_premium_catalog_cache)
 GLOBAL_LIST_EMPTY(tat_trader_chest_icon_cache)
 GLOBAL_LIST_EMPTY(tat_trader_chest_base_price_cache)
 GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
+GLOBAL_LIST_EMPTY(tat_trader_chest_round_sold_special_premium)
+GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
+	/obj/item/clothing/neck/roguetown/psicross/weeping,
+	/obj/item/rogueweapon/sword/long/exe/berserk,
+))
 
 /proc/tat_trader_chest_check_user(mob/living/user, silent = FALSE)
 	if(!ishuman(user))
@@ -600,6 +609,11 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 /proc/tat_trader_chest_path_uses_fixed_market_price(item_path)
 	return item_path == /obj/item/tat_trader_writ
 
+/proc/tat_trader_chest_is_special_premium_item(item_path)
+	return ispath(item_path, /obj/item) && (item_path in GLOB.tat_trader_chest_special_premium_items)
+
+/proc/tat_trader_chest_special_premium_sold_this_round(item_path)
+	return tat_trader_chest_is_special_premium_item(item_path) && (item_path in GLOB.tat_trader_chest_round_sold_special_premium)
 
 /proc/tat_trader_chest_get_catalog_paths()
 	if(length(GLOB.tat_trader_chest_catalog_cache))
@@ -850,7 +864,9 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 	var/list/market_price_modifiers
 	var/list/market_prices
 	var/list/current_premium_paths
+	var/list/sold_premium_paths
 	var/list/premium_market_history
+	var/list/premium_seen_paths
 	var/next_market_reroll = 0
 	var/last_market_reroll = 0
 
@@ -895,7 +911,9 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 	var/list/market_price_modifiers = list()
 	var/list/market_prices = list()
 	var/list/current_premium_paths = list()
+	var/list/sold_premium_paths = list()
 	var/list/premium_market_history = list()
+	var/list/premium_seen_paths = list()
 	var/next_market_reroll = 0
 	var/last_market_reroll = 0
 	var/obj/structure/tat_trader_display_case/display_case
@@ -931,8 +949,12 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 		market_prices = source.market_prices.Copy()
 	if(islist(source.current_premium_paths) && length(source.current_premium_paths))
 		current_premium_paths = source.current_premium_paths.Copy()
+	if(islist(source.sold_premium_paths) && length(source.sold_premium_paths))
+		sold_premium_paths = source.sold_premium_paths.Copy()
 	if(islist(source.premium_market_history) && length(source.premium_market_history))
 		premium_market_history = source.premium_market_history.Copy()
+	if(islist(source.premium_seen_paths) && length(source.premium_seen_paths))
+		premium_seen_paths = source.premium_seen_paths.Copy()
 	if(source.next_market_reroll)
 		next_market_reroll = source.next_market_reroll
 	if(source.last_market_reroll)
@@ -947,7 +969,9 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 	target.market_price_modifiers = islist(market_price_modifiers) ? market_price_modifiers.Copy() : list()
 	target.market_prices = islist(market_prices) ? market_prices.Copy() : list()
 	target.current_premium_paths = islist(current_premium_paths) ? current_premium_paths.Copy() : list()
+	target.sold_premium_paths = islist(sold_premium_paths) ? sold_premium_paths.Copy() : list()
 	target.premium_market_history = islist(premium_market_history) ? premium_market_history.Copy() : list()
+	target.premium_seen_paths = islist(premium_seen_paths) ? premium_seen_paths.Copy() : list()
 	target.next_market_reroll = next_market_reroll
 	target.last_market_reroll = last_market_reroll
 	return TRUE
@@ -1059,9 +1083,16 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 	for(var/item_path in all_candidates)
 		if(!ispath(item_path, /obj/item))
 			continue
+		if(tat_trader_chest_special_premium_sold_this_round(item_path))
+			continue
 		if(tat_trader_chest_get_item_path_base_price(item_path) < TAT_TRADER_CHEST_MIN_LIST_PRICE)
 			continue
-		valid_candidates[item_path] = max(1, round(catalog_weights[item_path] || 1))
+		var/weight = max(1, round(catalog_weights[item_path] || 1))
+		if(tat_trader_chest_is_special_premium_item(item_path))
+			weight = 1
+		else if(islist(premium_seen_paths) && (item_path in premium_seen_paths))
+			weight = max(1, round(weight / TAT_TRADER_CHEST_SEEN_WEIGHT_DIVISOR))
+		valid_candidates[item_path] = weight
 		CHECK_TICK
 
 	if(!length(valid_candidates))
@@ -1114,6 +1145,7 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 		if(!ispath(item_path, /obj/item))
 			continue
 		tat_trader_chest_add_unique_path(history_entry, item_path)
+		tat_trader_chest_add_unique_path(premium_seen_paths, item_path)
 
 	if(!length(history_entry))
 		return FALSE
@@ -1129,6 +1161,8 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 
 	var/change_percent = tat_trader_chest_path_uses_fixed_market_price(item_path) ? 0 : rand(TAT_TRADER_CHEST_PRICE_SWING_MIN, TAT_TRADER_CHEST_PRICE_SWING_MAX)
 	var/market_price = tat_trader_chest_path_uses_fixed_market_price(item_path) ? base_price : max(TAT_TRADER_CHEST_MIN_LIST_PRICE, round(base_price * (100 + change_percent) / 100))
+	if(premium && tat_trader_chest_is_special_premium_item(item_path))
+		market_price = max(TAT_TRADER_CHEST_MIN_LIST_PRICE, round(market_price * TAT_TRADER_CHEST_SPECIAL_PREMIUM_PRICE_MULTIPLIER))
 	market_price_modifiers[item_path] = change_percent
 	market_prices[item_path] = market_price
 	return TRUE
@@ -1140,6 +1174,7 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 	invalidate_market_catalog_cache()
 	market_price_modifiers = list()
 	market_prices = list()
+	sold_premium_paths = list()
 	current_premium_paths = select_premium_market_paths()
 
 	for(var/item_path in tat_trader_chest_get_catalog_paths())
@@ -1165,6 +1200,27 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 		return 0
 	return max(0, round(market_prices[item_path] || 0))
 
+/obj/structure/tat_trader_chest/proc/get_deposit_value(obj/item/I)
+	if(!I || QDELETED(I))
+		return 0
+
+	if(istype(I, /obj/item/roguecoin))
+		return tat_trader_chest_get_item_value(I)
+
+	var/item_path = I.type
+	refresh_market_prices(FALSE)
+
+	var/store_price = 0
+	if(item_path in market_prices)
+		store_price = get_market_price(item_path)
+	else
+		store_price = tat_trader_chest_get_item_path_base_price(item_path)
+
+	if(store_price <= 0)
+		return 0
+
+	return max(1, round(store_price * TAT_TRADER_CHEST_ITEM_DEPOSIT_MULTIPLIER))
+
 /obj/structure/tat_trader_chest/proc/build_market_catalog(force_rebuild = FALSE)
 	if(!force_rebuild && islist(cached_market_catalog))
 		return cached_market_catalog
@@ -1182,6 +1238,11 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 	for(var/item_path in paths)
 		if(!(item_path in market_prices))
 			continue
+		var/is_premium = (item_path in current_premium_paths)
+		if(is_premium && islist(sold_premium_paths) && (item_path in sold_premium_paths))
+			continue
+		if(is_premium && tat_trader_chest_special_premium_sold_this_round(item_path))
+			continue
 
 		var/base_price = tat_trader_chest_get_item_path_base_price(item_path)
 		if(base_price < TAT_TRADER_CHEST_MIN_LIST_PRICE)
@@ -1194,7 +1255,7 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 			"price" = get_market_price(item_path),
 			"price_change" = round(market_price_modifiers[item_path] || 0),
 			"type" = tat_trader_chest_item_type_text(item_path),
-			"premium" = (item_path in current_premium_paths),
+			"premium" = is_premium,
 			"icon" = tat_trader_chest_build_item_icon_payload(item_path),
 		))
 		CHECK_TICK
@@ -1249,7 +1310,7 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 		SStgui.update_uis(src)
 		return TRUE
 
-	var/value = tat_trader_chest_get_item_value(I)
+	var/value = get_deposit_value(I)
 	if(value <= 0)
 		to_chat(user, span_warning("[I] has no trade value for this chest."))
 		return TRUE
@@ -1305,6 +1366,14 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 				to_chat(usr, span_warning("That item is not sold by this chest."))
 				return FALSE
 
+			var/is_premium = (item_path in current_premium_paths)
+			if(is_premium && islist(sold_premium_paths) && (item_path in sold_premium_paths))
+				to_chat(usr, span_warning("That premium item has already been sold."))
+				return FALSE
+			if(is_premium && tat_trader_chest_special_premium_sold_this_round(item_path))
+				to_chat(usr, span_warning("That premium item has already left the market."))
+				return FALSE
+
 			var/price = get_market_price(item_path)
 			if(price <= 0)
 				return FALSE
@@ -1318,6 +1387,11 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 				return FALSE
 
 			bank_value -= price
+			if(is_premium)
+				tat_trader_chest_add_unique_path(sold_premium_paths, item_path)
+				if(tat_trader_chest_is_special_premium_item(item_path))
+					tat_trader_chest_add_unique_path(GLOB.tat_trader_chest_round_sold_special_premium, item_path)
+				invalidate_market_catalog_cache()
 
 			if(!usr.put_in_hands(purchased))
 				purchased.forceMove(get_turf(usr))
@@ -1417,6 +1491,9 @@ GLOBAL_LIST_EMPTY(tat_trader_chest_price_overrides_cache)
 #undef TAT_TRADER_CHEST_PRICE_SWING_MAX
 #undef TAT_TRADER_CHEST_PREMIUM_MARKET_COUNT
 #undef TAT_TRADER_CHEST_PREMIUM_HISTORY_ITERATIONS
+#undef TAT_TRADER_CHEST_SEEN_WEIGHT_DIVISOR
+#undef TAT_TRADER_CHEST_SPECIAL_PREMIUM_PRICE_MULTIPLIER
+#undef TAT_TRADER_CHEST_ITEM_DEPOSIT_MULTIPLIER
 #undef TAT_TRADER_CHEST_MAX_COIN_STACK
 #undef TAT_TRADER_CHEST_ROCKHILL_KRONA_VALUE
 #undef TAT_TRADER_CHEST_ZENAR_VALUE
