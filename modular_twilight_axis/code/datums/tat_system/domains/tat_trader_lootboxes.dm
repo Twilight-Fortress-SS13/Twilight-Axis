@@ -608,3 +608,249 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_otava_pool, list(
 	else
 		tat_add_weighted_lootbox_reward(rewards, GLOB.tat_trader_lootbox_clothing_aavnr_pool, 5)
 	return TRUE
+
+/obj/item/folding_peddler_stored
+	name = "folding peddler"
+	desc = "A compact, folded PEDDLER cart with a remote display case."
+	icon = 'modular_twilight_axis/icons/obj/trader.dmi'
+	icon_state = "trader_chest_off"
+	w_class = WEIGHT_CLASS_BULKY
+	var/list/stored_held_items = list()
+	var/stored_budget = 0
+	var/stored_wgain = 0
+	var/stored_locked = TRUE
+
+/obj/item/folding_peddler_stored/Destroy()
+	for(var/obj/item/I in stored_held_items)
+		if(!QDELETED(I))
+			qdel(I)
+	stored_held_items = null
+	return ..()
+
+/obj/item/folding_peddler_stored/attack_self(mob/living/user)
+	to_chat(user, span_notice("Right-click [src] to unfold it."))
+	return TRUE
+
+/obj/item/folding_peddler_stored/attack_right(mob/living/user)
+	return unfold(user)
+
+/obj/item/folding_peddler_stored/proc/can_unfold_at(turf/target_turf)
+	if(!target_turf || !isopenturf(target_turf))
+		return FALSE
+	if(target_turf.is_blocked_turf(TRUE) || (locate(/mob/living) in target_turf))
+		return FALSE
+	return TRUE
+
+/obj/item/folding_peddler_stored/proc/get_display_turf(turf/cart_turf, preferred_dir)
+	var/list/directions = list()
+	if(preferred_dir)
+		directions += preferred_dir
+	for(var/direction in list(NORTH, SOUTH, EAST, WEST))
+		if(!(direction in directions))
+			directions += direction
+
+	for(var/direction in directions)
+		var/turf/target_turf = get_step(cart_turf, direction)
+		if(can_unfold_at(target_turf))
+			return target_turf
+
+	return null
+
+/obj/item/folding_peddler_stored/proc/unfold(mob/living/user)
+	if(!user)
+		return FALSE
+
+	var/turf/cart_turf = get_step(user, user.dir)
+	if(!can_unfold_at(cart_turf))
+		to_chat(user, span_warning("There is no room to unfold [src] there."))
+		return FALSE
+
+	var/turf/display_turf = get_display_turf(cart_turf, user.dir)
+	if(!display_turf)
+		to_chat(user, span_warning("[src] needs an open adjacent space for its display case."))
+		return FALSE
+
+	var/obj/structure/roguemachine/vendor/mobile/folding/cart = new(cart_turf)
+	var/obj/structure/roguemachine/vendor_display/display = new(display_turf)
+	var/obj/item/roguekey/folding_peddler/key = new(get_turf(user))
+	key.lockid = "folding_peddler_[REF(cart)]_[rand(1000, 9999)]"
+	cart.load_state_from_folded(src, key, display)
+	display.linked_vendor = cart
+	if(!user.put_in_hands(key))
+		key.forceMove(get_turf(user))
+
+	user.visible_message(span_notice("[user] unfolds [src] into [cart]."), span_notice("You unfold [src] into [cart]."))
+	qdel(src)
+	return TRUE
+
+/obj/item/roguekey/folding_peddler
+	name = "peddler key"
+	desc = "A small key cut for a folding PEDDLER."
+	icon_state = "rustkey"
+
+/obj/structure/roguemachine/vendor/mobile/folding
+	name = "folding peddler"
+	desc = "A smaller, folding PEDDLER that can be packed together with its key and display."
+	icon = 'modular_twilight_axis/icons/obj/trader.dmi'
+	icon_state = "trader_chest_on"
+	anchored = TRUE
+	density = TRUE
+	var/obj/structure/roguemachine/vendor_display/display_case
+	var/obj/item/roguekey/folding_peddler/generated_key
+
+/obj/structure/roguemachine/vendor/mobile/folding/Move()
+	return ..()
+
+/obj/structure/roguemachine/vendor/mobile/folding/can_be_pulled(mob/user)
+	return FALSE
+
+/obj/structure/roguemachine/vendor/mobile/folding/update_icon()
+	cut_overlays()
+	if(obj_broken)
+		icon_state = "trader_chest_on"
+		set_light(0)
+		return
+	icon_state = "trader_chest_on"
+	if(held_items.len)
+		set_light(1, 1, 1, l_color = "#1b7bf1")
+	else
+		set_light(0)
+
+/obj/structure/roguemachine/vendor/mobile/folding/Destroy()
+	if(display_case && !QDELETED(display_case))
+		var/obj/structure/roguemachine/vendor_display/old_display = display_case
+		display_case = null
+		if(old_display.linked_vendor == src)
+			old_display.linked_vendor = null
+			qdel(old_display)
+	if(generated_key && !QDELETED(generated_key))
+		qdel(generated_key)
+	generated_key = null
+	return ..()
+
+/obj/structure/roguemachine/vendor/mobile/folding/proc/load_state_from_folded(obj/item/folding_peddler_stored/source, obj/item/roguekey/folding_peddler/key, obj/structure/roguemachine/vendor_display/display)
+	if(!source || !key || !display)
+		return FALSE
+
+	for(var/obj/item/I in source.stored_held_items.Copy())
+		var/list/source_data = source.stored_held_items[I]
+		source.stored_held_items -= I
+		held_items[I] = list()
+		if(islist(source_data))
+			held_items[I]["NAME"] = source_data["NAME"] || I.name
+			held_items[I]["PRICE"] = max(0, round(source_data["PRICE"] || 0))
+		else
+			held_items[I]["NAME"] = I.name
+			held_items[I]["PRICE"] = 0
+		I.forceMove(src)
+
+	budget = max(0, round(source.stored_budget || 0))
+	wgain = max(0, round(source.stored_wgain || 0))
+	locked = !!source.stored_locked
+	keycontrol = key.lockid
+	keycontrol_initialized = TRUE
+	generated_key = key
+	display_case = display
+	update_icon()
+	return TRUE
+
+/obj/structure/roguemachine/vendor/mobile/folding/proc/save_state_to_folded(obj/item/folding_peddler_stored/target)
+	if(!target)
+		return FALSE
+
+	for(var/obj/item/I in held_items.Copy())
+		var/list/item_data = held_items[I]
+		held_items -= I
+		target.stored_held_items[I] = islist(item_data) ? item_data.Copy() : list("NAME" = I.name, "PRICE" = 0)
+		I.forceMove(target)
+
+	target.stored_budget = max(0, round(budget || 0))
+	target.stored_wgain = max(0, round(wgain || 0))
+	target.stored_locked = locked
+	return TRUE
+
+/obj/structure/roguemachine/vendor/mobile/folding/proc/user_has_control(mob/user)
+	if(!user)
+		return FALSE
+	if(!locked)
+		return TRUE
+	var/obj/item/I = user.get_active_held_item()
+	if(istype(I, /obj/item/roguekey))
+		var/obj/item/roguekey/K = I
+		return K.lockid == keycontrol
+	return FALSE
+
+/obj/structure/roguemachine/vendor/mobile/folding/attack_right(mob/user)
+	if(!user_has_control(user))
+		to_chat(user, span_warning("You need to unlock [src] or hold its key to fold it."))
+		return TRUE
+	return fold_into_item(user)
+
+/obj/structure/roguemachine/vendor/mobile/folding/proc/fold_into_item(mob/user)
+	var/obj/item/folding_peddler_stored/folded = new(drop_location())
+	save_state_to_folded(folded)
+	user.visible_message(span_notice("[user] folds [src] into [folded]."), span_notice("You fold [src] into [folded]."))
+
+	if(display_case && !QDELETED(display_case))
+		var/obj/structure/roguemachine/vendor_display/old_display = display_case
+		display_case = null
+		old_display.linked_vendor = null
+		qdel(old_display)
+	if(generated_key && !QDELETED(generated_key))
+		qdel(generated_key)
+	generated_key = null
+	qdel(src)
+	return TRUE
+
+/obj/structure/roguemachine/vendor/mobile/folding/can_use_vendor_purchase(mob/user)
+	if(can_use_vendor_direct(user))
+		return TRUE
+	if(display_case && !QDELETED(display_case) && display_case.linked_vendor == src)
+		return user?.canUseTopic(display_case, BE_CLOSE)
+	return FALSE
+
+/obj/structure/roguemachine/vendor/mobile/folding/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Right-click an unlocked folding PEDDLER, or right-click it while holding its key, to pack it back up. Its key and display case are removed when packed.")
+
+/obj/structure/roguemachine/vendor_display
+	name = "peddler display"
+	desc = "A linked display case for a folding PEDDLER. Customers can browse and buy from the PEDDLER without touching its goods."
+	icon = 'modular_twilight_axis/icons/obj/trader.dmi'
+	icon_state = "trader_display"
+	anchored = TRUE
+	density = FALSE
+	drag_slowdown = 2
+	var/obj/structure/roguemachine/vendor/mobile/folding/linked_vendor
+
+/obj/structure/roguemachine/vendor_display/Destroy()
+	if(linked_vendor && linked_vendor.display_case == src)
+		linked_vendor.display_case = null
+	linked_vendor = null
+	return ..()
+
+/obj/structure/roguemachine/vendor_display/attack_hand(mob/living/user)
+	. = ..()
+	if(.)
+		return
+	if(!linked_vendor || QDELETED(linked_vendor))
+		to_chat(user, span_warning("[src] is not linked to a PEDDLER."))
+		return TRUE
+	if(!linked_vendor.locked)
+		to_chat(user, span_warning("[linked_vendor] is open for stocking, not sales."))
+		return TRUE
+	linked_vendor.open_vendor_browser(user, TRUE)
+	return TRUE
+
+/obj/structure/roguemachine/vendor_display/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/grown/log/tree/stake))
+		anchored = !anchored
+		to_chat(user, span_notice("You [anchored ? "anchor" : "un-anchor"] [src]."))
+		playsound(src, pick('sound/foley/woodclimb.ogg'), 100, TRUE)
+		return TRUE
+	if(!linked_vendor || QDELETED(linked_vendor))
+		to_chat(user, span_warning("[src] is not linked to a PEDDLER."))
+		return TRUE
+	if(istype(I, /obj/item/roguecoin))
+		return linked_vendor.attackby(I, user, params)
+	return ..()
