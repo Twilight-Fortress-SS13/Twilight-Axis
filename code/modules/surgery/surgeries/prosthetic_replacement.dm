@@ -25,7 +25,7 @@
 	requires_bodypart = FALSE
 	requires_missing_bodypart = FALSE
 	requires_bodypart_type = NONE
-	skill_min = SKILL_LEVEL_LEGENDARY
+	skill_min = SKILL_LEVEL_MASTER			//TA - EDIT
 	skill_median = SKILL_LEVEL_LEGENDARY
 	visible_required_skill = TRUE
 
@@ -86,8 +86,8 @@
 	requires_bodypart = FALSE //need a missing limb
 	requires_missing_bodypart = TRUE
 	requires_bodypart_type = NONE
-	skill_min = SKILL_LEVEL_JOURNEYMAN
-	skill_median = SKILL_LEVEL_EXPERT
+	skill_min = SKILL_LEVEL_MASTER		//TA - EDIT
+	skill_median = SKILL_LEVEL_LEGENDARY
 	visible_required_skill = TRUE
 
 /datum/surgery_step/add_prosthetic/tool_check(mob/user, obj/item/tool)
@@ -122,6 +122,9 @@
 			to_chat(user, span_warning("The head is refusing the body."))
 			return FALSE
 
+	if(target.has_status_effect(/datum/status_effect/debuff/limb_dull))
+		to_chat(user, span_warning("I can't do it now, it's to dangerous for his flesh"))
+		return FALSE
 
 	display_results(user, target, span_notice("I begin to replace [target]'s [parse_zone(target_zone)] with [tool]..."),
 		span_notice("[user] begins to replace [target]'s [parse_zone(target_zone)] with [tool]."),
@@ -132,6 +135,7 @@
 	var/obj/item/bodypart/bodypart = tool
 	if(bodypart.attach_limb(target) && bodypart.attach_wound)
 		bodypart.add_wound(bodypart.attach_wound)
+		target.apply_status_effect(/datum/status_effect/debuff/limb_dull)
 	display_results(user, target, span_notice("I succeed transplanting [target]'s [parse_zone(target_zone)]."),
 		span_notice("[user] successfully transplants [target]'s [parse_zone(target_zone)] with [tool]!"),
 		span_notice("[user] successfully transplants [target]'s [parse_zone(target_zone)]!"))
@@ -188,3 +192,18 @@
 	var/obj/item/bodypart/target_limb = target.get_bodypart(check_zone(target_zone))
 	target_limb?.drop_limb(TRUE)
 	return TRUE
+
+
+
+
+
+/atom/movable/screen/alert/status_effect/debuff/limb_dull
+	name = "Fatigue of the Flesh"
+	desc = "My body regaines limb back..but what the cost..."
+	icon_state = "poison"
+
+/datum/status_effect/debuff/limb_dull
+	id = "poison"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/limb_dull
+	effectedstats = list(STATKEY_STR = -1, STATKEY_CON = -2)
+	duration = 60 MINUTES
