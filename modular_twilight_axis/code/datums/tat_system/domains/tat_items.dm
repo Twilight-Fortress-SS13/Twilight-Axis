@@ -201,6 +201,8 @@
 	var/list/entry = get_entry(path)
 	if(!islist(entry) || is_loadout_only_entry(entry))
 		return 0
+	if(ispath(path, /obj/item/folding_peddler_stored))
+		return 1
 	var/cost = entry["cost"]
 	if(!isnum(cost))
 		cost = 0
@@ -220,6 +222,8 @@
 	if(!can_use_item_entry(entry))
 		return 0
 	var/trait_granted = get_granted_amount(item_path, TAT_ITEM_SOURCE_TRAIT)
+	if(ispath(item_path, /obj/item/folding_peddler_stored))
+		return max(0, 1 - trait_granted)
 	var/cost = entry["cost"]
 	if(!isnum(cost))
 		cost = 0
