@@ -890,6 +890,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	var/list/premium_purchase_counts
 	var/next_market_reroll = 0
 	var/last_market_reroll = 0
+	var/writ_reroll_unlock_at = 0
 
 /obj/item/tat_trader_chest/attack_self(mob/living/user)
 	return unfold(user)
@@ -937,6 +938,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	var/list/premium_purchase_counts = list()
 	var/next_market_reroll = 0
 	var/last_market_reroll = 0
+	var/writ_reroll_unlock_at = 0
 	var/obj/structure/tat_trader_display_case/display_case
 	var/list/cached_market_catalog
 	var/list/cached_display_catalog
@@ -944,8 +946,10 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 
 /obj/structure/tat_trader_chest/Initialize(mapload)
 	. = ..()
+	update_market_reroll_processing()
 
 /obj/structure/tat_trader_chest/Destroy()
+	STOP_PROCESSING(SSobj, src)
 	if(display_case)
 		var/obj/structure/tat_trader_display_case/old_display = display_case
 		display_case = null
@@ -980,6 +984,9 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 		next_market_reroll = source.next_market_reroll
 	if(source.last_market_reroll)
 		last_market_reroll = source.last_market_reroll
+	if(source.writ_reroll_unlock_at)
+		writ_reroll_unlock_at = source.writ_reroll_unlock_at
+	update_market_reroll_processing()
 	return TRUE
 
 /obj/structure/tat_trader_chest/proc/save_state_to_item(obj/item/tat_trader_chest/target)
@@ -995,6 +1002,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	target.premium_purchase_counts = islist(premium_purchase_counts) ? premium_purchase_counts.Copy() : list()
 	target.next_market_reroll = next_market_reroll
 	target.last_market_reroll = last_market_reroll
+	target.writ_reroll_unlock_at = writ_reroll_unlock_at
 	return TRUE
 
 /obj/structure/tat_trader_chest/proc/invalidate_market_catalog_cache()
@@ -1206,8 +1214,27 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	market_prices[item_path] = market_price
 	return TRUE
 
+/obj/structure/tat_trader_chest/proc/should_process_market_reroll()
+	return bank_value > 0 && length(market_prices) && next_market_reroll > 0
+
+/obj/structure/tat_trader_chest/proc/update_market_reroll_processing()
+	if(should_process_market_reroll())
+		START_PROCESSING(SSobj, src)
+	else
+		STOP_PROCESSING(SSobj, src)
+	return TRUE
+
+/obj/structure/tat_trader_chest/process()
+	if(!should_process_market_reroll())
+		STOP_PROCESSING(SSobj, src)
+		return
+	if(world.time < next_market_reroll)
+		return
+	refresh_market_prices(TRUE)
+
 /obj/structure/tat_trader_chest/proc/refresh_market_prices(force = FALSE)
 	if(!force && length(market_prices) && world.time < next_market_reroll)
+		update_market_reroll_processing()
 		return FALSE
 
 	invalidate_market_catalog_cache()
@@ -1230,6 +1257,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 
 	last_market_reroll = world.time
 	next_market_reroll = world.time + TAT_TRADER_CHEST_PRICE_REROLL_INTERVAL
+	update_market_reroll_processing()
 	SStgui.update_uis(src)
 	return TRUE
 
@@ -1243,11 +1271,12 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	if(!I || QDELETED(I))
 		return 0
 
+	refresh_market_prices(FALSE)
+
 	if(istype(I, /obj/item/roguecoin))
 		return tat_trader_chest_get_item_value(I)
 
 	var/item_path = I.type
-	refresh_market_prices(FALSE)
 
 	var/base_price = tat_trader_chest_get_item_path_base_price(item_path)
 	if(base_price <= 0)
@@ -1348,9 +1377,14 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 		return TRUE
 
 	if(istype(I, /obj/item/tat_trader_writ))
+		if(world.time < writ_reroll_unlock_at)
+			var/remaining = max(1, round((writ_reroll_unlock_at - world.time) / 10))
+			to_chat(user, span_warning("[src]'s market seals are still settling. Another writ can be used in [remaining] seconds."))
+			return TRUE
 		user.visible_message(span_notice("[user] presses [I] into [src]. The market seals crackle and rearrange."), span_notice("You spend [I] to reroll [src]'s market."))
 		qdel(I)
 		refresh_market_prices(TRUE)
+		writ_reroll_unlock_at = next_market_reroll
 		SStgui.update_uis(src)
 		return TRUE
 
@@ -1360,6 +1394,7 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 		return TRUE
 
 	bank_value += value
+	update_market_reroll_processing()
 	user.visible_message(span_notice("[user] deposits [I] into [src]."), span_notice("You deposit [I] for [value] coins. Banked value is now [bank_value]."))
 	qdel(I)
 	SStgui.update_uis(src)
