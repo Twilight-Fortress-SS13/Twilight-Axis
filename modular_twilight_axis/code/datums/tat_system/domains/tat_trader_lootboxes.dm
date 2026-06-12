@@ -1210,16 +1210,21 @@ GLOBAL_LIST_INIT(tat_trader_chest_special_premium_items, list(
 	var/item_path = I.type
 	refresh_market_prices(FALSE)
 
+	var/base_price = tat_trader_chest_get_item_path_base_price(item_path)
+	if(base_price <= 0)
+		return 0
+
 	var/store_price = 0
 	if(item_path in market_prices)
 		store_price = get_market_price(item_path)
 	else
-		store_price = tat_trader_chest_get_item_path_base_price(item_path)
+		store_price = base_price
 
 	if(store_price <= 0)
 		return 0
 
-	return max(1, round(store_price * TAT_TRADER_CHEST_ITEM_DEPOSIT_MULTIPLIER))
+	var/deposit_cap = max(1, round(base_price * TAT_TRADER_CHEST_ITEM_DEPOSIT_MULTIPLIER))
+	return max(1, min(store_price, deposit_cap))
 
 /obj/structure/tat_trader_chest/proc/build_market_catalog(force_rebuild = FALSE)
 	if(!force_rebuild && islist(cached_market_catalog))
