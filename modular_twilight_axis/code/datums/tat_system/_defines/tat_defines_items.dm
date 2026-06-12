@@ -35,8 +35,8 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 #define TAT_DONATION_ITEM_ENTRY(_name, _cost, _category, _unlock_type, _unlock_key, _slot_group, _donat_tier) list("name" = (_name), "cost" = (_cost), "category" = (_category), "unlock_type" = (_unlock_type), "unlock_key" = (_unlock_key), "slot_group" = (_slot_group), "donat_tier" = (_donat_tier), "donat_ignore" = list())
 #endif
 
+///obj/item/tat_trader_chest = TAT_ITEM_ENTRY("Merchant's Chest", 5, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), 
 #define TAT_AVAILABLE_ITEMS_LIST \
-	/obj/item/tat_trader_chest = TAT_ITEM_ENTRY("Merchant's Chest", 5, "misc", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "trader cache"), \
 	/obj/item/storage/backpack/rogue/backpack_trader = TAT_ITEM_ENTRY("Trader's backpack", 3, "clothing", TAT_UNLOCK_TYPE_TRAIT, "tat_trader_license", "back"), \
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/barker = TAT_ITEM_ENTRY("Barker", 2, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
