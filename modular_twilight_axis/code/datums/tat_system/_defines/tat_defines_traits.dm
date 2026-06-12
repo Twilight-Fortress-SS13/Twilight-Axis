@@ -253,7 +253,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_MAIL_SUPPLIER = TAT_TRAIT_ENTRY("Mail Supplier", 20, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks mail gear in all supported slots."), \
 	TAT_TRAIT_PLATE_SUPPLIER = TAT_TRAIT_ENTRY("Plate Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks plate gear in all supported slots."), \
 	TRAIT_INTELLECTUAL = TAT_TRAIT_ENTRY("Intellectual", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You have a keen eye and can assess a person's prowess in wit and blade."), \
-	TAT_TRAIT_POLYGLOT = TAT_TRAIT_ENTRY("Polyglot", 10, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "At spawn, choose one additional language to learn."), \
+	TAT_TRAIT_POLYGLOT = TAT_TRAIT_ENTRY("Polyglot", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "At spawn, choose one additional language to learn."), \
 	TAT_TRAIT_LOOTRAT = TAT_TRAIT_ENTRY("Loot Rat", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "Somehow in your journeys or life you collect a lot of different things and exotic treasures. Increase loot points by 10."), \
 	TAT_TRAIT_LOOTRAT_2 = TAT_TRAIT_ENTRY("Enormous Rat", 20, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You work on Guild with mountains of gold or you're just a lucky dungeon mudskipper. Increase loot points by 15."), \
 	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You are trained in the Arcyne arts, allowing you to wield magyck. Basis trait for magic-build classes. Gives +3 Arcane skill if there is no defensive lockout trait."), \
