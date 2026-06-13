@@ -11,6 +11,39 @@
 	. = ..()
 	owner_build = B
 
+/datum/mind
+	var/list/tat_unmintable_special_items = list()
+
+/datum/mind/proc/tat_mark_special_item_unmintable(key)
+	if(!key)
+		return FALSE
+	if(!islist(tat_unmintable_special_items))
+		tat_unmintable_special_items = list()
+	tat_unmintable_special_items[key] = TRUE
+	return TRUE
+
+/datum/mind/proc/tat_apply_special_item_sale_lock(key, obj/item/I)
+	if(!key || !I || !islist(tat_unmintable_special_items) || !tat_unmintable_special_items[key])
+		return FALSE
+	tat_unmintable_special_items -= key
+	I.unmintable = TRUE
+	return TRUE
+
+/datum/tat_items/proc/should_sale_lock_item_path(path)
+	if(!ispath(path, /obj/item))
+		return FALSE
+	if(ispath(path, /obj/item/roguecoin))
+		return FALSE
+	if(is_coin_pouch_path(path))
+		return FALSE
+	return TRUE
+
+/datum/tat_items/proc/apply_sale_lock_to_spawned_item(path, obj/item/I)
+	if(!I || !should_sale_lock_item_path(path))
+		return FALSE
+	I.unmintable = TRUE
+	return TRUE
+
 /datum/tat_items/proc/reset()
 	selected = list()
 	item_loadout = list()
@@ -1304,6 +1337,8 @@
 		if(!key)
 			continue
 		H.mind.special_items[key] = item_path
+		if(should_sale_lock_item_path(item_path))
+			H.mind.tat_mark_special_item_unmintable(key)
 		added = TRUE
 	return added
 
@@ -1319,6 +1354,7 @@
 			break
 		if(H.mind.special_items[key] != item_path)
 			continue
+		H.mind.tat_unmintable_special_items -= key
 		H.mind.special_items -= key
 		removed++
 	return removed > 0
@@ -1634,6 +1670,7 @@
 		var/obj/item/I = new path(get_turf(H))
 		if(!I)
 			continue
+		apply_sale_lock_to_spawned_item(path, I)
 		apply_paint_to_item(path, I)
 		try_put_into_any_storage_or_drop(I, H, path)
 		success = TRUE
@@ -1645,6 +1682,7 @@
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return FALSE
+	apply_sale_lock_to_spawned_item(path, I)
 	apply_paint_to_item(path, I)
 	var/list/slots = get_equip_slots_for_item(I, path)
 	for(var/slot_id in slots)
@@ -1719,6 +1757,7 @@
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return FALSE
+	apply_sale_lock_to_spawned_item(path, I)
 	apply_paint_to_item(path, I)
 	if(H.get_item_by_slot(equip_slot))
 		try_put_into_any_storage_or_drop(I, H, path)
@@ -1738,6 +1777,7 @@
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return FALSE
+	apply_sale_lock_to_spawned_item(path, I)
 	apply_paint_to_item(path, I)
 	if(try_put_into_loadout_hand(H, I, slot_id))
 		return TRUE
@@ -1865,6 +1905,7 @@
 	var/obj/item/I = new path(get_turf(H))
 	if(!I)
 		return FALSE
+	apply_sale_lock_to_spawned_item(path, I)
 	apply_paint_to_item(path, I)
 	if(equip_slot && !H.get_item_by_slot(equip_slot) && H.equip_to_slot_if_possible(I, equip_slot, FALSE, TRUE, TRUE, TRUE))
 		return TRUE

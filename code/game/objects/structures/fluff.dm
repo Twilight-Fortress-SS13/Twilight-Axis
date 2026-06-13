@@ -603,6 +603,7 @@
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I) //Twilight Axis Edit - TAT
 						user.put_in_hands(I)
 			return
 
@@ -659,6 +660,7 @@
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I) //Twilight Axis Edit - TAT
 						user.put_in_hands(I)
 			return
 
@@ -871,6 +873,7 @@
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I) //Twilight Axis Edit - TAT
 						user.put_in_hands(I)
 			return
 
