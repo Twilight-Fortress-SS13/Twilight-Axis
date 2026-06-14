@@ -614,7 +614,8 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_otava_pool, list(
 	desc = "A compact, folded PEDDLER cart with a remote display case."
 	icon = 'modular_twilight_axis/icons/obj/trader.dmi'
 	icon_state = "trader_chest_off"
-	w_class = WEIGHT_CLASS_BULKY
+	w_class = WEIGHT_CLASS_GIGANTIC
+	slot_flags = ITEM_SLOT_BACK
 	var/list/stored_held_items = list()
 	var/stored_budget = 0
 	var/stored_wgain = 0
@@ -626,6 +627,26 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_otava_pool, list(
 			qdel(I)
 	stored_held_items = null
 	return ..()
+
+/obj/item/folding_peddler_stored/attack_hand(mob/user)
+	if(!user || anchored)
+		return
+
+	if(loc == user)
+		if(!allow_attack_hand_drop(user) || !user.temporarilyRemoveItemFromInventory(src))
+			return
+
+	SEND_SIGNAL(loc, COMSIG_TRY_STORAGE_TAKE, src, user.loc, TRUE)
+	if(QDELETED(src))
+		return
+
+	if(throwing)
+		throwing.finalize(FALSE)
+
+	pickup(user)
+	add_fingerprint(user)
+	if(!user.put_in_active_hand(src, FALSE, FALSE))
+		user.dropItemToGround(src)
 
 /obj/item/folding_peddler_stored/attack_self(mob/living/user)
 	to_chat(user, span_notice("Right-click [src] to unfold it."))
