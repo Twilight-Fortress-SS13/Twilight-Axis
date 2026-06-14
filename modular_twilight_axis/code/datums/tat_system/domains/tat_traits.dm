@@ -214,6 +214,8 @@
 		return FALSE
 	if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && owner_build?.get_owner_ckey() != "mrix")
 		return FALSE
+	if(trait_id == TAT_TRAIT_DRUID_INITIATE && !owner_build?.can_select_druid_initiate_trait())
+		return FALSE
 	var/pq_minimum = get_pq_lock_minimum(trait_id)
 	if(pq_minimum > 0 && (owner_build?.get_owner_playerquality() || 0) < pq_minimum)
 		return FALSE

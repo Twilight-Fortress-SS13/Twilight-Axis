@@ -10,6 +10,7 @@
 	var/list/_cached_active_virtues = null
 	var/_cached_active_virtues_key = null
 	var/_cached_preference_loadout_key = null
+	var/_cached_owner_patron_type = null
 	var/list/_cached_ui_data = null
 	var/_ui_data_cache_dirty = TRUE
 
@@ -46,6 +47,7 @@
 	items.reset()
 	magic_profile = list()
 	_cached_preference_loadout_key = null
+	_cached_owner_patron_type = null
 	dirty = FALSE
 	invalidate_ui_data_cache()
 	return TRUE
@@ -85,6 +87,12 @@
 
 /datum/tat_build/proc/can_select_contractor_trait()
 	return is_owner_admin() //TRUE для фулланлока
+
+/datum/tat_build/proc/has_dendor_patron()
+	return owner_preferences?.selected_patron?.type == /datum/patron/divine/dendor
+
+/datum/tat_build/proc/can_select_druid_initiate_trait()
+	return has_dendor_patron()
 
 /datum/tat_build/proc/is_owner_tat_banned(mob/user = null)
 	if(user?.ckey)
@@ -175,16 +183,20 @@
 
 	var/new_virtues_key = get_active_virtues_cache_key(P)
 	var/new_loadout_key = get_preference_loadout_cache_key(P)
+	var/new_patron_type = P.selected_patron?.type
 	var/preferences_changed = owner_preferences != P
 	var/virtues_changed = _cached_active_virtues_key != new_virtues_key
 	var/loadout_changed = _cached_preference_loadout_key != new_loadout_key
+	var/patron_changed = _cached_owner_patron_type != new_patron_type
 
 	owner_preferences = P
 
-	if(preferences_changed || virtues_changed)
+	if(preferences_changed || virtues_changed || patron_changed)
 		_cached_active_virtues = null
 		_cached_active_virtues_key = null
+		_cached_owner_patron_type = new_patron_type
 		skills?.sanitize(FALSE)
+		traits?.sanitize()
 		invalidate_ui_data_cache()
 
 	if(loadout_changed)
@@ -192,7 +204,7 @@
 		items?.sync_external_grants()
 		invalidate_ui_data_cache()
 
-	if(!preferences_changed && !virtues_changed && !loadout_changed)
+	if(!preferences_changed && !virtues_changed && !loadout_changed && !patron_changed)
 		attach_preferences(P)
 
 	return TRUE
