@@ -8,6 +8,8 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/clothes_id //id for clothes
 	var/name	// this is the fluff name. these will be left generic (such as 'Lizardperson' for the lizard race) so servers can change them to whatever
 	var/desc
+	var/desc_title
+	var/list/mechanics_explanations // if this species has unique mechanics, explain each of them here. try to keep separate mechanics separated as individual list items
 	var/default_color = "#FFF"	// if alien colors are disabled, this is the color that will be used by that race
 	var/limbs_icon_m
 	var/limbs_icon_f
@@ -1285,6 +1287,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		if(!target.lying_attack_check(user))
 			return 0
 
+		user.break_invisibility_from_combat()
 		var/armor_block = target.run_armor_check(selzone, "blunt", armor_penetration = PEN_NONE, blade_dulling = user.used_intent.blade_class, damage = damage, intdamfactor = user.used_intent?.intent_intdamage_factor)
 
 		target.lastattacker = user.real_name
@@ -1293,6 +1296,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		target.lastattackerckey = user.ckey
 		target.lastattacker_weakref = WEAKREF(user)
 		user.dna.species.spec_unarmedattacked(user, target)
+		user.break_invisibility_from_combat()
 
 		target.next_attack_msg.Cut()
 
@@ -1561,6 +1565,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		stander = FALSE
 	if(!get_dist(user, target))
 		if(!stander)
+			user.break_invisibility_from_combat()
 			target.lastattacker = user.real_name
 			target.lastattackerckey = user.ckey
 			target.lastattacker_weakref = WEAKREF(user)
@@ -1598,6 +1603,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	else
 		if(!target.kick_attack_check(user))
 			return 0
+		user.break_invisibility_from_combat()
 		user.do_attack_animation_simple(target, ATTACK_EFFECT_KICK, TRUE)
 		playsound(target, 'sound/combat/hits/kick/kick.ogg', 100, TRUE, -1)
 
@@ -2462,3 +2468,48 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 /datum/species/proc/get_types_to_preload()
 	return get_organs(FALSE)
+
+/** Gets a string listing off all the stat changes made by a race.
+*
+* - `return_null_if_no_stats` : If no bonus stats are found, returns null instead of "No racial stat bonuses."
+* - `end_with_glue` : If any bonus stats are found, returns this string with the jointext glue string appended (`" | "`)."
+*/
+/datum/species/proc/get_string_bonus_stats(return_null_if_no_stats = FALSE, end_with_glue = FALSE)
+	var/list/stats_to_abbreviations = list(
+		STAT_STRENGTH = "STR",
+		STAT_PERCEPTION = "PER",
+		STAT_INTELLIGENCE = "INT",
+		STAT_CONSTITUTION = "CON",
+		STAT_WILLPOWER = "WIL",
+		STAT_SPEED = "SPD",
+		STAT_FORTUNE = "FOR"
+	)
+	var/list/bonuses = list()
+	for (var/stat in race_bonus)
+		var/amt = race_bonus[stat]
+		var/abbrev = stats_to_abbreviations[stat]
+		bonuses.Add("[abbrev] [amt < 0 ? "-" : "+"][abs(amt)]")
+	if(length(bonuses))
+		return jointext(bonuses, " | ") + (end_with_glue ? " | " : null)
+	else
+		return return_null_if_no_stats ? null : "No racial stat changes"
+
+/datum/species/proc/get_string_mechanics_explanations()
+	if(!mechanics_explanations)
+		return null
+	var/ret = ""
+	for(var/tutorial in mechanics_explanations)
+		ret += "<br>- [tutorial]"
+	return ret
+
+/datum/species/proc/get_string_bonus_traits()
+	var/list/bonuses = list()
+	for (var/trait in inherent_traits)
+		// THIS is how we avoid showing hidden traits? Really?? Surely there's a better way than this?!
+		if(!(trait in GLOB.roguetraits))
+			continue
+		bonuses.Add(SPAN_TOOLTIP_DANGEROUS_HTML(GLOB.roguetraits[trait], "\[<u>[trait]</u>\]"))
+	if(length(bonuses))
+		return jointext(bonuses, " | ")
+	else
+		return null

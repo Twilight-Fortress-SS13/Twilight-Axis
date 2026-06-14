@@ -734,9 +734,6 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		target.heal_wounds(500)
 		if(target.stat == DEAD)
 			target.revive()
-			#ifdef REVIVE_GRACE
-			target.apply_status_effect(/datum/status_effect/debuff/revive_grace)
-			#endif
 		target.apply_status_effect(/datum/status_effect/debuff/fleshmend_exhaustion)
 		to_chat(target, span_notice("ZIZO EMPOWERS ME!"))
 
@@ -1417,4 +1414,3 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	new /obj/item/rope(center)
 
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
-

@@ -9,16 +9,22 @@
 	var/realdesc
 	var/realstate
 	var/realicon
+	var/baotha_disguised = FALSE
 
 	grid_width = 32
 	grid_height = 32
 
 /obj/item/clothing/ring/baotha/Initialize()
-	.=..()
+	. = ..()
 	realname = name
 	realdesc = desc
 	realstate = icon_state
 	realicon = icon
+
+/obj/item/clothing/ring/baotha/get_examine_highlight_status()
+	if(baotha_disguised)
+		return
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_BAOTHA_RELIC)
 
 /obj/item/clothing/ring/baotha/examine(var/mob/living/carbon/human/user)
 	. = ..()
@@ -35,19 +41,23 @@
 				name = "gold ring"
 				desc = "A ring of golden beauty."
 				icon_state = "ring_g"
+				baotha_disguised = TRUE
 			if("silver ring")
 				name = "silver ring"
 				desc = "A ring of silvered glimmerance."
 				icon_state = "ring_s"
+				baotha_disguised = TRUE
 			if("bronze ring")
 				name = "bronze ring"
 				desc = "A ring of bronzen resiliance."
 				icon_state = "ring_b"
+				baotha_disguised = TRUE
 			if("Undo")
 				name = realname
 				desc = realdesc
 				icon = realicon
 				icon_state = realstate
+				baotha_disguised = FALSE
 
 /obj/item/clothing/ring/baotha/attack_self(var/mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)

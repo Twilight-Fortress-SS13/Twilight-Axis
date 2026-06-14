@@ -506,6 +506,11 @@
 	stressadd = -2
 	desc = span_boldred("Long ago, XYLIX put up an extra star in the sky to anger NOC... seeing it is a FANTASTIC sign!")
 
+/datum/stressevent/permadeath_end
+	timer = 5 MINUTES
+	stressadd = -4
+	desc = span_boldgreen("<b>I feel whole, once more! Death shant claim me yet!</b>")
+
 /datum/stressevent/lovezizo
 	timer = 666 MINUTES
 	stressadd = -666 // :)

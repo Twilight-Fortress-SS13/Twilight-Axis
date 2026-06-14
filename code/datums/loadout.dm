@@ -3443,3 +3443,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 1
 // Etruscan vol.3 Kit End
+
+//Tiara - Sprites made by G9ose and BolloTea
+/datum/loadout_item/donat/tiara
+	name = "Golden Tiara, Ornate"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/tiara
+	donatitem = TRUE
+	donat_tier = 1

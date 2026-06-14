@@ -8,12 +8,12 @@
 	category_tags = list(CTAG_MERCENARY)
 	cmode_music = 'sound/music/combat_steppe.ogg'
 	subclass_languages = list(/datum/language/aavnic)
-	horse = /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled
+//	horse = /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled TA EDIT cuz of saddleborn virtue
 	extra_context = "This subclass has 4 loadouts with various stats, skills & equipment."
 	subclass_skills = list(
 	//Universal skills
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/riding = SKILL_LEVEL_EXPERT,  // TA EDIT JOURNEYMAN —> EXPERT
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/tanning = SKILL_LEVEL_APPRENTICE,
@@ -22,6 +22,11 @@
 		/datum/skill/craft/sewing = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
+
+	subclass_virtues = list(  //TA ADDITION
+		/datum/virtue/utility/riding
+	)
+
 
 /datum/outfit/job/roguetown/mercenary/steppesman/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -56,9 +61,9 @@
 				backl = /obj/item/rogueweapon/shield/iron/steppesman
 				beltl= /obj/item/rogueweapon/scabbard/sword
 				l_hand = /obj/item/rogueweapon/sword/sabre/steppesman
-				neck = /obj/item/clothing/neck/roguetown/chaincoif
+				neck = /obj/item/clothing/neck/roguetown/chaincoif/full 			// TA EDIT +full coif
 				H.adjust_skillrank(/datum/skill/combat/swords, 4, TRUE)
-				H.adjust_skillrank(/datum/skill/combat/shields, 3, TRUE)
+				H.adjust_skillrank(/datum/skill/combat/shields, 4, TRUE)			// TA EDIT +1 shields
 				H.adjust_skillrank(/datum/skill/combat/whipsflails, 3, TRUE)
 				H.adjust_skillrank(/datum/skill/combat/knives, 3, TRUE)
 				H.adjust_skillrank(/datum/skill/misc/athletics, 3, TRUE)
@@ -89,10 +94,10 @@
 				wrists = /obj/item/clothing/wrists/roguetown/bracers
 				backl = /obj/item/rogueweapon/shield/iron/steppesman
 				l_hand = /obj/item/rogueweapon/stoneaxe/battle/steppesman
-				neck = /obj/item/clothing/neck/roguetown/chaincoif
+				neck = /obj/item/clothing/neck/roguetown/chaincoif/full 			// TA EDIT +full coif
 				H.adjust_skillrank(/datum/skill/combat/axes, 4, TRUE)
 				H.adjust_skillrank(/datum/skill/combat/whipsflails, 3, TRUE)
-				H.adjust_skillrank(/datum/skill/combat/shields, 3, TRUE)
+				H.adjust_skillrank(/datum/skill/combat/shields, 4, TRUE)			// TA EDIT +1 shields
 				H.adjust_skillrank(/datum/skill/combat/knives, 2, TRUE)
 				H.adjust_skillrank(/datum/skill/misc/athletics, 4, TRUE)
 				H.adjust_skillrank(/datum/skill/combat/wrestling, 3, TRUE)
@@ -101,7 +106,7 @@
 				H.adjust_skillrank_up_to(/datum/skill/craft/crafting, 2, TRUE)		//Ditto
 				H.adjust_skillrank_up_to(/datum/skill/labor/mining, 3, TRUE)		//Ditto
 				H.adjust_skillrank_up_to(/datum/skill/craft/traps, 3, TRUE)			//Ditto
-				H.change_stat(STATKEY_STR, 2)		//Statblock prone to revision. Probably will be revised. Currently weighted for 7 points and not 9.
+				H.change_stat(STATKEY_STR, 3)										//TA EDIT +1 STR to make it 9 points
 				H.change_stat(STATKEY_WIL, 3)
 				H.change_stat(STATKEY_CON, 2)
 				H.change_stat(STATKEY_PER, 2)

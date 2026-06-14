@@ -57,7 +57,10 @@ dreaming. Still have to go to sleep to learn skills. Also gives healing tickrate
 		else
 			soapy = FALSE
 
-		if(src.wear_armor || src.head && src.head.armor?.stab > 70)
+		var/has_bath_blocking_armor = src.wear_armor && !istype(src.wear_armor, /obj/item/clothing/suit/roguetown/armor/regenerating/skin)
+		var/has_bath_blocking_helmet = src.head && src.head.armor?.stab > 70
+
+		if(has_bath_blocking_armor || has_bath_blocking_helmet)
 			soak_count--
 			if(prob(10))
 				to_chat(src, span_warning("I'm not getting the most out of this with my outer clothes on."))

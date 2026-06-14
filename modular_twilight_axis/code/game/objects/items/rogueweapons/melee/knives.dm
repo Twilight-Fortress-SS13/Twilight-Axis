@@ -130,6 +130,9 @@
 	var/last_cut = 0
 	var/last_drug = 0
 
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_WEAPON)
+
 /obj/item/rogueweapon/huntingknife/idagger/steel/baotha/Initialize()
 	. = ..()
 	icon_state = "baotha_knife1"
@@ -198,4 +201,3 @@
 		return
 
 	REMOVE_TRAIT(target, TRAIT_PSYCHOSIS, "baothaknife")
-

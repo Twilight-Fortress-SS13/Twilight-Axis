@@ -26,7 +26,7 @@
 
 /datum/migrant_role/proc/after_spawn(mob/living/carbon/human/character)
 	return
-
+/*
 /datum/migrant_role/pilgrim
 	name = "Pilgrim"
 	advclass_cat_rolls = list(CTAG_PILGRIM = 20)
@@ -35,7 +35,7 @@
 	name = "Adventurer"
 	role_category = "Adventurer"
 	advclass_cat_rolls = list(CTAG_ADVENTURER = 20)
-
+*/
 /datum/migrant_role/bandit
 	name = "Bandit"
 	antag_datum = /datum/antagonist/bandit

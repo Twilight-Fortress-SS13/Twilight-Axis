@@ -105,6 +105,17 @@ SUBSYSTEM_DEF(vote)
 	if(!islist(file_data))
 		return
 
+	var/list/map_streaks = file_data["map_streaks"]
+	if(islist(map_streaks))
+		for(var/choice_text in choices)
+			var/streak = map_streaks[choice_text]
+			if(!isnum(streak))
+				streak = text2num("[streak]")
+			if(!streak || streak <= 0)
+				continue
+			map_vote_coefficients[choice_text] = round(1 + (MAP_VOTE_BONUS_STEP * streak), 0.01)
+		return
+
 	var/last_winner = file_data["winner"]
 	if(!last_winner || !(last_winner in choices))
 		return
@@ -126,27 +137,37 @@ SUBSYSTEM_DEF(vote)
 	var/json_file = file(LAST_MAP_VOTE_LOG_FILE)
 	var/list/file_data = list()
 
-	if(!fexists(json_file))
-		WRITE_FILE(json_file, "{}")
-	else
+	if(fexists(json_file))
 		file_data = safe_json_decode(file2text(json_file))
 
 	if(!islist(file_data))
 		file_data = list()
 
-	var/previous_winner = file_data["winner"]
-	var/previous_streak = file_data["streak"]
-	if(!isnum(previous_streak))
-		previous_streak = text2num("[previous_streak]")
-	if(!previous_streak)
-		previous_streak = 0
+	var/list/map_streaks = file_data["map_streaks"]
+	if(!islist(map_streaks))
+		map_streaks = list()
 
-	if(previous_winner == winning_choice)
-		file_data["streak"] = previous_streak + 1
-	else
-		file_data["streak"] = 1
+		var/previous_winner = file_data["winner"]
+		var/previous_streak = file_data["streak"]
+		if(!isnum(previous_streak))
+			previous_streak = text2num("[previous_streak]")
+		if(!previous_streak || previous_streak < 0)
+			previous_streak = 0
+		if(previous_winner)
+			for(var/choice_text in choices)
+				map_streaks[choice_text] = (choice_text == previous_winner) ? 0 : previous_streak
+
+	for(var/choice_text in choices)
+		var/current_streak = map_streaks[choice_text]
+		if(!isnum(current_streak))
+			current_streak = text2num("[current_streak]")
+		if(!current_streak || current_streak < 0)
+			current_streak = 0
+		map_streaks[choice_text] = (choice_text == winning_choice) ? 0 : current_streak + 1
 
 	file_data["winner"] = winning_choice
+	file_data["map_streaks"] = map_streaks
+	file_data -= "streak"
 
 	fdel(json_file)
 	WRITE_FILE(json_file, json_encode(file_data))
@@ -760,7 +781,7 @@ SUBSYSTEM_DEF(vote)
 			. += render_storyteller_choices(can_vote, C)
 		else
 			if(mode == "map")
-				. += "<div style='color:#5a9f54;font-size:0.95rem;margin-bottom:6px;'>Все карты, кроме той, что была в прошлом раунде, получают +25% к Весу голоса(бонус суммируется до бесконечности).</div>"
+				. += "<div style='color:#5a9f54;font-size:0.95rem;margin-bottom:6px;'>Каждая карта копит свой бонус отдельно: за каждый проигранный выбор она получает +25% к весу голоса. Победившая карта сбрасывает только свой бонус до x1.</div>"
 			. += "<ul>"
 			var/selected_option = vote_selections[C.ckey]
 			for(var/i=1,i<=choices.len,i++)

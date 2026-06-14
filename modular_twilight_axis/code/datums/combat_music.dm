@@ -180,3 +180,10 @@
 	shortname = "ImperialSpellbade"
 	credits = "Оригинал: https://youtu.be/mhsFGJs8a3A?si=wR0c07aVHyqXOPUG"
 	musicpath = list('sound/music/combat_imperial_spellblade.ogg')
+
+/datum/combat_music/hussar
+	name = "Winged Hussars"
+	desc = "Then the winged hussars arrived. Coming down the mountainside."
+	shortname = "WingedHussars"
+	credits = "https://www.youtube.com/watch?v=f-wNOlDOSEI"
+	musicpath = list('modular_twilight_axis/sound/music/combat_hussar.ogg')

@@ -1034,18 +1034,10 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			// Player message
 			msg_data["is_admin"] = FALSE
 			msg_data["author"] = initiator_key_name
-			// Extract the actual message after the last ": "
-			var/last_colon = 0
-			var/search_pos = 1
-			while(TRUE)
-				var/pos = findtext(clean_text, ": ", search_pos)
-				if(pos)
-					last_colon = pos
-					search_pos = pos + 1
-				else
-					break
-			if(last_colon)
-				msg_data["message"] = trim(copytext(clean_text, last_colon + 2))
+			// TA EDIT, extract the actual message after the first ": "
+			var/first_colon = findtext(clean_text, ": ")
+			if(first_colon)
+				msg_data["message"] = trim(copytext(clean_text, first_colon + 2))
 			else
 				msg_data["message"] = trim(clean_text)
 		else if(findtext(rest, "<font color='blue'>") || findtext(rest, "PM from"))
@@ -1058,18 +1050,10 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 				var/name_end = findtext(clean_text, ":", name_start)
 				if(name_end)
 					msg_data["author"] = trim(copytext(clean_text, name_start, name_end))
-			// Extract the actual message after the last ": "
-			var/last_colon = 0
-			var/search_pos = 1
-			while(TRUE)
-				var/pos = findtext(clean_text, ": ", search_pos)
-				if(pos)
-					last_colon = pos
-					search_pos = pos + 1
-				else
-					break
-			if(last_colon)
-				msg_data["message"] = trim(copytext(clean_text, last_colon + 2))
+			// TA EDIT, extract the actual message after the first ": "
+			var/first_colon = findtext(clean_text, ": ")
+			if(first_colon)
+				msg_data["message"] = trim(copytext(clean_text, first_colon + 2))
 			else
 				msg_data["message"] = trim(clean_text)
 		else if(findtext(rest, "<font color='green'>"))

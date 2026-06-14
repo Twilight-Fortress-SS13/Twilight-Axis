@@ -273,3 +273,14 @@
 	item_state = "nightmare_crown"
 	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
+
+//Tiara - Sprites made by G9ose and BolloTea
+
+/obj/item/clothing/head/roguetown/tiara
+	name = "ornate golden tiara"
+	desc = "A delicate tiara, made of gold. It seems to be a symbol of nobility, but also of beauty. It is said that the one who wears it will be blessed by Astrata's light."
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_HIP|ITEM_SLOT_MASK
+	icon_state = "tiara"
+	item_state = "tiara"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'

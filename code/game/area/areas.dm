@@ -111,7 +111,7 @@
 
 	var/threat_region = "" // Key used to look up threat region this area belongs to
 	/// Message used for deathsight. Try to be deliberately obtuse but not too obtuse.
-	var/deathsight_message = "a locale wreathed in enigmatic fog"
+	var/deathsight_message
 
 	var/coven_protected = FALSE
 	/// List of all turfs currently inside this area as nested lists indexed by zlevel.

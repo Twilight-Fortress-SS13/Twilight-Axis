@@ -378,6 +378,7 @@
 
 	if(can_inject(M, 1, affecting))//Thick suits can stop monkey bites.
 		if(..()) //successful monkey bite, this handles disease contraction.
+			M.break_invisibility_from_combat()
 			var/damage = rand(1, 3)
 			if(check_shields(M, damage, "the [M.name]"))
 				return 0

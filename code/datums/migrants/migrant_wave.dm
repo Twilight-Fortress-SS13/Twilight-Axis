@@ -63,7 +63,7 @@
 		. |= role_type
 	for(var/role_type in optional_roles)
 		. |= role_type
-
+/*
 /datum/migrant_wave/pilgrim
 	name = "Pilgrimage"
 	track = MIGRANT_TRACK_REGULAR
@@ -89,7 +89,7 @@
 		/datum/migrant_role/adventurer = 3,
 	)
 	greet_text = "Together with a party of trusted friends we decided to venture out, seeking thrills, glory and treasure, ending up in the misty and damp bog underneath Twilight Axis, perhaps getting ourselves into more than what we bargained for."
-
+*/
 /datum/migrant_wave/bandit
 	name = "Bandit Raid"
 	track = MIGRANT_TRACK_SPECIAL

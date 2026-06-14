@@ -466,10 +466,11 @@ Inquisitorial armory down here
 		return
 	new /obj/effect/temp_visual/censer_dust(get_turf(attacker))
 	new /obj/effect/temp_visual/censer_dust(get_turf(attacker))
+	new /obj/effect/temp_visual/frozen_mist_tile(get_turf(attacker))
 	if(issimple(attacker) || !attacker.mind)
 		attacker.apply_status_effect(/datum/status_effect/syonchurn, src)
 	
-	attacker.adjustFireLoss(9)
+	attacker.adjustFireLoss(10)
 
 #define SYONCHURN_FILTER "syonchurn glow"
 
@@ -482,7 +483,7 @@ Inquisitorial armory down here
 	id = "syon_churned"
 	alert_type = /atom/movable/screen/alert/status_effect/syonchurn
 	duration = -1
-	tick_interval = 1 SECONDS
+	tick_interval = 2 SECONDS
 	examine_text = "<font color='#00fff2'><b>SUBJECTPRONOUN is seared in body and soul by motes of lingering comet dust!</b></font>"
 	status_type = STATUS_EFFECT_REFRESH
 	effectedstats = list(STATKEY_LCK = -2, STATKEY_SPD = -2)
@@ -509,8 +510,10 @@ Inquisitorial armory down here
 
 /datum/status_effect/syonchurn/refresh()
 	. = ..()
-	intensity++
-	to_chat(owner, span_boldwarning("The shard's radiance intensifies, scourging me for my aggression!"))
+	if(intensity <= 10)
+		intensity++
+		if(prob(25))
+			to_chat(owner, span_boldwarning("The shard's radiance intensifies, scourging me for my aggression!"))
 
 /datum/status_effect/syonchurn/process()
 	. = ..()
@@ -529,9 +532,6 @@ Inquisitorial armory down here
 		to_chat(owner, span_blue("Away from the Golgatha's radiance, the searing dust fades into nothing."))
 		qdel(src)
 		return
-
-	if(!owner.mind)
-		owner.adjustFireLoss((damage_per_tick * intensity) * 3)
 
 	owner.adjustFireLoss(damage_per_tick * intensity)
 
@@ -587,7 +587,7 @@ Inquisitorial armory down here
     . += span_info("Left click someone else on the 'USE' intent, while its blade is extended, to begin gathering blood from them.")
     . += span_info("It takes several cycles to fill the INDEXER with blood - at which point, it will automatically retract the blade and seal itself. This may prove dangerous if used on someone who's already suffering from blood loss.")
     . += span_info("Once filled, left-clicking the INDEXER on a signed ACCUSATION or CONFESSION will combine them into a foldable package. This package can be then folded, stamped, and mailed back to Otava through the HERMES.")
-    . += span_info("Mailing an INDEXER reveals the worshipped pantheon of whoever's blood was gathered. More MARQUES are rewarded if the INDEXER was filled with the blood of an ASCENDANT, NITEBEASTE, or CURSEBORNED.")
+    . += span_info("Mailing an INDEXER reveals the worshipped pantheon of whoever's blood was gathered. More MARQUES are rewarded if the INDEXER was filled with the blood of an ASCENDANT, NITEBEASTE, or CURSEBOUND.")
 
 /obj/item/inqarticles/indexer/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
