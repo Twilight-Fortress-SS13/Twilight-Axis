@@ -648,6 +648,13 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_otava_pool, list(
 	if(!user.put_in_active_hand(src, FALSE, FALSE))
 		user.dropItemToGround(src)
 
+/obj/item/folding_peddler_stored/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	if((slot == SLOT_BACK || slot == SLOT_BACK_L || slot == SLOT_BACK_R) && length(stored_held_items))
+		if(!disable_warning && M)
+			to_chat(M, span_warning("[src] is too full of trade goods to wear on your back."))
+		return FALSE
+	return ..()
+
 /obj/item/folding_peddler_stored/attack_self(mob/living/user)
 	to_chat(user, span_notice("Right-click [src] to unfold it."))
 	return TRUE
@@ -808,6 +815,10 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_otava_pool, list(
 	return fold_into_item(user)
 
 /obj/structure/roguemachine/vendor/mobile/folding/proc/fold_into_item(mob/user)
+	if(length(held_items))
+		to_chat(user, span_warning("[src] cannot be folded while it still holds trade goods."))
+		return TRUE
+
 	var/obj/item/folding_peddler_stored/folded = new(drop_location())
 	save_state_to_folded(folded)
 	user.visible_message(span_notice("[user] folds [src] into [folded]."), span_notice("You fold [src] into [folded]."))
