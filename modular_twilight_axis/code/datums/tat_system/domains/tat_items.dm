@@ -236,6 +236,8 @@
 		return 0
 	if(ispath(path, /obj/item/folding_peddler_stored))
 		return 1
+	if(ispath(path, /obj/item/storage/belt/rogue/pouch/coins/mid))
+		return 2
 	var/cost = entry["cost"]
 	if(!isnum(cost))
 		cost = 0
@@ -257,6 +259,8 @@
 	var/trait_granted = get_granted_amount(item_path, TAT_ITEM_SOURCE_TRAIT)
 	if(ispath(item_path, /obj/item/folding_peddler_stored))
 		return max(0, 1 - trait_granted)
+	if(ispath(item_path, /obj/item/storage/belt/rogue/pouch/coins/mid))
+		return max(0, 2 - trait_granted)
 	var/cost = entry["cost"]
 	if(!isnum(cost))
 		cost = 0

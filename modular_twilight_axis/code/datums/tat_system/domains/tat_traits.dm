@@ -175,12 +175,20 @@
 
 	return 0
 
+/datum/tat_traits/proc/get_contractor_entity_discount(trait_id)
+	if(!has_trait(TAT_TRAIT_CONTRACTOR_ENTITY))
+		return 0
+	if(trait_id != TRAIT_NOPAINSTUN && trait_id != TRAIT_CIVILIZEDBARBARIAN)
+		return 0
+	return max(0, get_base_cost(trait_id))
+
 /datum/tat_traits/proc/get_cost_modifier(trait_id)
 	var/modifier = 0
 	modifier -= get_armor_supplier_cross_discount(trait_id)
 	modifier -= get_material_supplier_cross_discount(trait_id)
 	modifier -= get_armor_training_supplier_discount(trait_id)
 	modifier -= get_outlander_natural_potential_discount(trait_id)
+	modifier -= get_contractor_entity_discount(trait_id)
 	return modifier
 
 /datum/tat_traits/proc/get_display_cost(trait_id)
@@ -201,6 +209,8 @@
 
 /datum/tat_traits/proc/can_select_trait(trait_id)
 	if(!check_trait(trait_id))
+		return FALSE
+	if(trait_id == TAT_TRAIT_MARTIAL_MASTER)
 		return FALSE
 	if(trait_id == TAT_TRAIT_CONTRACTOR && !owner_build?.can_select_contractor_trait())
 		return FALSE
@@ -518,14 +528,15 @@
 	return CLERIC_REGEN_WITCH
 
 /datum/tat_traits/proc/get_divine_devotion_limit_for_tier(cleric_tier)
+	var/cap_offset = has_trait(TAT_TRAIT_RESIDENT) ? 10 : 20
 	switch(cleric_tier)
 		if(CLERIC_T4)
-			return CLERIC_REQ_4
+			return max(CLERIC_REQ_3, CLERIC_REQ_4 - cap_offset)
 		if(CLERIC_T3)
-			return CLERIC_REQ_3
+			return max(CLERIC_REQ_2, CLERIC_REQ_3 - cap_offset)
 		if(CLERIC_T2)
-			return CLERIC_REQ_2
-	return CLERIC_REQ_1
+			return max(CLERIC_REQ_1, CLERIC_REQ_2 - cap_offset)
+	return max(CLERIC_REQ_0, CLERIC_REQ_1 - cap_offset)
 
 /datum/tat_traits/proc/build_mage_aspects(scale_with_arcane = TRUE)
 	var/major = 0
@@ -1075,18 +1086,18 @@
 				continue
 			else
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
-	if(has_trait(TAT_TRAIT_RESIDENT))
-		apply_resident_package(H)
-	if(has_trait(TAT_TRAIT_SPELLBLADE))
-		apply_spellblade_base_package(H)
+	if(has_trait(TAT_TRAIT_RONIN))
+		H.LoadComponent(/datum/component/combo_core/ronin)
 	if(has_trait(TAT_TRAIT_SOUNDBREAKER))
 		H.LoadComponent(/datum/component/combo_core/soundbreaker)
 	if(has_trait(TAT_TRAIT_MARTIAL_MASTER))
 		H.LoadComponent(/datum/component/combo_core/martial_master)
+	if(has_trait(TAT_TRAIT_RESIDENT))
+		apply_resident_package(H)
+	if(has_trait(TAT_TRAIT_SPELLBLADE))
+		apply_spellblade_base_package(H)
 	if(has_trait(TAT_TRAIT_TROPHY_BOUNTY))
 		H.LoadComponent(/datum/component/trophy_hunter)
-	if(has_trait(TAT_TRAIT_RONIN))
-		H.LoadComponent(/datum/component/combo_core/ronin)
 	// Ritual chalk, spellbook and chalk are synchronized into the TAT loadout stash by /datum/tat_items.
 	if(has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T1) || has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T2))
 		var/bard_tier = BARD_T1
@@ -1111,10 +1122,10 @@
 	apply_divine_package(H)
 	apply_mage_package(H)
 	apply_druid_package(H)
-	apply_witch_base_package(H)
 	apply_accursed_package(H)
 	if(has_trait(TAT_TRAIT_CONTRACTOR))
 		H.LoadComponent(/datum/component/contractor, 0)
+	apply_witch_base_package(H)
 	if(has_trait(TAT_TRAIT_CONTRACTOR_ENTITY))
 		H.LoadComponent(/datum/component/contractor/entity, 4)
 	return TRUE

@@ -389,7 +389,10 @@
 		return FALSE
 
 	core.entity_erp_training_enabled = !core.entity_erp_training_enabled
-	core.set_body_empowered(core.entity_erp_training_enabled)
+	if(core.entity_erp_training_enabled)
+		to_chat(owner, span_notice("You start sharing Tempress training through intimate actions."))
+	else
+		to_chat(owner, span_notice("You stop sharing Tempress training."))
 	return TRUE
 
 /datum/action/cooldown/spell/contractor/entity_body_change
@@ -415,74 +418,6 @@
 	if(!istype(core, /datum/component/contractor/entity))
 		return FALSE
 	return core.alter_body(cast_on)
-
-#define TEMPRESS_BODY_POWER_TRAIT_SOURCE "tempress_body_power"
-#define TEMPRESS_BODY_POWER_PUNCH_DAMAGE 100
-
-/datum/component/contractor/entity/proc/set_body_empowered(enabled)
-	var/mob/living/L = parent
-	if(!isliving(L))
-		return
-
-	if(entity_erp_training_enabled)
-		ADD_TRAIT(L, TRAIT_STRONGKICK, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
-		ADD_TRAIT(L, TRAIT_PARRYEXPERT, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
-		RegisterSignal(L, COMSIG_MOB_ATTACK_HAND, PROC_REF(on_body_power_unarmed_hit))
-		to_chat(L, span_notice("You feel power inside you."))
-	else
-		REMOVE_TRAIT(L, TRAIT_STRONGKICK, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
-		REMOVE_TRAIT(L, TRAIT_PARRYEXPERT, TEMPRESS_BODY_POWER_TRAIT_SOURCE)
-		UnregisterSignal(L, COMSIG_MOB_ATTACK_HAND)
-		to_chat(L, span_notice("Your body returns to normal."))
-
-/datum/component/contractor/entity/proc/on_body_power_unarmed_hit(datum/source, mob/living/attacker, mob/living/target)
-	SIGNAL_HANDLER
-
-	if(!entity_erp_training_enabled)
-		return
-	if(!isliving(target))
-		return
-	if(istype(attacker.used_intent, /datum/intent/unarmed/help))
-		return
-	if(istype(attacker.used_intent, /datum/intent/unarmed/shove))
-		return
-
-	var/zone = attacker.zone_selected
-
-	INVOKE_ASYNC(src, PROC_REF(apply_body_power_punch_damage_async), target, zone)
-
-/datum/component/contractor/entity/proc/apply_body_power_punch_damage_async(mob/living/target, zone)
-	if(!entity_erp_training_enabled)
-		return
-	if(!isliving(target))
-		return
-
-	apply_body_power_punch_damage(target, zone)
-
-/datum/component/contractor/entity/proc/apply_body_power_punch_damage(mob/living/target, zone)
-	var/mob/living/L = parent
-	if(!isliving(L))
-		return FALSE
-
-	if(iscarbon(target))
-		var/mob/living/carbon/C = target
-		var/obj/item/bodypart/affecting = C.get_bodypart(check_zone(zone) || BODY_ZONE_CHEST)
-		if(!affecting)
-			return FALSE
-
-		C.apply_damage(TEMPRESS_BODY_POWER_PUNCH_DAMAGE, BRUTE, affecting, 0)
-	else
-		target.apply_damage(TEMPRESS_BODY_POWER_PUNCH_DAMAGE, BRUTE)
-
-	target.visible_message(
-		span_danger("[L]'s empowered strike drives force straight into [target]'s body!"),
-		span_userdanger("The empowered strike drives force straight through your body!")
-	)
-
-	return TRUE
-
-#undef TEMPRESS_BODY_POWER_TRAIT_SOURCE
-#undef TEMPRESS_BODY_POWER_PUNCH_DAMAGE
 
 // /mob/living/carbon/human/verb/call_contractor()
 // 	set name = "Offering"

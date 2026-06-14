@@ -139,6 +139,21 @@
 
 	return erp_try_start(initiator, src, user)
 
+/mob/living/simple_animal/proc/is_erp_blocked_as_target()
+	if(locate(/obj/shapeshift_holder) in src)
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/dragon))
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/voiddragon))
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/revenant/dragon))
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/werewolf_npc))
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/hag_shapeshift))
+		return FALSE
+	return TRUE
+
 /mob/living/carbon/human/proc/set_sex_surrender_to(mob/living/carbon/human/mob_object)
 	if(mob_object)
 		sex_surrender_ref = WEAKREF(mob_object)
@@ -304,7 +319,7 @@
 	if(!erp_can_use_menu_as_actor(actor, silent, force))
 		return null
 
-	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
+	var/mob/living/consent = SSerp.get_consent_mob_for_target(target_atom)
 	if(!consent)
 		return null
 
@@ -350,16 +365,22 @@
 	if(!actor || !target_atom || QDELETED(target_atom))
 		return FALSE
 
-	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
+	var/mob/living/consent = SSerp.get_consent_mob_for_target(target_atom)
 	if(!consent)
 		return FALSE
 
 	if(force)
 		return TRUE
 
-	if(consent.is_erp_blocked_as_target())
+	var/mob/living/carbon/human/human_consent = consent
+	if(istype(human_consent) && human_consent.is_erp_blocked_as_target())
 		to_chat(actor, span_warning("Blocked by leprosy or defiant combat mode."))
 		to_chat(consent, span_warning("Blocked by leprosy or defiant combat mode."))
+		return FALSE
+	var/mob/living/simple_animal/simple_consent = consent
+	if(istype(simple_consent) && simple_consent.is_erp_blocked_as_target())
+		if(!silent)
+			to_chat(actor, span_warning("[consent] can't be used as an ERP target."))
 		return FALSE
 
 	if(!consent.client)
