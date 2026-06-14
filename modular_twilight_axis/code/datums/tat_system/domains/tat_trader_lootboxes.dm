@@ -133,7 +133,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy = 7,
 	/obj/item/clothing/suit/roguetown/armor/chainmail/iron = 7,
 	/obj/item/clothing/suit/roguetown/armor/chainmail/light = 7,
-	/obj/item/clothing/suit/roguetown/armor/chainmail/light/fencer = 7,
+	/obj/item/clothing/suit/roguetown/armor/chainmail/besilked/fencer = 7,
 	/obj/item/clothing/suit/roguetown/armor/plate = 7,
 	/obj/item/clothing/suit/roguetown/armor/plate/bikini = 7,
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass = 7,
