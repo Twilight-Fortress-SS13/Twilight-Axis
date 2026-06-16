@@ -53,6 +53,11 @@
 		if(text)
 			controller.send_message(controller.spanify_scene_climax(text), best)
 
+	var/mob/living/carbon/human/partner = null
+	if(best)
+		var/list/ctx = get_orgasm_context(who, best)
+		partner = ctx?["partner"]
+
 	handle_arousal_climax_effects(who, active)
 	for(var/datum/erp_sex_link/Lx in active)
 		if(!Lx || QDELETED(Lx) || !Lx.is_valid())
@@ -76,11 +81,6 @@
 		who.playsound_local(who, 'sound/misc/mat/end.ogg', 100)
 
 	A?.spread_chain_orgasm(who)
-	var/mob/living/carbon/human/partner = null
-	if(best)
-		var/list/ctx = get_orgasm_context(who, best)
-		partner = ctx?["partner"]
-
 	A?.award_satisfaction_on_climax(who, partner)
 	A?.apply_climax_stress(who, partner)
 	return
