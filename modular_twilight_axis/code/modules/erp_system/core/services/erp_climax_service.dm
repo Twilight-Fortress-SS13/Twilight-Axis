@@ -9,7 +9,7 @@
 	. = ..()
 	controller = C
 
-/// Handles climax signal: message, schedule effects, stop until_climax links.
+/// Handles climax signal: message, effects, stop until_climax links.
 /datum/erp_climax_service/proc/on_arousal_climax(datum/source)
 	var/mob/living/carbon/human/who = source
 	if(!istype(who))
@@ -53,7 +53,7 @@
 		if(text)
 			controller.send_message(controller.spanify_scene_climax(text), best)
 
-	INVOKE_ASYNC(controller, TYPE_PROC_REF(/datum/erp_controller, handle_arousal_climax_effects), who, active)
+	handle_arousal_climax_effects(who, active)
 	for(var/datum/erp_sex_link/Lx in active)
 		if(!Lx || QDELETED(Lx) || !Lx.is_valid())
 			continue
