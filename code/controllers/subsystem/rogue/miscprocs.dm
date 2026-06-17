@@ -131,6 +131,18 @@
 		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_2, ROUNDSTART_TRAIT)
 	//TA EDIT END
 
+/datum/devotion/proc/get_progression_requirement_for_tier(cleric_tier)
+	switch(cleric_tier)
+		if(CLERIC_T1)
+			return CLERIC_REQ_1
+		if(CLERIC_T2)
+			return CLERIC_REQ_2
+		if(CLERIC_T3)
+			return CLERIC_REQ_3
+		if(CLERIC_T4)
+			return CLERIC_REQ_4
+	return null
+
 //The main proc that distributes all the needed devotion tweaks to the given class.
 //cleric_tier 		- The cleric tier that the holder will get spells of immediately.
 //passive_gain 		- Passive devotion gain, if any, will begin processing this datum.
@@ -143,6 +155,11 @@
 	if(devotion_limit) //Upper devotion limit - Limits gain to that tier's miracles. Mostly used by Templars / Paladins.
 		max_devotion = devotion_limit
 		max_progression = devotion_limit
+	else if(cleric_tier > CLERIC_T0 && !start_maxed)
+		var/tier_limit = get_progression_requirement_for_tier(cleric_tier)
+		if(tier_limit)
+			max_devotion = tier_limit
+			max_progression = tier_limit
 	if(passive_gain)
 		passive_devotion_gain = passive_gain
 		passive_progression_gain = passive_gain

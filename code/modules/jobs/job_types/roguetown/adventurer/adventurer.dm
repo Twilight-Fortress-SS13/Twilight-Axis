@@ -114,7 +114,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 	if(current_players > 70)
 		var/extra = floor((current_players - 80) / 5)
 		slots += extra
-	slots = min(slots, 30)
+	slots = min(slots, 25)
 
 	adventurer_job.total_positions = slots
 	adventurer_job.spawn_positions = slots

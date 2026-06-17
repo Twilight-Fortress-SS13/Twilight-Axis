@@ -122,6 +122,7 @@
 	track = MIGRANT_TRACK_SPECIAL
 	weight = 12
 	min_round_time = 45 MINUTES
+	min_pop = 40
 	is_raid = TRUE
 	required_roles = list(
 		/datum/migrant_role/gnoll = 1,

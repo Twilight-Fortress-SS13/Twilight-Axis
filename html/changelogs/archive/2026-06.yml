@@ -690,3 +690,96 @@
   - bugfix: "\u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D \u0432\u043E\u0440\
       \u0443\u044E\u0449\u0438\u0439 \u0441\u043A\u0432\u043E\u0437\u044C \u0441\u0442\
       \u0435\u043D\u044B \u043A\u0440\u044E\u043A"
+2026-06-15:
+  Antoonij:
+  - rscadd: "\u0431\u0438\u043D\u0434 \u0434\u043B\u044F \u0434\u0438\u0437\u0430\u0440\
+      \u043C\u043E\u0432"
+  BurpleBineapple:
+  - bugfix: Kazengunese dobo robes were incorrectly using ARMOR_MAILLE. They now use
+      ARMOR_PADDED.
+  FeniaFox:
+  - balance: Increased the integrity of heavy leather boots (and grenzelhoftian boots)
+      to match that of other heavy/hardened leather items (100 or 80 -> 250). Removed
+      from common NPCs to avoid easy scavenging.
+  - balance: Reduced the integrity of Ruma sandals to match that of other hardened
+      leather items (300 -> 250).
+  - qol: Renamed heavy leather gloves/boots to hardened leather gloves/boots, to match
+      other items with similar stats.
+  FreeStylaLT:
+  - rscadd: Added a bunch of new hair. Courtesy of Ratwood / Vanderlin.
+  G9ose:
+  - balance: stat bonus for Baota wretch deleted
+  KatTheFox:
+  - rscdel: Removed arcanic melds, replaced them with thematically-appropriate planar
+      materials. Artificer armor is now powered by an infernal core like the infernal
+      engines and infernal forge are.
+  - qol: Familiar-binding is now free, except for the most hubristic of pursuits.
+  OrbisAnima:
+  - qol: Made the Interarctions menu actions not spam over and over the same message,
+      only giving a new one anytime you change any of the speed, the intensity or
+      the action type.
+  - bugfix: Fixed Mage and God Hands from not working with the backdoor. Rejoice.
+  Quinalion:
+  - rscadd: "\u0422\u0438\u0430\u0440\u0430 \u0432 \u043B\u043E\u0434\u0430\u0443\u0442\
+      ."
+  - bugfix: "\u041A\u043B\u0430\u0441\u0441 \u041D\u0430\u043B\u0435\u0434\u0438\u0439\
+      \u0441\u043A\u043E\u0433\u043E \u0411\u043E\u0435\u0432\u043E\u0433\u043E \u041C\
+      \u0430\u0433\u0430 \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0434\u0443\
+      \u0431\u043B\u0438\u0440\u0443\u0435\u0442\u0441\u044F \u0432 \u0441\u043F\u0438\
+      \u0441\u043A\u0435."
+  - rscadd: "\u041D\u0430\u043B\u0435\u0434\u0438\u0439\u0441\u043A\u0438\u0439 \u0412\
+      \u0438\u0437\u0438\u0440\u044C \u0437\u043D\u0430\u0435\u0442 \u0417\u0438\u0431\
+      \u0430\u043D\u0442\u0438\u0439\u0441\u043A\u0438\u0439."
+  Ryumi:
+  - rscadd: Heretical items now have big, obvious highlights and tooltips making their
+      heretical / PVP-escalating nature clear, as well as brief explanations of how
+      and why.
+  borneblood:
+  - bugfix: fixed a few odd INDEXER interactions.
+  changelingonberry:
+  - rscdel: debug cat
+  radarseas:
+  - balance: woodcutting axe w/ battleaxe choices for regular heretics.
+  - balance: Psyheretics retain and only get the battleaxe choice as they did before
+      under "Axe"
+2026-06-16:
+  VanessaCoding:
+  - bugfix: autochisel fix
+  WeNeedMorePhoron:
+  - rscadd: Refactor the recipe system to support both pies and multiple recipes
+  - rscadd: Redid the examine text on food and added a view recipe links
+  - rscadd: Updated the cooking encyclopedia to massively expand coverage
+  - rscadd: Renamed all "giblets" to dried fruits and or raisins, giblets doesn't
+      really make sense and have an extremely specific meaning. Renamed caramel giblets
+      to just caramel etc. Fixed a lot of odd things. So help me god.
+  - rscadd: THERE IS NO SUCH THING AS FRIED CONGEE!!! AMBROSE!!!!!
+  - rscadd: 'Food & Culture Part 1 with sprites by 7erracota and original PR by Wildwestmars,
+      Items included: Egg dough, lasagna dough, griddle dough, wienerstick, pesto,
+      griddles (fruit, lemon, berry, poisonberry, apple, and with toppings), gridldewiener,
+      challah, pasta (spaghetti, sheet noodles, spgahetti and spaghetti w/ pesto),
+      and lasgna including redwhite, white, and lasagna with pesto.'
+  - rscadd: Renamed griddledog to griddlewiener to better fit periodical tone
+  - bugfix: You can fuel Hearth again.
+  - rscadd: Increase blockade TP from 72 / 104 to 90 / 120 again
+  - rscadd: Budget for raid increased to 200, bounty goons budget to 150
+  - rscadd: Raid / Bounty quest now drains 4 bands, from 3 bandst
+  - rscadd: Hard quest now get a +25 flat bonus to encourage more people to form a
+      party of two and take them on
+  - rscadd: Orc Warlord's excessive weight of 50 reduced to 30, should alleviate instance
+      of orc blockade looking trivially smal.
+  borneblood:
+  - bugfix: fixed an exploit with Smelting prompts
+  changelingonberry:
+  - bugfix: players getting stuck on class select screen as antag or bandit
+  radarseas:
+  - balance: necro legion gets flail skill
+  - bugfix: fixed necro legion NOT getting maces skill AT ALL despite getting a pick
+      for maces.
+2026-06-17:
+  Ketrai:
+  - bugfix: Removeallspells proc removes all spells again
+  nauticall:
+  - bugfix: Stairs are now properly buildable again.
+  - bugfix: Leaning on walls on RUN intent no longer builds Athletics XP.
+  - bugfix: Morphing elixirs on fencer's cuirasses (for Freifetchers) no longer compromise
+      Freifetcher dexterity.

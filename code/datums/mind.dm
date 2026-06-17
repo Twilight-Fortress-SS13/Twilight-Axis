@@ -609,15 +609,12 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 			continue
 		if(istype(carbon, /mob/living/carbon/human/dummy))
 			continue
-		if(carbon.job in GLOB.hunted_protected_roles)
-			continue
 		if(!(carbon.has_flaw(/datum/charflaw/hunted) || HAS_TRAIT(carbon, TRAIT_ZIZOID_HUNTED)))
 			continue
 
 		output += "<br>[carbon.real_name]"
 		if(carbon.job)
 			output += " - [carbon.job]"
-
 	output += "<br>Your creed is blood, your faith is steel. You will not rest until these souls are yours. Use the profane dagger to trap their souls for Graggar."
 
 	if(window)
@@ -1091,6 +1088,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 /datum/mind/proc/RemoveAllSpells()
 	for(var/datum/S in spell_list)
 		RemoveSpell(S)
+	for(var/datum/SP in current.actions)
+		RemoveSpell(SP)
 
 /datum/mind/proc/transfer_martial_arts(mob/living/new_character)
 	if(!ishuman(new_character))

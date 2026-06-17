@@ -34,9 +34,7 @@
 
 	init_subtypes(/datum/alch_cauldron_recipe, GLOB.alch_cauldron_recipes)
 
-	init_subtypes(/datum/stew_recipe, GLOB.stew_recipes)
-	
-	init_subtypes(/datum/alch_grid_recipe, GLOB.alch_grid_recipes)  
+	init_subtypes(/datum/stew_recipe, GLOB.stew_recipes) 
 
 	// Faiths
 	for(var/path in subtypesof(/datum/faith))

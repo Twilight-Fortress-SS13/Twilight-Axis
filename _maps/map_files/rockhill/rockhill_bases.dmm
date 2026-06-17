@@ -5642,9 +5642,6 @@
 	pixel_x = 9;
 	pixel_y = 43
 	},
-/obj/machinery/alch_workbench{
-	pixel_y = -8
-	},
 /turf/open/floor/rogue/churchrough,
 /area/rogue/indoors/wretchcamp)
 "zg" = (

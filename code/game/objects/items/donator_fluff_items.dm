@@ -565,8 +565,8 @@ mas//Lazily shoving all donator fluff items in here for now. Feel free to make t
 	desc = "An intimidating mandible, chiseled from jade and decorated with indeterminable alloys. It is smiling back at you with eternal malice."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
-	icon_state = "elegantjademask"
-	item_state = "elegantjademask"
+	icon_state = "jadehalfmask"
+	item_state = "jadehalfmask"
 	smeltresult = /obj/item/ingot/aaslag
 
 /obj/item/clothing/mask/rogue/facemask/steel/donator
@@ -574,8 +574,8 @@ mas//Lazily shoving all donator fluff items in here for now. Feel free to make t
 	desc = "An intimidating mandible, chiseled from jade and decorated with indeterminable alloys. It is smiling back at you with eternal malice."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
-	icon_state = "elegantjademask"
-	item_state = "elegantjademask"
+	icon_state = "jadehalfmask"
+	item_state = "jadehalfmask"
 	smeltresult = /obj/item/ingot/aaslag
 
 /obj/item/clothing/mask/rogue/facemask/bronze/donator
@@ -583,8 +583,8 @@ mas//Lazily shoving all donator fluff items in here for now. Feel free to make t
 	desc = "An intimidating mandible, chiseled from jade and decorated with indeterminable alloys. It is smiling back at you with eternal malice."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
-	icon_state = "elegantjademask"
-	item_state = "elegantjademask"
+	icon_state = "jadehalfmask"
+	item_state = "jadehalfmask"
 	smeltresult = /obj/item/ingot/aaslag
 
 /obj/item/clothing/mask/rogue/facemask/carved/jademask/donator
@@ -592,8 +592,8 @@ mas//Lazily shoving all donator fluff items in here for now. Feel free to make t
 	desc = "An intimidating mandible, chiseled from jade and decorated with indeterminable alloys. It is smiling back at you with eternal malice."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
-	icon_state = "elegantjademask"
-	item_state = "elegantjademask"
+	icon_state = "jadehalfmask"
+	item_state = "jadehalfmask"
 	smeltresult = /obj/item/ingot/aaslag
 
 //

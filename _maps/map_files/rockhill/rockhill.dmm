@@ -4219,9 +4219,6 @@
 /turf/closed/wall/mineral/rogue/decostone/cand,
 /area/rogue/under/underdark)
 "aSK" = (
-/obj/machinery/alch_workbench{
-	pixel_y = -8
-	},
 /turf/open/floor/rogue/church,
 /area/rogue/indoors/town/manor/rockhill)
 "aSO" = (
@@ -11800,9 +11797,6 @@
 /turf/open/floor/rogue/blocks,
 /area/rogue/outdoors/town/rockhill)
 "cxF" = (
-/obj/machinery/alch_workbench{
-	pixel_y = -7
-	},
 /obj/machinery/light/rogue/candle/blue,
 /turf/open/floor/rogue/tile/bath{
 	icon_state = "bathtileratwood"
@@ -92209,9 +92203,6 @@
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/under/cave)
 "tXH" = (
-/obj/machinery/alch_workbench{
-	pixel_y = -2
-	},
 /turf/open/floor/rogue/ruinedwood/turned,
 /area/rogue/indoors/town/physician)
 "tXL" = (

@@ -64,8 +64,6 @@
 		SStreasury.grant_savings(ECONOMIC_LOWER_CLASS, H)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/huntersyell)
-		var/datum/action/bloodhound_scent/BS = new()//TA EDIT
-		BS.Grant(H)//TA EDIT
 		var/weapons = list("Recurve Bow","Crossbow")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)

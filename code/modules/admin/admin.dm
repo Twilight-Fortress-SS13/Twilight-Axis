@@ -881,9 +881,18 @@
 	set category = "Admin.Special"
 	set name = "Back to Lobby"
 
+	if(!mob)
+		return
+
+	if(!ishuman(mob))
+		mob.returntolobby()
+		return
+
 	var/mob/living/carbon/human/H = mob
 	var/datum/job/mob_job
-	var/target_job = SSrole_class_handler.get_advclass_by_name(H.advjob)
+	var/target_job
+	if(H.advjob)
+		target_job = SSrole_class_handler.get_advclass_by_name(H.advjob)
 
 	if(H.mind)
 		mob_job = SSjob.GetJob(H.mind.assigned_role)
@@ -900,7 +909,8 @@
 	else
 		alert(usr, "Target has no mind!") // Optional Error check that may or may not be neccessary
 	GLOB.chosen_names -= H.real_name
-	LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(mob_job.department_flag, mob_job.obsfuscated_job)], H.mobid)
+	if(mob_job)
+		LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(mob_job.department_flag, mob_job.obsfuscated_job)], H.mobid)
 	LAZYREMOVE(GLOB.roleplay_ads, H.mobid)
 	H.returntolobby()
 

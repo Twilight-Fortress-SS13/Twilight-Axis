@@ -183,6 +183,14 @@
 		prefs.save_preferences()
 		to_chat(src, "You will see the red flashing effect [prefs.no_redflash ? "less" : "more"] frequently.")
 
+/client/verb/toggle_topexamine()
+	set category = "Preferences.Options"
+	set name = "Toggle Top Examine"
+	if(prefs)
+		prefs.top_examine = !prefs.top_examine
+		prefs.save_preferences()
+		to_chat(src, "Main Examines will be at the [prefs.top_examine ? "top" : "bottom"].")
+
 /client/verb/toggle_lobby_music()
 	set name = "Toggle Lobby Music"
 	set category = "Preferences.Options"

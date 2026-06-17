@@ -2,6 +2,7 @@
 	name = "Miragefen Rogue"
 	tutorial = "With their eloquence and thieving skills, some Tabaxi from Miragefen began offering their services to obtain necessary items or assist in combat due to their agility."
 	allowed_sexes = list(MALE, FEMALE)
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_miragefen_rogue
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_RACIAL

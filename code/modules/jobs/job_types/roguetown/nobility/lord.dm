@@ -459,6 +459,8 @@ GLOBAL_LIST_EMPTY(lord_titles)
 			recruiter.say("I HEREBY STRIP YOU, [uppertext(recruit.name)], OF NOBILITY!!")
 			REMOVE_TRAIT(recruit, TRAIT_NOBLE, TRAIT_GENERIC)
 			REMOVE_TRAIT(recruit, TRAIT_NOBLE, TRAIT_VIRTUE)
+			REMOVE_TRAIT(recruit, TRAIT_NOBLE, JOB_TRAIT)
+			REMOVE_TRAIT(recruit, TRAIT_NOBLE, ROUNDSTART_TRAIT)
 			return FALSE
 		else
 			to_chat(recruiter, span_warning("Their nobility is not mine to strip!"))
