@@ -166,7 +166,7 @@
 
 	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
 
-	invocations = list("Молю вас, Неделимые, даруйте силы чтобы продолжить!", "Малум, Пестра, даруйте же силы на борьбу!", "Помогите, Неделимые, справиться с усталостью!") // TA EDIT
+	invocations = list("Молю вас, Неделимые, даруйте силы, чтобы продолжить!", "Малум, Пестра, даруйте же силы на борьбу!", "Помогите, Неделимые, справиться с усталостью!") // TA EDIT
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = TRUE
