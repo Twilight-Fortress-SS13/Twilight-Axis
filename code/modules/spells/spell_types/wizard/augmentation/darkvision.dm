@@ -56,4 +56,4 @@
 /datum/action/cooldown/spell/darkvision/miracle/undivided
 	name = "Nitesight"
 	background_icon = 'icons/mob/actions/undividedmiracles.dmi'
-	invocations = list("Nachtsicht.") //Night Sight
+	invocations = list("Неделимые, даруйте же мне возможность видеть сквозь тьму.", "Нок, одари же меня зрением во тьме.") // TA EDIT

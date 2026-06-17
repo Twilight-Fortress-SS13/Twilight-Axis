@@ -63,7 +63,7 @@
 
 	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
 
-	invocations = list("Zwillingslichter, leitet meinen Blick.")//(Twin lights, guide my gaze)
+	invocations = list("Два Светила, ведите меня!", "Два Светила, укажите мне путь!", "Астрата, Нок, проведите меня сквозь тьму!")// TA EDIT
 	invocation_type = INVOCATION_WHISPER
 
 	charge_required = FALSE
@@ -166,7 +166,7 @@
 
 	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
 
-	invocations = list("Setzt euer großartiges Werk fort.") //(Continue your great work/s)
+	invocations = list("Молю вас, Неделимые, даруйте силы чтобы продолжить!", "Малум, Пестра, даруйте же силы на борьбу!", "Помогите, Неделимые, справиться с усталостью!") // TA EDIT
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = TRUE
@@ -259,7 +259,7 @@
 
 	secondary_resource_cost = SPELLCOST_STAT_BUFF - 5
 
-	invocations = list("Die Götter fordern dich auf weiterzukämpfen!") //("The gods demand you to fight on!")
+	invocations = list("Неделимые, даруйте же покой Эоры и стойкость Равокса!", "Равокс, Эора, благословите же нас!", "Помилуй же нас, Эора, укрепи же нас, Равокс!") // TA EDIT
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = TRUE
@@ -529,7 +529,7 @@
 	secondary_resource_type = SPELL_COST_STAMINA
 	secondary_resource_cost = SPELLCOST_STAT_BUFF + 20
 
-	invocations = list("United we stand!")
+	invocations = list("СКВОЗЬ ТЕРНИИ, НЕДЕЛИМЫЕ, УСТОИМ!", "СТОЯТЬ НАСМЕРТЬ, НЕДЕЛИМЫЕ! ВЕРНЁМ ПОРЯДОК В ГРИМОРИЮ!", "СИМ ПОБЕДИШИ!") // TA EDIT
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = FALSE
