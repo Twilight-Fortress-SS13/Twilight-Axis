@@ -268,7 +268,6 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_DECEIVING_MEEKNESS = TAT_TRAIT_ENTRY("Deceiving Meekness", 15, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "People think you are weak. They are mistaken. You have learned to hide your vices and true beliefs from others."), \
 	TRAIT_NASTY_EATER = TAT_TRAIT_ENTRY("Inhumen Digestion", 15, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You can eat bad food, and water toxic to humen does not affect you."), \
 	TRAIT_GOODLOVER = TAT_TRAIT_ENTRY("Fabled Lover", 10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "It is a lucky thing to share your bed."), \
-	TRAIT_NUTCRACKER = TAT_TRAIT_ENTRY("Nutcracker", 5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You love kicking idiots in the nuts."), \
 	TAT_TRAIT_DIVINE_INITIATE = TAT_TRAIT_ENTRY("Divine Initiate", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants miracles and devotion. Additional divine boon traits increase miracle access."), \
 	TAT_TRAIT_DIVINE_BOON_1 = TAT_TRAIT_ENTRY("Divine Boon I", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Divine Initiate. Raises your miracle package by one tier."), \
 	TAT_TRAIT_DIVINE_BOON_2 = TAT_TRAIT_ENTRY("Divine Boon II", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Divine Initiate and Divine Boon I. Raises your miracle package by one tier."), \
