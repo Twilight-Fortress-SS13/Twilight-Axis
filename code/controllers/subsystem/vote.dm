@@ -794,7 +794,7 @@ SUBSYSTEM_DEF(vote)
 		if(mode == "storyteller")
 			if(!length(storyteller_vote_log))
 				load_storyteller_vote_log()
-			var/pool_text = "Нажмите на (?) для получения описания режима. Раундстартовые основные антагонисты требуют минимум [HARD_ANTAG_MIN_POP] игроков. Победивший блок режимов будет исключён из голосования в следующем раунде."
+			var/pool_text = "Нажмите на (?) для получения описания режима. Раундстартовые крупные антагонисты требуют минимум [HARD_ANTAG_MIN_POP] игроков. Победивший блок режимов будет исключён из голосования в следующем раунде."
 			. += "<div style='color:#992414;font-size:0.9rem;margin-bottom:6px;'>[pool_text]</div>"
 			. += render_storyteller_choices(can_vote, C)
 		else
