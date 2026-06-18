@@ -161,7 +161,7 @@
 				if(1)
 					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend.ogg', 100, FALSE)
 				if(2)
-					C.mob.playsound_local(C.mob, 'sound/music/roundend_mirthful.ogg', 100, FALSE) //Hildegard Von Blingin and Whitney Avalon's transformative cover of 'Manchild' by Sabrina Carpenter, circa 2026.
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend6.ogg', 100, FALSE) // Die Toteninsel Emptiness
 				if(3)
 					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend2.ogg', 100, FALSE)
 				if(4)
