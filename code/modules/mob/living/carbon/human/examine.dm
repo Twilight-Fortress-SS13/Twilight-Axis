@@ -19,8 +19,6 @@
 
 /mob/living/carbon/human/examine(mob/user)
 	. = list()
-	if(!user.client?.prefs?.top_examine)
-		. += span_info("ø ------------ ø")
 	var/observer_privilege = isobserver(user)
 	var/t_He = p_they(TRUE)
 	var/t_his = p_their()
@@ -61,8 +59,7 @@
 	if(observer_privilege)
 		obscure_name = FALSE
 
-	if(user.client?.prefs?.top_examine)
-		. += generate_main_examine_body(user, m1, m2, m3, obscure_name, race_name, origin_name, observer_privilege, unknown_names)
+	. += generate_main_examine_body(user, m1, m2, m3, obscure_name, race_name, origin_name, observer_privilege, unknown_names)
 
 	if(user != src && HAS_TRAIT(user, TRAIT_MATTHIOS_EYES) && !HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
 		var/atom/item = get_most_expensive()
@@ -784,6 +781,69 @@
 				. += "<span class='info' style='color: #313131ff'>[m1] wearing black lipstick.</span>"
 
 
+	var/medical_text = ""
+	if(Adjacent(user))
+		if(observer_privilege)
+			var/static/list/check_zones = list(
+				BODY_ZONE_HEAD,
+				BODY_ZONE_CHEST,
+				BODY_ZONE_R_ARM,
+				BODY_ZONE_L_ARM,
+				BODY_ZONE_R_LEG,
+				BODY_ZONE_L_LEG,
+			)
+			for(var/zone in check_zones)
+				var/obj/item/bodypart/bodypart = get_bodypart(zone)
+				if(!bodypart)
+					continue
+				. += "<a href='?src=[REF(src)];inspect_limb=[zone]'>Inspect [parse_zone(zone)]</a>"
+			. += "<a href='?src=[REF(src)];check_hb=1'>Check Heartbeat</a>"
+		else
+			var/checked_zone = check_zone(user.zone_selected)
+			var/heartbeat
+			if(!(mobility_flags & MOBILITY_STAND) && user != src && (user.zone_selected == BODY_ZONE_CHEST))
+				heartbeat = "<a href='?src=[REF(src)];check_hb=1'>Listen to Heartbeat</a>"
+			medical_text = "[heartbeat ? "[heartbeat] | " : ""]<a href='?src=[REF(src)];inspect_limb=[checked_zone]'>Inspect [parse_zone(checked_zone)]</a>"
+
+	. += medical_text
+
+	var/showassess = FALSE
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(get_dist(src, H) <= ((2 + clamp(floor(((H.STAPER - 10))),-1, 4)) + HAS_TRAIT(user, TRAIT_INTELLECTUAL)))
+			showassess = TRUE
+
+	var/displayed_headshot
+	var/datum/antagonist/vampire/headshot_vampire = src.mind?.has_antag_datum(/datum/antagonist/vampire)
+	var/datum/antagonist/lich/headshot_lich = src.mind?.has_antag_datum(/datum/antagonist/lich)
+	if(headshot_vampire && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS)) && !isnull(vampire_headshot_link))
+		displayed_headshot = src.vampire_headshot_link
+	else if(headshot_lich && !isnull(src.lich_headshot_link))
+		displayed_headshot = src.lich_headshot_link
+	else
+		displayed_headshot = src.headshot_link
+
+	if(!obscure_name || client?.prefs.masked_examine)
+		var/list/examine_links = list()
+		if(showassess)
+			examine_links += "<a href='?src=[REF(src)];task=assess;'>Assess</a>"
+		if(flavortext || displayed_headshot || ooc_notes)
+			examine_links += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a>"
+		if(length(rumour) || length(noble_gossip))
+			if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+				examine_links += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
+		if(length(examine_links))
+			for(var/examine_link in examine_links)
+				. += examine_link
+		if((valid_headshot_link(src, displayed_headshot, TRUE)) && (user.client?.prefs.chatheadshot))
+			. += "<span class='info'><img src=[displayed_headshot] width=100 height=100/></span>"
+
+	/// Rumours & Gossip
+//	if(length(rumour) || length(noble_gossip)) TA EDIT START
+//		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+//			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>" TA EDIT END
+
+
 	if(show_descriptors)
 		var/list/lines
 		if((get_face_name() != real_name) && !observer_privilege)
@@ -821,8 +881,6 @@
 	if(!isnull(trait_exam))
 		. += trait_exam
 
-	if(!user.client?.prefs?.top_examine)
-		. += generate_main_examine_body(user, m1, m2, m3, obscure_name, race_name, origin_name, observer_privilege, unknown_names)
 
 	if(pose_text)
 		. += fieldset_block("Pose", pose_text, "pose_block")
@@ -864,20 +922,12 @@
 		else
 			displayed_headshot = src.headshot_link
 
-		if ((valid_headshot_link(src, displayed_headshot, TRUE)) && (user.client?.prefs.chatheadshot))
-			if(display_as_wanderer && !tat_pliant_title) // TA EDIT - TAT system
-				. += (span_info("ø ------------ ø\n[chat_headshot(displayed_headshot)]\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
-			else if(used_title)
-				. += (span_info("ø ------------ ø\n[chat_headshot(displayed_headshot)]\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
-			else
-				. += (span_info("ø ------------ ø\n[chat_headshot(displayed_headshot)]\nThis is the <EM>[used_name]</EM>, the [race_name]."))
+		if(display_as_wanderer && !tat_pliant_title) // TA EDIT - TAT system
+			. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
+		else if(used_title)
+			. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
 		else
-			if(display_as_wanderer && !tat_pliant_title) // TA EDIT - TAT system
-				. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
-			else if(used_title)
-				. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
-			else
-				. += (span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
+			. += (span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
 
 		//Origins
 		var/pronoun	//They / Their
@@ -1146,65 +1196,6 @@
 			var/mob/living/L = user
 			if(L.STAINT > 9 && L.STAPER > 9)
 				. += span_redtext("<i>[m1] critically fragile!</i>")
-
-	var/medical_text = ""
-	if(Adjacent(user))
-		if(observer_privilege)
-			var/static/list/check_zones = list(
-				BODY_ZONE_HEAD,
-				BODY_ZONE_CHEST,
-				BODY_ZONE_R_ARM,
-				BODY_ZONE_L_ARM,
-				BODY_ZONE_R_LEG,
-				BODY_ZONE_L_LEG,
-			)
-			for(var/zone in check_zones)
-				var/obj/item/bodypart/bodypart = get_bodypart(zone)
-				if(!bodypart)
-					continue
-				. += "<a href='?src=[REF(src)];inspect_limb=[zone]'>Inspect [parse_zone(zone)]</a>"
-			. += "<a href='?src=[REF(src)];check_hb=1'>Check Heartbeat</a>"
-		else
-			var/checked_zone = check_zone(user.zone_selected)
-			var/heartbeat
-			if(!(mobility_flags & MOBILITY_STAND) && user != src && (user.zone_selected == BODY_ZONE_CHEST))
-				heartbeat = "<a href='?src=[REF(src)];check_hb=1'>Listen to Heartbeat</a>"
-			medical_text = "[heartbeat ? "[heartbeat] | " : ""]<a href='?src=[REF(src)];inspect_limb=[checked_zone]'>Inspect [parse_zone(checked_zone)]</a>"
-
-	. += medical_text
-
-	var/showassess = FALSE
-	if(ishuman(user))
-		var/mob/living/carbon/human/H = user
-		if(get_dist(src, H) <= ((2 + clamp(floor(((H.STAPER - 10))),-1, 4)) + HAS_TRAIT(user, TRAIT_INTELLECTUAL)))
-			showassess = TRUE
-
-	var/displayed_headshot
-	var/datum/antagonist/vampire/headshot_vampire = src.mind?.has_antag_datum(/datum/antagonist/vampire)
-	var/datum/antagonist/lich/headshot_lich = src.mind?.has_antag_datum(/datum/antagonist/lich)
-	if(headshot_vampire && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS)) && !isnull(vampire_headshot_link))
-		displayed_headshot = src.vampire_headshot_link
-	else if(headshot_lich && !isnull(src.lich_headshot_link))
-		displayed_headshot = src.lich_headshot_link
-	else
-		displayed_headshot = src.headshot_link
-
-	if(!obscure_name || client?.prefs.masked_examine)
-		var/list/examine_links = list()
-		if(showassess)
-			examine_links += "<a href='?src=[REF(src)];task=assess;'>Assess</a>"
-		if(flavortext || displayed_headshot || ooc_notes)
-			examine_links += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a>"
-		if(length(rumour) || length(noble_gossip))
-			if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
-				examine_links += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
-		if(length(examine_links))
-			. += jointext(examine_links, " | ")
-
-	/// Rumours & Gossip
-//	if(length(rumour) || length(noble_gossip)) TA EDIT START
-//		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
-//			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>" TA EDIT END
 
 /mob/living/proc/status_effect_examines(pronoun_replacement) //You can include this in any mob's examine() to show the examine texts of status effects!
 	var/list/dat = list()
