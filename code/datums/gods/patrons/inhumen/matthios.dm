@@ -16,7 +16,7 @@
 					/obj/effect/proc_holder/spell/invoked/barter				= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/matthios_equalize		= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/matthios_churn		= CLERIC_T3,
-					// /obj/effect/proc_holder/spell/invoked/resurrect/matthios	= CLERIC_T3, // TA EDIT Counterpart to anastasis
+					/obj/effect/proc_holder/spell/invoked/resurrect/matthios	= CLERIC_T3, // Counterpart to anastasis
 	)
 	confess_lines = list(
 		"MATTHIOS STEALS FROM THE WORTHLESS!",

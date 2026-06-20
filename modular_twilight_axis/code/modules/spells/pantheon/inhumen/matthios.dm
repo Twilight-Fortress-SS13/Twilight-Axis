@@ -1409,7 +1409,7 @@
 	required_items = list()
 	sound = 'sound/magic/slimesquish.ogg'
 	chargedloop = /datum/looping_sound/invokelightning
-	recharge_time = 2 MINUTES //Anastasis Equivalent
+	recharge_time = 30 MINUTES //Anastasis Equivalent
 	overlay_icon = 'icons/mob/actions/matthiosmiracles.dmi'
 	overlay_state = "revival"
 	action_icon_state = "revival"
