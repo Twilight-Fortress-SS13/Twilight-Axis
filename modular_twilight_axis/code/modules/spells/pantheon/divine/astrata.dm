@@ -241,6 +241,9 @@
 		target.ignite_mob()
 	target.mind.remove_antag_datum(/datum/antagonist/zombie)
 	target.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)	//Removes the rotted-zombie debuff if they have it - Failsafe for it.
+	#ifdef REVIVE_GRACE
+	target.apply_status_effect(/datum/status_effect/debuff/revive_grace)
+	#endif
 	target.apply_status_effect(/datum/status_effect/debuff/revived)	//Temp debuff on revive, your stats get hit temporarily. Doubly so if having rotted.
 	return TRUE
 
