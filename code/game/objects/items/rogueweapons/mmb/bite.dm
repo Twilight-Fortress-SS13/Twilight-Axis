@@ -62,6 +62,9 @@
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_warning("I don't want to harm [src]!"))
 		return FALSE
+	if(user.has_status_effect(/datum/status_effect/debuff/deadite_grace) && src.mind)
+		to_chat(user, span_warning("Ah, Lux... I calm down considerably, but my hunger only increases."))
+		user.remove_status_effect(/datum/status_effect/debuff/deadite_grace)
 	if(!user.can_bite())
 		to_chat(user, span_warning("My mouth has something in it."))
 		return FALSE
@@ -74,7 +77,7 @@
 		if(!lying_attack_check(user))
 			return FALSE
 
-	var/def_zone = check_zone(user.zone_selected)
+	var/def_zone = melee_accuracy_check(user.zone_selected, user, src, /datum/skill/combat/unarmed, bitten, null)
 	var/obj/item/bodypart/affecting = get_bodypart(def_zone)
 	if(!affecting)
 		to_chat(user, span_warning("Nothing to bite."))
@@ -82,6 +85,7 @@
 
 	next_attack_msg.Cut()
 
+	user.break_invisibility_from_combat()
 	user.do_attack_animation(src, "bite")
 	playsound(user, 'sound/gore/flesh_eat_01.ogg', vol = 50, vary = FALSE, extrarange = -2, ignore_walls = FALSE, quiet = TRUE)
 	var/nodmg = FALSE
@@ -92,7 +96,7 @@
 		if(!affecting.has_wound(/datum/wound/bite))
 			nodmg = TRUE
 	if(!nodmg)
-		var/armor_block = run_armor_check(user.zone_selected, "stab", armor_penetration = PEN_NONE, blade_dulling=BCLASS_BITE, damage = dam2do)
+		var/armor_block = run_armor_check(def_zone, "stab", armor_penetration = PEN_NONE, blade_dulling=BCLASS_BITE, damage = dam2do)
 		if(!apply_damage(dam2do, BRUTE, def_zone, armor_block, user))
 			nodmg = TRUE
 			next_attack_msg += VISMSG_ARMOR_BLOCKED
@@ -103,9 +107,9 @@
 			rid = /datum/reagent/vampsolution
 	var/datum/wound/caused_wound
 	if(!nodmg)
-		caused_wound = affecting.bodypart_attacked_by(BCLASS_BITE, dam2do, user, user.zone_selected, crit_message = TRUE)
-	visible_message(span_danger("[user] bites [src]'s [parse_zone(user.zone_selected)]![next_attack_msg.Join()]"), \
-					span_userdanger("[user] bites my [parse_zone(user.zone_selected)]![next_attack_msg.Join()]"))
+		caused_wound = affecting.bodypart_attacked_by(BCLASS_BITE, dam2do, user, def_zone, crit_message = TRUE)
+	visible_message(span_danger("[user] bites [src]'s [parse_zone(def_zone)]![next_attack_msg.Join()]"), \
+					span_userdanger("[user] bites my [parse_zone(def_zone)]![next_attack_msg.Join()]"))
 
 	next_attack_msg.Cut()
 //nodmg if they don't have an open wound
@@ -149,14 +153,12 @@
 	var/obj/item/grabbing/bite/B = new()
 	user.equip_to_slot_or_del(B, SLOT_MOUTH)
 	if(user.mouth == B)
-		var/used_limb = src.find_used_grab_limb(user)
-		B.name = "[src]'s [parse_zone(used_limb)]"
-		var/obj/item/bodypart/BP = get_bodypart(check_zone(used_limb))
-		LAZYADD(BP.grabbedby, B)
+		B.name = "[src]'s [parse_zone(def_zone)]"
+		LAZYADD(affecting.grabbedby, B)
 		B.grabbed = src
 		B.grabbee = user
-		B.limb_grabbed = BP
-		B.sublimb_grabbed = used_limb
+		B.limb_grabbed = affecting
+		B.sublimb_grabbed = def_zone
 
 		lastattacker = user.real_name
 		lastattackerckey = user.ckey
@@ -252,6 +254,7 @@
 		return FALSE*/
 
 	user.changeNext_move(CLICK_CD_GRABBING)
+	user.break_invisibility_from_combat()
 	var/mob/living/carbon/C = grabbed
 	var/damage = user.get_punch_dmg()
 	if(HAS_TRAIT(user, TRAIT_STRONGBITE))
@@ -276,7 +279,7 @@
 							if(W.werewolf_infect_attempt())
 								infected = TRUE
 								break
-						
+
 						if(infected)
 							to_chat(user, span_boldnotice("I have delivered the gift to [C] while chewing on their [parse_zone(sublimb_grabbed)]!"))
 
@@ -328,4 +331,5 @@
 		to_chat(user, span_warning("Sigh. It's not bleeding."))
 		return
 
+	user.break_invisibility_from_combat()
 	user.drinksomeblood(grabbed, sublimb_grabbed)

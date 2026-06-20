@@ -17,10 +17,10 @@
 	if(ishuman(user))
 		if(istype(W, /obj/item/roguekey/psydonkey))
 			if(opened)
-				to_chat(user, span_info("The reliquary box has already been opened..."))
+				to_chat(user, span_info("The reliquary box has already been opened.."))
 				return
 			qdel(W)
-			to_chat(user, span_info("The reliquary lock takes my key as it opens, I take a moment to ponder what power was delivered to us..."))
+			to_chat(user, span_info("The reliquary lock takes my key as it opens, I take a moment to ponder what power was delivered to us.."))
 			playsound(loc, 'sound/foley/doors/lock.ogg', 60)
 			to_chat(user,)
 			var/relics = list("Melancholic Crankbox - Antimagic", "Daybreak - Silver Whip", "Stigmata - Silver Halberd", "Apocrypha - Silver Greatsword", "Golgatha - SYON Shard Censer")
@@ -92,7 +92,7 @@
 		soundloop.start()
 		var/songhearers = view(7, user)
 		for(var/mob/living/carbon/human/target in songhearers)
-			to_chat(target,span_cultsmall("[user] begins cranking the soul churner..."))
+			to_chat(target,span_cultsmall("[user] begins cranking the melancholic crankbox.."))
 	if(!cranking)
 		soundloop.stop()
 		user.remove_status_effect(/datum/status_effect/buff/cranking_soulchurner)
@@ -139,9 +139,9 @@
 				return list("shrink" = 0.6,"sx" = -1,"sy" = 0,"nx" = 11,"ny" = 1,"wx" = 0,"wy" = 1,"ex" = 4,"ey" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 15,"sturn" = 0,"wturn" = 0,"eturn" = 39,"nflip" = 8,"sflip" = 0,"wflip" = 0,"eflip" = 8)
 
 /atom/movable/screen/alert/status_effect/buff/cranking_soulchurner
-	name = "Cranking Soulchurner"
-	desc = "I am bringing the twisted device to life..."
-	icon_state = "buff"
+	name = "Soulchurning"
+	desc = "I am bringing the twisted device to life, letting their screams be heard!"
+	icon_state = "cranked"
 
 /datum/status_effect/buff/cranking_soulchurner
 	id = "crankchurner"
@@ -193,28 +193,24 @@
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(matthioslines))))
 						H.add_stress(/datum/stressevent/soulchurnerheretic)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/inhumen/zizo)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(zizolines))))
 						H.add_stress(/datum/stressevent/soulchurnerheretic)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/inhumen/graggar)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(graggarlines))))
 						H.add_stress(/datum/stressevent/soulchurnerheretic)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/inhumen/baotha)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(baothalines))))
 						H.add_stress(/datum/stressevent/soulchurnerheretic)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/undivided)
@@ -227,70 +223,60 @@
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(astratanlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/noc)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(noclines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/necra)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(necralines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/pestra)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(pestralines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/malum)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(malumlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/dendor)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(dendorlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/xylix)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(xylixlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/eora)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(eoralines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/abyssor)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(abyssorlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/ravox)
 						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(ravoxlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
-						H.apply_status_effect(/datum/status_effect/debuff/nekoldun)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 
@@ -360,8 +346,9 @@ Inquisitorial armory down here
 	if(fuel > 0)
 		. += span_info("Activate in your hand to open it.")
 		. += span_info("When opened, the 'BLESS' intent can be used to anoint Psydonic silver weaponry. Blessing a Psydonic silver weapon greatly enhances the power of its critical hits and debuffs against sunderable opponents.")
-		. += span_info("Blessing someone else, who happens to be a worshipper of Psydon, will temporarily buff them with increased Willpower and Constitution.")
-		. += span_warning("If the 'SMASH' intent is used while it's opened, the residing shard will violently explode with unimaginable force.")
+		. += span_info("Blessing someone else, who happens to be a worshipper of Psydon, will temporarily buff them with increased Willpower, Constitution, and Fortune.")
+		//. += span_warning("If the 'SMASH' intent is used while it's opened, the residing shard will violently explode with unimaginable force.") //TA EDIT
+		. += span_warning("<font color='#00e1ff'>While active, Golgatha burns and weakens anyone who attacks its bearer. The effect persists only while the attacker remains within the relic's light. This feature requires the bearer to be Silverblessed, and inflicts extra damage to mindless foes.</font>")
 	if(fuel <= 0)
 		. += span_info("It is gone.")
 
@@ -404,7 +391,6 @@ Inquisitorial armory down here
 	if(on && next_smoke < world.time)
 		new /obj/effect/temp_visual/censer_dust(get_turf(src))
 		next_smoke = world.time + smoke_interval
-		
 
 /obj/item/flashlight/flare/torch/lantern/psycenser/turn_off()
 	playsound(src.loc, 'sound/items/censer_off.ogg', 100)
@@ -418,14 +404,14 @@ Inquisitorial armory down here
 		M.update_inv_belt()
 	damtype = BRUTE
 
-
 /obj/item/flashlight/flare/torch/lantern/psycenser/fire_act(added, maxstacks)
 	return
 
 /obj/item/flashlight/flare/torch/lantern/psycenser/afterattack(atom/movable/A, mob/user, proximity)
 	. = ..()	//We smashed a guy with it turned on. Bad idea!
-	if(ismob(A) && on && (user.used_intent.type == /datum/intent/flail/smash/golgotha) && user.cmode)
+	/*if(ismob(A) && on && (user.used_intent.type == /datum/intent/flail/smash/golgotha) && user.cmode)
 		user.visible_message(span_warningbig("[user] smashes the exposed [src], shattering the shard of SYON!"))
+		user.visible_message(span_blue(pick("WHY--!!","SYON BLAS--!!","ENDU--!!","ENDURE THI--!!","WHAT THE F--!!","OH MY ALLFA--!!","OH PSYDO--!!","KABOO--!!","MASHALLA--!!","OH ADONA--!!","OH SHI--!!","PSYDO--!!","PSYDON BLAS--!!")))
 		explosion(get_turf(A),devastation_range = 3, heavy_impact_range = 5, light_impact_range = 6, flame_range = 3, flash_range = 6, smoke = FALSE)
 		fuel = 0
 		turn_off()
@@ -433,16 +419,16 @@ Inquisitorial armory down here
 		possible_item_intents = list(/datum/intent/weep)
 		user.update_a_intents()
 		for(var/mob/living/carbon/human/H in view(get_turf(src)))
-			if(H.patron?.type == /datum/patron/old_god)	//Psydonites get VERY depressed seeing an artifact get turned into an ulapool caber.
+			if(H.patron?.type == /datum/patron/old_god)	//Psydonites get VERY depressed seeing an artifact get turned into an ullapool caber.
 				H.add_stress(/datum/stressevent/syoncalamity)
 		for(var/mob/living/carbon/human/H in range(1, get_turf(src)))
-			H.gib()
+			H.gib()*/ //TA EDIT
 	if(isitem(A) && on && user.used_intent.type == /datum/intent/bless)
 		var/datum/component/silverbless/CP = A.GetComponent(/datum/component/silverbless)
 		if(CP)
 			if(!CP.is_blessed && (CP.silver_type & SILVER_PSYDONIAN))
 				playsound(user, 'sound/magic/censercharging.ogg', 100)
-				user.visible_message(span_info("[user] holds \the [src] over \the [A]..."))
+				user.visible_message(span_info("[user] holds \the [src] over \the [A].."))
 				if(do_after(user, 50, target = A))
 					CP.try_bless(BLESSING_PSYDONIAN)
 					new /obj/effect/temp_visual/censer_dust(get_turf(A))
@@ -453,10 +439,10 @@ Inquisitorial armory down here
 		if(H.patron?.type == /datum/patron/old_god)
 			if(!H.has_status_effect(/datum/status_effect/buff/censerbuff))
 				playsound(user, 'sound/magic/censercharging.ogg', 100)
-				user.visible_message(span_info("[user] holds \the [src] over \the [A]..."))
+				user.visible_message(span_info("[user] holds \the [src] over \the [A].."))
 				if(do_after(user, 50, target = A))
 					H.apply_status_effect(/datum/status_effect/buff/censerbuff)
-					to_chat(H, span_notice("The comet dust invigorates you."))
+					to_chat(H, span_hypnophrase("The fragrance of SYON's shard invigorates you!"))
 					playsound(H, 'sound/magic/holyshield.ogg', 100)
 					new /obj/effect/temp_visual/censer_dust(get_turf(H))
 			else
@@ -464,6 +450,102 @@ Inquisitorial armory down here
 
 		else
 			to_chat(user, span_warning("They do not share our faith."))
+
+/mob/living/carbon/human/proc/has_active_golgatha()
+	for(var/obj/item/flashlight/flare/torch/lantern/psycenser/G in contents)
+		if(G.on)
+			return TRUE
+	return FALSE
+
+/mob/living/carbon/human/proc/process_golgatha_rebuke(mob/living/attacker)
+	if(!has_active_golgatha())
+		return
+	if(!HAS_TRAIT(src, TRAIT_SILVER_BLESSED)) // only people who is silverblessed can use golgatha's hidden feature
+		return
+	if(HAS_TRAIT(attacker, TRAIT_INQUISITION)) // wife abuse
+		return
+	new /obj/effect/temp_visual/censer_dust(get_turf(attacker))
+	new /obj/effect/temp_visual/censer_dust(get_turf(attacker))
+	new /obj/effect/temp_visual/frozen_mist_tile(get_turf(attacker))
+	if(issimple(attacker) || !attacker.mind)
+		attacker.apply_status_effect(/datum/status_effect/syonchurn, src)
+	
+	attacker.adjustFireLoss(10)
+
+#define SYONCHURN_FILTER "syonchurn glow"
+
+/atom/movable/screen/alert/status_effect/syonchurn
+	name = "Dying Light"
+	desc = "The shard of Syon rejects my hostility against Psydon's anointed! Luminous fragments scour my body and spirit!"
+	icon_state = "supersunder"
+
+/datum/status_effect/syonchurn
+	id = "syon_churned"
+	alert_type = /atom/movable/screen/alert/status_effect/syonchurn
+	duration = -1
+	tick_interval = 2 SECONDS
+	examine_text = "<font color='#00fff2'><b>SUBJECTPRONOUN is seared in body and soul by motes of lingering comet dust!</b></font>"
+	status_type = STATUS_EFFECT_REFRESH
+	effectedstats = list(STATKEY_LCK = -2, STATKEY_SPD = -2)
+	var/datum/weakref/debuffer
+	var/outline_colour = "#70d1e2"
+	var/intensity = 1
+	var/range = 4
+	var/damage_per_tick = 0.5
+	var/agony = 0
+
+/datum/status_effect/syonchurn/on_creation(mob/living/new_owner, mob/living/caster, potency)
+	if(potency)
+		intensity = potency
+	if(caster)
+		debuffer = WEAKREF(caster)
+	return ..()
+
+/datum/status_effect/syonchurn/on_apply()
+	var/filter = owner.get_filter(SYONCHURN_FILTER)
+	if(!filter)
+		owner.add_filter(SYONCHURN_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 200, "size" = 1))
+	to_chat(owner, span_warning("Brilliant fragments of comet-light burst around me, repelling my violent intent!"))
+	return TRUE
+
+/datum/status_effect/syonchurn/refresh()
+	. = ..()
+	if(intensity <= 10)
+		intensity++
+		if(prob(25))
+			to_chat(owner, span_boldwarning("The shard's radiance intensifies, scourging me for my aggression!"))
+
+/datum/status_effect/syonchurn/process()
+	. = ..()
+	if(!owner)
+		qdel(src)
+		return
+	var/mob/living/carbon/human/source = debuffer?.resolve()
+	if(!source)
+		qdel(src)
+		return
+	if(!source.has_active_golgatha())
+		to_chat(owner, span_blue("As the Golgatha is sealed, the searing dust fades into nothing."))
+		qdel(src)
+		return
+	if(get_dist(source, owner) > range)
+		to_chat(owner, span_blue("Away from the Golgatha's radiance, the searing dust fades into nothing."))
+		qdel(src)
+		return
+
+	owner.adjustFireLoss(damage_per_tick * intensity)
+
+	if(world.time >= agony)
+		agony = world.time + rand(5,15) SECONDS
+		to_chat(owner, span_blue("Blue motes of a dying light burn through my flesh and soul!"))
+		new /obj/effect/particle_effect/thick_steam(get_turf(owner))
+		if(prob(50) && !HAS_TRAIT(owner, TRAIT_NOPAIN))
+			owner.emote("pain")
+
+/datum/status_effect/syonchurn/on_remove()
+	owner.remove_filter(SYONCHURN_FILTER)
+
+#undef SYONCHURN_FILTER
 
 /obj/effect/temp_visual/censer_dust
 	icon = 'icons/effects/effects.dmi'
@@ -483,7 +565,7 @@ Inquisitorial armory down here
 	throwforce = 15
 	force = 5
 	tool_behaviour = null
-	possible_item_intents = list(/datum/intent/use, /datum/intent/dagger/thrust) //Extremely low damage, blocked by anything sturdier than a cloth shirt. Quite funny to imagine it as a shiv, however.
+	possible_item_intents = list(/datum/intent/use, /datum/intent/dagger/thrust/quick) //Extremely low damage, blocked by anything sturdier than a cloth shirt. Quite funny to imagine it as a shiv, however.
 	slot_flags = ITEM_SLOT_HIP
 	sharpness = IS_SHARP
 	experimental_inhand = TRUE
@@ -505,7 +587,7 @@ Inquisitorial armory down here
     . += span_info("Left click someone else on the 'USE' intent, while its blade is extended, to begin gathering blood from them.")
     . += span_info("It takes several cycles to fill the INDEXER with blood - at which point, it will automatically retract the blade and seal itself. This may prove dangerous if used on someone who's already suffering from blood loss.")
     . += span_info("Once filled, left-clicking the INDEXER on a signed ACCUSATION or CONFESSION will combine them into a foldable package. This package can be then folded, stamped, and mailed back to Otava through the HERMES.")
-    . += span_info("Mailing an INDEXER reveals the worshipped pantheon of whoever's blood was gathered. More MARQUES are rewarded if the INDEXER was filled with the blood of an ASCENDANT, NITEBEASTE, or CURSEBORNED.")
+    . += span_info("Mailing an INDEXER reveals the worshipped pantheon of whoever's blood was gathered. More MARQUES are rewarded if the INDEXER was filled with the blood of an ASCENDANT, NITEBEASTE, or CURSEBOUND.")
 
 /obj/item/inqarticles/indexer/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -615,7 +697,7 @@ Inquisitorial armory down here
 		full = TRUE
 		visible_message(span_warning("[src] finishes drawing blood!"))
 		active = FALSE
-		desc += span_notice(" It's full!")
+		desc += span_notice("It's full!")
 		if(cursedblood)
 			playsound(src, 'sound/items/indexer_cursed.ogg', 100, FALSE, 3)
 			possible_item_intents = list(/datum/intent/use)
@@ -671,20 +753,81 @@ Inquisitorial armory down here
 		if(!active)
 			to_chat(user, span_warning("It's not primed."))
 			return
-		if(subject)
-			if(M != subject)
-				return
-		if(HAS_TRAIT(M, TRAIT_BLOODLOSS_IMMUNE))
-			to_chat(user, span_warning("They don't have any blood to sample."))		
-			return
-		if(istype(M, /mob/living/carbon/human/species/skeleton))
-			to_chat(user, span_warning("I don't think the Inquisition values marrow much these daes."))	
-			return		
-		if(!M.mind)		
-			return	
+
 		if(full)
 			to_chat(user, span_warning("It's full."))	
 			return	
+
+		if(subject)
+			if(M != subject)
+				return
+
+		if(istype(M, /mob/living/carbon/human/species/skeleton))
+			visible_message(span_warning("[user] goes to jab [M] with [src]!"))
+			if(do_after(user, 20, FALSE, M))
+				src.say("ERROR. BONE MARROW IS NOT A VALID INDEXING SUBSTANCE.")
+				to_chat(user, span_warning("I don't think that was wise. I hope nobody saw it..."))
+				playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
+				return	
+			else
+				src.say("ERROR. BONE MARROW IS NOT A VALID INDEXING SUBSTANCE.")
+				to_chat(user, span_warning("I don't think that was wise. I hope nobody saw it..."))
+				playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
+				return	
+
+		if(iscarbon(M))
+			visible_message(span_warning("[user] goes to jab [M] with [src]!"))
+			if(do_after(user, 20, FALSE, M))
+				var/mob/living/carbon/H = M
+				if(H.dna?.species && (NOBLOOD in H.dna.species.species_traits))
+					src.say("ERROR. NO BLOOD DETECTED.")
+					playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
+					return
+			else
+				var/mob/living/carbon/H = M
+				if(H.dna?.species && (NOBLOOD in H.dna.species.species_traits))
+					src.say("ERROR. NO BLOOD DETECTED.")
+					playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
+					return
+
+		if(M.blood_volume <= 0)
+			visible_message(span_warning("[user] goes to jab [M] with [src]!"))
+			if(do_after(user, 20, FALSE, M))
+				src.say("ERROR. THEY ARE COMPLETELY DEVOID OF BLOOD.")
+				playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
+				return
+			else
+				src.say("ERROR. THEY ARE COMPLETELY DEVOID OF BLOOD.")
+				playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
+				return
+
+		if(!M.mind)		
+			return	
+
+		if(M.stat == DEAD)
+			var/found_cursed = FALSE
+			if(M.mind.has_antag_datum(/datum/antagonist/werewolf, FALSE))
+				found_cursed = TRUE
+			if(M.mind.has_antag_datum(/datum/antagonist/werewolf/lesser, FALSE))
+				found_cursed = TRUE
+			if(M.mind.has_antag_datum(/datum/antagonist/vampire, FALSE))
+				found_cursed = TRUE
+			if(M.mind.has_antag_datum(/datum/antagonist/vampire))
+				found_cursed = TRUE
+			if(!found_cursed)
+				if(do_after(user, 20, FALSE, M))
+					playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
+					src.say("EXTRACTION FAILED. NO LUX DETECTED.")
+					return
+				else
+					playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
+					src.say("EXTRACTION FAILED. NO LUX DETECTED.")
+					return
+
+			src.say("SUSPICIOUS SUBSTANCE DETECTED. DIGGING THROUGH FLESH.")
+			takeblood(M, user)
+			return
+
 		visible_message(span_warning("[user] goes to jab [M] with [src]!"))
 		if(do_after(user, 20, FALSE, M))
 			takeblood(M, user)
@@ -692,91 +835,6 @@ Inquisitorial armory down here
 			return
 	else
 		to_chat(user, span_warning("I don't know how to use this."))		
-
-/obj/item/inqarticles/tallowpot
-	name = "tallowpot"
-	desc = "A small metal pot meant for holding waxes or melted redtallow. Convenient for coating signet rings and making an imprint. The warmth of a torch, lamptern, or candle should be enough to melt the redtallow for stamping writs."
-	icon = 'icons/roguetown/items/misc.dmi'
-	icon_state = "tallowpot"
-	item_state = "tallowpot"
-	dropshrink = 0.9
-	throw_speed = 1
-	throw_range = 3
-	throwforce = 5
-	possible_item_intents = list(/datum/intent/use)
-	grid_height = 32
-	grid_width = 32
-	obj_flags = CAN_BE_HIT
-	experimental_inhand = TRUE
-	w_class = WEIGHT_CLASS_SMALL
-	intdamage_factor = 0
-	embedding = null
-	var/tallow
-	var/remaining
-	var/heatedup
-	var/messageshown = 1
-	sellprice = 15
-
-/obj/item/inqarticles/tallowpot/Initialize(mapload)
-	. = ..()
-	START_PROCESSING(SSobj, src)	// For making sure it melts.
-
-/obj/item/inqarticles/tallowpot/Destroy()
-	. = ..()
-	STOP_PROCESSING(SSobj, src)	
-
-/obj/item/inqarticles/tallowpot/process()
-	if(heatedup > 0)
-		heatedup -= 4
-		remaining = max(remaining - -20, 0)
-		messageshown = 0
-	else
-		if(tallow)
-			if(!messageshown)
-				visible_message(span_info("The redtallow in [src] hardens again."))
-				messageshown = 1
-			update_icon()
-	if(remaining == 0)
-		qdel(tallow)
-		tallow = initial(tallow)
-		update_icon()
-	
-/obj/item/inqarticles/tallowpot/attacked_by(obj/item/I, mob/living/user)
-	. = ..()
-	if(istype(I, /obj/item/reagent_containers/food/snacks/tallow/red))
-		if(!tallow)
-			var/obj/item/reagent_containers/food/snacks/tallow/red/Q = I
-			tallow = Q
-			user.transferItemToLoc(Q, src, TRUE)
-			remaining = 300
-			update_icon()
-		else
-			to_chat(user, span_info("The [src] already has redtallow in it."))
-
-	if(istype(I, /obj/item/flashlight/flare/torch/))		
-		heatedup = 28
-		visible_message(span_info("[user] warms [src] with [I]."))
-		update_icon()
-
-	if(istype(I, /obj/item/candle/)) //Could optimize this, probably. Allows candles to be used in lighting up the tallow, too.	Remove if torches and lampterns suddenly stop working for this.
-		heatedup = 28
-		visible_message(span_info("[user] warms [src] with [I]."))
-		update_icon()
-
-
-/obj/item/inqarticles/tallowpot/update_icon()
-	. = ..()	
-	if(tallow)
-		icon_state = "[initial(icon_state)]_filled"
-		if(heatedup)
-			icon_state = "[initial(icon_state)]_melted"
-	else
-		icon_state = "[initial(icon_state)]"
-
-/obj/item/inqarticles/tallowpot/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Left click with a chunk of redtallow to fill it up.")
-    . += span_info("Once filled, left-clicking the tallowpot with a torch, lamptern, candle, or any other handheld source of heat will temporarily melt the redtallow inside.")
 
 /obj/item/rope/inqarticles/inquirycord
 	name = "inquiry cordage"
@@ -811,7 +869,7 @@ Inquisitorial armory down here
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
-
+/*		//TA-EDITSTART
 /obj/item/inqarticles/garrote // Do not give this item out freely to other classes. Do not subtype this item for other classes. This is intended purely as the Confessor's identifying sidegrade, and as a bonus for the Inspector INQ. I will be very sad if you disregard this comment. Thank you. - Yische.
 	name = "\proper seizing garrote" // It's nonlethal. It's so silly and fun.
 	desc = "A macabre instrument favored by the more clandestine of the Psydonian Silver Order; A length of thick leather inquiry cordage that has been dipped in both holy water and dye before being consecrated and spell-laced, held and threaded between two iron links. Perfect for apprehension."
@@ -1031,7 +1089,7 @@ Inquisitorial armory down here
 		span_userdanger("[user] [pick("garrotes", "asphyxiates")] me!"), span_hear("I hear the sickening sound of cordage!"), COMBAT_MESSAGE_RANGE, user)
 		to_chat(user, span_danger("I [pick("garrote", "asphyxiate")] [C]!"))	
 		user.changeNext_move(CLICK_CD_RESIST)	//Stops spam for choking.	
-
+*/			//TA-EDITEND
 /obj/item/clothing/head/inqarticles/blackbag
 	name = "black bag"
 	desc = "A heavily spell-weaved padded sack intended to muffle the cries made within it. Due to the heaviness of the materials involved, application and removal of these is usually difficult for the untrained."
@@ -1431,6 +1489,12 @@ Inquisitorial armory down here
 
 /atom/movable/screen/alert/scryingeye
 	name = "SCRYING EYE"
+	desc = "I SEE YOU."
+	icon_state = "scryingeye"
+	timeout = 8 SECONDS
+
+/atom/movable/screen/alert/hagscry
+	name = "THE ROOTS OBSERVE"
 	desc = "I SEE YOU."
 	icon_state = "scryingeye"
 	timeout = 8 SECONDS

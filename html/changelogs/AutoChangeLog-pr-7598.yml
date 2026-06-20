@@ -1,0 +1,6 @@
+author: "kimesik"
+delete-after: True
+changes:
+  - rscadd: "6 different specialisations for Wretch-Deserter (now called Militant)"
+  - balance: "no free mount, no Tracking and only Novice Riding for Militants without a specialisation."
+  - balance: "Militants get a medium helmet + a steel mask instead of a heavy helmet + no mask."

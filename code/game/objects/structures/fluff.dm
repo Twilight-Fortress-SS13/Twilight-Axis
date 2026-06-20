@@ -1124,8 +1124,13 @@
 		/obj/item/rogueweapon/greatsword/psygsword,
 		/obj/item/clothing/head/roguetown/circlet,
 		/obj/item/carvedgem,  //Some of these aren't particularly worth much, but it'd be REALLY unintuitive for "valuables" to not actually be offerings
-		/obj/item/rogueweapon/huntingknife/stoneknife/kukri,
-		/obj/item/rogueweapon/huntingknife/stoneknife/opalknife,
+		/obj/item/rogueweapon/huntingknife/combat/jadekukri,
+		/obj/item/rogueweapon/huntingknife/combat/opalknife,
+		/obj/item/ammo_casing/caseless/rogue/javelin,
+		/obj/item/rogueweapon/stoneaxe/battle/coral,
+		/obj/item/rogueweapon/sword/amber,
+		/obj/item/rogueweapon/sword/short/messer/onyxa,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/rondel/rose,
 		/obj/item/rogueweapon/mace/cudgel/shellrungu,
 		/obj/item/clothing/mask/rogue/facemask/carved,
 		/obj/item/clothing/neck/roguetown/carved,
@@ -1309,14 +1314,14 @@
 
 /obj/structure/fluff/psycross/zizocross/stone
 	name = "stone inverted cross"
-	desc = "An unholy symbol, the knowledge that something so sturdy was able to be put up in reverence of the dark star, completely unattended... is a difficult anchovy to swallow for many."
+	desc = "An unholy symbol. The knowledge that something so sturdy was able to be put up in reverence of the archlych, completely unattended, is a difficult anchovy to swallow for many."
 	icon_state = "cross_zizo_r"
 	divine = FALSE
 	max_integrity = 200
 
 /obj/structure/fluff/psycross/zizocross/golden
 	name = "golden inverted cross"
-	desc = "An unholy symbol meticilously plated with leaf gold. It stands in defiance to order. The dead will rise."
+	desc = "An unholy symbol meticulously plated with leaf gold. It stands in defiance to order. The dead will rise."
 	icon_state = "cross_zizo_u"
 	divine = FALSE
 	max_integrity = 350

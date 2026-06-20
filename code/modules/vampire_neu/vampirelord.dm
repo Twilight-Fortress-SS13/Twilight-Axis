@@ -10,7 +10,7 @@
 	confess_lines = list(
 		"I AM ANCIENT!",
 		"I AM THE LAND!",
-		"I AM THE FIRSTBORNE OF KAINE!",
+		"I AM THE ETERNAL!",
 		"I AM THE INHERITOR!",
 		"I WILL NOT BE FORGOTTEN!",
 	)
@@ -35,12 +35,15 @@
 		owner.person_knows_me(MF)
 
 	var/mob/living/carbon/human/H = owner.current
+	for(var/datum/charflaw/cf in H.charflaws)
+		if(istype(cf, /datum/charflaw/hunted) || istype(cf, /datum/charflaw/targeted))
+			H.charflaws.Remove(cf)
+			QDEL_NULL(cf)
 	H.equipOutfit(/datum/outfit/job/vamplord)
 	H.set_patron(/datum/patron/inhumen/zizo)
-	H.verbs |= /mob/living/carbon/human/proc/demand_submission
+	add_verb(H, /mob/living/carbon/human/proc/demand_submission)
 	H.maxbloodpool += 3000
 	H.adjust_bloodpool(3000)
-	H.cmode_music = 'sound/music/cmode/combat_ready_to_die.ogg' //LISTEN TO ME WHETHER YOU WANT TO HEAR IT OR NOT, YOU WEREN'T EVEN BORN WHEN THIS HAPPENED
 	for(var/S in MOBSTATS)
 		H.change_stat(S, 2)
 	H.forceMove(pick(GLOB.vlord_starts))
@@ -103,7 +106,7 @@
 // NEW VERBS
 /mob/living/carbon/human/proc/demand_submission()
 	set name = "Demand Submission"
-	set category = "VAMPIRE"
+	set category = "RoleUnique.Vampire"
 	if(SSmapping.retainer.king_submitted)
 		to_chat(src, span_warning("I am already the Master of [SSmapping.config.map_name]."))
 		return
@@ -127,7 +130,7 @@
 
 /mob/living/carbon/human/proc/punish_spawn()
 	set name = "Punish Minion"
-	set category = "VAMPIRE"
+	set category = "RoleUnique.Vampire"
 
 	if(!clan_position)
 		to_chat(src, span_warning("You have no subordinates to punish."))
@@ -195,8 +198,8 @@
 
 ////////BROKEN////////
 /obj/item/clothing/suit/roguetown/armor/chainmail/iron/vampire
-	name = "old ancient ceremonial vestments" //Currently invisible, due to the lack of an object sprite. Reinstate once someone adds a 'vunder' icon to the shirt.dmi.
-	desc = "An ornate aketon, woven from crimson silk and worn beneath a layer of enchanted gilbranze maille. Vheslyn, Zizo, Kaine had all failed in their pursuits - yet, the ancient truths they left behind were more valuable than lyfe itself. It's time to show them all how a Lord truly gets it done."
+	name = "regal maille"
+	desc = "An ornate aketon, woven from crimson silk and worn beneath a layer of enchanted gilbranze maille. Vheslyn and Zizo had both failed in their pursuits - yet, the ancient truths they left behind were more valuable than lyfe itself. It's time to show them all how a Lord truly gets it done."
 	icon_state = "vunder"
 	item_state = "vunder"
 	icon = 'icons/roguetown/clothing/shirts.dmi'
@@ -207,7 +210,7 @@
 	armor = ARMOR_VAMP
 	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG
 	resistance_flags = FIRE_PROOF | ACID_PROOF
-	smeltresult = /obj/item/ingot/purifiedaalloy
+	smeltresult = /obj/item/ingot/vampire
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/iron/vampire/Initialize()
@@ -228,7 +231,7 @@
 	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG
 	allowed_sex = list(MALE, FEMALE)
 	anvilrepair = /datum/skill/craft/armorsmithing
-	smeltresult = /obj/item/ingot/purifiedaalloy
+	smeltresult = /obj/item/ingot/vampire
 	equip_delay_self = 40
 	armor_class = ARMOR_CLASS_HEAVY
 	resistance_flags = FIRE_PROOF | ACID_PROOF
@@ -240,12 +243,14 @@
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/paalloy/vampire
 	name = "ancient ceremonial vestments"
-	desc = "An ornate aketon, woven from crimson silk and worn beneath a layer of enchanted gilbranze maille. Vheslyn, Zizo, Kaine had all failed in their pursuits - yet, the ancient truths they left behind were more valuable than lyfe itself. It's time to show them all how a Lord truly gets it done."
+	desc = "An ornate aketon, woven from crimson silk and worn beneath a layer of enchanted gilbranze maille. Vheslyn, and Zizo had both failed in their pursuits - yet, the ancient truths they left behind were more valuable than lyfe itself. It's time to show them all how a Lord truly gets it done."
+	icon_state = "vhauberk"
+	item_state = "vhauberk"
 	armor_class = ARMOR_CLASS_HEAVY
 	armor = ARMOR_VAMP
 	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG
 	resistance_flags = FIRE_PROOF | ACID_PROOF
-	smeltresult = /obj/item/ingot/purifiedaalloy
+	smeltresult = /obj/item/ingot/vampire
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/paalloy/vampire/Initialize()
@@ -264,7 +269,7 @@
 	blocksound = PLATEHIT
 	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
 	anvilrepair = /datum/skill/craft/armorsmithing
-	smeltresult = /obj/item/ingot/purifiedaalloy
+	smeltresult = /obj/item/ingot/vampire
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 
@@ -284,7 +289,7 @@
 	blocksound = PLATEHIT
 	armor = ARMOR_VAMP
 	resistance_flags = FIRE_PROOF | ACID_PROOF
-	smeltresult = /obj/item/ingot/purifiedaalloy
+	smeltresult = /obj/item/ingot/vampire
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 
 /obj/item/clothing/shoes/roguetown/boots/armor/vampire/Initialize()
@@ -298,10 +303,11 @@
 	icon_state = "vgloves"
 	item_state = "vgloves"
 	armor = ARMOR_VAMP
-	smeltresult = /obj/item/ingot/purifiedaalloy
+	smeltresult = /obj/item/ingot/vampire
 	body_parts_inherent = FULL_BODY
 	max_integrity = ARMOR_INT_SIDE_ANTAG
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
+	throw_on_break = FALSE //We only get one set
 
 /obj/item/clothing/gloves/roguetown/chain/vampire/Initialize()
   ..()
@@ -310,11 +316,12 @@
 /obj/item/clothing/wrists/roguetown/bracers/paalloy/vampire
 	name = "ancient ceremonial bracers"
 	desc = "Enchanted gilbranze cuffings, clasped around the wrists. They call it a 'curse', but what would they know? What would they have in five hundred years? Would the oh-so-valiant heroes truly accept death, or would they see the pointlessness in besmirching eternal lyfe?"
-	icon_state = "ancientbracers"
-	smeltresult = /obj/item/ingot/purifiedaalloy
+	icon_state = "vbracers"
+	smeltresult = /obj/item/ingot/vampire
 	armor = ARMOR_VAMP
 	max_integrity = ARMOR_INT_SIDE_ANTAG
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
+	throw_on_break = FALSE //We only get one set.
 
 /obj/item/clothing/wrists/roguetown/bracers/paalloy/vampire/Initialize()
   ..()
@@ -323,11 +330,12 @@
 /obj/item/clothing/neck/roguetown/gorget/paalloy/vampire
 	name = "ancient ceremonial gorget"
 	desc = "A neckguard of enchanted gilbranze. Though a vampyre needn't air to lyve, they most certainly need a spine."
-	icon_state = "ancientgorget"
-	smeltresult = /obj/item/ingot/purifiedaalloy
+	icon_state = "vgorget"
+	smeltresult = /obj/item/ingot/vampire
 	armor = ARMOR_VAMP
 	max_integrity = ARMOR_INT_SIDE_ANTAG
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
+	throw_on_break = FALSE //We only get one set.
 
 /obj/item/clothing/neck/roguetown/gorget/paalloy/vampire/Initialize()
   ..()
@@ -343,9 +351,10 @@
 	block2add = FOV_BEHIND
 	stack_fovs = FALSE
 	resistance_flags = FIRE_PROOF | ACID_PROOF
-	smeltresult = /obj/item/ingot/purifiedaalloy
+	smeltresult = /obj/item/ingot/vampire
 	var/active_item = FALSE
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
+	throw_on_break = FALSE //We only get one set.
 
 /obj/item/clothing/head/roguetown/helmet/heavy/vampire/Initialize()
   ..()

@@ -151,11 +151,12 @@
 				return FALSE
 			user.say("Baotha, fill my cup with endless mirth!")
 			playsound(loc, 'sound/misc/evilevent.ogg', 100, FALSE, -1)
-			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-			var/ritual_type = list("Ozium x3", "Moon Dust x3", "Purified Moondust", "Spice", "Herozium", "Smartium x3", "Grave Powder", "Corps Dust x3", "Inferrum x3", "Grenzelhoft Sour x3", "Otavan Red x3", "Otavan White x3", "Elven Red x3", "Valmora Blue", "Aged Spiced Wine", "Delectable Spiced Wine")
+			var/ritual_type = list("Ozium x3", "Moon Dust x3", "Purified Moondust x2", "Star shugar x2", "Spice x2", "Herozium x2", "Smartium x3", "Grave Powder x3", "Corps Dust x3", "Inferrum x3", "Grenzelhoft Sour x3", "Otavan Red x3", "Otavan White x3", "Elven Red x3", "Valmora Blue x2", "Aged Spiced Wine x2", "Delectable Spiced Wine x2")
 			var/chooselection = input(user, "Rituals of Gedonism", src) as null|anything in ritual_type
 			var/choose = /obj/item/reagent_containers/powder/ozium
 			var/count = 3
+			if(!chooselection)
+				return
 			switch(chooselection)
 				if("Ozium x3")
 					choose = /obj/item/reagent_containers/powder/ozium
@@ -163,6 +164,9 @@
 					choose = /obj/item/reagent_containers/powder/moondust
 				if("Purified Moondust x2")
 					choose = /obj/item/reagent_containers/powder/moondust_purest
+					count = 2
+				if("Star shugar x2")
+					choose = /obj/item/reagent_containers/powder/starsugar
 					count = 2
 				if("Spice x2")
 					choose = /obj/item/reagent_containers/powder/spice
@@ -199,6 +203,7 @@
 				new choose (get_turf(src))
 				playsound(src, 'sound/magic/mending.ogg', 35, TRUE, -2)
 				sleep(1 SECONDS)
+			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
 			return TRUE 
 		if("Masquarade")
 			if(!do_after(user, 5 SECONDS))

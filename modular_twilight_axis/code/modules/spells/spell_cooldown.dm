@@ -2,7 +2,7 @@
 	if(!owner)
 		CRASH("[type] - can_cast_spell called on a spell without an owner!")
 ////////////////////////////////////////
-	if(!iscarbon(owner)) //TA changes
+	if(!iscarbon(owner) && !istype(owner, /mob/living/simple_animal/pet/familiar)) //TA changes
 		return FALSE
 ////////////////////////////////////////
 	if(!(spell_flags & SPELL_IGNORE_SPELLBLOCK) && (HAS_TRAIT(owner, TRAIT_SPELLBLOCK) || HAS_TRAIT(owner, TRAIT_SPELLCOCKBLOCK)))

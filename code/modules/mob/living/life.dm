@@ -53,7 +53,8 @@
 		if(blood_volume > BLOOD_VOLUME_SURVIVE)
 			/*for(var/datum/wound/wound as anything in get_wounds())//TA EDIT START
 				if(wound?.severity <= WOUND_SEVERITY_MODERATE)
-					wound.heal_wound(0.4)*/
+					if(!istype(wound, /datum/wound/slash/incision))
+						wound.heal_wound(0.4)*/
 			if(HAS_TRAIT(src, TRAIT_PSYDONITE_4))
 				adjustBruteLoss(-5)
 				adjustFireLoss(-5)
@@ -66,13 +67,15 @@
 	if(HAS_TRAIT(src, TRAIT_WOUNDREGEN))
 		for(var/datum/wound/wound as anything in get_wounds())
 			wound.heal_wound(10)
+
 	if(!stat && HAS_TRAIT(src, TRAIT_LYCANRESILENCE) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
 		if(src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed))
 			return
 		handle_wounds()
 		if(blood_volume > BLOOD_VOLUME_SURVIVE)
 			for(var/datum/wound/wound as anything in get_wounds())
-				wound.heal_wound(3)
+				if(!istype(wound, /datum/wound/slash/incision))
+					wound.heal_wound(3)
 
 	if(blood_volume <= BLOOD_VOLUME_SURVIVE && stat)
 		handle_passive_blood()

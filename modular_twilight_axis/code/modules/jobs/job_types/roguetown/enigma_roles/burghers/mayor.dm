@@ -5,7 +5,7 @@
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
+	forbidden_races = list(RACES_DESPISED)
 	allowed_sexes = list(MALE, FEMALE)
 	display_order = JDO_MAYOR
 	tutorial = "Погрязший в коррупции или же великий благодетель, быть может, что-то между - вы мэр города Рокхилл и пользуетесь уважением и почётом среди его жителей. \

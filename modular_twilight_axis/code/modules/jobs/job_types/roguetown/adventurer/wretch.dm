@@ -33,30 +33,39 @@
 
 /proc/bountychoice_heretic(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
-	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
-	switch(crimeschoice)
-		if("I'm nobody")
-			GLOB.excommunicated_players += H.real_name
-		if("They fear me")
-			if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
-				H.put_in_hands(new /obj/item/clothing/head/roguetown/helmet/blacksteel/psythorns)
-			wretch_select_bounty(H)
-			H.change_stat(STATKEY_WIL, 2)
-			H.change_stat(STATKEY_CON, 1)
+	if(H.patron?.type == /datum/patron/inhumen/baotha)
+		H.change_stat(STATKEY_WIL, -1)
+		to_chat(H, span_purple("'Я менял свой образ так много раз, что сам уже не помню кем я был....'"))
+		return
+	else
+		var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+		switch(crimeschoice)
+			if("I'm nobody")
+				GLOB.excommunicated_players += H.real_name
+			if("They fear me")
+				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
+					H.put_in_hands(new /obj/item/clothing/head/roguetown/helmet/blacksteel/psythorns)
+				wretch_select_bounty(H)
+				H.change_stat(STATKEY_WIL, 2)
+				H.change_stat(STATKEY_CON, 1)
 
 /proc/bountychoice_hereticspy(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
-	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
-	switch(crimeschoice)
-		if("I'm nobody")
-			GLOB.excommunicated_players += H.real_name
-		if("They fear me")
-			if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
-				H.put_in_hands(new /obj/item/clothing/mask/rogue/spectacles/inq)
-				H.put_in_hands(new /obj/item/grapplinghook)
-			wretch_select_bounty(H)
-			H.change_stat(STATKEY_SPD, 1)
-			H.change_stat(STATKEY_INT, 1)
+	if(H.patron?.type == /datum/patron/inhumen/baotha)
+		H.change_stat(STATKEY_SPD, -1)
+		to_chat(H, span_purple("'Я менял свой образ так много раз, что сам уже не помню кем я был....'"))
+	else
+		var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+		switch(crimeschoice)
+			if("I'm nobody")
+				GLOB.excommunicated_players += H.real_name
+			if("They fear me")
+				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
+					H.put_in_hands(new /obj/item/clothing/mask/rogue/spectacles/inq)
+					H.put_in_hands(new /obj/item/grapplinghook)
+				wretch_select_bounty(H)
+				H.change_stat(STATKEY_SPD, 1)
+				H.change_stat(STATKEY_INT, 1)
 
 /proc/bountychoice_vigilante(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")

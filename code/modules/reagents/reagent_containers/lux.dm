@@ -9,6 +9,7 @@
 	list_reagents = list(/datum/reagent/vitae = 5)
 	grind_results = list(/datum/reagent/vitae = 5)
 	sellprice = 90
+	dropshrink = 0.7
 
 /datum/reagent/vitae
 	name = "Vitae"
@@ -16,6 +17,7 @@
 	color = "#7d8e98" // rgb: 96, 165, 132
 	overdose_threshold = 10
 	metabolization_rate = 0.1
+	taste_description = "a purified, innocent life energy that excites your consciousness. You're blurring in pleasure, and the world is becoming so pleasant."
 
 /datum/reagent/vitae/overdose_process(mob/living/M)
 	M.adjustOrganLoss(ORGAN_SLOT_HEART, 0.25  * REAGENTS_EFFECT_MULTIPLIER)
@@ -26,6 +28,7 @@
 /datum/reagent/vitae/on_mob_life(mob/living/carbon/M)
 	M.sate_addiction(/datum/charflaw/addiction/junkie)
 	M.apply_status_effect(/datum/status_effect/buff/vitae)
+	M.set_drugginess(45)
 	..()
 
 /obj/item/reagent_containers/lux_impure
@@ -35,6 +38,30 @@
 	icon_state = "lux_impure"
 	item_state = "lux_impure"
 	sellprice = 15
+	dropshrink = 0.7
+	possible_transfer_amounts = list()
+	volume = 15
+	list_reagents = list(/datum/reagent/impure_vitae = 5)
+	grind_results = list(/datum/reagent/impure_vitae = 5)
+
+/datum/reagent/impure_vitae
+	name = "Impure vitae"
+	description = "Dirty vital energy obtained from a sinful body."
+	overdose_threshold = 10
+	metabolization_rate = 0.1
+	color = "#9c0000"
+	taste_description = "a all of the sinful thoughts and deeds of the owner of this piece of soul."
+
+/datum/reagent/impure_vitae/overdose_process(mob/living/M)
+	M.adjustOrganLoss(ORGAN_SLOT_HEART, 0.25  * REAGENTS_EFFECT_MULTIPLIER)
+	M.adjustFireLoss(0.25  * REAGENTS_EFFECT_MULTIPLIER, 0)
+	..()
+	. = 1
+
+/datum/reagent/impure_vitae/on_mob_life(mob/living/carbon/M)
+	M.sate_addiction(/datum/charflaw/addiction/junkie)
+	M.apply_status_effect(/datum/status_effect/debuff/impure_vitae)
+	..()
 
 /obj/item/reagent_containers/lux_moss
 	name = "corrupted lux"
@@ -43,3 +70,4 @@
 	icon_state = "mosslux"
 	item_state = "mosslux"
 	sellprice = 1
+	dropshrink = 0.7

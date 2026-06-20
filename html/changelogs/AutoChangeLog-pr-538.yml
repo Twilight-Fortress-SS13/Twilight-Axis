@@ -1,5 +1,0 @@
-author: "KrillUr"
-delete-after: True
-changes:
-  - balance: "Вся броня с ТЯЖЁЛЫМ весом (требует трейт Plate training) получила NECK в зоны покрытия."
-  - code_imp: "Модульно добавлена 1 зона покрытия для кучи брони."

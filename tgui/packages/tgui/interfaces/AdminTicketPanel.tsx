@@ -601,13 +601,13 @@ export const AdminTicketPanel = (props) => {
                                   icon="user-secret"
                                   tooltip={
                                     admin_hide_charname
-                                      ? 'Character name hidden — click to show it'
-                                      : 'Character name visible — click to hide it'
+                                      ? 'Stealth Mode Active — click to disable'
+                                      : 'Stealth Mode Inactive — click to enable'
                                   }
                                   selected={!!admin_hide_charname}
                                   onClick={() => act('toggle_charname')}
                                 >
-                                  {admin_hide_charname ? 'Anon' : 'Named'}
+                                  {admin_hide_charname ? 'Stealth ON' : 'Stealth OFF'}
                                 </Button>
                                 <Button
                                   icon="image"

@@ -598,11 +598,11 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 	if(!("[user.mind.current.real_name]_faction" in user.faction))
 		user.faction |= "[user.mind.current.real_name]_faction"
 
-	if(!locate(/obj/effect/proc_holder/spell/invoked/gravemark) in user.mind?.spell_list)
-		user.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark/no_sprite)
+	if(!locate(/datum/action/cooldown/spell/gravemark) in user.mind?.spell_list)
+		user.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark/no_sprite)
 
-	if(!locate(/obj/effect/proc_holder/spell/invoked/minion_order/carbon) in user.mind?.spell_list) 
-		user.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order/carbon)
+	if(!locate(/datum/action/cooldown/spell/minion_order) in user.mind?.spell_list) 
+		user.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order)
 
 	var/spirit_type = get_spirit_type()
 	var/skill = user.get_skill_level(/datum/skill/magic/holy)

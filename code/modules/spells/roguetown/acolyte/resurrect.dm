@@ -28,6 +28,8 @@
 	var/debuff_type = /datum/status_effect/debuff/revived
 	var/structure_range = 1
 	var/harms_undead = TRUE
+	var/zizo = FALSE
+	var/matthios = FALSE
 	priest_excluded = TRUE
 
 /obj/effect/proc_holder/spell/invoked/resurrect/start_recharge()
@@ -53,41 +55,45 @@
 			to_chat(user, span_warning("[validation_result] on the floor next to or on top of [target]."))
 			revert_cast()
 			return FALSE
+		if(!zizo)
+			var/found_structure = FALSE
+			var/list/search_area = oview(structure_range, target)
 
-		var/found_structure = FALSE
-		var/list/search_area = oview(structure_range, target)
+			for(var/atom/A in search_area)
+				// Check if the atom itself is the required structure type
+				if(istype(A, required_structure))
+					found_structure = TRUE
+					break
 
-		for(var/atom/A in search_area)
-			// Check if the atom itself is the required structure type
-			if(istype(A, required_structure))
-				found_structure = TRUE
-				break
+				if(istype(A, /turf))
+					var/turf/T = A
+					for(var/obj/O in T.contents)
+						if(istype(O, required_structure))
+							found_structure = TRUE
+							break // Found it in the turf, no need to check further
+				if(found_structure)
+					break
 
-			if(istype(A, /turf))
-				var/turf/T = A
-				for(var/obj/O in T.contents)
-					if(istype(O, required_structure))
-						found_structure = TRUE
-						break // Found it in the turf, no need to check further
-			if(found_structure)
-				break
-
-		if(!found_structure)
-			var/atom/temp_structure = required_structure
-			to_chat(user, span_warning("I need a holy [initial(temp_structure.name)] near [target]."))
-			revert_cast()
-			return FALSE
+			if(!found_structure)
+				var/atom/temp_structure = required_structure
+				to_chat(user, span_warning("I need a holy [initial(temp_structure.name)] near [target]."))
+				revert_cast()
+				return FALSE
 		if(!target.check_revive(user))
 			revert_cast()
 			return FALSE
+
 		if(target.mob_biotypes & MOB_UNDEAD && harms_undead) //positive energy harms the undead
-			target.visible_message(
-				span_danger("[target] is unmade by divine magic!"), 
-				span_userdanger("I'm unmade by divine magic!")
-			)
-			target.gib()
+			if(alert(user, "[target]'s body rattles and seizes under the divine force. This will likely unmake them permanently. Continue?", "Divine Revival", "PURGE THE UNCLEAN!", "Stop") != "PURGE THE UNCLEAN!")
+				to_chat(user, span_notice("You halt the rite before the divine force can fully take hold."))
+				revert_cast()
+				return FALSE
+			target.visible_message(span_danger("[target] is unmade by divine magic!"), span_userdanger("Holy power tears my undead form apart!"))
+			playsound(target.loc, 'sound/magic/churn.ogg', 100, TRUE)
+			target.dust()
 			return TRUE
-		if(alert(target, "They are calling for you. Are you ready?", "Revival", "I need to wake up", "Don't let me go") != "I need to wake up")
+
+		if(alert(target, "They are calling for you. Are you ready?", "TEETERING BETWEEN PARADISE AND PERDITION.", "I need to wake up!", "Don't let me go..") != "I need to wake up!")
 			target.visible_message(span_notice("Nothing happens. They are not being let go."))
 			return FALSE
 		target.adjustOxyLoss(-target.getOxyLoss()) //Ye Olde CPR
@@ -115,13 +121,17 @@
 			target.apply_status_effect(debuff_type)	//Temp debuff on revive, your stats get hit temporarily. Doubly so if having rotted.
 		//Due to an increased cost and cooldown, these revival types heal quite a bit.
 		target.apply_status_effect(/datum/status_effect/buff/healing, 14)
-		#ifdef REVIVE_GRACE
-		target.apply_status_effect(/datum/status_effect/debuff/revive_grace) // TA EDIT
-		#endif
+		addtimer(CALLBACK(src, PROC_REF(deathmark), target), 5 MINUTES)
 		consume_items(target)
 		return TRUE
 	revert_cast()
 	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/resurrect/proc/deathmark(mob/living/victim)
+	if(victim.stat != DEAD)
+		victim.apply_status_effect(/datum/status_effect/debuff/permadeath) //The deathmark in question. This temporarily adds unrevivability to the target; die again while it's active, and your story'll be over.. for now.
+		victim.play_permadeath_indicator()
+		to_chat(victim, span_danger("You suddenly feel a deathly chill from within, as the lux begins to creep across your heart once more. The thread betwixt your soul and body remains thin; to succumb again so soon would ensure its total severance."))
 
 /obj/effect/proc_holder/spell/invoked/resurrect/cast_check(skipcharge, mob/user = usr)
 	if(!..())
@@ -130,6 +140,25 @@
 	return TRUE
 
 /obj/effect/proc_holder/spell/invoked/resurrect/proc/validate_items(atom/center)
+	// Zizo revivals require nearby bleeding sacrifice instead of items
+	if(zizo)
+		for(var/mob/living/L in range(1, center))
+			if(L == center)
+				continue
+			if(QDELETED(L))
+				continue
+			if(L.stat == DEAD)
+				continue
+
+			if(L.get_bleed_rate() > 0)
+				return ""
+
+		return "A living, bleeding victim"
+
+	if(matthios)
+	// Matthios revivals will drain mammon actively now
+		return ""
+
 	var/list/current_required_items = get_current_required_items()
 	var/list/available_items = list()
 	var/list/missing_items = list()
@@ -615,8 +644,7 @@
 
 /obj/effect/proc_holder/spell/invoked/resurrect/undivided
 	name = "Lesser Anastasis"
-	desc = "Resurrects the chosen target, bringing them back from the dead. </br>This blessing requires an offering to complete, in the form of a piece of golden \
-	ore. </br>Casting this on an undead or unholy target will smite them with explosive results. </br>Depending on how far gone \
+	desc = "Resurrects the chosen target, bringing them back from the dead. Casting this on an undead or unholy target will smite them with explosive results. </br>Depending on how far gone \
 	the spirit is, the 'Anastasis' blessing might need to be casted multiple times before successfully resurrecting them. </br>Unlike a regular Healing miracle, this \
 	can affect - and resurrect - devout Psydonians as well."
 	recharge_time = 20 MINUTES //Double the cooldown, no more gold cost, it simply doesn't work with the new economy and transmutation changes.

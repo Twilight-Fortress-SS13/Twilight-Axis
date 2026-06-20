@@ -8,6 +8,15 @@
 			swing_state = FALSE
 			return FALSE
 
+	if(mid_climb)
+		interrupt_climb()
+
+	if(!has_status_effect(/datum/status_effect/stealth_revealed) || !user.has_status_effect(/datum/status_effect/stealth_revealed))
+		if(get_skill_level(/datum/skill/misc/sneaking) >= SKILL_LEVEL_JOURNEYMAN || HAS_TRAIT(src, TRAIT_LIGHT_STEP))
+			apply_status_effect(/datum/status_effect/stealth_revealed)
+		if(user.get_skill_level(/datum/skill/misc/sneaking) >= SKILL_LEVEL_JOURNEYMAN || HAS_TRAIT(user, TRAIT_LIGHT_STEP))
+			user.apply_status_effect(/datum/status_effect/stealth_revealed)
+
 	if(!cmode)
 		return FALSE
 	if(stat)
@@ -33,6 +42,8 @@
 			CAR.adjust_arousal_special(src, 2)
 
 	if(has_status_effect(/datum/status_effect/debuff/vulnerable))
+		remove_status_effect(/datum/status_effect/buff/clash)
+		remove_status_effect(/datum/status_effect/buff/clash/limbguard)
 		if(!has_status_effect(/datum/status_effect/buff/weapon_binded) && !has_status_effect(/datum/status_effect/debuff/weapon_binded))
 			if(ishuman(src) && user.get_tempo_bonus(TEMPO_TAG_BINDABLE) && mind && user?.mind)
 				var/held = get_active_held_item()
@@ -42,8 +53,9 @@
 						if(HL.try_bind(held, user, TRUE))
 							remove_status_effect(/datum/status_effect/debuff/vulnerable)
 							return TRUE
+		return FALSE
 
-	// TA Edit start - SOUNDBREAKER
+		// TA Edit start - SOUNDBREAKER
 	var/success = FALSE
 
 	switch(d_intent)
@@ -59,3 +71,12 @@
 
 	return success
 	// TA Edit end - SOUNDBREAKER
+
+/mob/living/proc/interrupt_climb()
+	if(!mid_climb)
+		return FALSE
+	mid_climb = FALSE
+	doing = FALSE
+	playsound(src, 'sound/combat/swingdelay_disrupted.ogg', 100, TRUE)
+	visible_message(span_warning("[src]'s grip is broken!"), span_warning("My grip is broken!"))
+	return TRUE

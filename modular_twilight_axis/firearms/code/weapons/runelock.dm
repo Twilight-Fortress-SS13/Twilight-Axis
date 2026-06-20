@@ -248,7 +248,7 @@
 	slot_flags = ITEM_SLOT_BACK
 	w_class = WEIGHT_CLASS_BULKY
 	wdefense = 3
-	damfactor = 1
+	damfactor = 1.5
 	critfactor = 1
 	reload_time = 12
 

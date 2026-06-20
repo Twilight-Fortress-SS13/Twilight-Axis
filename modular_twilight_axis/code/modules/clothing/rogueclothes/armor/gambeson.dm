@@ -20,13 +20,13 @@
 	salvage_result = /obj/item/reagent_containers/lux
 	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE + 200
 	armor = ARMOR_BRIGANDINE
-	allowed_race = NON_DWARVEN_RACE_TYPES
 	auto_repair_mode = TRUE
 	relative_repair_interval = 15 SECONDS
 	interrupt_damount = 15
 	var/realname
 	var/realdesc
 	var/realstate
+	var/active_item = FALSE
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/baotha/Initialize()
 	.=..()
@@ -40,6 +40,21 @@
 	if(iscarbon(user))
 		if(user.patron.type == /datum/patron/inhumen/baotha)
 			. += ("This creature is a small gift from my patron, and I can make it take any form I desire.")
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/baotha/equipped(mob/living/user, slot)
+	. = ..()
+	if(active_item)
+		return
+	if(slot == SLOT_SHIRT || SLOT_ARMOR)
+		active_item = TRUE
+		ADD_TRAIT(user, TRAIT_BITERHELM, TRAIT_GENERIC)
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/baotha/dropped(mob/living/user)
+	..()
+	if(!active_item)
+		return
+	active_item = FALSE
+	REMOVE_TRAIT(user, TRAIT_BITERHELM, TRAIT_GENERIC)
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/baotha/attack_right(var/mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)
@@ -106,6 +121,11 @@
 				name = realname
 				desc = realdesc
 				icon_state = realstate
+
+		if(loc == user)
+			user.update_inv_armor()
+			user.update_inv_shirt()
+
 		playsound(user, pick('sound/magic/magic_nulled.ogg'), 20, TRUE)
 
 /obj/item/clothing/suit/roguetown/shirt/padedetrshirt

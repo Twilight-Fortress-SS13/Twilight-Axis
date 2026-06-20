@@ -60,7 +60,7 @@ It will also call down lightning strikes from the sky, and fling people with it'
 	..()
 
 /mob/living/simple_animal/hostile/retaliate/rogue/voiddragon
-	name = "void dragon"
+	name = "void drake"
 	desc = "An ancient creature from a bygone age. Now would be a good time to run."
 	health = 5000
 	maxHealth = 5000
@@ -77,7 +77,7 @@ It will also call down lightning strikes from the sky, and fling people with it'
 	environment_smash = ENVIRONMENT_SMASH_WALLS
 	base_intents = list(/datum/intent/unarmed/dragonclaw)
 	faction = list(FACTION_ABBERANT)
-	death_loot = list(/obj/item/clothing/ring/dragon_ring = 3, /obj/item/book/granter/arcane_aspect/minor = 2, /obj/item/book/granter/arcane_aspect/major = 1)
+	death_loot = list(/obj/item/clothing/ring/dragon_ring = 4)
 	obj_damage = 400	//Behold, nothing shall keep the dragon out
 	melee_damage_lower = 80
 	melee_damage_upper = 80

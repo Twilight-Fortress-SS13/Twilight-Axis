@@ -16,6 +16,7 @@
 	anvilrepair = /datum/skill/craft/blacksmithing
 	resistance_flags = FIRE_PROOF
 	experimental_inhand = TRUE
+	is_important = TRUE
 
 	grid_height = 32
 	grid_width = 32
@@ -904,6 +905,12 @@
 	desc = "A ancient, rusty key."
 	icon_state = "rustkey"
 	lockid = "admin_event_door"
+
+/obj/item/roguekey/zhurch/onmap
+	name = "brass key"
+	desc = "A key made of brass."
+	icon_state = "rustkey"
+	lockid = "zhurch"
 
 //////////////
 // SIDEFOLK //

@@ -53,10 +53,10 @@
 	var/list/arousal_data = list()
 	SEND_SIGNAL(H, COMSIG_SEX_GET_AROUSAL, arousal_data)
 	var/point_count = 0
-	if(arousal_data["arousal"] >= 90)
+	if(arousal_data["arousal"] >= 80)
 		to_chat(user, span_love("My pray has arousual!"))
 		point_count += 2
-	if(H.has_stress_event(/datum/stressevent/lasthigh))
+	if(H.has_stress_event(/datum/stressevent/TAlasthigh))
 		to_chat(user, span_love("My pray has under my high-blessing!"))
 		point_count += 1
 	if(H.has_status_effect(/datum/status_effect/buff/druqks))
@@ -149,8 +149,8 @@
 
 //T0 that tells the user the person's vice.
 /obj/effect/proc_holder/spell/invoked/TAbaothavice
-	name = "Tell Vice"
-	desc = "Tells you the targets Vice."
+	name = "Show desires"
+	desc = "Tells you the targets vice and arousal."
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "vice"
@@ -163,7 +163,7 @@
 	invocation_type = "none"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
-	recharge_time = 5 SECONDS 
+	recharge_time = 3 SECONDS 
 	miracle = TRUE
 	devotion_cost = 10
 	var/list/fake_vices = list()
@@ -196,6 +196,10 @@
 			return FALSE
 
 	to_chat(user, span_info("They are... [span_warning("a [vice_found]")]"))
+	var/list/arousal_data = list()
+	SEND_SIGNAL(H, COMSIG_SEX_GET_AROUSAL, arousal_data)
+	var/arousal = arousal_data["arousal"]
+	to_chat(user, span_info("Their arousal is [span_warning("[arousal]")]"))
 	return TRUE
 
 // T0: Bless drink

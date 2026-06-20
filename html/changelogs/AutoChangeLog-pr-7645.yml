@@ -1,0 +1,4 @@
+author: "OrbisAnima"
+delete-after: True
+changes:
+  - bugfix: "Restores T4 Noc's spell scroll crafting functionality. It has a variable dream point and cooldown now, cannot be used during day, but can create more than it used to (probably requires buff/nerf but this was a restore of functionality.)"

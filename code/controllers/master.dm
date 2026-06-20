@@ -332,7 +332,8 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 
 		// Sustained elevated tick dilation: catches the "15-40% TD sustained for N seconds" case.
 		// Uses SStime_track.time_dilation_avg_fast (already a percentage, smoothed over ~few seconds).
-		if(SStime_track && SStime_track.time_dilation_avg_fast >= CONFIG_GET(number/sustained_td_threshold_pct))
+		var/sustained_td_threshold = CONFIG_GET(number/sustained_td_threshold_pct)
+		if(sustained_td_threshold > 0 && SStime_track && SStime_track.time_dilation_avg_fast >= sustained_td_threshold)
 			if(!td_elevated_since)
 				td_elevated_since = REALTIMEOFDAY
 			else if(REALTIMEOFDAY - td_elevated_since >= CONFIG_GET(number/sustained_td_duration))
@@ -624,12 +625,9 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 
 
 
-/datum/controller/master/stat_entry()
-	if(!statclick)
-		statclick = new/obj/effect/statclick/debug(null, "Initializing...", src)
-
-	stat("Byond:", "(FPS:[world.fps]) (TickCount:[world.time/world.tick_lag]) (TickDrift:[round(Master.tickdrift,1)]([round((Master.tickdrift/(world.time/world.tick_lag))*100,0.1)]%))")
-	stat("Master Controller:", statclick.update("(TickRate:[Master.processing]) (Iteration:[Master.iteration])"))
+/datum/controller/master/stat_entry(msg)
+	msg = "(TickRate:[Master.processing]) (Iteration:[Master.iteration]) (TickLimit: [round(Master.current_ticklimit, 0.1)])"
+	return msg
 
 /datum/controller/master/StartLoadingMap()
 	//disallow more than one map to load at once, multithreading it will just cause race conditions
@@ -666,6 +664,15 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 /// `reason_tag` is a short filename-safe identifier (e.g. "stall", "sustainedTD").
 /// `reason_detail` is the human-readable explanation shown in logs and admin chat.
 /datum/controller/master/proc/AttemptProfileDump(delay, reason_tag = "emergency", reason_detail = "unspecified")
+	if(!CONFIG_GET(flag/profile_emergency_dumps)) // TA EDIT START
+		return FALSE
+
+	if(!CONFIG_GET(flag/auto_profile))
+		return FALSE
+
+	if(!SSprofiler)
+		return FALSE // TA EDIT END
+
 	if(REALTIMEOFDAY - last_profiled <= delay)
 		return FALSE
 	last_profiled = REALTIMEOFDAY
@@ -674,3 +681,4 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	log_game(msg)
 	message_admins("<span class='boldannounce'>\[PERF] [msg]</span>")
 	SSprofiler.DumpFile(allow_yield = FALSE, reason = reason_tag)
+	return TRUE

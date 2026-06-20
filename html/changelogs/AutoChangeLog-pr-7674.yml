@@ -1,0 +1,4 @@
+author: "FreeStylaLT"
+delete-after: True
+changes:
+  - sound: "Added *sniff sfx. Ported from Ratwood."

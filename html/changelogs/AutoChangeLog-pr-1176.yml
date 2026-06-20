@@ -1,0 +1,4 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - bugfix: "исправлен недочет с тем, что смерть не убирала стелс"

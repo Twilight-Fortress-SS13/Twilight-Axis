@@ -9,23 +9,7 @@
 	effectedstats = list(STATKEY_LCK = -1)
 	duration = 1 MINUTES
 	alert_type = /atom/movable/screen/alert/status_effect/emberwine
-
-/datum/status_effect/debuff/nekoldun
-	id = "Psydon's Music"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/nekoldun
-	duration = 70 SECONDS
-
-/datum/status_effect/debuff/nekoldun/on_apply()
-	. = ..()
-	ADD_TRAIT(owner, TRAIT_SPELLCOCKBLOCK, id)
-
-/datum/status_effect/debuff/nekoldun/on_remove()
-	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_SPELLCOCKBLOCK, id)
-
-/atom/movable/screen/alert/status_effect/debuff/nekoldun
-	name = "Psydon's Music"
-
+/*
 /* Kockout */
 /datum/status_effect/debuff/knockout
 	id = "knockout"
@@ -67,7 +51,7 @@
 
 /atom/movable/screen/alert/status_effect/debuff/knockout
 	name = "Drowsy"
-
+*/
 /datum/status_effect/debuff/vampiric_slowdown 
 	id = "vampiric_slowdown"
 	duration = 120 
@@ -289,69 +273,3 @@
 /atom/movable/screen/alert/status_effect/debuff/blood_call
 	name = "Blood Call"
 	desc = "Hard to concentrate!"
-/datum/status_effect/debuff/revive_grace
-	id = "revive_grace"
-	duration = 5 MINUTES
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/revive_grace
-	var/died_again = FALSE
-
-/datum/status_effect/debuff/revive_grace/on_apply()
-	. = ..()
-	var/mob/living/carbon/human/H = owner
-	if(!H)
-		return
-	RegisterSignal(H, COMSIG_MOB_DEATH, PROC_REF(on_death))
-
-/datum/status_effect/debuff/revive_grace/on_remove()
-	. = ..()
-	var/mob/living/carbon/human/H = owner
-	if(!H)
-		return
-	UnregisterSignal(H, COMSIG_MOB_DEATH)
-	if(!died_again)
-		H.apply_status_effect(/datum/status_effect/debuff/revive_dnr)
-
-/datum/status_effect/debuff/revive_grace/proc/on_death()
-	var/mob/living/carbon/human/H = owner
-	if(!H)
-		return
-	died_again = TRUE
-	H.remove_status_effect(type)
-
-/atom/movable/screen/alert/status_effect/debuff/revive_grace
-	name = "Lux Rush"
-	desc = "My Lux is strained from the recent resurrection, burning fiercely at its peak — but I can feel this surge will soon fade."
-	icon_state = "stressg"
-
-/datum/status_effect/debuff/revive_dnr
-	id = "revive_dnr"
-	duration = 1 HOURS
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/revive_dnr
-	var/permanent = FALSE
-
-/datum/status_effect/debuff/revive_dnr/on_apply()
-	. = ..()
-	if(!owner)
-		return
-	ADD_TRAIT(owner, TRAIT_DNR, "revive_grace")
-	RegisterSignal(owner, COMSIG_MOB_DEATH, PROC_REF(on_death))
-
-/datum/status_effect/debuff/revive_dnr/on_remove()
-	. = ..()
-	if(!owner)
-		return
-	if(!permanent)
-		REMOVE_TRAIT(owner, TRAIT_DNR, "revive_grace")
-	UnregisterSignal(owner, COMSIG_MOB_DEATH)
-
-/datum/status_effect/debuff/revive_dnr/proc/on_death()
-	var/mob/living/carbon/human/H = owner
-	if(!H)
-		return
-	permanent = TRUE
-	H.remove_status_effect(type)
-
-/atom/movable/screen/alert/status_effect/debuff/revive_dnr
-	name = "Lux Exhaustion"
-	desc = "The strain of binding with Lux has left my body fractured and unready. It cannot accept another — not yet."
-	icon_state = "stressb"

@@ -6,7 +6,7 @@
 	total_positions = 0
 	spawn_positions = 0
 	antag_job = TRUE
-	
+
 	tutorial = "Long ago you did a crime worthy of your bounty being hung on the wall outside of the local inn. You now live with your fellow freemen in the bog, and generally get up to no good."
 
 	outfit = null
@@ -52,7 +52,7 @@
 
 /datum/outfit/job/roguetown/bandit/pre_equip(mob/living/carbon/human/H)
 	. = ..()
-	H.verbs |= /mob/proc/haltyell_exhausting
+	add_verb(H, /mob/proc/haltyell_exhausting)
 
 /datum/outfit/job/roguetown/bandit/post_equip(mob/living/carbon/human/H)
 	..()
@@ -125,26 +125,45 @@
 	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
 	if(!bandit_job)
 		return
+	if(bandit_job.admin_slot_override)
+		return
 
-	if(is_storyteller_soft_antag_blocked())
+	if(!SSgamemode)
 		bandit_job.total_positions = 0
 		bandit_job.spawn_positions = 0
 		return
 
-	var/player_count = length(GLOB.joined_player_list)
-	var/ready_player_count = length(GLOB.ready_player_list)
-	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
+	var/player_count = SSgamemode.get_correct_popcount()
+
+	if(!SSgamemode.story_antag_open_slots(/datum/antagonist/bandit, player_count))
+		bandit_job.total_positions = 0
+		bandit_job.spawn_positions = 0
+		return
 
 	var/slots = 0
-
-	if(SSmapping.config.map_name == "Rockhill")
-		if(current_players > 60)
-			// На Рокхилле - 5 бандитов с 60 онлайна и +1 слот за каждые 40 сверху
-			slots = 5 + round((current_players - 60) / 40)
+	var/admin_slot = !SSgamemode.allow_vote ? SSgamemode.admin_slots["Bandit"] : null
+	if(!isnull(admin_slot))
+		slots = max(0, admin_slot)
 	else
-		// Дун ворлд - всегда 5 бандитов
-		if(current_players > 60)
-			slots = 5
+		var/storyteller_type = SSgamemode.story_policy_type(TRUE)
+		var/max_slots = SSgamemode.story_antag_slot_cap(/datum/antagonist/bandit, TRUE, storyteller_type)
+		if(max_slots <= 0)
+			bandit_job.total_positions = 0
+			bandit_job.spawn_positions = 0
+			return
 
-	bandit_job.total_positions = slots
-	bandit_job.spawn_positions = slots
+		var/min_players = SSgamemode.story_antag_min_players(/datum/antagonist/bandit)
+		var/slot_scaling = SSgamemode.story_antag_scaling_step(/datum/antagonist/bandit)
+		slots = SSgamemode.storyteller_scale_slots(
+			max_slots,
+			player_count,
+			FALSE,
+			slot_scaling,
+			min_players,
+			SSgamemode.hard_antag_mult(),
+		)
+
+	slots = SSgamemode.story_antag_slots(slots, /datum/antagonist/bandit, player_count)
+
+	bandit_job.total_positions = max(bandit_job.current_positions, slots)
+	bandit_job.spawn_positions = max(bandit_job.current_positions, slots)

@@ -156,7 +156,7 @@
 			if(H.patron?.type == /datum/patron/inhumen/zizo)
 				backpack_contents+= list(/obj/item/clothing/neck/roguetown/psicross/inhumen/iron)
 				H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
-				H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark)
+				H.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark)
 				H.mind?.current.faction += "[H.name]_faction"
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
 	armor = /obj/item/clothing/suit/roguetown/armor/leather

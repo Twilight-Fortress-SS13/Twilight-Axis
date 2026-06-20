@@ -13,7 +13,8 @@ SUBSYSTEM_DEF(job)
 	var/list/latejoin_trackers = list()	//Don't read this list, use GetLateJoinTurfs() instead
 
 	var/overflow_role = "Fuckyou"
-	var/list/level_order = list(JP_HIGH,JP_MEDIUM,JP_LOW)
+	var/list/level_order = list(JP_HIGH, JP_MEDIUM, JP_LOW)
+	var/list/lobby_level_order = list(JP_BOOST, JP_HIGH, JP_MEDIUM, JP_LOW) // TA EDIT
 
 /datum/controller/subsystem/job/Initialize(timeofday)
 	SSmapping.HACK_LoadMapConfig()
@@ -315,6 +316,8 @@ SUBSYSTEM_DEF(job)
 			key = "Church"
 		if(BURGHERS)
 			key = "Burghers"
+		if(ATC)
+			key = "Azurian Trading Company"
 		if(PEASANTS)
 			key = "Peasants"
 		if(INQUISITION)
@@ -323,6 +326,8 @@ SUBSYSTEM_DEF(job)
 			key = "Sidefolk"
 		if(WANDERERS)
 			key = "Wanderers"
+		if(ANTAGONIST)
+			key = "Antagonists"
 		else
 			key = "Wanderers"
 	return key
@@ -433,6 +438,10 @@ SUBSYSTEM_DEF(job)
 	do_required_jobs()
 	JobDebug("DO, Required Jobs Check end")
 
+	JobDebug("DO, Running Donor Priority Jobs") // TA EDIT
+	AssignDonorPriorityJobs() // TA EDIT
+	JobDebug("DO, Donor Priority Jobs end") // TA EDIT
+
 	//Other jobs are now checked
 	JobDebug("DO, Running Standard Check")
 
@@ -529,6 +538,8 @@ SUBSYSTEM_DEF(job)
 	//Mop up people who can't leave.
 	for(var/mob/dead/new_player/player in unassigned) //Players that wanted to back out but couldn't because they're antags (can you feel the edge case?)
 		RejectPlayer(player)
+
+	FinalizeDonorJobBoostCooldowns() // TA EDIT
 
 	return validate_required_jobs(required_jobs)
 
@@ -771,6 +782,8 @@ SUBSYSTEM_DEF(job)
 				young++
 				continue
 			switch(player.client.prefs.job_preferences[job.title])
+				if(JP_BOOST) // TA EDIT
+					high++ // TA EDIT
 				if(JP_HIGH)
 					high++
 				if(JP_MEDIUM)

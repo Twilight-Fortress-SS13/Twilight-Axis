@@ -1,10 +1,8 @@
-/mob/living/Moved()
+/mob/living/Moved(atom/OldLoc, Dir)
 	. = ..()
 	stop_looking()
 	update_turf_movespeed(loc)
 	update_pixel_shifting(TRUE)
-//	if(m_intent == MOVE_INTENT_RUN)
-//		consider_ambush()
 
 /mob/living/setDir(newdir, ismousemovement)
 	. = ..()
@@ -47,6 +45,24 @@
 /mob/living/update_sneak_invis()
 	if(m_intent = MOVE_INTENT_SNEAK)
 */
+
+/mob/living/proc/stop_sneaking_on_death()
+	if(m_intent != MOVE_INTENT_SNEAK && !rogue_sneaking)
+		return
+
+	m_intent = MOVE_INTENT_WALK
+
+	if(rogue_sneaking)
+		animate(src, alpha = initial(alpha), time = 0)
+		alpha = initial(alpha)
+		regenerate_icons()
+		rogue_sneaking = FALSE
+		SEND_SIGNAL(src, COMSIG_MOB_BREAK_SNEAK)
+
+	if(hud_used?.static_inventory)
+		for(var/atom/movable/screen/rogmove/selector in hud_used.static_inventory)
+			selector.update_icon()
+
 /mob/living/def_intent_change()
 	. = ..()
 	update_move_intent_slowdown()

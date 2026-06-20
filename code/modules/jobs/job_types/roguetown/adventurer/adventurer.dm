@@ -46,10 +46,12 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/sfighter/mhunter,
 		/datum/advclass/sfighter/barbarian,
 		/datum/advclass/sfighter/ironclad,
+		/datum/advclass/sfighter/deprived,
 		/datum/advclass/rogue,
 		/datum/advclass/rogue/thief,
 		/datum/advclass/rogue/bard,
 		/datum/advclass/rogue/swashbuckler,
+		/datum/advclass/rogue/antiquarian,
 		/datum/advclass/mystic,
 		/datum/advclass/mystic/resilientsoul,
 		/datum/advclass/mystic/holyblade,
@@ -110,9 +112,9 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 
 	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 	if(current_players > 70)
-		var/extra = floor((current_players - 70) / 5)
+		var/extra = floor((current_players - 80) / 5)
 		slots += extra
-	slots = min(slots, 30)
+	slots = min(slots, 25)
 
 	adventurer_job.total_positions = slots
 	adventurer_job.spawn_positions = slots

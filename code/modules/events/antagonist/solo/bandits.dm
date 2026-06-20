@@ -9,7 +9,7 @@
 	antag_flag = ROLE_BANDIT
 	shared_occurence_type = SHARED_MINOR_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
-	storyteller_guarantee_flags = STORYTELLER_FAVOR_BANDIT
+	storyteller_rumour_name = "bandits"
 
 	restricted_roles = DEFAULT_ANTAG_BLACKLISTED_ROLES
 	base_antags = 0
@@ -26,36 +26,10 @@
 	var/leader = FALSE
 
 /datum/round_event_control/antagonist/solo/bandits/preRunEvent()
-	if(is_storyteller_villain_blocked())
-		return EVENT_CANT_RUN
-	return ..()
+	return EVENT_CANT_RUN
 
 /datum/round_event/antagonist/solo/bandits/start()
-	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
-	bandit_job.total_positions = length(setup_minds)
-	bandit_job.spawn_positions = length(setup_minds)
-	SSmapping.retainer.bandit_goal = rand(200,400) + (length(setup_minds) * rand(200,400))
-	for(var/datum/mind/antag_mind as anything in setup_minds)
-		var/datum/job/J = SSjob.GetJob(antag_mind.current?.job)
-		J?.current_positions = max(J?.current_positions-1, 0)
-		antag_mind.current.unequip_everything()
-		SSjob.AssignRole(antag_mind.current, "Bandit")
-		SSmapping.retainer.bandits |= antag_mind.current
-		antag_mind.add_antag_datum(/datum/antagonist/bandit)
-
-		SSrole_class_handler.setup_class_handler(antag_mind.current, list(CTAG_BANDIT = 20))
-		antag_mind.current:advsetup = TRUE
-		antag_mind.current.hud_used?.set_advclass()
-
-	SSrole_class_handler.bandits_in_round = TRUE
+	return
 
 /datum/round_event_control/antagonist/solo/bandits/canSpawnEvent(players_amt, gamemode, fake_check)
-	. = ..()
-	if(!.)
-		return
-	var/list/candidates = get_candidates()
-
-	if(length(candidates) < 1)
-		return FALSE
-
-	return TRUE
+	return FALSE

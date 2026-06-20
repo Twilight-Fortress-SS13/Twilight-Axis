@@ -1,0 +1,9 @@
+author: "SpadesNeil"
+delete-after: True
+changes:
+  - rscadd: "Pottery items can now be fired in smelting furnaces in addition to baking ovens."
+  - rscadd: "Additional recipe for glass batch that uses bonemeal."
+  - qol: "Changed the names and descriptions of many unfinished pottery items so players can better understand what to do."
+  - balance: "Glass batch no longer requires expert skill to make."
+  - balance: "Glass statues can now be smelted back into glass."
+  - bugfix: "alch_grind_recipe for horn was missing its name, this is now fixed."

@@ -6,7 +6,7 @@
 	// Disabled for now, handled by bandit wave!
 	weight = 0
 	earliest_start = 30 MINUTES
-	min_players = 25
+	min_players = 40
 	tags = list(
 		TAG_COMBAT,
 		TAG_VILLIAN,
@@ -14,6 +14,8 @@
 
 /datum/round_event_control/antagonist/migrant_wave/gnolls/preRunEvent()
 	if(is_storyteller_soft_antag_blocked())
+		return EVENT_CANT_RUN
+	if(SSgamemode.current_storyteller?.preferred_gnoll_mode == GNOLL_SCALING_NONE)
 		return EVENT_CANT_RUN
 	return ..()
 

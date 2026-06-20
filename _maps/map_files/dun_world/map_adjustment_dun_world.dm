@@ -16,7 +16,6 @@
 		/datum/job/roguetown/knight_enigma, 
 		/datum/job/roguetown/royal_sergeant, 
 		/datum/job/roguetown/overseer, 
-		/datum/job/roguetown/dungeoneer,
 		/datum/job/roguetown/mayor,
 		/datum/job/roguetown/bailiff,
 	)

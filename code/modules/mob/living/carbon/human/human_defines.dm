@@ -11,6 +11,7 @@
 	can_buckle = TRUE
 	buckle_lying = FALSE
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
+	var/taints_loot = FALSE
 
 	ambushable = 1
 
@@ -225,6 +226,3 @@
 
 	/// Guarded Virtue (TRAIT_DECEIVING_MEEKNESS) exclusive variable for filtering out our descriptors from examine.
 	var/show_descriptors = TRUE
-
-	/// This is for highlighting marks in track.dm
-	var/mob/living/current_mark

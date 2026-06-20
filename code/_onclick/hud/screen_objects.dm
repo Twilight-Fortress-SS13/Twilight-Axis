@@ -79,6 +79,17 @@
 /atom/movable/screen/skills/Click(location, control, params)
 	var/list/modifiers = params2list(params)
 
+	if(modifiers["middle"])
+		if(ishuman(usr))
+			var/mob/living/carbon/human/H = usr
+		
+			if(H.get_skill_level(/datum/skill/combat/bows) < SKILL_LEVEL_EXPERT)
+				return
+		
+			var/datum/archery_perk_menu/menu = new(H)
+			menu.ui_interact(H)
+		return
+
 	if(modifiers["right"])
 		var/ht
 		var/mob/living/L = usr
@@ -150,11 +161,7 @@
 			if(H.craftingthing)
 				last_craft = world.time
 				var/datum/component/personal_crafting/C = H.craftingthing
-				if(H.client.legacycraft)
-					C.roguecraft(location, control, params, H)
-				else
-					C.ui_interact(H)
-			else
+				C.ui_interact(H)
 
 
 /atom/movable/screen/area_creator
@@ -1584,7 +1591,7 @@
 		_ensure_limb_vis(zone, gender_prefix)
 		var/has_bleed = _has_visible_bleed(BP)
 		var/damage = min(BP.burn_dam + BP.brute_dam, BP.max_damage)
-		if(HAS_TRAIT(H, TRAIT_NOPAIN))
+		if(HAS_TRAIT(H, TRAIT_NOPAIN) && !H.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) && !H.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed))
 			_apply_limb_state(zone, (damage || has_bleed) ? "#78a8ba" : null, 0, has_bleed)
 			return
 		var/wound_alpha = clamp(round((damage / BP.max_damage) * 510), 0, 255)
@@ -1874,7 +1881,7 @@
 				state2use = "stress"
 			if(5 to 14)
 				state2use = "stress2"
-			if(5 to 24)
+			if(15 to 24)
 				state2use = "stress3"
 			if(25 to 999)
 				state2use = "stress4"
@@ -2416,13 +2423,3 @@
 
 /atom/movable/screen/bloodpool_maskpart/mask
 	icon_state = "mana_mask"
-
-
-/atom/movable/screen/bloodpool/breath
-	name = "breath"
-	screen_loc = "WEST-1:3, CENTER+2"
-
-/atom/movable/screen/bloodpool/breath/Initialize(mapload)
-	. = ..()
-	set_fill_color("#00eaff")
-	set_value(1.0)

@@ -43,6 +43,9 @@
 			var/obj/item/IM = L.get_active_held_item()
 			H.process_clash(src, IM)
 			return
+		if(ishuman(L))
+			var/mob/living/carbon/human/H = L
+			H.process_golgatha_rebuke(src)
 		if(mob_biotypes & MOB_UNDEAD)
 			if(L.has_status_effect(/datum/status_effect/buff/necras_vow))
 				if(isnull(mind))
@@ -87,7 +90,20 @@
 						visible_message(span_warning("[src] pushes [AM]."))
 					changeNext_move(CLICK_CD_MELEE)
 					return
-		A.attack_hand(src, params)
+		if(cmode && used_intent.type == INTENT_HARM && isitem(A))
+			if(stamina_add(8))
+				var/dmg = get_punch_dmg()
+				var/obj/item/I = A
+				I.take_damage(dmg)
+				I.try_damage_pushback(src)
+				changeNext_move(CLICK_CD_MELEE)
+				var/verbu = pick(used_intent.attack_verb)
+				log_combat(src, I, "attacked with fists")
+				visible_message(span_danger("[src] [verbu] [I]!"))
+				var/tempsound = used_intent.hitsound
+				playsound(loc,  tempsound, 100, FALSE, -1)
+		else
+			A.attack_hand(src, params)
 		if(pulling)
 			changeNext_move(CLICK_CD_MELEE)
 

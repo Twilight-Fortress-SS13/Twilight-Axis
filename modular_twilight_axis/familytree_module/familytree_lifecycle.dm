@@ -15,7 +15,6 @@
 		/datum/job/roguetown/town_watch,
 		/datum/job/roguetown/vanguard,
 		/datum/job/roguetown/overseer,
-		/datum/job/roguetown/dungeoneer,
 	)
 
 	// Retinue (military)
@@ -75,7 +74,7 @@
 		ftlog("NOBLE DYNASTY: [H.real_name] blocked - no tier role")
 		return FALSE
 	ftlog("NOBLE DYNASTY: [H.real_name] eligible for ruling family (noble dynasty entry)")
-	request_family_confirmation(H, CALLBACK(src, PROC_REF(do_assign_noble_to_dynasty), H), "dynasty")
+	request_family_confirmation(H, CALLBACK(src, PROC_REF(do_assign_noble_to_dynasty), H), "dynasty", familytree_role_text_ru("relative"))
 	return TRUE
 
 /datum/controller/subsystem/familytree/proc/do_assign_noble_to_dynasty(mob/living/carbon/human/H)
@@ -180,16 +179,20 @@
 	var/mob/living/carbon/human/person_b
 	var/datum/callback/on_both_accept
 	var/confirm_type
+	var/relation_text_a
+	var/relation_text_b
 	var/result_a = CONFIRM_PENDING
 	var/result_b = CONFIRM_PENDING
 	var/resolved = FALSE
 	var/timerid
 
-/datum/family_confirm_session/New(mob/living/carbon/human/a, mob/living/carbon/human/b, datum/callback/cb, ctype)
+/datum/family_confirm_session/New(mob/living/carbon/human/a, mob/living/carbon/human/b, datum/callback/cb, ctype, role_text_a = null, role_text_b = null)
 	person_a = a
 	person_b = b
 	on_both_accept = cb
 	confirm_type = ctype
+	relation_text_a = role_text_a
+	relation_text_b = role_text_b
 
 /datum/family_confirm_session/Destroy()
 	if(timerid)
@@ -269,7 +272,7 @@
 		person.familytree_assignment_scheduled = TRUE
 		addtimer(CALLBACK(SSfamilytree, TYPE_PROC_REF(/datum/controller/subsystem/familytree, run_local_assignment), person, person.familytree_pref), 10 SECONDS)
 
-/datum/controller/subsystem/familytree/proc/request_family_confirmation(mob/living/carbon/human/H, datum/callback/on_accept, confirm_type = "family", busy_attempt = 0, busy_deferred = FALSE)
+/datum/controller/subsystem/familytree/proc/request_family_confirmation(mob/living/carbon/human/H, datum/callback/on_accept, confirm_type = "family", relation_text = null, busy_attempt = 0, busy_deferred = FALSE)
 	if(!H || QDELETED(H))
 		return
 	if(H?.familytree_opted_out)
@@ -292,21 +295,27 @@
 			H.familytree_confirmation_pending = FALSE
 			return
 		ftlog("CONFIRM DEFER: [H.real_name] busy=[busy_reason] retry=[busy_attempt + 1]/[familytree_busy_retry_limit] type=[confirm_type]")
-		addtimer(CALLBACK(src, PROC_REF(request_family_confirmation), H, on_accept, confirm_type, busy_attempt + 1, TRUE), familytree_busy_retry_delay)
+		addtimer(CALLBACK(src, PROC_REF(request_family_confirmation), H, on_accept, confirm_type, relation_text, busy_attempt + 1, TRUE), familytree_busy_retry_delay)
 		return
 	H.familytree_confirmation_pending = TRUE
-	INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), H, on_accept, confirm_type)
+	INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), H, on_accept, confirm_type, null, relation_text)
 
-/datum/controller/subsystem/familytree/proc/familytree_confirmation_found_text(confirm_type, mob/living/carbon/human/person, mob/living/carbon/human/partner = null, mutual = FALSE)
+/datum/controller/subsystem/familytree/proc/familytree_confirmation_found_text(confirm_type, mob/living/carbon/human/person, mob/living/carbon/human/partner = null, mutual = FALSE, relation_text = null)
 	var/base_text
 	if(confirm_type == "targeted_spouse" && partner)
 		base_text = "Ваша судьба сошлась с [partner.real_name]!"
 	else if(confirm_type == "spouse" || confirm_type == "targeted_spouse")
 		base_text = "Вам нашли пару!"
+	else if(confirm_type == "sibling_house")
+		base_text = mutual ? "Вам предлагают основать сиблинговый дом!" : "Вам предлагают основать сиблинговый дом!"
 	else if(confirm_type == "family")
 		base_text = mutual ? "Система нашла для вас семейную связь!" : "Система нашла для вас семью!"
+	else if(confirm_type == "house")
+		base_text = "Система нашла для вас семью!"
 	else
 		base_text = "Система нашла для вас семью!"
+	if(relation_text)
+		base_text += "\nВаша роль: [relation_text]"
 	if(person?.know_your_fate && partner)
 		base_text += familytree_format_fate_reveal(partner)
 	return base_text
@@ -327,7 +336,7 @@
 /datum/controller/subsystem/familytree/proc/familytree_confirmation_should_chat(confirm_type)
 	return confirm_type != "targeted_spouse"
 
-/datum/controller/subsystem/familytree/proc/do_solo_confirmation(mob/living/carbon/human/H, datum/callback/on_accept, confirm_type, mob/living/carbon/human/context_person = null)
+/datum/controller/subsystem/familytree/proc/do_solo_confirmation(mob/living/carbon/human/H, datum/callback/on_accept, confirm_type, mob/living/carbon/human/context_person = null, relation_text = null)
 	if(!H || QDELETED(H))
 		return
 	if(!H?.client)
@@ -336,7 +345,7 @@
 		on_accept.Invoke()
 		return
 
-	var/found_text = familytree_confirmation_found_text(confirm_type, H, context_person)
+	var/found_text = familytree_confirmation_found_text(confirm_type, H, context_person, FALSE, relation_text)
 	if(familytree_confirmation_should_chat(confirm_type))
 		to_chat(H, span_love(found_text))
 
@@ -360,7 +369,7 @@
 			H.familytree_opted_out = TRUE
 			unsubscribe_familytree_human(H, "player declined [confirm_type]")
 
-/datum/controller/subsystem/familytree/proc/request_mutual_confirmation(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/callback/on_both_accept, confirm_type = "family", busy_attempt = 0, busy_deferred = FALSE)
+/datum/controller/subsystem/familytree/proc/request_mutual_confirmation(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/callback/on_both_accept, confirm_type = "family", relation_text_a = null, relation_text_b = null, busy_attempt = 0, busy_deferred = FALSE)
 	if(!person_a || QDELETED(person_a) || !person_b || QDELETED(person_b))
 		if(busy_deferred)
 			if(person_a && !QDELETED(person_a))
@@ -392,7 +401,7 @@
 			person_b.familytree_confirmation_pending = FALSE
 			return
 		ftlog("MUTUAL DEFER: type=[confirm_type] retry=[busy_attempt + 1]/[familytree_busy_retry_limit] a=[person_a.real_name] busy=[busy_reason_a || "no"] b=[person_b.real_name] busy=[busy_reason_b || "no"]")
-		addtimer(CALLBACK(src, PROC_REF(request_mutual_confirmation), person_a, person_b, on_both_accept, confirm_type, busy_attempt + 1, TRUE), familytree_busy_retry_delay)
+		addtimer(CALLBACK(src, PROC_REF(request_mutual_confirmation), person_a, person_b, on_both_accept, confirm_type, relation_text_a, relation_text_b, busy_attempt + 1, TRUE), familytree_busy_retry_delay)
 		return
 
 	if(!person_a?.client && !person_b?.client)
@@ -403,17 +412,17 @@
 	if(!person_a?.client)
 		person_a.familytree_confirmation_pending = FALSE
 		person_b.familytree_confirmation_pending = TRUE
-		INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), person_b, on_both_accept, confirm_type, person_a)
+		INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), person_b, on_both_accept, confirm_type, person_a, relation_text_b)
 		return
 	if(!person_b?.client)
 		person_b.familytree_confirmation_pending = FALSE
 		person_a.familytree_confirmation_pending = TRUE
-		INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), person_a, on_both_accept, confirm_type, person_b)
+		INVOKE_ASYNC(src, PROC_REF(do_solo_confirmation), person_a, on_both_accept, confirm_type, person_b, relation_text_a)
 		return
 
 	person_a.familytree_confirmation_pending = TRUE
 	person_b.familytree_confirmation_pending = TRUE
-	var/datum/family_confirm_session/session = new(person_a, person_b, on_both_accept, confirm_type)
+	var/datum/family_confirm_session/session = new(person_a, person_b, on_both_accept, confirm_type, relation_text_a, relation_text_b)
 	session.timerid = addtimer(CALLBACK(session, TYPE_PROC_REF(/datum/family_confirm_session, force_timeout)), MUTUAL_CONFIRM_TIMEOUT, TIMER_STOPPABLE)
 
 	ftlog("MUTUAL CONFIRM: started type=[confirm_type] a=[person_a.real_name] b=[person_b.real_name]")
@@ -447,7 +456,8 @@
 		return
 
 	var/mob/living/carbon/human/partner = is_person_a ? session.person_b : session.person_a
-	var/found_text = familytree_confirmation_found_text(session.confirm_type, person, partner, TRUE)
+	var/relation_text_for_self = is_person_a ? session.relation_text_a : session.relation_text_b
+	var/found_text = familytree_confirmation_found_text(session.confirm_type, person, partner, TRUE, relation_text_for_self)
 	if(familytree_confirmation_should_chat(session.confirm_type))
 		to_chat(person, span_love(found_text))
 

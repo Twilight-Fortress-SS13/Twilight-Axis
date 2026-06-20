@@ -106,3 +106,79 @@
 	button_icon = 'modular_twilight_axis/icons/mob/actions/inq.dmi'
 	button_icon_state = "repulse"
 	invocations = list("Éloigne-toi!", "Pas Maintenant!")
+
+/obj/effect/proc_holder/spell/self/invisibility/runed
+	name = "Runed Cloak"
+	desc = "Make yourself completly invisible to chase your prey in her nightmares."
+	releasedrain = 0
+	chargedrain = 0
+	chargetime = 0
+	overlay_icon = 'icons/mob/actions/gnollmiracles.dmi'
+	action_icon = 'icons/mob/actions/gnollmiracles.dmi'
+	overlay_state = "stalk"
+	action_icon_state = "stalk"
+	recharge_time = 30 SECONDS
+	
+/obj/effect/proc_holder/spell/self/invisibility/cast(list/targets, mob/living/user)
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(H.anti_magic_check(TRUE, TRUE))
+			return FALSE
+		H.visible_message(span_warning("[H] starts to fade into thin air!"), span_notice("You start to become invisible!"))
+		var/dur = 20
+		H.apply_status_effect(/datum/status_effect/buff/psy_inv)
+		animate(H, alpha = 0, time = 1 SECONDS, easing = EASE_IN)
+		H.mob_timers[MT_INVISIBILITY] = world.time + dur SECONDS
+		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, update_sneak_invis), TRUE), dur SECONDS)
+		addtimer(CALLBACK(H, TYPE_PROC_REF(/atom/movable, visible_message), span_warning("[H] fades back into view."), span_notice("You become visible again.")), dur SECONDS)
+		return TRUE
+	revert_cast()
+	return FALSE
+
+/datum/status_effect/buff/psy_inv
+	alert_type = /atom/movable/screen/alert/status_effect/buff/psy_inv
+	id = "triumph"
+
+/atom/movable/screen/alert/status_effect/buff/psy_inv
+	name = "Invisible"
+	desc = "Psydon covers me"
+	icon_state = "triumph"
+
+/datum/status_effect/buff/psy_inv/on_apply()
+	duration = 20 SECONDS
+	ADD_TRAIT(owner, TRAIT_VOLF, "redlens")
+	effectedstats = list(STATKEY_SPD = 5)
+	. = ..()
+
+/datum/status_effect/buff/psy_inv/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_VOLF, "redlens")
+	owner.visible_message(span_warning("[owner] wavers, their energies simmering down."))
+	owner.OffBalance(5 SECONDS)
+
+/atom/movable/screen/fullscreen/volf
+	icon_state = "curse1"
+	layer = BLIND_LAYER
+
+/datum/client_colour/volf
+	colour = list(rgb(74, 114, 162), rgb(169, 116, 204), rgb(16, 16, 16), rgb(0,0,0))
+	priority = 1
+
+/atom/movable/screen/alert/status_effect/debuff/blindness/psy
+	name = "Blindness"
+	desc = "I see naught but darkness!"
+
+/datum/status_effect/debuff/blindness/psy
+	id = "blindness"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blindness/psy
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/blindness/on_creation(mob/living/new_owner, assocskill)
+	. = ..()
+
+/datum/status_effect/debuff/blindness/psy/on_apply()
+	. = ..()
+
+/datum/status_effect/debuff/blindness/psy/on_remove()
+	. = ..()
+	to_chat(owner, span_warning("My vision returns...!"))

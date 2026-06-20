@@ -3,6 +3,7 @@ GLOBAL_LIST_EMPTY(ghost_images_simple) //this is a list of all ghost images as t
 
 GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
+#define ROGUE_GHOST_MAX_BODY_RANGE 20
 /mob/dead/observer
 	name = "ghost"
 	desc = "" //jinkies!
@@ -62,6 +63,9 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	var/deadchat_name
 	var/datum/spawners_menu/spawners_menu
 	var/ghostize_time = 0
+	var/atom/movable/ghost_body_anchor
+	var/turf/ghost_body_anchor_turf
+	var/next_body_range_warning = 0
 	move_resist = INFINITY
 
 /mob/dead/observer/rogue
@@ -79,15 +83,6 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	icon = 'icons/roguetown/mob/misc.dmi'
 	icon_state = "hollow"
 	alpha = 150
-
-/mob/dead/observer/rogue/Move(n, direct)
-	if(world.time < next_gmove)
-		return
-	next_gmove = world.time + 3
-
-	setDir(direct)
-
-	. = ..()
 
 /mob/dead/observer/screye
 //	see_invisible = SEE_INVISIBLE_LIVING
@@ -108,14 +103,16 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	set_invisibility(GLOB.observer_default_invisibility)
 	set_glide_size(DELAY_TO_GLIDE_SIZE(3)) // 6 is atom/movable animation speed TA EDIT
 
-	verbs += list(
+	add_verb(src, list(
 		/mob/dead/observer/proc/dead_tele,
 		/mob/dead/observer/proc/open_spawners_menu,
-		/mob/dead/observer/proc/tray_view)
+		/mob/dead/observer/proc/tray_view))
 
 	if(!istype(src, /mob/dead/observer/rogue/arcaneeye))
 		if(!istype(src, /mob/dead/observer/screye))
-			client?.verbs += GLOB.ghost_verbs
+			if(client)
+				add_verb(client, GLOB.ghost_verbs)
+			client?.init_verbs()
 			to_chat(src, span_danger("Click the <b>SKULL</b> on the left of your HUD to respawn."))
 
 	if(icon_state in GLOB.ghost_forms_with_directions_list)
@@ -144,6 +141,10 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 				var/obj/Y = body.loc
 
 				T = get_turf(Y)
+
+		ghost_body_anchor = body
+		if(T)
+			ghost_body_anchor_turf = T
 
 		gender = body.gender
 		if(body.mind && body.mind.name)
@@ -202,8 +203,8 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	real_name = name
 
 	if(!fun_verbs)
-		verbs -= /mob/dead/observer/verb/boo
-		verbs -= /mob/dead/observer/verb/possess
+		remove_verb(src, /mob/dead/observer/verb/boo)
+		remove_verb(src, /mob/dead/observer/verb/possess)
 
 	GLOB.dead_mob_list += src
 
@@ -224,7 +225,9 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	if(!(istype(src, /mob/dead/observer/rogue/arcaneeye)))
 		if(istype(src, /mob/dead/observer/screye))
 			return
-		client?.verbs += GLOB.ghost_verbs
+		if(client)
+			add_verb(client, GLOB.ghost_verbs)
+		client?.init_verbs()
 		to_chat(src, span_danger("Click the <b>SKULL</b> on the left of your HUD to respawn."))
 
 /mob/dead/observer/narsie_act()
@@ -452,6 +455,48 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return
 	ghostize(0)
 
+/mob/dead/observer/proc/get_ghost_body_turf()
+	var/turf/body_turf
+	if(ghost_body_anchor && !QDELETED(ghost_body_anchor))
+		body_turf = get_turf(ghost_body_anchor)
+	if(!body_turf && mind?.current && !QDELETED(mind.current))
+		ghost_body_anchor = mind.current
+		body_turf = get_turf(ghost_body_anchor)
+	if(body_turf)
+		ghost_body_anchor_turf = body_turf
+		return body_turf
+	return ghost_body_anchor_turf
+
+/mob/dead/observer/proc/can_move_near_body(turf/target_turf)
+	return TRUE
+
+/mob/dead/observer/rogue/can_move_near_body(turf/target_turf)
+	if(istype(src, /mob/dead/observer/rogue/arcaneeye))
+		return TRUE
+	var/turf/body_turf = get_ghost_body_turf()
+	if(!body_turf || !target_turf)
+		return TRUE
+	if(body_turf.z == target_turf.z && get_dist(body_turf, target_turf) <= ROGUE_GHOST_MAX_BODY_RANGE)
+		return TRUE
+
+	var/turf/current_turf = get_turf(src)
+	if(current_turf && current_turf.z == body_turf.z && body_turf.z == target_turf.z)
+		var/current_distance = get_dist(body_turf, current_turf)
+		var/target_distance = get_dist(body_turf, target_turf)
+		if(current_distance > ROGUE_GHOST_MAX_BODY_RANGE && target_distance < current_distance)
+			return TRUE
+
+	if(client && world.time >= next_body_range_warning)
+		to_chat(src, span_warning("I cannot stray farther from my body."))
+		next_body_range_warning = world.time + 2 SECONDS
+	return FALSE
+
+/mob/dead/observer/rogue/forceMove(atom/destination)
+	var/turf/target_turf = get_turf(destination)
+	if(!can_move_near_body(target_turf))
+		return FALSE
+	return ..()
+
 /mob/dead/observer/Move(NewLoc, direct)
 	if(updatedir)
 		setDir(direct)//only update dir if we actually need it, so overlays won't spin on base sprites that don't have directions of their own
@@ -489,14 +534,16 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	SSdroning.kill_droning(src.client)
 	remove_client_colour(/datum/client_colour/monochrome)
 	client.change_view(CONFIG_GET(string/default_view))
-	client?.verbs -= GLOB.ghost_verbs
+	if(client)
+		remove_verb(client, GLOB.ghost_verbs)
+	client?.init_verbs()
 	SStgui.on_transfer(src, mind.current) // Transfer NanoUIs.
 	mind.current.key = key
 	return TRUE
 
 /mob/dead/observer/returntolobby(modifier as num)
 	set name = "{RETURN TO LOBBY}"
-	set category = "Options"
+	set category = "Preferences.Options"
 	set hidden = 1
 	if (CONFIG_GET(flag/norespawn))
 		return
@@ -538,7 +585,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		qdel(M)
 		return
 
-	client.verbs -= GLOB.ghost_verbs
+	remove_verb(client, GLOB.ghost_verbs)
+	client.init_verbs()
 	M.key = key
 	return
 
@@ -1000,11 +1048,11 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 			ghostimage_simple.icon_state = icon_state
 		if("fun_verbs")
 			if(fun_verbs)
-				verbs += /mob/dead/observer/verb/boo
-				verbs += /mob/dead/observer/verb/possess
+				add_verb(src, /mob/dead/observer/verb/boo)
+				add_verb(src, /mob/dead/observer/verb/possess)
 			else
-				verbs -= /mob/dead/observer/verb/boo
-				verbs -= /mob/dead/observer/verb/possess
+				remove_verb(src, /mob/dead/observer/verb/boo)
+				remove_verb(src, /mob/dead/observer/verb/possess)
 
 /mob/dead/observer/reset_perspective(atom/A)
 	if(client)
@@ -1116,3 +1164,5 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 			client.images += t_ray_images
 		else
 			client.images -= stored_t_ray_images
+
+#undef ROGUE_GHOST_MAX_BODY_RANGE

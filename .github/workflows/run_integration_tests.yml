@@ -55,9 +55,27 @@ jobs:
         id: run_tests
         run: |
           source $HOME/BYOND/byond/bin/byondsetup
-          /usr/bin/time -v bash tools/ci/run_server.sh ${{ inputs.map }} 2> metrics.txt
+
+          set +e
+
+          /usr/bin/time -v bash tools/ci/run_server.sh ${{ inputs.map }} > server_stdout.txt 2> metrics.txt
+          STATUS=$?
+
+          echo "===== server stdout ====="
+          cat server_stdout.txt || true
+
+          echo "===== metrics / stderr ====="
+          cat metrics.txt || true
+
+          echo "===== ci logs ====="
+          find ci_test/data/logs -maxdepth 4 -type f -print -exec sed -n '1,260p' {} \; || true
+
           MEM_KB=$(grep "Maximum resident set size" metrics.txt | awk '{print $6}')
-          echo "max_mem=$((MEM_KB / 1024))MB" >> $GITHUB_OUTPUT
+          if [ -n "$MEM_KB" ]; then
+            echo "max_mem=$((MEM_KB / 1024))MB" >> $GITHUB_OUTPUT
+          fi
+
+          exit $STATUS
           
       # - name: On test fail, write a step summary
       #   if: always() && steps.run_tests.outcome == 'failure'

@@ -6,16 +6,16 @@
 	faction = "Station"
 	total_positions = 2
 	spawn_positions = 2
-	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = ALL_AGES_LIST
 	allowed_patrons = list(/datum/patron/divine/pestra)
-
+	forbidden_races = list(RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/keeper
 	display_order = JDO_KEEPER
 	give_bank_account = TRUE
-	min_pq = 3
+	min_pq = 5
 	max_pq = null
 	round_contrib_points = 3
+	same_job_respawn_delay = 20 MINUTES
 
 	job_traits = list(TRAIT_MEDICINE_EXPERT, TRAIT_HOMESTEAD_EXPERT,
 						  TRAIT_ALCHEMY_EXPERT, TRAIT_SEWING_EXPERT,
@@ -88,4 +88,4 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T3, passive_gain = CLERIC_REGEN_MINOR, start_maxed = TRUE)
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_UPPER_MIDDLE_CLASS, H, "Church Funding.")
+		SStreasury.grant_savings(ECONOMIC_UPPER_MIDDLE_CLASS, H)

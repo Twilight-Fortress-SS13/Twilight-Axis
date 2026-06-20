@@ -44,7 +44,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
 
-	var/triumph_discount_remaining = is_donator(player.ckey) ? 3 : 0 // donators get first 3 triumph points free
+	var/triumph_discount_remaining = get_donator_triumph_discount(player.ckey) // TA EDIT
 	if(player.prefs.selected_loadout_items)
 		for(var/key in player.prefs.selected_loadout_items)
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
@@ -211,9 +211,13 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	return FALSE
 
 /proc/apply_charflaw_equipment(mob/living/carbon/human/character, client/player)
+	var/has_extra_vice = FALSE
+	for(var/datum/charflaw/cf in character.charflaws) // if we didn't do this, someone could take hunted and targeted together and no other vice
+		if(!cf.needs_extra_vice)
+			has_extra_vice = TRUE
 	for(var/datum/charflaw/cf in character.charflaws)
 		cf.apply_post_equipment(character)
-		if(cf.needs_extra_vice && character.charflaws.len < 2)
+		if(cf.needs_extra_vice && !has_extra_vice)
 			var/datum/charflaw/randflaw/rf = new()
 			character.charflaws.Add(rf)
 			rf.apply_post_equipment(character)

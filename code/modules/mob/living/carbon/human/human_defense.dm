@@ -24,9 +24,14 @@
 	var/protection = 0
 	var/intdamage = damage
 	var/consume_debuff = TRUE
+	
+	if(HAS_TRAIT(src, TRAIT_IRONMAN)) // free clongo noise when hit
+		playsound(loc, get_armor_sound(PLATEHIT, blade_dulling), 100) // SOVLNUKE!!!
+
 	if(!(d_type in ARMOR_DR_TYPES))
 		// Penetration types: slash, stab, piercing
 		used = get_best_worn_armor(def_zone, d_type)
+
 		if(used)
 			protection = used.armor.getRating(d_type)
 			protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
@@ -373,6 +378,7 @@
 
 	if(can_inject(M, 1, affecting))//Thick suits can stop monkey bites.
 		if(..()) //successful monkey bite, this handles disease contraction.
+			M.break_invisibility_from_combat()
 			var/damage = rand(1, 3)
 			if(check_shields(M, damage, "the [M.name]"))
 				return 0

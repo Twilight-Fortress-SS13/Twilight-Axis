@@ -23,6 +23,10 @@
 		"I ANSWER THE CALL OF THE WILD!",
 	)
 	storyteller = /datum/storyteller/dendor
+	titles = list(
+		"Treefather",
+		"Tree-Father"
+	)
 
 // In grove, bog, cross, or ritual chalk 
 // Yes, he is NOT calling the master cus he's unique. Whole bog is his prayer zone. Druids exist for a reason instead of in the church.
@@ -42,7 +46,7 @@
 		return TRUE
 	for(var/obj/structure/flora/roguetree/wise in view(4, get_turf(follower)))
 		return TRUE
-	to_chat(follower, span_danger("I must either be in Dendor's wilds, the Grove, near a wise tree, or near a Panetheon Cross for the 'Tree Father' to hear my prays..."))
+	to_chat(follower, span_danger("I must either be in Dendor's wilds, the Grove, near a wise tree, or near a Pantheon Cross for the Treefather to hear my prays..."))
 	return FALSE
 	
 /datum/patron/divine/dendor/on_gain(mob/living/H)

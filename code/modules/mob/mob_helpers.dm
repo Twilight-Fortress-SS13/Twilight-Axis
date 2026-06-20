@@ -232,6 +232,7 @@
 	return newphrase
 
 /// Makes you talk like you got cult stunned, which is slurring but with some dark messages
+// Except up, its Psyphied so this is what you get from being sundered instead, thank you whoever left this, I will cook.
 /proc/cultslur(n) // Inflicted on victims of a stun talisman
 	var/phrase = STRIP_HTML_SIMPLE(n,MAX_MESSAGE_LEN)
 	var/leng = length_char(phrase)
@@ -250,14 +251,13 @@
 			if(lowertext(newletter)=="u")
 				newletter="oo"
 			if(lowertext(newletter)=="c")
-				newletter=" NAR "
+				newletter="lr"
+			if(lowertext(newletter)=="e")
+				newletter="do"
+			if(lowertext(newletter)=="zizo") //YOU WISH
+				newletter="psy"
 			if(lowertext(newletter)=="s")
-				newletter=" SIE "
-		if(prob(25))
-			if(newletter==" ")
-				newletter=" no hope... "
-			if(newletter=="H")
-				newletter=" IT COMES... "
+				newletter="zr"
 
 		switch(rand(1,15))
 			if(1)
@@ -267,9 +267,9 @@
 			if(3)
 				newletter="fth"
 			if(4)
-				newletter="nglu"
+				newletter="zghl"
 			if(5)
-				newletter="glor"
+				newletter="psyzl"
 			else
 				;;
 		newphrase+="[newletter]";counter-=1
@@ -635,6 +635,19 @@
 		rog_intent_change(r_index)
 		rog_intent_change(l_index, 1)
 
+/mob/proc/cycle_mmb_intent()
+	if(!possible_mmb_intents?.len)
+		return
+	var/next_qintent
+	switch(mmb_intent?.type)
+		if(null)         next_qintent = QINTENT_BITE
+		if(INTENT_BITE)  next_qintent = QINTENT_JUMP
+		if(INTENT_JUMP)  next_qintent = QINTENT_KICK
+		if(INTENT_KICK)  next_qintent = QINTENT_SPECIAL
+		if(INTENT_SPECIAL) next_qintent = null
+		else             next_qintent = QINTENT_BITE
+	mmb_intent_change(next_qintent)
+
 /mob/verb/mmb_intent_change(input as text)
 	set name = "mmb-change"
 	set hidden = 1
@@ -891,6 +904,10 @@
 			return TRUE
 		return B.eye_blind
 	return FALSE
+
+///TRUE if the mob's sight is obscured enough to sense footsteps - fully blind (see [is_blind]) or has the clouding Blindness vice.
+/proc/vision_obscured(mob/M)
+	return is_blind(M) || M.has_flaw(/datum/charflaw/noeyeall)
 
 ///Is the mob hallucinating?
 /mob/proc/hallucinating()

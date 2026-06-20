@@ -22,8 +22,8 @@
 
 	base_intents = list(/datum/intent/unarmed/claw)
 	attack_sound = list('sound/combat/wooshes/blunt/wooshhuge (1).ogg','sound/combat/wooshes/blunt/wooshhuge (2).ogg','sound/combat/wooshes/blunt/wooshhuge (3).ogg')
-	melee_damage_lower = 80
-	melee_damage_upper = 100
+	melee_damage_lower = 40
+	melee_damage_upper = 50
 	STASTR = 14
 	STAPER = 8
 	STAINT = 1
@@ -42,7 +42,7 @@
 	remains_type = /obj/effect/decal/remains/troll // Placeholder until Troll remains are sprited.
 
 	ai_controller = /datum/ai_controller/minotaur
-	faction = list("undead")
+	faction = list("undead", "cult")
 
 
 /mob/living/simple_animal/hostile/retaliate/blood/Initialize()
@@ -170,7 +170,7 @@
 	animname = "claw"
 	blade_class = BCLASS_CHOP
 	hitsound = "genslash"
-	penfactor = 131
+	penfactor = PEN_BSTEEL
 	damfactor = 40
 	candodge = TRUE
 	canparry = TRUE

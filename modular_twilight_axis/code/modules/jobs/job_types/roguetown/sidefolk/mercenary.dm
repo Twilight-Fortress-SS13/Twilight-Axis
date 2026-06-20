@@ -6,6 +6,7 @@
 		/datum/advclass/mercenary/twilight_yohei,
 		/datum/advclass/mercenary/twilight_miragefen_rogue,
 		/datum/advclass/mercenary/twilight_conquistador,
-		/datum/advclass/mercenary/imperial_spellblade
+		/datum/advclass/mercenary/imperial_spellblade,
+		/datum/advclass/mercenary/twilight_hussar
 	)
 	. = ..()

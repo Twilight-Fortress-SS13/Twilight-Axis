@@ -64,7 +64,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
-  /datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
+	/datum/species/dwarf/gnome,\
 	/datum/species/aura,\
 )
 
@@ -110,12 +111,17 @@ Balloon Alert / Floating Text defines
 	/datum/species/anthromorphsmall,\
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
+	/datum/species/ooze,\
 
 #define RACES_DESPISED \
 	/datum/species/dullahan,\
 
 #define RACES_CONSTRUCT \
 	/datum/species/construct/metal,\
+
+#define RACES_OOZE \
+	/datum/species/ooze,\
+
 
 #define RACES_AASIMAR \
 	/datum/species/aasimar, \
@@ -151,6 +157,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
+	/datum/species/construct/metal,\
 
 // All but elves & half-elves.
 #define RACES_BLACKOAK \
@@ -174,6 +182,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
+	/datum/species/construct/metal,\
 
 // All but dwarves.
 #define RACES_GRUDGE \
@@ -199,8 +209,10 @@ Balloon Alert / Floating Text defines
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
+	/datum/species/ooze,\
+	/datum/species/construct/metal,\
 
-// Dwarves, Gnomes, Kobolds, D. Elves, Moths & Anthrosmall
+// All but Dwarves, Gnomes, Kobolds, D. Elves, Oozes, Moths & Anthrosmall
 #define RACES_UNDERDARK \
 	/datum/species/human/northern,\
 	/datum/species/human/halfelf,\
@@ -219,6 +231,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/demihuman,\
 	/datum/species/halforc,\
 	/datum/species/dullahan,\
+	/datum/species/construct/metal,\
 
 
 // All but Dracon, Lizardfolk, Kobolds.
@@ -244,6 +257,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
+	/datum/species/construct/metal,\
 
 
 #define NOBLE_RACES_TYPES list(\
@@ -298,6 +313,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/construct/metal,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/ooze,\
 	/datum/species/aura,\
 )
 // Non-dwarf non-kobold non-goblin mostly
@@ -322,6 +338,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/halforc,\
 	/datum/species/construct/metal,\
 	/datum/species/dullahan,\
+	/datum/species/ooze,\
 	/datum/species/aura,\
 )
 // Non-elf non-dwarf non-kobold non-goblin mostly
@@ -340,6 +357,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/demihuman,\
 	/datum/species/construct/metal,\
 	/datum/species/dullahan,\
+	/datum/species/ooze,\
 	/datum/species/aura,\
 )
 #define ALL_CLERIC_PATRONS list(/datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/necra, /datum/patron/divine/pestra, /datum/patron/divine/ravox, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/divine/undivided) // Currently unused.
@@ -406,9 +424,8 @@ GLOBAL_LIST_EMPTY(confessors)
 #define FAMILY_FULL 3
 
 GLOBAL_LIST_EMPTY(head_bounties)
-GLOBAL_LIST_EMPTY(board_viewers)
-GLOBAL_LIST_EMPTY(noticeboard_posts)
-GLOBAL_LIST_EMPTY(premium_noticeboardposts)
+GLOBAL_LIST_EMPTY(noticeboard_notices)
+GLOBAL_LIST_EMPTY(noticeboard_listings)
 GLOBAL_LIST_EMPTY(job_respawn_delays)
 GLOBAL_LIST_EMPTY(round_join_times)
 
@@ -444,6 +461,7 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_TRADER			"CAT_TRADER"		// Trader classes untethered from adventurer
 #define CTAG_LSKELETON		"CAT_LSKELETON"		// Lich Fortified Skeleton classes
 #define CTAG_NSKELETON		"CAT_NSKELETON"		// Necromancer Greater Skeleton classes
+#define CTAG_SSKELETON		"CAT_SSKELETON"		// Disposable Bad Omen Skeleton Classes
 #define CTAG_VAMPSERVANT	"CAT_VAMPSERVANT"	// Vampire lord bloodpool servant classes
 #define CTAG_VAMPGUARD		"CAT_VAMPGUARD"		// Vampire Lord bloodpool guard classes
 #define CTAG_VAMPSPAWN		"CAT_VAMPSPAWN"		// Vampire Lord bloodpool elite classes

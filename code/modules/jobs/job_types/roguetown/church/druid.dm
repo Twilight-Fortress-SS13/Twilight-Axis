@@ -20,6 +20,7 @@
 	min_pq = 5
 	max_pq = null
 	round_contrib_points = 2
+	same_job_respawn_delay = 20 MINUTES
 	cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg' // this was originally druid music. i think its ok to have druids share it w/ wardens.
 
 	//You're.. not REALLY a full-on church member, but being a druid implies you became a clergy-man of some sort; even if it's non-organized. So, still shouldn't be noble.
@@ -95,7 +96,7 @@
 	H.ambushable = FALSE
 	H.AddComponent(/datum/component/wise_tree_alert)
 	H.AddSpell(new /obj/effect/proc_holder/spell/targeted/create_seed)
-//	H.AddSpell(new /obj/effect/proc_holder/spell/self/conjure_armor/vines)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/conjure_arcyne_ward/druid)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_claws)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)

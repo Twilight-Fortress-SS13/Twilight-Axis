@@ -10,7 +10,6 @@
 	antagpanel_category = "Dreamwalker"
 	job_rank = ROLE_DREAMWALKER
 	storyteller_antag_flags = STORYTELLER_ANTAG_SOFT
-	storyteller_favor_flags = STORYTELLER_FAVOR_DREAMWALKER
 	confess_lines = list(
 		"MY VISION ABOVE ALL!",
 		"I'LL TAKE YOU TO MY REALM!",
@@ -83,6 +82,10 @@
 		body.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dream_bind)
 		body.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dream_trance)
 		body.grant_language(/datum/language/abyssal)
+	for(var/datum/charflaw/cf in body.charflaws)
+		if(istype(cf, /datum/charflaw/hunted) || istype(cf, /datum/charflaw/targeted))
+			body.charflaws.Remove(cf)
+			QDEL_NULL(cf)
 	body.ambushable = FALSE
 	body.AddComponent(/datum/component/dreamwalker_repair)
 	body.AddComponent(/datum/component/dreamwalker_mark)
@@ -135,6 +138,8 @@
 	cooldown = world.time + 4 SECONDS
 	visible_message(span_warning("[src] shimmers into existence!"))
 	playsound(src, 'sound/magic/charging_lightning.ogg', 50, TRUE)
+
+	set_light(3, 2, 20, l_color = "#7b60f3")
 
 /obj/structure/portal_jaunt/attack_hand(mob/user)
 	if(!do_after(user, 1 SECONDS, target = src))

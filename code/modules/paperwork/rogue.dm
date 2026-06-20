@@ -5,7 +5,6 @@
 	slot_flags = null
 	dropshrink = 0.6
 	firefuel = 30 SECONDS
-	sellprice = 2
 	textper = 108
 	maxlen = 2000
 	throw_range = 3
@@ -295,13 +294,13 @@
     . += span_info("Successfully mailing a SLIP will reward the sender with MARQUES. The amount of rewarded MARQUES increases, depending on whether you're an Orthodoxist, Absolver, or Inquisitor.")
 
 /obj/item/paper/inqslip/arrival/ortho
-	marquevalue = 4
+	marquevalue = 8 //At least two Orthodoxists can afford one relic, should they be understaffed and outgunned.
 
 /obj/item/paper/inqslip/arrival/inq
-	marquevalue = 10
+	marquevalue = 16 //Allows for the purchasing of one relic, or a couple lesser items from the Marquette.
 
 /obj/item/paper/inqslip/arrival/abso
-	marquevalue = 6
+	marquevalue = 16 //Ditto.
 
 /obj/item/paper/inqslip/proc/attemptsign(mob/user, mob/living/carbon/human/M)
 	if(sliptype == 2)
@@ -401,17 +400,28 @@
 		signee = user
 
 /obj/item/paper/inqslip/attacked_by(obj/item/I, mob/living/user)
-	if(istype(I, /obj/item/clothing/ring/signet))
+	if(istype(I, /obj/item/clothing/ring/signet/psy))
+		var/obj/item/clothing/ring/signet/psy/S = I
 		if(waxed)
 			to_chat(user,  span_warning("It's already wax-sealed."))
 			return
-		if(!sealed)
+		if(S.tallowed && sealed && S.tallow_color == "red")
+			waxed = TRUE
+			update_icon()
+			S.tallowed = FALSE
+			S.update_icon()
+			playsound(src, 'sound/items/inqslip_sealed.ogg', 75, TRUE, 4)
+			marquevalue += 2
+		else if(S.tallowed && sealed && S.tallow_color != "red")
+			to_chat(user,  span_warning("I need to use redtallow to seal this properly."))
+		else if(S.tallowed && !sealed && S.tallow_color == "red")
 			to_chat(user,  span_warning("I need to fold the [src] first."))
-			return
-		waxed = TRUE
-		update_icon()
-		playsound(src, 'sound/items/inqslip_sealed.ogg', 75, TRUE, 4)
-		marquevalue += 2
+		else
+			to_chat(user,  span_warning("The ring hasn't been waxed."))
+	else if(istype(I, /obj/item/clothing/ring/signet))
+		to_chat(user, span_warning("The [src] can only be stamped with a signet ring bearing the Archbishop's symbol."))
+		return
+	..()
 
 	if(sliptype != 1)
 		if(istype(I, /obj/item/inqarticles/indexer))

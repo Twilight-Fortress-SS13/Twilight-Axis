@@ -57,7 +57,7 @@ NECRO SKELETONS
 	armor =  /obj/item/clothing/suit/roguetown/armor/plate/full/zizo
 	pants = /obj/item/clothing/under/roguetown/platelegs/zizo/heavy
 	head = /obj/item/clothing/head/roguetown/helmet/skullcap/cult
-	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/zizo/heavy
+	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/zizo
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo/heavy
 	gloves = /obj/item/clothing/gloves/roguetown/plate/zizo/heavy
 

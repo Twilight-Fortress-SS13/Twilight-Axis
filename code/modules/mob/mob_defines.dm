@@ -245,6 +245,7 @@
 	var/datum/hSB/sandbox = null
 
 	var/bloody_hands = 0
+	var/bloody_hands_color
 
 	var/datum/focus //What receives our keyboard inputs. src by default
 
@@ -298,7 +299,7 @@
 	var/mobid = 0 //incremented on spawn
 
 	var/cmode = 0
-	var/d_intent = INTENT_DODGE
+	var/d_intent = INTENT_PARRY
 	var/islatejoin = FALSE
 	var/obj/effect/proc_holder/ranged_ability //Any ranged ability the mob has, as a click override
 

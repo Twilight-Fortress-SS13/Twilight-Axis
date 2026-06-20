@@ -40,8 +40,10 @@
 	. += span_info("To <b>turn in</b> a completed contract, click the ledger while holding the quest scroll.")
 	. += span_info("Retrieval-quest items should be <b>dropped onto the marked tile</b> in front of the ledger.")
 	. += span_info("Abandoning a contract forfeits its deposit to the treasury and places you under a brief guild cooldown before you may abandon another.")
-	. += span_info("The <b>Innkeeper</b> may compose rumor contracts here, spending Rumor Points to seed retrieval, courier, and light kill jobs across the realm.")
+	. += span_info("The <b>Innkeeper and their tavern staff</b> (Cook, Tapster) may compose rumor contracts here, spending Rumor Points to seed retrieval, courier, and light kill jobs across the realm.")
 	. += span_info("The <b>[english_list(GLOB.crown_authority_roles)]</b> may commission defense writs here - paid from the Burgher Pledge, the Crown's Purse, or issued as an unfunded Request. The Steward is the primary commissioner; the others substitute if the Steward is absent. A Regent sitting in the Lord's absence inherits commission authority for the duration of their regency.")
+	. += span_info("Your <b>fellowship</b> may turn in contracts you hold on your behalf, should you fall in battle. The reward and levy is credited to the one who turns it in, using their tax exempt status, if any.")
+	. += span_info("The <b>[english_list(GLOB.contract_proxy_officials)]</b> may turn in any completed contract on the holder's behalf, crediting the reward to the holder's own account. They take no cut.")
 
 /obj/structure/roguemachine/contractledger/attackby(obj/item/P, mob/living/carbon/human/user, params)
 	. = ..()
@@ -92,10 +94,11 @@
 	data["regions"] = build_region_listing()
 	data["tax_rate"] = SStreasury.get_tax_rate(TAX_CATEGORY_CONTRACT_LEVY)
 	data["guild_cut_rate"] = GUILD_REFERRAL_FEE_PCT
-	data["dynamic_role"] = resolve_dynamic_role(user)
-	data["region_tp_multipliers"] = build_region_tp_multipliers()
-	data["region_delivery_multipliers"] = build_region_delivery_multipliers()
-	if(data["dynamic_role"] == "innkeeper")
+	data["can_proxy_turnin"] = (user.job in GLOB.contract_proxy_officials)
+	var/list/dynamic_roles = resolve_dynamic_roles(user)
+	data["dynamic_roles"] = dynamic_roles
+	data["dynamic_role"] = length(dynamic_roles) ? dynamic_roles[1] : null
+	if("innkeeper" in dynamic_roles)
 		data["rumor_points"] = round(SStreasury.rumor_points, 0.1)
 		data["rumor_refill_base"] = RUMOR_POINTS_BASE_REFILL
 		data["rumor_refill_per_player"] = RUMOR_POINTS_PER_PLAYER
@@ -105,10 +108,7 @@
 		data["rumor_destinations"] = build_rumor_destinations()
 		data["rumor_log"] = SStreasury.rumor_log
 		data["rumor_lucrative_mult"] = RUMOR_LUCRATIVE_MULT
-	if(data["dynamic_role"] == "steward")
-		// Alderman acting via the noticeboard is restricted: pledge-only funding, no levy waiver.
-		// Steward retains broader authority even if also seated as Alderman (mirrors the gate at
-		// commission_defense_from_tgui where steward.job == "Steward" demotes alderman_acting).
+	if("steward" in dynamic_roles)
 		data["is_alderman_acting"] = (SScity_assembly?.is_alderman(user) && user.job != "Steward") ? TRUE : FALSE
 		data["pledge_balance"] = SStreasury.burgher_pledge_fund ? SStreasury.burgher_pledge_fund.balance : 0
 		data["pledge_refill_base"] = BURGHER_PLEDGE_BASE_REFILL
@@ -123,6 +123,7 @@
 		data["crown_purse_balance"] = SStreasury?.discretionary_fund?.balance || 0
 		data["defense_costs"] = GLOB.defense_quest_tier_costs.Copy()
 		data["defense_regions_by_type"] = build_defense_regions_by_type()
+		data["blockade_region_labels"] = build_blockade_region_labels()
 		data["defense_destinations"] = build_rumor_destinations()
 		data["defense_log"] = SStreasury.defense_log
 		data["blockade_recall_list"] = build_blockade_recall_list()
@@ -132,6 +133,8 @@
 		refresh_directive_quota()
 		data["directives_per_day"] = COMMISSION_REQUESTS_PER_DAY
 		data["directives_issued_today"] = directives_issued_today
+	if("towner" in dynamic_roles)
+		data["towner_postings"] = build_towner_posting_listing(user)
 	return data
 
 GLOBAL_LIST_INIT(crown_authority_roles, list(
@@ -142,6 +145,11 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 	"Marshal",
 	"Councillor",
 	"Prince",
+))
+
+GLOBAL_LIST_INIT(contract_proxy_officials, list(
+	"Steward",
+	"Clerk",
 ))
 
 /// TRUE if the user has standing to commission defense writs - either by job, or by sitting as
@@ -158,14 +166,14 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 		return TRUE
 	return FALSE
 
-/// Return the dynamic-tab role key for this user, or null. Extend here when a new job earns its
-/// own ledger panel (e.g. steward).
-/obj/structure/roguemachine/contractledger/proc/resolve_dynamic_role(mob/user)
-	if(user?.job == "Innkeeper")
-		return "innkeeper"
+/obj/structure/roguemachine/contractledger/proc/resolve_dynamic_roles(mob/user)
+	var/list/roles = list()
+	if(user?.job in GLOB.tavern_positions)
+		roles += "innkeeper"
 	if(can_commission(user))
-		return "steward"
-	return null
+		roles += "steward"
+	roles += "towner"
+	return roles
 
 /obj/structure/roguemachine/contractledger/proc/build_region_listing() // TA EDIT START
 	var/list/known = get_active_map_threat_regions()
@@ -197,6 +205,7 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 		if(istype(Q, /datum/quest/kill))
 			var/datum/quest/kill/KQ = Q
 			threat_bands = KQ.threat_bands_cleared
+		var/lapse_minutes = max(0, round((Q.get_lapse_time() - world.time) / 600, 1))
 		listing += list(list(
 			"ref" = REF(Q),
 			"title" = Q.title || "Unnamed Contract",
@@ -210,9 +219,13 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 			"expected_count" = expected_count,
 			"threat_bands" = threat_bands,
 			"levy_exempt" = Q.levy_exempt,
+			"guild_cut_exempt" = Q.guild_cut_exempt,
 			"is_rumor" = Q.source == QUEST_SOURCE_RUMOR,
 			"is_defense" = Q.source == QUEST_SOURCE_DEFENSE,
+			"is_towner" = Q.source == QUEST_SOURCE_TOWNER,
+			"is_standing" = Q.source == QUEST_SOURCE_RUMOR || Q.source == QUEST_SOURCE_DEFENSE || Q.source == QUEST_SOURCE_TOWNER,
 			"required_fellowship_size" = Q.required_fellowship_size,
+			"lapse_minutes" = lapse_minutes,
 		))
 	return listing
 
@@ -290,4 +303,7 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 			return TRUE
 		if("recall_blockade_writ")
 			recall_blockade_writ_from_tgui(user, params)
+			return TRUE
+		if("compose_towner")
+			compose_towner_from_tgui(user, params)
 			return TRUE

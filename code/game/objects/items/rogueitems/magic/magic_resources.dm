@@ -24,9 +24,10 @@
 	grid_width = 32
 	grid_height = 32
 	var/tier = 0 //used for determining potency for mob healing
+	dropshrink = 0.85
 
 /obj/item/magic/familiar
-	resistance_flags = INDESTRUCTIBLE
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	var/mob/living/simple_animal/pet/familiar/stored_familiar
 
 /obj/item/magic/familiar/dropped(mob/user, silent)
@@ -46,37 +47,9 @@
 	icon = 'icons/roguetown/mob/familiars.dmi'
 	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_NECK|ITEM_SLOT_RING // little pendant-esque thing
 
-// MELD
-/obj/item/magic/melded
-	name = "arcane meld"
-	icon_state = "wessence"
-	desc = "You should not be seeing this"
-	w_class = WEIGHT_CLASS_SMALL
-	sellprice = T1SELLPRICE
-
-/obj/item/magic/melded/t1
-	name = "arcanic meld"
-	icon_state = "meld"
-	desc = "A melding of infernal ash, fairy dust and elemental mote."
-	sellprice = T1MELDSELLPRICE
-
-/obj/item/magic/melded/t2
-	name = "dense arcanic meld"
-	icon_state = "dmeld"
-	desc = "A melding of hellhound fang, iridescent scales and elemental shard."
-	sellprice = T2MELDSELLPRICE
-
-/obj/item/magic/melded/t3
-	name = "sorcerous weave"
-	icon_state = "weave"
-	desc = "A melding of infernal core, heartwood core and elemental fragment."
-	sellprice = T3MELDSELLPRICE
-
-/obj/item/magic/melded/t4
-	name = "magical confluence"
-	icon_state = "confluence"
-	desc = "A melding of abyssal flame, sylvan essence and elemental relic."
-	sellprice = T4MELDSELLPRICE
+/obj/item/magic/familiar/familiar_spirit/Initialize()
+	. = ..()
+	src.filters += filter(type = "drop_shadow", x=0, y=0, size=1, offset = 2, color = GLOW_COLOR_ARCANE)
 
 //mapfetchable items
 /obj/item/magic/obsidian
@@ -115,6 +88,7 @@
 	icon_state = "runedartifact"
 	desc = "An old stone from age long ago, marked with glowing sigils."
 	w_class = WEIGHT_CLASS_SMALL
+	dropshrink = 0.8
 
 /obj/item/magic/artifact/Initialize()
 	.=..()

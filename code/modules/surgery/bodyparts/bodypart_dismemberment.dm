@@ -5,6 +5,13 @@
 /obj/item/bodypart/proc/can_disable(obj/item/I)
 	return disableable
 
+/// Returns TRUE if this bodypart is any kind of prosthetic limb
+/obj/item/bodypart/proc/is_prosthetic_limb()
+	return istype(src, /obj/item/bodypart/l_arm/prosthetic) || \
+	       istype(src, /obj/item/bodypart/r_arm/prosthetic) || \
+	       istype(src, /obj/item/bodypart/l_leg/prosthetic) || \
+	       istype(src, /obj/item/bodypart/r_leg/prosthetic)
+
 /obj/item/bodypart
 	/// Wound we get when surgically reattached
 	var/attach_wound = /datum/wound/artery/reattachment
@@ -69,8 +76,10 @@
 			return FALSE
 
 	var/obj/item/bodypart/affecting = C.get_bodypart(BODY_ZONE_CHEST)
-	if(affecting && dismember_wound)
+	if(affecting && dismember_wound && !isooze(C))
 		affecting.add_wound(dismember_wound)
+	else if(affecting && dismember_wound && isooze(C))
+		C.visible_message(span_danger("[C]'s wound closes rapidly to stem the flow of plasm."))
 	playsound(C, pick(dismemsound), 50, FALSE, -1)
 
 	var/stress2give = /datum/stressevent/viewdismember
@@ -87,8 +96,8 @@
 		// if they're already spinal-severed, THEN the head is removed.
 		// extra note: we only do this for mobs with a mind, aka not NPCS. npcs always get insta-decapped as before
 		if (owner?.client && !vorpal && !guillotine_execution && two_stage_death && !grievously_wounded)
-			if (owner?.construct)
-				C.visible_message(span_danger("<b>[C]'s wrought skull is <span class='crit'>CLEFT NIGH IN TWAIN</span> by a fearsome blow, crumbling into a <span class='crit'>CLOUD of DUST!</span></b>"))
+			if (HAS_TRAIT(owner, TRAIT_IRONMAN))
+				C.visible_message(span_danger("<B>[C] is <span class='crit'>[pick("ENDED", "TERMINATED", "DEPRECATED","SCRAPPED","DESTROYED","UNDONE","WRECKED","REKT","FRAGGED")]</span> as [C.p_their()] ravaged neck <span class='crit'>BLOSSOMS</span> into wisps of <span class='crit'>SCRAP and MAGIC DUST!</span></B>"))
 				C.death()
 				return
 
@@ -293,6 +302,8 @@
 /obj/item/bodypart/r_arm/drop_limb(special)
 	var/mob/living/carbon/C = owner
 	. = ..()
+	if(isooze(C))
+		qdel(src)
 	if(C && !special)
 		if(C.handcuffed)
 			C.handcuffed.forceMove(drop_location())
@@ -312,6 +323,8 @@
 /obj/item/bodypart/l_arm/drop_limb(special)
 	var/mob/living/carbon/C = owner
 	. = ..()
+	if(isooze(C))
+		qdel(src)
 	if(C && !special)
 		if(C.handcuffed)
 			C.handcuffed.forceMove(drop_location())
@@ -330,6 +343,8 @@
 /obj/item/bodypart/r_leg/drop_limb(special)
 	var/mob/living/carbon/C = owner
 	. = ..()
+	if(isooze(C))
+		qdel(src)
 	if(C && !special)
 		if(C.legcuffed)
 			C.legcuffed.forceMove(C.drop_location()) //At this point bodypart is still in nullspace
@@ -344,6 +359,8 @@
 /obj/item/bodypart/l_leg/drop_limb(special) //copypasta
 	var/mob/living/carbon/C = owner
 	. = ..()
+	if(isooze(C))
+		qdel(src)
 	if(C && !special)
 		if(C.legcuffed)
 			C.legcuffed.forceMove(C.drop_location())
@@ -520,3 +537,62 @@
 
 		L.attach_limb(src, 1)
 		return 1
+
+/// Grants or removes the overclock spell based on current prosthetic count
+/obj/item/bodypart/proc/sync_overclock_spell(mob/living/carbon/human/H)
+	if(!ishuman(H) || !H.mind)
+		return
+
+	var/has_prosthetic = FALSE
+	for(var/obj/item/bodypart/BP in H.bodyparts)
+		if(BP.is_prosthetic_limb())
+			has_prosthetic = TRUE
+			break
+
+	var/already_has_spell = H.mind.has_spell(/obj/effect/proc_holder/spell/invoked/overlock)
+
+	if(has_prosthetic && !already_has_spell)
+		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/overlock)
+		to_chat(H, span_notice("AS the prosthetic attachs I can feel I can push them beyond their limits if I focus."))
+	else if(!has_prosthetic && already_has_spell)
+		H.mind?.RemoveSpell(new /obj/effect/proc_holder/spell/invoked/overlock)
+		H.remove_status_effect(/datum/status_effect/buff/overclock)
+		to_chat(H, span_warning("Without any prosthetics, I can no longer overclock them."))
+
+	
+//adding this in seperate to add the overclock skill if we add an attachment
+/obj/item/bodypart/attach_limb(mob/living/carbon/C, special)
+	. = ..()
+	if(!.)
+		return
+	if(!is_prosthetic_limb())
+		return
+	if(!ishuman(C))
+		return
+	var/mob/living/carbon/human/H = C
+	sync_overclock_spell(H)
+
+//we check each prosthetic on limb removal rather than organic limbs
+/obj/item/bodypart/l_arm/prosthetic/drop_limb(special)
+	var/mob/living/carbon/human/was_owner = owner
+	. = ..()
+	if(ishuman(was_owner))
+		sync_overclock_spell(was_owner)
+
+/obj/item/bodypart/r_arm/prosthetic/drop_limb(special)
+	var/mob/living/carbon/human/was_owner = owner
+	. = ..()
+	if(ishuman(was_owner))
+		sync_overclock_spell(was_owner)
+
+/obj/item/bodypart/l_leg/prosthetic/drop_limb(special)
+	var/mob/living/carbon/human/was_owner = owner
+	. = ..()
+	if(ishuman(was_owner))
+		sync_overclock_spell(was_owner)
+
+/obj/item/bodypart/r_leg/prosthetic/drop_limb(special)
+	var/mob/living/carbon/human/was_owner = owner
+	. = ..()
+	if(ishuman(was_owner))
+		sync_overclock_spell(was_owner)

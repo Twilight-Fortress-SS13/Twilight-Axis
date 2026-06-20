@@ -1,4 +1,0 @@
-author: "Baneuus"
-delete-after: True
-changes:
-  - bugfix: "Зизоидский ритуал плотолечения теперь корректно отнимает статы."
