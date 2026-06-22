@@ -784,20 +784,41 @@
 /* Check for critical resistance and trigger its effects.
 	Return TRUE if critical resistance was triggered, false if it don't work
 */
+/mob/living/proc/get_critical_resistance_limit()
+	if(iscarbon(src))
+		var/mob/living/carbon/carbon_owner = src
+		if(NOBLOOD in carbon_owner.dna?.species?.species_traits)
+			return CRIT_RESISTANCE_STACKS_OP
+	if(isdullahan(src))
+		return CRIT_RESISTANCE_STACKS_OP
+	if(!mind)
+		return CRIT_RESISTANCE_STACKS_NPC
+	return min(CRIT_RESISTANCE_STACKS_PLAYER, 2)
+
 /mob/living/proc/try_resist_critical()
-	var/resistance = HAS_TRAIT(src, TRAIT_CRITICAL_RESISTANCE)
-	if(!resistance)
+	if(!HAS_TRAIT(src, TRAIT_CRITICAL_RESISTANCE))
 		return FALSE
 
-	var/crit_resist_tracker = has_status_effect(/datum/status_effect/debuff/crit_resistance_cd)
+	var/resist_limit = get_critical_resistance_limit()
+	if(resist_limit <= 0)
+		return FALSE
 
-	if(!crit_resist_tracker)
-		apply_status_effect(/datum/status_effect/debuff/crit_resistance_cd)
-		return TRUE // One chance were used and it was added
-	else
-		var/datum/status_effect/debuff/crit_resistance_cd/crit_resist_tracker_actual = crit_resist_tracker
-		// Iterate stack by 1 and then see if we can crit this hit
-		return !crit_resist_tracker_actual.try_crit()
+	var/datum/status_effect/debuff/crit_resistance_cd/crit_resist_tracker = has_status_effect(/datum/status_effect/debuff/crit_resistance_cd)
+	if(crit_resist_tracker)
+		if(crit_resist_tracker.my_stack >= resist_limit)
+			return FALSE
+		crit_resist_tracker.my_stack++
+		if(crit_resist_tracker.my_stack >= resist_limit)
+			crit_resist_tracker.duration = world.time + CRIT_RESISTANCE_TIMER_CD
+		return TRUE
+
+	apply_status_effect(/datum/status_effect/debuff/crit_resistance_cd)
+	crit_resist_tracker = has_status_effect(/datum/status_effect/debuff/crit_resistance_cd)
+	if(crit_resist_tracker)
+		crit_resist_tracker.my_stack = 1
+		if(resist_limit <= 1)
+			crit_resist_tracker.duration = world.time + CRIT_RESISTANCE_TIMER_CD
+	return TRUE
 
 /obj/item/bodypart/proc/handle_ooze_wounds(datum/wound/wound, silent = FALSE, crit_message = FALSE)
 	if(!wound.handle_ooze_wound(src))
