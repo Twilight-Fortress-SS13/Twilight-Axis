@@ -4034,6 +4034,7 @@
 #include "modular_twilight_axis\code\modules\surgery\organs\feature_organs\wings.dm"
 #include "modular_twilight_axis\code\modules\surgery\surgeries_hearth\extract_lux.dm"
 #include "modular_twilight_axis\code\modules\vampire_neu\vampire.dm"
+#include "modular_twilight_axis\code\modules\virtues\combat.dm"
 #include "modular_twilight_axis\code\onclick\click.dm"
 #include "modular_twilight_axis\familytree_module\familytree_module_config.dm"
 #include "modular_twilight_axis\firearms\code\clothes\feet.dm"
