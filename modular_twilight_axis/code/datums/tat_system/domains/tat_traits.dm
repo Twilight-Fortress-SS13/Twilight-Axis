@@ -1068,6 +1068,7 @@
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_RAGE) || !H.mind)
 		return FALSE
 	if(owner_build?.grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/self/ragebad))
+		ADD_TRAIT(H, TRAIT_RAGE, TAT_TRAIT_SOURCE)
 		return TRUE
 	if(!owner_build)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/ragebad)
@@ -1079,6 +1080,7 @@
 	if(!H || !has_trait(TAT_TRAIT_BERSERKER_RAGE) || !H.mind)
 		return FALSE
 	if(owner_build?.grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/self/rage))
+		ADD_TRAIT(H, TRAIT_RAGE, TAT_TRAIT_SOURCE)
 		return TRUE
 	if(!owner_build)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/rage)

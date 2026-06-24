@@ -225,6 +225,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/head/roguetown/helmet/heavy/kabuto/zunari = TAT_DONATION_ITEM_ENTRY("Light Kabuto", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "head", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/psysallet = TAT_DONATION_ITEM_ENTRY("Psydonic Sallet", 2.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "head", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/volfplate = TAT_ITEM_ENTRY("Volf-face Helm", 3.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
+	/obj/item/clothing/head/roguetown/helmet/coppercap = TAT_ITEM_ENTRY("Copper Lamellar Helmet", 0.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/horned = TAT_ITEM_ENTRY("Horned Cap", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/kettle = TAT_ITEM_ENTRY("Steel Kettle", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
 	/obj/item/clothing/head/roguetown/helmet/kettle/iron = TAT_ITEM_ENTRY("Iron Kettle", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "head"), \
@@ -262,6 +263,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/neck/roguetown/chaincoif = TAT_ITEM_ENTRY("Steel Chaincoif", 2, "clothing", "armor_family", TAT_ARMOR_PLATE, "neck"), \
 	/obj/item/clothing/neck/roguetown/chaincoif/chainmantle = TAT_ITEM_ENTRY("Chainmantle", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/chaincoif/full = TAT_ITEM_ENTRY("Chaincoif Full", 2.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "neck"), \
+	/obj/item/clothing/neck/roguetown/chaincoif/bronze = TAT_ITEM_ENTRY("Bronze Chaincoif", 1, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/chaincoif/iron = TAT_ITEM_ENTRY("Iron Chaincoif", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "neck"), \
 	/obj/item/clothing/neck/roguetown/coif/heavypadding = TAT_ITEM_ENTRY("Heavy Padded Coif", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "neck"), \
 	/obj/item/clothing/neck/roguetown/coif/padded = TAT_ITEM_ENTRY("Padded Coif", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "neck"), \
@@ -274,6 +276,10 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/shoes/roguetown/boots/armor = TAT_ITEM_ENTRY("Plated Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/armor/bronze = TAT_ITEM_ENTRY("Bronze Sandals", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/armor/iron = TAT_ITEM_ENTRY("Light Plated Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "shoes"), \
+	/obj/item/clothing/shoes/roguetown/boots/maille = TAT_ITEM_ENTRY("Maille Boots", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "shoes"), \
+	/obj/item/clothing/shoes/roguetown/boots/maille/bronze = TAT_ITEM_ENTRY("Bronze Maille Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "shoes"), \
+	/obj/item/clothing/shoes/roguetown/boots/maille/copper = TAT_ITEM_ENTRY("Copper Lamellar Boots", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
+	/obj/item/clothing/shoes/roguetown/boots/maille/iron = TAT_ITEM_ENTRY("Iron Maille Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = TAT_ITEM_ENTRY("Heavy Leather Boots", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/armor/rumaclan = TAT_ITEM_ENTRY("Heavy Sandals", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/kazengun = TAT_DONATION_ITEM_ENTRY("Kazengun Armored Sandals", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "shoes", TAT_DONATION_TIER_TWO), \
@@ -324,6 +330,9 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/suit/roguetown/armor/plate/iron = TAT_ITEM_ENTRY("iron half-plate", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/raneshen_scale = TAT_DONATION_ITEM_ENTRY("Ranesheni Medium Lamellar Armor", 3.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/suit/roguetown/armor/plate/scale = TAT_ITEM_ENTRY("Scalemail", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/scale/bronze = TAT_ITEM_ENTRY("Bronze Lamellar", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/scale/copper = TAT_ITEM_ENTRY("Copper Lamellar", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/scale/iron = TAT_ITEM_ENTRY("Lamellar", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/scale/steppe = TAT_ITEM_ENTRY("Steel Heavy Lamellar", 3.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/under/roguetown/brigandinelegs = TAT_ITEM_ENTRY("Chausses, Brigandine", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/chainlegs = TAT_ITEM_ENTRY("Steel Chain Chausses", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
@@ -331,6 +340,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/under/roguetown/chainlegs/iron = TAT_ITEM_ENTRY("Iron Chain Chausses", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/chainlegs/iron/kilt = TAT_ITEM_ENTRY("Iron Chain Kilt", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/chainlegs/kilt = TAT_ITEM_ENTRY("Steel Chain Kilt", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
+	/obj/item/clothing/under/roguetown/chainlegs/kilt/bronze = TAT_ITEM_ENTRY("Bronze Chain Kilt", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/chainlegs/skirt = TAT_ITEM_ENTRY("Steel Chain Skirt", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants = TAT_ITEM_ENTRY("Heavy Leather Pants", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/bronzeskirt = TAT_ITEM_ENTRY("Bronze skirt", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "pants"), \
@@ -347,15 +357,21 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/under/roguetown/trou/leather = TAT_ITEM_ENTRY("Leather Trousers", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/under/roguetown/gambeson = TAT_ITEM_ENTRY("Gamboised Cuisses", 1, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "pants"), \
 	/obj/item/clothing/under/roguetown/gambeson/heavy = TAT_ITEM_ENTRY("Padded Gamboised Cuisses", 1.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
+	/obj/item/clothing/under/roguetown/skirt/gambeson = TAT_ITEM_ENTRY("Gambesoned Kilt", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
+	/obj/item/clothing/under/roguetown/skirt/gambeson/heavy = TAT_ITEM_ENTRY("Padded Gambesoned Kilt", 1.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
+	/obj/item/clothing/under/roguetown/skirt/gambeson/light = TAT_ITEM_ENTRY("Light Gambesoned Kilt", 0.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/under/roguetown/trou/leather/gronn = TAT_ITEM_ENTRY("Gronnic Fur Pants", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/under/roguetown/trou/leather/pontifex/raneshen = TAT_ITEM_ENTRY("Baggy Desert Pants", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/wrists/roguetown/bracers = TAT_ITEM_ENTRY("Steel Bracers ", 1.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "wrists"), \
 	/obj/item/clothing/under/roguetown/trou/leathertights = TAT_ITEM_ENTRY("Leather tights", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/wrists/roguetown/bracers/brigandine = TAT_ITEM_ENTRY("Brigandine Rerebraces", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/bronze = TAT_ITEM_ENTRY("Bronze Bracers ", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
+	/obj/item/clothing/wrists/roguetown/bracers/bronze/chain = TAT_ITEM_ENTRY("Bronze Chain Sleeves", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
+	/obj/item/clothing/wrists/roguetown/bracers/chain = TAT_ITEM_ENTRY("Chain Sleeves", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/cloth/monk = TAT_ITEM_ENTRY("Monk Wrappings", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/copper = TAT_ITEM_ENTRY("Copper Bracers", 0.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/iron = TAT_ITEM_ENTRY("Iron Bracers ", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
+	/obj/item/clothing/wrists/roguetown/bracers/iron/chain = TAT_ITEM_ENTRY("Iron Chain Sleeves", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/leather = TAT_ITEM_ENTRY("Leather Bracers ", 0.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/leather/heavy = TAT_ITEM_ENTRY("Heavy Leather Bracers", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/splint = TAT_ITEM_ENTRY("Splint Bracers", 2.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "wrists"), \
@@ -537,6 +553,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/suit/roguetown/armor/brigandine/heavy = TAT_ITEM_ENTRY("Coat of Plates", 2.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
 	/obj/item/clothing/gloves/roguetown/chain/gronn = TAT_DONATION_ITEM_ENTRY("Gronn Byrine Gloves", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/gloves/roguetown/chain = TAT_ITEM_ENTRY("Сhain Gauntlets", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves"), \
+	/obj/item/clothing/gloves/roguetown/chain/bronze = TAT_ITEM_ENTRY("Bronze Maille Gauntlets", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/chain/iron = TAT_ITEM_ENTRY("Iron Сhain Gauntlets", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves"), \
 	/obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants1 = TAT_ITEM_ENTRY("Cut-throat pants", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "pants"), \
 	/obj/item/clothing/neck/roguetown/leather = TAT_ITEM_ENTRY("Hardened Leather Gorget", 0.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "neck"), \
@@ -750,6 +767,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/mobilestove = TAT_ITEM_ENTRY("Stove Kit", 1, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/contraption/wood_metalizer = TAT_ITEM_ENTRY("Metallizer", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/clothing/shoes/roguetown/horseshoes = TAT_ITEM_ENTRY("Horseshoes", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
+	/obj/item/clothing/shoes/roguetown/horseshoes/bronze = TAT_ITEM_ENTRY("Bronze Horseshoes", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/clothing/shoes/roguetown/horseshoes/steel = TAT_ITEM_ENTRY("Horseshoes", 1.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/customlock = TAT_ITEM_ENTRY("Unfinished Lock", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/customblank = TAT_ITEM_ENTRY("Custom Key", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
@@ -762,10 +780,14 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special = TAT_ITEM_ENTRY("Familial Talisman", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "cross"),\
 	/obj/item/book_crafting_kit = TAT_ITEM_ENTRY("Book kit", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"),\
 	/obj/item/paper = TAT_ITEM_ENTRY("Paper sheet", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"),\
-	/obj/item/clothing/suit/roguetown/armor/plate/bikini = TAT_ITEM_ENTRY("Plate Bikini Armor", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
-	/obj/item/clothing/suit/roguetown/armor/chainmail/bikini = TAT_ITEM_ENTRY("Chainmail Bikini Armor", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
-	/obj/item/clothing/suit/roguetown/armor/leather/hide/bikini = TAT_ITEM_ENTRY("Hide Bikini Armor", 2.0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "armor"), \
-	/obj/item/clothing/suit/roguetown/armor/leather/studded/bikini = TAT_ITEM_ENTRY("Studded Bikini Armor", 2.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/bikini = TAT_ITEM_ENTRY("Half-plate Corslet", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/iron/bikini = TAT_ITEM_ENTRY("Iron Half-plate Corslet", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/full/bikini = TAT_ITEM_ENTRY("Full-plate Corset", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/plate/full/iron/bikini = TAT_ITEM_ENTRY("Iron Full-plate Corset", 2.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/chainmail/bikini = TAT_ITEM_ENTRY("Chainmail Corslet", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/leather/hide/bikini = TAT_ITEM_ENTRY("Hide Corslet", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/leather/studded/bikini = TAT_ITEM_ENTRY("Studded Leather Corslet", 2.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
+	/obj/item/clothing/suit/roguetown/armor/leather/bikini = TAT_ITEM_ENTRY("Leather Corslet", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	
 GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 
