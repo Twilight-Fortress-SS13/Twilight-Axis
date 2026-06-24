@@ -293,22 +293,16 @@
 /datum/tat_build/proc/get_bonus_skill_domain_points(domain)
 	var/total = traits.get_bonus_skill_domain_points(domain)
 	if(domain == TAT_SKILL_DOMAIN_COMBAT)
-		if(has_trait(TAT_TRAIT_WEAPON_TRAINING))
-			total += 6
 		if(directions?.foundation == TAT_FOUNDATION_WANDERER)
-			total += 3
-		if(directions?.get_points(TAT_DIRECTION_COMBAT) >= 1)
-			total += 3
-			if(directions?.foundation == TAT_FOUNDATION_WANDERER)
-				total += 6
+			total += 6
+		if(directions?.get_role_choice() == TAT_ROLE_CHOICE_WRETCH)
+			total += 6
 	switch(directions?.get_role_choice())
 		if(TAT_ROLE_CHOICE_ADVENTURER)
 			if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
 				total += 6
 		if(TAT_ROLE_CHOICE_WRETCH)
 			if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
-				total += 6
-			else if(domain == TAT_SKILL_DOMAIN_COMBAT && has_trait(TAT_TRAIT_WEAPON_TRAINING))
 				total += 6
 		if(TAT_ROLE_CHOICE_TOWNER)
 			if(domain == TAT_SKILL_DOMAIN_PEACEFUL)
@@ -585,8 +579,11 @@
 	reset()
 	if(!islist(data))
 		return FALSE
-	traits.import_from_list(data["traits"])
-	directions.import_from_list(data["directions"])
+	if(islist(data["directions"]))
+		directions.import_from_list(data["directions"])
+		traits.import_from_list(data["traits"])
+	else
+		traits.import_from_list(data["traits"])
 	stats.import_from_list(data["stats"])
 	skills.import_from_list(data["skills"])
 	items.import_from_list(data["items"])
@@ -606,8 +603,11 @@
 		load_tat_slots_from_list(null, 1)
 		return FALSE
 
-	traits.import_from_list(data["traits"])
-	directions.import_from_list(data["directions"])
+	if(islist(data["directions"]))
+		directions.import_from_list(data["directions"])
+		traits.import_from_list(data["traits"])
+	else
+		traits.import_from_list(data["traits"])
 	stats.import_from_list(data["stats"])
 	skills.import_from_list(data["skills"])
 	items.import_from_list(data["items"])
@@ -866,8 +866,11 @@
 		return FALSE
 
 	reset()
-	traits.import_from_json_list(data["traits"])
-	directions.import_from_json_list(data["directions"])
+	if(islist(data["directions"]))
+		directions.import_from_json_list(data["directions"])
+		traits.import_from_json_list(data["traits"])
+	else
+		traits.import_from_json_list(data["traits"])
 	stats.import_from_json_list(data["stats"])
 	skills.import_from_json_list(data["skills"])
 	items.import_from_json_list(data["items"])
