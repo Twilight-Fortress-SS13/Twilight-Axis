@@ -1318,10 +1318,16 @@ const SkillRow = ({
 const SkillDomainTitle = ({
   domain,
   data,
+  act,
 }: {
   domain: SkillDomainKey;
   data: Data;
+  act: BackendAct;
 }) => {
+  const conversion = data.skill_conversion_state?.[domain];
+  const canGive = !!conversion?.can_give;
+  const canTake = !!conversion?.can_take;
+
   return (
     <Stack align="center" justify="space-between">
       <Stack.Item>
@@ -1330,9 +1336,27 @@ const SkillDomainTitle = ({
       <Stack.Item>
         <Stack align="center">
           <Stack.Item>
+            <Button
+              compact
+              tooltip={conversion?.take_text}
+              disabled={!canTake}
+              onClick={() => act('take_skill_domain_points', { domain, amount: 1 })}>
+              -
+            </Button>
+          </Stack.Item>
+          <Stack.Item>
             <Box style={{ opacity: 0.8, fontSize: '12px' }}>
               {formatDomainPoints(data, domain)}
             </Box>
+          </Stack.Item>
+          <Stack.Item>
+            <Button
+              compact
+              tooltip={conversion?.give_text}
+              disabled={!canGive}
+              onClick={() => act('give_skill_domain_points', { domain, amount: 1 })}>
+              +
+            </Button>
           </Stack.Item>
         </Stack>
       </Stack.Item>
@@ -1358,7 +1382,7 @@ const SkillsDomainPanel = ({
   return (
     <Stack.Item grow basis="32%" style={{ minWidth: '270px' }}>
       <Section
-        title={<SkillDomainTitle domain={domain} data={data} />}
+        title={<SkillDomainTitle domain={domain} data={data} act={act} />}
         fill
         style={{ height: '480px' }}>
         {!rows.length ? (
@@ -1423,7 +1447,7 @@ const SkillsTab = ({
       title={
         <SectionTitleWithMeta
           title="Skills"
-          meta="Fixed domain pools"
+          meta={`Conversion pool: ${data.skill_conversion_pool || 0}`}
         />
       }>
       {!hasAny ? (

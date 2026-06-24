@@ -219,7 +219,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_BARDIC_INSPIRATION_T1 = TAT_TRAIT_ENTRY("Bardic Inspiration I", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain tier 1 bardic inspiration, audience management verbs, and a songbook."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T2 = TAT_TRAIT_ENTRY("Bardic Inspiration II", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Upgrades bardic inspiration to tier 2, increasing audience size and songs known."), \
 	TAT_TRAIT_PARTY_LEADER = TAT_TRAIT_ENTRY("Party Leader", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Improves the core Fellowship: nearby fellows gain +1 CON; while at least one fellow is nearby, the leader gains +1 CON, +1 WIL, and +0.5 Fortune per nearby fellow."), \
-	TAT_TRAIT_CONTRACTOR_ENTITY = TAT_TRAIT_ENTRY("Tempress Entity", -10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Debug trait."), \
+	TAT_TRAIT_CONTRACTOR_ENTITY = TAT_TRAIT_ENTRY("Tempress Entity", 0, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Debug trait. Grants +2 direction points."), \
 	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -30, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
 	TAT_TRAIT_TROPHY_BOUNTY = TAT_TRAIT_ENTRY("Trophy Bounty", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "You can receive additional bonuses when wearing a headhook with monster heads."), \
 	TAT_TRAIT_WEAPON_TRAINING = TAT_TRAIT_ENTRY("Weapon Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Allows raising non-firearm combat skills to level 3 and grants +3 combat skill points when purchased."), \
@@ -249,7 +249,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_LOOTRAT_2 = TAT_TRAIT_ENTRY("Enormous Rat", 20, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You work on Guild with mountains of gold or you're just a lucky dungeon mudskipper. Increase loot points by 15."), \
 	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "Reduces Arcane skill costs and gives +3 Arcane if there is no defensive lockout trait."), \
 	TRAIT_JACKOFALLTRADES = TAT_TRAIT_ENTRY("Jack of All Trades", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Skills cost half as much for you to raise."), \
-	TAT_TRAIT_MASTER_OF_WANDERING = TAT_TRAIT_ENTRY("Master of Wandering", 30, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gives +20 Misc skill points and a discount on Misc skills. Conflicts with Resident."), \
+	TAT_TRAIT_MASTER_OF_WANDERING = TAT_TRAIT_ENTRY("Master of Wandering", 30, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Advanced wandering mastery in the Skills direction. Conflicts with Resident."), \
 	TAT_TRAIT_PLIANT_RENAME = TAT_TRAIT_ENTRY("Pliant Class Name", 0, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Requires 50+ player quality. Lets you rename your displayed class while keeping the Pliant admin marker prefix. Resident class selection is applied first, then you may choose the current class or a matching skill title as the base, and finally use that name, your active TAT slot name, or custom input."), \
 	TRAIT_EMPATH = TAT_TRAIT_ENTRY("Empath", 5, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can notice when people are in pain."), \
 	TRAIT_NOSTINK = TAT_TRAIT_ENTRY("Dead Nose", 10, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Your nose is numb to the smell of decay."), \
@@ -291,8 +291,8 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_TRAINEE_ARTISAN = TAT_TRAIT_ENTRY("Trainee Artisan", 10, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Crafting, Pottery, and the first two levels of Unarmed by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_CHIRURGEON = TAT_TRAIT_ENTRY("Trainee Chirurgeon", 10, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Medicine, Literacy, and the first two levels of Staves by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_TROUBADOUR = TAT_TRAIT_ENTRY("Trainee Troubadour", 10, TAT_CATEGORY_SKILL_DISCOUNT, TAT_CATEGORY_SKILL_DISCOUNT_NAME, "Reduces the cost of Music, Literacy, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
-	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Crafting skill-domain points."), \
-	TAT_TRAIT_STOCKPILER = TAT_TRAIT_ENTRY("Stockpiler", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gain extra Gathering skill-domain points."), \
+	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Advanced craft mastery in the Skills direction."), \
+	TAT_TRAIT_STOCKPILER = TAT_TRAIT_ENTRY("Stockpiler", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Advanced gathering mastery in the Skills direction."), \
 	TRAIT_SMITHING_EXPERT = TAT_TRAIT_ENTRY("Expert Forgehand", 30, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with smithing and engineering. Weaponsmithing, Armorsmithing, Smithing, Smelting, Engineering, Mining, Masonry and Pottery can progress to Legendary levels."), \
 	TAT_TRAIT_SKILLED_FORGEHAND = TAT_TRAIT_ENTRY("Skilled Forgehand", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with forge-work. Smithing, Smelting and Engineering can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with armor repair and fitting. Armorsmithing and Masonry can be picked to Master levels."), \
@@ -317,7 +317,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_SADDLEBORN = TAT_TRAIT_ENTRY("Saddleborn", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You can select and mount a specific mount. Riding can progress to Master levels."), \
 	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. Hunting, Tracking and Butchering can progress to Legendary levels."), \
 	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "To hunt well is to know the land. You know the common signs of prey and trails."), \
-	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Your feet walks a lot roads. Gives you +9 points in wandering skill tree."), \
+	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 10, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Your feet have walked many roads. A Skills-direction wandering perk."), \
 	TAT_TRAIT_HERETIC = TAT_TRAIT_ENTRY("Heretic", 0, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain cool HERETIC mark on your face."), \
 	TRAIT_RITUALIST = TAT_TRAIT_ENTRY("Ritualist", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gives God's favour for thy's rituals. Adds ritual chalk to your stash."), \
 	TRAIT_TECHNOPHOBE = TAT_TRAIT_ENTRY("Technophobe", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot use Meister devices."), \
@@ -350,6 +350,10 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_CONTRACTOR_ENTITY = TAT_BUILD_ITEM_BONUS_LOOTRAT \
 )
 
+#define TAT_TRAIT_DIRECTION_POINT_RULES list( \
+	TAT_TRAIT_CONTRACTOR_ENTITY = 2 \
+)
+
 #define TAT_TRAIT_ITEM_UNLOCK_RULES list( \
 	TAT_UNLOCK_TYPE_WEAPON_SUPPLY = list(TAT_SUPPLY_BRONZE = TAT_TRAIT_BRONZE_SUPPLIER, TAT_SUPPLY_SILVER = TAT_TRAIT_SILVER_SUPPLIER, TAT_SUPPLY_STEEL = TAT_TRAIT_STEEL_SUPPLIER, TAT_SUPPLY_FIREARMS = TAT_TRAIT_FIREARMS_SUPPLIER, TAT_SUPPLY_ARTIFACTS = TAT_TRAIT_ARTIFACTS_SUPPLIER), \
 	TAT_UNLOCK_TYPE_ARMOR_FAMILY = list(TAT_ARMOR_LEATHER = TAT_TRAIT_LEATHER_SUPPLIER, TAT_ARMOR_MAIL = TRAIT_MEDIUMARMOR, TAT_ARMOR_PLATE = TRAIT_HEAVYARMOR) \
@@ -361,20 +365,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 
 #define TAT_TRAIT_REPEATABLE_MAXIMUMS list()
 
-#define TAT_TRAIT_SKILL_POINT_RULES list( \
-	TAT_TRAIT_MASTER_OF_WANDERING = list( \
-		TAT_SKILL_DOMAIN_ADVENTURE = 25 \
-	), \
-	TAT_TRAIT_STRAYING_SOUL = list( \
-		TAT_SKILL_DOMAIN_ADVENTURE = 9, \
-	), \
-	TAT_TRAIT_MASTER_OF_CRAFTING = list( \
-		TAT_SKILL_DOMAIN_PEACEFUL = 25 \
-	), \
-	TAT_TRAIT_STOCKPILER = list( \
-		TAT_SKILL_DOMAIN_PEACEFUL = 20 \
-	), \
-)
+#define TAT_TRAIT_SKILL_POINT_RULES list()
 
 #define TAT_TRAIT_SKILL_BONUS_RULES list( \
 	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/smelting = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/engineering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST), \
@@ -441,6 +432,7 @@ GLOBAL_LIST_EMPTY(tat_trait_conflict_map)
 GLOBAL_LIST_EMPTY(tat_trait_requirement_map)
 GLOBAL_LIST_INIT(tat_trait_stat_point_rules, TAT_TRAIT_STAT_POINT_RULES)
 GLOBAL_LIST_INIT(tat_trait_item_point_rules, TAT_TRAIT_ITEM_POINT_RULES)
+GLOBAL_LIST_INIT(tat_trait_direction_point_rules, TAT_TRAIT_DIRECTION_POINT_RULES)
 GLOBAL_LIST_INIT(tat_trait_item_unlock_rules, TAT_TRAIT_ITEM_UNLOCK_RULES)
 GLOBAL_LIST_INIT(tat_trait_skill_point_rules, TAT_TRAIT_SKILL_POINT_RULES)
 GLOBAL_LIST_INIT(tat_trait_skill_bonus_rules, TAT_TRAIT_SKILL_BONUS_RULES)

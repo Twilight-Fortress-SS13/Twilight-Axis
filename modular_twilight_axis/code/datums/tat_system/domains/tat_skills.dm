@@ -53,26 +53,57 @@
 		return TAT_SKILL_DOMAIN_ADVENTURE
 	return null
 
+/datum/tat_skills/proc/is_convertible_skill_domain(domain)
+	domain = normalize_skill_domain(domain)
+	return domain == TAT_SKILL_DOMAIN_PEACEFUL || domain == TAT_SKILL_DOMAIN_ADVENTURE
+
 /datum/tat_skills/proc/can_give_skill_domain_points(domain, amount = 1)
-	return FALSE
+	domain = normalize_skill_domain(domain)
+	if(!is_convertible_skill_domain(domain))
+		return FALSE
+	amount = max(1, round(text2num("[amount]") || 1))
+	return skill_point_conversion_pool >= amount
 
 /datum/tat_skills/proc/can_take_skill_domain_points(domain, amount = 1)
-	return FALSE
+	domain = normalize_skill_domain(domain)
+	if(!is_convertible_skill_domain(domain))
+		return FALSE
+	amount = max(1, round(text2num("[amount]") || 1))
+	if(round(domain_points[domain] || 0) < amount)
+		return FALSE
+	return get_remaining_points(domain) >= amount
 
 /datum/tat_skills/proc/give_skill_domain_points(domain, amount = 1)
-	return FALSE
+	domain = normalize_skill_domain(domain)
+	amount = max(1, round(text2num("[amount]") || 1))
+	if(!can_give_skill_domain_points(domain, amount))
+		return FALSE
+	domain_points[domain] = max(0, round(domain_points[domain] || 0)) + amount
+	skill_point_conversion_pool -= amount
+	invalidate_spent_points_cache()
+	owner_build?.set_dirty()
+	return TRUE
 
 /datum/tat_skills/proc/take_skill_domain_points(domain, amount = 1)
-	return FALSE
+	domain = normalize_skill_domain(domain)
+	amount = max(1, round(text2num("[amount]") || 1))
+	if(!can_take_skill_domain_points(domain, amount))
+		return FALSE
+	domain_points[domain] = max(0, round(domain_points[domain] || 0) - amount)
+	skill_point_conversion_pool += amount
+	invalidate_spent_points_cache()
+	owner_build?.set_dirty()
+	return TRUE
 
 /datum/tat_skills/proc/build_skill_conversion_state()
 	var/list/result = list()
 	for(var/domain in list(TAT_SKILL_DOMAIN_COMBAT, TAT_SKILL_DOMAIN_PEACEFUL, TAT_SKILL_DOMAIN_ADVENTURE))
+		var/can_convert = is_convertible_skill_domain(domain)
 		result[domain] = list(
-			"can_give" = FALSE,
-			"can_take" = FALSE,
-			"give_text" = "Skill point conversion is disabled.",
-			"take_text" = "Skill point conversion is disabled.",
+			"can_give" = can_give_skill_domain_points(domain),
+			"can_take" = can_take_skill_domain_points(domain),
+			"give_text" = can_convert ? "Move one converted skill point into this pool." : "Combat skill points cannot be converted.",
+			"take_text" = can_convert ? "Move one free skill point into conversion." : "Combat skill points cannot be converted.",
 		)
 	return result
 
@@ -108,7 +139,7 @@
 	if(round(domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0) > combat_default)
 		domain_points[TAT_SKILL_DOMAIN_COMBAT] = combat_default
 
-	skill_point_conversion_pool = 0
+	skill_point_conversion_pool = max(0, round(text2num("[skill_point_conversion_pool]") || 0))
 
 	var/current_total = skill_point_conversion_pool
 	for(var/domain in domains)

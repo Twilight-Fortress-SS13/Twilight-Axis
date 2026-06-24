@@ -153,11 +153,14 @@
 
 /datum/tat_traits/proc/get_bonus_direction_points()
 	var/total = 0
+	var/list/rules = GLOB.tat_trait_direction_point_rules
 	for(var/trait_id in selected)
 		var/bonus = get_oddity_direction_point_bonus(trait_id)
-		if(bonus <= 0)
-			continue
-		total += bonus * get_trait_count(trait_id)
+		if(bonus > 0)
+			total += bonus * get_trait_count(trait_id)
+		var/rule_bonus = round(rules[trait_id] || 0)
+		if(rule_bonus > 0)
+			total += rule_bonus * get_trait_count(trait_id)
 	return total
 
 /datum/tat_traits/proc/is_armor_supplier_trait(trait_id)
