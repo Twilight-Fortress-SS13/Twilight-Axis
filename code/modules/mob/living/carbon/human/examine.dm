@@ -426,7 +426,9 @@
 	else
 		displayed_headshot = src.headshot_link
 
-	if((valid_headshot_link(src, displayed_headshot, TRUE)) && (user.client?.prefs.chatheadshot))
+	var/can_show_masked_identity = !obscure_name || client?.prefs?.masked_examine || observer_privilege
+
+	if(can_show_masked_identity && (valid_headshot_link(src, displayed_headshot, TRUE)) && (user.client?.prefs.chatheadshot))
 		. += span_info("[chat_headshot(displayed_headshot)]")
 
 	var/medical_text = ""
@@ -456,7 +458,7 @@
 	if(length(medical_text))
 		. += medical_text
 
-	if(!obscure_name || client?.prefs.masked_examine)
+	if(can_show_masked_identity)
 		var/list/examine_links = list()
 		if(showassess)
 			examine_links += "<a href='?src=[REF(src)];task=assess;'>Assess</a>"
@@ -900,6 +902,7 @@
 		. += span_info("ø ------------ ø\nThis is an unknown <EM>[name]</EM>.")
 	else
 		on_examine_face(user)
+		var/can_identify_face = !obscure_name || observer_privilege
 		var/used_name = name
 		var/used_title = get_role_title()
 		if(tat_pliant_title) // TA EDIT - TAT system
@@ -1058,14 +1061,15 @@
 				if (istype(H.patron, /datum/patron/old_god))
 					. += span_userdanger("HEATHEN! SHAME!")
 */
-		if(name in GLOB.outlawed_players)
-			. += span_userdanger("OUTLAW!")
+		if(can_identify_face)
+			if(name in GLOB.outlawed_players)
+				. += span_userdanger("OUTLAW!")
 
-		if(HAS_TRAIT(user, TRAIT_JUSTICARSIGHT) && !HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
-			for(var/datum/bounty/b in GLOB.head_bounties) //I hate this.
-				if(b.target == real_name)
-					. += span_syndradio("[m3] a bounty on [m2] head of [b.amount] mammon for [b.reason], issued by [b.employer].")
-					break
+			if(HAS_TRAIT(user, TRAIT_JUSTICARSIGHT) && !HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
+				for(var/datum/bounty/b in GLOB.head_bounties) //I hate this.
+					if(b.target == real_name)
+						. += span_syndradio("[m3] a bounty on [m2] head of [b.amount] mammon for [b.reason], issued by [b.employer].")
+						break
 
 		if(name in GLOB.court_agents)
 			var/datum/job/J = SSjob.GetJob(user.mind?.assigned_role)
@@ -1125,7 +1129,7 @@
 			if(HAS_TRAIT(user, TRAIT_EMPATH) && HAS_TRAIT(src, TRAIT_PERMAMUTE))
 				. += span_notice("[m1] lacks a voice. [m1] is a mute!")
 
-		var/villain_text = get_villain_text(user)
+		var/villain_text = get_villain_text(user, can_identify_face)
 		if(villain_text)
 			. += villain_text
 		var/heretic_text = get_heretic_text(user)
@@ -1306,13 +1310,13 @@
 	return clergy_text
 
 /// Returns antagonist-related examine text for the mob, if any. Can return null.
-/mob/living/proc/get_villain_text(mob/examiner)
+/mob/living/proc/get_villain_text(mob/examiner, can_identify_face = TRUE)
 	var/villain_text
 	if(mind)
 		if(mind.special_role == "Bandit")
 			if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
 				villain_text = span_notice("Free man!")
-			if(HAS_TRAIT(src,TRAIT_KNOWNCRIMINAL))
+			if(can_identify_face && HAS_TRAIT(src,TRAIT_KNOWNCRIMINAL))
 				villain_text = span_userdanger("BANDIT!")
 		if(mind.special_role == "Deadite")
 			villain_text = span_userdanger("DEADITE!")

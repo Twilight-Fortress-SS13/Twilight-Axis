@@ -4,6 +4,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_state = "stomp"
+	glow_color = GLOW_COLOR_GRAGGAR
+	glow_intensity = GLOW_INTENSITY_LOW
 	xp_gain = TRUE
 	releasedrain = 30
 	range = 0
@@ -99,11 +101,14 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_state = "call"
+	glow_color = GLOW_COLOR_GRAGGAR
+	glow_intensity = GLOW_INTENSITY_LOW
 	miracle = TRUE
 	devotion_cost = 40
 	releasedrain = 30
 	chargedrain = 2
 	chargetime = 3 SECONDS
+	chargedloop = /datum/looping_sound/invokeascendant
 	range = 4
 	recharge_time = 2 MINUTES //This lasts 25 SECONDS at max holy rank so for purposes of it not being chainable solo.
 	associated_skill = /datum/skill/magic/holy
@@ -166,10 +171,12 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_state = "regenerate"
+	glow_color = GLOW_COLOR_GRAGGAR
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 0
-	chargedloop = /datum/looping_sound/invokeholy
+	chargedloop = /datum/looping_sound/invokeascendant
 	sound = 'sound/foley/gross.ogg'
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = FALSE

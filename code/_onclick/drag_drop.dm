@@ -336,6 +336,7 @@
 	STOP_PROCESSING(SSmousecharge, src)
 	if(mob?.listed_turf)
 		LAZYREMOVE(mob.listed_turf.panel_listeners, src)
+	clear_listedturf_appearances()
 	return ..()
 
 /client/process()

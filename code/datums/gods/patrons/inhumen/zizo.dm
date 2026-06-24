@@ -33,7 +33,8 @@
 		"Lady of Progress",
 		"Lady of Secrets",
 		"Dame of Secrets",
-		"Arch Lych"
+		"Arch Lych",
+		"Zimiko"
 	)
 
 /datum/patron/inhumen/zizo/post_equip(mob/living/pious)

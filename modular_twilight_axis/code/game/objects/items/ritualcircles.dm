@@ -101,7 +101,7 @@
 	name = "Rune of Hedonism"
 	desc = "A Holy Rune of Baotha. Relief for the broken hearted."
 	icon_state = "baotha_chalky"
-	var/baothists = list("Rite of Joy", "Expancy", "Masquarade")
+	var/baothists = list("Rite of Armaments", "Rite of Joy", "Expancy", "Masquarade")
 
 /obj/structure/ritualcircle/baotha/attack_hand(mob/living/user, list/selected_atoms, turf/loc)
 	if(!..())
@@ -117,6 +117,42 @@
 		return
 	var/riteselection = input(user, "Rituals of Hedonism", src) as null|anything in baothists
 	switch(riteselection) // put ur rite selection here
+		if("Rite of Armaments")
+			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
+				to_chat(user, span_warning("I am not yet ready to perform this rite."))
+				return
+			var/onrune = view(1, src.loc)
+			var/list/joyridersonrune = list()
+			for(var/mob/living/carbon/human/persononrune in onrune)
+				if(HAS_TRAIT(persononrune, TRAIT_DEPRAVED))
+					joyridersonrune += persononrune
+			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in joyridersonrune
+			if(!target)
+				return
+			if(!do_after(user, 5 SECONDS))
+				return
+			user.say("O' BLESSED SPIDER, SCORNED AND SORROWFUL, HEED MY PLEA OF SUCCOR!!")
+			if(!do_after(user, 5 SECONDS))
+				return
+			user.say("TAKE THIS CUP FROM ME, OVERFILLING WITH ANGUISH AND HEARTBREAK..")
+			if(!do_after(user, 5 SECONDS))
+				return
+			user.say("..AND IN ITS STEAD, BESTOW UPON ME.. EEEEVEEERRRYTHIIIIIIING!!")
+			if(!do_after(user, 5 SECONDS))
+				return
+			icon_state = "baotha_active"
+			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+			ADD_TRAIT(target, TRAIT_NOPAIN, TRAIT_RITUAL)
+			ADD_TRAIT(target, TRAIT_DODGEEXPERT, TRAIT_RITUAL)
+			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic)
+			if(is_heretic)
+				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
+			if(is_heretic && target != user)
+				user.apply_status_effect(/datum/status_effect/debuff/lux_exhausted)
+				target.apply_status_effect(/datum/status_effect/debuff/lux_exhausted)
+			baothaarmaments(target)
+			spawn(120)
+				icon_state = "baotha_chalky"
 		if("Rite of Joy")
 			if(!do_after(user, 5 SECONDS))
 				return FALSE

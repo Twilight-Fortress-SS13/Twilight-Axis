@@ -1677,9 +1677,11 @@
 		check_teams()
 
 	else if(href_list["editpq"])
-		if(!check_rights(R_BAN))
+		if(!can_adjust_playerquality(usr.client, TRUE))
 			return
 		var/mob/M = locate(href_list["mob"]) in GLOB.mob_list
+		if(!M || !M.client)
+			return
 		var/client/mob_client = M.client
 		var/amt2change = input("How much to modify the PQ by? (20 to -20, or 0 to just add a note)") as null|num
 		if(!check_rights(R_BAN,0))
@@ -1696,13 +1698,12 @@
 				to_chat(C, "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">Your PQ has been adjusted by [amt2change] by [usr.key] for reason: [raisin]</span></span>")
 				return
 	else if(href_list["showpq"])
-		var/rank_name = usr.client?.holder?.rank.name // TA EDIT
-		if(rank_name in list("Eventmin", "Coder", "Developer")) // TA EDIT
-			return // TA EDIT
-		if(!check_rights(R_BAN))
-			return
 		var/mob/M = locate(href_list["mob"]) in GLOB.mob_list
+		if(!M || !M.client)
+			return
 		var/client/mob_client = M.client
+		if(!can_view_playerquality_of(usr.client, mob_client.ckey, TRUE))
+			return
 		check_pq_menu(mob_client.key)
 
 	else if(href_list["edittriumphs"])

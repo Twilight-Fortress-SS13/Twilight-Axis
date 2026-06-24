@@ -423,7 +423,9 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		if("ticket_pq")
 			var/ticket_id = params["ticket_id"]
 			var/datum/admin_help/ticket = TicketByID(ticket_id)
-			if(!ticket || !ticket.initiator_ckey)
+			if(!ticket || !ticket.initiator_ckey || !user.client)
+				return FALSE
+			if(!can_view_playerquality_of(user.client, ticket.initiator_ckey, TRUE))
 				return FALSE
 			// PQ / history transparency
 			admin_ticket_log(ticket.initiator_ckey, "<font color='green'>[key_name_admin(user)] is reviewing your account history and playtime in relation to this ticket.</font>")

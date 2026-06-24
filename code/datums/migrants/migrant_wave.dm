@@ -63,6 +63,7 @@
 		. |= role_type
 	for(var/role_type in optional_roles)
 		. |= role_type
+
 /*
 /datum/migrant_wave/pilgrim
 	name = "Pilgrimage"
@@ -90,11 +91,13 @@
 	)
 	greet_text = "Together with a party of trusted friends we decided to venture out, seeking thrills, glory and treasure, ending up in the misty and damp bog underneath Twilight Axis, perhaps getting ourselves into more than what we bargained for."
 */
+
 /datum/migrant_wave/bandit
 	name = "Bandit Raid"
 	track = MIGRANT_TRACK_SPECIAL
 	weight = 16
 	min_round_time = 45 MINUTES
+	min_pop = 45
 	is_raid = TRUE
 	spawn_landmark = "Bandit"
 	required_roles = list(
@@ -109,6 +112,7 @@
 	track = MIGRANT_TRACK_SPECIAL
 	weight = 12
 	min_round_time = 60 MINUTES
+	min_pop = 45
 	is_raid = TRUE
 	required_roles = list(
 		/datum/migrant_role/assassin = 1,
@@ -122,7 +126,7 @@
 	track = MIGRANT_TRACK_SPECIAL
 	weight = 12
 	min_round_time = 45 MINUTES
-	min_pop = 40
+	min_pop = 45
 	is_raid = TRUE
 	required_roles = list(
 		/datum/migrant_role/gnoll = 1,

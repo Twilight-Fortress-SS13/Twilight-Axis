@@ -884,6 +884,9 @@
 	if(!mob)
 		return
 
+	if(tgui_alert(usr, "Are you sure you want to return to the lobby? This will remove your current character from the round.", "Back to Lobby", list("Cancel", "Return to Lobby")) != "Return to Lobby")
+		return
+
 	if(!ishuman(mob))
 		mob.returntolobby()
 		return

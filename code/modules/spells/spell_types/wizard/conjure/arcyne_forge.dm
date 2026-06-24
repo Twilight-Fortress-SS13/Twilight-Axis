@@ -72,10 +72,12 @@
 /datum/action/cooldown/spell/arcyne_forge/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/carbon/human/H = owner
+
 	if(!istype(H))
 		return FALSE
 
 	var/choice = tgui_input_list(H, "Choose what to conjure", "Arcyne Forge", conjure_options)
+
 	if(!choice)
 		return FALSE
 
@@ -94,7 +96,12 @@
 	// Mark as conjured — no salvage, no smelting
 	R.smeltresult = null
 	R.salvage_result = null
+	R.salvage_amount = 0
 	R.fiber_salvage = FALSE
+	R.unmintable = TRUE
+	R.has_item_quality = TRUE
+	R.item_quality = ITEM_QUALITY_LOOTED
+	R.sellprice = 0
 
 	// Conjured glow
 	R.AddComponent(/datum/component/conjured_item, GLOW_COLOR_ARCANE)

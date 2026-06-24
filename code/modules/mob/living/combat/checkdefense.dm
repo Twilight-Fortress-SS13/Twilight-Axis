@@ -11,6 +11,8 @@
 	if(mid_climb)
 		interrupt_climb()
 
+	apply_status_effect(/datum/status_effect/combat_tag)
+	user.apply_status_effect(/datum/status_effect/combat_tag)
 	if(!has_status_effect(/datum/status_effect/stealth_revealed) || !user.has_status_effect(/datum/status_effect/stealth_revealed))
 		if(get_skill_level(/datum/skill/misc/sneaking) >= SKILL_LEVEL_JOURNEYMAN || HAS_TRAIT(src, TRAIT_LIGHT_STEP))
 			apply_status_effect(/datum/status_effect/stealth_revealed)
@@ -42,6 +44,8 @@
 			CAR.adjust_arousal_special(src, 2)
 
 	if(has_status_effect(/datum/status_effect/debuff/vulnerable))
+		remove_status_effect(/datum/status_effect/buff/clash)
+		remove_status_effect(/datum/status_effect/buff/clash/limbguard)
 		if(!has_status_effect(/datum/status_effect/buff/weapon_binded) && !has_status_effect(/datum/status_effect/debuff/weapon_binded))
 			if(ishuman(src) && user.get_tempo_bonus(TEMPO_TAG_BINDABLE) && mind && user?.mind)
 				var/held = get_active_held_item()
@@ -51,6 +55,7 @@
 						if(HL.try_bind(held, user, TRUE))
 							remove_status_effect(/datum/status_effect/debuff/vulnerable)
 							return TRUE
+		return FALSE
 
 		// TA Edit start - SOUNDBREAKER
 	var/success = FALSE

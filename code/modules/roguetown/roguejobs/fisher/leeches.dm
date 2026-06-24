@@ -63,6 +63,26 @@
 	. = ..()
 	icon_state = initial(icon_state)
 
+/obj/item/natural/worms/leech/proc/remove_from_host(mob/living/target, obj/item/bodypart/bodypart)
+	if(bodypart)
+		bodypart.remove_embedded_object(src)
+	else if(target)
+		target.simple_remove_embedded_object(src)
+
+/obj/item/natural/worms/leech/proc/give_stored_blood(mob/living/target, obj/item/bodypart/bodypart)
+	if(!target)
+		return TRUE
+
+	var/blood_given = min(max(BLOOD_VOLUME_NORMAL - target.blood_volume, 0), blood_storage, blood_sucking)
+	target.blood_volume = min(target.blood_volume + blood_given, BLOOD_VOLUME_NORMAL)
+	blood_storage = max(blood_storage - blood_given, 0)
+
+	if((blood_storage <= 0) || (target.blood_volume >= BLOOD_VOLUME_NORMAL))
+		remove_from_host(target, bodypart)
+		return TRUE
+
+	return FALSE
+
 /obj/item/natural/worms/leech/process()
 	if(!drainage && !is_embedded)
 		return PROCESS_KILL
@@ -77,14 +97,7 @@
 	host.adjustToxLoss(toxin_healing)
 	var/obj/item/bodypart/bp = loc
 	if(giving)
-		var/blood_given = min(BLOOD_VOLUME_MAXIMUM - host.blood_volume, blood_storage, blood_sucking)
-		host.blood_volume += blood_given
-		blood_storage = max(blood_storage - blood_given, 0)
-		if((blood_storage <= 0) || (host.blood_volume >= BLOOD_VOLUME_MAXIMUM))
-			if(bp)
-				bp.remove_embedded_object(src)
-			else
-				host.simple_remove_embedded_object(src)
+		if(give_stored_blood(host, bp))
 			return TRUE
 	else
 		var/blood_extracted = min(blood_maximum - blood_storage, host.blood_volume, blood_sucking)
@@ -103,14 +116,7 @@
 		return
 	user.adjustToxLoss(toxin_healing)
 	if(giving)
-		var/blood_given = min(BLOOD_VOLUME_MAXIMUM - user.blood_volume, blood_storage, blood_sucking)
-		user.blood_volume += blood_given
-		blood_storage = max(blood_storage - blood_given, 0)
-		if((blood_storage <= 0) || (user.blood_volume >= BLOOD_VOLUME_MAXIMUM))
-			if(bodypart)
-				bodypart.remove_embedded_object(src)
-			else
-				user.simple_remove_embedded_object(src)
+		if(give_stored_blood(user, bodypart))
 			return TRUE
 	else
 		var/blood_extracted = min(blood_maximum - blood_storage, user.blood_volume, blood_sucking)

@@ -167,15 +167,20 @@ Hotkey-Mode: (hotkey-mode must be on)
 /client/verb/set_stretch()
 	set name = "IconScaling"
 	set category = "Preferences.Options"
-	if(prefs)
-		if(prefs.crt == TRUE)
-			to_chat(src, "CRT mode is on.")
-			winset(src, "mapwindow.map", "zoom-mode=blur")
-			return
-	if(winget(src, "mapwindow.map", "zoom-mode") == "normal")
+	if(!prefs)
+		return
+	if(prefs.crt == TRUE)
+		to_chat(src, "CRT mode is on.")
+		winset(src, "mapwindow.map", "zoom-mode=blur")
+		return
+	if(prefs.icon_scaling == TRUE)
+		prefs.icon_scaling = FALSE
+		prefs.save_preferences()
 		to_chat(src, "Pixel-perfect... OK")
 		winset(src, "mapwindow.map", "zoom-mode=distort")
 	else
+		prefs.icon_scaling = TRUE
+		prefs.save_preferences()
 		to_chat(src, "Anti-aliased... OK")
 		winset(src, "mapwindow.map", "zoom-mode=normal")
 
@@ -185,19 +190,14 @@ Hotkey-Mode: (hotkey-mode must be on)
 	if(!prefs)
 		return
 	if(prefs.crt == TRUE)
-		winset(src, "mapwindow.map", "zoom-mode=normal")
 		prefs.crt = FALSE
 		prefs.save_preferences()
 		to_chat(src, "CRT... OFF")
-		for(var/atom/movable/screen/scannies/S in screen)
-			S.alpha = 0
 	else
-		winset(src, "mapwindow.map", "zoom-mode=blur")
 		prefs.crt = TRUE
 		prefs.save_preferences()
 		to_chat(src, "CRT... ON")
-		for(var/atom/movable/screen/scannies/S in screen)
-			S.alpha = 70
+	apply_saved_visual_preferences()
 
 /client/verb/grainfilter()
 	set category = "Preferences.Options"
@@ -216,6 +216,21 @@ Hotkey-Mode: (hotkey-mode must be on)
 		to_chat(src, "Grain is <font color='#007fff'>ON.</font>")
 		for(var/atom/movable/screen/grain/S in screen)
 			S.alpha = 55
+
+/client/proc/apply_saved_visual_preferences()
+	if(!prefs)
+		return
+	if(prefs.crt)
+		winset(src, "mapwindow.map", "zoom-mode=blur")
+	else if(prefs.icon_scaling)
+		winset(src, "mapwindow.map", "zoom-mode=normal")
+	else
+		winset(src, "mapwindow.map", "zoom-mode=distort")
+
+	for(var/atom/movable/screen/scannies/S in screen)
+		S.alpha = prefs.crt ? 70 : 0
+	for(var/atom/movable/screen/grain/S in screen)
+		S.alpha = prefs.grain ? 55 : 0
 
 /client/verb/triggercommend()
 	set category = "OOC"

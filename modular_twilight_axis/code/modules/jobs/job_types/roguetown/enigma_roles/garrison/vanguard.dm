@@ -21,7 +21,7 @@
 	advclass_cat_rolls = list(CTAG_VANGUARD = 20)
 
 	give_bank_account = TRUE
-	min_pq = 2
+	min_pq = 3
 	max_pq = null
 	round_contrib_points = 2
 	same_job_respawn_delay = 30 MINUTES

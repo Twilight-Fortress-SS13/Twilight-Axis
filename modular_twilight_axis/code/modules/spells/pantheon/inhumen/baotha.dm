@@ -7,6 +7,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "luxsteal0"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 100
 	chargedrain = 0
 	chargetime = 0
@@ -93,10 +95,12 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "mirage"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 0
-	chargedloop = /datum/looping_sound/invokeholy
+	chargedloop = /datum/looping_sound/invokeascendant
 	sound = 'sound/foley/gross.ogg'
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = FALSE
@@ -154,6 +158,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "vice"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 0
@@ -209,6 +215,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "bless_drink"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 0
@@ -284,6 +292,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "blessing"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 0
@@ -322,6 +332,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "ruin"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	chargedrain = 0
 	chargetime = 0
 	releasedrain = 5
@@ -422,6 +434,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "bloom"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	sound = list('sound/magic/magnet.ogg')
 	releasedrain = 40
 	chargetime = 10
@@ -476,9 +490,11 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "powder"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	clothes_req = FALSE
 	associated_skill = /datum/skill/magic/holy
-	chargedloop = /datum/looping_sound/invokeholy
+	chargedloop = /datum/looping_sound/invokeascendant
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 15
@@ -518,11 +534,13 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "powder"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	clothes_req = FALSE
 	range = 3	//POCKET OPIUM!
 	associated_skill = /datum/skill/magic/holy
 	projectile_type = /obj/projectile/magic/TAblowingdust
-	chargedloop = /datum/looping_sound/invokeholy
+	chargedloop = /datum/looping_sound/invokeascendant
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 15
@@ -555,6 +573,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "last_high"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 0
@@ -596,6 +616,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "joyride"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	range = 2
 	chargetime = 0.5 SECONDS
 	invocation_type = "emote"
@@ -640,6 +662,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "pleasure"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 0

@@ -357,3 +357,48 @@
 	message.embed = embed
 
 	send2chat(message, admin_notes_channel)
+
+// Трогаем ПКью через дискорд бота
+
+/datum/world_topic/pq_adjust
+	keyword = "pqadjust"
+
+/datum/world_topic/pq_adjust/Run(list/input)
+	var/admin_ckey = ckey(input["admin"])
+	var/target_ckey = ckey(input["ckey"])
+	var/amount = text2num(input["amount"])
+	var/reason = trim(input["reason"])
+
+	if(!admin_ckey)
+		return list("status" = "error", "message" = "Admin ckey is empty.")
+	if(!can_adjust_playerquality_by_admin_ckey(admin_ckey))
+		return list("status" = "error", "message" = "No rights to adjust PQ.")
+	if(!target_ckey)
+		return list("status" = "error", "message" = "Target ckey is empty.")
+	if(admin_ckey == target_ckey)
+		return list("status" = "error", "message" = "Самому себе PQ менять нельзя.")
+	if(isnull(amount))
+		return list("status" = "error", "message" = "Amount is invalid.")
+	amount = round(amount)
+	if(amount < -20 || amount > 20)
+		return list("status" = "error", "message" = "Amount must be between -20 and 20.")
+	if(amount != 0 && !reason)
+		return list("status" = "error", "message" = "Reason is required.")
+	if(length_char(reason) > 500)
+		reason = copytext_char(reason, 1, 501)
+
+	var/folder_prefix = copytext(target_ckey, 1, 2)
+	var/full_path = "data/player_saves/[folder_prefix]/[target_ckey]/preferences.sav"
+	if(!fexists(full_path))
+		return list("status" = "error", "message" = "User does not exist.")
+
+	var/old_pq = get_playerquality(target_ckey, FALSE)
+	adjust_playerquality(amount, target_ckey, admin_ckey, reason)
+	var/new_pq = get_playerquality(target_ckey, FALSE)
+
+	for(var/client/C in GLOB.clients)
+		if(C.ckey == target_ckey)
+			to_chat(C, "<span class='admin'><span class='prefix'>ADMIN LOG:</span> <span class='message linkify'>Your PQ has been adjusted by [amount] by [admin_ckey] for reason: [reason]</span></span>")
+			break
+
+	return list("status" = "ok", "ckey" = target_ckey, "admin" = admin_ckey, "amount" = amount, "old_pq" = old_pq, "new_pq" = new_pq)
