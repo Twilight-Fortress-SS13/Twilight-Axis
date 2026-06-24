@@ -39,70 +39,40 @@
 /datum/tat_skills/proc/normalize_skill_domain(domain)
 	if(domain == TAT_SKILL_DOMAIN_COMBAT)
 		return TAT_SKILL_DOMAIN_COMBAT
+	if(domain == TAT_SKILL_DOMAIN_PEACEFUL)
+		return TAT_SKILL_DOMAIN_PEACEFUL
+	if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
+		return TAT_SKILL_DOMAIN_ADVENTURE
 	if(domain == TAT_SKILL_DOMAIN_WANDERING)
-		return TAT_SKILL_DOMAIN_WANDERING
+		return TAT_SKILL_DOMAIN_ADVENTURE
 	if(domain == TAT_SKILL_DOMAIN_GATHERING)
-		return TAT_SKILL_DOMAIN_GATHERING
+		return TAT_SKILL_DOMAIN_PEACEFUL
 	if(domain == TAT_SKILL_DOMAIN_CRAFTING)
-		return TAT_SKILL_DOMAIN_CRAFTING
+		return TAT_SKILL_DOMAIN_PEACEFUL
 	if(domain == TAT_SKILL_DOMAIN_MISC)
-		return TAT_SKILL_DOMAIN_MISC
+		return TAT_SKILL_DOMAIN_ADVENTURE
 	return null
 
 /datum/tat_skills/proc/can_give_skill_domain_points(domain, amount = 1)
-	domain = normalize_skill_domain(domain)
-	if(!domain)
-		return FALSE
-	amount = max(1, round(amount || 1))
-	if(round(domain_points[domain] || 0) < amount)
-		return FALSE
-	return get_remaining_points(domain) >= amount
+	return FALSE
 
 /datum/tat_skills/proc/can_take_skill_domain_points(domain, amount = 1)
-	domain = normalize_skill_domain(domain)
-	if(!domain)
-		return FALSE
-	amount = max(1, round(amount || 1))
-	if(skill_point_conversion_pool < amount)
-		return FALSE
-	if(domain == TAT_SKILL_DOMAIN_COMBAT)
-		var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
-		var/default_value = max(0, round(default_domain_points[domain] || 0))
-		return round(domain_points[domain] || 0) + amount <= default_value
-	return TRUE
+	return FALSE
 
 /datum/tat_skills/proc/give_skill_domain_points(domain, amount = 1)
-	domain = normalize_skill_domain(domain)
-	if(!domain)
-		return FALSE
-	amount = max(1, round(amount || 1))
-	if(!can_give_skill_domain_points(domain, amount))
-		return FALSE
-	domain_points[domain] = round(domain_points[domain] || 0) - amount
-	skill_point_conversion_pool += amount
-	invalidate_spent_points_cache()
-	owner_build?.set_dirty()
-	return TRUE
+	return FALSE
 
 /datum/tat_skills/proc/take_skill_domain_points(domain, amount = 1)
-	domain = normalize_skill_domain(domain)
-	if(!domain)
-		return FALSE
-	amount = max(1, round(amount || 1))
-	if(!can_take_skill_domain_points(domain, amount))
-		return FALSE
-	domain_points[domain] = round(domain_points[domain] || 0) + amount
-	skill_point_conversion_pool -= amount
-	invalidate_spent_points_cache()
-	owner_build?.set_dirty()
-	return TRUE
+	return FALSE
 
 /datum/tat_skills/proc/build_skill_conversion_state()
 	var/list/result = list()
-	for(var/domain in list(TAT_SKILL_DOMAIN_COMBAT, TAT_SKILL_DOMAIN_WANDERING, TAT_SKILL_DOMAIN_GATHERING, TAT_SKILL_DOMAIN_CRAFTING, TAT_SKILL_DOMAIN_MISC))
+	for(var/domain in list(TAT_SKILL_DOMAIN_COMBAT, TAT_SKILL_DOMAIN_PEACEFUL, TAT_SKILL_DOMAIN_ADVENTURE))
 		result[domain] = list(
-			"can_give" = can_give_skill_domain_points(domain),
-			"can_take" = can_take_skill_domain_points(domain),
+			"can_give" = FALSE,
+			"can_take" = FALSE,
+			"give_text" = "Skill point conversion is disabled.",
+			"take_text" = "Skill point conversion is disabled.",
 		)
 	return result
 
@@ -112,15 +82,18 @@
 
 	var/list/domains = list(
 		TAT_SKILL_DOMAIN_COMBAT,
-		TAT_SKILL_DOMAIN_WANDERING,
-		TAT_SKILL_DOMAIN_GATHERING,
-		TAT_SKILL_DOMAIN_CRAFTING,
-		TAT_SKILL_DOMAIN_MISC
+		TAT_SKILL_DOMAIN_PEACEFUL,
+		TAT_SKILL_DOMAIN_ADVENTURE
 	)
 	var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
 
 	for(var/domain in domain_points.Copy())
-		if(!(domain in domains))
+		var/normalized = normalize_skill_domain(domain)
+		if(!normalized)
+			domain_points -= domain
+			continue
+		if(normalized != domain)
+			domain_points[normalized] = round(domain_points[normalized] || 0) + round(domain_points[domain] || 0)
 			domain_points -= domain
 
 	var/legal_total = 0
@@ -135,7 +108,7 @@
 	if(round(domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0) > combat_default)
 		domain_points[TAT_SKILL_DOMAIN_COMBAT] = combat_default
 
-	skill_point_conversion_pool = max(0, round(text2num("[skill_point_conversion_pool]") || 0))
+	skill_point_conversion_pool = 0
 
 	var/current_total = skill_point_conversion_pool
 	for(var/domain in domains)
@@ -179,7 +152,17 @@
 					break
 
 	else if(current_total < legal_total)
-		skill_point_conversion_pool += legal_total - current_total
+		for(var/domain in domains)
+			var/default_value = max(0, round(default_domain_points[domain] || 0))
+			var/current_value = round(domain_points[domain] || 0)
+			var/missing = default_value - current_value
+			if(missing <= 0)
+				continue
+			var/add = min(missing, legal_total - current_total)
+			domain_points[domain] = current_value + add
+			current_total += add
+			if(current_total >= legal_total)
+				break
 
 	invalidate_spent_points_cache()
 	return TRUE
@@ -470,16 +453,29 @@
 		return get_firearms_skill_cap(skill_type)
 
 	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
+	var/trained_cap = TAT_SKILL_COMBAT_CAP_WEAPON_TRAINED
 	var/expert_cap = TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT
 	var/master_cap = TAT_SKILL_COMBAT_CAP_TRAIT_MASTER
 
+	var/has_weapon_training = !!owner_build?.has_trait(TAT_TRAIT_WEAPON_TRAINING)
 	var/has_expert = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_EXPERT)
 	var/has_master = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_MASTER)
+	var/has_pugilist = !!owner_build?.has_trait(TRAIT_CIVILIZEDBARBARIAN)
 
 	var/current_invested = get_invested_value(skill_type)
 	var/bonus_value = get_bonus_value(skill_type)
 
 	var/cap = base_cap
+
+	if(has_weapon_training)
+		cap = trained_cap
+
+	var/is_pugilist_skill = skill_type == /datum/skill/combat/unarmed || skill_type == /datum/skill/combat/wrestling
+	if(has_pugilist && is_pugilist_skill)
+		if(has_weapon_training)
+			cap = max(cap, expert_cap)
+		else
+			cap = max(cap, trained_cap)
 
 	if(has_expert)
 		var/expert_invested_target = max(current_invested, expert_cap - bonus_value)
@@ -493,35 +489,34 @@
 
 	var/cap_bonus = get_trait_cap_bonus(skill_type) + get_virtue_skill_cap_bonus(skill_type)
 	if(cap_bonus > 0)
-		cap = max(cap, base_cap + cap_bonus)
+		var/bonus_cap = cap_bonus
+		if(bonus_cap > base_cap && !has_weapon_training && !(has_pugilist && is_pugilist_skill))
+			bonus_cap = base_cap
+		cap = max(cap, bonus_cap)
 
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_magic_skill_cap(skill_type)
 	var/cap = 0
+	var/can_apply_cap_bonus = TRUE
 
 	if(skill_type == /datum/skill/magic/arcane)
-		if(owner_build?.traits?.has_effective_trait(TRAIT_ARCYNE))
-			cap = 6
+		cap = owner_build?.directions?.get_points(TAT_DIRECTION_MAGIC) || 0
+		can_apply_cap_bonus = cap > 0
+		if(owner_build?.has_trait(TRAIT_ARCYNE) && !owner_build?.traits?.has_defensive_trait_lockout())
+			cap += 3
 
 	else if(skill_type == /datum/skill/magic/holy)
-		if(owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_3))
-			cap = 6
-		else if(owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_2))
-			cap = 5
-		else if(owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_1))
-			cap = 3
-		else if(owner_build?.has_trait(TAT_TRAIT_DIVINE_INITIATE))
-			cap = 1
-		else if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
-			cap = 3
+		if(owner_build?.has_trait(TAT_TRAIT_DIVINE_INITIATE) || owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_1) || owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_2) || owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_3))
+			cap = owner_build?.directions?.get_points(TAT_DIRECTION_MIRACLES) || 0
+		can_apply_cap_bonus = cap > 0
 
 	else if(skill_type == /datum/skill/magic/druidic)
 		if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
 			cap = 2
 
 	var/cap_bonus = get_trait_cap_bonus(skill_type) + get_virtue_skill_cap_bonus(skill_type)
-	if(cap_bonus > 0)
+	if(cap_bonus > 0 && can_apply_cap_bonus)
 		if(cap > 0)
 			cap += cap_bonus
 		else

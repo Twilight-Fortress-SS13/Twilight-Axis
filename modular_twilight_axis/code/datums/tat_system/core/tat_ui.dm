@@ -3,15 +3,19 @@
 /datum/tat_build/proc/get_ui_skill_domain_key(domain)
 	if(domain == TAT_SKILL_DOMAIN_COMBAT)
 		return "combat"
+	if(domain == TAT_SKILL_DOMAIN_PEACEFUL)
+		return "peaceful"
+	if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
+		return "adventure"
 	if(domain == TAT_SKILL_DOMAIN_WANDERING)
-		return "wandering"
+		return "adventure"
 	if(domain == TAT_SKILL_DOMAIN_GATHERING)
-		return "gathering"
+		return "peaceful"
 	if(domain == TAT_SKILL_DOMAIN_CRAFTING)
-		return "crafting"
+		return "peaceful"
 	if(domain == TAT_SKILL_DOMAIN_MISC)
-		return "misc"
-	return "misc"
+		return "adventure"
+	return "adventure"
 
 /datum/tat_build/proc/get_all_ui_skill_types()
 	var/list/result = list()
@@ -108,6 +112,11 @@
 		return list()
 	return skills.build_skill_conversion_state()
 
+/datum/tat_build/proc/build_ui_directions()
+	if(!directions)
+		return list()
+	return directions.build_ui_state()
+
 /datum/tat_build/proc/get_remaining_trait_points()
 	return traits?.get_remaining_points() || 0
 
@@ -117,40 +126,32 @@
 /datum/tat_build/proc/build_ui_skill_points_by_domain()
 	var/list/result = list(
 		"combat" = 0,
-		"wandering" = 0,
-		"gathering" = 0,
-		"crafting" = 0,
-		"misc" = 0,
+		"peaceful" = 0,
+		"adventure" = 0,
 	)
 
 	if(!skills)
 		return result
 
 	result["combat"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_COMBAT)
-	result["wandering"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_WANDERING)
-	result["gathering"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_GATHERING)
-	result["crafting"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_CRAFTING)
-	result["misc"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_MISC)
+	result["peaceful"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_PEACEFUL)
+	result["adventure"] = skills.get_total_maximum(TAT_SKILL_DOMAIN_ADVENTURE)
 
 	return result
 
 /datum/tat_build/proc/build_ui_skill_points_remaining_by_domain()
 	var/list/result = list(
 		"combat" = 0,
-		"wandering" = 0,
-		"gathering" = 0,
-		"crafting" = 0,
-		"misc" = 0,
+		"peaceful" = 0,
+		"adventure" = 0,
 	)
 
 	if(!skills)
 		return result
 
 	result["combat"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_COMBAT)
-	result["wandering"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_WANDERING)
-	result["gathering"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_GATHERING)
-	result["crafting"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_CRAFTING)
-	result["misc"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_MISC)
+	result["peaceful"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_PEACEFUL)
+	result["adventure"] = skills.get_remaining_points(TAT_SKILL_DOMAIN_ADVENTURE)
 
 	return result
 
@@ -176,6 +177,12 @@
 
 /datum/tat_build/proc/reset_traits()
 	traits?.reset()
+	sanitize()
+	set_dirty()
+	return TRUE
+
+/datum/tat_build/proc/reset_directions()
+	directions?.reset()
 	sanitize()
 	set_dirty()
 	return TRUE
@@ -221,6 +228,7 @@
 /datum/tat_build/proc/add_trait(trait_id)
 	var/ok = traits?.add_trait(trait_id)
 	if(ok)
+		directions?.sanitize()
 		traits?.sanitize()
 		stats?.sanitize()
 		skills?.refresh_after_trait_change()
@@ -240,11 +248,44 @@
 		else
 			break
 	if(changed)
+		directions?.sanitize()
 		traits?.sanitize()
 		stats?.sanitize()
 		skills?.refresh_after_trait_change()
 		items?.sanitize()
 	return changed
+
+/datum/tat_build/proc/set_direction_foundation(foundation)
+	if(!directions)
+		return FALSE
+	var/ok = directions.set_foundation(foundation)
+	if(ok)
+		sanitize()
+	return ok
+
+/datum/tat_build/proc/set_direction_role_choice(role_choice)
+	if(!directions)
+		return FALSE
+	var/ok = directions.set_role_choice(role_choice)
+	if(ok)
+		sanitize()
+	return ok
+
+/datum/tat_build/proc/add_direction_point(direction, amount = 1)
+	if(!directions)
+		return FALSE
+	var/ok = directions.add_point(direction, amount)
+	if(ok)
+		sanitize()
+	return ok
+
+/datum/tat_build/proc/remove_direction_point(direction, amount = 1)
+	if(!directions)
+		return FALSE
+	var/ok = directions.remove_point(direction, amount)
+	if(ok)
+		sanitize()
+	return ok
 
 /datum/tat_build/proc/add_item(path, amount = 1)
 	if(!items)
@@ -440,11 +481,17 @@
 /datum/tat_build/proc/build_ui_trait_entries()
 	var/list/result = list()
 	for(var/trait_id in GLOB.tat_available_traits)
+		if(trait_id == TAT_TRAIT_MAIL_SUPPLIER || trait_id == TAT_TRAIT_PLATE_SUPPLIER)
+			continue
+		if(trait_id == TAT_TRAIT_WEAPON_TRAINING && has_built_in_weapon_training_foundation())
+			continue
 		if(trait_id == TAT_TRAIT_CONTRACTOR && !can_select_contractor_trait())
 			continue
 		if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && get_owner_ckey() != "mrix")
 			continue
 		if(trait_id == TAT_TRAIT_DRUID_INITIATE && !can_select_druid_initiate_trait())
+			continue
+		if(directions?.is_role_trait(trait_id))
 			continue
 		var/list/entry = get_trait_entry(trait_id)
 		if(islist(entry) && entry["category"] == TAT_CATEGORY_SKILL_CONVERSION)
@@ -460,6 +507,14 @@
 			"repeatable" = traits?.is_repeatable_trait(trait_id),
 			"maximum" = traits?.get_trait_maximum(trait_id),
 			"external" = traits?.has_external_trait(trait_id),
+			"direction" = directions?.get_trait_direction(trait_id),
+			"direction_cost" = directions?.get_trait_cost(trait_id),
+			"direction_tier" = directions?.get_trait_tier(trait_id),
+			"direction_requirement_map" = directions?.get_trait_requirements(trait_id),
+			"direction_requirements" = directions?.get_trait_requirement_text(trait_id),
+			"direction_locked_reason" = traits?.get_trait_requirement_block_reason(trait_id) || directions?.get_trait_block_reason(trait_id),
+			"direction_point_bonus" = traits?.get_oddity_direction_point_bonus(trait_id),
+			"ordinary_group" = traits?.get_ordinary_trait_group(trait_id),
 		)
 	return result
 
@@ -467,7 +522,15 @@
 	items?.sync_external_grants()
 	if(!GLOB.tat_item_icon_cache_ready)
 		warm_tat_item_catalog()
-	return GLOB.tat_item_catalog_cache
+	var/list/result = list()
+	for(var/item_path in GLOB.tat_item_catalog_cache)
+		var/list/entry = GLOB.tat_item_catalog_cache[item_path]
+		if(!islist(entry))
+			continue
+		var/list/copy = entry.Copy()
+		copy["cost"] = items?.get_cost(text2path("[item_path]")) || copy["cost"]
+		result[item_path] = copy
+	return result
 
 /datum/tat_build/proc/build_ui_items_state()
 	if(islist(ui_items_state_cache))
@@ -494,6 +557,7 @@
 		result["[item_path]"] = list(
 			"amount" = amount,
 			"unlocked" = unlocked,
+			"soft_locked" = items.is_supply_soft_locked(entry),
 			"maximum" = maximum,
 			"can_add" = amount < maximum,
 		)
@@ -634,10 +698,6 @@
 			_skills_any_negative = TRUE
 	var/_p_stats_total = get_effective_stat_points_total()
 	var/_p_stats_rem = get_remaining_stat_points()
-	var/_p_traits_total = traits.get_total_maximum()
-	var/_p_traits_rem = get_remaining_trait_points()
-	var/_p_traits_capped_negative_raw = traits.get_capped_negative_credit_raw()
-	var/_p_traits_capped_negative_used = traits.get_capped_negative_credit_used()
 	items?.sync_external_grants()
 	var/_p_items_total = items.get_total_maximum()
 	var/_p_items_rem = get_remaining_item_points()
@@ -647,8 +707,6 @@
 		validation += "Spent too many stat points."
 	if(_skills_any_negative)
 		validation += "Spent too many skill points."
-	if(_p_traits_rem < 0)
-		validation += "Spent too many trait points."
 	if(_p_items_rem < 0)
 		validation += "Spent too many item points."
 	var/list/trait_issues = traits.has_invalid_trait_dependencies()
@@ -672,6 +730,7 @@
 	var/list/_items_state = build_ui_items_state()
 	var/list/_loadout = build_ui_loadout()
 	var/list/_tat_slots = build_ui_tat_slots()
+	var/list/_directions = build_ui_directions()
 
 	_cached_ui_data = list(
 		"stats" = _stats,
@@ -682,6 +741,7 @@
 		"effective_trait_counts" = _effective_trait_counts,
 		"external_trait_counts" = _external_trait_counts,
 		"available_traits" = build_ui_trait_entries(),
+		"directions" = _directions,
 		"items_state" = _items_state,
 		"loadout" = _loadout,
 
@@ -694,12 +754,6 @@
 		"skill_points_remaining_by_domain" = _skp_rem,
 		"skill_conversion_pool" = _skp_conversion_pool,
 		"skill_conversion_state" = _skp_conversion_state,
-
-		"points_traits" = _p_traits_total,
-		"points_traits_remaining" = _p_traits_rem,
-		"negative_trait_credit_raw" = _p_traits_capped_negative_raw,
-		"negative_trait_credit_used" = _p_traits_capped_negative_used,
-		"negative_trait_credit_cap" = TAT_NEGATIVE_TRAIT_CREDIT_CAP,
 
 		"points_items" = _p_items_total,
 		"points_items_remaining" = _p_items_rem,
@@ -744,6 +798,14 @@
 			return add_trait(params["id"])
 		if("remove_trait")
 			return remove_trait(params["id"], text2num(params["amount"]) || 1)
+		if("set_direction_foundation")
+			return set_direction_foundation(params["foundation"])
+		if("set_direction_role_choice")
+			return set_direction_role_choice(params["role_choice"])
+		if("add_direction_point")
+			return add_direction_point(params["direction"], text2num(params["amount"]) || 1)
+		if("remove_direction_point")
+			return remove_direction_point(params["direction"], text2num(params["amount"]) || 1)
 		if("add_item")
 			return add_item(text2path(params["path"]), text2num(params["amount"]) || 1)
 		if("remove_item")
@@ -772,6 +834,8 @@
 			return reset_skills()
 		if("reset_traits")
 			return reset_traits()
+		if("reset_directions")
+			return reset_directions()
 		if("reset_items")
 			return reset_items()
 		if("save")

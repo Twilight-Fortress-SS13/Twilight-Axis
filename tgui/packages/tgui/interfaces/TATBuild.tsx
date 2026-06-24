@@ -44,6 +44,14 @@ type TraitEntry = {
   desc?: string;
   repeatable?: boolean;
   maximum?: number;
+  direction?: DirectionKey | null;
+  direction_cost?: number;
+  direction_tier?: number;
+  direction_requirement_map?: Partial<Record<DirectionKey, number>>;
+  direction_requirements?: string | null;
+  direction_locked_reason?: string | null;
+  direction_point_bonus?: number;
+  ordinary_group?: string;
 };
 
 type TraitState = {
@@ -66,6 +74,7 @@ type ItemEntry = {
 type ItemState = {
   amount: number;
   unlocked: boolean;
+  soft_locked?: boolean;
   maximum?: number;
   can_add?: boolean;
 };
@@ -113,10 +122,19 @@ type TatSlotEntry = {
 
 type SkillDomainKey =
   | 'combat'
-  | 'wandering'
-  | 'gathering'
-  | 'crafting'
-  | 'misc';
+  | 'peaceful'
+  | 'adventure';
+
+type DirectionKey =
+  | 'combat'
+  | 'magic'
+  | 'miracles'
+  | 'music'
+  | 'skills'
+  | 'survival'
+  | 'ordinary';
+
+type TraitTabKey = DirectionKey;
 
 type SkillConversionDomainState = {
   can_give?: boolean;
@@ -143,8 +161,6 @@ type Data = {
   points_stats_remaining: number;
   points_skills: number;
   points_skills_remaining: number;
-  points_traits: number;
-  points_traits_remaining: number;
   points_items: number;
   points_items_remaining: number;
 
@@ -152,6 +168,24 @@ type Data = {
   skill_points_remaining_by_domain?: Partial<Record<SkillDomainKey, number>>;
   skill_conversion_pool?: number;
   skill_conversion_state?: Partial<Record<SkillDomainKey, SkillConversionDomainState>>;
+
+  directions?: {
+    foundation?: string;
+    role_choice?: string;
+    points_total?: number;
+    points_spent?: number;
+    points_remaining?: number;
+    directions?: Partial<Record<DirectionKey, {
+      points?: number;
+      spent?: number;
+      remaining?: number;
+      name?: string;
+    }>>;
+    foundation_names?: Record<string, string>;
+    foundation_role_choices?: Record<string, string[]>;
+    role_choice_names?: Record<string, string>;
+    direction_order?: DirectionKey[];
+  };
 
   tat_slots?: TatSlotEntry[] | Record<string, TatSlotEntry>;
   active_tat_slot?: number;
@@ -206,18 +240,14 @@ const MAX_RENDERED_ITEMS_PER_SLOT = 80;
 
 const SKILL_DOMAIN_TITLES: Record<SkillDomainKey, string> = {
   combat: 'Combat',
-  wandering: 'Wandering',
-  gathering: 'Gathering',
-  crafting: 'Crafting',
-  misc: 'Misc',
+  peaceful: 'Peaceful',
+  adventure: 'Adventure',
 };
 
 const SKILL_DOMAIN_ORDER: SkillDomainKey[] = [
   'combat',
-  'wandering',
-  'gathering',
-  'crafting',
-  'misc',
+  'peaceful',
+  'adventure',
 ];
 
 const normalizeSearch = (value: unknown): string =>
@@ -370,14 +400,15 @@ const normalizeSkillDomain = (value?: string | null): SkillDomainKey => {
   const normalized = normalizeSearch(value);
   if (
     normalized === 'combat' ||
-    normalized === 'wandering' ||
-    normalized === 'gathering' ||
-    normalized === 'crafting' ||
-    normalized === 'misc'
+    normalized === 'peaceful' ||
+    normalized === 'adventure'
   ) {
     return normalized;
   }
-  return 'misc';
+  if (normalized === 'gathering' || normalized === 'crafting') {
+    return 'peaceful';
+  }
+  return 'adventure';
 };
 
 const formatSkillDisplayValue = (state?: SkillState) => {
@@ -434,7 +465,11 @@ const canAddTrait = (data: Data, traitId: string, entry: TraitEntry): boolean =>
     return false;
   }
 
-  return data.points_traits_remaining >= (Number(entry.cost) || 0);
+  if (entry.direction && amount <= 0 && entry.direction_locked_reason) {
+    return false;
+  }
+
+  return true;
 };
 
 type LoadoutDollSlot = {
@@ -1283,21 +1318,10 @@ const SkillRow = ({
 const SkillDomainTitle = ({
   domain,
   data,
-  act,
 }: {
   domain: SkillDomainKey;
   data: Data;
-  act: BackendAct;
 }) => {
-  const domainState = data.skill_conversion_state?.[domain];
-  const pool = Number(data.skill_conversion_pool) || 0;
-  const remaining = getDomainRemainingPoints(data, domain) || 0;
-  const canGive = typeof domainState?.can_give === 'boolean' ? domainState.can_give : remaining > 0;
-  const canTake =
-    typeof domainState?.can_take === 'boolean'
-      ? domainState.can_take
-      : domain !== 'combat' && pool > 0;
-
   return (
     <Stack align="center" justify="space-between">
       <Stack.Item>
@@ -1310,26 +1334,6 @@ const SkillDomainTitle = ({
               {formatDomainPoints(data, domain)}
             </Box>
           </Stack.Item>
-          <Stack.Item>
-            <Button
-              compact
-              tooltip={domainState?.give_text || 'Give 1 free point from this domain to conversion pool'}
-              disabled={!canGive}
-              onClick={() => act('give_skill_domain_points', { domain })}>
-              -
-            </Button>
-          </Stack.Item>
-          {(domain !== 'combat' || canTake) && (
-            <Stack.Item>
-              <Button
-                compact
-                tooltip={domainState?.take_text || 'Take 1 point from conversion pool into this domain'}
-                disabled={!canTake}
-                onClick={() => act('take_skill_domain_points', { domain })}>
-                +
-              </Button>
-            </Stack.Item>
-          )}
         </Stack>
       </Stack.Item>
     </Stack>
@@ -1354,13 +1358,13 @@ const SkillsDomainPanel = ({
   return (
     <Stack.Item grow basis="32%" style={{ minWidth: '270px' }}>
       <Section
-        title={<SkillDomainTitle domain={domain} data={data} act={act} />}
+        title={<SkillDomainTitle domain={domain} data={data} />}
         fill
-        style={{ height: '320px' }}>
+        style={{ height: '480px' }}>
         {!rows.length ? (
           <NoticeBox>No skills in this group.</NoticeBox>
         ) : (
-          <Box style={{ maxHeight: '260px', overflowY: 'auto', paddingRight: '4px' }}>
+          <Box style={{ maxHeight: '420px', overflowY: 'auto', paddingRight: '4px' }}>
             {rows.map(([skillPath, entry]) => (
               <SkillRow
                 key={skillPath}
@@ -1393,10 +1397,8 @@ const SkillsTab = ({
   const groups = useMemo(() => {
     const byDomain: Record<SkillDomainKey, Array<[string, SkillEntry]>> = {
       combat: [],
-      wandering: [],
-      gathering: [],
-      crafting: [],
-      misc: [],
+      peaceful: [],
+      adventure: [],
     };
 
     Object.entries(data.available_skills || {}).forEach(([skillPath, entry]) => {
@@ -1421,7 +1423,7 @@ const SkillsTab = ({
       title={
         <SectionTitleWithMeta
           title="Skills"
-          meta={`Conversion pool: ${Number(data.skill_conversion_pool) || 0}`}
+          meta="Fixed domain pools"
         />
       }>
       {!hasAny ? (
@@ -1492,6 +1494,325 @@ const TraitPill = ({
   );
 };
 
+const DIRECTION_ORDER: DirectionKey[] = [
+  'combat',
+  'magic',
+  'miracles',
+  'music',
+  'skills',
+  'survival',
+  'ordinary',
+];
+
+const DIRECTION_LABELS: Record<DirectionKey, string> = {
+  combat: 'Combat',
+  magic: 'Magic',
+  miracles: 'Miracles',
+  music: 'Music',
+  skills: 'Skills',
+  survival: 'Survival',
+  ordinary: 'Ordinary',
+};
+
+const getTraitRequirementText = (entry: TraitEntry) => {
+  if (entry.direction_requirements) {
+    return entry.direction_requirements;
+  }
+  const requirementMap = entry.direction_requirement_map || {};
+  const parts = Object.entries(requirementMap)
+    .filter(([, value]) => Number(value) > 0)
+    .map(([direction, value]) => `${DIRECTION_LABELS[direction as DirectionKey] || direction} ${value}`);
+  return parts.join(', ');
+};
+
+const DirectionsPanel = ({
+  data,
+  act,
+  selectedDirection,
+  setSelectedDirection,
+}: {
+  data: Data;
+  act: BackendAct;
+  selectedDirection: TraitTabKey;
+  setSelectedDirection: (direction: TraitTabKey) => void;
+}) => {
+  const directions = data.directions;
+  const order = directions?.direction_order?.length ? directions.direction_order : DIRECTION_ORDER;
+  const hasOrdinaryDirection = order.includes('ordinary');
+  const foundation = directions?.foundation || 'settled';
+  const foundationNames = directions?.foundation_names || { settled: 'Settled', wanderer: 'Wanderer' };
+  const roleChoice = directions?.role_choice || 'towner';
+  const roleChoices = directions?.foundation_role_choices?.[foundation] || [];
+  const roleChoiceNames = directions?.role_choice_names || {};
+  const pointsRemaining = Number(directions?.points_remaining) || 0;
+  const pointsSpent = Number(directions?.points_spent) || 0;
+  const pointsTotal = Number(directions?.points_total) || 8;
+
+  return (
+    <Section title={<SectionTitleWithMeta title="Directions" meta={`${pointsRemaining} / ${pointsTotal} free`} />}>
+      <Stack vertical>
+        <Stack wrap align="center">
+          {Object.entries(foundationNames).map(([id, name]) => (
+            <Stack.Item key={id}>
+              <Button
+                compact
+                selected={foundation === id}
+                color={foundation === id ? 'good' : undefined}
+                onClick={() => act('set_direction_foundation', { foundation: id })}>
+                {name}
+              </Button>
+            </Stack.Item>
+          ))}
+          {roleChoices.map((id) => (
+            <Stack.Item key={id}>
+              <Button
+                compact
+                selected={roleChoice === id}
+                color={roleChoice === id ? 'good' : undefined}
+                onClick={() => act('set_direction_role_choice', { role_choice: id })}>
+                {roleChoiceNames[id] || id}
+              </Button>
+            </Stack.Item>
+          ))}
+          <Stack.Item>
+            <Box color="label" style={{ fontSize: '12px' }}>Allocated: {pointsSpent}</Box>
+          </Stack.Item>
+        </Stack>
+
+        <Stack align="stretch" justify="space-between">
+          {order.filter((direction) => direction !== 'ordinary').map((direction) => {
+            const state = directions?.directions?.[direction] || {};
+            const points = Number(state.points) || 0;
+            const spent = Number(state.spent) || 0;
+            const remaining = Number(state.remaining) || 0;
+            const label = state.name || DIRECTION_LABELS[direction] || direction;
+            return (
+              <Stack.Item key={direction} basis="12%" grow>
+                <Box
+                  style={{
+                    border: selectedDirection === direction ? '1px solid rgba(145, 207, 104, 0.65)' : '1px solid rgba(255,255,255,0.12)',
+                    padding: '5px 6px',
+                    minHeight: '66px',
+                    textAlign: 'center',
+                  }}>
+                  <Button
+                    fluid
+                    compact
+                    disabled={pointsRemaining <= 0 && points <= 0}
+                    onClick={() => {
+                      if (pointsRemaining > 0) {
+                        act('add_direction_point', { direction });
+                      }
+                    }}
+                    onContextMenu={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      if (points > 0) {
+                        act('remove_direction_point', { direction });
+                      }
+                    }}
+                    style={{ fontSize: '17px', lineHeight: 1, fontWeight: 700 }}>
+                    {points}
+                  </Button>
+                  <Button
+                    fluid
+                    compact
+                    selected={selectedDirection === direction}
+                    onClick={() => setSelectedDirection(direction)}>
+                    {label}
+                  </Button>
+                  <Box mt={0.25} style={{ opacity: 0.8, fontSize: '10px' }}>
+                    talents {spent}/{points} | free {remaining}
+                  </Box>
+                </Box>
+              </Stack.Item>
+            );
+          })}
+        </Stack>
+
+        {!hasOrdinaryDirection && (
+          <Stack align="center">
+            <Stack.Item>
+              <Button
+                compact
+                selected={selectedDirection === 'ordinary'}
+                onClick={() => setSelectedDirection('ordinary')}>
+                Ordinary
+              </Button>
+            </Stack.Item>
+            <Stack.Item>
+              <Box color="label" style={{ fontSize: '11px' }}>
+                Negative and neutral oddities
+              </Box>
+            </Stack.Item>
+          </Stack>
+        )}
+
+      </Stack>
+    </Section>
+  );
+};
+
+const getOrdinaryGroupLabel = (entry: TraitEntry) => (
+  (Number(entry.direction_point_bonus) || 0) > 0 || entry.ordinary_group === 'negative'
+    ? 'Negative'
+    : 'Neutral'
+);
+
+const TraitNode = ({
+  traitId,
+  entry,
+  data,
+  act,
+  setHoveredItem,
+}: {
+  traitId: string;
+  entry: TraitEntry;
+  data: Data;
+  act: BackendAct;
+  setHoveredItem: (value: HoverCardData | null) => void;
+}) => {
+  const amount = getTraitAmount(data, traitId);
+  const canAdd = canAddTrait(data, traitId, entry);
+  const requirementText = getTraitRequirementText(entry);
+  const directionPointBonus = Number(entry.direction_point_bonus) || 0;
+  const isOrdinary = entry.direction === 'ordinary';
+  const cost = entry.direction ? (entry.direction_cost || 0) : (entry.cost || 0);
+  const selected = amount > 0;
+  const effectText = isOrdinary && directionPointBonus > 0
+    ? `Grants +${directionPointBonus} direction points`
+    : null;
+
+  const hoverData: HoverCardData = {
+    name: entry.name || traitId,
+    desc: [
+      entry.direction_locked_reason || entry.desc,
+      effectText,
+      requirementText ? `Requires: ${requirementText}` : '',
+    ]
+      .filter(Boolean)
+      .join('\n'),
+    category: isOrdinary
+      ? `Ordinary - ${getOrdinaryGroupLabel(entry)}`
+      : entry.direction
+        ? `${DIRECTION_LABELS[entry.direction] || entry.direction} tier ${entry.direction_tier ?? 1}`
+        : entry.category_name || entry.category,
+    costText: effectText || (entry.direction ? `${cost} ${DIRECTION_LABELS[entry.direction] || entry.direction}` : `${cost} pts`),
+    total: amount,
+    canAdd,
+    leftHelp: canAdd ? 'LMB: add trait / increase stack' : 'Cannot add more',
+    rightHelp: amount > 0 ? 'RMB: remove trait / decrease stack' : 'RMB: nothing to remove',
+  };
+
+  return (
+    <div
+      onClick={() => {
+        if (canAdd) {
+          act('add_trait', { id: traitId, amount: 1 });
+        }
+      }}
+      onContextMenu={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (amount > 0) {
+          act('remove_trait', { id: traitId, amount: 1 });
+        }
+      }}
+      onMouseEnter={() => setHoveredItem(hoverData)}
+      onMouseLeave={() => setHoveredItem(null)}
+      style={{
+        width: '188px',
+        minHeight: '58px',
+        padding: '6px 7px',
+        border: selected ? '1px solid rgba(145,207,104,0.8)' : canAdd ? '1px solid rgba(255,255,255,0.18)' : '1px solid rgba(255,255,255,0.08)',
+        background: selected ? 'rgba(80,125,58,0.34)' : canAdd ? 'rgba(255,255,255,0.045)' : 'rgba(255,255,255,0.02)',
+        opacity: canAdd || selected ? 1 : 0.52,
+        cursor: canAdd || selected ? 'pointer' : 'default',
+        userSelect: 'none',
+      }}>
+      <Box bold style={{ fontSize: '12px', lineHeight: 1.15 }}>
+        {entry.name || traitId}
+      </Box>
+      <Box mt={0.25} style={{ opacity: 0.78, fontSize: '10px' }}>
+        {effectText || `Cost ${cost}${entry.repeatable && amount > 0 ? ` x${amount}` : ''}`}
+      </Box>
+      {!!requirementText && (
+        <Box mt={0.25} style={{ opacity: 0.72, fontSize: '9px' }}>
+          Req: {requirementText}
+        </Box>
+      )}
+    </div>
+  );
+};
+
+const DirectionTraitTree = ({
+  direction,
+  entries,
+  data,
+  act,
+  setHoveredItem,
+}: {
+  direction: DirectionKey;
+  entries: Array<[string, TraitEntry]>;
+  data: Data;
+  act: BackendAct;
+  setHoveredItem: (value: HoverCardData | null) => void;
+}) => {
+  const tiers = useMemo(() => {
+    const result: Record<string, {
+      order: number;
+      label: string;
+      subtitle: string;
+      entries: Array<[string, TraitEntry]>;
+    }> = {};
+    entries.forEach(([traitId, entry]) => {
+      const tier = entry.direction ? Math.max(0, Number(entry.direction_tier) || 0) : 1;
+      const isOrdinary = direction === 'ordinary';
+      const groupLabel = isOrdinary ? getOrdinaryGroupLabel(entry) : `Level ${tier}`;
+      const groupKey = isOrdinary ? groupLabel.toLowerCase() : String(tier);
+      if (!result[groupKey]) {
+        result[groupKey] = {
+          order: isOrdinary ? (groupLabel === 'Negative' ? 0 : 1) : tier,
+          label: groupLabel,
+          subtitle: isOrdinary ? 'Ordinary' : DIRECTION_LABELS[direction],
+          entries: [],
+        };
+      }
+      result[groupKey].entries.push([traitId, entry]);
+    });
+    Object.values(result).forEach((group) => {
+      group.entries.sort((a, b) => (a[1].name || a[0]).localeCompare(b[1].name || b[0]));
+    });
+    return Object.values(result).sort((a, b) => a.order - b.order);
+  }, [direction, entries]);
+
+  return (
+    <Stack vertical>
+      {!tiers.length ? (
+        <NoticeBox>No talents in this direction.</NoticeBox>
+      ) : tiers.map((group) => (
+        <Box key={group.label} mb={0.5} style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '5px' }}>
+          <Stack align="stretch">
+            <Stack.Item basis="58px">
+              <Box bold style={{ opacity: 0.9, fontSize: '12px' }}>{group.label}</Box>
+              <Box style={{ opacity: 0.62, fontSize: '10px' }}>{group.subtitle}</Box>
+            </Stack.Item>
+            <Stack.Item grow>
+              <Stack wrap>
+                {group.entries.map(([traitId, entry]) => (
+                  <Stack.Item key={traitId}>
+                    <TraitNode traitId={traitId} entry={entry} data={data} act={act} setHoveredItem={setHoveredItem} />
+                  </Stack.Item>
+                ))}
+              </Stack>
+            </Stack.Item>
+          </Stack>
+        </Box>
+      ))}
+    </Stack>
+  );
+};
+
 const TraitsTab = ({
   data,
   act,
@@ -1503,120 +1824,26 @@ const TraitsTab = ({
   search: string;
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
-  const grouped = useMemo(() => {
-    const groups: Record<string, { categoryName: string; available: Array<[string, TraitEntry]>; selected: Array<[string, TraitEntry]> }> = {};
-
-    Object.entries(data.available_traits || {})
-      .filter(([traitId, entry]) => matchesSearch(search, traitId, entry.name, entry.desc, entry.category, entry.category_name))
-      .forEach(([traitId, entry]) => {
-        const category = entry.category || 'other';
-        const categoryName = entry.category_name || 'Other';
-        if (!groups[category]) {
-          groups[category] = { categoryName, available: [], selected: [] };
-        }
-        if (getTraitAmount(data, traitId) > 0) {
-          groups[category].selected.push([traitId, entry]);
-        } else {
-          groups[category].available.push([traitId, entry]);
-        }
-      });
-
-    Object.values(groups).forEach((group) => {
-      group.available.sort((a, b) => (a[1].name || a[0]).localeCompare(b[1].name || b[0]));
-      group.selected.sort((a, b) => (a[1].name || a[0]).localeCompare(b[1].name || b[0]));
-    });
-
-    return Object.entries(groups).sort((a, b) => a[1].categoryName.localeCompare(b[1].categoryName));
-  }, [data, search]);
-
-  const buildTraitHover = (traitId: string, entry: TraitEntry): HoverCardData => {
-    const amount = getTraitAmount(data, traitId);
-    const canAdd = canAddTrait(data, traitId, entry);
-    return {
-      name: entry.name || traitId,
-      desc: entry.desc,
-      category: entry.category_name || entry.category,
-      costText: `${entry.cost || 0} pts`,
-      total: amount,
-      canAdd,
-      leftHelp: canAdd ? 'LMB: add trait / increase stack' : 'Cannot add more',
-      rightHelp: amount > 0 ? 'RMB: remove trait / decrease stack' : 'RMB: nothing to remove',
-    };
-  };
+  const [selectedDirection, setSelectedDirection] = useState<TraitTabKey>('combat');
+  const entries = useMemo(
+    () => Object.entries(data.available_traits || {})
+      .filter(([traitId, entry]) => matchesSearch(search, traitId, entry.name, entry.desc, entry.category, entry.category_name, entry.direction)),
+    [data.available_traits, search]
+  );
+  const visibleEntries = useMemo(
+    () => entries.filter(([, entry]) => selectedDirection === 'ordinary' ? !entry.direction || entry.direction === 'ordinary' : entry.direction === selectedDirection),
+    [entries, selectedDirection]
+  );
 
   return (
-    <Section title={<SectionTitleWithMeta title="Traits" meta={`Free: ${data.points_traits_remaining} / ${data.points_traits}`} />}>
-      {!grouped.length ? (
-        <NoticeBox>No matches found.</NoticeBox>
-      ) : (
-        <Stack vertical>
-          {grouped.map(([categoryKey, group]) => (
-            <Box key={categoryKey} mb={2} style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '10px' }}>
-              <Box bold mb={1} style={{ fontSize: '18px', letterSpacing: '1px' }}>
-                {group.categoryName}
-              </Box>
-
-              <Box bold mb={0.5}>Pool</Box>
-              {group.available.length ? (
-                <Stack wrap>
-                  {group.available.map(([traitId, entry]) => {
-                    const amount = getTraitAmount(data, traitId);
-                    const canAdd = canAddTrait(data, traitId, entry);
-                    return (
-                      <Stack.Item key={traitId}>
-                        <TraitPill
-                          title={entry.name || traitId}
-                          cost={entry.cost || 0}
-                          amount={amount}
-                          repeatable={!!entry.repeatable}
-                          disabledAdd={!canAdd}
-                          disabledRemove={amount <= 0}
-                          onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
-                          onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
-                          onHoverStart={() => setHoveredItem(buildTraitHover(traitId, entry))}
-                          onHoverEnd={() => setHoveredItem(null)}
-                        />
-                      </Stack.Item>
-                    );
-                  })}
-                </Stack>
-              ) : (
-                <NoticeBox>No available traits in this group.</NoticeBox>
-              )}
-
-              <Box bold mt={1} mb={0.5}>Selected</Box>
-              {group.selected.length ? (
-                <Stack wrap>
-                  {group.selected.map(([traitId, entry]) => {
-                    const amount = getTraitAmount(data, traitId);
-                    const canAdd = canAddTrait(data, traitId, entry);
-                    return (
-                      <Stack.Item key={traitId}>
-                        <TraitPill
-                          title={entry.name || traitId}
-                          cost={entry.cost || 0}
-                          amount={amount}
-                          repeatable={!!entry.repeatable}
-                          selected
-                          disabledAdd={!canAdd}
-                          disabledRemove={amount <= 0}
-                          onAdd={() => act('add_trait', { id: traitId, amount: 1 })}
-                          onRemove={() => act('remove_trait', { id: traitId, amount: 1 })}
-                          onHoverStart={() => setHoveredItem(buildTraitHover(traitId, entry))}
-                          onHoverEnd={() => setHoveredItem(null)}
-                        />
-                      </Stack.Item>
-                    );
-                  })}
-                </Stack>
-              ) : (
-                <NoticeBox>No selected traits in this group.</NoticeBox>
-              )}
-            </Box>
-          ))}
-        </Stack>
-      )}
-    </Section>
+    <Stack vertical>
+      <DirectionsPanel data={data} act={act} selectedDirection={selectedDirection} setSelectedDirection={setSelectedDirection} />
+      <Section title="Traits">
+        <Box mt={0.5}>
+          <DirectionTraitTree direction={selectedDirection} entries={visibleEntries} data={data} act={act} setHoveredItem={setHoveredItem} />
+        </Box>
+      </Section>
+    </Stack>
   );
 };
 
@@ -1635,16 +1862,25 @@ const ItemsTab = ({
   itemsAvailable: boolean;
   data: Data;
 }) => {
+  const [showMarkedUpSupplies, setShowMarkedUpSupplies] = useState(true);
   const groups = useMemo(() => {
     return groupEntriesByCategoryAndSlot(
       itemEntries || {},
       (itemPath, entry) =>
-        !!entry.unlocked && matchesSearch(search, itemPath, entry.name, entry.category, entry.slot_group, entry.unlock_type, entry.unlock_key)
+        !!entry.unlocked
+        && (showMarkedUpSupplies || !entry.soft_locked)
+        && matchesSearch(search, itemPath, entry.name, entry.category, entry.slot_group, entry.unlock_type, entry.unlock_key)
     );
-  }, [itemEntries, search]);
+  }, [itemEntries, search, showMarkedUpSupplies]);
 
   return (
-    <Section title={<SectionTitleWithMeta title="Items" meta={`Free: ${data.points_items_remaining} / ${data.points_items}`} />}>
+    <Section
+      title={<SectionTitleWithMeta title="Items" meta={`Free: ${data.points_items_remaining} / ${data.points_items}`} />}
+      buttons={
+        <Button selected={showMarkedUpSupplies} onClick={() => setShowMarkedUpSupplies(!showMarkedUpSupplies)}>
+          {showMarkedUpSupplies ? 'All supplies' : 'Normal price only'}
+        </Button>
+      }>
       {!itemsAvailable ? (
         <NoticeBox>Loading items...</NoticeBox>
       ) : !groups.length ? (
@@ -1653,7 +1889,7 @@ const ItemsTab = ({
         <Stack vertical>
           {groups.map(([categoryKey, slotGroups]) => (
             <Box key={categoryKey} mb={2}>
-              <Box bold mb={1} style={{ fontSize: '16px', letterSpacing: '0.5px', color: '#f0c35a' }}>
+              <Box bold mb={1} style={{ fontSize: '16px', color: '#f0c35a' }}>
                 {getCategoryLabel(categoryKey)}
               </Box>
 
@@ -1661,7 +1897,7 @@ const ItemsTab = ({
                 const visibleItems = items.slice(0, MAX_RENDERED_ITEMS_PER_SLOT);
                 return (
                   <Box key={`${categoryKey}-${slotKey}`} mb={1}>
-                    <Box bold mb={0.5} style={{ fontSize: '14px', letterSpacing: '0.5px', opacity: 0.9 }}>
+                    <Box bold mb={0.5} style={{ fontSize: '14px', opacity: 0.9 }}>
                       {getSlotLabel(slotKey)}
                     </Box>
 
@@ -1674,7 +1910,7 @@ const ItemsTab = ({
                           <ItemTile
                             key={itemPath}
                             name={entry.name || itemPath}
-                            topRightText={`${entry.cost || 0} pts`}
+                            topRightText={`${entry.cost || 0} pts${entry.soft_locked ? ' x2' : ''}`}
                             bottomLeftText={amount > 0 ? amount : undefined}
                             bottomRightText={!canAdd ? 'MAX' : undefined}
                             icon={entry.icon}
@@ -1686,7 +1922,7 @@ const ItemsTab = ({
                                 name: entry.name || itemPath,
                                 slot: getSlotLabel(entry.slot_group),
                                 category: getCategoryLabel(entry.category),
-                                costText: `${entry.cost || 0} pts`,
+                                costText: `${entry.cost || 0} pts${entry.soft_locked ? ' (marked up)' : ''}`,
                                 total: amount,
                                 maximum: Number.isFinite(maximum) ? maximum : undefined,
                                 canAdd,
@@ -2123,6 +2359,7 @@ export const TATBuild = () => {
         ...entry,
         amount: state?.amount || 0,
         unlocked: !!state?.unlocked,
+        soft_locked: !!state?.soft_locked,
         maximum: state?.maximum,
         can_add: state?.can_add,
       };
@@ -2240,6 +2477,7 @@ export const TATBuild = () => {
                 <Stack wrap>
                   <Stack.Item><Button onClick={() => act('reset_stats')}>Reset Stats</Button></Stack.Item>
                   <Stack.Item><Button onClick={() => act('reset_skills')}>Reset Skills</Button></Stack.Item>
+                  <Stack.Item><Button onClick={() => act('reset_directions')}>Reset Directions</Button></Stack.Item>
                   <Stack.Item><Button onClick={() => act('reset_traits')}>Reset Traits</Button></Stack.Item>
                   <Stack.Item><Button onClick={() => act('reset_items')}>Reset Items</Button></Stack.Item>
                 </Stack>

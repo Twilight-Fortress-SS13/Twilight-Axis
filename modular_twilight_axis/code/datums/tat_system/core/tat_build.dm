@@ -5,6 +5,7 @@
 	var/datum/tat_items/items
 	var/datum/tat_traits/traits
 	var/datum/tat_skills/skills
+	var/datum/tat_directions/directions
 
 	var/list/magic_profile = list()
 	var/list/_cached_active_virtues = null
@@ -37,11 +38,13 @@
 	items = new(src)
 	traits = new(src)
 	skills = new(src)
+	directions = new(src)
 	reset()
 	init_tat_slots()
 
 /datum/tat_build/proc/reset()
 	traits.reset()
+	directions.reset()
 	stats.reset()
 	skills.reset()
 	items.reset()
@@ -254,6 +257,12 @@
 /datum/tat_build/proc/has_trait(trait_id)
 	return traits.has_trait(trait_id)
 
+/datum/tat_build/proc/has_built_in_weapon_training()
+	return directions?.foundation == TAT_FOUNDATION_WANDERER
+
+/datum/tat_build/proc/has_built_in_weapon_training_foundation()
+	return directions?.foundation == TAT_FOUNDATION_WANDERER
+
 /datum/tat_build/proc/get_trait_cost_display(trait_id)
 	return traits.get_display_cost(trait_id)
 
@@ -270,13 +279,46 @@
 	return items.get_amount(item_path)
 
 /datum/tat_build/proc/get_bonus_stat_points()
-	return traits.get_bonus_stat_points()
+	var/total = traits.get_bonus_stat_points()
+	if(directions?.get_role_choice() == TAT_ROLE_CHOICE_WRETCH)
+		total += TAT_BUILD_STAT_BONUS_WANTED
+	return total
 
 /datum/tat_build/proc/get_bonus_item_points()
-	return traits.get_bonus_item_points()
+	var/total = traits.get_bonus_item_points()
+	if(directions?.get_role_choice() == TAT_ROLE_CHOICE_WRETCH)
+		total += TAT_BUILD_ITEM_BONUS_WANTED
+	return total
 
 /datum/tat_build/proc/get_bonus_skill_domain_points(domain)
-	return traits.get_bonus_skill_domain_points(domain)
+	var/total = traits.get_bonus_skill_domain_points(domain)
+	if(domain == TAT_SKILL_DOMAIN_COMBAT)
+		if(has_trait(TAT_TRAIT_WEAPON_TRAINING))
+			total += 6
+		if(directions?.foundation == TAT_FOUNDATION_WANDERER)
+			total += 3
+		if(directions?.get_points(TAT_DIRECTION_COMBAT) >= 1)
+			total += 3
+			if(directions?.foundation == TAT_FOUNDATION_WANDERER)
+				total += 6
+	switch(directions?.get_role_choice())
+		if(TAT_ROLE_CHOICE_ADVENTURER)
+			if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
+				total += 6
+		if(TAT_ROLE_CHOICE_WRETCH)
+			if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
+				total += 6
+			else if(domain == TAT_SKILL_DOMAIN_COMBAT && has_trait(TAT_TRAIT_WEAPON_TRAINING))
+				total += 6
+		if(TAT_ROLE_CHOICE_TOWNER)
+			if(domain == TAT_SKILL_DOMAIN_PEACEFUL)
+				total += 6
+		if(TAT_ROLE_CHOICE_TRADER)
+			if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
+				total += 3
+			else if(domain == TAT_SKILL_DOMAIN_PEACEFUL)
+				total += 3
+	return total
 
 /datum/tat_build/proc/get_bonus_skill_value(skill_type)
 	var/trait_bonus = traits.get_bonus_skill_value(skill_type)
@@ -328,8 +370,6 @@
 		issues += "Spent too many stat points."
 	if(skills.get_any_negative_remaining())
 		issues += "Spent too many skill points."
-	if(traits.get_remaining_points() < 0)
-		issues += "Spent too many trait points."
 	if(items.get_remaining_points() < 0)
 		issues += "Spent too many item points."
 
@@ -400,6 +440,7 @@
 	return /obj/effect/proc_holder/spell/invoked/headbutt
 
 /datum/tat_build/proc/sanitize()
+	directions.sanitize()
 	traits.sanitize()
 	stats.sanitize()
 	skills.sanitize()
@@ -457,7 +498,6 @@
 
 	if(islist(trait_data))
 		var/list/all_traits = GLOB.tat_available_traits
-		var/has_outlander = (TRAIT_OUTLANDER in trait_data) || !!trait_data[TRAIT_OUTLANDER]
 
 		for(var/key in trait_data)
 			var/trait_id = key
@@ -475,9 +515,6 @@
 				continue
 
 			var/cost = isnum(entry["cost"]) ? entry["cost"] : 0
-
-			if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && has_outlander)
-				cost -= TAT_TRAIT_DISCOUNT
 
 			var/total_cost = cost * count
 			if((trait_id in GLOB.tat_capped_negative_traits) && total_cost < 0)
@@ -525,6 +562,7 @@
 		"items" = items.export_to_list(),
 		"traits" = traits.export_to_list(),
 		"skills" = skills.export_to_list(),
+		"directions" = directions.export_to_list(),
 		"magic_profile" = magic_profile.Copy(),
 		"magic_config" = magic_profile.Copy(),
 	)
@@ -536,6 +574,7 @@
 		"items" = items.export_to_list(),
 		"traits" = traits.export_to_list(),
 		"skills" = skills.export_to_list(),
+		"directions" = directions.export_to_list(),
 		"magic_profile" = magic_profile.Copy(),
 		"magic_config" = magic_profile.Copy(),
 		"tat_slots" = export_tat_slots_to_list(),
@@ -547,6 +586,7 @@
 	if(!islist(data))
 		return FALSE
 	traits.import_from_list(data["traits"])
+	directions.import_from_list(data["directions"])
 	stats.import_from_list(data["stats"])
 	skills.import_from_list(data["skills"])
 	items.import_from_list(data["items"])
@@ -567,6 +607,7 @@
 		return FALSE
 
 	traits.import_from_list(data["traits"])
+	directions.import_from_list(data["directions"])
 	stats.import_from_list(data["stats"])
 	skills.import_from_list(data["skills"])
 	items.import_from_list(data["items"])
@@ -791,6 +832,7 @@
 	data["stats"] = stats?.export_to_json_list()
 	data["skills"] = skills?.export_to_json_list()
 	data["traits"] = traits?.export_to_json_list()
+	data["directions"] = directions?.export_to_json_list()
 	data["items"] = items?.export_to_json_list()
 
 	last_exported_json = json_encode(data)
@@ -825,6 +867,7 @@
 
 	reset()
 	traits.import_from_json_list(data["traits"])
+	directions.import_from_json_list(data["directions"])
 	stats.import_from_json_list(data["stats"])
 	skills.import_from_json_list(data["skills"])
 	items.import_from_json_list(data["items"])
@@ -837,6 +880,9 @@
 	return TRUE
 
 /datum/tat_build/proc/get_role_bucket()
+	if(directions)
+		return directions.get_role_choice()
+
 	if(traits?.has_trait(TAT_TRAIT_RESIDENT))
 		return TAT_ROLE_BUCKET_TOWNER
 
@@ -863,15 +909,27 @@
 
 /datum/tat_build/proc/get_role_bucket_from_data(list/build_data)
 	var/list/trait_data = islist(build_data) ? build_data["traits"] : null
+	var/list/direction_data = islist(build_data) ? build_data["directions"] : null
+	var/foundation = islist(direction_data) ? direction_data["foundation"] : null
+	var/role_choice = islist(direction_data) ? direction_data["role_choice"] : null
+
+	if(role_choice in list(TAT_ROLE_BUCKET_TOWNER, TAT_ROLE_BUCKET_TRADER, TAT_ROLE_BUCKET_ADVENTURER, TAT_ROLE_BUCKET_WRETCH))
+		return role_choice
 
 	if(trait_data_has_trait(trait_data, TAT_TRAIT_RESIDENT))
 		return TAT_ROLE_BUCKET_TOWNER
+
+	if(trait_data_has_trait(trait_data, TAT_TRAIT_TRADER_LICENSE))
+		return TAT_ROLE_BUCKET_TRADER
 
 	if(trait_data_has_trait(trait_data, TRAIT_OUTLANDER))
 		return TAT_ROLE_BUCKET_ADVENTURER
 
 	if(trait_data_has_trait(trait_data, TAT_TRAIT_WANTED))
 		return TAT_ROLE_BUCKET_WRETCH
+
+	if(foundation == TAT_FOUNDATION_WANDERER)
+		return TAT_ROLE_BUCKET_ADVENTURER
 
 	return TAT_ROLE_BUCKET_TRADER
 

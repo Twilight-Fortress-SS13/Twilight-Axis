@@ -121,7 +121,22 @@
 	if(!isnum(cost))
 		return 0
 
+	if(is_supply_soft_locked(entry))
+		cost *= 2
+
 	return cost
+
+/datum/tat_items/proc/is_supply_soft_locked(list/entry)
+	if(!islist(entry))
+		return FALSE
+	var/unlock_type = entry["unlock_type"]
+	var/unlock_key = entry["unlock_key"]
+	switch(unlock_type)
+		if(TAT_UNLOCK_TYPE_WEAPON_SUPPLY)
+			return !can_use_weapon_supply_type(unlock_key)
+		if(TAT_UNLOCK_TYPE_ARMOR_FAMILY)
+			return !can_use_armor_family(unlock_key)
+	return FALSE
 
 /datum/tat_items/proc/get_total_maximum()
 	return base_points + (owner_build ? owner_build.get_bonus_item_points() : 0)
@@ -149,9 +164,9 @@
 		if(TAT_ARMOR_LEATHER)
 			return !!owner_build?.has_trait(TAT_TRAIT_LEATHER_SUPPLIER)
 		if(TAT_ARMOR_MAIL)
-			return !!owner_build?.has_trait(TAT_TRAIT_MAIL_SUPPLIER)
+			return !!owner_build?.has_trait(TRAIT_MEDIUMARMOR) || !!owner_build?.has_trait(TRAIT_HEAVYARMOR)
 		if(TAT_ARMOR_PLATE)
-			return !!owner_build?.has_trait(TAT_TRAIT_PLATE_SUPPLIER)
+			return !!owner_build?.has_trait(TRAIT_HEAVYARMOR)
 	return FALSE
 
 /proc/tat_ckey_in_ckey_list(key, list/ckey_list)

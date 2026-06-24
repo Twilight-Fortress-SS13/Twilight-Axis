@@ -1,5 +1,6 @@
 #define TAT_TRAIT_WARRIOR_EXPERT "tat_warrior_expert"
 #define TAT_TRAIT_WARRIOR_MASTER "tat_warrior_master"
+#define TAT_TRAIT_WEAPON_TRAINING "tat_weapon_training"
 #define TAT_TRAIT_SOUNDBREAKER "tat_soundbreaker"
 #define TAT_TRAIT_RONIN "tat_ronin"
 #define TAT_TRAIT_RESIDENT "tat_resident"
@@ -25,7 +26,6 @@
 #define TAT_TRAIT_BARDIC_INSPIRATION_T1 "tat_bardic_inspiration_t1"
 #define TAT_TRAIT_BARDIC_INSPIRATION_T2 "tat_bardic_inspiration_t2"
 #define TAT_TRAIT_PARTY_LEADER "tat_party_leader"
-#define TAT_TRAIT_BONUS_STAT_POOL "tat_bonus_stat_pool"
 #define TAT_TRAIT_WANTED "tat_wanted"
 #define TAT_TRAIT_HERETIC "tat_heretic"
 #define TAT_TRAIT_LOOTRAT "tat_lootrat"
@@ -42,6 +42,7 @@
 #define TAT_TRAIT_DIVINE_BOON_1 "tat_divine_boon_1"
 #define TAT_TRAIT_DIVINE_BOON_2 "tat_divine_boon_2"
 #define TAT_TRAIT_DIVINE_BOON_3 "tat_divine_boon_3"
+#define TAT_TRAIT_DIVINE_BLAST "tat_divine_blast"
 
 #define TAT_TRAIT_MAGE_MAJOR_SLOT "tat_mage_major_slot"
 #define TAT_TRAIT_MAGE_MINOR_SLOT_1 "tat_mage_minor_slot_1"
@@ -129,7 +130,6 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 
 GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 
-#define TAT_BUILD_STAT_BONUS_EXTRA_STATS 3
 #define TAT_BUILD_STAT_BONUS_WANTED 5
 #define TAT_BUILD_ITEM_BONUS_WANTED 10
 #define TAT_BUILD_ITEM_BONUS_LOOTRAT 10
@@ -198,9 +198,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 #define TAT_MATERIAL_SUPPLIER_CROSS_DISCOUNT 5
 
 #define TAT_ARMOR_SUPPLIER_TRAITS list( \
-	TAT_TRAIT_LEATHER_SUPPLIER, \
-	TAT_TRAIT_MAIL_SUPPLIER, \
-	TAT_TRAIT_PLATE_SUPPLIER \
+	TAT_TRAIT_LEATHER_SUPPLIER \
 )
 
 #define TAT_MATERIAL_SUPPLIER_TRAITS list( \
@@ -209,10 +207,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_STEEL_SUPPLIER \
 )
 
-#define TAT_ARMOR_TRAINING_SUPPLIER_DISCOUNT_RULES list( \
-	TRAIT_MEDIUMARMOR = TAT_TRAIT_MAIL_SUPPLIER, \
-	TRAIT_HEAVYARMOR = TAT_TRAIT_PLATE_SUPPLIER \
-)
+#define TAT_ARMOR_TRAINING_SUPPLIER_DISCOUNT_RULES list()
 	
 // TAT_TRAIT_CONTRACTOR = TAT_TRAIT_ENTRY("Contractor", 80, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Awakens the contract-bearing curse in your veins. The whole world is waiting your gifts and deals."),
 #define TAT_AVAILABLE_TRAITS_LIST \
@@ -220,16 +215,16 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_RONIN = TAT_TRAIT_ENTRY("Ronin", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Unlocks the Ronin combo style."), \
 	TAT_TRAIT_SPELLBLADE = TAT_TRAIT_ENTRY("Spellblade", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants a set of weapon-binding spells."), \
 	TAT_TRAIT_RESIDENT = TAT_TRAIT_ENTRY("Resident", 10, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "Grants a Meister account and ownership of a house in the city."), \
-	TAT_TRAIT_TRADER_LICENSE = TAT_TRAIT_ENTRY("Merchant's Writ", 25, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "Unlocks sealed trader caches in the TAT item list. Conflicts with Resident, Wanted, Outlander, and Heretic."), \
+	TAT_TRAIT_TRADER_LICENSE = TAT_TRAIT_ENTRY("Merchant's Writ", 25, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Unlocks sealed trader caches in the TAT item list."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T1 = TAT_TRAIT_ENTRY("Bardic Inspiration I", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain tier 1 bardic inspiration, audience management verbs, and a songbook."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T2 = TAT_TRAIT_ENTRY("Bardic Inspiration II", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Upgrades bardic inspiration to tier 2, increasing audience size and songs known."), \
 	TAT_TRAIT_PARTY_LEADER = TAT_TRAIT_ENTRY("Party Leader", 30, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Improves the core Fellowship: nearby fellows gain +1 CON; while at least one fellow is nearby, the leader gains +1 CON, +1 WIL, and +0.5 Fortune per nearby fellow."), \
-	TAT_TRAIT_BONUS_STAT_POOL = TAT_TRAIT_ENTRY("Natural Potential", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Gain +3 stat points in the build pool."), \
 	TAT_TRAIT_CONTRACTOR_ENTITY = TAT_TRAIT_ENTRY("Tempress Entity", -10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Debug trait."), \
 	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -30, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
 	TAT_TRAIT_TROPHY_BOUNTY = TAT_TRAIT_ENTRY("Trophy Bounty", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "You can receive additional bonuses when wearing a headhook with monster heads."), \
-	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 40, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat skill cap from 3 to 4."), \
-	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 30, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises the combat skill cap from 4 to 5. Requires Expert Warrior."), \
+	TAT_TRAIT_WEAPON_TRAINING = TAT_TRAIT_ENTRY("Weapon Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Allows raising non-firearm combat skills to level 3 and grants 6 combat skill points. Wretches gain 6 more."), \
+	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 40, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises selected combat skill caps from 3 to 4 and grants 8 combat skill points."), \
+	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 30, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises one expert combat skill cap from 4 to 5 and grants 5 combat skill points. Requires Expert Warrior."), \
 	TRAIT_DODGEEXPERT = TAT_TRAIT_ENTRY("Expert Dodger", 30, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Much better at dodging incoming strikes in light armor or with little armor. Heavy armor is too cumbersome for this style."), \
 	TRAIT_PARRYEXPERT = TAT_TRAIT_ENTRY("Expert Parry", 30, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Much better at parrying incoming strikes, with a higher chance to deflect blows using a weapon."), \
 	TRAIT_HEAVYARMOR = TAT_TRAIT_ENTRY("Plate Training", 30, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Can move freely in heavy armor."), \
@@ -248,13 +243,11 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_STEEL_SUPPLIER = TAT_TRAIT_ENTRY("Steel Supplier", 15, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks steel-tier weapons."), \
 	TAT_TRAIT_FIREARMS_SUPPLIER = TAT_TRAIT_ENTRY("Firearms Supplier", 25, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks blackpowder weapons and supplies."), \
 	TAT_TRAIT_LEATHER_SUPPLIER = TAT_TRAIT_ENTRY("Leather Supplier", 10, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks leather gear in all supported slots."), \
-	TAT_TRAIT_MAIL_SUPPLIER = TAT_TRAIT_ENTRY("Mail Supplier", 20, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks mail gear in all supported slots."), \
-	TAT_TRAIT_PLATE_SUPPLIER = TAT_TRAIT_ENTRY("Plate Supplier", 30, TAT_CATEGORY_SUPPLY, TAT_CATEGORY_SUPPLY_NAME, "Unlocks plate gear in all supported slots."), \
 	TRAIT_INTELLECTUAL = TAT_TRAIT_ENTRY("Intellectual", 20, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "You have a keen eye and can assess a person's prowess in wit and blade."), \
 	TAT_TRAIT_POLYGLOT = TAT_TRAIT_ENTRY("Polyglot", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "At spawn, choose one additional language to learn."), \
 	TAT_TRAIT_LOOTRAT = TAT_TRAIT_ENTRY("Loot Rat", 20, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "Somehow in your journeys or life you collect a lot of different things and exotic treasures. Increase loot points by 10."), \
 	TAT_TRAIT_LOOTRAT_2 = TAT_TRAIT_ENTRY("Enormous Rat", 20, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You work on Guild with mountains of gold or you're just a lucky dungeon mudskipper. Increase loot points by 15."), \
-	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "You are trained in the Arcyne arts, allowing you to wield magyck. Basis trait for magic-build classes. Gives +3 Arcane skill if there is no defensive lockout trait."), \
+	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_ENHANCEMENT_NAME, "Reduces Arcane skill costs and gives +3 Arcane if there is no defensive lockout trait."), \
 	TRAIT_JACKOFALLTRADES = TAT_TRAIT_ENTRY("Jack of All Trades", 15, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Skills cost half as much for you to raise."), \
 	TAT_TRAIT_MASTER_OF_WANDERING = TAT_TRAIT_ENTRY("Master of Wandering", 30, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Gives +20 Misc skill points and a discount on Misc skills. Conflicts with Resident."), \
 	TAT_TRAIT_PLIANT_RENAME = TAT_TRAIT_ENTRY("Pliant Class Name", 0, TAT_CATEGORY_ENHANCEMENT, TAT_CATEGORY_ENHANCEMENT_NAME, "Requires 50+ player quality. Lets you rename your displayed class while keeping the Pliant admin marker prefix. Resident class selection is applied first, then you may choose the current class or a matching skill title as the base, and finally use that name, your active TAT slot name, or custom input."), \
@@ -272,6 +265,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_DIVINE_BOON_1 = TAT_TRAIT_ENTRY("Divine Boon I", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Divine Initiate. Raises your miracle package by one tier."), \
 	TAT_TRAIT_DIVINE_BOON_2 = TAT_TRAIT_ENTRY("Divine Boon II", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Divine Initiate and Divine Boon I. Raises your miracle package by one tier."), \
 	TAT_TRAIT_DIVINE_BOON_3 = TAT_TRAIT_ENTRY("Divine Boon III", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Divine Initiate and Divine Boon II. Raises your miracle package by one tier."), \
+	TAT_TRAIT_DIVINE_BLAST = TAT_TRAIT_ENTRY("Divine Blast", 10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Divine Boon III. Grants Divine Blast to divine faithful, or Unholy Blast to inhumen faithful."), \
 	TAT_TRAIT_MAGE_INITIATE = TAT_TRAIT_ENTRY("Mage Initiate", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants one minor spell, three utility spells, plus one extra utility per Arcane skill level."), \
 	TAT_TRAIT_MAGE_MAJOR_SLOT = TAT_TRAIT_ENTRY("Arcane Major Slot", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Mage Initiate. Grants +1 major spell slot."), \
 	TAT_TRAIT_MAGE_MINOR_SLOT_1 = TAT_TRAIT_ENTRY("Arcane Minor Slot I", 10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Mage Initiate. Grants +1 minor spell slot."), \
@@ -345,7 +339,6 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_ACCURSED = TAT_TRAIT_ENTRY("Dendor's Curse", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You're cursed by the Sleeping Volf. Now you're shapshift to lesser creachure every nite.")
 
 #define TAT_TRAIT_STAT_POINT_RULES list( \
-	TAT_TRAIT_BONUS_STAT_POOL = TAT_BUILD_STAT_BONUS_EXTRA_STATS, \
 	TAT_TRAIT_WANTED = TAT_BUILD_STAT_BONUS_WANTED, \
 	TAT_TRAIT_CONTRACTOR = -TAT_BASIC_STAT_POINTS \
 )
@@ -359,7 +352,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 
 #define TAT_TRAIT_ITEM_UNLOCK_RULES list( \
 	TAT_UNLOCK_TYPE_WEAPON_SUPPLY = list(TAT_SUPPLY_BRONZE = TAT_TRAIT_BRONZE_SUPPLIER, TAT_SUPPLY_SILVER = TAT_TRAIT_SILVER_SUPPLIER, TAT_SUPPLY_STEEL = TAT_TRAIT_STEEL_SUPPLIER, TAT_SUPPLY_FIREARMS = TAT_TRAIT_FIREARMS_SUPPLIER, TAT_SUPPLY_ARTIFACTS = TAT_TRAIT_ARTIFACTS_SUPPLIER), \
-	TAT_UNLOCK_TYPE_ARMOR_FAMILY = list(TAT_ARMOR_LEATHER = TAT_TRAIT_LEATHER_SUPPLIER, TAT_ARMOR_MAIL = TAT_TRAIT_MAIL_SUPPLIER, TAT_ARMOR_PLATE = TAT_TRAIT_PLATE_SUPPLIER) \
+	TAT_UNLOCK_TYPE_ARMOR_FAMILY = list(TAT_ARMOR_LEATHER = TAT_TRAIT_LEATHER_SUPPLIER, TAT_ARMOR_MAIL = TRAIT_MEDIUMARMOR, TAT_ARMOR_PLATE = TRAIT_HEAVYARMOR) \
 )
 
 #define TAT_TRAIT_PQ_LOCK_RULES list( \
@@ -370,53 +363,22 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 
 #define TAT_TRAIT_SKILL_POINT_RULES list( \
 	TAT_TRAIT_MASTER_OF_WANDERING = list( \
-		TAT_SKILL_DOMAIN_WANDERING = 15, \
-		TAT_SKILL_DOMAIN_MISC = 10 \
+		TAT_SKILL_DOMAIN_ADVENTURE = 25 \
 	), \
 	TAT_TRAIT_STRAYING_SOUL = list( \
-		TAT_SKILL_DOMAIN_WANDERING = 9, \
+		TAT_SKILL_DOMAIN_ADVENTURE = 9, \
 	), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = list( \
-		TAT_SKILL_DOMAIN_CRAFTING = 25 \
+		TAT_SKILL_DOMAIN_PEACEFUL = 25 \
 	), \
 	TAT_TRAIT_STOCKPILER = list( \
-		TAT_SKILL_DOMAIN_GATHERING = 20 \
+		TAT_SKILL_DOMAIN_PEACEFUL = 20 \
 	), \
 	TAT_TRAIT_WARRIOR_EXPERT = list( \
-		TAT_SKILL_DOMAIN_COMBAT = 15 \
+		TAT_SKILL_DOMAIN_COMBAT = 8 \
 	), \
 	TAT_TRAIT_WARRIOR_MASTER = list( \
-		TAT_SKILL_DOMAIN_COMBAT = 10 \
-	), \
-	TAT_TRAIT_MAGE_INITIATE = list( \
-		TAT_SKILL_DOMAIN_MISC = 2 \
-	), \
-	TAT_TRAIT_MAGE_MAJOR_SLOT = list( \
-		TAT_SKILL_DOMAIN_MISC = 4 \
-	), \
-	TAT_TRAIT_MAGE_MINOR_SLOT_2 = list( \
-		TAT_SKILL_DOMAIN_MISC = 3 \
-	), \
-	TAT_TRAIT_MAGE_UTILITY_SLOT = list( \
-		TAT_SKILL_DOMAIN_MISC = 4 \
-	), \
-	TAT_TRAIT_DIVINE_BOON_1 = list( \
-		TAT_SKILL_DOMAIN_MISC = 3 \
-	), \
-	TAT_TRAIT_DIVINE_BOON_2 = list( \
-		TAT_SKILL_DOMAIN_MISC = 4 \
-	), \
-	TAT_TRAIT_DIVINE_BOON_3 = list( \
-		TAT_SKILL_DOMAIN_MISC = 5 \
-	), \
-	TAT_TRAIT_DRUID_INITIATE = list( \
-		TAT_SKILL_DOMAIN_MISC = 2 \
-	), \
-	TAT_TRAIT_BARDIC_INSPIRATION_T1 = list( \
-		TAT_SKILL_DOMAIN_MISC = 4 \
-	), \
-	TAT_TRAIT_BARDIC_INSPIRATION_T2 = list( \
-		TAT_SKILL_DOMAIN_MISC = 5 \
+		TAT_SKILL_DOMAIN_COMBAT = 5 \
 	), \
 )
 
