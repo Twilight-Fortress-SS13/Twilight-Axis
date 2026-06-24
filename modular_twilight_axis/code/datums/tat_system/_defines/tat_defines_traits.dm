@@ -222,7 +222,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_CONTRACTOR_ENTITY = TAT_TRAIT_ENTRY("Tempress Entity", -10, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Debug trait."), \
 	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -30, TAT_CATEGORY_MAJOR_FLAW, TAT_CATEGORY_MAJOR_FLAW_NAME, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
 	TAT_TRAIT_TROPHY_BOUNTY = TAT_TRAIT_ENTRY("Trophy Bounty", 20, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "You can receive additional bonuses when wearing a headhook with monster heads."), \
-	TAT_TRAIT_WEAPON_TRAINING = TAT_TRAIT_ENTRY("Weapon Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Allows raising non-firearm combat skills to level 3."), \
+	TAT_TRAIT_WEAPON_TRAINING = TAT_TRAIT_ENTRY("Weapon Training", 10, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Allows raising non-firearm combat skills to level 3 and grants +3 combat skill points when purchased."), \
 	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 40, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises selected combat skill caps from 3 to 4."), \
 	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 30, TAT_CATEGORY_COMBAT_MASTERY, TAT_CATEGORY_COMBAT_MASTERY_NAME, "Raises one expert combat skill cap from 4 to 5. Requires Expert Warrior."), \
 	TRAIT_DODGEEXPERT = TAT_TRAIT_ENTRY("Expert Dodger", 30, TAT_CATEGORY_DEFENSE, TAT_CATEGORY_DEFENSE_NAME, "Much better at dodging incoming strikes in light armor or with little armor. Heavy armor is too cumbersome for this style."), \

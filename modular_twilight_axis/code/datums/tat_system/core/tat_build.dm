@@ -293,6 +293,8 @@
 /datum/tat_build/proc/get_bonus_skill_domain_points(domain)
 	var/total = traits.get_bonus_skill_domain_points(domain)
 	if(domain == TAT_SKILL_DOMAIN_COMBAT)
+		if(traits?.get_selected_trait_count(TAT_TRAIT_WEAPON_TRAINING) > 0)
+			total += 3
 		if(directions?.foundation == TAT_FOUNDATION_WANDERER)
 			total += 6
 		if(directions?.get_role_choice() == TAT_ROLE_CHOICE_WRETCH)
@@ -305,7 +307,9 @@
 			if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
 				total += 6
 		if(TAT_ROLE_CHOICE_TOWNER)
-			if(domain == TAT_SKILL_DOMAIN_PEACEFUL)
+			if(domain == TAT_SKILL_DOMAIN_COMBAT)
+				total -= 2
+			else if(domain == TAT_SKILL_DOMAIN_PEACEFUL)
 				total += 6
 		if(TAT_ROLE_CHOICE_TRADER)
 			if(domain == TAT_SKILL_DOMAIN_ADVENTURE)

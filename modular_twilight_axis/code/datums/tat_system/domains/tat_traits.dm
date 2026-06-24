@@ -22,6 +22,9 @@
 		return 1
 	if(trait_id == TAT_TRAIT_WEAPON_TRAINING && owner_build?.has_built_in_weapon_training())
 		return 1
+	return get_selected_trait_count(trait_id)
+
+/datum/tat_traits/proc/get_selected_trait_count(trait_id)
 	var/value = selected[trait_id]
 	if(isnum(value))
 		return max(0, round(value))

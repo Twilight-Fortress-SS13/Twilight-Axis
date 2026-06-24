@@ -121,7 +121,7 @@
 	switch(get_role_choice())
 		if(TAT_ROLE_CHOICE_TOWNER)
 			if(direction == TAT_DIRECTION_SKILLS)
-				return 1
+				return 2
 		if(TAT_ROLE_CHOICE_TRADER)
 			if(direction == TAT_DIRECTION_SURVIVAL)
 				return 1
