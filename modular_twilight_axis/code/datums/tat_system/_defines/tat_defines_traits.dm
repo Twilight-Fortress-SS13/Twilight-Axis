@@ -164,6 +164,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 #define TAT_CATEGORY_MAJOR_FLAW_NAME "Major Flaws"
 
 #define TAT_NEGATIVE_TRAIT_CREDIT_CAP 20
+#define TAT_NEGATIVE_DIRECTION_POINT_CAP 4
 #define TAT_CAPPED_NEGATIVE_TRAITS list( \
 	TAT_TRAIT_HERETIC, \
 	TRAIT_TECHNOPHOBE, \
@@ -172,6 +173,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_CRITICAL_WEAKNESS, \
 	TRAIT_NUDIST, \
 	TRAIT_INHUMEN_ANATOMY, \
+	TRAIT_NASTY_EATER, \
 	TRAIT_DISFIGURED, \
 	TRAIT_SPELLCOCKBLOCK, \
 	TRAIT_NOSLEEP, \
@@ -259,7 +261,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_GRAVEROBBER = TAT_TRAIT_ENTRY("Experienced Grave Robber", 20, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "Your experience with 'post-mortem artifact recovery' helps you resist Necra's curse placed on those who disturb resting places."), \
 	TRAIT_PURITAN_ADVENTURER = TAT_TRAIT_ENTRY("Interrogator", 20, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "With a silver psycross, you can force the restrained to kneel before a crucifix and proclaim their true allegiance."), \
 	TRAIT_DECEIVING_MEEKNESS = TAT_TRAIT_ENTRY("Deceiving Meekness", 15, TAT_CATEGORY_UTILITY, TAT_CATEGORY_UTILITY_NAME, "People think you are weak. They are mistaken. You have learned to hide your vices and true beliefs from others."), \
-	TRAIT_NASTY_EATER = TAT_TRAIT_ENTRY("Inhumen Digestion", 15, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You can eat bad food, and water toxic to humen does not affect you."), \
+	TRAIT_NASTY_EATER = TAT_TRAIT_ENTRY("Inhumen Digestion", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You can eat bad food, and water toxic to humen does not affect you."), \
 	TRAIT_GOODLOVER = TAT_TRAIT_ENTRY("Fabled Lover", 10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "It is a lucky thing to share your bed."), \
 	TAT_TRAIT_DIVINE_INITIATE = TAT_TRAIT_ENTRY("Divine Initiate", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Grants miracles and devotion. Additional divine boon traits increase miracle access."), \
 	TAT_TRAIT_DIVINE_BOON_1 = TAT_TRAIT_ENTRY("Divine Boon I", 15, TAT_CATEGORY_CLASS_MODULE, TAT_CATEGORY_CLASS_MODULE_NAME, "Requires Divine Initiate. Raises your miracle package by one tier."), \
@@ -326,7 +328,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_CRITICAL_WEAKNESS = TAT_TRAIT_ENTRY("Critical Weakness", -15, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You are far more vulnerable to critical wounds."), \
 	TRAIT_NUDIST = TAT_TRAIT_ENTRY("Nudist", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You refuse to wear clothes."), \
 	TRAIT_INHUMEN_ANATOMY = TAT_TRAIT_ENTRY("Inhumen Anatomy", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "Your anatomy prevents you from wearing hats and boots."), \
-	TRAIT_DISFIGURED = TAT_TRAIT_ENTRY("Disfigured", 5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You are unknowned to everyone."), \
+	TRAIT_DISFIGURED = TAT_TRAIT_ENTRY("Disfigured", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You are unknowned to everyone."), \
 	TRAIT_SPELLCOCKBLOCK = TAT_TRAIT_ENTRY("Bewitched", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot cast spells."), \
 	TRAIT_NOSLEEP = TAT_TRAIT_ENTRY("Sleepless", -5, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot fall asleep without drugs or a blow to the head."), \
 	TRAIT_NORUN = TAT_TRAIT_ENTRY("No Running", -10, TAT_CATEGORY_ODDITY, TAT_CATEGORY_ODDITY_NAME, "You cannot run."), \

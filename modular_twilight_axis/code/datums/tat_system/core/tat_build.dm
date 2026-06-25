@@ -280,6 +280,8 @@
 
 /datum/tat_build/proc/get_bonus_stat_points()
 	var/total = traits.get_bonus_stat_points()
+	if(directions?.get_role_choice() == TAT_ROLE_CHOICE_ADVENTURER)
+		total += 3
 	if(directions?.get_role_choice() == TAT_ROLE_CHOICE_WRETCH)
 		total += TAT_BUILD_STAT_BONUS_WANTED
 	return total

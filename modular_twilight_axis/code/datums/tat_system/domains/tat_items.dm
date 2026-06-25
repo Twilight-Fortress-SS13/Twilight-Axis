@@ -121,9 +121,6 @@
 	if(!isnum(cost))
 		return 0
 
-	if(is_supply_soft_locked(entry))
-		cost *= 2
-
 	return cost
 
 /datum/tat_items/proc/is_supply_soft_locked(list/entry)

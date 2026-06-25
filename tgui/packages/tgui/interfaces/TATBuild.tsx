@@ -1886,25 +1886,18 @@ const ItemsTab = ({
   itemsAvailable: boolean;
   data: Data;
 }) => {
-  const [showMarkedUpSupplies, setShowMarkedUpSupplies] = useState(true);
   const groups = useMemo(() => {
     return groupEntriesByCategoryAndSlot(
       itemEntries || {},
       (itemPath, entry) =>
         !!entry.unlocked
-        && (showMarkedUpSupplies || !entry.soft_locked)
         && matchesSearch(search, itemPath, entry.name, entry.category, entry.slot_group, entry.unlock_type, entry.unlock_key)
     );
-  }, [itemEntries, search, showMarkedUpSupplies]);
+  }, [itemEntries, search]);
 
   return (
     <Section
-      title={<SectionTitleWithMeta title="Items" meta={`Free: ${data.points_items_remaining} / ${data.points_items}`} />}
-      buttons={
-        <Button selected={showMarkedUpSupplies} onClick={() => setShowMarkedUpSupplies(!showMarkedUpSupplies)}>
-          {showMarkedUpSupplies ? 'All supplies' : 'Normal price only'}
-        </Button>
-      }>
+      title={<SectionTitleWithMeta title="Items" meta={`Free: ${data.points_items_remaining} / ${data.points_items}`} />}>
       {!itemsAvailable ? (
         <NoticeBox>Loading items...</NoticeBox>
       ) : !groups.length ? (
@@ -1934,7 +1927,7 @@ const ItemsTab = ({
                           <ItemTile
                             key={itemPath}
                             name={entry.name || itemPath}
-                            topRightText={`${entry.cost || 0} pts${entry.soft_locked ? ' x2' : ''}`}
+                            topRightText={`${entry.cost || 0} pts`}
                             bottomLeftText={amount > 0 ? amount : undefined}
                             bottomRightText={!canAdd ? 'MAX' : undefined}
                             icon={entry.icon}
@@ -1946,7 +1939,7 @@ const ItemsTab = ({
                                 name: entry.name || itemPath,
                                 slot: getSlotLabel(entry.slot_group),
                                 category: getCategoryLabel(entry.category),
-                                costText: `${entry.cost || 0} pts${entry.soft_locked ? ' (marked up)' : ''}`,
+                                costText: `${entry.cost || 0} pts`,
                                 total: amount,
                                 maximum: Number.isFinite(maximum) ? maximum : undefined,
                                 canAdd,

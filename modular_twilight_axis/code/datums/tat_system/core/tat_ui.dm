@@ -489,6 +489,10 @@
 			continue
 		if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && get_owner_ckey() != "mrix")
 			continue
+		if(trait_id == TAT_TRAIT_DRUID_INITIATE && !can_select_druid_initiate_trait())
+			continue
+		if(trait_id == TAT_TRAIT_TRADER_LICENSE && directions?.get_role_choice() != TAT_ROLE_CHOICE_TRADER)
+			continue
 		if(directions?.is_role_trait(trait_id))
 			continue
 		var/list/entry = get_trait_entry(trait_id)

@@ -151,17 +151,26 @@
 		return "negative"
 	return "neutral"
 
-/datum/tat_traits/proc/get_bonus_direction_points()
+/datum/tat_traits/proc/get_negative_oddity_direction_points()
 	var/total = 0
-	var/list/rules = GLOB.tat_trait_direction_point_rules
 	for(var/trait_id in selected)
 		var/bonus = get_oddity_direction_point_bonus(trait_id)
 		if(bonus > 0)
 			total += bonus * get_trait_count(trait_id)
+	return total
+
+/datum/tat_traits/proc/get_bonus_direction_points()
+	var/negative_bonus = 0
+	var/rule_total = 0
+	var/list/rules = GLOB.tat_trait_direction_point_rules
+	for(var/trait_id in selected)
+		var/bonus = get_oddity_direction_point_bonus(trait_id)
+		if(bonus > 0)
+			negative_bonus += bonus * get_trait_count(trait_id)
 		var/rule_bonus = round(rules[trait_id] || 0)
 		if(rule_bonus > 0)
-			total += rule_bonus * get_trait_count(trait_id)
-	return total
+			rule_total += rule_bonus * get_trait_count(trait_id)
+	return min(negative_bonus, TAT_NEGATIVE_DIRECTION_POINT_CAP) + rule_total
 
 /datum/tat_traits/proc/is_armor_supplier_trait(trait_id)
 	return trait_id in GLOB.tat_armor_supplier_traits
@@ -269,6 +278,12 @@
 		return FALSE
 	if(trait_id == TAT_TRAIT_DRUID_INITIATE && !owner_build?.can_select_druid_initiate_trait())
 		return FALSE
+	if(trait_id == TAT_TRAIT_TRADER_LICENSE && owner_build?.directions?.get_role_choice() != TAT_ROLE_CHOICE_TRADER)
+		return FALSE
+	var/negative_direction_bonus = get_oddity_direction_point_bonus(trait_id)
+	if(negative_direction_bonus > 0 && !has_trait(trait_id))
+		if(get_negative_oddity_direction_points() + negative_direction_bonus > TAT_NEGATIVE_DIRECTION_POINT_CAP)
+			return FALSE
 	if(owner_build?.directions && !owner_build.directions.can_select_trait(trait_id))
 		return FALSE
 	var/list/requirements = get_trait_requirement_map()
@@ -491,12 +506,22 @@
 	GLOB.tat_trait_requirement_map = list(
 		TAT_TRAIT_WARRIOR_EXPERT = list("all" = list(TAT_TRAIT_WEAPON_TRAINING), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" requires \"[get_trait_display_name(TAT_TRAIT_WEAPON_TRAINING)]\"."),
 		TAT_TRAIT_WARRIOR_MASTER = list("all" = list(TAT_TRAIT_WARRIOR_EXPERT), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" requires \"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\"."),
+		TAT_TRAIT_BARDIC_INSPIRATION_T2 = list("all" = list(TAT_TRAIT_BARDIC_INSPIRATION_T1), "message" = "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\"."),
+		TAT_TRAIT_SPELLBLADE = list("all" = list(TAT_TRAIT_MAGE_INITIATE, TRAIT_ARCYNE), "message" = "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" requires \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\" and \"[get_trait_display_name(TRAIT_ARCYNE)]\"."),
+		TAT_TRAIT_MAGE_MINOR_SLOT_1 = list("all" = list(TAT_TRAIT_MAGE_INITIATE), "message" = "\"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_1)]\" requires \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."),
 		TAT_TRAIT_MAGE_MINOR_SLOT_2 = list("all" = list(TAT_TRAIT_MAGE_MINOR_SLOT_1), "message" = "\"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_2)]\" requires \"[get_trait_display_name(TAT_TRAIT_MAGE_MINOR_SLOT_1)]\"."),
+		TAT_TRAIT_MAGE_MAJOR_SLOT = list("all" = list(TAT_TRAIT_MAGE_INITIATE), "message" = "\"[get_trait_display_name(TAT_TRAIT_MAGE_MAJOR_SLOT)]\" requires \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."),
+		TAT_TRAIT_MAGE_UTILITY_SLOT = list("all" = list(TAT_TRAIT_MAGE_INITIATE), "message" = "\"[get_trait_display_name(TAT_TRAIT_MAGE_UTILITY_SLOT)]\" requires \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\"."),
+		TAT_TRAIT_DIVINE_BOON_1 = list("all" = list(TAT_TRAIT_DIVINE_INITIATE), "message" = "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_1)]\" requires \"[get_trait_display_name(TAT_TRAIT_DIVINE_INITIATE)]\"."),
+		TAT_TRAIT_DIVINE_BOON_2 = list("all" = list(TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_DIVINE_BOON_1), "message" = "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_2)]\" requires previous divine progression."),
+		TAT_TRAIT_DIVINE_BOON_3 = list("all" = list(TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_DIVINE_BOON_2), "message" = "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\" requires previous divine progression."),
 		TAT_TRAIT_DIVINE_BLAST = list("all" = list(TAT_TRAIT_DIVINE_BOON_3), "message" = "\"[get_trait_display_name(TAT_TRAIT_DIVINE_BLAST)]\" requires \"[get_trait_display_name(TAT_TRAIT_DIVINE_BOON_3)]\"."),
+		TRAIT_RITUALIST = list("all" = list(TAT_TRAIT_HERETIC), "message" = "\"[get_trait_display_name(TRAIT_RITUALIST)]\" requires \"[get_trait_display_name(TAT_TRAIT_HERETIC)]\"."),
 		TAT_TRAIT_ARTIFACTS_SUPPLIER = list("all" = list(TAT_TRAIT_PARTY_LEADER), "message" = "\"[get_trait_display_name(TAT_TRAIT_ARTIFACTS_SUPPLIER)]\" requires \"[get_trait_display_name(TAT_TRAIT_PARTY_LEADER)]\"."),
 		TAT_TRAIT_SAVAGE_SKIN = list("all" = list(TRAIT_NOPAINSTUN), "message" = "\"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\" requires \"[get_trait_display_name(TRAIT_NOPAINSTUN)]\"."),
 		TRAIT_STRONGBITE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN), "message" = "\"[get_trait_display_name(TRAIT_STRONGBITE)]\" requires \"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\"."),
 		TAT_TRAIT_SAVAGE_RAGE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN), "message" = "\"[get_trait_display_name(TAT_TRAIT_SAVAGE_RAGE)]\" requires \"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\"."),
+		TAT_TRAIT_BERSERKER_RAGE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_HERETIC), "message" = "\"[get_trait_display_name(TAT_TRAIT_BERSERKER_RAGE)]\" requires savage skin and heretic."),
 	)
 	return GLOB.tat_trait_requirement_map
 
