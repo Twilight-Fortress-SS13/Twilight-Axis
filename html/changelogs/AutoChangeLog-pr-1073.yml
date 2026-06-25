@@ -1,0 +1,4 @@
+author: "UEDCommander"
+delete-after: True
+changes:
+  - rscadd: "Добавлена механика имений для городских дворян и придворных"

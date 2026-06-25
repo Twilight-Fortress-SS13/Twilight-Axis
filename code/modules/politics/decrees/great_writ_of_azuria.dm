@@ -17,6 +17,6 @@ Yeven under the seal of the Crown, in witness of the Ten."}
 /datum/decree/great_writ/apply_exemption(mob/living/payer, tax_category)
 	if(!active)
 		return FALSE
-	if(HAS_TRAIT(payer, TRAIT_NOBLE))
+	if(HAS_TRAIT(payer, TRAIT_NOBLE) && tax_category != TAX_CATEGORY_ESTATE_LEVY) //TA EDIT
 		return TRUE
 	return FALSE

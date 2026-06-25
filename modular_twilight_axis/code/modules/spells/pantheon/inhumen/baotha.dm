@@ -117,13 +117,13 @@
 	devotion_cost = 40-(5*skill_level)
 	playsound(get_turf(user), 'sound/magic/haste.ogg', 80, TRUE, soundping = TRUE)
 	user.visible_message(span_love("[user]'s body begins shrouded in a corrosive purple haze that obscures his silhouette!"))
-	var/mirage_type = list("Name", "Feature", "Nevermind")
+	var/mirage_type = list("Feature", "Nevermind") // list("Name", "Feature", "Nevermind")
 	var/selection = input(user, "Rituals of Gedonism", src) as null|anything in mirage_type
 	ADD_TRAIT(user, TRAIT_MIRAGE, TRAIT_MIRACLE)
 	ADD_TRAIT(user, TRAIT_EDIT_DESCRIPTORS, TRAIT_MIRACLE)
 	switch(selection) // put ur rite selection here
-		if("Name")
-			mirror_full_transform(user)
+//		if("Name")
+//			mirror_full_transform(user)
 		if("Feature")
 			perform_mirror_transform(user)
 		if("Nevermind")

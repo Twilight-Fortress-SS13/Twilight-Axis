@@ -139,7 +139,7 @@
 	var/list/current_weathers = list()
 	var/last_lighting_update = 0
 	/// our current tab
-	var/stat_tab
+	var/stat_tab = "Round Info" //TA EDIT
 
 	/// list of all tabs
 	var/list/panel_tabs = list()

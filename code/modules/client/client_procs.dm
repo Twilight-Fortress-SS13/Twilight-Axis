@@ -496,11 +496,19 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			alert(mob, "You have logged in already with another key this round, please log out of this one NOW or risk being banned!")
 
 	tgui_panel.initialize()
+	/* //TA EDIT BEGIN
 	stat_panel.initialize(
 		inline_html = file("html/statbrowser.html"),
 		inline_js = file("html/statbrowser.js"),
 		inline_css = file("html/statbrowser.css"),
 	)
+	*/
+
+	stat_panel.initialize(
+		inline_html = file("ta_statpanel/dist/ta-statbrowser-bundle.html"),
+	)
+
+	//TA EDIT END
 	apply_statbrowser_theme()
 	addtimer(CALLBACK(src, PROC_REF(check_panel_loaded)), 30 SECONDS)
 

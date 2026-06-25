@@ -28,6 +28,7 @@
 	var/list/blockades_fired = diff["blockades_fired"]
 	var/list/blockades_cleared = diff["blockades_cleared"]
 	var/list/banditry_lines = diff["banditry_drain_lines"]
+	var/list/outpost_manors = diff["outpost_manors"] //TA EDIT
 	var/banditry_total = diff["banditry_drain_total"] || 0
 	var/banditry_burned = diff["banditry_drain_burned"] || 0
 	var/banditry_debt_accrued = diff["banditry_drain_accrued_debt"] || 0
@@ -62,6 +63,14 @@
 		body += "<b>Financial losses from banditry:</b> <font color='#c44'>-[banditry_total]m</font><br>"
 		for(var/line in banditry_lines)
 			body += "&nbsp;&nbsp;- [line]<br>"
+		if(diff["outpost_reduction"]) //TA EDIT START
+			body += "<b>Estate outpost patrols have reduced the drain by:</b> [diff["outpost_reduction"]]m<br>"
+		if(length(outpost_manors))
+			body += "<b>The following estates mobilized against banditry:</b><br>"
+			for(var/manor in outpost_manors)
+				body += "&nbsp;&nbsp;- [manor], owned by [outpost_manors[manor]]<br>"
+		if(diff["outpost_threat_reduced"])
+			body += "<b>Threat relief:</b> [diff["outpost_threat_reduced"]] danger reduced by [diff["outpost_threat_reduction_amount"]] points.<br>" //TA EDIT END
 		if(banditry_debt_accrued > 0)
 			body += "<i>Treasury could not absorb the full hit. <font color='#c44'>[banditry_debt_accrued]m</font> accrued as banditry debt: future inflow shall be skimmed against it until paid. ([banditry_burned]m drawn from purse, [banditry_debt_accrued]m owed.)</i><br>"
 		body += "<br>"
