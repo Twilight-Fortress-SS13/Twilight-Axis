@@ -83,6 +83,31 @@
 
 	return FALSE
 
+/mob/living/proc/get_erp_panel_block_reason()
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/dragon) || istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/voiddragon) || istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/revenant/dragon))
+		return "This form cannot use the ERP panel."
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/werewolf_npc))
+		return "This form cannot use the ERP panel."
+	if(istype(src, /mob/living/carbon/human/species/wildshape))
+		return "This form cannot use the ERP panel."
+	if(istype(src, /mob/living/carbon/human/species/werewolf))
+		return "This form cannot use the ERP panel."
+
+	var/mob/living/carbon/human/H = src
+	if(!istype(H))
+		return null
+
+	if(isgnoll(H))
+		return "This form cannot use the ERP panel."
+	if(istype(H.dna?.species, /datum/species/dragon_matthios))
+		return "This form cannot use the ERP panel."
+
+	var/datum/antagonist/werewolf/W = H.mind?.has_antag_datum(/datum/antagonist/werewolf)
+	if(W?.transformed)
+		return "This form cannot use the ERP panel."
+
+	return null
+
 /mob/living/carbon/human/proc/is_erp_defiant_in_combat()
 	return defiant && cmode
 
@@ -338,6 +363,12 @@
 
 /proc/erp_can_use_menu_as_actor(mob/living/actor, silent = FALSE, force = FALSE)
 	if(!actor || !istype(actor))
+		return FALSE
+
+	var/panel_block_reason = actor.get_erp_panel_block_reason()
+	if(panel_block_reason)
+		if(!silent)
+			to_chat(actor, span_warning(panel_block_reason))
 		return FALSE
 
 	if(force)
