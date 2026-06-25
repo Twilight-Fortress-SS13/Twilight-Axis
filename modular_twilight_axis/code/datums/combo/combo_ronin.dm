@@ -1004,7 +1004,7 @@
 		W.ronin_prepared_combo = null
 		W.ronin_prepared_at = 0
 		_ronin_apply_weapon_glow(W)
-		to_chat(owner, span_danger("ELDER COMBO RELEAS0.ED: [rule_id]!"))
+		to_chat(owner, span_danger("ELDER COMBO RELEASED: [rule_id]!"))
 		OnComboConsumed(rule_id, W)
 		ExecuteElderCombo(rule_id, target, user.zone_selected)
 

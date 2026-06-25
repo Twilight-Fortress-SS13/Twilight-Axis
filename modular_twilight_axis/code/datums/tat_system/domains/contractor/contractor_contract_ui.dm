@@ -294,139 +294,139 @@
 	var/type = ui_param_text(params, "type")
 	switch(type)
 		if("information")
-			var/datum/contractor_bonus/information/B = new
-			B.target_name = copytext(ui_param_text(params, "target_name"), 1, MAX_NAME_LEN)
-			B.power_cost = 30
-			return B
+			var/datum/contractor_bonus/information/inf = new
+			inf.target_name = copytext(ui_param_text(params, "target_name"), 1, MAX_NAME_LEN)
+			inf.power_cost = 30
+			return inf
 		if("body_change")
-			var/datum/contractor_bonus/body_change/B = new
-			B.duration = max(1, ui_param_num(params, "duration_minutes", 5)) MINUTES
-			B.power_cost = 20
-			return B
+			var/datum/contractor_bonus/body_change/bc = new
+			bc.duration = max(1, ui_param_num(params, "duration_minutes", 5)) MINUTES
+			bc.power_cost = 20
+			return bc
 		if("orgasm")
-			var/datum/contractor_bonus/orgasm/B = new
-			B.source_type = ui_param_text(params, "source_type", "any")
-			B.count = max(1, ui_param_num(params, "count", 1))
-			B.power_cost = 20 + max(0, B.count - 1) * 10
-			return B
+			var/datum/contractor_bonus/orgasm/org = new
+			org.source_type = ui_param_text(params, "source_type", "any")
+			org.count = max(1, ui_param_num(params, "count", 1))
+			org.power_cost = 20 + max(0, org.count - 1) * 10
+			return org
 		if("item")
-			var/datum/contractor_bonus/item/B = new
+			var/datum/contractor_bonus/item/it = new
 			var/item_kind = ui_param_text(params, "item_kind", "gold_coin")
-			B.item_kind = item_kind
-			B.item_path = item_path_from_ui(item_kind)
-			B.amount = max(1, ui_param_num(params, "amount", 1))
-			B.value_per_item = item_value_from_ui(item_kind)
+			it.item_kind = item_kind
+			it.item_path = item_path_from_ui(item_kind)
+			it.amount = max(1, ui_param_num(params, "amount", 1))
+			it.value_per_item = item_value_from_ui(item_kind)
 			if(item_kind == "random_spell_scroll")
-				B.power_cost = 20 + (B.amount * 30)
+				it.power_cost = 20 + (it.amount * 30)
 			else
-				B.power_cost = 20 + round((B.amount * B.value_per_item) / 10) * 2
-			return B
+				it.power_cost = 20 + round((it.amount * it.value_per_item) / 10) * 2
+			return it
 		if("custom_item")
-			var/datum/contractor_bonus/enchanted_item/B = new
-			B.item_template = contractor_tat_contract_gear_path(ui_param_text(params, "item_template"))
-			if(!B.item_template)
-				B.item_template = contractor_tat_contract_first_gear_path()
-			if(!B.item_template)
-				qdel(B)
+			var/datum/contractor_bonus/enchanted_item/ei = new
+			ei.item_template = contractor_tat_contract_gear_path(ui_param_text(params, "item_template"))
+			if(!ei.item_template)
+				ei.item_template = contractor_tat_contract_first_gear_path()
+			if(!ei.item_template)
+				qdel(ei)
 				return null
-			B.item_color = ui_param_text(params, "color", B.item_color)
-			if(contractor_is_contract_weapon_path(B.item_template))
-				B.force_bonus = max(0, ui_param_num(params, "force_bonus", 0))
-				B.defense_bonus = max(0, ui_param_num(params, "defense_bonus", 0))
-			B.passive_stat_bonus = max(0, ui_param_num(params, "passive_stat_bonus", 0))
-			B.passive_stat_key = ui_param_text(params, "passive_stat_key", B.passive_stat_bonus ? STATKEY_STR : "")
-			if(B.passive_stat_bonus)
-				B.passive_stat_key = contractor_normalize_stat_key(B.passive_stat_key, STATKEY_STR)
-			B.enchantment_spell_path = ui_param_text(params, "enchantment_spell_path", "none")
-			if(!B.enchantment_spell_path || B.enchantment_spell_path == "none")
-				B.enchantment_spell_path = null
-			B.recalculate_power()
-			return B
+			ei.item_color = ui_param_text(params, "color", ei.item_color)
+			if(contractor_is_contract_weapon_path(ei.item_template))
+				ei.force_bonus = max(0, ui_param_num(params, "force_bonus", 0))
+				ei.defense_bonus = max(0, ui_param_num(params, "defense_bonus", 0))
+			ei.passive_stat_bonus = max(0, ui_param_num(params, "passive_stat_bonus", 0))
+			ei.passive_stat_key = ui_param_text(params, "passive_stat_key", ei.passive_stat_bonus ? STATKEY_STR : "")
+			if(ei.passive_stat_bonus)
+				ei.passive_stat_key = contractor_normalize_stat_key(ei.passive_stat_key, STATKEY_STR)
+			ei.enchantment_spell_path = ui_param_text(params, "enchantment_spell_path", "none")
+			if(!ei.enchantment_spell_path || ei.enchantment_spell_path == "none")
+				ei.enchantment_spell_path = null
+			ei.recalculate_power()
+			return ei
 		if("skill")
-			var/datum/contractor_bonus/skill/B = new
-			B.skill_type = text2path(ui_param_text(params, "skill_key")) || /datum/skill/misc/reading
-			B.amount = max(1, ui_param_num(params, "amount", 1))
-			B.power_cost = contractor_contract_power_for_skill(B.skill_type, B.amount)
-			return B
+			var/datum/contractor_bonus/skill/sk = new
+			sk.skill_type = text2path(ui_param_text(params, "skill_key")) || /datum/skill/misc/reading
+			sk.amount = max(1, ui_param_num(params, "amount", 1))
+			sk.power_cost = contractor_contract_power_for_skill(sk.skill_type, sk.amount)
+			return sk
 		if("stat")
-			var/datum/contractor_bonus/stat/B = new
-			B.stat_key = ui_param_text(params, "stat_key", STATKEY_STR)
-			B.amount = max(1, ui_param_num(params, "amount", 1))
-			B.power_cost = contractor_contract_power_for_stat(B.stat_key, B.amount)
-			return B
+			var/datum/contractor_bonus/stat/st = new
+			st.stat_key = ui_param_text(params, "stat_key", STATKEY_STR)
+			st.amount = max(1, ui_param_num(params, "amount", 1))
+			st.power_cost = contractor_contract_power_for_stat(st.stat_key, st.amount)
+			return st
 	return null
 
 /datum/contractor_contract/proc/curse_from_ui(list/params)
 	var/type = ui_param_text(params, "type")
 	switch(type)
 		if("submission")
-			var/datum/contractor_curse/submission/C = new
-			C.submission_amount = ui_param_num(params, "submission_amount", 25)
-			C.power_value = max(5, round(abs(C.submission_amount) / 2) * 5)
-			return C
+			var/datum/contractor_curse/submission/sub = new
+			sub.submission_amount = ui_param_num(params, "submission_amount", 25)
+			sub.power_value = max(5, round(abs(sub.submission_amount) / 2) * 5)
+			return sub
 		if("effect")
-			var/datum/contractor_curse/effect/C = new
-			ui_apply_trigger(C, params)
-			C.chunks = ui_param_num(params, "chunks", 1)
-			return C
+			var/datum/contractor_curse/effect/eff = new
+			ui_apply_trigger(eff, params)
+			eff.chunks = ui_param_num(params, "chunks", 1)
+			return eff
 		if("arousal")
-			var/datum/contractor_curse/arousal/C = new
-			ui_apply_trigger(C, params)
-			C.chunks = ui_param_num(params, "chunks", 1)
-			if(!C.chunks)
-				C.chunks = 1
-			return C
+			var/datum/contractor_curse/arousal/ar = new
+			ui_apply_trigger(ar, params)
+			ar.chunks = ui_param_num(params, "chunks", 1)
+			if(!ar.chunks)
+				ar.chunks = 1
+			return ar
 		if("orgasm")
-			var/datum/contractor_curse/orgasm/C = new
-			ui_apply_trigger(C, params)
-			C.count = max(1, ui_param_num(params, "count", 1))
-			return C
+			var/datum/contractor_curse/orgasm/org = new
+			ui_apply_trigger(org, params)
+			org.count = max(1, ui_param_num(params, "count", 1))
+			return org
 		if("stat_loss")
-			var/datum/contractor_curse/stat_loss/C = new
-			ui_apply_trigger(C, params)
-			C.stat_key = ui_param_text(params, "stat_key", STATKEY_STR)
-			C.amount = ui_param_num(params, "amount", -1)
-			if(!C.amount)
-				C.amount = -1
-			return C
+			var/datum/contractor_curse/stat_loss/sl = new
+			ui_apply_trigger(sl, params)
+			sl.stat_key = ui_param_text(params, "stat_key", STATKEY_STR)
+			sl.amount = ui_param_num(params, "amount", -1)
+			if(!sl.amount)
+				sl.amount = -1
+			return sl
 		if("skill_loss")
-			var/datum/contractor_curse/skill_loss/C = new
-			ui_apply_trigger(C, params)
-			C.skill_key = text2path(ui_param_text(params, "skill_key")) || /datum/skill/misc/reading
-			C.amount = ui_param_num(params, "amount", -1)
-			if(!C.amount)
-				C.amount = -1
-			return C
+			var/datum/contractor_curse/skill_loss/skl = new
+			ui_apply_trigger(skl, params)
+			skl.skill_key = text2path(ui_param_text(params, "skill_key")) || /datum/skill/misc/reading
+			skl.amount = ui_param_num(params, "amount", -1)
+			if(!skl.amount)
+				skl.amount = -1
+			return skl
 		if("stat_transfer")
-			var/datum/contractor_curse/stat_transfer/C = new
-			C.stat_key = ui_param_text(params, "stat_key", STATKEY_STR)
-			C.amount = max(1, ui_param_num(params, "amount", 1))
-			return C
+			var/datum/contractor_curse/stat_transfer/st = new
+			st.stat_key = ui_param_text(params, "stat_key", STATKEY_STR)
+			st.amount = max(1, ui_param_num(params, "amount", 1))
+			return st
 		if("skill_transfer")
-			var/datum/contractor_curse/skill_transfer/C = new
-			C.skill_key = text2path(ui_param_text(params, "skill_key")) || /datum/skill/misc/reading
-			C.amount = max(1, ui_param_num(params, "amount", 1))
-			return C
+			var/datum/contractor_curse/skill_transfer/skt = new
+			skt.skill_key = text2path(ui_param_text(params, "skill_key")) || /datum/skill/misc/reading
+			skt.amount = max(1, ui_param_num(params, "amount", 1))
+			return skt
 		if("body_change")
 			return new /datum/contractor_curse/body
 		if("emotion")
-			var/datum/contractor_curse/emotion/C = new
-			ui_apply_trigger(C, params)
-			C.emotion_text = copytext(ui_param_text(params, "emotion_text", C.emotion_text), 1, 1024)
-			return C
+			var/datum/contractor_curse/emotion/em = new
+			ui_apply_trigger(em, params)
+			em.emotion_text = copytext(ui_param_text(params, "emotion_text", em.emotion_text), 1, 1024)
+			return em
 		if("flaw")
-			var/datum/contractor_curse/flaw/C = new
-			ui_apply_trigger(C, params)
-			C.flaw_type = contractor_charflaw_path(ui_param_text(params, "flaw_type"))
-			if(!C.flaw_type)
+			var/datum/contractor_curse/flaw/fl = new
+			ui_apply_trigger(fl, params)
+			fl.flaw_type = contractor_charflaw_path(ui_param_text(params, "flaw_type"))
+			if(!fl.flaw_type)
 				var/list/flaw_catalog = contractor_charflaw_catalog()
 				if(length(flaw_catalog))
 					var/list/first_flaw = flaw_catalog[1]
-					C.flaw_type = contractor_charflaw_path(first_flaw?["id"])
-			if(!C.flaw_type)
-				qdel(C)
+					fl.flaw_type = contractor_charflaw_path(first_flaw?["id"])
+			if(!fl.flaw_type)
+				qdel(fl)
 				return null
-			return C
+			return fl
 	return null
 
 /datum/contractor_contract/proc/ui_apply_trigger(datum/contractor_curse/conditional/C, list/params)

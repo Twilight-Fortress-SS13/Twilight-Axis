@@ -291,8 +291,8 @@
 		return FALSE
 
 	if(contractee.is_submitted())
-		var/devotion_gain = max(0, CONTRACTOR_SUBMITTED_DEVOTION_GAIN - (contractee.lux_drink_count * CONTRACTOR_SUBMITTED_DEVOTION_DECAY))
-		var/lux_gain = max(0, CONTRACTOR_SUBMITTED_LUX_POWER_GAIN - (contractee.lux_drink_count * CONTRACTOR_SUBMITTED_LUX_DECAY))
+		var/devotion_gain = max(0, (CONTRACTOR_SUBMITTED_DEVOTION_GAIN - (contractee.lux_drink_count * CONTRACTOR_SUBMITTED_DEVOTION_DECAY)))
+		var/lux_gain = max(0, (CONTRACTOR_SUBMITTED_LUX_POWER_GAIN - (contractee.lux_drink_count * CONTRACTOR_SUBMITTED_LUX_DECAY)))
 		contractee.on_lux_drunk(0, FALSE)
 		if(devotion_gain)
 			adjust_devotion(devotion_gain, TRUE)

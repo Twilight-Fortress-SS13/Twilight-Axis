@@ -300,7 +300,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_SKILLED_ARTISAN = TAT_TRAIT_ENTRY("Skilled Artisan", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with general craftwork. Crafting and Pottery can be picked to Master levels."), \
 	TAT_TRAIT_MASTER_CRAFTSMAN = TAT_TRAIT_ENTRY("Master Craftsman", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Experienced with general craftwork. Crafting, Woodwork and Trapmaking can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_MASON = TAT_TRAIT_ENTRY("Skilled Architect", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with stone and kiln work. Masonry, Woodwork and Pottery can be picked to Master levels."), \
-	TAT_TRAIT_SKILLED_COOK = TAT_TRAIT_ENTRY("Skilled Cook", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Rod and steak, brothers! Cooking, Farming and Fishering can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_COOK = TAT_TRAIT_ENTRY("Skilled Cook", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Rod and steak, brothers! Cooking, Farming and Fishing can be picked to Master levels."), \
 	TRAIT_ALCHEMY_EXPERT = TAT_TRAIT_ENTRY("Expert Alchemist", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of the alchemical arts. Alchemy can progress to Legendary levels."), \
 	TAT_TRAIT_SKILLED_ALCHEMIST = TAT_TRAIT_ENTRY("Skilled Alchemist", 5, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Skilled with alchemical work. Alchemy can be picked to Master levels."), \
 	TRAIT_MEDICINE_EXPERT = TAT_TRAIT_ENTRY("Expert Physicker", 20, TAT_CATEGORY_CRAFT, TAT_CATEGORY_CRAFT_NAME, "Deep, intricate knowledge of medicine. Medicine can progress to Legendary levels."), \

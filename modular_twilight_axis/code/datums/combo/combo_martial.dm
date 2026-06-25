@@ -263,15 +263,12 @@
 		if(target.stat == DEAD)
 			return
 
-		if(skill_id == MARTIAL_MASTER_INPUT_KICK)
-
-		else
-			var/dmg = CalcPureDamage()
-			if(!AttackViaPipeline(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
-				last_action_success = FALSE
-				last_finisher_success = FALSE
-				last_matched_rule = null
-				return
+		var/dmg = CalcPureDamage()
+		if(!AttackViaPipeline(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+			last_action_success = FALSE
+			last_finisher_success = FALSE
+			last_matched_rule = null
+			return
 
 	last_action_success = TRUE
 	last_action_skill = skill_id
