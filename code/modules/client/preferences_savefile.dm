@@ -204,8 +204,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["erp_kink_prefs"] >> erp_kink_prefs
 	S["erp_organ_sensitivity"] >> erp_organ_prefs
 	// TA Addition end - new ERP SYSTEM
-	var/list/L
-	S["tat_build"] >> L
+	S["tat_build_migrated_to_character"] >> legacy_tat_build_migrated
+	S["tat_build"] >> legacy_tat_build_data
 
 	if(!tat_build)
 		tat_build = new(src)
@@ -268,7 +268,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	erp_organ_prefs = sanitize_islist(erp_organ_prefs, list())
 	sanitize_erp_organ_prefs()
 	//TA Addition end - new ERP SYSTEM
-	tat_build.load_from_list(sanitize_islist(L, list()))
+	legacy_tat_build_migrated = sanitize_integer(legacy_tat_build_migrated, FALSE, TRUE, FALSE)
+	legacy_tat_build_data = legacy_tat_build_migrated ? null : sanitize_islist(legacy_tat_build_data, null)
 
 	verify_keybindings_valid()
 	return TRUE
@@ -379,7 +380,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["erp_kink_prefs"], erp_kink_prefs)
 	WRITE_FILE(S["erp_organ_sensitivity"], erp_organ_prefs)
 	// TA Addition end - new ERP SYSTEM
-	WRITE_FILE(S["tat_build"], tat_build.export_to_list())
+	WRITE_FILE(S["tat_build_migrated_to_character"], legacy_tat_build_migrated)
 	return TRUE
 
 
@@ -696,6 +697,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		selected_patron = GLOB.patronlist[patron_typepath]
 		if(!selected_patron) //failsafe
 			selected_patron = GLOB.patronlist[default_patron]
+
+	var/list/tat_character_data
+	S["tat_build"] >> tat_character_data
+	if(!tat_build)
+		tat_build = new(src)
+	tat_build.load_tat_slots_state_from_list(tat_character_data, legacy_tat_build_data)
 
 	//Custom names
 	for(var/custom_name_id in GLOB.preferences_custom_names)
@@ -1114,6 +1121,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["loadout_1_hex"], loadout_1_hex)
 	WRITE_FILE(S["loadout_2_hex"], loadout_2_hex)
 	WRITE_FILE(S["loadout_3_hex"], loadout_3_hex)
+	if(tat_build)
+		WRITE_FILE(S["tat_build"], tat_build.export_tat_slots_state_to_list())
+		legacy_tat_build_migrated = TRUE
+		legacy_tat_build_data = null
+		var/original_cd = S.cd
+		S.cd = "/"
+		WRITE_FILE(S["tat_build_migrated_to_character"], TRUE)
+		S.cd = original_cd
 
 	// TA EDIT START - save familytree settings with the active character slot.
 	familytree_module_save_character_to_savefile(S, default_slot)

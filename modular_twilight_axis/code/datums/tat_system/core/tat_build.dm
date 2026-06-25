@@ -579,6 +579,13 @@
 		"active_tat_slot" = active_tat_slot,
 	)
 
+/datum/tat_build/proc/export_tat_slots_state_to_list()
+	init_tat_slots()
+	return list(
+		"tat_slots" = export_tat_slots_to_list(),
+		"active_tat_slot" = active_tat_slot,
+	)
+
 /datum/tat_build/proc/load_slot_build_from_list(list/data)
 	reset()
 	if(!islist(data))
@@ -598,6 +605,36 @@
 		var/list/temp = data["magic_config"]
 		magic_profile = temp.Copy()
 	sanitize()
+	return TRUE
+
+/datum/tat_build/proc/load_tat_slots_state_from_list(list/data, list/fallback_data = null)
+	var/list/source_data = null
+	if(islist(data) && (islist(data["tat_slots"]) || !isnull(data["active_tat_slot"])))
+		source_data = data
+	else if(islist(fallback_data) && (islist(fallback_data["tat_slots"]) || !isnull(fallback_data["active_tat_slot"])))
+		source_data = fallback_data
+	else if(islist(data) && (islist(data["stats"]) || islist(data["traits"]) || islist(data["skills"]) || islist(data["directions"]) || islist(data["items"])))
+		source_data = data
+	else if(islist(fallback_data) && (islist(fallback_data["stats"]) || islist(fallback_data["traits"]) || islist(fallback_data["skills"]) || islist(fallback_data["directions"]) || islist(fallback_data["items"])))
+		source_data = fallback_data
+
+	if(!source_data)
+		load_tat_slots_from_list(null, 1)
+		load_slot_into_current(1)
+		return FALSE
+
+	if(!islist(source_data["tat_slots"]) && isnull(source_data["active_tat_slot"]))
+		load_tat_slots_from_list(null, 1)
+		load_slot_build_from_list(source_data)
+		save_current_to_active_slot()
+		dirty = FALSE
+		invalidate_ui_data_cache()
+		return TRUE
+
+	load_tat_slots_from_list(source_data["tat_slots"], source_data["active_tat_slot"])
+	load_slot_into_current(active_tat_slot)
+	dirty = FALSE
+	invalidate_ui_data_cache()
 	return TRUE
 
 /datum/tat_build/proc/load_from_list(list/data)

@@ -292,6 +292,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/datum/loadout_panel/loadoutpanel
 	var/datum/tat_build/tat_build
+	var/list/legacy_tat_build_data
+	var/legacy_tat_build_migrated = FALSE
 
 
 /datum/preferences/New(client/C)
