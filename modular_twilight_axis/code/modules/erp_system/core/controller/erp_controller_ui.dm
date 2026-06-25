@@ -14,13 +14,6 @@
 	if(!M || !M.client)
 		return
 
-	var/mob/living/L = M
-	if(istype(L))
-		var/panel_block_reason = L.get_erp_panel_block_reason()
-		if(panel_block_reason)
-			to_chat(L, span_warning(panel_block_reason))
-			return
-
 	var/datum/erp_actor/A = controller.get_actor_by_mob(M)
 	if(A)
 		for(var/datum/erp_sex_organ/O in A.get_organs_ref())

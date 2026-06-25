@@ -122,13 +122,6 @@
 	return list()
 
 /datum/erp_sex_ui/ui_interact(mob/user, datum/tgui/ui)
-	var/mob/living/L = user
-	if(istype(L))
-		var/panel_block_reason = L.get_erp_panel_block_reason()
-		if(panel_block_reason)
-			to_chat(L, span_warning(panel_block_reason))
-			return
-
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, ui_key(), "Утолить желания")
@@ -143,13 +136,6 @@
 	. = ..()
 	if(.)
 		return
-	var/mob/living/L = ui?.user
-	if(istype(L))
-		var/panel_block_reason = L.get_erp_panel_block_reason()
-		if(panel_block_reason)
-			to_chat(L, span_warning(panel_block_reason))
-			SStgui.close_uis(src)
-			return TRUE
 	return handle_ui_intent(action, params)
 
 /datum/erp_sex_ui/proc/request_update()
