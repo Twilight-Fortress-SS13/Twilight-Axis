@@ -603,6 +603,7 @@
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I) //Twilight Axis Edit - TAT
 						user.put_in_hands(I)
 			return
 
@@ -659,6 +660,7 @@
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I) //Twilight Axis Edit - TAT
 						user.put_in_hands(I)
 			return
 
@@ -871,6 +873,7 @@
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I) //Twilight Axis Edit - TAT
 						user.put_in_hands(I)
 			return
 
@@ -1382,54 +1385,54 @@
 					var/mob/living/carbon/human/thebride
 					for(var/mob/M in viewers(src, 7))
 						// You cannot marry an animal, a corpse, a brainless mob, or someone who is already married.
-						if(!ishuman(M)) 
+						if(!ishuman(M))
 							continue
 						var/mob/living/carbon/human/C = M
 
 						if(C.stat == DEAD || !C.client || C.marriedto)
 							continue
-						
+
 						if(C.real_name == A.bitten_names[1])
 							thegroom = C
 						if(C.real_name == A.bitten_names[2])
 							thebride = C
-					
+
 					if(!thegroom || !thebride)
 						to_chat(user, span_warn("nonexistent"))
 						return
-					
+
 					// Astounding update: marriage now requires consent (it didn't before)
 					var/groom_confirm = input(thegroom, "Do you want to marry [thebride]?") as null|anything in list("Yes", "No")
 					if(groom_confirm != "Yes")
 						to_chat(user, span_warning("The groom has declined the marriage!"))
 						return ..()
-					
+
 					var/bride_confirm = input(thebride, "Do you want to marry [thegroom]?") as null|anything in list("Yes", "No")
 					if(bride_confirm != "Yes")
 						to_chat(user, span_warning("The bride has declined the marriage!"))
 						return ..()
-					
+
 					// Horrible terrible last name necromancy (sometimes works)
 					var/groom_index = findtext(thegroom.real_name, " ")
 					var/bride_index = findtext(thebride.real_name, " ")
 					var/bride_firstname = bride_index ? copytext(thebride.real_name, 1, bride_index) : thebride.real_name
-					
+
 					// Get groom's surname
 					var/groom_surname = copytext(thegroom.real_name, groom_index + 1)
 					if(!groom_index)
 						groom_surname = null
 					else if(findtext(thegroom.real_name, " of ") || findtext(thegroom.real_name, " the "))
 						groom_surname = null
-					
+
 					var/final_bride_name
 					// Ask bride if she wants to take the groom's surname
 					if(groom_surname != null)
 						var/bride_surname_choice = input(thebride, "Do you want to take [thegroom]'s surname? (Your new name will be [bride_firstname] [groom_surname])") as null|anything in list("Yes", "No")
 						final_bride_name = (bride_surname_choice == "Yes") ? (bride_firstname + " " + groom_surname) : thebride.real_name
-					
+
 					// Apply the changes
 					thebride.change_name(final_bride_name)
-			
+
 					thegroom.marriedto = thebride.real_name
 					thebride.marriedto = thegroom.real_name
 

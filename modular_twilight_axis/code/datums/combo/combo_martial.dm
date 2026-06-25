@@ -1,12 +1,5 @@
-// ============================================================
-// MARTIAL MASTER
-// Full combat-style component.
-// ============================================================
-
 #define MARTIAL_MASTER_COMBO_WINDOW            (7 SECONDS)
 #define MARTIAL_MASTER_MAX_HISTORY             6
-#define MARTIAL_MASTER_MAX_AROUSAL_STACKS      10
-#define MARTIAL_MASTER_AROUSAL_DMG_PER_STACK   0.05
 #define MARTIAL_MASTER_KICK_MIN_RECOVERY       (0.5 SECONDS)
 
 #define MARTIAL_MASTER_INPUT_PUNCH             1
@@ -26,8 +19,6 @@
 #define MARTIAL_MASTER_CONE_RANGE              2
 
 #define MARTIAL_MASTER_BALLOON_COOLDOWN        (0.5 SECONDS)
-#define MARTIAL_MASTER_STRONG_KICK_THROW       1
-#define MARTIAL_MASTER_STRONG_KICK_BONUS       0.20
 
 /proc/martial_master_get_component(mob/living/user)
 	if(!isliving(user))
@@ -49,29 +40,21 @@
 	dupe_mode = COMPONENT_DUPE_UNIQUE
 
 	var/current_stance = MARTIAL_MASTER_STANCE_PROC
-
-	var/arousal_stacks = 0
-	var/max_arousal_stacks = MARTIAL_MASTER_MAX_AROUSAL_STACKS
-
 	var/last_action_success = FALSE
 	var/last_action_skill = 0
 	var/last_action_zone = BODY_ZONE_CHEST
 	var/mob/living/last_action_target = null
-
 	var/last_finisher_success = FALSE
 	var/last_matched_rule = null
-
 	var/reverse_ready = FALSE
 	var/reverse_expires_at = 0
-
 	var/chain_step_ready = FALSE
 	var/chain_step_expires_at = 0
 	var/mob/living/chain_step_target = null
-
 	var/list/granted_spells = list()
 	var/spells_granted = FALSE
-
 	var/last_balloon_at = 0
+	var/obj/item/martial_master_proxy/proxy
 
 /datum/component/combo_core/martial_master/Initialize(_combo_window, _max_history)
 	. = ..(_combo_window || MARTIAL_MASTER_COMBO_WINDOW, _max_history || MARTIAL_MASTER_MAX_HISTORY)
@@ -82,7 +65,6 @@
 
 	StripExternalStyleSpells()
 	GrantSpells()
-	OnAttachApplyHiddenStats()
 
 	RegisterSignal(owner, COMSIG_ATTACK_TRY_CONSUME, PROC_REF(_sig_try_consume))
 	RegisterSignal(owner, COMSIG_MOB_PARRY_SUCCESS, PROC_REF(_sig_reverse_defense_success))
@@ -97,8 +79,15 @@
 		UnregisterSignal(owner, COMSIG_ATTACK_TRY_CONSUME)
 		UnregisterSignal(owner, COMSIG_MOB_PARRY_SUCCESS)
 
-		OnDetachClearHiddenStats()
 		RevokeSpells()
+
+	if(proxy)
+		if(!QDELETED(proxy))
+			proxy.force = 0
+			proxy.force_dynamic = 0
+			proxy.last_attack_target = null
+			qdel(proxy)
+	proxy = null
 
 	owner = null
 	granted_spells = null
@@ -119,7 +108,7 @@
 /datum/component/combo_core/martial_master/DefineRules()
 	RegisterRule("line",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH), 40, PROC_REF(_cb_combo))
 	RegisterRule("cone",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK),  45, PROC_REF(_cb_combo))
-	RegisterRule("charge",     list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_GRAB),  50, PROC_REF(_cb_combo))
+	RegisterRule("charge",     list(MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB),  50, PROC_REF(_cb_combo))
 
 	RegisterRule("spear",      list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH), 45, PROC_REF(_cb_combo))
 	RegisterRule("push",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_KICK),  50, PROC_REF(_cb_combo))
@@ -131,7 +120,7 @@
 	RegisterRule("silence",    list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK),  45, PROC_REF(_cb_combo))
 	RegisterRule("cross",      list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH), 45, PROC_REF(_cb_combo))
 
-	RegisterRule("reverse",    list(MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB),  55, PROC_REF(_cb_combo))
+	RegisterRule("reverse",    list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_GRAB),  55, PROC_REF(_cb_combo))
 
 /datum/component/combo_core/martial_master/OnHistoryChanged()
 	return
@@ -164,10 +153,6 @@
 			continue
 
 		if(istype(S, /obj/effect/proc_holder/spell/self/martial_master))
-			owner.mind.RemoveSpell(S)
-			continue
-
-		if(istype(S, /obj/effect/proc_holder/spell/self/temptress))
 			owner.mind.RemoveSpell(S)
 			continue
 
@@ -217,44 +202,6 @@
 	granted_spells = list()
 	spells_granted = FALSE
 
-/datum/component/combo_core/martial_master/proc/OnAttachApplyHiddenStats()
-	var/mob/living/H = owner
-	if(!H)
-		return
-
-	ADD_TRAIT(H, TRAIT_KEENEARS, type)
-	ADD_TRAIT(H, TRAIT_NUTCRACKER, type)
-	ADD_TRAIT(H, TRAIT_EMPATH, type)
-	ADD_TRAIT(H, TRAIT_NOPAINSTUN, type)
-	ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, type)
-
-	H.change_stat(STATKEY_STR, 4)
-	H.change_stat(STATKEY_SPD, 3)
-	H.change_stat(STATKEY_PER, 2)
-	H.change_stat(STATKEY_WIL, 5)
-	H.change_stat(STATKEY_CON, 4)
-
-	H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, 3, TRUE)
-	H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, 5, TRUE)
-	H.adjust_skillrank_up_to(/datum/skill/misc/athletics, 4, TRUE)
-
-/datum/component/combo_core/martial_master/proc/OnDetachClearHiddenStats()
-	var/mob/living/H = owner
-	if(!H)
-		return
-
-	REMOVE_TRAIT(H, TRAIT_KEENEARS, type)
-	REMOVE_TRAIT(H, TRAIT_NUTCRACKER, type)
-	REMOVE_TRAIT(H, TRAIT_EMPATH, type)
-	REMOVE_TRAIT(H, TRAIT_NOPAINSTUN, type)
-	REMOVE_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, type)
-
-	H.change_stat(STATKEY_STR, -4)
-	H.change_stat(STATKEY_SPD, -3)
-	H.change_stat(STATKEY_PER, -2)
-	H.change_stat(STATKEY_WIL, -5)
-	H.change_stat(STATKEY_CON, -4)
-
 /datum/component/combo_core/martial_master/proc/_sig_try_consume(datum/source, atom/target_atom, zone, obj/item/W, forced_skill_id)
 	SIGNAL_HANDLER
 
@@ -268,51 +215,94 @@
 	if(!IsBaseInput(skill_id))
 		return 0
 
-	var/mob/living/target = null
-	if(isliving(target_atom))
-		target = target_atom
 
-	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target, zone)
-	return 0
+	if(!isliving(target_atom) && skill_id != MARTIAL_MASTER_INPUT_GRAB)
+		return 0
 
-/datum/component/combo_core/martial_master/proc/_handle_try_consume_async(skill_id, mob/living/target, zone)
+	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target_atom, zone)
+	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
+		if(isliving(target_atom))
+			return 0
+		if(target_atom && !isturf(target_atom) && !isarea(target_atom))
+			return 0
+
+	return COMPONENT_ATTACK_CONSUMED
+
+/datum/component/combo_core/martial_master/proc/_handle_try_consume_async(skill_id, atom/target_atom, zone)
 	if(!owner)
 		return
 
+	owner.stamina_add(1)
+	var/zone_used = zone || BODY_ZONE_CHEST
+	var/mob/living/target = target_atom
+
+	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
+		if(istype(target))
+			if(target.stat == DEAD)
+				ClearHistory("invalid")
+				last_action_success = FALSE
+				last_finisher_success = FALSE
+				last_matched_rule = null
+				return
+		else if(isturf(target_atom) || isarea(target_atom) || !target_atom)
+			var/turf/target_turf = GetTargetTurf(target_atom)
+			if(target_turf)
+				FaceTurf(target_turf)
+			target = null
+		else
+			ClearHistory("invalid")
+			last_action_success = FALSE
+			last_finisher_success = FALSE
+			last_matched_rule = null
+			return
+
+	else
+		if(!istype(target))
+			return
+
+		if(target.stat == DEAD)
+			return
+
+		if(skill_id == MARTIAL_MASTER_INPUT_KICK)
+
+		else
+			var/dmg = CalcPureDamage()
+			if(!AttackViaPipeline(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+				last_action_success = FALSE
+				last_finisher_success = FALSE
+				last_matched_rule = null
+				return
+
 	last_action_success = TRUE
 	last_action_skill = skill_id
-	last_action_zone = zone || BODY_ZONE_CHEST
+	last_action_zone = zone_used
 	last_action_target = target
 	last_finisher_success = FALSE
 	last_matched_rule = null
 
-	if(current_stance == MARTIAL_MASTER_STANCE_PROC)
-		ApplyProcPressureOnHit(target, last_action_zone, FALSE)
-	else
-		ApplyPreciseOnHit(target, last_action_zone)
+	if(target && skill_id != MARTIAL_MASTER_INPUT_GRAB)
+		if(current_stance == MARTIAL_MASTER_STANCE_PROC)
+			ApplyProcPressureOnHit(target, last_action_zone, FALSE)
+		else
+			ApplyPreciseOnHit(target, last_action_zone)
 
-	if(chain_step_ready)
+	if(target && chain_step_ready)
 		if(world.time >= chain_step_expires_at || !chain_step_target)
 			chain_step_ready = FALSE
 			chain_step_expires_at = 0
 			chain_step_target = null
 		else if(target == chain_step_target)
-			target.adjustBruteLoss(max(1, round(GetComboDamageMultiplier() * 1.5)))
-			ApplyArmorDamageToZone(target, last_action_zone, GetPressureDamage() * 2)
-
-			if(HasStrongKick())
-				_throw_target_dir(target, get_dir(owner, target), MARTIAL_MASTER_STRONG_KICK_THROW, TRUE)
+			if(AttackMartialAreaTarget(target, max(1, 1.5), BCLASS_PUNCH, BRUTE, last_action_zone, 0))
+				ApplyArmorDamageToZone(target, last_action_zone, GetPressureDamage() * 2)
+				_balloon("chain-step hit")
 
 			chain_step_ready = FALSE
 			chain_step_expires_at = 0
 			chain_step_target = null
 
-			_balloon("chain-step hit")
-
 	RegisterInput(skill_id, target, last_action_zone)
-	SpendArousalStack(1)
-
-	datum_component_combo_martial_master_check_nutcracker(src, target, last_action_zone, skill_id)
+	if(target)
+		datum_component_combo_martial_master_check_nutcracker(src, target, last_action_zone, skill_id)
 
 /datum/component/combo_core/martial_master/proc/_sig_reverse_defense_success(datum/source, mob/living/attacker)
 	SIGNAL_HANDLER
@@ -344,8 +334,8 @@
 			MartialMasterAfterimage(my_turf, 0.8 SECONDS)
 			owner.forceMove(back)
 
-	ProcStrike(attacker, BODY_ZONE_CHEST, 1.40, 1.25)
-	attacker.Knockdown(1 SECONDS)
+	if(ProcStrike(attacker, BODY_ZONE_CHEST, 1.40, 1.25))
+		attacker.Knockdown(1 SECONDS)
 
 /datum/component/combo_core/martial_master/proc/ToggleStance()
 	if(current_stance == MARTIAL_MASTER_STANCE_PROC)
@@ -371,6 +361,14 @@
 	if(!owner)
 		return FALSE
 
+	switch(rule_id)
+		if("chain_step", "reverse")
+			if(!LastInputHadTarget(TRUE))
+				return FALSE
+		if("charge")
+			if(!LastInputsHaveNoTarget(3, TRUE))
+				return FALSE
+
 	if(!target)
 		target = last_action_target
 	if(!zone)
@@ -385,9 +383,39 @@
 
 	if(success)
 		_balloon_combo(rule_id)
+		ConsumeOnCombo(rule_id)
 
-	ConsumeOnCombo(rule_id)
 	return success
+
+/datum/component/combo_core/martial_master/proc/LastInputHadTarget(clear_on_fail = FALSE)
+	if(!length(history))
+		if(clear_on_fail)
+			ClearHistory("invalid")
+		return FALSE
+
+	var/datum/combo_input_entry/E = history[length(history)]
+	if(E?.target)
+		return TRUE
+
+	if(clear_on_fail)
+		ClearHistory("invalid")
+	return FALSE
+
+/datum/component/combo_core/martial_master/proc/LastInputsHaveNoTarget(count, clear_on_fail = FALSE)
+	if(!length(history) || length(history) < count)
+		if(clear_on_fail)
+			ClearHistory("invalid")
+		return FALSE
+
+	var/start_index = length(history) - count + 1
+	for(var/i in start_index to length(history))
+		var/datum/combo_input_entry/E = history[i]
+		if(E?.target)
+			if(clear_on_fail)
+				ClearHistory("invalid")
+			return FALSE
+
+	return TRUE
 
 /datum/component/combo_core/martial_master/proc/_balloon_combo(rule_id)
 	switch(rule_id)
@@ -421,15 +449,13 @@
 		return FALSE
 
 	var/zone_used = TryGetZone(zone)
-	var/mult = GetComboDamageMultiplier()
+	var/mult = 1.2
+	var/dmg = max(1, round(mult * GetComboBaseDamage(rule_id, TRUE) * CalcPureDamage()))
 
-	if(ComboUsesKick(rule_id) && HasStrongKick())
-		mult += MARTIAL_MASTER_STRONG_KICK_BONUS
+	if(!AttackMartialAreaTarget(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+		return FALSE
 
-	var/dmg = max(1, round(mult * GetComboBaseDamage(rule_id, TRUE)))
-	target.adjustBruteLoss(dmg)
 	ApplyPreciseFinisher(target, zone_used, last_action_skill, rule_id)
-
 	return TRUE
 
 /datum/component/combo_core/martial_master/proc/ExecuteProcCombo(rule_id, mob/living/target, zone)
@@ -500,6 +526,220 @@
 	return precise ? 1.0 : 1.2
 
 // ------------------------------------------------------------
+// proxy / damage pipeline
+// ------------------------------------------------------------
+
+/datum/component/combo_core/martial_master/proc/GetProxy()
+	if(!owner)
+		return null
+
+	if(proxy && QDELETED(proxy))
+		proxy = null
+
+	if(!proxy)
+		proxy = new /obj/item/martial_master_proxy(owner)
+
+	return proxy
+
+/datum/component/combo_core/martial_master/proc/GetDamageFlag(bclass, damage_type)
+	switch(bclass)
+		if(BCLASS_BLUNT, BCLASS_SMASH, BCLASS_TWIST, BCLASS_PUNCH)
+			return "blunt"
+		if(BCLASS_CHOP, BCLASS_CUT, BCLASS_LASHING, BCLASS_PUNISH)
+			return "slash"
+		if(BCLASS_PICK, BCLASS_STAB, BCLASS_PIERCE)
+			return "stab"
+
+	switch(damage_type)
+		if(BRUTE)
+			return "blunt"
+		if(BURN)
+			return "fire"
+		if(TOX)
+			return "bio"
+		if(OXY)
+			return "oxy"
+
+	return "blunt"
+
+/datum/component/combo_core/martial_master/proc/AttackViaPipeline(mob/living/target, damage, bclass = BCLASS_PUNCH, damage_type = BRUTE, zone = BODY_ZONE_CHEST, armor_penetration = 0, params = null)
+	if(!owner || !target)
+		return FALSE
+
+	zone = TryGetZone(zone)
+
+	var/obj/item/martial_master_proxy/P = GetProxy()
+	if(!P)
+		return FALSE
+
+	if(P.loc != owner)
+		P.forceMove(owner)
+
+	if(!islist(params))
+		params = list()
+
+	P.force = damage
+	P.force_dynamic = damage
+	P.damtype = damage_type
+	P.thrown_bclass = bclass
+	P.d_type = GetDamageFlag(bclass, damage_type)
+	P.armor_penetration = armor_penetration
+
+	P.name = "martial strike"
+
+	P.last_attack_success = FALSE
+	P.last_attack_target = null
+
+	owner.face_atom(target)
+	owner.do_attack_animation(target, ATTACK_EFFECT_DISARM)
+	P.melee_attack_chain(owner, target, params)
+
+	return P.last_attack_success
+
+/datum/component/combo_core/martial_master/proc/CheckMartialContact(mob/living/target)
+	if(!owner || !target)
+		return FALSE
+
+	if(target.stat == DEAD)
+		return FALSE
+
+	if((target.mobility_flags & MOBILITY_STAND))
+		if(target.checkmiss(owner))
+			return FALSE
+
+	if(target.checkdefense(owner.used_intent, owner))
+		return FALSE
+
+	return TRUE
+
+/datum/component/combo_core/martial_master/proc/AttackMartialAreaTarget(mob/living/target, damage, bclass = BCLASS_PUNCH, damage_type = BRUTE, zone = BODY_ZONE_CHEST, armor_penetration = 0)
+	if(!owner || !target)
+		return FALSE
+
+	if(target.stat == DEAD)
+		return FALSE
+
+	zone = TryGetZone(zone)
+
+	if((target.mobility_flags & MOBILITY_STAND))
+		if(target.checkmiss(owner))
+			return FALSE
+
+	if(target.checkdefense(owner.used_intent, owner))
+		return FALSE
+
+	var/obj/item/martial_master_proxy/P = GetProxy()
+	if(!P)
+		return FALSE
+
+	if(P.loc != owner)
+		P.forceMove(owner)
+
+	P.force = damage
+	P.force_dynamic = damage
+	P.damtype = damage_type
+	P.thrown_bclass = bclass
+	P.d_type = GetDamageFlag(bclass, damage_type)
+	P.armor_penetration = armor_penetration
+
+	P.last_attack_success = FALSE
+	P.last_attack_target = null
+
+	SEND_SIGNAL(P, COMSIG_ITEM_ATTACK_SUCCESS, target, owner)
+	SEND_SIGNAL(target, COMSIG_ITEM_ATTACKED_SUCCESS, P, owner)
+
+	if(!iscarbon(target))
+		var/nodmg = FALSE
+		var/success = !!target.attacked_by(P, owner)
+		if(!success)
+			nodmg = TRUE
+
+		SEND_SIGNAL(target, COMSIG_ATOM_ATTACK_HAND, owner)
+
+		P.last_attack_success = success
+		P.last_attack_target = target
+
+		if(owner?.used_intent)
+			if(!nodmg)
+				if(owner.used_intent.hitsound)
+					playsound(target.loc, owner.used_intent.hitsound, 100, FALSE, -1)
+			else
+				playsound(target.loc, "nodmg", 100, FALSE, -1)
+
+		return success
+
+	var/mob/living/carbon/C = target
+	var/obj/item/bodypart/affecting = C.get_bodypart(check_zone(zone) || BODY_ZONE_CHEST)
+	if(!affecting)
+		return FALSE
+
+	var/mob/living/carbon/human/H = C
+	if(!H)
+		return FALSE
+
+	if(!H.lying_attack_check(owner))
+		return FALSE
+
+	if(H.has_status_effect(/datum/status_effect/buff/clash) && H.get_active_held_item() && ishuman(owner))
+		var/obj/item/IM = H.get_active_held_item()
+		H.process_clash(owner, IM)
+		return FALSE
+
+	var/attack_flag = "blunt"
+	switch(bclass)
+		if(BCLASS_BLUNT, BCLASS_SMASH, BCLASS_TWIST, BCLASS_PUNCH)
+			attack_flag = "blunt"
+		if(BCLASS_CHOP, BCLASS_CUT, BCLASS_LASHING, BCLASS_PUNISH)
+			attack_flag = "slash"
+		if(BCLASS_PICK, BCLASS_STAB, BCLASS_PIERCE)
+			attack_flag = "stab"
+
+	var/armor_block = H.run_armor_check(
+		zone,
+		attack_flag,
+		armor_penetration = armor_penetration,
+		blade_dulling = owner.used_intent?.blade_class,
+		damage = damage,
+		intdamfactor = owner.used_intent?.intent_intdamage_factor
+	)
+
+	H.next_attack_msg.Cut()
+	var/nodmg = FALSE
+	if(!H.apply_damage(damage, damage_type, affecting, armor_block))
+		nodmg = TRUE
+		H.next_attack_msg += VISMSG_ARMOR_BLOCKED
+	else
+		affecting.bodypart_attacked_by(
+			bclass,
+			damage,
+			owner,
+			zone,
+			crit_message = TRUE,
+			armor = armor_block,
+			weapon = P
+		)
+
+		SEND_SIGNAL(H, COMSIG_ATOM_ATTACK_HAND, owner)
+		if(affecting.body_zone == BODY_ZONE_HEAD)
+			SEND_SIGNAL(owner, COMSIG_HEAD_PUNCHED, H)
+
+	H.send_item_attack_message(P, owner, zone)
+
+	H.next_attack_msg.Cut()
+
+	P.last_attack_target = H
+	P.last_attack_success = TRUE
+
+	if(owner?.used_intent)
+		if(!nodmg)
+			if(owner.used_intent.hitsound)
+				playsound(H.loc, owner.used_intent.hitsound, 100, FALSE, -1)
+		else
+			playsound(H.loc, "nodmg", 100, FALSE, -1)
+
+	return TRUE
+
+// ------------------------------------------------------------
 // proc stance forms
 // ------------------------------------------------------------
 
@@ -541,22 +781,14 @@
 
 	var/zone_used = TryGetZone(zone)
 	var/pure_damage = CalcPureDamage()
-	var/dmg_mult = GetComboDamageMultiplier() * damage_mult
-
-	if((last_action_skill == MARTIAL_MASTER_INPUT_KICK || ComboUsesKick(last_matched_rule)) && HasStrongKick())
-		dmg_mult += MARTIAL_MASTER_STRONG_KICK_BONUS
+	var/dmg_mult = 1.1 * damage_mult
 
 	var/dmg = max(1, round(dmg_mult * pure_damage))
 
-	owner.face_atom(target)
-	owner.do_attack_animation(target, ATTACK_EFFECT_DISARM)
+	if(!AttackMartialAreaTarget(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+		return FALSE
 
-	target.adjustBruteLoss(dmg)
 	ApplyArmorDamageToZone(target, zone_used, max(1, round(GetPressureDamage() * armor_mult)))
-
-	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK && HasStrongKick())
-		_try_strong_kick_throw(target)
-
 	return TRUE
 
 /datum/component/combo_core/martial_master/proc/ProcComboLine(zone)
@@ -580,7 +812,6 @@
 				continue
 			if(ProcStrike(L, zone, 1.35, 1.0))
 				any = TRUE
-			break
 
 	return any
 
@@ -601,7 +832,6 @@
 				continue
 			if(ProcStrike(L, zone, 1.15, 0.8))
 				any = TRUE
-			break
 
 	return any
 
@@ -662,13 +892,12 @@
 		if(L == owner || L.stat == DEAD)
 			continue
 		ProcStrike(L, zone, 1.10, 0.8)
-		break
 
 /datum/component/combo_core/martial_master/proc/ProcComboCharge(zone)
 	if(!owner)
 		return FALSE
 
-	var/mob/living/target = FindFrontTarget(MARTIAL_MASTER_CHARGE_RANGE)
+	var/mob/living/target = FindFrontConeTarget(MARTIAL_MASTER_CHARGE_RANGE)
 	if(!target)
 		return FALSE
 
@@ -717,7 +946,6 @@
 			if(ProcStrike(L, zone, 1.10, 1.0))
 				_throw_target_dir(L, hit_dir, 1, TRUE)
 				any = TRUE
-			break
 
 	return any
 
@@ -736,9 +964,6 @@
 		return FALSE
 
 	var/push_dist = 3
-	if(HasStrongKick())
-		push_dist++
-
 	_throw_target_dir(target, get_dir(owner, target), push_dist, TRUE)
 	return TRUE
 
@@ -791,6 +1016,7 @@
 	if(!origin)
 		return FALSE
 
+	var/any = FALSE
 	var/d = owner.dir
 	var/turf/front = get_step(origin, d)
 	if(front)
@@ -798,11 +1024,11 @@
 		for(var/mob/living/L in front)
 			if(L == owner || L.stat == DEAD)
 				continue
-			ProcStrike(L, zone, 1.00, 1.0)
-			break
+			if(ProcStrike(L, zone, 1.00, 1.0))
+				any = TRUE
 
 	addtimer(CALLBACK(src, PROC_REF(_cross_followup), d, zone), 0.25 SECONDS)
-	return TRUE
+	return any
 
 /datum/component/combo_core/martial_master/proc/_cross_followup(d, zone)
 	if(!owner)
@@ -828,7 +1054,6 @@
 			if(L == owner || L.stat == DEAD)
 				continue
 			ProcStrike(L, zone, 0.90, 0.8)
-			break
 
 /datum/component/combo_core/martial_master/proc/FindFrontTarget(max_range = 8)
 	if(!owner)
@@ -850,6 +1075,41 @@
 			return L
 
 	return null
+
+/datum/component/combo_core/martial_master/proc/FindFrontConeTarget(max_range = 5)
+	if(!owner)
+		return null
+
+	var/turf/origin = get_turf(owner)
+	if(!origin)
+		return null
+
+	var/base_dir = owner.dir
+	if(!base_dir)
+		return null
+
+	var/list/valid_dirs = list(base_dir, turn(base_dir, 45), turn(base_dir, -45))
+	var/mob/living/best_target = null
+	var/best_dist = INFINITY
+
+	for(var/mob/living/L in view(max_range, owner))
+		if(L == owner || L.stat == DEAD)
+			continue
+
+		var/turf/target_turf = get_turf(L)
+		if(!target_turf)
+			continue
+
+		var/target_dir = get_dir(origin, target_turf)
+		if(!(target_dir in valid_dirs))
+			continue
+
+		var/target_dist = get_dist(origin, target_turf)
+		if(target_dist < best_dist)
+			best_target = L
+			best_dist = target_dist
+
+	return best_target
 
 /datum/component/combo_core/martial_master/proc/ProcComboChainStep()
 	if(!owner)
@@ -892,7 +1152,7 @@
 
 	return null
 
-/// GGG - reverse
+/// PPG - reverse
 /datum/component/combo_core/martial_master/proc/ProcComboReverse()
 	if(!owner)
 		return FALSE
@@ -908,9 +1168,7 @@
 // ------------------------------------------------------------
 
 /datum/component/combo_core/martial_master/proc/GetPressureChance()
-	var/chance = 25
-	if(HasStrongKick())
-		chance += 10
+	var/chance = 10
 	return clamp(chance, 0, 100)
 
 /datum/component/combo_core/martial_master/proc/GetPressureDamage()
@@ -918,7 +1176,7 @@
 		return 1
 
 	var/amount = max(1, round(owner.get_stat(STAT_STRENGTH) / 2))
-	if(HasStrongKick() && last_action_skill == MARTIAL_MASTER_INPUT_KICK)
+	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK)
 		amount += 1
 	return amount
 
@@ -971,8 +1229,8 @@
 	if(!owner)
 		return 1
 
-	var/amount = max(1, round(owner.get_stat(STAT_STRENGTH) / 2))
-	if(HasStrongKick() && last_action_skill == MARTIAL_MASTER_INPUT_KICK)
+	var/amount = max(1, round(owner.get_stat(STAT_STRENGTH) / 4))
+	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK)
 		amount += 1
 	return amount
 
@@ -980,8 +1238,10 @@
 	if(!owner || !target)
 		return
 
-	var/zone_used = TryGetZone(zone)
+	if(!prob(10))
+		return
 
+	var/zone_used = TryGetZone(zone)
 	if(IsMouthZone(zone_used))
 		if(prob(40))
 			target.apply_status_effect(/datum/status_effect/silenced, 3 SECONDS)
@@ -989,34 +1249,31 @@
 
 	switch(zone_used)
 		if(BODY_ZONE_HEAD)
-			if(prob(25))
-				target.Dizzy(1 SECONDS)
+			target.Dizzy(1 SECONDS)
 
 		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-			if(prob(25))
-				SafeSlow(target, HasStrongKick() ? 1.5 : 1)
+			SafeSlow(target, 1)
 
 		if(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)
-			if(prob(25))
-				if(ishuman(target))
-					var/mob/living/carbon/human/H = target
-					H.drop_all_held_items()
-				else
-					target.Immobilize(0.5 SECONDS)
+			if(ishuman(target))
+				var/mob/living/carbon/human/H = target
+				H.drop_all_held_items()
+			else
+				target.Immobilize(0.5 SECONDS)
 
 		if(BODY_ZONE_CHEST)
-			if(prob(25))
-				target.stamina_add(GetPreciseStaminaDamage())
+			target.stamina_add(GetPreciseStaminaDamage())
 
 /datum/component/combo_core/martial_master/proc/ApplyPreciseFinisher(mob/living/target, zone, finisher_skill, rule_id)
 	if(!target)
 		return
 
-	var/zone_used = TryGetZone(zone)
+	if(!prob(50))
+		return
 
+	var/zone_used = TryGetZone(zone)
 	if(IsMouthZone(zone_used))
-		if(prob(80))
-			target.apply_status_effect(/datum/status_effect/silenced, 5 SECONDS)
+		target.apply_status_effect(/datum/status_effect/silenced, 5 SECONDS)
 		return
 
 	switch(zone_used)
@@ -1038,12 +1295,12 @@
 
 		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 			if(finisher_skill == MARTIAL_MASTER_INPUT_KICK)
-				SafeOffbalance(target, HasStrongKick() ? 2.5 SECONDS : 2 SECONDS)
+				SafeOffbalance(target, 2 SECONDS)
 			else
-				SafeSlow(target, HasStrongKick() ? 2 : 1.5)
+				SafeSlow(target, 1.5)
 
 		if(BODY_ZONE_CHEST)
-			target.stamina_add(round(target.max_stamina * 0.12))
+			target.stamina_add(round(target.max_stamina * 0.05))
 			if(finisher_skill == MARTIAL_MASTER_INPUT_GRAB)
 				target.Knockdown(1.5 SECONDS)
 
@@ -1052,23 +1309,7 @@
 // ------------------------------------------------------------
 
 /datum/component/combo_core/martial_master/proc/GetKickOffbalanceDuration(base_duration = 3 SECONDS)
-	if(HasStrongKick())
-		return max(MARTIAL_MASTER_KICK_MIN_RECOVERY, round(base_duration * 0.7))
-	return base_duration
-
-/datum/component/combo_core/martial_master/proc/HasStrongKick()
-	if(!owner)
-		return FALSE
-	return HAS_TRAIT(owner, TRAIT_STRONGKICK)
-
-/// kept small and only for direct kick hits
-/datum/component/combo_core/martial_master/proc/_try_strong_kick_throw(mob/living/target)
-	if(!target || !HasStrongKick())
-		return FALSE
-	if(prob(30))
-		_throw_target_dir(target, get_dir(owner, target), MARTIAL_MASTER_STRONG_KICK_THROW, TRUE)
-		return TRUE
-	return FALSE
+	return max(MARTIAL_MASTER_KICK_MIN_RECOVERY, round(base_duration * 0.7))
 
 /datum/component/combo_core/martial_master/proc/ComboUsesKick(rule_id)
 	switch(rule_id)
@@ -1089,29 +1330,6 @@
 
 	target.safe_throw_at(throw_target, distance, 1, owner, spin = spin)
 	return TRUE
-
-// ------------------------------------------------------------
-// arousal / resources
-// ------------------------------------------------------------
-
-/datum/component/combo_core/martial_master/proc/AddArousalStack(amount = 1)
-	if(amount <= 0)
-		return
-
-	arousal_stacks = clamp(arousal_stacks + amount, 0, max_arousal_stacks)
-
-/datum/component/combo_core/martial_master/proc/SpendArousalStack(amount = 1)
-	if(amount <= 0)
-		return
-	if(arousal_stacks <= 0)
-		return
-
-	arousal_stacks = clamp(arousal_stacks - amount, 0, max_arousal_stacks)
-
-/datum/component/combo_core/martial_master/proc/GetComboDamageMultiplier()
-	var/mult = 1
-	mult += (arousal_stacks * MARTIAL_MASTER_AROUSAL_DMG_PER_STACK)
-	return max(1, mult)
 
 // ------------------------------------------------------------
 // utils
@@ -1148,7 +1366,7 @@
 	if(zone_precise != BODY_ZONE_PRECISE_GROIN)
 		return FALSE
 
-	var/chance = C.arousal_stacks * 5
+	var/chance = 15
 
 	switch(C.last_matched_rule)
 		if("reverse", "chain_step")
@@ -1156,7 +1374,7 @@
 		if("charge", "spin", "push")
 			chance += 40
 
-	if(C.HasStrongKick() && skill_id == MARTIAL_MASTER_INPUT_KICK)
+	if(skill_id == MARTIAL_MASTER_INPUT_KICK)
 		chance += 15
 
 	var/obj/item/bodypart/chest/CH = target.get_bodypart(BODY_ZONE_CHEST)
@@ -1219,7 +1437,7 @@
 	duration = 10
 	randomdir = FALSE
 
-/datum/component/combo_core/martial_master/proc/MartialMasterWaveUp(color = "#6b1f2b")
+/datum/component/combo_core/martial_master/proc/MartialMasterWaveUp(color = "#5a0f1f")
 	if(!owner)
 		return
 
@@ -1299,8 +1517,6 @@
 
 #undef MARTIAL_MASTER_COMBO_WINDOW
 #undef MARTIAL_MASTER_MAX_HISTORY
-#undef MARTIAL_MASTER_MAX_AROUSAL_STACKS
-#undef MARTIAL_MASTER_AROUSAL_DMG_PER_STACK
 #undef MARTIAL_MASTER_KICK_MIN_RECOVERY
 #undef MARTIAL_MASTER_INPUT_PUNCH
 #undef MARTIAL_MASTER_INPUT_KICK
@@ -1308,7 +1524,6 @@
 #undef MARTIAL_MASTER_STANCE_PROC
 #undef MARTIAL_MASTER_STANCE_PRECISE
 #undef MARTIAL_MASTER_BUTTON_SWITCH_STANCE
-
 #undef MARTIAL_MASTER_REVERSE_WINDOW
 #undef MARTIAL_MASTER_CHAIN_STEP_WINDOW
 #undef MARTIAL_MASTER_CHARGE_RANGE
@@ -1316,420 +1531,3 @@
 #undef MARTIAL_MASTER_LINE_RANGE
 #undef MARTIAL_MASTER_CONE_RANGE
 #undef MARTIAL_MASTER_BALLOON_COOLDOWN
-#undef MARTIAL_MASTER_STRONG_KICK_THROW
-#undef MARTIAL_MASTER_STRONG_KICK_BONUS
-
-// ============================================================
-// TEMPTRESS
-// Martial master inheritor with ERP/training hooks.
-// ============================================================
-
-#define TEMPTRESS_EMBRACE_TRAIT_SOURCE    "temptress_embrace"
-#define TEMPTRESS_EMBRACE_PULSE_CD        (1 SECONDS)
-#define TEMPTRESS_EMBRACE_GAIN_CD         (3 SECONDS)
-#define TEMPTRESS_EMBRACE_RANGE           2
-
-/proc/temptress_get_component(mob/living/user)
-	if(!isliving(user))
-		return null
-
-	var/datum/component/combo_core/temptress/C = user.GetComponent(/datum/component/combo_core/temptress)
-	if(!C)
-		C = user.AddComponent(/datum/component/combo_core/temptress)
-	return C
-
-/proc/temptress_get_component_safe(mob/living/user)
-	if(!isliving(user))
-		return null
-
-	return user.GetComponent(/datum/component/combo_core/temptress)
-
-GLOBAL_LIST_INIT(temptress_erp_training_map, list(
-	/datum/skill/labor/farming = list("action" = /datum/erp_action/other/hands/milking_breasts, "passive" = "temptress"),
-	/datum/skill/labor/mining = list("action" = /datum/erp_action/other/mouth/rimming, "passive" = "temptress"),
-	/datum/skill/labor/fishing = list("action" = /datum/erp_action/other/hands/finger_oral, "passive" = "temptress"),
-	/datum/skill/labor/butchering = list("action" = /datum/erp_action/other/body/grinding, "passive" = "temptress"),
-	/datum/skill/labor/lumberjacking = list("action" = /datum/erp_action/other/hands/spanking, "passive" = "temptress"),
-
-	/datum/skill/magic/holy = list("action" = /datum/erp_action/other/mouth/cunnilingus, "passive" = "temptress"),
-	/datum/skill/magic/arcane = list("action" = /datum/erp_action/other/mouth/breast_feed, "passive" = "temptress"),
-
-	/datum/skill/misc/climbing = list("action" = /datum/erp_action/other/body/rubbing, "passive" = "actor"),
-	/datum/skill/misc/reading = list("action" = /datum/erp_action/other/vagina/force_face, "passive" = "actor"),
-	/datum/skill/misc/stealing = list("action" = /datum/erp_action/other/vagina/face, "passive" = "actor"),
-	/datum/skill/misc/sneaking = list("action" = /datum/erp_action/other/hands/force_crotch, "passive" = "actor"),
-	/datum/skill/misc/lockpicking = list("action" = /datum/erp_action/other/hands/tease_vagina, "passive" = "temptress"),
-	/datum/skill/misc/riding = list("action" = /datum/erp_action/other/anus/force_face, "passive" = "temptress"),
-	/datum/skill/misc/medicine = list("action" = /datum/erp_action/other/mouth/finger_lick, "passive" = "actor"),
-	/datum/skill/misc/tracking = list("action" = /datum/erp_action/other/mouth/foot_lick, "passive" = "temptress"),
-
-	/datum/skill/craft/crafting = list("action" = /datum/erp_action/other/breasts/breast_feed, "passive" = "actor"),
-	/datum/skill/craft/weaponsmithing = list("action" = /datum/erp_action/other/hands/toy_anal, "passive" = "actor"),
-	/datum/skill/craft/armorsmithing = list("action" = /datum/erp_action/other/hands/toy_oral, "passive" = "actor"),
-	/datum/skill/craft/blacksmithing = list("action" = /datum/erp_action/other/anus/butt, "passive" = "temptress"),
-	/datum/skill/craft/smelting = list("action" = /datum/erp_action/other/penis/rubbing, "passive" = "actor"),
-	/datum/skill/craft/carpentry = list("action" = /datum/erp_action/other/vagina/rubbing, "passive" = "actor"),
-	/datum/skill/craft/masonry = list("action" = /datum/erp_action/other/anus/rubbing, "passive" = "actor"),
-	/datum/skill/craft/traps = list("action" = /datum/erp_action/other/anus/face, "passive" = "actor"),
-	/datum/skill/craft/engineering = list("action" = /datum/erp_action/other/hands/toy_oral, "passive" = "temptress"),
-	/datum/skill/craft/cooking = list("action" = /datum/erp_action/other/mouth/kiss, "passive" = "temptress"),
-	/datum/skill/craft/sewing = list("action" = /datum/erp_action/other/hands/rubbing, "passive" = "temptress"),
-	/datum/skill/craft/tanning = list("action" = /datum/erp_action/other/hands/spanking, "passive" = "actor"),
-	/datum/skill/craft/ceramics = list("action" = /datum/erp_action/other/hands/breasts_play, "passive" = "temptress"),
-	/datum/skill/craft/alchemy = list("action" = /datum/erp_action/other/hands/milking_penis, "passive" = "temptress"),
-
-	/datum/skill/combat/knives = list("action" = /datum/erp_action/other/penis/masturbation, "passive" = "actor"),
-	/datum/skill/combat/swords = list("action" = /datum/erp_action/other/hands/toy_anal, "passive" = "temptress"),
-	/datum/skill/combat/polearms = list("action" = /datum/erp_action/other/hands/toy_vaginal, "passive" = "temptress"),
-	/datum/skill/combat/maces = list("action" = /datum/erp_action/other/legs/footjob, "passive" = "temptress"),
-	/datum/skill/combat/axes = list("action" = /datum/erp_action/other/mouth/foot_lick, "passive" = "temptress"),
-	/datum/skill/combat/whipsflails = list("action" = /datum/erp_action/other/hands/tease_testicles, "passive" = "temptress"),
-	/datum/skill/combat/wrestling = list("action" = /datum/erp_action/other/hands/finger_anal, "passive" = "temptress"),
-	/datum/skill/combat/unarmed = list("action" = /datum/erp_action/other/hands/finger_vaginal, "passive" = "temptress"),
-	/datum/skill/combat/shields = list("action" = /datum/erp_action/other/breasts/teasing, "passive" = "actor"),
-	/datum/skill/combat/staves = list("action" = /datum/erp_action/other/legs/teasing, "passive" = "actor")
-))
-
-GLOBAL_LIST_INIT(temptress_combat_skills, list(
-	/datum/skill/combat/knives,
-	/datum/skill/combat/swords,
-	/datum/skill/combat/polearms,
-	/datum/skill/combat/maces,
-	/datum/skill/combat/axes,
-	/datum/skill/combat/whipsflails,
-	/datum/skill/combat/wrestling,
-	/datum/skill/combat/unarmed,
-	/datum/skill/combat/shields,
-	/datum/skill/combat/staves
-))
-
-/proc/temptress_erp_get_training_entry(datum/erp_action/A, expected_passive)
-	if(!A || !expected_passive)
-		return null
-
-	var/action_type = A.type
-
-	for(var/skill_type as anything in GLOB.temptress_erp_training_map)
-		var/list/entry = GLOB.temptress_erp_training_map[skill_type]
-		if(!islist(entry))
-			continue
-
-		if(entry["action"] != action_type)
-			continue
-
-		if(entry["passive"] != expected_passive)
-			continue
-
-		return list("skill" = skill_type, "passive" = entry["passive"])
-
-	return null
-
-/datum/erp_scene_effects/proc/apply_training(list/active_links)
-	if(!controller)
-		return
-
-	var/list/temptresses = list()
-
-	var/datum/component/combo_core/temptress/TC = controller.owner?.physical?.GetComponent(/datum/component/combo_core/temptress)
-	if(TC && TC.erotic_embrace_enabled && TC.owner)
-		temptresses += TC.owner
-
-	TC = controller.active_partner?.physical?.GetComponent(/datum/component/combo_core/temptress)
-	if(TC && TC.erotic_embrace_enabled && TC.owner)
-		if(!(TC.owner in temptresses))
-			temptresses += TC.owner
-
-	if(!length(temptresses))
-		return
-
-	for(var/mob/living/temptress_mob as anything in temptresses)
-		if(!temptress_mob)
-			continue
-
-		for(var/datum/erp_sex_link/L in active_links)
-			if(!L || QDELETED(L) || !L.is_valid())
-				continue
-
-			var/datum/erp_actor/active = L.actor_active
-			var/datum/erp_actor/passive = L.actor_passive
-			if(!active || !passive)
-				continue
-
-			var/mob/living/m_active = active.get_effect_mob()
-			var/mob/living/m_passive = passive.get_effect_mob()
-			if(!m_active || !m_passive)
-				continue
-
-			var/expected_passive = null
-			var/mob/living/receiver = null
-
-			if(m_active == temptress_mob)
-				expected_passive = "actor"
-				receiver = m_passive
-			else if(m_passive == temptress_mob)
-				expected_passive = "temptress"
-				receiver = m_active
-			else
-				continue
-
-			if(!receiver?.mind)
-				continue
-
-			var/list/entry = temptress_erp_get_training_entry(L.action, expected_passive)
-			if(!entry)
-				continue
-
-			var/skill_type = entry["skill"]
-			if(!skill_type)
-				continue
-
-			if(skill_type in GLOB.temptress_combat_skills)
-				if(L.force < SEX_FORCE_HIGH)
-					continue
-
-			receiver.mind.add_sleep_experience(skill_type, 2, FALSE)
-
-/datum/component/combo_core/temptress
-	parent_type = /datum/component/combo_core/martial_master
-	dupe_mode = COMPONENT_DUPE_UNIQUE
-
-	var/erotic_embrace_enabled = FALSE
-	var/temptress_awakened = FALSE
-
-	var/last_embrace_pulse = 0
-	var/last_embrace_gain = 0
-
-/datum/component/combo_core/temptress/Initialize(_combo_window, _max_history)
-	. = ..(_combo_window, _max_history)
-	if(. == COMPONENT_INCOMPATIBLE)
-		return .
-
-	RegisterSignal(owner, COMSIG_PARENT_EXAMINE, PROC_REF(_sig_examined))
-	return .
-
-/datum/component/combo_core/temptress/Destroy(force)
-	if(owner)
-		UnregisterSignal(owner, COMSIG_PARENT_EXAMINE)
-		REMOVE_TRAIT(owner, TRAIT_DODGEEXPERT, TEMPTRESS_EMBRACE_TRAIT_SOURCE)
-
-	return ..()
-
-/datum/component/combo_core/temptress/process()
-	. = ..()
-
-	if(!owner || !erotic_embrace_enabled)
-		return
-
-	if(world.time < last_embrace_pulse + TEMPTRESS_EMBRACE_PULSE_CD)
-		return
-
-	last_embrace_pulse = world.time
-
-	var/list/targets = list()
-
-	for(var/mob/living/M in view(TEMPTRESS_EMBRACE_RANGE, owner))
-		if(M == owner)
-			continue
-		if(M.stat == DEAD)
-			continue
-		targets += M
-
-	if(!length(targets))
-		return
-
-	if(world.time >= last_embrace_gain + TEMPTRESS_EMBRACE_GAIN_CD)
-		for(var/mob/living/M as anything in targets)
-			AddArousalStack(1)
-			SEND_SIGNAL(M, COMSIG_SEX_RECEIVE_ACTION, 2, 0, TRUE, 1, 1, null)
-
-		last_embrace_gain = world.time
-	else
-		for(var/mob/living/M as anything in targets)
-			SEND_SIGNAL(M, COMSIG_SEX_RECEIVE_ACTION, 1, 0, TRUE, 1, 1, null)
-
-/datum/component/combo_core/temptress/GetComboDamageMultiplier()
-	var/mult = 1
-	mult += (arousal_stacks * 0.10)
-	return max(1, mult)
-
-/datum/component/combo_core/temptress/GrantSpells()
-	if(!owner?.mind)
-		return
-
-	var/mob/living/L = owner
-	RevokeSpells()
-
-	var/list/paths = list(
-		/obj/effect/proc_holder/spell/self/martial_master/switch_stance
-	)
-
-	if(!temptress_awakened)
-		paths += /obj/effect/proc_holder/spell/self/temptress_awaken
-	else
-		paths += /obj/effect/proc_holder/spell/self/temptress/erotic_embrace
-		paths += /obj/effect/proc_holder/spell/invoked/massage
-		paths += /datum/action/cooldown/spell/mirror_transform
-
-	for(var/path in paths)
-		var/obj/effect/proc_holder/spell/S = new path
-		L.mind.AddSpell(S)
-		granted_spells += S
-
-	spells_granted = TRUE
-
-/datum/component/combo_core/temptress/proc/UnlockTemptressArts()
-	if(temptress_awakened)
-		return
-
-	temptress_awakened = TRUE
-	GrantSpells()
-	MartialMasterWaveUp("#6b2240")
-	_balloon("awakened")
-
-/datum/component/combo_core/temptress/proc/ToggleEroticEmbrace()
-	erotic_embrace_enabled = !erotic_embrace_enabled
-
-	if(erotic_embrace_enabled)
-		ADD_TRAIT(owner, TRAIT_DODGEEXPERT, TEMPTRESS_EMBRACE_TRAIT_SOURCE)
-		MartialMasterWaveUp("#6b2240")
-	else
-		REMOVE_TRAIT(owner, TRAIT_DODGEEXPERT, TEMPTRESS_EMBRACE_TRAIT_SOURCE)
-		MartialMasterParticleUp("#6b2240")
-
-	_balloon_embrace()
-
-/datum/component/combo_core/temptress/proc/_sig_examined(datum/source, mob/living/user)
-	SIGNAL_HANDLER
-
-	if(!erotic_embrace_enabled)
-		return 0
-	if(!isliving(user))
-		return 0
-	if(user == owner)
-		return 0
-	if(world.time < last_embrace_gain + TEMPTRESS_EMBRACE_GAIN_CD)
-		return 0
-
-	SEND_SIGNAL(user, COMSIG_SEX_RECEIVE_ACTION, 6, 0, TRUE, 2, 2, null)
-	AddArousalStack(1)
-	last_embrace_gain = world.time
-	return 0
-
-/datum/component/combo_core/temptress/proc/_balloon_embrace()
-	if(erotic_embrace_enabled)
-		_balloon("embrace: on")
-	else
-		_balloon("embrace: off")
-
-// ------------------------------------------------------------
-// spells
-// ------------------------------------------------------------
-
-/obj/effect/proc_holder/spell/self/temptress
-	name = "Temptress Ability"
-	desc = "Base temptress ability."
-	clothes_req = FALSE
-	charge_type = "recharge"
-	cost = 0
-	xp_gain = FALSE
-
-	releasedrain = 0
-	chargedrain = 0
-	chargetime = 0
-	recharge_time = 6 SECONDS
-
-	warnie = "spellwarning"
-	no_early_release = TRUE
-	movement_interrupt = FALSE
-	spell_tier = 1
-
-	invocations = list()
-	invocation_type = "none"
-	hide_charge_effect = TRUE
-	charging_slowdown = 0
-	chargedloop = null
-	overlay_state = null
-
-	action_icon = 'modular_twilight_axis/icons/roguetown/misc/soundspells.dmi'
-
-/obj/effect/proc_holder/spell/self/temptress/proc/Execute(mob/living/user, datum/component/combo_core/temptress/C)
-	return
-
-/obj/effect/proc_holder/spell/self/temptress_awaken
-	name = "Temptress Awakening"
-	desc = "Awaken the tempting flow within yourself."
-	clothes_req = FALSE
-	charge_type = "recharge"
-	cost = 0
-	xp_gain = FALSE
-
-	releasedrain = 0
-	chargedrain = 0
-	chargetime = 0
-	recharge_time = 2 SECONDS
-
-	warnie = "spellwarning"
-	no_early_release = TRUE
-	movement_interrupt = FALSE
-	spell_tier = 1
-
-	invocations = list()
-	invocation_type = "none"
-	hide_charge_effect = TRUE
-	charging_slowdown = 0
-	chargedloop = null
-	overlay_state = "embrace"
-
-	action_icon = 'modular_twilight_axis/icons/roguetown/misc/soundspells.dmi'
-
-/obj/effect/proc_holder/spell/self/temptress_awaken/cast(list/targets, mob/living/user)
-	. = ..()
-	if(!isliving(user))
-		return
-
-	var/mob/living/L = user
-	if(L.incapacitated())
-		return
-
-	var/datum/component/combo_core/temptress/C = temptress_get_component(L)
-	if(!C)
-		return
-
-	if(C.temptress_awakened)
-		L.balloon_alert(L, "Already awakened.")
-		return
-
-	C.UnlockTemptressArts()
-
-	if(L.mind)
-		L.mind.RemoveSpell(src)
-	qdel(src)
-
-/obj/effect/proc_holder/spell/self/temptress/erotic_embrace
-	name = "Erotic Embrace"
-	desc = "Toggle erotic embrace mode."
-	overlay_state = "embrace"
-	recharge_time = 2 SECONDS
-
-/obj/effect/proc_holder/spell/self/temptress/erotic_embrace/cast(list/targets, mob/living/user)
-	. = ..()
-	if(!isliving(user))
-		return
-
-	var/mob/living/L = user
-	if(L.incapacitated())
-		return
-
-	var/datum/component/combo_core/temptress/C = temptress_get_component_safe(L)
-	if(!C)
-		return
-
-	if(!C.temptress_awakened)
-		return
-
-	C.ToggleEroticEmbrace()
-
-#undef TEMPTRESS_EMBRACE_TRAIT_SOURCE
-#undef TEMPTRESS_EMBRACE_PULSE_CD
-#undef TEMPTRESS_EMBRACE_GAIN_CD
-#undef TEMPTRESS_EMBRACE_RANGE

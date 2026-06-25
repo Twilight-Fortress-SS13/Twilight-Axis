@@ -143,7 +143,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["ambiencevol"]		>> ambiencevol
 	S["anonymize"]			>> anonymize
 	S["donor_ooc_color"]	>> donor_ooc_color // TA EDIT
-	S["donor_ooc_icon"]	>> donor_ooc_icon // TA EDIT 
+	S["donor_ooc_icon"]	>> donor_ooc_icon // TA EDIT
 	S["donor_examine_icon"]	>> donor_examine_icon // TA EDIT
 	S["stopdroning"]		>> stopdroning
 	S["masked_examine"]		>> masked_examine
@@ -200,10 +200,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	S["defiant"]			>> defiant
 	// TA Addition start - new ERP SYSTEM
-	S["erp_custom_actions"] >> erp_custom_actions	
+	S["erp_custom_actions"] >> erp_custom_actions
 	S["erp_kink_prefs"] >> erp_kink_prefs
 	S["erp_organ_sensitivity"] >> erp_organ_prefs
 	// TA Addition end - new ERP SYSTEM
+	var/list/L
+	S["tat_build"] >> L
+
+	if(!tat_build)
+		tat_build = new(src)
 
 	//try to fix any outdated data if necessary
 	if(needs_update >= 0)
@@ -263,6 +268,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	erp_organ_prefs = sanitize_islist(erp_organ_prefs, list())
 	sanitize_erp_organ_prefs()
 	//TA Addition end - new ERP SYSTEM
+	tat_build.load_from_list(sanitize_islist(L, list()))
 
 	verify_keybindings_valid()
 	return TRUE
@@ -298,7 +304,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["ambiencevol"], ambiencevol)
 	WRITE_FILE(S["anonymize"], anonymize)
 	WRITE_FILE(S["donor_ooc_color"], donor_ooc_color) // TA EDIT
-	WRITE_FILE(S["donor_ooc_icon"], donor_ooc_icon) // TA EDIT 
+	WRITE_FILE(S["donor_ooc_icon"], donor_ooc_icon) // TA EDIT
 	WRITE_FILE(S["donor_examine_icon"], donor_examine_icon) // TA EDIT
 	WRITE_FILE(S["stopdroning"], stopdroning)
 	WRITE_FILE(S["masked_examine"], masked_examine)
@@ -373,6 +379,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["erp_kink_prefs"], erp_kink_prefs)
 	WRITE_FILE(S["erp_organ_sensitivity"], erp_organ_prefs)
 	// TA Addition end - new ERP SYSTEM
+	WRITE_FILE(S["tat_build"], tat_build.export_to_list())
 	return TRUE
 
 
@@ -456,13 +463,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		S[choices_key] >> choices
 	return copy_virtue_choices(choices)
 
-/datum/preferences/proc/normalize_saved_virtue(saved_value, savefile/S, choices_key)
+/datum/preferences/proc/normalize_saved_virtue(saved_value, savefile/S, choices_key, legacy_choices_key = null)
 	var/virtue_type = /datum/virtue/none
 	var/list/choices = list()
 
 	if(ispath(saved_value, /datum/virtue))
 		virtue_type = saved_value
 		choices = get_saved_virtue_choices(S, choices_key)
+		if(!length(choices) && legacy_choices_key)
+			choices = get_saved_virtue_choices(S, legacy_choices_key)
 	else if(istype(saved_value, /datum/virtue))
 		var/datum/virtue/loaded_virtue = saved_value
 		if(ispath(loaded_virtue.type, /datum/virtue))
@@ -515,12 +524,21 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	var/saved_virtue_type
 	var/saved_virtuetwo_type
 	var/saved_origin_type
+	var/legacy_virtue_type
+	var/legacy_virtuetwo_type
 	S["virtue"] >> saved_virtue_type
 	S["virtuetwo"] >> saved_virtuetwo_type
 	S["virtue_origin"] >> saved_origin_type
+	S["virtue_type"] >> legacy_virtue_type
+	S["virtuetwo_type"] >> legacy_virtuetwo_type
 
-	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices")
-	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices")
+	if(!saved_virtue_type && legacy_virtue_type)
+		saved_virtue_type = legacy_virtue_type
+	if(!saved_virtuetwo_type && legacy_virtuetwo_type)
+		saved_virtuetwo_type = legacy_virtuetwo_type
+
+	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices", "virtue_picked_choices")
+	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices", "virtuetwo_picked_choices")
 	var/list/origin_data = normalize_saved_virtue(saved_origin_type, S, "virtue_origin_choices")
 
 	virtue = load_clean_virtue(virtue_data[1], virtue_data[2])
@@ -866,11 +884,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!islist(job_characters)) //TA EDIT START
 		job_characters = list()
 	for(var/job_title in job_characters)
-		
+
 		var/slot_num = job_characters[job_title]
 		if(!isnum(slot_num) || slot_num < 1 || slot_num > max_save_slots)
 			job_characters -= job_title //TA EDIT END
-	
+
 	all_quirks = SANITIZE_LIST(all_quirks)
 
 	S["customizer_entries"] >> customizer_entries
@@ -879,17 +897,17 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	// TA EDIT START - load familytree settings from the active character slot.
 	familytree_module_load_character_from_savefile(S, slot, TRUE)
 	// TA EDIT END
-	
+
 	return TRUE
 
 /datum/preferences/proc/fast_scan_for_job(savefile/S, slot)
 	S.cd = "/character[slot]"
-	
-	
+
+
 	S["real_name"] >> real_name
 	if(!real_name) real_name = "Slot [slot]"
 
-	
+
 	var/species_name
 	S["species"] >> species_name
 	if(species_name && GLOB.species_list[species_name])
@@ -898,11 +916,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	else
 		pref_species = new default_species.type
 
-	
+
 	S["age"] >> age
 	S["gender"] >> gender
 
-	
+
 	var/patron_typepath
 	S["selected_patron"] >> patron_typepath
 	if(patron_typepath && GLOB.patronlist[patron_typepath])
@@ -910,23 +928,32 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	else
 		selected_patron = GLOB.patronlist[default_patron]
 
-	
+
 	var/saved_virtue_type
 	var/saved_virtuetwo_type
 	var/saved_origin_type
+	var/legacy_virtue_type
+	var/legacy_virtuetwo_type
 	S["virtue"] >> saved_virtue_type
 	S["virtuetwo"] >> saved_virtuetwo_type
 	S["virtue_origin"] >> saved_origin_type
-	
-	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices")
-	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices")
+	S["virtue_type"] >> legacy_virtue_type
+	S["virtuetwo_type"] >> legacy_virtuetwo_type
+
+	if(!saved_virtue_type && legacy_virtue_type)
+		saved_virtue_type = legacy_virtue_type
+	if(!saved_virtuetwo_type && legacy_virtuetwo_type)
+		saved_virtuetwo_type = legacy_virtuetwo_type
+
+	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices", "virtue_picked_choices")
+	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices", "virtuetwo_picked_choices")
 	var/list/origin_data = normalize_saved_virtue(saved_origin_type, S, "virtue_origin_choices")
 
 	virtue = load_clean_virtue(virtue_data[1], virtue_data[2])
 	virtuetwo = load_clean_virtue(virtuetwo_data[1], virtuetwo_data[2])
 	virtue_origin = load_clean_virtue(origin_data[1], origin_data[2])
 
-	
+
 	charflaws.Cut()
 	var/list/loaded_flaws
 	S["charflaws"] >> loaded_flaws

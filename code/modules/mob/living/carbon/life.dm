@@ -26,7 +26,7 @@
 	if(stat != DEAD && istype(loc, /turf/open/water))
 		var/turf/open/water/W = loc
 		handle_inwater(W)
-	
+
 	var/bprv = handle_bodyparts()
 	if(bprv & BODYPART_LIFE_UPDATE_HEALTH)
 		update_stamina() //needs to go before updatehealth to remove stamcrit
@@ -660,6 +660,14 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 					if(armor_blocked && !fallingas)
 						to_chat(src, span_warning("I can't sleep like this. My armor is burdening me."))
 						fallingas = TRUE
+					// TA start begin - TAT system
+					if(HAS_TRAIT(src, TRAIT_NUDE_SLEEPER) && (H.wear_armor || H.wear_pants || H.wear_shirt || H.wear_wrists || H.cloak || H.gloves || H.shoes))
+						message = "I am unable to sleep in clothes. I should remove them."
+						if(!fallingas)
+							to_chat(src, span_warning(message))
+						fallingas = TRUE
+						return
+					// TA start end - TAT system
 				if(!armor_blocked)
 					if (sleepy_mod > 1)
 						sleep_threshold = 30
