@@ -37,8 +37,8 @@
 /datum/outfit/job/roguetown/adventurer/noble/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.set_blindness(0)
-	H.dna.species.soundpack_m = new /datum/voicepack/male/evil() //Aurafarming
-	H.dna.species.soundpack_f = new /datum/voicepack/female/haughty()
+	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/evil] //Aurafarming
+	H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/haughty]
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/gold
 	if(H.mind)
 		var/clothing = list("Classic - Nowhere Significant", "Azuria", "Grenzelhoft", "Otava", "Aavnr", "Ranesheni", "Gronn", "Etrusca", "Naledi", "Kazengun")
@@ -184,8 +184,8 @@
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				H.cmode_music = 'sound/music/combat_vagarian.ogg'
 				H.grant_language(/datum/language/gronnic) //Duh
-				H.dna.species.soundpack_m = new /datum/voicepack/male/warrior() //Barbaric nobles
-				H.dna.species.soundpack_f = new /datum/voicepack/female/warrior()
+				H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior] //Barbaric nobles
+				H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/warrior]
 				backl = /obj/item/storage/backpack/rogue/satchel
 				switch(H.patron?.type) //If you are in the gronnic pantheon, you get a lucky charm.
 					if(/datum/patron/inhumen/zizo)
@@ -451,7 +451,7 @@
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/recipe_book/survival = 1,
 		)
-	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
+	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight]
 	H.set_blindness(0)
 	if(H.mind)
 		var/weapons = list("Longsword","Mace + Shield","Flail + Shield","Lance + Shield","Billhook","Battle Axe","Greataxe","Greatflail")

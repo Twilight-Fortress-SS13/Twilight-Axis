@@ -206,7 +206,7 @@
 		H.mind.AddSpell(new /datum/action/cooldown/spell/eyebite)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/lacrima)
 	H.ambushable = FALSE
-	H.dna.species.soundpack_m = new /datum/voicepack/other/lich()
+	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/other/lich]
 
 	addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, choose_name_popup), "LICH"), 5 SECONDS)
 
@@ -313,7 +313,7 @@
 	new_body.set_patron(/datum/patron/inhumen/zizo)
 	new_body.mind.grab_ghost(force = TRUE)
 	new_body.ambushable = FALSE
-	new_body.dna.species.soundpack_m = new /datum/voicepack/other/lich() //evil ass voice stays
+	new_body.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/other/lich] //evil ass voice stays
 	// Grant a spellbook so the lich can pick aspects
 	new_body.equip_to_slot_or_del(new /obj/item/book/spellbook,SLOT_IN_BACKPACK, TRUE)
 	// Grant a chalk so the lich can do rituals

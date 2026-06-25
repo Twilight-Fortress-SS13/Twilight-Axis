@@ -1928,14 +1928,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donat_scabbardroyal
-	name = "Decorated Scabbard, Golden"
+	name = "Donator Kit - Decorated Scabbard, Golden"
 	path = /obj/item/rogueweapon/scabbard/sword/royal/donat
 	category = list("Оружие", "Донат")
 	donatitem = TRUE
 	donat_tier = 1
 
 /datum/loadout_item/donat_sheathroyal
-	name = "Decorated Sheath, Golden"
+	name = "Donator Kit - Decorated Sheath, Golden"
 	path = /obj/item/rogueweapon/scabbard/sheath/royal/donat
 	category = list("Оружие", "Донат")
 	donatitem = TRUE

@@ -427,7 +427,6 @@ Works together with spawning an observer, noted above.
 This is the proc mobs get to turn into a ghost. Forked from ghostize due to compatibility issues.
 */
 /mob/living/verb/ghost()
-	set category = "OOC"
 	set name = "Ghost"
 	set desc = ""
 	set hidden = 1
@@ -444,7 +443,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		ghostize(0)						//0 parameter is so we can never re-enter our body, "Charlie, you can never come baaaack~" :3
 
 /mob/camera/verb/ghost()
-	set category = "OOC"
 	set name = "Ghost"
 	set desc = ""
 	set hidden = 1
@@ -514,7 +512,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	return FALSE
 
 /mob/dead/observer/proc/reenter_corpse()
-	set category = "Ghost"
 	set name = "Re-enter Corpse"
 	set hidden = 1
 	if(!client)
@@ -592,7 +589,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 
 /mob/dead/observer/verb/stay_dead()
-	set category = "Ghost"
 	set name = "Do Not Resuscitate"
 	set hidden = 1
 	if(!check_rights(R_WATCH))
@@ -634,7 +630,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		SEND_SOUND(src, sound(sound))
 
 /mob/dead/observer/proc/dead_tele()
-	set category = "Ghost"
 	set name = "Teleport"
 	set desc= "Teleport to a location"
 	set hidden = 1
@@ -662,7 +657,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	usr.forceMove(pick(L))
 
 /mob/dead/observer/verb/follow()
-	set category = "Ghost"
 	set name = "Orbit" // "Haunt"
 	set desc = ""
 	set hidden = 1
@@ -718,7 +712,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	animate(src, pixel_y = 2, time = 10, loop = -1)
 
 /mob/dead/observer/verb/jumptomob() //Moves the ghost instead of just changing the ghosts's eye -Nodrak
-	set category = "Ghost"
 	set name = "Jump to Mob"
 	set desc = ""
 	set hidden = 1
@@ -745,7 +738,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 				to_chat(A, span_danger("This mob is not located in the game world."))
 
 /mob/dead/observer/verb/change_view_range()
-	set category = "Ghost"
 	set name = "View Range"
 	set desc = ""
 	set hidden = 1
@@ -796,7 +788,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/dead/observer/verb/toggle_ghostsee()
 	set name = "Toggle Ghost Vision"
 	set desc = ""
-	set category = "Ghost"
 	set hidden = 1
 	ghostvision = !(ghostvision)
 	update_sight()
@@ -804,7 +795,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 /mob/dead/observer/verb/toggle_darkness()
 	set name = "Toggle Darkness"
-	set category = "Ghost"
 	set hidden = 1
 	switch(lighting_alpha)
 		if (LIGHTING_PLANE_ALPHA_VISIBLE)
@@ -900,7 +890,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 /mob/dead/observer/verb/view_manifest()
 	set name = "View Crew Manifest"
-	set category = "Ghost"
 	set hidden = 1
 	if(!check_rights(R_WATCH))
 		return
@@ -958,7 +947,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/dead/observer/verb/toggle_data_huds()
 	set name = "Toggle Sec/Med/Diag HUD"
 	set desc = ""
-	set category = "Ghost"
 	set hidden = 1
 	if(!check_rights(R_WATCH))
 		return
@@ -974,7 +962,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/dead/observer/verb/toggle_health_scan()
 	set name = "Toggle Health Scan"
 	set desc = ""
-	set category = "Ghost"
 	set hidden = 1
 	if(!check_rights(R_WATCH))
 		return
@@ -988,7 +975,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/dead/observer/verb/toggle_gas_scan()
 	set name = "Toggle Gas Scan"
 	set desc = ""
-	set category = "Ghost"
 	set hidden = 1
 	if(!check_rights(R_WATCH))
 		return
@@ -1003,7 +989,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	set name = "Restore Ghost Character"
 	set desc = "Sets your deadchat name and ghost appearance to your \
 		roundstart character."
-	set category = "Ghost"
 	set hidden = 1
 	if(!check_rights(R_WATCH))
 		return
@@ -1069,7 +1054,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 /mob/dead/observer/verb/observe()
 	set name = "Observe"
-	set category = "OOC"
 	set hidden = 1
 	if(!check_rights(R_WATCH))
 		return
@@ -1126,7 +1110,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/dead/observer/proc/open_spawners_menu()
 	set name = "Spawners Menu"
 	set desc = ""
-	set category = "Ghost"
 	set hidden = 1
 	if(!check_rights(R_DEBUG))
 		return
@@ -1136,7 +1119,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	spawners_menu.ui_interact(src)
 
 /mob/dead/observer/proc/tray_view()
-	set category = "Ghost"
 	set name = "T-ray view"
 	set desc = ""
 	set hidden = 1

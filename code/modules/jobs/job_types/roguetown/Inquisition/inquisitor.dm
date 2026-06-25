@@ -86,6 +86,8 @@
 		"Branding Iron" = /obj/item/branding_iron 
 	)
 
+	tempo_capable = TRUE
+
 /datum/outfit/job/roguetown/inquisitor/inspector/pre_equip(mob/living/carbon/human/H)
 	..()
 	has_loadout = TRUE
@@ -221,6 +223,7 @@
 		"Branding Letters" = /obj/item/branding_letters, // TA Branding
 		"Branding Iron" = /obj/item/branding_iron
 	)
+	tempo_capable = FALSE
 
 /datum/outfit/job/roguetown/inquisitor/ordinator/pre_equip(mob/living/carbon/human/H)
 	..()

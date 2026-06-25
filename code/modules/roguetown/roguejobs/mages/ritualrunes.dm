@@ -529,9 +529,9 @@ GLOBAL_LIST(teleport_runes)
 					fam.gender=NEUTER
 			// needs 2 be done here because we trans the gender mid-ritual
 			if(fam.gender == MALE)
-				fam.voice_pack = new /datum/voicepack/male
+				fam.voice_pack = GLOB.voice_packs[/datum/voicepack/male]
 			else
-				fam.voice_pack = new /datum/voicepack/female
+				fam.voice_pack = GLOB.voice_packs[/datum/voicepack/female]
 			src.visible_message(span_notice("[fam.summoning_emote]"))
 
 			if(isnewplayer(chosen))
