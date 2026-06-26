@@ -22,6 +22,10 @@
 		return
 	if (!epicenter)
 		return ..()
+	
+	var/is_artillery = (devastation_range == 4 && heavy_impact_range == 10 && light_impact_range == 20)
+	if(!is_artillery)
+		return ..()
 	var/ddist = devastation_range
 	var/hdist = heavy_impact_range
 	var/ldist = light_impact_range
@@ -51,7 +55,7 @@
 			var/base_burn = max(((EX_BURN_DEV * ddist) - (EX_BURN_DEV * fodist)) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
-			damage_clothes(max(base_brute * 4, 0), BRUTE, "bullet")
+			artillery_damage_clothes(max(base_brute * 4, 0), BRUTE, "bullet")
 			Unconscious(max(((EX_UNC_DEV_D * ddist) - (EX_UNC_DEV_F * fodist)) * bullet_mult, 0))
 			Knockdown(max(((EX_KD_DEV * ddist) - (EX_KD_DEV * fodist)) * bullet_mult, 0))
 
@@ -60,14 +64,14 @@
 			var/base_burn = max(((EX_BURN_HEAVY * hdist) - (EX_BURN_HEAVY * fodist)) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
-			damage_clothes(max(base_brute * 2, 0), BRUTE, "bullet")
+			artillery_damage_clothes(max(base_brute * 2, 0), BRUTE, "bullet")
 			Unconscious(max(((EX_UNC_HEAVY_H * hdist) - (EX_UNC_HEAVY_F * fodist)) * bullet_mult, 0))
 			Knockdown(max(((EX_KD_HEAVY * hdist) - (EX_KD_HEAVY * fodist)) * bullet_mult, 0))
 
 		if(EXPLODE_LIGHT)
 			var/base_brute = max(((EX_BRUTE_LIGHT * ldist) - (EX_BRUTE_LIGHT * fodist)) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
-			damage_clothes(max(base_brute, 0), BRUTE, "bullet")
+			artillery_damage_clothes(max(base_brute, 0), BRUTE, "bullet")
 
 	var/chest_brute = brute_loss * 0.5
 	var/chest_burn = burn_loss * 0.5
@@ -75,7 +79,7 @@
 	apply_damage(chest_burn, BURN, BODY_ZONE_CHEST)
 	take_overall_damage(max(brute_loss - chest_brute, 0), max(burn_loss - chest_burn, 0))
 
-	if(severity <= 2)
+	if(severity <= EXPLODE_HEAVY)
 		var/limb_loss_mult = 1
 		if(bullet_tier < 3)
 			limb_loss_mult = 4
@@ -95,7 +99,7 @@
 				if(max_limb_loss <= 0)
 					break
 
-/mob/living/carbon/human/damage_clothes(damage_amount, damage_type = BRUTE, damage_flag = 0, def_zone)
+/mob/living/carbon/human/proc/artillery_damage_clothes(damage_amount, damage_type = BRUTE, damage_flag = 0, def_zone)
 	if(damage_type != BRUTE && damage_type != BURN)
 		return
 	damage_amount *= 0.5
