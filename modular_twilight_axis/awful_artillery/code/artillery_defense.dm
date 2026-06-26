@@ -26,6 +26,11 @@
 	if(!is_artillery)
 		return ..()
 
+	var/turf/epicenter_turf = get_turf(epicenter)
+	var/turf/my_turf = get_turf(src)
+	if(!epicenter_turf || !my_turf || epicenter_turf.z != my_turf.z)
+		return ..()
+
 	contents_explosion(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	SEND_SIGNAL(src, COMSIG_ATOM_EX_ACT, severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	if(QDELETED(src))
@@ -34,13 +39,13 @@
 	var/hdist = heavy_impact_range
 	var/ldist = light_impact_range
 	var/fdist = flame_range
-	var/fodist = get_dist(src, epicenter)
+	var/fodist = get_dist(my_turf, epicenter_turf)
 	var/brute_loss = 0
 	var/burn_loss = 0
 	var/dmgmod = rand(5, 15) * 0.1
 	
-	var/bullet_tier = getarmor(BODY_ZONE_CHEST, "bullet")
-	var/fire_tier = getarmor(BODY_ZONE_CHEST, "fire")
+	var/bullet_tier = getarmor(BODY_ZONE_CHEST, "bullet") || 0
+	var/fire_tier = getarmor(BODY_ZONE_CHEST, "fire") || 0
 	
 	var/bullet_mult = 1
 	var/fire_mult = 1
@@ -49,9 +54,9 @@
 	if(fire_tier > 0)
 		fire_mult = 1 / (1 + 0.1 * fire_tier)
 
-	if(fdist)
-		var/stacks = ((fdist - fodist) * 2)
-		adjust_fire_stacks(max(stacks, 0))
+	if(fdist && fodist < fdist)
+		var/stacks = (fdist - fodist) * 2
+		adjust_fire_stacks(stacks)
 		ignite_mob()
 
 	switch(severity)
