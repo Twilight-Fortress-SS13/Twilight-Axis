@@ -18,8 +18,10 @@
 	SEND_SIGNAL(src, COMSIG_ATOM_EX_ACT, severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	if(QDELETED(src))
 		return
-	if (!severity || !epicenter)
+	if (!severity)
 		return
+	if (!epicenter)
+		return ..()
 	var/ddist = devastation_range
 	var/hdist = heavy_impact_range
 	var/ldist = light_impact_range
@@ -27,7 +29,7 @@
 	var/fodist = get_dist(src, epicenter)
 	var/brute_loss = 0
 	var/burn_loss = 0
-	var/dmgmod = round(rand(0.5, 1.5), 0.1)
+	var/dmgmod = rand(5, 15) * 0.1
 	
 	var/bullet_tier = getarmor(null, "bullet")
 	var/fire_tier = getarmor(null, "fire")
@@ -45,8 +47,8 @@
 
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
-			var/base_brute = ((EX_BRUTE_DEV * ddist) - (EX_BRUTE_DEV * fodist)) * dmgmod
-			var/base_burn = ((EX_BURN_DEV * ddist) - (EX_BURN_DEV * fodist)) * dmgmod
+			var/base_brute = max(((EX_BRUTE_DEV * ddist) - (EX_BRUTE_DEV * fodist)) * dmgmod, 0)
+			var/base_burn = max(((EX_BURN_DEV * ddist) - (EX_BURN_DEV * fodist)) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
 			damage_clothes(max(base_brute * 4, 0), BRUTE, "bullet")
@@ -54,8 +56,8 @@
 			Knockdown(max(((EX_KD_DEV * ddist) - (EX_KD_DEV * fodist)) * bullet_mult, 0))
 
 		if(EXPLODE_HEAVY)
-			var/base_brute = ((EX_BRUTE_HEAVY * hdist) - (EX_BRUTE_HEAVY * fodist)) * dmgmod
-			var/base_burn = ((EX_BURN_HEAVY * hdist) - (EX_BURN_HEAVY * fodist)) * dmgmod
+			var/base_brute = max(((EX_BRUTE_HEAVY * hdist) - (EX_BRUTE_HEAVY * fodist)) * dmgmod, 0)
+			var/base_burn = max(((EX_BURN_HEAVY * hdist) - (EX_BURN_HEAVY * fodist)) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
 			damage_clothes(max(base_brute * 2, 0), BRUTE, "bullet")
@@ -63,7 +65,7 @@
 			Knockdown(max(((EX_KD_HEAVY * hdist) - (EX_KD_HEAVY * fodist)) * bullet_mult, 0))
 
 		if(EXPLODE_LIGHT)
-			var/base_brute = ((EX_BRUTE_LIGHT * ldist) - (EX_BRUTE_LIGHT * fodist)) * dmgmod
+			var/base_brute = max(((EX_BRUTE_LIGHT * ldist) - (EX_BRUTE_LIGHT * fodist)) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			damage_clothes(max(base_brute, 0), BRUTE, "bullet")
 
@@ -84,7 +86,7 @@
 		if(bullet_tier < 4 && severity == EXPLODE_DEVASTATE)
 			max_limb_loss = max(max_limb_loss, rand(1, 3))
 			
-		for(var/X in bodyparts)
+		for(var/X in bodyparts.Copy())
 			var/obj/item/bodypart/BP = X
 			if(prob(25/severity * limb_loss_mult) && !prob(15) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
 				BP.brute_dam = BP.max_damage
