@@ -18,10 +18,6 @@
 
 /mob/living/carbon/human/ex_act(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	set waitfor = FALSE
-	contents_explosion(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
-	SEND_SIGNAL(src, COMSIG_ATOM_EX_ACT, severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
-	if(QDELETED(src))
-		return
 	if (!severity)
 		return
 	if (!epicenter)
@@ -30,6 +26,11 @@
 	var/is_artillery = (devastation_range == ARTILLERY_DEV_RANGE && heavy_impact_range == ARTILLERY_HEAVY_RANGE && light_impact_range == ARTILLERY_LIGHT_RANGE)
 	if(!is_artillery)
 		return ..()
+
+	contents_explosion(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
+	SEND_SIGNAL(src, COMSIG_ATOM_EX_ACT, severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
+	if(QDELETED(src))
+		return
 	var/ddist = devastation_range
 	var/hdist = heavy_impact_range
 	var/ldist = light_impact_range
@@ -39,8 +40,8 @@
 	var/burn_loss = 0
 	var/dmgmod = rand(5, 15) * 0.1
 	
-	var/bullet_tier = getarmor(null, "bullet")
-	var/fire_tier = getarmor(null, "fire")
+	var/bullet_tier = getarmor(BODY_ZONE_CHEST, "bullet")
+	var/fire_tier = getarmor(BODY_ZONE_CHEST, "fire")
 	
 	var/bullet_mult = 1
 	var/fire_mult = 1
@@ -51,7 +52,8 @@
 
 	if(fdist)
 		var/stacks = ((fdist - fodist) * 2)
-		fire_act(max(stacks, 0))
+		adjust_fire_stacks(max(stacks, 0))
+		ignite_mob()
 
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
