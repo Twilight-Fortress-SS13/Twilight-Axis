@@ -304,10 +304,14 @@
 	return TRUE
 
 /datum/tat_directions/proc/export_to_list()
+	sanitize()
+	var/list/exported_points = list()
+	for(var/direction in TAT_DIRECTION_ORDER)
+		exported_points[direction] = get_allocated_points(direction)
 	return list(
 		"foundation" = foundation,
 		"role_choice" = get_role_choice(),
-		"points" = points.Copy(),
+		"points" = exported_points,
 	)
 
 /datum/tat_directions/proc/import_from_list(list/data)

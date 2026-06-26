@@ -813,6 +813,8 @@
 
 /datum/tat_build/proc/set_active_tat_slot(slot_id)
 	init_tat_slots()
+	if(dirty)
+		save_current_to_slot(active_tat_slot)
 	active_tat_slot = normalize_tat_slot_index(slot_id)
 	if(!load_slot_into_current(active_tat_slot))
 		return FALSE
