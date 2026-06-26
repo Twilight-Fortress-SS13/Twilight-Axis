@@ -310,6 +310,8 @@
 		if(TAT_ROLE_CHOICE_ADVENTURER)
 			if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
 				total += 6
+			else if(domain == TAT_SKILL_DOMAIN_PEACEFUL)
+				total -= 3
 		if(TAT_ROLE_CHOICE_WRETCH)
 			if(domain == TAT_SKILL_DOMAIN_ADVENTURE)
 				total += 6

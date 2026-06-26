@@ -184,9 +184,9 @@
 		if(TAT_ARMOR_LEATHER)
 			return !!owner_build?.has_trait(TAT_TRAIT_LEATHER_SUPPLIER)
 		if(TAT_ARMOR_MAIL)
-			return !!owner_build?.has_trait(TRAIT_MEDIUMARMOR) || !!owner_build?.has_trait(TRAIT_HEAVYARMOR)
+			return !!owner_build?.has_trait(TAT_TRAIT_MAIL_SUPPLIER) || !!owner_build?.has_trait(TRAIT_MEDIUMARMOR) || !!owner_build?.has_trait(TRAIT_HEAVYARMOR)
 		if(TAT_ARMOR_PLATE)
-			return !!owner_build?.has_trait(TRAIT_HEAVYARMOR)
+			return !!owner_build?.has_trait(TAT_TRAIT_PLATE_SUPPLIER) || !!owner_build?.has_trait(TRAIT_HEAVYARMOR)
 	return FALSE
 
 /proc/tat_ckey_in_ckey_list(key, list/ckey_list)
