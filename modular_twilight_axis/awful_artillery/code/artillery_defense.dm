@@ -17,7 +17,6 @@
 #define ARTILLERY_LIGHT_RANGE 20
 
 /mob/living/carbon/human/ex_act(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
-	set waitfor = FALSE
 	if (!severity)
 		return
 	if (!epicenter)
@@ -99,6 +98,8 @@
 		if(bodyparts)
 			for(var/X in bodyparts.Copy())
 				var/obj/item/bodypart/BP = X
+				if(!BP)
+					continue
 				if(prob(25/severity * limb_loss_mult) && !prob(15) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
 					BP.brute_dam = BP.max_damage
 					BP.dismember()
@@ -158,6 +159,8 @@
 			torn_items |= wear_armor
 
 	for(var/obj/item/I as anything in torn_items)
+		if(!I)
+			continue
 		I.take_damage(damage_amount, damage_type, damage_flag, 0)
 
 #undef EX_BRUTE_DEV
