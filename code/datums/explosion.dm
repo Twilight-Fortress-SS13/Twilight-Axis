@@ -249,7 +249,7 @@ GLOBAL_LIST_EMPTY(explosions)
 				var/turf/closed/wall/W = T
 				W.ex_act(dist, epicenter, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 			else
-				T.ex_act(dist)
+				T.ex_act(dist, epicenter, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range) // TA EDIT
 			exploded_this_tick += T
 
 		//--- THROW STUFF AROUND ---
