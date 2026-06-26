@@ -12,6 +12,10 @@
 
 #define EX_BRUTE_LIGHT 10
 
+#define ARTILLERY_DEV_RANGE 4
+#define ARTILLERY_HEAVY_RANGE 10
+#define ARTILLERY_LIGHT_RANGE 20
+
 /mob/living/carbon/human/ex_act(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	set waitfor = FALSE
 	contents_explosion(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
@@ -22,8 +26,8 @@
 		return
 	if (!epicenter)
 		return ..()
-	
-	var/is_artillery = (devastation_range == 4 && heavy_impact_range == 10 && light_impact_range == 20)
+
+	var/is_artillery = (devastation_range == ARTILLERY_DEV_RANGE && heavy_impact_range == ARTILLERY_HEAVY_RANGE && light_impact_range == ARTILLERY_LIGHT_RANGE)
 	if(!is_artillery)
 		return ..()
 	var/ddist = devastation_range
@@ -86,18 +90,19 @@
 		else if(bullet_tier < 4)
 			limb_loss_mult = 2
 			
-		var/max_limb_loss = rand(0, floor(3/severity))
+		var/max_limb_loss = rand(0, round(3/severity))
 		if(bullet_tier < 4 && severity == EXPLODE_DEVASTATE)
 			max_limb_loss = max(max_limb_loss, rand(1, 3))
 			
-		for(var/X in bodyparts.Copy())
-			var/obj/item/bodypart/BP = X
-			if(prob(25/severity * limb_loss_mult) && !prob(15) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
-				BP.brute_dam = BP.max_damage
-				BP.dismember()
-				max_limb_loss--
-				if(max_limb_loss <= 0)
-					break
+		if(bodyparts)
+			for(var/X in bodyparts.Copy())
+				var/obj/item/bodypart/BP = X
+				if(prob(25/severity * limb_loss_mult) && !prob(15) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
+					BP.brute_dam = BP.max_damage
+					BP.dismember()
+					max_limb_loss--
+					if(max_limb_loss <= 0)
+						break
 
 /mob/living/carbon/human/proc/artillery_damage_clothes(damage_amount, damage_type = BRUTE, damage_flag = 0, def_zone)
 	if(damage_type != BRUTE && damage_type != BURN)
@@ -166,3 +171,7 @@
 #undef EX_KD_HEAVY
 
 #undef EX_BRUTE_LIGHT
+
+#undef ARTILLERY_DEV_RANGE
+#undef ARTILLERY_HEAVY_RANGE
+#undef ARTILLERY_LIGHT_RANGE
