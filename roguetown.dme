@@ -3594,6 +3594,7 @@
 #include "modular_twilight_axis\code\_signals.dm"
 #include "modular_twilight_axis\code\_HELPERS\split_string_to_list.dm"
 #include "modular_twilight_axis\code\chess\twilight_axis_chess.dm"
+#include "modular_twilight_axis\code\cards\card_table.dm"
 #include "modular_twilight_axis\code\controllers\subsystem\_defines.dm"
 #include "modular_twilight_axis\code\controllers\subsystem\area_spawn_entries.dm"
 #include "modular_twilight_axis\code\controllers\subsystem\area_spawn_subsystem.dm"

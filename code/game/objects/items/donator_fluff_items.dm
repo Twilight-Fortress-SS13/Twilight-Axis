@@ -1417,6 +1417,30 @@ As Excaliber."
 	icon_state = "aeternum"
 	bigboy = TRUE
 
+/obj/item/clothing/head/roguetown/crown_hat
+	name = "crown hat"
+	desc = "Oft worn in place of a crown, this hat is the signature headwear of the Grand Duke. Its iconic feather stretches tall above its peers."
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	icon_state = "shenara_hat"
+	detail_tag = "_detail"
+	detail_color = CLOTHING_SCARLET
+	adjustable = CAN_CADJUST
+
+/obj/item/clothing/head/roguetown/crown_hat/Initialize()
+	. = ..()
+	AddComponent(/datum/component/adjustable_clothing, null, null, null, null, null, UPD_HEAD)
+	update_icon()
+
+/obj/item/clothing/head/roguetown/crown_hat/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
 //KETRAI
 /obj/item/clothing/head/roguetown/octopus
 	name = "octopus hat"
