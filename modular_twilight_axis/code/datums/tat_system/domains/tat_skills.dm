@@ -59,6 +59,10 @@
 	domain = normalize_skill_domain(domain)
 	return domain == TAT_SKILL_DOMAIN_PEACEFUL || domain == TAT_SKILL_DOMAIN_ADVENTURE
 
+/datum/tat_skills/proc/can_convert_from_skill_domain(domain)
+	domain = normalize_skill_domain(domain)
+	return domain == TAT_SKILL_DOMAIN_COMBAT || is_convertible_skill_domain(domain)
+
 /datum/tat_skills/proc/get_converted_combat_points()
 	var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
 	var/combat_default = max(0, round(default_domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0))
@@ -75,7 +79,7 @@
 
 /datum/tat_skills/proc/can_take_skill_domain_points(domain, amount = 1)
 	domain = normalize_skill_domain(domain)
-	if(!is_convertible_skill_domain(domain))
+	if(!can_convert_from_skill_domain(domain))
 		return FALSE
 	amount = max(1, round(text2num("[amount]") || 1))
 	return get_convertible_remaining_points(domain) >= amount
@@ -115,13 +119,13 @@
 /datum/tat_skills/proc/build_skill_conversion_state()
 	var/list/result = list()
 	for(var/domain in list(TAT_SKILL_DOMAIN_COMBAT, TAT_SKILL_DOMAIN_PEACEFUL, TAT_SKILL_DOMAIN_ADVENTURE))
-		var/can_convert = is_convertible_skill_domain(domain)
-		var/can_receive = can_convert || domain == TAT_SKILL_DOMAIN_COMBAT
+		var/can_convert = can_convert_from_skill_domain(domain)
+		var/can_receive = is_convertible_skill_domain(domain) || domain == TAT_SKILL_DOMAIN_COMBAT
 		result[domain] = list(
 			"can_give" = can_give_skill_domain_points(domain),
 			"can_take" = can_take_skill_domain_points(domain),
 			"give_text" = can_receive ? "Move one converted skill point into this pool." : "This skill pool cannot receive converted points.",
-			"take_text" = can_convert ? "Move one free base or role skill point into conversion." : "Combat skill points cannot be converted out.",
+			"take_text" = can_convert ? "Move one free base or role skill point into conversion." : "This skill pool cannot be converted out.",
 		)
 	return result
 
@@ -149,15 +153,15 @@
 
 	for(var/domain in converted_role_points.Copy())
 		var/normalized = normalize_skill_domain(domain)
-		if(!is_convertible_skill_domain(normalized))
+		if(!can_convert_from_skill_domain(normalized))
 			converted_role_points -= domain
 			continue
 		if(normalized != domain)
 			converted_role_points[normalized] = round(converted_role_points[normalized] || 0) + round(converted_role_points[domain] || 0)
 			converted_role_points -= domain
 
-	for(var/domain in list(TAT_SKILL_DOMAIN_PEACEFUL, TAT_SKILL_DOMAIN_ADVENTURE))
-		converted_role_points[domain] = clamp(round(text2num("[converted_role_points[domain]]") || 0), 0, get_role_domain_points(domain))
+	for(var/domain in domains)
+		converted_role_points[domain] = clamp(round(text2num("[converted_role_points[domain]]") || 0), 0, get_convertible_role_domain_points(domain))
 
 	var/legal_total = 0
 	var/base_legal_total = 0
@@ -168,7 +172,7 @@
 
 		var/current_value = text2num("[domain_points[domain]]")
 		domain_points[domain] = max(0, round(current_value || 0))
-	for(var/domain in list(TAT_SKILL_DOMAIN_PEACEFUL, TAT_SKILL_DOMAIN_ADVENTURE))
+	for(var/domain in domains)
 		legal_total += get_converted_role_points(domain)
 
 	var/combat_default = max(0, round(default_domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0))
@@ -333,6 +337,21 @@
 		return 0
 	return round((domain_points[domain] || 0) + (owner_build ? owner_build.get_bonus_skill_domain_points(domain) : 0) - get_converted_role_points(domain))
 
+/datum/tat_skills/proc/get_trait_domain_points(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain || !owner_build?.traits)
+		return 0
+	var/total = owner_build.traits.get_bonus_skill_domain_points(domain)
+	if(domain == TAT_SKILL_DOMAIN_COMBAT && owner_build.traits.get_selected_trait_count(TAT_TRAIT_WEAPON_TRAINING) > 0)
+		total += 3
+	return max(0, round(total || 0))
+
+/datum/tat_skills/proc/get_free_domain_points(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return 0
+	return max(0, get_total_maximum(domain) - get_trait_domain_points(domain))
+
 /datum/tat_skills/proc/get_base_remaining_points(domain)
 	domain = normalize_skill_domain(domain)
 	if(!domain)
@@ -345,6 +364,20 @@
 		return 0
 	return max(0, round(owner_build.get_role_skill_domain_points(domain) || 0))
 
+/datum/tat_skills/proc/get_convertible_role_domain_points(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain || !owner_build)
+		return 0
+	if(domain != TAT_SKILL_DOMAIN_COMBAT)
+		return get_role_domain_points(domain)
+
+	var/total = 0
+	if(owner_build.directions?.foundation == TAT_FOUNDATION_WANDERER)
+		total += 6
+	if(owner_build.directions?.get_role_choice() == TAT_ROLE_CHOICE_WRETCH)
+		total += 6
+	return max(0, total)
+
 /datum/tat_skills/proc/get_converted_role_points(domain)
 	domain = normalize_skill_domain(domain)
 	if(!domain)
@@ -353,9 +386,9 @@
 
 /datum/tat_skills/proc/get_convertible_remaining_points(domain)
 	domain = normalize_skill_domain(domain)
-	if(!is_convertible_skill_domain(domain))
+	if(!can_convert_from_skill_domain(domain))
 		return 0
-	return round(domain_points[domain] || 0) + get_role_domain_points(domain) - get_converted_role_points(domain) - get_spent_points(domain)
+	return round(domain_points[domain] || 0) + get_convertible_role_domain_points(domain) - get_converted_role_points(domain) - get_spent_points(domain)
 
 /datum/tat_skills/proc/get_combat_expert_count(except_skill_type = null)
 	if(!except_skill_type && _cached_combat_expert_count >= 0)
@@ -745,11 +778,17 @@
 		var/invested_value = get_invested_value(skill_type)
 		if(skill_type == changed_skill_type)
 			invested_value = max(0, round(changed_invested_value || 0))
-
-		if(invested_value < target_level)
+		if(invested_value <= 0)
 			continue
 
-		total += get_step_cost(skill_type, target_level)
+		for(var/step in 1 to invested_value)
+			if(get_raw_total_value(skill_type, step - 1) >= target_level)
+				continue
+			if(get_raw_total_value(skill_type, step) < target_level)
+				continue
+
+			total += get_step_cost(skill_type, step)
+			break
 
 	return total
 

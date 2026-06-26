@@ -171,6 +171,8 @@ type Data = {
 
   skill_points_by_domain?: Partial<Record<SkillDomainKey, number>>;
   skill_points_remaining_by_domain?: Partial<Record<SkillDomainKey, number>>;
+  skill_free_points_by_domain?: Partial<Record<SkillDomainKey, number>>;
+  skill_trait_points_by_domain?: Partial<Record<SkillDomainKey, number>>;
   skill_conversion_pool?: number;
   skill_conversion_state?: Partial<Record<SkillDomainKey, SkillConversionDomainState>>;
 
@@ -425,9 +427,14 @@ const formatSkillDisplayValue = (state?: SkillState) => {
 const formatDomainPoints = (data: Data, domain: SkillDomainKey) => {
   const total = data.skill_points_by_domain?.[domain];
   const remaining = data.skill_points_remaining_by_domain?.[domain];
+  const free = data.skill_free_points_by_domain?.[domain];
+  const trait = data.skill_trait_points_by_domain?.[domain];
+  const breakdown = typeof free === 'number' && typeof trait === 'number'
+    ? ` (${free} - ${trait})`
+    : '';
 
   if (typeof total === 'number' && typeof remaining === 'number') {
-    return `${remaining} / ${total}`;
+    return `${remaining} / ${total}${breakdown}`;
   }
 
   return '? / ?';

@@ -155,6 +155,38 @@
 
 	return result
 
+/datum/tat_build/proc/build_ui_skill_free_points_by_domain()
+	var/list/result = list(
+		"combat" = 0,
+		"peaceful" = 0,
+		"adventure" = 0,
+	)
+
+	if(!skills)
+		return result
+
+	result["combat"] = skills.get_free_domain_points(TAT_SKILL_DOMAIN_COMBAT)
+	result["peaceful"] = skills.get_free_domain_points(TAT_SKILL_DOMAIN_PEACEFUL)
+	result["adventure"] = skills.get_free_domain_points(TAT_SKILL_DOMAIN_ADVENTURE)
+
+	return result
+
+/datum/tat_build/proc/build_ui_skill_trait_points_by_domain()
+	var/list/result = list(
+		"combat" = 0,
+		"peaceful" = 0,
+		"adventure" = 0,
+	)
+
+	if(!skills)
+		return result
+
+	result["combat"] = skills.get_trait_domain_points(TAT_SKILL_DOMAIN_COMBAT)
+	result["peaceful"] = skills.get_trait_domain_points(TAT_SKILL_DOMAIN_PEACEFUL)
+	result["adventure"] = skills.get_trait_domain_points(TAT_SKILL_DOMAIN_ADVENTURE)
+
+	return result
+
 /datum/tat_build/proc/can_save()
 	if(is_owner_tat_banned())
 		return FALSE
@@ -703,6 +735,8 @@
 		return _cached_ui_data
 	var/list/_skp_total = build_ui_skill_points_by_domain()
 	var/list/_skp_rem = build_ui_skill_points_remaining_by_domain()
+	var/list/_skp_free = build_ui_skill_free_points_by_domain()
+	var/list/_skp_trait = build_ui_skill_trait_points_by_domain()
 	var/list/_skp_conversion_state = build_ui_skill_conversion_state()
 	var/_skp_conversion_pool = skills?.skill_point_conversion_pool || 0
 	var/_p_skills_total = 0
@@ -770,6 +804,8 @@
 		"points_skills_remaining" = _p_skills_rem,
 		"skill_points_by_domain" = _skp_total,
 		"skill_points_remaining_by_domain" = _skp_rem,
+		"skill_free_points_by_domain" = _skp_free,
+		"skill_trait_points_by_domain" = _skp_trait,
 		"skill_conversion_pool" = _skp_conversion_pool,
 		"skill_conversion_state" = _skp_conversion_state,
 

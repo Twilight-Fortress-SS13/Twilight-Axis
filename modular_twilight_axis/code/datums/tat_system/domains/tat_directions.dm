@@ -146,7 +146,7 @@
 		if(TAT_ROLE_CHOICE_ADVENTURER)
 			return 2
 		if(TAT_ROLE_CHOICE_WRETCH)
-			return 1
+			return 2
 	return 0
 
 /datum/tat_directions/proc/get_remaining_points()
