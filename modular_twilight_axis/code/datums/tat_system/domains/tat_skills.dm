@@ -949,7 +949,7 @@
 		var/list/imported_role_conversions = data["converted_role_points"]
 		for(var/domain in imported_role_conversions)
 			var/normalized_domain = normalize_skill_domain(domain)
-			if(is_convertible_skill_domain(normalized_domain))
+			if(can_convert_from_skill_domain(normalized_domain))
 				converted_role_points[normalized_domain] = max(0, round(text2num("[imported_role_conversions[domain]]") || 0))
 	var/raw_conversion_pool = data["skill_point_conversion_pool"]
 	skill_point_conversion_pool = max(0, round(text2num("[raw_conversion_pool]") || 0))
@@ -999,7 +999,7 @@
 		var/list/imported_role_conversions = data["converted_role_points"]
 		for(var/domain in imported_role_conversions)
 			var/normalized_domain = normalize_skill_domain(domain)
-			if(is_convertible_skill_domain(normalized_domain))
+			if(can_convert_from_skill_domain(normalized_domain))
 				converted_role_points[normalized_domain] = max(0, round(text2num("[imported_role_conversions[domain]]") || 0))
 	var/raw_conversion_pool = data["skill_point_conversion_pool"]
 	skill_point_conversion_pool = max(0, round(text2num("[raw_conversion_pool]") || 0))

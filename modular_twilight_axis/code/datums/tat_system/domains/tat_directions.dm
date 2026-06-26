@@ -353,7 +353,7 @@
 		"points" = exported_points,
 	)
 
-/datum/tat_directions/proc/import_from_list(list/data)
+/datum/tat_directions/proc/import_from_list(list/data, run_sanitize = TRUE)
 	reset()
 	if(!islist(data))
 		return FALSE
@@ -365,14 +365,15 @@
 			var/normalized = direction == TAT_DIRECTION_DEFENSE ? TAT_DIRECTION_COMBAT : normalize_direction(direction)
 			if(normalized)
 				points[normalized] = max(0, round(points[normalized] || 0)) + max(0, round(text2num("[imported_points[direction]]") || 0))
-	sanitize()
+	if(run_sanitize)
+		sanitize()
 	return TRUE
 
 /datum/tat_directions/proc/export_to_json_list()
 	return export_to_list()
 
-/datum/tat_directions/proc/import_from_json_list(list/data)
-	return import_from_list(data)
+/datum/tat_directions/proc/import_from_json_list(list/data, run_sanitize = TRUE)
+	return import_from_list(data, run_sanitize)
 
 /datum/tat_directions/proc/build_ui_state()
 	var/list/result = list()

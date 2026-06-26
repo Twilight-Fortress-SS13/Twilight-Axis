@@ -600,7 +600,7 @@
 	if(!islist(data))
 		return FALSE
 	if(islist(data["directions"]))
-		directions.import_from_list(data["directions"])
+		directions.import_from_list(data["directions"], FALSE)
 		traits.import_from_list(data["traits"])
 	else
 		traits.import_from_list(data["traits"])
@@ -654,7 +654,7 @@
 		return FALSE
 
 	if(islist(data["directions"]))
-		directions.import_from_list(data["directions"])
+		directions.import_from_list(data["directions"], FALSE)
 		traits.import_from_list(data["traits"])
 	else
 		traits.import_from_list(data["traits"])
@@ -919,7 +919,7 @@
 
 	reset()
 	if(islist(data["directions"]))
-		directions.import_from_json_list(data["directions"])
+		directions.import_from_json_list(data["directions"], FALSE)
 		traits.import_from_json_list(data["traits"])
 	else
 		traits.import_from_json_list(data["traits"])
