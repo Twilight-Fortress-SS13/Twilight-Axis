@@ -282,10 +282,6 @@
 		return FALSE
 	if(trait_id == TAT_TRAIT_TRADER_LICENSE && owner_build?.directions?.get_role_choice() != TAT_ROLE_CHOICE_TRADER)
 		return FALSE
-	var/negative_direction_bonus = get_oddity_direction_point_bonus(trait_id)
-	if(negative_direction_bonus > 0 && !has_trait(trait_id))
-		if(get_negative_oddity_direction_points() + negative_direction_bonus > TAT_NEGATIVE_DIRECTION_POINT_CAP)
-			return FALSE
 	if(owner_build?.directions && !owner_build.directions.can_select_trait(trait_id))
 		return FALSE
 	var/list/requirements = get_trait_requirement_map()
