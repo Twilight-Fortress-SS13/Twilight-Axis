@@ -127,9 +127,6 @@
 		if(TAT_ROLE_CHOICE_TRADER)
 			if(direction == TAT_DIRECTION_SURVIVAL)
 				return 1
-		if(TAT_ROLE_CHOICE_WRETCH)
-			if(direction == TAT_DIRECTION_SURVIVAL)
-				return 1
 	return 0
 
 /datum/tat_directions/proc/get_spent_points()
