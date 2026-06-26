@@ -488,8 +488,6 @@
 /datum/tat_build/proc/build_ui_trait_entries()
 	var/list/result = list()
 	for(var/trait_id in GLOB.tat_available_traits)
-		if(trait_id == TAT_TRAIT_MAIL_SUPPLIER || trait_id == TAT_TRAIT_PLATE_SUPPLIER)
-			continue
 		if(trait_id == TAT_TRAIT_WEAPON_TRAINING && has_built_in_weapon_training_foundation())
 			continue
 		if(trait_id == TAT_TRAIT_CONTRACTOR && !can_select_contractor_trait())
@@ -539,6 +537,7 @@
 		if(!islist(entry))
 			continue
 		var/list/copy = entry.Copy()
+		copy["base_cost"] = copy["cost"]
 		copy["cost"] = items?.get_cost(text2path("[item_path]")) || copy["cost"]
 		result[item_path] = copy
 	return result
@@ -571,6 +570,8 @@
 			"soft_locked" = items.is_supply_soft_locked(entry),
 			"maximum" = maximum,
 			"can_add" = amount < maximum,
+			"cost" = items.get_cost(item_path),
+			"base_cost" = items.get_base_cost(item_path),
 		)
 	ui_items_state_cache = result
 	return result

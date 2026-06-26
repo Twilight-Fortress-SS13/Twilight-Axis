@@ -49,6 +49,7 @@
 	role_choice = new_role_choice
 	owner_build?.traits?.sanitize()
 	owner_build?.skills?.refresh_after_trait_change()
+	owner_build?.items?.sanitize()
 	owner_build?.set_dirty()
 	return TRUE
 
@@ -59,6 +60,7 @@
 	role_choice = new_role_choice
 	owner_build?.traits?.sanitize()
 	owner_build?.skills?.refresh_after_trait_change()
+	owner_build?.items?.sanitize()
 	owner_build?.set_dirty()
 	return TRUE
 
@@ -165,6 +167,7 @@
 	points[direction] = value
 	owner_build?.traits?.sanitize()
 	owner_build?.skills?.refresh_after_trait_change()
+	owner_build?.items?.sanitize()
 	owner_build?.set_dirty()
 	return TRUE
 

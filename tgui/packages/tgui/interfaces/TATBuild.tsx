@@ -63,6 +63,7 @@ type TraitState = {
 type ItemEntry = {
   name: string;
   cost: number;
+  base_cost?: number;
   category?: string;
   unlock_type?: string;
   unlock_key?: string;
@@ -77,6 +78,8 @@ type ItemState = {
   soft_locked?: boolean;
   maximum?: number;
   can_add?: boolean;
+  cost?: number;
+  base_cost?: number;
 };
 
 type LoadoutPaintState = {
@@ -2379,6 +2382,8 @@ export const TATBuild = () => {
         soft_locked: !!state?.soft_locked,
         maximum: state?.maximum,
         can_add: state?.can_add,
+        cost: state?.cost ?? entry.cost,
+        base_cost: state?.base_cost ?? entry.base_cost,
       };
     });
 

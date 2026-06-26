@@ -112,7 +112,7 @@
 				result[source_key] = count
 	return result
 
-/datum/tat_items/proc/get_cost(item_path)
+/datum/tat_items/proc/get_base_cost(item_path)
 	var/list/entry = get_entry(item_path)
 	if(!islist(entry))
 		return 0
@@ -121,6 +121,29 @@
 	if(!isnum(cost))
 		return 0
 
+	return cost
+
+/datum/tat_items/proc/has_armor_cost_discount(list/entry)
+	if(!islist(entry) || entry["unlock_type"] != TAT_UNLOCK_TYPE_ARMOR_FAMILY)
+		return FALSE
+
+	var/armor_family = entry["unlock_key"]
+	switch(armor_family)
+		if(TAT_ARMOR_LEATHER)
+			return !!owner_build?.has_trait(TAT_TRAIT_LEATHER_SUPPLIER) && (owner_build?.directions?.get_points(TAT_DIRECTION_SURVIVAL) || 0) >= 3
+		if(TAT_ARMOR_MAIL)
+			return !!owner_build?.has_trait(TAT_TRAIT_MAIL_SUPPLIER) && !!owner_build?.has_trait(TRAIT_MEDIUMARMOR)
+		if(TAT_ARMOR_PLATE)
+			return !!owner_build?.has_trait(TAT_TRAIT_PLATE_SUPPLIER) && !!owner_build?.has_trait(TRAIT_HEAVYARMOR)
+	return FALSE
+
+/datum/tat_items/proc/get_cost(item_path)
+	var/list/entry = get_entry(item_path)
+	var/cost = get_base_cost(item_path)
+	if(cost <= 0)
+		return cost
+	if(has_armor_cost_discount(entry))
+		return cost * 0.5
 	return cost
 
 /datum/tat_items/proc/is_supply_soft_locked(list/entry)
