@@ -12,9 +12,6 @@
 
 #define EX_BRUTE_LIGHT 10
 
-#define ARTILLERY_DEV_RANGE 4
-#define ARTILLERY_HEAVY_RANGE 10
-#define ARTILLERY_LIGHT_RANGE 20
 
 /mob/living/carbon/human/ex_act(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	if (!severity)
@@ -61,25 +58,25 @@
 
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
-			var/base_brute = max(((EX_BRUTE_DEV * ddist) - (EX_BRUTE_DEV * fodist)) * dmgmod, 0)
-			var/base_burn = max(((EX_BURN_DEV * ddist) - (EX_BURN_DEV * fodist)) * dmgmod, 0)
+			var/base_brute = max(EX_BRUTE_DEV * (ddist - fodist) * dmgmod, 0)
+			var/base_burn = max(EX_BURN_DEV * (ddist - fodist) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
 			artillery_damage_clothes(max(base_brute * 4, 0), BRUTE, "bullet")
 			Unconscious(max(((EX_UNC_DEV_D * ddist) - (EX_UNC_DEV_F * fodist)) * bullet_mult, 0))
-			Knockdown(max(((EX_KD_DEV * ddist) - (EX_KD_DEV * fodist)) * bullet_mult, 0))
+			Knockdown(max(EX_KD_DEV * (ddist - fodist) * bullet_mult, 0))
 
 		if(EXPLODE_HEAVY)
-			var/base_brute = max(((EX_BRUTE_HEAVY * hdist) - (EX_BRUTE_HEAVY * fodist)) * dmgmod, 0)
-			var/base_burn = max(((EX_BURN_HEAVY * hdist) - (EX_BURN_HEAVY * fodist)) * dmgmod, 0)
+			var/base_brute = max(EX_BRUTE_HEAVY * (hdist - fodist) * dmgmod, 0)
+			var/base_burn = max(EX_BURN_HEAVY * (hdist - fodist) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
 			artillery_damage_clothes(max(base_brute * 2, 0), BRUTE, "bullet")
 			Unconscious(max(((EX_UNC_HEAVY_H * hdist) - (EX_UNC_HEAVY_F * fodist)) * bullet_mult, 0))
-			Knockdown(max(((EX_KD_HEAVY * hdist) - (EX_KD_HEAVY * fodist)) * bullet_mult, 0))
+			Knockdown(max(EX_KD_HEAVY * (hdist - fodist) * bullet_mult, 0))
 
 		if(EXPLODE_LIGHT)
-			var/base_brute = max(((EX_BRUTE_LIGHT * ldist) - (EX_BRUTE_LIGHT * fodist)) * dmgmod, 0)
+			var/base_brute = max(EX_BRUTE_LIGHT * (ldist - fodist) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			artillery_damage_clothes(max(base_brute, 0), BRUTE, "bullet")
 
@@ -106,7 +103,7 @@
 				if(!BP)
 					continue
 				if(prob(25/severity * limb_loss_mult) && !prob(15) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
-					BP.brute_dam = BP.max_damage
+					BP.receive_damage(BP.max_damage, 0)
 					BP.dismember()
 					max_limb_loss--
 					if(max_limb_loss <= 0)
@@ -181,7 +178,3 @@
 #undef EX_KD_HEAVY
 
 #undef EX_BRUTE_LIGHT
-
-#undef ARTILLERY_DEV_RANGE
-#undef ARTILLERY_HEAVY_RANGE
-#undef ARTILLERY_LIGHT_RANGE

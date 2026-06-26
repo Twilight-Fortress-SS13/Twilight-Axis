@@ -2,6 +2,10 @@
 #define BASE_AZIMUTH_ERROR 16
 #define OVERHEAT_ERROR 50
 
+#define ARTILLERY_DEV_RANGE 4
+#define ARTILLERY_HEAVY_RANGE 10
+#define ARTILLERY_LIGHT_RANGE 20
+
 /obj/item/artillery_shell
 	name = "Дружок, если ты это увидел то админы/маппер дурачки"
 	icon = 'modular_twilight_axis/awful_artillery/icons/artillery.dmi'
