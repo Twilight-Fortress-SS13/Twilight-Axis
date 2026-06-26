@@ -28,7 +28,9 @@
 	if(!epicenter_turf || !my_turf || epicenter_turf.z != my_turf.z)
 		return ..()
 
-	contents_explosion(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
+	log_combat(target, src, "blown up by artillery")
+	flash_act()
+
 	SEND_SIGNAL(src, COMSIG_ATOM_EX_ACT, severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	if(QDELETED(src))
 		return
@@ -62,6 +64,7 @@
 			var/base_burn = max(EX_BURN_DEV * (ddist - fodist) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
+			adjustEarDamage(30, 120)
 			artillery_damage_clothes(max(base_brute * 4, 0), BRUTE, "bullet")
 			Unconscious(max(((EX_UNC_DEV_D * ddist) - (EX_UNC_DEV_F * fodist)) * bullet_mult, 0))
 			Knockdown(max(EX_KD_DEV * (ddist - fodist) * bullet_mult, 0))
@@ -71,6 +74,7 @@
 			var/base_burn = max(EX_BURN_HEAVY * (hdist - fodist) * dmgmod, 0)
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
+			adjustEarDamage(15, 60)
 			artillery_damage_clothes(max(base_brute * 2, 0), BRUTE, "bullet")
 			Unconscious(max(((EX_UNC_HEAVY_H * hdist) - (EX_UNC_HEAVY_F * fodist)) * bullet_mult, 0))
 			Knockdown(max(EX_KD_HEAVY * (hdist - fodist) * bullet_mult, 0))
@@ -99,12 +103,12 @@
 			
 		if(bodyparts)
 			for(var/X in bodyparts.Copy())
-				var/obj/item/bodypart/BP = X
-				if(!BP)
+				var/obj/item/bodypart/bp = X
+				if(!bp)
 					continue
-				if(prob(25/severity * limb_loss_mult) && !prob(15) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
-					BP.receive_damage(BP.max_damage, 0)
-					BP.dismember()
+				if(prob(25/severity * limb_loss_mult) && !prob(15) && bp.body_zone != BODY_ZONE_HEAD && bp.body_zone != BODY_ZONE_CHEST)
+					bp.receive_damage(bp.max_damage, 0)
+					bp.dismember()
 					max_limb_loss--
 					if(max_limb_loss <= 0)
 						break
@@ -160,10 +164,10 @@
 		if(wear_armor && ((wear_armor.body_parts_covered & FEET) || (wear_armor.body_parts_covered & LEGS)))
 			torn_items |= wear_armor
 
-	for(var/obj/item/I as anything in torn_items)
-		if(!I)
+	for(var/obj/item/torn_item as anything in torn_items)
+		if(!torn_item)
 			continue
-		I.take_damage(damage_amount, damage_type, damage_flag, 0)
+		torn_item.take_damage(damage_amount, damage_type, damage_flag, 0)
 
 #undef EX_BRUTE_DEV
 #undef EX_BURN_DEV
