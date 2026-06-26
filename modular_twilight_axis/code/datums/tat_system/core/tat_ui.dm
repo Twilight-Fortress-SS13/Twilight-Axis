@@ -488,17 +488,7 @@
 /datum/tat_build/proc/build_ui_trait_entries()
 	var/list/result = list()
 	for(var/trait_id in GLOB.tat_available_traits)
-		if(trait_id == TAT_TRAIT_WEAPON_TRAINING && has_built_in_weapon_training_foundation())
-			continue
-		if(trait_id == TAT_TRAIT_CONTRACTOR && !can_select_contractor_trait())
-			continue
 		if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && get_owner_ckey() != "mrix")
-			continue
-		if(trait_id == TAT_TRAIT_DRUID_INITIATE && !can_select_druid_initiate_trait())
-			continue
-		if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && directions?.foundation != TAT_FOUNDATION_SETTLED)
-			continue
-		if(trait_id == TAT_TRAIT_TRADER_LICENSE && directions?.get_role_choice() != TAT_ROLE_CHOICE_TRADER)
 			continue
 		if(directions?.is_role_trait(trait_id))
 			continue
@@ -507,6 +497,21 @@
 			continue
 		if(!islist(entry))
 			continue
+		var/can_add = traits?.can_select_trait(trait_id)
+		var/lock_reason = traits?.get_trait_requirement_block_reason(trait_id) || directions?.get_trait_block_reason(trait_id)
+		if(!lock_reason && !can_add)
+			if(trait_id == TAT_TRAIT_WEAPON_TRAINING && has_built_in_weapon_training_foundation())
+				lock_reason = "Built into Wanderer roles."
+			else if(trait_id == TAT_TRAIT_CONTRACTOR && !can_select_contractor_trait())
+				lock_reason = "Contractor is not available for this character."
+			else if(trait_id == TAT_TRAIT_DRUID_INITIATE && !can_select_druid_initiate_trait())
+				lock_reason = "Requires Dendor as patron."
+			else if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && directions?.foundation != TAT_FOUNDATION_SETTLED)
+				lock_reason = "Requires Shenanigans foundation."
+			else if(trait_id == TAT_TRAIT_TRADER_LICENSE && directions?.get_role_choice() != TAT_ROLE_CHOICE_TRADER)
+				lock_reason = "Requires Trader role."
+			else if(traits?.is_pq_locked_trait(trait_id))
+				lock_reason = "Requires [traits.get_pq_lock_minimum(trait_id)] player quality."
 		result[trait_id] = list(
 			"name" = entry["name"],
 			"cost" = get_trait_cost_display(trait_id),
@@ -516,12 +521,13 @@
 			"repeatable" = traits?.is_repeatable_trait(trait_id),
 			"maximum" = traits?.get_trait_maximum(trait_id),
 			"external" = traits?.has_external_trait(trait_id),
+			"can_add" = can_add,
 			"direction" = directions?.get_trait_direction(trait_id),
 			"direction_cost" = directions?.get_trait_cost(trait_id),
 			"direction_tier" = directions?.get_trait_tier(trait_id),
 			"direction_requirement_map" = directions?.get_trait_requirements(trait_id),
 			"direction_requirements" = directions?.get_trait_requirement_text(trait_id),
-			"direction_locked_reason" = traits?.get_trait_requirement_block_reason(trait_id) || directions?.get_trait_block_reason(trait_id),
+			"direction_locked_reason" = lock_reason,
 			"direction_point_bonus" = traits?.get_oddity_direction_point_bonus(trait_id),
 			"ordinary_group" = traits?.get_ordinary_trait_group(trait_id),
 		)

@@ -42,6 +42,7 @@ type TraitEntry = {
   category: string;
   category_name: string;
   desc?: string;
+  can_add?: boolean;
   repeatable?: boolean;
   maximum?: number;
   direction?: DirectionKey | null;
@@ -130,6 +131,7 @@ type SkillDomainKey =
 
 type DirectionKey =
   | 'combat'
+  | 'ranged'
   | 'magic'
   | 'miracles'
   | 'music'
@@ -452,8 +454,8 @@ const getTraitAmount = (data: Data, traitId: string): number => {
 
 const canAddTrait = (data: Data, traitId: string, entry: TraitEntry): boolean => {
   const state = data.traits_state?.[traitId];
-  if (typeof state?.can_add === 'boolean') {
-    return state.can_add;
+  if (state?.can_add === false || entry.can_add === false) {
+    return false;
   }
 
   const amount = getTraitAmount(data, traitId);
@@ -1523,6 +1525,7 @@ const TraitPill = ({
 
 const DIRECTION_ORDER: DirectionKey[] = [
   'combat',
+  'ranged',
   'magic',
   'miracles',
   'music',
@@ -1532,7 +1535,8 @@ const DIRECTION_ORDER: DirectionKey[] = [
 ];
 
 const DIRECTION_LABELS: Record<DirectionKey, string> = {
-  combat: 'Combat',
+  combat: 'Melee',
+  ranged: 'Ranged',
   magic: 'Magic',
   miracles: 'Miracles',
   music: 'Music',
@@ -1567,7 +1571,7 @@ const DirectionsPanel = ({
   const order = directions?.direction_order?.length ? directions.direction_order : DIRECTION_ORDER;
   const hasOrdinaryDirection = order.includes('ordinary');
   const foundation = directions?.foundation || 'settled';
-  const foundationNames = directions?.foundation_names || { settled: 'Settled', wanderer: 'Wanderer' };
+  const foundationNames = directions?.foundation_names || { settled: 'Shenanigans', wanderer: 'Wanderer' };
   const roleChoice = directions?.role_choice || 'towner';
   const roleChoices = directions?.foundation_role_choices?.[foundation] || [];
   const roleChoiceNames = directions?.role_choice_names || {};
@@ -1713,7 +1717,8 @@ const TraitNode = ({
   const hoverData: HoverCardData = {
     name: entry.name || traitId,
     desc: [
-      entry.direction_locked_reason || entry.desc,
+      entry.desc,
+      entry.direction_locked_reason ? `Locked: ${entry.direction_locked_reason}` : '',
       effectText,
       requirementText ? `Requires: ${requirementText}` : '',
     ]

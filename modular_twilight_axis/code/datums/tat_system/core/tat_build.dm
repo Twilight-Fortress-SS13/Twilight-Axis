@@ -568,8 +568,8 @@
 		"traits" = traits.export_to_list(),
 		"skills" = skills.export_to_list(),
 		"directions" = directions.export_to_list(),
-		"magic_profile" = magic_profile.Copy(),
-		"magic_config" = magic_profile.Copy(),
+		"magic_profile" = deep_copy_list_alt(magic_profile),
+		"magic_config" = deep_copy_list_alt(magic_profile),
 	)
 
 /datum/tat_build/proc/export_to_list()
@@ -580,14 +580,16 @@
 		"traits" = traits.export_to_list(),
 		"skills" = skills.export_to_list(),
 		"directions" = directions.export_to_list(),
-		"magic_profile" = magic_profile.Copy(),
-		"magic_config" = magic_profile.Copy(),
+		"magic_profile" = deep_copy_list_alt(magic_profile),
+		"magic_config" = deep_copy_list_alt(magic_profile),
 		"tat_slots" = export_tat_slots_to_list(),
 		"active_tat_slot" = active_tat_slot,
 	)
 
 /datum/tat_build/proc/export_tat_slots_state_to_list()
 	init_tat_slots()
+	if(dirty)
+		save_current_to_slot(active_tat_slot)
 	return list(
 		"tat_slots" = export_tat_slots_to_list(),
 		"active_tat_slot" = active_tat_slot,
@@ -607,10 +609,10 @@
 	items.import_from_list(data["items"])
 	if(islist(data["magic_profile"]))
 		var/list/temp = data["magic_profile"]
-		magic_profile = temp.Copy()
+		magic_profile = deep_copy_list_alt(temp)
 	else if(islist(data["magic_config"]))
 		var/list/temp = data["magic_config"]
-		magic_profile = temp.Copy()
+		magic_profile = deep_copy_list_alt(temp)
 	sanitize()
 	return TRUE
 
@@ -662,10 +664,10 @@
 
 	if(islist(data["magic_profile"]))
 		var/list/temp = data["magic_profile"]
-		magic_profile = temp.Copy()
+		magic_profile = deep_copy_list_alt(temp)
 	else if(islist(data["magic_config"]))
 		var/list/temp = data["magic_config"]
-		magic_profile = temp.Copy()
+		magic_profile = deep_copy_list_alt(temp)
 
 	var/list/_tat_slots = data["tat_slots"]
 	var/_active_tat_slot = data["active_tat_slot"]

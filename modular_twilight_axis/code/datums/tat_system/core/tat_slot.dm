@@ -15,7 +15,7 @@
 /datum/tat_slot/proc/export_to_list()
 	return list(
 		"name" = name,
-		"build_data" = islist(build_data) ? build_data.Copy() : list(),
+		"build_data" = islist(build_data) ? deep_copy_list_alt(build_data) : list(),
 	)
 
 /datum/tat_slot/proc/load_from_list(list/L, datum/tat_build/owner_build = null)
@@ -28,17 +28,17 @@
 
 	name = istext(L["name"]) ? L["name"] : "Slot"
 	var/list/data = L["build_data"]
-	build_data = islist(data) ? data.Copy() : list()
+	build_data = islist(data) ? deep_copy_list_alt(data) : list()
 	refresh_summary(owner_build)
 	return TRUE
 
 /datum/tat_slot/proc/set_build_data(list/L, datum/tat_build/owner_build = null)
-	build_data = islist(L) ? L.Copy() : list()
+	build_data = islist(L) ? deep_copy_list_alt(L) : list()
 	refresh_summary(owner_build)
 	return TRUE
 
 /datum/tat_slot/proc/get_build_data()
-	return islist(build_data) ? build_data.Copy() : list()
+	return islist(build_data) ? deep_copy_list_alt(build_data) : list()
 
 /datum/tat_slot/proc/refresh_summary(datum/tat_build/owner_build = null)
 	if(owner_build)

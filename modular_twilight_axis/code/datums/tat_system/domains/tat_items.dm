@@ -2028,9 +2028,9 @@
 /datum/tat_items/proc/export_to_list()
 	return list(
 		"selected" = selected.Copy(),
-		"item_loadout" = item_loadout.Copy(),
-		"item_grants" = item_grants.Copy(),
-		"item_paint" = item_paint.Copy(),
+		"item_loadout" = deep_copy_list_alt(item_loadout),
+		"item_grants" = deep_copy_list_alt(item_grants),
+		"item_paint" = deep_copy_list_alt(item_paint),
 	)
 
 /datum/tat_items/proc/import_from_list(list/data)
@@ -2051,13 +2051,13 @@
 
 	if(islist(data["item_grants"]))
 		var/list/temp_grants = data["item_grants"]
-		item_grants = temp_grants.Copy()
+		item_grants = deep_copy_list_alt(temp_grants)
 	if(islist(data["item_loadout"]))
 		var/list/temp_loadout = data["item_loadout"]
-		item_loadout = temp_loadout.Copy()
+		item_loadout = deep_copy_list_alt(temp_loadout)
 	if(islist(data["item_paint"]))
 		var/list/temp_paint = data["item_paint"]
-		item_paint = temp_paint.Copy()
+		item_paint = deep_copy_list_alt(temp_paint)
 
 	sync_external_grants()
 	for(var/item_path in get_all_item_paths())

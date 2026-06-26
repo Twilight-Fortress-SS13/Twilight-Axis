@@ -59,11 +59,18 @@
 	domain = normalize_skill_domain(domain)
 	return domain == TAT_SKILL_DOMAIN_PEACEFUL || domain == TAT_SKILL_DOMAIN_ADVENTURE
 
+/datum/tat_skills/proc/get_converted_combat_points()
+	var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
+	var/combat_default = max(0, round(default_domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0))
+	return max(0, round(domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0) - combat_default)
+
 /datum/tat_skills/proc/can_give_skill_domain_points(domain, amount = 1)
 	domain = normalize_skill_domain(domain)
+	amount = max(1, round(text2num("[amount]") || 1))
+	if(domain == TAT_SKILL_DOMAIN_COMBAT)
+		return skill_point_conversion_pool >= amount && get_converted_combat_points() + amount <= TAT_COMBAT_CONVERTED_POINT_LIMIT
 	if(!is_convertible_skill_domain(domain))
 		return FALSE
-	amount = max(1, round(text2num("[amount]") || 1))
 	return skill_point_conversion_pool >= amount
 
 /datum/tat_skills/proc/can_take_skill_domain_points(domain, amount = 1)
@@ -109,11 +116,12 @@
 	var/list/result = list()
 	for(var/domain in list(TAT_SKILL_DOMAIN_COMBAT, TAT_SKILL_DOMAIN_PEACEFUL, TAT_SKILL_DOMAIN_ADVENTURE))
 		var/can_convert = is_convertible_skill_domain(domain)
+		var/can_receive = can_convert || domain == TAT_SKILL_DOMAIN_COMBAT
 		result[domain] = list(
 			"can_give" = can_give_skill_domain_points(domain),
 			"can_take" = can_take_skill_domain_points(domain),
-			"give_text" = can_convert ? "Move one converted skill point into this pool." : "Combat skill points cannot be converted.",
-			"take_text" = can_convert ? "Move one free base or role skill point into conversion." : "Combat skill points cannot be converted.",
+			"give_text" = can_receive ? "Move one converted skill point into this pool." : "This skill pool cannot receive converted points.",
+			"take_text" = can_convert ? "Move one free base or role skill point into conversion." : "Combat skill points cannot be converted out.",
 		)
 	return result
 
@@ -164,8 +172,9 @@
 		legal_total += get_converted_role_points(domain)
 
 	var/combat_default = max(0, round(default_domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0))
-	if(round(domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0) > combat_default)
-		domain_points[TAT_SKILL_DOMAIN_COMBAT] = combat_default
+	var/combat_maximum = combat_default + TAT_COMBAT_CONVERTED_POINT_LIMIT
+	if(round(domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0) > combat_maximum)
+		domain_points[TAT_SKILL_DOMAIN_COMBAT] = combat_maximum
 
 	skill_point_conversion_pool = max(0, round(text2num("[skill_point_conversion_pool]") || 0))
 
@@ -301,6 +310,9 @@
 		return 0
 	return add_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_cap_bonus_rules, virtues) + add_virtue_choice_rule_value(skill_type, GLOB.tat_virtue_choice_skill_cap_bonus_rules, virtues)
 
+/datum/tat_skills/proc/get_virtue_skill_floor(skill_type)
+	return max(get_virtue_bonus_value(skill_type), get_virtue_skill_cap_bonus(skill_type))
+
 /datum/tat_skills/proc/rebuild_bonus_values()
 	bonus = list()
 	invalidate_spent_points_cache()
@@ -383,10 +395,37 @@
 	var/invested_value = isnull(invested_override) ? get_invested_value(skill_type) : max(0, round(invested_override))
 	return invested_value + get_bonus_value(skill_type)
 
+/datum/tat_skills/proc/is_ranged_combat_skill(skill_type)
+	if(ispath(skill_type, /datum/skill/combat/bows))
+		return TRUE
+	if(ispath(skill_type, /datum/skill/combat/crossbows))
+		return TRUE
+	if(ispath(skill_type, /datum/skill/combat/slings))
+		return TRUE
+	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
+		return TRUE
+	return FALSE
+
+/datum/tat_skills/proc/get_ranged_synergy_cap(skill_type)
+	if(!owner_build?.directions)
+		return 0
+	var/ranged_points = owner_build.directions.get_points(TAT_DIRECTION_RANGED) || 0
+	if(ranged_points <= 0)
+		return 0
+	if(owner_build.has_trait(TAT_TRAIT_RANGED_SYNERGY_BOWS) && skill_type == /datum/skill/combat/bows)
+		return ranged_points
+	if(owner_build.has_trait(TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS) && skill_type == /datum/skill/combat/crossbows)
+		return ranged_points
+	if(owner_build.has_trait(TAT_TRAIT_RANGED_SYNERGY_SLINGS) && skill_type == /datum/skill/combat/slings)
+		return ranged_points
+	if(owner_build.has_trait(TAT_TRAIT_RANGED_SYNERGY_FIREARMS) && skill_type == /datum/skill/combat/twilight_firearms)
+		return ranged_points
+	return 0
+
 /datum/tat_skills/proc/is_limited_combat_skill(skill_type)
 	if(!ispath(skill_type, /datum/skill/combat))
 		return FALSE
-	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
+	if(is_ranged_combat_skill(skill_type))
 		return FALSE
 	return TRUE
 
@@ -529,6 +568,9 @@
 	if(owner_build?.has_trait(TRAIT_FIREARMS_MARKSMAN))
 		cap = TAT_SKILL_NONCOMBAT_CAP_SPECTRAIT
 
+	cap = max(cap, get_ranged_synergy_cap(skill_type))
+	cap = max(cap, get_virtue_skill_floor(skill_type))
+
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_combat_skill_cap(skill_type)
@@ -547,14 +589,18 @@
 	var/has_expert = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_EXPERT)
 	var/has_master = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_MASTER)
 	var/has_pugilist = !!owner_build?.has_trait(TRAIT_CIVILIZEDBARBARIAN)
+	var/is_ranged_skill = is_ranged_combat_skill(skill_type)
 
 	var/current_invested = get_invested_value(skill_type)
 	var/bonus_value = get_bonus_value(skill_type)
 
 	var/cap = base_cap
 
-	if(has_weapon_training)
+	if(has_weapon_training && !is_ranged_skill)
 		cap = trained_cap
+
+	if(is_ranged_skill)
+		cap = max(cap, get_ranged_synergy_cap(skill_type))
 
 	var/is_pugilist_skill = skill_type == /datum/skill/combat/unarmed || skill_type == /datum/skill/combat/wrestling
 	if(has_pugilist && is_pugilist_skill)
@@ -563,12 +609,12 @@
 		else
 			cap = max(cap, trained_cap)
 
-	if(has_expert)
+	if(has_expert && !is_ranged_skill)
 		var/expert_invested_target = max(current_invested, expert_cap - bonus_value)
 		if(expert_invested_target >= 0 && get_raw_total_value(skill_type, expert_invested_target) >= expert_cap && !would_violate_combat_hardcaps(skill_type, expert_invested_target))
 			cap = expert_cap
 
-	if(has_master && cap >= expert_cap)
+	if(has_master && !is_ranged_skill && cap >= expert_cap)
 		var/master_invested_target = max(current_invested, master_cap - bonus_value)
 		if(master_invested_target >= 0 && get_raw_total_value(skill_type, master_invested_target) >= master_cap && !would_violate_combat_hardcaps(skill_type, master_invested_target))
 			cap = master_cap
@@ -580,6 +626,8 @@
 			bonus_cap = base_cap
 		cap = max(cap, bonus_cap)
 
+	cap = max(cap, get_virtue_skill_floor(skill_type))
+
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_magic_skill_cap(skill_type)
@@ -587,15 +635,17 @@
 	var/can_apply_cap_bonus = TRUE
 
 	if(skill_type == /datum/skill/magic/arcane)
-		cap = owner_build?.directions?.get_points(TAT_DIRECTION_MAGIC) || 0
-		can_apply_cap_bonus = cap > 0
-		if(owner_build?.has_trait(TRAIT_ARCYNE) && !owner_build?.traits?.has_defensive_trait_lockout())
-			cap += 3
+		var/magic_points = owner_build?.directions?.get_points(TAT_DIRECTION_MAGIC) || 0
+		cap = magic_points
+		if(owner_build?.has_trait(TRAIT_ARCYNE))
+			cap = max(cap, 3)
+		cap = min(cap, SKILL_LEVEL_EXPERT)
+		can_apply_cap_bonus = FALSE
 
 	else if(skill_type == /datum/skill/magic/holy)
 		if(owner_build?.has_trait(TAT_TRAIT_DIVINE_INITIATE) || owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_1) || owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_2) || owner_build?.has_trait(TAT_TRAIT_DIVINE_BOON_3))
-			cap = owner_build?.directions?.get_points(TAT_DIRECTION_MIRACLES) || 0
-		can_apply_cap_bonus = cap > 0
+			cap = min(owner_build?.directions?.get_points(TAT_DIRECTION_MIRACLES) || 0, SKILL_LEVEL_EXPERT)
+		can_apply_cap_bonus = FALSE
 
 	else if(skill_type == /datum/skill/magic/druidic)
 		if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
@@ -608,6 +658,8 @@
 		else
 			cap = cap_bonus
 
+	cap = max(cap, get_virtue_skill_floor(skill_type))
+
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
 /datum/tat_skills/proc/get_noncombat_skill_cap(skill_type)
@@ -616,6 +668,7 @@
 	var/unlock_cap = max(get_trait_cap_bonus(skill_type), get_virtue_skill_cap_bonus(skill_type))
 	if(unlock_cap > 0)
 		cap = max(cap, unlock_cap)
+	cap = max(cap, get_virtue_skill_floor(skill_type))
 
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
@@ -700,13 +753,6 @@
 
 	return total
 
-/datum/tat_skills/proc/combat_restricted_bonus_capacity(changed_skill_type = null, changed_invested_value = null)
-	var/expert_bonus = get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_EXPERT, TAT_SKILL_DOMAIN_COMBAT)
-	var/master_bonus = get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_MASTER, TAT_SKILL_DOMAIN_COMBAT)
-	var/expert_spend = get_combat_step_spent_at_level(TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT, changed_skill_type, changed_invested_value)
-	var/master_spend = get_combat_step_spent_at_level(TAT_SKILL_COMBAT_CAP_TRAIT_MASTER, changed_skill_type, changed_invested_value)
-	return min(expert_bonus, expert_spend) + min(master_bonus, master_spend)
-
 /datum/tat_skills/proc/combat_budget_is_valid(new_combat_spent = null, changed_skill_type = null, changed_invested_value = null)
 	var/combat_spent = isnull(new_combat_spent) ? get_spent_points(TAT_SKILL_DOMAIN_COMBAT) : round(new_combat_spent)
 	if(combat_spent > get_total_maximum(TAT_SKILL_DOMAIN_COMBAT))
@@ -714,12 +760,12 @@
 
 	var/expert_bonus = get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_EXPERT, TAT_SKILL_DOMAIN_COMBAT)
 	var/master_bonus = get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_MASTER, TAT_SKILL_DOMAIN_COMBAT)
+	var/expert_spend = get_combat_step_spent_at_level(TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT, changed_skill_type, changed_invested_value)
+	var/master_spend = get_combat_step_spent_at_level(TAT_SKILL_COMBAT_CAP_TRAIT_MASTER, changed_skill_type, changed_invested_value)
+	var/restricted_covered = min(expert_bonus, expert_spend) + min(master_bonus, master_spend)
 	var/unrestricted_pool = get_total_maximum(TAT_SKILL_DOMAIN_COMBAT) - expert_bonus - master_bonus
-	var/restricted_spend = max(0, combat_spent - unrestricted_pool)
-	if(restricted_spend <= 0)
-		return TRUE
-
-	return restricted_spend <= combat_restricted_bonus_capacity(changed_skill_type, changed_invested_value)
+	var/unrestricted_spend = combat_spent - restricted_covered
+	return unrestricted_spend <= unrestricted_pool
 
 /datum/tat_skills/proc/domain_budget_is_valid(domain)
 	domain = normalize_skill_domain(domain)

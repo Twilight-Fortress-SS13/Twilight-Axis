@@ -196,9 +196,37 @@
 	var/list/rule = get_trait_rule(trait_id)
 	return rule ? rule["direction"] : null
 
+/datum/tat_directions/proc/is_handicraft_cluster_trait(trait_id)
+	return trait_id == TAT_TRAIT_MASTER_OF_CRAFTING || trait_id == TAT_TRAIT_STOCKPILER || trait_id == TAT_TRAIT_STRAYING_SOUL
+
+/datum/tat_directions/proc/get_first_selected_handicraft_cluster_trait()
+	if(!owner_build?.traits?.selected)
+		return null
+	for(var/trait_id in owner_build.traits.selected)
+		if(is_handicraft_cluster_trait(trait_id) && owner_build.traits.get_trait_count(trait_id) > 0)
+			return trait_id
+	return null
+
+/datum/tat_directions/proc/get_handicraft_cluster_trait_cost(trait_id)
+	if(!is_handicraft_cluster_trait(trait_id))
+		return -1
+	switch(get_role_choice())
+		if(TAT_ROLE_CHOICE_TRADER)
+			return 1
+		if(TAT_ROLE_CHOICE_TOWNER)
+			var/first_trait = get_first_selected_handicraft_cluster_trait()
+			if(!first_trait || first_trait == trait_id)
+				return 0
+	return 2
+
 /datum/tat_directions/proc/get_trait_cost(trait_id)
 	var/list/rule = get_trait_rule(trait_id)
-	return rule ? max(0, round(rule["cost"] || 0)) : 0
+	if(!rule)
+		return 0
+	var/handicraft_cost = get_handicraft_cluster_trait_cost(trait_id)
+	if(handicraft_cost >= 0)
+		return handicraft_cost
+	return max(0, round(rule["cost"] || 0))
 
 /datum/tat_directions/proc/get_trait_tier(trait_id)
 	var/list/rule = get_trait_rule(trait_id)
@@ -219,6 +247,10 @@
 	if(!islist(requirements))
 		return TRUE
 	for(var/direction in requirements)
+		if(direction == TAT_DIRECTION_ORDINARY)
+			if(get_trait_tier(trait_id) < round(requirements[direction] || 0))
+				return FALSE
+			continue
 		if(get_points(direction) < round(requirements[direction] || 0))
 			return FALSE
 	return TRUE
@@ -263,6 +295,8 @@
 	if(owner_build?.traits?.has_trait(trait_id))
 		return TRUE
 	var/direction = get_trait_direction(trait_id)
+	if(direction == TAT_DIRECTION_ORDINARY)
+		return TRUE
 	return get_remaining_trait_points(direction) >= get_trait_cost(trait_id)
 
 /datum/tat_directions/proc/get_trait_block_reason(trait_id)
@@ -272,6 +306,8 @@
 	if(requirement_text && !trait_requirements_met(trait_id))
 		return "Requires [requirement_text]."
 	var/direction = get_trait_direction(trait_id)
+	if(direction == TAT_DIRECTION_ORDINARY)
+		return null
 	if(get_remaining_trait_points(direction) < get_trait_cost(trait_id))
 		return "Not enough unspent [GLOB.tat_direction_names[direction] || direction] direction points."
 	return null
