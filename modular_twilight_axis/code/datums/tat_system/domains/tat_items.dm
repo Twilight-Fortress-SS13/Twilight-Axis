@@ -223,6 +223,11 @@
 	var/donat_tier = round(entry["donat_tier"] || 0)
 	if(donat_tier > 0 && !tat_can_ckey_use_donation_item(owner_build?.get_owner_ckey(), donat_tier, entry))
 		return FALSE
+
+	var/required_trait = entry["required_trait"]
+	if(required_trait && !owner_build?.has_trait(required_trait))
+		return FALSE
+
 	var/unlock_type = entry["unlock_type"]
 	var/unlock_key = entry["unlock_key"]
 	switch(unlock_type)
@@ -265,6 +270,29 @@
 		total += amount
 	return total
 
+/datum/tat_items/proc/is_limited_firearm_item(item_path)
+	if(!ispath(item_path))
+		item_path = text2path("[item_path]")
+	if(!item_path)
+		return FALSE
+	return ispath(item_path, /obj/item/gun/ballistic/twilight_firearm)
+
+/datum/tat_items/proc/get_limited_firearm_item_count(exclude_item_path = null)
+	var/total = 0
+	for(var/item_path in get_all_item_paths())
+		if(!isnull(exclude_item_path) && item_path == exclude_item_path)
+			continue
+		if(!is_limited_firearm_item(item_path))
+			continue
+
+		var/amount = get_purchase_limit_amount(item_path)
+		if(amount <= 0)
+			continue
+
+		total += amount
+
+	return total
+
 /datum/tat_items/proc/get_item_total_allowed_amount(path)
 	var/list/entry = get_entry(path)
 	if(!islist(entry) || is_loadout_only_entry(entry))
@@ -273,6 +301,8 @@
 		return 1
 	if(ispath(path, /obj/item/storage/belt/rogue/pouch/coins/mid))
 		return 2
+	if(is_limited_firearm_item(path))
+		return 1
 	var/cost = entry["cost"]
 	if(!isnum(cost))
 		cost = 0
@@ -296,6 +326,8 @@
 		return max(0, 1 - trait_granted)
 	if(ispath(item_path, /obj/item/storage/belt/rogue/pouch/coins/mid))
 		return max(0, 2 - trait_granted)
+	if(is_limited_firearm_item(item_path))
+		return max(0, 1 - get_limited_firearm_item_count(item_path) - trait_granted)
 	var/cost = entry["cost"]
 	if(!isnum(cost))
 		cost = 0

@@ -46,9 +46,10 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/gun/ballistic/twilight_firearm/hunt_arquebus = TAT_ITEM_ENTRY("Hunter's Arquebus", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/barker = TAT_ITEM_ENTRY("Barker", 2, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar = TAT_ITEM_ENTRY("Hand Mortar", 6, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
+	/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Arquebus Pistol", 7, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_FIREARMS, "blackpowder", "tat_wanted"), \
+	/obj/item/twilight_powderflask/fyre = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Fyrepowder Flask", 3, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_FIREARMS, "blackpowder", "tat_wanted"), \
+	/obj/item/twilight_powderflask/terror = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Terrorpowder Flask", 2, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_FIREARMS, "blackpowder", "tat_wanted"), \
 	/obj/item/twilight_powderflask = TAT_ITEM_ENTRY("Blackpowder Flask", 1, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
-	/obj/item/twilight_powderflask/fyre = TAT_ITEM_ENTRY("Fyrepowder Flask", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
-	/obj/item/twilight_powderflask/terror= TAT_ITEM_ENTRY("Terrorpowder Flask", 2, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/quiver/twilight_bullet/lead = TAT_ITEM_ENTRY("30 Lead Bullets", 2, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/quiver/twilight_bullet/lead_ten = TAT_ITEM_ENTRY("10 Lead Bullets", 1, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/quiver/twilight_bullet/cannonball/grapeshot = TAT_ITEM_ENTRY("20 Lead Grapeshots", 3, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
@@ -711,9 +712,8 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/repair_kit = TAT_ITEM_ENTRY("Fabric Patch", 4, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/millstone = TAT_ITEM_ENTRY("Millstone", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/kitchen/rollingpin = TAT_ITEM_ENTRY("Rolling Pin", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
-	/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol = TAT_ITEM_ENTRY("Arquebus Pistol", 7, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/storage/belt/rogue/leather/twilight_holsterbelt = TAT_ITEM_ENTRY("Holster Belt", 1, "clothing", "weapon_supply", TAT_SUPPLY_FIREARMS, "belt"), \
-	/obj/item/gun/ballistic/twilight_firearm/flintgonne = TAT_ITEM_ENTRY("Hakenbüchse", 6, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
+	/obj/item/gun/ballistic/twilight_firearm/flintgonne = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Hakenbüchse", 6, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_FIREARMS, "blackpowder", "tat_wanted"), \
 	/obj/item/natural/feather = TAT_ITEM_ENTRY("Feather", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/bucket/gronn = TAT_DONATION_ITEM_ENTRY("Gronn Norsii horned helmet", 1.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "head", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/head/roguetown/articap = TAT_DONATION_ITEM_ENTRY("Tinker Hat", 0, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "head", TAT_DONATION_TIER_ONE), \
@@ -827,6 +827,7 @@ GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 			"unlock_type" = entry["unlock_type"],
 			"unlock_key" = entry["unlock_key"],
 			"slot_group" = entry["slot_group"],
+			"required_trait" = entry["required_trait"],
 			"donat_tier" = round(entry["donat_tier"] || 0),
 			"loadout_only" = !!entry["loadout_only"],
 			"icon" = icon_payload?["icon"],
