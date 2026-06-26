@@ -416,6 +416,13 @@
 		var/next_cost = 0
 		if(next_target > 0 && next_target <= invested_cap)
 			next_cost = max(1, next_target - get_skill_cost_discount(skill_type, next_target))
+			var/domain = skills.get_domain(skill_type)
+			var/current_cost = skills.get_total_cost_for_level(skill_type, invested_value)
+			var/new_domain_spent = skills.get_spent_points(domain) - current_cost + skills.get_total_cost_for_level(skill_type, next_target)
+			if(new_domain_spent > skills.get_total_maximum(domain))
+				next_cost = 0
+			else if(domain == TAT_SKILL_DOMAIN_COMBAT && !skills.combat_budget_is_valid(new_domain_spent, skill_type, next_target))
+				next_cost = 0
 
 		result["[skill_type]"] = list(
 			"level" = total_value,

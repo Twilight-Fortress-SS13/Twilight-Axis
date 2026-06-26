@@ -294,6 +294,11 @@
 
 /datum/tat_build/proc/get_bonus_skill_domain_points(domain)
 	var/total = traits.get_bonus_skill_domain_points(domain)
+	total += get_role_skill_domain_points(domain)
+	return total
+
+/datum/tat_build/proc/get_role_skill_domain_points(domain)
+	var/total = 0
 	if(domain == TAT_SKILL_DOMAIN_COMBAT)
 		if(traits?.get_selected_trait_count(TAT_TRAIT_WEAPON_TRAINING) > 0)
 			total += 3
