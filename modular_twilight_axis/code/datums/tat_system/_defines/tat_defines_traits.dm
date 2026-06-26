@@ -132,6 +132,7 @@ GLOBAL_LIST_INIT(tat_trait_skill_cap_bonus_rules, TAT_TRAIT_SKILL_CAP_BONUS_RULE
 GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 
 #define TAT_BUILD_STAT_BONUS_WANTED 5
+#define TAT_BUILD_STAT_BONUS_EXTRA_STATS 3
 #define TAT_BUILD_ITEM_BONUS_WANTED 10
 #define TAT_BUILD_ITEM_BONUS_LOOTRAT 10
 #define TAT_BUILD_ITEM_BONUS_LOOTRAT_2 15
@@ -370,7 +371,14 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 
 #define TAT_TRAIT_REPEATABLE_MAXIMUMS list()
 
-#define TAT_TRAIT_SKILL_POINT_RULES list()
+#define TAT_TRAIT_SKILL_POINT_RULES list( \
+	TAT_TRAIT_STOCKPILER = list( \
+		TAT_SKILL_DOMAIN_PEACEFUL = 20 \
+	), \
+	TAT_TRAIT_STRAYING_SOUL = list( \
+		TAT_SKILL_DOMAIN_ADVENTURE = 9 \
+	) \
+)
 
 #define TAT_TRAIT_SKILL_BONUS_RULES list( \
 	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/smelting = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/engineering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST), \
