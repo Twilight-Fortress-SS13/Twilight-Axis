@@ -1,8 +1,24 @@
+#define EX_BRUTE_DEV 120
+#define EX_BURN_DEV 60
+#define EX_UNC_DEV_D 50
+#define EX_UNC_DEV_F 15
+#define EX_KD_DEV 30
+
+#define EX_BRUTE_HEAVY 40
+#define EX_BURN_HEAVY 20
+#define EX_UNC_HEAVY_H 10
+#define EX_UNC_HEAVY_F 5
+#define EX_KD_HEAVY 30
+
+#define EX_BRUTE_LIGHT 10
+
 /mob/living/carbon/human/ex_act(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	set waitfor = FALSE
 	contents_explosion(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	SEND_SIGNAL(src, COMSIG_ATOM_EX_ACT, severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
-	if (!severity)
+	if(QDELETED(src))
+		return
+	if (!severity || !epicenter)
 		return
 	var/ddist = devastation_range
 	var/hdist = heavy_impact_range
@@ -29,25 +45,25 @@
 
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
-			var/base_brute = ((120 * ddist) - (120 * fodist)) * dmgmod
-			var/base_burn = ((60 * ddist) - (60 * fodist)) * dmgmod
+			var/base_brute = ((EX_BRUTE_DEV * ddist) - (EX_BRUTE_DEV * fodist)) * dmgmod
+			var/base_burn = ((EX_BURN_DEV * ddist) - (EX_BURN_DEV * fodist)) * dmgmod
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
 			damage_clothes(max(base_brute * 4, 0), BRUTE, "bullet")
-			Unconscious(max(((50 * ddist) - (15 * fodist)) * bullet_mult, 0))
-			Knockdown(max(((30 * ddist) - (30 * fodist)) * bullet_mult, 0))
+			Unconscious(max(((EX_UNC_DEV_D * ddist) - (EX_UNC_DEV_F * fodist)) * bullet_mult, 0))
+			Knockdown(max(((EX_KD_DEV * ddist) - (EX_KD_DEV * fodist)) * bullet_mult, 0))
 
 		if(EXPLODE_HEAVY)
-			var/base_brute = ((40 * hdist) - (40 * fodist)) * dmgmod
-			var/base_burn = ((20 * hdist) - (20 * fodist)) * dmgmod
+			var/base_brute = ((EX_BRUTE_HEAVY * hdist) - (EX_BRUTE_HEAVY * fodist)) * dmgmod
+			var/base_burn = ((EX_BURN_HEAVY * hdist) - (EX_BURN_HEAVY * fodist)) * dmgmod
 			brute_loss = base_brute * bullet_mult
 			burn_loss = base_burn * fire_mult
 			damage_clothes(max(base_brute * 2, 0), BRUTE, "bullet")
-			Unconscious(max(((10 * hdist) - (5 * fodist)) * bullet_mult, 0))
-			Knockdown(max(((30 * hdist) - (30 * fodist)) * bullet_mult, 0))
+			Unconscious(max(((EX_UNC_HEAVY_H * hdist) - (EX_UNC_HEAVY_F * fodist)) * bullet_mult, 0))
+			Knockdown(max(((EX_KD_HEAVY * hdist) - (EX_KD_HEAVY * fodist)) * bullet_mult, 0))
 
 		if(EXPLODE_LIGHT)
-			var/base_brute = ((10 * ldist) - (10 * fodist)) * dmgmod
+			var/base_brute = ((EX_BRUTE_LIGHT * ldist) - (EX_BRUTE_LIGHT * fodist)) * dmgmod
 			brute_loss = base_brute * bullet_mult
 			damage_clothes(max(base_brute, 0), BRUTE, "bullet")
 
@@ -130,3 +146,17 @@
 
 	for(var/obj/item/I as anything in torn_items)
 		I.take_damage(damage_amount, damage_type, damage_flag, 0)
+
+#undef EX_BRUTE_DEV
+#undef EX_BURN_DEV
+#undef EX_UNC_DEV_D
+#undef EX_UNC_DEV_F
+#undef EX_KD_DEV
+
+#undef EX_BRUTE_HEAVY
+#undef EX_BURN_HEAVY
+#undef EX_UNC_HEAVY_H
+#undef EX_UNC_HEAVY_F
+#undef EX_KD_HEAVY
+
+#undef EX_BRUTE_LIGHT
