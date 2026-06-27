@@ -128,7 +128,7 @@
 			if(direction == TAT_DIRECTION_SKILLS)
 				return 2
 		if(TAT_ROLE_CHOICE_TRADER)
-			if(direction == TAT_DIRECTION_SURVIVAL)
+			if(direction == TAT_DIRECTION_SKILLS)
 				return 1
 	return 0
 
