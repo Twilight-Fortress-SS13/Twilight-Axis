@@ -63,17 +63,27 @@
 	domain = normalize_skill_domain(domain)
 	return domain == TAT_SKILL_DOMAIN_COMBAT || is_convertible_skill_domain(domain)
 
-/datum/tat_skills/proc/get_converted_combat_points()
+/datum/tat_skills/proc/can_receive_converted_skill_domain(domain)
+	domain = normalize_skill_domain(domain)
+	return domain == TAT_SKILL_DOMAIN_COMBAT || is_convertible_skill_domain(domain)
+
+/datum/tat_skills/proc/get_converted_domain_points(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return 0
 	var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
-	var/combat_default = max(0, round(default_domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0))
-	return max(0, round(domain_points[TAT_SKILL_DOMAIN_COMBAT] || 0) - combat_default)
+	var/default_value = max(0, round(default_domain_points[domain] || 0))
+	return max(0, round(domain_points[domain] || 0) - default_value)
+
+/datum/tat_skills/proc/get_converted_combat_points()
+	return get_converted_domain_points(TAT_SKILL_DOMAIN_COMBAT)
 
 /datum/tat_skills/proc/can_give_skill_domain_points(domain, amount = 1)
 	domain = normalize_skill_domain(domain)
 	amount = max(1, round(text2num("[amount]") || 1))
 	if(domain == TAT_SKILL_DOMAIN_COMBAT)
 		return skill_point_conversion_pool >= amount && get_converted_combat_points() + amount <= TAT_COMBAT_CONVERTED_POINT_LIMIT
-	if(!is_convertible_skill_domain(domain))
+	if(!can_receive_converted_skill_domain(domain))
 		return FALSE
 	return skill_point_conversion_pool >= amount
 
@@ -105,8 +115,13 @@
 	amount = max(1, round(text2num("[amount]") || 1))
 	if(!can_take_skill_domain_points(domain, amount))
 		return FALSE
-	var/base_amount = min(amount, max(0, get_base_remaining_points(domain)))
-	var/role_amount = amount - base_amount
+	var/remaining_amount = amount
+	var/converted_amount = min(remaining_amount, get_converted_domain_points(domain), max(0, get_remaining_points(domain)))
+	if(converted_amount > 0)
+		domain_points[domain] = max(0, round(domain_points[domain] || 0) - converted_amount)
+		remaining_amount -= converted_amount
+	var/base_amount = min(remaining_amount, max(0, get_base_remaining_points(domain)))
+	var/role_amount = remaining_amount - base_amount
 	if(base_amount > 0)
 		domain_points[domain] = max(0, round(domain_points[domain] || 0) - base_amount)
 	if(role_amount > 0)
@@ -120,12 +135,17 @@
 	var/list/result = list()
 	for(var/domain in list(TAT_SKILL_DOMAIN_COMBAT, TAT_SKILL_DOMAIN_PEACEFUL, TAT_SKILL_DOMAIN_ADVENTURE))
 		var/can_convert = can_convert_from_skill_domain(domain)
-		var/can_receive = is_convertible_skill_domain(domain) || domain == TAT_SKILL_DOMAIN_COMBAT
+		var/can_receive = can_receive_converted_skill_domain(domain)
+		var/give_text = can_receive ? "Move one converted skill point into this pool." : "This skill pool cannot receive converted points."
+		var/take_text = can_convert ? "Move one free base or role skill point into conversion." : "This skill pool cannot be converted out."
+		if(domain == TAT_SKILL_DOMAIN_COMBAT)
+			give_text = "Move one converted skill point into Combat. Combat can receive up to [TAT_COMBAT_CONVERTED_POINT_LIMIT] converted points."
+			take_text = "Move one free Combat point into conversion for other skill pools."
 		result[domain] = list(
 			"can_give" = can_give_skill_domain_points(domain),
 			"can_take" = can_take_skill_domain_points(domain),
-			"give_text" = can_receive ? "Move one converted skill point into this pool." : "This skill pool cannot receive converted points.",
-			"take_text" = can_convert ? "Move one free base or role skill point into conversion." : "This skill pool cannot be converted out.",
+			"give_text" = give_text,
+			"take_text" = take_text,
 		)
 	return result
 

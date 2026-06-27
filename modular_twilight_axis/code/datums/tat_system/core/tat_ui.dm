@@ -187,6 +187,34 @@
 
 	return result
 
+/datum/tat_build/proc/build_ui_skill_point_breakdown_by_domain()
+	var/list/result = list(
+		"combat" = list("base" = 0, "trait" = 0, "expert" = 0, "master" = 0, "converted" = 0),
+		"peaceful" = list("base" = 0, "trait" = 0, "converted" = 0),
+		"adventure" = list("base" = 0, "trait" = 0, "converted" = 0),
+	)
+
+	if(!skills)
+		return result
+
+	var/list/default_domain_points = TAT_DEFAULT_SKILL_DOMAIN_POINTS
+	for(var/domain in result)
+		var/list/breakdown = result[domain]
+		var/default_points = max(0, round(default_domain_points[domain] || 0))
+		var/current_domain_points = max(0, round(skills.domain_points[domain] || 0))
+		breakdown["base"] = max(0, round(min(current_domain_points, default_points) + get_role_skill_domain_points(domain) - skills.get_converted_role_points(domain)))
+		breakdown["trait"] = skills.get_trait_domain_points(domain)
+		breakdown["converted"] = skills.get_converted_domain_points(domain)
+
+	var/list/combat_breakdown = result["combat"]
+	var/expert_points = skills.get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_EXPERT, TAT_SKILL_DOMAIN_COMBAT)
+	var/master_points = skills.get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_MASTER, TAT_SKILL_DOMAIN_COMBAT)
+	combat_breakdown["expert"] = expert_points
+	combat_breakdown["master"] = master_points
+	combat_breakdown["trait"] = max(0, round(combat_breakdown["trait"] || 0) - expert_points - master_points)
+
+	return result
+
 /datum/tat_build/proc/can_save()
 	if(is_owner_tat_banned())
 		return FALSE
@@ -737,6 +765,7 @@
 	var/list/_skp_rem = build_ui_skill_points_remaining_by_domain()
 	var/list/_skp_free = build_ui_skill_free_points_by_domain()
 	var/list/_skp_trait = build_ui_skill_trait_points_by_domain()
+	var/list/_skp_breakdown = build_ui_skill_point_breakdown_by_domain()
 	var/list/_skp_conversion_state = build_ui_skill_conversion_state()
 	var/_skp_conversion_pool = skills?.skill_point_conversion_pool || 0
 	var/_p_skills_total = 0
@@ -806,6 +835,7 @@
 		"skill_points_remaining_by_domain" = _skp_rem,
 		"skill_free_points_by_domain" = _skp_free,
 		"skill_trait_points_by_domain" = _skp_trait,
+		"skill_point_breakdown_by_domain" = _skp_breakdown,
 		"skill_conversion_pool" = _skp_conversion_pool,
 		"skill_conversion_state" = _skp_conversion_state,
 

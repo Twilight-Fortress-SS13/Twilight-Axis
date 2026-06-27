@@ -173,6 +173,13 @@ type Data = {
   skill_points_remaining_by_domain?: Partial<Record<SkillDomainKey, number>>;
   skill_free_points_by_domain?: Partial<Record<SkillDomainKey, number>>;
   skill_trait_points_by_domain?: Partial<Record<SkillDomainKey, number>>;
+  skill_point_breakdown_by_domain?: Partial<Record<SkillDomainKey, {
+    base?: number;
+    trait?: number;
+    expert?: number;
+    master?: number;
+    converted?: number;
+  }>>;
   skill_conversion_pool?: number;
   skill_conversion_state?: Partial<Record<SkillDomainKey, SkillConversionDomainState>>;
 
@@ -186,6 +193,7 @@ type Data = {
       points?: number;
       spent?: number;
       remaining?: number;
+      next_cost?: number;
       name?: string;
     }>>;
     foundation_names?: Record<string, string>;
@@ -427,17 +435,24 @@ const formatSkillDisplayValue = (state?: SkillState) => {
 const formatDomainPoints = (data: Data, domain: SkillDomainKey) => {
   const total = data.skill_points_by_domain?.[domain];
   const remaining = data.skill_points_remaining_by_domain?.[domain];
-  const free = data.skill_free_points_by_domain?.[domain];
-  const trait = data.skill_trait_points_by_domain?.[domain];
-  const breakdown = typeof free === 'number' && typeof trait === 'number'
-    ? ` (${free} - ${trait})`
-    : '';
 
   if (typeof total === 'number' && typeof remaining === 'number') {
-    return `${remaining} / ${total}${breakdown}`;
+    return `${remaining} / ${total}`;
   }
 
   return '? / ?';
+};
+
+const formatDomainPointBreakdown = (data: Data, domain: SkillDomainKey) => {
+  const breakdown = data.skill_point_breakdown_by_domain?.[domain];
+  const base = Number(breakdown?.base) || 0;
+  const trait = Number(breakdown?.trait) || 0;
+  const expert = Number(breakdown?.expert) || 0;
+  const master = Number(breakdown?.master) || 0;
+  const converted = Number(breakdown?.converted) || 0;
+  return domain === 'combat'
+    ? `B:${base} | T:${trait} | E:${expert} | M:${master} | C:${converted}`
+    : `B:${base} | T:${trait} | C:${converted}`;
 };
 
 const getDomainRemainingPoints = (data: Data, domain: SkillDomainKey) => {
@@ -1357,9 +1372,18 @@ const SkillDomainTitle = ({
             </Button>
           </Stack.Item>
           <Stack.Item>
-            <Box style={{ opacity: 0.8, fontSize: '12px' }}>
-              {formatDomainPoints(data, domain)}
-            </Box>
+            <Stack vertical align="center">
+              <Stack.Item>
+                <Box style={{ opacity: 0.9, fontSize: '12px', lineHeight: 1.05 }}>
+                  {formatDomainPoints(data, domain)}
+                </Box>
+              </Stack.Item>
+              <Stack.Item>
+                <Box style={{ opacity: 0.72, fontSize: '10px', lineHeight: 1.05, whiteSpace: 'nowrap' }}>
+                  {formatDomainPointBreakdown(data, domain)}
+                </Box>
+              </Stack.Item>
+            </Stack>
           </Stack.Item>
           <Stack.Item>
             <Button
@@ -1589,41 +1613,69 @@ const DirectionsPanel = ({
   return (
     <Section title={<SectionTitleWithMeta title="Directions" meta={`${pointsRemaining} / ${pointsTotal} free`} />}>
       <Stack vertical>
-        <Stack wrap align="center">
-          {Object.entries(foundationNames).map(([id, name]) => (
-            <Stack.Item key={id}>
-              <Button
-                compact
-                selected={foundation === id}
-                color={foundation === id ? 'good' : undefined}
-                onClick={() => act('set_direction_foundation', { foundation: id })}>
-                {name}
-              </Button>
-            </Stack.Item>
-          ))}
-          {roleChoices.map((id) => (
-            <Stack.Item key={id}>
-              <Button
-                compact
-                selected={roleChoice === id}
-                color={roleChoice === id ? 'good' : undefined}
-                onClick={() => act('set_direction_role_choice', { role_choice: id })}>
-                {roleChoiceNames[id] || id}
-              </Button>
-            </Stack.Item>
-          ))}
+        <Stack vertical align="center">
           <Stack.Item>
-            <Box color="label" style={{ fontSize: '12px' }}>Allocated: {pointsSpent}</Box>
+            <Box color="label" style={{ fontSize: '11px', textAlign: 'center' }}>
+              Основа выбирает группу архетипов и стартовую логику билда
+            </Box>
+          </Stack.Item>
+          <Stack.Item>
+            <Stack wrap align="center" justify="center">
+              {Object.entries(foundationNames).map(([id, name]) => (
+                <Stack.Item key={id}>
+                  <Button
+                    compact
+                    selected={foundation === id}
+                    color={foundation === id ? 'good' : undefined}
+                    onClick={() => act('set_direction_foundation', { foundation: id })}>
+                    {name}
+                  </Button>
+                </Stack.Item>
+              ))}
+            </Stack>
           </Stack.Item>
         </Stack>
 
-        <Stack align="stretch" justify="space-between">
+        <Stack vertical align="center">
+          <Stack.Item>
+            <Box color="label" style={{ fontSize: '11px', textAlign: 'center' }}>
+              Архетип задает стартовые бонусы навыков и направлений
+            </Box>
+          </Stack.Item>
+          <Stack.Item>
+            <Stack wrap align="center" justify="center">
+              {roleChoices.map((id) => (
+                <Stack.Item key={id}>
+                  <Button
+                    compact
+                    selected={roleChoice === id}
+                    color={roleChoice === id ? 'good' : undefined}
+                    onClick={() => act('set_direction_role_choice', { role_choice: id })}>
+                    {roleChoiceNames[id] || id}
+                  </Button>
+                </Stack.Item>
+              ))}
+            </Stack>
+          </Stack.Item>
+        </Stack>
+
+        <Stack align="center" justify="center">
+          <Stack.Item>
+            <Box color="label" style={{ fontSize: '12px' }}>
+              Вложено: {pointsSpent}
+            </Box>
+          </Stack.Item>
+        </Stack>
+
+        <Stack align="stretch" justify="center">
           {order.filter((direction) => direction !== 'ordinary').map((direction) => {
             const state = directions?.directions?.[direction] || {};
             const points = Number(state.points) || 0;
             const spent = Number(state.spent) || 0;
             const remaining = Number(state.remaining) || 0;
+            const nextCost = Number(state.next_cost) || 1;
             const label = state.name || DIRECTION_LABELS[direction] || direction;
+            const canAddDirectionPoint = pointsRemaining >= nextCost;
             return (
               <Stack.Item key={direction} basis="12%" grow>
                 <Box
@@ -1636,9 +1688,9 @@ const DirectionsPanel = ({
                   <Button
                     fluid
                     compact
-                    disabled={pointsRemaining <= 0 && points <= 0}
+                    disabled={!canAddDirectionPoint && points <= 0}
                     onClick={() => {
-                      if (pointsRemaining > 0) {
+                      if (canAddDirectionPoint) {
                         act('add_direction_point', { direction });
                       }
                     }}
@@ -1660,7 +1712,7 @@ const DirectionsPanel = ({
                     {label}
                   </Button>
                   <Box mt={0.25} style={{ opacity: 0.8, fontSize: '10px' }}>
-                    talents {spent}/{points} | free {remaining}
+                    talents {spent}/{points} | free {remaining}{nextCost > 1 ? ` | next ${nextCost}` : ''}
                   </Box>
                 </Box>
               </Stack.Item>

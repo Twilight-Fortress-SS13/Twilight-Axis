@@ -328,7 +328,10 @@
 /datum/tat_build/proc/get_bonus_skill_value(skill_type)
 	var/trait_bonus = traits.get_bonus_skill_value(skill_type)
 	var/virtue_bonus = skills.get_virtue_bonus_value(skill_type)
-	return round(trait_bonus + virtue_bonus)
+	var/direction_bonus = 0
+	if(skill_type == /datum/skill/misc/music)
+		direction_bonus = min(3, max(0, directions?.get_points(TAT_DIRECTION_MUSIC) || 0))
+	return round(trait_bonus + virtue_bonus + direction_bonus)
 
 /datum/tat_build/proc/get_skill_cap_bonus_value(skill_type)
 	var/trait_cap = traits.get_skill_cap_bonus_value(skill_type)

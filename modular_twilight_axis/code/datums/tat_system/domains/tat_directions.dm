@@ -4,6 +4,9 @@
 	var/role_choice = TAT_ROLE_CHOICE_TOWNER
 	var/list/points = list()
 
+/proc/tat_towner_battle_direction_cost_mode()
+	return TAT_TOWNER_BATTLE_DIRECTION_COST_MODE
+
 /datum/tat_directions/New(datum/tat_build/B)
 	. = ..()
 	owner_build = B
@@ -129,11 +132,61 @@
 				return 1
 	return 0
 
-/datum/tat_directions/proc/get_spent_points()
+/datum/tat_directions/proc/is_towner_battle_direction(direction)
+	direction = normalize_direction(direction)
+	if(!direction || get_role_choice() != TAT_ROLE_CHOICE_TOWNER)
+		return FALSE
+	return direction in TAT_TOWNER_BATTLE_DIRECTIONS
+
+/datum/tat_directions/proc/get_triangular_cost(value)
+	value = max(0, round(text2num("[value]") || 0))
+	return round((value * (value + 1)) / 2)
+
+/datum/tat_directions/proc/get_towner_battle_allocated_points(direction_override = null, override_value = null)
 	var/total = 0
 	for(var/direction in TAT_DIRECTION_ORDER)
-		total += get_allocated_points(direction)
+		if(!(direction in TAT_TOWNER_BATTLE_DIRECTIONS))
+			continue
+		if(direction_override && direction == direction_override)
+			total += max(0, round(text2num("[override_value]") || 0))
+		else
+			total += get_allocated_points(direction)
 	return total
+
+/datum/tat_directions/proc/get_towner_battle_spent_points(direction_override = null, override_value = null)
+	if(get_role_choice() != TAT_ROLE_CHOICE_TOWNER)
+		return 0
+	switch(tat_towner_battle_direction_cost_mode())
+		if(TAT_TOWNER_BATTLE_DIRECTION_COST_MODE_BRANCH)
+			var/total = 0
+			for(var/direction in TAT_TOWNER_BATTLE_DIRECTIONS)
+				var/value = (direction_override && direction == direction_override) ? max(0, round(text2num("[override_value]") || 0)) : get_allocated_points(direction)
+				total += get_triangular_cost(value)
+			return total
+		if(TAT_TOWNER_BATTLE_DIRECTION_COST_MODE_GLOBAL)
+			return get_triangular_cost(get_towner_battle_allocated_points(direction_override, override_value))
+	return 0
+
+/datum/tat_directions/proc/get_spent_points(direction_override = null, override_value = null)
+	var/total = 0
+	var/use_towner_battle_cost = get_role_choice() == TAT_ROLE_CHOICE_TOWNER
+	for(var/direction in TAT_DIRECTION_ORDER)
+		if(use_towner_battle_cost && (direction in TAT_TOWNER_BATTLE_DIRECTIONS))
+			continue
+		if(direction_override && direction == direction_override)
+			total += max(0, round(text2num("[override_value]") || 0))
+		else
+			total += get_allocated_points(direction)
+	if(use_towner_battle_cost)
+		total += get_towner_battle_spent_points(direction_override, override_value)
+	return total
+
+/datum/tat_directions/proc/get_next_point_cost(direction)
+	direction = normalize_direction(direction)
+	if(!direction)
+		return 0
+	var/current = get_allocated_points(direction)
+	return max(0, get_spent_points(direction, current + 1) - get_spent_points())
 
 /datum/tat_directions/proc/get_total_points()
 	return TAT_DIRECTION_POINTS + get_role_bonus_points() + (owner_build?.traits?.get_bonus_direction_points() || 0)
@@ -158,8 +211,7 @@
 	var/current = get_allocated_points(direction)
 	if(value == current)
 		return TRUE
-	var/delta = value - current
-	if(delta > 0 && get_remaining_points() < delta)
+	if(value > current && get_spent_points(direction, value) > get_total_points())
 		return FALSE
 	points[direction] = value
 	owner_build?.traits?.sanitize()
@@ -379,6 +431,7 @@
 			"points" = get_points(direction),
 			"spent" = get_spent_trait_points(direction),
 			"remaining" = get_remaining_trait_points(direction),
+			"next_cost" = get_next_point_cost(direction),
 			"name" = GLOB.tat_direction_names[direction] || direction,
 		)
 	return list(
