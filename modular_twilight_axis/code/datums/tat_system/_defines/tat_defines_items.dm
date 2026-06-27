@@ -48,7 +48,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar = TAT_ITEM_ENTRY("Hand Mortar", 6, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Arquebus Pistol", 7, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_FIREARMS, "blackpowder", "tat_wanted"), \
 	/obj/item/twilight_powderflask/fyre = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Fyrepowder Flask", 3, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_FIREARMS, "blackpowder", "tat_wanted"), \
-	/obj/item/twilight_powderflask/terror = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Terrorpowder Flask", 2, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_FIREARMS, "blackpowder", "tat_wanted"), \
+	/obj/item/twilight_powderflask/terror= TAT_ITEM_ENTRY("Terrorpowder Flask", 2, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/twilight_powderflask = TAT_ITEM_ENTRY("Blackpowder Flask", 1, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/quiver/twilight_bullet/lead = TAT_ITEM_ENTRY("30 Lead Bullets", 2, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
 	/obj/item/quiver/twilight_bullet/lead_ten = TAT_ITEM_ENTRY("10 Lead Bullets", 1, "weapon", "weapon_supply", TAT_SUPPLY_FIREARMS, "blackpowder"), \
