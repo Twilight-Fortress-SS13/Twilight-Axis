@@ -526,12 +526,19 @@
 		TRAIT_STRONGBITE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN), "message" = "\"[get_trait_display_name(TRAIT_STRONGBITE)]\" requires \"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\"."),
 		TAT_TRAIT_SAVAGE_RAGE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN), "message" = "\"[get_trait_display_name(TAT_TRAIT_SAVAGE_RAGE)]\" requires \"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\"."),
 		TAT_TRAIT_BERSERKER_RAGE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_HERETIC), "message" = "\"[get_trait_display_name(TAT_TRAIT_BERSERKER_RAGE)]\" requires savage skin and heretic."),
+		TAT_TRAIT_LOOTRAT_2 = list("all" = list(TAT_TRAIT_TRADER_LICENSE, TAT_TRAIT_LOOTRAT), "foundation" = TAT_FOUNDATION_SETTLED, "role_choice" = TAT_ROLE_CHOICE_TRADER, "message" = "\"[get_trait_display_name(TAT_TRAIT_LOOTRAT_2)]\" requires \"[get_trait_display_name(TAT_TRAIT_TRADER_LICENSE)]\", \"[get_trait_display_name(TAT_TRAIT_LOOTRAT)]\", and Trader role."),
 	)
 	return GLOB.tat_trait_requirement_map
 
 /datum/tat_traits/proc/trait_requirement_is_met(list/rule)
 	if(!islist(rule))
 		return TRUE
+	var/required_foundation = rule["foundation"]
+	if(required_foundation && owner_build?.directions?.foundation != required_foundation)
+		return FALSE
+	var/required_role_choice = rule["role_choice"]
+	if(required_role_choice && owner_build?.directions?.get_role_choice() != required_role_choice)
+		return FALSE
 	var/list/all_requirements = rule["all"]
 	if(islist(all_requirements))
 		for(var/required_trait in all_requirements)
