@@ -275,7 +275,7 @@
 	var/handicraft_cost = get_handicraft_cluster_trait_cost(trait_id)
 	if(handicraft_cost >= 0)
 		return handicraft_cost
-	return max(0, round(rule["cost"] || 0))
+	return max(0, owner_build?.traits?.get_base_cost(trait_id) || 0)
 
 /datum/tat_directions/proc/get_trait_tier(trait_id)
 	var/list/rule = get_trait_rule(trait_id)

@@ -144,7 +144,7 @@
 	var/cost = get_base_cost(trait_id)
 	if(cost >= 0)
 		return 0
-	return min(4, max(1, round((-cost) / 5)))
+	return min(4, max(1, -cost))
 
 /datum/tat_traits/proc/get_ordinary_trait_group(trait_id)
 	if(get_oddity_direction_point_bonus(trait_id) > 0)
@@ -237,17 +237,6 @@
 	return modifier
 
 /datum/tat_traits/proc/get_display_cost(trait_id)
-	if(owner_build?.directions?.is_direction_trait(trait_id))
-		return 0
-	var/list/entry = get_entry(trait_id)
-	if(islist(entry) && entry["category"] == TAT_CATEGORY_ODDITY)
-		var/oddity_cost = get_base_cost(trait_id)
-		var/sign = oddity_cost < 0 ? -1 : 1
-		if(oddity_cost < 0)
-			oddity_cost = -oddity_cost
-		if(oddity_cost <= 0)
-			return 0
-		return sign * min(4, max(1, round(oddity_cost / 5)))
 	var/cost = get_base_cost(trait_id) + get_cost_modifier(trait_id)
 	if(is_armor_supplier_trait(trait_id) || is_material_supplier_trait(trait_id))
 		return max(0, cost)
