@@ -452,7 +452,7 @@
 
 /datum/tat_skills/proc/get_raw_total_value(skill_type, invested_override = null)
 	var/invested_value = isnull(invested_override) ? get_invested_value(skill_type) : max(0, round(invested_override))
-	return invested_value + get_bonus_value(skill_type)
+	return invested_value + get_raw_bonus_value(skill_type)
 
 /datum/tat_skills/proc/is_ranged_combat_skill(skill_type)
 	if(ispath(skill_type, /datum/skill/combat/bows))
@@ -542,7 +542,7 @@
 		var/score = 0
 		if(drops_below_threshold)
 			score += 10000
-		score += get_bonus_value(skill_type) * 100
+		score += get_raw_bonus_value(skill_type) * 100
 		score += invested_value
 
 		if(score > best_score)
