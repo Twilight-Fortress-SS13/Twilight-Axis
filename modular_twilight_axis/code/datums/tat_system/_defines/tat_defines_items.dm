@@ -729,9 +729,9 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/chisel/bronze = TAT_ITEM_ENTRY("Bronze Chisel", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "wood work"), \
 	/obj/item/rogueweapon/handsaw = TAT_ITEM_ENTRY("Handsaw", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "wood work"), \
 	/obj/item/rogueweapon/handsaw/bronze = TAT_ITEM_ENTRY("Bronze Handsaw", 0.5, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "wood work"), \
-	/obj/item/clothing/neck/roguetown/psicross/weeping = TAT_ITEM_ENTRY("Weeping Cross", 50, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
-	/obj/item/clothing/neck/roguetown/psicross/hag = TAT_ITEM_ENTRY("Wyrd Cross", 50, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
-	/obj/item/rogueweapon/sword/long/exe/berserk/dragonslayer = TAT_ITEM_ENTRY("Daemon Slayer", 50, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
+	/obj/item/clothing/neck/roguetown/psicross/weeping = TAT_ITEM_ENTRY("Weeping Cross", 999, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
+	/obj/item/clothing/neck/roguetown/psicross/hag = TAT_ITEM_ENTRY("Wyrd Cross", 999, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
+	/obj/item/rogueweapon/sword/long/exe/berserk/dragonslayer = TAT_ITEM_ENTRY("Daemon Slayer", 999, "misc", "weapon_supply", TAT_SUPPLY_IRON, "soon..."), \
 	/obj/item/clothing/cloak/tabard = TAT_ITEM_ENTRY("Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/stabard = TAT_ITEM_ENTRY("Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/stabard/surcoat = TAT_ITEM_ENTRY("Surcoat", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
