@@ -468,7 +468,7 @@
 
 	for(var/skill_type in get_all_ui_skill_types())
 		var/cap = skills.get_maximum(skill_type)
-		var/bonus_value = round(skills.bonus[skill_type] || 0)
+		var/bonus_value = skills.get_bonus_value(skill_type)
 		var/invested_value = round(skills.invested[skill_type] || 0)
 		var/total_value = skills.get_total_value(skill_type)
 		var/invested_cap = max(0, cap - bonus_value)

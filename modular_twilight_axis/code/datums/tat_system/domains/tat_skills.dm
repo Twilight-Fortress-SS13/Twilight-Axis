@@ -263,12 +263,18 @@
 /datum/tat_skills/proc/get_invested_value(skill_type)
 	return round(invested[skill_type] || 0)
 
-/datum/tat_skills/proc/get_bonus_value(skill_type)
+/datum/tat_skills/proc/get_raw_bonus_value(skill_type)
 	if(!check_skill(skill_type))
 		return 0
 	if(owner_build)
 		return round(owner_build.get_bonus_skill_value(skill_type) || 0)
 	return round(bonus[skill_type] || 0)
+
+/datum/tat_skills/proc/get_bonus_value(skill_type)
+	var/raw_bonus = get_raw_bonus_value(skill_type)
+	if(raw_bonus <= 0)
+		return 0
+	return min(raw_bonus, max(0, get_maximum(skill_type) - get_invested_value(skill_type)))
 
 /datum/tat_skills/proc/virtue_matches_rule(virtue_entry, virtue_rule)
 	if(!virtue_entry || !virtue_rule)
@@ -645,7 +651,7 @@
 	var/is_ranged_skill = is_ranged_combat_skill(skill_type)
 
 	var/current_invested = get_invested_value(skill_type)
-	var/bonus_value = get_bonus_value(skill_type)
+	var/bonus_value = get_raw_bonus_value(skill_type)
 
 	var/cap = base_cap
 

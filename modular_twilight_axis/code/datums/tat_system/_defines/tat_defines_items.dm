@@ -756,7 +756,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/cloak/tabard/psydontabard = TAT_ITEM_ENTRY("Psydon Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/cloak/tabard/psydontabard/black = TAT_ITEM_ENTRY("Psydon Tabard", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/rogueweapon/handclaw/steel = TAT_ITEM_ENTRY("Steel Mantis Claws", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "unarmed"), \
-	/obj/item/storage/magebag = TAT_ITEM_ENTRY("Scholar's Pouch", 1.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
+	/obj/item/storage/magebag = TAT_ITEM_ENTRY("Scholar's Pouch", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/clothing/head/roguetown/spellcasterhat = TAT_ITEM_ENTRY("Spellsinger Hat", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "head"), \
 	/obj/item/clothing/suit/roguetown/shirt/robe/spellcasterrobe = TAT_ITEM_ENTRY("Spellsinger Robes", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/rogueweapon/sword/sabre/shamshir = TAT_ITEM_ENTRY("Shamshir", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \

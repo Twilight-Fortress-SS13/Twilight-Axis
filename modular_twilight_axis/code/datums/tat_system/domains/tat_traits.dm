@@ -365,6 +365,9 @@
 	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && skill_type == /datum/skill/magic/arcane)
 		total += 1
 
+	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && skill_type == /datum/skill/misc/reading)
+		total += min(4, max(0, owner_build?.directions?.get_points(TAT_DIRECTION_MAGIC) || 0))
+
 	if(has_trait(TAT_TRAIT_SADDLEBORN) && skill_type == /datum/skill/misc/riding)
 		total += 1
 
