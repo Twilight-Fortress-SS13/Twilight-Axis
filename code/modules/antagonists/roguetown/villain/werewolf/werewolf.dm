@@ -207,6 +207,7 @@
 	item_flags = DROPDEL
 	repair_time = 15 SECONDS
 	interrupt_damount = 35
+	silver_weak = TRUE
 
 /datum/intent/simple/werewolf
 	name = "claw"

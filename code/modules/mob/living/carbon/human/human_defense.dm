@@ -14,6 +14,15 @@
 	return (armorval/max(organnum, 1))
 
 
+/mob/living/carbon/human/proc/apply_silver_weak_armor_damage_bonus(obj/item/clothing/armor_piece, obj/item/used_weapon, armor_damage)
+	if(!armor_damage)
+		return armor_damage
+	if(!armor_piece?.silver_weak)
+		return armor_damage
+	if(!istype(used_weapon) || !used_weapon.is_silver)
+		return armor_damage
+	return round(armor_damage * armor_piece.silver_weak_damage_multiplier)
+
 /mob/living/carbon/human/proc/checkarmor(def_zone, d_type, damage, armor_penetration = PEN_NONE, blade_dulling, intdamfactor = 1, obj/item/used_weapon, pen_info)
 	if(!d_type)
 		return 0
@@ -83,6 +92,7 @@
 					remove_status_effect(/datum/status_effect/debuff/vulnerable)
 					emote("groan", forced = TRUE)
 
+			intdamage = apply_silver_weak_armor_damage_bonus(used, used_weapon, intdamage)
 			used.take_damage(intdamage, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
 	else
 		// DR types: blunt, fire, acid
@@ -130,6 +140,7 @@
 				var/actualdmg = intdamage
 				if(!full_dmg)
 					actualdmg /= layers_deep
+				actualdmg = apply_silver_weak_armor_damage_bonus(C, used_weapon, actualdmg)
 				C.take_damage(actualdmg, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
 				if(C.blocksound && !played_sound)
 					playsound(loc, get_armor_sound(C.blocksound, blade_dulling), 100)

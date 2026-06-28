@@ -60,6 +60,8 @@
 	var/chunkcolor = "#5e5e5e"
 	var/material_category = ARMOR_MAT_LEATHER
 	var/throw_on_break = FALSE
+	var/silver_weak = FALSE
+	var/silver_weak_damage_multiplier = 1.4
 
 /obj/item
 	var/blocking_behavior
