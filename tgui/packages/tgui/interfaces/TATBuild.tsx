@@ -39,8 +39,6 @@ type SkillState = {
 type TraitEntry = {
   name: string;
   cost: number;
-  category: string;
-  category_name: string;
   desc?: string;
   can_add?: boolean;
   repeatable?: boolean;
@@ -1787,7 +1785,7 @@ const TraitNode = ({
       ? `Ordinary - ${getOrdinaryGroupLabel(entry)}`
       : entry.direction
         ? `${DIRECTION_LABELS[entry.direction] || entry.direction} tier ${entry.direction_tier ?? 1}`
-        : entry.category_name || entry.category,
+        : 'Trait',
     costText: effectText || (entry.direction ? `${cost} ${DIRECTION_LABELS[entry.direction] || entry.direction}` : `${cost} pts`),
     total: amount,
     canAdd,
@@ -1918,11 +1916,11 @@ const TraitsTab = ({
   const [selectedDirection, setSelectedDirection] = useState<TraitTabKey>('combat');
   const entries = useMemo(
     () => Object.entries(data.available_traits || {})
-      .filter(([traitId, entry]) => matchesSearch(search, traitId, entry.name, entry.desc, entry.category, entry.category_name, entry.direction)),
+      .filter(([traitId, entry]) => matchesSearch(search, traitId, entry.name, entry.desc, entry.direction)),
     [data.available_traits, search]
   );
   const visibleEntries = useMemo(
-    () => entries.filter(([, entry]) => selectedDirection === 'ordinary' ? !entry.direction || entry.direction === 'ordinary' : entry.direction === selectedDirection),
+    () => entries.filter(([, entry]) => entry.direction === selectedDirection),
     [entries, selectedDirection]
   );
 

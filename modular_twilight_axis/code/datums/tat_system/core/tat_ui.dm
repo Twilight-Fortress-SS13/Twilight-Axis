@@ -553,9 +553,9 @@
 		if(directions?.is_role_trait(trait_id))
 			continue
 		var/list/entry = get_trait_entry(trait_id)
-		if(islist(entry) && entry["category"] == TAT_CATEGORY_SKILL_CONVERSION)
-			continue
 		if(!islist(entry))
+			continue
+		if(!directions?.is_direction_trait(trait_id))
 			continue
 		var/can_add = traits?.can_select_trait(trait_id)
 		var/lock_reason = traits?.get_trait_requirement_block_reason(trait_id) || directions?.get_trait_block_reason(trait_id)
@@ -575,8 +575,6 @@
 		result[trait_id] = list(
 			"name" = entry["name"],
 			"cost" = get_trait_cost_display(trait_id),
-			"category" = entry["category"],
-			"category_name" = entry["category_name"],
 			"desc" = entry["desc"],
 			"repeatable" = traits?.is_repeatable_trait(trait_id),
 			"maximum" = traits?.get_trait_maximum(trait_id),

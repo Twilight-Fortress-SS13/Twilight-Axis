@@ -136,10 +136,12 @@
 	return round((isnum(entry["cost"]) ? entry["cost"] : 0))
 
 /datum/tat_traits/proc/get_oddity_direction_point_bonus(trait_id)
-	if(owner_build?.directions?.is_direction_trait(trait_id) && owner_build.directions.get_trait_direction(trait_id) != TAT_DIRECTION_ORDINARY)
+	if(!owner_build?.directions?.is_direction_trait(trait_id))
+		return 0
+	if(owner_build.directions.get_trait_direction(trait_id) != TAT_DIRECTION_ORDINARY)
 		return 0
 	var/list/entry = get_entry(trait_id)
-	if(!islist(entry) || entry["category"] != TAT_CATEGORY_ODDITY)
+	if(!islist(entry))
 		return 0
 	var/cost = get_base_cost(trait_id)
 	if(cost >= 0)
