@@ -27,6 +27,7 @@ const pauseEvent = (e) => {
 
 type Props = PropsWithChildren<{
   onZoom?: (zoom: number) => void;
+  onClick?: (x: number, y: number) => void; // TA EDIT
 }>;
 
 type State = {
@@ -59,8 +60,12 @@ export class NanoMap extends Component<Props, State> {
   }
 
   getWxH = (zoom: number) => {
-    const { config } = useBackend();
-    return [config.mapInfo.maxx * 2 * zoom, config.mapInfo.maxy * 2 * zoom];
+    // TA EDIT BEGIN
+    const { config, data } = useBackend<any>();
+    const maxx = data?.maxx ?? config?.mapInfo?.maxx ?? 255;
+    const maxy = data?.maxy ?? config?.mapInfo?.maxy ?? 255;
+    return [maxx * 2 * zoom, maxy * 2 * zoom];
+    // TA EDIT END
   };
 
   setZoom(zoom: number, mouseX: number, mouseY: number) {
@@ -186,20 +191,21 @@ export class NanoMap extends Component<Props, State> {
   }
 
   render() {
-    const { config } = useBackend();
+    const { config, data } = useBackend<any>(); // TA EDIT
     const { dragging, offsetX, offsetY, zoom = 1 } = this.state;
     const { children } = this.props;
 
     const WxH = this.getWxH(zoom);
-
-    const mapUrl = resolveAsset(`minimap_${config.mapZLevel}.png`);
+    // TA EDIT BEGIN
+    const mapZLevel = data?.mapZLevel ?? config?.mapZLevel ?? 1;
+    const mapUrl = resolveAsset(`/minimap_${mapZLevel}.png`);
+    // TA EDIT END
     const newStyle: CSSProperties = {
       width: `${WxH[0]}px`,
       height: `${WxH[1]}px`,
-      marginTop: `${offsetY}px`,
-      marginLeft: `${offsetX}px`,
+      transform: `translate(${offsetX}px, ${offsetY}px)`, // TA EDIT
       overflow: 'hidden',
-      position: 'relative',
+      position: 'absolute', // TA EDIT
       imageRendering: 'pixelated',
       backgroundImage: `url(${mapUrl})`,
       backgroundSize: 'cover',
@@ -207,13 +213,39 @@ export class NanoMap extends Component<Props, State> {
       textAlign: 'center',
       cursor: dragging ? 'move' : 'auto',
     };
+    // TA EDIT BEGIN
+    const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (this.state.dragging) return;
+      if (!this.props.onClick) return;
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      const tileX = Math.floor(clickX / (2 * zoom)) + 1;
+      const tileY = Math.floor((rect.height - clickY) / (2 * zoom)) + 1;
+
+      this.props.onClick(tileX, tileY);
+    };
 
     return (
-      <Box className="NanoMap__container" overflow="hidden">
+      <Box
+        className="NanoMap__container"
+        overflow="hidden"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      // TA EDIT END
+      >
         <Box
           style={newStyle}
           textAlign="center"
           onMouseDown={this.handleDragStart}
+          onClick={handleMapClick} // TA EDIT
         >
           <Box>{children}</Box>
         </Box>
@@ -290,12 +322,12 @@ const NanoMapZoomer = (props: NanoMapZoomerProps) => {
           />
         </LabeledList.Item>
         <LabeledList.Item label="Z-Level">
-          {data.map_levels
+          {(data?.map_levels || []) // TA EDIT
             .sort((a, b) => Number(a) - Number(b))
             .map((level) => (
               <Button
                 key={level}
-                selected={~~level === ~~config.mapZLevel}
+                selected={~~level === ~~(data?.mapZLevel ?? config?.mapZLevel ?? 1)} // TA EDIT
                 onClick={() => {
                   act('setZLevel', { mapZLevel: level });
                 }}
