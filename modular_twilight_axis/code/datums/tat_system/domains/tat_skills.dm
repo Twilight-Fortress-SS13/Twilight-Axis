@@ -116,7 +116,7 @@
 	if(!can_take_skill_domain_points(domain, amount))
 		return FALSE
 	var/remaining_amount = amount
-	var/converted_amount = min(remaining_amount, get_converted_domain_points(domain), max(0, get_remaining_points(domain)))
+	var/converted_amount = min(remaining_amount, get_free_converted_domain_points(domain))
 	if(converted_amount > 0)
 		domain_points[domain] = max(0, round(domain_points[domain] || 0) - converted_amount)
 		remaining_amount -= converted_amount
@@ -382,7 +382,9 @@
 	domain = normalize_skill_domain(domain)
 	if(!domain)
 		return 0
-	return round(domain_points[domain] || 0) - get_spent_points(domain)
+	var/base_points = max(0, round(domain_points[domain] || 0))
+	var/convertible_spent = get_convertible_spent_points(domain)
+	return max(0, base_points - min(base_points, convertible_spent))
 
 /datum/tat_skills/proc/get_role_domain_points(domain)
 	domain = normalize_skill_domain(domain)
@@ -410,11 +412,60 @@
 		return 0
 	return max(0, round(converted_role_points[domain] || 0))
 
+/datum/tat_skills/proc/get_convertible_domain_pool(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return 0
+	return max(0, round(domain_points[domain] || 0) + get_convertible_role_domain_points(domain) - get_converted_role_points(domain))
+
+/datum/tat_skills/proc/get_nonconvertible_domain_points(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return 0
+	return max(0, get_total_maximum(domain) - get_convertible_domain_pool(domain))
+
+/datum/tat_skills/proc/get_nonconvertible_spent_coverage(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return 0
+	var/spent = get_spent_points(domain)
+	if(domain != TAT_SKILL_DOMAIN_COMBAT)
+		return min(spent, get_nonconvertible_domain_points(domain))
+
+	var/weapon_training_points = owner_build?.traits?.get_selected_trait_count(TAT_TRAIT_WEAPON_TRAINING) > 0 ? 3 : 0
+	var/expert_bonus = get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_EXPERT, TAT_SKILL_DOMAIN_COMBAT)
+	var/master_bonus = get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_MASTER, TAT_SKILL_DOMAIN_COMBAT)
+	var/expert_spend = get_combat_step_spent_at_level(TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)
+	var/master_spend = get_combat_step_spent_at_level(TAT_SKILL_COMBAT_CAP_TRAIT_MASTER)
+	var/restricted_coverage = min(expert_bonus, expert_spend) + min(master_bonus, master_spend)
+	return min(spent, weapon_training_points + restricted_coverage)
+
+/datum/tat_skills/proc/get_convertible_spent_points(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return 0
+	return max(0, get_spent_points(domain) - get_nonconvertible_spent_coverage(domain))
+
+/datum/tat_skills/proc/get_convertible_role_remaining_points(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return 0
+	var/role_pool = max(0, get_convertible_role_domain_points(domain) - get_converted_role_points(domain))
+	var/convertible_spent = get_convertible_spent_points(domain)
+	var/base_points = max(0, round(domain_points[domain] || 0))
+	return max(0, role_pool - max(0, convertible_spent - base_points))
+
+/datum/tat_skills/proc/get_free_converted_domain_points(domain)
+	domain = normalize_skill_domain(domain)
+	if(!domain)
+		return 0
+	return min(get_converted_domain_points(domain), get_base_remaining_points(domain))
+
 /datum/tat_skills/proc/get_convertible_remaining_points(domain)
 	domain = normalize_skill_domain(domain)
 	if(!can_convert_from_skill_domain(domain))
 		return 0
-	return round(domain_points[domain] || 0) + get_convertible_role_domain_points(domain) - get_converted_role_points(domain) - get_spent_points(domain)
+	return get_base_remaining_points(domain) + get_convertible_role_remaining_points(domain)
 
 /datum/tat_skills/proc/get_combat_expert_count(except_skill_type = null)
 	if(!except_skill_type && _cached_combat_expert_count >= 0)
