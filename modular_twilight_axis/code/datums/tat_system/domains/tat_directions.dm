@@ -246,7 +246,7 @@
 	return rule ? rule["direction"] : null
 
 /datum/tat_directions/proc/is_handicraft_cluster_trait(trait_id)
-	return trait_id == TAT_TRAIT_MASTER_OF_CRAFTING || trait_id == TAT_TRAIT_STOCKPILER || trait_id == TAT_TRAIT_STRAYING_SOUL
+	return trait_id == TAT_TRAIT_MASTER_OF_CRAFTING || trait_id == TAT_TRAIT_STRAYING_SOUL
 
 /datum/tat_directions/proc/get_first_selected_handicraft_cluster_trait()
 	if(!owner_build?.traits?.selected)
