@@ -142,10 +142,29 @@
 	value = max(0, round(text2num("[value]") || 0))
 	return round((value * (value + 1)) / 2)
 
+/datum/tat_directions/proc/get_discounted_towner_battle_cost(value)
+	value = max(0, round(text2num("[value]") || 0))
+	var/total = 0
+	for(var/i = 1, i <= value, i++)
+		total += max(1, i - 1)
+	return total
+
+/datum/tat_directions/proc/has_towner_hunter_direction_discount(direction)
+	if(get_role_choice() != TAT_ROLE_CHOICE_TOWNER)
+		return FALSE
+	direction = normalize_direction(direction)
+	if(direction == TAT_DIRECTION_COMBAT && owner_build?.traits?.has_trait(TAT_TRAIT_HUNTER_BEATER))
+		return TRUE
+	if(direction == TAT_DIRECTION_RANGED && owner_build?.traits?.has_trait(TAT_TRAIT_HUNTER_SHOOTER))
+		return TRUE
+	return FALSE
+
 /datum/tat_directions/proc/get_towner_battle_allocated_points(direction_override = null, override_value = null)
 	var/total = 0
 	for(var/direction in TAT_DIRECTION_ORDER)
 		if(!(direction in TAT_TOWNER_BATTLE_DIRECTIONS))
+			continue
+		if(has_towner_hunter_direction_discount(direction))
 			continue
 		if(direction_override && direction == direction_override)
 			total += max(0, round(text2num("[override_value]") || 0))
@@ -156,15 +175,25 @@
 /datum/tat_directions/proc/get_towner_battle_spent_points(direction_override = null, override_value = null)
 	if(get_role_choice() != TAT_ROLE_CHOICE_TOWNER)
 		return 0
+	var/discounted_total = 0
+	for(var/discounted_direction in TAT_TOWNER_BATTLE_DIRECTIONS)
+		if(!has_towner_hunter_direction_discount(discounted_direction))
+			continue
+		if(direction_override && discounted_direction == direction_override)
+			discounted_total += get_discounted_towner_battle_cost(override_value)
+		else
+			discounted_total += get_discounted_towner_battle_cost(get_allocated_points(discounted_direction))
 	switch(tat_towner_battle_direction_cost_mode())
 		if(TAT_TOWNER_BATTLE_DIRECTION_COST_MODE_BRANCH)
 			var/total = 0
 			for(var/direction in TAT_TOWNER_BATTLE_DIRECTIONS)
+				if(has_towner_hunter_direction_discount(direction))
+					continue
 				var/value = (direction_override && direction == direction_override) ? max(0, round(text2num("[override_value]") || 0)) : get_allocated_points(direction)
 				total += get_triangular_cost(value)
-			return total
+			return total + discounted_total
 		if(TAT_TOWNER_BATTLE_DIRECTION_COST_MODE_GLOBAL)
-			return get_triangular_cost(get_towner_battle_allocated_points(direction_override, override_value))
+			return get_triangular_cost(get_towner_battle_allocated_points(direction_override, override_value)) + discounted_total
 	return 0
 
 /datum/tat_directions/proc/get_spent_points(direction_override = null, override_value = null)
@@ -275,6 +304,8 @@
 	var/handicraft_cost = get_handicraft_cluster_trait_cost(trait_id)
 	if(handicraft_cost >= 0)
 		return handicraft_cost
+	if(trait_id == TRAIT_OUTDOORSMAN && get_role_choice() == TAT_ROLE_CHOICE_TOWNER)
+		return 1
 	return max(0, owner_build?.traits?.get_base_cost(trait_id) || 0)
 
 /datum/tat_directions/proc/get_trait_tier(trait_id)

@@ -498,10 +498,13 @@
 		TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS = list(TAT_TRAIT_RANGED_SYNERGY_BOWS, TAT_TRAIT_RANGED_SYNERGY_SLINGS, TAT_TRAIT_RANGED_SYNERGY_FIREARMS),
 		TAT_TRAIT_RANGED_SYNERGY_SLINGS = list(TAT_TRAIT_RANGED_SYNERGY_BOWS, TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS, TAT_TRAIT_RANGED_SYNERGY_FIREARMS),
 		TAT_TRAIT_RANGED_SYNERGY_FIREARMS = list(TAT_TRAIT_RANGED_SYNERGY_BOWS, TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS, TAT_TRAIT_RANGED_SYNERGY_SLINGS),
-		TAT_TRAIT_SAVAGE_RAGE = list(TAT_TRAIT_BERSERKER_RAGE),
+		TAT_TRAIT_HUNTER_BEATER = list(TAT_TRAIT_HUNTER_SHOOTER, TAT_TRAIT_RONIN, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_MASTER_OF_CRAFTING, TRAIT_SMITHING_EXPERT, TAT_TRAIT_SKILLED_FORGEHAND, TAT_TRAIT_SKILLED_ARMORER, TAT_TRAIT_SKILLED_WEAPONSMITH, TAT_TRAIT_SKILLED_ARTISAN, TAT_TRAIT_MASTER_CRAFTSMAN, TAT_TRAIT_SKILLED_MASON, TAT_TRAIT_SKILLED_COOK, TRAIT_ALCHEMY_EXPERT, TAT_TRAIT_SKILLED_ALCHEMIST, TRAIT_MEDICINE_EXPERT, TAT_TRAIT_SKILLED_PHYSICKER, TRAIT_HOMESTEAD_EXPERT, TRAIT_SELF_SUSTENANCE, TRAIT_SURVIVAL_EXPERT, TAT_TRAIT_SKILLED_SURVIVALIST, TRAIT_SEWING_EXPERT, TAT_TRAIT_SKILLED_CLOTHIER, TRAIT_SEEDKNOW, TRAIT_CAUTIOUS_FISHER, TRAIT_SQUIRE_REPAIR),
+		TAT_TRAIT_HUNTER_SHOOTER = list(TAT_TRAIT_HUNTER_BEATER, TAT_TRAIT_RONIN, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_MASTER_OF_CRAFTING, TRAIT_SMITHING_EXPERT, TAT_TRAIT_SKILLED_FORGEHAND, TAT_TRAIT_SKILLED_ARMORER, TAT_TRAIT_SKILLED_WEAPONSMITH, TAT_TRAIT_SKILLED_ARTISAN, TAT_TRAIT_MASTER_CRAFTSMAN, TAT_TRAIT_SKILLED_MASON, TAT_TRAIT_SKILLED_COOK, TRAIT_ALCHEMY_EXPERT, TAT_TRAIT_SKILLED_ALCHEMIST, TRAIT_MEDICINE_EXPERT, TAT_TRAIT_SKILLED_PHYSICKER, TRAIT_HOMESTEAD_EXPERT, TRAIT_SELF_SUSTENANCE, TRAIT_SURVIVAL_EXPERT, TAT_TRAIT_SKILLED_SURVIVALIST, TRAIT_SEWING_EXPERT, TAT_TRAIT_SKILLED_CLOTHIER, TRAIT_SEEDKNOW, TRAIT_CAUTIOUS_FISHER, TRAIT_SQUIRE_REPAIR),
+		TAT_TRAIT_BODYBUILDER_SKIN = list(TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_SAVAGE_RAGE, TAT_TRAIT_BERSERKER_RAGE),
+		TAT_TRAIT_SAVAGE_RAGE = list(TAT_TRAIT_BERSERKER_RAGE, TAT_TRAIT_BODYBUILDER_SKIN),
 		TRAIT_EASYDISMEMBER = list(TRAIT_HARDDISMEMBER),
-		TRAIT_FENCERDEXTERITY = list(TAT_TRAIT_SAVAGE_SKIN),
-		TRAIT_NUDE_SLEEPER = list(TRAIT_NUDIST, TAT_TRAIT_SAVAGE_SKIN, TRAIT_NOSLEEP),
+		TRAIT_FENCERDEXTERITY = list(TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_BODYBUILDER_SKIN),
+		TRAIT_NUDE_SLEEPER = list(TRAIT_NUDIST, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_BODYBUILDER_SKIN, TRAIT_NOSLEEP),
 		TRAIT_NOSLEEP = list(TRAIT_RITUALIST),
 		TRAIT_REVERSE_GUIDANCE = list(TRAIT_LESSER_REVERSE_GUIDANCE),
 		TRAIT_NOPAINSTUN = list(TAT_TRAIT_MAGE_INITIATE)
@@ -528,9 +531,12 @@
 		TAT_TRAIT_ARTIFACTS_SUPPLIER = list("all" = list(TAT_TRAIT_PARTY_LEADER), "message" = "\"[get_trait_display_name(TAT_TRAIT_ARTIFACTS_SUPPLIER)]\" requires \"[get_trait_display_name(TAT_TRAIT_PARTY_LEADER)]\"."),
 		TAT_TRAIT_SILVER_SUPPLIER = list("all" = list(TRAIT_PURITAN_ADVENTURER), "message" = "\"[get_trait_display_name(TAT_TRAIT_SILVER_SUPPLIER)]\" requires \"[get_trait_display_name(TRAIT_PURITAN_ADVENTURER)]\"."),
 		TAT_TRAIT_SAVAGE_SKIN = list("all" = list(TRAIT_NOPAINSTUN), "message" = "\"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\" requires \"[get_trait_display_name(TRAIT_NOPAINSTUN)]\"."),
+		TAT_TRAIT_BODYBUILDER_SKIN = list("role_choice" = TAT_ROLE_CHOICE_TOWNER, "message" = "\"[get_trait_display_name(TAT_TRAIT_BODYBUILDER_SKIN)]\" requires Resident."),
 		TRAIT_STRONGBITE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN), "message" = "\"[get_trait_display_name(TRAIT_STRONGBITE)]\" requires \"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\"."),
 		TAT_TRAIT_SAVAGE_RAGE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN), "message" = "\"[get_trait_display_name(TAT_TRAIT_SAVAGE_RAGE)]\" requires \"[get_trait_display_name(TAT_TRAIT_SAVAGE_SKIN)]\"."),
 		TAT_TRAIT_BERSERKER_RAGE = list("all" = list(TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_HERETIC), "message" = "\"[get_trait_display_name(TAT_TRAIT_BERSERKER_RAGE)]\" requires savage skin and heretic."),
+		TAT_TRAIT_HUNTER_BEATER = list("all" = list(TRAIT_OUTDOORSMAN), "role_choice" = TAT_ROLE_CHOICE_TOWNER, "message" = "\"[get_trait_display_name(TAT_TRAIT_HUNTER_BEATER)]\" requires Resident and \"[get_trait_display_name(TRAIT_OUTDOORSMAN)]\"."),
+		TAT_TRAIT_HUNTER_SHOOTER = list("all" = list(TRAIT_OUTDOORSMAN), "role_choice" = TAT_ROLE_CHOICE_TOWNER, "message" = "\"[get_trait_display_name(TAT_TRAIT_HUNTER_SHOOTER)]\" requires Resident and \"[get_trait_display_name(TRAIT_OUTDOORSMAN)]\"."),
 		TAT_TRAIT_LOOTRAT_2 = list("all" = list(TAT_TRAIT_TRADER_LICENSE, TAT_TRAIT_LOOTRAT), "foundation" = TAT_FOUNDATION_SETTLED, "role_choice" = TAT_ROLE_CHOICE_TRADER, "message" = "\"[get_trait_display_name(TAT_TRAIT_LOOTRAT_2)]\" requires \"[get_trait_display_name(TAT_TRAIT_TRADER_LICENSE)]\", \"[get_trait_display_name(TAT_TRAIT_LOOTRAT)]\", and Trader role."),
 	)
 	return GLOB.tat_trait_requirement_map
@@ -760,6 +766,75 @@
 		return
 	ADD_TRAIT(H, TRAIT_WITCH, TAT_TRAIT_SOURCE)
 	ADD_TRAIT(H, TRAIT_DEATHSIGHT, TAT_TRAIT_SOURCE)
+
+/datum/tat_traits/proc/get_available_witch_paths()
+	var/list/paths = list()
+	if(!has_trait(TAT_TRAIT_WITCH_INITIATE))
+		return paths
+	if(owner_build?.directions?.get_role_choice() != TAT_ROLE_CHOICE_TOWNER)
+		return paths
+	var/magic_points = owner_build?.directions?.get_points(TAT_DIRECTION_MAGIC) || 0
+	var/miracle_points = owner_build?.directions?.get_points(TAT_DIRECTION_MIRACLES) || 0
+	if(magic_points >= 2)
+		paths += TAT_WITCH_PATH_OLD_MAGICK
+	if(miracle_points >= 2)
+		paths += TAT_WITCH_PATH_GODSBLOOD
+	if(magic_points >= 1 && miracle_points >= 1)
+		paths += TAT_WITCH_PATH_MYSTAGOGUE
+	return paths
+
+/datum/tat_traits/proc/get_witch_path_choice(mob/living/carbon/human/H)
+	var/list/paths = get_available_witch_paths()
+	if(!length(paths))
+		return null
+	var/stored_path = owner_build?.get_magic_value("witch_path")
+	if(stored_path in paths)
+		return stored_path
+	if(length(paths) == 1)
+		return paths[1]
+	if(H?.client)
+		var/path_choice = tgui_input_list(H, "How do your powers manifest?", "THE OLD WAYS", paths)
+		if(path_choice in paths)
+			return path_choice
+	return paths[1]
+
+/datum/tat_traits/proc/apply_witch_path_package(mob/living/carbon/human/H)
+	if(!H || !H.mind || !has_trait(TAT_TRAIT_WITCH_INITIATE))
+		return
+	var/path_choice = get_witch_path_choice(H)
+	if(!path_choice)
+		owner_build?.set_magic_value("witch_path", null)
+		return
+	owner_build?.set_magic_value("witch_path", path_choice)
+	var/datum/devotion/D
+	var/list/aspects
+	switch(path_choice)
+		if(TAT_WITCH_PATH_OLD_MAGICK)
+			ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
+			H.adjust_skillrank_up_to(/datum/skill/magic/arcane, max(1, owner_build?.get_skill_value(/datum/skill/magic/arcane) || 1), TRUE)
+			aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 5, "ward" = TRUE)
+			H.mind.setup_mage_aspects(aspects)
+			owner_build?.set_magic_value("mage_aspects", aspects.Copy())
+		if(TAT_WITCH_PATH_GODSBLOOD)
+			if(H.devotion)
+				qdel(H.devotion)
+			D = new /datum/devotion(H, H.patron)
+			H.adjust_skillrank_up_to(/datum/skill/magic/holy, max(1, owner_build?.get_skill_value(/datum/skill/magic/holy) || 1), TRUE)
+			D.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
+			D.max_devotion *= 0.5
+		if(TAT_WITCH_PATH_MYSTAGOGUE)
+			if(H.devotion)
+				qdel(H.devotion)
+			D = new /datum/devotion(H, H.patron)
+			H.adjust_skillrank_up_to(/datum/skill/magic/holy, max(1, owner_build?.get_skill_value(/datum/skill/magic/holy) || 1), TRUE)
+			D.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_1)
+			D.max_devotion *= 0.5
+			ADD_TRAIT(H, TRAIT_ARCYNE, TAT_TRAIT_SOURCE)
+			H.adjust_skillrank_up_to(/datum/skill/magic/arcane, max(1, owner_build?.get_skill_value(/datum/skill/magic/arcane) || 1), TRUE)
+			aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3)
+			H.mind.setup_mage_aspects(aspects)
+			owner_build?.set_magic_value("mage_aspects", aspects.Copy())
+			grant_poke_spell(H)
 
 /datum/tat_traits/proc/apply_witch_shapeshift_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_WITCH_INITIATE))
@@ -1111,6 +1186,14 @@
 		owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path_2, SLOT_SHIRT)
 	return TRUE
 
+/datum/tat_traits/proc/apply_bodybuilder_skin_package(mob/living/carbon/human/H)
+	if(!H || !has_trait(TAT_TRAIT_BODYBUILDER_SKIN))
+		return FALSE
+
+	var/skin_path = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/gladiator
+	owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
+	return TRUE
+
 /datum/tat_traits/proc/apply_savage_rage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_RAGE) || !H.mind)
 		return FALSE
@@ -1189,7 +1272,7 @@
 		if(is_repeatable_trait(trait_id))
 			continue
 		switch(trait_id)
-			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_WEAPON_TRAINING, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_RANGED_SUPPLIER, TAT_TRAIT_RANGED_SYNERGY_BOWS, TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS, TAT_TRAIT_RANGED_SYNERGY_SLINGS, TAT_TRAIT_RANGED_SYNERGY_FIREARMS, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_DIVINE_BLAST, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_CONTRACTOR, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_MASTER_OF_CRAFTING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_PLIANT_RENAME, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_SAVAGE_RAGE, TAT_TRAIT_HERETIC, TAT_TRAIT_BERSERKER_RAGE, TAT_TRAIT_LOOTRAT, TRAIT_SHIRTLESS, TAT_TRAIT_LOOTRAT_2, TAT_TRAIT_ACCURSED, TAT_TRAIT_POLYGLOT)
+			if(TAT_TRAIT_WARRIOR_EXPERT, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_WEAPON_TRAINING, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_RONIN, TAT_TRAIT_RESIDENT, TAT_TRAIT_STEEL_SUPPLIER, TAT_TRAIT_SILVER_SUPPLIER, TAT_TRAIT_BRONZE_SUPPLIER, TAT_TRAIT_LEATHER_SUPPLIER, TAT_TRAIT_MAIL_SUPPLIER, TAT_TRAIT_PLATE_SUPPLIER, TAT_TRAIT_RANGED_SUPPLIER, TAT_TRAIT_RANGED_SYNERGY_BOWS, TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS, TAT_TRAIT_RANGED_SYNERGY_SLINGS, TAT_TRAIT_RANGED_SYNERGY_FIREARMS, TAT_TRAIT_HUNTER_BEATER, TAT_TRAIT_HUNTER_SHOOTER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_BARDIC_INSPIRATION_T1, TAT_TRAIT_BARDIC_INSPIRATION_T2, TAT_TRAIT_PARTY_LEADER, TAT_TRAIT_BONUS_STAT_POOL, TAT_TRAIT_WANTED, TAT_TRAIT_DIVINE_INITIATE, TAT_TRAIT_DIVINE_BLAST, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_DRUID_INITIATE, TAT_TRAIT_WITCH_INITIATE, TAT_TRAIT_CONTRACTOR, TAT_TRAIT_ARTIFACTS_SUPPLIER, TAT_TRAIT_FIREARMS_SUPPLIER, TAT_TRAIT_TROPHY_BOUNTY, TAT_TRAIT_MASTER_OF_WANDERING, TAT_TRAIT_MASTER_OF_CRAFTING, TAT_TRAIT_STRAYING_SOUL, TAT_TRAIT_PLIANT_RENAME, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_BODYBUILDER_SKIN, TAT_TRAIT_SAVAGE_RAGE, TAT_TRAIT_HERETIC, TAT_TRAIT_BERSERKER_RAGE, TAT_TRAIT_LOOTRAT, TRAIT_SHIRTLESS, TAT_TRAIT_LOOTRAT_2, TAT_TRAIT_ACCURSED, TAT_TRAIT_POLYGLOT)
 				continue
 			else
 				ADD_TRAIT(H, trait_id, TAT_TRAIT_SOURCE)
@@ -1215,6 +1298,7 @@
 			H.inspiration.grant_inspiration(H, bard_tier)
 	try_apply_party_leader(H)
 	apply_savage_skin_package(H)
+	apply_bodybuilder_skin_package(H)
 	apply_savage_rage_package(H)
 	apply_berserker_rage_package(H)
 	if(has_trait(TAT_TRAIT_WARRIOR_MASTER))
@@ -1248,6 +1332,7 @@
 		if(!H.HasSpell(/obj/effect/proc_holder/spell/self/choose_riding_virtue_mount))
 			H.AddSpell(new /obj/effect/proc_holder/spell/self/choose_riding_virtue_mount)
 		ADD_TRAIT(H, TRAIT_EQUESTRIAN, TAT_TRAIT_SOURCE)
+	apply_witch_path_package(H)
 	apply_witch_shapeshift_package(H)
 	apply_pliant_title(H)
 	apply_polyglot_package(H)

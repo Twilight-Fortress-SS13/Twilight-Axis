@@ -7,6 +7,7 @@
 #define TAT_TRAIT_MASTER_OF_WANDERING "tat_master_of_wandering"
 #define TAT_TRAIT_PLIANT_RENAME "tat_pliant_rename"
 #define TAT_TRAIT_SAVAGE_SKIN "tat_savage_skin"
+#define TAT_TRAIT_BODYBUILDER_SKIN "tat_bodybuilder_skin"
 #define TAT_TRAIT_SAVAGE_RAGE "tat_savage_rage"
 #define TAT_TRAIT_BERSERKER_RAGE "tat_berserker_rage"
 #define TAT_TRAIT_TRADER_LICENSE "tat_trader_license"
@@ -23,6 +24,8 @@
 #define TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS "tat_ranged_synergy_crossbows"
 #define TAT_TRAIT_RANGED_SYNERGY_SLINGS "tat_ranged_synergy_slings"
 #define TAT_TRAIT_RANGED_SYNERGY_FIREARMS "tat_ranged_synergy_firearms"
+#define TAT_TRAIT_HUNTER_BEATER "tat_hunter_beater"
+#define TAT_TRAIT_HUNTER_SHOOTER "tat_hunter_shooter"
 #define TAT_TRAIT_ARTIFACTS_SUPPLIER "tat_artifacts_supplier"
 #define TAT_TRAIT_TROPHY_BOUNTY "tat_trophy_bounty"
 #define TAT_TRAIT_PLATE_SUPPLIER "tat_plate_supplier"
@@ -54,6 +57,10 @@
 #define TAT_TRAIT_MAGE_MINOR_SLOT_1 "tat_mage_minor_slot_1"
 #define TAT_TRAIT_MAGE_MINOR_SLOT_2 "tat_mage_minor_slot_2"
 #define TAT_TRAIT_MAGE_UTILITY_SLOT "tat_mage_utility_slot"
+
+#define TAT_WITCH_PATH_OLD_MAGICK "Old Magick"
+#define TAT_WITCH_PATH_GODSBLOOD "Godsblood"
+#define TAT_WITCH_PATH_MYSTAGOGUE "Mystagogue"
 
 #define TAT_TRAIT_TRAINEE_SMITH "tat_trainee_smith"
 #define TAT_TRAIT_TRAINEE_ARMORER "tat_trainee_armorer"
@@ -113,6 +120,7 @@
 	TRAIT_SELF_SUSTENANCE = list(/datum/skill/craft/crafting = 3, /datum/skill/craft/weaponsmithing = 3, /datum/skill/craft/armorsmithing = 3, /datum/skill/craft/blacksmithing = 3, /datum/skill/craft/smelting = 3, /datum/skill/craft/carpentry = 3, /datum/skill/craft/masonry = 3, /datum/skill/craft/traps = 3, /datum/skill/craft/engineering = 3, /datum/skill/craft/cooking = 3, /datum/skill/craft/sewing = 3, /datum/skill/craft/tanning = 3, /datum/skill/craft/ceramics = 3, /datum/skill/craft/alchemy = 3, /datum/skill/labor/farming = 3, /datum/skill/labor/mining = 3, /datum/skill/labor/fishing = 3, /datum/skill/labor/butchering = 3, /datum/skill/labor/lumberjacking = 3), \
 	TRAIT_MASTERFUL_HUNTER = list(/datum/skill/misc/hunting = 6, /datum/skill/misc/tracking = 6, /datum/skill/labor/butchering = 6), \
 	TRAIT_EXPERT_HUNTER = list(/datum/skill/misc/hunting = 5, /datum/skill/misc/tracking = 5), \
+	TAT_TRAIT_HUNTER_SHOOTER = list(/datum/skill/combat/bows = 4, /datum/skill/combat/crossbows = 4, /datum/skill/combat/slings = 4), \
 	TRAIT_FIREARMS_MARKSMAN = list(/datum/skill/combat/twilight_firearms = 4), \
 	TAT_TRAIT_SADDLEBORN = list(/datum/skill/misc/riding = 5), \
 )
@@ -208,11 +216,13 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_MEDIUMARMOR = TAT_TRAIT_ENTRY("Maille Training", 2, "Can move freely in medium armor."), \
 	TRAIT_NOPAINSTUN = TAT_TRAIT_ENTRY("Enduring", 2, "Pain does not impair you as easily. You can endure more burns before collapsing."), \
 	TAT_TRAIT_SAVAGE_SKIN = TAT_TRAIT_ENTRY("Savage Skin", 1, "Requires Enduring. Starts you with barbarian regenerating skin equipped in the armor slot."), \
+	TAT_TRAIT_BODYBUILDER_SKIN = TAT_TRAIT_ENTRY("Bodybuilder Skin", 2, "Resident only. Starts you with pit-hardened regenerating skin equipped in the armor slot. Does not require Enduring. Conflicts with other skin traits."), \
 	TAT_TRAIT_SAVAGE_RAGE = TAT_TRAIT_ENTRY("Savage Rage", 1, "Requires Savage Skin. Grants the Rage ability."), \
 	TAT_TRAIT_BERSERKER_RAGE = TAT_TRAIT_ENTRY("Berserkers Rage", 2, "Requires Savage Skin and Heretic. Grants the Berserkers Rage ability."), \
 	TRAIT_CRITICAL_RESISTANCE = TAT_TRAIT_ENTRY("Critical Resistance", 2, "Your constitution is iron-clad. You can resist the first critical wounds that would fell others, though repeated punishment will overwhelm you."), \
 	TRAIT_HARDDISMEMBER = TAT_TRAIT_ENTRY("Hard Dismemberment", 1, "Your limbs are harder to dismember."), \
 	TRAIT_STEELHEARTED = TAT_TRAIT_ENTRY("Steelhearted", 1, "Hardened nerves. You do not waiver from the sight of violence in battle."), \
+	TRAIT_OUTDOORSMAN = TAT_TRAIT_ENTRY("Outdoorsman", 3, "Experience in the wilds lets you sleep on surfaces like treebranches as if they were beds. Costs 1 Survival point for Residents."), \
 	TRAIT_CIVILIZEDBARBARIAN = TAT_TRAIT_ENTRY("Expert Pugilist", 2, "Turns you into a living weapon: stronger unarmed strikes, broader unarmed reach, and much better parrying with bracers, knuckles, or bandages."), \
 	TRAIT_FENCERDEXTERITY = TAT_TRAIT_ENTRY("Fencer's Dexterity", 1, "I've trained my entire lyfe around the art of unarmoured fencing, affording myself unmatched speed when wearing very light armour. I'm very choosy otherwise. WARNING: YOU CAN WEAR ONLY LIGHT ARMOR"), \
 	TAT_TRAIT_BRONZE_SUPPLIER = TAT_TRAIT_ENTRY("Bronze Supplier", 1, "Unlocks bronze-tier weapons."), \
@@ -252,13 +262,15 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_MAGE_MINOR_SLOT_2 = TAT_TRAIT_ENTRY("Arcane Minor Slot II", 1, "Requires Mage Initiate. Grants +1 minor spell slot."), \
 	TAT_TRAIT_MAGE_UTILITY_SLOT = TAT_TRAIT_ENTRY("Arcane Utility Slot", 1, "Requires Mage Initiate. Grants +1 utility spell slot."), \
 	TAT_TRAIT_DRUID_INITIATE = TAT_TRAIT_ENTRY("Druid Initiate", 3, "Requires Dendor as your patron. Grants Dendor's druidic rites, direct druid spells, and wise tree alert."), \
-	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 2, "Grants witch trait and ability to shapeshift yourself into different small creatures."), \
+	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 2, "Grants witch trait, deathsight, and ability to shapeshift yourself into different small creatures. Resident only: Magic 2 unlocks Old Magick, Miracles 2 unlocks Godsblood, and Magic 1 plus Miracles 1 unlocks Mystagogue."), \
 	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 1, "Grants explosives gifts from your friends. Luck scaled."), \
 	TAT_TRAIT_ARTIFACTS_SUPPLIER = TAT_TRAIT_ENTRY("Artifacts Bearer", 3, "You're one of the adventurers with stories about your raids. Now, you have one of the deadliest weapons in Grimmoria. REQUIRES: Party Leader"), \
 	TAT_TRAIT_RANGED_SYNERGY_BOWS = TAT_TRAIT_ENTRY("Bow Synergy", 1, "Choose one ranged synergy only. Your Ranged direction points automatically raise Bows, limited by the current Bows cap."), \
 	TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS = TAT_TRAIT_ENTRY("Crossbow Synergy", 1, "Choose one ranged synergy only. Your Ranged direction points automatically raise Crossbows, limited by the current Crossbows cap."), \
 	TAT_TRAIT_RANGED_SYNERGY_SLINGS = TAT_TRAIT_ENTRY("Sling Synergy", 1, "Choose one ranged synergy only. Your Ranged direction points automatically raise Slings, limited by the current Slings cap."), \
 	TAT_TRAIT_RANGED_SYNERGY_FIREARMS = TAT_TRAIT_ENTRY("Firearm Synergy", 1, "Choose one ranged synergy only. Your Ranged direction points automatically raise Firearms, limited by the current Firearms cap."), \
+	TAT_TRAIT_HUNTER_BEATER = TAT_TRAIT_ENTRY("Beater Hunter", 2, "Resident hunter path. Polearms cost 1 less to raise. Melee direction keeps Towner battle progression, but each new level costs 1 less to a minimum of 1. Conflicts with Shooter Hunter and major peaceful specializations."), \
+	TAT_TRAIT_HUNTER_SHOOTER = TAT_TRAIT_ENTRY("Shooter Hunter", 2, "Resident hunter path. Bows, crossbows and slings can be raised to level 4. Ranged direction keeps Towner battle progression, but each new level costs 1 less to a minimum of 1. Conflicts with Beater Hunter and major peaceful specializations."), \
 	TRAIT_BOW_DOUBLESHOT = TAT_TRAIT_ENTRY("Double Shot Archer", 1, "Unlocks the Double Shot bow special."), \
 	TRAIT_BOW_LONGSHOT = TAT_TRAIT_ENTRY("Long Shot Archer", 1, "Unlocks the Long Shot bow special."), \
 	TRAIT_BOW_BACKSTEP = TAT_TRAIT_ENTRY("Skirmisher Archer", 1, "Unlocks the Backstep Shot bow special."), \
@@ -391,6 +403,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_MASTERFUL_HUNTER = list(/datum/skill/misc/hunting = TAT_SKILL_BASIC_BOOST, /datum/skill/misc/tracking = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST), \
 	TRAIT_EXPERT_HUNTER = list(/datum/skill/misc/hunting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/misc/tracking = TAT_SKILL_DISCOUNT_BOOST), \
 	TRAIT_FIREARMS_MARKSMAN = list(/datum/skill/combat/twilight_firearms = SKILL_LEVEL_JOURNEYMAN), \
+	TAT_TRAIT_HUNTER_BEATER = list(/datum/skill/combat/polearms = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_TRAINEE_SMITH = list(/datum/skill/craft/blacksmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/smelting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/maces = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_TRAINEE_ARMORER = list(/datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/shields = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_TRAINEE_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/combat/swords = TAT_SKILL_DISCOUNT_BOOST), \
@@ -409,6 +422,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 )
 
 #define TAT_TRAIT_SKILL_DISCOUNT_RULES list( \
+	TAT_TRAIT_HUNTER_BEATER = list(/datum/skill/combat/polearms), \
 	TAT_TRAIT_TRAINEE_SMITH = list(/datum/skill/craft/blacksmithing, /datum/skill/craft/smelting, /datum/skill/combat/maces), \
 	TAT_TRAIT_TRAINEE_ARMORER = list(/datum/skill/craft/armorsmithing, /datum/skill/craft/masonry, /datum/skill/combat/shields), \
 	TAT_TRAIT_TRAINEE_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing, /datum/skill/craft/engineering, /datum/skill/combat/swords), \
