@@ -41,6 +41,16 @@
 		if(act in nopain_blocked)
 			return FALSE
 
+	if(act == "fatigue")
+		if(HAS_TRAIT(src, TRAIT_LYCANRESILENCE))
+			return FALSE
+		if(isliving(src))
+			var/mob/living/L = src
+			if(L.mob_biotypes & MOB_UNDEAD)
+				return FALSE
+		if(HAS_TRAIT(src, TRAIT_NOBREATH))
+			return FALSE
+
 	var/param = message
 	var/custom_param = findchar(act, " ")
 //	if(custom_param)
