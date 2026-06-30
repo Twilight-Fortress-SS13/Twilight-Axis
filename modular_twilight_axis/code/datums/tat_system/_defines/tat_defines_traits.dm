@@ -315,7 +315,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_SADDLEBORN = TAT_TRAIT_ENTRY("Saddleborn", 1, "You can select and mount a specific mount. Riding can progress to Master levels."), \
 	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 2, "To hunt well is to know the land. Hunting, Tracking and Butchering can progress to Legendary levels."), \
 	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 1, "To hunt well is to know the land. You know the common signs of prey and trails."), \
-	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 2, "Grants +15 adventure skill points. Costs 2 Skills points; Residents get the first Handicraft/Straying Soul trait free, Traders always pay 1."), \
+	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 2, "Grants +21 adventure skill points. Costs 2 Skills points; Residents get the first Handicraft/Straying Soul trait free, Traders always pay 1."), \
 	TAT_TRAIT_HERETIC = TAT_TRAIT_ENTRY("Heretic", 0, "Gain cool HERETIC mark on your face."), \
 	TRAIT_RITUALIST = TAT_TRAIT_ENTRY("Ritualist", 2, "Gives God's favour for thy's rituals. Adds ritual chalk to your stash."), \
 	TRAIT_TECHNOPHOBE = TAT_TRAIT_ENTRY("Technophobe", -1, "You cannot use Meister devices."), \
@@ -375,7 +375,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 		TAT_SKILL_DOMAIN_PEACEFUL = 30 \
 	), \
 	TAT_TRAIT_STRAYING_SOUL = list( \
-		TAT_SKILL_DOMAIN_ADVENTURE = 15 \
+		TAT_SKILL_DOMAIN_ADVENTURE = 21 \
 	) \
 )
 
