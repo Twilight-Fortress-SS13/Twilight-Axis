@@ -436,7 +436,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_TRAINEE_CLOTHIER = list(/datum/skill/craft/sewing, /datum/skill/craft/tanning, /datum/skill/combat/whipsflails), \
 	TAT_TRAIT_TRAINEE_HOMESTEADER = list(/datum/skill/labor/farming, /datum/skill/craft/cooking, /datum/skill/combat/wrestling), \
 	TAT_TRAIT_TRAINEE_ARTISAN = list(/datum/skill/craft/crafting, /datum/skill/craft/ceramics, /datum/skill/combat/unarmed), \
-	TAT_TRAIT_TRAINEE_CHIRURGEON = list(/datum/skill/misc/medicine, /datum/skill/misc/reading, /datum/skill/combat/staves), \
+	TAT_TRAIT_TRAINEE_CHIRURGEON = list(/datum/skill/misc/medicine, /datum/skill/craft/alchemy, /datum/skill/combat/staves), \
 	TAT_TRAIT_TRAINEE_TROUBADOUR = list(/datum/skill/misc/music, /datum/skill/misc/reading, /datum/skill/combat/knives) \
 )
 
