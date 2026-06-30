@@ -17,9 +17,14 @@
 /datum/tat_traits/proc/get_entry(trait_id)
 	return GLOB.tat_available_traits[trait_id]
 
+/datum/tat_traits/proc/is_resident_only_hunter_trait(trait_id)
+	return trait_id in list(TAT_TRAIT_HUNTER_BEATER, TAT_TRAIT_HUNTER_SHOOTER)
+
 /datum/tat_traits/proc/get_trait_count(trait_id)
 	if(owner_build?.directions?.get_effective_role_trait() == trait_id)
 		return 1
+	if(is_resident_only_hunter_trait(trait_id) && owner_build?.directions?.get_role_choice() != TAT_ROLE_CHOICE_TOWNER)
+		return 0
 	if(trait_id == TAT_TRAIT_WEAPON_TRAINING && !((owner_build?.directions?.get_role_choice()) in list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER)))
 		return 0
 	if(trait_id == TAT_TRAIT_WEAPON_TRAINING && owner_build?.has_built_in_weapon_training())
@@ -258,6 +263,8 @@
 
 /datum/tat_traits/proc/can_select_trait(trait_id)
 	if(!check_trait(trait_id))
+		return FALSE
+	if(is_resident_only_hunter_trait(trait_id) && owner_build?.directions?.get_role_choice() != TAT_ROLE_CHOICE_TOWNER)
 		return FALSE
 	if(trait_id == TAT_TRAIT_WEAPON_TRAINING && !((owner_build?.directions?.get_role_choice()) in list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER)))
 		return FALSE

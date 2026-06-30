@@ -552,6 +552,8 @@
 			continue
 		if(trait_id == TAT_TRAIT_WEAPON_TRAINING && !((directions?.get_role_choice()) in list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER)))
 			continue
+		if(traits?.is_resident_only_hunter_trait(trait_id) && directions?.get_role_choice() != TAT_ROLE_CHOICE_TOWNER)
+			continue
 		if(directions?.is_role_trait(trait_id))
 			continue
 		var/list/entry = get_trait_entry(trait_id)
