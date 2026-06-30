@@ -368,7 +368,7 @@
 	if(!domain || !owner_build?.traits)
 		return 0
 	var/total = owner_build.traits.get_bonus_skill_domain_points(domain)
-	if(domain == TAT_SKILL_DOMAIN_COMBAT && owner_build.traits.get_selected_trait_count(TAT_TRAIT_WEAPON_TRAINING) > 0)
+	if(domain == TAT_SKILL_DOMAIN_COMBAT && owner_build.traits.has_trait(TAT_TRAIT_WEAPON_TRAINING))
 		total += 3
 	return max(0, round(total || 0))
 
@@ -432,7 +432,7 @@
 	if(domain != TAT_SKILL_DOMAIN_COMBAT)
 		return min(spent, get_nonconvertible_domain_points(domain))
 
-	var/weapon_training_points = owner_build?.traits?.get_selected_trait_count(TAT_TRAIT_WEAPON_TRAINING) > 0 ? 3 : 0
+	var/weapon_training_points = owner_build?.traits?.has_trait(TAT_TRAIT_WEAPON_TRAINING) ? 3 : 0
 	var/expert_bonus = get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_EXPERT, TAT_SKILL_DOMAIN_COMBAT)
 	var/master_bonus = get_selected_trait_domain_bonus(TAT_TRAIT_WARRIOR_MASTER, TAT_SKILL_DOMAIN_COMBAT)
 	var/expert_spend = get_combat_step_spent_at_level(TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)

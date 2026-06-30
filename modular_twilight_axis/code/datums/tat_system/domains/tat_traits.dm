@@ -20,6 +20,8 @@
 /datum/tat_traits/proc/get_trait_count(trait_id)
 	if(owner_build?.directions?.get_effective_role_trait() == trait_id)
 		return 1
+	if(trait_id == TAT_TRAIT_WEAPON_TRAINING && !((owner_build?.directions?.get_role_choice()) in list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER)))
+		return 0
 	if(trait_id == TAT_TRAIT_WEAPON_TRAINING && owner_build?.has_built_in_weapon_training())
 		return 1
 	return get_selected_trait_count(trait_id)
@@ -256,6 +258,8 @@
 
 /datum/tat_traits/proc/can_select_trait(trait_id)
 	if(!check_trait(trait_id))
+		return FALSE
+	if(trait_id == TAT_TRAIT_WEAPON_TRAINING && !((owner_build?.directions?.get_role_choice()) in list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER)))
 		return FALSE
 	if(trait_id == TAT_TRAIT_WEAPON_TRAINING && owner_build?.has_built_in_weapon_training_foundation())
 		return FALSE
@@ -515,6 +519,7 @@
 	if(length(GLOB.tat_trait_requirement_map))
 		return GLOB.tat_trait_requirement_map
 	GLOB.tat_trait_requirement_map = list(
+		TAT_TRAIT_WEAPON_TRAINING = list("role_choices" = list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER), "message" = "\"[get_trait_display_name(TAT_TRAIT_WEAPON_TRAINING)]\" requires Resident or Trader role."),
 		TAT_TRAIT_WARRIOR_EXPERT = list("all" = list(TAT_TRAIT_WEAPON_TRAINING), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" requires \"[get_trait_display_name(TAT_TRAIT_WEAPON_TRAINING)]\"."),
 		TAT_TRAIT_WARRIOR_MASTER = list("all" = list(TAT_TRAIT_WARRIOR_EXPERT), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" requires \"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\"."),
 		TAT_TRAIT_BARDIC_INSPIRATION_T2 = list("all" = list(TAT_TRAIT_BARDIC_INSPIRATION_T1), "message" = "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\"."),
@@ -549,6 +554,9 @@
 		return FALSE
 	var/required_role_choice = rule["role_choice"]
 	if(required_role_choice && owner_build?.directions?.get_role_choice() != required_role_choice)
+		return FALSE
+	var/list/required_role_choices = rule["role_choices"]
+	if(islist(required_role_choices) && !((owner_build?.directions?.get_role_choice()) in required_role_choices))
 		return FALSE
 	var/list/all_requirements = rule["all"]
 	if(islist(all_requirements))

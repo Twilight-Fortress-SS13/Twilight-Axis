@@ -258,10 +258,10 @@
 	return traits.has_trait(trait_id)
 
 /datum/tat_build/proc/has_built_in_weapon_training()
-	return directions?.foundation == TAT_FOUNDATION_WANDERER
+	return FALSE
 
 /datum/tat_build/proc/has_built_in_weapon_training_foundation()
-	return directions?.foundation == TAT_FOUNDATION_WANDERER
+	return FALSE
 
 /datum/tat_build/proc/get_trait_cost_display(trait_id)
 	return traits.get_display_cost(trait_id)
@@ -300,7 +300,7 @@
 /datum/tat_build/proc/get_role_skill_domain_points(domain)
 	var/total = 0
 	if(domain == TAT_SKILL_DOMAIN_COMBAT)
-		if(traits?.get_selected_trait_count(TAT_TRAIT_WEAPON_TRAINING) > 0)
+		if((directions?.get_role_choice() in list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER)) && traits?.get_selected_trait_count(TAT_TRAIT_WEAPON_TRAINING) > 0)
 			total += 3
 		if(directions?.foundation == TAT_FOUNDATION_WANDERER)
 			total += 6

@@ -550,6 +550,8 @@
 	for(var/trait_id in GLOB.tat_available_traits)
 		if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && get_owner_ckey() != "mrix")
 			continue
+		if(trait_id == TAT_TRAIT_WEAPON_TRAINING && !((directions?.get_role_choice()) in list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER)))
+			continue
 		if(directions?.is_role_trait(trait_id))
 			continue
 		var/list/entry = get_trait_entry(trait_id)
@@ -560,9 +562,7 @@
 		var/can_add = traits?.can_select_trait(trait_id)
 		var/lock_reason = traits?.get_trait_requirement_block_reason(trait_id) || directions?.get_trait_block_reason(trait_id)
 		if(!lock_reason && !can_add)
-			if(trait_id == TAT_TRAIT_WEAPON_TRAINING && has_built_in_weapon_training_foundation())
-				lock_reason = "Built into Wanderer roles."
-			else if(trait_id == TAT_TRAIT_CONTRACTOR && !can_select_contractor_trait())
+			if(trait_id == TAT_TRAIT_CONTRACTOR && !can_select_contractor_trait())
 				lock_reason = "Contractor is not available for this character."
 			else if(trait_id == TAT_TRAIT_DRUID_INITIATE && !can_select_druid_initiate_trait())
 				lock_reason = "Requires Dendor as patron."
