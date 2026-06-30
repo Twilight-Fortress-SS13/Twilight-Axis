@@ -43,6 +43,9 @@
 #define LOOT_BUDGET_ARAIGNEE 		    300
 #define LOOT_BUDGET_BOGMANFORT          1200
 #define LOOT_BUDGET_SKELETONFORT        800
+#define LOOT_BUDGET_BIZZARE_BAZAARE     1500 //TA DT Edit
+#define LOOT_BUDGET_DESERT_PYRAMID		2000 //TA DT Edit
+#define LOOT_BUDGET_DESERTDARK			1000 //TA DT Edit
 
 // ---- Spawner Loot Values (mammons) ----
 // Expected mammon value of what each spawner category rolls.
@@ -96,6 +99,8 @@
 #define LOOT_VALUE_VALUABLE_TABLEWARE	25	// actual avg 0 but gold/silver tableware has gameplay value
 #define LOOT_VALUE_CHEAP_JEWELRY		15	// actual avg ~13 (psicrosses + rings)
 #define LOOT_VALUE_VALUABLE_JEWELRY		140	// actual avg ~140 (gem rings 155-270, amulets 100-222)
+#define LOOT_VALUE_CHEAP_CARVEDGEM		7	// TA DT edit
+#define LOOT_VALUE_VALUABLE_CARVEDGEM	30	// TA DT edit
 
 // Loot chests
 #define LOOT_VALUE_CHEST				80

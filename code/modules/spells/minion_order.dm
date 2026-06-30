@@ -27,6 +27,11 @@
 
 /datum/action/cooldown/spell/minion_order/cast(atom/cast_on)
 	. = ..()
+
+	if(!owner?.mind?.current)
+		reset_spell_cooldown()
+		return FALSE
+
 	var/faction_tag = "[owner.mind.current.real_name]_faction"
 
 	if(ismob(cast_on) && istype(cast_on, /mob/living/simple_animal))
@@ -58,39 +63,58 @@
 	var/count = 0
 	var/msg = ""
 
-	for(var/mob/other_mob in oview(order_range, owner))
-		if(istype(other_mob, /mob/living/simple_animal) && !other_mob.client)
-			var/mob/living/simple_animal/minion = other_mob
+	for(var/mob/living/simple_animal/minion in oview(order_range, owner))
+		if(minion.client)
+			continue
+		if(!minion.ai_controller)
+			continue
+		if(!((faction_ordering && owner.faction_check_mob(minion)) || (!faction_ordering && faction_tag && (faction_tag in minion.faction))))
+			continue
 
-			if((faction_ordering && owner.faction_check_mob(minion)) || (!faction_ordering && faction_tag && (faction_tag in minion.faction)))
-				minion.ai_controller.CancelActions()
-				minion.ai_controller.clear_blackboard_key(BB_FOLLOW_TARGET)
-				minion.ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
-				minion.ai_controller.clear_blackboard_key(BB_TRAVEL_DESTINATION)
-				minion.ai_controller.clear_blackboard_key(BB_BASIC_MOB_RETALIATE_LIST)
-				count += 1
-				switch(order_type)
-					if("goto")
-						minion.ai_controller.set_blackboard_key(BB_TRAVEL_DESTINATION, target_location)
-						msg = "go to [target_location]."
-					if("follow")
-						minion.ai_controller.set_blackboard_key(BB_FOLLOW_TARGET, target)
-						msg = "follow you."
-					if("aggressive")
-						msg = "act on their own."
-					if("attack")
-						minion.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
-						msg = "attack [target.name] on sight."
-					if("toggle_stance")
-						if(minion == target)
-							if("neutral" in minion.faction)
-								minion.faction -= "neutral"
-								minion.pet_passive = FALSE
-								msg = "attack non-marked on sight."
-							else
-								minion.faction += "neutral"
-								minion.pet_passive = TRUE
-								msg = "only retaliate when attacked."
+		minion.ai_controller.CancelActions()
+		minion.ai_controller.clear_blackboard_key(BB_FOLLOW_TARGET)
+		minion.ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
+		minion.ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
+		minion.ai_controller.clear_blackboard_key(BB_TRAVEL_DESTINATION)
+		minion.ai_controller.clear_blackboard_key(BB_BASIC_MOB_RETALIATE_LIST)
+		minion.ai_controller.clear_blackboard_key(BB_HIGHEST_THREAT_MOB)
+		count += 1
+
+		switch(order_type)
+			if("goto")
+				minion.ai_controller.set_blackboard_key(BB_TRAVEL_DESTINATION, target_location)
+				msg = "go to [target_location]."
+			if("follow")
+				minion.ai_controller.set_blackboard_key(BB_FOLLOW_TARGET, target)
+				if(!("neutral" in minion.faction))
+					minion.faction += "neutral"
+				minion.pet_passive = TRUE
+				msg = "follow you."
+			if("aggressive")
+				if("neutral" in minion.faction)
+					minion.faction -= "neutral"
+				minion.pet_passive = FALSE
+				msg = "act on their own."
+			if("attack")
+				if(QDELETED(target) || target.stat == DEAD)
+					continue
+				if("neutral" in minion.faction)
+					minion.faction -= "neutral"
+				minion.pet_passive = FALSE
+				minion.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
+				minion.ai_controller.set_blackboard_key(BB_HIGHEST_THREAT_MOB, target)
+				msg = "attack [target.name] on sight."
+			if("toggle_stance")
+				if(minion == target)
+					if("neutral" in minion.faction)
+						minion.faction -= "neutral"
+						minion.pet_passive = FALSE
+						msg = "attack non-marked on sight."
+					else
+						minion.faction += "neutral"
+						minion.pet_passive = TRUE
+						msg = "only retaliate when attacked."
+
 	if(count > 0)
 		to_chat(owner, "Ordered [count] minions to [msg]")
 	else

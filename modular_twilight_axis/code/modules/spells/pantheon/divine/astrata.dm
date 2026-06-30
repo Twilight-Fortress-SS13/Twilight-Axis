@@ -585,7 +585,7 @@
 	icon_state = "flamei"
 	item_state = "flameh"
 	color = "#ffbb00ff"
-	possible_item_intents = list(/datum/intent/mace/strike/astrata, /datum/intent/mace/smash/astrata, /datum/intent/use)
+	possible_item_intents = list(/datum/intent/mace/strike/TAastrata, /datum/intent/mace/smash/TAastrata, /datum/intent/use)
 	tool_behaviour = TOOL_CAUTERY
 	parrysound = list('sound/magic/magic_nulled.ogg')
 	swingsound = list('sound/items/firelight.ogg')
@@ -676,7 +676,7 @@
 		var/dist = get_dist(M, user)
 		if(dist > 1)
 			return
-		if(istype(user.a_intent, /datum/intent/mace/smash/astrata))
+		if(istype(user.a_intent, /datum/intent/mace/smash/TAastrata))
 			var/fire_stacks = M.fire_stacks
 			if(fire_stacks > 4)
 				M.adjustFireLoss(fire_stacks * 5) //i am confident in your ability to kill someone after doing this much damage

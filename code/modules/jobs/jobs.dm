@@ -65,7 +65,9 @@ GLOBAL_LIST_INIT(nonhuman_positions, list(
 
 GLOBAL_LIST_INIT(leadership_positions, list( // Used for boldening text primarily
 	"Grand Duke",
+	"Sultan", // Desert Town
 	"Hand",
+	"Vizier", //Desert Town
 	"Court Magician",
 	"Court Physician",
 	"Marshal",
@@ -91,11 +93,15 @@ GLOBAL_LIST_INIT(regency_positions, list( // Used to determine elligibility for 
 	"Steward",
 	"Councillor",
 	"Marshal",
+	"Vizier", //Desert Town
+	"Sheikh", //Desert Town
 ))
 
 GLOBAL_LIST_INIT(noble_positions, list( //Royal family only
 	"Grand Duke",
+	"Sultan", // Desert Town
 	"Consort",
+	"Harem Favorite", // Desert Town
 	"Prince",
 ))
 
@@ -110,6 +116,10 @@ GLOBAL_LIST_INIT(courtier_positions, list( //Anyone that is officially part of t
 	"Archivist",
 	"Seneschal",
 	"Suitor",
+	"Vizier", //TA_EDIT
+	"Head Slave", //TA_EDIT
+	"Slave Master", //TA_EDIT
+	"Sheikh", //TA_EDIT
 ))
 
 GLOBAL_LIST_INIT(retinue_positions, list( //Manorites
@@ -117,6 +127,7 @@ GLOBAL_LIST_INIT(retinue_positions, list( //Manorites
 	"Knight",
 	"Royal Knight",
 	"Squire",
+	"Cataphract", //TA_EDIT
 ))
 
 GLOBAL_LIST_INIT(garrison_positions, list( //Guards
@@ -126,12 +137,15 @@ GLOBAL_LIST_INIT(garrison_positions, list( //Guards
 	"Royal Guard",
 	"Warden",
 	"Watchman",
+	"Janissary Sergeant", //TA_EDIT
+	"Janissary", //TA_EDIT
+	"Azeb Agha", //TA_EDIT 
+	"Azeb", //TA_EDIT
 ))
 
 GLOBAL_LIST_INIT(citywatch_positions, list( //Guards
 	"Town Sheriff",
 	"Town Watch",
-	"Dungeoneer",
 ))
 
 GLOBAL_LIST_INIT(vanguard_positions, list( //Guards
@@ -191,6 +205,7 @@ GLOBAL_LIST_INIT(peasant_positions, list( //Serfs / peasants / generic towners
 	"Servant",
 	"Soilson",
 	"Towner",
+	"Palace Slave", //TA_EDIT
 ))
 
 GLOBAL_LIST_INIT(sidefolk_positions, list( //Weerdoes who hang around the town
@@ -211,6 +226,8 @@ GLOBAL_LIST_INIT(wanderer_positions, list( //Homeless
 GLOBAL_LIST_INIT(antagonist_positions, list( //Mostly lesser antagonists
 	"Assassin",
 	"Bandit",
+	"Freeman", // TA EDIT
+	"Lost Grenzel", // TA EDIT
 	"Wretch",
 	"Gnoll",
 	"Hag",

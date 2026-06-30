@@ -32,6 +32,11 @@
 #define TRADE_REGION_NORTHFORT "northfort"
 #define TRADE_REGION_HEARTFELT "heartfelt"
 #define TRADE_REGION_HAGENWALD "hagenwald"
+#define TRADE_REGION_AL_ASHUR_OASIS "al_ashur_oasis" // TA EDIT START
+#define TRADE_REGION_AL_ASHUR_CARAVAN_ROAD "al_ashur_caravan_road"
+#define TRADE_REGION_AL_ASHUR_SPICE_DUNES "al_ashur_spice_dunes"
+#define TRADE_REGION_AL_ASHUR_GIZA_ROUTE "al_ashur_giza_route"
+#define TRADE_REGION_AL_ASHUR_SUNKEN_RUINS "al_ashur_sunken_ruins" // TA EDIT END
 
 #define STANDING_ORDER_DURATION 2
 #define URGENT_ORDER_DURATION 1
@@ -49,7 +54,7 @@
 #define STANDING_ORDER_POP_SCALE_PER_PLAYER 0
 #define STANDING_ORDER_POP_SCALE_MAX 3.0
 
-#define STANDING_ORDER_BASE_BONUS 0.75
+#define STANDING_ORDER_BASE_BONUS 1.0
 
 // Partial Fulfillment: Let players fulfill an order with 50% by VALUE for 85% payout
 // So that steward / towners are still soft encouraged to fulfill the whole order
@@ -154,4 +159,189 @@
 #define PETITION_COST_LUXURIES 350
 #define PETITION_COST_ALCHEMY 350
 #define PETITION_COST_MASTERWORK 400
+
+/proc/ta_economy_realm_name()
+	var/realm = SSmapping?.map_adjustment?.realm_name
+	if(!realm)
+		return "Azuria"
+	return realm
+
+/proc/ta_economy_map_name()
+	return SSmapping?.config?.map_name || ""
+
+/proc/ta_economy_realm_type()
+	var/realm_type = SSmapping?.map_adjustment?.realm_type
+	if(!realm_type)
+		return "Crown"
+	return realm_type
+
+/proc/ta_economy_default_azurian_labels()
+	var/realm = lowertext("[ta_economy_realm_name()]")
+	return (!realm || realm == "azuria" || realm == "azure peak")
+
+/proc/ta_economy_al_ashur_labels()
+	return lowertext("[ta_economy_realm_name()]") == "al-ashur"
+
+/proc/ta_economy_rockhill_labels()
+	var/map_name = lowertext("[ta_economy_map_name()]")
+	var/realm = lowertext("[ta_economy_realm_name()]")
+	return (map_name == "rockhill" || realm == "enigma")
+
+/proc/ta_economy_authority_noun()
+	if(ta_economy_default_azurian_labels())
+		return "Crown"
+	return ta_economy_realm_type()
+
+/proc/ta_economy_authority_capital()
+	if(ta_economy_default_azurian_labels())
+		return "The Crown"
+	return "The [ta_economy_realm_type()]"
+
+/proc/ta_economy_authority_lower()
+	if(ta_economy_default_azurian_labels())
+		return "the Crown"
+	return "the [ta_economy_realm_type()]"
+
+/proc/ta_economy_authority_possessive()
+	if(ta_economy_default_azurian_labels())
+		return "Crown's"
+	return "[ta_economy_realm_type()]'s"
+
+/proc/ta_economy_authority_possessive_lower()
+	if(ta_economy_default_azurian_labels())
+		return "the Crown's"
+	return "the [ta_economy_realm_type()]'s"
+
+/proc/ta_economy_authority_purse()
+	return "[ta_economy_authority_possessive()] Purse"
+
+/proc/ta_economy_trade_company()
+	if(ta_economy_default_azurian_labels())
+		return "Azurian Trading Company"
+	if(ta_economy_al_ashur_labels())
+		return "Ashurian Trading Company"
+	return "[ta_economy_realm_name()] Trading Company"
+
+/proc/ta_economy_trade_company_the()
+	return "the [ta_economy_trade_company()]"
+
+/proc/ta_economy_burghers_lower()
+	if(ta_economy_default_azurian_labels())
+		return "the Burghers of Azuria"
+	if(ta_economy_al_ashur_labels())
+		return "the merchants of Al-Ashur"
+	return "the burghers of [ta_economy_realm_name()]"
+
+/proc/ta_economy_burghers_capital()
+	if(ta_economy_default_azurian_labels())
+		return "The Burghers of Azuria"
+	if(ta_economy_al_ashur_labels())
+		return "The merchants of Al-Ashur"
+	return "The burghers of [ta_economy_realm_name()]"
+
+/proc/ta_economy_pledge_capital()
+	if(ta_economy_al_ashur_labels())
+		return "Merchant Pledge"
+	return "Burgher Pledge"
+
+/proc/ta_economy_pledge_lower()
+	if(ta_economy_al_ashur_labels())
+		return "the Merchant Pledge"
+	return "the Burgher Pledge"
+
+/proc/ta_economy_pledge_grace_capital()
+	if(ta_economy_al_ashur_labels())
+		return "The merchants' grace"
+	if(ta_economy_default_azurian_labels())
+		return "The Burghers' grace"
+	return "The burghers' grace"
+
+/proc/ta_economy_company_patron_gods()
+	if(ta_economy_default_azurian_labels())
+		return "Malum the Worker and Abyssor the Dreamer"
+	if(ta_economy_al_ashur_labels())
+		return "the patrons of caravan and counting-house"
+	return "the patrons of commerce"
+
+/proc/ta_economy_ruler_title()
+	if(ta_economy_default_azurian_labels())
+		return "Lord"
+	if(ta_economy_al_ashur_labels())
+		return "Sultan"
+	if(ta_economy_realm_type() == "Kingdom")
+		return "Monarch"
+	return "Ruler"
+
+/proc/ta_economy_loan_settled_title()
+	if(ta_economy_default_azurian_labels())
+		return "ATC LOAN SETTLED"
+	return "COMPANY LOAN SETTLED"
+
+/proc/ta_economy_borrows_title()
+	return "[uppertext(ta_economy_authority_capital())] BORROWS"
+
+/proc/ta_economy_burghers_lend_title()
+	if(ta_economy_default_azurian_labels())
+		return "THE BURGHERS LEND"
+	return "THE MERCHANTS LEND"
+
+/proc/ta_economy_burghers_paid_title()
+	if(ta_economy_default_azurian_labels())
+		return "THE BURGHERS PAID"
+	return "THE MERCHANTS PAID"
+
+/proc/ta_economy_church_label()
+	if(ta_economy_default_azurian_labels())
+		return "the Church of Azuria"
+	if(ta_economy_al_ashur_labels())
+		return "the Temple of Al-Ashur"
+	return "the Church of [ta_economy_realm_name()]"
+
+/proc/ta_economy_seizure_inventory()
+	if(ta_economy_default_azurian_labels())
+		return GLOB.atc_seizure_inventory.Copy()
+	if(ta_economy_al_ashur_labels())
+		return list(
+			"a gilded basin from the palace baths",
+			"three sealed jars of oasis saffron",
+			"a pearl-inlaid counting chest from the bazaar",
+			"two silk awnings taken down from the Sultan's court",
+			"a jeweled astrolabe from the palace observatory",
+			"the Vizier's reserve of cinnamon and myrrh",
+			"a lacquered chest of caravan toll seals",
+			"four bolts of Gizan silk",
+			"a pair of trained saigaks from the royal stables",
+			"a crate of glassware from the desert furnaces",
+			"a cedar writing desk from the scribal hall",
+			"a sealed coffer marked PROPERTY OF THE SULTANATE",
+		)
+	return list(
+		"three sealed coffers from the treasury",
+		"a gilded ceremonial basin",
+		"a brace of falcons from the ruler's mews",
+		"the Steward's reserve of spices",
+		"a brocaded canopy bed, taken down with great difficulty",
+		"a chest of stamped toll seals",
+		"a silvered court mirror",
+		"a set of ceremonial parade harnesses",
+		"a parcel of foreign silk",
+		"a sealed coffer marked PROPERTY OF [uppertext(ta_economy_realm_name())]",
+	)
+
+/proc/ta_economy_realm_labels_payload()
+	return list(
+		"authority_noun" = ta_economy_authority_noun(),
+		"authority_capital" = ta_economy_authority_capital(),
+		"authority_lower" = ta_economy_authority_lower(),
+		"authority_possessive" = ta_economy_authority_possessive(),
+		"authority_possessive_lower" = ta_economy_authority_possessive_lower(),
+		"authority_purse" = ta_economy_authority_purse(),
+		"trade_company" = ta_economy_trade_company(),
+		"trade_company_the" = ta_economy_trade_company_the(),
+		"burghers_capital" = ta_economy_burghers_capital(),
+		"burghers_lower" = ta_economy_burghers_lower(),
+		"pledge_capital" = ta_economy_pledge_capital(),
+		"pledge_lower" = ta_economy_pledge_lower(),
+		"pledge_grace_capital" = ta_economy_pledge_grace_capital(),
+	)
 

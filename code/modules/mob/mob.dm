@@ -98,7 +98,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 	else
 		GLOB.alive_mob_list += src
 	set_focus(src)
-	prepare_huds()
+	prepare_huds_TA()
 	for(var/v in GLOB.active_alternate_appearances)
 		if(!v)
 			continue

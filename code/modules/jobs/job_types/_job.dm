@@ -73,6 +73,7 @@
 	//allowed sex/race for picking
 	var/list/allowed_sexes = list(MALE, FEMALE)
 	var/list/forbidden_races
+	var/list/allowed_races // TA EDIT
 	var/list/allowed_patrons
 	var/list/allowed_ages = ALL_AGES_LIST
 
@@ -179,6 +180,15 @@
 
 	///
 	var/quest_claim_barred = FALSE
+
+// TA EDIT BEGIN
+/datum/job/New()
+	..()
+	if(length(allowed_races))
+		if(!forbidden_races)
+			forbidden_races = list()
+		forbidden_races |= (ALL_RACES_TYPES - allowed_races)
+// TA EDIT END
 
 /proc/is_quest_claim_barred(mob/user)
 	if(!user?.mind)

@@ -731,10 +731,11 @@
 
 /obj/structure/fluff/signage/examine(mob/user)
 	. = ..()
+	var/realm_name = SSmapping.map_adjustment.realm_name //TA EDIT таблички теперь корректно работают на всех картах
 	if(!user.is_literate())
 		. += "I have no idea what it says."
 	else
-		. += "It says \"Twilight Axis\""
+		. += "It says \"[realm_name]\""
 
 /obj/structure/fluff/sign
 	icon_state = "signwrote"

@@ -4,6 +4,7 @@
 
 	var/datum/job/consort_job = find_job_by_type(/datum/job/roguetown/lady)
 	var/datum/job/suitor_job = find_job_by_type(/datum/job/roguetown/suitor)
+	var/datum/job/harem_job = find_job_by_type(/datum/job/roguetown/harem)
 
 	if(consort_job)
 		royal_partner_job_baselines["consort"] = list(
@@ -21,7 +22,16 @@
 			"spawn_positions" = suitor_job.spawn_positions,
 		)
 
-	return royal_partner_job_baselines.len >= 2
+	if(harem_job)
+		royal_partner_job_baselines["harem"] = list(
+			"forbidden_races" = islist(harem_job.forbidden_races) ? harem_job.forbidden_races.Copy() : list(),
+			"allowed_sexes" = islist(harem_job.allowed_sexes) ? harem_job.allowed_sexes.Copy() : list(),
+			"total_positions" = harem_job.total_positions,
+			"spawn_positions" = harem_job.spawn_positions,
+		)
+
+
+	return royal_partner_job_baselines["consort"] && royal_partner_job_baselines["suitor"]
 
 /datum/controller/subsystem/familytree/proc/get_royal_partner_mode_from_preferences(datum/preferences/P)
 	if(!P)
@@ -138,6 +148,8 @@
 			job = find_job_by_type(/datum/job/roguetown/lady)
 		if("suitor")
 			job = find_job_by_type(/datum/job/roguetown/suitor)
+		if("harem")
+			job = find_job_by_type(/datum/job/roguetown/harem)
 
 	var/list/baseline = royal_partner_job_baselines[job_key]
 	if(!job || !baseline)
@@ -168,6 +180,7 @@
 
 	apply_royal_partner_job_state("consort", FALSE)
 	apply_royal_partner_job_state("suitor", FALSE)
+	apply_royal_partner_job_state("harem", FALSE)
 
 /datum/controller/subsystem/familytree/proc/refresh_royal_partner_jobs(mob/living/carbon/human/duke, datum/preferences/P)
 	if(!duke?.client)
@@ -180,6 +193,10 @@
 		P = duke.client.prefs
 	if(!P)
 		return FALSE
+
+	var/datum/job/royal_partner_owner_job = get_familytree_job(duke)
+	if(istype(royal_partner_owner_job, /datum/job/roguetown/sultan))
+		return refresh_sultan_harem_jobs(duke, P)
 
 	if(current_royal_partner_owner == duke && current_royal_partner_snapshot.len)
 		return TRUE
@@ -236,6 +253,8 @@
 
 /datum/controller/subsystem/familytree/proc/get_royal_partner_job_key(role_or_job)
 	var/datum/job/job = resolve_job_datum(role_or_job)
+	if(is_royal_harem_job(job))
+		return "harem"
 	if(is_royal_consort_job(job))
 		return "consort"
 	if(is_royal_suitor_job(job))

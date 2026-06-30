@@ -1734,8 +1734,8 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/bigfoot_axe
 	donatitem = TRUE
 
-/datum/loadout_item/donator/aisuwand
-	name = "Donator Kit - Crystalline Wand - Required: Wand"
+/datum/loadout_item/donator/aisurapier
+	name = "Donator Kit - Crystalline Rapier - Required: Rapier"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/aisuwand
 	donatitem = TRUE
@@ -2036,13 +2036,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/triumph_weaponkit_psy
 	donatitem = TRUE
-
+/*
 /datum/loadout_item/donator_nerocavalier
 	name = "Donator Kit - Blacksteel Longsword - Required: Longsword"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/weapon/noire_flsword
 	donatitem = TRUE
-
+*/
 /datum/loadout_item/donator/nero_sword
 	name = "Donator Kit - Sylvan Longsword - Required: Longsword"
 	category = list("Оружие", "Донат")
@@ -3417,9 +3417,16 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donat/etrpants
 	name = "Wanderer's pants - (no small races)"
 	category = list("Одежда", "Донат")
-	path = /obj/item/clothing/under/roguetown/trou/leather/etrpants
+	path = /obj/item/clothing/under/roguetown/trou/leather/etrpants/donat
 	donatitem = TRUE
 	donat_tier = 1
+
+/datum/loadout_item/donat/etrpants_enchantingkit
+	name = "Donator Kit - Wanderer's pants - Required: Leather Trousers, Splinted Chausses Or Brigandine Chausses (no small races)"
+	category = list("Одежда", "Донат")
+	path = /obj/item/enchantingkit/etrpants
+	donatitem = TRUE
+	donat_tier = 2
 
 /datum/loadout_item/etrdress3
 	name = "Strapless gown - (only female, no small races)"
@@ -3970,3 +3977,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Триумфы")
 	path = /obj/item/rogueweapon/scabbard/sheath/royal
 	triumph_cost = 13
+
+/datum/loadout_item/donat/sagesbighat
+	name = "Большая шляпа мудреца"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/sagesbighat
+	donatitem = TRUE
+	ckeywhitelist = list("somethingawful917")

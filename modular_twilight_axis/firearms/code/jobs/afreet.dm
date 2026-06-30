@@ -1,11 +1,3 @@
-/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/bandit
-	name = "studied jacket"
-	desc = "A loose garment that is usually draped across ones upper body. No one's quite sure of its cultural origin but it does look fancy."
-	color = "#B36A57"
-	body_parts_covered = COVERAGE_ALL_BUT_ARMS
-	armor = ARMOR_LEATHER
-	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
-
 /datum/advclass/twilight_afreet
 	name = "Afreet"
 	tutorial = "'Demon of Fire', the slaves used to call you, when you, dressed in black uniform, emerged from the sands, having shot their masters dead with weapons they could not comprehend. During the War, you were deployed deep within the Naledi lands, tasked with plundering Golden Empire's slave trade routes. Perhaps you found it too profitable and enjoyable to leave behind, or perhaps you still wage your war to this day — either way, you no longer answer to the Kaiser or his lackeys."
@@ -86,7 +78,7 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, 4, TRUE)
 		if("Veteran")
 			mask = /obj/item/clothing/mask/rogue/ragmask/red
-			armor = /obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/bandit
+			armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 			shirt = /obj/item/clothing/suit/roguetown/shirt/freifechter
 			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 			backl = /obj/item/storage/backpack/rogue/satchel

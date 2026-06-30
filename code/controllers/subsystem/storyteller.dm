@@ -238,6 +238,8 @@ SUBSYSTEM_DEF(gamemode)
 		"Hag" = null,
 		"Assassin" = null,
 		"Bandit" = null,
+		"Freeman" = null,
+		"Lost Grenzel" = null,
 		"Lich" = null,
 		"VL" = null,
 		"Masquerade" = null,
@@ -989,9 +991,17 @@ SUBSYSTEM_DEF(gamemode)
 	if(preset.hag_slots > 0)
 		caps["Hag"] = preset.hag_slots
 	if(!preset.block_hard)
-		var/bandit_cap = story_antag_slot_cap(/datum/antagonist/bandit, roundstart = TRUE, storyteller_type = storyteller_type)
-		if(bandit_cap > 0)
-			caps["Bandit"] = bandit_cap
+		if(SSmapping?.config?.map_name == "Desert Town")
+			var/freeman_cap = story_antag_slot_cap(/datum/antagonist/bandit/freeman, roundstart = TRUE, storyteller_type = storyteller_type)
+			if(freeman_cap > 0)
+				caps["Freeman"] = freeman_cap
+	//		var/lost_grenzel_cap = story_antag_slot_cap(/datum/antagonist/bandit/lost_grenzel, roundstart = TRUE, storyteller_type = storyteller_type)
+	//		if(lost_grenzel_cap > 0)
+	//			caps["Lost Grenzel"] = lost_grenzel_cap // Lost Grenzel comment
+		else
+			var/bandit_cap = story_antag_slot_cap(/datum/antagonist/bandit, roundstart = TRUE, storyteller_type = storyteller_type)
+			if(bandit_cap > 0)
+				caps["Bandit"] = bandit_cap
 	var/list/seen = list()
 
 	for(var/datum/round_event_control/antagonist/solo/ec in event_pools[EVENT_TRACK_CHARACTER_INJECTION])
@@ -1383,6 +1393,10 @@ SUBSYSTEM_DEF(gamemode)
 	// datum but overrides to its own "Masquerade" slot via event.storyteller_slot_key.
 	if(ispath(antag_datum, /datum/antagonist/vampire))
 		return "VL"
+	if(ispath(antag_datum, /datum/antagonist/bandit/freeman))
+		return "Freeman"
+//	if(ispath(antag_datum, /datum/antagonist/bandit/lost_grenzel))
+//		return "Lost Grenzel"
 	if(ispath(antag_datum, /datum/antagonist/bandit))
 		return "Bandit"
 	if(ispath(antag_datum, /datum/antagonist/lich))

@@ -1,3 +1,33 @@
+/proc/sanitize_custom_descriptor_text(text)
+	if(!istext(text))
+		return null
+
+	text = STRIP_HTML_SIMPLE(lowertext(text), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
+	if(!is_english_custom_descriptor_text(text))
+		return null
+
+	return text
+
+/proc/is_english_custom_descriptor_text(text)
+	if(!istext(text))
+		return FALSE
+
+	var/has_letter = FALSE
+
+	for(var/i in 1 to length(text))
+		var/char = text2ascii(text, i)
+
+		if(char >= 97 && char <= 122)
+			has_letter = TRUE
+			continue
+
+		if(char == 32 || char == 39 || char == 45)
+			continue
+
+		return FALSE
+
+	return has_letter
+
 /datum/preferences/proc/validate_descriptors()
 	for(var/choice_type in pref_species.descriptor_choices)
 		var/datum/descriptor_choice/choice = DESCRIPTOR_CHOICE(choice_type)
@@ -28,7 +58,9 @@
 	for(var/i in 1 to CUSTOM_DESCRIPTOR_AMOUNT)
 		var/datum/custom_descriptor_entry/custom_entry = custom_descriptors[i]
 		custom_entry.prefix_type = sanitize_integer(custom_entry.prefix_type, 1, CUSTOM_PREFIX_AMOUNT, CUSTOM_PREFIX_HAS_A)
-		custom_entry.content_text = STRIP_HTML_SIMPLE(lowertext(custom_entry.content_text), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
+		custom_entry.content_text = sanitize_custom_descriptor_text(custom_entry.content_text)
+		if(isnull(custom_entry.content_text))
+			custom_entry.content_text = ""
 
 /datum/preferences/proc/reset_descriptors()
 	descriptor_entries = list()
@@ -90,7 +122,10 @@
 			var/new_content = input(user, "Describe the feature", "Describe myself") as text|null
 			if(!new_content)
 				return
-			new_content = STRIP_HTML_SIMPLE(lowertext(new_content), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
+			new_content = sanitize_custom_descriptor_text(new_content)
+			if(!new_content)
+				to_chat(user, span_warning("Custom descriptors may only use English letters, spaces, apostrophes, and hyphens."))
+				return
 			custom_entry.content_text = new_content
 		if("print_descriptor_setup")
 			var/mob/living/temp = new /mob/living(null)
@@ -126,7 +161,7 @@
 			dat += custom_data
 
 	dat += "<br><a href='?_src_=prefs;preference=print_descriptor_setup;task=change_descriptor'>Print descriptor setup to chat</a>"
-	dat += "<br><center><b>Custom descriptor rules:</b> No proper nouns. No immersion breaking words. No overtly sexual descriptors. Look at the pre-written descriptors for examples of what is acceptable. Capitalization is handled automatically.</center>"
+	dat += "<br><center><b>Custom descriptor rules:</b> English only. No proper nouns. No immersion breaking words. No overtly sexual descriptors. Look at the pre-written descriptors for examples of what is acceptable. Allowed characters: English letters, spaces, apostrophes, and hyphens. Capitalization is handled automatically.</center>"
 	return dat
 
 /datum/preferences/proc/print_custom_descriptor_customization(index)

@@ -13,7 +13,12 @@
 		TAG_COMBAT,
 		TAG_VILLIAN,
 	)
-
+// TA EDIT - DESERT TOWN
+/datum/round_event_control/antagonist/migrant_wave/banditsorgnolls/canSpawnEvent(players_amt, gamemode, fake_check)
+	if(SSmapping.config.map_name == "Desert Town")
+		return FALSE
+	return ..()
+// TA EDIT - DESERT TOWN
 /datum/round_event_control/antagonist/migrant_wave/banditsorgnolls/preRunEvent()
 	if(is_storyteller_soft_antag_blocked())
 		return EVENT_CANT_RUN

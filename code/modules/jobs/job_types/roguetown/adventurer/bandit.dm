@@ -121,39 +121,64 @@
 
 	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, FALSE, my_crime, bounty_poster)
 
+
 /proc/update_bandits_slots()
+	//update_lost_grenzel_slots() // Lost Grenzel comment
+
 	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
 	if(!bandit_job)
 		return
-	if(bandit_job.admin_slot_override)
+
+	var/is_desert_town = SSmapping?.config?.map_name == "Desert Town"
+	var/datum/job/slot_job = bandit_job
+	var/antag_path = /datum/antagonist/bandit
+	var/admin_slot_key = "Bandit"
+
+	if(is_desert_town)
+		bandit_job.always_show_on_latechoices = FALSE
+		bandit_job.total_positions = 0
+		bandit_job.spawn_positions = 0
+
+		slot_job = SSjob.GetJob("Freeman")
+		if(!slot_job)
+			return
+
+		antag_path = /datum/antagonist/bandit/freeman
+		admin_slot_key = "Freeman"
+		slot_job.always_show_on_latechoices = FALSE
+		slot_job.total_positions = 0
+		slot_job.spawn_positions = 0
+
+	if(slot_job.admin_slot_override)
 		return
 
 	if(!SSgamemode)
-		bandit_job.total_positions = 0
-		bandit_job.spawn_positions = 0
+		slot_job.total_positions = 0
+		slot_job.spawn_positions = 0
 		return
 
 	var/player_count = SSgamemode.get_correct_popcount()
 
-	if(!SSgamemode.story_antag_open_slots(/datum/antagonist/bandit, player_count))
-		bandit_job.total_positions = 0
-		bandit_job.spawn_positions = 0
+	slot_job.always_show_on_latechoices = TRUE
+	if(!SSgamemode.story_antag_open_slots(antag_path, player_count))
+		slot_job.total_positions = 0
+		slot_job.spawn_positions = 0
 		return
 
 	var/slots = 0
-	var/admin_slot = !SSgamemode.allow_vote ? SSgamemode.admin_slots["Bandit"] : null
+	var/admin_slot = !SSgamemode.allow_vote ? SSgamemode.admin_slots[admin_slot_key] : null
 	if(!isnull(admin_slot))
 		slots = max(0, admin_slot)
 	else
 		var/storyteller_type = SSgamemode.story_policy_type(TRUE)
-		var/max_slots = SSgamemode.story_antag_slot_cap(/datum/antagonist/bandit, TRUE, storyteller_type)
+		var/max_slots = SSgamemode.story_antag_slot_cap(antag_path, TRUE, storyteller_type)
 		if(max_slots <= 0)
-			bandit_job.total_positions = 0
-			bandit_job.spawn_positions = 0
+			slot_job.total_positions = 0
+			slot_job.spawn_positions = 0
 			return
 
-		var/min_players = SSgamemode.story_antag_min_players(/datum/antagonist/bandit)
-		var/slot_scaling = SSgamemode.story_antag_scaling_step(/datum/antagonist/bandit)
+		var/min_players = SSgamemode.story_antag_min_players(antag_path)
+		var/slot_scaling = SSgamemode.story_antag_scaling_step(antag_path)
 		slots = SSgamemode.storyteller_scale_slots(
 			max_slots,
 			player_count,
@@ -163,7 +188,7 @@
 			SSgamemode.hard_antag_mult(),
 		)
 
-	slots = SSgamemode.story_antag_slots(slots, /datum/antagonist/bandit, player_count)
+	slots = SSgamemode.story_antag_slots(slots, antag_path, player_count)
 
-	bandit_job.total_positions = max(bandit_job.current_positions, slots)
-	bandit_job.spawn_positions = max(bandit_job.current_positions, slots)
+	slot_job.total_positions = max(slot_job.current_positions, slots)
+	slot_job.spawn_positions = max(slot_job.current_positions, slots)

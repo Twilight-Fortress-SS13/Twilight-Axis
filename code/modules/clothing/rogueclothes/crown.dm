@@ -27,6 +27,8 @@
 	. = ..()
 	if(SSmapping.config.map_name == "Rockhill")
 		name = "Crown of Enigma"
+	if(SSmapping.config.map_name == "Desert Town")
+		name = "Crown of Al-Ashur"
 	else
 		name = "Crown of Azuria"
 	if(SSroguemachine.crown)

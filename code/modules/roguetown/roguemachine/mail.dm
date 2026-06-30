@@ -85,11 +85,11 @@
 				var/is_mine = FALSE
 				if(I.mailedto == H.real_name)
 					is_mine = TRUE 
-				else if(H.mind?.assigned_role == "Hand" || H.mind?.special_role == "Hand")
+				else if((H.mind && (H.mind.assigned_role in list("Hand", "Vizier"))) || (H.mind && (H.mind.special_role in list("Hand", "Vizier")))) // TA edit
 					if(findtext(I.mailedto, "#"))
 						var/box2find = text2num(copytext(I.mailedto, findtext(I.mailedto, "#")+1))
 						for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers) 
-							if(X.ournum == box2find && X.mailtag == "Hand") 
+							if(X.ournum == box2find && (X.mailtag in list("Hand", "Vizier"))) 
 								is_mine = TRUE 
 								break 
 				if(is_mine) 
@@ -177,6 +177,7 @@
 	. += span_info("Insert coins to purchase supplies or send a letters.")
 	. += span_info("Left click with a paper or package to send a prewritten letter for free.")
 	. += span_info("You can wrap an item in paper to create a mailable package.")
+	. += span_info("Роль придворного агента может посылать бесплатные письма через ПКМ-панель, но только деснице.") // TA EDIT
 	if(HAS_TRAIT(user, TRAIT_INQUISITION))
 		. += span_info("<br>The MARQUETTE can be accessed via a secret compartment fitted within the HERMES. Load a Marque to access it.")
 		. += span_info("You can send arrival slips, accusation slips, fully loaded INDEXERs or confessions here.")
@@ -189,7 +190,7 @@
 	var/is_court_agent = FALSE // TA EDIT BEGIN
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
-		if(H.mind?.assigned_role == "Court Agent" || H.mind?.special_role == "Court Agent")
+		if((H.mind?.assigned_role in list("Court Agent", "Enslaved kafir")) || (H.mind?.special_role in list("Court Agent", "Enslaved kafir")))
 			is_court_agent = TRUE 
 	if(!coin_loaded && !is_court_agent) 
 		to_chat(user, span_warning("Insert coins to use the terminal."))
@@ -237,7 +238,7 @@
 	var/is_court_agent = FALSE // TA EDIT BEGIN
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
-		if(H.mind?.assigned_role == "Court Agent" || H.mind?.special_role == "Court Agent") 
+		if((H.mind?.assigned_role in list("Court Agent", "Enslaved kafir")) || (H.mind?.special_role in list("Court Agent", "Enslaved kafir"))) 
 			is_court_agent = TRUE
 	data["is_court_agent"] = is_court_agent // TA EDIT END
 	return data
@@ -259,20 +260,20 @@
 	var/is_court_agent = FALSE
 	if(ishuman(user))
 		var/mob/living/carbon/human/H_user = user 
-		if(H_user.mind?.assigned_role == "Court Agent" || H_user.mind?.special_role == "Court Agent")
+		if((H_user.mind?.assigned_role in list("Court Agent", "Enslaved kafir")) || (H_user.mind?.special_role in list("Court Agent", "Enslaved kafir")))
 			is_court_agent = TRUE 
 
 	var/is_hand = FALSE
 	if(findtext(send2place, "#"))
 		var/box2find = text2num(copytext(send2place, findtext(send2place, "#")+1))
 		for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers)
-			if(X.ournum == box2find && X.mailtag == "Hand")
+			if(X.ournum == box2find && (X.mailtag in list("Hand", "Vizier")))
 				is_hand = TRUE
 				break
 	else
 		for(var/mob/living/carbon/human/H_target in GLOB.human_list)
 			if(H_target.real_name == send2place)
-				if(H_target.mind?.assigned_role == "Hand" || H_target.mind?.special_role == "Hand")
+				if((H_target.mind?.assigned_role in list("Hand", "Vizier")) || (H_target.mind?.special_role in list("Hand", "Vizier")))
 					is_hand = TRUE
 				break
 	return (is_court_agent && is_hand) // TA EDIT END
@@ -331,7 +332,7 @@
 				for(var/mob/living/carbon/human/H in GLOB.human_list)
 					var/is_target = FALSE
 					if(findtext(send2place, "#"))
-						if(H.mind?.assigned_role == "Hand" || H.mind?.special_role == "Hand")
+						if((H.mind?.assigned_role in list("Hand", "Vizier")) || (H.mind?.special_role in list("Hand", "Vizier")))
 							is_target = TRUE 
 					else
 						if(H.real_name == send2place)
@@ -508,6 +509,16 @@
 					to_chat(user, (span_warning("It isn't broken.")))
 				if(I.broken)
 					to_chat(user, (span_warning("Clean it first.")))
+
+	if(istype(P, /obj/item/inqarticles/litany))		
+		if((HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_PURITAN)))	
+			var/obj/item/inqarticles/litany/I = P
+			visible_message(span_warning("[user] sends something."))
+			budget2change(6, user, "MARQUE") //Orthodoxist-centric. The number represents how much marques are restored to the Marquette upon refunding it.
+			qdel(I) //Design idea's that it costs 3/4ths of an Orthodoxist's free marque payout (8, in this case), and allows them to bless one weapon of their choosing.
+			record_round_statistic(STATS_MARQUES_MADE, 6) //It deletes itself after use, but can alternatively be saved to be refunded if an Absolver arrives later.
+			playsound(loc, 'sound/misc/otavanlament.ogg', 100, FALSE, -1)
+			playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)	
 
 	if(istype(P, /obj/item/paper/inqslip/confession))
 		if((HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_PURITAN)))
@@ -755,7 +766,7 @@
 				for(var/mob/living/carbon/human/H in GLOB.human_list)
 					var/is_target = FALSE
 					if(findtext(send2place, "#"))
-						if(H.mind?.assigned_role == "Hand" || H.mind?.special_role == "Hand")
+						if((H.mind?.assigned_role in list("Hand", "Vizier")) || (H.mind?.special_role in list("Hand", "Vizier")))
 							is_target = TRUE
 					else
 						if(H.real_name == send2place)
@@ -979,11 +990,11 @@
 		for(var/obj/item/I in SSroguemachine.secret_mail)
 			if(I.mailedto == H.real_name)
 				return TRUE
-			else if(H.mind?.assigned_role == "Hand" || H.mind?.special_role == "Hand")
+			else if((H.mind?.assigned_role in list("Hand", "Vizier")) || (H.mind?.special_role in list("Hand", "Vizier")))
 				if(findtext(I.mailedto, "#"))
 					var/box2find = text2num(copytext(I.mailedto, findtext(I.mailedto, "#")+1))
 					for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers)
-						if(X.ournum == box2find && X.mailtag == "Hand")
+						if(X.ournum == box2find && (X.mailtag in list("Hand", "Vizier")))
 							return TRUE
 	if(M)
 		for(var/obj/item/I in M.contents)

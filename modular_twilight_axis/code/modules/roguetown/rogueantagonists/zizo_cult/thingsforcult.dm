@@ -284,6 +284,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	desc = "An cursed sword, which can steal life power"
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
 	icon_state = "Zsword"
+	max_blade_int = 300
+	max_integrity = 300
+	force = 26
 	smeltresult = /obj/item/ingot/steel/zizo
 
 /obj/item/rogueweapon/sword/sabre/zizo/Initialize(mapload, ...)
@@ -345,6 +348,15 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 /obj/item/rogueweapon/mace/steel/zizo
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
 	icon_state = "Zmaul"
+	force = 30
+	force_wielded = 38
+	wdefense = 5
+	max_integrity = 320
+	special = /datum/special_intent/ground_smash/cult
+
+/datum/special_intent/ground_smash/cult
+	cooldown = 60 SECONDS
+	tile_coordinates = list(list(0,0), list(0,1, 0.1 SECONDS), list(0,2, 0.2 SECONDS), list(1,0), list(1,1, 0.1 SECONDS), list(1,2, 0.1 SECONDS), list(-1,0), list(-1,1, 0.1 SECONDS), list(-1,2, 0.1 SECONDS))
 
 /obj/item/rogueweapon/mace/steel/zizo/Initialize(mapload, ...)
 	. = ..()
@@ -385,8 +397,17 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/greataxe/steel/doublehead/zizo
+	name = "cursed greataxe"
+	desc = "An doublehead axe, which made for kills for Zizo-queen."
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
 	icon_state = "Ztaxe"
+	special = /datum/special_intent/vicious_swipe
+	max_blade_int = 400
+	max_integrity = 380
+	wdefense = 9
+	minstr = 11
+	force = 20
+	force_wielded = 35
 
 /obj/item/rogueweapon/greataxe/steel/doublehead/zizo/Initialize(mapload, ...)
 	. = ..()
@@ -564,9 +585,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/on_mob/zcross.dmi'
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/zcross.dmi'
 	icon_state = "zcross"
-	slot_flags = ITEM_SLOT_NECK
+	slot_flags = ITEM_SLOT_RING
 	sellprice = 0
-	max_integrity = 160
+	max_integrity = 180
 	body_parts_covered = COVERAGE_FULL | COVERAGE_HEAD_NOSE | NECK | HANDS | FEET 
 	armor = ARMOR_CULTNECK 
 	blade_dulling = DULLING_BASHCHOP
@@ -641,3 +662,15 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	name = "Cult light armor"
 	desc = "Robe of my queen makes me speedy!"
 	icon_state = "buff"
+
+/atom/proc/prepare_huds_TA()
+	hud_list = list()
+	for(var/hud in hud_possible)
+		var/hint = hud_possible[hud]
+		switch(hint)
+			if(HUD_LIST_LIST)
+				hud_list[hud] = list()
+			else
+				var/image/I = image('modular_twilight_axis/icons/mob/hud.dmi', src, "")
+				I.appearance_flags = RESET_COLOR|RESET_TRANSFORM
+				hud_list[hud] = I

@@ -558,7 +558,7 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 				if (BURGHERS)
 					cat_name = "Burghers"
 				if (ATC)
-					cat_name = "Azurian Trading Company"
+					cat_name = ta_economy_trade_company()
 				if (PEASANTS)
 					cat_name = "Peasants"
 				if (SIDEFOLK)

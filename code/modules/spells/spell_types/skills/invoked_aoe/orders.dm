@@ -33,6 +33,11 @@
 			affectedjobs = list("Town Watch")
 		else if(user.job == "Overseer")
 			affectedjobs = list("Vanguard")
+		else if(user.job == "Janissary Sergeant")
+			affectedjobs = list("Janissary", "Janissary Footman", "Janissary Jezail", "Janissary Zephyr") // Desert Town
+		else if(user.job == "Azeb Agha")
+			affectedjobs = list("Azeb") // Desert Town
+
 		else //failsafe in case someone somehow gets the spells without a role that uses them
 			to_chat(user, span_alert("I don't have authority to order anyone!"))
 			revert_cast()

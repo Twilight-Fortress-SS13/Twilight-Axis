@@ -36,9 +36,9 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	/datum/charflaw/mind_broken::name = /datum/charflaw/mind_broken,
 	/datum/charflaw/noflaw::name = /datum/charflaw/noflaw,
 	/datum/charflaw/leprosy::name = /datum/charflaw/leprosy,
-	/datum/charflaw/wanted::name = /datum/charflaw/wanted,
+//	/datum/charflaw/wanted::name = /datum/charflaw/wanted,
 	/datum/charflaw/randflaw::name = /datum/charflaw/randflaw,
-//	/datum/charflaw/lawless::name + " (min pq: [/datum/charflaw/lawless::required_pq], exclusive for adventuring jobs)" = /datum/charflaw/lawless, // TA EDIT
+	/datum/charflaw/lawless::name + " (min pq: [/datum/charflaw/lawless::required_pq], exclusive for adventuring jobs)" = /datum/charflaw/lawless, // TA EDIT
 	/datum/charflaw/gefheretic::name + " (min pq: [/datum/charflaw/gefheretic::required_pq], exclusive for adventuring jobs)" = /datum/charflaw/gefheretic // TA EDIT
 	))
 

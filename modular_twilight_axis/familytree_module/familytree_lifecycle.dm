@@ -29,6 +29,37 @@
 		/datum/job/roguetown/courtphysician,
 	)
 
+/datum/controller/subsystem/familytree/proc/load_deserttown_roles()
+	high_tier_nobility_types |= list(
+		/datum/job/roguetown/sultan,
+		/datum/job/roguetown/vizier,
+		/datum/job/roguetown/sheikh,
+	)
+
+	high_tier_military_types |= list(
+		/datum/job/roguetown/cataphract,
+		/datum/job/roguetown/janissarysergeant,
+		/datum/job/roguetown/janissary,
+		/datum/job/roguetown/azebagha,
+		/datum/job/roguetown/azeb,
+		/datum/job/roguetown/slavemaster,
+	)
+
+	low_tier_job_types |= list(
+		/datum/job/roguetown/headslave,
+		/datum/job/roguetown/slave,
+		/datum/job/roguetown/freeman,
+	//	/datum/job/roguetown/lost_grenzel, // Lost Grenzel comment
+	)
+
+	low_tier_job_titles |= list(
+		"Head Slave",
+		"Palace Slave",
+		"Slave",
+		"Freeman",
+	//	"Lost Grenzel", // Lost Grenzel comment
+	)
+
 /datum/controller/subsystem/familytree/proc/ask_monarch_noble_permission(mob/living/carbon/human/monarch)
 	if(!monarch?.client)
 		return

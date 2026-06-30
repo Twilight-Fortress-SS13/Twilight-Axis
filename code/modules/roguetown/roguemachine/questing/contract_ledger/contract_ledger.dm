@@ -146,6 +146,9 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 	"Marshal",
 	"Councillor",
 	"Prince",
+	"Sultan", // Desert Town
+	"Vizier", // Desert Town
+	"Sheikh", // Desert Town
 ))
 
 GLOBAL_LIST_INIT(contract_proxy_officials, list(

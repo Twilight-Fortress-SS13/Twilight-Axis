@@ -116,6 +116,7 @@ SUBSYSTEM_DEF(familytree)
 	create_isolated_species_houses()
 	ftlog("families after isolated houses: [families.len]")
 	load_enigma_roles()
+	load_deserttown_roles()
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_CREATED, PROC_REF(on_mob_created))
 	var/registered_count = 0
 	for(var/mob/living/carbon/human/H in GLOB.mob_list)

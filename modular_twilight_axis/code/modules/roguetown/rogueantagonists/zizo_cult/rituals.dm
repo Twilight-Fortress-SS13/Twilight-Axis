@@ -496,10 +496,8 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	desk = "Призывает проклятое сердце, кое может помочь в захвате жертв. Не поможет в бою."
 	center_requirement = /obj/item/organ/heart
 
-	n_req = /obj/item/natural/worms/leech
 	s_req = /obj/item/alch/sinew
 	w_req = /obj/item/alch/viscera
-	e_req = /obj/item/alch/taraxacum
 
 	is_cultist_ritual = TRUE
 
@@ -911,9 +909,9 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	target.mind.AddSpell(new /obj/effect/proc_holder/spell/self/zizo_regenerate)
 
 /datum/ritual/fleshcrafting/fleshform
-	name = "Форма Плоти"
+	name = "Боевая плоть"
 	desk = "Превращает жертву в глупую живую плоть."
-	cultist_number = 5
+	cultist_number = 2
 	center_requirement = /mob/living/carbon/human
 	center_book = "Жертва"
 
@@ -1230,7 +1228,6 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	desk = "Ритуал, который позволяет создать сталь из простых кусочков"
 	center_requirement = /obj/item/scrap
 
-	n_req = /obj/item/scrap
 	s_req = /obj/item/scrap
 	w_req = /obj/item/scrap
 	e_req = /obj/item/scrap
@@ -1342,6 +1339,21 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	new /obj/item/rogueweapon/stoneaxe/battle/zizo(center)
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 
+/datum/ritual/weaponary/summonegreataxe
+	name = "Создание двустороннего двуручного топора"
+	desk = "Призывает особо-острый боевой двуручный топор."
+	center_requirement = /obj/item/rogueweapon/stoneaxe/battle/zizo
+	
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/summonegreataxe/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/greataxe/steel/doublehead/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
 /datum/ritual/weaponary/summonasword
 	name = "Создание поглощающего меча"
 	desk = "Призывает меч, который ворует жизненную энергию."
@@ -1355,6 +1367,23 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	S.start()
 
 	new /obj/item/rogueweapon/sword/sabre/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/summonmace
+	name = "Призыв булавы"
+	desk = "Призывает особую булаву Зизо."
+	center_requirement = /obj/item/rogueweapon/mace
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/summonmace/invoke(mob/living/user, turf/center)
+
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/mace/steel/zizo(center)
+
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 
 /datum/ritual/weaponary/summonshield

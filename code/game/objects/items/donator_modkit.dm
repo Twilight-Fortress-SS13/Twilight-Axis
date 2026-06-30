@@ -492,8 +492,8 @@
 	name = "'Grenzelhoft Mage Vest' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Robe"
 	target_items = list(/obj/item/clothing/suit/roguetown/shirt/robe,
-						/obj/item/clothing/suit/roguetown/shirt/robe)
-	result_item = /obj/item/clothing/suit/roguetown/shirt/sofiavest
+						/obj/item/clothing/suit/roguetown/shirt)
+	result_item = /obj/item/clothing/cloak/tabard/stabard/surcoat/sofiavest
 
 /obj/item/enchantingkit/strudel2
 	name = "'Xylixian Fasching Leotard' morphing elixir"
@@ -796,6 +796,7 @@
 	result_item = /obj/item/rogueweapon/maesune/sabre
 
 //NeroCavalier - Sword
+/* REMOVED BY REQUEST.
 /obj/item/enchantingkit/weapon/noire_flsword
 	name = "'Blacksteel Longsword' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Longsword"
@@ -803,12 +804,13 @@
 		/obj/item/rogueweapon/sword/long
 	)
 	result_item = /obj/item/rogueweapon/nerocavalier/flsword
+*/
 
 /obj/item/enchantingkit/aisuwand
-	name = "Crystalline Wand morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Wand"
-	target_items = list(/obj/item/rogueweapon/wand)
-	result_item = /obj/item/rogueweapon/wand/aisu
+    name = "Crystalline Rapier morphing elixir"
+    desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Rapier"
+    target_items = list(/obj/item/rogueweapon/sword/rapier)
+    result_item = /obj/item/rogueweapon/sword/rapier/aisu
 
 /obj/item/enchantingkit/weapon/regnum
 	name = "'Regnum' morphing elixir"

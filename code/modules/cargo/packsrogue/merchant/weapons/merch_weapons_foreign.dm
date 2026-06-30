@@ -82,6 +82,10 @@
 		/obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo,
 		/obj/item/rogueweapon/scabbard/sword/kazengun/noparry
 	)
+/datum/supply_pack/rogue/merc_weapons/kriegmesser/zybantine
+	name = "Zybantine Heavy Scimitar"
+	cost = 70
+	contains = list(/obj/item/rogueweapon/sword/long/kriegmesser/zybantine)
 
 /datum/supply_pack/rogue/merc_weapons/kodachi
 	name = "Kodachi and Scabbard"

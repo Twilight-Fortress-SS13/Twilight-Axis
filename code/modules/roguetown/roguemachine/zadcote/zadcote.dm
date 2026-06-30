@@ -392,7 +392,7 @@
 	desc = "A zadcote of the stewardry, kept open to any members of the Royal Court."
 	faction = ZADCOTE_FACTION_STEWARD
 	motto = "STEWARDRY ZADCOTE"
-	operator_jobs = list("Grand Duke", "Regent", "Steward", "Clerk", "Councillor", "Hand")
+	operator_jobs = list("Grand Duke", "Regent", "Steward", "Clerk", "Councillor", "Hand", "Sultan", "Vizier", "Sheikh") //TA_EDIT
 	allows_voyeur = FALSE
 
 /obj/item/roguemachine/zadcote/merchant
