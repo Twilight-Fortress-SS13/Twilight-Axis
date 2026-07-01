@@ -6,7 +6,7 @@
 #define ARTILLERY_HEAVY_RANGE 10
 #define ARTILLERY_LIGHT_RANGE 20
 
-GLOBAL_LIST_INIT(artillery_sepia_matrix, list(0.393,0.349,0.272,0, 0.769,0.686,0.534,0, 0.189,0.168,0.131,0, 0,0,0,1, 0,0,0,0))
+#define ARTILLERY_SEPIA_MATRIX list(0.393,0.349,0.272,0, 0.769,0.686,0.534,0, 0.189,0.168,0.131,0, 0,0,0,1, 0,0,0,0)
 
 /obj/item/artillery_shell
 	name = "Дружок, если ты это увидел то админы/маппер дурачки"
@@ -66,12 +66,13 @@ GLOBAL_LIST_INIT(artillery_sepia_matrix, list(0.393,0.349,0.272,0, 0.769,0.686,0
 	ui_view_x = null
 	ui_view_y = null
 	for(var/u in cached_expert_maps)
-		var/obj/effect/abstract/artillery_map/map_obj = cached_expert_maps[u]
-		if(map_obj)
+		var/list/tiles = cached_expert_maps[u]
+		if(tiles)
 			var/mob/M = u
 			if(M?.client)
-				M.client.screen -= map_obj.tiles
-			qdel(map_obj)
+				for(var/atom/movable/screen/S in tiles)
+					M.client.screen -= S
+					qdel(S)
 	cached_expert_maps = null
 	return ..()
 
@@ -259,145 +260,93 @@ GLOBAL_LIST_INIT(artillery_sepia_matrix, list(0.393,0.349,0.272,0, 0.769,0.686,0
 		ui = new(user, src, "Artillery", "Artillery")
 		ui.open()
 
-/obj/structure/artillery/proc/fix_map_glitch(mob/user)
-	if(QDELETED(src) || QDELETED(user) || !user.client)
-		return
-	var/obj/effect/abstract/artillery_map/M = cached_expert_maps[user]
-	if(M && !M.redraw_done)
-		var/v_x = M.view_x
-		var/v_y = M.view_y
-		var/v_z = M.view_z
-		var/rad = M.radius
-		cached_expert_maps[user] = null
-		user.client.screen -= M.tiles
-		qdel(M)
-		generate_map_screen(v_x, v_y, v_z, rad, user, TRUE)
+
 
 /obj/effect/abstract/artillery_dummy
 	icon = 'icons/mob/screen_gen.dmi'
 	icon_state = ""
 	plane = ABOVE_LIGHTING_PLANE
 
-/obj/effect/abstract/artillery_map
-	name = "artillery map"
-	var/list/tiles = list()
-	var/radius
-	var/view_x
-	var/view_y
-	var/view_z
-	var/redraw_done = FALSE
-
-/obj/effect/abstract/artillery_map/Destroy()
-	for(var/t in tiles)
-		qdel(t)
-	tiles.Cut()
-	return ..()
-
-/obj/effect/abstract/artillery_map/Initialize(mapload, rad = 6)
-	. = ..()
-	radius = rad
-	var/obj/structure/artillery/A = loc
-	for(var/dy in radius to -radius step -1)
-		for(var/dx in -radius to radius)
-			var/atom/movable/screen/artillery_map_tile/tile = new(src)
-			tile.linked_artillery = A
-			tile.map_dx = dx
-			tile.map_dy = dy
-			tile.screen_loc = "artmap:[dx + rad + 1],[dy + rad + 1]"
-			tiles += tile
-
 /atom/movable/screen/artillery_map_tile
-	name = "artillery map tile"
-	mouse_opacity = MOUSE_OPACITY_OPAQUE
-	var/map_dx = 0
-	var/map_dy = 0
+	name = "artillery map"
+	plane = ABOVE_LIGHTING_PLANE
+	layer = 100
+	var/dx = 0
+	var/dy = 0
 	var/obj/structure/artillery/linked_artillery
 
 /atom/movable/screen/artillery_map_tile/Click(location, control, params)
-	var/mob/user = usr
-	if(!linked_artillery)
-		return
+	if(linked_artillery)
+		if(linked_artillery.expert_mode_active)
+			linked_artillery.expert_target_tile(usr, dx, dy)
+		else
+			linked_artillery.target_tile(usr, dx, dy)
 
-	var/list/P = params2list(params)
-	if(P["left"])
-		var/obj/effect/abstract/artillery_map/M = loc
-		if(istype(M))
-			if(M.radius == 15)
-				linked_artillery.expert_target_tile(user, map_dx, map_dy)
-			else
-				linked_artillery.target_tile(user, map_dx, map_dy)
 
-/obj/structure/artillery/proc/generate_map_screen(view_x, view_y, view_z, radius, mob/user, no_redraw = FALSE)
-	var/obj/effect/abstract/artillery_map/M = cached_expert_maps[user]
+
+/obj/structure/artillery/proc/generate_map_screen(view_x, view_y, view_z, radius, mob/user)
+	var/list/tiles = cached_expert_maps[user]
 	var/map_id = radius == 15 ? "expert_artmap" : "normal_artmap"
 	
-	if(M && M.radius == radius && M.view_x == view_x && M.view_y == view_y && M.view_z == view_z)
+	if(tiles)
 		if(user.client)
-			user.client.screen |= M.tiles
-			winset(user, map_id, "icon-size=[radius == 15 ? 16 : 32]")
-		return M
+			for(var/atom/movable/screen/S in tiles)
+				user.client.screen -= S
+				qdel(S)
 
-	if(M)
+	tiles = list()
+	cached_expert_maps[user] = tiles
+
+	var/turf/center = locate(view_x, view_y, view_z)
+	if(!center)
+		return null
+
+	var/list/turfs = range(radius, center)
+	for(var/turf/T in turfs)
+		var/dx = T.x - center.x
+		var/dy = T.y - center.y
+		var/atom/movable/screen/artillery_map_tile/tile = new(null)
+		tile.appearance = T.appearance
+		
+		for(var/obj/O in T)
+			if(O.invisibility > 0) continue
+			if(istype(O, /obj/effect)) continue
+			var/mutable_appearance/MA = new(O.appearance)
+			MA.plane = FLOAT_PLANE
+			MA.layer = FLOAT_LAYER
+			tile.overlays += MA
+				
+		tile.plane = ABOVE_LIGHTING_PLANE
+		tile.layer = 100
+		tile.color = ARTILLERY_SEPIA_MATRIX
+		tile.dx = dx
+		tile.dy = dy
+		tile.linked_artillery = src
+		tile.screen_loc = "[map_id]:[dx + radius + 1],[dy + radius + 1]"
+		tiles += tile
 		if(user.client)
-			user.client.screen -= M.tiles
-		qdel(M)
+			user.client.screen |= tile
 
-	M = new /obj/effect/abstract/artillery_map(src, radius)
-	M.view_x = view_x
-	M.view_y = view_y
-	M.view_z = view_z
-	cached_expert_maps[user] = M
-
-	if(no_redraw)
-		M.redraw_done = TRUE
-	else
-		addtimer(CALLBACK(src, PROC_REF(fix_map_glitch), user), 10)
-
-	var/tile_index = 1
-	var/list/t_list = M.tiles
-	for(var/dy in radius to -radius step -1)
-		var/ty = view_y + dy
-		for(var/dx in -radius to radius)
-			var/tx = view_x + dx
-			var/atom/movable/screen/artillery_map_tile/tile = t_list[tile_index++]
-			tile.overlays.Cut()
-
-			var/turf/T = locate(tx, ty, view_z)
-			if(!T) continue
-
-			var/turf/highest = get_highest_turf(T)
-			if(!highest) continue
-
-			tile.appearance = highest.appearance
-			tile.screen_loc = "[map_id]:[dx + radius + 1],[dy + radius + 1]"
-			tile.plane = ABOVE_LIGHTING_PLANE
-			tile.layer = 100
-			tile.mouse_opacity = MOUSE_OPACITY_OPAQUE
-			tile.color = GLOB.artillery_sepia_matrix
-
-			if(dx == 0 && dy == 0)
-				var/image/crosshair = image('icons/mob/screen_gen.dmi', "")
-				crosshair.maptext = "<span style='color:#FF0000; font-size:22pt; font-weight:bold; text-align:center; -dm-text-outline: 2px black;'>+</span>"
-				crosshair.maptext_width = 32
-				crosshair.maptext_height = 32
-				crosshair.maptext_y = -5
-				crosshair.plane = ABOVE_LIGHTING_PLANE
-				crosshair.layer = 105
-				tile.overlays += crosshair
-
-			for(var/atom/movable/AM in highest)
-				if(AM.invisibility > 100 || ismob(AM) || istype(AM, /obj/effect) || istype(AM, /atom/movable/lighting_object))
-					continue
-				var/mutable_appearance/MA = new(AM.appearance)
-				MA.plane = ABOVE_LIGHTING_PLANE
-				MA.layer = 101
-				tile.overlays += MA
-
+	var/atom/movable/screen/crosshair = new()
+	crosshair.name = "crosshair"
+	crosshair.icon = 'icons/mob/screen_gen.dmi'
+	crosshair.icon_state = ""
+	crosshair.maptext = "<span style='color:#FF0000; font-size:22pt; font-weight:bold; text-align:center; -dm-text-outline: 2px black;'>+</span>"
+	crosshair.maptext_width = 32
+	crosshair.maptext_height = 32
+	crosshair.maptext_y = -5
+	crosshair.plane = ABOVE_LIGHTING_PLANE
+	crosshair.layer = 105
+	crosshair.screen_loc = "[map_id]:[radius + 1],[radius + 1]"
+	tiles += crosshair
+	
 	if(user.client)
-		user.client.screen |= M.tiles
+		user.client.screen |= crosshair
 		winset(user, map_id, "icon-size=[radius == 15 ? 16 : 32]")
 
-	return M
+
+
+	return tiles
 
 /obj/structure/artillery/proc/calculate_firing_solution(mob/user, target_x, target_y)
 	var/dist_x = target_x - src.x

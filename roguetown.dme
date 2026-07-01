@@ -3579,7 +3579,6 @@
 #include "modular\piercing\supply.dm"
 #include "modular\ze_genesis_call\genesis_call.dm"
 #include "modular_twilight_axis\awful_artillery\code\_artillery.dm"
-#include "modular_twilight_axis\awful_artillery\code\artillery_defense.dm"
 #include "modular_twilight_axis\awful_artillery\code\craft.dm"
 #include "modular_twilight_axis\awful_artillery\code\merchant.dm"
 #include "modular_twilight_axis\awful_artillery\code\mortar.dm"
