@@ -527,7 +527,7 @@
 		return GLOB.tat_trait_requirement_map
 	GLOB.tat_trait_requirement_map = list(
 		TAT_TRAIT_WEAPON_TRAINING = list("role_choices" = list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER), "message" = "\"[get_trait_display_name(TAT_TRAIT_WEAPON_TRAINING)]\" requires Resident or Trader role."),
-		TAT_TRAIT_WARRIOR_EXPERT = list("all" = list(TAT_TRAIT_WEAPON_TRAINING), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" requires \"[get_trait_display_name(TAT_TRAIT_WEAPON_TRAINING)]\"."),
+		TAT_TRAIT_WARRIOR_EXPERT = list("all_by_role_choice" = list(TAT_ROLE_CHOICE_TOWNER = list(TAT_TRAIT_WEAPON_TRAINING), TAT_ROLE_CHOICE_TRADER = list(TAT_TRAIT_WEAPON_TRAINING)), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\" requires \"[get_trait_display_name(TAT_TRAIT_WEAPON_TRAINING)]\" for Resident and Trader roles."),
 		TAT_TRAIT_WARRIOR_MASTER = list("all" = list(TAT_TRAIT_WARRIOR_EXPERT), "message" = "\"[get_trait_display_name(TAT_TRAIT_WARRIOR_MASTER)]\" requires \"[get_trait_display_name(TAT_TRAIT_WARRIOR_EXPERT)]\"."),
 		TAT_TRAIT_BARDIC_INSPIRATION_T2 = list("all" = list(TAT_TRAIT_BARDIC_INSPIRATION_T1), "message" = "\"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T2)]\" requires \"[get_trait_display_name(TAT_TRAIT_BARDIC_INSPIRATION_T1)]\"."),
 		TAT_TRAIT_SPELLBLADE = list("all" = list(TAT_TRAIT_MAGE_INITIATE, TRAIT_ARCYNE), "message" = "\"[get_trait_display_name(TAT_TRAIT_SPELLBLADE)]\" requires \"[get_trait_display_name(TAT_TRAIT_MAGE_INITIATE)]\" and \"[get_trait_display_name(TRAIT_ARCYNE)]\"."),
@@ -570,6 +570,13 @@
 		for(var/required_trait in all_requirements)
 			if(!has_trait(required_trait))
 				return FALSE
+	var/list/all_by_role_choice = rule["all_by_role_choice"]
+	if(islist(all_by_role_choice))
+		var/list/role_requirements = all_by_role_choice[owner_build?.directions?.get_role_choice()]
+		if(islist(role_requirements))
+			for(var/required_trait in role_requirements)
+				if(!has_trait(required_trait))
+					return FALSE
 	return TRUE
 
 /datum/tat_traits/proc/get_trait_requirement_block_reason(trait_id)

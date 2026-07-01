@@ -263,6 +263,9 @@
 /datum/tat_build/proc/has_built_in_weapon_training_foundation()
 	return FALSE
 
+/datum/tat_build/proc/has_role_combat_training_unlock()
+	return (directions?.get_role_choice()) in list(TAT_ROLE_CHOICE_ADVENTURER, TAT_ROLE_CHOICE_WRETCH)
+
 /datum/tat_build/proc/get_trait_cost_display(trait_id)
 	return traits.get_display_cost(trait_id)
 

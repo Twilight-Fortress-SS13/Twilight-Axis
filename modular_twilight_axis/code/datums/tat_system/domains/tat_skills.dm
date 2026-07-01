@@ -696,6 +696,7 @@
 	var/master_cap = TAT_SKILL_COMBAT_CAP_TRAIT_MASTER
 
 	var/has_weapon_training = !!owner_build?.has_trait(TAT_TRAIT_WEAPON_TRAINING)
+	var/has_training_unlock = has_weapon_training || !!owner_build?.has_role_combat_training_unlock()
 	var/has_expert = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_EXPERT)
 	var/has_master = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_MASTER)
 	var/has_pugilist = !!owner_build?.has_trait(TRAIT_CIVILIZEDBARBARIAN)
@@ -706,7 +707,7 @@
 
 	var/cap = base_cap
 
-	if(has_weapon_training && !is_ranged_skill)
+	if(has_training_unlock && !is_ranged_skill)
 		cap = trained_cap
 
 	if(is_ranged_skill)
@@ -714,7 +715,7 @@
 
 	var/is_pugilist_skill = skill_type == /datum/skill/combat/unarmed || skill_type == /datum/skill/combat/wrestling
 	if(has_pugilist && is_pugilist_skill)
-		if(has_weapon_training)
+		if(has_training_unlock)
 			cap = max(cap, expert_cap)
 		else
 			cap = max(cap, trained_cap)
@@ -732,7 +733,7 @@
 	var/cap_bonus = get_trait_cap_bonus(skill_type) + get_virtue_skill_cap_bonus(skill_type)
 	if(cap_bonus > 0)
 		var/bonus_cap = cap_bonus
-		if(bonus_cap > base_cap && !has_weapon_training && !(has_pugilist && is_pugilist_skill))
+		if(bonus_cap > base_cap && !has_training_unlock && !(has_pugilist && is_pugilist_skill))
 			bonus_cap = base_cap
 		cap = max(cap, bonus_cap)
 
