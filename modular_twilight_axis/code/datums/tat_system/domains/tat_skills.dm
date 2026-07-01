@@ -697,6 +697,7 @@
 
 	var/has_weapon_training = !!owner_build?.has_trait(TAT_TRAIT_WEAPON_TRAINING)
 	var/has_training_unlock = has_weapon_training || !!owner_build?.has_role_combat_training_unlock()
+	var/has_hunter_cap_unlock = !!owner_build?.has_trait(TAT_TRAIT_HUNTER_SHOOTER)
 	var/has_expert = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_EXPERT)
 	var/has_master = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_MASTER)
 	var/has_pugilist = !!owner_build?.has_trait(TRAIT_CIVILIZEDBARBARIAN)
@@ -733,7 +734,7 @@
 	var/cap_bonus = get_trait_cap_bonus(skill_type) + get_virtue_skill_cap_bonus(skill_type)
 	if(cap_bonus > 0)
 		var/bonus_cap = cap_bonus
-		if(bonus_cap > base_cap && !has_training_unlock && !(has_pugilist && is_pugilist_skill))
+		if(bonus_cap > base_cap && !has_training_unlock && !(has_hunter_cap_unlock && is_ranged_skill) && !(has_pugilist && is_pugilist_skill))
 			bonus_cap = base_cap
 		cap = max(cap, bonus_cap)
 
