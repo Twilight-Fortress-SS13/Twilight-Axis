@@ -1386,6 +1386,19 @@
 /datum/tat_traits/proc/export_to_list()
 	return selected.Copy()
 
+/datum/tat_traits/proc/import_trait_count(trait_id, count = 1)
+	if(!check_trait(trait_id))
+		return FALSE
+	count = max(0, round(text2num("[count]") || 0))
+	if(count <= 0)
+		return FALSE
+	if(is_repeatable_trait(trait_id))
+		count = min(count, get_trait_maximum(trait_id))
+		selected[trait_id] = count
+	else
+		selected[trait_id] = TRUE
+	return TRUE
+
 /datum/tat_traits/proc/import_from_list(list/data)
 	reset()
 	if(!islist(data))
@@ -1393,9 +1406,7 @@
 	for(var/trait_id in data)
 		if(!check_trait(trait_id))
 			continue
-		var/count = isnum(data[trait_id]) ? round(data[trait_id]) : (data[trait_id] ? 1 : 0)
-		for(var/i in 1 to count)
-			add_trait(trait_id)
+		import_trait_count(trait_id, data[trait_id])
 	return TRUE
 
 /datum/tat_traits/proc/export_to_json_list()
@@ -1411,13 +1422,18 @@
 	if(!islist(data))
 		return FALSE
 	for(var/key in data)
+		var/import_count = 1
 		if(check_trait(key))
-			add_trait(key)
+			import_count = isnull(data[key]) ? (get_selected_trait_count(key) + 1) : data[key]
+			import_trait_count(key, import_count)
 			continue
 		if(data[key] && check_trait("[key]"))
-			var/count = isnum(data[key]) ? round(data[key]) : 1
-			for(var/i in 1 to count)
-				add_trait("[key]")
+			import_count = data[key]
+			import_trait_count("[key]", import_count)
+			continue
+		var/value = data[key]
+		if(istext(value) && check_trait(value))
+			import_trait_count(value, get_selected_trait_count(value) + 1)
 	return TRUE
 
 /datum/tat_traits/proc/get_resident_skill_spell_rules()
