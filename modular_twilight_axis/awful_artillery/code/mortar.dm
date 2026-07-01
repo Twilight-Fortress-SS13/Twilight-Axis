@@ -63,6 +63,8 @@
 		M.playsound_local(src, 'modular_twilight_axis/awful_artillery/sound/far_explosion.ogg', 100, FALSE, pressure_affected = FALSE)
 	
 
+	var/list/hit_turfs = list(T)
+
 	if(istype(T, /turf/closed))
 		explosion(T, 4, 10, 20)
 	else 
@@ -88,14 +90,16 @@
 					affected_turf.ChangeTurf(/turf/open/transparent/openspace)
 
 			explosion(turf_below, 4, 10, 20, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
+			hit_turfs += turf_below
 		else 
 			explosion(T, 4, 10, 20, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
 	
-	for(var/i in 1 to PROJECTILE_NUM)
-		var/obj/projectile/bullet/shell_shrapnel/P = new(T)
-		P.starting = T
-		P.def_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_HEAD)
-		P.fire((i * PROJECTILE_DEGREES_DIV) % 360)
+	for(var/turf/target_turf in hit_turfs)
+		for(var/i in 1 to PROJECTILE_NUM)
+			var/obj/projectile/bullet/shell_shrapnel/P = new(target_turf)
+			P.starting = target_turf
+			P.def_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_HEAD)
+			P.fire((i * PROJECTILE_DEGREES_DIV) % 360)
 	
 	qdel(src)
 

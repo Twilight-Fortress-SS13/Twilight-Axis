@@ -303,15 +303,28 @@
 
 	var/list/turfs = range(radius, center)
 	for(var/turf/T in turfs)
+		var/turf/highest_T = T
+		while(GET_TURF_ABOVE(highest_T))
+			highest_T = GET_TURF_ABOVE(highest_T)
+
+		while(GET_TURF_BELOW(highest_T) && istype(highest_T, /turf/open/transparent))
+			highest_T = GET_TURF_BELOW(highest_T)
+
 		var/dx = T.x - center.x
 		var/dy = T.y - center.y
 		var/atom/movable/screen/artillery_map_tile/tile = new(null)
-		tile.appearance = T.appearance
 		
-		for(var/obj/O in T)
+		if(istype(highest_T, /turf/open/transparent))
+			tile.icon = 'icons/turf/floors.dmi'
+			tile.icon_state = "grey"
+		else
+			tile.appearance = highest_T.appearance
+		
+		for(var/obj/O in highest_T)
 			if(O.invisibility > 0) continue
 			if(istype(O, /obj/effect)) continue
 			var/mutable_appearance/MA = new(O.appearance)
+			MA.dir = O.dir
 			MA.plane = FLOAT_PLANE
 			MA.layer = FLOAT_LAYER
 			tile.overlays += MA
