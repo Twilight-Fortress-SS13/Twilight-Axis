@@ -714,7 +714,8 @@
 	if(is_ranged_skill)
 		cap = max(cap, get_ranged_synergy_cap(skill_type))
 
-	var/is_pugilist_skill = skill_type == /datum/skill/combat/unarmed || skill_type == /datum/skill/combat/wrestling
+	var/is_pugilist_unarmed_skill = skill_type == /datum/skill/combat/unarmed
+	var/is_pugilist_skill = is_pugilist_unarmed_skill || skill_type == /datum/skill/combat/wrestling
 	if(has_pugilist && is_pugilist_skill)
 		if(has_training_unlock)
 			cap = max(cap, expert_cap)
@@ -730,6 +731,9 @@
 		var/master_invested_target = max(current_invested, master_cap - bonus_value)
 		if(master_invested_target >= 0 && get_raw_total_value(skill_type, master_invested_target) >= master_cap && !would_violate_combat_hardcaps(skill_type, master_invested_target))
 			cap = master_cap
+
+	if(has_pugilist && has_expert && is_pugilist_unarmed_skill)
+		cap = max(cap, master_cap)
 
 	var/cap_bonus = get_trait_cap_bonus(skill_type) + get_virtue_skill_cap_bonus(skill_type)
 	if(cap_bonus > 0)
