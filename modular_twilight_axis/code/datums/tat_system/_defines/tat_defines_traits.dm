@@ -223,7 +223,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_HARDDISMEMBER = TAT_TRAIT_ENTRY("Hard Dismemberment", 1, "Your limbs are harder to dismember."), \
 	TRAIT_STEELHEARTED = TAT_TRAIT_ENTRY("Steelhearted", 1, "Hardened nerves. You do not waiver from the sight of violence in battle."), \
 	TRAIT_OUTDOORSMAN = TAT_TRAIT_ENTRY("Outdoorsman", 3, "Experience in the wilds lets you sleep on surfaces like treebranches as if they were beds. Costs 1 Survival point for Residents."), \
-	TRAIT_CIVILIZEDBARBARIAN = TAT_TRAIT_ENTRY("Expert Pugilist", 2, "Turns you into a living weapon: stronger unarmed strikes, broader unarmed reach, and much better parrying with bracers, knuckles, or bandages. With Expert Warrior, Unarmed can be raised to level 5; Wrestling is not raised by this special unlock."), \
+	TRAIT_CIVILIZEDBARBARIAN = TAT_TRAIT_ENTRY("Expert Pugilist", 2, "Turns you into a living weapon: stronger unarmed strikes, broader unarmed reach, and much better parrying with bracers, knuckles, or bandages. Wretches with Expert Warrior can raise Unarmed to level 5; Wrestling is not raised by this special unlock."), \
 	TRAIT_FENCERDEXTERITY = TAT_TRAIT_ENTRY("Fencer's Dexterity", 1, "I've trained my entire lyfe around the art of unarmoured fencing, affording myself unmatched speed when wearing very light armour. I'm very choosy otherwise. WARNING: YOU CAN WEAR ONLY LIGHT ARMOR"), \
 	TAT_TRAIT_BRONZE_SUPPLIER = TAT_TRAIT_ENTRY("Bronze Supplier", 1, "Unlocks bronze-tier weapons."), \
 	TAT_TRAIT_SILVER_SUPPLIER = TAT_TRAIT_ENTRY("Silver Supplier", 4, "Unlocks silver-tier weapons."), \

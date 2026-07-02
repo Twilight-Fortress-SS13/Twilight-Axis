@@ -732,7 +732,7 @@
 		if(master_invested_target >= 0 && get_raw_total_value(skill_type, master_invested_target) >= master_cap && !would_violate_combat_hardcaps(skill_type, master_invested_target))
 			cap = master_cap
 
-	if(has_pugilist && has_expert && is_pugilist_unarmed_skill)
+	if(has_pugilist && has_expert && is_pugilist_unarmed_skill && owner_build?.directions?.get_role_choice() == TAT_ROLE_CHOICE_WRETCH)
 		cap = max(cap, master_cap)
 
 	var/cap_bonus = get_trait_cap_bonus(skill_type) + get_virtue_skill_cap_bonus(skill_type)
