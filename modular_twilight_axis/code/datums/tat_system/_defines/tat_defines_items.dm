@@ -854,8 +854,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/cushion/desert1 = TAT_ITEM_ENTRY("Desert Cushion", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/cushion/desert2 = TAT_ITEM_ENTRY("Desert Cushion", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/cushion/zybantine = TAT_ITEM_ENTRY("Zybantine Cushion", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
-	/obj/item/reagent_containers/glass/bucket/tinypot = TAT_ITEM_ENTRY("Small Clay Pot", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
-	/obj/item/natural/rock/desert = TAT_ITEM_ENTRY("Sand Rock", 0, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/bikini = TAT_ITEM_ENTRY("Half-plate Corslet", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/iron/bikini = TAT_ITEM_ENTRY("Iron Half-plate Corslet", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/full/bikini = TAT_ITEM_ENTRY("Full-plate Corset", 3.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "armor"), \
