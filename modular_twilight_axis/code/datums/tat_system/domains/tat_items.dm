@@ -270,6 +270,14 @@
 		total += amount
 	return total
 
+/datum/tat_items/proc/is_kazengun_sheath_item(item_path, list/entry = null)
+	if(!islist(entry))
+		entry = get_entry(item_path)
+	if(!islist(entry) || lowertext("[entry["slot_group"]]") != "sheath")
+		return FALSE
+	var/path_text = lowertext("[item_path]")
+	return findtext(path_text, "kazengun")
+
 /datum/tat_items/proc/is_limited_firearm_item(item_path)
 	if(!ispath(item_path))
 		item_path = text2path("[item_path]")
@@ -332,11 +340,14 @@
 	if(!isnum(cost))
 		cost = 0
 	var/category = entry["category"]
+	var/slot_group = entry["slot_group"]
+	if(lowertext("[slot_group]") == "sheath")
+		var/item_limit = is_kazengun_sheath_item(item_path, entry) ? 1 : 2
+		return max(0, item_limit - trait_granted)
 	if(cost <= 0 && (category == "misc" || category == "weapon"))
 		return max(0, 1 - trait_granted)
 	if(!tat_item_entry_is_slot_limited(entry))
 		return max(0, 99 - trait_granted)
-	var/slot_group = entry["slot_group"]
 	if(!slot_group)
 		return max(0, 99 - trait_granted)
 	var/already_taken_elsewhere = get_slot_group_item_count(slot_group, category, item_path)
