@@ -212,6 +212,20 @@
 	combat_breakdown["expert"] = expert_points
 	combat_breakdown["master"] = master_points
 	combat_breakdown["trait"] = max(0, round(combat_breakdown["trait"] || 0) - expert_points - master_points)
+	var/combat_total = skills.get_total_maximum(TAT_SKILL_DOMAIN_COMBAT)
+	var/combat_spent = skills.get_spent_points(TAT_SKILL_DOMAIN_COMBAT)
+	var/expert_spent = min(expert_points, skills.get_combat_step_spent_at_level(TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT))
+	var/master_spent = min(master_points, skills.get_combat_step_spent_at_level(TAT_SKILL_COMBAT_CAP_TRAIT_MASTER))
+	var/restricted_total = expert_points + master_points
+	var/restricted_spent = min(restricted_total, expert_spent + master_spent)
+	var/normal_total = max(0, combat_total - restricted_total)
+	var/normal_spent = min(normal_total, max(0, combat_spent - restricted_spent))
+	combat_breakdown["normal_total"] = normal_total
+	combat_breakdown["normal_spent"] = normal_spent
+	combat_breakdown["normal_remaining"] = max(0, normal_total - normal_spent)
+	combat_breakdown["expert_master_total"] = restricted_total
+	combat_breakdown["expert_master_spent"] = restricted_spent
+	combat_breakdown["expert_master_remaining"] = max(0, restricted_total - restricted_spent)
 
 	return result
 
@@ -553,6 +567,8 @@
 		if(trait_id == TAT_TRAIT_WEAPON_TRAINING && !((directions?.get_role_choice()) in list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER)))
 			continue
 		if(traits?.is_resident_only_hunter_trait(trait_id) && directions?.get_role_choice() != TAT_ROLE_CHOICE_TOWNER)
+			continue
+		if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && traits?.is_wanderer_role_choice(directions?.get_role_choice()))
 			continue
 		if(directions?.is_role_trait(trait_id))
 			continue

@@ -20,6 +20,9 @@
 /datum/tat_traits/proc/is_resident_only_hunter_trait(trait_id)
 	return trait_id in list(TAT_TRAIT_HUNTER_BEATER, TAT_TRAIT_HUNTER_SHOOTER)
 
+/datum/tat_traits/proc/is_wanderer_role_choice(role_choice)
+	return role_choice == TAT_ROLE_CHOICE_ADVENTURER || role_choice == TAT_ROLE_CHOICE_WRETCH
+
 /datum/tat_traits/proc/get_trait_count(trait_id)
 	if(owner_build?.directions?.get_effective_role_trait() == trait_id)
 		return 1
@@ -278,7 +281,7 @@
 		return FALSE
 	if(trait_id == TAT_TRAIT_DRUID_INITIATE && !owner_build?.can_select_druid_initiate_trait())
 		return FALSE
-	if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && owner_build?.directions?.foundation != TAT_FOUNDATION_SETTLED)
+	if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && (owner_build?.directions?.foundation != TAT_FOUNDATION_SETTLED || is_wanderer_role_choice(owner_build?.directions?.get_role_choice())))
 		return FALSE
 	if(trait_id == TAT_TRAIT_TRADER_LICENSE && owner_build?.directions?.get_role_choice() != TAT_ROLE_CHOICE_TRADER)
 		return FALSE

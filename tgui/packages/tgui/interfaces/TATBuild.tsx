@@ -177,6 +177,12 @@ type Data = {
     expert?: number;
     master?: number;
     converted?: number;
+    normal_total?: number;
+    normal_spent?: number;
+    normal_remaining?: number;
+    expert_master_total?: number;
+    expert_master_spent?: number;
+    expert_master_remaining?: number;
   }>>;
   skill_conversion_pool?: number;
   skill_conversion_state?: Partial<Record<SkillDomainKey, SkillConversionDomainState>>;
@@ -431,6 +437,26 @@ const formatSkillDisplayValue = (state?: SkillState) => {
 };
 
 const formatDomainPoints = (data: Data, domain: SkillDomainKey) => {
+  if (domain === 'combat') {
+    const breakdown = data.skill_point_breakdown_by_domain?.combat;
+    const normalTotal = Number(breakdown?.normal_total);
+    const normalRemaining = Number(breakdown?.normal_remaining);
+    const restrictedTotal = Number(breakdown?.expert_master_total);
+    const restrictedRemaining = Number(breakdown?.expert_master_remaining);
+
+    if (Number.isFinite(normalTotal) && Number.isFinite(normalRemaining)) {
+      const normalText = `${normalRemaining} / ${normalTotal}`;
+      if (
+        Number.isFinite(restrictedTotal)
+        && Number.isFinite(restrictedRemaining)
+        && restrictedTotal > 0
+      ) {
+        return `${normalText} (${restrictedRemaining} / ${restrictedTotal})`;
+      }
+      return normalText;
+    }
+  }
+
   const total = data.skill_points_by_domain?.[domain];
   const remaining = data.skill_points_remaining_by_domain?.[domain];
 
