@@ -122,6 +122,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/mace/steel = TAT_ITEM_ENTRY("Steel Mace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/mace/steel/morningstar = TAT_ITEM_ENTRY("Morningstar", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/rogueweapon/mace/steel/silver = TAT_ITEM_ENTRY("Silver Mace", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "blunt"), \
+	/obj/item/rogueweapon/hammer/stone = TAT_ITEM_ENTRY("Stone Hammer", 0, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
 	/obj/item/rogueweapon/mace/warhammer = TAT_ITEM_ENTRY("Warhammer", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "blunt"), \
 	/obj/item/rogueweapon/mace/warhammer/bronze = TAT_ITEM_ENTRY("Bronze Warhammer", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "blunt"), \
 	/obj/item/rogueweapon/mace/warhammer/steel = TAT_ITEM_ENTRY("Steel Warhammer", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
@@ -516,7 +517,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/woodstaff = TAT_ITEM_ENTRY("Wooden Staff", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/woodstaff/implement = TAT_ITEM_ENTRY("Lesser Staff", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/woodstaff/implement/greater = TAT_ITEM_ENTRY("Greater Staff", 5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
-	/obj/item/rogueweapon/woodstaff/implement/grand/naledi = TAT_ITEM_ENTRY("Naledi Staff", 8, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/spear/billhook = TAT_ITEM_ENTRY("Billhook", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/stone/copper = TAT_ITEM_ENTRY("Copper Spear", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/clothing/gloves/roguetown/chain/contraption/voltic = TAT_ITEM_ENTRY("Voltic Gauntlet", 4, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
@@ -573,6 +573,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/repair_kit/metal/bad = TAT_ITEM_ENTRY("Scrap Kit", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/repair_kit/metal = TAT_ITEM_ENTRY("Plate's kit", 4, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/repair_kit/bad = TAT_ITEM_ENTRY("Fabric Patch", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
+	/obj/item/polishing_cream = TAT_ITEM_ENTRY("Polishing Cream", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/storage/hip/headhook = TAT_ITEM_ENTRY("Head Hook", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/storage/hip/headhook/bronze = TAT_ITEM_ENTRY("Bronze Head Hook", 2, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate = TAT_ITEM_ENTRY("Psydonic Cuirass", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
@@ -806,7 +807,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/suit/roguetown/shirt/dress/thawb/brown = TAT_ITEM_ENTRY("Brown Thawb", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/dress/thawb/grey = TAT_ITEM_ENTRY("Grey Thawb", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/dress/thawb/gold = TAT_ITEM_ENTRY("Gold-trimmed Thawb", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
-	/obj/item/clothing/suit/roguetown/shirt/jafar = TAT_ITEM_ENTRY("Zybantine Magos Robes", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
+	/obj/item/clothing/suit/roguetown/shirt/jafar = TAT_ITEM_ENTRY("Zybantine Magos Robes", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "armor skin"), \
 	/obj/item/clothing/head/roguetown/turban = TAT_ITEM_ENTRY("Turban", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
 	/obj/item/clothing/head/roguetown/turban/tan = TAT_ITEM_ENTRY("Tan Turban", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
 	/obj/item/clothing/head/roguetown/turban/brown = TAT_ITEM_ENTRY("Brown Turban", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
