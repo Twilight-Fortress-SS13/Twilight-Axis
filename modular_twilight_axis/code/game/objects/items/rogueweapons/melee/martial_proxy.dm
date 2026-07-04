@@ -92,35 +92,6 @@
 	SEND_SIGNAL(M, COMSIG_ITEM_ATTACKED_SUCCESS, src, user)
 
 	var/mm_zone = user.zone_selected
-
-	if(mm_zone == BODY_ZONE_PRECISE_R_INHAND)
-		var/offh = 0
-		var/obj/item/W = M.held_items[1]
-		if(W)
-			if(!(M.mobility_flags & MOBILITY_STAND))
-				M.throw_item(get_step(M, turn(M.dir, 90)), offhand = offh)
-			else
-				M.dropItemToGround(W)
-			M.visible_message(span_notice("[user] disarms [M]!"), \
-							span_boldwarning("I'm disarmed by [user]!"))
-			last_attack_target = M
-			last_attack_success = TRUE
-			return TRUE
-
-	if(mm_zone == BODY_ZONE_PRECISE_L_INHAND)
-		var/offh = 0
-		var/obj/item/W = M.held_items[2]
-		if(W)
-			if(!(M.mobility_flags & MOBILITY_STAND))
-				M.throw_item(get_step(M, turn(M.dir, 270)), offhand = offh)
-			else
-				M.dropItemToGround(W)
-			M.visible_message(span_notice("[user] disarms [M]!"), \
-							span_boldwarning("I'm disarmed by [user]!"))
-			last_attack_target = M
-			last_attack_success = TRUE
-			return TRUE
-
 	var/selzone = melee_accuracy_check(mm_zone, user, M, /datum/skill/combat/unarmed, user.used_intent)
 	if(!isliving(M))
 		return FALSE

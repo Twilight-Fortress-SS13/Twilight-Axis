@@ -922,8 +922,6 @@
 			H.mind.AddSpell(new /datum/action/cooldown/spell/advance)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/gate_of_reckoning)
 		if("Macebearer")
-			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/kastvyl)
-			H.mind.AddSpell(new /datum/action/cooldown/spell/tremor)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/charge)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/cataclysm)
 	H.mind.setup_mage_aspects(build_mage_aspects(FALSE))
