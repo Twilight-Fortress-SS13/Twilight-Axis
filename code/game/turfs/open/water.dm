@@ -1,4 +1,10 @@
+#define WATER_PULLING_STAMINA_MULTIPLIER 1.5 // TA EDIT
+
 ///////////// OVERLAY EFFECTS /////////////
+
+/atom/movable // TA EDIT
+	var/tmp/water_dragged = FALSE // TA EDIT
+
 /obj/effect/overlay/water
 	icon = 'icons/turf/newwater.dmi'
 	icon_state = "bottom"
@@ -63,9 +69,8 @@
 	if(isliving(AM) && !AM.throwing)
 		var/mob/living/user = AM
 		if(isliving(user) && !user.is_floor_hazard_immune())
-			for(var/obj/structure/S in src)
-				if(S.obj_flags & BLOCK_Z_OUT_DOWN)
-					return
+			if(platform_atom_count > 0)
+				return
 			if(water_overlay)
 				if((get_dir(src, newloc) == SOUTH))
 					water_overlay.layer = BELOW_MOB_LAYER
@@ -75,6 +80,8 @@
 						if(!locate(/mob/living) in src)
 							water_overlay.layer = BELOW_MOB_LAYER
 							water_overlay.plane = GAME_PLANE
+			if(user.water_dragged) // TA EDIT
+				return // TA EDIT
 			var/drained = get_stamina_drain(user, get_dir(src, newloc))
 			if(drained && !user.stamina_add(drained))
 				user.Immobilize(30)
@@ -124,12 +131,15 @@
 	if(!swimmer.check_armor_skill())
 		. += UNSKILLED_ARMOR_PENALTY
 	if(.) // this check is expensive so we only run it if we do expect to use stamina
-		for(var/obj/structure/S in src)
-			if(S.obj_flags & BLOCK_Z_OUT_DOWN)
-				return 0
+		if(platform_atom_count > 0)
+			return 0
 		for(var/D in GLOB.cardinals) //adjacent to a floor to hold onto
 			if(istype(get_step(src, D), /turf/open/floor))
 				return 0
+	if(.)
+		var/atom/movable/pulled = swimmer.pulling
+		if(!swimmer.moving_from_pull && pulled && pulled != swimmer && isliving(pulled))
+			. *= WATER_PULLING_STAMINA_MULTIPLIER
 
 // Mobs won't try to path through water if low on stamina,
 // and will take advantage of water flow to move faster.
@@ -164,9 +174,8 @@
 
 /turf/open/water/Entered(atom/movable/AM, atom/oldLoc)
 	. = ..()
-	for(var/obj/structure/S in src)
-		if(S.obj_flags & BLOCK_Z_OUT_DOWN)
-			return
+	if(platform_atom_count > 0)
+		return
 	if(istype(AM, /obj/item/reagent_containers/food/snacks/fish))
 		var/obj/item/reagent_containers/food/snacks/fish/F = AM
 		if (F.sinkable)
@@ -580,7 +589,8 @@
 
 /turf/open/water/river/Entered(atom/movable/AM, atom/oldLoc)
 	. = ..()
-	START_PROCESSING(SSrivers, src)
+	if(platform_atom_count <= 0)
+		START_PROCESSING(SSrivers, src)
 
 /turf/open/water/river/get_heuristic_slowdown(mob/traverser, travel_dir)
 	var/const/UPSTREAM_PENALTY = 4
@@ -589,9 +599,8 @@
 	. = ..()
 	if(traverser.is_floor_hazard_immune())
 		return
-	for(var/obj/structure/S in src)
-		if(S.obj_flags & BLOCK_Z_OUT_DOWN)
-			return
+	if(platform_atom_count > 0)
+		return
 	if(travel_dir == dir) // downriver
 		. += DOWNSTREAM_BONUS // faster!
 	else if(travel_dir == GLOB.reverse_dir[dir]) // upriver
@@ -600,16 +609,18 @@
 		. += SIDESTREAM_PENALTY // sidestream walking isn't free, bro
 
 /turf/open/water/river/proc/process_river()
+	if(platform_atom_count > 0)
+		STOP_PROCESSING(SSrivers, src)
+		return
 	var/found_movable = FALSE
 	for(var/atom/movable/A in contents)
-		found_movable = TRUE
-		for(var/obj/structure/S in src)
-			if(S.obj_flags & BLOCK_Z_OUT_DOWN)
-				return
-		if((A.loc == src))
-			A.ConveyorMove(dir)
+		if(!A.anchored)
+			found_movable = TRUE
+			if((A.loc == src))
+				A.ConveyorMove(dir)
 
-	if(found_movable)
+	// stop processing once there's nothing left to move
+	if(!found_movable)
 		STOP_PROCESSING(SSrivers, src)
 		return
 
@@ -655,3 +666,6 @@
 	swim_skill = TRUE
 	wash_in = TRUE
 	water_reagent = /datum/reagent/water/gross
+
+
+#undef WATER_PULLING_STAMINA_MULTIPLIER // TA EDIT

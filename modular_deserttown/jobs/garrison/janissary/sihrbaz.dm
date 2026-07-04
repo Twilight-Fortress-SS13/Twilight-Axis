@@ -42,7 +42,7 @@
 		/obj/item/rope/chain = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
 		/obj/item/storage/keyring/manatarms,
-		/obj/item/book/spellbook = 1,
+		/obj/item/rogueweapon/spellbook = 1,
 		/obj/item/chalk = 1,
 		)
 	H.adjust_blindness(-3)

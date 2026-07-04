@@ -467,8 +467,8 @@
 	switch(mob.zone_selected)
 		if(BODY_ZONE_R_ARM)
 			next_in_line = BODY_ZONE_PRECISE_R_HAND
-		if(BODY_ZONE_PRECISE_R_HAND) // ta edit
-			next_in_line = BODY_ZONE_PRECISE_R_INHAND // ta edit
+//.		if(BODY_ZONE_PRECISE_R_HAND) // ta edit
+//			next_in_line = BODY_ZONE_PRECISE_R_INHAND // ta edit
 		else
 			next_in_line = BODY_ZONE_R_ARM
 
@@ -505,8 +505,8 @@
 	switch(mob.zone_selected)
 		if(BODY_ZONE_L_ARM)
 			next_in_line = BODY_ZONE_PRECISE_L_HAND
-		if(BODY_ZONE_PRECISE_L_HAND) // ta edit
-			next_in_line = BODY_ZONE_PRECISE_L_INHAND // ta edit
+//		if(BODY_ZONE_PRECISE_L_HAND) // ta edit
+//			next_in_line = BODY_ZONE_PRECISE_L_INHAND // ta edit
 		else
 			next_in_line = BODY_ZONE_L_ARM
 
@@ -712,9 +712,12 @@
 		switch(intent)
 			if(MOVE_INTENT_SNEAK)
 				var/mob/living/L = src
-				m_intent = MOVE_INTENT_SNEAK
-				if(L.in_combat_until < world.time)
-					update_sneak_invis()
+				if(L.has_status_effect(/datum/status_effect/buff/fly))
+					to_chat(src, span_warning("I can't sneak while flying!"))
+				else
+					m_intent = MOVE_INTENT_SNEAK
+					if(L.in_combat_until < world.time)
+						update_sneak_invis()
 
 			if(MOVE_INTENT_WALK)
 				m_intent = MOVE_INTENT_WALK

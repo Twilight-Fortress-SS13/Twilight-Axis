@@ -49,7 +49,7 @@
 					/obj/item/needle/thorn = 1,
 					/obj/item/natural/cloth = 1,
 					/obj/item/flashlight/flare/torch = 1,
-					/obj/item/book/spellbook = 1,
+					/obj/item/rogueweapon/spellbook = 1,
 					/obj/item/chalk = 1,
 					)
 	mask = /obj/item/clothing/mask/rogue/ragmask/red

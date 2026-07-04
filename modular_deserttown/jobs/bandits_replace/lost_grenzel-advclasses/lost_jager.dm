@@ -66,6 +66,7 @@
 				l_hand = /obj/item/twilight_powderflask
 				beltr = /obj/item/quiver/twilight_bullet/lead
 				H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 5, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/staves, 2, TRUE)
 				ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/takeapprentice)
 	belt = /obj/item/storage/belt/rogue/leather/cloth/sash

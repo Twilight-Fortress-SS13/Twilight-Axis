@@ -25,6 +25,7 @@
 	var/misfire_chance = 0
 	/// Reload time, in SECONDS
 	var/reload_time = 8
+	var/reload_stamina_cost = 15
 	damfactor = 1
 	var/critfactor = 0.7
 	var/npcdamfactor = 4
@@ -62,6 +63,7 @@
 					if(skill)
 						adj_reload_time = reload_time / skill
 				if(move_after(H, adj_reload_time SECONDS, target = H))
+					H.stamina_add(reload_stamina_cost)
 					playsound(H, 'modular_twilight_axis/firearms/sound/musketcock.ogg', 100, FALSE)
 					cocked = TRUE
 			else
@@ -165,7 +167,7 @@
 		spread = max(3, spread / skill)
 	if(prob(misfire_chance))
 		to_chat(user, span_warning("The [name] misfires!"))
-		explosion(src, light_impact_range = 2, heavy_impact_range = 1, smoke = TRUE, soundin = 'sound/misc/explode/bomb.ogg')
+		explosion(src, light_impact_range = 2, heavy_impact_range = 1, smoke = FALSE, soundin = 'sound/misc/explode/bomb.ogg')
 		qdel(src)
 		return
 	for(var/obj/item/ammo_casing/CB in get_ammo_list(FALSE, TRUE))
@@ -176,10 +178,6 @@
 		BB.damage *= damfactor * per_scaling
 	cocked = FALSE
 	update_icon()
-	var/dir = get_dir(src, target)
-	var/datum/effect_system/smoke_spread/smoke = new
-	smoke.set_up(1, get_step(src, dir))
-	smoke.start()
 	..()
 
 /obj/item/ammo_box/magazine/internal/shot/twilight_runelock
@@ -251,6 +249,7 @@
 	damfactor = 1.5
 	critfactor = 1
 	reload_time = 12
+	reload_stamina_cost = 20
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle/getonmobprop(tag)
 	. = ..()

@@ -40,6 +40,22 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 /datum/ritual/proc/invoke(mob/living/user, turf/center)
 	return
 
+/obj/effect/decal/cleanable/sigil/proc/find_ritual_ingredient(turf/target_turf, required_type)
+	if(!target_turf || !required_type)
+		return null
+	for(var/atom/movable/found_ingredient in target_turf)
+		if(istype(found_ingredient, required_type))
+			return found_ingredient
+	return null
+
+/obj/effect/decal/cleanable/sigil/proc/consume_ritual_ingredients(list/ingredients_to_consume)
+	if(!length(ingredients_to_consume))
+		return
+	for(var/atom/movable/ingredient as anything in ingredients_to_consume)
+		if(!ingredient || QDELETED(ingredient) || ismob(ingredient))
+			continue
+		qdel(ingredient)
+
 // Счетчик количества ритуалов
 /proc/get_ritual_count(ritual_name)
 	if(!GLOB.ritual_counters[ritual_name])
@@ -147,56 +163,51 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/cardinal_success = FALSE
 	var/center_success = FALSE
 	var/dews = 0
+	var/list/ingredients_to_consume = list()
+	var/atom/movable/found_ingredient
 
 	if(pickritual.e_req)
-		for(var/atom/A in get_step(src, EAST))
-			if(istype(A, pickritual.e_req))
-				dews++
-				break
-			else
-				continue
+		found_ingredient = find_ritual_ingredient(get_step(src, EAST), pickritual.e_req)
+		if(found_ingredient)
+			dews++
+			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(pickritual.s_req)
-		for(var/atom/A in get_step(src, SOUTH))
-			if(istype(A, pickritual.s_req))
-				dews++
-				break
-			else
-				continue
+		found_ingredient = find_ritual_ingredient(get_step(src, SOUTH), pickritual.s_req)
+		if(found_ingredient)
+			dews++
+			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(pickritual.w_req)
-		for(var/atom/A in get_step(src, WEST))
-			if(istype(A, pickritual.w_req))
-				dews++
-				break
-			else
-				continue
+		found_ingredient = find_ritual_ingredient(get_step(src, WEST), pickritual.w_req)
+		if(found_ingredient)
+			dews++
+			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(pickritual.n_req)
-		for(var/atom/A in get_step(src, NORTH))
-			if(istype(A, pickritual.n_req))
-				dews++
-				break
-			else
-				continue
+		found_ingredient = find_ritual_ingredient(get_step(src, NORTH), pickritual.n_req)
+		if(found_ingredient)
+			dews++
+			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(dews >= 4)
 		cardinal_success = TRUE
 
-	for(var/atom/A in loc.contents)
-		if(!istype(A, pickritual.center_requirement))
-			continue
-		else
+	if(pickritual.center_requirement)
+		found_ingredient = find_ritual_ingredient(get_turf(src), pickritual.center_requirement)
+		if(found_ingredient)
 			center_success = TRUE
-			break
+			ingredients_to_consume += found_ingredient
+	else
+		center_success = TRUE
 
 	var/badritualpunishment = FALSE
 	if(cardinal_success != TRUE)
@@ -213,7 +224,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		user.electrocute_act(10, src)
 		return
 
-	consume_ingredients(pickritual)
+	consume_ritual_ingredients(ingredients_to_consume)
 	user.playsound_local(user, 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sounds/tesa.ogg', 25)
 	user.whisper("O'vena tesa...")
 

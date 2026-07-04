@@ -187,3 +187,20 @@
 		/mob/living/simple_animal/hostile/retaliate/rogue/boar = "suidae"
 	)
 	preferred_areas = list()
+
+// TA EDIT START
+/datum/hunting_category/proc/can_spawn_in_area(area/A)
+	if(!A)
+		return FALSE
+	if(!preferred_areas || !preferred_areas.len)
+		return TRUE
+	return preferred_areas[A.type] > 0
+
+/datum/hunting_category/proc/get_area_bonus(area/A)
+	if(!A || !preferred_areas)
+		return 0
+	var/bonus = preferred_areas[A.type]
+	if(!bonus)
+		return 0
+	return bonus
+// TA EDIT END

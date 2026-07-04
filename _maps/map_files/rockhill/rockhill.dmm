@@ -103283,7 +103283,7 @@
 /area/rogue/under/town/sewer)
 "wuB" = (
 /obj/structure/table/church/m/alt,
-/obj/item/spellbook_unfinished/pre_arcyne,
+/obj/item/rogueweapon/spellbook,
 /obj/item/roguegem/random,
 /turf/open/floor/rogue/churchrough{
 	color = "#d4ffcf"

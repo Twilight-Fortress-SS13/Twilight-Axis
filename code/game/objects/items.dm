@@ -1894,6 +1894,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			return "Sworn Enemy"
 		if(EXAMINEHIGHLIGHT_VIBE_CROWN)
 			return "Divine"
+		if(EXAMINEHIGHLIGHT_VIBE_GOLGATHA)
+			return "Blessed"
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD)
+			return "ALARMINGLY ODD"
 	return null
 
 /// See `proc/get_examine_highlight_status()` and `code\__DEFINES\highlight_examine_defines.dm`. 
@@ -1911,6 +1915,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			return EXAMINEHIGHLIGHT_TOOLTIP_VIBE_FOE
 		if(EXAMINEHIGHLIGHT_VIBE_CROWN)
 			return EXAMINEHIGHLIGHT_TOOLTIP_VIBE_CROWN
+		if(EXAMINEHIGHLIGHT_VIBE_GOLGATHA)
+			return EXAMINEHIGHLIGHT_TOOLTIP_VIBE_GOLGATHA
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD)
+			return EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_VERYODD
 	return null
 
 /// See `proc/get_examine_highlight_status()` and `code\__DEFINES\highlight_examine_defines.dm`. 
@@ -1928,6 +1936,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			return COLOR_VIBE_FOE
 		if(EXAMINEHIGHLIGHT_VIBE_CROWN)
 			return COLOR_VIBE_CROWN
+		if(EXAMINEHIGHLIGHT_VIBE_GOLGATHA)
+			return COLOR_VIBE_GOLGATHA
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD)
+			return COLOR_HERESYSEVERITY_VERYODD //Its meant to be a double-take. Intentional.
 	return null
 	
 /// See `proc/get_examine_highlight_status()` and `code\__DEFINES\highlight_examine_defines.dm`. 
@@ -1945,4 +1957,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			return SYMBOL_VIBE_FOE
 		if(EXAMINEHIGHLIGHT_VIBE_CROWN)
 			return SYMBOL_VIBE_CROWN
+		if(EXAMINEHIGHLIGHT_VIBE_GOLGATHA)
+			return SYMBOL_VIBE_GOLGATHA
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD)
+			return EXAMINEHIGHLIGHT_SYMBOL_HERESYSEVERITY_VERYODD //Its meant to be a double-take. Intentional.
 	return null

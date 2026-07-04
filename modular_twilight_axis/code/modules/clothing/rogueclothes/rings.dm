@@ -10,6 +10,7 @@
 	var/realstate
 	var/realicon
 	var/baotha_disguised = FALSE
+	var/disguise_state
 
 	grid_width = 32
 	grid_height = 32
@@ -40,24 +41,30 @@
 			if("gold ring")
 				name = "gold ring"
 				desc = "A ring of golden beauty."
-				icon_state = "ring_g"
+				disguise_state = "ring_g"
+				icon_state = disguise_state
 				baotha_disguised = TRUE
 			if("silver ring")
 				name = "silver ring"
 				desc = "A ring of silvered glimmerance."
-				icon_state = "ring_s"
+				disguise_state = "ring_s"
+				icon_state = disguise_state
 				baotha_disguised = TRUE
 			if("bronze ring")
 				name = "bronze ring"
 				desc = "A ring of bronzen resiliance."
-				icon_state = "ring_b"
+				disguise_state = "ring_b"
+				icon_state = disguise_state
 				baotha_disguised = TRUE
 			if("Undo")
 				name = realname
 				desc = realdesc
 				icon = realicon
 				icon_state = realstate
+				disguise_state = null
 				baotha_disguised = FALSE
+		update_icon()
+		user.update_inv_wear_id()
 
 /obj/item/clothing/ring/baotha/attack_self(var/mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)
@@ -70,3 +77,18 @@
 			playsound(user, pick('sound/magic/magic_nulled.ogg'), 20, TRUE)
 		else
 			to_chat(user, "<span class='notice'>I losing concentration!</span>")
+
+/obj/item/clothing/ring/baotha/update_icon()
+	. = ..()
+	if(baotha_disguised && disguise_state)
+		icon_state = disguise_state
+	else
+		icon_state = realstate
+
+/obj/item/clothing/ring/baotha/dropped(mob/user)
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/ring/baotha/equipped(mob/user, slot)
+	. = ..()
+	update_icon()

@@ -423,6 +423,7 @@
 		/obj/item/clothing/suit/roguetown/armor/plate/full								= /obj/item/clothing/suit/roguetown/armor/plate/full/donator_triheartfelt
 	)
 	result_item = null
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/full/donator_triheartfelt
 
 /obj/item/enchantingkit/weapon/donator_longsword
 	name = "'Elegant Longsword' morphing elixir"
@@ -536,7 +537,7 @@
 
 //Bigfoot - Custom great axe type
 /obj/item/enchantingkit/bigfoot_axe
-	name = "'Gilded Great Axe' morphing elixir"
+	name = "'Aureline' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Steel Greataxe"
 	target_items = list(/obj/item/rogueweapon/greataxe/steel)
 	result_item = /obj/item/rogueweapon/greataxe/steel/gilded
@@ -990,11 +991,32 @@
 	target_items = list(/obj/item/clothing/suit/roguetown/armor/chainmail)
 	result_item = /obj/item/clothing/suit/roguetown/armor/chainmail/ollanius_maille
 
+/obj/item/enchantingkit/weapon/ollanius
+	name = "'azurosa-wrapped sword' morphing elixer"
+	target_items = list(
+		/obj/item/rogueweapon/sword/short/messer,
+		/obj/item/rogueweapon/sword/short,
+		/obj/item/rogueweapon/sword/sabre,
+		/obj/item/rogueweapon/sword
+	)
+	result_item = /obj/item/rogueweapon/ollanius_sword
+
 //Olympus7
 /obj/item/enchantingkit/olygsword
     name = "'Gre'as'anto d'Shar' morphing elixir"
     target_items = list(/obj/item/rogueweapon/greatsword)
     result_item = /obj/item/rogueweapon/greatsword/olygsword
+
+//SpartanBobby
+/obj/item/enchantingkit/bobby_helm
+	name = "'Holy Astratan Bascinet' morphing elixir"
+	target_items = list(
+		/obj/item/clothing/head/roguetown/helmet/heavy/astratan,
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface
+
+	)
+	result_item = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/spartanbobby
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //

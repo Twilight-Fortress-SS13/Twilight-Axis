@@ -104,7 +104,7 @@
 	R.sellprice = 0
 
 	// Conjured glow
-	R.AddComponent(/datum/component/conjured_item, GLOW_COLOR_ARCANE)
+	R.AddComponent(/datum/component/conjured_item, GLOW_COLOR_ARCANE, FALSE, H, src)
 
 	H.put_in_hands(R)
 	conjured_item = R

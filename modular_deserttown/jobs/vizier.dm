@@ -275,7 +275,7 @@
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/poison = 1,
 		/obj/item/roguekey/skeleton = 1,
-		/obj/item/book/spellbook = 1,
+		/obj/item/rogueweapon/spellbook = 1,
 	)
 	if(H.age == AGE_OLD)
 		H.change_stat(STATKEY_SPD, -1)

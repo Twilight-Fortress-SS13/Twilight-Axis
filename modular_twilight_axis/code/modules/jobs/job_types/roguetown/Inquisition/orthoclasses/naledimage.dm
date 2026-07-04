@@ -70,7 +70,7 @@
 		/obj/item/rogueweapon/huntingknife,
 		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/paper/inqslip/arrival/ortho,
-		/obj/item/book/spellbook
+		/obj/item/rogueweapon/spellbook
 	)
 	if(H.age == AGE_OLD)
 		H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_MASTER, TRUE)

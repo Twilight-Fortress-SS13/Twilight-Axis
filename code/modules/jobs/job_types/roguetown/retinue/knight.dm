@@ -215,6 +215,7 @@
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 
 /datum/advclass/knight/footknight
 	name = "Foot Knight"
@@ -337,6 +338,7 @@
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 
 /datum/advclass/knight/mountedknight
 	name = "Mounted Knight"
@@ -489,6 +491,7 @@
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 
 
 /datum/advclass/knight/irregularknight
@@ -660,6 +663,7 @@
 
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 
 
 /datum/advclass/knight/knightchampion
@@ -733,6 +737,7 @@
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/takeaim)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/hold)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/onfeet)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight]
 
 	add_verb(H, list(

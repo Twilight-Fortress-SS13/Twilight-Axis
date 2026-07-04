@@ -47,7 +47,7 @@
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/storage/keyring/acolyte = 1,
-		/obj/item/book/spellbook = 1
+		/obj/item/rogueweapon/spellbook = 1
 		)
 
 /datum/outfit/job/roguetown/spellblade/pre_equip(mob/living/carbon/human/H)
