@@ -38,7 +38,7 @@
 	..()
 
 	H.adjust_blindness(-3)
-	var/classes = list("Lone Wolf","Otavan Dragoon")
+	var/classes = list("Lone Wolf") // var/classes = list("Lone Wolf", "Otavan Dragoon")
 	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
 
 	switch(classchoice)
