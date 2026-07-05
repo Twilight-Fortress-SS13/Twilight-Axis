@@ -16,6 +16,8 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 	var/mob/living/howner
 	var/atom/movable/iparent
 
+	var/special_armor_penetration = null // TA EDIT
+
 	/// The main place where we can draw out the pattern. Every tile entry is a list with two numbers.
 	/// The origin (0,0) is one step forward from the dir the owner is facing.
 	/// This is abstract, and can be modified, though it's best done before _assign_grid_indexes().
@@ -362,7 +364,10 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 	if(ishuman(target))
 		var/mob/living/carbon/human/HT = target
 		var/obj/item/bodypart/affecting = HT.get_bodypart(zone)
-		var/armor_block = HT.run_armor_check(zone, d_type, 0, damage = dam, used_weapon = W, armor_penetration = (no_pen ? PEN_NONE : 0))
+		var/armor_penetration = no_pen ? PEN_NONE : 0 // TA EDIT START
+		if(!isnull(special_armor_penetration))
+			armor_penetration = special_armor_penetration
+		var/armor_block = HT.run_armor_check(zone, d_type, 0, damage = dam, used_weapon = W, armor_penetration = armor_penetration) // TA EDIT END
 		if(full_pen)
 			armor_block = 0		//You block NOTHING, sir!
 		if(HT.apply_damage(dam, W.damtype, affecting, armor_block))
@@ -677,9 +682,9 @@ SPECIALS START HERE
 		var/throwdir = get_dir(howner, L)
 		var/turf/throwtarget = get_ranged_target_turf(get_turf(L), throwdir, 1)
 		L.safe_throw_at(throwtarget, 1, 1, howner, force = MOVE_FORCE_EXTREMELY_STRONG)
-		L.apply_status_effect(/datum/status_effect/debuff/exposed, exposed_dur)
 		var/hit_zone = get_aimed_zone(L)
 		apply_generic_weapon_damage(L, dam, "blunt", hit_zone, bclass = BCLASS_BLUNT, no_pen = TRUE)
+		L.apply_status_effect(/datum/status_effect/debuff/exposed, exposed_dur)
 	..()
 
 #define AXE_SWING_GRID_DEFAULT 	list(list(-1,0), list(0,0, 0.2 SECONDS), list(1,0, 0.4 SECONDS))
@@ -734,6 +739,9 @@ SPECIALS START HERE
 
 /datum/special_intent/axe_swing/graggarite
 	requires_wielding = FALSE
+
+/datum/special_intent/axe_swing/graggarite/werewolf // TA EDIT
+	special_armor_penetration = PEN_MEDIUM // TA EDIT
 
 #undef AXE_SWING_GRID_DEFAULT
 #undef AXE_SWING_GRID_MIRROR

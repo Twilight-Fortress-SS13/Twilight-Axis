@@ -27,7 +27,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN, // ta edit
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 	)
-	adv_stat_ceiling = list(STAT_INTELLIGENCE = 12, STAT_CONSTITUTION = 10, STAT_WILLPOWER = 12) //infinite fatigue + spellblade fuckery vs vamp
+	adv_stat_ceiling = list(STAT_INTELLIGENCE = 12, STAT_SPEED = 9, STAT_CONSTITUTION = 10, STAT_WILLPOWER = 12) //infinite fatigue + spellblade fuckery vs vamp
 	extra_context = "This class is unable to be revived and all forms of death will dust you."
 
 /datum/outfit/job/roguetown/wretch/ancient_spellblade
@@ -63,9 +63,9 @@
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
 	shoes = /obj/item/clothing/shoes/roguetown/sandals/paalloy
 	gloves = /obj/item/clothing/gloves/roguetown/chain/paalloy
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/paalloy
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/paalloy/chain
 	mask = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/lich //Stands out
-	backr = /obj/item/rogueweapon/shield/heater
+	backr = /obj/item/rogueweapon/shield/bronze/paalloy
 	backl = /obj/item/storage/backpack/rogue/satchel
 
 	H.taints_loot = TRUE //For that shitty-ass reanimated corpse gear look.

@@ -51,7 +51,7 @@
 				if(zone_precise != BODY_ZONE_PRECISE_STOMACH)
 					attempted_wounds += /datum/wound/fracture/chest
 				else
-					attempted_wounds += /datum/wound/scarring
+					attempted_wounds += /datum/wound/puncture/small
 			if(70 to INFINITY)
 				if((zone_precise == BODY_ZONE_PRECISE_STOMACH) && !resistance)
 					attempted_wounds += /datum/wound/slash/disembowel

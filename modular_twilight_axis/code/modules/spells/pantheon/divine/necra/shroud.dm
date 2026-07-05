@@ -314,7 +314,7 @@
 
 	var/mob/living/owner = target
 	RegisterSignal(owner, COMSIG_ATOM_ATTACKBY, PROC_REF(on_owner_attackby))
-	RegisterSignals(owner, list(COMSIG_ATOM_ATTACK_HAND, COMSIG_ATOM_ATTACK_PAW), PROC_REF(on_owner_attack_generic))
+	RegisterSignal(owner, COMSIG_ATOM_ATTACK_HAND, PROC_REF(on_owner_attack_generic))
 	RegisterSignal(owner, COMSIG_ATOM_ATTACK_ANIMAL, PROC_REF(on_owner_attack_npc))
 	RegisterSignal(owner, COMSIG_ATOM_BULLET_ACT, PROC_REF(on_owner_bullet_act))
 	RegisterSignal(owner, COMSIG_ATOM_HITBY, PROC_REF(on_owner_hitby))
@@ -327,7 +327,6 @@
 	UnregisterSignal(source, list(
 		COMSIG_ATOM_ATTACKBY,
 		COMSIG_ATOM_ATTACK_HAND,
-		COMSIG_ATOM_ATTACK_PAW,
 		COMSIG_ATOM_ATTACK_ANIMAL,
 		COMSIG_ATOM_BULLET_ACT,
 		COMSIG_ATOM_HITBY,

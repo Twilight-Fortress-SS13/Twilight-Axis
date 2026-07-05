@@ -1977,10 +1977,17 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donator_waff
-	name = "Donator Kit - Weeper Lathe - Required: Greatsword"
+	name = "Donator Kit - Weeper Lathe - Required: Kriegmesser or Greatsword"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/weapon/waff
 	donatitem = TRUE
+
+/datum/loadout_item/donator_xenolalia
+	name = "Donator Kit - Xenolalia - Required: Flamberge"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/wafflamberge
+	donatitem = TRUE
+	donat_tier = 2
 
 /datum/loadout_item/donator_inverserun
 	name = "Donator Kit - Votive Thorns - Required: Any Zweihander"
