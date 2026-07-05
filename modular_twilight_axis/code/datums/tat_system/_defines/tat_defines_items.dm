@@ -805,7 +805,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/suit/roguetown/shirt/dress/thawb/brown = TAT_ITEM_ENTRY("Brown Thawb", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/dress/thawb/grey = TAT_ITEM_ENTRY("Grey Thawb", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/shirt/dress/thawb/gold = TAT_ITEM_ENTRY("Gold-trimmed Thawb", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
-	/obj/item/clothing/suit/roguetown/shirt/jafar = TAT_ITEM_ENTRY("Zybantine Magos Robes", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "armor skin"), \
 	/obj/item/clothing/head/roguetown/turban = TAT_ITEM_ENTRY("Turban", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
 	/obj/item/clothing/head/roguetown/turban/tan = TAT_ITEM_ENTRY("Tan Turban", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
 	/obj/item/clothing/head/roguetown/turban/brown = TAT_ITEM_ENTRY("Brown Turban", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
@@ -813,8 +812,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/head/roguetown/turban/red = TAT_ITEM_ENTRY("Red Turban", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
 	/obj/item/clothing/head/roguetown/turban/fancypurple = TAT_ITEM_ENTRY("Fancy Purple Turban", 0.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
 	/obj/item/clothing/head/roguetown/tagelmust = TAT_ITEM_ENTRY("Tagelmust", 0.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
-	/obj/item/clothing/head/roguetown/sultan/merchant = TAT_ITEM_ENTRY("Merchant's Turban", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
-	/obj/item/clothing/head/roguetown/jafar = TAT_ITEM_ENTRY("Zybantine Magos Hat", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "head"), \
 	/obj/item/clothing/under/roguetown/sirwal = TAT_ITEM_ENTRY("Sirwal", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/under/roguetown/sirwal/beige = TAT_ITEM_ENTRY("Beige Sirwal", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/under/roguetown/sirwal/brown = TAT_ITEM_ENTRY("Brown Sirwal", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
