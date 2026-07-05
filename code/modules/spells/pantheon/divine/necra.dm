@@ -313,22 +313,8 @@ var/global/mob/_corpse_sort_ref = null
 	var/list/departed = list()
 	var/list/forsaken = list()
 
-	for(var/mob/living/carbon/C in GLOB.mob_list)
-		if(!C || QDELETED(C))
-			continue
-
-		// --- corpse logic ---
-		var/is_dead = (C.stat == DEAD)
-		var/is_deadite = FALSE
-		if(C.mind)
-			is_deadite = C.mind.has_antag_datum(/datum/antagonist/zombie)
-
-		var/is_skeleton = istype(C, /mob/living/carbon/human/species/skeleton)
-		var/is_skeleton_valid = (is_skeleton && !(C.mobility_flags & MOBILITY_STAND))
-		var/no_burialrites = !C.burialrited
-
-		var/is_corpse = ((is_dead || is_deadite || is_skeleton_valid) && no_burialrites)
-		if(!is_corpse)
+	for(var/mob/living/carbon/C in GLOB.dead_mob_list)
+		if(QDELETED(C) || C.burialrited)
 			continue
 
 		// --- classification ---
@@ -389,11 +375,16 @@ var/global/mob/_corpse_sort_ref = null
 		corpse_name += "of \a [descriptor_name]"
 
 		// --- markers ---
+		var/is_deadite = C.mind?.has_antag_datum(/datum/antagonist/zombie)
+		var/is_skeleton = istype(C, /mob/living/carbon/human/species/skeleton) || C.mind?.has_antag_datum(/datum/antagonist/skeleton)
+
 		if(is_deadite && C.stat != DEAD)
 			corpse_name += " (!!☣︎!!)"
+		
 		else if(is_deadite)
 			corpse_name += " (☣︎)"
-		else if(is_skeleton_valid)
+		
+		else if(is_skeleton)
 			corpse_name += " (☠)"
 
 		// --- pick list ---
@@ -681,7 +672,7 @@ var/global/mob/_corpse_sort_ref = null
 						"I CAN'T PUT IT OUT!"
 					)
 					to_chat(src, span_red(pick(fire_reactions)))
-					src.emote("agony")
+					src.emote("superagony")
 				if(2)
 					src.adjustToxLoss(rand(1, 20))
 
@@ -723,7 +714,7 @@ var/global/mob/_corpse_sort_ref = null
 								"I'M SORRY, UNDERMAIDEN, I'M SORRY!"
 							)
 							to_chat(src, span_red(pick(wound_reactions)))
-							src.emote("agony")
+							src.emote("superagony")
 					else
 						src.adjustBruteLoss(rand(15, 25))
 

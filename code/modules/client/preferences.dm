@@ -52,7 +52,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/tgui_fancy = TRUE
 	var/tgui_lock = TRUE
 	var/tgui_theme = "azure_default"
-	var/parchment_skin = "parchment"
+	var/parchment_skin = "leatherbound"
+	var/statbrowser_theme = "dark"
 	var/windowflashing = TRUE
 	var/toggles = TOGGLES_DEFAULT
 	var/ghost_toggles
@@ -111,6 +112,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/static/datum/species/default_species = new /datum/species/human/northern()
 	var/datum/patron/selected_patron
 	var/static/datum/patron/default_patron = /datum/patron/divine/undivided
+	var/have_manor = TRUE //TA EDIT
+	var/manor_name = "" //TA EDIT
+	var/manor_type = "manor" //TA EDIT
 	var/list/features = MANDATORY_FEATURE_LIST
 	var/list/randomise = list(RANDOM_UNDERWEAR = TRUE, RANDOM_UNDERWEAR_COLOR = TRUE, RANDOM_UNDERSHIRT = TRUE, RANDOM_SOCKS = TRUE, RANDOM_BACKPACK = TRUE, RANDOM_JUMPSUIT_STYLE = FALSE, RANDOM_SKIN_TONE = TRUE, RANDOM_EYE_COLOR = TRUE)
 	var/list/friendlyGenders = list("male" = "masculine", "female" = "feminine")
@@ -165,8 +169,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/no_language_icon = FALSE
 	var/no_redflash = FALSE
 	var/no_storyteller_events = FALSE
+	var/top_examine = FALSE
+	var/no_runechat_animation = FALSE //TA EDIT
 
 	var/lastclass
+
+	var/donor_priority_last_round_index = 0 // TA EDIT
 
 	var/uplink_spawn_loc = UPLINK_PDA
 
@@ -194,7 +202,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/family = FAMILY_NONE
 
 	var/crt = FALSE
-	var/grain = TRUE
+	var/grain = FALSE
+	var/icon_scaling = FALSE
 	var/dnr_pref = FALSE
 	var/qsr_pref = FALSE
 
@@ -270,9 +279,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/averse_chosen_faction = "Inquisition"
 
-
 	var/datum/voicepack/temp_vp
-
 
 	var/mood_messages_in_chat
 
@@ -309,6 +316,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				max_save_slots = get_max_save_slots(plevel)
 	var/loaded_preferences_successfully = load_preferences()
 	if(loaded_preferences_successfully)
+		if(C)
+			C.apply_saved_visual_preferences()
 		if(load_character())
 			if(check_nameban(C.ckey) || (C.blacklisted() == 1))
 				real_name = pref_species.random_name(gender,1)
@@ -541,8 +550,13 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	ResetJobs()
 	if(user)
 		if(pref_species.desc)
-			to_chat(user, "[pref_species.desc]")
-		to_chat(user, "<font color='red'>Classes reset.</font>")
+			var/bonus_stats = span_racialstatinfo(pref_species.get_string_bonus_stats())
+			var/traits_list = pref_species.get_string_bonus_traits()
+			var/bonus_traits = traits_list && length(traits_list) ? "<br>" + span_smallracialstatinfo(traits_list) : null
+			var/mechanics = pref_species.mechanics_explanations ? span_info(pref_species.get_string_mechanics_explanations()) : null
+			var/description2print  = fieldset_block(span_big("<b>[span_bignotice(pref_species.desc_title)]</b>"), "[pref_species.desc]<br><hr>[bonus_stats][bonus_traits][mechanics]", "speciesdesc_block")
+			to_chat(user, description2print)
+		to_chat(user, span_red("Classes reset."))
 	random_character(gender, FALSE, FALSE)
 	accessory = "Nothing"
 
@@ -802,12 +816,19 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br>"
 			dat += "<b>Vices:</b>"
 			if(charflaws.len)
+				var/has_extra_vice = FALSE
+				for(var/i = 1 to charflaws.len)
+					var/datum/charflaw/cf = charflaws[i]
+					if(!cf)
+						continue
+					if(!cf.needs_extra_vice)
+						has_extra_vice = TRUE
 				for(var/i = 1 to charflaws.len)
 					var/datum/charflaw/cf = charflaws[i]
 					if(!cf)
 						continue
 					var/warning = ""
-					if(cf.needs_extra_vice && charflaws.len < 2)
+					if(cf.needs_extra_vice && !has_extra_vice)
 						warning = "<font color = '#910505'>"
 					dat += "[warning] <a href='?_src_=prefs;preference=charflaw;task=remove;index=[i]'>[cf]</a>[warning ? " (Requires Extra Vice!)</font>" : ""]"
 					if(i < charflaws.len)
@@ -934,6 +955,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><b>Family Preferences:</b> <a href='?_src_=prefs;preference=family_options;task=input'>Change</a>" // TA EDIT
 			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;task=input'>Change</a>"
 
+			dat += "<BR><BR><b>Has an Estate:</b> <a href='?_src_=prefs;preference=have_manor;task=input'>[have_manor ? "Yes" : "No"]</a><BR>" // TA EDIT
+			dat += "<b>Estate Name:</b> <a href='?_src_=prefs;preference=manor_name;task=input'>[manor_name ? manor_name : "Unknown Manor"]</a><BR>" // TA EDIT
+			dat += "<b>Estate Type:</b> <a href='?_src_=prefs;preference=manor_type;task=input'>[get_manor_type_display_name(manor_type)]</a><BR>" //TA EDIT
+
 			dat += "</td>"
 
 			dat += "</tr></table>"
@@ -948,6 +973,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<h2>Display</h2>"
 			dat += "<b>TGUI Theme:</b> <a href='?_src_=prefs;preference=tgui_theme'>[get_tgui_theme_display_name()]</a><br>"
 			dat += "<b>Parchment Theme:</b> <a href='?_src_=prefs;preference=parchment_skin'>[get_parchment_skin_display_name()]</a><br>"
+			dat += "<b>Panel Theme:</b> <a href='?_src_=prefs;preference=statbrowser_theme'>[get_statbrowser_theme_display_name()]</a><br>"
 			dat += "<b>UI Mode:</b> <a href='?_src_=prefs;preference=tgui_ui_prefs;task=menu'>[tgui_pref ? "TGUI" : "Legacy"]</a><br>"
 			dat += "<b>tgui Monitors:</b> <a href='?_src_=prefs;preference=tgui_lock'>[(tgui_lock) ? "Primary" : "All"]</a><br>"
 			dat += "<b>Ambient Occlusion:</b> <a href='?_src_=prefs;preference=ambientocclusion'>[ambientocclusion ? "Enabled" : "Disabled"]</a><br>"
@@ -956,6 +982,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<b>Fit Viewport:</b> <a href='?_src_=prefs;preference=auto_fit_viewport'>[auto_fit_viewport ? "Auto" : "Manual"]</a><br>"
 			if (CONFIG_GET(string/default_view) != CONFIG_GET(string/default_view_square))
 				dat += "<b>Widescreen:</b> <a href='?_src_=prefs;preference=widescreenpref'>[widescreenpref ? "Enabled ([CONFIG_GET(string/default_view)])" : "Disabled ([CONFIG_GET(string/default_view_square)])"]</a><br>"
+			dat += "<h2>Other</h2>"
+			dat += "<b>Be Voice:</b> <a href='?_src_=prefs;preference=schizo_voice'>[(toggles & SCHIZO_VOICE) ? "Enabled":"Disabled"]</a><br>"
 
 			dat += "</td><td width='400px' height='500px' valign='top'>"
 			dat += "<h2>Special Role Settings</h2>"
@@ -1222,6 +1250,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		if(joblessrole != RETURNTOLOBBY && joblessrole != BERANDOMJOB)
 			joblessrole = RETURNTOLOBBY
 		HTML += "<i>Click on an unlocked Class to get more information</i><br>"
+		HTML += donor_job_boost_prefs_banner(user) // TA EDIT
 		HTML += "<b>If Role Unavailable:</b><font color='purple'><a href='?_src_=prefs;preference=job;task=nojob'>[joblessrole]</a></font><BR>"
 		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
 		HTML += "<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>"
@@ -1325,36 +1354,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				continue
 
 		
-			var/prefLevelLabel = "ERROR"
-			var/prefLevelColor = "pink"
-			var/prefUpperLevel = -1 
-			var/prefLowerLevel = -1 
-
-			switch(job_preferences[job.title])
-				if(JP_HIGH)
-					prefLevelLabel = "High"
-					prefLevelColor = "slateblue"
-					prefUpperLevel = 4
-					prefLowerLevel = 2
-					var/mob/dead/new_player/P = user
-					if(istype(P))
-						P.topjob = job.title
-						topjob = job.title
-				if(JP_MEDIUM)
-					prefLevelLabel = "Medium"
-					prefLevelColor = "green"
-					prefUpperLevel = 1
-					prefLowerLevel = 3
-				if(JP_LOW)
-					prefLevelLabel = "Low"
-					prefLevelColor = "orange"
-					prefUpperLevel = 2
-					prefLowerLevel = 4
-				else
-					prefLevelLabel = "NEVER"
-					prefLevelColor = "red"
-					prefUpperLevel = 3
-					prefLowerLevel = 1
+			var/list/pref_ui = job_pref_display_data(job, user) // TA EDIT START
+			var/prefLevelLabel = pref_ui["label"] // TA EDIT
+			var/prefLevelColor = pref_ui["color"] // TA EDIT
+			var/prefUpperLevel = pref_ui["upper"] // TA EDIT
+			var/prefLowerLevel = pref_ui["lower"] // TA EDIT END
 
 			HTML += "<a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
 			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font></a>"
@@ -1391,6 +1395,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				job_preferences[j] = JP_MEDIUM
 				//technically break here
 
+	if(level == JP_BOOST) // TA EDIT START
+		for(var/j in job_preferences)
+			if(job_preferences[j] == JP_BOOST)
+				job_preferences[j] = JP_HIGH // TA EDIT END
+
 	job_preferences[job.title] = level
 	return TRUE
 
@@ -1409,15 +1418,15 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		ShowChoices(user,4)
 		return
 
-	var/jpval = null
-	switch(desiredLvl)
-		if(3)
-			jpval = JP_LOW
-		if(2)
-			jpval = JP_MEDIUM
-		if(1)
-			jpval = JP_HIGH
+	if(desiredLvl == JOB_PREF_UI_NEVER)
+		clear_job_preference(job)
+		SetChoices(user)
+		return 1
 
+	var/jpval = desired_lvl_to_job_pref(desiredLvl, job, user)
+	if(!jpval)
+		SetChoices(user)
+		return
 
 	SetJobPreferenceLevel(job, jpval)
 	SetChoices(user)
@@ -2009,6 +2018,34 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						else
 							to_chat(user, "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,.</font>")
 
+				if("manor_name")  //TA EDIT START
+					var/new_name = tgui_input_text(user, "Choose a name for your manor:", "MANOR NAME", encode = FALSE)
+					if(new_name)
+						new_name = reject_bad_name(new_name)
+						if(new_name)
+							manor_name = new_name
+						else
+							to_chat(user, "<font color='red'>Invalid manor name. It should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,.</font>")
+
+				if("have_manor")
+					have_manor = !have_manor
+					if(have_manor)
+						to_chat(user, span_notice("При наличии дворянства, вы сможете управлять имением, которое будет приносить вам доход и предоставлять различные бонусы. Для того, чтобы связаться с имением, используйте ГЕРМЕС."))
+					else
+						to_chat(user, span_notice("При наличии дворянства ваш персонаж будет считаться безземельным дворянином, не получая доступ к имению."))
+
+				if("manor_type")
+					var/list/manor_type_choices = list(
+						"Manor" = "manor",
+						"Hunter Mansion" = "hunter_mansion",
+						"Village" = "village",
+						"Fisher Hamlet" = "fisher_hamlet",
+						"Mining Settlement" = "mining_settlement"
+					)
+					var/new_manor_type = tgui_input_list(user, "Choose the type of manor you'd like to manage:", "MANOR TYPE", manor_type_choices, get_manor_type_display_name(manor_type))
+					if(new_manor_type)
+						manor_type = manor_type_choices[new_manor_type] //TA EDIT END
+
 //				if("age")
 //					var/new_age = input(user, "Choose your character's age:\n([AGE_MIN]-[AGE_MAX])", "Years Dead") as num|null
 //					if(new_age)
@@ -2103,12 +2140,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 							to_chat(user, "<font color='red'>Your character will now audibly emote in accordance to their Voice Identity and any Racial / Class-specific voice packs.</font>")
 				if("voicepack_preview")
 					if(voice_pack != "Default")
-						var/datum/voicepack/VP = GLOB.voice_packs_list[voice_pack]
-						if(!istype(temp_vp, VP))
-							temp_vp = new VP()
-						var/voiceline = temp_vp.get_sound(pick(temp_vp.preview))
+						var/datum/voicepack/VP = GLOB.voice_packs[GLOB.voice_packs_list[voice_pack]]
+						var/voiceline = VP.get_sound(pick(VP.preview))
 						user.playsound_local(user, voiceline, 100)
-
 				if("taur_type")
 					var/list/species_taur_list = pref_species.get_taur_list()
 					if(!LAZYLEN(species_taur_list))
@@ -2803,6 +2837,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						var/datum/virtue/virtue_chosen = virtue_choices[result]
 						virtue = new virtue_chosen.type
 						to_chat(user, process_virtue_text(virtue_chosen))
+						if(!istype(virtue, /datum/virtue/combat/second_chance) && !istype(virtuetwo, /datum/virtue/combat/second_chance))
+							if(skin_tone == SKIN_COLOR_ROT)
+								var/new_tone = random_skin_tone()
+								skin_tone = new_tone
+								features["mcolor"] = sanitize_hexcolor(new_tone)
+								try_update_mutant_colors()
 				if("virtuetwo")
 					var/list/virtue_choices = list()
 					for (var/path as anything in GLOB.virtues)
@@ -2829,6 +2869,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						var/datum/virtue/virtue_chosen = virtue_choices[result]
 						virtuetwo = new virtue_chosen.type
 						to_chat(user, process_virtue_text(virtue_chosen))
+						if(!istype(virtue, /datum/virtue/combat/second_chance) && !istype(virtuetwo, /datum/virtue/combat/second_chance))
+							if(skin_tone == SKIN_COLOR_ROT)
+								var/new_tone = random_skin_tone()
+								skin_tone = new_tone
+								features["mcolor"] = sanitize_hexcolor(new_tone)
+								try_update_mutant_colors()
 					/*	if (statpack.type != /datum/statpack/wildcard/virtuous)
 							statpack = new /datum/statpack/wildcard/virtuous
 							to_chat(user, span_purple("Your statpack has been set to virtuous (no stats) due to selecting a virtue.")) */
@@ -2892,6 +2938,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 */
 				if("s_tone")
 					var/listy = pref_species.get_skin_list()
+					if(istype(virtue, /datum/virtue/combat/second_chance) || istype(virtuetwo, /datum/virtue/combat/second_chance))
+						listy["Rotten"] = SKIN_COLOR_ROT
 					var/new_s_tone = tgui_input_list(user, "Choose your character's skin tone:", "SKINTONE", listy)
 					if(new_s_tone)
 						skin_tone = listy[new_s_tone]
@@ -3094,6 +3142,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					setTguiStyle(user)
 				if("parchment_skin")
 					cycle_parchment_skin()
+				if("statbrowser_theme")
+					cycle_statbrowser_theme()
+					user.client?.apply_statbrowser_theme()
 				if("winflash")
 					windowflashing = !windowflashing
 
@@ -3246,7 +3297,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					user << browse(null, "window=preferences") //closes job selection
 					user << browse(null, "window=mob_occupation")
 					user << browse(null, "window=latechoices") //closes late job selection
-					user << browse(null, "window=migration") // Closes migrant menu
+					migrant.hide_ui() // Closes migrant menu
 
 					SStriumphs.remove_triumph_buy_menu(user.client)
 
@@ -3377,6 +3428,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	character.set_patron(selected_patron)
 	character.backpack = backpack
 	character.defiant = defiant
+	character.check_manor_pref = have_manor //TA EDIT
 
 	character.jumpsuit_style = jumpsuit_style
 
@@ -3556,7 +3608,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 /datum/preferences/proc/is_active_migrant()
 	if(!migrant)
 		return FALSE
-	if(!migrant.active)
+	if(!migrant.queued_wave)
 		return FALSE
 	return TRUE
 

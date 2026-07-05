@@ -685,10 +685,16 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			if(rotstuff)
 				head_quality = -1
 			head.scale_butchering_quality(head_quality)
+			if(no_head_bounty)
+				head.sellprice = 0
 		to_chat(user, "<span class='notice'>I finish butchering: [butcher_summary(botch_count, normal_count, perfect_count, botch_chance, perfect_chance)].</span>")
 		if(user.mind)
 			user.mind.add_sleep_experience(/datum/skill/labor/butchering, user.STAINT * BUTCHERING_EXP_FINISH)
 		gib()
+
+/mob/living/simple_animal/mark_contract_spawned()
+	. = ..()
+	head_butcher = null
 
 /mob/living/proc/butcher_summary(botch_count, normal_count, perfect_count, botch_chance, perfect_chance)
     var/list/parts = list()
@@ -731,10 +737,6 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	if(speed == 0)
 		remove_movespeed_modifier(MOVESPEED_ID_SIMPLEMOB_VARSPEED, TRUE)
 	add_movespeed_modifier(MOVESPEED_ID_SIMPLEMOB_VARSPEED, TRUE, 100, multiplicative_slowdown = speed, override = TRUE)
-
-/mob/living/simple_animal/Stat()
-	..()
-	return //RTCHANGE
 
 /mob/living/simple_animal/proc/drop_loot()
 	for(var/i in loot) // If someone puts a turf in this list I'm going to kill you.
@@ -1298,7 +1300,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 //Flight related procs foy flying simple_animals
 /mob/living/simple_animal/proc/fly_up()
-	set category = "Winged Form"
+	set category = "RoleUnique.Winged Form"
 	set name = "Fly Up"
 
 	if(src.pulledby != null)
@@ -1313,7 +1315,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			to_chat(src, span_notice("I can't fly away while being grabbed!"))
 
 /mob/living/simple_animal/proc/fly_down()
-	set category = "Winged Form"
+	set category = "RoleUnique.Winged Form"
 	set name = "Fly Down"
 
 	if(src.pulledby != null)

@@ -36,12 +36,21 @@
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/natural/fibers = 1)
 
+/datum/crafting_recipe/roguetown/leather/container/satchel/black
+	name = "black satchel"
+	result = /obj/item/storage/backpack/rogue/satchel/black
+	sellprice = 15
+
 /datum/crafting_recipe/roguetown/leather/container/satchelshort
 	name = "short satchel"
 	result = /obj/item/storage/backpack/rogue/satchel/short
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/natural/fibers = 1)
 	sellprice = 15
+
+/datum/crafting_recipe/roguetown/leather/container/satchelshort/black
+	name = "short black satchel"
+	result = /obj/item/storage/backpack/rogue/satchel/short
 
 /datum/crafting_recipe/roguetown/leather/container/backpack
 	name = "backpack"
@@ -64,6 +73,12 @@
 /datum/crafting_recipe/roguetown/leather/container/boltpouch
 	name = "quiver, bolt pouch"
 	result = /obj/item/quiver/bolt
+	reqs = list(/obj/item/natural/hide/cured = 2,
+				/obj/item/natural/fibers = 1)
+
+/datum/crafting_recipe/roguetown/leather/container/stakepouch
+	name = "quiver, shotstake pouch"
+	result = /obj/item/quiver/bolt/stake
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/natural/fibers = 1)
 

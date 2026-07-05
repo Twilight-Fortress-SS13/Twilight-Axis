@@ -40,21 +40,16 @@ GLOBAL_VAR_INIT(mobids, 1)
 		for(var/M in observers)
 			var/mob/dead/observe = M
 			observe.reset_perspective(null)
-	qdel(hud_used)
-	for(var/cc in client_colours)
-		qdel(cc)
+	QDEL_NULL(hud_used)
+	QDEL_LIST(client_colours)
 	used_intent = null
-	used_rmb_intent = null
 	if(a_intent && a_intent.mastermob == src)
 		a_intent.mastermob = null
 	a_intent = null
 	o_intent = null
 	possible_mmb_intents = null
-	QDEL_LIST(possible_spell_intents)
 	QDEL_LIST(possible_a_intents)
 	QDEL_LIST(possible_offhand_intents)
-	QDEL_LIST(possible_rmb_intents)
-	QDEL_NULL(base_intents)
 	QDEL_NULL(mmb_intent)
 	QDEL_NULL(rmb_intent)
 	QDEL_NULL(unarmed_special)
@@ -68,7 +63,6 @@ GLOBAL_VAR_INIT(mobids, 1)
 		var/datum/skill_holder/my_skill = skills
 		my_skill.current = null
 		QDEL_NULL(skills)
-	client_colours = null
 	if(active_storage)
 		active_storage.hide_from(src)
 	ghostize(drawskip=TRUE)
@@ -104,7 +98,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 	else
 		GLOB.alive_mob_list += src
 	set_focus(src)
-	prepare_huds()
+	prepare_huds_TA()
 	for(var/v in GLOB.active_alternate_appearances)
 		if(!v)
 			continue
@@ -204,7 +198,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 		ignored_mobs = list(ignored_mobs)
 	if(!isnum(vision_distance))
 		vision_distance = DEFAULT_MESSAGE_RANGE
-	var/list/hearers = get_hearers_in_view(vision_distance, src) //caches the hearers and then removes ignored mobs.
+	var/list/hearers = hearers(vision_distance, src) //caches the hearers and then removes ignored mobs.
 	hearers -= ignored_mobs
 	if(self_message)
 		hearers -= src
@@ -240,7 +234,7 @@ GLOBAL_VAR_INIT(mobids, 1)
  * * hearing_distance (optional) is the range, how many tiles away the message can be heard.
  */
 /atom/proc/audible_message(message, deaf_message, hearing_distance = DEFAULT_MESSAGE_RANGE, self_message, runechat_message = null, log_seen = NONE, log_seen_msg = null, custom_spans = list("emote"), used_language = /datum/language/common)
-	var/list/hearers = get_hearers_in_view(hearing_distance, src)
+	var/list/hearers = hearers(hearing_distance, src)
 	if(self_message)
 		hearers -= src
 	for(var/mob/M in hearers)
@@ -260,7 +254,7 @@ GLOBAL_VAR_INIT(mobids, 1)
  */
 
 /atom/proc/loud_message(message, hearing_distance = DEFAULT_MESSAGE_RANGE, directional = TRUE)
-	var/list/listening = get_hearers_in_view(hearing_distance, src)
+	var/list/listening = hearers(hearing_distance, src)
 	for(var/_M in GLOB.player_list)
 		var/mob/M = _M
 		if(!M.client) //client is so that ghosts don't have to listen to mice
@@ -487,7 +481,6 @@ GLOBAL_VAR_INIT(mobids, 1)
   */
 /mob/verb/examinate(atom/A as mob|obj|turf in view()) //It used to be oview(12), but I can't really say why
 	set name = "Examine"
-	set category = "IC"
 	set hidden = 1
 
 	if(isturf(A) && !(sight & SEE_TURFS) && !(A in view(client ? client.view : world.view, src)))
@@ -523,11 +516,11 @@ GLOBAL_VAR_INIT(mobids, 1)
 	if(result)
 		var/list/mechanics_result = A.get_mechanics_examine(src)
 		if(length(mechanics_result))
-			var/mechanics_result_str = "<details><summary>Mechanics</summary>"
+			var/list/mech_lines = list()
 			for(var/line in mechanics_result)
-				mechanics_result_str += " - " + line + "\n"
-			mechanics_result_str += "</details>"
-			result += mechanics_result_str
+				mech_lines += "<span class='smallnotice'> - </span>[line]"
+			var/mechanics_result_str = "<details><summary><span class='smallnotice'>Mechanics</span></summary>[mech_lines.Join("<br>")]</details>"
+			result[result.len] += mechanics_result_str // append to last line so the join doesn't insert a blank line before the dropdown
 		to_chat(src, usr.client.prefs.no_examine_blocks ? result.Join("\n") : examine_block(result.Join("\n")))
 	SEND_SIGNAL(src, COMSIG_MOB_EXAMINATE, A)
 
@@ -588,7 +581,7 @@ GLOBAL_VAR_INIT(mobids, 1)
  */
 /mob/verb/memory()
 	set name = "Notes"
-	set category = "Memory"
+	set category = "IC.Memory"
 	set desc = ""
 	if(mind)
 		mind.show_memory(src)
@@ -600,7 +593,7 @@ GLOBAL_VAR_INIT(mobids, 1)
  */
 /mob/verb/add_memory(msg as message)
 	set name = "AddNote"
-	set category = "Memory"
+	set category = "IC.Memory"
 	if(mind)
 		if (world.time < memory_throttle_time)
 			return
@@ -621,7 +614,6 @@ GLOBAL_VAR_INIT(mobids, 1)
  */
 /mob/verb/abandon_mob()
 	set name = "{ABANDON MOB}"
-	set category = "Options"
 	set hidden = 1
 	if(!check_rights(0))
 		return
@@ -757,35 +749,6 @@ GLOBAL_VAR_INIT(mobids, 1)
 /mob/proc/is_muzzled()
 	return 0
 
-/**
- * Output an update to the stat panel for the client
- *
- * calculates client ping, round id, server time, time dilation and other data about the round
- * and puts it in the mob status panel on a regular loop
- */
-/mob/Stat()
-	..()
-
-	if(!client)
-		return
-
-	client.refresh_browserpanel()
-
-/**
- * Convert a list of spells into a displyable list for the statpanel
- *
- * Shows charge and other important info
- */
-/mob/proc/add_spells_to_statpanel(list/spells)
-	for(var/obj/effect/proc_holder/spell/S in spells)
-		if(S.can_be_cast_by(src))
-			switch(S.charge_type)
-				if("recharge")
-					statpanel("[S.panel]","[S.charge_counter/10.0]/[S.recharge_time/10]",S)
-				if("charges")
-					statpanel("[S.panel]","[S.charge_counter]/[S.recharge_time]",S)
-				if("holdervar")
-					statpanel("[S.panel]","[S.holder_var_type] [S.holder_var_amount]",S)
 
 #define MOB_FACE_DIRECTION_DELAY 1
 
@@ -1039,6 +1002,8 @@ GLOBAL_VAR_INIT(mobids, 1)
 		if(!("[REF(target)]" in faction_src))
 			faction_target -= "[REF(target)]" //same thing here.
 		return faction_check(faction_src, faction_target, TRUE)
+	if(HAS_TRAIT(target, TRAIT_NOPVE))
+		return TRUE // don't bother checking anyone who's exempt from pve entirely
 	// Avoid lit allocations by scanning factions directly for better perf.
 	var/list/their_faction = target.faction
 	var/their_name = target.name
@@ -1356,3 +1321,15 @@ GLOBAL_VAR_INIT(mobids, 1)
 	canon_client = null
 
 #undef MOB_FACE_DIRECTION_DELAY
+
+/// Adds this list to the output to the stat browser
+/mob/proc/get_status_tab_items()
+	. = list("") //we want to offset unique stuff from standard stuff
+	SEND_SIGNAL(src, COMSIG_MOB_GET_STATUS_TAB_ITEMS, .)
+	if(client)
+		. += list(list("IC DATE: ", "[get_current_ic_date_as_string()] (CLICK FOR CALENDAR)", "src=[REF(client)];statbrowser_calendar=1"))
+		. += list(list("tod", GLOB.tod, "IC TIME: [get_current_ic_time_as_string()]"))
+	return .
+
+/mob/proc/get_stats_tab_items()
+	return list()

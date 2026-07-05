@@ -253,6 +253,7 @@
 	primary_resource_cost = 0
 	cooldown_time = 1 MINUTES
 	familiar = TRUE
+	required_items = null
 
 /obj/effect/proc_holder/spell/self/infernal_surge
 	name = "Infernal Surge"
@@ -438,7 +439,7 @@
 	R.fiber_salvage = FALSE
 
 	// Conjured glow
-	R.AddComponent(/datum/component/conjured_item, GLOW_COLOR_EARTHEN)
+	R.AddComponent(/datum/component/conjured_item, GLOW_COLOR_EARTHEN, FALSE, H, src)
 
 	H.put_in_hands(R)
 	conjured_item = R

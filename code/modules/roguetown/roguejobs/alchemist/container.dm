@@ -7,6 +7,10 @@
 	list_reagents = list(/datum/reagent/medicine/stronghealth = 50)
 	flags_ai_inventory = AI_ITEM_HEALING_DRINK | AI_ITEM_DRINK
 
+/obj/item/reagent_containers/glass/bottle/rogue/restoration
+	list_reagents = list(/datum/reagent/medicine/restoration = 50)
+	flags_ai_inventory = AI_ITEM_HEALING_DRINK | AI_ITEM_DRINK
+
 /obj/item/reagent_containers/glass/bottle/rogue/manapot
 	list_reagents = list(/datum/reagent/medicine/manapot = 50)
 
@@ -28,6 +32,11 @@
 	disgustingly cheap medicine; an ancient concoction, resurrected for usage within the gladitorial arenas of Lirvas and Raneshen. </br>A \
 	particular variant of this, made by fermenting zardines in the Terrorbog, happens to be a very popular condiment back in Rockhill."
 	list_reagents = list(/datum/reagent/medicine/healthpot/zarum = 50)
+
+/obj/item/reagent_containers/glass/bottle/rogue/healthpot/zarum/bog
+	name = "bottle of medicinal fish honeygar"
+	desc = "A bottle with a mudclay cork, tethered to the bottleneck via braided twine. Fermented fish-paste, herbs and honey make for an unexpectedly palatable medicine. Developed by the Levy of Azure Peak from the Terrorbog fish-vinegar recipe, the added honey softens the brew's harsh bite and tempers its fishy aftertaste. It heals no better than ordinary fish vinegar, but goes down with considerably less suffering."
+	list_reagents = list(/datum/reagent/medicine/healthpot/zarum/bog = 50)
 
 //vanderlin potion stuff//
 /obj/item/reagent_containers/glass/bottle/rogue/strongmanapot
@@ -95,6 +104,9 @@
 
 /obj/item/reagent_containers/glass/bottle/alchemical/fermented_crab
 	list_reagents = list(/datum/reagent/fermented_crab = 15)
+
+/obj/item/reagent_containers/glass/bottle/alchemical/restoration
+	list_reagents = list(/datum/reagent/medicine/restoration = 30)
 
 //////////////////////////
 /// ALCOHOLIC BOTTLES ///

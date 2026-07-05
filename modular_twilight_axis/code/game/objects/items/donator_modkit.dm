@@ -243,3 +243,12 @@
 	part even the thickest-of-foes into gorey halves."
 	icon_state = "gdadao"
 	sheathe_icon = "dadao"
+
+/obj/item/enchantingkit/etrpants
+	name = "'Wanderer's pants' morphing elixer'"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Leather Trousers, Splinted Chausses Or Brigandine Chausses"
+	target_items = list(
+		/obj/item/clothing/under/roguetown/trou/leather = /obj/item/clothing/under/roguetown/trou/leather/etrpants, 
+		/obj/item/clothing/under/roguetown/brigandinelegs = /obj/item/clothing/under/roguetown/trou/leather/etrpants,
+		/obj/item/clothing/under/roguetown/splintlegs = /obj/item/clothing/under/roguetown/trou/leather/etrpants)
+	icon_loadout = /obj/item/clothing/under/roguetown/trou/leather/etrpants

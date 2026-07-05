@@ -20,13 +20,19 @@
 		return FALSE
 	if(istype(job, /datum/job/roguetown/lord))
 		return TRUE
+	if(istype(job, /datum/job/roguetown/sultan))
+		return TRUE
 	if(istype(job, /datum/job/roguetown/lady))
 		return TRUE
 	if(istype(job, /datum/job/roguetown/prince))
 		return TRUE
 	if(istype(job, /datum/job/roguetown/hand))
 		return TRUE
+	if(istype(job, /datum/job/roguetown/vizier))
+		return TRUE
 	if(istype(job, /datum/job/roguetown/suitor))
+		return TRUE
+	if(istype(job, /datum/job/roguetown/sheikh))
 		return TRUE
 	if(istype(job, /datum/job/roguetown/seneschal))
 		return TRUE
@@ -39,6 +45,8 @@
 	if(istype(job, /datum/job/roguetown/archivist))
 		return TRUE
 	if(istype(job, /datum/job/roguetown/knight))
+		return TRUE
+	if(istype(job, /datum/job/roguetown/cataphract))
 		return TRUE
 	if(istype(job, /datum/job/roguetown/marshal))
 		return TRUE

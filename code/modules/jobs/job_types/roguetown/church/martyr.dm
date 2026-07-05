@@ -10,7 +10,7 @@
 	var/next_activation = 0
 	var/end_activation = 0
 	var/ignite_chance = 2
-	var/traits_applied = list(TRAIT_NOPAIN, TRAIT_NOPAINSTUN, TRAIT_NOMOOD, TRAIT_NOHUNGER, TRAIT_NOBREATH, TRAIT_DEATHLESS, TRAIT_BLOODLOSS_IMMUNE, TRAIT_LONGSTRIDER, TRAIT_STRONGBITE, TRAIT_STRENGTH_UNCAPPED, TRAIT_GRABIMMUNE, TRAIT_TEMPO)
+	var/traits_applied = list(TRAIT_NOPAIN, TRAIT_NOPAINSTUN, TRAIT_NOMOOD, TRAIT_NOHUNGER, TRAIT_NOBREATH, TRAIT_DEATHLESS, TRAIT_BLOODLOSS_IMMUNE, TRAIT_LONGSTRIDER, TRAIT_STRONGBITE, TRAIT_STRENGTH_UNCAPPED, TRAIT_GRABIMMUNE, TRAIT_TEMPO, TRAIT_STUNIMMUNE)
 	var/stat_bonus_martyr = 3
 	var/mob/living/current_holder
 	var/is_active = FALSE
@@ -468,7 +468,7 @@
 	faction = "Station"
 	tutorial = "Martyrs are hand-picked among the most devout of the Holy See. They are given one of the See's cherished relics to protect the Church, and to inspire hope and lead by example of grace, kindness and vicious intolerance to any who do not share the belief of the Ten. They have sworn an Oath in the sight of the gods, and will fulfill it to the bitter end."
 	allowed_sexes = list(MALE, FEMALE)
-	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED RACES_OOZE)
 	allowed_patrons = list(/datum/patron/divine/undivided)
 	outfit = /datum/outfit/job/roguetown/martyr
 	min_pq = 15 //Cus it's a Martyr of the Ten. Get it.
@@ -486,7 +486,7 @@
 	//No undeath-adjacent virtues for a role that can sacrifice itself. The Ten like their sacrifices 'pure'. (I actually didn't want to code returning those virtue traits post-sword use)
 	//They get those traits during sword activation, anyway.
 	//Dual wielder is there to stand-in for ambidextrous in case they activate their sword in their off-hand.
-	virtue_restrictions = list(/datum/virtue/utility/noble, /datum/virtue/combat/rotcured, /datum/virtue/utility/hollow, /datum/virtue/combat/dualwielder, /datum/virtue/heretic/zchurch_keyholder)
+	virtue_restrictions = list(/datum/virtue/utility/noble, /datum/virtue/combat/second_chance, /datum/virtue/utility/hollow, /datum/virtue/combat/dualwielder, /datum/virtue/heretic/zchurch_keyholder)
 
 	advclass_cat_rolls = list(CTAG_MARTYR = 2)
 	job_subclasses = list(
@@ -554,7 +554,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/mini_flagpole/church,
 		)
-	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
+	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight]
 	H.AddComponent(/datum/component/wise_tree_alert)
 	if(H.mind)
 		var/helmets = list("Holy Silver Bascinet","Holy Silver Armet")
@@ -579,8 +579,6 @@
 /obj/item/rogueweapon/sword/long/martyr
 	force = 30
 	force_wielded = 36
-	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust, /datum/intent/sword/strike)
-	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust, /datum/intent/sword/strike, /datum/intent/sword/chop)
 	icon_state = "martyrsword"
 	item_state = "martyrsword"
 	lefthand_file = 'icons/mob/inhands/weapons/roguemartyr_lefthand.dmi'
@@ -607,6 +605,7 @@
 	is_silver = TRUE
 	override_state = null
 	is_important = TRUE
+	alt_grips = list(/datum/alt_grip/mordhau/sword/lesser, /datum/alt_grip/halfsword/lesser)
 	special = /datum/special_intent/martyr_astrata_verdict
 
 /obj/item/rogueweapon/sword/long/martyr/ComponentInitialize()

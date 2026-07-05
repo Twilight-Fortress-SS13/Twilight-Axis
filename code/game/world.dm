@@ -451,7 +451,7 @@ GLOBAL_VAR(restart_counter)
 /*
 #ifdef TESTING
 /client/verb/maxzcdec()
-	set category = "DEBUGTEST"
+	set category = "Debug.Test"
 	set name = "decr"
 	set desc = ""
 	world.decrementMaxZ()
@@ -568,6 +568,29 @@ GLOBAL_VAR(restart_counter)
 	embed.title = "Приближается конец истории!"
 	embed.description = "Игроки проголосовали за конец раунда. До конца: [ROUND_END_TIME_VERBAL]"
 	embed.colour = "#ac87c5"
+	embed.footer = new(GLOB.rogue_round_id)
+
+	var/datum/tgs_message_content/message = new("")
+	message.embed = embed
+
+	send2chat(
+		message,
+		announce_channel
+	)
+
+/world/proc/TgsAnnounceRoundExtended()
+	if(!TgsAvailable())
+		return
+
+	var/announce_channel = CONFIG_GET(string/chat_announce_new_game)
+
+	if(!announce_channel)
+		return
+
+	var/datum/tgs_chat_embed/structure/embed = new()
+	embed.title = "История продолжается!"
+	embed.description = "Игроки проголосовали за продолжение раунда. История продлена на [DisplayTimeText(ROUND_EXTENSION_TIME)]."
+	embed.colour = "#79ac78"
 	embed.footer = new(GLOB.rogue_round_id)
 
 	var/datum/tgs_message_content/message = new("")

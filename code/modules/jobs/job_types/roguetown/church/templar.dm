@@ -10,14 +10,14 @@
 	forbidden_races = list(RACES_DESPISED)
 	allowed_patrons = ALL_DIVINE_PATRONS
 	outfit = /datum/outfit/job/roguetown/templar
-	min_pq = 3 //Deus vult, but only according to the proper escalation rules
+	min_pq = 6 //Deus vult, but only according to the proper escalation rules
 	max_pq = null
 	round_contrib_points = 2
 	total_positions = 4
 	spawn_positions = 4
 	advclass_cat_rolls = list(CTAG_TEMPLAR = 20)
 	display_order = JDO_TEMPLAR
-
+	same_job_respawn_delay = 30 MINUTES
 	give_bank_account = TRUE
 	job_traits = list(TRAIT_RITUALIST, TRAIT_STEELHEARTED, TRAIT_CLERGY)
 
@@ -53,6 +53,7 @@
 		/datum/skill/combat/maces = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,	//May tone down to 2; seems OK.
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
@@ -70,11 +71,11 @@
 
 /datum/outfit/job/roguetown/templar/crusader/pre_equip(mob/living/carbon/human/H)
 	..()
-	head = /obj/item/clothing/head/roguetown/helmet/heavy/bucket
+	head = /obj/item/clothing/head/roguetown/helmet/heavy/holysee
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
 	cloak = /obj/item/clothing/cloak/tabard/crusader/tief
-	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
+	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/holysee
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/holysee
 	wrists = /obj/item/clothing/neck/roguetown/psicross/astrata
 	gloves = /obj/item/clothing/gloves/roguetown/chain
 	belt = /obj/item/storage/belt/rogue/leather/black
@@ -93,15 +94,23 @@
 	switch(H.patron?.type)
 		if(/datum/patron/divine/undivided)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/undivided
-			head = /obj/item/clothing/head/roguetown/helmet/heavy/undivided
 			if(H.mind)
-				var/cloaks = list("Cloak", "Tabard")
+				var/cloaks = list("Cloak", "Regular Tabard", "Crusader Tabard")
 				var/cloakchoice = input(H,"Choose your covering", "TAKE UP FASHION") as anything in cloaks
 				switch(cloakchoice)
 					if("Cloak")
 						cloak = /obj/item/clothing/cloak/undivided
-					if("Tabard")
-						cloak = /obj/item/clothing/cloak/templar/undivided
+					if("Regular Tabard")
+						cloak = /obj/item/clothing/cloak/templar/undivided_alt
+					if("Crusader Tabard")
+						cloak = /obj/item/clothing/cloak/tabard/stabard/crusader/undivided
+				var/helms = list("Sallet", "Barbute")
+				var/helmchoice = input(H, "Choose your headwear", "TAKE UP NOGGIN PROTECTION") as anything in helms
+				switch(helmchoice)
+					if("Sallet")
+						head = /obj/item/clothing/head/roguetown/helmet/heavy/undivided
+					if("Barbute")
+						head = /obj/item/clothing/head/roguetown/helmet/heavy/holyseebarbute
 		if(/datum/patron/divine/astrata)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/astrata
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/astratan
@@ -152,7 +161,7 @@
 	if(patron_dagger)
 		backpack_contents += patron_dagger
 
-	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
+	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight]
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2)	//Capped to T2 miracles.
 	if(H.mind)
@@ -164,6 +173,8 @@
 	switch(H.patron?.type)
 		if(/datum/patron/divine/astrata) //Unique patron weapons, more can be added here if wanted.
 			weapons += "Solar Judgement"
+			weapons += "Absolutio"
+			weapons += "Sunburst"
 		if(/datum/patron/divine/undivided)
 			weapons += "Decablade"
 		if(/datum/patron/divine/noc)
@@ -200,13 +211,13 @@
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
 		if("Flail")
-			H.put_in_hands(new /obj/item/rogueweapon/flail/sflail(H))
+			H.put_in_hands(new /obj/item/rogueweapon/flail/sflail/holysee(H))
 			H.adjust_skillrank(/datum/skill/combat/whipsflails, SKILL_LEVEL_NOVICE, TRUE)
 		if("Mace")
-			H.put_in_hands(new /obj/item/rogueweapon/mace/steel(H))
+			H.put_in_hands(new /obj/item/rogueweapon/mace/steel/holyseemace(H))
 			H.adjust_skillrank(/datum/skill/combat/maces, SKILL_LEVEL_NOVICE, TRUE)
 		if("Battle Axe")
-			H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/battle(H))
+			H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/battle/holyseeaxe(H))
 			H.adjust_skillrank(/datum/skill/combat/axes, SKILL_LEVEL_NOVICE, TRUE)
 		if("Decablade")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/undivided(H))
@@ -252,21 +263,29 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE) // again, needs skill to actually use the weapon
 		if("Cackle Lash")
 			H.put_in_hands(new /obj/item/rogueweapon/whip/xylix(H))
-			H.adjust_skillrank(/datum/skill/combat/whipsflails, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_EXPERT, TRUE)
 		if("Duel Settler")
 			H.put_in_hands(new /obj/item/rogueweapon/mace/goden/steel/ravox(H))
-			H.adjust_skillrank(/datum/skill/combat/maces, SKILL_LEVEL_NOVICE, TRUE)
+			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H), FALSE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 		if("Censure")
 			H.put_in_hands(new /obj/item/rogueweapon/greatsword/grenz/flamberge/ravox(H), TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H), FALSE)
-			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 		if("The Heartstring")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/rapier/eora(H))
-			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword, SLOT_BELT_L, TRUE)
 		if("Tidecleaver")
 			H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/battle/abyssoraxe(H))
-			H.adjust_skillrank(/datum/skill/combat/axes, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
+		if("Absolutio")
+			H.put_in_hands(new /obj/item/rogueweapon/sword/long/undivided/absolutio(H))
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword, SLOT_BELT_L, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
+		if("Sunburst")
+			H.put_in_hands(new /obj/item/rogueweapon/mace/steel/holyseemace/sunburst(H))
+			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 
 	// -- Start of section for god specific bonuses --
 	if(H.patron?.type == /datum/patron/divine/undivided)

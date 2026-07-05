@@ -15,8 +15,7 @@
 	the opposite is true. Humens come from a vast swathe of cultures and ethnicities, most of which \
 	have historically been at odds with one another. Being the eldest creations of the Weeping God, humens \
 	tend to find fortune easier than the other races, and are so diverse that no other racial traits \
-	are dominant in their species.<br>\
-	<span style='color: #6a8cb7;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>+1 INT | +1 WIL</b></span><br>"
+	are dominant in their species."
 
 	skin_tone_wording = "Ancestry"
 
@@ -77,6 +76,9 @@
 		/datum/body_marking/nose,
 		/datum/body_marking/bangs,
 		/datum/body_marking/bun,
+		/datum/body_marking/waist,
+		/datum/body_marking/womb_tattoo,
+		/datum/body_marking/butterfly
 	)
 
 /datum/species/human/northern/check_roundstart_eligible()

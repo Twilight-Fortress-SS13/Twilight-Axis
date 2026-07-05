@@ -2,7 +2,7 @@
 	id = REALM_HAMMERHOLD
 	name = "Drud Akhdruk" //TA EDIT
 	roll_weight = TRADE_REALM_WEIGHT_DISTANT
-	demanded_categories = list(NAVIGATOR_BUCKET_GARMENT_COMMON, NAVIGATOR_BUCKET_BEVERAGE, NAVIGATOR_BUCKET_ARMOR_HEAVY, NAVIGATOR_BUCKET_SEAFOOD, NAVIGATOR_BUCKET_POTTERY, NAVIGATOR_BUCKET_MISCELLANEOUS)
+	demanded_categories = list(NAVIGATOR_BUCKET_GARMENT_COMMON, NAVIGATOR_BUCKET_ARMOR_HEAVY, NAVIGATOR_BUCKET_SEAFOOD, NAVIGATOR_BUCKET_POTTERY, NAVIGATOR_BUCKET_MISCELLANEOUS)
 	single_word_base = TRUE
 	ship_name_words = list(
 		"Æthel", "Beorht", "Hammer", "Anvil", "Grim",
@@ -64,7 +64,7 @@
 	victualling_fresh_pool = list(
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/friedegg/hammerhold, "qty_min" = VICTUALLING_QTY_SMALL_MIN, "qty_max" = VICTUALLING_QTY_SMALL_MAX, "price" = VICTUALLING_PRICE_LUXURY),
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/wienerpotatonions, "qty_min" = VICTUALLING_QTY_MEDIUM_MIN, "qty_max" = VICTUALLING_QTY_MEDIUM_MAX, "price" = VICTUALLING_PRICE_STEAK),
-		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/meat/steak/bear/fried, "qty_min" = VICTUALLING_QTY_SMALL_MIN, "qty_max" = VICTUALLING_QTY_SMALL_MAX, "price" = VICTUALLING_PRICE_FEAST),
+		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/meat/bear/fried, "qty_min" = VICTUALLING_QTY_SMALL_MIN, "qty_max" = VICTUALLING_QTY_SMALL_MAX, "price" = VICTUALLING_PRICE_FEAST),
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/preserved/potato_baked, "qty_min" = VICTUALLING_QTY_LARGE_MIN, "qty_max" = VICTUALLING_QTY_LARGE_MAX, "price" = VICTUALLING_PRICE_BREAD),
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/pie/cooked/pot, "qty_min" = VICTUALLING_QTY_MEDIUM_MIN, "qty_max" = VICTUALLING_QTY_MEDIUM_MAX, "price" = VICTUALLING_PRICE_STEAK),
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/sandwich/ham, "qty_min" = VICTUALLING_QTY_MEDIUM_MIN, "qty_max" = VICTUALLING_QTY_MEDIUM_MAX, "price" = VICTUALLING_PRICE_FISH),
@@ -75,11 +75,11 @@
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/cheesebun, "qty_min" = VICTUALLING_QTY_MEDIUM_MIN, "qty_max" = VICTUALLING_QTY_MEDIUM_MAX, "price" = VICTUALLING_PRICE_SIMPLE),
 	)
 	victualling_drinks_pool = list(
-		list("recipe" = /datum/brewing_recipe/beer, "qty_min" = VICTUALLING_QTY_LARGE_MIN, "qty_max" = VICTUALLING_QTY_LARGE_MAX),
-		list("recipe" = /datum/brewing_recipe/beer/oat, "qty_min" = VICTUALLING_QTY_MEDIUM_MIN, "qty_max" = VICTUALLING_QTY_MEDIUM_MAX),
-		list("recipe" = /datum/brewing_recipe/mead, "qty_min" = VICTUALLING_QTY_MEDIUM_MIN, "qty_max" = VICTUALLING_QTY_MEDIUM_MAX),
-		list("recipe" = /datum/brewing_recipe/cider, "qty_min" = VICTUALLING_QTY_MEDIUM_MIN, "qty_max" = VICTUALLING_QTY_MEDIUM_MAX),
-		list("recipe" = /datum/brewing_recipe/voddena, "qty_min" = VICTUALLING_QTY_TINY_MIN, "qty_max" = VICTUALLING_QTY_TINY_MAX),
+		list("recipe" = /datum/brewing_recipe/beer, "keg_mult" = 2),
+		list("recipe" = /datum/brewing_recipe/beer/oat),
+		list("recipe" = /datum/brewing_recipe/mead),
+		list("recipe" = /datum/brewing_recipe/cider),
+		list("recipe" = /datum/brewing_recipe/voddena),
 	)
 	cultural_stock_pool = list(
 		/datum/supply_pack/rogue/hammerhold/dwarven_maul,

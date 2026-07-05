@@ -87,6 +87,20 @@
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
 
+/obj/item/clothing/suit/roguetown/shirt/robe/undividedcleric
+	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT|ITEM_SLOT_CLOAK
+	name = "undivided clerical robe"
+	desc = "Undivided, we walk - a Pantheon of Ten, guiding Psydonia's wanderers towards providence."
+	body_parts_covered = CHEST|GROIN|ARMS|LEGS|VITALS
+	icon_state = "tenclericrobe"
+	icon = 'icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/armor.dmi'
+	sleeved = null
+	boobed = TRUE
+	color = null
+	r_sleeve_status = SLEEVE_NORMAL
+	l_sleeve_status = SLEEVE_NORMAL
+
 /obj/item/clothing/suit/roguetown/shirt/robe/ravox
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT|ITEM_SLOT_CLOAK
 	name = "ravox robe"
@@ -143,6 +157,9 @@
 	color = null
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
+
+/obj/item/clothing/suit/roguetown/shirt/robe/necromancer/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, "The robes of Zizo's foul deadite-raisers")
 
 /obj/item/clothing/suit/roguetown/shirt/robe/dendor
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT|ITEM_SLOT_CLOAK

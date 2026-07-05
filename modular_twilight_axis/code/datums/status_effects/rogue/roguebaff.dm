@@ -42,21 +42,6 @@
 	var/priest_timer_check = 0
 	var/matthios_banner_timer_check = 0
 
-/mob/living/carbon/human/Life()
-	. = ..()
-	if((src.mind?.assigned_role == "Bishop") && !(world.time < priest_timer_check + 10 SECONDS))
-		priest_timer_check = world.time
-		for(var/mob/living/carbon/human/H in view(7, src))
-			if(HAS_TRAIT(H, TRAIT_CLERGY_TA) && !H.has_status_effect(/datum/status_effect/buff/clergybuff))
-				H.apply_status_effect(/datum/status_effect/buff/clergybuff)
-	if((istype(src.get_inactive_held_item(), /obj/item/rogueweapon/spear/matthios_standard) || istype(src.get_active_held_item(), /obj/item/rogueweapon/spear/matthios_standard)) && !(world.time < matthios_banner_timer_check + 5 SECONDS))
-		matthios_banner_timer_check = world.time
-		for(var/mob/living/carbon/human/H in view(7, src))
-			if(istype(H.patron, /datum/patron/inhumen/matthios))
-				H.apply_status_effect(/datum/status_effect/buff/twilight_peoplesbanner)
-			else if(HAS_TRAIT(H, TRAIT_NOBLE) || HAS_TRAIT(H, TRAIT_CLERGY_TA))
-				H.apply_status_effect(/datum/status_effect/debuff/twilight_peoplesbanner)
-
 /area/rogue/Entered(mob/living/carbon/human/guy)
 
 	.=..()
@@ -208,7 +193,7 @@
 		to_chat(owner, span_warning("AHAHAHA!! AHAHAHAHAHAHAHAH!!!!"))
 		if(owner.cmode)
 			return
-		if(owner.construct)
+		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
 			return
 		owner.hallucination = min(owner.hallucination + 10, 50)
 
@@ -216,7 +201,7 @@
 	if(owner) //heal and immobilize owner
 		if(owner.cmode)
 			return
-		if(owner.construct)
+		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
 			return
 		var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_blood(get_turf(owner))
 		H.color = "#fbbebe"

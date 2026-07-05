@@ -196,6 +196,11 @@
 /obj/item/roguemachine/zadcote/ui_state(mob/user)
 	return GLOB.human_adjacent_state
 
+/obj/item/roguemachine/zadcote/ui_status(mob/user, datum/ui_state/state)
+	if(isobserver(user))
+		return UI_CLOSE
+	return ..()
+
 /obj/item/roguemachine/zadcote/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
@@ -327,6 +332,22 @@
 				return TRUE
 			link.allow_summons = !link.allow_summons
 			return TRUE
+		if("withdraw_voyeur")
+			withdraw_voyeur(H)
+			return TRUE
+
+/obj/item/roguemachine/zadcote/proc/withdraw_voyeur(mob/living/carbon/human/operator)
+	if(!allows_voyeur)
+		return FALSE
+	if(voyeur_fund <= 0)
+		to_chat(operator, span_warning("The scrying basin is empty."))
+		return FALSE
+	var/amount = voyeur_fund
+	voyeur_fund = 0
+	budget2change(amount, operator)
+	to_chat(operator, span_notice("You drain [amount]m from [src]'s scrying basin."))
+	playsound(loc, 'sound/misc/gold_misc.ogg', 60, FALSE, -1)
+	return TRUE
 
 /obj/item/roguemachine/zadcote/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/zadcage))
@@ -368,10 +389,10 @@
 
 /obj/item/roguemachine/zadcote/steward
 	name = "stewardry zadcote"
-	desc = "A zadcote of the stewardry, kept open to any membes of the Royal Court."
+	desc = "A zadcote of the stewardry, kept open to any members of the Royal Court."
 	faction = ZADCOTE_FACTION_STEWARD
 	motto = "STEWARDRY ZADCOTE"
-	operator_jobs = list("Grand Duke", "Regent", "Steward", "Clerk", "Councillor", "Hand")
+	operator_jobs = list("Grand Duke", "Regent", "Steward", "Clerk", "Councillor", "Hand", "Sultan", "Vizier", "Sheikh") //TA_EDIT
 	allows_voyeur = FALSE
 
 /obj/item/roguemachine/zadcote/merchant

@@ -20,10 +20,15 @@
 	var/hearrange = 0 // Only hearable by wearer
 	is_important = TRUE
 
+/obj/item/clothing/head/roguetown/crown/serpcrown/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_VIBE_CROWN, VIBEDESC_CROWN)
+
 /obj/item/clothing/head/roguetown/crown/serpcrown/Initialize()
 	. = ..()
 	if(SSmapping.config.map_name == "Rockhill")
 		name = "Crown of Enigma"
+	if(SSmapping.config.map_name == "Desert Town")
+		name = "Crown of Al-Ashur"
 	else
 		name = "Crown of Azuria"
 	if(SSroguemachine.crown)

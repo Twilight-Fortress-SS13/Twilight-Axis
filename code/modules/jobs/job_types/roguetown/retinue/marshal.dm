@@ -6,7 +6,7 @@
 	total_positions = 1
 	spawn_positions = 1
 	allowed_sexes = list(MALE, FEMALE)
-	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED RACES_OOZE)
 	allowed_ages = list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
 	display_order = JDO_MARSHAL
 	selection_color = JCOLOR_RETINUE
@@ -27,9 +27,7 @@
 	same_job_respawn_delay = 30 MINUTES
 
 	job_traits = list(TRAIT_NOBLE, TRAIT_HEAVYARMOR, TRAIT_PERFECT_TRACKER, TRAIT_EXPERT_HUNTER)
-	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible) //Needs to use the throat - sometimes
-
-
+	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible, /datum/charflaw/wanted) //Needs to use the throat - sometimes
 	job_subclasses = list(
 		/datum/advclass/marshal/classic,
 		/datum/advclass/marshal/kcommander
@@ -53,8 +51,8 @@
 		/obj/item/signal_horn = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
 		)
-	H.verbs |= /mob/proc/haltyell
-	H.verbs |= list(/mob/living/carbon/human/proc/request_outlaw, /mob/living/carbon/human/proc/request_law, /mob/living/carbon/human/proc/request_law_removal, /mob/living/carbon/human/proc/request_purge)
+	add_verb(H, /mob/proc/haltyell)
+	add_verb(H, list(/mob/living/carbon/human/proc/request_outlaw, /mob/living/carbon/human/proc/request_law, /mob/living/carbon/human/proc/request_law_removal, /mob/living/carbon/human/proc/request_purge))
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_RICH, H)
 
@@ -137,7 +135,7 @@
 
 /mob/living/carbon/human/proc/request_law()
 	set name = "Request Law"
-	set category = "Voice of Command"
+	set category = "RoleUnique.Voice of Command"
 	if(stat)
 		return
 	var/inputty = input("Write a new law", "SHERIFF") as text|null
@@ -153,7 +151,7 @@
 
 /mob/living/carbon/human/proc/request_law_removal()
 	set name = "Request Law Removal"
-	set category = "Voice of Command"
+	set category = "RoleUnique.Voice of Command"
 	if(stat)
 		return
 	var/inputty = input("Remove a law", "SHERIFF") as text|null
@@ -170,7 +168,7 @@
 
 /mob/living/carbon/human/proc/request_purge()
 	set name = "Request Purge"
-	set category = "Voice of Command"
+	set category = "RoleUnique.Voice of Command"
 	if(stat)
 		return
 	if(hasomen(OMEN_NOLORD))
@@ -184,7 +182,7 @@
 
 /mob/living/carbon/human/proc/request_outlaw()
 	set name = "Request Outlaw"
-	set category = "Voice of Command"
+	set category = "RoleUnique.Voice of Command"
 	if(stat)
 		return
 	var/inputty = input("Outlaw a person", "SHERIFF") as text|null
@@ -242,13 +240,13 @@
 	make_outlaw(requested_outlaw)
 
 /mob/proc/haltyell()
-	set name = "HALT!"
-	set category = "Noises"
+	set name = "СТОЯТЬ!"
+	set category = "Emotes.Noises"
 	emote("haltyell")
 
 /mob/proc/haltyell_exhausting()
-	set name = "HALT!"
-	set category = "Noises"
+	set name = "СТОЯТЬ!"
+	set category = "Emotes.Noises"
 
 	emote("haltyell")
 	stamina_add(rand(5,15))

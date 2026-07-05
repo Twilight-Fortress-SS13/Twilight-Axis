@@ -39,7 +39,7 @@ var/list/zone_translations = list(
 	show_runechat = TRUE
 
 /mob/living/carbon/human/verb/emote_vomit()
-	set name = "Vomit"
+	set name = "Блевать"
 	set category = "Emotes"
 	emote("vomit", intentional = TRUE)
 
@@ -119,10 +119,18 @@ var/list/zone_translations = list(
 
 /datum/emote/living/meditate/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
-	if(do_after(user, 1 MINUTES))
-		user.add_stress(/datum/stressevent/meditation)
-		to_chat(user, span_green("My meditations were rewarding."))
-
+	if(HAS_TRAIT(user, TRAIT_IRONMAN))
+		to_chat(user, span_green("You focus inwards..."))
+		if(do_after(user, 1 MINUTES))
+			var/mob/living/U = user
+			var/percent = U.max_energy * 0.3
+			user.add_stress(/datum/stressevent/meditation_ironman)
+			user.energy_add(percent)
+			playsound(user, 'sound/misc/machineyes.ogg', 25)
+	else
+		to_chat(user, span_green("You focus inwards..."))
+		if(do_after(user, 1 MINUTES))
+			user.add_stress(/datum/stressevent/meditation)
 
 /datum/emote/living/bow
 	key = "bow"
@@ -157,7 +165,7 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_burp()
 	set name = "Рыгать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
 
 	emote("burp", intentional = TRUE)
 
@@ -171,7 +179,7 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_choke()
 	set name = "Задыхаться"
-	set category = "Noises"
+	set category = "Emotes.Noises"
 
 	emote("choke", intentional = TRUE)
 
@@ -227,7 +235,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_cough()
 	set name = "Кашлять"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("cough", intentional = TRUE)
 
@@ -241,7 +250,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_clearthroat()
 	set name = "Прочистить горло"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("clearthroat", intentional = TRUE)
 
@@ -335,7 +345,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_gag()
 	set name = "Подавиться"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("gag", intentional = TRUE)
 
@@ -349,8 +360,9 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_gasp()
-	set name = "Вздохнуть!"
-	set category = "Noises"
+	set name = "Ах!"
+	set category = "Emotes.Noises"
+
 
 	emote("gasp", intentional = TRUE)
 
@@ -384,7 +396,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_giggle()
 	set name = "Хихикать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("giggle", intentional = TRUE)
 
@@ -410,7 +423,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_chuckle()
 	set name = "Усмехнуться"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("chuckle", intentional = TRUE)
 
@@ -459,7 +473,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_groan()
 	set name = "Тяжело вздохнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("groan", intentional = TRUE)
 
@@ -540,6 +555,12 @@ var/list/zone_translations = list(
 				message_param = "целует %t в [ru_zone_selected]."
 	playsound(target.loc, pick('sound/vo/kiss (1).ogg','sound/vo/kiss (2).ogg'), 100, FALSE, -1)
 	if(user.mind)
+		/// Blackblood hidden interactions
+		var/mob/living/carbon/carbs = target
+		if(HAS_TRAIT(carbs, TRAIT_BLACKBLOOD) && HAS_TRAIT(user, TRAIT_INQUISITION) && !HAS_TRAIT(carbs, TRAIT_PSYDONIAN_GRIT))
+			user.add_stress(/datum/stressevent/inq_trauma)
+			carbs.emote("whimper")
+
 		record_round_statistic(STATS_KISSES_MADE)
 
 /datum/emote/living/lick
@@ -643,6 +664,11 @@ var/list/zone_translations = list(
 	if(ishuman(target))
 		playsound(target.loc, pick('sound/vo/hug.ogg'), 100, FALSE, -1)
 		if(user.mind)
+			/// Blackblood hidden interactions
+			var/mob/living/carbon/carbs = target
+			if(HAS_TRAIT(carbs, TRAIT_BLACKBLOOD) && HAS_TRAIT(user, TRAIT_INQUISITION) && !HAS_TRAIT(carbs, TRAIT_PSYDONIAN_GRIT))
+				carbs.add_stress(/datum/stressevent/inq_trauma)
+				carbs.stress_freakout()
 			record_round_statistic(STATS_HUGS_MADE)
 			SEND_SIGNAL(user, COMSIG_MOB_HUGGED, target)
 
@@ -715,6 +741,12 @@ var/list/zone_translations = list(
 		H.flash_fullscreen("redflash3")
 		H.AdjustSleeping(-50)
 		playsound(target.loc, 'sound/foley/slap.ogg', 100, TRUE, -1)
+		/// Blackblood hidden interactions
+		var/mob/living/carbon/carbs = target
+		if(HAS_TRAIT(target, TRAIT_BLACKBLOOD) && HAS_TRAIT(user, TRAIT_INQUISITION) && !HAS_TRAIT(target, TRAIT_PSYDONIAN_GRIT))
+			user.add_stress(/datum/stressevent/inq_trauma)
+			carbs.emote("whimper")
+
 
 /datum/emote/living/pinch
 	key = "pinch"
@@ -773,7 +805,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_laugh()
 	set name = "Смеяться"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("laugh", intentional = TRUE)
 
@@ -834,7 +867,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_scream()
 	set name = "Кричать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("scream", intentional = TRUE)
 
@@ -887,6 +921,24 @@ var/list/zone_translations = list(
 	needs_emotion = TRUE
 
 /datum/emote/living/scream/agony/run_emote(mob/user, params, type_override, intentional)
+	. = ..()
+	if(.)
+		for(var/mob/living/carbon/human/L in viewers(7,user))
+			if(L == user)
+				L.sate_addiction(/datum/charflaw/addiction/masochist)
+				continue
+			if(get_dist(L, user) <= 2 && L != user)
+				L.sate_addiction(/datum/charflaw/addiction/sadist)
+
+/datum/emote/living/scream/superagony
+	key = "superagony"
+	message = "screams in ungodly agony!"
+	emote_type = EMOTE_AUDIBLE
+	only_forced_audio = TRUE
+	show_runechat = FALSE
+	needs_emotion = TRUE
+
+/datum/emote/living/scream/superagony/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
 	if(.)
 		for(var/mob/living/carbon/human/L in viewers(7,user))
@@ -1025,7 +1077,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_rage()
 	set name = "Ярость"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("rage", intentional = TRUE)
 
@@ -1042,8 +1095,9 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_attnwhistle()
-	set name = "Привлечь свистом"
-	set category = "Noises"
+	set name = "Свистнуть"
+	set category = "Emotes.Noises"
+
 
 	emote("attnwhistle", intentional = TRUE)
 
@@ -1097,7 +1151,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_sigh()
 	set name = "Вздохнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("sigh", intentional = TRUE)
 
@@ -1115,8 +1170,9 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_whistle()
-	set name = "Свистеть"
-	set category = "Noises"
+	set name = "Насвистывать"
+	set category = "Emotes.Noises"
+
 
 	emote("whistle", intentional = TRUE)
 
@@ -1129,8 +1185,9 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_hmm()
-	set name = "Хмм"
-	set category = "Noises"
+	set name = "Хмыкнуть"
+	set category = "Emotes.Noises"
+
 
 	emote("hmm", intentional = TRUE)
 
@@ -1143,8 +1200,9 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_huh()
-	set name = "Хах?"
-	set category = "Noises"
+	set name = "Что?"
+	set category = "Emotes.Noises"
+
 
 	emote("huh", intentional = TRUE)
 
@@ -1158,7 +1216,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_hum()
 	set name = "Напевать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("hum", intentional = TRUE)
 
@@ -1207,7 +1266,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_shh()
 	set name = "Шикнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("shh", intentional = TRUE)
 
@@ -1234,8 +1294,8 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_snore()
-	set name = "Snore"
-	set category = "Noises"
+	set name = "Храпеть"
+	set category = "Emotes.Noises"
 	emote("snore", intentional = TRUE)
 
 /datum/emote/living/stare
@@ -1290,7 +1350,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_warcry()
 	set name = "Боевой клич"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("warcry", intentional = TRUE)
 
@@ -1310,7 +1371,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_whimper()
 	set name = "Хныкать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("whimper", intentional = TRUE)
 
@@ -1329,7 +1391,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_yawn()
 	set name = "Зевать"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("yawn", intentional = TRUE)
 
@@ -1492,7 +1555,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_snap()
 	set name = "Щелкнуть 1"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("snap", intentional = TRUE)
 
@@ -1505,7 +1569,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_blink()
 	set name = "Моргнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("blink", intentional = TRUE)
 
@@ -1518,7 +1583,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_stomp()
 	set name = "Топнуть"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("stomp", intentional = TRUE)
 
@@ -1531,7 +1597,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_snap2()
 	set name = "Щелкнуть 2"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("snap2", intentional = TRUE)
 
@@ -1544,7 +1611,8 @@ var/list/zone_translations = list(
 
 /mob/living/carbon/human/verb/emote_snap3()
 	set name = "Щелкнуть 3"
-	set category = "Noises"
+	set category = "Emotes.Noises"
+
 
 	emote("snap3", intentional = TRUE)
 
@@ -1647,7 +1715,7 @@ var/list/zone_translations = list(
 		chance -= modifier_sum
 		chance *= chance_per_point
 
-		var/msg = success ? span_green("УСПЕШНО [pick(success_message_list)]") : span_danger("ПРОВАЛ: [pick(failure_message_list)] [chance]%")
+		var/msg = success ? span_green("УСПЕШНО: [pick(success_message_list)]") : span_danger("ПРОВАЛ: [pick(failure_message_list)] [chance]%")
 
 		msg = replace_pronoun(user, msg)
 
@@ -1716,9 +1784,9 @@ var/list/zone_translations = list(
 	)
 
 	failure_message_list = list(
-		"руки похожи на ветки",
-		"не сможет поднять даже стул",
-		"стоило есть больше мяса",
+		"руки похожи на ветки...",
+		"не сможет поднять даже стул...",
+		"стоило есть больше мяса...",
 	)
 
 /mob/living/carbon/human/verb/emote_strength_roll()
@@ -1747,8 +1815,8 @@ var/list/zone_translations = list(
 	)
 
 	failure_message_list = list(
-		"видимо страдает близорукостью!",
-		"похоже обладает катарактой!",
+		"видимо страдает близорукостью...",
+		"похоже обладает катарактой...",
 		"слеп...",
 	)
 
@@ -1780,8 +1848,8 @@ var/list/zone_translations = list(
 
 	failure_message_list = list(
 		"совсем не понимает где находится...",
-		"голова как кочерыжка",
-		"как сложить два плюс два - осталось загадкой...",
+		"голова как кочерыжка...",
+		"как сложить два плюс два — осталось загадкой...",
 	)
 
 /mob/living/carbon/human/verb/emote_intelligence_roll()
@@ -1798,7 +1866,7 @@ var/list/zone_translations = list(
 	)
 
 	attempt_message_list = list(
-		"испытывает свою крепость",
+		"испытывает свою крепость...",
 		"готовится к удару...",
 		"готовится терпеть...",
 	)
@@ -1811,8 +1879,8 @@ var/list/zone_translations = list(
 
 	failure_message_list = list(
 		"одни кожа, да кости...",
-		"покачивается как травинка на ветру",
-		"кости хруки как хрусталь",
+		"покачивается как травинка на ветру...",
+		"кости хрупки как хрусталь...",
 	)
 
 /mob/living/carbon/human/verb/emote_constitution_roll()
@@ -1835,19 +1903,19 @@ var/list/zone_translations = list(
 	)
 
 	success_message_list = list(
-		"преодолевает это",
+		"преодолевает это!",
 		"никогда не сдается!",
-		"пройдет сквозь огонь и воду",
+		"пройдет сквозь огонь и воду!",
 	)
 
 	failure_message_list = list(
-		"труслив как цыпленок",
+		"труслив как цыпленок...",
 		"руки опускаются...",
-		"испугается, даже если никто не крикнет",
+		"испугается, даже если никто не крикнет...",
 	)
 
 /mob/living/carbon/human/verb/emote_willpower_roll()
-	set name = "%Проверка силы воли"
+	set name = "%Проверка воли"
 	set category = "Emotes"
 
 	emote("willpower", intentional = TRUE)
@@ -1862,20 +1930,20 @@ var/list/zone_translations = list(
 	)
 
 	attempt_message_list = list(
-		"готовит свой лучшее движение...",
+		"готовит свое лучшее движение...",
 		"демонстрирует свою гибкость...",
 		"пытается разогнаться...",
 	)
 
 	success_message_list = list(
-		"показывает блестящий контроль своего тела",
-		"изгибается словно кошка",
-		"невероятная гибкость",
+		"показывает блестящий контроль своего тела!",
+		"изгибается словно кошка!",
+		"невероятная гибкость!",
 	)
 
 	failure_message_list = list(
-		"похоже владеет двумя левыми",
-		"переигрывает себя",
+		"похоже владеет двумя левыми...",
+		"переигрывает себя...",
 		"медленнее улитки...",
 	)
 
@@ -1895,14 +1963,14 @@ var/list/zone_translations = list(
 	)
 
 	success_message_list = list(
-		"мог бы найти слиток в луже",
+		"мог бы найти слиток в луже!",
 		"будто бы кроличья лапка в кармане!",
 		"светится истинной удачей!",
 	)
 
 	failure_message_list = list(
 		"понимает, что игра была проигрышной с самого начала...",
-		"удача явно не на твоей стороне",
+		"удача явно не на твоей стороне...",
 		"все ставки против...",
 	)
 
@@ -1930,8 +1998,8 @@ var/list/zone_translations = list(
 
 	success_message_list = list(
 		"переполнен непоколебимой уверенностью!",
-		"- лицо, подобно каменной маске",
-		"... лик подобен богу",
+		"— лицо, подобно каменной маске!",
+		"...лик подобен богу!",
 	)
 
 	failure_message_list = list(
@@ -1945,57 +2013,3 @@ var/list/zone_translations = list(
 	set category = "Emotes"
 
 	emote("charisma", intentional = TRUE)
-
-/mob/living/carbon/human/verb/dive()
-	set name = "Dive"
-	set category = "Swimming"
-	
-	var/turf/T = get_turf(src)
-	if(!istype(T, /turf/open/water/transparent))
-		to_chat(src, span_warning("You must be in deep water to dive!"))
-		return
-	
-	var/turf/below = GET_TURF_BELOW(T)
-	if(!below || !istype(below, /turf/open/water/transparent))
-		to_chat(src, span_warning("It's not deep enough here to dive."))
-		return
-
-	src.swim_z(DOWN)
-
-/mob/living/carbon/human/verb/surface()
-	set name = "Surface"
-	set category = "Swimming"
-	
-	var/turf/T = get_turf(src)
-	
-	if(!istype(T, /turf/open/water/transparent/inner))
-		to_chat(src, span_warning("You are already at the surface!"))
-		return
-
-	var/turf/above = GET_TURF_ABOVE(T)
-	if(!above || !istype(above, /turf/open/water/transparent))
-		to_chat(src, span_warning("Something is blocking you from surfacing here."))
-		return
-
-	src.swim_z(UP)
-
-/mob/living/carbon/human/proc/swim_z(direction)
-	if(stat || IsKnockdown() || IsParalyzed()) 
-		to_chat(src, span_warning("You are too incapacitated to move!"))
-		return FALSE
-	
-	var/turf/current_T = get_turf(src)
-	var/target_z = (direction == UP) ? (z + 1) : (z - 1)
-	var/turf/target_T = locate(current_T.x, current_T.y, target_z)
-
-	if(istype(target_T, /turf/open/water))
-		if(!stamina_add(direction == DOWN ? 20 : 10)) 
-			to_chat(src, span_warning("You are too exhausted to [direction == UP ? "surface" : "dive"]!"))
-			return FALSE
-
-		visible_message(span_notice("[src] [direction == UP ? "emerges to the surface" : "dives into the depths"]."))
-		forceMove(target_T)
-		return TRUE
-		
-	to_chat(src, span_warning("You can't [direction == UP ? "emerge" : "dive"] here."))
-	return FALSE

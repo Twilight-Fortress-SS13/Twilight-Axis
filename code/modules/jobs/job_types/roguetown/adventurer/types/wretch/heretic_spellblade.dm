@@ -65,7 +65,7 @@
 	backpack_contents = list(/obj/item/flashlight/flare/torch = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = 1,
 		/obj/item/chalk = 1,
-		/obj/item/book/spellbook = 1,
+		/obj/item/rogueweapon/spellbook = 1,
 	)
 
 	to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
@@ -75,7 +75,7 @@
 	var/chant_faction = "zizite"
 	var/extra_blade_weapon
 	if(istype(H.patron, /datum/patron/inhumen/zizo))
-		extra_blade_weapon = "Avantyne Longsword"
+		extra_blade_weapon = "Avantyne Arming Sword"
 	else if(istype(H.patron, /datum/patron/divine/noc))
 		chant_faction = "noccite"
 	var/selection_html = get_spellblade_chant_html(src, H, chant_faction, extra_blade_weapon)
@@ -107,8 +107,8 @@
 				H.mind.AddSpell(new /datum/action/cooldown/spell/advance)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/gate_of_reckoning)
 			if("macebearer")
-				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/kastvyl)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/tremor)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/shatter)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/tremor)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/charge)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/cataclysm)
 
@@ -157,12 +157,12 @@
 			var/list/weapons = list("Kriegmesser", "Longsword", "Rapier", "Sabre", "Steel Arming Sword", "Steel Greatsword", "Steel Dagger")
 			// Inject patron-specific weapon
 			if(istype(H.patron, /datum/patron/inhumen/zizo))
-				weapons.Insert(1, "Avantyne Longsword")
+				weapons.Insert(1, "Avantyne Arming Sword")
 			var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 			beltr = /obj/item/rogueweapon/scabbard/sword
 			switch(weapon_choice)
-				if("Avantyne Longsword")
-					r_hand = /obj/item/rogueweapon/sword/long/zizo
+				if("Avantyne Arming Sword")
+					r_hand = /obj/item/rogueweapon/sword/zizo
 				if("Kriegmesser")
 					r_hand = /obj/item/rogueweapon/sword/long/kriegmesser
 					backr = /obj/item/rogueweapon/scabbard/gwstrap

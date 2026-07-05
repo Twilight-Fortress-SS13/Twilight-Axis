@@ -136,6 +136,7 @@
 #include "familytree_holy_verbs.dm"
 #include "familytree_lifecycle.dm"
 #include "familytree_subsystem_core.dm"
+#include "familytree_royal_harem.dm"
 #include "familytree_subsystem_helpers.dm"
 #include "familytree_subsystem_matching.dm"
 #include "familytree_subsystem_royal.dm"

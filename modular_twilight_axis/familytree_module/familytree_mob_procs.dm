@@ -296,19 +296,19 @@
 
 /mob/living/carbon/human/verb/my_family()
 	set name = "My Family"
-	set category = "IC"
+	set category = "IC.Family"
 
 	familytree_open_family_panel("My Family")
 
 /mob/living/carbon/human/verb/ReturnFamilyList()
 	set name = "List Family"
-	set category = "IC"
+	set category = "IC.Family"
 
 	familytree_open_family_panel("List Family")
 
 /mob/living/carbon/human/verb/ToggleFamilyUI()
 	set name = "Family UI"
-	set category = "IC"
+	set category = "IC.Family"
 	ShowFamilyUI(FALSE)
 
 /mob/living/carbon/human/proc/ShowFamilyUI(silent)

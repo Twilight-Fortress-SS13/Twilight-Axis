@@ -87,7 +87,7 @@
 		)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/heartfelt)
-		H.verbs |= list(/mob/living/carbon/human/mind/proc/setordersheartfelt)
+		add_verb(H, list(/mob/living/carbon/human/mind/proc/setordersheartfelt))
 
 	var/helmet = list("Etruscan Bascinet","Volf Plate Helmet","Beak Helmet","Visored Sallet",)
 	var/helmet_choice = input("Choose your Helm.", "TAKE UP HELMS") as anything in helmet
@@ -188,6 +188,7 @@
 
 	subclass_skills = list(
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/arcyne = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
@@ -217,7 +218,7 @@
 		/obj/item/reagent_containers/glass/bottle/rogue/poison = 1,
 		/obj/item/natural/feather = 1,
 		/obj/item/paper/scroll = 1,
-		/obj/item/book/spellbook = 1,
+		/obj/item/rogueweapon/spellbook = 1,
 	) //starts with a vial of poison, like all wizened evil advisors do!
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/studded
 	pants = /obj/item/clothing/under/roguetown/tights/black

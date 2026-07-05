@@ -66,7 +66,9 @@
 	// Skill 5+ shows area efficiency
 	if(skill >= 5)
 		var/area/A = get_area(src)
-		var/bonus = hunt_category?.preferred_areas[A.type]
+		var/bonus = 0 // TA EDIT START
+		if(hunt_category)
+			bonus = hunt_category.get_area_bonus(A) // TA EDIT END
 		if(bonus)
 			. += "<br><details><summary><span class='nicegreen'>Environmental Analysis</span></summary>"
 			. += span_info("The local terrain ([A.name]) increases discovery chances by <b>[bonus]%</b>.")
@@ -87,7 +89,7 @@
 	// Find categories that actually like this specific area
 	for(var/cat_type in subtypesof(/datum/hunting_category))
 		var/datum/hunting_category/C = new cat_type()
-		if(C.preferred_areas[A.type] > 0)
+		if(C.can_spawn_in_area(A) && C.get_area_bonus(A) > 0) // TA EDIT
 			valid_cats[C.name] = C
 
 	if(!valid_cats.len)
@@ -382,14 +384,22 @@
 	var/list/cat_weights = list()
 
 	if(secret_map_influence)
-		hunt_category = new secret_map_influence()
-	else
+		var/datum/hunting_category/C = new secret_map_influence() // TA EDIT START
+		if(C.can_spawn_in_area(A))
+			hunt_category = C
+		else
+			secret_map_influence = null
+
+	if(!hunt_category)
 		for(var/cat_type in subtypesof(/datum/hunting_category))
 			var/datum/hunting_category/C = new cat_type()
+			if(!C.can_spawn_in_area(A))
+				continue
+
 			var/weight = C.skill_weights[skill + 1]
 
 			// Exact type matching for area bonus to avoid using subtypes
-			var/area_bonus = C.preferred_areas[A.type]
+			var/area_bonus = C.get_area_bonus(A) // TA EDIT END
 			if(area_bonus)
 				weight = max(0, weight * (1 + (area_bonus / 100)))
 

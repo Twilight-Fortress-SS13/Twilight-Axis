@@ -15,8 +15,10 @@
 	obsfuscated_job = TRUE
 	townie_contract_gate_exempt = TRUE
 	class_setup_examine = FALSE
-	peopleiknow = list("Hand") // TA EDIT
-	peopleknowme = list("Hand") // TA EDIT
+	// TA EDIT BEGIN
+	peopleiknow = list("Hand", "Vizier") // TA edit
+	peopleknowme = list("Hand", "Vizier") // TA edit
+	// TA EDIT END
 	same_job_respawn_delay = 30 MINUTES
 
 //Hooking in here does not mess with their equipment procs
@@ -27,7 +29,7 @@
 			GLOB.court_agents += H.real_name
 			if(H.mind)
 				H.mind.special_role = "Court Agent" //For obfuscating them in the Actors list: _job.dm L:216
-				H.verbs |= /datum/job/roguetown/adventurer/courtagent/proc/remember_employer
+				add_verb(H, /datum/job/roguetown/adventurer/courtagent/proc/remember_employer)
 			..()
 
 /datum/job/roguetown/adventurer/courtagent/proc/know_employer(var/mob/living/carbon/human/H)
@@ -40,7 +42,7 @@
 
 /datum/job/roguetown/adventurer/courtagent/proc/remember_employer()
 	set name = "Remember Spymaster"
-	set category = "Subterfuge"
+	set category = "RoleUnique.Subterfuge"
 
 	to_chat(usr, span_boldnotice("My spymaster is:"))
 	for(var/name in GLOB.court_spymaster)

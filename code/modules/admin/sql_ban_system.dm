@@ -2,10 +2,185 @@
 #define MAX_ADMINBANS_PER_ADMIN 1
 #define MAX_ADMINBANS_PER_HEADMIN 3
 
+/proc/ta_roleban_list(list/base, list/extras)
+	. = list()
+	if(base)
+		. |= base
+	if(extras)
+		. |= extras
+
+/proc/ta_roleban_canonical_role(role)
+	if(!role)
+		return
+	switch(role)
+		if("Sultan")
+			return "Grand Duke"
+		if("Vizier")
+			return "Hand"
+		if("Sheikh")
+			return "Councillor"
+		if("Head Slave")
+			return "Seneschal"
+		if("Palace Slave")
+			return "Servant"
+		if("Harem Favorite")
+			return "Suitor"
+		if("Cataphract", "Royal Knight")
+			return "Knight"
+		if("Sergeant", "Janissary Sergeant", "Azeb Agha", "Royal Guard Sergeant")
+			return "Sergeant-at-Arms"
+		if("Man-at-Arms")
+			return "Man at Arms"
+		if("Royal Guard", "Janissary")
+			return "Man at Arms"
+		if("Vanguard", "Azeb", "Azeb Agha")
+			return "Warden"
+		if("Freeman", "Lost Grenzel")
+			return ROLE_BANDIT
+	return role
+
+/proc/ta_roleban_canonicalize_roles(roles)
+	. = list()
+	if(islist(roles))
+		for(var/role in roles)
+			var/canonical_role = ta_roleban_canonical_role(role)
+			if(canonical_role)
+				. |= canonical_role
+	else
+		var/canonical_role = ta_roleban_canonical_role(roles)
+		if(canonical_role)
+			. |= canonical_role
+
+/proc/ta_roleban_panel_list(list/base, list/extras)
+	return ta_roleban_canonicalize_roles(ta_roleban_list(base, extras))
+
+/proc/ta_roleban_panel_list_without(list/base, list/extras, list/excluded)
+	. = ta_roleban_panel_list(base, extras)
+	for(var/role in ta_roleban_canonicalize_roles(excluded))
+		. -= role
+
+/proc/ta_roleban_department_class(department)
+	switch(department)
+		if("Ducal Family")
+			return "nobles"
+		if("Courtiers")
+			return "courtier"
+		if("Retinue")
+			return "mercenaries"
+		if("Wanderers")
+			return "yeomen"
+		if("Burghers")
+			return "yeomen"
+		if("ATC")
+			return "mercenaries"
+	return ckey(department)
+
+
+/proc/ta_roleban_department_style(department)
+	switch(department)
+		if("Ducal Family")
+			return "background-color: #aa83b9; color: #443a39;"
+		if("Courtiers")
+			return "background-color: #81adc8; color: #443a39;"
+		if("Retinue")
+			return "background-color: #c86e3a; color: #443a39;"
+		if("Wanderers")
+			return "background-color: #819e82; color: #443a39;"
+		if("Burghers")
+			return "background-color: #819e82; color: #443a39;"
+		if("ATC")
+			return "background-color: #c86e3a; color: #443a39;"
+	return null
+
+/proc/ta_roleban_department_style_attribute(department)
+	var/department_style = ta_roleban_department_style(department)
+	if(department == "Garrison")
+		if(department_style)
+			department_style += " display: block; width: 100%; box-sizing: border-box; text-align: center;"
+		else
+			department_style = "display: block; width: 100%; box-sizing: border-box; text-align: center;"
+	if(department_style)
+		return " style='[department_style]'"
+	return ""
+
+/proc/ta_roleban_department_column_style_attribute(department)
+	switch(department)
+		if("Garrison")
+			return " style='clear: both; float: none; width: 100%; display: block; margin-top: 8px; text-align: center;'"
+	return ""
+
+/proc/ta_roleban_department_content_style_attribute(department)
+	switch(department)
+		if("Garrison")
+			return " style='display: block; width: 100%; text-align: center;'"
+	return ""
+
+/proc/ta_roleban_equivalent_roles(role)
+	. = list()
+	if(!role)
+		return
+	var/canonical_role = ta_roleban_canonical_role(role)
+	if(canonical_role)
+		. |= canonical_role
+	. |= role
+	switch(canonical_role)
+		if("Grand Duke")
+			. |= list("Sultan")
+		if("Hand")
+			. |= list("Vizier")
+		if("Councillor")
+			. |= list("Sheikh")
+		if("Seneschal")
+			. |= list("Head Slave")
+		if("Servant")
+			. |= list("Palace Slave")
+		if("Suitor")
+			. |= list("Harem Favorite")
+		if("Knight")
+			. |= list("Cataphract", "Royal Knight")
+		if("Sergeant-at-Arms")
+			. |= list("Sergeant", "Janissary Sergeant", "Azeb Agha", "Royal Guard Sergeant")
+		if("Man at Arms")
+			. |= list("Royal Guard", "Janissary")
+		if("Warden")
+			. |= list("Vanguard", "Azeb")
+		if(ROLE_BANDIT)
+			. |= list("Freeman", "Lost Grenzel")
+
+/proc/ta_roleban_expand_roles(roles)
+	. = list()
+	if(islist(roles))
+		for(var/role in roles)
+			. |= ta_roleban_equivalent_roles(role)
+	else
+		. |= ta_roleban_equivalent_roles(roles)
+
+/proc/ta_roleban_display_name(role)
+	if(!role)
+		return role
+	var/list/linked_roles = ta_roleban_equivalent_roles(role)
+	linked_roles -= role
+	if(role == "Sergeant-at-Arms")
+		linked_roles -= "Sergeant"
+	if(!length(linked_roles))
+		return role
+	return "[role] ([linked_roles.Join(", ")])"
+
+/proc/ta_roleban_is_already_banned(role, list/banned_from)
+	if(!role || !length(banned_from))
+		return FALSE
+	for(var/check_role in ta_roleban_equivalent_roles(role))
+		if(check_role in banned_from)
+			return TRUE
+	return FALSE
+
 //checks client ban cache or DB ban table if ckey is banned from one or more roles
 //doesn't return any details, use only for if statements
 /proc/is_banned_from(player_ckey, list/roles)
 	if(!player_ckey)
+		return
+	roles = ta_roleban_expand_roles(roles)
+	if(!length(roles))
 		return
 	var/client/C = GLOB.directory[player_ckey]
 	if(C)
@@ -55,6 +230,15 @@
 /proc/is_banned_from_with_details(player_ckey, player_ip, player_cid, role)
 	if(!player_ckey && !player_ip && !player_cid)
 		return
+	var/list/check_roles = ta_roleban_expand_roles(role)
+	if(!length(check_roles))
+		return
+	var/list/role_values = list("ckey" = player_ckey, "ip" = player_ip, "computerid" = player_cid)
+	var/list/sql_roles_list = list()
+	for(var/i in 1 to check_roles.len)
+		role_values["role[i]"] = check_roles[i]
+		sql_roles_list += ":role[i]"
+	var/sql_roles = sql_roles_list.Join(", ")
 	var/datum/DBQuery/query_check_ban = SSdbcore.NewQuery({"
 		SELECT
 			id,
@@ -69,12 +253,12 @@
 			computerid,
 			IFNULL((SELECT byond_key FROM [format_table_name("player")] WHERE [format_table_name("player")].ckey = [format_table_name("ban")].a_ckey), a_ckey)
 		FROM [format_table_name("ban")]
-		WHERE role = :role
+		WHERE role IN ([sql_roles])
 			AND (ckey = :ckey OR ip = INET_ATON(:ip) OR computerid = :computerid)
 			AND unbanned_datetime IS NULL
 			AND (expiration_time IS NULL OR expiration_time > NOW())
 		ORDER BY bantime DESC
-	"}, list("role" = role, "ckey" = player_ckey, "ip" = player_ip, "computerid" = player_cid))
+	"}, role_values)
 	if(!query_check_ban.warn_execute())
 		qdel(query_check_ban)
 		return
@@ -234,45 +418,61 @@
 		var/break_counter = 0
 		//note to future developers: RT doesn't have command staff so toggle_head was removed, go back in the git history if you need to readd it
 		//departments/groups that don't have command staff would throw a javascript error since there's no corresponding reference for toggle_head()
-		var/list/headless_job_lists = list("Ducal Family" = GLOB.noble_positions,
-							"Courtiers" = GLOB.courtier_positions,
-							"Retinue" = GLOB.retinue_positions,
-							"Garrison" = GLOB.garrison_positions,
-							"City Watch" = GLOB.citywatch_positions,
-							"Vanguard" = GLOB.vanguard_positions,
-							"Church" = GLOB.church_positions,
-              "Inquisition" = GLOB.inquisition_positions,
-							"Wanderers" = GLOB.wanderer_positions,
+		var/list/listed_rolebans = list()
+		var/list/headless_job_lists = list("Ducal Family" = ta_roleban_panel_list_without(GLOB.noble_positions, list("Grand Duke", "Sultan"), list("Suitor", "Harem Favorite")),
+							"Courtiers" = ta_roleban_panel_list(GLOB.courtier_positions, list("Hand", "Councillor", "Seneschal", "Vizier", "Sheikh", "Head Slave", "Suitor", "Harem Favorite")),
+							"Retinue" = ta_roleban_panel_list(GLOB.retinue_positions, list("Knight", "Cataphract", "Royal Knight")),
+							"Garrison" = ta_roleban_panel_list(ta_roleban_list(ta_roleban_list(GLOB.garrison_positions, GLOB.citywatch_positions), GLOB.vanguard_positions), list("Sergeant-at-Arms", "Man at Arms", "Sergeant", "Janissary Sergeant", "Janissary", "Azeb Agha", "Royal Guard Sergeant", "Royal Guard", "Slave Master", "Warden", "Vanguard", "Azeb", "Sheriff", "Watchman")),
+							"Church" = ta_roleban_panel_list(GLOB.church_positions, null),
+							"Inquisition" = ta_roleban_panel_list(GLOB.inquisition_positions, null),
+							"Wanderers" = ta_roleban_panel_list(GLOB.wanderer_positions, null),
 							"Abstract" = list("Appearance", "Emote", "Deadchat", "OOC", "LOOC", "MENTORHELP"))
 		for(var/department in headless_job_lists)
-			output += "<div class='column'><label class='rolegroup [ckey(department)]'><input type='checkbox' name='[department]' class='hidden' onClick='toggle_checkboxes(this, \"_com\")'>[department]</label><div class='content'>"
-			break_counter = 0
+			var/list/display_jobs = list()
 			for(var/job in headless_job_lists[department])
-				if(break_counter > 0 && (break_counter % 3 == 0))
+				if(job in listed_rolebans)
+					continue
+				listed_rolebans |= job
+				display_jobs |= job
+			if(!length(display_jobs))
+				continue
+			output += "<div class='column'[ta_roleban_department_column_style_attribute(department)]><label class='rolegroup [ta_roleban_department_class(department)]'[ta_roleban_department_style_attribute(department)]><input type='checkbox' name='[department]' class='hidden' onClick='toggle_checkboxes(this, \"_com\")'>[department]</label><div class='content'[ta_roleban_department_content_style_attribute(department)]>"
+			break_counter = 0
+			var/roles_per_line = (department == "Garrison") ? 2 : 3
+			for(var/job in display_jobs)
+				if(break_counter > 0 && (break_counter % roles_per_line == 0))
 					output += "<br>"
-				output += {"<label class='inputlabel checkbox'>[job]
+				output += {"<label class='inputlabel checkbox'>[ta_roleban_display_name(job)]
 							<input type='checkbox' name='[job]' class='[department]' value='1'>
-							<div class='inputbox[(job in banned_from) ? " banned" : ""]'></div></label>
+							<div class='inputbox[ta_roleban_is_already_banned(job, banned_from) ? " banned" : ""]'></div></label>
 				"}
 				break_counter++
 			output += "</div></div>"
-		var/list/long_job_lists = list("Peasants" = GLOB.peasant_positions,
-									"Burghers" = GLOB.burgher_positions,
-									"ATC" = GLOB.atc_positions,
-									"Sidefolk" = GLOB.sidefolk_positions,
+		var/list/long_job_lists = list("Peasants" = ta_roleban_panel_list(GLOB.peasant_positions, list("Servant", "Palace Slave")),
+									"Burghers" = ta_roleban_panel_list(GLOB.burgher_positions, null),
+									"ATC" = ta_roleban_panel_list(GLOB.atc_positions, null),
+									"Sidefolk" = ta_roleban_panel_list(GLOB.sidefolk_positions, null),
 									"Ghost and Other Roles" = list(ROLE_NECRO_SKELETON, ROLE_LICH_SKELETON, ROLE_UNBOUND_DEATHKNIGHT, ROLE_DARK_ITINERANT),
-									"Antagonist Positions" = list(ROLE_ASCENDANT, ROLE_ASPIRANT, ROLE_BANDIT, ROLE_NBEAST, ROLE_WEREWOLF, ROLE_LICH, ROLE_PREBEL),
+									"Antagonist Positions" = ta_roleban_panel_list(list(ROLE_ASCENDANT, ROLE_ASPIRANT, ROLE_BANDIT, "Freeman", "Lost Grenzel", ROLE_NBEAST, ROLE_WEREWOLF, ROLE_LICH, ROLE_PREBEL), null),
 									"Lesser Antagonst Positions" = list(ROLE_WRETCH, ROLE_DREAMWALKER, ROLE_GNOLL, ROLE_VAMPIRE))
 									//ADD BACK DARK ELF AND MANIAC TO THE LIST IF THEY ARE EVER REENABLED
 		for(var/department in long_job_lists)
-			output += "<div class='column'><label class='rolegroup long [ckey(department)]'><input type='checkbox' name='[department]' class='hidden' onClick='toggle_checkboxes(this, \"_com\")'>[department]</label><div class='content'>"
-			break_counter = 0
+			var/list/long_display_jobs = list()
 			for(var/job in long_job_lists[department])
+				if(job in listed_rolebans)
+					continue
+				listed_rolebans |= job
+				long_display_jobs |= job
+			if(!length(long_display_jobs))
+				continue
+			output += "<div class='column'><label class='rolegroup long [ta_roleban_department_class(department)]'[ta_roleban_department_style_attribute(department)]><input type='checkbox' name='[department]' class='hidden' onClick='toggle_checkboxes(this, \"_com\")'>[department]</label><div class='content'>"
+			break_counter = 0
+			for(var/job in long_display_jobs)
 				if(break_counter > 0 && (break_counter % 10 == 0))
 					output += "<br>"
-				output += {"<label class='inputlabel checkbox'>[job]
+				output += {"<label class='inputlabel checkbox'>[ta_roleban_display_name(job)]
 							<input type='checkbox' name='[job]' class='[department]' value='1'>
-							<div class='inputbox[(job in banned_from) ? " banned" : ""]'></div></label>
+							<div class='inputbox[ta_roleban_is_already_banned(job, banned_from) ? " banned" : ""]'></div></label>
 				"}
 				break_counter++
 			output += "</div></div>"
@@ -380,7 +580,7 @@
 			if("server")
 				roles_to_ban += "Server"
 			if("role")
-				href_list.Remove("Command", "Security", "Engineering", "Medical", "Science", "Supply", "Silicon", "Abstract", "Service", "Ghost and Other Roles", "Antagonist Positions", "Lesser Antagonst Positions") //remove the role banner hidden input values
+				href_list.Remove("Command", "Security", "Engineering", "Medical", "Science", "Supply", "Silicon", "Abstract", "Service", "Ducal Family", "Courtiers", "Retinue", "Garrison", "Church", "Inquisition", "Wanderers", "Peasants", "Burghers", "ATC", "Sidefolk", "Ghost and Other Roles", "Antagonist Positions", "Lesser Antagonst Positions") //remove the role banner hidden input values
 				if(href_list[href_list.len] == "roleban_delimiter")
 					error_state += "Role ban was selected but no roles to ban were selected."
 				else
@@ -403,6 +603,9 @@
 		return
 	if(!SSdbcore.Connect())
 		to_chat(usr, span_danger("Failed to establish database connection."))
+		return
+	roles_to_ban = ta_roleban_canonicalize_roles(roles_to_ban)
+	if(!length(roles_to_ban))
 		return
 	var/player_ckey = ckey(player_key)
 	if(player_ckey)

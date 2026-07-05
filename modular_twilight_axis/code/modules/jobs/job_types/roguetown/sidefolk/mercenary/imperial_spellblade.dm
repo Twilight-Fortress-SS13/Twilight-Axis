@@ -14,7 +14,7 @@
 		STATKEY_CON = 1,
 		STATKEY_WIL = 1,
 	)
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 6, "ward" = TRUE) // Mama Zizo said you get 2 more points on Utility!!!
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 6, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
@@ -55,7 +55,7 @@
 	backpack_contents = list(/obj/item/flashlight/flare/torch = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = 1,
 		/obj/item/chalk = 1,
-		/obj/item/book/spellbook = 1,
+		/obj/item/rogueweapon/spellbook = 1,
 		/obj/item/roguekey/mercenary = 1
 	)
 
@@ -96,8 +96,8 @@
 				H.mind.AddSpell(new /datum/action/cooldown/spell/advance)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/gate_of_reckoning)
 			if("macebearer")
-				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/kastvyl)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/tremor)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/shatter)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/tremor)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/charge)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/cataclysm)
 

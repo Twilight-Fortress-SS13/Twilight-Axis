@@ -33,14 +33,15 @@
 
 /datum/clan_leader/proc/make_new_leader(mob/living/carbon/human/H)
 	ADD_TRAIT(H, TRAIT_CLAN_LEADER, "clan")
-
+	if(H.job == "Stray")
+		return
 	// Add lord spells
 	for(var/spell_type in lord_spells)
 		H.mind?.AddSpell(new spell_type(H.mind))
 
 	// Add lord verbs
 	for(var/verb_path in lord_verbs)
-		H.verbs |= verb_path
+		add_verb(H, verb_path)
 
 	// Add lord traits
 	for(var/trait in lord_traits)
@@ -63,7 +64,7 @@
 		H.mind?.RemoveSpell(spell_type)
 
 	for(var/verb_path in lord_verbs)
-		H.verbs -= verb_path
+		remove_verb(H, verb_path)
 
 	for(var/trait in lord_traits)
 		REMOVE_TRAIT(H, trait, "lord_component")

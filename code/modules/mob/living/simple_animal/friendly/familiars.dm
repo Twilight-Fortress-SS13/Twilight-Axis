@@ -154,8 +154,8 @@
 
 /mob/living/simple_animal/pet/familiar/proc/TryAddFlight()
 	if(movement_type & (FLYING | FLOATING))
-		verbs += list(/mob/living/simple_animal/proc/fly_up,
-		/mob/living/simple_animal/proc/fly_down)
+		add_verb(src, list(/mob/living/simple_animal/proc/fly_up,
+		/mob/living/simple_animal/proc/fly_down))
 
 // they can wear pouches and amulets around their neck, for sovl
 /mob/living/simple_animal/pet/familiar/can_equip(obj/item/I, slot, disable_warning, bypass_equip_delay_self)
@@ -456,6 +456,11 @@
 	src.set_light_color(LIGHT_COLOR_FIRE)
 	if(src.light_system == STATIC_LIGHT)
 		src.update_light()
+	ADD_TRAIT(src, TRAIT_NOFIRE, "[type]")
+	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
+	weather_immunities += "lava"
 
 /mob/living/simple_animal/pet/familiar/infernal/is_aligned_leyline(obj/structure/leyline/ley)
 	return istype(ley, /obj/structure/leyline/normal/decap)
@@ -476,7 +481,7 @@
 	var/list/hearers_in_range = get_hearers_in_LOS(healing_range, src, RECURSIVE_CONTENTS_CLIENT_MOBS)
 	for(var/mob/living/carbon/human/human in hearers_in_range)
 		var/distance = get_dist(src, human)
-		if(distance > healing_range || human.construct)
+		if(distance > healing_range || HAS_TRAIT(human, TRAIT_IRONMAN))
 			continue
 		if(!human.has_status_effect(/datum/status_effect/buff/campfire_stamina))
 			to_chat(human, span_info("The warmth of [src.name]'s flames comforts me, affording me a short rest. I would need to lie down on a bed to get a better rest."))
@@ -515,7 +520,6 @@
 			if(foundstab)
 				var/prob2spoil = 33
 				if(cs)
-					to_chat(world,span_warning("[cs]"))
 					prob2spoil = 1
 				var/already_rolled = FALSE
 				user.visible_message("<span class='notice'>[user] starts to cook [I] over [src.name]'s flame...</span>")

@@ -194,17 +194,21 @@
 		out["can_knot_now"] = FALSE
 		return out
 
-	for(var/datum/erp_sex_link/L in controller.links)
+	var/list/links = list()
+	SEND_SIGNAL(top, COMSIG_ERP_GET_LINKS, links)
+
+	for(var/datum/erp_sex_link/L in links)
 		if(!L || QDELETED(L) || !L.is_valid())
 			continue
 
-		if(L.actor_active != controller.owner)
+		var/datum/erp_sex_organ/other = null
+		if(L.init_organ == P)
+			other = L.target_organ
+		else if(L.target_organ == P)
+			other = L.init_organ
+		else
 			continue
 
-		if(L.init_organ != P)
-			continue
-
-		var/datum/erp_sex_organ/other = L.target_organ
 		if(!other || QDELETED(other))
 			continue
 
@@ -266,17 +270,17 @@
 	if(!P || !P.have_knot)
 		return FALSE
 
-	if(!controller.links || !controller.links.len)
+	var/mob/living/carbon/human/top = P.get_owner()
+	if(!istype(top))
 		return FALSE
 
-	for(var/datum/erp_sex_link/L in controller.links)
+	var/list/links = list()
+	SEND_SIGNAL(top, COMSIG_ERP_GET_LINKS, links)
+	if(!links || !links.len)
+		return FALSE
+
+	for(var/datum/erp_sex_link/L in links)
 		if(!L || QDELETED(L) || !L.is_valid())
-			continue
-
-		if(L.actor_active != controller.owner)
-			continue
-
-		if(L.init_organ != P)
 			continue
 
 		if(!L.action)
@@ -288,7 +292,14 @@
 		if(L.action.has_action_tag("inject_outside_only"))
 			continue
 
-		var/datum/erp_sex_organ/other = L.target_organ
+		var/datum/erp_sex_organ/other = null
+		if(L.init_organ == P)
+			other = L.target_organ
+		else if(L.target_organ == P)
+			other = L.init_organ
+		else
+			continue
+
 		if(!other || QDELETED(other))
 			continue
 

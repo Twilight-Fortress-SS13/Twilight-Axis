@@ -6,7 +6,7 @@
 	total_positions = 6
 	spawn_positions = 6
 	allowed_sexes = list(MALE, FEMALE)
-	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
+	forbidden_races = list(RACES_DESPISED)
 	job_traits = list(TRAIT_WOODSMAN)
 	tutorial = "Авангард, названный так за их судьбу - оберегать дальние рубежи Рокхилла - стойко оберегает деревню и подходы к городу. \
 	Часто набранный из местных крестьянских сынов и дочерей, они часто отстаивают интересы не Короля или Барона, но своей деревни. \
@@ -21,7 +21,7 @@
 	advclass_cat_rolls = list(CTAG_VANGUARD = 20)
 
 	give_bank_account = TRUE
-	min_pq = 2
+	min_pq = 3
 	max_pq = null
 	round_contrib_points = 2
 	same_job_respawn_delay = 30 MINUTES

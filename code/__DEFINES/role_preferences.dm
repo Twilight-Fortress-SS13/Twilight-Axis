@@ -24,6 +24,8 @@
 #define ROLE_UNBOUND_DEATHKNIGHT "Unbound Death Knight"
 #define ROLE_DARK_ITINERANT "Dark Itinerant"
 #define ROLE_CULT			"Cult of Ascension"
+#define ROLE_FREEMAN		"Freeman" // TA EDIT
+#define ROLE_LOSTGRENZEL	"Lost Grenzel" // TA EDIT
 
 #define ROLE_SYNDICATE			"Syndicate"
 #define ROLE_TRAITOR			"Traitor"

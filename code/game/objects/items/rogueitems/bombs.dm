@@ -441,8 +441,10 @@
 
 //admin only mega bomb, should never be made craftable
 /obj/item/satchel_bomb/mega
-	name = "MEGA blastpowder satchel"
-	desc = "An over filled satchel of Blastpowder originally made by Lubbin' Bleat, Octava's Famed sheep-kin bathhouse attendant and ruler of the slumber beat... this type of bomb has been banned by all nations and labeled as a threat by both the church of the ten and Pysdonia. IF YOU SEE A LIT WICK, YOU BEST RUN AWAY QUICK!"
+	name = "mega blastpowder satchel"
+	desc = "An overfilled satchel of blastpowder originally made by Lubbin Bleat, Otava's famed sheep-kin bathhouse attendant and ruler of the slumberbeat.. \
+	</br>This bomb has been outlawed by all of Psydonia's kingdoms, and labled as a threat by both the Churches of the Pantheon and Orthodoxy. \
+	</br> <font color='FF0000'>IF YOU SEE A LIT WICK, YOU BEST RUN AWAY QUICK!</font>"
 	icon_state = "satchel_bomb"
 	lit_state = "satchel_bomb-lit"
 	icon = 'icons/roguetown/items/misc.dmi'
@@ -653,7 +655,7 @@
 		for(var/mob/living/target in range(2, T))
 			if(!target.mind || istype(target, /mob/living/simple_animal))
 				target.adjustFireLoss(PVE_damage) //fireball damage + 40. That
-		explosion(T, heavy_impact_range = 1, light_impact_range = 2, flame_range = 2, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
+		explosion(T, heavy_impact_range = 1, light_impact_range = 3, flame_range = 2, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
 		qdel(src)
 
 /obj/item/smokeshell

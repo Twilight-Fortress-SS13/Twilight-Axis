@@ -148,6 +148,8 @@ Turf and target are separate in case you want to teleport some distance from a t
 	return destination
 
 /proc/getline(atom/M,atom/N)//Ultra-Fast Bresenham Line-Drawing Algorithm
+	if(!M || !N)
+		return list()
 	var/px=M.x		//starting x
 	var/py=M.y
 	var/line[] = list(locate(px,py,M.z))
@@ -1570,7 +1572,8 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 	/area/rogue/outdoors/bog, \
 	/area/rogue/outdoors/mountains, \
 	/area/rogue/outdoors/rtfield, \
-	/area/rogue/outdoors/bograt \
+	/area/rogue/outdoors/bograt, \
+	/area/rogue/outdoors/desert \
 )
 
 /proc/is_valid_hunting_area(area/A)

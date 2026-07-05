@@ -1,4 +1,4 @@
-#define RURAL_TAX 500 // Daily mint at dawn. Floor at/above RURAL_TAX_POP_HIGH effective players.
+#define RURAL_TAX 200 // Cut to 200 to make economy not too easy.
 #define TREASURY_TICK_AMOUNT 6 MINUTES
 
 #define HERMES_FREE_COOLDOWN (5 MINUTES)
@@ -9,5 +9,10 @@
 #define ESCROW_DURABILITY_FLOOR 0.8
 
 #define SCRAPPER_BARK_INTERVAL (60 SECONDS)
+
+#define SCRAPPER_RECYCLE_OK 1
+#define SCRAPPER_RECYCLE_WORTHLESS 2
+#define SCRAPPER_RECYCLE_FULL 3
+#define SCRAPPER_RECYCLE_BROKE 4
 
 #define EXPORT_ANNOUNCE_THRESHOLD 100

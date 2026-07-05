@@ -86,7 +86,7 @@
 	var/newtime = (10 - user.get_skill_level(/datum/skill/combat/bows) * 2) + (10 - user.STASTR / 2) + (20 - user.STAPER)
 	if(chambered)
 		newtime *= chambered.charge_time_mult
-	return max(1, newtime) * ARCHER_NPC_ROF_PENALTY
+	return max(ARCHER_NPC_MIN_BOW_CHARGETIME, newtime) * ARCHER_NPC_ROF_PENALTY
 
 //bow objs ฅ^•ﻌ•^ฅ
 
@@ -120,6 +120,7 @@
 	obj_flags = UNIQUE_RENAME
 	var/heavy_bow = FALSE //used for adding a STR check to the charge time of a bow
 	cartridge_articles = "an"
+	var/spill_ammo_on_drop = TRUE
 	var/datum/special_intent/special
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/equipped(mob/user, slot) //TA EDIT START
@@ -139,10 +140,6 @@
 
 		else
 			special = null
-
-/obj/item/gun/ballistic/revolver/grenadelauncher/bow/dropped(mob/user, silent)
-	. = ..()
-	special = null 
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/Destroy()
 	if(special)
@@ -248,16 +245,17 @@
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/shoot_with_empty_chamber()
 	return
 
-/obj/item/gun/ballistic/revolver/grenadelauncher/bow/dropped()
+/obj/item/gun/ballistic/revolver/grenadelauncher/bow/dropped(mob/user, silent)
 	. = ..()
-	if(chambered)
+	special = null
+	if(chambered && spill_ammo_on_drop)
 		chambered = null
 		var/num_unloaded = 0
 		for(var/obj/item/ammo_casing/CB in get_ammo_list(FALSE, TRUE))
 			CB.forceMove(drop_location())
 //			CB.bounce_away(FALSE, NONE)
 			num_unloaded++
-		if (num_unloaded)
+		if(num_unloaded)
 			update_icon()
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)

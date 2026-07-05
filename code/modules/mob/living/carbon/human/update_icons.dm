@@ -1722,6 +1722,10 @@ generate/load female uniform sprites matching all previously decided variables
 
 	standing = center_image(standing, isinhands ? inhand_x_dimension : worn_x_dimension, isinhands ? inhand_y_dimension : worn_y_dimension)
 
+	if(worn_offsets)
+		standing.pixel_x += worn_offsets["x"]
+		standing.pixel_y += worn_offsets["y"]
+
 	//Handle held offsets
 	var/mob/M = loc
 	if(istype(M))
@@ -1979,6 +1983,11 @@ generate/load female uniform sprites matching all previously decided variables
 			new_limbs += BP.get_limb_icon(hideaux = hiden)
 		else
 			new_limbs += BP.get_limb_icon()
+	
+	if(isooze(src))
+		for(var/image/limb_alpha in new_limbs)
+			limb_alpha.alpha = 180
+
 	if(length(new_limbs))
 		overlays_standing[BODYPARTS_LAYER] = new_limbs
 		limb_icon_cache[icon_render_key] = new_limbs

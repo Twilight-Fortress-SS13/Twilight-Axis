@@ -205,7 +205,7 @@
 					/obj/effect/proc_holder/spell/self/TAinsufflation					= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/heal 						  	= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/TAgriefflower					= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/griefflower					= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/projectile/TAblowingdust		= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/TAlasthigh					= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/TAjoyride						= CLERIC_T3,

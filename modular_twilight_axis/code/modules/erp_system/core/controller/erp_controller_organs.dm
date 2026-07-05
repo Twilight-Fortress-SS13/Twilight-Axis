@@ -70,7 +70,7 @@
 		"sensitivity" = O.sensitivity,
 		"pain" = O.pain,
 		"busy" = O.is_busy(),
-		"storage" = build_liquid_block(O.storage),
+		"storage" = istype(O, /datum/erp_sex_organ/penis) ? build_liquid_block(null) : build_liquid_block(O.storage),
 		"producing" = build_liquid_block(O.producing),
 		"links" = links,
 		"toggles" = toggles
@@ -106,7 +106,7 @@
 	var/pct = (vol / cap) * 100
 	pct = clamp(round(pct, 0.1), 0, 100)
 
-	return list("has" = TRUE, "pct" = pct, "volume" = pct)
+	return list("has" = TRUE, "pct" = pct, "volume" = vol, "capacity" = cap)
 
 /// Sets organ sensitivity and saves preferences.
 /datum/erp_controller_organs/proc/set_organ_sensitivity(mob/living/carbon/human/H, organ_id, value)

@@ -96,19 +96,19 @@
 
 	var/list/unlocked_cats = list("Things")
 	switch(usr.advjob)
-		if("Brigand")
+		if("Brigand", "Sayyaf-Hurr") // TA EDIT
 			unlocked_cats+="Brigand"
 		if("Sellsword")
 			unlocked_cats+="Sellsword"
 		if("Hedge Alchemist")
 			unlocked_cats+="Alchemist"
-		if("Hedge Knight")
+		if("Hedge Knight", "Fāris-šārid") // TA EDIT
 			unlocked_cats+="Knight"
-		if("Hedge Mage")
+		if("Hedge Mage", "Sahir-maradun") // TA EDIT
 			unlocked_cats+="Mage"
 		if("Knave")
 			unlocked_cats+="Knave"
-		if("Iconoclast")
+		if("Iconoclast", "Mujizat-Musaid") // TA EDIT
 			unlocked_cats+="Iconoclast"
    
 	if(current_cat == "1")

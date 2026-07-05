@@ -50,12 +50,16 @@
 	armor_penetration = PEN_LIGHT
 	movement_type = UNSTOPPABLE
 	range = SPELL_RANGE_PROJECTILE
-	flag = "piercing"
+	flag = "stab"
 	hitsound = 'sound/combat/hits/bladed/genthrust (1).ogg'
 	/// How many mob targets have been pierced
 	var/hits = 0
 	/// Max mob targets before stopping
 	var/max_hits = 3
+
+/obj/projectile/magic/arcyne_lance/greatbow
+	damage = 90
+	max_hits = 5
 
 /obj/projectile/magic/arcyne_lance/arc
 	name = "arced arcyne lance"

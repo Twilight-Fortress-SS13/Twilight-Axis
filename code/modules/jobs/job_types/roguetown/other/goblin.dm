@@ -30,8 +30,8 @@
 			M.mind.current.job = null
 		if(H.dna && H.dna.species)
 			H.dna.species.species_traits |= NOBLOOD
-			H.dna.species.soundpack_m = new /datum/voicepack/other/goblin()
-			H.dna.species.soundpack_f = new /datum/voicepack/other/goblin()
+			H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/other/goblin]
+			H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/other/goblin]
 		var/obj/item/headdy = H.get_bodypart("head")
 		if(headdy)
 			headdy.icon = 'icons/roguetown/mob/monster/goblins.dmi'
@@ -62,6 +62,15 @@
 		ADD_TRAIT(H, TRAIT_NOMOOD, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_NOHUNGER, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_CRITICAL_WEAKNESS, TRAIT_GENERIC)
+		//Ensures we get journeyman skills
+		H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 3, TRUE)
+		H.adjust_skillrank_up_to(/datum/skill/combat/maces, 3, TRUE)
+		H.adjust_skillrank_up_to(/datum/skill/combat/axes, 3, TRUE)
+		H.adjust_skillrank_up_to(/datum/skill/combat/swords, 3, TRUE)
+		H.adjust_skillrank_up_to(/datum/skill/combat/shields, 3, TRUE)
+		H.adjust_skillrank_up_to(/datum/skill/misc/swimming, 3, TRUE)
+		H.adjust_skillrank_up_to(/datum/skill/combat/knives, 3, TRUE) //Give players a way to use their stone knives, NPCs hit better.
+		H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, 3, TRUE) //So players can break dorpels, NPCs hit better.
 
 		if(H.mind)
 			H.mind.add_antag_datum(new /datum/antagonist/goblin()) //Ensures we are in fact, a goblin (so friend/foe examines + admin antag tracking)

@@ -87,7 +87,7 @@
 	return defiant && cmode
 
 /mob/living/carbon/human/proc/is_erp_defiant()
-	return defiant && client.prefs.sexable
+	return defiant && (!client || !client.prefs || !client.prefs.sexable)
 
 /mob/living/carbon/human/proc/has_erp_leprosy()
 	if(HAS_TRAIT(src, TRAIT_LEPROSY))
@@ -138,6 +138,21 @@
 	var/atom/initiator = is_head ? dragged : user
 
 	return erp_try_start(initiator, src, user)
+
+/mob/living/simple_animal/proc/is_erp_blocked_as_target()
+	if(locate(/obj/shapeshift_holder) in src)
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/dragon))
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/voiddragon))
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/revenant/dragon))
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/werewolf_npc))
+		return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/hag_shapeshift))
+		return FALSE
+	return TRUE
 
 /mob/living/carbon/human/proc/set_sex_surrender_to(mob/living/carbon/human/mob_object)
 	if(mob_object)
@@ -304,7 +319,7 @@
 	if(!erp_can_use_menu_as_actor(actor, silent, force))
 		return null
 
-	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
+	var/mob/living/consent = SSerp.get_consent_mob_for_target(target_atom)
 	if(!consent)
 		return null
 
@@ -318,6 +333,7 @@
 
 	EC.add_partner_atom(target_atom)
 	EC.open_ui(actor)
+
 	return EC
 
 /proc/erp_can_use_menu_as_actor(mob/living/actor, silent = FALSE, force = FALSE)
@@ -328,12 +344,18 @@
 		return TRUE
 
 	var/mob/living/carbon/human/human_actor = actor
+	if(!istype(human_actor))
+		if(!silent)
+			to_chat(actor, span_warning("I can't do this."))
+		return FALSE
+
 	if(!human_actor.can_do_sex)
 		if(!silent)
 			to_chat(actor, span_warning("I can't do this."))
 		return FALSE
 
 	if(human_actor.is_erp_blocked_as_target())
+		to_chat(actor, span_warning("Blocked by leprosy or defiant combat mode."))
 		return FALSE
 
 	if(actor.client && actor.client.prefs && !actor.client.prefs.sexable)
@@ -348,14 +370,22 @@
 	if(!actor || !target_atom || QDELETED(target_atom))
 		return FALSE
 
-	var/mob/living/carbon/human/consent = SSerp.get_consent_mob_for_target(target_atom)
+	var/mob/living/consent = SSerp.get_consent_mob_for_target(target_atom)
 	if(!consent)
 		return FALSE
 
 	if(force)
 		return TRUE
 
-	if(consent.is_erp_blocked_as_target())
+	var/mob/living/carbon/human/human_consent = consent
+	if(istype(human_consent) && human_consent.is_erp_blocked_as_target())
+		to_chat(actor, span_warning("Blocked by leprosy or defiant combat mode."))
+		to_chat(consent, span_warning("Blocked by leprosy or defiant combat mode."))
+		return FALSE
+	var/mob/living/simple_animal/simple_consent = consent
+	if(istype(simple_consent) && simple_consent.is_erp_blocked_as_target())
+		if(!silent)
+			to_chat(actor, span_warning("[consent] can't be used as an ERP target."))
 		return FALSE
 
 	if(!consent.client)

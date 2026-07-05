@@ -30,6 +30,7 @@ type StewardData = {
   crown_purse_balance: number;
   defense_costs: Record<string, number>;
   defense_regions_by_type: Record<string, string[]>;
+  blockade_region_labels: Record<string, string>;
   region_tp_multipliers: Record<string, number>;
   defense_destinations: string[];
   defense_log: DefenseLogEntry[];
@@ -213,6 +214,35 @@ const ModeRadio = (props: {
   </label>
 );
 
+const LevyStampRow = (props: {
+  aldermanActing: boolean;
+  levyExempt: boolean;
+  onChange: (v: boolean) => void;
+}) => (
+  <FormRow label="Levy Stamp">
+    <label
+      style={
+        props.aldermanActing
+          ? { textDecoration: 'line-through', color: '#8a7250' }
+          : undefined
+      }
+      title={
+        props.aldermanActing
+          ? "The Alderman cannot waive the Crown's tax."
+          : undefined
+      }
+    >
+      <input
+        type="checkbox"
+        checked={props.levyExempt}
+        disabled={props.aldermanActing}
+        onChange={(e) => props.onChange(e.target.checked)}
+      />
+      &nbsp;Stamp as LEVY EXEMPT (waive Crown&apos;s Contract Levy)
+    </label>
+  </FormRow>
+);
+
 const ComposeView = () => {
   const { act, data } = useBackend<StewardData>();
 
@@ -310,7 +340,7 @@ const ComposeView = () => {
       // Blockade + directive writs are always bearer-bond; ignore the mode control.
       in_hands: isBlockade || isDirective ? 1 : mode === 'hands' ? 1 : 0,
       // Directives skip the levy-exempt stamp (no reward to exempt).
-      levy_exempt: isBlockade || isDirective ? 0 : levyExempt ? 1 : 0,
+      levy_exempt: isDirective ? 0 : levyExempt ? 1 : 0,
       // Bonus Pay forced off for Requests (directive) server-side as well.
       bonus_pay_level: effectiveLevel,
       funding,
@@ -362,9 +392,12 @@ const ComposeView = () => {
               !isBlockade && typeof mult === 'number' && mult !== 1
                 ? ` (×${mult} reward)`
                 : '';
+            const label = isBlockade
+              ? data.blockade_region_labels?.[r] || r
+              : r;
             return (
               <option key={r} value={r}>
-                {r}
+                {label}
                 {suffix}
               </option>
             );
@@ -496,53 +529,36 @@ const ComposeView = () => {
       )}
 
       {!isBlockade && funding !== 'directive' && (
-        <>
-          <FormRow label="Deliver As">
-            <div className="ContractLedger__InnkeeperModeRow">
-              <ModeRadio
-                value="board"
-                selected={mode}
-                onChange={setMode}
-                label="Post on public board"
-              />
-              <ModeRadio
-                value="hands"
-                selected={mode}
-                onChange={setMode}
-                label="Put in my hands"
-              />
-            </div>
-          </FormRow>
+        <FormRow label="Deliver As">
+          <div className="ContractLedger__InnkeeperModeRow">
+            <ModeRadio
+              value="board"
+              selected={mode}
+              onChange={setMode}
+              label="Post on public board"
+            />
+            <ModeRadio
+              value="hands"
+              selected={mode}
+              onChange={setMode}
+              label="Put in my hands"
+            />
+          </div>
+        </FormRow>
+      )}
 
-          <FormRow label="Levy Stamp">
-            <label
-              style={
-                aldermanActing
-                  ? { textDecoration: 'line-through', color: '#8a7250' }
-                  : undefined
-              }
-              title={
-                aldermanActing
-                  ? "The Alderman cannot waive the Crown's tax."
-                  : undefined
-              }
-            >
-              <input
-                type="checkbox"
-                checked={levyExempt}
-                disabled={aldermanActing}
-                onChange={(e) => setLevyExempt(e.target.checked)}
-              />
-              &nbsp;Stamp as LEVY EXEMPT (waive Crown&apos;s Contract Levy)
-            </label>
-          </FormRow>
-        </>
+      {funding !== 'directive' && (
+        <LevyStampRow
+          aldermanActing={aldermanActing}
+          levyExempt={levyExempt}
+          onChange={setLevyExempt}
+        />
       )}
       {isBlockade && funding !== 'directive' && (
         <div className="ContractLedger__InnkeeperFlavor">
-          Blockade writs are always drawn to your hand. Pin to a notice
-          board to require a Fellowship of three; keep in hand to dispatch a
-          trusted party directly.
+          Blockade writs are always drawn to your hand. Pin to the Grand
+          Contract Ledger to require a Fellowship of three; keep in hand to
+          dispatch a trusted party directly.
         </div>
       )}
 
@@ -572,7 +588,7 @@ const ComposeView = () => {
               ? `Print Writ (${coin(effectiveCost)})`
               : `Commission (${coin(effectiveCost)})`}
         </button>
-        {isBlockade && recallEntry?.recall_eligible && (
+        {isBlockade && !!recallEntry?.recall_eligible && (
           <button
             type="button"
             className="ContractLedger__SignButton"

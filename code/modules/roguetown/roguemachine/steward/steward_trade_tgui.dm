@@ -1,3 +1,5 @@
+#define LEDGER_PAGE_SIZE 50
+
 /obj/structure/roguemachine/steward/ui_state(mob/user)
 	// The sitting Alderman acts remotely from the Notice Board - they cannot physically reach the
 	// locked Stewardry. For them, swap adjacency for a conscious-and-alive check; access is gated
@@ -87,11 +89,54 @@
 	data["petition_categories"] = petition_categories
 	data["petition_tax_pct"] = round((1 - PETITION_TAX_MULT) * 100)
 	data["petitions_per_day"] = PETITIONS_PER_DAY
+	data["realm_labels"] = ta_economy_realm_labels_payload()
+
+	var/list/lview = ledger_view[user.ckey]
+	if(lview && lview["open"])
+		data["ledger_page"] = build_ledger_page(user.ckey)
 
 	return data
 
+/obj/structure/roguemachine/steward/proc/build_ledger_page(ckey)
+	var/list/lview = ledger_view[ckey]
+	var/page = max(1, lview ? (lview["page"] || 1) : 1)
+	var/filter = lview ? (lview["filter"] || "") : ""
+	var/window_start = (page - 1) * LEDGER_PAGE_SIZE + 1
+	var/window_end = page * LEDGER_PAGE_SIZE
+	var/list/entries = list()
+	var/matched = 0
+	var/total = length(SStreasury.ledger)
+	var/crown_name = SStreasury.discretionary_fund?.name
+	for(var/i = total to 1 step -1)
+		var/datum/treasury_entry/E = SStreasury.ledger[i]
+		if(crown_name && E.from_name != crown_name && E.to_name != crown_name)
+			continue
+		if(filter && !findtext(E.reason, filter) && !findtext(E.from_name, filter) && !findtext(E.to_name, filter))
+			continue
+		matched++
+		if(matched < window_start)
+			continue
+		if(matched > window_end)
+			break
+		entries += list(list(
+			"kind" = E.kind,
+			"from" = E.from_name,
+			"to" = E.to_name,
+			"amount" = E.amount,
+			"reason" = E.reason || "",
+		))
+	return list(
+		"entries" = entries,
+		"page" = page,
+		"page_size" = LEDGER_PAGE_SIZE,
+		"shown" = length(entries),
+		"has_more" = (matched > window_end) ? TRUE : FALSE,
+		"filtered" = filter ? TRUE : FALSE,
+	)
+
 /obj/structure/roguemachine/steward/ui_data(mob/user)
 	var/list/data = list()
+	data["realm_labels"] = ta_economy_realm_labels_payload()
 	data["treasury"] = SStreasury?.discretionary_fund?.balance || 0
 	data["day"] = GLOB.dayspassed
 	data["expected_rural_revenue"] = SStreasury?.get_rural_tax_amount() || 0
@@ -264,9 +309,9 @@
 			else if((orders_by_region[region_id] || 0) >= STANDING_ORDERS_MAX_PER_REGION)
 				blocker = "[region.name] already has [orders_by_region[region_id]] active orders"
 			else if(pledge_missing)
-				blocker = "the Burgher Pledge is not yet established"
+				blocker = "[ta_economy_pledge_lower()] is not yet established"
 			else if(pledge_balance < cost)
-				blocker = "the Burgher Pledge cannot cover [cost]m"
+				blocker = "[ta_economy_pledge_capital()] cannot cover [cost]m"
 			else
 				var/has_template = FALSE
 				for(var/template_path in templates)
@@ -298,6 +343,15 @@
 		"arrears_consumed" = SStreasury.atc_loan_arrears_consumed ? TRUE : FALSE,
 		"loans_drawn" = SStreasury.atc_loans_drawn_this_round,
 		"outstanding" = SStreasury.atc_loan_arrears_consumed ? SStreasury.treasury_debt : 0,
+		"authority_capital" = ta_economy_authority_capital(),
+		"authority_lower" = ta_economy_authority_lower(),
+		"authority_possessive" = ta_economy_authority_possessive(),
+		"authority_purse" = ta_economy_authority_purse(),
+		"trade_company" = ta_economy_trade_company(),
+		"trade_company_the" = ta_economy_trade_company_the(),
+		"burghers_capital" = ta_economy_burghers_capital(),
+		"burghers_lower" = ta_economy_burghers_lower(),
+		"pledge_grace_capital" = ta_economy_pledge_grace_capital(),
 	)
 
 	return data
@@ -537,7 +591,7 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 	if(locked && !alderman_has_access(usr))
 		return TRUE
 	if(SStreasury.is_in_receivership() && (action in GLOB.steward_trade_sequestration_locked_actions))
-		to_chat(usr, span_warning("The Azurian Trading Company holds the Crown's commerce in sequestration. Petition, tax, and fine are your remaining instruments."))
+		to_chat(usr, span_warning("[ta_economy_trade_company_the()] holds [ta_economy_authority_lower()]'s commerce in sequestration. Petition, tax, and fine are your remaining instruments."))
 		return TRUE
 	if(action == "fulfill_order" || (action in GLOB.steward_trade_sequestration_locked_actions))
 		SStreasury.dirty_market_view()
@@ -866,7 +920,7 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 			if(units <= 0)
 				to_chat(usr, span_warning("No surplus to export - either no entry is over its threshold, or every demanding region is saturated for the day."))
 				return TRUE
-			scom_announce("Crown clears surplus stockpile: [units] units exported for [revenue] mammon.")
+			scom_announce("[ta_economy_authority_capital()] clears surplus stockpile: [units] units exported for [revenue] mammon.")
 			for(var/line in result["lines"])
 				to_chat(usr, span_notice(line))
 			to_chat(usr, span_notice("<b>Total: [units] units exported for [revenue]m.</b>"))
@@ -914,7 +968,7 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 			if(total_units <= 0)
 				to_chat(usr, span_warning("No [category] surplus to export."))
 				return TRUE
-			scom_announce("Crown clears [category] surplus: [total_units] units exported for [total_revenue] mammon.")
+			scom_announce("[ta_economy_authority_capital()] clears [category] surplus: [total_units] units exported for [total_revenue] mammon.")
 			for(var/line in lines)
 				to_chat(usr, span_notice(line))
 			to_chat(usr, span_notice("<b>Total: [total_units] units exported for [total_revenue]m.</b>"))
@@ -938,17 +992,17 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 			return TRUE
 		if("take_atc_loan")
 			if(SScity_assembly?.is_alderman(usr))
-				to_chat(usr, span_warning("The Alderman's writ does not extend to drawing loans against the Crown."))
+				to_chat(usr, span_warning("The Alderman's writ does not extend to drawing loans against [ta_economy_authority_lower()]."))
 				return TRUE
 			if(!(usr.job in GLOB.crown_authority_roles))
-				to_chat(usr, span_warning("Only the Crown's office may approach the Guilds clerk."))
+				to_chat(usr, span_warning("Only [ta_economy_authority_possessive_lower()] office may approach the Company clerk."))
 				return TRUE
 			var/amount = text2num("[params["amount"]]")
 			if(!isnum(amount))
 				return TRUE
 			if(SStreasury.take_atc_loan(amount, usr))
 				playsound(src, 'sound/items/inqslip_sealed.ogg', 70, FALSE, -1)
-				visible_message(span_notice("[src] stamps a sealed writ. The wax bears the mark of the Azurian Trading Company."))
+				visible_message(span_notice("[src] stamps a sealed writ. The wax bears the mark of [ta_economy_trade_company_the()]."))
 			SStgui.update_uis(src)
 			return TRUE
 		if("set_royal_custom_margin")
@@ -958,3 +1012,35 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 			if(isnum(n))
 				SStreasury.royal_custom_margin = clamp(round(n), 0, 500)
 			return TRUE
+		if("ledger_open")
+			ledger_view[usr.ckey] = list("open" = TRUE, "page" = 1, "filter" = "")
+			update_static_data(usr)
+			return TRUE
+		if("ledger_close")
+			var/list/lview = ledger_view[usr.ckey]
+			if(lview)
+				lview["open"] = FALSE
+			return TRUE
+		if("ledger_page")
+			var/list/lview = ledger_view[usr.ckey]
+			if(!lview || !lview["open"])
+				return TRUE
+			lview["page"] = max(1, text2num("[params["page"]]") || 1)
+			update_static_data(usr)
+			return TRUE
+		if("ledger_filter")
+			var/list/lview = ledger_view[usr.ckey]
+			if(!lview || !lview["open"])
+				return TRUE
+			lview["filter"] = trim("[params["filter"]]")
+			lview["page"] = 1
+			update_static_data(usr)
+			return TRUE
+		if("ledger_refresh")
+			var/list/lview = ledger_view[usr.ckey]
+			if(!lview || !lview["open"])
+				return TRUE
+			update_static_data(usr)
+			return TRUE
+
+#undef LEDGER_PAGE_SIZE

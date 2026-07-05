@@ -127,10 +127,24 @@
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/armorsmithing
 
+/obj/item/storage/belt/rogue/leather/iron
+	name = "iron belt"
+	desc = "A fine leather belt that's been sleeved within many segments of iron, protecting its delicate innards from prying hands-and-blades."
+	icon_state = "ironplaque"
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/armorsmithing
+
 /obj/item/storage/belt/rogue/leather/steel/tasset
 	name = "tasseted belt"
 	desc = "A fine leather belt that's been sleeved within many segments of steel, and further reinforced with the tassets of a fluted cuirass."
 	icon_state = "steeltasset"
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/armorsmithing
+
+/obj/item/storage/belt/rogue/leather/iron/tasset
+	name = "tasseted iron belt"
+	desc = "A fine leather belt that's been sleeved within many segments of iron, and further reinforced with the tassets of a fluted cuirass."
+	icon_state = "irontasset"
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/armorsmithing
 
@@ -142,13 +156,23 @@
 	color = "#b9a286"
 	component_type = /datum/component/storage/concrete/roguetown/belt/cloth
 
+/obj/item/storage/belt/rogue/leather/rope/upgraded
+	name = "pouch-fitted rope belt"
+	desc = "A length of strong rope repurposed into a belt, fitted with a pouch for the same space as a leather belt."
+	component_type = /datum/component/storage/concrete/roguetown/belt
+
 /obj/item/storage/belt/rogue/leather/cloth
 	name = "cloth sash"
 	desc = "A strip of cloth tied together at the ends into a makeshift belt. It's better than nothing."
 	icon_state = "cloth"
 	component_type = /datum/component/storage/concrete/roguetown/belt/cloth
 
-/obj/item/storage/belt/rogue/leather/cloth/lady
+/obj/item/storage/belt/rogue/leather/cloth/upgraded
+	name = "pouch-fitted cloth sash"
+	desc = "A strip of cloth tied together at the ends into a makeshift belt, fitted with a pouch for the same space as a leather belt."
+	component_type = /datum/component/storage/concrete/roguetown/belt
+
+/obj/item/storage/belt/rogue/leather/cloth/upgraded/lady
 	color = "#575160"
 
 /obj/item/storage/belt/rogue/leather/cloth/bandit
@@ -192,10 +216,17 @@
 	)
 
 /obj/item/storage/backpack/rogue/satchel/otavan
-	name = "otavan leather satchel"
+	name = "otavan satchel"
 	desc = "A sleek, stylish, and surprisingly sturdy satchel that hails straight from the Sovereignty of Otava. It is made to endure, first and foremost."
 	icon_state = "osatchel"
 	item_state = "osatchel"
+
+/obj/item/storage/backpack/rogue/satchel/otavan/short
+	name = "otavan short satchel"
+	desc = "A sleek, stylish, and surprisingly sturdy satchel that hails straight from the Sovereignty of Otava. This one is made to clip to a belt or to a pair of pants, freeing the shoulders from any weight."
+	icon_state = "osatchelshort"
+	item_state = "osatchelshort"
+	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP
 
 /obj/item/storage/backpack/rogue/satchel/mule/PopulateContents()
 	for(var/i in 1 to 3)
@@ -210,7 +241,10 @@
 				new /obj/item/reagent_containers/powder/spice(src)
 
 /obj/item/storage/backpack/rogue/satchel/black
-	color = CLOTHING_BLACK
+	name = "black satchel"
+	icon_state = "bsatchel"
+	item_state = "bsatchel"
+	sellprice = 10
 
 /obj/item/storage/backpack/rogue/attack_right(mob/user)
 	var/datum/component/storage/CP = GetComponent(/datum/component/storage)
@@ -224,6 +258,11 @@
 	icon_state = "satchelshort"
 	item_state = "satchelshort"
 	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP //Implement a check in the future that prevents more than one being worn at once.
+
+/obj/item/storage/backpack/rogue/satchel/short/black
+	name = "black short satchel"
+	icon_state = "bsatchelshort"
+	item_state = "bsatchelshort"
 
 /obj/item/storage/backpack/rogue/satchel/beltpack
 	name = "beltpack" //Satchel that fits on the cloak or belt slot. Should be exceptionally rare for on-spawn loadouts, unless a flag's added to make it incompatable with regular satchels.
@@ -427,10 +466,24 @@
 		knives += K
 	update_icon()
 
+/obj/item/storage/belt/rogue/leather/knifebelt/black/silver_blessed/Initialize()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/rogueweapon/huntingknife/throwingknife/silver/preblessed/K = new()
+		knives += K
+	update_icon()
+
 /obj/item/storage/belt/rogue/leather/knifebelt/black/psydon/Initialize()
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/psydon/K = new()
+		knives += K
+	update_icon()
+
+/obj/item/storage/belt/rogue/leather/knifebelt/black/psydon_blessed/Initialize()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/rogueweapon/huntingknife/throwingknife/psydon/preblessed/K = new()
 		knives += K
 	update_icon()
 

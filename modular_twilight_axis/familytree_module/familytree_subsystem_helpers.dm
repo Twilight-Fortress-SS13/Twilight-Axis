@@ -4,6 +4,8 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 	"Sir ", "Brother ", "Sister ",
 	"Father ", "Mother ",
 	"King ", "Queen ", "Prince ", "Princess ",
+	"Sultan ", "Sultana ", "Vizier ", "Sheikh ",
+	"Amir ", "Amirah ",
 ))
 
 /proc/familytree_strip_title(name)
@@ -475,10 +477,10 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 	return FALSE
 
 /datum/controller/subsystem/familytree/proc/is_royal_monarch_job(datum/job/job)
-	return istype(job, /datum/job/roguetown/lord)
+	return istype(job, /datum/job/roguetown/lord) || istype(job, /datum/job/roguetown/sultan)
 
 /datum/controller/subsystem/familytree/proc/is_royal_consort_job(datum/job/job)
-	return istype(job, /datum/job/roguetown/lady)
+	return istype(job, /datum/job/roguetown/lady) || is_royal_harem_job(job)
 
 /datum/controller/subsystem/familytree/proc/is_royal_suitor_job(datum/job/job)
 	return istype(job, /datum/job/roguetown/suitor)
@@ -487,7 +489,7 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 	return istype(job, /datum/job/roguetown/prince)
 
 /datum/controller/subsystem/familytree/proc/is_royal_hand_job(datum/job/job)
-	return istype(job, /datum/job/roguetown/hand)
+	return istype(job, /datum/job/roguetown/hand) || istype(job, /datum/job/roguetown/vizier)
 
 /datum/controller/subsystem/familytree/proc/get_royal_status(mob/living/carbon/human/H)
 	var/datum/job/job = get_familytree_job(H)

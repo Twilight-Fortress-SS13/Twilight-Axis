@@ -39,12 +39,13 @@
 						to_chat(src, span_notice("[absorb_text]"))
 		else	// Unfortunate special behaviour for projectiles because they are absent most data pen_info wants (attacker mob ref, weapon sharpness, intent, etc)
 			if(armor_tier > 0)
+				// this was fucked for how long????
 				if(armor_penetration == armor_tier)
-					blocked = block_damage * PEN_PASSTHROUGH_PROJ_EQUAL // We block 80% of the damage, letting 20% through to body / into integ.
+					blocked = block_damage * (1 - PEN_PASSTHROUGH_PROJ_EQUAL) // We block 80% of the damage, letting 20% through to body / into integ.
 					if(penetrated_text)
 						to_chat(src, span_danger("[penetrated_text]"))
 				else if(armor_penetration > armor_tier)
-					blocked = block_damage * PEN_PASSTHROUGH_PROJ_MORE // We block 20% of the damage, letting 80% through to body / into integ.
+					blocked = block_damage * (1 - PEN_PASSTHROUGH_PROJ_MORE) // We block 20% of the damage, letting 80% through to body / into integ.
 					if(penetrated_text)
 						to_chat(src, span_danger("[penetrated_text]"))
 				else
@@ -61,10 +62,19 @@
 				if(dullness_ratio <= SHARPNESS_TIER2_THRESHOLD)	//Our weapon is CHUNKED. What are we PENNING WITH.
 					blocked = block_damage * 10
 
+	break_invisibility_from_combat()
+	return blocked
+
+/mob/living/proc/break_invisibility_from_combat()
+	var/should_update_invis = FALSE
+	if(vars["rogue_sneaking"])
+		mob_timers[MT_FOUNDSNEAK] = world.time
+		should_update_invis = TRUE
 	if(mob_timers[MT_INVISIBILITY] > world.time)
 		mob_timers[MT_INVISIBILITY] = world.time
+		should_update_invis = TRUE
+	if(should_update_invis)
 		update_sneak_invis(reset = TRUE)
-	return blocked
 
 #define SHARPNESS_PENALTY_RATIO_ONE 0.7
 #define SHARPNESS_PENALTY_RATIO_TWO 0.6
@@ -171,9 +181,11 @@
 		return FALSE
 	var/datum/status_effect/buff/clash/guard = has_status_effect(/datum/status_effect/buff/clash)
 	if(guard)
+		var/atom/movable/original_firer = P.firer
 		if(P.on_guard_deflect(src))
 			apply_status_effect(/datum/status_effect/buff/parry_buffer)
-			apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+			if(original_firer != src)
+				apply_status_effect(/datum/status_effect/buff/adrenaline_rush/ranged)
 			guard.deflected_spell = TRUE
 			remove_status_effect(/datum/status_effect/buff/clash)
 			return TRUE
@@ -240,26 +252,29 @@
 		if(!apply_damage(actual_damage, P.damage_type, def_zone, armor))
 			nodmg = TRUE
 			next_attack_msg += VISMSG_ARMOR_BLOCKED
-		apply_effects(stun = P.stun, knockdown = P.knockdown, unconscious = P.unconscious, slur = P.slur, stutter = P.stutter, eyeblur = P.eyeblur, drowsy = P.drowsy, blocked = armor, stamina = P.stamina, jitter = P.jitter, paralyze = P.paralyze, immobilize = P.immobilize)
+		changeNext_inCombat(IN_COMBAT_DELAY)
+		if(!P.out_of_effective_range())
+			apply_effects(stun = P.stun, knockdown = P.knockdown, unconscious = P.unconscious, slur = P.slur, stutter = P.stutter, eyeblur = P.eyeblur, drowsy = P.drowsy, blocked = armor, stamina = P.stamina, jitter = P.jitter, paralyze = P.paralyze, immobilize = P.immobilize)
 		if(!nodmg)
-			if(P.dismemberment)
-				check_projectile_dismemberment(P, def_zone,armor)
-			if(P.woundclass)
-				check_projectile_wounding(P, def_zone, armor)
+			if(!P.out_of_effective_range())
+				if(P.dismemberment || P.dismember_by_default)
+					check_projectile_dismemberment(P, def_zone,armor)
+				if(P.woundclass)
+					check_projectile_wounding(P, def_zone, armor)
 
-			if(P.poisontype)// New proc for poisoning that respects if armor stopped damage from the projectile, by blocking or through reduction. Only called if poison type is defined.
-				if(!P.poisonamount)
-					CRASH("Projectile attempted to add poison with undefined amount.")
-				if(iscarbon(src))
-					var/mob/living/carbon/M = src
-					M.reagents.add_reagent(P.poisontype, P.poisonamount)
-					if(P.poisonfeel)
-						M.show_message(span_danger("You feel an intense [P.poisonfeel] sensation spreading swiftly from the area!"))
+				if(P.poisontype)// New proc for poisoning that respects if armor stopped damage from the projectile, by blocking or through reduction. Only called if poison type is defined.
+					if(!P.poisonamount)
+						CRASH("Projectile attempted to add poison with undefined amount.")
+					if(iscarbon(src))
+						var/mob/living/carbon/M = src
+						M.reagents.add_reagent(P.poisontype, P.poisonamount)
+						if(P.poisonfeel)
+							M.show_message(span_danger("You feel an intense [P.poisonfeel] sensation spreading swiftly from the area!"))
 
-			if(P.embedchance && !check_projectile_embed(P, def_zone, armor))
-				P.handle_drop()
+				if(P.embedchance && !check_projectile_embed(P, def_zone, armor))
+					P.handle_drop()
 
-			P.do_special_projectile_effect(P.firer, get_bodypart(check_zone(def_zone)), src, def_zone)
+				P.do_special_projectile_effect(P.firer, get_bodypart(check_zone(def_zone)), src, def_zone)
 
 		else
 			P.handle_drop()
@@ -282,7 +297,7 @@
 	return 0
 
 /mob/living/proc/check_projectile_wounding(obj/projectile/P, def_zone)
-	return simple_woundcritroll(P.woundclass, P.damage, null, def_zone, crit_message = TRUE)
+	return simple_woundcritroll(P.woundclass, P.damage, null, def_zone, crit_message = TRUE, no_crit = P.no_crit)
 
 /mob/living/proc/check_projectile_embed(obj/projectile/P, def_zone)
 	// Disable embeds on simples, allowing it to override on complex.
@@ -316,6 +331,7 @@
 				nodmg = TRUE
 				next_attack_msg += VISMSG_ARMOR_BLOCKED
 			if(!nodmg)
+				changeNext_inCombat(IN_COMBAT_DELAY)
 				if(iscarbon(src))
 					var/obj/item/bodypart/affecting = get_bodypart(zone)
 					if(affecting)
@@ -349,6 +365,8 @@
 			return 1
 
 /mob/living/fire_act(added, maxstacks)
+	if(has_status_effect(/datum/status_effect/buff/emberward))
+		return
 	if(added > 20)
 		added = 20
 	if(maxstacks > 20)
@@ -530,6 +548,9 @@
 	if(HAS_TRAIT(M, TRAIT_PACIFISM))
 		to_chat(M, span_warning("I don't want to hurt anyone!"))
 		return FALSE
+	if(M.has_status_effect(/datum/status_effect/debuff/deadite_grace) && src.mind)
+		to_chat(M, span_warning("Ah, Lux... I calm down considerably, but my hunger only increases."))
+		M.remove_status_effect(/datum/status_effect/debuff/deadite_grace)
 
 	M.do_attack_animation(src, visual_effect_icon = M.a_intent.animname)
 	playsound(get_turf(M), pick(M.attack_sound), 100, FALSE)
@@ -547,6 +568,14 @@
 		if(M.incapacitated())
 			return FALSE
 
+		if(ishuman(src))
+			var/mob/living/carbon/human/H = src
+			if(H.has_active_golgatha())
+				H.process_golgatha_rebuke(M)
+
+		if(checkguard(M))
+			return FALSE
+
 		if(checkmiss(M))
 			return FALSE
 
@@ -560,6 +589,13 @@
 
 	return TRUE
 
+/mob/living/proc/checkguard(mob/living/simple_animal/attacker)
+	var/mob/living/carbon/human/target = src
+	if(!(ishuman(target) && target.has_status_effect(/datum/status_effect/buff/clash)))
+		return FALSE
+	var/obj/item/IM = target.get_active_held_item()
+	target.simple_clash(attacker, IM)
+	return TRUE
 
 /mob/living/attack_paw(mob/living/carbon/monkey/M)
 	if(isturf(loc) && istype(loc.loc, /area/start))
@@ -570,6 +606,9 @@
 		if(HAS_TRAIT(M, TRAIT_PACIFISM))
 			to_chat(M, span_info("I don't want to hurt anyone!"))
 			return FALSE
+		if(M.has_status_effect(/datum/status_effect/debuff/deadite_grace) && src.mind)
+			to_chat(M, span_warning("Ah, Lux... I calm down considerably, but my hunger only increases."))
+			M.remove_status_effect(/datum/status_effect/debuff/deadite_grace)
 
 		if(M.is_muzzled() || M.is_mouth_covered(FALSE, TRUE))
 			to_chat(M, span_warning("I can't bite with my mouth covered!"))
@@ -578,6 +617,7 @@
 		if (prob(75))
 			log_combat(M, src, "attacked")
 			playsound(loc, 'sound/blank.ogg', 50, TRUE, -1)
+			M.break_invisibility_from_combat()
 			visible_message(span_danger("[M.name] bites [src]!"), \
 							span_danger("[M.name] bites you!"), span_hear("I hear a chomp!"), COMBAT_MESSAGE_RANGE, M)
 			to_chat(M, span_danger("I bite [src]!"))
@@ -600,6 +640,9 @@
 		if(HAS_TRAIT(M, TRAIT_PACIFISM))
 			to_chat(M, span_info("I don't want to hurt anyone!"))
 			return FALSE
+		if(M.has_status_effect(/datum/status_effect/debuff/deadite_grace) && src.mind)
+			to_chat(M, span_warning("Ah, Lux... I calm down considerably, but my hunger only increases."))
+			M.remove_status_effect(/datum/status_effect/debuff/deadite_grace)
 
 		if(M.is_muzzled() || M.is_mouth_covered(FALSE, TRUE))
 			to_chat(M, span_warning("I can't bite with my mouth covered!"))
@@ -608,6 +651,7 @@
 		if (prob(75))
 			log_combat(M, src, "attacked")
 			playsound(loc, 'sound/blank.ogg', 50, TRUE, -1)
+			M.break_invisibility_from_combat()
 			visible_message(span_danger("[M.name] bites [src]!"), \
 							span_danger("[M.name] bites you!"), span_hear("I hear a chomp!"), COMBAT_MESSAGE_RANGE, M)
 			to_chat(M, span_danger("I bite [src]!"))
@@ -634,16 +678,28 @@
 		return FALSE
 	if(shock_damage < 1 && !(flags & SHOCK_VISUAL_ONLY))
 		return FALSE
+
+	if(HAS_TRAIT(src, TRAIT_IRONMAN) && !(flags & SHOCK_VISUAL_ONLY)) // this handles shock weakness, jakk here as you wish
+		adjustFireLoss(50)
+
 	if(!(flags & SHOCK_VISUAL_ONLY))
 		if(!(flags & SHOCK_ILLUSION))
 			adjustFireLoss(shock_damage)
 		else
 			adjustStaminaLoss(shock_damage)
-	visible_message(
-		span_danger("[src] was shocked by \the [source]!"), \
-		span_danger("I feel a powerful shock coursing through my body!"), \
-		span_hear("I hear a heavy electrical crack.") \
-	)
+
+	if(HAS_TRAIT(src, TRAIT_IRONMAN)) // sovl
+		visible_message(
+			span_danger("[src] was violently shocked by \the [source]!"), \
+			span_danger("Electricity tears through my metal body with ease!"), \
+			span_hear("I hear violent electrical cracking and metal popping.")
+		)
+	else
+		visible_message(
+			span_danger("[src] was shocked by \the [source]!"), \
+			span_danger("I feel a powerful shock coursing through my body!"), \
+			span_hear("I hear a heavy electrical crack.")
+		)	
 	playsound(get_turf(src), pick('sound/misc/elec (1).ogg', 'sound/misc/elec (2).ogg', 'sound/misc/elec (3).ogg'), 100, FALSE)
 	return shock_damage
 
@@ -686,6 +742,8 @@
 		used_item = get_active_held_item()
 	if(!used_intent)
 		used_intent = src.used_intent
+	if(!istype(used_intent, /datum/intent))
+		return
 	var/animation_type
 	if(used_item || !simplified)
 		animation_type = item_animation_override || used_intent?.get_attack_animation_type()

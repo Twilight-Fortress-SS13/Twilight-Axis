@@ -103,6 +103,7 @@
 #define ARMOR_INT_CHEST_LIGHT_MEDIUM 250 // Medium tier cloth / leather armor
 #define ARMOR_INT_CHEST_LIGHT_BASE 200
 #define ARMOR_INT_CHEST_LIGHT_STEEL 180
+#define ARMOR_INT_CHEST_LIGHT_IRON 180
 #define ARMOR_INT_CHEST_CIVILIAN 100
 
 // LEG PIECES - Leg Armor
@@ -153,23 +154,26 @@
 // LEATHER: Decent Blunt DR. Axe CHOP (MEDIUM), sword thrust (MEDIUM) and bodkin (HEAVY) get through. Better vs stab than padded, worse vs piercing.
 #define ARMOR_PADDED list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_BSTEEL, "fire" = DR_MEDIUM, "acid" = DR_NONE, "bullet" = DR_LIGHT)  //TA EDIT
 #define ARMOR_LEATHER_NPC list("blunt" = DR_HEAVY, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "acid" = DR_NONE, "bullet" = DR_LIGHT)  //TA EDIT
-#define ARMOR_LEATHER list("blunt" = DR_ULTRA, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "acid" = DR_NONE, "bullet" = DR_LIGHT) //TA EDIT
+#define ARMOR_LEATHER list("blunt" = DR_ULTRA, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "acid" = DR_NONE, "bullet" = DR_LIGHT)  //TA EDIT
 
 // LIGHT ARMOR - SNOWFLAKE. Not comfortable with them, but not touching it atm.
 #define ARMOR_DRAGONSKIN list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_MEDIUM, "fire" = DR_HEAVY, "acid" = DR_NONE, "bullet" = DR_LIGHT) // Iconoclast dragon skin. Fire resistant. TA EDIT
 #define ARMOR_DRAGONHIDE list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_HEAVY, "acid" = DR_NONE, "bullet" = DR_LIGHT) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist TA EDIT
 
+//TA EDIT
+#define ARMOR_CULTNECK list("blunt" = DR_LIGHT, "slash" = DR_SUPER, "stab" = DR_SUPER, "piercing" = DR_SUPER, "fire" = DR_HEAVY, "acid" = DR_NONE) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist
+
 // BRIGANDINE — All brigandine parts. Better blunt and arrow padding than plate, but sword stabs and above will pen. Best light armor gets for melee. Medium/heavy classes should still wear maille under it!
-#define ARMOR_BRIGANDINE list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "acid" = DR_NONE, "bullet" = DR_HEAVY)  //TA EDIT
+#define ARMOR_BRIGANDINE list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "acid" = DR_NONE, "bullet" = DR_HEAVY)  //TA EDIT
 
 // BRONZE - All bronze armor. Not particularly good against any specialized AP intent, but uniquely resistant to fire damage from mage spells and the like. THIS SHOULD BE USING IRON INTEGRITY.
-#define ARMOR_BRONZE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_MEDIUM, "fire" = DR_LIGHT, "acid" = DR_LIGHT, "bullet" = DR_LIGHT)  //TA EDIT
+#define ARMOR_BRONZE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_MEDIUM, "fire" = DR_HEAVY, "acid" = DR_LIGHT, "bullet" = DR_LIGHT)  //TA EDIT
 
 // MAILLE — Chainmail. Medium: Plate level protection but weak vs Bodkin (100% through)
-#define ARMOR_MAILLE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_LIGHT, "fire" = DR_NONE, "acid" = DR_NONE, "bullet" = DR_HEAVY)  //TA EDIT
+#define ARMOR_MAILLE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_LIGHT, "fire" = DR_LIGHT, "acid" = DR_NONE, "bullet" = DR_HEAVY)  //TA EDIT
 
 // PLATE — Cuirass, plate. All plate-tier items; differentiated by integrity, not rating. Spear (PEN_HEAVY) gets 20% through stab. Bodkin goes through 100% - MEDIUM rating. Weak vs Blunt. 
-#define ARMOR_PLATE list("blunt" = DR_LIGHT, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "acid" = DR_NONE, "bullet" = DR_SUPER)  //TA EDIT
+#define ARMOR_PLATE list("blunt" = DR_LIGHT, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_LIGHT, "acid" = DR_NONE, "bullet" = DR_SUPER)  //TA EDIT
 
 // BSTEEL — Blacksteel, antagonist. DBLOCK_BSTEEL (4).
 // Halfsword (PEN_BSTEEL) gets 20% through. Blunt still works decently (DR_MEDIUM only).

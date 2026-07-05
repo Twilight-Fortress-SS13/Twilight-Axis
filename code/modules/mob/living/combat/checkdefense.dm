@@ -8,6 +8,12 @@
 			swing_state = FALSE
 			return FALSE
 
+	if(mid_climb)
+		interrupt_climb()
+
+	changeNext_inCombat(IN_COMBAT_DELAY)
+	user.changeNext_inCombat(IN_COMBAT_DELAY)
+
 	if(!cmode)
 		return FALSE
 	if(stat)
@@ -33,6 +39,8 @@
 			CAR.adjust_arousal_special(src, 2)
 
 	if(has_status_effect(/datum/status_effect/debuff/vulnerable))
+		remove_status_effect(/datum/status_effect/buff/clash)
+		remove_status_effect(/datum/status_effect/buff/clash/limbguard)
 		if(!has_status_effect(/datum/status_effect/buff/weapon_binded) && !has_status_effect(/datum/status_effect/debuff/weapon_binded))
 			if(ishuman(src) && user.get_tempo_bonus(TEMPO_TAG_BINDABLE) && mind && user?.mind)
 				var/held = get_active_held_item()
@@ -42,8 +50,9 @@
 						if(HL.try_bind(held, user, TRUE))
 							remove_status_effect(/datum/status_effect/debuff/vulnerable)
 							return TRUE
+		return FALSE
 
-	// TA Edit start - SOUNDBREAKER
+		// TA Edit start - SOUNDBREAKER
 	var/success = FALSE
 
 	switch(d_intent)
@@ -59,3 +68,12 @@
 
 	return success
 	// TA Edit end - SOUNDBREAKER
+
+/mob/living/proc/interrupt_climb()
+	if(!mid_climb)
+		return FALSE
+	mid_climb = FALSE
+	doing = FALSE
+	playsound(src, 'sound/combat/swingdelay_disrupted.ogg', 100, TRUE)
+	visible_message(span_warning("[src]'s grip is broken!"), span_warning("My grip is broken!"))
+	return TRUE

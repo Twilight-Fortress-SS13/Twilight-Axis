@@ -4,7 +4,7 @@
 	name = "fat"
 	desc = "A lump of animal fat, fit for oiling and sausage-stuffing."
 	icon_state = "fat"
-	list_reagents = list(/datum/reagent/consumable/nutriment = SNACK_DECENT)
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_HALF_MEAL)
 	eat_effect = /datum/status_effect/debuff/uncookedfood
 	possible_item_intents = list(/datum/intent/food, /datum/intent/splash)
 	fat_yield = 20
@@ -51,7 +51,7 @@
 	icon_state = "tallow"
 	tastes = list("grease" = 1, "oil" = 1, "regret" = 1)
 	obj_flags = CAN_BE_HIT
-	list_reagents = list(/datum/reagent/consumable/nutriment = SNACK_POOR)
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_QUARTER_MEAL)
 	eat_effect = /datum/status_effect/debuff/uncookedfood
 	fat_yield = 5 // 5 per animal fat
 	bitesize = 1
@@ -119,10 +119,29 @@
 */
 
 /obj/item/reagent_containers/food/snacks/tallow/attackby(obj/item/I, mob/living/user, params)
+	if(try_handle_tallow_interaction(I, user))
+		return TRUE
+
+	return ..()
+
+/obj/item/reagent_containers/food/snacks/tallow/attacked_by(obj/item/I, mob/living/user)
+	if(try_handle_tallow_interaction(I, user))
+		return TRUE
+
+	return ..()
+
+/obj/item/reagent_containers/food/snacks/tallow/proc/try_handle_tallow_interaction(obj/item/I, mob/living/user)
+	if(!I || !user)
+		return FALSE
+
+	if(I == src)
+		return TRUE
+
 	// Try to make blacktallow with ash
 	if(istype(I, /obj/item/ash))
 		if(tgui_alert(user, "Soak the tallow in ash to make blacktallow?", "Make Blacktallow", list("Yes", "No")) != "Yes")
 			return TRUE
+
 		changefood(/obj/item/reagent_containers/food/snacks/tallow/black, user)
 		qdel(I)
 		to_chat(user, span_notice("You stain the tallow with ash, turning it into blacktallow."))
@@ -130,10 +149,8 @@
 
 	if(try_make_redtallow(I, user))
 		return TRUE
-	return ..()
 
-/obj/item/reagent_containers/food/snacks/tallow/attacked_by(obj/item/I, mob/living/user)
-	return attackby(I, user, null)
+	return FALSE
 
 /obj/item/reagent_containers/food/snacks/tallow/proc/try_make_redtallow(obj/item/I, mob/living/user)
 	if(!I || !user)

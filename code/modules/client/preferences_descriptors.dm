@@ -1,3 +1,33 @@
+/proc/sanitize_custom_descriptor_text(text)
+	if(!istext(text))
+		return null
+
+	text = STRIP_HTML_SIMPLE(lowertext(text), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
+	if(!is_english_custom_descriptor_text(text))
+		return null
+
+	return text
+
+/proc/is_english_custom_descriptor_text(text)
+	if(!istext(text))
+		return FALSE
+
+	var/has_letter = FALSE
+
+	for(var/i in 1 to length(text))
+		var/char = text2ascii(text, i)
+
+		if(char >= 97 && char <= 122)
+			has_letter = TRUE
+			continue
+
+		if(char == 32 || char == 39 || char == 45)
+			continue
+
+		return FALSE
+
+	return has_letter
+
 /datum/preferences/proc/validate_descriptors()
 	for(var/choice_type in pref_species.descriptor_choices)
 		var/datum/descriptor_choice/choice = DESCRIPTOR_CHOICE(choice_type)
@@ -13,6 +43,8 @@
 
 	for(var/datum/descriptor_entry/entry as anything in descriptor_entries)
 		var/datum/descriptor_choice/choice = DESCRIPTOR_CHOICE(entry.descriptor_choice_type)
+		if(!choice)
+			continue
 		if(entry.descriptor_type == null || !(entry.descriptor_type in choice.descriptors))
 			if(choice.default_descriptor)
 				entry.descriptor_type = choice.default_descriptor
@@ -26,7 +58,9 @@
 	for(var/i in 1 to CUSTOM_DESCRIPTOR_AMOUNT)
 		var/datum/custom_descriptor_entry/custom_entry = custom_descriptors[i]
 		custom_entry.prefix_type = sanitize_integer(custom_entry.prefix_type, 1, CUSTOM_PREFIX_AMOUNT, CUSTOM_PREFIX_HAS_A)
-		custom_entry.content_text = STRIP_HTML_SIMPLE(lowertext(custom_entry.content_text), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
+		custom_entry.content_text = sanitize_custom_descriptor_text(custom_entry.content_text)
+		if(isnull(custom_entry.content_text))
+			custom_entry.content_text = ""
 
 /datum/preferences/proc/reset_descriptors()
 	descriptor_entries = list()
@@ -64,24 +98,51 @@
 			var/datum/descriptor_entry/entry = get_descriptor_entry_for_choice(choice_type)
 			entry.descriptor_type = picked_type
 		if("custom_descriptor_prefix")
-			var/static/list/translation = CUSTOM_PREFIX_TRANSLATION_LIST
-			var/static/list/input_list = CUSTOM_PREFIX_INPUT_LIST
+			var/static/list/full_translation = CUSTOM_PREFIX_TRANSLATION_LIST
+			var/static/list/full_input = CUSTOM_PREFIX_INPUT_LIST
+			var/static/list/article_translation = CUSTOM_ARTICLE_TRANSLATION_LIST
+			var/static/list/article_input = CUSTOM_ARTICLE_INPUT_LIST
+			var/static/list/article_only_types = CUSTOM_DESCRIPTOR_ARTICLE_ONLY
+			var/static/list/custom_descriptor_types = CUSTOM_DESCRIPTOR_TYPE_LIST
 			var/index = text2num(href_list["index"])
 			var/datum/custom_descriptor_entry/custom_entry = custom_descriptors[index]
-			var/current_prefix_text = translation["[custom_entry.prefix_type ]"]
-			var/new_prefix_text = input(user, "Choose the prefix", "Describe myself", current_prefix_text) as null|anything in input_list
+			var/is_article_only = (custom_descriptor_types[index] in article_only_types)
+			var/translation = is_article_only ? article_translation : full_translation
+			var/input_list = is_article_only ? article_input : full_input
+			var/current_prefix_text = translation["[custom_entry.prefix_type]"]
+			if(!current_prefix_text)
+				current_prefix_text = is_article_only ? "a" : "Has a"
+			var/new_prefix_text = input(user, "Choose the article", "Describe myself", current_prefix_text) as null|anything in input_list
 			if(!new_prefix_text)
 				return
-			var/new_prefix_type = input_list[new_prefix_text]
-			custom_entry.prefix_type = new_prefix_type
+			custom_entry.prefix_type = input_list[new_prefix_text]
 		if("custom_descriptor_content")
 			var/index = text2num(href_list["index"])
 			var/datum/custom_descriptor_entry/custom_entry = custom_descriptors[index]
 			var/new_content = input(user, "Describe the feature", "Describe myself") as text|null
 			if(!new_content)
 				return
-			new_content = STRIP_HTML_SIMPLE(lowertext(new_content), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
+			new_content = sanitize_custom_descriptor_text(new_content)
+			if(!new_content)
+				to_chat(user, span_warning("Custom descriptors may only use English letters, spaces, apostrophes, and hyphens."))
+				return
 			custom_entry.content_text = new_content
+		if("print_descriptor_setup")
+			var/mob/living/temp = new /mob/living(null)
+			temp.pronouns = pronouns
+			apply_descriptors(temp)
+			var/list/desc_lines = build_cool_description(temp.get_mob_descriptors(FALSE, null), temp)
+			qdel(temp)
+			var/output = ""
+			if(!(user.client?.prefs?.full_examine))
+				output = "<details><summary>[span_info("Details")]</summary>"
+			for(var/line in desc_lines)
+				output += span_info(line)
+				output += "<br>"
+			if(!(user.client?.prefs?.full_examine))
+				if(length(desc_lines))
+					output += "</details>"
+			to_chat(user, output)
 
 /datum/preferences/proc/print_descriptors_page()
 	var/list/dat = list()
@@ -91,28 +152,37 @@
 		var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(entry.descriptor_type)
 		dat += "<b>[choice.name]:</b> <a href='?_src_=prefs;descriptor_choice=[choice_type];preference=choose_descriptor;task=change_descriptor'>[descriptor.name]</a><br>"
 
+	var/static/list/custom_descriptor_types = CUSTOM_DESCRIPTOR_TYPE_LIST
 	for(var/i in 1 to CUSTOM_DESCRIPTOR_AMOUNT)
-		// Ugly, I know
-		if(i == 1)
-			if(!has_descriptor_type_in_entries(/datum/mob_descriptor/prominent/custom/one))
-				continue
-		else if(i == 2)
-			if(!has_descriptor_type_in_entries(/datum/mob_descriptor/prominent/custom/two))
-				continue
-		else
+		if(!has_descriptor_type_in_entries(custom_descriptor_types[i]))
 			continue
 		var/list/custom_data = print_custom_descriptor_customization(i)
 		if(custom_data)
 			dat += custom_data
 
-	dat += "<br><br><center>Descriptors can vary based on gender<br>Some don't appear if you don't match a requirement<center>"
+	dat += "<br><a href='?_src_=prefs;preference=print_descriptor_setup;task=change_descriptor'>Print descriptor setup to chat</a>"
+	dat += "<br><center><b>Custom descriptor rules:</b> English only. No proper nouns. No immersion breaking words. No overtly sexual descriptors. Look at the pre-written descriptors for examples of what is acceptable. Allowed characters: English letters, spaces, apostrophes, and hyphens. Capitalization is handled automatically.</center>"
 	return dat
 
 /datum/preferences/proc/print_custom_descriptor_customization(index)
-	var/static/list/translation = CUSTOM_PREFIX_TRANSLATION_LIST
+	var/static/list/full_translation = CUSTOM_PREFIX_TRANSLATION_LIST
+	var/static/list/article_translation = CUSTOM_ARTICLE_TRANSLATION_LIST
+	var/static/list/custom_descriptor_types = CUSTOM_DESCRIPTOR_TYPE_LIST
+	var/static/list/prefix_support = CUSTOM_DESCRIPTOR_SHOWS_PREFIX
+	var/static/list/article_only_types = CUSTOM_DESCRIPTOR_ARTICLE_ONLY
 	var/list/dat = list()
 	var/datum/custom_descriptor_entry/custom_entry = custom_descriptors[index]
-	dat += "<br><b>Custom #[index]:</b> <a href='?_src_=prefs;index=[index];preference=custom_descriptor_prefix;task=change_descriptor'>[translation["[custom_entry.prefix_type]"]]</a><a href='?_src_=prefs;index=[index];preference=custom_descriptor_content;task=change_descriptor'>[custom_entry.content_text]</a>"
+	var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(custom_descriptor_types[index])
+	var/desc_type = custom_descriptor_types[index]
+	if(desc_type in prefix_support)
+		var/is_article_only = (desc_type in article_only_types)
+		var/translation = is_article_only ? article_translation : full_translation
+		var/prefix_display = translation["[custom_entry.prefix_type]"]
+		if(!prefix_display)
+			prefix_display = is_article_only ? "a" : "Has a"
+		dat += "<br><b>[descriptor.name]:</b> <a href='?_src_=prefs;index=[index];preference=custom_descriptor_prefix;task=change_descriptor'>[prefix_display]</a> <a href='?_src_=prefs;index=[index];preference=custom_descriptor_content;task=change_descriptor'>[custom_entry.content_text]</a>"
+	else
+		dat += "<br><b>[descriptor.name]:</b> <a href='?_src_=prefs;index=[index];preference=custom_descriptor_content;task=change_descriptor'>[custom_entry.content_text]</a>"
 	return dat
 
 /datum/preferences/proc/show_descriptors_ui(mob/user)

@@ -359,6 +359,38 @@
 	releasedrain = 0
 	blade_class = BCLASS_PUNCH
 
+/datum/intent/tome/aegis
+	name = "arcyne aegis"
+	desc = "Project an arcyne shield into the offhand. Aim anywhere and hold to charge it like a spell."
+	icon_state = "inuse"
+	chargetime = 2 SECONDS
+	chargedrain = 0
+	no_early_release = TRUE
+	charging_slowdown = CHARGING_SLOWDOWN_HEAVY
+	chargedloop = /datum/looping_sound/invokeascendant
+	glow_color = GLOW_COLOR_ARCANE
+	glow_intensity = GLOW_INTENSITY_MEDIUM
+	tranged = 1
+	noaa = TRUE
+	candodge = FALSE
+	canparry = FALSE
+	misscost = 0
+	no_attack = TRUE
+	releasedrain = 0
+	blade_class = BCLASS_PUNCH
+
+/datum/intent/tome/aegis/get_chargetime()
+	var/obj/item/rogueweapon/spellbook/book = masteritem
+	if(istype(book))
+		return book.aegis_charge_time
+	return chargetime
+
+/datum/intent/tome/aegis/can_charge(atom/clicked_object)
+	var/obj/item/rogueweapon/spellbook/book = masteritem
+	if(!istype(book))
+		return FALSE
+	return book.can_conjure_aegis(mastermob, feedback = TRUE)
+
 /datum/intent/give
 	name = "give"
 	candodge = FALSE
@@ -529,6 +561,7 @@
 
 /datum/intent/arc
 	name = "arc"
+	desc = "Fires the shot in an arc that allows it to passes through mob in the way. Will also tracks the target IF you have your cursor over them. This also allows you to aims at a target above or below."
 	icon_state = "inarc"
 	tranged = 1
 	warnie = "aimwarn"
@@ -577,7 +610,7 @@
 	noaa = FALSE
 	animname = "bite"
 	hitsound = list('sound/combat/hits/punch/punch_hard (1).ogg', 'sound/combat/hits/punch/punch_hard (2).ogg', 'sound/combat/hits/punch/punch_hard (3).ogg')
-	misscost = 3
+	misscost = 1
 	releasedrain = 1
 	swingdelay = 0
 	clickcd = CLICK_CD_FAST // Same speed as katar — fists are the free unarmed weapon
@@ -595,11 +628,28 @@
 	if(ismob(target))
 		var/mob/M = target
 		var/list/targetl = list(target)
-		user.visible_message(span_warning("[user] taunts [M]!"), span_warning("I taunt [M]!"), ignored_mobs = targetl)
+		user.visible_message(span_taunt("[user] taunts [M]!"), span_taunt("I taunt [M]!"), ignored_mobs = targetl)
 		user.emote("taunt")
-		if(M.client)
-			if(M.can_see_cone(user))
-				to_chat(M, span_danger("[user] taunts me!"))
+		if(M.mind)
+			var/mob/living/L = user
+			var/taunticon = "taunt" // Regular fist
+			var/custom_offset = 21
+			if(istype(L.patron, /datum/patron/inhumen/graggar) || L.get_stress_amount() > 10 || L.get_flaw(/datum/charflaw/addiction/paranoid))
+				taunticon = "midfinger" // Very rude, but we're also a Rude Person (or stressed)
+				custom_offset = 23
+
+			var/datum/charflaw/averse/AV = L.get_flaw(/datum/charflaw/averse)
+			if(AV)
+				if(AV.check_aversion(L, M))
+					taunticon = "midfinger"	// We hate this person in particular
+
+			if(istype(L.patron, /datum/patron/divine/eora) || HAS_TRAIT(L, TRAIT_PACIFISM))
+				taunticon = "thumbsdown"
+				custom_offset = 24
+
+			L.play_overhead_private_rclickemote(targetl, taunticon, custom_offset)
+			user.changeNext_move(CLICK_CD_FAST)	// Mostly to prevent spamming the animation too heavily.
+			to_chat(M, span_taunt("[user] taunts me!"))
 		else
 			M.taunted(user)
 	return
@@ -611,8 +661,8 @@
 	chargetime = 0
 	animname = "blank22"
 	hitsound = list('sound/combat/hits/punch/punch (1).ogg', 'sound/combat/hits/punch/punch (2).ogg', 'sound/combat/hits/punch/punch (3).ogg')
-	misscost = 5
-	releasedrain = 4	//More than punch cus pen factor.
+	misscost = 1
+	releasedrain = 1	//More than punch cus pen factor.
 	swingdelay = 0
 	penfactor = PEN_NONE
 	candodge = TRUE
@@ -640,9 +690,11 @@
 		var/mob/M = target
 		var/list/targetl = list(target)
 		user.visible_message(span_blue("[user] shoos [M] away."), span_blue("I shoo [M] away."), ignored_mobs = targetl)
-		if(M.client)
-			if(M.can_see_cone(user))
-				to_chat(M, span_blue("[user] shoos me away."))
+		if(M.mind)
+			var/mob/living/L = user
+			L.play_overhead_private_rclickemote(targetl, "dismiss")
+			user.changeNext_move(CLICK_CD_FAST)	// Mostly to prevent spamming the animation too heavily.
+			to_chat(M, span_blue("[user] shoos me away."))
 		else
 			M.shood(user)
 	return
@@ -654,7 +706,7 @@
 	chargetime = 0
 	noaa = TRUE
 	rmb_ranged = TRUE
-	releasedrain = 10
+	releasedrain = 2
 	misscost = 8
 	candodge = TRUE
 	canparry = TRUE
@@ -667,9 +719,11 @@
 		var/mob/M = target
 		var/list/targetl = list(target)
 		user.visible_message(span_yellow("[user] beckons [M] to come closer."), span_yellow("I beckon [M] to come closer."), ignored_mobs = targetl)
-		if(M.client)
-			if(M.can_see_cone(user))
-				to_chat(M, span_yellow("[user] beckons me to come closer."))
+		if(M.mind)
+			var/mob/living/L = user
+			L.play_overhead_private_rclickemote(targetl, "beckon")
+			user.changeNext_move(CLICK_CD_FAST)	// Mostly to prevent spamming the animation too heavily.
+			to_chat(M, span_yellow("[user] beckons me to come closer."))
 		else
 			M.beckoned(user)
 	return
@@ -691,9 +745,11 @@
 		var/mob/M = target
 		var/list/targetl = list(target)
 		user.visible_message(span_green("[user] waves friendly at [M]."), span_green("I wave friendly at [M]."), ignored_mobs = targetl)
-		if(M.client)
-			if(M.can_see_cone(user))
-				to_chat(M, span_green("[user] gives me a friendly wave."))
+		if(M.mind)	// Waving at an NPC doesn't need to show this.
+			var/mob/living/L = user
+			L.play_overhead_private_rclickemote(targetl, "wavefriendly")
+			user.changeNext_move(CLICK_CD_FAST)	// Mostly to prevent spamming the animation too heavily.
+			to_chat(M, span_green("[user] gives me a friendly wave."))
 	return
 
 /datum/intent/simple/headbutt
@@ -829,11 +885,13 @@
 	attack_verb = list("dazes")
 	animname = "strike"
 	hitsound = list('sound/combat/hits/blunt/daze_hit.ogg')
-	chargetime = 0
 	penfactor = PEN_NONE
-	swingdelay = 6
+	swingdelay = 1 SECONDS
 	damfactor = 1
 	item_d_type = "blunt"
 	intent_effect = /datum/status_effect/debuff/dazed
 	target_parts = list(BODY_ZONE_HEAD)
 	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
+	candodge = FALSE
+	canparry = FALSE
+	swingdelay_type = SWINGDELAY_CANCEL

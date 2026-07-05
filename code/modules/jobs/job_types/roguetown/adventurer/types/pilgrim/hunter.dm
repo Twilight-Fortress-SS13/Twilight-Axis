@@ -2,6 +2,7 @@
 	name = "Bow-Hunter"
 	tutorial = "You are a hunter. With your bow you hunt the fauna of the glade, skinning what you kill and cooking any meat left over. The job is dangerous but important in the circulation of clothing and light armor."
 	allowed_sexes = list(MALE, FEMALE)
+	forbidden_races = list(RACES_DESPISED)
 	
 	outfit = /datum/outfit/job/roguetown/adventurer/hunter
 	traits_applied = list(TRAIT_OUTDOORSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_MASTERFUL_HUNTER)
@@ -64,8 +65,6 @@
 		SStreasury.grant_savings(ECONOMIC_LOWER_CLASS, H)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/huntersyell)
-		var/datum/action/bloodhound_scent/BS = new()//TA EDIT
-		BS.Grant(H)//TA EDIT
 		var/weapons = list("Recurve Bow","Crossbow")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)

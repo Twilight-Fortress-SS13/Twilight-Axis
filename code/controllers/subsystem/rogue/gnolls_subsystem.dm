@@ -15,7 +15,7 @@ SUBSYSTEM_DEF(gnoll_scaling)
 
 /datum/controller/subsystem/gnoll_scaling/proc/unlock_gnoll_scaling()
 	var/players_amt = get_active_player_count(alive_check = 1, afk_check = 1, human_check = 1)
-	if(players_amt < 25)
+	if(players_amt < 40)
 		addtimer(CALLBACK(src, .proc/unlock_gnoll_scaling), 6000)
 		return
 
@@ -32,14 +32,10 @@ SUBSYSTEM_DEF(gnoll_scaling)
 
 	var/mode = get_gnoll_scaling()
 	var/target_slots = 1
-
-	switch(mode)
-		if(GNOLL_SCALING_SINGLE)
-			target_slots = 1
-		if(GNOLL_SCALING_FLAT)
-			target_slots = 2
-		if(GNOLL_SCALING_DYNAMIC)
-			target_slots = 3
+	if(!SSgamemode.allow_vote && !isnull(SSgamemode.admin_slots["Gnoll"]))
+		target_slots = max(0, SSgamemode.admin_slots["Gnoll"])
+	else
+		target_slots = gnoll_scaled_slots(mode)
 	desired_gnoll_slots = target_slots
 
 	// Increase this automatically even if no further people with hunted join.

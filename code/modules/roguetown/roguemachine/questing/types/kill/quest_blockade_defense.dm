@@ -2,7 +2,7 @@
 	quest_type = QUEST_BLOCKADE_DEFENSE
 	quest_difficulty = QUEST_DIFFICULTY_HARD
 	tp_budget = BLOCKADE_WAVE_1_TP
-	threat_bands_cleared = QUEST_BANDS_RAID * 2
+	threat_bands_cleared = QUEST_BANDS_BLOCKADE
 	required_fellowship_size = 0
 
 	var/current_wave = 0
@@ -12,7 +12,6 @@
 	var/wave_warn_30s_id
 	var/datum/weakref/wave_landmark_ref
 	var/datum/weakref/blockade_ref
-	var/failed = FALSE
 	/// TRUE after materialize() arms the quest and before the bearer has triggered wave 1
 	/// by entering the landmark's proximity. Prevents double-fire via check_arrival.
 	var/armed = FALSE
@@ -28,6 +27,10 @@
 	/// correct pot. Null for directives (which burned nothing).
 	var/datum/fund/funding_fund
 	var/funding_cost = 0
+	var/warrant_consumed = 0
+
+/datum/quest/kill/blockade_defense/get_scroll_type()
+	return /obj/item/quest_writ/blockade
 
 /// Faction is forced by the blockade, not rolled from threat weights.
 /datum/quest/kill/blockade_defense/preview(obj/effect/landmark/quest_spawner/landmark)
@@ -221,6 +224,7 @@
 	var/datum/blockade/B = blockade_ref?.resolve()
 	if(B)
 		B.active_scroll_ref = null
+		B.active_quest_ref = null
 	despawn_live_wave_mobs()
 	quest_scroll?.update_quest_text()
 	var/obj/item/quest_writ/S = quest_scroll
@@ -268,13 +272,20 @@
 	var/datum/blockade/B = blockade_ref?.resolve()
 	if(B)
 		B.active_scroll_ref = null
+		B.active_quest_ref = null
 	if(funding_fund && funding_cost > 0)
 		SStreasury.mint(funding_fund, funding_cost, "Blockade writ recall refund ([recaller ? recaller.real_name : "unknown"])")
 		if(funding_fund == SStreasury.burgher_pledge_fund)
 			record_round_statistic(STATS_PLEDGE_CONSUMED, -funding_cost)
+	if(warrant_consumed > 0)
+		SScity_assembly?.refund_defense(warrant_consumed, recaller, "blockade writ recall")
+		warrant_consumed = 0
 	var/obj/item/quest_writ/S = quest_scroll
 	if(S && !QDELETED(S))
 		qdel(S)
+	else
+		SSquestpool.pool -= src
+		qdel(src)
 	return TRUE
 
 /datum/quest/kill/blockade_defense/proc/despawn_live_wave_mobs()
@@ -298,14 +309,22 @@
 	var/datum/blockade/B = blockade_ref?.resolve()
 	if(B)
 		B.active_scroll_ref = null
+		B.active_quest_ref = null
 		SSeconomy.clear_blockade(B, "cleared")
 	var/mob/lead = quest_receiver_reference?.resolve()
 	var/payout = reward_amount
 	if(payout > 0)
 		if(lead && SStreasury.has_account(lead))
-			SStreasury.mint(SStreasury.get_account(lead), payout, "Blockade defense reward ([quest_giver_name || "Crown"] -> [lead.real_name])")
+			var/datum/fund/lead_account = SStreasury.get_account(lead)
+			SStreasury.mint(lead_account, payout, "Blockade defense reward ([quest_giver_name || "Crown"] -> [lead.real_name])")
+			var/tax_amt = 0
+			if(!levy_exempt)
+				tax_amt = SStreasury.apply_tax(lead_account, payout, TAX_CATEGORY_CONTRACT_LEVY, "Blockade defense")
+				if(tax_amt > 0)
+					record_featured_stat(FEATURED_STATS_TAX_PAYERS, lead, tax_amt)
+					record_round_statistic(STATS_TAXES_COLLECTED, tax_amt)
 			record_round_statistic(STATS_BLOCKADE_REWARDS_PAID, payout)
-			announce_to_bearer("The final wave breaks. The rewards have been transferred to your account.")
+			announce_to_bearer("The final wave breaks. The rewards have been transferred to your account. Gross: [payout] mammons. Tax: [tax_amt] mammons. Net: [payout - tax_amt] mammons.")
 		else
 			SStreasury.mint(SStreasury.discretionary_fund, payout, "Blockade defense reward (unbanked bearer)")
 			announce_to_bearer("The final wave breaks. The Crown holds your share - return to the Nerve Master to collect.")

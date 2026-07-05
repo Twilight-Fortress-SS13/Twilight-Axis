@@ -26,6 +26,7 @@
 	var/realname
 	var/realdesc
 	var/realstate
+	var/active_item = FALSE
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/baotha/Initialize()
 	.=..()
@@ -39,6 +40,21 @@
 	if(iscarbon(user))
 		if(user.patron.type == /datum/patron/inhumen/baotha)
 			. += ("This creature is a small gift from my patron, and I can make it take any form I desire.")
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/baotha/equipped(mob/living/user, slot)
+	. = ..()
+	if(active_item)
+		return
+	if(slot == SLOT_SHIRT || SLOT_ARMOR)
+		active_item = TRUE
+		ADD_TRAIT(user, TRAIT_BITERHELM, TRAIT_GENERIC)
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/baotha/dropped(mob/living/user)
+	..()
+	if(!active_item)
+		return
+	active_item = FALSE
+	REMOVE_TRAIT(user, TRAIT_BITERHELM, TRAIT_GENERIC)
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/baotha/attack_right(var/mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)

@@ -202,6 +202,7 @@
 				l_hand = /obj/item/twilight_powderflask
 				beltr = /obj/item/quiver/twilight_bullet/lead
 				H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 5, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/staves, 2, TRUE)
 				ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/takeapprentice) //TA EDIT
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
@@ -246,7 +247,8 @@
 	age_mod = /datum/class_age_mod/grenzel_mage
 	subclass_skills = list(
 		/datum/skill/magic/arcane = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/staves = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
@@ -282,7 +284,7 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/book/spellbook = 1,
+		/obj/item/rogueweapon/spellbook/greater = 1,
 		/obj/item/chalk = 1
 		)
 	ADD_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)

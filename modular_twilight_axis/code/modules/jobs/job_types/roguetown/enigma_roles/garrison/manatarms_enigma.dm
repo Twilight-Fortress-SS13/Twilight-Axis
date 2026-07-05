@@ -7,7 +7,7 @@
 	spawn_positions = 4 //Not getting filled either way
 
 	allowed_sexes = list(MALE, FEMALE)
-	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
+	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = list(AGE_ADULT, AGE_MIDDLEAGED)
 	job_traits = list(TRAIT_GUARDSMAN, TRAIT_STEELHEARTED)
 	tutorial = "Доказав свою преданность и способности, вы получили смысл жизни - защищать Королевскую семью и её двор в качестве лейб-гвардейца. \

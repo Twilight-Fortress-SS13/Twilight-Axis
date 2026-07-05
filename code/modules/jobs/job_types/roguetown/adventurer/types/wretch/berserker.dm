@@ -47,7 +47,7 @@
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	backr = /obj/item/storage/backpack/rogue/satchel
-	belt = /obj/item/storage/belt/rogue/leather/rope // more wild look + aura
+	belt = /obj/item/storage/belt/rogue/leather/rope/upgraded/dark // more wild look + aura
 	neck = /obj/item/clothing/neck/roguetown/coif/heavypadding //Used to be a reinforced leather coif, but crit resist kinda leaves your head open to shit
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/combat = 1, //Steel variant of the hunting knife. Pseudoantagonist-tier, plus an avenue to hack limbs with.
@@ -57,7 +57,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = 1,	//Small health vial
 		)
-	H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
+	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior]
 	if(H.mind)
 		H.set_blindness(0)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/rage)
@@ -97,7 +97,7 @@
 					if("Punch Dagger")
 						beltr = /obj/item/rogueweapon/katar/punchdagger
 			if("Martial Expert") // designed to compete with unarmed by giving you alternatives to approaching fights- only expert 
-				var/list/martial_options = list("Discipline - Bodybuilder", "Battle Axe", "Grand Mace", "Longsword")
+				var/list/martial_options = list("Greatsword", "Battle Axe", "Grand Mace", "Longsword")
 				var/weapon_choice = input(H, "Choose your WEAPONS of WAR!", "SPILL THEIR ENTRAILS.") as anything in martial_options
 				switch(weapon_choice)
 					if("Greatsword") //Actually not a meme anymore
@@ -109,7 +109,8 @@
 						beltr = /obj/item/rogueweapon/stoneaxe/battle
 					if("Grand Mace")
 						H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
-						beltr = /obj/item/rogueweapon/mace/goden/steel
+						r_hand = /obj/item/rogueweapon/mace/goden/steel
+						backl = /obj/item/rogueweapon/scabbard/gwstrap
 					if("Longsword") //Swapped out the falx for this, it's a primary weapon afterall
 						H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 						beltr = /obj/item/rogueweapon/scabbard/sword

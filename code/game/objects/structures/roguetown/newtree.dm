@@ -48,7 +48,7 @@
 /obj/structure/flora/newtree/obj_destruction(damage_flag)//this proc is stupidly long for a destruction proc
 	var/turf/NT = get_turf(src)
 	var/turf/UPNT = get_step_multiz(src, UP)
-	src.obj_flags = CAN_BE_HIT | BLOCK_Z_IN_UP //so the logs actually fall when pulled by zfall
+	set_is_platform(FALSE) //so the logs actually fall when pulled by zfall
 	if(burnt)
 		damage_flag = "fire"
 
@@ -64,13 +64,13 @@
 				var/turf/BI = get_step(B, DI)
 				for(var/obj/structure/flora/newbranch/bi in BI)//2 tile end branch
 					if(bi.dir == DI)
-						bi.obj_flags = CAN_BE_HIT
+						bi.set_is_platform(FALSE)
 						bi.obj_destruction(damage_flag)
 					for(var/atom/bio in BI)
 						BI.zFall(bio)
 				for(var/obj/structure/flora/newleaf/bil in BI)//2 tile end leaf
 					bil.obj_destruction(damage_flag)
-				BRANCH.obj_flags = CAN_BE_HIT 
+				BRANCH.set_is_platform(FALSE)
 				BRANCH.obj_destruction(damage_flag)
 			for(var/atom/BRA in B)//unload a sack of rocks on a branch and stand under it, it'll be funny bro
 				B.zFall(BRA)
@@ -115,7 +115,10 @@
 			used_time = max(70 - (myskill * 10) - (L.STASPD * 3), (HAS_TRAIT(L, TRAIT_WOODWALKER) ? 15 : 30))
 		playsound(user, 'sound/foley/climb.ogg', 100, TRUE)
 		user.visible_message(span_warning("[user] starts to climb [src]."), span_warning("I start to climb [src]..."))
-		if(do_after(L, used_time, target = src))
+		L.mid_climb = TRUE
+		var/climbed = do_after(L, used_time, target = src)
+		L.mid_climb = FALSE
+		if(climbed)
 			var/pulling = user.pulling
 			if(ismob(pulling))
 				user.pulling.forceMove(target)
@@ -165,6 +168,8 @@
 		T.update_icon()
 
 /obj/structure/flora/newtree/proc/build_branches()
+	if(istype(get_turf(src), /turf/open/floor) && prob(90)) // We only want branches in the upper layers
+		return
 	for(var/D in GLOB.cardinals)
 		var/turf/NT = get_step(src, D)
 		if(istype(NT, /turf/open/transparent/openspace))

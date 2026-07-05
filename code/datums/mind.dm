@@ -609,15 +609,12 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 			continue
 		if(istype(carbon, /mob/living/carbon/human/dummy))
 			continue
-		if(carbon.job in GLOB.hunted_protected_roles)
-			continue
 		if(!(carbon.has_flaw(/datum/charflaw/hunted) || HAS_TRAIT(carbon, TRAIT_ZIZOID_HUNTED)))
 			continue
 
 		output += "<br>[carbon.real_name]"
 		if(carbon.job)
 			output += " - [carbon.job]"
-
 	output += "<br>Your creed is blood, your faith is steel. You will not rest until these souls are yours. Use the profane dagger to trap their souls for Graggar."
 
 	if(window)
@@ -958,8 +955,10 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	if(current)
 		to_chat(current, span_nicegreen("Tip: You can Ctrl-Click your hotkey bar to unlock it, then drag to rearrange your spells. Re-arranging them change which hotkeys they are bound to in order from left to right (Alt 1 to Alt 9 default). You can shift click your spells to learn more about them."))
 
-/datum/mind/proc/setup_mage_aspects(list/config)
+/datum/mind/proc/setup_mage_aspects(list/config, grant_attunement = TRUE)
 	mage_aspect_config = config
+	if(grant_attunement && current)
+		ADD_TRAIT(current, TRAIT_LEYLINE_ATTUNEMENT, TRAIT_GENERIC)
 	ensure_mage_basics()
 	check_learnspell()
 
@@ -1091,6 +1090,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 /datum/mind/proc/RemoveAllSpells()
 	for(var/datum/S in spell_list)
 		RemoveSpell(S)
+	for(var/datum/SP in current.actions)
+		RemoveSpell(SP)
 
 /datum/mind/proc/transfer_martial_arts(mob/living/new_character)
 	if(!ishuman(new_character))
@@ -1259,7 +1260,28 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
 						user.put_in_hands(I)
-						if (istype(I, /obj/item/clothing)) // commit any pref dyes to our item if it is clothing and we have them available
+						// Apply loadout-specific properties only if this is a loadout item
+						var/list/metadata = user.client?.prefs?.gear_list?[item]
+						if(islist(metadata))
+							// Free loadout items cannot be sold, smelted, or salvaged (triumph items are exempt)
+							var/datum/loadout_item/LI = GLOB.loadout_items_by_name[item]
+							if(!LI?.triumph_cost)
+								I.sellprice = 0
+								I.smeltresult = /obj/item/ash
+								I.salvage_result = /obj/item/ash
+							// Apply metadata (color, custom name, custom desc)
+							if(metadata["color"])
+								I.add_atom_colour(metadata["color"], FIXED_COLOUR_PRIORITY)
+							if(metadata["detail_color"] && I.detail_tag)
+								I.detail_color = metadata["detail_color"]
+							if(metadata["altdetail_color"] && I.altdetail_tag)
+								I.altdetail_color = metadata["altdetail_color"]
+							if(metadata["custom_name"])
+								I.name = metadata["custom_name"]
+							if(metadata["custom_desc"])
+								I.desc = metadata["custom_desc"]
+							I.update_icon()
+						else if(istype(I, /obj/item/clothing)) // commit any pref dyes to our item if it is clothing and we have them available
 							var/dye = user.client?.prefs.resolve_loadout_to_color(path2item)
-							if (dye)
+							if(dye)
 								I.add_atom_colour(dye, FIXED_COLOUR_PRIORITY) */

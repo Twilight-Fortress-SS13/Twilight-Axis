@@ -72,7 +72,9 @@ type ActionsTabPayload = {
 
 type LiquidBlock = {
   has?: boolean;
+  pct?: number;
   volume?: number;
+  capacity?: number;
 };
 
 type StatusLinkRow = {
@@ -1179,10 +1181,20 @@ const fmt1 = (v?: number) => {
 };
 
 const summedFill = (storage?: LiquidBlock, producing?: LiquidBlock) => {
-  const sv = Number(storage?.volume ?? 0);
-  const pv = Number(producing?.volume ?? 0);
-  const total = (Number.isFinite(sv) ? sv : 0) + (Number.isFinite(pv) ? pv : 0);
-  return total;
+  const blocks = [storage, producing].filter((block) => block?.has);
+  const volume = blocks.reduce((sum, block) => sum + Number(block?.volume ?? 0), 0);
+  const capacity = blocks.reduce((sum, block) => sum + Number(block?.capacity ?? 0), 0);
+
+  if (Number.isFinite(volume) && Number.isFinite(capacity) && capacity > 0) {
+    return Math.min(100, Math.max(0, (volume / capacity) * 100));
+  }
+
+  const pcts = blocks.map((block) => Number(block?.pct ?? 0)).filter(Number.isFinite);
+  if (!pcts.length) {
+    return 0;
+  }
+
+  return Math.min(100, Math.max(0, pcts.reduce((sum, pct) => sum + pct, 0) / pcts.length));
 };
 
 const StatusOrganCard: React.FC<{

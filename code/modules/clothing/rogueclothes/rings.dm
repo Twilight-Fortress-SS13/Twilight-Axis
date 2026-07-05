@@ -107,6 +107,12 @@
 	desc = "A ring of evershifting hues."
 	icon_state = "ring_opal"
 
+/obj/item/clothing/ring/porcelain
+	name = "porcelain ring"
+	desc = "A ring of shining porcelain."
+	icon_state = "ring_porcelain"
+	sellprice = 10
+
 /obj/item/clothing/ring/active
 	var/active = FALSE
 	desc = "A golden ring that bares a runic enigma, capable of nullifying all incoming magicka. The runic enigma pulsates with crimson light, rendering me invulnerable to arcynic violence!"
@@ -539,6 +545,15 @@
 		active_item = FALSE
 	return
 
+/obj/item/clothing/ring/statgemerald/antiquarian
+	sellprice = 30
+	desc = "A gemerald ring, glimmering with verdant brilliance. The closer your hand drifts to it, the stronger that the wind howls. The precious stone has chipped with long use, and is quite worthless except in its magick."	
+/obj/item/clothing/ring/statonyx/antiquarian
+	sellprice = 30
+	desc = "An onyx ring, shining with violet determination. The closer your hand drifts to it, the faster your heart pounds. The precious stone has chipped with long use, and is quite worthless except in its magick."
+/obj/item/clothing/ring/statamythortz/antiquarian
+	sellprice = 30
+	desc = "A saffira ring, crackling with azuric fascination. The closer your hand drifts to it, the clearer your mind becomes. The precious stone has chipped with long use, and is quite worthless except in its magick."
 ///
 
 /obj/item/clothing/ring/statdorpel

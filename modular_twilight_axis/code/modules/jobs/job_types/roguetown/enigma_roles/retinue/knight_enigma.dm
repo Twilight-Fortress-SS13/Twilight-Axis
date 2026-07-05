@@ -5,7 +5,7 @@
 	faction = "Station"
 	total_positions = 2
 	spawn_positions = 2
-	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
+	forbidden_races = list(RACES_DESPISED)
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_ages = list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
 	tutorial = "Вы - воин с экспертной подготовкой; рожденный в мелком дворянстве и с юных лет воспитанный как оруженосец. \

@@ -57,7 +57,7 @@
 
 /datum/armor/proc/getRating(rating)
 	switch(rating)
-		if("blunt", "slash", "stab", "piercing", "fire", "acid", "magic")
+		if("blunt", "slash", "stab", "piercing", "fire", "acid", "magic", "bullet") // TA EDIT
 			return vars[rating]
 	stack_trace("getRating called with unknown rating key [rating] — fix the caller")
 	return 0

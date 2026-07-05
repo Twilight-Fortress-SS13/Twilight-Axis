@@ -33,6 +33,11 @@
 			affectedjobs = list("Town Watch")
 		else if(user.job == "Overseer")
 			affectedjobs = list("Vanguard")
+		else if(user.job == "Janissary Sergeant")
+			affectedjobs = list("Janissary", "Janissary Footman", "Janissary Jezail", "Janissary Zephyr") // Desert Town
+		else if(user.job == "Azeb Agha")
+			affectedjobs = list("Azeb") // Desert Town
+
 		else //failsafe in case someone somehow gets the spells without a role that uses them
 			to_chat(user, span_alert("I don't have authority to order anyone!"))
 			revert_cast()
@@ -218,7 +223,7 @@
 //For good roles
 /mob/living/carbon/human/mind/proc/setorders()
 	set name = "Rehearse Orders"
-	set category = "Voice of Command"
+	set category = "RoleUnique.Voice of Command"
 	mind.movemovemovetext = input("Send a message.", "Move! Move! Move!") as text|null
 	if(!mind.movemovemovetext)
 		to_chat(src, "I must rehearse something for this order...")

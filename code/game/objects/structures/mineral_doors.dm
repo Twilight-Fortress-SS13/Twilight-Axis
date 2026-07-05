@@ -238,7 +238,11 @@
 		if(HAS_TRAIT(user, TRAIT_BASHDOORS))
 			if(locked)
 				user.visible_message(span_warning("[user] bashes into [src]!"))
+				var/was_broken = obj_broken
+				var/was_destroyed = obj_destroyed
 				take_damage(200, "brute", "blunt", 1)
+				if((obj_broken && !was_broken) || (obj_destroyed && !was_destroyed))
+					log_door_break(user)
 			else
 				playsound(src, 'sound/combat/hits/onwood/woodimpact (1).ogg', 100)
 				force_open()
@@ -440,14 +444,19 @@
 	var/turf/T = get_turf(src)
 	..()
 	if(obj_broken || obj_destroyed)
-		if(!T)
-			return
-		var/obj/effect/track/structure/new_track = SStracks.get_track(/obj/effect/track/structure, T)
-		if(new_track)
-			new_track.handle_creation(user)
-		if(user?.ckey)
-			message_admins("[user.real_name] [obj_destroyed ? "destroyed" : "broke"] [src.name] at X:[src.x] Y:[src.y] Z:[src.z] in area: [get_area(src)] [ADMIN_JMP(src)]")
-			log_admin("[user.real_name] [obj_destroyed ? "destroyed" : "broke"] [src.name] at X:[src.x] Y:[src.y] Z:[src.z] in area: [get_area(src)]")
+		log_door_break(user, T)
+
+/obj/structure/mineral_door/proc/log_door_break(mob/user, turf/source_turf)
+	if(!source_turf)
+		source_turf = get_turf(src)
+	if(!source_turf)
+		return
+	var/obj/effect/track/structure/new_track = SStracks.get_track(/obj/effect/track/structure, source_turf)
+	if(new_track)
+		new_track.handle_creation(user)
+	if(user?.ckey)
+		message_admins("[user.real_name] [obj_destroyed ? "destroyed" : "broke"] [src.name] at X:[src.x] Y:[src.y] Z:[src.z] in area: [get_area(src)] [ADMIN_JMP(src)]")
+		log_admin("[user.real_name] [obj_destroyed ? "destroyed" : "broke"] [src.name] at X:[src.x] Y:[src.y] Z:[src.z] in area: [get_area(src)]")
 
 /obj/structure/mineral_door/proc/repairdoor(obj/item/I, mob/user)
 	if(brokenstate)
@@ -473,7 +482,7 @@
 						playsound(user, 'sound/misc/wood_saw.ogg', 100, TRUE)
 						icon_state = "[base_state]"
 						density = TRUE
-						opacity = TRUE
+						set_opacity(TRUE)
 						brokenstate = FALSE
 						obj_broken = FALSE
 						obj_integrity = max_integrity
@@ -675,7 +684,7 @@
 	if(!brokenstate)
 		icon_state = "[base_state]br"
 		density = FALSE
-		opacity = FALSE
+		set_opacity(FALSE)
 		brokenstate = TRUE
 	..()
 
@@ -937,11 +946,11 @@
 		return
 	if(opacity)
 		to_chat(user, span_info("I slide the viewport open."))
-		opacity = FALSE
+		set_opacity(FALSE)
 		playsound(src, 'sound/foley/doors/windowup.ogg', 100, FALSE)
 	else
 		to_chat(user, span_info("I slide the viewport closed."))
-		opacity = TRUE
+		set_opacity(TRUE)
 		playsound(src, 'sound/foley/doors/windowup.ogg', 100, FALSE)
 
 /obj/structure/mineral_door/wood/donjon/stone/broken

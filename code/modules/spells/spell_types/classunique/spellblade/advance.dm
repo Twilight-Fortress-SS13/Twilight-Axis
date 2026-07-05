@@ -101,7 +101,6 @@
 				break
 		if(blocked)
 			break
-
 		if(!step(H, facing))
 			break
 		steps_taken++

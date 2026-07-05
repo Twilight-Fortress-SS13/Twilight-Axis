@@ -369,7 +369,7 @@
 			A.flash_fullscreen("redflash3")
 			A.Stun(10)
 			A.apply_damage(10, BRUTE, def_zone)
-			A.emote("whimper")
+			A.emote("whimper", forced = TRUE)
 			return
 	if(!ismob(M))
 		say("Unable to comply without a subject. Aborting...")
@@ -452,6 +452,8 @@
 			message_admins("[M.real_name] was killed by the EXCIDIUM.")
 			log_admin("[M.real_name] was killed by the EXCIDIUM.")
 			playsound(src, 'sound/combat/vite.ogg', 100, FALSE, -1)
+			M.emote("superagony")
+			M.visible_message(span_warningbig("The CASTIFICO begins GRUESOMELY SHAVING OUT every bit and ounce of [M]'s FLESH on their HEAD, leaving only a grinning, bleeding skull behind. Justice has been served."))
 			victim_head.skeletonize()
 			submission = TRUE
 	else

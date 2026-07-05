@@ -145,8 +145,6 @@
 	var/should_self_destruct = TRUE
 	max_integrity = 50
 	fuel = 30 MINUTES
-	light_depth = 0
-	light_height = 0
 	grid_width = 32
 	grid_height = 32
 	experimental_onhip = TRUE
@@ -426,7 +424,6 @@
 	w_class = WEIGHT_CLASS_SMALL
 	light_color = "#ffb272ff"
 	on = FALSE
-
 	slot_flags = ITEM_SLOT_HEAD
 	flags_inv = HIDEFACE|HIDEEARS|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
 	body_parts_covered = FULL_HEAD|NECK
@@ -434,13 +431,13 @@
 	block2add = FOV_BEHIND
 	equip_delay_self = 3 SECONDS
 	unequip_delay_self = 3 SECONDS
-
 	force = 1
 	on_damage = 3
 	wdefense = 1 //The pumpkin has a chance of getting in the way of strikes.
 	fuel = 0 MINUTES
 	should_self_destruct = FALSE
 	sellprice = 8 //Allows a minor business to bloom from them. This may require adjustments.
+	dropshrink = null
 
 /obj/item/flashlight/flare/torch/lantern/pumpkin/examine(mob/user)
 	. = ..()
@@ -487,6 +484,9 @@
 	icon_state = "pumpkinlampz"
 	item_state = "pumpkinlampz"
 	light_color = "#ceff72ff"
+
+/obj/item/flashlight/flare/torch/lantern/pumpkin/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, "GREAT GOOGLY MOOGLY, THAT PUMPKIN IS PRAISING SHE OF Z!")
 
 /obj/item/flashlight/flare/torch/lantern/pumpkin/grin
 	name = "smiling pumpkin lamptern"

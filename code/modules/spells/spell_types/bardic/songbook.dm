@@ -13,11 +13,13 @@ GLOBAL_LIST_INIT(learnable_songs, list(
 	/datum/action/cooldown/spell/song/discordant_dirge,
 	/datum/action/cooldown/spell/song/enervating_elegy,
 	/datum/action/cooldown/spell/song/rattling_requiem,
+	// Fluff Songs
+	/datum/action/cooldown/spell/song/muses_grace
 ))
 
 /mob/living/carbon/human/proc/open_songbook()
 	set name = "Songbook"
-	set category = "Inspiration"
+	set category = "RoleUnique.Inspiration"
 
 	if(!inspiration)
 		return
@@ -102,7 +104,7 @@ GLOBAL_LIST_INIT(learnable_songs, list(
 			"known" = (rhythm_path in existing_rhythm_types),
 		))
 
-	var/max_picks = owner?.inspiration?.level >= BARD_T2 ? RHYTHM_PICKS_T2 : RHYTHM_PICKS_T1
+	var/max_picks = (owner?.inspiration?.level >= BARD_T2 ? RHYTHM_PICKS_T2 : RHYTHM_PICKS_T1) + (owner?.inspiration?.bonus_rhythm_picks || 0)
 	data["rhythms"] = rhythm_list
 	data["rhythm_slots_remaining"] = max_picks - existing_rhythm_types.len
 	data["can_unlearn"] = can_unlearn()
@@ -173,7 +175,7 @@ GLOBAL_LIST_INIT(learnable_songs, list(
 			for(var/datum/action/cooldown/spell/rhythm/existing in owner.mind.spell_list)
 				if(existing.type == rhythm_path)
 					return TRUE
-			var/max_picks = owner.inspiration.level >= BARD_T2 ? RHYTHM_PICKS_T2 : RHYTHM_PICKS_T1
+			var/max_picks = (owner.inspiration.level >= BARD_T2 ? RHYTHM_PICKS_T2 : RHYTHM_PICKS_T1) + owner.inspiration.bonus_rhythm_picks
 			var/existing_count = 0
 			for(var/datum/action/cooldown/spell/rhythm/R in owner.mind.spell_list)
 				existing_count++

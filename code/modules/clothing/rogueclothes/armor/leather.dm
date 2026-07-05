@@ -238,10 +238,19 @@
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM
 	color = "#313131"
 
+/obj/item/clothing/suit/roguetown/armor/leather/heavy/aristocratavar
+	name = "noble's vest"
+	desc = "A light, custom-tailored flimsy leather and silken vest worn by nobility in the forested peaks of Aavnr."
+	icon_state = "freijacket"
+	item_state = "freijacket"
+	max_integrity = ARMOR_INT_CHEST_LIGHT_BASE - 30 //It'll save you from a blow or two but then it'll break quickly
+	color = "#292626"
+
 /obj/item/clothing/suit/roguetown/armor/leather/bikini
 	name = "leather corslet"
 	desc = "Flexible cowhide armor. Lightweight, better than nothing. Trimmed to protect the heart and hips."
 	body_parts_covered = CHEST|GROIN
+	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT // cause I never see those being used
 	icon_state = "leatherkini"
 	item_state = "leatherkini"
 	allowed_sex = list(FEMALE, MALE)
@@ -252,6 +261,7 @@
 	name = "studded leather corslet"
 	desc = "Studded leather is the most durable of all hides and leathers and about as light. Trimmed to protect the heart and hips."
 	body_parts_covered = CHEST|GROIN
+	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
 	icon_state = "studleatherkini"
 	item_state = "studleatherkini"
 	allowed_sex = list(MALE, FEMALE)
@@ -261,6 +271,7 @@
 	name = "hide corslet"
 	desc = "A light armor of wildbeast hide. Far more durable than leather. Trimmed to protect the heart and hips."
 	body_parts_covered = CHEST|GROIN
+	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
 	icon_state = "hidearmorkini"
 	item_state = "hidearmorkini"
 	allowed_sex = list(MALE, FEMALE)
@@ -375,4 +386,3 @@
 	armor = ARMOR_LEATHER
 	detail_color = CLOTHING_DARK_GREY
 	slot_flags = ITEM_SLOT_ARMOR
-	armor = ARMOR_PADDED

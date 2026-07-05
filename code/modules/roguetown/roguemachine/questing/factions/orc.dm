@@ -7,7 +7,8 @@
 	can_blockade = TRUE
 	category = FACTION_CAT_GOBLINOID
 	mob_types = list(
-		/mob/living/carbon/human/species/orc/npc/footsoldier = 40,
+		/mob/living/carbon/human/species/orc/npc/footsoldier = 30,
+		/mob/living/carbon/human/species/orc/npc/archer = 31, // ~30% of the orc humanoid line
 		/mob/living/carbon/human/species/orc/npc/berserker = 22,
 		/mob/living/carbon/human/species/orc/npc/marauder = 18,
 		/mob/living/simple_animal/hostile/retaliate/rogue/troll/axe = 10,
@@ -21,6 +22,7 @@
 		"Warlord %N",
 		"%N Skullcleaver",
 		"%N the Mighty",
+		"%N the Pillager",
 		"Chieftain %N",
 	)
 	boss_name_file = "strings/rt/names/other/halforcm.txt"

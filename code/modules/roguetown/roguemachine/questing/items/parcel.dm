@@ -59,7 +59,7 @@
 		/area/rogue/indoors/town/church = list("Bishop", "Acolyte", "Templar", "Sexton", "Martyr"),
 		/area/rogue/indoors/town/dwarfin = list("Guildmaster", "Guildsman"),
 		/area/rogue/indoors/town/shop = list("Merchant", "Shophand"),
-		/area/rogue/indoors/town/manor = list("Councillor", "Seneschal", "Servant", "Hand", "Knight", "Royal Knight", "Prince", "Marshal", "Steward", "Clerk", "Grand Duke"),
+		/area/rogue/indoors/town/manor = list("Councillor", "Seneschal", "Servant", "Hand", "Knight", "Royal Knight", "Prince", "Marshal", "Steward", "Clerk", "Grand Duke", "Sultan", "Vizier", "Cataphract", "Sheikh"), //TA_EDIT
 		/area/rogue/indoors/town/magician = list("Court Magician", "Magicians Associate", "Archivist"),
 		/area/rogue/indoors/town/physician = list("Head Physician", "Apothecary", "Court Physician"), //TA_EDIT
 		/area/rogue/indoors/town = list("Guild Handler")
@@ -136,6 +136,11 @@
 /obj/item/parcel/towner_caravan
 	var/datum/weakref/unlocked_by_owner_ref
 	var/owner_name = ""
+
+/obj/item/parcel/towner_caravan/Initialize(mapload)
+	. = ..()
+	invisibility = initial(invisibility)
+	QDEL_NULL(proximity_monitor)
 
 /obj/item/parcel/towner_caravan/attack_self(mob/user)
 	if(!length(contained_items))

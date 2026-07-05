@@ -56,16 +56,17 @@
 	return TRUE
 
 /datum/special_intent/range_special/proc/setup_projectile(obj/projectile/proj, proj_range)
-	if(!istype(proj)) return
+	if(!istype(proj))
+		return
 	
 	var/final_range = proj_range ? proj_range : src.range
 	
 	proj.range = final_range
 	proj.max_range = final_range
 	proj.decayedRange = final_range
-	proj.target_z = target_z
 	proj.original = final_target
-	if(is_arc_mode)
+
+	if(is_arc_mode && target_level_turf)
 		proj.xo = target_level_turf.x - howner.x
 		proj.yo = target_level_turf.y - howner.y
 	else

@@ -127,14 +127,19 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 			client.dsay(message)
 		return
 
-	if(message_mode == MODE_SING)
+	// autopunctuation
+	if(!client?.prefs?.no_autopunctuate)
+		message = autopunct_bare(message)
+
+	if(message_mode == MODE_SING || HAS_TRAIT(src, TRAIT_MUSES_GRACE))
 	#if DM_VERSION < 513
 		var/randomnote = "~"
 	#else
-		var/randomnote = pick("&#9835;", "&#9834;", "&#9836;")
+		var/randomnote = pick(9835, 9834, 9836)
+		randomnote = ascii2text(randomnote)
 	#endif
 		spans |= SPAN_SINGING
-		message = "[randomnote] [message] [randomnote]"
+		message = "[randomnote] [capitalize(message)] [randomnote]"
 
 	if(stat == DEAD)
 		say_dead(original_message)
@@ -246,10 +251,6 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		message = uppertext(message)
 	if(!message)
 		return
-
-	// autopunctuation
-	if(!client?.prefs?.no_autopunctuate)
-		message = autopunct_bare(message)
 
 	if(D.flags & SIGNLANG)
 		send_speech_sign(message, message_range, src, bubble_type, spans, language, message_mode, original_message)
@@ -650,7 +651,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		. = "stammers"
 	else if(derpspeech)
 		. = "gibbers"
-	else if(message_mode == MODE_SING)
+	else if(message_mode == MODE_SING || HAS_TRAIT(src, TRAIT_MUSES_GRACE))
 		. = verb_sing
 	else
 		. = ..()

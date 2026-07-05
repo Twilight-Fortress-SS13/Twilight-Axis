@@ -1,13 +1,8 @@
 /mob/living/Moved(atom/OldLoc, Dir)
-	var/was_on_diveable_water = istype(get_turf(OldLoc), /turf/open/water/transparent)
 	. = ..()
 	stop_looking()
 	update_turf_movespeed(loc)
 	update_pixel_shifting(TRUE)
-	if(client && was_on_diveable_water != istype(get_turf(src), /turf/open/water/transparent))
-		client.refresh_browserpanel(TRUE)
-//	if(m_intent == MOVE_INTENT_RUN)
-//		consider_ambush()
 
 /mob/living/setDir(newdir, ismousemovement)
 	. = ..()
@@ -50,6 +45,24 @@
 /mob/living/update_sneak_invis()
 	if(m_intent = MOVE_INTENT_SNEAK)
 */
+
+/mob/living/proc/stop_sneaking_on_death()
+	if(m_intent != MOVE_INTENT_SNEAK && !rogue_sneaking)
+		return
+
+	m_intent = MOVE_INTENT_WALK
+
+	if(rogue_sneaking)
+		animate(src, alpha = initial(alpha), time = 0)
+		alpha = initial(alpha)
+		regenerate_icons()
+		rogue_sneaking = FALSE
+		SEND_SIGNAL(src, COMSIG_MOB_BREAK_SNEAK)
+
+	if(hud_used?.static_inventory)
+		for(var/atom/movable/screen/rogmove/selector in hud_used.static_inventory)
+			selector.update_icon()
+
 /mob/living/def_intent_change()
 	. = ..()
 	update_move_intent_slowdown()
@@ -77,16 +90,20 @@
 			var/skill_delay = base_walk * skill_mod
 			mod = min(default_delay, skill_delay)
 
-	var/spdchange = (10-STASPD)*SPEED_MOVSPD_MOD
+	var/spdchange = (10-get_effective_speed())*SPEED_MOVSPD_MOD
 	//spdchange = clamp(spdchange, -0.5, 1)  //Previous clamp when MOVSPD_MOD was at 0.1
 	mod = mod+spdchange
 	add_movespeed_modifier(MOVESPEED_ID_MOB_WALK_RUN_CONFIG_SPEED, TRUE, 100, override = TRUE, multiplicative_slowdown = mod)
 
+/// The SPD stat used for movement-delay math. Overridden where things clamp it
+/mob/living/proc/get_effective_speed()
+	return STASPD
+
 /mob/living/proc/update_turf_movespeed(turf/open/T)
 	if(isopenturf(T))
-		var/usedslow = T.get_slowdown(src)
-		if(HAS_TRAIT(src, TRAIT_TRAM_MOVER))
-			usedslow = 0
+		var/usedslow = 0
+		if(!HAS_TRAIT(src, TRAIT_TRAM_MOVER))
+			usedslow = T.get_slowdown(src)
 		if(usedslow != 0)
 			add_movespeed_modifier(MOVESPEED_ID_LIVING_TURF_SPEEDMOD, update=TRUE, priority=100, multiplicative_slowdown=usedslow, movetypes=GROUND)
 		else
@@ -127,7 +144,7 @@
 	remove_movespeed_modifier(MOVESPEED_ID_BULKY_DRAGGING)
 
 /mob/living/can_zFall(turf/T, levels)
-	if(HAS_TRAIT(src, TRAIT_WOODWALKER))
+	if(HAS_TRAIT(src, TRAIT_WOODWALKER) && !HAS_TRAIT(src, TRAIT_DEADITE)) //Zombies just fall through leaves, we're not doing that. Stop.
 		for(var/leaf in T.contents)
 			if(istype(leaf, /obj/structure/flora/newleaf))
 				return FALSE

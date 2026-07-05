@@ -112,6 +112,11 @@
 		active = FALSE
 		playsound(loc, 'sound/items/garroteshut.ogg', 65, TRUE)
 
+/obj/item/inqarticles/garrote/proc/has_oxy_protection(obj/item/I)
+	if(!I || I.obj_broken)
+		return FALSE
+	return istype(I, /obj/item/clothing/neck/roguetown/gorget) || istype(I, /obj/item/clothing/neck/roguetown/leather) || istype(I, /obj/item/clothing/neck/roguetown/bevor) || istype(I, /obj/item/clothing/neck/roguetown/coif) || istype(I, /obj/item/clothing/neck/roguetown/chaincoif)
+
 /obj/item/inqarticles/garrote/attack_self(mob/user)
 	if(obj_broken)
 		to_chat(user, span_warning("It's useless now, although.."))
@@ -231,9 +236,16 @@
 		playsound(loc, pick('sound/items/garrotechoke1.ogg', 'sound/items/garrotechoke2.ogg', 'sound/items/garrotechoke3.ogg', 'sound/items/garrotechoke4.ogg', 'sound/items/garrotechoke5.ogg'), 100, TRUE)
 		if(prob(40))
 			C.emote("choke")
-		C.adjustOxyLoss(30)
+		var/oxy_damage = 30
+		if(C.InCritical())
+			oxy_damage = choke_damage
+		else if(ishuman(C))
+			var/mob/living/carbon/human/H = C
+			if(has_oxy_protection(H.wear_neck) || has_oxy_protection(H.head))
+				oxy_damage = choke_damage
+		C.adjustOxyLoss(oxy_damage)
 		if(!C.mind) // NPCs can be choked out twice as fast
-			C.adjustOxyLoss(30)
+			C.adjustOxyLoss(oxy_damage)
 		C.visible_message(span_danger("[user] [pick("garrotes", "asphyxiates")] [C]!"), \
 		span_userdanger("[user] [pick("garrotes", "asphyxiates")] me!"), span_hear("I hear the sickening sound of cordage!"), COMBAT_MESSAGE_RANGE, user)
 		to_chat(user, span_danger("I [pick("garrote", "asphyxiate")] [C]!"))	
@@ -378,4 +390,3 @@
 						H.mind?.AddSpell(new /datum/action/cooldown/spell/repulse)
 					if("Leap")
 						H.mind?.AddSpell(new /datum/action/cooldown/spell/leap)
-

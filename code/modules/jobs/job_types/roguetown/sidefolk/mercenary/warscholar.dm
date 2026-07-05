@@ -19,7 +19,8 @@
 	age_mod = /datum/class_age_mod/war_scholar
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 2, "utilities" = 6, "post_aspect_spells" = list(/datum/action/cooldown/spell/mindlink, /datum/action/cooldown/spell/mending), "ward" = TRUE)
 	subclass_skills = list(
-		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/staves = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
@@ -57,6 +58,7 @@
 	if(H.mind)
 		detailcolor = input("Choose a color.", "NALEDIAN COLORPLEX") as anything in naledicolors
 		detailcolor = naledicolors[detailcolor]
+		H.mind.AddSpell(new /datum/action/cooldown/spell/ley_lines)
 	r_hand = /obj/item/rogueweapon/woodstaff/implement/grand/naledi
 	head = /obj/item/clothing/head/roguetown/roguehood/hierophant
 	cloak = /obj/item/clothing/cloak/hierophant
@@ -72,13 +74,15 @@
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	var/naledi_book = pick(/obj/item/book/rogue/naledi1, /obj/item/book/rogue/naledi2, /obj/item/book/rogue/naledi3, /obj/item/book/rogue/naledi4)
 	backpack_contents = list(
+		/obj/item/chalk = 1,
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/rogueweapon/huntingknife/idagger = 1,
-		/obj/item/book/spellbook = 1,
+		/obj/item/rogueweapon/spellbook/greater = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		(naledi_book) = 1
 		)
 	H.merctype = 14
+	
 
 /datum/advclass/mercenary/warscholar_pontifex
 	name = "Naledi Pontifex"
@@ -94,17 +98,15 @@
 	class_select_category = CLASS_CAT_NALEDI
 	category_tags = list(CTAG_MERCENARY)
 	cmode_music = 'sound/music/warscholar.ogg'
-	traits_applied = list(TRAIT_CIVILIZEDBARBARIAN, TRAIT_ARCYNE, TRAIT_NALEDI, TRAIT_BLOOD_RESISTANCE)
+	traits_applied = list(TRAIT_CIVILIZEDBARBARIAN, TRAIT_ARCYNE, TRAIT_NALEDI)
 	// Previous budget was kinda lopsided with negative per and con on a melee class (??) to give them a lot of str and speed. I took 6 points off and shifted it to wil and perception instead.
 	subclass_stats = list(
-		STATKEY_STR = 1,
-		STATKEY_SPD = 1,
+		STATKEY_STR = 2,
 		STATKEY_WIL = 2,
-		STATKEY_PER = 2,
-		STATKEY_CON = 1
+		STATKEY_CON = 3
 	)
 	subclass_skills = list(
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
@@ -116,7 +118,7 @@
 		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN,
 	)
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 4)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 4, ward = TRUE, "locked_aspects" = list(/datum/magic_aspect/autowardry))
 
 /datum/outfit/job/roguetown/mercenary/warscholar_pontifex
 	var/detailcolor
@@ -193,12 +195,13 @@
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	var/naledi_book = pick(/obj/item/book/rogue/naledi1, /obj/item/book/rogue/naledi2, /obj/item/book/rogue/naledi3, /obj/item/book/rogue/naledi4)
 	backpack_contents = list(
+		/obj/item/chalk = 1,
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/lockpick = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		(naledi_book) = 1,
-		/obj/item/book/spellbook = 1,
+		/obj/item/rogueweapon/spellbook/greater = 1,
 		)
 	H.merctype = 14
 
@@ -213,7 +216,7 @@
 	class_select_category = CLASS_CAT_NALEDI
 	category_tags = list(CTAG_MERCENARY)
 	cmode_music = 'sound/music/warscholar.ogg'
-	traits_applied = list(TRAIT_ARCYNE, TRAIT_ALCHEMY_EXPERT, TRAIT_NALEDI)
+	traits_applied = list(TRAIT_ARCYNE, TRAIT_ALCHEMY_EXPERT, TRAIT_MEDICINE_EXPERT, TRAIT_NALEDI)
 	subclass_stats = list(
 		STATKEY_INT = 3,
 		STATKEY_SPD = 2,
@@ -228,7 +231,8 @@
 		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
-		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/arcyne = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/polearms = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/arcane = SKILL_LEVEL_EXPERT,
@@ -274,24 +278,29 @@
 
 	var/naledi_book = pick(/obj/item/book/rogue/naledi1, /obj/item/book/rogue/naledi2, /obj/item/book/rogue/naledi3, /obj/item/book/rogue/naledi4)
 	backpack_contents = list(
+		/obj/item/chalk = 1,
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		(naledi_book) = 1
 		)
 
+
 	if(H.mind)
 		detailcolor = input("Choose a color.", "NALEDIAN COLORPLEX") as anything in naledicolors
 		detailcolor = naledicolors[detailcolor]
-		H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/soulshot)
+		grant_poke_spell_ex(H)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/blink/shadowstep)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diminish)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/vizier_restoration)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/reversion)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/vizier/restoration)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/vizier/reversion)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/vizier/acceleration)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/guidance)		
+		H.mind.AddSpell(new /datum/action/cooldown/spell/conjure_arcyne_ward/crystalhide)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/bestow_ward)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/guidance)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
+
 	H.merctype = 14
 
 /datum/outfit/job/roguetown/mercenary/warscholar/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)

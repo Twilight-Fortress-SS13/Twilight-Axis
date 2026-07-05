@@ -44,8 +44,113 @@
 
 	required_items = list(/obj/item/clothing/neck/roguetown/psicross/undivided, /obj/item/clothing/neck/roguetown/psicross/silver/undivided)
 
+//////////////////////////////////////////////////////////////////////////////////
+// T0 - Recuperation - Restore ENERGY to a target and provide restoration buff. //
+//////////////////////////////////////////////////////////////////////////////////
+//Malum + Pestra
+
+/datum/action/cooldown/spell/undivided/recuperation
+	name = "Recuperation"
+	desc = "Restores the targets Energy and provides brief regeneration to it. Twice as effective on target other than yourself."
+	fluff_desc = "Behind every great work is a hard-working master, dilligent and patient yet not immune from intricacies of lyfe. Even Malum has once fallen to such after losing His hammer, exhausted and weak he was nursed back to health by Pestra so that even he may continue on. Now Their shared gift fuels the forges of Psydonia for no great work shall go unfinished so long as They maintain vigil."
+	button_icon_state = "calming_respite"
+	sound = 'sound/magic/undivided_recuperation.ogg'
+	glow_intensity = GLOW_INTENSITY_LOW
+
+	click_to_activate = TRUE
+	cast_range = SPELL_RANGE_GROUND
+	self_cast_possible = TRUE
+
+	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR - 10
+
+	secondary_resource_cost = SPELLCOST_CANTRIP
+
+	//invocations = list("Setzt euer großartiges Werk fort.") //(Continue your great work/s)
+	invocation_type = INVOCATION_NONE
+
+	charge_required = TRUE
+	charge_time = 1 SECONDS
+	charge_drain = 0
+	charge_slowdown = CHARGING_SLOWDOWN_NONE
+	charge_sound = 'sound/magic/holycharging.ogg'
+	cooldown_time = 2 MINUTES
+
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+
+/datum/action/cooldown/spell/undivided/recuperation/cast(atom/cast_on)
+	. = ..()
+	var/const/energytoregen = 50
+
+	var/mob/living/carbon/human/H = owner
+	if(!istype(H))
+		return FALSE
+
+	var/mob/living/spelltarget = cast_on
+
+	if (!isliving(spelltarget))
+		show_visible_message(owner, "You can only cast this on living beings.")
+		return FALSE
+	if (spelltarget == H)
+		spelltarget.energy_add(energytoregen * (owner.get_skill_level(associated_skill)))//200 for templar, 300 for acolyte
+		spelltarget.apply_status_effect(/datum/status_effect/buff/recuperation)
+		show_visible_message(owner, "<font color='cyan'>As [owner] intones the incantation, vibrant flames swirl around them.", "<font color='cyan'>As you intone the incantation, vibrant flames swirl around you. You feel refreshed.")
+	else if (H.energy > (energytoregen * 2))
+		owner.energy_add(-(energytoregen * (owner.get_skill_level(associated_skill))))
+		spelltarget.energy_add((energytoregen * (owner.get_skill_level(associated_skill))) * 2)
+		spelltarget.apply_status_effect(/datum/status_effect/buff/recuperation/other)
+		show_visible_message(spelltarget, "<font color='cyan'>As [owner] intones the incantation, vibrant flames swirl around them, a dance of energy flowing towards [spelltarget].", "<font color='cyan'>As [owner] intones the incantation, vibrant flames swirl around them, a dance of energy flowing towards you. You feel refreshed.")
+
+/atom/movable/screen/alert/status_effect/buff/recuperation
+	name = "Recuperation"
+	desc = "A brief respite for my ailments."
+	icon_state = "recuperation"
+
+#define RECUPERATION_BASE_FILTER "recuperation"
+
+/datum/status_effect/buff/recuperation
+	id = "recuperation"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/recuperation
+	duration = 10 SECONDS
+	var/healing_on_tick = 5
+	var/outline_colour = "#2e8d8d"
+
+/datum/status_effect/buff/recuperation/other
+	duration = 20 SECONDS
+
+/datum/status_effect/buff/recuperation/on_apply()
+	var/filter = owner.get_filter(RECUPERATION_BASE_FILTER)
+	if (!filter)
+		owner.add_filter(RECUPERATION_BASE_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 90, "size" = 1))
+	return TRUE
+
+/datum/status_effect/buff/recuperation/tick()
+	if(HAS_TRAIT(owner, TRAIT_IRONMAN))
+		return
+	var/stamheal = healing_on_tick
+	if(!owner.cmode)
+		stamheal *= 2
+	owner.energy_add(stamheal)
+	owner.adjust_bodytemperature(8)
+
+/datum/status_effect/buff/recuperation/on_remove()
+	owner.remove_filter(RECUPERATION_BASE_FILTER)
+
+#undef RECUPERATION_BASE_FILTER
+
+///////////////////
+// T1 - Miracle  //
+///////////////////
+
+/datum/action/cooldown/spell/miracle/heal/undivided
+	name = "Greater Miracle"
+	desc = "Blesses the target with minor health regeneration. If casted in conjunction with the 'Fortify' blessing, its healing power is greatly \
+	increased. Most healing Miracles cannot affect devoted Psydonians."
+	fluff_desc = "Within Their realm disease and ailments hold no sway over the devout, even the deepest wound shall soon come apart in Their light."
+	background_icon = 'icons/mob/actions/undividedmiracles.dmi'
+	button_icon = 'icons/mob/actions/undividedmiracles.dmi'
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// T0 - Twinned Gaze - Removes vision cone for duration as well grants night vision on high enough level. //
+// T1 - Twinned Gaze - Removes vision cone for duration as well grants night vision on high enough level. //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Astrata + Noc
 
@@ -63,11 +168,11 @@
 
 	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
 
-	invocations = list("Zwillingslichter, leitet meinen Blick.")//(Twin lights, guide my gaze)
+	invocations = list("Grant your sight unto me.") //list("Zwillingslichter, leitet meinen Blick.")//(Twin lights, guide my gaze)
 	invocation_type = INVOCATION_WHISPER
 
 	charge_required = FALSE
-	cooldown_time = 2 MINUTES
+	cooldown_time = 3 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
@@ -86,7 +191,7 @@
 /datum/status_effect/buff/twinned_gaze
 	id = "twinnedgaze"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/twinned_gaze
-	duration = 15 SECONDS
+	duration = 40 SECONDS
 	var/skill_level = 0
 	status_type = STATUS_EFFECT_REPLACE
 
@@ -99,7 +204,7 @@
 	// Reset base values because the miracle can 
 	// now actually be recast at high enough skill and during day time
 	// This is a safeguard because buff code makes my head hurt
-	duration = 15 SECONDS
+	duration = 20 SECONDS
 
 
 	if(skill_level > SKILL_LEVEL_EXPERT)
@@ -132,112 +237,6 @@
 	else
 		REMOVE_TRAIT(owner, TRAIT_DARKVISION, TRAIT_GAZE)
 
-///////////////////
-// T1 - Miracle  //
-///////////////////
-
-/datum/action/cooldown/spell/miracle/heal/undivided
-	name = "Greater Miracle"
-	desc = "Blesses the target with minor health regeneration. If casted in conjunction with the 'Fortify' blessing, its healing power is greatly \
-	increased. Most healing Miracles cannot affect devoted Psydonians."
-	fluff_desc = "Within Their realm disease and ailments hold no sway over the devout, even the deepest wound shall soon come apart in Their light."
-	background_icon = 'icons/mob/actions/undividedmiracles.dmi'
-	button_icon = 'icons/mob/actions/undividedmiracles.dmi'
-	primary_resource_cost = SPELLCOST_MIRACLE
-
-//////////////////////////////////////////////////////////////////////////////////
-// T1 - Recuperation - Restore ENERGY to a target and provide restoration buff. //
-//////////////////////////////////////////////////////////////////////////////////
-//Malum + Pestra
-
-/datum/action/cooldown/spell/undivided/recuperation
-	name = "Recuperation"
-	desc = "Restores the targets Energy and provides brief regeneration to it. Twice as effective on target other than yourself."
-	fluff_desc = "Behind every great work is a hard-working master, dilligent and patient yet not immune from intricacies of lyfe. Even Malum has once fallen to such after losing His hammer, exhausted and weak he was nursed back to health by Pestra so that even he may continue on. Now Their shared gift fuels the forges of Psydonia for no great work shall go unfinished so long as They maintain vigil."
-	button_icon_state = "calming_respite"
-	sound = 'sound/magic/undivided_recuperation.ogg'
-	glow_intensity = GLOW_INTENSITY_LOW
-
-	click_to_activate = TRUE
-	cast_range = SPELL_RANGE_GROUND
-	self_cast_possible = TRUE
-
-	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR - 10
-
-	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
-
-	invocations = list("Setzt euer großartiges Werk fort.") //(Continue your great work/s)
-	invocation_type = INVOCATION_SHOUT
-
-	charge_required = TRUE
-	charge_time = 1 SECONDS
-	charge_drain = 0
-	charge_slowdown = CHARGING_SLOWDOWN_NONE
-	charge_sound = 'sound/magic/holycharging.ogg'
-	cooldown_time = 2 MINUTES
-
-	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
-
-/datum/action/cooldown/spell/undivided/recuperation/cast(atom/cast_on)
-	. = ..()
-	var/const/energytoregen = 50
-
-	var/mob/living/carbon/human/H = owner
-	if(!istype(H))
-		return FALSE
-
-	var/mob/living/spelltarget = cast_on
-
-	if (!isliving(spelltarget))
-		show_visible_message(owner, "You can only cast this on living beings.")
-		return FALSE
-	if (spelltarget == H)
-		spelltarget.energy_add(energytoregen * (owner.get_skill_level(associated_skill)))//200 for templar, 300 for acolyte
-		spelltarget.apply_status_effect(/datum/status_effect/buff/recuperation)
-		show_visible_message(owner, "As [owner] intones the incantation, vibrant flames swirl around them.", "As you intone the incantation, vibrant flames swirl around you. You feel refreshed.")
-	else if (H.energy > (energytoregen * 2))
-		owner.energy_add(-(energytoregen * (owner.get_skill_level(associated_skill))))
-		spelltarget.energy_add((energytoregen * (owner.get_skill_level(associated_skill))) * 2)
-		spelltarget.apply_status_effect(/datum/status_effect/buff/recuperation/other)
-		show_visible_message(spelltarget, "As [owner] intones the incantation, vibrant flames swirl around them, a dance of energy flowing towards [spelltarget].", "As [owner] intones the incantation, vibrant flames swirl around them, a dance of energy flowing towards you. You feel refreshed.")
-
-/atom/movable/screen/alert/status_effect/buff/recuperation
-	name = "Recuperation"
-	desc = "A brief respite for my ailments."
-	icon_state = "recuperation"
-
-#define RECUPERATION_BASE_FILTER "recuperation"
-
-/datum/status_effect/buff/recuperation
-	id = "recuperation"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/recuperation
-	duration = 10 SECONDS
-	var/healing_on_tick = 5
-	var/outline_colour = "#2e8d8d"
-
-/datum/status_effect/buff/recuperation/other
-	duration = 20 SECONDS
-
-/datum/status_effect/buff/recuperation/on_apply()
-	var/filter = owner.get_filter(RECUPERATION_BASE_FILTER)
-	if (!filter)
-		owner.add_filter(RECUPERATION_BASE_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 90, "size" = 1))
-	return TRUE
-
-/datum/status_effect/buff/recuperation/tick()
-	if(owner.construct)
-		return
-	var/stamheal = healing_on_tick
-	if(!owner.cmode)
-		stamheal *= 2
-	owner.energy_add(stamheal)
-	owner.adjust_bodytemperature(8)
-
-/datum/status_effect/buff/recuperation/on_remove()
-	owner.remove_filter(RECUPERATION_BASE_FILTER)
-
-#undef RECUPERATION_BASE_FILTER
-
 ////////////////////////////////////////////////////////////
 // T2 - Perseverance- Seal wounds and calm down a person. //
 ////////////////////////////////////////////////////////////
@@ -259,7 +258,7 @@
 
 	secondary_resource_cost = SPELLCOST_STAT_BUFF - 5
 
-	invocations = list("Die Götter fordern dich auf weiterzukämpfen!") //("The gods demand you to fight on!")
+	invocations = list("Falter not before evyl!") //list("Die Götter fordern dich auf weiterzukämpfen!") //("The gods demand you to fight on!")
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = TRUE
@@ -285,7 +284,7 @@
 		show_visible_message(owner, "You can only cast this on living beings.")
 		return FALSE
 	else
-		spelltarget.visible_message(span_info("Warmth radiates from [spelltarget] as their wounds seal over!"), span_notice("The pain from my wounds fade as warmth radiates from my soul!"))
+		spelltarget.visible_message(span_undivided("Warmth radiates from [spelltarget] as their wounds seal over!"), span_undivided("The pain from my wounds fade as warmth radiates from my soul!"))
 		if(iscarbon(spelltarget))
 			var/mob/living/carbon/C = spelltarget
 			var/obj/item/bodypart/affecting = C.get_bodypart(check_zone(owner.zone_selected))
@@ -324,22 +323,19 @@
 	glow_intensity = 0
 
 	click_to_activate = FALSE
-
 	primary_resource_cost = SPELLCOST_MIRACLE
-
 	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
-
 	invocation_type = INVOCATION_NONE
-
 	charge_required = FALSE
 	cooldown_time = 5 SECONDS
-
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
+	/// var we use to flag we are currently choosing a bundle.
+	var/choosing_bundle = FALSE
 	var/chosen_bundle
 	var/list/miracle_generalist_bundle = list(
 		/datum/action/cooldown/spell/noc/inspiration::name					= /datum/action/cooldown/spell/noc/inspiration,
-		/obj/effect/proc_holder/spell/invoked/spiderspeak::name				= /obj/effect/proc_holder/spell/invoked/spiderspeak,
+		/datum/action/cooldown/spell/darkvision/miracle/undivided::name		= /datum/action/cooldown/spell/darkvision/miracle/undivided,
 		/datum/action/cooldown/spell/noc/invisibility::name					= /datum/action/cooldown/spell/noc/invisibility,
 		/obj/effect/proc_holder/spell/targeted/blesscrop::name				= /obj/effect/proc_holder/spell/targeted/blesscrop,
 		/obj/effect/proc_holder/spell/invoked/eora_blessing::name			= /obj/effect/proc_holder/spell/invoked/eora_blessing,
@@ -362,10 +358,15 @@
 
 /datum/action/cooldown/spell/undivided/undivided_spellpack/cast(atom/cast_on)
 	. = ..()
+	
+	if(choosing_bundle)
+		return FALSE
 	var/choice = chosen_bundle
 	if(!chosen_bundle)
+		choosing_bundle = TRUE
 		choice = alert(owner, "What type of miracles did the Divines bless you with?", "CHOOSE PATH", "Generalist", "Acolyte", "Templar")
 		chosen_bundle = choice
+		choosing_bundle = FALSE
 	switch(choice)
 		if("Generalist")
 			add_spells(owner, miracle_generalist_bundle, choice_count = 3)
@@ -379,8 +380,7 @@
 			add_spells(owner, miracle_templar_bundle, choice_count = 2)
 			owner.mind?.RemoveSpell(src.type)
 			return TRUE
-		else
-			return FALSE
+	return FALSE
 
 /datum/action/cooldown/spell/undivided/undivided_spellpack/proc/add_spells(mob/owner, list/spells, choice_count = 1, grant_all = FALSE)
 	for(var/spell_type in spells)
@@ -413,7 +413,7 @@
 	desc = "Share a terrible secret of lyfe with your target, reducing their Fortune and stressing them out."
 	fluff_desc = "Psydonia is a place of many joys but underneath the facade lies true terror, lying in wait for another to stumble upon it. During his antics in the underworld Xylix stumbled upon one such horror, deep within realm of Necra laid great archive from times of Psydon filled to the brim with knowledge not meant for the eyes of mortals. Ignoring warnings given by Noc he bestowed such a gift towards his followers in hopes they use it well, for one only underestimates the poet once."
 	button_icon_state = "gallows"
-	sound = 'sound/magic/undivided_mockery.ogg'
+	sound = 'sound/magic/undivided_gallows.ogg'
 	glow_intensity = GLOW_INTENSITY_MEDIUM
 
 	click_to_activate = TRUE
@@ -433,6 +433,7 @@
 	charge_sound = 'sound/magic/holycharging.ogg'
 	cooldown_time = 1 MINUTES
 
+	spell_flags = SPELL_PSYDON
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 /datum/action/cooldown/spell/undivided/gallow_humor/cast(atom/cast_on)
@@ -447,7 +448,6 @@
 		show_visible_message(owner, "You can only cast this on living beings.")
 		return FALSE
 	owner.visible_message("<font color='cyan'>[owner] whispers something to [spelltarget].</font>")
-	playsound(get_turf(spelltarget), 'sound/magic/undivided_gallows.ogg', 70, FALSE)
 	if(spelltarget.anti_magic_check(TRUE, TRUE))
 		return FALSE
 	if(spell_guard_check(spelltarget, TRUE))
@@ -472,8 +472,8 @@
 	icon_state = "gallows"
 
 /datum/stressevent/gallowshumor
-	timer = 10 MINUTES 
-	stressadd = 10 //Hop Tuah
+	timer = 5 MINUTES 
+	stressadd = 6 //Hop Tuah
 	desc = span_undivided("NO NO NO!")
 
 /datum/status_effect/debuff/gallowshumor/on_apply()
@@ -499,6 +499,8 @@
 	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR - 10
 
 	secondary_resource_cost = SPELLCOST_MINOR_SKILL
+
+	cooldown_time = 1 MINUTES
 
 	sound = 'sound/magic/heal_new.ogg'
 	charge_required = TRUE

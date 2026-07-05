@@ -5,7 +5,7 @@
 	faction = "Station"
 	total_positions = 4
 	spawn_positions = 4
-	forbidden_races = list(RACES_SHUNNED RACES_DESPISED RACES_CONSTRUCT)
+	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = list(AGE_ADULT, AGE_MIDDLEAGED)
 	display_order = JDO_TOWNWATCH
 	tutorial = "Отвечая за безопасность города и соблюдение закона, вы ходите среди угнетенных, неся справедливость и боль. \
@@ -23,10 +23,10 @@
 	max_pq = null
 	round_contrib_points = 2
 	same_job_respawn_delay = 30 MINUTES
-
 	cmode_music = 'modular_twilight_axis/sound/music/combat/combat_watchman.ogg'
 	job_subclasses = list(
 		/datum/advclass/town_watch,
+		/datum/advclass/town_watch/dungeoneer,
 	)
 
 /datum/job/roguetown/town_watch/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
@@ -96,7 +96,11 @@
 /datum/outfit/job/roguetown/town_watch/pre_equip(mob/living/carbon/human/H)
 	..()
 	if(H.mind)
-		backpack_contents = list(/obj/item/rogueweapon/huntingknife/idagger/steel = 1, /obj/item/rope/chain = 1, /obj/item/rogueweapon/scabbard/sheath = 1)
+		backpack_contents = list(
+			/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
+			/obj/item/rope/chain = 1,
+			/obj/item/rogueweapon/scabbard/sheath = 1,
+		)
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")
 	H.verbs |= /mob/proc/haltyell
 
@@ -107,3 +111,66 @@
 /obj/item/storage/belt/rogue/leather/citywatch
 	name = "city watch belt"
 	color = "#60a0dbbb"
+
+/datum/advclass/town_watch/dungeoneer
+	name = "Dungeoneer"
+	tutorial = "Покаяние, мерзкая склонность к садизму или извращённое понимание правосудия — что-то из этого привело вас к тому, чтобы надеть презренный капюшон палача.\
+	\ Прихоти шерифа и знати — ваш закон; вы ведь не привыкли терзаться вопросами морали."
+	outfit = /datum/outfit/job/roguetown/town_watch/dungeoneer
+	maximum_possible_slots = 1
+	category_tags = list(CTAG_TOWN_WATCH)
+	traits_applied = list(TRAIT_GUARDSMAN, TRAIT_STEELHEARTED, TRAIT_JAILOR, TRAIT_CIVILIZEDBARBARIAN, TRAIT_CRITICAL_RESISTANCE, TRAIT_IGNOREDAMAGESLOWDOWN)
+	subclass_stats = list(
+		STATKEY_STR = 3,
+		STATKEY_CON = 2,
+		STATKEY_WIL = 2,
+		STATKEY_INT = -1,
+	)
+	subclass_skills = list(
+		/datum/skill/combat/whipsflails = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER,
+		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/swords = SKILL_LEVEL_NOVICE,
+		/datum/skill/combat/slings = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/sewing = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/traps = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
+		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE,
+	)
+	subclass_stashed_items = list(
+		"Branding Letters" = /obj/item/branding_letters,
+		"Branding Iron" = /obj/item/branding_iron,
+	)
+
+/datum/outfit/job/roguetown/town_watch/dungeoneer/pre_equip(mob/living/carbon/human/H)
+	..()
+	head = /obj/item/clothing/head/roguetown/menacing/executioner
+	neck = /obj/item/clothing/neck/roguetown/gorget
+	mask = /obj/item/clothing/head/roguetown/roguehood/black
+	armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/bailiff
+	wrists = /obj/item/clothing/wrists/roguetown/bracers
+	gloves = /obj/item/clothing/gloves/roguetown/leather
+	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
+	beltr = /obj/item/rogueweapon/whip/antique
+	beltl = /obj/item/storage/keyring/dungeoneer
+	backl = /obj/item/rogueweapon/sword/long/exe/cloth
+	H.adjust_blindness(-3)
+	if(H.mind)
+		H.set_blindness(0)
+	backpack_contents = list(
+		/obj/item/rogueweapon/huntingknife = 1,
+		/obj/item/rope/chain = 1,
+		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
+	)
+	H.verbs |= /mob/proc/haltyell
+
+	if(H.mind)
+		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
