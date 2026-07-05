@@ -1274,48 +1274,57 @@
 
 /// Returns patron-related examine text for the mob, if any. Can return null.
 /mob/living/proc/get_heretic_text(mob/examiner)
-	var/heretic_text = null
-	var/seer
+    var/heretic_text = null
+    var/seer
 
-	if(HAS_TRAIT(src,TRAIT_DECEIVING_MEEKNESS))
-		return null
+    if(HAS_TRAIT(src,TRAIT_DECEIVING_MEEKNESS))
+        return null
 
-	if(HAS_TRAIT(examiner, TRAIT_HERETIC_SEER))
-		seer = TRUE
+    if(HAS_TRAIT(examiner, TRAIT_HERETIC_SEER))
+        seer = TRUE
 
-	if(HAS_TRAIT(src, TRAIT_DUSTRUNNER))
-		var/mob/living/living_examiner = examiner
-		if(HAS_TRAIT(examiner, TRAIT_DUSTRUNNER))
-			heretic_text += "Fellow runner. The dust moves."
-		else if(living_examiner?.patron?.type == /datum/patron/inhumen/matthios)
-			heretic_text += "A Guild runner, by the look of them."
-		else if(examiner.job in GLOB.bathhouse_positions)
-			heretic_text += "One of the Guild's runners. I know the signs."
+    if(HAS_TRAIT(src, TRAIT_DUSTRUNNER))
+        var/mob/living/living_examiner = examiner
+        if(HAS_TRAIT(examiner, TRAIT_DUSTRUNNER))
+            heretic_text += "Fellow runner. The dust moves."
+        else if(living_examiner?.patron?.type == /datum/patron/inhumen/matthios)
+            heretic_text += "A Guild runner, by the look of them."
+        else if(examiner.job in GLOB.bathhouse_positions)
+            heretic_text += "One of the Guild's runners. I know the signs."
 
-	if(HAS_TRAIT(src, TRAIT_FREEMAN))
-		if(seer)
-			heretic_text += "Matthiosian."
-			if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
-				heretic_text += " To share with. To take with. For all, and us."
-		else if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
-			heretic_text += "Fellow Free Man!"
-	else if((HAS_TRAIT(src, TRAIT_CABAL)))
-		if(seer)
-			heretic_text += "A member of Zizo's cabal."
-			if(HAS_TRAIT(examiner, TRAIT_CABAL))
-				heretic_text += " May their ambitions not interfere with mine."
-	else if((HAS_TRAIT(src, TRAIT_HORDE)))
-		if(seer)
-			heretic_text += "Hardened by Graggar's Rituals."
-			if(HAS_TRAIT(examiner, TRAIT_HORDE))
-				heretic_text += " Mine were a glorious memory."
-	else if((HAS_TRAIT(src, TRAIT_DEPRAVED)))
-		if(seer)
-			heretic_text += "Baotha's Touched."
-			if(HAS_TRAIT(examiner, TRAIT_DEPRAVED))
-				heretic_text += " She leads us to the greatest ends."
+    if(HAS_TRAIT(src, TRAIT_FREEMAN))
+        if(seer)
+            heretic_text += "Matthiosian."
+            if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
+                heretic_text += " To share with. To take with. For all, and us."
+        else if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
+            heretic_text += "Fellow Free Man!"
+            
+    else if(HAS_TRAIT(src, TRAIT_CABAL))
+        if(seer)
+            heretic_text += "A member of Zizo's cabal."
+            if(HAS_TRAIT(examiner, TRAIT_CABAL))
+                heretic_text += " May their ambitions not interfere with mine."
+        else if(HAS_TRAIT(examiner, TRAIT_CABAL))
+            heretic_text += "A Rival for the Faithful."
+            
+    else if(HAS_TRAIT(src, TRAIT_HORDE))
+        if(seer)
+            heretic_text += "Hardened by Graggar's Rituals."
+            if(HAS_TRAIT(examiner, TRAIT_HORDE))
+                heretic_text += " Mine were a glorious memory."
+        else if(HAS_TRAIT(examiner, TRAIT_HORDE))
+            heretic_text += "A Rival for Dominion."
+            
+    else if(HAS_TRAIT(src, TRAIT_DEPRAVED))
+        if(seer)
+            heretic_text += "Baotha's Touched."
+            if(HAS_TRAIT(examiner, TRAIT_DEPRAVED))
+                heretic_text += " She leads us to the greatest ends."
+        else if(HAS_TRAIT(examiner, TRAIT_DEPRAVED))
+            heretic_text += "A Devotee of Delight."
 
-	return heretic_text
+    return heretic_text
 
 /// Same as get_heretic_text, but returns a simple symbol depending on the type of heretic!
 /mob/living/proc/get_heretic_symbol(mob/examiner)
