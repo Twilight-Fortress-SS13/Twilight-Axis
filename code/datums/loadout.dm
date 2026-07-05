@@ -4139,6 +4139,30 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/rogueweapon/scabbard/sheath/royal
 	triumph_cost = 13
 
+/datum/loadout_item/grenzelhoft_kit_gambeson
+	name = "Donator Kit - Grenzelhoft Hip-Shirt"
+	category = list("Одежда", "Донат")
+	path = /obj/item/enchantingkit/grenzel_gambeson
+	donatitem = TRUE
+
+/datum/loadout_item/grenzelhoft_kit_shoes
+	name = "Donator Kit - Grenzelhoft Boots"
+	category = list("Обувь", "Донат")
+	path = /obj/item/enchantingkit/grenzel_shoes
+	donatitem = TRUE
+
+/datum/loadout_item/grenzelhoft_kit_pants
+	name = "Donator Kit - Grenzelhoft Paumpers"
+	category = list("Одежда", "Донат")
+	path = /obj/item/enchantingkit/grenzel_pants
+	donatitem = TRUE
+
+/datum/loadout_item/grenzelhoft_kit_gloves
+	name = "Donator Kit - Grenzelhoft Gloves"
+	category = list("Одежда", "Донат")
+	path = /obj/item/enchantingkit/grenzel_gloves
+	donatitem = TRUE
+
 /datum/loadout_item/donat/sagesbighat
 	name = "Большая шляпа мудреца"
 	category = list("Головные уборы", "Донат")
