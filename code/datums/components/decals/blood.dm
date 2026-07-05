@@ -53,5 +53,10 @@
 /datum/component/decal/blood/proc/get_examine_name(datum/source, mob/user, list/override)
 	var/atom/A = parent
 	override[EXAMINE_POSITION_ARTICLE] = A.gender == PLURAL? "some" : "a"
-	override[EXAMINE_POSITION_BEFORE] = " <span class='bloody'>bloody</span> "
+	// TA EDIT START - hygiene system
+	if(A.GetComponent(/datum/component/decal/dirt))
+		override[EXAMINE_POSITION_BEFORE] = " <span class='warning'>dirty</span> <span class='bloody'>bloody</span> "
+	else
+		override[EXAMINE_POSITION_BEFORE] = " <span class='bloody'>bloody</span> "
+	// TA EDIT END - hygiene system
 	return COMPONENT_EXNAME_CHANGED

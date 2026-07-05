@@ -395,6 +395,11 @@
 	..()
 	if(isliving(AM))
 		var/mob/living/L = AM
+		// TA EDIT START - hygiene system
+		if(ishuman(L))
+			var/mob/living/carbon/human/H = L
+			H.hygiene_adjust_dirt(1)
+		// TA EDIT END - hygiene system
 		if(L.m_intent == MOVE_INTENT_RUN && (L.mobility_flags & MOBILITY_STAND))
 			if(!ishuman(L))
 				to_chat(L, span_warning("I'm cut on a thorn!"))

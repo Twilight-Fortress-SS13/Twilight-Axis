@@ -176,6 +176,9 @@
 	. = ..()
 	if(platform_atom_count > 0)
 		return
+	// TA EDIT START - hygiene system
+	hygiene_entered(AM)
+	// TA EDIT END - hygiene system
 	if(istype(AM, /obj/item/reagent_containers/food/snacks/fish))
 		var/obj/item/reagent_containers/food/snacks/fish/F = AM
 		if (F.sinkable)

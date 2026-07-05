@@ -3627,6 +3627,9 @@
 #include "modular_twilight_axis\code\datums\status_effects\rogue\roguebaff.dm"
 #include "modular_twilight_axis\code\datums\status_effects\rogue\ronin.dm"
 #include "modular_twilight_axis\code\datums\status_effects\rogue\soundbreaker.dm"
+// TA EDIT START - hygiene system
+#include "modular_twilight_axis\code\modules\hygiene\hygiene.dm"
+// TA EDIT END - hygiene system
 #include "modular_twilight_axis\code\datums\stress\negative_events.dm"
 #include "modular_twilight_axis\code\datums\trophy_effect.dm"
 #include "modular_twilight_axis\code\datums\trophy_hunter.dm"

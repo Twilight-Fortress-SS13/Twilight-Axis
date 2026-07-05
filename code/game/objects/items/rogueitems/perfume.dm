@@ -62,6 +62,11 @@
 	user.changeNext_move(CLICK_CD_RANGE*2)
 	playsound(user.loc, 'sound/items/perfume.ogg', 100, TRUE)
 	target.AddComponent(/datum/component/temporary_pollution_emission, fragrance_type, 5, 10 MINUTES)
+	// TA EDIT START - hygiene system
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		H.hygiene_apply_perfume()
+	// TA EDIT END - hygiene system
 
 /obj/item/perfume/random/Initialize()
 	fragrance_type = pick(subtypesof(/datum/pollutant/fragrance))
