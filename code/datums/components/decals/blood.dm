@@ -55,8 +55,8 @@
 	override[EXAMINE_POSITION_ARTICLE] = A.gender == PLURAL? "some" : "a"
 	// TA EDIT START - hygiene system
 	if(A.GetComponent(/datum/component/decal/dirt))
-		override[EXAMINE_POSITION_BEFORE] = " <span class='warning'>dirty</span> <span class='bloody'>bloody</span> "
+		override[EXAMINE_POSITION_BEFORE] = " " + span_dirty("dirty") + " " + span_bloody("bloody") + " "
 	else
-		override[EXAMINE_POSITION_BEFORE] = " <span class='bloody'>bloody</span> "
+		override[EXAMINE_POSITION_BEFORE] = " " + span_bloody("bloody") + " "
 	// TA EDIT END - hygiene system
 	return COMPONENT_EXNAME_CHANGED

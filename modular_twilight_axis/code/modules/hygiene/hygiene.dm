@@ -1,8 +1,8 @@
 #define HYGIENE_DIRT_MAX 100
 #define HYGIENE_STINK_THRESHOLD 100
 #define HYGIENE_STINK_RADIUS 2
-#define HYGIENE_DIRTY_WATER_GAIN 2
-#define HYGIENE_BUSH_GAIN 1
+#define HYGIENE_DIRTY_WATER_GAIN 5
+#define HYGIENE_BUSH_GAIN 3
 #define HYGIENE_CLEAN_WATER_LOSS 25
 #define HYGIENE_DRY_LOSS 1
 #define HYGIENE_DRY_TICK_DELAY (30 SECONDS)
@@ -10,11 +10,12 @@
 #define HYGIENE_STINK_TICK_DELAY (4 SECONDS)
 #define HYGIENE_PERFUME_DURATION (10 MINUTES)
 #define HYGIENE_DIRT_COLOR "#6f6658"
+#define HYGIENE_CLOTHING_DIRT_STEP 14
 
 /mob/living/carbon/human
 	var/hygiene_dirt = 0
 	var/hygiene_lifetime_dirt = 0
-	var/hygiene_next_clothing_threshold = 25
+	var/hygiene_next_clothing_threshold = HYGIENE_CLOTHING_DIRT_STEP
 	var/hygiene_next_environment_tick = 0
 	var/hygiene_was_stinking = FALSE
 	var/hygiene_perfumed_until = 0
@@ -24,6 +25,11 @@
 	SIGNAL_HANDLER
 	if(strength >= CLEAN_STRENGTH_BLOOD)
 		hygiene_adjust_dirt(-HYGIENE_DIRT_MAX, FALSE)
+		hygiene_reset_clothing_progression()
+
+/mob/living/carbon/human/proc/hygiene_reset_clothing_progression()
+	hygiene_lifetime_dirt = 0
+	hygiene_next_clothing_threshold = HYGIENE_CLOTHING_DIRT_STEP
 
 /mob/living/carbon/human/proc/hygiene_get_dirt()
 	if(HAS_TRAIT(src, TRAIT_DEADITE))
@@ -79,15 +85,15 @@
 		hygiene_emit_stench()
 
 /mob/living/carbon/human/proc/hygiene_dirty_equipment_for_gain()
-	var/list/slots = list(shoes, wear_pants, wear_armor, wear_shirt, gloves, head)
+	var/list/slots = list(shoes, wear_pants, cloak, wear_armor, wear_shirt, gloves, head)
 	while(hygiene_lifetime_dirt >= hygiene_next_clothing_threshold)
-		var/slot_index = round(hygiene_next_clothing_threshold / 25)
+		var/slot_index = round(hygiene_next_clothing_threshold / HYGIENE_CLOTHING_DIRT_STEP)
 		if(slot_index > length(slots))
 			return
 		var/obj/item/I = slots[slot_index]
 		if(I)
 			I.add_dirt_decal()
-		hygiene_next_clothing_threshold += 25
+		hygiene_next_clothing_threshold += HYGIENE_CLOTHING_DIRT_STEP
 
 /mob/living/carbon/human/proc/hygiene_emit_stench()
 	if(world.time < hygiene_next_stink_tick)
@@ -144,13 +150,16 @@
 /mob/living/carbon/human/proc/hygiene_examine_line(mob/user)
 	if(hygiene_get_dirt() < HYGIENE_STINK_THRESHOLD || hygiene_is_perfumed())
 		return null
+	var/is_feminine = gender == FEMALE
+	var/from_them = is_feminine ? "неё" : "него"
+	var/they = is_feminine ? "Она" : "Он"
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(HAS_TRAIT(H, TRAIT_NOBLE))
-			return span_warning("От него воняет как из выгребной ямы!")
+			return span_dirty("От [from_them] воняет как из выгребной ямы!")
 	if(HAS_TRAIT(src, TRAIT_UNSEEMLY))
-		return span_warning("Он источает невыносимую вонь.")
-	return span_warning("От него смердит.")
+		return span_dirty("[they] источает невыносимую вонь.")
+	return span_dirty("От [from_them] смердит.")
 
 /datum/status_effect/debuff/hygiene_stench
 	id = "hygiene_stench"
@@ -181,32 +190,73 @@
 
 /datum/component/decal/dirt/generate_appearance(_icon, _icon_state, _dir, _layer, _color)
 	var/obj/item/I = parent
-	if(!I.icon)
-		return FALSE
-	if(!_icon)
-		_icon = 'icons/effects/blood.dmi'
-	if(!_icon_state)
-		_icon_state = "splatter[rand(1,6)]"
+	if(I.bigboy)
+		if(!_icon)
+			_icon = 'icons/effects/bloodbig.dmi'
+		if(!_icon_state)
+			_icon_state = "itemblood"
+	else
+		if(!_icon)
+			_icon = 'icons/effects/blood.dmi'
+		if(!_icon_state)
+			_icon_state = "splatter[rand(1,6)]"
 	_color ||= HYGIENE_DIRT_COLOR
-	var/icon/base_icon = icon(I.icon, I.icon_state, , 1)
-	base_icon.Blend(_color, ICON_ADD)
-	base_icon.ColorTone(_color)
-	base_icon.Blend(icon(_icon, _icon_state), ICON_MULTIPLY)
-	pic = mutable_appearance(base_icon, initial(I.icon_state), _layer)
-	pic.alpha = 120
+
+	var/icon = I.icon
+	var/icon_state = I.icon_state
+	var/static/list/dirt_splatter_appearances = list()
+	var/base_icon = isfile(icon) ? "[icon]" : "[initial(I.icon)]"
+	var/index = "[base_icon]-[icon_state]-[_color]"
+	pic = dirt_splatter_appearances[index]
+	if(!pic)
+		var/icon/dirt_splatter_icon = icon(icon, icon_state, , 1)
+		dirt_splatter_icon.Blend(_color, ICON_ADD)
+		dirt_splatter_icon.ColorTone(_color)
+		dirt_splatter_icon.Blend(icon(_icon, _icon_state), ICON_MULTIPLY)
+		pic = mutable_appearance(dirt_splatter_icon, initial(icon_state))
+		dirt_splatter_appearances[index] = pic
+	pic.alpha = 150
 	return TRUE
+
+/obj/item/proc/hygiene_apply_worn_dirt_overlay(mutable_appearance/standing, file2use, t_state, layer2use, sleeveindex, boobed_overlay)
+	if(!standing || !file2use || !t_state)
+		return
+	var/index = "[t_state][sleeveindex]"
+	var/static/list/dirty_onmob = list()
+	var/cache_key = "[index][(boobed_overlay) ? "_boob" : ""]-[HYGIENE_DIRT_COLOR]"
+	var/icon/clothing_icon = dirty_onmob[cache_key]
+	if(!clothing_icon)
+		if(sleeved && sleeveindex < 4)
+			clothing_icon = icon(GLOB.dismembered_clothing_icons[index])
+		else
+			clothing_icon = icon(file2use, t_state)
+		if(boobed_overlay && boobed)
+			clothing_icon.Blend(icon(file2use, "[t_state]_boob"), ICON_OVERLAY)
+		clothing_icon.Blend("#fff", ICON_ADD)
+		clothing_icon.Blend(icon('icons/effects/blood.dmi', "splatter[rand(1,6)]"), ICON_MULTIPLY)
+		clothing_icon.Blend(HYGIENE_DIRT_COLOR, ICON_MULTIPLY)
+		dirty_onmob[cache_key] = fcopy_rsc(clothing_icon)
+	var/mutable_appearance/pic = mutable_appearance(clothing_icon, -layer2use)
+	pic.appearance_flags = RESET_COLOR
+	pic.alpha = 150
+	standing.overlays.Add(pic)
 
 /datum/component/decal/dirt/proc/get_examine_name(datum/source, mob/user, list/override)
 	var/atom/A = parent
 	override[EXAMINE_POSITION_ARTICLE] = A.gender == PLURAL ? "some" : "a"
 	if(A.GetComponent(/datum/component/decal/blood))
-		override[EXAMINE_POSITION_BEFORE] = " <span class='warning'>dirty</span> <span class='bloody'>bloody</span> "
+		override[EXAMINE_POSITION_BEFORE] = " " + span_dirty("dirty") + " " + span_bloody("bloody") + " "
 	else
-		override[EXAMINE_POSITION_BEFORE] = " <span class='warning'>dirty</span> "
+		override[EXAMINE_POSITION_BEFORE] = " " + span_dirty("dirty") + " "
 	return COMPONENT_EXNAME_CHANGED
 
 /obj/item/proc/add_dirt_decal()
+	if(GetComponent(/datum/component/decal/dirt))
+		return
 	AddComponent(/datum/component/decal/dirt)
+	if(ishuman(loc))
+		var/mob/living/carbon/human/H = loc
+		H.regenerate_icons()
 
 /obj/item/proc/hygiene_try_dirty_from_attack(atom/target)
 	if(!target)
@@ -235,7 +285,7 @@
 		add_dirt_decal()
 
 /turf/open/water/proc/hygiene_is_dirty_water()
-	return FALSE
+	return ispath(water_reagent, /datum/reagent/water/gross) || ispath(water_reagent, /datum/reagent/blood)
 
 /turf/open/water/proc/hygiene_is_clean_water()
 	return wash_in && !hygiene_is_dirty_water()
@@ -272,3 +322,4 @@
 #undef HYGIENE_STINK_TICK_DELAY
 #undef HYGIENE_PERFUME_DURATION
 #undef HYGIENE_DIRT_COLOR
+#undef HYGIENE_CLOTHING_DIRT_STEP

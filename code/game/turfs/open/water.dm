@@ -248,7 +248,9 @@
 			return
 		var/list/wash = list('sound/foley/waterwash (1).ogg','sound/foley/waterwash (2).ogg')
 		playsound(user, pick_n_take(wash), 100, FALSE)
-		var/obj/item2wash = user.get_active_held_item()
+		// TA EDIT START - hygiene system
+		var/obj/item/item2wash = user.get_active_held_item()
+		// TA EDIT END - hygiene system
 		if(!item2wash)
 			if(istype(src, /turf/open/water/bath) && ishuman(user))
 				var/mob/living/carbon/human/bather = user
@@ -256,7 +258,13 @@
 				return
 			user.visible_message(span_info("[user] starts to wash in [src]."))
 			if(do_after(L, 3 SECONDS, target = src))
-				if(wash_in)
+				// TA EDIT START - hygiene system
+				if(hygiene_is_dirty_water())
+					if(ishuman(user))
+						var/mob/living/carbon/human/H = user
+						H.hygiene_adjust_dirt(10)
+				else if(wash_in)
+				// TA EDIT END - hygiene system
 					wash_atom(user, CLEAN_STRONG)
 					user.remove_stress(/datum/stressevent/sewertouched)
 				playsound(user, pick(wash), 100, FALSE)
@@ -292,7 +300,11 @@
 		else
 			user.visible_message(span_info("[user] starts to wash [item2wash] in [src]."))
 			if(do_after(L, 30, target = src))
-				if(wash_in)
+				// TA EDIT START - hygiene system
+				if(hygiene_is_dirty_water())
+					item2wash.add_dirt_decal()
+				else if(wash_in)
+				// TA EDIT END - hygiene system
 					wash_atom(item2wash, CLEAN_STRONG)
 					L.update_inv_hands()
 				if(istype(src,/turf/open/water/bloody))
