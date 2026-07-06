@@ -7,6 +7,7 @@
 #define HYGIENE_DRY_LOSS 1
 #define HYGIENE_DRY_TICK_DELAY (30 SECONDS)
 #define HYGIENE_WATER_TICK_DELAY (5 SECONDS)
+#define HYGIENE_STINK_TICK_DELAY (4 SECONDS)
 #define HYGIENE_PERFUME_DURATION (10 MINUTES)
 #define HYGIENE_DIRT_COLOR "#6f6658"
 
@@ -17,6 +18,7 @@
 	var/hygiene_next_environment_tick = 0
 	var/hygiene_was_stinking = FALSE
 	var/hygiene_perfumed_until = 0
+	var/hygiene_next_stink_tick = 0
 
 /mob/living/carbon/human/proc/hygiene_clean_act(datum/source, strength)
 	SIGNAL_HANDLER
@@ -88,9 +90,14 @@
 		hygiene_next_clothing_threshold += 25
 
 /mob/living/carbon/human/proc/hygiene_emit_stench()
-	if(hygiene_is_perfumed())
-		hygiene_clear_emitted_stench()
+	if(world.time < hygiene_next_stink_tick)
 		return
+	if(hygiene_is_perfumed())
+		return
+	var/turf/T = get_turf(src)
+	if(!T)
+		return
+	hygiene_next_stink_tick = world.time + HYGIENE_STINK_TICK_DELAY
 	for(var/mob/living/carbon/human/H in view(HYGIENE_STINK_RADIUS, src))
 		if(H == src)
 			continue
@@ -174,6 +181,8 @@
 
 /datum/component/decal/dirt/generate_appearance(_icon, _icon_state, _dir, _layer, _color)
 	var/obj/item/I = parent
+	if(!I.icon)
+		return FALSE
 	if(!_icon)
 		_icon = 'icons/effects/blood.dmi'
 	if(!_icon_state)
@@ -202,22 +211,28 @@
 /obj/item/proc/hygiene_try_dirty_from_attack(atom/target)
 	if(!target)
 		return
+	if(GetComponent(/datum/component/decal/dirt))
+		return
 	if(istype(target, /obj/structure/flora/roguegrass))
 		var/turf/T = get_turf(target)
-		if(istype(T, /turf/open/water))
-			var/turf/open/water/W = T
-			if(W.hygiene_is_dirty_water())
-				add_dirt_decal()
-				return
-	if(ishuman(target))
-		var/mob/living/carbon/human/H = target
-		var/in_dirty_water = FALSE
-		var/turf/T = get_turf(H)
-		if(istype(T, /turf/open/water))
-			var/turf/open/water/W = T
-			in_dirty_water = W.hygiene_is_dirty_water()
-		if(H.hygiene_get_dirt() > 0 || in_dirty_water)
+		if(!istype(T, /turf/open/water))
+			return
+		var/turf/open/water/W = T
+		if(W.hygiene_is_dirty_water())
 			add_dirt_decal()
+		return
+	if(!ishuman(target))
+		return
+	var/mob/living/carbon/human/H = target
+	if(H.hygiene_get_dirt() > 0)
+		add_dirt_decal()
+		return
+	var/turf/T = get_turf(H)
+	if(!istype(T, /turf/open/water))
+		return
+	var/turf/open/water/W = T
+	if(W.hygiene_is_dirty_water())
+		add_dirt_decal()
 
 /turf/open/water/proc/hygiene_is_dirty_water()
 	return FALSE
@@ -231,8 +246,6 @@
 	var/mob/living/carbon/human/H = AM
 	if(hygiene_is_dirty_water())
 		H.hygiene_adjust_dirt(HYGIENE_DIRTY_WATER_GAIN)
-	else if(hygiene_is_clean_water())
-		H.hygiene_adjust_dirt(-HYGIENE_CLEAN_WATER_LOSS, FALSE)
 	H.hygiene_next_environment_tick = world.time + HYGIENE_WATER_TICK_DELAY
 
 /turf/open/water/sewer/hygiene_is_dirty_water()
@@ -256,5 +269,6 @@
 #undef HYGIENE_DRY_LOSS
 #undef HYGIENE_DRY_TICK_DELAY
 #undef HYGIENE_WATER_TICK_DELAY
+#undef HYGIENE_STINK_TICK_DELAY
 #undef HYGIENE_PERFUME_DURATION
 #undef HYGIENE_DIRT_COLOR

@@ -93,7 +93,7 @@
 
 	RegisterSignal(src, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(clean_blood))
 	// TA EDIT START - hygiene system
-	RegisterSignal(src, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(hygiene_clean_act))
+	RegisterSignal(src, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(hygiene_clean_act), override = TRUE)
 	// TA EDIT END - hygiene system
 	AddComponent(/datum/component/personal_crafting)
 	AddComponent(/datum/component/footstep, footstep_type, 1, 2)
