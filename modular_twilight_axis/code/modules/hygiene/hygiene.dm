@@ -151,15 +151,15 @@
 	if(hygiene_get_dirt() < HYGIENE_STINK_THRESHOLD || hygiene_is_perfumed())
 		return null
 	var/is_feminine = gender == FEMALE
-	var/from_them = is_feminine ? "неё" : "него"
-	var/they = is_feminine ? "Она" : "Он"
+	var/from_them = is_feminine ? "her" : "him"
+	var/they = is_feminine ? "She" : "He"
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(HAS_TRAIT(H, TRAIT_NOBLE))
-			return span_dirty("От [from_them] воняет как из выгребной ямы!")
+			return span_dirty("The stench coming from [from_them] is like an open cesspit!")
 	if(HAS_TRAIT(src, TRAIT_UNSEEMLY))
-		return span_dirty("[they] источает невыносимую вонь.")
-	return span_dirty("От [from_them] смердит.")
+		return span_dirty("[they] reeks unbearably.")
+	return span_dirty("A foul stench comes from [from_them].")
 
 /datum/status_effect/debuff/hygiene_stench
 	id = "hygiene_stench"
