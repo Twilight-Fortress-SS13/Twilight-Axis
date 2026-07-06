@@ -171,9 +171,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_EASYDISMEMBER, \
 	TRAIT_PERMAMUTE, \
 	TRAIT_SHIRTLESS, \
-	TRAIT_NODEF, \
-	TRAIT_REVERSE_GUIDANCE, \
-	TRAIT_LESSER_REVERSE_GUIDANCE \
+	TRAIT_NODEF \
 )
 
 #define TAT_RESIDENT_PUGILIST_DEFAULT "Dropkick - Pushback + Extra Damage"
@@ -335,8 +333,6 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_EASYDISMEMBER = TAT_TRAIT_ENTRY("Easy Dismemberment", -3, "Your limbs are much easier to dismember."), \
 	TRAIT_PERMAMUTE = TAT_TRAIT_ENTRY("Permanent Mute", -2, "You are permanently mute and cannot speak."), \
 	TRAIT_NODEF = TAT_TRAIT_ENTRY("No Defense", -4, "You expose yourself completely in battle."), \
-	TRAIT_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Reverse Guidance", -2, "Something hinders you in battle. Anti-guidance: 20%."), \
-	TRAIT_LESSER_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Lesser Reverse Guidance", -1, "Something faintly hinders you in battle. Anti-guidance: 10%."), \
 	TAT_TRAIT_ACCURSED = TAT_TRAIT_ENTRY("Dendor's Curse", -1, "You're cursed by the Sleeping Volf. Now you're shapshift to lesser creachure every nite.")
 
 #define TAT_TRAIT_STAT_POINT_RULES list( \

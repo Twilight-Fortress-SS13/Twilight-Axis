@@ -520,7 +520,6 @@
 		TRAIT_FENCERDEXTERITY = list(TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_BODYBUILDER_SKIN),
 		TRAIT_NUDE_SLEEPER = list(TRAIT_NUDIST, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_BODYBUILDER_SKIN, TRAIT_NOSLEEP),
 		TRAIT_NOSLEEP = list(TRAIT_RITUALIST),
-		TRAIT_REVERSE_GUIDANCE = list(TRAIT_LESSER_REVERSE_GUIDANCE),
 		TRAIT_NOPAINSTUN = list(TAT_TRAIT_MAGE_INITIATE)
 	)
 	return GLOB.tat_trait_conflict_map
@@ -1529,6 +1528,21 @@
 		return null
 	return text2path(path_text)
 
+/datum/tat_traits/proc/get_tat_resident_advclass_datum(advclass_type)
+	RETURN_TYPE(/datum/advclass)
+	if(!ispath(advclass_type, /datum/advclass))
+		return null
+
+	var/list/all_classes = SSrole_class_handler?.sorted_class_categories?[CTAG_ALLCLASS]
+	if(!length(all_classes))
+		return null
+
+	for(var/datum/advclass/advclass as anything in all_classes)
+		if(advclass.type == advclass_type)
+			return advclass
+
+	return null
+
 /datum/tat_traits/proc/get_tat_resident_role_choice_for_title(title)
 	if(!has_trait(TAT_TRAIT_RESIDENT) || !istext(title) || !length(title))
 		return null
@@ -1613,10 +1627,16 @@
 	var/applied_name = title
 
 	if(resident_advjob_type)
-		var/datum/advclass/advclass = new resident_advjob_type
+		var/datum/advclass/advclass = get_tat_resident_advclass_datum(resident_advjob_type)
 		if(advclass)
 			applied_name = get_pliant_safe_class_name(advclass.name, title)
-			qdel(advclass)
+			if(H.mind)
+				H.mind.picked_advclass = advclass
+		else
+			advclass = new resident_advjob_type
+			if(advclass)
+				applied_name = get_pliant_safe_class_name(advclass.name, title)
+				qdel(advclass)
 
 	if(!length(applied_name))
 		return
