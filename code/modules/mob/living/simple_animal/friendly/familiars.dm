@@ -48,7 +48,8 @@
 	response_harm_continuous = "kicks"
 	response_harm_simple = "kick"
 	faction = list(FACTION_ROGUEANIMAL, FACTION_NEUTRAL)
-	speed = 0.8
+	speed = 0
+	move_to_delay = 2
 	breedchildren = 0 //Yeah no, I'm not falling for this one.
 	dodgetime = 20
 	held_items = list(null, null)
