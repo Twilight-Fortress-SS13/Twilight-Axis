@@ -254,37 +254,38 @@
 	icon_loadout = /obj/item/clothing/under/roguetown/trou/leather/etrpants
 
 /obj/item/enchantingkit/grenzel_gambeson
-    name = "'Grenzelhoft Hip-Shirt' morphing elixir"
-    desc = "A small container of special morphing dust, perfect to make a specific item. Required: Gambeson or Padded Gambeson."
-    target_items = list(
-        /obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft,
-        /obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
-    )
-    icon_loadout = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
+	name = "'Grenzelhoft Hip-Shirt' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Gambeson or Padded Gambeson."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft,
+		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
+	)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
 
 /obj/item/enchantingkit/grenzel_shoes
-    name = "'Grenzelhoft Boots' morphing elixir"
-    desc = "A small container of special morphing dust, perfect to make a specific item. Required: Heavy Leather Boots or Dark Boots."
-    target_items = list(
-        /obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/roguetown/grenzelhoft,
-        /obj/item/clothing/shoes/roguetown/boots = /obj/item/clothing/shoes/roguetown/grenzelhoft
-    )
-    icon_loadout = /obj/item/clothing/shoes/roguetown/grenzelhoft
+	name = "'Grenzelhoft Boots' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Heavy Leather Boots or Dark Boots."
+	target_items = list(
+		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/roguetown/grenzelhoft,
+		/obj/item/clothing/shoes/roguetown/boots = /obj/item/clothing/shoes/roguetown/grenzelhoft
+	)
+	icon_loadout = /obj/item/clothing/shoes/roguetown/grenzelhoft
 
 /obj/item/enchantingkit/grenzel_pants
-    name = "'Grenzelhoft Paumpers' morphing elixir"
-    desc = "A small container of special morphing dust, perfect to make a specific item. Required: Hardened Leather Pants or Regular Pants."
-    target_items = list(
-        /obj/item/clothing/under/roguetown/heavy_leather_pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants,
-        /obj/item/clothing/under/roguetown/trou = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants,
-        /obj/item/clothing/under/roguetown/tights = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
-    )
-    icon_loadout = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
+	name = "'Grenzelhoft Paumpers' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Hardened Leather Pants or Regular Pants."
+	target_items = list(
+		/obj/item/clothing/under/roguetown/heavy_leather_pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants,
+		/obj/item/clothing/under/roguetown/trou = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants,
+		/obj/item/clothing/under/roguetown/tights = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
+	)
+	icon_loadout = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 
 /obj/item/enchantingkit/grenzel_gloves
-    name = "'Grenzelhoft Gloves' morphing elixir"
-    desc = "A small container of special morphing dust, perfect to make a specific item. Required: Any Gloves."
-    target_items = list(
-        /obj/item/clothing/gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
-    )
-    icon_loadout = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
+	name = "'Grenzelhoft Gloves' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Any Gloves."
+	target_items = list(
+		/obj/item/clothing/gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
+	)
+	icon_loadout = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
+
