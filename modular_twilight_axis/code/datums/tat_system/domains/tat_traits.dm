@@ -1001,6 +1001,8 @@
 	var/list/roles = list()
 	if(has_trait(TAT_TRAIT_WITCH_INITIATE))
 		roles["Witch"] = 1000000
+	if(has_trait(TAT_TRAIT_SPELLBLADE))
+		roles["Spellblade"] = 800000
 	if(has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T1) || has_trait(TAT_TRAIT_BARDIC_INSPIRATION_T2))
 		roles["Minstrel"] = 600000
 	return roles

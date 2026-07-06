@@ -683,12 +683,31 @@
 
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
+/datum/tat_skills/proc/get_arcyne_armament_skill_cap(skill_type)
+	var/cap = 0
+
+	if(owner_build?.has_trait(TRAIT_ARCYNE))
+		cap = TAT_SKILL_COMBAT_CAP_WEAPON_TRAINED
+
+	if(owner_build?.has_trait(TAT_TRAIT_MAGE_INITIATE))
+		cap = max(cap, TAT_SKILL_COMBAT_CAP_WEAPON_TRAINED)
+
+	if(owner_build?.has_trait(TAT_TRAIT_SPELLBLADE))
+		cap = max(cap, TAT_SKILL_COMBAT_CAP_TRAIT_MASTER)
+
+	cap = max(cap, get_virtue_skill_floor(skill_type))
+
+	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
+
 /datum/tat_skills/proc/get_combat_skill_cap(skill_type)
 	if(!ispath(skill_type, /datum/skill/combat))
 		return TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM
 
 	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 		return get_firearms_skill_cap(skill_type)
+
+	if(skill_type == /datum/skill/combat/arcyne)
+		return get_arcyne_armament_skill_cap(skill_type)
 
 	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
 	var/trained_cap = TAT_SKILL_COMBAT_CAP_WEAPON_TRAINED

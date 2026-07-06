@@ -39,6 +39,7 @@
 	/datum/skill/combat/shields, \
 	/datum/skill/combat/slings, \
 	/datum/skill/combat/staves, \
+	/datum/skill/combat/arcyne, \
 	/datum/skill/combat/twilight_firearms \
 )
 
