@@ -85,6 +85,7 @@
 #define TAT_TRAIT_SKILLED_ARMORER "tat_skilled_armorer"
 #define TAT_TRAIT_SKILLED_WEAPONSMITH "tat_skilled_weaponsmith"
 #define TAT_TRAIT_SKILLED_ARTISAN "tat_skilled_artisan"
+#define TAT_TRAIT_SKILLED_WOODSMAN "tat_skilled_woodsman"
 #define TAT_TRAIT_SKILLED_MASON "tat_skilled_mason"
 #define TAT_TRAIT_SKILLED_CLOTHIER "tat_skilled_clothier"
 #define TAT_TRAIT_SKILLED_SURVIVALIST "tat_skilled_survivalist"
@@ -98,10 +99,11 @@
 #define TAT_TRAIT_SKILL_CAP_BONUS_RULES list( \
 	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/weaponsmithing = 6, /datum/skill/craft/armorsmithing = 6, /datum/skill/craft/blacksmithing = 6, /datum/skill/craft/smelting = 6, /datum/skill/craft/engineering = 6, /datum/skill/labor/mining = 6, /datum/skill/craft/masonry = 6, /datum/skill/craft/ceramics = 6), \
 	TRAIT_ENCHANTING_EXPERT = list(/datum/skill/craft/blacksmithing = 6, /datum/skill/craft/smelting = 6, /datum/skill/craft/engineering = 6), \
-	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = 5, /datum/skill/craft/smelting = 5, /datum/skill/craft/engineering = 5), \
-	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = 5, /datum/skill/craft/masonry = 5), \
+	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = 5, /datum/skill/craft/smelting = 5, /datum/skill/craft/engineering = 5, /datum/skill/craft/masonry = 5), \
+	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = 5, /datum/skill/craft/engineering = 5), \
 	TAT_TRAIT_SKILLED_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = 5, /datum/skill/craft/engineering = 5), \
 	TAT_TRAIT_SKILLED_ARTISAN = list(/datum/skill/craft/crafting = 5, /datum/skill/craft/ceramics = 5), \
+	TAT_TRAIT_SKILLED_WOODSMAN = list(/datum/skill/labor/lumberjacking = 5, /datum/skill/craft/carpentry = 5), \
 	TAT_TRAIT_MASTER_CRAFTSMAN = list(/datum/skill/craft/crafting = 5, /datum/skill/craft/carpentry = 5, /datum/skill/craft/traps = 5), \
 	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = 5, /datum/skill/craft/carpentry = 5, /datum/skill/craft/ceramics = 5), \
 	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = 6), \
@@ -292,10 +294,11 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_TRAINEE_TROUBADOUR = TAT_TRAIT_ENTRY("Trainee Troubadour", 1, "Reduces the cost of Music, Literacy, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 2, "Grants +30 peaceful skill points. Costs 2 Skills points; Residents get the first Handicraft/Straying Soul trait free, Traders always pay 1."), \
 	TRAIT_SMITHING_EXPERT = TAT_TRAIT_ENTRY("Expert Forgehand", 3, "Experienced with smithing and engineering. Weaponsmithing, Armorsmithing, Smithing, Smelting, Engineering, Mining, Masonry and Pottery can progress to Legendary levels."), \
-	TAT_TRAIT_SKILLED_FORGEHAND = TAT_TRAIT_ENTRY("Skilled Forgehand", 1, "Skilled with forge-work. Smithing, Smelting and Engineering can be picked to Master levels."), \
-	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 1, "Skilled with armor repair and fitting. Armorsmithing and Masonry can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_FORGEHAND = TAT_TRAIT_ENTRY("Skilled Forgehand", 1, "Skilled with forge-work. Smithing, Smelting, Engineering and Masonry can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 1, "Skilled with armor repair and fitting. Armorsmithing and Engineering can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_WEAPONSMITH = TAT_TRAIT_ENTRY("Skilled Weaponsmith", 1, "Skilled with weapon work. Weaponsmithing and Engineering can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_ARTISAN = TAT_TRAIT_ENTRY("Skilled Artisan", 1, "Skilled with general craftwork. Crafting and Pottery can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_WOODSMAN = TAT_TRAIT_ENTRY("Skilled Woodsman", 1, "Skilled with timber work. Lumberjacking and Woodwork can be picked to Master levels."), \
 	TAT_TRAIT_MASTER_CRAFTSMAN = TAT_TRAIT_ENTRY("Master Craftsman", 1, "Experienced with general craftwork. Crafting, Woodwork and Trapmaking can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_MASON = TAT_TRAIT_ENTRY("Skilled Architect", 1, "Skilled with stone and kiln work. Masonry, Woodwork and Pottery can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_COOK = TAT_TRAIT_ENTRY("Skilled Cook", 1, "Rod and steak, brothers! Cooking, Farming and Fishing can be picked to Master levels."), \
@@ -381,10 +384,11 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 
 #define TAT_TRAIT_SKILL_BONUS_RULES list( \
 	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/smelting = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/engineering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST), \
-	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/smelting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST), \
-	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/smelting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_SKILLED_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_SKILLED_ARTISAN = list(/datum/skill/craft/crafting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_WOODSMAN = list(/datum/skill/labor/lumberjacking = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/carpentry = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/carpentry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST), \
 	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = TAT_SKILL_BASIC_BOOST), \
 	TAT_TRAIT_SKILLED_ALCHEMIST = list(/datum/skill/craft/alchemy = TAT_SKILL_DISCOUNT_BOOST), \
