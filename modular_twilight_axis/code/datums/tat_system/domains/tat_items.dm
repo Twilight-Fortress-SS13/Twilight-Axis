@@ -481,6 +481,7 @@
 	if(owner_build.has_trait(TRAIT_RITUALIST))
 		add_grant_amount(result, /obj/item/ritechalk)
 	if(owner_build.has_trait(TAT_TRAIT_MAGE_INITIATE))
+		add_grant_amount(result, /obj/item/rogueweapon/spellbook)
 		add_grant_amount(result, /obj/item/chalk)
 	return result
 

@@ -30,6 +30,7 @@
 #define TAT_TRAIT_TROPHY_BOUNTY "tat_trophy_bounty"
 #define TAT_TRAIT_PLATE_SUPPLIER "tat_plate_supplier"
 #define TAT_TRAIT_SPELLBLADE "tat_spellblade"
+#define TAT_TRAIT_SPELLFIST "tat_spellfist"
 
 #define TAT_TRAIT_BARDIC_INSPIRATION_T1 "tat_bardic_inspiration_t1"
 #define TAT_TRAIT_BARDIC_INSPIRATION_T2 "tat_bardic_inspiration_t2"
@@ -198,6 +199,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_SOUNDBREAKER = TAT_TRAIT_ENTRY("Soundbreaker", 2, "Unlocks the Soundbreaker combo style."), \
 	TAT_TRAIT_RONIN = TAT_TRAIT_ENTRY("Ronin", 2, "Unlocks the Ronin combo style."), \
 	TAT_TRAIT_SPELLBLADE = TAT_TRAIT_ENTRY("Spellblade", 2, "Grants a set of weapon-binding spells and lets Arcyne Armament reach Master."), \
+	TAT_TRAIT_SPELLFIST = TAT_TRAIT_ENTRY("Spellfist", 2, "Requires Expert Pugilist and Mage Initiate. Grants unarmed arcyne combat spells and arcyne momentum."), \
 	TAT_TRAIT_RESIDENT = TAT_TRAIT_ENTRY("Resident", 1, "Grants a Meister account and ownership of a house in the city."), \
 	TAT_TRAIT_TRADER_LICENSE = TAT_TRAIT_ENTRY("Merchant's Writ", 1, "Unlocks sealed trader caches in the TAT item list."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T1 = TAT_TRAIT_ENTRY("Bardic Inspiration I", 1, "Gain tier 1 bardic inspiration, audience management verbs, and a songbook."), \
