@@ -251,7 +251,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_GRAVEROBBER = TAT_TRAIT_ENTRY("Experienced Grave Robber", 1, "Your experience with 'post-mortem artifact recovery' helps you resist Necra's curse placed on those who disturb resting places."), \
 	TRAIT_PURITAN_ADVENTURER = TAT_TRAIT_ENTRY("Interrogator", 1, "With a silver psycross, you can force the restrained to kneel before a crucifix and proclaim their true allegiance."), \
 	TRAIT_DECEIVING_MEEKNESS = TAT_TRAIT_ENTRY("Deceiving Meekness", 1, "People think you are weak. They are mistaken. You have learned to hide your vices and true beliefs from others."), \
-	TRAIT_NASTY_EATER = TAT_TRAIT_ENTRY("Inhumen Digestion", 1, "You can eat bad food, and water toxic to humen does not affect you."), \
+	TRAIT_NASTY_EATER = TAT_TRAIT_ENTRY("Inhumen Digestion", 1, "You can eat bad food, and water toxic to humen does not affect you. Costs 1 direction point."), \
 	TRAIT_GOODLOVER = TAT_TRAIT_ENTRY("Fabled Lover", 1, "It is a lucky thing to share your bed."), \
 	TAT_TRAIT_DIVINE_INITIATE = TAT_TRAIT_ENTRY("Divine Initiate", 1, "Grants miracles and devotion. Additional divine boon traits increase miracle access."), \
 	TAT_TRAIT_DIVINE_BOON_1 = TAT_TRAIT_ENTRY("Divine Boon I", 1, "Requires Divine Initiate. Raises your miracle package by one tier."), \
@@ -327,7 +327,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_CRITICAL_WEAKNESS = TAT_TRAIT_ENTRY("Critical Weakness", -3, "You are far more vulnerable to critical wounds."), \
 	TRAIT_NUDIST = TAT_TRAIT_ENTRY("Nudist", -2, "You refuse to wear clothes."), \
 	TRAIT_INHUMEN_ANATOMY = TAT_TRAIT_ENTRY("Inhumen Anatomy", -1, "Your anatomy prevents you from wearing hats and boots. Grants +1 direction point as a negative oddity."), \
-	TRAIT_DISFIGURED = TAT_TRAIT_ENTRY("Disfigured", 1, "You are unknowned to everyone."), \
+	TRAIT_DISFIGURED = TAT_TRAIT_ENTRY("Disfigured", 1, "You are unknowned to everyone. Costs 1 direction point."), \
 	TRAIT_SPELLCOCKBLOCK = TAT_TRAIT_ENTRY("Bewitched", -1, "You cannot cast spells."), \
 	TRAIT_NOSLEEP = TAT_TRAIT_ENTRY("Sleepless", -1, "You cannot fall asleep without drugs or a blow to the head."), \
 	TRAIT_NORUN = TAT_TRAIT_ENTRY("No Running", -2, "You cannot run."), \
