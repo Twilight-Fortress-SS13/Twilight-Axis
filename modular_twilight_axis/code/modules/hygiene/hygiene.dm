@@ -223,7 +223,7 @@
 		return
 	var/index = "[t_state][sleeveindex]"
 	var/static/list/dirty_onmob = list()
-	var/cache_key = "[index][(boobed_overlay) ? "_boob" : ""]-[HYGIENE_DIRT_COLOR]"
+	var/cache_key = "[index][(boobed_overlay) ? "_boob" : ""]-[bloody_icon]-[bloody_icon_state]-[HYGIENE_DIRT_COLOR]"
 	var/icon/clothing_icon = dirty_onmob[cache_key]
 	if(!clothing_icon)
 		if(sleeved && sleeveindex < 4)
@@ -233,7 +233,7 @@
 		if(boobed_overlay && boobed)
 			clothing_icon.Blend(icon(file2use, "[t_state]_boob"), ICON_OVERLAY)
 		clothing_icon.Blend("#fff", ICON_ADD)
-		clothing_icon.Blend(icon('icons/effects/blood.dmi', "splatter[rand(1,6)]"), ICON_MULTIPLY)
+		clothing_icon.Blend(icon(bloody_icon, bloody_icon_state), ICON_MULTIPLY)
 		clothing_icon.Blend(HYGIENE_DIRT_COLOR, ICON_MULTIPLY)
 		dirty_onmob[cache_key] = fcopy_rsc(clothing_icon)
 	var/mutable_appearance/pic = mutable_appearance(clothing_icon, -layer2use)
