@@ -10,6 +10,7 @@
 	ricochet_chance = 85
 	ricochets_max = 3
 	armor_penetration = 40
+	range = 9
 
 /obj/projectile/bullet/shell_shrapnel/on_hit(atom/target, blocked = 0, pierce_hit)
 	. = ..()
@@ -17,26 +18,15 @@
 		var/mob/living/carbon/human/H = target
 		var/bullet_tier = H.getarmor(def_zone, "bullet")
 		
-		var/limb_loss_mult = 0
-		
 		if(bullet_tier >= 50) 
 			H.damage_clothes(400, BRUTE, "bullet", def_zone)
-			H.apply_damage(40, BRUTE, def_zone)
-			limb_loss_mult = 0
+			H.apply_damage(20, BRUTE, def_zone)
 		else if(bullet_tier >= 10)
 			H.damage_clothes(400, BRUTE, "bullet", def_zone)
-			H.apply_damage(80, BRUTE, def_zone)
-			limb_loss_mult = 0
+			H.apply_damage(30, BRUTE, def_zone)
 		else
 			H.damage_clothes(400, BRUTE, "bullet", def_zone) 
-			H.apply_damage(80, BRUTE, def_zone)
-			limb_loss_mult = 4
-
-		if(limb_loss_mult > 0)
-			var/obj/item/bodypart/BP = H.get_bodypart(def_zone)
-			if(BP && prob(25 * limb_loss_mult) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
-				BP.brute_dam = BP.max_damage
-				BP.dismember(skip_checks = TRUE)
+			H.apply_damage(40, BRUTE, def_zone)
 
 /obj/item/artillery_shell/mortar
 	name = "mortar shell"
@@ -66,14 +56,14 @@
 	var/list/hit_turfs = list(T)
 
 	if(istype(T, /turf/closed))
-		explosion(T, 4, 10, 20)
+		explosion(T, 3, 0, 9)
 	else 
 		var/turf/turf_below = GET_TURF_BELOW(T)
 		if(istype(turf_below, /turf/open))
-			explosion(T, 4, 10, 20, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
+			explosion(T, 3, 0, 9, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
 			T.ChangeTurf(/turf/open/transparent/openspace)
 
-			var/ex_range = 5
+			var/ex_range = 3
 			for(var/turf/affected_turf in range(ex_range, T))
 				if(affected_turf == T)
 					continue
@@ -89,10 +79,10 @@
 				if(prob(chance))
 					affected_turf.ChangeTurf(/turf/open/transparent/openspace)
 
-			explosion(turf_below, 4, 10, 20, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
+			explosion(turf_below, 3, 0, 9, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
 			hit_turfs += turf_below
 		else 
-			explosion(T, 4, 10, 20, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
+			explosion(T, 3, 0, 9, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
 	
 	for(var/turf/target_turf in hit_turfs)
 		for(var/i in 1 to PROJECTILE_NUM)
