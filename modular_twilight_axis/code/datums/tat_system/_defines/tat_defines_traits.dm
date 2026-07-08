@@ -325,7 +325,8 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_BAD_MOOD = TAT_TRAIT_ENTRY("Bad Mood", -1, "All stress you receive is doubled."), \
 	TRAIT_PACIFISM = TAT_TRAIT_ENTRY("Pacifist", -4, "You cannot harm living beings."), \
 	TRAIT_CRITICAL_WEAKNESS = TAT_TRAIT_ENTRY("Critical Weakness", -3, "You are far more vulnerable to critical wounds."), \
-	TRAIT_NUDIST = TAT_TRAIT_ENTRY("Nudist", -2, "You refuse to wear clothes."), \
+	TRAIT_NUDIST = TAT_TRAIT_ENTRY("Nudist", -3, "You refuse to wear clothes."), \
+	TRAIT_SHIRTLESS = TAT_TRAIT_ENTRY("Shirtless", -1, "For one reason or another, you cannot bear covering yourself from the waist up."), \
 	TRAIT_INHUMEN_ANATOMY = TAT_TRAIT_ENTRY("Inhumen Anatomy", -1, "Your anatomy prevents you from wearing hats and boots. Grants +1 direction point as a negative oddity."), \
 	TRAIT_DISFIGURED = TAT_TRAIT_ENTRY("Disfigured", 1, "You are unknowned to everyone. Costs 1 direction point."), \
 	TRAIT_SPELLCOCKBLOCK = TAT_TRAIT_ENTRY("Bewitched", -1, "You cannot cast spells."), \
