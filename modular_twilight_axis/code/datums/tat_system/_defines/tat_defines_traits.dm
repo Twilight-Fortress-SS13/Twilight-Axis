@@ -210,8 +210,8 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -3, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
 	TAT_TRAIT_TROPHY_BOUNTY = TAT_TRAIT_ENTRY("Trophy Bounty", 1, "You can receive additional bonuses when wearing a headhook with monster heads."), \
 	TAT_TRAIT_WEAPON_TRAINING = TAT_TRAIT_ENTRY("Weapon Training", 1, "Allows raising melee combat skills to level 3 and grants +3 combat skill points when purchased."), \
-	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 4, "Raises selected combat skill caps from 3 to 4 and grants +6 combat skill points for expert-level training."), \
-	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 2, "Raises one expert combat skill cap from 4 to 5 and grants +4 combat skill points for master-level training. Requires Expert Warrior."), \
+	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 3, "Raises selected combat skill caps from 3 to 4 and grants +6 combat skill points for expert-level training."), \
+	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 3, "Raises one expert combat skill cap from 4 to 5 and grants +4 combat skill points for master-level training. Requires Expert Warrior."), \
 	TRAIT_DODGEEXPERT = TAT_TRAIT_ENTRY("Expert Dodger", 2, "Much better at dodging incoming strikes in light armor or with little armor. Heavy armor is too cumbersome for this style."), \
 	TRAIT_PARRYEXPERT = TAT_TRAIT_ENTRY("Expert Parry", 2, "Much better at parrying incoming strikes, with a higher chance to deflect blows using a weapon."), \
 	TRAIT_HEAVYARMOR = TAT_TRAIT_ENTRY("Plate Training", 3, "Can move freely in heavy armor."), \
