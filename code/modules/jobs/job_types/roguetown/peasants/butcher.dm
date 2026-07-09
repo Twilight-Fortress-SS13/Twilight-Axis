@@ -1,26 +1,31 @@
 /datum/job/roguetown/butcher
 	title = "Butcher"
-	flag = BEASTMASTER
+	flag = BUTCHER
 	department_flag = PEASANTS
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
 
-	allowed_races = list("Humen",
-	"Humen",
-	"Elf",
-	"Half-Elf",
-	"Dwarf",
-	"Tiefling",
-	"Aasimar"
+	allowed_races = list(
+		"Humen",
+		"Elf",
+		"Half-Elf",
+		"Dwarf",
+		"Tiefling",
+		"Argonian",
+		"Dark Elf",
+		"Aasimar",
+		"Half Orc",
 	)
-	tutorial = "Some say youre a strange individual, some say youre a cheat while some claim you are a savant in the art of sausage making. Without your skilled hands and knifework most of the livestock around the town would be wasted. "
-
-	allowed_ages = list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
+	allowed_ages = ADULT_AGES_LIST
+	
+	tutorial = "Some say you're a strange individual, some say you're a cheat, while some claim you're a savant in the art of sausage making. Without your skilled hands and knifework, most of the livestock around the town would be wasted. "
 
 	outfit = /datum/outfit/job/roguetown/beastmaster
 	display_order = JDO_BUTCHER
 	give_bank_account = TRUE
+	min_pq = -10
+	max_pq = null
 
 /datum/outfit/job/roguetown/beastmaster/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -32,7 +37,7 @@
 		H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 2, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/labor/taming, 5, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/craft/tanning, 1, TRUE)
-		H.mind.adjust_skillrank(/datum/skill/misc/riding, 1, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/misc/riding, 3, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/craft/crafting, 2, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/labor/butchering, 5, TRUE)
 	if(H.gender == MALE)

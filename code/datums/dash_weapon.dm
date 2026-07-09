@@ -40,11 +40,11 @@
 		spot1.Beam(spot2,beam_effect,time=20)
 		current_charges--
 		holder.update_action_buttons_icon()
-		addtimer(CALLBACK(src, .proc/charge), charge_rate)
+		addtimer(CALLBACK(src, PROC_REF(charge)), charge_rate)
 
 /datum/action/innate/dash/proc/charge()
 	current_charges = CLAMP(current_charges + 1, 0, max_charges)
 	holder.update_action_buttons_icon()
 	if(recharge_sound)
 		playsound(dashing_item, recharge_sound, 50, TRUE)
-	to_chat(holder, "<span class='notice'>[src] now has [current_charges]/[max_charges] charges.</span>")
+	to_chat(holder, span_notice("[src] now has [current_charges]/[max_charges] charges."))

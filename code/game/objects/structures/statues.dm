@@ -15,7 +15,7 @@
 /obj/structure/statue/Initialize()
 	. = ..()
 	AddComponent(art_type, impressiveness)
-	addtimer(CALLBACK(src, /datum.proc/AddComponent, /datum/component/beauty, impressiveness *  75), 0)
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/datum, AddComponent), /datum/component/beauty, impressiveness *  75), 0)
 
 /obj/structure/statue/attackby(obj/item/W, mob/living/user, params)
 	add_fingerprint(user)
@@ -26,11 +26,11 @@
 			if(!W.tool_start_check(user, amount=0))
 				return FALSE
 
-			user.visible_message("<span class='notice'>[user] is slicing apart the [name].</span>", \
-								"<span class='notice'>I are slicing apart the [name]...</span>")
+			user.visible_message(span_notice("[user] is slicing apart the [name]."), \
+								span_notice("I are slicing apart the [name]..."))
 			if(W.use_tool(src, user, 40, volume=50))
-				user.visible_message("<span class='notice'>[user] slices apart the [name].</span>", \
-									"<span class='notice'>I slice apart the [name]!</span>")
+				user.visible_message(span_notice("[user] slices apart the [name]."), \
+									span_notice("I slice apart the [name]!"))
 				deconstruct(TRUE)
 			return
 	return ..()

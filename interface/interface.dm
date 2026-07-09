@@ -2,7 +2,7 @@
 /client/verb/wiki(query as text)
 	set name = "wiki"
 	set desc = ""
-	set hidden = 1
+	set category = "OOC"
 	var/wikiurl = CONFIG_GET(string/wikiurl)
 	if(wikiurl)
 		if(query)
@@ -11,52 +11,63 @@
 		else if (query != null)
 			src << link(wikiurl)
 	else
-		to_chat(src, "<span class='danger'>The wiki URL is not set in the server configuration.</span>")
+		to_chat(src, span_danger("The wiki URL is not set in the server configuration."))
 	return
 
-/client/verb/forum()
-	set name = "forum"
+/client/verb/discord()
+	set name = "discord"
 	set desc = ""
-	set hidden = 1
-	var/forumurl = CONFIG_GET(string/forumurl)
-	if(forumurl)
-		if(alert("This will open the forum in your browser. Are you sure?",,"Yes","No")!="Yes")
+	set category = "OOC"
+	var/discordurl = CONFIG_GET(string/discordurl)
+	if(discordurl)
+		if(alert("This will open the discord. Are you sure?",,"Yes","No")!="Yes")
 			return
-		src << link(forumurl)
+		src << link(discordurl)
 	else
-		to_chat(src, "<span class='danger'>The forum URL is not set in the server configuration.</span>")
+		to_chat(src, span_danger("The forum URL is not set in the server configuration."))
 	return
 
 /client/verb/rules()
 	set name = "rules"
 	set desc = ""
-	set hidden = 1
+	set category = "OOC"
 	var/rulesurl = CONFIG_GET(string/rulesurl)
 	if(rulesurl)
 		if(alert("This will open the rules in your browser. Are you sure?",,"Yes","No")!="Yes")
 			return
 		src << link(rulesurl)
 	else
-		to_chat(src, "<span class='danger'>The rules URL is not set in the server configuration.</span>")
+		to_chat(src, span_danger("The rules URL is not set in the server configuration."))
 	return
 
 /client/verb/github()
 	set name = "github"
 	set desc = ""
-	set hidden = 1
+	set category = "OOC"
 	var/githuburl = CONFIG_GET(string/githuburl)
 	if(githuburl)
 		if(alert("This will open the Github repository in your browser. Are you sure?",,"Yes","No")!="Yes")
 			return
 		src << link(githuburl)
 	else
-		to_chat(src, "<span class='danger'>The Github URL is not set in the server configuration.</span>")
+		to_chat(src, span_danger("The Github URL is not set in the server configuration."))
 	return
+
+/client/verb/mentorhelp()
+	set name = "Mentorhelp"
+	set desc = ""
+	set category = "Admin"
+	if(mob)
+		var/msg = input("Say your meditation:", "Voices in your head") as text|null
+		if(msg)
+			mob.schizohelp(msg)
+	else
+		to_chat(src, span_danger("You can't currently use Mentorhelp in the main menu."))
 
 /client/verb/reportissue()
 	set name = "report-issue"
 	set desc = ""
-	set hidden = 1
+	set category = "OOC"
 	var/githuburl = CONFIG_GET(string/githuburl)
 	if(githuburl)
 		var/message = "This will open the Github issue reporter in your browser. Are you sure?"
@@ -72,7 +83,7 @@
 			url_params = "Issue reported from [GLOB.round_id ? " Round ID: [GLOB.round_id][servername ? " ([servername])" : ""]" : servername]\n\n[url_params]"
 		DIRECT_OUTPUT(src, link("[githuburl]/issues/new?body=[url_encode(url_params)]"))
 	else
-		to_chat(src, "<span class='danger'>The Github URL is not set in the server configuration.</span>")
+		to_chat(src, span_danger("The Github URL is not set in the server configuration."))
 	return
 
 /client/verb/changelog()
@@ -88,9 +99,8 @@
 		winset(src, "infowindow.changelog", "font-style=;")
 
 /client/verb/hotkeys_help()
-	set name = "zHelp-Controls"
-	set category = "Options"
-
+	set name = "_Help-Controls"
+	set category = "OOC"
 	mob.hotkey_help()
 
 
@@ -169,15 +179,31 @@ Hotkey-Mode: (hotkey-mode must be on)
 		prefs.crt = FALSE
 		prefs.save_preferences()
 		to_chat(src, "CRT... OFF")
-		for(var/obj/screen/scannies/S in screen)
+		for(var/atom/movable/screen/scannies/S in screen)
 			S.alpha = 0
 	else
 		winset(src, "mapwindow.map", "zoom-mode=blur")
 		prefs.crt = TRUE
 		prefs.save_preferences()
 		to_chat(src, "CRT... ON")
-		for(var/obj/screen/scannies/S in screen)
+		for(var/atom/movable/screen/scannies/S in screen)
 			S.alpha = 70
+
+/client/verb/triggercommend()
+	set category = "OOC"
+	set name = "Commend Someone"
+	commendsomeone()
+
+/client/verb/changefps()
+	set category = "Options"
+	set name = "ChangeFPS"
+	if(!prefs)
+		return
+	var/newfps = input(usr, "Enter new FPS", "New FPS", 100) as null|num
+	if (!isnull(newfps))
+		prefs.clientfps = clamp(newfps, 1, 1000)
+		fps = prefs.clientfps
+		prefs.save_preferences()
 
 /*
 /client/verb/set_blur()

@@ -6,7 +6,7 @@
 	dir_in = 1 //Facing North.
 	max_integrity = 400
 	deflect_chance = 20
-	armor = list("melee" = 40, "bullet" = 35, "laser" = 15, "energy" = 10, "bomb" = 20, "bio" = 0, "rad" = 50, "fire" = 100, "acid" = 100)
+	armor = list("blunt" = 40, "slash" = 40, "stab" = 35, "bullet" = 35, "laser" = 15, "energy" = 10, "bomb" = 20, "bio" = 0, "rad" = 50, "fire" = 100, "acid" = 100)
 	max_temperature = 30000
 	infra_luminosity = 8
 	force = 40
@@ -17,8 +17,8 @@
 	shield = new/obj/durand_shield
 	shield.chassis = src
 	shield.layer = layer
-	RegisterSignal(src, COMSIG_MECHA_ACTION_ACTIVATE, .proc/relay)
-	RegisterSignal(src, COMSIG_PROJECTILE_PREHIT, .proc/prehit)
+	RegisterSignal(src, COMSIG_MECHA_ACTION_ACTIVATE, PROC_REF(relay))
+	RegisterSignal(src, COMSIG_PROJECTILE_PREHIT, PROC_REF(prehit))
 	. = ..()
 
 /obj/mecha/combat/durand/Destroy()
@@ -45,7 +45,7 @@
 		shield.forceMove(loc)
 		shield.dir = dir
 
-/obj/mecha/combat/durand/forceMove(var/turf/T)
+/obj/mecha/combat/durand/forceMove(turf/T)
 	. = ..()
 	shield.forceMove(T)
 
@@ -72,7 +72,7 @@
 
 /**Checks if defense mode is enabled, and if the attacker is standing in an area covered by the shield.
 Expects a turf. Returns true if the attack should be blocked, false if not.*/
-/obj/mecha/combat/durand/proc/defense_check(var/turf/aloc)
+/obj/mecha/combat/durand/proc/defense_check(turf/aloc)
 	if (!defense_mode || !shield || shield.switching)
 		return FALSE
 	. = FALSE
@@ -144,7 +144,7 @@ own integrity back to max. Shield is automatically dropped if we run out of powe
 
 /obj/durand_shield/Initialize()
 	. = ..()
-	RegisterSignal(src, COMSIG_MECHA_ACTION_ACTIVATE, .proc/activate)
+	RegisterSignal(src, COMSIG_MECHA_ACTION_ACTIVATE, PROC_REF(activate))
 
 /obj/durand_shield/Destroy()
 	if(chassis)
@@ -161,13 +161,13 @@ the shield is disabled by means other than the action button (like running out o
 	if(switching && !signal_args[1])
 		return
 	if(!chassis.defense_mode && (!chassis.cell || chassis.cell.charge < 100)) //If it's off, and we have less than 100 units of power
-		chassis.occupant_message("<span class='warn'>Insufficient power; cannot activate defense mode.</span>")
+		chassis.occupant_message(span_warn("Insufficient power; cannot activate defense mode."))
 		return
 	switching = TRUE
 	chassis.defense_mode = !chassis.defense_mode
 	chassis.defense_action.button_icon_state = "mech_defense_mode_[chassis.defense_mode ? "on" : "off"]" //This is backwards because we haven't changed the var yet
 	if(!signal_args[1])
-		chassis.occupant_message("<span class='notice'>Defense mode [chassis.defense_mode?"enabled":"disabled"].</span>")
+		chassis.occupant_message(span_notice("Defense mode [chassis.defense_mode?"enabled":"disabled"]."))
 		chassis.log_message("User has toggled defense mode -- now [chassis.defense_mode?"enabled":"disabled"].", LOG_MECHA)
 	else
 		chassis.log_message("defense mode state changed -- now [chassis.defense_mode?"enabled":"disabled"].", LOG_MECHA)

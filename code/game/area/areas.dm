@@ -39,7 +39,7 @@
 	/// Bonus mood for being in this area
 	var/mood_bonus = 0
 	/// Mood message for being here, only shows up if mood_bonus != 0
-	var/mood_message = "<span class='nicegreen'>This area is pretty nice!\n</span>"
+	var/mood_message = span_nicegreen("This area is pretty nice!\n")
 
 	var/power_equip = TRUE
 	var/power_light = TRUE
@@ -141,7 +141,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 		if (picked && is_station_level(picked.z))
 			GLOB.teleportlocs[AR.name] = AR
 
-	sortTim(GLOB.teleportlocs, /proc/cmp_text_asc)
+	sortTim(GLOB.teleportlocs, GLOBAL_PROC_REF(cmp_text_asc))
 
 /**
   * Called when an area loads
@@ -345,7 +345,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 				if(D.operating)
 					D.nextstate = opening ? FIREDOOR_OPEN : FIREDOOR_CLOSED
 				else if(!(D.density ^ opening))
-					INVOKE_ASYNC(D, (opening ? /obj/machinery/door/firedoor.proc/open : /obj/machinery/door/firedoor.proc/close))
+					INVOKE_ASYNC(D, (opening ? TYPE_PROC_REF(/obj/machinery/door/firedoor, open) : TYPE_PROC_REF(/obj/machinery/door/firedoor, close)))
 
 /**
   * Generate an firealarm alert for this area
@@ -450,7 +450,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 		var/mob/living/silicon/SILICON = i
 		if(SILICON.triggerAlarm("Burglar", src, cameras, trigger))
 			//Cancel silicon alert after 1 minute
-			addtimer(CALLBACK(SILICON, /mob/living/silicon.proc/cancelAlarm,"Burglar",src,trigger), 600)
+			addtimer(CALLBACK(SILICON, TYPE_PROC_REF(/mob/living/silicon, cancelAlarm),"Burglar",src,trigger), 600)
 
 /**
   * Trigger the fire alarm visual affects in an area
@@ -558,7 +558,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 			used += used_light + used_equip + used_environ
 		if(STATIC_EQUIP)
 			used += static_equip
-		if(STATIC_LIGHT)
+		if(STATIC_LIGHT_A)
 			used += static_light
 		if(STATIC_ENVIRON)
 			used += static_environ
@@ -576,7 +576,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 	switch(powerchannel)
 		if(STATIC_EQUIP)
 			static_equip += value
-		if(STATIC_LIGHT)
+		if(STATIC_LIGHT_A)
 			static_light += value
 		if(STATIC_ENVIRON)
 			static_environ += value
@@ -611,7 +611,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
   *
   * If the area has ambience, then it plays some ambience music to the ambience channel
   */
-/area/Entered(atom/movable/M, OldLoc)
+/area/Entered(atom/movable/M, atom/OldLoc)
 	set waitfor = FALSE
 	SEND_SIGNAL(src, COMSIG_AREA_ENTERED, M)
 	SEND_SIGNAL(M, COMSIG_ENTER_AREA, src) //The atom that enters the area
@@ -630,12 +630,24 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 	if(first_time_text)
 		L.intro_area(src)
 
+	var/mob/living/living_arrived = M
+
+	if(istype(living_arrived) && living_arrived.client && !living_arrived.cmode)
+		//Ambience if combat mode is off
+		SSdroning.area_entered(src, living_arrived.client)
+		SSdroning.play_loop(src, living_arrived.client)
+		var/found = FALSE
+		for(var/datum/weather/rain/R in SSweather.curweathers)
+			found = TRUE
+		if(found)
+			SSdroning.play_rain(src, living_arrived.client)
+
 //	L.play_ambience(src)
 
 /client
 	var/musicfading = 0
 
-/mob/living/proc/intro_area(var/area/A)
+/mob/living/proc/intro_area(area/A)
 	if(!mind)
 		return
 	if(A.first_time_text in mind.areas_entered)
@@ -643,7 +655,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 	if(!client)
 		return
 	mind.areas_entered += A.first_time_text
-	var/obj/screen/area_text/T = new()
+	var/atom/movable/screen/area_text/T = new()
 	client.screen += T
 	T.maptext = {"<span style='vertical-align:top; text-align:center;
 				color: #820000; font-size: 300%;
@@ -655,9 +667,9 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 	T.maptext_y = 64
 	playsound_local(src, 'sound/misc/area.ogg', 100, FALSE)
 	animate(T, alpha = 255, time = 10, easing = EASE_IN)
-	addtimer(CALLBACK(src, .proc/clear_area_text, T), 35)
+	addtimer(CALLBACK(src, PROC_REF(clear_area_text), T), 35)
 
-/mob/living/proc/clear_area_text(var/obj/screen/A)
+/mob/living/proc/clear_area_text(atom/movable/screen/A)
 	if(!A)
 		return
 	if(!client)
@@ -669,7 +681,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 			client.screen -= A
 			qdel(A)
 
-/mob/living/proc/clear_time_icon(var/obj/screen/A)
+/mob/living/proc/clear_time_icon(atom/movable/screen/A)
 	if(!A)
 		return
 	if(!client)
@@ -747,18 +759,6 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 /// A hook so areas can modify the incoming args (of what??)
 /area/proc/PlaceOnTopReact(list/new_baseturfs, turf/fake_turf_type, flags)
 	return flags
-
-/area/Entered(atom/movable/arrived, area/old_area)
-	var/mob/living/living_arrived = arrived
-	if(istype(living_arrived) && living_arrived.client && !living_arrived.cmode)
-		//Ambience if combat mode is off
-		SSdroning.area_entered(src, living_arrived.client)
-		SSdroning.play_loop(src, living_arrived.client)
-		var/found = FALSE
-		for(var/datum/weather/rain/R in SSweather.curweathers)
-			found = TRUE
-		if(found)
-			SSdroning.play_rain(src, living_arrived.client)
 
 /area/proc/on_joining_game(mob/living/boarder)
 	return

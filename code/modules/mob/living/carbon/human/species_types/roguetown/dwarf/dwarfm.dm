@@ -3,7 +3,7 @@
 
 /datum/species/dwarf/mountain
 	name = "Dwarf"
-	id = "dwarf"
+	id = "dwarfm"
 	desc = "<b>Dwarf</b><br>\
 	A proud and robust race of short mountain folk, \
 	the dwarves are known for their pride in martial strength \
@@ -16,11 +16,15 @@
 	the various challenges they face. Even if, in some irony: this behaviour \
 	leads the race towards technological advacement as they continue \
 	to improve their craft through powerful mechanization and forging \
-	Dwarves are hearty, but are not known for their speed or eyesight..."
+	Dwarves are hearty, but are not known for their speed or eyesight... \
+	Each dwarf hails from a ancient fortress named after the most plentiful mineral."
+
+	skin_tone_wording = "Dwarf Fortress"
+
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,YOUNGBEARD,STUBBLE,OLDGREY)
-	inherent_traits = list(TRAIT_NOMOBSWAP)
-	possible_ages = list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
+	inherent_traits = list(TRAIT_NOMOBSWAP,TRAIT_DRUNK_HEALING)
+	possible_ages = list(AGE_YOUNG, AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
 	default_features = list("mcolor" = "FFF", "wings" = "None")
 	use_skintones = 1
 	skinned_type = /obj/item/stack/sheet/animalhide/human
@@ -35,6 +39,7 @@
 	soundpack_m = /datum/voicepack/male/dwarf
 	soundpack_f = /datum/voicepack/female/dwarf
 	custom_clothes = TRUE
+	clothes_id = "dwarf"
 	offset_features = list(OFFSET_ID = list(0,0), OFFSET_GLOVES = list(0,0), OFFSET_WRISTS = list(0,0),\
 	OFFSET_CLOAK = list(0,0), OFFSET_FACEMASK = list(0,-4), OFFSET_HEAD = list(0,-4), \
 	OFFSET_FACE = list(0,-4), OFFSET_BELT = list(0,-5), OFFSET_BACK = list(0,-4), \
@@ -48,10 +53,6 @@
 	specstats = list("strength" = 1, "perception" = -2, "intelligence" = 0, "constitution" = 2, "endurance" = 2, "speed" = -3, "fortune" = 0)
 	specstats_f = list("strength" = 1, "perception" = -2, "intelligence" = 0, "constitution" = 2, "endurance" = 1, "speed" = -2, "fortune" = 0)
 	enflamed_icon = "widefire"
-	possible_faiths = list(FAITH_PSYDON, FAITH_DWARF)
-
-/datum/species/dwarf/mountain/check_roundstart_eligible()
-	return TRUE
 
 /datum/species/dwarf/mountain/get_span_language(datum/language/message_language)
 	if(!message_language)
@@ -63,14 +64,16 @@
 	return message_language.spans
 
 /datum/species/dwarf/mountain/get_skin_list()
-	return sortList(list(
-	"skin1" = "ffe0d1",
-	"skin2" = "fcccb3",
-	"skin3" = "edc6b3",
-	"skin4" = "e2b9a3",
-	"skin5" = "d9a284",
-	"skin6" = "c69b83"
-	))
+	return list(
+		"Platinum" = SKIN_COLOR_PLATINUM,
+		"Aurum" = SKIN_COLOR_AURUM,
+		"Quicksilver" = SKIN_COLOR_QUICKSILVER,
+		"Brass" = SKIN_COLOR_BRASS,
+		"Iron" = SKIN_COLOR_IRON,
+		"Malachite" = SKIN_COLOR_MALACHITE,
+		"Obsidian" = SKIN_COLOR_OBSIDIAN,
+		"Brimstone" = SKIN_COLOR_BRIMSTONE,
+	)
 
 /datum/species/dwarf/mountain/get_hairc_list()
 	return sortList(list(
@@ -118,3 +121,10 @@
 
 /datum/species/dwarf/mountain/random_surname()
 	return " [pick(world.file2list("strings/rt/names/dwarf/dwarmlast.txt"))]"
+
+//this accent is HORRIBLE right now, someone please fix this shit
+// oh yeah here we go again 85 to 23
+// changed my mind, if the accent were to return it should just be on a single subset of dwarves.
+///datum/species/dwarf/mountain/get_accent(mob/living/carbon/human/H)
+//	return strings("dwarf_replacement.json", "dwarf")
+

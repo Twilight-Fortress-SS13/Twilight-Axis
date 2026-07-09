@@ -51,6 +51,20 @@
 	var/gamemode_ready = FALSE //Is the gamemode all set up and ready to start checking for ending conditions.
 	var/setup_error		//What stopepd setting up the mode.
 
+	var/list/datum/mind/villains = list() //Murders Runtimes via shoving this into parent
+	var/list/datum/mind/vampires = list()
+	var/list/datum/mind/werewolves = list()
+	var/list/datum/mind/bandits = list()
+
+	var/list/datum/mind/pre_villains = list()
+	var/list/datum/mind/pre_werewolves = list()
+	var/list/datum/mind/pre_vampires = list()
+	var/list/datum/mind/pre_bandits = list()
+	var/list/datum/mind/pre_delfs = list()
+	var/list/datum/mind/pre_rebels = list()
+	var/list/datum/mind/pre_aspirants = list()
+	var/list/datum/mind/aspirants = list()
+	
 /datum/game_mode/proc/announce() //Shows the gamemode's name and a fast description.
 	to_chat(world, "<b>The gamemode is: <span class='[announce_span]'>[name]</span>!</b>")
 	to_chat(world, "<b>[announce_text]</b>")
@@ -72,7 +86,7 @@
 			return 0
 		return 1
 	else
-		message_admins("<span class='notice'>DEBUG: GAME STARTING WITHOUT PLAYER NUMBER CHECKS, THIS WILL PROBABLY BREAK SHIT.</span>")
+		message_admins(span_notice("DEBUG: GAME STARTING WITHOUT PLAYER NUMBER CHECKS, THIS WILL PROBABLY BREAK SHIT."))
 		return 1
 
 
@@ -84,7 +98,7 @@
 /datum/game_mode/proc/post_setup(report) //Gamemodes can override the intercept report. Passing TRUE as the argument will force a report.
 	if(!report)
 		report = !CONFIG_GET(flag/no_intercept_report)
-//	addtimer(CALLBACK(GLOBAL_PROC, .proc/display_roundstart_logout_report), ROUNDSTART_LOGOUT_REPORT_TIME)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(display_roundstart_logout_report)), ROUNDSTART_LOGOUT_REPORT_TIME)
 
 	if(CONFIG_GET(flag/reopen_roundstart_suicide_roles))
 		var/delay = CONFIG_GET(number/reopen_roundstart_suicide_roles_delay)
@@ -92,18 +106,23 @@
 			delay = (delay SECONDS)
 		else
 			delay = (4 MINUTES) //default to 4 minutes if the delay isn't defined.
-		addtimer(CALLBACK(GLOBAL_PROC, .proc/reopen_roundstart_suicide_roles), delay)
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(reopen_roundstart_suicide_roles)), delay)
 
 	if(SSdbcore.Connect())
-		var/sql
+		var/list/to_set = list()
+		var/arguments = list()
 		if(SSticker.mode)
-			sql += "game_mode = '[SSticker.mode]'"
+			to_set += "game_mode = :game_mode"
+			arguments["game_mode"] = SSticker.mode
 		if(GLOB.revdata.originmastercommit)
-			if(sql)
-				sql += ", "
-			sql += "commit_hash = '[GLOB.revdata.originmastercommit]'"
-		if(sql)
-			var/datum/DBQuery/query_round_game_mode = SSdbcore.NewQuery("UPDATE [format_table_name("round")] SET [sql] WHERE id = [GLOB.round_id]")
+			to_set += "commit_hash = :commit_hash"
+			arguments["commit_hash"] = GLOB.revdata.originmastercommit
+		if(to_set.len)
+			arguments["round_id"] = GLOB.round_id
+			var/datum/DBQuery/query_round_game_mode = SSdbcore.NewQuery(
+				"UPDATE [format_table_name("round")] SET [to_set.Join(", ")] WHERE id = :round_id",
+				arguments
+			)
 			query_round_game_mode.Execute()
 			qdel(query_round_game_mode)
 	if(report)
@@ -367,13 +386,17 @@
 		if(player.ready == PLAYER_READY_TO_PLAY && player.check_preferences())
 //			if(player.client && player.client.whitelisted() && !player.client.blacklisted())
 			players += player
+			continue
+		if(player.client in SSrole_class_handler.drifter_wave_FULLY_entered_clients)
+			players += player
+			continue
 
 	// Shuffling, the players list is now ping-independent!!!
 	// Goodbye antag dante
 	players = shuffle(players)
 
 	for(var/mob/dead/new_player/player in players)
-		if(player.client && player.ready == PLAYER_READY_TO_PLAY)
+		if(player.client && player.ready == PLAYER_READY_TO_PLAY || player.client in SSrole_class_handler.drifter_wave_FULLY_entered_clients)
 			if(check_pq)
 				if(get_playerquality(player.ckey) <= -10)
 					continue
@@ -484,7 +507,7 @@
 //Reports player logouts//
 //////////////////////////
 /proc/display_roundstart_logout_report()
-	var/list/msg = list("<span class='boldnotice'>Roundstart logout report\n\n</span>")
+	var/list/msg = list(span_boldnotice("Roundstart logout report\n\n"))
 	for(var/i in GLOB.mob_living_list)
 		var/mob/living/L = i
 		var/mob/living/carbon/C = L

@@ -1,7 +1,7 @@
 /obj/item/flint
 	name = "flint"
+	desc = "A jagged piece of flint, witness to the dances of fire and stone."
 	icon_state = "flint"
-	desc = ""
 	gripped_intents = null
 	//dropshrink = 0.75
 	force = 0
@@ -10,6 +10,7 @@
 	obj_flags = null
 	icon = 'icons/roguetown/items/lighting.dmi'
 	var/flintcd = 0
+	anvilrepair = /datum/skill/craft/blacksmithing
 
 /obj/item/flint/attack_self(mob/living/user)
 	if(world.time < flintcd + 10)

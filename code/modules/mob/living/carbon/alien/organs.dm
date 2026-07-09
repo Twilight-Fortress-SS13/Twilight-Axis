@@ -129,13 +129,13 @@
 	if(!owner|| owner.stat == DEAD)
 		return
 	if(isalien(owner)) //Different effects for aliens than humans
-		to_chat(owner, "<span class='danger'>My Queen has been struck down!</span>")
-		to_chat(owner, "<span class='danger'>I are struck with overwhelming agony! You feel confused, and my connection to the hivemind is severed.</span>")
+		to_chat(owner, span_danger("My Queen has been struck down!"))
+		to_chat(owner, span_danger("I are struck with overwhelming agony! You feel confused, and my connection to the hivemind is severed."))
 		owner.emote("roar")
 		owner.Stun(200) //Actually just slows them down a bit.
 
 	else if(ishuman(owner)) //Humans, being more fragile, are more overwhelmed by the mental backlash.
-		to_chat(owner, "<span class='danger'>I feel a splitting pain in my head, and are struck with a wave of nausea. You cannot hear the hivemind anymore!</span>")
+		to_chat(owner, span_danger("I feel a splitting pain in my head, and are struck with a wave of nausea. You cannot hear the hivemind anymore!"))
 		owner.emote("scream")
 		owner.Paralyze(100)
 
@@ -144,8 +144,8 @@
 	owner.stuttering += 30
 
 	recent_queen_death = 1
-	owner.throw_alert("alien_noqueen", /obj/screen/alert/alien_vulnerable)
-	addtimer(CALLBACK(src, .proc/clear_queen_death), QUEEN_DEATH_DEBUFF_DURATION)
+	owner.throw_alert("alien_noqueen", /atom/movable/screen/alert/alien_vulnerable)
+	addtimer(CALLBACK(src, PROC_REF(clear_queen_death)), QUEEN_DEATH_DEBUFF_DURATION)
 
 
 /obj/item/organ/alien/hivenode/proc/clear_queen_death()
@@ -154,7 +154,7 @@
 	recent_queen_death = 0
 	if(!owner) //In case the xeno is butchered or subjected to surgery after death.
 		return
-	to_chat(owner, "<span class='noticealien'>The pain of the queen's death is easing. You begin to hear the hivemind again.</span>")
+	to_chat(owner, span_noticealien("The pain of the queen's death is easing. You begin to hear the hivemind again."))
 	owner.clear_alert("alien_noqueen")
 
 #undef QUEEN_DEATH_DEBUFF_DURATION

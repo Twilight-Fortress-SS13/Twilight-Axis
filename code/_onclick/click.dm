@@ -292,7 +292,8 @@
 								atkswinging = null
 								//update_warning()
 								return
-//					resolveAdjacentClick(T,W,params,used_hand)
+					if(cmode)
+						resolveAdjacentClick(T,W,params,used_hand) //hit the turf
 					if(!used_intent.noaa)
 						changeNext_move(CLICK_CD_MELEE)
 						do_attack_animation(T, visual_effect_icon = used_intent.animname)
@@ -307,8 +308,8 @@
 						else
 							playsound(get_turf(src), used_intent.miss_sound, 100, FALSE)
 							if(used_intent.miss_text)
-								visible_message("<span class='warning'>[src] [used_intent.miss_text]!</span>", \
-												"<span class='warning'>I [used_intent.miss_text]!</span>")
+								visible_message(span_warning("[src] [used_intent.miss_text]!"), \
+												span_warning("I [used_intent.miss_text]!"))
 					aftermiss()
 					atkswinging = null
 					//update_warning()
@@ -540,7 +541,7 @@
 		return
 //	A.AltClick(src)
 //	else
-//		to_chat(src, "<span class='warning'>I need an empty hand to sort through the items here.</span>")
+//		to_chat(src, span_warning("I need an empty hand to sort through the items here."))
 
 
 /*
@@ -680,7 +681,7 @@
 		last_dir_change = world.time
 
 //debug
-/obj/screen/proc/scale_to(x1,y1)
+/atom/movable/screen/proc/scale_to(x1,y1)
 	if(!y1)
 		y1 = x1
 	var/matrix/M = new
@@ -690,7 +691,7 @@
 /atom
 	var/xyoverride = FALSE //so we can 'face' the click catcher even though it doesn't have an x or a y
 
-/obj/screen/click_catcher
+/atom/movable/screen/click_catcher
 	icon = 'icons/mob/screen_gen.dmi'
 	icon_state = "catcher"
 	plane = CLICKCATCHER_PLANE
@@ -702,7 +703,7 @@
 #define MAX_SAFE_BYOND_ICON_SCALE_TILES (MAX_SAFE_BYOND_ICON_SCALE_PX / world.icon_size)
 #define MAX_SAFE_BYOND_ICON_SCALE_PX (33 * 32)			//Not using world.icon_size on purpose.
 
-/obj/screen/click_catcher/proc/UpdateGreed(view_size_x = 15, view_size_y = 15)
+/atom/movable/screen/click_catcher/proc/UpdateGreed(view_size_x = 15, view_size_y = 15)
 	var/icon/newicon = icon('icons/mob/screen_gen.dmi', "catcher")
 	var/ox = min(MAX_SAFE_BYOND_ICON_SCALE_TILES, view_size_x)
 	var/oy = min(MAX_SAFE_BYOND_ICON_SCALE_TILES, view_size_y)
@@ -717,7 +718,7 @@
 	M.Scale(px/sx, py/sy)
 	transform = M
 
-/obj/screen/click_catcher/Click(location, control, params)
+/atom/movable/screen/click_catcher/Click(location, control, params)
 	var/list/modifiers = params2list(params)
 	var/turf/T = params2turf(modifiers["screen-loc"], get_turf(usr.client ? usr.client.eye : usr), usr.client)
 	params += "&catcher=1"
@@ -725,7 +726,7 @@
 		T.Click(location, control, params)
 	. = 1
 
-/obj/screen/click_catcher/face_me(location, control, params)
+/atom/movable/screen/click_catcher/face_me(location, control, params)
 	var/list/modifiers = params2list(params)
 	var/turf/T = params2turf(modifiers["screen-loc"], get_turf(usr.client ? usr.client.eye : usr), usr.client)
 	if(T)
@@ -802,7 +803,7 @@
 		targeti.pixel_y = I.Height() - world.icon_size - 4
 		targeti.pixel_x = -1
 		src.client.images |= targeti
-		for(var/obj/screen/eye_intent/eyet in hud_used.static_inventory)
+		for(var/atom/movable/screen/eye_intent/eyet in hud_used.static_inventory)
 			eyet.update_icon(src) //Update eye icon
 	else
 		UntargetMob()
@@ -821,7 +822,7 @@
 		nodirchange = FALSE
 	src.client.images -= targeti
 	//clear hud icon
-	for(var/obj/screen/eye_intent/eyet in hud_used.static_inventory)
+	for(var/atom/movable/screen/eye_intent/eyet in hud_used.static_inventory)
 		eyet.update_icon(src)
 
 /mob/proc/ShiftRightClickOn(atom/A, params)
@@ -838,7 +839,7 @@
 		if(T == loc)
 			look_up()
 		else
-			if(lying && istransparentturf(T))
+			if(istransparentturf(T))
 				look_down(T)
 			else
 				look_further(T)
@@ -860,5 +861,5 @@
 	if(!fixedeye)
 		nodirchange = TRUE
 	tempfixeye = TRUE
-	for(var/obj/screen/eye_intent/eyet in hud_used.static_inventory)
+	for(var/atom/movable/screen/eye_intent/eyet in hud_used.static_inventory)
 		eyet.update_icon(src) //Update eye icon

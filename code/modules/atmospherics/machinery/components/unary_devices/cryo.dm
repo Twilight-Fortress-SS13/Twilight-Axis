@@ -6,7 +6,7 @@
 	icon_state = "pod-off"
 	density = TRUE
 	max_integrity = 350
-	armor = list("melee" = 0, "bullet" = 0, "laser" = 0, "energy" = 100, "bomb" = 0, "bio" = 100, "rad" = 100, "fire" = 30, "acid" = 30)
+	armor = list("blunt" = 0, "slash" = 0, "stab" = 0, "bullet" = 0, "laser" = 0, "energy" = 100, "bomb" = 0, "bio" = 100, "rad" = 100, "fire" = 30, "acid" = 30)
 	layer = ABOVE_WINDOW_LAYER
 	state_open = FALSE
 	circuit = /obj/item/circuitboard/machine/cryo_tube
@@ -73,7 +73,7 @@
 /obj/machinery/atmospherics/components/unary/cryo_cell/examine(mob/user) //this is leaving out everything but efficiency since they follow the same idea of "better beaker, better results"
 	. = ..()
 	if(in_range(user, src) || isobserver(user))
-		. += "<span class='notice'>The status display reads: Efficiency at <b>[efficiency*100]%</b>.</span>"
+		. += span_notice("The status display reads: Efficiency at <b>[efficiency*100]%</b>.")
 
 /obj/machinery/atmospherics/components/unary/cryo_cell/Destroy()
 	QDEL_NULL(radio)
@@ -161,7 +161,7 @@
 		occupant_overlay.pixel_y--
 	add_overlay(occupant_overlay)
 	add_overlay("cover-on")
-	addtimer(CALLBACK(src, .proc/run_anim, anim_up, occupant_overlay), 7, TIMER_UNIQUE)
+	addtimer(CALLBACK(src, PROC_REF(run_anim), anim_up, occupant_overlay), 7, TIMER_UNIQUE)
 
 /obj/machinery/atmospherics/components/unary/cryo_cell/nap_violation(mob/violator)
 	open_machine()
@@ -248,7 +248,7 @@
 /obj/machinery/atmospherics/components/unary/cryo_cell/relaymove(mob/user)
 	if(message_cooldown <= world.time)
 		message_cooldown = world.time + 50
-		to_chat(user, "<span class='warning'>[src]'s door won't budge!</span>")
+		to_chat(user, span_warning("[src]'s door won't budge!"))
 
 /obj/machinery/atmospherics/components/unary/cryo_cell/open_machine(drop = FALSE)
 	if(!state_open && !panel_open)
@@ -271,14 +271,14 @@
 /obj/machinery/atmospherics/components/unary/cryo_cell/container_resist(mob/living/user)
 	user.changeNext_move(CLICK_CD_BREAKOUT)
 	user.last_special = world.time + CLICK_CD_BREAKOUT
-	user.visible_message("<span class='notice'>I see [user] kicking against the glass of [src]!</span>", \
-		"<span class='notice'>I struggle inside [src], kicking the release with your foot... (this will take about [DisplayTimeText(breakout_time)].)</span>", \
-		"<span class='hear'>I hear a thump from [src].</span>")
+	user.visible_message(span_notice("I see [user] kicking against the glass of [src]!"), \
+		span_notice("I struggle inside [src], kicking the release with your foot... (this will take about [DisplayTimeText(breakout_time)].)"), \
+		span_hear("I hear a thump from [src]."))
 	if(do_after(user, breakout_time, target = src))
 		if(!user || user.stat != CONSCIOUS || user.loc != src )
 			return
-		user.visible_message("<span class='warning'>[user] successfully broke out of [src]!</span>", \
-			"<span class='notice'>I successfully break out of [src]!</span>")
+		user.visible_message(span_warning("[user] successfully broke out of [src]!"), \
+			span_notice("I successfully break out of [src]!"))
 		open_machine()
 
 /obj/machinery/atmospherics/components/unary/cryo_cell/examine(mob/user)
@@ -299,7 +299,7 @@
 		if(L.incapacitated())
 			close_machine(target)
 	else
-		user.visible_message("<span class='notice'>[user] starts shoving [target] inside [src].</span>", "<span class='notice'>I start shoving [target] inside [src].</span>")
+		user.visible_message(span_notice("[user] starts shoving [target] inside [src]."), span_notice("I start shoving [target] inside [src]."))
 		if (do_after(user, 25, target=target))
 			close_machine(target)
 
@@ -307,13 +307,13 @@
 	if(istype(I, /obj/item/reagent_containers/glass))
 		. = 1 //no afterattack
 		if(beaker)
-			to_chat(user, "<span class='warning'>A beaker is already loaded into [src]!</span>")
+			to_chat(user, span_warning("A beaker is already loaded into [src]!"))
 			return
 		if(!user.transferItemToLoc(I, src))
 			return
 		beaker = I
-		user.visible_message("<span class='notice'>[user] places [I] in [src].</span>", \
-							"<span class='notice'>I place [I] in [src].</span>")
+		user.visible_message(span_notice("[user] places [I] in [src]."), \
+							span_notice("I place [I] in [src]."))
 		var/reagentlist = pretty_string_from_reagent_list(I.reagents.reagent_list)
 		log_game("[key_name(user)] added an [I] to cryo containing [reagentlist]")
 		return
@@ -432,7 +432,7 @@
 	return // we don't see the pipe network while inside cryo.
 
 /obj/machinery/atmospherics/components/unary/cryo_cell/get_remote_view_fullscreens(mob/user)
-	user.overlay_fullscreen("remote_view", /obj/screen/fullscreen/impaired, 1)
+	user.overlay_fullscreen("remote_view", /atom/movable/screen/fullscreen/impaired, 1)
 
 /obj/machinery/atmospherics/components/unary/cryo_cell/can_crawl_through()
 	return // can't ventcrawl in or out of cryo.

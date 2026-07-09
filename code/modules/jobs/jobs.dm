@@ -61,31 +61,44 @@ GLOBAL_LIST_INIT(nonhuman_positions, list(
 
 GLOBAL_LIST_INIT(noble_positions, list(
 	"King",
-	"Queen",
+	"Queen Consort",
 	"Prince",
-	"Sheriff",
+	"Guard Captain",
+	"Bailiff",
+	"Councillor",
 	"Steward",
-	"Court Magician"
-	))
+	"Knight",
+))
+
+GLOBAL_LIST_INIT(courtier_positions, list(
+	"Court Magician",
+	"Court Physician",
+	"Jester",
+	"Butler",
+))
 
 GLOBAL_LIST_INIT(garrison_positions, list(
-	"Town Guard",
-	"Castle Guard",
+	"Watchman",
+	"Bog Guard",
+	"Bog Master",
+	"Man at Arms",
 	"Veteran",
 	"Dungeoneer",
 	"Gatemaster",
-	"Village Elder"
-	))
+	"Village Elder",
+))
 
 GLOBAL_LIST_INIT(church_positions, list(
 	"Priest",
-	"Cleric",
+	"Inquisitor",
+	"Confessor",
 	"Acolyte",
-	"Witch Hunter",
-	"Confessor"
-	))
+	"Mortician",
+	"Templar",
+	"Druid",
+))
 
-GLOBAL_LIST_INIT(serf_positions, list(
+GLOBAL_LIST_INIT(yeoman_positions, list(
 	"Merchant",
 	"Barkeep",
 	"Archivist",
@@ -94,49 +107,54 @@ GLOBAL_LIST_INIT(serf_positions, list(
 	"Tailor",
 	"Alchemist",
 	"Mason",
-	"Scribe"
-	))
+	"Scribe",
+))
 
 GLOBAL_LIST_INIT(peasant_positions, list(
 	"Soilson",
 	"Butcher",
 	"Cook",
-	"Gravedigger",
-	"Jester",
+	"Lunatic",
 	"Miner",
 	"Hunter",
 	"Fisher",
 	"Lumberjack",
-	"Butler",
-	"Adventurer",
 	"Towner",
-	"Pilgrim",
 	"Grabber",
-	"Mercenary",
 	"Nightmaster",
 	"Bath Wench",
 	"Docker",
 	"Prisoner",
-	"Beggar"
-	))
+	"Beggar",
+	"Adventurer",
+	"Pilgrim",
+	"Drifter"
+))
+
+GLOBAL_LIST_INIT(mercenary_positions, list(
+	"Grenzelhoft Mercenary",
+	"Desert Rider Mercenary",
+))
 
 GLOBAL_LIST_INIT(youngfolk_positions, list(
 	"Squire",
+	"Clerk",
 	"Smithy Apprentice",
 	"Magician's Apprentice",
 	"Churchling",
 	"Servant",
-	"Orphan"
-	))
+	"Shophand",
+	"Orphan",
+))
 
 GLOBAL_LIST_INIT(allmig_positions, list(
 	"Adventurer",
-	"Pilgrim"
-	))
+	"Pilgrim",
+))
 
 GLOBAL_LIST_INIT(roguewar_positions, list(
-	"Adventurer"
-	))
+	"Adventurer",
+))
 
 GLOBAL_LIST_INIT(roguefight_positions, list(
 	"Red Captain",
@@ -146,12 +164,25 @@ GLOBAL_LIST_INIT(roguefight_positions, list(
 	"Green Captain",
 	"Green Caster",
 	"Green Ranger",
-	"Green Fighter"
-	))
+	"Green Fighter",
+))
 
 GLOBAL_LIST_INIT(test_positions, list(
-	"Tester"
-	))
+	"Tester",
+))
+
+GLOBAL_LIST_INIT(job_assignment_order, get_job_assignment_order())
+
+/proc/get_job_assignment_order()
+	var/list/sorting_order = list()
+	sorting_order += GLOB.noble_positions
+	sorting_order += GLOB.courtier_positions
+	sorting_order += GLOB.garrison_positions
+	sorting_order += GLOB.church_positions
+	sorting_order += GLOB.yeoman_positions
+	sorting_order += GLOB.peasant_positions
+	sorting_order += GLOB.youngfolk_positions
+	return sorting_order
 
 GLOBAL_LIST_INIT(exp_jobsmap, list(
 	EXP_TYPE_CREW = list("titles" = peasant_positions | command_positions | engineering_positions | medical_positions | science_positions | supply_positions | security_positions | civilian_positions | list("AI","Cyborg")), // crew positions
@@ -181,7 +212,7 @@ GLOBAL_PROTECT(exp_specialmap)
 
 //this is necessary because antags happen before job datums are handed out, but NOT before they come into existence
 //so I can't simply use job datum.department_head straight from the mind datum, laaaaame.
-/proc/get_department_heads(var/job_title)
+/proc/get_department_heads(job_title)
 	if(!job_title)
 		return list()
 

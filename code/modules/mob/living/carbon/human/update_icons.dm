@@ -98,10 +98,10 @@ There are several things that need to be remembered:
 	var/list/limb_overlaysb = list()
 	var/list/limb_overlaysc = list()
 
-	if(gender == FEMALE || dna.species.use_f)
+	if((gender == FEMALE && !dna.species.use_m)|| dna.species.use_f)
 		limb_icon = dna.species.dam_icon_f
 
-		if(gender == MALE)
+		if(gender == MALE || dna.species.use_m)
 			hidechest = TRUE
 
 		var/obj/item/bodypart/CH = get_bodypart(BODY_ZONE_CHEST)
@@ -129,102 +129,106 @@ There are several things that need to be remembered:
 			g = BP.offset_f
 		if(BP.body_zone == BODY_ZONE_HEAD)
 			update_hair()
-		if(BP.brutestate && !BP.skeletonized)
-			var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_[BP.brutestate]0", -DAMAGE_LAYER)
-			damage_overlays += damage_overlay
-			var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_[BP.brutestate]0", -LEG_DAMAGE_LAYER)
-			legdam_overlays += legdam_overlay
-			var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_[BP.brutestate]0", -ARM_DAMAGE_LAYER)
-			armdam_overlays += armdam_overlay
-		if(BP.burnstate && !BP.skeletonized)
-			var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_0[BP.burnstate]", -DAMAGE_LAYER)
-			damage_overlays += damage_overlay
-			var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_0[BP.burnstate]", -LEG_DAMAGE_LAYER)
-			legdam_overlays += legdam_overlay
-			var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_0[BP.burnstate]", -ARM_DAMAGE_LAYER)
-			armdam_overlays += armdam_overlay
-		var/checker = FALSE
-		if(BP.get_bleedrate())
-			checker = TRUE
-			if(BP.bandage)
-				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_b", -DAMAGE_LAYER)
-				damage_overlay.color = BP.bandage.color
+		var/bleed_checker = FALSE
+		var/list/wound_overlays
+		if(!BP.skeletonized)
+			if(BP.brutestate)
+				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_[BP.brutestate]0", -DAMAGE_LAYER)
 				damage_overlays += damage_overlay
-				var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_b", -LEG_DAMAGE_LAYER)
-				legdam_overlay.color = BP.bandage.color
+				var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_[BP.brutestate]0", -LEG_DAMAGE_LAYER)
 				legdam_overlays += legdam_overlay
-				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_b", -ARM_DAMAGE_LAYER)
-				armdam_overlay.color = BP.bandage.color
+				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_[BP.brutestate]0", -ARM_DAMAGE_LAYER)
 				armdam_overlays += armdam_overlay
-		for(var/datum/wound/W in BP.wounds)
+			if(BP.burnstate)
+				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_0[BP.burnstate]", -DAMAGE_LAYER)
+				damage_overlays += damage_overlay
+				var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_0[BP.burnstate]", -LEG_DAMAGE_LAYER)
+				legdam_overlays += legdam_overlay
+				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_0[BP.burnstate]", -ARM_DAMAGE_LAYER)
+				armdam_overlays += armdam_overlay
+			if(BP.get_bleed_rate())
+				bleed_checker = TRUE
+				if(BP.bandage)
+					var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_b", -DAMAGE_LAYER)
+					damage_overlay.color = BP.bandage.color
+					damage_overlays += damage_overlay
+					var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_b", -LEG_DAMAGE_LAYER)
+					legdam_overlay.color = BP.bandage.color
+					legdam_overlays += legdam_overlay
+					var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_b", -ARM_DAMAGE_LAYER)
+					armdam_overlay.color = BP.bandage.color
+					armdam_overlays += armdam_overlay
+			wound_overlays = list()
+			for(var/datum/wound/wound as anything in BP.wounds)
+				if(!wound.mob_overlay)
+					continue
+				wound_overlays |= wound.mob_overlay
+			for(var/wound_overlay in wound_overlays)
+				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_[wound_overlay]", -DAMAGE_LAYER)
+				damage_overlays += damage_overlay
+				var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_[wound_overlay]", -LEG_DAMAGE_LAYER)
+				legdam_overlays += legdam_overlay
+				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_[wound_overlay]", -ARM_DAMAGE_LAYER)
+				armdam_overlays += armdam_overlay
+		if(!bleed_checker && BP.bandage)
+			var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_b", -DAMAGE_LAYER)
+			damage_overlay.color = BP.bandage.color
+			damage_overlays += damage_overlay
+			var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_b", -LEG_DAMAGE_LAYER)
+			legdam_overlay.color = BP.bandage.color
+			legdam_overlays += legdam_overlay
+			var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_b", -ARM_DAMAGE_LAYER)
+			armdam_overlay.color = BP.bandage.color
+			armdam_overlays += armdam_overlay
+		if(BP.aux_zone && !((BP.body_zone == BODY_ZONE_CHEST) && hidechest))
 			if(!BP.skeletonized)
-				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_[W.mob_overlay]", -DAMAGE_LAYER)
-				damage_overlays += damage_overlay
-				var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_[W.mob_overlay]", -LEG_DAMAGE_LAYER)
-				legdam_overlays += legdam_overlay
-				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_[W.mob_overlay]", -ARM_DAMAGE_LAYER)
-				armdam_overlays += armdam_overlay
-		if(!checker)
-			if(BP.bandage)
-				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_b", -DAMAGE_LAYER)
+				if(BP.brutestate)
+					var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_[BP.brutestate]0", -DAMAGE_LAYER)
+					damage_overlays += damage_overlay
+					var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_[BP.brutestate]0", -LEG_DAMAGE_LAYER)
+					legdam_overlays += legdam_overlay
+					var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_[BP.brutestate]0", -ARM_DAMAGE_LAYER)
+					armdam_overlays += armdam_overlay
+				if(BP.burnstate)
+					var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_0[BP.burnstate]", -DAMAGE_LAYER)
+					damage_overlays += damage_overlay
+					var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_0[BP.burnstate]", -LEG_DAMAGE_LAYER)
+					legdam_overlays += legdam_overlay
+					var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_0[BP.burnstate]", -ARM_DAMAGE_LAYER)
+					armdam_overlays += armdam_overlay
+				if(bleed_checker)
+					if(BP.bandage)
+						var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_b", -DAMAGE_LAYER)
+						damage_overlay.color = BP.bandage.color
+						damage_overlays += damage_overlay
+						var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_b", -LEG_DAMAGE_LAYER)
+						legdam_overlay.color = BP.bandage.color
+						legdam_overlays += legdam_overlay
+						var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_b", -ARM_DAMAGE_LAYER)
+						armdam_overlay.color = BP.bandage.color
+						armdam_overlays += armdam_overlay
+				//We got the wound overlays before, it's all good
+				for(var/wound_overlay in wound_overlays)
+					var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_[wound_overlay]", -DAMAGE_LAYER)
+					damage_overlays += damage_overlay
+					var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_[wound_overlay]", -LEG_DAMAGE_LAYER)
+					legdam_overlays += legdam_overlay
+					var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_[wound_overlay]", -ARM_DAMAGE_LAYER)
+					armdam_overlays += armdam_overlay
+			if(!bleed_checker && BP.bandage)
+				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_b", -DAMAGE_LAYER)
 				damage_overlay.color = BP.bandage.color
 				damage_overlays += damage_overlay
-				var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.body_zone]_b", -LEG_DAMAGE_LAYER)
+				var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_b", -LEG_DAMAGE_LAYER)
 				legdam_overlay.color = BP.bandage.color
 				legdam_overlays += legdam_overlay
-				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_b", -ARM_DAMAGE_LAYER)
+				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_b", -ARM_DAMAGE_LAYER)
 				armdam_overlay.color = BP.bandage.color
 				armdam_overlays += armdam_overlay
-		if(BP.aux_zone && !((BP.body_zone == BODY_ZONE_CHEST) && hidechest) )
-			if(BP.brutestate && !BP.skeletonized)
-				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_[BP.brutestate]0", -DAMAGE_LAYER)
-				damage_overlays += damage_overlay
-				var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_[BP.brutestate]0", -LEG_DAMAGE_LAYER)
-				legdam_overlays += legdam_overlay
-				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_[BP.brutestate]0", -ARM_DAMAGE_LAYER)
-				armdam_overlays += armdam_overlay
-			if(BP.burnstate && !BP.skeletonized)
-				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_0[BP.burnstate]", -DAMAGE_LAYER)
-				damage_overlays += damage_overlay
-				var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_0[BP.burnstate]", -LEG_DAMAGE_LAYER)
-				legdam_overlays += legdam_overlay
-				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_0[BP.burnstate]", -ARM_DAMAGE_LAYER)
-				armdam_overlays += armdam_overlay
-			if(checker)
-				if(BP.bandage)
-					var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_b", -DAMAGE_LAYER)
-					damage_overlay.color = BP.bandage.color
-					damage_overlays += damage_overlay
-					var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_b", -LEG_DAMAGE_LAYER)
-					legdam_overlay.color = BP.bandage.color
-					legdam_overlays += legdam_overlay
-					var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_b", -ARM_DAMAGE_LAYER)
-					armdam_overlay.color = BP.bandage.color
-					armdam_overlays += armdam_overlay
-			for(var/datum/wound/W in BP.wounds)
-				if(!BP.skeletonized)
-					var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_[W.mob_overlay]", -DAMAGE_LAYER)
-					damage_overlays += damage_overlay
-					var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_[W.mob_overlay]", -LEG_DAMAGE_LAYER)
-					legdam_overlays += legdam_overlay
-					var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_[W.mob_overlay]", -ARM_DAMAGE_LAYER)
-					armdam_overlays += armdam_overlay
-			if(!checker)
-				if(BP.bandage)
-					var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_b", -DAMAGE_LAYER)
-					damage_overlay.color = BP.bandage.color
-					damage_overlays += damage_overlay
-					var/mutable_appearance/legdam_overlay = mutable_appearance(limb_icon, "legdam_[BP.aux_zone]_b", -LEG_DAMAGE_LAYER)
-					legdam_overlay.color = BP.bandage.color
-					legdam_overlays += legdam_overlay
-					var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_b", -ARM_DAMAGE_LAYER)
-					armdam_overlay.color = BP.bandage.color
-					armdam_overlays += armdam_overlay
 
 		var/used_offset = BP.offset
 		if(gender == FEMALE)
 			used_offset = BP.offset_f
-
 
 		for(var/mutable_appearance/M in damage_overlays)
 			if(used_offset in dna.species.offset_features)
@@ -313,7 +317,7 @@ There are several things that need to be remembered:
 	remove_overlay(PANTS_LAYER)
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_PANTS]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_PANTS]
 		inv.update_icon()
 
 	if(istype(wear_pants, /obj/item/clothing/under))
@@ -362,7 +366,7 @@ There are several things that need to be remembered:
 	remove_overlay(NECK_LAYER)
 
 	if(client && hud_used && hud_used.inv_slots[SLOT_NECK])
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_NECK]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_NECK]
 		inv.update_icon()
 
 	if(wear_neck)
@@ -388,7 +392,7 @@ There are several things that need to be remembered:
 	remove_overlay(RING_LAYER)
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_RING]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_RING]
 		inv.update_icon()
 
 	var/mutable_appearance/id_overlay
@@ -400,7 +404,7 @@ There are several things that need to be remembered:
 		update_observer_view(wear_ring)
 		if(dna && dna.species.sexes)
 			var/G = (gender == FEMALE) ? "f" : "m"
-			if(G == "f" || dna.species.use_f)
+			if((G == "f" && !dna.species.use_m) || dna.species.use_f)
 				id_overlay = wear_ring.build_worn_icon(default_layer = RING_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = TRUE)
 			else
 				id_overlay = wear_ring.build_worn_icon(default_layer = RING_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = FALSE)
@@ -422,7 +426,7 @@ There are several things that need to be remembered:
 	remove_overlay(GLOVESLEEVE_LAYER)
 
 	if(client && hud_used && hud_used.inv_slots[SLOT_GLOVES])
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_GLOVES]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_GLOVES]
 		inv.update_icon()
 
 	if(!gloves && bloody_hands)
@@ -450,10 +454,10 @@ There are several things that need to be remembered:
 			var/racecustom
 			var/mutable_appearance/gloves_overlay
 			if(dna.species.custom_clothes)
-				racecustom = dna.species.id
+				racecustom = dna.species.clothes_id
 			var/G = (gender == FEMALE) ? "f" : "m"
 			var/armsindex = get_limbloss_index(ARM_RIGHT, ARM_LEFT)
-			if(G == "f" || dna.species.use_f)
+			if((G == "f" && !dna.species.use_m) || dna.species.use_f)
 				gloves_overlay = gloves.build_worn_icon(default_layer = GLOVES_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = TRUE, sleeveindex = armsindex)
 			else
 				gloves_overlay = gloves.build_worn_icon(default_layer = GLOVES_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = FALSE, sleeveindex = armsindex, customi = racecustom)
@@ -495,7 +499,7 @@ There are several things that need to be remembered:
 	remove_overlay(WRISTSLEEVE_LAYER)
 
 	if(client && hud_used && hud_used.inv_slots[SLOT_WRISTS])
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_WRISTS]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_WRISTS]
 		inv.update_icon()
 
 	if(wear_wrists)
@@ -507,11 +511,11 @@ There are several things that need to be remembered:
 		if(dna && dna.species.sexes)
 			var/racecustom
 			if(dna.species.custom_clothes)
-				racecustom = dna.species.id
+				racecustom = dna.species.clothes_id
 			var/G = (gender == FEMALE) ? "f" : "m"
 			var/armsindex = get_limbloss_index(ARM_RIGHT, ARM_LEFT)
 			var/mutable_appearance/wrists_overlay
-			if(G == "f" || dna.species.use_f)
+			if((G == "f" && !dna.species.use_m) || dna.species.use_f)
 				wrists_overlay = wear_wrists.build_worn_icon(default_layer = WRISTS_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = TRUE, sleeveindex = armsindex)
 			else
 				wrists_overlay = wear_wrists.build_worn_icon(default_layer = WRISTS_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = FALSE, sleeveindex = armsindex, customi = racecustom)
@@ -555,7 +559,7 @@ There are several things that need to be remembered:
 		return
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_GLASSES]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_GLASSES]
 		inv.update_icon()
 
 	if(glasses)
@@ -585,7 +589,7 @@ There are several things that need to be remembered:
 		return
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_WEAR_MASK]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_WEAR_MASK]
 		inv.update_icon()
 
 	if(ears)
@@ -608,7 +612,7 @@ There are several things that need to be remembered:
 	remove_overlay(SHOES_LAYER)
 	remove_overlay(SHOESLEEVE_LAYER)
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_SHOES]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_SHOES]
 		inv.update_icon()
 
 	if(shoes)
@@ -623,8 +627,8 @@ There are several things that need to be remembered:
 			var/racecustom
 			var/mutable_appearance/shoes_overlay
 			if(dna.species.custom_clothes)
-				racecustom = dna.species.id
-			if(G == "f" || dna.species.use_f)
+				racecustom = dna.species.clothes_id
+			if((G == "f" && !dna.species.use_m) || dna.species.use_f)
 				shoes_overlay = shoes.build_worn_icon(default_layer = SHOES_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = "f", customi = racecustom, sleeveindex = footindex)
 			else
 				shoes_overlay = shoes.build_worn_icon(default_layer = SHOES_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = FALSE, customi = racecustom, sleeveindex = footindex)
@@ -655,7 +659,7 @@ There are several things that need to be remembered:
 	remove_overlay(BELT_LAYER)
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_S_STORE]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_S_STORE]
 		inv.update_icon()
 
 	if(s_store)
@@ -683,7 +687,7 @@ There are several things that need to be remembered:
 		return
 
 	if(client && hud_used && hud_used.inv_slots[SLOT_HEAD])
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_HEAD]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_HEAD]
 		inv.update_icon()
 
 	if(head)
@@ -718,7 +722,7 @@ There are several things that need to be remembered:
 	var/list/standing_behind = list()
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_BELT]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_BELT]
 		inv.update_icon()
 		inv = hud_used.inv_slots[SLOT_BELT_R]
 		inv.update_icon()
@@ -840,8 +844,8 @@ There are several things that need to be remembered:
 				var/racecustom
 				var/mutable_appearance/mbeltoverlay
 				if(dna.species.custom_clothes)
-					racecustom = dna.species.id
-				if(G == "f" || dna.species.use_f)
+					racecustom = dna.species.clothes_id
+				if((G == "f" && !dna.species.use_m) || dna.species.use_f)
 					mbeltoverlay = belt.build_worn_icon(default_layer = BELT_LAYER, default_icon_file = 'icons/roguetown/clothing/onmob/belts.dmi', coom = "f", customi = racecustom)
 				else
 					mbeltoverlay = belt.build_worn_icon(default_layer = BELT_LAYER, default_icon_file = 'icons/roguetown/clothing/onmob/belts.dmi', coom = FALSE, customi = racecustom)
@@ -870,7 +874,7 @@ There are several things that need to be remembered:
 	remove_overlay(ARMOR_LAYER)
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_ARMOR]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_ARMOR]
 		inv.update_icon()
 
 	if(istype(wear_armor, /obj/item/clothing/suit))
@@ -894,7 +898,7 @@ There are several things that need to be remembered:
 /mob/living/carbon/human/update_inv_pockets()
 	return/*
 	if(client && hud_used)
-		var/obj/screen/inventory/inv
+		var/atom/movable/screen/inventory/inv
 
 		inv = hud_used.inv_slots[SLOT_L_STORE]
 		inv.update_icon()
@@ -940,7 +944,7 @@ There are several things that need to be remembered:
 	var/list/undercloaks = list()
 	var/list/backbehind = list()
 	if(client && hud_used && hud_used.inv_slots[SLOT_BACK])
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_BACK]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_BACK]
 		inv.update_icon()
 		inv = hud_used.inv_slots[SLOT_BACK_R]
 		inv.update_icon()
@@ -1069,7 +1073,7 @@ There are several things that need to be remembered:
 	remove_overlay(TABARD_LAYER)
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_CLOAK]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_CLOAK]
 		inv.update_icon()
 
 	var/list/cloaklays = list()
@@ -1085,8 +1089,8 @@ There are several things that need to be remembered:
 			var/racecustom
 			var/mutable_appearance/cloak_overlay
 			if(dna.species.custom_clothes)
-				racecustom = dna.species.id
-			if(G == "f")
+				racecustom = dna.species.clothes_id
+			if(G == "f" && !dna.species.use_m)
 				cloak_overlay = cloak.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = "f", customi = racecustom)
 			else
 				if(dna.species.use_f)
@@ -1133,8 +1137,8 @@ There are several things that need to be remembered:
 			var/racecustom
 			var/mutable_appearance/cloak_overlay
 			if(dna.species.custom_clothes)
-				racecustom = dna.species.id
-			if(G == "f")
+				racecustom = dna.species.clothes_id
+			if(G == "f" && !dna.species.use_m)
 				cloak_overlay = backr.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = "f", customi = racecustom)
 			else
 				if(dna.species.use_f)
@@ -1186,7 +1190,7 @@ There are several things that need to be remembered:
 	remove_overlay(SHIRTSLEEVE_LAYER)
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_SHIRT]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_SHIRT]
 		inv.update_icon()
 
 	if(wear_shirt)
@@ -1202,7 +1206,7 @@ There are several things that need to be remembered:
 			var/racecustom
 			var/hideboob = FALSE
 			if(dna.species.custom_clothes)
-				racecustom = dna.species.id
+				racecustom = dna.species.clothes_id
 			if(wear_armor)
 				var/obj/item/I = wear_armor
 				if(I.flags_inv & HIDEBOOB)
@@ -1211,10 +1215,10 @@ There are several things that need to be remembered:
 				var/obj/item/I = cloak
 				if(I.flags_inv & HIDEBOOB)
 					hideboob = TRUE
-			if(G == "f" && !hideboob)
+			if(G == "f" && !hideboob && !dna.species.use_m)
 				shirt_overlay = wear_shirt.build_worn_icon(default_layer = SHIRT_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = "f", customi = racecustom, sleeveindex = armsindex)
 			else
-				if(dna.species.use_f || G == "f")
+				if(dna.species.use_f || (G == "f" && !dna.species.use_m))
 					shirt_overlay = wear_shirt.build_worn_icon(default_layer = SHIRT_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = "e", customi = racecustom, sleeveindex = armsindex)
 				else
 					shirt_overlay = wear_shirt.build_worn_icon(default_layer = SHIRT_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = FALSE, customi = racecustom, sleeveindex = armsindex)
@@ -1261,7 +1265,7 @@ There are several things that need to be remembered:
 	remove_overlay(ARMORSLEEVE_LAYER)
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_ARMOR]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_ARMOR]
 		inv.update_icon()
 
 	if(wear_armor)
@@ -1281,8 +1285,8 @@ There are several things that need to be remembered:
 				if(I.flags_inv & HIDEBOOB)
 					hideboob = TRUE
 			if(dna.species.custom_clothes)
-				racecustom = dna.species.id
-			if(G == "f" && !hideboob || G == "f")
+				racecustom = dna.species.clothes_id
+			if((G == "f" && !hideboob && !dna.species.use_m)|| (G == "f" && !dna.species.use_m))
 				armor_overlay = wear_armor.build_worn_icon(default_layer = ARMOR_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = "f", customi = racecustom, sleeveindex = armsindex)
 			else
 				if(dna.species.use_f)
@@ -1333,7 +1337,7 @@ There are several things that need to be remembered:
 	remove_overlay(LEGSLEEVE_LAYER)
 
 	if(client && hud_used)
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_PANTS]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_PANTS]
 		inv.update_icon()
 
 	if(wear_pants)
@@ -1348,8 +1352,8 @@ There are several things that need to be remembered:
 			var/legsindex = get_limbloss_index(LEG_RIGHT, LEG_LEFT)
 			var/mutable_appearance/pants_overlay
 			if(dna.species.custom_clothes)
-				racecustom = dna.species.id
-			if(G == "f")
+				racecustom = dna.species.clothes_id
+			if(G == "f" && !dna.species.use_m)
 				pants_overlay = wear_pants.build_worn_icon(default_layer = PANTS_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', coom = "f", customi = racecustom, sleeveindex = legsindex)
 			else
 				if(dna.species.use_f)
@@ -1369,7 +1373,7 @@ There are several things that need to be remembered:
 
 			//add sleeve overlays, then offset
 			var/list/sleeves = list()
-			var/femw = (gender == FEMALE || dna.species.use_f) ? "_f" : ""
+			var/femw = ((gender == FEMALE && !dna.species.use_m) || dna.species.use_f) ? "_f" : ""
 			if(wear_pants.sleeved && legsindex > 0 && wear_pants.adjustable != CADJUSTED)
 				sleeves = get_sleeves_layer(wear_pants,legsindex,LEGSLEEVE_LAYER)
 			if(wear_pants.adjustable == CADJUSTED)
@@ -1401,7 +1405,7 @@ There are several things that need to be remembered:
 		return
 
 	if(client && hud_used && hud_used.inv_slots[SLOT_MOUTH])
-		var/obj/screen/inventory/inv = hud_used.inv_slots[SLOT_MOUTH]
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_MOUTH]
 		inv.update_icon()
 
 	if(mouth)
@@ -1434,7 +1438,7 @@ There are several things that need to be remembered:
 	if(legcuffed)
 		overlays_standing[LEGCUFF_LAYER] = mutable_appearance('icons/roguetown/mob/bodies/cuffed.dmi', "[legcuffed.name]down", -LEGCUFF_LAYER)
 		apply_overlay(LEGCUFF_LAYER)
-		throw_alert("legcuffed", /obj/screen/alert/restrained/legcuffed, new_master = src.legcuffed)
+		throw_alert("legcuffed", /atom/movable/screen/alert/restrained/legcuffed, new_master = src.legcuffed)
 
 /proc/wear_female_version(t_color, icon, layer, type)
 	var/index = t_color
@@ -1652,7 +1656,7 @@ generate/load female uniform sprites matching all previously decided variables
 
 	return standing
 
-/mob/living/carbon/proc/get_sleeves_layer(var/obj/item/I,sleeveindex,layer2use)
+/mob/living/carbon/proc/get_sleeves_layer(obj/item/I,sleeveindex,layer2use)
 	if(!I)
 		return
 	var/list/sleeves = list()
@@ -1666,8 +1670,8 @@ generate/load female uniform sprites matching all previously decided variables
 
 	var/racecustom
 	if(dna.species.custom_clothes)
-		racecustom = dna.species.id
-	var/index = "[I.icon_state][(gender == FEMALE || dna.species.use_f) ? "_f" : ""][racecustom ? "_[racecustom]" : ""]"
+		racecustom = dna.species.clothes_id
+	var/index = "[I.icon_state][((gender == FEMALE && !dna.species.use_m)|| dna.species.use_f) ? "_f" : ""][racecustom ? "_[racecustom]" : ""]"
 	var/static/list/bloody_r = list()
 	var/static/list/bloody_l = list()
 	if(I.nodismemsleeves && sleeveindex) //armor pauldrons that show up above arms but don't get dismembered
@@ -1867,6 +1871,9 @@ generate/load female uniform sprites matching all previously decided variables
 /mob/proc/update_body_parts_head_only()
 	return
 
+/mob/proc/update_body_parts_eyes_only()
+	return
+
 // Only renders the head of the human
 /mob/living/carbon/human/update_body_parts_head_only()
 	if (!dna)
@@ -1875,7 +1882,7 @@ generate/load female uniform sprites matching all previously decided variables
 	if (!dna.species)
 		return
 
-	var/obj/item/bodypart/HD = get_bodypart("head")
+	var/obj/item/bodypart/HD = get_bodypart(BODY_ZONE_HEAD)
 
 	if (!istype(HD))
 		return
@@ -1887,7 +1894,6 @@ generate/load female uniform sprites matching all previously decided variables
 	update_damage_overlays()
 
 	if(HD && !(HAS_TRAIT(src, TRAIT_HUSK)))
-
 		// lipstick
 		if(lip_style && (LIPS in dna.species.species_traits))
 			var/mutable_appearance/lip_overlay = mutable_appearance('icons/mob/human_face.dmi', "lips_[lip_style]", -BODY_LAYER)
@@ -1903,6 +1909,25 @@ generate/load female uniform sprites matching all previously decided variables
 			add_overlay(lip_overlay)
 
 		// eyes
+		update_body_parts_eyes_only()
+
+	dna.species.handle_hair(src)
+
+	update_inv_head()
+	update_inv_wear_mask()
+	update_inv_mouth()
+
+/mob/living/carbon/human/update_body_parts_eyes_only()
+	if (!dna)
+		return
+
+	if (!dna.species)
+		return
+
+	if(!get_bodypart(BODY_ZONE_HEAD)) //Decapitated
+		return
+
+	if(!(HAS_TRAIT(src, TRAIT_HUSK)))
 		if(!(NOEYESPRITES in dna.species.species_traits))
 			var/obj/item/organ/eyes/E = getorganslot(ORGAN_SLOT_EYES)
 			var/mutable_appearance/eye_overlay
@@ -1924,9 +1949,3 @@ generate/load female uniform sprites matching all previously decided variables
 					eye_overlay.pixel_x += dna.species.offset_features[OFFSET_FACE][1]
 					eye_overlay.pixel_y += dna.species.offset_features[OFFSET_FACE][2]
 			add_overlay(eye_overlay)
-
-	dna.species.handle_hair(src)
-
-	update_inv_head()
-	update_inv_wear_mask()
-	update_inv_mouth()

@@ -78,7 +78,7 @@ GLOBAL_VAR(moneymaster)
 /obj/structure/roguemachine/money/attack_hand(mob/living/user)
 	. = ..()
 	user.changeNext_move(CLICK_CD_MELEE)
-	to_chat(user, "<span class='info'>I rub the machine clockwise.</span>")
+	to_chat(user, span_info("I rub the machine clockwise."))
 	if(budget > 0)
 		say("[budget] MAMMON ARE MINE...")
 		playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
@@ -92,7 +92,7 @@ GLOBAL_VAR(moneymaster)
 	user.changeNext_move(CLICK_CD_MELEE)
 	var/inputt = alert(user,"Gold, Silver, or Bronze?",,"BRONZE","SILVER","GOLD")
 	if(inputt && Adjacent(user))
-		to_chat(user, "<span class='info'>I pull on the [inputt] tongue.</span>")
+		to_chat(user, span_info("I pull on the [inputt] tongue."))
 		if(inputt == "BRONZE" && budget >= 50)
 			budget2change(budget, user, inputt)
 			budget = 0
@@ -101,7 +101,7 @@ GLOBAL_VAR(moneymaster)
 				L.emote("scream")
 				L.Paralyze(50)
 				L.Stun(50)
-				L.visible_message("<span class='danger'>[user] is buried under a mountain of coins!</span>")
+				L.visible_message(span_danger("[user] is buried under a mountain of coins!"))
 		else
 			budget2change(budget, user, inputt)
 			switch(inputt)
@@ -127,62 +127,50 @@ GLOBAL_VAR(moneymaster)
 		T = get_turf(src)
 	else
 		T = get_turf(user)
-	if(!budget)
+	if(!budget || budget <= 0)
 		return
-	budget = round(budget)
-	var/found
+	budget = floor(budget)
+	var/type_to_put
+	var/zenars_to_put
 	if(specify)
-		found = TRUE
 		switch(specify)
 			if("GOLD")
-				var/zenars = budget/10
-				if(zenars >= 1)
-					var/obj/item/roguecoin/gold/G = new (T)
-					if(zenars > 1)
-						for(var/i in 2 to zenars)
-							var/obj/item/roguecoin/gold/GV = new /obj/item/roguecoin/gold(G)
-							G.held += GV
-					G.update_icon()
-					user.put_in_hands(G)
+				zenars_to_put = budget/10
+				type_to_put = /obj/item/roguecoin/gold
 			if("SILVER")
-				var/zenars = budget/5
-				if(zenars >= 1)
-					var/obj/item/roguecoin/silver/G = new (T)
-					if(zenars > 1)
-						for(var/i in 2 to zenars)
-							var/obj/item/roguecoin/silver/GV = new /obj/item/roguecoin/silver(G)
-							G.held += GV
-					G.update_icon()
-					user.put_in_hands(G)
+				zenars_to_put = budget/5
+				type_to_put = /obj/item/roguecoin/silver
 			if("BRONZE")
-				var/zenars = budget
-				if(zenars >= 1)
-					var/obj/item/roguecoin/copper/G = new (T)
-					if(zenars > 1)
-						for(var/i in 2 to zenars)
-							var/obj/item/roguecoin/copper/GV = new /obj/item/roguecoin/copper(G)
-							G.held += GV
-					G.update_icon()
-					user.put_in_hands(G)
+				zenars_to_put = budget
+				type_to_put = /obj/item/roguecoin/copper
 	else
-		var/zenars = budget/10
-		if(zenars >= 1)
-			for(var/i in 1 to zenars)
-				budget -= 10
-				found = TRUE
-				new /obj/item/roguecoin/gold(T)
-		zenars = budget/5
-		if(zenars >= 1)
-			for(var/i in 1 to zenars)
-				budget -= 5
-				found = TRUE
-				new /obj/item/roguecoin/silver(T)
+		var/highest_found = FALSE
+		var/zenars = floor(budget/10)
+		if(zenars)
+			budget -= zenars * 10
+			highest_found = TRUE
+			type_to_put = /obj/item/roguecoin/gold
+			zenars_to_put = zenars
+		zenars = floor(budget/5)
+		if(zenars)
+			budget -= zenars * 5
+			if(!highest_found)
+				highest_found = TRUE
+				type_to_put = /obj/item/roguecoin/silver
+				zenars_to_put = zenars
+			else
+				new /obj/item/roguecoin/silver(T, zenars)
 		if(budget >= 1)
-			for(var/i in 1 to budget)
-				found = TRUE
-				new /obj/item/roguecoin/copper(T)
-	if(found)
-		playsound(T, 'sound/misc/coindispense.ogg', 100, FALSE, -1)
+			if(!highest_found)
+				type_to_put = /obj/item/roguecoin/copper
+				zenars_to_put = budget
+			else
+				new /obj/item/roguecoin/copper(T, budget)
+	if(!type_to_put || zenars_to_put < 1)
+		return
+	var/obj/item/roguecoin/G = new type_to_put(T, floor(zenars_to_put))
+	user.put_in_hands(G)
+	playsound(T, 'sound/misc/coindispense.ogg', 100, FALSE, -1)
 /*
 /obj/structure/roguemachine/money/attack_right(mob/user)
 	. = ..()
@@ -191,7 +179,7 @@ GLOBAL_VAR(moneymaster)
 	user.changeNext_move(CLICK_CD_MELEE)
 	playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 	speaking = !speaking
-	to_chat(user, "<span class='info'>I press the right eye.</span>")
+	to_chat(user, span_info("I press the right eye."))
 	update_icon()
 */
 /obj/structure/roguemachine/money/obj_break(damage_flag)

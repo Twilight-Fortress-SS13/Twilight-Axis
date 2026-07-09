@@ -25,7 +25,7 @@
 		ROTATION_ALTCLICK | ROTATION_CLOCKWISE | ROTATION_COUNTERCLOCKWISE | ROTATION_FLIP | ROTATION_VERBS,
 		null,
 		null,
-		CALLBACK(src,.proc/after_rotation)
+		CALLBACK(src,PROC_REF(after_rotation))
 		)
 
 /obj/item/assembly/infra/proc/after_rotation()
@@ -39,7 +39,7 @@
 
 /obj/item/assembly/infra/examine(mob/user)
 	. = ..()
-	. += "<span class='notice'>The infrared trigger is [on?"on":"off"].</span>"
+	. += span_notice("The infrared trigger is [on?"on":"off"].")
 
 /obj/item/assembly/infra/activate()
 	if(!..())
@@ -167,7 +167,7 @@
 		return
 	if(listeningTo)
 		UnregisterSignal(listeningTo, COMSIG_ATOM_EXITED)
-	RegisterSignal(newloc, COMSIG_ATOM_EXITED, .proc/check_exit)
+	RegisterSignal(newloc, COMSIG_ATOM_EXITED, PROC_REF(check_exit))
 	listeningTo = newloc
 
 /obj/item/assembly/infra/proc/check_exit(datum/source, atom/movable/offender)

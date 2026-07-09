@@ -7,26 +7,26 @@
 
 /obj/item/organ/body_egg/on_find(mob/living/finder)
 	..()
-	to_chat(finder, "<span class='warning'>I found an unknown alien organism in [owner]'s [zone]!</span>")
+	to_chat(finder, span_warning("I found an unknown alien organism in [owner]'s [zone]!"))
 
 /obj/item/organ/body_egg/Initialize()
 	. = ..()
 	if(iscarbon(loc))
 		Insert(loc)
 
-/obj/item/organ/body_egg/Insert(var/mob/living/carbon/M, special = 0)
+/obj/item/organ/body_egg/Insert(mob/living/carbon/M, special = 0)
 	..()
 	ADD_TRAIT(owner, TRAIT_XENO_HOST, TRAIT_GENERIC)
 	ADD_TRAIT(owner, TRAIT_XENO_IMMUNE, "xeno immune")
 	owner.med_hud_set_status()
-	INVOKE_ASYNC(src, .proc/AddInfectionImages, owner)
+	INVOKE_ASYNC(src, PROC_REF(AddInfectionImages), owner)
 
-/obj/item/organ/body_egg/Remove(var/mob/living/carbon/M, special = 0)
+/obj/item/organ/body_egg/Remove(mob/living/carbon/M, special = 0)
 	if(owner)
 		REMOVE_TRAIT(owner, TRAIT_XENO_HOST, TRAIT_GENERIC)
 		REMOVE_TRAIT(owner, TRAIT_XENO_IMMUNE, "xeno immune")
 		owner.med_hud_set_status()
-		INVOKE_ASYNC(src, .proc/RemoveInfectionImages, owner)
+		INVOKE_ASYNC(src, PROC_REF(RemoveInfectionImages), owner)
 	..()
 
 /obj/item/organ/body_egg/on_death()

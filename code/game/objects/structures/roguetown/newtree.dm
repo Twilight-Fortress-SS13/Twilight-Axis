@@ -27,9 +27,39 @@
 						user.put_in_hands(I)
 			return
 
-/obj/structure/flora/newtree/obj_destruction(damage_flag)
+/obj/structure/flora/newtree/obj_destruction(damage_flag)//this proc is stupidly long for a destruction proc
 	var/turf/NT = get_turf(src)
-	if(!istype(NT, /turf/open/transparent/openspace))
+	var/turf/UPNT = get_step_multiz(src, UP)
+	src.obj_flags = CAN_BE_HIT | BLOCK_Z_IN_UP //so the logs actually fall when pulled by zfall
+
+	for(var/obj/structure/flora/newtree/D in UPNT)//theoretically you'd be able to break trees through a floor but no one is building floors under a tree so this is probably fine
+		D.obj_destruction(damage_flag)
+	for(var/obj/item/grown/log/tree/I in UPNT)
+		UPNT.zFall(I)
+
+	for(var/DI in GLOB.cardinals)
+		var/turf/B = get_step(src, DI)
+		for(var/obj/structure/flora/newbranch/BRANCH in B)//i straight up can't use locate here, it does not work
+			if(BRANCH.dir == DI)
+				var/turf/BI = get_step(B, DI)
+				for(var/obj/structure/flora/newbranch/bi in BI)//2 tile end branch
+					if(bi.dir == DI)
+						bi.obj_flags = CAN_BE_HIT
+						bi.obj_destruction(damage_flag)
+					for(var/atom/bio in BI)
+						BI.zFall(bio)
+				for(var/obj/structure/flora/newleaf/bil in BI)//2 tile end leaf
+					bil.obj_destruction(damage_flag)
+				BRANCH.obj_flags = CAN_BE_HIT 
+				BRANCH.obj_destruction(damage_flag)
+			for(var/atom/BRA in B)//unload a sack of rocks on a branch and stand under it, it'll be funny bro
+				B.zFall(BRA)
+	
+	for(var/turf/DIA in block(get_step(src, SOUTHWEST), get_step(src, NORTHEAST)))
+		for(var/obj/structure/flora/newleaf/LEAF in DIA)
+			LEAF.obj_destruction(damage_flag)
+
+	if(!istype(NT, /turf/open/transparent/openspace) && !(locate(/obj/structure/flora/roguetree/stump) in NT))//if i don't add the stump check it spawns however many zlevels it goes up because of src recursion
 		new /obj/structure/flora/roguetree/stump(NT)
 	playsound(src, 'sound/misc/treefall.ogg', 100, FALSE)
 	. = ..()
@@ -37,18 +67,20 @@
 /obj/structure/flora/newtree/attack_hand(mob/user)
 	if(isliving(user))
 		var/mob/living/L = user
-		if(L.stat != CONSCIOUS)
+		if(L.stat != CONSCIOUS || L.incapacitated() || !(L.mobility_flags & MOBILITY_STAND))
 			return
 		var/turf/target = get_step_multiz(user, UP)
 		if(!istype(target, /turf/open/transparent/openspace))
-			to_chat(user, "<span class='warning'>I can't climb here.</span>")
+			to_chat(user, span_warning("I can't climb here."))
 			return
 		if(!L.can_zTravel(target, UP))
-			to_chat(user, "<span class='warning'>I can't climb there.</span>")
+			to_chat(user, span_warning("I can't climb there."))
 			return
 		var/used_time = 0
+		var/exp_to_gain = 0 
 		if(L.mind)
 			var/myskill = L.mind.get_skill_level(/datum/skill/misc/climbing)
+			exp_to_gain = (L.STAINT/2) * L.mind.get_learning_boon(/datum/skill/misc/climbing)
 			var/obj/structure/table/TA = locate() in L.loc
 			if(TA)
 				myskill += 1
@@ -58,7 +90,7 @@
 					myskill += 1
 			used_time = max(70 - (myskill * 10) - (L.STASPD * 3), 30)
 		playsound(user, 'sound/foley/climb.ogg', 100, TRUE)
-		user.visible_message("<span class='warning'>[user] starts to climb [src].</span>", "<span class='warning'>I start to climb [src]...</span>")
+		user.visible_message(span_warning("[user] starts to climb [src]."), span_warning("I start to climb [src]..."))
 		if(do_after(L, used_time, target = src))
 			var/pulling = user.pulling
 			if(ismob(pulling))
@@ -66,6 +98,8 @@
 			user.forceMove(target)
 			user.start_pulling(pulling,supress_message = TRUE)
 			playsound(user, 'sound/foley/climb.ogg', 100, TRUE)
+			if(L.mind) // idk just following whats going on above
+				L.mind.adjust_experience(/datum/skill/misc/climbing, exp_to_gain, FALSE)
 
 /obj/structure/flora/newtree/update_icon()
 	icon_state = ""

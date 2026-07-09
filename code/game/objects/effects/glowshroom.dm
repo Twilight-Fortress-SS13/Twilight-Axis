@@ -22,7 +22,7 @@
 	/turf/open/floor/plating/beach/water))
 
 /obj/structure/glowshroom/fire_act(added, maxstacks)
-	visible_message("<span class='warning'>[src] catches fire!</span>")
+	visible_message(span_warning("[src] catches fire!"))
 	var/turf/T = get_turf(src)
 	qdel(src)
 	new /obj/effect/hotspot(T)
@@ -31,7 +31,11 @@
 	if(isliving(mover) && mover.z == z)
 //		var/throwdir = get_dir(src, mover)
 		var/mob/living/L = mover
-		if(L.electrocute_act(30, src))
+
+		if(HAS_TRAIT(L, TRAIT_KNEESTINGER_IMMUNITY)) //Dendor kneestinger immunity
+			return TRUE
+
+		if(L.electrocute_act(30, src)) 
 			L.consider_ambush()
 			if(L.throwing)
 				L.throwing.finalize(FALSE)
@@ -44,16 +48,17 @@
 	if(isliving(AM))
 		var/mob/living/L = AM
 		if(L.z == z)
-			if(L.electrocute_act(30, src))
-				L.emote("painscream")
-				L.consider_ambush()
+			if(!HAS_TRAIT(L, TRAIT_KNEESTINGER_IMMUNITY))
+				if(L.electrocute_act(30, src))
+					L.emote("painscream")
+					L.consider_ambush()
 	. = ..()
 
 /obj/structure/glowshroom/attackby(obj/item/W, mob/user, params)
 	if(isliving(user) && W && user.z == z)
 		if(W.flags_1 & CONDUCT_1)
 			var/mob/living/L = user
-			if(L.electrocute_act(30, src))
+			if(L.electrocute_act(30, src)) // The kneestingers will let you pass if you worship dendor, but they won't take your stupid ass hitting them.
 				L.emote("painscream")
 				L.consider_ambush()
 				if(L.throwing)
@@ -129,7 +134,7 @@
 	else //if on the floor, glowshroom on-floor sprite
 		icon_state = base_icon_state
 */
-//	addtimer(CALLBACK(src, .proc/Spread), delay)
+//	addtimer(CALLBACK(src, PROC_REF(Spread)), delay)
 
 /obj/structure/glowshroom/proc/Spread()
 	var/turf/ownturf = get_turf(src)
@@ -176,7 +181,7 @@
 			shrooms_planted++ //if we failed due to generation, don't try to plant one later
 	if(shrooms_planted < myseed.yield) //if we didn't get all possible shrooms planted, try again later
 		myseed.yield -= shrooms_planted
-		addtimer(CALLBACK(src, .proc/Spread), delay)
+		addtimer(CALLBACK(src, PROC_REF(Spread)), delay)
 
 /obj/structure/glowshroom/proc/CalcDir(turf/location = loc)
 	var/direction = 16
@@ -220,7 +225,7 @@
 
 /obj/structure/glowshroom/acid_act(acidpwr, acid_volume)
 	. = 1
-	visible_message("<span class='danger'>[src] melts away!</span>")
+	visible_message(span_danger("[src] melts away!"))
 	var/obj/effect/decal/cleanable/molten_object/I = new (get_turf(src))
 	I.desc = ""
 	qdel(src)

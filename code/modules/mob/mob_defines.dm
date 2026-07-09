@@ -49,6 +49,8 @@
 
 	/// The zone this mob is currently targeting
 	var/zone_selected = BODY_ZONE_CHEST
+	/// This is stupid but for the sake of surgery, mobs can target organ slots
+	var/organ_slot_selected = ORGAN_SLOT_HEART
 
 	var/computer_id = null
 	var/list/logging = list()
@@ -221,7 +223,7 @@
 
 	var/memory_throttle_time = 0
 
-	var/list/alerts = list() // contains /obj/screen/alert only // On /mob so clientless mobs will throw alerts properly
+	var/list/alerts = list() // contains /atom/movable/screen/alert only // On /mob so clientless mobs will throw alerts properly
 	var/list/screens = list()
 	var/list/client_colours = list()
 	var/hud_type = /datum/hud

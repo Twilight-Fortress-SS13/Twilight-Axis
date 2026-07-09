@@ -18,11 +18,11 @@
 	mode = AI_IDLE
 	dodgetime = 30 //they can dodge easily, but have a cooldown on it
 	flee_in_pain = TRUE
-	static_npc = TRUE
+
 	wander = FALSE
 
 /mob/living/carbon/human/species/goblin/npc/ambush
-	static_npc = FALSE
+
 	wander = TRUE
 
 /mob/living/carbon/human/species/goblin/hell
@@ -69,7 +69,7 @@
 
 /datum/species/goblin/moon/spec_death(gibbed, mob/living/carbon/human/H)
 	new /obj/item/reagent_containers/powder/moondust_purest(get_turf(H))
-	H.visible_message("<span class='blue'>Moondust falls from [H]!</span>")
+	H.visible_message(span_blue("Moondust falls from [H]!"))
 //	qdel(H)
 
 /obj/item/bodypart/chest/goblin
@@ -100,7 +100,7 @@
 	name = "goblin"
 	id = "goblin"
 	species_traits = list(NO_UNDERWEAR,NOEYESPRITES)
-	inherent_traits = list(TRAIT_NOFATSTAM,TRAIT_RESISTCOLD,TRAIT_RESISTHIGHPRESSURE,TRAIT_RESISTLOWPRESSURE,TRAIT_RADIMMUNE)
+	inherent_traits = list(TRAIT_NOROGSTAM,TRAIT_RESISTCOLD,TRAIT_RESISTHIGHPRESSURE,TRAIT_RESISTLOWPRESSURE,TRAIT_RADIMMUNE)
 	no_equip = list(SLOT_SHIRT, SLOT_WEAR_MASK, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_S_STORE)
 	nojumpsuit = 1
 	sexes = 1
@@ -108,7 +108,7 @@
 	damage_overlay_type = ""
 	var/raceicon = "goblin"
 
-/datum/species/goblin/regenerate_icons(var/mob/living/carbon/human/H)
+/datum/species/goblin/regenerate_icons(mob/living/carbon/human/H)
 //	H.cut_overlays()
 	H.icon_state = ""
 	if(H.notransform)
@@ -177,12 +177,14 @@
 /mob/living/carbon/human/species/goblin/update_inv_armor()
 	update_wearable()
 
-/datum/species/goblin/update_damage_overlays(var/mob/living/carbon/human/H)
+/datum/species/goblin/update_damage_overlays(mob/living/carbon/human/H)
 	return
 
 /mob/living/carbon/human/species/goblin/Initialize()
 	. = ..()
-	addtimer(CALLBACK(src, .proc/after_creation), 10)
+	spawn(10)
+		after_creation()
+	//addtimer(CALLBACK(src, PROC_REF(after_creation)), 10)
 
 /mob/living/carbon/human/species/goblin/handle_combat()
 	if(mode == AI_HUNT)
@@ -194,15 +196,14 @@
 	..()
 	gender = MALE
 	if(src.dna && src.dna.species)
-		src.dna.species.soundpack_m = new /datum/voicepack/goblin()
-		src.dna.species.soundpack_f = new /datum/voicepack/goblin()
+		src.dna.species.soundpack_m = new /datum/voicepack/male/goblin()
+		src.dna.species.soundpack_f = new /datum/voicepack/male/goblin()
 		var/obj/item/headdy = get_bodypart("head")
 		if(headdy)
 			headdy.icon = 'icons/roguetown/mob/monster/goblins.dmi'
 			headdy.icon_state = "[src.dna.species.id]_head"
 			headdy.sellprice = rand(7,40)
-	src.remove_all_languages()
-	//src.grant_language(/datum/language/orcsp)
+	src.grant_language(/datum/language/orcish)
 	var/obj/item/organ/eyes/eyes = src.getorganslot(ORGAN_SLOT_EYES)
 	if(eyes)
 		eyes.Remove(src,1)
@@ -218,7 +219,7 @@
 	real_name = "goblin"
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_GENERIC)
-	ADD_TRAIT(src, TRAIT_NOFATSTAM, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_NOROGSTAM, TRAIT_GENERIC)
 //	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_GENERIC)
 //	blue breathes underwater, need a new specific one for this maybe organ cheque
 //	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_GENERIC)
@@ -362,7 +363,7 @@
 	if(!in_range(src, user))
 		return
 	if(gobs >= (maxgobs+1))
-		to_chat(user, "<span class='danger'>Too many Gobs.</span>")
+		to_chat(user, span_danger("Too many Gobs."))
 		return
 	gobs++
 	var/mob/living/carbon/human/species/goblin/npc/N = new (get_turf(src))
@@ -398,7 +399,9 @@
 		return
 	spawning = TRUE
 	update_icon()
-	addtimer(CALLBACK(src, .proc/creategob), 4 SECONDS)
+	spawn(2 SECONDS)
+		creategob()
+	//addtimer(CALLBACK(src, PROC_REF(creategob)), 4 SECONDS)
 
 /obj/structure/gob_portal/Destroy()
 	soundloop.stop()

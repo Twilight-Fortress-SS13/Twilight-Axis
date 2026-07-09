@@ -107,7 +107,7 @@
 	limited = 2
 	cost = 0
 
-/datum/contractor_item/contract_reroll/handle_purchase(var/datum/contractor_hub/hub)
+/datum/contractor_item/contract_reroll/handle_purchase(datum/contractor_hub/hub)
 	. = ..()
 
 	if (.)
@@ -154,19 +154,19 @@
 	cost = 2
 	var/datum/mind/partner_mind = null
 
-/datum/contractor_item/contractor_partner/handle_purchase(var/datum/contractor_hub/hub, mob/living/user)
+/datum/contractor_item/contractor_partner/handle_purchase(datum/contractor_hub/hub, mob/living/user)
 	. = ..()
 
 	if (.)
-		to_chat(user, "<span class='notice'>The uplink vibrates quietly, connecting to nearby agents...</span>")
+		to_chat(user, span_notice("The uplink vibrates quietly, connecting to nearby agents..."))
 
-		var/list/mob/dead/observer/candidates = pollGhostCandidates("Do you want to play as the Contractor Support Unit for [user.real_name]?", ROLE_PAI, null, FALSE, 100, POLL_IGNORE_CONTRACTOR_SUPPORT)
+		var/list/mob/candidates = pollGhostCandidates("Do you want to play as the Contractor Support Unit for [user.real_name]?", ROLE_PAI, null, FALSE, 100, POLL_IGNORE_CONTRACTOR_SUPPORT)
 
 		if(LAZYLEN(candidates))
-			var/mob/dead/observer/C = pick(candidates)
+			var/mob/C = pick(candidates)
 			spawn_contractor_partner(user, C.key)
 		else
-			to_chat(user, "<span class='notice'>No available agents at this time, please try again later.</span>")
+			to_chat(user, span_notice("No available agents at this time, please try again later."))
 
 			// refund and add the limit back.
 			limited += 1
@@ -233,7 +233,7 @@
 	limited = 2
 	cost = 3
 
-/datum/contractor_item/blackout/handle_purchase(var/datum/contractor_hub/hub)
+/datum/contractor_item/blackout/handle_purchase(datum/contractor_hub/hub)
 	. = ..()
 
 	if (.)
@@ -241,7 +241,7 @@
 		priority_announce("Abnormal activity detected in [station_name()]")
 
 // Subtract cost, and spawn if it's an item.
-/datum/contractor_item/proc/handle_purchase(var/datum/contractor_hub/hub, mob/living/user)
+/datum/contractor_item/proc/handle_purchase(datum/contractor_hub/hub, mob/living/user)
 
 	if (hub.contract_rep >= cost)
 		hub.contract_rep -= cost
@@ -261,9 +261,9 @@
 		var/atom/item_to_create = new item(get_turf(user))
 
 		if(user.put_in_hands(item_to_create))
-			to_chat(user, "<span class='notice'>My purchase materializes into my hands!</span>")
+			to_chat(user, span_notice("My purchase materializes into my hands!"))
 		else
-			to_chat(user, "<span class='notice'>My purchase materializes onto the floor.</span>")
+			to_chat(user, span_notice("My purchase materializes onto the floor."))
 
 		return item_to_create
 	return TRUE

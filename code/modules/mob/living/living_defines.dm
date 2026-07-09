@@ -43,9 +43,9 @@
 	var/incorporeal_move = FALSE //FALSE is off, INCORPOREAL_MOVE_BASIC is normal, INCORPOREAL_MOVE_SHADOW is for ninjas
 								 //and INCORPOREAL_MOVE_JAUNT is blocked by holy water/salt
 
-	var/list/roundstart_quirks = list()
+	var/list/roundstart_quirks
 
-	var/list/surgeries = list()	//a list of surgery datums. generally empty, they're added when the player wants them.
+	var/list/surgeries //a list of surgery steps. generally empty, they're added when the player is performing them.
 
 	var/now_pushing = null //used by living/Bump() and living/PushAM() to prevent potential infinite loop.
 
@@ -153,8 +153,6 @@
 	var/obj/item/grabbing/r_grab = null
 	var/obj/item/grabbing/l_grab = null
 
-	var/list/simple_embedded_objects = list()
-
 	var/datum/sex_controller/sexcon
 
 	var/slowdown
@@ -164,3 +162,14 @@
 	var/list/death_trackers = list()
 
 	var/rot_type = /datum/component/rot/simple
+
+	/**This variable updated in mob_movement.dm primarily. Mainly a shitcode measure for existing shitcode because this is SHITCODE!
+	 * All it does is track when a mob is sneaking so we don't have to constantly reset alpha values as this fucks with how things are intended to be.
+	 * if you really need to cancel someone who is sneaking, call update_sneak_invis(TRUE).*/
+	var/rogue_sneaking = FALSE
+	/* Can be used to change the lighting threshholds at which players can sneak.*/
+	var/rogue_sneaking_light_threshhold = 0.15
+
+
+	/// Default pitch for emotes, on humans this is modified by stats
+	var/voice_pitch = 1

@@ -10,9 +10,9 @@
 /datum/nanite_program/triggered/sleepy/trigger()
 	if(!..())
 		return
-	to_chat(host_mob, "<span class='warning'>I start to feel very sleepy...</span>")
+	to_chat(host_mob, span_warning("I start to feel very sleepy..."))
 	host_mob.drowsyness += 20
-	addtimer(CALLBACK(host_mob, /mob/living.proc/Sleeping, 200), rand(60,200))
+	addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living, Sleeping), 200), rand(60,200))
 
 /datum/nanite_program/paralyzing
 	name = "Paralysis"
@@ -25,11 +25,11 @@
 
 /datum/nanite_program/paralyzing/enable_passive_effect()
 	. = ..()
-	to_chat(host_mob, "<span class='warning'>My muscles seize! You can't move!</span>")
+	to_chat(host_mob, span_warning("My muscles seize! You can't move!"))
 
 /datum/nanite_program/paralyzing/disable_passive_effect()
 	. = ..()
-	to_chat(host_mob, "<span class='notice'>My muscles relax, and you can move again.</span>")
+	to_chat(host_mob, span_notice("My muscles relax, and you can move again."))
 
 /datum/nanite_program/triggered/shocking
 	name = "Electric Shock"
@@ -169,7 +169,7 @@
 		sent_message = sentence
 	if(host_mob.stat == DEAD)
 		return
-	to_chat(host_mob, "<span class='warning'>I feel compelled to speak...</span>")
+	to_chat(host_mob, span_warning("I feel compelled to speak..."))
 	host_mob.say(sent_message, forced = "nanite speech")
 
 /datum/nanite_program/triggered/comm/voice

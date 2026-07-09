@@ -1,6 +1,6 @@
 GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 
-/proc/get_uplink_items(var/datum/game_mode/gamemode = null, allow_sales = TRUE, allow_restricted = TRUE)
+/proc/get_uplink_items(datum/game_mode/gamemode = null, allow_sales = TRUE, allow_restricted = TRUE)
 	var/list/filtered_uplink_items = list()
 	var/list/sale_items = list()
 
@@ -125,9 +125,9 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 	if(ishuman(user) && istype(A, /obj/item))
 		var/mob/living/carbon/human/H = user
 		if(H.put_in_hands(A))
-			to_chat(H, "<span class='boldnotice'>[A] materializes into your hands!</span>")
+			to_chat(H, span_boldnotice("[A] materializes into your hands!"))
 			return A
-	to_chat(user, "<span class='boldnotice'>[A] materializes onto the floor!</span>")
+	to_chat(user, span_boldnotice("[A] materializes onto the floor!"))
 	return A
 
 //Discounts (dynamically filled above)
@@ -1338,7 +1338,7 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 		return
 	U.failsafe_code = U.generate_code()
 	var/code = "[islist(U.failsafe_code) ? english_list(U.failsafe_code) : U.failsafe_code]"
-	to_chat(user, "<span class='warning'>The new failsafe code for this uplink is now : [code].</span>")
+	to_chat(user, span_warning("The new failsafe code for this uplink is now : [code]."))
 	if(user.mind)
 		user.mind.store_memory("Failsafe code for [U.parent] : [code]")
 	return U.parent //For log icon
@@ -1640,6 +1640,7 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 	cost = 6
 	restricted_roles = list("Geneticist", "Chief Medical Officer")
 
+/*
 /datum/uplink_item/role_restricted/brainwash_disk
 	name = "Brainwashing Surgery Program"
 	desc = "A disk containing the procedure to perform a brainwashing surgery, allowing you to implant an objective onto a target. \
@@ -1647,6 +1648,7 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 	item = /obj/item/disk/surgery/brainwashing
 	restricted_roles = list("Medical Doctor", "Chief Medical Officer", "Roboticist")
 	cost = 5
+*/
 
 /datum/uplink_item/role_restricted/clown_bomb
 	name = "Clown Bomb"
@@ -1780,8 +1782,8 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 
 /datum/uplink_item/role_restricted/reverse_revolver
 	name = "Reverse Revolver"
-	desc = "" //drop your weapon, then watch as the greedy corporate pigs blow their own brains all over the wall. \
-	The revolver itself is actually real. Only clumsy people, and clowns, can fire it normally. Comes in a box of hugs. Honk."
+	//drop your weapon, then watch as the greedy corporate pigs blow their own brains all over the wall.
+	desc = "The revolver itself is actually real. Only clumsy people, and clowns, can fire it normally. Comes in a box of hugs. Honk."  
 	cost = 14
 	item = /obj/item/storage/box/hug/reverse_revolver
 	restricted_roles = list("Clown")
@@ -1805,8 +1807,8 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 
 /datum/uplink_item/badass/costumes/centcom_official
 	name = "CentCom Official Costume"
-	desc = "" //their nuclear disk and weapons system, and then when they decline, pull out a fully automatic rifle and gun down the Captain. \
-			Radio headset does not include encryption key. No gun included."
+	//their nuclear disk and weapons system, and then when they decline, pull out a fully automatic rifle and gun down the Captain. 
+	desc = "Radio headset does not include encryption key. No gun included." 
 	item = /obj/item/storage/box/syndie_kit/centcom_costume
 
 /datum/uplink_item/badass/costumes/clown

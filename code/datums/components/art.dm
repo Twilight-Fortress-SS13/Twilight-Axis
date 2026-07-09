@@ -4,17 +4,17 @@
 /datum/component/art/Initialize(impress)
 	impressiveness = impress
 	if(isobj(parent))
-		RegisterSignal(parent, COMSIG_PARENT_EXAMINE, .proc/on_obj_examine)
+		RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(on_obj_examine))
 	else
-		RegisterSignal(parent, COMSIG_PARENT_EXAMINE, .proc/on_other_examine)
+		RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(on_other_examine))
 	if(isstructure(parent))
-		RegisterSignal(parent, COMSIG_ATOM_ATTACK_HAND, .proc/on_attack_hand)
+		RegisterSignal(parent, COMSIG_ATOM_ATTACK_HAND, PROC_REF(on_attack_hand))
 	if(isitem(parent))
-		RegisterSignal(parent, COMSIG_ITEM_ATTACK_SELF, .proc/apply_moodlet)
+		RegisterSignal(parent, COMSIG_ITEM_ATTACK_SELF, PROC_REF(apply_moodlet))
 
 /datum/component/art/proc/apply_moodlet(mob/M, impress)
-	M.visible_message("<span class='notice'>[M] stops and looks intently at [parent].</span>", \
-						 "<span class='notice'>I stop to take in [parent].</span>")
+	M.visible_message(span_notice("[M] stops and looks intently at [parent]."), \
+						 span_notice("I stop to take in [parent]."))
 	switch(impress)
 		if (0 to BAD_ART)
 			SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "artbad", /datum/mood_event/artbad)
@@ -34,7 +34,7 @@
 	apply_moodlet(M, impressiveness *(O.obj_integrity/O.max_integrity))
 
 /datum/component/art/proc/on_attack_hand(datum/source, mob/M)
-	to_chat(M, "<span class='notice'>I start examining [parent]...</span>")
+	to_chat(M, span_notice("I start examining [parent]..."))
 	if(!do_after(M, 20, target = parent))
 		return
 	on_obj_examine(source, M)
@@ -42,8 +42,8 @@
 /datum/component/art/rev
 
 /datum/component/art/rev/apply_moodlet(mob/M, impress)
-	M.visible_message("<span class='notice'>[M] stops to inspect [parent].</span>", \
-						 "<span class='notice'>I take in [parent], inspecting the fine craftsmanship of the proletariat.</span>")
+	M.visible_message(span_notice("[M] stops to inspect [parent]."), \
+						 span_notice("I take in [parent], inspecting the fine craftsmanship of the proletariat."))
 
 	if(M.mind && M.mind.has_antag_datum(/datum/antagonist/rev))
 		SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "artgreat", /datum/mood_event/artgreat)

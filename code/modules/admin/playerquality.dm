@@ -81,7 +81,8 @@
 			msg += " - GM: [admin]"
 		if(reason)
 			msg += " - RSN: [reason]"
-		do_bot_thing_pq(msg)
+		message_admins("[admin] adjusted [key]'s PQ by [amt] for reason: [reason]")
+		log_admin("[admin] adjusted [key]'s PQ by [amt] for reason: [reason]")
 
 /client/proc/check_pq()
 	set category = "GameMaster"
@@ -97,7 +98,7 @@
 		for(var/mob/living/H in GLOB.player_list)
 			selections[H.real_name] = H.ckey
 		if(!selections.len)
-			to_chat(src, "<span class='boldwarning'>No characters found.</span>")
+			to_chat(src, span_boldwarning("No characters found."))
 			return
 		selection = input("Which Character?") as null|anything in sortList(selections)
 		if(!selection)
@@ -119,27 +120,30 @@
 		if(!selection)
 			return
 		theykey = selection
-	if(!fexists("data/player_saves/[copytext(theykey,1,2)]/[theykey]/preferences.sav"))
-		to_chat(src, "<span class='boldwarning'>User does not exist.</span>")
+	check_pq_menu(theykey)
+
+/proc/check_pq_menu(ckey)
+	if(!fexists("data/player_saves/[copytext(ckey,1,2)]/[ckey]/preferences.sav"))
+		to_chat(src, span_boldwarning("User does not exist."))
 		return
-	var/popup_window_data = "<center>[selection]</center>"
-	popup_window_data += "<center>PQ: [get_playerquality(theykey, TRUE, TRUE)] ([get_playerquality(theykey, FALSE, TRUE)])</center>"
+	var/popup_window_data = "<center>[ckey]</center>"
+	popup_window_data += "<center>PQ: [get_playerquality(ckey, TRUE, TRUE)] ([get_playerquality(ckey, FALSE, TRUE)])</center>"
 
 //	dat += "<table width=100%><tr><td width=33%><div style='text-align:left'><a href='?_src_=prefs;preference=playerquality;task=menu'><b>PQ:</b></a> [get_playerquality(user.ckey, text = TRUE)]</div></td><td width=34%><center><a href='?_src_=prefs;preference=triumphs;task=menu'><b>TRIUMPHS:</b></a> [user.get_triumphs() ? "\Roman [user.get_triumphs()]" : "None"]</center></td><td width=33%></td></tr></table>"
-	popup_window_data += "<center><a href='?_src_=holder;[HrefToken()];cursemenu=[theykey]'>CURSES</a></center>"
+	popup_window_data += "<center><a href='?_src_=holder;[HrefToken()];cursemenu=[ckey]'>CURSES</a></center>"
 	popup_window_data += "<table width=100%><tr><td width=33%><div style='text-align:left'>"
-	popup_window_data += "Commends: <a href='?_src_=holder;[HrefToken()];readcommends=[theykey]'>[get_commends(theykey)]</a></div></td>"
-	popup_window_data += "<td width=34%><center>ESL Points: [get_eslpoints(theykey)]</center></td>"
-	popup_window_data += "<td width=33%><div style='text-align:right'>Rounds Survived: [get_roundsplayed(theykey)]</div></td></tr></table>"
-	var/list/listy = world.file2list("data/player_saves/[copytext(theykey,1,2)]/[theykey]/playerquality.txt")
+	popup_window_data += "Commends: <a href='?_src_=holder;[HrefToken()];readcommends=[ckey]'>[get_commends(ckey)]</a></div></td>"
+	popup_window_data += "<td width=34%><center>ESL Points: [get_eslpoints(ckey)]</center></td>"
+	popup_window_data += "<td width=33%><div style='text-align:right'>Rounds Survived: [get_roundsplayed(ckey)]</div></td></tr></table>"
+	var/list/listy = world.file2list("data/player_saves/[copytext(ckey,1,2)]/[ckey]/playerquality.txt")
 	if(!listy.len)
-		popup_window_data += "<span class='info'>No data on record. Create some.</span>"
+		popup_window_data += span_info("No data on record. Create some.")
 	else
 		for(var/i = listy.len to 1 step -1)
 			var/ya = listy[i]
 			if(ya)
 				popup_window_data += "<span class='info'>[listy[i]]</span><br>"
-	var/datum/browser/noclose/popup = new(mob, "playerquality", "", 390, 320)
+	var/datum/browser/noclose/popup = new(usr, "playerquality", "", 390, 320)
 	popup.set_content(popup_window_data)
 	popup.open()
 
@@ -155,7 +159,7 @@
 		for(var/mob/living/H in GLOB.player_list)
 			selections[H.real_name] = H.ckey
 		if(!selections.len)
-			to_chat(src, "<span class='boldwarning'>No characters found.</span>")
+			to_chat(src, span_boldwarning("No characters found."))
 			return
 		selection = input("Which Character?") as null|anything in sortList(selections)
 		if(!selection)
@@ -178,10 +182,10 @@
 			return
 		theykey = selection
 	if(theykey == ckey)
-		to_chat(src, "<span class='boldwarning'>That's you!</span>")
+		to_chat(src, span_boldwarning("That's you!"))
 		return
 	if(!fexists("data/player_saves/[copytext(theykey,1,2)]/[theykey]/preferences.sav"))
-		to_chat(src, "<span class='boldwarning'>User does not exist.</span>")
+		to_chat(src, span_boldwarning("User does not exist."))
 		return
 	var/amt2change = input("How much to modify the PQ by? (20 to -20, or 0 to just add a note)") as null|num
 	if(!check_rights(R_ADMIN,0))
@@ -189,7 +193,11 @@
 	var/raisin = stripped_input("State a short reason for this change", "Game Master", "", null)
 	if(!amt2change && !raisin)
 		return
-	adjust_playerquality(amt2change, theykey, ckey(src.ckey), raisin)
+	adjust_playerquality(amt2change, theykey, src.ckey, raisin)
+	for(var/client/C in GLOB.clients) // I hate this, but I'm not refactoring the cancer above this point.
+		if(lowertext(C.key) == lowertext(theykey))
+			to_chat(C, "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">Your PQ has been adjusted by [amt2change] by [key] for reason: [raisin]</span></span>")
+			return
 
 /proc/add_commend(key, giver)
 	if(!giver || !key)

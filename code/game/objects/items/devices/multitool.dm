@@ -34,10 +34,10 @@
 
 /obj/item/multitool/examine(mob/user)
 	. = ..()
-	. += "<span class='notice'>Its buffer [buffer ? "contains [buffer]." : "is empty."]</span>"
+	. += span_notice("Its buffer [buffer ? "contains [buffer]." : "is empty."]")
 
 /obj/item/multitool/suicide_act(mob/living/carbon/user)
-	user.visible_message("<span class='suicide'>[user] puts the [src] to [user.p_their()] chest. It looks like [user.p_theyre()] trying to pulse [user.p_their()] heart off!</span>")
+	user.visible_message(span_suicide("[user] puts the [src] to [user.p_their()] chest. It looks like [user.p_theyre()] trying to pulse [user.p_their()] heart off!"))
 	return OXYLOSS//theres a reason it wasnt recommended by doctors
 
 
@@ -94,7 +94,7 @@
 /obj/item/multitool/ai_detect/proc/toggle_hud(mob/user)
 	hud_on = !hud_on
 	if(user)
-		to_chat(user, "<span class='notice'>I toggle the ai detection HUD on [src] [hud_on ? "on" : "off"].</span>")
+		to_chat(user, span_notice("I toggle the ai detection HUD on [src] [hud_on ? "on" : "off"]."))
 	if(hud_on)
 		show_hud(user)
 	else
@@ -102,7 +102,7 @@
 
 /obj/item/multitool/ai_detect/proc/show_hud(mob/user)
 	if(user && hud_type)
-		var/obj/screen/plane_master/camera_static/PM = user.hud_used.plane_masters["[CAMERA_STATIC_PLANE]"]
+		var/atom/movable/screen/plane_master/camera_static/PM = user.hud_used.plane_masters["[CAMERA_STATIC_PLANE]"]
 		PM.alpha = 150
 		var/datum/atom_hud/H = GLOB.huds[hud_type]
 		if(!H.hudusers[user])
@@ -112,7 +112,7 @@
 
 /obj/item/multitool/ai_detect/proc/remove_hud(mob/user)
 	if(user && hud_type)
-		var/obj/screen/plane_master/camera_static/PM = user.hud_used.plane_masters["[CAMERA_STATIC_PLANE]"]
+		var/atom/movable/screen/plane_master/camera_static/PM = user.hud_used.plane_masters["[CAMERA_STATIC_PLANE]"]
 		PM.alpha = 255
 		var/datum/atom_hud/H = GLOB.huds[hud_type]
 		H.remove_hud_from(user)

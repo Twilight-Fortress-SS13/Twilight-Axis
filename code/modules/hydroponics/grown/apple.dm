@@ -38,7 +38,7 @@
 	list_reagents = list(/datum/reagent/consumable/nutriment = 3)
 	worn_y_dimension = 64
 	var/equippedloc = null
-	rotprocess = 12 MINUTES
+	rotprocess = 20 MINUTES
 	can_distill = TRUE
 	distill_reagent = /datum/reagent/consumable/ethanol/beer/cider
 	var/list/bitten_names = list()
@@ -53,7 +53,7 @@
 /obj/item/reagent_containers/food/snacks/grown/apple/blockproj(mob/living/carbon/human/H)
 	testing("APPLEHITBEGIN")
 	if(prob(98))
-		H.visible_message("<span class='notice'>[H] is saved by the apple!</span>")
+		H.visible_message(span_notice("[H] is saved by the apple!"))
 //		playsound(get_turf(owner),'sound/blank.ogg', 100, TRUE)
 		H.dropItemToGround(H.head)
 		return 1
@@ -82,10 +82,6 @@
 	name = "apple core"
 	icon_state = "applecore"
 	icon = 'icons/roguetown/items/produce.dmi'
-	baitchance = 75
-	fishloot = list(/obj/item/reagent_containers/food/snacks/fish/carp = 10,
-					/obj/item/reagent_containers/food/snacks/fish/eel = 5,
-					/obj/item/reagent_containers/food/snacks/fish/angler = 1)
 
 // Gold Apple
 /obj/item/seeds/apple/gold

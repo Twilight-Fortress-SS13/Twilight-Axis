@@ -36,6 +36,7 @@
 	item_state = "leather"
 	equip_sound = 'sound/blank.ogg'
 	heldz_items = 3
+	sewrepair = TRUE
 
 /obj/item/storage/belt/rogue/leather/dropped(mob/living/carbon/human/user)
 	..()
@@ -49,6 +50,8 @@
 	name = "plaque belt"
 	icon_state = "goldplaque"
 	sellprice = 50
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/armorsmithing
 
 /obj/item/storage/belt/rogue/leather/shalal
 	name = "shalal belt"
@@ -64,11 +67,15 @@
 	name = "plaque belt"
 	icon_state = "silverplaque"
 	sellprice = 30
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/armorsmithing
 
 /obj/item/storage/belt/rogue/leather/hand
 	name = "steel belt"
 	icon_state = "steelplaque"
 	sellprice = 30
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/armorsmithing
 
 /obj/item/storage/belt/rogue/leather/rope
 	name = "rope belt"
@@ -106,12 +113,13 @@
 	equip_sound = 'sound/blank.ogg'
 	content_overlays = FALSE
 	bloody_icon_state = "bodyblood"
+	sewrepair = TRUE
 
 /obj/item/storage/belt/rogue/pouch/ComponentInitialize()
 	. = ..()
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
 	if(STR)
-		STR.max_combined_w_class = 3
+		STR.max_combined_w_class = 6
 		STR.max_w_class = WEIGHT_CLASS_NORMAL
 		STR.max_items = 3
 		STR.not_while_equipped = FALSE
@@ -155,7 +163,8 @@
 			if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
 				qdel(H)
 
-
+/obj/item/storage/belt/rogue/pouch/food/PopulateContents()
+	new /obj/item/reagent_containers/food/snacks/rogue/crackerscooked(src)
 
 /obj/item/storage/backpack/rogue/satchel
 	name = "satchel"
@@ -172,6 +181,7 @@
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
 	alternate_worn_layer = UNDER_CLOAK_LAYER
+	sewrepair = TRUE
 
 /obj/item/storage/backpack/rogue/satchel/heartfelt/PopulateContents()
 	new /obj/item/natural/feather(src)
@@ -208,6 +218,7 @@
 	max_integrity = 300
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
+	sewrepair = TRUE
 
 /obj/item/storage/backpack/rogue/backpack/ComponentInitialize()
 	. = ..()

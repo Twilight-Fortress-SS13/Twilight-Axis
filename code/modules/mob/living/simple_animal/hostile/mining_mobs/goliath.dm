@@ -65,7 +65,7 @@
 	if(!isturf(tturf))
 		return
 	if(get_dist(src, target) <= 7)//Screen range check, so you can't get tentacle'd offscreen
-		visible_message("<span class='warning'>[src] digs its tentacles under [target]!</span>")
+		visible_message(span_warning("[src] digs its tentacles under [target]!"))
 		new /obj/effect/temp_visual/goliath_tentacle/original(tturf, src)
 		ranged_cooldown = world.time + ranged_cooldown_time
 		icon_state = icon_aggro
@@ -167,7 +167,7 @@
 		var/turf/closed/mineral/M = loc
 		M.gets_drilled()
 	deltimer(timerid)
-	timerid = addtimer(CALLBACK(src, .proc/tripanim), 7, TIMER_STOPPABLE)
+	timerid = addtimer(CALLBACK(src, PROC_REF(tripanim)), 7, TIMER_STOPPABLE)
 
 /obj/effect/temp_visual/goliath_tentacle/original/Initialize(mapload, new_spawner)
 	. = ..()
@@ -181,14 +181,14 @@
 /obj/effect/temp_visual/goliath_tentacle/proc/tripanim()
 	icon_state = "Goliath_tentacle_wiggle"
 	deltimer(timerid)
-	timerid = addtimer(CALLBACK(src, .proc/trip), 3, TIMER_STOPPABLE)
+	timerid = addtimer(CALLBACK(src, PROC_REF(trip)), 3, TIMER_STOPPABLE)
 
 /obj/effect/temp_visual/goliath_tentacle/proc/trip()
 	var/latched = FALSE
 	for(var/mob/living/L in loc)
 		if((!QDELETED(spawner) && spawner.faction_check_mob(L)) || L.stat == DEAD)
 			continue
-		visible_message("<span class='danger'>[src] grabs hold of [L]!</span>")
+		visible_message(span_danger("[src] grabs hold of [L]!"))
 		L.Stun(100)
 		L.adjustBruteLoss(rand(10,15))
 		latched = TRUE
@@ -196,7 +196,7 @@
 		retract()
 	else
 		deltimer(timerid)
-		timerid = addtimer(CALLBACK(src, .proc/retract), 10, TIMER_STOPPABLE)
+		timerid = addtimer(CALLBACK(src, PROC_REF(retract)), 10, TIMER_STOPPABLE)
 
 /obj/effect/temp_visual/goliath_tentacle/proc/retract()
 	icon_state = "Goliath_tentacle_retract"

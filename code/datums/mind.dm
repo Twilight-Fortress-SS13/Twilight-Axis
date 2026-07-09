@@ -81,6 +81,8 @@
 
 	var/list/notes = list() //RTD add notes button
 
+	var/lastrecipe
+
 /datum/mind/New(key)
 	src.key = key
 	soulOwner = src
@@ -106,14 +108,16 @@
 		if(is_role)
 			. += M
 
-/datum/mind/proc/i_know_person(person) //we are added to their lists, they are added to ours
+/datum/mind/proc/i_know_person(person) //they are added to ours
 	if(!person)
 		return
-	if(person == src)
+	if(person == src || person == src.current)
 		return
-	var/datum/mind/M = person
-	if(ishuman(M.current))
-		var/mob/living/carbon/human/H = M.current
+	if(istype(person, /datum/mind))
+		var/datum/mind/M = person
+		person = M.current
+	if(ishuman(person))
+		var/mob/living/carbon/human/H = person
 		if(!known_people[H.real_name])
 			known_people[H.real_name] = list()
 		known_people[H.real_name]["VCOLOR"] = H.voice_color
@@ -129,29 +133,33 @@
 		known_people[H.real_name]["FGENDER"] = H.gender
 		known_people[H.real_name]["FAGE"] = H.age
 
-/datum/mind/proc/person_knows_me(person) //we are added to their lists, they are added to ours
+/datum/mind/proc/person_knows_me(person) //we are added to their lists
 	if(!person)
 		return
-	if(person == src)
+	if(person == src || person == src.current)
 		return
-	var/datum/mind/M = person
-	if(M.known_people)
-		if(ishuman(current))
-			var/mob/living/carbon/human/H = current
-			if(!M.known_people[H.real_name])
-				M.known_people[H.real_name] = list()
-			M.known_people[H.real_name]["VCOLOR"] = H.voice_color
-			var/used_title
-			if(H.job)
-				var/datum/job/J = SSjob.GetJob(H.job)
-				used_title = J.title
-				if(H.gender == FEMALE && J.f_title)
-					used_title = J.f_title
-			if(!used_title)
-				used_title = "unknown"
-			M.known_people[H.real_name]["FJOB"] = used_title
-			M.known_people[H.real_name]["FGENDER"] = H.gender
-			M.known_people[H.real_name]["FAGE"] = H.age
+	if(ishuman(person))
+		var/mob/living/carbon/human/guy = person
+		person = guy.mind
+	if(istype(person, /datum/mind))
+		var/datum/mind/M = person
+		if(M.known_people)
+			if(ishuman(current))
+				var/mob/living/carbon/human/H = current
+				if(!M.known_people[H.real_name])
+					M.known_people[H.real_name] = list()
+				M.known_people[H.real_name]["VCOLOR"] = H.voice_color
+				var/used_title
+				if(H.job)
+					var/datum/job/J = SSjob.GetJob(H.job)
+					used_title = J.title
+					if(H.gender == FEMALE && J.f_title)
+						used_title = J.f_title
+				if(!used_title)
+					used_title = "unknown"
+				M.known_people[H.real_name]["FJOB"] = used_title
+				M.known_people[H.real_name]["FGENDER"] = H.gender
+				M.known_people[H.real_name]["FAGE"] = H.age
 
 /datum/mind/proc/do_i_know(datum/mind/person, name)
 	if(!person && !name)
@@ -248,7 +256,7 @@
 	transfer_antag_huds(hud_to_transfer)				//inherit the antag HUD
 	transfer_actions(new_character)
 	transfer_martial_arts(new_character)
-	RegisterSignal(new_character, COMSIG_MOB_DEATH, .proc/set_death_time)
+	RegisterSignal(new_character, COMSIG_MOB_DEATH, PROC_REF(set_death_time))
 	if(active || force_key_move)
 		testing("dotransfer to [new_character]")
 		new_character.key = key		//now transfer the key to link the client to our new body
@@ -262,27 +270,37 @@
 	switch(skill_experience[S])
 		if(SKILL_EXP_LEGENDARY to INFINITY)
 			known_skills[S] = SKILL_LEVEL_LEGENDARY
+			
 		if(SKILL_EXP_MASTER to SKILL_EXP_LEGENDARY)
 			known_skills[S] = SKILL_LEVEL_MASTER
+			
 		if(SKILL_EXP_EXPERT to SKILL_EXP_MASTER)
 			known_skills[S] = SKILL_LEVEL_EXPERT
+			
 		if(SKILL_EXP_JOURNEYMAN to SKILL_EXP_EXPERT)
 			known_skills[S] = SKILL_LEVEL_JOURNEYMAN
+			
 		if(SKILL_EXP_APPRENTICE to SKILL_EXP_JOURNEYMAN)
 			known_skills[S] = SKILL_LEVEL_APPRENTICE
+			
 		if(SKILL_EXP_NOVICE to SKILL_EXP_APPRENTICE)
 			known_skills[S] = SKILL_LEVEL_NOVICE
+			
 		if(0 to SKILL_EXP_NOVICE)
 			known_skills[S] = SKILL_LEVEL_NONE
+			
 	if(isnull(old_level) || known_skills[S] == old_level)
 		return //same level or we just started earning xp towards the first level.
 	if(silent)
 		return
+	// ratio = round(skill_experience[S]/limit,1) * 100
+	// to_chat(current, "<span class='nicegreen'> My [S.name] is around [ratio]% of the way there.")
+	//TODO add some bar hud or something, i think i seen a request like that somewhere
 	if(known_skills[S] >= old_level)
 		if(known_skills[S] > old_level)
-			to_chat(current, "<span class='nicegreen'>My [S.name] grows!</span>")
+			to_chat(current, span_nicegreen("My [S.name] grows to [SSskills.level_names[known_skills[S]]]!"))
 	else
-		to_chat(current, "<span class='warning'>My [S.name] has weakened!</span>")
+		to_chat(current, span_warning("My [S.name] has weakened to [SSskills.level_names[known_skills[S]]]!"))
 
 /datum/mind/proc/adjust_skillrank(skill, amt, silent = FALSE)
 	var/datum/skill/S = GetSkillRef(skill)
@@ -325,9 +343,9 @@
 	if(silent)
 		return
 	if(known_skills[S] >= old_level)
-		to_chat(current, "<span class='nicegreen'>I feel like I've become more proficient at [S.name]!</span>")
+		to_chat(current, span_nicegreen("I feel like I've become more proficient at [S.name]!"))
 	else
-		to_chat(current, "<span class='warning'>I feel like I've become worse at [S.name]!</span>")
+		to_chat(current, span_warning("I feel like I've become worse at [S.name]!"))
 
 
 ///Gets the skill's singleton and returns the result of its get_skill_speed_modifier
@@ -353,10 +371,10 @@
 		if(known_skills[i]) //Do we actually have a level in this?
 			shown_skills += i
 	if(!length(shown_skills))
-		to_chat(user, "<span class='warning'>I don't have any skills.</span>")
+		to_chat(user, span_warning("I don't have any skills."))
 		return
 	var/msg = ""
-	msg += "<span class='info'>*---------*\n</span>"
+	msg += span_info("*---------*\n")
 	for(var/i in shown_skills)
 		msg += "[i] - [SSskills.level_names[known_skills[i]]]\n"
 	msg += "</span>"
@@ -537,7 +555,7 @@
 
 	if (!uplink_loc)
 		if(!silent)
-			to_chat(traitor_mob, "<span class='boldwarning'>Unfortunately, [employer] wasn't able to get you an Uplink.</span>")
+			to_chat(traitor_mob, span_boldwarning("Unfortunately, [employer] wasn't able to get you an Uplink."))
 		. = 0
 	else
 		. = uplink_loc
@@ -547,11 +565,11 @@
 		U.setup_unlock_code()
 		if(!silent)
 			if(uplink_loc == R)
-				to_chat(traitor_mob, "<span class='boldnotice'>[employer] has cunningly disguised a Syndicate Uplink as my [R.name]. Simply dial the frequency [format_frequency(U.unlock_code)] to unlock its hidden features.</span>")
+				to_chat(traitor_mob, span_boldnotice("[employer] has cunningly disguised a Syndicate Uplink as my [R.name]. Simply dial the frequency [format_frequency(U.unlock_code)] to unlock its hidden features."))
 			else if(uplink_loc == PDA)
-				to_chat(traitor_mob, "<span class='boldnotice'>[employer] has cunningly disguised a Syndicate Uplink as my [PDA.name]. Simply enter the code \"[U.unlock_code]\" into the ringtone select to unlock its hidden features.</span>")
+				to_chat(traitor_mob, span_boldnotice("[employer] has cunningly disguised a Syndicate Uplink as my [PDA.name]. Simply enter the code \"[U.unlock_code]\" into the ringtone select to unlock its hidden features."))
 			else if(uplink_loc == P)
-				to_chat(traitor_mob, "<span class='boldnotice'>[employer] has cunningly disguised a Syndicate Uplink as my [P.name]. Simply twist the top of the pen [english_list(U.unlock_code)] from its starting position to unlock its hidden features.</span>")
+				to_chat(traitor_mob, span_boldnotice("[employer] has cunningly disguised a Syndicate Uplink as my [P.name]. Simply twist the top of the pen [english_list(U.unlock_code)] from its starting position to unlock its hidden features."))
 
 		if(uplink_owner)
 			uplink_owner.antag_memory += U.unlock_note + "<br>"
@@ -584,7 +602,7 @@
 
 	if(creator.mind.special_role)
 		message_admins("[ADMIN_LOOKUPFLW(current)] has been created by [ADMIN_LOOKUPFLW(creator)], an antagonist.")
-		to_chat(current, "<span class='danger'>Despite my creators current allegiances, my true master remains [creator.real_name]. If their loyalties change, so do yours. This will never change unless my creator's body is destroyed.</span>")
+		to_chat(current, span_danger("Despite my creators current allegiances, my true master remains [creator.real_name]. If their loyalties change, so do yours. This will never change unless my creator's body is destroyed."))
 
 /datum/mind/proc/show_memory(mob/recipient, window=1)
 	if(!recipient)
@@ -599,10 +617,10 @@
 		all_objectives |= A.objectives
 
 	if(all_objectives.len)
-		output += "<B>Objectives:</B>"
+		output += "\n<B>Objectives:</B>"
 		var/obj_count = 1
 		for(var/datum/objective/objective in all_objectives)
-			output += "<br><B>Objective #[obj_count++]</B>: [objective.explanation_text]"
+			output += "\n<B>[objective.flavor] #[obj_count++]</B>: [objective.explanation_text]"
 //			var/list/datum/mind/other_owners = objective.get_owners() - src
 //			if(other_owners.len)
 //				output += "<ul>"
@@ -626,7 +644,7 @@
 	if(href_list["remove_antag"])
 		var/datum/antagonist/A = locate(href_list["remove_antag"]) in antag_datums
 		if(!istype(A))
-			to_chat(usr,"<span class='warning'>Invalid antagonist ref to be removed.</span>")
+			to_chat(usr,span_warning("Invalid antagonist ref to be removed."))
 			return
 		A.admin_remove(usr)
 
@@ -778,7 +796,7 @@
 							log_admin("[key_name(usr)] changed [current]'s telecrystal count to [crystals].")
 			if("uplink")
 				if(!equip_traitor())
-					to_chat(usr, "<span class='danger'>Equipping a syndicate failed!</span>")
+					to_chat(usr, span_danger("Equipping a syndicate failed!"))
 					log_admin("[key_name(usr)] tried and failed to give [current] an uplink.")
 				else
 					log_admin("[key_name(usr)] gave [current] an uplink.")
@@ -800,11 +818,11 @@
 
 /datum/mind/proc/announce_objectives()
 	var/obj_count = 1
-	to_chat(current, "<span class='notice'>My current objectives:</span>")
+	to_chat(current, span_notice("My current objectives:"))
 	for(var/objective in get_all_objectives())
 		var/datum/objective/O = objective
 		O.update_explanation_text()
-		to_chat(current, "<B>Objective #[obj_count]</B>: [O.explanation_text]")
+		to_chat(current, "<B>[O.flavor] #[obj_count]</B>: [O.explanation_text]")
 		obj_count++
 
 /datum/mind/proc/find_syndicate_uplink()
@@ -855,8 +873,19 @@
 	special_role = ROLE_REV_HEAD
 
 /datum/mind/proc/AddSpell(obj/effect/proc_holder/spell/S)
+	if(!S)
+		return
 	spell_list += S
 	S.action.Grant(current)
+
+/datum/mind/proc/has_spell(spell_type, specific = FALSE)
+	if(istype(spell_type, /obj/effect/proc_holder))
+		var/obj/instanced_spell = spell_type
+		spell_type = instanced_spell.type
+	for(var/obj/effect/proc_holder/spell as anything in spell_list)
+		if((specific && spell.type == spell_type) || istype(spell, spell_type))
+			return TRUE
+	return FALSE
 
 /datum/mind/proc/owns_soul()
 	return soulOwner == src
@@ -903,9 +932,9 @@
 				continue
 		S.charge_counter = delay
 		S.updateButtonIcon()
-		INVOKE_ASYNC(S, /obj/effect/proc_holder/spell.proc/start_recharge)
+		INVOKE_ASYNC(S, TYPE_PROC_REF(/obj/effect/proc_holder/spell, start_recharge))
 
-/datum/mind/proc/get_ghost(even_if_they_cant_reenter, ghosts_with_clients)
+/datum/mind/proc/get_ghost(even_if_they_cant_reenter = FALSE, ghosts_with_clients = FALSE)
 	for(var/mob/dead/observer/G in (ghosts_with_clients ? GLOB.player_list : GLOB.dead_mob_list))
 		if(G.mind == src)
 			if(G.can_reenter_corpse || even_if_they_cant_reenter)
@@ -977,3 +1006,11 @@
 	..()
 	mind.assigned_role = ROLE_PAI
 	mind.special_role = ""
+
+
+
+/datum/mind/proc/get_learning_boon(skill)
+	var/mob/living/carbon/human/H = current
+	var/boon = H.age == AGE_YOUNG ? 1.2 : 1 // optional
+	boon += get_skill_level(skill) / 10
+	return boon 

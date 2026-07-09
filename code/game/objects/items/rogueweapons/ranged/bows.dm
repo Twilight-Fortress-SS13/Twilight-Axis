@@ -1,7 +1,7 @@
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 	name = "bow"
-	desc = ""
+	desc = "A wooden weapon with a taut string."
 	icon = 'icons/roguetown/weapons/32.dmi'
 	icon_state = "bow"
 	item_state = "bow"
@@ -19,6 +19,7 @@
 	cartridge_wording = "arrow"
 	load_sound = 'sound/foley/nockarrow.ogg'
 	associated_skill = /datum/skill/combat/bows
+	var/damfactor = 1
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/getonmobprop(tag)
 	. = ..()
@@ -36,7 +37,7 @@
 	return
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/dropped()
-	..()
+	. = ..()
 	if(chambered)
 		chambered = null
 		var/num_unloaded = 0
@@ -67,8 +68,8 @@
 		else
 			BB.damage = BB.damage
 			BB.embedchance = 100
-		BB.damage = BB.damage * (user.STAPER / 10)
-	..()
+		BB.damage = BB.damage * (user.STAPER / 10) * damfactor
+	. = ..()
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/update_icon()
 	. = ..()
@@ -103,7 +104,7 @@
 
 /datum/intent/shoot/bow/prewarning()
 	if(mastermob)
-		mastermob.visible_message("<span class='warning'>[mastermob] draws [masteritem]!</span>")
+		mastermob.visible_message(span_warning("[mastermob] draws [masteritem]!"))
 		playsound(mastermob, pick('sound/combat/Ranged/bow-draw-01.ogg'), 100, FALSE)
 
 /datum/intent/shoot/bow/get_chargetime()
@@ -139,7 +140,7 @@
 
 /datum/intent/arc/bow/prewarning()
 	if(mastermob)
-		mastermob.visible_message("<span class='warning'>[mastermob] draws [masteritem]!</span>")
+		mastermob.visible_message(span_warning("[mastermob] draws [masteritem]!"))
 		playsound(mastermob, pick('sound/combat/Ranged/bow-draw-01.ogg'), 100, FALSE)
 
 /datum/intent/arc/bow/get_chargetime()
@@ -159,3 +160,23 @@
 		else
 			return 1
 	return chargetime
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+	name = "recurve bow"
+	desc = "A long but slender bow, finely crafted from horn, sinew, and wood. It has an atypical shape."
+	icon_state = "bowr"
+	possible_item_intents = list(/datum/intent/shoot/bow/recurve, /datum/intent/arc/bow/recurve,INTENT_GENERIC)
+	randomspread = 1
+	spread = 1
+	force = 9
+	damfactor = 0.9
+
+/datum/intent/shoot/bow/recurve
+	chargetime = 0.75
+	chargedrain = 1.5
+	charging_slowdown = 2.5
+
+/datum/intent/arc/bow/recurve
+	chargetime = 0.75
+	chargedrain = 1.5
+	charging_slowdown = 2.5

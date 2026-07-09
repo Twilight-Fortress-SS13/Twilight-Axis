@@ -8,10 +8,10 @@
 	healing_factor = STANDARD_ORGAN_HEALING
 	decay_factor = 5 * STANDARD_ORGAN_DECAY		//designed to fail about 5 minutes after death
 
-	low_threshold_passed = "<span class='info'>Prickles of pain appear then die out from within my chest...</span>"
-	high_threshold_passed = "<span class='warning'>Something inside my chest hurts, and the pain isn't subsiding. You notice myself breathing far faster than before.</span>"
-	now_fixed = "<span class='info'>My heart begins to beat again.</span>"
-	high_threshold_cleared = "<span class='info'>The pain in my chest has died down, and my breathing becomes more relaxed.</span>"
+	low_threshold_passed = span_info("Prickles of pain appear then die out from within my chest...")
+	high_threshold_passed = span_warning("Something inside my chest hurts, and the pain isn't subsiding. You notice myself breathing far faster than before.")
+	now_fixed = span_info("My heart begins to beat again.")
+	high_threshold_cleared = span_info("The pain in my chest has died down, and my breathing becomes more relaxed.")
 
 	// Heart attack code is in code/modules/mob/living/carbon/human/life.dm
 	var/beating = 1
@@ -20,6 +20,24 @@
 	var/beat = BEAT_NONE//is this mob having a heatbeat sound played? if so, which?
 	var/failed = FALSE		//to prevent constantly running failing code
 	var/operated = FALSE	//whether the heart's been operated on to fix some of its damages
+
+	/// Marking on this heart for the maniac antagonist
+	var/inscryption
+	/// Associated maniac key
+	var/inscryption_key
+
+/obj/item/organ/heart/examine(mob/user)
+	. = ..()
+	var/datum/antagonist/maniac/dreamer = user.mind?.has_antag_datum(/datum/antagonist/maniac)
+	if(dreamer)
+		if(!inscryption)
+			. += "<span class='danger'><b>There is NOTHING on this heart. \
+				Should be? Following the TRUTH - not here. I need to keep LOOKING. Keep FOLLOWING my heart.</b></span>"
+		else
+			. += "<b><span class='warning'>There's something CUT on this HEART.</span>\n\"[inscryption]. Add it to the other keys to exit INRL.\"</b>"
+			if(!(inscryption in dreamer.hearts_seen))
+				dreamer.hearts_seen += inscryption
+				SEND_SOUND(dreamer, 'sound/villain/newheart.ogg')
 
 /obj/item/organ/heart/update_icon()
 	if(beating)
@@ -30,7 +48,7 @@
 /obj/item/organ/heart/Remove(mob/living/carbon/M, special = 0)
 	..()
 	if(!special)
-		addtimer(CALLBACK(src, .proc/stop_if_unowned), 120)
+		addtimer(CALLBACK(src, PROC_REF(stop_if_unowned)), 120)
 
 /obj/item/organ/heart/proc/stop_if_unowned()
 	if(!owner)
@@ -40,9 +58,9 @@
 	..()
 	if(!beating)
 		user.visible_message("<span class='notice'>[user] squeezes [src] to \
-			make it beat again!</span>","<span class='notice'>I squeeze [src] to make it beat again!</span>")
+			make it beat again!</span>",span_notice("I squeeze [src] to make it beat again!"))
 		Restart()
-		addtimer(CALLBACK(src, .proc/stop_if_unowned), 80)
+		addtimer(CALLBACK(src, PROC_REF(stop_if_unowned)), 80)
 
 /obj/item/organ/heart/proc/Stop()
 	beating = 0
@@ -83,7 +101,7 @@
 		if(H.health <= H.crit_threshold && beat != BEAT_SLOW)
 			beat = BEAT_SLOW
 			H.playsound_local(get_turf(H), slowbeat,40,0, channel = CHANNEL_HEARTBEAT)
-//			to_chat(owner, "<span class='notice'>I feel my heart slow down...</span>")
+//			to_chat(owner, span_notice("I feel my heart slow down..."))
 		if(beat == BEAT_SLOW && H.health > H.crit_threshold)
 			H.stop_sound_channel(CHANNEL_HEARTBEAT)
 			beat = BEAT_NONE
@@ -98,8 +116,8 @@
 
 	if(organ_flags & ORGAN_FAILING)	//heart broke, stopped beating, death imminent
 		if(owner.stat == CONSCIOUS)
-			owner.visible_message("<span class='danger'>[owner] clutches at [owner.p_their()] chest as if [owner.p_their()] heart is stopping!</span>", \
-				"<span class='danger'>I feel a terrible pain in my chest, as if my heart has stopped!</span>")
+			owner.visible_message(span_danger("[owner] clutches at [owner.p_their()] chest as if [owner.p_their()] heart is stopping!"), \
+				span_danger("I feel a terrible pain in my chest, as if my heart has stopped!"))
 		owner.set_heartattack(TRUE)
 		failed = TRUE
 
@@ -135,7 +153,7 @@
 			var/mob/living/carbon/human/H = owner
 			if(H.dna && !(NOBLOOD in H.dna.species.species_traits))
 				H.blood_volume = max(H.blood_volume - blood_loss, 0)
-				to_chat(H, "<span class='danger'>I have to keep pumping my blood!</span>")
+				to_chat(H, span_danger("I have to keep pumping my blood!"))
 				if(add_colour)
 					H.add_client_colour(/datum/client_colour/cursed_heart_blood) //bloody screen so real
 					add_colour = FALSE
@@ -145,7 +163,7 @@
 /obj/item/organ/heart/cursed/Insert(mob/living/carbon/M, special = 0)
 	..()
 	if(owner)
-		to_chat(owner, "<span class='danger'>My heart has been replaced with a cursed one, you have to pump this one manually otherwise you'll die!</span>")
+		to_chat(owner, span_danger("My heart has been replaced with a cursed one, you have to pump this one manually otherwise you'll die!"))
 
 /obj/item/organ/heart/cursed/Remove(mob/living/carbon/M, special = 0)
 	..()
@@ -161,12 +179,12 @@
 		var/obj/item/organ/heart/cursed/cursed_heart = target
 
 		if(world.time < (cursed_heart.last_pump + (cursed_heart.pump_delay-10))) //no spam
-			to_chat(owner, "<span class='danger'>Too soon!</span>")
+			to_chat(owner, span_danger("Too soon!"))
 			return
 
 		cursed_heart.last_pump = world.time
 		playsound(owner,'sound/blank.ogg',40,TRUE)
-		to_chat(owner, "<span class='notice'>My heart beats.</span>")
+		to_chat(owner, span_notice("My heart beats."))
 
 		var/mob/living/carbon/human/H = owner
 		if(istype(H))
@@ -199,7 +217,7 @@
 	if(. & EMP_PROTECT_SELF)
 		return
 	Stop()
-	addtimer(CALLBACK(src, .proc/Restart), 20/severity SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(Restart)), 20/severity SECONDS)
 	damage += 100/severity
 
 /obj/item/organ/heart/cybernetic/on_life()
@@ -231,7 +249,7 @@
 	. = ..()
 	if(owner.health < 5 && world.time > min_next_adrenaline)
 		min_next_adrenaline = world.time + rand(250, 600) //anywhere from 4.5 to 10 minutes
-		to_chat(owner, "<span class='danger'>I feel myself dying, but you refuse to give up!</span>")
+		to_chat(owner, span_danger("I feel myself dying, but you refuse to give up!"))
 		owner.heal_overall_damage(15, 15, 0, BODYPART_ORGANIC)
 		if(owner.reagents.get_reagent_amount(/datum/reagent/medicine/ephedrine) < 20)
 			owner.reagents.add_reagent(/datum/reagent/medicine/ephedrine, 10)

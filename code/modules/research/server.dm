@@ -64,7 +64,7 @@
 	if(. & EMP_PROTECT_SELF)
 		return
 	stat |= EMPED
-	addtimer(CALLBACK(src, .proc/unemp), 600)
+	addtimer(CALLBACK(src, PROC_REF(unemp)), 600)
 	refresh_working()
 
 /obj/machinery/rnd/server/proc/unemp()
@@ -154,7 +154,7 @@
 			var/obj/machinery/rnd/server/S = locate(href_list["toggle"]) in SSresearch.servers
 			S.toggle_disable()
 		else
-			to_chat(usr, "<span class='danger'>Access Denied.</span>")
+			to_chat(usr, span_danger("Access Denied."))
 
 	updateUsrDialog()
 	return
@@ -199,4 +199,4 @@
 		return
 	playsound(src, "sparks", 75, TRUE)
 	obj_flags |= EMAGGED
-	to_chat(user, "<span class='notice'>I disable the security protocols.</span>")
+	to_chat(user, span_notice("I disable the security protocols."))

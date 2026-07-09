@@ -23,7 +23,6 @@
 	var/flee_in_pain = FALSE
 	var/stand_attempts = 0
 
-	var/static_npc = TRUE
 	var/returning_home = FALSE
 
 /mob/living/carbon/human/proc/IsStandingStill()
@@ -194,7 +193,7 @@
 //	else if(istype(I, /obj/item/clothing))
 //		var/obj/item/clothing/C = I
 //		monkeyDrop(C)
-//		addtimer(CALLBACK(src, .proc/pickup_and_wear, C), 5)
+//		addtimer(CALLBACK(src, PROC_REF(pickup_and_wear), C), 5)
 //		return TRUE
 
 	// EVERYTHING ELSE
@@ -206,12 +205,12 @@
 	blacklistItems[I] ++
 	return FALSE
 
-/mob/living/carbon/human/proc/pickup_and_wear(var/obj/item/clothing/C)
+/mob/living/carbon/human/proc/pickup_and_wear(obj/item/clothing/C)
 	if(!equip_to_appropriate_slot(C))
 		monkeyDrop(get_item_by_slot(C)) // remove the existing item if worn
-		addtimer(CALLBACK(src, .proc/equip_to_appropriate_slot, C), 5)
+		addtimer(CALLBACK(src, PROC_REF(equip_to_appropriate_slot), C), 5)
 
-/mob/living/carbon/human/proc/monkeyDrop(var/obj/item/A)
+/mob/living/carbon/human/proc/monkeyDrop(obj/item/A)
 	if(A)
 		dropItemToGround(A, TRUE)
 
@@ -226,7 +225,7 @@
 		last_special = world.time + CLICK_CD_BREAKOUT
 		cuff_resist(I)
 
-/mob/living/carbon/human/proc/should_target(var/mob/living/L)
+/mob/living/carbon/human/proc/should_target(mob/living/L)
 	if(HAS_TRAIT(src, TRAIT_PACIFISM))
 		return FALSE
 
@@ -269,9 +268,9 @@
 					back_to_idle()
 					return TRUE
 				m_intent = MOVE_INTENT_WALK
-				INVOKE_ASYNC(src, .proc/walk2derpless, target)
+				INVOKE_ASYNC(src, PROC_REF(walk2derpless), target)
 
-			if(!get_active_held_item() && !get_inactive_held_item())
+			if(!get_active_held_item() && !get_inactive_held_item() && !mind?.has_antag_datum(/datum/antagonist/zombie))
 				// pickup any nearby weapon
 				for(var/obj/item/I in view(1,src))
 					if(!isturf(I.loc))

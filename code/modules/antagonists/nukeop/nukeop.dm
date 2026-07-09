@@ -35,7 +35,7 @@
 
 /datum/antagonist/nukeop/greet()
 	owner.current.playsound_local(get_turf(owner.current), 'sound/blank.ogg',100,0)
-	to_chat(owner, "<span class='notice'>I are a [nuke_team ? nuke_team.syndicate_name : "syndicate"] agent!</span>")
+	to_chat(owner, span_notice("I are a [nuke_team ? nuke_team.syndicate_name : "syndicate"] agent!"))
 	owner.announce_objectives()
 
 /datum/antagonist/nukeop/on_gain()
@@ -131,8 +131,8 @@
 
 /datum/antagonist/nukeop/get_admin_commands()
 	. = ..()
-	.["Send to base"] = CALLBACK(src,.proc/admin_send_to_base)
-	.["Tell code"] = CALLBACK(src,.proc/admin_tell_code)
+	.["Send to base"] = CALLBACK(src,PROC_REF(admin_send_to_base))
+	.["Tell code"] = CALLBACK(src,PROC_REF(admin_tell_code))
 
 /datum/antagonist/nukeop/proc/admin_send_to_base(mob/admin)
 	owner.current.forceMove(pick(GLOB.nukeop_start))
@@ -147,7 +147,7 @@
 		antag_memory += "<B>Syndicate Nuclear Bomb Code</B>: [code]<br>"
 		to_chat(owner.current, "The nuclear authorization code is: <B>[code]</B>")
 	else
-		to_chat(admin, "<span class='danger'>No valid nuke found!</span>")
+		to_chat(admin, span_danger("No valid nuke found!"))
 
 /datum/antagonist/nukeop/leader
 	name = "Nuclear Operative Leader"
@@ -181,7 +181,7 @@
 	to_chat(owner, "<B>If you feel you are not up to this task, give your ID to another operative.</B>")
 	to_chat(owner, "<B>In your hand you will find a special item capable of triggering a greater challenge for your team. Examine it carefully and consult with your fellow operatives before activating it.</B>")
 	owner.announce_objectives()
-	addtimer(CALLBACK(src, .proc/nuketeam_name_assign), 1)
+	addtimer(CALLBACK(src, PROC_REF(nuketeam_name_assign)), 1)
 
 
 /datum/antagonist/nukeop/leader/proc/nuketeam_name_assign()
@@ -311,38 +311,38 @@
 
 /datum/team/nuclear/roundend_report()
 	var/list/parts = list()
-	parts += "<span class='header'>[syndicate_name] Operatives:</span>"
+	parts += span_header("[syndicate_name] Operatives:")
 
 	switch(get_result())
 		if(NUKE_RESULT_FLUKE)
-			parts += "<span class='redtext big'>Humiliating Syndicate Defeat</span>"
+			parts += span_redtextbig("Humiliating Syndicate Defeat")
 			parts += "<B>The crew of [station_name()] gave [syndicate_name] operatives back their bomb! The syndicate base was destroyed!</B> Next time, don't lose the nuke!"
 		if(NUKE_RESULT_NUKE_WIN)
-			parts += "<span class='greentext big'>Syndicate Major Victory!</span>"
+			parts += span_greentextbig("Syndicate Major Victory!")
 			parts += "<B>[syndicate_name] operatives have destroyed [station_name()]!</B>"
 		if(NUKE_RESULT_NOSURVIVORS)
-			parts += "<span class='neutraltext big'>Total Annihilation</span>"
+			parts += span_neutraltextbig("Total Annihilation")
 			parts +=  "<B>[syndicate_name] operatives destroyed [station_name()] but did not leave the area in time and got caught in the explosion.</B> Next time, don't lose the disk!"
 		if(NUKE_RESULT_WRONG_STATION)
-			parts += "<span class='redtext big'>Crew Minor Victory</span>"
+			parts += span_redtextbig("Crew Minor Victory")
 			parts += "<B>[syndicate_name] operatives secured the authentication disk but blew up something that wasn't [station_name()].</B> Next time, don't do that!"
 		if(NUKE_RESULT_WRONG_STATION_DEAD)
-			parts += "<span class='redtext big'>[syndicate_name] operatives have earned Darwin Award!</span>"
+			parts += span_redtextbig("[syndicate_name] operatives have earned Darwin Award!")
 			parts += "<B>[syndicate_name] operatives blew up something that wasn't [station_name()] and got caught in the explosion.</B> Next time, don't do that!"
 		if(NUKE_RESULT_CREW_WIN_SYNDIES_DEAD)
-			parts += "<span class='redtext big'>Crew Major Victory!</span>"
+			parts += span_redtextbig("Crew Major Victory!")
 			parts += "<B>The Research Staff has saved the disk and killed the [syndicate_name] Operatives</B>"
 		if(NUKE_RESULT_CREW_WIN)
-			parts += "<span class='redtext big'>Crew Major Victory</span>"
+			parts += span_redtextbig("Crew Major Victory")
 			parts += "<B>The Research Staff has saved the disk and stopped the [syndicate_name] Operatives!</B>"
 		if(NUKE_RESULT_DISK_LOST)
-			parts += "<span class='neutraltext big'>Neutral Victory!</span>"
+			parts += span_neutraltextbig("Neutral Victory!")
 			parts += "<B>The Research Staff failed to secure the authentication disk but did manage to kill most of the [syndicate_name] Operatives!</B>"
 		if(NUKE_RESULT_DISK_STOLEN)
-			parts += "<span class='greentext big'>Syndicate Minor Victory!</span>"
+			parts += span_greentextbig("Syndicate Minor Victory!")
 			parts += "<B>[syndicate_name] operatives survived the assault but did not achieve the destruction of [station_name()].</B> Next time, don't lose the disk!"
 		else
-			parts += "<span class='neutraltext big'>Neutral Victory</span>"
+			parts += span_neutraltextbig("Neutral Victory")
 			parts += "<B>Mission aborted!</B>"
 
 	var/text = "<br><span class='header'>The syndicate operatives were:</span>"

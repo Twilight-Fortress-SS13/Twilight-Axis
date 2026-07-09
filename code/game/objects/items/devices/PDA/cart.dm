@@ -274,7 +274,7 @@ Code:
 
 
 			if(!powercount)
-				menu += "<span class='danger'>No connection<BR></span>"
+				menu += span_danger("No connection<BR>")
 			else
 
 				menu += "<FONT SIZE=-1>"
@@ -288,7 +288,7 @@ Code:
 		if (433)
 			menu = "<h4>[PDAIMG(power)] Power Monitor </h4><BR>"
 			if(!powmonitor || !powmonitor.get_powernet())
-				menu += "<span class='danger'>No connection<BR></span>"
+				menu += span_danger("No connection<BR>")
 			else
 				var/list/L = list()
 				var/datum/powernet/connected_powernet = powmonitor.get_powernet()
@@ -607,7 +607,7 @@ Code:
 				active1 = null
 
 		if("Send Signal")
-			INVOKE_ASYNC(radio, /obj/item/integrated_signaler.proc/send_activation)
+			INVOKE_ASYNC(radio, TYPE_PROC_REF(/obj/item/integrated_signaler, send_activation))
 
 		if("Signal Frequency")
 			var/new_frequency = sanitize_frequency(radio.frequency + text2num(href_list["sfreq"]))

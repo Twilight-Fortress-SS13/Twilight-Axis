@@ -2,14 +2,16 @@
 
 /datum/advclass/fishermaster
 	name = "Master Fisher"
-	allowed_sexes = list("male", "female")
+	tutorial = "You are a Master Fisher, you cast your rod with might, and are able to pull fish larger than Eoras Bosom."
+	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = list("Humen"
 	)
 	outfit = /datum/outfit/job/roguetown/adventurer/fishermaster
-	isvillager = FALSE
-	ispilgrim = TRUE
-	maxchosen = 1
+
+	maximum_possible_slots = 1
 	pickprob = 5
+
+	category_tags = list(CTAG_PILGRIM)
 
 /datum/outfit/job/roguetown/adventurer/fishermaster/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -24,7 +26,8 @@
 		belt = /obj/item/storage/belt/rogue/leather/rope
 		backl = /obj/item/fishingrod
 		beltr = /obj/item/cooking/pan
-		beltl = /obj/item/rogueweapon/huntingknife
+		mouth = /obj/item/rogueweapon/huntingknife
+		beltl = /obj/item/flint
 		backpack_contents = list(/obj/item/natural/worms = 2,/obj/item/rogueweapon/shovel/small=1)
 		if(H.mind)
 			H.mind.adjust_skillrank(/datum/skill/combat/knives, 2, TRUE)

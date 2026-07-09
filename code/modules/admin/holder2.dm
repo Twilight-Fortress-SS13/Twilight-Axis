@@ -50,8 +50,6 @@ GLOBAL_PROTECT(href_token)
 	rank = R
 	admin_signature = "Nanotrasen Officer #[rand(0,9)][rand(0,9)][rand(0,9)]"
 	href_token = GenerateToken()
-	if(R.rights & R_DEBUG) //grant profile access
-		world.SetConfig("APP/admin", ckey, "role=admin")
 	//only admins with +ADMIN start admined
 	if(protected)
 		GLOB.protected_admins[target] = src
@@ -94,6 +92,7 @@ GLOBAL_PROTECT(href_token)
 	if ((C = owner) || (C = GLOB.directory[target]))
 		disassociate()
 		C.verbs += /client/proc/readmin
+		C.verbs += /client/proc/adminwho
 
 /datum/admins/proc/associate(client/C)
 	if(IsAdminAdvancedProcCall())

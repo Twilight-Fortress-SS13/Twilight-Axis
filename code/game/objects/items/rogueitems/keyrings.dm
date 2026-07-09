@@ -2,7 +2,7 @@
 
 /obj/item/keyring
 	name = "keyring"
-	desc = ""
+	desc = "Will help you organize your keys."
 	icon_state = "keyring0"
 	icon = 'icons/roguetown/items/keys.dmi'
 	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
@@ -12,6 +12,7 @@
 	throwforce = 0
 	var/list/keys = list()
 	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_NECK|ITEM_SLOT_MOUTH|ITEM_SLOT_WRISTS
+	anvilrepair = /datum/skill/craft/blacksmithing
 
 /obj/item/keyring/Initialize()
 	. = ..()
@@ -50,7 +51,7 @@
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
-/obj/item/keyring/proc/addtoring(var/obj/item/I)
+/obj/item/keyring/proc/addtoring(obj/item/I)
 	if(!I || !istype(I))
 		return 0
 	I.loc = src
@@ -86,7 +87,7 @@
 /obj/item/keyring/attackby(obj/item/I, mob/user)
 	if(istype(I,/obj/item/roguekey))
 		if(keys.len >= 10)
-			to_chat(user, "<span class='warning'>Too many keys.</span>")
+			to_chat(user, span_warning("Too many keys."))
 			return
 		user.dropItemToGround(I)
 		addtoring(I)
@@ -95,7 +96,7 @@
 
 /obj/item/keyring/attack_right(mob/user)
 	if(keys.len)
-		to_chat(user, "<span class='notice'>I steal a key off the ring.</span>")
+		to_chat(user, span_notice("I steal a key off the ring."))
 		var/obj/item/roguekey/K = removefromring(user)
 		user.put_in_active_hand(K)
 
@@ -119,11 +120,18 @@
 
 /obj/item/keyring/proc/update_desc()
 	if(keys.len)
-		desc = "<span class='info'>\Roman [keys.len] keys.</span>"
+		desc = span_info("\Roman [keys.len] keys.")
 	else
 		desc = ""
 
 /obj/item/keyring/sheriff
+	keys = list(/obj/item/roguekey/sheriff, /obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/graveyard)
+
+/obj/item/keyring/bailiff
+	keys = list(/obj/item/roguekey/sheriff, /obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/graveyard)
+
+
+/obj/item/keyring/councillor
 	keys = list(/obj/item/roguekey/sheriff, /obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/graveyard)
 
 /obj/item/keyring/guard
@@ -132,8 +140,14 @@
 /obj/item/keyring/guardcastle
 	keys = list(/obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor)
 
+/obj/item/keyring/velder
+	keys = list(/obj/item/roguekey/velder, /obj/item/roguekey/blacksmith/town, /obj/item/roguekey/farm, /obj/item/roguekey/butcher)
+
+/obj/item/keyring/vtavern
+	keys = list(/obj/item/roguekey/tavern/village, /obj/item/roguekey/roomvi/village, /obj/item/roguekey/roomv/village, /obj/item/roguekey/roomiv/village, /obj/item/roguekey/roomiii/village, /obj/item/roguekey/roomii/village, /obj/item/roguekey/roomi/village)
+
 /obj/item/keyring/gatemaster
-	keys = list(/obj/item/roguekey/garrison, /obj/item/roguekey/walls)
+	keys = list(/obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor)
 
 /obj/item/keyring/merchant
 	keys = list(/obj/item/roguekey/shop, /obj/item/roguekey/merchant)
@@ -151,7 +165,7 @@
 	keys = list(/obj/item/roguekey/priest, /obj/item/roguekey/confession, /obj/item/roguekey/church)
 
 /obj/item/keyring/puritan
-	keys = list(/obj/item/roguekey/puritan, /obj/item/roguekey/manor, /obj/item/roguekey/dungeon, /obj/item/roguekey/confession, /obj/item/roguekey/church)
+	keys = list(/obj/item/roguekey/puritan, /obj/item/roguekey/manor, /obj/item/roguekey/dungeon, /obj/item/roguekey/confession, /obj/item/roguekey/church, /obj/item/roguekey/sheriff)
 
 /obj/item/keyring/shepherd
 	keys = list(/obj/item/roguekey/confession, /obj/item/roguekey/church)
@@ -165,9 +179,20 @@
 /obj/item/keyring/steward
 	keys = list(/obj/item/roguekey/steward, /obj/item/roguekey/walls, /obj/item/roguekey/dungeon, /obj/item/roguekey/manor, /obj/item/roguekey/graveyard)
 
+/obj/item/keyring/clerk
+	keys = list(/obj/item/roguekey/walls, /obj/item/roguekey/dungeon, /obj/item/roguekey/manor, /obj/item/roguekey/graveyard)
+
 /obj/item/keyring/dungeoneer
-	keys = list(/obj/item/roguekey/dungeon, /obj/item/roguekey/manor, /obj/item/roguekey/garrison)
+	keys = list(/obj/item/roguekey/dungeon, /obj/item/roguekey/manor, /obj/item/roguekey/garrison, /obj/item/roguekey/archive)
 
 /obj/item/keyring/servant
 	keys = list(/obj/item/roguekey/manor, /obj/item/roguekey/garrison)
 
+/obj/item/keyring/archivist
+	keys = list(/obj/item/roguekey/manor, /obj/item/roguekey/archive)
+
+/obj/item/keyring/physician
+	keys = list(/obj/item/roguekey/manor, /obj/item/roguekey/garrison, /obj/item/roguekey/physician)
+
+/obj/item/keyring/royal
+	keys = list(/obj/item/roguekey/manor, /obj/item/roguekey/royal)

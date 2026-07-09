@@ -60,3 +60,13 @@
 	name = "Scrying Orb"
 	cost = 120
 	contains = list(/obj/item/scrying)
+
+/datum/supply_pack/rogue/luxury/listenst
+	name = "Emerald Choker"
+	cost = 250
+	contains = list(/obj/item/listenstone)
+
+/datum/supply_pack/rogue/luxury/riddleofsteel
+	name = "Riddle of Steel"
+	cost = 400
+	contains = list(/obj/item/riddleofsteel)

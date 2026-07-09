@@ -23,7 +23,7 @@
 	GLOB.zombie_infection_list -= src
 	. = ..()
 
-/obj/item/organ/zombie_infection/Insert(var/mob/living/carbon/M, special = 0)
+/obj/item/organ/zombie_infection/Insert(mob/living/carbon/M, special = 0)
 	. = ..()
 	START_PROCESSING(SSobj, src)
 
@@ -50,7 +50,7 @@
 	if (causes_damage && !iszombie(owner) && owner.stat != DEAD)
 		owner.adjustToxLoss(1)
 		if (prob(10))
-			to_chat(owner, "<span class='danger'>I feel sick...</span>")
+			to_chat(owner, span_danger("I feel sick..."))
 	if(timer_id)
 		return
 	if(owner.suiciding)
@@ -65,7 +65,7 @@
 		not even death can stop, you will rise again!</span>")
 	var/revive_time = rand(revive_time_min, revive_time_max)
 	var/flags = TIMER_STOPPABLE
-	timer_id = addtimer(CALLBACK(src, .proc/zombify), revive_time, flags)
+	timer_id = addtimer(CALLBACK(src, PROC_REF(zombify)), revive_time, flags)
 
 /obj/item/organ/zombie_infection/proc/zombify()
 	timer_id = null
@@ -88,11 +88,11 @@
 		return
 
 	owner.grab_ghost()
-	owner.visible_message("<span class='danger'>[owner] suddenly convulses, as [owner.p_they()][stand_up ? " stagger to [owner.p_their()] feet and" : ""] gain a ravenous hunger in [owner.p_their()] eyes!</span>", "<span class='alien'>I HUNGER!</span>")
+	owner.visible_message(span_danger("[owner] suddenly convulses, as [owner.p_they()][stand_up ? " stagger to [owner.p_their()] feet and" : ""] gain a ravenous hunger in [owner.p_their()] eyes!"), span_alien("I HUNGER!"))
 	playsound(owner.loc, 'sound/blank.ogg', 50, TRUE)
 	owner.do_jitter_animation(living_transformation_time)
 	owner.Stun(living_transformation_time)
-	to_chat(owner, "<span class='alertalien'>I are now a zombie! Do not seek to be cured, do not help any non-zombies in any way, do not harm my zombie brethren and spread the disease by killing others. You are a creature of hunger and violence.</span>")
+	to_chat(owner, span_alertalien("I are now a zombie! Do not seek to be cured, do not help any non-zombies in any way, do not harm my zombie brethren and spread the disease by killing others. You are a creature of hunger and violence."))
 
 /obj/item/organ/zombie_infection/nodamage
 	causes_damage = FALSE

@@ -122,8 +122,9 @@
 	blade_dulling = DULLING_BASHCHOP
 	destroy_sound = 'sound/combat/hits/onwood/destroyfurniture.ogg'
 	attacked_sound = "woodimpact"
+	item_chair = null
 
-/obj/item/chair/rogue/
+/obj/item/chair/rogue
 	name = "chair"
 	icon = 'icons/roguetown/items/chairs.dmi'
 	icon_state = "chair2"
@@ -135,7 +136,7 @@
 	max_integrity = 100
 	destroy_sound = 'sound/combat/hits/onwood/destroyfurniture.ogg'
 	attacked_sound = "woodimpact"
-	sleepy = 0.1
+	sleepy = 0.35
 
 /obj/item/chair/rogue/getonmobprop(tag)
 	. = ..()
@@ -153,7 +154,7 @@
 		if((M.mobility_flags & MOBILITY_STAND))
 			if(isturf(loc))
 				var/movefrom = get_dir(M.loc, loc)
-				if(movefrom == dir && item_chair != null)
+				if(movefrom == dir && item_chair)
 					playsound(loc, 'sound/foley/chairfall.ogg', 100, FALSE)
 					var/obj/item/I = new item_chair(loc)
 					item_chair = null

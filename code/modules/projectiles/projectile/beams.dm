@@ -3,13 +3,15 @@
 	icon_state = "laser"
 	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
 	damage = 20
-	light_range = 2
 	damage_type = BURN
 	hitsound = 'sound/blank.ogg'
 	hitsound_wall = 'sound/blank.ogg'
 	flag = "laser"
 	eyeblur = 2
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/red_laser
+	light_system = MOVABLE_LIGHT
+	light_range = 2
+	light_power = 1
 	light_color = LIGHT_COLOR_RED
 	ricochets_max = 50	//Honk!
 	ricochet_chance = 80
@@ -183,7 +185,7 @@
 	. = ..()
 	if(iscarbon(target))
 		var/mob/living/carbon/M = target
-		M.visible_message("<span class='danger'>[M] explodes into a shower of gibs!</span>")
+		M.visible_message(span_danger("[M] explodes into a shower of gibs!"))
 		M.gib()
 
 //a shrink ray that shrinks stuff, which grows back after a short while.

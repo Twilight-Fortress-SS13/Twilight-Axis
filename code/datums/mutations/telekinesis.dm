@@ -4,7 +4,7 @@
 	desc = ""
 	quality = POSITIVE
 	difficulty = 18
-	text_gain_indication = "<span class='notice'>I feel smarter!</span>"
+	text_gain_indication = span_notice("I feel smarter!")
 	limb_req = BODY_ZONE_HEAD
 	instability = 30
 
@@ -17,7 +17,7 @@
 	. = ..()
 	if(.)
 		return
-	RegisterSignal(H, COMSIG_MOB_ATTACK_RANGED, .proc/on_ranged_attack)
+	RegisterSignal(H, COMSIG_MOB_ATTACK_RANGED, PROC_REF(on_ranged_attack))
 
 /datum/mutation/human/telekinesis/on_losing(mob/living/carbon/human/H)
 	. = ..()

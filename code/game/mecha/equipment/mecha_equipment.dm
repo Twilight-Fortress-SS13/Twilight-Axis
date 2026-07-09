@@ -39,7 +39,7 @@
 		src.update_chassis_page()
 		log_message("[src] is destroyed.", LOG_MECHA)
 		if(chassis.occupant)
-			chassis.occupant_message("<span class='danger'>[src] is destroyed!</span>")
+			chassis.occupant_message(span_danger("[src] is destroyed!"))
 			chassis.occupant.playsound_local(chassis, destroy_sound, 50)
 		if(!detachable) //If we're a built-in nondetachable equipment, let's lock up the slot that we were in.
 			chassis.max_equip--
@@ -51,9 +51,9 @@
 		if(!user.temporarilyRemoveItemFromInventory(src))
 			return FALSE
 		attach(M)
-		user.visible_message("<span class='notice'>[user] attaches [src] to [M].</span>", "<span class='notice'>I attach [src] to [M].</span>")
+		user.visible_message(span_notice("[user] attaches [src] to [M]."), span_notice("I attach [src] to [M]."))
 		return TRUE
-	to_chat(user, "<span class='warning'>I are unable to attach [src] to [M]!</span>")
+	to_chat(user, span_warning("I are unable to attach [src] to [M]!"))
 	return FALSE
 
 /obj/item/mecha_parts/mecha_equipment/proc/get_equip_info()
@@ -98,7 +98,7 @@
 /obj/item/mecha_parts/mecha_equipment/proc/start_cooldown()
 	set_ready_state(0)
 	chassis.use_power(energy_drain)
-	addtimer(CALLBACK(src, .proc/set_ready_state, 1), equip_cooldown)
+	addtimer(CALLBACK(src, PROC_REF(set_ready_state), 1), equip_cooldown)
 
 /obj/item/mecha_parts/mecha_equipment/proc/do_after_cooldown(atom/target)
 	if(!chassis)

@@ -1,6 +1,7 @@
 /datum/job
 	//The name of the job , used for preferences, bans and more. Make sure you know what you're doing before changing this.
 	var/title = "NOPE"
+	var/f_title
 
 	//Job access. The use of minimal_access or access is determined by a config setting: config.jobs_have_minimal_access
 	var/list/minimal_access = list()		//Useful for servers which prefer to only have access given to the places a job absolutely needs (Larger server population)
@@ -66,10 +67,10 @@
 	var/list/roundstart_experience
 
 	//allowed sex/race for picking
-	var/list/allowed_sexes = list(MALE,FEMALE)
-	var/list/allowed_races = ALL_RACES_LIST_NAMES
-	var/list/allowed_patrons = ALL_PATRON_NAMES_LIST
-	var/list/allowed_ages = list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
+	var/list/allowed_sexes
+	var/list/allowed_races
+	var/list/allowed_patrons
+	var/list/allowed_ages = ADULT_AGES_LIST
 
 	/// Innate skill levels unlocked at roundstart. Format is list(/datum/skill/foo = SKILL_EXP_NOVICE) with exp as an integer or as per code/_DEFINES/skills.dm
 	var/list/skills
@@ -78,8 +79,6 @@
 
 	var/list/jobstats
 	var/list/jobstats_f
-
-	var/f_title = null
 
 	var/tutorial = null
 
@@ -92,13 +91,56 @@
 	var/list/peopleknowme = list()
 
 	var/plevel_req = 0
-	var/min_pq = -999
+	var/min_pq = 0
+	var/max_pq = 0
 
 	var/show_in_credits = TRUE
 
 	var/give_bank_account = FALSE
 
 	var/can_random = TRUE
+
+	//is the job required for game progression
+	var/required = FALSE
+
+	/// Some jobs have unique combat mode music, because why not?
+	var/cmode_music
+
+	/// This job is a "wanderer" on examine
+	var/wanderer_examine = FALSE
+
+	/// This job uses adventurer classes on examine
+	var/advjob_examine = FALSE
+
+	/// This job always shows on latechoices
+	var/always_show_on_latechoices = FALSE
+
+	/// Cooldown for joining as this job again, if it was your last job
+	var/same_job_respawn_delay = FALSE
+
+	/// This job re-opens slots if someone dies as it
+	var/job_reopens_slots_on_death = FALSE
+
+	/// This job is immune to species-based swapped gender locks
+	var/immune_to_genderswap = FALSE
+
+/*
+	How this works, its CTAG_DEFINE = amount_to_attempt_to_role 
+	EX: advclass_cat_rolls = list(CTAG_PILGRIM = 5, CTAG_ADVENTURER = 5)
+	You will still need to contact the subsystem though
+*/
+	var/list/advclass_cat_rolls
+/*
+	Basically this is just a ref to a drifter wave if its attached to one
+	The role class handler will grab relevant data out of it it uses a class select
+	Just make sure to unattach afterward we are done.
+*/
+	var/datum/drifter_wave/drifter_wave_attachment
+
+/*
+	How this works, they get one extra roll on every category per PQ amount
+*/
+	var/PQ_boost_divider = 0
 
 
 /datum/job/proc/special_job_check(mob/dead/new_player/player)
@@ -123,10 +165,9 @@
 		for(var/i in roundstart_experience)
 			experiencer.mind.adjust_experience(i, roundstart_experience[i], TRUE)
 
-	if(spells)		
+	if(spells && H.mind)	
 		for(var/S in spells)
-			if(H.mind)
-				H.mind.AddSpell(new S)
+			H.mind.AddSpell(new S)
 
 	if(H.gender == FEMALE)
 		if(jobstats_f)
@@ -154,21 +195,26 @@
 
 	if(give_bank_account)
 		if(give_bank_account > 1)
-			SStreasury.create_bank_account(H.real_name, give_bank_account)
+			SStreasury.create_bank_account(H, give_bank_account)
 		else
-			SStreasury.create_bank_account(H.real_name)
+			SStreasury.create_bank_account(H)
 
 	if(show_in_credits)
 		SScrediticons.processing += H
+	
+	if(cmode_music)
+		H.cmode_music = cmode_music
 
 /mob/living/carbon/human/proc/add_credit()
 	if(!mind || !client)
 		return
 	var/thename = "[real_name]"
 	var/datum/job/J = SSjob.GetJob(mind.assigned_role)
-	var/used_title = J.title
-	if(gender == FEMALE && J.f_title)
-		used_title = J.f_title
+	var/used_title
+	if(J)
+		used_title = J.title
+		if(gender == FEMALE && J.f_title)
+			used_title = J.f_title
 	if(used_title)
 		thename = "[real_name] the [used_title]"
 	GLOB.credits_icons[thename] = list()
@@ -200,12 +246,16 @@
 	if(. == null)
 		return antag_rep
 
+//Proc that returns the final outfit we should equip on someone, can be overriden for special behavior
+/datum/job/proc/get_outfit(mob/living/carbon/human/wearer, visualsOnly = FALSE, announce = TRUE, latejoin = FALSE, preference_source = null)
+	return outfit
+
 //Don't override this unless the job transforms into a non-human (Silicons do this for example)
 /datum/job/proc/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE, latejoin = FALSE, datum/outfit/outfit_override = null, client/preference_source)
 	if(!H)
 		return FALSE
 	if(CONFIG_GET(flag/enforce_human_authority) && (title in GLOB.command_positions))
-		if(H.dna.species.id != "human")
+		if((H.dna.species.id != "human") && (H.dna.species.id != "humen"))
 			H.set_species(/datum/species/human)
 			H.apply_pref_name("human", preference_source)
 	if(!visualsOnly)
@@ -218,8 +268,10 @@
 	if(H.gender == FEMALE)
 		if(outfit_override || outfit_female)
 			H.equipOutfit(outfit_override ? outfit_override : outfit_female, visualsOnly)
-		else if(outfit)
-			H.equipOutfit(outfit, visualsOnly)
+		else
+			var/final_outfit = get_outfit(H, visualsOnly, announce, latejoin, preference_source)
+			if(final_outfit)
+				H.equipOutfit(final_outfit, visualsOnly)
 	else
 		if(outfit_override || outfit)
 			H.equipOutfit(outfit_override ? outfit_override : outfit, visualsOnly)
@@ -246,7 +298,7 @@
 /datum/job/proc/announce_head(mob/living/carbon/human/H, channels) //tells the given channel that the given mob is the new department head. See communications.dm for valid channels.
 	if(H && GLOB.announcement_systems.len)
 		//timer because these should come after the captain announcement
-		SSticker.OnRoundstart(CALLBACK(GLOBAL_PROC, .proc/addtimer, CALLBACK(pick(GLOB.announcement_systems), /obj/machinery/announcement_system/proc/announce, "NEWHEAD", H.real_name, H.job, channels), 1))
+		SSticker.OnRoundstart(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(addtimer), CALLBACK(pick(GLOB.announcement_systems), TYPE_PROC_REF(/obj/machinery/announcement_system, announce), "NEWHEAD", H.real_name, H.job, channels), 1))
 
 //If the configuration option is set to require players to be logged as old enough to play certain jobs, then this proc checks that they are, otherwise it just returns 1
 /datum/job/proc/player_old_enough(client/C)

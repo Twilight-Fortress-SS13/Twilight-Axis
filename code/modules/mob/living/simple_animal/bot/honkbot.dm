@@ -50,14 +50,14 @@
 
 /mob/living/simple_animal/bot/honkbot/proc/sensor_blink()
 	icon_state = "honkbot-c"
-	addtimer(CALLBACK(src, /atom/.proc/update_icon), 5, TIMER_OVERRIDE|TIMER_UNIQUE)
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, update_icon)), 5, TIMER_OVERRIDE|TIMER_UNIQUE)
 
 //honkbots react with sounds.
 /mob/living/simple_animal/bot/honkbot/proc/react_ping()
 	playsound(src, 'sound/blank.ogg', 50, TRUE, -1) //the first sound upon creation!
 	spam_flag = TRUE
 	sensor_blink()
-	addtimer(CALLBACK(src, .proc/spam_flag_false), 18) // calibrates before starting the honk
+	addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), 18) // calibrates before starting the honk
 
 /mob/living/simple_animal/bot/honkbot/proc/react_buzz()
 	playsound(src, 'sound/blank.ogg', 50, TRUE, -1)
@@ -115,23 +115,23 @@ Maintenance panel panel is [open ? "opened" : "closed"]"},
 /mob/living/simple_animal/bot/honkbot/attack_hand(mob/living/carbon/human/H)
 	if(H.used_intent.type == INTENT_HARM)
 		retaliate(H)
-		addtimer(CALLBACK(src, .proc/react_buzz), 5)
+		addtimer(CALLBACK(src, PROC_REF(react_buzz)), 5)
 	return ..()
 
 
 /mob/living/simple_animal/bot/honkbot/attackby(obj/item/W, mob/user, params)
 	if(W.tool_behaviour != TOOL_SCREWDRIVER && (W.force) && (!target) && (W.damtype != STAMINA) )
 		retaliate(user)
-		addtimer(CALLBACK(src, .proc/react_buzz), 5)
+		addtimer(CALLBACK(src, PROC_REF(react_buzz)), 5)
 	..()
 
 /mob/living/simple_animal/bot/honkbot/emag_act(mob/user)
 	..()
 	if(emagged == 2)
 		if(user)
-			user << "<span class='danger'>I short out [src]'s sound control system. It gives out an evil laugh!!</span>"
+			user << span_danger("I short out [src]'s sound control system. It gives out an evil laugh!!")
 			oldtarget_name = user.name
-		audible_message("<span class='danger'>[src] gives out an evil laugh!</span>")
+		audible_message(span_danger("[src] gives out an evil laugh!"))
 		playsound(src, 'sound/blank.ogg', 75, TRUE, -1) // evil laughter
 		update_icon()
 
@@ -155,7 +155,7 @@ Maintenance panel panel is [open ? "opened" : "closed"]"},
 		bike_horn(A)
 
 
-/mob/living/simple_animal/bot/honkbot/hitby(atom/movable/AM, skipcatch = FALSE, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum)
+/mob/living/simple_animal/bot/honkbot/hitby(atom/movable/AM, skipcatch = FALSE, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum, d_type = "blunt")
 	if(istype(AM, /obj/item))
 		playsound(src, honksound, 50, TRUE, -1)
 		var/obj/item/I = AM
@@ -170,21 +170,21 @@ Maintenance panel panel is [open ? "opened" : "closed"]"},
 			playsound(src, honksound, 50, TRUE, -1)
 			spam_flag = TRUE //prevent spam
 			sensor_blink()
-			addtimer(CALLBACK(src, .proc/spam_flag_false), cooldowntimehorn)
+			addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntimehorn)
 	else if (emagged == 2) //emagged honkbots will spam short and memorable sounds.
 		if (!spam_flag)
 			playsound(src, "honkbot_e", 50, FALSE)
 			spam_flag = TRUE // prevent spam
 			icon_state = "honkbot-e"
-			addtimer(CALLBACK(src, /atom/.proc/update_icon), 30, TIMER_OVERRIDE|TIMER_UNIQUE)
-		addtimer(CALLBACK(src, .proc/spam_flag_false), cooldowntimehorn)
+			addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, update_icon)), 30, TIMER_OVERRIDE|TIMER_UNIQUE)
+		addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntimehorn)
 
 /mob/living/simple_animal/bot/honkbot/proc/honk_attack(mob/living/carbon/C) // horn attack
 	if(!spam_flag)
 		playsound(loc, honksound, 50, TRUE, -1)
 		spam_flag = TRUE // prevent spam
 		sensor_blink()
-		addtimer(CALLBACK(src, .proc/spam_flag_false), cooldowntimehorn)
+		addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntimehorn)
 
 /mob/living/simple_animal/bot/honkbot/proc/stun_attack(mob/living/carbon/C) // airhorn stun
 	if(!spam_flag)
@@ -206,16 +206,16 @@ Maintenance panel panel is [open ? "opened" : "closed"]"},
 				target = oldtarget_name
 			else // you really don't want to hit an emagged honkbot
 				threatlevel = 6 // will never let you go
-			addtimer(CALLBACK(src, .proc/spam_flag_false), cooldowntime)
+			addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntime)
 
 			log_combat(src,C,"honked")
 
-			C.visible_message("<span class='danger'>[src] has honked [C]!</span>",\
-					"<span class='danger'>[src] has honked you!</span>")
+			C.visible_message(span_danger("[src] has honked [C]!"),\
+					span_danger("[src] has honked you!"))
 		else
 			C.stuttering = 20
 			C.Paralyze(80)
-			addtimer(CALLBACK(src, .proc/spam_flag_false), cooldowntime)
+			addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntime)
 
 
 /mob/living/simple_animal/bot/honkbot/handle_automated_action()
@@ -279,13 +279,13 @@ Maintenance panel panel is [open ? "opened" : "closed"]"},
 	target = null
 	last_found = world.time
 	frustration = 0
-	INVOKE_ASYNC(src, .proc/handle_automated_action) //responds quickly
+	INVOKE_ASYNC(src, PROC_REF(handle_automated_action)) //responds quickly
 
 /mob/living/simple_animal/bot/honkbot/proc/back_to_hunt()
 	anchored = FALSE
 	frustration = 0
 	mode = BOT_HUNT
-	INVOKE_ASYNC(src, .proc/handle_automated_action) // responds quickly
+	INVOKE_ASYNC(src, PROC_REF(handle_automated_action)) // responds quickly
 
 /mob/living/simple_animal/bot/honkbot/proc/look_for_perp()
 	anchored = FALSE
@@ -315,7 +315,7 @@ Maintenance panel panel is [open ? "opened" : "closed"]"},
 				speak("Honk!")
 				visible_message("<b>[src]</b> starts chasing [C.name]!")
 				mode = BOT_HUNT
-				INVOKE_ASYNC(src, .proc/handle_automated_action)
+				INVOKE_ASYNC(src, PROC_REF(handle_automated_action))
 				break
 			else
 				continue
@@ -323,7 +323,7 @@ Maintenance panel panel is [open ? "opened" : "closed"]"},
 /mob/living/simple_animal/bot/honkbot/explode()
 
 	walk_to(src,0)
-	visible_message("<span class='boldannounce'>[src] blows apart!</span>")
+	visible_message(span_boldannounce("[src] blows apart!"))
 	var/atom/Tsec = drop_location()
 	//doesn't drop cardboard nor its assembly, since its a very frail material.
 	if(prob(50))
@@ -338,7 +338,7 @@ Maintenance panel panel is [open ? "opened" : "closed"]"},
 	new /obj/effect/decal/cleanable/oil(loc)
 	..()
 
-/mob/living/simple_animal/bot/honkbot/attack_alien(var/mob/living/carbon/alien/user as mob)
+/mob/living/simple_animal/bot/honkbot/attack_alien(mob/living/carbon/alien/user as mob)
 	..()
 	if(!isalien(target))
 		target = user

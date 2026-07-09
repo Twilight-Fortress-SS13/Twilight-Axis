@@ -135,14 +135,13 @@
 /obj/item/paper/examine(mob/user)
 	. = ..()
 	if(!mailer)
-		. += "<a href='?src=[REF(src)];read=1'>Read</a>"
+		. += "<a href='?src=[REF(src)];read=1'>Read</a> (<a href='?src=[REF(src)];Help=1'>Help</a>)"
 	else
 		. += "It's from [mailer], addressed to [mailedto].</a>"
 
 /obj/item/paper/proc/read(mob/user)
 //	var/datum/asset/assets = get_asset_datum(/datum/asset/spritesheet/simple/paper)
 //	assets.send(user)
-	user << browse_rsc('html/book.png')
 	if(!user.client || !user.hud_used)
 		return
 	if(!user.hud_used.reads)
@@ -152,19 +151,10 @@
 	if(mailer)
 		return
 	if(in_range(user, src) || isobserver(user))
-//		var/obj/screen/read/R = user.hud_used.reads
-		user.hud_used.reads.icon_state = "scrap"
-		user.hud_used.reads.show()
-		var/dat = {"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
-					<html><head><style type=\"text/css\">
-					body { background-image:url('book.png');background-repeat: repeat; }</style></head><body scroll=yes>"}
-		dat += "[info]<br>"
-		dat += "<a href='?src=[REF(src)];close=1' style='position:absolute;right:50px'>Close</a>"
-		dat += "</body></html>"
-		user << browse(dat, "window=reading;size=460x300;can_close=0;can_minimize=0;can_maximize=0;can_resize=0;titlebar=0")
-		onclose(user, "reading", src)
+//		var/atom/movable/screen/read/R = user.hud_used.reads
+		format_browse(info, user)
 	else
-		return "<span class='warning'>I'm too far away to read it.</span>"
+		return span_warning("I'm too far away to read it.")
 
 /*
 	if(in_range(user, src) || isobserver(user))
@@ -175,7 +165,7 @@
 			user << browse("<HTML><HEAD><TITLE>[name]</TITLE>[extra_headers]</HEAD><BODY>[stars(info)]<HR></BODY></HTML>", "window=paper[md5(name)]")
 			onclose(user, "paper[md5(name)]")
 	else
-		return "<span class='warning'>You're too far away to read it.</span>"
+		return span_warning("You're too far away to read it.")
 */
 /obj/item/paper/verb/rename()
 	set name = "Rename paper"
@@ -187,7 +177,7 @@
 	if(ishuman(usr))
 		var/mob/living/carbon/human/H = usr
 		if(HAS_TRAIT(H, TRAIT_CLUMSY) && prob(25))
-			to_chat(H, "<span class='warning'>I cut myself on the paper! Ahhhh! Ahhhhh!</span>")
+			to_chat(H, span_warning("I cut myself on the paper! Ahhhh! Ahhhhh!"))
 			H.damageoverlaytemp = 9001
 			H.update_damage_hud()
 			return
@@ -198,7 +188,7 @@
 
 
 /obj/item/paper/suicide_act(mob/user)
-	user.visible_message("<span class='suicide'>[user] scratches a grid on [user.p_their()] wrist with the paper! It looks like [user.p_theyre()] trying to commit sudoku...</span>")
+	user.visible_message(span_suicide("[user] scratches a grid on [user.p_their()] wrist with the paper! It looks like [user.p_theyre()] trying to commit sudoku..."))
 	return (BRUTELOSS)
 
 /obj/item/paper/proc/reset_spamflag()
@@ -206,7 +196,7 @@
 
 /obj/item/paper/attack_self(mob/user)
 	if(mailer)
-		user.visible_message("<span class='notice'>[user] opens the letter from [mailer].</span>")
+		user.visible_message(span_notice("[user] opens the letter from [mailer]."))
 		cached_mailer = mailer
 		cached_mailedto = mailedto
 		mailer = null
@@ -218,7 +208,7 @@
 		if(!spam_flag)
 			spam_flag = TRUE
 			playsound(loc, 'sound/blank.ogg', 50, TRUE)
-			addtimer(CALLBACK(src, .proc/reset_spamflag), 20)
+			addtimer(CALLBACK(src, PROC_REF(reset_spamflag)), 20)
 
 
 /obj/item/paper/attack_ai(mob/living/silicon/ai/user)
@@ -276,8 +266,8 @@
 /obj/item/paper/proc/updateinfolinks()
 	info_links = info
 	for(var/i in 1 to min(fields, 15))
-		addtofield(i, "<font face=\"[PEN_FONT]\"><A href='?src=[REF(src)];write=[i]'>write</A></font>", 1)
-	info_links = info_links + "<font face=\"[PEN_FONT]\"><A href='?src=[REF(src)];write=end'>write</A></font>"
+		addtofield(i, "<A href='?src=[REF(src)];write=[i]'>write</A> (<A href='?src=[REF(src)];help=1'>\[?\]</A>)", 1)
+	info_links = info_links + "<A href='?src=[REF(src)];write=end'>write</A> <A href='?src=[REF(src)];help=1'>\[?\]</A>"
 
 
 /obj/item/paper/proc/clearpaper()
@@ -373,6 +363,7 @@
 	if(href_list["help"])
 		openhelp(usr)
 		return
+
 	if(href_list["write"])
 		var/id = href_list["write"]
 		var/t =  stripped_multiline_input("Enter what you want to write:", "Write", no_trim=TRUE)
@@ -395,6 +386,9 @@
 		t = parsepencode(t, i, usr, iscrayon) // Encode everything from pencode to html
 
 		if(t != null)	//No input from the user means nothing needs to be added
+			if((length(info) + length(t)) > maxlen)
+				to_chat(usr, span_warning("Too long. Try again."))
+				return
 			if(id!="end")
 				addtofield(text2num(id), t) // He wants to edit a field, let him.
 			else
@@ -403,8 +397,18 @@
 				testing("[findtext(info, "\n")]")
 				updateinfolinks()
 			playsound(src, 'sound/items/write.ogg', 100, FALSE)
-			usr << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY>[info_links]<HR>[stamps]</BODY><div align='right'style='position:fixed;bottom:0;font-style:bold;'><A href='?src=[REF(src)];help=1'>\[?\]</A></div></HTML>", "window=[name]") // Update the window
+			format_browse(info_links, usr)
 			update_icon_state()
+
+/obj/item/paper/proc/format_browse(t, mob/user)
+	user << browse_rsc('html/book.png')
+	var/dat = {"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
+			<html><head><style type=\"text/css\">
+			body { background-image:url('book.png');background-repeat: repeat; }</style></head><body scroll=yes>"}
+	dat += "[t]<br>"
+	dat += "<a href='?src=[REF(src)];close=1' style='position:absolute;right:50px'>Close</a>"
+	dat += "</body></html>"
+	user << browse(dat, "window=reading;size=500x400;can_close=1;can_minimize=0;can_maximize=0;can_resize=1;titlebar=0;border=0")
 
 /obj/item/paper/attackby(obj/item/P, mob/living/carbon/human/user, params)
 	if(resistance_flags & ON_FIRE)
@@ -418,26 +422,36 @@
 
 	if(istype(P, /obj/item/pen) || istype(P, /obj/item/natural/thorn)|| istype(P, /obj/item/natural/feather))
 		if(length(info) > maxlen)
-			to_chat(user, "<span class='warning'>[src] is full of verba.</span>")
+			to_chat(user, span_warning("[src] is full of verba."))
 			return
 		if(user.can_read(src))
-			var/t = stripped_multiline_input("Write Something", "Paper", no_trim=TRUE)
-			if(t)
-				if((length(info) + length(t)) > maxlen)
-					to_chat(user, "<span class='warning'>Too long. Try again.</span>")
-					return
-				info += t
+			format_browse(info_links, user)
 			update_icon_state()
 			return
 		else
-			to_chat(user, "<span class='warning'>I can't write.</span>")
+			to_chat(user, span_warning("I can't write."))
 			return
+		return
 
+	if(istype(P, /obj/item/paper))
+		var/obj/item/paper/p = P
+		if(info && p.info)
+			var/obj/item/manuscript/M = new /obj/item/manuscript(get_turf(P.loc))
+			M.page_texts = list(src.info, p.info)
+			M.compiled_pages = "<p>[src.info]</p><p>[p.info]</p>"
+			qdel(p)
+			if(user.Adjacent(M))
+				M.add_fingerprint(user)
+				user.update_inv_hands()
+				user.put_in_active_hand(src)
+				user.put_in_inactive_hand(M)
+			. = ..()
+			return qdel(src)
 
 	if(!P.can_be_package_wrapped())
 		return ..()
 
-	to_chat(user, "<span class='info'>I start to wrap [P] in [src]...</span>")
+	to_chat(user, span_info("I start to wrap [P] in [src]..."))
 	if(do_after(user, 30, 0, target = src))
 		if(user.is_holding(P))
 			if(!user.dropItemToGround(P))
@@ -472,12 +486,12 @@
 		LAZYADD(stamped, P.icon_state)
 		add_overlay(stampoverlay)
 
-		to_chat(user, "<span class='notice'>I stamp the paper with your rubber stamp.</span>")
+		to_chat(user, span_notice("I stamp the paper with your rubber stamp."))
 
 	if(P.get_temperature())
 		if(HAS_TRAIT(user, TRAIT_CLUMSY) && prob(10))
-			user.visible_message("<span class='warning'>[user] accidentally ignites [user.p_them()]self!</span>", \
-								"<span class='danger'>I miss the paper and accidentally light myself on fire!</span>")
+			user.visible_message(span_warning("[user] accidentally ignites [user.p_them()]self!"), \
+								span_danger("I miss the paper and accidentally light myself on fire!"))
 			user.dropItemToGround(P)
 			user.adjust_fire_stacks(1)
 			user.IgniteMob()
@@ -487,7 +501,7 @@
 			return
 
 		user.dropItemToGround(src)
-		user.visible_message("<span class='danger'>[user] lights [src] ablaze with [P]!</span>", "<span class='danger'>I light [src] on fire!</span>")
+		user.visible_message(span_danger("[user] lights [src] ablaze with [P]!"), span_danger("I light [src] on fire!"))
 		fire_act()*/
 
 	add_fingerprint(user)

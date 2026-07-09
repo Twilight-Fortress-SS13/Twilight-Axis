@@ -3,7 +3,7 @@
 
 /datum/species/human/halfelf
 	name = "Half-Elf"
-	id = "human"
+	id = "helf"
 	desc = "<b>Half Elf</b><br>\
 	The child of an Elf and Humen, Half-Elves are generally frowned \
 	upon by more conservative peoples, although as racial tensions lower, \
@@ -11,15 +11,19 @@
 	worry that someday, it may be impossible to distinguish the two species. \
 	Half-Elves are extremely diverse, as they bring in human and elvish culture\
 	and it is widely considered that Half-Elf culture is simply a melting pot of \
-	various other cultures condensing into one vibrant entity.\
-	Due to their heritage, Half-Elves dont tend to gain or suffer from any racial traits..."
+	various other cultures condensing into one vibrant entity. \
+	Due to their heritage, Half-Elves tend to gain racial traits depending on how strong their fathers, or mothers, genes were. \
+	Half-Elves also typically try to find identity in one of two regions they have similarities towards."
+
+	skin_tone_wording = "Identity"
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,STUBBLE,OLDGREY)
 	inherent_traits = list(TRAIT_NOMOBSWAP)
 	default_features = list("mcolor" = "FFF", "ears" = "ElfH", "wings" = "None")
 	mutant_bodyparts = list("ears")
+	mutanteyes = /obj/item/organ/eyes/halfelf
 	use_skintones = 1
-	possible_ages = list(AGE_YOUNG, AGE_ADULT, AGE_MIDDLEAGED)
+	possible_ages = ALL_AGES_LIST
 	skinned_type = /obj/item/stack/sheet/animalhide/human
 	disliked_food = NONE
 	liked_food = NONE
@@ -45,17 +49,14 @@
 	specstats_f = list("strength" = -1, "perception" = 1, "intelligence" = 1, "constitution" = -2, "endurance" = 0, "speed" = 2, "fortune" = -1)
 	enflamed_icon = "widefire"
 
-/datum/species/human/halfelf/check_roundstart_eligible()
-	return TRUE
-
 /datum/species/human/halfelf/get_skin_list()
-	return sortList(list(
-	"skin1" = "ffe0d1",
-	"skin2" = "fcccb3",
-	"skin3" = "edc6b3",
-	"skin4" = "e2b9a3"
-	))
-
+	return list(
+		"Timber-Gronn" = SKIN_COLOR_TIMBER_GRONN,
+		"Giza-Azure" = SKIN_COLOR_GIZA_AZURE,
+		"Walnut-Stine" = SKIN_COLOR_WALNUT_STINE,
+		"Etrustcan-Dandelion" = SKIN_COLOR_ETRUSTCAN_DANDELION,
+		"Ebon-Born" = SKIN_COLOR_EBON_BORN,
+	)
 
 /datum/species/human/halfelf/get_hairc_list()
 	return sortList(list(

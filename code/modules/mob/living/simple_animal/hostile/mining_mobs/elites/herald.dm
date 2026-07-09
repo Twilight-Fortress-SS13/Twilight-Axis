@@ -52,39 +52,39 @@
 /mob/living/simple_animal/hostile/asteroid/elite/herald/death()
 	. = ..()
 	if(!is_mirror)
-		addtimer(CALLBACK(src, .proc/become_ghost), 8)
+		addtimer(CALLBACK(src, PROC_REF(become_ghost)), 8)
 	if(my_mirror != null)
 		qdel(my_mirror)
 
 /mob/living/simple_animal/hostile/asteroid/elite/herald/proc/become_ghost()
 	icon_state = "herald_ghost"
 
-/mob/living/simple_animal/hostile/asteroid/elite/herald/say(message, bubble_type, var/list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+/mob/living/simple_animal/hostile/asteroid/elite/herald/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
 	. = ..()
 	playsound(get_turf(src), 'sound/blank.ogg', 20, TRUE)
 
 /datum/action/innate/elite_attack/herald_trishot
 	name = "Triple Shot"
 	button_icon_state = "herald_trishot"
-	chosen_message = "<span class='boldwarning'>I are now firing three shots in your chosen direction.</span>"
+	chosen_message = span_boldwarning("I are now firing three shots in your chosen direction.")
 	chosen_attack_num = HERALD_TRISHOT
 
 /datum/action/innate/elite_attack/herald_directionalshot
 	name = "Circular Shot"
 	button_icon_state = "herald_directionalshot"
-	chosen_message = "<span class='boldwarning'>I are firing projectiles in all directions.</span>"
+	chosen_message = span_boldwarning("I are firing projectiles in all directions.")
 	chosen_attack_num = HERALD_DIRECTIONALSHOT
 
 /datum/action/innate/elite_attack/herald_teleshot
 	name = "Teleport Shot"
 	button_icon_state = "herald_teleshot"
-	chosen_message = "<span class='boldwarning'>I will now fire a shot which teleports you where it lands.</span>"
+	chosen_message = span_boldwarning("I will now fire a shot which teleports you where it lands.")
 	chosen_attack_num = HERALD_TELESHOT
 
 /datum/action/innate/elite_attack/herald_mirror
 	name = "Summon Mirror"
 	button_icon_state = "herald_mirror"
-	chosen_message = "<span class='boldwarning'>I will spawn a mirror which duplicates your attacks.</span>"
+	chosen_message = span_boldwarning("I will spawn a mirror which duplicates your attacks.")
 	chosen_attack_num = HERALD_MIRROR
 
 /mob/living/simple_animal/hostile/asteroid/elite/herald/OpenFire()
@@ -122,7 +122,7 @@
 		if(HERALD_MIRROR)
 			herald_mirror()
 
-/mob/living/simple_animal/hostile/asteroid/elite/herald/proc/shoot_projectile(turf/marker, set_angle, var/is_teleshot)
+/mob/living/simple_animal/hostile/asteroid/elite/herald/proc/shoot_projectile(turf/marker, set_angle, is_teleshot)
 	var/turf/startloc = get_turf(src)
 	var/obj/projectile/herald/H = null
 	if(!is_teleshot)
@@ -141,13 +141,13 @@
 	var/target_turf = get_turf(target)
 	var/angle_to_target = Get_Angle(src, target_turf)
 	shoot_projectile(target_turf, angle_to_target, FALSE)
-	addtimer(CALLBACK(src, .proc/shoot_projectile, target_turf, angle_to_target, FALSE), 2)
-	addtimer(CALLBACK(src, .proc/shoot_projectile, target_turf, angle_to_target, FALSE), 4)
+	addtimer(CALLBACK(src, PROC_REF(shoot_projectile), target_turf, angle_to_target, FALSE), 2)
+	addtimer(CALLBACK(src, PROC_REF(shoot_projectile), target_turf, angle_to_target, FALSE), 4)
 	if(health < maxHealth * 0.5)
 		playsound(get_turf(src), 'sound/blank.ogg', 20, TRUE)
-		addtimer(CALLBACK(src, .proc/shoot_projectile, target_turf, angle_to_target, FALSE), 10)
-		addtimer(CALLBACK(src, .proc/shoot_projectile, target_turf, angle_to_target, FALSE), 12)
-		addtimer(CALLBACK(src, .proc/shoot_projectile, target_turf, angle_to_target, FALSE), 14)
+		addtimer(CALLBACK(src, PROC_REF(shoot_projectile), target_turf, angle_to_target, FALSE), 10)
+		addtimer(CALLBACK(src, PROC_REF(shoot_projectile), target_turf, angle_to_target, FALSE), 12)
+		addtimer(CALLBACK(src, PROC_REF(shoot_projectile), target_turf, angle_to_target, FALSE), 14)
 
 /mob/living/simple_animal/hostile/asteroid/elite/herald/proc/herald_circleshot()
 	var/static/list/directional_shot_angles = list(0, 45, 90, 135, 180, 225, 270, 315)
@@ -164,11 +164,11 @@
 	if(!is_mirror)
 		icon_state = "herald_enraged"
 	playsound(get_turf(src), 'sound/blank.ogg', 20, TRUE)
-	addtimer(CALLBACK(src, .proc/herald_circleshot), 5)
+	addtimer(CALLBACK(src, PROC_REF(herald_circleshot)), 5)
 	if(health < maxHealth * 0.5)
 		playsound(get_turf(src), 'sound/blank.ogg', 20, TRUE)
-		addtimer(CALLBACK(src, .proc/herald_circleshot), 15)
-	addtimer(CALLBACK(src, .proc/unenrage), 20)
+		addtimer(CALLBACK(src, PROC_REF(herald_circleshot)), 15)
+	addtimer(CALLBACK(src, PROC_REF(unenrage)), 20)
 
 /mob/living/simple_animal/hostile/asteroid/elite/herald/proc/herald_teleshot(target)
 	ranged_cooldown = world.time + 30
@@ -268,7 +268,7 @@
 	. = ..()
 	if(!rand(1,100) <= hit_reaction_chance)
 		return
-	owner.visible_message("<span class='danger'>[owner]'s [src] emits a loud noise as [owner] is struck!</span>")
+	owner.visible_message(span_danger("[owner]'s [src] emits a loud noise as [owner] is struck!"))
 	var/static/list/directional_shot_angles = list(0, 45, 90, 135, 180, 225, 270, 315)
 	playsound(get_turf(owner), 'sound/blank.ogg', 20, TRUE)
-	addtimer(CALLBACK(src, .proc/reactionshot, owner), 10)
+	addtimer(CALLBACK(src, PROC_REF(reactionshot), owner), 10)

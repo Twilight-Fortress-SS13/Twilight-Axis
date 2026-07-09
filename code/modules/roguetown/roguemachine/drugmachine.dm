@@ -32,7 +32,7 @@
 			update_icon()
 			return attack_hand(user)
 		else
-			to_chat(user, "<span class='warning'>Wrong key.</span>")
+			to_chat(user, span_warning("Wrong key."))
 			return
 	if(istype(P, /obj/item/keyring))
 		var/obj/item/keyring/K = P
@@ -122,7 +122,7 @@
 				switch(select)
 					if("To Bank")
 						var/mob/living/carbon/human/H = usr
-						SStreasury.generate_money_account(secret_budget, H.real_name)
+						SStreasury.generate_money_account(secret_budget, H)
 						secret_budget = 0
 					if("Direct")
 						if(secret_budget > 0)

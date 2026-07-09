@@ -14,7 +14,7 @@
 
 /obj/item/clothing/gloves/ComponentInitialize()
 	. = ..()
-	RegisterSignal(src, COMSIG_COMPONENT_CLEAN_ACT, .proc/clean_blood)
+	RegisterSignal(src, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(clean_blood))
 
 /obj/item/clothing/gloves/proc/clean_blood(datum/source, strength)
 	if(strength < CLEAN_STRENGTH_BLOOD)
@@ -22,7 +22,7 @@
 	transfer_blood = 0
 
 /obj/item/clothing/gloves/suicide_act(mob/living/carbon/user)
-	user.visible_message("<span class='suicide'>\the [src] are forcing [user]'s hands around [user.p_their()] neck! It looks like the gloves are possessed!</span>")
+	user.visible_message(span_suicide("\the [src] are forcing [user]'s hands around [user.p_their()] neck! It looks like the gloves are possessed!"))
 	return OXYLOSS
 
 /obj/item/clothing/gloves/worn_overlays(isinhands = FALSE)

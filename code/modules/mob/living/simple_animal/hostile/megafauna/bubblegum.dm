@@ -78,28 +78,28 @@ Difficulty: Hard
 	name = "Triple Charge"
 	icon_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "sniper_zoom"
-	chosen_message = "<span class='colossus'>I are now triple charging at the target you click on.</span>"
+	chosen_message = span_colossus("I are now triple charging at the target you click on.")
 	chosen_attack_num = 1
 
 /datum/action/innate/megafauna_attack/hallucination_charge
 	name = "Hallucination Charge"
 	icon_icon = 'icons/effects/bubblegum.dmi'
 	button_icon_state = "smack ya one"
-	chosen_message = "<span class='colossus'>I are now charging with hallucinations at the target you click on.</span>"
+	chosen_message = span_colossus("I are now charging with hallucinations at the target you click on.")
 	chosen_attack_num = 2
 
 /datum/action/innate/megafauna_attack/hallucination_surround
 	name = "Surround Target"
 	icon_icon = 'icons/turf/walls/wall.dmi'
 	button_icon_state = "wall"
-	chosen_message = "<span class='colossus'>I are now surrounding the target you click on with hallucinations.</span>"
+	chosen_message = span_colossus("I are now surrounding the target you click on with hallucinations.")
 	chosen_attack_num = 3
 
 /datum/action/innate/megafauna_attack/blood_warp
 	name = "Blood Warp"
 	icon_icon = 'icons/effects/blood.dmi'
 	button_icon_state = "floor1"
-	chosen_message = "<span class='colossus'>I are now warping to blood around your clicked position.</span>"
+	chosen_message = span_colossus("I are now warping to blood around your clicked position.")
 	chosen_attack_num = 4
 
 /mob/living/simple_animal/hostile/megafauna/bubblegum/OpenFire()
@@ -152,7 +152,7 @@ Difficulty: Hard
 
 /mob/living/simple_animal/hostile/megafauna/bubblegum/proc/surround_with_hallucinations()
 	for(var/i = 1 to 5)
-		INVOKE_ASYNC(src, .proc/hallucination_charge_around, 2, 8, 2, 0, 4)
+		INVOKE_ASYNC(src, PROC_REF(hallucination_charge_around), 2, 8, 2, 0, 4)
 		if(ismob(target))
 			charge(delay = 6)
 		else
@@ -197,7 +197,7 @@ Difficulty: Hard
 /mob/living/simple_animal/hostile/megafauna/bubblegum/proc/try_bloodattack()
 	var/list/targets = get_mobs_on_blood()
 	if(targets.len)
-		INVOKE_ASYNC(src, .proc/bloodattack, targets, prob(50))
+		INVOKE_ASYNC(src, PROC_REF(bloodattack), targets, prob(50))
 		return TRUE
 	return FALSE
 
@@ -241,10 +241,10 @@ Difficulty: Hard
 	SLEEP_CHECK_DEATH(4)
 	for(var/mob/living/L in T)
 		if(!faction_check_mob(L))
-			to_chat(L, "<span class='danger'>[src] rends you!</span>")
+			to_chat(L, span_danger("[src] rends you!"))
 			playsound(T, attack_sound, 100, TRUE, -1)
 			var/limb_to_hit = L.get_bodypart(pick(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
-			L.apply_damage(10, BRUTE, limb_to_hit, L.run_armor_check(limb_to_hit, "melee", null, null, armor_penetration))
+			L.apply_damage(10, BRUTE, limb_to_hit, L.run_armor_check(limb_to_hit, "slash", null, null, armor_penetration))
 	SLEEP_CHECK_DEATH(3)
 
 /mob/living/simple_animal/hostile/megafauna/bubblegum/proc/bloodgrab(turf/T, handedness)
@@ -258,12 +258,12 @@ Difficulty: Hard
 	for(var/mob/living/L in T)
 		if(!faction_check_mob(L))
 			if(L.stat != CONSCIOUS)
-				to_chat(L, "<span class='danger'>[src] drags you through the blood!</span>")
+				to_chat(L, span_danger("[src] drags you through the blood!"))
 				playsound(T, 'sound/blank.ogg', 100, TRUE, -1)
 				var/turf/targetturf = get_step(src, dir)
 				L.forceMove(targetturf)
 				playsound(targetturf, 'sound/blank.ogg', 100, TRUE, -1)
-				addtimer(CALLBACK(src, .proc/devour, L), 2)
+				addtimer(CALLBACK(src, PROC_REF(devour), L), 2)
 	SLEEP_CHECK_DEATH(1)
 
 /mob/living/simple_animal/hostile/megafauna/bubblegum/proc/blood_warp()
@@ -295,11 +295,11 @@ Difficulty: Hard
 		shuffle_inplace(pools)
 		found_bloodpool = pick(pools)
 	if(found_bloodpool)
-		visible_message("<span class='danger'>[src] sinks into the blood...</span>")
+		visible_message(span_danger("[src] sinks into the blood..."))
 		playsound(get_turf(src), 'sound/blank.ogg', 100, TRUE, -1)
 		forceMove(get_turf(found_bloodpool))
 		playsound(get_turf(src), 'sound/blank.ogg', 100, TRUE, -1)
-		visible_message("<span class='danger'>And springs back out!</span>")
+		visible_message(span_danger("And springs back out!"))
 		blood_enrage()
 		return TRUE
 	return FALSE
@@ -330,15 +330,15 @@ Difficulty: Hard
 	change_move_delay(3.75)
 	var/newcolor = rgb(149, 10, 10)
 	add_atom_colour(newcolor, TEMPORARY_COLOUR_PRIORITY)
-	var/datum/callback/cb = CALLBACK(src, .proc/blood_enrage_end)
+	var/datum/callback/cb = CALLBACK(src, PROC_REF(blood_enrage_end))
 	addtimer(cb, enrage_time)
 
-/mob/living/simple_animal/hostile/megafauna/bubblegum/proc/blood_enrage_end(var/newcolor = rgb(149, 10, 10))
+/mob/living/simple_animal/hostile/megafauna/bubblegum/proc/blood_enrage_end(newcolor = rgb(149, 10, 10))
 	update_approach()
 	change_move_delay()
 	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, newcolor)
 
-/mob/living/simple_animal/hostile/megafauna/bubblegum/proc/change_move_delay(var/newmove = initial(move_to_delay))
+/mob/living/simple_animal/hostile/megafauna/bubblegum/proc/change_move_delay(newmove = initial(move_to_delay))
 	move_to_delay = newmove
 	set_varspeed(move_to_delay)
 	handle_automated_action() // need to recheck movement otherwise move_to_delay won't update until the next checking aka will be wrong speed for a bit
@@ -377,7 +377,7 @@ Difficulty: Hard
 				continue
 		var/mob/living/simple_animal/hostile/megafauna/bubblegum/hallucination/B = new /mob/living/simple_animal/hostile/megafauna/bubblegum/hallucination(src.loc)
 		B.forceMove(place)
-		INVOKE_ASYNC(B, .proc/charge, chargeat, delay, chargepast)
+		INVOKE_ASYNC(B, PROC_REF(charge), chargeat, delay, chargepast)
 	if(useoriginal)
 		charge(chargeat, delay, chargepast)
 
@@ -416,7 +416,7 @@ Difficulty: Hard
 
 /mob/living/simple_animal/hostile/megafauna/bubblegum/bullet_act(obj/projectile/P)
 	if(BUBBLEGUM_IS_ENRAGED)
-		visible_message("<span class='danger'>[src] deflects the projectile; [p_they()] can't be hit with ranged weapons while enraged!</span>", "<span class='danger'>I deflect the projectile!</span>")
+		visible_message(span_danger("[src] deflects the projectile; [p_they()] can't be hit with ranged weapons while enraged!"), span_danger("I deflect the projectile!"))
 		playsound(src, pick('sound/blank.ogg'), 300, TRUE)
 		return BULLET_ACT_BLOCK
 	return ..()
@@ -464,7 +464,7 @@ Difficulty: Hard
 		DestroySurroundings()
 		if(isliving(A))
 			var/mob/living/L = A
-			L.visible_message("<span class='danger'>[src] slams into [L]!</span>", "<span class='danger'>[src] tramples you into the ground!</span>")
+			L.visible_message(span_danger("[src] slams into [L]!"), span_danger("[src] tramples you into the ground!"))
 			src.forceMove(get_turf(L))
 			L.apply_damage(istype(src, /mob/living/simple_animal/hostile/megafauna/bubblegum/hallucination) ? 15 : 30, BRUTE)
 			playsound(get_turf(L), 'sound/blank.ogg', 100, TRUE)

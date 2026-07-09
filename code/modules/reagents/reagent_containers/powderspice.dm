@@ -34,7 +34,7 @@
 	M.apply_status_effect(/datum/status_effect/buff/druqks)
 	..()
 
-/obj/screen/fullscreen/druqks
+/atom/movable/screen/fullscreen/druqks
 	icon_state = "spa"
 	plane = FLOOR_PLANE
 	layer = ABOVE_OPEN_TURF_LAYER
@@ -42,30 +42,30 @@
 	show_when_dead = FALSE
 
 /datum/reagent/druqks/overdose_start(mob/living/M)
-	M.visible_message("<span class='warning'>Blood runs from [M]'s nose.</span>")
+	M.visible_message(span_warning("Blood runs from [M]'s nose."))
 
 /datum/reagent/druqks/overdose_process(mob/living/M)
 	M.adjustToxLoss(10, 0)
 
 /datum/reagent/druqks/on_mob_metabolize(mob/living/M)
-	M.overlay_fullscreen("druqk", /obj/screen/fullscreen/druqks)
+	M.overlay_fullscreen("druqk", /atom/movable/screen/fullscreen/druqks)
 	M.set_drugginess(30)
-	M.update_body_parts_head_only()
+//	M.update_body_parts_head_only()
 	if(M.client)
 		ADD_TRAIT(M, TRAIT_DRUQK, "based")
 		SSdroning.area_entered(get_area(M), M.client)
 //			if(M.client.screen && M.client.screen.len)
-//				var/obj/screen/plane_master/game_world/PM = locate(/obj/screen/plane_master/game_world) in M.client.screen
+//				var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in M.client.screen
 //				PM.backdrop(M.client.mob)
 
 /datum/reagent/druqks/on_mob_end_metabolize(mob/living/M)
 	M.clear_fullscreen("druqk")
-	M.update_body_parts_head_only()
+//	M.update_body_parts_head_only()
 	if(M.client)
 		REMOVE_TRAIT(M, TRAIT_DRUQK, "based")
 		SSdroning.play_area_sound(get_area(M), M.client)
 //		if(M.client.screen && M.client.screen.len)
-///			var/obj/screen/plane_master/game_world/PM = locate(/obj/screen/plane_master/game_world) in M.client.screen
+///			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in M.client.screen
 //			PM.backdrop(M.client.mob)
 
 /obj/item/reagent_containers/powder/throw_impact(atom/hit_atom, datum/thrownthing/thrownthing)
@@ -89,18 +89,18 @@
 		return FALSE
 
 	if(M == user)
-		M.visible_message("<span class='notice'>[user] sniffs [src].</span>")
+		M.visible_message(span_notice("[user] sniffs [src]."))
 	else
 		if(iscarbon(M))
 			var/mob/living/carbon/C = M
 			var/obj/item/bodypart/CH = C.get_bodypart(BODY_ZONE_HEAD)
 			if(!CH)
-				to_chat(user, "<span class='warning'>[C.p_theyre(TRUE)] missing something.</span>")
-			user.visible_message("<span class='danger'>[user] attempts to force [C] to inhale [src].</span>", \
-								"<span class='danger'>[user] attempts to force me to inhale [src]!</span>")
+				to_chat(user, span_warning("[C.p_theyre(TRUE)] missing something."))
+			user.visible_message(span_danger("[user] attempts to force [C] to inhale [src]."), \
+								span_danger("[user] attempts to force me to inhale [src]!"))
 			if(C.cmode)
 				if(!CH.grabbedby)
-					to_chat(user, "<span class='info'>[C.p_they(TRUE)] steals [C.p_their()] face from it.</span>")
+					to_chat(user, span_info("[C.p_they(TRUE)] steals [C.p_their()] face from it."))
 					return FALSE
 			if(!do_mob(user, M, 10))
 				return FALSE
@@ -120,14 +120,14 @@
 	if(!dissolvable || !target.is_refillable())
 		return
 	if(target.is_drainable() && !target.reagents.total_volume)
-		to_chat(user, "<span class='warning'>[target] is empty! There's nothing to dissolve [src] in.</span>")
+		to_chat(user, span_warning("[target] is empty! There's nothing to dissolve [src] in."))
 		return
 
 	if(target.reagents.holder_full())
-		to_chat(user, "<span class='warning'>[target] is full.</span>")
+		to_chat(user, span_warning("[target] is full."))
 		return
 
-	user.visible_message("<span class='warning'>[user] slips something into [target]!</span>", "<span class='notice'>I dissolve [src] in [target].</span>", null, 2)
+	user.visible_message(span_warning("[user] slips something into [target]!"), span_notice("I dissolve [src] in [target]."), null, 2)
 	reagents.trans_to(target, reagents.total_volume, transfered_by = user)
 	qdel(src)
 */
@@ -193,7 +193,7 @@
 
 /datum/reagent/ozium/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message("<span class='warning'>Blood runs from [M]'s nose.</span>")
+	M.visible_message(span_warning("Blood runs from [M]'s nose."))
 
 /datum/reagent/ozium/overdose_process(mob/living/M)
 	M.adjustToxLoss(10, 0)
@@ -233,7 +233,7 @@
 
 /datum/reagent/moondust/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message("<span class='warning'>Blood runs from [M]'s nose.</span>")
+	M.visible_message(span_warning("Blood runs from [M]'s nose."))
 
 /datum/reagent/moondust/overdose_process(mob/living/M)
 	M.adjustToxLoss(10, 0)
@@ -263,7 +263,7 @@
 /datum/reagent/moondust_purest/on_mob_metabolize(mob/living/M)
 	M.playsound_local(M, 'sound/ravein/small/hello_my_friend.ogg', 100, FALSE)
 	M.flash_fullscreen("can_you_see")
-	M.overlay_fullscreen("purest_kaif", /obj/screen/fullscreen/purest)
+	M.overlay_fullscreen("purest_kaif", /atom/movable/screen/fullscreen/purest)
 	animate(M.client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE)
 	animate(pixel_y = -1, time = 1, flags = ANIMATION_RELATIVE)
 
@@ -283,7 +283,7 @@
 
 /datum/reagent/moondust_purest/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message("<span class='warning'>Blood runs from [M]'s nose.</span>")
+	M.visible_message(span_warning("Blood runs from [M]'s nose."))
 
 /datum/reagent/moondust_purest/overdose_process(mob/living/M)
 	M.adjustToxLoss(10, 0)

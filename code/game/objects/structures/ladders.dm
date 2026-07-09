@@ -72,7 +72,7 @@
 
 /obj/structure/ladder/singularity_pull()
 	if (!(resistance_flags & INDESTRUCTIBLE))
-		visible_message("<span class='danger'>[src] is torn to pieces by the gravitational pull!</span>")
+		visible_message(span_danger("[src] is torn to pieces by the gravitational pull!"))
 		qdel(src)
 
 /obj/structure/ladder/proc/travel(going_up, mob/user, is_ghost, obj/structure/ladder/ladder)
@@ -116,7 +116,7 @@
 	else if(down)
 		travel(FALSE, user, is_ghost, down)
 	else
-		to_chat(user, "<span class='warning'>[src] doesn't seem to lead anywhere!</span>")
+		to_chat(user, span_warning("[src] doesn't seem to lead anywhere!"))
 
 	if(!is_ghost)
 		add_fingerprint(user)
@@ -131,6 +131,8 @@
 	return use(user)
 
 /obj/structure/ladder/attackby(obj/item/W, mob/user, params)
+	if(obj_flags & CAN_BE_HIT)
+		return ..()
 	return use(user)
 
 /obj/structure/ladder/attack_robot(mob/living/silicon/robot/R)
@@ -144,9 +146,9 @@
 
 /obj/structure/ladder/proc/show_fluff_message(going_up, mob/user)
 	if(going_up)
-		user.visible_message("<span class='notice'>[user] climbs up [src].</span>", "<span class='notice'>I climb up [src].</span>")
+		user.visible_message(span_notice("[user] climbs up [src]."), span_notice("I climb up [src]."))
 	else
-		user.visible_message("<span class='notice'>[user] climbs down [src].</span>", "<span class='notice'>I climb down [src].</span>")
+		user.visible_message(span_notice("[user] climbs down [src]."), span_notice("I climb down [src]."))
 
 
 // Indestructible away mission ladders which link based on a mapped ID and height value rather than X/Y/Z.
@@ -215,14 +217,12 @@
 	anchored = TRUE
 	var/obj/structure/ladder/down   //the ladder below this one
 	var/obj/structure/ladder/up     //the ladder above this one
-	obj_flags = BLOCK_Z_OUT_DOWN
+	obj_flags = BLOCK_Z_OUT_DOWN | CAN_BE_HIT
 	max_integrity = 200
 	blade_dulling = DULLING_BASHCHOP
 
-
-
 /obj/structure/wallladder/OnCrafted(dirin)
-	dir = dirin
+	. = ..()
 	layer = BELOW_MOB_LAYER
 	switch(dir)
 		if(NORTH)

@@ -85,15 +85,15 @@
 		if(1)
 			if(!locked)
 				if(!istype(target) || target.anchored || target.move_resist >= MOVE_FORCE_EXTREMELY_STRONG)
-					occupant_message("<span class='warning'>Unable to lock on [target]!</span>")
+					occupant_message(span_warning("Unable to lock on [target]!"))
 					return
 				if(ismob(target))
 					var/mob/M = target
 					if(M.mob_negates_gravity())
-						occupant_message("<span class='warning'>Unable to lock on [target]!</span>")
+						occupant_message(span_warning("Unable to lock on [target]!"))
 						return
 				locked = target
-				occupant_message("<span class='notice'>Locked on [target].</span>")
+				occupant_message(span_notice("Locked on [target]."))
 				send_byjax(chassis.occupant,"exosuit.browser","[REF(src)]",src.get_equip_info())
 			else if(target!=locked)
 				if(locked in view(chassis))
@@ -106,7 +106,7 @@
 					return TRUE
 				else
 					locked = null
-					occupant_message("<span class='notice'>Lock on [locked] disengaged.</span>")
+					occupant_message(span_notice("Lock on [locked] disengaged."))
 					send_byjax(chassis.occupant,"exosuit.browser","[REF(src)]",src.get_equip_info())
 		if(2)
 			var/list/atoms = list()
@@ -121,7 +121,7 @@
 					var/mob/M = A
 					if(M.mob_negates_gravity())
 						continue
-				INVOKE_ASYNC(src, .proc/do_scatter, A, target)
+				INVOKE_ASYNC(src, PROC_REF(do_scatter), A, target)
 
 			var/turf/T = get_turf(target)
 			log_game("[key_name(chassis.occupant)] used a Gravitational Catapult repulse wave on [AREACOORD(T)]")
@@ -300,7 +300,7 @@
 		return 1000 //making magic
 
 
-/obj/item/mecha_parts/mecha_equipment/tesla_energy_relay/proc/GET_MUTATION_POWER_channel(var/area/A)
+/obj/item/mecha_parts/mecha_equipment/tesla_energy_relay/proc/GET_MUTATION_POWER_channel(area/A)
 	var/pow_chan
 	if(A)
 		for(var/c in use_channels)
@@ -336,7 +336,7 @@
 	if(isnull(cur_charge) || !chassis.cell)
 		STOP_PROCESSING(SSobj, src)
 		set_ready_state(1)
-		occupant_message("<span class='notice'>No powercell detected.</span>")
+		occupant_message(span_notice("No powercell detected."))
 		return
 	if(cur_charge < chassis.cell.maxcharge)
 		var/area/A = get_area(chassis)
@@ -407,20 +407,20 @@
 		if(result)
 			send_byjax(chassis.occupant,"exosuit.browser","[REF(src)]",src.get_equip_info())
 
-/obj/item/mecha_parts/mecha_equipment/generator/proc/load_fuel(var/obj/item/stack/sheet/P)
+/obj/item/mecha_parts/mecha_equipment/generator/proc/load_fuel(obj/item/stack/sheet/P)
 	if(P.type == fuel.type && P.amount > 0)
 		var/to_load = max(max_fuel - fuel.amount*fuel.mats_per_stack,0)
 		if(to_load)
 			var/units = min(max(round(to_load / P.mats_per_stack),1),P.amount)
 			fuel.amount += units
 			P.use(units)
-			occupant_message("<span class='notice'>[units] unit\s of [fuel] successfully loaded.</span>")
+			occupant_message(span_notice("[units] unit\s of [fuel] successfully loaded."))
 			return units
 		else
-			occupant_message("<span class='notice'>Unit is full.</span>")
+			occupant_message(span_notice("Unit is full."))
 			return 0
 	else
-		occupant_message("<span class='warning'>[fuel] traces in target minimal! [P] cannot be used as fuel.</span>")
+		occupant_message(span_warning("[fuel] traces in target minimal! [P] cannot be used as fuel."))
 		return
 
 /obj/item/mecha_parts/mecha_equipment/generator/attackby(weapon,mob/user, params)
@@ -439,7 +439,7 @@
 	var/cur_charge = chassis.get_charge()
 	if(isnull(cur_charge))
 		set_ready_state(1)
-		occupant_message("<span class='notice'>No powercell detected.</span>")
+		occupant_message(span_notice("No powercell detected."))
 		log_message("Deactivated.", LOG_MECHA)
 		STOP_PROCESSING(SSobj, src)
 		return
@@ -482,7 +482,7 @@
 /obj/item/mecha_parts/mecha_equipment/thrusters/try_attach_part(mob/user, obj/mecha/M)
 	for(var/obj/item/I in M.equipment)
 		if(istype(I, src))
-			to_chat(user, "<span class='warning'>[M] already has this thruster package!</span>")
+			to_chat(user, span_warning("[M] already has this thruster package!"))
 			return FALSE
 	. = ..()
 
@@ -517,24 +517,24 @@
 	if (chassis.active_thrusters == src)
 		return
 	chassis.active_thrusters = src
-	occupant_message("<span class='notice'>[src] enabled.</span>")
+	occupant_message(span_notice("[src] enabled."))
 
 /obj/item/mecha_parts/mecha_equipment/thrusters/proc/disable()
 	if(chassis.active_thrusters != src)
 		return
 	chassis.active_thrusters = null
-	occupant_message("<span class='notice'>[src] disabled.</span>")
+	occupant_message(span_notice("[src] disabled."))
 
 /obj/item/mecha_parts/mecha_equipment/thrusters/get_equip_info()
 	return "[..()] \[<a href='?src=[REF(src)];mode=0'>Enable</a>|<a href='?src=[REF(src)];mode=1'>Disable</a>\]"
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/proc/thrust(var/movement_dir)
+/obj/item/mecha_parts/mecha_equipment/thrusters/proc/thrust(movement_dir)
 	if(!chassis)
 		return FALSE
 	generate_effect(movement_dir)
 	return TRUE //This parent should never exist in-game outside admeme use, so why not let it be a creative thruster?
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/proc/generate_effect(var/movement_dir)
+/obj/item/mecha_parts/mecha_equipment/thrusters/proc/generate_effect(movement_dir)
 	var/obj/effect/particle_effect/E = new effect_type(get_turf(chassis))
 	E.dir = turn(movement_dir, 180)
 	step(E, turn(movement_dir, 180))
@@ -549,11 +549,11 @@
 
 /obj/item/mecha_parts/mecha_equipment/thrusters/gas/try_attach_part(mob/user, obj/mecha/M)
 	if(!M.internal_tank)
-		to_chat(user, "<span class='warning'>[M] does not have an internal tank and cannot support this upgrade!</span>")
+		to_chat(user, span_warning("[M] does not have an internal tank and cannot support this upgrade!"))
 		return FALSE
 	. = ..()
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/gas/thrust(var/movement_dir)
+/obj/item/mecha_parts/mecha_equipment/thrusters/gas/thrust(movement_dir)
 	if(!chassis || !chassis.internal_tank)
 		return FALSE
 	var/moles = chassis.internal_tank.air_contents.total_moles()
@@ -573,7 +573,7 @@
 	salvageable = FALSE
 	effect_type = /obj/effect/particle_effect/ion_trails
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/ion/thrust(var/movement_dir)
+/obj/item/mecha_parts/mecha_equipment/thrusters/ion/thrust(movement_dir)
 	if(!chassis)
 		return FALSE
 	if(chassis.use_power(chassis.step_energy_drain))

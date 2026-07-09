@@ -18,7 +18,7 @@
 		return .
 	pixel_x = rand(-5,5)
 	pixel_y = rand(5,5)
-	blood_timer = addtimer(CALLBACK(src, .proc/become_dry), rand(5 MINUTES,8 MINUTES), TIMER_STOPPABLE)
+	blood_timer = addtimer(CALLBACK(src, PROC_REF(become_dry)), rand(5 MINUTES,8 MINUTES), TIMER_STOPPABLE)
 
 
 /obj/effect/decal/cleanable/blood/proc/become_dry()
@@ -85,11 +85,12 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	appearance_flags = NO_CLIENT_COLOR
 	var/blood_timer
+
 /obj/effect/decal/cleanable/trail_holder/Initialize(mapload, list/datum/disease/diseases)
 	. = ..()
 	if(. == INITIALIZE_HINT_QDEL)
 		return .
-	blood_timer = addtimer(CALLBACK(src, .proc/become_dry), rand(5 MINUTES,8 MINUTES), TIMER_STOPPABLE)
+	blood_timer = addtimer(CALLBACK(src, PROC_REF(become_dry)), rand(5 MINUTES,8 MINUTES), TIMER_STOPPABLE)
 
 /obj/effect/decal/cleanable/trail_holder/Destroy()
 	deltimer(blood_timer)

@@ -1,14 +1,6 @@
 
 /mob/living/carbon/human/proc/change_name(new_name)
-	if(real_name == new_name)
-		return
-	var/act
-	if(real_name in SStreasury.bank_accounts)
-		act = SStreasury.bank_accounts[real_name]
-		SStreasury.bank_accounts -= real_name
 	real_name = new_name
-	if(act)
-		SStreasury.create_bank_account(real_name, act)
 
 /mob/living/carbon/human/restrained(ignore_grab)
 	. = ((wear_armor && wear_armor.breakouttime) || ..())
@@ -165,10 +157,10 @@
 	. = ..()
 	if(G.trigger_guard == TRIGGER_GUARD_NORMAL)
 		if(HAS_TRAIT(src, TRAIT_CHUNKYFINGERS))
-			to_chat(src, "<span class='warning'>My meaty finger is much too large for the trigger guard!</span>")
+			to_chat(src, span_warning("My meaty finger is much too large for the trigger guard!"))
 			return FALSE
 	if(HAS_TRAIT(src, TRAIT_NOGUNS))
-		to_chat(src, "<span class='warning'>I can't bring myself to use a ranged weapon!</span>")
+		to_chat(src, span_warning("I can't bring myself to use a ranged weapon!"))
 		return FALSE
 
 /mob/living/carbon/human/proc/get_bank_account()

@@ -87,7 +87,13 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 /obj/effect/landmark/start/adventurerlate
 	name = "Adventurerlate"
 	icon_state = "arrow"
-	jobspawn_override = list("Adventurer", "Pilgrim", "skeleton")
+	jobspawn_override = list("Skeleton", "Drifter", "Pilgrim", "Adventurer")
+	delete_after_roundstart = FALSE
+
+/obj/effect/landmark/start/bogguardlate
+	name = "Bogguardlate"
+	icon_state = "arrow"
+	jobspawn_override = list("Bog Master", "Bog Guard")
 	delete_after_roundstart = FALSE
 
 /obj/effect/landmark/start/vagrantlate
@@ -102,10 +108,16 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	jobspawn_override = list("Orphan")
 	delete_after_roundstart = FALSE
 
-/obj/effect/landmark/start/mercenarylate
-	name = "Mercenarylate"
+/obj/effect/landmark/start/desertriderlate
+	name = "DesertRiderlate"
 	icon_state = "arrow"
-	jobspawn_override = list("Mercenary")
+	jobspawn_override = list("Desert Rider Mercenary")
+	delete_after_roundstart = FALSE
+
+/obj/effect/landmark/start/grenzelhoftlate
+	name = "Grenzelhoftlate"
+	icon_state = "arrow"
+	jobspawn_override = list("Grenzelhoft Mercenary")
 	delete_after_roundstart = FALSE
 
 /obj/effect/landmark/start/villagerlate
@@ -123,27 +135,55 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/sheriff
-	name = "Sheriff"
+	name = "Guard Captain"
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/barkeep
 	name = "Barkeep"
 	icon_state = "arrow"
 
+/obj/effect/landmark/start/cook
+	name = "Cook"
+	icon_state = "arrow"
+
 /obj/effect/landmark/start/steward
 	name = "Steward"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/clerk
+	name = "Clerk"
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/magician
 	name = "Court Magician"
 	icon_state = "arrow"
 
+/obj/effect/landmark/start/physician
+	name = "Court Physician"
+	icon_state = "arrow"
+
 /obj/effect/landmark/start/guardsman
-	name = "Town Guard"
+	name = "Watchman"
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/manorguardsman
-	name = "Castle Guard"
+	name = "Man at Arms"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/bogmaster
+	name = "Bog Master"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/bogguardsman
+	name = "Bog Guard"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/bailiff
+	name = "Bailiff"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/councillor
+	name = "Councillor"
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/veteran
@@ -178,8 +218,16 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	name = "Acolyte"
 	icon_state = "arrow"
 
+/obj/effect/landmark/start/druid
+	name = "Druid"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/templar
+	name = "Templar"
+	icon_state = "arrow"
+
 /obj/effect/landmark/start/puritan
-	name = "Witch Hunter"
+	name = "Inquisitor"
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/shepherd
@@ -198,6 +246,10 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	name = "Merchant"
 	icon_state = "arrow"
 
+/obj/effect/landmark/start/shophand
+	name = "Shophand"
+	icon_state = "arrow"
+
 /obj/effect/landmark/start/grabber
 	name = "Grabber"
 	icon_state = "arrow"
@@ -207,7 +259,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	name = "Innkeep"
 	icon_state = "arrow"
 
-/obj/effect/landmark/start/apothecary
+/obj/effect/landmark/start/archivist
 	name = "Archivist"
 	icon_state = "arrow"
 
@@ -248,7 +300,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/gravedigger
-	name = "Gravedigger"
+	name = "Mortician"
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/mercenary
@@ -260,7 +312,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/lady
-	name = "Queen"
+	name = "Queen Consort"
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/prince
@@ -268,7 +320,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/prisoner
-	name = "Prisoner"
+	name = "Hostage"
 	icon_state = "arrow"
 
 /obj/effect/landmark/start/jester
@@ -298,7 +350,6 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 /obj/effect/landmark/start/barkeeper
 	name = "Barkeeper"
 	icon_state = "arrow"
-
 
 /obj/effect/landmark/start/adventurer
 	name = "Adventurer"
@@ -330,6 +381,23 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	name = "Smithy Apprentice"
 	icon_state = "arrow"
 
+//goblin
+
+/obj/effect/landmark/start/goblinking
+	name = "Goblin King"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/goblincook
+	name = "Goblin Cook"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/goblinguard
+	name = "Goblin Guard"
+	icon_state = "arrow"
+
+/obj/effect/landmark/start/goblinsmith
+	name = "Goblin Smith"
+	icon_state = "arrow"
 
 // START LANDMARKS FOLLOW. Don't change the names unless
 // you are refactoring shitty landmark code.
@@ -708,6 +776,16 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 	ruin_template = null
 	. = ..()
 
+/// Marks the bottom left of the testing zone.
+/// In landmarks.dm and not unit_test.dm so it is always active in the mapping tools.
+/obj/effect/landmark/unit_test_bottom_left
+	name = "unit test zone bottom left"
+
+/// Marks the top right of the testing zone.
+/// In landmarks.dm and not unit_test.dm so it is always active in the mapping tools.
+/obj/effect/landmark/unit_test_top_right
+	name = "unit test zone top right"
+
 //Underworld landmark
 
 /obj/effect/landmark/underworld
@@ -718,9 +796,3 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 
 /obj/effect/landmark/underworldsafe // To prevent demons spawn camping will save a lot of ear rape.
 	name = "safe zone"
-
-/obj/effect/landmark/underworldcoin/Initialize(mapload)
-	GLOB.underworldcoin += loc
-	return
-
-

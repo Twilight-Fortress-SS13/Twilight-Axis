@@ -115,7 +115,7 @@
 /datum/reagent/consumable/cooking_oil/reaction_obj(obj/O, reac_volume)
 	if(holder && holder.chem_temp >= fry_temperature)
 		if(isitem(O) && !istype(O, /obj/item/reagent_containers/food/snacks/deepfryholder))
-			O.loc.visible_message("<span class='warning'>[O] rapidly fries as it's splashed with hot oil! Somehow.</span>")
+			O.loc.visible_message(span_warning("[O] rapidly fries as it's splashed with hot oil! Somehow."))
 			var/obj/item/reagent_containers/food/snacks/deepfryholder/F = new(O.drop_location(), O)
 			F.fry(volume)
 			F.reagents.add_reagent(/datum/reagent/consumable/cooking_oil, reac_volume)
@@ -135,13 +135,13 @@
 		oil_damage *= 1 - M.get_permeability_protection()
 	var/FryLoss = round(min(38, oil_damage * reac_volume))
 	if(!HAS_TRAIT(M, TRAIT_OIL_FRIED))
-		M.visible_message("<span class='warning'>The boiling oil sizzles as it covers [M]!</span>", \
-		"<span class='danger'>You're covered in boiling oil!</span>")
+		M.visible_message(span_warning("The boiling oil sizzles as it covers [M]!"), \
+		span_danger("You're covered in boiling oil!"))
 		if(FryLoss)
 			M.emote("scream")
 		playsound(M, 'sound/blank.ogg', 25, TRUE)
 		ADD_TRAIT(M, TRAIT_OIL_FRIED, "cooking_oil_react")
-		addtimer(CALLBACK(M, /mob/living/proc/unfry_mob), 3)
+		addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living, unfry_mob)), 3)
 	if(FryLoss)
 		M.adjustFireLoss(FryLoss)
 	return TRUE
@@ -166,7 +166,7 @@
 	taste_description = "sweetness"
 
 /datum/reagent/consumable/sugar/overdose_start(mob/living/M)
-	to_chat(M, "<span class='danger'>I go into hyperglycaemic shock! Lay off the twinkies!</span>")
+	to_chat(M, span_danger("I go into hyperglycaemic shock! Lay off the twinkies!"))
 	M.AdjustSleeping(600, FALSE)
 	. = 1
 
@@ -296,12 +296,12 @@
 			victim.confused = max(M.confused, 5) // 10 seconds
 			victim.Knockdown(3 SECONDS)
 			victim.add_movespeed_modifier(MOVESPEED_ID_PEPPER_SPRAY, update=TRUE, priority=100, multiplicative_slowdown=0.25, blacklisted_movetypes=(FLYING|FLOATING))
-			addtimer(CALLBACK(victim, /mob.proc/remove_movespeed_modifier, MOVESPEED_ID_PEPPER_SPRAY), 10 SECONDS)
+			addtimer(CALLBACK(victim, TYPE_PROC_REF(/mob, remove_movespeed_modifier), MOVESPEED_ID_PEPPER_SPRAY), 10 SECONDS)
 		victim.update_damage_hud()
 
 /datum/reagent/consumable/condensedcapsaicin/on_mob_life(mob/living/carbon/M)
 	if(prob(5))
-		M.visible_message("<span class='warning'>[M] [pick("dry heaves!","coughs!","splutters!")]</span>")
+		M.visible_message(span_warning("[M] [pick("dry heaves!","coughs!","splutters!")]"))
 	..()
 
 /datum/reagent/consumable/sodiumchloride
@@ -393,7 +393,7 @@
 /datum/reagent/consumable/garlic/on_mob_life(mob/living/carbon/M)
 	if(isvampire(M)) //incapacitating but not lethal. Unfortunately, vampires cannot vomit.
 		if(prob(min(25,current_cycle)))
-			to_chat(M, "<span class='danger'>I can't get the scent of garlic out of my nose! You can barely think...</span>")
+			to_chat(M, span_danger("I can't get the scent of garlic out of my nose! You can barely think..."))
 			M.Paralyze(10)
 			M.Jitter(10)
 	else if(ishuman(M))
@@ -553,14 +553,6 @@
 		M.adjustToxLoss(-1*REM, 0)
 	..()
 
-/datum/reagent/consumable/honey/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
-  if(iscarbon(M) && (method in list(TOUCH, VAPOR, PATCH)))
-    var/mob/living/carbon/C = M
-    for(var/s in C.surgeries)
-      var/datum/surgery/S = s
-      S.speed_modifier = max(0.6, S.speed_modifier)
-  ..()
-
 /datum/reagent/consumable/mayonnaise
 	name = "Mayonnaise"
 	description = "An white and oily mixture of mixed egg yolks."
@@ -587,10 +579,10 @@
 				unprotected = TRUE
 	if(unprotected)
 		if(!M.getorganslot(ORGAN_SLOT_EYES))	//can't blind somebody with no eyes
-			to_chat(M, "<span class='notice'>My eye sockets feel wet.</span>")
+			to_chat(M, span_notice("My eye sockets feel wet."))
 		else
 			if(!M.eye_blurry)
-				to_chat(M, "<span class='warning'>Tears well up in my eyes!</span>")
+				to_chat(M, span_warning("Tears well up in my eyes!"))
 			M.blind_eyes(2)
 			M.blur_eyes(5)
 	..()
@@ -600,7 +592,7 @@
 	if(M.eye_blurry)	//Don't worsen vision if it was otherwise fine
 		M.blur_eyes(4)
 		if(prob(10))
-			to_chat(M, "<span class='warning'>My eyes sting!</span>")
+			to_chat(M, span_warning("My eyes sting!"))
 			M.blind_eyes(2)
 
 
@@ -643,12 +635,30 @@
 	description = "A stimulating ichor which causes luminescent fungi to grow on the skin. "
 	color = "#b5a213"
 	taste_description = "tingling mushroom"
+	//Lazy list of mobs affected by the luminosity of this reagent.
+	var/list/mobs_affected
 
 /datum/reagent/consumable/tinlux/reaction_mob(mob/living/M)
-	M.set_light(2)
+	add_reagent_light(M)
 
 /datum/reagent/consumable/tinlux/on_mob_end_metabolize(mob/living/M)
-	M.set_light(-2)
+	remove_reagent_light(M)
+
+/datum/reagent/consumable/tinlux/proc/on_living_holder_deletion(mob/living/source)
+	remove_reagent_light(source)
+
+/datum/reagent/consumable/tinlux/proc/add_reagent_light(mob/living/living_holder)
+	var/obj/effect/dummy/lighting_obj/moblight/mob_light_obj = living_holder.mob_light(2)
+	LAZYSET(mobs_affected, living_holder, mob_light_obj)
+	RegisterSignal(living_holder, COMSIG_PARENT_QDELETING, PROC_REF(on_living_holder_deletion))
+
+/datum/reagent/consumable/tinlux/proc/remove_reagent_light(mob/living/living_holder)
+	UnregisterSignal(living_holder, COMSIG_PARENT_QDELETING)
+	var/obj/effect/dummy/lighting_obj/moblight/mob_light_obj = LAZYACCESS(mobs_affected, living_holder)
+	LAZYREMOVE(mobs_affected, living_holder)
+	if(mob_light_obj)
+		qdel(mob_light_obj)
+
 
 /datum/reagent/consumable/vitfro
 	name = "Vitrium Froth"

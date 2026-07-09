@@ -14,6 +14,7 @@
 	integrity_failure = 0.5
 	resistance_flags = FIRE_PROOF
 	body_parts_covered = EYES
+	anvilrepair = /datum/skill/craft/armorsmithing
 //	block2add = FOV_BEHIND
 
 /obj/item/clothing/mask/rogue/spectacles/golden
@@ -25,6 +26,7 @@
 	integrity_failure = 0.5
 	resistance_flags = FIRE_PROOF
 	body_parts_covered = EYES
+	anvilrepair = /datum/skill/craft/armorsmithing
 
 /obj/item/clothing/mask/rogue/spectacles/Initialize()
 	. = ..()
@@ -32,7 +34,7 @@
 
 /obj/item/clothing/mask/rogue/spectacles/Crossed(mob/crosser)
 	if(isliving(crosser) && !obj_broken)
-		take_damage(11, BRUTE, "melee", 1)
+		take_damage(11, BRUTE, "blunt", 1)
 	..()
 
 /obj/item/clothing/mask/rogue/equipped(mob/user, slot)
@@ -50,6 +52,8 @@
 	max_integrity = 20
 	integrity_failure = 0.5
 	block2add = FOV_RIGHT
+	body_parts_covered = EYES
+	sewrepair = TRUE
 
 /obj/item/clothing/mask/rogue/eyepatch/left
 	desc = "An eyepatch, fitted for the left eye."
@@ -61,6 +65,7 @@
 	desc = "Half of your face turned gold."
 	icon_state = "lmask"
 	sellprice = 50
+	anvilrepair = /datum/skill/craft/armorsmithing
 
 /obj/item/clothing/mask/rogue/lordmask/l
 	icon_state = "lmask_l"
@@ -73,14 +78,15 @@
 	break_sound = 'sound/foley/breaksound.ogg'
 	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
 	resistance_flags = FIRE_PROOF
-	armor = list("melee" = 100, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
-	prevent_crits = list(BCLASS_CUT, BCLASS_CHOP, BCLASS_BLUNT)
+	armor = list("blunt" = 90, "slash" = 100, "stab" = 80, "bullet" = 20, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
+	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
 	flags_inv = HIDEFACE
 	body_parts_covered = FACE
 	block2add = FOV_BEHIND
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
 	experimental_onhip = TRUE
-
+	anvilrepair = /datum/skill/craft/armorsmithing
+	smeltresult = /obj/item/ingot/iron
 
 /obj/item/clothing/mask/rogue/facemask/prisoner/Initialize()
 	. = ..()
@@ -97,6 +103,7 @@
 	name = "steel mask"
 	icon_state = "smask"
 	max_integrity = 200
+	smeltresult = /obj/item/ingot/steel
 
 /obj/item/clothing/mask/rogue/shepherd
 	name = "halfmask"
@@ -107,6 +114,7 @@
 	adjustable = CAN_CADJUST
 	toggle_icon_state = TRUE
 	experimental_onhip = TRUE
+	sewrepair = TRUE
 
 /obj/item/clothing/mask/rogue/shepherd/AdjustClothes(mob/user)
 	if(loc == user)
@@ -127,3 +135,12 @@
 				if(ishuman(user))
 					var/mob/living/carbon/H = user
 					H.update_inv_wear_mask()
+
+/obj/item/clothing/mask/rogue/physician
+	name = "plague mask"
+	desc = "What better laboratory than the blood-soaked battlefield?"
+	icon_state = "physmask"
+	flags_inv = HIDEFACE|HIDEHAIR|HIDEFACIALHAIR
+	body_parts_covered = FACE|EARS|EYES|MOUTH|NECK
+	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
+	sewrepair = TRUE

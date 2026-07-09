@@ -26,8 +26,8 @@
 
 	target.orbiters = src
 	if(ismovableatom(target))
-		tracker = new(target, CALLBACK(src, .proc/move_react))
-	RegisterSignal(parent, COMSIG_MOVABLE_UPDATE_GLIDE_SIZE, .proc/orbiter_glide_size_update)
+		tracker = new(target, CALLBACK(src, PROC_REF(move_react)))
+	RegisterSignal(parent, COMSIG_MOVABLE_UPDATE_GLIDE_SIZE, PROC_REF(orbiter_glide_size_update))
 
 
 /datum/component/orbiter/UnregisterFromParent()
@@ -65,7 +65,7 @@
 			orbiter.orbiting.end_orbit(orbiter)
 	orbiters[orbiter] = TRUE
 	orbiter.orbiting = src
-	RegisterSignal(orbiter, COMSIG_MOVABLE_MOVED, .proc/orbiter_move_react)
+	RegisterSignal(orbiter, COMSIG_MOVABLE_MOVED, PROC_REF(orbiter_move_react))
 	SEND_SIGNAL(parent, COMSIG_ATOM_ORBIT_BEGIN, orbiter)
 	var/matrix/initial_transform = matrix(orbiter.transform)
 
@@ -92,7 +92,7 @@
 	//we stack the orbits up client side, so we can assign this back to normal server side without it breaking the orbit
 	orbiter.transform = initial_transform
 	orbiter.forceMove(get_turf(parent))
-	to_chat(orbiter, "<span class='notice'>Now orbiting [parent].</span>")
+	to_chat(orbiter, span_notice("Now orbiting [parent]."))
 
 /datum/component/orbiter/proc/end_orbit(atom/movable/orbiter, refreshing=FALSE)
 	if(!orbiters[orbiter])

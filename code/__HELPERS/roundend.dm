@@ -184,12 +184,12 @@
 		client.verbs += /client/proc/lobbyooc
 
 /client/proc/show_game_over()
-	var/obj/screen/splash/credits/S = new(src, FALSE)
+	var/atom/movable/screen/splash/credits/S = new(src, FALSE)
 	S.Fade(FALSE,FALSE)
 	RollCredits()
 //	if(GLOB.credits_icons.len)
 //		for(var/i=0, i<=GLOB.credits_icons.len, i++)
-//			var/obj/screen/P = new()
+//			var/atom/movable/screen/P = new()
 //			P.layer = SPLASHSCREEN_LAYER+1
 //			P.appearance = GLOB.credits_icons
 //			screen += P
@@ -199,12 +199,9 @@
 
 	log_game("The round has ended.")
 
-	to_chat(world, "<BR><BR><BR><span class='reallybig'>So ends this tale of Roguetown.</span>")
+	to_chat(world, "<BR><BR><BR><span class='reallybig'>So ends this tale of Blackstone.</span>")
 	get_end_reason()
 
-#ifndef TESTSERVER
-	do_bot_thing_end()
-#endif
 	var/list/key_list = list()
 	for(var/client/C in GLOB.clients)
 		if(C.mob)
@@ -299,6 +296,7 @@
 	SSblackbox.Seal()
 
 	sleep(10 SECONDS)
+	SSvote.initiate_vote("map", "Blackstone players")
 	ready_for_reboot = TRUE
 	standard_reboot()
 
@@ -308,7 +306,7 @@
 	if(istype(SSticker.mode, /datum/game_mode/chaosmode))
 		var/datum/game_mode/chaosmode/C = SSticker.mode
 		if(C.check_for_lord)
-			if(!C.check_for_lord())
+			if(!C.check_for_lord(forced = TRUE))
 				end_reason = pick("Without a Monarch, they were doomed to become slaves of Zizo.",
 								"Without a Monarch, they were doomed to be eaten by nite creachers.",
 								"Without a Monarch, they were doomed to become victims of Gehenna.",
@@ -329,9 +327,9 @@
 
 
 	if(end_reason)
-		to_chat(world, "<span class='big bold'>[end_reason].</span>")
+		to_chat(world, span_bigbold("[end_reason]."))
 	else
-		to_chat(world, "<span class='big bold'>The town has managed to survive another week.</span>")
+		to_chat(world, span_bigbold("The town has managed to survive another week."))
 
 /datum/controller/subsystem/ticker/proc/gamemode_report()
 	var/list/all_teams = list()
@@ -357,7 +355,7 @@
 	var/currrent_category
 	var/datum/antagonist/previous_category
 
-	sortTim(all_antagonists, /proc/cmp_antag_category)
+	sortTim(all_antagonists, GLOBAL_PROC_REF(cmp_antag_category))
 
 	for(var/datum/antagonist/A in all_antagonists)
 		if(!A.show_in_roundend)
@@ -387,11 +385,6 @@
 	shit += "<br><font color='#af2323'><span class='bold'>Blood spilt:</span></font> [round(blood_lost / 100, 1)]L"
 	shit += "<br><font color='#36959c'><span class='bold'>TRIUMPH(s) Awarded:</span></font> [tri_gained]"
 	shit += "<br><font color='#a02fa4'><span class='bold'>TRIUMPH(s) Stolen:</span></font> [tri_lost * -1]"
-	shit += "<br><font color='#ffffff'><span class='bold'>Pleasures:</span></font> [cums]"
-//	if(cuckers.len)
-//		shit += "<br><font color='#4e488a'><span class='bold'>Adulterers:</span></font> "
-//		for(var/x in cuckers.len)
-//			shit += "[x]"
 	if(GLOB.confessors.len)
 		shit += "<br><font color='#93cac7'><span class='bold'>Confessors:</span></font> "
 		for(var/x in GLOB.confessors)
@@ -445,7 +438,7 @@
 		var/info = statspage ? "<a href='?action=openLink&link=[url_encode(statspage)][GLOB.round_id]'>[GLOB.round_id]</a>" : GLOB.round_id
 		parts += "[FOURSPACES]Round ID: <b>[info]</b>"
 	parts += "[FOURSPACES]Shift Duration: <B>[DisplayTimeText(world.time - SSticker.round_start_time)]</B>"
-	parts += "[FOURSPACES]Station Integrity: <B>[mode.station_was_nuked ? "<span class='redtext'>Destroyed</span>" : "[popcount["station_integrity"]]%"]</B>"
+	parts += "[FOURSPACES]Station Integrity: <B>[mode.station_was_nuked ? span_redtext("Destroyed") : "[popcount["station_integrity"]]%"]</B>"
 	var/total_players = GLOB.joined_player_list.len
 	if(total_players)
 		parts+= "[FOURSPACES]Total Population: <B>[total_players]</B>"
@@ -500,17 +493,17 @@
 			if(EMERGENCY_ESCAPED_OR_ENDGAMED)
 				if(!M.onCentCom() && !M.onSyndieBase())
 					parts += "<div class='panel stationborder'>"
-					parts += "<span class='marooned'>I managed to survive, but were marooned on [station_name()]...</span>"
+					parts += span_marooned("I managed to survive, but were marooned on [station_name()]...")
 				else
 					parts += "<div class='panel greenborder'>"
-					parts += "<span class='greentext'>I managed to survive the events on [station_name()] as [M.real_name].</span>"
+					parts += span_greentext("I managed to survive the events on [station_name()] as [M.real_name].")
 			else
 				parts += "<div class='panel greenborder'>"
-				parts += "<span class='greentext'>I managed to survive the events on [station_name()] as [M.real_name].</span>"
+				parts += span_greentext("I managed to survive the events on [station_name()] as [M.real_name].")
 
 		else
 			parts += "<div class='panel redborder'>"
-			parts += "<span class='redtext'>I did not survive the events on [station_name()]...</span>"
+			parts += span_redtext("I did not survive the events on [station_name()]...")
 	else
 		parts += "<div class='panel stationborder'>"
 	parts += "<br>"
@@ -579,7 +572,7 @@
 /datum/controller/subsystem/ticker/proc/medal_report()
 	if(GLOB.commendations.len)
 		var/list/parts = list()
-		parts += "<span class='header'>Medal Commendations:</span>"
+		parts += span_header("Medal Commendations:")
 		for (var/com in GLOB.commendations)
 			parts += com
 		return "<div class='panel stationborder'>[parts.Join("<br>")]</div>"
@@ -611,7 +604,7 @@
 	var/currrent_category
 	var/datum/antagonist/previous_category
 
-	sortTim(all_antagonists, /proc/cmp_antag_category)
+	sortTim(all_antagonists, GLOBAL_PROC_REF(cmp_antag_category))
 
 	for(var/datum/antagonist/A in all_antagonists)
 		if(!A.show_in_roundend)
@@ -647,7 +640,7 @@
 /datum/controller/subsystem/ticker/proc/give_show_playerlist_button(client/C)
 	set waitfor = 0
 	to_chat(C,"<a href='?src=[C];playerlistrogue=1'>* SHOW PLAYER LIST *</a>")
-	to_chat(C,"<a href='?src=[C];commendsomeone=1'>* Commend a Character *</a>")
+	C.commendsomeone(forced = TRUE)
 
 /datum/action/report
 	name = "Show roundend report"
@@ -711,15 +704,15 @@
 	var/count = 1
 	for(var/datum/objective/objective in objectives)
 		if(objective.check_completion())
-			objective_parts += "<b>Objective #[count]</b>: [objective.explanation_text] <span class='greentext'>Success!</span>"
+			objective_parts += "<b>[objective.flavor] #[count]</b>: [objective.explanation_text] <span class='greentext'>Success!</span>"
 		else
-			objective_parts += "<b>Objective #[count]</b>: [objective.explanation_text] <span class='redtext'>Fail.</span>"
+			objective_parts += "<b>[objective.flavor] #[count]</b>: [objective.explanation_text] <span class='redtext'>Fail.</span>"
 		count++
 	return objective_parts.Join("<br>")
 
 /datum/controller/subsystem/ticker/proc/save_admin_data()
 	if(IsAdminAdvancedProcCall())
-		to_chat(usr, "<span class='admin prefix'>Admin rank DB Sync blocked: Advanced ProcCall detected.</span>")
+		to_chat(usr, span_adminprefix("Admin rank DB Sync blocked: Advanced ProcCall detected."))
 		return
 	if(CONFIG_GET(flag/admin_legacy_system)) //we're already using legacy system so there's nothing to save
 		return
@@ -729,9 +722,7 @@
 	var/list/sql_admins = list()
 	for(var/i in GLOB.protected_admins)
 		var/datum/admins/A = GLOB.protected_admins[i]
-		var/sql_ckey = sanitizeSQL(A.target)
-		var/sql_rank = sanitizeSQL(A.rank.name)
-		sql_admins += list(list("ckey" = "'[sql_ckey]'", "rank" = "'[sql_rank]'"))
+		sql_admins += list(list("ckey" = A.target, "rank" = A.rank.name))
 	SSdbcore.MassInsert(format_table_name("admin"), sql_admins, duplicate_key = TRUE)
 	var/datum/DBQuery/query_admin_rank_update = SSdbcore.NewQuery("UPDATE [format_table_name("player")] p INNER JOIN [format_table_name("admin")] a ON p.ckey = a.ckey SET p.lastadminrank = a.rank")
 	query_admin_rank_update.Execute()
@@ -766,15 +757,20 @@
 			flags += "can_edit_flags"
 		if(!flags.len)
 			continue
-		var/sql_rank = sanitizeSQL(R.name)
 		var/flags_to_check = flags.Join(" != [R_EVERYTHING] AND ") + " != [R_EVERYTHING]"
-		var/datum/DBQuery/query_check_everything_ranks = SSdbcore.NewQuery("SELECT flags, exclude_flags, can_edit_flags FROM [format_table_name("admin_ranks")] WHERE rank = '[sql_rank]' AND ([flags_to_check])")
+		var/datum/DBQuery/query_check_everything_ranks = SSdbcore.NewQuery(
+			"SELECT flags, exclude_flags, can_edit_flags FROM [format_table_name("admin_ranks")] WHERE rank = :rank AND ([flags_to_check])",
+			list("rank" = R.name)
+		)
 		if(!query_check_everything_ranks.Execute())
 			qdel(query_check_everything_ranks)
 			return
 		if(query_check_everything_ranks.NextRow()) //no row is returned if the rank already has the correct flag value
 			var/flags_to_update = flags.Join(" = [R_EVERYTHING], ") + " = [R_EVERYTHING]"
-			var/datum/DBQuery/query_update_everything_ranks = SSdbcore.NewQuery("UPDATE [format_table_name("admin_ranks")] SET [flags_to_update] WHERE rank = '[sql_rank]'")
+			var/datum/DBQuery/query_update_everything_ranks = SSdbcore.NewQuery(
+				"UPDATE [format_table_name("admin_ranks")] SET [flags_to_update] WHERE rank = :rank",
+				list("rank" = R.name)
+			)
 			if(!query_update_everything_ranks.Execute())
 				qdel(query_update_everything_ranks)
 				return

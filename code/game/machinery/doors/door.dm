@@ -9,7 +9,7 @@
 	layer = OPEN_DOOR_LAYER
 	power_channel = ENVIRON
 	max_integrity = 350
-	armor = list("melee" = 30, "bullet" = 30, "laser" = 20, "energy" = 20, "bomb" = 10, "bio" = 100, "rad" = 100, "fire" = 80, "acid" = 70)
+	armor = list("blunt" = 30, "slash" = 30, "stab" = 30, "bullet" = 30, "laser" = 20, "energy" = 20, "bomb" = 10, "bio" = 100, "rad" = 100, "fire" = 80, "acid" = 70)
 	CanAtmosPass = ATMOS_PASS_DENSITY
 	flags_1 = PREVENT_CLICK_UNDER_1
 	damage_deflection = 10
@@ -42,13 +42,13 @@
 	. = ..()
 	if(red_alert_access)
 		if(GLOB.security_level >= SEC_LEVEL_RED)
-			. += "<span class='notice'>Due to a security threat, its access requirements have been lifted!</span>"
+			. += span_notice("Due to a security threat, its access requirements have been lifted!")
 		else
-			. += "<span class='notice'>In the event of a red alert, its access requirements will automatically lift.</span>"
+			. += span_notice("In the event of a red alert, its access requirements will automatically lift.")
 	if(!poddoor)
-		. += "<span class='notice'>Its maintenance panel is <b>screwed</b> in place.</span>"
+		. += span_notice("Its maintenance panel is <b>screwed</b> in place.")
 	if(safety_mode)
-		. += "<span class='notice'>It has labels indicating that it has an emergency mechanism to open it with <b>just your hands</b> if there's no power.</span>"
+		. += span_notice("It has labels indicating that it has an emergency mechanism to open it with <b>just your hands</b> if there's no power.")
 
 /obj/machinery/door/check_access_list(list/access_list)
 	if(red_alert_access && GLOB.security_level >= SEC_LEVEL_RED)
@@ -88,7 +88,7 @@
 
 /obj/machinery/door/proc/try_safety_unlock(mob/user)
 	if(safety_mode && !hasPower() && density)
-		to_chat(user, "<span class='notice'>I begin unlocking the airlock safety mechanism...</span>")
+		to_chat(user, span_notice("I begin unlocking the airlock safety mechanism..."))
 		if(do_after(user, 15 SECONDS, target = src))
 			try_to_crowbar(null, user)
 			return TRUE
@@ -244,12 +244,12 @@
 	if (. & EMP_PROTECT_SELF)
 		return
 	if(prob(20/severity) && (istype(src, /obj/machinery/door/airlock) || istype(src, /obj/machinery/door/window)) )
-		INVOKE_ASYNC(src, .proc/open)
+		INVOKE_ASYNC(src, PROC_REF(open))
 	if(prob(severity*10 - 20))
 		if(secondsElectrified == MACHINE_NOT_ELECTRIFIED)
 			secondsElectrified = MACHINE_ELECTRIFIED_PERMANENT
 			LAZYADD(shockedby, "\[[time_stamp()]\]EM Pulse")
-			addtimer(CALLBACK(src, .proc/unelectrify), 300)
+			addtimer(CALLBACK(src, PROC_REF(unelectrify)), 300)
 
 /obj/machinery/door/proc/unelectrify()
 	secondsElectrified = MACHINE_NOT_ELECTRIFIED
@@ -296,7 +296,7 @@
 	air_update_turf(1)
 	update_freelook_sight()
 	if(autoclose)
-		addtimer(CALLBACK(src, .proc/close), autoclose)
+		addtimer(CALLBACK(src, PROC_REF(close)), autoclose)
 	return 1
 
 /obj/machinery/door/proc/close()
@@ -338,7 +338,7 @@
 
 /obj/machinery/door/proc/crush()
 	for(var/mob/living/L in get_turf(src))
-		L.visible_message("<span class='warning'>[src] closes on [L], crushing [L.p_them()]!</span>", "<span class='danger'>[src] closes on you and crushes you!</span>")
+		L.visible_message(span_warning("[src] closes on [L], crushing [L.p_them()]!"), span_danger("[src] closes on you and crushes you!"))
 		if(isalien(L))  //For xenos
 			L.adjustBruteLoss(DOOR_CRUSH_DAMAGE * 1.5) //Xenos go into crit after aproximately the same amount of crushes as humans.
 			L.emote("roar")
@@ -364,7 +364,7 @@
 		close()
 
 /obj/machinery/door/proc/autoclose_in(wait)
-	addtimer(CALLBACK(src, .proc/autoclose), wait, TIMER_UNIQUE | TIMER_NO_HASH_WAIT | TIMER_OVERRIDE)
+	addtimer(CALLBACK(src, PROC_REF(autoclose)), wait, TIMER_UNIQUE | TIMER_NO_HASH_WAIT | TIMER_OVERRIDE)
 
 /obj/machinery/door/proc/requiresID()
 	return 1

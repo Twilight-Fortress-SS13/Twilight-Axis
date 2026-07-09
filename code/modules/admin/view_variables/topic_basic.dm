@@ -34,7 +34,7 @@
 			if (!C)
 				return
 			if(!target)
-				to_chat(usr, "<span class='warning'>The object you tried to expose to [C] no longer exists (nulled or hard-deled)</span>")
+				to_chat(usr, span_warning("The object you tried to expose to [C] no longer exists (nulled or hard-deled)"))
 				return
 			message_admins("[key_name_admin(usr)] Showed [key_name_admin(C)] a <a href='?_src_=vars;datumrefresh=[REF(target)]'>VV window</a>")
 			log_admin("Admin [key_name(usr)] Showed [key_name(C)] a VV window of a [target]")
@@ -51,11 +51,11 @@
 		if(!check_rights(NONE))
 			return
 		var/list/names = list()
-		var/list/componentsubtypes = sortList(subtypesof(/datum/component), /proc/cmp_typepaths_asc)
+		var/list/componentsubtypes = sortList(subtypesof(/datum/component), GLOBAL_PROC_REF(cmp_typepaths_asc))
 		names += "---Components---"
 		names += componentsubtypes
 		names += "---Elements---"
-		names += sortList(subtypesof(/datum/element), /proc/cmp_typepaths_asc)
+		names += sortList(subtypesof(/datum/element), GLOBAL_PROC_REF(cmp_typepaths_asc))
 		var/result = input(usr, "Choose a component/element to add","better know what ur fuckin doin pal") as null|anything in names
 		if(!usr || !result || result == "---Components---" || result == "---Elements---")
 			return
@@ -74,6 +74,6 @@
 			datumname = "element"
 			target.AddElement(arglist(lst))
 		log_admin("[key_name(usr)] has added [result] [datumname] to [key_name(src)].")
-		message_admins("<span class='notice'>[key_name_admin(usr)] has added [result] [datumname] to [key_name_admin(src)].</span>")
+		message_admins(span_notice("[key_name_admin(usr)] has added [result] [datumname] to [key_name_admin(src)]."))
 	if(href_list[VV_HK_CALLPROC])
 		usr.client.callproc_datum(target)

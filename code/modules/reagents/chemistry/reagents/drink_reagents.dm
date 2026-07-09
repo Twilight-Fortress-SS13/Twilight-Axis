@@ -169,7 +169,7 @@
 
 /datum/reagent/consumable/superlaughter/on_mob_life(mob/living/carbon/M)
 	if(prob(30))
-		M.visible_message("<span class='danger'>[M] bursts out into a fit of uncontrollable laughter!</span>", "<span class='danger'>I burst out in a fit of uncontrollable laughter!</span>")
+		M.visible_message(span_danger("[M] bursts out into a fit of uncontrollable laughter!"), span_danger("I burst out in a fit of uncontrollable laughter!"))
 		M.Stun(5)
 		SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "chemical_laughter", /datum/mood_event/chemical_superlaughter)
 	..()
@@ -209,7 +209,8 @@
 		var/mob/living/carbon/human/H = M
 		if(!HAS_TRAIT(H, TRAIT_NOHUNGER))
 			H.adjust_hydration(10)
-		M.blood_volume = min(M.blood_volume+10, BLOOD_VOLUME_MAXIMUM)
+		if(H.blood_volume < BLOOD_VOLUME_NORMAL)
+			H.blood_volume = min(H.blood_volume+10, BLOOD_VOLUME_NORMAL)
 	..()
 
 /datum/reagent/consumable/soymilk
@@ -312,7 +313,7 @@
 
 /datum/reagent/consumable/tea/arnold_palmer/on_mob_life(mob/living/carbon/M)
 	if(prob(5))
-		to_chat(M, "<span class='notice'>[pick("You remember to square your shoulders.","You remember to keep your head down.","You can't decide between squaring your shoulders and keeping your head down.","You remember to relax.","You think about how someday you'll get two strokes off your golf game.")]</span>")
+		to_chat(M, span_notice("[pick("You remember to square your shoulders.","You remember to keep your head down.","You can't decide between squaring your shoulders and keeping your head down.","You remember to relax.","You think about how someday you'll get two strokes off your golf game.")]"))
 	..()
 	. = 1
 

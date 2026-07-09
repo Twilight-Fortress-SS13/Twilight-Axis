@@ -138,7 +138,7 @@
 			if (!user.transferItemToLoc(W,src))
 				return
 			diskette = W
-			to_chat(user, "<span class='notice'>I insert [W].</span>")
+			to_chat(user, span_notice("I insert [W]."))
 			playsound(src, 'sound/blank.ogg', 50, FALSE)
 			updateUsrDialog()
 	else if(W.tool_behaviour == TOOL_MULTITOOL)
@@ -177,7 +177,7 @@
 		else
 			dat += "<a href='byond://?src=[REF(src)];task=stopautoprocess'>Stop autoprocess</a>"
 	else
-		dat += "<span class='linkOff'>Autoprocess</span>"
+		dat += span_linkoff("Autoprocess")
 	dat += "<h3>Cloning Pod Status</h3>"
 	dat += "<div class='statusDisplay'>[temp]&nbsp;</div>"
 	switch(menu)
@@ -214,7 +214,7 @@
 					dat += "<a href='byond://?src=[REF(src)];scan=1;body_only=1'>Body-Only Scan</a>"
 					dat += "<br><a href='byond://?src=[REF(src)];lock=1'>[scanner.locked ? "Unlock Scanner" : "Lock Scanner"]</a>"
 				else
-					dat += "<span class='linkOff'>Start Scan</span>"
+					dat += span_linkoff("Start Scan")
 
 			// Database
 			dat += "<h3>Database Functions</h3>"
@@ -282,7 +282,7 @@
 					if(can_load)
 						dat += "<br /><a href='byond://?src=[REF(src)];disk=load'>Load From Disk</a>"
 					else
-						dat += "<span class='linkOff'>Cannot Load From Disk: Access Denied</span>"
+						dat += span_linkoff("Cannot Load From Disk: Access Denied")
 					if(diskette.fields["SE"])
 						if(!include_se)
 							dat += "<br /><a href='byond://?src=[REF(src)];task=include_se'>Currently Excluding SE</a>"
@@ -357,7 +357,7 @@
 		playsound(src, 'sound/blank.ogg', 50, FALSE)
 		say("Initiating scan...")
 
-		addtimer(CALLBACK(src, .proc/do_scan, usr, body_only), 2 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(do_scan), usr, body_only), 2 SECONDS)
 
 		//No locking an open scanner.
 	else if ((href_list["lock"]) && !isnull(scanner) && scanner.is_operational())
@@ -574,8 +574,8 @@
 		dna.delete_species = FALSE
 		R.fields["mrace"] = dna.species
 	else
-		var/datum/species/rando_race = pick(GLOB.roundstart_races)
-		R.fields["mrace"] = rando_race.type
+		var/rando_race = pick(get_selectable_species())
+		R.fields["mrace"] = GLOB.species_list[rando_race]
 
 	R.fields["name"] = mob_occupant.real_name
 	R.fields["id"] = copytext(md5(mob_occupant.real_name), 2, 6)

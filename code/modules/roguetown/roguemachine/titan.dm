@@ -1,5 +1,15 @@
 GLOBAL_LIST_EMPTY(outlawed_players)
 GLOBAL_LIST_EMPTY(lord_decrees)
+GLOBAL_LIST_INIT(laws_of_the_land, initialize_laws_of_the_land())
+
+/proc/initialize_laws_of_the_land()
+	var/list/laws = strings("laws_of_the_land.json", "lawsets")
+	var/list/lawsets_weighted = list()
+	for(var/lawset_name as anything in laws)
+		var/list/lawset = laws[lawset_name]
+		lawsets_weighted[lawset_name] = lawset["weight"]
+	var/chosen_lawset = pickweight(lawsets_weighted)
+	return laws[chosen_lawset]["laws"]
 
 /obj/structure/roguemachine/titan
 	name = "throat"
@@ -64,7 +74,7 @@ GLOBAL_LIST_EMPTY(lord_decrees)
 	switch(mode)
 		if(0)
 			if(findtext(message2recognize, "help"))
-				say("My commands are: Make Decree, Make Announcement, Set Taxes, Declare Outlaw, Summon Crown, Nevermind")
+				say("My commands are: Make Decree, Make Announcement, Set Taxes, Declare Outlaw, Summon Crown, Make Law, Remove Law, Purge Laws, Nevermind")
 				playsound(src, 'sound/misc/machinelong.ogg', 100, FALSE, -1)
 			if(findtext(message2recognize, "make announcement"))
 				if(nocrown)
@@ -90,6 +100,50 @@ GLOBAL_LIST_EMPTY(lord_decrees)
 				say("Speak and they will obey.")
 				playsound(src, 'sound/misc/machineyes.ogg', 100, FALSE, -1)
 				mode = 2
+				return
+			if(findtext(message2recognize, "make law"))
+				if(!SScommunications.can_announce(H))
+					say("I must gather my strength!")
+					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+					return
+				if(notlord || nocrown)
+					say("You are not my master!")
+					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+					return
+				say("Speak and they will obey.")
+				playsound(src, 'sound/misc/machineyes.ogg', 100, FALSE, -1)
+				mode = 4
+				return
+			if(findtext(message2recognize, "remove law"))
+				if(!SScommunications.can_announce(H))
+					say("I must gather my strength!")
+					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+					return
+				if(notlord || nocrown)
+					say("You are not my master!")
+					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+					return
+				var/message_clean = replacetext(message2recognize, "remove law", "")
+				var/law_index = text2num(message_clean) || 0
+				if(!law_index || !GLOB.laws_of_the_land[law_index])
+					say("That law doesn't exist!")
+					return
+				say("That law shall be gone!")
+				playsound(src, 'sound/misc/machineyes.ogg', 100, FALSE, -1)
+				remove_law(law_index)
+				return
+			if(findtext(message2recognize, "purge laws"))
+				if(!SScommunications.can_announce(H))
+					say("I must gather my strength!")
+					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+					return
+				if(notlord || nocrown)
+					say("You are not my master!")
+					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+					return
+				say("All laws shall be purged!")
+				playsound(src, 'sound/misc/machineyes.ogg', 100, FALSE, -1)
+				purge_laws()
 				return
 			if(findtext(message2recognize, "declare outlaw"))
 				if(notlord || nocrown)
@@ -136,7 +190,12 @@ GLOBAL_LIST_EMPTY(lord_decrees)
 			make_decree(H, raw_message)
 			mode = 0
 		if(3)
-			make_outlaw(H, raw_message)
+			declare_outlaw(H, raw_message)
+			mode = 0
+		if(4)
+			if(!SScommunications.can_announce(speaker))
+				return
+			make_law(raw_message)
 			mode = 0
 
 /obj/structure/roguemachine/titan/proc/give_tax_popup(mob/living/carbon/human/user)
@@ -150,7 +209,7 @@ GLOBAL_LIST_EMPTY(lord_decrees)
 			return
 		newtax = CLAMP(newtax, 1, 99)
 		SStreasury.tax_value = newtax / 100
-		priority_announce("The new tax in Rockhill shall be [newtax] percent.", "The Generous Lord Decrees", 'sound/misc/alert.ogg', "Captain")
+		priority_announce("The new tax in Rockhill shall be [newtax] percent.", "The Generous Lord Decrees", pick('sound/misc/royal_decree.ogg', 'sound/misc/royal_decree2.ogg'), "Captain")
 
 
 /obj/structure/roguemachine/titan/proc/make_announcement(mob/living/user, raw_message)
@@ -162,7 +221,7 @@ GLOBAL_LIST_EMPTY(lord_decrees)
 		if(istype(C))
 			if(P.rev_team)
 				if(P.rev_team.members.len < 3)
-					to_chat(user, "<span class='warning'>I need more folk on my side to declare victory.</span>")
+					to_chat(user, span_warning("I need more folk on my side to declare victory."))
 				else
 					for(var/datum/objective/prebel/obj in user.mind.get_all_objectives())
 						obj.completed = TRUE
@@ -181,7 +240,7 @@ GLOBAL_LIST_EMPTY(lord_decrees)
 		if(istype(C))
 			if(P.rev_team)
 				if(P.rev_team.members.len < 3)
-					to_chat(user, "<span class='warning'>I need more folk on my side to declare victory.</span>")
+					to_chat(user, span_warning("I need more folk on my side to declare victory."))
 				else
 					for(var/datum/objective/prebel/obj in user.mind.get_all_objectives())
 						obj.completed = TRUE
@@ -191,21 +250,20 @@ GLOBAL_LIST_EMPTY(lord_decrees)
 	GLOB.lord_decrees += raw_message
 	SScommunications.make_announcement(user, TRUE, raw_message)
 
-/obj/structure/roguemachine/titan/proc/make_outlaw(mob/living/user, raw_message)
+/obj/structure/roguemachine/titan/proc/declare_outlaw(mob/living/user, raw_message)
 	if(!SScommunications.can_announce(user))
 		return
 	if(user.job)
-		var/datum/job/J = SSjob.GetJob(user.job)
-		var/used_title = J.title
-		if(user.gender == FEMALE && J.f_title)
-			used_title = J.f_title
-		if(used_title != "King")
+		if(!istype(SSjob.GetJob(user.job), /datum/job/roguetown/lord))
 			return
 	else
 		return
+	return make_outlaw(raw_message)
+
+/proc/make_outlaw(raw_message)
 	if(raw_message in GLOB.outlawed_players)
 		GLOB.outlawed_players -= raw_message
-		priority_announce("[raw_message] is no longer an outlaw in Rockhill lands.", "The King Decrees", 'sound/misc/alert.ogg', "Captain")
+		priority_announce("[raw_message] is no longer an outlaw in Rockhill lands.", "The King Decrees", 'sound/misc/royal_decree.ogg', "Captain")
 		return FALSE
 	var/found = FALSE
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
@@ -214,4 +272,20 @@ GLOBAL_LIST_EMPTY(lord_decrees)
 	if(!found)
 		return FALSE
 	GLOB.outlawed_players += raw_message
-	priority_announce("[raw_message] has been declared an outlaw and must be captured or slain.", "The King Decrees", 'sound/misc/alert.ogg', "Captain")
+	priority_announce("[raw_message] has been declared an outlaw and must be captured or slain.", "The King Decrees", 'sound/misc/royal_decree2.ogg', "Captain")
+	return TRUE
+
+/proc/make_law(raw_message)
+	GLOB.laws_of_the_land += raw_message
+	priority_announce("[length(GLOB.laws_of_the_land)]. [raw_message]", "A LAW IS DECLARED", pick('sound/misc/new_law.ogg', 'sound/misc/new_law2.ogg'), "Captain")
+
+/proc/remove_law(law_index)
+	if(!GLOB.laws_of_the_land[law_index])
+		return
+	var/law_text = GLOB.laws_of_the_land[law_index]
+	GLOB.laws_of_the_land -= law_text
+	priority_announce("[law_index]. [law_text]", "A LAW IS ABOLISHED", pick('sound/misc/new_law.ogg', 'sound/misc/new_law2.ogg'), "Captain")
+
+/proc/purge_laws()
+	GLOB.laws_of_the_land = list()
+	priority_announce("All laws of the land have been purged!", "LAWS PURGED", 'sound/misc/lawspurged.ogg', "Captain")

@@ -58,7 +58,7 @@
 		qdel(src)
 		return
 	if(ismegafauna(M))
-		M.visible_message("<span class='warning'>[M] glows fiercely as the containment field flickers out!</span>")
+		M.visible_message(span_warning("[M] glows fiercely as the containment field flickers out!"))
 		FG1.calc_power(INFINITY) //rip that 'containment' field
 		M.adjustHealth(-M.obj_damage)
 	else
@@ -122,9 +122,9 @@
 		if(prob(20))
 			user.Stun(40)
 		user.take_overall_damage(0, shock_damage)
-		user.visible_message("<span class='danger'>[user.name] was shocked by the [src.name]!</span>", \
-		"<span class='danger'>Energy pulse detected, system damaged!</span>", \
-		"<span class='hear'>I hear an electrical crack.</span>")
+		user.visible_message(span_danger("[user.name] was shocked by the [src.name]!"), \
+		span_danger("Energy pulse detected, system damaged!"), \
+		span_hear("I hear an electrical crack."))
 
 	user.updatehealth()
 	bump_field(user)
@@ -139,4 +139,4 @@
 	do_sparks(5, TRUE, AM.loc)
 	var/atom/target = get_edge_target_turf(AM, get_dir(src, get_step_away(AM, src)))
 	AM.throw_at(target, 200, 4)
-	addtimer(CALLBACK(src, .proc/clear_shock), 5)
+	addtimer(CALLBACK(src, PROC_REF(clear_shock)), 5)

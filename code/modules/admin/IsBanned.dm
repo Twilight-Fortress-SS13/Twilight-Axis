@@ -41,8 +41,8 @@ GLOBAL_VAR(last_connection)
 			if (admin)
 				log_admin("The admin [key] has been allowed to bypass the whitelist")
 				if (message)
-					message_admins("<span class='adminnotice'>The admin [key] has been allowed to bypass the whitelist</span>")
-					addclientmessage(ckey,"<span class='adminnotice'>I have been allowed to bypass the whitelist</span>")
+					message_admins(span_adminnotice("The admin [key] has been allowed to bypass the whitelist"))
+					addclientmessage(ckey,span_adminnotice("I have been allowed to bypass the whitelist"))
 			else
 				log_access("Failed Login: [key] - Not on whitelist")
 				return list("reason"="whitelist", "desc" = "\nBecome whitelisted! discord.gg/bx9c7ha5Qk")
@@ -62,8 +62,8 @@ GLOBAL_VAR(last_connection)
 			if (admin)
 				log_admin("The admin [key] has been allowed to bypass the blacklist")
 				if (message)
-					message_admins("<span class='adminnotice'>The admin [key] has been allowed to bypass the blacklist</span>")
-					addclientmessage(ckey,"<span class='adminnotice'>I have been allowed to bypass the blacklist</span>")
+					message_admins(span_adminnotice("The admin [key] has been allowed to bypass the blacklist"))
+					addclientmessage(ckey,span_adminnotice("I have been allowed to bypass the blacklist"))
 			else
 				log_access("Failed Login: [key] - Blacklisted")
 				return list("reason"="blacklist", "desc" = "\nSomething went wrong. Contact the Game Master.")
@@ -114,7 +114,7 @@ GLOBAL_VAR(last_connection)
 						log_admin(msg)
 						if (message)
 							message_admins(msg)
-							addclientmessage(ckey,"<span class='adminnotice'>Admin [key] has been allowed to bypass a matching non-admin ban on [i["key"]] [i["ip"]]-[i["computerid"]].</span>")
+							addclientmessage(ckey,span_adminnotice("Admin [key] has been allowed to bypass a matching non-admin ban on [i["key"]] [i["ip"]]-[i["computerid"]]."))
 						continue
 				var/expires = "This is a permanent ban."
 				if(i["expiration_time"])
@@ -140,7 +140,7 @@ GLOBAL_VAR(last_connection)
 			return
 		GLOB.stickybanadminexemptions[ckey] = world.time
 		stoplag() // sleep a byond tick
-		GLOB.stickbanadminexemptiontimerid = addtimer(CALLBACK(GLOBAL_PROC, /proc/restore_stickybans), 5 SECONDS, TIMER_STOPPABLE|TIMER_UNIQUE|TIMER_OVERRIDE)
+		GLOB.stickbanadminexemptiontimerid = addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(restore_stickybans)), 5 SECONDS, TIMER_STOPPABLE|TIMER_UNIQUE|TIMER_OVERRIDE)
 		return
 	var/list/ban = ..()	//default pager ban stuff
 
@@ -226,11 +226,19 @@ GLOBAL_VAR(last_connection)
 		if (ban["fromdb"])
 			if(SSdbcore.Connect())
 				INVOKE_ASYNC(SSdbcore, /datum/controller/subsystem/dbcore/proc.QuerySelect, list(
-					SSdbcore.NewQuery("INSERT INTO [format_table_name("stickyban_matched_ckey")] (matched_ckey, stickyban) VALUES ('[sanitizeSQL(ckey)]', '[sanitizeSQL(bannedckey)]') ON DUPLICATE KEY UPDATE last_matched = now()"),
-					SSdbcore.NewQuery("INSERT INTO [format_table_name("stickyban_matched_ip")] (matched_ip, stickyban) VALUES ( INET_ATON('[sanitizeSQL(address)]'), '[sanitizeSQL(bannedckey)]') ON DUPLICATE KEY UPDATE last_matched = now()"),
-					SSdbcore.NewQuery("INSERT INTO [format_table_name("stickyban_matched_cid")] (matched_cid, stickyban) VALUES ('[sanitizeSQL(computer_id)]', '[sanitizeSQL(bannedckey)]') ON DUPLICATE KEY UPDATE last_matched = now()")
+					SSdbcore.NewQuery(
+						"INSERT INTO [format_table_name("stickyban_matched_ckey")] (matched_ckey, stickyban) VALUES (:ckey, :bannedckey) ON DUPLICATE KEY UPDATE last_matched = now()",
+						list("ckey" = ckey, "bannedckey" = bannedckey)
+					),
+					SSdbcore.NewQuery(
+						"INSERT INTO [format_table_name("stickyban_matched_ip")] (matched_ip, stickyban) VALUES (INET_ATON(:address), :bannedckey) ON DUPLICATE KEY UPDATE last_matched = now()",
+						list("address" = address, "bannedckey" = bannedckey)
+					),
+					SSdbcore.NewQuery(
+						"INSERT INTO [format_table_name("stickyban_matched_cid")] (matched_cid, stickyban) VALUES (:computer_id, :bannedckey) ON DUPLICATE KEY UPDATE last_matched = now()",
+						list("computer_id" = computer_id, "bannedckey" = bannedckey)
+					)
 				), FALSE, TRUE)
-
 
 		//byond will not trigger isbanned() for "global" host bans,
 		//ie, ones where the "apply to this game only" checkbox is not checked (defaults to not checked)
@@ -238,12 +246,12 @@ GLOBAL_VAR(last_connection)
 		if (admin)
 			log_admin("The admin [key] has been allowed to bypass a matching host/sticky ban on [bannedckey]")
 			if (message)
-				message_admins("<span class='adminnotice'>The admin [key] has been allowed to bypass a matching host/sticky ban on [bannedckey]</span>")
-				addclientmessage(ckey,"<span class='adminnotice'>I have been allowed to bypass a matching host/sticky ban on [bannedckey]</span>")
+				message_admins(span_adminnotice("The admin [key] has been allowed to bypass a matching host/sticky ban on [bannedckey]"))
+				addclientmessage(ckey,span_adminnotice("I have been allowed to bypass a matching host/sticky ban on [bannedckey]"))
 			return null
 
 		if (C) //user is already connected!.
-			to_chat(C, "<span class='redtext'>I are about to get disconnected for matching a sticky ban after you connected. If this turns out to be the ban evasion detection system going haywire, we will automatically detect this and revert the matches. if you feel that this is the case, please wait EXACTLY 6 seconds then reconnect using file -> reconnect to see if the match was automatically reversed.</span>")
+			to_chat(C, span_redtext("I are about to get disconnected for matching a sticky ban after you connected. If this turns out to be the ban evasion detection system going haywire, we will automatically detect this and revert the matches. if you feel that this is the case, please wait EXACTLY 6 seconds then reconnect using file -> reconnect to see if the match was automatically reversed."))
 
 		var/desc = ""
 		. = list("reason" = "Stickyban", "desc" = desc)
@@ -276,16 +284,6 @@ GLOBAL_VAR(last_connection)
 #ifdef TESTSERVER
 	return FALSE
 #endif
-	if(!check_whitelist(ckey))
-//		if(text2num(CheckJoinDate(ckey)) > 2021)
-		if(holder)
-			return FALSE
-		else
-			if(!check_bypassage(ckey))
-				var/plevel = patreonlevel()
-				if(plevel < 1 || !plevel)
-					if(!discord_name())
-						return TRUE
 
 #undef STICKYBAN_MAX_MATCHES
 #undef STICKYBAN_MAX_EXISTING_USER_MATCHES

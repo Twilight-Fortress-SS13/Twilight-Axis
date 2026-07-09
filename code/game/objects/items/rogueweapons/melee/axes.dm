@@ -1,9 +1,10 @@
 /obj/item/rogueweapon/stoneaxe
-	slot_flags = ITEM_SLOT_HIP
-	force = 12
+	slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+	force = 18
+	force_wielded = 20
 	possible_item_intents = list(/datum/intent/axe/chop/stone)
 	name = "stone axe"
-	desc = ""
+	desc = "A rough stone axe. Badly balanced."
 	icon_state = "stoneaxe"
 	icon = 'icons/roguetown/weapons/32.dmi'
 	item_state = "axe"
@@ -12,8 +13,9 @@
 	//dropshrink = 0.75
 	parrysound = list('sound/combat/parry/wood/parrywood (1).ogg', 'sound/combat/parry/wood/parrywood (2).ogg', 'sound/combat/parry/wood/parrywood (3).ogg')
 	swingsound = BLADEWOOSH_MED
-	associated_skill = /datum/skill/combat/axesmaces
+	associated_skill = /datum/skill/combat/axes
 	max_blade_int = 100
+	minstr = 8
 	wdefense = 1
 	w_class = WEIGHT_CLASS_BULKY
 	wlength = WLENGTH_SHORT
@@ -82,7 +84,9 @@
 	attack_verb = list("cuts", "slashes")
 	hitsound = list('sound/combat/hits/bladed/smallslash (1).ogg', 'sound/combat/hits/bladed/smallslash (2).ogg', 'sound/combat/hits/bladed/smallslash (3).ogg')
 	animname = "cut"
+	penfactor = 10
 	chargetime = 0
+	item_d_type = "slash"
 
 /datum/intent/axe/chop
 	name = "chop"
@@ -91,18 +95,27 @@
 	attack_verb = list("chops", "hacks")
 	animname = "chop"
 	hitsound = list('sound/combat/hits/bladed/genchop (1).ogg', 'sound/combat/hits/bladed/genchop (2).ogg', 'sound/combat/hits/bladed/genchop (3).ogg')
-	penfactor = 10
+	penfactor = 20
 	swingdelay = 10
+	item_d_type = "slash"
+
+/datum/intent/axe/chop/battle
+	penfactor = 70
+	damfactor = 1.2 //36 on battleaxe
+
+/datum/intent/axe/cut/battle
+	penfactor = 30
 
 /obj/item/rogueweapon/stoneaxe/battle
-	slot_flags = ITEM_SLOT_HIP
-	force = 33
-	possible_item_intents = list(/datum/intent/axe/cut,/datum/intent/axe/chop)
+	force = 25
+	force_wielded = 30
+	possible_item_intents = list(/datum/intent/axe/cut/battle, /datum/intent/axe/chop/battle)
 	name = "battle axe"
+	desc = "A steel battleaxe of war. Has a wicked edge."
 	icon_state = "battleaxe"
 	max_blade_int = 300
 	smeltresult = /obj/item/ingot/steel
-	gripped_intents = list(/datum/intent/axe/cut,/datum/intent/axe/chop)
+	gripped_intents = list(/datum/intent/axe/cut/battle ,/datum/intent/axe/chop/battle)
 	minstr = 12
 	wdefense = 4
 
@@ -118,19 +131,36 @@
 	return ..()
 
 /obj/item/rogueweapon/stoneaxe/woodcut
-	slot_flags = ITEM_SLOT_HIP
-	force = 18
-	possible_item_intents = list(/datum/intent/axe/cut,/datum/intent/axe/chop)
 	name = "axe"
+	force = 20
+	force_wielded = 26
+	possible_item_intents = list(/datum/intent/axe/cut,/datum/intent/axe/chop)
+	desc = "A regular iron woodcutting axe."
 	icon_state = "axe"
 	max_blade_int = 400
 	smeltresult = /obj/item/ingot/iron
 	gripped_intents = list(/datum/intent/axe/cut,/datum/intent/axe/chop)
 	wdefense = 2
 
+/obj/item/rogueweapon/stoneaxe/handaxe
+	force = 19
+	possible_item_intents = list(/datum/intent/axe/cut,/datum/intent/axe/chop)
+	name = "hatchet"
+	desc = "An iron hand axe."
+	icon_state = "hatchet"
+	minstr = 1
+	dropshrink = 0.75
+	max_blade_int = 400
+	smeltresult = /obj/item/ingot/iron
+	gripped_intents = null
+	wdefense = 2
+
 /obj/item/rogueweapon/stoneaxe/woodcut/steel
 	icon_state = "saxe"
-	force = 20
+	force = 22
+	force_wielded = 28
+	desc = "A steel woodcutting axe. Performs much better than its iron counterpart."
+	force = 26
 	max_blade_int = 500
 	smeltresult = /obj/item/ingot/steel
 	wdefense = 3

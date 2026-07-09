@@ -1,4 +1,4 @@
-/datum/round_event_control/rogue/worldsiege
+/*/datum/round_event_control/rogue/worldsiege
 	name = "skellyworldsiege"
 	typepath = /datum/round_event/rogue/worldsiege
 	weight = 99
@@ -37,7 +37,7 @@
 		var/datum/game_mode/chaosmode/C = SSticker.mode
 		if(istype(C))
 			C.skeletons = TRUE
-			addtimer(CALLBACK(C, /datum/game_mode/chaosmode/.proc/reset_skeletons), rand(4 MINUTES, 8 MINUTES))
+			addtimer(CALLBACK(C, TYPE_PROC_REF(/datum/game_mode/chaosmode, reset_skeletons)), rand(4 MINUTES, 8 MINUTES))
 			for(var/mob/dead/observer/O in GLOB.player_list)
-				addtimer(CALLBACK(O, /mob/dead/observer/.proc/horde_respawn), 1)
-	return
+				addtimer(CALLBACK(O, TYPE_PROC_REF(/mob/dead/observer, horde_respawn)), 1)
+	return*/

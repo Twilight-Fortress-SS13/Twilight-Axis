@@ -62,7 +62,7 @@
 	..()
 	update_icon()
 
-
+/* Eyes that glow in the dark. They float over kybraxor pits at the moment.
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/update_icon()
 	cut_overlays()
 	..()
@@ -70,7 +70,7 @@
 		var/mutable_appearance/eye_lights = mutable_appearance(icon, "vve")
 		eye_lights.plane = 19
 		eye_lights.layer = 19
-		add_overlay(eye_lights)
+		add_overlay(eye_lights)*/
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/get_sound(input)
 	switch(input)
@@ -114,7 +114,7 @@
 			return "nose"
 		if(BODY_ZONE_PRECISE_MOUTH)
 			return "mouth"
-		if(BODY_ZONE_PRECISE_HAIR)
+		if(BODY_ZONE_PRECISE_SKULL)
 			return "head"
 		if(BODY_ZONE_PRECISE_EARS)
 			return "head"

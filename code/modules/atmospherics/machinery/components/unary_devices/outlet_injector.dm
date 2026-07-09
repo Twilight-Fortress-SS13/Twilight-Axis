@@ -124,7 +124,7 @@
 		var/datum/gas_mixture/air_contents = airs[1]
 		volume_rate = CLAMP(number, 0, air_contents.volume)
 
-	addtimer(CALLBACK(src, .proc/broadcast_status), 2)
+	addtimer(CALLBACK(src, PROC_REF(broadcast_status)), 2)
 
 	if(!("status" in signal.data)) //do not update_icon
 		update_icon()
@@ -174,7 +174,7 @@
 /obj/machinery/atmospherics/components/unary/outlet_injector/can_unwrench(mob/user)
 	. = ..()
 	if(. && on && is_operational())
-		to_chat(user, "<span class='warning'>I cannot unwrench [src], turn it off first!</span>")
+		to_chat(user, span_warning("I cannot unwrench [src], turn it off first!"))
 		return FALSE
 
 // mapping

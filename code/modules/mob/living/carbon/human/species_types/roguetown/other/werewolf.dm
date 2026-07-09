@@ -6,10 +6,26 @@
 	var/list/stored_experience
 
 /datum/species/werewolf
-	name = "werewolf"
+	name = "verewolf"
 	id = "werewolf"
 	species_traits = list(NO_UNDERWEAR,NOEYESPRITES)
-	inherent_traits = list(TRAIT_NOFATSTAM,TRAIT_RESISTHEAT,TRAIT_RESISTCOLD,TRAIT_RESISTHIGHPRESSURE,TRAIT_RESISTLOWPRESSURE,TRAIT_CHUNKYFINGERS,TRAIT_RADIMMUNE,TRAIT_NODISMEMBER)
+	inherent_traits = list(
+		TRAIT_STRONGBITE,
+		TRAIT_ZJUMP,
+		TRAIT_NOFALLDAMAGE1,
+		TRAIT_NOROGSTAM,
+		TRAIT_BASHDOORS,
+		TRAIT_SHOCKIMMUNE,
+		TRAIT_STEELHEARTED,
+		TRAIT_BREADY,
+		TRAIT_TOXIMMUNE,
+		TRAIT_ORGAN_EATER,
+		TRAIT_NASTY_EATER,
+		TRAIT_NOSTINK,
+		TRAIT_CRITICAL_RESISTANCE,
+		TRAIT_IGNOREDAMAGESLOWDOWN,
+		TRAIT_IGNORESLOWDOWN
+	)
 	inherent_biotypes = MOB_HUMANOID
 	armor = 30
 	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_R, SLOT_BACK_L, SLOT_S_STORE)
@@ -26,9 +42,9 @@
 /datum/species/werewolf/send_voice(mob/living/carbon/human/H)
 	playsound(get_turf(H), pick('sound/vo/mobs/wwolf/wolftalk1.ogg','sound/vo/mobs/wwolf/wolftalk2.ogg'), 100, TRUE, -1)
 
-/datum/species/werewolf/regenerate_icons(var/mob/living/carbon/human/H)
+/datum/species/werewolf/regenerate_icons(mob/living/carbon/human/H)
 	H.icon = 'icons/roguetown/mob/monster/werewolf.dmi'
-	H.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB, /datum/intent/unarmed/wwolf)
+	H.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
 	if(H.gender == MALE)
 		H.icon_state = "wwolf_m"
 	else
@@ -38,11 +54,11 @@
 
 /datum/species/werewolf/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
-	RegisterSignal(C, COMSIG_MOB_SAY, .proc/handle_speech)
+	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 	C.remove_all_languages()
 	C.grant_language(/datum/language/beast)
 
-/datum/species/werewolf/update_damage_overlays(var/mob/living/carbon/human/H)
+/datum/species/werewolf/update_damage_overlays(mob/living/carbon/human/H)
 	H.remove_overlay(DAMAGE_LAYER)
 	var/list/hands = list()
 	var/mutable_appearance/inhand_overlay = mutable_appearance("[H.icon_state]-dam", layer=-DAMAGE_LAYER)
@@ -75,4 +91,4 @@
 	return TRUE
 
 /datum/species/werewolf/random_name(gender,unique,lastname)
-	return "WEREVOLF"
+	return "VEREWOLF"

@@ -302,11 +302,11 @@
 
 /obj/item/multitool/field_debug/attack_self(mob/user)
 	operating = !operating
-	to_chat(user, "<span class='notice'>I turn [src] [operating? "on":"off"].</span>")
+	to_chat(user, span_notice("I turn [src] [operating? "on":"off"]."))
 	UnregisterSignal(listeningTo, COMSIG_MOVABLE_MOVED)
 	listeningTo = null
 	if(!istype(current) && operating)
-		RegisterSignal(user, COMSIG_MOVABLE_MOVED, .proc/on_mob_move)
+		RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(on_mob_move))
 		listeningTo = user
 		setup_debug_field()
 	else if(!operating)

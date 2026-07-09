@@ -1,7 +1,7 @@
 /datum/game_mode/roguewar/proc/get_team()
 
-/*
 
+/* 
 /datum/game_mode/roguewar
 	name = "chaosmode"
 	config_tag = "chaosmode"
@@ -101,7 +101,7 @@
 			missing_lord_time = world.time
 		if(world.time > missing_lord_time + 10 MINUTES)
 			missing_lord_time = world.time
-			addomen("nolord")
+			addomen(OMEN_NOLORD)
 		return FALSE
 	else
 		return TRUE
@@ -120,10 +120,10 @@
 	"Knight",
 	"Merchant",
 	"Gatemaster",
-	"Sheriff",
-	"Witch Hunter",
+	"Guard Captain",
+	"Inquisitor",
 	"Village Elder",
-	"Town Guard")
+	"Watchman")
 	var/num_bandits = 0
 	if(num_players() >= 10)
 		num_bandits = CLAMP(round(num_players() / 10), 1, 4)
@@ -216,7 +216,7 @@
 						found = FALSE
 					if(rebelguy.assigned_role in GLOB.church_positions)
 						found = FALSE
-					if(rebelguy.assigned_role in GLOB.serf_positions)
+					if(rebelguy.assigned_role in GLOB.yeoman_positions)
 						found = FALSE
 					if(!found)
 						continue
@@ -233,11 +233,11 @@
 	restricted_jobs = list("Lord",
 	"Prisoner",
 	"Dungeoneer",
-	"Witch Hunter",
+	"Inquisitor",
 	"Shepherd",
 	"Monk",
 	"Cleric",
-	"Sheriff")
+	"Guard Captain")
 	var/proab
 #ifdef TESTSERVER
 	proab = 100
@@ -245,7 +245,7 @@
 	proab = 10 //35?
 #endif
 	if(prob(proab))
-		antag_candidates = get_players_for_role(ROLE_VILLAIN)
+		antag_candidates = get_players_for_role(ROLE_MANIAC)
 		var/datum/mind/villain = pick_n_take(antag_candidates)
 		if(villain)
 			var/found = FALSE
@@ -271,7 +271,7 @@
 	restricted_jobs = list()
 
 /datum/game_mode/chaosmode/proc/pick_vampires()
-	restricted_jobs = list("Monk","Priest","Witch Hunter","Shepherd")
+	restricted_jobs = list("Monk","Priest","Inquisitor","Shepherd")
 	var/num_vampires = rand(1,3)
 #ifdef TESTSERVER
 	num_vampires = 100
@@ -302,7 +302,7 @@
 	restricted_jobs = list()
 
 /datum/game_mode/chaosmode/proc/pick_werewolves()
-	restricted_jobs = list("Prisoner","Knight","Witch Hunter","Shepherd")
+	restricted_jobs = list("Prisoner","Knight","Inquisitor","Shepherd")
 	var/num_werewolves = rand(1,3)
 #ifdef TESTSERVER
 	num_werewolves = 100
@@ -335,20 +335,20 @@
 	set waitfor = FALSE
 ///////////////// VILLAINS
 	for(var/datum/mind/traitor in pre_villains)
-		var/datum/antagonist/new_antag = new /datum/antagonist/villain()
-		addtimer(CALLBACK(traitor, /datum/mind.proc/add_antag_datum, new_antag), rand(10,100))
+		var/datum/antagonist/new_antag = new /datum/antagonist/maniac()
+		addtimer(CALLBACK(traitor, TYPE_PROC_REF(/datum/mind, add_antag_datum), new_antag), rand(10,100))
 		GLOB.pre_setup_antags -= traitor
 
 ///////////////// WWOLF
 	for(var/datum/mind/werewolf in pre_werewolves)
 		var/datum/antagonist/new_antag = new /datum/antagonist/werewolf()
-		addtimer(CALLBACK(werewolf, /datum/mind.proc/add_antag_datum, new_antag), rand(10,100))
+		addtimer(CALLBACK(werewolf, TYPE_PROC_REF(/datum/mind, add_antag_datum), new_antag), rand(10,100))
 		GLOB.pre_setup_antags -= werewolf
 
 ///////////////// VAMPIRES
 	for(var/datum/mind/vampire in pre_vampires)
 		var/datum/antagonist/new_antag = new /datum/antagonist/vampire()
-		addtimer(CALLBACK(vampire, /datum/mind.proc/add_antag_datum, new_antag), rand(10,100))
+		addtimer(CALLBACK(vampire, TYPE_PROC_REF(/datum/mind, add_antag_datum), new_antag), rand(10,100))
 		GLOB.pre_setup_antags -= vampire
 
 ///////////////// BANDIT
@@ -371,19 +371,19 @@
 
 /datum/game_mode/chaosmode/make_antag_chance(mob/living/carbon/human/character) //klatejoin
 	return
-//******** VILLAINS
+//////////////// VILLAINS
 	var/num_villains = round((num_players() * 0.30)+1, 1)
 	if((SSticker.mode.villains.len + pre_villains.len) >= num_villains) //Upper cap for number of latejoin antagonists
 		return
-	if(ROLE_VILLAIN in character.client.prefs.be_special)
-		if(!is_banned_from(character.ckey, list(ROLE_VILLAIN)) && !QDELETED(character))
+	if(ROLE_MANIAC in character.client.prefs.be_special)
+		if(!is_banned_from(character.ckey, list(ROLE_MANIAC)) && !QDELETED(character))
 			if(age_check(character.client))
 				if(!(character.job in restricted_jobs))
 					if(prob(66))
 						add_latejoin_villain(character.mind)
 
 /datum/game_mode/chaosmode/proc/add_latejoin_villain(datum/mind/character)
-	var/datum/antagonist/villain/new_antag = new /datum/antagonist/villain()
+	var/datum/antagonist/maniac/new_antag = new /datum/antagonist/maniac()
 	character.add_antag_datum(new_antag)
 
 /datum/game_mode/chaosmode/proc/vampire_werewolf()
@@ -409,4 +409,5 @@
 			return "vampire"
 	if(werewolves.len)
 		if(vampires.len)
-			return "werewolf"*/
+			return "werewolf"
+ */

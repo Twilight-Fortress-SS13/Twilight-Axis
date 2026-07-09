@@ -11,7 +11,7 @@
 	heat_proof = TRUE
 	safe = FALSE
 	max_integrity = 600
-	armor = list("melee" = 50, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 100, "acid" = 70)
+	armor = list("blunt" = 50, "slash" = 60, "stab" = 75, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 100, "acid" = 70)
 	resistance_flags = FIRE_PROOF
 	damage_deflection = 70
 	poddoor = TRUE
@@ -37,9 +37,9 @@
 /obj/machinery/door/poddoor/shuttledock/proc/check()
 	var/turf/T = get_step(src, checkdir)
 	if(!istype(T, turftype))
-		INVOKE_ASYNC(src, .proc/open)
+		INVOKE_ASYNC(src, PROC_REF(open))
 	else
-		INVOKE_ASYNC(src, .proc/close)
+		INVOKE_ASYNC(src, PROC_REF(close))
 
 /obj/machinery/door/poddoor/incinerator_toxmix
 	name = "combustion chamber vent"

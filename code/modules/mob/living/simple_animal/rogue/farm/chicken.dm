@@ -64,7 +64,7 @@
 			return "beak"
 		if(BODY_ZONE_PRECISE_MOUTH)
 			return "beak"
-		if(BODY_ZONE_PRECISE_HAIR)
+		if(BODY_ZONE_PRECISE_SKULL)
 			return "head"
 		if(BODY_ZONE_PRECISE_EARS)
 			return "head"
@@ -110,7 +110,7 @@
 	if(!stat && (production > 29) && egg_type && isturf(loc) && !enemies.len)
 		testing("laying egg with [production] production")
 		if(locate(/obj/structure/fluff/nest) in loc)
-			visible_message("<span class='alertalien'>[src] [pick(layMessage)]</span>")
+			visible_message(span_alertalien("[src] [pick(layMessage)]"))
 			production = max(production - 30, 0)
 			var/obj/item/reagent_containers/food/snacks/egg/E = new egg_type(get_turf(src))
 			E.pixel_x = rand(-6,6)
@@ -130,13 +130,13 @@
 				if(CH)
 					qdel(CH)
 					new /obj/structure/fluff/nest(loc)
-					visible_message("<span class='notice'>[src] builds a nest.</span>")
+					visible_message(span_notice("[src] builds a nest."))
 				else
 					CH = locate(/obj/item/grown/log/tree/stick) in loc
 					if(CH)
 						qdel(CH)
 						new /obj/structure/fluff/nest(loc)
-						visible_message("<span class='notice'>[src] builds a nest.</span>")
+						visible_message(span_notice("[src] builds a nest."))
 				//if cant find, look for chaff in view and move to it
 				var/list/foundchaff = list()
 				for(var/obj/item/natural/fibers/C in oview(src))
@@ -147,11 +147,11 @@
 				if(foundchaff.len)
 					stop_automated_movement = TRUE
 					Goto(pick(foundchaff),move_to_delay)
-					addtimer(CALLBACK(src, .proc/return_action), 15 SECONDS)
+					addtimer(CALLBACK(src, PROC_REF(return_action)), 15 SECONDS)
 			else
 				stop_automated_movement = TRUE
 				Goto(pick(foundnests),move_to_delay)
-				addtimer(CALLBACK(src, .proc/return_action), 15 SECONDS)
+				addtimer(CALLBACK(src, PROC_REF(return_action)), 15 SECONDS)
 
 
 /obj/structure/fluff/nest

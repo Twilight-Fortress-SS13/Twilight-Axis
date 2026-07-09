@@ -12,7 +12,7 @@
 	if(absorb_stun(0)) //continuous effect, so we don't want it to increment the stuns absorbed.
 		return
 	if(!IsParalyzed())
-		to_chat(src, "<span class='notice'>You're too exhausted to keep going...</span>")
+		to_chat(src, span_notice("You're too exhausted to keep going..."))
 	var/prev = stam_paralyzed
 	stam_paralyzed = TRUE
 	if(!prev && getStaminaLoss() < 120) // Puts you a little further into the initial stamcrit, makes stamcrit harder to outright counter with chems.
@@ -21,22 +21,24 @@
 /mob/living/carbon/adjust_drugginess(amount)
 	druggy = max(druggy+amount, 0)
 	if(druggy)
-		overlay_fullscreen("high", /obj/screen/fullscreen/high)
+		overlay_fullscreen("high", /atom/movable/screen/fullscreen/high)
 //		SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "high", /datum/mood_event/high)
 	else
 		clear_fullscreen("high")
 //		SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "high")
 //	update_body_parts_head_only()
+	update_body_parts_eyes_only()
 
 /mob/living/carbon/set_drugginess(amount)
 	druggy = max(amount, 0)
 	if(druggy)
-		overlay_fullscreen("high", /obj/screen/fullscreen/high)
-//		throw_alert("high", /obj/screen/alert/high)
+		overlay_fullscreen("high", /atom/movable/screen/fullscreen/high)
+//		throw_alert("high", /atom/movable/screen/alert/high)
 	else
 		clear_fullscreen("high")
 //		clear_alert("high")
 //	update_body_parts_head_only()
+	update_body_parts_eyes_only()
 
 /mob/living/carbon/adjust_disgust(amount)
 	disgust = CLAMP(disgust+amount, 0, DISGUST_LEVEL_MAXEDOUT)
@@ -80,3 +82,7 @@
 	var/obj/item/organ/brain/B = getorganslot(ORGAN_SLOT_BRAIN)
 	if(B)
 		. = B.cure_all_traumas(resilience)
+
+/mob/living/carbon/cure_paralysis(source)
+	. = ..()
+	update_disabled_bodyparts()

@@ -8,7 +8,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	set category = "OOC"
 	set hidden = 1
 	if(GLOB.say_disabled)	//This is here to try to identify lag problems
-		to_chat(usr, "<span class='danger'>Speech is currently admin-disabled.</span>")
+		to_chat(usr, span_danger("Speech is currently admin-disabled."))
 		return
 
 	if(!mob)
@@ -16,29 +16,29 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 
 	if(CONFIG_GET(flag/usewhitelist))
 		if(whitelisted() != 1)
-			to_chat(src, "<span class='danger'>I can't use that.</span>")
+			to_chat(src, span_danger("I can't use that."))
 			return
 
 	if(blacklisted())
-		to_chat(src, "<span class='danger'>I can't use that.</span>")
+		to_chat(src, span_danger("I can't use that."))
 		return
 
 	if(get_playerquality(ckey) <= -5)
-		to_chat(src, "<span class='danger'>I can't use that.</span>")
+		to_chat(src, span_danger("I can't use that."))
 		return
 
 	if(!holder)
 		if(!GLOB.ooc_allowed)
-			to_chat(src, "<span class='danger'>OOC is globally muted.</span>")
+			to_chat(src, span_danger("OOC is globally muted."))
 			return
 		if(!GLOB.dooc_allowed && (mob.stat == DEAD))
-			to_chat(usr, "<span class='danger'>OOC for dead mobs has been turned off.</span>")
+			to_chat(usr, span_danger("OOC for dead mobs has been turned off."))
 			return
 		if(prefs.muted & MUTE_OOC)
-			to_chat(src, "<span class='danger'>I cannot use OOC (muted).</span>")
+			to_chat(src, span_danger("I cannot use OOC (muted)."))
 			return
 	if(is_banned_from(ckey, "OOC"))
-		to_chat(src, "<span class='danger'>I have been banned from OOC.</span>")
+		to_chat(src, span_danger("I have been banned from OOC."))
 		return
 	if(QDELETED(src))
 		return
@@ -62,7 +62,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 			return
 
 	if(!(prefs.chat_toggles & CHAT_OOC))
-		to_chat(src, "<span class='danger'>I have OOC muted.</span>")
+		to_chat(src, span_danger("I have OOC muted."))
 		return
 
 	mob.log_talk(raw_msg, LOG_OOC)
@@ -74,35 +74,38 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 //		if(prefs.toggles & MEMBER_PUBLIC)
 //			keyname = "<font color='[prefs.ooccolor ? prefs.ooccolor : GLOB.normal_ooc_colour]'>[icon2html('icons/member_content.dmi', world, "blag")][keyname]</font>"
 	//The linkify span classes and linkify=TRUE below make ooc text get clickable chat href links if you pass in something resembling a url
+	var/color2use = prefs.voice_color
+	if(!color2use)
+		color2use = "#FFFFFF"
+	else
+		color2use = "#[color2use]"
+	var/chat_color = "#c5c5c5"
+	var/msg_to_send = ""
+			
 	for(var/client/C in GLOB.clients)
-		var/color2use = prefs.voice_color
-		if(!color2use)
-			color2use = "#FFFFFF"
-		else
-			color2use = "#[color2use]"
-		var/chat_color = "#c5c5c5"
+		var/real_key = C.holder ? "([key])" : ""
 		if(C.prefs.chat_toggles & CHAT_OOC)
+			msg_to_send = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <font color='[chat_color]'><span class='message linkify'>[msg]</span></font>"
 			if(holder)
-				to_chat(C, "<font color='[color2use]'><EM>[keyname]:</EM></font> <font color='#4972bc'><span class='message linkify'>[msg]</span></font>")
-			else
-				to_chat(C, "<font color='[color2use]'><EM>[keyname]:</EM></font> <font color='[chat_color]'><span class='message linkify'>[msg]</span></font>")
+				msg_to_send = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <font color='#4972bc'><span class='message linkify'>[msg]</span></font>"
+			to_chat(C, msg_to_send)
 
 //				if(!holder.fakekey || C.holder)
 //					if(check_rights_for(src, R_ADMIN))
 //						to_chat(C, "<span class='adminooc'><EM>[keyname]:</EM> <span class='message linkify'>[msg]</span></span></font>")
 //					else
-//						to_chat(C, "<span class='adminobserverooc'><EM>[keyname]:</EM> <span class='message linkify'>[msg]</span></span>")
+//						to_chat(C, span_adminobserverooc("<EM>[keyname]:</EM> <span class='message linkify'>[msg]</span>"))
 //				else
 //					if(GLOB.OOC_COLOR)
 //						to_chat(C, "<font color='[GLOB.OOC_COLOR]'><b><EM>[keyname]:</EM> <span class='message linkify'>[msg]</span></b></font>")
 //					else
-//						to_chat(C, "<span class='ooc'><EM>[keyname]:</EM> <span class='message linkify'>[msg]</span></span>")
+//						to_chat(C, span_ooc("<EM>[keyname]:</EM> <span class='message linkify'>[msg]</span>"))
 
 //			else if(!(key in C.prefs.ignoring))
 //				if(GLOB.OOC_COLOR)
 //					to_chat(C, "<font color='[GLOB.OOC_COLOR]'><b><EM>[keyname]:</EM> <span class='message linkify'>[msg]</span></b></font>")
 //				else
-//					to_chat(C, "<span class='ooc'><EM>[keyname]:</EM> <span class='message linkify'>[msg]</span></span>")
+//					to_chat(C, span_ooc("<EM>[keyname]:</EM> <span class='message linkify'>[msg]</span>"))
 
 
 /client/proc/lobbyooc(msg as text)
@@ -111,7 +114,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	set desc = "Talk with the other players."
 
 	if(GLOB.say_disabled)	//This is here to try to identify lag problems
-		to_chat(usr, "<span class='danger'>Speech is currently admin-disabled.</span>")
+		to_chat(usr, span_danger("Speech is currently admin-disabled."))
 		return
 
 	if(!mob)
@@ -119,23 +122,23 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 
 	if(CONFIG_GET(flag/usewhitelist))
 		if(whitelisted() != 1)
-			to_chat(src, "<span class='danger'>I can't use that.</span>")
+			to_chat(src, span_danger("I can't use that."))
 			return
 
 	if(blacklisted())
-		to_chat(src, "<span class='danger'>I can't use that.</span>")
+		to_chat(src, span_danger("I can't use that."))
 		return
 
 	if(get_playerquality(ckey) <= -5)
-		to_chat(src, "<span class='danger'>I can't use that.</span>")
+		to_chat(src, span_danger("I can't use that."))
 		return
 
 	if(!holder)
 		if(prefs.muted & MUTE_OOC)
-			to_chat(src, "<span class='danger'>I cannot use OOC (muted).</span>")
+			to_chat(src, span_danger("I cannot use OOC (muted)."))
 			return
 	if(is_banned_from(ckey, "OOC"))
-		to_chat(src, "<span class='danger'>I have been banned from OOC.</span>")
+		to_chat(src, span_danger("I have been banned from OOC."))
 		return
 	if(QDELETED(src))
 		return
@@ -159,7 +162,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 			return
 
 	if(!(prefs.chat_toggles & CHAT_OOC))
-		to_chat(src, "<span class='danger'>I have OOC muted.</span>")
+		to_chat(src, span_danger("I have OOC muted."))
 		return
 
 	mob.log_talk(raw_msg, LOG_OOC)
@@ -171,25 +174,25 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 //		if(prefs.toggles & MEMBER_PUBLIC)
 //			keyname = "<font color='[prefs.ooccolor ? prefs.ooccolor : GLOB.normal_ooc_colour]'>[icon2html('icons/member_content.dmi', world, "blag")][keyname]</font>"
 	//The linkify span classes and linkify=TRUE below make ooc text get clickable chat href links if you pass in something resembling a url
+	var/color2use = prefs.voice_color
+	if(!color2use)
+		color2use = "#FFFFFF"
+	else
+		color2use = "#[color2use]"
+	var/chat_color = "#c5c5c5"
+	var/msg_to_send = ""
+	
 	for(var/client/C in GLOB.clients)
-		var/can_hear = FALSE
+		var/real_key = C.holder ? "([key])" : ""
 		if(C.prefs.chat_toggles & CHAT_OOC)
-			can_hear = TRUE
-			if(SSticker.current_state != GAME_STATE_FINISHED)
-				if(!istype(C.mob, /mob/dead/new_player))
-					can_hear = FALSE
-		if(can_hear)
-			var/color2use = prefs.voice_color
-			if(!color2use)
-				color2use = "#FFFFFF"
-			else
-				color2use = "#[color2use]"
-			var/chat_color = "#c5c5c5"
-			if(C.prefs.chat_toggles & CHAT_OOC)
-				if(holder)
-					to_chat(C, "<font color='[color2use]'><EM>[keyname]:</EM></font> <font color='#4972bc'><span class='message linkify'>[msg]</span></font>")
-				else
-					to_chat(C, "<font color='[color2use]'><EM>[keyname]:</EM></font> <font color='[chat_color]'><span class='message linkify'>[msg]</span></font>")
+			if(SSticker.current_state != GAME_STATE_FINISHED && !istype(C.mob, /mob/dead/new_player) && !C.holder)
+				continue
+			
+			msg_to_send = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <font color='[chat_color]'><span class='message linkify'>[msg]</span></font>"
+			if(holder)
+				msg_to_send = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <font color='#4972bc'><span class='message linkify'>[msg]</span></font>"
+				
+			to_chat(C, msg_to_send)
 
 
 /proc/toggle_ooc(toggle = null)
@@ -280,7 +283,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	if(GLOB.admin_notice)
 		to_chat(src, "<span class='boldnotice'>Admin Notice:</span>\n \t [GLOB.admin_notice]")
 	else
-		to_chat(src, "<span class='notice'>There are no admin notices at the moment.</span>")
+		to_chat(src, span_notice("There are no admin notices at the moment."))
 #ifdef TESTSERVER
 /client/verb/smiteselfverily()
 	set name = "KillSelf"
@@ -292,7 +295,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	var/confirm = alert(src, "Should I really kill myself?", "Feed the crows", "Yes", "No")
 	if(confirm == "Yes")
 		log_admin("[key_name(usr)] used killself.")
-		message_admins("<span class='adminnotice'>[key_name_admin(usr)] used killself.</span>")
+		message_admins(span_adminnotice("[key_name_admin(usr)] used killself."))
 		mob.death()
 #endif
 
@@ -447,7 +450,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	if(motd)
 		to_chat(src, "<div class=\"motd\">[motd]</div>", handle_whitespace=FALSE)
 	else
-		to_chat(src, "<span class='notice'>The Message of the Day has not been set.</span>")
+		to_chat(src, span_notice("The Message of the Day has not been set."))
 
 /client/proc/self_notes()
 	set name = "View Admin Remarks"
@@ -459,7 +462,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	if(!check_rights(0))
 		return
 	if(!CONFIG_GET(flag/see_own_notes))
-		to_chat(usr, "<span class='notice'>Sorry, that function is not enabled on this server.</span>")
+		to_chat(usr, span_notice("Sorry, that function is not enabled on this server."))
 		return
 
 	browse_messages(null, usr.ckey, null, TRUE)
@@ -470,7 +473,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	set desc = ""
 
 	if(!CONFIG_GET(flag/use_exp_tracking))
-		to_chat(usr, "<span class='notice'>Sorry, tracking is currently disabled.</span>")
+		to_chat(usr, span_notice("Sorry, tracking is currently disabled."))
 		return
 
 	var/list/body = list()

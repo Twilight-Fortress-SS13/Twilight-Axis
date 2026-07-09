@@ -79,15 +79,13 @@
 			if(!E)
 				continue
 			for(var/obj/I in T)
-				if(I.anchored)
-					continue
-				if(!isturf(I.loc))
+				if(I.anchored || !isturf(I.loc) || istype(I, /obj/item/roguecoin))
 					continue
 				var/prize = I.get_real_price() - (I.get_real_price() * SStreasury.queens_tax)
 				if(prize >= 1)
 					play_sound=TRUE
 					budgie += prize
-					I.visible_message("<span class='warning'>[I] is sucked into the air!</span>")
+					I.visible_message(span_warning("[I] is sucked into the air!"))
 					qdel(I)
 			budgie = round(budgie)
 			if(budgie > 0)
@@ -140,18 +138,18 @@
 /obj/structure/roguemachine/merchantvend/attackby(obj/item/P, mob/user, params)
 	if(istype(P, /obj/item/roguekey))
 		var/obj/item/roguekey/K = P
-		if(K.lockid == "merchant")
+		if(K.lockid == "merchant" || K.lockid == "lord")
 			locked = !locked
 			playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 			update_icon()
 			return attack_hand(user)
 		else
-			to_chat(user, "<span class='warning'>Wrong key.</span>")
+			to_chat(user, span_warning("Wrong key."))
 			return
 	if(istype(P, /obj/item/keyring))
 		var/obj/item/keyring/K = P
 		for(var/obj/item/roguekey/KE in K.keys)
-			if(KE.lockid == "merchant")
+			if(KE.lockid == "merchant" || KE.lockid == "lord")
 				locked = !locked
 				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 				update_icon()
@@ -173,6 +171,9 @@
 	if(href_list["buy"])
 		var/mob/M = usr
 		var/path = text2path(href_list["buy"])
+		if(!ispath(path, /datum/supply_pack))
+			message_admins("RETARDED MOTHERFUCKER [usr.key] IS TRYING TO BUY A [path] WITH THE GOLDFACE")
+			return
 		var/datum/supply_pack/PA = new path
 		var/cost = PA.cost
 		var/tax_amt=round(SStreasury.tax_value * cost)
@@ -186,9 +187,12 @@
 		else
 			say("Not enough!")
 			return
-		var/pathi = pick(PA.contains)
-		var/obj/item/I = new pathi(get_turf(src))
-		M.put_in_hands(I)
+		var/shoplength = PA.contains.len
+		var/l
+		for(l=1,l<=shoplength,l++)
+			var/pathi = pick(PA.contains)
+			var/obj/item/I = new pathi(get_turf(src))
+			M.put_in_hands(I)
 		qdel(PA)
 	if(href_list["change"])
 		if(budget > 0)
@@ -259,7 +263,7 @@
 	if(!ishuman(user))
 		return
 	if(locked)
-		to_chat(user, "<span class='warning'>It's locked. Of course.</span>")
+		to_chat(user, span_warning("It's locked. Of course."))
 		return
 	user.changeNext_move(CLICK_CD_MELEE)
 	playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)

@@ -27,7 +27,7 @@
 
 	var/datum/client_colour/CC = new colour_type()
 	client_colours |= CC
-	sortTim(client_colours, /proc/cmp_clientcolour_priority)
+	sortTim(client_colours, GLOBAL_PROC_REF(cmp_clientcolour_priority))
 	update_client_colour()
 
 
@@ -115,6 +115,9 @@
 	colour = list(1,1,1, 1,1,1, 1,1,1)
 	priority = 1
 
+/datum/client_colour/maniac_marked
+	colour = list(1,0,0, 0,1,0, 0,0,1.5)
+	priority = 0
 
 /datum/client_colour/monochrome/trance
 	priority = 1

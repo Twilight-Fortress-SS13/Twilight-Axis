@@ -2,8 +2,8 @@
 	name = "chest"
 	desc = ""
 	icon = 'icons/roguetown/misc/structure.dmi'
-	icon_state = "chestweird2"
-	base_icon_state = "chestweird2"
+	icon_state = "chest3s"
+	base_icon_state = "chest3s"
 	drag_slowdown = 2
 	open_sound = 'sound/misc/chestopen.ogg'
 	close_sound = 'sound/misc/chestclose.ogg'
@@ -16,8 +16,8 @@
 	allow_dense = FALSE
 
 /obj/structure/closet/crate/chest/gold
-	icon_state = "chestweird1"
-	base_icon_state = "chestweird1"
+	icon_state = "chest3"
+	base_icon_state = "chest3"
 
 //obj/structure/closet/crate/chest/Initialize(mapload)
 //	. = ..()
@@ -97,12 +97,13 @@
 	keylock = TRUE
 	lockid = "lord"
 	locked = TRUE
+	masterkey = TRUE
 	base_icon_state = "closetlord"
 	icon_state = "closetlord"
 
 /obj/structure/closet/crate/drawer
 	name = "drawer"
-	desc = "a wooden drawer."
+	desc = "A wooden drawer."
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "drawer5"
 	base_icon_state = "drawer5"
@@ -119,7 +120,7 @@
 
 /obj/structure/closet/crate/drawer/inn
 	name = "drawer"
-	desc = "a wooden drawer."
+	desc = "A wooden drawer."
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "drawer5"
 	base_icon_state = "drawer5"

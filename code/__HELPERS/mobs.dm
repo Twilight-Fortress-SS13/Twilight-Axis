@@ -306,7 +306,7 @@ GLOBAL_LIST_EMPTY(species_list)
 /mob
 	var/doing = 0
 
-/proc/do_after(mob/user, var/delay, needhand = 1, atom/target = null, progress = 1, datum/callback/extra_checks = null)
+/proc/do_after(mob/user, delay, needhand = 1, atom/target = null, progress = 1, datum/callback/extra_checks = null)
 	if(!user)
 		return 0
 
@@ -381,7 +381,7 @@ GLOBAL_LIST_EMPTY(species_list)
 	if (progress)
 		qdel(progbar)
 
-/proc/move_after(mob/user, var/delay, needhand = 1, atom/target = null, progress = 1, datum/callback/extra_checks = null) //do_after copypasta but you can move
+/proc/move_after(mob/user, delay, needhand = 1, atom/target = null, progress = 1, datum/callback/extra_checks = null) //do_after copypasta but you can move
 	if(!user)
 		return 0
 
@@ -583,7 +583,7 @@ GLOBAL_LIST_EMPTY(species_list)
 // Displays a message in deadchat, sent by source. Source is not linkified, message is, to avoid stuff like character names to be linkified.
 // Automatically gives the class deadsay to the whole message (message + source)
 /proc/deadchat_broadcast(message, source=null, mob/follow_target=null, turf/turf_target=null, speaker_key=null, message_type=DEADCHAT_REGULAR)
-	message = "<span class='deadsay'>[source]<span class='linkify'>[message]</span></span>"
+	message = span_deadsay("[source]<span class='linkify'>[message]</span>")
 	for(var/mob/M in GLOB.player_list)
 		var/datum/preferences/prefs
 		if(M.client.prefs)

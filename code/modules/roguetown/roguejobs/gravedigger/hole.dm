@@ -1,6 +1,7 @@
 
 /obj/structure/closet/dirthole
 	name = "hole"
+	desc = "Just a small hole..."
 	icon_state = "hole1"
 	icon = 'icons/turf/roguefloor.dmi'
 	var/stage = 1
@@ -18,11 +19,13 @@
 	layer = 2.8
 
 /obj/structure/closet/dirthole/grave
+	desc = "A hole big enough for a coffin."
 	stage = 3
 	faildirt = 3
 	icon_state = "grave"
 
 /obj/structure/closet/dirthole/closed
+	desc = "A mound of dirt with something below."
 	stage = 4
 	faildirt = 3
 	climb_offset = 10
@@ -50,9 +53,9 @@
 
 /obj/structure/closet/dirthole/closed/loot/examine(mob/user)
 	. = ..()
-	if(HAS_TRAIT(user, RTRAIT_NOSTINK))
+	if(HAS_TRAIT(user, TRAIT_SOUL_EXAMINE))
 		if(lootroll == 1)
-			. += "<span class='warning'>Better let this one sleep.</span>"
+			. += span_warning("Better let this one sleep.")
 
 /obj/structure/closet/dirthole/insertion_allowed(atom/movable/AM)
 	if(istype(AM, /obj/structure/closet/crate/chest) || istype(AM, /obj/structure/closet/burial_shroud))
@@ -68,103 +71,105 @@
 /obj/structure/closet/dirthole/toggle(mob/living/user)
 	return
 
-/obj/structure/closet/dirthole/attackby(obj/item/W, mob/user, params)
-	if(istype(W, /obj/item/rogueweapon/shovel))
-		var/obj/item/rogueweapon/shovel/S = W
-		if(user.used_intent.type == /datum/intent/shovelscoop)
-			if(S.heldclod)
-				playsound(loc,'sound/items/empty_shovel.ogg', 100, TRUE)
-				QDEL_NULL(S.heldclod)
-				if(stage == 3) //close grave
-					stage = 4
-					climb_offset = 10
-					locked = TRUE
-					close()
-					var/founds
-					for(var/atom/A in contents)
-						founds = TRUE
-						break
-					if(!founds)
-						stage = 2
-						climb_offset = 0
-						locked = FALSE
-						open()
-					update_icon()
-				else if(stage < 4)
-					stage--
-					climb_offset = 0
-					update_icon()
-					if(stage == 0)
-						qdel(src)
-				S.update_icon()
+/obj/structure/closet/dirthole/attackby(obj/item/attacking_item, mob/user, params)
+	if(!istype(attacking_item, /obj/item/rogueweapon/shovel))
+		return ..()
+	var/obj/item/rogueweapon/shovel/attacking_shovel = attacking_item
+	if(user.used_intent.type != /datum/intent/shovelscoop)
+		return
+
+	if(attacking_shovel.heldclod)
+		playsound(loc,'sound/items/empty_shovel.ogg', 100, TRUE)
+		QDEL_NULL(attacking_shovel.heldclod)
+		if(stage == 3) //close grave
+			stage = 4
+			climb_offset = 10
+			locked = TRUE
+			close()
+			var/founds
+			for(var/atom/A in contents)
+				founds = TRUE
+				break
+			if(!founds)
+				stage = 2
+				climb_offset = 0
+				locked = FALSE
+				open()
+			update_icon()
+		else if(stage < 4)
+			stage--
+			climb_offset = 0
+			update_icon()
+			if(stage == 0)
+				qdel(src)
+		attacking_shovel.update_icon()
+		return
+	else
+		if(stage == 3)
+			var/turf/underT = get_step_multiz(src, DOWN)
+			if(underT && isopenturf(underT) && mastert)
+				attacking_shovel.heldclod = new(attacking_shovel)
+				attacking_shovel.update_icon()
+				playsound(mastert,'sound/items/dig_shovel.ogg', 100, TRUE)
+				mastert.ChangeTurf(/turf/open/transparent/openspace)
 				return
-			else
-				if(stage == 3)
-					var/turf/underT = get_step_multiz(src, DOWN)
-					if(underT && isopenturf(underT) && mastert)
-						S.heldclod = new(S)
-						S.update_icon()
-						playsound(mastert,'sound/items/dig_shovel.ogg', 100, TRUE)
-						mastert.ChangeTurf(/turf/open/transparent/openspace)
-						return
 //					for(var/D in GLOB.cardinals)
 //						var/turf/T = get_step(mastert, D)
 //						if(T)
 //							if(istype(T, /turf/open/water))
-//								S.heldclod = new(S)
-//								S.update_icon()
+//								attacking_shovel.heldclod = new(attacking_shovel)
+//								attacking_shovel.update_icon()
 //								playsound(mastert,'sound/items/dig_shovel.ogg', 100, TRUE)
 //								mastert.ChangeTurf(T.type, flags = CHANGETURF_INHERIT_AIR)
 //								return
-					to_chat(user, "<span class='warning'>I can't dig myself any deeper.</span>")
-					return
-				var/used_str = 10
-				if(iscarbon(user))
-					var/mob/living/carbon/C = user
-					if(C.domhand)
-						used_str = C.get_str_arms(C.used_hand)
-					C.rogfat_add(max(60 - (used_str * 5), 1))
-				if(stage < 3)
-					if(faildirt < 2)
-						if(prob(used_str * 5))
-							stage++
-						else
-							faildirt++
-					else
-						stage++
-				if(stage == 4)
-					stage = 3
-					climb_offset = 0
-					locked = FALSE
-					open()
-					for(var/obj/structure/gravemarker/G in loc)
-						qdel(G)
-						if(isliving(user))
-							var/mob/living/L = user
-							L.apply_status_effect(/datum/status_effect/debuff/cursed)
-				update_icon()
-				S.heldclod = new(S)
-				S.update_icon()
-				playsound(loc,'sound/items/dig_shovel.ogg', 100, TRUE)
-				return
-	..()
+			to_chat(user, span_warning("I can't dig myself any deeper."))
+			return
+		var/used_str = 10
+		if(iscarbon(user))
+			var/mob/living/carbon/C = user
+			if(C.domhand)
+				used_str = C.get_str_arms(C.used_hand)
+			C.rogfat_add(max(60 - (used_str * 5), 1))
+		if(stage < 3)
+			if(faildirt < 2)
+				if(prob(used_str * 5))
+					stage++
+				else
+					faildirt++
+			else
+				stage++
+		if(stage == 4)
+			stage = 3
+			climb_offset = 0
+			locked = FALSE
+			open()
+			for(var/obj/structure/gravemarker/G in loc)
+				qdel(G)
+				if(isliving(user))
+					var/mob/living/L = user
+					L.apply_status_effect(/datum/status_effect/debuff/cursed)
+		update_icon()
+		attacking_shovel.heldclod = new(attacking_shovel)
+		attacking_shovel.update_icon()
+		playsound(loc,'sound/items/dig_shovel.ogg', 100, TRUE)
+		return
 
 /datum/status_effect/debuff/cursed
 	id = "cursed"
-	alert_type = /obj/screen/alert/status_effect/debuff/cursed
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/cursed
 	effectedstats = list("fortune" = -3)
 	duration = 10 MINUTES
 
-/obj/screen/alert/status_effect/debuff/cursed
+/atom/movable/screen/alert/status_effect/debuff/cursed
 	name = "Cursed"
-	desc = ""
+	desc = "I feel... unlucky."
 	icon_state = "debuff"
 
 /obj/structure/closet/dirthole/MouseDrop_T(atom/movable/O, mob/living/user)
 	var/turf/T = get_turf(src)
 	if(istype(O, /obj/structure/closet/crate/coffin))
 		O.forceMove(T)
-	if(!istype(O) || O.anchored || istype(O, /obj/screen))
+	if(!istype(O) || O.anchored || istype(O, /atom/movable/screen))
 		return
 	if(!istype(user) || user.incapacitated() || !(user.mobility_flags & MOBILITY_STAND))
 		return
@@ -184,14 +189,14 @@
 		return
 	var/list/targets = list(O, src)
 	add_fingerprint(user)
-	user.visible_message("<span class='warning'>[user] [actuallyismob ? "tries to ":""]stuff [O] into [src].</span>", \
-				 	 	"<span class='warning'>I [actuallyismob ? "try to ":""]stuff [O] into [src].</span>", \
-				 	 	"<span class='hear'>I hear clanging.</span>")
+	user.visible_message(span_warning("[user] [actuallyismob ? "tries to ":""]stuff [O] into [src]."), \
+				 	 	span_warning("I [actuallyismob ? "try to ":""]stuff [O] into [src]."), \
+				 	 	span_hear("I hear clanging."))
 	if(actuallyismob)
 		if(do_after_mob(user, targets, 40))
-			user.visible_message("<span class='notice'>[user] stuffs [O] into [src].</span>", \
-							 	 "<span class='notice'>I stuff [O] into [src].</span>", \
-							 	 "<span class='hear'>I hear a loud bang.</span>")
+			user.visible_message(span_notice("[user] stuffs [O] into [src]."), \
+							 	 span_notice("I stuff [O] into [src]."), \
+							 	 span_hear("I hear a loud bang."))
 			var/mob/living/L = O
 			if(!issilicon(L))
 				L.Paralyze(40)
@@ -220,19 +225,17 @@
 	for(var/obj/structure/closet/crate/coffin/C in contents)
 		for(var/mob/living/carbon/human/D in C.contents)
 			D.buried = TRUE
-
-
-
 	opened = FALSE
 //	update_icon()
 	return TRUE
+
 /obj/structure/closet/dirthole/dump_contents()
 	for(var/mob/A in contents)
 		if((!A.stat) && (istype(A, /mob/living/carbon/human)))
 			var/mob/living/carbon/human/B = A
 			B.buried = FALSE
 	..()
-	
+
 /obj/structure/closet/dirthole/open(mob/living/user)
 	if(opened)
 		return
@@ -277,13 +280,17 @@
 						if(prob(5))
 							new /obj/item/natural/worms/grubs(T)
 						else
-							new /obj/item/natural/worms/leeches(T)
+							new /obj/item/natural/worms/leech(T)
 					else
 						new /obj/item/natural/worms(T)
 		else
-			if(!(locate(/obj/item/natural/stone) in T))
-				if(prob(23))
-					new /obj/item/natural/stone(T)
+			if((locate(/obj/structure/flora/newtree) in view(1)) && !(locate(/obj/item/grown/log/tree/stick) in T))
+				if(prob(33))
+					new /obj/item/grown/log/tree/stick(T)
+			else
+				if(!(locate(/obj/item/natural/stone) in T))
+					if(prob(33))
+						new /obj/item/natural/stone(T)
 	return ..()
 
 /obj/structure/closet/dirthole/Destroy()

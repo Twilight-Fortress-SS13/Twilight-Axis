@@ -410,11 +410,11 @@
 		if(amount) //don't spam up the chat for continuous stuns
 			if(priority_absorb_key["visible_message"] || priority_absorb_key["self_message"])
 				if(priority_absorb_key["visible_message"] && priority_absorb_key["self_message"])
-					visible_message("<span class='warning'>[src][priority_absorb_key["visible_message"]]</span>", "<span class='boldwarning'>[priority_absorb_key["self_message"]]</span>")
+					visible_message(span_warning("[src][priority_absorb_key["visible_message"]]"), span_boldwarning("[priority_absorb_key["self_message"]]"))
 				else if(priority_absorb_key["visible_message"])
-					visible_message("<span class='warning'>[src][priority_absorb_key["visible_message"]]</span>")
+					visible_message(span_warning("[src][priority_absorb_key["visible_message"]]"))
 				else if(priority_absorb_key["self_message"])
-					to_chat(src, "<span class='boldwarning'>[priority_absorb_key["self_message"]]</span>")
+					to_chat(src, span_boldwarning("[priority_absorb_key["self_message"]]"))
 			priority_absorb_key["stuns_absorbed"] += amount
 		return TRUE
 
@@ -463,7 +463,7 @@
 
 /mob/living/proc/become_nearsighted(source)
 	if(!HAS_TRAIT(src, TRAIT_NEARSIGHT))
-		overlay_fullscreen("nearsighted", /obj/screen/fullscreen/impaired, 1)
+		overlay_fullscreen("nearsighted", /atom/movable/screen/fullscreen/impaired, 1)
 	ADD_TRAIT(src, TRAIT_NEARSIGHT, source)
 
 /mob/living/proc/cure_husk(source)
@@ -505,3 +505,9 @@
 /mob/living/proc/ignore_slowdown(source)
 	ADD_TRAIT(src, TRAIT_IGNORESLOWDOWN, source)
 	update_movespeed(FALSE)
+
+/mob/living/proc/cure_holdbreath(source)
+	REMOVE_TRAIT(src, TRAIT_HOLDBREATH, source)
+
+/mob/living/proc/cure_paralysis(source)
+	REMOVE_TRAIT(src, TRAIT_PARALYSIS, source)

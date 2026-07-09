@@ -7,15 +7,15 @@
 /mob/living/carbon/UnarmedAttack(atom/A, proximity, params)
 
 	if(!has_active_hand()) //can't attack without a hand.
-		to_chat(src, "<span class='warning'>I lack working hands.</span>")
+		to_chat(src, span_warning("I lack working hands."))
 		return
 
 	if(!has_hand_for_held_index(used_hand)) //can't attack without a hand.
-		to_chat(src, "<span class='warning'>I can't move this hand.</span>")
+		to_chat(src, span_warning("I can't move this hand."))
 		return
 
 	if(check_arm_grabbed(used_hand))
-		to_chat(src, "<span class='warning'>Someone is grabbing my arm!</span>")
+		to_chat(src, span_warning("Someone is grabbing my arm!"))
 		return
 
 	// Special glove functions:
@@ -55,10 +55,10 @@
 				if(istype(AM) && !AM.anchored)
 					var/jadded = max(100-(STASTR*10),5)
 					if(rogfat_add(jadded))
-						visible_message("<span class='info'>[src] pushes [AM].</span>")
+						visible_message(span_info("[src] pushes [AM]."))
 						PushAM(AM, MOVE_FORCE_STRONG)
 					else
-						visible_message("<span class='warning'>[src] pushes [AM].</span>")
+						visible_message(span_warning("[src] pushes [AM]."))
 					changeNext_move(CLICK_CD_MELEE)
 					return
 		A.attack_hand(src, params)
@@ -68,15 +68,15 @@
 		return
 
 	if(!has_active_hand()) //can't attack without a hand.
-		to_chat(src, "<span class='warning'>I lack working hands.</span>")
+		to_chat(src, span_warning("I lack working hands."))
 		return
 
 	if(!has_hand_for_held_index(used_hand)) //can't attack without a hand.
-		to_chat(src, "<span class='warning'>I can't move this hand.</span>")
+		to_chat(src, span_warning("I can't move this hand."))
 		return
 
 	if(check_arm_grabbed())
-		to_chat(src, "<span class='warning'>[pulledby] is restraining my arm!</span>")
+		to_chat(src, span_warning("[pulledby] is restraining my arm!"))
 		return
 
 	A.attack_right(src, params)
@@ -114,7 +114,7 @@
 	var/lastgibto
 
 /mob/living/ongive(mob/user, params)
-	if(!ishuman(user))
+	if(!ishuman(user) || src == user)
 		return
 	var/mob/living/carbon/human/H = user
 	if(givingto == H && !H.get_active_held_item()) //take item being offered
@@ -125,7 +125,7 @@
 		if(I)
 			transferItemToLoc(I, newloc = H, force = FALSE, silent = TRUE)
 			H.put_in_active_hand(I)
-			visible_message("<span class='notice'>[src.name] gives [I] to [H.name].</span>")
+			visible_message(span_notice("[src.name] gives [I] to [H.name]."))
 			return
 		else
 			givingto = null
@@ -134,10 +134,10 @@
 			var/obj/item/I = H.get_active_held_item()
 			H.givingto = src
 			H.lastgibto = world.time
-			to_chat(src, "<span class='notice'>[H.name] offers [I] to me.</span>")
-			to_chat(H, "<span class='notice'>I offer [I] to [src.name].</span>")
+			to_chat(src, span_notice("[H.name] offers [I] to me."))
+			to_chat(H, span_notice("I offer [I] to [src.name]."))
 		else
-			to_chat(H, "<span class='warning'>[src.name]'s hands are full.</span>")
+			to_chat(H, span_warning("[src.name]'s hands are full."))
 
 /atom/proc/onkick(mob/user)
 	return
@@ -155,10 +155,10 @@
 
 /mob/living/carbon/onbite(mob/living/carbon/human/user)
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
-		to_chat(user, "<span class='warning'>I don't want to harm [src]!</span>")
+		to_chat(user, span_warning("I don't want to harm [src]!"))
 		return FALSE
 	if(user.mouth)
-		to_chat(user, "<span class='warning'>My mouth has something in it.</span>")
+		to_chat(user, span_warning("My mouth has something in it."))
 		return FALSE
 
 	var/datum/intent/bite/bitten = new()
@@ -172,49 +172,50 @@
 	var/def_zone = check_zone(user.zone_selected)
 	var/obj/item/bodypart/affecting = get_bodypart(def_zone)
 	if(!affecting)
-		to_chat(user, "<span class='warning'>Nothing to bite.</span>")
+		to_chat(user, span_warning("Nothing to bite."))
 		return
 
 	next_attack_msg.Cut()
 
 	var/nodmg = FALSE
 	var/dam2do = 10*(user.STASTR/20)
-	if(HAS_TRAIT(user, RTRAIT_STRONGBITE))
+	if(HAS_TRAIT(user, TRAIT_STRONGBITE))
 		dam2do *= 2
-	if(!HAS_TRAIT(user, RTRAIT_STRONGBITE))
+	if(!HAS_TRAIT(user, TRAIT_STRONGBITE))
 		if(!affecting.has_wound(/datum/wound/bite))
 			nodmg = TRUE
 	if(!nodmg)
-		var/armor_block = run_armor_check(user.zone_selected, "melee",blade_dulling=BCLASS_BITE)
+		var/armor_block = run_armor_check(user.zone_selected, "stab",blade_dulling=BCLASS_BITE)
 		if(!apply_damage(dam2do, BRUTE, def_zone, armor_block, user))
 			nodmg = TRUE
 			next_attack_msg += " <span class='warning'>Armor stops the damage.</span>"
 
+	var/datum/wound/caused_wound
 	if(!nodmg)
-		affecting.attacked_by(BCLASS_BITE, dam2do, user, user.zone_selected)
-	visible_message("<span class='danger'>[user] bites [src]'s [parse_zone(user.zone_selected)]![next_attack_msg.Join()]</span>", \
-					"<span class='userdanger'>[user] bites my [parse_zone(user.zone_selected)]![next_attack_msg.Join()]</span>")
+		caused_wound = affecting.bodypart_attacked_by(BCLASS_BITE, dam2do, user, user.zone_selected, crit_message = TRUE)
+	visible_message(span_danger("[user] bites [src]'s [parse_zone(user.zone_selected)]![next_attack_msg.Join()]"), \
+					span_userdanger("[user] bites my [parse_zone(user.zone_selected)]![next_attack_msg.Join()]"))
 
 	next_attack_msg.Cut()
 
 	if(!nodmg)
 		playsound(src, "smallslash", 100, TRUE, -1)
-		if(user.mind && mind)
+		if(ishuman(src) && user.mind)
 			if(user.mind.has_antag_datum(/datum/antagonist/werewolf))
-				if(!src.mind.has_antag_datum(/datum/antagonist/werewolf))
-					if(prob(10))
-						addtimer(CALLBACK(src, .mob/living/carbon/human/proc/werewolf_infect), 3 MINUTES)
+				caused_wound?.werewolf_infect_attempt()
+				if(prob(30))
+					user.werewolf_feed(src)
 			if(user.mind.has_antag_datum(/datum/antagonist/zombie))
-				if(!src.mind.has_antag_datum(/datum/antagonist/zombie))
-					if(prob(23))
-						addtimer(CALLBACK(src, .mob/living/carbon/human/proc/zombie_infect), 3 MINUTES)
+				var/datum/antagonist/zombie/existing_zomble = mind?.has_antag_datum(/datum/antagonist/zombie)
+				if(caused_wound?.zombie_infect_attempt() && !existing_zomble)
+					user.mind.adjust_triumphs(1)
 
 	var/obj/item/grabbing/bite/B = new()
 	user.equip_to_slot_or_del(B, SLOT_MOUTH)
 	if(user.mouth == B)
 		var/used_limb = src.find_used_grab_limb(user)
-		B.name = "[src]'s [used_limb]"
-		var/obj/item/bodypart/BP = get_bodypart(check_zone(user.zone_selected))
+		B.name = "[src]'s [parse_zone(used_limb)]"
+		var/obj/item/bodypart/BP = get_bodypart(check_zone(used_limb))
 		BP.grabbedby += B
 		B.grabbed = src
 		B.grabbee = user
@@ -248,12 +249,12 @@
 					return
 				if(A == src)
 					return
-				if(ismob(A))
-					var/mob/M = A
-					if(lying && M.pulling != src)
+				if(isliving(A))
+					var/mob/living/L = A
+					if(!(mobility_flags & MOBILITY_STAND) && L.pulling == src)
 						return
 				if(IsOffBalanced())
-					to_chat(src, "<span class='warning'>I haven't regained my balance yet.</span>")
+					to_chat(src, span_warning("I haven't regained my balance yet."))
 					return
 				changeNext_move(mmb_intent.clickcd)
 				face_atom(A)
@@ -290,25 +291,26 @@
 				return
 			if(INTENT_JUMP)
 				if(istype(src.loc, /turf/open/water))
-					to_chat(src, "<span class='warning'>I'm floating.</span>")
+					to_chat(src, span_warning("I'm floating in [get_turf(src)]."))
+					return
+				if(!A || QDELETED(A) || !A.loc)
 					return
 				if(A == src || A == src.loc)
 					return
 				if(src.get_num_legs() < 2)
 					return
 				if(pulledby && pulledby != src)
-					to_chat(src, "<span class='warning'>I'm being grabbed.</span>")
+					to_chat(src, span_warning("I'm being grabbed."))
 					return
 				if(IsOffBalanced())
-					to_chat(src, "<span class='warning'>I haven't regained my balance yet.</span>")
+					to_chat(src, span_warning("I haven't regained my balance yet."))
 					return
-				if(lying)
-					to_chat(src, "<span class='warning'>I should stand up first.</span>")
-					return
-				if(!ismob(A) && !isturf(A))
-					return
+				if(!(mobility_flags & MOBILITY_STAND))
+					if(!HAS_TRAIT(src, TRAIT_LEAPER))// The Jester cares not for such social convention.
+						to_chat(src, span_warning("I should stand up first."))
+						return
 				if(A.z != src.z)
-					if(!HAS_TRAIT(src, RTRAIT_ZJUMP))
+					if(!HAS_TRAIT(src, TRAIT_ZJUMP))
 						return
 				changeNext_move(mmb_intent.clickcd)
 				face_atom(A)
@@ -323,7 +325,8 @@
 					OffBalance(30)
 					jadded = 15
 					jrange = 3
-					jextra = TRUE
+					if(!HAS_TRAIT(src, TRAIT_LEAPER))// The Jester lands where the Jester wants.
+						jextra = TRUE
 				else
 					OffBalance(20)
 					jadded = 10
@@ -360,7 +363,10 @@
 				if(src.incapacitated())
 					return
 				if(!get_location_accessible(src, BODY_ZONE_PRECISE_MOUTH, grabs="other"))
-					to_chat(src, "<span class='warning'>My mouth is blocked.</span>")
+					to_chat(src, span_warning("My mouth is blocked."))
+					return
+				if(HAS_TRAIT(src, TRAIT_NO_BITE))
+					to_chat(src, span_warning("I can't bite."))
 					return
 				changeNext_move(mmb_intent.clickcd)
 				face_atom(A)
@@ -377,37 +383,65 @@
 					var/targetperception = (V.STAPER)
 					var/list/stealablezones = list("chest", "neck", "groin", "r_hand", "l_hand")
 					var/list/stealpos = list()
+					var/list/mobsbehind = list()
+					var/exp_to_gain = STAINT
 					if(stealroll > targetperception)
-						if(!(zone_selected in stealablezones))
-							to_chat()
+					//TODO add exp here
+						if(U.get_active_held_item())
+							to_chat(src, span_warning("I can't pickpocket while my hand is full!"))
 							return
-						switch(U.zone_selected)
-							if("chest")
-								stealpos.Add(V.get_item_by_slot(SLOT_BACK_L))
-								stealpos.Add(V.get_item_by_slot(SLOT_BACK_R))
-							if("neck")
-								stealpos.Add(V.get_item_by_slot(SLOT_NECK))
-							if("groin")
-								stealpos.Add(V.get_item_by_slot(SLOT_BELT_R))
-								stealpos.Add(V.get_item_by_slot(SLOT_BELT_L))	
-							if("r_hand" || "l_hand")
-								stealpos.Add(V.get_item_by_slot(SLOT_RING))
-						var/obj/item/picked = pick(stealpos)
-						V.dropItemToGround(picked)
-						put_in_active_hand(picked)						
-						to_chat(src, "<span class='green'>I stole [picked]!</span>")
-					if(stealroll <= 4)	
-						to_chat(V, "<span class='danger'>Someone tried pickpocketing me!</span>")
+						if(!(zone_selected in stealablezones))
+							to_chat(src, span_warning("What am I going to steal from there?"))
+							return
+						mobsbehind |= cone(V, list(turn(V.dir, 180)), list(src))
+						if(mobsbehind.Find(src))
+							switch(U.zone_selected)
+								if("chest")
+									if (V.get_item_by_slot(SLOT_BACK_L))
+										stealpos.Add(V.get_item_by_slot(SLOT_BACK_L))
+									if (V.get_item_by_slot(SLOT_BACK_R))
+										stealpos.Add(V.get_item_by_slot(SLOT_BACK_R))
+								if("neck")
+									if (V.get_item_by_slot(SLOT_NECK))
+										stealpos.Add(V.get_item_by_slot(SLOT_NECK))
+								if("groin")
+									if (V.get_item_by_slot(SLOT_BELT_R))
+										stealpos.Add(V.get_item_by_slot(SLOT_BELT_R))
+									if (V.get_item_by_slot(SLOT_BELT_L))
+										stealpos.Add(V.get_item_by_slot(SLOT_BELT_L))	
+								if("r_hand" || "l_hand")
+									if (V.get_item_by_slot(SLOT_RING))
+										stealpos.Add(V.get_item_by_slot(SLOT_RING))
+							if (length(stealpos) > 0)
+								var/obj/item/picked = pick(stealpos)
+								V.dropItemToGround(picked)
+								put_in_active_hand(picked)						
+								to_chat(src, span_green("I stole [picked]!"))
+								V.log_message("has had \the [picked] stolen by [key_name(U)]", LOG_ATTACK, color="black")
+								U.log_message("has stolen \the [picked] from [key_name(V)]", LOG_ATTACK, color="black")
+								exp_to_gain *= src.mind.get_learning_boon(thiefskill)
+							else
+								exp_to_gain /= 2 // these can be removed or changed on reviewer's discretion
+								to_chat(src, span_warning("I didn't find anything there. Perhaps I should look elsewhere."))
+						else
+							to_chat(src, "<span class='warning'>They can see me!")
+					if(stealroll <= 4)
+						V.log_message("has had an attempted pickpocket by [key_name(U)]", LOG_ATTACK, color="black")
+						U.log_message("has attempted to pickpocket [key_name(V)]", LOG_ATTACK, color="black")
+						to_chat(V, span_danger("Someone tried pickpocketing me!"))
 					if(stealroll < targetperception)
-						to_chat(src, "<span class='danger'>I failed to pick the pocket!</span>")
+						V.log_message("has had an attempted pickpocket by [key_name(U)]", LOG_ATTACK, color="black")
+						U.log_message("has attempted to pickpocket [key_name(V)]", LOG_ATTACK, color="black")
+						to_chat(src, span_danger("I failed to pick the pocket!"))
+						exp_to_gain /= 5 // these can be removed or changed on reviewer's discretion
+					src.mind.adjust_experience(/datum/skill/misc/stealing, exp_to_gain, FALSE)
 					changeNext_move(mmb_intent.clickcd)
 				return
 			if(INTENT_SPELL)
-				if(ranged_ability)
-					if(ranged_ability.InterceptClickOn(src, params, A))
-						changeNext_move(mmb_intent.clickcd)
-						if(mmb_intent.releasedrain)
-							rogfat_add(mmb_intent.releasedrain)
+				if(ranged_ability?.InterceptClickOn(src, params, A))
+					changeNext_move(mmb_intent.clickcd)
+					if(mmb_intent.releasedrain)
+						rogfat_add(mmb_intent.releasedrain)
 				return
 
 //Return TRUE to cancel other attack hand effects that respect it.
@@ -441,7 +475,7 @@
 	if(!user.can_interact_with(src))
 		return FALSE
 	if((interaction_flags_atom & INTERACT_ATOM_REQUIRES_DEXTERITY) && !user.IsAdvancedToolUser())
-		to_chat(user, "<span class='warning'>I don't have the dexterity to do this!</span>")
+		to_chat(user, span_warning("I don't have the dexterity to do this!"))
 		return FALSE
 	if(!(interaction_flags_atom & INTERACT_ATOM_IGNORE_INCAPACITATED) && user.incapacitated((interaction_flags_atom & INTERACT_ATOM_IGNORE_RESTRAINED), !(interaction_flags_atom & INTERACT_ATOM_CHECK_GRAB)))
 		return FALSE
@@ -489,8 +523,8 @@
 //		src.emote("attackgrunt")
 		playsound(get_turf(src), used_intent.miss_sound, 100, FALSE)
 		if(used_intent.miss_text)
-			visible_message("<span class='warning'>[src] [used_intent.miss_text]!</span>", \
-							"<span class='warning'>I [used_intent.miss_text]!</span>")
+			visible_message(span_warning("[src] [used_intent.miss_text]!"), \
+							span_warning("I [used_intent.miss_text]!"))
 		aftermiss()
 
 //	if(isturf(A) && get_dist(src,A) <= 1) //move this to grab inhand item being used on an empty tile
@@ -512,10 +546,10 @@
 			if(istype(AM) && !AM.anchored)
 				var/jadded = max(100-(STASTR*10),5)
 				if(rogfat_add(jadded))
-					visible_message("<span class='info'>[src] pushes [AM].</span>")
+					visible_message(span_info("[src] pushes [AM]."))
 					PushAM(AM, MOVE_FORCE_STRONG)
 				else
-					visible_message("<span class='warning'>[src] pushes [AM].</span>")
+					visible_message(span_warning("[src] pushes [AM]."))
 				return
 	A.attack_animal(src)
 
@@ -557,21 +591,21 @@
 		if(ishuman(ML))
 			var/mob/living/carbon/human/H = ML
 			affecting = H.get_bodypart(ran_zone(dam_zone))
-		var/armor = ML.run_armor_check(affecting, "melee")
+		var/armor = ML.run_armor_check(affecting, "stab")
 		if(prob(75))
 			ML.apply_damage(rand(1,3), BRUTE, affecting, armor)
-			ML.visible_message("<span class='danger'>[name] bites [ML]!</span>", \
-							"<span class='danger'>[name] bites you!</span>", "<span class='hear'>I hear a chomp!</span>", COMBAT_MESSAGE_RANGE, name)
-			to_chat(name, "<span class='danger'>I bite [ML]!</span>")
+			ML.visible_message(span_danger("[name] bites [ML]!"), \
+							span_danger("[name] bites you!"), span_hear("I hear a chomp!"), COMBAT_MESSAGE_RANGE, name)
+			to_chat(name, span_danger("I bite [ML]!"))
 			if(armor >= 2)
 				return
 			for(var/thing in diseases)
 				var/datum/disease/D = thing
 				ML.ForceContractDisease(D)
 		else
-			ML.visible_message("<span class='danger'>[src]'s bite misses [ML]!</span>", \
-							"<span class='danger'>I avoid [src]'s bite!</span>", "<span class='hear'>I hear jaws snapping shut!</span>", COMBAT_MESSAGE_RANGE, src)
-			to_chat(src, "<span class='danger'>My bite misses [ML]!</span>")
+			ML.visible_message(span_danger("[src]'s bite misses [ML]!"), \
+							span_danger("I avoid [src]'s bite!"), span_hear("I hear jaws snapping shut!"), COMBAT_MESSAGE_RANGE, src)
+			to_chat(src, span_danger("My bite misses [ML]!"))
 
 /*
 	Aliens

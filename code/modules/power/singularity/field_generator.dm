@@ -34,7 +34,7 @@ field_generator power level display
 	max_integrity = 500
 	CanAtmosPass = ATMOS_PASS_YES
 	//100% immune to lasers and energy projectiles since it absorbs their energy.
-	armor = list("melee" = 25, "bullet" = 10, "laser" = 100, "energy" = 100, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 50, "acid" = 70)
+	armor = list("blunt" = 25, "slash" = 20, "stab" = 15, "bullet" = 10, "laser" = 100, "energy" = 100, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 50, "acid" = 70)
 	var/const/num_power_levels = 6	// Total number of power level icon has
 	var/power_level = 0
 	var/active = FG_OFFLINE
@@ -72,28 +72,28 @@ field_generator power level display
 	if(state == FG_WELDED)
 		if(get_dist(src, user) <= 1)//Need to actually touch the thing to turn it on
 			if(active >= FG_CHARGING)
-				to_chat(user, "<span class='warning'>I are unable to turn off [src] once it is online!</span>")
+				to_chat(user, span_warning("I are unable to turn off [src] once it is online!"))
 				return 1
 			else
-				user.visible_message("<span class='notice'>[user] turns on [src].</span>", \
-					"<span class='notice'>I turn on [src].</span>", \
-					"<span class='hear'>I hear heavy droning.</span>")
+				user.visible_message(span_notice("[user] turns on [src]."), \
+					span_notice("I turn on [src]."), \
+					span_hear("I hear heavy droning."))
 				turn_on()
 				investigate_log("<font color='green'>activated</font> by [key_name(user)].", INVESTIGATE_SINGULO)
 
 				add_fingerprint(user)
 	else
-		to_chat(user, "<span class='warning'>[src] needs to be firmly secured to the floor first!</span>")
+		to_chat(user, span_warning("[src] needs to be firmly secured to the floor first!"))
 
 /obj/machinery/field/generator/can_be_unfasten_wrench(mob/user, silent)
 	if(active)
 		if(!silent)
-			to_chat(user, "<span class='warning'>Turn \the [src] off first!</span>")
+			to_chat(user, span_warning("Turn \the [src] off first!"))
 		return FAILED_UNFASTEN
 
 	else if(state == FG_WELDED)
 		if(!silent)
-			to_chat(user, "<span class='warning'>[src] is welded to the floor!</span>")
+			to_chat(user, span_warning("[src] is welded to the floor!"))
 		return FAILED_UNFASTEN
 
 	return ..()
@@ -114,32 +114,32 @@ field_generator power level display
 /obj/machinery/field/generator/welder_act(mob/living/user, obj/item/I)
 	. = ..()
 	if(active)
-		to_chat(user, "<span class='warning'>[src] needs to be off!</span>")
+		to_chat(user, span_warning("[src] needs to be off!"))
 		return TRUE
 
 	switch(state)
 		if(FG_UNSECURED)
-			to_chat(user, "<span class='warning'>[src] needs to be wrenched to the floor!</span>")
+			to_chat(user, span_warning("[src] needs to be wrenched to the floor!"))
 
 		if(FG_SECURED)
 			if(!I.tool_start_check(user, amount=0))
 				return TRUE
-			user.visible_message("<span class='notice'>[user] starts to weld [src] to the floor.</span>", \
-				"<span class='notice'>I start to weld \the [src] to the floor...</span>", \
-				"<span class='hear'>I hear welding.</span>")
+			user.visible_message(span_notice("[user] starts to weld [src] to the floor."), \
+				span_notice("I start to weld \the [src] to the floor..."), \
+				span_hear("I hear welding."))
 			if(I.use_tool(src, user, 20, volume=50) && state == FG_SECURED)
 				state = FG_WELDED
-				to_chat(user, "<span class='notice'>I weld the field generator to the floor.</span>")
+				to_chat(user, span_notice("I weld the field generator to the floor."))
 
 		if(FG_WELDED)
 			if(!I.tool_start_check(user, amount=0))
 				return TRUE
-			user.visible_message("<span class='notice'>[user] starts to cut [src] free from the floor.</span>", \
-				"<span class='notice'>I start to cut \the [src] free from the floor...</span>", \
-				"<span class='hear'>I hear welding.</span>")
+			user.visible_message(span_notice("[user] starts to cut [src] free from the floor."), \
+				span_notice("I start to cut \the [src] free from the floor..."), \
+				span_hear("I hear welding."))
 			if(I.use_tool(src, user, 20, volume=50) && state == FG_WELDED)
 				state = FG_SECURED
-				to_chat(user, "<span class='notice'>I cut \the [src] free from the floor.</span>")
+				to_chat(user, span_notice("I cut \the [src] free from the floor."))
 
 	return TRUE
 
@@ -148,7 +148,7 @@ field_generator power level display
 	if(M.environment_smash & ENVIRONMENT_SMASH_RWALLS && active == FG_OFFLINE && state != FG_UNSECURED)
 		state = FG_UNSECURED
 		anchored = FALSE
-		M.visible_message("<span class='warning'>[M] rips [src] free from its moorings!</span>")
+		M.visible_message(span_warning("[M] rips [src] free from its moorings!"))
 	else
 		..()
 	if(!anchored)
@@ -182,8 +182,8 @@ field_generator power level display
 	active = FG_OFFLINE
 	CanAtmosPass = ATMOS_PASS_YES
 	air_update_turf(TRUE)
-	INVOKE_ASYNC(src, .proc/cleanup)
-	addtimer(CALLBACK(src, .proc/cool_down), 50)
+	INVOKE_ASYNC(src, PROC_REF(cleanup))
+	addtimer(CALLBACK(src, PROC_REF(cool_down)), 50)
 
 /obj/machinery/field/generator/proc/cool_down()
 	if(active || warming_up <= 0)
@@ -191,11 +191,11 @@ field_generator power level display
 	warming_up--
 	update_icon()
 	if(warming_up > 0)
-		addtimer(CALLBACK(src, .proc/cool_down), 50)
+		addtimer(CALLBACK(src, PROC_REF(cool_down)), 50)
 
 /obj/machinery/field/generator/proc/turn_on()
 	active = FG_CHARGING
-	addtimer(CALLBACK(src, .proc/warm_up), 50)
+	addtimer(CALLBACK(src, PROC_REF(warm_up)), 50)
 
 /obj/machinery/field/generator/proc/warm_up()
 	if(!active)
@@ -205,7 +205,7 @@ field_generator power level display
 	if(warming_up >= 3)
 		start_fields()
 	else
-		addtimer(CALLBACK(src, .proc/warm_up), 50)
+		addtimer(CALLBACK(src, PROC_REF(warm_up)), 50)
 
 /obj/machinery/field/generator/proc/calc_power(set_power_draw)
 	var/power_draw = 2 + fields.len
@@ -216,7 +216,7 @@ field_generator power level display
 		check_power_level()
 		return 1
 	else
-		visible_message("<span class='danger'>The [name] shuts down!</span>", "<span class='hear'>I hear something shutting down.</span>")
+		visible_message(span_danger("The [name] shuts down!"), span_hear("I hear something shutting down."))
 		turn_off()
 		investigate_log("ran out of power and <font color='red'>deactivated</font>", INVESTIGATE_SINGULO)
 		power = 0
@@ -260,10 +260,10 @@ field_generator power level display
 	move_resist = INFINITY
 	CanAtmosPass = ATMOS_PASS_NO
 	air_update_turf(TRUE)
-	addtimer(CALLBACK(src, .proc/setup_field, 1), 1)
-	addtimer(CALLBACK(src, .proc/setup_field, 2), 2)
-	addtimer(CALLBACK(src, .proc/setup_field, 4), 3)
-	addtimer(CALLBACK(src, .proc/setup_field, 8), 4)
+	addtimer(CALLBACK(src, PROC_REF(setup_field), 1), 1)
+	addtimer(CALLBACK(src, PROC_REF(setup_field), 2), 2)
+	addtimer(CALLBACK(src, PROC_REF(setup_field), 4), 3)
+	addtimer(CALLBACK(src, PROC_REF(setup_field), 8), 4)
 	addtimer(VARSET_CALLBACK(src, active, FG_ONLINE), 5)
 
 /obj/machinery/field/generator/proc/setup_field(NSEW)
@@ -337,7 +337,7 @@ field_generator power level display
 	//This is here to help fight the "hurr durr, release singulo cos nobody will notice before the
 	//singulo eats the evidence". It's not fool-proof but better than nothing.
 	//I want to avoid using global variables.
-	INVOKE_ASYNC(src, .proc/notify_admins)
+	INVOKE_ASYNC(src, PROC_REF(notify_admins))
 
 	move_resist = initial(move_resist)
 

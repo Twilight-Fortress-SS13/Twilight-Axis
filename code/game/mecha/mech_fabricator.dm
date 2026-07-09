@@ -260,7 +260,7 @@
 	updateUsrDialog()
 	return
 
-/obj/machinery/mecha_part_fabricator/proc/get_resource_cost_w_coeff(datum/design/D, var/datum/material/resource, roundto = 1)
+/obj/machinery/mecha_part_fabricator/proc/get_resource_cost_w_coeff(datum/design/D, datum/material/resource, roundto = 1)
 	return round(D.materials[resource]*component_coeff, roundto)
 
 /obj/machinery/mecha_part_fabricator/proc/get_construction_time_w_coeff(datum/design/D, roundto = 1) //aran
@@ -362,7 +362,7 @@
 		add_part_set_to_queue(href_list["partset_to_queue"])
 		return update_queue_on_page()
 	if(href_list["process_queue"])
-		INVOKE_ASYNC(src, .proc/do_process_queue)
+		INVOKE_ASYNC(src, PROC_REF(do_process_queue))
 	if(href_list["clear_temp"])
 		temp = null
 	if(href_list["screen"])
@@ -423,7 +423,7 @@
 /obj/machinery/mecha_part_fabricator/proc/AfterMaterialInsert(item_inserted, id_inserted, amount_inserted)
 	var/datum/material/M = id_inserted
 	add_overlay("fab-load-[M.name]")
-	addtimer(CALLBACK(src, /atom/proc/cut_overlay, "fab-load-[M.name]"), 10)
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, cut_overlay), "fab-load-[M.name]"), 10)
 	updateUsrDialog()
 
 /obj/machinery/mecha_part_fabricator/attackby(obj/item/W, mob/user, params)
@@ -438,10 +438,10 @@
 
 /obj/machinery/mecha_part_fabricator/proc/is_insertion_ready(mob/user)
 	if(panel_open)
-		to_chat(user, "<span class='warning'>I can't load [src] while it's opened!</span>")
+		to_chat(user, span_warning("I can't load [src] while it's opened!"))
 		return FALSE
 	if(being_built)
-		to_chat(user, "<span class='warning'>\The [src] is currently processing! Please wait until completion.</span>")
+		to_chat(user, span_warning("\The [src] is currently processing! Please wait until completion."))
 		return FALSE
 
 	return TRUE

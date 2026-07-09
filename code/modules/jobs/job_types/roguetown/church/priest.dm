@@ -6,23 +6,29 @@
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-
-	f_title = "Priestess"
-	allowed_races = list("Humen","Humen","Elf", "Dwarf","Half-Elf",	"Aasimar")
-	allowed_patrons = list("Astrata")
-	tutorial = "The Divine is all that matters in a world of the immoral. The Weeping god left his children to rule over us mortals and you will preach their wisdom to any who still heed their will. The faithless are growing in number, it is up to you to shepard them to a God-Fearing future."
+	selection_color = JCOLOR_CHURCH
+	allowed_sexes = list(MALE, FEMALE)
+	allowed_races = list(
+		"Humen", 
+		"Aasimar",
+	)
+	allowed_patrons = ALL_DIVINE_PATRONS
+	tutorial = "The Divine is all that matters in a world of the immoral. The Weeping God left his children to rule over us mortals and you will preach their wisdom to any who still heed their will. The faithless are growing in number, it is up to you to shepard them to a Gods-fearing future."
 	whitelist_req = FALSE
+
+	spells = list(/obj/effect/proc_holder/spell/self/convertrole/templar, /obj/effect/proc_holder/spell/self/convertrole/monk)
 	outfit = /datum/outfit/job/roguetown/priest
 
 	display_order = JDO_PRIEST
 	give_bank_account = 115
-	min_pq = -4
+	min_pq = 2
+	max_pq = null
+
+/datum/outfit/job/roguetown/priest
+	allowed_patrons = list(/datum/patron/divine/astrata)
 
 /datum/outfit/job/roguetown/priest/pre_equip(mob/living/carbon/human/H)
 	..()
-	H.verbs |= /mob/living/carbon/human/proc/coronate_lord
-	H.verbs |= /mob/living/carbon/human/proc/churchexcommunicate
-	H.verbs |= /mob/living/carbon/human/proc/churchannouncement
 	neck = /obj/item/clothing/neck/roguetown/psicross/astrata
 	head = /obj/item/clothing/head/roguetown/priestmask
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/priest
@@ -33,23 +39,34 @@
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/rich
 	id = /obj/item/clothing/ring/active/nomag
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/priest
+	backl = /obj/item/storage/backpack/rogue/satchel
+	backpack_contents = list(
+		/obj/item/needle/pestra = 1,
+		/obj/item/natural/worms/leech/cheele = 1, //little buddy
+	)
 	if(H.mind)
-		H.mind.adjust_skillrank(/datum/skill/misc/reading, 5, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/combat/wrestling, 5, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 5, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/combat/polearms, 4, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/misc/reading, 6, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/misc/alchemy, 4, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/misc/medicine, 5, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/magic/holy, 5, TRUE)
-		H.mind.adjust_skillrank(/datum/skill/combat/polearms, 2, TRUE)
 		if(H.age == AGE_OLD)
 			H.mind.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
 		H.change_stat("strength", -1)
-		H.change_stat("intelligence", 2)
-		H.change_stat("constitution", -2)
+		H.change_stat("intelligence", 3)
+		H.change_stat("constitution", -1)
 		H.change_stat("endurance", 1)
-		H.change_stat("speed", -2)
-	var/datum/devotion/cleric_holder/C = new /datum/devotion/cleric_holder(H, H.PATRON) // This creates the cleric holder used for devotion spells
-	C.holder_mob = H
-	H.verbs += list(/mob/living/carbon/human/proc/devotionreport, /mob/living/carbon/human/proc/clericpray)
+		H.change_stat("speed", -1)
+	var/datum/devotion/C = new /datum/devotion(H, H.patron) // This creates the cleric holder used for devotion spells
 	C.grant_spells_priest(H)
+	H.verbs += list(/mob/living/carbon/human/proc/devotionreport, /mob/living/carbon/human/proc/clericpray)
 
-//	ADD_TRAIT(H, RTRAIT_NOBLE, TRAIT_GENERIC)
+	H.verbs |= /mob/living/carbon/human/proc/coronate_lord
+	H.verbs |= /mob/living/carbon/human/proc/churchexcommunicate
+	H.verbs |= /mob/living/carbon/human/proc/churchannouncement
+//	ADD_TRAIT(H, TRAIT_NOBLE, TRAIT_GENERIC)
 //		H.underwear = "Femleotard"
 //		H.underwear_color = CLOTHING_BLACK
 //		H.update_body()
@@ -61,7 +78,7 @@
 	if(!mind)
 		return
 	if(!istype(get_area(src), /area/rogue/indoors/town/church/chapel))
-		to_chat(src, "<span class='warning'>I need to do this in the chapel.</span>")
+		to_chat(src, span_warning("I need to do this in the chapel."))
 		return FALSE
 	for(var/mob/living/carbon/human/HU in get_step(src, src.dir))
 		if(!HU.mind)
@@ -72,30 +89,31 @@
 			continue
 		if(!istype(HU.head, /obj/item/clothing/head/roguetown/crown/serpcrown))
 			continue
+		
+		//Abdicate previous King
 		for(var/mob/living/carbon/human/HL in GLOB.human_list)
 			if(HL.mind)
-				if(HL.mind.assigned_role == "King")
-					HL.mind.assigned_role = "Ex-King"
+				if(HL.mind.assigned_role == "King" || HL.mind.assigned_role == "Queen Consort")
+					HL.mind.assigned_role = "Towner" //So they don't get the innate traits of the king
+			//would be better to change their title directly, but that's not possible since the title comes from the job datum
 			if(HL.job == "King")
-				HL.job = "Ex-King"
-			if(HL.mind)
-				if(HL.mind.assigned_role == "Queen")
-					HL.mind.assigned_role = "Ex-Queen"
-			if(HL.job == "Queen")
-				HL.job = "Ex-Queen"
+				HL.job = "King Emeritus"
+			if(HL.job == "Queen Consort")
+				HL.job = "Queen Dowager"
+
+		//Coronate new King (or Queen)
+		HU.mind.assigned_role = "King"
+		HU.job = "King"
 		switch(HU.gender)
 			if("male")
-				HU.mind.assigned_role = "King"
-				HU.job = "King"
+				SSticker.rulertype = "King"
 			if("female")
-				HU.mind.assigned_role = "Queen"
-				HU.job = "Queen"
+				SSticker.rulertype = "Queen"
 		SSticker.rulermob = HU
 		var/dispjob = mind.assigned_role
-		GLOB.badomens -= "nolord"
+		removeomen(OMEN_NOLORD)
 		say("By the authority of the gods, I pronounce you Ruler of all Rockhill!")
-		priority_announce("[real_name] the [dispjob] has named [HU.real_name] the inheritor of ROGUETOWN!", title = "Long Live [HU.real_name]!", sound = 'sound/misc/bell.ogg')
-		return
+		priority_announce("[real_name] the [dispjob] has named [HU.real_name] the inheritor of ROCKHILL!", title = "Long Live [HU.real_name]!", sound = 'sound/misc/bell.ogg')
 
 /mob/living/carbon/human/proc/churchexcommunicate()
 	set name = "Curse"
@@ -105,11 +123,11 @@
 	var/inputty = input("Curse someone... (curse them again to remove it)", "Sinner Name") as text|null
 	if(inputty)
 		if(!istype(get_area(src), /area/rogue/indoors/town/church/chapel))
-			to_chat(src, "<span class='warning'>I need to do this from the chapel.</span>")
+			to_chat(src, span_warning("I need to do this from the chapel."))
 			return FALSE
 		if(inputty in GLOB.excommunicated_players)
 			GLOB.excommunicated_players -= inputty
-			priority_announce("[real_name] has forgiven [inputty]. Once more walk in the light!", title = "Hail the Ten!", sound = 'sound/misc/bell.ogg')
+			priority_announce("[real_name] has forgiven [inputty]. Once more walk in the light!", title = "Hail the Nine!", sound = 'sound/misc/bell.ogg')
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
 				if(H.real_name == inputty)
 					H.remove_stress(/datum/stressevent/psycurse)
@@ -134,8 +152,22 @@
 	var/inputty = input("Make an announcement", "ROGUETOWN") as text|null
 	if(inputty)
 		if(!istype(get_area(src), /area/rogue/indoors/town/church/chapel))
-			to_chat(src, "<span class='warning'>I need to do this from the chapel.</span>")
+			to_chat(src, span_warning("I need to do this from the chapel."))
 			return FALSE
 		priority_announce("[inputty]", title = "The Priest Speaks", sound = 'sound/misc/bell.ogg')
 
+/obj/effect/proc_holder/spell/self/convertrole/templar
+	name = "Recruit Templar"
+	new_role = "Templar"
+	recruitment_faction = "Templars"
+	recruitment_message = "Serve the nine, %RECRUIT!"
+	accept_message = "FOR THE NINE!"
+	refuse_message = "I refuse."
 
+/obj/effect/proc_holder/spell/self/convertrole/monk
+	name = "Recruit Acolyte"
+	new_role = "Acolyte"
+	recruitment_faction = "Church"
+	recruitment_message = "Serve the nine, %RECRUIT!"
+	accept_message = "FOR THE NINE!"
+	refuse_message = "I refuse."

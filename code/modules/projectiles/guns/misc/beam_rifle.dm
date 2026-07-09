@@ -102,13 +102,13 @@
 			zoom_lock = 0
 		switch(zoom_lock)
 			if(ZOOM_LOCK_AUTOZOOM_FREEMOVE)
-				to_chat(user, "<span class='boldnotice'>I switch [src]'s zooming processor to free directional.</span>")
+				to_chat(user, span_boldnotice("I switch [src]'s zooming processor to free directional."))
 			if(ZOOM_LOCK_AUTOZOOM_ANGLELOCK)
-				to_chat(user, "<span class='boldnotice'>I switch [src]'s zooming processor to locked directional.</span>")
+				to_chat(user, span_boldnotice("I switch [src]'s zooming processor to locked directional."))
 			if(ZOOM_LOCK_CENTER_VIEW)
-				to_chat(user, "<span class='boldnotice'>I switch [src]'s zooming processor to center mode.</span>")
+				to_chat(user, span_boldnotice("I switch [src]'s zooming processor to center mode."))
 			if(ZOOM_LOCK_OFF)
-				to_chat(user, "<span class='boldnotice'>I disable [src]'s zooming system.</span>")
+				to_chat(user, span_boldnotice("I disable [src]'s zooming system."))
 		reset_zooming()
 	else
 		..()
@@ -158,7 +158,7 @@
 
 /obj/item/gun/energy/beam_rifle/attack_self(mob/user)
 	projectile_setting_pierce = !projectile_setting_pierce
-	to_chat(user, "<span class='boldnotice'>I set \the [src] to [projectile_setting_pierce? "pierce":"impact"] mode.</span>")
+	to_chat(user, span_boldnotice("I set \the [src] to [projectile_setting_pierce? "pierce":"impact"] mode."))
 	aiming_beam()
 
 /obj/item/gun/energy/beam_rifle/proc/update_slowdown()
@@ -272,7 +272,7 @@
 		current_user = null
 	if(istype(user))
 		current_user = user
-		RegisterSignal(user, COMSIG_MOVABLE_MOVED, .proc/on_mob_move)
+		RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(on_mob_move))
 		listeningTo = user
 
 /obj/item/gun/energy/beam_rifle/onMouseDrag(src_object, over_object, src_location, over_location, params, mob)
@@ -287,7 +287,7 @@
 /obj/item/gun/energy/beam_rifle/onMouseDown(object, location, params, mob/mob)
 	if(istype(mob))
 		set_user(mob)
-	if(istype(object, /obj/screen) && !istype(object, /obj/screen/click_catcher))
+	if(istype(object, /atom/movable/screen) && !istype(object, /atom/movable/screen/click_catcher))
 		return
 	if((object in mob.contents) || (object == mob))
 		return
@@ -295,7 +295,7 @@
 	return ..()
 
 /obj/item/gun/energy/beam_rifle/onMouseUp(object, location, params, mob/M)
-	if(istype(object, /obj/screen) && !istype(object, /obj/screen/click_catcher))
+	if(istype(object, /atom/movable/screen) && !istype(object, /atom/movable/screen/click_catcher))
 		return
 	process_aim()
 	if(aiming_time_left <= aiming_time_fire_threshold && check_user())
@@ -449,7 +449,7 @@
 	new /obj/effect/temp_visual/explosion/fast(epicenter)
 	for(var/mob/living/L in range(aoe_mob_range, epicenter))		//handle aoe mob damage
 		L.adjustFireLoss(aoe_mob_damage)
-		to_chat(L, "<span class='danger'>\The [src] sears you!</span>")
+		to_chat(L, span_danger("\The [src] sears you!"))
 	for(var/turf/T in range(aoe_fire_range, epicenter))		//handle aoe fire
 		if(prob(aoe_fire_chance))
 			new /obj/effect/hotspot(T)

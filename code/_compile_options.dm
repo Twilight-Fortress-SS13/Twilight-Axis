@@ -11,7 +11,7 @@
 //0 test
 //12 minutes norma
 //#define ROUNDTIMERBOAT (300 MINUTES)
-#define INITIAL_ROUND_TIMER (99 MINUTES)
+#define INITIAL_ROUND_TIMER (120 MINUTES)
 #define ROUND_EXTENSION_TIME (30 MINUTES)
 //180 norma
 //60 test
@@ -71,3 +71,7 @@
 #ifdef TRAVISTESTING
 #define TESTING
 #endif
+
+// A reasonable number of maximum overlays an object needs
+// If you think you need more, rethink it
+#define MAX_ATOM_OVERLAYS 100

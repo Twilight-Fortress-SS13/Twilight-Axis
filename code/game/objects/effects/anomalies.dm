@@ -76,7 +76,7 @@
 
 /obj/effect/anomaly/attackby(obj/item/I, mob/user, params)
 	if(I.tool_behaviour == TOOL_ANALYZER)
-		to_chat(user, "<span class='notice'>Analyzing... [src]'s unstable field is fluctuating along frequency [format_frequency(aSignal.frequency)], code [aSignal.code].</span>")
+		to_chat(user, span_notice("Analyzing... [src]'s unstable field is fluctuating along frequency [format_frequency(aSignal.frequency)], code [aSignal.code]."))
 
 ///////////////////////
 
@@ -228,7 +228,7 @@
 				if(ismob(A) && !(A in flashers)) // don't flash if we're already doing an effect
 					var/mob/M = A
 					if(M.client)
-						INVOKE_ASYNC(src, .proc/blue_effect, M)
+						INVOKE_ASYNC(src, PROC_REF(blue_effect), M)
 
 /obj/effect/anomaly/bluespace/proc/blue_effect(mob/M)
 	var/obj/blueeffect = new /obj(src)
@@ -262,7 +262,7 @@
 		T.atmos_spawn_air("o2=5;plasma=5;TEMP=1000")
 
 /obj/effect/anomaly/pyro/detonate()
-	INVOKE_ASYNC(src, .proc/makepyroslime)
+	INVOKE_ASYNC(src, PROC_REF(makepyroslime))
 
 /obj/effect/anomaly/pyro/proc/makepyroslime()
 	var/turf/open/T = get_turf(src)

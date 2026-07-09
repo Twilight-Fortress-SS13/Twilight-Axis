@@ -118,7 +118,7 @@
 				return
 
 			log_admin("[key_name(usr)] reset the thunderdome to default with delete_mobs==[delete_mobs].", 1)
-			message_admins("<span class='adminnotice'>[key_name_admin(usr)] reset the thunderdome to default with delete_mobs==[delete_mobs].</span>")
+			message_admins(span_adminnotice("[key_name_admin(usr)] reset the thunderdome to default with delete_mobs==[delete_mobs]."))
 
 			var/area/thunderdome = GLOB.areas_by_type[/area/tdome/arena]
 			if(delete_mobs == "Yes")
@@ -147,7 +147,7 @@
 				return
 			set_station_name(new_name)
 			log_admin("[key_name(usr)] renamed the station to \"[new_name]\".")
-			message_admins("<span class='adminnotice'>[key_name_admin(usr)] renamed the station to: [new_name].</span>")
+			message_admins(span_adminnotice("[key_name_admin(usr)] renamed the station to: [new_name]."))
 			priority_announce("[command_name()] has renamed the station to \"[new_name]\".")
 		if("night_shift_set")
 			if(!check_rights(R_ADMIN))
@@ -173,7 +173,7 @@
 			var/new_name = new_station_name()
 			set_station_name(new_name)
 			log_admin("[key_name(usr)] reset the station name.")
-			message_admins("<span class='adminnotice'>[key_name_admin(usr)] reset the station name.</span>")
+			message_admins(span_adminnotice("[key_name_admin(usr)] reset the station name."))
 			priority_announce("[command_name()] has renamed the station to \"[new_name]\".")
 
 		if("list_bombers")
@@ -235,7 +235,7 @@
 				message_admins("[key_name_admin(usr)] [new_perma ? "stopped" : "started"] the arrivals shuttle")
 				log_admin("[key_name(usr)] [new_perma ? "stopped" : "started"] the arrivals shuttle")
 			else
-				to_chat(usr, "<span class='admin'>There is no arrivals shuttle.</span>")
+				to_chat(usr, span_admin("There is no arrivals shuttle."))
 		if("showailaws")
 			if(!check_rights(R_ADMIN))
 				return
@@ -286,7 +286,7 @@
 			SSblackbox.record_feedback("nested tally", "admin_secrets_fun_used", 1, list("Monkeyize All Humans"))
 			for(var/i in GLOB.human_list)
 				var/mob/living/carbon/human/H = i
-				INVOKE_ASYNC(H, /mob/living/carbon.proc/monkeyize)
+				INVOKE_ASYNC(H, TYPE_PROC_REF(/mob/living/carbon, monkeyize))
 			ok = 1
 
 		if("allspecies")
@@ -313,7 +313,7 @@
 				return
 			SSblackbox.record_feedback("nested tally", "admin_secrets_fun_used", 1, list("Power All APCs"))
 			log_admin("[key_name(usr)] made all areas powered", 1)
-			message_admins("<span class='adminnotice'>[key_name_admin(usr)] made all areas powered</span>")
+			message_admins(span_adminnotice("[key_name_admin(usr)] made all areas powered"))
 			power_restore()
 
 		if("unpower")
@@ -321,7 +321,7 @@
 				return
 			SSblackbox.record_feedback("nested tally", "admin_secrets_fun_used", 1, list("Depower All APCs"))
 			log_admin("[key_name(usr)] made all areas unpowered", 1)
-			message_admins("<span class='adminnotice'>[key_name_admin(usr)] made all areas unpowered</span>")
+			message_admins(span_adminnotice("[key_name_admin(usr)] made all areas unpowered"))
 			power_failure()
 
 		if("quickpower")
@@ -329,7 +329,7 @@
 				return
 			SSblackbox.record_feedback("nested tally", "admin_secrets_fun_used", 1, list("Power All SMESs"))
 			log_admin("[key_name(usr)] made all SMESs powered", 1)
-			message_admins("<span class='adminnotice'>[key_name_admin(usr)] made all SMESs powered</span>")
+			message_admins(span_adminnotice("[key_name_admin(usr)] made all SMESs powered"))
 			power_restore_quick()
 
 		if("traitor_all")
@@ -356,7 +356,7 @@
 				new_objective.explanation_text = objective
 				T.add_objective(new_objective)
 				H.mind.add_antag_datum(T)
-			message_admins("<span class='adminnotice'>[key_name_admin(usr)] used everyone is a traitor secret. Objective is [objective]</span>")
+			message_admins(span_adminnotice("[key_name_admin(usr)] used everyone is a traitor secret. Objective is [objective]"))
 			log_admin("[key_name(usr)] used everyone is a traitor secret. Objective is [objective]")
 
 		if("changebombcap")
@@ -368,7 +368,7 @@
 			if (!CONFIG_SET(number/bombcap, newBombCap))
 				return
 
-			message_admins("<span class='boldannounce'>[key_name_admin(usr)] changed the bomb cap to [GLOB.MAX_EX_DEVESTATION_RANGE], [GLOB.MAX_EX_HEAVY_RANGE], [GLOB.MAX_EX_LIGHT_RANGE]</span>")
+			message_admins(span_boldannounce("[key_name_admin(usr)] changed the bomb cap to [GLOB.MAX_EX_DEVESTATION_RANGE], [GLOB.MAX_EX_HEAVY_RANGE], [GLOB.MAX_EX_LIGHT_RANGE]"))
 			log_admin("[key_name(usr)] changed the bomb cap to [GLOB.MAX_EX_DEVESTATION_RANGE], [GLOB.MAX_EX_HEAVY_RANGE], [GLOB.MAX_EX_LIGHT_RANGE]")
 
 		if("blackout")
@@ -396,7 +396,7 @@
 				var/mob/living/carbon/human/H = i
 				SEND_SOUND(H, sound('sound/blank.ogg'))
 
-				if(H.dna.species.id == "human")
+				if(H.dna.species.id == "human" || H.dna.species.id == "humen")
 					if(H.dna.features["tail_human"] == "None" || H.dna.features["ears"] == "None")
 						var/obj/item/organ/ears/cat/ears = new
 						var/obj/item/organ/tail/cat/tail = new
@@ -418,7 +418,7 @@
 						if(droptype == "Yes")
 							ADD_TRAIT(I, TRAIT_NODROP, ADMIN_TRAIT)
 				else
-					to_chat(H, "<span class='warning'>You're not kawaii enough for this!</span>")
+					to_chat(H, span_warning("You're not kawaii enough for this!"))
 
 		if("whiteout")
 			if(!check_rights(R_FUN))
@@ -442,7 +442,7 @@
 					var/datum/round_event_control/disease_outbreak/DC = locate(/datum/round_event_control/disease_outbreak) in SSevents.control
 					E = DC.runEvent()
 				if("Choose")
-					var/virus = input("Choose the virus to spread", "BIOHAZARD") as null|anything in sortList(typesof(/datum/disease, /proc/cmp_typepaths_asc))
+					var/virus = input("Choose the virus to spread", "BIOHAZARD") as null|anything in sortList(typesof(/datum/disease, GLOBAL_PROC_REF(cmp_typepaths_asc)))
 					var/datum/round_event_control/disease_outbreak/DC = locate(/datum/round_event_control/disease_outbreak) in SSevents.control
 					var/datum/round_event/disease_outbreak/DO = DC.runEvent()
 					DO.virus_type = virus
@@ -453,7 +453,7 @@
 				return
 			SSblackbox.record_feedback("nested tally", "admin_secrets_fun_used", 1, list("Mass Braindamage"))
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
-				to_chat(H, "<span class='boldannounce'>I suddenly feel stupid.</span>")
+				to_chat(H, span_boldannounce("I suddenly feel stupid."))
 				H.adjustOrganLoss(ORGAN_SLOT_BRAIN, 60, 80)
 			message_admins("[key_name_admin(usr)] made everybody retarded")
 
@@ -624,7 +624,7 @@
 				var/list/prefs = settings["mainsettings"]
 
 				if (prefs["amount"]["value"] < 1 || prefs["portalnum"]["value"] < 1)
-					to_chat(usr, "<span class='warning'>Number of portals and mobs to spawn must be at least 1.</span>")
+					to_chat(usr, span_warning("Number of portals and mobs to spawn must be at least 1."))
 					return
 
 				var/mob/pathToSpawn = prefs["typepath"]["value"]
@@ -632,7 +632,7 @@
 					pathToSpawn = text2path(pathToSpawn)
 
 				if (!ispath(pathToSpawn))
-					to_chat(usr, "<span class='notice'>Invalid path [pathToSpawn].</span>")
+					to_chat(usr, span_notice("Invalid path [pathToSpawn]."))
 					return
 
 				var/list/candidates = list()
@@ -662,9 +662,9 @@
 						var/ghostcandidates = list()
 						for (var/j in 1 to min(prefs["amount"]["value"], length(candidates)))
 							ghostcandidates += pick_n_take(candidates)
-							addtimer(CALLBACK(GLOBAL_PROC, .proc/doPortalSpawn, get_random_station_turf(), pathToSpawn, length(ghostcandidates), storm, ghostcandidates, outfit), i*prefs["delay"]["value"])
+							addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(doPortalSpawn), get_random_station_turf(), pathToSpawn, length(ghostcandidates), storm, ghostcandidates, outfit), i*prefs["delay"]["value"])
 					else if (prefs["playersonly"]["value"] != "Yes")
-						addtimer(CALLBACK(GLOBAL_PROC, .proc/doPortalSpawn, get_random_station_turf(), pathToSpawn, prefs["amount"]["value"], storm, null, outfit), i*prefs["delay"]["value"])
+						addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(doPortalSpawn), get_random_station_turf(), pathToSpawn, prefs["amount"]["value"], storm, null, outfit), i*prefs["delay"]["value"])
 
 	if(E)
 		E.processing = FALSE

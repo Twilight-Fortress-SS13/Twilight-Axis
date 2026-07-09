@@ -1,7 +1,7 @@
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 	name = "crossbow"
-	desc = ""
+	desc = "A deadly weapon that shoots a bolt with terrific power."
 	icon = 'icons/roguetown/weapons/32.dmi'
 	icon_state = "crossbow0"
 	item_state = "crossbow"
@@ -19,6 +19,9 @@
 	load_sound = 'sound/foley/nockarrow.ogg'
 	fire_sound = 'sound/combat/Ranged/crossbow-small-shot-02.ogg'
 	associated_skill = /datum/skill/combat/crossbows
+	anvilrepair = /datum/skill/craft/weaponsmithing
+	smeltresult = /obj/item/ingot/steel
+	var/damfactor = 2
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/getonmobprop(tag)
 	. = ..()
@@ -77,12 +80,12 @@
 		..()
 	else
 		if(!cocked)
-			to_chat(user, "<span class='info'>I step on the stirrup and use all my might...</span>")
-			if(do_after(user, 40 - user.STASTR, target = user))
+			to_chat(user, span_info("I step on the stirrup and use all my might..."))
+			if(do_after(user, 50 - user.STASTR, target = user))
 				playsound(user, 'sound/combat/Ranged/crossbow_medium_reload-01.ogg', 100, FALSE)
 				cocked = TRUE
 		else
-			to_chat(user, "<span class='warning'>I carefully de-cock the crossbow.</span>")
+			to_chat(user, span_warning("I carefully de-cock the crossbow."))
 			cocked = FALSE
 	update_icon()
 
@@ -93,7 +96,7 @@
 				return
 			..()
 		else
-			to_chat(user, "<span class='warning'>I need to cock the bow first.</span>")
+			to_chat(user, span_warning("I need to cock the bow first."))
 
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
@@ -106,8 +109,7 @@
 		spread = 0
 	for(var/obj/item/ammo_casing/CB in get_ammo_list(FALSE, TRUE))
 		var/obj/projectile/BB = CB.BB
-		if(user.STAPER > 10)
-			BB.damage = BB.damage * (user.STAPER / 10)
+		BB.damage = BB.damage * damfactor
 	cocked = FALSE
 	..()
 

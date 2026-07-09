@@ -329,32 +329,15 @@ Turf and target are separate in case you want to teleport some distance from a t
 /proc/sortmobs()
 	var/list/moblist = list()
 	var/list/sortmob = sortNames(GLOB.mob_list)
-	for(var/mob/living/silicon/ai/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/camera/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/living/silicon/pai/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/living/silicon/robot/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/living/carbon/human/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/living/brain/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/living/carbon/alien/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/dead/observer/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/dead/new_player/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/living/carbon/monkey/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/living/simple_animal/slime/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/living/simple_animal/M in sortmob)
-		moblist.Add(M)
-	for(var/mob/living/carbon/true_devil/M in sortmob)
-		moblist.Add(M)
+	var/list/types = list()
+	for(var/mob/M in sortmob)
+		if(M.type in types)
+			types[M.type].Add(M)
+		else
+			types[M.type] = list(M)
+	var/types_sort = sortNames(types)
+	for(var/T in types_sort)
+		moblist.Add(types_sort[T])
 	return moblist
 
 // Format a power value in W, kW, MW, or GW.
@@ -459,7 +442,7 @@ Turf and target are separate in case you want to teleport some distance from a t
 	Gets all contents of contents and returns them all in a list.
 */
 
-/atom/proc/GetAllContents(var/T)
+/atom/proc/GetAllContents(T)
 	var/list/processing_list = list(src)
 	var/list/assembled = list()
 	if(T)
@@ -582,11 +565,11 @@ Turf and target are separate in case you want to teleport some distance from a t
 	for(var/area/A in world)
 		GLOB.sortedAreas.Add(A)
 
-	sortTim(GLOB.sortedAreas, /proc/cmp_name_asc)
+	sortTim(GLOB.sortedAreas, GLOBAL_PROC_REF(cmp_name_asc))
 
 /area/proc/addSorted()
 	GLOB.sortedAreas.Add(src)
-	sortTim(GLOB.sortedAreas, /proc/cmp_name_asc)
+	sortTim(GLOB.sortedAreas, GLOBAL_PROC_REF(cmp_name_asc))
 
 //Takes: Area type as a text string from a variable.
 //Returns: Instance for the area in the world.
@@ -660,86 +643,6 @@ Turf and target are separate in case you want to teleport some distance from a t
 /proc/anyprob(value)
 	return (rand(1,value)==value)
 
-/proc/parse_zone(zone)
-	if(zone == BODY_ZONE_PRECISE_R_HAND)
-		return "right hand"
-	else if (zone == BODY_ZONE_PRECISE_L_HAND)
-		return "left hand"
-	else if (zone == BODY_ZONE_L_ARM)
-		return "left arm"
-	else if (zone == BODY_ZONE_R_ARM)
-		return "right arm"
-	else if (zone == BODY_ZONE_L_LEG)
-		return "left leg"
-	else if (zone == BODY_ZONE_R_LEG)
-		return "right leg"
-	else if (zone == BODY_ZONE_PRECISE_L_FOOT)
-		return "left foot"
-	else if (zone == BODY_ZONE_PRECISE_R_FOOT)
-		return "right foot"
-	else if (zone == BODY_ZONE_PRECISE_NECK)
-		return "throat"
-	else if (zone == BODY_ZONE_PRECISE_GROIN)
-		return "groin"
-	else if (zone == BODY_ZONE_PRECISE_EARS)	//we want the chatlog to say 'grabbed his ear' not 'grabbed his ears' etc
-		return "ear"
-	else if (zone == BODY_ZONE_PRECISE_R_EYE)
-		return "eyes"
-	else if (zone == BODY_ZONE_PRECISE_L_EYE)
-		return "eyes"
-	else if (zone == BODY_ZONE_PRECISE_NOSE)
-		return "nose"
-	else if (zone == BODY_ZONE_R_INHAND)
-		return "right hand"
-	else if (zone == BODY_ZONE_L_INHAND)
-		return "left hand"
-	else if (zone == BODY_ZONE_PRECISE_HAIR)
-		return "hair"
-	else if (zone == BODY_ZONE_PRECISE_MOUTH)
-		return "mouth"
-	else
-		return zone
-
-/mob/living/carbon/proc/parse_zone(zone, mob/living/target)
-	if(zone == BODY_ZONE_PRECISE_R_HAND)
-		return "right hand"
-	else if (zone == BODY_ZONE_PRECISE_L_HAND)
-		return "left hand"
-	else if (zone == BODY_ZONE_L_ARM)
-		return "left arm"
-	else if (zone == BODY_ZONE_R_ARM)
-		return "right arm"
-	else if (zone == BODY_ZONE_L_LEG)
-		return "left leg"
-	else if (zone == BODY_ZONE_R_LEG)
-		return "right leg"
-	else if (zone == BODY_ZONE_PRECISE_L_FOOT)
-		return "left foot"
-	else if (zone == BODY_ZONE_PRECISE_R_FOOT)
-		return "right foot"
-	else if (zone == BODY_ZONE_PRECISE_NECK)
-		return "throat"
-	else if (zone == BODY_ZONE_PRECISE_GROIN)
-		return "groin"
-	else if (zone == BODY_ZONE_PRECISE_EARS)	//we want the chatlog to say 'grabbed his ear' not 'grabbed his ears' etc
-		return "ear"
-	else if (zone == BODY_ZONE_PRECISE_R_EYE)
-		return "right eye"
-	else if (zone == BODY_ZONE_PRECISE_L_EYE)
-		return "left eye"
-	else if (zone == BODY_ZONE_PRECISE_NOSE)
-		return "nose"
-	else if (zone == BODY_ZONE_R_INHAND)
-		return parse_inhand(zone)
-	else if (zone == BODY_ZONE_L_INHAND)
-		return parse_inhand(zone)
-	else if (zone == BODY_ZONE_PRECISE_HAIR)
-		return "hair"
-	else if (zone == BODY_ZONE_PRECISE_MOUTH)
-		return "mouth"
-	else
-		return zone
-
 /*
 
  Gets the turf this atom's *ICON* appears to inhabit
@@ -805,22 +708,12 @@ Turf and target are separate in case you want to teleport some distance from a t
 		loc = loc.loc
 	return null
 
-
-//For objects that should embed, but make no sense being is_sharp or is_pointed()
-//e.g: rods
-GLOBAL_LIST_INIT(can_embed_types, typecacheof(list(
-	/obj/item/stack/rods,
-	/obj/item/pipe)))
-
-/proc/can_embed(obj/item/W)
-	if(W.get_sharpness())
-		return 1
-	if(is_pointed(W))
-		return 1
-
-	if(is_type_in_typecache(W, GLOB.can_embed_types))
-		return 1
-
+/proc/can_embed(obj/item/weapon)
+	if(HAS_TRAIT(weapon, TRAIT_NODROP) || HAS_TRAIT(weapon, TRAIT_NOEMBED))
+		return FALSE
+	if(!weapon.embedding?.embed_chance)
+		return FALSE
+	return TRUE
 
 /*
 Checks if that loc and dir has an item on the wall
@@ -999,7 +892,7 @@ B --><-- A
 // eg: center_image(I, 32,32)
 // eg2: center_image(I, 96,96)
 
-/proc/center_image(var/image/I, x_dimension = 0, y_dimension = 0)
+/proc/center_image(image/I, x_dimension = 0, y_dimension = 0)
 	if(!I)
 		return
 
@@ -1156,7 +1049,7 @@ B --><-- A
 
 	return L
 
-/atom/proc/contains(var/atom/A)
+/atom/proc/contains(atom/A)
 	if(!A)
 		return 0
 	for(var/atom/location = A.loc, location, location = location.loc)
@@ -1309,7 +1202,7 @@ GLOBAL_REAL_VAR(list/stack_trace_storage)
 	pixel_x = initialpixelx
 	pixel_y = initialpixely
 
-/proc/weightclass2text(var/w_class)
+/proc/weightclass2text(w_class)
 	switch(w_class)
 		if(WEIGHT_CLASS_TINY)
 			. = "tiny"
@@ -1500,9 +1393,14 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 //datum may be null, but it does need to be a typed var
 #define NAMEOF(datum, X) (#X || ##datum.##X)
 
-#define VARSET_LIST_CALLBACK(target, var_name, var_value) CALLBACK(GLOBAL_PROC, /proc/___callbackvarset, ##target, ##var_name, ##var_value)
+/**
+ * NAMEOF that actually works in static definitions because src::type requires src to be defined
+ */
+#define NAMEOF_STATIC(datum, X) (nameof(type::##X))
+
+#define VARSET_LIST_CALLBACK(target, var_name, var_value) CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(___callbackvarset), ##target, ##var_name, ##var_value)
 //dupe code because dm can't handle 3 level deep macros
-#define VARSET_CALLBACK(datum, var, var_value) CALLBACK(GLOBAL_PROC, /proc/___callbackvarset, ##datum, NAMEOF(##datum, ##var), ##var_value)
+#define VARSET_CALLBACK(datum, var, var_value) CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(___callbackvarset), ##datum, NAMEOF(##datum, ##var), ##var_value)
 
 /proc/___callbackvarset(list_or_datum, var_name, var_value)
 	if(length(list_or_datum))
@@ -1514,8 +1412,8 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	else
 		D.vars[var_name] = var_value
 
-#define	TRAIT_CALLBACK_ADD(target, trait, source) CALLBACK(GLOBAL_PROC, /proc/___TraitAdd, ##target, ##trait, ##source)
-#define	TRAIT_CALLBACK_REMOVE(target, trait, source) CALLBACK(GLOBAL_PROC, /proc/___TraitRemove, ##target, ##trait, ##source)
+#define	TRAIT_CALLBACK_ADD(target, trait, source) CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(___TraitAdd), ##target, ##trait, ##source)
+#define	TRAIT_CALLBACK_REMOVE(target, trait, source) CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(___TraitRemove), ##target, ##trait, ##source)
 
 ///DO NOT USE ___TraitAdd OR ___TraitRemove as a replacement for ADD_TRAIT / REMOVE_TRAIT defines. To be used explicitly for callback.
 /proc/___TraitAdd(target,trait,source)
@@ -1627,33 +1525,10 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	for(var/i in L)
 		if(condition.Invoke(i))
 			. |= i
-/proc/generate_items_inside(list/items_list,var/where_to)
+/proc/generate_items_inside(list/items_list,where_to)
 	for(var/each_item in items_list)
 		for(var/i in 1 to items_list[each_item])
 			new each_item(where_to)
-
-//sends a message to chat
-//config_setting should be one of the following
-//null - noop
-//empty string - use TgsTargetBroadcast with admin_only = FALSE
-//other string - use TgsChatBroadcast with the tag that matches config_setting, only works with TGS4, if using TGS3 the above method is used
-/proc/send2chat(message, config_setting)
-	if(config_setting == null || !world.TgsAvailable())
-		return
-
-	var/datum/tgs_version/version = world.TgsVersion()
-	if(config_setting == "" || version.suite == 3)
-		world.TgsTargetedChatBroadcast(message, FALSE)
-		return
-
-	var/list/channels_to_use = list()
-	for(var/I in world.TgsChatChannelInfo())
-		var/datum/tgs_chat_channel/channel = I
-		if(channel.tag == config_setting)
-			channels_to_use += channel
-
-	if(channels_to_use.len)
-		world.TgsChatBroadcast()
 
 /proc/num2sign(numeric)
 	if(numeric > 0)

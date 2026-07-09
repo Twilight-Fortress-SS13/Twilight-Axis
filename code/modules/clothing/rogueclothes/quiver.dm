@@ -17,6 +17,7 @@
 	strip_delay = 20
 	var/max_storage = 20
 	var/list/arrows = list()
+	sewrepair = TRUE
 
 /obj/item/quiver/attackby(obj/A, loc, params)
 	if(A.type in subtypesof(/obj/item/ammo_casing/caseless/rogue))
@@ -25,7 +26,7 @@
 			arrows += A
 			update_icon()
 		else
-			to_chat(loc, "<span class='warning'>Full!</span>")
+			to_chat(loc, span_warning("Full!"))
 		return
 	if(istype(A, /obj/item/gun/ballistic/revolver/grenadelauncher/bow))
 		var/obj/item/gun/ballistic/revolver/grenadelauncher/bow/B = A
@@ -50,7 +51,7 @@
 /obj/item/quiver/examine(mob/user)
 	. = ..()
 	if(arrows.len)
-		. += "<span class='notice'>[arrows.len] inside.</span>"
+		. += span_notice("[arrows.len] inside.")
 
 /obj/item/quiver/update_icon()
 	if(arrows.len)
@@ -71,3 +72,19 @@
 		var/obj/item/ammo_casing/caseless/rogue/bolt/A = new()
 		arrows += A
 	update_icon()
+/*
+/obj/item/quiver/Parrows/Initialize()
+	..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/ammo_casing/caseless/rogue/arrow/poison/A = new()
+		arrows += A
+	update_icon()
+
+/obj/item/quiver/Pbolts/Initialize()
+	..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/ammo_casing/caseless/rogue/bolt/poison/A = new()
+		arrows += A
+	update_icon()
+*/
+

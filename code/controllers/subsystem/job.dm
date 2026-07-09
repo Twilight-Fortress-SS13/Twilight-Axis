@@ -21,7 +21,6 @@ SUBSYSTEM_DEF(job)
 		SetupOccupations()
 	if(CONFIG_GET(flag/load_jobs_from_txt))
 		LoadJobs()
-	generate_selectable_species()
 	set_overflow_role(CONFIG_GET(string/overflow_job))
 	return ..()
 
@@ -45,7 +44,7 @@ SUBSYSTEM_DEF(job)
 	occupations = list()
 	var/list/all_jobs = subtypesof(/datum/job/roguetown)
 	if(!all_jobs.len)
-		to_chat(world, "<span class='boldannounce'>Error setting up jobs, no job datums found</span>")
+		to_chat(world, span_boldannounce("Error setting up jobs, no job datums found"))
 		return 0
 
 	for(var/J in all_jobs)
@@ -127,24 +126,26 @@ SUBSYSTEM_DEF(job)
 		if(flag && (!(flag in player.client.prefs.be_special)))
 			JobDebug("FOC flag failed, Player: [player], Flag: [flag], ")
 			continue
-		if(player.mind && job.title in player.mind.restricted_roles)
+		if(player.mind && (job.title in player.mind.restricted_roles))
 			JobDebug("FOC incompatible with antagonist role, Player: [player]")
 			continue
-		if(!(player.client.prefs.pref_species.name in job.allowed_races))
+		if(length(job.allowed_races) && !(player.client.prefs.pref_species.name in job.allowed_races))
 			JobDebug("FOC incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
-		if(!(player.client.prefs.selected_patron.name in job.allowed_patrons))
+		if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron.type in job.allowed_patrons))
 			JobDebug("FOC incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 		if(job.plevel_req > player.client.patreonlevel())
 			JobDebug("FOC incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
-		if(get_playerquality(player.ckey) < job.min_pq)
+		if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq))
+			continue
+		if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq))
 			continue
 		if(!(player.client.prefs.gender in job.allowed_sexes))
 			JobDebug("FOC incompatible with sex, Player: [player], Job: [job.title]")
 			continue
-		if(!(player.client.prefs.age in job.allowed_ages))
+		if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
 			JobDebug("FOC incompatible with age, Player: [player], Job: [job.title], Age: [player.client.prefs.age]")
 			continue
 		if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
@@ -200,11 +201,11 @@ SUBSYSTEM_DEF(job)
 			JobDebug("GRJ incompatible with antagonist role, Player: [player], Job: [job.title]")
 			continue
 
-		if(!(player.client.prefs.pref_species.name in job.allowed_races))
+		if(length(job.allowed_races) && !(player.client.prefs.pref_species.name in job.allowed_races))
 			JobDebug("GRJ incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 
-		if(!(player.client.prefs.selected_patron.name in job.allowed_patrons))
+		if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron.type in job.allowed_patrons))
 			JobDebug("GRJ incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 
@@ -212,19 +213,20 @@ SUBSYSTEM_DEF(job)
 			JobDebug("GRJ incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 
-		if(get_playerquality(player.ckey) < job.min_pq)
-			continue
-
-		if(!(player.client.prefs.age in job.allowed_ages))
+		if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
 			JobDebug("GRJ incompatible with age, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 
-		if(!(player.client.prefs.gender in job.allowed_sexes))
+		if(length(job.allowed_sexes) && !(player.client.prefs.gender in job.allowed_sexes))
 			JobDebug("GRJ incompatible with sex, Player: [player], Job: [job.title]")
 			continue
 
-		if(get_playerquality(player.ckey) < job.min_pq)
+		if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq))
 			JobDebug("GRJ incompatible with minPQ, Player: [player], Job: [job.title]")
+			continue
+
+		if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq))
+			JobDebug("GRJ incompatible with maxPQ, Player: [player], Job: [job.title]")
 			continue
 
 		if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
@@ -370,7 +372,6 @@ SUBSYSTEM_DEF(job)
 
 	//Shuffle players and jobs
 	unassigned = shuffle(unassigned)
-	unassigned = sort_male_female(unassigned)
 
 	HandleFeedbackGathering()
 
@@ -440,11 +441,11 @@ SUBSYSTEM_DEF(job)
 					JobDebug("DO incompatible with antagonist role, Player: [player], Job:[job.title]")
 					continue
 
-				if(!(player.client.prefs.pref_species.name in job.allowed_races))
+				if(length(job.allowed_races) && !(player.client.prefs.pref_species.name in job.allowed_races))
 					JobDebug("DO incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 					continue
 
-				if(!(player.client.prefs.selected_patron.name in job.allowed_patrons))
+				if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron.type in job.allowed_patrons))
 					JobDebug("DO incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 					continue
 
@@ -452,7 +453,10 @@ SUBSYSTEM_DEF(job)
 					JobDebug("DO incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 					continue
 
-				if(get_playerquality(player.ckey) < job.min_pq)
+				if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq))
+					continue
+
+				if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq))
 					continue
 
 				if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass))
@@ -466,11 +470,11 @@ SUBSYSTEM_DEF(job)
 					if(job.whitelist_req && (!player.client.whitelisted()))
 						continue
 
-				if(!(player.client.prefs.age in job.allowed_ages))
+				if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
 					JobDebug("DO incompatible with age, Player: [player], Job: [job.title]")
 					continue
 
-				if(!(player.client.prefs.gender in job.allowed_sexes))
+				if(length(job.allowed_sexes) && !(player.client.prefs.gender in job.allowed_sexes))
 					JobDebug("DO incompatible with gender preference, Player: [player], Job: [job.title]")
 					continue
 
@@ -507,62 +511,64 @@ SUBSYSTEM_DEF(job)
 
 /datum/controller/subsystem/job/proc/do_required_jobs()
 	var/amt_picked = 0
-	var/list/require = list("King", "Merchant")
-	for(var/X in require)
-		var/datum/job/job = GetJob(X)
-		if(!job)
-			continue
-		for(var/mob/dead/new_player/player in unassigned)
-			if(is_banned_from(player.ckey, job.title))
-				continue
-
-			if(QDELETED(player))
-				break
-
-			if(!job.player_old_enough(player.client))
-				continue
-
-			if(job.required_playtime_remaining(player.client))
-				continue
-
-			if(player.mind && job.title in player.mind.restricted_roles)
-				continue
-
-			if(!(player.client.prefs.pref_species.name in job.allowed_races))
-				continue
-			
-			if(!(player.client.prefs.selected_patron.name in job.allowed_patrons))
-				continue
-
-			if(job.plevel_req > player.client.patreonlevel())
-				continue
-
-			if(get_playerquality(player.ckey) < job.min_pq)
-				continue
-
-			if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass))
-				continue
-
-			if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
-				continue
-
-			if(CONFIG_GET(flag/usewhitelist))
-				if(job.whitelist_req && (!player.client.whitelisted()))
+	var/require = list()
+	for(var/datum/job/job in occupations)
+		if(job.required)
+			require += job
+	for(var/datum/job/job in require)
+		for(var/level in level_order)
+			for(var/mob/dead/new_player/player in unassigned)
+				if(player.client.prefs.job_preferences[job.title] != level)
 					continue
 
-			if(!(player.client.prefs.age in job.allowed_ages))
-				continue
+				if(is_banned_from(player.ckey, job.title))
+					continue
 
-			if(!(player.client.prefs.gender in job.allowed_sexes))
-				continue
+				if(QDELETED(player))
+					break
 
-			if(!job.special_job_check(player))
-				continue
+				if(!job.player_old_enough(player.client))
+					continue
 
-			// If the player wants that job on this level, then try give it to him.
-			if(player.client.prefs.job_preferences[job.title] == JP_HIGH)
-				// If the job isn't filled
-				if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
+				if(job.required_playtime_remaining(player.client))
+					continue
+
+				if(player.mind && job.title in player.mind.restricted_roles)
+					continue
+
+				if(length(job.allowed_races) && !(player.client.prefs.pref_species.name in job.allowed_races))
+					continue
+				
+				if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron.type in job.allowed_patrons))
+					continue
+
+				if(job.plevel_req > player.client.patreonlevel())
+					continue
+
+				if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq) && level != JP_LOW) //since its required people on low can roll for it
+					continue
+
+				if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass))
+					continue
+
+				if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
+					continue
+
+				if(CONFIG_GET(flag/usewhitelist))
+					if(job.whitelist_req && (!player.client.whitelisted()))
+						continue
+
+				if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
+					continue
+
+				if(length(job.allowed_sexes) && !(player.client.prefs.gender in job.allowed_sexes))
+					continue
+
+				if(!job.special_job_check(player))
+					continue
+
+				// We only need 1 person for the required job, the rest can use the normal system
+				if((job.current_positions < 1))
 					AssignRole(player, job.title)
 					unassigned -= player
 					amt_picked++
@@ -686,7 +692,7 @@ SUBSYSTEM_DEF(job)
 ////		if(job.req_admin_notify)
 //			to_chat(M, "<b>I are playing a job that is important for Game Progression. If you have to disconnect, please notify the admins via adminhelp.</b>")
 //		if(CONFIG_GET(number/minimal_access_threshold))
-//			to_chat(M, "<span class='notice'><B>As this station was initially staffed with a [CONFIG_GET(flag/jobs_have_minimal_access) ? "full crew, only your job's necessities" : "skeleton crew, additional access may"] have been added to your ID card.</B></span>")
+//			to_chat(M, span_notice("<B>As this station was initially staffed with a [CONFIG_GET(flag/jobs_have_minimal_access) ? "full crew, only your job's necessities" : "skeleton crew, additional access may"] have been added to your ID card.</B>"))
 //		if(job.tutorial)
 //			to_chat(M, job.tutorial)
 	var/related_policy = get_policy(rank)
@@ -809,7 +815,7 @@ SUBSYSTEM_DEF(job)
 	var/oldjobs = SSjob.occupations
 	sleep(20)
 	for (var/datum/job/J in oldjobs)
-		INVOKE_ASYNC(src, .proc/RecoverJob, J)
+		INVOKE_ASYNC(src, PROC_REF(RecoverJob), J)
 
 /datum/controller/subsystem/job/proc/RecoverJob(datum/job/J)
 	var/datum/job/newjob = GetJob(J.title)

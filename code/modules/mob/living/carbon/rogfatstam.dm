@@ -6,6 +6,8 @@
 	if(world.time > last_fatigued + 50) //regen fatigue
 		var/added = rogstam / maxrogstam
 		added = round(-10+ (added*-40))
+		if(HAS_TRAIT(src, TRAIT_MISSING_NOSE))
+			added = round(added * 0.5, 1)
 		if(rogfat >= 1)
 			rogfat_add(added)
 		else
@@ -14,17 +16,22 @@
 	update_health_hud()
 
 /mob/living/proc/update_rogstam()
-	maxrogstam = STAEND*100
+	var/athletics_skill = 0
+	if(mind)
+		athletics_skill = mind.get_skill_level(/datum/skill/misc/athletics)
+	maxrogstam = (STAEND + (athletics_skill/2 ) ) * 100
 	if(cmode)
-		if(!HAS_TRAIT(src, RTRAIT_BREADY))
+		if(!HAS_TRAIT(src, TRAIT_BREADY))
 			rogstam_add(-2)
 
 /mob/proc/rogstam_add(added as num)
 	return
 
 /mob/living/rogstam_add(added as num)
-	if(HAS_TRAIT(src, TRAIT_NOFATSTAM))
+	if(HAS_TRAIT(src, TRAIT_NOROGSTAM))
 		return TRUE
+	if(m_intent == MOVE_INTENT_RUN)
+		mind.adjust_experience(/datum/skill/misc/athletics, (STAINT*0.02))
 	rogstam += added
 	if(rogstam > maxrogstam)
 		rogstam = maxrogstam
@@ -42,7 +49,7 @@
 	return TRUE
 
 /mob/living/rogfat_add(added as num, emote_override, force_emote = TRUE) //call update_rogfat here and set last_fatigued, return false when not enough fatigue left
-	if(HAS_TRAIT(src, TRAIT_NOFATSTAM))
+	if(HAS_TRAIT(src, TRAIT_NOROGSTAM))
 		return TRUE
 	rogfat = CLAMP(rogfat+added, 0, maxrogfat)
 	if(added > 0)
@@ -71,8 +78,8 @@
 		changeNext_move(CLICK_CD_EXHAUSTED)
 		flash_fullscreen("blackflash")
 		if(rogstam <= 0)
-			addtimer(CALLBACK(src, .proc/Knockdown, 30), 10)
-		addtimer(CALLBACK(src, .proc/Immobilize, 30), 10)
+			addtimer(CALLBACK(src, PROC_REF(Knockdown), 30), 10)
+		addtimer(CALLBACK(src, PROC_REF(Immobilize), 30), 10)
 		if(iscarbon(src))
 			var/mob/living/carbon/C = src
 			if(C.stress >= 30)
@@ -91,16 +98,16 @@
 	var/heart_attacking = FALSE
 
 /mob/living/carbon/proc/heart_attack()
-	if(HAS_TRAIT(src, TRAIT_NOFATSTAM))
+	if(HAS_TRAIT(src, TRAIT_NOROGSTAM))
 		return
 	if(!heart_attacking)
 		heart_attacking = TRUE
 		shake_camera(src, 1, 3)
 		blur_eyes(10)
 		var/stuffy = list("ZIZO GRABS MY WEARY HEART!","ARGH! MY HEART BEATS NO MORE!","NO... MY HEART HAS BEAT IT'S LAST!","MY HEART HAS GIVEN UP!","MY HEART BETRAYS ME!","THE METRONOME OF MY LIFE STILLS!")
-		to_chat(src, "<span class='userdanger'>[pick(stuffy)]</span>")
+		to_chat(src, span_userdanger("[pick(stuffy)]"))
 		emote("breathgasp", forced = TRUE)
-		addtimer(CALLBACK(src, .proc/adjustOxyLoss, 110), 30)
+		addtimer(CALLBACK(src, PROC_REF(adjustOxyLoss), 110), 30)
 
 /mob/living/proc/freak_out()
 	return
@@ -123,15 +130,15 @@
 	else
 		emote("fatigue", forced = TRUE)
 		if(stress > 15)
-			addtimer(CALLBACK(src, /mob/.proc/do_freakout_scream), rand(30,50))
+			addtimer(CALLBACK(src, TYPE_PROC_REF(/mob, do_freakout_scream)), rand(30,50))
 	if(hud_used)
 //		var/list/screens = list(hud_used.plane_masters["[OPENSPACE_BACKDROP_PLANE]"],hud_used.plane_masters["[BLACKNESS_PLANE]"],hud_used.plane_masters["[GAME_PLANE_UPPER]"],hud_used.plane_masters["[GAME_PLANE_FOV_HIDDEN]"], hud_used.plane_masters["[FLOOR_PLANE]"], hud_used.plane_masters["[GAME_PLANE]"], hud_used.plane_masters["[LIGHTING_PLANE]"])
 		var/matrix/skew = matrix()
-		skew.Scale(4)
-		skew.Translate(-224,0)
-		var/matrix/newmatrix = skew
+		skew.Scale(2)
+		//skew.Translate(-224,0)
+		var/matrix/newmatrix = skew 
 		for(var/C in hud_used.plane_masters)
-			var/obj/screen/plane_master/whole_screen = hud_used.plane_masters[C]
+			var/atom/movable/screen/plane_master/whole_screen = hud_used.plane_masters[C]
 			if(whole_screen.plane == HUD_PLANE)
 				continue
 			animate(whole_screen, transform = newmatrix, time = 1, easing = QUAD_EASING)

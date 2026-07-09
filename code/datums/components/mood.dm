@@ -10,7 +10,7 @@
 	var/mood_modifier = 1 //Modifier to allow certain mobs to be less affected by moodlets
 	var/list/datum/mood_event/mood_events = list()
 	var/insanity_effect = 0 //is the owner being punished for low mood? If so, how much?
-	var/obj/screen/mood/screen_obj
+	var/atom/movable/screen/mood/screen_obj
 
 /datum/component/mood/Initialize()
 	if(!isliving(parent))
@@ -18,13 +18,13 @@
 
 	START_PROCESSING(SSmood, src)
 
-	RegisterSignal(parent, COMSIG_ADD_MOOD_EVENT, .proc/add_event)
-	RegisterSignal(parent, COMSIG_CLEAR_MOOD_EVENT, .proc/clear_event)
-	RegisterSignal(parent, COMSIG_ENTER_AREA, .proc/check_area_mood)
-	RegisterSignal(parent, COMSIG_LIVING_REVIVE, .proc/on_revive)
+	RegisterSignal(parent, COMSIG_ADD_MOOD_EVENT, PROC_REF(add_event))
+	RegisterSignal(parent, COMSIG_CLEAR_MOOD_EVENT, PROC_REF(clear_event))
+	RegisterSignal(parent, COMSIG_ENTER_AREA, PROC_REF(check_area_mood))
+	RegisterSignal(parent, COMSIG_LIVING_REVIVE, PROC_REF(on_revive))
 
-	RegisterSignal(parent, COMSIG_MOB_HUD_CREATED, .proc/modify_hud)
-	RegisterSignal(parent, COMSIG_JOB_RECEIVED, .proc/register_job_signals)
+	RegisterSignal(parent, COMSIG_MOB_HUD_CREATED, PROC_REF(modify_hud))
+	RegisterSignal(parent, COMSIG_JOB_RECEIVED, PROC_REF(register_job_signals))
 
 	var/mob/living/owner = parent
 	if(owner.hud_used)
@@ -39,11 +39,11 @@
 
 /datum/component/mood/proc/register_job_signals(datum/source, job)
 	if(job in list("Research Director", "Scientist", "Roboticist"))
-		RegisterSignal(parent, COMSIG_ADD_MOOD_EVENT_RND, .proc/add_event) //Mood events that are only for RnD members
+		RegisterSignal(parent, COMSIG_ADD_MOOD_EVENT_RND, PROC_REF(add_event)) //Mood events that are only for RnD members
 
 /datum/component/mood/proc/print_mood(mob/user)
 	var/msg = "<span class='info'>*---------*\n<EM>My current mood</EM></span>\n"
-	msg += "<span class='notice'>My mental status: </span>" //Long term
+	msg += span_notice("My mental status: ") //Long term
 	switch(sanity)
 		if(SANITY_GREAT to INFINITY)
 			msg += "<span class='nicegreen'>My mind feels like a temple!</span>\n"
@@ -58,7 +58,7 @@
 		if(SANITY_INSANE to SANITY_CRAZY)
 			msg += "<span class='boldwarning'>AHAHAHAHAHAHAHAHAHAH!!</span>\n"
 
-	msg += "<span class='notice'>My current mood: </span>" //Short term
+	msg += span_notice("My current mood: ") //Short term
 	switch(mood_level)
 		if(1)
 			msg += "<span class='boldwarning'>I wish I was dead!</span>\n"
@@ -79,7 +79,7 @@
 		if(9)
 			msg += "<span class='nicegreen'>I love life!</span>\n"
 
-	msg += "<span class='notice'>Moodlets:\n</span>"//All moodlets
+	msg += span_notice("Moodlets:\n")//All moodlets
 	if(mood_events.len)
 		for(var/i in mood_events)
 			var/datum/mood_event/event = mood_events[i]
@@ -249,7 +249,7 @@
 			clear_event(null, category)
 		else
 			if(the_event.timeout)
-				addtimer(CALLBACK(src, .proc/clear_event, null, category), the_event.timeout, TIMER_UNIQUE|TIMER_OVERRIDE)
+				addtimer(CALLBACK(src, PROC_REF(clear_event), null, category), the_event.timeout, TIMER_UNIQUE|TIMER_OVERRIDE)
 			return 0 //Don't have to update the event.
 	var/list/params = args.Copy(4)
 	params.Insert(1, parent)
@@ -260,7 +260,7 @@
 	update_mood()
 
 	if(the_event.timeout)
-		addtimer(CALLBACK(src, .proc/clear_event, null, category), the_event.timeout, TIMER_UNIQUE|TIMER_OVERRIDE)
+		addtimer(CALLBACK(src, PROC_REF(clear_event), null, category), the_event.timeout, TIMER_UNIQUE|TIMER_OVERRIDE)
 
 /datum/component/mood/proc/clear_event(datum/source, category)
 	if(!istext(category))
@@ -289,8 +289,8 @@
 	screen_obj = new
 	screen_obj.color = "#4b96c4"
 	hud.infodisplay += screen_obj
-	RegisterSignal(hud, COMSIG_PARENT_QDELETING, .proc/unmodify_hud)
-	RegisterSignal(screen_obj, COMSIG_CLICK, .proc/hud_click)
+	RegisterSignal(hud, COMSIG_PARENT_QDELETING, PROC_REF(unmodify_hud))
+	RegisterSignal(screen_obj, COMSIG_CLICK, PROC_REF(hud_click))
 
 /datum/component/mood/proc/unmodify_hud(datum/source)
 	if(!screen_obj)

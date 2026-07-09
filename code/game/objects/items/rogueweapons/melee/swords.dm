@@ -1,12 +1,12 @@
 
 /obj/item/rogueweapon/sword
-	slot_flags = ITEM_SLOT_HIP
+	slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
 	force = 18
 	force_wielded = 25
 	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust)
 	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust)
 	name = "sword"
-	desc = "A simple steel sord."
+	desc = "A simple steel sword, clean and effective."
 	icon_state = "sword1"
 	icon = 'icons/roguetown/weapons/32.dmi'
 	lefthand_file = 'icons/mob/inhands/weapons/rogue_lefthand.dmi'
@@ -23,6 +23,7 @@
 	throwforce = 10
 	thrown_bclass = BCLASS_CUT
 	//dropshrink = 0.75
+	anvilrepair = /datum/skill/craft/weaponsmithing
 	smeltresult = /obj/item/ingot/steel
 	minstr = 7
 	sellprice = 30
@@ -34,6 +35,8 @@
 		icon_state = "sword[rand(1,3)]"
 
 /obj/item/rogueweapon/sword/decorated
+	name = "engraved sword"
+	desc = "A valuable sword for celebrations and rites."
 	icon_state = "decsword1"
 	sellprice = 140
 
@@ -63,6 +66,7 @@
 	chargetime = 0
 	hitsound = list('sound/combat/hits/bladed/genslash (1).ogg', 'sound/combat/hits/bladed/genslash (2).ogg', 'sound/combat/hits/bladed/genslash (3).ogg')
 	swingdelay = 0
+	item_d_type = "slash"
 
 /datum/intent/sword/thrust
 	name = "stab"
@@ -74,10 +78,21 @@
 	penfactor = 20
 	chargetime = 0
 	swingdelay = 0
+	item_d_type = "stab"
+
+/obj/item/rogueweapon/sword/short
+	name = "short sword"
+	desc = "An archaic steel sword made for stabbing."
+	force = 19
+	possible_item_intents = list(/datum/intent/sword/cut/short, /datum/intent/sword/thrust/short)
+	icon_state = "swordshort"
+	gripped_intents = null
+	minstr = 4
+	wdefense = 4
 
 /obj/item/rogueweapon/sword/long
-	force = 28
-	force_wielded = 35
+	force = 25
+	force_wielded = 30
 	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust, /datum/intent/sword/strike)
 	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust, /datum/intent/sword/strike, /datum/intent/sword/chop)
 	icon_state = "longsword"
@@ -86,7 +101,7 @@
 	lefthand_file = 'icons/mob/inhands/weapons/roguebig_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/roguebig_righthand.dmi'
 	name = "bastard sword"
-	desc = ""
+	desc = "A bastard sword that can chop with ease."
 	parrysound = "bladedmedium"
 	swingsound = BLADEWOOSH_LARGE
 	pickup_sound = 'sound/foley/equip/swordlarge2.ogg'
@@ -100,7 +115,6 @@
 	associated_skill = /datum/skill/combat/swords
 	throwforce = 15
 	thrown_bclass = BCLASS_CUT
-	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP
 	dropshrink = 0.75
 	smeltresult = /obj/item/ingot/steel
 
@@ -118,8 +132,8 @@
 
 
 /obj/item/rogueweapon/sword/long/heirloom
-	force = 28
-	force_wielded = 35
+	force = 20
+	force_wielded = 32
 	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust, /datum/intent/sword/strike)
 	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust, /datum/intent/sword/strike, /datum/intent/sword/chop)
 	icon_state = "heirloom"
@@ -142,7 +156,6 @@
 	associated_skill = /datum/skill/combat/swords
 	throwforce = 15
 	thrown_bclass = BCLASS_CUT
-	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP
 	dropshrink = 0.75
 	smeltresult = /obj/item/ingot/steel
 
@@ -181,7 +194,6 @@
 	associated_skill = /datum/skill/combat/swords
 	throwforce = 15
 	thrown_bclass = BCLASS_CUT
-	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP
 	dropshrink = 0.75
 	smeltresult = /obj/item/ingot/steel
 	sellprice = 363
@@ -219,9 +231,9 @@
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
 	associated_skill = /datum/skill/combat/swords
+	max_integrity = 9999
 	throwforce = 15
 	thrown_bclass = BCLASS_CUT
-	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP
 	dropshrink = 0.75
 	smeltresult = /obj/item/ingot/steel
 	sellprice = 363
@@ -237,8 +249,8 @@
 			if("onbelt") return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 /obj/item/rogueweapon/sword/long/rider
-	force = 28
-	force_wielded = 35
+	force = 26
+	force_wielded = 31
 	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/strike)
 	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/strike, /datum/intent/sword/chop)
 	icon_state = "tabi"
@@ -247,7 +259,7 @@
 	lefthand_file = 'icons/mob/inhands/weapons/roguebig_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/roguebig_righthand.dmi'
 	name = "kilij scimitar"
-	desc = ""
+	desc = "A scimitar with elegant curves and deadly sharpness."
 	parrysound = "bladedmedium"
 	swingsound = BLADEWOOSH_LARGE
 	pickup_sound = 'sound/foley/equip/swordlarge2.ogg'
@@ -261,7 +273,6 @@
 	associated_skill = /datum/skill/combat/swords
 	throwforce = 15
 	thrown_bclass = BCLASS_CUT
-	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP
 	dropshrink = 0.75
 	smeltresult = /obj/item/ingot/steel
 
@@ -287,7 +298,7 @@
 	lefthand_file = 'icons/mob/inhands/weapons/roguebig_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/roguebig_righthand.dmi'
 	name = "shalal saber"
-	desc = ""
+	desc = "Lightweight, slender and curved."
 	parrysound = list('sound/combat/parry/bladed/bladedthin (1).ogg', 'sound/combat/parry/bladed/bladedthin (2).ogg', 'sound/combat/parry/bladed/bladedthin (3).ogg')
 	swingsound = BLADEWOOSH_SMALL
 	pickup_sound = 'sound/foley/equip/swordlarge2.ogg'
@@ -301,7 +312,6 @@
 	associated_skill = /datum/skill/combat/swords
 	throwforce = 15
 	thrown_bclass = BCLASS_CUT
-	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP
 	dropshrink = 0.75
 	minstr = 6
 	sellprice = 42
@@ -330,6 +340,7 @@
 	penfactor = 20
 	swingdelay = 5
 	damfactor = 0.8
+	item_d_type = "blunt"
 
 /datum/intent/sword/chop
 	name = "chop"
@@ -340,15 +351,16 @@
 	hitsound = list('sound/combat/hits/bladed/genchop (1).ogg', 'sound/combat/hits/bladed/genchop (2).ogg', 'sound/combat/hits/bladed/genchop (3).ogg')
 	penfactor = 10
 	swingdelay = 8
+	damfactor = 0.8
+	item_d_type = "slash"
 
 /obj/item/rogueweapon/sword/long/exe
 	possible_item_intents = list(/datum/intent/sword/strike)
-	gripped_intents = list(/datum/intent/sword/chop)
+	gripped_intents = list(/datum/intent/axe/chop)
 	icon_state = "exe"
 	name = "execution sword"
 	desc = ""
 	minstr = 10
-	slot_flags = ITEM_SLOT_BACK
 
 /obj/item/rogueweapon/sword/long/exe/getonmobprop(tag)
 	. = ..()
@@ -369,23 +381,54 @@
 	user.changeNext_move(CLICK_CD_MELEE)
 	playsound(user, "clothwipe", 100, TRUE)
 	SEND_SIGNAL(src, COMSIG_COMPONENT_CLEAN_ACT, CLEAN_STRONG)
-	user.visible_message("<span class='warning'>[user] wipes [src] down with its cloth.</span>","<span class='notice'>I wipe [src] down with its cloth.</span>")
+	user.visible_message(span_warning("[user] wipes [src] down with its cloth."),span_notice("I wipe [src] down with its cloth."))
 	return
 
 /obj/item/rogueweapon/sword/iron
 	name = "sword"
-	desc = "A simple iron sword."
+	desc = "A simple iron sword, the most classical war weapon."
 	icon_state = "isword"
 	minstr = 6
 	smeltresult = /obj/item/ingot/iron
 	max_integrity = 100
 	sellprice = 10
 
+/obj/item/rogueweapon/sword/iron/short
+	name = "short sword"
+	desc = "An archaic iron sword."
+	icon_state = "iswordshort"
+	possible_item_intents = list(/datum/intent/sword/cut/short, /datum/intent/sword/thrust/short)
+	gripped_intents = null
+	minstr = 4
+	wdefense = 3
+
+/obj/item/rogueweapon/sword/iron/short/chipped
+	force = 17
+	desc = "An ancient-looking iron sword."
+	icon_state = "iswordshort_d"
+	max_integrity = 75
+
+/datum/intent/sword/cut/short
+	clickcd = 10
+	damfactor = 0.9
+
+/datum/intent/sword/thrust/short
+	clickcd = 10
+	damfactor = 1.1
+
+/obj/item/rogueweapon/sword/iron/messer
+	name = "iron messer"
+	desc = "A single edged blade to slice and chop with."
+	icon_state = "imesser"
+	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust, /datum/intent/axe/chop)
+	gripped_intents = null
+	minstr = 4
+	wdefense = 2
+
 /obj/item/rogueweapon/sword/sabre
 	name = "sabre"
-	desc = "A swift saber."
+	desc = "A swift saber. Parries realiantly and strikes swiftly"
 	icon_state = "saber"
-	smeltresult = /obj/item/ingot/steel
 	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust)
 	gripped_intents = null
 	parrysound = list('sound/combat/parry/bladed/bladedthin (1).ogg', 'sound/combat/parry/bladed/bladedthin (2).ogg', 'sound/combat/parry/bladed/bladedthin (3).ogg')
@@ -403,9 +446,8 @@
 
 /obj/item/rogueweapon/sword/rapier
 	name = "rapier"
-	desc = "A precise raper."
+	desc = "A precise rapier, a good stabbing weapon."
 	icon_state = "rapier"
-	smeltresult = /obj/item/ingot/steel
 	possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier)
 	gripped_intents = null
 	parrysound = list('sound/combat/parry/bladed/bladedthin (1).ogg', 'sound/combat/parry/bladed/bladedthin (2).ogg', 'sound/combat/parry/bladed/bladedthin (3).ogg')
@@ -442,3 +484,12 @@
 	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust)
 	gripped_intents = null
 	wdefense = 6
+
+/obj/item/rogueweapon/sword/sabre/elf
+	force = 25
+	name = "elvish saber"
+	desc = "This finely crafted saber is of elven smithcraft."
+	icon_state = "esaber"
+	item_state = "esaber"
+	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'

@@ -22,12 +22,12 @@
 		return
 	var/msg
 	if(!can_cast(user))
-		msg = "<span class='warning'>I can no longer cast [name]!</span>"
+		msg = span_warning("I can no longer cast [name]!")
 		remove_ranged_ability(msg)
 		return
 	if(active)
 		if(deactive_msg)
-			msg = "<span class='notice'>[deactive_msg]</span>"
+			msg = span_notice("[deactive_msg]")
 		if(charge_type == "recharge")
 			var/refund_percent = current_amount/projectile_amount
 			charge_counter = charge_max * refund_percent
@@ -37,7 +37,7 @@
 		on_deactivation(user)
 	else
 		if(active_msg)
-			msg = "<span class='notice'>[active_msg] <B>Left-click to shoot it at a target!</B></span>"
+			msg = span_notice("[active_msg] <B>Left-click to shoot it at a target!</B>")
 		current_amount = projectile_amount
 		active = TRUE
 		add_ranged_ability(user, msg, TRUE)
@@ -59,7 +59,7 @@
 	if(..())
 		return FALSE
 	var/ran_out = (current_amount <= 0)
-	if(!cast_check(!ran_out, ranged_ability_user))
+	if(!can_cast(caller) || !cast_check(!ran_out, ranged_ability_user))
 		remove_ranged_ability()
 		return FALSE
 	var/list/targets = list(target)
@@ -169,7 +169,7 @@
 
 /obj/effect/proc_holder/spell/aimed/spell_cards/on_activation(mob/M)
 	QDEL_NULL(lockon_component)
-	lockon_component = M.AddComponent(/datum/component/lockon_aiming, 5, typecacheof(list(/mob/living)), 1, null, CALLBACK(src, .proc/on_lockon_component))
+	lockon_component = M.AddComponent(/datum/component/lockon_aiming, 5, typecacheof(list(/mob/living)), 1, null, CALLBACK(src, PROC_REF(on_lockon_component)))
 
 /obj/effect/proc_holder/spell/aimed/spell_cards/proc/on_lockon_component(list/locked_weakrefs)
 	if(!length(locked_weakrefs))

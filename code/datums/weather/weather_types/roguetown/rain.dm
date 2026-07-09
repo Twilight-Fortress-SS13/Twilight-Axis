@@ -4,7 +4,7 @@
 	desc = ""
 
 	telegraph_duration = 10 SECONDS
-	telegraph_message = "<span class='warning'>The sky begins to weep.</span>"
+	telegraph_message = span_warning("The sky begins to weep.")
 	telegraph_sound = 'sound/blank.ogg'
 
 	weather_message = ""
@@ -100,7 +100,7 @@
 			M.playsound_local(M, pick('sound/ambience/noises/thunout (1).ogg','sound/ambience/noises/thunout (2).ogg','sound/ambience/noises/thunout (3).ogg','sound/ambience/noises/thunout (4).ogg'), 100, FALSE)
 			M.lightning_flashing = TRUE
 			M.update_sight()
-			addtimer(CALLBACK(M, /mob/living/carbon.proc/reset_lightning), 1)
+			addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living/carbon, reset_lightning)), 1)
 			continue
 		if(istype(A, /area/rogue/indoors))
 			M.playsound_local(M, pick('sound/ambience/noises/thunin (1).ogg','sound/ambience/noises/thunin (2).ogg','sound/ambience/noises/thunin (3).ogg','sound/ambience/noises/thunin (4).ogg'), 100, FALSE)

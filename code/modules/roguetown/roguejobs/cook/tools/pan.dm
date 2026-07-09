@@ -2,8 +2,8 @@
 	force = 20
 	throwforce = 15
 	possible_item_intents = list(/datum/intent/mace/strike/shovel)
-	name = "pan"
-	desc = ""
+	name = "steel pan"
+	desc = "Two in one: Cook and smash heads."
 	icon_state = "pan"
 	icon = 'icons/roguetown/items/cooking.dmi'
 	lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
@@ -13,6 +13,7 @@
 	//dropshrink = 0.8
 	slot_flags = ITEM_SLOT_HIP
 	can_parry = TRUE
+	drop_sound = 'sound/foley/dropsound/shovel_drop.ogg'
 	wdefense = 5
 	ingsize = 3
 

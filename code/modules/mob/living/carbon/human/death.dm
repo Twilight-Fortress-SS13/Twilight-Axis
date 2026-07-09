@@ -46,7 +46,10 @@
 				return
 
 	if(!gibbed)
-		if(!is_in_roguetown(src))
+		var/datum/antagonist/zombie/zomble = mind?.has_antag_datum(/datum/antagonist/zombie)
+		if(zomble)
+			addtimer(CALLBACK(zomble, TYPE_PROC_REF(/datum/antagonist/zombie, wake_zombie)), 5 SECONDS)
+		else if(can_death_zombify())
 			zombie_check()
 
 	if(client || mind)
@@ -65,7 +68,7 @@
 //		else
 //			if(get_triumphs() > 0)
 //				tris2take += -1
-		if(real_name in SStreasury.bank_accounts)
+		if(H in SStreasury.bank_accounts)
 			for(var/obj/structure/roguemachine/camera/C in view(7, src))
 				var/area_name = A.name
 				var/texty = "<CENTER><B>Death of a Living Being</B><br>---<br></CENTER>"
@@ -82,29 +85,31 @@
 				if(real_name in GLOB.outlawed_players)
 					yeae = FALSE
 
-		if(tris2take)
-			adjust_triumphs(tris2take)
-		else
-			if(get_triumphs() > 0)
+		if(get_triumphs() > 0)
+			if(tris2take)
+				adjust_triumphs(tris2take)
+			else
 				adjust_triumphs(-1)
 
-		if(job == "King" || job == "Queen")
-			for(var/mob/living/carbon/human/HU in GLOB.player_list)
-				if(!HU.stat)
-					if(is_in_roguetown(HU))
+		switch(job)
+			if("King")
+				//omen gets added separately, after a few minutes
+				for(var/mob/living/carbon/human/HU in GLOB.player_list)
+					if(!HU.stat && is_in_roguetown(HU))
 						HU.playsound_local(get_turf(HU), 'sound/music/lorddeath.ogg', 80, FALSE, pressure_affected = FALSE)
-
+			if("Priest")
+				addomen(OMEN_NOPRIEST)
 //		if(yeae)
 //			if(mind)
-//				if((mind.assigned_role == "Lord") || (mind.assigned_role == "Priest") || (mind.assigned_role == "Sheriff") || (mind.assigned_role == "Merchant"))
-//					addomen("importantdeath")
+//				if((mind.assigned_role == "Lord") || (mind.assigned_role == "Priest") || (mind.assigned_role == "Guard Captain") || (mind.assigned_role == "Merchant"))
+//					addomen(OMEN_NOBLEDEATH)
 
 		if(!gibbed && yeae)
 			for(var/mob/living/carbon/human/HU in viewers(7, src))
 				if(HU.marriedto == src)
 					HU.adjust_triumphs(-1)
 //				if(HU != src && !HAS_TRAIT(HU, TRAIT_BLIND))
-//					if(!HAS_TRAIT(HU, RTRAIT_ANTAG))
+//					if(!HAS_TRAIT(HU, TRAIT_ANTAG))
 //						if(HU.dna?.species && dna?.species)
 //							if(HU.dna.species.id == dna.species.id)
 //								HU.add_stress(/datum/stressevent/viewdeath)
@@ -125,20 +130,17 @@
 		SSblackbox.ReportDeath(src)
 		log_message("has died (BRUTE: [src.getBruteLoss()], BURN: [src.getFireLoss()], TOX: [src.getToxLoss()], OXY: [src.getOxyLoss()], CLONE: [src.getCloneLoss()])", LOG_ATTACK)
 	if(is_devil(src))
-		INVOKE_ASYNC(is_devil(src), /datum/antagonist/devil.proc/beginResurrectionCheck, src)
+		INVOKE_ASYNC(is_devil(src), TYPE_PROC_REF(/datum/antagonist/devil, beginResurrectionCheck), src)
 
-/mob/living/carbon/human/proc/zombie_check()
-	if(mind && ckey)
-		if(mind.has_antag_datum(/datum/antagonist/vampirelord))
-			return
-		if(mind.has_antag_datum(/datum/antagonist/werewolf))
-			return
-		if(mind.has_antag_datum(/datum/antagonist/zombie))
-			return
-		if(mind.has_antag_datum(/datum/antagonist/skeleton))
-			return
-		mind.add_antag_datum(/datum/antagonist/zombie)
-		qdel(cleric)
+/mob/living/carbon/human/revive(full_heal, admin_revive)
+	. = ..()
+	if(!.)
+		return
+	switch(job)
+		if("King")
+			removeomen(OMEN_NOLORD)
+		if("Priest")
+			removeomen(OMEN_NOPRIEST)
 
 /mob/living/carbon/human/gib(no_brain, no_organs, no_bodyparts, safe_gib = FALSE)
 	for(var/mob/living/carbon/human/CA in viewers(7, src))
@@ -148,7 +150,7 @@
 			if(CA.marriedto == src)
 				CA.adjust_triumphs(-1)
 			CA.add_stress(/datum/stressevent/viewgib)
-	. = ..()
+	return ..()
 
 /mob/living/carbon/human/proc/makeSkeleton()
 	ADD_TRAIT(src, TRAIT_DISFIGURED, TRAIT_GENERIC)
@@ -165,3 +167,6 @@
 	ADD_TRAIT(src, TRAIT_BADDNA, MADE_UNCLONEABLE)
 	blood_volume = 0
 	return TRUE
+
+/proc/can_death_zombify(mob/living/carbon/human)
+	return hasomen(OMEN_NOPRIEST) || !is_in_roguetown(human)

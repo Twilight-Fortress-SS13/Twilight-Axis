@@ -30,12 +30,12 @@
 #define HOP				(1<<0)
 #define BARTENDER		(1<<1)
 #define BOTANIST		(1<<2)
-#define COOK			(1<<3)
+//#define COOK			(1<<3) //This is redefined below, and is a ss13 leftover.
 #define JANITOR			(1<<4)
 #define CURATOR			(1<<5)
 #define QUARTERMASTER	(1<<6)
 #define CARGOTECH		(1<<7)
-#define MINER			(1<<8)
+//#define MINER			(1<<8) //This is redefined below, and is a ss13 leftover.
 #define LAWYER			(1<<9)
 #define CHAPLAIN		(1<<10)
 #define CLOWN			(1<<11)
@@ -47,12 +47,14 @@
 #define JOB_UNAVAILABLE_BANNED 2
 #define JOB_UNAVAILABLE_PLAYTIME 3
 #define JOB_UNAVAILABLE_ACCOUNTAGE 4
-#define JOB_UNAVAILABLE_SLOTFULL 5
+#define JOB_UNAVAILABLE_PATRON 5
 #define JOB_UNAVAILABLE_RACE 6
 #define JOB_UNAVAILABLE_SEX 7
-#define JOB_UNAVAILABLE_WTEAM 8
-#define JOB_UNAVAILABLE_LASTCLASS 9
-#define JOB_UNAVAILABLE_PATRON 10
+#define JOB_UNAVAILABLE_AGE 8
+#define JOB_UNAVAILABLE_WTEAM 9
+#define JOB_UNAVAILABLE_LASTCLASS 10
+#define JOB_UNAVAILABLE_JOB_COOLDOWN 11
+#define JOB_UNAVAILABLE_SLOTFULL 12
 
 #define DEFAULT_RELIGION "Christianity"
 #define DEFAULT_DEITY "Space Jesus"
@@ -95,104 +97,165 @@
 #define NOBLEMEN		(1<<0)
 
 #define LORD		(1<<0)
-#define STEWARD		(1<<1)
-#define KNIGHT		(1<<2)
-#define WIZARD		(1<<3)
-#define SHERIFF		(1<<4)
+#define LADY		(1<<1)
+#define HAND		(1<<2)
+#define STEWARD		(1<<3)
+#define KNIGHT		(1<<4)
+#define SHERIFF		(1<<5)
+#define BAILIFF		(1<<6)
 
 #define GARRISON		(1<<1)
 
 #define GUARDSMAN	(1<<0)
-#define DUNGEONEER	(1<<1)
-#define WATCHMAN	(1<<2)
-#define WOODSMAN	(1<<3)
+#define MANATARMS	(1<<1)
+#define DUNGEONEER	(1<<2)
+#define GATEMASTER	(1<<3)
+#define VETERAN		(1<<4)
+#define ELDER		(1<<5)
+#define BOGGUARD	(1<<6)
+#define BOGMASTER	(1<<7)
 
 #define CHURCHMEN		(1<<2)
 
 #define PRIEST		(1<<0)
-#define CLERIC		(1<<1)
 #define PURITAN		(1<<2)
 #define MONK		(1<<3)
+#define GRAVEDIGGER	(1<<4)
+#define CONFESSOR	(1<<5)
+#define DRUID		(1<<6)
 
-#define SERFS			(1<<3)
+#define COURTIERS	(1<<3)
+
+#define JESTER		(1<<0)
+#define WIZARD		(1<<1)
+#define PHYSICIAN 	(1<<2)
+#define BUTLER		(1<<3)
+#define COUNCILLOR	(1<<4)
+
+#define YEOMEN		(1<<4)
 
 #define BARKEEP		(1<<0)
 #define ARCHIVIST	(1<<1)
-#define BLACKSMITH	(1<<2)
-#define ALCHEMIST	(1<<3)
-#define MASON		(1<<4)
-#define TAILOR		(1<<5)
-#define MERCHANT	(1<<6)
-#define SCRIBE		(1<<7)
+#define ARMORSMITH	(1<<2)
+#define WEAPONSMITH (1<<3)
+#define ALCHEMIST	(1<<4)
+#define MASON		(1<<5)
+#define TAILOR		(1<<6)
+#define MERCHANT	(1<<7)
+#define SCRIBE		(1<<8)
+#define APOTHECARY	(1<<9)
 
-#define PEASANTS		(1<<4)
+#define PEASANTS	(1<<5)
 
 #define HUNTER		(1<<0)
 #define FARMER		(1<<1)
-#define BEASTMASTER	(1<<2)
-#define FISHER		(1<<4)
-#define LUMBERJACK	(1<<5)
-#define GRAVEDIGGER	(1<<6)
-#define MINER		(1<<7)
-#define BUTLER		(1<<8)
-#define JESTER		(1<<8)
-#define ADVENTURER	(1<<9)
-#define COOK		(1<<10)
-#define GRABBER		(1<<11)
+#define BUTCHER		(1<<2)
+#define FISHER		(1<<3)
+#define LUMBERJACK	(1<<4)
+#define MINER		(1<<5)
+#define COOK		(1<<6)
+#define GRABBER		(1<<7)
+#define NIGHTMASTER	(1<<8)
+#define BEGGAR		(1<<9)
+#define WENCH		(1<<10)
+#define ADVENTURER	(1<<11)
+#define PILGRIM		(1<<12)
+#define VILLAGER	(1<<13)
+#define PRISONER	(1<<14)
+#define LUNATIC		(1<<15)
+#define WAVE_DRIFTER (1<<16)
 
-#define YOUNGFOLK		(1<<5)
+#define YOUNGFOLK	(1<<6)
 
 #define APPRENTICE	(1<<0)
-#define SQUIRE		(1<<1)
-#define SERVANT		(1<<2)
-#define ORPHAN		(1<<3)
-#define PRINCE		(1<<4)
+#define CHURCHLING	(1<<1)
+#define SQUIRE		(1<<2)
+#define SERVANT		(1<<3)
+#define ORPHAN		(1<<4)
+#define PRINCE		(1<<5)
+#define SHOPHAND	(1<<6)
+#define CLERK 		(1<<7)
+#define MAGEAPPRENTICE	(1<<8)
 
-#define JCOLOR_NOBLE "#9c40bf"
-#define JCOLOR_MERCHANT "#c2b449"
-#define JCOLOR_SOLDIER "#b64949"
-#define JCOLOR_SERF "#669968"
-#define JCOLOR_PEASANT "#936d6c"
+#define MERCENARIES		(1<<7)
+
+#define DESERT_RIDER	(1<<0)
+#define GRENZELHOFT		(1<<1)
+
+#define GOBLIN		(1<<8)
+
+#define GOBLINKING	(1<<0)
+#define GOBLINCOOK	(1<<1)
+#define GOBLINGUARD	(1<<2)
+#define GOBLINSMITH	(1<<3)
+
+#define SLOP		(1<<9)
+
+#define TESTER		(1<<0)
+#define DEATHKNIGHT (1<<1)
+#define SKELETON	(1<<2)
+
+#define JCOLOR_NOBLE "#aa83b9"
+#define JCOLOR_COURTIER "#81adc8"
+#define JCOLOR_CHURCH "#c0ba8d"
+#define JCOLOR_SOLDIER "#b18484"
+#define JCOLOR_YEOMAN "#819e82"
+#define JCOLOR_PEASANT "#b09262"
+#define JCOLOR_MERCENARY "#c86e3a"
 
 
 // job display orders //
 
+// Nobles
 #define JDO_LORD 1
 #define JDO_LADY 1.1
 #define JDO_PRINCE 1.2
 #define JDO_HAND 2
 #define JDO_STEWARD 3
+#define JDO_CLERK 3.1
+#define JDO_BAILIFF 4
+#define JDO_COUNCILLOR 4.1
 
+// Courtiers
 #define JDO_MAGICIAN 5
-#define JDO_WAPP 6
+#define JDO_MAGEAPPRENTICE 5.1
+#define JDO_PHYSICIAN 6
+#define JDO_JESTER 7
+#define JDO_BUTLER 7.1
+#define JDO_SERVANT 7.2
 
-#define JDO_SHERIFF 7
-#define JDO_CASTLEGUARD 7.1
-#define JDO_TOWNGUARD 8
-#define JDO_GATEMASTER 9
-#define JDO_DUNGEONEER 10
-#define JDO_SQUIRE 11
-#define JDO_VET 11.1
+#define JDO_SHERIFF 8
+#define JDO_KNIGHT 8.1
+#define JDO_SQUIRE 8.2
+#define JDO_CASTLEGUARD 8.3
+#define JDO_GATEMASTER 8.4
+#define JDO_TOWNGUARD 8.5
+#define JDO_DUNGEONEER 8.6
+#define JDO_VET 8.7
+#define JDO_BOGMASTER 9
+#define JDO_BOGGUARD 9.1
+#define JDO_CHIEF 9.2
 
-#define JDO_PRIEST 12
-#define JDO_CLERIC 13
-#define JDO_MONK 14
-#define JDO_CHURCHLING 15
+#define JDO_PRIEST 10
+#define JDO_PURITAN 11
+#define JDO_TEMPLAR 12
+#define JDO_MONK 13
+#define JDO_DRUID 13.1
+#define JDO_CHURCHLING 14
+#define JDO_GRAVEMAN 15
+#define JDO_SHEPHERD 16
 
-#define JDO_PURITAN 16
-#define JDO_SHEPHERD 17
+#define JDO_MERCHANT 17
+#define JDO_SHOPHAND 17.1
+#define JDO_GRABBER 17.2
 
-#define JDO_MERCHANT 18
-#define JDO_GRABBER 19
+#define JDO_ARCHIVIST 18
 
-#define JDO_ARMORER 20
-#define JDO_WSMITH 21
-#define JDO_BAPP 22
+#define JDO_ARMORER 19
+#define JDO_WEAPONSMITH 20
+#define JDO_APPRENTICE 21
 
-#define JDO_MASON 23
-
-#define JDO_BUTLER 24
-#define JDO_SERVANT 25
+#define JDO_MASON 22
 
 #define JDO_BARKEEP 26
 #define JDO_COOK 27
@@ -200,21 +263,24 @@
 #define JDO_BUTCHER 27.1
 #define JDO_SOILSON 27.2
 
-#define JDO_GRAVEMAN 28
+#define JDO_NIGHTMASTER 28
+#define JDO_WENCH 28.1
 
-#define JDO_NIGHTMAN 28.1
-#define JDO_NIGHTMAIDEN 28.2
+#define JDO_VILLAGER 30
+#define JDO_ADVENTURER 30.1
+#define JDO_PILGRIM 30.2
+#define JDO_DRIFTER 32.3
 
-#define JDO_JESTER 29
-#define JDO_PRISONER 30
+#define JDO_GRENZELHOFT 31
+#define JDO_DESERT_RIDER 32
 
-#define JDO_CHIEF 31
-#define JDO_VILLAGER 32
+#define JDO_VAGRANT 33
+#define JDO_ORPHAN 34
 
-#define JDO_ADVENTURER 32.1
-#define JDO_PILGRIM 32.2
+#define JDO_PRISONER 35
+#define JDO_LUNATIC 35.1
 
-#define JDO_MERCENARY 33
-
-#define JDO_VAGRANT 34
-#define JDO_ORPHAN 35
+#define JDO_GOBLINKING 36
+#define JDO_GOBLINCOOK 37
+#define JDO_GOBLINGUARD 38
+#define JDO_GOBLINSMITH 39

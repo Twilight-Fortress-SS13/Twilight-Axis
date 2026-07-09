@@ -64,12 +64,12 @@ GLOBAL_VAR_INIT(dayspassed, FALSE)
 					foundnd = TRUE
 				if(!foundnd)
 					SSweather.run_weather(/datum/weather/rain, 1)
-			if(GLOB.forecast == "fog")
+		/*	if(GLOB.forecast == "fog")
 				var/foundnd
 				for(var/datum/weather/fog/R in SSweather.curweathers)
 					foundnd = TRUE
 				if(!foundnd)
-					SSweather.run_weather(/datum/weather/fog, 1)
+					SSweather.run_weather(/datum/weather/fog, 1) */
 		else
 			switch(GLOB.forecast) //end the weather now
 				if("rain")
@@ -122,7 +122,7 @@ GLOBAL_VAR_INIT(dayspassed, FALSE)
 		if(text_to_show in mind.areas_entered)
 			return
 		mind.areas_entered += text_to_show
-		var/obj/screen/area_text/T = new()
+		var/atom/movable/screen/area_text/T = new()
 		client.screen += T
 		T.maptext = {"<span style='vertical-align:top; text-align:center;
 					color: #7c5b10; font-size: 150%;
@@ -134,12 +134,12 @@ GLOBAL_VAR_INIT(dayspassed, FALSE)
 		T.maptext_y = -120
 		playsound_local(src, 'sound/misc/newday.ogg', 100, FALSE)
 		animate(T, alpha = 255, time = 10, easing = EASE_IN)
-		addtimer(CALLBACK(src, .proc/clear_area_text, T), 35)
-	var/obj/screen/daynight/D = new()
+		addtimer(CALLBACK(src, PROC_REF(clear_area_text), T), 35)
+	var/atom/movable/screen/daynight/D = new()
 	D.alpha = 0
 	client.screen += D
 	animate(D, alpha = 255, time = 20, easing = EASE_IN)
-	addtimer(CALLBACK(src, .proc/clear_time_icon, D), 30)
+	addtimer(CALLBACK(src, PROC_REF(clear_time_icon), D), 30)
 
 /proc/station_time_debug(force_set)
 	if(isnum(force_set))

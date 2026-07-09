@@ -1,52 +1,101 @@
+// ROGUETRAITS (description when rmb skills button)
+#define TRAIT_WEBWALK "Webwalker"
+#define TRAIT_NOSTINK "Dead Nose"
+#define TRAIT_ZJUMP "High Jumping"
+#define TRAIT_LEAPER "Leaper"
+#define TRAIT_NOSEGRAB "Nosey"
+#define TRAIT_NUTCRACKER "Nutcracker"
+#define TRAIT_SEEPRICES "Giza Blooded"
+#define TRAIT_SEEPRICES_SHITTY "Giza-in-training"
+#define TRAIT_STRONGBITE "Strong Bite"
+#define TRAIT_NOBLE "Noble Blooded"
+#define TRAIT_EMPATH "Empath"
+#define TRAIT_BREADY "Battleready"
+#define TRAIT_MEDIUMARMOR "Maille Training"
+#define TRAIT_HEAVYARMOR "Plate Training"
+#define TRAIT_DODGEEXPERT "Fast Reflexes"
+#define TRAIT_DECEIVING_MEEKNESS "Deceiving Meekness"
+#define TRAIT_CRITICAL_RESISTANCE "Critical Resistance"
+#define TRAIT_CRITICAL_WEAKNESS "Critical Weakness"
+#define TRAIT_MANIAC_AWOKEN "Awoken"
+#define TRAIT_NOROGSTAM "Indefatigable" //for ai
+#define TRAIT_NUDIST "Nudist" //you can't wear most clothes
+#define TRAIT_CYCLOPS_LEFT "Cyclops (Left)" //poked left eye
+#define TRAIT_CYCLOPS_RIGHT "Cyclops (Right)" //poked right eye
+#define TRAIT_RETARD_ANATOMY "Inhumen Anatomy" //can't wear hats and shoes
+#define TRAIT_NASTY_EATER "Inhumen Digestion" //can eat rotten food, organs, poison berries, and drink murky water
+#define TRAIT_NOFALLDAMAGE1 "Minor fall damage immunity"
+#define TRAIT_MISSING_NOSE "Missing Nose" //halved stamina regeneration
+#define TRAIT_DISFIGURED "Disfigured"
+#define TRAIT_SPELLCOCKBLOCK "Bewitched" //prevents spellcasting
+#define TRAIT_ANTIMAGIC	"Anti-Magic"
+#define TRAIT_SHOCKIMMUNE "Shock Immunity"
+#define TRAIT_NOSLEEP "Fatal Insomnia"
 
-//ROGUETRAITS (description when rmb skills button)
-#define RTRAIT_WEBWALK 					"Webwalker"
-#define RTRAIT_NOSTINK 					"Dead Nose"
-#define RTRAIT_ZJUMP 					"High Jumping"
-#define RTRAIT_NOSEGRAB 				"Intimidating"
-#define RTRAIT_SEEPRICES				"Golden Blood"
-#define RTRAIT_STRONGBITE				"Strong Bite"
-#define RTRAIT_TORTURER					"Torturer"
-#define RTRAIT_HATEWOMEN				"Ladykiller"
-#define RTRAIT_GOODLOVER				"Fabled Lover"
-#define RTRAIT_NOBLE					"Noble Blooded"
-#define RTRAIT_EMPATH					"Empath"
-#define RTRAIT_BREADY					"Battleready"
-#define RTRAIT_MEDIUMARMOR					"Maille Training"
-#define RTRAIT_HEAVYARMOR					"Plate Training"
+// PATRON GOD TRAITS
+#define TRAIT_ROT_EATER "Blessing of Pestra" //can eat rotten food
+#define TRAIT_ORGAN_EATER "Blessing of Graggar" //can eat organs
+#define TRAIT_KNEESTINGER_IMMUNITY "Blessing of Dendor"
+#define TRAIT_SOUL_EXAMINE "Blessing of Necra" //can check bodies to see if they have departed
+#define TRAIT_CRACKHEAD "Blessing of Eora" //will never overdose
+#define TRAIT_COMMIE "Blessing of Matthios" //recognized by bandits as an ally
 
-#define TRAIT_NOFATSTAM				"nofatstam" //for ai
-#define TRAIT_NOSLEEP				"nosleep"
-#define TRAIT_BASHDOORS				"bashdoors"
-#define TRAIT_NOMOOD 			"no_mood"
-#define TRAIT_SIMPLE_WOUNDS		"simple_wounds"
-#define TRAIT_BANDITCAMP 				"banditcamp"
-#define TRAIT_VAMPMANSION			"vampiremansion"
-#define TRAIT_LIMPDICK 				"limp_dick"
-#define TRAIT_SEXPASS				"sexpass"
-#define TRAIT_STEELHEARTED 			"steelhearted" //no bad mood from dismembering or seeing this
+#define TRAIT_BASHDOORS "bashdoors"
+#define TRAIT_NOMOOD "no_mood"
+#define TRAIT_SIMPLE_WOUNDS "simple_wounds"
+#define TRAIT_BANDITCAMP "banditcamp"
+#define TRAIT_VAMPMANSION "vampiremansion"
+#define TRAIT_LIMPDICK "limp_dick"
+#define TRAIT_SEXPASS "sexpass"
+#define TRAIT_STEELHEARTED "steelhearted" //no bad mood from dismembering or seeing this
+#define TRAIT_IWASREVIVED "iwasrevived" //prevents PQ gain from reviving the same person twice
+#define TRAIT_IWASUNZOMBIFIED "iwasunzombified" //prevents PQ gain from curing a zombie twice
+#define TRAIT_IWASHAUNTED "iwashaunted" //prevents spawning a haunt from a decapitated body twice
+#define TRAIT_SCHIZO_AMBIENCE "schizo_ambience" //replaces all ambience with creepy shit
+#define TRAIT_SCREENSHAKE "screenshake" //screen will always be shaking, you cannot stop it
+#define TRAIT_NORUN "Decayed Flesh"
 
 GLOBAL_LIST_INIT(roguetraits, list(
-	RTRAIT_WEBWALK = "I can move freely between webs.",
-	RTRAIT_NOSTINK = "My nose is numb to the smell of decay.",
-	RTRAIT_ZJUMP = "Who needs to climb when you can make great leaps?",
-	RTRAIT_NOSEGRAB = "I love to grab the idiots by their noses.",
-	RTRAIT_SEEPRICES = "I can tell the prices of things down to the zenny.",
-	RTRAIT_STRONGBITE = "Stronger bites, critical bite attacks.",
-	RTRAIT_TORTURER = "I've learned the art of confessions.",
-	RTRAIT_HATEWOMEN = "Double damage against female mobs.",
-	RTRAIT_GOODLOVER = "It's a lucky thing to share my bed.",
-	RTRAIT_NOBLE = "<span class='blue'>I'm of noble blood.</span>",
-	RTRAIT_EMPATH = "I can notice stress levels in detail.",
-	RTRAIT_BREADY = "Defensive stance does not passively fatigue me.",
-	RTRAIT_MEDIUMARMOR = "I can move freely in medium armor.",
-	RTRAIT_HEAVYARMOR = "I can move freely in heavy armor."
-	))
-
-
-
-
-
+	TRAIT_WEBWALK = "I can move freely between webs.",
+	TRAIT_NOSTINK = span_dead("My nose is numb to the smell of decay."),
+	TRAIT_ZJUMP = "Time to reach a new high.",
+	TRAIT_LEAPER = "I can leap like a frog.",
+	TRAIT_NOSEGRAB = "I love to grab idiots by their noses!",
+	TRAIT_NUTCRACKER = "I love kicking idiots on the nuts!",
+	TRAIT_SEEPRICES = "I can tell the prices of things down to the zenny.",
+	TRAIT_SEEPRICES_SHITTY = "I can tell the prices of things... <i>Kind of</i>.",
+	TRAIT_STRONGBITE = "Stronger bites, critical bite attacks.",
+	TRAIT_NOBLE = span_blue("I'm of noble blood."),
+	TRAIT_EMPATH = "I can notice when people are in pain.",
+	TRAIT_BREADY = "Defensive stance does not passively fatigue me.",
+	TRAIT_MEDIUMARMOR = "I can move freely in medium armor.",
+	TRAIT_HEAVYARMOR = "I can move freely in heavy armor.",
+	TRAIT_DODGEEXPERT = "I can dodge easily while only wearing light armor.",
+	TRAIT_DECEIVING_MEEKNESS = "People look at me and think I am a weakling. They are mistaken.",
+	TRAIT_CRITICAL_RESISTANCE = "I am resistant to wounds that would be life threatening to others.",
+	TRAIT_CRITICAL_WEAKNESS = span_danger("I am weak to wounds that others could survive."),
+	TRAIT_MANIAC_AWOKEN = span_danger("I am <b>WAKING UP</b> and the sheeple know this. They will resist."),
+	TRAIT_NOROGSTAM = "I have boundless energy, I will never tire.",
+	TRAIT_NUDIST = "I <b>refuse</b> to wear clothes. They are a hindrance to my freedom.",
+	TRAIT_CYCLOPS_LEFT = span_warning("My left eye has been poked out..."),
+	TRAIT_CYCLOPS_RIGHT = span_warning("My right eye has been poked out..."),
+	TRAIT_RETARD_ANATOMY = "My anatomy is inhumen, preventing me from wearing hats and shoes.",
+	TRAIT_NASTY_EATER = span_dead("I can eat bad food, and water that would be toxic to humen will not affect me."),
+	TRAIT_NOFALLDAMAGE1 = span_warning("I can easily handle minor falls."),
+	TRAIT_DISFIGURED = span_warning("No one can recognize me..."),
+	TRAIT_MISSING_NOSE = span_warning("I struggle to breathe."),
+	TRAIT_SPELLCOCKBLOCK = span_warning("I cannot cast any spells."),
+	TRAIT_ANTIMAGIC = "I am immune to most forms of magic.",
+	TRAIT_SHOCKIMMUNE = "I am immune to electrical shocks.",
+	TRAIT_NOSLEEP = span_warning("I can't sleep."),
+	TRAIT_ROT_EATER = span_necrosis("I can eat rotten food."),
+	TRAIT_ORGAN_EATER = span_bloody("I can eat organs and raw flesh."),
+	TRAIT_KNEESTINGER_IMMUNITY = "I am immune to the shock of kneestingers.",
+	TRAIT_SOUL_EXAMINE = span_deadsay("I know when someone's soul has departed."),
+	TRAIT_CRACKHEAD = span_love("I can use drugs as much as I want!"),
+	TRAIT_COMMIE = span_bloody("I can recognize other free men, and they can recognize me too."),
+	TRAIT_NORUN = span_warning("My body has atrophied in my state of decay; my leg joints just don't have the strength or durability for running anymore"),
+))
 
 // trait accessor defines
 #define ADD_TRAIT(target, trait, source) \
@@ -113,6 +162,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 //mob traits
 #define TRAIT_BLIND 			"blind"
 #define TRAIT_MUTE				"mute"
+#define TRAIT_ZOMBIE_SPEECH 	"zombie_speech"
+#define TRAIT_GARGLE_SPEECH		"gargle_speech"
 #define TRAIT_EMOTEMUTE			"emotemute"
 #define TRAIT_DEAF				"deaf"
 #define TRAIT_NEARSIGHT			"nearsighted"
@@ -128,13 +179,11 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_IGNOREDAMAGESLOWDOWN "ignoredamageslowdown"
 #define TRAIT_DEATHCOMA			"deathcoma" //Causes death-like unconsciousness
 #define TRAIT_FAKEDEATH			"fakedeath" //Makes the owner appear as dead to most forms of medical examination
-#define TRAIT_DISFIGURED		"disfigured"
 #define TRAIT_XENO_HOST			"xeno_host"	//Tracks whether we're gonna be a baby alien's mummy.
 #define TRAIT_STUNIMMUNE		"stun_immunity"
 #define TRAIT_STUNRESISTANCE    "stun_resistance"
 #define TRAIT_SLEEPIMMUNE		"sleep_immunity"
 #define TRAIT_PUSHIMMUNE		"push_immunity"
-#define TRAIT_SHOCKIMMUNE		"shock_immunity"
 #define TRAIT_STABLEHEART		"stable_heart"
 #define TRAIT_STABLELIVER		"stable_liver"
 #define TRAIT_NOPAINSTUN		"no_pain-stun"
@@ -152,13 +201,14 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NOHUNGER			"no_hunger"
 #define TRAIT_NOMETABOLISM		"no_metabolism"
 #define TRAIT_TOXIMMUNE			"toxin_immune"
+#define TRAIT_HARDDISMEMBER		"hard_dismember"
 #define TRAIT_EASYDISMEMBER		"easy_dismember"
 #define TRAIT_LIMBATTACHMENT 	"limb_attach"
 #define TRAIT_NOLIMBDISABLE		"no_limb_disable"
 #define TRAIT_EASYLIMBDISABLE	"easy_limb_disable"
 #define TRAIT_TOXINLOVER		"toxinlover"
 #define TRAIT_NOBREATH			"no_breath"
-#define TRAIT_ANTIMAGIC			"anti_magic"
+#define TRAIT_HOLDBREATH		"hold_breath"
 #define TRAIT_HOLY				"holy"
 #define TRAIT_DEPRESSION		"depression"
 #define TRAIT_JOLLY				"jolly"
@@ -194,6 +244,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_QUICK_CARRY		"quick-carry"
 #define TRAIT_QUICKER_CARRY		"quicker-carry"
 #define TRAIT_UNINTELLIGIBLE_SPEECH "unintelligible-speech"
+#define TRAIT_LANGUAGE_BARRIER	"language-barrier"
 #define TRAIT_UNSTABLE			"unstable"
 #define TRAIT_OIL_FRIED			"oil_fried"
 #define TRAIT_MEDICAL_HUD		"med_hud"
@@ -204,12 +255,20 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_XENO_IMMUNE		"xeno_immune"//prevents xeno huggies implanting skeletons
 #define TRAIT_NOPAIN			"no_pain"
 #define TRAIT_DRUQK				"druqk"
+#define TRAIT_BURIED_COIN_GIVEN "buried_coin_given" // prevents a human corpse from being used for a corpse multiple times
+#define TRAIT_BLOODLOSS_IMMUNE "bloodloss_immune" // can bleed, but will never die from blood loss
+#define TRAIT_ROTMAN "rotman" //you are a rotman and need occasional maintenance
+#define TRAIT_ZOMBIE_IMMUNE "zombie_immune" //immune to zombie infection
+#define TRAIT_NO_BITE "no_bite" //prevents biting
 
-//non-mob traits
-#define TRAIT_PARALYSIS			"paralysis" //Used for limb-based paralysis, where replacing the limb will fix it
+//bodypart traits
+#define TRAIT_PARALYSIS	"paralysis" //Used for limb-based paralysis and full body paralysis
+#define TRAIT_BRITTLE "brittle" //The limb is more susceptible to fractures
+#define TRAIT_FINGERLESS "fingerless" //The limb has no fingies
 
-// item traits
+//item traits
 #define TRAIT_NODROP            "nodrop"
+#define TRAIT_NOEMBED			"noembed"
 #define TRAIT_T_RAY_VISIBLE     "t-ray-visible" // Visible on t-ray scanners if the atom/var/level == 1
 #define TRAIT_NO_TELEPORT		"no-teleport" //you just can't
 
@@ -233,7 +292,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_PHOTOGRAPHER		"photographer"
 #define TRAIT_MUSICIAN			"musician"
 #define TRAIT_LIGHT_DRINKER		"light_drinker"
-#define TRAIT_EMPATH			"empath"
 #define TRAIT_FRIENDLY			"friendly"
 #define TRAIT_GRABWEAKNESS		"grab_weakness"
 #define TRAIT_SNOB				"snob"
@@ -249,6 +307,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define DISEASE_TRAIT "disease"
 #define SPECIES_TRAIT "species"
 #define ORGAN_TRAIT "organ"
+#define CRIT_TRAIT "crit"
 #define ROUNDSTART_TRAIT "roundstart" //cannot be removed without admin intervention
 #define JOB_TRAIT "job"
 #define CYBORG_ITEM_TRAIT "cyborg-item"
@@ -303,3 +362,5 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define SLEEPING_CARP_TRAIT "sleeping_carp"
 #define MADE_UNCLONEABLE "made-uncloneable"
 #define TIMESTOP_TRAIT "timestop"
+#define HUGBOX_TRAIT "hugbox"
+#define ADVENTURER_TRAIT "adventurer"

@@ -1,29 +1,43 @@
 /datum/advclass/woodcutter
 	name = "Woodcutter"
-	allowed_sexes = list("male")
-	allowed_races = list("Humen",
-	"Humen",
-	"Elf",
-	"Dark Elf",
-	"Half-Elf",
-	"Tiefling",
-	"Dwarf",
-	"Dwarf",
-	"Aasimar"
+	tutorial = "You are a strong Lumberjack, armed with an axe, you can gather wood \
+	either for yourself, or for others. You are a novice carpenter too, so you can bend wood into some items you need, and chop it efficiently"
+	allowed_sexes = list(MALE)
+	allowed_races = list(
+		"Humen",
+		"Elf",
+		"Half-Elf",
+		"Dwarf",
+		"Tiefling",
+		"Argonian",
+		"Dark Elf",
+		"Aasimar",
+		"Half Orc"
 	)
 	outfit = /datum/outfit/job/roguetown/adventurer/woodcutter
-	isvillager = TRUE
-	ispilgrim = TRUE
+	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 
 /datum/outfit/job/roguetown/adventurer/woodcutter/pre_equip(mob/living/carbon/human/H)
 	..()
-	H.mind.adjust_skillrank(/datum/skill/combat/axesmaces, 2, TRUE)
-	H.mind.adjust_skillrank(/datum/skill/combat/wrestling, 1, TRUE)
-	H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 1, TRUE)
-	H.mind.adjust_skillrank(/datum/skill/craft/crafting, 3, TRUE)
-	H.mind.adjust_skillrank(/datum/skill/craft/carpentry, 2, TRUE)
-	H.mind.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/combat/axes, 3, TRUE) // AXE MEN! GIVE ME SPLINTERS!
+	H.mind.adjust_skillrank(/datum/skill/misc/athletics, 3, TRUE) 
+	H.mind.adjust_skillrank(/datum/skill/combat/bows, pick(0,0,1), TRUE)
+	H.mind.adjust_skillrank(/datum/skill/combat/wrestling, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/combat/knives, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/combat/polearms, 1, TRUE) 
+	H.mind.adjust_skillrank(/datum/skill/misc/swimming, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/misc/climbing, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/craft/crafting, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/craft/carpentry, 1, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/craft/masonry, 1, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/craft/engineering, 1, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/sewing, 1, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/labor/butchering, 1, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/labor/lumberjacking, 4, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/craft/traps, 1, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/misc/medicine, 1, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/craft/cooking, pick(0,1,1), TRUE)
 	belt = /obj/item/storage/belt/rogue/leather
 	shirt = /obj/item/clothing/suit/roguetown/shirt/shortshirt/random
 	pants = /obj/item/clothing/under/roguetown/trou
@@ -34,6 +48,8 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	armor = /obj/item/clothing/suit/roguetown/armor/workervest
 	beltr = /obj/item/rogueweapon/stoneaxe/woodcut
-	H.change_stat("strength", 1)
-	H.change_stat("intelligence", -2)
-	H.change_stat("speed", -1)
+	beltl = /obj/item/rogueweapon/huntingknife
+	backpack_contents = list(/obj/item/flint = 1)
+	H.change_stat("strength", 3)
+	H.change_stat("constitution", 1)
+	H.change_stat("perception", 1)

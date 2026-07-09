@@ -20,7 +20,7 @@
 	var/malfunction_probability = 10// Chance of malfunction when the component is damaged
 	var/device_type
 
-/obj/item/computer_hardware/New(var/obj/L)
+/obj/item/computer_hardware/New(obj/L)
 	..()
 	pixel_x = rand(-8, 8)
 	pixel_y = rand(-8, 8)
@@ -36,10 +36,10 @@
 	if(istype(I, /obj/item/stack/cable_coil))
 		var/obj/item/stack/S = I
 		if(obj_integrity == max_integrity)
-			to_chat(user, "<span class='warning'>\The [src] doesn't seem to require repairs.</span>")
+			to_chat(user, span_warning("\The [src] doesn't seem to require repairs."))
 			return 1
 		if(S.use(1))
-			to_chat(user, "<span class='notice'>I patch up \the [src] with a bit of \the [I].</span>")
+			to_chat(user, span_notice("I patch up \the [src] with a bit of \the [I]."))
 			obj_integrity = min(obj_integrity + 10, max_integrity)
 		return 1
 
@@ -56,7 +56,7 @@
 	return TRUE
 
 // Called on multitool click, prints diagnostic information to the user.
-/obj/item/computer_hardware/proc/diagnostics(var/mob/user)
+/obj/item/computer_hardware/proc/diagnostics(mob/user)
 	to_chat(user, "Hardware Integrity Test... (Corruption: [damage]/[max_damage]) [damage > damage_failure ? "FAIL" : damage > damage_malfunction ? "WARN" : "PASS"]")
 
 // Handles damage checks
@@ -73,14 +73,14 @@
 
 	return TRUE // Good to go.
 
-/obj/item/computer_hardware/examine(var/mob/user)
+/obj/item/computer_hardware/examine(mob/user)
 	. = ..()
 	if(damage > damage_failure)
-		. += "<span class='danger'>It seems to be severely damaged!</span>"
+		. += span_danger("It seems to be severely damaged!")
 	else if(damage > damage_malfunction)
-		. += "<span class='warning'>It seems to be damaged!</span>"
+		. += span_warning("It seems to be damaged!")
 	else if(damage)
-		. += "<span class='notice'>It seems to be slightly damaged.</span>"
+		. += span_notice("It seems to be slightly damaged.")
 
 // Component-side compatibility check.
 /obj/item/computer_hardware/proc/can_install(obj/item/modular_computer/M, mob/living/user = null)

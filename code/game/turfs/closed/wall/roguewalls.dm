@@ -17,11 +17,12 @@
 
 /turf/closed/wall/mineral/rogue/stone
 	name = "stone wall"
+	desc = "A wall of smooth, unyielding stone."
 	icon = 'icons/turf/walls/stone_wall.dmi'
 	icon_state = "stone"
 	smooth = SMOOTH_MORE
 	blade_dulling = DULLING_BASH
-	max_integrity = 1200
+	max_integrity = 1800
 	sheet_type = /obj/item/natural/stone
 	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
@@ -29,12 +30,14 @@
 	above_floor = /turf/open/floor/rogue/blocks
 	baseturfs = list(/turf/open/floor/rogue/blocks)
 	neighborlay = "dirtedge"
-	climbdiff = 1
+	climbdiff = 3
 	damage_deflection = 10
 
 /turf/closed/wall/mineral/rogue/stone/window
+	name = "stone window"
+	desc = "A window with solid and sturdy stone frame."
 	opacity = FALSE
-	max_integrity = 800
+	max_integrity = 1300
 
 /turf/closed/wall/mineral/rogue/stone/window/CanPass(atom/movable/mover, turf/target)
 	if(istype(mover) && ((mover.pass_flags & PASSTABLE) || (mover.pass_flags & PASSGRILLE)) )
@@ -57,6 +60,7 @@
 
 /turf/closed/wall/mineral/rogue/craftstone
 	name = "stone wall"
+	desc = "A durable wall made from specially crafted stone."
 	icon = 'icons/turf/walls/craftstone.dmi'
 	icon_state = "box"
 	smooth = SMOOTH_MORE
@@ -69,12 +73,13 @@
 	above_floor = /turf/open/floor/rogue/blocks
 	baseturfs = list(/turf/open/floor/rogue/blocks)
 	neighborlay = "dirtedge"
-	climbdiff = 1
+	climbdiff = 3
 	damage_deflection = 10
 
 
 /turf/closed/wall/mineral/rogue/stonebrick
 	name = "brick wall"
+	desc = "Several rows of bricks form this wall."
 	icon = 'icons/turf/walls/stonebrick.dmi'
 	icon_state = "stonebrick"
 	smooth = SMOOTH_MORE
@@ -92,7 +97,8 @@
 	damage_deflection = 20
 
 /turf/closed/wall/mineral/rogue/wood
-	name = "wall"
+	name = "wooden wall"
+	desc = "A rough-hewn wall of wood."
 	icon = 'icons/turf/walls/roguewood.dmi'
 	icon_state = "wood"
 	smooth = SMOOTH_MORE
@@ -108,6 +114,8 @@
 	climbdiff = 3
 
 /turf/closed/wall/mineral/rogue/wood/window
+	name = "wooden window"
+	desc = "A window with rough hewn wood frame."
 	opacity = FALSE
 	max_integrity = 550
 
@@ -123,6 +131,7 @@
 
 /turf/closed/wall/mineral/rogue/tent
 	name = "tent"
+	desc = "Made from durable fabric and wooden branches."
 	icon = 'icons/turf/roguewall.dmi'
 	icon_state = "tent"
 	smooth = SMOOTH_FALSE
@@ -137,13 +146,9 @@
 	neighborlay = "dirtedge"
 	climbdiff = 1
 
-
-/turf/closed/wall/mineral/rogue/tent/OnCrafted(dirin)
-	dir = dirin
-	return
-
 /turf/closed/wall/mineral/rogue/wooddark
-	name = "wall"
+	name = "dark wood wall"
+	desc = "Made from durable, somewhat darker wood." // i am not sure if the wood is really dark
 	icon = 'icons/turf/roguewall.dmi'
 	icon_state = "corner"
 	smooth = SMOOTH_FALSE
@@ -158,25 +163,22 @@
 	climbdiff = 3
 
 /turf/closed/wall/mineral/rogue/wooddark/horizontal
-	name = "wall"
 	icon_state = "horizwooddark"
 
 /turf/closed/wall/mineral/rogue/wooddark/vertical
-	name = "wall"
 	icon_state = "vertwooddark"
 
 /turf/closed/wall/mineral/rogue/wooddark/end
-	name = "wall"
 	icon_state = "endwooddark"
 
 /turf/closed/wall/mineral/rogue/wooddark/slitted
-	name = "wall"
 	icon_state = "slittedwooddark"
 
 /turf/closed/wall/mineral/rogue/wooddark/window
-	name = "wall"
+	name = "dark wood window"
 	icon_state = "subwindow"
 	opacity = FALSE
+	max_integrity = 850
 
 /turf/closed/wall/mineral/rogue/wooddark/window/CanPass(atom/movable/mover, turf/target)
 	if(istype(mover) && ((mover.pass_flags & PASSTABLE) || (mover.pass_flags & PASSGRILLE)) )
@@ -184,7 +186,7 @@
 	return ..()
 
 /turf/closed/wall/mineral/rogue/roofwall
-	name = "wall"
+	name = "wooden wall"
 	icon = 'icons/turf/roguewall.dmi'
 	icon_state = ""
 	smooth = SMOOTH_FALSE
@@ -210,7 +212,8 @@
 	icon_state = "roofTurf_IC"
 
 /turf/closed/wall/mineral/rogue/decowood
-	name = "wall"
+	name = "decorated wooden wall"
+	desc = "Meticulously designed by an professional carpenter."
 	icon = 'icons/turf/roguewall.dmi'
 	icon_state = "decowood"
 	smooth = SMOOTH_FALSE
@@ -229,29 +232,31 @@
 	dir = pick(GLOB.cardinals)
 
 /turf/closed/wall/mineral/rogue/decowood/vert
+	name = "decorated wooden wall"
 	icon_state = "decowood-vert"
 
 /turf/closed/wall/mineral/rogue/decostone
-	name = "stone wall"
+	name = "decorated stone wall"
+	desc = "The mason did an excellent job etching details into this wall."
 	icon = 'icons/turf/roguewall.dmi'
 	icon_state = "decostone-b"
 	smooth = SMOOTH_MORE
 	wallclimb = FALSE
 	blade_dulling = DULLING_BASH
-	max_integrity = 2200
+	max_integrity = 1800
 	sheet_type = /obj/item/natural/stone
 	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
 	above_floor = /turf/open/floor/rogue/blocks
 	baseturfs = list(/turf/open/floor/rogue/blocks)
 	neighborlay = "dirtedge"
-	climbdiff = 1
+	climbdiff = 3
 
 /turf/closed/wall/mineral/rogue/decostone/long
 	icon_state = "decostone-l"
 
 /obj/structure/thronething
-	name = "stone wall"
+	name = "decorated stone wall" // what is thronething??
 	icon = 'icons/turf/roguewall.dmi'
 	max_integrity = 0
 	opacity = 0
@@ -274,7 +279,7 @@
 
 /turf/closed/wall/shroud //vines
 	name = "thick treetop"
-	desc = ""
+	desc = "All the birds flew away before I could see one!"
 	icon = 'icons/turf/roguewall.dmi'
 	icon_state = "shroud1"
 	var/smooth_icon = 'icons/turf/smoothrocks.dmi'
@@ -309,11 +314,11 @@
 					res_replenish = world.time + 8 MINUTES
 				var/obj/item/B = new /obj/item/grown/log/tree/stick(user.loc)
 				user.put_in_hands(B)
-				user.visible_message("<span class='notice'>[user] finds [B] in [src].</span>")
+				user.visible_message(span_notice("[user] finds [B] in [src]."))
 				return
-			user.visible_message("<span class='warning'>[user] searches through [src].</span>")
+			user.visible_message(span_warning("[user] searches through [src]."))
 			if(!res)
-				to_chat(user, "<span class='warning'>Picked clean... I should try later.</span>")
+				to_chat(user, span_warning("Picked clean... I should try later."))
 	..()
 
 /turf/closed/wall/shroud/Initialize()
@@ -327,6 +332,7 @@
 
 /turf/closed/wall/mineral/rogue/pipe
 	name = "metal wall"
+	desc = "Solid steel made into an impenetrable obstacle."
 	icon = 'icons/turf/pipewall.dmi'
 	icon_state = "iron_box"
 	smooth = SMOOTH_MORE
@@ -338,5 +344,56 @@
 	canSmoothWith = list(/turf/closed/wall/mineral/rogue/pipe)
 	above_floor = /turf/open/floor/rogue/concrete
 	baseturfs = list(/turf/open/floor/rogue/concrete)
-	climbdiff = 1
+	climbdiff = 4
 	damage_deflection = 20
+
+/turf/closed/wall/mineral/rogue/stone/blue_moss
+	icon = 'icons/turf/walls/blue_mossy.dmi'
+
+/turf/closed/wall/mineral/rogue/stone/window/blue_moss
+	icon = 'icons/turf/walls/blue_mossy.dmi'
+
+/turf/closed/wall/mineral/rogue/stone/red_moss
+    icon = 'icons/turf/walls/red_mossy.dmi'
+
+/turf/closed/wall/mineral/rogue/stone/red_moss
+    icon = 'icons/turf/walls/red_mossy.dmi'
+/turf/closed/wall/mineral/rogue/decostone/mossy
+    name = "decorated mossy stone wall"
+    desc = "There was much effort put into this wall a long time ago."
+    icon = 'icons/turf/Rougewall_mossy.dmi'
+    icon_state = "decostone-b-green"
+    climbdiff = 4
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/long
+    icon_state = "decostone-l-green"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/end
+    icon_state = "decostone-e-green"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/cand
+    icon_state = "decostone-cand-green"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/blue
+    icon_state = "decostone-b-blue"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/blue/long
+    icon_state = "decostone-l-blue"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/blue/end
+    icon_state = "decostone-e-blue"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/blue/cand
+    icon_state = "decostone-cand-blue"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/red
+    icon_state = "decostone-b-red"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/red/long
+    icon_state = "decostone-l-red"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/red/end
+    icon_state = "decostone-e-red"
+
+/turf/closed/wall/mineral/rogue/decostone/mossy/red/cand
+    icon_state = "decostone-cand-red"

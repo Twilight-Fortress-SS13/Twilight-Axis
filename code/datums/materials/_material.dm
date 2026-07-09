@@ -25,7 +25,7 @@ Simple datum which is instanced once per type and is used for every object of sa
 	///This is the amount of value per 1 unit of the material
 	var/value_per_unit = 0
 	///Armor modifiers, multiplies an items normal armor vars by these amounts.
-	var/armor_modifiers = list("melee" = 1, "bullet" = 1, "laser" = 1, "energy" = 1, "bomb" = 1, "bio" = 1, "rad" = 1, "fire" = 1, "acid" = 1)
+	var/armor_modifiers = list("blunt" = 1, "slash" = 1, "stab" = 1, "bullet" = 1, "laser" = 1, "energy" = 1, "bomb" = 1, "bio" = 1, "rad" = 1, "fire" = 1, "acid" = 1)
 	///How beautiful is this material per unit
 	var/beauty_modifier = 0
 
@@ -41,13 +41,13 @@ Simple datum which is instanced once per type and is used for every object of sa
 		source.name = "[name] [source.name]"
 
 	if(beauty_modifier)
-		addtimer(CALLBACK(source, /datum.proc/AddComponent, /datum/component/beauty, beauty_modifier * amount), 0)
+		addtimer(CALLBACK(source, TYPE_PROC_REF(/datum, AddComponent), /datum/component/beauty, beauty_modifier * amount), 0)
 
 	if(istype(source, /obj)) //objs
 		on_applied_obj(source, amount, material_flags)
 
 ///This proc is called when the material is added to an object specifically.
-/datum/material/proc/on_applied_obj(var/obj/o, amount, material_flags)
+/datum/material/proc/on_applied_obj(obj/o, amount, material_flags)
 	var/new_max_integrity = CEILING(o.max_integrity * integrity_modifier, 1)
 	o.modify_max_integrity(new_max_integrity)
 	o.force *= strength_modifier
@@ -77,7 +77,7 @@ Simple datum which is instanced once per type and is used for every object of sa
 		on_removed_obj(source, material_flags)
 
 ///This proc is called when the material is removed from an object specifically.
-/datum/material/proc/on_removed_obj(var/obj/o, amount, material_flags)
+/datum/material/proc/on_removed_obj(obj/o, amount, material_flags)
 	var/new_max_integrity = initial(o.max_integrity)
 	o.modify_max_integrity(new_max_integrity)
 	o.force = initial(o.force)

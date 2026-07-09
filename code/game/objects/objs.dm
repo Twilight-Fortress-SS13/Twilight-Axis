@@ -3,15 +3,18 @@
 	animate_movement = SLIDE_STEPS
 	speech_span = SPAN_ROBOT
 	var/obj_flags = CAN_BE_HIT
-	var/set_obj_flags // ONLY FOR MAPPING: Sets flags from a string list, handled in Initialize. Usage: set_obj_flags = "EMAGGED;!CAN_BE_HIT" to set EMAGGED and clear CAN_BE_HIT.
+	/// ONLY FOR MAPPING: Sets flags from a string list, handled in Initialize. Usage: set_obj_flags = "EMAGGED;!CAN_BE_HIT" to set EMAGGED and clear CAN_BE_HIT.
+	var/set_obj_flags 
 
 	var/damtype = BRUTE
 	var/force = 0
 
 	var/datum/armor/armor
-	var/obj_integrity	//defaults to max_integrity
+	///defaults to max_integrity
+	var/obj_integrity
 	var/max_integrity = 500
-	var/integrity_failure = 0 //0 if we have no special broken behavior, otherwise is a percentage of at what point the obj breaks. 0.5 being 50%
+	///0 if we have no special broken behavior, otherwise is a percentage of at what point the obj breaks. 0.5 being 50%
+	var/integrity_failure = 0 
 	///Damage under this value will be completely ignored
 	var/damage_deflection = 0
 	var/obj_broken = FALSE
@@ -19,11 +22,15 @@
 
 	var/resistance_flags = NONE // INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ON_FIRE | UNACIDABLE | ACID_PROOF
 
-	var/acid_level = 0 //how much acid is on that obj
+	///how much acid is on that obj
+	var/acid_level = 0 
 
-	var/persistence_replacement //have something WAY too amazing to live to the next round? Set a new path here. Overuse of this var will make me upset.
-	var/current_skin //Has the item been reskinned?
-	var/list/unique_reskin //List of options to reskin.
+	///have something WAY too amazing to live to the next round? Set a new path here. Overuse of this var will make me upset.
+	var/persistence_replacement 
+	///Has the item been reskinned?
+	var/current_skin            
+	///List of options to reskin.
+	var/list/unique_reskin      
 
 	// Access levels, used in modules\jobs\access.dm
 	var/list/req_access
@@ -31,9 +38,11 @@
 	var/list/req_one_access
 	var/req_one_access_txt = "0"
 
-	var/renamedByPlayer = FALSE //set when a player uses a pen on a renamable object
+	///set when a player uses a pen on a renamable object
+	var/renamedByPlayer = FALSE 
 
-	var/drag_slowdown // Amont of multiplicative slowdown applied if pulled. >1 makes you slower, <1 makes you faster.
+	/// Amont of multiplicative slowdown applied if pulled. >1 makes you slower, <1 makes you faster.
+	var/drag_slowdown 
 
 	var/blade_dulling = DULLING_BASHCHOP
 
@@ -99,9 +108,9 @@
 	anchored = anchorvalue
 
 /obj/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback, force)
-	..()
+	. = ..()
 	if(obj_flags & FROZEN)
-		visible_message("<span class='danger'>[src] shatters into a million pieces!</span>")
+		visible_message(span_danger("[src] shatters into a million pieces!"))
 		qdel(src)
 
 
@@ -254,17 +263,19 @@
 		if (islist(result))
 			if (result["button"] != 2) // If the user pressed the cancel button
 				// text2num conveniently returns a null on invalid values
-				armor = armor.setRating(melee = text2num(result["values"]["melee"]),\
-			                  bullet = text2num(result["values"]["bullet"]),\
-			                  laser = text2num(result["values"]["laser"]),\
-			                  energy = text2num(result["values"]["energy"]),\
-			                  bomb = text2num(result["values"]["bomb"]),\
-			                  bio = text2num(result["values"]["bio"]),\
-			                  rad = text2num(result["values"]["rad"]),\
-			                  fire = text2num(result["values"]["fire"]),\
-			                  acid = text2num(result["values"]["acid"]))
-				log_admin("[key_name(usr)] modified the armor on [src] ([type]) to melee: [armor.melee], bullet: [armor.bullet], laser: [armor.laser], energy: [armor.energy], bomb: [armor.bomb], bio: [armor.bio], rad: [armor.rad], fire: [armor.fire], acid: [armor.acid]")
-				message_admins("<span class='notice'>[key_name_admin(usr)] modified the armor on [src] ([type]) to melee: [armor.melee], bullet: [armor.bullet], laser: [armor.laser], energy: [armor.energy], bomb: [armor.bomb], bio: [armor.bio], rad: [armor.rad], fire: [armor.fire], acid: [armor.acid]</span>")
+				armor = armor.setRating(blunt = text2num(result["values"]["blunt"]),\
+								slash = text2num(result["values"]["slash"]),\
+								stab = text2num(result["values"]["stab"]),\
+								bullet = text2num(result["values"]["bullet"]),\
+								laser = text2num(result["values"]["laser"]),\
+								energy = text2num(result["values"]["energy"]),\
+								bomb = text2num(result["values"]["bomb"]),\
+								bio = text2num(result["values"]["bio"]),\
+								rad = text2num(result["values"]["rad"]),\
+								fire = text2num(result["values"]["fire"]),\
+								acid = text2num(result["values"]["acid"]))
+				log_admin("[key_name(usr)] modified the armor on [src] ([type]) to blunt: [armor.blunt], slash: [armor.slash], stab:[armor.stab], bullet: [armor.bullet], laser: [armor.laser], energy: [armor.energy], bomb: [armor.bomb], bio: [armor.bio], rad: [armor.rad], fire: [armor.fire], acid: [armor.acid]")
+				message_admins(span_notice("[key_name_admin(usr)] modified the armor on [src] ([type]) to blunt: [armor.blunt], slash: [armor.slash], stab:[armor.stab], bullet: [armor.bullet], laser: [armor.laser], energy: [armor.energy], bomb: [armor.bomb], bio: [armor.bio], rad: [armor.rad], fire: [armor.fire], acid: [armor.acid]"))
 	if(href_list[VV_HK_MASS_DEL_TYPE])
 		if(check_rights(R_DEBUG|R_SERVER))
 			var/action_type = alert("Strict type ([type]) or type and all subtypes?",,"Strict type","Type and subtypes","Cancel")
@@ -290,7 +301,7 @@
 						to_chat(usr, "No objects of this type exist")
 						return
 					log_admin("[key_name(usr)] deleted all objects of type [O_type] ([i] objects deleted) ")
-					message_admins("<span class='notice'>[key_name(usr)] deleted all objects of type [O_type] ([i] objects deleted) </span>")
+					message_admins(span_notice("[key_name(usr)] deleted all objects of type [O_type] ([i] objects deleted) "))
 				if("Type and subtypes")
 					var/i = 0
 					for(var/obj/Obj in world)
@@ -302,14 +313,14 @@
 						to_chat(usr, "No objects of this type exist")
 						return
 					log_admin("[key_name(usr)] deleted all objects of type or subtype of [O_type] ([i] objects deleted) ")
-					message_admins("<span class='notice'>[key_name(usr)] deleted all objects of type or subtype of [O_type] ([i] objects deleted) </span>")
+					message_admins(span_notice("[key_name(usr)] deleted all objects of type or subtype of [O_type] ([i] objects deleted) "))
 
 /obj/examine(mob/user)
 	. = ..()
 //	if(obj_flags & UNIQUE_RENAME)
-//		. += "<span class='notice'>Use a pen on it to rename it or change its description.</span>"
+//		. += span_notice("Use a pen on it to rename it or change its description.")
 	if(unique_reskin && !current_skin)
-		. += "<span class='notice'>Alt-click it to reskin it.</span>"
+		. += span_notice("Alt-click it to reskin it.")
 
 /obj/AltClick(mob/user)
 	. = ..()

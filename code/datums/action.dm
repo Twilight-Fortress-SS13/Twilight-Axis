@@ -9,7 +9,7 @@
 	var/obj/target = null
 	var/check_flags = NONE
 	var/processing = FALSE
-	var/obj/screen/movable/action_button/button = null
+	var/atom/movable/screen/movable/action_button/button = null
 	var/buttontooltipstyle = ""
 	var/transparent_when_unavailable = TRUE
 
@@ -142,7 +142,7 @@
 			button.color = rgb(255,255,255,255)
 			return 1
 
-/datum/action/proc/ApplyIcon(obj/screen/movable/action_button/current_button, force = FALSE)
+/datum/action/proc/ApplyIcon(atom/movable/screen/movable/action_button/current_button, force = FALSE)
 	if(icon_icon && button_icon_state && ((current_button.button_icon_state != button_icon_state) || force))
 		current_button.cut_overlays(TRUE)
 		current_button.add_overlay(mutable_appearance(icon_icon, button_icon_state))
@@ -178,7 +178,7 @@
 		I.ui_action_click(owner, src)
 	return 1
 
-/datum/action/item_action/ApplyIcon(obj/screen/movable/action_button/current_button, force)
+/datum/action/item_action/ApplyIcon(atom/movable/screen/movable/action_button/current_button, force)
 	if(button_icon && button_icon_state)
 		// If set, use the custom icon that we set instead
 		// of the item appearence
@@ -418,7 +418,7 @@
 			owner.research_scanner++
 		else
 			owner.research_scanner--
-		to_chat(owner, "<span class='notice'>[target] research scanner has been [active ? "activated" : "deactivated"].</span>")
+		to_chat(owner, span_notice("[target] research scanner has been [active ? "activated" : "deactivated"]."))
 		return 1
 
 /datum/action/item_action/toggle_research_scanner/Remove(mob/M)
@@ -485,9 +485,9 @@
 		I.attack_self(owner)
 	else
 		if (owner.get_num_arms() <= 0)
-			to_chat(owner, "<span class='warning'>I dont have any usable hands!</span>")
+			to_chat(owner, span_warning("I dont have any usable hands!"))
 		else
-			to_chat(owner, "<span class='warning'>My hands are full!</span>")
+			to_chat(owner, span_warning("My hands are full!"))
 
 ///MGS BOX!
 /datum/action/item_action/agent_box
@@ -514,7 +514,7 @@
 		return
 	//Box closing from here on out.
 	if(!isturf(owner.loc)) //Don't let the player use this to escape mechs/welded closets.
-		to_chat(owner, "<span class='warning'>I need more space to activate this implant!</span>")
+		to_chat(owner, span_warning("I need more space to activate this implant!"))
 		return
 	if(cooldown < world.time - 100)
 		var/box = new boxtype(owner.drop_location())
@@ -739,7 +739,7 @@
 	icon_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "storage_gather_switch"
 
-/datum/action/item_action/storage_gather_mode/ApplyIcon(obj/screen/movable/action_button/current_button)
+/datum/action/item_action/storage_gather_mode/ApplyIcon(atom/movable/screen/movable/action_button/current_button)
 	. = ..()
 	var/old_layer = target.layer
 	var/old_plane = target.plane

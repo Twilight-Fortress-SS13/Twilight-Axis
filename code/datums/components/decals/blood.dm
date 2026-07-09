@@ -5,7 +5,7 @@
 	if(!isitem(parent))
 		return COMPONENT_INCOMPATIBLE
 	. = ..()
-	RegisterSignal(parent, COMSIG_ATOM_GET_EXAMINE_NAME, .proc/get_examine_name)
+	RegisterSignal(parent, COMSIG_ATOM_GET_EXAMINE_NAME, PROC_REF(get_examine_name))
 
 /datum/component/decal/blood/generate_appearance(_icon, _icon_state, _dir, _layer, _color)
 	testing("genappearance")
@@ -39,5 +39,5 @@
 /datum/component/decal/blood/proc/get_examine_name(datum/source, mob/user, list/override)
 	var/atom/A = parent
 	override[EXAMINE_POSITION_ARTICLE] = A.gender == PLURAL? "some" : "a"
-	override[EXAMINE_POSITION_BEFORE] = " <span class='danger'>bloody</span> "
+	override[EXAMINE_POSITION_BEFORE] = " <span class='bloody'>bloody</span> "
 	return COMPONENT_EXNAME_CHANGED

@@ -148,7 +148,7 @@ GLOBAL_PROTECT(exp_to_update)
 	set waitfor = FALSE
 	var/list/old_minutes = GLOB.exp_to_update
 	GLOB.exp_to_update = null
-	SSdbcore.MassInsert(format_table_name("role_time"), old_minutes, "ON DUPLICATE KEY UPDATE minutes = minutes + VALUES(minutes)")
+	SSdbcore.MassInsert(format_table_name("role_time"), old_minutes, duplicate_key = "ON DUPLICATE KEY UPDATE minutes = minutes + VALUES(minutes)")
 
 //resets a client's exp to what was in the db.
 /client/proc/set_exp_from_db()
@@ -156,7 +156,10 @@ GLOBAL_PROTECT(exp_to_update)
 		return -1
 	if(!SSdbcore.Connect())
 		return -1
-	var/datum/DBQuery/exp_read = SSdbcore.NewQuery("SELECT job, minutes FROM [format_table_name("role_time")] WHERE ckey = '[sanitizeSQL(ckey)]'")
+	var/datum/DBQuery/exp_read = SSdbcore.NewQuery(
+		"SELECT job, minutes FROM [format_table_name("role_time")] WHERE ckey = :ckey",
+		list("ckey" = ckey)
+	)
 	if(!exp_read.Execute(async = TRUE))
 		qdel(exp_read)
 		return -1
@@ -188,7 +191,10 @@ GLOBAL_PROTECT(exp_to_update)
 	else
 		prefs.db_flags |= newflag
 
-	var/datum/DBQuery/flag_update = SSdbcore.NewQuery("UPDATE [format_table_name("player")] SET flags = '[prefs.db_flags]' WHERE ckey='[sanitizeSQL(ckey)]'")
+	var/datum/DBQuery/flag_update = SSdbcore.NewQuery(
+		"UPDATE [format_table_name("player")] SET flags=:flags WHERE ckey=:ckey",
+		list("flags" = "[prefs.db_flags]", "ckey" = ckey)
+	)
 
 	if(!flag_update.Execute())
 		qdel(flag_update)
@@ -210,41 +216,41 @@ GLOBAL_PROTECT(exp_to_update)
 			var/rolefound = FALSE
 			play_records[EXP_TYPE_LIVING] += minutes
 			if(announce_changes)
-				to_chat(src,"<span class='notice'>I got: [minutes] Living EXP!</span>")
+				to_chat(src,span_notice("I got: [minutes] Living EXP!"))
 			if(mob.mind.assigned_role)
 				for(var/job in SSjob.name_occupations)
 					if(mob.mind.assigned_role == job)
 						rolefound = TRUE
 						play_records[job] += minutes
 						if(announce_changes)
-							to_chat(src,"<span class='notice'>I got: [minutes] [job] EXP!</span>")
+							to_chat(src,span_notice("I got: [minutes] [job] EXP!"))
 				if(!rolefound)
 					for(var/role in GLOB.exp_specialmap[EXP_TYPE_SPECIAL])
 						if(mob.mind.assigned_role == role)
 							rolefound = TRUE
 							play_records[role] += minutes
 							if(announce_changes)
-								to_chat(mob,"<span class='notice'>I got: [minutes] [role] EXP!</span>")
+								to_chat(mob,span_notice("I got: [minutes] [role] EXP!"))
 				if(mob.mind.special_role && !(mob.mind.datum_flags & DF_VAR_EDITED))
 					var/trackedrole = mob.mind.special_role
 					play_records[trackedrole] += minutes
 					if(announce_changes)
-						to_chat(src,"<span class='notice'>I got: [minutes] [trackedrole] EXP!</span>")
+						to_chat(src,span_notice("I got: [minutes] [trackedrole] EXP!"))
 			if(!rolefound)
 				play_records["Unknown"] += minutes
 		else
 			if(holder && !holder.deadmined)
 				play_records[EXP_TYPE_ADMIN] += minutes
 				if(announce_changes)
-					to_chat(src,"<span class='notice'>I got: [minutes] Admin EXP!</span>")
+					to_chat(src,span_notice("I got: [minutes] Admin EXP!"))
 			else
 				play_records[EXP_TYPE_GHOST] += minutes
 				if(announce_changes)
-					to_chat(src,"<span class='notice'>I got: [minutes] Ghost EXP!</span>")
+					to_chat(src,span_notice("I got: [minutes] Ghost EXP!"))
 	else if(isobserver(mob))
 		play_records[EXP_TYPE_GHOST] += minutes
 		if(announce_changes)
-			to_chat(src,"<span class='notice'>I got: [minutes] Ghost EXP!</span>")
+			to_chat(src,span_notice("I got: [minutes] Ghost EXP!"))
 	else if(minutes)	//Let "refresh" checks go through
 		return
 
@@ -256,11 +262,11 @@ GLOBAL_PROTECT(exp_to_update)
 			CRASH("invalid job value [jtype]:[jvalue]")
 		LAZYINITLIST(GLOB.exp_to_update)
 		GLOB.exp_to_update.Add(list(list(
-			"job" = "'[sanitizeSQL(jtype)]'",
-			"ckey" = "'[sanitizeSQL(ckey)]'",
+			"job" = "'[jtype]'",
+			"ckey" = "'[ckey]'",
 			"minutes" = jvalue)))
 		prefs.exp[jtype] += jvalue
-	addtimer(CALLBACK(SSblackbox,/datum/controller/subsystem/blackbox/proc/update_exp_db),20,TIMER_OVERRIDE|TIMER_UNIQUE)
+	addtimer(CALLBACK(SSblackbox,TYPE_PROC_REF(/datum/controller/subsystem/blackbox, update_exp_db)),20,TIMER_OVERRIDE|TIMER_UNIQUE)
 
 
 //ALWAYS call this at beginning to any proc touching player flags, or your database admin will probably be mad
@@ -268,7 +274,10 @@ GLOBAL_PROTECT(exp_to_update)
 	if(!SSdbcore.Connect())
 		return FALSE
 
-	var/datum/DBQuery/flags_read = SSdbcore.NewQuery("SELECT flags FROM [format_table_name("player")] WHERE ckey='[ckey]'")
+	var/datum/DBQuery/flags_read = SSdbcore.NewQuery(
+		"SELECT flags FROM [format_table_name("player")] WHERE ckey=:ckey",
+		list("ckey" = ckey)
+	)
 
 	if(!flags_read.Execute(async = TRUE))
 		qdel(flags_read)

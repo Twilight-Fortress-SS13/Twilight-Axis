@@ -57,11 +57,11 @@
 
 	if(grab_ghost_when == CLONER_FRESH_CLONE)
 		H.grab_ghost()
-		to_chat(H, "<span class='notice'><b>Consciousness slowly creeps over you as my body regenerates.</b><br><i>So this is what cloning feels like?</i></span>")
+		to_chat(H, span_notice("<b>Consciousness slowly creeps over you as my body regenerates.</b><br><i>So this is what cloning feels like?</i>"))
 
 	if(grab_ghost_when == CLONER_MATURE_CLONE)
 		H.ghostize(TRUE)	//Only does anything if they were still in their old body and not already a ghost
-		to_chat(H.get_ghost(TRUE), "<span class='notice'>My body is beginning to regenerate in a cloning pod. You will become conscious when it is complete.</span>")
+		to_chat(H.get_ghost(TRUE), span_notice("My body is beginning to regenerate in a cloning pod. You will become conscious when it is complete."))
 
 	if(H)
 		H.faction |= factions
@@ -212,7 +212,7 @@
 			dat += "<a href='byond://?src=[REF(src)];clone=1'>Clone</a>"
 			dat += "<br><a href='byond://?src=[REF(src)];lock=1'>[src.scanner.locked ? "Unlock Scanner" : "Lock Scanner"]</a>"
 		else
-			dat += "<span class='linkOff'>Clone</span>"
+			dat += span_linkoff("Clone")
 
 	var/datum/browser/popup = new(user, "cloning", "Prototype Cloning System Control")
 	popup.set_content(dat)
@@ -234,7 +234,7 @@
 		playsound(src, 'sound/blank.ogg', 50, FALSE)
 		say("Initiating scan...")
 
-		addtimer(CALLBACK(src, .proc/do_clone), 2 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(do_clone)), 2 SECONDS)
 
 		//No locking an open scanner.
 	else if ((href_list["lock"]) && !isnull(scanner) && scanner.is_operational())
@@ -286,8 +286,8 @@
 	if(dna.species)
 		clone_species = dna.species
 	else
-		var/datum/species/rando_race = pick(GLOB.roundstart_races)
-		clone_species = rando_race.type
+		var/rando_race = pick(get_selectable_species())
+		clone_species = GLOB.species_list[rando_race]
 
 	var/obj/machinery/clonepod/pod = GetAvailablePod()
 	//Can't clone without someone to clone.  Or a pod.  Or if the pod is busy. Or full of gibs.

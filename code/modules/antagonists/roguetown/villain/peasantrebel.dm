@@ -1,5 +1,5 @@
 //How often to check for promotion possibility
-#define HEAD_UPDATE_PERIOD 300
+#define INGAME_ROLE_HEAD_UPDATE_PERIOD 300
 
 /datum/antagonist/prebel
 	name = "Peasant Rebel"
@@ -8,27 +8,32 @@
 	job_rank = ROLE_PREBEL
 	antag_hud_type = ANTAG_HUD_REV
 	antag_hud_name = "rev"
-	var/datum/team/prebels/rev_team
 	show_in_roundend = FALSE
-	confess_lines = list("VIVA!", "DEATH TO THE NOBLES!")
+	confess_lines = list(
+		"VIVA!", 
+		"DEATH TO THE NOBLES!",
+		"STICK IT TO THE MAN!",
+		"NO GODS, NO MASTERS!",
+	)
 	increase_votepwr = FALSE
+	var/datum/team/prebels/rev_team
 
 /datum/antagonist/prebel/examine_friendorfoe(datum/antagonist/examined_datum,mob/examiner,mob/examined)
 	if(istype(examined_datum, /datum/antagonist/prebel/head))
-		return "<span class='boldnotice'>A revolution leader.</span>"
+		return span_boldnotice("A revolution leader.")
 	if(istype(examined_datum, /datum/antagonist/prebel))
-		return "<span class='boldnotice'>My ally in revolt against the pigs.</span>"
+		return span_boldnotice("My ally in revolt against the pigs.")
 
 
 /datum/antagonist/prebel/on_gain()
 	. = ..()
 	owner.special_role = ROLE_PREBEL
 	var/mob/living/carbon/human/H = owner.current
-	H.cmode_music = 'sound/music/combatbandit.ogg'
+	H.cmode_music = 'sound/music/combat_bandit.ogg'
 	H.add_stress(/datum/stressevent/prebel)
 
 /datum/antagonist/prebel/greet()
-	to_chat(owner, "<span class='danger'>I am a peasant rebel! It's time for a change in leadership for this town.</span>")
+	to_chat(owner, span_danger("I am a peasant rebel! It's time for a change in leadership for this town."))
 	if(rev_team)
 		rev_team.update_objectives()
 	owner.announce_objectives()
@@ -45,14 +50,6 @@
 			return FALSE
 		if(new_owner.current && HAS_TRAIT(new_owner.current, TRAIT_MINDSHIELD))
 			return FALSE
-
-/datum/antagonist/prebel/apply_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	add_antag_hud(antag_hud_type, antag_hud_name, M)
-
-/datum/antagonist/prebel/remove_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	remove_antag_hud(antag_hud_type, M)
 
 /datum/antagonist/prebel/on_gain()
 	. = ..()
@@ -94,9 +91,11 @@
 	name = "Head Rebel"
 	antag_hud_name = "rev_head"
 	increase_votepwr = TRUE
+
 /datum/antagonist/prebel/head/on_gain()
 	. = ..()
 	owner.AddSpell(new /obj/effect/proc_holder/spell/self/rebelconvert)
+	owner.current?.set_patron(/datum/patron/inhumen/matthios) //head rebels always love matthios, of course
 
 /datum/antagonist/prebel/proc/can_be_converted(mob/living/candidate)
 	if(!candidate.mind)
@@ -125,9 +124,9 @@
 		user.say(inputty, forced = "spell")
 		var/datum/antagonist/prebel/PR = user.mind.has_antag_datum(/datum/antagonist/prebel)
 		for(var/mob/living/carbon/human/L in get_hearers_in_view(6, get_turf(user)))
-			addtimer(CALLBACK(L,/mob/living/carbon/human.proc/rev_ask, user,PR,inputty),1)
+			addtimer(CALLBACK(L,TYPE_PROC_REF(/mob/living/carbon/human, rev_ask), user,PR,inputty),1)
 
-/mob/living/carbon/human/proc/rev_ask(var/mob/living/carbon/human/guy,var/datum/antagonist/prebel/mind_datum,offer)
+/mob/living/carbon/human/proc/rev_ask(mob/living/carbon/human/guy,datum/antagonist/prebel/mind_datum,offer)
 	if(!guy || !mind_datum || !offer)
 		return
 	if(!mind)
@@ -144,17 +143,17 @@
 	playsound_local(src, 'sound/misc/rebel.ogg', 100, FALSE)
 	var/garbaggio = alert(src, "[offer]","Rebellion", "Yes", "No")
 	if(world.time > shittime + 35 SECONDS)
-		to_chat(src,"<span class='danger'>Too late.</span>")
+		to_chat(src,span_danger("Too late."))
 		return
 	mob_timers["rebeloffer"] = world.time
 	if(garbaggio == "Yes")
 		if(mind_datum.add_revolutionary(mind))
-			RT.offers2join += "<span class='info'><B>[real_name]</B> <span class='blue'>ACCEPTED</span> [guy.real_name]: \"[offer]\"</span>"
-			to_chat(guy,"<span class='blue'>[src] joins the revolution.</span>")
+			RT.offers2join += span_info("<B>[real_name]</B> <span class='blue'>ACCEPTED</span> [guy.real_name]: \"[offer]\"")
+			to_chat(guy,span_blue("[src] joins the revolution."))
 	else
-		to_chat(src,"<span class='danger'>I reject the offer.</span>")
-		to_chat(guy,"<span class='danger'>[src] rejects the offer.</span>")
-		RT.offers2join += "<span class='info'><B>[real_name]</B> <span class='red'>REJECTED</span> [guy.real_name]: \"[offer]\"</span>"
+		to_chat(src,span_danger("I reject the offer."))
+		to_chat(guy,span_danger("[src] rejects the offer."))
+		RT.offers2join += span_info("<B>[real_name]</B> <span class='red'>REJECTED</span> [guy.real_name]: \"[offer]\"")
 
 /datum/antagonist/prebel/proc/add_revolutionary(datum/mind/rev_mind)
 	if(!can_be_converted(rev_mind.current))
@@ -182,11 +181,11 @@
 			R = M.has_antag_datum(/datum/antagonist/prebel/head)
 		R.objectives |= objectives
 
-	addtimer(CALLBACK(src,.proc/update_objectives),HEAD_UPDATE_PERIOD,TIMER_UNIQUE)
+	addtimer(CALLBACK(src,PROC_REF(update_objectives)),INGAME_ROLE_HEAD_UPDATE_PERIOD,TIMER_UNIQUE)
 
 
 /datum/team/prebels/roundend_report()
-	to_chat(world, "<span class='header'> * [name] * </span>")
+	to_chat(world, span_header(" * [name] * "))
 	to_chat(world, "[printplayerlist(members)]")
 
 	if(objectives.len)
@@ -203,8 +202,8 @@
 			for(var/datum/mind/M in members)
 				if(considered_alive(M))
 					M.adjust_triumphs(5)
-			to_chat(world, "<span class='greentext'>The Peasant Rebellion has triumphed!</span>")
+			to_chat(world, span_greentext("The Peasant Rebellion has triumphed!"))
 		else
-			to_chat(world, "<span class='redtext'>The Peasant Rebellion has FAILED!</span>")
+			to_chat(world, span_redtext("The Peasant Rebellion has FAILED!"))
 		for(var/X in offers2join)
 			to_chat(world,"[X]")

@@ -25,9 +25,9 @@
 //STUN
 /datum/status_effect/incapacitating/stun
 	id = "stun"
-	alert_type = /obj/screen/alert/status_effect/stun
+	alert_type = /atom/movable/screen/alert/status_effect/stun
 
-/obj/screen/alert/status_effect/stun
+/atom/movable/screen/alert/status_effect/stun
 	name = "Stunned"
 	desc = ""
 	icon_state = "stun"
@@ -35,9 +35,9 @@
 //KNOCKDOWN
 /datum/status_effect/incapacitating/knockdown
 	id = "knockdown"
-	alert_type = /obj/screen/alert/status_effect/knocked_down
+	alert_type = /atom/movable/screen/alert/status_effect/knocked_down
 
-/obj/screen/alert/status_effect/knocked_down
+/atom/movable/screen/alert/status_effect/knocked_down
 	name = "Knocked Down"
 	desc = ""
 	icon_state = "knockdown"
@@ -45,18 +45,18 @@
 //IMMOBILIZED
 /datum/status_effect/incapacitating/immobilized
 	id = "immobilized"
-	alert_type = /obj/screen/alert/status_effect/immobilized
+	alert_type = /atom/movable/screen/alert/status_effect/immobilized
 
-/obj/screen/alert/status_effect/immobilized
+/atom/movable/screen/alert/status_effect/immobilized
 	name = "Immobilized"
 	desc = ""
 	icon_state = "immob"
 
 /datum/status_effect/incapacitating/paralyzed
 	id = "paralyzed"
-	alert_type = /obj/screen/alert/status_effect/paralyzed
+	alert_type = /atom/movable/screen/alert/status_effect/paralyzed
 
-/obj/screen/alert/status_effect/paralyzed
+/atom/movable/screen/alert/status_effect/paralyzed
 	name = "Paralyzed"
 	desc = ""
 	icon_state = "paralyze"
@@ -73,7 +73,7 @@
 //SLEEPING
 /datum/status_effect/incapacitating/sleeping
 	id = "sleeping"
-	alert_type = /obj/screen/alert/status_effect/asleep
+	alert_type = /atom/movable/screen/alert/status_effect/asleep
 	needs_update_stat = TRUE
 	var/mob/living/carbon/carbon_owner
 	var/mob/living/carbon/human/human_owner
@@ -117,8 +117,6 @@
 			healing -= 0.1
 			break //Only count the first bedsheet
 		if(health_ratio > 0.8)
-			owner.adjustBruteLoss(healing)
-			owner.adjustFireLoss(healing)
 			owner.adjustToxLoss(healing * 0.5, TRUE, TRUE)
 		owner.adjustStaminaLoss(healing)
 	if(human_owner && human_owner.drunkenness)
@@ -130,7 +128,7 @@
 			if(prob(10) && owner.health > owner.crit_threshold)
 				owner.emote("snore")
 
-/obj/screen/alert/status_effect/asleep
+/atom/movable/screen/alert/status_effect/asleep
 	name = "Asleep"
 	desc = ""
 	icon_state = "asleep"
@@ -140,7 +138,7 @@
         id = "stasis"
         duration = -1
         tick_interval = 10
-        alert_type = /obj/screen/alert/status_effect/stasis
+        alert_type = /atom/movable/screen/alert/status_effect/stasis
         var/last_dead_time
 
 /datum/status_effect/incapacitating/stasis/proc/update_time_of_death()
@@ -169,7 +167,7 @@
         update_time_of_death()
         return ..()
 
-/obj/screen/alert/status_effect/stasis
+/atom/movable/screen/alert/status_effect/stasis
         name = "Stasis"
         desc = ""
         icon_state = "stasis"
@@ -180,7 +178,7 @@
 /datum/status_effect/strandling //get it, strand as in durathread strand + strangling = strandling hahahahahahahahahahhahahaha i want to die
 	id = "strandling"
 	status_type = STATUS_EFFECT_UNIQUE
-	alert_type = /obj/screen/alert/status_effect/strandling
+	alert_type = /atom/movable/screen/alert/status_effect/strandling
 
 /datum/status_effect/strandling/on_apply()
 	ADD_TRAIT(owner, TRAIT_MAGIC_CHOKE, "dumbmoron")
@@ -190,19 +188,19 @@
 	REMOVE_TRAIT(owner, TRAIT_MAGIC_CHOKE, "dumbmoron")
 	return ..()
 
-/obj/screen/alert/status_effect/strandling
+/atom/movable/screen/alert/status_effect/strandling
 	name = "Choking strand"
 	desc = ""
 	icon_state = "his_grace"
 	alerttooltipstyle = "hisgrace"
 
-/obj/screen/alert/status_effect/strandling/Click(location, control, params)
+/atom/movable/screen/alert/status_effect/strandling/Click(location, control, params)
 	. = ..()
-	to_chat(mob_viewer, "<span class='notice'>I attempt to remove the durathread strand from around my neck.</span>")
+	to_chat(mob_viewer, span_notice("I attempt to remove the durathread strand from around my neck."))
 	if(do_after(mob_viewer, 35, null, mob_viewer))
 		if(isliving(mob_viewer))
 			var/mob/living/L = mob_viewer
-			to_chat(mob_viewer, "<span class='notice'>I succesfuly remove the durathread strand.</span>")
+			to_chat(mob_viewer, span_notice("I succesfuly remove the durathread strand."))
 			L.remove_status_effect(STATUS_EFFECT_CHOKINGSTRAND)
 
 
@@ -242,9 +240,9 @@
 	id = "his_wrath"
 	duration = -1
 	tick_interval = 4
-	alert_type = /obj/screen/alert/status_effect/his_wrath
+	alert_type = /atom/movable/screen/alert/status_effect/his_wrath
 
-/obj/screen/alert/status_effect/his_wrath
+/atom/movable/screen/alert/status_effect/his_wrath
 	name = "His Wrath"
 	desc = ""
 	icon_state = "his_grace"
@@ -382,7 +380,7 @@
 /datum/status_effect/necropolis_curse/proc/apply_curse(set_curse)
 	curse_flags |= set_curse
 	if(curse_flags & CURSE_BLINDING)
-		owner.overlay_fullscreen("curse", /obj/screen/fullscreen/curse, 1)
+		owner.overlay_fullscreen("curse", /atom/movable/screen/fullscreen/curse, 1)
 
 /datum/status_effect/necropolis_curse/proc/remove_curse(remove_curse)
 	if(remove_curse & CURSE_BLINDING)
@@ -445,7 +443,7 @@
 	ADD_TRAIT(owner, TRAIT_PACIFISM, "gonbolaPacify")
 	ADD_TRAIT(owner, TRAIT_MUTE, "gonbolaMute")
 	ADD_TRAIT(owner, TRAIT_JOLLY, "gonbolaJolly")
-	to_chat(owner, "<span class='notice'>I suddenly feel at peace and feel no need to make any sudden or rash actions...</span>")
+	to_chat(owner, span_notice("I suddenly feel at peace and feel no need to make any sudden or rash actions..."))
 	return ..()
 
 /datum/status_effect/gonbolaPacify/on_remove()
@@ -458,11 +456,11 @@
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = 300
 	tick_interval = 10
-	examine_text = "<span class='warning'>SUBJECTPRONOUN seems slow and unfocused.</span>"
+	examine_text = span_warning("SUBJECTPRONOUN seems slow and unfocused.")
 	var/stun = TRUE
-	alert_type = /obj/screen/alert/status_effect/trance
+	alert_type = /atom/movable/screen/alert/status_effect/trance
 
-/obj/screen/alert/status_effect/trance
+/atom/movable/screen/alert/status_effect/trance
 	name = "Trance"
 	desc = ""
 	icon_state = "high"
@@ -475,11 +473,11 @@
 /datum/status_effect/trance/on_apply()
 	if(!iscarbon(owner))
 		return FALSE
-	RegisterSignal(owner, COMSIG_MOVABLE_HEAR, .proc/hypnotize)
+	RegisterSignal(owner, COMSIG_MOVABLE_HEAR, PROC_REF(hypnotize))
 	ADD_TRAIT(owner, TRAIT_MUTE, "trance")
 	owner.add_client_colour(/datum/client_colour/monochrome/trance)
-	owner.visible_message("[stun ? "<span class='warning'>[owner] stands still as [owner.p_their()] eyes seem to focus on a distant point.</span>" : ""]", \
-	"<span class='warning'>[pick("You feel my thoughts slow down...", "You suddenly feel extremely dizzy...", "You feel like you're in the middle of a dream...","You feel incredibly relaxed...")]</span>")
+	owner.visible_message("[stun ? span_warning("[owner] stands still as [owner.p_their()] eyes seem to focus on a distant point.") : ""]", \
+	span_warning("[pick("You feel my thoughts slow down...", "You suddenly feel extremely dizzy...", "You feel like you're in the middle of a dream...","You feel incredibly relaxed...")]"))
 	return TRUE
 
 /datum/status_effect/trance/on_creation(mob/living/new_owner, _duration, _stun = TRUE)
@@ -492,7 +490,7 @@
 	REMOVE_TRAIT(owner, TRAIT_MUTE, "trance")
 	owner.dizziness = 0
 	owner.remove_client_colour(/datum/client_colour/monochrome/trance)
-	to_chat(owner, "<span class='warning'>I snap out of my trance!</span>")
+	to_chat(owner, span_warning("I snap out of my trance!"))
 
 /datum/status_effect/trance/proc/hypnotize(datum/source, list/hearing_args)
 	if(!owner.can_hear())
@@ -501,8 +499,8 @@
 		return
 	var/mob/living/carbon/C = owner
 	C.cure_trauma_type(/datum/brain_trauma/hypnosis, TRAUMA_RESILIENCE_SURGERY) //clear previous hypnosis
-	addtimer(CALLBACK(C, /mob/living/carbon.proc/gain_trauma, /datum/brain_trauma/hypnosis, TRAUMA_RESILIENCE_SURGERY, hearing_args[HEARING_RAW_MESSAGE]), 10)
-	addtimer(CALLBACK(C, /mob/living.proc/Stun, 60, TRUE, TRUE), 15) //Take some time to think about it
+	addtimer(CALLBACK(C, TYPE_PROC_REF(/mob/living/carbon, gain_trauma), /datum/brain_trauma/hypnosis, TRAUMA_RESILIENCE_SURGERY, hearing_args[HEARING_RAW_MESSAGE]), 10)
+	addtimer(CALLBACK(C, TYPE_PROC_REF(/mob/living, Stun), 60, TRUE, TRUE), 15) //Take some time to think about it
 	qdel(src)
 
 /datum/status_effect/spasms
@@ -515,14 +513,14 @@
 		switch(rand(1,5))
 			if(1)
 				if((owner.mobility_flags & MOBILITY_MOVE) && isturf(owner.loc))
-					to_chat(owner, "<span class='warning'>My leg spasms!</span>")
+					to_chat(owner, span_warning("My leg spasms!"))
 					step(owner, pick(GLOB.cardinals))
 			if(2)
 				if(owner.incapacitated())
 					return
 				var/obj/item/I = owner.get_active_held_item()
 				if(I)
-					to_chat(owner, "<span class='warning'>My fingers spasm!</span>")
+					to_chat(owner, span_warning("My fingers spasm!"))
 					owner.log_message("used [I] due to a Muscle Spasm", LOG_ATTACK)
 					I.attack_self(owner)
 			if(3)
@@ -538,14 +536,14 @@
 					if(isliving(M))
 						targets += M
 				if(LAZYLEN(targets))
-					to_chat(owner, "<span class='warning'>My arm spasms!</span>")
+					to_chat(owner, span_warning("My arm spasms!"))
 					owner.log_message(" attacked someone due to a Muscle Spasm", LOG_ATTACK) //the following attack will log itself
 					owner.ClickOn(pick(targets))
 				owner.a_intent = prev_intent
 			if(4)
 				var/prev_intent = owner.a_intent
 				owner.a_intent = INTENT_HARM
-				to_chat(owner, "<span class='warning'>My arm spasms!</span>")
+				to_chat(owner, span_warning("My arm spasms!"))
 				owner.log_message("attacked [owner.p_them()]self to a Muscle Spasm", LOG_ATTACK)
 				owner.ClickOn(owner)
 				owner.a_intent = prev_intent
@@ -557,7 +555,7 @@
 				for(var/turf/T in oview(owner, 3))
 					targets += T
 				if(LAZYLEN(targets) && I)
-					to_chat(owner, "<span class='warning'>My arm spasms!</span>")
+					to_chat(owner, span_warning("My arm spasms!"))
 					owner.log_message("threw [I] due to a Muscle Spasm", LOG_ATTACK)
 					owner.throw_item(pick(targets))
 
@@ -565,12 +563,12 @@
 	id = "dna_melt"
 	duration = 600
 	status_type = STATUS_EFFECT_REPLACE
-	alert_type = /obj/screen/alert/status_effect/dna_melt
+	alert_type = /atom/movable/screen/alert/status_effect/dna_melt
 	var/kill_either_way = FALSE //no amount of removing mutations is gonna save you now
 
 /datum/status_effect/dna_melt/on_creation(mob/living/new_owner, set_duration, updating_canmove)
 	. = ..()
-	to_chat(new_owner, "<span class='boldwarning'>My body can't handle the mutations! I need to get my mutations removed fast!</span>")
+	to_chat(new_owner, span_boldwarning("My body can't handle the mutations! I need to get my mutations removed fast!"))
 
 /datum/status_effect/dna_melt/on_remove()
 	if(!ishuman(owner))
@@ -579,7 +577,7 @@
 	var/mob/living/carbon/human/H = owner
 	H.something_horrible(kill_either_way)
 
-/obj/screen/alert/status_effect/dna_melt
+/atom/movable/screen/alert/status_effect/dna_melt
 	name = "Genetic Breakdown"
 	desc = ""
 	icon_state = "dna_melt"
@@ -589,7 +587,7 @@
 	duration = 100
 	status_type = STATUS_EFFECT_REPLACE
 	tick_interval = 1
-	alert_type = /obj/screen/alert/status_effect/go_away
+	alert_type = /atom/movable/screen/alert/status_effect/go_away
 	var/direction
 
 /datum/status_effect/go_away/on_creation(mob/living/new_owner, set_duration, updating_canmove)
@@ -602,7 +600,7 @@
 	var/turf/T = get_step(owner, direction)
 	owner.forceMove(T)
 
-/obj/screen/alert/status_effect/go_away
+/atom/movable/screen/alert/status_effect/go_away
 	name = "TO THE STARS AND BEYOND!"
 	desc = ""
 	icon_state = "high"
@@ -621,25 +619,25 @@
 	switch(msg_stage)
 		if(0 to 300)
 			if(prob(1))
-				fake_msg = pick("<span class='warning'>[pick("Your head hurts.", "Your head pounds.")]</span>",
-				"<span class='warning'>[pick("You're having difficulty breathing.", "Your breathing becomes heavy.")]</span>",
-				"<span class='warning'>[pick("You feel dizzy.", "Your head spins.")]</span>",
+				fake_msg = pick(span_warning("[pick("Your head hurts.", "Your head pounds.")]"),
+				span_warning("[pick("You're having difficulty breathing.", "Your breathing becomes heavy.")]"),
+				span_warning("[pick("You feel dizzy.", "Your head spins.")]"),
 				"<span notice='warning'>[pick("You swallow excess mucus.", "You lightly cough.")]</span>",
-				"<span class='warning'>[pick("Your head hurts.", "Your mind blanks for a moment.")]</span>",
-				"<span class='warning'>[pick("Your throat hurts.", "You clear my throat.")]</span>")
+				span_warning("[pick("Your head hurts.", "Your mind blanks for a moment.")]"),
+				span_warning("[pick("Your throat hurts.", "You clear my throat.")]"))
 		if(301 to 600)
 			if(prob(2))
-				fake_msg = pick("<span class='warning'>[pick("Your head hurts a lot.", "Your head pounds incessantly.")]</span>",
-				"<span class='warning'>[pick("Your windpipe feels like a straw.", "Your breathing becomes tremendously difficult.")]</span>",
-				"<span class='warning'>I feel very [pick("dizzy","woozy","faint")].</span>",
-				"<span class='warning'>[pick("You hear a ringing in my ear.", "Your ears pop.")]</span>",
-				"<span class='warning'>I nod off for a moment.</span>")
+				fake_msg = pick(span_warning("[pick("Your head hurts a lot.", "Your head pounds incessantly.")]"),
+				span_warning("[pick("Your windpipe feels like a straw.", "Your breathing becomes tremendously difficult.")]"),
+				span_warning("I feel very [pick("dizzy","woozy","faint")]."),
+				span_warning("[pick("You hear a ringing in my ear.", "Your ears pop.")]"),
+				span_warning("I nod off for a moment."))
 		else
 			if(prob(3))
 				if(prob(50))// coin flip to throw a message or an emote
-					fake_msg = pick("<span class='danger'>[pick("Your head hurts!", "You feel a burning knife inside my brain!", "A wave of pain fills my head!")]</span>",
-					"<span class='danger'>[pick("Your lungs hurt!", "It hurts to breathe!")]</span>",
-					"<span class='warning'>[pick("You feel nauseated.", "You feel like you're going to throw up!")]</span>")
+					fake_msg = pick(span_danger("[pick("Your head hurts!", "You feel a burning knife inside my brain!", "A wave of pain fills my head!")]"),
+					span_danger("[pick("Your lungs hurt!", "It hurts to breathe!")]"),
+					span_warning("[pick("You feel nauseated.", "You feel like you're going to throw up!")]"))
 				else
 					fake_emote = pick("cough", "sniff", "sneeze")
 

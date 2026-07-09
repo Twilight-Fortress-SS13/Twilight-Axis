@@ -364,7 +364,7 @@
 
 /proc/ScreenText(obj/O, maptext="", screen_loc="CENTER-7,CENTER-7", maptext_height=480, maptext_width=480)
 	if(!isobj(O))
-		O = new /obj/screen/text()
+		O = new /atom/movable/screen/text()
 	O.maptext = maptext
 	O.maptext_height = maptext_height
 	O.maptext_width = maptext_width
@@ -378,7 +378,7 @@
 /proc/flick_overlay(image/I, list/show_to, duration)
 	for(var/client/C in show_to)
 		C.images += I
-	addtimer(CALLBACK(GLOBAL_PROC, /proc/remove_images_from_clients, I, show_to), duration, TIMER_CLIENT_TIME)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(remove_images_from_clients), I, show_to), duration, TIMER_CLIENT_TIME)
 
 /proc/flick_overlay_view(image/I, atom/target, duration) //wrapper for the above, flicks to everyone who can see the target atom
 	var/list/viewing = list()
@@ -417,22 +417,22 @@
 		window_flash(M.client)
 	switch(ignore_category ? askuser(M,Question,"Please answer in [DisplayTimeText(poll_time)]!","Yes","No","Never for this round", StealFocus=0, Timeout=poll_time) : askuser(M,Question,"Please answer in [DisplayTimeText(poll_time)]!","Yes","No", StealFocus=0, Timeout=poll_time))
 		if(1)
-			to_chat(M, "<span class='notice'>Choice registered: Yes.</span>")
+			to_chat(M, span_notice("Choice registered: Yes."))
 			if(time_passed + poll_time <= world.time)
-				to_chat(M, "<span class='danger'>Sorry, you answered too late to be considered!</span>")
+				to_chat(M, span_danger("Sorry, you answered too late to be considered!"))
 				SEND_SOUND(M, 'sound/blank.ogg')
 				candidates -= M
 			else
 				candidates += M
 		if(2)
-			to_chat(M, "<span class='danger'>Choice registered: No.</span>")
+			to_chat(M, span_danger("Choice registered: No."))
 			candidates -= M
 		if(3)
 			var/list/L = GLOB.poll_ignore[ignore_category]
 			if(!L)
 				GLOB.poll_ignore[ignore_category] = list()
 			GLOB.poll_ignore[ignore_category] += M.ckey
-			to_chat(M, "<span class='danger'>Choice registered: Never for this round.</span>")
+			to_chat(M, span_danger("Choice registered: Never for this round."))
 			candidates -= M
 		else
 			candidates -= M
@@ -442,6 +442,9 @@
 
 	for(var/mob/dead/observer/G in GLOB.player_list)
 		candidates += G
+	
+	for(var/mob/living/carbon/spirit/bigchungus in GLOB.player_list)
+		candidates += bigchungus
 
 	return pollCandidates(Question, jobbanType, gametypeCheck, be_special_flag, poll_time, ignore_category, flashwindow, candidates)
 

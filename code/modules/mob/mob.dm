@@ -124,12 +124,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 
 	var/datum/gas_mixture/environment = loc.return_air()
 
-	var/t =	"<span class='notice'>Coordinates: [x],[y] \n</span>"
-	t +=	"<span class='danger'>Temperature: [environment.temperature] \n</span>"
+	var/t =	span_notice("Coordinates: [x],[y] \n")
+	t +=	span_danger("Temperature: [environment.temperature] \n")
 	for(var/id in environment.gases)
 		var/gas = environment.gases[id]
 		if(gas[MOLES])
-			t+="<span class='notice'>[gas[GAS_META][META_GAS_NAME]]: [gas[MOLES]] \n</span>"
+			t+=span_notice("[gas[GAS_META][META_GAS_NAME]]: [gas[MOLES]] \n")
 
 	to_chat(usr, t)
 
@@ -308,7 +308,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 			qdel(W)
 		else
 			if(!disable_warning)
-				to_chat(src, "<span class='warning'>I couldn't equip that.</span>")
+				to_chat(src, span_warning("I couldn't equip that."))
 		return FALSE
 	equip_to_slot(W, slot, redraw_mob, initial) //This proc should not ever fail.
 	update_a_intents()
@@ -425,12 +425,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 		return
 
 	if(is_blind(src))
-		to_chat(src, "<span class='warning'>Something is there but I can't see it!</span>")
+		to_chat(src, span_warning("Something is there but I can't see it!"))
 		return
 
 	if(isturf(A.loc) && isliving(src))
 		face_atom(A)
-		visible_message("<span class='emote'>[src] looks at [A].</span>")
+		visible_message(span_emote("[src] looks at [A]."))
 	var/list/result = A.examine(src)
 	if(result)
 		to_chat(src, result.Join("\n"))
@@ -487,9 +487,9 @@ GLOBAL_VAR_INIT(mobids, 1)
 	lastpoint = world.time
 	var/obj/I = get_active_held_item()
 	if(I)
-		src.visible_message("<span class='info'>[src] points [I] at [A].</span>", "<span class='info'>I point [I] at [A].</span>")
+		src.visible_message(span_info("[src] points [I] at [A]."), span_info("I point [I] at [A]."))
 	else
-		src.visible_message("<span class='info'>[src] points at [A].</span>", "<span class='info'>I point at [A].</span>")
+		src.visible_message(span_info("[src] points at [A]."), span_info("I point at [A]."))
 
 	return TRUE
 
@@ -593,12 +593,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 	if (CONFIG_GET(flag/norespawn))
 		return
 	if ((stat != DEAD || !( SSticker )))
-		to_chat(usr, "<span class='boldnotice'>I must be dead to use this!</span>")
+		to_chat(usr, span_boldnotice("I must be dead to use this!"))
 		return
 
 	log_game("[key_name(usr)] used abandon mob.")
 
-	to_chat(src, "<span class='info'>Returned to lobby successfully.</span>")
+	to_chat(src, span_info("Returned to lobby successfully."))
 
 	if(!client)
 		log_game("[key_name(usr)] AM failed due to disconnect.")
@@ -785,6 +785,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 			GLOB.cameranet.stat_entry()
 		if(statpanel("Tickets"))
 			GLOB.ahelp_tickets.stat_entry()
+			
 		if(length(GLOB.sdql2_queries))
 			if(statpanel("SDQL2"))
 				stat("Access Global SDQL2 List", GLOB.sdql2_vv_statobj)
@@ -1150,7 +1151,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 ///Set the lighting plane hud alpha to the mobs lighting_alpha var
 /mob/proc/sync_lighting_plane_alpha()
 	if(hud_used)
-		var/obj/screen/plane_master/lighting/L = hud_used.plane_masters["[LIGHTING_PLANE]"]
+		var/atom/movable/screen/plane_master/lighting/L = hud_used.plane_masters["[LIGHTING_PLANE]"]
 		if (L)
 			L.alpha = lighting_alpha
 
@@ -1179,11 +1180,11 @@ GLOBAL_VAR_INIT(mobids, 1)
 /mob/proc/can_read(obj/O, silent = FALSE)
 	if(is_blind(src) || eye_blurry)
 		if(!silent)
-			to_chat(src, "<span class='warning'>I'm too blind to read.</span>")
+			to_chat(src, span_warning("I'm too blind to read."))
 		return
 	if(!is_literate())
 		if(!silent)
-			to_chat(src, "<span class='warning'>I can't make sense of these verba.</span>")
+			to_chat(src, span_warning("I can't make sense of these verba."))
 		return
 	return TRUE
 
@@ -1286,7 +1287,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 	H.open_language_menu(usr)
 
 ///Adjust the nutrition of a mob
-/mob/proc/adjust_nutrition(var/change) //Honestly FUCK the oldcoders for putting nutrition on /mob someone else can move it up because holy hell I'd have to fix SO many typechecks
+/mob/proc/adjust_nutrition(change) //Honestly FUCK the oldcoders for putting nutrition on /mob someone else can move it up because holy hell I'd have to fix SO many typechecks
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
 		nutrition = NUTRITION_LEVEL_FULL
 	nutrition = max(0, nutrition + change)
@@ -1294,21 +1295,21 @@ GLOBAL_VAR_INIT(mobids, 1)
 		nutrition = NUTRITION_LEVEL_FULL
 
 ///Force set the mob nutrition
-/mob/proc/set_nutrition(var/change) //Seriously fuck you oldcoders.
+/mob/proc/set_nutrition(change) //Seriously fuck you oldcoders.
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
 		nutrition = NUTRITION_LEVEL_FULL
 	nutrition = max(0, change)
 	if(nutrition > NUTRITION_LEVEL_FULL)
 		nutrition = NUTRITION_LEVEL_FULL
 
-/mob/proc/adjust_hydration(var/change)
+/mob/proc/adjust_hydration(change)
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
 		nutrition = HYDRATION_LEVEL_FULL
 	hydration = max(0, hydration + change)
 	if(hydration > HYDRATION_LEVEL_FULL)
 		hydration = HYDRATION_LEVEL_FULL
 
-/mob/proc/set_hydration(var/change)
+/mob/proc/set_hydration(change)
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
 		nutrition = HYDRATION_LEVEL_FULL
 	hydration = max(0, change)

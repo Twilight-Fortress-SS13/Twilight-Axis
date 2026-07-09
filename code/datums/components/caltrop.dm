@@ -12,7 +12,7 @@
 	probability = _probability
 	flags = _flags
 
-	RegisterSignal(parent, list(COMSIG_MOVABLE_CROSSED), .proc/Crossed)
+	RegisterSignal(parent, list(COMSIG_MOVABLE_CROSSED), PROC_REF(Crossed))
 
 /datum/component/caltrop/proc/Crossed(datum/source, atom/movable/AM)
 	var/atom/A = parent
@@ -52,11 +52,11 @@
 
 		if(cooldown < world.time - 10) //cooldown to avoid message spam.
 			if(!H.incapacitated(ignore_restraints = TRUE))
-				H.visible_message("<span class='danger'>[H] steps on [A].</span>", \
-						"<span class='danger'>I step on [A]!</span>")
+				H.visible_message(span_danger("[H] steps on [A]."), \
+						span_danger("I step on [A]!"))
 			else
-				H.visible_message("<span class='danger'>[H] slides on [A]!</span>", \
-						"<span class='danger'>I slide on [A]!</span>")
+				H.visible_message(span_danger("[H] slides on [A]!"), \
+						span_danger("I slide on [A]!"))
 
 			cooldown = world.time
 		H.Paralyze(60)

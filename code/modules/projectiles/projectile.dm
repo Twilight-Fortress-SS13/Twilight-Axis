@@ -115,6 +115,9 @@
 	var/ammo_type
 
 	var/arcshot = FALSE
+	var/poisontype
+	var/poisonamount
+	var/poisonfeel
 
 /obj/projectile/proc/handle_drop()
 	return
@@ -138,12 +141,13 @@
 /mob/living/proc/check_limb_hit(hit_zone)
 	if(has_limbs)
 		return hit_zone
+	return BODY_ZONE_CHEST
 
 /mob/living/carbon/check_limb_hit(hit_zone)
 	if(get_bodypart(hit_zone))
 		return hit_zone
-	else //when a limb is missing the damage is actually passed to the chest
-		return BODY_ZONE_CHEST
+	//when a limb is missing the damage is actually passed to the chest
+	return BODY_ZONE_CHEST
 
 /obj/projectile/proc/prehit(atom/target)
 	return TRUE
@@ -238,7 +242,6 @@
 
 //	var/distance = get_dist(T, starting) // Get the distance between the turf shot from and the mob we hit and use that for the calculations.
 //	def_zone = ran_zone(def_zone, max(100-(7*distance), 5)) //Lower accurancy/longer range tradeoff. 7 is a balanced number to use.
-	def_zone = def_zone
 
 	if(isturf(A) && hitsound_wall)
 		var/volume = CLAMP(vol_by_damage() + 20, 0, 100)
@@ -568,7 +571,9 @@
 	else
 		var/mob/living/L = target
 		if(!direct_target)
-			if(!CHECK_BITFIELD(L.mobility_flags, MOBILITY_USE | MOBILITY_STAND | MOBILITY_MOVE) || !(L.stat == CONSCIOUS))		//If they're able to 1. stand or 2. use items or 3. move, AND they are not softcrit,  they are not stunned enough to dodge projectiles passing over.
+			//If they're able to 1. stand or 2. use items or 3. move, AND they are not softcrit,  they are not stunned enough to dodge projectiles passing over.
+			//If they're dead they shouldn't be getting hit by indirect fire
+			if((CHECK_BITFIELD(L.mobility_flags, MOBILITY_USE | MOBILITY_STAND | MOBILITY_MOVE) && L.stat == CONSCIOUS) || L.stat == DEAD)		
 				return FALSE
 	return TRUE
 

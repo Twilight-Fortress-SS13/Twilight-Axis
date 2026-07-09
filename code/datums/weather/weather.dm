@@ -4,12 +4,12 @@
 	var/name = "space wind"
 	var/desc = ""
 
-	var/telegraph_message = "<span class='warning'>The wind begins to pick up.</span>" //The message displayed in chat to foreshadow the weather's beginning
+	var/telegraph_message = span_warning("The wind begins to pick up.") //The message displayed in chat to foreshadow the weather's beginning
 	var/telegraph_duration = 300 //In deciseconds, how long from the beginning of the telegraph until the weather begins
 	var/telegraph_sound //The sound file played to everyone on an affected z-level
 	var/telegraph_overlay //The overlay applied to all tiles on the z-level
 
-	var/weather_message = "<span class='danger'>The wind begins to blow ferociously!</span>" //Displayed in chat once the weather begins in earnest
+	var/weather_message = span_danger("The wind begins to blow ferociously!") //Displayed in chat once the weather begins in earnest
 	var/weather_duration = 1200 //In deciseconds, how long the weather lasts once it begins
 	var/weather_duration_lower = 1200 //See above - this is the lowest possible duration
 	var/weather_duration_upper = 1500 //See above - this is the highest possible duration
@@ -17,7 +17,7 @@
 	var/weather_overlay
 	var/weather_color = null
 
-	var/end_message = "<span class='danger'>The wind relents its assault.</span>" //Displayed once the weather is over
+	var/end_message = span_danger("The wind relents its assault.") //Displayed once the weather is over
 	var/end_duration = 50 //In deciseconds, how long the "wind-down" graphic will appear before vanishing entirely
 	var/end_sound
 	var/end_overlay
@@ -95,7 +95,7 @@
 				to_chat(M, telegraph_message)
 			if(telegraph_sound)
 				SEND_SOUND(M, sound(telegraph_sound))
-	addtimer(CALLBACK(src, .proc/start), telegraph_duration)
+	addtimer(CALLBACK(src, PROC_REF(start)), telegraph_duration)
 
 /datum/weather/proc/starteffected()
 	return
@@ -128,7 +128,7 @@
 				to_chat(M, weather_message)
 			if(weather_sound)
 				SEND_SOUND(M, sound(weather_sound))
-	addtimer(CALLBACK(src, .proc/wind_down), weather_duration)
+	addtimer(CALLBACK(src, PROC_REF(wind_down)), weather_duration)
 
 /datum/weather/proc/wind_down()
 	if(stage >= WIND_DOWN_STAGE)
@@ -145,7 +145,7 @@
 				to_chat(M, end_message)
 			if(end_sound)
 				SEND_SOUND(M, sound(end_sound))
-	addtimer(CALLBACK(src, .proc/end), end_duration)
+	addtimer(CALLBACK(src, PROC_REF(end)), end_duration)
 
 /datum/weather/proc/end()
 	if(stage == END_STAGE)

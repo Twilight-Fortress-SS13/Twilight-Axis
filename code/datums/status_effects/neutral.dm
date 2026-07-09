@@ -5,9 +5,9 @@
 
 /datum/status_effect/incapacitating/off_balanced
 	id = "off_balanced"
-	alert_type = /obj/screen/alert/status_effect/off_balanced
+	alert_type = /atom/movable/screen/alert/status_effect/off_balanced
 
-/obj/screen/alert/status_effect/off_balanced
+/atom/movable/screen/alert/status_effect/off_balanced
 	name = "Off Balanced"
 	desc = ""
 	icon_state = "off_balanced"
@@ -62,7 +62,7 @@
 	get_kill()
 	. = ..()
 
-/obj/screen/alert/status_effect/in_love
+/atom/movable/screen/alert/status_effect/in_love
 	name = "In Love"
 	desc = ""
 	icon_state = "in_love"
@@ -71,7 +71,7 @@
 	id = "in_love"
 	duration = -1
 	status_type = STATUS_EFFECT_UNIQUE
-	alert_type = /obj/screen/alert/status_effect/in_love
+	alert_type = /atom/movable/screen/alert/status_effect/in_love
 	var/mob/living/date
 
 /datum/status_effect/in_love/on_creation(mob/living/new_owner, mob/living/love_interest)
@@ -110,7 +110,7 @@
 		rewarded = caster
 
 /datum/status_effect/bounty/on_apply()
-	to_chat(owner, "<span class='boldnotice'>I hear something behind you talking...</span> <span class='notice'>I have been marked for death by [rewarded]. If you die, they will be rewarded.</span>")
+	to_chat(owner, span_boldnotice("I hear something behind you talking...</span> <span class='notice'>I have been marked for death by [rewarded]. If you die, they will be rewarded."))
 	playsound(owner, 'sound/blank.ogg', 75, FALSE)
 	return ..()
 
@@ -121,9 +121,9 @@
 
 /datum/status_effect/bounty/proc/rewards()
 	if(rewarded && rewarded.mind && rewarded.stat != DEAD)
-		to_chat(owner, "<span class='boldnotice'>I hear something behind you talking...</span> <span class='notice'>Bounty claimed.</span>")
+		to_chat(owner, span_boldnotice("I hear something behind you talking...</span> <span class='notice'>Bounty claimed."))
 		playsound(owner, 'sound/blank.ogg', 75, FALSE)
-		to_chat(rewarded, "<span class='greentext'>I feel a surge of mana flow into you!</span>")
+		to_chat(rewarded, span_greentext("I feel a surge of mana flow into you!"))
 		for(var/obj/effect/proc_holder/spell/spell in rewarded.mind.spell_list)
 			spell.charge_counter = spell.charge_max
 			spell.recharging = FALSE
@@ -144,7 +144,7 @@
 /datum/status_effect/bugged/on_apply(mob/living/new_owner, mob/living/tracker)
 	. = ..()
 	if (.)
-		RegisterSignal(new_owner, COMSIG_MOVABLE_HEAR, .proc/handle_hearing)
+		RegisterSignal(new_owner, COMSIG_MOVABLE_HEAR, PROC_REF(handle_hearing))
 
 /datum/status_effect/bugged/on_remove()
 	. = ..()

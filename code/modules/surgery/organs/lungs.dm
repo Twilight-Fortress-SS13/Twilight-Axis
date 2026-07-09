@@ -11,9 +11,9 @@
 	healing_factor = STANDARD_ORGAN_HEALING
 	decay_factor = STANDARD_ORGAN_DECAY
 
-	high_threshold_passed = "<span class='warning'>I feel some sort of constriction around my chest as my breathing becomes shallow and rapid.</span>"
-	now_fixed = "<span class='warning'>My lungs seem to once again be able to hold air.</span>"
-	high_threshold_cleared = "<span class='info'>The constriction around my chest loosens as my breathing calms down.</span>"
+	high_threshold_passed = span_warning("I feel some sort of constriction around my chest as my breathing becomes shallow and rapid.")
+	now_fixed = span_warning("My lungs seem to once again be able to hold air.")
+	high_threshold_cleared = span_info("The constriction around my chest loosens as my breathing calms down.")
 
 	//Breath damage
 
@@ -80,13 +80,13 @@
 
 		H.failed_last_breath = TRUE
 		if(safe_oxygen_min)
-			H.throw_alert("not_enough_oxy", /obj/screen/alert/not_enough_oxy)
+			H.throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
 		else if(safe_toxins_min)
-			H.throw_alert("not_enough_tox", /obj/screen/alert/not_enough_tox)
+			H.throw_alert("not_enough_tox", /atom/movable/screen/alert/not_enough_tox)
 		else if(safe_co2_min)
-			H.throw_alert("not_enough_co2", /obj/screen/alert/not_enough_co2)
+			H.throw_alert("not_enough_co2", /atom/movable/screen/alert/not_enough_co2)
 		else if(safe_nitro_min)
-			H.throw_alert("not_enough_nitro", /obj/screen/alert/not_enough_nitro)
+			H.throw_alert("not_enough_nitro", /atom/movable/screen/alert/not_enough_nitro)
 		return FALSE
 
 	var/gas_breathed = 0
@@ -109,7 +109,7 @@
 		if(O2_pp > safe_oxygen_max)
 			var/ratio = (breath_gases[/datum/gas/oxygen][MOLES]/safe_oxygen_max) * 10
 			H.apply_damage_type(CLAMP(ratio, oxy_breath_dam_min, oxy_breath_dam_max), oxy_damage_type)
-			H.throw_alert("too_much_oxy", /obj/screen/alert/too_much_oxy)
+			H.throw_alert("too_much_oxy", /atom/movable/screen/alert/too_much_oxy)
 		else
 			H.clear_alert("too_much_oxy")
 
@@ -117,7 +117,7 @@
 	if(safe_oxygen_min)
 		if(O2_pp < safe_oxygen_min)
 			gas_breathed = handle_too_little_breath(H, O2_pp, safe_oxygen_min, breath_gases[/datum/gas/oxygen][MOLES])
-			H.throw_alert("not_enough_oxy", /obj/screen/alert/not_enough_oxy)
+			H.throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
 		else
 			H.failed_last_breath = FALSE
 			if(H.health >= H.crit_threshold)
@@ -137,7 +137,7 @@
 		if(N2_pp > safe_nitro_max)
 			var/ratio = (breath_gases[/datum/gas/nitrogen][MOLES]/safe_nitro_max) * 10
 			H.apply_damage_type(CLAMP(ratio, nitro_breath_dam_min, nitro_breath_dam_max), nitro_damage_type)
-			H.throw_alert("too_much_nitro", /obj/screen/alert/too_much_nitro)
+			H.throw_alert("too_much_nitro", /atom/movable/screen/alert/too_much_nitro)
 		else
 			H.clear_alert("too_much_nitro")
 
@@ -145,7 +145,7 @@
 	if(safe_nitro_min)
 		if(N2_pp < safe_nitro_min)
 			gas_breathed = handle_too_little_breath(H, N2_pp, safe_nitro_min, breath_gases[/datum/gas/nitrogen][MOLES])
-			H.throw_alert("nitro", /obj/screen/alert/not_enough_nitro)
+			H.throw_alert("nitro", /atom/movable/screen/alert/not_enough_nitro)
 		else
 			H.failed_last_breath = FALSE
 			if(H.health >= H.crit_threshold)
@@ -170,7 +170,7 @@
 				H.apply_damage_type(3, co2_damage_type) // Lets hurt em a little, let them know we mean business
 				if(world.time - H.co2overloadtime > 300) // They've been in here 30s now, lets start to kill them for their own good!
 					H.apply_damage_type(8, co2_damage_type)
-				H.throw_alert("too_much_co2", /obj/screen/alert/too_much_co2)
+				H.throw_alert("too_much_co2", /atom/movable/screen/alert/too_much_co2)
 			if(prob(20)) // Lets give them some chance to know somethings not right though I guess.
 				H.emote("cough")
 
@@ -182,7 +182,7 @@
 	if(safe_co2_min)
 		if(CO2_pp < safe_co2_min)
 			gas_breathed = handle_too_little_breath(H, CO2_pp, safe_co2_min, breath_gases[/datum/gas/carbon_dioxide][MOLES])
-			H.throw_alert("not_enough_co2", /obj/screen/alert/not_enough_co2)
+			H.throw_alert("not_enough_co2", /atom/movable/screen/alert/not_enough_co2)
 		else
 			H.failed_last_breath = FALSE
 			if(H.health >= H.crit_threshold)
@@ -203,7 +203,7 @@
 		if(Toxins_pp > safe_toxins_max)
 			var/ratio = (breath_gases[/datum/gas/plasma][MOLES]/safe_toxins_max) * 10
 			H.apply_damage_type(CLAMP(ratio, tox_breath_dam_min, tox_breath_dam_max), tox_damage_type)
-			H.throw_alert("too_much_tox", /obj/screen/alert/too_much_tox)
+			H.throw_alert("too_much_tox", /atom/movable/screen/alert/too_much_tox)
 		else
 			H.clear_alert("too_much_tox")
 
@@ -212,7 +212,7 @@
 	if(safe_toxins_min)
 		if(Toxins_pp < safe_toxins_min)
 			gas_breathed = handle_too_little_breath(H, Toxins_pp, safe_toxins_min, breath_gases[/datum/gas/plasma][MOLES])
-			H.throw_alert("not_enough_tox", /obj/screen/alert/not_enough_tox)
+			H.throw_alert("not_enough_tox", /atom/movable/screen/alert/not_enough_tox)
 		else
 			H.failed_last_breath = FALSE
 			if(H.health >= H.crit_threshold)
@@ -269,12 +269,12 @@
 	// Nitryl
 		var/nitryl_pp = breath.get_breath_partial_pressure(breath_gases[/datum/gas/nitryl][MOLES])
 		if (prob(nitryl_pp))
-			to_chat(H, "<span class='alert'>My mouth feels like it's burning!</span>")
+			to_chat(H, span_alert("My mouth feels like it's burning!"))
 		if (nitryl_pp >40)
 			H.emote("breathgasp")
 			H.adjustFireLoss(10)
 			if (prob(nitryl_pp/2))
-				to_chat(H, "<span class='alert'>My throat closes up!</span>")
+				to_chat(H, span_alert("My throat closes up!"))
 				H.silent = max(H.silent, 3)
 		else
 			H.adjustFireLoss(nitryl_pp/4)
@@ -308,22 +308,22 @@
 					// At lower pp, give out a little warning
 					SEND_SIGNAL(owner, COMSIG_CLEAR_MOOD_EVENT, "smell")
 					if(prob(5))
-						to_chat(owner, "<span class='notice'>There is an unpleasant smell in the air.</span>")
+						to_chat(owner, span_notice("There is an unpleasant smell in the air."))
 				if(5 to 15)
 					//At somewhat higher pp, warning becomes more obvious
 					if(prob(15))
-						to_chat(owner, "<span class='warning'>I smell something horribly decayed inside this room.</span>")
+						to_chat(owner, span_warning("I smell something horribly decayed inside this room."))
 						SEND_SIGNAL(owner, COMSIG_ADD_MOOD_EVENT, "smell", /datum/mood_event/disgust/bad_smell)
 				if(15 to 30)
 					//Small chance to vomit. By now, people have internals on anyway
 					if(prob(5))
-						to_chat(owner, "<span class='warning'>The stench of rotting carcasses is unbearable!</span>")
+						to_chat(owner, span_warning("The stench of rotting carcasses is unbearable!"))
 						SEND_SIGNAL(owner, COMSIG_ADD_MOOD_EVENT, "smell", /datum/mood_event/disgust/nauseating_stench)
 						owner.vomit()
 				if(30 to INFINITY)
 					//Higher chance to vomit. Let the horror start
 					if(prob(15))
-						to_chat(owner, "<span class='warning'>The stench of rotting carcasses is unbearable!</span>")
+						to_chat(owner, span_warning("The stench of rotting carcasses is unbearable!"))
 						SEND_SIGNAL(owner, COMSIG_ADD_MOOD_EVENT, "smell", /datum/mood_event/disgust/nauseating_stench)
 						owner.vomit()
 				else
@@ -374,7 +374,7 @@
 			H.apply_damage_type(cold_level_1_damage*cold_modifier, cold_damage_type)
 		if(breath_temperature < cold_level_1_threshold)
 			if(prob(20))
-				to_chat(H, "<span class='warning'>I feel [cold_message] in my [name]!</span>")
+				to_chat(H, span_warning("I feel [cold_message] in my [name]!"))
 
 	if(!HAS_TRAIT(H, TRAIT_RESISTHEAT)) // HEAT DAMAGE
 		var/heat_modifier = H.dna.species.heatmod
@@ -386,14 +386,14 @@
 			H.apply_damage_type(heat_level_3_damage*heat_modifier, heat_damage_type)
 		if(breath_temperature > heat_level_1_threshold)
 			if(prob(20))
-				to_chat(H, "<span class='warning'>I feel [hot_message] in my [name]!</span>")
+				to_chat(H, span_warning("I feel [hot_message] in my [name]!"))
 
 /obj/item/organ/lungs/on_life()
 	..()
 	if((!failed) && ((organ_flags & ORGAN_FAILING)))
 		if(owner.stat == CONSCIOUS)
-			owner.visible_message("<span class='danger'>[owner] grabs [owner.p_their()] throat, struggling for breath!</span>", \
-								"<span class='danger'>I suddenly feel like you can't breathe!</span>")
+			owner.visible_message(span_danger("[owner] grabs [owner.p_their()] throat, struggling for breath!"), \
+								span_danger("I suddenly feel like you can't breathe!"))
 		failed = TRUE
 	else if(!(organ_flags & ORGAN_FAILING))
 		failed = FALSE

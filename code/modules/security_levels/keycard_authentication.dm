@@ -26,7 +26,7 @@ GLOBAL_DATUM_INIT(keycard_events, /datum/events, new)
 
 /obj/machinery/keycard_auth/Initialize()
 	. = ..()
-	ev = GLOB.keycard_events.addEvent("triggerEvent", CALLBACK(src, .proc/triggerEvent))
+	ev = GLOB.keycard_events.addEvent("triggerEvent", CALLBACK(src, PROC_REF(triggerEvent)))
 
 /obj/machinery/keycard_auth/Destroy()
 	GLOB.keycard_events.clearEvent("triggerEvent", ev)
@@ -53,7 +53,7 @@ GLOBAL_DATUM_INIT(keycard_events, /datum/events, new)
 	if(isanimal(user))
 		var/mob/living/simple_animal/A = user
 		if(!A.dextrous)
-			to_chat(user, "<span class='warning'>I are too primitive to use this device!</span>")
+			to_chat(user, span_warning("I are too primitive to use this device!"))
 			return UI_CLOSE
 	return ..()
 
@@ -84,7 +84,7 @@ GLOBAL_DATUM_INIT(keycard_events, /datum/events, new)
 	event = event_type
 	waiting = 1
 	GLOB.keycard_events.fireEvent("triggerEvent", src)
-	addtimer(CALLBACK(src, .proc/eventSent), 20)
+	addtimer(CALLBACK(src, PROC_REF(eventSent)), 20)
 
 /obj/machinery/keycard_auth/proc/eventSent()
 	triggerer = null
@@ -94,7 +94,7 @@ GLOBAL_DATUM_INIT(keycard_events, /datum/events, new)
 /obj/machinery/keycard_auth/proc/triggerEvent(source)
 	icon_state = "auth_on"
 	event_source = source
-	addtimer(CALLBACK(src, .proc/eventTriggered), 20)
+	addtimer(CALLBACK(src, PROC_REF(eventTriggered)), 20)
 
 /obj/machinery/keycard_auth/proc/eventTriggered()
 	icon_state = "auth_off"
@@ -105,10 +105,10 @@ GLOBAL_DATUM_INIT(keycard_events, /datum/events, new)
 	message_admins("[ADMIN_LOOKUPFLW(triggerer)] triggered and [ADMIN_LOOKUPFLW(confirmer)] confirmed event [event]")
 
 	var/area/A1 = get_area(triggerer)
-	deadchat_broadcast(" triggered [event] at <span class='name'>[A1.name]</span>.", "<span class='name'>[triggerer]</span>", triggerer)
+	deadchat_broadcast(" triggered [event] at <span class='name'>[A1.name]</span>.", span_name("[triggerer]"), triggerer)
 
 	var/area/A2 = get_area(confirmer)
-	deadchat_broadcast(" confirmed [event] at <span class='name'>[A2.name]</span>.", "<span class='name'>[confirmer]</span>", confirmer)
+	deadchat_broadcast(" confirmed [event] at <span class='name'>[A2.name]</span>.", span_name("[confirmer]"), confirmer)
 	switch(event)
 		if(KEYCARD_RED_ALERT)
 			set_security_level(SEC_LEVEL_RED)

@@ -6,7 +6,7 @@
 		return
 
 	if(GLOB.say_disabled)	//This is here to try to identify lag problems
-		to_chat(usr, "<span class='danger'>Speech is currently admin-disabled.</span>")
+		to_chat(usr, span_danger("Speech is currently admin-disabled."))
 		return
 
 	msg = copytext(sanitize(msg), 1, MAX_MESSAGE_LEN)
@@ -15,7 +15,7 @@
 	log_prayer("[src.key]/([src.name]): [msg]")
 //	if(usr.client)
 //		if(usr.client.prefs.muted & MUTE_PRAY)
-//			to_chat(usr, "<span class='danger'>I cannot pray (muted).</span>")
+//			to_chat(usr, span_danger("I cannot pray (muted)."))
 //			return
 //		if(src.client.handle_spam_prevention(msg,MUTE_PRAY))
 //			return
@@ -24,6 +24,9 @@
 	var/font_color = "purple"
 	var/prayer_type = "PRAYER"
 	var/deity
+	if(ishuman(src))
+		var/mob/living/carbon/human/human_user = src
+		deity = human_user.patron.name
 	if(usr.job == "Chaplain")
 		cross.icon_state = "kingyellow"
 		font_color = "blue"
@@ -43,8 +46,7 @@
 			prayer_type = "SPIRITUAL PRAYER"
 
 	var/msg_tmp = msg
-	msg = "<span class='adminnotice'>[icon2html(cross, GLOB.admins)]<b><font color=[font_color]>[prayer_type][deity ? " (to [deity])" : ""]: </font>[ADMIN_FULLMONTY(src)] [ADMIN_SC(src)]:</b> <span class='linkify'>[msg]</span></span>"
-
+	msg = span_adminnotice("[icon2html(cross, GLOB.admins)]<b><font color=[font_color]>[prayer_type][deity ? " (to [deity])" : ""]: </font>[ADMIN_FULLMONTY(src)] [ADMIN_SC(src)]:</b> <span class='linkify'>[msg]</span>")
 	for(var/client/C in GLOB.admins)
 		if(C.prefs.chat_toggles & CHAT_PRAYER)
 			to_chat(C, msg)
@@ -60,28 +62,31 @@
 			var/client/J = M.client
 			to_chat(J, msg)
 
-	to_chat(usr, "<span class='info'>I pray to the gods: \"[msg_tmp]\"</span>")
+	to_chat(usr, span_info("I pray to the gods: \"[msg_tmp]\""))
 
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Prayer") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	//log_admin("HELP: [key_name(src)]: [msg]")
+	var/datum/antagonist/maniac/maniac = mind?.has_antag_datum(/datum/antagonist/maniac)
+	if(maniac && (text2num(msg_tmp) == maniac.sum_keys))
+		maniac.wake_up()
 
 /proc/CentCom_announce(text , mob/Sender)
 	var/msg = copytext(sanitize(text), 1, MAX_MESSAGE_LEN)
-	msg = "<span class='adminnotice'><b><font color=orange>CENTCOM:</font>[ADMIN_FULLMONTY(Sender)] [ADMIN_CENTCOM_REPLY(Sender)]:</b> [msg]</span>"
+	msg = span_adminnotice("<b><font color=orange>CENTCOM:</font>[ADMIN_FULLMONTY(Sender)] [ADMIN_CENTCOM_REPLY(Sender)]:</b> [msg]")
 	to_chat(GLOB.admins, msg)
 	for(var/obj/machinery/computer/communications/C in GLOB.machines)
 		C.overrideCooldown()
 
 /proc/Syndicate_announce(text , mob/Sender)
 	var/msg = copytext(sanitize(text), 1, MAX_MESSAGE_LEN)
-	msg = "<span class='adminnotice'><b><font color=crimson>SYNDICATE:</font>[ADMIN_FULLMONTY(Sender)] [ADMIN_SYNDICATE_REPLY(Sender)]:</b> [msg]</span>"
+	msg = span_adminnotice("<b><font color=crimson>SYNDICATE:</font>[ADMIN_FULLMONTY(Sender)] [ADMIN_SYNDICATE_REPLY(Sender)]:</b> [msg]")
 	to_chat(GLOB.admins, msg)
 	for(var/obj/machinery/computer/communications/C in GLOB.machines)
 		C.overrideCooldown()
 
 /proc/Nuke_request(text , mob/Sender)
 	var/msg = copytext(sanitize(text), 1, MAX_MESSAGE_LEN)
-	msg = "<span class='adminnotice'><b><font color=orange>NUKE CODE REQUEST:</font>[ADMIN_FULLMONTY(Sender)] [ADMIN_CENTCOM_REPLY(Sender)] [ADMIN_SET_SD_CODE]:</b> [msg]</span>"
+	msg = span_adminnotice("<b><font color=orange>NUKE CODE REQUEST:</font>[ADMIN_FULLMONTY(Sender)] [ADMIN_CENTCOM_REPLY(Sender)] [ADMIN_SET_SD_CODE]:</b> [msg]")
 	to_chat(GLOB.admins, msg)
 	for(var/obj/machinery/computer/communications/C in GLOB.machines)
 		C.overrideCooldown()
@@ -93,30 +98,32 @@
 //	if(!usr.client.holder)
 //		return
 //
-//	msg = copytext(sanitize(msg), 1, MAX_MESSAGE_LEN)
+	msg = copytext(sanitize(msg), 1, MAX_MESSAGE_LEN)
 	if(!msg)
 		return
 	log_prayer("[src.key]/([src.name]): [msg]")
 
-	msg = "<span class='info'>[real_name] prays: [msg]</span>"
+	var/deity = ""
+	if(isliving(src))
+		var/mob/living/living_user = src
+		if(istype(living_user.patron))
+			deity = " to [living_user.patron.name]"
 
-//	for(var/client/C in GLOB.admins)
-//		if(C.prefs.chat_toggles & CHAT_PRAYER)
-///			to_chat(C, msg)
+	var/datum/antagonist/maniac/maniac = mind?.has_antag_datum(/datum/antagonist/maniac)
+	if(maniac)
+		if(text2num(msg) == maniac.sum_keys)
+			deity = " to THE GODHEAD"
+			INVOKE_ASYNC(maniac, TYPE_PROC_REF(/datum/antagonist/maniac, wake_up))
+		else
+			var/datum/patron/zizo = GLOB.patronlist[/datum/patron/inhumen/zizo]
+			deity = " to [zizo.name]"
+	
+	var/display_name = "[real_name || src.name]"
 
-	for(var/client/J in GLOB.clients)
-		if(!J.mob)
-			continue
-//		var/T = get_turf(src)
-		var/go = FALSE
-		if(isliving(J.mob))
-			var/mob/living/M = J.mob
-			if(M.stat == DEAD)
-				go = TRUE
-		if(isobserver(J.mob))
-			go = TRUE
-		if(istype(J.mob, /mob/dead/new_player))
-			go = TRUE
-		if(!go)
-			continue
-		to_chat(J, msg)
+	msg = span_info("[display_name] prays[deity] [ADMIN_FLW(src)][ADMIN_SM(src)]: [msg]")
+	
+	for(var/client/janny in GLOB.admins)
+		if(janny.prefs.chat_toggles & CHAT_PRAYER)
+			to_chat(janny, msg)
+			if(janny.prefs.toggles & SOUND_PRAYERS)
+				SEND_SOUND(janny, sound('sound/pray.ogg'))

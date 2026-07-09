@@ -39,8 +39,8 @@
 		g1 = GetGreenPart(default_color)
 		b1 = GetBluePart(default_color)
 		spec_updatehealth(H)
-		RegisterSignal(C, COMSIG_ATOM_EMAG_ACT, .proc/on_emag_act)
-		RegisterSignal(C, COMSIG_ATOM_EMP_ACT, .proc/on_emp_act)
+		RegisterSignal(C, COMSIG_ATOM_EMAG_ACT, PROC_REF(on_emag_act))
+		RegisterSignal(C, COMSIG_ATOM_EMP_ACT, PROC_REF(on_emp_act))
 
 /datum/species/ethereal/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
 	.=..()
@@ -72,22 +72,22 @@
 /datum/species/ethereal/proc/on_emp_act(mob/living/carbon/human/H, severity)
 	EMPeffect = TRUE
 	spec_updatehealth(H)
-	to_chat(H, "<span class='notice'>I feel the light of your body leave you.</span>")
+	to_chat(H, span_notice("I feel the light of your body leave you."))
 	switch(severity)
 		if(EMP_LIGHT)
-			addtimer(CALLBACK(src, .proc/stop_emp, H), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE) //We're out for 10 seconds
+			addtimer(CALLBACK(src, PROC_REF(stop_emp), H), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE) //We're out for 10 seconds
 		if(EMP_HEAVY)
-			addtimer(CALLBACK(src, .proc/stop_emp, H), 20 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE) //We're out for 20 seconds
+			addtimer(CALLBACK(src, PROC_REF(stop_emp), H), 20 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE) //We're out for 20 seconds
 
 /datum/species/ethereal/proc/on_emag_act(mob/living/carbon/human/H, mob/user)
 	if(emageffect)
 		return
 	emageffect = TRUE
 	if(user)
-		to_chat(user, "<span class='notice'>I tap [H] on the back with your card.</span>")
-	H.visible_message("<span class='danger'>[H] starts flickering in an array of colors!</span>")
+		to_chat(user, span_notice("I tap [H] on the back with your card."))
+	H.visible_message(span_danger("[H] starts flickering in an array of colors!"))
 	handle_emag(H)
-	addtimer(CALLBACK(src, .proc/stop_emag, H), 30 SECONDS) //Disco mode for 30 seconds! This doesn't affect the ethereal at all besides either annoying some players, or making someone look badass.
+	addtimer(CALLBACK(src, PROC_REF(stop_emag), H), 30 SECONDS) //Disco mode for 30 seconds! This doesn't affect the ethereal at all besides either annoying some players, or making someone look badass.
 
 
 /datum/species/ethereal/spec_life(mob/living/carbon/human/H)
@@ -98,7 +98,7 @@
 /datum/species/ethereal/proc/stop_emp(mob/living/carbon/human/H)
 	EMPeffect = FALSE
 	spec_updatehealth(H)
-	to_chat(H, "<span class='notice'>I feel more energized as your shine comes back.</span>")
+	to_chat(H, span_notice("I feel more energized as your shine comes back."))
 
 
 /datum/species/ethereal/proc/handle_emag(mob/living/carbon/human/H)
@@ -106,25 +106,25 @@
 		return
 	current_color = pick(ETHEREAL_COLORS)
 	spec_updatehealth(H)
-	addtimer(CALLBACK(src, .proc/handle_emag, H), 5) //Call ourselves every 0.5 seconds to change color
+	addtimer(CALLBACK(src, PROC_REF(handle_emag), H), 5) //Call ourselves every 0.5 seconds to change color
 
 /datum/species/ethereal/proc/stop_emag(mob/living/carbon/human/H)
 	emageffect = FALSE
 	spec_updatehealth(H)
-	H.visible_message("<span class='danger'>[H] stops flickering and goes back to their normal state!</span>")
+	H.visible_message(span_danger("[H] stops flickering and goes back to their normal state!"))
 
 /datum/species/ethereal/proc/handle_charge(mob/living/carbon/human/H)
 	brutemod = 1.25
 	switch(get_charge(H))
 		if(ETHEREAL_CHARGE_NONE)
-			H.throw_alert("ethereal_charge", /obj/screen/alert/etherealcharge, 3)
+			H.throw_alert("ethereal_charge", /atom/movable/screen/alert/etherealcharge, 3)
 		if(ETHEREAL_CHARGE_NONE to ETHEREAL_CHARGE_LOWPOWER)
-			H.throw_alert("ethereal_charge", /obj/screen/alert/etherealcharge, 2)
+			H.throw_alert("ethereal_charge", /atom/movable/screen/alert/etherealcharge, 2)
 			if(H.health > 10.5)
 				apply_damage(0.65, TOX, null, null, H)
 			brutemod = 1.75
 		if(ETHEREAL_CHARGE_LOWPOWER to ETHEREAL_CHARGE_NORMAL)
-			H.throw_alert("ethereal_charge", /obj/screen/alert/etherealcharge, 1)
+			H.throw_alert("ethereal_charge", /atom/movable/screen/alert/etherealcharge, 1)
 			brutemod = 1.5
 		else
 			H.clear_alert("ethereal_charge")

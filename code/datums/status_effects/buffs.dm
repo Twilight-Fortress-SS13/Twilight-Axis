@@ -3,15 +3,15 @@
 /datum/status_effect/shadow_mend
 	id = "shadow_mend"
 	duration = 30
-	alert_type = /obj/screen/alert/status_effect/shadow_mend
+	alert_type = /atom/movable/screen/alert/status_effect/shadow_mend
 
-/obj/screen/alert/status_effect/shadow_mend
+/atom/movable/screen/alert/status_effect/shadow_mend
 	name = "Shadow Mend"
 	desc = ""
 	icon_state = "shadow_mend"
 
 /datum/status_effect/shadow_mend/on_apply()
-	owner.visible_message("<span class='notice'>Violet light wraps around [owner]'s body!</span>", "<span class='notice'>Violet light wraps around my body!</span>")
+	owner.visible_message(span_notice("Violet light wraps around [owner]'s body!"), span_notice("Violet light wraps around my body!"))
 	playsound(owner, 'sound/blank.ogg', 50, TRUE)
 	return ..()
 
@@ -20,7 +20,7 @@
 	owner.adjustFireLoss(-15)
 
 /datum/status_effect/shadow_mend/on_remove()
-	owner.visible_message("<span class='warning'>The violet light around [owner] glows black!</span>", "<span class='warning'>The tendrils around you cinch tightly and reap their toll...</span>")
+	owner.visible_message(span_warning("The violet light around [owner] glows black!"), span_warning("The tendrils around you cinch tightly and reap their toll..."))
 	playsound(owner, 'sound/blank.ogg', 50, TRUE)
 	owner.apply_status_effect(STATUS_EFFECT_VOID_PRICE)
 
@@ -29,9 +29,9 @@
 	id = "void_price"
 	duration = 300
 	tick_interval = 30
-	alert_type = /obj/screen/alert/status_effect/void_price
+	alert_type = /atom/movable/screen/alert/status_effect/void_price
 
-/obj/screen/alert/status_effect/void_price
+/atom/movable/screen/alert/status_effect/void_price
 	name = "Void Price"
 	desc = ""
 	icon_state = "shadow_mend"
@@ -44,7 +44,7 @@
 /datum/status_effect/cyborg_power_regen
 	id = "power_regen"
 	duration = 100
-	alert_type = /obj/screen/alert/status_effect/power_regen
+	alert_type = /atom/movable/screen/alert/status_effect/power_regen
 	var/power_to_give = 0 //how much power is gained each tick
 
 /datum/status_effect/cyborg_power_regen/on_creation(mob/living/new_owner, new_power_per_tick)
@@ -52,7 +52,7 @@
 	if(. && isnum(new_power_per_tick))
 		power_to_give = new_power_per_tick
 
-/obj/screen/alert/status_effect/power_regen
+/atom/movable/screen/alert/status_effect/power_regen
 	name = "Power Regeneration"
 	desc = ""
 	icon_state = "power_regen"
@@ -69,16 +69,16 @@
 	id = "his_grace"
 	duration = -1
 	tick_interval = 4
-	alert_type = /obj/screen/alert/status_effect/his_grace
+	alert_type = /atom/movable/screen/alert/status_effect/his_grace
 	var/bloodlust = 0
 
-/obj/screen/alert/status_effect/his_grace
+/atom/movable/screen/alert/status_effect/his_grace
 	name = "His Grace"
 	desc = ""
 	icon_state = "his_grace"
 	alerttooltipstyle = "hisgrace"
 
-/obj/screen/alert/status_effect/his_grace/MouseEntered(location,control,params)
+/atom/movable/screen/alert/status_effect/his_grace/MouseEntered(location,control,params)
 	desc = initial(desc)
 	var/datum/status_effect/his_grace/HG = attached_effect
 	desc += "<br><font size=3><b>Current Bloodthirst: [HG.bloodlust]</b></font>\
@@ -119,18 +119,18 @@
 /datum/status_effect/wish_granters_gift //Fully revives after ten seconds.
 	id = "wish_granters_gift"
 	duration = 50
-	alert_type = /obj/screen/alert/status_effect/wish_granters_gift
+	alert_type = /atom/movable/screen/alert/status_effect/wish_granters_gift
 
 /datum/status_effect/wish_granters_gift/on_apply()
-	to_chat(owner, "<span class='notice'>Death is not my end! The Wish Granter's energy suffuses you, and you begin to rise...</span>")
+	to_chat(owner, span_notice("Death is not my end! The Wish Granter's energy suffuses you, and you begin to rise..."))
 	return ..()
 
 /datum/status_effect/wish_granters_gift/on_remove()
 	owner.revive(full_heal = TRUE, admin_revive = TRUE)
-	owner.visible_message("<span class='warning'>[owner] appears to wake from the dead, having healed all wounds!</span>", "<span class='notice'>I have regenerated.</span>")
+	owner.visible_message(span_warning("[owner] appears to wake from the dead, having healed all wounds!"), span_notice("I have regenerated."))
 	owner.update_mobility()
 
-/obj/screen/alert/status_effect/wish_granters_gift
+/atom/movable/screen/alert/status_effect/wish_granters_gift
 	name = "Wish Granter's Immortality"
 	desc = ""
 	icon_state = "wish_granter"
@@ -150,7 +150,7 @@
 		if(isliving(B.current))
 			var/mob/living/M = B.current
 			SEND_SOUND(M, sound('sound/blank.ogg'))
-			to_chat(M, "<span class='cultlarge'>The Cult's Master, [owner], has fallen in \the [A]!</span>")
+			to_chat(M, span_cultlarge("The Cult's Master, [owner], has fallen in \the [A]!"))
 
 /datum/status_effect/cult_master/tick()
 	if(owner.stat != DEAD && !alive)
@@ -168,7 +168,7 @@
 	id = "blooddrunk"
 	duration = 10
 	tick_interval = 0
-	alert_type = /obj/screen/alert/status_effect/blooddrunk
+	alert_type = /atom/movable/screen/alert/status_effect/blooddrunk
 	var/last_health = 0
 	var/last_bruteloss = 0
 	var/last_fireloss = 0
@@ -177,7 +177,7 @@
 	var/last_cloneloss = 0
 	var/last_staminaloss = 0
 
-/obj/screen/alert/status_effect/blooddrunk
+/atom/movable/screen/alert/status_effect/blooddrunk
 	name = "Blood-Drunk"
 	desc = "" //not true, and the item description mentions its actual effect
 	icon_state = "blooddrunk"
@@ -298,13 +298,13 @@
 
 
 /datum/status_effect/sword_spin/on_apply()
-	owner.visible_message("<span class='danger'>[owner] begins swinging the sword with inhuman strength!</span>")
+	owner.visible_message(span_danger("[owner] begins swinging the sword with inhuman strength!"))
 	var/oldcolor = owner.color
 	owner.color = "#ff0000"
 	owner.add_stun_absorption("bloody bastard sword", duration, 2, "doesn't even flinch as the sword's power courses through them!", "You shrug off the stun!", " glowing with a blazing red aura!")
 	owner.spin(duration,1)
 	animate(owner, color = oldcolor, time = duration, easing = EASE_IN)
-	addtimer(CALLBACK(owner, /atom/proc/update_atom_colour), duration)
+	addtimer(CALLBACK(owner, TYPE_PROC_REF(/atom, update_atom_colour)), duration)
 	playsound(owner, 'sound/blank.ogg', 75, FALSE)
 	return ..()
 
@@ -317,7 +317,7 @@
 		slashy.attack(M, owner)
 
 /datum/status_effect/sword_spin/on_remove()
-	owner.visible_message("<span class='warning'>[owner]'s inhuman strength dissipates and the sword's runes grow cold!</span>")
+	owner.visible_message(span_warning("[owner]'s inhuman strength dissipates and the sword's runes grow cold!"))
 
 
 //Used by changelings to rapidly heal
@@ -326,7 +326,7 @@
 /datum/status_effect/fleshmend
 	id = "fleshmend"
 	duration = 100
-	alert_type = /obj/screen/alert/status_effect/fleshmend
+	alert_type = /atom/movable/screen/alert/status_effect/fleshmend
 
 /datum/status_effect/fleshmend/tick()
 	if(owner.on_fire)
@@ -338,7 +338,7 @@
 	owner.adjustFireLoss(-5, FALSE)
 	owner.adjustOxyLoss(-10)
 
-/obj/screen/alert/status_effect/fleshmend
+/atom/movable/screen/alert/status_effect/fleshmend
 	name = "Fleshmend"
 	desc = ""
 	icon_state = "fleshmend"
@@ -363,7 +363,7 @@
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = -1
 	tick_interval = 25
-	examine_text = "<span class='notice'>They seem to have an aura of healing and helpfulness about them.</span>"
+	examine_text = span_notice("They seem to have an aura of healing and helpfulness about them.")
 	alert_type = null
 	var/hand
 	var/deathTick = 0
@@ -385,7 +385,7 @@
 		if(deathTick < 4)
 			deathTick += 1
 		else
-			owner.visible_message("<span class='notice'>[owner]'s soul is absorbed into the rod, relieving the previous snake of its duty.</span>")
+			owner.visible_message(span_notice("[owner]'s soul is absorbed into the rod, relieving the previous snake of its duty."))
 			var/mob/living/simple_animal/hostile/retaliate/poison/snake/healSnake = new(owner.loc)
 			var/list/chems = list(/datum/reagent/medicine/sal_acid, /datum/reagent/medicine/C2/convermol, /datum/reagent/medicine/oxandrolone)
 			healSnake.poison_type = pick(chems)
@@ -412,11 +412,11 @@
 						var/obj/item/bodypart/L = itemUser.newBodyPart(BODY_ZONE_L_ARM, FALSE, FALSE)
 						L.attach_limb(itemUser)
 						itemUser.put_in_hand(newRod, hand, forced = TRUE)
-					to_chat(itemUser, "<span class='notice'>My arm suddenly grows back with the Rod of Asclepius still attached!</span>")
+					to_chat(itemUser, span_notice("My arm suddenly grows back with the Rod of Asclepius still attached!"))
 				else
 					//Otherwise get rid of whatever else is in their hand and return the rod to said hand
 					itemUser.put_in_hand(newRod, hand, forced = TRUE)
-					to_chat(itemUser, "<span class='notice'>The Rod of Asclepius suddenly grows back out of my arm!</span>")
+					to_chat(itemUser, span_notice("The Rod of Asclepius suddenly grows back out of my arm!"))
 			//Because a servant of medicines stops at nothing to help others, lets keep them on their toes and give them an additional boost.
 			if(itemUser.health < itemUser.maxHealth)
 				new /obj/effect/temp_visual/heal(get_turf(itemUser), "#375637")
@@ -460,7 +460,7 @@
 		owner.confused = max(0, owner.confused - 1)
 		SEND_SIGNAL(owner, COMSIG_ADD_MOOD_EVENT, "goodmusic", /datum/mood_event/goodmusic)
 
-/obj/screen/alert/status_effect/regenerative_core
+/atom/movable/screen/alert/status_effect/regenerative_core
 	name = "Regenerative Core Tendrils"
 	desc = ""
 	icon_state = "regenerative_core"
@@ -469,7 +469,7 @@
 	id = "Regenerative Core"
 	duration = 1 MINUTES
 	status_type = STATUS_EFFECT_REPLACE
-	alert_type = /obj/screen/alert/status_effect/regenerative_core
+	alert_type = /atom/movable/screen/alert/status_effect/regenerative_core
 
 /datum/status_effect/regenerative_core/on_apply()
 	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, id)
@@ -485,10 +485,10 @@
 /datum/status_effect/antimagic
 	id = "antimagic"
 	duration = 10 SECONDS
-	examine_text = "<span class='notice'>They seem to be covered in a dull, grey aura.</span>"
+	examine_text = span_notice("They seem to be covered in a dull, grey aura.")
 
 /datum/status_effect/antimagic/on_apply()
-	owner.visible_message("<span class='notice'>[owner] is coated with a dull aura!</span>")
+	owner.visible_message(span_notice("[owner] is coated with a dull aura!"))
 	ADD_TRAIT(owner, TRAIT_ANTIMAGIC, MAGIC_TRAIT)
 	//glowing wings overlay
 	playsound(owner, 'sound/blank.ogg', 75, FALSE)
@@ -496,4 +496,4 @@
 
 /datum/status_effect/antimagic/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_ANTIMAGIC, MAGIC_TRAIT)
-	owner.visible_message("<span class='warning'>[owner]'s dull aura fades away...</span>")
+	owner.visible_message(span_warning("[owner]'s dull aura fades away..."))

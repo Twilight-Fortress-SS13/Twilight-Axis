@@ -109,7 +109,7 @@
 	if(!is_operational()) //you cant use broken machine you chumbis
 		return
 	if(current_user)
-		to_chat(user, "<span class='warning'>The console is already in use!</span>")
+		to_chat(user, span_warning("The console is already in use!"))
 		return
 	var/mob/living/L = user
 
@@ -274,7 +274,7 @@
 	if(final)
 		playsound(origin,'sound/blank.ogg', 25, FALSE)
 		remote_eye.setLoc(get_turf(final))
-		C.overlay_fullscreen("flash", /obj/screen/fullscreen/flash/static)
+		C.overlay_fullscreen("flash", /atom/movable/screen/fullscreen/flash/static)
 		C.clear_fullscreen("flash", 3) //Shorter flash than normal since it's an ~~advanced~~ console!
 	else
 		playsound(origin,'sound/blank.ogg', 25, FALSE)

@@ -12,6 +12,8 @@
 	var/footstepstealth = FALSE
 	baseturfs = /turf/open/transparent/openspace
 
+	damage_deflection = INFINITY //TODO: Find a better method for breakable turf system
+
 /turf/proc/get_slowdown(mob/user)
 	return 0
 
@@ -81,7 +83,7 @@
 	heavyfootstep = null
 	var/sound
 
-/turf/open/indestructible/sound/Entered(var/mob/AM)
+/turf/open/indestructible/sound/Entered(mob/AM)
 	..()
 	if(istype(AM))
 		playsound(src,sound,50,TRUE)
@@ -217,7 +219,7 @@
 			if(C.m_intent == MOVE_INTENT_WALK && (lube&NO_SLIP_WHEN_WALKING))
 				return 0
 		if(!(lube&SLIDE_ICE))
-			to_chat(C, "<span class='notice'>I slipped[ O ? " on the [O.name]" : ""]!</span>")
+			to_chat(C, span_notice("I slipped[ O ? " on the [O.name]" : ""]!"))
 			playsound(C.loc, 'sound/blank.ogg', 50, TRUE, -3)
 
 		SEND_SIGNAL(C, COMSIG_ADD_MOOD_EVENT, "slipped", /datum/mood_event/slipped)
@@ -239,7 +241,7 @@
 			lube |= SLIDE_ICE
 
 		if(lube&SLIDE)
-			new /datum/forced_movement(C, get_ranged_target_turf(C, olddir, 4), 1, FALSE, CALLBACK(C, /mob/living/carbon/.proc/spin, 1, 1))
+			new /datum/forced_movement(C, get_ranged_target_turf(C, olddir, 4), 1, FALSE, CALLBACK(C, TYPE_PROC_REF(/mob/living/carbon, spin), 1, 1))
 		else if(lube&SLIDE_ICE)
 			if(C.force_moving) //If we're already slipping extend it
 				qdel(C.force_moving)

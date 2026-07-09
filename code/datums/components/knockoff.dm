@@ -7,8 +7,8 @@
 /datum/component/knockoff/Initialize(knockoff_chance,zone_override,slots_knockoffable)
 	if(!isitem(parent))
 		return COMPONENT_INCOMPATIBLE
-	RegisterSignal(parent, COMSIG_ITEM_EQUIPPED,.proc/OnEquipped)
-	RegisterSignal(parent, COMSIG_ITEM_DROPPED,.proc/OnDropped)
+	RegisterSignal(parent, COMSIG_ITEM_EQUIPPED,PROC_REF(OnEquipped))
+	RegisterSignal(parent, COMSIG_ITEM_DROPPED,PROC_REF(OnDropped))
 
 	src.knockoff_chance = knockoff_chance
 
@@ -30,7 +30,7 @@
 	if(!wearer.dropItemToGround(I))
 		return
 
-	wearer.visible_message("<span class='warning'>[attacker] knocks off [wearer]'s [I.name]!</span>","<span class='danger'>[attacker] knocks off your [I.name]!</span>")
+	wearer.visible_message(span_warning("[attacker] knocks off [wearer]'s [I.name]!"),span_danger("[attacker] knocks off your [I.name]!"))
 
 /datum/component/knockoff/proc/OnEquipped(datum/source, mob/living/carbon/human/H,slot)
 	if(!istype(H))
@@ -38,7 +38,7 @@
 	if(slots_knockoffable && !(slot in slots_knockoffable))
 		UnregisterSignal(H, COMSIG_HUMAN_DISARM_HIT)
 		return
-	RegisterSignal(H, COMSIG_HUMAN_DISARM_HIT, .proc/Knockoff, TRUE)
+	RegisterSignal(H, COMSIG_HUMAN_DISARM_HIT, PROC_REF(Knockoff), TRUE)
 
 /datum/component/knockoff/proc/OnDropped(datum/source, mob/living/M)
 	UnregisterSignal(M, COMSIG_HUMAN_DISARM_HIT)

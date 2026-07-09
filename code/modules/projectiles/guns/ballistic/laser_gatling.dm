@@ -30,19 +30,19 @@
 	overheat = max(0, overheat - heat_diffusion)
 
 //ATTACK HAND IGNORING PARENT RETURN VALUE
-/obj/item/minigunpack/attack_hand(var/mob/living/carbon/user)
+/obj/item/minigunpack/attack_hand(mob/living/carbon/user)
 	if(src.loc == user)
 		if(!armed)
 			if(user.get_item_by_slot(SLOT_BACK) == src)
 				armed = 1
 				if(!user.put_in_hands(gun))
 					armed = 0
-					to_chat(user, "<span class='warning'>I need a free hand to hold the gun!</span>")
+					to_chat(user, span_warning("I need a free hand to hold the gun!"))
 					return
 				update_icon()
 				user.update_inv_back()
 		else
-			to_chat(user, "<span class='warning'>I are already holding the gun!</span>")
+			to_chat(user, span_warning("I are already holding the gun!"))
 	else
 		..()
 
@@ -69,8 +69,8 @@
 
 		if(!M.incapacitated())
 
-			if(istype(over_object, /obj/screen/inventory/hand))
-				var/obj/screen/inventory/hand/H = over_object
+			if(istype(over_object, /atom/movable/screen/inventory/hand))
+				var/atom/movable/screen/inventory/hand/H = over_object
 				M.putItemFromInventoryInHandIfPossible(src, H.held_index)
 
 
@@ -80,15 +80,15 @@
 	else
 		icon_state = "holstered"
 
-/obj/item/minigunpack/proc/attach_gun(var/mob/user)
+/obj/item/minigunpack/proc/attach_gun(mob/user)
 	if(!gun)
 		gun = new(src)
 	gun.forceMove(src)
 	armed = 0
 	if(user)
-		to_chat(user, "<span class='notice'>I attach the [gun.name] to the [name].</span>")
+		to_chat(user, span_notice("I attach the [gun.name] to the [name]."))
 	else
-		src.visible_message("<span class='warning'>The [gun.name] snaps back onto the [name]!</span>")
+		src.visible_message(span_warning("The [gun.name] snaps back onto the [name]!"))
 	update_icon()
 	user.update_inv_back()
 
@@ -127,7 +127,7 @@
 	return
 
 /obj/item/gun/ballistic/minigun/dropped(mob/user)
-	SHOULD_CALL_PARENT(0)
+	SHOULD_CALL_PARENT(FALSE)
 	if(ammo_pack)
 		ammo_pack.attach_gun(user)
 	else
@@ -139,9 +139,9 @@
 			ammo_pack.overheat += burst_size
 			..()
 		else
-			to_chat(user, "<span class='warning'>The gun's heat sensor locked the trigger to prevent lens damage!</span>")
+			to_chat(user, span_warning("The gun's heat sensor locked the trigger to prevent lens damage!"))
 
 /obj/item/gun/ballistic/minigun/afterattack(atom/target, mob/living/user, flag, params)
 	if(!ammo_pack || ammo_pack.loc != user)
-		to_chat(user, "<span class='warning'>I need the backpack power source to fire the gun!</span>")
+		to_chat(user, span_warning("I need the backpack power source to fire the gun!"))
 	. = ..()

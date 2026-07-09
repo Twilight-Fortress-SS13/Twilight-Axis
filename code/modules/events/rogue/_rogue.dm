@@ -15,24 +15,36 @@ GLOBAL_LIST_INIT(badomens, list())
 	if(!name)
 		return FALSE
 
+/proc/hasomen(input)
+	return (input in GLOB.badomens)
+
 /proc/addomen(input)
-	if(!(input in GLOB.badomens))
-		testing("Omen added: [input]")
-		GLOB.badomens += input
+	if(hasomen(input))
+		return
+	testing("Omen added: [input]")
+	GLOB.badomens += input
+
+/proc/removeomen(input)
+	if(!hasomen(input))
+		return
+	testing("Omen removed: [input]")
+	GLOB.badomens -= input
 
 /datum/round_event_control/proc/badomen(eventreason)
 	var/used
 	switch(eventreason)
-		if("roundstart")
+		if(OMEN_ROUNDSTART)
 			used = "Zizo."
-		if("importantdeath")
-			used = "A Noble has perished."
-		if("skellysiege")
-			used = "Unwelcome visitors!"
-		if("nolord")
+		if(OMEN_NOLORD)
 			used = "The Monarch is dead! We need a new ruler."
-		if("sunsteal")
+		if(OMEN_NOPRIEST)
+			used = "The High Priest is dead!"
+		if(OMEN_NOBLEDEATH)
+			used = "A Noble has perished."
+		if(OMEN_SUNSTEAL)
 			used = "The Sun, she is wounded!"
+		if(OMEN_SKELETONSIEGE)
+			used = "Unwelcome visitors!"
 	if(eventreason && used)
 		priority_announce(used, "Bad Omen", 'sound/misc/evilevent.ogg')
 

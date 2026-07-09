@@ -43,6 +43,16 @@
 	var/jumping = FALSE
 	var/zfalling = FALSE
 
+	///Lazylist to keep track on the sources of illumination.
+	var/list/affected_dynamic_lights
+	///Highest-intensity light affecting us, which determines our visibility.
+	var/affecting_dynamic_lumi = 0
+
+/atom/movable/Initialize(mapload)
+	. = ..()
+	if(light_system == MOVABLE_LIGHT)
+		AddComponent(/datum/component/overlay_lighting)
+
 /atom/movable/proc/can_zFall(turf/source, levels = 1, turf/target, direction)
 	if(!direction)
 		direction = DOWN
@@ -65,7 +75,7 @@
 		if(isobj(A) || ismob(A))
 			if(A.layer > highest.layer)
 				highest = A
-//	INVOKE_ASYNC(src, .proc/SpinAnimation, 5, 2)
+//	INVOKE_ASYNC(src, PROC_REF(SpinAnimation), 5, 2)
 	throw_impact(highest)
 	return TRUE
 
@@ -158,8 +168,8 @@
 		if(M.doing)
 			M.doing = FALSE
 		if(!supress_message)
-			M.visible_message("<span class='warning'>[src] grabs [M].</span>", \
-				"<span class='danger'>[src] grabs you.</span>")
+			M.visible_message(span_warning("[src] grabs [M]."), \
+				span_danger("[src] grabs you."))
 	return TRUE
 
 /atom/movable/proc/stop_pulling(forced = TRUE)
@@ -577,6 +587,10 @@
 
 /atom/movable/proc/throw_at(atom/target, range, speed, mob/thrower, spin = FALSE, diagonals_first = FALSE, datum/callback/callback, force = MOVE_FORCE_STRONG, extra = FALSE) //If this returns FALSE then callback will not be called.
 	. = FALSE
+
+	if(QDELETED(src))
+		CRASH("Qdeleted thing being thrown around.")
+
 	if (!target || speed <= 0)
 		return
 
@@ -612,20 +626,13 @@
 
 	. = TRUE // No failure conditions past this point.
 
-	var/datum/thrownthing/TT = new()
-	TT.thrownthing = src
-	TT.target = target
-	TT.target_turf = get_turf(target)
-	TT.init_dir = get_dir(src, target)
-	TT.maxrange = range
-	TT.speed = speed
-	TT.thrower = thrower
-	TT.diagonals_first = diagonals_first
-	TT.force = force
-	TT.callback = callback
-	TT.extra = extra
-	if(!QDELETED(thrower))
-		TT.target_zone = thrower.zone_selected
+	var/target_zone
+	if(QDELETED(thrower))
+		thrower = null //Let's not pass a qdeleting reference if any.
+	else
+		target_zone = thrower.zone_selected
+
+	var/datum/thrownthing/TT = new(src, target, get_turf(target), get_dir(src, target), range, speed, thrower, diagonals_first, force, callback, target_zone, extra)
 
 	var/dist_x = abs(target.x - src.x)
 	var/dist_y = abs(target.y - src.y)
@@ -659,7 +666,6 @@
 			var/turf/above = get_step_multiz(curloc, UP)
 			if(istype(above, /turf/open/transparent/openspace))
 				forceMove(above)
-	spin = FALSE
 	if(spin)
 		SpinAnimation(5, 1)
 
@@ -686,12 +692,12 @@
 /atom/movable/proc/force_push(atom/movable/AM, force = move_force, direction, silent = FALSE)
 	. = AM.force_pushed(src, force, direction)
 	if(!silent && .)
-		visible_message("<span class='warning'>[src] forcefully pushes against [AM]!</span>", "<span class='warning'>I forcefully push against [AM]!</span>")
+		visible_message(span_warning("[src] forcefully pushes against [AM]!"), span_warning("I forcefully push against [AM]!"))
 
 /atom/movable/proc/move_crush(atom/movable/AM, force = move_force, direction, silent = FALSE)
 	. = AM.move_crushed(src, force, direction)
 	if(!silent && .)
-		visible_message("<span class='danger'>[src] crushes past [AM]!</span>", "<span class='danger'>I crush [AM]!</span>")
+		visible_message(span_danger("[src] crushes past [AM]!"), span_danger("I crush [AM]!"))
 
 /atom/movable/proc/move_crushed(atom/movable/pusher, force = MOVE_FORCE_DEFAULT, direction)
 	return FALSE
@@ -899,15 +905,13 @@
 
 /atom/movable/proc/can_speak_in_language(datum/language/dt)
 	var/datum/language_holder/H = get_language_holder()
-
-	if(!H.has_language(dt))
+	if(!H.has_language(dt) || HAS_TRAIT(src, TRAIT_LANGUAGE_BARRIER))
 		return FALSE
 	else if(H.omnitongue)
 		return TRUE
 	else if(could_speak_in_language(dt) && (!H.only_speaks_language || H.only_speaks_language == dt))
 		return TRUE
-	else
-		return FALSE
+	return FALSE
 
 /atom/movable/proc/get_default_language()
 	// if no language is specified, and we want to say() something, which

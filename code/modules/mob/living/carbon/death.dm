@@ -29,7 +29,7 @@
 	return ..()
 
 /mob/living/carbon/proc/inflate_gib() // Plays an animation that makes mobs appear to inflate before finally gibbing
-	addtimer(CALLBACK(src, .proc/gib, null, null, TRUE, TRUE), 25)
+	addtimer(CALLBACK(src, PROC_REF(gib), null, null, TRUE, TRUE), 25)
 	var/matrix/M = matrix()
 	M.Scale(1.8, 1.2)
 	animate(src, time = 40, transform = M, easing = SINE_EASING)
@@ -43,8 +43,14 @@
 	var/atom/Tsec = drop_location()
 	for(var/mob/M in src)
 		M.forceMove(Tsec)
-		visible_message("<span class='danger'>[M] bursts out of [src]!</span>")
+		visible_message(span_danger("[M] bursts out of [src]!"))
 	. = ..()
+
+/mob/living/carbon/spill_embedded_objects()
+	. = ..()
+	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
+		for(var/obj/item/embedded_item as anything in bodypart.embedded_objects)
+			bodypart.remove_embedded_object(embedded_item)
 
 /mob/living/carbon/spill_organs(no_brain, no_organs, no_bodyparts)
 	var/atom/Tsec = drop_location()
@@ -77,9 +83,8 @@
 			I.forceMove(Tsec)
 			I.throw_at(get_edge_target_turf(src,pick(GLOB.alldirs)),rand(1,3),5)
 
-
 /mob/living/carbon/spread_bodyparts()
-	for(var/X in bodyparts)
-		var/obj/item/bodypart/BP = X
-		BP.drop_limb()
-		BP.throw_at(get_edge_target_turf(src,pick(GLOB.alldirs)),rand(1,3),5)
+	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
+		if(!bodypart.drop_limb())
+			continue
+		bodypart.throw_at(get_edge_target_turf(src,pick(GLOB.alldirs)),rand(1,3),5)

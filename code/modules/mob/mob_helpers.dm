@@ -20,7 +20,7 @@
 			zone = BODY_ZONE_HEAD
 		if(BODY_ZONE_PRECISE_MOUTH)
 			zone = BODY_ZONE_HEAD
-		if(BODY_ZONE_PRECISE_HAIR)
+		if(BODY_ZONE_PRECISE_SKULL)
 			zone = BODY_ZONE_HEAD
 		if(BODY_ZONE_PRECISE_EARS)
 			zone = BODY_ZONE_HEAD
@@ -38,9 +38,9 @@
 			zone = BODY_ZONE_CHEST
 		if(BODY_ZONE_PRECISE_STOMACH)
 			zone = BODY_ZONE_CHEST
-		if(BODY_ZONE_R_INHAND)
+		if(BODY_ZONE_PRECISE_R_INHAND)
 			zone = BODY_ZONE_R_ARM
-		if(BODY_ZONE_L_INHAND)
+		if(BODY_ZONE_PRECISE_L_INHAND)
 			zone = BODY_ZONE_L_ARM
 
 	return zone
@@ -336,7 +336,7 @@
 	if(hud_used && hud_used.action_intent)
 		hud_used.action_intent.icon_state = "[a_intent]"
 
-/mob/proc/examine_intent(var/numb, var/offhand = FALSE)
+/mob/proc/examine_intent(numb, offhand = FALSE)
 	var/datum/intent/to_examine
 	if(offhand)
 		if(numb)
@@ -569,11 +569,16 @@
 		playsound_local(src, 'sound/misc/comboff.ogg', 100)
 		SSdroning.play_area_sound(get_area(src), client)
 		cmode = FALSE
+		if(client && HAS_TRAIT(src, TRAIT_SCREENSHAKE))
+			animate(client, pixel_y)
 	else
 		cmode = TRUE
 		playsound_local(src, 'sound/misc/combon.ogg', 100)
 		if(L.cmode_music)
 			SSdroning.play_combat_music(L.cmode_music, client)
+		if(client && HAS_TRAIT(src, TRAIT_SCHIZO_AMBIENCE))
+			animate(client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE)
+			animate(pixel_y = -1, time = 1, flags = ANIMATION_RELATIVE)
 	if(hud_used)
 		if(hud_used.cmode_button)
 			hud_used.cmode_button.update_icon()
@@ -596,7 +601,7 @@
 		if(19)
 			zone_selected = BODY_ZONE_HEAD
 		if(18)
-			zone_selected = BODY_ZONE_PRECISE_HAIR
+			zone_selected = BODY_ZONE_PRECISE_SKULL
 		if(17)
 			zone_selected = BODY_ZONE_PRECISE_EARS
 		if(16)
@@ -638,14 +643,17 @@
 			if(hud_used.zone_select)
 				hud_used.zone_select.update_icon()
 
+/mob/proc/select_organ_slot(choice)
+	organ_slot_selected = choice
+
 /mob/proc/select_zone(choice)
 	zone_selected = choice
 	switch(choice)
-		if(BODY_ZONE_HEAD)
+		if(BODY_ZONE_PRECISE_SKULL)
 			aimheight = 19
-		if(BODY_ZONE_PRECISE_HAIR)
-			aimheight = 18
 		if(BODY_ZONE_PRECISE_EARS)
+			aimheight = 18
+		if(BODY_ZONE_HEAD)
 			aimheight = 17
 		if(BODY_ZONE_PRECISE_R_EYE)
 			aimheight = 16
@@ -778,13 +786,13 @@
 		var/orbit_link
 		if (source && action == NOTIFY_ORBIT)
 			orbit_link = " <a href='?src=[REF(O)];follow=[REF(source)]'>(Orbit)</a>"
-		to_chat(O, "<span class='ghostalert'>[message][(enter_link) ? " [enter_link]" : ""][orbit_link]</span>")
+		to_chat(O, span_ghostalert("[message][(enter_link) ? " [enter_link]" : ""][orbit_link]"))
 		if(ghost_sound)
 			SEND_SOUND(O, sound(ghost_sound, volume = notify_volume))
 		if(flashwindow)
 			window_flash(O.client)
 		if(source)
-			var/obj/screen/alert/notify_action/A = O.throw_alert("[REF(source)]_notify_action", /obj/screen/alert/notify_action)
+			var/atom/movable/screen/alert/notify_action/A = O.throw_alert("[REF(source)]_notify_action", /atom/movable/screen/alert/notify_action)
 			if(A)
 				if(O.client.prefs && O.client.prefs.UI_style)
 					A.icon = ui_style2icon(O.client.prefs.UI_style)
@@ -813,14 +821,14 @@
 		if((brute_heal > 0 && affecting.brute_dam > 0) || (burn_heal > 0 && affecting.burn_dam > 0))
 			if(affecting.heal_damage(brute_heal, burn_heal, 0, BODYPART_ROBOTIC))
 				H.update_damage_overlays()
-			user.visible_message("<span class='notice'>[user] has fixed some of the [dam ? "dents on" : "burnt wires in"] [H]'s [affecting.name].</span>", \
-			"<span class='notice'>I fix some of the [dam ? "dents on" : "burnt wires in"] [H == user ? "your" : "[H]'s"] [affecting.name].</span>")
+			user.visible_message(span_notice("[user] has fixed some of the [dam ? "dents on" : "burnt wires in"] [H]'s [affecting.name]."), \
+			span_notice("I fix some of the [dam ? "dents on" : "burnt wires in"] [H == user ? "your" : "[H]'s"] [affecting.name]."))
 			return 1 //successful heal
 		else
-			to_chat(user, "<span class='warning'>[affecting] is already in good condition!</span>")
+			to_chat(user, span_warning("[affecting] is already in good condition!"))
 
 ///Is the passed in mob an admin ghost
-/proc/IsAdminGhost(var/mob/user)
+/proc/IsAdminGhost(mob/user)
 	if(!user)		//Are they a mob? Auto interface updates call this with a null src
 		return
 	if(!user.client) // Do they have a client?
@@ -852,14 +860,16 @@
 		var/datum/antagonist/A = M.mind.has_antag_datum(/datum/antagonist/)
 		if(A)
 			poll_message = "[poll_message] Status:[A.name]."
-	var/list/mob/dead/observer/candidates = pollCandidatesForMob(poll_message, ROLE_PAI, null, FALSE, 100, M)
+	var/list/mob/candidates = pollCandidatesForMob(poll_message, ROLE_PAI, null, FALSE, 100, M)
 
 	if(LAZYLEN(candidates))
-		var/mob/dead/observer/C = pick(candidates)
+		var/mob/C = pick(candidates)
 		to_chat(M, "Your mob has been taken over by a ghost!")
 		message_admins("[key_name_admin(C)] has taken control of ([ADMIN_LOOKUPFLW(M)])")
 		M.ghostize(0,drawskip=TRUE)
 		M.key = C.key
+		if(!QDELETED(C))	
+			qdel(C)
 		return TRUE
 	else
 		to_chat(M, "There were no ghosts willing to take control.")

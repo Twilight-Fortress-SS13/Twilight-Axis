@@ -44,9 +44,9 @@
 	if((start_eject + 30) < world.time)
 		start_eject = world.time
 		playsound(src, 'sound/blank.ogg', 50, FALSE, FALSE)
-		addtimer(CALLBACK(src, .proc/expel_holder, H, TRUE), 20)
+		addtimer(CALLBACK(src, PROC_REF(expel_holder), H, TRUE), 20)
 	else
-		addtimer(CALLBACK(src, .proc/expel_holder, H), 20)
+		addtimer(CALLBACK(src, PROC_REF(expel_holder), H), 20)
 
 /obj/structure/disposaloutlet/proc/expel_holder(obj/structure/disposalholder/H, playsound=FALSE)
 	if(playsound)
@@ -72,9 +72,9 @@
 		return TRUE
 
 	playsound(src, 'sound/blank.ogg', 100, TRUE)
-	to_chat(user, "<span class='notice'>I start slicing the floorweld off [src]...</span>")
+	to_chat(user, span_notice("I start slicing the floorweld off [src]..."))
 	if(I.use_tool(src, user, 20))
-		to_chat(user, "<span class='notice'>I slice the floorweld off [src].</span>")
+		to_chat(user, span_notice("I slice the floorweld off [src]."))
 		stored.forceMove(loc)
 		transfer_fingerprints_to(stored)
 		stored = null

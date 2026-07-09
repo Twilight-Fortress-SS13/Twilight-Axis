@@ -7,7 +7,7 @@
 
 /obj/structure/roguemachine/steward
 	name = "nerve master"
-	desc = ""
+	desc = "The stewards most trusted friend."
 	icon = 'icons/roguetown/misc/machines.dmi'
 	icon_state = "steward_machine"
 	density = TRUE
@@ -29,7 +29,7 @@
 			update_icon()
 			return
 		else
-			to_chat(user, "<span class='warning'>Wrong key.</span>")
+			to_chat(user, span_warning("Wrong key."))
 			return
 	if(istype(P, /obj/item/keyring))
 		var/obj/item/keyring/K = P
@@ -39,7 +39,7 @@
 				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 				update_icon()
 				return
-		to_chat(user, "<span class='warning'>Wrong key.</span>")
+		to_chat(user, span_warning("Wrong key."))
 		return
 	return ..()
 
@@ -62,16 +62,24 @@
 		SStreasury.log_to_steward("-[amt] imported [D.name]")
 		scom_announce("Rockhill imports [D.name] for [amt] mammon.", )
 		D.raise_demand()
-		addtimer(CALLBACK(src, .proc/do_import, D.type), 10 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(do_import), D.type), 10 SECONDS)
 	if(href_list["export"])
 		var/datum/roguestock/D = locate(href_list["export"]) in SStreasury.stockpile_datums
 		if(!D)
 			return
-		if(D.held_items < D.importexport_amt)
+		if((D.held_items[1] + D.held_items[2]) < D.importexport_amt)
 			say("Insufficient stock.")
 			return
 		var/amt = D.get_export_price()
-		D.held_items -= D.importexport_amt
+
+		// Try to export everything from town stockpile
+		if(D.held_items[1] >= D.importexport_amt)
+			D.held_items[1] -= D.importexport_amt
+		// If not possible, first pull form town stockpile, then bog stockpile
+		else
+			D.held_items[2] -= (D.importexport_amt - D.held_items[1])
+			D.held_items[1] = 0
+
 		SStreasury.treasury_value += amt
 		SStreasury.log_to_steward("+[amt] exported [D.name]")
 		scom_announce("Rockhill exports [D.name] for [amt] mammon.")
@@ -119,10 +127,14 @@
 				if(findtext(num2text(newtax), "."))
 					return
 				newtax = CLAMP(newtax, 0, 999)
+				if(newtax < D.withdraw_price)
+					scom_announce("The withdraw price for [D.name] was decreased.")
 				D.withdraw_price = newtax
 	if(href_list["givemoney"])
-		var/X = href_list["givemoney"]
-		for(var/A in SStreasury.bank_accounts)
+		var/X = locate(href_list["givemoney"])
+		if(!X)
+			return
+		for(var/mob/living/A in SStreasury.bank_accounts)
 			if(A == X)
 				var/newtax = input(usr, "How much to give [X]", src) as null|num
 				if(!usr.canUseTopic(src, BE_CLOSE) || locked)
@@ -136,8 +148,10 @@
 				SStreasury.give_money_account(newtax, A)
 				break
 	if(href_list["fineaccount"])
-		var/X = href_list["fineaccount"]
-		for(var/A in SStreasury.bank_accounts)
+		var/X = locate(href_list["fineaccount"])
+		if(!X)
+			return
+		for(var/mob/living/A in SStreasury.bank_accounts)
 			if(A == X)
 				var/newtax = input(usr, "How much to fine [X]", src) as null|num
 				if(!usr.canUseTopic(src, BE_CLOSE) || locked)
@@ -151,7 +165,7 @@
 				SStreasury.give_money_account(-newtax, A)
 				break
 	if(href_list["payroll"])
-		var/list/L = list(GLOB.noble_positions) + list(GLOB.garrison_positions) + list(GLOB.church_positions) + list(GLOB.serf_positions) + list(GLOB.peasant_positions) + list(GLOB.youngfolk_positions)
+		var/list/L = list(GLOB.noble_positions) + list(GLOB.garrison_positions) + list(GLOB.church_positions) + list(GLOB.yeoman_positions) + list(GLOB.peasant_positions) + list(GLOB.youngfolk_positions)
 		var/list/things = list()
 		for(var/list/category in L)
 			for(var/A in category)
@@ -172,10 +186,10 @@
 			return
 		for(var/mob/living/carbon/human/H in GLOB.human_list)
 			if(H.job == job_to_pay)
-				SStreasury.give_money_account(amount_to_pay, H.real_name)
+				SStreasury.give_money_account(amount_to_pay, H)
 	return attack_hand(usr)
 
-/obj/structure/roguemachine/steward/proc/do_import(datum/roguestock/D,var/number)
+/obj/structure/roguemachine/steward/proc/do_import(datum/roguestock/D,number)
 	if(!D)
 		return
 	D = new D
@@ -196,14 +210,14 @@
 	playsound(T, 'sound/misc/hiss.ogg', 100, FALSE, -1)
 	number += 1
 	testing("number2 is [number]")
-	addtimer(CALLBACK(src, .proc/do_import, D.type, number), 3 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(do_import), D.type, number), 3 SECONDS)
 
 /obj/structure/roguemachine/steward/attack_hand(mob/living/user)
 	. = ..()
 	if(.)
 		return
 	if(locked)
-		to_chat(user, "<span class='warning'>It's locked. Of course.</span>")
+		to_chat(user, span_warning("It's locked. Of course."))
 		return
 	user.changeNext_move(CLICK_CD_MELEE)
 	playsound(loc, 'sound/misc/keyboard_enter.ogg', 100, FALSE, -1)
@@ -213,23 +227,27 @@
 		if(TAB_MAIN)
 			contents += "<center>NERVE MASTER<BR>"
 			contents += "--------------<BR>"
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_BANK]'>\[Bank\]</a><BR>"
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_STOCK]'>\[Stockpile\]</a><BR>"
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_IMPORT]'>\[Import\]</a><BR>"
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_BOUNTIES]'>\[Bounties\]</a><BR>"
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_LOG]'>\[Log\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_BANK]'>\[Bank\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_STOCK]'>\[Stockpile\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_IMPORT]'>\[Import\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_BOUNTIES]'>\[Bounties\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_LOG]'>\[Log\]</a><BR>"
 			contents += "</center>"
 		if(TAB_BANK)
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
 			contents += "<center>Bank<BR>"
 			contents += "--------------<BR>"
 			contents += "Treasury: [SStreasury.treasury_value]m</center><BR>"
-			contents += "<a href='?src=[REF(src)];payroll=1'>\[Pay by Class\]</a><BR><BR>"
-			for(var/A in SStreasury.bank_accounts)
-				contents += "[A] - [SStreasury.bank_accounts[A]]m<BR>"
-				contents += "<a href='?src=[REF(src)];givemoney=[A]'>\[Give Money\]</a> <a href='?src=[REF(src)];fineaccount=[A]'>\[Fine Account\]</a><BR><BR>"
+			contents += "<a href='?src=\ref[src];payroll=1'>\[Pay by Class\]</a><BR><BR>"
+			for(var/mob/living/carbon/human/A in SStreasury.bank_accounts)
+				if(ishuman(A))
+					var/mob/living/carbon/human/tmp = A
+					contents += "[tmp.real_name] ([tmp.advjob ? tmp.advjob : tmp.job]) - [SStreasury.bank_accounts[A]]m<BR>"
+				else
+					contents += "[A.real_name] - [SStreasury.bank_accounts[A]]m<BR>"
+				contents += "<a href='?src=\ref[src];givemoney=\ref[A]'>\[Give Money\]</a> <a href='?src=\ref[src];fineaccount=\ref[A]'>\[Fine Account\]</a><BR><BR>"
 		if(TAB_STOCK)
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
 			contents += "<center>Stockpile<BR>"
 			contents += "--------------<BR>"
 			contents += "Treasury: [SStreasury.treasury_value]m<BR>"
@@ -238,14 +256,15 @@
 			for(var/datum/roguestock/stockpile/A in SStreasury.stockpile_datums)
 				contents += "[A.name]<BR>"
 				contents += "[A.desc]<BR>"
-				contents += "Stockpiled Amount: [A.held_items]<BR>"
-				contents += "Bounty Price: <a href='?src=[REF(src)];setbounty=[REF(A)]'>[A.payout_price]</a><BR>"
+				contents += "Stockpiled Amount: [A.held_items[1] + A.held_items[2]]<BR>"
+				contents += "Bounty Price: <a href='?src=\ref[src];setbounty=\ref[A]'>[A.payout_price]</a><BR>"
+				contents += "Withdraw Price: <a href='?src=\ref[src];setprice=\ref[A]'>[A.withdraw_price]</a><BR>"
 				contents += "Demand: [A.demand2word()]<BR>"
 				if(A.importexport_amt)
-					contents += "<a href='?src=[REF(src)];import=[REF(A)]'>\[Import [A.importexport_amt] ([A.get_import_price()])\]</a> <a href='?src=[REF(src)];export=[REF(A)]'>\[Export [A.importexport_amt] ([A.get_export_price()])\]</a> <BR>"
-				contents += "<a href='?src=[REF(src)];togglewithdraw=[REF(A)]'>\[[A.withdraw_disabled ? "Enable" : "Disable"] Withdrawing\]</a><BR><BR>"
+					contents += "<a href='?src=\ref[src];import=\ref[A]'>\[Import [A.importexport_amt] ([A.get_import_price()])\]</a> <a href='?src=\ref[src];export=\ref[A]'>\[Export [A.importexport_amt] ([A.get_export_price()])\]</a> <BR>"
+				contents += "<a href='?src=\ref[src];togglewithdraw=\ref[A]'>\[[A.withdraw_disabled ? "Enable" : "Disable"] Withdrawing\]</a><BR><BR>"
 		if(TAB_IMPORT)
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
 			contents += "<center>Imports<BR>"
 			contents += "--------------<BR>"
 			contents += "Treasury: [SStreasury.treasury_value]m<BR>"
@@ -256,9 +275,9 @@
 				contents += "[A.desc]<BR>"
 				if(!A.stable_price)
 					contents += "Demand: [A.demand2word()]<BR>"
-				contents += "<a href='?src=[REF(src)];import=[REF(A)]'>\[Import [A.importexport_amt] ([A.get_import_price()])\]</a><BR><BR>"
+				contents += "<a href='?src=\ref[src];import=\ref[A]'>\[Import [A.importexport_amt] ([A.get_import_price()])\]</a><BR><BR>"
 		if(TAB_BOUNTIES)
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
 			contents += "<center>Bounties<BR>"
 			contents += "--------------<BR>"
 			contents += "Treasury: [SStreasury.treasury_value]m<BR>"
@@ -266,13 +285,13 @@
 			for(var/datum/roguestock/bounty/A in SStreasury.stockpile_datums)
 				contents += "[A.name]<BR>"
 				contents += "[A.desc]<BR>"
-				contents += "Total Collected: [A.held_items]<BR>"
+				contents += "Total Collected: [A.held_items[1] + A.held_items[2]]<BR>"
 				if(A.percent_bounty)
-					contents += "Bounty Price: <a href='?src=[REF(src)];setbounty=[REF(A)]'>[A.payout_price]%</a><BR><BR>"
+					contents += "Bounty Price: <a href='?src=\ref[src];setbounty=\ref[A]'>[A.payout_price]%</a><BR><BR>"
 				else
-					contents += "Bounty Price: <a href='?src=[REF(src)];setbounty=[REF(A)]'>[A.payout_price]</a><BR><BR>"
+					contents += "Bounty Price: <a href='?src=\ref[src];setbounty=\ref[A]'>[A.payout_price]</a><BR><BR>"
 		if(TAB_LOG)
-			contents += "<a href='?src=[REF(src)];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
 			contents += "<center>Log<BR>"
 			contents += "--------------</center><BR><BR>"
 			for(var/i = SStreasury.log_entries.len to 1 step -1)

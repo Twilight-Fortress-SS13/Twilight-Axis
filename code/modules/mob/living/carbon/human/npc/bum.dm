@@ -9,12 +9,12 @@ GLOBAL_LIST_INIT(bum_aggro, world.file2list("strings/rt/bumaggrolines.txt"))
 	dodgetime = 30
 	flee_in_pain = TRUE
 	possible_rmb_intents = list()
-	static_npc = TRUE
+
 	wander = FALSE
 
 /mob/living/carbon/human/species/human/northern/bum/ambush
 	aggressive=1
-	static_npc = FALSE
+
 	wander = TRUE
 
 /mob/living/carbon/human/species/human/northern/bum/retaliate(mob/living/L)
@@ -27,7 +27,7 @@ GLOBAL_LIST_INIT(bum_aggro, world.file2list("strings/rt/bumaggrolines.txt"))
 			say(pick(GLOB.bum_aggro))
 			linepoint(target)
 
-/mob/living/carbon/human/species/human/northern/bum/should_target(var/mob/living/L)
+/mob/living/carbon/human/species/human/northern/bum/should_target(mob/living/L)
 	if(L.stat != CONSCIOUS)
 		return FALSE
 	. = ..()
@@ -35,14 +35,16 @@ GLOBAL_LIST_INIT(bum_aggro, world.file2list("strings/rt/bumaggrolines.txt"))
 /mob/living/carbon/human/species/human/northern/bum/Initialize()
 	. = ..()
 	set_species(/datum/species/human/northern)
-	addtimer(CALLBACK(src, .proc/after_creation), 10)
+	spawn(10)
+		after_creation()
+	//addtimer(CALLBACK(src, PROC_REF(after_creation)), 10)
 
 /mob/living/carbon/human/species/human/northern/bum/after_creation()
 	..()
 	job = "Beggar"
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_GENERIC)
-	ADD_TRAIT(src, TRAIT_NOFATSTAM, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_NOROGSTAM, TRAIT_GENERIC)
 	equipOutfit(new /datum/outfit/job/roguetown/vagrant)
 
 /mob/living/carbon/human/species/human/northern/bum/npc_idle()

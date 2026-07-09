@@ -9,15 +9,27 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/adjust_pq,
 	/client/proc/hearallasghost,
 	/client/proc/admin_ghost,
-	/client/proc/ghost_up,
-	/client/proc/ghost_down,
+	/datum/admins/proc/start_vote,
+	/client/proc/toggle_autovote,
+	/datum/admins/proc/show_player_panel,
+	/datum/admins/proc/admin_heal,
+	/datum/admins/proc/admin_revive,
+	/datum/admins/proc/admin_sleep,
 	/client/proc/jumptoarea,
-	/client/proc/jumptokey,				
+	/client/proc/jumptokey,
+	/datum/admins/proc/checkpq,
+	/datum/admins/proc/adjustpq,
 	/client/proc/jumptomob,
 	/client/proc/returntolobby,
 	/datum/verbs/menu/Admin/verb/playerpanel,
 	/client/proc/check_antagonists,
-	/client/proc/cmd_admin_say			
+	/client/proc/cmd_admin_say,
+	/client/proc/deadmin,				/*destroys our own admin datum so we can play as a regular player*/
+	/client/proc/set_context_menu_enabled,
+	/client/proc/delete_player_book,
+	/client/proc/amend_player_book,
+	/client/proc/pull_book_file_names,
+	/client/proc/adminwho
 	)
 GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
 GLOBAL_PROTECT(admin_verbs_admin)
@@ -25,8 +37,6 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	return list(
 	/client/proc/adjusttriumph,
 	/client/proc/end_party,
-	/client/proc/set_context_menu_enabled,
-	/client/proc/deadmin,				/*destroys our own admin datum so we can play as a regular player*/
 	/client/proc/cmd_admin_say,			/*admin-only ooc chat*/
 	/client/proc/hide_verbs,			/*hides all our adminverbs*/
 	/client/proc/hide_most_verbs,		/*hides all our hideable adminverbs*/
@@ -57,8 +67,6 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/datum/admins/proc/set_admin_notice, /*announcement all clients see when joining the server.*/
 	/client/proc/admin_ghost,			/*allows us to ghost/reenter body at will*/
 	/client/proc/hearallasghost,
-	/client/proc/ghost_up,
-	/client/proc/ghost_down,
 	/client/proc/toggle_view_range,		/*changes how far we can see*/
 	/client/proc/getserverlogs,		/*for accessing server logs*/
 	/client/proc/getcurrentlogs,		/*for accessing server logs for the current round*/
@@ -109,7 +117,6 @@ GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/set_dynex_scale,
 	/client/proc/drop_dynex_bomb,
 	/client/proc/cinematic,
-	/client/proc/one_click_antag,
 	/client/proc/cmd_admin_add_freeform_ai_law,
 	/client/proc/object_say,
 	/client/proc/toggle_random_events,
@@ -192,11 +199,11 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/returntolobby,
 	/client/proc/set_tod_override
 	)
-GLOBAL_LIST_INIT(admin_verbs_possess, list(/proc/possess, /proc/release))
+GLOBAL_LIST_INIT(admin_verbs_possess, list(/proc/possess, GLOBAL_PROC_REF(release)))
 GLOBAL_PROTECT(admin_verbs_possess)
 GLOBAL_LIST_INIT(admin_verbs_permissions, list(/client/proc/edit_admin_permissions))
 GLOBAL_PROTECT(admin_verbs_permissions)
-GLOBAL_LIST_INIT(admin_verbs_poll, list(/client/proc/create_poll))
+GLOBAL_LIST_INIT(admin_verbs_poll, list(/client/proc/poll_panel))
 GLOBAL_PROTECT(admin_verbs_poll)
 
 //verbs which can be hidden - needs work
@@ -327,7 +334,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	verbs.Remove(/client/proc/hide_most_verbs, GLOB.admin_verbs_hideable)
 	verbs += /client/proc/show_verbs
 
-	to_chat(src, "<span class='interface'>Most of your adminverbs have been hidden.</span>")
+	to_chat(src, span_interface("Most of your adminverbs have been hidden."))
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Hide Most Adminverbs") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
 
@@ -338,7 +345,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	remove_admin_verbs()
 	verbs += /client/proc/show_verbs
 
-	to_chat(src, "<span class='interface'>Almost all of your adminverbs have been hidden.</span>")
+	to_chat(src, span_interface("Almost all of your adminverbs have been hidden."))
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Hide All Adminverbs") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
 
@@ -349,20 +356,17 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	verbs -= /client/proc/show_verbs
 	add_admin_verbs()
 
-	to_chat(src, "<span class='interface'>All of your adminverbs are now visible.</span>")
+	to_chat(src, span_interface("All of your adminverbs are now visible."))
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Show Adminverbs") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 
-/client/proc/set_context_menu_enabled(Enable as num)
+/client/proc/set_context_menu_enabled()
 	set category = "Admin"
-	set name = "Right-click Menu"
-	if(holder)
-		if(Enable)
-			show_popup_menus = TRUE
-		else
-			show_popup_menus = FALSE
-	else
-		show_popup_menus = FALSE
+	set name = "Toggle Right-Click Menus"
+	if(!holder)
+		return
+	show_popup_menus = !show_popup_menus
+	to_chat(src, show_popup_menus ? "Right click menus are now enabled" : "Right click menus are now disabled")
 
 /client/proc/admin_ghost()
 	set category = "GameMaster"
@@ -378,8 +382,21 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		if(!ghost.can_reenter_corpse)
 			log_admin("[key_name(usr)] re-entered corpse")
 			message_admins("[key_name_admin(usr)] re-entered corpse")
+		if(istype(ghost.mind.current, /mob/living))
+			var/mob/living/M = ghost.mind.current
+			var/datum/status_effect/incapacitating/sleeping/S = M.IsSleeping()
+			if(S && !M.IsKnockdown() && !M.IsStun() && !M.IsParalyzed()) // Wake them up unless they're asleep for another reason
+				M.remove_status_effect(S)
+				M.set_resting(FALSE, TRUE)
+			M.density = initial(M.density)
+			M.invisibility = initial(M.invisibility)
+		else
+			var/mob/M = ghost.mind.current
+			M.invisibility = initial(M.invisibility)
+			M.density = initial(M.density)
 		ghost.can_reenter_corpse = 1 //force re-entering even when otherwise not possible
 		ghost.reenter_corpse()
+		show_popup_menus = FALSE
 		SSblackbox.record_feedback("tally", "admin_verb", 1, "Admin Reenter") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	else if(isnewplayer(mob))
 //		to_chat(src, "<font color='red'>Error: Aghost: Can't admin-ghost whilst in the lobby. Join or Observe first.</font>")
@@ -391,9 +408,12 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		log_admin("[key_name(usr)] admin ghosted.")
 		message_admins("[key_name_admin(usr)] admin ghosted.")
 		var/mob/body = mob
-		body.ghostize(1)
+		body.invisibility = INVISIBILITY_MAXIMUM
+		body.density = 0
+		body.ghostize(TRUE, admin = TRUE)
 		if(body && !body.key)
 			body.key = "@[key]"	//Haaaaaaaack. But the people have spoken. If it breaks; blame adminbus
+		show_popup_menus = TRUE
 		SSblackbox.record_feedback("tally", "admin_verb", 1, "Admin Ghost") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/invisimin()
@@ -403,10 +423,18 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	if(holder && mob)
 		if(mob.invisibility == INVISIBILITY_OBSERVER)
 			mob.invisibility = initial(mob.invisibility)
-			to_chat(mob, "<span class='boldannounce'>Invisimin off. Invisibility reset.</span>")
+			to_chat(mob, span_boldannounce("Invisimin off. Invisibility reset."))
 		else
 			mob.invisibility = INVISIBILITY_OBSERVER
-			to_chat(mob, "<span class='adminnotice'><b>Invisimin on. You are now as invisible as a ghost.</b></span>")
+			to_chat(mob, span_adminnotice("<b>Invisimin on. You are now as invisible as a ghost.</b>"))
+
+/client/proc/toggle_autovote()
+	set name = "Toggle Magnum Mode"
+	set category = "Server"
+	if(check_rights(R_POLL))
+		SSticker.autovote = !SSticker.autovote
+		message_admins(SSticker.autovote ? "[key_name_admin(usr)] has enabled automatic round restart votes." : "[key_name_admin(usr)] has disabled automatic round restart votes.")
+		log_admin(SSticker.autovote ? "[key_name(usr)] has enabled automatic round restart votes." : "[key_name(usr)] has disabled automatic round restart votes.")
 
 /client/proc/check_antagonists()
 	set name = "Check Antagonists"
@@ -461,6 +489,13 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		holder.Secrets()
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Secrets Panel") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
+/client/proc/poll_panel()
+	set name = "Server Poll Management"
+	set category = "Admin"
+	if(!check_rights(R_POLL))
+		return
+	holder.poll_list_panel()
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Server Poll Management") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/findStealthKey(txt)
 	if(txt)
@@ -613,14 +648,14 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	log_admin("[key_name(usr)] gave [key_name(T)] the spell [S].")
-	message_admins("<span class='adminnotice'>[key_name_admin(usr)] gave [key_name_admin(T)] the spell [S].</span>")
+	message_admins(span_adminnotice("[key_name_admin(usr)] gave [key_name_admin(T)] the spell [S]."))
 
 	S = spell_list[S]
 	if(T.mind)
 		T.mind.AddSpell(new S)
 	else
 		T.AddSpell(new S)
-		message_admins("<span class='danger'>Spells given to mindless mobs will not be transferred in mindswap or cloning!</span>")
+		message_admins(span_danger("Spells given to mindless mobs will not be transferred in mindswap or cloning!"))
 
 /client/proc/remove_spell(mob/T in GLOB.mob_list)
 	set category = "Fun"
@@ -632,7 +667,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		if(S)
 			T.mind.RemoveSpell(S)
 			log_admin("[key_name(usr)] removed the spell [S] from [key_name(T)].")
-			message_admins("<span class='adminnotice'>[key_name_admin(usr)] removed the spell [S] from [key_name_admin(T)].</span>")
+			message_admins(span_adminnotice("[key_name_admin(usr)] removed the spell [S] from [key_name_admin(T)]."))
 			SSblackbox.record_feedback("tally", "admin_verb", 1, "Remove Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/give_disease(mob/living/T in GLOB.mob_living_list)
@@ -640,15 +675,15 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	set name = "Give Disease"
 	set desc = ""
 	if(!istype(T))
-		to_chat(src, "<span class='notice'>I can only give a disease to a mob of type /mob/living.</span>")
+		to_chat(src, span_notice("I can only give a disease to a mob of type /mob/living."))
 		return
-	var/datum/disease/D = input("Choose the disease to give to that guy", "ACHOO") as null|anything in sortList(SSdisease.diseases, /proc/cmp_typepaths_asc)
+	var/datum/disease/D = input("Choose the disease to give to that guy", "ACHOO") as null|anything in sortList(SSdisease.diseases, GLOBAL_PROC_REF(cmp_typepaths_asc))
 	if(!D)
 		return
 	T.ForceContractDisease(new D, FALSE, TRUE)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Disease") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	log_admin("[key_name(usr)] gave [key_name(T)] the disease [D].")
-	message_admins("<span class='adminnotice'>[key_name_admin(usr)] gave [key_name_admin(T)] the disease [D].</span>")
+	message_admins(span_adminnotice("[key_name_admin(usr)] gave [key_name_admin(T)] the disease [D]."))
 
 /client/proc/object_say(obj/O in world)
 	set category = "Special Verbs"
@@ -659,7 +694,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		return
 	O.say(message)
 	log_admin("[key_name(usr)] made [O] at [AREACOORD(O)] say \"[message]\"")
-	message_admins("<span class='adminnotice'>[key_name_admin(usr)] made [O] at [AREACOORD(O)]. say \"[message]\"</span>")
+	message_admins(span_adminnotice("[key_name_admin(usr)] made [O] at [AREACOORD(O)]. say \"[message]\""))
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Object Say") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 /client/proc/togglebuildmodeself()
 	set name = "Toggle Build Mode Self"
@@ -673,6 +708,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 /client/proc/check_ai_laws()
 	set name = "Check AI Laws"
 	set category = "Admin"
+	set hidden = 1
 	if(holder)
 		src.holder.output_ai_laws()
 
@@ -689,7 +725,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	holder.deactivate()
 
-	to_chat(src, "<span class='interface'>I are now a normal player.</span>")
+	to_chat(src, span_interface("I are now a normal player."))
 	log_admin("[src] deadmined themself.")
 	message_admins("[src] deadmined themself.")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Deadmin")
@@ -714,7 +750,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	if (!holder)
 		return //This can happen if an admin attempts to vv themself into somebody elses's deadmin datum by getting ref via brute force
 
-	to_chat(src, "<span class='interface'>I am now an admin.</span>")
+	to_chat(src, span_interface("I am now an admin."))
 	message_admins("[src] re-adminned themselves.")
 	log_admin("[src] re-adminned themselves.")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Readmin")
@@ -768,11 +804,53 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 /client/proc/end_party()
 	set category = "GameMaster"
 	set name = "EndPlaytest"
+	set hidden = 1
 	if(!holder)
 		return
 	if(!SSticker.end_party)
 		SSticker.end_party=TRUE
-		to_chat(src, "<span class='interface'>Ending enabled.</span>")
+		to_chat(src, span_interface("Ending enabled."))
 	else
 		SSticker.end_party=FALSE
-		to_chat(src, "<span class='interface'>Ending DISABLED.</span>")
+		to_chat(src, span_interface("Ending DISABLED."))
+
+/client/proc/delete_player_book()
+	set name = "Database Delete Player Book"
+	set category = "Debug"
+	set desc = ""
+	if(!holder)
+		return
+	var/player_book = input(src, "What is the book file you want to delete? (spaces and other characters are their url encode versions for the file name, so for example spaces are +)")
+	if(player_book)	
+		SSlibrarian.del_player_book(player_book)
+		message_admins("[src] has deleted the player book: [player_book]")
+	else
+		to_chat(src, span_notice("Either the book file doesn't exist or you have failed to type it in properly (you can look up the file name by the verb 'database book file names'"))
+
+/client/proc/pull_book_file_names()
+	set name = "Database Book File Names"
+	set category = "Debug"
+	set desc = ""
+	if(!holder)
+		return
+	var/list/book_titles = SSlibrarian.pull_player_book_titles()
+	if(!book_titles)
+		return
+	var/dat = ""
+	for(var/I in book_titles)
+		dat += "[I]<br>"
+	src << browse(dat, "window=reading;size=250x500;can_close=1;can_minimize=1;can_maximize=1;can_resize=1;titlebar=1")
+
+/client/proc/amend_player_book()
+	set name = "Database Amend Player Book"
+	set category = "Debug"
+	set desc = ""
+	if(!holder)
+		return
+	var/book_title = input(src, "What is the book file name?")
+	var/amend_type = alert(src, "What type of text do you want to amend?", "", "book_title", "author", "icon")
+	var/amend_text = input(src, "What do you want to amend it to? (you don't have to make it in the file name format, use normal spaces)")
+	if(SSlibrarian.amend_player_book(book_title, amend_type, amend_text))
+		message_admins("[src] has amended [book_title]'s [amend_type] to [amend_text]")
+	else
+		to_chat(src, span_notice("Either the book file doesn't exist or you have failed to type something in properly (you can look up the file name by the verb 'database book file names'"))

@@ -39,11 +39,11 @@
 	if(!istype(I, /obj/item/reagent_containers/food/snacks/customizable) && istype(I, /obj/item/reagent_containers/food/snacks))
 		var/obj/item/reagent_containers/food/snacks/S = I
 		if(I.w_class > WEIGHT_CLASS_SMALL)
-			to_chat(user, "<span class='warning'>The ingredient is too big for [src]!</span>")
+			to_chat(user, span_warning("The ingredient is too big for [src]!"))
 		else if((ingredients.len >= ingMax) || (reagents.total_volume >= volume))
-			to_chat(user, "<span class='warning'>I can't add more ingredients to [src]!</span>")
+			to_chat(user, span_warning("I can't add more ingredients to [src]!"))
 		else if(istype(I, /obj/item/reagent_containers/food/snacks/pizzaslice/custom) || istype(I, /obj/item/reagent_containers/food/snacks/cakeslice/custom))
-			to_chat(user, "<span class='warning'>Adding [I.name] to [src] would make a mess.</span>")
+			to_chat(user, span_warning("Adding [I.name] to [src] would make a mess."))
 		else
 			if(!user.transferItemToLoc(I, src))
 				return
@@ -54,7 +54,7 @@
 			S.reagents.trans_to(src,min(S.reagents.total_volume, 15), transfered_by = user) //limit of 15, we don't want our custom food to be completely filled by just one ingredient with large reagent volume.
 			foodtype |= S.foodtype
 			update_snack_overlays(S)
-			to_chat(user, "<span class='notice'>I add the [I.name] to the [name].</span>")
+			to_chat(user, span_notice("I add the [I.name] to the [name]."))
 			update_name(S)
 	else
 		. = ..()
@@ -243,7 +243,7 @@
 		var/obj/item/reagent_containers/food/snacks/breadslice/BS = I
 		if(finished)
 			return
-		to_chat(user, "<span class='notice'>I finish the [src.name].</span>")
+		to_chat(user, span_notice("I finish the [src.name]."))
 		finished = 1
 		name = "[customname] sandwich"
 		BS.reagents.trans_to(src, BS.reagents.total_volume, transfered_by = user)
@@ -280,45 +280,6 @@
 
 // Bowl ////////////////////////////////////////////////
 
-/obj/item/reagent_containers/glass/bowl
-	name = "bowl"
-	desc = ""
-	icon = 'icons/obj/food/soupsalad.dmi'
-	icon_state = "bowl"
-	reagent_flags = OPENCONTAINER
-	custom_materials = list(/datum/material/glass = 500)
-	w_class = WEIGHT_CLASS_NORMAL
-
-/obj/item/reagent_containers/glass/bowl/attackby(obj/item/I,mob/user, params)
-	if(istype(I, /obj/item/reagent_containers/food/snacks))
-		var/obj/item/reagent_containers/food/snacks/S = I
-		if(I.w_class > WEIGHT_CLASS_SMALL)
-			to_chat(user, "<span class='warning'>The ingredient is too big for [src]!</span>")
-		else if(contents.len >= 20)
-			to_chat(user, "<span class='warning'>I can't add more ingredients to [src]!</span>")
-		else
-			if(reagents.has_reagent(/datum/reagent/water, 10)) //are we starting a soup or a salad?
-				var/obj/item/reagent_containers/food/snacks/customizable/A = new/obj/item/reagent_containers/food/snacks/customizable/soup(get_turf(src))
-				A.initialize_custom_food(src, S, user)
-			else
-				var/obj/item/reagent_containers/food/snacks/customizable/A = new/obj/item/reagent_containers/food/snacks/customizable/salad(get_turf(src))
-				A.initialize_custom_food(src, S, user)
-	else
-		. = ..()
-	return
-
-/obj/item/reagent_containers/glass/bowl/on_reagent_change(changetype)
-	..()
-	update_icon()
-
-/obj/item/reagent_containers/glass/bowl/update_icon()
-	cut_overlays()
-	if(reagents && reagents.total_volume)
-		var/mutable_appearance/filling = mutable_appearance('icons/obj/food/soupsalad.dmi', "fullbowl")
-		filling.color = mix_color_from_reagents(reagents.reagent_list)
-		add_overlay(filling)
-	else
-		icon_state = "bowl"
 
 #undef INGREDIENTS_FILL
 #undef INGREDIENTS_SCATTER

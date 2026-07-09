@@ -54,6 +54,9 @@
 /obj/item/clothing/under/roguetown/tights/black
 	color = CLOTHING_BLACK
 
+/obj/item/clothing/under/roguetown/tights/purple
+	color = CLOTHING_PURPLE
+
 /obj/item/clothing/under/roguetown/tights/jester
 	desc = "Funny tights!"
 	color = "#1E3B20"
@@ -78,6 +81,15 @@
 	name = "pants"
 	icon_state = "sailorpants"
 
+/obj/item/clothing/under/roguetown/webs
+	name = "webbing"
+	desc = "a fine webbing made from spidersilk, popular fashion within the underdark"
+	gender = PLURAL
+	icon_state = "webs"
+	item_state = "webs"
+	r_sleeve_status = SLEEVE_NOMOD
+	l_sleeve_status = SLEEVE_NOMOD
+
 /obj/item/clothing/under/roguetown/trou
 	name = "work trousers"
 	desc = ""
@@ -86,7 +98,7 @@
 	item_state = "trou"
 //	adjustable = CAN_CADJUST
 	sewrepair = TRUE
-	armor = list("melee" = 10, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
+	armor = list("blunt" = 30, "slash" = 10, "stab" = 20, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
 	prevent_crits = list(BCLASS_CUT)
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
@@ -110,17 +122,20 @@
 	item_state = "chain_legs"
 //	adjustable = CAN_CADJUST
 	sewrepair = FALSE
-	armor = list("melee" = 100, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
-	prevent_crits = list(BCLASS_CUT, BCLASS_CHOP, BCLASS_BLUNT)
+	armor = list("blunt" = 60, "slash" = 100, "stab" = 80, "bullet" = 20, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
+	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
 	blocksound = CHAINHIT
 	var/do_sound = FALSE
 	drop_sound = 'sound/foley/dropsound/chain_drop.ogg'
 	anvilrepair = /datum/skill/craft/armorsmithing
+	smeltresult = /obj/item/ingot/steel
 	r_sleeve_status = SLEEVE_NOMOD
 	l_sleeve_status = SLEEVE_NOMOD
 
 /obj/item/clothing/under/roguetown/chainlegs/iron
 	icon_state = "ichain_legs"
+	anvilrepair = /datum/skill/craft/armorsmithing
+	smeltresult = /obj/item/ingot/iron
 
 /obj/item/clothing/under/roguetown/platelegs
 	name = "plated chausses"
@@ -130,8 +145,8 @@
 	item_state = "chain_legs"
 //	adjustable = CAN_CADJUST
 	sewrepair = FALSE
-	armor = list("melee" = 100, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
-	prevent_crits = list(BCLASS_CUT, BCLASS_CHOP, BCLASS_BLUNT)
+	armor = list("blunt" = 90, "slash" = 100, "stab" = 80, "bullet" = 50, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
+	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
 	blocksound = PLATEHIT
 	var/do_sound = FALSE
 	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'

@@ -31,6 +31,10 @@
 		D.set_vehicle_dir_layer(EAST, OBJ_LAYER)
 		D.set_vehicle_dir_layer(WEST, OBJ_LAYER)
 
+/mob/living/simple_animal/hostile/retaliate/rogue/saiga/death()
+	unbuckle_all_mobs()
+	.=..()
+
 /mob/living/simple_animal/hostile/retaliate/rogue/saiga
 	icon = 'icons/roguetown/mob/monster/saiga.dmi'
 	name = "saiga"
@@ -123,9 +127,6 @@
 	can_buckle = FALSE
 	aggressive = 1
 
-/mob/living/simple_animal/hostile/retaliate/rogue/saiga/saigakid/get_emote_frequency()
-	return 55100
-
 /mob/living/simple_animal/hostile/retaliate/rogue/saiga/simple_limb_hit(zone)
 	if(!zone)
 		return ""
@@ -138,7 +139,7 @@
 			return "snout"
 		if(BODY_ZONE_PRECISE_MOUTH)
 			return "snout"
-		if(BODY_ZONE_PRECISE_HAIR)
+		if(BODY_ZONE_PRECISE_SKULL)
 			return "head"
 		if(BODY_ZONE_PRECISE_EARS)
 			return "head"
@@ -188,8 +189,8 @@
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	attack_verb_continuous = "headbutts"
 	attack_verb_simple = "headbutt"
-	health = 200
-	maxHealth = 200
+	health = 400
+	maxHealth = 400
 	melee_damage_lower = 60
 	melee_damage_upper = 90
 	environment_smash = ENVIRONMENT_SMASH_NONE
@@ -261,6 +262,9 @@
 		D.set_vehicle_dir_layer(EAST, OBJ_LAYER)
 		D.set_vehicle_dir_layer(WEST, OBJ_LAYER)
 
+/mob/living/simple_animal/hostile/retaliate/rogue/saigabuck/death()
+	unbuckle_all_mobs()
+	.=..()
 
 /mob/living/simple_animal/hostile/retaliate/rogue/saigabuck/eat_plants()
 	//..()
@@ -282,7 +286,7 @@
 			return "snout"
 		if(BODY_ZONE_PRECISE_MOUTH)
 			return "snout"
-		if(BODY_ZONE_PRECISE_HAIR)
+		if(BODY_ZONE_PRECISE_SKULL)
 			return "head"
 		if(BODY_ZONE_PRECISE_EARS)
 			return "head"
@@ -337,10 +341,6 @@
 	tame = TRUE
 	can_buckle = FALSE
 	aggressive = 1
-
-/mob/living/simple_animal/hostile/retaliate/rogue/saiga/saigaboy/get_emote_frequency()
-	return 55100
-
 /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame
 	tame = TRUE
 

@@ -9,8 +9,8 @@
 	var/scan_desc = "" //description when detected by a health scanner
 	var/mob/living/carbon/owner //the poor bastard
 	var/obj/item/organ/brain/brain //the poor bastard's brain
-	var/gain_text = "<span class='notice'>I feel traumatized.</span>"
-	var/lose_text = "<span class='notice'>I no longer feel traumatized.</span>"
+	var/gain_text = span_notice("I feel traumatized.")
+	var/lose_text = span_notice("I no longer feel traumatized.")
 	var/can_gain = TRUE
 	var/random_gain = TRUE //can this be gained through random traumas?
 	var/resilience = TRAUMA_RESILIENCE_BASIC //how hard is this to cure?
@@ -40,8 +40,8 @@
 //Called when given to a mob
 /datum/brain_trauma/proc/on_gain()
 	to_chat(owner, gain_text)
-	RegisterSignal(owner, COMSIG_MOB_SAY, .proc/handle_speech)
-	RegisterSignal(owner, COMSIG_MOVABLE_HEAR, .proc/handle_hearing)
+	RegisterSignal(owner, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+	RegisterSignal(owner, COMSIG_MOVABLE_HEAR, PROC_REF(handle_hearing))
 
 //Called when removed from a mob
 /datum/brain_trauma/proc/on_lose(silent)

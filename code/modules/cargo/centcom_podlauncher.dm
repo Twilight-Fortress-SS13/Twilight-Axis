@@ -13,6 +13,7 @@
 	set name = "Config/Launch Supplypod"
 	set desc = ""
 	set category = "Admin"
+	set hidden = 1
 	var/datum/centcom_podlauncher/plaunch  = new(usr)//create the datum
 	plaunch.ui_interact(usr)//datum has a tgui component, here we open the window
 
@@ -437,7 +438,7 @@ force_open = FALSE, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.adm
 /datum/centcom_podlauncher/ui_close() //Uses the destroy() proc. When the user closes the UI, we clean up the temp_pod and supplypod_selector variables.
 	qdel(src)
 
-/datum/centcom_podlauncher/proc/updateCursor(var/launching) //Update the moues of the user
+/datum/centcom_podlauncher/proc/updateCursor(launching) //Update the moues of the user
 	if (holder) //Check to see if we have a client
 		if (launching) //If the launching param is true, we give the user new mouse icons.
 			holder.mouse_up_icon = 'icons/effects/supplypod_target.dmi' //Icon for when mouse is released
@@ -457,7 +458,7 @@ force_open = FALSE, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.adm
 	var/left_click = pa.Find("left")
 	if (launcherActivated)
 		//Clicking on UI elements shouldn't launch a pod
-		if(istype(target,/obj/screen))
+		if(istype(target,/atom/movable/screen))
 			return FALSE
 
 		. = TRUE
@@ -584,7 +585,7 @@ force_open = FALSE, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.adm
 	qdel(selector) //Delete the selector effect
 	. = ..()
 
-/datum/centcom_podlauncher/proc/supplypod_punish_log(var/list/whoDyin)
+/datum/centcom_podlauncher/proc/supplypod_punish_log(list/whoDyin)
 	var/podString = effectBurst ? "5 pods" : "a pod"
 	var/whomString = ""
 	if (LAZYLEN(whoDyin))
