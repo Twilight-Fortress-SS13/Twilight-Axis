@@ -1121,7 +1121,6 @@
 /obj/item/rogueweapon/knuckledusters/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_notice("Knuckledusters, similar to Katars, can still parry oncoming blows. Note that their fragility makes this a bit more of a daunting process, however, for unskilled swingers.")
-	//. += span_notice("Activate - while held in your current hand - to turn these into knuckles, which can be worn as gloves to greatly improve your unarmed damage and parrying chances.")
 
 /obj/item/rogueweapon/knuckledusters/silver
 	name = "silver knuckledusters"
@@ -1166,7 +1165,7 @@
 /obj/item/rogueweapon/knuckledusters/psy/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
-		pre_blessed = BLESSING_PSYDONIAN,\
+		pre_blessed = BLESSING_NONE,\
 		silver_type = SILVER_PSYDONIAN,\
 		added_force = 0,\
 		added_blade_int = 0,\

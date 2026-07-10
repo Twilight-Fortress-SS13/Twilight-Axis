@@ -50,6 +50,7 @@
 	RegisterSignal(parent, COMSIG_ITEM_DROPPED, PROC_REF(on_drop))
 	RegisterSignal(parent, COMSIG_ITEM_AFTERATTACK, PROC_REF(item_afterattack))
 	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
+	RegisterSignal(parent, COMSIG_ITEM_BROKEN, PROC_REF(on_item_broken), override = TRUE)
 
 	var/obj/item/I = parent
 	inactive_intents = I.possible_item_intents.Copy()
@@ -248,7 +249,32 @@
 				else
 					activate(user)
 		else
-			to_chat(user, span_info("You must be holding the sword in your active hand!"))
+			to_chat(user, span_info("You must be holding the weapon in your active hand!"))
+
+#define WEAPON_SWORD /obj/item/rogueweapon/sword/long/martyr
+#define WEAPON_AXE /obj/item/rogueweapon/greataxe/steel/doublehead/martyr
+#define WEAPON_MACE /obj/item/rogueweapon/mace/goden/martyr
+#define WEAPON_TRIDENT /obj/item/rogueweapon/spear/partizan/martyr
+
+/datum/component/martyrweapon/proc/on_item_broken(mob/user)
+	SIGNAL_HANDLER
+	var/obj/item/I = parent
+	I.visible_message(span_danger("[I] begins to glimmer and whine. It's changing..!"))
+	SSroguemachine.martyrweapon = null
+	addtimer(CALLBACK(src, PROC_REF(summon_weapon), I), 5 SECONDS, TIMER_UNIQUE)
+
+/datum/component/martyrweapon/proc/summon_weapon(obj/item/rogueweapon/weapon)
+	var/weapontype = pick(WEAPON_SWORD, WEAPON_MACE, WEAPON_TRIDENT, WEAPON_AXE)
+	var/obj/item/rogueweapon/newweapon = new weapontype(get_turf(weapon))
+	newweapon.visible_message(span_danger("[newweapon] hardens itself, finally."))
+	SSroguemachine.martyrweapon = newweapon
+	QDEL_NULL(weapon)
+	return
+
+#undef WEAPON_SWORD
+#undef WEAPON_AXE
+#undef WEAPON_MACE
+#undef WEAPON_TRIDENT
 
 //IF it gets dropped, somehow (likely delimbing), turn it off immediately.
 /datum/component/martyrweapon/proc/on_drop(datum/source, mob/user)
@@ -672,7 +698,7 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]."))
 			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
@@ -790,7 +816,7 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]."))
 			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
@@ -892,7 +918,7 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]."))
 			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
@@ -996,7 +1022,7 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]."))
 			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
@@ -1059,7 +1085,7 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]."))
 			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
@@ -1106,7 +1132,7 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]."))
 			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
@@ -1154,7 +1180,7 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]."))
 			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
@@ -1201,7 +1227,7 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]."))
 			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE
@@ -1252,7 +1278,7 @@
 				H.ignite_mob()
 			return FALSE
 		else	//Everyone else
-			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]]."))
+			to_chat(user, span_warning("A painful jolt across your entire body sends you to the ground. You cannot touch [src]."))
 			H.emote("groan", forced = TRUE)
 			H.Stun(10)
 			return FALSE

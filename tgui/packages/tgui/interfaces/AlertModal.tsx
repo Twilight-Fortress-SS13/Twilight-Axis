@@ -22,6 +22,36 @@ enum DIRECTION {
   Decrement = -1,
 }
 
+function renderButtonContent(button: string, large_buttons: BooleanLike) {
+  const [label, detail] = button.split('\n', 2);
+
+  if (!detail) {
+    return !large_buttons ? button : button.toUpperCase();
+  }
+
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        flexDirection: 'column',
+        gap: '2px',
+        lineHeight: 1.05,
+      }}
+    >
+      <span>{!large_buttons ? label : label.toUpperCase()}</span>
+      <span
+        style={{
+          color: '#ffd36a',
+          fontSize: '0.82em',
+          fontWeight: 700,
+        }}
+      >
+        {detail}
+      </span>
+    </span>
+  );
+}
+
 export function AlertModal(props) {
   const { act, data } = useBackend<Data>();
   const {
@@ -45,7 +75,11 @@ export function AlertModal(props) {
 
   const [selected, setSelected] = useState(0);
 
-  const windowWidth = 345 + (buttons.length > 2 ? 55 : 0);
+  const hasButtonDetails = buttons.some((button) => button.includes('\n'));
+  const messageLineBreaks = (message.match(/\n/g) || []).length;
+  const windowWidth = hasButtonDetails
+    ? 520
+    : 345 + (buttons.length > 2 ? 55 : 0);
 
   // very accurate estimate of padding for each num of buttons
   const paddingMagicNumber = 67 / buttons.length + 23;
@@ -53,7 +87,11 @@ export function AlertModal(props) {
   // At least one of the buttons has a long text message
   const isVerbose = buttons.some(
     (button) =>
-      textWidth(button, '', large_buttons ? 14 : 12) > // 14 is the larger font size for large buttons
+      textWidth(
+        button.replace('\n', ' '),
+        '',
+        large_buttons ? 14 : 12,
+      ) > // 14 is the larger font size for large buttons
       windowWidth / buttons.length - paddingMagicNumber,
   );
   const largeSpacing = isVerbose && large_buttons ? 20 : 15;
@@ -62,6 +100,8 @@ export function AlertModal(props) {
   const windowHeight =
     140 +
     (isVerbose ? largeSpacing * buttons.length : 0) +
+    (hasButtonDetails ? 16 * buttons.length : 0) +
+    messageLineBreaks * 12 +
     (message.length > 30 ? Math.ceil(message.length / 4) : 0) +
     (message.length && large_buttons ? 5 : 0);
 
@@ -103,7 +143,11 @@ export function AlertModal(props) {
         <Section fill>
           <Stack fill vertical>
             <Stack.Item m={1} grow>
-              <Box color="label" overflow="hidden">
+              <Box
+                color="label"
+                overflow="hidden"
+                style={{ whiteSpace: 'pre-line' }}
+              >
                 {message}
               </Box>
             </Stack.Item>
@@ -148,7 +192,7 @@ function HorizontalButtons(props: ButtonDisplayProps) {
             selected={selected === index}
             textAlign="center"
           >
-            {!large_buttons ? button : button.toUpperCase()}
+            {renderButtonContent(button, large_buttons)}
           </Button>
         </Stack.Item>
       ))}
@@ -190,7 +234,7 @@ function VerticalButtons(props: ButtonDisplayProps) {
             selected={selected === index}
             textAlign="center"
           >
-            {!large_buttons ? button : button.toUpperCase()}
+            {renderButtonContent(button, large_buttons)}
           </Button>
         </Stack.Item>
       ))}

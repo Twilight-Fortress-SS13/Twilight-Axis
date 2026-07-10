@@ -171,7 +171,6 @@ GLOBAL_LIST_INIT(burgher_positions, list( //Artisans, store owners what have you
 	"Apothecary",
 	"Innkeeper",
 	"Bathmaster",
-	"Town Crier",
 	"Magicians Associate",
 	"Mayor", //TA_EDIT
 	"Bailiff", //TA_EDIT

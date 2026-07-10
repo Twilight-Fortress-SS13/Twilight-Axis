@@ -203,6 +203,10 @@
 	name = "Gift - Armor Cosmetic, Shoulderguard"
 	path = /obj/item/clothing/cloak/tabard/stabard/donator_shoulderguard
 
+/datum/loadout_item/donator/universal/armorpiece_armharness
+	name = "Gift - Armor Cosmetic, Arm Harness"
+	path = /obj/item/enchantingkit/donator_universal_armharness
+
 /////////////////////////////
 // ! Player / Donor Kits ! //
 /////////////////////////////
@@ -628,5 +632,10 @@
 	name = "Donator Kit - Azurosa-Wrapped Sword"
 	path = /obj/item/enchantingkit/weapon/ollanius
 	ckeywhitelist = list("ollanius")
+
+/datum/loadout_item/donator/spaz_helm
+	name = "Donator Kit - Hound-Nosed Bascinet"
+	path = /obj/item/enchantingkit/spaz_helm
+	ckeywhitelist = list("seniorspaz")
 	sort_category = "Donator"
 */

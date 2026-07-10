@@ -9,18 +9,37 @@
 	var/list/target_items = list()
 	var/result_item = null
 	var/icon_loadout = null
+	/// Whether we'll be looking for exact types in target_items. This generally should be TRUE unless the user wants the elixir to be used on subtypes as well.
+	var/exact_type = FALSE
+
+/obj/item/enchantingkit/proc/can_morph_item(obj/item/I)
+	if(!I || !LAZYLEN(target_items))
+		return FALSE
+
+	for(var/T in target_items)
+		if(exact_type)
+			if(I.type == T)
+				return TRUE
+		else if(istype(I, T))
+			return TRUE
+
+	return FALSE
 
 /obj/item/enchantingkit/proc/get_result_type(obj/item/I)
-	if(!I)
+	if(!can_morph_item(I))
 		return null
 
 	var/result_type = null
 
-	if(LAZYLEN(target_items))
-		for(var/T in target_items)
-			if(istype(I, T))
-				result_type = target_items[T]
-				break
+	for(var/T in target_items)
+		if(exact_type)
+			if(I.type != T)
+				continue
+		else if(!istype(I, T))
+			continue
+
+		result_type = target_items[T]
+		break
 
 	if(!result_type && result_item)
 		result_type = result_item
@@ -33,6 +52,10 @@
 /obj/item/enchantingkit/proc/prepare_morph_target(obj/item/I, mob/user)
 	if(!I || !user)
 		return FALSE
+
+	if(I.GetComponent(/datum/component/conjured_item))
+		to_chat(user, span_warning("[src] cannot morph conjured items."))
+		return TRUE
 
 	if(I.loc == user)
 		user.temporarilyRemoveItemFromInventory(I, TRUE)
@@ -182,7 +205,7 @@
 	if(!I || !user)
 		return ..()
 
-	if(!is_type_in_list(I, target_items))
+	if(!can_morph_item(I))
 		return ..()
 
 	var/result_type = get_result_type(I)
@@ -235,7 +258,7 @@
 	if(!istype(I, /obj/item/rogueweapon))
 		return ..()
 
-	if(!is_type_in_list(I, target_items))
+	if(!can_morph_item(I))
 		return ..()
 
 	var/R_type = result_item
@@ -533,6 +556,12 @@
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Steel Rapier."
 	target_items = list(/obj/item/rogueweapon/sword/rapier)
 	result_item = /obj/item/rogueweapon/sword/donator_smallsword
+
+/obj/item/enchantingkit/donator_universal_armharness
+	name = "'Plate Arm Harness' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of Steel Bracers."
+	target_items = list(/obj/item/clothing/wrists/roguetown/bracers)
+	result_item = /obj/item/clothing/wrists/roguetown/bracers/armharness
 
 /////////////////////////////
 // ! Player / Donor Kits ! //
@@ -1096,6 +1125,16 @@
 
 	)
 	result_item = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/spartanbobby
+
+//spaz - Armet/Hounskull/Barbute
+/obj/item/enchantingkit/spaz_helm
+	name = "'hound-nosed bascinet' morphing elixir"
+	target_items = list(
+		/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/spaz,
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/spaz,
+		/obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor            = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor/spaz
+	)
+	result_item = null
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
