@@ -202,7 +202,7 @@
 	name = "Bat Form"
 	desc = ""
 	overlay_state = "bat_transform"
-	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/bat
+	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/bat/witch_shifted
 	knockout_on_death = 30 SECONDS
 
 /obj/effect/proc_holder/spell/targeted/shapeshift/witch/crow
@@ -210,7 +210,7 @@
 	overlay_state = "zad"
 	desc = ""
 	knockout_on_death = 15 SECONDS
-	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/bat/crow
+	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/bat/crow/witch_shifted
 	sound = 'sound/vo/mobs/bird/birdfly.ogg'
 
 /obj/effect/proc_holder/spell/targeted/shapeshift/witch/lesser_vernard
@@ -231,6 +231,24 @@
 	overlay_state = "cabbit_transform"
 	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit/witch_shifted
 
+/mob/living/simple_animal/hostile/retaliate/bat/witch_shifted
+	name = "bat"
+	desc = "A small fluttering creature. This one has a peculiar intelligence in its eyes..."
+	speed = 0
+	move_to_delay = 2
+	AIStatus = AI_OFF
+	can_have_ai = FALSE
+	wander = FALSE
+
+/mob/living/simple_animal/hostile/retaliate/bat/crow/witch_shifted
+	name = "zad"
+	desc = "A black bird with a peculiar intelligence in its eyes..."
+	speed = 0
+	move_to_delay = 2
+	AIStatus = AI_OFF
+	can_have_ai = FALSE
+	wander = FALSE
+
 /datum/intent/simple/claw/witch_cat
 	name = "scratch"
 	attack_verb = list("scratches", "claws")
@@ -238,6 +256,11 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/witch_shifted
 	name = "lesser volf"
 	desc = "A smaller, runtier variant of the classic volf that hounds the woods nearby. Rarely seen around these parts, and doesn't look nearly as dangerous as its larger counterparts. This one has a peculiar intelligence in its yellow eyes..."
+	speed = 0
+	move_to_delay = 2
+	AIStatus = AI_OFF
+	can_have_ai = FALSE
+	wander = FALSE
 	STASPD = 15
 	STASTR = 3
 	STACON = 5
@@ -249,6 +272,11 @@
 /mob/living/simple_animal/pet/cat/witch_shifted
 	name = "aloof cat"
 	desc = "A bored-seeming feline. This one has a peculiar intelligence in its green eyes..."
+	speed = 0
+	move_to_delay = 2
+	AIStatus = AI_OFF
+	can_have_ai = FALSE
+	wander = FALSE
 	defprob = 90
 	STASPD = 18
 	STASTR = 1
@@ -260,6 +288,11 @@
 /mob/living/simple_animal/pet/cat/rogue/black/witch_shifted
 	name = "voidblack cat"
 	desc = "Supposedly sacred to Necra, and just as interested in rats as their lesser counterparts. This one has a strange intelligence behind its dark, wide eyes..."
+	speed = 0
+	move_to_delay = 2
+	AIStatus = AI_OFF
+	can_have_ai = FALSE
+	wander = FALSE
 	defprob = 90
 	STASPD = 18
 	STASTR = 1
@@ -271,6 +304,11 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/fox/witch_shifted
 	name = "lesser vernard"
 	desc = "A smaller, runtier variant of the sneaky vernards that skulk the woods nearby. Rarely seen around these parts, and doesn't look nearly as dangerous as its larger counterparts. This one has a peculiar intelligence in its yellow eyes..."
+	speed = 0
+	move_to_delay = 2
+	AIStatus = AI_OFF
+	can_have_ai = FALSE
+	wander = FALSE
 	defprob = 90
 	STASPD = 18
 	STASTR = 2
@@ -283,6 +321,11 @@
 /mob/living/simple_animal/hostile/retaliate/smallrat/witch_shifted
 	name = "small rous"
 	desc = "Supposedly sacred to Pestra, these small and occasionally pestilent creachurs are commonly found in pantries and ships. This one seems to be a bit more smarter than the others..."
+	speed = 0
+	move_to_delay = 2
+	AIStatus = AI_OFF
+	can_have_ai = FALSE
+	wander = FALSE
 	defprob = 90
 	STASPD = 18
 	STASTR = 1
@@ -294,6 +337,11 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit/witch_shifted
 	name = "lesser cabbit"
 	desc = "Seeing one of these quick beasts is said to bring Xylix's fortune, along with their feet. It looks weak and innocent, and incredibly adorable."
+	speed = 0
+	move_to_delay = 2
+	AIStatus = AI_OFF
+	can_have_ai = FALSE
+	wander = FALSE
 	defprob = 90
 	STASPD = 20
 	STASTR = 1

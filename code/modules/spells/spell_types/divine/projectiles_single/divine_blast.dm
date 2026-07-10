@@ -2,7 +2,7 @@
 	name = "Divine Blast"
 	desc = "Shoot out a blast of divine power! Deals more damage to heretics(Psydonians/Inhumen) and Undead! \n\
 	Damage is increased by 100% versus simple-minded creechurs.\n\
-	Toggle arc mode (Ctrl+G) while the spell is active to fire it over intervening mobs. Arced attacks deal 25% less damage."
+	Toggle arc mode (Shift+G) while the spell is active to fire it over intervening mobs. Arced attacks deal 25% less damage."
 	clothes_req = FALSE
 	range = 12
 	projectile_type = /obj/projectile/energy/divineblast
@@ -115,11 +115,7 @@
 					H.blur_eyes(10)
 				if(/datum/patron/divine/noc)
 					H.visible_message(span_warning("Moonlight engulfs [H]"), span_warning("Moonlight engulfs me!"))
-					for(var/obj/O in range(0, H))	
-						O.extinguish()
-					for(var/mob/M in range(0, H)) // extinguish lights of target(zizo snuff pretty much but range 0 always)
-						for(var/obj/O in M.contents)
-							O.extinguish()
+					damage += (caster.get_stat(STATKEY_INT) * 2)
 				if(/datum/patron/divine/ravox)
 					H.Slowdown(2)
 					H.visible_message(span_warning("Divine chains briefly coil around [H]'s legs!"), span_warning("Divine chains briefly shackle around my legs!"))

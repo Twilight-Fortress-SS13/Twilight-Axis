@@ -28,6 +28,12 @@
 /datum/round_event_control/antagonist/solo/bandits/preRunEvent()
 	return EVENT_CANT_RUN
 
+/datum/round_event_control/antagonist/solo/bandits/get_antag_amount()
+	var/admin_slot = SSgamemode.get_admin_slot(antag_datum, storyteller_slot_key)
+	if(!isnull(admin_slot))
+		return max(0, admin_slot)
+	return SSgamemode.story_antag_slot_cap(antag_datum, roundstart = roundstart)
+
 /datum/round_event/antagonist/solo/bandits/start()
 	return
 

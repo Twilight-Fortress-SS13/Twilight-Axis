@@ -80,6 +80,13 @@
 		age_mod = newmod
 	. = ..()
 
+/mob/living/carbon/human/proc/get_advclass_datum()
+	RETURN_TYPE(/datum/advclass)
+	if(mind?.picked_advclass)
+		return mind.picked_advclass
+	if(advjob)
+		return SSrole_class_handler.get_advclass_by_name(advjob)
+
 /datum/advclass/proc/equipme(mob/living/carbon/human/H, dummy = FALSE)
 	// input sleeps....
 	set waitfor = FALSE
@@ -251,4 +258,3 @@
 
 //Final proc in the set for really silly shit
 ///datum/advclass/proc/extra_slop_proc_ending(mob/living/carbon/human/H)
-

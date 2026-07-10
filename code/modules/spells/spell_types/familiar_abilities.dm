@@ -103,6 +103,41 @@
 	log_game("[key_name(user)] sent a message to [key_name(summoner)] with contents [message]")
 	return TRUE
 
+/mob/living/simple_animal/pet/familiar/proc/clear_familiar_click_intercepts()
+	if(ranged_ability)
+		ranged_ability.deactivate(src)
+
+	if(click_intercept)
+		if(istype(click_intercept, /datum/action/cooldown))
+			var/datum/action/cooldown/cooldown_action = click_intercept
+			cooldown_action.unset_click_ability(src, refund_cooldown = TRUE)
+		else if(istype(click_intercept, /obj/effect/proc_holder))
+			var/obj/effect/proc_holder/proc_holder = click_intercept
+			proc_holder.remove_ranged_ability()
+		else
+			click_intercept = null
+
+	if(client)
+		for(var/datum/action/cooldown/spell/spell_action as anything in actions)
+			spell_action.UnregisterSignal(client, list(COMSIG_CLIENT_MOUSEDOWN, COMSIG_CLIENT_MOUSEUP))
+		update_mouse_pointer()
+
+/mob/living/simple_animal/pet/familiar/proc/refresh_familiar_action_buttons(force_rebuild = FALSE)
+	if(!client || !hud_used)
+		return
+
+	for(var/datum/action/action as anything in actions.Copy())
+		var/atom/movable/screen/movable/action_button/button = action.viewers[hud_used]
+		if(force_rebuild || !button || QDELETED(button) || !(button in client.screen))
+			if(button && !QDELETED(button))
+				client.screen -= button
+				qdel(button)
+			action.viewers -= hud_used
+			action.ShowTo(src)
+		action.build_all_button_icons(ALL, TRUE)
+
+	update_action_buttons(TRUE)
+
 /datum/action/cooldown/spell/familiar_transform
 	name = "Spirit Transformation"
 	desc = "Draw your form into itself, becoming a small orb that is wearable as a pendant, or revert to your original form."
@@ -117,10 +152,22 @@
 	spell_requirements = NONE
 	spell_impact_intensity = SPELL_IMPACT_NONE
 
-/datum/action/cooldown/spell/familiar_transform/cast(mob/living/simple_animal/pet/familiar/user)
+/datum/action/cooldown/spell/familiar_transform/IsAvailable(feedback = FALSE)
+	var/mob/living/simple_animal/pet/familiar/user = owner
+	if(istype(user) && istype(user.loc, /obj/item/magic/familiar/familiar_spirit))
+		var/old_check_flags = check_flags
+		check_flags &= ~AB_CHECK_IMMOBILE
+		. = ..(feedback)
+		check_flags = old_check_flags
+		return
+	return ..(feedback)
+
+/datum/action/cooldown/spell/familiar_transform/cast(atom/cast_on)
 	. = ..()
+	var/mob/living/simple_animal/pet/familiar/user = owner
 	if(!istype(user))
 		return FALSE
+
 	if(isturf(user.loc))
 		// we're on the ground somewhere, so we should become orb
 		var/obj/item/magic/familiar/familiar_spirit/spirit = new /obj/item/magic/familiar/familiar_spirit(user.loc)
@@ -128,19 +175,31 @@
 		spirit.icon_state = user.icon_living
 		spirit.name = user.name
 		spirit.desc = "A small orb, containing the spirit of [user.name]."
+		user.clear_familiar_click_intercepts()
 		user.forceMove(spirit)
 		user.status_flags |= GODMODE
+		user.reset_perspective()
+		user.refresh_familiar_action_buttons(TRUE)
 		return TRUE
-	else
-		if(user.health<=0) // you shouldn't be able to cast this while dead, but just in case
-			return FALSE
-		var/obj/item/magic/familiar/familiar_spirit/spirit = user.loc
-		if(!istype(spirit)) // we might be inside another item like warden tools
-			return FALSE
-		user.forceMove(get_turf(user))
-		user.status_flags &= ~GODMODE
-		qdel(spirit)
-		return TRUE
+
+	if(user.health <= 0) // you shouldn't be able to cast this while dead, but just in case
+		return FALSE
+
+	var/obj/item/magic/familiar/familiar_spirit/spirit = user.loc
+	if(!istype(spirit)) // we might be inside another item like warden tools
+		return FALSE
+
+	var/turf/T = get_turf(user)
+	if(!T)
+		return FALSE
+
+	user.clear_familiar_click_intercepts()
+	user.forceMove(T)
+	user.status_flags &= ~GODMODE
+	user.reset_perspective()
+	user.refresh_familiar_action_buttons(TRUE)
+	qdel(spirit)
+	return TRUE
 
 /datum/action/cooldown/spell/fae_brew
 	name = "Alchemical Stomach"
@@ -320,6 +379,16 @@
 	cooldown_time = 30 SECONDS
 	charge_required = FALSE
 
+/datum/action/cooldown/spell/arcyne_forge/elemental/IsAvailable(feedback = FALSE)
+	var/mob/living/simple_animal/pet/familiar/user = owner
+	if(istype(user) && conjured_item && !QDELETED(conjured_item) && user.loc == conjured_item)
+		var/old_check_flags = check_flags
+		check_flags &= ~AB_CHECK_IMMOBILE
+		. = ..(feedback)
+		check_flags = old_check_flags
+		return
+	return ..(feedback)
+
 /datum/action/cooldown/spell/arcyne_forge/elemental/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/simple_animal/pet/familiar/H = owner
@@ -353,18 +422,45 @@
 	R.AddComponent(/datum/component/conjured_item, GLOW_COLOR_EARTHEN)
 	RegisterSignal(R, COMSIG_ITEM_BROKEN, PROC_REF(revert))
 	RegisterSignal(R, COMSIG_ITEM_DROPPED, PROC_REF(revert_perspective))
+	H.clear_familiar_click_intercepts()
 	H.forceMove(R)
+	H.reset_perspective()
+	H.refresh_familiar_action_buttons(TRUE)
 	conjured_item = R
 	return TRUE
 
 /datum/action/cooldown/spell/arcyne_forge/elemental/proc/revert_perspective()
-	owner.reset_perspective()
+	var/mob/living/simple_animal/pet/familiar/H = owner
+	if(!istype(H))
+		return
+	H.reset_perspective()
+	H.refresh_familiar_action_buttons(TRUE)
 
 /datum/action/cooldown/spell/arcyne_forge/elemental/proc/revert()
-	if(conjured_item)
-		owner.forceMove(get_turf(owner))
-		owner.status_flags &= ~GODMODE
+	var/mob/living/simple_animal/pet/familiar/H = owner
+	if(!istype(H))
 		QDEL_NULL(conjured_item)
+		return
+
+	if(!conjured_item || QDELETED(conjured_item))
+		H.status_flags &= ~GODMODE
+		H.clear_familiar_click_intercepts()
+		H.reset_perspective()
+		H.refresh_familiar_action_buttons(TRUE)
+		return
+
+	var/turf/T = get_turf(H)
+	if(!T)
+		T = get_turf(conjured_item)
+	if(!T)
+		return
+
+	H.clear_familiar_click_intercepts()
+	H.forceMove(T)
+	H.status_flags &= ~GODMODE
+	H.reset_perspective()
+	H.refresh_familiar_action_buttons(TRUE)
+	QDEL_NULL(conjured_item)
 
 /datum/action/cooldown/spell/arcyne_forge/elemental/void // lmao
 	name = "Void Forge"

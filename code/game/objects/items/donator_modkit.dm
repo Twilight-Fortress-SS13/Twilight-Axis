@@ -9,18 +9,37 @@
 	var/list/target_items = list()
 	var/result_item = null
 	var/icon_loadout = null
+	/// Whether we'll be looking for exact types in target_items. This generally should be TRUE unless the user wants the elixir to be used on subtypes as well.
+	var/exact_type = FALSE
+
+/obj/item/enchantingkit/proc/can_morph_item(obj/item/I)
+	if(!I || !LAZYLEN(target_items))
+		return FALSE
+
+	for(var/T in target_items)
+		if(exact_type)
+			if(I.type == T)
+				return TRUE
+		else if(istype(I, T))
+			return TRUE
+
+	return FALSE
 
 /obj/item/enchantingkit/proc/get_result_type(obj/item/I)
-	if(!I)
+	if(!can_morph_item(I))
 		return null
 
 	var/result_type = null
 
-	if(LAZYLEN(target_items))
-		for(var/T in target_items)
-			if(istype(I, T))
-				result_type = target_items[T]
-				break
+	for(var/T in target_items)
+		if(exact_type)
+			if(I.type != T)
+				continue
+		else if(!istype(I, T))
+			continue
+
+		result_type = target_items[T]
+		break
 
 	if(!result_type && result_item)
 		result_type = result_item
@@ -33,6 +52,10 @@
 /obj/item/enchantingkit/proc/prepare_morph_target(obj/item/I, mob/user)
 	if(!I || !user)
 		return FALSE
+
+	if(I.GetComponent(/datum/component/conjured_item))
+		to_chat(user, span_warning("[src] cannot morph conjured items."))
+		return TRUE
 
 	if(I.loc == user)
 		user.temporarilyRemoveItemFromInventory(I, TRUE)
@@ -182,7 +205,7 @@
 	if(!I || !user)
 		return ..()
 
-	if(!is_type_in_list(I, target_items))
+	if(!can_morph_item(I))
 		return ..()
 
 	var/result_type = get_result_type(I)
@@ -235,7 +258,7 @@
 	if(!istype(I, /obj/item/rogueweapon))
 		return ..()
 
-	if(!is_type_in_list(I, target_items))
+	if(!can_morph_item(I))
 		return ..()
 
 	var/R_type = result_item
@@ -318,7 +341,7 @@
 
 /obj/item/enchantingkit/croppedhaubergeon
 	name = "'Cropped Haubergeon' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Bronze Haubergeon, anIron Haubergeon, or a Steel Haubergeon."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Bronze Haubergeon, an Iron Haubergeon, or a Steel Haubergeon."
 	target_items = list(
 		/obj/item/clothing/suit/roguetown/armor/chainmail/bronze		= /obj/item/clothing/suit/roguetown/armor/chainmail/bronze/donator,
 		/obj/item/clothing/suit/roguetown/armor/chainmail/iron			= /obj/item/clothing/suit/roguetown/armor/chainmail/iron/donator,
@@ -329,7 +352,7 @@
 
 /obj/item/enchantingkit/heartplate
 	name = "'Heartplate' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Bronze Cuirass, anIron Breastplate, a Steel Cuirass, or a set of Leather Armor."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Bronze Cuirass, an Iron Breastplate, a Steel Cuirass, or a set of Leather Armor."
 	target_items = list(
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/bronze		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/bronze/donator,
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/iron			= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/iron/donator,
@@ -453,7 +476,7 @@
 
 /obj/item/enchantingkit/plackart
 	name = "'Plackart' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Bronze Cuirass, an Iron Breastplate, a Steel Cuirass, a Fencing Cuirass,or a set of Leather Armor."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Bronze Cuirass, an Iron Breastplate, a Steel Cuirass, a Fencing Cuirass, or a set of Leather Armor."
 	target_items = list(
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/iron			= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/iron/donator_girdle,
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/bronze		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/bronze/donator_girdle,
@@ -462,6 +485,83 @@
 		/obj/item/clothing/suit/roguetown/armor/leather						= /obj/item/clothing/suit/roguetown/armor/leather/donator_girdle
 	)
 	result_item = null
+
+/obj/item/enchantingkit/donator_universal_armory
+	name = "'Elegant Armory' morphing elixir" //Small compromise to avoid bloating the Loadout tab. 
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of most Steel weapons, including the Decorated Sword and Dagger."
+	target_items = list(
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated 			= /obj/item/rogueweapon/huntingknife/idagger/steel/decorated/donator_elegant,
+		/obj/item/rogueweapon/huntingknife/idagger/steel					= /obj/item/rogueweapon/huntingknife/idagger/steel/donator_elegant,	
+		/obj/item/rogueweapon/mace/warhammer/steel 							= /obj/item/rogueweapon/mace/warhammer/steel/donator_elegant, 				
+		/obj/item/rogueweapon/mace/steel/silver 							= /obj/item/rogueweapon/mace/steel/silver/donator_elegant, 
+		/obj/item/rogueweapon/mace/goden/steel								= /obj/item/rogueweapon/mace/goden/steel/donator_elegant,	
+		/obj/item/rogueweapon/sword/short/messer							= /obj/item/rogueweapon/sword/short/messer/donator_elegant,				
+		/obj/item/rogueweapon/sword/long/dec 								= /obj/item/rogueweapon/sword/long/dec/donator_elegant, 
+		/obj/item/rogueweapon/sword/long/exe								= /obj/item/rogueweapon/sword/long/exe/donator_elegant,
+		/obj/item/rogueweapon/sword/rapier/dec								= /obj/item/rogueweapon/sword/rapier/dec/donator_elegant,				
+		/obj/item/clothing/gloves/roguetown/knuckles						= /obj/item/clothing/gloves/roguetown/knuckles/donator_elegant,	
+		/obj/item/rogueweapon/stoneaxe/woodcut/steel						= /obj/item/rogueweapon/stoneaxe/woodcut/steel/donator_elegant,
+		/obj/item/rogueweapon/woodstaff/quarterstaff/steel					= /obj/item/rogueweapon/woodstaff/quarterstaff/steel/donator_elegant,
+		/obj/item/rogueweapon/sword/rapier									= /obj/item/rogueweapon/sword/rapier/donator_elegant,
+		/obj/item/rogueweapon/sword/short									= /obj/item/rogueweapon/sword/short/donator_elegant,				
+		/obj/item/rogueweapon/sword/long									= /obj/item/rogueweapon/sword/long/donator_elegant,				
+		/obj/item/rogueweapon/sword/sabre									= /obj/item/rogueweapon/sword/sabre/donator_elegant,				
+		/obj/item/rogueweapon/sword/decorated								= /obj/item/rogueweapon/sword/decorated/donator_elegant,	
+		/obj/item/rogueweapon/flail/sflail									= /obj/item/rogueweapon/flail/sflail/donator_elegant,				
+		/obj/item/rogueweapon/greataxe/steel								= /obj/item/rogueweapon/greataxe/steel/donator_elegant,				
+		/obj/item/rogueweapon/spear/lance									= /obj/item/rogueweapon/spear/lance/donator_elegant,				
+		/obj/item/rogueweapon/mace/steel									= /obj/item/rogueweapon/mace/steel/donator_elegant,		
+		/obj/item/rogueweapon/stoneaxe/battle								= /obj/item/rogueweapon/stoneaxe/battle/donator_elegant,				
+		/obj/item/rogueweapon/spear/boar									= /obj/item/rogueweapon/spear/boar/donator_elegant,	
+		/obj/item/rogueweapon/greatsword									= /obj/item/rogueweapon/greatsword/donator_elegant,
+		/obj/item/rogueweapon/katar 										= /obj/item/rogueweapon/katar/donator_elegant, 														
+		/obj/item/rogueweapon/halberd										= /obj/item/rogueweapon/halberd/donator_elegant,					
+		/obj/item/rogueweapon/eaglebeak										= /obj/item/rogueweapon/eaglebeak/donator_elegant,
+		/obj/item/rogueweapon/sword											= /obj/item/rogueweapon/sword/donator_elegant
+	)
+	result_item = null
+
+/obj/item/enchantingkit/weapon/donator_universal_whips
+	name = "'Elegant Whip' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Whip."
+	target_items = list(/obj/item/rogueweapon/whip)
+	result_item = /obj/item/rogueweapon/example/donator_elegant_whip
+
+/obj/item/enchantingkit/weapon/donator_universal_urumi
+	name = "'Elegant Urumi' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of any Whip with an Alloyed Tip."
+	target_items = list(
+		/obj/item/rogueweapon/whip/antique,
+		/obj/item/rogueweapon/whip/bronze,
+		/obj/item/rogueweapon/whip/blacksteel,
+		/obj/item/rogueweapon/whip/silver,
+		/obj/item/rogueweapon/whip/psywhip_lesser
+	)
+	result_item = /obj/item/rogueweapon/example/donator_elegant_urumi
+
+/obj/item/enchantingkit/donator_universal_shield
+	name = "'Elegant Kite Shield' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Kite Shield."
+	target_items = list(/obj/item/rogueweapon/shield/tower/metal)
+	result_item = /obj/item/rogueweapon/shield/tower/metal/donator_elegant
+
+/obj/item/enchantingkit/weapon/donator_universal_grenzshortsword
+	name = "'Katzbalger Shortsword' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Steel Shortsword."
+	target_items = list(/obj/item/rogueweapon/sword/short)
+	result_item = /obj/item/rogueweapon/example/donator_grenzshortsword
+
+/obj/item/enchantingkit/donator_universal_grenzrapier
+	name = "'Smallsword Rapier' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Steel Rapier."
+	target_items = list(/obj/item/rogueweapon/sword/rapier)
+	result_item = /obj/item/rogueweapon/sword/donator_smallsword
+
+/obj/item/enchantingkit/donator_universal_armharness
+	name = "'Plate Arm Harness' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of Steel Bracers."
+	target_items = list(/obj/item/clothing/wrists/roguetown/bracers)
+	result_item = /obj/item/clothing/wrists/roguetown/bracers/armharness
 
 /////////////////////////////
 // ! Player / Donor Kits ! //
@@ -612,12 +712,20 @@
 	)
 	result_item = /obj/item/rogueweapon/eirenxiv/eirensword
 
-//pretzel - custom steel greatsword. PSYDON LYVES. PSYDON ENDVRES.
+//waffai - silver for monsters, steel for men
 /obj/item/enchantingkit/weapon/waff
 	name = "'Weeper's Lathe' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Greatsword"
-	target_items = list(/obj/item/rogueweapon/greatsword)		// i, uh. i really do promise i'm only gonna use it on steel greatswords.
-	result_item = /obj/item/rogueweapon/example/waffai_greatsword
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Kriegmesser"
+	target_items = list(/obj/item/rogueweapon/sword/long/kriegmesser,
+						/obj/item/rogueweapon/greatsword)
+	result_item = null
+	icon_loadout = /obj/item/rogueweapon/example/waffai_broadsword
+
+/obj/item/enchantingkit/weapon/wafflamberge
+	name = "'Xenolalia' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Flamberge"
+	target_items = list(/obj/item/rogueweapon/greatsword/grenz/flamberge)
+	result_item = /obj/item/rogueweapon/example/waffai_flamberge
 
 //inverserun claymore
 /obj/item/enchantingkit/weapon/inverserun
@@ -1017,6 +1125,16 @@
 
 	)
 	result_item = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/spartanbobby
+
+//spaz - Armet/Hounskull/Barbute
+/obj/item/enchantingkit/spaz_helm
+	name = "'hound-nosed bascinet' morphing elixir"
+	target_items = list(
+		/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/spaz,
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull/spaz,
+		/obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor            = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor/spaz
+	)
+	result_item = null
 
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
