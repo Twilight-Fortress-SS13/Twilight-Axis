@@ -361,13 +361,17 @@
 		if(islist(skill_map))
 			total += round(skill_map[skill_type] || 0)
 
-	if(has_trait(TRAIT_ARCYNE) && skill_type == /datum/skill/magic/arcane)
+	if(skill_type == /datum/skill/magic/arcane && has_trait(TAT_TRAIT_SPELLBLADE))
 		total += 3
+	else if(has_trait(TRAIT_ARCYNE) && skill_type == /datum/skill/magic/arcane)
+		total += 3
+	if(skill_type == /datum/skill/combat/arcyne && has_trait(TAT_TRAIT_SPELLBLADE))
+		total += 2
 
 	if(has_trait(TRAIT_CIVILIZEDBARBARIAN) && (skill_type == /datum/skill/combat/unarmed || skill_type == /datum/skill/combat/wrestling))
 		total += 1
 
-	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && skill_type == /datum/skill/magic/arcane)
+	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && !has_trait(TAT_TRAIT_SPELLBLADE) && skill_type == /datum/skill/magic/arcane)
 		total += 1
 
 	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && skill_type == /datum/skill/misc/reading)
