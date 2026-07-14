@@ -619,6 +619,11 @@
 	if(has_trait(TAT_TRAIT_WANTED))
 		if((trait_a == TRAIT_NOPAINSTUN && (trait_b == TAT_TRAIT_MAGE_INITIATE || trait_b == TAT_TRAIT_DIVINE_BOON_2)) || (trait_b == TRAIT_NOPAINSTUN && (trait_a == TAT_TRAIT_MAGE_INITIATE || trait_a == TAT_TRAIT_DIVINE_BOON_2)))
 			return null
+	if(owner_build?.directions?.get_role_choice() == TAT_ROLE_CHOICE_WRETCH)
+		if((trait_a == TAT_TRAIT_SPELLBLADE && trait_b == TAT_TRAIT_DIVINE_BOON_1) || (trait_b == TAT_TRAIT_SPELLBLADE && trait_a == TAT_TRAIT_DIVINE_BOON_1))
+			return null
+		if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_MINOR_SLOT_1) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_MINOR_SLOT_1))
+			return null
 
 	var/list/conflicts = get_trait_conflict_map()
 	var/list/a_conflicts = conflicts[trait_a]
