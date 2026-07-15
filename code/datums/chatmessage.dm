@@ -80,7 +80,10 @@
 		stack_trace("/datum/chatmessage created with [isnull(owner) ? "null" : "invalid"] mob owner")
 		qdel(src)
 		return
-	INVOKE_ASYNC(src, PROC_REF(generate_image), text, target, owner, extra_classes, lifespan)
+
+	extra_classes = extra_classes ? extra_classes.Copy() : list()
+	_extra_classes = extra_classes
+
 	if(extra_classes.Find("emote")) //TA EDIT START
 		font_size = 7
 		tgt_color = "#adadad"
@@ -93,8 +96,6 @@
 			if(VOICE_TYPE_FEM)
 				blip_tone = BLIP_TONE_FEMININE
 
-	_extra_classes = extra_classes.Copy()
-
 	if((length(text) > 1) && ((text[length(text)] == "!") && (text[length(text) - 1] == "!")))
 		exclaimed = TRUE
 
@@ -102,14 +103,25 @@
 	if(!extra_classes.Find("emote"))
 		tgt_color = extra_classes.Find("italics") ? target.chat_color_darkened : target.chat_color //TA EDIT END
 
+	INVOKE_ASYNC(src, PROC_REF(generate_image), text, target, owner, extra_classes, lifespan) //TA EDIT END
+
 /datum/chatmessage/Destroy()
-	if (owned_by)
-		if (owned_by.seen_messages)
+	premature_end = TRUE
+
+	if(owned_by)
+		UnregisterSignal(owned_by, COMSIG_PARENT_QDELETING)
+		if(owned_by.seen_messages)
 			LAZYREMOVEASSOC(owned_by.seen_messages, message_loc, src)
-		owned_by.images.Remove(message)
+		if(message)
+			owned_by.images.Remove(message)
+
 	owned_by = null
 	message_loc = null
 	message = null
+	_extra_classes = null
+	remaining_strings = null
+	text = null
+	current_string = null
 	return ..()
 
 /*
@@ -139,6 +151,11 @@
   * * lifespan - The lifespan of the message in deciseconds
   */
 /datum/chatmessage/proc/generate_image(text, atom/target, mob/owner, list/extra_classes, lifespan)
+	if(QDELETED(src) || QDELETED(target) || QDELETED(owner) || !owner.client)
+		return qdel(src)
+
+	extra_classes = extra_classes ? extra_classes : list()
+
 	// Register client who owns this message
 	owned_by = owner.client
 	RegisterSignal(owned_by, COMSIG_PARENT_QDELETING, .proc/on_parent_qdel)
@@ -218,9 +235,13 @@
 
 
 /datum/chatmessage/proc/finish_image_generation(mheight, atom/target, mob/owner, complete_text, lifespan)
+	if(QDELETED(src))
+		return
 	if(!owned_by || QDELETED(owned_by))
 		return qdel(src)
 	if(!target || QDELETED(target))
+		return qdel(src)
+	if(!owner || QDELETED(owner))
 		return qdel(src)
 	approx_lines = max(1, mheight / CHAT_MESSAGE_APPROX_LHEIGHT)
 	message_loc = target
@@ -258,7 +279,6 @@
 	animate(message, alpha = 150, time = CHAT_MESSAGE_SPAWN_TIME)
 
 	// Prepare for destruction
-	scheduled_destruction = world.time + (lifespan - CHAT_MESSAGE_EOL_FADE)
 	var/skip_anim = FALSE //TA EDIT START
 	if(HAS_TRAIT(message_loc, TRAIT_NO_RUNECHAT_ANIMATION))
 		skip_anim = TRUE
@@ -266,7 +286,7 @@
 		skip_anim = TRUE
 	if(skip_anim)
 		message.maptext = complete_text
-		addtimer(CALLBACK(src, PROC_REF(end_of_life)), lifespan - CHAT_MESSAGE_EOL_FADE, TIMER_UNIQUE|TIMER_OVERRIDE)
+		schedule_end_of_life(lifespan - CHAT_MESSAGE_EOL_FADE)
 	else
 		INVOKE_ASYNC(src, PROC_REF(spelling_loop))
 
@@ -291,14 +311,14 @@
 	return CHAT_SPELLING_PUNCTUATION[character] ? CHAT_SPELLING_PUNCTUATION[character] : 0
 
 /datum/chatmessage/proc/spelling_loop()
-	if(QDELETED(src))
+	if(QDELETED(src) || premature_end || !message || QDELETED(message) || !remaining_strings)
 		return
 
 	var/delay = CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER
 	var/direction = 1
 
 	var/skip_spelling = FALSE
-	if(isliving(message_loc))
+	if(isliving(message_loc) && !QDELETED(message_loc))
 		var/mobs_around = 0
 		for(var/mob/living/seer in oview(message_loc))
 			if(seer.client)
@@ -306,8 +326,9 @@
 		if(mobs_around > 4)
 			skip_spelling = TRUE
 	for(var/letter as anything in remaining_strings)
-		if(premature_end)
+		if(QDELETED(src) || premature_end || !message || QDELETED(message))
 			return
+
 		var/extra_delay = spelling_extra_delays(letter)
 		if(skip_spelling || isnull(extra_delay))
 			current_string += letter
@@ -316,41 +337,54 @@
 				delay += CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + extra_delay
 			continue
 
-		add_string(letter, direction, (extra_delay ? FALSE : TRUE))
+		if(!add_string(letter, direction, (extra_delay ? FALSE : TRUE)))
+			return
 		direction *= -1
 		sleep(CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + extra_delay)
+
+		// The datum or its image may be deleted while this async proc is sleeping.
+		if(QDELETED(src) || premature_end || !message || QDELETED(message))
+			return
+
 		delay += CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + extra_delay
 
-	if(skip_spelling)
-		add_string()
+	if(skip_spelling && !add_string())
+		return
 
-	if(!QDELETED(message))
-		animate(
-			message,
-			time = CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER,
-			pixel_w = 0,
-			pixel_z = 0,
-		)
-	addtimer(CALLBACK(src, PROC_REF(end_of_life)), delay + 2 SECONDS)
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return
+
+	animate(
+		message,
+		time = CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER,
+		pixel_w = 0,
+		pixel_z = 0,
+	)
+	schedule_end_of_life(delay + 2 SECONDS)
 
 /datum/chatmessage/proc/add_string(string = "", direction = 1, audible = TRUE)
-	if(QDELETED(src))
-		return
-	if(premature_end)
-		return
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return FALSE
 
-	_add_string(arglist(args))
+	return _add_string(arglist(args))
 
 /datum/chatmessage/proc/_add_string(string = "", direction = 1, audible = TRUE)
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return FALSE
+
 	current_string += string
 	message.maptext = MAPTEXT(turn_to_styled(current_string))
-	if(audible && !_extra_classes.Find("emote"))
+	if(audible && (!_extra_classes || !_extra_classes.Find("emote")))
 		/*
 		play_toot()
 		*/ // it's kinda dogshit rn
 		do_shift(direction)
 
+	return TRUE
+
 /datum/chatmessage/proc/play_toot()
+	if(QDELETED(src) || premature_end || !message_loc || QDELETED(message_loc))
+		return
 	if(world.time < last_toot_time + TOOT_COOLDOWN)
 		return
 
@@ -359,9 +393,12 @@
 	playsound(message_loc, 'modular_twilight_axis/sound/effects/chat_toots/toot1.ogg', 30, frequency = rand(blip_tone[1], blip_tone[2]))
 
 /datum/chatmessage/proc/do_shift(direction)
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return
+
 	var/exclaimed_multiplier = exclaimed ? 3 : 1
 
-	if(!_extra_classes.Find("emote"))
+	if(!_extra_classes || !_extra_classes.Find("emote"))
 		animate(
 			message,
 			time = CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER,
@@ -370,16 +407,18 @@
 			easing = ELASTIC_EASING,
 		)
 
-	if(source_shake)
+	if(source_shake && message_loc && !QDELETED(message_loc))
 		var/old_transform = message_loc.transform
 		var/old_pixel_w = message_loc.pixel_w
 		var/old_pixel_z = message_loc.pixel_z
+		var/matrix/shake_transform = matrix(message_loc.transform)
+		shake_transform.Turn(rand(2 * exclaimed_multiplier, 6 * (exclaimed_multiplier - 0.5) * direction))
 		animate(
 			message_loc,
 			time = CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + 0.3 - (exclaimed ? 0 : 0.1),
 			pixel_w = ((exclaimed_multiplier - 1) + rand(exclaimed_multiplier - 1, exclaimed_multiplier + (exclaimed ? 0 : 3))) * pick(-1, 1),
 			pixel_z = (exclaimed_multiplier + rand((exclaimed_multiplier - 1 + (exclaimed ? 0 : 3)) * direction, 1 * (direction ? direction : 1) * exclaimed_multiplier)),
-			transform = message_loc.transform.Turn(rand(2 * exclaimed_multiplier, 6 * (exclaimed_multiplier - 0.5) * direction)),
+			transform = shake_transform,
 			easing = ELASTIC_EASING,
 		)
 		animate(
@@ -411,17 +450,27 @@
 
 	addtimer(CALLBACK(src, PROC_REF(end_of_life)), delay + 0.1 SECONDS) 
 */ //TA EDIT END
+/datum/chatmessage/proc/schedule_end_of_life(delay)
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return FALSE
+
+	scheduled_destruction = world.time + delay
+	addtimer(CALLBACK(src, PROC_REF(end_of_life)), delay, TIMER_UNIQUE|TIMER_OVERRIDE)
+	return TRUE
+
 /**
   * Applies final animations to overlay CHAT_MESSAGE_EOL_FADE deciseconds prior to message deletion
   */
 /datum/chatmessage/proc/end_of_life(fadetime = CHAT_MESSAGE_EOL_FADE)
 	if(QDELETED(src))
 		return
-	animate(message, alpha = 0, pixel_z = -14, alpha = 0, time = fadetime, flags = ANIMATION_PARALLEL) //TA EDIT START
 
-	if(QDELETED(src))
+	premature_end = TRUE
+	if(!message || QDELETED(message))
+		qdel(src)
 		return
 
+	animate(message, pixel_z = -14, alpha = 0, time = fadetime, flags = ANIMATION_PARALLEL) //TA EDIT START
 	QDEL_IN(src, fadetime) //TA EDIT END
 
 /**
