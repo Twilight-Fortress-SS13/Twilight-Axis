@@ -95,7 +95,7 @@
 		switch(armorchoice)
 			if("Brigandine Set")
 				neck = /obj/item/clothing/neck/roguetown/gorget/steel
-				armor = /obj/item/clothing/suit/roguetown/armor/plate
+				armor = /obj/item/clothing/suit/roguetown/armor/brigandine
 				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 				pants = /obj/item/clothing/under/roguetown/brigandinelegs
 				wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine
