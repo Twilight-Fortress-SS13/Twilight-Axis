@@ -624,6 +624,8 @@
 			return null
 		if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TAT_TRAIT_MAGE_MINOR_SLOT_1) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TAT_TRAIT_MAGE_MINOR_SLOT_1))
 			return null
+		if((trait_a == TAT_TRAIT_WARRIOR_EXPERT && trait_b == TRAIT_HEAVYARMOR) || (trait_b == TAT_TRAIT_WARRIOR_EXPERT && trait_a == TRAIT_HEAVYARMOR))
+			return null
 
 	var/list/conflicts = get_trait_conflict_map()
 	var/list/a_conflicts = conflicts[trait_a]
