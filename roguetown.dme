@@ -3961,6 +3961,7 @@
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\wretch\lunacyembracer.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\wretch\skeletons.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\wretch\gudsklor.dm"
+#include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\wretch\deserter.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\burghers\mage_apprentice.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\church\acolyte.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\church\martyr.dm"
