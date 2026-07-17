@@ -514,7 +514,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/quiver/sling/fire_pot = TAT_ITEM_ENTRY("Fire Pots for Slings", 2.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "munition"), \
 	/obj/item/rogueweapon/woodstaff = TAT_ITEM_ENTRY("Wooden Staff", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/woodstaff/implement = TAT_ITEM_ENTRY("Lesser Staff", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
-	/obj/item/rogueweapon/woodstaff/implement/greater = TAT_ITEM_ENTRY("Greater Staff", 5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "magic"), \
 	/obj/item/rogueweapon/spear/billhook = TAT_ITEM_ENTRY("Billhook", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/spear/stone/copper = TAT_ITEM_ENTRY("Copper Spear", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/clothing/gloves/roguetown/chain/contraption/voltic = TAT_ITEM_ENTRY("Voltic Gauntlet", 4, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
