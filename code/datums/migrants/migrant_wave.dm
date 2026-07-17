@@ -100,6 +100,7 @@
 	min_pop = 45
 	is_raid = TRUE
 	spawn_landmark = "Bandit"
+	can_roll = FALSE
 	required_roles = list(
 		/datum/migrant_role/bandit = 1,
 	)

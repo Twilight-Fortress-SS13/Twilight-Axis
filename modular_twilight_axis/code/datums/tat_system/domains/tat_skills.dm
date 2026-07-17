@@ -683,12 +683,49 @@
 
 	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
 
+/datum/tat_skills/proc/get_arcyne_armament_skill_cap(skill_type)
+	var/cap = 0
+	var/has_arcyne_training = !!owner_build?.has_trait(TRAIT_ARCYNE) || !!owner_build?.has_trait(TAT_TRAIT_MAGE_INITIATE)
+	if(!has_arcyne_training)
+		return clamp(get_virtue_skill_floor(skill_type), 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
+
+	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
+	var/trained_cap = TAT_SKILL_COMBAT_CAP_WEAPON_TRAINED
+	var/expert_cap = TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT
+	var/master_cap = TAT_SKILL_COMBAT_CAP_TRAIT_MASTER
+	var/has_training_unlock = !!owner_build?.has_trait(TAT_TRAIT_WEAPON_TRAINING) || !!owner_build?.has_role_combat_training_unlock()
+	var/has_expert = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_EXPERT)
+	var/has_master = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_MASTER)
+	var/current_invested = get_invested_value(skill_type)
+	var/bonus_value = get_raw_bonus_value(skill_type)
+
+	cap = base_cap
+	if(has_training_unlock)
+		cap = trained_cap
+
+	if(has_expert)
+		var/expert_invested_target = max(current_invested, expert_cap - bonus_value)
+		if(expert_invested_target >= 0 && get_raw_total_value(skill_type, expert_invested_target) >= expert_cap && !would_violate_combat_hardcaps(skill_type, expert_invested_target))
+			cap = expert_cap
+
+	if(has_master && cap >= expert_cap)
+		var/master_invested_target = max(current_invested, master_cap - bonus_value)
+		if(master_invested_target >= 0 && get_raw_total_value(skill_type, master_invested_target) >= master_cap && !would_violate_combat_hardcaps(skill_type, master_invested_target))
+			cap = master_cap
+
+	cap = max(cap, get_virtue_skill_floor(skill_type))
+
+	return clamp(cap, 0, TAT_SKILL_NONCOMBAT_CAP_ABSOLUTE)
+
 /datum/tat_skills/proc/get_combat_skill_cap(skill_type)
 	if(!ispath(skill_type, /datum/skill/combat))
 		return TAT_SKILL_NONCOMBAT_CAP_BASIC_SYSTEM
 
 	if(ispath(skill_type, /datum/skill/combat/twilight_firearms))
 		return get_firearms_skill_cap(skill_type)
+
+	if(skill_type == /datum/skill/combat/arcyne)
+		return get_arcyne_armament_skill_cap(skill_type)
 
 	var/base_cap = TAT_SKILL_COMBAT_CAP_DEFAULT
 	var/trained_cap = TAT_SKILL_COMBAT_CAP_WEAPON_TRAINED
@@ -751,11 +788,16 @@
 	var/can_apply_cap_bonus = TRUE
 
 	if(skill_type == /datum/skill/magic/arcane)
-		var/magic_points = owner_build?.directions?.get_points(TAT_DIRECTION_MAGIC) || 0
-		cap = magic_points
-		if(owner_build?.has_trait(TRAIT_ARCYNE))
-			cap = max(cap, 3)
-		cap = min(cap, SKILL_LEVEL_EXPERT)
+		if(owner_build?.has_trait(TAT_TRAIT_SPELLBLADE))
+			cap = 3
+			if(owner_build?.directions?.get_role_choice() == TAT_ROLE_CHOICE_WRETCH)
+				cap = SKILL_LEVEL_MASTER
+		else
+			var/magic_points = owner_build?.directions?.get_points(TAT_DIRECTION_MAGIC) || 0
+			cap = magic_points
+			if(owner_build?.has_trait(TRAIT_ARCYNE))
+				cap = max(cap, 3)
+			cap = min(cap, SKILL_LEVEL_EXPERT)
 		can_apply_cap_bonus = FALSE
 
 	else if(skill_type == /datum/skill/magic/holy)

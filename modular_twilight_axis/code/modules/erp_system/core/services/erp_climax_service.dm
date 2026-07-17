@@ -9,17 +9,13 @@
 	. = ..()
 	controller = C
 
-/// Handles climax signal: message, schedule effects, stop until_climax links.
+/// Handles climax signal: message, effects, stop until_climax links.
 /datum/erp_climax_service/proc/on_arousal_climax(datum/source)
 	var/mob/living/carbon/human/who = source
 	if(!istype(who))
 		return
 
 	var/datum/component/arousal/A = who.GetComponent(/datum/component/arousal)
-	if(A)
-		if(A.erp_last_climax_fx_time && (world.time - A.erp_last_climax_fx_time) <= 2)
-			return
-		A.erp_last_climax_fx_time = world.time
 
 	var/list/active_raw = list()
 	SEND_SIGNAL(who, COMSIG_ERP_GET_LINKS, active_raw)
@@ -29,6 +25,14 @@
 		for(var/datum/erp_sex_link/L in active_raw)
 			if(L && !QDELETED(L) && L.is_valid())
 				active += L
+
+	if(should_defer_to_knot_owner(who, active))
+		return
+
+	if(A)
+		if(A.erp_last_climax_fx_time && (world.time - A.erp_last_climax_fx_time) <= 2)
+			return
+		A.erp_last_climax_fx_time = world.time
 
 	var/datum/erp_sex_link/best = null
 	if(active.len)
@@ -53,7 +57,12 @@
 		if(text)
 			controller.send_message(controller.spanify_scene_climax(text), best)
 
-	INVOKE_ASYNC(controller, TYPE_PROC_REF(/datum/erp_controller, handle_arousal_climax_effects), who, active)
+	var/mob/living/carbon/human/partner = null
+	if(best)
+		var/list/ctx = get_orgasm_context(who, best)
+		partner = ctx?["partner"]
+
+	handle_arousal_climax_effects(who, active)
 	for(var/datum/erp_sex_link/Lx in active)
 		if(!Lx || QDELETED(Lx) || !Lx.is_valid())
 			continue
@@ -76,14 +85,60 @@
 		who.playsound_local(who, 'sound/misc/mat/end.ogg', 100)
 
 	A?.spread_chain_orgasm(who)
-	var/mob/living/carbon/human/partner = null
-	if(best)
-		var/list/ctx = get_orgasm_context(who, best)
-		partner = ctx?["partner"]
-
 	A?.award_satisfaction_on_climax(who, partner)
 	A?.apply_climax_stress(who, partner)
 	return
+
+/// Lets the controller that owns the active knotting penis handle this climax.
+/datum/erp_climax_service/proc/should_defer_to_knot_owner(mob/living/carbon/human/who, list/active_links)
+	if(!istype(who) || !islist(active_links) || !active_links.len)
+		return FALSE
+	if(controller?.do_knot_action)
+		return FALSE
+
+	for(var/datum/erp_sex_link/L in active_links)
+		if(!L || QDELETED(L) || !L.is_valid())
+			continue
+
+		var/datum/erp_sex_organ/penis/P = null
+		var/datum/erp_sex_organ/other = null
+		if(istype(L.init_organ, /datum/erp_sex_organ/penis))
+			P = L.init_organ
+			other = L.target_organ
+		else if(istype(L.target_organ, /datum/erp_sex_organ/penis))
+			P = L.target_organ
+			other = L.init_organ
+		else
+			continue
+
+		if(!P || !P.have_knot || P.get_owner() != who)
+			continue
+
+		if(!other || QDELETED(other))
+			continue
+		if(!(other.erp_organ_type in list(SEX_ORGAN_VAGINA, SEX_ORGAN_ANUS, SEX_ORGAN_MOUTH)))
+			continue
+
+		if(!get_knot_controller_for_penis_link(who, P, L))
+			continue
+
+		return TRUE
+
+	return FALSE
+
+/datum/erp_climax_service/proc/get_knot_controller_for_penis_link(mob/living/carbon/human/top, datum/erp_sex_organ/penis/P, datum/erp_sex_link/L)
+	if(!istype(top) || !P || !L)
+		return null
+
+	var/datum/erp_controller/link_controller = L.session
+	if(link_controller && !QDELETED(link_controller) && link_controller.do_knot_action && link_controller.get_owner_penis_organ() == P)
+		return link_controller
+
+	var/datum/erp_controller/top_controller = SSerp?.get_controller_for(top)
+	if(top_controller && !QDELETED(top_controller) && top_controller.do_knot_action && top_controller.get_owner_penis_organ() == P)
+		return top_controller
+
+	return null
 
 /// Runs delayed climax effects and updates UI.
 /datum/erp_climax_service/proc/handle_arousal_climax_effects(mob/living/carbon/human/who, list/active_links)
@@ -107,8 +162,6 @@
 	if(islist(pens) && pens.len)
 		for(var/datum/erp_sex_organ/penis/P in pens)
 			if(!P || QDELETED(P))
-				continue
-			if(!P.producing || !P.producing.producing_reagent)
 				continue
 
 			var/datum/erp_sex_link/best_link = null
@@ -136,12 +189,20 @@
 					best_score = sc
 					best_link = Lp
 
-				// Кнот ищем отдельно от best:
-				// только если член — именно инициатор линка.
-				if(Lp.init_organ != P)
+				// Knotting is resolved separately from best_link and may use
+				// either side of the link as long as the knot owner enabled it.
+				var/datum/erp_controller/knot_controller = get_knot_controller_for_penis_link(top, P, Lp)
+				if(!knot_controller)
 					continue
 
-				var/datum/erp_sex_organ/other = Lp.target_organ
+				var/datum/erp_sex_organ/other = null
+				if(Lp.init_organ == P)
+					other = Lp.target_organ
+				else if(Lp.target_organ == P)
+					other = Lp.init_organ
+				else
+					continue
+
 				if(!other || QDELETED(other))
 					continue
 
@@ -157,7 +218,7 @@
 
 				knot_force_by_target[other] = max(knot_force_by_target[other] || 0, Lp.force)
 
-			if(controller.do_knot_action && P.have_knot && K && knot_candidates.len)
+			if(P.have_knot && K && knot_candidates.len)
 				var/max_units = max(1, P.count_to_action)
 				var/list/free_units = list()
 
@@ -199,6 +260,9 @@
 					var/slot = free_units[1]
 					free_units.Cut(1, 2)
 					K.try_knot_link(btm, P, T, penis_unit_id = slot, force_level = knot_force_by_target[T])
+
+			if(!P.producing || !P.producing.producing_reagent)
+				continue
 
 			if(best_link?.action && best_link.action.inject_timing == INJECT_ON_FINISH)
 				best_link.action.handle_inject(best_link, who)

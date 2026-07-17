@@ -209,24 +209,24 @@
 		"wizard_old", "wiza10", "wiza20", "wiza30", "wiza40",
 	)
 	loot_table = list(
-		/obj/item/book/granter/spell/noc/message                          = 15,
-		/obj/item/book/granter/spell/noc/fireball                         = 10,
-		/obj/item/book/granter/spell/noc/lbolt                            = 8,
+//		/obj/item/book/granter/spell/noc/message                          = 15,
+//		/obj/item/book/granter/spell/noc/fireball                         = 10,
+//		/obj/item/book/granter/spell/noc/lbolt                            = 8,
 		/obj/item/book/granter/spell/bonechill                            = 8,
-		/obj/item/book/granter/spell/noc/boulderstrike                    = 8,
-		/obj/item/book/granter/spell/noc/blink                            = 6,
-		/obj/item/book/granter/spell/noc/repulse                          = 6,
-		/obj/item/book/granter/spell/noc/mindlink                         = 5,
+//		/obj/item/book/granter/spell/noc/boulderstrike                    = 8,
+//		/obj/item/book/granter/spell/noc/blink                            = 6,
+//		/obj/item/book/granter/spell/noc/repulse                          = 6,
+//		/obj/item/book/granter/spell/noc/mindlink                         = 5,
 		/obj/item/book/granter/spell/random                               = 3,
 		/obj/item/storage/belt/rogue/pouch/coins/mid                      = 20,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot         = 15,
 	)
 	loot_table_lucky = list(
 		/obj/item/book/granter/spell/random                               = 20,
-		/obj/item/book/granter/spell/noc/mindlink                         = 15,
-		/obj/item/book/granter/spell/noc/lbolt                            = 15,
-		/obj/item/book/granter/spell/noc/boulderstrike                    = 10,
-		/obj/item/book/granter/spell/noc/mending                          = 8,
+//		/obj/item/book/granter/spell/noc/mindlink                         = 15,
+//		/obj/item/book/granter/spell/noc/lbolt                            = 15,
+//		/obj/item/book/granter/spell/noc/boulderstrike                    = 10,
+//		/obj/item/book/granter/spell/noc/mending                          = 8,
 		/obj/item/book/granter/spell/random                               = 10,
 		/obj/item/storage/belt/rogue/pouch/coins/rich                     = 15,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot         = 10,
@@ -241,10 +241,10 @@
 	)
 	loot_table = list(
 		/obj/item/book/granter/spell/random                               = 15,
-		/obj/item/book/granter/spell/noc/repulse                          = 12,
+//		/obj/item/book/granter/spell/noc/repulse                          = 12,
 		/obj/item/book/granter/spell/bonechill                            = 10,
-		/obj/item/book/granter/spell/noc/message                          = 8,
-		/obj/item/book/granter/spell/noc/mindlink                         = 6,
+//		/obj/item/book/granter/spell/noc/message                          = 8,
+//		/obj/item/book/granter/spell/noc/mindlink                         = 6,
 		/obj/item/natural/bone                                            = 20,
 		/obj/item/skull                                                   = 10,
 		/obj/item/storage/belt/rogue/pouch/coins/mid                      = 15,
@@ -253,10 +253,10 @@
 	loot_table_lucky = list(
 		/obj/item/book/granter/spell/random                               = 15,
 		/obj/item/book/granter/spell/random                               = 10,
-		/obj/item/book/granter/spell/noc/repulse                          = 15,
-		/obj/item/book/granter/spell/noc/mindlink                         = 15,
+//		/obj/item/book/granter/spell/noc/repulse                          = 15,
+//		/obj/item/book/granter/spell/noc/mindlink                         = 15,
 		/obj/item/book/granter/spell/bonechill                            = 10,
-		/obj/item/book/granter/spell/noc/mending                          = 8,
+//		/obj/item/book/granter/spell/noc/mending                          = 8,
 		/obj/item/storage/belt/rogue/pouch/coins/rich                     = 15,
 	)
 

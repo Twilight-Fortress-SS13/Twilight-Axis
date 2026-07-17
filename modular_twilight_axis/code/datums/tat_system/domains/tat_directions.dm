@@ -208,6 +208,17 @@
 			total += get_allocated_points(direction)
 	if(use_towner_battle_cost)
 		total += get_towner_battle_spent_points(direction_override, override_value)
+	total += get_ordinary_trait_spent_points()
+	return total
+
+/datum/tat_directions/proc/get_ordinary_trait_spent_points()
+	if(!owner_build?.traits)
+		return 0
+	var/total = 0
+	for(var/trait_id in owner_build.traits.selected)
+		if(get_trait_direction(trait_id) != TAT_DIRECTION_ORDINARY)
+			continue
+		total += get_trait_cost(trait_id) * owner_build.traits.get_trait_count(trait_id)
 	return total
 
 /datum/tat_directions/proc/get_next_point_cost(direction)
@@ -372,10 +383,12 @@
 		return TRUE
 	if(!trait_requirements_met(trait_id))
 		return FALSE
-	if(owner_build?.traits?.has_trait(trait_id))
-		return TRUE
 	var/direction = get_trait_direction(trait_id)
 	if(direction == TAT_DIRECTION_ORDINARY)
+		if(owner_build?.traits?.has_trait(trait_id))
+			return get_remaining_points() >= 0
+		return get_remaining_points() >= get_trait_cost(trait_id)
+	if(owner_build?.traits?.has_trait(trait_id))
 		return TRUE
 	return get_remaining_trait_points(direction) >= get_trait_cost(trait_id)
 
@@ -387,6 +400,8 @@
 		return "Requires [requirement_text]."
 	var/direction = get_trait_direction(trait_id)
 	if(direction == TAT_DIRECTION_ORDINARY)
+		if(get_remaining_points() < get_trait_cost(trait_id))
+			return "Not enough unspent direction points."
 		return null
 	if(get_remaining_trait_points(direction) < get_trait_cost(trait_id))
 		return "Not enough unspent [GLOB.tat_direction_names[direction] || direction] direction points."

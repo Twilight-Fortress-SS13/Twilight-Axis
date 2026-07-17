@@ -30,6 +30,7 @@
 #define TAT_TRAIT_TROPHY_BOUNTY "tat_trophy_bounty"
 #define TAT_TRAIT_PLATE_SUPPLIER "tat_plate_supplier"
 #define TAT_TRAIT_SPELLBLADE "tat_spellblade"
+#define TAT_TRAIT_SPELLFIST "tat_spellfist"
 
 #define TAT_TRAIT_BARDIC_INSPIRATION_T1 "tat_bardic_inspiration_t1"
 #define TAT_TRAIT_BARDIC_INSPIRATION_T2 "tat_bardic_inspiration_t2"
@@ -85,6 +86,7 @@
 #define TAT_TRAIT_SKILLED_ARMORER "tat_skilled_armorer"
 #define TAT_TRAIT_SKILLED_WEAPONSMITH "tat_skilled_weaponsmith"
 #define TAT_TRAIT_SKILLED_ARTISAN "tat_skilled_artisan"
+#define TAT_TRAIT_SKILLED_WOODSMAN "tat_skilled_woodsman"
 #define TAT_TRAIT_SKILLED_MASON "tat_skilled_mason"
 #define TAT_TRAIT_SKILLED_CLOTHIER "tat_skilled_clothier"
 #define TAT_TRAIT_SKILLED_SURVIVALIST "tat_skilled_survivalist"
@@ -98,10 +100,11 @@
 #define TAT_TRAIT_SKILL_CAP_BONUS_RULES list( \
 	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/weaponsmithing = 6, /datum/skill/craft/armorsmithing = 6, /datum/skill/craft/blacksmithing = 6, /datum/skill/craft/smelting = 6, /datum/skill/craft/engineering = 6, /datum/skill/labor/mining = 6, /datum/skill/craft/masonry = 6, /datum/skill/craft/ceramics = 6), \
 	TRAIT_ENCHANTING_EXPERT = list(/datum/skill/craft/blacksmithing = 6, /datum/skill/craft/smelting = 6, /datum/skill/craft/engineering = 6), \
-	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = 5, /datum/skill/craft/smelting = 5, /datum/skill/craft/engineering = 5), \
-	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = 5, /datum/skill/craft/masonry = 5), \
+	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = 5, /datum/skill/craft/smelting = 5, /datum/skill/craft/engineering = 5, /datum/skill/craft/masonry = 5), \
+	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = 5, /datum/skill/craft/engineering = 5), \
 	TAT_TRAIT_SKILLED_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = 5, /datum/skill/craft/engineering = 5), \
 	TAT_TRAIT_SKILLED_ARTISAN = list(/datum/skill/craft/crafting = 5, /datum/skill/craft/ceramics = 5), \
+	TAT_TRAIT_SKILLED_WOODSMAN = list(/datum/skill/labor/lumberjacking = 5, /datum/skill/craft/carpentry = 5), \
 	TAT_TRAIT_MASTER_CRAFTSMAN = list(/datum/skill/craft/crafting = 5, /datum/skill/craft/carpentry = 5, /datum/skill/craft/traps = 5), \
 	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = 5, /datum/skill/craft/carpentry = 5, /datum/skill/craft/ceramics = 5), \
 	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = 6), \
@@ -169,9 +172,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_EASYDISMEMBER, \
 	TRAIT_PERMAMUTE, \
 	TRAIT_SHIRTLESS, \
-	TRAIT_NODEF, \
-	TRAIT_REVERSE_GUIDANCE, \
-	TRAIT_LESSER_REVERSE_GUIDANCE \
+	TRAIT_NODEF \
 )
 
 #define TAT_RESIDENT_PUGILIST_DEFAULT "Dropkick - Pushback + Extra Damage"
@@ -197,7 +198,8 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 #define TAT_AVAILABLE_TRAITS_LIST \
 	TAT_TRAIT_SOUNDBREAKER = TAT_TRAIT_ENTRY("Soundbreaker", 2, "Unlocks the Soundbreaker combo style."), \
 	TAT_TRAIT_RONIN = TAT_TRAIT_ENTRY("Ronin", 2, "Unlocks the Ronin combo style."), \
-	TAT_TRAIT_SPELLBLADE = TAT_TRAIT_ENTRY("Spellblade", 2, "Grants a set of weapon-binding spells."), \
+	TAT_TRAIT_SPELLBLADE = TAT_TRAIT_ENTRY("Spellblade", 2, "Grants weapon-binding spells, +2 Arcyne Armament, and +3 Arcana. Wretches can raise Arcana to Master."), \
+	TAT_TRAIT_SPELLFIST = TAT_TRAIT_ENTRY("Spellfist", 2, "Requires Expert Pugilist and Mage Initiate. Grants unarmed arcyne combat spells and arcyne momentum."), \
 	TAT_TRAIT_RESIDENT = TAT_TRAIT_ENTRY("Resident", 1, "Grants a Meister account and ownership of a house in the city."), \
 	TAT_TRAIT_TRADER_LICENSE = TAT_TRAIT_ENTRY("Merchant's Writ", 1, "Unlocks sealed trader caches in the TAT item list."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T1 = TAT_TRAIT_ENTRY("Bardic Inspiration I", 1, "Gain tier 1 bardic inspiration, audience management verbs, and a songbook."), \
@@ -208,8 +210,8 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_WANTED = TAT_TRAIT_ENTRY("Wanted", -3, "Gain +5 stat points in the build pool, become an Outlaw, gain Forbidden Knowledge, and receive a bounty."), \
 	TAT_TRAIT_TROPHY_BOUNTY = TAT_TRAIT_ENTRY("Trophy Bounty", 1, "You can receive additional bonuses when wearing a headhook with monster heads."), \
 	TAT_TRAIT_WEAPON_TRAINING = TAT_TRAIT_ENTRY("Weapon Training", 1, "Allows raising melee combat skills to level 3 and grants +3 combat skill points when purchased."), \
-	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 2, "Raises selected combat skill caps from 3 to 4 and grants +6 combat skill points for expert-level training."), \
-	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 2, "Raises one expert combat skill cap from 4 to 5 and grants +4 combat skill points for master-level training. Requires Expert Warrior."), \
+	TAT_TRAIT_WARRIOR_EXPERT = TAT_TRAIT_ENTRY("Expert Warrior", 3, "Raises selected combat skill caps from 3 to 4 and grants +6 combat skill points for expert-level training."), \
+	TAT_TRAIT_WARRIOR_MASTER = TAT_TRAIT_ENTRY("Master Warrior", 3, "Raises one expert combat skill cap from 4 to 5 and grants +4 combat skill points for master-level training. Requires Expert Warrior."), \
 	TRAIT_DODGEEXPERT = TAT_TRAIT_ENTRY("Expert Dodger", 2, "Much better at dodging incoming strikes in light armor or with little armor. Heavy armor is too cumbersome for this style."), \
 	TRAIT_PARRYEXPERT = TAT_TRAIT_ENTRY("Expert Parry", 2, "Much better at parrying incoming strikes, with a higher chance to deflect blows using a weapon."), \
 	TRAIT_HEAVYARMOR = TAT_TRAIT_ENTRY("Plate Training", 3, "Can move freely in heavy armor."), \
@@ -237,7 +239,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_POLYGLOT = TAT_TRAIT_ENTRY("Polyglot", 1, "At spawn, choose one additional language to learn."), \
 	TAT_TRAIT_LOOTRAT = TAT_TRAIT_ENTRY("Loot Rat", 1, "Somehow in your journeys or life you collect a lot of different things and exotic treasures. Increase loot points by 10."), \
 	TAT_TRAIT_LOOTRAT_2 = TAT_TRAIT_ENTRY("Enormous Rat", 2, "You work on Guild with mountains of gold or you're just a lucky dungeon mudskipper. Increase loot points by 15."), \
-	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 1, "Magic 1. Guarantees Arcane 3. Arcane can only rise above 3 when the Magic direction reaches that level."), \
+	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 1, "Magic 1. Guarantees Arcane 3 and unlocks Arcyne Armament training. Weapon Training, Expert Warrior, and Master Warrior raise its cap normally."), \
 	TRAIT_JACKOFALLTRADES = TAT_TRAIT_ENTRY("Jack of All Trades", 2, "Skills cost half as much for you to raise."), \
 	TAT_TRAIT_MASTER_OF_WANDERING = TAT_TRAIT_ENTRY("Master of Wandering", 2, "Advanced wandering mastery in the Skills direction. Gives -1 cost to misc skills, improved to -2 for Adventurers and Wretches. Conflicts with Resident."), \
 	TAT_TRAIT_PLIANT_RENAME = TAT_TRAIT_ENTRY("Pliant Class Name", 0, "Requires 50+ player quality. Lets you rename your displayed class while keeping the Pliant admin marker prefix. Resident class selection is applied first, then you may choose the current class or a matching skill title as the base, and finally use that name, your active TAT slot name, or custom input."), \
@@ -249,14 +251,14 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_GRAVEROBBER = TAT_TRAIT_ENTRY("Experienced Grave Robber", 1, "Your experience with 'post-mortem artifact recovery' helps you resist Necra's curse placed on those who disturb resting places."), \
 	TRAIT_PURITAN_ADVENTURER = TAT_TRAIT_ENTRY("Interrogator", 1, "With a silver psycross, you can force the restrained to kneel before a crucifix and proclaim their true allegiance."), \
 	TRAIT_DECEIVING_MEEKNESS = TAT_TRAIT_ENTRY("Deceiving Meekness", 1, "People think you are weak. They are mistaken. You have learned to hide your vices and true beliefs from others."), \
-	TRAIT_NASTY_EATER = TAT_TRAIT_ENTRY("Inhumen Digestion", 1, "You can eat bad food, and water toxic to humen does not affect you."), \
+	TRAIT_NASTY_EATER = TAT_TRAIT_ENTRY("Inhumen Digestion", 1, "You can eat bad food, and water toxic to humen does not affect you. Costs 1 direction point."), \
 	TRAIT_GOODLOVER = TAT_TRAIT_ENTRY("Fabled Lover", 1, "It is a lucky thing to share your bed."), \
 	TAT_TRAIT_DIVINE_INITIATE = TAT_TRAIT_ENTRY("Divine Initiate", 1, "Grants miracles and devotion. Additional divine boon traits increase miracle access."), \
 	TAT_TRAIT_DIVINE_BOON_1 = TAT_TRAIT_ENTRY("Divine Boon I", 1, "Requires Divine Initiate. Raises your miracle package by one tier."), \
 	TAT_TRAIT_DIVINE_BOON_2 = TAT_TRAIT_ENTRY("Divine Boon II", 2, "Requires Divine Initiate and Divine Boon I. Raises your miracle package by one tier."), \
 	TAT_TRAIT_DIVINE_BOON_3 = TAT_TRAIT_ENTRY("Divine Boon III", 2, "Requires Divine Initiate and Divine Boon II. Raises your miracle package by one tier."), \
 	TAT_TRAIT_DIVINE_BLAST = TAT_TRAIT_ENTRY("Divine Blast", 1, "Requires Divine Boon III. Grants Divine Blast to divine faithful, or Unholy Blast to inhumen faithful."), \
-	TAT_TRAIT_MAGE_INITIATE = TAT_TRAIT_ENTRY("Mage Initiate", 2, "Grants one minor spell, three utility spells, +1 Arcane, and a Reading bonus equal to Magic direction points, up to +4. Also grants one extra utility spell per Arcane skill level."), \
+	TAT_TRAIT_MAGE_INITIATE = TAT_TRAIT_ENTRY("Mage Initiate", 2, "Grants one minor spell, three utility spells, +1 Arcane, Arcyne Armament training, and a Reading bonus equal to Magic direction points, up to +4. Also grants one extra utility spell per Arcane skill level."), \
 	TAT_TRAIT_MAGE_MAJOR_SLOT = TAT_TRAIT_ENTRY("Arcane Major Slot", 2, "Requires Mage Initiate. Grants +1 major spell slot."), \
 	TAT_TRAIT_MAGE_MINOR_SLOT_1 = TAT_TRAIT_ENTRY("Arcane Minor Slot I", 1, "Requires Mage Initiate. Grants +1 minor spell slot."), \
 	TAT_TRAIT_MAGE_MINOR_SLOT_2 = TAT_TRAIT_ENTRY("Arcane Minor Slot II", 1, "Requires Mage Initiate. Grants +1 minor spell slot."), \
@@ -292,10 +294,11 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_TRAINEE_TROUBADOUR = TAT_TRAIT_ENTRY("Trainee Troubadour", 1, "Reduces the cost of Music, Literacy, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 2, "Grants +30 peaceful skill points. Costs 2 Skills points; Residents get the first Handicraft/Straying Soul trait free, Traders always pay 1."), \
 	TRAIT_SMITHING_EXPERT = TAT_TRAIT_ENTRY("Expert Forgehand", 3, "Experienced with smithing and engineering. Weaponsmithing, Armorsmithing, Smithing, Smelting, Engineering, Mining, Masonry and Pottery can progress to Legendary levels."), \
-	TAT_TRAIT_SKILLED_FORGEHAND = TAT_TRAIT_ENTRY("Skilled Forgehand", 1, "Skilled with forge-work. Smithing, Smelting and Engineering can be picked to Master levels."), \
-	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 1, "Skilled with armor repair and fitting. Armorsmithing and Masonry can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_FORGEHAND = TAT_TRAIT_ENTRY("Skilled Forgehand", 1, "Skilled with forge-work. Smithing, Smelting, Engineering and Masonry can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 1, "Skilled with armor repair and fitting. Armorsmithing and Engineering can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_WEAPONSMITH = TAT_TRAIT_ENTRY("Skilled Weaponsmith", 1, "Skilled with weapon work. Weaponsmithing and Engineering can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_ARTISAN = TAT_TRAIT_ENTRY("Skilled Artisan", 1, "Skilled with general craftwork. Crafting and Pottery can be picked to Master levels."), \
+	TAT_TRAIT_SKILLED_WOODSMAN = TAT_TRAIT_ENTRY("Skilled Woodsman", 1, "Skilled with timber work. Lumberjacking and Woodwork can be picked to Master levels."), \
 	TAT_TRAIT_MASTER_CRAFTSMAN = TAT_TRAIT_ENTRY("Master Craftsman", 1, "Experienced with general craftwork. Crafting, Woodwork and Trapmaking can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_MASON = TAT_TRAIT_ENTRY("Skilled Architect", 1, "Skilled with stone and kiln work. Masonry, Woodwork and Pottery can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_COOK = TAT_TRAIT_ENTRY("Skilled Cook", 1, "Rod and steak, brothers! Cooking, Farming and Fishing can be picked to Master levels."), \
@@ -322,9 +325,10 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_BAD_MOOD = TAT_TRAIT_ENTRY("Bad Mood", -1, "All stress you receive is doubled."), \
 	TRAIT_PACIFISM = TAT_TRAIT_ENTRY("Pacifist", -4, "You cannot harm living beings."), \
 	TRAIT_CRITICAL_WEAKNESS = TAT_TRAIT_ENTRY("Critical Weakness", -3, "You are far more vulnerable to critical wounds."), \
-	TRAIT_NUDIST = TAT_TRAIT_ENTRY("Nudist", -2, "You refuse to wear clothes."), \
+	TRAIT_NUDIST = TAT_TRAIT_ENTRY("Nudist", -3, "You refuse to wear clothes."), \
+	TRAIT_SHIRTLESS = TAT_TRAIT_ENTRY("Shirtless", -1, "For one reason or another, you cannot bear covering yourself from the waist up."), \
 	TRAIT_INHUMEN_ANATOMY = TAT_TRAIT_ENTRY("Inhumen Anatomy", -1, "Your anatomy prevents you from wearing hats and boots. Grants +1 direction point as a negative oddity."), \
-	TRAIT_DISFIGURED = TAT_TRAIT_ENTRY("Disfigured", 1, "You are unknowned to everyone."), \
+	TRAIT_DISFIGURED = TAT_TRAIT_ENTRY("Disfigured", 1, "You are unknowned to everyone. Costs 1 direction point."), \
 	TRAIT_SPELLCOCKBLOCK = TAT_TRAIT_ENTRY("Bewitched", -1, "You cannot cast spells."), \
 	TRAIT_NOSLEEP = TAT_TRAIT_ENTRY("Sleepless", -1, "You cannot fall asleep without drugs or a blow to the head."), \
 	TRAIT_NORUN = TAT_TRAIT_ENTRY("No Running", -2, "You cannot run."), \
@@ -332,8 +336,6 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_EASYDISMEMBER = TAT_TRAIT_ENTRY("Easy Dismemberment", -3, "Your limbs are much easier to dismember."), \
 	TRAIT_PERMAMUTE = TAT_TRAIT_ENTRY("Permanent Mute", -2, "You are permanently mute and cannot speak."), \
 	TRAIT_NODEF = TAT_TRAIT_ENTRY("No Defense", -4, "You expose yourself completely in battle."), \
-	TRAIT_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Reverse Guidance", -2, "Something hinders you in battle. Anti-guidance: 20%."), \
-	TRAIT_LESSER_REVERSE_GUIDANCE = TAT_TRAIT_ENTRY("Lesser Reverse Guidance", -1, "Something faintly hinders you in battle. Anti-guidance: 10%."), \
 	TAT_TRAIT_ACCURSED = TAT_TRAIT_ENTRY("Dendor's Curse", -1, "You're cursed by the Sleeping Volf. Now you're shapshift to lesser creachure every nite.")
 
 #define TAT_TRAIT_STAT_POINT_RULES list( \
@@ -381,10 +383,11 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 
 #define TAT_TRAIT_SKILL_BONUS_RULES list( \
 	TRAIT_SMITHING_EXPERT = list(/datum/skill/craft/blacksmithing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/smelting = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/engineering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST), \
-	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/smelting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST), \
-	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_FORGEHAND = list(/datum/skill/craft/blacksmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/smelting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_ARMORER = list(/datum/skill/craft/armorsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_SKILLED_WEAPONSMITH = list(/datum/skill/craft/weaponsmithing = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/engineering = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_SKILLED_ARTISAN = list(/datum/skill/craft/crafting = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST), \
+	TAT_TRAIT_SKILLED_WOODSMAN = list(/datum/skill/labor/lumberjacking = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/carpentry = TAT_SKILL_DISCOUNT_BOOST), \
 	TAT_TRAIT_SKILLED_MASON = list(/datum/skill/craft/masonry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/carpentry = TAT_SKILL_DISCOUNT_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_DISCOUNT_BOOST), \
 	TRAIT_ALCHEMY_EXPERT = list(/datum/skill/craft/alchemy = TAT_SKILL_BASIC_BOOST), \
 	TAT_TRAIT_SKILLED_ALCHEMIST = list(/datum/skill/craft/alchemy = TAT_SKILL_DISCOUNT_BOOST), \

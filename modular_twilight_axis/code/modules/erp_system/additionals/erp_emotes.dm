@@ -23,12 +23,12 @@
 				if(iself(O) || ishalfelf(O) || isdarkelf(O))
 					if(!O.cmode)
 						to_chat(target, span_love("It tickles..."))
-					SEND_SIGNAL(O, COMSIG_SEX_RECEIVE_ACTION, user, 1, 0, FALSE, SEX_FORCE_LOW, SEX_SPEED_LOW, null)
+					SEND_SIGNAL(O, COMSIG_SEX_RECEIVE_ACTION, 1, 0, FALSE, SEX_FORCE_LOW, SEX_SPEED_LOW, null)
 
 			else if(J.zone_selected == BODY_ZONE_PRECISE_GROIN)
 				message_param = "лижет %t между ног."
 				to_chat(target, span_love("That feels nice..."))
-				SEND_SIGNAL(target, COMSIG_SEX_RECEIVE_ACTION, user, 2, 0, FALSE, SEX_FORCE_LOW, SEX_SPEED_LOW, null)
+				SEND_SIGNAL(target, COMSIG_SEX_RECEIVE_ACTION, 2, 0, FALSE, SEX_FORCE_LOW, SEX_SPEED_LOW, null)
 
 			else if(J.zone_selected == BODY_ZONE_HEAD)
 				message_param = "лижет щечку %t"

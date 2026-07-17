@@ -1,13 +1,14 @@
 /// Code-defined gamemode presets. These replace the old storyteller gods. Players vote between them (grouped
 /// into three pools - see GAMEMODE_POOL_* in __DEFINES/storytellers.dm) or admins fine-tune the roundstart
-/// antag config directly.
+/// antag config directly. A preset's vote pool is set by preset_pool, independent of its type hierarchy.
 
 /datum/storyteller/gamemode
 	always_votable = TRUE
 	hag_slots = 1
 
 // ----------------------------------------------------------------------------------------------------------
-// Extended - no hard antags, no soft antags; only a lone Hag may appear
+// PSYDON pool - lowest intensity. No hard antags. Extended opens nothing; Low Intensity opens a few wretches.
+// (Low Intensity is defined further down as no_antag/small_wretch but votes in this pool via preset_pool.)
 // ----------------------------------------------------------------------------------------------------------
 /datum/storyteller/gamemode/extended
 	name = "Extended"
@@ -83,7 +84,7 @@
 	)
 
 // ----------------------------------------------------------------------------------------------------------
-// Atleast one main antag will be selected
+// ASCENDANT pool - guaranteed roundstart hard antag. At least one main antag will be selected.
 // ----------------------------------------------------------------------------------------------------------
 /datum/storyteller/gamemode/guaranteed_antag
 	name = "High Intensity"
@@ -102,9 +103,9 @@
 	wretch_slot_cap = 9
 
 /datum/storyteller/gamemode/guaranteed_antag/low_wretch
-	name = "Medium Intensity"
+	name = "Tempered Intensity"
 	vote_desc = "Гарантированный крупный антагонист случайного типа. Также присутствует несколько малых антагонистов."
-	desc = "Гарантированный раундстартовый крупный антагонист с более агрессивным масштабированием от онлайна. До 4 изгоев (Wretches). До 1 гнолла. Карга (Hag) присутствует."
+	desc = "Гарантированный раундстартовый крупный антагонист с более агрессивным масштабированием от онлайна. До 4 изгоев (Wretches). До 1 гнолла. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
 	color_theme = "#7a1f1f"
 	hard_mult = 2
 	block_soft = FALSE
@@ -113,12 +114,12 @@
 	wretch_slot_cap = 4
 
 // ----------------------------------------------------------------------------------------------------------
-// Just wretches/gnolls/hags, etc
+// TEN pool - no hard antags, soft antags only. Standard is the lighter option, Medium the default fallback.
 // ----------------------------------------------------------------------------------------------------------
-/datum/storyteller/gamemode/no_antag	// DEFAULT
-	name = "Standard Intensity"
+/datum/storyteller/gamemode/no_antag	// DEFAULT (inconclusive-vote fallback)
+	name = "Medium Intensity"
 	vote_desc = "Без крупных антагонистов. Малые антагонисты масштабируются умеренно."
-	desc = "Без крупных антагонистов. Изгои (Wretches) масштабируются обычно (от 5 до 12). До 3 гноллов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
+	desc = "Без крупных антагонистов. Изгои (Wretches) масштабируются обычно: от 5 до 12. До 3 гноллов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
 	welcome_text = "Тёплый дневной свет пробуждает вас ото сна..."
 	color_theme = "#2b8c87"
 	preset_pool = GAMEMODE_POOL_NOANTAG
@@ -130,15 +131,26 @@
 	roundstart_prob = 50
 	guarantees_roundstart_roleset = FALSE
 
+/datum/storyteller/gamemode/no_antag/standard
+	name = "Standard Intensity"
+	vote_desc = "Без крупных антагонистов. Умеренное количество малых антагонистов."
+	desc = "Без крупных антагонистов. До 6 изгоев (Wretches). До 2 гноллов. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
+	color_theme = "#37b3a6"
+	allow_dreamwalker = FALSE
+	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
+	wretch_slot_cap = 6
+
+// Low Intensity - votes in the PSYDON pool (see preset_pool) despite being a no_antag subtype.
 /datum/storyteller/gamemode/no_antag/small_wretch
 	name = "Low Intensity"
-	vote_desc = "Без крупных антагонистов. Малых антагонистов меньше."
-	desc = "Без крупных антагонистов. Изгои (Wretches) фиксированы на 5 слотах. До 1 гнолла. Карга (Hag) присутствует. Могут появиться сноходцы (Dreamwalker)."
+	vote_desc = "Без крупных антагонистов. Малых антагонистов совсем мало."
+	desc = "Без крупных антагонистов. Изгои (Wretches) фиксированы на 4 слотах. Гноллы не появляются. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
 	welcome_text = "\"Любовь витает в воздухе? Нет же; это пахнут свежеиспечённые пироги на подоконниках!\""
 	color_theme = "#1f6b67"
+	preset_pool = GAMEMODE_POOL_EXTENDED
 	allow_dreamwalker = FALSE
-	preferred_gnoll_mode = GNOLL_SCALING_SINGLE	// max 1
-	wretch_slot_cap = 5
+	preferred_gnoll_mode = GNOLL_SCALING_NONE
+	wretch_slot_cap = 4
 	roundstart_prob = 0
 
 	starting_point_multipliers = list(
