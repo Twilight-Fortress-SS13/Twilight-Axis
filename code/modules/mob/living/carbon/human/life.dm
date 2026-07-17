@@ -37,6 +37,9 @@
 		return 0
 
 	SEND_SIGNAL(src, COMSIG_HUMAN_LIFE)
+	// TA EDIT START - hygiene system
+	hygiene_process()
+	// TA EDIT END - hygiene system
 
 	if(advsetup)
 		Stun(50)

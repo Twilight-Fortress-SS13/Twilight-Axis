@@ -26,6 +26,7 @@
 #define span_blue(str) ("<span class='blue'>" + (str) + "</span>")
 #define span_blueteamradio(str) ("<span class='blueteamradio'>" + (str) + "</span>")
 #define span_bloody(str) ("<span class='bloody '>" + (str) + "</span>")
+#define span_dirty(str) ("<span class='dirty'>" + (str) + "</span>")
 #define span_bold(str) ("<span class='bold'>" + (str) + "</span>")
 #define span_boldannounce(str) ("<span class='boldannounce'>" + (str) + "</span>")
 #define span_boldnotice(str) ("<span class='boldnotice'>" + (str) + "</span>")

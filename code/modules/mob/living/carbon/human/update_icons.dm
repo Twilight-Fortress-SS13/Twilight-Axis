@@ -1720,6 +1720,11 @@ generate/load female uniform sprites matching all previously decided variables
 		var/mutable_appearance/pic = mutable_appearance(clothing_icon, -layer2use)
 		standing.overlays.Add(pic)
 
+	// TA EDIT START - hygiene system
+	if(!isinhands && GetComponent(/datum/component/decal/dirt))
+		hygiene_apply_worn_dirt_overlay(standing, file2use, t_state, layer2use, sleeveindex, boobed_overlay)
+	// TA EDIT END - hygiene system
+
 	standing = center_image(standing, isinhands ? inhand_x_dimension : worn_x_dimension, isinhands ? inhand_y_dimension : worn_y_dimension)
 
 	if(worn_offsets)
