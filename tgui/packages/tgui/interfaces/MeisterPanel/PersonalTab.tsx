@@ -14,15 +14,9 @@ import {
   SEAL_RED,
   sectionHeaderStyle,
 } from '../common/parchment';
-import { type TabProps } from './types';
+import type { TabProps } from './types';
 
-const DENOMS = [
-  { id: 'GOLD_ROCKHILL', label: 'Gold', value: 14 },
-  { id: 'GOLD', label: 'Gold', value: 10 },
-  { id: 'SILVER', label: 'Silver', value: 5 },
-  { id: 'BRONZE', label: 'Bronze', value: 1 },
-];
-
+// TA EDIT START
 const DENOMS_DUN_WORLD = [
   { id: 'GOLD', label: 'Gold', value: 10 },
   { id: 'SILVER', label: 'Silver', value: 5 },
@@ -33,19 +27,22 @@ const DENOMS_ROCKHILL = [
   { id: 'GOLD', label: 'Gold', value: 14 },
   { id: 'BRONZE', label: 'Bronze', value: 1 },
 ];
+// TA EDIT END
 
 export const PersonalTab = ({ data, act }: TabProps) => {
   const [denom, setDenom] = useState<string>('GOLD');
   const [coinAmount, setCoinAmount] = useState<string>('');
   const [repayAmount, setRepayAmount] = useState<string>('');
 
+  // TA EDIT START
+  const activeDenoms =
+    data.ta_map === 'Rockhill' ? DENOMS_ROCKHILL : DENOMS_DUN_WORLD;
   const numericCoins = parseInt(coinAmount, 10) || 0;
-  const denomMod = DENOMS.find((d) => d.id === denom)?.value ?? 1;
+  const denomMod = activeDenoms.find((d) => d.id === denom)?.value ?? 1;
+  // TA EDIT END
   const totalDraw = numericCoins * denomMod;
   const drawDisabled =
-    numericCoins < 1 ||
-    numericCoins > 20 ||
-    totalDraw > data.account_balance;
+    numericCoins < 1 || numericCoins > 20 || totalDraw > data.account_balance;
 
   const numericRepay = parseInt(repayAmount, 10) || 0;
   const loan = data.active_loan;
@@ -53,6 +50,24 @@ export const PersonalTab = ({ data, act }: TabProps) => {
     !loan ||
     numericRepay < 1 ||
     numericRepay > Math.min(loan.remaining, data.account_balance);
+
+  // TA EDIT START
+  const denominationButtons = activeDenoms.map((d) => (
+    <button
+      type="button"
+      key={d.id}
+      style={{
+        ...inkButtonStyle({}),
+        marginRight: 4,
+        fontWeight: denom === d.id ? 'bold' : 'normal',
+        background: denom === d.id ? 'var(--p-tab-active-bg)' : BUTTON_BG,
+      }}
+      onClick={() => setDenom(d.id)}
+    >
+      {d.label} ({d.value}m)
+    </button>
+  ));
+  // TA EDIT END
 
   return (
     <div style={cardStyle}>
@@ -69,49 +84,7 @@ export const PersonalTab = ({ data, act }: TabProps) => {
       <div style={sectionHeaderStyle}>Withdraw Coin</div>
       <div style={fieldRowStyle}>
         <div style={fieldLabelStyle}>Denomination</div>
-        {data.ta_map === 'Rockhill' ? (
-          <div style={fieldValueStyle}>
-            {DENOMS_ROCKHILL.map((d) => (
-              <button
-                type="button"
-                key={d.id}
-                style={{
-                  ...inkButtonStyle({}),
-                  marginRight: 4,
-                  fontWeight: denom === d.id ? 'bold' : 'normal',
-                  background:
-                    denom === d.id
-                      ? 'var(--p-tab-active-bg)'
-                      : BUTTON_BG,
-                }}
-                onClick={() => setDenom(d.id)}
-              >
-                {d.label} ({d.value}m)
-              </button>
-            ))}
-          </div>
-        ) : (
-          <div style={fieldValueStyle}>
-            {DENOMS_DUN_WORLD.map((d) => (
-              <button
-                type="button"
-                key={d.id}
-                style={{
-                  ...inkButtonStyle({}),
-                  marginRight: 4,
-                  fontWeight: denom === d.id ? 'bold' : 'normal',
-                  background:
-                    denom === d.id
-                      ? 'var(--p-tab-active-bg)'
-                      : BUTTON_BG,
-                }}
-                onClick={() => setDenom(d.id)}
-              >
-                {d.label} ({d.value}m)
-              </button>
-            ))}
-          </div>
-        )}
+        <div style={fieldValueStyle}>{denominationButtons}</div>
       </div>
       <div style={fieldRowStyle}>
         <div style={fieldLabelStyle}>Coins</div>

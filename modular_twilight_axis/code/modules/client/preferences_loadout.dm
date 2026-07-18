@@ -91,23 +91,14 @@
 		ui = new(user, src, "LoadoutPanel")
 		ui.open()
 
-/datum/loadout_panel/ui_data(mob/user)
+/datum/loadout_panel/ui_static_data(mob/user)
 	var/list/data = list()
 	var/list/categories = list()
 	var/datum/preferences/user_prefs = user.client.prefs
-	var/list/selected_loadout_items = user_prefs.selected_loadout_items
 
 	var/donat_level = check_patreon_lvl(user.ckey)
 	var/triumph_discount = get_donator_triumph_discount(user.ckey)
 	var/is_donator_status = (triumph_discount > 0) || is_donator(user.ckey)
-
-	var/total_triumph_cost = 0
-	for(var/item_name in selected_loadout_items)
-		var/datum/loadout_item/selected_item = GLOB.loadout_items_by_name[item_name]
-		if(selected_item?.triumph_cost)
-			total_triumph_cost += selected_item.triumph_cost
-
-	var/triumph_discount_used = min(triumph_discount, total_triumph_cost)
 
 	for(var/cat_name in GLOB.loadout_items_by_category)
 		var/list/items_in_cat = GLOB.loadout_items_by_category[cat_name]
@@ -121,42 +112,54 @@
 			if(item.ckeywhitelist && !item.donator_ckey_check(user.ckey))
 				continue
 
-			var/icon = item.path::icon
-			var/icon_state = item.path::icon_state
-			var/selected = (item.name in selected_loadout_items)
+			var/atom/movable/icon_source_path = item.path
 			var/lock_reason = item.get_loadout_lock_reason(user)
 
-			if(ispath(item.path, /obj/item/enchantingkit))
-				var/obj/item/enchantingkit/kit_typepath = item.path
-				var/obj/result_item = kit_typepath.result_item
-				var/obj/icon_loadout = kit_typepath.icon_loadout
-				if(result_item != null)
-					icon = result_item::icon
-					icon_state = result_item::icon_state
-				else
-					icon = icon_loadout::icon
-					icon_state = icon_loadout::icon_state
+			var/icon = icon_source_path::icon
+			var/icon_state = icon_source_path::icon_state
+			
+			var/id = sanitize_css_class_name("[icon_source_path]")
+
+			var/icon_class_name = "loadout_icons128x128 [id]"
 
 			categories[cat_name][item.name] += list(
 				name = item.name,
 				path = item.path,
 				icon = icon,
 				icon_state = icon_state,
+				icon_class_name = icon_class_name,
 				isDonatorItem = item.donatitem,
-				isSelected = selected,
 				unavailable = !isnull(lock_reason),
 				unavailableReason = lock_reason,
 				requiredTier = item.donat_tier,
-				triumphCost = item.triumph_cost
+				triumphCost = item.triumph_cost,
 			)
 
 	data["categories"] = categories
 	data["isDonator"] = is_donator_status
 	data["donatTier"] = donat_level
 	data["triumphDiscount"] = triumph_discount
+	data["maxLoadoutSlots"] = user_prefs.get_loadout_size(user)
+
+	return data
+
+/datum/loadout_panel/ui_data(mob/user)
+	var/list/data = list()
+	var/datum/preferences/user_prefs = user.client.prefs
+	var/list/selected_loadout_items = user_prefs.selected_loadout_items
+
+	var/total_triumph_cost = 0
+	for(var/item_name in selected_loadout_items)
+		var/datum/loadout_item/selected_item = GLOB.loadout_items_by_name[item_name]
+		if(selected_item?.triumph_cost)
+			total_triumph_cost += selected_item.triumph_cost
+
+	var/triumph_discount = get_donator_triumph_discount(user.ckey)
+	var/triumph_discount_used = min(triumph_discount, total_triumph_cost)
+
+	data["selectedLoadoutItems"] = selected_loadout_items
 	data["triumphDiscountUsed"] = triumph_discount_used
 	data["curLoadoutSlots"] = selected_loadout_items.len
-	data["maxLoadoutSlots"] = user_prefs.get_loadout_size(user)
 
 	return data
 
@@ -201,7 +204,7 @@
 
 /datum/loadout_panel/ui_assets(mob/user)
 	return list(
-		get_asset_datum(/datum/asset/spritesheet/loadout_icons)
+		get_asset_datum(/datum/asset/spritesheet_batched/loadout_icons)
 	)
 
 /datum/preferences/proc/get_max_save_slots(plevel)

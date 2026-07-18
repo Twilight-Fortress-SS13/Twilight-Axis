@@ -115,6 +115,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/datum/admins/proc/wake_view,
 	/datum/admins/proc/extend_round,
 	/client/proc/cmd_admin_set_ic_date, /* Set custom IC date for events */
+	/client/proc/log_viewer_new,
 	)
 GLOBAL_LIST_INIT(admin_verbs_ban, list(
 	/client/proc/unban_panel,
@@ -187,7 +188,8 @@ GLOBAL_PROTECT(admin_verbs_server)
 //	/datum/admins/proc/BC_RemoveKeyVerb,
 //	/datum/admins/proc/admin_add_donator_verb,
 //	/datum/admins/proc/admin_remove_donator_verb,
-	/client/proc/toggle_hub
+	/client/proc/toggle_hub,
+  /client/proc/download_player_save
 	)
 GLOBAL_LIST_INIT(admin_verbs_debug, world.AVerbsDebug())
 GLOBAL_PROTECT(admin_verbs_debug)
@@ -983,4 +985,4 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		return
 
 	to_chat(src, "Browser tools are now enabled.")
-	winset(src, null, "browser-options=devtools,find,byondstorage")
+	winset(src, null, "browser-options=devtools,find,refresh")

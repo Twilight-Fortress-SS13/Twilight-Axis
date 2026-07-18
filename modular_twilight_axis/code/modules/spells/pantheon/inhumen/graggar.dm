@@ -113,7 +113,7 @@
 	recharge_time = 2 MINUTES //This lasts 25 SECONDS at max holy rank so for purposes of it not being chainable solo.
 	associated_skill = /datum/skill/magic/holy
 	invocation_type = "shout"
-	sound = 'sound/magic/graggar_silence.ogg'
+	sound = 'sound/magic/graggar_rage.ogg'
 	invocations = list("GRRRAAAA!!", "GGGGAAA!!", "AAAAAARRRR!!")
 	zizo_spell = FALSE // Graggar wants his car back.
 

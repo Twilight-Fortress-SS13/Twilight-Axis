@@ -6,6 +6,10 @@
 	var/busted = FALSE
 	var/ready = FALSE
 	var/draws_used = 0
+	var/poker_folded = FALSE
+	var/poker_all_in = FALSE
+	var/poker_bet = 0
+	var/poker_total_bet = 0
 	var/result = null
 	var/left = FALSE
 	var/is_spirit = FALSE
@@ -26,6 +30,10 @@
 		"busted" = busted,
 		"ready" = ready,
 		"draws_used" = draws_used,
+		"poker_folded" = poker_folded,
+		"poker_all_in" = poker_all_in,
+		"poker_bet" = poker_bet,
+		"poker_total_bet" = poker_total_bet,
 		"result" = result,
 		"left" = left,
 		"is_spirit" = is_spirit,
@@ -35,7 +43,7 @@
 	if(!player)
 		return list()
 	var/show_hand = (stage == CARD_TABLE_STAGE_FINISHED || player == viewer)
-	var/list/seen = (!show_hand && user?.ckey && player?.ckey) ? xylix_seen_for(user.ckey, player.ckey) : list()
+	var/list/seen = (!show_hand && user && user.ckey && player.ckey) ? xylix_seen_for(user.ckey, player.ckey) : list()
 	var/list/hand_data = list()
 	for(var/i = 1, i <= player.hand.len, i++)
 		var/list/card = player.hand[i]
@@ -56,6 +64,10 @@
 		"busted" = player.busted,
 		"ready" = player.ready,
 		"draws_used" = player.draws_used,
+		"poker_folded" = player.poker_folded,
+		"poker_all_in" = player.poker_all_in,
+		"poker_bet" = player.poker_bet,
+		"poker_total_bet" = player.poker_total_bet,
 		"result" = player.result,
 		"left" = player.left,
 		"is_spirit" = player.is_spirit,

@@ -40,11 +40,15 @@ export const RecipeBookSidebar = memo((props: Props) => {
   const filtered = useMemo(() => {
     const query = search.toLowerCase();
     const seen = new Set<string>();
+    // TA EDIT
+    const isAllCategory = category === 'All' || category === 'Всё';
     return recipes.filter((r) => {
-      const matchCat = category === 'Всё' || r.category === category;
-      const matchSearch = !query || (r.name && r.name.toLowerCase().includes(query));
+      // TA EDIT
+      const matchCat = isAllCategory || r.category === category;
+      const matchSearch = !query || r.name?.toLowerCase().includes(query);
       if (!matchCat || !matchSearch) return false;
-      if (category === 'Всё') {
+      // TA EDIT
+      if (isAllCategory) {
         if (seen.has(r.path)) return false;
         seen.add(r.path);
       }
@@ -53,6 +57,8 @@ export const RecipeBookSidebar = memo((props: Props) => {
   }, [recipes, search, category]);
 
   const hasCategories = categories.length > 1;
+  // TA EDIT
+  const hasBack = Boolean(onBack);
 
   return (
     <Stack fill>
@@ -77,8 +83,14 @@ export const RecipeBookSidebar = memo((props: Props) => {
                 })}
               </Section>
             </Stack.Item>
-            {!!onBack && (
-              <Stack.Item style={{ flexShrink: 0, marginTop: '6px', marginBottom: '6px' }}>
+            {hasBack && (
+              <Stack.Item
+                style={{
+                  flexShrink: 0,
+                  marginTop: '6px',
+                  marginBottom: '6px',
+                }}
+              >
                 <button
                   type="button"
                   style={{
@@ -121,7 +133,9 @@ export const RecipeBookSidebar = memo((props: Props) => {
               )}
             </Section>
           </Stack.Item>
-          <Stack.Item style={{ flexShrink: 0, marginTop: '6px', marginBottom: '6px' }}>
+          <Stack.Item
+            style={{ flexShrink: 0, marginTop: '6px', marginBottom: '6px' }}
+          >
             <input
               type="text"
               placeholder="Search..."
@@ -135,8 +149,14 @@ export const RecipeBookSidebar = memo((props: Props) => {
               }}
             />
           </Stack.Item>
-          {!hasCategories && !!onBack && (
-            <Stack.Item style={{ flexShrink: 0, marginTop: '6px', marginBottom: '6px' }}>
+          {!hasCategories && hasBack && (
+            <Stack.Item
+              style={{
+                flexShrink: 0,
+                marginTop: '6px',
+                marginBottom: '6px',
+              }}
+            >
               <button
                 type="button"
                 style={{

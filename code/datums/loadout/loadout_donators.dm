@@ -207,6 +207,10 @@
 	name = "Gift - Armor Cosmetic, Arm Harness"
 	path = /obj/item/enchantingkit/donator_universal_armharness
 
+/datum/loadout_item/donator/universal/heelkit
+	name = "Gift - Armor Cosmetic, Heelification Elixir"
+	path = /obj/item/heelkit
+
 /////////////////////////////
 // ! Player / Donor Kits ! //
 /////////////////////////////
@@ -637,5 +641,15 @@
 	name = "Donator Kit - Hound-Nosed Bascinet"
 	path = /obj/item/enchantingkit/spaz_helm
 	ckeywhitelist = list("seniorspaz")
+
+/datum/loadout_item/donator/gazelleskull
+	name = "Donator Item - Gazelle Skull"
+	path = /obj/item/clothing/head/roguetown/decoration/gazelleskull
+	ckeywhitelist = list("shiroseschnee")
+
+/datum/loadout_item/donator/morto_staff
+	name = "Donator Kit - Frozen Vow"
+	path = /obj/item/enchantingkit/morto_staff
+	ckeywhitelist = list("mortosasye")
 	sort_category = "Donator"
 */

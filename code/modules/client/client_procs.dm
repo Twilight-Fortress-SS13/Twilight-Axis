@@ -79,7 +79,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			return
 
 	var/stl = CONFIG_GET(number/second_topic_limit)
-	if (!holder && stl)
+	if (!holder && stl && href_list["window_id"] != "statbrowser")
 		var/second = round(world.time, 10)
 		if (!topiclimiter)
 			topiclimiter = new(LIMITER_SIZE)
@@ -228,7 +228,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			else
 				to_chat(src, span_warning("You already voted on the [schizo.voice_names[voice.client.ckey]] answer!"))
 		return
-	
+
 	if(href_list["viewchronicle"])
 		var/tab = href_list["chronicletab"] || "The Realm"
 		show_chronicle(tab)
@@ -360,6 +360,10 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	return 1
 */
 
+#if (PRELOAD_RSC == 0)
+GLOBAL_LIST_EMPTY(external_rsc_urls)
+#endif
+
 /client/New(TopicData)
 	var/tdata = TopicData //save this for later use
 	TopicData = null							//Prevent calls to client.Topic from connect
@@ -373,6 +377,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	stat_panel = new(src, "statbrowser")
 	stat_panel.subscribe(src, PROC_REF(on_stat_panel_message))
 
+	winset(src, null, "browser-options=find,refresh")
 	initialize_commandbar_spy()
 
 	GLOB.ahelp_tickets.ClientLogin(src)
@@ -1301,9 +1306,6 @@ GLOBAL_LIST_EMPTY(respawncounts)
 /client/New()
 	..()
 	fullscreen()
-	if(byond_version >= 516) // Enable 516 compat browser storage mechanisms
-		winset(src, null, "browser-options=find,byondstorage")
-	// byondstorage,devtools <- other options
 
 /client/proc/give_award(achievement_type, mob/user)
 	return	player_details.achievements.unlock(achievement_type, mob/user)

@@ -5,9 +5,10 @@
  */
 
 import {
+  // TA EDIT
   colorList,
-  hexToHsva,
   type HsvaColor,
+  hexToHsva,
   hsvaToHex,
   hsvaToHslString,
   hsvaToRgba,
@@ -45,32 +46,44 @@ interface ColorPickerData {
   title: string;
   default_color: string;
   presets: string;
+  named_presets?: Record<string, string>;
 }
 
 type ColorPickerModalProps = Record<never, never>;
 
 export const ColorPickerModal: React.FC<ColorPickerModalProps> = () => {
+  // TA EDIT
   const { act, data } = useBackend<ColorPickerData>();
   const {
     timeout,
     message,
     autofocus,
     default_color = '#000000',
+    // TA EDIT
     presets = '',
+    named_presets,
   } = data;
   let { title } = data;
+  const hasNamedPresets =
+    named_presets && Object.keys(named_presets).length > 0;
 
   const [selectedColor, setSelectedColor] = useState<HsvaColor>(
     hexToHsva(default_color),
   );
 
+  // TA EDIT START
+  const [selectedPreset, setSelectedPreset] = useState<number | undefined>(
+    undefined,
+  );
   const [lastSelectedColor, setLastSelectedColor] = useState<string>('');
   const [allowEditing, setAllowEditing] = useState<boolean>(false);
+  // TA EDIT END
 
   useEffect(() => {
     setSelectedColor(hexToHsva(default_color));
   }, [default_color]);
 
+  // TA EDIT START
   useEffect(() => {
     const hexCol = hsvaToHex(selectedColor);
     if (
@@ -82,14 +95,6 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = () => {
       act('preset', { color: hexCol, index: selectedPreset + 1 });
     }
   }, [selectedColor]);
-
-  if (!title) {
-    title = 'Color';
-  }
-
-  const [selectedPreset, setSelectedPreset] = useState<number | undefined>(
-    undefined,
-  );
 
   const ourPresets = presets
     .replaceAll('#', '')
@@ -108,13 +113,19 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = () => {
     },
     [[], []],
   );
+  // TA EDIT END
+
+  if (!title) {
+    title = 'Color';
+  }
+
+  let windowHeight = message ? 460 : 420;
+  if (hasNamedPresets) {
+    windowHeight += 90;
+  }
+
   return (
-    <Window
-      height={message ? 460 : 420}
-      title={title}
-      width={600}
-      theme="generic"
-    >
+    <Window height={windowHeight} title={title} width={600} theme="generic">
       {!!timeout && <Loader value={timeout} />}
       <Window.Content>
         <Stack fill vertical>
@@ -124,6 +135,36 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = () => {
               <Section fill>
                 <Box color="label" overflow="hidden">
                   {message}
+                </Box>
+              </Section>
+            </Stack.Item>
+          )}
+          {hasNamedPresets && named_presets && (
+            <Stack.Item>
+              <Section title="Dye Colors">
+                <Box style={{ display: 'flex', flexWrap: 'wrap', gap: '2px' }}>
+                  {Object.entries(named_presets).map(([name, hex]) => (
+                    <Tooltip key={name} content={name} position="bottom">
+                      <Box
+                        style={{
+                          width: '22px',
+                          height: '22px',
+                          backgroundColor: hex,
+                          border:
+                            hsvaToHex(selectedColor) === hex.toLowerCase()
+                              ? '2px solid white'
+                              : '1px solid rgba(255,255,255,0.3)',
+                          borderRadius: '2px',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                          // TA EDIT
+                          setSelectedPreset(undefined);
+                          setSelectedColor(hexToHsva(hex));
+                        }}
+                      />
+                    </Tooltip>
+                  ))}
                 </Box>
               </Section>
             </Stack.Item>
@@ -151,6 +192,7 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = () => {
   );
 };
 
+// TA EDIT START
 interface ColorPresetsProps {
   setColor: (color: HsvaColor) => void;
   setShowPresets: (show: boolean) => void;
@@ -249,6 +291,7 @@ const ColorPresets: React.FC<ColorPresetsProps> = React.memo(
     );
   },
 );
+// TA EDIT END
 
 interface ColorSelectorProps {
   color: HsvaColor;

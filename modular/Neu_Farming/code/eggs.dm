@@ -30,3 +30,17 @@
 		visible_message("<span class='warning'>[H] crushes [src] underfoot.</span>")
 		qdel(src)
 
+// TA EDIT
+/obj/item/reagent_containers/food/snacks/rogue/egg/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	. = ..()
+	if(QDELETED(src))
+		return
+	var/turf/T = get_turf(hit_atom)
+	if(!T)
+		T = get_turf(src)
+	if(T)
+		var/obj/O = new /obj/effect/decal/cleanable/food/egg_smudge(T)
+		O.pixel_x = rand(-8,8)
+		O.pixel_y = rand(-8,8)
+	visible_message("<span class='warning'>[src] splatters.</span>")
+	qdel(src)

@@ -609,9 +609,8 @@
 	desc = "A delicate weaving of striped fabric, intended to be dyed in contrasting colors and worn atop a helmet. Perfect for tournaments."
 	item_state = "orle"
 	icon_state = "orle"
-	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
-	icon = 'icons/clothing/donor_clothes.dmi'
-	worn_offsets = list("x" = 0, "y" = 7)
+	detail_tag = "_detail"
+	altdetail_tag = "_detailalt"
 	detail_color = CLOTHING_SCARLET
 	altdetail_color = CLOTHING_AZUROSA
 
@@ -710,6 +709,11 @@
 			H.update_inv_armor()
 			H.update_icon()
 	
+/obj/item/clothing/shoes/roguetown/simpleshoes/heels/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
+	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+
 /obj/item/clothing/shoes/roguetown/simpleshoes/heels/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
@@ -774,6 +778,7 @@
 	desc = "A snug-fitting tunic, favored by Azurians during the chillier daes of autumn."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi' 
 	icon_state = "doublet"
 	item_state = "doublet"
 	r_sleeve_status = SLEEVE_NORMAL
@@ -2034,3 +2039,47 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "astrata_impressed"
+
+// KADENCEKATARI
+/obj/item/clothing/head/roguetown/decoration/gazelleskull
+	name = "Gazelle Skull"
+	desc = "A skull, carved from a gazelle that rests overhead. The tribal identity of the gazelle is seen as an omen of sorts. \
+	Known for being quick to act and fleetfooted, it symbolizes the need to be fast to react and the need to get out of danger. \
+	Sometimes, you will encounter an insurmountable threat, and in order to survive against such a threat, \
+	you must flee. That is a fact of life."
+	icon = 'icons/clothing/donor_clothes.dmi'
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	alternate_worn_layer  = 8.9
+	icon_state = "donor_skull"
+	worn_offsets = list("x" = 0, "y" = 14)
+	color = null
+
+// MORTOSASYE
+/obj/item/rogueweapon/woodstaff/implement/grand/morto
+	base_implement_name = null
+	name = "Frozen Vow"
+	desc = "A magic staff sheathed in dark ice and crowned with flawless blortz gems of exceptional purity. Each crystalline facet drinks in the arcane energy that would otherwise dissipate into the air with every spell, preserving it within the frozen metal before returning it to its wielder. Extremely cold to the touch."
+	icon_state = "mystralstaff"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/woodstaff/implement/grand/magos/morto
+	base_implement_name = null
+	name = "Frozen Vow"
+	desc = "A magic staff sheathed in dark ice and crowned with flawless blortz gems of exceptional purity. Each crystalline facet drinks in the arcane energy that would otherwise dissipate into the air with every spell, preserving it within the frozen metal before returning it to its wielder. Extremely cold to the touch."
+	icon_state = "mystralstaff"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/woodstaff/implement/greater/quartz/morto
+	base_implement_name = null
+	name = "Frozen Vow"
+	desc = "A magic staff sheathed in dark ice and crowned with flawless blortz gems of exceptional purity. Each crystalline facet drinks in the arcane energy that would otherwise dissipate into the air with every spell, preserving it within the frozen metal before returning it to its wielder. Extremely cold to the touch."
+	icon_state = "mystralstaff"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/woodstaff/implement/amethyst/morto
+	base_implement_name = null
+	name = "Frozen Vow"
+	desc = "A magic staff sheathed in dark ice and crowned with flawless blortz gems of exceptional purity. Each crystalline facet drinks in the arcane energy that would otherwise dissipate into the air with every spell, preserving it within the frozen metal before returning it to its wielder. Extremely cold to the touch."
+	icon_state = "mystralstaff"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'

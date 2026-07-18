@@ -162,31 +162,31 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/rogueweapon/hammer/wood
 	triumph_cost = 4
 
-/datum/loadout_item/axe 
+/datum/loadout_item/axe
 	name = "Stone Axe"
 	category = list("Разное", "Триумфы")
 	path = /obj/item/rogueweapon/stoneaxe
 	triumph_cost = 4
 
-/datum/loadout_item/knife 
+/datum/loadout_item/knife
 	name = "Stone Knife"
 	category = list("Разное", "Триумфы")
 	path = /obj/item/rogueweapon/huntingknife/stoneknife
 	triumph_cost = 3
 
-/datum/loadout_item/hoe 
+/datum/loadout_item/hoe
 	name = "Stone Hoe"
 	category = list("Разное", "Триумфы")
 	path = /obj/item/rogueweapon/hoe/stone
 	triumph_cost = 4
 
-/datum/loadout_item/spade 
+/datum/loadout_item/spade
 	name = "Wood Spade"
 	category = list("Разное", "Триумфы")
 	path = /obj/item/rogueweapon/shovel/small
 	triumph_cost = 4
 
-/datum/loadout_item/mirror 
+/datum/loadout_item/mirror
 	name = "Hand Mirror"
 	category = list("Разное", "Триумфы")
 	path = /obj/item/handmirror
@@ -2179,7 +2179,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/weapon/nero_dagger
 	donatitem = TRUE
 	donat_tier = 2
-	
+
 /datum/loadout_item/donator/nero_sabre
 	name = "Donator Kit - Sylvan Sabre - Required: Sabre"
 	category = list("Оружие", "Донат")
@@ -2684,7 +2684,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/tabard/devotee/astrata
 	donatitem = TRUE
-	
+
 /datum/loadout_item/donat/tabard/templar/astrata
 	name = "Табард-плащ Астраты"
 	category = list("Плащи", "Донат")
@@ -3116,7 +3116,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/head/roguetown/octopus
 	category = list("Головные уборы", "Донат")
 	donatitem = TRUE
-	donat_tier = 2	
+	donat_tier = 2
 
 /datum/loadout_item/shawl
 	name = "Shawl"
@@ -3168,7 +3168,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/storage/belt/rogue/leather/suspenders
 	donatitem = TRUE
- 
+
 /datum/loadout_item/woolencollar
 	name = "Woolen Collar"
 	category = list("Аксессуары", "Донат")
@@ -3679,6 +3679,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/weapon/donator_imbuedlongsword
 	donatitem = TRUE
 	donat_tier = 2
+
+/datum/loadout_item/donator/morto_staff
+	name = "Donator Kit - Frozen Vow - Required: Staff"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/morto_staff
+	donatitem = TRUE
+	donat_tier = 2
+
 
 /datum/loadout_item/donator/universal/cloak_goldmaillekini
 	name = "Donator Item - Golden Maillekini"

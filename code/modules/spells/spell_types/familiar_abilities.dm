@@ -138,69 +138,6 @@
 
 	update_action_buttons(TRUE)
 
-/datum/action/cooldown/spell/familiar_transform
-	name = "Spirit Transformation"
-	desc = "Draw your form into itself, becoming a small orb that is wearable as a pendant, or revert to your original form."
-	button_icon_state = "rune2"
-
-	click_to_activate = FALSE
-	self_cast_possible = TRUE
-	charge_required = FALSE
-	cooldown_time = 1 SECONDS
-
-	primary_resource_type = SPELL_COST_NONE
-	spell_requirements = NONE
-	spell_impact_intensity = SPELL_IMPACT_NONE
-
-/datum/action/cooldown/spell/familiar_transform/IsAvailable(feedback = FALSE)
-	var/mob/living/simple_animal/pet/familiar/user = owner
-	if(istype(user) && istype(user.loc, /obj/item/magic/familiar/familiar_spirit))
-		var/old_check_flags = check_flags
-		check_flags &= ~AB_CHECK_IMMOBILE
-		. = ..(feedback)
-		check_flags = old_check_flags
-		return
-	return ..(feedback)
-
-/datum/action/cooldown/spell/familiar_transform/cast(atom/cast_on)
-	. = ..()
-	var/mob/living/simple_animal/pet/familiar/user = owner
-	if(!istype(user))
-		return FALSE
-
-	if(isturf(user.loc))
-		// we're on the ground somewhere, so we should become orb
-		var/obj/item/magic/familiar/familiar_spirit/spirit = new /obj/item/magic/familiar/familiar_spirit(user.loc)
-		spirit.icon = user.icon
-		spirit.icon_state = user.icon_living
-		spirit.name = user.name
-		spirit.desc = "A small orb, containing the spirit of [user.name]."
-		user.clear_familiar_click_intercepts()
-		user.forceMove(spirit)
-		user.status_flags |= GODMODE
-		user.reset_perspective()
-		user.refresh_familiar_action_buttons(TRUE)
-		return TRUE
-
-	if(user.health <= 0) // you shouldn't be able to cast this while dead, but just in case
-		return FALSE
-
-	var/obj/item/magic/familiar/familiar_spirit/spirit = user.loc
-	if(!istype(spirit)) // we might be inside another item like warden tools
-		return FALSE
-
-	var/turf/T = get_turf(user)
-	if(!T)
-		return FALSE
-
-	user.clear_familiar_click_intercepts()
-	user.forceMove(T)
-	user.status_flags &= ~GODMODE
-	user.reset_perspective()
-	user.refresh_familiar_action_buttons(TRUE)
-	qdel(spirit)
-	return TRUE
-
 /datum/action/cooldown/spell/fae_brew
 	name = "Alchemical Stomach"
 	desc = "Toggle your brewing ability; while enabled, and you have a stock of reagents inside yourself, you will attempt to brew them into a potion using your summoner's alchemical skill."
@@ -341,7 +278,7 @@
 
 /datum/action/cooldown/spell/arcyne_forge/elemental
 	name = "Earthen Forge"
-	desc = "Shape your earthen form into a tool or weapon. Shaped items have halved durability. When the item breaks, you will revert to your original form. Cast again to manually revert."
+	desc = "Shape your earthen form into a tool or weapon. When the item breaks, you will revert to your original form. Cast again to manually revert."
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_SAME_Z
 	conjure_options = list(
 		// Staff
@@ -409,8 +346,6 @@
 	var/item_path = conjure_options[choice]
 	var/obj/item/R = new item_path(H.drop_location())
 
-	// Halve durability
-	R.max_integrity = round(R.max_integrity * 0.5)
 	R.obj_integrity = R.max_integrity
 	owner.status_flags |= GODMODE
 	// Mark as conjured — no salvage, no smelting
@@ -421,6 +356,7 @@
 	// Conjured glow
 	R.AddComponent(/datum/component/conjured_item, GLOW_COLOR_EARTHEN)
 	RegisterSignal(R, COMSIG_ITEM_BROKEN, PROC_REF(revert))
+	RegisterSignal(H, COMSIG_LIVING_RESIST, PROC_REF(revert))
 	RegisterSignal(R, COMSIG_ITEM_DROPPED, PROC_REF(revert_perspective))
 	H.clear_familiar_click_intercepts()
 	H.forceMove(R)
@@ -464,7 +400,7 @@
 
 /datum/action/cooldown/spell/arcyne_forge/elemental/void // lmao
 	name = "Void Forge"
-	desc = "Shape your ever-malleable form into a tool or weapon. Shaped items have halved durability. When the item breaks, you will revert to your original form. Cast again to manually revert."
+	desc = "Shape your ever-malleable form into a tool or weapon. When the item breaks, you will revert to your original form. Cast again to manually revert."
 
 /datum/action/cooldown/spell/arcyne_forge/elementalt2
 	name = "Greater Earthen Shaping"

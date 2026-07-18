@@ -43,9 +43,16 @@
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
 		if(/datum/patron/divine/undivided)
-			mask = /obj/item/clothing/head/roguetown/roguehood/undivided
+			var/colors = list("Normal", "Clerical")
+			var/colorchoice = input(H,"Choose style", "TAKE UP FASHION") as anything in colors
+			switch(colorchoice)
+				if("Normal")
+					mask = /obj/item/clothing/head/roguetown/roguehood/undivided
+					cloak = /obj/item/clothing/suit/roguetown/shirt/robe/undivided
+				if("Clerical")
+					mask = /obj/item/clothing/head/roguetown/roguehood/undividedcleric
+					cloak = /obj/item/clothing/suit/roguetown/shirt/robe/undividedcleric
 			neck = /obj/item/clothing/neck/roguetown/psicross/undivided
-			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/undivided
 		if(/datum/patron/divine/astrata)
 			mask = /obj/item/clothing/head/roguetown/roguehood/astrata
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata

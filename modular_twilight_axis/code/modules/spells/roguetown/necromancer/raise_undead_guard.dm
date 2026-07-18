@@ -26,8 +26,8 @@
 	if(!locate(/datum/action/cooldown/spell/gravemark) in user.mind?.spell_list) //OFF VVV
 		user.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark)
 
-	if(!locate(/obj/effect/proc_holder/spell/invoked/minion_order) in user.mind?.spell_list)  //SPELLGRANT IN CLASS FILE
-		user.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
+	if(!locate(/datum/action/cooldown/spell/minion_order) in user.mind?.spell_list)  //SPELLGRANT IN CLASS FILE
+		user.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order)
 
 	if(istype(get_area(user), /area/rogue/indoors/ravoxarena))
 		to_chat(user, span_userdanger("I reach for outer help, but something rebukes me! This challenge is only for me to overcome!"))

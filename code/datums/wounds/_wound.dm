@@ -303,7 +303,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		if(!owner || QDELETED(owner) || QDELETED(src))
 			return FALSE
 
-	if(!HAS_TRAIT(owner, TRAIT_PARALYSIS) && owner.blood_volume > BLOOD_VOLUME_SURVIVE && owner.stat < UNCONSCIOUS) //TA EDIT START
+	if(!HAS_TRAIT(owner, TRAIT_PARALYSIS) && owner.blood_volume > BLOOD_VOLUME_SURVIVE && owner.stat < UNCONSCIOUS && !HAS_TRAIT(src, TRAIT_BLACKBLOOD)) //TA EDIT START
 		var/healamount = 0
 		if(HAS_TRAIT(owner, TRAIT_PSYDONITE_4))
 			healamount = 0.4 + (owner.STAWIL * 0.1)
@@ -318,7 +318,8 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 				return FALSE
 		//TA EDIT END
 
-	if(HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing)
+	if(HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing && !HAS_TRAIT(src, TRAIT_BLACKBLOOD))
+
 		if(!istype(src, /datum/wound/slash/incision))
 			heal_wound(0.6)
 		if(!owner || QDELETED(owner) || QDELETED(src))
@@ -335,7 +336,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	if (!owner.client)
 		return
 
-	if (HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing)
+	if (HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing && !HAS_TRAIT(src, TRAIT_BLACKBLOOD))
 		heal_wound(0.6) // psydonites are supposed to apparently slightly heal wounds whether dead or alive
 		if(!istype(src, /datum/wound/slash/incision))
 			heal_wound(0.6)

@@ -48,6 +48,8 @@
 	reach = 3
 	icon_state = "inlash"
 	item_d_type = "slash"
+	effective_range = 1
+	effective_range_type = EFF_RANGE_ABOVE
 
 //Exclusive variant to whips with alloyed tips and high Strength requirements. On par with a traditional lash, but can dismember from afar.
 /datum/intent/whip/lash/master
@@ -70,6 +72,8 @@
 	reach = 2
 	icon_state = "incrack"
 	item_d_type = "slash"
+	effective_range = 1
+	effective_range_type = EFF_RANGE_ABOVE
 
 //Bludgeon = Sidegrade of the Crack that functions like a ranged mace. Unique to the Nagaika, or the Steppsman's whip.
 /datum/intent/whip/crack/blunt

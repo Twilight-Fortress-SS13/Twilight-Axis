@@ -94,6 +94,7 @@
 					rules += "Азурийский: туз за 11, но два туза дают 21; валет, дама и король за 10."
 		if(CARD_TABLE_GAME_POKER)
 			rules += "Цель: собрать лучшую комбинацию."
+			rules += "Ставки: введите сумму. Если сумма не выше текущей ставки, кнопка Ставка делает чек или поддержку; если выше - поднимает ставку. Ва-банк ставит все, Отказаться сбрасывает руку."
 			switch(poker_variant)
 				if(CARD_TABLE_POKER_TEXAS)
 					rules += "Ранешенский: у игрока 2 карты, на столе 5 общих карт."
@@ -104,6 +105,10 @@
 				else
 					rules += "Азурийский: игрок получает 5 карт и может один раз заменить одну карту."
 			rules += "Дилер всегда один из игроков. [dealer_rotation_label()]."
+			if(poker_uses_community_cards())
+				rules += "Ранешенский, Валорийский и Гиза: общие карты открываются по одной за круг, после каждой карты повторяется круг ставок."
+			else
+				rules += "Азурийский: общих карт на столе нет, сравниваются только руки игроков."
 		if(CARD_TABLE_GAME_SOLITAIRE)
 			rules += "Цель: разложить карты по стопкам пасьянса."
 			if(solitaire_variant == CARD_TABLE_SOLITAIRE_SPIDER)
@@ -169,7 +174,18 @@
 		"can_start" = (stage == CARD_TABLE_STAGE_LOBBY && is_host && game_type != CARD_TABLE_GAME_NONE && players.len >= min_players()),
 		"can_pack" = can_pack(),
 		"dealer_value" = (table_dealer && stage == CARD_TABLE_STAGE_FINISHED) ? hand_value(table_dealer.hand) : null,
-		"community_cards" = build_card_data(community_cards, FALSE),
+		"community_cards" = (game_type == CARD_TABLE_GAME_POKER && poker_uses_community_cards()) ? build_card_data(community_cards, FALSE) : list(),
+		"poker_turn" = (game_type == CARD_TABLE_GAME_POKER && stage == CARD_TABLE_STAGE_PLAYING && poker_current_player()) ? poker_current_player().name : null,
+		"poker_current_bet" = (game_type == CARD_TABLE_GAME_POKER) ? poker_current_bet : 0,
+		"poker_pot" = (game_type == CARD_TABLE_GAME_POKER) ? poker_pot : 0,
+		"poker_betting_round" = (game_type == CARD_TABLE_GAME_POKER) ? poker_betting_round : 0,
+		"blackjack_action_seq" = blackjack_action_seq,
+		"blackjack_action_player_index" = blackjack_action_player_index,
+		"blackjack_action_bust" = blackjack_action_bust,
+		"fool_action_seq" = fool_action_seq,
+		"fool_action_kind" = fool_action_kind,
+		"fool_action_player_index" = fool_action_player_index,
+		"fool_action_target_index" = fool_action_target_index,
 		"my_value" = me ? hand_value(me.hand) : null,
 		"solitaire_tableau" = build_solitaire_tableau(),
 		"solitaire_stock_count" = solitaire_stock.len,

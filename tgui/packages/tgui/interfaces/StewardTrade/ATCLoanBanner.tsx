@@ -19,6 +19,7 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
   const aldermanActing = !!data.is_alderman_acting;
 
   const [amount, setAmount] = useState(atc_loan.min);
+  // TA EDIT START
   const labels = atc_loan as AtcLoanState & {
     authority_capital?: string;
     authority_lower?: string;
@@ -31,11 +32,16 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
   const authorityPurse = labels.authority_purse || "Crown's Purse";
   const tradeCompany = labels.trade_company || 'Azurian Trading Company';
   const pledgeGrace = labels.pledge_grace_capital || "The Burghers' grace";
+  // TA EDIT END
 
   if (!atc_loan.can_view) {
     return null;
   }
-  if (!atc_loan.available && atc_loan.loans_drawn === 0 && !atc_loan.arrears_consumed) {
+  if (
+    !atc_loan.available &&
+    atc_loan.loans_drawn === 0 &&
+    !atc_loan.arrears_consumed
+  ) {
     return null;
   }
 
@@ -64,12 +70,15 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
         {atc_loan.available ? (
           <>
             The clerk receives applications for emergency loan of{' '}
-            <b>{atc_loan.min}m to {atc_loan.max}m</b> on the Company&apos;s
-            standing credit, at the customary{' '}
+            <b>
+              {atc_loan.min}m to {atc_loan.max}m
+            </b>{' '}
+            on the Company&apos;s standing credit, at the customary{' '}
             <b>{atc_loan.interest_pct}% interest</b> charged against the
             principal. The arrears grace stands forfeit on draw - should{' '}
-            {authorityLower} miss its next payroll, the realm enters sequestration without
-            warning. Window closes on Day {atc_loan.closed_day}.
+            {authorityLower} miss its next payroll, the realm enters
+            sequestration without warning. Window closes on Day{' '}
+            {atc_loan.closed_day}.
           </>
         ) : (
           atc_loan.blocker || 'The clerk is unavailable.'
@@ -85,12 +94,14 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
         >
           Outstanding to the Company: <b>{atc_loan.outstanding}m</b>. All
           inflow into the {authorityPurse} is skimmed against the debt until
-          it is settled. {pledgeGrace} is forfeit; the next missed
-          payroll skips arrears and goes straight to sequestration.
+          it is settled. {pledgeGrace} is forfeit; the next missed payroll
+          skips arrears and goes straight to sequestration.
         </div>
       )}
       {atc_loan.loans_drawn > 0 && (
-        <div style={{ color: INK_FAINT, fontSize: FONT_BODY, marginBottom: '6px' }}>
+        <div
+          style={{ color: INK_FAINT, fontSize: FONT_BODY, marginBottom: '6px' }}
+        >
           Loans drawn this week: {atc_loan.loans_drawn}.
         </div>
       )}

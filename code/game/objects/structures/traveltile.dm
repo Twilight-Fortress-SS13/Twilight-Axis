@@ -233,6 +233,7 @@
 
 	return FALSE
 
+
 /obj/structure/fluff/traveltile/proc/can_go(atom/movable/AM)
 	if(AM.recent_travel)
 		if(world.time < AM.recent_travel + 15 SECONDS)

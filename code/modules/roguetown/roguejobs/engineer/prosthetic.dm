@@ -351,6 +351,7 @@
 	brute_reduction = 0
 	burn_reduction = 0
 	max_damage = 40
+	organ_slowdown = 0.05 // -5%
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
 	sellprice = 7 //TA EDIT
@@ -369,7 +370,7 @@
 	max_damage = 150
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	organ_slowdown = 1.2
+	organ_slowdown = 0.2 // -20%
 	brute_reduction = 5
 	burn_reduction = 5
 	anvilrepair = /datum/skill/craft/engineering
@@ -387,7 +388,7 @@
 	max_damage = 200
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	organ_slowdown = 1.1
+	organ_slowdown = 0.1 // -10%
 	brute_reduction = 10
 	burn_reduction = 10
 	anvilrepair = /datum/skill/craft/engineering
@@ -407,6 +408,7 @@
 	max_damage = 220
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 350
+	organ_slowdown = 0.15 // -15%
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/bronze
 
@@ -441,6 +443,7 @@
 	brute_reduction = 0
 	burn_reduction = 0
 	max_damage = 40
+	organ_slowdown = 0.05 // -5%
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
 	sellprice = 7 //TA EDIT
@@ -460,7 +463,7 @@
 	max_damage = 150
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	organ_slowdown = 1.2
+	organ_slowdown = 0.2 // -20%
 	brute_reduction = 5
 	burn_reduction = 5
 	anvilrepair = /datum/skill/craft/engineering
@@ -479,7 +482,7 @@
 	max_damage = 200
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	organ_slowdown = 1.1
+	organ_slowdown = 0.1 // -10%
 	brute_reduction = 10
 	burn_reduction = 10
 	anvilrepair = /datum/skill/craft/engineering
@@ -500,6 +503,7 @@
 	max_damage = 220
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 350
+	organ_slowdown = 0.15 // -15%
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/bronze
 

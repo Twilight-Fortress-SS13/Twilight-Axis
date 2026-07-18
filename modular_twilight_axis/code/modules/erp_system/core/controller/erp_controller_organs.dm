@@ -246,12 +246,13 @@
 		return out
 
 	for(var/datum/erp_sex_organ/O in controller.active_partner.get_organs_ref(type_filter))
+		var/total = O.get_total_slots()
 		out += list(list(
 			"id" = "\ref[O]",
 			"name" = get_organ_ui_name(O),
-			"busy" = O.is_busy(),
-			"free" = O.get_free_slots(),
-			"total" = O.get_total_slots()
+			"busy" = FALSE,
+			"free" = total,
+			"total" = total
 		))
 
 	return out

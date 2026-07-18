@@ -93,8 +93,7 @@
 	AI_THINK(victim, "AGGRO: +[threat_to_add] from [attacker]")
 	add_threat(victim, attacker, threat_to_add)
 
-	if(victim.ai_controller.ai_status == AI_STATUS_IDLE)
-		victim.ai_controller.set_ai_status(AI_STATUS_ON)
+	victim.ai_controller.wake_for_combat()
 
 /// Clears the aggro table when the mob dies
 /datum/component/ai_aggro_system/proc/on_death(mob/living/source)
@@ -113,12 +112,12 @@
 		return
 	if(attacker == victim)
 		return
-	// TA EDIT
+	if(victim.faction_check_mob(attacker))
+		return
 	if(isliving(attacker))
 		var/mob/living/living_attacker = attacker
 		if(SEND_SIGNAL(living_attacker, "mob_ai_target_check", victim))
 			return
-	// TA EDIT END
 
 	var/list/aggro_table = victim.ai_controller.blackboard[BB_MOB_AGGRO_TABLE]
 	if(!aggro_table)
@@ -140,10 +139,9 @@
 	if(!victim.ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET])
 		victim.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, attacker)
 
-	// Any threat addition should wake the AI from IDLE — otherwise NPCs that get aggro
+	// Any threat addition should wake the AI - otherwise NPCs that get aggro
 	// via call_for_help, proximity scans, or provocation miracles stay stuck staring.
-	if(victim.ai_controller.ai_status == AI_STATUS_IDLE)
-		victim.ai_controller.set_ai_status(AI_STATUS_ON)
+	victim.ai_controller.wake_for_combat()
 
 	// Update highest threat mob
 	update_highest_threat(victim)
@@ -197,12 +195,10 @@
 
 	// Find the mob with the highest threat
 	for(var/mob/threat_mob as anything in aggro_table)
-		// TA EDIT
 		if(isliving(threat_mob))
 			var/mob/living/living_threat = threat_mob
 			if(SEND_SIGNAL(living_threat, "mob_ai_target_check", source))
 				continue
-		// TA EDIT END
 		if(aggro_table[threat_mob] > highest_threat)
 			highest_threat = aggro_table[threat_mob]
 			highest_threat_mob = threat_mob

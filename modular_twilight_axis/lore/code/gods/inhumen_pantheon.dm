@@ -106,7 +106,7 @@
 	desc = "Бог силы и власти, которая приходит с нею. Пока другие божества обрекают свою паству на жалкое существование в мире, где власть приходит через их благословение и по праву рождения, Граггар провозглашает, что править может каждый, кто достаточно силен, чтобы забрать желаемое. «Слабые унаследуют лишь грязь», предупреждает он, напоминая о судьбе тех, кто не стремится стать сильнее."
 	undead_hater = TRUE
 	worshippers = "Племенные народы, безумцы, маньяки, жестокий люд."
-	miracles = list(/datum/action/cooldown/spell/touch/orison					        = CLERIC_ORI,
+	/*miracles = list(/datum/action/cooldown/spell/touch/orison					        = CLERIC_ORI,
 					/obj/effect/proc_holder/spell/self/graggar_bloodrage				= CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/graggar_chainbreak				= CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/heavy_stomp 		       			= CLERIC_T1,
@@ -119,7 +119,7 @@
 					/obj/effect/proc_holder/spell/invoked/silence/graggar				= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/revel_in_slaughter 			= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/resurrect/graggar				= CLERIC_T4,
-	)
+	)*/
 	confess_lines = list(
 		"ГРАГГАР - ЗВЕРЬ, КОТОРОМУ Я ПОКЛОНЯЮСЬ!",
 		"ЧЕРЕЗ ПРЕВОСХОДСТВО - К БОЖЕСТВЕННОСТИ!",
@@ -164,7 +164,7 @@
 					/obj/effect/proc_holder/spell/invoked/twilight_churnwealthy							= CLERIC_T2,
 					/obj/effect/proc_holder/spell/self/twilight_amongus									= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/projectile/twilight_crownfortheking			= CLERIC_T2,
-					/obj/effect/proc_holder/spell/invoked/barter										= CLERIC_T2,
+					/datum/action/cooldown/spell/matthios/barter										= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/twilight_commieflag							= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/resurrect/twilight_matthios					= CLERIC_T3,
 					/obj/effect/proc_holder/spell/self/wildshape_twilight_wingsoffreedom				= CLERIC_T4,

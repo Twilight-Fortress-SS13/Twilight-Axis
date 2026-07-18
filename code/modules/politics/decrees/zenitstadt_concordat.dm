@@ -1,15 +1,19 @@
 /datum/decree/zenitstadt_concordat
 	id = DECREE_ZENITSTADT_CONCORDAT
-	name = "The Zenitstadt Concordat"
+	name = "Сумеречный Конкордат"
 	category = DECREE_CATEGORY_ANCIENT
-	mechanical_text = "Church clergy and declared Benefactors of the Faith pay no taxes."
-	flavor_text = {"This Zenitstadt Concordat, sworne under the Ten's Grace and with Ravox as witness, witnesseth that the Church of Azuria, consecrated beneath the Ten and quickened by Astrata's light, shall keep the peace of the gods upon this land: to pray for the safety and prosperity of the Realm by daye and by night, to maintain the favor of the Ten through proper sacrament and offering, to levy tithe from amongst its own brethren, to shelter the poor and downtrodden, and to furnish its own knightly order of templars that the common defense of the Realm be not wanting.
+	mechanical_text = "Духовенство и благодетели Церкви освобождаются от налогов."
+	flavor_text = {"Настоящий Сумеречный Конкордат, заключённый под покровительством Десяти Неделимых между Короной Азурии, Святым Престолом Грензельхофта и Валорийским Святым Престолом в память о великой победе над силами тьмы, что властвовали в Азурийской Долине, постановляет:
 
-In exchange, as the sacred envoys of the gods and sworn servants of the Ten, the clergy of the Church of Azuria shall bear no tax nor levy, neither upon their persons nor upon the properties of the Faith; nor shall the Crown intrude upon the internal discipline of the Church, save by lawful counsel taken with the Church of the Ten.
+- Валорийская Церковь Неделимых Десяти, озаренная светом Астраты, наделяется правом и обязанностью хранить мир богов на этой земле. Во исполнение сией благой цели, служители Церкви будут молиться о безопасности и процветании Герцогства днем и ночью, поддерживать благосклонность Десяти посредством надлежащих таинств и церемоний, взимать десятину со своих прихожан, давать приют бедным и угнетенным. Служители Церкви, в том числе крестоносцы Ордена Тамплиеров, призванные оберегать покой храмов и святынь Десяти, могут свободно и беспрепятственно передвигаться по землям Азурийской долины, и не подвергнутся каким-либо гонениям и притеснениям.
+- Церковь Десяти Грензельхофта, при поручительстве и с благословения Имперской Церкви Одиннадцати, наделяется равным правом проповедовать и возносить молитвы Десяти и Одному на землях Азурии, не подвергаясь каким-либо гонениям и притеснениям ни в отношении своих служителей, ни в отношении своих последователей. В свою очередь, Церковь Десяти Грензельхофта отказывается от любых притязаний на храмы и святыни Валорийской Церкви Неделимых Десяти на землях Азурийской долины.
+- Корона Великого Герцогства Азурийского, признавая волю Астраты как источник законной власти над сией землей, обязуется освободить духовенство, имущество и благодетелей Церкви от налогов и податей, и отказывается от права на вмешательство во внутренние дела Церкви, окромя как путем переговоров с высшим представителем Валорийского Святого Престола на этой земле. В свою очередь, Церковь отказывается от права на вмешательство в дела светского правосудия и закона, покуда они не относятся к вопросам поддержания Божественного Порядка, ереси и преступлений против Церкви.
+	
+Стремясь к поддержанию мира на землях Азурии, все стороны, заверившие настоящий Конкордат, обязуются стремиться к поддержанию буквы и духа сего соглашения, отныне и вовеки.
 
-Yeven under the seal of the Crown, in witness of the Ten."}
-	revoke_text = "The %RULER% has rescinded the Zenitstadt Concordat. The Church's wealth shall serve the greater good of the Realm - let the Ten judge who betrayed whom."
-	restore_text = "The %RULER% has affirmed the Zenitstadt Concordat. The hand of the Crown shall meddle no more in the disposition of the Church's worldly wealth."
+Заверено печатью Короны, печатью Святого Престола Грензельхофта и печатью Святого Престола Валории, милостью Десяти Неделимых."}
+	revoke_text = "Правитель сиих земель аннулировал Сумеречный Конкордат. Богатства Церкви должны служить благу Герцогства — и да рассудят Десять справедливость сего решения."
+	restore_text = "Правитель сиих земель восстановил действие Сумеречного Конкордата. Корона больше не будет вмешиваться в распоряжение мирскими богатствами Церкви."
 
 /datum/decree/zenitstadt_concordat/roll_initial_year()
 	return CALENDAR_EPOCH_YEAR - rand(50, 120)

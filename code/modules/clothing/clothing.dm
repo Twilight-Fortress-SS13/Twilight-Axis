@@ -69,6 +69,7 @@
 	var/altdetail_tag
 	var/detail_color
 	var/altdetail_color
+	var/mutable_appearance/detail_overlay
 	var/boobed_detail = TRUE
 	var/sleeved_detail = TRUE
 	var/malumblessed_c = FALSE
@@ -108,6 +109,22 @@
 
 /obj/item/proc/get_altdetail_color() //this is for extra layers on clothes
 	return altdetail_color
+
+/obj/item/proc/refresh_detail_overlay()
+	if(detail_overlay)
+		cut_overlay(detail_overlay)
+		detail_overlay = null
+	if(!get_detail_tag())
+		return
+	var/detail_state = "[icon_state][detail_tag]"
+	if(!icon_exists(icon, detail_state))
+		detail_state = "[initial(icon_state)][detail_tag]"
+	var/mutable_appearance/pic = mutable_appearance(icon(icon, detail_state))
+	pic.appearance_flags = RESET_COLOR
+	if(get_detail_color())
+		pic.color = get_detail_color()
+	add_overlay(pic)
+	detail_overlay = pic
 
 /obj/item/clothing/get_mechanics_examine(mob/user)
 	. = ..()
@@ -667,7 +684,7 @@ BLIND     // can't see anything
 			return examine_text
 
 	// Fake armor
-	if(armor.getRating("slash") == 0 && armor.getRating("stab") == 0 && armor.getRating("blunt") == 0 && armor.getRating("piercing") == 0)
+	if(armor.getRating("slash") == 0 && armor.getRating("stab") == 0 && armor.getRating("blunt") == 0 && armor.getRating("piercing") == 0 && armor.getRating("fire") == 0 && armor.getRating("bullet") == 0)
 		if(examine_highlight_status)
 			var/severity = examine_highlight_status[1]
 			var/labeled_string = get_examine_highlight_labeled_string(severity, examine_text)
@@ -682,15 +699,13 @@ BLIND     // can't see anything
 	str += "[colorgrade_rating("🪓 SLASH", armor.slash, elaborate = TRUE)] | "
 	str += "[colorgrade_rating("🗡️ STAB", armor.stab, elaborate = TRUE)] | "
 	str += "[colorgrade_rating("🏹 PIERCE", armor.piercing, elaborate = TRUE)]"
-	if(armor.fire > NONE || armor.acid > NONE || armor.bullet > NONE) //TA EDIT
+	if(armor.fire > NONE || armor.bullet > NONE)
 		str += "<br><b>RESIST:</b> "
 		var/list/resists = list()
 		if(armor.fire > NONE)
 			resists += colorgrade_rating("🔥 FIRE", armor.fire, elaborate = TRUE)
-		if(armor.acid > NONE)
-			resists += colorgrade_rating("🧪 ACID", armor.acid, elaborate = TRUE)
-		if(armor.bullet > NONE) //TA EDIT
-			resists += colorgrade_rating("💣 BULLET", armor.bullet, elaborate = TRUE) //TA EDIT
+		if(armor.bullet > NONE)
+			resists += colorgrade_rating("💣 BULLET", armor.bullet, elaborate = TRUE, max_tier = 5)
 		str += resists.Join(" | ")
 
 	if(examine_highlight_status)

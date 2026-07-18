@@ -6,12 +6,13 @@
  * @license MIT
  */
 
-export const IMPL_MEMORY = 0;
 export const IMPL_HUB_STORAGE = 1;
-
-type StorageImplementation = typeof IMPL_MEMORY | typeof IMPL_HUB_STORAGE;
+export const IMPL_IFRAME_INDEXED_DB = 2;
 
 const KEY_NAME = 'azure';
+type StorageImplementation =
+  | typeof IMPL_HUB_STORAGE
+  | typeof IMPL_IFRAME_INDEXED_DB;
 
 type StorageBackend = {
   impl: StorageImplementation;
@@ -24,54 +25,14 @@ type StorageBackend = {
 const testGeneric = (testFn: () => boolean) => (): boolean => {
   try {
     return Boolean(testFn());
-  } catch (error) {
-    console.error('Storage backend test failed:', error);
+  } catch {
     return false;
   }
 };
 
-const testHubStorage = testGeneric(() => {
-  const exists = !!window.hubStorage;
-  const hasGetter = !!window.hubStorage?.getItem;
-  const hasSetter = !!window.hubStorage?.setItem;
-
-  console.log('[storage] hubStorage exists:', exists);
-  console.log('[storage] hubStorage has getItem:', hasGetter);
-  console.log('[storage] hubStorage has setItem:', hasSetter);
-
-  return exists && hasGetter && hasSetter;
-});
-
-class MemoryBackend implements StorageBackend {
-  private store: Record<string, any>;
-  public impl: StorageImplementation;
-
-  constructor() {
-    this.impl = IMPL_MEMORY;
-    this.store = {};
-  }
-
-  async get(key: string): Promise<any> {
-    const value = this.store[key];
-    console.log('[storage:memory] get', key, value);
-    return value;
-  }
-
-  async set(key: string, value: any): Promise<void> {
-    console.log('[storage:memory] set', key, value);
-    this.store[key] = value;
-  }
-
-  async remove(key: string): Promise<void> {
-    console.log('[storage:memory] remove', key);
-    this.store[key] = undefined;
-  }
-
-  async clear(): Promise<void> {
-    console.log('[storage:memory] clear');
-    this.store = {};
-  }
-}
+const testHubStorage = testGeneric(
+  () => window.hubStorage && !!window.hubStorage.getItem,
+);
 
 class HubStorageBackend implements StorageBackend {
   public impl: StorageImplementation;
@@ -81,57 +42,101 @@ class HubStorageBackend implements StorageBackend {
   }
 
   async get(key: string): Promise<any> {
-    const fullKey = `${KEY_NAME}-${key}`;
-    try {
-      const value = await window.hubStorage.getItem(fullKey);
-      console.log('[storage:hub] raw get', fullKey, value);
-
-      if (typeof value === 'string') {
-        try {
-          const parsed = JSON.parse(value);
-          console.log('[storage:hub] parsed get', fullKey, parsed);
-          return parsed;
-        } catch (error) {
-          console.error('[storage:hub] failed to parse JSON for', fullKey, value, error);
-          return undefined;
-        }
-      }
-
-      return undefined;
-    } catch (error) {
-      console.error('[storage:hub] get failed for', fullKey, error);
-      return undefined;
+    const value = await window.hubStorage.getItem(`${KEY_NAME}-${key}`);
+    if (typeof value === 'string') {
+      return JSON.parse(value);
     }
+    return undefined;
   }
 
   async set(key: string, value: any): Promise<void> {
-    const fullKey = `${KEY_NAME}-${key}`;
-    try {
-      const serialized = JSON.stringify(value);
-      console.log('[storage:hub] set', fullKey, value);
-      await window.hubStorage.setItem(fullKey, serialized);
-    } catch (error) {
-      console.error('[storage:hub] set failed for', fullKey, value, error);
-    }
+    window.hubStorage.setItem(`${KEY_NAME}-${key}`, JSON.stringify(value));
   }
 
   async remove(key: string): Promise<void> {
-    const fullKey = `${KEY_NAME}-${key}`;
-    try {
-      console.log('[storage:hub] remove', fullKey);
-      await window.hubStorage.removeItem(fullKey);
-    } catch (error) {
-      console.error('[storage:hub] remove failed for', fullKey, error);
-    }
+    window.hubStorage.removeItem(`${KEY_NAME}-${key}`);
   }
 
   async clear(): Promise<void> {
-    try {
-      console.log('[storage:hub] clear');
-      await window.hubStorage.clear();
-    } catch (error) {
-      console.error('[storage:hub] clear failed', error);
+    window.hubStorage.clear();
+  }
+}
+
+class IFrameIndexedDbBackend implements StorageBackend {
+  public impl: StorageImplementation;
+
+  private documentElement: HTMLIFrameElement;
+  private iframeWindow: Window;
+
+  constructor() {
+    this.impl = IMPL_IFRAME_INDEXED_DB;
+  }
+
+  async ready(): Promise<boolean> {
+    const iframe = document.createElement('iframe');
+    const iframeStore = `${Byond.storageCdn}?store=${KEY_NAME}`;
+    iframe.style.display = 'none';
+    iframe.src = iframeStore;
+
+    const completePromise: Promise<boolean> = new Promise((resolve) => {
+      fetch(iframeStore, { method: 'HEAD' })
+        .then((response) => {
+          if (response.status !== 200) {
+            resolve(false);
+          }
+        })
+        .catch(() => {
+          resolve(false);
+        });
+
+      const handler = (message: MessageEvent) => {
+        if (message.source === this.iframeWindow && message.data === 'ready') {
+          window.removeEventListener('message', handler);
+          resolve(true);
+        }
+      };
+
+      window.addEventListener('message', handler);
+    });
+
+    this.documentElement = document.body.appendChild(iframe);
+    if (!this.documentElement.contentWindow) {
+      return new Promise((res) => res(false));
     }
+
+    this.iframeWindow = this.documentElement.contentWindow;
+
+    return completePromise;
+  }
+
+  async get(key: string): Promise<any> {
+    return new Promise((resolve) => {
+      const handler = (message: MessageEvent) => {
+        if (message.source === this.iframeWindow && message.data?.key === key) {
+          window.removeEventListener('message', handler);
+          resolve(message.data.value);
+        }
+      };
+
+      window.addEventListener('message', handler);
+      this.iframeWindow.postMessage({ type: 'get', key: key }, '*');
+    });
+  }
+
+  async set(key: string, value: any): Promise<void> {
+    this.iframeWindow.postMessage({ type: 'set', key: key, value: value }, '*');
+  }
+
+  async remove(key: string): Promise<void> {
+    this.iframeWindow.postMessage({ type: 'remove', key: key }, '*');
+  }
+
+  async clear(): Promise<void> {
+    this.iframeWindow.postMessage({ type: 'clear' }, '*');
+  }
+
+  async destroy(): Promise<void> {
+    this.documentElement?.remove();
   }
 }
 
@@ -141,21 +146,79 @@ class HubStorageBackend implements StorageBackend {
  */
 class StorageProxy implements StorageBackend {
   private backendPromise: Promise<StorageBackend>;
-  public impl: StorageImplementation = IMPL_MEMORY;
+  public impl: StorageImplementation = IMPL_IFRAME_INDEXED_DB;
 
   constructor() {
     this.backendPromise = (async () => {
-      if (testHubStorage()) {
-        this.impl = IMPL_HUB_STORAGE;
-        console.log('[storage] Selected backend: HUB_STORAGE');
-        return new HubStorageBackend();
+      // If we have not enabled byondstorage yet, we need to check
+      // if we can use the IFrame, or if we need to enable byondstorage
+      console.log(`testHubStorage ${testHubStorage()}`);
+      if (!testHubStorage()) {
+        // If we have an IFrame URL we can use, and we haven't already enabled
+        // byondstorage, we should use the IFrame backend
+        console.log(`storageCdn: ${Byond.storageCdn}`);
+        if (Byond.storageCdn) {
+          const iframe = new IFrameIndexedDbBackend();
+
+          if ((await iframe.ready()) === true) {
+            if (await iframe.get('byondstorage-migrated')) return iframe;
+
+            Byond.winset(null, 'browser-options', '+byondstorage');
+
+            await new Promise<void>((resolve) => {
+              const handler = async () => {
+                document.removeEventListener('byondstorageupdated', handler);
+
+                setTimeout(async () => {
+                  const hub = new HubStorageBackend();
+
+                  // Migrate these existing settings from byondstorage to the IFrame
+                  for (const setting of [
+                    'panel-settings',
+                    'chat-state',
+                    'chat-messages',
+                  ]) {
+                    const settings = await hub.get(setting);
+                    if (settings !== undefined) {
+                      await iframe.set(setting, settings);
+                    }
+                  }
+
+                  await iframe.set('byondstorage-migrated', true);
+
+                  Byond.winset(null, 'browser-options', '-byondstorage');
+
+                  resolve();
+                }, 1);
+              };
+
+              document.addEventListener('byondstorageupdated', handler);
+            });
+
+            return iframe;
+          }
+
+          iframe.destroy();
+        }
+
+        // IFrame hasn't worked out for us, we'll need to enable byondstorage
+        Byond.winset(null, 'browser-options', '+byondstorage');
+
+        return new Promise((resolve) => {
+          const listener = () => {
+            document.removeEventListener('byondstorageupdated', listener);
+
+            // This event is emitted *before* byondstorage is actually created
+            // so we have to wait a little bit before we can use it
+            setTimeout(() => resolve(new HubStorageBackend()), 1);
+          };
+
+          document.addEventListener('byondstorageupdated', listener);
+        });
       }
 
-      this.impl = IMPL_MEMORY;
-      console.warn(
-        '[storage] No supported storage backend found. Using in-memory storage.',
-      );
-      return new MemoryBackend();
+      // byondstorage is already enabled, we can use it straight away
+      return new HubStorageBackend();
     })();
   }
 
