@@ -335,6 +335,7 @@
 	var/ok = directions.set_foundation(foundation)
 	if(ok)
 		sanitize()
+		set_dirty()
 	return ok
 
 /datum/tat_build/proc/set_direction_role_choice(role_choice)
@@ -343,6 +344,7 @@
 	var/ok = directions.set_role_choice(role_choice)
 	if(ok)
 		sanitize()
+		set_dirty()
 	return ok
 
 /datum/tat_build/proc/add_direction_point(direction, amount = 1)
@@ -351,6 +353,7 @@
 	var/ok = directions.add_point(direction, amount)
 	if(ok)
 		sanitize()
+		set_dirty()
 	return ok
 
 /datum/tat_build/proc/remove_direction_point(direction, amount = 1)
@@ -359,6 +362,7 @@
 	var/ok = directions.remove_point(direction, amount)
 	if(ok)
 		sanitize()
+		set_dirty()
 	return ok
 
 /datum/tat_build/proc/add_item(path, amount = 1)
@@ -763,7 +767,6 @@
 	return list(
 		"available_stats" = build_ui_stat_entries(),
 		"available_skills" = build_ui_skill_entries(),
-		"available_traits" = build_ui_trait_entries(),
 		"available_items" = build_ui_items_static(),
 	)
 
