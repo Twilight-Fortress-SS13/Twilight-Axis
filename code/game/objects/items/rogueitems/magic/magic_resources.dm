@@ -1,7 +1,7 @@
 #define T1SELLPRICE 4
 #define T2SELLPRICE 20
 #define T3SELLPRICE 60
-#define T4SELLPRICE 120
+#define T4SELLPRICE 200
 // Meld prices: 3x input tier + small crafting premium
 // Mapfetchable sell prices
 #define LEYLINE_SELLPRICE 30

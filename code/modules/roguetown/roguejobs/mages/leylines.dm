@@ -23,6 +23,8 @@
  *     Only leyline type that supports the T5 Void Dragon ritual (uses a T4 circle).
  */
 
+#define LEYLINE_TELEPORT_COOLDOWN (5 MINUTES)
+
 GLOBAL_LIST_EMPTY(leyline_sites)
 GLOBAL_LIST_EMPTY(leyline_activations)
 
@@ -61,6 +63,7 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 	var/uses_today = 0
 	var/last_reset_day = 0
 	var/max_tier = 0
+	var/last_used_for_teleport = -LEYLINE_TELEPORT_COOLDOWN
 
 /obj/structure/leyline/Initialize()
 	. = ..()
@@ -71,6 +74,12 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 /obj/structure/leyline/Destroy()
 	GLOB.leyline_sites -= src
 	return ..()
+
+/obj/structure/leyline/proc/on_teleport_cooldown()
+	return (world.time - last_used_for_teleport) < LEYLINE_TELEPORT_COOLDOWN
+
+/obj/structure/leyline/proc/set_teleport_cooldown()
+	last_used_for_teleport = world.time
 
 /obj/structure/leyline/proc/check_daily_reset()
 	if(GLOB.dayspassed != last_reset_day)
@@ -183,3 +192,5 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 	mega_region = "bog"
 	max_tier = 5
 	color = "#AB47BC" // purple — void
+
+#undef LEYLINE_TELEPORT_COOLDOWN
