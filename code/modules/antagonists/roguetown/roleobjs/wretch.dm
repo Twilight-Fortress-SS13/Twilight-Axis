@@ -12,8 +12,14 @@
 	. = ..()
 	if(owner)
 		owner.special_role = "Wretch"
+		if(ishuman(owner.current))
+			var/mob/living/carbon/human/H = owner.current
+			H.wretch_territory_buff = TRUE
 
 /datum/antagonist/wretch/on_removal()
 	. = ..()
 	if(owner)
 		owner.special_role = null
+		if(ishuman(owner.current))
+			var/mob/living/carbon/human/H = owner.current
+			H.wretch_territory_buff = FALSE

@@ -152,7 +152,7 @@
 	target.mind.current.job = null
 
 	target.become_skeleton()
-	target.wretch_necromancer_minion = TRUE
+	target.wretch_territory_buff = TRUE
 
 	target.patron = master.patron
 	target.faction = list("undead", "[master.real_name]_faction")
@@ -299,7 +299,7 @@
 	target.key = C.key
 	current_charges--
 	SSjob.EquipRank(target, "Greater Skeleton", TRUE)
-	target.wretch_necromancer_minion = TRUE
+	target.wretch_territory_buff = TRUE
 	target.visible_message(span_warning("[target]'s eyes light up with an eerie glow!"))
 	active_skeletons += WEAKREF(target)
 

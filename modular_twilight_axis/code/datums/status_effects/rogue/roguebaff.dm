@@ -41,7 +41,8 @@
 /mob/living/carbon/human
 	var/priest_timer_check = 0
 	var/matthios_banner_timer_check = 0
-	var/wretch_necromancer_minion = FALSE
+	var/bandit_territory_buff = FALSE
+	var/wretch_territory_buff = FALSE
 
 /area/rogue
 	var/territory_role
@@ -69,19 +70,17 @@
 		return
 
 	var/area/rogue/rogue_area = current_area
-	var/current_role = mind?.special_role
-	var/is_wretch_territory_ally = current_role == "Wretch" || wretch_necromancer_minion
 
 	switch(rogue_area.territory_role)
 		if("Bandit")
-			if(current_role == "Bandit")
+			if(bandit_territory_buff)
 				apply_status_effect(/datum/status_effect/buff/territory/bandit)
-			else if(current_role != "Wretch")
+			else if(!wretch_territory_buff)
 				apply_status_effect(/datum/status_effect/debuff/territory/bandit)
 		if("Wretch")
-			if(is_wretch_territory_ally)
+			if(wretch_territory_buff)
 				apply_status_effect(/datum/status_effect/buff/territory/wretch)
-			else if(current_role != "Bandit")
+			else if(!bandit_territory_buff)
 				apply_status_effect(/datum/status_effect/debuff/territory/wretch)
 
 /area/rogue/Entered(mob/living/carbon/human/guy)
@@ -108,9 +107,12 @@
 		return
 
 	var/area/rogue/rogue_area = current_area
-	var/is_territory_ally = H.mind?.special_role == territory_role
-	if(territory_role == "Wretch" && H.wretch_necromancer_minion)
-		is_territory_ally = TRUE
+	var/is_territory_ally = FALSE
+	switch(territory_role)
+		if("Bandit")
+			is_territory_ally = H.bandit_territory_buff
+		if("Wretch")
+			is_territory_ally = H.wretch_territory_buff
 	if(rogue_area.territory_role != territory_role || !is_territory_ally)
 		H.update_territory_effects()
 

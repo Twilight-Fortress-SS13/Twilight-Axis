@@ -57,6 +57,15 @@
 	ADD_TRAIT(H, TRAIT_OUTLAW, TRAIT_GENERIC)		//Just to stop them from using mesiters like Wretches.
 	to_chat(H, span_alertsyndie("I am a BANDIT!"))
 	to_chat(H, span_boldwarning("Long ago I did a crime worthy of my bounty being hung on the wall outside of the local inn. I live now with fellow free men in reverence to MATTHIOS whose idol grants us boons and wishes when fed the money, treasures, and metals of the civilized wretches. As a member of the free men, I worship MATTHIOS first and foremost, though I may have allegiance to other deities."))
+	H.bandit_territory_buff = TRUE
+
+/datum/antagonist/bandit/on_removal()
+	. = ..()
+	if(owner)
+		owner.special_role = null
+		if(ishuman(owner.current))
+			var/mob/living/carbon/human/H = owner.current
+			H.bandit_territory_buff = FALSE
 
 /datum/antagonist/bandit/proc/forge_objectives()
 	return

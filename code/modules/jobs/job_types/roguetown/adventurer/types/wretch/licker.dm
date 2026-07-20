@@ -27,6 +27,7 @@
 		H.adjust_skillrank_up_to(/datum/skill/magic/blood, 4, TRUE)
 		var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(generation = GENERATION_NEONATE)
 		H.mind.add_antag_datum(new_antag)
+		H.wretch_territory_buff = TRUE
 		H.apply_status_effect(STATUS_EFFECT_VAMPIRE_SPAWN_PROTECTION)
 		REMOVE_TRAIT(H, TRAIT_OUTLAW, JOB_TRAIT)
 		if(HAS_TRAIT(H, TRAIT_CRITICAL_RESISTANCE))
@@ -36,13 +37,13 @@
 		to_chat(H, span_danger("You are playing an Antagonist role. By choosing to spawn as a Wretch, you are expected to actively create conflict with other players. Failing to play this role with the appropriate gravitas may result in punishment for Low Roleplay standards.")) //giving this notice, since its part of the bounty system
 		//leaving the below in if people want to give lickers outlaw/bounty status again, this will keep it off the trader roles but combat roles will have to choose a bounty
 		/*var/list/traderjobs = list("Aristocrat",
-									"Scholar", 
-								   "Peddler", 
-								   "Jeweler", 
-								   "Harlequin", 
-								   "Doomsayer", 
-								   "Cuisiner", 
-								   "Brewer") 
+									"Scholar",
+								   "Peddler",
+								   "Jeweler",
+								   "Harlequin",
+								   "Doomsayer",
+								   "Cuisiner",
+								   "Brewer")
 		if(H.advjob in traderjobs)
 			REMOVE_TRAIT(H, TRAIT_OUTLAW, JOB_TRAIT) //removing since these are non-combat roles and they need to be able to use the stocks and miesters to blend in
 			to_chat(H, span_danger("You are playing an Antagonist role. By choosing to spawn as a Wretch, you are expected to actively create conflict with other players. Failing to play this role with the appropriate gravitas may result in punishment for Low Roleplay standards.")) //giving this notice, since its part of the bounty system
