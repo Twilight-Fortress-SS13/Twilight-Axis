@@ -969,6 +969,17 @@
 	pixel_y = 0
 	pixel_x = 0
 
+/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar/blackrose
+	name = "'Black Rose' hand mortar"
+	desc = "Более компактная, элегантная, даже можно сказать женственная разновидность ручной мортиры с отделкой из воронёной стали и золота."
+	icon = 'modular_twilight_axis/firearms/icons/mortar/blackrose.dmi'
+	icon_state = "blackrose"
+	item_state = "blackrose"
+	advanced_icon = 'modular_twilight_axis/firearms/icons/mortar/blackrose.dmi'
+	advanced_icon_r = 'modular_twilight_axis/firearms/icons/mortar/blackrose_r.dmi'
+	advanced_icon_norod	= 'modular_twilight_axis/firearms/icons/mortar/blackrose_norod.dmi'
+	advanced_icon_r_norod = 'modular_twilight_axis/firearms/icons/mortar/blackrose_r_norod.dmi'
+
 /obj/item/ammo_box/magazine/internal/twilight_firearm/mortar
 	name = "mortar internal magazine"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot

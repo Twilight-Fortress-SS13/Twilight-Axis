@@ -67,6 +67,12 @@
 		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle)
 	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle
 
+/obj/item/enchantingkit/blackrose
+	name = "'Blackrose' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: hand mortar"
+	target_items = list(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar/blackrose)
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar/blackrose
+
 //Her Verdict - Kriegmesser
 /obj/item/enchantingkit/weapon/herverdict
 	name = "'Her Verdict' morphing elixir"

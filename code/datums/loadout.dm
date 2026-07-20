@@ -2340,6 +2340,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/jagerrifle
 	donatitem = TRUE
 
+/datum/loadout_item/blackrose_ozenfan
+	name = "Blackrose"
+	category = list("Оружие")
+	path = /obj/item/enchantingkit/blackrose
+	ckeywhitelist = list("gisya")
+
 /datum/loadout_item/donator_stinketh_shashka
 	name = "Donator Kit - Fencer's Shashka - Required: Szöréndnížine Sabre Or Aavnic Shashka"
 	category = list("Оружие", "Донат")
