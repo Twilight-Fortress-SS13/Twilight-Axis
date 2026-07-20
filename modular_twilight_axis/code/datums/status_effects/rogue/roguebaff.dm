@@ -37,18 +37,102 @@
 				preserve = TRUE
 		if(!preserve)
 			owner.remove_status_effect(/datum/status_effect/buff/clergybuff)
-	
+
 /mob/living/carbon/human
 	var/priest_timer_check = 0
 	var/matthios_banner_timer_check = 0
 
+/area/rogue
+	var/territory_role
+
+/area/rogue/outdoors/banditcamp
+	territory_role = "Bandit"
+
+/area/rogue/indoors/banditcamp
+	territory_role = "Bandit"
+
+/area/rogue/outdoors/woods/wretch_lair
+	territory_role = "Wretch"
+
+/area/rogue/under/cave/inhumen
+	territory_role = "Wretch"
+
+/mob/living/carbon/human/proc/update_territory_effects()
+	remove_status_effect(/datum/status_effect/buff/territory/bandit)
+	remove_status_effect(/datum/status_effect/buff/territory/wretch)
+	remove_status_effect(/datum/status_effect/debuff/territory/bandit)
+	remove_status_effect(/datum/status_effect/debuff/territory/wretch)
+
+	var/area/current_area = get_area(src)
+	if(!istype(current_area, /area/rogue))
+		return
+
+	var/area/rogue/rogue_area = current_area
+	var/current_role = mind?.special_role
+
+	switch(rogue_area.territory_role)
+		if("Bandit")
+			if(current_role == "Bandit")
+				apply_status_effect(/datum/status_effect/buff/territory/bandit)
+			else if(current_role != "Wretch")
+				apply_status_effect(/datum/status_effect/debuff/territory/bandit)
+		if("Wretch")
+			if(current_role == "Wretch")
+				apply_status_effect(/datum/status_effect/buff/territory/wretch)
+			else if(current_role != "Bandit")
+				apply_status_effect(/datum/status_effect/debuff/territory/wretch)
+
 /area/rogue/Entered(mob/living/carbon/human/guy)
 
 	.=..()
+	if(!istype(guy))
+		return
 	if((src.holy_area == TRUE) && HAS_TRAIT(guy, TRAIT_CLERGY_TA) && !guy.has_status_effect(/datum/status_effect/buff/clergybuff) && !HAS_TRAIT(guy, TRAIT_EXCOMMUNICATED) && !HAS_TRAIT(guy, TRAIT_HERESIARCH))
 		guy.apply_status_effect(/datum/status_effect/buff/clergybuff)
+	guy.update_territory_effects()
 
-/datum/status_effect/buff/mist_form 
+/datum/status_effect/buff/territory
+	var/territory_role
+
+/datum/status_effect/buff/territory/process()
+	. = ..()
+	if(!ishuman(owner))
+		owner.remove_status_effect(type)
+		return
+
+	var/mob/living/carbon/human/H = owner
+	var/area/current_area = get_area(H)
+	if(!istype(current_area, /area/rogue))
+		H.update_territory_effects()
+		return
+
+	var/area/rogue/rogue_area = current_area
+	if(rogue_area.territory_role != territory_role || H.mind?.special_role != territory_role)
+		H.update_territory_effects()
+
+/datum/status_effect/buff/territory/bandit
+	id = "bandit_territory"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/territory/bandit
+	effectedstats = list(STATKEY_STR = 5, STATKEY_PER = 5, STATKEY_INT = 5, STATKEY_CON = 5, STATKEY_WIL = 5, STATKEY_SPD = 5, STATKEY_LCK = 5)
+	territory_role = "Bandit"
+
+/atom/movable/screen/alert/status_effect/buff/territory/bandit
+	name = "Bandit Territory"
+	desc = "I know every path and hiding place here. This ground belongs to my band."
+	icon_state = "buff"
+
+/datum/status_effect/buff/territory/wretch
+	id = "wretch_territory"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/territory/wretch
+	effectedstats = list(STATKEY_STR = 5, STATKEY_PER = 5, STATKEY_INT = 5, STATKEY_CON = 5, STATKEY_WIL = 5, STATKEY_SPD = 5, STATKEY_LCK = 5)
+	territory_role = "Wretch"
+
+/atom/movable/screen/alert/status_effect/buff/territory/wretch
+	name = "Wretch Territory"
+	desc = "The lair are familiar to me. I am stronger on this ground."
+	icon_state = "buff"
+
+/datum/status_effect/buff/mist_form
 	id = "mist_form"
 	duration = 6666
 	alert_type = /atom/movable/screen/alert/status_effect/buff/dagger_dash
@@ -56,8 +140,8 @@
 /datum/status_effect/buff/mist_form/on_apply()
 	if(!isliving(owner)) return FALSE
 	var/mob/living/L = owner
-	
-	L.alpha = 100 
+
+	L.alpha = 100
 
 	ADD_TRAIT(L, "ethereal", MAGIC_TRAIT)
 	ADD_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
@@ -70,24 +154,24 @@
 	L.status_flags |= GODMODE
 
 
-	L.density = FALSE 
-	
+	L.density = FALSE
+
 
 	L.pass_flags |= LETPASSTHROW
 
 	L.pass_flags |= PASSMOB
-	
+
 	return ..()
 
 /datum/status_effect/buff/mist_form/on_remove()
 	var/mob/living/L = owner
 	if(!L) return
-	
+
 	L.alpha = 255
-	
+
 
 	L.density = TRUE
-	
+
 
 	REMOVE_TRAIT(L, "ethereal", MAGIC_TRAIT)
 	REMOVE_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
@@ -99,7 +183,7 @@
 	L.status_flags &= ~GODMODE
 	L.pass_flags &= ~LETPASSTHROW
 	L.pass_flags &= ~PASSMOB
-	
+
 	..()
 
 /atom/movable/screen/alert/status_effect/buff/smartium

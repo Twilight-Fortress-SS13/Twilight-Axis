@@ -52,11 +52,11 @@
 /atom/movable/screen/alert/status_effect/debuff/knockout
 	name = "Drowsy"
 */
-/datum/status_effect/debuff/vampiric_slowdown 
+/datum/status_effect/debuff/vampiric_slowdown
 	id = "vampiric_slowdown"
-	duration = 120 
-	alert_type = null 
-	effectedstats = list(STATKEY_SPD = -10) 
+	duration = 120
+	alert_type = null
+	effectedstats = list(STATKEY_SPD = -10)
 
 /datum/status_effect/debuff/vampiric_slowdown/on_apply()
 	. = ..()
@@ -68,26 +68,53 @@
 		to_chat(owner, span_notice("The burden lifts, and I regain my speed."))
 	. = ..()
 
+/datum/status_effect/debuff/territory
+	var/territory_role
+
+/datum/status_effect/debuff/territory/process()
+	. = ..()
+	if(!ishuman(owner))
+		owner.remove_status_effect(type)
+		return
+
+	var/mob/living/carbon/human/H = owner
+	var/area/current_area = get_area(H)
+	if(!istype(current_area, /area/rogue))
+		H.update_territory_effects()
+		return
+
+	var/area/rogue/rogue_area = current_area
+	var/current_role = H.mind?.special_role
+	if(rogue_area.territory_role != territory_role || current_role == "Bandit" || current_role == "Wretch")
+		H.update_territory_effects()
+
+/datum/status_effect/debuff/territory/bandit
+	id = "bandit_territory_intruder"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/territory/bandit
+	effectedstats = list(STATKEY_STR = -3, STATKEY_PER = -3, STATKEY_INT = -3, STATKEY_CON = -3, STATKEY_WIL = -3, STATKEY_SPD = -3, STATKEY_LCK = -3)
+	territory_role = "Bandit"
+	icon_state = "debuff"
+
 /datum/status_effect/stacking/hypothermia
 	id = "hypothermia"
 	status_type = STATUS_EFFECT_REFRESH
-	max_stacks = 18 
+	max_stacks = 18
 	delay_before_decay = 10 SECONDS
 	tick_interval = 1 SECONDS
-	
+
 	var/last_frozen_time = 0
-	var/current_speed_penalty = 0 
+	var/current_speed_penalty = 0
 
 /datum/status_effect/stacking/hypothermia/refresh(mob/living/new_owner, ...)
 	var/list/A = args
 	var/amount = (A.len >= 2) ? A[2] : 1
 	add_stacks(amount)
-	
+
 /datum/status_effect/stacking/hypothermia/add_stacks(stacks_added)
-	if(!owner || owner.stat == DEAD) 
+	if(!owner || owner.stat == DEAD)
 		return FALSE
-	
-	
+
+
 	var/datum/status_effect/freon/freeze/F = owner.has_status_effect(/datum/status_effect/freon/freeze)
 	if(F)
 		F.ice_integrity = min(F.ice_integrity + (stacks_added * 5), 250)
@@ -96,23 +123,23 @@
 
 	if(stacks_added > 0)
 		last_frozen_time = world.time
-	
+
 	stacks = clamp(stacks + stacks_added, 0, max_stacks)
-	
-	
+
+
 	var/new_penalty = -round(stacks * 0.5)
 	if(new_penalty != current_speed_penalty)
-		owner.change_stat(STATKEY_SPD, -current_speed_penalty) 
+		owner.change_stat(STATKEY_SPD, -current_speed_penalty)
 		current_speed_penalty = new_penalty
-		owner.change_stat(STATKEY_SPD, current_speed_penalty) 
-	
+		owner.change_stat(STATKEY_SPD, current_speed_penalty)
+
 
 	if(stacks == 6)
 		owner.balloon_alert(owner, "My limbs are going numb...")
 	else if(stacks == 12)
 		owner.balloon_alert(owner, "The cold is clouding the mind!")
-	
-	
+
+
 	if(stacks >= 18)
 		do_final_freeze()
 		return TRUE
@@ -121,7 +148,7 @@
 	return TRUE
 
 /datum/status_effect/stacking/hypothermia/proc/update_frost_visuals()
-	if(!owner) 
+	if(!owner)
 		return
 	var/r = clamp(255 - (stacks * 11), 50, 255)
 	var/g = clamp(255 - (stacks * 6), 140, 255)
@@ -130,55 +157,55 @@
 	owner.update_atom_colour()
 
 /datum/status_effect/stacking/hypothermia/tick()
-	if(!owner || owner.stat == DEAD) 
+	if(!owner || owner.stat == DEAD)
 		return
-	
-	
+
+
 	if(world.time > last_frozen_time + delay_before_decay)
 		if(stacks > 0)
 			add_stacks(-1)
-			return 
+			return
 
-	if(!owner) 
+	if(!owner)
 		return
 
 	owner.update_move_intent_slowdown()
 
 
-	if(stacks >= 1 && stacks <= 5) 
-		if(prob(10)) 
+	if(stacks >= 1 && stacks <= 5)
+		if(prob(10))
 			owner.emote("shiver")
 
-	else if(stacks >= 6 && stacks <= 11) 
+	else if(stacks >= 6 && stacks <= 11)
 		owner.adjustFireLoss(1.5)
 		if(owner.stamina < owner.max_stamina)
 			owner.stamina_add(10)
-		
-	else if(stacks >= 12) 
+
+	else if(stacks >= 12)
 		owner.adjustFireLoss(3)
 		owner.adjustOxyLoss(3)
-		
+
 		if(owner.stamina < owner.max_stamina)
 			owner.stamina_add(15)
-		
-		
-		if(prob(15)) 
+
+
+		if(prob(15))
 			owner.apply_status_effect(STATUS_EFFECT_SLEEPING, 40)
-			
-		
+
+
 		if(prob(15))
 			owner.visible_message(span_danger("[owner] is staggering from the terrible cold!"))
 			owner.Knockdown(20)
 
 /datum/status_effect/stacking/hypothermia/proc/do_final_freeze()
-	if(!owner) 
+	if(!owner)
 		return
 	owner.apply_status_effect(/datum/status_effect/freon/freeze)
 	qdel(src)
 
 /datum/status_effect/stacking/hypothermia/on_remove()
 	if(owner)
-		
+
 		owner.change_stat(STATKEY_SPD, -current_speed_penalty)
 		owner.remove_atom_colour(ADMIN_COLOUR_PRIORITY)
 		owner.update_move_intent_slowdown()
