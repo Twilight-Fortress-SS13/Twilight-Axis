@@ -68,6 +68,47 @@
 		to_chat(owner, span_notice("The burden lifts, and I regain my speed."))
 	. = ..()
 
+/datum/status_effect/debuff/territory
+	var/territory_role
+
+/datum/status_effect/debuff/territory/tick()
+	if(!ishuman(owner))
+		qdel(src)
+		return
+
+	var/mob/living/carbon/human/H = owner
+	var/area/current_area = get_area(H)
+	if(!istype(current_area, /area/rogue))
+		H.update_territory_effects()
+		return
+
+	var/area/rogue/rogue_area = current_area
+	var/current_role = H.mind?.special_role
+	if(rogue_area.territory_role != territory_role || current_role == "Bandit" || current_role == "Wretch")
+		H.update_territory_effects()
+
+/datum/status_effect/debuff/territory/bandit
+	id = "bandit_territory_intruder"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/territory/bandit
+	effectedstats = list(STATKEY_STR = -3, STATKEY_PER = -3, STATKEY_INT = -3, STATKEY_CON = -3, STATKEY_WIL = -3, STATKEY_SPD = -3, STATKEY_LCK = -3)
+	territory_role = "Bandit"
+
+/atom/movable/screen/alert/status_effect/debuff/territory/bandit
+	name = "Bandit Territory"
+	desc = "Every trail feels watched, and an ambush could come from anywhere."
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/territory/wretch
+	id = "wretch_territory_intruder"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/territory/wretch
+	effectedstats = list(STATKEY_STR = -3, STATKEY_PER = -3, STATKEY_INT = -3, STATKEY_CON = -3, STATKEY_WIL = -3, STATKEY_SPD = -3, STATKEY_LCK = -3)
+	territory_role = "Wretch"
+
+/atom/movable/screen/alert/status_effect/debuff/territory/wretch
+	name = "Wretch Territory"
+	desc = "The lair presses in around me, and unseen dangers sap my resolve."
+	icon_state = "debuff"
+
 /datum/status_effect/stacking/hypothermia
 	id = "hypothermia"
 	status_type = STATUS_EFFECT_REFRESH
