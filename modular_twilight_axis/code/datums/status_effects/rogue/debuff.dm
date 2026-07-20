@@ -84,7 +84,8 @@
 
 	var/area/rogue/rogue_area = current_area
 	var/current_role = H.mind?.special_role
-	if(rogue_area.territory_role != territory_role || current_role == "Bandit" || current_role == "Wretch")
+	var/is_wretch_territory_ally = territory_role == "Wretch" && H.wretch_necromancer_minion
+	if(rogue_area.territory_role != territory_role || current_role == "Bandit" || current_role == "Wretch" || is_wretch_territory_ally)
 		H.update_territory_effects()
 
 /datum/status_effect/debuff/territory/bandit
