@@ -3,7 +3,8 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Icon } from 'tgui-core/components';
 
-import { backendSuspendStart, globalStore, useBackend } from '../backend';
+import { useBackend } from '../backend';
+import { suspendStart } from '../events/handlers/suspense';
 import { Window } from '../layouts';
 
 type FamilyType = 'none' | 'member';
@@ -445,9 +446,7 @@ const FamilyTypeCardView = memo(function FamilyTypeCardView(
 const FAMILY_WINDOW_FULLSCREEN_SIZE = 10000;
 
 function closeFamilyWindow() {
-  if (globalStore) {
-    globalStore.dispatch(backendSuspendStart());
-  }
+  suspendStart();
 }
 
 function fitFamilyWindowToScreen() {

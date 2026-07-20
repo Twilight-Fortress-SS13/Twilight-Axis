@@ -1,0 +1,5 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - balance: "Синяя полоска тратится на 40% меньше (исключение заклинания)"
+  - balance: "Заточка тратится на 30% меньше"

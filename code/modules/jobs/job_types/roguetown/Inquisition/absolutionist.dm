@@ -77,6 +77,7 @@
 	if(ishuman(L))
 		var/mob/living/carbon/human/H = L
 		if(H.mind)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/touch/asperges) //TA EDIT
 			H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/persist)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonlux_tamper)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonabsolve)
@@ -143,6 +144,23 @@
 		to_chat(user, span_warning("[target] is already faithful to Psydon!"))
 		revert_cast()
 		return FALSE
+
+	if(istype(target.patron, /datum/patron/vheslyn)) //UNFORGIVABLE SIN, UNFORGIVABLE, DIE. DIE. DIE.
+		to_chat(user, span_userdanger("[target] is UNFORGIVABLE, my attempt to convert them to PSYDON, violently sunders my lux!"))
+		if(!HAS_TRAIT(user, TRAIT_NOPAIN))
+			user.emote("agony")
+		if(!HAS_TRAIT(user, TRAIT_NOMOOD))
+			user.freak_out()
+		playsound(user, 'sound/misc/lava_death.ogg', 100, TRUE)
+		user.adjust_fire_stacks(40, /datum/status_effect/fire_handler/fire_stacks/vheslyn) //YOU FUCKING DESERVE THIS
+		user.adjustFireLoss(120)//This will kill you, always.
+		user.Knockdown(30)
+		user.Jitter(30)
+		user.Stun(25)
+		user.ignite_mob()
+		explosion(get_turf(user), light_impact_range = 1, flame_range = 1, smoke = FALSE)
+		user.visible_message(span_danger("[user] is violently smited as profane flames engulf their entire body!"))
+		return TRUE
 
 	if(alert(target, "[user.real_name] offers you the chance to renounce your sins, and to worship Psydon once more. Do you take it?", "REDEMPTION OR REFUSAL", "Yes", "No") != "Yes")
 		to_chat(user, span_warning("[target] has refused your offer of redemption."))

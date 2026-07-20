@@ -764,6 +764,8 @@ GLOBAL_VAR_INIT(mobids, 1)
  * * we are not restrained
  */
 /mob/proc/canface(atom/A)
+	if(facing_locked)
+		return FALSE
 	if(client)
 		if(world.time < client.last_turn)
 			return FALSE
@@ -1214,9 +1216,8 @@ GLOBAL_VAR_INIT(mobids, 1)
 	if(stat != CONSCIOUS)
 		to_chat(src, span_warning("I can't set my pose right now."))
 		return
-
 	var/old_pose = pose_text
-	var/new_pose = tgui_input_text(src, "Set your character's pose (MARKDOWN AVAILABLE):", "SET POSE", pose_text, multiline = FALSE, encode = FALSE, bigmodal = TRUE, max_length = 256)
+	var/new_pose = tgui_input_text(src, "Set your character's pose (MARKDOWN AVAILABLE):", "SET POSE", pose_text, multiline = FALSE, encode = TRUE, bigmodal = TRUE, max_length = 256)
 	if(isnull(new_pose))
 		return
 
@@ -1328,7 +1329,10 @@ GLOBAL_VAR_INIT(mobids, 1)
 	SEND_SIGNAL(src, COMSIG_MOB_GET_STATUS_TAB_ITEMS, .)
 	if(client)
 		. += list(list("IC DATE: ", "[get_current_ic_date_as_string()] (CLICK FOR CALENDAR)", "src=[REF(client)];statbrowser_calendar=1"))
-		. += list(list("tod", GLOB.tod, "IC TIME: [get_current_ic_time_as_string()]"))
+		var/current_tod = GLOB.tod
+		if(!istext(current_tod) || !length(current_tod))
+			current_tod = "day"
+		. += list(list("tod", current_tod, "IC TIME: [get_current_ic_time_as_string()]"))
 	return .
 
 /mob/proc/get_stats_tab_items()

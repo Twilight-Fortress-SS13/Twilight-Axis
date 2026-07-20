@@ -141,6 +141,9 @@
 			message = "[card_table_display_name(user)] покидает стол."
 		if(stage == CARD_TABLE_STAGE_PLAYING && game_type == CARD_TABLE_GAME_FOOL)
 			fool_normalize_turn_after_leave()
+		if(stage != CARD_TABLE_STAGE_LOBBY && has_spirit_opponent() && active_real_players_count() < 1)
+			stage = CARD_TABLE_STAGE_FINISHED
+			message = "Игра завершается: за столом не осталось живых игроков."
 		if(stage != CARD_TABLE_STAGE_LOBBY && active_players_count() < min_players())
 			stage = CARD_TABLE_STAGE_FINISHED
 			message = "Игра завершается: не хватает активных игроков."
@@ -174,6 +177,9 @@
 		message = "[name] покидает стол[reason_text]."
 		if(stage == CARD_TABLE_STAGE_PLAYING && game_type == CARD_TABLE_GAME_FOOL)
 			fool_normalize_turn_after_leave()
+		if(stage != CARD_TABLE_STAGE_LOBBY && has_spirit_opponent() && active_real_players_count() < 1)
+			stage = CARD_TABLE_STAGE_FINISHED
+			message = "Игра завершается: за столом не осталось живых игроков."
 		if(stage != CARD_TABLE_STAGE_LOBBY && active_players_count() < min_players())
 			stage = CARD_TABLE_STAGE_FINISHED
 			message = "Игра завершается: не хватает активных игроков."

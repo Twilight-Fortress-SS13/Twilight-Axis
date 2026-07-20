@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+// TA EDIT
+import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Image, Section, Stack } from 'tgui-core/components';
 
 import { resolveAsset } from '../assets';
 import { useBackend } from '../backend';
-import { ExaminePanelData } from './ExaminePanelData';
+import type { ExaminePanelData } from './ExaminePanelData';
 
 const isValidAssetValue = (value?: string | null) =>
   !!value && value !== '0' && value !== '00';
@@ -69,6 +70,14 @@ export const FlavorTextPage = (props) => {
     }),
     [safeOocNotesNsfw],
   );
+
+  // TA EDIT START
+  useEffect(() => {
+    if (flavorTextIndex === 'NSFW' && !canShowNsfwFlavor) {
+      setFlavorTextIndex('SFW');
+    }
+  }, [canShowNsfwFlavor, flavorTextIndex]);
+  // TA EDIT END
 
   return (
     <Stack fill>
@@ -243,6 +252,14 @@ export const ImageGalleryPage = (props) => {
   const images = galleryMode === 'NSFW' ? safeNsfwGallery : safeSfwGallery;
   const canShowNsfwGallery =
     safeNsfwGallery.length > 0 && Boolean(is_naked || nsfw_examine_always);
+
+  // TA EDIT START
+  useEffect(() => {
+    if (galleryMode === 'NSFW' && !canShowNsfwGallery) {
+      setGalleryMode('SFW');
+    }
+  }, [canShowNsfwGallery, galleryMode]);
+  // TA EDIT END
 
   return (
     <Section

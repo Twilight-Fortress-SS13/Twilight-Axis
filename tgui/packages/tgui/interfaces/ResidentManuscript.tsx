@@ -580,7 +580,7 @@ export const ResidentManuscript = () => {
     useState<OwnerStatusKey>(ownerStatusKey);
 
   const canEdit = !!permissions.can_edit;
-  const showVerification = !Boolean(is_owner);
+  const showVerification = !is_owner;
   const defectKeys = verification.defect_note_keys ?? [];
   const defectNotes = defectKeys.map((key) => texts.defects[key] || key);
   const validationNote = verification.note_key
@@ -907,7 +907,7 @@ type DocumentCrestProps = {
   profileId: DocumentProfileId;
 };
 
-const PROFILE_EMBLEMS: Record<DocumentProfileId, ReactNode> = {
+const PROFILE_EMBLEMS: Partial<Record<DocumentProfileId, ReactNode>> = {
   resident: (
     <>
       <path

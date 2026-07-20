@@ -7,6 +7,7 @@
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/armor.dmi'
 	icon_state = "mamaluke"
 	item_state = "mamaluke"
+	max_integrity = 350
 
 /obj/item/clothing/suit/roguetown/armor/plate/cataphract
 	slot_flags = ITEM_SLOT_ARMOR
@@ -78,7 +79,7 @@
 	icon = 'modular_deserttown/icons/clothing/head.dmi'
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/head.dmi'
 	icon_state = "mamhelm"
-	max_integrity = 250
+	max_integrity = 320
 	body_parts_covered = HEAD|HAIR|EARS
 	flags_inv = HIDEEARS|HIDEHAIR
 

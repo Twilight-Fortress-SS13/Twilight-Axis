@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 import { useBackend } from '../backend';
 import { Box, Button, Section, Slider, Stack } from 'tgui-core/components';
 import { Window } from '../layouts';
@@ -13,8 +15,8 @@ type OnagerData = {
   max_distance: number;
 };
 
-export const Onager = (props, context) => {
-  const { act, data } = useBackend<OnagerData>(context);
+export const Onager = () => {
+  const { act, data } = useBackend<OnagerData>();
   
   if (!data) {
     return (
@@ -34,7 +36,7 @@ export const Onager = (props, context) => {
   } = data;
 
   // Стили для квадратных кнопок
-  const squareBtnStyle = {
+  const squareBtnStyle: CSSProperties = {
     width: '32px',
     height: '32px',
     padding: '0',
@@ -122,8 +124,7 @@ export const Onager = (props, context) => {
                     minValue={min_distance}
                     maxValue={max_distance}
                     step={1}
-                    fill // Растягивает слайдер на всю ширину
-                    onChange={(e, value) => act('set_distance', { dist: value })}
+                    onChange={(_, value) => act('set_distance', { dist: value })}
                   />
                   <Box mt={0.5} textAlign="center" color="label" fontSize="0.8em">
                     ({min_distance} - {max_distance} tiles)

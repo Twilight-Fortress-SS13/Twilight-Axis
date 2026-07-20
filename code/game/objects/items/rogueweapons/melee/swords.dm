@@ -220,6 +220,15 @@
 	. = ..()
 	AddComponent(/datum/component/skill_blessed, TRAIT_LONGSWORDSMAN, /datum/skill/combat/swords, SKILL_LEVEL_MASTER)
 
+/obj/item/rogueweapon/sword/long/iron
+	name = "bastard sword"
+	desc = "A bastard sword that can chop with ease. It can be effectively wielded in both one- and two-handed grips, hence the name."
+	icon_state = "ilongsword"
+	item_state = "ilongsword"
+	sheathe_icon = "ilongsword"
+	max_integrity = 100
+	smeltresult = /obj/item/ingot/iron
+
 /obj/item/rogueweapon/sword/long/blacksteel
 	name = "blacksteel longsword"
 	desc = "A sleek blade of a dark, and burnished hue. \
@@ -373,7 +382,7 @@
 /obj/item/rogueweapon/sword/long/cleric
 	name = "anointed longsword"
 	desc = "A crusader's longsword, adorned with a blade of cold iron and blessed to smite evil. Though this blessed alloy lacks the strength to \
-	sunder those who bare greater curses, it nevertheless channels enough power to dispell the lesser curses of mindless fiends-and-foes. </br>'Strike \
+	sunder those who bear greater curses, it nevertheless channels enough power to dispell the lesser curses of mindless fiends-and-foes. </br>'Strike \
 	true, my child, for thy blade is thine God..'"
 	icon_state = "crusaderlongsword"
 	sheathe_icon = "crusaderlongsword"
@@ -395,7 +404,7 @@
 
 /obj/item/rogueweapon/sword/long/undivided
 	name = "decablade"
-	desc = "A blessed longsword, held by the Holy See's templars in their stalwart defense against evil. The golden crossguard bares the winged motif of an angel, and \
+	desc = "A blessed longsword, held by the Holy See's templars in their stalwart defense against evil. The golden crossguard bears the winged motif of an angel, and \
 	psalms from the Pantheon's holy tome have been meticulously carved along the blade's edge. </br>'With a drop of holy Eclipsum, doth the blade rise..' </br>'..gilded, \
 	gleaming, radiant heat, warm my soul, immolate my enemies..' </br>'..and let me vanquish all those who would dare to Divide us, once more.'"
 	icon_state = "seeblade"
@@ -460,6 +469,30 @@
 	when drawn, a symbol of distress. Ad pacem servandam."
 	sheathe_icon = "reform"
 	icon_state = "reformistsword"
+
+/obj/item/rogueweapon/sword/long/etruscan/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the projectile", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
+	SEND_SIGNAL(src, COMSIG_ITEM_HIT_REACT, args)
+	var/mob/attacker
+	var/obj/item/I
+	if(attack_type == THROWN_PROJECTILE_ATTACK)
+		if(istype(hitby, /obj/item)) // can't trust mob -> item assignments
+			I = hitby
+		if(I?.thrownby)
+			attacker = I.thrownby
+	if(attack_type == PROJECTILE_ATTACK)
+		var/obj/projectile/P = hitby
+		if(P?.firer)
+			attacker = P.firer
+	if(attacker && istype(attacker))
+		if (!owner.can_see_cone(attacker))
+			return FALSE
+		if(obj_broken)
+			return FALSE
+		if((owner.client?.chargedprog == 100 && owner.used_intent?.tranged) || prob(40)) // let's give it a 40% coverage, it's still something thinner than a shield
+			owner.visible_message(span_danger("[owner] expertly blocks [hitby] with [src]!"))
+			src.take_damage(floor(damage / 4))
+			return TRUE
+	return FALSE
 
 /obj/item/rogueweapon/sword/long/fencerguy
 	name = "grenzelhoftian longsword"
@@ -627,7 +660,7 @@
 /obj/item/rogueweapon/sword/long/judgement/vlord/examine(mob/user)
 	. = ..()
 	if(user.mind?.has_antag_datum(/datum/antagonist/vampire))
-		. += span_notice("You can feel the unholy blade's enchantment resonate with your cursed nature, anyone that does not bare your curse will be unable to touch it.")
+		. += span_notice("You can feel the unholy blade's enchantment resonate with your cursed nature, anyone that does not bear your curse will be unable to touch it.")
 
 /obj/item/rogueweapon/sword/long/judgement/vlord/Initialize()
   ..()
@@ -730,7 +763,7 @@
 	name = "\"Terminus Est\""
 	desc = "An ornate executioner's sword, decorated with a golden pommel and crossguard. A bloody rag \
 	winds around the ricasso, ever-present to keep its edge spotless for the executionee's final \
-	judgement. The stout-angled blade bares an enscription along its length; </br>'WHEN THIS SWORDE I DOTH LYFT, I WISH THE SINNER ETERNAL LYFE AS THINE GYFT.'"
+	judgement. The stout-angled blade bears an enscription along its length; </br>'WHEN THIS SWORDE I DOTH LYFT, I WISH THE SINNER ETERNAL LYFE AS THINE GYFT.'"
 	smeltresult = /obj/item/ingot/gold // It is the most valuable component
 	max_blade_int = 363 
 	smelt_bar_num = 2

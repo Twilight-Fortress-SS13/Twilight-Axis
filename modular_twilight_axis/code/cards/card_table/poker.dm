@@ -25,7 +25,137 @@
 			continue
 		if(!P.ready)
 			return TRUE
+	poker_after_betting_round()
+	return TRUE
+
+/datum/card_table_session/proc/poker_player_in_hand(datum/card_table_player/player)
+	return player_is_active(player) && !player.poker_folded
+
+/datum/card_table_session/proc/poker_uses_community_cards()
+	return poker_variant == CARD_TABLE_POKER_TEXAS || poker_variant == CARD_TABLE_POKER_OMAHA || poker_variant == CARD_TABLE_POKER_STUD
+
+/datum/card_table_session/proc/poker_active_hands_count()
+	var/count = 0
+	for(var/datum/card_table_player/player in players)
+		if(poker_player_in_hand(player))
+			count++
+	return count
+
+/datum/card_table_session/proc/poker_next_betting_index(start_index)
+	if(!players.len)
+		return 0
+	for(var/offset = 0, offset < players.len, offset++)
+		var/check_index = start_index + offset
+		while(check_index > players.len)
+			check_index -= players.len
+		var/datum/card_table_player/player = players[check_index]
+		if(poker_player_in_hand(player) && !player.ready && !player.poker_all_in)
+			return check_index
+	return 0
+
+/datum/card_table_session/proc/poker_reset_betting_round()
+	poker_current_bet = 10
+	for(var/datum/card_table_player/player in players)
+		if(poker_player_in_hand(player) && !player.poker_all_in)
+			player.ready = FALSE
+			player.poker_bet = 0
+		else if(poker_player_in_hand(player))
+			player.ready = TRUE
+	poker_turn_index = poker_next_betting_index(dealer_index + 1)
+	poker_betting_round = community_cards.len
+	return poker_turn_index
+
+/datum/card_table_session/proc/poker_after_betting_round()
+	if(poker_active_hands_count() <= 1)
+		poker_finish()
+		return
+	if(!poker_uses_community_cards())
+		poker_finish()
+		return
+	while(community_cards.len < 5)
+		var/list/new_card = draw_one()
+		if(!new_card)
+			break
+		community_cards += list(new_card)
+		if(poker_reset_betting_round())
+			message = "Открыта общая карта [community_cards.len]/5. Новый круг ставок."
+			return
 	poker_finish()
+
+/datum/card_table_session/proc/poker_current_player() as /datum/card_table_player
+	if(poker_turn_index < 1 || poker_turn_index > players.len)
+		return null
+	var/datum/card_table_player/player = players[poker_turn_index]
+	if(!poker_player_in_hand(player) || player.ready || player.poker_all_in)
+		return null
+	return player
+
+/datum/card_table_session/proc/poker_next_turn()
+	if(poker_active_hands_count() <= 1)
+		poker_finish()
+		return
+	for(var/offset = 1, offset <= players.len, offset++)
+		var/check_index = poker_turn_index + offset
+		while(check_index > players.len)
+			check_index -= players.len
+		var/datum/card_table_player/next_player = players[check_index]
+		if(poker_player_in_hand(next_player) && !next_player.ready && !next_player.poker_all_in)
+			poker_turn_index = check_index
+			return
+	poker_after_betting_round()
+
+/datum/card_table_session/proc/poker_check(mob/user)
+	var/datum/card_table_player/player = player_for_user(user)
+	if(stage != CARD_TABLE_STAGE_PLAYING || game_type != CARD_TABLE_GAME_POKER || player != poker_current_player())
+		return FALSE
+	var/delta = max(0, poker_current_bet - player.poker_bet)
+	poker_pot += delta
+	player.poker_total_bet += delta
+	player.poker_bet = poker_current_bet
+	player.ready = TRUE
+	message = poker_current_bet ? "[player.name] поддерживает ставку." : "[player.name] делает чек."
+	poker_next_turn()
+	return TRUE
+
+/datum/card_table_session/proc/poker_bet(mob/user, amount)
+	var/datum/card_table_player/player = player_for_user(user)
+	if(stage != CARD_TABLE_STAGE_PLAYING || game_type != CARD_TABLE_GAME_POKER || player != poker_current_player())
+		return FALSE
+	amount = max(10, text2num("[amount]"))
+	if(amount <= poker_current_bet)
+		return poker_check(user)
+	var/delta = max(0, amount - player.poker_bet)
+	poker_current_bet = amount
+	poker_pot += delta
+	player.poker_total_bet += delta
+	for(var/datum/card_table_player/other in players)
+		if(poker_player_in_hand(other) && !other.poker_all_in)
+			other.ready = FALSE
+	player.poker_bet = poker_current_bet
+	player.ready = TRUE
+	message = "[player.name] ставит [amount]."
+	poker_next_turn()
+	return TRUE
+
+/datum/card_table_session/proc/poker_all_in(mob/user)
+	var/datum/card_table_player/player = player_for_user(user)
+	if(!player)
+		return FALSE
+	var/success = poker_bet(user, max(poker_current_bet + 100, player.poker_bet + 100))
+	if(success)
+		player.poker_all_in = TRUE
+		message = "[player.name] идет ва-банк."
+	return success
+
+/datum/card_table_session/proc/poker_fold(mob/user)
+	var/datum/card_table_player/player = player_for_user(user)
+	if(stage != CARD_TABLE_STAGE_PLAYING || game_type != CARD_TABLE_GAME_POKER || player != poker_current_player())
+		return FALSE
+	player.poker_folded = TRUE
+	player.ready = TRUE
+	player.result = "Fold"
+	message = "[player.name] отказывается от раздачи."
+	poker_next_turn()
 	return TRUE
 
 /datum/card_table_session/proc/poker_finish_turn(mob/user, card_index)
@@ -47,7 +177,7 @@
 			continue
 		if(!P.ready)
 			return TRUE
-	poker_finish()
+	poker_after_betting_round()
 	return TRUE
 
 /datum/card_table_session/proc/poker_score(list/hand)
@@ -57,15 +187,15 @@
 	var/list/ranks = list()
 	for(var/list/card in hand)
 		var/rank = "[card["rank_value"]]"
-		counts[rank] = text2num("[counts[rank]]") + 1
+		counts[rank]++
 		ranks += card_table_card_rank_value(card)
 	var/list/groups = list()
 	for(var/rank_key in counts)
-		groups += text2num("[counts[rank_key]]")
+		groups += counts[rank_key]
 	groups = sortList(groups)
 	var/high = 0
 	for(var/value in ranks)
-		high = max(high, text2num("[value]"))
+		high = max(high, value)
 	var/category = 1
 	if(4 in groups)
 		category = 7
@@ -76,7 +206,7 @@
 	else
 		var/pairs = 0
 		for(var/group_count in groups)
-			if(text2num("[group_count]") == 2)
+			if(group_count == 2)
 				pairs++
 		if(pairs >= 2)
 			category = 3
@@ -90,7 +220,7 @@
 	var/list/scored_hand = list()
 	for(var/list/card in player.hand)
 		scored_hand += list(card)
-	if(poker_variant == CARD_TABLE_POKER_TEXAS || poker_variant == CARD_TABLE_POKER_OMAHA)
+	if(poker_uses_community_cards())
 		for(var/list/table_card in community_cards)
 			scored_hand += list(table_card)
 	return poker_score(scored_hand)
@@ -109,6 +239,8 @@
 		if(P.left)
 			if(!P.result)
 				P.result = "Left"
+		else if(P.poker_folded)
+			P.result = "Fold"
 		else
 			P.result = (P == winner) ? "Winner" : "Lost"
 	stage = CARD_TABLE_STAGE_FINISHED

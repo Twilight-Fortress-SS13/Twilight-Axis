@@ -60,6 +60,16 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	///AI paused time
 	var/paused_until = 0
 
+	// TA EDIT START
+	var/datum/weakref/melee_progress_target
+	var/melee_progress_health
+	var/melee_progress_stat
+	var/melee_progress_since
+	var/melee_no_progress_attacks
+	var/datum/weakref/ignored_melee_target
+	var/ignored_melee_target_until
+	// TA EDIT END
+
 	var/failed_sneak_check = 0
 	///Time at which controller became inactive
 	var/inactive_timestamp
@@ -217,7 +227,7 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	return !QDELETED(pawn)
 
 ///Interact with objects
-/datum/ai_controller/proc/ai_interact(target, combat_mode, nextmove = FALSE, list/modifiers, maintain_position = FALSE)
+/datum/ai_controller/proc/ai_interact(target, combat_mode, nextmove = FALSE, list/modifiers)
 	if(!ai_can_interact())
 		return FALSE
 
@@ -231,12 +241,6 @@ have ways of interacting with a specific atom and control it. They posses a blac
 		return FALSE
 	if(nextmove && living_pawn.next_move > world.time)
 		return FALSE
-
-	if(!maintain_position)
-		if(!(living_pawn.mobility_flags & MOBILITY_STAND))
-			living_pawn.aimheight_change(rand(1,9))
-		else
-			living_pawn.aimheight_change(rand(10,19))
 
 	var/params = list2params(modifiers)
 
@@ -366,8 +370,19 @@ have ways of interacting with a specific atom and control it. They posses a blac
 
 /datum/ai_controller/proc/on_pawn_attacked(mob/living/source, atom/attacker, damage)
 	SIGNAL_HANDLER
-	if(ai_status != AI_STATUS_ON)
-		reset_ai_status()
+	wake_for_combat()
+
+/datum/ai_controller/proc/wake_for_combat()
+	if(ai_status == AI_STATUS_ON)
+		return
+	if(ismob(pawn))
+		var/mob/living/mob_pawn = pawn
+		if(mob_pawn.stat >= UNCONSCIOUS)
+			return
+		if(mob_pawn.client && !continue_processing_when_client)
+			return
+	blackboard[BB_AI_ALERT_MODE_UNTIL] = world.time + 30 SECONDS
+	set_ai_status(AI_STATUS_ON)
 
 /// Sets the AI on or off based on current conditions, call to reset after you've manually disabled it somewhere
 /datum/ai_controller/proc/reset_ai_status()
@@ -453,7 +468,8 @@ have ways of interacting with a specific atom and control it. They posses a blac
 			// the normal movement leash so snipers don't get free damage from offscreen.
 			var/last_hit = blackboard["bb_last_ranged_hit_time"] || 0
 			var/mob/last_shooter = blackboard["bb_last_ranged_attacker"]
-			if(!(last_shooter == current_movement_target && (world.time - last_hit < 15 SECONDS)))
+			var/commanded_travel = (current_movement_target == blackboard[BB_TRAVEL_DESTINATION])
+			if(!commanded_travel && !(last_shooter == current_movement_target && (world.time - last_hit < 15 SECONDS)))
 				CancelActions()
 				return
 
@@ -505,7 +521,7 @@ have ways of interacting with a specific atom and control it. They posses a blac
 			// Account for weapon reach: an AI with a whip/polearm should stop walking once they
 			// can swing, not insist on dist <= 1. iscarbon check matches the held_for_reach scope above.
 			var/effective_required_distance = current_behavior.required_distance
-			if(iscarbon(moving_pawn))
+			if(iscarbon(moving_pawn) && isliving(current_movement_target))
 				var/mob/living/carbon/carbon_pawn = moving_pawn
 				var/intent_reach = carbon_pawn.used_intent?.reach || 1
 				if(intent_reach > effective_required_distance)
@@ -605,6 +621,71 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	for(var/behavior_type in list(/datum/ai_behavior/find_potential_targets, /datum/ai_behavior/find_aggro_targets))
 		behavior_cooldowns[behavior_type] = world.time
 
+// TA EDIT START
+/datum/ai_controller/proc/reset_melee_attack_progress()
+	melee_progress_target = null
+	melee_progress_health = null
+	melee_progress_stat = null
+	melee_progress_since = 0
+	melee_no_progress_attacks = 0
+
+/datum/ai_controller/proc/is_melee_target_ignored(atom/target)
+	var/atom/ignored_target = ignored_melee_target?.resolve()
+	if(!ignored_target || world.time >= ignored_melee_target_until)
+		ignored_melee_target = null
+		ignored_melee_target_until = 0
+		return FALSE
+	return ignored_target == target
+
+/datum/ai_controller/proc/record_melee_attack_progress(atom/target, target_key, hiding_location_key)
+	if(!isliving(target))
+		reset_melee_attack_progress()
+		return FALSE
+
+	var/mob/living/living_target = target
+	if(QDELETED(living_target))
+		reset_melee_attack_progress()
+		return FALSE
+
+	var/mob/living/tracked_target = melee_progress_target?.resolve()
+	if(tracked_target != living_target)
+		reset_melee_attack_progress()
+		melee_progress_target = WEAKREF(living_target)
+		melee_progress_health = living_target.health
+		melee_progress_stat = living_target.stat
+		melee_progress_since = world.time
+		melee_no_progress_attacks = 1
+		return FALSE
+
+	if(living_target.stat != melee_progress_stat || living_target.health < melee_progress_health)
+		melee_progress_health = living_target.health
+		melee_progress_stat = living_target.stat
+		melee_progress_since = world.time
+		melee_no_progress_attacks = 0
+		return FALSE
+
+	if(living_target.health > melee_progress_health)
+		melee_progress_health = living_target.health
+
+	melee_no_progress_attacks++
+	if(melee_no_progress_attacks < AI_MELEE_NO_PROGRESS_LIMIT || world.time < melee_progress_since + AI_MELEE_NO_PROGRESS_TIME)
+		return FALSE
+
+	ignored_melee_target = WEAKREF(living_target)
+	ignored_melee_target_until = world.time + AI_MELEE_IGNORE_TIME
+	reset_melee_attack_progress()
+
+	if(target_key && blackboard[target_key] == living_target)
+		clear_blackboard_key(target_key)
+	if(hiding_location_key && blackboard[hiding_location_key])
+		clear_blackboard_key(hiding_location_key)
+	if(blackboard[BB_HIGHEST_THREAT_MOB] == living_target)
+		clear_blackboard_key(BB_HIGHEST_THREAT_MOB)
+
+	nudge_target_scan()
+	return TRUE
+// TA EDIT END
+
 /proc/alert_ai_visibility_change(atom/source, range = 7)
 	for(var/mob/living/L in view(range, source))
 		if(!L.ai_controller)
@@ -666,7 +747,6 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	UnregisterSignal(pawn, COMSIG_MOB_LOGIN)
 	if(!continue_processing_when_client)
 		set_ai_status(AI_STATUS_OFF) //Can't do anything while player is connected
-	set_ai_status(AI_STATUS_OFF) //Can't do anything while player is connected
 	RegisterSignal(pawn, COMSIG_MOB_LOGOUT, PROC_REF(on_sentience_lost))
 
 /datum/ai_controller/proc/on_sentience_lost()

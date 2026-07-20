@@ -3662,7 +3662,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		dat += "[V.custom_text]"
 		dat += "</font>"
 	if(V.stackable)
-		dat += "<font color = '#ffeea3'>This virtue can be picked twice using Virtuous.</font><br>"
+		dat += "<font color = '#ffeea3'><br>This virtue can be picked twice using Virtuous.</font><br>"
 	return dat
 
 /datum/preferences/proc/LorePopup(mob/user)

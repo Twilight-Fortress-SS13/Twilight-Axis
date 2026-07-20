@@ -7,7 +7,7 @@
 	Cast on an enemy: Order all minions to attack that target.<br>\
 	Cast on one of your minions: Toggle its stance between retaliate-only and attack-all-strangers.<br>\
 	<br>\
-	Does not affect carbon mobs."
+	Does not affect ordinary carbon mobs."
 	button_icon = 'icons/mob/actions/roguespells.dmi'
 	button_icon_state = "raiseskele"
 	cast_range = 12
@@ -34,9 +34,9 @@
 
 	var/faction_tag = "[owner.mind.current.real_name]_faction"
 
-	if(ismob(cast_on) && istype(cast_on, /mob/living/simple_animal))
-		var/mob/living/simple_animal/minion = cast_on
-		if(faction_tag in minion.faction)
+	if(ismob(cast_on) && (istype(cast_on, /mob/living/simple_animal) || HAS_TRAIT(cast_on, TRAIT_CONJURED_SUMMON)))
+		var/mob/living/minion = cast_on
+		if((faction_ordering && owner.faction_check_mob(minion)) || (!faction_ordering && faction_tag && (faction_tag in minion.faction)))
 			process_minions(order_type = "toggle_stance", target = minion, faction_tag = faction_tag)
 			return TRUE
 
@@ -50,7 +50,7 @@
 
 	if(ismob(cast_on))
 		var/mob/living/mob_target = cast_on
-		if(faction_tag in mob_target.faction)
+		if((faction_ordering && owner.faction_check_mob(mob_target)) || (!faction_ordering && faction_tag && (faction_tag in mob_target.faction)))
 			process_minions(order_type = "aggressive", target = mob_target, faction_tag = faction_tag)
 		else
 			process_minions(order_type = "attack", target = mob_target, faction_tag = faction_tag)
@@ -63,12 +63,18 @@
 	var/count = 0
 	var/msg = ""
 
-	for(var/mob/living/simple_animal/minion in oview(order_range, owner))
+	for(var/mob/living/minion in oview(order_range, owner))
+		if(!istype(minion, /mob/living/simple_animal) && !HAS_TRAIT(minion, TRAIT_CONJURED_SUMMON))
+			continue
 		if(minion.client)
 			continue
 		if(!minion.ai_controller)
 			continue
 		if(!((faction_ordering && owner.faction_check_mob(minion)) || (!faction_ordering && faction_tag && (faction_tag in minion.faction))))
+			continue
+		if(order_type == "toggle_stance" && minion != target)
+			continue
+		if(order_type == "attack" && (QDELETED(target) || target.stat == DEAD))
 			continue
 
 		minion.ai_controller.CancelActions()
@@ -78,6 +84,8 @@
 		minion.ai_controller.clear_blackboard_key(BB_TRAVEL_DESTINATION)
 		minion.ai_controller.clear_blackboard_key(BB_BASIC_MOB_RETALIATE_LIST)
 		minion.ai_controller.clear_blackboard_key(BB_HIGHEST_THREAT_MOB)
+		minion.ai_controller.clear_blackboard_key(BB_CURRENT_PET_TARGET)
+		minion.ai_controller.blackboard[BB_MOB_AGGRO_TABLE] = list()
 		count += 1
 
 		switch(order_type)
@@ -96,24 +104,22 @@
 				minion.pet_passive = FALSE
 				msg = "act on their own."
 			if("attack")
-				if(QDELETED(target) || target.stat == DEAD)
-					continue
 				if("neutral" in minion.faction)
 					minion.faction -= "neutral"
 				minion.pet_passive = FALSE
+				minion.ai_controller.set_blackboard_key(BB_CURRENT_PET_TARGET, target)
 				minion.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
 				minion.ai_controller.set_blackboard_key(BB_HIGHEST_THREAT_MOB, target)
 				msg = "attack [target.name] on sight."
 			if("toggle_stance")
-				if(minion == target)
-					if("neutral" in minion.faction)
-						minion.faction -= "neutral"
-						minion.pet_passive = FALSE
-						msg = "attack non-marked on sight."
-					else
-						minion.faction += "neutral"
-						minion.pet_passive = TRUE
-						msg = "only retaliate when attacked."
+				if("neutral" in minion.faction)
+					minion.faction -= "neutral"
+					minion.pet_passive = FALSE
+					msg = "attack non-marked on sight."
+				else
+					minion.faction += "neutral"
+					minion.pet_passive = TRUE
+					msg = "only retaliate when attacked."
 
 	if(count > 0)
 		to_chat(owner, "Ordered [count] minions to [msg]")

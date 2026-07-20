@@ -109,7 +109,6 @@
 
 		//trader (probably fine to keep as it is)
 
-
 		// /datum/job/roguetown/archivist,
 		// /datum/job/roguetown/barkeep,
 		// /datum/job/roguetown/guildmaster,

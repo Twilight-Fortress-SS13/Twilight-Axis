@@ -10,6 +10,9 @@
 	var/ball_size = DEFAULT_TESTICLES_SIZE
 	var/virility = TRUE
 
+/obj/item/organ/testicles/get_cache_key()
+	return "[..()]-[ball_size]"
+
 /obj/item/organ/testicles/internal
 	name = "internal testicles"
 	visible_organ = FALSE

@@ -79,6 +79,12 @@
 		var/mob/dead/observer/observer = mob
 		if(world.time < observer.next_gmove)
 			return FALSE
+		// TA EDIT START
+		if(n && direct)
+			var/turf/target_turf = get_step(get_turf(observer), direct)
+			if(!observer.can_move_near_body(target_turf))
+				return FALSE
+		// TA EDIT END
 	else if(world.time < move_delay) //do not move anything ahead of this check please
 		return FALSE
 	next_move_dir_add = 0
@@ -88,8 +94,10 @@
 		var/mob/dead/observer/observer = mob
 		var/observer_delay_multiplier = GLOB.observer_move_delay_multiplier
 
-		if(istype(observer, /mob/dead/observer/rogue))
+		// TA EDIT START
+		if(!istype(observer, /mob/dead/observer/admin) && !istype(observer, /mob/dead/observer/eye))
 			observer_delay_multiplier = 6
+		// TA EDIT END
 
 		observer.next_gmove = world.time + (world.tick_lag * observer_delay_multiplier)
 		move_delay = world.time
@@ -119,6 +127,12 @@
 				to_chat(src, span_warning("My spirit hasn't manifested yet."))
 		return FALSE
 	if(mob.force_moving)
+		return FALSE
+
+	var/mob/living/sliding_mob = mob
+	var/datum/status_effect/ice_slide/ice_sliding = sliding_mob.has_status_effect(/datum/status_effect/ice_slide)
+	if(ice_sliding)
+		ice_sliding.steer(direct)
 		return FALSE
 
 	if(mob.shifting)

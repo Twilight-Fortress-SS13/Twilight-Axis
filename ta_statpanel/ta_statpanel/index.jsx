@@ -1,5 +1,5 @@
 import { h, render, Fragment } from 'preact';
-import { useState, useEffect, useRef, useCallback, useMemo } from 'preact/hooks';
+import { useState, useEffect, useCallback, useMemo } from 'preact/hooks';
 
 var decoder = decodeURIComponent || unescape;
 
@@ -207,71 +207,69 @@ function addVerbList(payload) {
   if (changed) setState({ verbs, verbTabs });
 }
 
+function statusValue(value, fallback = '') {
+  if (value === null || value === undefined) return fallback;
+  if (typeof value === 'string') return value;
+  return String(value);
+}
+
 function StatusRow({ part }) {
   if (!Array.isArray(part)) {
-    if (typeof part === 'string' && part.trim() === '') return <br />;
-    return <div>{part}</div>;
+    const text = statusValue(part);
+    if (text.trim() === '') return <br />;
+    return <div>{text}</div>;
   }
 
-  if (part?.[0] === 'spinner') return <BrailleSpinner />;
+  const kind = statusValue(part[0]);
+  if (kind === 'spinner') return <BrailleSpinner />;
 
-  switch (part[0]) {
+  switch (kind) {
     case 'tod': {
-      const todWord = part[1].charAt(0).toUpperCase() + part[1].slice(1);
-      const todText = part[2];
+      const todClass = statusValue(part[1], 'day') || 'day';
+      const todWord = todClass.charAt(0).toUpperCase() + todClass.slice(1);
+      const todText = statusValue(part[2]);
       const idx = todText.indexOf(todWord);
       if (idx === -1) return <div>{todText}</div>;
       return (
         <div>
           {todText.slice(0, idx)}
-          <span className={'tod-' + part[1]}>{todWord}</span>
+          <span className={'tod-' + todClass}>{todWord}</span>
           {todText.slice(idx + todWord.length)}
         </div>
       );
     }
     case 'load': {
+      const loadClass = statusValue(part[1], 'low') || 'low';
+      const loadText = statusValue(part[2]);
       if (part[3] !== undefined) {
         return (
           <div>
-            {part[2]}
-            <span className={'load-' + part[1]}>{part[3]}</span>
+            {loadText}
+            <span className={'load-' + loadClass}>{statusValue(part[3])}</span>
           </div>
         );
       }
-      return <div className={'load-' + part[1]}>{part[2]}</div>;
+      return <div className={'load-' + loadClass}>{loadText}</div>;
     }
     case 'same_line':
-      return <div><a href={'byond://?' + part[2]}>{part[1]}</a></div>;
+      return <div><a href={'byond://?' + statusValue(part[2])}>{statusValue(part[1])}</a></div>;
     default: {
-      if (part[0].trim() === '') return <br />;
+      if (kind.trim() === '') return <br />;
       if (part[2]) {
         return (
           <div>
-            {part[0]}
-            <a href={'byond://?' + part[2]}>{part[1]}</a>
+            {kind}
+            <a href={'byond://?' + statusValue(part[2])}>{statusValue(part[1])}</a>
           </div>
         );
       }
-      return <div>{part}</div>;
+      return <div>{part.map((piece) => statusValue(piece)).join('')}</div>;
     }
   }
 }
 
 function RoundInfoPanel() {
   const s = useStatState();
-
-  const sentFixRef = useRef(false);
-  useEffect(() => {
-    if (s.verbTabs.length === 0) {
-      if (!sentFixRef.current) {
-        sentFixRef.current = true;
-        Byond.command('Fix-Stat-Panel');
-      }
-    } else {
-      sentFixRef.current = false;
-    }
-  }, [s.verbTabs.length]);
-
   return (
     <table>
       {s.statusTabParts.map((part, i) => (

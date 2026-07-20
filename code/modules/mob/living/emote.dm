@@ -1681,7 +1681,7 @@ var/list/zone_translations = list(
 
 		switch(key)
 			if("strength")
-				success = living.stat_roll(STAT_STRENGTH, chance_per_point, modifier_sum) 
+				success = living.stat_roll(STAT_STRENGTH, chance_per_point, modifier_sum)
 				chance = living.get_stat(STAT_STRENGTH)
 			if("perception")
 				success = living.stat_roll(STAT_PERCEPTION, chance_per_point, modifier_sum)

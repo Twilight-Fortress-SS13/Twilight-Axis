@@ -23,6 +23,7 @@
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/tracking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/labor/butchering = SKILL_LEVEL_JOURNEYMAN, // Butcher trolls
@@ -134,7 +135,7 @@
 		/datum/species/dwarf/mountain
 		)
 	surgery_cover = FALSE 
-	max_integrity = 135
+	max_integrity = 325 
 	sewrepair = FALSE
 	repairmsg_begin = "The thick skin cover starts to bulge and repair tears"
 	repairmsg_continue = "More of the tears on the skin close up"
@@ -142,7 +143,7 @@
 	repairmsg_end = "Your skin looks just as shiny as ever, like it might stop the blow of a fully grown troll once more."
 
 	interrupt_damount = 25
-	repair_time = 35 SECONDS
+	repair_time = 30 SECONDS
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/slayer/Initialize(mapload)
 	. = ..()

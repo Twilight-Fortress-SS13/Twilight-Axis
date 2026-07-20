@@ -73,6 +73,34 @@
 			return FALSE
 	return TRUE
 
+/datum/card_table_session/proc/blackjack_mark_action(datum/card_table_player/player, busted = FALSE)
+	blackjack_action_seq++
+	blackjack_action_player_index = player_index(player)
+	blackjack_action_bust = busted ? TRUE : FALSE
+
+/datum/card_table_session/proc/blackjack_process_spirit_turn(mark_actions = TRUE)
+	if(stage != CARD_TABLE_STAGE_PLAYING || game_type != CARD_TABLE_GAME_BLACKJACK)
+		return
+	for(var/datum/card_table_player/player in players)
+		if(!player.is_spirit || player.left || player.standing || player.busted)
+			continue
+		while(!player.standing && !player.busted)
+			var/value = hand_value(player.hand)
+			if(value >= 17)
+				player.standing = TRUE
+				break
+			var/list/card = draw_one()
+			if(!card)
+				player.standing = TRUE
+				break
+			player.hand += list(card)
+			if(hand_value(player.hand) > 21)
+				player.busted = TRUE
+				player.standing = TRUE
+			if(mark_actions)
+				blackjack_mark_action(player, player.busted)
+		message = "[player.name] играет руку дилера."
+
 /datum/card_table_session/proc/blackjack_finish()
 	var/datum/card_table_player/table_dealer = dealer_player()
 	var/dealer_value = 0
@@ -111,6 +139,8 @@
 		message = "[player.name] перебирает."
 	else
 		message = "[player.name] берет карту."
+	blackjack_mark_action(player, player.busted)
+	blackjack_process_spirit_turn(FALSE)
 	if(blackjack_all_done())
 		blackjack_finish()
 	return TRUE
@@ -121,6 +151,7 @@
 		return FALSE
 	player.standing = TRUE
 	message = "[player.name] остается."
+	blackjack_process_spirit_turn()
 	if(blackjack_all_done())
 		blackjack_finish()
 	return TRUE
@@ -143,9 +174,13 @@
 	if(game_type == CARD_TABLE_GAME_BLACKJACK && hand_value(player.hand) > 21)
 		player.busted = TRUE
 		player.standing = TRUE
+	if(game_type == CARD_TABLE_GAME_BLACKJACK)
+		blackjack_mark_action(player, player.busted)
 	xylix_cheat_used += user.ckey
 	xylix_check_exposure(user)
 	to_chat(user, span_notice("Ксаликс подталкивает [card_table_card_label(card)] в нужное место."))
+	if(game_type == CARD_TABLE_GAME_BLACKJACK)
+		blackjack_process_spirit_turn(FALSE)
 	if(game_type == CARD_TABLE_GAME_BLACKJACK && blackjack_all_done())
 		blackjack_finish()
 	return TRUE

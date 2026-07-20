@@ -27,7 +27,7 @@
 	var/atom/target = controller.blackboard[target_key]
 	var/datum/targetting_datum/targetting_datum = controller.blackboard[targetting_datum_key]
 
-	if(!targetting_datum.can_attack(basic_mob, target))
+	if(controller.is_melee_target_ignored(target) || !targetting_datum.can_attack(basic_mob, target)) // TA EDIT
 		finish_action(controller, FALSE, target_key)
 		return
 
@@ -39,12 +39,22 @@
 		finish_action(controller, FALSE, target_key)
 		return
 	basic_mob.face_atom(target)
+	var/forced_zone = controller.blackboard[BB_FORCED_ATTACK_ZONE]
+	if(forced_zone)
+		basic_mob.zone_selected = forced_zone
 	basic_mob.a_intent = pick(basic_mob.possible_a_intents) //randomized intent
 
+	// TA EDIT START
 	if(hiding_target) //Slap it!
+		controller.reset_melee_attack_progress()
 		basic_mob.ClickOn(hiding_target, list())
 	else
+		var/next_click_before = basic_mob.next_click
 		basic_mob.ClickOn(target, list())
+		if(basic_mob.next_click != next_click_before && controller.record_melee_attack_progress(target, target_key, hiding_location_key))
+			finish_action(controller, FALSE, target_key, targetting_datum_key, hiding_location_key)
+			return
+	// TA EDIT END
 
 	if(sidesteps_after && prob(33)) //this is so fucking hacky, but going off og code this is exactly how it goes ignoring movetimers
 		if(!target || !isturf(target.loc) || !isturf(basic_mob.loc) || basic_mob.stat == DEAD)
@@ -112,6 +122,27 @@
 	. = ..()
 	if(!succeeded)
 		controller.clear_blackboard_key(target_key)
+
+/datum/ai_behavior/opportunistic_ranged_attack
+	behavior_flags = AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
+	required_distance = 0
+	action_cooldown = 0.4 SECONDS
+
+/datum/ai_behavior/opportunistic_ranged_attack/setup(datum/ai_controller/controller, target_key, targetting_datum_key, hiding_location_key)
+	var/atom/target = controller.blackboard[target_key]
+	return !QDELETED(target)
+
+/datum/ai_behavior/opportunistic_ranged_attack/perform(delta_time, datum/ai_controller/controller, target_key, targetting_datum_key, hiding_location_key)
+	. = ..()
+	var/mob/living/simple_animal/hostile/basic_mob = controller.pawn
+	var/atom/target = controller.blackboard[target_key]
+	var/datum/targetting_datum/targetting_datum = controller.blackboard[targetting_datum_key]
+	if(!istype(basic_mob) || QDELETED(target) || target == basic_mob || !targetting_datum?.can_attack(basic_mob, target))
+		finish_action(controller, FALSE, target_key)
+		return
+	basic_mob.face_atom(target)
+	basic_mob.RangedAttack(target)
+	finish_action(controller, TRUE, target_key)
 
 
 /datum/ai_behavior/basic_melee_attack/bog_troll/finish_action(datum/ai_controller/controller, succeeded, target_key, targetting_datum_key, hiding_location_key)

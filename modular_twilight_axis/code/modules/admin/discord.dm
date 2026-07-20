@@ -14,6 +14,77 @@
 		"[GLOB.rogue_round_id] / [time2text(world.timeofday, "DD.MM.YYYY hh:mm:ss", world.timezone)]"
 	)
 
+/world/proc/split_discord_log_text(text, max_length = 1900)
+	var/list/chunks = list()
+	var/remaining = "[text]"
+	while(length_char(remaining) > max_length)
+		var/cut_position = max_length + 1
+		var/minimum_position = max(1, max_length - 250)
+		for(var/newline_index = max_length; newline_index >= minimum_position; newline_index--)
+			if(copytext_char(remaining, newline_index, newline_index + 1) == "\n")
+				cut_position = newline_index + 1
+				break
+		if(cut_position == max_length + 1)
+			for(var/space_index = max_length; space_index >= minimum_position; space_index--)
+				if(copytext_char(remaining, space_index, space_index + 1) == " ")
+					cut_position = space_index + 1
+					break
+		var/chunk = trim(copytext_char(remaining, 1, cut_position))
+		if(length(chunk))
+			chunks += chunk
+		remaining = trim(copytext_char(remaining, cut_position))
+	if(length(remaining))
+		chunks += remaining
+	return chunks
+
+/world/proc/send_discord_ban_log(title, description, colour, player_ckey, admin_ckey, reason, admin_bans_channel, admin_bans_channel2)
+	var/full_text = "[description]\n\n**Игрок:** `[player_ckey]`\n**Администратор:** `[admin_ckey]`\n**Причина:**\n[reason]"
+	if(length_char(full_text) <= 1900 && length_char(reason) <= 1000)
+		var/datum/tgs_chat_embed/structure/embed = new()
+		embed.title = title
+		embed.description = description
+		embed.colour = colour
+		embed.footer = create_discord_embed_footer()
+		var/datum/tgs_chat_embed/field/field_player_ckey = new(
+			"Игрок", "`[player_ckey]`"
+		)
+		var/datum/tgs_chat_embed/field/field_admin_ckey = new(
+			"Администратор", "`[admin_ckey]`"
+		)
+		var/datum/tgs_chat_embed/field/field_reason = new(
+			"Причина", "[copytext_char(reason, 1)]"
+		)
+		field_player_ckey.is_inline = TRUE
+		field_admin_ckey.is_inline = TRUE
+		field_reason.is_inline = FALSE
+		embed.fields = list(
+			field_player_ckey,
+			field_admin_ckey,
+			field_reason,
+		)
+		var/datum/tgs_message_content/message = new("")
+		message.embed = embed
+		if(admin_bans_channel)
+			send2chat(message, admin_bans_channel)
+		if(admin_bans_channel2)
+			send2chat(message, admin_bans_channel2)
+		return
+	var/list/chunks = split_discord_log_text(full_text)
+	for(var/index in 1 to chunks.len)
+		var/datum/tgs_chat_embed/structure/embed = new()
+		if(index == 1)
+			embed.title = title
+		embed.description = chunks[index]
+		embed.colour = colour
+		if(index == chunks.len)
+			embed.footer = create_discord_embed_footer()
+		var/datum/tgs_message_content/message = new("")
+		message.embed = embed
+		if(admin_bans_channel)
+			send2chat(message, admin_bans_channel)
+		if(admin_bans_channel2)
+			send2chat(message, admin_bans_channel2)
+
 /// Отправляет средствами TGS сообщение о блокировке игрока или его ролей.
 /world/proc/TgsAnnounceBan(player_ckey, admin_ckey, duration, time_message, roles, reason, severity, applies_to_admins)
 	if(!TgsAvailable())
@@ -35,13 +106,14 @@
 
 	var/is_role_ban = roles[1] != "Server"
 
-	var/title = is_role_ban ? "Бан ролей!" : "Бан!"
+	var/title = is_role_ban ? "Бан ролей" : "Бан"
 	var/description = "Игрок теряет возможность играть на сервере."
 
 	if(is_role_ban)
-		description = "Игрок теряет указанные роли:\n"
+		var/list/role_lines = list()
 		for(var/role_name in roles)
-			description += "- [role_name]\n"
+			role_lines += "• `[role_name]`"
+		description = "Игрок потерял доступ к указанным ролям:\n[role_lines.Join("\n")]"
 
 	description += "\n"
 
@@ -54,42 +126,16 @@
 	if(applies_to_admins)
 		description += "\n*Применено к администратору*"
 
-	var/datum/tgs_chat_embed/structure/embed = new()
-	embed.title = title
-	embed.description = description
-	embed.colour = "#ed8796"
-	embed.footer = create_discord_embed_footer()
-
-	var/datum/tgs_message_content/message = new("")
-	message.embed = embed
-
-	var/datum/tgs_chat_embed/field/field_player_ckey = new(
-		"Игрок", "`[player_ckey]`"
+	send_discord_ban_log(
+		title,
+		description,
+		"#ed8796",
+		player_ckey,
+		admin_ckey,
+		reason,
+		admin_bans_channel,
+		admin_bans_channel2,
 	)
-
-	var/datum/tgs_chat_embed/field/field_admin_ckey = new(
-		"Администратор", "`[admin_ckey]`"
-	)
-
-	var/datum/tgs_chat_embed/field/field_reason = new(
-		"Причина", "[copytext_char(reason, 1)]"
-	)
-
-	field_player_ckey.is_inline = TRUE
-	field_admin_ckey.is_inline = TRUE
-	field_reason.is_inline = FALSE
-
-	embed.fields = list(
-		field_player_ckey,
-		field_admin_ckey,
-		field_reason,
-	)
-
-	if(admin_bans_channel)
-		send2chat(message, admin_bans_channel)
-
-	if(admin_bans_channel2)
-		send2chat(message, admin_bans_channel2)
 
 /// Отправляет средствами TGS сообщение в дискорд об изменении PQ игрока.
 /world/proc/TgsAnnouncePQChanges(value, player_ckey, admin_ckey, reason)
@@ -270,7 +316,7 @@
 		admin_notes_channel
 	)
 
-/world/proc/TgsAnnounceUnban(player_ckey, admin_ckey, role)
+/world/proc/TgsAnnounceUnban(player_ckey, admin_ckey, roles, reason)
 	if(!TgsAvailable())
 		return
 
@@ -280,41 +326,42 @@
 	if(!admin_bans_channel && !admin_bans_channel2)
 		return
 
-	var/description = "Игроку доступна роль `[role]`!"
-	if(lowertext(role) == "server")
-		description = "Игрок может играть на сервере!"
+	var/list/unbanned_roles
+	if(islist(roles))
+		var/list/role_list = roles
+		unbanned_roles = role_list.Copy()
+	else
+		unbanned_roles = list(roles)
+	var/list/non_server_roles = list()
+	var/server_unban = FALSE
+	for(var/role in unbanned_roles)
+		if(lowertext("[role]") == "server")
+			server_unban = TRUE
+		else
+			non_server_roles |= role
+	var/list/role_lines = list()
+	for(var/role in non_server_roles)
+		role_lines += "• `[role]`"
+	var/description
+	if(server_unban && !length(non_server_roles))
+		description = "Игрок получил доступ к серверу!"
+	else if(server_unban)
+		description = "Игрок получил доступ к серверу!\n\nИгрок получил доступ к указанным ролям:\n[role_lines.Join("\n")]"
+	else if(length(non_server_roles) == 1)
+		description = "Игрок получил доступ к указанной роли `[non_server_roles[1]]`!"
+	else
+		description = "Игрок получил доступ к указанным ролям:\n[role_lines.Join("\n")]"
 
-	var/datum/tgs_chat_embed/structure/embed = new()
-	embed.title = "Разбан"
-	embed.description = description
-	embed.colour = "#a6da95"
-	embed.footer = create_discord_embed_footer()
-
-	var/datum/tgs_message_content/message = new("")
-	message.embed = embed
-
-	var/datum/tgs_chat_embed/field/field_player_ckey = new(
-		"Игрок", "`[player_ckey]`"
+	send_discord_ban_log(
+		"Разбан",
+		description,
+		"#a6da95",
+		player_ckey,
+		admin_ckey,
+		reason,
+		admin_bans_channel,
+		admin_bans_channel2,
 	)
-
-	var/datum/tgs_chat_embed/field/field_admin_ckey = new(
-		"Администратор", "`[admin_ckey]`"
-	)
-
-	field_player_ckey.is_inline = TRUE
-	field_admin_ckey.is_inline = TRUE
-
-	embed.fields = list(
-		field_player_ckey,
-		field_admin_ckey,
-	)
-
-	if(admin_bans_channel)
-		send2chat(message, admin_bans_channel)
-
-	if(admin_bans_channel2)
-		send2chat(message, admin_bans_channel2)
-
 
 /world/proc/TgsAnnounceAdminMessageDeletion(admin_ckey, target_key, type, text)
 	if(!TgsAvailable())

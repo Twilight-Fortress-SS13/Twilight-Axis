@@ -1,8 +1,8 @@
 /datum/decree/noc_pestra_covenant
 	id = DECREE_NOC_PESTRA_COVENANT
-	name = "The Covenant of Noc & Pestra"
+	name = "Завет Нок и Пестры"
 	category = DECREE_CATEGORY_NEW
-	mechanical_text = "Caps poll tax for university and apothecary staff, and floors their wages: Court Magician 40m, Archivist 20m, Magicians Associate 10m, Head Physician 80m, Apothecary 40m."
+	mechanical_text = "Устанавливает верхний предел подушной подати для представителей Университета и Апотекарской палаты, а также минимальный уровень их заработной платы: придворный маг — 40 м, архивариус — 20 м, арканный маг — 10 м, главный лекарь — 80 м, апотекарий — 40 м."
 	/// Jobs covered by the scholarly half of the covenant (Noc's mantle).
 	var/static/list/university_jobs = list(
 		"Court Magician",
@@ -21,13 +21,13 @@
 		"Head Physician" = 80,
 		"Apothecary" = 40,
 	)
-	flavor_text = {"This Covenant of Noc & Pestra, sworne under the watchful eye of Noc and the merciful hand of Pestra, witnesseth that the scholars of the University and the healers of the Apothecary shall bear no greater levy than the lightest measure upon their heads, and shall be paid from the Crown's purse an honest minimum of their due whilst this Covenant standeth.
+	flavor_text = {"Настоящий Завет, заключённый под бдительным взором Нок и милостивой рукой Пестры, свидетельствует о том, что ученые умы Университета и целители Апотекарской палаты не будут нести никакого обременения, кроме наименьших из возможных податей, и будут получать из казны Короны честный минимум того, что им причитается, пока действует настоящий Завет.
 
-In exchange, the chartered scholars of the University shall keep the lore and knowledge of the Realm, preserve it, and teach it unto those worthy and of bright minds, for Noc granted humen the gift of magick and wisdom that we may pass it on. And the chartered healers of the Apothecary, agents of Pestra, shall tend the hurt of every subject who cometh to their door, be they beggar or burgher, and shall never refuse the wounded for want of coin, for Pestra is merciful and taught us medicine that we may care for one another.
+Взамен, лицензированные ученые умы Университета обязуются будут хранить знания и мудрость сиих щемель, сохранять их и преподавать достойным и светлым умам, ибо Нок даровала людям дар арканы и мудрости, чтобы мы могли распространять и преумножать их. А дипломированные целители Апотекарской палаты, посланники Пестры, принимают обязательство лечить раны каждого подданного Короны, пришедшего к их порогу, будь то нищий или горожанин, и никогда не откажут раненому из-за недостатка монет, ибо Пестра милосердна и научила нас медицине, чтобы мы могли заботиться друг о друге.
 
-Yeven under the seal of the Crown, in witness of Noc and Pestra."}
-	revoke_text = "The %RULER% has suspended the Covenant of Noc & Pestra. The scholars and healers of Azuria now bear the Crown's common levy in full - and Noc and Pestra may reckon how long their mercy lasts without their chartered hands."
-	restore_text = "The %RULER% has affirmed the Covenant of Noc & Pestra. The scholars and healers of Azuria resume their sheltered station, that the Realm may keep both its lore and its mercy."
+Заверено печатью Короны, милостью Нок и Пестры."}
+	revoke_text = "Правитель сиих земель прекратил действие Завета Нок и Пестры. Представители Университета и Апотекарской палаты теперь облагаются налогами и податями в полном объеме. Сколь долго продержится милость Нок и Пестры, ежели слуги их будут возносить молитвы о тягости их бытия?"
+	restore_text = "Правитель сиих земель восстановил Завет Нок и Пестры. Представители Университета и Апотекарской палаты вновь обрели свой защищенный статус, дабы торжествовали на землях под властью Короны мудрость и милосердие."
 
 /datum/decree/noc_pestra_covenant/roll_initial_year()
 	return CALENDAR_EPOCH_YEAR - rand(20, 60)

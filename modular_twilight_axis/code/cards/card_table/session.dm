@@ -22,11 +22,23 @@
 	var/dealer_rotates = TRUE
 	var/dealer_index = 0
 	var/dealer_rounds = 0
+	var/poker_turn_index = 0
+	var/poker_current_bet = 10
+	var/poker_pot = 0
+	var/poker_betting_round = 0
+	var/blackjack_action_seq = 0
+	var/blackjack_action_player_index = 0
+	var/blackjack_action_bust = FALSE
 
 	var/current_index = 1
 	var/defender_index = 2
 	var/fool_defender_start_hand = 0
 	var/fool_first_bout = TRUE
+	var/list/fool_passed_players = list()
+	var/fool_action_seq = 0
+	var/fool_action_kind = null
+	var/fool_action_player_index = 0
+	var/fool_action_target_index = 0
 	var/list/table_pairs = list()
 	var/list/table_attack = null
 	var/list/table_defense = null
@@ -52,6 +64,7 @@
 	solitaire_foundations = null
 	xylix_seen_cards = null
 	xylix_cheat_used = null
+	fool_passed_players = null
 	table_pairs = null
 	table_attack = null
 	table_defense = null
@@ -75,6 +88,13 @@
 	solitaire_completed_sets = 0
 	xylix_seen_cards = list()
 	xylix_cheat_used = list()
+	poker_turn_index = 0
+	poker_current_bet = 10
+	poker_pot = 0
+	poker_betting_round = 0
+	blackjack_action_seq = 0
+	blackjack_action_player_index = 0
+	blackjack_action_bust = FALSE
 	table_pairs = list()
 	table_attack = null
 	table_defense = null
@@ -84,12 +104,21 @@
 	defender_index = 2
 	fool_defender_start_hand = 0
 	fool_first_bout = TRUE
+	fool_passed_players = list()
+	fool_action_seq = 0
+	fool_action_kind = null
+	fool_action_player_index = 0
+	fool_action_target_index = 0
 	for(var/datum/card_table_player/player in players)
 		player.hand = list()
 		player.standing = FALSE
 		player.busted = FALSE
 		player.ready = FALSE
 		player.draws_used = 0
+		player.poker_folded = FALSE
+		player.poker_all_in = FALSE
+		player.poker_bet = 0
+		player.poker_total_bet = 0
 		player.result = null
 		player.left = FALSE
 	if(dealer_index > players.len)
@@ -206,6 +235,19 @@
 		if(player_is_active(player))
 			count++
 	return count
+
+/datum/card_table_session/proc/active_real_players_count()
+	var/count = 0
+	for(var/datum/card_table_player/player in players)
+		if(player_is_active(player) && !player.is_spirit)
+			count++
+	return count
+
+/datum/card_table_session/proc/has_spirit_opponent()
+	for(var/datum/card_table_player/player in players)
+		if(player.is_spirit && !player.left)
+			return TRUE
+	return FALSE
 
 /datum/card_table_session/proc/player_for_user(mob/user)
 	if(!user || !user.ckey)

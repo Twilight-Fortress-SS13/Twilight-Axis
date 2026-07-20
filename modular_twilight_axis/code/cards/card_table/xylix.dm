@@ -38,7 +38,7 @@
 
 /datum/card_table_session/proc/xylix_can_choose_card(mob/user)
 	var/tier = xylix_tier(user)
-	return tier >= CLERIC_T2 && user?.ckey && !(user.ckey in xylix_cheat_used) && (game_type == CARD_TABLE_GAME_FOOL || game_type == CARD_TABLE_GAME_BLACKJACK)
+	return tier >= CLERIC_T2 && user && user.ckey && !(user.ckey in xylix_cheat_used) && (game_type == CARD_TABLE_GAME_FOOL || game_type == CARD_TABLE_GAME_BLACKJACK)
 
 /datum/card_table_session/proc/xylix_reveal_key(viewer_ckey, target_ckey)
 	return "[viewer_ckey]|[target_ckey]"

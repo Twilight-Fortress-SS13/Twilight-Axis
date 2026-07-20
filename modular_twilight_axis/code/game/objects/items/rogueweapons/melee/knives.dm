@@ -162,7 +162,7 @@
 		return
 
 	var/mob/living/carbon/human/target = victim
-	var/random_drug = pick(list(/datum/reagent/ozium, /datum/reagent/moondust))
+	var/drug = /datum/reagent/neurotoxin 
 	var/selected_hallucination = pick(list(
 		"Is this TRVE??", "IDDQD", "DAFUQ?", "I am NOT meant to see this.",
 		"What... WHAT is this?", "This doesn't make SENSE.", "I don't UNDERSTAND.",
@@ -188,12 +188,12 @@
 		addtimer(CALLBACK(target, "emote", pick("giggle","laugh","chuckle")), 0)
 
 	if(last_cut + 10 SECONDS >= world.time) return
-	target.blur_eyes(5)
-	target.adjust_blurriness(10)
-	target.adjustToxLoss(10)
+	//target.blur_eyes(5)
+	//target.adjust_blurriness(10)
+	target.adjustToxLoss(9)
 	last_cut = world.time
-	if(last_drug + 1 MINUTES >= world.time) return
-	target.reagents.add_reagent(random_drug, 2)
+	if(last_drug + 8 SECONDS >= world.time) return
+	target.reagents.add_reagent(drug, 1.6)
 	last_drug = world.time
 
 /proc/baothapsychosis(mob/living/carbon/target)
@@ -201,3 +201,42 @@
 		return
 
 	REMOVE_TRAIT(target, TRAIT_PSYCHOSIS, "baothaknife")
+
+/datum/reagent/neurotoxin
+	name = "Neurotoxin"
+	description = "A strong neurotoxin that puts the subject into a death-like state."
+	color = "#2E2E61" // rgb: 46, 46, 97
+	metabolization_rate = 0.05
+	harmful = TRUE
+
+/datum/reagent/neurotoxin/on_mob_life(mob/living/carbon/M)
+	var/amt = volume 
+
+	if(amt >= 8)
+		if(prob(30))
+			to_chat(M, span_warning("WHAT THE-.. I CANT FEEL MY BODY!"))
+		M.Paralyze(600, 0)
+		M.emote("agony")
+
+	else if(amt >= 7)
+		if(prob(15))
+			to_chat(M, span_warning("I'M SO WEAK NOW! STOP IT!!.."))
+		M.apply_status_effect(/datum/status_effect/debuff/exposed)
+		M.Slowdown(5)
+
+	else if(amt >= 5)
+		M.energy_add(-20)
+		M.blur_eyes(4)
+		if(prob(15))
+			to_chat(M, span_warning("THIS ACID!! I.. Im really getting weaker a lot.. "))
+
+	else if(amt >= 2.1)
+		M.energy_add(-15)
+		if(prob(15))
+			to_chat(M, span_warning("I feel myself weaker.."))
+
+	else if(amt >= 1.1)
+		if(prob(12))
+			to_chat(M, span_warning("Agh.. I feel weak in my body.."))
+
+	return ..()
