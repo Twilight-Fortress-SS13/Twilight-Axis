@@ -1128,29 +1128,99 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	bucket += list(entry)
 
-/datum/orbit_menu/proc/get_role_selection_color(assigned_role, list/role_color_cache, datum/job/J = null)
+/datum/orbit_menu/proc/get_orbit_role_group(datum/job/J)
+	if(!J)
+		return null
+
+	var/department = SSjob.bitflag_to_department(J.department_flag, J.obsfuscated_job)
+	switch(department)
+		if("Noblemen")
+			return "Ducal Family"
+		if("Vanguard", "Town Guard", "City Watch")
+			return "Garrison"
+
+	return department
+
+/datum/orbit_menu/proc/get_orbit_role_group_color(role_group)
+	switch(role_group)
+		if("Ducal Family")
+			return "#aa83b9"
+		if("Courtiers")
+			return "#81adc8"
+		if("Retinue")
+			return "#223273"
+		if("Garrison")
+			return "#b18484"
+		if("Church")
+			return "#c0ba8d"
+		if("Inquisition")
+			return "#cc4242"
+		if("Wanderers")
+			return "#819e82"
+		if("Burghers")
+			return "#c86e3a"
+		if("Sidefolk")
+			return "#65b2b5"
+		if("Peasants")
+			return "#b09262"
+		if("ATC", "Azurian Trading Company")
+			return "#c86e3a"
+
+	return null
+
+/datum/orbit_menu/proc/get_orbit_special_role_color(role_label)
+	if(!role_label)
+		return null
+
+	var/normalized_role = lowertext(role_label)
+	if(normalized_role in list(
+		"necromancer skeleton",
+		"lich skeleton",
+		"unbound death knight",
+		"death knight",
+		"dark itinerant",
+	))
+		return "#2e0073"
+
+	if(normalized_role in list(
+		"wretch",
+		"dreamwalker",
+		"gnoll",
+		"vampire",
+		"lesser vampire",
+		"thinblood vampire",
+		"ancillae vampire",
+		"vampire spawn",
+	))
+		return ""
+
+	return null
+
+/datum/orbit_menu/proc/get_role_selection_color(assigned_role, role_group, list/role_color_cache, datum/job/J = null)
 	if(!assigned_role)
 		return null
 
+	var/cache_key = "[assigned_role]|[role_group]"
 	if(role_color_cache)
-		var/cached_color = role_color_cache[assigned_role]
+		var/cached_color = role_color_cache[cache_key]
 		if(!isnull(cached_color))
 			return cached_color || null
 
-	var/resolved_color = null
-	if(!J)
-		J = SSjob.GetJob(assigned_role)
-	if(J)
-		if(J.selection_color)
-			resolved_color = J.selection_color
-		else
-			var/department = SSjob.bitflag_to_department(J.department_flag, J.obsfuscated_job)
-			var/list/department_colors = JCOLOR_BY_DEPARTMENT
-			if(department_colors[department])
-				resolved_color = department_colors[department]
+	var/resolved_color = get_orbit_role_group_color(role_group)
+	if(!resolved_color)
+		if(!J)
+			J = SSjob.GetJob(assigned_role)
+		if(J)
+			if(J.selection_color)
+				resolved_color = J.selection_color
+			else
+				var/department = SSjob.bitflag_to_department(J.department_flag, J.obsfuscated_job)
+				var/list/department_colors = JCOLOR_BY_DEPARTMENT
+				if(department_colors[department])
+					resolved_color = department_colors[department]
 
 	if(role_color_cache)
-		role_color_cache[assigned_role] = resolved_color || ""
+		role_color_cache[cache_key] = resolved_color || ""
 
 	return resolved_color
 
@@ -1320,26 +1390,36 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	if(ismob(target))
 		var/mob/M = target
+		var/assigned_role = M.mind?.assigned_role
+		var/antag_role_label
+		var/has_antag_group = FALSE
+		var/selection_color
 		if(M.stat != DEAD && !isobserver(M))
 			var/list/antag_info = get_orbit_antag_info(M)
 			if(antag_info)
+				has_antag_group = TRUE
+				antag_role_label = antag_info["label"]
 				entry["antag_group"] = antag_info["group"]
-				entry["antag_role"] = antag_info["label"]
+				entry["antag_role"] = antag_role_label
 			else
 				var/antag_group = get_orbit_antag_group(M)
 				if(antag_group)
+					has_antag_group = TRUE
 					entry["antag_group"] = antag_group
-		if(M.mind?.assigned_role)
-			var/assigned_role = M.mind.assigned_role
+		if(assigned_role)
 			entry["role"] = assigned_role
 			var/datum/job/J = SSjob.GetJob(assigned_role)
-			if(J)
-				var/job_department = SSjob.bitflag_to_department(J.department_flag, J.obsfuscated_job)
-				if(job_department)
-					entry["department"] = job_department
-			var/selection_color = get_role_selection_color(assigned_role, role_color_cache, J)
-			if(selection_color)
-				entry["selection_color"] = selection_color
+			var/role_group = get_orbit_role_group(J)
+			if(role_group)
+				entry["department"] = role_group
+			selection_color = get_role_selection_color(assigned_role, role_group, role_color_cache, J)
+		var/special_role_color = get_orbit_special_role_color(antag_role_label ? antag_role_label : assigned_role)
+		if(!isnull(special_role_color))
+			selection_color = special_role_color
+		else if(has_antag_group)
+			selection_color = "#361f1f"
+		if(selection_color)
+			entry["selection_color"] = selection_color
 		if(M.job)
 			entry["job"] = M.job
 		if(isliving(M))

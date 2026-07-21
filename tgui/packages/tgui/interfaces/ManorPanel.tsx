@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import {
   Box,
   Button,
@@ -351,89 +351,67 @@ const Scene = ({ kind }: { kind: string }) => {
 
   if (kind === 'field') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('field_icon.png')} alt="Поля" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('field_icon.png')} alt="Поля" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'orchard') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('fruit_icon.png')} alt="Сады" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('fruit_icon.png')} alt="Сады" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'hunt') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('hunting_icon.png')} alt="Охотничьи угодья" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('hunting_icon.png')} alt="Охотничьи угодья" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'farm') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('ranch_icon.png')} alt="Фермы" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('ranch_icon.png')} alt="Фермы" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'trade') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('trade_icon.png')} alt="Торговые ряды" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('trade_icon.png')} alt="Торговые ряды" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'fish') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('fishing_icon.png')} alt="Заводи" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('fishing_icon.png')} alt="Заводи" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'mining') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('mine_icon.png')} alt="Шахты" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('mine_icon.png')} alt="Шахты" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'forest') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('forest_icon.png')} alt="Леса" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('forest_icon.png')} alt="Леса" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'mage_tower') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('mage_tower_icon.png')} alt="Леса" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('mage_tower_icon.png')} alt="Леса" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'cathedral') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('cathedral_icon.png')} alt="Леса" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('cathedral_icon.png')} alt="Леса" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 
   if (kind === 'outpost') {
     return (
-      <>
-        <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('outpost_icon.png')} alt="Аванпост" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-      </>
+      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('outpost_icon.png')} alt="Аванпост" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
     );
   }
 

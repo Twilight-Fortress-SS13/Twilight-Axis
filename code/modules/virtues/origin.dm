@@ -70,7 +70,7 @@
 
 /datum/virtue/origin/raneshen
 	name = "Ranesheni"
-	origin_name = "Raneshan"
+	origin_name = "Raneshen"
 	added_languages = list(/datum/language/raneshi)
 	desc = "I originate from the lush valleys and harsh badlands of Raneshen -- The Autarchy, Merchants of Shifting Sands. Home to the zealous sun elves and many others looking to profit without judgement, build great works with cheap labor or simply fulfill their lyfe's desires with coin and flesh. The region sits at the center of the continent of Eastern Psydonia. Recently engulfed in a violent set of rebellions against the slaver regions, it has been enduring a tumultuous time with many refugees -- both slaver and slave, fleeing its hold.<br>"
 	origin_desc = "Raneshen - better known by its ancestral title, 'Zybantia' - resides across the ocean as Grenzelhoft's economic rival: \
@@ -255,20 +255,6 @@
 	to surface cultures and  communities, often perceived as strange at best, and downright evil at worst. A stigma developed by those who live upon \
 	the surface about their home and culture, believing all things evil crawl out of the very depths they reside in. A stigma that has lessened in \
 	recent yils, but still vastly present nonetheless."
-
-/datum/virtue/origin/racial/underdark/apply_to_human(mob/living/carbon/human/H)
-	..()
-	var/list/choices = list("Normal (Default)", "Strict (Sunlight Sensitivity + Advanced Darksight)")
-	var/complex = tgui_input_list(H, "How adapted are you to the Underdark?", "Underdweller Upbringing", choices)
-	if(!complex)
-		complex = "Normal (Default)"
-	switch(complex)
-		if("Strict (Sunlight Sensitivity + Advanced Darksight)")
-			ADD_TRAIT(H, TRAIT_SUNLIGHT_SENSITIVE, TRAIT_GENERIC)
-			ADD_TRAIT(H, TRAIT_NITEVISION, TRAIT_GENERIC)
-			to_chat(H, span_notice("The sun is irritantly bright for you, but your eyes cut the darkness better!"))
-		else
-			to_chat(H, span_notice("You're quick to adapt."))
 
 /datum/virtue/origin/apply_to_human(mob/living/carbon/human/recipient)
 	recipient.dna.species.origin = origin_name

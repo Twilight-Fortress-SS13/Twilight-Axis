@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { useBackend } from 'tgui/backend';
-import { classes } from 'tgui-core/react';
 import { Window } from 'tgui/layouts';
 import {
-  DmIcon,
   Button,
-  Icon,
   Box,
   ProgressBar,
   Stack,
@@ -311,16 +308,16 @@ export const LoadoutPanel = () => {
                           gap: '6px',
                         }}
                       >
-                        <Box
+                        <div
+                          title={item}
                           style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
                           }}
-                          tooltip={item}
                         >
                           {item}
-                        </Box>
+                        </div>
                         <Button
                           color="danger"
                           onClick={() => act('remove', { item })}
@@ -427,9 +424,19 @@ export const LoadoutPanel = () => {
                             borderRadius: '8px',
                           }}
                           tooltip={
-                            `${item?.unavailable
-                              ? item?.unavailableReason || (item?.requiredTier ? "Недоступно. Требуется уровень:"+item.requiredTier : 'Недоступно.')
-                              : item?.name || 'Без названия'}`}
+                            item?.unavailable ? (
+                              <Box>
+                                <Box>{item?.name || 'Без названия'}</Box>
+                                <Box mt={0.5}>
+                                  {item?.requiredTier
+                                    ? `Требуется уровень мецената: ${item.requiredTier}.`
+                                    : item?.unavailableReason || 'Недоступно.'}
+                                </Box>
+                              </Box>
+                            ) : (
+                              item?.name || 'Без названия'
+                            )
+                          }
                           onClick={() => {
                             if (selectedSet.has(item?.name)) {
                               act('remove', { item: item?.name || item?.path });

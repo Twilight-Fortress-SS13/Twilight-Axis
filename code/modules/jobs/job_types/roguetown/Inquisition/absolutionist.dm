@@ -17,6 +17,7 @@
 	wanderer_examine = FALSE
 	advjob_examine = FALSE
 	give_bank_account = 15
+	vice_restrictions = list(/datum/charflaw/silverweakness)
 	same_job_respawn_delay = 30 MINUTES
 
 	job_traits = list(
@@ -77,6 +78,7 @@
 	if(ishuman(L))
 		var/mob/living/carbon/human/H = L
 		if(H.mind)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/touch/asperges) //TA EDIT
 			H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/persist)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonlux_tamper)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonabsolve)

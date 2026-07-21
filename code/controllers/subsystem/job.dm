@@ -178,6 +178,9 @@ SUBSYSTEM_DEF(job)
 					break
 			if(has_restricted_vice)
 				continue
+		if(job.prefs_all_subclasses_restricted(player.client))
+			JobDebug("FOC incompatible with advclass virtues/vices, Player: [player], Job: [job.title]")
+			continue
 		if(job.plevel_req > player.client.patreonlevel())
 			JobDebug("FOC incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
@@ -255,6 +258,9 @@ SUBSYSTEM_DEF(job)
 					break
 			if(has_restricted_vice)
 				continue
+		if(job.prefs_all_subclasses_restricted(player.client))
+			JobDebug("GRJ incompatible with advclass virtues/vices, Player: [player], Job: [job.title]")
+			continue
 
 		if(job.plevel_req > player.client.patreonlevel())
 			JobDebug("GRJ incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
@@ -495,7 +501,19 @@ SUBSYSTEM_DEF(job)
 				if(length(job.virtue_restrictions) && ((player.client.prefs.virtue?.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions) || (player.client.prefs.virtue_origin?.type in job.virtue_restrictions)))
 					JobDebug("DO incompatible with virtues, Player: [player], Job: [job.title], Virtue 1: [player.client.prefs.virtue?.name]")
 					continue
-				// =========================================================================
+				if(length(job.vice_restrictions))
+					var/has_restricted_vice = FALSE
+					for(var/datum/charflaw/cf in player.client.prefs.charflaws)
+						if(cf.type in job.vice_restrictions)
+							JobDebug("DO incompatible with vices, Player: [player], Job: [job.title], Vice: [cf.name]")
+							has_restricted_vice = TRUE
+							break
+					if(has_restricted_vice)
+						continue
+
+				if(job.prefs_all_subclasses_restricted(player.client))
+					JobDebug("DO incompatible with advclass virtues/vices, Player: [player], Job: [job.title]")
+					continue
 
 				#ifdef USES_PQ
 				if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq))
@@ -594,6 +612,8 @@ SUBSYSTEM_DEF(job)
 							break
 					if(has_restricted_vice)
 						continue
+				if(job.prefs_all_subclasses_restricted(player.client))
+					continue
 
 				#ifdef USES_PQ
 				if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq) && level != JP_LOW) continue

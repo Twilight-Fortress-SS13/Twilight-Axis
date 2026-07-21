@@ -1,5 +1,5 @@
 import { cls, stripHtml } from './helpers';
-import { type Aspect, type Spell } from './types';
+import type { Aspect, Spell } from './types';
 
 export const GrimoireChoiceSection = ({
   aspect,

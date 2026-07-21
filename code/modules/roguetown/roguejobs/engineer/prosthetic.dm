@@ -159,7 +159,6 @@
 	max_damage = 20
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	sellprice = 7 //TA EDIT
 	fingers = FALSE //can't swing weapons but can pick stuff up and punch
 	anvilrepair = /datum/skill/craft/carpentry
 	dismember_wound = /datum/wound/bruise/large
@@ -254,7 +253,6 @@
 	max_damage = 40
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	sellprice = 7 //TA EDIT
 	fingers = FALSE //can't swing weapons but can pick stuff up and punch
 	anvilrepair = /datum/skill/craft/carpentry
 	dismember_wound = /datum/wound/bruise/large
@@ -354,7 +352,6 @@
 	organ_slowdown = 0.05 // -5%
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	sellprice = 7 //TA EDIT
 	anvilrepair = /datum/skill/craft/carpentry
 	dismember_wound = /datum/wound/bruise/large
 
@@ -446,7 +443,6 @@
 	organ_slowdown = 0.05 // -5%
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	sellprice = 7 //TA EDIT
 	anvilrepair = /datum/skill/craft/carpentry
 	dismember_wound = /datum/wound/bruise/large
 

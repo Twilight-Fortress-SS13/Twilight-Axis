@@ -63,6 +63,9 @@
 			desc = "A simple luck charm - a zenny, pierced by a blade and hanging on a thin iron chain. A tiny inscription upon the amulet's edge reads: «All tyrants will die alone.»"
 	. = ..()
 
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, "Strange luck charm")
+
 /obj/item/clothing/neck/roguetown/chaincoif/full/iron
 	name = "iron full chain coif"
 	icon_state = "fchaincoif"

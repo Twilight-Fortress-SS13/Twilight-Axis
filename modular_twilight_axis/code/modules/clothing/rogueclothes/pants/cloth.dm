@@ -31,7 +31,6 @@
 	icon_state = "gambesonp"
 	armor = ARMOR_PADDED
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
-	sellprice = 25
 	color = "#976E6B"
 
 /obj/item/clothing/under/roguetown/trou/leather/etrpants

@@ -44,6 +44,7 @@
 #define STATUS_EFFECT_BLINDED /datum/status_effect/debuff/blindness // "new" noc blind effect. see noc.dm for details.
 
 #define STATUS_EFFECT_OFFBALANCED /datum/status_effect/incapacitating/off_balanced
+#define STATUS_EFFECT_BALL_KICK_RECOVERY /datum/status_effect/ball_kick_recovery // TA EDIT
 
 #define STATUS_EFFECT_STUN /datum/status_effect/incapacitating/stun //the affected is unable to move or use items
 

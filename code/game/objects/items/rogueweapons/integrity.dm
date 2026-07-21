@@ -1,3 +1,5 @@
+#define BLADE_INTEGRITY_LOSS_MULT 0.7 // TA EDIT
+
 /obj/item
 	/// Current blade integrity
 	var/blade_int = 0
@@ -15,6 +17,7 @@
 /obj/item/proc/remove_bintegrity(amt as num, mob/user)
 	if(sharpness == IS_BLUNT)
 		return FALSE
+	amt *= BLADE_INTEGRITY_LOSS_MULT // TA EDIT
 	if(sharpness_mod != 1)
 		amt *= sharpness_mod
 	if(cleave_sharpness_mult != 1)
@@ -136,3 +139,5 @@
 /obj/item/proc/restore_bintegrity()
 	max_blade_int = initial(max_blade_int)//Given it's reduced above.
 	blade_int = initial(max_blade_int)//Now return it.
+
+#undef BLADE_INTEGRITY_LOSS_MULT

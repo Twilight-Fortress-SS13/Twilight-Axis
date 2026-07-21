@@ -76,7 +76,7 @@ const TRAILING_MASKED_DESCRIPTOR_REGEX = / \[[^\]]+\]$/;
 const TRAILING_DUPLICATE_SUFFIX_REGEX = / \(\d+\)$/;
 const EMPTY_TARGETS: OrbitTarget[] = [];
 const ROLE_GROUP_COLORS: Record<string, RoleColor> = {
-  Noblemen: {
+  'Ducal Family': {
     backgroundColor: '#aa83b9',
     color: '#443a39',
   },
@@ -85,8 +85,8 @@ const ROLE_GROUP_COLORS: Record<string, RoleColor> = {
     color: '#443a39',
   },
   Retinue: {
-    backgroundColor: '#c86e3a',
-    color: '#443a39',
+    backgroundColor: '#223273',
+    color: '#ffffff',
   },
   Garrison: {
     backgroundColor: '#b18484',
@@ -109,7 +109,15 @@ const ROLE_GROUP_COLORS: Record<string, RoleColor> = {
     color: '#443a39',
   },
   Burghers: {
-    backgroundColor: '#819e82',
+    backgroundColor: '#c86e3a',
+    color: '#443a39',
+  },
+  Sidefolk: {
+    backgroundColor: '#65b2b5',
+    color: '#443a39',
+  },
+  ATC: {
+    backgroundColor: '#c86e3a',
     color: '#443a39',
   },
   'Azurian Trading Company': {
@@ -145,12 +153,13 @@ const LESSER_VAMPIRE_ROLE_NAMES = [
   'vampire spawn',
 ] as const;
 const ALIVE_NORMAL_GROUP_ORDER = [
-  'Noblemen',
+  'Ducal Family',
   'Courtiers',
+  'Retinue',
   'Garrison',
   'Church',
   'Inquisition',
-  'Yeomen',
+  'Burghers',
   'Peasants',
   'Sidefolk',
   'Wanderers',
@@ -448,6 +457,24 @@ function buildItemTooltip(
   return `${fullName} | ${roleText} | ${healthText} health`;
 }
 
+function getRoleGroupKey(department: string | undefined, roleLabel: string) {
+  const normalizedDepartment = department?.trim();
+
+  if (
+    normalizedDepartment === 'Vanguard' ||
+    normalizedDepartment === 'Town Guard' ||
+    normalizedDepartment === 'City Watch'
+  ) {
+    return 'Garrison';
+  }
+
+  if (normalizedDepartment === 'Noblemen') {
+    return 'Ducal Family';
+  }
+
+  return normalizedDepartment || roleLabel;
+}
+
 function buildIndexedTarget(
   item: OrbitTarget,
   sectionKey: OrbitSectionKey,
@@ -455,12 +482,7 @@ function buildIndexedTarget(
   const displayName = getDisplayName(item.full_name);
   const roleLabel = getRoleLabel(item);
   const healthStateColor = getHealthStateColor(item.health_percent);
-  const groupKey =
-    item.department === 'Vanguard' ||
-    item.department === 'Town Guard' ||
-    item.department === 'City Watch'
-      ? 'Garrison'
-      : item.department || roleLabel;
+  const groupKey = getRoleGroupKey(item.department, roleLabel);
   const roleColor = getRoleColor(item, roleLabel.toLowerCase(), groupKey);
 
   return {

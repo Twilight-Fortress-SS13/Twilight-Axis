@@ -45,7 +45,6 @@
 	icon = 'modular_twilight_axis/awful_artillery/icons/artillery.dmi'
 	icon_state = "barrel"
 	color = "#96745e"
-	sellprice = 50
 
 /datum/anvil_recipe/engineering/artillery/mortar_barrel_from_universal
 	name = "заготовка ствола мортиры(переделка ствола) "

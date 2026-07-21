@@ -28,7 +28,7 @@
 	if(target.stat == DEAD)
 		to_chat(user, "They're dead!")
 		return FALSE
-	if(istiefling(target))
+	if(istiefling(target) || isdullahan(target)) //TA EDIT
 		to_chat(user, span_warning("Their Lux is infernal. It will not do."))
 		return FALSE
 	if(HAS_TRAIT(target, TRAIT_UNFORGIVABLE))
@@ -52,7 +52,7 @@
 		display_results(user, target, span_notice("You extract a single dose of lux from [target]'s heart."),
 			"[user] extracts lux from [target]'s innards.",
 			"[user] extracts lux from [target]'s innards.")
-		
+
 		var/apply_greater
 		if(isaasimar(target) && !(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED)))
 			new /obj/item/reagent_containers/lux(target.loc)

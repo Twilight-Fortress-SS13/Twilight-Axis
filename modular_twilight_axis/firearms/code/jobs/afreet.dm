@@ -17,15 +17,16 @@
 		STATKEY_CON = 2,
 	)
 	subclass_skills = list(
-		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/labor/butchering = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
-		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/sneaking = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
@@ -60,7 +61,7 @@
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 			armor = /obj/item/clothing/suit/roguetown/armor/leather
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
-			beltr = /obj/item/rogueweapon/stoneaxe/woodcut
+			beltr = /obj/item/rogueweapon/stoneaxe/woodcut/steel
 			backl = /obj/item/storage/backpack/rogue/backpack
 			shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
 			head = /obj/item/clothing/head/roguetown/grenzelhofthat
@@ -68,11 +69,11 @@
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 			belt = /obj/item/storage/belt/rogue/leather
 			backpack_contents = list(
-				/obj/item/twilight_powderflask = 1, 
-				/obj/item/rogueweapon/huntingknife = 1, 
-				/obj/item/flint = 1, /obj/item/bedroll = 1, 
-				/obj/item/needle/thorn = 1, 
-				/obj/item/natural/cloth/bandage = 1, 
+				/obj/item/twilight_powderflask = 1,
+				/obj/item/rogueweapon/huntingknife = 1,
+				/obj/item/flint = 1, /obj/item/bedroll = 1,
+				/obj/item/needle/thorn = 1,
+				/obj/item/natural/cloth/bandage = 1,
 				/obj/item/flashlight/flare/torch = 1
 			)
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, 4, TRUE)
@@ -81,14 +82,15 @@
 			armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 			shirt = /obj/item/clothing/suit/roguetown/shirt/freifechter
 			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
+			beltl = /obj/item/rogueweapon/huntingknife/idagger/steel
 			backl = /obj/item/storage/backpack/rogue/satchel
 			wrists = /obj/item/rogueweapon/katar/punchdagger
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 			belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
 			backpack_contents = list(
-				/obj/item/twilight_powderflask = 1,  
-				/obj/item/needle/thorn = 1, 
-				/obj/item/natural/cloth/bandage = 1, 
+				/obj/item/twilight_powderflask = 1,
+				/obj/item/needle/thorn = 1,
+				/obj/item/natural/cloth/bandage = 1,
 				/obj/item/flashlight/flare/torch = 1,
 				/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
 				/obj/item/rogueweapon/scabbard/sheath = 1

@@ -51,6 +51,16 @@
 	var/lose_patience_timer_id //id for a timer to call LoseTarget(), used to stop mobs fixating on a target they can't reach
 	var/lose_patience_timeout = 300 //30 seconds by default, so there's no major changes to AI behaviour, beyond actually bailing if stuck forever
 
+	// TA EDIT START
+	var/datum/weakref/melee_progress_target
+	var/melee_progress_health
+	var/melee_progress_stat
+	var/melee_progress_since
+	var/melee_no_progress_attacks
+	var/datum/weakref/ignored_melee_target
+	var/ignored_melee_target_until
+	// TA EDIT END
+
 	var/del_on_deaggro = 0 //seconds to delete after losing aggro
 	var/last_aggro_loss = null
 
@@ -252,6 +262,11 @@
 	if(isturf(the_target) || !the_target || the_target.type == /atom/movable/lighting_object) // bail out on invalids
 		return FALSE
 
+	// TA EDIT START
+	if(is_melee_target_ignored(the_target))
+		return FALSE
+	// TA EDIT END
+
 	if(binded)
 		return FALSE
 
@@ -317,7 +332,7 @@
 			addtimer(cb, (i - 1)*delay)
 	else
 		AttackingTarget()
-	if(patience)
+	if(patience && target) // TA EDIT
 		GainPatience()
 
 /mob/living/simple_animal/hostile/proc/CheckAndAttack()
@@ -408,8 +423,70 @@
 	SEND_SIGNAL(src, COMSIG_HOSTILE_ATTACKINGTARGET, target)
 	in_melee = TRUE
 
-	if(!QDELETED(target))
-		return target.attack_animal(src)
+	// TA EDIT START
+	var/atom/attacked_target = target
+	var/result
+	if(!QDELETED(attacked_target))
+		result = attacked_target.attack_animal(src)
+	if(!QDELETED(src) && attacked_target == target)
+		record_melee_attack_progress(attacked_target)
+	return result
+
+/mob/living/simple_animal/hostile/proc/reset_melee_attack_progress()
+	melee_progress_target = null
+	melee_progress_health = null
+	melee_progress_stat = null
+	melee_progress_since = 0
+	melee_no_progress_attacks = 0
+
+/mob/living/simple_animal/hostile/proc/is_melee_target_ignored(atom/checking_target)
+	var/atom/ignored_target = ignored_melee_target?.resolve()
+	if(!ignored_target || world.time >= ignored_melee_target_until)
+		ignored_melee_target = null
+		ignored_melee_target_until = 0
+		return FALSE
+	return ignored_target == checking_target
+
+/mob/living/simple_animal/hostile/proc/record_melee_attack_progress(atom/attacked_target)
+	if(!isliving(attacked_target))
+		reset_melee_attack_progress()
+		return FALSE
+
+	var/mob/living/living_target = attacked_target
+	if(QDELETED(living_target))
+		reset_melee_attack_progress()
+		return FALSE
+
+	var/mob/living/tracked_target = melee_progress_target?.resolve()
+	if(tracked_target != living_target)
+		reset_melee_attack_progress()
+		melee_progress_target = WEAKREF(living_target)
+		melee_progress_health = living_target.health
+		melee_progress_stat = living_target.stat
+		melee_progress_since = world.time
+		melee_no_progress_attacks = 1
+		return FALSE
+
+	if(living_target.stat != melee_progress_stat || living_target.health < melee_progress_health)
+		melee_progress_health = living_target.health
+		melee_progress_stat = living_target.stat
+		melee_progress_since = world.time
+		melee_no_progress_attacks = 0
+		return FALSE
+
+	if(living_target.health > melee_progress_health)
+		melee_progress_health = living_target.health
+
+	melee_no_progress_attacks++
+	if(melee_no_progress_attacks < AI_MELEE_NO_PROGRESS_LIMIT || world.time < melee_progress_since + AI_MELEE_NO_PROGRESS_TIME)
+		return FALSE
+
+	ignored_melee_target = WEAKREF(living_target)
+	ignored_melee_target_until = world.time + AI_MELEE_IGNORE_TIME
+	reset_melee_attack_progress()
+	LoseTarget()
+	return TRUE
+	// TA EDIT END
 
 /mob/living/simple_animal/hostile/proc/Aggro()
 	vision_range = aggro_vision_range
@@ -434,6 +511,7 @@
 	approaching_target = FALSE
 	in_melee = FALSE
 	walk(src, 0)
+	reset_melee_attack_progress() // TA EDIT
 	LoseAggro()
 
 /mob/living/simple_animal/hostile/proc/revalidate_target_on_faction_change()

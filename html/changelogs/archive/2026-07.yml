@@ -1018,11 +1018,31 @@
   FreeStylaLT:
   - sound: Saccharine Heels (Baothan Heretic boots) now make the appropriate heel
       SFX.
+  Lamasmaster:
+  - balance: Malum Miracles
+  - bugfix: Malum Ritual
+  - bugfix: Antiquarian not getting Secular Barter
+  - balance: Tanning Hides now provides 1 + SKILL (TANNING) Cured Leathers.
   Ollanius:
   - bugfix: Purchasing a refitting kit now properly vends a refitting kit.
   - balance: Reduces cost of a refitting kit from 50 to 25, as it's wholly cosmetic.
   - bugfix: Decorated steel armor no longer requires fluted armor to make. Whoopsies!
   - rscadd: Adjusts the bastard sword's description.
+  ShadowLarkens:
+  - config: Added STORAGE_CDN_IFRAME to config/resources.txt, this is mandatory if
+      you want clients to use the new iframe storage!
+  - bugfix: Client stutters should be reduced by the new TGUI storage system
+  - code_imp: tgui-core updated to v6.1.1, this may cause some UI elements to look
+      weird or break, be on the lookout and report them!
+  - code_imp: TGUI Linting is now enforced by github workflows
+  - refactor: TGUI and TGUI-Panel (the chat) have had their entire backend state system
+      streamlined for simplicity and efficiency.
+  - admin: There's a new log viewer under Admin -> View Round Logs, but it may not
+      have all logs, be careful!
+  - server: Logs can now be output in JSON format
+  - config: JSON Logs can be turned off by commenting out config.txt -> LOG_AS_JSON
+  - config: Human-Readable Logs can be turned off by commenting out config.txt ->
+      LOG_AS_HUMAN_READABLE
   WeNeedMorePhoron:
   - rscadd: Councillors lose Stewardry key except for Cofferers, who cannot take crafting
       virtues
@@ -1045,31 +1065,17 @@
       saving around 10 - 15%
   probbrie:
   - balance: added Dual Wield to Zeybek when they choose twin shamshirs
-  Lamasmaster:
-  - balance: Malum Miracles
-  - bugfix: Malum Ritual
-  - bugfix: Antiquarian not getting Secular Barter
-  - balance: Tanning Hides now provides 1 + SKILL (TANNING) Cured Leathers.
-  ShadowLarkens:
-  - config: Added STORAGE_CDN_IFRAME to config/resources.txt, this is mandatory if
-      you want clients to use the new iframe storage!
-  - bugfix: Client stutters should be reduced by the new TGUI storage system
-  - code_imp: tgui-core updated to v6.1.1, this may cause some UI elements to look
-      weird or break, be on the lookout and report them!
-  - code_imp: TGUI Linting is now enforced by github workflows
-  - refactor: TGUI and TGUI-Panel (the chat) have had their entire backend state system
-      streamlined for simplicity and efficiency.
-  - admin: There's a new log viewer under Admin -> View Round Logs, but it may not
-      have all logs, be careful!
-  - server: Logs can now be output in JSON format
-  - config: JSON Logs can be turned off by commenting out config.txt -> LOG_AS_JSON
-  - config: Human-Readable Logs can be turned off by commenting out config.txt ->
-      LOG_AS_HUMAN_READABLE
   the evil wizard on the cover of dopethrone:
   - rscadd: smoking is now tracked in endround. see TOP BLACKLUNGS
   yyzsong:
   - qol: Ghosts now see item pricing information on examine.
 2026-07-18:
+  BurpleBineapple:
+  - bugfix: Bites no longer ignore Defend intent guarding, or Limbguard. Biting a
+      limbguarded area will instantly break your jaw.
+  - balance: hitting a Limbguard with your bare hands now does severe damage to your
+      gloves. If your gloves are broken or you are bare handed, punching a Limbguard
+      will break the offending arm.
   GDWK-matt:
   - rscadd: "\u043D\u0430\u0432\u044B\u043A \u0447\u0442\u0435\u043D\u0438\u044F"
   - balance: "\u0440\u0435\u0431\u0430\u043B\u0430\u043D\u0441 \u0431\u0440\u043E\u043D\
@@ -1084,6 +1090,8 @@
   - rscadd: Hag Panel Interaction
   Lutowski:
   - image: Partially resprited werewolf.
+  Quinalion:
+  - bugfix: Fixed grenzelhoftian clothing icons.
   WeNeedMorePhoron:
   - bugfix: Fixes shield overlay broken by my optimization PR that stopped forcing
       redraw of all in hand sprite to save on cpu
@@ -1173,32 +1181,14 @@
   - bugfix: Probably fix the Grenzelhoftian Leibwachter not spawnign with wepaons
   borneblood:
   - bugfix: fixed an oversight that caused Bishop's staff to sizzle them
+  changelingonberry:
+  - bugfix: Loadout manager (select loadout) no longer announces to the whole server
   msw7007:
   - bugfix: "\u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0432\
       \ \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0415\u0420\u041F, \u0432 \u0441\
       \u0438\u0441\u0442\u0435\u043C\u0435 \u043A\u0430\u0440\u0442."
   plsleavemealon:
   - balance: mauls no longer require herculean strength to use them
-  sinerume:
-  - rscadd: "\u041B\u0435\u0441\u0441\u0435\u0440 \u043C\u0435\u043D\u0434\u0438\u043D\
-      \u0433 \u0434\u043B\u044F \u0440\u0438\u0442\u0443\u0430\u043B\u0430"
-  - rscadd: "\u041F\u0435\u0440\u0435\u043D\u043E\u0441 \u043B\u0430\u0442 \u0438\
-      \ \u043A\u043E\u043F\u044C\u044F \u0411\u0430\u043E\u0442\u044B \u0432 \u043C\
-      \u043E\u0434\u0443\u043B\u044C"
-  - balance: "\u041F\u0435\u0440\u0435\u0434\u0435\u043B\u0430\u043D\u044B \u0441\u0442\
-      \u0430\u0442\u044B \u043A\u043E\u0438\u0444\u0430"
-  - bugfix: "\u0412\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D \u043C\u0435\u043D\
-      \u0434\u0438\u043D\u0433"
-  BurpleBineapple:
-  - bugfix: Bites no longer ignore Defend intent guarding, or Limbguard. Biting a
-      limbguarded area will instantly break your jaw.
-  - balance: hitting a Limbguard with your bare hands now does severe damage to your
-      gloves. If your gloves are broken or you are bare handed, punching a Limbguard
-      will break the offending arm.
-  Quinalion:
-  - bugfix: Fixed grenzelhoftian clothing icons.
-  changelingonberry:
-  - bugfix: Loadout manager (select loadout) no longer announces to the whole server
   radarseas:
   - rscadd: Added phase roll, a means of dodging exclusive to Vheslynite Cultists,
       used to phase through flesh and steel alyke
@@ -1221,5 +1211,127 @@
       get hags smited anymore.
   - image: added Vheslynite spells and Profane Fire status Effect
   - code_imp: added code ready for implimentation into Vheslyn Cultists
+  sinerume:
+  - rscadd: "\u041B\u0435\u0441\u0441\u0435\u0440 \u043C\u0435\u043D\u0434\u0438\u043D\
+      \u0433 \u0434\u043B\u044F \u0440\u0438\u0442\u0443\u0430\u043B\u0430"
+  - rscadd: "\u041F\u0435\u0440\u0435\u043D\u043E\u0441 \u043B\u0430\u0442 \u0438\
+      \ \u043A\u043E\u043F\u044C\u044F \u0411\u0430\u043E\u0442\u044B \u0432 \u043C\
+      \u043E\u0434\u0443\u043B\u044C"
+  - balance: "\u041F\u0435\u0440\u0435\u0434\u0435\u043B\u0430\u043D\u044B \u0441\u0442\
+      \u0430\u0442\u044B \u043A\u043E\u0438\u0444\u0430"
+  - bugfix: "\u0412\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D \u043C\u0435\u043D\
+      \u0434\u0438\u043D\u0433"
   yyzsong:
   - rscadd: Gold bowl smithing recipe
+2026-07-19:
+  Clem-The-Duck:
+  - rscadd: Makes it possible to layer a fluted cuirass with a hauberk
+  Dorodomki:
+  - rscadd: 'Added new weapons for unarmed, iron claws, iron grip bludgeon and iron
+      knuckles + their recipes
+
+      :cl:'
+  FreeStylaLT:
+  - qol: Guarded now obscures Nobility.
+  Quinalion:
+  - balance: Grenzelhoft Boots now count as positive armor for TRAIT_FENCERDEXTERITY.
+  - rscadd: Freifechter mercenaries now start with a pouch of copper coins.
+  - bugfix: Fixed Freifechter mercenary equipment.
+  SpadesNeil:
+  - image: structure.dmi now has a fallback image
+  WeNeedMorePhoron:
+  - rscadd: Optimized the floating function used by levitation to not eat up 0.25%
+      of the server CPU. report any issue
+  - bugfix: Bathhouse tile that requires job OR trait works again
+  mumblemancer:
+  - rscadd: spider silk (drow) shirt available in cultural imports of merchant
+  racobio:
+  - rscadd: Added racobio's donator item and sprites for it
+  radarseas:
+  - balance: trait_shatterkill has been re-tuned. Skeletons no longer die to rib fractures,
+      instead it disables their legs. Aim for the head on shamblers, sire.
+2026-07-20:
+  BurpleBineapple:
+  - rscadd: donator items for DasFox
+  SomeDeviant:
+  - bugfix: fixed new 'blank' icon for the gatehatch structures on the bridge to the
+      keep/keep front door
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u043E\u0431\
+      \u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u0443\u0434\u0430\u043B\u0451\u043D\
+      \u043D\u044B\u0445 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439 \u0430\
+      \u043D\u0438\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u043E\u0433\u043E\
+      \ runechat."
+  - rscadd: "\u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u043C\u044F\u0447"
+  WeNeedMorePhoron:
+  - rscdel: Mimic no longer do the jumpscare zoom
+  radarseas:
+  - bugfix: TRAIT_SHATTER_KILL aka, shatterable form, is more accurate to how the
+      trait works.
+2026-07-21:
+  EtheoBoxxman:
+  - spellcheck: Fixed all 'Raneshan' typos.
+  FreeStylaLT:
+  - bugfix: Fixed some classes that get Guarded (Deceiving Meekness trait) for free
+      not getting the relevant toggle verbs as well.
+  - rscadd: Added an Ear Flick -- *eflick emote.
+  - rscadd: Added a special animation for elf and wood elf ears for the *eflick emote.
+  - bugfix: Fixed *sniff emote not being on the emote list.
+  - balance: Addiction Vices now come with status effects.
+  KatTheFox:
+  - rscadd: 'The woodcutting enchantment can now be applied to more ''axe-like'' weapons:
+      greataxes, halberds, poleaxes, etc. Previously, it could only be applied to
+      specific types of axes (the one-handed, non-weapon kind mostly).'
+  - bugfix: Book-binding now correctly describes the cover image options
+  Ketrai:
+  - image: Fixes the playful hairstyle offset
+  Lamasmaster:
+  - rscadd: Padded and Hardened Leather footwraps.
+  - bugfix: Cloth/Leather bracers making metallic sounds.
+  - sound: Equip/pickup sound to Gambesons / Leather armour
+  Quinalion:
+  - rscadd: "\u0422\u0435\u043F\u0435\u0440\u044C \u0418\u0441\u043A\u0443\u043F\u0438\
+      \u0442\u0435\u043B\u044E \u0438\u043D\u043A\u0432\u0438\u0437\u0438\u0446\u0438\
+      \u0438 \u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u043C\u0438\u0440\u0430\
+      \u043A\u043B ASPERGES, \u043F\u043E \u0441\u0432\u043E\u0435\u0439 \u043C\u0435\
+      \u0445\u0430\u043D\u0438\u043A\u0435 \u0430\u043D\u0430\u043B\u043E\u0433\u0438\
+      \u0447\u043D\u044B\u0439 Orison \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\
+      \u0445 \u043C\u0438\u0440\u0430\u043A\u043B\u0438\u0441\u0442\u043E\u0432."
+  - image: "\u0420\u0435\u0441\u043F\u0440\u0430\u0439\u0442 \u042D\u0442\u0440\u0443\
+      \u0441\u043A\u043E\u0433\u043E \u041F\u043B\u0430\u0449\u0430 \u0438\u0437 \u043B\
+      \u043E\u0434\u0430\u0443\u0442\u0430."
+  Ryan180602:
+  - rscadd: donor item
+  THE GRAND DUKE OF AZURE PEAK:
+  - bugfix: stick bundles will properly fill when rmb;ing a pile of sticks
+  - bugfix: stuck bundles will not blast ur ears out when rmb'ing a pile of sticks
+  - bugfix: cloth bundles will also not blast your ears out in when rmb'ing a pile
+      of it
+  - rscadd: zerobrine
+  TankTheBirb:
+  - bugfix: Fixes manabloom tea outputting "/list" when you OD on it instead of the
+      correct "MY STOMACH BURNS" text.
+  Vladmar11:
+  - bugfix: "\u0418\u0418 \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0434\
+      \u043E\u043B\u0436\u0435\u043D \u0431\u0435\u0441\u043A\u043E\u043D\u0435\u0447\
+      \u043D\u043E \u0430\u0442\u0430\u043A\u043E\u0432\u0430\u0442\u044C \u0446\u0435\
+      \u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u043E\u043D \u0434\
+      \u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\
+      \u044F \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u043D\u0430\u043D\u0435\u0441\
+      \u0442\u0438 \u0443\u0440\u043E\u043D."
+  - rscadd: "\u0411\u0430\u043D \u0438 \u0430\u043D\u0431\u0430\u043D \u043F\u0430\
+      \u043D\u0435\u043B\u044C \u0442\u0435\u043F\u0435\u0440\u044C \u043D\u0430 \u0422\
+      \u0413\u0423\u0418"
+  - balance: "\u0421\u0438\u043D\u044F\u044F \u043F\u043E\u043B\u043E\u0441\u043A\u0430\
+      \ \u0442\u0440\u0430\u0442\u0438\u0442\u0441\u044F \u043D\u0430 40% \u043C\u0435\
+      \u043D\u044C\u0448\u0435 (\u0438\u0441\u043A\u043B\u044E\u0447\u0435\u043D\u0438\
+      \u0435 \u0437\u0430\u043A\u043B\u0438\u043D\u0430\u043D\u0438\u044F)"
+  - balance: "\u0417\u0430\u0442\u043E\u0447\u043A\u0430 \u0442\u0440\u0430\u0442\u0438\
+      \u0442\u0441\u044F \u043D\u0430 30% \u043C\u0435\u043D\u044C\u0448\u0435"
+  WeNeedMorePhoron:
+  - rscadd: Needle can be reloaded from bundle (continously)
+  - rscadd: Uploading an audio with a protected playback error no longer warn every
+      admins instead of you, it now warns you and spare the admins.
+  yyzsong:
+  - bugfix: Removes reference to whip-scarring wounds that were prior removed
+  - spellcheck: Corrects improper usage of "Bare" across item descriptions

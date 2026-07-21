@@ -601,7 +601,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			var/mob/living/L = user
 			var/fatigue = calculate_fatigue_drain(L)
 			if(fatigue > 0)
-				L.stamina_add(fatigue)
+				L.stamina_add(fatigue, null, TRUE, 1) // TA EDIT
 		invocation(user)
 		start_recharge()
 		if(sound)
@@ -610,7 +610,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		if(isliving(user))
 			var/mob/living/L = user
 			if(releasedrain > 0)
-				L.stamina_add(calculate_fatigue_drain(L))
+				L.stamina_add(calculate_fatigue_drain(L), null, TRUE, 1) // TA EDIT
 			if(L.has_status_effect(/datum/status_effect/buff/clash))
 				var/mob/living/carbon/human/H = user
 				H.bad_guard(span_warning("I can't focus while casting spells!"), cheesy = TRUE)

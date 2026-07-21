@@ -1022,11 +1022,12 @@
 		else if(GLOB.lord_titles[name])
 			. += span_notice("[m3] been granted the title of \"[GLOB.lord_titles[name]]\".")
 
-		if(HAS_TRAIT(src, TRAIT_NOBLE) || HAS_TRAIT(src, TRAIT_DEFILED_NOBLE))
-			if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_DEFILED_NOBLE))
-				. += span_notice("A fellow noble.")
-			else
-				. += span_notice("A noble!")
+		if(!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
+			if(HAS_TRAIT(src, TRAIT_NOBLE) || HAS_TRAIT(src, TRAIT_DEFILED_NOBLE))
+				if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_DEFILED_NOBLE))
+					. += span_notice("A fellow noble.")
+				else
+					. += span_notice("A noble!")
 
 		if(HAS_TRAIT(src, TRAIT_RESIDENT))
 			. += span_notice("A chartered resident.")
@@ -1225,7 +1226,7 @@
 		var/datum/antagonist/vampire/vamp_inspect = src.mind?.has_antag_datum(/datum/antagonist/vampire)
 		if(vamp_inspect && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS)))
 			. += span_redtext("[m3] strange glowing eyes and fangs!")
-	
+
 		//Blackblood Inquisition trauma
 		if(HAS_TRAIT(src, TRAIT_INQUISITION) && HAS_TRAIT(user, TRAIT_BLACKBLOOD))
 			var/mob/living/carbon/carbs = user

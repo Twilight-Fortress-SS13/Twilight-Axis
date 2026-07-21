@@ -27,7 +27,7 @@
 	var/atom/target = controller.blackboard[target_key]
 	var/datum/targetting_datum/targetting_datum = controller.blackboard[targetting_datum_key]
 
-	if(!targetting_datum.can_attack(basic_mob, target))
+	if(controller.is_melee_target_ignored(target) || !targetting_datum.can_attack(basic_mob, target)) // TA EDIT
 		finish_action(controller, FALSE, target_key)
 		return
 
@@ -44,10 +44,17 @@
 		basic_mob.zone_selected = forced_zone
 	basic_mob.a_intent = pick(basic_mob.possible_a_intents) //randomized intent
 
+	// TA EDIT START
 	if(hiding_target) //Slap it!
+		controller.reset_melee_attack_progress()
 		basic_mob.ClickOn(hiding_target, list())
 	else
+		var/next_click_before = basic_mob.next_click
 		basic_mob.ClickOn(target, list())
+		if(basic_mob.next_click != next_click_before && controller.record_melee_attack_progress(target, target_key, hiding_location_key))
+			finish_action(controller, FALSE, target_key, targetting_datum_key, hiding_location_key)
+			return
+	// TA EDIT END
 
 	if(sidesteps_after && prob(33)) //this is so fucking hacky, but going off og code this is exactly how it goes ignoring movetimers
 		if(!target || !isturf(target.loc) || !isturf(basic_mob.loc) || basic_mob.stat == DEAD)
