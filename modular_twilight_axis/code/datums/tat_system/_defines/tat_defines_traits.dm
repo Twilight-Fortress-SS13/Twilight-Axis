@@ -31,6 +31,7 @@
 #define TAT_TRAIT_PLATE_SUPPLIER "tat_plate_supplier"
 #define TAT_TRAIT_SPELLBLADE "tat_spellblade"
 #define TAT_TRAIT_SPELLFIST "tat_spellfist"
+#define TAT_TRAIT_EXPERT_ARMAMENT "tat_expert_armament"
 
 #define TAT_TRAIT_BARDIC_INSPIRATION_T1 "tat_bardic_inspiration_t1"
 #define TAT_TRAIT_BARDIC_INSPIRATION_T2 "tat_bardic_inspiration_t2"
@@ -81,6 +82,8 @@
 
 #define TAT_TRAIT_MASTER_OF_CRAFTING "tat_master_of_crafting"
 #define TAT_TRAIT_STRAYING_SOUL "tat_straying_soul"
+#define TAT_TRAIT_HANDICRAFT_APPRENTICE "tat_handicraft_apprentice"
+#define TAT_TRAIT_STRAYING_SOUL_APPRENTICE "tat_straying_soul_apprentice"
 
 #define TAT_TRAIT_SKILLED_FORGEHAND "tat_skilled_forgehand"
 #define TAT_TRAIT_SKILLED_ARMORER "tat_skilled_armorer"
@@ -200,6 +203,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_RONIN = TAT_TRAIT_ENTRY("Ronin", 2, "Unlocks the Ronin combo style."), \
 	TAT_TRAIT_SPELLBLADE = TAT_TRAIT_ENTRY("Spellblade", 2, "Grants weapon-binding spells, +2 Arcyne Armament, and +3 Arcana. Wretches can raise Arcana to Master."), \
 	TAT_TRAIT_SPELLFIST = TAT_TRAIT_ENTRY("Spellfist", 2, "Requires Expert Pugilist and Mage Initiate. Grants unarmed arcyne combat spells and arcyne momentum."), \
+	TAT_TRAIT_EXPERT_ARMAMENT = TAT_TRAIT_ENTRY("Expert Armament", 2, "Raises Arcyne Armament to Expert level. Requires Arcyne Training or Mage Initiate and conflicts with Expert Warrior."), \
 	TAT_TRAIT_RESIDENT = TAT_TRAIT_ENTRY("Resident", 1, "Grants a Meister account and ownership of a house in the city."), \
 	TAT_TRAIT_TRADER_LICENSE = TAT_TRAIT_ENTRY("Merchant's Writ", 1, "Unlocks sealed trader caches in the TAT item list."), \
 	TAT_TRAIT_BARDIC_INSPIRATION_T1 = TAT_TRAIT_ENTRY("Bardic Inspiration I", 1, "Gain tier 1 bardic inspiration, audience management verbs, and a songbook."), \
@@ -239,7 +243,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_POLYGLOT = TAT_TRAIT_ENTRY("Polyglot", 1, "At spawn, choose one additional language to learn."), \
 	TAT_TRAIT_LOOTRAT = TAT_TRAIT_ENTRY("Loot Rat", 1, "Somehow in your journeys or life you collect a lot of different things and exotic treasures. Increase loot points by 10."), \
 	TAT_TRAIT_LOOTRAT_2 = TAT_TRAIT_ENTRY("Enormous Rat", 2, "You work on Guild with mountains of gold or you're just a lucky dungeon mudskipper. Increase loot points by 15."), \
-	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 1, "Magic 1. Guarantees Arcane 3 and unlocks Arcyne Armament training. Weapon Training, Expert Warrior, and Master Warrior raise its cap normally."), \
+	TRAIT_ARCYNE = TAT_TRAIT_ENTRY("Arcyne Training", 1, "Magic 1. Guarantees Arcane 3 and unlocks Arcyne Armament training. Weapon Training, Expert Armament, Expert Warrior, and Master Warrior raise its cap normally."), \
 	TRAIT_JACKOFALLTRADES = TAT_TRAIT_ENTRY("Jack of All Trades", 2, "Skills cost half as much for you to raise."), \
 	TAT_TRAIT_MASTER_OF_WANDERING = TAT_TRAIT_ENTRY("Master of Wandering", 2, "Advanced wandering mastery in the Skills direction. Gives -1 cost to misc skills, improved to -2 for Adventurers and Wretches. Conflicts with Resident."), \
 	TAT_TRAIT_PLIANT_RENAME = TAT_TRAIT_ENTRY("Pliant Class Name", 0, "Requires 50+ player quality. Lets you rename your displayed class while keeping the Pliant admin marker prefix. Resident class selection is applied first, then you may choose the current class or a matching skill title as the base, and finally use that name, your active TAT slot name, or custom input."), \
@@ -293,6 +297,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_TRAINEE_CHIRURGEON = TAT_TRAIT_ENTRY("Trainee Chirurgeon", 1, "Reduces the cost of Medicine, Literacy, and the first two levels of Staves by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_TRAINEE_TROUBADOUR = TAT_TRAIT_ENTRY("Trainee Troubadour", 1, "Reduces the cost of Music, Literacy, and the first two levels of Knives by 1. Does not stack with Resident or other discount traits on the same skill."), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = TAT_TRAIT_ENTRY("Master of Handicraft", 2, "Grants +30 peaceful skill points. Costs 2 Skills points; Residents get the first Handicraft/Straying Soul trait free, Traders always pay 1."), \
+	TAT_TRAIT_HANDICRAFT_APPRENTICE = TAT_TRAIT_ENTRY("Handicraft Apprentice", 1, "Adventurer and Wretch only. Grants +15 peaceful skill points and conflicts with Master of Handicraft."), \
 	TRAIT_SMITHING_EXPERT = TAT_TRAIT_ENTRY("Expert Forgehand", 3, "Experienced with smithing and engineering. Weaponsmithing, Armorsmithing, Smithing, Smelting, Engineering, Mining, Masonry and Pottery can progress to Legendary levels."), \
 	TAT_TRAIT_SKILLED_FORGEHAND = TAT_TRAIT_ENTRY("Skilled Forgehand", 1, "Skilled with forge-work. Smithing, Smelting, Engineering and Masonry can be picked to Master levels."), \
 	TAT_TRAIT_SKILLED_ARMORER = TAT_TRAIT_ENTRY("Skilled Armorer", 1, "Skilled with armor repair and fitting. Armorsmithing and Engineering can be picked to Master levels."), \
@@ -319,6 +324,8 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 2, "To hunt well is to know the land. Hunting, Tracking and Butchering can progress to Legendary levels."), \
 	TRAIT_EXPERT_HUNTER = TAT_TRAIT_ENTRY("Expert Hunter", 1, "To hunt well is to know the land. You know the common signs of prey and trails."), \
 	TAT_TRAIT_STRAYING_SOUL = TAT_TRAIT_ENTRY("Straying Soul", 2, "Grants +21 adventure skill points. Costs 2 Skills points; Residents get the first Handicraft/Straying Soul trait free, Traders always pay 1."), \
+	TAT_TRAIT_STRAYING_SOUL_APPRENTICE = TAT_TRAIT_ENTRY("Straying Soul Apprentice", 1, "Adventurer and Wretch only. Grants +10 adventure skill points and conflicts with Straying Soul."), \
+	TRAIT_KEENEARS = TAT_TRAIT_ENTRY("Keen Ears", 2, "Enhances hearing, allowing you to recognize voices and hear whispers from farther away."), \
 	TAT_TRAIT_HERETIC = TAT_TRAIT_ENTRY("Heretic", 0, "Gain cool HERETIC mark on your face. Residents only gain the mark and cannot use it to unlock Ritualist, Berserkers Rage, or bypass defensive divine lockouts."), \
 	TRAIT_RITUALIST = TAT_TRAIT_ENTRY("Ritualist", 2, "Gives God's favour for thy's rituals. Adds ritual chalk to your stash."), \
 	TRAIT_TECHNOPHOBE = TAT_TRAIT_ENTRY("Technophobe", -1, "You cannot use Meister devices."), \
@@ -373,8 +380,14 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_WARRIOR_MASTER = list( \
 		TAT_SKILL_DOMAIN_COMBAT = TAT_TRAIT_WARRIOR_MASTER_COMBAT_POINTS \
 	), \
+	TAT_TRAIT_HANDICRAFT_APPRENTICE = list( \
+		TAT_SKILL_DOMAIN_PEACEFUL = 15 \
+	), \
 	TAT_TRAIT_MASTER_OF_CRAFTING = list( \
 		TAT_SKILL_DOMAIN_PEACEFUL = 30 \
+	), \
+	TAT_TRAIT_STRAYING_SOUL_APPRENTICE = list( \
+		TAT_SKILL_DOMAIN_ADVENTURE = 10 \
 	), \
 	TAT_TRAIT_STRAYING_SOUL = list( \
 		TAT_SKILL_DOMAIN_ADVENTURE = 21 \

@@ -694,7 +694,7 @@
 	var/expert_cap = TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT
 	var/master_cap = TAT_SKILL_COMBAT_CAP_TRAIT_MASTER
 	var/has_training_unlock = !!owner_build?.has_trait(TAT_TRAIT_WEAPON_TRAINING) || !!owner_build?.has_role_combat_training_unlock()
-	var/has_expert = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_EXPERT)
+	var/has_expert = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_EXPERT) || !!owner_build?.has_trait(TAT_TRAIT_EXPERT_ARMAMENT)
 	var/has_master = !!owner_build?.has_trait(TAT_TRAIT_WARRIOR_MASTER)
 	var/current_invested = get_invested_value(skill_type)
 	var/bonus_value = get_raw_bonus_value(skill_type)
