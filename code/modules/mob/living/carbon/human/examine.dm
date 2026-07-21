@@ -1299,7 +1299,7 @@
 			if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
 				heretic_text += " To share with. To take with. For all, and us."
 		else if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
-			heretic_text += "Fellow Free Man!"
+			heretic_text += "<span style='color:#E3AB37'>Fellow Free Man!</span>"
 
 	else if(HAS_TRAIT(src, TRAIT_CABAL))
 		if(seer)
@@ -1307,15 +1307,15 @@
 			if(HAS_TRAIT(examiner, TRAIT_CABAL))
 				heretic_text += " May their ambitions not interfere with mine."
 		else if(HAS_TRAIT(examiner, TRAIT_CABAL))
-			heretic_text += "A Rival for the Faithful."
-            
+			heretic_text += "<span style='color:#AB2F2F'>A Rival for the Faithful.</span>"
+
 	else if(HAS_TRAIT(src, TRAIT_HORDE))
 		if(seer)
 			heretic_text += "Hardened by Graggar's Rituals."
 			if(HAS_TRAIT(examiner, TRAIT_HORDE))
 				heretic_text += " Mine were a glorious memory."
 		else if(HAS_TRAIT(examiner, TRAIT_HORDE))
-			heretic_text += "A Rival for Dominion."
+			heretic_text += "<span style='color:#B30303'>A Rival for Dominion.</span>"
 
 	else if(HAS_TRAIT(src, TRAIT_DEPRAVED))
 		if(seer)
@@ -1323,7 +1323,7 @@
 			if(HAS_TRAIT(examiner, TRAIT_DEPRAVED))
 				heretic_text += " She leads us to the greatest ends."
 		else if(HAS_TRAIT(examiner, TRAIT_DEPRAVED))
-			heretic_text += "A Devotee of Delight."
+			heretic_text += "<span style='color:#E91E63'>A Devotee of Delight.</span>"
 
 	return heretic_text
 
