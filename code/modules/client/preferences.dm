@@ -1706,6 +1706,48 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				var/datum/job/J = SSjob.GetJob(job_title)
 				if(!J || !length(J.job_subclasses))
 					return 1
+
+				var/list/valid_subclasses = list("No subclass preference")
+				var/datum/preferences/character_prefs = get_job_prefs(job_title)
+				for(var/subclass_path in J.job_subclasses)
+					var/datum/advclass/subclass_type = subclass_path
+					var/datum/advclass/subclass = SSrole_class_handler.get_advclass_by_name(initial(subclass_type.name))
+					if(!subclass)
+						continue
+					if(!subclass.check_preferences_requirements(character_prefs, user.client, FALSE, FALSE))
+						continue
+					valid_subclasses += subclass.name
+
+				var/current_subclass = job_subclass_preferences[job_title]
+				var/default_subclass = "No subclass preference"
+				if(current_subclass && (current_subclass in valid_subclasses))
+					default_subclass = current_subclass
+				var/selected_subclass = tgui_input_list(user, "Choose a preferred subclass for [job_title]:", "Subclass Preference", valid_subclasses, default_subclass)
+				if(!selected_subclass)
+					SetChoices(user)
+					return 1
+
+				if(selected_subclass == "No subclass preference")
+					job_subclass_preferences -= job_title
+					job_subclass_strict -= job_title
+				else
+					var/list/failure_modes = list(
+						"Try another role, otherwise return to lobby",
+						"Let me choose another subclass"
+					)
+					var/default_failure_mode = job_subclass_strict[job_title] ? failure_modes[1] : failure_modes[2]
+					var/failure_choice = tgui_input_list(user, "What should happen if [selected_subclass] is unavailable?", "Subclass Preference", failure_modes, default_failure_mode)
+					if(!failure_choice)
+						SetChoices(user)
+						return 1
+					job_subclass_preferences[job_title] = selected_subclass
+					if(failure_choice == failure_modes[1])
+						job_subclass_strict[job_title] = TRUE
+					else
+						job_subclass_strict -= job_title
+
+				save_character()
+				SetChoices(user) // TA EDIT END
 			if("set_job_slot") //TA EDIT START
 				if(SSticker.job_change_locked)
 					return 1
