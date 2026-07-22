@@ -248,6 +248,58 @@
 					H.remove_language(L)
 		H.grant_language(player.prefs.extra_language)  //TA EDIT END
 
+/datum/advclass/proc/check_preferences_requirements(datum/preferences/prefs, client/player, check_slots = TRUE, check_probability = TRUE) // TA EDIT START
+	if(!prefs)
+		return FALSE
+
+	var/datum/species/pref_species = prefs.pref_species
+	var/list/local_allowed_sexes = list()
+	if(length(allowed_sexes))
+		local_allowed_sexes |= allowed_sexes
+	if(!immune_to_genderswap && pref_species?.gender_swapping)
+		if(MALE in allowed_sexes)
+			local_allowed_sexes -= MALE
+			local_allowed_sexes += FEMALE
+		if(FEMALE in allowed_sexes)
+			local_allowed_sexes -= FEMALE
+			local_allowed_sexes += MALE
+	if(length(local_allowed_sexes) && !(prefs.gender in local_allowed_sexes))
+		return FALSE
+
+	if(length(forbidden_races) && (pref_species?.type in forbidden_races))
+		return FALSE
+
+	if(length(allowed_ages) && !(prefs.age in allowed_ages))
+		return FALSE
+
+	if(length(allowed_patrons) && !(prefs.selected_patron?.type in allowed_patrons))
+		return FALSE
+
+	if(length(virtue_limits))
+		for(var/virtuetype in virtue_limits)
+			if(istype(prefs.virtue, virtuetype) || istype(prefs.virtuetwo, virtuetype))
+				return FALSE
+
+	var/list/current_vice_limits = vice_limits
+	if(player?.prefs == prefs)
+		current_vice_limits = get_prefs_vice_limits(player)
+	if(length(current_vice_limits) && has_limited_vice(prefs.charflaws, current_vice_limits))
+		return FALSE
+
+	if(check_slots && !SSrole_class_handler.class_has_available_slot(src, player?.ckey))
+		return FALSE
+
+	#ifdef USES_PQ
+	if(min_pq != -100)
+		if(!player || !(get_playerquality(player.ckey) >= min_pq))
+			return FALSE
+	#endif
+
+	if(check_probability && !prob(pickprob))
+		return FALSE
+
+	return TRUE // TA EDIT END
+
 /*
 	Whoa! we are checking requirements here!
 	On the datum! Wow!
@@ -287,9 +339,8 @@
 		if(has_limited_vice(H.charflaws, current_vice_limits))
 			return FALSE
 
-	if(maximum_possible_slots > -1)
-		if(total_slots_occupied >= maximum_possible_slots)
-			return FALSE
+	if(!SSrole_class_handler.class_has_available_slot(src, H.client?.ckey)) // TA EDIT START
+		return FALSE // TA EDIT END
 
 	#ifdef USES_PQ
 	if(min_pq != -100) // If someone sets this we actually do the check.

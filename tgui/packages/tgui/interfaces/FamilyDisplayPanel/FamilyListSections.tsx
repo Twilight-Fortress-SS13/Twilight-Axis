@@ -7,8 +7,6 @@ import type { FamilyDisplayEntry, FamilyDisplaySection } from './types';
 const DEFAULT_ACCENT = '#9370DB';
 const NAME_SHADOW = '0 0 10px #8d5958, 0 0 20px #8d5958';
 
-const entryDescriptorCache: Record<string, string> = {};
-
 const labelStyle = {
   color: '#f4e9d3',
   fontSize: '12px',
@@ -45,21 +43,14 @@ const FamilyEntry = ({ entry }: { entry: FamilyDisplayEntry }) => {
   const accentColor = entry.accentColor || DEFAULT_ACCENT;
   const details = entry.details || [];
   const [hovered, setHovered] = useState(false);
-
-  const ref = entry.personRef;
-  const cacheKey = ref || entry.name;
-  if (entry.descriptor && cacheKey) {
-    entryDescriptorCache[cacheKey] = entry.descriptor;
-  }
-  const tooltipText =
-    entry.descriptor || (cacheKey ? entryDescriptorCache[cacheKey] : null);
+  const tooltipText = entry.descriptor || null;
 
   return (
-    <Box
-      mb={1.5}
+    <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
+        marginBottom: '0.75rem',
         cursor: 'default',
         position: 'relative',
       }}>
@@ -76,7 +67,7 @@ const FamilyEntry = ({ entry }: { entry: FamilyDisplayEntry }) => {
         <Box style={detailsStyle}>{details.join(', ')}</Box>
       )}
       {hovered && !!tooltipText && <Box style={tooltipStyle}>{tooltipText}</Box>}
-    </Box>
+    </div>
   );
 };
 

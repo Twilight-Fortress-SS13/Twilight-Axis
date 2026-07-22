@@ -39,6 +39,7 @@ SUBSYSTEM_DEF(familytree)
 	var/ftlog_counter = 0
 	var/ftlog_error_count = 0
 	var/ftlog_warn_count = 0
+	var/verbose_logging = FALSE
 
 #define FTLOG_DEBUG "DEBUG"
 #define FTLOG_INFO  "INFO"
@@ -47,7 +48,8 @@ SUBSYSTEM_DEF(familytree)
 #define FTLOG_CRIT  "CRIT"
 
 /datum/controller/subsystem/familytree/proc/ftlog(msg, level = FTLOG_INFO)
-#ifdef FAMILYTREE_DEBUG_LOGGING
+	if(level == FTLOG_DEBUG && !verbose_logging)
+		return
 	if(!familytree_log_file)
 		if(GLOB.log_directory)
 			familytree_log_file = "[GLOB.log_directory]/ss_family.log"
@@ -59,8 +61,6 @@ SUBSYSTEM_DEF(familytree)
 	if(level == FTLOG_WARN)
 		ftlog_warn_count++
 	WRITE_LOG(familytree_log_file, "\[[logtime]] [level] #[ftlog_counter] [msg]")
-#endif
-	return
 
 /datum/controller/subsystem/familytree/proc/ftlog_state(tag = "SNAPSHOT")
 #ifdef FAMILYTREE_DEBUG_LOGGING
@@ -154,6 +154,7 @@ SUBSYSTEM_DEF(familytree)
 	if(old_setspouse != H.setspouse)
 		H.familytree_setspouse_retries = 0
 		H.familytree_setspouse_timeout_offered = FALSE
+		H.familytree_setspouse_wait_started = 0
 	H.species_preference_mode = P.species_preference_mode
 	H.preferred_species_types = islist(P.preferred_species_types) ? P.preferred_species_types.Copy() : list()
 	H.preferred_species_anatomy = P.preferred_species_anatomy
@@ -183,6 +184,7 @@ SUBSYSTEM_DEF(familytree)
 		return
 	H.familytree_setspouse_retries = 0
 	H.familytree_setspouse_timeout_offered = FALSE
+	H.familytree_setspouse_wait_started = 0
 	ftlog("target preference changed for [H.real_name]: '[old_target]' -> '[new_target]'")
 	if(H.family_datum || H.familytree_opted_out || H.familytree_confirmation_pending)
 		return
@@ -219,6 +221,9 @@ SUBSYSTEM_DEF(familytree)
 		ftlog("on_mob_created SKIP: dummy")
 		return
 	var/mob/living/carbon/human/H = new_mob
+	if(H.ai_controller)
+		ftlog("on_mob_created SKIP: AI-controlled NPC ([H.ai_controller]), not a real player character")
+		return
 	ftlog("on_mob_created PASS: registering [H.real_name] (ckey=[H.ckey] - may be empty, login will handle)")
 	register_human(H)
 	if(H.ckey)
@@ -274,6 +279,8 @@ SUBSYSTEM_DEF(familytree)
 		return
 	H.familytree_assignment_scheduled = FALSE
 	H.familytree_confirmation_pending = FALSE
+	H.familytree_consecutive_match_failures = 0
+	H.familytree_clear_confirm_button()
 	viable_spouses -= H
 	if(!H.familytree_module_signal_bound)
 		ftlog("stop_tracking SKIP: [H.real_name] not bound")
@@ -340,6 +347,7 @@ SUBSYSTEM_DEF(familytree)
 		ftlog("try_queue UNSUB: [H.real_name] reason=[unsubscribe_reason]", FTLOG_WARN)
 		unsubscribe_familytree_human(H, unsubscribe_reason)
 		return
+	familytree_hydrate_round_state(H)
 	if(H.stat == DEAD)
 		ftlog("try_queue SKIP: [H.real_name] dead")
 		return
@@ -398,6 +406,11 @@ SUBSYSTEM_DEF(familytree)
 		addtimer(CALLBACK(src, PROC_REF(run_royal_assignment), H, royal_status), get_royal_delay(H) SECONDS)
 		return
 
+	if(H.familytree_opted_out)
+		ftlog("try_queue STOP: [H.real_name] opted out this round")
+		stop_tracking_human(H, "opted out this round")
+		return
+
 	if(familytree_pref_enabled(H.familytree_pref))
 		var/target_name = familytree_get_target_name(H)
 		var/timer = (target_name && length(target_name)) ? 3 : (rand(1, 30) + 10)
@@ -409,6 +422,12 @@ SUBSYSTEM_DEF(familytree)
 	if(H.client && (H.mind?.assigned_role || H.job))
 		ftlog("try_queue STOP: [H.real_name] familytree disabled (pref=FAMILY_NONE)")
 		stop_tracking_human(H, "familytree disabled for this character")
+
+/datum/controller/subsystem/familytree/proc/familytree_match_retry_delay(mob/living/carbon/human/H)
+	var/failures = 0
+	if(H)
+		failures = clamp(H.familytree_consecutive_match_failures, 0, 6)
+	return (10 + failures * 10) SECONDS
 
 /datum/controller/subsystem/familytree/proc/run_local_assignment(mob/living/carbon/human/H, status, busy_attempt = 0)
 	ftlog("run_local_assignment: [H?.real_name] ([H?.ckey]) status=[status] busy_attempt=[busy_attempt]")
@@ -445,6 +464,11 @@ SUBSYSTEM_DEF(familytree)
 	if(H.familytree_confirmation_pending)
 		ftlog("run_local SKIP: [H.real_name] confirmation already pending")
 		H.familytree_assignment_scheduled = FALSE
+		return
+	if(!familytree_join_create_phase_open())
+		ftlog("run_local WAIT: [H.real_name] matching locked until join/create phase")
+		H.familytree_assignment_scheduled = FALSE
+		wait_for_join_create_phase(H, "matching locked until join/create phase")
 		return
 	H.familytree_assignment_scheduled = FALSE
 	if(try_force_mutual_targeted_match(H))

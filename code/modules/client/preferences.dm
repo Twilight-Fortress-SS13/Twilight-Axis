@@ -132,6 +132,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	//Job preferences 2.0 - indexed by job title , no key or value implies never
 	var/list/job_preferences = list()
+	var/list/job_subclass_preferences = list() // TA EDIT START
+	var/list/job_subclass_strict = list() // TA EDIT END
 		// Want randomjob if preferences already filled - Donkie
 	var/joblessrole = RETURNTOLOBBY  //defaults to 1 for fewer assistants
 
@@ -1295,6 +1297,19 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					slot_text = "Slot [job_characters[job.title]]"
 				slot_button_html = " | <a href='?_src_=prefs;preference=job;task=set_job_slot;text=[rank]'><font color='gray'>\[[slot_text]\]</font></a>"
 
+			var/subclass_button_html = "" // TA EDIT START
+			if(length(job.job_subclasses))
+				var/selected_subclass = job_subclass_preferences[job.title]
+				var/subclass_star = "☆"
+				var/subclass_color = "gray"
+				var/subclass_tooltip = "Subclass: Any"
+				if(selected_subclass)
+					var/failure_text = job_subclass_strict[job.title] ? "Try Another Role, Otherwise Return to Lobby" : "Choose Another Subclass"
+					subclass_star = "★"
+					subclass_color = "#e3c06f"
+					subclass_tooltip = "Subclass: [selected_subclass] / [failure_text]"
+				subclass_button_html = " | <a href='?_src_=prefs;preference=job;task=set_job_subclass;text=[rank]' title='[subclass_tooltip]'><font color='[subclass_color]'>[subclass_star]</font></a>" // TA EDIT END
+
 			var/start_font = ""
 			var/end_font = ""
 			var/job_unavailable_status = JOB_AVAILABLE
@@ -1350,12 +1365,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			if(is_ineligible)
 				HTML += "<font color='#a56161'> (Ineligible) </font>"
 				HTML += slot_button_html
+				HTML += subclass_button_html // TA EDIT
 				HTML += "</td></tr>"
 				continue
 
 
 			if(!(job_unavailable_status in acceptable_unavailables))
 				HTML += slot_button_html
+				HTML += subclass_button_html // TA EDIT
 				HTML += "</td></tr>"
 				continue
 
@@ -1370,6 +1387,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font></a>"
 
 			HTML += slot_button_html
+			HTML += subclass_button_html // TA EDIT
 
 			HTML += "</td></tr>"
 
@@ -1443,7 +1461,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 /datum/preferences/proc/ResetJobs()
 	job_preferences = list()
 	job_characters = list() //TA EDIT
+	job_subclass_preferences = list() // TA EDIT START
+	job_subclass_strict = list() // TA EDIT END
 	save_preferences()   //TA EDIT
+	save_character() // TA EDIT
 
 /datum/preferences/proc/ResetLastClass(mob/user)
 	if(user.client?.prefs)
@@ -1678,7 +1699,13 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				if(SSticker.job_change_locked)
 					return 1
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
-
+			if("set_job_subclass") // TA EDIT START
+				if(SSticker.job_change_locked)
+					return 1
+				var/job_title = href_list["text"]
+				var/datum/job/J = SSjob.GetJob(job_title)
+				if(!J || !length(J.job_subclasses))
+					return 1
 			if("set_job_slot") //TA EDIT START
 				if(SSticker.job_change_locked)
 					return 1

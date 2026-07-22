@@ -1335,3 +1335,152 @@
   yyzsong:
   - bugfix: Removes reference to whip-scarring wounds that were prior removed
   - spellcheck: Corrects improper usage of "Bare" across item descriptions
+2026-07-22:
+  Dorodomki:
+  - rscadd: Added gear options for the levy, armor, helmets, cloaks.
+  - balance: rebalanced levy unarmed option having templar wrappings replaced with
+      weighted wrappings, gives them a peasant knife replacing the hunting one, adds
+      wrestling lv3 on unarmed levy, removes extra weapon skills and gives one point
+      on mining + skincrafting for grinding gear.
+  - bugfix: 'fixed a few descriptions and weapon loadouts on town levy.
+
+      :cl:'
+  FreeStylaLT:
+  - qol: Elf ears will now instinctively flick upon being kissed or licked.
+  Guidesu:
+  - rscadd: Added silver weakness as a vice.
+  Ketrai:
+  - rscadd: Sewer rats have been extra twitchy port mortem
+  - balance: Maneaters now butcher simple animals with novice skill.
+  OrbisAnima:
+  - qol: Triumph cost for loadout items is now deducted when the item is actually
+      retrieved from storage, not at round start, while preserving the donator discount
+      pool across all retrievals in the round.
+  - bugfix: Fixed loadout items from still being sellable when they arent bought with
+      triumph.
+  PatapoIIIa:
+  - bugfix: "\u0412\u0430\u043C\u043F\u0438\u0440\u044B \u0431\u043E\u043B\u044C\u0448\
+      \u0435 \u043D\u0435 \u043C\u043E\u0433\u0443\u0442 \u0442\u0435\u043B\u0435\u043F\
+      \u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0435\u0431\
+      \u044F (Presence) \u0441\u043A\u0432\u043E\u0437\u044C \u0441\u0442\u0435\u043D\
+      \u044B \u043F\u0440\u0438 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u043C Auspex"
+  - bugfix: "\u0414\u0430\u0440 \u0411\u0435\u0440\u0441\u0435\u0440\u043A\u0430 \u0442\
+      \u0435\u043F\u0435\u0440\u044C \u0441\u0440\u0430\u0431\u0430\u0442\u044B\u0432\
+      \u0430\u0435\u0442 \u0438 \u043F\u043E\u0441\u043B\u0435 \u043C\u0433\u043D\u043E\
+      \u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043C\u0435\u0440\u0442\u0438 \u043E\
+      \u0442 \u043E\u0434\u0438\u043D\u043E\u0447\u043D\u043E\u0433\u043E \u0443\u0434\
+      \u0430\u0440\u0430"
+  - bugfix: "\u0421\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C Quietus\
+      \ \xAB\u0412\u0437\u043E\u0440 \u0412\u0430\u0430\u043B\u0430\xBB (T4) \u0431\
+      \u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0431\u044B\u043B\u0430 \u043F\u043E\
+      \u043B\u043D\u043E\u0441\u0442\u044C\u044E \u043D\u0435\u0440\u0430\u0431\u043E\
+      \u0447\u0435\u0439"
+  - bugfix: "Dagon's Call \u043D\u0435\u043B\u044C\u0437\u044F \u043E\u0431\u0440\u0430\
+      \u0442\u0438\u0442\u044C \u043D\u0430 \u0441\u0430\u043C\u043E\u0433\u043E \u0441\
+      \u0435\u0431\u044F"
+  - bugfix: "\u0423\u0441\u0442\u0440\u0430\u043D\u0435\u043D\u044B \u0434\u0432\u043E\
+      \u0439\u043D\u043E\u0439 \u0443\u0440\u043E\u043D \u0438 \u0434\u0443\u0431\u043B\
+      \u0438\u0440\u0443\u044E\u0449\u0435\u0435\u0441\u044F \u0441\u043E\u043E\u0431\
+      \u0449\u0435\u043D\u0438\u0435 \u043E\u0442 \u044F\u0434\u0430 Quietus (Vitae\
+      \ Acid)"
+  - bugfix: "\u0412\u0430\u043C\u043F\u0438\u0440\u044B \u0441\u043D\u043E\u0432\u0430\
+      \ \u0432\u0438\u0434\u044F\u0442 HUD-\u0438\u043A\u043E\u043D\u043A\u0443 \u0430\
+      \u043D\u0442\u0430\u0433\u043E\u043D\u0438\u0441\u0442\u0430 \u0434\u0440\u0443\
+      \u0433 \u0443 \u0434\u0440\u0443\u0433\u0430"
+  - bugfix: "\u0420\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u044B \u0441 \u0434\u0430\
+      \u0440\u043E\u043C \xAB\u0416\u0438\u0442\u0435\u043B\u044C\xBB \u0441\u043D\
+      \u043E\u0432\u0430 \u043F\u043E\u043B\u0443\u0447\u0430\u044E\u0442 \u0433\u0440\
+      \u0430\u043C\u043E\u0442\u0443 \u0438 \u043C\u0435\u0441\u0442\u043E \u0432\
+      \ \u0442\u0430\u0432\u0435\u0440\u043D\u0435"
+  - bugfix: "\u041F\u0440\u0438\u0437\u0432\u0430\u043D\u043D\u044B\u0435 \u0441\u0443\
+      \u0449\u0435\u0441\u0442\u0432\u0430 (\u0434\u043E\u0441\u043F\u0435\u0445\u0438\
+      \ \u043C\u0430\u0433\u0430 \u0438 \u0442.\u043F.) \u0431\u043E\u043B\u044C\u0448\
+      \u0435 \u043D\u0435 \u043C\u043E\u0433\u0443\u0442 \u0441\u0442\u0430\u0442\u044C\
+      \ \xAB\u0436\u0435\u043D\u0438\u0445\u043E\u043C/\u043D\u0435\u0432\u0435\u0441\
+      \u0442\u043E\u0439\xBB \u0432 \u0441\u0435\u043C\u0435\u0439\u043D\u043E\u0439\
+      \ \u0441\u0438\u0441\u0442\u0435\u043C\u0435"
+  - bugfix: "\u0412\u0437\u0430\u0438\u043C\u043D\u044B\u0439 \u043E\u0442\u043A\u0430\
+      \u0437 \u043E\u0442 \u043F\u0430\u0440\u044B \u0432 \u0441\u0435\u043C\u0435\
+      \u0439\u043D\u043E\u0439 \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0431\u043E\
+      \u043B\u044C\u0448\u0435 \u043D\u0435 \u0441\u0432\u043E\u0434\u0438\u0442 \u0442\
+      \u0435\u0445 \u0436\u0435 \u0434\u0432\u0443\u0445 \u043B\u044E\u0434\u0435\u0439\
+      \ \u043F\u043E\u0432\u0442\u043E\u0440\u043D\u043E"
+  - bugfix: "\u0423\u0441\u0442\u0440\u0430\u043D\u0435\u043D\u044B \u0437\u0430\u0432\
+      \u0438\u0441\u0430\u043D\u0438\u044F \u043F\u043E\u0434\u0442\u0432\u0435\u0440\
+      \u0436\u0434\u0435\u043D\u0438\u044F \u043F\u0430\u0440\u044B \u0432 \u0441\u0435\
+      \u043C\u0435\u0439\u043D\u043E\u0439 \u0441\u0438\u0441\u0442\u0435\u043C\u0435\
+      \ (\u0438\u043A\u043E\u043D\u043A\u0430/\u0431\u043B\u043E\u043A\u0438\u0440\
+      \u043E\u0432\u043A\u0430 \u043D\u0430\u0432\u0441\u0435\u0433\u0434\u0430, \u0430\
+      \u0432\u0442\u043E\u043F\u0440\u0438\u043D\u044F\u0442\u0438\u0435 \u0437\u0430\
+      \ \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0432\u0448\u0435\u0433\u043E\u0441\
+      \u044F)"
+  - balance: "Rockhill Masquerade \u2014 \u0448\u0430\u043D\u0441 \u043F\u043E\u044F\
+      \u0432\u043B\u0435\u043D\u0438\u044F \u0437\u0430\u0432\u0438\u0441\u0438\u0442\
+      \ \u043E\u0442 \u043D\u0430\u0441\u0435\u043B\u0451\u043D\u043D\u043E\u0441\u0442\
+      \u0438 \u0440\u0430\u0443\u043D\u0434\u0430, \u0434\u043E\u0431\u0430\u0432\u043B\
+      \u0435\u043D \u0442\u0430\u0439\u043C\u0435\u0440 \u0432\u044B\u0431\u043E\u0440\
+      \u0430 \u043A\u043B\u0430\u043D\u0430"
+  - qol: "\u0414\u0438\u0430\u043B\u043E\u0433 \u043E\u0436\u0438\u0434\u0430\u043D\
+      \u0438\u044F \xAB\u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E\
+      \xBB \u0432 \u0441\u0435\u043C\u044C\u0435 \u0441\u0447\u0438\u0442\u0430\u0435\
+      \u0442 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\
+      \u044F, \u0430 \u043D\u0435 \u0447\u0438\u0441\u043B\u043E \u043F\u043E\u043F\
+      \u044B\u0442\u043E\u043A"
+  - qol: "\u0418\u043A\u043E\u043D\u043A\u0430 \u0432\u044B\u0431\u043E\u0440\u0430\
+      \ \u043A\u043B\u0430\u043D\u0430 \u0443 \u0432\u0440\u0435\u0442\u0447\u0435\
+      \u0439/\u043B\u0438\u043A\u0435\u0440\u043E\u0432 \u0441 \u043F\u0440\u0438\u043D\
+      \u0443\u0434\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u043C \u043A\u043B\u0430\
+      \u043D\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0432\u0438\
+      \u0441\u0438\u0442 \u0431\u0435\u0437 \u043D\u0443\u0436\u0434\u044B"
+  - qol: "\u0417\u0430\u043A\u0440\u044B\u0442\u0438\u0435 \u043C\u0435\u043D\u044E\
+      \ \u0432\u044B\u0431\u043E\u0440\u0430 \u043A\u043B\u0430\u043D\u0430 \u0431\
+      \u0435\u0437 \u0432\u044B\u0431\u043E\u0440\u0430 \u0431\u043E\u043B\u044C\u0448\
+      \u0435 \u043D\u0435 \u0444\u043E\u0440\u0441\u0438\u0442 \u043A\u043B\u0430\u043D\
+      \ \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"
+  - admin: "\u041B\u043E\u0433\u0438 \u0441\u0435\u043C\u0435\u0439\u043D\u043E\u0439\
+      \ \u0441\u0438\u0441\u0442\u0435\u043C\u044B \u043F\u0435\u0440\u0435\u0432\u0435\
+      \u0434\u0435\u043D\u044B \u0432 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\
+      \u0439 ss_family.log \u0441 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\
+      \u0430\u0435\u043C\u044B\u043C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u044B\
+      \u043C \u0440\u0435\u0436\u0438\u043C\u043E\u043C"
+  Ryan180602:
+  - balance: Throwing knives have 80% embed chance.
+  - balance: Broadheads and Bodkins do +5 damage.
+  - qol: Examining a projectile, or a bow/xbow with a projectile will show you the
+      sweetspot.
+  - bugfix: altgripped swordes having mismatched icons
+  Ryumi:
+  - rscadd: Xylixian amulets now correctly show themselves as "heretical" when disguised
+      as heretical amulet types.
+  - bugfix: Hag amulets also account for Gronn amulets and more Zizite amulet types.
+  - qol: Slightly improved the presentation of faith and pantheon descriptions in
+      the character edit menu.
+  SomeDeviant:
+  - bugfix: fixed proper stateswitching Gatehatch icons
+  WeNeedMorePhoron:
+  - rscdel: Purged a massive amount of hardset sell prices (more later) and added
+      a unit test to harden against it. Also prevented crafting recipe from ever setting
+      hardset sellprice again in code.
+  - rscadd: Numerous abilities like appraisal, matthios eyes, lirvasian abilities
+      etc. now uses the real and actual price instead of hardset sell price and should
+      work with crafted items.
+  - rscadd: Optimized calculation of the heaviest armor worn on body. Report any oddities
+      with swimming stamina drain, jumping and / or speed cap. etc.
+  - rscadd: Optimized item underlay, report any oddity with your tetris inventory.
+  - rscadd: Optimized flick overlays used in pickup animations and emote overlays
+      to not send to the entire server. Report any oddities.
+  - rscadd: Optimized the arousal system to no longer process when unneeded. Report
+      any oddities.
+  - rscadd: Tried to make client weather less expensive, report oddities especially
+      with transition between indoor and outdoor area
+  - rscadd: Optimized the progress bar significantly. Report any oddity.
+  - rscadd: Optimized AI cooldown call for find_and_set behaviors, which covers finding
+      and eating food. Report oddities related to these.
+  - rscadd: Stop_looking() should no longer unconditionally reset and animate your
+      perspective when you are not looking up / down and costs us 1% CPU seconds for
+      no good reasons.
+  borneblood:
+  - qol: Arcyne Trickster can now pick between Magos or Thief loadouts.
+  - rscadd: Mreow verb.
+  - balance: Removed Enduring from Construct, transposing its effects to the racial
+      trait.

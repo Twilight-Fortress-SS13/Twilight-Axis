@@ -950,6 +950,16 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 #endif
 
+/client/proc/familytree_toggle_verbose_logging()
+	set name = "FamilyTree Verbose Logging"
+	set category = "Debug"
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	SSfamilytree.verbose_logging = !SSfamilytree.verbose_logging
+	to_chat(mob, span_notice("FamilyTree verbose logging is now [SSfamilytree.verbose_logging ? "ON" : "OFF"] (writes to ss_family.log)."))
+
 #ifdef FAMILYTREE_DEBUG_LOGGING
 
 /datum/emote/living/familytree_debug
