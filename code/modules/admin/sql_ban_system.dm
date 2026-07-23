@@ -1039,7 +1039,12 @@
 				is_admin = TRUE
 			if(roles_to_ban[1] == "Server" && (!is_admin || (is_admin && applies_to_admins)))
 				qdel(i)
-	if(player_ckey && ("TAT System" in roles_to_ban || "TAT Towner" in roles_to_ban || "TAT Trader" in roles_to_ban || "TAT Adventurer" in roles_to_ban || "TAT Wretch" in roles_to_ban))
+	var/has_tat_role_ban = FALSE
+	for(var/role_to_ban in roles_to_ban)
+		if(role_to_ban == "TAT System" || role_to_ban == "TAT Towner" || role_to_ban == "TAT Trader" || role_to_ban == "TAT Adventurer" || role_to_ban == "TAT Wretch")
+			has_tat_role_ban = TRUE
+			break
+	if(player_ckey && has_tat_role_ban)
 		tat_apply_restriction_side_effects_to_online_client(player_ckey)
 	return TRUE
 

@@ -116,6 +116,20 @@
 
 	return human_has_tat_role_bucket(H, required_tat_bucket)
 
+/datum/advclass/tat_class/equipme(mob/living/carbon/human/H, dummy = FALSE)
+	if(!H)
+		return FALSE
+
+	// Mark this before the asynchronous base class equipment proc runs. The
+	// priority subclass path may otherwise reach preference-loadout handling
+	// before advjob is assigned, leaving the TAT loadout unapplied.
+	if(!dummy)
+		H.tat_handles_preference_loadout = TRUE
+		H.tat_pliant_title = name
+		get_human_active_tat_build(H)
+
+	return ..()
+
 /datum/advclass/tat_class/towner
 	name = "Pliant Towner"
 	tutorial = "A custom-built local resident of Psydonia. Your home, work, and place among the townfolk are defined by your active TAT build."

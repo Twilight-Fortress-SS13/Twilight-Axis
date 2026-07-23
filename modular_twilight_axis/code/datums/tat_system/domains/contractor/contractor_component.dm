@@ -848,9 +848,6 @@
 /datum/component/contractor/entity/try_drink_mob_lux(mob/living/carbon/human/target)
 	return FALSE
 
-/datum/component/contractor/entity/test_self_contract_pipeline(mob/user)
-	return FALSE
-
 /datum/component/contractor/entity/open_contract(mob/living/carbon/human/target)
 	return FALSE
 

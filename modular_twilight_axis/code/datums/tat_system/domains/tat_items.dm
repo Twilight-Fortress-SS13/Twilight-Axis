@@ -2261,6 +2261,14 @@
 	if(character.tat_handles_preference_loadout)
 		return TRUE
 
+	// Roundstart subclass priority can reserve a TAT class before the normal
+	// class equipment path has assigned advjob or applied the TAT build.
+	if(istype(character.mind?.picked_advclass, /datum/advclass/tat_class))
+		return TRUE
+	var/datum/advclass/reserved_class = SSrole_class_handler?.roundstart_subclass_reservations[character.ckey]
+	if(istype(reserved_class, /datum/advclass/tat_class))
+		return TRUE
+
 	if(tat_role_text_matches_pliant(character.tat_pliant_title))
 		return TRUE
 
