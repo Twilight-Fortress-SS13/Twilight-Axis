@@ -87,7 +87,7 @@
 
 /datum/contractor_curse/conditional/proc/on_sex_action(datum/source, power = 1, forced = 0, active = TRUE, stage = 1, tick_count = 1, datum/link = null)
 	SIGNAL_HANDLER
-	if(condition_matches("sex_process"))
+	if(condition_matches("sex_process") && prob(trigger_chance))
 		on_condition_met()
 	return 0
 
@@ -97,18 +97,20 @@
 		return 0
 	if(climax_source != CONTRACTOR_CLIMAX_SOURCE_ANY && source_type != climax_source)
 		return 0
+	if(!prob(trigger_chance))
+		return 0
 	on_condition_met()
 	return 0
 
 /datum/contractor_curse/conditional/proc/on_eat(datum/source)
 	SIGNAL_HANDLER
-	if(condition_matches("eat"))
+	if(condition_matches("eat") && prob(trigger_chance))
 		on_condition_met()
 	return 0
 
 /datum/contractor_curse/conditional/proc/on_sleep(datum/source)
 	SIGNAL_HANDLER
-	if(condition_matches("sleep"))
+	if(condition_matches("sleep") && prob(trigger_chance))
 		on_condition_met()
 	return 0
 
@@ -123,7 +125,7 @@
 		message = speech_args[SPEECH_MESSAGE]
 	else
 		message = "[speech_args]"
-	if(findtext(lowertext(message), lowertext(required_phrase)))
+	if(findtext(lowertext(message), lowertext(required_phrase)) && prob(trigger_chance))
 		on_condition_met()
 	return 0
 
@@ -132,6 +134,8 @@
 		return on_contract_fulfilled(contract, reason)
 	if(fulfillment_price_fired)
 		return TRUE
+	if(!prob(trigger_chance))
+		return FALSE
 	fulfillment_price_fired = TRUE
 
 
@@ -181,7 +185,7 @@
 	var/submission_amount = 25
 
 /datum/contractor_curse/submission/apply(datum/contractor_contract/contract)
-	contract.contractee?.adjust_submission(submission_amount)
+	contract.contractee?.adjust_submission(submission_amount, contract.contractor)
 	return TRUE
 
 
@@ -275,7 +279,7 @@
 /datum/contractor_curse/phrase/on_condition_met()
 	if(!source_contract)
 		return FALSE
-	source_contract.contractee.adjust_submission(submission_reward)
+	source_contract.contractee.adjust_submission(submission_reward, source_contract.contractor)
 	return TRUE
 
 
@@ -327,7 +331,7 @@
 /datum/contractor_curse/action/on_condition_met()
 	if(!source_contract)
 		return FALSE
-	source_contract.contractee.adjust_submission(submission_reward)
+	source_contract.contractee.adjust_submission(submission_reward, source_contract.contractor)
 	return TRUE
 
 
@@ -364,7 +368,7 @@
 	if(!source_contract)
 		return FALSE
 	var/delta = 2 * chunks
-	source_contract.contractee.adjust_submission(delta)
+	source_contract.contractee.adjust_submission(delta, source_contract.contractor)
 	if(source_contract.contractee.owner)
 		to_chat(source_contract.contractee.owner, span_notice("The contract shifts your submission by [delta]."))
 	return TRUE

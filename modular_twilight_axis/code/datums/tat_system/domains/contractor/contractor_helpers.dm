@@ -10,8 +10,6 @@
 	var/datum/component/contractee/contractee = H.GetComponent(/datum/component/contractee)
 	if(!contractee)
 		contractee = H.AddComponent(/datum/component/contractee, contractor)
-	else if(contractor && !contractee.contractor)
-		contractee.contractor = contractor
 	return contractee
 
 /proc/contractor_get_arcana_power(mob/living/carbon/human/H)
@@ -506,8 +504,10 @@
 	if(!S || !H)
 		return FALSE
 	var/datum/component/contractee/C = H.GetComponent(/datum/component/contractee)
-	if(C && C.contractor == S)
-		return TRUE
+	if(C)
+		for(var/datum/contractor_contract/contract as anything in C.contracts)
+			if(contract.contractor == S)
+				return TRUE
 	return FALSE
 
 /proc/contractor_direction_to_text(atom/source_atom, atom/target_atom)

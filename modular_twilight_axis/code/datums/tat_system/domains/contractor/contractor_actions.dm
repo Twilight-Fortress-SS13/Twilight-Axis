@@ -115,38 +115,6 @@
 		return FALSE
 	return core.open_contract(cast_on)
 
-/datum/action/cooldown/spell/contractor/test_level_up
-	name = "TEST: Awaken Contractor"
-	desc = "Debug spell: raises contractor level by one step and refreshes unlocked skills. Removes itself at level 4."
-	button_icon_state = "spell_default"
-	cooldown_time = 1 SECONDS
-	required_contractor_level = CONTRACTOR_LEVEL_SLEEPING
-	devotion_cost_on_success = FALSE
-
-/datum/action/cooldown/spell/contractor/test_level_up/cast(atom/cast_on)
-	. = ..()
-	var/datum/component/contractor/core = get_core()
-	if(!core)
-		return FALSE
-	return core.test_level_up(owner)
-
-/datum/action/cooldown/spell/contractor/test_pipeline
-	name = "TEST: Self Contract Pipeline"
-	desc = "Debug spell: self-kiss, generate Lux from yourself, apply the drink debuff, and run the full contract pipeline on yourself."
-	button_icon_state = "spell_default"
-	cooldown_time = 3 SECONDS
-	required_contractor_level = CONTRACTOR_LEVEL_SLEEPING
-	devotion_cost_on_success = FALSE
-	self_cast_possible = TRUE
-	click_to_activate = FALSE
-
-/datum/action/cooldown/spell/contractor/test_pipeline/cast(atom/cast_on)
-	. = ..()
-	var/datum/component/contractor/core = get_core()
-	if(!core)
-		return FALSE
-	return core.test_self_contract_pipeline(owner)
-
 /datum/action/cooldown/spell/contractor/return_to_summon
 	name = "Return"
 	desc = "Return to the place where the contractor accepted the summoning."

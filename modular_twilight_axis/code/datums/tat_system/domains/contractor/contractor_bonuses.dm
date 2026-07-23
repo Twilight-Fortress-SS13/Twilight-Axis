@@ -209,19 +209,27 @@
 	power_cost = 20
 	fulfills_contract_immediately = FALSE
 	var/duration = CONTRACTOR_BODY_CHANGE_PERMISSION_TIME
+	var/trait_source
 
 /datum/contractor_bonus/body_change/apply(datum/contractor_contract/contract)
 	var/mob/living/carbon/human/H = contract.contractee?.owner
 	if(!H)
 		return FALSE
-	H.apply_status_effect(/datum/status_effect/buff/contractor_mirror_permission, duration, contract)
+	trait_source = "[CONTRACTOR_TRAIT_SOURCE]_body_change_\ref[contract]"
+	ADD_TRAIT(H, TRAIT_MIRROR_MAGIC, trait_source)
+	addtimer(CALLBACK(src, PROC_REF(complete), contract), duration)
 	to_chat(H, span_notice("The contract lets you reshape yourself through mirrors for [round(duration / 600)] minutes."))
 	return TRUE
 
+/datum/contractor_bonus/body_change/proc/complete(datum/contractor_contract/contract)
+	if(contract?.is_active())
+		contract.fulfill("body_change_complete")
+
 /datum/contractor_bonus/body_change/remove(datum/contractor_contract/contract)
 	var/mob/living/carbon/human/H = contract.contractee?.owner
-	if(H)
-		H.remove_status_effect(/datum/status_effect/buff/contractor_mirror_permission)
+	if(H && trait_source)
+		REMOVE_TRAIT(H, TRAIT_MIRROR_MAGIC, trait_source)
+	trait_source = null
 	return TRUE
 
 /datum/contractor_bonus/stat

@@ -89,6 +89,8 @@
 		return FALSE
 	bonus_power = calculate_bonus_power()
 	curse_power = calculate_curse_power()
+	if(!gift_contract && curse_power <= 0)
+		return FALSE
 	if(curse_power > bonus_power)
 		return FALSE
 	if(!gift_contract && contractor.lux_power < CONTRACTOR_CONTRACT_SEAL_LUX_COST)
@@ -117,19 +119,13 @@
 		if(contractor?.owner)
 			if(!length(bonuses))
 				to_chat(contractor.owner, span_warning("The contract has no boon."))
+			else if(!gift_contract && curse_power <= 0)
+				to_chat(contractor.owner, span_warning("A contract needs a price; use cancellation instead."))
 			else if(curse_power > bonus_power)
 				to_chat(contractor.owner, span_warning("The price exceeds the boon budget by [curse_power - bonus_power] power."))
 			else if(contractor.lux_power < CONTRACTOR_CONTRACT_SEAL_LUX_COST && !gift_contract)
 				to_chat(contractor.owner, span_warning("You need [CONTRACTOR_CONTRACT_SEAL_LUX_COST] Lux power to seal this contract. Current Lux power: [contractor.lux_power]."))
 		return FALSE
-	if(!gift_contract)
-		contractor.lux_power = max(0, contractor.lux_power - CONTRACTOR_CONTRACT_SEAL_LUX_COST)
-		var/leftover_power = max(0, bonus_power - curse_power)
-		var/lux_rebate = round(leftover_power / CONTRACTOR_CONTRACT_LEFTOVER_TO_LUX_RATIO)
-		if(lux_rebate > 0)
-			contractor.lux_power += lux_rebate
-			to_chat(contractor.owner, span_notice("You leave [leftover_power] price power unwritten and distill it into [lux_rebate] Lux."))
-		contractor.adjust_devotion(CONTRACTOR_CONTRACT_DEVOTION_GAIN, TRUE)
 	applied = TRUE
 	status = CONTRACTOR_CONTRACT_ACTIVE
 	activated_time = world.time
@@ -140,6 +136,14 @@
 	if(!apply_bonuses())
 		rollback_failed_finalize()
 		return FALSE
+	if(!gift_contract)
+		contractor.lux_power = max(0, contractor.lux_power - CONTRACTOR_CONTRACT_SEAL_LUX_COST)
+		var/leftover_power = max(0, bonus_power - curse_power)
+		var/lux_rebate = round(leftover_power / CONTRACTOR_CONTRACT_LEFTOVER_TO_LUX_RATIO)
+		if(lux_rebate > 0)
+			contractor.lux_power += lux_rebate
+			to_chat(contractor.owner, span_notice("You leave [leftover_power] price power unwritten and distill it into [lux_rebate] Lux."))
+		contractor.adjust_devotion(CONTRACTOR_CONTRACT_DEVOTION_GAIN, TRUE)
 	if(!pending_fulfillment)
 		fulfill("instant")
 	return TRUE
@@ -187,7 +191,7 @@
 		curse.fire_contract_fulfillment(src, reason)
 
 	if(!gift_contract)
-		contractee?.adjust_submission(max(1, round(curse_power * 0.1)))
+		contractee?.adjust_submission(max(1, round(curse_power * 0.1)), contractor)
 		contractor?.on_contract_fulfilled(src)
 	else
 		contractor?.fill_devotion(TRUE)

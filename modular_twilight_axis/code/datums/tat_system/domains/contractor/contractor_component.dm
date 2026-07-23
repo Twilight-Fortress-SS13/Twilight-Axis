@@ -230,12 +230,7 @@
 		/datum/action/cooldown/spell/contractor/status,
 		/datum/action/cooldown/spell/contractor/drink_lux,
 		/datum/action/cooldown/spell/contractor/offer_contract,
-		/datum/action/cooldown/spell/contractor/test_pipeline,
 	)
-	if(level < CONTRACTOR_LEVEL_COMPLETE)
-		spells += /datum/action/cooldown/spell/contractor/test_level_up
-	else
-		contractor_remove_mind_spell(owner, /datum/action/cooldown/spell/contractor/test_level_up)
 	if(level >= CONTRACTOR_LEVEL_AWAKENED)
 		spells += /datum/action/cooldown/spell/contractor/change_form
 	if(level >= CONTRACTOR_LEVEL_AWARE)
@@ -290,10 +285,11 @@
 		to_chat(owner, span_warning("[target] is already devitalised. Their Lux will not answer again yet."))
 		return FALSE
 
-	if(contractee.is_submitted())
-		var/devotion_gain = max(0, (CONTRACTOR_SUBMITTED_DEVOTION_GAIN - (contractee.lux_drink_count * CONTRACTOR_SUBMITTED_DEVOTION_DECAY)))
-		var/lux_gain = max(0, (CONTRACTOR_SUBMITTED_LUX_POWER_GAIN - (contractee.lux_drink_count * CONTRACTOR_SUBMITTED_LUX_DECAY)))
-		contractee.on_lux_drunk(0, FALSE)
+	if(contractee.is_submitted(src))
+		var/drink_count = contractee.get_lux_drink_count(src)
+		var/devotion_gain = max(0, (CONTRACTOR_SUBMITTED_DEVOTION_GAIN - (drink_count * CONTRACTOR_SUBMITTED_DEVOTION_DECAY)))
+		var/lux_gain = max(0, (CONTRACTOR_SUBMITTED_LUX_POWER_GAIN - (drink_count * CONTRACTOR_SUBMITTED_LUX_DECAY)))
+		contractee.on_lux_drunk(0, src, FALSE)
 		if(devotion_gain)
 			adjust_devotion(devotion_gain, TRUE)
 		if(lux_gain)
@@ -314,7 +310,7 @@
 		try_imprint_from(target)
 
 	lux_power += drunk_amount
-	contractee.on_lux_drunk(drunk_amount, TRUE)
+	contractee.on_lux_drunk(drunk_amount, src, TRUE)
 	adjust_devotion(min(drunk_amount, CONTRACTOR_CONTRACT_DEVOTION_GAIN), TRUE)
 	target.apply_status_effect(/datum/status_effect/debuff/devitalised)
 	to_chat(owner, span_notice("You drink [drunk_amount] Lux from [target]. Lux power: [lux_power]."))
@@ -381,40 +377,6 @@
 		if(CONTRACTOR_LEVEL_COMPLETE)
 			return 8
 	return 0
-
-/datum/component/contractor/proc/test_level_up(mob/user)
-	if(!owner || QDELETED(owner))
-		return FALSE
-	if(level >= CONTRACTOR_LEVEL_COMPLETE)
-		contractor_remove_mind_spell(owner, /datum/action/cooldown/spell/contractor/test_level_up)
-		to_chat(user || owner, span_notice("Contractor test level-up is no longer needed: maximum level reached."))
-		return FALSE
-	var/old_level = level
-	var/next_level = min(CONTRACTOR_LEVEL_COMPLETE, level + 1)
-	completed_contracts = max(completed_contracts, get_completed_contracts_required_for_level(next_level))
-	update_level_from_contracts()
-	grant_contractor_actions()
-	to_chat(user || owner, span_boldnotice("TEST: contractor level [old_level] -> [level]. Completed contracts set to [completed_contracts]."))
-	to_chat(user || owner, span_notice("TEST: abilities refreshed; devotion costs and level locks can now be checked from the Contractor panel."))
-	if(level >= CONTRACTOR_LEVEL_COMPLETE)
-		contractor_remove_mind_spell(owner, /datum/action/cooldown/spell/contractor/test_level_up)
-	return TRUE
-
-/datum/component/contractor/proc/test_self_contract_pipeline(mob/user)
-	if(!owner || QDELETED(owner))
-		return FALSE
-	if(!can_use_contractor_power(owner, CONTRACTOR_LEVEL_SLEEPING, FALSE))
-		return FALSE
-	var/datum/component/contractee/contractee = get_or_create_contractee(owner)
-	if(!contractee)
-		return FALSE
-	var/generated_lux = CONTRACTOR_MOB_LUX_BASE_POWER + (CONTRACTOR_MOB_LUX_LEVEL_BONUS * level)
-	lux_power += generated_lux
-	contractee.on_lux_drunk(generated_lux, TRUE)
-	adjust_devotion(min(generated_lux, CONTRACTOR_CONTRACT_DEVOTION_GAIN), TRUE)
-	owner.apply_status_effect(/datum/status_effect/debuff/devitalised)
-	owner.visible_message(span_warning("[owner] kisses themself, drawing a bright thread of Lux into an infernal contract."), span_notice("TEST: You kiss yourself, generate [generated_lux] Lux, apply the devitalised debuff, and start a self-contract."))
-	return open_contract(owner)
 
 /datum/component/contractor/proc/toggle_form()
 	return set_true_form(!true_form)
@@ -902,8 +864,6 @@
 		/datum/action/cooldown/spell/contractor/status,
 		/datum/action/cooldown/spell/contractor/drink_lux,
 		/datum/action/cooldown/spell/contractor/offer_contract,
-		/datum/action/cooldown/spell/contractor/test_pipeline,
-		/datum/action/cooldown/spell/contractor/test_level_up,
 		/datum/action/cooldown/spell/contractor/return_to_summon,
 		/datum/action/cooldown/spell/contractor/change_form,
 		/datum/action/cooldown/spell/contractor/evasion,
@@ -1180,7 +1140,7 @@
 
 /datum/component/contractor/proc/prepare_gift(mob/living/carbon/human/target)
 	var/datum/component/contractee/contractee = target?.GetComponent(/datum/component/contractee)
-	if(!contractee || contractee.contractor != src || !contractee.is_submitted())
+	if(!contractee || !contractee.is_submitted(src))
 		to_chat(owner, span_warning("This contractee is not fully submitted to you."))
 		return FALSE
 	var/datum/contractor_contract/contract = new(src, contractee)

@@ -21,9 +21,10 @@
 			to_chat(user, examine_text)
 	var/datum/component/contractor/user_contractor = ishuman(user) ? user.GetComponent(/datum/component/contractor) : null
 	var/datum/component/contractee/contractee = GetComponent(/datum/component/contractee)
-	if(user_contractor && contractee?.contractor == user_contractor)
-		var/mark = contractee.is_submitted() ? "fully submitted" : "bound"
-		var/text = span_love("An infernal mark tells you this one is [mark]: [contractee.submission]/[contractee.submission_threshold].")
+	if(user_contractor && contractee)
+		var/submission = contractee.get_submission(user_contractor)
+		var/mark = contractee.is_submitted(user_contractor) ? "fully submitted" : "bound"
+		var/text = span_love("An infernal mark tells you this one is [mark]: [submission]/[contractee.submission_threshold].")
 		if(islist(.))
 			. += text
 		else

@@ -23,6 +23,23 @@
 /datum/tat_traits/proc/is_wanderer_role_choice(role_choice)
 	return role_choice == TAT_ROLE_CHOICE_ADVENTURER || role_choice == TAT_ROLE_CHOICE_WRETCH
 
+/datum/tat_traits/proc/is_contractor_skill_trait(trait_id)
+	if(trait_id in list(TRAIT_ARCYNE, TRAIT_JACKOFALLTRADES, TAT_TRAIT_MASTER_OF_WANDERING))
+		return TRUE
+	return (trait_id in GLOB.tat_trait_skill_point_rules) || (trait_id in GLOB.tat_trait_skill_bonus_rules) || (trait_id in GLOB.tat_trait_skill_cap_bonus_rules) || (trait_id in GLOB.tat_trait_skill_discount_rules)
+
+/datum/tat_traits/proc/is_contractor_trait_blocked(trait_id)
+	if(has_trait(TAT_TRAIT_CONTRACTOR_ENTITY))
+		return FALSE
+	if(has_trait(TAT_TRAIT_CONTRACTOR))
+		return trait_id != TAT_TRAIT_CONTRACTOR && !is_contractor_skill_trait(trait_id)
+	if(trait_id != TAT_TRAIT_CONTRACTOR)
+		return FALSE
+	for(var/selected_trait_id in selected)
+		if(selected_trait_id != TAT_TRAIT_CONTRACTOR && !is_contractor_skill_trait(selected_trait_id))
+			return TRUE
+	return FALSE
+
 /datum/tat_traits/proc/get_trait_count(trait_id)
 	if(owner_build?.directions?.get_effective_role_trait() == trait_id)
 		return 1
@@ -278,6 +295,8 @@
 	if(trait_id == TAT_TRAIT_CONTRACTOR && !owner_build?.can_select_contractor_trait())
 		return FALSE
 	if(trait_id == TAT_TRAIT_CONTRACTOR_ENTITY && owner_build?.get_owner_ckey() != "mrix")
+		return FALSE
+	if(is_contractor_trait_blocked(trait_id))
 		return FALSE
 	if(trait_id == TAT_TRAIT_DRUID_INITIATE && !owner_build?.can_select_druid_initiate_trait())
 		return FALSE

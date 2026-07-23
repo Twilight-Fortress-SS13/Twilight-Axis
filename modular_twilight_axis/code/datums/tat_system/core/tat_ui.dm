@@ -586,6 +586,8 @@
 		if(!lock_reason && !can_add)
 			if(trait_id == TAT_TRAIT_CONTRACTOR && !can_select_contractor_trait())
 				lock_reason = "Contractor is not available for this character."
+			else if(traits?.is_contractor_trait_blocked(trait_id))
+				lock_reason = "Contractor may only select skill traits."
 			else if(trait_id == TAT_TRAIT_DRUID_INITIATE && !can_select_druid_initiate_trait())
 				lock_reason = "Requires Dendor as patron."
 			else if(trait_id == TAT_TRAIT_BONUS_STAT_POOL && directions?.foundation != TAT_FOUNDATION_SETTLED)

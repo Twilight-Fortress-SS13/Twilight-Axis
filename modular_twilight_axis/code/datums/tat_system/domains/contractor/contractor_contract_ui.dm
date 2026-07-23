@@ -54,7 +54,7 @@
 	data["can_edit_bonuses"] = (phase == "contractor_boons" || phase == "succubus_gift_boons")
 	data["can_edit_curses"] = (phase == "succubus_curses")
 	data["can_submit_bonuses"] = data["can_edit_bonuses"] && length(bonuses)
-	data["can_submit_curses"] = data["can_edit_curses"] && calculate_curse_power() <= calculate_bonus_power()
+	data["can_submit_curses"] = data["can_edit_curses"] && calculate_curse_power() > 0 && calculate_curse_power() <= calculate_bonus_power()
 	data["can_accept"] = (phase == "contractor_signature")
 	data["can_refuse"] = (phase == "contractor_signature")
 	data["read_chance"] = read_chance
@@ -232,7 +232,7 @@
 		if("submit_curses")
 			if(ui_phase_for(user) != "succubus_curses")
 				return FALSE
-			if(calculate_curse_power() > calculate_bonus_power())
+			if(calculate_curse_power() <= 0 || calculate_curse_power() > calculate_bonus_power())
 				return FALSE
 			status = CONTRACTOR_CONTRACT_PENDING_CONTRACTEE
 			if(contractee?.owner)
@@ -246,9 +246,8 @@
 		if("refuse_contract")
 			if(ui_phase_for(user) != "contractor_signature")
 				return FALSE
-			if(!gift_contract && contractor?.is_inside_active_seal())
-				var/atom/seal = contractor_find_nearby_seal(contractor.owner)
-				contractor_break_seal(seal)
+			if(!gift_contract && contractor)
+				contractor.lux_power = max(0, contractor.lux_power - CONTRACTOR_CONTRACT_REFUSAL_LUX_PENALTY)
 			qdel(src)
 			return TRUE
 		if("cancel_contract")
