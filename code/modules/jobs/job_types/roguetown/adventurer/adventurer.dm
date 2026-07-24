@@ -75,7 +75,12 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/foreigner/shepherd,
 		/datum/advclass/foreigner/fencerguy,
 		/datum/advclass/foreigner/bronzeclad,
-		/datum/advclass/foreigner/lesserblackoak
+		/datum/advclass/foreigner/lesserblackoak,
+		/datum/advclass/gronn/jarl,
+		/datum/advclass/gronn/tideweaver,
+		/datum/advclass/gronn/volfskin,
+		/datum/advclass/gronn/huscarl,
+		/datum/advclass/gronn/thrall
 	)
 
 /datum/status_effect/advclass_selection
