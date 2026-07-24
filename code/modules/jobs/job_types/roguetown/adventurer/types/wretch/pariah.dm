@@ -12,13 +12,13 @@
 	traits_applied = list(TRAIT_AZURENATIVE, TRAIT_OUTDOORSMAN, TRAIT_BLACKOAK, TRAIT_DODGEEXPERT, TRAIT_ARCYNE, TRAIT_WOODWALKER, TRAIT_EXPERT_HUNTER)
 	//lower-than-avg stats for wretch but their traits are insanely good
 	subclass_stats = list(
-		STATKEY_INT = 1,
+		STATKEY_INT = 2,    //TA EDIT +1 INT
 		STATKEY_PER = 1,
-		STATKEY_SPD = 2, // 7 Weight instead of 9 full weight
+		STATKEY_SPD = 2, 
 		STATKEY_CON = 1,
 		STATKEY_WIL = 1,
 	)
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 4)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 4)   // TA EDIT +1 minor
 	subclass_languages = list(/datum/language/oldazurian)
 	subclass_skills = list(
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
@@ -138,10 +138,10 @@
 				if("Elvish Curveblade")
 					r_hand = /obj/item/rogueweapon/greatsword/elvish
 					backr = /obj/item/rogueweapon/scabbard/gwstrap
-				if("Steel Dagger")
-					beltr = /obj/item/rogueweapon/huntingknife/idagger/steel
+				if("Elvish Dagger")												//TA EDIT Steel dagger —> Elvish Dagger... they are ELVES
+					beltr = /obj/item/rogueweapon/huntingknife/idagger/silver/elvish
 					backr = /obj/item/rogueweapon/shield/wood
-			if(weapon_choice == "Steel Dagger")
+			if(weapon_choice == "Elvish Dagger")
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
 			else
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)

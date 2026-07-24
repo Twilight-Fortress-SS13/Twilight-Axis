@@ -8,15 +8,15 @@
 	category_tags = list(CTAG_MERCENARY)
 	cmode_music = 'sound/music/combat_desertrider.ogg'
 	subclass_languages = list(/datum/language/raneshi)
-	traits_applied = list(TRAIT_ARCYNE)
+	traits_applied = list(TRAIT_ARCYNE, TRAIT_DODGEEXPERT) //TA EDIT +TRAIT_DODGEEXPERT 
 	subclass_stats = list(
-		STATKEY_SPD = 1, // Weighted 7. Swap str for spd
-		STATKEY_INT = 1, // Weighted 7. But a very nice statblock
+		STATKEY_SPD = 2,  // TA EDIT +1 SPD so it's 9 statblock
+		STATKEY_INT = 1,
 		STATKEY_PER = 1, 
 		STATKEY_CON = 1,
 		STATKEY_WIL = 2, // With 2 Wil they should not be struggling
 	)
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 4)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 4) //TA EDIT +1 minor
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
