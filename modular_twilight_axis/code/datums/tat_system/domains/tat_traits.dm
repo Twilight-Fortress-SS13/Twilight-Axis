@@ -62,7 +62,17 @@
 
 /datum/tat_traits/proc/get_external_traits()
 	var/list/result = list()
-	var/list/virtues = owner_build?.get_active_virtues()
+	var/datum/species/species = owner_build?.owner_preferences?.pref_species
+	if(species && islist(species.inherent_traits))
+		for(var/trait_id in species.inherent_traits)
+			if(check_trait(trait_id))
+				result[trait_id] = TRUE
+
+	var/list/active_virtues = owner_build?.get_active_virtues()
+	var/list/virtues = islist(active_virtues) ? active_virtues.Copy() : list()
+	var/datum/virtue/origin = owner_build?.owner_preferences?.virtue_origin
+	if(origin && !(origin in virtues))
+		virtues += origin
 	if(!length(virtues))
 		return result
 
@@ -318,6 +328,10 @@
 	// traits stay buyable: external traits must not satisfy requirement chains.
 	if(has_external_trait(trait_id) && get_base_cost(trait_id) < 0)
 		return FALSE
+	var/list/external_traits = get_external_traits()
+	for(var/external_trait_id in external_traits)
+		if(are_traits_mutually_exclusive(trait_id, external_trait_id))
+			return FALSE
 	return TRUE
 
 /datum/tat_traits/proc/add_trait(trait_id)
@@ -517,8 +531,8 @@
 		TAT_TRAIT_WANTED = list(TRAIT_OUTLANDER, TAT_TRAIT_RESIDENT, TRAIT_TECHNOPHOBE),
 		TAT_TRAIT_CONTRACTOR = list(TRAIT_OUTLANDER, TAT_TRAIT_WANTED, TAT_TRAIT_HERETIC, TAT_TRAIT_RESIDENT, TAT_TRAIT_TRADER_LICENSE, TAT_TRAIT_WARRIOR_EXPERT, TRAIT_PARRYEXPERT, TRAIT_DODGEEXPERT, TRAIT_CRITICAL_RESISTANCE, TRAIT_MEDIUMARMOR, TRAIT_HEAVYARMOR, TRAIT_CIVILIZEDBARBARIAN),
 		TRAIT_DODGEEXPERT = list(TRAIT_PARRYEXPERT, TAT_TRAIT_MAGE_MINOR_SLOT_2, TAT_TRAIT_MAGE_MAJOR_SLOT),
-		TRAIT_HEAVYARMOR = list(TRAIT_CRITICAL_RESISTANCE, TAT_TRAIT_DIVINE_BOON_1, TAT_TRAIT_MAGE_INITIATE, TRAIT_DODGEEXPERT, TRAIT_PARRYEXPERT),
-		TRAIT_MEDIUMARMOR = list(TRAIT_CRITICAL_RESISTANCE, TAT_TRAIT_DIVINE_BOON_2, TAT_TRAIT_MAGE_MAJOR_SLOT, TRAIT_DODGEEXPERT, TRAIT_PARRYEXPERT),
+		TRAIT_HEAVYARMOR = list(TRAIT_CRITICAL_RESISTANCE, TAT_TRAIT_DIVINE_BOON_1, TAT_TRAIT_MAGE_INITIATE, TRAIT_DODGEEXPERT, TRAIT_PARRYEXPERT, TAT_TRAIT_RONIN, TAT_TRAIT_SOUNDBREAKER),
+		TRAIT_MEDIUMARMOR = list(TRAIT_CRITICAL_RESISTANCE, TAT_TRAIT_DIVINE_BOON_2, TAT_TRAIT_MAGE_MAJOR_SLOT, TRAIT_DODGEEXPERT, TRAIT_PARRYEXPERT, TAT_TRAIT_SOUNDBREAKER),
 		TAT_TRAIT_TROPHY_BOUNTY = list(TAT_TRAIT_RONIN, TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_SPELLFIST),
 		TAT_TRAIT_SOUNDBREAKER = list(TAT_TRAIT_RONIN, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_SPELLFIST, TAT_TRAIT_DIVINE_BOON_1, TAT_TRAIT_MAGE_MAJOR_SLOT, TAT_TRAIT_MAGE_MINOR_SLOT_1),
 		TAT_TRAIT_RONIN = list(TAT_TRAIT_SOUNDBREAKER, TAT_TRAIT_SPELLBLADE, TAT_TRAIT_SPELLFIST, TAT_TRAIT_DIVINE_BOON_1, TAT_TRAIT_MAGE_MAJOR_SLOT, TAT_TRAIT_MAGE_MINOR_SLOT_1),
