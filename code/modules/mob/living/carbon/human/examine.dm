@@ -157,7 +157,7 @@
 		. += span_warning("[src]'s hollow expression is filled with mindless anger!")
 
 	if(wear_shirt && !(SLOT_SHIRT in obscured))
-		var/str = "[m3] [wear_shirt.generate_tooltip(wear_shirt.get_examine_string(user))]. "
+		var/str = "[m3] [wear_shirt.generate_tooltip(wear_shirt.get_examine_string(user), user)]. "  //TA EDIT
 		str += "[wear_shirt.integrity_check(is_smart, guarded)]"
 		if(is_stupid)
 			str = "[m3] some kind of shirt!"
@@ -171,7 +171,7 @@
 			var/obj/item/clothing/under/U = wear_pants
 			if(U.attached_accessory)
 				accessory_msg += " with [icon2html(U.attached_accessory, user)] \a [U.attached_accessory]"
-		var/str = "[m3] [wear_pants.generate_tooltip(wear_pants.get_examine_string(user))][accessory_msg]. "
+		var/str = "[m3] [wear_pants.generate_tooltip(wear_pants.get_examine_string(user), user)][accessory_msg]. "  //TA EDIT
 		if(!wear_armor)
 			str += wear_pants.integrity_check(is_smart, guarded)
 		if(is_stupid)
@@ -181,7 +181,7 @@
 
 	//head
 	if(head && !(SLOT_HEAD in obscured))
-		var/str = "[m3] [head.generate_tooltip(head.get_examine_string(user))] on [m2] head. "
+		var/str = "[m3] [head.generate_tooltip(head.get_examine_string(user), user)] on [m2] head. "  //TA EDIT
 		str += head.integrity_check(is_smart)
 		if(is_stupid)
 			if(istype(head,/obj/item/clothing/head/roguetown/helmet))
@@ -192,7 +192,7 @@
 
 	//suit/armor
 	if(wear_armor && !(SLOT_ARMOR in obscured))
-		var/str = "[m3] [wear_armor.generate_tooltip(wear_armor.get_examine_string(user))]. "
+		var/str = "[m3] [wear_armor.generate_tooltip(wear_armor.get_examine_string(user), user)]. "  //TA EDIT
 		if(is_smart || is_normal)
 			str += wear_armor.integrity_check(is_smart, guarded)
 		else if (is_stupid)
@@ -222,7 +222,7 @@
 		var/str
 		if(istype(cloak, /obj/item/clothing))
 			var/obj/item/clothing/CL = cloak
-			str = "[m3] [CL.generate_tooltip(CL.get_examine_string(user))] on [m2] shoulders. "
+			str = "[m3] [CL.generate_tooltip(CL.get_examine_string(user), user)] on [m2] shoulders. "  //TA EDIT
 		else
 			str = "[m3] [cloak.get_examine_string(user)] on [m2] shoulders. "
 		str += cloak.integrity_check(is_smart, guarded)
@@ -310,7 +310,7 @@
 	var/datum/component/forensics/FR = GetComponent(/datum/component/forensics)
 	//gloves
 	if(gloves && !(SLOT_GLOVES in obscured))
-		var/str = "[m3] [gloves.generate_tooltip(gloves.get_examine_string(user))] on [m2] hands. "
+		var/str = "[m3] [gloves.generate_tooltip(gloves.get_examine_string(user), user)] on [m2] hands. "  //TA EDIT
 		str += gloves.integrity_check(is_smart, guarded)
 		if(is_stupid)
 			str = "[m3] a pair of gloves of some kind!"
@@ -343,7 +343,7 @@
 
 	//shoes
 	if(shoes && !(SLOT_SHOES in obscured))
-		var/str = "[m3] [shoes.generate_tooltip(shoes.get_examine_string(user))] on [m2] feet. "
+		var/str = "[m3] [shoes.generate_tooltip(shoes.get_examine_string(user), user)] on [m2] feet. "  //TA EDIT
 		str += shoes.integrity_check(is_smart, guarded)
 		if(is_stupid)
 			str = "[m3] some shoes on [m2] feet!"
@@ -351,7 +351,7 @@
 
 	//mask
 	if(wear_mask && !(SLOT_WEAR_MASK in obscured))
-		var/str = "[m3] [wear_mask.generate_tooltip(wear_mask.get_examine_string(user))] on [m2] face. "
+		var/str = "[m3] [wear_mask.generate_tooltip(wear_mask.get_examine_string(user), user)] on [m2] face. "  //TA EDIT
 		str += wear_mask.integrity_check(is_smart, guarded)
 		if(is_stupid)
 			str = "[m3] some kinda thing on [m2] face!"
@@ -362,7 +362,7 @@
 		var/str
 		if(istype(mouth, /obj/item/clothing))
 			var/obj/item/clothing/CM = mouth
-			str = "[m3] [CM.generate_tooltip(CM.get_examine_string(user))] in [m2] mouth. "
+			str = "[m3] [CM.generate_tooltip(CM.get_examine_string(user), user)] in [m2] mouth. "  //TA EDIT
 		else
 			"[m3] [get_item_examine_label(mouth, user)] in [m2] mouth. "
 		str += mouth.integrity_check(is_smart, guarded)
@@ -372,7 +372,7 @@
 
 	//neck
 	if(wear_neck && !(SLOT_NECK in obscured))
-		var/str = "[m3] [wear_neck.generate_tooltip(wear_neck.get_examine_string(user))] around [m2] neck. "
+		var/str = "[m3] [wear_neck.generate_tooltip(wear_neck.get_examine_string(user), user)] around [m2] neck. " //TA EDIT
 		str += wear_neck.integrity_check(is_smart, guarded)
 		if (is_stupid)
 			str = "[m3] something on [m2] neck!"
@@ -391,7 +391,7 @@
 
 	//ID
 	if(wear_ring && !(SLOT_RING in obscured))
-		var/str = "[m3] [wear_ring.generate_tooltip(wear_ring.get_examine_string(user))] on [m2] hands. "
+		var/str = "[m3] [wear_ring.generate_tooltip(wear_ring.get_examine_string(user), user)] on [m2] hands. " //TA EDIT
 		if(is_smart && istype(wear_ring, /obj/item/clothing/ring/active))
 			var/obj/item/clothing/ring/active/AR = wear_ring
 			if(AR.cooldowny)
@@ -405,7 +405,7 @@
 
 	//wrists
 	if(wear_wrists && !(SLOT_WRISTS in obscured))
-		var/str = "[m3] [wear_wrists.generate_tooltip(wear_wrists.get_examine_string(user))] on [m2] wrists."
+		var/str = "[m3] [wear_wrists.generate_tooltip(wear_wrists.get_examine_string(user), user)] on [m2] wrists." //TA EDIT
 		str += wear_wrists.integrity_check(is_smart, guarded)
 		if (is_stupid)
 			str = "[m3] something on [m2] wrists!"
@@ -414,7 +414,7 @@
 	//arcyne ward
 	if(istype(skin_armor, /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward))
 		var/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/ward = skin_armor
-		var/str = "[m3] <font color='[ward.ward_color]'>[ward.generate_tooltip(ward.get_examine_string(user))] shimmering around [user == src ? "me" : p_them()].</font>"
+		var/str = "[m3] <font color='[ward.ward_color]'>[ward.generate_tooltip(ward.get_examine_string(user), user)] shimmering around [user == src ? "me" : p_them()].</font>" //TA EDIT
 		str += ward.integrity_check(is_smart, guarded)
 		if (is_stupid)
 			str = "[m3] some weird shiny thing!"
@@ -1406,8 +1406,9 @@
 /mob/living/proc/get_item_examine_label(obj/item/I, mob/living/user)
 	var/examine_highlight_status = I.get_examine_highlight_status()
 	var/item_examine_string = I.get_examine_string(user)
-	if(examine_highlight_status)
-		var/severity = examine_highlight_status[1]
-		var/heresy_examine_tooltip = I.get_examine_highlight_description(examine_highlight_status) + "<br>" + I.get_examine_highlight_explanation(severity)
-		item_examine_string = SPAN_TOOLTIP_DANGEROUS_HTML(heresy_examine_tooltip, I.get_examine_highlight_labeled_string(severity, item_examine_string))
+	if(examine_highlight_status) 
+		var/severity = examine_highlight_status[1] 
+		if(I.can_reveal_heresy(user, severity)) //TA EDIT
+			var/heresy_examine_tooltip = I.get_examine_highlight_description(examine_highlight_status) + "<br>" + I.get_examine_highlight_explanation(severity) 
+			item_examine_string = SPAN_TOOLTIP_DANGEROUS_HTML(heresy_examine_tooltip, I.get_examine_highlight_labeled_string(severity, item_examine_string))
 	return item_examine_string

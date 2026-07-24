@@ -159,7 +159,7 @@
 	l_sleeve_status = SLEEVE_NORMAL
 
 /obj/item/clothing/suit/roguetown/shirt/robe/necromancer/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, "The robes of Zizo's foul deadite-raisers")
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, "Робы отвратительных некромантов Зизо")
 
 /obj/item/clothing/suit/roguetown/shirt/robe/dendor
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT|ITEM_SLOT_CLOAK

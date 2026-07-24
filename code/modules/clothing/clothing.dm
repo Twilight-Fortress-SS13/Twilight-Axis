@@ -669,29 +669,31 @@ BLIND     // can't see anything
 	. = ..()
 
 
-/obj/proc/generate_tooltip(examine_text)
+/obj/proc/generate_tooltip(examine_text, mob/living/user = null) //TA EDIT START
 	return examine_text
 
-/obj/item/clothing/generate_tooltip(examine_text)
+/obj/item/clothing/generate_tooltip(examine_text, mob/living/user = null)
 	var/examine_highlight_status = get_examine_highlight_status()
 	if(!armor)	// No armor
 		if(examine_highlight_status)
 			var/severity = examine_highlight_status[1]
-			var/labeled_string = get_examine_highlight_labeled_string(severity, examine_text)
-			var/tooltip_string = get_examine_highlight_tooltip_string(examine_highlight_status)
-			return SPAN_TOOLTIP_DANGEROUS_HTML(tooltip_string, labeled_string)
-		else
-			return examine_text
+			if(can_reveal_heresy(user, severity))
+				var/labeled_string = get_examine_highlight_labeled_string(severity, examine_text)
+				var/tooltip_string = get_examine_highlight_tooltip_string(examine_highlight_status)
+				return SPAN_TOOLTIP_DANGEROUS_HTML(tooltip_string, labeled_string)
+			else
+				return examine_text
 
 	// Fake armor
 	if(armor.getRating("slash") == 0 && armor.getRating("stab") == 0 && armor.getRating("blunt") == 0 && armor.getRating("piercing") == 0 && armor.getRating("fire") == 0 && armor.getRating("bullet") == 0)
 		if(examine_highlight_status)
 			var/severity = examine_highlight_status[1]
-			var/labeled_string = get_examine_highlight_labeled_string(severity, examine_text)
-			var/tooltip_string = get_examine_highlight_tooltip_string(examine_highlight_status)
-			return SPAN_TOOLTIP_DANGEROUS_HTML(tooltip_string, labeled_string)
-		else
-			return examine_text
+			if(can_reveal_heresy(user, severity))
+				var/labeled_string = get_examine_highlight_labeled_string(severity, examine_text)
+				var/tooltip_string = get_examine_highlight_tooltip_string(examine_highlight_status)
+				return SPAN_TOOLTIP_DANGEROUS_HTML(tooltip_string, labeled_string)
+			else
+				return examine_text //TA EDIT END
 
 	var/str
 	str += "<b>ABSORPTION:</b> [colorgrade_rating("🔨 BLUNT", armor.blunt, elaborate = TRUE, max_tier = 5)]<br>"
@@ -711,10 +713,11 @@ BLIND     // can't see anything
 	if(examine_highlight_status)
 		var/heresy_desc = get_examine_highlight_description(examine_highlight_status)
 		var/severity = examine_highlight_status[1]
-		if(heresy_desc)
-			str += "<br>" + heresy_desc
-			str += "<br>" + get_examine_highlight_explanation(severity)
-		examine_text = get_examine_highlight_labeled_string(severity, examine_text)
+		if(can_reveal_heresy(user, severity)) //TA EDIT
+			if(heresy_desc)
+				str += "<br>" + heresy_desc
+				str += "<br>" + get_examine_highlight_explanation(severity)
+			examine_text = get_examine_highlight_labeled_string(severity, examine_text)
 	else
 		//This makes it appear darker than the rest of examine text. Draws the cursor to it like to a Wetsquires.rt link.
 		examine_text = "<font color = '#808080'>[examine_text]</font>"

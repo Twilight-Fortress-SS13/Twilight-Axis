@@ -1,57 +1,57 @@
 // Zizo items
-#define HERESYDESC_ZIZO_WEAPON "A grim weapon of Zizo's champions"
-#define HERESYDESC_ZIZO_ARMOR "An accursed armor piece of Zizo's champions"
-#define HERESYDESC_ZIZO_RELIC "A relic of Zizo's grim design"
-#define HERESYDESC_ZIZO_ICON "It bears the grim zcross of Zizo"
-#define HERESYDESC_ZIZO_MISC "A known design of Zizo"
-#define HERESYDESC_ZIZO_AVANTYNE "It is forged out of Zizo's foul Avantyne"
-#define HERESYDESC_ZIZO_ARTIFICE "Zizo's artificed design, recreated uncomfortably accurately"
-#define HERESYDESC_ZIZO_ARTIFICE_RECLAIMED "The old artificed designs of Zizo... Reclaimed?"
+#define HERESYDESC_ZIZO_WEAPON "Мрачное оружие воинов Зизо"
+#define HERESYDESC_ZIZO_ARMOR "Проклятый доспех воинов Зизо"
+#define HERESYDESC_ZIZO_RELIC "Реликвия мрачного творения Зизо"
+#define HERESYDESC_ZIZO_ICON "На нём изображён мрачный крест Зизо"
+#define HERESYDESC_ZIZO_MISC "Известный дизайн Зизо"
+#define HERESYDESC_ZIZO_AVANTYNE "Оно выковано из мерзкого авантина Зизо"
+#define HERESYDESC_ZIZO_ARTIFICE "Искусно созданный образец Зизо, воссозданный с пугающей точностью"
+#define HERESYDESC_ZIZO_ARTIFICE_RECLAIMED "Загадочный дизайн из древних времен"
 
 // Matthios items
-#define HERESYDESC_MATTHIOS_WEAPON "A weapon of Matthios's greedy champions"
-#define HERESYDESC_MATTHIOS_ARMOR "An avaricious armor piece of Matthios's champions"
-#define HERESYDESC_MATTHIOS_RELIC "A relic of Matthios's covetous design"
-#define HERESYDESC_MATTHIOS_ICON "It bears the covetous icon of Matthios"
-#define HERESYDESC_MATTHIOS_MISC "A known design of Matthios"
+#define HERESYDESC_MATTHIOS_WEAPON "Оружие алчных воинов Маттиоса"
+#define HERESYDESC_MATTHIOS_ARMOR "Доспех алчных воинов Маттиоса"
+#define HERESYDESC_MATTHIOS_RELIC "Реликвия алчного дизайна Маттиоса"
+#define HERESYDESC_MATTHIOS_ICON "На нём изображён символ Маттиоса"
+#define HERESYDESC_MATTHIOS_MISC "Известный образец Маттиоса"
 
 // Graggar items
-#define HERESYDESC_GRAGGAR_WEAPON "A weapon of Graggar's bloodthirsty champions"
-#define HERESYDESC_GRAGGAR_ARMOR "A brutal armor piece of Graggar's champions"
-#define HERESYDESC_GRAGGAR_RELIC "A relic of Graggar's cruel design"
-#define HERESYDESC_GRAGGAR_ICON "It bears the icon of cruel Graggar"
-#define HERESYDESC_GRAGGAR_MISC "A known design of Graggar"
+#define HERESYDESC_GRAGGAR_WEAPON "Оружие кровожадных воинов Граггара"
+#define HERESYDESC_GRAGGAR_ARMOR "Зловещий доспех воинов Граггара"
+#define HERESYDESC_GRAGGAR_RELIC "Реликвия жестокого замысла Граггара"
+#define HERESYDESC_GRAGGAR_ICON "На нём изображён символ жестокого Граггара"
+#define HERESYDESC_GRAGGAR_MISC "Известный образец, созданный Граггаром"
 
 // Baotha items
-#define HERESYDESC_BAOTHA_WEAPON "A weapon of Baotha's depraved champions"
-#define HERESYDESC_BAOTHA_ARMOR "A depraved armor piece of Baotha's champions"
-#define HERESYDESC_BAOTHA_RELIC "A relic of Baotha's debauched design"
-#define HERESYDESC_BAOTHA_ICON "It bears the icon of debauched Baotha"
-#define HERESYDESC_BAOTHA_MISC "A known design of Baotha"
+#define HERESYDESC_BAOTHA_WEAPON "Оружие гнустных воинов Баоты"
+#define HERESYDESC_BAOTHA_ARMOR "Доспех гнустных воинов Баоты"
+#define HERESYDESC_BAOTHA_RELIC "Реликвия, созданная по развратным замыслам Баоты"
+#define HERESYDESC_BAOTHA_ICON "На нём изображён символ развратной Баоты"
+#define HERESYDESC_BAOTHA_MISC "Известный образец творчества Баоты"
 
 // Abyssor dream items
-#define HERESYDESC_DREAM_ITEM "A weapon from Abyssor's dream. It is dangerous, and shouldn't be seen outside of capable, sanctified hands"
+#define HERESYDESC_DREAM_ITEM "Оружие из кошмаров Абиссора. Оно опасно, и не должно находиться в руках простых смертных, что не обладают знаниями о том, как сдержать его зловещую мощь"
 // Dreamwalker items
-#define HERESYDESC_DREAMWALKER_WEAPON "An enchanced weapon from Abyssor's dream, wielded by Abyssor's cursed - the enigmatic and violent Dreamwalkers"
-#define HERESYDESC_DREAMWALKER_ARMOR "An armor piece from Abyssor's dream, worn by Abyssor's cursed - the enigmatic and violent Dreamwalkers"
+#define HERESYDESC_DREAMWALKER_WEAPON "Оружие загадочного и жестокого культа Кошмара"
+#define HERESYDESC_DREAMWALKER_ARMOR "Доспехи загадочного и жестокого культа Кошмара"
 
 // Misc items
-#define HERESYDESC_GRONN "A symbol of the North's archaic beliefs"
-#define HERESYDESC_WEEPING_CROSS "It is ensnared in a perpetual state of half-coagulation, the alloy cracked and bleeding"
+#define HERESYDESC_GRONN "Символ странных верований Севера"
+#define HERESYDESC_WEEPING_CROSS "Он сделан из странного металла, который словно бы кровоточит"
 
 // Vampire Lord Items - General theme is mysterious but a bad omen
-#define HERESYDESC_VAMPIRE "An unnatural enchanted armor piece of solid gilbranze that crackles with strange energies"
-#define HERESYDESC_VAMPIRE_CROWN "An unnatural enchanted crown that crackles with strange energies" 
-#define HERESYDESC_VAMPIRE_SWORD "An unnatural sword of some unknown alloy that crackles with strange energies"
+#define HERESYDESC_VAMPIRE "Неестественный зачарованный доспех, выкованный из гилбранза. Его поверхность будто бы искрится странной энергией"
+#define HERESYDESC_VAMPIRE_CROWN "Неестественная зачарованнная корона, что искрится странной энергией" 
+#define HERESYDESC_VAMPIRE_SWORD "Неестественный меч из неизвестного сплава, что искрится странной энергией"
 
 // Inquisitional gear
-#define HERESYDESC_INQUIS_WHISPERER "A blatently unusual design of ring...? that seems to whisper" //Only shows while not equipped on ring slot
-#define HERESYDESC_INQUIS_CHURNER "I CAN HEAR SCREAMS COMING FROM WITHIN, WHAT THE HELL IS THAT THING?!!" //Only shows while active
+#define HERESYDESC_INQUIS_WHISPERER "Очень необычный дизайн кольца... Кажется, оно шепчет?" //Only shows while not equipped on ring slot
+#define HERESYDESC_INQUIS_CHURNER "Я СЛЫШУ МОЛЬБЫ О ПОМОЩИ, ДОНОСЯЩИЕСЯ ИЗНУТРИ, ЧТО ЭТО ТАКОЕ?!!" //Only shows while active
 
-#define VIBEDESC_FRIEND "A loyal ally of Azure Peak."
-#define VIBEDESC_FOE "A disloyal enemy of Azure Peak."
-#define VIBEDESC_CROWN "A relic anointed by Astrata."
-#define VIBEDESC_GOLGATHA "A relic of Psydon's creation."
+#define VIBEDESC_FRIEND "Верный союзник Короны."
+#define VIBEDESC_FOE "Заклятый враг Короны."
+#define VIBEDESC_CROWN "Реликвия, освященная Астратой."
+#define VIBEDESC_GOLGATHA "Реликвия, ниспосланная Всеотцом."
 
 /**
 * -========= HERESY ITEM SEVERITY LEVELS =========-
@@ -107,15 +107,15 @@
 #define COLOR_VIBE_GOLGATHA "#94f8ff"
 
 // Heresy severity descriptions
-#define EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_ALARMING "<font color=[COLOR_HERESYSEVERITY_ALARMING]><b>This is a blatantly dangerous heretical item!</b></font><br>Carrying this out in the open is tantamount to declaring myself an enemy to Tennite and Psydonite faith. Those who serve the Ten and the One are likely to respond in kind."
-#define EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_SUSPICIOUS "<font color=[COLOR_HERESYSEVERITY_SUSPICIOUS]><b>This is a suspicious heretical item!</b></font><br>It is considered heretical by Tennite and Psydonite faith. Those who serve the Ten and the One are likely to view me with suspicion and distrust <b>at best</b> if I am caught with it."
-#define EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_ODD "<font color=[COLOR_HERESYSEVERITY_ODD]><b>An odd expression of faith...</b></font><br>It is not openly deemed heretical by Tennite and Psydonite faith. However, that does not stop it from being seen as unusual. I am likely to be given odd looks if I am seen with it and not much more, but more guarded (or paranoid) Tennites and Psydonites may not be so charitable."
-#define EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_VERYODD "<font color=[COLOR_HERESYSEVERITY_ALARMING]><b>This is a blatantly weird item!</b></font><br>Carrying this out in the open is highly suspicious to Tennite and/or Psydonite faith. Those who serve the Ten and/or the One are likely to respond with suspicion and distrust <b>at best</b> if I am caught with it."
+#define EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_ALARMING "<font color=[COLOR_HERESYSEVERITY_ALARMING]><b>ЕРЕСЬ!</b></font><br>Этот зловещий дизайн используется еретиками, скрывающимися в темных уголках Гримории. Встреча с владельцем такого предмета не сулит ничего хорошего для последователей Десяти и Одного."
+#define EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_SUSPICIOUS "<font color=[COLOR_HERESYSEVERITY_SUSPICIOUS]><b>Вероятно, еретический дизайн!</b></font><br>Такие предметы часто обнаруживаются у схваченных ересиархов, и, предположительно, являются символами их веры. Последователи Десяти и Одного отнесутся к владельцу как минимум с подозрением."
+#define EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_ODD "<font color=[COLOR_HERESYSEVERITY_ODD]><b>Странное проявление веры... </b></font><br>Хоть этот предмет и не несет на себе явного символа еретической веры, он явно указывает на принадлежность к необычным, возможно, языческим верованиям. Инквизиция, вероятно, следит за владельцами таких предметов."
+#define EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_VERYODD "<font color=[COLOR_HERESYSEVERITY_ALARMING]><b>Это очень подозрительный дизайн!</b></font><br>Такие предметы часто обнаруживаются у схваченных ересиархов. Открытое их ношение служит поводом для подозрений со стороны последователей Десяти и Одного."
 
-#define EXAMINEHIGHLIGHT_TOOLTIP_VIBE_FRIEND "<font color=[COLOR_VIBE_FRIEND]><b>A loyal bearing.</b></font><br>This carries the look of one who stands with the Crown and its laws. Many subjects may view its bearer as a friend, servant, or ally of the realm."
-#define EXAMINEHIGHLIGHT_TOOLTIP_VIBE_FOE "<font color=[COLOR_VIBE_FOE]><b>A disloyal bearing.</b></font><br>This carries the look of one who stands apart from the Crown and its laws. Many subjects may view its bearer with suspicion, seeing a potential rebel, outlaw, or enemy of the realm."
-#define EXAMINEHIGHLIGHT_TOOLTIP_VIBE_CROWN "<font color=[COLOR_VIBE_CROWN]><b>Heavy the Crown is, and ever shall it be.</b></font><br>Such symbols are not lightly bestowed, for they signify authority exercised beneath Astrata's eternal light. This is a recognized mark of divine sovereignty, symbolizing the sacred right to rule granted by the Sun-Tyrant to a chosen bloodline. Most subjects should regard its bearer with reverence, recognizing a station and authority very few can claim."
-#define EXAMINEHIGHLIGHT_TOOLTIP_VIBE_GOLGATHA "<font color=[COLOR_VIBE_GOLGATHA]><b>`Oh, how graceful His power was! And His sacrifice, ever so noble!`</b></font><br>It is said to contain a volatile fragment of the <font color=[COLOR_VIBE_GOLGATHA]><b>Comet Syon</b></font>, a sacred artifact to those of Psydonite Faith, such a relic is only entrusted within the capable hands of the Otavian Orthodoxy, Those who serve the Orthodoxy or others of Psydonite Faith are <b>very likely respond with violence</b> if I am not supposed to have it."
+#define EXAMINEHIGHLIGHT_TOOLTIP_VIBE_FRIEND "<font color=[COLOR_VIBE_FRIEND]><b>Проявление преданности.</b></font><br>Символ верных подданных Короны. Многие простые жители могут видеть во владельце друга, союзника или слугу Короны."
+#define EXAMINEHIGHLIGHT_TOOLTIP_VIBE_FOE "<font color=[COLOR_VIBE_FOE]><b>Проявление мятежа.</b></font><br>Символ тех, кто противостоит Короне. Многие простые жители могут относиться ко владельцу с подозрением, видя в нем мятежника или врага государства."
+#define EXAMINEHIGHLIGHT_TOOLTIP_VIBE_CROWN "<font color=[COLOR_VIBE_CROWN]><b>Тяжела корона, и таковой она будет всегда.</b></font><br>Такие символы не даруются легкомысленно, ибо они означают власть, осуществляемую под вечным светом Астраты. Это признанный знак божественного суверенитета, символизирующий священное право на правление, предоставленное Госпожёй Порядка избранной династии. Большинство подданных должны относиться к его носителю с почтением, признавая положение и власть, на которые могут претендовать лишь немногие."
+#define EXAMINEHIGHLIGHT_TOOLTIP_VIBE_GOLGATHA "<font color=[COLOR_VIBE_GOLGATHA]><b>`Пламя СВЯЩЕННОЙ КОМЕТЫ СИОН выжжет любую ТЬМУ из Псайдонии, пока не останутся лишь РУИНЫ СТАРОГО МИРА.`</b></font><br>В этом артефакте содержится нестабильный осколок <font color=[COLOR_VIBE_GOLGATHA]><b>кометы СИОН</b></font> – древней реликвии, ниспосланной с небес самим Псайдоном в ранние годы Войны в Небесах. Служители псайдонитской веры, вероятно, <b>отреагируют крайне негативно,</b> если мне не вверено владение этим предметом."
 
 // Heresy severity symbols
 #define EXAMINEHIGHLIGHT_SYMBOL_HERESYSEVERITY_SUSPICIOUS "!"
