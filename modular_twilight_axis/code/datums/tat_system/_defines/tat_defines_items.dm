@@ -470,7 +470,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/suit/roguetown/armor/gambeson/lord = TAT_ITEM_ENTRY("Arming Jacket", 2, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
 	/obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit = TAT_ITEM_ENTRY("Old Dobo Robe", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/basiceast = TAT_ITEM_ENTRY("Simple Dobo Robe", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
-	/obj/item/clothing/suit/roguetown/armor/basiceast/captainrobe = TAT_ITEM_ENTRY("Foreign Robes", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/cloak/absolutionistrobe/black = TAT_ITEM_ENTRY("Blessed Robe", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "cloak"), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine/haraate = TAT_DONATION_ITEM_ENTRY("Hansimhae Cuirass", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/suit/roguetown/armor/brigandine/harayoroi = TAT_DONATION_ITEM_ENTRY("Light Hansimhae Cuirass", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor", TAT_DONATION_TIER_TWO), \
@@ -831,7 +830,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/suit/roguetown/armor/leather/studded/bikini = TAT_ITEM_ENTRY("Studded Leather Corslet", 2.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/bikini = TAT_ITEM_ENTRY("Leather Corslet", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/bikini = TAT_ITEM_ENTRY("Chainmail Corslet", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
-	
+
 GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 
 /proc/build_tat_item_icon_payload(item_path)

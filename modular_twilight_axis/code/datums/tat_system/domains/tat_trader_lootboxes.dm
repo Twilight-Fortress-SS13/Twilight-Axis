@@ -375,7 +375,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_kazengun_pool, list(
 	/obj/item/clothing/head/roguetown/mentorhat = 2,
 	/obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit = 2,
 	/obj/item/clothing/suit/roguetown/armor/basiceast = 2,
-	/obj/item/clothing/suit/roguetown/armor/basiceast/captainrobe = 1,
 	/obj/item/clothing/shoes/roguetown/armor/rumaclan = 2,
 	/obj/item/clothing/cloak/eastcloak1 = 2,
 	/obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt1 = 1,
