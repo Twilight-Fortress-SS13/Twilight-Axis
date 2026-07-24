@@ -14,6 +14,10 @@
 	altdetail_color = "#FFFFFF"
 	max_integrity = ARMOR_INT_CHEST_MEDIUM_STEEL + 10
 
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/grenzelhoft/Initialize()
+	. = ..()
+	update_icon()
+
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/grenzelhoft/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
@@ -30,17 +34,15 @@
 			pic2.color = get_altdetail_color()
 		add_overlay(pic2)
 
-/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ornate // Heavy armour NECK coverage buff
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/citywatch
-
-/obj/item/clothing/suit/roguetown/armor/chainmail/light/iron
+/obj/item/clothing/suit/roguetown/armor/chainmail/iron/besilked
 	name = "iron besilked haubergeon"
 	desc = "A maille shirt fashioned from hundreds of interlinked iron rings."
 	armor_class = ARMOR_CLASS_LIGHT
-	max_integrity = ARMOR_INT_CHEST_MEDIUM_IRON
-	smeltresult = /obj/item/ingot/iron
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/iron/besilked/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 
 /obj/item/clothing/suit/roguetown/armor/brigandine/haraate
 	sleeved = 'icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'

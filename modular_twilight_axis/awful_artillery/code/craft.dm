@@ -3,15 +3,15 @@
 	skillcraft = /datum/skill/craft/engineering
 
 /datum/crafting_recipe/roguetown/artillery/mortar_wheel
-	name = "колесо лафета мортиры"
-	result = /obj/item/mortar_wheel 
+	name = "mortar carriage wheel"
+	result = /obj/item/mortar_wheel
 	reqs = list(/obj/item/grown/log/tree/stick = 4, /obj/item/grown/log/tree/small = 1)
 	verbage_simple = "engineer"
 	verbage = "engineers"
 	craftdiff = 1
 
 /datum/crafting_recipe/roguetown/artillery/mortar_base
-	name = "лафет мортиры"
+	name = "mortar carriage"
 	result = /obj/item/artillery_assembly/mortar
 	reqs = list(/obj/item/grown/log/tree/small = 4, /obj/item/grown/log/tree = 2)
 	verbage_simple = "engineer"
@@ -19,7 +19,7 @@
 	craftdiff = 1
 
 /datum/crafting_recipe/roguetown/artillery/finish_mortar
-	name = "сборка мортиры"
+	name = "assemble mortar"
 	result = /obj/structure/artillery/mortar
 	reqs = list(/obj/item/mortar_wheel = 4, /obj/item/mortar_barrel  = 1, /obj/item/artillery_assembly/mortar = 1)
 	verbage_simple = "engineer"
@@ -47,7 +47,7 @@
 	color = "#96745e"
 
 /datum/anvil_recipe/engineering/artillery/mortar_barrel_from_universal
-	name = "заготовка ствола мортиры(переделка ствола) "
+	name = "Artillery Barrel Blank "
 	req_bar = /obj/item/ingot/steel
 	additional_items = list(/obj/item/artillery_barrel_assembly)
 	created_item = /obj/item/mortar_barrel_assembly
@@ -55,10 +55,10 @@
 	craftdiff = 6
 
 /datum/anvil_recipe/engineering/artillery
-	i_type = "Artillery"
+	category = "Artillery"
 
 /datum/anvil_recipe/engineering/artillery/mortar_barrel
-	name = "заготовка ствола мортиры "
+	name = "Mortar Barrel Blank, (+9 Blacksteel)"
 	req_bar = /obj/item/ingot/blacksteel
 	additional_items = list(/obj/item/ingot/blacksteel, /obj/item/ingot/blacksteel, /obj/item/ingot/blacksteel, /obj/item/ingot/blacksteel, /obj/item/ingot/blacksteel,/obj/item/ingot/blacksteel, /obj/item/ingot/blacksteel, /obj/item/ingot/blacksteel, /obj/item/ingot/blacksteel)
 	created_item = /obj/item/mortar_barrel_assembly
@@ -67,7 +67,7 @@
 	max_progress = 1000
 
 /datum/crafting_recipe/roguetown/artillery/polish_mortar_barrel
-	name = "полировка заготовки ствола мортиры"
+	name = "finish mortar barrel"
 	result = /obj/item/mortar_barrel
 	reqs = list(/obj/item/mortar_barrel_assembly = 1)
 	tools = list(/obj/item/natural/cloth)

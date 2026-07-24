@@ -7,7 +7,7 @@
 				delay = 13
 			if("night", "dusk")
 				delay = 16
-	if(world.time > last_fatigued + delay) //regen fatigue 
+	if(world.time > last_fatigued + delay) //regen fatigue
 		var/added = energy / max_energy
 		added = round(-10 + (added * - 40))
 		if(src.climbing) // no stam regen while climbing guh

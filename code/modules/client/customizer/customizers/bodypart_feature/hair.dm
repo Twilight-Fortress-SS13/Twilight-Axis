@@ -1702,19 +1702,19 @@
 		/datum/sprite_accessory/hair/head/sodden,
 		/datum/sprite_accessory/hair/head/lizbeth,
 
-		// Twilight style
-		/datum/sprite_accessory/hair/head/dreadlocks_accurate,
-		/datum/sprite_accessory/hair/head/dreadlocks_accurate_tied,
-		/datum/sprite_accessory/hair/head/cactus,
-		/datum/sprite_accessory/hair/head/choppy,
-		/datum/sprite_accessory/hair/head/elize,
-		/datum/sprite_accessory/hair/head/floof,
-		/datum/sprite_accessory/hair/head/wavy_tied,
-		/datum/sprite_accessory/hair/head/wavy,
-		/datum/sprite_accessory/hair/head/wavy_medium,
-		/datum/sprite_accessory/hair/head/charlotta,
-		/datum/sprite_accessory/hair/head/volaju_alt,
-		/datum/sprite_accessory/hair/head/long_twist,
+		//TA Hairs
+		/datum/sprite_accessory/hair/head/ta/dreadlocks_accurate,
+		/datum/sprite_accessory/hair/head/ta/dreadlocks_accurate_tied,
+		/datum/sprite_accessory/hair/head/ta/cactus,
+		/datum/sprite_accessory/hair/head/ta/choppy,
+		/datum/sprite_accessory/hair/head/ta/elize,
+		/datum/sprite_accessory/hair/head/ta/floof,
+		/datum/sprite_accessory/hair/head/ta/wavy_tied,
+		/datum/sprite_accessory/hair/head/ta/wavy,
+		/datum/sprite_accessory/hair/head/ta/wavy_medium,
+		/datum/sprite_accessory/hair/head/ta/charlotta,
+		/datum/sprite_accessory/hair/head/ta/volaju_alt,
+		/datum/sprite_accessory/hair/head/ta/long_twist,
 		)
 
 /datum/customizer_choice/bodypart_feature/hair/head/humanoid/get_random_accessory(datum/customizer_entry/entry, datum/preferences/prefs)

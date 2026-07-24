@@ -8,7 +8,7 @@
 // Crafting recipes for collars and leashes
 
 /datum/crafting_recipe/roguetown/leather/neck/catbell_collar
-	name = "catbell collar (1 cured leather, catbell)"
+	name = "catbell collar"
 	result = /obj/item/clothing/neck/roguetown/collar/bell/catbell
 	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell = 1)
 	tools = list(/obj/item/needle)
@@ -18,7 +18,7 @@
 	always_availible = TRUE
 
 /datum/crafting_recipe/roguetown/leather/neck/cowbell_collar
-	name = "cowbell collar (1 curedleather, cowbell)"
+	name = "cowbell collar"
 	result = /obj/item/clothing/neck/roguetown/collar/bell/cowbell
 	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell/cow = 1)
 	tools = list(/obj/item/needle)
@@ -29,7 +29,7 @@
 
 
 /datum/crafting_recipe/roguetown/leather/neck/leather_leash
-	name = "leather leash (1 leather)"
+	name = "leather leash"
 	result = /obj/item/leash/leather
 	reqs = list(/obj/item/natural/hide/cured = 1)
 	tools = list(/obj/item/needle)
@@ -65,10 +65,3 @@
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, "Strange luck charm")
-
-/obj/item/clothing/neck/roguetown/chaincoif/full/iron
-	name = "iron full chain coif"
-	icon_state = "fchaincoif"
-	icon = 'modular_twilight_axis/icons/roguetown/clothing/neck.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/neck.dmi'
-	max_integrity = ARMOR_INT_SIDE_IRON

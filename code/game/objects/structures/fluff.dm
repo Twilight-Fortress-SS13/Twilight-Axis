@@ -139,6 +139,17 @@
 		dest = src.loc
 	if(!dest)
 		return
+	var/climb_dir = get_dir(climber_turf, dest) // TA EDIT START
+	for(var/obj/structure/fluff/railing/fence/F in climber_turf)
+		if(F.dir == climb_dir)
+			if(ismob(A))
+				to_chat(A, span_warning("Something is blocking the way."))
+			return
+	for(var/obj/structure/fluff/railing/fence/blocking_fence in dest)
+		if(blocking_fence.dir == get_dir(dest, climber_turf))
+			if(ismob(A))
+				to_chat(A, span_warning("Something is blocking the way."))
+			return // TA EDIT END
 	if(dest.is_blocked_turf(source_atom = A))
 		if(ismob(A))
 			to_chat(A, span_warning("Something is blocking the way."))
@@ -457,7 +468,7 @@
 		user.visible_message("<span class='info'>[user] Carves a name into the passage.</span>")
 		if(do_after(user, 10))
 			var/passagename
-			passagename = input("What name would you like to carve into the passage?")
+			passagename = sanitize(input("What name would you like to carve into the passage?"))
 			if (passagename)
 				name = passagename + "(passage)"
 				desc = "a passage with a name carved into it"
@@ -524,7 +535,7 @@
 		user.visible_message("<span class='info'>[user] Carves a name into the grille.</span>")
 		if(do_after(user, 10))
 			var/grillename
-			grillename = input("What name would you like to carve into the grille?")
+			grillename = sanitize(input("What name would you like to carve into the grille?"))
 			if (grillename)
 				name = grillename + "(grille)"
 				desc = "a grille with a name carved into it"
@@ -1597,7 +1608,7 @@
 		set_opacity(TRUE)
 
 // This is from the Druid Grove remap ages back. Turning it into a proper subtype for faster init. or whatever reason ur supposed
-// to do it. 
+// to do it.
 /obj/effect/wisp/prestidigitation/willowwisp
 	name = "Will-o'-the-wisp"
 	desc = "A small, fiery ball of light made up of mystical energy."

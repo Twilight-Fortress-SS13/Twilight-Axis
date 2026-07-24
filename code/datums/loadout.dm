@@ -2316,6 +2316,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/kumie_shirt
 	donatitem = TRUE
 
+/datum/loadout_item/donator/universal/armor_gothic_psydonic
+	name = "Donator Kit - Gothic Psydonic Cuirass - Required: Psydonic Cuirass"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/gothicpsydoniccuirass
+	donatitem = TRUE
+
 /datum/loadout_item/donator_kumie4
 	name = "Donator Kit - Aristocratic Coat - Required: Hardened Leather Coat or Lightweight Brigandine(No Small Races)"
 	category = list("Броня", "Донат")
@@ -2383,6 +2389,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_wodao
 	category = list("Оружие", "Донат")
 	donatitem = TRUE
+
+/datum/loadout_item/donator_athena_solace
+	name = "Donator Kit - Solace - Required: Rapier"
+	path = /obj/item/enchantingkit/weapon/athena_solace
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+	donat_tier = 2
 
 /datum/loadout_item/donator_weaponkitdadao
 	name = "Donator Kit - Dadao - Required: Iron Hunting Sword, Iron Dueling Messer, Steel Messer, Steel Hunting Sword Or Falx"

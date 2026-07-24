@@ -186,8 +186,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/migrant_pref/migrant
 	var/next_special_trait = null
 
-	var/action_buttons_screen_locs = list()
-
 	var/domhand = 2
 	var/nickname = "Please Change Me"
 	var/highlight_color = "#FF0000"
@@ -1609,7 +1607,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 		dat += "<br><b>Crime:</b> "
 		dat += "<a href='?_src_=prefs;preference=preset_bounty_crime;task=input'>\
-			[preset_bounty_crime || "None"]\
+			[html_encode(preset_bounty_crime) || "None"]\
 		</a>"
 	if(preset_bounty_severity_key && !GLOB.wretch_severities[preset_bounty_severity_key])
 		preset_bounty_severity_key = null

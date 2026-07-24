@@ -158,7 +158,7 @@
 				return FALSE
 			user.say("Let the wine flow, let the music crash!")
 			if(!do_after(user, 5 SECONDS))
-				return FALSE	
+				return FALSE
 			user.say("Away with tears, away with shame!")
 			to_chat(user, span_notice("The memory of sorrow fades into a haze of bliss."))
 			if(!do_after(user, 5 SECONDS))
@@ -201,7 +201,7 @@
 				if("Purified Moondust x2")
 					choose = /obj/item/reagent_containers/powder/moondust_purest
 					count = 2
-				if("Star shugar x2")
+				if("Starsugar x2")
 					choose = /obj/item/reagent_containers/powder/starsugar
 					count = 2
 				if("Spice x2")
@@ -240,7 +240,7 @@
 				playsound(src, 'sound/magic/mending.ogg', 35, TRUE, -2)
 				sleep(1 SECONDS)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-			return TRUE 
+			return TRUE
 		if("Masquarade")
 			if(!do_after(user, 5 SECONDS))
 				return FALSE

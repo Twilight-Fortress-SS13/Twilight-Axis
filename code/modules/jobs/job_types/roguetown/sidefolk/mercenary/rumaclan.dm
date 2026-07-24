@@ -7,14 +7,14 @@
 	subclass_languages = list(/datum/language/kazengunese)
 	class_select_category = CLASS_CAT_KAZENGUN
 	category_tags = list(CTAG_MERCENARY)
-	traits_applied = list(TRAIT_CRITICAL_RESISTANCE, TRAIT_HARDDISMEMBER, TRAIT_NOPAINSTUN, TRAIT_HONORBOUND)
+	traits_applied = list(TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_HONORBOUND) //TA EDIT
 	cmode_music = 'sound/music/combat_Kazengun_Runaway_Chariot.ogg'
 	subclass_stats = list(
-		STATKEY_CON = 2,
+		STATKEY_CON = 3,
 		STATKEY_WIL = 3,
-		STATKEY_STR = 1,
+		STATKEY_STR = 2,
 		STATKEY_PER = 1,
-		STATKEY_SPD = 1
+		STATKEY_SPD = -1
 	)
 	subclass_skills = list(
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
@@ -59,7 +59,7 @@
 	subclass_languages = list(/datum/language/kazengunese)
 	class_select_category = CLASS_CAT_KAZENGUN
 	category_tags = list(CTAG_MERCENARY)
-	traits_applied = list(TRAIT_BLOOD_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_HONORBOUND)
+	traits_applied = list(TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_HONORBOUND)
 	subclass_stats = list(
 		STATKEY_SPD = 4,
 		STATKEY_PER = 2,

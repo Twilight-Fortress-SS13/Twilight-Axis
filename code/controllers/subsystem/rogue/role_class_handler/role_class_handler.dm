@@ -356,7 +356,6 @@ SUBSYSTEM_DEF(role_class_handler)
 		return FALSE // TA EDIT END
 
 
-	H.advsetup = FALSE // This is actually on a lot of shit, so its a ghetto selector protector if u need one
 	if(H.mind)
 		H.mind.picked_advclass = picked_class
 	picked_class.equipme(H)
