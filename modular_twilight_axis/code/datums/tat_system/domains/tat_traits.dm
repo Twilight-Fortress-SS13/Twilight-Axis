@@ -982,6 +982,9 @@
 	var/subclass_selected = H.client ? tgui_input_list(H, "Who are you?", "The spellblade specialization", subclass_list) : null
 	if(!subclass_selected)
 		subclass_selected = "Blade"
+	var/datum/status_effect/buff/arcyne_momentum/momentum = H.apply_status_effect(/datum/status_effect/buff/arcyne_momentum)
+	if(momentum)
+		momentum.chant = lowertext(subclass_selected)
 	switch(subclass_selected)
 		if("Blade")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/caedo)
