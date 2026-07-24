@@ -161,6 +161,16 @@
 	domain = "Море, ветер, стихия, торговля, плавания, природная магия, кошмары, тайны."
 	desc = "Гневливый морской бог, бушующая морская стихия, что посылает штормы в моря и ветра не земли. Сын Псайдона, которому не удалось унаследовать престол отца, и тем не менее люди боятся и уважают его необузданную стихию."
 	worshippers = "Мореплаватели, пираты, рыболовы, торговцы."
+	miracles = list(/datum/action/cooldown/spell/touch/orison								= CLERIC_ORI,
+					/obj/effect/proc_holder/spell/invoked/aquatic_compulsion				= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/abyssor_wind						= CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/abyssor_bends					= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/abyssor_undertow				= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/abyssheal						= CLERIC_T2,
+					/obj/effect/proc_holder/spell/invoked/call_mossback					= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/call_dreamfiend				= CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/abyssal_infusion				= CLERIC_T4,
+	)
 	confess_lines = list(
 		"АБИССОР ПОВЕЛЕВАЕТ ВОЛНАМИ!",
 		"ЯРОСТЬ ОКЕАНА - ВОЛЯ АБИССОРА!",
