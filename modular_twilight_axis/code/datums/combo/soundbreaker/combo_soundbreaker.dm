@@ -555,13 +555,18 @@
 		return target
 	return null
 
-/datum/component/combo_core/soundbreaker/proc/apply_combo_armor_wear(mob/living/carbon/human/target, hit_zone, attack_flag, force_dynamic, multiplier = 1)
+/datum/component/combo_core/soundbreaker/proc/apply_combo_armor_wear(mob/living/carbon/human/target, hit_zone, attack_flag, force_dynamic, multiplier = 1, max_wear = 25, top_layer_only = FALSE)
 	if(!target || !attack_flag || !force_dynamic)
 		return
 
 	var/wear = round(force_dynamic * multiplier)
-	wear = clamp(wear, 1, 25)
+	wear = clamp(wear, 1, max_wear)
 	if(wear <= 0)
+		return
+	if(top_layer_only)
+		var/obj/item/clothing/top_layer = target.get_best_worn_armor(hit_zone, attack_flag)
+		if(top_layer)
+			top_layer.take_damage(wear, BRUTE, "blunt")
 		return
 
 	var/cover_flag
@@ -660,8 +665,12 @@
 	owner.active_hand_index = old_hand
 	return (success_main || success_off)
 
+#define SB_BASELINE_UNARMED 3
+#define SB_BASELINE_MUSIC 4
+#define SB_UNARMED_DAMAGE_STEP (1 / 15)
+#define SB_MUSIC_DAMAGE_STEP (1 / 30)
 #define SB_MIN_DAMAGE_MULT 0.75
-#define SB_MAX_DAMAGE_MULT 1.5
+#define SB_MAX_DAMAGE_MULT 1.2
 
 /datum/component/combo_core/soundbreaker/proc/GetBaseUnarmedDamage(hand_index = null)
 	if(!owner)
@@ -761,7 +770,7 @@
 
 	var/music_skill = owner.get_skill_level(/datum/skill/misc/music)
 
-	var/skill_bonus = (skill * 0.2) + (music_skill * 0.1)
+	var/skill_bonus = 1 + ((skill - SB_BASELINE_UNARMED) * SB_UNARMED_DAMAGE_STEP) + ((music_skill - SB_BASELINE_MUSIC) * SB_MUSIC_DAMAGE_STEP)
 	skill_bonus = clamp(skill_bonus, SB_MIN_DAMAGE_MULT, SB_MAX_DAMAGE_MULT)
 	damage *= skill_bonus
 
@@ -773,6 +782,10 @@
 
 #undef SB_MIN_DAMAGE_MULT
 #undef SB_MAX_DAMAGE_MULT
+#undef SB_BASELINE_UNARMED
+#undef SB_BASELINE_MUSIC
+#undef SB_UNARMED_DAMAGE_STEP
+#undef SB_MUSIC_DAMAGE_STEP
 
 /datum/component/combo_core/soundbreaker/proc/_pick_combo_victim_on_turf(turf/T, mob/living/primary)
 	if(!T)
@@ -1026,7 +1039,7 @@
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		var/hit_zone = TryGetZone(zone)
-		apply_combo_armor_wear(H, hit_zone, "blunt", ScaleDamage(damage_mult), 0.75)
+		apply_combo_armor_wear(H, hit_zone, "blunt", ScaleDamage(damage_mult), 0.825, 30, TRUE)
 
 	return M
 
@@ -1199,7 +1212,7 @@
 
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
-		apply_combo_armor_wear(H, zone, "blunt", ScaleDamage(2.75), 2)
+		apply_combo_armor_wear(H, zone, "blunt", ScaleDamage(2.75), 2.5, 50)
 
 	owner.visible_message(
 		span_danger("[owner]'s syncopation rattles through [target]'s gear!"),
