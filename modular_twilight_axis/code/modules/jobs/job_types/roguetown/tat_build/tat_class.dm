@@ -103,6 +103,15 @@
 
 	var/required_tat_bucket = null
 
+/datum/advclass/tat_class/check_preferences_requirements(datum/preferences/prefs, client/player, check_slots = TRUE, check_probability = TRUE)
+	if(!client_can_use_tat_role_bucket(player, required_tat_bucket))
+		return FALSE
+
+	if(!client_has_tat_role_bucket(player, required_tat_bucket))
+		return FALSE
+
+	return ..()
+
 /datum/advclass/tat_class/check_requirements(mob/living/carbon/human/H)
 	var/key = H?.ckey || H?.client?.ckey
 	if(key)

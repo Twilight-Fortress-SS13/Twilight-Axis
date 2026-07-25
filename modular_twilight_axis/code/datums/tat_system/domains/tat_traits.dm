@@ -1439,6 +1439,7 @@
 	if(has_trait(TAT_TRAIT_WANTED))
 		ADD_TRAIT(H, TRAIT_OUTLAW, TAT_TRAIT_SOURCE)
 		ADD_TRAIT(H, TRAIT_HERESIARCH, TAT_TRAIT_SOURCE)
+		ADD_TRAIT(H, TRAIT_ZURCH, TAT_TRAIT_SOURCE)
 	if(has_trait(TAT_TRAIT_HERETIC))
 		GLOB.excommunicated_players += H.real_name
 	apply_divine_package(H)

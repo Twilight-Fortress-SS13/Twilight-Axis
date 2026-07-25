@@ -242,7 +242,11 @@ SUBSYSTEM_DEF(role_class_handler)
 			qdel(related_handler)
 		release_roundstart_subclass_reservation(player.ckey)
 		return
-	if(finish_class_handler(H, picked_class, related_handler, 0, FALSE))
+	var/tat_class_is_currently_valid = TRUE
+	if(istype(picked_class, /datum/advclass/tat_class))
+		var/datum/advclass/tat_class/picked_tat_class = picked_class
+		tat_class_is_currently_valid = client_can_use_tat_role_bucket(player, picked_tat_class.required_tat_bucket) && client_has_tat_role_bucket(player, picked_tat_class.required_tat_bucket)
+	if(tat_class_is_currently_valid && finish_class_handler(H, picked_class, related_handler, 0, FALSE))
 		release_roundstart_subclass_reservation(player.ckey)
 		return
 	if(related_handler && !QDELETED(related_handler))
