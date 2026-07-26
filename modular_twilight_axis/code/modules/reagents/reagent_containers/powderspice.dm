@@ -29,7 +29,7 @@
 	volume = 15
 	list_reagents = list(/datum/reagent/smartium = 15)
 	grind_results = list(/datum/reagent/smartium = 15)
-	sellprice = 5
+	sellprice = 0
 
 /datum/reagent/smartium
 	name = "smartium"
@@ -81,7 +81,7 @@
 	volume = 15
 	list_reagents = list(/datum/reagent/corps_dust = 15)
 	grind_results = list(/datum/reagent/corps_dust = 15)
-	sellprice = 5
+	sellprice = 0
 
 /datum/reagent/corps_dust
 	name = "corps dust"
@@ -131,7 +131,7 @@
 	volume = 15
 	list_reagents = list(/datum/reagent/grave_powder = 15)
 	grind_results = list(/datum/reagent/grave_powder = 15)
-	sellprice = 5
+	sellprice = 0
 
 /datum/reagent/grave_powder
 	name = "grave powder"
@@ -183,7 +183,7 @@
 	volume = 15
 	list_reagents = list(/datum/reagent/inferrum = 15)
 	grind_results = list(/datum/reagent/inferrum = 15)
-	sellprice = 5
+	sellprice = 0
 
 /datum/reagent/inferrum
 	name = "inferrum"

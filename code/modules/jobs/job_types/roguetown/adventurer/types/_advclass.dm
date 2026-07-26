@@ -160,7 +160,61 @@
 
 	if(applies_post_equipment)
 		apply_character_post_equipment(H)
+	H.set_advsetup(FALSE)
+	H.mind?.refresh_spell_buttons()
+//======== Massive shitcode, that works at least.
+/datum/advclass/proc/get_vice_limits(mob/living/carbon/human/H)
+	if(length(vice_limits))
+		return vice_limits.Copy()
+	return list()
 
+/datum/advclass/proc/get_prefs_vice_limits(client/player)
+	if(length(vice_limits))
+		return vice_limits.Copy()
+	return list()
+
+/datum/advclass/proc/is_vice_limited(vice, list/limited_vices)
+	if(isnull(limited_vices))
+		limited_vices = vice_limits
+	if(!length(limited_vices) || !vice)
+		return FALSE
+	for(var/vicetype in limited_vices)
+		if(ispath(vice, vicetype) || istype(vice, vicetype))
+			return TRUE
+	return FALSE
+
+/datum/advclass/proc/has_limited_vice(list/current_vices, list/limited_vices)
+	if(isnull(limited_vices))
+		limited_vices = vice_limits
+	if(!length(current_vices) || !length(limited_vices))
+		return FALSE
+	for(var/vice in current_vices)
+		if(is_vice_limited(vice, limited_vices))
+			return TRUE
+	return FALSE
+
+/datum/advclass/proc/get_limited_vice_names(list/current_vices, list/limited_vices)
+	. = list()
+	if(isnull(limited_vices))
+		limited_vices = vice_limits
+	if(!length(current_vices) || !length(limited_vices))
+		return
+	for(var/datum/charflaw/cf in current_vices)
+		if(is_vice_limited(cf, limited_vices))
+			. += cf.name
+
+/datum/advclass/proc/get_prefs_restriction_names(client/player)
+	. = list()
+	if(!player?.prefs)
+		return
+	if(length(virtue_limits))
+		for(var/virtuetype in virtue_limits)
+			if(istype(player.prefs.virtue, virtuetype))
+				. += player.prefs.virtue.name
+			if(istype(player.prefs.virtuetwo, virtuetype))
+				. += player.prefs.virtuetwo.name
+	. += get_limited_vice_names(player.prefs.charflaws, get_prefs_vice_limits(player))
+//===
 /datum/advclass/proc/post_equip(mob/living/carbon/human/H)
 	addtimer(CALLBACK(H,TYPE_PROC_REF(/mob/living/carbon/human, add_credit), TRUE), 20)
 	if(cmode_music)
@@ -196,6 +250,58 @@
 					H.remove_language(L)
 		H.grant_language(player.prefs.extra_language)  //TA EDIT END
 
+/datum/advclass/proc/check_preferences_requirements(datum/preferences/prefs, client/player, check_slots = TRUE, check_probability = TRUE) // TA EDIT START
+	if(!prefs)
+		return FALSE
+
+	var/datum/species/pref_species = prefs.pref_species
+	var/list/local_allowed_sexes = list()
+	if(length(allowed_sexes))
+		local_allowed_sexes |= allowed_sexes
+	if(!immune_to_genderswap && pref_species?.gender_swapping)
+		if(MALE in allowed_sexes)
+			local_allowed_sexes -= MALE
+			local_allowed_sexes += FEMALE
+		if(FEMALE in allowed_sexes)
+			local_allowed_sexes -= FEMALE
+			local_allowed_sexes += MALE
+	if(length(local_allowed_sexes) && !(prefs.gender in local_allowed_sexes))
+		return FALSE
+
+	if(length(forbidden_races) && (pref_species?.type in forbidden_races))
+		return FALSE
+
+	if(length(allowed_ages) && !(prefs.age in allowed_ages))
+		return FALSE
+
+	if(length(allowed_patrons) && !(prefs.selected_patron?.type in allowed_patrons))
+		return FALSE
+
+	if(length(virtue_limits))
+		for(var/virtuetype in virtue_limits)
+			if(istype(prefs.virtue, virtuetype) || istype(prefs.virtuetwo, virtuetype))
+				return FALSE
+
+	var/list/current_vice_limits = vice_limits
+	if(player?.prefs == prefs)
+		current_vice_limits = get_prefs_vice_limits(player)
+	if(length(current_vice_limits) && has_limited_vice(prefs.charflaws, current_vice_limits))
+		return FALSE
+
+	if(check_slots && !SSrole_class_handler.class_has_available_slot(src, player?.ckey))
+		return FALSE
+
+	#ifdef USES_PQ
+	if(min_pq != -100)
+		if(!player || !(get_playerquality(player.ckey) >= min_pq))
+			return FALSE
+	#endif
+
+	if(check_probability && !prob(pickprob))
+		return FALSE
+
+	return TRUE // TA EDIT END
+
 /*
 	Whoa! we are checking requirements here!
 	On the datum! Wow!
@@ -230,15 +336,13 @@
 			if(istype(H.client.prefs?.virtue, virtuetype) || istype(H.client.prefs?.virtuetwo, virtuetype))
 				return FALSE
 
-	if(length(vice_limits) && H.client)
-		for(var/vicetype in vice_limits)
-			for(var/vice in H.charflaws)
-				if(istype(vice, vicetype))
-					return FALSE
-
-	if(maximum_possible_slots > -1)
-		if(total_slots_occupied >= maximum_possible_slots)
+	var/list/current_vice_limits = get_vice_limits(H)
+	if(length(current_vice_limits) && H.client)
+		if(has_limited_vice(H.charflaws, current_vice_limits))
 			return FALSE
+
+	if(!SSrole_class_handler.class_has_available_slot(src, H.client?.ckey)) // TA EDIT START
+		return FALSE // TA EDIT END
 
 	#ifdef USES_PQ
 	if(min_pq != -100) // If someone sets this we actually do the check.

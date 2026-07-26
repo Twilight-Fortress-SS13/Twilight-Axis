@@ -1,6 +1,6 @@
 /datum/controller/subsystem/familytree/proc/familytree_join_create_phase_open()
 	if(!SSticker?.round_start_time)
-		return TRUE
+		return FALSE
 	return (world.time - SSticker.round_start_time) >= FAMILYTREE_JOIN_CREATE_DELAY
 
 /datum/controller/subsystem/familytree/proc/familytree_join_create_delay_remaining()
@@ -12,7 +12,7 @@
 
 /datum/controller/subsystem/familytree/proc/familytree_relative_join_phase_open()
 	if(!SSticker?.round_start_time)
-		return TRUE
+		return FALSE
 	return (world.time - SSticker.round_start_time) >= FAMILYTREE_RELATIVE_JOIN_DELAY
 
 /datum/controller/subsystem/familytree/proc/familytree_join_create_fallback_open()
@@ -138,7 +138,6 @@
 		ftlog("AddLocal: [H.real_name] has favorite=[target_name], trying favorite assign (retry #[H.familytree_setspouse_retries])")
 		var/favorite_result = TryAssignToFavorite(H, status)
 		if(favorite_result == "assigned")
-			stop_tracking_human(H, "assigned via favorite")
 			return
 		if(favorite_result == "phase_locked")
 			wait_for_relative_join_phase(H, "favorite house join is phase locked")
@@ -151,10 +150,12 @@
 				find_and_confirm_newlywed(H)
 				wait_for_relative_join_phase(H, "favorite unavailable during join/create fallback phase")
 				return
+			if(!H.familytree_setspouse_wait_started)
+				H.familytree_setspouse_wait_started = world.time
 			H.familytree_setspouse_retries++
-			if(H.familytree_setspouse_retries >= 30 && !H.familytree_setspouse_timeout_offered)
+			if((world.time - H.familytree_setspouse_wait_started) >= FAMILYTREE_SETSPOUSE_TIMEOUT && !H.familytree_setspouse_timeout_offered)
 				H.familytree_setspouse_timeout_offered = TRUE
-				ftlog("AddLocal: [H.real_name] setspouse timeout reached (30 retries), offering reset")
+				ftlog("AddLocal: [H.real_name] setspouse timeout reached ([H.familytree_setspouse_retries] retries, [DisplayTimeText(world.time - H.familytree_setspouse_wait_started)] elapsed), offering reset")
 				INVOKE_ASYNC(src, PROC_REF(offer_setspouse_reset), H, status)
 				return
 			ftlog("AddLocal: [H.real_name] favorite not found, waiting 60s")
@@ -176,6 +177,9 @@
 			return
 		if(H.desired_relative_role != RELATIVE_ANY)
 			wait_for_new_family_match(H, "target house count not met for selected relative role")
+			return
+		if(!relative_join_phase_open)
+			wait_for_new_family_match(H, "holding solo house seed until relative join phase")
 			return
 		familytree_found_new_house(H, "created new house; target house count not met")
 		return
@@ -484,6 +488,9 @@
 	if(!familytree_name_lock_allows_pair(H, favorite))
 		return "waiting"
 	if(favorite.familytree_confirmation_pending)
+		return "waiting"
+	if(familytree_pair_blocked(H, favorite))
+		ftlog("TryFavorite: [H.real_name] <-> [favorite.real_name] pair is blocked (mutual refusal), skipping")
 		return "waiting"
 
 	var/mutual_sibling = (H.desired_relative_role == RELATIVE_SIBLING && favorite.desired_relative_role == RELATIVE_SIBLING)
@@ -941,6 +948,8 @@
 	if(!house || !person || !anchor?.person || anchor.person == person)
 		return possible_roles
 	if(anchor.cosmetic || anchor.phantom)
+		return possible_roles
+	if(familytree_pair_blocked(person, anchor.person))
 		return possible_roles
 	if(!familytree_relative_species_compatible(person, anchor.person))
 		return possible_roles

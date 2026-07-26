@@ -5,7 +5,6 @@
 
 /datum/antagonist/vampire
 	var/datum/antagonist/vampire/sire_vampire
-	var/research_spent = 0
 	var/ta_minimum_strength = 12
 	var/ta_minimum_speed = 12
 	var/ta_minimum_willpower = 12

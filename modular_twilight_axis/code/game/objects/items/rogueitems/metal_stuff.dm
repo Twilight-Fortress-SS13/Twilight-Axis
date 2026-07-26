@@ -1,7 +1,7 @@
 /obj/item/craft_kit
 	name = "iron craftkit"
 	desc = "An empty metal box that is suitable for storing various pieces of hardware and other scrap. \
-	Fill with reguired metal objects to create a varios items"
+	Fill with reguired metal objects to create a various items."
 	icon_state = "craft_kit_iron"
 	icon = 'modular_twilight_axis/icons/roguetown/items/misc.dmi'
 	grid_width = 64
@@ -164,7 +164,7 @@
 	result =
 */
 
-GLOBAL_LIST_INIT(craft_iron, (list(/obj/item/clothing/neck/roguetown/chaincoif/full/iron,
+GLOBAL_LIST_INIT(craft_iron, (list(/obj/item/clothing/neck/roguetown/chaincoif/iron/full,
 								/obj/item/clothing/suit/roguetown/armor/chainmail/iron,
 								/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron,
 								/obj/item/clothing/suit/roguetown/armor/plate/cuirass/iron,
@@ -182,7 +182,7 @@ GLOBAL_LIST_INIT(craft_iron, (list(/obj/item/clothing/neck/roguetown/chaincoif/f
 //helmet
 
 /obj/item/craft_kit/full_chaincoif
-	result = /obj/item/clothing/neck/roguetown/chaincoif/full/iron
+	result = /obj/item/clothing/neck/roguetown/chaincoif/iron/full
 
 //armor
 
@@ -226,7 +226,7 @@ GLOBAL_LIST_INIT(craft_iron, (list(/obj/item/clothing/neck/roguetown/chaincoif/f
 //feets
 
 /obj/item/craft_kit/lplateboots
-	result = /obj/item/clothing/shoes/roguetown/boots/armor/iron
+	result = /obj/item/clothing/shoes/roguetown/boots/maille/iron
 
 //STEEL
 /*
@@ -269,7 +269,7 @@ GLOBAL_LIST_INIT(craft_steel, (list(/obj/item/clothing/neck/roguetown/chaincoif/
 	result = /obj/item/clothing/suit/roguetown/armor/plate/full
 
 /obj/item/craft_kit/steel/haubergeon_light
-	result = /obj/item/clothing/suit/roguetown/armor/chainmail/light
+	result = /obj/item/clothing/suit/roguetown/armor/chainmail/iron/besilked
 
 //legs
 

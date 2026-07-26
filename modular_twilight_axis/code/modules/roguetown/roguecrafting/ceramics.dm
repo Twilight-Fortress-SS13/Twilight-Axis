@@ -1,5 +1,5 @@
 /datum/crafting_recipe/roguetown/ceramics/clay/xylixmask
-	name = "mask (xylixian)"
+	name = "xylixian mask"
 	result = list(/obj/item/natural/clay/xylixmask)
 	reqs = list(/obj/item/natural/clay = 3)
 	craftdiff = 3

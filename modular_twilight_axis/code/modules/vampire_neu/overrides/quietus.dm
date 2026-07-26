@@ -173,7 +173,7 @@
 		return FALSE
 
 	var/mob/living/last_attacker = owner.lastattacker_weakref?.resolve()
-	if(isliving(last_attacker))
+	if(isliving(last_attacker) && last_attacker != owner)
 		return TRUE
 
 	if(alert)
@@ -183,7 +183,7 @@
 /datum/coven_power/quietus/dagons_call/activate()
 	. = ..()
 	var/mob/living/last_attacker = owner.lastattacker_weakref?.resolve()
-	if(!isliving(last_attacker))
+	if(!isliving(last_attacker) || last_attacker == owner)
 		return FALSE
 
 	owner.emote("snap", forced = TRUE)
@@ -201,10 +201,6 @@
 	range = 0
 
 /datum/coven_power/quietus/baals_caress/can_activate(atom/target, alert = FALSE)
-	. = ..()
-	if(!.)
-		return FALSE
-
 	var/obj/item/rogueweapon/target_weapon = owner.get_active_held_item()
 	if(!istype(target_weapon))
 		if(alert)
@@ -214,13 +210,23 @@
 		if(alert)
 			to_chat(owner, span_warning("[src] может усилить только острое оружие."))
 		return FALSE
+
+	// target_type is NONE on this rework (self-cast off the held weapon), but the
+	// vanilla baals_caress/can_activate this chains into via ..() still expects an
+	// /obj/item/rogueweapon target and fails with "can only be used on weapons!"
+	// against the null the engine passes for a NONE-type power. Feed it the held
+	// weapon we already validated above so that check passes too.
+	. = ..(target_weapon, alert)
+	if(!.)
+		return FALSE
 	return TRUE
 
 /datum/coven_power/quietus/baals_caress/activate(obj/item/rogueweapon/ignored_target)
-	. = ..()
 	var/obj/item/rogueweapon/target_weapon = owner.get_active_held_item()
 	if(!istype(target_weapon) || !target_weapon.sharpness)
 		return FALSE
+
+	. = ..(target_weapon)
 
 	var/datum/component/ta_bloodblade/existing_coating = target_weapon.GetComponent(/datum/component/ta_bloodblade)
 	owner.visible_message(span_danger("[owner] пронзает себя оружием [target_weapon]!"))

@@ -4,7 +4,7 @@
 	icon_state = "gambeson"
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/pants.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/pants.dmi'
-	body_parts_covered = COVERAGE_ALL_UNDERGROIN
+	body_parts_covered = GROIN|LEGS|FEET
 	slot_flags = ITEM_SLOT_PANTS
 	armor = ARMOR_PADDED
 	blocksound = SOFTUNDERHIT
@@ -31,7 +31,6 @@
 	icon_state = "gambesonp"
 	armor = ARMOR_PADDED
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
-	sellprice = 25
 	color = "#976E6B"
 
 /obj/item/clothing/under/roguetown/trou/leather/etrpants

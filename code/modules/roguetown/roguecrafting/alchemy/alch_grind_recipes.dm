@@ -330,3 +330,8 @@
 	name = "Herb Seed (Rosa)"
 	valid_input = /obj/item/alch/rosa
 	valid_outputs = list(/obj/item/herbseed/rosa = 1)
+
+/datum/alch_grind_recipe/azurosa_seed
+	name = "Herb Seed (Azurosa)"
+	valid_input = /obj/item/alch/rosa
+	valid_outputs = list(/obj/item/herbseed/rosa/azure = 1)

@@ -533,10 +533,12 @@ var/list/zone_translations = list(
 				message_param = "страстно целует %t."
 			else if(H.zone_selected == BODY_ZONE_PRECISE_EARS)
 				message_param = "целует %t в ухо."
-				var/mob/living/carbon/human/E = target
-				if(iself(E) || ishalfelf(E) || isdarkelf(E))
-					if(!E.cmode)
-						to_chat(target, span_love("Это щекотно..."))
+				if(!HAS_TRAIT(target, TRAIT_DECEIVING_MEEKNESS) && !HAS_TRAIT(target, TRAIT_NOMOOD))
+					var/mob/living/carbon/human/E = target
+					if(iself(E) || ishalfelf(E) || isdarkelf(E) || issunelf(E))
+						if(!E.cmode)
+							to_chat(target, span_love("Это щекотно..."))
+							E.emote("eflick", intentional = TRUE)
 			else if(H.zone_selected == BODY_ZONE_PRECISE_R_EYE || H.zone_selected == BODY_ZONE_PRECISE_L_EYE)
 				message_param = "целует %t в бровь."
 			else if(H.zone_selected == BODY_ZONE_PRECISE_SKULL)
@@ -593,10 +595,12 @@ var/list/zone_translations = list(
 				message_param = "лижет губы %t."
 			else if(J.zone_selected == BODY_ZONE_PRECISE_EARS)
 				message_param = "лижет ухо %t."
-				var/mob/living/carbon/human/O = target
-				if(iself(O) || ishalfelf(O) || isdarkelf(O))
-					if(!O.cmode)
-						to_chat(target, span_love("Это щекотно..."))
+				if(!HAS_TRAIT(target, TRAIT_DECEIVING_MEEKNESS) && !HAS_TRAIT(target, TRAIT_NOMOOD))
+					var/mob/living/carbon/human/O = target
+					if(iself(O) || ishalfelf(O) || isdarkelf(O) || issunelf(O))
+						if(!O.cmode)
+							to_chat(target, span_love("Это щекотно..."))
+							O.emote("eflick", intentional = TRUE)
 			else if(J.zone_selected == BODY_ZONE_PRECISE_GROIN)
 				message_param = "лижет %t между ног."
 				to_chat(target, span_love("Это очень приятно..."))

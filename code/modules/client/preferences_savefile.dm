@@ -720,6 +720,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["job_preferences"] >> job_preferences
 
 	S["job_characters"] >> job_characters //TA EDIT
+	S["job_subclass_preferences"] >> job_subclass_preferences // TA EDIT START
+	S["job_subclass_strict"] >> job_subclass_strict // TA EDIT END
 
 	//Quirks
 	S["all_quirks"] >> all_quirks
@@ -897,6 +899,31 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		var/slot_num = job_characters[job_title]
 		if(!isnum(slot_num) || slot_num < 1 || slot_num > max_save_slots)
 			job_characters -= job_title //TA EDIT END
+
+	if(!islist(job_subclass_preferences)) // TA EDIT START
+		job_subclass_preferences = list()
+	if(!islist(job_subclass_strict))
+		job_subclass_strict = list()
+	for(var/job_title in job_subclass_preferences.Copy())
+		var/subclass_name = job_subclass_preferences[job_title]
+		var/datum/job/J = SSjob.GetJob(job_title)
+		var/valid_subclass = FALSE
+		if(istext(subclass_name) && length(J?.job_subclasses))
+			for(var/subclass_path in J.job_subclasses)
+				var/datum/advclass/subclass_type = subclass_path
+				if(initial(subclass_type.name) == subclass_name)
+					valid_subclass = TRUE
+					break
+		if(!valid_subclass)
+			job_subclass_preferences -= job_title
+			job_subclass_strict -= job_title
+	for(var/job_title in job_subclass_strict.Copy())
+		if(!(job_title in job_subclass_preferences))
+			job_subclass_strict -= job_title
+		else
+			job_subclass_strict[job_title] = sanitize_integer(job_subclass_strict[job_title], FALSE, TRUE, FALSE)
+			if(!job_subclass_strict[job_title])
+				job_subclass_strict -= job_title // TA EDIT END
 	
 	all_quirks = SANITIZE_LIST(all_quirks)
 
@@ -1029,6 +1056,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["job_preferences"] , job_preferences)
 
 	WRITE_FILE(S["job_characters"]  , job_characters) //TA EDIT
+	WRITE_FILE(S["job_subclass_preferences"], job_subclass_preferences) // TA EDIT START
+	WRITE_FILE(S["job_subclass_strict"], job_subclass_strict) // TA EDIT END
 
 	//Quirks
 	WRITE_FILE(S["all_quirks"]			, all_quirks)

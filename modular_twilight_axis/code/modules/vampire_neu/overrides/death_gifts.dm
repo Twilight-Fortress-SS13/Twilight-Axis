@@ -11,6 +11,9 @@
 #define TA_DEATH_GIFT_BERSERK_PUSH_DISTANCE 3
 #define TA_DEATH_GIFT_BERSERK_SILVER_HITS_MIN 2
 #define TA_DEATH_GIFT_BERSERK_SILVER_HITS_MAX 3
+#define TA_DEATH_GIFT_BERSERK_RISE_DAMAGE_CAP 100
+#define TA_DEATH_GIFT_BERSERK_RISE_HIT_MEMORY (10 SECONDS)
+#define TA_DEATH_GIFT_BERSERK_RISE_HEALTH_MARGIN 15
 
 /datum/antagonist/vampire
 	var/ta_death_gifts_given = 0
@@ -320,6 +323,9 @@
 	var/active = FALSE
 	var/starting = FALSE
 	var/ending = FALSE
+	var/rising = FALSE
+	var/last_hit_damage = 0
+	var/last_hit_time = 0
 	var/end_time = 0
 	var/applied_frenzy_visuals = FALSE
 	var/gibbing = FALSE
@@ -337,6 +343,7 @@
 	RegisterSignal(parent, COMSIG_MOB_STATCHANGE, PROC_REF(on_stat_change))
 	RegisterSignal(parent, COMSIG_LIVING_HEALTH_UPDATE, PROC_REF(on_health_update))
 	RegisterSignal(parent, COMSIG_LIVING_DEATH, PROC_REF(on_death))
+	RegisterSignal(parent, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage_taken))
 	RegisterSignal(parent, COMSIG_MOB_ATTACK_HAND, PROC_REF(on_unarmed_attack))
 	RegisterSignal(parent, COMSIG_ITEM_ATTACKED_SUCCESS, PROC_REF(on_item_attacked_success))
 	START_PROCESSING(SSprocessing, src)
@@ -348,7 +355,7 @@
 		set_berserk_traits(owner, FALSE)
 	if(istype(owner))
 		clear_berserk_overlay(owner)
-	UnregisterSignal(parent, list(COMSIG_MOB_STATCHANGE, COMSIG_LIVING_HEALTH_UPDATE, COMSIG_LIVING_DEATH, COMSIG_MOB_ATTACK_HAND, COMSIG_ITEM_ATTACKED_SUCCESS))
+	UnregisterSignal(parent, list(COMSIG_MOB_STATCHANGE, COMSIG_LIVING_HEALTH_UPDATE, COMSIG_LIVING_DEATH, COMSIG_MOB_APPLY_DAMGE, COMSIG_MOB_ATTACK_HAND, COMSIG_ITEM_ATTACKED_SUCCESS))
 	STOP_PROCESSING(SSprocessing, src)
 	return ..()
 
@@ -485,7 +492,38 @@
 		qdel(berserk_after_image)
 	berserk_after_image = null
 
+/datum/component/ta_death_gift_berserk/proc/break_restraints(mob/living/carbon/human/owner)
+	var/broke_free = FALSE
+
+	if(owner.handcuffed)
+		var/obj/item/cuffs = owner.handcuffed
+		owner.handcuffed = null
+		owner.update_handcuffed()
+		qdel(cuffs)
+		broke_free = TRUE
+
+	if(owner.legcuffed)
+		var/obj/item/legcuffs = owner.legcuffed
+		owner.legcuffed = null
+		owner.update_inv_legcuffed()
+		qdel(legcuffs)
+		owner.remove_status_effect(/datum/status_effect/debuff/netted)
+		broke_free = TRUE
+
+	if(owner.buckled)
+		owner.buckled.unbuckle_mob(owner, TRUE)
+		broke_free = TRUE
+
+	for(var/obj/item/grabbing/grab in owner.grabbedby)
+		qdel(grab)
+		broke_free = TRUE
+
+	if(broke_free)
+		playsound(owner, 'sound/misc/chain_snap.ogg', 100, FALSE, 10)
+		owner.visible_message(span_danger("[owner] яростно рвет удерживающие путы!"), span_userdanger("Ярость рвет оковы, будто гнилую бечеву."))
+
 /datum/component/ta_death_gift_berserk/proc/keep_berserk_upright(mob/living/carbon/human/owner)
+	break_restraints(owner)
 	owner.remove_CC(FALSE)
 	owner.SetSleeping(0, FALSE, TRUE)
 	owner.SetUnconscious(0, FALSE, TRUE)
@@ -547,13 +585,15 @@
 		return FALSE
 	if(target == owner || target.stat == DEAD)
 		return FALSE
+	if(!target.client)
+		return FALSE
 	return get_dist(owner, target) <= 7
 
 /datum/component/ta_death_gift_berserk/proc/find_berserk_target(mob/living/carbon/human/owner, mob/living/excluded_target = null)
 	var/mob/living/best_target = null
 	var/best_dist = INFINITY
 	for(var/mob/living/possible_target in oviewers(7, owner))
-		if(possible_target == owner || possible_target == excluded_target || possible_target.stat == DEAD)
+		if(possible_target == excluded_target || !is_valid_berserk_target(owner, possible_target))
 			continue
 		var/current_dist = get_dist(owner, possible_target)
 		if(current_dist < best_dist)
@@ -561,7 +601,7 @@
 			best_dist = current_dist
 	if(best_target)
 		return best_target
-	if(excluded_target && !QDELETED(excluded_target) && excluded_target.stat != DEAD)
+	if(is_valid_berserk_target(owner, excluded_target))
 		return excluded_target
 	return null
 
@@ -614,10 +654,65 @@
 		starting = TRUE
 		INVOKE_ASYNC(src, PROC_REF(start_berserk), source)
 
+/datum/component/ta_death_gift_berserk/proc/on_damage_taken(mob/living/carbon/human/source, damage, damagetype, def_zone)
+	SIGNAL_HANDLER
+	if(damagetype == STAMINA)
+		return
+	last_hit_damage = damage
+	last_hit_time = world.time
+
 /datum/component/ta_death_gift_berserk/proc/on_death(mob/living/carbon/human/source, gibbed)
 	SIGNAL_HANDLER
-	if(active && !gibbed)
+	if(gibbed)
+		return
+	if(active)
 		INVOKE_ASYNC(src, PROC_REF(ta_bloody_gib), source)
+		return
+	if(!can_rise_from_death(source))
+		return
+	rising = TRUE
+	INVOKE_ASYNC(src, PROC_REF(rise_from_death), source)
+
+/datum/component/ta_death_gift_berserk/proc/can_rise_from_death(mob/living/carbon/human/owner)
+	if(!istype(owner) || QDELETED(owner) || active || starting || rising)
+		return FALSE
+	if(owner.has_status_effect(/datum/status_effect/debuff/sleepytime) || owner.has_status_effect(/datum/status_effect/debuff/ta_death_gift_tired))
+		return FALSE
+	if(!owner.get_bodypart(BODY_ZONE_HEAD))
+		return FALSE
+	if(world.time - last_hit_time <= TA_DEATH_GIFT_BERSERK_RISE_HIT_MEMORY && last_hit_damage > TA_DEATH_GIFT_BERSERK_RISE_DAMAGE_CAP)
+		return FALSE
+	return TRUE
+
+/datum/component/ta_death_gift_berserk/proc/rise_from_death(mob/living/carbon/human/owner)
+	if(!istype(owner) || QDELETED(owner) || owner.stat != DEAD)
+		rising = FALSE
+		return
+
+	heal_death_wounds(owner)
+
+	var/needed_healing = (HEALTH_THRESHOLD_DEAD + TA_DEATH_GIFT_BERSERK_RISE_HEALTH_MARGIN) - owner.health
+	if(needed_healing > 0)
+		owner.adjustBruteLoss(-min(needed_healing, owner.getBruteLoss()))
+		owner.updatehealth()
+		needed_healing = (HEALTH_THRESHOLD_DEAD + TA_DEATH_GIFT_BERSERK_RISE_HEALTH_MARGIN) - owner.health
+		if(needed_healing > 0)
+			owner.adjustFireLoss(-min(needed_healing, owner.getFireLoss()))
+			owner.updatehealth()
+
+	if(!owner.ta_stabilize_death_gift_body(TRUE, owner.mind))
+		rising = FALSE
+		return
+
+	owner.visible_message(span_userdanger("Раны [owner] с влажным хрустом стягиваются, и мертвое тело поднимается на ноги!"), span_userdanger("Смерть не удержит мою ярость. ПЛОТЬ СРАСТАЕТСЯ, И Я ВСТАЮ."))
+	if(!active && !starting)
+		start_berserk(owner)
+	rising = FALSE
+
+/datum/component/ta_death_gift_berserk/proc/heal_death_wounds(mob/living/carbon/human/owner)
+	for(var/obj/item/bodypart/bodypart as anything in owner.bodyparts)
+		for(var/datum/wound/grievous/killing_wound in bodypart.wounds.Copy())
+			qdel(killing_wound)
 
 /datum/component/ta_death_gift_berserk/proc/on_item_attacked_success(mob/living/carbon/human/source, obj/item/weapon, mob/living/attacker)
 	SIGNAL_HANDLER
@@ -647,7 +742,7 @@
 /datum/component/ta_death_gift_berserk/proc/on_unarmed_attack(mob/living/carbon/human/source, mob/living/carbon/human/attacker, mob/living/target, datum/martial_art/attacker_style)
 	SIGNAL_HANDLER
 	var/mob/living/carbon/human/owner = parent
-	if(!active || ending || source != owner || attacker != owner || !isliving(target) || target == owner || target.stat == DEAD)
+	if(!active || ending || source != owner || attacker != owner || !is_valid_berserk_target(owner, target))
 		return
 
 	INVOKE_ASYNC(src, PROC_REF(try_berserk_attack), owner, target)
@@ -676,7 +771,7 @@
 		handle_berserk_unarmed_attack(owner, target, selected_zone)
 
 /datum/component/ta_death_gift_berserk/proc/handle_berserk_unarmed_attack(mob/living/carbon/human/owner, mob/living/target, selected_zone)
-	if(!active || ending || !istype(owner) || QDELETED(owner) || !isliving(target) || QDELETED(target) || target == owner || target.stat == DEAD)
+	if(!active || ending || !istype(owner) || QDELETED(owner) || !is_valid_berserk_target(owner, target))
 		return
 
 	var/zone = check_zone(selected_zone)
@@ -699,7 +794,7 @@
 	owner.clear_frenzy_cache()
 
 /datum/component/ta_death_gift_berserk/proc/handle_berserk_bite(mob/living/carbon/human/owner, mob/living/target, selected_zone)
-	if(!active || ending || !istype(owner) || QDELETED(owner) || !isliving(target) || QDELETED(target) || target == owner || target.stat == DEAD)
+	if(!active || ending || !istype(owner) || QDELETED(owner) || !is_valid_berserk_target(owner, target))
 		return
 
 	var/zone = check_zone(selected_zone)
@@ -745,3 +840,6 @@
 #undef TA_DEATH_GIFT_BERSERK_PUSH_DISTANCE
 #undef TA_DEATH_GIFT_BERSERK_SILVER_HITS_MIN
 #undef TA_DEATH_GIFT_BERSERK_SILVER_HITS_MAX
+#undef TA_DEATH_GIFT_BERSERK_RISE_DAMAGE_CAP
+#undef TA_DEATH_GIFT_BERSERK_RISE_HIT_MEMORY
+#undef TA_DEATH_GIFT_BERSERK_RISE_HEALTH_MARGIN

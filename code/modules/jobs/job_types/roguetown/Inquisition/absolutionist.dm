@@ -17,6 +17,7 @@
 	wanderer_examine = FALSE
 	advjob_examine = FALSE
 	give_bank_account = 15
+	vice_restrictions = list(/datum/charflaw/silverweakness)
 	same_job_respawn_delay = 30 MINUTES
 
 	job_traits = list(

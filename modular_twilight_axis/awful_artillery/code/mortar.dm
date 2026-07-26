@@ -91,14 +91,12 @@
 	name = "mortar carriage wheel"
 	icon = 'modular_twilight_axis/awful_artillery/icons/artillery.dmi'
 	icon_state = "mortar_wheel"
-	sellprice = 5
 	
 
 /obj/item/mortar_barrel 
 	name = "barrel of the mortar"
 	icon = 'modular_twilight_axis/awful_artillery/icons/artillery.dmi'
 	icon_state = "barrel"
-	sellprice = 150
 	w_class = WEIGHT_CLASS_HUGE
 
 /obj/item/mortar_used_barrel

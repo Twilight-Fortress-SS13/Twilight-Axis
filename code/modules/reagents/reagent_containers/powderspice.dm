@@ -323,7 +323,7 @@
 	volume = 18
 	list_reagents = list(/datum/reagent/moondust_purest = 18)
 	grind_results = list(/datum/reagent/moondust_purest = 15)
-	sellprice = 30
+	sellprice = 0
 
 /datum/reagent/moondust_purest
 	name = "Purest Moondust"

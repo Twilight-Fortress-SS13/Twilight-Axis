@@ -12,6 +12,7 @@
 // familytree_rituals.dm             - clergy helpers, desired-role search, ritual_adopt, vampire_bind, family_curse
 // familytree_holy_verbs.dm          - holy skill verbs: establish_bond, dissolve_marriage (manual marriage/adoption/sibling)
 // familytree_lifecycle.dm           - royal job hooks, enigma, noble dynasty, notifications, confirmation sessions, setspouse reset
+// familytree_round_ledger.dm        - per-ckey round ledger: opt-out/blocked pairs persist across relogs and new bodies
 // familytree_subsystem_core.dm      - SUBSYSTEM_DEF(familytree): init, signals, queue, local/royal runners
 // familytree_subsystem_helpers.dm   - species/anatomy/gender compat, job helpers, age checks, DetermineAppropriateRole
 // familytree_subsystem_matching.dm  - AddLocal, AssignToHouse/Family, NewlyWed/Family matching, favorite, wedding ring
@@ -23,7 +24,7 @@
 //
 // TGUI: tgui/packages/tgui/interfaces/FamilySettingsPanel.tsx
 //       tgui/packages/tgui/interfaces/FamilyDisplayPanel.tsx
-//       tgui/packages/tgui/interfaces/FamilyDisplayPanel/*.tsx (FamilyTree, FamilyTreeBranch, FamilyTreeCard, FamilyListSections, types)
+//       tgui/packages/tgui/interfaces/FamilyDisplayPanel/*.tsx (FamilyTree, FamilyTreeCard, FamilyListSections, types)
 // Assets: relations.dmi
 //
 // Notes:
@@ -67,6 +68,7 @@
 #define FAMILYTREE_PLAYERS_PER_TARGET_HOUSE 10
 #define FAMILYTREE_MAX_RANDOM_RELATIVES 3
 #define FAMILYTREE_DONATOR_RELATIVES_TIER 1
+#define FAMILYTREE_SETSPOUSE_TIMEOUT (30 MINUTES)
 
 #define ANY_GENDER 1
 #define SAME_GENDER 2
@@ -128,6 +130,7 @@
 #define FTREJ_F_OPTOUT       (1<<10)
 
 #include "familytree_prefs_ui.dm"
+#include "familytree_confirm_alert.dm"
 #include "familytree_mob_procs.dm"
 #include "familytree_heritage_core.dm"
 #include "familytree_member.dm"
@@ -135,6 +138,7 @@
 #include "familytree_rituals.dm"
 #include "familytree_holy_verbs.dm"
 #include "familytree_lifecycle.dm"
+#include "familytree_round_ledger.dm"
 #include "familytree_subsystem_core.dm"
 #include "familytree_royal_harem.dm"
 #include "familytree_subsystem_helpers.dm"

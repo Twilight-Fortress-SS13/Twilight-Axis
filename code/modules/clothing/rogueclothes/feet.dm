@@ -36,7 +36,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/attackby(obj/item/W, mob/living/carbon/user, params)
 	// Special exception for rotfang to help deal with inventory woes / make it harder to steal.
-	if(istype(W, /obj/item/rogueweapon/huntingknife/throwingknife) || istype(W, /obj/item/rogueweapon/huntingknife/idagger/steel/rotfang))
+	if(istype(W, /obj/item/rogueweapon/huntingknife/throwingknife) || istype(W, /obj/item/rogueweapon/huntingknife/idagger/steel/rotfang) || istype(W, /obj/item/rogueweapon/huntingknife/throwingknife/triumph))
 		if(holdingknife == null)
 			for(var/obj/item/clothing/shoes/roguetown/boots/B in user.get_equipped_items(TRUE))
 				to_chat(loc, span_warning("I quickly slot [W] into [B]!"))
@@ -44,7 +44,7 @@
 				holdingknife = W
 				playsound(loc, 'sound/foley/equip/swordsmall1.ogg')
 		else
-			to_chat(loc, span_warning("My boot already holds a throwing knife."))
+			to_chat(loc, span_warning("My boot already holds a knife."))
 		return
 	. = ..()
 
@@ -88,7 +88,7 @@
 	color = null
 	sewrepair = TRUE
 	armor = ARMOR_LEATHER
-	max_integrity = ARMOR_INT_SIDE_HARDLEATHER //170 extra hp. stop footfragging my orthos. 
+	max_integrity = ARMOR_INT_SIDE_HARDLEATHER //170 extra hp. stop footfragging my orthos.
 	salvage_amount = 1
 	salvage_result = /obj/item/natural/hide/cured
 
@@ -283,12 +283,22 @@
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 
+/obj/item/clothing/shoes/roguetown/grenzelhoft/loadout
+	name = "aesthetic grenzelhoft boots"
+	max_integrity = ARMOR_INT_CHEST_CIVILIAN
+	armor = ARMOR_CLOTHING
+
 /obj/item/clothing/shoes/roguetown/grenzelhoft/freifechter
 	name = "fencing boots"
 	desc = "A pair of lightweight snugly fitting boots. They're reinforced along the toes and ankles and offer a measure of protection against missteps and glancing blows during close exchanges, often favoured by duelists and other itinerant swordsmen."
 	icon_state = "freiboots"
 	item_state = "freiboots"
 	max_integrity = ARMOR_INT_SIDE_HARDLEATHER + 50
+
+/obj/item/clothing/shoes/roguetown/grenzelhoft/freifechter/loadout
+	name = "aesthetic fencing boots"
+	max_integrity = ARMOR_INT_CHEST_CIVILIAN
+	armor = ARMOR_CLOTHING
 
 /obj/item/clothing/shoes/roguetown/boots/armor/dwarven
 	name = "grudgebearer dwarven boots"

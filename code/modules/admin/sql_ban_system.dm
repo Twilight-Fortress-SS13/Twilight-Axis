@@ -1319,6 +1319,14 @@
 	var/kna = key_name_admin(usr)
 	log_admin_private("[kn] has edited the [changes_keys_text] of a ban for [old_key ? "[old_key]" : "[old_ip]-[old_cid]"].") //if a ban doesn't have a key it must have an ip and/or a cid to have reached this point normally
 	message_admins("[kna] has edited the [changes_keys_text] of a ban for [old_key ? "[old_key]" : "[old_ip]-[old_cid]"].")
+	var/discord_target = player_key
+	if(!discord_target)
+		discord_target = old_key
+	if(!discord_target)
+		var/discord_ip = player_ip ? player_ip : old_ip
+		var/discord_cid = player_cid ? player_cid : old_cid
+		discord_target = "[discord_ip]-[discord_cid]"
+	world.TgsAnnounceBanEdit(discord_target, usr.ckey, changes)
 	if(changes["Applies to admins"])
 		send2irc("BAN ALERT","[kn] has edited a ban for [old_key ? "[old_key]" : "[old_ip]-[old_cid]"] to [applies_to_admins ? "" : "not"]affect admins")
 	var/client/C = GLOB.directory[old_key]

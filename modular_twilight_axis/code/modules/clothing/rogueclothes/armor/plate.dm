@@ -1,3 +1,8 @@
+/obj/item/clothing/suit/roguetown/armor/plate/Initialize()
+	. = ..()
+	if(body_parts_covered == COVERAGE_ALL_BUT_HANDFEET || armor_class == ARMOR_CLASS_HEAVY)
+		body_parts_covered |= NECK
+
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/twilight_elven
 	name = "elven rider cuirass"
 	desc = "An expertly smithed form-fitting steel cuirass that is much lighter and agile, but breaks with much more ease. Its sleek design marks it as a product of elven craftsmanship."
@@ -9,7 +14,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/plate/raneshen_scale
 	slot_flags = ITEM_SLOT_ARMOR
-	name = "ranesheni medium lamellar armor"
+	name = "ranesheni scalemail"
 	desc = "Armor used by the Empire's vanguard fighters. The plates are connected to each other with cord for mobility. The arms are protected by pauldrons, and the legs by a small chainmail skirt. The armor itself is decorated with bronze."
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/armor.dmi'
@@ -33,7 +38,7 @@
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/32х48/sleeves_armor.dmi'
 	icon_state = "heavy_armour"
 	item_state = "heavy_armour"
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
 	equip_delay_self = 12 SECONDS
 	unequip_delay_self = 12 SECONDS
 	equip_delay_other = 3 SECONDS
@@ -41,38 +46,6 @@
 	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
 	smelt_bar_num = 4
 	armor_class = ARMOR_CLASS_HEAVY
-
-// Heavy armour NECK coverage buff:
-
-/obj/item/clothing/suit/roguetown/armor/plate/fluted
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/fluted/graggar // As specified in PR neck coverage buff is only for HEAVY, therefore i exclude graggar halfplate
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
-
-/obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/otavan
-	body_parts_covered = COVERAGE_TORSO | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/full
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/samsibsa
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/vampire
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/bikini
-	body_parts_covered = CHEST|GROIN|LEGS|ARMS|NECK
-
-/obj/item/clothing/suit/roguetown/armor/heartfelt/lord // In fact - is plate armour
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
-
-/obj/item/clothing/suit/roguetown/armor/heartfelt/hand
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
 
 /obj/item/clothing/suit/roguetown/armor/plate/scale/townguard
 	name = "watchman's armor"
@@ -134,7 +107,7 @@
 	smelt_bar_num = 2
 	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
 
-	#define ARMOR_BAOTHA_LIGHT list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "acid" = DR_NONE, "bullet" = DR_HEAVY)  //TA EDIT
+#define ARMOR_BAOTHA_LIGHT list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "acid" = DR_NONE, "bullet" = DR_HEAVY)  //TA EDIT
 
 /obj/item/clothing/head/roguetown/helmet/baotha_ta
 	name = "saccharine sallet"
@@ -339,4 +312,4 @@
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
 
-	#undef ARMOR_BAOTHA_LIGHT
+#undef ARMOR_BAOTHA_LIGHT

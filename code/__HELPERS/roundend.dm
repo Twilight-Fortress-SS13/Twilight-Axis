@@ -94,7 +94,8 @@
 	if(SSticker.current_state != GAME_STATE_FINISHED)
 		return
 	status_flags |= GODMODE
-	ai_controller?.set_ai_status(AI_STATUS_OFF)
+	if(istype(ai_controller, /datum/ai_controller))
+		ai_controller.set_ai_status(AI_STATUS_OFF)
 	if(client)
 		add_verb(client, /client/proc/lobbyooc)
 		add_verb(client, /client/proc/view_stats)

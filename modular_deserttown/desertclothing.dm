@@ -197,7 +197,7 @@
 
 //SHIRTS
 
-//Easternclothes 
+//Easternclothes
 /obj/item/clothing/suit/roguetown/shirt/dress/thawb
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
 	name = "thawb"
@@ -329,7 +329,7 @@
 
 /obj/item/clothing/head/roguetown/turban/brown
 	color = "#684f41"
-	
+
 /obj/item/clothing/head/roguetown/turban/dark
 	color = "#414141"
 
@@ -431,7 +431,7 @@
 	icon_state = "jafar"
 	item_state = "jafar"
 	dynamic_hair_suffix = "+generic"
-	flags_inv = HIDEEARS|HIDEHAIR	
+	flags_inv = HIDEEARS|HIDEHAIR
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HEAD
 //pants
 
@@ -518,7 +518,7 @@
 	slot_flags = ITEM_SLOT_CLOAK
 	sellprice = 50
 	nodismemsleeves = TRUE
-	
+
 /obj/item/clothing/cloak/raincloak/amir
 	name = "amir's cloak"
 	desc = "A silky red cloak as light as a feather, embroidened with gold patterns. Fit for a prince of Zybantine."
@@ -606,13 +606,12 @@
 /obj/item/storage/belt/rogue/leather/cloth/sash/random/Initialize()
 	color = pick(CLOTHING_BROWN, CLOTHING_RED, CLOTHING_ORANGE, CLOTHING_YELLOW, CLOTHING_WHITE, CLOTHING_PURPLE)
 	..()
-	
+
 /obj/item/storage/belt/rogue/leather/noblesash
 	name = "Zybantine noble sash"
 	icon = 'modular_deserttown/icons/clothing/belts.dmi'
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/belts.dmi'
 	icon_state = "noblesash"
-	sellprice = 5
 
 /datum/crafting_recipe/roguetown/sewing/zybnoblesash
 	name = "sash (zybantine noble)"
@@ -739,7 +738,7 @@
 	armor = ARMOR_LEATHER
 	max_integrity = 200			//Half that of iron boots
 
-	
+
 /obj/item/clothing/shoes/roguetown/boots/armor/shalal
 	name = "plated babouche"
 	desc = "Sturdy boots stitched together from cured leather. Stylish, firm, and sport a satisfying 'squeek' with each step."
@@ -761,4 +760,3 @@
 				/obj/item/natural/fibers = 1)
 	tools = list(/obj/item/needle)
 	craftdiff = 3
-	sellprice = 20

@@ -274,6 +274,36 @@
 
 	return entries
 
+/mob/living/carbon/human/proc/familytree_build_distant_relation_entries()
+	var/list/entries = list()
+	var/datum/family_member/checker_member = family_member_datum
+	if(!checker_member)
+		return entries
+	var/list/seen = list()
+	for(var/datum/heritage/house as anything in SSfamilytree.families)
+		if(!house || house == family_datum)
+			continue
+		for(var/datum/family_member/member as anything in house.members)
+			if(!member?.person || member == checker_member)
+				continue
+			if(member.cosmetic || member.phantom || seen[member.person])
+				continue
+			var/relation = checker_member.GetRelationshipTo(member)
+			if(!relation)
+				continue
+			seen[member.person] = TRUE
+			var/house_name = house.housename || "неизвестный дом"
+			var/is_dummy = istype(member.person, /mob/living/carbon/human/dummy)
+			entries += list(list(
+				"name" = member.person.real_name,
+				"label" = uppertext(relation),
+				"details" = list("Дом [house_name]"),
+				"accentColor" = family_datum?.GetRelationColor(relation),
+				"personRef" = is_dummy ? null : REF(member.person),
+				"descriptor" = null,
+			))
+	return entries
+
 /mob/living/carbon/human/proc/familytree_open_family_panel(panel_title = "My Family")
 	var/panel_subtitle = family_datum ? family_datum.GetDisplayHouseTitle() : ""
 	var/panel_empty_message = family_datum ? "No family members found." : "You're not part of any notable family."
@@ -287,6 +317,10 @@
 	var/list/bond_entries = familytree_build_bond_display_entries()
 	if(bond_entries.len)
 		panel.add_section("Current Bonds", bond_entries)
+
+	var/list/distant_entries = familytree_build_distant_relation_entries()
+	if(distant_entries.len)
+		panel.add_section("Дальние родственники", distant_entries)
 
 	if(family_datum)
 		panel.set_tree_data(SSfamilytree.get_display_tree_for(family_datum, src))

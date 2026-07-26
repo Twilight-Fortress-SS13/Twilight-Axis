@@ -14,6 +14,10 @@
 	altdetail_color = "#FFFFFF"
 	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL + 10
 
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle/grenzelhoft/Initialize()
+	. = ..()
+	update_icon()
+
 /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle/grenzelhoft/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
@@ -45,6 +49,10 @@
 	detail_color = "#262927"
 	altdetail_color = "#FFFFFF"
 	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL - ARMOR_INT_HELMET_HEAVY_ADJUSTABLE_PENALTY + 10
+
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/grenzelhoft/Initialize()
+	. = ..()
+	update_icon()
 
 /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/grenzelhoft/update_icon()
 	cut_overlays()

@@ -436,7 +436,6 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 	var/nearest_summary = familytree_relative_audit_text(H, nearest)
 	var/found_text = found_summary || "unknown"
 	var/message = "FAMILYTREE: [key_name(H)] joined house '[house_name]'. searched=[search_summary]; found=[found_text]; nearest_relative=[nearest_summary]"
-	log_admin(message)
 	ftlog(message, FTLOG_INFO)
 
 /datum/controller/subsystem/familytree/proc/is_job_of_type(datum/job/job, list/type_list)

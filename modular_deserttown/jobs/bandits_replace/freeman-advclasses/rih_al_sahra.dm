@@ -16,7 +16,7 @@
 	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_STEELHEARTED)
 	classes = list("Jannisary Deserter" = "Вы предали своего собственного Султана ради свободы своего народа. Вы были стрелком - и стрелком отличным.", "Desert Raider" = "Вы грабили караваны Султана ещё задолго до восстания шейхов, однако теперь у вас есть удачная возможность пограбить ещё - и за праведное дело, кто-же от такого отказывается?")
 	subclass_stats = list(
-		STATKEY_STR = 1, 
+		STATKEY_STR = 1,
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 3,
 		STATKEY_PER = 3,
@@ -51,7 +51,6 @@
 	if (!istype(H.patron, /datum/patron/inhumen/matthios))
 		to_chat(H, span_warning("Борясь за свободу народа - или грабя богачей - я неминуемо стал исповедовать Аль-Маттиоса."))
 		H.set_patron(/datum/patron/inhumen/matthios)
-	beltl = /obj/item/quiver/twilight_bullet/lead
 	neck = /obj/item/clothing/neck/roguetown/coif
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
@@ -60,10 +59,22 @@
 	var/classchoice = input(H, "Choose your archetypes", "Available archetypes") as anything in classes
 	switch(classchoice)
 		if("Jannisary Deserter")
-			ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)        
+			ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 			mask = /obj/item/clothing/mask/rogue/ragmask/red
 			cloak = /obj/item/clothing/cloak/dunestalker
-			backr = /obj/item/gun/ballistic/twilight_firearm/flintgonne
+			var/list/firearm_choices = list("Arquebus", "Handgonne")
+			var/firearm_choice = input(H, "Choose your firearm", "Available firearms") as anything in firearm_choices
+			if(firearm_choice == "Handgonne")
+				backr = /obj/item/gun/ballistic/twilight_firearm/handgonne
+				var/list/ammo_choices = list("Lead Cannonballs", "Grapeshot")
+				var/ammo_choice = input(H, "Choose your ammunition", "Available ammunition") as anything in ammo_choices
+				if(ammo_choice == "Grapeshot")
+					beltl = /obj/item/quiver/twilight_bullet/cannonball/grapeshot
+				else
+					beltl = /obj/item/quiver/twilight_bullet/cannonball/lead
+			else
+				backr = /obj/item/gun/ballistic/twilight_firearm/arquebus
+				beltl = /obj/item/quiver/twilight_bullet/lead
 			pants = /obj/item/clothing/under/roguetown/sirwal/brown
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/janissary
 			beltr = /obj/item/rogueweapon/sword/long/kriegmesser/zybantine
@@ -74,15 +85,15 @@
 			belt = /obj/item/storage/belt/rogue/leather/cloth/sash/brown
 			neck = /obj/item/clothing/neck/roguetown/gorget/steel
 			backpack_contents = list(
-				/obj/item/twilight_powderflask = 1, 
-				/obj/item/rogueweapon/huntingknife = 1, 
-				/obj/item/flint = 1, /obj/item/bedroll = 1, 
-				/obj/item/needle/thorn = 1, 
-				/obj/item/natural/cloth/bandage = 1, 
+				/obj/item/twilight_powderflask = 1,
+				/obj/item/rogueweapon/huntingknife = 1,
+				/obj/item/flint = 1, /obj/item/bedroll = 1,
+				/obj/item/needle/thorn = 1,
+				/obj/item/natural/cloth/bandage = 1,
 				/obj/item/flashlight/flare/torch = 1
 			)
 		if("Desert Raider")
-			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)        
+			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 			mask = /obj/item/clothing/mask/rogue/ragmask/red
 			armor = /obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/freeman
 			cloak = /obj/item/clothing/cloak/dunestalker
@@ -94,9 +105,9 @@
 			belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
 			head = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/raneshen
 			backpack_contents = list(
-				/obj/item/twilight_powderflask = 1,  
-				/obj/item/needle/thorn = 1, 
-				/obj/item/natural/cloth/bandage = 1, 
+				/obj/item/twilight_powderflask = 1,
+				/obj/item/needle/thorn = 1,
+				/obj/item/natural/cloth/bandage = 1,
 				/obj/item/flashlight/flare/torch = 1,
 				/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
 				/obj/item/rogueweapon/scabbard/sheath = 1

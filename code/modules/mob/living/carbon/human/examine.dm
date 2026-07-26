@@ -434,6 +434,9 @@
 	if(effect && HAS_TRAIT(user, TRAIT_INQUISITION))
 		. += "<A href='?src=[REF(src)];item=[effect.device]'><span class='warning'>[m3] \a [effect.device] implanted.</span></A>"
 
+	if(HAS_TRAIT(src, TRAIT_SILVER_BLESSED) && user.mind?.has_antag_datum(/datum/antagonist/vampire))
+		. += span_redtext("SILVER-BLOODED...")
+
 
 	var/showassess = FALSE
 	if(ishuman(user))
@@ -499,6 +502,7 @@
 //	if(length(rumour) || length(noble_gossip)) TA EDIT START
 //		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
 //			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>" TA EDIT END
+
 
 
 	//Gets encapsulated with a warning span

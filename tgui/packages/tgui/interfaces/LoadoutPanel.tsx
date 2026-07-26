@@ -424,9 +424,19 @@ export const LoadoutPanel = () => {
                             borderRadius: '8px',
                           }}
                           tooltip={
-                            `${item?.unavailable
-                              ? item?.unavailableReason || (item?.requiredTier ? `Недоступно. Требуется уровень: ${item.requiredTier}` : 'Недоступно.')
-                              : item?.name || 'Без названия'}`}
+                            item?.unavailable ? (
+                              <Box>
+                                <Box>{item?.name || 'Без названия'}</Box>
+                                <Box mt={0.5}>
+                                  {item?.requiredTier
+                                    ? `Требуется уровень мецената: ${item.requiredTier}.`
+                                    : item?.unavailableReason || 'Недоступно.'}
+                                </Box>
+                              </Box>
+                            ) : (
+                              item?.name || 'Без названия'
+                            )
+                          }
                           onClick={() => {
                             if (selectedSet.has(item?.name)) {
                               act('remove', { item: item?.name || item?.path });

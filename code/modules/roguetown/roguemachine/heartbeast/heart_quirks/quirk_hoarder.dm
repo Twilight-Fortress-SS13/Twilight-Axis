@@ -124,7 +124,7 @@
 		beast.heart_beast.visible_message(span_warning("[beast.heart_beast] seems to find the raw coin boring!"))
 		return FALSE
 
-	if(I.sellprice < value_current)
+	if(I.get_real_price() < value_current)
 		beast.heart_beast.visible_message(span_warning("[beast.heart_beast] seems unimpressed!"))
 		return FALSE
 

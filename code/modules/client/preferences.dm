@@ -132,6 +132,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	//Job preferences 2.0 - indexed by job title , no key or value implies never
 	var/list/job_preferences = list()
+	var/list/job_subclass_preferences = list() // TA EDIT START
+	var/list/job_subclass_strict = list() // TA EDIT END
 		// Want randomjob if preferences already filled - Donkie
 	var/joblessrole = RETURNTOLOBBY  //defaults to 1 for fewer assistants
 
@@ -183,8 +185,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/datum/migrant_pref/migrant
 	var/next_special_trait = null
-
-	var/action_buttons_screen_locs = list()
 
 	var/domhand = 2
 	var/nickname = "Please Change Me"
@@ -715,7 +715,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				dat += "<b>Race Bonus:</b> <a href='?_src_=prefs;preference=race_bonus_select;task=input'>[race_bonus_display ? "[race_bonus_display]" : "None"]</a><BR>"
 			else
 				race_bonus = null
-			
+
 			var/datum/language/selected_lang
 			var/lang_output = "None"
 			if(ispath(extra_language, /datum/language))
@@ -845,7 +845,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				if(istype(cf, /datum/charflaw/averse))
 					has_averse = TRUE
 					break
-			
+
 			if(has_averse)
 				if(!averse_chosen_faction)
 					averse_chosen_faction = "Inquisition"
@@ -1291,6 +1291,19 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					slot_text = "Slot [job_characters[job.title]]"
 				slot_button_html = " | <a href='?_src_=prefs;preference=job;task=set_job_slot;text=[rank]'><font color='gray'>\[[slot_text]\]</font></a>"
 
+			var/subclass_button_html = "" // TA EDIT START
+			if(length(job.job_subclasses))
+				var/selected_subclass = job_subclass_preferences[job.title]
+				var/subclass_star = "☆"
+				var/subclass_color = "gray"
+				var/subclass_tooltip = "Subclass: Any"
+				if(selected_subclass)
+					var/failure_text = job_subclass_strict[job.title] ? "Try Another Role, Otherwise Return to Lobby" : "Choose Another Subclass"
+					subclass_star = "★"
+					subclass_color = "#e3c06f"
+					subclass_tooltip = "Subclass: [selected_subclass] / [failure_text]"
+				subclass_button_html = " | <a href='?_src_=prefs;preference=job;task=set_job_subclass;text=[rank]' title='[subclass_tooltip]'><font color='[subclass_color]'>[subclass_star]</font></a>" // TA EDIT END
+
 			var/start_font = ""
 			var/end_font = ""
 			var/job_unavailable_status = JOB_AVAILABLE
@@ -1346,12 +1359,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			if(is_ineligible)
 				HTML += "<font color='#a56161'> (Ineligible) </font>"
 				HTML += slot_button_html
+				HTML += subclass_button_html // TA EDIT
 				HTML += "</td></tr>"
 				continue 
 
 
 			if(!(job_unavailable_status in acceptable_unavailables))
 				HTML += slot_button_html 
+				HTML += subclass_button_html // TA EDIT
 				HTML += "</td></tr>" 
 				continue
 
@@ -1366,6 +1381,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font></a>"
 			
 			HTML += slot_button_html 
+			HTML += subclass_button_html // TA EDIT
 			
 			HTML += "</td></tr>"
 
@@ -1439,7 +1455,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 /datum/preferences/proc/ResetJobs() 
 	job_preferences = list()
 	job_characters = list() //TA EDIT
+	job_subclass_preferences = list() // TA EDIT START
+	job_subclass_strict = list() // TA EDIT END
 	save_preferences()   //TA EDIT
+	save_character() // TA EDIT
 
 /datum/preferences/proc/ResetLastClass(mob/user)
 	if(user.client?.prefs)
@@ -1584,7 +1603,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 		dat += "<br><b>Crime:</b> "
 		dat += "<a href='?_src_=prefs;preference=preset_bounty_crime;task=input'>\
-			[preset_bounty_crime || "None"]\
+			[html_encode(preset_bounty_crime) || "None"]\
 		</a>"
 	if(preset_bounty_severity_key && !GLOB.wretch_severities[preset_bounty_severity_key])
 		preset_bounty_severity_key = null
@@ -1675,6 +1694,55 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					return 1
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
 			
+			if("set_job_subclass") // TA EDIT START
+				if(SSticker.job_change_locked)
+					return 1
+				var/job_title = href_list["text"]
+				var/datum/job/J = SSjob.GetJob(job_title)
+				if(!J || !length(J.job_subclasses))
+					return 1
+
+				var/list/valid_subclasses = list("No subclass preference")
+				var/datum/preferences/character_prefs = get_job_prefs(job_title)
+				for(var/subclass_path in J.job_subclasses)
+					var/datum/advclass/subclass_type = subclass_path
+					var/datum/advclass/subclass = SSrole_class_handler.get_advclass_by_name(initial(subclass_type.name))
+					if(!subclass)
+						continue
+					if(!subclass.check_preferences_requirements(character_prefs, user.client, FALSE, FALSE))
+						continue
+					valid_subclasses += subclass.name
+
+				var/current_subclass = job_subclass_preferences[job_title]
+				var/default_subclass = "No subclass preference"
+				if(current_subclass && (current_subclass in valid_subclasses))
+					default_subclass = current_subclass
+				var/selected_subclass = tgui_input_list(user, "Choose a preferred subclass for [job_title]:", "Subclass Preference", valid_subclasses, default_subclass)
+				if(!selected_subclass)
+					SetChoices(user)
+					return 1
+
+				if(selected_subclass == "No subclass preference")
+					job_subclass_preferences -= job_title
+					job_subclass_strict -= job_title
+				else
+					var/list/failure_modes = list(
+						"Try another role, otherwise return to lobby",
+						"Let me choose another subclass"
+					)
+					var/default_failure_mode = job_subclass_strict[job_title] ? failure_modes[1] : failure_modes[2]
+					var/failure_choice = tgui_input_list(user, "What should happen if [selected_subclass] is unavailable?", "Subclass Preference", failure_modes, default_failure_mode)
+					if(!failure_choice)
+						SetChoices(user)
+						return 1
+					job_subclass_preferences[job_title] = selected_subclass
+					if(failure_choice == failure_modes[1])
+						job_subclass_strict[job_title] = TRUE
+					else
+						job_subclass_strict -= job_title
+
+				save_character()
+				SetChoices(user) // TA EDIT END
 			if("set_job_slot") //TA EDIT START
 				if(SSticker.job_change_locked)
 					return 1
@@ -2010,7 +2078,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						else
 							to_chat(user, "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,.</font>")
 
-	
+
 				if("nickname")
 					var/new_name = tgui_input_text(user, "Choose your character's nickname (For Highlighting):", "NICKNAME",  encode = FALSE)
 					if(new_name)
@@ -2178,9 +2246,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					var/faith_input = tgui_input_list(user, "The world rots. Which truth you bear?", "FAITH", faiths_named)
 					if(faith_input)
 						var/datum/faith/faith = faiths_named[faith_input]
-						to_chat(user, "<font color='yellow'>Вера: [faith.translated_name]</font>") //	TA EDIT
-						to_chat(user, "Описание: [faith.desc]") //										TA EDIT
-						to_chat(user, "<font color='red'>Последователи: [faith.worshippers]</font>") //	TA EDIT
+						var/pantheon_info = "[faith.desc]<br><br>"
+						pantheon_info += span_redtext("Последователи: " + faith.worshippers)
+						var/pantheon_fieldsetblock = fieldset_block(span_big("<b>[span_bignotice(faith.translated_name)]</b>"), pantheon_info, "faithdesc_block")
+						to_chat(user, pantheon_fieldsetblock)
 						selected_patron = GLOB.patronlist[faith.godhead] || GLOB.patronlist[pick(GLOB.patrons_by_faith[faith_input])]
 
 				if("patron")
@@ -2193,10 +2262,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					var/god_input = tgui_input_list(user, "The first amongst many.", "PATRON", patrons_named)
 					if(god_input)
 						selected_patron = patrons_named[god_input]
-						to_chat(user, "<font color='yellow'>Покровитель: [selected_patron.translated_name]</font>") //	TA EDIT
-						to_chat(user, "<font color='#FFA500'>Домены: [selected_patron.domain]</font>") //				TA EDIT
-						to_chat(user, "Описание: [selected_patron.desc]") //											TA EDIT
-						to_chat(user, "<font color='red'>Последователи: [selected_patron.worshippers]</font>") //		TA EDIT
+						var/patron_info = ""
+						patron_info += span_honeyyellow("Домены: [selected_patron.domain]<br><br>")
+						patron_info += "[selected_patron.desc]<br><br>"
+						patron_info += span_redtext("Последователи: [selected_patron.worshippers]")
+						var/patron_fieldsetblock = fieldset_block(span_big("<b>[span_bignotice(selected_patron.translated_name)]</b>"), patron_info, "patrondesc_block")
+						to_chat(user, patron_fieldsetblock)
 
 				if("combat_music") // if u change shit here look at /client/verb/combat_music() too
 					select_combat_music(user) // TA EDIT
@@ -3458,7 +3529,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link	
 
 	character.erpprefs = erpprefs
-	
+
 	// Copy the cached version
 	character.flavortext_cached = flavortext_cached
 	character.ooc_notes_cached = ooc_notes_cached

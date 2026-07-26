@@ -38,6 +38,9 @@
 	var/tmp/familytree_opted_out = FALSE
 	var/tmp/familytree_setspouse_timeout_offered = FALSE
 	var/tmp/familytree_setspouse_retries = 0
+	var/tmp/familytree_setspouse_wait_started = 0
+	var/tmp/familytree_consecutive_match_failures = 0
+	var/tmp/familytree_confirm_timerid
 	var/allow_relatives_in_family = TRUE
 	var/know_your_fate = FALSE
 	var/familytree_father_name = ""
@@ -227,7 +230,10 @@
 	if(!istext(setspouse))
 		setspouse = ""
 	else
-		setspouse = copytext(setspouse, 1, 65)
+		setspouse = replacetext(setspouse, "\"", "")
+		setspouse = replacetext(setspouse, "\n", " ")
+		setspouse = replacetext(setspouse, ascii2text(13), " ")
+		setspouse = trim(copytext(setspouse, 1, 65))
 
 	polygamy_mode = sanitize_integer(polygamy_mode, POLYGAMY_DISABLED, POLYGAMY_ALLOW_BOTH, POLYGAMY_DISABLED)
 	desired_relative_role = sanitize_integer(desired_relative_role, RELATIVE_ANY, RELATIVE_SPOUSE, RELATIVE_ANY)
