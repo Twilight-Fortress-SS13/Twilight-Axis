@@ -1042,6 +1042,16 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Аксессуары"
 	path = /obj/item/clothing/head/roguetown/dendormask
 
+/datum/loadout_item/tutorialbook
+	name = "A Tutorialeer's Handbook"
+	category = "Аксессуары"
+	path = /obj/item/recipe_book/survival
+
+/datum/loadout_item/ball
+	name = "Ball"
+	category = "Аксессуары"
+	path = /obj/item/ball
+
 /datum/loadout_item/eorahood
 	name = "Opera Mask - Eoran Hood"
 	category = list("Аксессуары", "Донат")
@@ -1882,6 +1892,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/weapon/euthanasia
 	donatitem = TRUE
 
+
 /*
 /datum/loadout_item/donator_zydrasiconocrown
 	name = "Donator Kit - Iconoclast Crown - Required: Barred Helmet(Only men, no small races)"
@@ -2666,11 +2677,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/cloak/cape/blkknight
 	donatitem = TRUE
 
-/datum/loadout_item/donat/furcloak
-	name = "Меховой плащ"
+/datum/loadout_item/donator/longest_night
+	name = "Donator Item - Longest Night Cloak"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/raincloak/furcloak
+	path = /obj/item/clothing/cloak/longest_night
 	donatitem = TRUE
+	donat_tier = 2
 
 /datum/loadout_item/donat/snowcloak
 	name = "Снежный плащ"

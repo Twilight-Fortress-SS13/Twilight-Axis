@@ -1683,7 +1683,7 @@
 	name = "porcelain amulet"
 	icon_state = "amulet_porcelain"
 	desc = "A dainty amulet made out of fine porcelain, donnable on both the neck and wrist."
-	sellprice = 15
+	toggle_icon_state = FALSE
 
 /obj/item/clothing/neck/roguetown/collar/prisoner
 	name = "castifico collar"

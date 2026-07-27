@@ -7,7 +7,7 @@
 //	where you would want the updater procs below to run
 
 //	This also works with decimals.
-#define SAVEFILE_VERSION_MAX	33.9
+#define SAVEFILE_VERSION_MAX	36
 
 /*
 SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Carn
@@ -95,6 +95,24 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 						species_name = "Venardine"
 		_load_species(S, species_name)
+	if(current_version < 35) // Migrate old 3-slot loadout to selected_loadout_items
+		var/list/saved_selected_loadout_items
+		S["selected_loadout_items"] >> saved_selected_loadout_items
+		if(!islist(saved_selected_loadout_items))
+			selected_loadout_items = list()
+			var/list/old_keys = list("loadout", "loadout2", "loadout3")
+			for(var/old_key in old_keys)
+				var/loadout_type
+				S[old_key] >> loadout_type
+				if(!loadout_type || !ispath(loadout_type))
+					continue
+				var/datum/loadout_item/LI = GLOB.loadout_items[loadout_type]
+				if(!LI || LI.name == "Parent loadout datum")
+					continue
+				if(!(LI.name in selected_loadout_items))
+					selected_loadout_items.Add(LI.name)
+	if(current_version < 36) // Strip the old per-item favorite/hated food & drink data now that preferences are category flags
+		S.dir.Remove("culinary_preferences")
 
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)
@@ -456,13 +474,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		WRITE_FILE(S["charflaws"], cleaned_types)
 
 /datum/preferences/proc/_load_culinary_preferences(S)
-	var/list/loaded_culinary_preferences
-	S["culinary_preferences"] >> loaded_culinary_preferences
-	if(loaded_culinary_preferences)
-		culinary_preferences = loaded_culinary_preferences
-		validate_culinary_preferences()
-	else
-		reset_culinary_preferences()
+	S["favorite_cuisine"] >> favorite_cuisine
+	S["favorite_dish"] >> favorite_dish
+	S["favorite_drink"] >> favorite_drink
+	sanitize_culinary_preferences()
 
 /datum/preferences/proc/_load_statpack(S)
 	var/statpack_type
@@ -1072,7 +1087,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["highlight_color"]		, highlight_color)
 	WRITE_FILE(S["taur_type"]			, taur_type)
 	WRITE_FILE(S["taur_color"]			, taur_color)
-	WRITE_FILE(S["culinary_preferences"], culinary_preferences)
+	WRITE_FILE(S["favorite_cuisine"]	, favorite_cuisine)
+	WRITE_FILE(S["favorite_dish"]		, favorite_dish)
+	WRITE_FILE(S["favorite_drink"]		, favorite_drink)
 	WRITE_FILE(S["topjob"]				, topjob)
 
 	//Custom names

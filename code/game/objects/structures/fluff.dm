@@ -1551,7 +1551,6 @@
 	var/obj/item/grown/log/tree/stake/stake
 	var/obj/item/bodypart/head/victim
 
-
 /obj/structure/fluff/headstake/CheckParts(list/parts_list)
 	..()
 	victim = locate(/obj/item/bodypart/head) in parts_list
@@ -1583,6 +1582,13 @@
 	if(.)
 		return
 	to_chat(user, span_notice("I take down [src]."))
+	victim.forceMove(drop_location())
+	victim = null
+	stake.forceMove(drop_location())
+	stake = null
+	qdel(src)
+
+/obj/structure/fluff/headstake/deconstruct()
 	victim.forceMove(drop_location())
 	victim = null
 	stake.forceMove(drop_location())

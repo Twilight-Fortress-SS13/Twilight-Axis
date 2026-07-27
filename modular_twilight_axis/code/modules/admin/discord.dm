@@ -363,6 +363,50 @@
 		admin_bans_channel2,
 	)
 
+/world/proc/TgsAnnounceBanEdit(player_ckey, admin_ckey, list/changes)
+	if(!TgsAvailable() || !length(changes))
+		return
+
+	var/admin_bans_channel = CONFIG_GET(string/admin_bans_channel)
+	var/admin_bans_channel2 = CONFIG_GET(string/admin_bans_channel2)
+
+	if(!admin_bans_channel && !admin_bans_channel2)
+		return
+
+	var/list/change_names = list(
+		"Key" = "Ключ",
+		"IP" = "IP",
+		"CID" = "CID",
+		"Applies to admins" = "Применение к администраторам",
+		"Duration" = "Срок",
+		"Reason" = "Причина",
+	)
+	var/list/change_lines = list()
+	for(var/change_key in changes)
+		var/change_name = change_names[change_key]
+		if(!change_name)
+			change_name = change_key
+		var/change_value = replacetext("[changes[change_key]]", "<br>", "\n")
+		change_lines += "**[change_name]:**\n[change_value]"
+
+	var/full_text = "**Игрок:** `[player_ckey]`\n**Администратор:** `[admin_ckey]`\n\n[change_lines.Join("\n\n")]"
+	var/list/chunks = split_discord_log_text(full_text)
+	for(var/index in 1 to chunks.len)
+		var/datum/tgs_chat_embed/structure/embed = new()
+		if(index == 1)
+			embed.title = "Изменение бана"
+		embed.description = chunks[index]
+		embed.colour = "#f5a97f"
+		if(index == chunks.len)
+			embed.footer = create_discord_embed_footer()
+
+		var/datum/tgs_message_content/message = new("")
+		message.embed = embed
+		if(admin_bans_channel)
+			send2chat(message, admin_bans_channel)
+		if(admin_bans_channel2)
+			send2chat(message, admin_bans_channel2)
+
 /world/proc/TgsAnnounceAdminMessageDeletion(admin_ckey, target_key, type, text)
 	if(!TgsAvailable())
 		return
