@@ -225,7 +225,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_BODYBUILDER_SKIN = TAT_TRAIT_ENTRY("Bodybuilder Skin", 2, "Resident only. Starts you with pit-hardened regenerating skin equipped in the armor slot. Does not require Enduring. Conflicts with other skin traits."), \
 	TAT_TRAIT_SAVAGE_RAGE = TAT_TRAIT_ENTRY("Savage Rage", 1, "Requires Savage Skin. Grants the Rage ability."), \
 	TAT_TRAIT_BERSERKER_RAGE = TAT_TRAIT_ENTRY("Berserkers Rage", 2, "Requires Savage Skin and Heretic. Grants the Berserkers Rage ability."), \
-	TRAIT_CRITICAL_RESISTANCE = TAT_TRAIT_ENTRY("Critical Resistance", 2, "Your constitution is iron-clad. You can resist the first critical wounds that would fell others, though repeated punishment will overwhelm you."), \
+	TRAIT_CRITICAL_RESISTANCE = TAT_TRAIT_ENTRY("Critical Resistance", 3, "Your constitution is iron-clad. You can resist the first critical wounds that would fell others, though repeated punishment will overwhelm you."), \
 	TRAIT_HARDDISMEMBER = TAT_TRAIT_ENTRY("Hard Dismemberment", 2, "Your limbs are harder to dismember."), \
 	TRAIT_STEELHEARTED = TAT_TRAIT_ENTRY("Steelhearted", 1, "Hardened nerves. You do not waiver from the sight of violence in battle."), \
 	TRAIT_OUTDOORSMAN = TAT_TRAIT_ENTRY("Outdoorsman", 3, "Experience in the wilds lets you sleep on surfaces like treebranches as if they were beds. Costs 1 Survival point for Residents."), \
