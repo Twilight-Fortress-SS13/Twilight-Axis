@@ -233,6 +233,30 @@
 	_cached_active_virtues_key = cache_key
 	return result
 
+/datum/tat_build/proc/suppresses_arcyne_potential()
+	if(!traits?.has_trait(TAT_TRAIT_DIVINE_BOON_3))
+		return FALSE
+	for(var/datum/virtue/combat/magical_potential/virtue as anything in get_active_virtues())
+		return TRUE
+	return FALSE
+
+/datum/tat_build/proc/suppress_arcyne_potential_effects(mob/living/carbon/human/H)
+	if(!H || !suppresses_arcyne_potential())
+		return FALSE
+
+	var/arcane_level = skills?.get_total_value(/datum/skill/magic/arcane) || 0
+	H.adjust_skillrank_down_to(/datum/skill/magic/arcane, arcane_level, TRUE)
+	H.mind?.RemoveSpell(/datum/action/cooldown/spell/touch/prestidigitation)
+
+	// Mage packages replace the virtue's aspect configuration. Otherwise undo its three utility picks.
+	if(!get_magic_value("mage_aspects"))
+		if(islist(H.mind?.mage_aspect_config))
+			H.mind.mage_aspect_config["utilities"] = max(0, (H.mind.mage_aspect_config["utilities"] || 0) - 3)
+			H.mind.check_learnspell()
+		REMOVE_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)
+
+	return TRUE
+
 /datum/tat_build/proc/invalidate_active_virtues_cache()
 	_cached_active_virtues = null
 	_cached_active_virtues_key = null
@@ -729,6 +753,7 @@
 	traits.apply_deferred_to_human(H)
 	stats.apply_to_human(H)
 	skills.apply_to_human(H)
+	suppress_arcyne_potential_effects(H)
 
 	return TRUE
 

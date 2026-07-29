@@ -332,12 +332,20 @@
 	var/list/virtues = owner_build?.get_active_virtues()
 	if(!length(virtues))
 		return 0
+	if(skill_type == /datum/skill/magic/arcane && owner_build?.suppresses_arcyne_potential())
+		virtues = virtues.Copy()
+		for(var/datum/virtue/combat/magical_potential/virtue as anything in virtues)
+			virtues -= virtue
 	return add_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_bonus_rules, virtues) + add_virtue_choice_rule_value(skill_type, GLOB.tat_virtue_choice_skill_bonus_rules, virtues)
 
 /datum/tat_skills/proc/get_virtue_skill_cap_bonus(skill_type)
 	var/list/virtues = owner_build?.get_active_virtues()
 	if(!length(virtues))
 		return 0
+	if(skill_type == /datum/skill/magic/arcane && owner_build?.suppresses_arcyne_potential())
+		virtues = virtues.Copy()
+		for(var/datum/virtue/combat/magical_potential/virtue as anything in virtues)
+			virtues -= virtue
 	return add_virtue_rule_value(skill_type, GLOB.tat_virtue_skill_cap_bonus_rules, virtues) + add_virtue_choice_rule_value(skill_type, GLOB.tat_virtue_choice_skill_cap_bonus_rules, virtues)
 
 /datum/tat_skills/proc/get_virtue_skill_floor(skill_type)

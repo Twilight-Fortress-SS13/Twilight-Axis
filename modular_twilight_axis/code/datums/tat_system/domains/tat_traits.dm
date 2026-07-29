@@ -830,7 +830,11 @@
 		if(/datum/patron/divine/xylix)
 			H.grant_language(/datum/language/tricksterscant)
 		if(/datum/patron/inhumen/zizo)
-			H.grant_language(/datum/language/undead)
+			if(cleric_tier >= CLERIC_T2)
+				H.grant_language(/datum/language/undead)
+			else
+				// Patron.on_gain grants this at conversion; TAT keeps it gated behind T2 miracles.
+				H.remove_language(/datum/language/undead)
 	if(H.patron?.type == /datum/patron/inhumen/zizo && cleric_tier >= CLERIC_T2)
 		owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/minion_order)
 		owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/gravemark)
