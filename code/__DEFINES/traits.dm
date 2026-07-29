@@ -366,6 +366,7 @@
 #define TRAIT_ZIZOEYES "Zizo eyes"
 #define TRAIT_NOC_LIGHT_BLESSING "Noc Blessing"
 #define TRAIT_OUTLANDER "Outlander"
+#define TRAIT_CONCEALMENT_EXPERT "Concealment Expert"
 #define TRAIT_VOLF "Volf"
 #define TRAIT_SHAKY_SPEECH "Shaky Speech"
 #define TRAIT_NO_RUNECHAT_ANIMATION "No Runechat Animation"
@@ -672,7 +673,8 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_ARTILLERY_EXPERT = span_greentext("Я ранее обращался с артиллерией и разбираюсь в тонкостях её наводки."),
 	TRAIT_ZIZOEYES = span_notice("You no longer fear a veil of the darkness, yet your eyes are glimmering lights in it.."),
 	TRAIT_NOC_LIGHT_BLESSING = span_notice("Нок благославила меня на существование под её светом."),
-	TRAIT_OUTLANDER = span_info("The locals see me as not of their land.")
+	TRAIT_OUTLANDER = span_info("The locals see me as not of their land."),
+	TRAIT_CONCEALMENT_EXPERT = span_info("My experience in ambush tactics allow me to confuse the enemy in close combat, making it harder for them to land a hit against me. The better is my Perception and Sneaking skills, the more efficient my Concealment is.")
 ))
 
 // trait accessor defines

@@ -8,7 +8,7 @@
 	subclass_languages = list(/datum/language/otavan)
 	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
 	traits_applied = list(
-		TRAIT_DODGEEXPERT,
+		TRAIT_CONCEALMENT_EXPERT, //TA EDIT
 		TRAIT_BLACKBAGGER,
 		TRAIT_PERFECT_TRACKER,
 		TRAIT_PSYDONITE,
@@ -41,7 +41,7 @@
 	subclass_stashed_items = list(
 		"The Book" = /obj/item/book/rogue/bibble/psy
 	)
-	extra_context = "This subclass can choose between two Disciplines; the Confessor and Arbalist. Taking the latter will provide Master skills for their ranged weapon and a minor increase to all physical stats, but imparts a heavy Speed malus and removes the 'Dodge Expert' trait."
+	extra_context = "This subclass can choose between two Disciplines; the Confessor and Arbalist. Taking the latter will provide Master skills for their ranged weapon and a minor increase to all physical stats, but imparts a heavy Speed malus and removes the 'Concealment Expert' trait." //TA EDIT
 
 /datum/outfit/job/roguetown/confessor
 	job_bitflag = BITFLAG_HOLY_WARRIOR
@@ -80,7 +80,7 @@
 				head = /obj/item/clothing/head/roguetown/headband/bloodied
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon
 				shirt = /obj/item/clothing/suit/roguetown/armor/manual/sewable/confessor
-				REMOVE_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
+				REMOVE_TRAIT(H, TRAIT_CONCEALMENT_EXPERT, TRAIT_GENERIC) //TA EDIT
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/misc/swimming, 4, TRUE)
 				H.change_stat(STATKEY_CON, 1)

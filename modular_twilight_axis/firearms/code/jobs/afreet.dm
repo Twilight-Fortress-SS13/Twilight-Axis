@@ -7,7 +7,7 @@
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_corsair.ogg'
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/grenzelhoftian)
-	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
+	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_STEELHEARTED)
 	classes = list("Jäger Deserter" = "Ex-soldier with handgonne, excellent survival skills and axe to chop some wood and heads", "Veteran" = "Long ago you were a soldier...or pretend to be. Now you are a man from the road with your trusty pistol and dagger")
 	subclass_stats = list(
 		STATKEY_STR = 1,
@@ -88,6 +88,7 @@
 				/obj/item/flashlight/flare/torch = 1
 			)
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, 4, TRUE)
+			ADD_TRAIT(H, TRAIT_CONCEALMENT_EXPERT, TRAIT_GENERIC)
 		if("Veteran")
 			mask = /obj/item/clothing/mask/rogue/ragmask/red
 			armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
@@ -108,3 +109,4 @@
 			)
 			H.adjust_skillrank_up_to(/datum/skill/combat/knives, 4, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, 1, TRUE)
+			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
