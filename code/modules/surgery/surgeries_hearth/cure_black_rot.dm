@@ -9,7 +9,10 @@
 		/datum/surgery_step/cauterize
 	)
 	target_mobtypes = list(/mob/living/carbon/human)
-	possible_locs = list(BODY_ZONE_CHEST)
+	possible_locs = list(
+		BODY_ZONE_HEAD, // TA EDIT
+		BODY_ZONE_CHEST,
+	)
 
 /datum/surgery_step/extract_black_rose_residue
 	name = "Excise black rot"

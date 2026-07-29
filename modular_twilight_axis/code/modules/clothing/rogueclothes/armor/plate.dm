@@ -107,8 +107,6 @@
 	smelt_bar_num = 2
 	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
 
-#define ARMOR_BAOTHA_LIGHT list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "acid" = DR_NONE, "bullet" = DR_HEAVY)  //TA EDIT
-
 /obj/item/clothing/head/roguetown/helmet/baotha_ta
 	name = "saccharine sallet"
 	desc = "Lo', the twins of beauty; Eora and Belladoth, they sought a prize which but one may have.."
@@ -131,7 +129,7 @@
 	desc = "And yet, their methods differed; Belladoth proposed with Her lust and temptation, Eora with Her love and warmth.."
 	icon_state = "baothacoif"
 	item_state = "baothacoif"
-	armor = ARMOR_BAOTHA_LIGHT
+	armor = ARMOR_MAILLE
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 150
 	body_parts_covered = NECK | HAIR | EARS | HEAD | NOSE
 	armor_class = ARMOR_CLASS_LIGHT
@@ -219,7 +217,7 @@
 	desc = "A betrayal without compare, and a sin without redemption; or so, She believed.."
 	icon_state = "baothabracers"
 	chunkcolor = "#6d1c87"
-	armor = ARMOR_BAOTHA_LIGHT
+	armor = ARMOR_MAILLE
 	resistance_flags = FIRE_PROOF
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 150
 	smeltresult = /obj/item/ingot/component/baotha
@@ -241,7 +239,7 @@
 /obj/item/clothing/under/roguetown/skirt/baotha_ta
 	name = "saccharine fauldcoat"
 	desc = "Only did Belladona's haze clear, once She heard Eora's gasps and Ravox's fright; what else could She've done besides fleeing the heavens?"
-	armor = ARMOR_BAOTHA_LIGHT
+	armor = ARMOR_MAILLE
 	icon_state = "baothaskirt"
 	chunkcolor = "#6d1c87"
 	resistance_flags = FIRE_PROOF
@@ -298,6 +296,11 @@
 	armor_class = ARMOR_CLASS_LIGHT
 	smeltresult = /obj/item/ingot/component/baotha
 
+/obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
+	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "BOOTS")
@@ -311,5 +314,3 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
-
-#undef ARMOR_BAOTHA_LIGHT

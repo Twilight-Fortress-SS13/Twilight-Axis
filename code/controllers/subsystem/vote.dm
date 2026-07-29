@@ -38,6 +38,7 @@ SUBSYSTEM_DEF(vote)
 
 /datum/controller/subsystem/vote/fire()	//called by master_controller
 	if(mode)
+		remove_ineligible_votes()
 		var/vote_period = custom_vote_period || CONFIG_GET(number/vote_period)
 		time_remaining = round((started_time + vote_period - world.time)/10)
 
@@ -53,6 +54,7 @@ SUBSYSTEM_DEF(vote)
 /datum/controller/subsystem/vote/proc/end_vote()
 	if(!mode)
 		return
+	remove_ineligible_votes()
 	result()
 	for(var/client/C in voting)
 		C << browse(null, "window=vote;can_close=0;size=[vote_width]x[vote_height]")
@@ -645,6 +647,14 @@ SUBSYSTEM_DEF(vote)
 	if(mode == "storyteller")
 		save_storyteller_vote_log(null, "active")
 	return TRUE
+
+/datum/controller/subsystem/vote/proc/remove_ineligible_votes()
+	if(!(mode in ready_required_modes))
+		return
+	for(var/voter_ckey in voted.Copy())
+		var/client/C = GLOB.directory[voter_ckey]
+		if(C && !can_client_vote(C))
+			remove_vote_for_ckey(voter_ckey)
 
 /datum/controller/subsystem/vote/proc/submit_vote(vote)
 	// Voting where vote power is equal for all

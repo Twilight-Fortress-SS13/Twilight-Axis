@@ -2,6 +2,7 @@
 	mid_length = 2400 // 4 minutes for some reason. better would be each song having a specific length
 	volume = 100
 	extra_range = 5
+	blocked_z_levels = list(1)
 	persistent_loop = TRUE
 	var/stress2give = /datum/stressevent/music
 	sound_group = /datum/sound_group/instruments //reserves sound channels for up to 10 instruments at a time

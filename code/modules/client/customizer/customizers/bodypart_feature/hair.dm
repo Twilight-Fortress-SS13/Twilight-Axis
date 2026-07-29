@@ -1701,6 +1701,7 @@
 		/datum/sprite_accessory/hair/head/strand,
 		/datum/sprite_accessory/hair/head/sodden,
 		/datum/sprite_accessory/hair/head/lizbeth,
+		/datum/sprite_accessory/hair/head/skunky,
 
 		//TA Hairs
 		/datum/sprite_accessory/hair/head/ta/dreadlocks_accurate,

@@ -103,6 +103,8 @@
 							'sound/music/cmode/antag/combat_dying_world_instrumental.ogg' = 3) // 1/4 is good odds for 1/round tho
 	W.cmode_music = pickweight(dying_world)
 	W.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/werewolf_skin(W)
+	// Equip without checking if we can equip, since it is forced.
+	W.wear_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/werewolf_skin/extremities(W)
 	playsound(W.loc, pick('sound/combat/gib (1).ogg','sound/combat/gib (2).ogg'), 200, FALSE, 3)
 	W.spawn_gibs(FALSE)
 	src.forceMove(W)

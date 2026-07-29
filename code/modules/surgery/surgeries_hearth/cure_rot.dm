@@ -6,8 +6,10 @@
 		/datum/surgery_step/cauterize
 	)
 	target_mobtypes = list(/mob/living/carbon/human)
-	possible_locs = list(BODY_ZONE_CHEST)
-
+	possible_locs = list(
+		BODY_ZONE_HEAD, // TA EDIT
+		BODY_ZONE_CHEST,
+	)
 /datum/surgery_step/burn_rot
 	name = "burn rot"
 	implements = list(
@@ -46,7 +48,7 @@
 			target.death()	//Kills the target if they are a zombie as a fail-safe.
 			var/datum/component/rot/rot = target.GetComponent(/datum/component/rot)
 			if(rot && rot.amount && rot.amount >= 5 MINUTES)	//Fail-safe to make sure the dead person has at least rotted for ~5 min.
-				stinky = TRUE				
+				stinky = TRUE
 
 	if(remove_rot(target = target, user = user, method = "surgery", damage = burndam,
 		success_message = "You burn away the rot inside of [target].",

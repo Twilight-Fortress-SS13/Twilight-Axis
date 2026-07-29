@@ -120,19 +120,25 @@
 	if(item_flags & IN_STORAGE)
 		return
 	var/mob/living/carbon/human/H = user
-	switch(amount)
-		if(2)
-			var/obj/F = new stacktype(src.loc)
-			var/obj/I = new stacktype(src.loc)
-			H.put_in_hands(F)
-			H.put_in_hands(I)
-			qdel(src)
-			return
-		else
-			amount -= 1
-			var/obj/F = new stacktype(src.loc)
-			H.put_in_hands(F)
-			user.visible_message("[user] removes [F] from [src].", "I remove [F] from [src].")
+	if(amount <= 0) // TA EDIT START
+		qdel(src)
+		return
+	if(amount == 1)
+		var/obj/F = new stacktype(src.loc)
+		H.put_in_hands(F)
+		qdel(src)
+		return
+	if(amount == 2)
+		var/obj/F = new stacktype(src.loc)
+		var/obj/I = new stacktype(src.loc)
+		H.put_in_hands(F)
+		H.put_in_hands(I)
+		qdel(src)
+		return
+	amount -= 1
+	var/obj/F = new stacktype(src.loc)
+	H.put_in_hands(F)
+	user.visible_message("[user] removes [F] from [src].", "I remove [F] from [src].") // TA EDIT END
 	update_bundle()
 
 /obj/item/natural/bundle/attack_turf(turf/T, mob/living/user)

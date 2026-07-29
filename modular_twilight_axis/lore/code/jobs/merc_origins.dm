@@ -79,6 +79,9 @@
 /datum/advclass/mercenary/routier
 	origin_limits = list(/datum/virtue/origin/otava)
 
+/datum/advclass/mercenary/twilight_gunslinger
+	origin_limits = list(/datum/virtue/origin/otava)
+
 /datum/advclass/mercenary/rumaclan
 	origin_limits = list(/datum/virtue/origin/kazengun)
 

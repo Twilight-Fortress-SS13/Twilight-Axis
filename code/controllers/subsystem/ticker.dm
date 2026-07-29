@@ -1,6 +1,5 @@
 #define ROUND_START_MUSIC_LIST "strings/round_start_sounds.txt"
 
-
 GLOBAL_VAR_INIT(round_timer, INITIAL_ROUND_TIMER)
 
 SUBSYSTEM_DEF(ticker)
