@@ -723,13 +723,16 @@
 
 		if(InCritical())
 			msg += span_warning("[m1] barely conscious.")
-		else
-			if(stat >= UNCONSCIOUS)
-				msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"].[client && ((world.time - disconnected_at) > 120 SECONDS) ? "" : " <b>[m1] won't be able to wake up soon. [m1] been like this for about [ceil(((world.time - disconnected_at)/10)/60)] minutes.</b>"]"
-			else if(eyesclosed)
-				msg += "[capitalize(m2)] eyes are closed."
-			else if(has_status_effect(/datum/status_effect/debuff/sleepytime))
-				msg += "[m1] looking a little tired."
+		else if(stat >= UNCONSCIOUS)
+			msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"]."
+		else if(eyesclosed)
+			msg += "[capitalize(m2)] eyes are closed."
+		else if(has_status_effect(/datum/status_effect/debuff/sleepytime))
+			msg += "[m1] looking a little tired."
+
+		if(key && !client && disconnected_at)
+			var/disconnected_minutes = max(0, ceil((world.time - disconnected_at) / (1 MINUTES)))
+			msg += "<b>[m1] won't be able to wake up soon. [m1] been like this for about [disconnected_minutes] minute[disconnected_minutes == 1 ? "" : "s"].</b>"
 	else
 		msg += "[m1] unconscious."
 //		else

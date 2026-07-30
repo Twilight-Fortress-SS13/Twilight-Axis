@@ -162,10 +162,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/donor_examine_icon = TRUE // TA EDIT
 	var/masked_examine = FALSE
 	var/nsfw_examine_always = FALSE // TA EDIT
-	var/full_examine = FALSE
+	var/full_examine = TRUE
 	var/mute_animal_emotes = FALSE
 	var/autoconsume = FALSE
-	var/no_examine_blocks = TRUE
+	var/no_examine_blocks = FALSE
 	var/no_autopunctuate = FALSE
 	var/no_language_fonts = FALSE
 	var/no_language_icon = FALSE
@@ -1698,6 +1698,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				if(SSticker.job_change_locked)
 					return 1
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
+
+
 			if("set_job_subclass") // TA EDIT START
 				if(SSticker.job_change_locked)
 					return 1

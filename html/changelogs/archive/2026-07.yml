@@ -1835,6 +1835,11 @@
   - rscdel: Removed Artificer Armor from standing order and added some proper categorizations
       to some artificers items for display / market purpose
 2026-07-28:
+  Antoonij:
+  - code_imp: "\u0437\u0430\u0431\u044B\u0432\u0430\u0439\u043A\u0430 \u0432\u0430\
+      \u043C\u043F\u0438\u0440\u043E\u0432 \u0437\u0430\u043C\u0435\u043D\u0435\u043D\
+      \u0430 \u043D\u0430 \u0430\u043D\u0441\u0438\u043D \u043F\u0440\u0435\u0437\u0435\
+      \u043D\u0441++"
   FreeStylaLT:
   - rscadd: Added Fencing Breeches to the Donator Regional Loadout.
   - bugfix: Fixed fencing gloves in the Donator Regional Loadout not giving out the
@@ -1873,15 +1878,6 @@
       master medicine down to expert
   - balance: Expert Physicker option of Take Apprentice now gives Apprentice medicine
       skill instead of Novice
-  WeNeedMorePhoron:
-  - rscdel: Removed Tomb of Alotheos and all supporting code for it.
-  eirenxiv:
-  - bugfix: fixed female details on the coat of the commander
-  Antoonij:
-  - code_imp: "\u0437\u0430\u0431\u044B\u0432\u0430\u0439\u043A\u0430 \u0432\u0430\
-      \u043C\u043F\u0438\u0440\u043E\u0432 \u0437\u0430\u043C\u0435\u043D\u0435\u043D\
-      \u0430 \u043D\u0430 \u0430\u043D\u0441\u0438\u043D \u043F\u0440\u0435\u0437\u0435\
-      \u043D\u0441++"
   Vladmar11:
   - balance: "\u041C\u0430\u0441\u043A\u0430\u0440\u0430\u0434 \u0442\u0435\u043F\u0435\
       \u0440\u044C \u043D\u0435 \u0436\u0440\u0435\u0442 \u0441\u043B\u043E\u0442\
@@ -1893,6 +1889,10 @@
   - balance: "\u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043D\
       \u0430 1 \u0441\u043B\u043E\u0442 \u0434\u043B\u044F \u043E\u0442\u0430\u0432\
       \u0430\u043D\u0441\u043A\u043E\u0433\u043E \u0432\u043E\u043B\u043A\u0430"
+  WeNeedMorePhoron:
+  - rscdel: Removed Tomb of Alotheos and all supporting code for it.
+  eirenxiv:
+  - bugfix: fixed female details on the coat of the commander
   sinerume:
   - rscadd: "\u0426\u043E\u043A\u0430\u043D\u044C\u0435 \u043A\u0430\u0431\u043B\u0443\
       \u0447\u043A\u043E\u0432"
@@ -1952,4 +1952,112 @@
   - balance: lich ballistarries gets a mid-level pouch of ancient coin. Not... anyone
       would accept that as coinage, right?
   - bugfix: padded undervestments no longer make plate armor noises.
-
+2026-07-30:
+  Chituka:
+  - refactor: "\u0440\u0435\u0444\u0430\u043A\u0442\u043E\u0440 \u043A\u043E\u0434\
+      \u0430 \u043E\u0433\u043D\u0435\u0441\u0442\u0440\u0435\u043B\u0430\n:cl:\n\
+      <!-- Both :cl:'s are required for the changelog to work! You can put your name\
+      \ to the right of the first :cl: if you want to overwrite your GitHub username\
+      \ as author ingame. -->\n<!-- You can use multiple of the same prefix (they're\
+      \ only used for the icon ingame) and delete the unneeded ones. Despite some\
+      \ of the tags, changelogs should generally represent how a player might be affected\
+      \ by the changes rather than a summary of the PR's contents. -->"
+  Doomtail:
+  - rscadd: Added one new hairstyle and snout option
+  FeniaFox:
+  - balance: Increased integrity of blacksteel daggers from 80 (iron tier) to 144
+      (steel tier + ~20%).
+  KatTheFox:
+  - rscadd: Voyeur no longer requires sating other peoples' vices to sate. You now
+      just need to do anything that gives them a sufficiently-strong mood buff; basic
+      things like being full or hydrated or basic-level good food won't work, but
+      higher tier foods and high-skill music should.
+  - balance: Court Agents are now in the courtier tax bracket, i.e. they don't get
+      taxed by default
+  - bugfix: Removing items from storage while standing on open space - flying, climbing,
+      walking on leaves with woodwalker - no longer drops the items on people below
+      you in the same tick they get put in your hand, which could be exploited to
+      infinitely brick people to death with only 1 brick
+  - bugfix: Void familiars no longer lose flight when dying and reviving
+  - bugfix: Picked up mobs should no longer be or become deaf
+  LeviathanWeber:
+  - bugfix: "\u041F\u0435\u0441\u043E\u043A \u043F\u0440\u0438\u0437\u044B\u0432\u0430\
+      \u0435\u043C\u044B\u0439 \u043D\u0430\u0431\u043E\u0436\u043D\u044B\u043C\u0438\
+      \ \u041C\u0430\u0442\u0442\u0438\u043E\u0441\u0438\u0442\u0430\u043C\u0438 \u0442\
+      \u0435\u043F\u0435\u0440\u044C \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442\
+      \ \u0438 \u043C\u043E\u0436\u0435\u0442 \u0441\u043D\u043E\u0432\u0430 \u0438\
+      \u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C\u0441\u044F\
+      ."
+  Quinalion:
+  - image: "\u0418\u043A\u043E\u043D\u043A\u0430 \u0431\u043B\u0438\u043D\u043A\u0430\
+      \ \u0442\u0435\u043F\u0435\u0440\u044C \u0444\u0438\u043E\u043B\u0435\u0442\u043E\
+      \u0432\u0430\u044F."
+  - image: All Hierophant's Naledi equipment is now greyscale and can be dyed.
+  - bugfix: Fixed several incorrect onmob sprites.
+  Ryan180602:
+  - bugfix: bugs with Tug of War, Provocation, Judgement.
+  - rscadd: Trial of Glory/Wits under Provocation.
+  - balance: Tug of War is now a projectile that gives 2s off-bal + 1s stun to the
+      pulled and tugs them back (ofc).
+  - balance: Ravox miracles like Challenge need combat mode.
+  SomeDeviant:
+  - bugfix: fixed casting from inside objects
+  TankTheBirb:
+  - rscadd: 'Changed the adjust_fire_stacks proc to adjust_scorch_stack on the following
+      weapons: Militia Spear special reed attack, Sling Fire pots, burning gas belchers,
+      and Fire rune from the utility spell Rune Ward.'
+  WeNeedMorePhoron:
+  - server: Made WeNeedMorePhoron (myself) the codeowners of subsyste, economics system,
+      politics, PVE, AI, icon updates, tgui, spells and crafting so that less PRs
+      touching these domains will slip pass by accident without review.
+  - balance: Change 12 points reset aspect budget back to 4 for mage
+  - rscadd: Redid Towner Quests again, this time there's variations you can pick for
+      different ore veins / caravan types. Removed the Easy difficulty, rebalanced
+      to just medium. Made the two options mostly equal.
+  - rscadd: Redid Blockade Balance, now they no longer multiplies massively by region.
+      They now have 180 TP per wave and should have some varieties in composition.
+      They scales by 20% per additional person in sight spotted - up to 5. So if you
+      bring 5, rewards and amount of enemies fought should scale slightly.
+  - rscadd: Cleaned up an issue where quest on spawn had a legacy function that blanketly
+      applied quest faction to every mobs nearby, including toward Conjured Summons,
+      making them completely useless in blockade fight.
+  YakumoChen:
+  - rscadd: Added allspice to merchant
+  - balance: Merchant sugar is cheaper (less cheap than stockpile of course)
+  - balance: rebalanced peppermill recipe to cooking 5(M) instead of carpentry 4(E)
+  borneblood:
+  - refactor: TRAIT_FOOD_STIPEND -> TRAIT_ROYAL_SUBSIDY
+  - rscadd: Added a check that makes all Steward Ledger spam be bundled in 1 line.
+  - balance: Royal Subsidy does not let you sell things to the Stockpile anymore.
+      Royal Subsidy ignores taxes, you're omega-hired my dude.
+  - bugfix: Royal Subsidy lets you import things from the Stockpile.
+  - bugfix: Enduring and Construct traits work again.
+  - bugfix: Blackblooded Inquisitors are less dramatic now.
+  changelingonberry:
+  - server: truncates who column in the banning database so banning is still possible
+      on high pop
+  - bugfix: you can no longer spam repair items to speed it up
+  radarseas:
+  - rscdel: You can no longer kill Zaelorian and Baotha in the underdark. The Otavan
+      Orthodoxy would lyke to remind you no such names have existed amongst drowkynd
+      nor, ever will exist and that this is but a fungus induced mass-hallucination.
+  - image: deleted and cleaned up some unused icons in general spells.
+  - image: Added recolored scroll backgrounds for Xylix/Necra/Eora/Baotha.
+  - image: Adjusted some of Necra/Xylix/Eora's spell icons.
+  - refactor: moved some sprites from general spells to their respective miracle icon
+      files.
+  twinklover22:
+  - balance: blunt intent added to daybreak
+  - bugfix: whip blunt strike description
+  zeroisthebiggay:
+  - qol: Polished items will now tell you what stage they are on exactly, rather than
+      stages two and three being lumped together.
+  - qol: Each stage gives you a hint on what needs to be done next in the examine
+      text.
+  - qol: Polish will yell at you and prevent you from applying it if you are attempting
+      to apply it to an item that isn't at maximum integrity.
+  - qol: If an item is dyed or has a color value of anything other than pure white,
+      polish won't forcibly alter its color. This means you can polish dyed items
+      without fucking up the dye. This is major QOL for anyone who has either tried
+      to polish their dyed or armor, or has had their armor polished, dyed, broken,
+      and then have to reapply the polish.
