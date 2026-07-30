@@ -231,7 +231,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/clothing/ring/active/nomag = 4,
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/blacksteel = 3,
 	/obj/item/clothing/suit/roguetown/armor/brigandine/banneret = 4,
-	/obj/item/clothing/suit/roguetown/armor/brigandine/captain = 4,
 	/obj/item/clothing/suit/roguetown/armor/brigandine/haraate = 4,
 	/obj/item/clothing/suit/roguetown/armor/heartfelt = 4,
 	/obj/item/clothing/suit/roguetown/armor/heartfelt/hand = 4,
