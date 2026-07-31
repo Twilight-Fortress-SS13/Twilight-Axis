@@ -40,7 +40,13 @@
 			if(armor_tier > 0)
 				if(armor_penetration >= armor_tier)
 					if(pen_info)
-						blocked = block_damage * (1 - (pen_info * PEN_PASSTHROUGH_RATIO)) 
+						if(isitem(used_weapon))
+							var/obj/item/I = used_weapon
+							if(I.sharpness && I.max_blade_int)
+								if((I.blade_int / I.max_blade_int) <= SHARPNESS_TIER2_THRESHOLD) // Our sharpness is chunked (<=20%), so we do not penetrate at all.
+									pen_info = 0
+						if(pen_info)
+							blocked = block_damage * (1 - (PEN_PASSTHROUGH_MINIMUM + (pen_info * PEN_PASSTHROUGH_RATIO)))
 					if(penetrated_text)
 						to_chat(src, span_danger("[penetrated_text]"))
 				else
@@ -87,21 +93,16 @@
 	if(should_update_invis)
 		update_sneak_invis(reset = TRUE)
 
-#define SHARPNESS_PENALTY_RATIO_ONE 0.7
-#define SHARPNESS_PENALTY_RATIO_TWO 0.6
-#define SHARPNESS_PENALTY_RATIO_THREE 0.5
-#define SHARPNESS_PENALTY_RATIO_FOUR 0.4
-
 /proc/get_pen_info(mob/living/carbon/human/target, mob/living/attacker, obj/item/clothing/used_armor, def_zone, d_type, armor_pen, obj/item/I)
 	if(!target || !def_zone || !d_type || !armor_pen || !ishuman(target))
 		return 1
-	var/pen_total = armor_pen
+	var/pen_total = (armor_pen * 2)
 	var/protection
 	if(!used_armor)
 		used_armor = target.get_best_worn_armor(def_zone, d_type)
 	if(used_armor)
 		protection = used_armor.armor.getRating(d_type)
-	pen_total -= protection
+	pen_total -= (protection * 2)
 	var/balance_bonus = 0
 	var/sharpness_bonus = 0
 	var/damfactor_bonus = 0
@@ -110,56 +111,34 @@
 		if(I.sharpness && I.max_blade_int) 	// IS_BLUNT is 0, so this will be falsy with blunt weapons.
 			var/dullness_ratio = I.blade_int / I.max_blade_int
 
-			if(attacker.used_intent.damfactor != 1)
-				damfactor_bonus += floor(((attacker?.used_intent?.damfactor) - 1) * 10)
+			if(attacker?.used_intent && attacker.used_intent.damfactor != 1)
+				damfactor_bonus += floor((attacker.used_intent.damfactor - 1) * 10)
 
-			if(dullness_ratio > SHARPNESS_TIER1_THRESHOLD)	// We are above 80% sharpness, so we go along as planned and get a small bonus.
+			if(dullness_ratio > SHARPNESS_TIER1_THRESHOLD)	// Above 80% sharpness grants a small penetration bonus.
 				sharpness_bonus += 1
-				use_bonus = TRUE
-			else if(dullness_ratio < SHARPNESS_TIER2_THRESHOLD + 0.1)	// We are below sharpness threshold where we use damfactors & STR for damage, so we won't use it for pen either.
+			if(dullness_ratio <= SHARPNESS_TIER1_FLOOR)
 				use_bonus = FALSE
-				if(damfactor_bonus > 0)
-					damfactor_bonus = 0
-			else	// We are inbetween, so we'll apply a penalty.
-				if(dullness_ratio < SHARPNESS_PENALTY_RATIO_ONE)
-					if(damfactor_bonus > 0)
-						damfactor_bonus = max(damfactor_bonus - 1, 0) // -1 from damfactor
-				if(dullness_ratio <= SHARPNESS_PENALTY_RATIO_TWO)
-					sharpness_bonus -= 1	//-1 from the total
-				if(dullness_ratio <= SHARPNESS_PENALTY_RATIO_THREE)
-					if(damfactor_bonus > 0)
-						damfactor_bonus = max(damfactor_bonus - 1, 0) // -2 from damfactor
-				if(dullness_ratio <= SHARPNESS_PENALTY_RATIO_FOUR)
-					sharpness_bonus -= 1	//-2 from the total
+				damfactor_bonus = 0
 
-		if(use_bonus)
+		if(use_bonus && attacker)
 			switch(I.wbalance)
 				if(WBALANCE_HEAVY)
 					balance_bonus = (attacker.STASTR - 10) + 2
 				if(WBALANCE_NORMAL)
 					balance_bonus = (attacker.STASTR - 10)
-				if(WBALANCE_SWIFT)
-					balance_bonus = (attacker.STASPD - 10)
+				if(WBALANCE_SWIFT)	// Swift weapons use either SPD or STR, whichever is higher.
+					balance_bonus = max((attacker.STASPD - 10), (attacker.STASTR - 10))
+			if(I.wbalance != WBALANCE_HEAVY)
+				balance_bonus = min(balance_bonus, 4)
 
-	else
+	else if(attacker)
 		balance_bonus = (attacker.STASTR - 10)	// Unarmed, probably.
-	// If our negative sharpness malus is equal or greater than the balance bonus, we neutralize them both.
-	// This is to prevent edge cases where losing sharpness would -increase- our pen damage.
-	// Fundamentally, we shouldn't be penalized via sharpness beyond what we would've gained from our stats.
-	if(abs(balance_bonus) <= abs(sharpness_bonus) && sharpness_bonus <= 0 && balance_bonus >= 0)	
-		balance_bonus = 0
-		sharpness_bonus = 0
+
+	// This proc is called only once penetration has already succeeded.
 	pen_total += balance_bonus
 	pen_total += sharpness_bonus
-	// This proc's usage is meant to presume we're in the part of the 
-	// proc pipeline that is already penning, so we give it at least a 1.
-	pen_total = clamp(pen_total, 1, 8)
+	pen_total = clamp(pen_total, 1, PEN_PASSTHROUGH_CAP)
 	return pen_total
-
-#undef SHARPNESS_PENALTY_RATIO_ONE
-#undef SHARPNESS_PENALTY_RATIO_TWO
-#undef SHARPNESS_PENALTY_RATIO_THREE
-#undef SHARPNESS_PENALTY_RATIO_FOUR
 
 /mob/living/proc/getarmor(def_zone, type, damage, armor_penetration, blade_dulling, intdamfactor, used_weapon)
 	return 0
