@@ -183,6 +183,8 @@
 	if(result == "Да, сбросить")
 		ftlog("SETSPOUSE RESET: [H.real_name] cleared setspouse '[offered_target]'")
 		H.setspouse = ""
+		var/datum/familytree_prefs/round_prefs = familytree_get_round_prefs(H, FALSE)
+		round_prefs?.clear_setspouse()
 		var/datum/preferences/P = H.client?.prefs
 		if(P)
 			P.familytree_module_load_character()
@@ -293,8 +295,8 @@
 	if(!idler.client)
 		SSfamilytree.pause_familytree_human(idler, "disconnected during confirmation")
 		return
-	if(other && SSfamilytree.familytree_record_blocked_pair(idler, other))
-		to_chat(idler, span_warning("Вы не ответили на предложение, и оно истекло. Эта пара больше не будет предложена в этом раунде, но система продолжит поиск."))
+	if(other && SSfamilytree.familytree_record_timeout_block(idler, other))
+		to_chat(idler, span_warning("Вы не ответили на предложение, и оно истекло. Эта пара будет отложена на несколько попыток, но система продолжит поиск."))
 	else
 		to_chat(idler, span_warning("Вы не ответили на предложение, и оно истекло. Система продолжит поиск."))
 	SSfamilytree.try_queue_assignment(idler)

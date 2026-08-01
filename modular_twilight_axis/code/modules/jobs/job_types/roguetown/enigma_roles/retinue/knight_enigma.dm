@@ -16,7 +16,7 @@
 	whitelist_req = TRUE
 	outfit = /datum/outfit/job/roguetown/knight_enigma
 	advclass_cat_rolls = list(CTAG_ROYALKNIGHT = 20)
-	job_traits = list(TRAIT_NOBLE, TRAIT_STEELHEARTED)
+	job_traits = list(TRAIT_NOBLE, TRAIT_STEELHEARTED, TRAIT_EXPERT_HUNTER)
 	give_bank_account = TRUE
 	noble_income = 10
 	min_pq = 10
@@ -119,6 +119,7 @@
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/hunting = SKILL_LEVEL_APPRENTICE,
 	)
 	subclass_virtues = list(
 		/datum/virtue/utility/riding
@@ -223,3 +224,4 @@
 		)
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_UPPER_CLASS, H, "Savings.")
+		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)

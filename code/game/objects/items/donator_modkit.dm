@@ -1240,6 +1240,15 @@
 	)
 	result_item = /obj/item/rogueweapon/sword/rapier/athena
 
+//Octus - Falling Star
+/obj/item/enchantingkit/weapon/falling_star
+	name = "'Falling Star' morphing elixer"
+	target_items = list(
+		/obj/item/rogueweapon/greatsword,
+		/obj/item/rogueweapon/greatsword/paalloy
+	)
+	result_item = /obj/item/rogueweapon/greatsword/falling_star
+
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
 /////////////////////////////

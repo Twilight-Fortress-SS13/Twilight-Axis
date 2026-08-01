@@ -3705,6 +3705,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 2
 
+/datum/loadout_item/donator/falling_star
+	name = "Donator Kit - Falling Star - Required: Greatsword"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/falling_star
+	donatitem = TRUE
+	donat_tier = 2
+
 /datum/loadout_item/donator/morto_staff
 	name = "Donator Kit - Frozen Vow - Required: Staff"
 	category = list("Оружие", "Донат")

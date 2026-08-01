@@ -10,6 +10,8 @@
 	if(!istype(lord))
 		return
 
+	lord.verbs |= /mob/living/carbon/human/proc/ta_claim_royal_ancestry
+
 	var/old_name = lord.real_name
 	var/current_title
 	var/untitled_name = old_name

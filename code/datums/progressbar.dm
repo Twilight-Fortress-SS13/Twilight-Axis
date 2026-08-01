@@ -26,8 +26,7 @@
 	set_new_cells()
 	// late log-ins or walking into the range afterwards are handled by the cell tracker
 	for(var/mob/M in our_cells.get_type_members(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS))
-		if(M.client)
-			M.client.images |= bar
+		show_to(M) // TA EDIT
 	RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(set_new_cells))
 
 	LAZYINITLIST(user.progressbars)
@@ -92,11 +91,21 @@
 		RegisterSignal(new_grid, SPATIAL_GRID_CELL_ENTERED(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS), PROC_REF(on_client_enter))
 
 // we never remove these when clients exit, they all get cleaned up when the mob leaves
-/datum/progressbar/proc/on_client_enter(datum/source, mob/client_holder)
+/datum/progressbar/proc/on_client_enter(datum/source, mob/client_holder) // TA EDIT START
 	SIGNAL_HANDLER
 	if(!istype(client_holder) || !client_holder.client)
 		return
+	show_to(client_holder)
+
+/datum/progressbar/proc/show_to(mob/client_holder)
+	if(!client_holder?.client)
+		return
 	client_holder.client.images |= bar
+	if(!client_holder.observers)
+		return
+	for(var/mob/dead/observer/observer as anything in client_holder.observers)
+		if(observer.client)
+			observer.client.images |= bar // TA EDIT END
 
 /datum/progressbar/proc/remove_from_clients()
 	for(var/client/C in GLOB.clients) // this is genuinely faster than tracking clients we've sent it to
