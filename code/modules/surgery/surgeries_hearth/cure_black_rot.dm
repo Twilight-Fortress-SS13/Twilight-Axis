@@ -25,8 +25,10 @@
 	skill_min = SKILL_LEVEL_EXPERT
 	preop_sound = 'sound/surgery/scalpel1.ogg'
 	success_sound = 'sound/surgery/scalpel2.ogg'
-	possible_locs = list(BODY_ZONE_CHEST)
-
+	possible_locs = list(
+		BODY_ZONE_HEAD, // TA EDIT
+		BODY_ZONE_CHEST,
+	)
 /datum/surgery_step/extract_black_rose_residue/preop(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
 	display_results(user, target, span_userdanger("I carefully attempt to cut out the black ooze from [target]'s flesh..."),
 		span_userdanger("[user] carefully tries to cut out the black ooze from [target]'s chest."),

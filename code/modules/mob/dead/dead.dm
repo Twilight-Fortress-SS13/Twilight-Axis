@@ -173,6 +173,9 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		if(key == "City Watch" || key == "Vanguard" || key == "Retinue")
 			key = "Garrison"
 
+		if(key == "ATC" || key == "Azurian Trading Company")
+			key = "Burghers"
+
 		var/list/job_players = ready_players_by_job[job_name]
 
 		if(!job_list_by_department[key])

@@ -290,6 +290,24 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	legacy_tat_build_migrated = sanitize_integer(legacy_tat_build_migrated, FALSE, TRUE, FALSE)
 	legacy_tat_build_data = legacy_tat_build_migrated ? null : sanitize_islist(legacy_tat_build_data, null)
 
+	S["ccg_known_rare_cards"] >> ccg_known_rare_cards
+	ccg_known_rare_cards = SANITIZE_LIST(ccg_known_rare_cards)
+	S["ccg_selected_deck"] >> ccg_selected_deck
+	ccg_selected_deck = SANITIZE_LIST(ccg_selected_deck)
+	S["ccg_saved_deck_cards"] >> ccg_saved_deck_cards
+	ccg_saved_deck_cards = SANITIZE_LIST(ccg_saved_deck_cards)
+	S["ccg_saved_deck_faction"] >> ccg_saved_deck_faction
+	S["ccg_saved_deck_leader"] >> ccg_saved_deck_leader
+	S["ccg_saved_decks"] >> ccg_saved_decks
+	ccg_saved_decks = SANITIZE_LIST(ccg_saved_decks)
+	S["ccg_active_deck_index"] >> ccg_active_deck_index
+	S["ccg_deckbuilder_view_mode"] >> ccg_deckbuilder_view_mode
+	S["ccg_soundtrack_enabled"] >> ccg_soundtrack_enabled
+	S["ccg_presets_are_virtual"] >> ccg_presets_are_virtual
+	if(!length(ccg_saved_deck_cards) && length(ccg_selected_deck))
+		ccg_saved_deck_cards = ccg_selected_deck.Copy()
+	ccg_load_or_migrate_sql()
+
 	verify_keybindings_valid()
 	return TRUE
 
@@ -588,6 +606,53 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 /datum/preferences/proc/_load_loadout(S)
 	S["selected_loadout_items"] >> selected_loadout_items
 	selected_loadout_items = SANITIZE_LIST(selected_loadout_items)
+	var/list/root_ccg_known_rare_cards = islist(ccg_known_rare_cards) ? ccg_known_rare_cards.Copy() : list()
+	var/list/root_ccg_selected_deck = islist(ccg_selected_deck) ? ccg_selected_deck.Copy() : list()
+	var/list/root_ccg_saved_deck_cards = islist(ccg_saved_deck_cards) ? ccg_saved_deck_cards.Copy() : list()
+	var/root_ccg_saved_deck_faction = ccg_saved_deck_faction
+	var/root_ccg_saved_deck_leader = ccg_saved_deck_leader
+	var/list/root_ccg_saved_decks = islist(ccg_saved_decks) ? deepCopyList(ccg_saved_decks) : list()
+	var/root_ccg_active_deck_index = ccg_active_deck_index
+	var/root_ccg_deckbuilder_view_mode = ccg_deckbuilder_view_mode
+	var/root_ccg_soundtrack_enabled = ccg_soundtrack_enabled
+	var/root_ccg_presets_are_virtual = ccg_presets_are_virtual
+	S["ccg_known_rare_cards"] >> ccg_known_rare_cards
+	ccg_known_rare_cards = SANITIZE_LIST(ccg_known_rare_cards)
+	S["ccg_selected_deck"] >> ccg_selected_deck
+	ccg_selected_deck = SANITIZE_LIST(ccg_selected_deck)
+	S["ccg_saved_deck_cards"] >> ccg_saved_deck_cards
+	ccg_saved_deck_cards = SANITIZE_LIST(ccg_saved_deck_cards)
+	S["ccg_saved_deck_faction"] >> ccg_saved_deck_faction
+	S["ccg_saved_deck_leader"] >> ccg_saved_deck_leader
+	S["ccg_saved_decks"] >> ccg_saved_decks
+	ccg_saved_decks = SANITIZE_LIST(ccg_saved_decks)
+	S["ccg_active_deck_index"] >> ccg_active_deck_index
+	S["ccg_deckbuilder_view_mode"] >> ccg_deckbuilder_view_mode
+	S["ccg_soundtrack_enabled"] >> ccg_soundtrack_enabled
+	S["ccg_presets_are_virtual"] >> ccg_presets_are_virtual
+	if(!length(ccg_known_rare_cards) && length(root_ccg_known_rare_cards))
+		ccg_known_rare_cards = root_ccg_known_rare_cards
+	if(!length(ccg_selected_deck) && length(root_ccg_selected_deck))
+		ccg_selected_deck = root_ccg_selected_deck
+	if(!length(ccg_saved_deck_cards) && length(root_ccg_saved_deck_cards))
+		ccg_saved_deck_cards = root_ccg_saved_deck_cards
+	if(!length(ccg_saved_decks) && length(root_ccg_saved_decks))
+		ccg_saved_decks = root_ccg_saved_decks
+	if(!ccg_saved_deck_faction)
+		ccg_saved_deck_faction = root_ccg_saved_deck_faction
+	if(!ccg_saved_deck_leader)
+		ccg_saved_deck_leader = root_ccg_saved_deck_leader
+	if(!ccg_active_deck_index)
+		ccg_active_deck_index = root_ccg_active_deck_index
+	if(!ccg_deckbuilder_view_mode)
+		ccg_deckbuilder_view_mode = root_ccg_deckbuilder_view_mode
+	if(isnull(ccg_soundtrack_enabled))
+		ccg_soundtrack_enabled = root_ccg_soundtrack_enabled
+	if(isnull(ccg_presets_are_virtual))
+		ccg_presets_are_virtual = root_ccg_presets_are_virtual
+	if(!length(ccg_saved_deck_cards) && length(ccg_selected_deck))
+		ccg_saved_deck_cards = ccg_selected_deck.Copy()
+	ccg_load_or_migrate_sql()
 
 /datum/preferences/proc/_load_loadout_colours(S)
 	S["loadout_1_hex"] >> loadout_1_hex

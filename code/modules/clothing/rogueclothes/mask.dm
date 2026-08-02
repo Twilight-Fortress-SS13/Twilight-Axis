@@ -32,20 +32,8 @@
 	if(!istype(loc, /mob/living/carbon))
 		return
 	var/mob/living/carbon/H = user
-	if(icon_state == "[initial(icon_state)]_snout")
-		icon_state = initial(icon_state)
+	if(toggle_snout())
 		H.update_inv_wear_mask()
-		update_icon()
-		return
-
-	var/icon/J = new('icons/roguetown/clothing/onmob/masks.dmi')
-	var/list/istates = J.IconStates()
-	for(var/icon_s in istates)
-		if(findtext(icon_s, "[icon_state]_snout"))
-			icon_state += "_snout"
-			H.update_inv_wear_mask()
-			update_icon()
-			return
 
 /obj/item/clothing/mask/rogue/get_mechanics_examine()
 	. = ..()
@@ -199,6 +187,7 @@
 /obj/item/clothing/mask/rogue/equipped(mob/user, slot)
 	..()
 	user.update_fov_angles()
+	restore_snout()
 
 /obj/item/clothing/mask/rogue/dropped(mob/user)
 	..()

@@ -961,6 +961,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><b>Pliant Soul Settings:</b> <a href='?_src_=prefs;preference=tat_build;task=input'>Change</a>" // TA EDIT
 
 			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;task=input'>Change</a>"
+			dat += "<br><b>Cards Game:</b> <a href='?_src_=prefs;preference=ccg_settings'>Settings</a><br>"
 
 			dat += "<BR><BR><b>Has an Estate:</b> <a href='?_src_=prefs;preference=have_manor;task=input'>[have_manor ? "Yes" : "No"]</a><BR>" // TA EDIT
 			dat += "<b>Estate Name:</b> <a href='?_src_=prefs;preference=manor_name;task=input'>[manor_name ? manor_name : "Unknown Manor"]</a><BR>" // TA EDIT
@@ -1638,6 +1639,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			C.clear_character_previews()
 
 /datum/preferences/proc/process_link(mob/user, list/href_list)
+	if(href_list["preference"] == "ccg_settings")
+		ccg_open_preferences_deckbuilder(user)
+		return
+
 	if(href_list["boosty"])
 		var/url = CONFIG_GET(string/boostyurl)
 		if (url)

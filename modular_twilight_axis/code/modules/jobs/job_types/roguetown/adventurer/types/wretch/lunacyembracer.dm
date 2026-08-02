@@ -53,7 +53,7 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T3, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)
 	neck = /obj/item/clothing/neck/roguetown/psicross/dendor
-	armor = /obj/item/clothing/suit/roguetown/armor/manual/sewable/maille/berzerkerchest
+	armor = /obj/item/clothing/suit/roguetown/armor/manual/resting/maille/berzerkerchest
 	head = /obj/item/flowercrown/briar
 
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dropkick)

@@ -563,45 +563,57 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/surcoatheavy
 	name = "Surcoat, Overvestments"
-	category = "Плащи"
+	category = list("Плащи", "Триумфы")
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader/heavy
 	triumph_cost = 3
 
 /datum/loadout_item/surcoatgoldenorder
 	name = "Surcoat, Golden Order"
-	category = "Плащи"
+	category = list("Плащи", "Триумфы")
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader
 	triumph_cost = 3
 
 /datum/loadout_item/surcoatsilverorder
 	name = "Surcoat, Silver Order"
-	category = "Плащи"
+	category = list("Плащи", "Триумфы")
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader/t
 	triumph_cost = 3
 
 /datum/loadout_item/surcoatgoldenorderast
 	name = "Surcoat, Golden Order, Astratan"
-	category = "Плащи"
+	category = list("Плащи", "Триумфы")
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader/astrata
 	triumph_cost = 3
 
 /datum/loadout_item/surcoatsilverorderast
 	name = "Surcoat, Silver Order, Astratan"
-	category = "Плащи"
+	category = list("Плащи", "Триумфы")
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader/t/astrata
 	triumph_cost = 3
 
 /datum/loadout_item/surcoatgoldenorderuni
 	name = "Surcoat, Golden Order, Undivided"
-	category = "Плащи"
+	category = list("Плащи", "Триумфы")
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader/undivided
 	triumph_cost = 3
 
 /datum/loadout_item/surcoatsilverorderuni
 	name = "Surcoat, Silver Order, Undivided"
-	category = "Плащи"
+	category = list("Плащи", "Триумфы")
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader/t/undivided
 	triumph_cost = 3
+
+/datum/loadout_item/ranger_cloak
+	name = "Ranger Cloak, Forest Green"
+	category = list("Плащи", "Триумфы")
+	path = /obj/item/clothing/cloak/rangercloak
+	triumph_cost = 5
+
+/datum/loadout_item/ranger_cloak_gray
+	name = "Ranger Cloak, Neutral Gray"
+	category = list("Плащи", "Триумфы")
+	path = /obj/item/clothing/cloak/rangercloak/gray
+	triumph_cost = 5
 
 /datum/loadout_item/scaledcloak
 	name = "Scaled Cloak"

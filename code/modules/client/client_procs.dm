@@ -1244,6 +1244,8 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 		if (CONFIG_GET(flag/asset_simple_preload))
 			addtimer(CALLBACK(SSassets.transport, TYPE_PROC_REF(/datum/asset_transport, send_assets_slow), src, SSassets.transport.preload), 5 SECONDS)
 
+		addtimer(CALLBACK(src, PROC_REF(ccg_migrate_saved_card_deck)), 3 SECONDS)
+
 		// NOTE: Preload_vox was removed because we do not have vox
 
 //Hook, override it to run code when dir changes

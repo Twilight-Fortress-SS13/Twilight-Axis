@@ -1138,6 +1138,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 			return "Ducal Family"
 		if("Vanguard", "Town Guard", "City Watch")
 			return "Garrison"
+		if("ATC", "Azurian Trading Company")
+			return "Burghers"
 
 	return department
 

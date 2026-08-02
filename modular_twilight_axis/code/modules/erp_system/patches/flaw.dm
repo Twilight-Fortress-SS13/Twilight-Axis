@@ -12,20 +12,7 @@
 	if(!Aro)
 		return ..()
 
-	var/oldsated = sated
-	var/now_sated = (Aro.satisfaction_points >= ERP_NYMPHO_SATED_SP)
-	if(oldsated != now_sated)
-		sated = now_sated
-		unsate_time = world.time
-		if(!sated)
-			var/hard = (Aro.satisfaction_points < ERP_NYMPHO_HARD_HUNGER_SP)
-			to_chat(H, hard ? span_boldred("I don't indulge my vice.") : span_boldwarning(needsate_text))
-		else
-			if(sated_text)
-				to_chat(H, span_blue(sated_text))
-			H.remove_stress(/datum/stressevent/vice)
-			if(debuff)
-				H.remove_status_effect(debuff)
+	Aro.sync_lovefiend_sated_from_sp()
 
 	if(!sated)
 		H.add_stress(/datum/stressevent/vice)

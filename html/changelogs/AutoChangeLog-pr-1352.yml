@@ -1,0 +1,4 @@
+author: "Corde50"
+delete-after: True
+changes:
+  - rscdel: "Удален спелл \"Repulse\" у подкласса Otavan Volf"

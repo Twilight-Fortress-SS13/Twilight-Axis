@@ -115,6 +115,11 @@
 	if(human_actor.is_erp_blocked_as_target())
 		return FALSE
 
+	if(human_actor.is_blocked_by_auto_song())
+		if(!silent)
+			to_chat(human_actor, span_warning("I can't use the ERP panel while performing the song."))
+		return FALSE
+
 	if(human_actor.client && human_actor.client.prefs && !human_actor.client.prefs.sexable)
 		if(!silent)
 			to_chat(src, span_warning("You don't want to do this. (ERP preference)"))
