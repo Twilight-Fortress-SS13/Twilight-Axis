@@ -93,6 +93,7 @@
 	AddComponent(/datum/component/footstep, footstep_type, 1, 2)
 	GLOB.human_list += src
 	unarmed_special = new /datum/special_intent/upper_cut()
+	addtimer(CALLBACK(src, PROC_REF(create_scent_image)), 1 SECONDS) // TA EDIT
 
 /mob/living/carbon/human/Login()
 	. = ..()
@@ -165,6 +166,10 @@
 			if(F)
 				F.remove_pending_invite(real_name)
 		incoming_fellowship_invites.Cut()
+	if(scent_image) // TA EDIT START
+		remove_scent_from_all()
+		qdel(scent_image)
+		scent_image = null // TA EDIT END
 	return ..()
 
 /mob/living/carbon/human/Stat()

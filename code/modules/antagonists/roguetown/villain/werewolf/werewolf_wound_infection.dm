@@ -23,6 +23,8 @@
 	severity = WOUND_SEVERITY_BIOHAZARD
 	if(bodypart_owner)
 		sortTim(bodypart_owner.wounds, GLOBAL_PROC_REF(cmp_wound_severity_dsc))
+	human_owner.remove_scent_from_all()//TA EDIT
+	human_owner.clear_scent_image()//TA EDIT
 	return TRUE
 
 /datum/wound/proc/wake_werewolf()

@@ -86,6 +86,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	var/healable_by_miracles = TRUE
 
 /datum/wound/Destroy(force)
+	var/datum/temp_owner = owner //TA EDOT
 	if(bodypart_owner)
 		remove_from_bodypart()
 	else if(owner)
@@ -96,6 +97,11 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	bodypart_owner = null
 	owner = null
 	. = ..()
+
+	var/mob/living/carbon/human/H = temp_owner // TA EDIT START
+	if(istype(H) && !H.is_werewolf_infected())
+		H.create_scent_image()// TA EDIT END
+
 	return QDEL_HINT_IWILLGC
 
 /datum/wound/New()

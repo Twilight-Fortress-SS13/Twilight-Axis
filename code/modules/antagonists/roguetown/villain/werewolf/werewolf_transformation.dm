@@ -117,6 +117,12 @@
 	W.cmode_music_override = cmode_music_override
 	W.cmode_music_override_name = cmode_music_override_name
 	mind.transfer_to(W)
+
+	if(W.client) //TA EDIT START
+		for(var/mob/living/carbon/human/H2 in GLOB.human_list)
+			if(H2.scent_image)
+				W.client.images |= H2.scent_image // TA EDIT END
+
 	skills?.known_skills = list()
 	skills?.skill_experience = list()
 	W.grant_language(/datum/language/beast)
@@ -187,6 +193,11 @@
 	REMOVE_TRAIT(W, TRAIT_PACIFISM, TRAIT_SOURCE_WEREWOLF)
 
 	mind.transfer_to(W)
+
+	if(W.client) //TA EDIT START
+		for(var/mob/living/carbon/human/H2 in GLOB.human_list)
+			if(H2.scent_image)
+				W.client.images |= H2.scent_image // TA EDIT END
 
 	var/mob/living/carbon/human/species/werewolf/WA = src
 	W.copy_known_languages_from(WA.stored_language)

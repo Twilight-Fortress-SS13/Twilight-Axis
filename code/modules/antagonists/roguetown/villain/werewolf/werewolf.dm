@@ -97,11 +97,21 @@
 		forge_werewolf_objectives()
 
 	wolfname = "[pick(GLOB.wolf_prefixes)] [pick(GLOB.wolf_suffixes)]"
+	var/mob/living/carbon/human/H = owner.current //TA EDTI START
+	if(istype(H))
+		H.remove_scent_from_all()
+		H.clear_scent_image()//TA EDTI END
 	return ..()
 
 /datum/antagonist/werewolf/on_removal()
 	if(!silent && owner.current)
 		to_chat(owner.current,span_danger("I am no longer a [special_role]!"))
+
+	if(owner.current && owner.current.client) //TA EDIT START
+		for(var/mob/living/carbon/human/other_human in GLOB.human_list)
+			if(other_human.scent_image)
+				owner.current.client.images -= other_human.scent_image //TA EDIT END
+
 	owner.special_role = null
 	return ..()
 

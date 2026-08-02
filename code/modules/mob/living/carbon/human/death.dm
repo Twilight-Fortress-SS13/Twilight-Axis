@@ -178,6 +178,11 @@
 			user_species.soul_light_off()
 			update_body()
 
+	if(scent_image)
+		remove_scent_from_all() // TA EDIT START
+		qdel(scent_image)
+		scent_image = null // TA EDIT END
+
 	if(SSticker.HasRoundStarted())
 		SSblackbox.ReportDeath(src)
 		log_message("has died (BRUTE: [src.getBruteLoss()], BURN: [src.getFireLoss()], TOX: [src.getToxLoss()], OXY: [src.getOxyLoss()], CLONE: [src.getCloneLoss()])", LOG_ATTACK)

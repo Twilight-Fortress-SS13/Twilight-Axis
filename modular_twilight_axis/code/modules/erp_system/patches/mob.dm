@@ -230,6 +230,11 @@
 		client.prefs.apply_erp_kinks_to_mob(src)
 	SSerp.apply_prefs_for_mob(src)
 	erp_resync_after_body_restore()
+	if(mind && mind.has_antag_datum(/datum/antagonist/werewolf) && client) // TA EDIT START
+		if(istype(src, /mob/living/carbon/human/species/werewolf))
+			for(var/mob/living/carbon/human/H in GLOB.human_list)
+				if(H.scent_image)
+					client.images |= H.scent_image // TA EDIT END
 
 /obj/item/bodypart/head/dullahan/MiddleMouseDrop_T(atom/movable/dragged, mob/living/user)
 	if(user.mmb_intent)
