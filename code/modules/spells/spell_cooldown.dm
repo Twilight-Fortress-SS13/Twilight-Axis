@@ -265,7 +265,8 @@
 		if(!can_cast_spell(TRUE))
 			cancel_casting()
 			return PROCESS_KILL
-/*		if(is_held_ready()) // TA EDIT START
+		/*
+		if(is_held_ready()) // TA EDIT START
 			if(!fully_charged_at)
 				fully_charged_at = world.time
 			var/held_for = world.time - fully_charged_at
@@ -288,7 +289,8 @@
 				owner.balloon_alert(owner, "I cannot hold the spell any longer!")
 				cancel_casting(voluntary = is_held_ready())
 				return PROCESS_KILL
-			invoke_resource_cost(primary_resource_type, ramped_drain) */ // TA EDIT END
+			invoke_resource_cost(primary_resource_type, ramped_drain)
+		*/ // TA EDIT END
 		refresh_charge_intent()
 		return
 
