@@ -363,7 +363,7 @@
 	wrists = /obj/item/clothing/neck/roguetown/psicross/silver
 	beltl = /obj/item/rogueweapon/scabbard/sword
 	r_hand = /obj/item/rogueweapon/sword/short/psy
-
+/*
 /datum/advclass/otavan_volf
 	name = "Otavan Volf"
 	tutorial = "No matter who you were before. Now you are a bloodhound of Inquisition enchanted with rune magyck. No doors can stop you and no heretic can escape your silent bullet."
@@ -454,3 +454,4 @@
 			H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/fetch)
 		if("Leap")
 			H.mind?.AddSpell(new /datum/action/cooldown/spell/leap)
+*/

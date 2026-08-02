@@ -3,6 +3,6 @@
 	job_subclasses += list(
 		/datum/advclass/blackpowder_legionnaire,
 		/datum/advclass/psydonianwarscholar,
-		/datum/advclass/otavan_volf
+//		/datum/advclass/otavan_volf
 		)
 	. = ..()
