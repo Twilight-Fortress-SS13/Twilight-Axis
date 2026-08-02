@@ -1322,8 +1322,8 @@
 		var/skin_path = /obj/item/clothing/suit/roguetown/armor/manual/pushups/barbarian
 		owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
 	else
-		var/skin_path_1 = /obj/item/clothing/suit/roguetown/armor/manual/sewable/maille/berzerkerchest
-		var/skin_path_2 = /obj/item/clothing/suit/roguetown/armor/manual/sewable/leather/berzerker
+		var/skin_path_1 = /obj/item/clothing/suit/roguetown/armor/manual/resting/maille/berzerkerchest
+		var/skin_path_2 = /obj/item/clothing/suit/roguetown/armor/manual/resting/leather/berzerker
 		owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path_1, SLOT_ARMOR)
 		owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path_2, SLOT_SHIRT)
 	return TRUE
@@ -1332,7 +1332,7 @@
 	if(!H || !has_trait(TAT_TRAIT_BODYBUILDER_SKIN))
 		return FALSE
 
-	var/skin_path = /obj/item/clothing/suit/roguetown/armor/manual/sewable/padded/gladiator
+	var/skin_path = /obj/item/clothing/suit/roguetown/armor/manual/sewable/padded/disciple
 	owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
 	return TRUE
 
