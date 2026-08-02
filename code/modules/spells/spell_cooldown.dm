@@ -265,7 +265,7 @@
 		if(!can_cast_spell(TRUE))
 			cancel_casting()
 			return PROCESS_KILL
-		if(is_held_ready())
+/*		if(is_held_ready()) // TA EDIT START
 			if(!fully_charged_at)
 				fully_charged_at = world.time
 			var/held_for = world.time - fully_charged_at
@@ -288,7 +288,7 @@
 				owner.balloon_alert(owner, "I cannot hold the spell any longer!")
 				cancel_casting(voluntary = is_held_ready())
 				return PROCESS_KILL
-			invoke_resource_cost(primary_resource_type, ramped_drain)
+			invoke_resource_cost(primary_resource_type, ramped_drain) */ // TA EDIT END
 		refresh_charge_intent()
 		return
 
@@ -1237,7 +1237,7 @@
 	return charge_required && click_to_activate
 
 /datum/action/cooldown/spell/proc/has_hold_cap()
-	return is_held_ready() && !charge_then_click && hold_max_time > hold_grace_time
+	return FALSE // TA EDIT
 
 /datum/action/cooldown/spell/proc/handle_hold_instability(held_for)
 	if(!has_hold_cap())
@@ -1270,11 +1270,7 @@
 	cancel_casting(voluntary = TRUE, cost_mult_override = SPELL_HOLD_TEAR_COST)
 
 /datum/action/cooldown/spell/proc/is_cancel_penalized()
-	if(!cancel_penalty_mult)
-		return FALSE
-	if(!source_aspect || ispath(source_aspect, /datum/magic_aspect/pseudo))
-		return FALSE
-	return TRUE
+	return FALSE // TA EDIT
 
 /datum/action/cooldown/spell/proc/past_cancel_commitment()
 	if(fully_charged || charged)
