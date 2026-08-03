@@ -1,0 +1,5 @@
+author: "AzurLazur"
+delete-after: True
+changes:
+  - rscdel: "Маршалёк"
+  - rscadd: "Гетман"

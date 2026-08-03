@@ -570,6 +570,8 @@
 
 		current_ancestor = parent
 
+	ta_apply_pending_royal_ancestor()
+
 /datum/controller/subsystem/familytree/proc/set_species_type(mob/living/carbon/human/H, species_type)
 	if(!H || !species_type)
 		return

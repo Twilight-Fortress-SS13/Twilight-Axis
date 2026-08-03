@@ -588,7 +588,37 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 		return TRUE
 	if(partner.familytree_blocked_ckeys && (seeker.ckey in partner.familytree_blocked_ckeys))
 		return TRUE
+	if(familytree_timeout_block_active(seeker, partner) || familytree_timeout_block_active(partner, seeker))
+		return TRUE
 	return FALSE
+
+/datum/controller/subsystem/familytree/proc/familytree_timeout_block_active(mob/living/carbon/human/holder, mob/living/carbon/human/other)
+	if(!holder || !other?.ckey || !islist(holder.familytree_timeout_blocks))
+		return FALSE
+	return holder.familytree_timeout_blocks[other.ckey] > 0
+
+/datum/controller/subsystem/familytree/proc/familytree_record_timeout_block(mob/living/carbon/human/a, mob/living/carbon/human/b)
+	if(!a || !b || !a.ckey || !b.ckey)
+		return FALSE
+	if(!islist(a.familytree_timeout_blocks))
+		a.familytree_timeout_blocks = list()
+	if(!islist(b.familytree_timeout_blocks))
+		b.familytree_timeout_blocks = list()
+	a.familytree_timeout_blocks[b.ckey] = FAMILYTREE_TIMEOUT_BLOCK_ITERATIONS
+	b.familytree_timeout_blocks[a.ckey] = FAMILYTREE_TIMEOUT_BLOCK_ITERATIONS
+	ftlog("TIMEOUT_BLOCK: [a.real_name] <-> [b.real_name] held back for [FAMILYTREE_TIMEOUT_BLOCK_ITERATIONS] iterations")
+	return TRUE
+
+/datum/controller/subsystem/familytree/proc/familytree_tick_timeout_blocks(mob/living/carbon/human/H)
+	if(!H || !islist(H.familytree_timeout_blocks) || !H.familytree_timeout_blocks.len)
+		return
+	for(var/blocked_ckey in H.familytree_timeout_blocks.Copy())
+		var/left = H.familytree_timeout_blocks[blocked_ckey] - 1
+		if(left > 0)
+			H.familytree_timeout_blocks[blocked_ckey] = left
+			continue
+		H.familytree_timeout_blocks -= blocked_ckey
+		ftlog("TIMEOUT_BLOCK: [H.real_name] may be matched with [blocked_ckey] again")
 
 /proc/familytree_donator_relatives_enabled(ckey)
 	if(!ckey)

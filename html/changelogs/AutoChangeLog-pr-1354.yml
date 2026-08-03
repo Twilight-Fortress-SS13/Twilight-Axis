@@ -1,0 +1,4 @@
+author: "Chituka"
+delete-after: True
+changes:
+  - bugfix: "паффер теперь стреляет правильно"

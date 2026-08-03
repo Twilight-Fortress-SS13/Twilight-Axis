@@ -5,13 +5,44 @@
 
 //T0
 
+/obj/item/pocketsand
+	name = "pocket sand"
+	desc = "A fistful of fine, irritating sand. Guaranteed to be clawing at the eyes of the unwise."
+	icon = 'icons/roguetown/items/natural.dmi'
+	icon_state = "clod1"
+	w_class = WEIGHT_CLASS_SMALL
+	dropshrink = 0
+	throwforce = 0
+	throw_speed = 1
+	grid_width = 32
+	grid_height = 32
+
+/obj/item/pocketsand/throw_impact(atom/hit_atom)
+	var/turf/T = get_turf(hit_atom)
+	if(isliving(hit_atom))
+		var/mob/living/target = hit_atom
+		if(!target.mind || istype(target, /mob/living/simple_animal))
+			target.adjustBruteLoss(5)
+		if(iscarbon(target))
+			target.blur_eyes(5)
+			target.adjust_blurriness(10)
+			target.blind_eyes(1.5)
+		target.visible_message(
+			span_warning("[target] is blasted with a cloud of sand!"),
+			span_warning("Sand gets into my eyes! I can't see!")
+		)
+		target.emote("pain")
+		target.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
+	playsound(T, 'sound/items/firesnuff.ogg', 100)
+	qdel(src)
+
 /datum/action/cooldown/spell/matthios/freemans_tools
 	spell_color = GLOW_COLOR_MATTHIOS
 	desc = "A simple prayer to the Free-God Matthios, for tools of liberation and struggle.<br><br>His will manifests in three forms: gutter-born arts of the freemen, gilded tools of blessed liberation, or by granting the bases of Malchem, a form of primordial alchemy so impossible it is oft mistaken for sorcery."
 	options = list(
 		//a simple 'blinds u for 1 sec' throwable
 		"Pocket Sand" = list(
-			path = /obj/item/impact_grenade/pocketsand,
+			path = /obj/item/pocketsand,
 			m_cooldown = 60 SECONDS,
 			m_devotion = 10,
 			m_rank = SKILL_LEVEL_NOVICE,
@@ -872,7 +903,7 @@
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "matthios_standard"
 	resistance_flags = FIRE_PROOF
-	
+
 /obj/item/rogueweapon/spear/matthios_standard/Initialize()
 	. = ..()
 	for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(src, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
@@ -1045,7 +1076,7 @@
 
 		var/datum/action/cooldown/spell/projectile/fireball/fireball = new /datum/action/cooldown/spell/projectile/fireball
 		var/datum/action/cooldown/spell/projectile/spitfire/spitfire = new /datum/action/cooldown/spell/projectile/spitfire
-		
+
 		fireball.Grant(src)
 		spitfire.Grant(src)
 
@@ -1325,7 +1356,7 @@
 	W.grant_language(/datum/language/draconic)
 	W.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
 	W.update_a_intents()
-	
+
 	if(getorganslot(ORGAN_SLOT_PENIS))
 		W.internal_organs_slot[ORGAN_SLOT_PENIS] = /obj/item/organ/penis/knotted/big
 	if(getorganslot(ORGAN_SLOT_TESTICLES))
@@ -1339,7 +1370,7 @@
 	ADD_TRAIT(src, TRAIT_NOSLEEP, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOPAIN, TRAIT_SOURCE_WILDSHAPE)
-	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_SOURCE_WILDSHAPE)	
+	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_PACIFISM, TRAIT_SOURCE_WILDSHAPE) // just an extra layer of protection in case something will go wrong

@@ -36,10 +36,15 @@ SUBSYSTEM_DEF(familytree)
 	var/familytree_busy_retry_limit = 30
 	var/familytree_busy_retry_delay = 10 SECONDS
 	var/familytree_log_file
+	var/list/familytree_round_prefs_by_ckey = list()
 	var/ftlog_counter = 0
 	var/ftlog_error_count = 0
 	var/ftlog_warn_count = 0
+#ifdef FAMILYTREE_DEBUG_LOGGING
+	var/verbose_logging = TRUE
+#else
 	var/verbose_logging = FALSE
+#endif
 
 #define FTLOG_DEBUG "DEBUG"
 #define FTLOG_INFO  "INFO"
@@ -47,7 +52,7 @@ SUBSYSTEM_DEF(familytree)
 #define FTLOG_ERROR "ERROR"
 #define FTLOG_CRIT  "CRIT"
 
-/datum/controller/subsystem/familytree/proc/ftlog(msg, level = FTLOG_INFO)
+/datum/controller/subsystem/familytree/proc/ftlog(msg, level = FTLOG_DEBUG)
 	if(level == FTLOG_DEBUG && !verbose_logging)
 		return
 	if(!familytree_log_file)
@@ -63,7 +68,6 @@ SUBSYSTEM_DEF(familytree)
 	WRITE_LOG(familytree_log_file, "\[[logtime]] [level] #[ftlog_counter] [msg]")
 
 /datum/controller/subsystem/familytree/proc/ftlog_state(tag = "SNAPSHOT")
-#ifdef FAMILYTREE_DEBUG_LOGGING
 	ftlog("=== [tag] ===", FTLOG_INFO)
 	ftlog("[tag] families=[families.len] viable_spouses=[viable_spouses.len] errors=[ftlog_error_count] warns=[ftlog_warn_count]", FTLOG_INFO)
 	var/assigned_count = 0
@@ -88,7 +92,6 @@ SUBSYSTEM_DEF(familytree)
 				names += "[node.person.real_name]([node.person.ckey || "NPC"])"
 		ftlog("[tag] HOUSE '[house.housename]' race=[house.dominant_race] members=[house.member_nodes.len]: [names.Join(", ")]", FTLOG_DEBUG)
 	ftlog("=== /[tag] ===", FTLOG_INFO)
-#endif
 
 /datum/controller/subsystem/familytree/proc/register_family(datum/heritage/house)
 	if(!house)
@@ -144,36 +147,12 @@ SUBSYSTEM_DEF(familytree)
 			families += family
 
 /datum/controller/subsystem/familytree/proc/load_familytree_runtime_preferences(mob/living/carbon/human/H, datum/preferences/P)
-	if(!H || !P)
+	if(!H)
 		return FALSE
-	P.familytree_module_load_character()
-	var/old_setspouse = H.setspouse
-	H.familytree_pref = P.family
-	H.gender_choice_pref = P.gender_choice_pref
-	H.setspouse = P.setspouse
-	if(old_setspouse != H.setspouse)
-		H.familytree_setspouse_retries = 0
-		H.familytree_setspouse_timeout_offered = FALSE
-		H.familytree_setspouse_wait_started = 0
-	H.species_preference_mode = P.species_preference_mode
-	H.preferred_species_types = islist(P.preferred_species_types) ? P.preferred_species_types.Copy() : list()
-	H.preferred_species_anatomy = P.preferred_species_anatomy
-	H.polygamy_mode = P.polygamy_mode
-	H.desired_relative_role = P.desired_relative_role
-	H.allow_low_status_marriage = P.allow_low_status_marriage
-	H.allow_relatives_in_family = P.allow_relatives_in_family
-	H.know_your_fate = P.know_your_fate
-	H.familytree_father_name = istext(P.familytree_father_name) ? P.familytree_father_name : ""
-	H.familytree_mother_name = istext(P.familytree_mother_name) ? P.familytree_mother_name : ""
-	H.familytree_father_species = istext(P.familytree_father_species) ? P.familytree_father_species : ""
-	H.familytree_mother_species = istext(P.familytree_mother_species) ? P.familytree_mother_species : ""
-	if(familytree_donator_relatives_enabled(H.ckey))
-		H.familytree_random_siblings = sanitize_integer(text2num("[P.familytree_random_siblings]"), 0, FAMILYTREE_MAX_RANDOM_RELATIVES, 0)
-		H.familytree_random_children = sanitize_integer(text2num("[P.familytree_random_children]"), 0, FAMILYTREE_MAX_RANDOM_RELATIVES, 0)
-	else
-		H.familytree_random_siblings = 0
-		H.familytree_random_children = 0
-	return TRUE
+	var/datum/familytree_prefs/round_prefs = familytree_get_round_prefs(H, TRUE)
+	if(!round_prefs)
+		return FALSE
+	return round_prefs.apply_to(H)
 
 /datum/controller/subsystem/familytree/proc/on_familytree_target_preference_changed(mob/living/carbon/human/H, old_setspouse)
 	if(!H || QDELETED(H))
@@ -187,6 +166,9 @@ SUBSYSTEM_DEF(familytree)
 	H.familytree_setspouse_wait_started = 0
 	ftlog("target preference changed for [H.real_name]: '[old_target]' -> '[new_target]'")
 	if(H.family_datum || H.familytree_opted_out || H.familytree_confirmation_pending)
+		return
+	if(!familytree_get_round_prefs(H, TRUE))
+		ftlog("try_queue STOP: [H.real_name] has no round preference datum")
 		return
 	if(!familytree_pref_enabled(H.familytree_pref))
 		return
@@ -221,8 +203,8 @@ SUBSYSTEM_DEF(familytree)
 		ftlog("on_mob_created SKIP: dummy")
 		return
 	var/mob/living/carbon/human/H = new_mob
-	if(H.ai_controller)
-		ftlog("on_mob_created SKIP: AI-controlled NPC ([H.ai_controller]), not a real player character")
+	if(H.ai_controller || initial(H.ai_controller))
+		ftlog("on_mob_created SKIP: AI-controlled NPC ([H.ai_controller || initial(H.ai_controller)]), not a real player character")
 		return
 	ftlog("on_mob_created PASS: registering [H.real_name] (ckey=[H.ckey] - may be empty, login will handle)")
 	register_human(H)
@@ -242,6 +224,7 @@ SUBSYSTEM_DEF(familytree)
 		if(try_grant_holy_spells(H))
 			granted++
 	ftlog("scan_and_grant_holy_spells DONE: scanned=[scanned] granted=[granted]")
+	ftlog_state("ROUNDSTART")
 
 /datum/controller/subsystem/familytree/proc/try_grant_holy_spells(mob/living/carbon/human/H)
 	if(!H || QDELETED(H) || !H.ckey || !H.mind)

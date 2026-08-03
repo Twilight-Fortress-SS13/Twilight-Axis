@@ -59,7 +59,7 @@ GLOBAL_LIST_EMPTY(antagonists)
 	. = TRUE
 	var/datum/mind/tested = new_owner || owner
 
-	if(tested?.current && is_banned(tested.current))
+	if(tested?.current && (QDELETED(tested.current) || is_banned(tested.current)))
 		return FALSE
 
 	if(tested.has_antag_datum(type))
@@ -122,9 +122,9 @@ GLOBAL_LIST_EMPTY(antagonists)
 			REMOVE_TRAIT(owner.current, TRAIT_TEMPO, SPECIES_TRAIT)
 
 /datum/antagonist/proc/is_banned(mob/M)
-	if(!M)
+	if(!M || !M.ckey)
 		return FALSE
-	. = (is_banned_from(M.ckey, list(ROLE_SYNDICATE, job_rank)) || QDELETED(M))
+	return is_banned_from(M.ckey, list(ROLE_SYNDICATE, job_rank))
 
 /datum/antagonist/proc/on_life(mob/user)
 	return

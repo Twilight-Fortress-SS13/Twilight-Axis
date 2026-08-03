@@ -119,18 +119,13 @@
 	var/atom/movable/screen/splash/credits/S = new(src, FALSE)
 	S.Fade(FALSE,FALSE)
 	RollCredits()
-	if(GLOB.credits_icons.len)
-		for(var/i=0, i<=GLOB.credits_icons.len, i++)
-			var/atom/movable/screen/P = new()
-			P.layer = SPLASHSCREEN_LAYER+1
-			P.appearance = GLOB.credits_icons
-			screen += P
 
 /datum/controller/subsystem/ticker/proc/declare_completion()
 	set waitfor = FALSE
 
 	log_game("The round has ended.")
 	SSerp?.hard_shutdown_all("roundend_credits_start") // TA add - NEW ERP SYSTEM
+	ccg_sync_all_player_collections()
 	to_chat(world, "<BR><BR><BR><span class='reallybig'>So ends this tale on [realm_name].</span>")
 	get_end_reason()
 	roundend_notify_discord()
@@ -288,9 +283,6 @@
 						"Pawns of gods, preachers of nite, all come together to recite this tale.",
 						"Whether with loss or life, kingdom survives... for now.",
 						"The people of [realm_name] prepare to look forward; their actions locked in the impermeable past.")
-
-	if(SSmapping.retainer.head_rebel_decree)
-		end_reason = "The rebellious peasants have taken control of Azuria's throne, shepherding forth the beginning of a new community!"
 
 	if(SSmapping.retainer.cult_ascended)
 		end_reason = "ZIZOZIZOZIZOZIZO"

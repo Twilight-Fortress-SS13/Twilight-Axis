@@ -472,6 +472,13 @@ function getRoleGroupKey(department: string | undefined, roleLabel: string) {
     return 'Ducal Family';
   }
 
+  if (
+    normalizedDepartment === 'ATC' ||
+    normalizedDepartment === 'Azurian Trading Company'
+  ) {
+    return 'Burghers';
+  }
+
   return normalizedDepartment || roleLabel;
 }
 

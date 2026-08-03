@@ -121,6 +121,11 @@
 
 	last_client_interact = world.time
 
+	//TA edit - Bard chages start
+	if(handle_bard_audience_click(A, modifiers))
+		return
+	//TA edit - Bard chages end
+
 	if(check_click_intercept(params,A))
 		return
 
@@ -340,7 +345,7 @@
 		if(can_reach)
 			if(isopenturf(A))
 				var/turf/T = A
-				if(used_intent.noaa)
+				if(used_intent.noaa && !used_intent.force_autoaim)
 					resolveAdjacentClick(A,W,params,used_hand)
 					return
 				if(T)
@@ -351,15 +356,21 @@
 						target = M
 						break
 					if(target)
-						if(target.Adjacent(src) || (used_intent.effective_range_type && CanReach(target, W)))
-							if(used_intent.cleave)
-								used_intent.cleave.show_cleave_visuals(src, T)
-							else
-								do_attack_animation(T, used_intent.animname, used_intent.masteritem, used_intent = src.used_intent)
+						//CanReach already honours used_intent.reach, so this covers reach 2+ intents
+						if(target.Adjacent(src) || CanReach(target, W))
+							if(!used_intent.noaa)
+								if(used_intent.cleave)
+									used_intent.cleave.show_cleave_visuals(src, T)
+								else
+									do_attack_animation(T, used_intent.animname, used_intent.masteritem, used_intent = src.used_intent)
 							resolveAdjacentClick(target,W,params,used_hand)
 							atkswinging = null
 							//update_warning()
 							return
+					if(used_intent.noaa) //force_autoaim intent with nothing to aim at, hit the turf like it always did
+						resolveAdjacentClick(A,W,params,used_hand)
+						atkswinging = null
+						return
 					if(cmode)
 						resolveAdjacentClick(T,W,params,used_hand) //hit the turf
 					if(!used_intent.noaa)

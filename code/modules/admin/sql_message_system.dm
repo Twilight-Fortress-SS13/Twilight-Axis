@@ -194,6 +194,8 @@
 		qdel(query_edit_message)
 		log_admin_private("[kn] has edited a [type] [(type == "note" || type == "message" || type == "watchlist entry") ? " for [target_key]" : ""] made by [admin_key] from [old_text] to [new_text]")
 		message_admins("[kna] has edited a [type] [(type == "note" || type == "message" || type == "watchlist entry") ? " for [target_key]" : ""] made by [admin_key] from<br>[old_text]<br>to<br>[new_text]")
+		if(type == "note" || type == "message" || type == "watchlist entry")
+			world.TgsAnnounceAdminMessageEdit(editor_ckey, target_key, admin_key, type, old_text, new_text)
 		if(browse)
 			browse_messages("[type]")
 		else

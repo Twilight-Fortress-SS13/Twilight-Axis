@@ -48,7 +48,7 @@ GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
 GLOBAL_PROTECT(admin_verbs_admin)
 /world/proc/AVerbsAdmin()
 	return list(
-//	/client/proc/adjusttriumph,
+	/client/proc/adjusttriumph,
 	/client/proc/end_party,
 	/client/proc/cmd_admin_say,			/*admin-only ooc chat*/
 	/client/proc/toggle_lobby_ooc,
@@ -110,6 +110,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/toggleadminhelpsound,
 	/client/proc/respawn_character,
 	/client/proc/clear_job_respawn_delay,
+	/client/proc/ccg_admin_management,
 	/client/proc/discord_id_manipulation, /* No Discord implementation? */
 	/datum/admins/proc/sleep_view,
 	/datum/admins/proc/wake_view,
@@ -748,24 +749,9 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	set name = "Give Spell"
 	set desc = ""
 
-	var/list/spell_list = list()
-	var/type_length = length("/obj/effect/proc_holder/spell") + 2
-	for(var/A in GLOB.spells)
-		spell_list[copytext("[A]", type_length)] = A
-	var/obj/effect/proc_holder/spell/S = input("Choose the spell to give to that guy", "ABRAKADABRA") as null|anything in sortList(spell_list)
-	if(!S)
-		return
-
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-	log_admin("[key_name(usr)] gave [key_name(T)] the spell [S].")
-	message_admins(span_adminnotice("[key_name_admin(usr)] gave [key_name_admin(T)] the spell [S]."))
-
-	S = spell_list[S]
-	if(T.mind)
-		T.mind.AddSpell(new S)
-	else
-		T.AddSpell(new S)
-		message_admins(span_danger("Spells given to mindless mobs will not be transferred in mindswap or cloning!"))
+	var/granted = loadout_add_spell(T)
+	if(granted)
+		SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/remove_spell(mob/T in GLOB.mob_list)
 	set category = "Game Master"
@@ -985,4 +971,52 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	to_chat(src, "Browser tools are now enabled.")
 	winset(src, null, "browser-options=devtools,find,refresh")
+
+/client/proc/adjusttriumph()
+	set category = "Admin.Special"
+	set name = "Adjust Triumphs"
+	set desc = "Adjust a player's Triumphs by ckey, including offline players."
+	if(!holder || !check_rights(R_ADMIN))
+		return
+
+	var/target_input = input(src, "Enter the player's ckey.", "Adjust Triumphs") as null|text
+	var/target_ckey = ckey(target_input)
+	if(!target_ckey)
+		return
+	if(target_ckey == src.ckey)
+		to_chat(src, span_boldwarning("Самому себе триумфы выдавать нельзя."))
+		return
+
+	var/current_triumphs = SStriumphs.get_triumphs(target_ckey)
+	var/amt2change = input(src, "How much to modify [target_ckey]'s Triumphs by? (100 to -100)\nCurrent Triumphs: [current_triumphs]", "Adjust Triumphs") as null|num
+	if(isnull(amt2change))
+		return
+	amt2change = clamp(round(amt2change), -100, 100)
+	if(current_triumphs + amt2change < 0)
+		amt2change = -current_triumphs
+	if(!amt2change)
+		to_chat(src, span_warning("The Triumph amount was not changed."))
+		return
+
+	var/raisin = stripped_input(usr, "State a short reason for this change", "Game Master", null, null)
+	if(!raisin)
+		return
+
+	var/new_triumphs = current_triumphs + amt2change
+	if(alert(src, "Ckey: [target_ckey]\nTriumphs: [current_triumphs] -> [new_triumphs]\nReason: [raisin]", "Confirm Triumph Adjustment", "Confirm", "Cancel") != "Confirm")
+		return
+
+	SStriumphs.triumph_adjust(amt2change, target_ckey)
+	SStriumphs.adjust_leaderboard(target_ckey)
+	world.TgsAnnounceTriumphChanges(amt2change, target_ckey, src.ckey, raisin)
+	message_admins("[usr.key] adjusted [target_ckey]'s triumphs by [amt2change] with reason: [raisin].")
+	log_admin("[usr.key] adjusted [target_ckey]'s triumphs by [amt2change] with reason: [raisin].")
+	to_chat(src, span_adminnotice("[target_ckey]'s Triumphs: [current_triumphs] -> [new_triumphs]."))
+
+	var/client/target_client = GLOB.directory[target_ckey]
+	if(target_client)
+		if(amt2change > 0)
+			to_chat(target_client, "\n<font color='purple'>[amt2change] TRIUMPH(S) awarded.</font>")
+		else
+			to_chat(target_client, "\n<font color='purple'>[amt2change * -1] TRIUMPH(S) lost.</font>")
 

@@ -80,7 +80,7 @@
 /datum/reagent/medicine/stronghealth
 	name = "Strong Health Potion"
 	description = "Quickly regenerates all types of damage."
-	color = "#820000be"
+	color = "#820000"
 	taste_description = "rich lifeblood"
 	scent_description = "metal"
 	metabolization_rate = REAGENTS_METABOLISM * 3

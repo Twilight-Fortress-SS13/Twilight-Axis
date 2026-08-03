@@ -84,13 +84,14 @@
 	gloves = /obj/item/clothing/gloves/roguetown/chain
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
-	shoes = /obj/item/clothing/shoes/roguetown/boots/armor
+	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 	backl = /obj/item/rogueweapon/shield/tower
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	belt = /obj/item/storage/belt/rogue/leather/black
 	beltl = /obj/item/rogueweapon/scabbard/sword
 	beltr = /obj/item/rogueweapon/stoneaxe/woodcut/wardenpick
 	cloak = /obj/item/clothing/cloak/forrestercloak/vanguard
+	r_hand = /obj/item/rogueweapon/sword/sabre
 
 /datum/outfit/job/roguetown/overseer/pre_equip(mob/living/carbon/human/H)
 	..()

@@ -22,6 +22,10 @@
 	if(!CheckAdminHref(href, href_list))
 		return
 
+	if(href_list["ccg_manage"])
+		ccg_management_topic(href_list)
+		return
+
 	// Open Heal Panel from Player Panel
 	if(href_list["heal_panel"])
 		var/mob/living/M = locate(href_list["heal_panel"])

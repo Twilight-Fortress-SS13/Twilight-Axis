@@ -1,6 +1,5 @@
 #define ROUND_START_MUSIC_LIST "strings/round_start_sounds.txt"
 
-
 GLOBAL_VAR_INIT(round_timer, INITIAL_ROUND_TIMER)
 
 SUBSYSTEM_DEF(ticker)
@@ -453,6 +452,8 @@ SUBSYSTEM_DEF(ticker)
 
 	SSgamemode.roll_roundstart_antag()
 	SSgamemode.spawn_extra_antags()
+
+	GLOB.dominant_faith_tracker.roundstart_setup() // this needs to be after antags roll because some of them change your patron
 
 //	SEND_SOUND(world, sound('sound/misc/roundstart.ogg'))
 	current_state = GAME_STATE_PLAYING

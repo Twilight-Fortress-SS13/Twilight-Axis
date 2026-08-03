@@ -21,6 +21,7 @@
 
 /obj/item/ammo_casing
 	var/obj/item/quiver/twilight_bullet/runicbag/linked_bag = null
+	var/breech_loaded = FALSE
 
 /**
  * Generic ammo used by handgonnes and arquebuses
@@ -513,3 +514,11 @@
 	max_integrity = 0.1
 	pellets = 6
 	variance = 30
+
+/obj/item/ammo_casing/caseless/rogue/twilight_lead/paper
+	name = "paper cartridge"
+	desc = "Фундаментально, бумажный патрон мало чем отличается от обычного сочетания пороха и пули - но использовать его значительно удобнее."
+	projectile_type = /obj/projectile/bullet/twilight_lead
+	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
+	icon_state = "paper_bullet"
+	breech_loaded = TRUE

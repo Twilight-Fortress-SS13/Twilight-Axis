@@ -161,7 +161,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["ambiencevol"]		>> ambiencevol
 	S["anonymize"]			>> anonymize
 	S["donor_ooc_color"]	>> donor_ooc_color // TA EDIT
-	S["donor_ooc_icon"]	>> donor_ooc_icon // TA EDIT 
+	S["donor_ooc_icon"]	>> donor_ooc_icon // TA EDIT
 	S["donor_examine_icon"]	>> donor_examine_icon // TA EDIT
 	S["stopdroning"]		>> stopdroning
 	S["masked_examine"]		>> masked_examine
@@ -219,7 +219,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["no_runechat_animation"] >> no_runechat_animation //TA EDIT
 	S["defiant"]			>> defiant
 	// TA Addition start - new ERP SYSTEM
-	S["erp_custom_actions"] >> erp_custom_actions	
+	S["erp_custom_actions"] >> erp_custom_actions
 	S["erp_kink_prefs"] >> erp_kink_prefs
 	S["erp_organ_sensitivity"] >> erp_organ_prefs
 	// TA Addition end - new ERP SYSTEM
@@ -283,6 +283,24 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	sanitize_erp_organ_prefs()
 	//TA Addition end - new ERP SYSTEM
 
+	S["ccg_known_rare_cards"] >> ccg_known_rare_cards
+	ccg_known_rare_cards = SANITIZE_LIST(ccg_known_rare_cards)
+	S["ccg_selected_deck"] >> ccg_selected_deck
+	ccg_selected_deck = SANITIZE_LIST(ccg_selected_deck)
+	S["ccg_saved_deck_cards"] >> ccg_saved_deck_cards
+	ccg_saved_deck_cards = SANITIZE_LIST(ccg_saved_deck_cards)
+	S["ccg_saved_deck_faction"] >> ccg_saved_deck_faction
+	S["ccg_saved_deck_leader"] >> ccg_saved_deck_leader
+	S["ccg_saved_decks"] >> ccg_saved_decks
+	ccg_saved_decks = SANITIZE_LIST(ccg_saved_decks)
+	S["ccg_active_deck_index"] >> ccg_active_deck_index
+	S["ccg_deckbuilder_view_mode"] >> ccg_deckbuilder_view_mode
+	S["ccg_soundtrack_enabled"] >> ccg_soundtrack_enabled
+	S["ccg_presets_are_virtual"] >> ccg_presets_are_virtual
+	if(!length(ccg_saved_deck_cards) && length(ccg_selected_deck))
+		ccg_saved_deck_cards = ccg_selected_deck.Copy()
+	ccg_load_or_migrate_sql()
+
 	verify_keybindings_valid()
 	return TRUE
 
@@ -336,7 +354,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["ambiencevol"], ambiencevol)
 	WRITE_FILE(S["anonymize"], anonymize)
 	WRITE_FILE(S["donor_ooc_color"], donor_ooc_color) // TA EDIT
-	WRITE_FILE(S["donor_ooc_icon"], donor_ooc_icon) // TA EDIT 
+	WRITE_FILE(S["donor_ooc_icon"], donor_ooc_icon) // TA EDIT
 	WRITE_FILE(S["donor_examine_icon"], donor_examine_icon) // TA EDIT
 	WRITE_FILE(S["stopdroning"], stopdroning)
 	WRITE_FILE(S["masked_examine"], masked_examine)
@@ -569,6 +587,53 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 /datum/preferences/proc/_load_loadout(S)
 	S["selected_loadout_items"] >> selected_loadout_items
 	selected_loadout_items = SANITIZE_LIST(selected_loadout_items)
+	var/list/root_ccg_known_rare_cards = islist(ccg_known_rare_cards) ? ccg_known_rare_cards.Copy() : list()
+	var/list/root_ccg_selected_deck = islist(ccg_selected_deck) ? ccg_selected_deck.Copy() : list()
+	var/list/root_ccg_saved_deck_cards = islist(ccg_saved_deck_cards) ? ccg_saved_deck_cards.Copy() : list()
+	var/root_ccg_saved_deck_faction = ccg_saved_deck_faction
+	var/root_ccg_saved_deck_leader = ccg_saved_deck_leader
+	var/list/root_ccg_saved_decks = islist(ccg_saved_decks) ? deepCopyList(ccg_saved_decks) : list()
+	var/root_ccg_active_deck_index = ccg_active_deck_index
+	var/root_ccg_deckbuilder_view_mode = ccg_deckbuilder_view_mode
+	var/root_ccg_soundtrack_enabled = ccg_soundtrack_enabled
+	var/root_ccg_presets_are_virtual = ccg_presets_are_virtual
+	S["ccg_known_rare_cards"] >> ccg_known_rare_cards
+	ccg_known_rare_cards = SANITIZE_LIST(ccg_known_rare_cards)
+	S["ccg_selected_deck"] >> ccg_selected_deck
+	ccg_selected_deck = SANITIZE_LIST(ccg_selected_deck)
+	S["ccg_saved_deck_cards"] >> ccg_saved_deck_cards
+	ccg_saved_deck_cards = SANITIZE_LIST(ccg_saved_deck_cards)
+	S["ccg_saved_deck_faction"] >> ccg_saved_deck_faction
+	S["ccg_saved_deck_leader"] >> ccg_saved_deck_leader
+	S["ccg_saved_decks"] >> ccg_saved_decks
+	ccg_saved_decks = SANITIZE_LIST(ccg_saved_decks)
+	S["ccg_active_deck_index"] >> ccg_active_deck_index
+	S["ccg_deckbuilder_view_mode"] >> ccg_deckbuilder_view_mode
+	S["ccg_soundtrack_enabled"] >> ccg_soundtrack_enabled
+	S["ccg_presets_are_virtual"] >> ccg_presets_are_virtual
+	if(!length(ccg_known_rare_cards) && length(root_ccg_known_rare_cards))
+		ccg_known_rare_cards = root_ccg_known_rare_cards
+	if(!length(ccg_selected_deck) && length(root_ccg_selected_deck))
+		ccg_selected_deck = root_ccg_selected_deck
+	if(!length(ccg_saved_deck_cards) && length(root_ccg_saved_deck_cards))
+		ccg_saved_deck_cards = root_ccg_saved_deck_cards
+	if(!length(ccg_saved_decks) && length(root_ccg_saved_decks))
+		ccg_saved_decks = root_ccg_saved_decks
+	if(!ccg_saved_deck_faction)
+		ccg_saved_deck_faction = root_ccg_saved_deck_faction
+	if(!ccg_saved_deck_leader)
+		ccg_saved_deck_leader = root_ccg_saved_deck_leader
+	if(!ccg_active_deck_index)
+		ccg_active_deck_index = root_ccg_active_deck_index
+	if(!ccg_deckbuilder_view_mode)
+		ccg_deckbuilder_view_mode = root_ccg_deckbuilder_view_mode
+	if(isnull(ccg_soundtrack_enabled))
+		ccg_soundtrack_enabled = root_ccg_soundtrack_enabled
+	if(isnull(ccg_presets_are_virtual))
+		ccg_presets_are_virtual = root_ccg_presets_are_virtual
+	if(!length(ccg_saved_deck_cards) && length(ccg_selected_deck))
+		ccg_saved_deck_cards = ccg_selected_deck.Copy()
+	ccg_load_or_migrate_sql()
 
 	S["loadout_item_colors"] >> loadout_item_colors
 	sanitize_loadout_item_colors()
@@ -920,7 +985,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!islist(job_characters)) //TA EDIT START
 		job_characters = list()
 	for(var/job_title in job_characters)
-		
+
 		var/slot_num = job_characters[job_title]
 		if(!isnum(slot_num) || slot_num < 1 || slot_num > max_save_slots)
 			job_characters -= job_title //TA EDIT END
@@ -950,7 +1015,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 			job_subclass_strict[job_title] = sanitize_integer(job_subclass_strict[job_title], FALSE, TRUE, FALSE)
 			if(!job_subclass_strict[job_title])
 				job_subclass_strict -= job_title // TA EDIT END
-	
+
 	all_quirks = SANITIZE_LIST(all_quirks)
 
 	S["customizer_entries"] >> customizer_entries
@@ -959,17 +1024,17 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	// TA EDIT START - load familytree settings from the active character slot.
 	familytree_module_load_character_from_savefile(S, slot, TRUE)
 	// TA EDIT END
-	
+
 	return TRUE
 
 /datum/preferences/proc/fast_scan_for_job(savefile/S, slot)
 	S.cd = "/character[slot]"
-	
-	
+
+
 	S["real_name"] >> real_name
 	if(!real_name) real_name = "Slot [slot]"
 
-	
+
 	var/species_name
 	S["species"] >> species_name
 	if(species_name && GLOB.species_list[species_name])
@@ -978,11 +1043,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	else
 		pref_species = new default_species.type
 
-	
+
 	S["age"] >> age
 	S["gender"] >> gender
 
-	
+
 	var/patron_typepath
 	S["selected_patron"] >> patron_typepath
 	if(patron_typepath && GLOB.patronlist[patron_typepath])
@@ -990,14 +1055,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	else
 		selected_patron = GLOB.patronlist[default_patron]
 
-	
+
 	var/saved_virtue_type
 	var/saved_virtuetwo_type
 	var/saved_origin_type
 	S["virtue"] >> saved_virtue_type
 	S["virtuetwo"] >> saved_virtuetwo_type
 	S["virtue_origin"] >> saved_origin_type
-	
+
 	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices")
 	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices")
 	var/list/origin_data = normalize_saved_virtue(saved_origin_type, S, "virtue_origin_choices")
@@ -1006,7 +1071,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	virtuetwo = load_clean_virtue(virtuetwo_data[1], virtuetwo_data[2])
 	virtue_origin = load_clean_virtue(origin_data[1], origin_data[2])
 
-	
+
 	charflaws.Cut()
 	var/list/loaded_flaws
 	S["charflaws"] >> loaded_flaws

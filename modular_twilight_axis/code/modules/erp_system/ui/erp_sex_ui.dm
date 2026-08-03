@@ -136,6 +136,9 @@
 	. = ..()
 	if(.)
 		return
+	if(actor?.is_blocked_by_auto_song())
+		to_chat(actor, span_warning("I can't use the ERP panel while performing the song."))
+		return FALSE
 	return handle_ui_intent(action, params)
 
 /datum/erp_sex_ui/proc/request_update()

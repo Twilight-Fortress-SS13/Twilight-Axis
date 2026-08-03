@@ -45,7 +45,7 @@
 				msg += span_artery("[m1] pale.")
 			if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
 				msg += span_artery("[m1] a little pale.")
-	
+
 		// Bleeding
 		if(bleed_rate)
 			var/bleed_wording = "bleeding"
@@ -72,9 +72,13 @@
 	//Grabbing
 	if(pulledby && pulledby.grab_state)
 		msg += "[m1] being grabbed by [pulledby]."
-	
+
 	if(stat >= UNCONSCIOUS)
-		msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"].[client && ((world.time - disconnected_at) > 120 SECONDS) ? "" : " <b>[m1] won't be able to wake up soon. [m1] been like this for about [ceil(((world.time - disconnected_at)/10)/60)] minutes.</b>"]"
+		msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"]."
+
+	if(key && !client && disconnected_at)
+		var/disconnected_minutes = max(0, ceil((world.time - disconnected_at) / (1 MINUTES)))
+		msg += "<b>[m1] won't be able to wake up soon. [m1] been like this for about [disconnected_minutes] minute[disconnected_minutes == 1 ? "" : "s"].</b>"
 
 	if(length(msg))
 		. += span_warning("[msg.Join("\n")]")

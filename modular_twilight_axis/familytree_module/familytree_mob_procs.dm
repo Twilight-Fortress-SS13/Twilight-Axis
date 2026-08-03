@@ -376,23 +376,10 @@
 /mob/dead/new_player/IsJobUnavailable(rank, latejoin = FALSE)
 	if(QDELETED(src))
 		return JOB_UNAVAILABLE_GENERIC
-	if(has_world_trait(/datum/world_trait/skeleton_siege))
-		if(rank != "Greater Skeleton")
-			return JOB_UNAVAILABLE_GENERIC
-		else
-			return JOB_AVAILABLE
-	else
-		if(rank == "Greater Skeleton")
-			return JOB_UNAVAILABLE_GENERIC
-
-	if(has_world_trait(/datum/world_trait/goblin_siege))
-		if(rank != "Goblin")
-			return JOB_UNAVAILABLE_GENERIC
-		else
-			return JOB_AVAILABLE
-	else
-		if(rank == "Goblin")
-			return JOB_UNAVAILABLE_GENERIC
+	if(rank == "Siege Skeleton")
+		return has_world_trait(/datum/world_trait/skeleton_siege) ? JOB_AVAILABLE : JOB_UNAVAILABLE_GENERIC
+	if(rank == "Goblin")
+		return has_world_trait(/datum/world_trait/goblin_siege) ? JOB_AVAILABLE : JOB_UNAVAILABLE_GENERIC
 
 	var/datum/job/job = SSjob.GetJob(rank)
 	if(!job)

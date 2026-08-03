@@ -7,7 +7,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	//doohickeys for savefiles
 	var/path
 	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
-  
+
 	var/loaded_slot = 1
 
 	var/max_save_slots = 20
@@ -157,15 +157,15 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/stopdroning = FALSE
 
 	var/anonymize = TRUE
-	var/donor_ooc_color = TRUE // TA EDIT 
-	var/donor_ooc_icon = TRUE // TA EDIT 
+	var/donor_ooc_color = TRUE // TA EDIT
+	var/donor_ooc_icon = TRUE // TA EDIT
 	var/donor_examine_icon = TRUE // TA EDIT
 	var/masked_examine = FALSE
 	var/nsfw_examine_always = FALSE // TA EDIT
-	var/full_examine = FALSE
+	var/full_examine = TRUE
 	var/mute_animal_emotes = FALSE
 	var/autoconsume = FALSE
-	var/no_examine_blocks = TRUE
+	var/no_examine_blocks = FALSE
 	var/no_autopunctuate = FALSE
 	var/no_language_fonts = FALSE
 	var/no_language_icon = FALSE
@@ -218,7 +218,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/chatheadshot = TRUE
 	var/list/violated = list() // ТА
 	var/ooc_extra
-	var/ooc_extra_img // ТА 
+	var/ooc_extra_img // ТА
 	var/ooc_extra_img_link // ТА
 	var/song_artist
 	var/song_title
@@ -556,16 +556,16 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 /datum/preferences/proc/get_job_prefs(job_title, forced_slot = null) //TA EDIT start
 	var/slot = forced_slot ? forced_slot : job_characters[job_title]
-	
-	
+
+
 	if(!slot || slot == loaded_slot)
 		return src
 
-	
+
 	if(loaded_job_slots["[slot]"])
 		return loaded_job_slots["[slot]"]
 
-	
+
 	var/datum/preferences/temp = new(parent)
 	temp.load_character(slot)
 	loaded_job_slots["[slot]"] = temp
@@ -991,6 +991,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 			dat += "<br><b>Family Preferences:</b> <a href='?_src_=prefs;preference=family_options;task=input'>Change</a>" // TA EDIT
 			dat += "<br><b>Loadout Items:</b> <a href='?_src_=prefs;preference=loadout_item;task=input'>Change</a>"
+			dat += "<br><b>Cards Game:</b> <a href='?_src_=prefs;preference=ccg_settings'>Settings</a><br>"
 
 			dat += "<BR><BR><b>Has an Estate:</b> <a href='?_src_=prefs;preference=have_manor;task=input'>[have_manor ? "Yes" : "No"]</a><BR>" // TA EDIT
 			dat += "<b>Estate Name:</b> <a href='?_src_=prefs;preference=manor_name;task=input'>[manor_name ? manor_name : "Unknown Manor"]</a><BR>" // TA EDIT
@@ -1484,7 +1485,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	return 1
 
 
-/datum/preferences/proc/ResetJobs() 
+/datum/preferences/proc/ResetJobs()
 	job_preferences = list()
 	job_characters = list() //TA EDIT
 	job_subclass_preferences = list() // TA EDIT START
@@ -1729,7 +1730,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				if(SSticker.job_change_locked)
 					return 1
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
-			
+
 			if("set_job_subclass") // TA EDIT START
 				if(SSticker.job_change_locked)
 					return 1
@@ -1785,28 +1786,28 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				var/job_title = href_list["text"]
 				var/datum/job/J = SSjob.GetJob(job_title)
 				if(!J) return 1
-				
+
 				if(!path || !fexists(path))
 					return 1
 
 				var/list/valid_slots = list("Active Slot (Default)" = "default")
-				
-				
+
+
 				var/savefile/S = new /savefile(path)
-				
-				
+
+
 				var/datum/preferences/dummy_pref = new(parent)
-				
-				
+
+
 				for(var/i = 1 to max_save_slots)
-					
-					if(i % 5 == 0) 
+
+					if(i % 5 == 0)
 						CHECK_TICK
-					
-					
+
+
 					dummy_pref.fast_scan_for_job(S, i)
-					
-					
+
+
 					if(J.validate_prefs_for_job(dummy_pref))
 						valid_slots["Slot [i] - [dummy_pref.real_name] ([dummy_pref.pref_species.name])"] = i
 
@@ -3384,7 +3385,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						to_chat(user, span_notice("You will now have resistance from people violating you, but be punished for trying to violate others." + " " + span_boldwarning("(COMBAT Mode will disable ERP interactions. Bypassing this is a bannable offense, AHELP if necessary.)")))
 					else
 						to_chat(user, span_boldwarning("You fully immerse yourself in the grim experience, waiving your resistance from people violating you, but letting you do the same unto other non-defiants"))
-		
+
 				if("schizo_voice")
 					toggles ^= SCHIZO_VOICE
 					if(toggles & SCHIZO_VOICE)
@@ -3569,7 +3570,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	character.nsfw_ooc_extra_img = nsfw_ooc_extra_img
 
-	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link	
+	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link
 
 	character.erpprefs = erpprefs
 

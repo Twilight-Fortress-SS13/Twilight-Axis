@@ -8,11 +8,11 @@
 	spawn_positions = 8
 
 	tutorial = "Whether you were once a free soul or were born into chattel servitude, you're one of the many abused and mistreated slaves whipped by the Task Master to keep the Sultan's palace running smooth. Each day is marked by a scar on your back, and it is your back that carries the dirty, menial work required to keep the royal family content and decadent."
-	
+
 	outfit = /datum/outfit/job/roguetown/slave
 	advclass_cat_rolls = list(CTAG_PSLAVE = 20)
 	forbidden_races = list(RACES_DESPISED)
-	job_traits = list(TRAIT_HOMESTEAD_EXPERT, TRAIT_SLAVE, TRAIT_FOOD_STIPEND, TRAIT_ROYALSERVANT)
+	job_traits = list(TRAIT_HOMESTEAD_EXPERT, TRAIT_SLAVE, TRAIT_ROYAL_SUBSIDY, TRAIT_ROYALSERVANT)
 	display_order = JDO_SERVANT
 	give_bank_account = TRUE
 	min_pq = -10
@@ -28,7 +28,7 @@
 	)
 
 /datum/advclass/slave/servant
-	traits_applied = list(TRAIT_CICERONE, TRAIT_ROYALSERVANT, TRAIT_FOOD_STIPEND)
+	traits_applied = list(TRAIT_CICERONE, TRAIT_ROYALSERVANT, TRAIT_ROYAL_SUBSIDY)
 	name = "Servant"
 	tutorial = "You are a humdrum servant, dressed the part; lowly and best out of sight. It's practical, however."
 	outfit = /datum/outfit/job/roguetown/slave/servant
@@ -53,7 +53,7 @@
 
 /datum/outfit/job/roguetown/slave/servant/pre_equip(mob/living/carbon/human/H)
 	..()
-	
+
 	if(should_wear_femme_clothes(H))
 		shirt = /obj/item/clothing/suit/roguetown/shirt/dress/thawb
 	else
