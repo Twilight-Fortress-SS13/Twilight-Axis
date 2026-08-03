@@ -28,6 +28,9 @@ export type AppearanceData = {
   age: string | number;
   hair_color: string;
   eye_color: string;
+  eye_second_color?: string;
+  eye_heterochromia?: boolean;
+  eye_heterochromia_available?: boolean;
   skin_tone?: string;
   uses_skin_tones?: boolean;
   update_mutant_colors?: boolean;
@@ -384,7 +387,6 @@ export type FamiliarEditorData = {
 
 export type CharacterPreviewData = {
   map_id?: string | null;
-  control_generation?: number;
   grid_size?: number;
 };
 

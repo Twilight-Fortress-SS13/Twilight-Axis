@@ -209,7 +209,27 @@ export const AppearanceTab = (props: {
           <Stack vertical fill>
             <Stack.Item basis="55%">
               <Section title="Лицо и волосы" fill scrollable>
-                <CompactRow label="Цвет глаз" value={props.data.appearance.eye_color} colorPreview={props.data.appearance.eye_color} onClick={() => props.onEditPreference('eyes')} />
+                {props.data.appearance.eye_heterochromia_available ? (
+                  <CompactRow
+                    label="Гетерохромия"
+                    value={props.data.appearance.eye_heterochromia ? 'Да' : 'Нет'}
+                    onClick={() => props.onEditPreference('eye_heterochromia')}
+                  />
+                ) : null}
+                <CompactRow
+                  label={props.data.appearance.eye_heterochromia ? 'Первый глаз' : 'Цвет глаз'}
+                  value={props.data.appearance.eye_color}
+                  colorPreview={props.data.appearance.eye_color}
+                  onClick={() => props.onEditPreference('eyes')}
+                />
+                {props.data.appearance.eye_heterochromia_available && props.data.appearance.eye_heterochromia ? (
+                  <CompactRow
+                    label="Второй глаз"
+                    value={props.data.appearance.eye_second_color || props.data.appearance.eye_color}
+                    colorPreview={props.data.appearance.eye_second_color || props.data.appearance.eye_color}
+                    onClick={() => props.onEditPreference('eye_second_color')}
+                  />
+                ) : null}
                 <CompactRow label="Причёска" value={hairCustomizer?.current_accessory_name || 'Нет'} onClick={hairCustomizer?.id ? () => toggleHairCustomizer(hairCustomizer.id) : undefined} />
                 <CompactRow label="Борода" value={facialHairCustomizer?.current_accessory_name || 'Нет'} onClick={facialHairCustomizer?.id ? () => toggleHairCustomizer(facialHairCustomizer.id) : undefined} />
                 {faceEntries.length ? faceEntries.map((entry) => (

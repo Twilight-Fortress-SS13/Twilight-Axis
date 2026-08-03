@@ -43,7 +43,6 @@
 	var/preview_refresh_worker_running = FALSE
 	var/preview_visible = FALSE
 	var/character_preview_map_id
-	var/character_preview_control_generation = 0
 	var/character_preview_grid_size = 3
 	var/character_preview_grid_overridden = FALSE
 	var/character_preview_direction = SOUTH
@@ -141,7 +140,6 @@
 /datum/character_setup_panel/proc/build_character_preview_payload()
 	return list(
 		map_id = character_preview_map_id,
-		control_generation = character_preview_control_generation,
 		grid_size = character_preview?.grid_size || character_preview_grid_size
 	)
 
@@ -184,11 +182,11 @@
 	if(!preview)
 		preview_refresh_requested = TRUE
 		return
+	preview.display_to(last_user.client)
 	var/previous_grid_size = preview.grid_size
 	if(!preview.update_body())
 		preview_refresh_requested = TRUE
 		return
-	preview.display_to(last_user.client)
 	character_preview_grid_size = preview.grid_size
 	if(previous_grid_size != preview.grid_size)
 		update_character_preview_payload()
@@ -239,7 +237,7 @@
 	preview.grid_size_overridden = character_preview_grid_overridden
 	preview.set_grid_size(character_preview_grid_size)
 	preview.current_direction = character_preview_direction
-	if(!preview.update_body())
+	if(!preview.body && !preview.update_body())
 		queue_preview_refresh(1, TRUE)
 		return
 	preview.display_to(user.client, TRUE)
@@ -322,7 +320,6 @@
 	prefs.handle_loadout_size(user)
 	prefs.clean_loadout(user)
 	preview_visible = TRUE
-	character_preview_control_generation++
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "CharacterSetup")
@@ -340,7 +337,7 @@
 	character_preview?.hide_from_client()
 
 /datum/character_setup_panel/proc/refresh_from_legacy()
-	if(!prefs || !last_user?.client)
+	if(!prefs || !last_user?.client || processing_tgui_action)
 		return
 	prepare_preferences_state()
 	invalidate_customizer_catalog_payload()
@@ -349,8 +346,6 @@
 	cached_slot_summaries = null
 	invalidate_jobs_payload_cache()
 	queue_preview_refresh(1, TRUE)
-	if(processing_tgui_action)
-		return
 	SStgui.update_uis(src)
 	if(jobs_panel)
 		SStgui.update_uis(jobs_panel)
@@ -533,6 +528,16 @@
 	mutant_color_1 = mutant_color_1 ? "#[mutant_color_1]" : "#FFFFFF"
 	mutant_color_2 = mutant_color_2 ? "#[mutant_color_2]" : "#FFFFFF"
 	mutant_color_3 = mutant_color_3 ? "#[mutant_color_3]" : "#FFFFFF"
+	var/datum/customizer_entry/organ/eyes/eyes_entry = prefs.get_customizer_entry_of_type(/datum/customizer_entry/organ/eyes)
+	var/eye_color = eyes_entry ? eyes_entry.eye_color : prefs.get_eye_color()
+	var/eye_second_color = eyes_entry ? eyes_entry.second_color : eye_color
+	if(!eye_second_color)
+		eye_second_color = eye_color
+	var/eye_heterochromia = eyes_entry?.heterochromia ? TRUE : FALSE
+	var/eye_heterochromia_available = FALSE
+	if(eyes_entry)
+		var/datum/customizer_choice/organ/eyes/eyes_choice = CUSTOMIZER_CHOICE(eyes_entry.customizer_choice_type)
+		eye_heterochromia_available = eyes_choice?.allows_heterochromia ? TRUE : FALSE
 	data["appearance"] = list(
 		species = prefs.pref_species ? prefs.pref_species.base_name : "None",
 		subspecies = prefs.pref_species ? prefs.pref_species.sub_name : "None",
@@ -545,7 +550,10 @@
 		body_is_feminine = (prefs.gender == FEMALE),
 		age = prefs.age,
 		hair_color = prefs.get_hair_color(),
-		eye_color = prefs.get_eye_color(),
+		eye_color = eye_color,
+		eye_second_color = eye_second_color,
+		eye_heterochromia = eye_heterochromia,
+		eye_heterochromia_available = eye_heterochromia_available,
 		skin_tone = prefs.skin_tone,
 		uses_skin_tones = prefs.pref_species?.use_skintones ? TRUE : FALSE,
 		update_mutant_colors = prefs.update_mutant_colors ? TRUE : FALSE,
@@ -1903,6 +1911,9 @@
 			var/list/href_list = list()
 			for(var/key in params)
 				href_list[key] = "[params[key]]"
+			if(href_list["preference"] == "eyes")
+				handle_edit_preference(user, "eyes")
+				return TRUE
 			prefs.process_link(user, href_list)
 			var/static/list/save_after_link_preferences = list(
 				"tgui_theme",
@@ -2648,6 +2659,42 @@
 			if(voicepack_input)
 				prefs.voice_pack = voicepack_input
 				changed = TRUE
+
+		if("eyes")
+			var/datum/customizer_entry/organ/eyes/eyes_entry = prefs.get_customizer_entry_of_type(/datum/customizer_entry/organ/eyes)
+			if(eyes_entry)
+				var/previous_eye_color = eyes_entry.eye_color
+				prefs.handle_customizer_topic(user, list(
+					"customizer" = "[eyes_entry.customizer_type]",
+					"customizer_task" = "eye_color"
+				))
+				if(eyes_entry.eye_color != previous_eye_color)
+					changed = TRUE
+					update_key = "customizer"
+
+		if("eye_heterochromia")
+			var/datum/customizer_entry/organ/eyes/eyes_entry = prefs.get_customizer_entry_of_type(/datum/customizer_entry/organ/eyes)
+			if(eyes_entry)
+				var/previous_heterochromia = eyes_entry.heterochromia
+				prefs.handle_customizer_topic(user, list(
+					"customizer" = "[eyes_entry.customizer_type]",
+					"customizer_task" = "heterochromia"
+				))
+				if(eyes_entry.heterochromia != previous_heterochromia)
+					changed = TRUE
+					update_key = "customizer"
+
+		if("eye_second_color")
+			var/datum/customizer_entry/organ/eyes/eyes_entry = prefs.get_customizer_entry_of_type(/datum/customizer_entry/organ/eyes)
+			if(eyes_entry)
+				var/previous_second_color = eyes_entry.second_color
+				prefs.handle_customizer_topic(user, list(
+					"customizer" = "[eyes_entry.customizer_type]",
+					"customizer_task" = "second_eye_color"
+				))
+				if(eyes_entry.second_color != previous_second_color)
+					changed = TRUE
+					update_key = "customizer"
 
 		if("species")
 			var/list/base_species = list()

@@ -28,77 +28,48 @@ const CharacterPreview = (props: {
 }) => {
   const gridSize = props.preview?.grid_size || 3;
   const previewMapId = props.preview?.map_id;
-  const previewControlGeneration = props.preview?.control_generation || 0;
-  const previewStateRef = useRef({
-    hidden: props.hidden,
-    gridSize,
-    act: props.act,
-  });
-  previewStateRef.current = {
-    hidden: props.hidden,
-    gridSize,
-    act: props.act,
-  };
+  const actRef = useRef(props.act);
+  actRef.current = props.act;
   const previewParams = useMemo(() => ({
     id: previewMapId || '',
     type: 'map' as const,
     'background-color': '#000000',
-    'is-visible': !previewStateRef.current.hidden,
-    zoom: getPreviewZoom(previewStateRef.current.gridSize),
-    'zoom-mode': 'distort',
-    letterbox: false,
-    'saved-params': '',
-  }), [previewMapId, previewControlGeneration]);
+  }), [previewMapId]);
 
   useEffect(() => {
     if (!previewMapId) {
       return;
     }
 
-    Byond.winset(previewMapId, { 'is-visible': !props.hidden });
+    Byond.winset(previewMapId, {
+      'is-visible': !props.hidden,
+    });
   }, [previewMapId, props.hidden]);
 
   useEffect(() => {
-    if (!previewMapId || props.hidden) {
+    if (!previewMapId) {
       return;
     }
 
-    const frame = requestAnimationFrame(() => {
-      Byond.winset(previewMapId, {
-        'is-visible': true,
-        zoom: getPreviewZoom(gridSize),
-        'zoom-mode': 'distort',
-        letterbox: false,
-        'saved-params': '',
-      });
+    Byond.winset(previewMapId, {
+      zoom: getPreviewZoom(gridSize),
+      'zoom-mode': 'distort',
+      letterbox: false,
+      'saved-params': '',
     });
-
-    return () => cancelAnimationFrame(frame);
-  }, [previewMapId, props.hidden, gridSize]);
+  }, [previewMapId, gridSize]);
 
   useEffect(() => {
     if (!previewMapId) {
       return;
     }
 
-    const configureTimer = setTimeout(() => {
-      Byond.winset(previewMapId, {
-        'is-visible': !previewStateRef.current.hidden,
-        zoom: getPreviewZoom(previewStateRef.current.gridSize),
-        'zoom-mode': 'distort',
-        letterbox: false,
-        'saved-params': '',
-      });
-    }, 250);
     const syncTimer = setTimeout(() => {
-      previewStateRef.current.act('sync_preview_control');
+      actRef.current('sync_preview_control');
     }, 650);
 
-    return () => {
-      clearTimeout(configureTimer);
-      clearTimeout(syncTimer);
-    };
-  }, [previewMapId, previewControlGeneration]);
+    return () => clearTimeout(syncTimer);
+  }, [previewMapId]);
 
   return (
     <Box>
@@ -126,7 +97,7 @@ const CharacterPreview = (props: {
             }}
           >
             <ByondUi
-              key={`${previewMapId}-${previewControlGeneration}`}
+              key={previewMapId}
               params={previewParams}
               style={{
                 width: '100%',

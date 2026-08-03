@@ -127,7 +127,7 @@ export const GeneralTab = (props: {
             <CompactRow label="Боевая музыка" value={props.data.identity.combat_music || 'Default'} onClick={() => props.onEditPreference('combat_music')} />
             <CompactRow label="Имение" value={manorSummary(props.data.roleplay)} onClick={props.onOpenManor} />
             <CompactRow label="Фамильяр" value="Открыть" onClick={props.onOpenFamiliar} />
-            <CompactRow label="Меню ККИ" value="Открыть" onClick={() => props.act('link', { preference: 'ccg_settings' })} />
+            <CompactRow label="Арлит" value="Открыть" onClick={() => props.act('link', { preference: 'ccg_settings' })} />
             <CompactRow
               label="Быть ментором"
               value={props.data.system_settings?.schizo_voice ? 'Да' : 'Нет'}
