@@ -1,4 +1,5 @@
 GLOBAL_LIST_EMPTY(lordcolor)
+GLOBAL_LIST_EMPTY(loadout_lordcolor)
 
 GLOBAL_VAR(lordprimary)
 GLOBAL_VAR(lordsecondary)
@@ -15,6 +16,15 @@ GLOBAL_VAR(lordsecondary)
 
 /turf/proc/lordcolor(primary,secondary)
 	color = primary
+
+/proc/update_loadout_lord_colors(primary, secondary)
+	for(var/datum/weakref/item_ref as anything in GLOB.loadout_lordcolor.Copy())
+		var/obj/item/item = item_ref.resolve()
+		if(!item)
+			GLOB.loadout_lordcolor -= item_ref
+			continue
+
+		item.apply_loadout_duchy_colors(primary, secondary)
 
 /mob/proc/lord_color_choice()
 	if(!client)
@@ -37,6 +47,7 @@ GLOBAL_VAR(lordsecondary)
 		O.lordcolor(prim,sec)
 	for(var/turf/T in GLOB.lordcolor)
 		T.lordcolor(prim,sec)
+	update_loadout_lord_colors(prim, sec)
 
 /proc/lord_color_default()
 	GLOB.lordprimary = "#007fff" //AZURE
@@ -45,3 +56,4 @@ GLOBAL_VAR(lordsecondary)
 		O.lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
 	for(var/turf/T in GLOB.lordcolor)
 		T.lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
+	update_loadout_lord_colors(GLOB.lordprimary, GLOB.lordsecondary)

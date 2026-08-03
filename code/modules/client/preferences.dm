@@ -258,8 +258,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/taur_type = null
 	var/taur_color = "ffffff"
 
-	/// Assoc list of culinary preferences, where the key is the type of the culinary preference, and value is food/drink typepath
-	var/list/culinary_preferences = list()
+	var/favorite_cuisine = NONE
+	var/favorite_dish = NONE
+	var/favorite_drink = NONE
 
 
 	var/tgui_pref = TRUE
@@ -293,6 +294,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/feint_hud = FALSE
 
 	var/datum/loadout_panel/loadoutpanel
+	var/datum/character_setup_panel/character_setup_panel
+	var/tmp/character_setup_open_pending = FALSE
+	var/tmp/character_setup_tgui_active = FALSE
 
 
 
@@ -526,6 +530,30 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	if(combat_music.credits)
 		to_chat(user, span_info("Song name: <b>[combat_music.credits]</b>")) // TA EDIT END
 
+/datum/preferences/Destroy()
+	QDEL_NULL(character_setup_panel)
+	return ..()
+
+/datum/preferences/proc/open_character_setup_tgui(mob/user)
+	if(!user || !user.client)
+		character_setup_open_pending = FALSE
+		return
+	if(!SSmapping?.initialized || !SSjob?.initialized)
+		if(!character_setup_open_pending)
+			character_setup_open_pending = TRUE
+			addtimer(CALLBACK(src, PROC_REF(retry_open_character_setup_tgui), user), 1 SECONDS)
+		return
+	character_setup_open_pending = FALSE
+	if(!character_setup_panel)
+		character_setup_panel = new(src)
+	character_setup_panel.ui_interact(user)
+
+/datum/preferences/proc/retry_open_character_setup_tgui(mob/user)
+	character_setup_open_pending = FALSE
+	if(!user?.client || user.client.prefs != src)
+		return
+	open_character_setup_tgui(user)
+
 /datum/preferences/proc/get_job_prefs(job_title, forced_slot = null) //TA EDIT start
 	var/slot = forced_slot ? forced_slot : job_characters[job_title]
 	
@@ -579,6 +607,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 /datum/preferences/proc/ShowChoices(mob/user, tabchoice)
 	if(!user || !user.client)
 		return
+	if(character_setup_tgui_active)
+		character_setup_panel?.refresh_from_legacy()
+		return
 	if(slot_randomized)
 		load_character(default_slot) // Reloads the character slot. Prevents random features from overwriting the slot if saved.
 		slot_randomized = FALSE
@@ -589,6 +620,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		current_tab = tabchoice
 	if(tabchoice == 4)
 		current_tab = 0
+
+	if(current_tab == 0 && tgui_pref)
+		open_character_setup_tgui(user)
+		return
 
 	dat += "<a href='?_src_=prefs;preference=tab;tab=0' [current_tab == 0 ? "class='linkOn'" : ""]>Character</a>"
 	dat += "<a href='?_src_=prefs;preference=tab;tab=1' [current_tab == 1 ? "class='linkOn'" : ""]>Game Settings</a>"
@@ -1239,11 +1274,13 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	popup.open(FALSE)
 	onclose(user, "capturekeypress", src)
 
-/datum/preferences/proc/SetChoices(mob/user, limit = 14, list/splitJobs = list("Court Magician", "Bishop", "Merchant", "Guildmaster", "Archivist", "Towner", "Grenzelhoft Mercenary", "Beggar", "Prisoner", "Goblin King"), widthPerColumn = 295, height = 620)
+/datum/preferences/proc/SetChoices(mob/user, limit = 18, list/splitJobs = list("Court Magician", "Bishop", "Merchant", "Guildmaster", "Archivist", "Towner", "Grenzelhoft Mercenary", "Beggar", "Prisoner", "Goblin King"), widthPerColumn = 220, height = 720)
 	if(!SSjob)
 		return
+	if(character_setup_tgui_active)
+		character_setup_panel?.refresh_from_legacy()
+		return
 
-	var/width = widthPerColumn
 	var/HTML = "<center>"
 	if(SSjob.occupations.len <= 0)
 		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center><br>"
@@ -1252,32 +1289,52 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		if(joblessrole != RETURNTOLOBBY && joblessrole != BERANDOMJOB)
 			joblessrole = RETURNTOLOBBY
 		HTML += "<i>Click on an unlocked Class to get more information</i><br>"
-		HTML += donor_job_boost_prefs_banner(user) // TA EDIT
-		HTML += "<b>If Role Unavailable:</b><font color='purple'><a href='?_src_=prefs;preference=job;task=nojob'>[joblessrole]</a></font><BR>"
+		HTML += donor_job_boost_prefs_banner(user)
+		HTML += "<b>If Role Unavailable:</b><font color='purple'><a href='?_src_=prefs;preference=job;task=nojob'>[joblessrole]</a></font><br>"
 		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
-		HTML += "<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>"
-		HTML += "<table width='100%' cellpadding='1' cellspacing='0'>"
+		HTML += {"
+<style>
+.jobprefs { font-size: 11px; line-height: 1.05; width: 100%; }
+.job-scroll { width: 100%; max-height: 575px; overflow: auto; border: 1px solid #4b3431; box-sizing: border-box; }
+.job-columns { border-collapse: collapse; table-layout: fixed; }
+.job-column { width: 220px; min-width: 220px; max-width: 220px; vertical-align: top; border-right: 1px solid #4b3431; }
+.job-column:last-child { border-right: 0; }
+.job-column table { width: 220px; border-collapse: collapse; table-layout: fixed; }
+.job-column td { padding: 1px 2px; height: 20px; vertical-align: middle; }
+.job-name-cell { width: 112px; max-width: 112px; text-align: right; padding-right: 4px !important; overflow: hidden; }
+.job-name-cell a, .job-name-cell font { font-size: 11px; line-height: 11px; }
+.job-controls-cell { width: 104px; max-width: 104px; white-space: nowrap; overflow: hidden; }
+.job-control-grid { display: grid; grid-template-columns: 68px 16px 16px; column-gap: 2px; align-items: center; width: 104px; }
+.job-status { display: block; width: 68px; min-width: 0; overflow: hidden; text-overflow: clip; white-space: nowrap; text-align: left; }
+.job-pref-link, .job-pref-link *, .job-status font { font-size: 9px !important; line-height: 10px !important; letter-spacing: -1px; }
+.job-action-cell { display: block; width: 16px; height: 16px; overflow: hidden; text-align: center; }
+.job-mini-btn { display: block; box-sizing: border-box; width: 15px; height: 15px; padding: 0; margin: 0; border: 1px solid #8d6b67; background: #5c342f; color: #f3dfd8 !important; text-decoration: none; border-radius: 2px; font-size: 9px !important; line-height: 13px; text-align: center; overflow: hidden; }
+.job-mini-btn font { font-size: 9px !important; line-height: 13px !important; }
+.tutorialhover { position: relative; display: inline-block; max-width: 108px; white-space: normal; overflow-wrap: break-word; }
+.tutorialhover .tutorial { visibility: hidden; width: 240px; background-color: black; color: #e3c06f; text-align: center; border-radius: 6px; padding: 5px 6px; position: absolute; z-index: 10; top: 100%; left: 50%; margin-left: -120px; }
+.tutorialhover:hover .tutorial { visibility: visible; }
+.job-separator td { height: 4px; padding: 0; border-top: 1px solid #4b3431; }
+</style>
+<div class='jobprefs'><div class='job-scroll'><table class='job-columns'><tr><td class='job-column'><table>"}
 		var/index = -1
 		var/datum/job/lastJob
 
 		for(var/datum/job/job in sortList(SSjob.occupations, GLOBAL_PROC_REF(cmp_job_display_asc)))
 			if(!job.spawn_positions && !job.always_show_on_latechoices)
 				continue
-			
+
 			index += 1
 			if(index >= limit)
-				width += widthPerColumn
 				if((index < limit) && (lastJob != null))
 					for(var/i = 0, i < (limit - index), i += 1)
-						HTML += "<tr bgcolor='#000000'><td width='60%' align='right'>&nbsp</td><td width='40%'>&nbsp</td></tr>"
-				HTML += "</table></td><td width='20%'><table width='100%' cellpadding='1' cellspacing='0'>"
+						HTML += "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>"
+				HTML += "</table></td><td class='job-column'><table>"
 				index = 0
 
 			if(job.title in splitJobs)
-				HTML += "<tr bgcolor='#000000'><td colspan='2'><hr></td></tr>"
+				HTML += "<tr class='job-separator'><td colspan='2'></td></tr>"
 
-			HTML += "<tr bgcolor='#000000'>"
-			
+			HTML += "<tr>"
 			var/rank = job.title
 			var/used_name = job.display_title || job.title
 			if((titles_pref == TITLES_F) && job.f_title)
@@ -1286,12 +1343,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 			var/slot_button_html = ""
 			if(max_save_slots > 1)
-				var/slot_text = "Active"
+				var/slot_text = "Active character"
+				var/slot_label = "•"
 				if(job_characters[job.title])
 					slot_text = "Slot [job_characters[job.title]]"
-				slot_button_html = " | <a href='?_src_=prefs;preference=job;task=set_job_slot;text=[rank]'><font color='gray'>\[[slot_text]\]</font></a>"
+					slot_label = "[job_characters[job.title]]"
+				slot_button_html = "<a class='job-mini-btn' href='?_src_=prefs;preference=job;task=set_job_slot;text=[rank]' title='[slot_text]'>[slot_label]</a>"
 
-			var/subclass_button_html = "" // TA EDIT START
+			var/subclass_button_html = ""
 			if(length(job.job_subclasses))
 				var/selected_subclass = job_subclass_preferences[job.title]
 				var/subclass_star = "☆"
@@ -1302,12 +1361,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					subclass_star = "★"
 					subclass_color = "#e3c06f"
 					subclass_tooltip = "Subclass: [selected_subclass] / [failure_text]"
-				subclass_button_html = " | <a href='?_src_=prefs;preference=job;task=set_job_subclass;text=[rank]' title='[subclass_tooltip]'><font color='[subclass_color]'>[subclass_star]</font></a>" // TA EDIT END
+				subclass_button_html = "<a class='job-mini-btn' href='?_src_=prefs;preference=job;task=set_job_subclass;text=[rank]' title='[subclass_tooltip]'><font color='[subclass_color]'>[subclass_star]</font></a>"
 
 			var/start_font = ""
 			var/end_font = ""
 			var/job_unavailable_status = JOB_AVAILABLE
-			
 			if(isnewplayer(parent?.mob))
 				var/mob/dead/new_player/new_player = parent.mob
 				job_unavailable_status = new_player.IsJobUnavailable(job.title, latejoin = FALSE)
@@ -1316,88 +1374,62 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			if(!(job_unavailable_status in acceptable_unavailables))
 				start_font = "<font color='#a36c63'>"
 				end_font = "</font>"
-			
-			HTML += "<td width='60%' align='right'>"
-			HTML += {"
-<style>
-.tutorialhover { position: relative; display: inline-block; border-bottom: 1px dotted black; }
-.tutorialhover .tutorial { visibility: hidden; width: 280px; background-color: black; color: #e3c06f; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; top: 100%; left: 50%; margin-left: -140px; }
-.tutorialhover:hover .tutorial{ visibility: visible; }
-</style>
-<div class="tutorialhover"> [start_font][job.class_setup_examine ? "<a href='?src=[REF(job)];explainjob=1'>[used_name]</a>" : "[used_name]"][end_font]</span>
-<span class="tutorial">[job.tutorial]<br>Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contrib_points]" : ""]</span>
-</div>
-			"}
-			HTML += "</td>"
 
-			HTML += "<td width='40%' style='white-space: nowrap;'>"
+			var/job_name_link = job.class_setup_examine ? "<a href='?src=[REF(job)];explainjob=1'>[used_name]</a>" : "[used_name]"
+			var/tutorial_rcp = job.round_contrib_points ? "RCP: +[job.round_contrib_points]" : ""
+			HTML += "<td class='job-name-cell'><div class='tutorialhover'>[start_font][job_name_link][end_font]<span class='tutorial'>[job.tutorial]<br>Slots: [job.spawn_positions] [tutorial_rcp]</span></div></td>"
+			HTML += "<td class='job-controls-cell'><div class='job-control-grid'>"
 
+			var/status_html = ""
 			if(is_banned_from(user.ckey, rank))
-				HTML += "<a href='?_src_=prefs;bancheck=[rank]'> BANNED</a></td></tr>"
-				continue
-			var/required_playtime_remaining = job.required_playtime_remaining(user.client)
-			if(required_playtime_remaining)
-				HTML += "<font color=red> \[ [get_exp_format(required_playtime_remaining)] as [job.get_exp_req_type()] \] </font></td></tr>"
-				continue
-			if(!job.player_old_enough(user.client))
-				var/available_in_days = job.available_in_days(user.client)
-				HTML += "<font color=red> \[IN [(available_in_days)] DAYS\]</font></td></tr>"
-				continue
+				status_html = "<a href='?_src_=prefs;bancheck=[rank]'>BANNED</a>"
+			else
+				var/required_playtime_remaining = job.required_playtime_remaining(user.client)
+				if(required_playtime_remaining)
+					status_html = "<font color=red>[get_exp_format(required_playtime_remaining)]</font>"
+				else if(!job.player_old_enough(user.client))
+					var/available_in_days = job.available_in_days(user.client)
+					status_html = "<font color=red>IN [available_in_days] DAYS</font>"
 
 			#ifdef USES_PQ
-			if(!isnull(job.min_pq) && (get_playerquality(user.ckey) < job.min_pq))
-				HTML += "<font color=#a59461> (Min PQ: [job.min_pq])</font></td></tr>"
-				continue
-			if(!isnull(job.max_pq) && (get_playerquality(user.ckey) > job.max_pq))
-				HTML += "<font color=#a59461> (Max PQ: [job.max_pq])</font></td></tr>"
-				continue
+			if(!status_html && !isnull(job.min_pq) && (get_playerquality(user.ckey) < job.min_pq))
+				status_html = "<font color=#a59461>Min PQ [job.min_pq]</font>"
+			if(!status_html && !isnull(job.max_pq) && (get_playerquality(user.ckey) > job.max_pq))
+				status_html = "<font color=#a59461>Max PQ [job.max_pq]</font>"
 			#endif
 
-			var/datum/preferences/char_prefs = get_job_prefs(rank)
-			var/is_ineligible = !job.validate_prefs_for_job(char_prefs)
+			if(!status_html)
+				var/datum/preferences/char_prefs = get_job_prefs(rank)
+				if(!job.validate_prefs_for_job(char_prefs))
+					status_html = "<font color='#a56161'>Ineligible</font>"
+				else if(!(job_unavailable_status in acceptable_unavailables))
+					status_html = "<font color='#a56161'>Unavailable</font>"
 
-			if(is_ineligible)
-				HTML += "<font color='#a56161'> (Ineligible) </font>"
-				HTML += slot_button_html
-				HTML += subclass_button_html // TA EDIT
-				HTML += "</td></tr>"
-				continue 
+			if(status_html)
+				HTML += "<span class='job-status'>[status_html]</span>"
+			else
+				var/list/pref_ui = job_pref_display_data(job, user)
+				var/prefLevelLabel = pref_ui["label"]
+				var/prefLevelColor = pref_ui["color"]
+				var/prefUpperLevel = pref_ui["upper"]
+				var/prefLowerLevel = pref_ui["lower"]
+				HTML += "<span class='job-status job-pref-link'><a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'><font color=[prefLevelColor]>[prefLevelLabel]</font></a></span>"
 
+			HTML += "<span class='job-action-cell'>[slot_button_html]</span>"
+			HTML += "<span class='job-action-cell'>[subclass_button_html]</span>"
+			HTML += "</div></td></tr>"
 
-			if(!(job_unavailable_status in acceptable_unavailables))
-				HTML += slot_button_html 
-				HTML += subclass_button_html // TA EDIT
-				HTML += "</td></tr>" 
-				continue
+		for(var/i = 1, i < (limit - index), i += 1)
+			HTML += "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>"
 
-		
-			var/list/pref_ui = job_pref_display_data(job, user) // TA EDIT START
-			var/prefLevelLabel = pref_ui["label"] // TA EDIT
-			var/prefLevelColor = pref_ui["color"] // TA EDIT
-			var/prefUpperLevel = pref_ui["upper"] // TA EDIT
-			var/prefLowerLevel = pref_ui["lower"] // TA EDIT END
-
-			HTML += "<a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
-			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font></a>"
-			
-			HTML += slot_button_html 
-			HTML += subclass_button_html // TA EDIT
-			
-			HTML += "</td></tr>"
-
-		for(var/i = 1, i < (limit - index), i += 1) 
-			HTML += "<tr bgcolor='000000'><td width='60%' align='right'>&nbsp</td><td width='40%'>&nbsp</td></tr>"
-
-		HTML += "</td'></tr></table>"
-		HTML += "</center></table><br>"
-
+		HTML += "</table></td></tr></table></div></div><br>"
 		if(user.client.prefs.lastclass)
 			HTML += "<center><a href='?_src_=prefs;preference=job;task=triumphthing'>PLAY AS [user.client.prefs.lastclass] AGAIN</a></center>"
 		else
 			HTML += "<br>"
 		HTML += "<center><a href='?_src_=prefs;preference=job;task=reset'>Reset</a></center>"
 
-	var/datum/browser/noclose/popup = new(user, "mob_occupation", "<div align='center'>Class Selection</div>", width, height)
+	var/datum/browser/noclose/popup = new(user, "mob_occupation", "<div align='center'>Class Selection</div>", 1220, height)
 	popup.set_window_options(can_close = TRUE)
 	popup.set_content(HTML)
 	popup.open(FALSE)
@@ -1633,6 +1665,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			C.clear_character_previews()
 
 /datum/preferences/proc/process_link(mob/user, list/href_list)
+	if(href_list["preference"] == "ccg_settings")
+		ccg_open_preferences_deckbuilder(user)
+		return
+
 	if(href_list["boosty"])
 		var/url = CONFIG_GET(string/boostyurl)
 		if (url)
@@ -1790,10 +1826,16 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		switch(href_list["task"])
 			if("be_special")
 				var/be_special_type = href_list["be_special_type"]
+				if(is_banned_from(user.ckey, ROLE_SYNDICATE) || is_banned_from(user.ckey, be_special_type))
+					return 1
+				if(ispath(GLOB.special_roles_rogue[be_special_type]) && CONFIG_GET(flag/use_age_restriction_for_jobs))
+					if(get_remaining_days(user.client))
+						return 1
 				if(be_special_type in be_special)
 					be_special -= be_special_type
 				else
 					be_special += be_special_type
+				save_preferences()
 		ShowChoices(user, 1)
 		return 1
 	else if(href_list["preference"] == "tgui_ui_prefs")
@@ -2010,7 +2052,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			return
 		if("change_culinary_preferences")
 			handle_culinary_topic(user, href_list)
-			show_culinary_ui(user)
 			return
 		if("random")
 			switch(href_list["preference"])
@@ -3030,9 +3071,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						ooccolor = new_ooccolor
 
 				if("asaycolor")
-					var/new_asaycolor = color_pick_sanitized(user, "Choose your ASAY color:", "Game Preference",asaycolor)
-					if(new_asaycolor)
-						asaycolor = new_asaycolor
+					if(CONFIG_GET(flag/allow_admin_asaycolor))
+						var/new_asaycolor = color_pick_sanitized(user, "Choose your ASAY color:", "Game Preference", asaycolor ? asaycolor : "#ff4500")
+						if(new_asaycolor)
+							asaycolor = new_asaycolor
 
 				if("bag")
 					var/new_backpack = input(user, "Choose your character's style of bag:", "Character Preference")  as null|anything in GLOB.backpacklist
@@ -3079,10 +3121,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						preferred_map = maplist[pickedmap]
 
 				if ("clientfps")
-					var/desiredfps = input(user, "Choose your desired fps. (0 = synced with server tick rate (currently:[world.fps]))", "Character Preference", clientfps)  as null|num
-					if (!isnull(desiredfps))
+					var/desiredfps = tgui_input_number(user, "Choose your desired fps. 0 syncs it with the server.", "FPS", clientfps, 240, 0)
+					if(!isnull(desiredfps))
 						clientfps = desiredfps
-						parent.fps = desiredfps
+						if(parent)
+							parent.fps = desiredfps
 				if("ui")
 					var/pickedui = input(user, "Choose your UI style.", "Character Preference", UI_style)  as null|anything in sortList(GLOB.available_ui_styles)
 					if(pickedui)
@@ -3586,8 +3629,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	// Customizers are already applied inside set_species() (both the species-change path via
 	// on_species_gain, and the same-species short-circuit). Re-applying here doubled the work.
 
-	if(culinary_preferences)
-		apply_culinary_preferences(character)
+	apply_culinary_preferences(character)
 
 /datum/preferences/proc/get_default_name(name_id)
 	switch(name_id)
@@ -3643,6 +3685,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	parent?.ensure_keys_set(src)
 
 /datum/preferences/proc/try_update_mutant_colors()
+	if(!update_mutant_colors)
+		return
 	reset_body_marking_colors()
 	reset_all_customizer_accessory_colors()
 

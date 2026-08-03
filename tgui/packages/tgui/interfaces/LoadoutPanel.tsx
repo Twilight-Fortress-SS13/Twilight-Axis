@@ -1,504 +1,449 @@
-import { useState } from 'react';
-import { useBackend } from 'tgui/backend';
-import { Window } from 'tgui/layouts';
+import { useMemo, useState } from 'react';
+import { useBackend } from '../backend';
 import {
-  Button,
   Box,
+  Button,
+  Input,
   ProgressBar,
+  Section,
   Stack,
   Tabs,
-  Input,
 } from 'tgui-core/components';
 
-interface Data {
-  categories: Record<string, Record<string, Item>>;
-  isDonator: boolean | number;
-  selectedLoadoutItems: string[];
-  donatTier: number;
-  triumphDiscount: number;
-  triumphDiscountUsed: number;
-  curLoadoutSlots: number;
-  maxLoadoutSlots: number;
-}
-
-interface Item {
+type LoadoutItem = {
   name: string;
   path: string;
   icon_class_name: string;
   isDonatorItem: boolean;
-  icon: string;
-  icon_state: string;
+  icon?: string | null;
+  icon_state?: string | null;
   unavailable?: boolean;
   unavailableReason?: string;
   requiredTier?: number;
   triumphCost?: number;
-}
+  colorable?: boolean;
+};
+
+type SelectedLoadoutItem = {
+  name: string;
+  colorChannels?: Record<string, string>;
+  colors?: Record<string, string>;
+  colorLabels?: Record<string, string>;
+};
+
+type LoadoutCatalogData = {
+  categories?: Record<string, Record<string, LoadoutItem>>;
+  isDonator?: boolean | number;
+  donatTier?: number;
+  triumphDiscount?: number;
+  maxLoadoutSlots?: number;
+};
+
+type LoadoutStateData = {
+  selectedLoadoutItems?: string[];
+  selectedLoadoutDetails?: SelectedLoadoutItem[];
+  triumphDiscountUsed?: number;
+  curLoadoutSlots?: number;
+};
+
+type Data = {
+  loadout_catalog?: LoadoutCatalogData;
+  loadout_state?: LoadoutStateData;
+};
+
+const cardStyle = {
+  border: '1px solid rgba(255,255,255,0.12)',
+};
+
+const LoadoutTierLink = (props: { tier: number; text: string }) => (
+  <Button
+    tooltip={props.text}
+    tooltipPosition="bottom"
+    style={{
+      minWidth: 0,
+      width: 'auto',
+      height: 'auto',
+      padding: 0,
+      border: 'none',
+      boxShadow: 'none',
+      background: 'none',
+      lineHeight: 'inherit',
+      verticalAlign: 'baseline',
+      color: '#facc15',
+      fontWeight: 'bold',
+      cursor: 'help',
+    }}
+  >
+    {props.tier}
+  </Button>
+);
 
 export const LoadoutPanel = () => {
   const { data, act } = useBackend<Data>();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
 
-  const selectedSet = new Set(data.selectedLoadoutItems ?? []);
-
-  const categoriesArray = Object.entries(data.categories ?? {}).map(
-    ([name, items]) => ({
-      name,
-      items,
-    })
+  const catalog = data.loadout_catalog;
+  const state = data.loadout_state;
+  const selectedItems = state?.selectedLoadoutItems || [];
+  const selectedDetails = state?.selectedLoadoutDetails || selectedItems.map((name) => ({ name }));
+  const selectedSet = useMemo(() => new Set(selectedItems), [selectedItems]);
+  const categoriesArray = useMemo(
+    () => Object.entries(catalog?.categories || {}).map(([name, items]) => ({ name, items })),
+    [catalog?.categories],
   );
+  const activeCategory = categoriesArray.some((category) => category.name === selectedCategory)
+    ? selectedCategory
+    : (categoriesArray[0]?.name || '');
+  const activeItems = categoriesArray.find((category) => category.name === activeCategory)?.items || {};
+  const normalizedSearch = searchQuery.trim().toLowerCase();
+  const filteredItems = Object.values(activeItems).filter((item) => (
+    !normalizedSearch || (item?.name?.toLowerCase() || '').includes(normalizedSearch)
+  ));
+  const currentSlots = state?.curLoadoutSlots || 0;
+  const maxSlots = catalog?.maxLoadoutSlots || 0;
+  const slotRatio = maxSlots > 0 ? currentSlots / maxSlots : 0;
+  const triumphDiscount = catalog?.triumphDiscount || 0;
+  const triumphDiscountUsed = state?.triumphDiscountUsed || 0;
+  const hasDonatorTriumphDiscount = !!catalog?.isDonator && triumphDiscount > 0;
 
-  const filteredItems = Object.values(categoriesArray[tabIndex]?.items || {}).filter(
-    (item) => (item?.name?.toLowerCase() || '').includes(searchQuery.toLowerCase())
-  );
-
-  const handleResetClick = () => {
-    if (confirmReset) {
-      act('clear', {});
-      setTimeout(() => setConfirmReset(false), 100);
-    } else {
+  const handleReset = () => {
+    if (!confirmReset) {
       setConfirmReset(true);
-      setTimeout(() => setConfirmReset(false), 5000);
+      window.setTimeout(() => setConfirmReset(false), 5000);
+      return;
     }
+    act('loadout_clear');
+    setConfirmReset(false);
   };
 
-  const slotRatio =
-    data.maxLoadoutSlots > 0
-      ? data.curLoadoutSlots / data.maxLoadoutSlots
-      : 0;
-
-  const hasDonatorTriumphDiscount =
-    !!data.isDonator && data.triumphDiscount > 0;
-
   return (
-    <Window
-      title="Лодаут"
-      buttons={
-        <Button
-          tooltip={`Выберите предметы для вашего персонажа.
-Вы их сможете забрать, когда нажмете правой кнопкой мыши по статуе или дереву.
-Рескины на оружие (Donator kit) являются просто рескинами, чтобы его получить используйте зелье на соответствующем предмете.`}
-          tooltipPosition="bottom"
-          style={{
-            position: 'fixed',
-            top: '9px',
-            left: '92px',
-            zIndex: 103,
-            minWidth: '0',
-            width: '16px',
-            height: '16px',
-            padding: '0',
-            border: 'none',
-            boxShadow: 'none',
-            background: 'none',
-            textAlign: 'center',
-            lineHeight: '16px',
-            fontSize: '13px',
-            fontWeight: 'bold',
-            color: '#d7b6b6',
-            textShadow: '0 0 4px rgba(255,255,255,0.35)',
-            cursor: 'help',
-          }}
+    <Box style={{ position: 'relative', height: '100%', minHeight: 0 }}>
+      <Stack fill>
+      <Stack.Item basis="224px" shrink={0}>
+        <Section
+          title="Лодаут"
+          fill
+          scrollable
+          buttons={(
+            <Button
+              compact
+              icon="question"
+              tooltip={`Выберите предметы для вашего персонажа.
+Забрать их можно через контекстное меню статуи или дерева.
+Donator kit — это рескины: используйте зелье на соответствующем предмете.
+Также некоторые вещи можно перекрашивать, нажав на кнопку с палитрой в списке выбранных предметов.`}
+              tooltipPosition="bottom"
+            />
+          )}
         >
-          ?
-        </Button>
-      }
-      width={1200}
-      height={700}
-    >
-      <Window.Content>
-        <Stack fill>
-          <Stack.Item width="300px">
-            <Stack vertical textAlign="justify">
-              <Stack.Item style={{ textAlign: 'center' }}>
-                <Button onClick={() => act('boosty')}>
-                  <h3>Поддержать сервер</h3>
-                </Button>
-              </Stack.Item>
-              <Stack.Item>
-                <Box
-                  mt={1}
-                  style={{
-                    fontSize: '13px',
-                    lineHeight: 1.35,
-                    textAlign: 'center',
-                    color: '#d7b6b6',
-                  }}
-                >
-                  Для меценатов в зависимости от уровня подписки(
-                  <Button
-                    tooltip="Т1 - дает 7 слотов вещей, 3 скидочных триумфа, 40 слотов персонажей и вещи своего тира."
-                    tooltipPosition="bottom"
-                    style={{
-                      minWidth: '0',
-                      width: 'auto',
-                      height: 'auto',
-                      padding: '0',
-                      border: 'none',
-                      boxShadow: 'none',
-                      background: 'none',
-                      lineHeight: 'inherit',
-                      verticalAlign: 'baseline',
-                      color: '#facc15',
-                      fontWeight: 'bold',
-                      cursor: 'help',
-                    }}
-                  >
-                    1
-                  </Button>
-                  ,{' '}
-                  <Button
-                    tooltip="Т2 - дает 11 слотов вещей, 5 скидочных триумфа, 60 слотов персонажей, возможность поменять цвет в дискорде, кастомную боевую музыку и вещи своего тира."
-                    tooltipPosition="bottom"
-                    style={{
-                      minWidth: '0',
-                      width: 'auto',
-                      height: 'auto',
-                      padding: '0',
-                      border: 'none',
-                      boxShadow: 'none',
-                      background: 'none',
-                      lineHeight: 'inherit',
-                      verticalAlign: 'baseline',
-                      color: '#facc15',
-                      fontWeight: 'bold',
-                      cursor: 'help',
-                    }}
-                  >
-                    2
-                  </Button>
-                  ,{' '}
-                  <Button
-                    tooltip="Т3 - дает 17 слотов вещей, 7 скидочных триумфа, 80 слотов персонажей, возможность поменять цвет в дискорде, кастомную боевую музыку и вещи своего тира. Также дается возможность раз в 2 раунда с повышенным приоритетом зайти за роль, имеющую более 2 слотов."
-                    tooltipPosition="bottom"
-                    style={{
-                      minWidth: '0',
-                      width: 'auto',
-                      height: 'auto',
-                      padding: '0',
-                      border: 'none',
-                      boxShadow: 'none',
-                      background: 'none',
-                      lineHeight: 'inherit',
-                      verticalAlign: 'baseline',
-                      color: '#facc15',
-                      fontWeight: 'bold',
-                      cursor: 'help',
-                    }}
-                  >
-                    3
-                  </Button>
-                  ,{' '}
-                  <Button
-                    tooltip="Т4 - дает 21 слотов вещей, 10 скидочных триумфа, 100 слотов персонажей, возможность поменять цвет в дискорде, кастомную боевую музыку и вещи своего тира. Также дается возможность с повышенным приоритетом зайти за роль, имеющую более 2 слотов, в отличии от Т3 без КД в 2 раунда."
-                    tooltipPosition="bottom"
-                    style={{
-                      minWidth: '0',
-                      width: 'auto',
-                      height: 'auto',
-                      padding: '0',
-                      border: 'none',
-                      boxShadow: 'none',
-                      background: 'none',
-                      lineHeight: 'inherit',
-                      verticalAlign: 'baseline',
-                      color: '#facc15',
-                      fontWeight: 'bold',
-                      cursor: 'help',
-                    }}
-                  >
-                    4
-                  </Button>
-                  ,{' '}
-                  <Button
-                    tooltip="Т5 - дает 27 слотов вещей, 15 скидочных триумфа, 120 слотов персонажей, возможность поменять цвет в дискорде, кастомную боевую музыку и вещи своего тира. Также дается возможность зайти за любую роль с повышенным приоритетом, в отличии от Т3 и Т4 каких-либо ограничений нет."
-                    tooltipPosition="bottom"
-                    style={{
-                      minWidth: '0',
-                      width: 'auto',
-                      height: 'auto',
-                      padding: '0',
-                      border: 'none',
-                      boxShadow: 'none',
-                      background: 'none',
-                      lineHeight: 'inherit',
-                      verticalAlign: 'baseline',
-                      color: '#facc15',
-                      fontWeight: 'bold',
-                      cursor: 'help',
-                    }}
-                  >
-                    5
-                  </Button>
-                  ) открываются различные бонусы в лодауте и не только. Лишь за
-                  счет поддержки сервер существует.
-                </Box>
-              </Stack.Item>
-              <br />
-              <Stack.Item>
-                {data.curLoadoutSlots} / {data.maxLoadoutSlots}
-              </Stack.Item>
-              <Stack.Item>
-                <ProgressBar
-                  ranges={{
-                    bad: [0.75, Infinity],
-                    average: [0.25, 0.75],
-                    good: [-Infinity, 0.25],
-                  }}
-                  value={slotRatio}
-                  width="300px"
-                />
-              </Stack.Item>
+          <Button fluid icon="heart" onClick={() => act('loadout_boosty')}>
+            Поддержать сервер
+          </Button>
+          <Box mt={0.65} mb={0.7} color="label" textAlign="center" style={{ lineHeight: 1.3 }}>
+            Бонусы уровней{' '}
+            <LoadoutTierLink tier={1} text="Т1 — 7 слотов вещей, 3 скидочных триумфа, 40 слотов персонажей и вещи своего тира." />
+            ,{' '}
+            <LoadoutTierLink tier={2} text="Т2 — 11 слотов вещей, 5 скидочных триумфов, 60 слотов персонажей, цвет в Discord, боевая музыка и вещи своего тира." />
+            ,{' '}
+            <LoadoutTierLink tier={3} text="Т3 — 17 слотов вещей, 7 скидочных триумфов, 80 слотов персонажей и повышенный приоритет раз в два раунда для ролей с более чем двумя слотами." />
+            ,{' '}
+            <LoadoutTierLink tier={4} text="Т4 — 21 слот вещей, 10 скидочных триумфов, 100 слотов персонажей и повышенный приоритет без задержки Т3." />
+            ,{' '}
+            <LoadoutTierLink tier={5} text="Т5 — 27 слотов вещей, 15 скидочных триумфов, 120 слотов персонажей и повышенный приоритет без ограничений." />
+          </Box>
 
-              {hasDonatorTriumphDiscount ? (
-                <Stack.Item>
+          <Stack align="center" mb={0.35}>
+            <Stack.Item grow>
+              <Box bold>Слоты предметов</Box>
+            </Stack.Item>
+            <Stack.Item>{currentSlots} / {maxSlots}</Stack.Item>
+          </Stack>
+          <ProgressBar
+            ranges={{
+              bad: [0.75, Infinity],
+              average: [0.25, 0.75],
+              good: [-Infinity, 0.25],
+            }}
+            value={slotRatio}
+          />
+
+          {hasDonatorTriumphDiscount ? (
+            <Box mt={0.7} p={0.55} style={{ ...cardStyle, color: '#facc15' }}>
+              ★ Скидочные триумфы: {triumphDiscountUsed} / {triumphDiscount}
+            </Box>
+          ) : null}
+
+          <Box mt={0.85} mb={0.45} bold textAlign="center">
+            Выбранные предметы
+          </Box>
+          {selectedDetails.length ? selectedDetails.map((item) => (
+            <Box key={item.name} mb={0.35} p={0.35} style={cardStyle}>
+              <Stack align="start">
+                <Stack.Item grow style={{ minWidth: 0 }}>
                   <Box
+                    title={item.name}
                     style={{
-                      display: 'inline-block',
-                      padding: '8px 14px',
-                      borderRadius: '8px',
-                      backgroundColor: 'rgba(212, 175, 55, 0.14)',
-                      border: '1px solid rgba(212, 175, 55, 0.55)',
-                      color: '#facc15',
-                      fontWeight: 'bold',
-                      textShadow: '1px 1px 3px rgba(0,0,0,0.75)',
+                      minWidth: 0,
+                      lineHeight: 1.2,
+                      whiteSpace: 'normal',
+                      overflowWrap: 'anywhere',
+                      wordBreak: 'break-word',
                     }}
                   >
-                    ★ Скидочные триумфы: занято {data.triumphDiscountUsed} из{' '}
-                    {data.triumphDiscount}
+                    {item.name}
                   </Box>
                 </Stack.Item>
+                <Stack.Item>
+                  <Button
+                    compact
+                    color="danger"
+                    icon="times"
+                    tooltip="Убрать"
+                    onClick={() => act('loadout_remove', { item: item.name })}
+                  />
+                </Stack.Item>
+              </Stack>
+              {Object.keys(item.colorChannels || {}).length ? (
+                <Stack align="center" mt={0.3}>
+                  <Stack.Item grow>
+                    <Box color="label">Цвета</Box>
+                  </Stack.Item>
+                  {Object.entries(item.colorChannels || {}).map(([channel, label]) => {
+                    const color = item.colors?.[channel];
+                    const colorLabel = item.colorLabels?.[channel];
+                    return (
+                      <Stack.Item key={`${item.name}-${channel}`}>
+                        <Button
+                          compact
+                          icon="palette"
+                          tooltip={`${label}: ${colorLabel || color || 'исходный цвет'}`}
+                          onClick={() => act('loadout_pick_color', {
+                            item: item.name,
+                            channel,
+                          })}
+                          style={{
+                            minWidth: '26px',
+                            width: '26px',
+                            height: '26px',
+                            padding: 0,
+                            borderRadius: '4px',
+                            border: `2px solid ${color || 'rgba(255,255,255,0.28)'}`,
+                            background: 'rgba(255,255,255,0.04)',
+                            color: color || '#d8d8d8',
+                            textShadow: color
+                              ? '0 0 2px #000, 0 0 4px #000'
+                              : undefined,
+                            boxShadow: color
+                              ? `0 0 6px ${color}`
+                              : undefined,
+                          }}
+                        />
+                      </Stack.Item>
+                    );
+                  })}
+                  {Object.keys(item.colorLabels || {}).length ? (
+                    <Stack.Item>
+                      <Button
+                        compact
+                        icon="undo"
+                        tooltip="Сбросить все цвета вещи"
+                        onClick={() => act('loadout_clear_colors', { item: item.name })}
+                      />
+                    </Stack.Item>
+                  ) : null}
+                </Stack>
               ) : null}
-              <Stack.Item>
-                <Box
-                  mt={2}
+            </Box>
+          )) : (
+            <Box color="label" textAlign="center">Пока ничего не выбрано.</Box>
+          )}
+        </Section>
+      </Stack.Item>
+
+      <Stack.Item grow style={{ minWidth: 0 }}>
+        <Section title="Предметы" fill>
+          <Stack vertical fill>
+            <Stack.Item>
+              <Box
+                onWheel={(event) => {
+                  const target = event.currentTarget;
+                  if (target.scrollWidth <= target.clientWidth) {
+                    return;
+                  }
+                  target.scrollLeft += event.deltaY || event.deltaX;
+                  event.preventDefault();
+                }}
+                style={{
+                  overflowX: 'auto',
+                  overflowY: 'hidden',
+                  minWidth: 0,
+                  width: '100%',
+                  paddingBottom: '4px',
+                  overscrollBehaviorX: 'contain',
+                  scrollbarGutter: 'stable',
+                }}
+              >
+                <Tabs
                   style={{
-                    minHeight: '200px',
-                    maxHeight: '260px',
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
-                    padding: '8px',
-                    border: '1px solid rgba(120, 150, 190, 0.65)',
-                    borderRadius: '6px',
-                    backgroundColor: 'rgba(0, 0, 0, 0.14)',
+                    display: 'flex',
+                    flexWrap: 'nowrap',
+                    width: 'max-content',
+                    minWidth: '100%',
                   }}
                 >
-                  <Box
-                    mb={1}
-                    textAlign="center"
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      textShadow: '1px 1px 3px rgba(0,0,0,0.8)',
-                    }}
-                  >
-                    Выбранные предметы:
-                  </Box>
-
-                  {(data.selectedLoadoutItems ?? []).length ? (
-                    (data.selectedLoadoutItems ?? []).map((item) => (
-                      <Box
-                        key={item}
-                        mb={1}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          gap: '6px',
-                        }}
-                      >
-                        <div
-                          title={item}
-                          style={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          {item}
-                        </div>
-                        <Button
-                          color="danger"
-                          onClick={() => act('remove', { item })}
-                        >
-                          Удалить
-                        </Button>
-                      </Box>
-                    ))
-                  ) : (
-                    <Box color="label" textAlign="center">
-                      Пока ничего не выбрано.
-                    </Box>
-                  )}
-                </Box>
-              </Stack.Item>
-            </Stack>
-          </Stack.Item>
-
-          <Stack.Item width="100%">
-            <Stack vertical fill>
-              <Stack.Item>
-                <Tabs>
-                  {categoriesArray.map((cat, i) => (
+                  {categoriesArray.map((category) => (
                     <Tabs.Tab
-                      key={cat.name}
-                      selected={i === tabIndex}
-                      onClick={() => setTabIndex(i)}
-                      style={{
-                        flex: 1,
-                        backgroundColor: i === tabIndex ? '#444' : '#222',
-                        color: 'white',
-                      }}
+                      key={category.name}
+                      selected={category.name === activeCategory}
+                      onClick={() => setSelectedCategory(category.name)}
+                      style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }}
                     >
-                      {cat.name}
+                      {category.name}
                     </Tabs.Tab>
                   ))}
                 </Tabs>
-              </Stack.Item>
-              <Stack.Item
+              </Box>
+            </Stack.Item>
+            <Stack.Item>
+              <Box
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
+                  display: 'grid',
+                  gridTemplateColumns: 'minmax(0, 1fr) max-content',
                   alignItems: 'center',
-                  marginTop: '10px',
+                  gap: '6px',
+                  width: '100%',
+                  minWidth: 0,
+                  overflow: 'hidden',
                 }}
               >
-                <Input
-                  placeholder="Поиск предметов..."
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  width="300px"
-                />
+                <Box style={{ minWidth: 0, width: '100%', overflow: 'hidden' }}>
+                  <Input
+                    fluid
+                    placeholder="Поиск предметов..."
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    style={{ minWidth: 0, width: '100%' }}
+                  />
+                </Box>
                 <Button
-                  onClick={handleResetClick}
-                  style={{ marginTop: '10px' }}
                   color={confirmReset ? 'good' : 'danger'}
-                >
-                  <span style={{ color: 'white' }}>
-                    {confirmReset ? 'Точно?' : 'Сбросить все'}
-                  </span>
-                </Button>
-              </Stack.Item>
-              <Stack.Item
-                style={{
-                  overflowY: 'auto',
-                  overflowX: 'hidden',
-                }}
-              >
-                <div
+                  onClick={handleReset}
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
-                    gap: '8px',
+                    minWidth: 'max-content',
+                    whiteSpace: 'nowrap',
                   }}
                 >
-                  {filteredItems.map((item, index) => (
-                    <div
-                      key={item?.name || item?.path || index}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        minHeight: '64px',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      <Box
+                  {confirmReset ? 'Точно?' : 'Сбросить всё'}
+                </Button>
+              </Box>
+            </Stack.Item>
+            <Stack.Item grow style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+              {filteredItems.length ? (
+                <Box
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(104px, 1fr))',
+                    gap: '8px',
+                    alignContent: 'start',
+                  }}
+                >
+                  {filteredItems.map((item, index) => {
+                    const itemName = item?.name || item?.path || `loadout-${index}`;
+                    const selected = selectedSet.has(item?.name);
+                    const borderColor = item?.unavailable ? '#a77a18' : (selected ? '#a71818' : '#24a718');
+                    return (
+                      <Button
+                        key={itemName}
                         style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          minWidth: '96px',
-                          flexShrink: 0,
+                          position: 'relative',
+                          width: '100%',
+                          minHeight: '112px',
+                          padding: '6px',
+                          overflow: 'hidden',
+                          backgroundColor: '#141414',
+                          border: `2px solid ${borderColor}`,
+                          borderRadius: '8px',
+                        }}
+                        tooltip={(
+                          <Box>
+                            <Box bold>{item?.name || 'Без названия'}</Box>
+                            {item?.unavailable ? (
+                              <Box mt={0.4}>
+                                {item?.requiredTier
+                                  ? `Требуется уровень мецената: ${item.requiredTier}.`
+                                  : item?.unavailableReason || 'Недоступно.'}
+                              </Box>
+                            ) : null}
+                            {item?.triumphCost ? <Box mt={0.4}>{item.triumphCost} триумфов</Box> : null}
+                          </Box>
+                        )}
+                        onClick={() => {
+                          if (selected) {
+                            act('loadout_remove', { item: item?.name || item?.path });
+                          } else {
+                            act('loadout_add', { item: item?.name || item?.path });
+                          }
                         }}
                       >
-                        <Button
+                        <Box
+                          className={item.icon_class_name}
                           style={{
-                            backgroundColor: '#141414',
-                            padding: '16px',
-                            width: '96px',
-                            height: '96px',
-                            border: '2x solid red',
-                            borderColor: `${item?.unavailable ? '#a77a18' : (selectedSet.has(item?.name)? '#a71818' : '#24a718')}`,
-                            borderRadius: '8px',
+                            position: 'absolute',
+                            left: '50%',
+                            top: '47%',
+                            transform: 'translate(-50%, -50%) scale(0.67)',
+                            transformOrigin: 'center',
                           }}
-                          tooltip={
-                            item?.unavailable ? (
-                              <Box>
-                                <Box>{item?.name || 'Без названия'}</Box>
-                                <Box mt={0.5}>
-                                  {item?.requiredTier
-                                    ? `Требуется уровень мецената: ${item.requiredTier}.`
-                                    : item?.unavailableReason || 'Недоступно.'}
-                                </Box>
-                              </Box>
-                            ) : (
-                              item?.name || 'Без названия'
-                            )
-                          }
-                          onClick={() => {
-                            if (selectedSet.has(item?.name)) {
-                              act('remove', { item: item?.name || item?.path });
-                            } else {
-                              act('add', { item: item?.name || item?.path });
-                            }
-                          }}
-                        >
+                        />
+                        {item?.isDonatorItem ? (
                           <Box
-                            inline
-                            verticalAlign="middle"
-                            className={item.icon_class_name}
                             style={{
-                              transform: 'scale(0.67) translate(-51px, -50px)',
+                              position: 'absolute',
+                              left: 3,
+                              right: 3,
+                              bottom: 3,
+                              fontSize: '11px',
+                              fontWeight: 'bold',
+                              color: '#c084fc',
+                              textAlign: 'center',
+                              textShadow: '1px 1px 3px rgba(0,0,0,0.85)',
                             }}
                           >
-                            {item?.triumphCost ? (
-                              <Box
-                                style={{
-                                  width: '100%',
-                                  marginTop: '96px',
-                                  fontSize: '20px',
-                                  fontWeight: 'bold',
-                                  color: '#d4af37',
-                                  outlineColor: 'black',
-                                  textAlign: 'center',
-                                  textShadow: '1px 1px 3px rgba(0,0,0,0.75)',
-                                  lineHeight: 1.2,
-                                }}
-                              >
-                                {item.triumphCost} триумфов
-                              </Box>
-                            ) : null}
-
-                            {item?.isDonatorItem ? (
-                              <Box
-                                style={{
-                                  width: '100%',
-                                  marginTop: '96px',
-                                  fontSize: '20px',
-                                  fontWeight: 'bold',
-                                  color: '#c084fc',
-                                  outlineColor: 'black',
-                                  textAlign: 'center',
-                                  textShadow: '1px 1px 3px rgba(0,0,0,0.75)',
-                                  lineHeight: 1.2,
-                                }}
-                              >
-                                Донат тир {item.requiredTier && item.requiredTier > 0 ? item.requiredTier : 1}
-                              </Box>
-                            ) : null}
+                            Тир {item.requiredTier && item.requiredTier > 0 ? item.requiredTier : 1}
                           </Box>
-                        </Button>
-                      </Box>
-                    </div>
-                  ))}
-                </div>
-              </Stack.Item>
-            </Stack>
-          </Stack.Item>
-        </Stack>
-      </Window.Content>
-    </Window>
+                        ) : item?.triumphCost ? (
+                          <Box
+                            style={{
+                              position: 'absolute',
+                              left: 3,
+                              right: 3,
+                              bottom: 3,
+                              fontSize: '11px',
+                              fontWeight: 'bold',
+                              color: '#d4af37',
+                              textAlign: 'center',
+                              textShadow: '1px 1px 3px rgba(0,0,0,0.85)',
+                            }}
+                          >
+                            {item.triumphCost} триумфов
+                          </Box>
+                        ) : null}
+                      </Button>
+                    );
+                  })}
+                </Box>
+              ) : (
+                <Box color="label" textAlign="center" mt={2}>
+                  В этой категории ничего не найдено.
+                </Box>
+              )}
+            </Stack.Item>
+          </Stack>
+        </Section>
+      </Stack.Item>
+      </Stack>
+    </Box>
   );
 };

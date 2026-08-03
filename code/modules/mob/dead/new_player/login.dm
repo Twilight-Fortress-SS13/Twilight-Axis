@@ -1,5 +1,5 @@
 /mob/dead/new_player/Login()
-	if(client && CONFIG_GET(flag/use_exp_tracking))
+	if(CONFIG_GET(flag/use_exp_tracking))
 		client.set_exp_from_db()
 		client.set_db_player_flags()
 	if(!mind)
@@ -15,7 +15,8 @@
 	sight |= SEE_TURFS
 
 	addtimer(CALLBACK(src, PROC_REF(do_after_login)), 4 SECONDS)
-	new_player_panel()
+	addtimer(CALLBACK(src, PROC_REF(new_player_panel)), 2 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(retry_player_panel)), 8 SECONDS)
 
 	if(client)
 		client.playtitlemusic()
@@ -54,11 +55,9 @@
 			if(5)
 				shown_patreon_level = "Lord"
 		to_chat(src, span_info("Donator Level: [shown_patreon_level]"))
-//		to_chat(src, span_notice("New to the server? The <a href='byond://?src=[REF(client)];open_encyclopedia=1'>Encyclopaedia Azurea</a> holds recipes, and guides - you can also find it under the OOC tab."))
 
 	if(GLOB.admin_notice)
 		to_chat(src, span_notice("<b>Admin Notice:</b>\n \t [GLOB.admin_notice]"))
-
 	var/spc = CONFIG_GET(number/soft_popcap)
 	if(spc && living_player_count() >= spc)
 		to_chat(src, span_notice("<b>Server Notice:</b>\n \t [CONFIG_GET(string/soft_popcap_message)]"))

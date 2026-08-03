@@ -41,8 +41,12 @@
 				if(user.Adjacent(src))
 					if(user.mind.special_items[item])
 						var/path2item = user.mind.special_items[item]
+						var/base_item_name = item
+						if(copytext(item, -length(TRIUMPH_STASH_SUFFIX)) == TRIUMPH_STASH_SUFFIX)
+							base_item_name = copytext(item, 1, length(item) - length(TRIUMPH_STASH_SUFFIX) + 1)
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.client?.prefs.apply_loadout_item_colors(I, base_item_name)
 						user.put_in_hands(I)
 
 /obj/structure/flora/newtree/obj_destruction(damage_flag)//this proc is stupidly long for a destruction proc

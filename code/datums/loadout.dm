@@ -196,252 +196,252 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/chaperon
 	name = "Chaperon (Normal)"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/chaperon
 
 /datum/loadout_item/chaperon/alt
 	name = "Chaperon (Alt)"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/chaperon/greyscale
 
 /datum/loadout_item/chaperon/burgherc
 	name = "Noble's Chaperon"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/chaperon/noble
 	donatitem = TRUE
 
 /datum/loadout_item/shalal
 	name = "Keffiyeh"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/roguehood/shalal
 
 /datum/loadout_item/tricorn
 	name = "Tricorn Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/helmet/tricorn
 
 /datum/loadout_item/nurseveil
 	name = "Nurse Veil"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/veiled
 
 /datum/loadout_item/archercap
 	name = "Archer's Cap"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/archercap
 
 /datum/loadout_item/strawhat
 	name = "Straw Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/strawhat
 
 /datum/loadout_item/eaststrawhat
 	name = "Worn rice hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/eaststrawhat
 
 /datum/loadout_item/tw_d_horns
 	name = "Horns Helmkleinod"
-	category = list("Головные уборы", "Триумфы")
+	category = list("Шляпы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_horns
 	triumph_cost = 20
 
 /datum/loadout_item/tw_d_basic
 	name = "Helm's Chaperon"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/tw_d_basic
 
 /datum/loadout_item/tw_d_castle_red
 	name = "Castle Helmkleinod"
-	category = list("Головные уборы", "Триумфы")
+	category = list("Шляпы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_castle_red
 	triumph_cost = 20
 
 /datum/loadout_item/tw_d_graggar
 	name = "Bloodied Star Helmkleinod"
-	category = list("Головные уборы", "Триумфы")
+	category = list("Шляпы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_graggar
 	triumph_cost = 20
 
 /datum/loadout_item/tw_d_efreet
 	name = "Afreet Helmkleinod"
-	category = list("Головные уборы", "Триумфы")
+	category = list("Шляпы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_efreet
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_feathers
 	name = "Feathers Accessory"
-	category = list("Головные уборы", "Триумфы")
+	category = list("Шляпы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_feathers
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_oathtaker
 	name = "Oathtaker Symbol"
-	category = list("Головные уборы", "Триумфы")
+	category = list("Шляпы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_oathtaker
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_windmill
 	name = "Windmill Helmkleinod"
-	category = list("Головные уборы", "Триумфы")
+	category = list("Шляпы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_windmill
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_swan
 	name = "Swan on Lake"
-	category = list("Головные уборы", "Триумфы")
+	category = list("Шляпы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_swan
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_dragon_red
 	name = "Dragon's Dread"
-	category = list("Головные уборы", "Триумфы")
+	category = list("Шляпы", "Триумфы")
 	path = /obj/item/clothing/head/roguetown/tw_d_dragon_red
 	triumph_cost = 15
 
 /datum/loadout_item/antlers
 	name = "Old Antlers"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/antlers
 
 /datum/loadout_item/headscarf
 	name = "Head Scarf"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/hscarf
 
 /datum/loadout_item/tengai
 	name = "Tengai"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/tengai
 
 /datum/loadout_item/burgerhood
 	name = "Noble Hood"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/roguehood/burgerhood
 
 /datum/loadout_item/gasa
 	name = "Gasa"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/gasa
 
 /datum/loadout_item/torioigasa
 	name = "Torioigasa"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/torioigasa
 
 /datum/loadout_item/roningasa
 	name = "Roningasa"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/roningasa
 
 /datum/loadout_item/witchhat
 	name = "Witch Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/witchhat
 
 /datum/loadout_item/bardhat
 	name = "Bard Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/bardhat
 
 /datum/loadout_item/fancyhat
 	name = "Fancy Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/fancyhat
 
 /datum/loadout_item/furhat
 	name = "Fur Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/hatfur
 
 /datum/loadout_item/smokingcap
 	name = "Smoking Cap"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/smokingcap
 
 /datum/loadout_item/headband
 	name = "Headband"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/headband
 
 /datum/loadout_item/buckled_hat
 	name = "Buckled Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/puritan
 
 /datum/loadout_item/folded_hat
 	name = "Folded Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/bucklehat
 
 /datum/loadout_item/duelist_hatc
 	name = "Duelist's Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/duelhat
 
 /datum/loadout_item/hood
 	name = "Hood"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/roguehood
 
 /datum/loadout_item/hijab
 	name = "Hijab"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab
 
 /datum/loadout_item/heavyhood
 	name = "Heavy Hood"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/roguehood/shalal/heavyhood
 
 /datum/loadout_item/nunveil
 	name = "Nun Veil"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/nun
 
 /datum/loadout_item/papakha
 	name = "Papakha"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/papakha
 
 /datum/loadout_item/rosa_crown
 	name = "Rosa Crown"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/flowercrown/rosa
 
 /datum/loadout_item/salvia_crown
 	name = "Salvia Crown"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/flowercrown/salvia
 
 /datum/loadout_item/matricaria_crown
 	name = "Matricaria Crown"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/flowercrown/matricaria
 
 /datum/loadout_item/calendula_crown
 	name = "Calendula Crown"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/flowercrown/calendula
 
 /datum/loadout_item/manabloom_crown
 	name = "Manabloom Crown"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/flowercrown/manabloom
 
 /datum/loadout_item/briar_crown
 	name = "Briar Thorn Crown"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/flowercrown/briar
 
 /datum/loadout_item/briarthorns
 	name = "Briar Thorns"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/briarthorns
 
 /datum/loadout_item/loudmouth_headgear
 	name = "Loudmouth's Headcover"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/veiled/loudmouth
 	donat_tier = 2
 
@@ -769,7 +769,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/deserthood
 	name = "Desert Hood"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/deserthood
 
 /datum/loadout_item/desertskirt
@@ -779,7 +779,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/explorerhat
 	name = "Explorer Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/explorerhat
 
 /datum/loadout_item/explorervest
@@ -1283,7 +1283,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/jesterhatc
 	name = "Jester's Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/jester
 
 /datum/loadout_item/jestertunickc
@@ -1956,13 +1956,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/gdhatsirdon
 	name = "Donator Kit - Gravedigger's Hat"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/duelhat/pretzel
 	donatitem = TRUE
 
 /datum/loadout_item/donator/porcelainmask
 	name = "Donator Item - Porcelain Mask"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/mask/rogue/iamcrystalclear
 	donatitem = TRUE
 
@@ -2876,7 +2876,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/donat/elven_burka
 	name = "Эльфийская бурка"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/twilight_elven_hat
 
 /datum/loadout_item/donat/cloak_twilight_desert
@@ -2909,60 +2909,60 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/naledimask
 	name = "Маска Наледи"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/mask/rogue/lordmask/naledi/decorated
 
 /datum/loadout_item/donat/eoramask
 	name = "Эоранская маска"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/eoramask
 	donatitem = TRUE
 
 /datum/loadout_item/donat/xylixmask
 	name = "Ксайликситская маска"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/mask/rogue/xylixmask
 	donatitem = TRUE
 
 /datum/loadout_item/weatheredmask
 	name = "Weathered Xylixian Mask"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/mask/rogue/xylixmask/weathered
 	donatitem = TRUE
 
 /datum/loadout_item/donat/eyepatchfake
 	name = "Повязка на правый глаз (ненастоящая)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/mask/rogue/eyepatch/fake
 	donatitem = TRUE
 
 /datum/loadout_item/donat/eyepatchfakeleft
 	name = "Повязка на левый глаз (ненастоящая)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/mask/rogue/eyepatch/left/fake
 	donatitem = TRUE
 
 /datum/loadout_item/owlmask
 	name = "Совиная маска"
-	category = list ("Донат", "Головные уборы")
+	category = list ("Донат", "Шляпы")
 	path = /obj/item/clothing/mask/rogue/owlmask
 	donatitem = TRUE
 
 /datum/loadout_item/onimask
 	name = "Oni mask"
-	category = list ("Донат", "Головные уборы")
+	category = list ("Донат", "Шляпы")
 	path = /obj/item/clothing/mask/rogue/yoruku_oni
 	donatitem = TRUE
 
 /datum/loadout_item/kitsunemask
 	name = "Kitsune mask"
-	category = list ("Донат", "Головные уборы")
+	category = list ("Донат", "Шляпы")
 	path = /obj/item/clothing/mask/rogue/yoruku_kitsune
 	donatitem = TRUE
 
 /datum/loadout_item/brassbeak
 	name = "Donator Kit - Brass Beak Mask - Required: Head Physician's Mask Or Plague Mask"
-	category = list ("Донат", "Головные уборы")
+	category = list ("Донат", "Шляпы")
 	path = /obj/item/enchantingkit/lmwevil_brassbeak
 	donatitem = TRUE
 
@@ -2970,166 +2970,166 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/stargazerhood
 	name = "Капюшон звездочета"
-	category = list ("Донат", "Головные уборы")
+	category = list ("Донат", "Шляпы")
 	path = /obj/item/clothing/head/roguetown/roguehood/stargazer
 	donatitem = TRUE
 
 /datum/loadout_item/donat/grenzelhofthat_decorated
 	name = "Грензельхофтская шляпа (без брони, декоративная)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/grenzelhofthat/decorated
 	donatitem = TRUE
 
 /datum/loadout_item/donat/wizhat
 	name = "Шляпа мага (синяя)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/wizhat
 	donatitem = TRUE
 
 /datum/loadout_item/donat/wizhatred
 	name = "Шляпа мага (красная)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/wizhat/red
 	donatitem = TRUE
 
 /datum/loadout_item/donat/wizhatyellow
 	name = "Шляпа мага (желтая)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/wizhat/yellow
 	donatitem = TRUE
 
 /datum/loadout_item/donat/wizhatgreen
 	name = "Шляпа мага (зеленая)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/wizhat/green
 	donatitem = TRUE
 
 /datum/loadout_item/donat/wizhatblack
 	name = "Шляпа мага (черная)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/wizhat/black
 	donatitem = TRUE
 
 /datum/loadout_item/donat/maid_headdress
 	name = "Чепчик горничной"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/maidhead
 	donatitem = TRUE
 
 /datum/loadout_item/donat/maidband
 	name = "Чепчик горничной (новый)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/maidband
 	donatitem = TRUE
 
 /datum/loadout_item/donat/kokoshnik
 	name = "Кокошник"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/twilight_hammerhold_hat
 	donatitem = TRUE
 
 /datum/loadout_item/donat/hammerhold_hat
 	name = "Хаммерхолдская шляпа"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/twilight_hammerhold_hat/peasant
 	donatitem = TRUE
 
 /datum/loadout_item/donat/nun_hood
 	name = "Капюшон монашки"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/nunTA
 	donatitem = TRUE
 
 /datum/loadout_item/donat/flowers_crown_eora
 	name = "Корона из цветов Эоры"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/flowercrown/rosa/resprite
 	donatitem = TRUE
 
 /datum/loadout_item/donat/etrusca_hat
 	name = "Этруская шляпа"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/duelhat/etrusca
 	donatitem = TRUE
 
 /datum/loadout_item/donat/grenzberet
 	name = "Grenzelhoftian Beret"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/grenzelhofthat/triumph
 	donatitem = TRUE
 
 /datum/loadout_item/tw_d_horns_donat
 	name = "Horns Helmkleinod (Донат - Т2)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_horns
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_castle_red_donat
 	name = "Castle Helmkleinod (Донат - Т2)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_castle_red
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_graggar_donat
 	name = "Bloodied Star Helmkleinod (Донат - Т2)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_graggar
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_efreet_donat
 	name = "Afreet Helmkleinod (Донат - Т2)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_efreet
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_feathers_donat
 	name = "Feathers Accessory (Донат - Т2)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_feathers
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_oathtaker_donat
 	name = "Oathtaker Symbol (Донат - Т2)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_oathtaker
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_windmill_donat
 	name = "Windmill Helmkleinod (Донат - Т2)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_windmill
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_swan_donat
 	name = "Swan on Lake (Донат - Т2)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_swan
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_dragon_red_donat
 	name = "Dragon's Dread (Донат - Т2)"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tw_d_dragon_red
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/donator_koruu
 	name = "Donator Kit - Well-Worn Bamboo Hat"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/mentorhat/koruu
 	donatitem = TRUE
 
 /datum/loadout_item/donator_eekasqueak
 	name = "Saffira encrusted tiara"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/circlet/saffiratiara
 	donatitem = TRUE
 	donat_tier = 2
@@ -3137,25 +3137,25 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donator/ketrai
 	name = "Octopus hat"
 	path = /obj/item/clothing/head/roguetown/octopus
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/shawl
 	name = "Shawl"
 	path = /obj/item/clothing/head/roguetown/shawl
-	category = "Головные уборы"
+	category = "Шляпы"
 
 /datum/loadout_item/maidband
 	name = "Maid Headdress"
 	path = /obj/item/clothing/head/roguetown/maidhead
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	donatitem = TRUE
 
 /datum/loadout_item/maidbandfancy
 	name = "Valorian Maid Headband"
 	path = /obj/item/clothing/head/roguetown/maidband
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	donatitem = TRUE
 
 // Обувь
@@ -3348,14 +3348,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/sanguine_hat
 	name = "Sanguine Hat"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/courtphysician
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/sanguine_cap
 	name = "Sanguine Cap"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/courtphysician/female
 	donatitem = TRUE
 	donat_tier = 2
@@ -3473,7 +3473,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/donator_nightmare_crown
 	name = "Donator Kit - Nightmare Tears Crown"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/nightmare_crown
 	donatitem = TRUE
 	ckeywhitelist = list("wrvxth", "murken4ik")
@@ -3484,7 +3484,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/etrhat
 	name = "Wanderer's hat"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/duelhat/etrhat
 	donatitem = TRUE
 	donat_tier = 1
@@ -3570,7 +3570,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 //Tiara - Sprites made by G9ose and BolloTea
 /datum/loadout_item/donat/tiara
 	name = "Golden Tiara, Ornate"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/tiara
 	donatitem = TRUE
 	donat_tier = 1
@@ -3673,7 +3673,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/donator/universal/azurosa_crown
 	name = "Donator Item - Azurosa Flowers, Crown"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/flowercrown/rosa/azure
 	donatitem = TRUE
 
@@ -3931,45 +3931,45 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/donator/crown_hat
 	name = "Donator Item - Crown Hat"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/crown_hat
 	donat_tier = 2
 
 /datum/loadout_item/cap
 	name = "Cap"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/cap
 
 /datum/loadout_item/tiyon
 	name = "Tiyon"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/tiyon
 
 /datum/loadout_item/longveil
 	name = "Long Veil"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/longveil
 
 /datum/loadout_item/durag
 	name = "Durag"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/durag
 
 /datum/loadout_item/witchhat/old
 	name = "Witch Hat (Old)"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/witchhat/old
 	donatitem = TRUE
 
 /datum/loadout_item/wizhat/gen
 	name = "Wizard Hat (Generic)"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/wizhat/gen
 	donatitem = TRUE
 
 /datum/loadout_item/chefhat
 	name = "Chef's Hat"
-	category = "Головные уборы"
+	category = "Шляпы"
 	path = /obj/item/clothing/head/roguetown/chef
 
 /datum/loadout_item/psicross/decrepit
@@ -4200,7 +4200,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/donat/sagesbighat
 	name = "Большая шляпа мудреца"
-	category = list("Головные уборы", "Донат")
+	category = list("Шляпы", "Донат")
 	path = /obj/item/clothing/head/roguetown/sagesbighat
 	donatitem = TRUE
 	ckeywhitelist = list("somethingawful917")

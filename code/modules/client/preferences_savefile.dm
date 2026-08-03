@@ -7,7 +7,7 @@
 //	where you would want the updater procs below to run
 
 //	This also works with decimals.
-#define SAVEFILE_VERSION_MAX	33.9
+#define SAVEFILE_VERSION_MAX	36
 
 /*
 SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Carn
@@ -95,6 +95,24 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 						species_name = "Venardine"
 		_load_species(S, species_name)
+	if(current_version < 35)
+		var/list/saved_selected_loadout_items
+		S["selected_loadout_items"] >> saved_selected_loadout_items
+		if(!islist(saved_selected_loadout_items))
+			selected_loadout_items = list()
+			var/list/old_keys = list("loadout", "loadout2", "loadout3")
+			for(var/old_key in old_keys)
+				var/loadout_type
+				S[old_key] >> loadout_type
+				if(!loadout_type || !ispath(loadout_type))
+					continue
+				var/datum/loadout_item/LI = GLOB.loadout_items[loadout_type]
+				if(!LI || LI.name == "Parent loadout datum")
+					continue
+				if(!(LI.name in selected_loadout_items))
+					selected_loadout_items.Add(LI.name)
+	if(current_version < 36)
+		S.dir.Remove("culinary_preferences")
 
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)
@@ -448,13 +466,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		WRITE_FILE(S["charflaws"], cleaned_types)
 
 /datum/preferences/proc/_load_culinary_preferences(S)
-	var/list/loaded_culinary_preferences
-	S["culinary_preferences"] >> loaded_culinary_preferences
-	if(loaded_culinary_preferences)
-		culinary_preferences = loaded_culinary_preferences
-		validate_culinary_preferences()
-	else
-		reset_culinary_preferences()
+	S["favorite_cuisine"] >> favorite_cuisine
+	S["favorite_dish"] >> favorite_dish
+	S["favorite_drink"] >> favorite_drink
+	sanitize_culinary_preferences()
 
 /datum/preferences/proc/_load_statpack(S)
 	var/statpack_type
@@ -554,6 +569,13 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 /datum/preferences/proc/_load_loadout(S)
 	S["selected_loadout_items"] >> selected_loadout_items
 	selected_loadout_items = SANITIZE_LIST(selected_loadout_items)
+
+	S["loadout_item_colors"] >> loadout_item_colors
+	sanitize_loadout_item_colors()
+
+	for(var/item_name in loadout_item_colors.Copy())
+		if(!(item_name in selected_loadout_items))
+			loadout_item_colors -= item_name
 
 /datum/preferences/proc/_load_loadout_colours(S)
 	S["loadout_1_hex"] >> loadout_1_hex
@@ -881,15 +903,18 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 			job_preferences -= j
 		if(job_preferences[j] == JP_HIGH || job_preferences[j] == JP_BOOST) // TA EDIT
 			topjob_found = TRUE
-			var/datum/job/prefjob = SSjob.GetJob(j)
-			if(prefjob)
-				topjob = prefjob.title
+			if(SSjob?.initialized)
+				var/datum/job/prefjob = SSjob.GetJob(j)
+				if(prefjob)
+					topjob = prefjob.title
+			else
+				topjob = j
 			WRITE_FILE(S["topjob"], topjob)
 	if(!topjob_found && topjob)	// Fallback in case we load a slot that had HIGH set but then it got unset / job got altered.
 		topjob = null
 		WRITE_FILE(S["topjob"], topjob)
 
-	if(parent) // TA EDIT
+	if(parent && SSjob?.initialized) // TA EDIT
 		sanitize_donor_job_boost(parent.mob) // TA EDIT
 
 	if(!islist(job_characters)) //TA EDIT START
@@ -904,19 +929,20 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		job_subclass_preferences = list()
 	if(!islist(job_subclass_strict))
 		job_subclass_strict = list()
-	for(var/job_title in job_subclass_preferences.Copy())
-		var/subclass_name = job_subclass_preferences[job_title]
-		var/datum/job/J = SSjob.GetJob(job_title)
-		var/valid_subclass = FALSE
-		if(istext(subclass_name) && length(J?.job_subclasses))
-			for(var/subclass_path in J.job_subclasses)
-				var/datum/advclass/subclass_type = subclass_path
-				if(initial(subclass_type.name) == subclass_name)
-					valid_subclass = TRUE
-					break
-		if(!valid_subclass)
-			job_subclass_preferences -= job_title
-			job_subclass_strict -= job_title
+	if(SSjob?.initialized)
+		for(var/job_title in job_subclass_preferences.Copy())
+			var/subclass_name = job_subclass_preferences[job_title]
+			var/datum/job/J = SSjob.GetJob(job_title)
+			var/valid_subclass = FALSE
+			if(istext(subclass_name) && length(J?.job_subclasses))
+				for(var/subclass_path in J.job_subclasses)
+					var/datum/advclass/subclass_type = subclass_path
+					if(initial(subclass_type.name) == subclass_name)
+						valid_subclass = TRUE
+						break
+			if(!valid_subclass)
+				job_subclass_preferences -= job_title
+				job_subclass_strict -= job_title
 	for(var/job_title in job_subclass_strict.Copy())
 		if(!(job_title in job_subclass_preferences))
 			job_subclass_strict -= job_title
@@ -1039,7 +1065,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["highlight_color"]		, highlight_color)
 	WRITE_FILE(S["taur_type"]			, taur_type)
 	WRITE_FILE(S["taur_color"]			, taur_color)
-	WRITE_FILE(S["culinary_preferences"], culinary_preferences)
+	WRITE_FILE(S["favorite_cuisine"]	, favorite_cuisine)
+	WRITE_FILE(S["favorite_dish"]		, favorite_dish)
+	WRITE_FILE(S["favorite_drink"]		, favorite_drink)
 	WRITE_FILE(S["topjob"]				, topjob)
 
 	//Custom names
@@ -1132,6 +1160,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["img_gallery"] , img_gallery)
 	WRITE_FILE(S["nsfw_img_gallery"] , nsfw_img_gallery)
 	WRITE_FILE(S["selected_loadout_items"], selected_loadout_items)
+	WRITE_FILE(S["loadout_item_colors"], loadout_item_colors)
 
 	//Familiar Files
 	WRITE_FILE(S["familiar_names"] , familiar_prefs.familiar_names)

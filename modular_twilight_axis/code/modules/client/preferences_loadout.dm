@@ -1,11 +1,181 @@
+#define LOADOUT_COLOR_DUCHY_PRIMARY "duchy_primary"
+#define LOADOUT_COLOR_DUCHY_SECONDARY "duchy_secondary"
+
+/obj/item
+	var/list/loadout_duchy_color_sources
+
+/obj/item/proc/apply_loadout_color_channel(channel, color_value)
+	if(!color_value)
+		return FALSE
+
+	switch(channel)
+		if("primary")
+			add_atom_colour(color_value, FIXED_COLOUR_PRIORITY)
+		if("detail")
+			detail_color = color_value
+		if("altdetail")
+			altdetail_color = color_value
+		else
+			return FALSE
+
+	return TRUE
+
+/obj/item/proc/refresh_loadout_colors()
+	update_icon()
+	if(ismob(loc))
+		var/mob/M = loc
+		M.regenerate_icons()
+
+/obj/item/proc/apply_loadout_duchy_colors(primary, secondary, refresh = TRUE)
+	if(!islist(loadout_duchy_color_sources))
+		return FALSE
+
+	var/changed = FALSE
+	for(var/channel in loadout_duchy_color_sources)
+		var/color_source = loadout_duchy_color_sources[channel]
+		var/color_value
+
+		switch(color_source)
+			if(LOADOUT_COLOR_DUCHY_PRIMARY)
+				color_value = primary
+			if(LOADOUT_COLOR_DUCHY_SECONDARY)
+				color_value = secondary
+
+		if(color_value && apply_loadout_color_channel(channel, color_value))
+			changed = TRUE
+
+	if(changed && refresh)
+		refresh_loadout_colors()
+
+	return changed
+
+/datum/loadout_item/proc/can_color_loadout_item()
+	var/static/list/allowed_types = list(
+		/obj/item/clothing,
+		/obj/item/storage,
+		/obj/item/bedroll,
+		/obj/item/flowercrown,
+		/obj/item/legwears,
+		/obj/item/undies,
+		/obj/item/reagent_containers/glass/bottle/clayvase,
+		/obj/item/reagent_containers/glass/bottle/clayfancyvase,
+		/obj/item/reagent_containers/glass/cup/claycup,
+		/obj/item/reagent_containers/glass/bottle/claybottle,
+		/obj/item/roguestatue/clay,
+		/obj/item/roguestatue/glass,
+		"/obj/item/reagent_containers/glass/bottle/blown",
+		"/obj/item/reagent_containers/glass/bottle/alchemical/blown"
+	)
+
+	for(var/allowed_type in allowed_types)
+		var/allowed_path = allowed_type
+		if(istext(allowed_path))
+			allowed_path = text2path(allowed_path)
+		if(allowed_path && ispath(path, allowed_path))
+			return TRUE
+
+	return FALSE
+
+/datum/loadout_item/proc/get_loadout_color_channels()
+	var/list/channels = list()
+
+	if(!can_color_loadout_item())
+		return channels
+
+	channels["primary"] = "Основной цвет"
+
+	var/obj/item/item_type = path
+	if(item_type::detail_color)
+		channels["detail"] = "Дополнительный цвет"
+	if(item_type::altdetail_color)
+		channels["altdetail"] = "Третий цвет"
+
+	return channels
+
+/datum/loadout_item/proc/can_color_loadout_channel(channel)
+	var/list/channels = get_loadout_color_channels()
+	return !!channels[channel]
+
 /datum/preferences
 	var/current_loadout_category = "Всё"
+	var/list/loadout_item_colors = list()
 
-// Обрабатывает вещи в списке лодаута игрока и удаляет те, название которых было изменено или они были удалены.
-// Иначе лодаут будет ломаться. Мб это как то адекватнее можно починить, но я хз.
+/datum/preferences/proc/is_loadout_duchy_color_source(color)
+	return color == LOADOUT_COLOR_DUCHY_PRIMARY || color == LOADOUT_COLOR_DUCHY_SECONDARY
+
+/datum/preferences/proc/sanitize_loadout_color(color)
+	if(!istext(color))
+		return
+
+	if(is_loadout_duchy_color_source(color))
+		return color
+
+	return sanitize_hexcolor(color, 6, TRUE, null)
+
+/datum/preferences/proc/resolve_loadout_color(color)
+	var/sanitized_color = sanitize_loadout_color(color)
+	if(!sanitized_color)
+		return
+
+	switch(sanitized_color)
+		if(LOADOUT_COLOR_DUCHY_PRIMARY)
+			if(GLOB.lordprimary)
+				return sanitize_hexcolor(GLOB.lordprimary, 6, TRUE, null)
+			return
+		if(LOADOUT_COLOR_DUCHY_SECONDARY)
+			if(GLOB.lordsecondary)
+				return sanitize_hexcolor(GLOB.lordsecondary, 6, TRUE, null)
+			return
+
+	return sanitized_color
+
+/datum/preferences/proc/get_loadout_color_label(color)
+	var/sanitized_color = sanitize_loadout_color(color)
+	if(!sanitized_color)
+		return
+
+	switch(sanitized_color)
+		if(LOADOUT_COLOR_DUCHY_PRIMARY)
+			return "Primary Keep Color"
+		if(LOADOUT_COLOR_DUCHY_SECONDARY)
+			return "Secondary Keep Color"
+
+	return sanitized_color
+
+/datum/preferences/proc/sanitize_loadout_item_colors()
+	if(!islist(loadout_item_colors))
+		loadout_item_colors = list()
+		return
+
+	var/list/validated_colors = list()
+	for(var/item_name in loadout_item_colors)
+		var/list/raw_colors = loadout_item_colors[item_name]
+		if(!islist(raw_colors))
+			var/legacy_color = sanitize_loadout_color(raw_colors)
+			if(legacy_color)
+				validated_colors[item_name] = list("primary" = legacy_color)
+			continue
+
+		var/list/item_colors = list()
+		for(var/channel in raw_colors)
+			if(!(channel in list("primary", "detail", "altdetail")))
+				continue
+
+			var/color = sanitize_loadout_color(raw_colors[channel])
+			if(color)
+				item_colors[channel] = color
+
+		if(item_colors.len)
+			validated_colors[item_name] = item_colors
+
+	loadout_item_colors = validated_colors
+
 /datum/preferences/proc/clean_loadout(mob/user)
 	var/list/valid_items = list()
+	var/list/valid_colors = list()
 	var/has_invalid_items = FALSE
+
+	sanitize_loadout_item_colors()
 
 	for(var/item_name in selected_loadout_items)
 		var/datum/loadout_item/item = GLOB.loadout_items_by_name[item_name]
@@ -19,18 +189,35 @@
 
 		valid_items.Add(item_name)
 
+		var/list/saved_colors = loadout_item_colors[item_name]
+		if(!islist(saved_colors))
+			continue
+
+		var/list/item_colors = list()
+		for(var/channel in saved_colors)
+			if(!item.can_color_loadout_channel(channel))
+				continue
+
+			var/color = sanitize_loadout_color(saved_colors[channel])
+			if(color)
+				item_colors[channel] = color
+
+		if(item_colors.len)
+			valid_colors[item_name] = item_colors
+
+	selected_loadout_items = valid_items
+	loadout_item_colors = valid_colors
+
 	if(has_invalid_items)
-		selected_loadout_items = valid_items
 		to_chat(user, "Твой лодаут был очищен из-за изменений в предметах.")
 
-/// Обрабатывает размер лодаута и сбрасывает его, если превышает лимит
 /datum/preferences/proc/handle_loadout_size(mob/user)
 	if(selected_loadout_items.len <= get_loadout_size(user))
 		return
 	selected_loadout_items = list()
+	loadout_item_colors = list()
 	to_chat(user, "Размер твоего лодаута был изменён и его пришлось сбросить!")
 
-/// Возвращает размер лодаута для указанного ника игрока
 /datum/preferences/proc/get_loadout_size(mob/user)
 	var/loadout_size = 3
 	var/modifiers = 0
@@ -50,13 +237,142 @@
 
 	return modifiers ? max(loadout_size + modifiers, 1) : loadout_size
 
-/// Добавляет предмет лодаута
 /datum/preferences/proc/add_loadout_item(item_name)
 	selected_loadout_items.Add(item_name)
 
-/// Убирает предмет лодаута
 /datum/preferences/proc/remove_loadout_item(item_name)
 	selected_loadout_items.RemoveAll(item_name)
+	if(islist(loadout_item_colors))
+		loadout_item_colors -= item_name
+
+/datum/preferences/proc/set_loadout_item_color(item_name, channel, color)
+	if(!(item_name in selected_loadout_items))
+		return FALSE
+
+	var/datum/loadout_item/item = GLOB.loadout_items_by_name[item_name]
+	if(!item || !item.can_color_loadout_channel(channel))
+		return FALSE
+
+	var/sanitized_color = sanitize_loadout_color(color)
+	if(!sanitized_color)
+		return FALSE
+
+	if(!islist(loadout_item_colors))
+		loadout_item_colors = list()
+
+	var/list/item_colors = loadout_item_colors[item_name]
+	if(!islist(item_colors))
+		item_colors = list()
+
+	item_colors[channel] = sanitized_color
+	loadout_item_colors[item_name] = item_colors
+	return TRUE
+
+/datum/preferences/proc/clear_loadout_item_color(item_name, channel = null)
+	if(!islist(loadout_item_colors))
+		return FALSE
+
+	var/list/item_colors = loadout_item_colors[item_name]
+	if(!islist(item_colors))
+		return FALSE
+
+	if(isnull(channel))
+		loadout_item_colors -= item_name
+		return TRUE
+
+	item_colors -= channel
+	if(item_colors.len)
+		loadout_item_colors[item_name] = item_colors
+	else
+		loadout_item_colors -= item_name
+
+	return TRUE
+
+/datum/preferences/proc/get_loadout_item_color(item_name, channel = "primary")
+	if(!islist(loadout_item_colors))
+		return
+
+	var/list/item_colors = loadout_item_colors[item_name]
+	if(!islist(item_colors))
+		return
+
+	return sanitize_loadout_color(item_colors[channel])
+
+/datum/preferences/proc/pick_loadout_item_color(mob/user, item_name, channel)
+	if(!(item_name in selected_loadout_items))
+		return FALSE
+
+	var/datum/loadout_item/item = GLOB.loadout_items_by_name[item_name]
+	if(!item)
+		return FALSE
+
+	var/list/channels = item.get_loadout_color_channels()
+	var/channel_name = channels[channel]
+	if(!channel_name)
+		return FALSE
+
+	var/current_color = resolve_loadout_color(get_loadout_item_color(item_name, channel))
+	var/pick_method = alert(user, "Выберите способ выбора цвета.", channel_name, "Палитра", "Готовые цвета", "Отмена")
+	var/new_color
+
+	switch(pick_method)
+		if("Палитра")
+			new_color = color_pick_sanitized(user, "Выберите [lowertext(channel_name)].", "Цвет предмета", current_color ? current_color : "#FFFFFF")
+
+		if("Готовые цвета")
+			var/list/colors_to_pick = list(
+				"Primary Keep Color" = LOADOUT_COLOR_DUCHY_PRIMARY,
+				"Secondary Keep Color" = LOADOUT_COLOR_DUCHY_SECONDARY
+			)
+			colors_to_pick += COLOR_MAP
+			colors_to_pick += pridelist
+
+			var/picked_color = input(user, "Выберите цвет.", channel_name, null) as null|anything in colors_to_pick
+			if(!picked_color)
+				return FALSE
+			new_color = colors_to_pick[picked_color]
+
+		else
+			return FALSE
+
+	if(isnull(new_color))
+		return FALSE
+
+	return set_loadout_item_color(item_name, channel, new_color)
+
+/datum/preferences/proc/apply_loadout_item_colors(obj/item/target, item_name)
+	if(!target)
+		return
+
+	var/datum/loadout_item/item = GLOB.loadout_items_by_name[item_name]
+	if(!item || !item.can_color_loadout_item())
+		return
+
+	var/changed = FALSE
+	var/list/duchy_color_sources = list()
+	var/list/color_channels = item.get_loadout_color_channels()
+
+	for(var/channel in color_channels)
+		var/color_setting = get_loadout_item_color(item_name, channel)
+		if(!color_setting)
+			continue
+
+		if(is_loadout_duchy_color_source(color_setting))
+			duchy_color_sources[channel] = color_setting
+			continue
+
+		var/color_value = resolve_loadout_color(color_setting)
+		if(color_value && target.apply_loadout_color_channel(channel, color_value))
+			changed = TRUE
+
+	if(duchy_color_sources.len)
+		target.loadout_duchy_color_sources = duchy_color_sources
+		GLOB.loadout_lordcolor |= WEAKREF(target)
+		if(target.apply_loadout_duchy_colors(GLOB.lordprimary, GLOB.lordsecondary, FALSE))
+			changed = TRUE
+
+	if(changed)
+		target.refresh_loadout_colors()
 
 /client/verb/boosty()
 	set name = "boosty"
@@ -75,7 +391,6 @@
 	config_entry_value = ""
 
 /datum/loadout_panel
-	/// Mob that the examine panel belongs to.
 	var/mob/living/carbon/human/holder
 
 /datum/loadout_panel/New(mob/holder_mob)
@@ -117,9 +432,7 @@
 
 			var/icon = icon_source_path::icon
 			var/icon_state = icon_source_path::icon_state
-			
 			var/id = sanitize_css_class_name("[icon_source_path]")
-
 			var/icon_class_name = "loadout_icons128x128 [id]"
 
 			categories[cat_name][item.name] += list(
@@ -133,6 +446,7 @@
 				unavailableReason = lock_reason,
 				requiredTier = item.donat_tier,
 				triumphCost = item.triumph_cost,
+				colorable = item.can_color_loadout_item(),
 			)
 
 	data["categories"] = categories
@@ -145,19 +459,46 @@
 
 /datum/loadout_panel/ui_data(mob/user)
 	var/list/data = list()
+	var/list/selected_details = list()
 	var/datum/preferences/user_prefs = user.client.prefs
 	var/list/selected_loadout_items = user_prefs.selected_loadout_items
 
 	var/total_triumph_cost = 0
 	for(var/item_name in selected_loadout_items)
 		var/datum/loadout_item/selected_item = GLOB.loadout_items_by_name[item_name]
-		if(selected_item?.triumph_cost)
-			total_triumph_cost += selected_item.triumph_cost
+		var/list/color_channels = list()
+		var/list/item_colors = list()
+		var/list/item_color_labels = list()
+		if(selected_item)
+			color_channels = selected_item.get_loadout_color_channels()
+			if(selected_item.triumph_cost)
+				total_triumph_cost += selected_item.triumph_cost
+
+			for(var/channel in color_channels)
+				var/color_setting = user_prefs.get_loadout_item_color(item_name, channel)
+				if(!color_setting)
+					continue
+
+				var/color_value = user_prefs.resolve_loadout_color(color_setting)
+				if(color_value)
+					item_colors[channel] = color_value
+
+				var/color_label = user_prefs.get_loadout_color_label(color_setting)
+				if(color_label)
+					item_color_labels[channel] = color_label
+
+		selected_details += list(list(
+			"name" = item_name,
+			"colorChannels" = color_channels,
+			"colors" = item_colors,
+			"colorLabels" = item_color_labels,
+		))
 
 	var/triumph_discount = get_donator_triumph_discount(user.ckey)
 	var/triumph_discount_used = min(triumph_discount, total_triumph_cost)
 
 	data["selectedLoadoutItems"] = selected_loadout_items
+	data["selectedLoadoutDetails"] = selected_details
 	data["triumphDiscountUsed"] = triumph_discount_used
 	data["curLoadoutSlots"] = selected_loadout_items.len
 
@@ -165,8 +506,13 @@
 
 /datum/loadout_panel/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
+	if(.)
+		return
+	return handle_action(ui.user, action, params)
 
-	var/mob/user = ui.user
+/datum/loadout_panel/proc/handle_action(mob/user, action, list/params)
+	if(!user?.client)
+		return
 	var/datum/preferences/user_prefs = user.client.prefs
 
 	switch(action)
@@ -174,7 +520,7 @@
 			var/item_name = params["item"]
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[item_name]
 
-			if(!item)
+			if(!item || (item_name in user_prefs.selected_loadout_items))
 				return TRUE
 
 			if(user_prefs.selected_loadout_items.len >= user_prefs.get_loadout_size(user))
@@ -195,11 +541,22 @@
 
 		if("clear")
 			user_prefs.selected_loadout_items = list()
+			user_prefs.loadout_item_colors = list()
 			to_chat(user, "Лодаут очищен!")
 			return TRUE
 
+		if("pick_color")
+			user_prefs.pick_loadout_item_color(user, params["item"], params["channel"])
+			return TRUE
+
+		if("clear_colors")
+			user_prefs.clear_loadout_item_color(params["item"])
+			return TRUE
+
 		if("boosty")
-			user << link(CONFIG_GET(string/boostyurl))
+			var/boosty_url = CONFIG_GET(string/boostyurl)
+			if(boosty_url)
+				user << link(boosty_url)
 			return TRUE
 
 /datum/loadout_panel/ui_assets(mob/user)
