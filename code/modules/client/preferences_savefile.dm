@@ -95,7 +95,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 						species_name = "Venardine"
 		_load_species(S, species_name)
-	if(current_version < 35)
+	if(current_version < 35) // Migrate old 3-slot loadout to selected_loadout_items
 		var/list/saved_selected_loadout_items
 		S["selected_loadout_items"] >> saved_selected_loadout_items
 		if(!islist(saved_selected_loadout_items))
@@ -111,7 +111,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 					continue
 				if(!(LI.name in selected_loadout_items))
 					selected_loadout_items.Add(LI.name)
-	if(current_version < 36)
+	if(current_version < 36) // Strip the old per-item favorite/hated food & drink data now that preferences are category flags
 		S.dir.Remove("culinary_preferences")
 
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
