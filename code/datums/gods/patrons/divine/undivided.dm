@@ -7,8 +7,8 @@
 	miracles = list(/datum/action/cooldown/spell/touch/orison					= CLERIC_ORI,
 					/datum/action/cooldown/spell/miracle/ignition/undivided		= CLERIC_T0,
 					/datum/action/cooldown/spell/undivided/recuperation			= CLERIC_T0,
-					/datum/action/cooldown/spell/miracle/heal/undivided			= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal/undivided			= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T3, // TA EDIT
 					/datum/action/cooldown/spell/undivided/twinned_gaze			= CLERIC_T1,
 					/datum/action/cooldown/spell/undivided/perseverance			= CLERIC_T2,
 					/datum/action/cooldown/spell/undivided/undivided_spellpack	= CLERIC_T2,

@@ -6,8 +6,8 @@
 	mob_traits = list(TRAIT_SOUL_EXAMINE, TRAIT_NOSTINK)	//No stink is generic but they deal with dead bodies so.. makes sense, I suppose?
 	miracles = list(/datum/action/cooldown/spell/touch/orison						= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/invoked/necras_sight				= CLERIC_T0,
-					/datum/action/cooldown/spell/miracle/heal 						= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle				= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 						= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle				= CLERIC_T3, // TA EDIT
 					/obj/effect/proc_holder/spell/invoked/avert						= CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/locate_dead 					= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/fog_ward					= CLERIC_T1, // Not bugged, only appears on fog rounds!

@@ -112,8 +112,8 @@
 					/obj/effect/proc_holder/spell/self/heavy_stomp 		       			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/blood_call 		       		= CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/graggar_regenerate 		       	= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/heal 				        	= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 				        	= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T3, // TA EDIT
 					/datum/action/cooldown/spell/graggar/graggar_battlecry		 		= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/projectile/graggar_blood_net 	= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/silence/graggar				= CLERIC_T2,
@@ -159,8 +159,8 @@
 					/obj/effect/proc_holder/spell/invoked/twilight_weightofchains						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/twilight_transact								= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/twilight_equalize								= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/heal 								        	= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle									= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 								        	= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle									= CLERIC_T3, // TA EDIT
 					/obj/effect/proc_holder/spell/invoked/twilight_churnwealthy							= CLERIC_T2,
 					/obj/effect/proc_holder/spell/self/twilight_amongus									= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/projectile/twilight_crownfortheking			= CLERIC_T2,
@@ -203,8 +203,8 @@
 					/obj/effect/proc_holder/spell/targeted/touch/TAloversruin			= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/TAbaothablessings				= CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/TAinsufflation					= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/heal 						  	= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 						  	= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T3, // TA EDIT
 					/obj/effect/proc_holder/spell/invoked/griefflower					= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/projectile/TAblowingdust		= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/TAlasthigh					= CLERIC_T2,

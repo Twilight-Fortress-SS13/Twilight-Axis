@@ -68,8 +68,8 @@
 					/obj/effect/proc_holder/spell/self/TAastrata_gaze						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAastratagrasp = CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/TAastrata_fireresist					= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal								= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T3, // TA EDIT
 					/obj/effect/proc_holder/spell/invoked/projectile/TAsacred_flame			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/TAastrata_sword						= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/TAastrataspark					= CLERIC_T2,
@@ -104,8 +104,8 @@
 /*	miracles = list(/datum/action/cooldown/spell/touch/orison				= CLERIC_ORI,
 					/datum/action/cooldown/spell/noc/sight					= CLERIC_T0,
 					/datum/action/cooldown/spell/darkvision/miracle			= CLERIC_T0,
-					/datum/action/cooldown/spell/miracle/heal				= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle		= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal				= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle		= CLERIC_T3, // TA EDIT
 					/datum/action/cooldown/spell/noc/enlightenment			= CLERIC_T1,
 					/datum/action/cooldown/spell/noc/inspiration			= CLERIC_T1,
 					/datum/action/cooldown/spell/noc/invisibility			= CLERIC_T2,
@@ -185,8 +185,8 @@
 					/obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAravoxgrasp = CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/TAtug_of_war					= CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/TAprovocation						= CLERIC_T0,
-					/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal								= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T3, // TA EDIT
 					/obj/effect/proc_holder/spell/self/TAdivine_strike						= CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/TAbalance_immune					= CLERIC_T2,
 					/obj/effect/proc_holder/spell/self/TAcall_to_arms						= CLERIC_T2,
@@ -217,8 +217,8 @@
 	miracles = list(/datum/action/cooldown/spell/touch/orison						= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/invoked/necras_sight				= CLERIC_T0,
 					/datum/action/cooldown/spell/touch/shroud_of_tranquility = CLERIC_T0,
-					/datum/action/cooldown/spell/miracle/heal 						= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle				= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal 						= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle				= CLERIC_T3, // TA EDIT
 					/obj/effect/proc_holder/spell/invoked/avert						= CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/locate_dead 					= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/fog_ward					= CLERIC_T1,
@@ -304,8 +304,8 @@
 					/obj/effect/proc_holder/spell/invoked/TArestoration		= CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/TArepair				= CLERIC_T0,
 					/obj/effect/proc_holder/spell/invoked/TArework				= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/heal					= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal					= CLERIC_T3, // TA EDIT
+					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T3, // TA EDIT
 					/datum/action/cooldown/spell/arcyne_forge/miracle			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/TAvigorousexchange	= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/TAheatmetal			= CLERIC_T2,
