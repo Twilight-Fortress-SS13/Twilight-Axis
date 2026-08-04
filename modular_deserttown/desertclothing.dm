@@ -45,7 +45,7 @@
 	smeltresult = /obj/item/ingot/blacksteel
 
 /obj/item/clothing/suit/roguetown/armor/brigandine/agha
-	name = "Agha Scale"
+	name = "agha scale"
 	desc = "Fine armor made of treated animal scales, denoting an esteemd career in the dunes."
 	icon_state = "huus"
 	item_state = "huus"
@@ -74,7 +74,7 @@
 	smeltresult = /obj/item/ingot/steel
 
 /obj/item/clothing/head/roguetown/helmet/janissaryhelm
-	name = "Janissary Helmet"
+	name = "janissary helmet"
 	desc = "A helmet with too much style."
 	icon = 'modular_deserttown/icons/clothing/head.dmi'
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/head.dmi'
@@ -369,7 +369,7 @@
 	craftdiff = 4
 
 /obj/item/clothing/head/roguetown/tagelmust
-	name = "Tagelmust"
+	name = "tagelmust"
 	desc = "A long cloth, wound around the head, and a veil."
 	body_parts_covered = HEAD|EARS|HAIR|NECK|NOSE|MOUTH
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR
@@ -608,7 +608,7 @@
 	..()
 
 /obj/item/storage/belt/rogue/leather/noblesash
-	name = "Zybantine noble sash"
+	name = "zybantine noble sash"
 	icon = 'modular_deserttown/icons/clothing/belts.dmi'
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/belts.dmi'
 	icon_state = "noblesash"
@@ -620,14 +620,14 @@
 	craftdiff = 4
 
 /obj/item/storage/belt/rogue/leather/sultbelt
-	name = "Zybantine Sultans Sash"
+	name = "zybantine sultan sash"
 	icon = 'modular_deserttown/icons/clothing/belts.dmi'
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/belts.dmi'
 	icon_state = "sultbelt"
 	sellprice = 30
 
 /obj/item/storage/belt/rogue/leather/jafar
-	name = "Zybantine magos Sash"
+	name = "zybantine magos sash"
 	icon = 'modular_deserttown/icons/clothing/belts.dmi'
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/belts.dmi'
 	icon_state = "jafar"

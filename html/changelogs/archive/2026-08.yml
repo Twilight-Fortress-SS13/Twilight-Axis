@@ -10,8 +10,9 @@
   Lamasmaster:
   - rscadd: '2 infernal summons: Armour and a Sword'
   PatapoIIIa:
-  - rscadd: "\u0421\u0418 \u0442\u0435\u0441\u0442\u044b \u0434\u043b\u044f \u0441\u0435\u043c\u0435\u0439"
-  - bugfix: "\u0424\u0438\u043a\u0441 \u0441\u0435\u043c\u0435\u0439"
+  - rscadd: "\u0421\u0418 \u0442\u0435\u0441\u0442\u044B \u0434\u043B\u044F \u0441\
+      \u0435\u043C\u0435\u0439"
+  - bugfix: "\u0424\u0438\u043A\u0441 \u0441\u0435\u043C\u0435\u0439"
   WeNeedMorePhoron:
   - rscadd: You can no longer self extract lux from yourself
   borneblood:
@@ -22,7 +23,6 @@
   radarseas:
   - image: added/modified abscond + new xylix revival icon
   - bugfix: my dumbass forgot to check Xylix getting anastasis Icon, FUCK.
-
 2026-08-02:
   7erracotta:
   - rscadd: Added amulets
@@ -58,3 +58,61 @@
   - rscadd: Slightly buff the earlier waves in a blockade and rewards
   - balance: Holding onto a spell pass 1 seconds strains you up to 5 seconds for forced
       cancel
+2026-08-03:
+  Corde50:
+  - rscdel: "\u0423\u0434\u0430\u043B\u0435\u043D \u0441\u043F\u0435\u043B\u043B \"\
+      Repulse\" \u0443 \u043F\u043E\u0434\u043A\u043B\u0430\u0441\u0441\u0430 Otavan\
+      \ Volf"
+  EmilitiaEnnehrt:
+  - bugfix: fixes elvish glaive pixelshift
+  KatTheFox:
+  - bugfix: Wings will now render below tails from the south specifically. This fix
+      only applies to new character slots or if you change your character's species
+      to something else and back. Which will reset all your customization. Yeah.
+  Ketrai:
+  - rscadd: Ranger cloak dyable & forest green in triumph store.
+  Vladmar11:
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0448\u0430\u043D\u0441\
+      \ \u043D\u0430 \u0437\u0430\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043E\
+      \u0431\u043E\u0440\u043E\u0442\u043D\u0435\u043C \u043F\u0440\u0438 \u043E\u0431\
+      \u043B\u0438\u0437\u044B\u0432\u0430\u043D\u0438\u0438 \u0446\u0435\u043B\u0438\
+      \ \u0441 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u043C\u0438 \u0440\u0430\
+      \u043D\u0430\u043C\u0438"
+  - balance: "\u0438\u0437\u043C\u0435\u043D\u0435\u043D\u044B \u0448\u0430\u043D\u0441\
+      \u044B \u0437\u0430\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u0443 \u043E\u0431\
+      \u043E\u0440\u043E\u0442\u043D\u0435\u0439"
+  WeNeedMorePhoron:
+  - rscdel: Links in OOC chat etc. are no longer automatically linkified for security
+      reasons.
+  borneblood:
+  - bugfix: Bees can now timeout when pursuing bad plants.
+  - rscadd: Examining Apiary gives you a few more insights on how your bees are doing.
+      Magnifying glasses also improved.
+  emptymarch:
+  - rscadd: "\u043E\u0440\u0438\u0434\u0436\u0438\u043D \u0411\u0430\u0433\u0440\u043E\
+      \u0432\u044B\u0445 \u0417\u0435\u043C\u0435\u043B\u044C"
+  msw7007:
+  - rscadd: "\u043D\u043E\u0432\u043E\u0435 \u043E\u043A\u043D\u043E \u043D\u0430\
+      \ tgUI \u0434\u043B\u044F \u0431\u0430\u0440\u0434\u043E\u0432"
+  - rscadd: "\u041A\u041A\u0418 \u0432 \u0422\u0410."
+2026-08-04:
+  AzurLazur:
+  - rscdel: "\u041C\u0430\u0440\u0448\u0430\u043B\u0451\u043A"
+  - rscadd: "\u0413\u0435\u0442\u043C\u0430\u043D"
+  Chituka:
+  - bugfix: "\u043F\u0430\u0444\u0444\u0435\u0440 \u0442\u0435\u043F\u0435\u0440\u044C\
+      \ \u0441\u0442\u0440\u0435\u043B\u044F\u0435\u0442 \u043F\u0440\u0430\u0432\u0438\
+      \u043B\u044C\u043D\u043E"
+  EmilitiaEnnehrt:
+  - rscadd: Adds quarterstaffs to Smithy's Silverface.
+  - rscadd: Adds empty surgeon bag to Silverface.
+  - bugfix: fixes a missing delimiter in champion's text.
+  - rscadd: Adds craftable zigboxes.
+  - rscadd: Allows oat and rice grain to be made into grain bait.
+  - rscadd: Chickens now also eat rice.
+  - rscadd: Cows, fogbeasts, and saigas now also eat corn.
+  Ryan180602:
+  - bugfix: fix up peasant rebellion
+  WeNeedMorePhoron:
+  - rscadd: Makes Whips Great instead of Long for weapon length, which make sense
+      given it has a 3 tiles attack.

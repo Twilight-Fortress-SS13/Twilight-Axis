@@ -503,7 +503,16 @@
 
 /datum/status_effect/buff/dragonhide/TAfireresist/on_apply()
 	. = ..()
+	ADD_TRAIT(owner, TRAIT_NOFIRE, "[type]")
+	for(var/datum/status_effect/fire_handler/fire_stacks/fire_effect in owner.status_effects.Copy())
+		qdel(fire_effect)
 	addtimer(CALLBACK(src, PROC_REF(continue_proc)), wait = (10 SECONDS))
+
+/datum/status_effect/buff/dragonhide/TAfireresist/on_remove()
+	for(var/datum/status_effect/fire_handler/fire_stacks/fire_effect in owner.status_effects.Copy())
+		qdel(fire_effect)
+	REMOVE_TRAIT(owner, TRAIT_NOFIRE, "[type]")
+	return ..()
 
 /datum/status_effect/buff/dragonhide/TAfireresist/proc/continue_proc()
 	if(QDELETED(src) || QDELING(src) || !owner || QDELETED(owner))

@@ -75,7 +75,7 @@
 	save_stats()
 	set_stats()
 	greet()
-	return ..()
+	return .
 
 /datum/antagonist/lich/greet()
 	to_chat(owner.current, span_userdanger("An immortal king cries for new subjects. Subdue and conquer."))

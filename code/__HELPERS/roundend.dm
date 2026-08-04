@@ -284,9 +284,6 @@
 						"Whether with loss or life, kingdom survives... for now.",
 						"The people of [realm_name] prepare to look forward; their actions locked in the impermeable past.")
 
-	if(SSmapping.retainer.head_rebel_decree)
-		end_reason = "The rebellious peasants have taken control of Azuria's throne, shepherding forth the beginning of a new community!"
-
 	if(SSmapping.retainer.cult_ascended)
 		end_reason = "ZIZOZIZOZIZOZIZO"
 

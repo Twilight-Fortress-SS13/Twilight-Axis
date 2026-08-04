@@ -244,6 +244,7 @@ SUBSYSTEM_DEF(gamemode)
 		"VL" = null,
 		"Masquerade" = null,
 		"Werewolf" = null,
+		"Rebel" = null,
 	)
 
 	/// List of new player minds we currently want to give our roundstart antag to
@@ -262,7 +263,6 @@ SUBSYSTEM_DEF(gamemode)
 
 	var/round_ends_at = 0
 	var/roundvoteend = FALSE
-	var/reb_end_time = 0
 
 /datum/controller/subsystem/gamemode/Initialize(time, zlevel)
 #if defined(UNIT_TESTS) || defined(AUTOWIKI) // lazy way of doing this but idc
@@ -800,17 +800,6 @@ SUBSYSTEM_DEF(gamemode)
 				SSvote.initiate_vote("endround", pick("Zlod", "Sun King", "Gaia", "Moon Queen", "Aeon", "Gemini", "Aries"))
 	else if(roundvoteend && world.time >= round_ends_at)
 		return TRUE
-	if(SSmapping.retainer.head_rebel_decree)
-		if(reb_end_time == 0)
-			to_chat(world, span_boldannounce("The peasant rebels took control of the throne, hail the new community!"))
-			if(ttime >= INITIAL_ROUND_TIMER)
-				reb_end_time = ttime + 15 MINUTES
-				to_chat(world, span_boldwarning("The round will end in 15 minutes."))
-			else
-				reb_end_time = INITIAL_ROUND_TIMER
-				to_chat(world, span_boldwarning("The round will end at the 2:30 hour mark."))
-		if(ttime >= reb_end_time)
-			return TRUE
 
 /datum/controller/subsystem/gamemode/proc/generate_town_goals()
 	return
@@ -1413,6 +1402,8 @@ SUBSYSTEM_DEF(gamemode)
 		return "Gnoll"
 	if(ispath(antag_datum, /datum/antagonist/wretch))
 		return "Wretch"
+	if(ispath(antag_datum, /datum/antagonist/prebel))
+		return "Rebel"
 	return null
 
 /// Switches the round to the permissive Admin sandbox preset when an admin fine-tunes via a toggle or slot
@@ -1441,15 +1432,17 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/opened = list()
 	if(allow_vote)
 		return opened
-	for(var/key in list("Bandit", "Lich", "VL", "Werewolf"))
+	for(var/key in list("Bandit", "Lich", "VL", "Werewolf", "Rebel"))
 		if((admin_slots[key] || 0) > 0)
 			opened += key
 	return opened
 
-/// Narrows the roundstart pick when one is forced. Admin-opened hard antags take priority: the pick is
+/// Narrows the roundstart pick. Admin-opened hard antags take priority: the pick is
 /// restricted to exactly those antags (so multiple opened antags get a random pick among themselves).
-/// Otherwise, when the active preset guarantees a hard antag, the pick is narrowed to villain events only so
-/// a permitted Dreamwalker (or any non-villain injection) cannot consume the guaranteed hard-antag slot.
+/// Otherwise the pick is narrowed to villain events whenever any can roll, so a soft injection
+/// (the Dreamwalker) never consumes the round's hard-antag slot while a villain could have taken
+/// it - soft injections only win the roll when no villain can roll at all (the no-antag preset,
+/// or pops below the hard-antag minimum).
 /datum/controller/subsystem/gamemode/proc/storyteller_guaranteed_events(list/valid_events)
 	var/list/guaranteed_events = list()
 	var/list/admin_hard = opened_hard_antags()
@@ -1464,10 +1457,10 @@ SUBSYSTEM_DEF(gamemode)
 	var/datum/storyteller/preset = active_preset()
 	if(!preset?.guaranteed_hard)
 		return guaranteed_events
-	for(var/datum/round_event_control/antagonist/solo/event as anything in valid_events)
+	for(var/datum/round_event_control/event as anything in valid_events)
 		if(event.occurrences)
 			continue
-		if((event.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN) && event.consumes_hard_antag_slot)
+		if(event.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN)
 			guaranteed_events[event] = valid_events[event]
 	return guaranteed_events
 
