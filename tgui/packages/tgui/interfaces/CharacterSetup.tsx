@@ -29,8 +29,10 @@ import { SystemTab } from './CharacterSetup/tabs/SystemTab';
 import type { Data, DialogTab, KeybindEntry, MainTab } from './CharacterSetup/types';
 
 const mainTabStyle = {
-  flex: '1 0 auto',
-  minWidth: '82px',
+  flex: '1 1 0',
+  minWidth: '72px',
+  paddingLeft: '5px',
+  paddingRight: '5px',
   whiteSpace: 'nowrap',
   textAlign: 'center',
   justifyContent: 'center',
@@ -58,8 +60,8 @@ export const CharacterSetup = () => {
   return (
     <Window
       title="Настройка персонажа"
-      width={1390}
-      height={710}
+      width={1103}
+      height={709}
       buttons={(
         <Box
           style={{
@@ -122,10 +124,12 @@ export const CharacterSetup = () => {
                 ) : null}
               </Box>
             </Stack.Item>
-            <Stack.Item grow>
+            <Stack.Item grow basis={0} style={{ minWidth: 0, overflow: 'hidden' }}>
               <Box
                 style={{
                   position: 'relative',
+                  width: '100%',
+                  maxWidth: '100%',
                   height: '100%',
                   minWidth: 0,
                   overflow: 'hidden',
@@ -251,8 +255,9 @@ export const CharacterSetup = () => {
                       style={{
                         display: 'flex',
                         flexWrap: 'nowrap',
-                        width: 'max-content',
-                        minWidth: '100%',
+                        width: '100%',
+                        minWidth: '720px',
+                        maxWidth: '100%',
                       }}
                     >
                       <Tabs.Tab style={mainTabStyle} selected={mainTab === 'general'} onClick={() => setMainTab('general')}>Общее</Tabs.Tab>
@@ -276,7 +281,7 @@ export const CharacterSetup = () => {
                     </Tabs>
                   </Box>
                 </Stack.Item>
-                <Stack.Item grow>
+                <Stack.Item grow style={{ minWidth: 0, minHeight: 0, overflow: 'hidden' }}>
                   {mainTab === 'general' ? (
                     <GeneralTab
                       data={data}

@@ -4,6 +4,8 @@ import { Box, Button, Section, Stack } from 'tgui-core/components';
 import type { Data } from '../types';
 import { CompactRow, cardStyle, truncate } from '../components/shared';
 
+const descriptionLabelBasis = '100px';
+
 const notesFormattingExamples = [
   { code: '\\', text: 'экранирует специальные символы' },
   { code: '# text', text: 'заголовок' },
@@ -84,12 +86,12 @@ export const NotesTab = (props: {
             </Box>
           ) : null}
 
-          <CompactRow wrap label="Flavortext" value={truncate(props.data.roleplay.flavortext, 1500)} onClick={() => props.onEditTextField('flavortext')} />
-          <CompactRow wrap label="OOC Notes" value={truncate(props.data.roleplay.ooc_notes, 1500)} onClick={() => props.onEditTextField('ooc_notes')} />
-          <CompactRow wrap label="Rumours" value={truncate(props.data.roleplay.rumour, 1500)} onClick={() => props.onEditTextField('rumour')} />
-          <CompactRow wrap label="Дворянские сплетни" value={truncate(props.data.roleplay.noble_gossip, 1500)} onClick={() => props.onEditTextField('noble_gossip')} />
-          <CompactRow wrap label="ERP Preferences" value={truncate(props.data.roleplay.erpprefs, 1500)} onClick={() => props.onEditTextField('erpprefs')} />
-          <CompactRow wrap label="NSFW Flavortext" value={truncate(props.data.roleplay.nsfwflavortext, 1500)} onClick={() => props.onEditTextField('nsfwflavortext')} />
+          <CompactRow wrap label="Flavortext" labelBasis={descriptionLabelBasis} value={truncate(props.data.roleplay.flavortext, 1500)} onClick={() => props.onEditTextField('flavortext')} />
+          <CompactRow wrap label="OOC Notes" labelBasis={descriptionLabelBasis} value={truncate(props.data.roleplay.ooc_notes, 1500)} onClick={() => props.onEditTextField('ooc_notes')} />
+          <CompactRow wrap label="Rumours" labelBasis={descriptionLabelBasis} value={truncate(props.data.roleplay.rumour, 1500)} onClick={() => props.onEditTextField('rumour')} />
+          <CompactRow wrap label="Дворянские сплетни" labelBasis={descriptionLabelBasis} value={truncate(props.data.roleplay.noble_gossip, 1500)} onClick={() => props.onEditTextField('noble_gossip')} />
+          <CompactRow wrap label="ERP Preferences" labelBasis={descriptionLabelBasis} value={truncate(props.data.roleplay.erpprefs, 1500)} onClick={() => props.onEditTextField('erpprefs')} />
+          <CompactRow wrap label="NSFW Flavortext" labelBasis={descriptionLabelBasis} value={truncate(props.data.roleplay.nsfwflavortext, 1500)} onClick={() => props.onEditTextField('nsfwflavortext')} />
         </Section>
       </Stack.Item>
       <Stack.Item grow>

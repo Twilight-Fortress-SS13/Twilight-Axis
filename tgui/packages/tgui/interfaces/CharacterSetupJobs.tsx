@@ -710,9 +710,11 @@ export const CharacterSetupJobsContent = () => {
             mb={0.5}
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr minmax(260px, 360px) 1fr',
+              gridTemplateColumns: 'minmax(0, 1fr) 320px max-content',
               alignItems: 'center',
               gap: '6px',
+              width: '100%',
+              minWidth: 0,
             }}
           >
             <Box />
@@ -733,6 +735,7 @@ export const CharacterSetupJobsContent = () => {
                 justifyContent: 'end',
                 gap: '5px',
                 minWidth: 0,
+                maxWidth: '100%',
                 height: '24px',
               }}
             >
@@ -744,7 +747,11 @@ export const CharacterSetupJobsContent = () => {
                   minHeight: '24px',
                   maxHeight: '24px',
                   margin: '0',
+                  maxWidth: '320px',
                   padding: '0 8px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                   lineHeight: 1,
                   verticalAlign: 'top',
                 }}

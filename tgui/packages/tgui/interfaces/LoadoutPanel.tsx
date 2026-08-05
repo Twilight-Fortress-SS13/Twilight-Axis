@@ -262,18 +262,25 @@ Donator kit — это рескины: используйте зелье на с
         </Section>
       </Stack.Item>
 
-      <Stack.Item grow style={{ minWidth: 0 }}>
-        <Section title="Предметы" fill style={{ minWidth: 0 }}>
+      <Stack.Item grow basis={0} style={{ minWidth: 0, maxWidth: '100%', overflow: 'hidden' }}>
+        <Section
+          title="Предметы"
+          fill
+          style={{ minWidth: 0, maxWidth: '100%', overflow: 'hidden' }}
+        >
           <Box
             style={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: 'grid',
+              gridTemplateRows: 'auto auto minmax(0, 1fr)',
+              width: '100%',
+              maxWidth: '100%',
               height: '100%',
               minHeight: 0,
               minWidth: 0,
+              overflow: 'hidden',
             }}
           >
-            <Box style={{ flex: '0 0 auto', minWidth: 0 }}>
+            <Box style={{ minWidth: 0, maxWidth: '100%', overflow: 'hidden' }}>
               <Box
                 onWheel={(event) => {
                   const target = event.currentTarget;
@@ -287,8 +294,9 @@ Donator kit — это рескины: используйте зелье на с
                   overflowX: 'auto',
                   overflowY: 'hidden',
                   minWidth: 0,
+                  maxWidth: '100%',
                   width: '100%',
-                  paddingBottom: '4px',
+                  paddingBottom: '6px',
                   overscrollBehaviorX: 'contain',
                   scrollbarGutter: 'stable',
                   scrollbarWidth: 'thin',
@@ -296,10 +304,10 @@ Donator kit — это рескины: используйте зелье на с
               >
                 <Tabs
                   style={{
-                    display: 'flex',
+                    display: 'inline-flex',
                     flexWrap: 'nowrap',
                     width: 'max-content',
-                    minWidth: '100%',
+                    minWidth: 'max-content',
                   }}
                 >
                   {categoriesArray.map((category) => (
@@ -315,21 +323,23 @@ Donator kit — это рескины: используйте зелье на с
                 </Tabs>
               </Box>
             </Box>
-            <Box style={{ flex: '0 0 auto', minWidth: 0, marginTop: '4px' }}>
+            <Box style={{ minWidth: 0, maxWidth: '100%', marginTop: '4px', overflow: 'hidden' }}>
               <Box
                 style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
+                  display: 'grid',
+                  gridTemplateColumns: 'minmax(0, 1fr) max-content',
                   alignItems: 'center',
                   gap: '6px',
                   width: '100%',
+                  maxWidth: '100%',
                   minWidth: 0,
+                  overflow: 'hidden',
                 }}
               >
                 <Box
                   style={{
-                    flex: '1 1 180px',
                     minWidth: 0,
+                    maxWidth: '100%',
                     overflow: 'hidden',
                   }}
                 >
@@ -350,9 +360,8 @@ Donator kit — это рескины: используйте зелье на с
                   color={confirmReset ? 'good' : 'danger'}
                   onClick={handleReset}
                   style={{
-                    flex: '0 0 auto',
                     minWidth: 'max-content',
-                    marginLeft: 'auto',
+                    maxWidth: '100%',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -362,22 +371,39 @@ Donator kit — это рескины: используйте зелье на с
             </Box>
             <Box
               style={{
-                flex: '1 1 auto',
+                position: 'relative',
                 minHeight: 0,
                 minWidth: 0,
+                maxWidth: '100%',
+                width: '100%',
                 marginTop: '4px',
-                overflowY: 'auto',
-                overflowX: 'hidden',
+                overflow: 'hidden',
               }}
             >
+              <Box
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  paddingRight: '2px',
+                  overflowY: 'auto',
+                  overflowX: 'hidden',
+                  scrollbarGutter: 'stable',
+                  overscrollBehaviorY: 'contain',
+                }}
+              >
               {filteredItems.length ? (
                 <Box
                   style={{
                     display: 'grid',
+                    width: '100%',
+                    maxWidth: '100%',
                     minWidth: 0,
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(104px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fit, 104px)',
+                    gridAutoRows: '112px',
+                    justifyContent: 'start',
                     gap: '8px',
                     alignContent: 'start',
+                    overflow: 'hidden',
                   }}
                 >
                   {filteredItems.map((item, index) => {
@@ -389,8 +415,12 @@ Donator kit — это рескины: используйте зелье на с
                         key={itemName}
                         style={{
                           position: 'relative',
-                          width: '100%',
+                          width: '104px',
+                          minWidth: '104px',
+                          maxWidth: '104px',
+                          height: '112px',
                           minHeight: '112px',
+                          maxHeight: '112px',
                           padding: '6px',
                           overflow: 'hidden',
                           backgroundColor: '#141414',
@@ -470,6 +500,7 @@ Donator kit — это рескины: используйте зелье на с
                   В этой категории ничего не найдено.
                 </Box>
               )}
+              </Box>
             </Box>
           </Box>
         </Section>

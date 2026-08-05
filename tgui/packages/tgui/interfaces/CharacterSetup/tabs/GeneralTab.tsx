@@ -148,6 +148,11 @@ export const GeneralTab = (props: {
             <CompactRow label="Фамильяр" value="Открыть" onClick={props.onOpenFamiliar} />
             <CompactRow label="Arlette" value="Открыть" onClick={() => props.act('link', { preference: 'ccg_settings' })} />
             <CompactRow
+              label="Defiant"
+              value={props.data.identity.defiant ? 'Да' : 'Нет'}
+              onClick={() => props.act('link', { preference: 'be_defiant' })}
+            />
+            <CompactRow
               label="Быть ментором"
               value={props.data.system_settings?.schizo_voice ? 'Да' : 'Нет'}
               onClick={() => props.act('link', { preference: 'schizo_voice' })}

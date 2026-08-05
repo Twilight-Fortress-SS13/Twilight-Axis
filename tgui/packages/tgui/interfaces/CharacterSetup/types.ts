@@ -13,6 +13,7 @@ export type IdentityData = {
   dnr_pref?: boolean;
   combat_music?: string;
   domhand?: string;
+  defiant?: boolean;
 };
 
 export type AppearanceData = {

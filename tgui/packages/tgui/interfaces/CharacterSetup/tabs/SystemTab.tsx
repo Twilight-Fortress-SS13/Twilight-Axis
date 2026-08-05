@@ -3,6 +3,8 @@ import { Box, Dropdown, Section, Stack } from 'tgui-core/components';
 import type { Data } from '../types';
 import { CompactRow, Subhead, cardStyle } from '../components/shared';
 
+const miscLabelBasis = '140px';
+
 const getPreviewFloorName = (name?: string) => {
   const names: Record<string, string> = {
     Арлекинская: 'Плитка',
@@ -136,26 +138,31 @@ export const SystemTab = (props: {
         <Section title="Разное" fill scrollable>
           <Subhead>Examine</Subhead>
           <CompactRow
+            labelBasis={miscLabelBasis}
             label="Examine Theme"
             value={settings.examine_theme_name || 'None (Use Viewer\'s)'}
             onClick={() => props.act('link', { preference: 'examine_theme', task: 'input' })}
           />
           <CompactRow
+            labelBasis={miscLabelBasis}
             label="Anonymize"
             value={settings.anonymize ? 'Да' : 'Нет'}
             onClick={() => props.act('toggle_system_pref', { pref: 'anonymize' })}
           />
           <CompactRow
+            labelBasis={miscLabelBasis}
             label="Masked examine"
             value={settings.masked_examine ? 'Да' : 'Нет'}
             onClick={() => props.act('toggle_system_pref', { pref: 'masked_examine' })}
           />
           <CompactRow
+            labelBasis={miscLabelBasis}
             label="Full examine"
             value={settings.full_examine ? 'Да' : 'Нет'}
             onClick={() => props.act('toggle_system_pref', { pref: 'full_examine' })}
           />
           <CompactRow
+            labelBasis={miscLabelBasis}
             label="No examine blocks"
             value={settings.no_examine_blocks ? 'Да' : 'Нет'}
             onClick={() => props.act('toggle_system_pref', { pref: 'no_examine_blocks' })}
@@ -165,16 +172,19 @@ export const SystemTab = (props: {
             <>
               <Subhead>Визуал для меценатов</Subhead>
               <CompactRow
+                labelBasis={miscLabelBasis}
                 label="Цвет в OOC"
                 value={settings.donor_ooc_color ? 'Включён' : 'Выключен'}
                 onClick={() => props.act('link', { preference: 'donor_ooc_color' })}
               />
               <CompactRow
+                labelBasis={miscLabelBasis}
                 label="Иконка в OOC"
                 value={settings.donor_ooc_icon ? 'Включена' : 'Выключена'}
                 onClick={() => props.act('link', { preference: 'donor_ooc_icon' })}
               />
               <CompactRow
+                labelBasis={miscLabelBasis}
                 label="Иконка в examine"
                 value={settings.donor_examine_icon ? 'Включена' : 'Выключена'}
                 onClick={() => props.act('link', { preference: 'donor_examine_icon' })}
@@ -186,17 +196,20 @@ export const SystemTab = (props: {
             <>
               <Subhead>Администратор</Subhead>
               <CompactRow
+                labelBasis={miscLabelBasis}
                 label="Play Admin MIDIs"
                 value={settings.play_admin_midis ? 'Включено' : 'Выключено'}
                 onClick={() => props.act('link', { preference: 'hear_midis' })}
               />
               <CompactRow
+                labelBasis={miscLabelBasis}
                 label="Adminhelp sounds"
                 value={settings.hear_adminhelps ? 'Включено' : 'Выключено'}
                 onClick={() => props.act('link', { preference: 'hear_adminhelps' })}
               />
               {settings.can_edit_asaycolor ? (
                 <CompactRow
+                  labelBasis={miscLabelBasis}
                   label="ASAY цвет"
                   value={settings.asaycolor || '#ff4500'}
                   colorPreview={settings.asaycolor || '#ff4500'}
@@ -204,16 +217,19 @@ export const SystemTab = (props: {
                 />
               ) : null}
               <CompactRow
+                labelBasis={miscLabelBasis}
                 label="Always deadmin"
                 value={settings.deadmin_always_forced ? 'Принудительно' : settings.deadmin_always ? 'Включено' : 'Выключено'}
                 onClick={settings.deadmin_always_forced ? undefined : () => props.act('link', { preference: 'toggle_deadmin_always' })}
               />
               <CompactRow
+                labelBasis={miscLabelBasis}
                 label="Deadmin as antag"
                 value={settings.deadmin_antag_forced ? 'Принудительно' : settings.deadmin_antag ? 'Deadmin' : 'Keep Admin'}
                 onClick={settings.deadmin_antag_forced ? undefined : () => props.act('link', { preference: 'toggle_deadmin_antag' })}
               />
               <CompactRow
+                labelBasis={miscLabelBasis}
                 label="Deadmin as command"
                 value={settings.deadmin_head_forced ? 'Принудительно' : settings.deadmin_head ? 'Deadmin' : 'Keep Admin'}
                 onClick={settings.deadmin_head_forced ? undefined : () => props.act('link', { preference: 'toggle_deadmin_head' })}

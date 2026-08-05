@@ -131,14 +131,14 @@ const ContextCustomizerRow = (props: {
         )}
       </Stack>
       {showSize ? (
-        <Box mt={0.3}>
+        <Box mt={0.3} style={{ minWidth: 0, maxWidth: '100%', overflow: 'hidden' }}>
           {effectiveSizeOptions.length ? (
-            <Box p={0.35} style={cardStyle}>
-              <Stack align="center">
-                <Stack.Item basis="180px" shrink={0}>
+            <Box p={0.35} style={{ ...cardStyle, minWidth: 0, maxWidth: '100%', overflow: 'hidden' }}>
+              <Stack align="center" fill>
+                <Stack.Item basis="100px" shrink={0}>
                   <Box color="label">{props.entry.size_label || 'Размер'}</Box>
                 </Stack.Item>
-                <Stack.Item grow>
+                <Stack.Item grow style={{ minWidth: 0 }}>
                   <Dropdown
                     width="100%"
                     options={effectiveSizeOptions.map((option) => ({ displayText: option.name, value: option.id }))}
@@ -155,6 +155,7 @@ const ContextCustomizerRow = (props: {
           ) : (
             <CompactRow
               label={props.entry.size_label || 'Размер'}
+              labelBasis="100px"
               value={props.entry.size_value ?? 'Не задан'}
               onClick={() => props.act('edit_customizer_size', {
                 customizer: props.entry.id,

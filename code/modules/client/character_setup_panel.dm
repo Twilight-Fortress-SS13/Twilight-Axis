@@ -515,7 +515,8 @@
 		highlight_color = prefs.highlight_color,
 		dnr_pref = prefs.dnr_pref,
 		combat_music = prefs.combat_music ? (prefs.combat_music.shortname ? prefs.combat_music.shortname : prefs.combat_music.name) : "Default",
-		domhand = (prefs.domhand == 1) ? "Left-handed" : "Right-handed"
+		domhand = (prefs.domhand == 1) ? "Left-handed" : "Right-handed",
+		defiant = prefs.defiant
 	)
 	var/list/species_taur_list = prefs.pref_species ? prefs.pref_species.get_taur_list() : null
 	var/race_bonus_available = prefs.pref_species && length(prefs.pref_species.custom_selection)
@@ -1991,7 +1992,8 @@
 				"toggle_deadmin_antag",
 				"toggle_deadmin_head",
 				"storyteller",
-				"schizo_voice"
+				"schizo_voice",
+				"be_defiant"
 			)
 			if(href_list["preference"] in save_after_link_preferences)
 				prefs.save_preferences()
