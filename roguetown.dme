@@ -3752,6 +3752,7 @@
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\merch_armor_exotic.dm"
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\merch_armor_heavy.dm"
 #include "modular_twilight_axis\code\modules\client\preferences_toggles.dm"
+#include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\antags\Iconoclast.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\courtier\jester.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\skeletonize.dm"
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\merch_armor_light.dm"
