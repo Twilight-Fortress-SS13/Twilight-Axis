@@ -32,6 +32,7 @@ export type AppearanceData = {
   eye_heterochromia?: boolean;
   eye_heterochromia_available?: boolean;
   skin_tone?: string;
+  skin_tone_wording?: string;
   uses_skin_tones?: boolean;
   update_mutant_colors?: boolean;
   mutant_colors_available?: boolean;
@@ -142,6 +143,7 @@ export type HairCustomizer = {
   name: string;
   current_accessory_name: string;
   choice_name: string;
+  option_count?: number;
   hair_color?: string;
   natural_gradient?: string;
   natural_color?: string;
@@ -261,7 +263,6 @@ export type SystemSettings = {
   masked_examine?: boolean;
   full_examine?: boolean;
   mute_animal_emotes?: boolean;
-  autoconsume?: boolean;
   no_examine_blocks?: boolean;
   no_autopunctuate?: boolean;
   no_language_fonts?: boolean;
@@ -318,6 +319,8 @@ export type ViceOption = {
   id: string;
   name: string;
   description?: string;
+  meta?: string;
+  disabled_reason?: string | null;
   selected?: boolean;
 };
 

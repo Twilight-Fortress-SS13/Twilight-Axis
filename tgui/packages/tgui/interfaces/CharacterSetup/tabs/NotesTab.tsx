@@ -68,7 +68,7 @@ export const NotesTab = (props: {
             </Stack.Item>
             <Stack.Item>
               <Button icon="eye" onClick={() => props.act('link', { preference: 'ooc_preview', task: 'input' })}>
-                Предпросмотр флавора
+                Flavortext Preview
               </Button>
             </Stack.Item>
           </Stack>
@@ -84,12 +84,12 @@ export const NotesTab = (props: {
             </Box>
           ) : null}
 
-          <CompactRow wrap label="Флавортекст" value={truncate(props.data.roleplay.flavortext, 1500)} onClick={() => props.onEditTextField('flavortext')} />
-          <CompactRow wrap label="OOC заметки" value={truncate(props.data.roleplay.ooc_notes, 1500)} onClick={() => props.onEditTextField('ooc_notes')} />
-          <CompactRow wrap label="Слухи" value={truncate(props.data.roleplay.rumour, 1500)} onClick={() => props.onEditTextField('rumour')} />
-          <CompactRow wrap label="Сплетни знати" value={truncate(props.data.roleplay.noble_gossip, 1500)} onClick={() => props.onEditTextField('noble_gossip')} />
-          <CompactRow wrap label="ERP предпочтения" value={truncate(props.data.roleplay.erpprefs, 1500)} onClick={() => props.onEditTextField('erpprefs')} />
-          <CompactRow wrap label="NSFW флавортекст" value={truncate(props.data.roleplay.nsfwflavortext, 1500)} onClick={() => props.onEditTextField('nsfwflavortext')} />
+          <CompactRow wrap label="Flavortext" value={truncate(props.data.roleplay.flavortext, 1500)} onClick={() => props.onEditTextField('flavortext')} />
+          <CompactRow wrap label="OOC Notes" value={truncate(props.data.roleplay.ooc_notes, 1500)} onClick={() => props.onEditTextField('ooc_notes')} />
+          <CompactRow wrap label="Rumours" value={truncate(props.data.roleplay.rumour, 1500)} onClick={() => props.onEditTextField('rumour')} />
+          <CompactRow wrap label="Дворянские сплетни" value={truncate(props.data.roleplay.noble_gossip, 1500)} onClick={() => props.onEditTextField('noble_gossip')} />
+          <CompactRow wrap label="ERP Preferences" value={truncate(props.data.roleplay.erpprefs, 1500)} onClick={() => props.onEditTextField('erpprefs')} />
+          <CompactRow wrap label="NSFW Flavortext" value={truncate(props.data.roleplay.nsfwflavortext, 1500)} onClick={() => props.onEditTextField('nsfwflavortext')} />
         </Section>
       </Stack.Item>
       <Stack.Item grow>
@@ -102,21 +102,21 @@ export const NotesTab = (props: {
               </a>
             </Box>
           ) : null}
-          <CompactRow label="SFW галерея" value={`${props.data.roleplay.sfw_gallery_count || 0}/3`} onClick={() => props.act('manage_gallery', { nsfw: 0 })} />
+          <CompactRow label="SFW Gallery" value={`${props.data.roleplay.sfw_gallery_count || 0}/3`} onClick={() => props.act('manage_gallery', { nsfw: 0 })} />
           {renderImagePreviewGrid(
             props.data.roleplay.sfw_gallery,
-            'SFW галерея пуста.',
+            'SFW Gallery is empty.',
             (index) => props.act('remove_gallery_image', { nsfw: 0, index: index + 1 }),
           )}
-          <CompactRow label="NSFW галерея" value={`${props.data.roleplay.nsfw_gallery_count || 0}/3`} onClick={() => props.act('manage_gallery', { nsfw: 1 })} />
+          <CompactRow label="NSFW Gallery" value={`${props.data.roleplay.nsfw_gallery_count || 0}/3`} onClick={() => props.act('manage_gallery', { nsfw: 1 })} />
           {renderImagePreviewGrid(
             props.data.roleplay.nsfw_gallery,
-            'NSFW галерея пуста.',
+            'NSFW Gallery is empty.',
             (index) => props.act('remove_gallery_image', { nsfw: 1, index: index + 1 }),
           )}
-          <CompactRow wrap label="Музыка во флаворе" value={truncate(props.data.roleplay.music_url || 'Не задано', 72)} onClick={() => props.onEditPreference('ooc_extra')} />
-          <CompactRow label="Исполнитель" value={props.data.roleplay.song_artist || 'Не задан'} onClick={() => props.onEditPreference('change_artist')} />
-          <CompactRow label="Название трека" value={props.data.roleplay.song_title || 'Не задано'} onClick={() => props.onEditPreference('change_title')} />
+          <CompactRow wrap label="Flavor Music" value={truncate(props.data.roleplay.music_url || 'Не задано', 72)} onClick={() => props.onEditPreference('ooc_extra')} />
+          <CompactRow label="Artist" value={props.data.roleplay.song_artist || 'Не задан'} onClick={() => props.onEditPreference('change_artist')} />
+          <CompactRow label="Track Title" value={props.data.roleplay.song_title || 'Не задано'} onClick={() => props.onEditPreference('change_title')} />
         </Section>
       </Stack.Item>
     </Stack>

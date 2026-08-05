@@ -25,12 +25,17 @@
 /datum/character_setup_jobs_panel/proc/build_jobs_ui_data(mob/user, include_full_entries)
 	if(!prefs || !user)
 		return list()
+	var/player_quality = null
+	#ifdef USES_PQ
+	player_quality = get_playerquality(user.ckey)
+	#endif
 	var/list/data = list(
 		"job_slot_target" = active_job_slot_title,
 		"job_slot_choices" = active_job_slot_title ? (owner_panel ? owner_panel.build_job_slot_choices(active_job_slot_title) : build_job_slot_choices(active_job_slot_title)) : list(),
 		"current_joblessrole" = "[prefs.joblessrole]",
 		"active_job_detail" = active_job_detail,
 		"use_female_job_titles" = (prefs.titles_pref == TITLES_F),
+		"job_player_quality" = player_quality,
 	)
 	if(include_full_entries)
 		data["job_entries"] = prefs.character_setup_job_entries(user)
@@ -59,6 +64,12 @@
 		var/rank = job.title
 		var/default_name = job.display_title ? job.display_title : job.title
 		var/female_name = job.f_title ? job.f_title : default_name
+		var/min_pq = null
+		var/max_pq = null
+		#ifdef USES_PQ
+		min_pq = job.min_pq
+		max_pq = job.max_pq
+		#endif
 		var/list/tooltip_parts = list()
 		if(job.tutorial)
 			tooltip_parts += "[job.tutorial]"
@@ -73,6 +84,8 @@
 			tutorial = job.tutorial,
 			slots = job.spawn_positions,
 			round_contrib_points = job.round_contrib_points,
+			min_pq = min_pq,
+			max_pq = max_pq,
 			has_details = !!job.class_setup_examine,
 			tooltip = jointext(tooltip_parts, "\n"),
 			has_subclasses = !!length(job.job_subclasses),

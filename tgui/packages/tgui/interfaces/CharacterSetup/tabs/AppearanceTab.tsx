@@ -231,7 +231,9 @@ export const AppearanceTab = (props: {
                   />
                 ) : null}
                 <CompactRow label="Причёска" value={hairCustomizer?.current_accessory_name || 'Нет'} onClick={hairCustomizer?.id ? () => toggleHairCustomizer(hairCustomizer.id) : undefined} />
-                <CompactRow label="Борода" value={facialHairCustomizer?.current_accessory_name || 'Нет'} onClick={facialHairCustomizer?.id ? () => toggleHairCustomizer(facialHairCustomizer.id) : undefined} />
+                {facialHairCustomizer?.option_count ? (
+                  <CompactRow label="Борода" value={facialHairCustomizer.current_accessory_name || 'Нет'} onClick={facialHairCustomizer.id ? () => toggleHairCustomizer(facialHairCustomizer.id) : undefined} />
+                ) : null}
                 {faceEntries.length ? faceEntries.map((entry) => (
                   <ContextCustomizerRow key={entry.id} entry={entry} act={props.act} />
                 )) : (
@@ -241,21 +243,23 @@ export const AppearanceTab = (props: {
             </Stack.Item>
             <Stack.Item grow>
               <Section title="Тело" fill scrollable>
+                {props.data.appearance.uses_skin_tones ? (
+                  <ContextDropdownRow
+                    label={props.data.appearance.skin_tone_wording || 'Skin Tone'}
+                    selector={resolveContextSelector(props.data, 'skin_tone')}
+                    onSelected={(value) => props.act('set_context_preference', { kind: 'skin_tone', value })}
+                  />
+                ) : null}
                 <SliderNumberRow
                   label="Размер персонажа"
                   value={Number(props.data.appearance.body_size || 100)}
                   min={props.data.preference_limits?.body_size_min || 50}
                   max={props.data.preference_limits?.body_size_max || 150}
                   step={1}
+                  stepPixelSize={12}
+                  formatValue={(value) => `${Math.round(value)}%`}
                   onCommit={(value) => props.act('set_body_size_value', { value })}
                 />
-                {props.data.appearance.uses_skin_tones ? (
-                  <ContextDropdownRow
-                    label="Цвет кожи"
-                    selector={resolveContextSelector(props.data, 'skin_tone')}
-                    onSelected={(value) => props.act('set_context_preference', { kind: 'skin_tone', value })}
-                  />
-                ) : null}
                 <CompactRow
                   label="Обновлять цвета частей тела"
                   value={props.data.appearance.update_mutant_colors ? 'Да' : 'Нет'}
@@ -285,7 +289,7 @@ export const AppearanceTab = (props: {
                 ) : null}
                 {(props.data.appearance.taur_available || props.data.appearance.taur_type !== 'Нет') ? (
                   <ContextDropdownRow
-                    label="Таур-тело"
+                    label="Taur-body"
                     selector={resolveContextSelector(props.data, 'taur_type')}
                     onSelected={(value) => props.act('set_context_preference', { kind: 'taur_type', value })}
                     auxButton={(

@@ -1,5 +1,5 @@
-import { type CSSProperties, type ReactNode, useEffect, useState } from 'react';
-import { Box, Button, Stack } from 'tgui-core/components';
+import { type CSSProperties, type ReactNode } from 'react';
+import { Box, Button, Slider, Stack } from 'tgui-core/components';
 
 import type { RoleplayData } from '../types';
 
@@ -173,7 +173,7 @@ export const CompactRow = (props: {
   return (
     <Box mb={0.35} p={0.35} style={{ ...cardStyle, opacity: props.subtle ? 0.88 : 1 }}>
       <Stack align={props.wrap ? 'start' : 'center'}>
-        <Stack.Item basis={props.labelBasis || '180px'} shrink={0}>
+        <Stack.Item basis={props.labelBasis || '160px'} shrink={0}>
           <Box color="label">{props.label}</Box>
         </Stack.Item>
         {props.auxButton ? (
@@ -254,20 +254,18 @@ export const SliderNumberRow = (props: {
   onPaletteClick?: () => void;
   disabled?: boolean;
   labelBasis?: string;
+  stepPixelSize?: number;
+  formatValue?: (value: number) => ReactNode;
 }) => {
-  const [draft, setDraft] = useState(String(props.value));
-
-  useEffect(() => {
-    setDraft(String(props.value));
-  }, [props.value]);
-
-  const commitValue = (rawValue: number) => {
-    if (!Number.isFinite(rawValue)) {
-      setDraft(String(props.value));
+  const handleSliderChange = (...args: unknown[]) => {
+    const rawValue = typeof args[0] === 'number' ? args[0] : args[1];
+    if (typeof rawValue !== 'number' || !Number.isFinite(rawValue)) {
       return;
     }
-    const nextValue = normalizeStepValue(clampNumericValue(rawValue, props.min, props.max), props.step);
-    setDraft(String(nextValue));
+    const nextValue = normalizeStepValue(
+      clampNumericValue(rawValue, props.min, props.max),
+      props.step,
+    );
     if (nextValue !== props.value) {
       props.onCommit(nextValue);
     }
@@ -276,7 +274,7 @@ export const SliderNumberRow = (props: {
   return (
     <Box mb={0.35} p={0.35} style={cardStyle}>
       <Stack align="center">
-        <Stack.Item basis={props.labelBasis || '180px'} shrink={0}>
+        <Stack.Item basis={props.labelBasis || '160px'} shrink={0}>
           <Box color="label">{props.label}</Box>
         </Stack.Item>
         {props.onPaletteClick ? (
@@ -289,41 +287,18 @@ export const SliderNumberRow = (props: {
             />
           </Stack.Item>
         ) : null}
-        <Stack.Item grow>
-          <input
-            type="range"
-            min={props.min}
-            max={props.max}
+        <Stack.Item grow style={{ minWidth: 0 }}>
+          <Slider
+            fluid
+            minValue={props.min}
+            maxValue={props.max}
             step={props.step}
+            stepPixelSize={props.stepPixelSize || 2}
+            value={props.value}
+            format={props.formatValue}
             disabled={props.disabled}
-            value={draft}
-            title={props.sliderTooltip}
-            onMouseDown={(event) => event.stopPropagation()}
-            onPointerDown={(event) => event.stopPropagation()}
-            onChange={(event) => setDraft(event.currentTarget.value)}
-            onMouseUp={(event) => commitValue(Number(event.currentTarget.value))}
-            onTouchEnd={(event) => commitValue(Number((event.currentTarget as HTMLInputElement).value))}
-            style={{ width: '100%' }}
-          />
-        </Stack.Item>
-        <Stack.Item basis="78px" shrink={0}>
-          <input
-            type="number"
-            min={props.min}
-            max={props.max}
-            step={props.step}
-            disabled={props.disabled}
-            value={draft}
-            onMouseDown={(event) => event.stopPropagation()}
-            onPointerDown={(event) => event.stopPropagation()}
-            onChange={(event) => setDraft(event.currentTarget.value)}
-            onBlur={(event) => commitValue(Number(event.currentTarget.value))}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                commitValue(Number((event.currentTarget as HTMLInputElement).value));
-              }
-            }}
-            style={{ width: '100%' }}
+            suppressFlicker={250}
+            onChange={handleSliderChange}
           />
         </Stack.Item>
       </Stack>

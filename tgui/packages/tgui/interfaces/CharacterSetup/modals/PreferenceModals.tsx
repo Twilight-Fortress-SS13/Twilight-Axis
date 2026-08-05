@@ -64,8 +64,12 @@ export const ContextDropdownRow = (props: {
   auxButton?: ReactNode;
   labelBasis?: string;
   showMeta?: boolean;
+  showCurrentInfo?: boolean;
 }) => {
-  const optionItems = (props.selector?.options || []).map((option) => ({
+  const selectorOptions = props.selector?.options || [];
+  const currentOption = selectorOptions.find((option) => option.current)
+    || selectorOptions.find((option) => option.name === props.selector?.current);
+  const optionItems = selectorOptions.map((option) => ({
     displayText: props.showMeta !== false && option.meta ? `${option.name} — ${option.meta}` : option.name,
     value: option.id,
   }));
@@ -73,7 +77,7 @@ export const ContextDropdownRow = (props: {
   return (
     <Box mb={0.35} p={0.35} style={cardStyle}>
       <Stack align="center">
-        <Stack.Item basis={props.labelBasis || '180px'} shrink={0}>
+        <Stack.Item basis={props.labelBasis || '160px'} shrink={0}>
           <Box color="label">{props.label}</Box>
         </Stack.Item>
         {props.auxButton ? (
@@ -91,6 +95,12 @@ export const ContextDropdownRow = (props: {
           />
         </Stack.Item>
       </Stack>
+      {props.showCurrentInfo && (currentOption?.description || currentOption?.meta) ? (
+        <Box mt={0.4} px={0.6} py={0.45} color="label" textAlign="center" style={{ whiteSpace: 'normal', lineHeight: 1.2 }}>
+          {currentOption?.description ? <Box>{currentOption.description}</Box> : null}
+          {currentOption?.meta ? <Box color="average" mt={currentOption.description ? 0.25 : 0}>{currentOption.meta}</Box> : null}
+        </Box>
+      ) : null}
     </Box>
   );
 };
@@ -164,7 +174,7 @@ export const VicesModal = (props: {
       if (!needle) {
         return true;
       }
-      return `${option.name} ${option.description || ''}`.toLowerCase().includes(needle);
+      return `${option.name} ${option.description || ''} ${option.meta || ''} ${option.disabled_reason || ''}`.toLowerCase().includes(needle);
     });
   }, [options, search]);
   const canAddMore = selected.length < (props.limit || 0);
@@ -182,6 +192,7 @@ export const VicesModal = (props: {
               <Stack align="center">
                 <Stack.Item grow>
                   <Box bold>{option.name}</Box>
+                  {option.meta ? <Box color="average" style={{ whiteSpace: 'normal' }}>{option.meta}</Box> : null}
                   {option.description ? <Box color="label" style={{ whiteSpace: 'normal' }}>{option.description}</Box> : null}
                 </Stack.Item>
                 <Stack.Item>
@@ -202,13 +213,17 @@ export const VicesModal = (props: {
               <Stack align="center">
                 <Stack.Item grow>
                   <Box bold>{option.name}</Box>
+                  {option.meta ? <Box color="average" style={{ whiteSpace: 'normal' }}>{option.meta}</Box> : null}
                   {option.description ? <Box color="label" style={{ whiteSpace: 'normal' }}>{option.description}</Box> : null}
+                  {option.disabled_reason ? <Box color="bad" style={{ whiteSpace: 'normal' }}>{option.disabled_reason}</Box> : null}
                 </Stack.Item>
                 <Stack.Item>
                   {option.selected ? (
                     <Button compact onClick={() => props.act('remove_charflaw_type', { flaw: option.id })}>Убрать</Button>
                   ) : (
-                    <Button compact disabled={!canAddMore} onClick={() => props.act('add_charflaw', { flaw: option.id })}>Добавить</Button>
+                    <Button compact disabled={!canAddMore || !!option.disabled_reason} onClick={() => props.act('add_charflaw', { flaw: option.id })}>
+                      {option.disabled_reason ? 'Недоступно' : 'Добавить'}
+                    </Button>
                   )}
                 </Stack.Item>
               </Stack>
@@ -338,9 +353,10 @@ export const CulinaryModal = (props: {
                   key={entry.key}
                   fluid
                   selected={entry.key === activeKey}
+                  compact
                   textAlign="left"
-                  mb={0.4}
-                  p={0.55}
+                  mb={0.25}
+                  p={0.3}
                   onClick={() => { setActiveKey(entry.key); setSearch(''); }}
                 >
                   <Box color="label">{entry.label}</Box>
@@ -348,7 +364,7 @@ export const CulinaryModal = (props: {
                 </Button>
               ))}
               <Box mt={0.6}>
-                <Button fluid onClick={() => props.act('reset_culinary_preferences')}>Сбросить</Button>
+                <Button compact fluid onClick={() => props.act('reset_culinary_preferences')}>Сбросить</Button>
               </Box>
             </Box>
           </Section>
@@ -361,13 +377,15 @@ export const CulinaryModal = (props: {
                   <Box mb={0.6}>
                     <Input fluid placeholder="Поиск..." value={search} onChange={setSearch} />
                   </Box>
-                  <Box style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '8px' }}>
+                  <Box style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '4px' }}>
                     {filteredOptions.map((option) => (
                       <Button
                         key={`${activeEntry.key}-${option.id}`}
+                        compact
                         selected={option.name === activeEntry.value || (option.id === '0' && activeEntry.value === 'None')}
                         textAlign="center"
-                        style={{ minHeight: '54px' }}
+                        p={0.35}
+                        style={{ minHeight: '32px' }}
                         onClick={() => props.act('set_culinary_axis', { axis: activeEntry.key, value: option.id })}
                       >
                         <Box bold>{option.name}</Box>
@@ -503,14 +521,14 @@ export const FamiliarModal = (props: {
             <Section title="Описание">
               <Box style={{ maxHeight: '570px', overflowY: 'auto', paddingBottom: '10px', boxSizing: 'border-box' }}>
                 <Box mb={0.5}>
-                  <Box color="label" mb={0.35}>Флавортекст</Box>
+                  <Box color="label" mb={0.35}>Flavortext</Box>
                   <textarea value={flavor} onChange={(event) => setFlavor(event.currentTarget.value)} style={{ width: '100%', minHeight: '160px', background: 'rgba(255,255,255,0.06)', color: 'white', border: '1px solid rgba(255,255,255,0.18)', padding: '8px' }} />
-                  <Box mt={0.35}><Button fluid onClick={() => familiarAction('set_familiar_flavortext', flavor)}>Сохранить флавор</Button></Box>
+                  <Box mt={0.35}><Button fluid onClick={() => familiarAction('set_familiar_flavortext', flavor)}>Сохранить Flavortext</Button></Box>
                 </Box>
                 <Box mb={0.5}>
-                  <Box color="label" mb={0.35}>OOC заметки</Box>
+                  <Box color="label" mb={0.35}>OOC Notes</Box>
                   <textarea value={ooc} onChange={(event) => setOoc(event.currentTarget.value)} style={{ width: '100%', minHeight: '130px', background: 'rgba(255,255,255,0.06)', color: 'white', border: '1px solid rgba(255,255,255,0.18)', padding: '8px' }} />
-                  <Box mt={0.35}><Button fluid onClick={() => familiarAction('set_familiar_ooc_notes', ooc)}>Сохранить OOC заметки</Button></Box>
+                  <Box mt={0.35}><Button fluid onClick={() => familiarAction('set_familiar_ooc_notes', ooc)}>Сохранить OOC Notes</Button></Box>
                 </Box>
                 <Box mb={0.5}>
                   <Box color="label" mb={0.35}>OOC Extra URL</Box>

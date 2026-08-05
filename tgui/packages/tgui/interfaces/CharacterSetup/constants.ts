@@ -37,7 +37,6 @@ export const legacyInputPreferences = new Set([
   'preset_bounty_severity_v_key',
   'preset_bounty_crime',
   'dnr',
-  'domhand',
   'update_mutant_colors',
   'mutant_color',
   'mutant_color2',

@@ -19,6 +19,8 @@ type JobEntry = {
   tutorial?: string;
   slots?: number;
   round_contrib_points?: number;
+  min_pq?: number | null;
+  max_pq?: number | null;
   has_details?: boolean;
   tooltip?: string;
   has_subclasses?: boolean;
@@ -89,6 +91,7 @@ type Data = {
   job_slot_choices?: JobSlotChoice[];
   current_joblessrole?: string;
   active_job_detail?: JobDetail | null;
+  job_player_quality?: number | null;
 };
 
 const cardStyle = {
@@ -246,15 +249,20 @@ const JobPriorityControl = (props: {
         }
       }}
       style={{
-        width: '56px',
-        minWidth: '56px',
-        maxWidth: '56px',
-        minHeight: '22px',
-        height: '22px',
+        width: '68px',
+        minWidth: '68px',
+        maxWidth: '68px',
+        minHeight: '30px',
+        height: '30px',
         padding: lockedReason ? '0' : '0 3px',
-        fontSize: lockedReason ? '13px' : '9px',
-        lineHeight: '20px',
+        fontSize: lockedReason ? '16px' : '13px',
+        lineHeight: 1,
         whiteSpace: 'nowrap',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        verticalAlign: 'top',
+        margin: '0',
         background: lockedReason ? 'rgba(126,72,72,0.48)' : fillForPref(props.entry.current_pref),
         border: '1px solid rgba(255,255,255,0.16)',
       }}
@@ -285,12 +293,17 @@ const JobCompactButton = (props: {
       width: props.width || '24px',
       minWidth: props.width || '24px',
       maxWidth: props.width || '24px',
-      height: '22px',
-      minHeight: '22px',
-      padding: '0 2px',
-      fontSize: '9px',
-      lineHeight: '20px',
+      height: '30px',
+      minHeight: '30px',
+      padding: '0 3px',
+      fontSize: '13px',
+      lineHeight: 1,
       textAlign: 'center',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      verticalAlign: 'top',
+      margin: '0',
     }}
   >
     {props.label}
@@ -303,10 +316,27 @@ const JobRow = (props: {
   act: (action: string, params?: Record<string, unknown>) => void;
   onOpenDetails: () => void;
   onOpenSlot: () => void;
+  playerQuality?: number | null;
 }) => {
   const entry = props.entry;
   const description = stripSimpleHtml(entry.tooltip || 'Нет описания.');
   const unavailableReason = entry.disabled_reason || entry.priority_disabled_reason;
+  const pqRequirement = [
+    entry.min_pq !== null
+      && entry.min_pq !== undefined
+      && props.playerQuality !== null
+      && props.playerQuality !== undefined
+      && props.playerQuality < entry.min_pq
+      ? `Min PQ: ${entry.min_pq}`
+      : null,
+    entry.max_pq !== null
+      && entry.max_pq !== undefined
+      && props.playerQuality !== null
+      && props.playerQuality !== undefined
+      && props.playerQuality > entry.max_pq
+      ? `Max PQ: ${entry.max_pq}`
+      : null,
+  ].filter(Boolean).join(' • ');
   const subclassTooltip = entry.subclass_preference
     ? `Подкласс: ${entry.subclass_preference}\n${
       entry.subclass_strict
@@ -321,12 +351,12 @@ const JobRow = (props: {
       py={0.2}
       style={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 150px) 56px 34px 24px',
+        gridTemplateColumns: 'minmax(0, 150px) 68px 40px 30px',
         gap: '2px',
         alignItems: 'center',
         justifyContent: 'start',
         minWidth: 0,
-        minHeight: '28px',
+        minHeight: pqRequirement ? '48px' : '38px',
         border: props.selected
           ? '1px solid rgba(255,255,255,0.34)'
           : '1px solid rgba(255,255,255,0.12)',
@@ -351,7 +381,7 @@ const JobRow = (props: {
           style={{
             minWidth: 0,
             paddingRight: '0px',
-            fontSize: '11px',
+            fontSize: '15px',
             fontWeight: 700,
             lineHeight: 1.1,
             overflow: 'hidden',
@@ -360,7 +390,12 @@ const JobRow = (props: {
             cursor: entry.has_details ? 'pointer' : 'default',
           }}
         >
-          {entry.name}
+          <Box>{entry.name}</Box>
+          {pqRequirement ? (
+            <Box color="average" style={{ fontSize: '12px', fontWeight: 500, lineHeight: 1.1 }}>
+              {pqRequirement}
+            </Box>
+          ) : null}
         </Box>
       </Tooltip>
 
@@ -374,7 +409,7 @@ const JobRow = (props: {
         label={normalizeSlotLabel(entry.assigned_slot)}
         title={`Персонаж для роли: ${entry.assigned_slot || 'Активный слот'}`}
         disabled={!!entry.disabled_reason}
-        width="34px"
+        width="40px"
         onClick={props.onOpenSlot}
       />
       <JobCompactButton
@@ -656,7 +691,7 @@ export const CharacterSetupJobsContent = () => {
   };
 
   return (
-    <Box style={{ position: 'relative', height: '100%' }}>
+    <Box style={{ position: 'relative', height: '100%', fontSize: '15px' }}>
       {slotOpen ? (
         <JobSlotModal
           jobTitle={data.job_slot_target}
@@ -818,6 +853,7 @@ export const CharacterSetupJobsContent = () => {
                             act('open_job_slot', { job: entry.id });
                             setSlotOpen(true);
                           }}
+                          playerQuality={data.job_player_quality}
                         />
                       ))}
                     </Box>

@@ -28,6 +28,14 @@ import { NotesTab } from './CharacterSetup/tabs/NotesTab';
 import { SystemTab } from './CharacterSetup/tabs/SystemTab';
 import type { Data, DialogTab, KeybindEntry, MainTab } from './CharacterSetup/types';
 
+const mainTabStyle = {
+  flex: '1 0 auto',
+  minWidth: '82px',
+  whiteSpace: 'nowrap',
+  textAlign: 'center',
+  justifyContent: 'center',
+} as const;
+
 export const CharacterSetup = () => {
   const { act, data } = useBackend<Data>();
   const [mainTab, setMainTab] = useState<MainTab>('general');
@@ -83,7 +91,7 @@ export const CharacterSetup = () => {
       <Window.Content onMouseDown={(event) => event.stopPropagation()}>
         <Box style={{ position: 'relative', height: '100%' }}>
           <Stack fill>
-            <Stack.Item basis="360px" shrink={0}>
+            <Stack.Item basis="280px" shrink={0}>
               <Box
                 style={{
                   position: 'relative',
@@ -247,12 +255,12 @@ export const CharacterSetup = () => {
                         minWidth: '100%',
                       }}
                     >
-                      <Tabs.Tab style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} selected={mainTab === 'general'} onClick={() => setMainTab('general')}>Общее</Tabs.Tab>
-                      <Tabs.Tab style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} selected={mainTab === 'appearance'} onClick={() => setMainTab('appearance')}>Внешность</Tabs.Tab>
-                      <Tabs.Tab style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} selected={mainTab === 'markings'} onClick={() => setMainTab('markings')}>Маркинги</Tabs.Tab>
-                      <Tabs.Tab style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} selected={mainTab === 'notes'} onClick={() => setMainTab('notes')}>Заметки</Tabs.Tab>
+                      <Tabs.Tab style={mainTabStyle} selected={mainTab === 'general'} onClick={() => setMainTab('general')}>Общее</Tabs.Tab>
+                      <Tabs.Tab style={mainTabStyle} selected={mainTab === 'appearance'} onClick={() => setMainTab('appearance')}>Внешность</Tabs.Tab>
+                      <Tabs.Tab style={mainTabStyle} selected={mainTab === 'markings'} onClick={() => setMainTab('markings')}>Маркинги</Tabs.Tab>
+                      <Tabs.Tab style={mainTabStyle} selected={mainTab === 'notes'} onClick={() => setMainTab('notes')}>Заметки</Tabs.Tab>
                       <Tabs.Tab
-                        style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }}
+                        style={mainTabStyle}
                         selected={mainTab === 'classes'}
                         onClick={() => {
                           act('refresh_jobs');
@@ -261,10 +269,10 @@ export const CharacterSetup = () => {
                       >
                         Роли
                       </Tabs.Tab>
-                      <Tabs.Tab style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} selected={mainTab === 'loadout'} onClick={() => setMainTab('loadout')}>Лодаут</Tabs.Tab>
-                      <Tabs.Tab style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} selected={mainTab === 'antags'} onClick={() => setMainTab('antags')}>Антагонисты</Tabs.Tab>
-                      <Tabs.Tab style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} selected={mainTab === 'system'} onClick={() => setMainTab('system')}>Система</Tabs.Tab>
-                      <Tabs.Tab style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} selected={mainTab === 'keys'} onClick={() => setMainTab('keys')}>Клавиши</Tabs.Tab>
+                      <Tabs.Tab style={mainTabStyle} selected={mainTab === 'loadout'} onClick={() => setMainTab('loadout')}>Лодаут</Tabs.Tab>
+                      <Tabs.Tab style={mainTabStyle} selected={mainTab === 'antags'} onClick={() => setMainTab('antags')}>Антагонисты</Tabs.Tab>
+                      <Tabs.Tab style={mainTabStyle} selected={mainTab === 'system'} onClick={() => setMainTab('system')}>Система</Tabs.Tab>
+                      <Tabs.Tab style={mainTabStyle} selected={mainTab === 'keys'} onClick={() => setMainTab('keys')}>Клавиши</Tabs.Tab>
                     </Tabs>
                   </Box>
                 </Stack.Item>

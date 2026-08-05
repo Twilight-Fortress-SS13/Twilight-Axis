@@ -103,13 +103,12 @@
 		"job_catalog" = job_catalog,
 		"max_save_slots" = prefs?.max_save_slots || 0,
 		"voice_type_choices" = voice_type_choices,
-		"vice_catalog" = build_vice_catalog(),
 		"keybinding_catalog" = build_keybinding_catalog(),
 		"preference_limits" = list(
 			voice_pitch_min = MIN_VOICE_PITCH,
 			voice_pitch_max = MAX_VOICE_PITCH,
-			body_size_min = round(BODY_SIZE_MIN * 100),
-			body_size_max = round(BODY_SIZE_MAX * 100),
+			body_size_min = round(BODY_SIZE_MIN * 100 + 0.5),
+			body_size_max = round(BODY_SIZE_MAX * 100 + 0.5),
 			vice_limit = MAX_VICES
 		),
 		"preview_floor_options" = list(
@@ -555,13 +554,14 @@
 		eye_heterochromia = eye_heterochromia,
 		eye_heterochromia_available = eye_heterochromia_available,
 		skin_tone = prefs.skin_tone,
+		skin_tone_wording = prefs.pref_species?.skin_tone_wording || "Skin Tone",
 		uses_skin_tones = prefs.pref_species?.use_skintones ? TRUE : FALSE,
 		update_mutant_colors = prefs.update_mutant_colors ? TRUE : FALSE,
 		mutant_colors_available = mutant_colors_available,
 		mutant_color_1 = mutant_color_1,
 		mutant_color_2 = mutant_color_2,
 		mutant_color_3 = mutant_color_3,
-		body_size = round((prefs.features["body_size"] || 1) * 100),
+		body_size = round((prefs.features["body_size"] || 1) * 100 + 0.5),
 		taur_type = taur_label(prefs.taur_type),
 		taur_color = prefs.taur_color,
 		taur_available = LAZYLEN(species_taur_list) ? TRUE : FALSE,
@@ -609,6 +609,7 @@
 		manor_type = manor_type_display_name(prefs.manor_type)
 	)
 	data["context_selectors"] = build_context_selectors_payload()
+	data["vice_catalog"] = build_vice_catalog(user)
 	data["selected_vices"] = build_selected_vice_ids()
 	data["descriptor_editor"] = build_descriptor_editor_payload()
 	data["culinary_editor"] = build_culinary_editor_payload()
@@ -659,7 +660,6 @@
 		masked_examine = prefs.masked_examine,
 		full_examine = prefs.full_examine,
 		mute_animal_emotes = prefs.mute_animal_emotes,
-		autoconsume = prefs.autoconsume,
 		no_examine_blocks = prefs.no_examine_blocks,
 		no_autopunctuate = prefs.no_autopunctuate,
 		no_language_fonts = prefs.no_language_fonts,
@@ -1223,11 +1223,19 @@
 		var/datum/customizer_choice/choice = CUSTOMIZER_CHOICE(entry.customizer_choice_type)
 		var/datum/sprite_accessory/current_accessory = entry.accessory_type ? SPRITE_ACCESSORY(entry.accessory_type) : null
 		var/datum/customizer_entry/hair/hair_entry = entry
+		var/option_count = 0
+		if(choice?.sprite_accessories)
+			for(var/accessory_type as anything in choice.sprite_accessories)
+				var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
+				if(!accessory || lowertext(accessory.name) in list("shaved", "none", "нет"))
+					continue
+				option_count += 1
 		var/list/payload = list(
 			id = "[customizer_type]",
 			name = translate_customizer_name(customizer.name),
 			current_accessory_name = current_accessory ? current_accessory.name : "Нет",
 			choice_name = choice ? choice.name : "Нет",
+			option_count = option_count,
 			hair_color = hair_entry.hair_color,
 			natural_gradient = hair_gradient_label(hair_entry.natural_gradient),
 			natural_color = hair_entry.natural_color,
@@ -1637,19 +1645,27 @@
 /datum/character_setup_panel/proc/build_context_selectors_payload()
 	var/list/output = list()
 
+	var/list/age_options = list()
+	if(prefs.pref_species)
+		for(var/age_option in prefs.pref_species.possible_ages)
+			age_options += list(make_selector_option("[age_option]", "[age_option]", null, null, prefs.age == age_option))
 	output["age"] = list(
-		current = "[prefs.age]"
+		current = "[prefs.age]",
+		options = age_options
 	)
 
+	var/list/skin_tone_options = list()
 	var/list/skin_list = prefs.pref_species?.get_skin_list()
 	var/current_skin_label = prefs.skin_tone ? "[prefs.skin_tone]" : "Не задан"
 	if(islist(skin_list))
 		for(var/skin_name in skin_list)
-			if(skin_list[skin_name] == prefs.skin_tone)
+			var/skin_value = skin_list[skin_name]
+			if(skin_value == prefs.skin_tone)
 				current_skin_label = "[skin_name]"
-				break
+			skin_tone_options += list(make_selector_option("[skin_name]", "[skin_name]", null, null, skin_value == prefs.skin_tone))
 	output["skin_tone"] = list(
-		current = current_skin_label
+		current = current_skin_label,
+		options = skin_tone_options
 	)
 
 	output["voicepack"] = list(
@@ -1672,9 +1688,16 @@
 		current = taur_label(prefs.taur_type)
 	)
 
+	var/list/faith_options = list()
 	var/datum/faith/selected_faith = prefs.selected_patron ? GLOB.faithlist[prefs.selected_patron.associated_faith] : null
+	for(var/path as anything in GLOB.preference_faiths)
+		var/datum/faith/faith = GLOB.faithlist[path]
+		if(!faith?.name)
+			continue
+		faith_options += list(make_selector_option("[path]", faith.name, null, null, selected_faith == faith))
 	output["faith"] = list(
-		current = selected_faith ? selected_faith.name : "None"
+		current = selected_faith ? selected_faith.name : "None",
+		options = faith_options
 	)
 
 	var/current_faith = prefs.selected_patron ? prefs.selected_patron.associated_faith : initial(prefs.default_patron.associated_faith)
@@ -1726,7 +1749,37 @@
 		output += list(make_selector_option("[path]", V.name, V.desc, null, primary ? (prefs.virtue?.type == path) : (prefs.virtuetwo?.type == path)))
 	return output
 
-/datum/character_setup_panel/proc/build_vice_catalog()
+/datum/character_setup_panel/proc/charflaw_requirement_meta(flaw_type)
+	if(flaw_type == /datum/charflaw/lawless)
+		return "Min PQ: [/datum/charflaw/lawless::required_pq] • Только для приключенческих ролей"
+	if(flaw_type == /datum/charflaw/gefheretic)
+		return "Min PQ: [/datum/charflaw/gefheretic::required_pq] • Только для приключенческих ролей"
+	return null
+
+/datum/character_setup_panel/proc/charflaw_restriction_reason(mob/user, flaw_type)
+	var/required_pq = null
+	if(flaw_type == /datum/charflaw/lawless)
+		required_pq = /datum/charflaw/lawless::required_pq
+	else if(flaw_type == /datum/charflaw/gefheretic)
+		required_pq = /datum/charflaw/gefheretic::required_pq
+	else
+		return null
+
+	#ifdef USES_PQ
+	var/player_quality = user?.ckey ? get_playerquality(user.ckey) : null
+	if(isnull(player_quality) || player_quality < required_pq)
+		return "Требуется PQ [required_pq]."
+	#endif
+
+	var/datum/job/last_job = null
+	if(prefs.lastclass && SSjob)
+		last_job = SSjob.GetJob(prefs.lastclass)
+	if(last_job?.vice_restrictions && (flaw_type in last_job.vice_restrictions))
+		return "Недоступно для [last_job.title]. Только для приключенческих ролей."
+
+	return null
+
+/datum/character_setup_panel/proc/build_vice_catalog(mob/user)
 	var/list/output = list()
 	for(var/key in GLOB.character_flaws)
 		var/flaw_type = GLOB.character_flaws[key]
@@ -1741,7 +1794,9 @@
 		output += list(list(
 			id = "[flaw_type]",
 			name = flaw_name,
-			description = description
+			description = description,
+			meta = charflaw_requirement_meta(flaw_type),
+			disabled_reason = charflaw_restriction_reason(user, flaw_type)
 		))
 	return output
 
@@ -1911,8 +1966,8 @@
 			var/list/href_list = list()
 			for(var/key in params)
 				href_list[key] = "[params[key]]"
-			if(href_list["preference"] == "eyes")
-				handle_edit_preference(user, "eyes")
+			if(href_list["preference"] == "eyes" || href_list["preference"] == "domhand")
+				handle_edit_preference(user, href_list["preference"])
 				return TRUE
 			prefs.process_link(user, href_list)
 			var/static/list/save_after_link_preferences = list(
@@ -2457,10 +2512,6 @@
 			prefs.mute_animal_emotes = !prefs.mute_animal_emotes
 			changed = TRUE
 
-		if("autoconsume")
-			prefs.autoconsume = !prefs.autoconsume
-			changed = TRUE
-
 		if("no_examine_blocks")
 			prefs.no_examine_blocks = !prefs.no_examine_blocks
 			changed = TRUE
@@ -2654,6 +2705,10 @@
 				prefs.voice_type = voicetype_input
 				changed = TRUE
 
+		if("domhand")
+			prefs.domhand = prefs.domhand == 1 ? 2 : 1
+			changed = TRUE
+
 		if("voicepack")
 			var/voicepack_input = tgui_input_list(user, "Выберите голосовой пак.", "Голосовой пак", GLOB.voice_packs_list)
 			if(voicepack_input)
@@ -2776,6 +2831,7 @@
 					hairs = prefs.pref_species.get_hairc_list()
 				prefs.hair_color = hairs[pick(hairs)]
 				prefs.facial_hair_color = prefs.hair_color
+				show_age_description(user)
 				prefs.ResetJobs()
 				changed = TRUE
 
@@ -2947,6 +3003,10 @@
 		prepare_update_after_action(user, update_key)
 
 /datum/character_setup_panel/proc/handle_add_charflaw(mob/user, flaw_type)
+	var/restriction_reason = charflaw_restriction_reason(user, flaw_type)
+	if(restriction_reason)
+		to_chat(user, span_warning(restriction_reason))
+		return
 	for(var/datum/charflaw/_existing in prefs.charflaws)
 		if(istype(_existing, /datum/charflaw/noflaw))
 			prefs.charflaws.Remove(_existing)
@@ -3000,6 +3060,22 @@
 		return FALSE
 	return TRUE
 
+/datum/character_setup_panel/proc/show_age_description(mob/user)
+	var/age_info = ""
+	switch(prefs.age)
+		if(AGE_ADULT)
+			age_info = "You preside in your 'prime', whatever this may be, and gain no bonus nor endure any penalty for your time spent alive.<br><br>"
+			age_info += span_honeyyellow("No modifiers")
+		if(AGE_MIDDLEAGED)
+			age_info = "Muscles ache and joints begin to slow as Aeon's grasp begins to settle upon your shoulders.<br><br>"
+			age_info += span_honeyyellow("-1 SPD, +1 WIL, +1 FOR")
+		if(AGE_OLD)
+			age_info = "In a place as lethal as PSYDONIA, the elderly are all but marvels... or beneficiaries of the habitually privileged.<br><br>"
+			age_info += span_honeyyellow("-1 STR, -2 SPE, -1 PER, -2 CON, +2 INT, +1 FOR")
+	if(length(age_info))
+		var/age_fieldsetblock = fieldset_block(span_big("<b>[span_bignotice(prefs.age)]</b>"), age_info, "agedesc_block")
+		to_chat(user, age_fieldsetblock)
+
 /datum/character_setup_panel/proc/handle_set_context_preference(mob/user, kind, value)
 	if(!kind)
 		return
@@ -3014,6 +3090,7 @@
 					hairs = prefs.pref_species.get_hairc_list()
 				prefs.hair_color = hairs[pick(hairs)]
 				prefs.facial_hair_color = prefs.hair_color
+				show_age_description(user)
 				prefs.ResetJobs()
 				prepare_update_after_action(user, "age")
 		if("voicepack")
@@ -3060,12 +3137,24 @@
 			if(faith_type && (faith_type in GLOB.preference_faiths))
 				var/datum/faith/faith = GLOB.faithlist[faith_type]
 				if(faith)
+					var/pantheon_info = "[faith.desc]<br><br>"
+					pantheon_info += span_redtext("Последователи: " + faith.worshippers)
+					var/pantheon_name = faith.translated_name ? faith.translated_name : faith.name
+					var/pantheon_fieldsetblock = fieldset_block(span_big("<b>[span_bignotice(pantheon_name)]</b>"), pantheon_info, "faithdesc_block")
+					to_chat(user, pantheon_fieldsetblock)
 					prefs.selected_patron = GLOB.patronlist[faith.godhead] || GLOB.patronlist[pick(GLOB.patrons_by_faith[faith.name])]
 					prepare_update_after_action(user, "faith")
 		if("patron")
 			var/patron_type = text2path(value)
 			if(patron_type && GLOB.patronlist[patron_type])
 				prefs.selected_patron = GLOB.patronlist[patron_type]
+				var/patron_info = ""
+				patron_info += span_honeyyellow("Домены: [prefs.selected_patron.domain]<br><br>")
+				patron_info += "[prefs.selected_patron.desc]<br><br>"
+				patron_info += span_redtext("Последователи: [prefs.selected_patron.worshippers]")
+				var/patron_name = prefs.selected_patron.translated_name ? prefs.selected_patron.translated_name : prefs.selected_patron.name
+				var/patron_fieldsetblock = fieldset_block(span_big("<b>[span_bignotice(patron_name)]</b>"), patron_info, "patrondesc_block")
+				to_chat(user, patron_fieldsetblock)
 				prepare_update_after_action(user, "patron")
 		if("virtue_primary")
 			var/virtue_type = text2path(value)
@@ -3265,9 +3354,7 @@
 	var/result = tgui_input_list(user, "Выберите порок.", "Пороки", cf_list)
 	if(result)
 		result = cf_list[result]
-		var/datum/charflaw/C = new result()
-		prefs.charflaws.Add(C)
-		prepare_update_after_action(user, "charflaw")
+		handle_add_charflaw(user, result)
 
 /datum/character_setup_panel/proc/handle_manage_gallery(mob/user, nsfw = FALSE)
 	var/list/current_gallery = nsfw ? prefs.nsfw_img_gallery : prefs.img_gallery

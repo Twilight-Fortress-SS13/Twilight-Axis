@@ -51,7 +51,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/tgui_fancy = TRUE
 	var/tgui_lock = TRUE
-	var/tgui_theme = "azure_default"
+	var/tgui_theme = "azure_lingyue"
 	var/parchment_skin = "leatherbound"
 	var/statbrowser_theme = "dark"
 	var/windowflashing = TRUE

@@ -119,8 +119,8 @@ export const LoadoutPanel = () => {
   };
 
   return (
-    <Box style={{ position: 'relative', height: '100%', minHeight: 0 }}>
-      <Stack fill>
+    <Box style={{ position: 'relative', height: '100%', minHeight: 0, minWidth: 0 }}>
+      <Stack fill style={{ minWidth: 0 }}>
       <Stack.Item basis="224px" shrink={0}>
         <Section
           title="Лодаут"
@@ -263,9 +263,17 @@ Donator kit — это рескины: используйте зелье на с
       </Stack.Item>
 
       <Stack.Item grow style={{ minWidth: 0 }}>
-        <Section title="Предметы" fill>
-          <Stack vertical fill>
-            <Stack.Item>
+        <Section title="Предметы" fill style={{ minWidth: 0 }}>
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              minHeight: 0,
+              minWidth: 0,
+            }}
+          >
+            <Box style={{ flex: '0 0 auto', minWidth: 0 }}>
               <Box
                 onWheel={(event) => {
                   const target = event.currentTarget;
@@ -283,6 +291,7 @@ Donator kit — это рескины: используйте зелье на с
                   paddingBottom: '4px',
                   overscrollBehaviorX: 'contain',
                   scrollbarGutter: 'stable',
+                  scrollbarWidth: 'thin',
                 }}
               >
                 <Tabs
@@ -305,45 +314,67 @@ Donator kit — это рескины: используйте зелье на с
                   ))}
                 </Tabs>
               </Box>
-            </Stack.Item>
-            <Stack.Item>
+            </Box>
+            <Box style={{ flex: '0 0 auto', minWidth: 0, marginTop: '4px' }}>
               <Box
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(0, 1fr) max-content',
+                  display: 'flex',
+                  flexWrap: 'wrap',
                   alignItems: 'center',
                   gap: '6px',
                   width: '100%',
                   minWidth: 0,
-                  overflow: 'hidden',
                 }}
               >
-                <Box style={{ minWidth: 0, width: '100%', overflow: 'hidden' }}>
+                <Box
+                  style={{
+                    flex: '1 1 180px',
+                    minWidth: 0,
+                    overflow: 'hidden',
+                  }}
+                >
                   <Input
                     fluid
                     placeholder="Поиск предметов..."
                     value={searchQuery}
                     onChange={setSearchQuery}
-                    style={{ minWidth: 0, width: '100%' }}
+                    style={{
+                      display: 'block',
+                      minWidth: 0,
+                      width: '100%',
+                      maxWidth: '100%',
+                    }}
                   />
                 </Box>
                 <Button
                   color={confirmReset ? 'good' : 'danger'}
                   onClick={handleReset}
                   style={{
+                    flex: '0 0 auto',
                     minWidth: 'max-content',
+                    marginLeft: 'auto',
                     whiteSpace: 'nowrap',
                   }}
                 >
                   {confirmReset ? 'Точно?' : 'Сбросить всё'}
                 </Button>
               </Box>
-            </Stack.Item>
-            <Stack.Item grow style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+            </Box>
+            <Box
+              style={{
+                flex: '1 1 auto',
+                minHeight: 0,
+                minWidth: 0,
+                marginTop: '4px',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+              }}
+            >
               {filteredItems.length ? (
                 <Box
                   style={{
                     display: 'grid',
+                    minWidth: 0,
                     gridTemplateColumns: 'repeat(auto-fill, minmax(104px, 1fr))',
                     gap: '8px',
                     alignContent: 'start',
@@ -439,8 +470,8 @@ Donator kit — это рескины: используйте зелье на с
                   В этой категории ничего не найдено.
                 </Box>
               )}
-            </Stack.Item>
-          </Stack>
+            </Box>
+          </Box>
         </Section>
       </Stack.Item>
       </Stack>
