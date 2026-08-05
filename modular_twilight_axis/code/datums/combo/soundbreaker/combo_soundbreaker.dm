@@ -233,7 +233,7 @@
 		refreshed_any = TRUE
 
 	return refreshed_any
-	
+
 /datum/component/combo_core/soundbreaker/proc/RefreshBreakerWindowTimer()
 	if(!owner)
 		return FALSE
@@ -1088,8 +1088,7 @@
 // ------------------------------------------------------------
 
 /datum/component/combo_core/soundbreaker/proc/ComboEchoBeat(mob/living/target)
-	ApplyDamage(target, 1.5, BCLASS_PUNCH, is_combo = TRUE)
-	SafeSlow(target, 2)
+	ApplyDamage(target, 1.1, BCLASS_PUNCH, is_combo = TRUE)
 
 	owner.visible_message(
 		span_danger("[owner]'s rhythm tightens into a punishing triplet!"),
