@@ -7,7 +7,7 @@
 
 
 /datum/outfit/job/roguetown/bandit/iconoclast/pre_equip(mob/living/carbon/human/H)
-	..()
+	add_verb(H, /mob/proc/haltyell_exhausting)
 	if (!(istype(H.patron, /datum/patron/inhumen/matthios)))
 		to_chat(H, span_warning("Matthios embraces me.. I must uphold his creed. I am his light in the darkness."))
 		H.set_patron(/datum/patron/inhumen/matthios)
