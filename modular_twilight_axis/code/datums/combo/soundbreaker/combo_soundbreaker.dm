@@ -1088,7 +1088,7 @@
 // ------------------------------------------------------------
 
 /datum/component/combo_core/soundbreaker/proc/ComboEchoBeat(mob/living/target)
-	ApplyDamage(target, 1.1, BCLASS_PUNCH, is_combo = TRUE)
+	ApplyDamage(target, 0.75, BCLASS_PUNCH, is_combo = TRUE)
 
 	owner.visible_message(
 		span_danger("[owner]'s rhythm tightens into a punishing triplet!"),
