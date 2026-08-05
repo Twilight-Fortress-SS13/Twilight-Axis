@@ -1088,7 +1088,7 @@
 // ------------------------------------------------------------
 
 /datum/component/combo_core/soundbreaker/proc/ComboEchoBeat(mob/living/target)
-	ApplyDamage(target, 0.75, BCLASS_PUNCH, is_combo = TRUE)
+	ApplyDamage(target, 0.5, BCLASS_PUNCH, is_combo = TRUE)
 
 	owner.visible_message(
 		span_danger("[owner]'s rhythm tightens into a punishing triplet!"),
@@ -1308,7 +1308,7 @@
 	if(!owner || !target)
 		return
 
-	ApplyDamage(target, 1.5, BCLASS_PUNCH, is_combo = TRUE)
+	ApplyDamage(target, 1.25, BCLASS_PUNCH, is_combo = TRUE)
 	if(isnum(target.max_stamina) && target.max_stamina > 0)
 		var/drain = round(target.max_stamina * SB_CRESCENDO_STAM_DRAIN_PCT)
 		drain = clamp(drain, 1, 999)
@@ -1332,7 +1332,7 @@
 	ResetRhythm()
 
 /datum/component/combo_core/soundbreaker/proc/ComboOverture(mob/living/target)
-	ApplyDamage(target, 1.75, BCLASS_PUNCH, is_combo = TRUE)
+	ApplyDamage(target, 1.5, BCLASS_PUNCH, is_combo = TRUE)
 	target.Stun(1.5 SECONDS)
 
 	owner.visible_message(
