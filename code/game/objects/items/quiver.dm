@@ -193,6 +193,19 @@
 						M.balloon_alert(M, "[length(arrows)] left...")
 				update_icon()
 		return
+	if(istype(A, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow))
+		var/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow/B = A
+		if(arrows.len && !B.chambered && B.cocked)
+			var/obj/item/ammo_casing/caseless/rogue/AR = pick_ammo(/obj/item/ammo_casing/caseless/rogue/bolt/light)
+			if(AR)
+				arrows -= AR
+				B.attackby(AR, loc, params)
+				if(ismob(loc))
+					var/mob/M = loc
+					if(HAS_TRAIT(M, TRAIT_COMBAT_AWARE))
+						M.balloon_alert(M, "[length(arrows)] left...")
+				update_icon()
+		return
 	..()
 
 /obj/item/quiver/attack_right(mob/user)
@@ -1129,8 +1142,7 @@
 	if(!held)
 		to_chat(user, span_warning("I'm not holding anything to stow in [src]."))
 		return
-	if(!istype(held, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow) || \
-	    istype(held, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow))
+	if(!istype(held, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow))
 		to_chat(user, span_warning("[held] doesn't fit — only crossbows and slurbows."))
 		return
 	if(user.transferItemToLoc(held, src))

@@ -181,7 +181,9 @@
 /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/attackby(obj/item/A, mob/user, params)
 	if(istype(A, /obj/item/ammo_box) || istype(A, /obj/item/ammo_casing))
 		if(cocked)
-			if((loc == user) && (user.get_inactive_held_item() != src))
+			if((loc == user) && \
+			(user.get_inactive_held_item() != src) && \
+			(user.get_active_held_item() != src))
 				return
 			..()
 		else
@@ -320,6 +322,11 @@
 	w_class = WEIGHT_CLASS_SMALL
 	wdefense = 2
 	max_integrity = 80
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Unlike other crossbows, slurbow can be nocked from a quiver.")
+
 
 /obj/item/ammo_box/magazine/internal/shot/slurbow
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/bolt/light
