@@ -272,10 +272,10 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/mask/rogue/facemask/copper = TAT_ITEM_ENTRY("Copper Mask", 0.5, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/steel = TAT_ITEM_ENTRY("Steel Mask", 2, "clothing", "weapon_supply", TAT_SUPPLY_STEEL, "mask"), \
 	/obj/item/clothing/mask/rogue/spectacles = TAT_ITEM_ENTRY("Spectacles", 0.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "mask"), \
-	/obj/item/clothing/mask/rogue/padded = TAT_ITEM_ENTRY("Padded Mask", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "mask"), \
-	/obj/item/clothing/mask/rogue/leather = TAT_ITEM_ENTRY("Padded Leather Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "mask"), \
-	/obj/item/clothing/mask/rogue/mailleiron = TAT_ITEM_ENTRY("Iron Chainmaille Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
-	/obj/item/clothing/mask/rogue/flutedmailleiron = TAT_ITEM_ENTRY("Iron Fluted Chainmaille Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
+	/obj/item/clothing/mask/rogue/facemask/padded = TAT_ITEM_ENTRY("Padded Mask", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "mask"), \
+	/obj/item/clothing/mask/rogue/facemask/leather = TAT_ITEM_ENTRY("Padded Leather Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "mask"), \
+	/obj/item/clothing/mask/rogue/facemask/maille = TAT_ITEM_ENTRY("Iron Chainmaille Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
+	/obj/item/clothing/mask/rogue/facemask/maille/fluted = TAT_ITEM_ENTRY("Iron Fluted Chainmaille Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
 	/obj/item/clothing/mask/rogue/wildguard = TAT_ITEM_ENTRY("Wildguard Mask", 1, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/steel/kazengun = TAT_DONATION_ITEM_ENTRY("Soldier's Half-Mask", 1, "clothing", "weapon_supply", TAT_SUPPLY_STEEL, "mask", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/mask/rogue/facemask/steel/kazengun/yohei = TAT_DONATION_ITEM_ENTRY("Demon's Half-Mask", 1, "clothing", "weapon_supply", TAT_SUPPLY_STEEL, "mask", TAT_DONATION_TIER_TWO), \
