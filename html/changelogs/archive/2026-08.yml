@@ -1,3 +1,123 @@
+ChatGPT Plus
+
+
+
+
+Обработка заняла 42m 21s
+Исправил все семь пунктов
+Arrival-лист инквизитора. Инквизитору добавлена поясная сумка в слот плаща. Его основной рюкзак переполнялся: система последовательно проверяет спину, пояс и плащ, а не поместившиеся предметы через три секунды выбрасывает на пол. Теперь arrival-лист, ножны и остальные обязательные вещи помещаются в экипировку. 
+
+Навыки рунлока. Эксперт арбалета и TRAIT_ARTILLERY_EXPERT убраны из базового инквизитора:
+
+рунлок даёт Expert Firearms и TRAIT_FIREARMS_MARKSMAN;
+
+арбалет даёт Master Crossbows и TRAIT_ARTILLERY_EXPERT.
+
+Раньше эксперт арбалета приходил из базового класса, а рунлок просто прибавлял три уровня огнестрела от нуля. 
+
+Arbalist’s Skin и Enduring Skin. В manual.dm дважды объявлялся один и тот же repair_check(), причём второе объявление вызывало отсутствующую родительскую проверку. Проверки объединены. Обе кожи теперь ремонтируются:
+
+иглой с ниткой;
+
+нагретым каутерием.
+
+Отжимания предназначены для отдельного типа manual/pushups, поэтому именно эти две кожи чинятся шитьём. 
+
+Музыкальная шкатулка. Повторный запуск больше не создаёт параллельный звуковой цикл. При остановке или смене мелодии старый looping_sound полностью удаляется, а при новом запуске создаётся один новый экземпляр. 
+
+Прокачка арбалета конфессором. Конфессору добавлен отсутствовавший TRAIT_ARTILLERY_EXPERT, используемый другими инквизиторскими специалистами по арбалетам. Сам навык арбалета не имеет потолка на эксперте, а оружие отмечено как обучаемое. Этот пункт желательно отдельно проверить несколькими успешными попаданиями по валидной живой цели, поскольку полный игровой XP-цикл здесь запустить нельзя. 
+
+Валюта Rockhill. Вместо пачки из 20 медяков теперь выдаются 4 настоящие серебряные монеты. Общая стоимость награды остаётся прежней — 20 единиц, но монеты больше не преобразуются в местную медь. 
+
+Инквизиторский жакет. Его собственный attackby() больше не перехватывает швейный набор. Особая логика запускается только при вставке ornate cuirass, остальные предметы передаются стандартному обработчику ремонта. 
+
+Изменённые файлы
+code/modules/jobs/job_types/roguetown/Inquisition/inquisitor.dm
+
+modular_twilight_axis/firearms/code/jobs/inquisitor.dm
+
+code/modules/jobs/job_types/roguetown/Inquisition/orthoclasses/confessor.dm
+
+code/modules/clothing/rogueclothes/armor/manual.dm
+
+code/game/objects/structures/roguetown/musicbox.dm
+
+modular_twilight_axis/lore/code/objects/coins.dm
+
+code/modules/clothing/rogueclothes/armor/plate.dm
+
+Файлы проверены сравнением изменений и поиском конфликтующих повторных объявлений. Полную компиляцию .dme выполнить не удалось: в среде нет DreamMaker/SpacemanDMM и полного локального клона репозитория.
+
+
+понедельник 17:24
+Закинь все эти файлы в архив с правильно выставленным путем
+
+Обработка заняла 16s
+Готово. Пути внутри архива начинаются с code/ и modular_twilight_axis/, поэтому его можно распаковать прямо в корень репозитория с заменой файлов.
+
+Скачать архив Twilight-Axis_bugfixes.zip
+
+
+TRAIT_ARTILLERY_EXPERT позволяет пользоваться мортирой, а не прокачивать арбалет...
+
+Обработка заняла 11m 23s
+Ты прав. Я ошибочно связал TRAIT_ARTILLERY_EXPERT с арбалетами.
+
+Реальная причина пункта 1.5 находится в ammo_bolts.dm: при попадании проверка передавала SKILL_LEVEL_EXPERT, поэтому после дос
+арбалета больше не начислялся. 
+
+Исправил:
+
+убрал TRAIT_ARTILLERY_EXPERT у конфессора;
+
+убрал его из выбора обычного арбалета у инквизитора;
+
+заменил предел прокачки арбалета с SKILL_LEVEL_EXPERT на SKILL_LEVEL_LEGENDARY;
+
+оставил TRAIT_ARTILLERY_EXPERT только у Blackpowder Réprimer, где он действительно нужен для артиллерии;
+
+добавил исправленный ammo_bolts.dm в архив;
+
+пересобрал и проверил архив — внутри теперь 8 файлов с правильными путями.
+
+Скачать исправленный Twilight-Axis_bugfixes.zip
+
+
+сегодня 15:22
+
+Вставленный текст(15).txt
+Документ
+Исправь конфликт:
+html/changelogs/archive/2026-08.yml:
+
+Обработка заняла 53s
+Исправил конфликт:
+
+сохранил записи обеих веток;
+
+emptymarch и msw7007 оставил в секции 2026-08-03;
+
+оставил один заголовок 2026-08-04;
+
+сохранил все изменения perenos3, отсутствующие в main; 
+
+
+удалил все маркеры <<<<<<<, =======, >>>>>>>;
+
+проверил файл YAML-парсером — синтаксис корректный.
+
+2026-08.yml
+
+
+2026-08.yml
+Код
+
+
+Библиотека
+/
+2026-08.yml
+
+
 2026-08-01:
   KatTheFox:
   - rscadd: Fae familiar abilities have been reshuffled, both potion abilities are
@@ -111,8 +231,88 @@
   - rscadd: Allows oat and rice grain to be made into grain bait.
   - rscadd: Chickens now also eat rice.
   - rscadd: Cows, fogbeasts, and saigas now also eat corn.
+  - code_imp: Half-kin, Wild-kin, and Verminvolk can use Lizard and Fluvian sound
+      emotes.
+  - code_imp: Lizard and Fluvian can use some of Wild-tongue emotes.
+  FreeStylaLT:
+  - balance: Dodge now starts at 90% rather than 95%. Pity Dodge recovery from being
+      struck can no longer exceed 85%.
+  - balance: Swift stance is now more effective vs dodge.
+  - balance: Weapon Skill difference between the target and attacker is now more effective
+      vs dodge. This currently does not apply to pure unarmed.
+  - balance: SPD difference between target and attacker is now more effective vs dodge.
+  - bugfix: Fixed dodge not working correctly when fighting simple mobs.
+  Lamasmaster:
+  - balance: Bailiff
+  Quinalion:
+  - code_imp: Removed unnecessary vars from the Duelist, Maille, and Fluted Maille
+      masks and goggles.
+  - refactor: Standardized the affected equipment to match the implementation of other
+      chainmail items.
   Ryan180602:
   - bugfix: fix up peasant rebellion
   WeNeedMorePhoron:
   - rscadd: Makes Whips Great instead of Long for weapon length, which make sense
       given it has a 3 tiles attack.
+  - rscadd: Pyromancy now get a choice spell between Spitfire or Ultio as their poke
+      spell, a reworked version of an old spell made by Swagmeyer.
+  - balance: Bleed rate adjusted to 10 on charred crit from 5.
+  - balance: Remove insta death on proccing two burn crits. oops.
+  - balance: Projectiles and Arcyne Strike (I.e. most new spells) will no longer pop
+      exposed / vulnerable, requiring a staff tap to interact
+  - rscadd: Frost Shards back to Yellow Penalty (Parry Penalty), Rimecast back to
+      Cancel (Red). Their primary spell is easily cancelable which makes it feel very
+      very meh to uise.
+  - rscadd: Steward / Clerk can now bypass withdraw limit they set themselves
+  - rscadd: Improved the interface for Stewardry to give them more options and lower
+      the tedium needed for certain type of economic controls / import / export to
+      saturation point.
+  - rscadd: Added cloth production to Kingsfield and Rosawood
+  radarseas:
+  - rscadd: Added new miracles for Zizo.
+  - rscadd: tweaked various descriptions and such involving certain Zizite items.
+  - rscadd: rejection from rituos is slightly tuned up and a little bit more flashier
+  - rscadd: Zizo rituals are flashier and snuff out the lighting once completed successfully.
+  - rscadd: Added two more rituals to Zizo, "Progressive Trance" and "Insightful Chant".
+  - rscadd: Added a contraband bible, exclusive intentionally to Zizite heretics and
+      Zpellblades (not unbound).
+  - rscadd: Zizo's patron has changed confession lines + vague description tweaks
+      to better fit with the lore. Instead of ZIZO for the sake of Zizo. She's properly
+      the lady of Artifice, Undeath, Progress and Left-handed Magicks.
+  - rscdel: Armament rites no longer give you a round long -2 debuff to all stats
+      when done on another, you already have a 2hr long unique-cooldown as-is that
+      prevents you mass-distributing it.
+  - balance: armament rite extended cooldowns now apply to Gnolls/Spies as well as
+      regular heretics. I know what you are.
+  - balance: Zeretic statline has been shuffled over to +1 WIL, +1 INT +1 PER from
+      +1 per/str/con, since burns are less of an applicable factor + its a spellcaster
+      hybrid that gets shadowed by Noc since rituos no longer grants majors.
+  - rscadd: Added a fuckhuge of new sprites/respites for Zizo-related left-handed
+      magicks or sprite-shifts to make it clearer that its unholy magicka.
+  - balance: Zizo's miracles are slightly different now on-average.
+  - balance: any inhumen cross can be used for interrogations.
+  - balance: unknightly migrant wave has Zizocant now.
+  - balance: heretics get iron zcrosses vs decrepit, not it means much.
+  - balance: necromancer now has diagnose (overdue tbh) this version is 7 tiles vs
+      4. Lich gets this version instead too.
+  - image: added/modified around some sprites, for necromancers and w/ever
+2026-08-05:
+  EmilitiaEnnehrt:
+  - bugfix: Gembracers now covers arms, previously broken.
+  FreeStylaLT:
+  - balance: Penetrative damage now scales more harshly when dealing direct body damage.
+  - balance: Swift-balanced weapons now use either STR or SPD, whichever is higher
+      for pen purposes.
+  - balance: Stat-scaling for pen damage purposes is now capped at 14.
+  - balance: Sharpness-based weapons that are under 20% sharpness ("chunked") can
+      no longer penetrate.
+  - qol: 10 SPD is now the minimum for dodge mechanics to fully function. (Down from
+      11)
+  - qol: Dodging simple mobs with Dodge Expert is now easier.
+  KatTheFox:
+  - bugfix: blessing food no longer lowers its quality
+  WeNeedMorePhoron:
+  - rscadd: Renamed player facing harem window to shrafa window, a new name that does
+      not have any orientalist implication to it.
+  changelingonberry:
+  - admin: custom descriptors now display in the player panel

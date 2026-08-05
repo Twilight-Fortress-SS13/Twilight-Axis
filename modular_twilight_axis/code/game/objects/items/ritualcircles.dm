@@ -144,12 +144,9 @@
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
 			ADD_TRAIT(target, TRAIT_NOPAIN, TRAIT_RITUAL)
 			ADD_TRAIT(target, TRAIT_DODGEEXPERT, TRAIT_RITUAL)
-			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic)
+			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
 			if(is_heretic)
 				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
-			if(is_heretic && target != user)
-				user.apply_status_effect(/datum/status_effect/debuff/lux_exhausted)
-				target.apply_status_effect(/datum/status_effect/debuff/lux_exhausted)
 			baothaarmamentsta(target)
 			spawn(120)
 				icon_state = "baotha_chalky"
