@@ -834,13 +834,13 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/suit/roguetown/armor/leather/studded/bikini = TAT_ITEM_ENTRY("Studded Leather Corslet", 2.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/bikini = TAT_ITEM_ENTRY("Leather Corslet", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/suit/roguetown/armor/chainmail/bikini = TAT_ITEM_ENTRY("Chainmail Corslet", 3, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
-	/obj/item/clothing/mask/rogue/spectacles/monocle = TAT_ITEM_ENTRY("Monocle", 1, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "eyes"), \
-	/obj/item/clothing/mask/rogue/spectacles/iron = TAT_ITEM_ENTRY("Iron Glasses", 1, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "eyes"), \
-	/obj/item/clothing/mask/rogue/spectacles/steel = TAT_ITEM_ENTRY("Steel Glasses", 1, "clothing", "weapon_supply", TAT_SUPPLY_STEEL, "eyes"), \
-	/obj/item/clothing/mask/rogue/spectacles/bronze = TAT_ITEM_ENTRY("Bronze Glasses", 1, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "eyes"), \
-	/obj/item/clothing/mask/rogue/spectacles/duelist = TAT_ITEM_ENTRY("Duelist Glasses", 1, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "eyes"), \
-	/obj/item/clothing/mask/rogue/spectacles/duelist/steel = TAT_ITEM_ENTRY("Steel Duelist Glasses", 1, "clothing", "weapon_supply", TAT_SUPPLY_STEEL, "eyes"), \
-	/obj/item/clothing/mask/rogue/spectacles/duelist/bronze = TAT_ITEM_ENTRY("Bronze Duelist Glasses", 1, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "eyes"), \
+	/obj/item/clothing/mask/rogue/spectacles/monocle = TAT_ITEM_ENTRY("Monocle", 0.5, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "eyes"), \
+	/obj/item/clothing/mask/rogue/spectacles/iron = TAT_ITEM_ENTRY("Iron Glasses", 0.5, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "eyes"), \
+	/obj/item/clothing/mask/rogue/spectacles/steel = TAT_ITEM_ENTRY("Steel Glasses", 0.5, "clothing", "weapon_supply", TAT_SUPPLY_STEEL, "eyes"), \
+	/obj/item/clothing/mask/rogue/spectacles/bronze = TAT_ITEM_ENTRY("Bronze Glasses", 0.5, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "eyes"), \
+	/obj/item/clothing/mask/rogue/spectacles/duelist = TAT_ITEM_ENTRY("Duelist Glasses", 0.5, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "eyes"), \
+	/obj/item/clothing/mask/rogue/spectacles/duelist/steel = TAT_ITEM_ENTRY("Steel Duelist Glasses", 0.5, "clothing", "weapon_supply", TAT_SUPPLY_STEEL, "eyes"), \
+	/obj/item/clothing/mask/rogue/spectacles/duelist/bronze = TAT_ITEM_ENTRY("Bronze Duelist Glasses", 0.5, "clothing", "weapon_supply", TAT_SUPPLY_BRONZE, "eyes"), \
 
 GLOBAL_LIST_INIT(tat_available_items, list(TAT_AVAILABLE_ITEMS_LIST))
 
