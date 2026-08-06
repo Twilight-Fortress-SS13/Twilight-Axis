@@ -144,7 +144,7 @@
 	UnregisterSignal(owner, COMSIG_MOB_CLICKON)
 	targeting = FALSE
 	active = FALSE
-	client.mouse_pointer_icon = initial(client.mouse_pointer_icon)
+	client.refresh_mouse_pointer(TRUE) // TA EDIT
 	build_all_button_icons()
 
 /datum/action/coven/proc/handle_click(mob/source, atom/target, params)

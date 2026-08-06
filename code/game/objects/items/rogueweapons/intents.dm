@@ -29,7 +29,7 @@
 	/// Restores turf-click auto-aim on a noaa intent silently (so without the attack anim).
 	var/force_autoaim = FALSE
 	var/warnie = ""
-	var/pointer = 'icons/effects/mousemice/human_attack.dmi'
+	var/pointer = "human_attack" // TA EDIT
 	/// Invoked clickCD.
 	var/clickcd = CLICK_CD_MELEE
 	/// Amount of time required to stay stationary after attack. Moving during this period incurs off-balance.
@@ -368,7 +368,7 @@
 	chargedrain = 0
 	chargetime = 0
 	noaa = TRUE
-	pointer = 'icons/effects/mousemice/human_give.dmi'
+	pointer = "human_give" // TA EDIT
 
 /datum/looping_sound/invokegen
 	mid_sounds = list('sound/magic/charging.ogg')

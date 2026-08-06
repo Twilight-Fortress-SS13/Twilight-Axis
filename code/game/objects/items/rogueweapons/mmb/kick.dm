@@ -9,7 +9,7 @@
 	misscost = 20
 	unarmed = TRUE
 	animname = "kick"
-	pointer = 'icons/effects/mousemice/human_kick.dmi'
+	pointer = "human_kick" // TA EDIT
 
 /datum/intent/kick/on_mmb(atom/target, mob/living/user, params)
 	user.try_kick(target)

@@ -1,4 +1,3 @@
-
 /client
 		//////////////////////
 		//BLACK MAGIC THINGS//
@@ -85,6 +84,11 @@
 	var/mouse_down_icon = null
 	/// world.time of last intercepted mouse-up, used to prevent double-clicks after signal intercept
 	var/click_intercept_time = 0
+	var/mouse_pointer_ability = null // TA EDIT START
+	var/datum/mouse_pointer_ability_source = null
+	var/mouse_pointer_priority = -1
+	var/pending_mouse_pointer = null
+	var/mouse_pointer_update_pending = FALSE // TA EDIT END
 
 	///Used for ip intel checking to identify evaders, disabled because of issues with traffic
 	var/ip_intel = "Disabled"

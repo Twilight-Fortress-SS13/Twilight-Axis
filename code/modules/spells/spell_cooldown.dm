@@ -306,16 +306,14 @@
 	if(owner.client && charge_started_at && charge_target_time)
 		var/progress = world.time - charge_started_at
 		var/percentage = clamp((progress / charge_target_time) * 100, 0, 100)
-		var/new_icon = SSmousecharge.access(percentage)
-		if(owner.client.mouse_pointer_icon != new_icon)
-			owner.client.mouse_pointer_icon = new_icon
+		owner.client.set_mouse_pointer(SSmousecharge.access(percentage), 40) // TA EDIT
 
 	// Charge goal reached — enter the held phase; keep processing so hold_drain bleeds while held.
 	if(world.time > (charge_started_at + charge_target_time))
 		fully_charged = TRUE
 		fully_charged_at = world.time
 		if(owner.client)
-			owner.client.mouse_pointer_icon = 'icons/effects/mousemice/swang/acharged.dmi'
+			owner.client.set_mouse_pointer("charge_full", 40) // TA EDIT
 			if(hide_charge_effect)
 				owner.playsound_local(owner, 'sound/magic/charged.ogg', 40, TRUE)
 			else
@@ -1024,7 +1022,7 @@
 
 	// Reset mouse pointer
 	if(owner.client)
-		owner.client.mouse_pointer_icon = 'icons/effects/mousemice/human.dmi'
+		owner.client.refresh_mouse_pointer(TRUE) // TA EDIT
 
 /// Provides feedback after a spell cast occurs, in the form of a cast sound and/or invocation
 /datum/action/cooldown/spell/proc/spell_feedback(mob/living/invoker)
@@ -1106,7 +1104,7 @@
 
 	// Mouse charge pointer
 	if(owner.client)
-		owner.client.mouse_pointer_icon = 'icons/effects/mousemice/swang/acharging.dmi'
+		owner.client.set_mouse_pointer("charge_active", 40) // TA EDIT
 
 	if(charge_message)
 		owner.balloon_alert(owner, charge_message)
@@ -1189,7 +1187,7 @@
 
 	// Reset mouse pointer
 	if(owner.client)
-		owner.client.mouse_pointer_icon = 'icons/effects/mousemice/human.dmi'
+		owner.client.refresh_mouse_pointer(TRUE) // TA EDIT
 
 	// Always restore the spell to "selected and listening" if it's still the active click intercept.
 	// This prevents dead-spell states where charging ends but no input handler is registered.
@@ -1705,7 +1703,7 @@
 	if(!LAZYACCESS(modifiers, MIDDLE_CLICK))
 		return
 	if(source)
-		source.mouse_pointer_icon = 'icons/effects/mousemice/human_attack.dmi'
+		source.set_mouse_pointer("human_attack", 30) // TA EDIT
 	return COMPONENT_CLIENT_MOUSEDOWN_INTERCEPT
 
 /// Try to begin the casting process on mouse down.

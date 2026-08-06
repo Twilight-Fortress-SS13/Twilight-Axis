@@ -353,7 +353,7 @@
 		return
 	UnregisterSignal(owner, COMSIG_MOB_CLICKON)
 	targeting = FALSE
-	client.mouse_pointer_icon = initial(client.mouse_pointer_icon)
+	client.refresh_mouse_pointer(TRUE)
 	build_all_button_icons()
 
 /datum/action/ta_ascended_coven/proc/handle_click(mob/source, atom/target, params)

@@ -281,8 +281,7 @@
 
 	on_who.click_intercept = src
 	if(ranged_mousepointer)
-		on_who.client?.mouse_pointer_icon = ranged_mousepointer
-		on_who.update_mouse_pointer()
+		on_who.client?.set_mouse_pointer_ability(ranged_mousepointer, src) // TA EDIT
 	build_all_button_icons(UPDATE_BUTTON_STATUS|UPDATE_BUTTON_BACKGROUND)
 	return TRUE
 
@@ -298,8 +297,7 @@
 	on_who.click_intercept = null
 	cancel_retrigger()
 	if(ranged_mousepointer)
-		on_who.client?.mouse_pointer_icon = initial(on_who.client?.mouse_pointer_icon)
-		on_who.update_mouse_pointer()
+		on_who.client?.clear_mouse_pointer_ability(src) // TA EDIT
 	build_all_button_icons(UPDATE_BUTTON_STATUS|UPDATE_BUTTON_BACKGROUND)
 	return TRUE
 

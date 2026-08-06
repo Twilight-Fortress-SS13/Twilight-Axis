@@ -93,6 +93,7 @@
 
 /client/MouseDown(object, location, control, params)
 	charge_was_blocked_by_cooldown = FALSE
+	mouse_pointer_priority = -1 // TA EDIT
 	var/list/modifiers = params2list(params)
 	var/lmb_blocked = FALSE
 
@@ -110,7 +111,7 @@
 		mob.atkswinging = null
 		charging = null
 		STOP_PROCESSING(SSmousecharge, src)
-		mouse_pointer_icon = 'icons/effects/mousemice/human.dmi'
+		refresh_mouse_pointer(TRUE) // TA EDIT
 		return
 
 	// New spell system intercepted this click — skip old cursor/intent handling
@@ -123,7 +124,7 @@
 	tcompare = object
 
 	if(mouse_down_icon)
-		mouse_pointer_icon = mouse_down_icon
+		set_mouse_pointer(mouse_down_icon, 50) // TA EDIT
 
 	var/delay = mob.CanMobAutoclick(object, location, params)
 
@@ -138,7 +139,7 @@
 
 	if(was_charging)
 		STOP_PROCESSING(SSmousecharge, src)
-		mouse_pointer_icon = 'icons/effects/mousemice/human.dmi'
+		refresh_mouse_pointer(TRUE) // TA EDIT
 		return
 
 	if(!mob.fixedeye)
@@ -179,9 +180,9 @@
 			mob.face_atom(object, location, control, params)
 			updateprogbar(object)
 		else
-			mouse_pointer_icon = 'icons/effects/mousemice/human_attack.dmi'
+			set_mouse_pointer("human_attack", 20) // TA EDIT
 	else
-		mouse_pointer_icon = 'icons/effects/mousemice/human_looking.dmi'
+		set_mouse_pointer("human_looking", 20) // TA EDIT
 
 /client/proc/handle_middle_click(atom/object, params, list/modifiers)
 	if(mob.next_move > world.time)
@@ -197,12 +198,12 @@
 				return
 
 	if(!mob.mmb_intent)
-		mouse_pointer_icon = 'icons/effects/mousemice/human_looking.dmi'
+		set_mouse_pointer("human_looking", 20) // TA EDIT
 	else
 		if(mob.mmb_intent.get_chargetime() && !object.blockscharging)
 			updateprogbar(object)
 		else
-			mouse_pointer_icon = mob.mmb_intent.pointer
+			set_mouse_pointer(mob.mmb_intent.pointer, 20) // TA EDIT
 
 /client/proc/handle_left_click(atom/object, location, control, params, list/modifiers)
 	var/cooldown = (mob.active_hand_index == 1) ? mob.next_lmove : mob.next_rmove
@@ -220,7 +221,7 @@
 	if(mob.used_intent.get_chargetime() && !object.blockscharging && !mob.in_throw_mode)
 		updateprogbar(object)
 	else
-		mouse_pointer_icon = 'icons/effects/mousemice/human_attack.dmi'
+		set_mouse_pointer("human_attack", 20) // TA EDIT
 
 /client/proc/lmb_noface(atom/object, list/modifiers)
 	if(!modifiers["left"])
@@ -256,7 +257,7 @@
 
 	charging = 0
 
-	mouse_pointer_icon = 'icons/effects/mousemice/human.dmi'
+	refresh_mouse_pointer(TRUE) // TA EDIT
 
 	if(mob.curplaying)
 		mob.curplaying.on_mouse_up()
@@ -287,11 +288,11 @@
 	if(mob.stat != CONSCIOUS)
 		chargedprog = 0
 		mob.atkswinging = null
-		mouse_pointer_icon = 'icons/effects/mousemice/human.dmi'
+		refresh_mouse_pointer(TRUE) // TA EDIT
 		return
 
 	if (mouse_up_icon)
-		mouse_pointer_icon = mouse_up_icon
+		set_mouse_pointer(mouse_up_icon, 50) // TA EDIT
 	selected_target[1] = null
 
 	if(tcompare)
@@ -330,6 +331,7 @@
 		lastplayed = 0
 		doneset = 0
 		chargedprog = 0
+		set_mouse_pointer(SSmousecharge.access(0), 40) // TA EDIT
 		START_PROCESSING(SSmousecharge, src)
 
 /client/Destroy()
@@ -359,9 +361,7 @@
 			progress = world.time - charge_start_time
 			progress = min(progress, goal)
 			chargedprog = ((progress / goal) * 100)
-			var/new_icon = SSmousecharge.access(chargedprog)
-			if(mouse_pointer_icon != new_icon)
-				mouse_pointer_icon = new_icon
+			set_mouse_pointer(SSmousecharge.access(chargedprog), 40) // TA EDIT
 		else //Fully charged spell
 			if(!doneset)
 				doneset = 1
@@ -369,9 +369,7 @@
 					playsound(L, 'sound/magic/charged.ogg', 100, TRUE)
 					L.curplaying.on_mouse_up()
 				chargedprog = 100
-				var/new_icon = 'icons/effects/mousemice/swang/acharged.dmi'
-				if(mouse_pointer_icon != new_icon)
-					mouse_pointer_icon = new_icon
+				set_mouse_pointer("charge_full", 40) // TA EDIT
 			else
 				if(!L.stamina_add(L.used_intent.chargedrain))
 					L.stop_attack()
