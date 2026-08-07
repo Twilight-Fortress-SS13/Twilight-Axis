@@ -57,17 +57,6 @@
 				ADD_TRAIT(H, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 				H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_LEGENDARY, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_LEGENDARY, TRUE)
-				var/techniques = list("Dropkick - Pushback + Extra Damage", "Chokeslam - Stamina Damage", "Stunner - Dazed Debuff", "Headbutt - Vulnerable Debuff")
-				var/technique_choice = input(H, "Choose your TECHNIQUE.", "DECIMATE AND DOMINATE WITH FLAIR.") as anything in techniques
-				switch(technique_choice)
-					if("Dropkick - Pushback + Extra Damage")
-						H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dropkick)
-					if("Chokeslam - Stamina Damage")
-						H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/chokeslam)
-					if("Stunner - Dazed Debuff")
-						H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stunner)
-					if("Headbutt - Vulnerable Debuff")
-						H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/headbutt)
 				var/static/list/safe_bodyzones = list(
 					BODY_ZONE_HEAD,
 					BODY_ZONE_CHEST,
