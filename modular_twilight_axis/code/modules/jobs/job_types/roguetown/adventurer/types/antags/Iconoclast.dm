@@ -49,6 +49,8 @@
 				ADD_TRAIT(H, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 				H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_LEGENDARY, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_LEGENDARY, TRUE)
+				H.change_stat(STATKEY_CON, 2)
+				H.change_stat(STATKEY_LCK, -2)
 				var/static/list/safe_bodyzones = list(
 					BODY_ZONE_HEAD,
 					BODY_ZONE_CHEST,
