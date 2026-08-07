@@ -3971,6 +3971,7 @@
 #include "modular_twilight_axis\code\modules\erp_system\ui\erp_sex_ui_tab.dm"
 #include "modular_twilight_axis\code\modules\events\antagonists\zizocult.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\adventurer.dm"
+#include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\bandit.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\wretch.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\combat\cleric.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\combat\foreigner.dm"

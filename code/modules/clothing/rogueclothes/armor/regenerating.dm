@@ -202,7 +202,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/proc/setup_auto_repair()
 	repair_time = (max_integrity / auto_repair_mode_base) * auto_repair_mode_time
-	
+
 	// Ensure relative mode is on to respect the new calculated repair_time
 	relative_repair_mode = TRUE
 	auto_repair_mode_triggered = TRUE
@@ -261,7 +261,7 @@
 	I thought you died alone, a long, long time ago.</br> \
 	Oh no, not me, I never lost control.</br> \
 	You're face to face, with the man who sold the world."
-	armor = ARMOR_DRAGONSKIN 
+	armor = ARMOR_DRAGONSKIN
 	max_integrity = 450
 	repair_time = 20 SECONDS
 

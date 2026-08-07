@@ -1,11 +1,3 @@
-/datum/advclass/iconoclast
-	subclass_stats = list(
-		STATKEY_STR = 3,
-		STATKEY_WIL = 3,
-		STATKEY_CON = 2
-	)
-
-
 /datum/outfit/job/roguetown/bandit/iconoclast/pre_equip(mob/living/carbon/human/H)
 	add_verb(H, /mob/proc/haltyell_exhausting)
 	if (!(istype(H.patron, /datum/patron/inhumen/matthios)))
