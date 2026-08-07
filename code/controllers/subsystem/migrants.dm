@@ -304,10 +304,12 @@ SUBSYSTEM_DEF(migrants)
 		GLOB.character_list[character.mobid] = "[fakekey] was [character.real_name] ([rank])<BR>"
 		GLOB.character_ckey_list[character.real_name] = character.ckey
 		var/mob_name = character.real_name
-		var/mob_rank = rank
+		var/mob_rank = role.name // TA EDIT
 		if(character.mind.special_role == "Court Agent")
 			mob_rank = "Adventurer"
-		GLOB.actors_list[character.mobid] = list("name" = mob_name, "rank" = mob_rank)
+		if(!GLOB.actors_list["Migrants"]) // TA EDIT
+			GLOB.actors_list["Migrants"] = list() // TA EDIT
+		GLOB.actors_list["Migrants"] += list("[character.mobid]" = "[mob_name] as the [humanc.dna.species.name] [mob_rank]<BR>") // TA EDIT
 		log_character("[character.ckey] ([fakekey]) - [character.real_name] - [rank]")
 	if(GLOB.respawncounts[character.ckey])
 		var/AN = GLOB.respawncounts[character.ckey]

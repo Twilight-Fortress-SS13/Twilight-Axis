@@ -80,7 +80,10 @@
 		GLOB.fires_list -= src
 
 /obj/machinery/light/rogue/Destroy()
-	QDEL_NULL(soundloop)
+	if(ispath(soundloop))
+		soundloop = null
+	else
+		QDEL_NULL(soundloop)
 	GLOB.fires_list -= src
 	. = ..()
 

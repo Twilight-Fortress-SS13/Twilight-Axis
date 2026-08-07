@@ -230,7 +230,10 @@
 	LAZYCLEARLIST(overlays)
 
 	QDEL_NULL(light)
-	QDEL_NULL(ai_controller)
+	if(ispath(ai_controller))
+		ai_controller = null
+	else
+		QDEL_NULL(ai_controller)
 
 	return ..()
 
