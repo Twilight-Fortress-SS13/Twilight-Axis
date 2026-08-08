@@ -2413,6 +2413,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Оружие", "Донат")
 	donatitem = TRUE
 
+/datum/loadout_item/donator/aticius_fls
+	name = "Donator Kit - For Love's Sake - Required: Longsword"
+	path = /obj/item/enchantingkit/aticius_fls
+	category = list("Оружие", "Донат")
+	donatitem = TRUE
+	donat_tier = 2
+
 /datum/loadout_item/donator_athena_solace
 	name = "Donator Kit - Solace - Required: Rapier"
 	path = /obj/item/enchantingkit/weapon/athena_solace
@@ -3593,6 +3600,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Donator Kit - Holy Astratan Bascinet - Required: Pigface Bascinet"
 	path = /obj/item/enchantingkit/bobby_helm
 	category = list("Броня", "Донат")
+	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/leathergloves

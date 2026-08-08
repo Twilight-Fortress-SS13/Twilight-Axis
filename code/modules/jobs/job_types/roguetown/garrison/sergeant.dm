@@ -27,6 +27,7 @@
 	job_subclasses = list(
 		/datum/advclass/sergeant/sergeant
 	)
+	has_subprefs = FALSE // only one subclass
 	same_job_respawn_delay = 30 MINUTES
 
 /datum/outfit/job/roguetown/sergeant

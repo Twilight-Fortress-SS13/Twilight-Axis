@@ -62,7 +62,7 @@
 		H.grant_language(/datum/language/thievescant)
 		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, choose_name_popup), "BANDIT"), 5 SECONDS)
 		var/wanted = list("I am a notorious criminal", "I am a nobody")
-		var/wanted_choice = input("Are you a known criminal?") as anything in wanted
+		var/wanted_choice = input(H, "Are you a known criminal?") as anything in wanted
 		switch(wanted_choice)
 			if("I am a notorious criminal") //Extra challenge for those who want it
 				bandit_select_bounty(H)

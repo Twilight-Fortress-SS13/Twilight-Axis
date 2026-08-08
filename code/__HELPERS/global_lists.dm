@@ -61,6 +61,9 @@
 	for (var/path in subtypesof(/datum/virtue))
 		var/datum/virtue/virtue = new path()
 		GLOB.virtues[path] = virtue
+		if(ispath(path, /datum/virtue/origin))
+			var/datum/virtue/origin/origin = virtue
+			GLOB.origins[origin.origin_name] = origin.origin_desc
 
 	ccg_build_card_registry()
 

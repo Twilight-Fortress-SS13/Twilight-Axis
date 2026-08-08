@@ -354,6 +354,7 @@
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "bars"
 	density = TRUE
+	climbable = FALSE // TA EDIT
 	anchored = TRUE
 	blade_dulling = DULLING_BASHCHOP
 	max_integrity = 700
@@ -423,6 +424,10 @@
 /obj/structure/bars/passage/steel
 	name = "steel bars"
 	max_integrity = 2000
+
+/obj/structure/bars/passage/obj_break(damage_flag) // TA EDIT START
+	. = ..()
+	icon_state = "passage1b" // TA EDIT END
 
 /obj/structure/bars/passage/redstone_triggered()
 	if(obj_broken)

@@ -1,21 +1,3 @@
-/datum/outfit/job/roguetown/inquisitor/inspector/pre_equip(mob/living/carbon/human/H)
-	. = ..()
-	backl = null
-	beltr = null
-	belt = null
-	var/weapons = list("Crossbow", "Runelock Pistol")
-	var/weapon_choice = input(H,"CHOOSE YOUR JUDGEMENT.", "DELIVER HIS WILL.") as anything in weapons
-	switch(weapon_choice)
-		if("Crossbow")
-			H.adjust_skillrank(/datum/skill/combat/crossbows, 1, TRUE)
-			belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/psydon
-			backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
-			beltr = /obj/item/quiver/bolt/standard
-		if("Runelock Pistol")
-			H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 3, TRUE)
-			belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock
-			beltr = /obj/item/quiver/twilight_bullet/runicbag/runed
-
 /datum/advclass/inquisitor/blackpowder
 	name = "Blackpowder Réprimer"
 	tutorial = "A truly rare specimen among the ranks of the Inquisition - an agent of the Blackpowder Order now serving as an Ordinator, hunting down Psydon's many enemies, set upon this task by Marshal Inquisitionis himself. There are many mistakes a heretic can commit over their lifespan, but when facing a Blackpowder Marksman, their final error tends to be the fact that they brought a sword to a gunfight."
@@ -79,7 +61,7 @@
 	wrists = /obj/item/clothing/neck/roguetown/psicross/silver
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 	backr = /obj/item/storage/backpack/rogue/satchel/otavan
-	gloves = /obj/item/clothing/gloves/roguetown/otavan/psygloves
+	gloves = /obj/item/clothing/gloves/roguetown/otavan/inqgloves
 	id = /obj/item/clothing/ring/signet/psy
 	backpack_contents = list(
 		/obj/item/storage/keyring/inquisitor = 1,

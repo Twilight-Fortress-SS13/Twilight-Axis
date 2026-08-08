@@ -202,7 +202,7 @@ GLOBAL_LIST_INIT(craft_iron, (list(/obj/item/clothing/neck/roguetown/chaincoif/i
 	result = /obj/item/clothing/suit/roguetown/armor/plate/full/iron
 
 /obj/item/craft_kit/haubergeon_light
-	result = /obj/item/clothing/suit/roguetown/armor/chainmail/light/iron
+	result = /obj/item/clothing/suit/roguetown/armor/chainmail/iron/besilked
 
 /obj/item/craft_kit/brigandine_light
 	result = /obj/item/clothing/suit/roguetown/armor/brigandine/light/handmade
@@ -269,7 +269,7 @@ GLOBAL_LIST_INIT(craft_steel, (list(/obj/item/clothing/neck/roguetown/chaincoif/
 	result = /obj/item/clothing/suit/roguetown/armor/plate/full
 
 /obj/item/craft_kit/steel/haubergeon_light
-	result = /obj/item/clothing/suit/roguetown/armor/chainmail/iron/besilked
+	result = /obj/item/clothing/suit/roguetown/armor/chainmail/besilked
 
 //legs
 
