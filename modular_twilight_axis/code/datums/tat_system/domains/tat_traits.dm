@@ -808,12 +808,14 @@
 
 	apply_resident_skill_spells(H)
 
+/*
 /datum/tat_traits/proc/apply_resident_pugilist_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TRAIT_CIVILIZEDBARBARIAN))
 		return
 	var/spell_type = owner_build?.get_resident_pugilist_spell_type(owner_build?.get_resident_pugilist_spell_choice(H))
 	if(spell_type)
 		owner_build?.grant_mind_spell_if_missing(H, spell_type)
+*/
 
 /datum/tat_traits/proc/apply_divine_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_DIVINE_INITIATE))
@@ -840,9 +842,9 @@
 		owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/gravemark)
 	if(has_trait(TAT_TRAIT_DIVINE_BLAST))
 		if(istype(H.patron, /datum/patron/divine))
-			owner_build?.grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/invoked/projectile/divineblast)
+			owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/projectile/divine_blast)
 		else if(istype(H.patron, /datum/patron/inhumen))
-			owner_build?.grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/invoked/projectile/unholyblast)
+			owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/projectile/unholy_blast)
 
 /datum/tat_traits/proc/apply_mage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_MAGE_INITIATE) || !H.mind)
@@ -1467,8 +1469,8 @@
 /datum/tat_traits/proc/apply_deferred_to_human(mob/living/carbon/human/H)
 	if(!H?.client)
 		return FALSE
-	if(has_trait(TAT_TRAIT_RESIDENT))
-		apply_resident_pugilist_package(H)
+//	if(has_trait(TAT_TRAIT_RESIDENT))
+		//apply_resident_pugilist_package(H)
 	if(has_trait(TAT_TRAIT_SPELLBLADE))
 		apply_spellblade_specialization_package(H)
 	if(has_trait(TAT_TRAIT_SPELLFIST))

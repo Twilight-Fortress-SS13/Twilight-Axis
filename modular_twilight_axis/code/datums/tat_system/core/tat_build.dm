@@ -453,6 +453,7 @@
 		return 3
 	return 0
 
+/*
 /datum/tat_build/proc/get_resident_pugilist_spell_choice(mob/living/carbon/human/H)
 	var/list/options = list(
 		"Headbutt - Vulnerable Debuff",
@@ -473,6 +474,7 @@
 		if("Stunner - Dazed Debuff")
 			return /obj/effect/proc_holder/spell/invoked/stunner
 	return /obj/effect/proc_holder/spell/invoked/headbutt
+*/
 
 /datum/tat_build/proc/sanitize()
 	directions.sanitize()
