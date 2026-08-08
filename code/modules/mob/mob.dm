@@ -1094,11 +1094,9 @@ GLOBAL_VAR_INIT(mobids, 1)
 
 ///Update the mouse pointer of the attached client in this mob
 /mob/proc/update_mouse_pointer()
-	if (!client)
+	if(!client) // TA EDIT START
 		return
-	if(!client.charging && !atkswinging)
-		if(examine_cursor_icon && client.keys_held["Shift"]) //mouse shit is hardcoded, make this non hard-coded once we make mouse modifiers bindable
-			client.mouse_pointer_icon = examine_cursor_icon
+	client.refresh_mouse_pointer() // TA EDIT END
 
 
 ///This mob is abile to read books

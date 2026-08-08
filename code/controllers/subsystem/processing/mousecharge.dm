@@ -5,29 +5,29 @@ PROCESSING_SUBSYSTEM_DEF(mousecharge)
 	flags = SS_KEEP_TIMING //Surely nothing bad will happen.
 	priority = FIRE_PRIORITY_MOUSECHARGE
 	stat_tag = "MOUSE"
-	var/list/mouse_icons = list(
-	'icons/effects/mousemice/swang/0.dmi',\
-	'icons/effects/mousemice/swang/5.dmi',\
-	'icons/effects/mousemice/swang/10.dmi',\
-	'icons/effects/mousemice/swang/15.dmi',\
-	'icons/effects/mousemice/swang/20.dmi',\
-	'icons/effects/mousemice/swang/25.dmi',\
-	'icons/effects/mousemice/swang/30.dmi',\
-	'icons/effects/mousemice/swang/35.dmi',\
-	'icons/effects/mousemice/swang/40.dmi',\
-	'icons/effects/mousemice/swang/45.dmi',\
-	'icons/effects/mousemice/swang/50.dmi',\
-	'icons/effects/mousemice/swang/55.dmi',\
-	'icons/effects/mousemice/swang/60.dmi',\
-	'icons/effects/mousemice/swang/65.dmi',\
-	'icons/effects/mousemice/swang/70.dmi',\
-	'icons/effects/mousemice/swang/75.dmi',\
-	'icons/effects/mousemice/swang/80.dmi',\
-	'icons/effects/mousemice/swang/85.dmi',\
-	'icons/effects/mousemice/swang/90.dmi',\
-	'icons/effects/mousemice/swang/95.dmi',\
-	'icons/effects/mousemice/swang/100.dmi'
-)
+	var/list/mouse_icons = list( // TA EDIT START
+	"charge_0",\
+	"charge_5",\
+	"charge_10",\
+	"charge_15",\
+	"charge_20",\
+	"charge_25",\
+	"charge_30",\
+	"charge_35",\
+	"charge_40",\
+	"charge_45",\
+	"charge_50",\
+	"charge_55",\
+	"charge_60",\
+	"charge_65",\
+	"charge_70",\
+	"charge_75",\
+	"charge_80",\
+	"charge_85",\
+	"charge_90",\
+	"charge_95",\
+	"charge_100"
+) // TA EDIT END
 /datum/controller/subsystem/processing/mousecharge/fire(resumed = 0)
 	if (!resumed)
 		currentrun = processing.Copy()

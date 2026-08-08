@@ -13,6 +13,115 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 GLOBAL_LIST_EMPTY(respawntimes)
 GLOBAL_LIST_EMPTY(respawncounts)
 
+GLOBAL_LIST_EMPTY(mouse_pointer_icons) // TA EDIT START
+GLOBAL_LIST_INIT(mouse_pointer_icon_states, list(
+	"human",
+	"human_attack",
+	"human_give",
+	"human_jump",
+	"human_kick",
+	"human_looking",
+	"charge_0",
+	"charge_5",
+	"charge_10",
+	"charge_15",
+	"charge_20",
+	"charge_25",
+	"charge_30",
+	"charge_35",
+	"charge_40",
+	"charge_45",
+	"charge_50",
+	"charge_55",
+	"charge_60",
+	"charge_65",
+	"charge_70",
+	"charge_75",
+	"charge_80",
+	"charge_85",
+	"charge_90",
+	"charge_95",
+	"charge_100",
+	"charge_active",
+	"charge_full"
+))
+
+/proc/get_mouse_pointer_icon(pointer)
+	if(!istext(pointer) || !(pointer in GLOB.mouse_pointer_icon_states))
+		return pointer
+	var/icon/cached_pointer = GLOB.mouse_pointer_icons[pointer]
+	if(!cached_pointer)
+		cached_pointer = icon('icons/effects/mousemice/cursors.dmi', pointer)
+		GLOB.mouse_pointer_icons[pointer] = cached_pointer
+	return cached_pointer
+
+/proc/initialize_mouse_pointer_icons()
+	if(length(GLOB.mouse_pointer_icons) == length(GLOB.mouse_pointer_icon_states))
+		return
+	for(var/pointer_state in GLOB.mouse_pointer_icon_states)
+		get_mouse_pointer_icon(pointer_state)
+
+/client/proc/apply_mouse_pointer()
+	mouse_pointer_update_pending = FALSE
+	var/new_pointer = pending_mouse_pointer
+	pending_mouse_pointer = null
+	if(!new_pointer || mouse_pointer_icon == new_pointer)
+		return
+	mouse_pointer_icon = new_pointer
+
+/client/proc/set_mouse_pointer(pointer, priority = 0, force = FALSE)
+	pointer = get_mouse_pointer_icon(pointer)
+	if(!pointer)
+		pointer = get_mouse_pointer_icon("human")
+	if(!force && priority < mouse_pointer_priority)
+		return FALSE
+	mouse_pointer_priority = priority
+	if(mouse_pointer_update_pending && pending_mouse_pointer == pointer)
+		return TRUE
+	if(!mouse_pointer_update_pending && mouse_pointer_icon == pointer)
+		return TRUE
+	pending_mouse_pointer = pointer
+	if(mouse_pointer_update_pending)
+		return TRUE
+	mouse_pointer_update_pending = TRUE
+	spawn(0)
+		if(!QDELETED(src))
+			apply_mouse_pointer()
+	return TRUE
+
+/client/proc/reset_mouse_pointer()
+	mouse_pointer_priority = -1
+	set_mouse_pointer("human", 0, TRUE)
+
+/client/proc/refresh_mouse_pointer(ignore_activity = FALSE)
+	if(!mob)
+		reset_mouse_pointer()
+		return
+	if(!ignore_activity && (charging || mob.atkswinging))
+		return
+	reset_mouse_pointer()
+	if(mob.examine_cursor_icon && keys_held["Shift"])
+		set_mouse_pointer(mob.examine_cursor_icon, 10)
+	if(mouse_pointer_ability && mouse_pointer_ability_source == mob.click_intercept)
+		set_mouse_pointer(mouse_pointer_ability, 30)
+	else
+		mouse_pointer_ability = null
+		mouse_pointer_ability_source = null
+		if(mob.ranged_ability?.ranged_mousepointer)
+			set_mouse_pointer(mob.ranged_ability.ranged_mousepointer, 30)
+
+/client/proc/set_mouse_pointer_ability(pointer, datum/source)
+	mouse_pointer_ability = pointer
+	mouse_pointer_ability_source = source
+	refresh_mouse_pointer()
+
+/client/proc/clear_mouse_pointer_ability(datum/source)
+	if(source && mouse_pointer_ability_source != source)
+		return
+	mouse_pointer_ability = null
+	mouse_pointer_ability_source = null
+	refresh_mouse_pointer(TRUE) // TA EDIT END
+
 #define LIMITER_SIZE	5
 #define CURRENT_SECOND	1
 #define SECOND_COUNT	2
@@ -370,6 +479,9 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 
 	if(connection != "seeker" && connection != "web")//Invalid connection type.
 		return null
+
+	initialize_mouse_pointer_icons() // TA EDIT START
+	set_mouse_pointer("human", 0, TRUE) // TA EDIT END
 
 	GLOB.clients += src
 	GLOB.directory[ckey] = src

@@ -1287,7 +1287,7 @@
 		client.charging = 0
 		client.chargedprog = 0
 		client.tcompare = null //so we don't shoot the attack off
-		client.mouse_pointer_icon = 'icons/effects/mousemice/human.dmi'
+		client.refresh_mouse_pointer(TRUE) // TA EDIT
 		STOP_PROCESSING(SSmousecharge, client)
 	if(used_intent)
 		used_intent.on_mouse_up()
@@ -2074,13 +2074,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	update_sight()
 
 /mob/living/update_mouse_pointer()
-	if(!client)
-		return
-	if(!client.charging && !atkswinging)
-		if(examine_cursor_icon && client.keys_held["Shift"]) //mouse shit is hardcoded, make this non hard-coded once we make mouse modifiers bindable
-			client.mouse_pointer_icon = examine_cursor_icon
-	if(ranged_ability && ranged_ability.ranged_mousepointer)
-		client.mouse_pointer_icon = ranged_ability.ranged_mousepointer
+	return ..() // TA EDIT
 
 /mob/living/vv_edit_var(var_name, var_value)
 	switch(var_name)

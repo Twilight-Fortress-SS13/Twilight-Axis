@@ -5,7 +5,7 @@
 	chargedrain = 0
 	chargetime = 0
 	noaa = TRUE
-	pointer = 'icons/effects/mousemice/human_jump.dmi'
+	pointer = "human_jump" // TA EDIT
 
 /datum/intent/jump/on_mmb(atom/target, mob/living/user, params)
 	user.jump_action(target)

@@ -59,17 +59,16 @@
 
 /// Sets this action as the active ability for the passed mob
 /datum/action/innate/proc/set_ranged_ability(mob/living/on_who, text_to_show)
+	on_who.click_intercept = src // TA EDIT
 	if(ranged_mousepointer)
-		on_who.client?.mouse_pointer_icon = ranged_mousepointer
+		on_who.client?.set_mouse_pointer_ability(ranged_mousepointer, src) // TA EDIT
 	if(text_to_show)
 		to_chat(on_who, text_to_show)
-	on_who.click_intercept = src
 
 /// Removes this action as the active ability of the passed mob
 /datum/action/innate/proc/unset_ranged_ability(mob/living/on_who, text_to_show)
 	if(ranged_mousepointer)
-		on_who.client?.mouse_pointer_icon = initial(on_who.client?.mouse_pointer_icon)
-		on_who.update_mouse_pointer()
+		on_who.client?.clear_mouse_pointer_ability(src) // TA EDIT
 	if(text_to_show)
 		to_chat(on_who, text_to_show)
 	on_who.click_intercept = null

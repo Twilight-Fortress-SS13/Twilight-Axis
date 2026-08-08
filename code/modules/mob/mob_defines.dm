@@ -26,7 +26,7 @@
 	var/static/next_mob_id = 0
 
 ///Cursor icon used when holding shift over things
-	var/examine_cursor_icon = 'icons/effects/mousemice/human_looking.dmi'
+	var/examine_cursor_icon = "human_looking" // TA EDIT
 
 	/// List of movement speed modifiers applying to this mob
 	var/list/movespeed_modification				//Lazy list, see mob_movespeed.dm
