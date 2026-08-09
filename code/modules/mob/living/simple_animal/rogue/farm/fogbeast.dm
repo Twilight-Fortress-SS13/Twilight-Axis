@@ -2,7 +2,7 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast
 	name = "fogbeast mare"
-	desc = "A distant cousin to the saiga, hailing from the mysterious islands of Kaizoku - rarer, but more strongly valued. Extensively used in the Steppes of Aavnr as pack animals and combat mounts."
+	desc = "A riding beast bred from the crossing of saigas and the few horses that still remain in the known world. Fogbeasts are valued for their strength and endurance, and are widely used as pack animals and combat mounts."
 	icon = 'icons/roguetown/mob/monster/fogbeast.dmi'
 	icon_state = "fogbeast"
 	icon_living = "fogbeast"
@@ -194,7 +194,7 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 // FOAL
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/kid
 	name = "fogbeast filly"
-	desc = "A young fogbeast, likely to be running around with its mother. Fogbeasts are a distant cousin to the saiga, hailing from the mysterious islands of Kaizoku - rarer, but more strongly valued. Extensively used in the Steppes of Aavnr as pack animals and combat mounts."
+	desc = "A young fogbeast, likely to be running around with its mother. Fogbeasts are riding beasts bred from the crossing of saigas and the few horses that still remain in the known world. They are valued for their strength and endurance, and are widely used as pack animals and combat mounts."
 	icon = 'icons/roguetown/mob/monster/fogbeast.dmi'
 	icon_state = "foggie"
 	icon_living = "foggie"
