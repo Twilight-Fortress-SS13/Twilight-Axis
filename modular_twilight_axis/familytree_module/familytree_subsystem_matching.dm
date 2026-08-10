@@ -1800,8 +1800,6 @@
 /datum/controller/subsystem/familytree/proc/FindFamilyMatch(mob/living/carbon/human/H)
 	if(!H)
 		return null
-	var/our_race = H.dna.species.name
-	var/our_isolated = is_isolated(H)
 	var/houses_scanned = 0
 	var/reject_mask = 0
 	var/list/potential_matches = list()
@@ -1810,7 +1808,7 @@
 		if(house.closed)
 			reject_mask |= FTREJ_F_CLOSED
 			continue
-		if(!house_race_compatible(house, our_race, our_isolated, H))
+		if(!house_relative_compatible(house, H))
 			reject_mask |= FTREJ_F_RACE
 			continue
 		houses_scanned++

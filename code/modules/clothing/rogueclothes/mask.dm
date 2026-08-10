@@ -70,9 +70,6 @@
 	max_integrity = 300
 	var/lensmoved = FALSE
 
-/obj/item/clothing/mask/rogue/spectacles/inq/spawnpair
-	lensmoved = TRUE
-
 /obj/item/clothing/mask/rogue/spectacles/inq/equipped(mob/user, slot)
 	..()
 	if(slot == SLOT_WEAR_MASK || slot == SLOT_HEAD)
@@ -91,12 +88,13 @@
 
 /obj/item/clothing/mask/rogue/spectacles/inq/attack_right(mob/user, slot)
 	..()
-
 	if(!lensmoved)
+		playsound(user, 'sound/items/inqglassesoff.ogg', 80)
 		to_chat(user, span_info("You discreetly slide the inner lenses out of the way."))
 		REMOVE_TRAIT(user, TRAIT_NOCSHADES, "redlens")
 		lensmoved = TRUE
 		return
+	playsound(user, 'sound/items/inqglasseson.ogg', 80)
 	to_chat(user, span_info("You discreetly slide the inner lenses back into place."))
 	ADD_TRAIT(user, TRAIT_NOCSHADES, "redlens")
 	lensmoved = FALSE
@@ -316,10 +314,12 @@
 /obj/item/clothing/mask/rogue/facemask/steel/confessor/lensed/attack_right(mob/user, slot)
 	..()
 	if(!lensmoved)
+		playsound(user, 'sound/items/inqglassesoff.ogg', 80)
 		to_chat(user, span_info("You discreetly slide the inner lenses out of the way."))
 		REMOVE_TRAIT(user, TRAIT_NOCSHADES, "redlens")
 		lensmoved = TRUE
 		return
+	playsound(user, 'sound/items/inqglasseson.ogg', 80)
 	to_chat(user, span_info("You discreetly slide the inner lenses back into place."))
 	ADD_TRAIT(user, TRAIT_NOCSHADES, "redlens")
 	lensmoved = FALSE
@@ -831,6 +831,7 @@
 	sewrepair = TRUE
 	salvage_result = /obj/item/natural/fibers
 	salvage_amount = 1
+	smeltresult = /obj/item/ash
 
 /obj/item/clothing/mask/rogue/facemask/padded/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/equip/rummaging-03.ogg', null, (UPD_HEAD|UPD_MASK))	//Standard mask
@@ -848,6 +849,7 @@
 	sewrepair = TRUE
 	salvage_result = /obj/item/natural/hide/cured
 	salvage_amount = 1
+	smeltresult = /obj/item/ash
 
 /obj/item/clothing/mask/rogue/facemask/leather/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/equip/rummaging-03.ogg', null, (UPD_HEAD|UPD_MASK))	//Standard mask
