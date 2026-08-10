@@ -90,7 +90,9 @@
 		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/storage/belt/rogue/pouch,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/rogueweapon/hammer/copper
+		/obj/item/rogueweapon/hammer/copper,
+		/obj/item/armor_brush = 1,
+		/obj/item/polishing_cream = 1
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)
@@ -139,7 +141,9 @@
 		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/storage/belt/rogue/pouch,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/rogueweapon/hammer/copper
+		/obj/item/rogueweapon/hammer/copper,
+		/obj/item/armor_brush = 1,
+		/obj/item/polishing_cream = 1
 	)
 	H.adjust_blindness(-3)
 	if(H.mind)
@@ -202,7 +206,9 @@
 		/obj/item/storage/belt/rogue/pouch,
 		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/rogueweapon/hammer/copper
+		/obj/item/rogueweapon/hammer/copper,
+		/obj/item/armor_brush = 1,
+		/obj/item/polishing_cream = 1
 		)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS , H)

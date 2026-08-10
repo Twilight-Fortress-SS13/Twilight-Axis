@@ -714,6 +714,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["familiar_names"]					>> familiar_prefs.familiar_names
 	S["familiar_pronouns"]				>> familiar_prefs.familiar_pronouns
 	S["familiar_species"]				>> familiar_prefs.familiar_species
+	S["familiar_voice_colors"]			>> familiar_prefs.familiar_voice_colors
 	S["familiar_flavortext"]			>> familiar_prefs.familiar_flavortext
 	S["familiar_flavortext_display"]	>> familiar_prefs.familiar_flavortext_display
 	S["familiar_headshot_link"]			>> familiar_prefs.familiar_headshot_link
@@ -798,6 +799,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["joblessrole"] >> joblessrole
 	//Load prefs
 	S["job_preferences"] >> job_preferences
+	S["job_subprefs"] >> job_subprefs
 
 	S["job_characters"] >> job_characters //TA EDIT
 	S["job_subclass_preferences"] >> job_subclass_preferences // TA EDIT START
@@ -1004,6 +1006,51 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 			job_subclass_strict[job_title] = sanitize_integer(job_subclass_strict[job_title], FALSE, TRUE, FALSE)
 			if(!job_subclass_strict[job_title])
 				job_subclass_strict -= job_title // TA EDIT END
+
+	if(!islist(job_subprefs))
+		job_subprefs = list()
+	for(var/job_title in job_subprefs.Copy())
+		if(!islist(job_subprefs[job_title]))
+			job_subprefs -= job_title
+
+	for(var/job_title in job_subclass_preferences)
+		var/datum/job/J = SSjob.GetJob(job_title)
+		if(!J)
+			continue
+		var/local_subclass_path
+		for(var/subclass_path in J.job_subclasses)
+			var/datum/advclass/subclass_type = subclass_path
+			if(initial(subclass_type.name) != job_subclass_preferences[job_title])
+				continue
+			local_subclass_path = subclass_path
+			break
+		if(!local_subclass_path)
+			continue
+		var/list/roleprefs = job_subprefs[job_title]
+		if(!islist(roleprefs))
+			roleprefs = islist(J.default_subprefs) ? J.default_subprefs.Copy() : list()
+			job_subprefs[job_title] = roleprefs
+		roleprefs["favorite_advclass"] = local_subclass_path
+
+	for(var/job_title in job_subprefs)
+		if(job_subclass_preferences[job_title])
+			continue
+		var/list/roleprefs = job_subprefs[job_title]
+		var/favorite_subclass_path = roleprefs["favorite_advclass"]
+		if(!favorite_subclass_path)
+			continue
+		if(!ispath(favorite_subclass_path, /datum/advclass))
+			roleprefs["favorite_advclass"] = null
+			continue
+		var/datum/job/J = SSjob.GetJob(job_title)
+		if(!J || !length(J.job_subclasses))
+			continue
+		if(!(favorite_subclass_path in J.job_subclasses))
+			roleprefs["favorite_advclass"] = null
+			continue
+		var/datum/advclass/favorite_subclass_type = favorite_subclass_path
+		job_subclass_preferences[job_title] = initial(favorite_subclass_type.name)
+		job_subclass_strict -= job_title
 	
 	all_quirks = SANITIZE_LIST(all_quirks)
 
@@ -1136,6 +1183,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["joblessrole"]		, joblessrole)
 	//Write prefs
 	WRITE_FILE(S["job_preferences"] , job_preferences)
+	WRITE_FILE(S["job_subprefs"] , job_subprefs)
 
 	WRITE_FILE(S["job_characters"]  , job_characters) //TA EDIT
 	WRITE_FILE(S["job_subclass_preferences"], job_subclass_preferences) // TA EDIT START
@@ -1219,6 +1267,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["familiar_names"] , familiar_prefs.familiar_names)
 	WRITE_FILE(S["familiar_pronouns"] , familiar_prefs.familiar_pronouns)
 	WRITE_FILE(S["familiar_species"] , familiar_prefs.familiar_species)
+	WRITE_FILE(S["familiar_voice_colors"] , familiar_prefs.familiar_voice_colors)
 	WRITE_FILE(S["familiar_flavortext"] , familiar_prefs.familiar_flavortext)
 	WRITE_FILE(S["familiar_flavortext_display"] , familiar_prefs.familiar_flavortext_display)
 	WRITE_FILE(S["familiar_headshot_link"] , familiar_prefs.familiar_headshot_link)

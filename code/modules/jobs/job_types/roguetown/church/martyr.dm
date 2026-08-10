@@ -434,7 +434,7 @@
 
 				I.max_blade_int = 9999
 				I.blade_int = I.max_blade_int
-				
+
 				current_holder.adjust_skillrank(/datum/skill/misc/athletics, 6, FALSE)
 
 				current_holder.STASTR = 20
@@ -519,6 +519,7 @@
 	job_subclasses = list(
 		/datum/advclass/martyr
 	)
+	has_subprefs = FALSE // only one subclass
 
 /datum/advclass/martyr
 	name = "Martyr"

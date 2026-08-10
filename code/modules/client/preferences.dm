@@ -134,6 +134,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	//Job preferences 2.0 - indexed by job title , no key or value implies never
 	var/list/job_preferences = list()
+	/// Preferences specific to a job. Alist, job title = (some object, usually a list)
+	var/list/job_subprefs = list()
+
 	var/list/job_subclass_preferences = list() // TA EDIT START
 	var/list/job_subclass_strict = list() // TA EDIT END
 		// Want randomjob if preferences already filled - Donkie
@@ -1308,6 +1311,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					subclass_tooltip = "Subclass: [selected_subclass] / [failure_text]"
 				subclass_button_html = " | <a href='?_src_=prefs;preference=job;task=set_job_subclass;text=[rank]' title='[subclass_tooltip]'><font color='[subclass_color]'>[subclass_star]</font></a>" // TA EDIT END
 
+			var/show_role_subprefs = FALSE
+			if(job.has_subprefs && islist(job.default_subprefs))
+				for(var/subpref_key in job.default_subprefs)
+					if(subpref_key == "favorite_advclass")
+						continue
+					show_role_subprefs = TRUE
+					break
+
 			var/start_font = ""
 			var/end_font = ""
 			var/job_unavailable_status = JOB_AVAILABLE
@@ -1328,6 +1339,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 .tutorialhover .tutorial { visibility: hidden; width: 280px; background-color: black; color: #e3c06f; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; top: 100%; left: 50%; margin-left: -140px; }
 .tutorialhover:hover .tutorial{ visibility: visible; }
 </style>
+[show_role_subprefs ? "<div class='tutorialhover'><a href='?src=[REF(job)];subprefs=1'>\[+\]</a><span class='tutorial'>Class Preferences</span></div>" : ""]
 <div class="tutorialhover"> [start_font][job.class_setup_examine ? "<a href='?src=[REF(job)];explainjob=1'>[used_name]</a>" : "[used_name]"][end_font]</span>
 <span class="tutorial">[job.tutorial]<br>Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contrib_points]" : ""]</span>
 </div>
@@ -1459,6 +1471,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 /datum/preferences/proc/ResetJobs()
 	job_preferences = list()
 	job_characters = list() //TA EDIT
+	if(islist(job_subprefs))
+		for(var/job_title in job_subprefs)
+			var/list/roleprefs = job_subprefs[job_title]
+			if(islist(roleprefs))
+				roleprefs["favorite_advclass"] = null
 	job_subclass_preferences = list() // TA EDIT START
 	job_subclass_strict = list() // TA EDIT END
 	save_preferences()   //TA EDIT
@@ -1749,6 +1766,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					else
 						job_subclass_strict -= job_title
 
+				J.get_roleprefs(user.client)
 				save_character()
 				SetChoices(user) // TA EDIT END
 			if("set_job_slot") //TA EDIT START
@@ -2342,7 +2360,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					to_chat(user, "<span class='notice'>Please use a relatively SFW image of the head and shoulder area to maintain immersion level. Lastly, ["<span class='bold'>do not use a real life photo or use any image that is less than serious.</span>"]</span>")
 					to_chat(user, "<span class='notice'>If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser.</span>")
 					to_chat(user, "<span class='notice'>Keep in mind that the photo will be downsized to 325x325 pixels, so the more square the photo, the better it will look.</span>")
-					var/new_headshot_link = tgui_input_text(user, "Input the headshot link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Headshot", headshot_link,  encode = FALSE)
+					var/new_headshot_link = trim(tgui_input_text(user, "Input the headshot link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Headshot", headshot_link, max_length = MAX_MESSAGE_LEN, encode = FALSE), MAX_MESSAGE_LEN)
 					if(new_headshot_link == null)
 						return
 					if(new_headshot_link == "")
@@ -2360,7 +2378,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					to_chat(user, "<span class='notice'>Please use a relatively SFW image of the head and shoulder area to maintain immersion level. Lastly, ["<span class='bold'>do not use a real life photo or use any image that is less than serious.</span>"]</span>")
 					to_chat(user, "<span class='notice'>If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser.</span>")
 					to_chat(user, "<span class='notice'>Keep in mind that the photo will be downsized to 325x325 pixels, so the more square the photo, the better it will look.</span>")
-					var/new_lich_headshot_link = tgui_input_text(user, "Input the Lich headshot link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Lich Headshot", lich_headshot_link,  encode = FALSE)
+					var/new_lich_headshot_link = trim(tgui_input_text(user, "Input the Lich headshot link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Lich Headshot", lich_headshot_link, max_length = MAX_MESSAGE_LEN, encode = FALSE), MAX_MESSAGE_LEN)
 					if(new_lich_headshot_link == null)
 						return
 					if(new_lich_headshot_link == "")
@@ -2378,7 +2396,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					to_chat(user, "<span class='notice'>Please use a relatively SFW image of the head and shoulder area to maintain immersion level. Lastly, ["<span class='bold'>do not use a real life photo or use any image that is less than serious.</span>"]</span>")
 					to_chat(user, "<span class='notice'>If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser.</span>")
 					to_chat(user, "<span class='notice'>Keep in mind that the photo will be downsized to 325x325 pixels, so the more square the photo, the better it will look.</span>")
-					var/new_vampire_headshot_link = tgui_input_text(user, "Input the vampire headshot link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Vampire Headshot", vampire_headshot_link,  encode = FALSE)
+					var/new_vampire_headshot_link = trim(tgui_input_text(user, "Input the vampire headshot link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Vampire Headshot", vampire_headshot_link, max_length = MAX_MESSAGE_LEN, encode = FALSE), MAX_MESSAGE_LEN)
 					if(new_vampire_headshot_link == null)
 						return
 					if(new_vampire_headshot_link == "")
@@ -2430,7 +2448,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					popup.open(FALSE)
 				if("flavortext")
 					to_chat(user, "<span class='notice'>["<span class='bold'>Flavortext should not include nonphysical nonsensory attributes such as backstory or the character's internal thoughts.</span>"]</span>")
-					var/new_flavortext = tgui_input_text(user, "Input your character description:", "Flavortext", flavortext, multiline = TRUE,  encode = FALSE, bigmodal = TRUE)
+					var/new_flavortext = trim(tgui_input_text(user, "Input your character description:", "Flavortext", flavortext, max_length = MAX_NOTE_SIZE, multiline = TRUE,  encode = FALSE, bigmodal = TRUE), MAX_NOTE_SIZE)
 					if(new_flavortext == null)
 						return
 					if(new_flavortext == "")
@@ -2443,7 +2461,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					log_game("[user] has set their flavortext'.")
 				if("ooc_notes")
 					to_chat(user, "<span class='notice'>["<span class='bold'>OOC notes should be used for roleplay hooks and general information about your character.</span>"]</span>")
-					var/new_ooc_notes = tgui_input_text(user, "Input your OOC preferences:", "OOC notes", ooc_notes, multiline = TRUE,  encode = FALSE, bigmodal = TRUE)
+					var/new_ooc_notes = trim(tgui_input_text(user, "Input your OOC preferences:", "OOC notes", ooc_notes, max_length = MAX_NOTE_SIZE, multiline = TRUE, encode = FALSE, bigmodal = TRUE), MAX_NOTE_SIZE)
 					if(new_ooc_notes == null)
 						return
 					if(new_ooc_notes == "")
@@ -2457,7 +2475,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 				if("rumour")
 					to_chat(user, span_notice("Rumours are things others might know, or think they know about you, they don't necessarily have to be precise, or even true. But remember that they can provide a hint to another player on how to interact with, or even think about your character.\n<b>Avoid explicit bodily descriptions, though rumors like \"sleeps around a lot\" are fine.</b>"))
-					var/new_rumour = tgui_input_text(user, "Input rumours about your character: (400 Character Limit)", "Rumours", rumour, multiline = TRUE, encode = FALSE, bigmodal = TRUE)
+					var/new_rumour = trim(tgui_input_text(user, "Input rumours about your character: (400 Character Limit)", "Rumours", rumour, max_length = 400, multiline = TRUE, encode = FALSE, bigmodal = TRUE), 400)
 					if(new_rumour == null)
 						return
 					if(new_rumour == "")
@@ -2474,7 +2492,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 				if("gossip")
 					to_chat(user, span_notice("Gossip is rumours spread around, and known only in Noble circles, only other well-born individuals are aware of it. Gossip, similarly to standard rumours does not need to be precise or true, but remember that it can provide hints and avenues for other Nobles to interact with, and judge your Character.\n<b>Avoid explicit bodily descriptions, though rumors like \"sleeps around a lot\" are fine.</b>"))
-					var/new_gossip = tgui_input_text(user, "Input noble gossip about your character: (400 Character Limit)", "Noble Gossip", noble_gossip, multiline = TRUE, encode = FALSE, bigmodal = TRUE)
+					var/new_gossip = trim(tgui_input_text(user, "Input noble gossip about your character: (400 Character Limit)", "Noble Gossip", noble_gossip, max_length = 400, multiline = TRUE, encode = FALSE, bigmodal = TRUE), 400)
 					if(new_gossip == null)
 						return
 					if(new_gossip == "")
@@ -2492,7 +2510,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				if("nsfwflavortext")
 					to_chat(user, "<span class='notice'>["<span class='bold'>NSFW Flavortext can be used for setting things like body descriptions and other physical details that may be conisdered explicit.</span>"]</span>")
 					to_chat(user, "<font color = '#d6d6d6'>Leave blank to clear.</font>")
-					var/new_nsfwflavortext = tgui_input_text(user, "Input your character description:", "NSFW Flavortext", nsfwflavortext, multiline = TRUE,  encode = FALSE, bigmodal = TRUE)
+					var/new_nsfwflavortext = trim(tgui_input_text(user, "Input your character description:", "NSFW Flavortext", nsfwflavortext, max_length = MAX_NOTE_SIZE, multiline = TRUE,  encode = FALSE, bigmodal = TRUE), MAX_NOTE_SIZE)
 					if(new_nsfwflavortext == null)
 						return
 					if(new_nsfwflavortext == "")
@@ -2508,7 +2526,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				if("erpprefs")
 					to_chat(user, "<span class='notice'>["<span class='bold'>Erotic Roleplay preferences. If you put 'anything goes' or 'no limits' here, do not be surprised if people take you up on it.</span>"]</span>")
 					to_chat(user, "<font color = '#d6d6d6'>Leave blank to clear.</font>")
-					var/new_erpprefs = tgui_input_text(user, "Input your preferences:", "ERP Preferences", erpprefs, multiline = TRUE,  encode = FALSE, bigmodal = TRUE)
+					var/new_erpprefs = trim(tgui_input_text(user, "Input your preferences:", "ERP Preferences", erpprefs, max_length = MAX_NOTE_SIZE, multiline = TRUE, encode = FALSE, bigmodal = TRUE), MAX_NOTE_SIZE)
 					if(new_erpprefs == null)
 						return
 					if(new_erpprefs == "")
@@ -2523,7 +2541,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					log_game("[user] has set their ERP preferences'.")
 
 				if("img_gallery")
-
 					if(img_gallery.len >= 3)
 						to_chat(user, "You already have three images in your gallery!")
 						return
@@ -2533,7 +2550,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					to_chat(user, "<span class='notice'>Keep in mind that all three images are displayed next to eachother and justified to fill a horizontal rectangle. As such, vertical images work best.</span>")
 					to_chat(user, "<span class='notice'>You can only have a maximum of ["<span class='bold'>THREE IMAGES</span>"] in your gallery at a time.</span>")
 
-					var/new_galleryimg = tgui_input_text(user, "Input the image link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Gallery Image",  encode = FALSE)
+					var/new_galleryimg = trim(tgui_input_text(user, "Input the image link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Gallery Image", max_length = MAX_MESSAGE_LEN, encode = FALSE), MAX_MESSAGE_LEN)
 
 					if(new_galleryimg == null)
 						return
@@ -2561,22 +2578,22 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					to_chat(user, "<span class='notice'>Keep in mind that all three images are displayed next to eachother and justified to fill a horizontal rectangle. As such, vertical images work best.</span>")
 					to_chat(user, "<span class='notice'>You can only have a maximum of ["<span class='bold'>THREE IMAGES</span>"] in your gallery at a time.</span>")
 
-					var/new_galleryimg = tgui_input_text(user, "Input the image link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Gallery Image",  encode = FALSE)
+					var/new_galleryimg_nsfw = trim(tgui_input_text(user, "Input the image link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "NSFW Gallery Image", max_length = MAX_MESSAGE_LEN, encode = FALSE), MAX_MESSAGE_LEN)
 
-					if(new_galleryimg == null)
+					if(new_galleryimg_nsfw == null)
 						return
-					if(new_galleryimg == "")
-						new_galleryimg = null
+					if(new_galleryimg_nsfw == "")
+						new_galleryimg_nsfw = null
 						ShowChoices(user)
 						return
-					if(!valid_headshot_link(user, new_galleryimg))
+					if(!valid_headshot_link(user, new_galleryimg_nsfw))
 						to_chat(user, "<span class='notice'>Invalid image link. Make sure it's a direct link from a valid host (gyazo, discord, lensdump, imgbox, catbox).</span>")
-						new_galleryimg = null
+						new_galleryimg_nsfw = null
 						ShowChoices(user)
 						return
-					nsfw_img_gallery += new_galleryimg
+					nsfw_img_gallery += new_galleryimg_nsfw
 					to_chat(user, "<span class='notice'>Successfully added image to nsfw gallery.</span>")
-					log_game("[user] has added an image to their nsfw gallery: '[new_galleryimg]'.")
+					log_game("[user] has added an image to their nsfw gallery: '[new_galleryimg_nsfw]'.")
 
 				if("clear_gallery")
 					if(!img_gallery.len)
@@ -2653,7 +2670,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					to_chat(user, "<span class='notice'>If the song doesn't  play properly, ensure that it's a direct link that opens properly in a browser.</span>")
 					to_chat(user, "<font color = '#d6d6d6'>Leave blank to clear your current song.</font>")
 					to_chat(user, "<font color ='red'>Abuse of this will get you banned.</font>")
-					var/new_extra_link = tgui_input_text(user, "Input the accessory link (https, hosts: discord, catbox):", "Song URL", ooc_extra, encode = FALSE)
+					var/new_extra_link = trim(tgui_input_text(user, "Input the accessory link (https, hosts: discord, catbox):", "Song URL", ooc_extra, max_length = MAX_MESSAGE_LEN, encode = FALSE), MAX_MESSAGE_LEN)
 					if(new_extra_link == null)
 						return
 					if(new_extra_link == "")
@@ -2678,7 +2695,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 						log_game("[user] has set their Song URL to '[ooc_extra]'.")
 
 				if("change_artist")
-					var/new_artist = tgui_input_text(user, "Input your song's artist:", "Song Artist", song_artist,  encode = FALSE)
+					var/new_artist = trim(tgui_input_text(user, "Input your song's artist:", "Song Artist", song_artist, max_length = MAX_MESSAGE_LEN, encode = FALSE), MAX_MESSAGE_LEN)
 					if(new_artist == null)
 						return
 					if(new_artist == "")
