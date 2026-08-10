@@ -164,6 +164,7 @@
 
 // LIGHT ARMOR - SNOWFLAKE. Not comfortable with them, but not touching it atm.
 #define ARMOR_DRAGONHIDE list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_MEDIUM, "bullet" = DR_LIGHT) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist
+#define ARMOR_DRAGONSKIN list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_MEDIUM, "bullet" = DR_LIGHT) // iconoclast dragon skin profile
 
 #define ARMOR_CULTNECK list("blunt" = DR_LIGHT, "slash" = DR_SUPER, "stab" = DR_SUPER, "piercing" = DR_SUPER, "fire" = DR_HEAVY, "bullet" = DR_LIGHT) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist
 
