@@ -17,7 +17,6 @@
 	blocksound = SOFTUNDERHIT
 	armor = ARMOR_PADDED
 	unenchantable = TRUE
-	blocking_behavior = BLOCKSHIRT | BLOCKARMOR // Skins block layering real armor (armor_class > NONE); plain shirts still layer. Arbalist/berserker override below.
 
 	var/repairmsg_end = "My skin has become taut with newfound vigor!"
 	var/repairmsg_continue = "My armour mends some of its abuse.."
@@ -225,7 +224,6 @@
 	desc = "Taut lyke the bow I draw."
 	max_integrity = ARMOR_INT_CHEST_CIVILIAN //Our value: 100 (was LIGHT_BASE).
 	//Tax for being shirt slot.
-	blocking_behavior = null // Exception: may be layered under real armor (the confessor wears it with a cuirass).
 
 /obj/item/clothing/suit/roguetown/armor/manual/sewable/padded/disciple
 	name = "enduring skin"
@@ -400,7 +398,7 @@
 /obj/item/clothing/suit/roguetown/armor/manual/resting/leather/berzerker
 	name = "unstoppable skin"
 	desc = "I've endured enough. The onslaught has lost its meaning."
-	blocking_behavior = BLOCKSHIRT | BLOCKARMOR | SAMEWEAR // Unlayerable with outside armor, but pairs with the unstoppable chest.
+	blocking_behavior = SAMEWEAR
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
 	max_integrity = ARMOR_INT_CHEST_LIGHT_ELITE //Our value: 300 (was LIGHT_MASTER+150).
 	//Perk of being a wretch powerclass.
@@ -419,6 +417,6 @@
 	armor = ARMOR_MAILLE
 	resistance_flags = FLAMMABLE
 	blocksound = SOFTHIT
-	blocking_behavior = BLOCKSHIRT | BLOCKARMOR | SAMEWEAR // Unlayerable with outside armor, but pairs with the unstoppable skin.
+	blocking_behavior = SAMEWEAR
 	body_parts_covered = COVERAGE_VEST
 	body_parts_inherent = COVERAGE_VEST
