@@ -201,7 +201,9 @@
 		return
 	current_count++
 	if(current_count >= max(1, count))
-		source_contract.fulfill("orgasm_boon_complete")
+		var/datum/contractor_contract/contract = source_contract
+		source_contract = null
+		addtimer(CALLBACK(contract, TYPE_PROC_REF(/datum/contractor_contract, fulfill), "orgasm_boon_complete"), 0)
 
 /datum/contractor_bonus/body_change
 	name = "body alteration"
