@@ -216,7 +216,7 @@
 		set_light(0)
 		return
 	set_light(1, 1, 1, l_color = "#1b7bf1")
-	add_overlay(mutable_appearance(icon, "vendor-merch"))
+	add_overlay(mutable_appearance('icons/roguetown/misc/machines.dmi', "vendor-merch")) // TA EDIT
 
 
 /obj/structure/roguemachine/goldface/attackby(obj/item/P, mob/user, params)

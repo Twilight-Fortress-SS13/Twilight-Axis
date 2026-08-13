@@ -49,7 +49,7 @@
 
 	if(H.mind)
 		var/weapons = list("Аркебуза со штыком","Кулеврина и картечь")
-		var/weapon_choice = input("Выберите свое оружие.", "К ОРУЖИЮ") as anything in weapons
+		var/weapon_choice = input(H, "Выберите свое оружие.", "К ОРУЖИЮ") as anything in weapons
 		H.set_blindness(0)
 		switch(weapon_choice)
 			if("Аркебуза со штыком")
