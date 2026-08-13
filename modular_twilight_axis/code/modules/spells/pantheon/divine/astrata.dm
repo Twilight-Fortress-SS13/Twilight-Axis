@@ -1152,7 +1152,7 @@
 		aoemining.take_damage(1100, BRUTE, "blunt", 1)
 	sleep(10)
 	animate(mark, alpha = 5, time = 10, flags = ANIMATION_PARALLEL)
-
+/*
 /obj/effect/proc_holder/spell/self/TAastrata_sword
 	name = "Solar Blade"
 	desc = "Call for a blade to preserve light and order in Psydonia. Its strength is middling, but it glows fiercely and can be used to cauterize wounds."
@@ -1224,3 +1224,4 @@
 	set_light(5, 4, l_color = GLOW_COLOR_FIRE)
 	addtimer(CALLBACK(src, PROC_REF(TAskillcheck), src), wait = 1)
 	AddComponent(/datum/component/cursed_item, TRAIT_APRICITY, "SOLAR SABRE")
+*/

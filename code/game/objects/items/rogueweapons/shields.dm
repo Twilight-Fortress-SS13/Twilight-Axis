@@ -463,7 +463,7 @@
 	bullet_damage_mult = 0 //TA EDIT
 
 /obj/item/rogueweapon/shield/tower/metal/zizo/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, "An alloy of Zizo's anointed metals; Avantyne and Darksteel")
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/shield/tower/metal/zizo/Initialize()
 	. = ..()

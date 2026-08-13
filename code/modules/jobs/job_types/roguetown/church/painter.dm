@@ -13,9 +13,10 @@
 	outfit = /datum/outfit/job/roguetown/monk
 	display_order = JDO_PAINTER
 	give_bank_account = TRUE
-	min_pq = 1
+	min_pq = 5
 	max_pq = null
 	round_contrib_points = 3
+	same_job_respawn_delay = 30 MINUTES
 
 	job_traits = list(TRAIT_WATERBREATHING, TRAIT_RITUALIST, TRAIT_CLERGY)
 

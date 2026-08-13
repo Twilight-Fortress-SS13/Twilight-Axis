@@ -78,7 +78,7 @@
 	if(H.mind)
 		H.set_patron(/datum/patron/divine/malum)
 		H.AddComponent(/datum/component/ore_sight) // controversial, and powerful, but it means you're spending less Wretch Time just mining.
-	var/weapons = list("Path of the Hammer - Steel Warhammer", "Path of the Crossbow - Crossbow and Bolts", "Path of the Pick - Pulaski Axe")
+	var/weapons = list("Path of the Hammer - Steel Warhammer", "Path of the Crossbow - Crossbow and Bolts", "Path of the Pick - Pulaski Axe", "Path of Artifice - Steel Wrench and Engineering")
 	var/weapon_choice = input(H, "Choose your weapon.", "HOT IS THE ANVYL") as anything in weapons
 	var/crimes = list("I'm nobody", "They fear me")
 	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
@@ -112,6 +112,9 @@
 				ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
 			else
 				H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/woodcut/pick)
-
+		if("Path of Artifice - Steel Wrench and Engineering") //they can level engineering already- the wrench is a downgrade from the warhammer, but someone picking this probably wants to be an engineer
+			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/engineering, SKILL_LEVEL_EXPERT, TRUE)
+			H.put_in_hands(new /obj/item/rogueweapon/contraption/linker/mace/big/steel/precharged)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_4)	//Minor regen, is pre-emptively leveled up to T4 to avoid grind and support.

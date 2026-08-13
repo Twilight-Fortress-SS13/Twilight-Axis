@@ -370,6 +370,8 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 	if(ishuman(target))
 		var/mob/living/carbon/human/HT = target
 		var/obj/item/bodypart/affecting = HT.get_bodypart(zone)
+		if(!affecting)
+			affecting = HT.get_bodypart(BODY_ZONE_CHEST)//fallback for if we're targeting a missing limb
 		var/armor_penetration = no_pen ? PEN_NONE : 0 // TA EDIT START
 		if(!isnull(special_armor_penetration))
 			armor_penetration = special_armor_penetration

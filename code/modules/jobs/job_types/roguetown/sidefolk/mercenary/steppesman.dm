@@ -22,7 +22,6 @@
 		/datum/skill/craft/sewing = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
-
 	subclass_virtues = list(  //TA ADDITION
 		/datum/virtue/utility/riding
 	)
