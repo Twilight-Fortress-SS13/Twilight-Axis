@@ -45,6 +45,7 @@
 					underwear.forceMove(get_turf(src))
 					src.put_in_hands(underwear)
 					underwear = null
+					regenerate_icons() // TA EDIT
 		if((user.zone_selected == BODY_ZONE_L_LEG) || (user.zone_selected == BODY_ZONE_R_LEG))
 			if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
 				if(!legwear_socks)
@@ -56,6 +57,7 @@
 					legwear_socks.forceMove(get_turf(src))
 					src.put_in_hands(legwear_socks)
 					legwear_socks = null
+					regenerate_icons() // TA EDIT
 		if(user.zone_selected == BODY_ZONE_CHEST)
 			if(!piercings_item)
 				return

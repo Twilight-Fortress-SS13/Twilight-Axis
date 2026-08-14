@@ -673,3 +673,6 @@
   - bugfix: fixed vheslynic hellfire being regular fire
   - bugfix: vhelsynite hellfire properly shows its purple "hellfire!" status effect
   - balance: slightly knocked down the firestacks on exploding.
+2026-08-14:
+  Quinalion:
+  - rscadd: "\u0421\u043A\u0443\u0442\u0443\u043C."
