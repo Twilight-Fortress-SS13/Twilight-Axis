@@ -56,9 +56,24 @@
 	cost = 10
 	contains = list(/obj/item/clothing/suit/roguetown/armor/leather)
 
+/datum/supply_pack/rogue/Alchemist/brigandine_light
+	name = "Lightweight Brigandine"
+	cost = 45
+	contains = list(/obj/item/clothing/suit/roguetown/armor/brigandine/light)
+
+/datum/supply_pack/rogue/Alchemist/brigandine
+	name = "Brigandine"
+	cost = 80
+	contains = list(/obj/item/clothing/suit/roguetown/armor/brigandine)
+
 ///////////////////
 // WRISTS/GLOVES //
 ///////////////////
+
+/datum/supply_pack/rogue/Alchemist/brigandine_bracers
+	name = "Brigandine Rerebraces"
+	cost = 30
+	contains = list(/obj/item/clothing/wrists/roguetown/bracers/brigandine)
 
 /datum/supply_pack/rogue/Alchemist/leather/Lbracers
 	name = "Leather Bracers"
@@ -83,6 +98,11 @@
 ///////////////
 // LEGS/FEET //
 ///////////////
+
+/datum/supply_pack/rogue/Alchemist/brigandine_chausses
+	name = "Brigandine Chausses"
+	cost = 30
+	contains = list(/obj/item/clothing/under/roguetown/brigandinelegs)
 
 /datum/supply_pack/rogue/Alchemist/leather/pants
 	name = "Leather Trousers"
@@ -114,6 +134,21 @@
 	contains = list(/obj/item/rogueweapon/sword/short)
 
 /datum/supply_pack/rogue/Alchemist/rapier
+	name = "Rapier"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/sword/rapier)
+
+/datum/supply_pack/rogue/Alchemist/sabre
+	name = "Sabre"
+	cost = 40
+	contains = list(/obj/item/rogueweapon/sword/sabre)
+
+/datum/supply_pack/rogue/Alchemist/shamshir
+	name = "Shamshir"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/sword/sabre/shamshir)
+
+/datum/supply_pack/rogue/Knave/rapier
 	name = "Rapier"
 	cost = 50
 	contains = list(/obj/item/rogueweapon/sword/rapier)

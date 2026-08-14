@@ -69,12 +69,3 @@
 	var/datum/browser/popup = new(src, "actors", "<center>This Story's Actors</center>", 387, 420)
 	popup.set_content(dat.Join(""))
 	popup.open(FALSE)
-
-/client/proc/view_roleplay_ads()
-	var/list/dat = list()
-	for(var/X in GLOB.roleplay_ads)
-		dat += "[GLOB.roleplay_ads[X]]"
-
-	var/datum/browser/popup = new(src, "actors", "<center>Roleplay Ads</center>", 500, 600)
-	popup.set_content(dat.Join(""))
-	popup.open(FALSE)

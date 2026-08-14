@@ -117,6 +117,9 @@
 	//Even if we don't push/swap places, we "touched" them, so spread fire
 	spreadFire(M)
 
+	if(!M.density || !density)
+		return FALSE
+
 	if(now_pushing)
 		return TRUE
 
@@ -390,6 +393,8 @@
 		if(I)
 			if(I.wlength > WLENGTH_NORMAL)
 				CZ = TRUE
+				if(I.wlength < WLENGTH_GREAT) //only GREAT weapons reach the head from the ground
+					acceptable = list(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_R_ARM, BODY_ZONE_CHEST, BODY_ZONE_L_ARM)
 			else
 				acceptable = list(BODY_ZONE_R_ARM,BODY_ZONE_L_ARM,BODY_ZONE_PRECISE_R_HAND,BODY_ZONE_PRECISE_L_HAND,BODY_ZONE_PRECISE_GROIN, BODY_ZONE_PRECISE_STOMACH, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG, BODY_ZONE_PRECISE_R_FOOT, BODY_ZONE_PRECISE_L_FOOT)
 		else
@@ -1444,6 +1449,24 @@
 		on = FALSE
 	..()
 
+
+// A dead body no players have ever claimed, for looting convenience that shouldn't be accessible on a player ever.
+/mob/living/proc/is_unclaimed_corpse()
+	return (stat == DEAD) && !mind && !ckey
+
+/mob/living/carbon/is_unclaimed_corpse()
+	return ..() && !last_mind
+
+// Multiply the stripping delay, faster on surrendered, even faster on dead NPC
+/mob/living/proc/get_strip_delay_mult(mob/living/target, obj/item/what)
+	if(!isliving(target))
+		return 1
+	if(target.is_unclaimed_corpse())
+		return STRIP_DELAY_MULT_UNCLAIMED_CORPSE
+	if(target.compliance || target.surrendering || HAS_TRAIT(target, TRAIT_ARMOR_BREAK))
+		return STRIP_DELAY_MULT_SURRENDER
+	return 1
+
 // The src mob is trying to strip an item from someone
 // Override if a certain type of mob should be behave differently when stripping items (can't, for example)
 /mob/living/stripPanelUnequip(obj/item/what, mob/who, where)
@@ -1467,15 +1490,11 @@
 		to_chat(src, span_warning("Your hands pass right through \the [what]!"))
 		return
 
-	var/surrender_mod = 1
-
 	if(isliving(who))
 		var/mob/living/L = who
 		if(L.cmode && L.mobility_flags & MOBILITY_STAND && !L.restrained())
 			to_chat(src, span_warning("I can't take \the [what] off, they are too tense!"))
 			return
-		if(L.compliance || L.surrendering || HAS_TRAIT(L, TRAIT_ARMOR_BREAK))
-			surrender_mod = 0.5
 
 	if(!who.Adjacent(src))
 		return
@@ -1487,10 +1506,10 @@
 	to_chat(src, span_danger("I try to remove [who]'s [what.name]..."))
 	what.add_fingerprint(src)
 
-	var/strip_delayed = what.strip_delay
+	var/strip_delayed = what.strip_delay * get_strip_delay_mult(who, what)
 	if(enhanced_strip)
 		strip_delayed = 0.1 SECONDS
-	if(do_after(src, strip_delayed * surrender_mod, who))
+	if(do_after(src, strip_delayed, TRUE, who))
 		if(what && (Adjacent(who) || (enhanced_strip && (get_dist(src, who) <= 3))))
 			enhanced_strip = FALSE
 			if(islist(where))
@@ -1506,6 +1525,85 @@
 		who.show_inv(src)
 	else
 		src << browse(null,"window=mob[REF(who)]")
+
+// The src mob is emptying an unclaimed corpse in one go, one do_after per item so it can be interrupted for partial loot
+/mob/living/stripPanelUnequipAll(mob/who, loot_filter = LOOT_FILTER_ALL)
+	var/mob/living/target = who
+	if(!isliving(target) || !target.is_unclaimed_corpse())
+		return
+
+	if(!has_active_hand())
+		to_chat(src, span_warning("I lack working hands."))
+		return
+
+	if(!has_hand_for_held_index(active_hand_index))
+		to_chat(src, span_warning("I can't move this hand."))
+		return
+
+	if(check_arm_grabbed(active_hand_index))
+		to_chat(src, span_warning("Someone is grabbing my arm!"))
+		return
+
+	if(istype(src, /mob/living/carbon/spirit))
+		to_chat(src, span_warning("My hands pass right through [target]!"))
+		return
+
+	if(!target.Adjacent(src))
+		return
+
+	var/list/carried = target.get_equipped_items(TRUE) //null on mobs with no equip slots
+	carried = (carried ? carried : list()) + target.held_items
+
+	var/list/loot = list()
+	for(var/obj/item/I in carried)
+		if(I.item_flags & ABSTRACT)
+			continue
+		if(!I.matches_loot_filter(loot_filter))
+			continue
+		if(!I.canStrip(target))
+			continue
+		loot += I
+
+	var/nothing_msg = "[target] has nothing left worth taking."
+	var/start_msg = "I start looting [target]..."
+	switch(loot_filter)
+		if(LOOT_FILTER_FABRIC)
+			nothing_msg = "[target] has nothing worth cutting up."
+			start_msg = "I start stripping [target] for cloth..."
+		if(LOOT_FILTER_SMELT)
+			nothing_msg = "[target] has nothing worth melting down."
+			start_msg = "I start stripping [target] for metal..."
+
+	if(!length(loot))
+		to_chat(src, span_warning(nothing_msg))
+		return
+
+	target.visible_message(span_warning("[src] starts looting [target]."), null, null, null, src)
+	to_chat(src, span_notice(start_msg))
+
+	var/taken = 0
+	for(var/obj/item/I in loot)
+		if(!target.Adjacent(src))
+			break
+		if(QDELETED(I) || I.loc != target || !I.canStrip(target))
+			continue
+		I.add_fingerprint(src)
+		if(!do_after(src, I.strip_delay * get_strip_delay_mult(target, I), TRUE, target))
+			break
+		if(QDELETED(I) || I.loc != target || !target.Adjacent(src))
+			continue
+		if(I.doStrip(src, target))
+			taken++
+			log_combat(src, target, "stripped [I] off")
+
+	if(taken)
+		target.visible_message(span_warning("[src] loots [target]."), null, null, null, src)
+		to_chat(src, span_notice("I take [taken] thing\s from [target]."))
+
+	if(Adjacent(target)) //update inventory window
+		target.show_inv(src)
+	else
+		src << browse(null,"window=mob[REF(target)]")
 
 // The src mob is trying to place an item on someone
 // Override if a certain mob should be behave differently when placing items (can't, for example)
@@ -1934,7 +2032,8 @@
 			stop_pulling()
 	if(!(mobility_flags & MOBILITY_UI))
 		unset_machine()
-	density = !lying
+	if(initial(density))
+		density = !lying
 	if(lying)
 		if(!lying_prev)
 			fall(!canstand_involuntary)
@@ -2022,6 +2121,8 @@
 	if(!istype(user))
 		return
 	if(user.incapacitated())
+		return
+	if(user == src)
 		return
 	if(can_be_held(user))
 		mob_try_pickup(user)
@@ -2305,7 +2406,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 					if(current_mark && current_mark == L)
 						val += "m"	// "1m" appended to icon state later on.
 					z_highlights[T] = val
-			
+
 			if(turf_up_two)
 				for(var/mob/living/L in get_hearers_in_range(search_range, turf_up_two, RECURSIVE_CONTENTS_CLIENT_MOBS))
 					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_sleuth)
@@ -2325,12 +2426,12 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 					if(current_mark && current_mark == L)
 						val += "m"	// "3m" appended to icon state later on.
 					z_highlights[T] = val
-			
+
 			if(length(z_highlights))
 				for(var/turf/T in z_highlights)
 					if(!T.density)
 						found_ping_someone_above(T, client, z_highlights[T])
-			
+
 			#undef ZTAG_ONE
 			#undef ZTAG_TWO
 			#undef ZTAG_THREE
@@ -2381,7 +2482,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	return
 
 /mob/living/look_up()
-	if(client.perspective != MOB_PERSPECTIVE) 
+	if(client.perspective != MOB_PERSPECTIVE)
 		stop_looking()
 		return
 	if(client.pixel_x || client.pixel_y)
@@ -2418,8 +2519,8 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 			to_chat(src, span_warning("There is nothing unusual about this weather.."))
 			do_time_change()
 		return
-		
-	else if(!istransparentturf(ceiling)) 
+
+	else if(!istransparentturf(ceiling))
 		to_chat(src, span_warning("There is a ceiling above my head."))
 		return
 
@@ -2434,7 +2535,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 	if(!do_after(src, ttime, target = src))
 		return
-		
+
 	reset_perspective(ceiling)
 	update_cone_show()
 //	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(stop_looking)) //We stop looking up if we move.
@@ -2535,7 +2636,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	if(m_intent != MOVE_INTENT_SNEAK)
 		visible_message(span_info("[src] looks down through [T]."))
 	else
-		to_chat(src, span_info("[src] looks down through [T]."))	
+		to_chat(src, span_info("[src] looks down through [T]."))
 
 	if(!do_after(src, ttime, target = src))
 		return

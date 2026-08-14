@@ -357,7 +357,7 @@
 	climbable = FALSE // TA EDIT
 	anchored = TRUE
 	blade_dulling = DULLING_BASHCHOP
-	max_integrity = 700
+	max_integrity = 1400
 	damage_deflection = 12
 	integrity_failure = 0.15
 	dir = SOUTH
@@ -391,7 +391,7 @@
 
 /obj/structure/bars/steel
 	name = "steel bars"
-	max_integrity = 2000
+	max_integrity = 2500
 
 /obj/structure/bars/tough
 	max_integrity = 9000
@@ -407,7 +407,10 @@
 	..()
 */
 /obj/structure/bars/obj_break(damage_flag)
-	icon_state = "[initial(icon_state)]b"
+	if(isnull(broken_icon_state))
+		icon_state = "[initial(icon_state)]b"
+	else
+		icon_state = broken_icon_state
 	density = FALSE
 	..()
 
@@ -418,12 +421,13 @@
 	icon_state = "passage0"
 	desc = "This looks like it can open and close!"
 	density = TRUE
-	max_integrity = 1500
+	max_integrity = 2000
 	redstone_structure = TRUE
+	broken_icon_state = "passage1b"
 
 /obj/structure/bars/passage/steel
 	name = "steel bars"
-	max_integrity = 2000
+	max_integrity = 2500
 
 /obj/structure/bars/passage/obj_break(damage_flag) // TA EDIT START
 	. = ..()
@@ -490,7 +494,7 @@
 	desc = ""
 	icon_state = "floorgrille"
 	density = FALSE
-	layer = TABLE_LAYER
+	//layer = TABLE_LAYER
 	plane = GAME_PLANE
 	damage_deflection = 5
 	blade_dulling = DULLING_BASHCHOP

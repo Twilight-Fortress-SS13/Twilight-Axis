@@ -106,15 +106,16 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 		return
 
 	if(href_list["origin_lore"])
-		if(!client || !client.prefs.virtue_origin.origin_desc || !client.prefs.virtue_origin.origin_name)
-			to_chat(usr, span_ooc("Characters must have a functional client for origin descriptions to be accessed."))
-			return
-		var/datum/browser/popup = new(usr, "origin_info", "<center>[client.prefs.virtue_origin.origin_name]</center>", 460, 550)
-		popup.set_content(client.prefs.virtue_origin.origin_desc)
+		var/oname = (dna.species.origin || "Elsewhere")
+		var/origin_desc = GLOB.origins[oname]
+		var/datum/browser/popup = new(usr, "origin_info", "<center>[oname]</center>", 460, 550)
+		popup.set_content(origin_desc)
 		popup.open()
 		return
 
 	if(href_list["undiesthing"]) //canUseTopic check for this is handled by mob/Topic()
+		if(NO_UNDERWEAR in dna.species.species_traits)
+			return
 		if(!get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
 			to_chat(usr, span_warning("I can't reach that! Something is covering it."))
 			return
@@ -131,6 +132,8 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 			underwear = null
 
 	if(href_list["legwearsthing"]) //canUseTopic check for this is handled by mob/Topic()
+		if(NO_UNDERWEAR in dna.species.species_traits)
+			return
 		if(!get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
 			to_chat(usr, span_warning("I can't reach that! Something is covering it."))
 			return
@@ -153,17 +156,21 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 		var/obj/item/place_item = usr.get_active_held_item() // Item to place in the pocket, if it's empty
 
 		var/delay_denominator = 1
+		var/pocket_delay_mult = 1 // Only scales looting
 		if(pocket_item && !(pocket_item.item_flags & ABSTRACT))
 			if(HAS_TRAIT(pocket_item, TRAIT_NODROP))
 				to_chat(usr, "<span class='warning'>I try to empty [src]'s [pocket_side] pocket, it seems to be stuck!</span>")
 			to_chat(usr, "<span class='notice'>I try to empty [src]'s [pocket_side] pocket.</span>")
+			if(isliving(usr))
+				var/mob/living/rummager = usr
+				pocket_delay_mult = rummager.get_strip_delay_mult(src, pocket_item)
 		else if(place_item && place_item.mob_can_equip(src, usr, pocket_id, 1) && !(place_item.item_flags & ABSTRACT))
 			to_chat(usr, "<span class='notice'>I try to place [place_item] into [src]'s [pocket_side] pocket.</span>")
 			delay_denominator = 4
 		else
 			return
 
-		if(do_mob(usr, src, POCKET_STRIP_DELAY/delay_denominator)) //placing an item into the pocket is 4 times faster
+		if(do_mob(usr, src, POCKET_STRIP_DELAY * pocket_delay_mult / delay_denominator)) //placing an item into the pocket is 4 times faster
 			if(pocket_item)
 				if(pocket_item == (pocket_id == SLOT_R_STORE ? r_store : l_store)) //item still in the pocket we search
 					dropItemToGround(pocket_item)
@@ -441,6 +448,15 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 			to_chat(usr, "<span class='info'>[msg]</span>")
 		else	//Edge-case of there being ONLY noble gossip, but we aren't a noble.
 			to_chat(usr, "<span class='info'>Any tales of intrigue of this one are reserved to the nobility...</span>")
+		return
+
+	if(href_list["task"] == "view_fam_headshot")
+		if(!ismob(usr))
+			return
+		var/datum/examine_panel/familiar/mob_examine_panel = new(src)
+		mob_examine_panel.holder = src
+		mob_examine_panel.viewing = usr
+		mob_examine_panel.ui_interact(usr)
 		return
 
 	return ..() //end of this massive fucking chain. TODO: make the hud chain not spooky. - Yeah, great job doing that. - I made it worse sorry guys.

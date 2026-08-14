@@ -61,7 +61,7 @@
 		if(/datum/patron/divine/dendor)
 			id = /obj/item/clothing/neck/roguetown/psicross/dendor/gronn
 		else
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special 
+			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_1)
@@ -69,8 +69,8 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/rogueweapon/huntingknife/stoneknife = 1
 		)
-	
-	var/techniques = list("Dropkick - Pushback + Extra Damage", "Chokeslam - Stamina Damage", "Stunner - Dazed Debuff", "Headbutt - Vulnerable Debuff") // cool wrestling moves
+
+/*	var/techniques = list("Dropkick - Pushback + Extra Damage", "Chokeslam - Stamina Damage", "Stunner - Dazed Debuff", "Headbutt - Vulnerable Debuff") // cool wrestling moves
 	var/technique_choice = input(H,"Choose your TECHNIQUE.", "TOSS THEM.") as anything in techniques
 	switch(technique_choice)
 		if("Dropkick - Pushback + Extra Damage")
@@ -81,7 +81,7 @@
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stunner)
 		if("Headbutt - Vulnerable Debuff")
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/headbutt)
-		
+	*/
 	var/crimes = list("I'm nobody", "They fear me")
 	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
 	switch(crimeschoice)

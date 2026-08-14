@@ -174,12 +174,21 @@ SUBSYSTEM_DEF(role_class_handler)
 	We will cache it per server session via an assc list with a ckey leading to the datum.
 */
 /datum/controller/subsystem/role_class_handler/proc/setup_class_handler(mob/living/carbon/human/H, advclass_rolls_override = null, register_id = null)
+	if(!H?.client)
+		return
+	var/job_title = H.job
+	var/datum/job/roguetown/RT_JOB
+	if(job_title)
+		RT_JOB = SSjob.GetJob(job_title)
+	if(!RT_JOB && H.mind?.assigned_role)
+		job_title = H.mind.assigned_role
+		RT_JOB = SSjob.GetJob(job_title)
 	if(!register_id)
-		if(H.job == "Towner")
+		if(job_title == "Towner")
 			register_id = "towner"
 
 	var/list/roundstart_excluded_classes = consume_roundstart_subclass_exclusions(H.client.ckey) // TA EDIT START
-	var/list/roundstart_reservation = consume_roundstart_subclass_reservation(H.client.ckey, H.job)
+	var/list/roundstart_reservation = consume_roundstart_subclass_reservation(H.client.ckey, job_title)
 	if(roundstart_reservation)
 		var/datum/advclass/reserved_class = roundstart_reservation["class"]
 		if(class_has_available_slot(reserved_class))
@@ -192,6 +201,9 @@ SUBSYSTEM_DEF(role_class_handler)
 				return
 			qdel(reserved_handler)
 		if(roundstart_reservation["strict"])
+			var/strict_subclass_name = reserved_class?.name
+			log_game("ROLE CLASS HANDLER: [H.ckey] ([H.real_name]) returned to lobby because strict reserved subclass [strict_subclass_name] became unavailable for job [job_title].")
+			message_admins("ROLE CLASS HANDLER: [H.ckey] ([H.real_name]) returned to lobby because strict reserved subclass [strict_subclass_name] became unavailable for job [job_title].")
 			to_chat(H, span_warning("Your reserved subclass became unavailable, so you were returned to the lobby."))
 			H.returntolobby()
 			return
@@ -214,8 +226,13 @@ SUBSYSTEM_DEF(role_class_handler)
 		XTRA_MEATY.class_cat_alloc_attempts = advclass_rolls_override
 		//XTRA_MEATY.PQ_boost_divider = 10
 	else
-		var/datum/job/roguetown/RT_JOB = SSjob.GetJob(H.job)
-		if(RT_JOB.advclass_cat_rolls.len)
+		if(!RT_JOB)
+			var/assigned_role = H.mind?.assigned_role
+			log_game("ROLE CLASS HANDLER: Could not resolve job for [H.ckey] ([H.real_name]); H.job=[H.job], assigned_role=[assigned_role]. Skipping subclass setup.")
+			message_admins("ROLE CLASS HANDLER: Could not resolve job for [H.ckey] ([H.real_name]); H.job=[H.job], assigned_role=[assigned_role]. Skipping subclass setup.")
+			qdel(XTRA_MEATY)
+			return
+		if(length(RT_JOB.advclass_cat_rolls))
 			XTRA_MEATY.class_cat_alloc_attempts = RT_JOB.advclass_cat_rolls
 
 		//if(RT_JOB.PQ_boost_divider)

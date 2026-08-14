@@ -25,7 +25,7 @@
 	var/misfire_chance = 0
 	/// Reload time, in SECONDS
 	var/reload_time = 8
-	var/reload_stamina_cost = 15
+	var/reload_stamina_cost = 20
 	damfactor = 1
 	var/critfactor = 0.7
 	var/npcdamfactor = 4
@@ -164,7 +164,13 @@
 	var/skill = user.get_skill_level(/datum/skill/combat/twilight_firearms)
 	if(skill)
 		misfire_chance = max(0, misfire_chance - (skill * 2))
-		spread = max(3, spread / skill)
+	if(user.client)
+		if(user.client.chargedprog >= 100)
+			spread = 0
+		else
+			spread = 150 - (150 * (user.client.chargedprog / 100))
+	else
+		spread = 0
 	if(prob(misfire_chance))
 		to_chat(user, span_warning("The [name] misfires!"))
 		explosion(src, light_impact_range = 2, heavy_impact_range = 1, smoke = FALSE, soundin = 'sound/misc/explode/bomb.ogg')
@@ -196,14 +202,14 @@
 		var/newtime = chargetime
 		//skill block
 		newtime = newtime + 75
-		newtime = newtime - (mastermob.get_skill_level(/datum/skill/combat/twilight_firearms) * 15)
+		newtime = newtime / max(1, mastermob.get_skill_level(/datum/skill/combat/twilight_firearms))
 		//per block
 		newtime = newtime + 20
 		newtime = newtime - ((mastermob.STAPER)*1.5)
-		if(newtime > 0)
+		if(newtime > 10)
 			return newtime
 		else
-			return 0.1
+			return 10
 	return chargetime
 
 /datum/intent/arc/twilight_runelock
@@ -215,14 +221,14 @@
 		var/newtime = chargetime
 		//skill block
 		newtime = newtime + 70
-		newtime = newtime - (mastermob.get_skill_level(/datum/skill/combat/twilight_firearms) * 15)
+		newtime = newtime / max(1, mastermob.get_skill_level(/datum/skill/combat/twilight_firearms))
 		//per block
 		newtime = newtime + 20
 		newtime = newtime - ((mastermob.STAPER)*1.5)
-		if(newtime > 0)
+		if(newtime > 10)
 			return newtime
 		else
-			return 1
+			return 10
 	return chargetime
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle
@@ -251,7 +257,7 @@
 	damfactor = 1.5
 	critfactor = 1
 	reload_time = 12
-	reload_stamina_cost = 20
+	reload_stamina_cost = 50
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle/getonmobprop(tag)
 	. = ..()

@@ -43,11 +43,46 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		/datum/advclass/lord/mage,
 		/datum/advclass/lord/inbred
 	)
-
+	default_subprefs = list("favorite_advclass" = null, "primcolor" = null, "seccolor" = null)
 
 /datum/outfit/job/roguetown/lord
 	job_bitflag = BITFLAG_ROYALTY
 	has_loadout = TRUE
+
+/datum/job/roguetown/lord/update_subprefs_window(mob/user)
+	var/client/C = usr.client
+	if(!C || !C.prefs)
+		return
+	var/list/roleprefs = get_roleprefs(C)
+	var/HTML = {"
+		<i>You can choose your ducal colors here; this will only take effect if both are set.</i><br/>
+		<b>Primary color:</b> <a href="?src=[REF(src)];primcolor=1">[roleprefs["primcolor"] || "Choose"]</a><br/>
+		<b>Secondary color:</b> <a href="?src=[REF(src)];seccolor=1">[roleprefs["seccolor"] || "Choose"]</a><br/>
+		<center><a href="?src=[REF(src)];subprefsexit=1">EXIT</a>\t\t<a href="?src=[REF(src)];subprefsreset=1">RESET</a></center>
+	"}
+	// the fact that the window width/height will be different each time is the main reason this isn't all done in a parent proc on /datum/job
+	var/datum/browser/popup = new(user, "[JOB_SUBPREFS_WINDOW_ID]", "<div align='center'>[title] Preferences</div>", 500, 400)
+	popup.set_content(HTML)
+	popup.open(FALSE)
+	if(winexists(usr, "[JOB_SUBPREFS_WINDOW_ID]"))
+		winset(usr, "[JOB_SUBPREFS_WINDOW_ID]", "focus=true")
+
+/datum/job/roguetown/lord/Topic(href, list/href_list)
+	. = ..()
+	var/client/C = usr.client
+	if(!C || !C.prefs)
+		return
+	var/list/roleprefs = get_roleprefs(C)
+	if(href_list["primcolor"])
+		var/choice = input(usr, "Choose a Primary Color", "ROYAL STANDARD") as anything in COLOR_MAP
+		if(choice)
+			roleprefs["primcolor"] = choice
+			update_subprefs_window(usr)
+	if(href_list["seccolor"])
+		var/choice = input(usr, "Choose a Secondary Color", "ROYAL STANDARD") as anything in COLOR_MAP
+		if(choice)
+			roleprefs["seccolor"] = choice
+			update_subprefs_window(usr)
 
 /datum/job/roguetown/lord/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
@@ -68,8 +103,21 @@ GLOBAL_LIST_EMPTY(lord_titles)
 
 		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_marriage_choice)), 50)
 		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50)
-		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_color_choice)), 50)
-
+		if(STATION_TIME_PASSED() <= 30 MINUTES) //Late to the party? Stuck with default colors, sorry!
+			spawn(50){
+				var/list/prefs = get_roleprefs(L.client)
+				if(prefs && prefs["primcolor"] && prefs["seccolor"])
+					var/prim = COLOR_MAP[prefs["primcolor"]]
+					var/sec = COLOR_MAP[prefs["seccolor"]]
+					GLOB.lordprimary = prim
+					GLOB.lordsecondary = sec
+					for(var/obj/O in GLOB.lordcolor)
+						O.lordcolor(prim,sec)
+					for(var/turf/T in GLOB.lordcolor)
+						T.lordcolor(prim,sec)
+				else
+					L.lord_color_choice()
+			}
 
 /datum/outfit/job/roguetown/lord
 	neck = /obj/item/storage/belt/rogue/pouch/coins/rich
@@ -273,7 +321,6 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/arcane = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
 	)
@@ -316,7 +363,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	)
 	subclass_skills = list(
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/riding = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/sewing = SKILL_LEVEL_NOVICE,

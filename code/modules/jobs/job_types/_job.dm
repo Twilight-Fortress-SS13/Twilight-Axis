@@ -181,6 +181,61 @@
 	///
 	var/quest_claim_barred = FALSE
 
+	///Whether this class has additional preferences specific to it, like bounties for wretch. Make sure to also put handling for it in the job's /Topic! See wretch.dm for an example. Note that this is true-by-default because the default handler handles advclass selection
+	var/has_subprefs = TRUE
+
+	/// Default state of the subprefs; for most roles, this will just be the subclass selection.
+	var/list/default_subprefs = list("favorite_advclass" = null)
+
+///Returns the client's subprefs list for this job, initializing it if it does not exist. Will be null if the client or prefs are null.
+/datum/job/proc/get_roleprefs(client/C)
+	if(!C)
+		return
+	var/datum/preferences/prefs = C.prefs
+	if(!prefs)
+		return
+	if(!prefs.job_subprefs || !islist(prefs.job_subprefs))
+		prefs.job_subprefs = list()
+	if(!islist(prefs.job_subprefs[title]))
+		prefs.job_subprefs[title] = islist(default_subprefs) ? default_subprefs.Copy() : list()
+	var/list/roleprefs = prefs.job_subprefs[title]
+	if(length(job_subclasses))
+		var/preferred_subclass = prefs.job_subclass_preferences[title]
+		if(preferred_subclass)
+			var/preferred_subclass_path
+			for(var/subclass_path in job_subclasses)
+				var/datum/advclass/subclass_type = subclass_path
+				if(initial(subclass_type.name) != preferred_subclass)
+					continue
+				preferred_subclass_path = subclass_path
+				break
+			if(preferred_subclass_path)
+				roleprefs["favorite_advclass"] = preferred_subclass_path
+			else
+				prefs.job_subclass_preferences -= title
+				prefs.job_subclass_strict -= title
+				roleprefs["favorite_advclass"] = null
+		else
+			roleprefs["favorite_advclass"] = null
+	return roleprefs
+
+/datum/job/proc/update_subprefs_window(mob/user)
+	if(!advclass_cat_rolls)
+		return
+	var/client/C = usr.client
+	if(!C || !C.prefs)
+		return
+	get_roleprefs(C)
+	var/HTML = {"
+		<center><a href="?src=[REF(src)];subprefsexit=1">EXIT</a>\t\t<a href="?src=[REF(src)];subprefsreset=1">RESET</a></center>
+	"}
+	// the fact that the window width/height will be different each time is the main reason this isn't all done in a parent proc on /datum/job
+	var/datum/browser/popup = new(user, "[JOB_SUBPREFS_WINDOW_ID]", "<div align='center'>[title] Preferences</div>", 500, 250)
+	popup.set_content(HTML)
+	popup.open(FALSE)
+	if(winexists(usr, "[JOB_SUBPREFS_WINDOW_ID]"))
+		winset(usr, "[JOB_SUBPREFS_WINDOW_ID]", "focus=true")
+
 // TA EDIT BEGIN
 /datum/job/New()
 	..()
@@ -782,6 +837,29 @@
 		popup.open(FALSE)
 		if(winexists(usr, "subclassslots"))
 			winset(usr, "subclassslots", "focus=true")
+	if(href_list["subprefs"]) // display the html for the actual input box here
+		update_subprefs_window(usr)
+	if(href_list["subprefsexit"])
+		usr << browse(null, "window=[JOB_SUBPREFS_WINDOW_ID]") // close subprefs window
+	if(!advclass_cat_rolls)
+		return
+	var/client/C = usr.client
+	if(!C)
+		return
+	var/datum/preferences/prefs = C.prefs
+	if(!prefs)
+		return
+	var/list/roleprefs = get_roleprefs(C)
+	if(!roleprefs)
+		return
+
+	if(href_list["subprefsreset"])
+		var/favorite_advclass = roleprefs["favorite_advclass"]
+		prefs.job_subprefs[title] = islist(default_subprefs) ? default_subprefs.Copy() : list()
+		if(favorite_advclass)
+			prefs.job_subprefs[title]["favorite_advclass"] = favorite_advclass
+		prefs.save_character()
+		update_subprefs_window(usr)
 	. = ..()
 
 /datum/job/proc/has_limited_subclasses()
