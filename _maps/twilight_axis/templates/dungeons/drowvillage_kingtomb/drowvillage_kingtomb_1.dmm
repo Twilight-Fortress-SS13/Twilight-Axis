@@ -179,6 +179,10 @@
 "cy" = (
 /turf/open/floor/rogue/rooftop,
 /area/rogue/under/underdark)
+"cz" = (
+/obj/structure/closet/crate/coffin,
+/turf/open/floor/rogue/churchmarble,
+/area/rogue/under/kingtomb)
 "cC" = (
 /obj/item/storage/belt/rogue/surgery_bag/full{
 	pixel_y = 10
@@ -908,8 +912,16 @@
 /area/rogue/under/kingtomb)
 "ma" = (
 /obj/structure/table/wood/fancy/royalblack,
-/obj/item/clothing/head/roguetown/helmet/heavy/knight/gold/king,
-/turf/open/floor/rogue/churchmarble,
+/obj/item/enchantmentscroll/superior/featherstep,
+/obj/item/enchantmentscroll/greater/lifesteal{
+	pixel_x = -10;
+	pixel_y = 10
+	},
+/obj/item/enchantmentscroll/basic/xylix{
+	pixel_y = -10;
+	pixel_x = -10
+	},
+/turf/open/floor/rogue/carpet/lord/right,
 /area/rogue/under/kingtomb/bossarena)
 "mf" = (
 /obj/effect/decal/cleanable/blood{
@@ -1028,9 +1040,9 @@
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/kingtomb)
 "nz" = (
-/obj/structure/vampthrone,
-/mob/living/carbon/human/species/human/northern/dungeonboss/forgottenking,
-/turf/open/floor/rogue/carpet/lord/center,
+/obj/structure/table/wood/fancy/royalblack,
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/gold/king,
+/turf/open/floor/rogue/churchmarble,
 /area/rogue/under/kingtomb/bossarena)
 "nE" = (
 /obj/structure/rack/rogue,
@@ -2231,7 +2243,7 @@
 	icon_state = "walldec6"
 	},
 /turf/closed/wall/mineral/rogue/stone/unbreakable,
-/area/rogue/under/underdark/north)
+/area/rogue/under/kingtomb)
 "DS" = (
 /obj/machinery/light/rogue/firebowl,
 /turf/open/floor/rogue/naturalstone,
@@ -2589,17 +2601,9 @@
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/kingtomb)
 "KQ" = (
-/obj/structure/table/wood/fancy/royalblack,
-/obj/item/enchantmentscroll/superior/featherstep,
-/obj/item/enchantmentscroll/greater/lifesteal{
-	pixel_x = -10;
-	pixel_y = 10
-	},
-/obj/item/enchantmentscroll/basic/xylix{
-	pixel_y = -10;
-	pixel_x = -10
-	},
-/turf/open/floor/rogue/carpet/lord/right,
+/obj/structure/vampthrone,
+/mob/living/carbon/human/species/human/northern/dungeonboss/forgottenking,
+/turf/open/floor/rogue/carpet/lord/center,
 /area/rogue/under/kingtomb/bossarena)
 "KT" = (
 /obj/structure/table/wood,
@@ -4192,7 +4196,7 @@ Al
 Pl
 Pl
 Pl
-Ei
+Tm
 Tm
 Tm
 Tm
@@ -4290,7 +4294,7 @@ Al
 Al
 Al
 Pl
-Ei
+Tm
 Tm
 Tm
 sU
@@ -4490,7 +4494,7 @@ Pm
 Al
 Al
 Pl
-Ei
+Tm
 nY
 Ve
 KM
@@ -4590,7 +4594,7 @@ oq
 Al
 Al
 Pl
-Ei
+Tm
 Tm
 Ov
 Ve
@@ -4690,7 +4694,7 @@ Pm
 Pm
 Al
 Pl
-Ei
+Tm
 rY
 Ve
 mo
@@ -4890,7 +4894,7 @@ Pm
 Al
 Al
 Pl
-Ei
+Tm
 Tm
 Tm
 sU
@@ -4992,7 +4996,7 @@ Al
 Pl
 Pl
 Pl
-Ei
+Tm
 Tm
 Tm
 Tm
@@ -5288,7 +5292,7 @@ cE
 Al
 Al
 Pl
-Ei
+Tm
 IX
 IX
 IX
@@ -5388,7 +5392,7 @@ Al
 Al
 Al
 Pl
-Ei
+Tm
 uz
 FU
 FU
@@ -5488,7 +5492,7 @@ Al
 Al
 Al
 Pl
-Ei
+Tm
 FU
 FU
 FU
@@ -5588,7 +5592,7 @@ Al
 Al
 Al
 Pl
-Ei
+Tm
 uz
 FU
 FU
@@ -5688,7 +5692,7 @@ Al
 Al
 Al
 Pl
-Ei
+Tm
 je
 je
 je
@@ -5788,7 +5792,7 @@ Al
 Al
 Al
 Pl
-Ei
+Tm
 Ui
 ui
 oh
@@ -5888,8 +5892,8 @@ Al
 Al
 Al
 Pl
-Ei
-ma
+Tm
+nz
 FU
 FU
 je
@@ -5988,7 +5992,7 @@ ai
 ai
 Al
 Pl
-Ei
+Tm
 vV
 tR
 tR
@@ -6088,7 +6092,7 @@ ai
 ai
 Al
 Pl
-Ei
+Tm
 yU
 rb
 rb
@@ -6097,7 +6101,7 @@ rb
 rb
 lr
 rb
-nz
+KQ
 rb
 rb
 Kh
@@ -6188,8 +6192,8 @@ ai
 ai
 Al
 Pl
-Ei
-KQ
+Tm
+ma
 Sd
 Sd
 wQ
@@ -6288,7 +6292,7 @@ bJ
 Al
 Al
 Pl
-Ei
+Tm
 Mm
 FU
 FU
@@ -6388,7 +6392,7 @@ ai
 Al
 Al
 Pl
-Ei
+Tm
 dZ
 ov
 mP
@@ -6488,7 +6492,7 @@ Al
 Al
 Al
 Pl
-Ei
+Tm
 je
 je
 je
@@ -6588,7 +6592,7 @@ Al
 Al
 Al
 Pl
-Ei
+Tm
 uz
 FU
 FU
@@ -6688,7 +6692,7 @@ Al
 Al
 Al
 Pl
-Ei
+Tm
 FU
 FU
 FU
@@ -6788,8 +6792,8 @@ ai
 Al
 Al
 Pl
-Ei
-uz
+Tm
+cz
 FU
 FU
 aS
@@ -6888,8 +6892,8 @@ ai
 Al
 Al
 Pl
-Ei
-IX
+Tm
+Tm
 IX
 IX
 IX
