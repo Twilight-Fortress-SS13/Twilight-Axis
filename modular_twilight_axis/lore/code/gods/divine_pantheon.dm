@@ -63,7 +63,7 @@
 		"Первородная Дочь", "Первородной Дочери", "Первородной Дочери", "Первородную Дочь",
 		"Первородной Дочерью", "Первородной Дочери"
 	)
-	miracles = list(/datum/action/cooldown/spell/touch/orison								= CLERIC_ORI,
+/*	miracles = list(/datum/action/cooldown/spell/touch/orison								= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/invoked/TAignition						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/TAastrata_gaze						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAastratagrasp = CLERIC_T0,
@@ -77,7 +77,7 @@
 					/obj/effect/proc_holder/spell/invoked/TArevive							= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/immolation						= CLERIC_T4,
 					/obj/effect/proc_holder/spell/invoked/TAsunstrike						= CLERIC_T4,
-	)
+	)*/
 
 	domain = "Солнце, порядок, правосудие, вера, тактика и стратегия, плодородие."
 	desc = "Лучезарная Богиня Солнца, Его любящая дочь и та, кто приняла на себя тяжёлое бремя следить за Гриморией в отсутствие Отца и борющаяся с силами, что пытаются свергнуть мир во мрак и хаос."
