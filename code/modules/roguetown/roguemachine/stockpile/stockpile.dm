@@ -207,6 +207,12 @@
 		if(sound == TRUE)
 			playsound(loc, 'sound/misc/hiss.ogg', 100, FALSE, -1)
 		return
+	//TA start edit - TAT system
+	if(I.tat_trade_locked)
+		if(message)
+			say("TAT-issued goods cannot be deposited here.")
+		return
+	//TA end edit - TAT system
 
 	// Pre-check: farmer must have a Meister account. Otherwise the stockpile would silently
 	// eat their goods for no payment - do not scam walk-ins.
@@ -361,5 +367,4 @@
 		say("Bulk selling in progress...")
 		playsound(loc, 'sound/misc/hiss.ogg', 100, FALSE, -1)
 		playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-
 

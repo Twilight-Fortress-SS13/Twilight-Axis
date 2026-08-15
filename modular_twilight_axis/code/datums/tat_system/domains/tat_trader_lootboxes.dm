@@ -454,6 +454,11 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_otava_pool, list(
 	var/tier = TAT_TRADER_LOOTBOX_CHEAP
 	var/opened = FALSE
 
+/obj/item/tat_trader_lootbox/Initialize(mapload)
+	. = ..()
+	tat_trade_locked = TRUE
+	unmintable = TRUE
+
 /obj/item/tat_trader_lootbox/cheap
 	name = "cheap trader cache"
 	icon_state = "chest1"
@@ -521,6 +526,8 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_otava_pool, list(
 	var/obj/item/reward = new item_path(get_turf(user))
 	if(!reward)
 		return FALSE
+	reward.tat_trade_locked = TRUE
+	reward.unmintable = TRUE
 
 	if(!user.put_in_hands(reward))
 		reward.forceMove(get_turf(user))

@@ -27,7 +27,12 @@
 		return FALSE
 	tat_unmintable_special_items -= key
 	I.unmintable = TRUE
+	I.tat_trade_locked = TRUE
 	return TRUE
+
+/obj/item
+	/// Items issued by TAT cannot be converted into stockpile or navigator value.
+	var/tat_trade_locked = FALSE
 
 /datum/tat_items/proc/should_sale_lock_item_path(path)
 	if(!ispath(path, /obj/item))
@@ -42,6 +47,7 @@
 	if(!I || !should_sale_lock_item_path(path))
 		return FALSE
 	I.unmintable = TRUE
+	I.tat_trade_locked = TRUE
 	return TRUE
 
 /datum/tat_items/proc/reset()

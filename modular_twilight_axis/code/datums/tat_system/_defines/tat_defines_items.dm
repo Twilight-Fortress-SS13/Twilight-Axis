@@ -58,7 +58,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/neck/roguetown/psicross/silver/undivided = TAT_ITEM_ENTRY("Silver Tennite cross", 1, "misc", "weapon_supply", TAT_SUPPLY_SILVER, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/silver/necra = TAT_ITEM_ENTRY("Silver Necra Cross", 1, "misc", "weapon_supply", TAT_SUPPLY_SILVER, "cross"),\
 	/obj/item/clothing/neck/roguetown/psicross/silver/noc = TAT_ITEM_ENTRY("Silver Noc Cross", 1, "misc", "weapon_supply", TAT_SUPPLY_SILVER, "cross"), \
-	/obj/item/quiver/twilight_bullet/silver = TAT_ITEM_ENTRY("10 Silver Bullets", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "munition"), \
 	/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow = TAT_ITEM_ENTRY("Crossbow", 3, "weapon", TAT_UNLOCK_TYPE_TRAIT, "tat_ranged_supplier", "ranged"), \
 	/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Recurve Bow", 2, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_IRON, "ranged", "tat_ranged_supplier"), \
 	/obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Long Bow", 3, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_IRON, "ranged", "tat_ranged_supplier"), \
@@ -69,7 +68,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/quiver/bolt/pyro = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Pyro Bolts", 2, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_IRON, "munition", "tat_ranged_supplier"), \
 	/obj/item/quiver/bolt/water = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Water Bolts", 1, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_IRON, "munition", "tat_ranged_supplier"), \
 	/obj/item/quiver/bolt/light = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Light Bolts", 2, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_IRON, "munition", "tat_ranged_supplier"), \
-	/obj/item/quiver/bolt/silver = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Silver Bolts", 3, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_SILVER, "munition", "tat_ranged_supplier"), \
 	/obj/item/rogueweapon/eaglebeak = TAT_ITEM_ENTRY("Eagle's Beak", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/eaglebeak/lucerne = TAT_ITEM_ENTRY("Lucerne", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
 	/obj/item/rogueweapon/shovel/silver/preblessed = TAT_ITEM_ENTRY("Silver Shovel", 2, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "polearm"), \
