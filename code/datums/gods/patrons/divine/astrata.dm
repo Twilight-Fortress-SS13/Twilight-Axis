@@ -15,6 +15,7 @@
 					/datum/action/cooldown/spell/astrata/firecloak		    = CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/revive			= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/immolation		= CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/TAsunstrike		= CLERIC_T4, // TA EDIT
 	)
 	confess_lines = list(
 		"ASTRATA IS MY LIGHT!",
