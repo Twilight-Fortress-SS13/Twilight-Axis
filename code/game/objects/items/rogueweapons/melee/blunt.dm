@@ -24,6 +24,8 @@
 	item_d_type = "blunt"
 	desc = "A powerful blow that delivers Strength-scaling knockback and slowdown to the target. The amount of inflicted knockback scales off your Strength, ranging from X (1 tile) to XIV (4 tiles). </br>Cannot inflict any knockback or slowdown if your Strength is below X. </br>Cannot be used consecutively more than every 5 seconds on the same target. </br>Prone targets halve the knockback distance. </br>Not fully charging the attack limits knockback to 1 tile."
 	var/maxrange = 4
+	var/list/smash_sound_listeners // TA EDIT
+	var/smash_sound_channel	// TA EDIT
 
 /datum/intent/mace/smash/spec_on_apply_effect(mob/living/H, mob/living/user, params)
 	var/chungus_khan_str = user.STASTR
@@ -50,9 +52,27 @@
 		force = H.move_force)
 // Do not call handle_knockback like in knockback cuz that means it will hardstun.
 
-/datum/intent/mace/smash/prewarning()
+/datum/intent/mace/smash/prewarning() // TA EDIT START
 	if(mastermob)
-		playsound(mastermob, pick('sound/combat/wooshes/blunt/wooshhuge (2).ogg'), 100, FALSE)
+		stop_smash_sound()
+		smash_sound_channel = SSsounds.random_available_channel()
+		smash_sound_listeners = playsound(mastermob, pick('sound/combat/wooshes/blunt/wooshhuge (2).ogg'), 100, FALSE, channel = smash_sound_channel)
+
+/datum/intent/mace/smash/proc/stop_smash_sound()
+	if(smash_sound_channel)
+		for(var/mob/listener as anything in smash_sound_listeners)
+			if(!QDELETED(listener))
+				listener.stop_sound_channel(smash_sound_channel)
+	smash_sound_listeners = null
+	smash_sound_channel = null
+
+/datum/intent/mace/smash/on_mouse_up()
+	stop_smash_sound()
+	return ..()
+
+/datum/intent/mace/smash/Destroy()
+	stop_smash_sound()
+	return ..() // TA EDIT START END
 
 /datum/intent/mace/smash/lesser
 	name = "one-handed smash" //Exclusive to Warhammers, and other mace-styled bludgeons that can only be wielded in one hand.

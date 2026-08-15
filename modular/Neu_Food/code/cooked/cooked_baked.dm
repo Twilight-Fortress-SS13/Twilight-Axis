@@ -449,6 +449,26 @@
 	eat_effect = /datum/status_effect/buff/snackbuff
 
 /*	.................   Apple Bread   ................... */
+/obj/item/reagent_containers/food/snacks/rogue/applebread_half
+	name = "half-done apple dough"
+	desc = "It needs more apple slices!"
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "dough_apple"
+	list_reagents = list(/datum/reagent/consumable/nutriment = 1)
+	w_class = WEIGHT_CLASS_NORMAL
+	rotprocess = SHELFLIFE_DECENT
+
+/obj/item/reagent_containers/food/snacks/rogue/applebread_uncooked
+	name = "raw apple loaf"
+	desc = "Into the oven you go!"
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "applebread_uncooked"
+	slices_num = 0
+	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/applebread
+	list_reagents = list(/datum/reagent/consumable/nutriment = 1)
+	w_class = WEIGHT_CLASS_NORMAL
+	rotprocess = SHELFLIFE_DECENT
+
 /obj/item/reagent_containers/food/snacks/rogue/applebread
 	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
 	dish_type = DISH_BREAD

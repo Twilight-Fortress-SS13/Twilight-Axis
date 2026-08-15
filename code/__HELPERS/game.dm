@@ -320,8 +320,11 @@
 	return O
 
 /proc/remove_images_from_clients(image/I, list/show_to)
+	if(!show_to)
+		return
 	for(var/client/C as anything in show_to)
-		C.images -= I
+		if(C)
+			C.images -= I
 
 /proc/flick_overlay(image/I, list/show_to, duration)
 	if(!show_to || !length(show_to))

@@ -139,6 +139,17 @@
 	lockdir = dir
 	icon_state = base_state
 
+/obj/structure/roguewindow/openclose/reinforced/brick/update_icon()
+	..()
+	var/list/available_icon_states = icon_states(icon)
+	if(icon_state in available_icon_states)
+		return
+	var/fallback_state = replacetext(icon_state, "w-", "")
+	if(fallback_state in available_icon_states)
+		icon_state = fallback_state
+		return
+	icon_state = base_state
+
 /obj/structure/roguewindow/harem1
 	name = "shrafa window"
 	desc = "A latticed window of colored glass, made in Ranesheni style."

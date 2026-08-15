@@ -144,6 +144,8 @@
 
 	if(length(subclass_virtues))
 		for(var/virtue in subclass_virtues)
+			if(!virtue)
+				continue
 			apply_virtue(H, new virtue)
 
 	if(age_mod)

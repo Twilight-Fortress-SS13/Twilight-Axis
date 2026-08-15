@@ -199,6 +199,8 @@
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN, // That saiga was stolen. Probably.
 		/datum/skill/misc/tracking = SKILL_LEVEL_NOVICE,
 	)
+	subclass_virtues = list() //Unlike Disgraced Knight, you don't get a free mount.
+
 /datum/outfit/job/roguetown/wretch/desertergeneric/pre_equip(mob/living/carbon/human/H)
 	..()
 	if(H.mind)

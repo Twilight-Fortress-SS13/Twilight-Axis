@@ -37,6 +37,12 @@ SUBSYSTEM_DEF(familytree)
 	var/familytree_busy_retry_delay = 10 SECONDS
 	var/familytree_log_file
 	var/list/familytree_round_prefs_by_ckey = list()
+	var/familytree_search_id_counter = 0
+	var/list/familytree_search_ids = list()
+	var/list/familytree_retry_signatures = list()
+	var/list/familytree_retry_last_log = list()
+	var/list/familytree_retry_attempts = list()
+	var/list/familytree_retry_suppressed = list()
 	var/ftlog_counter = 0
 	var/ftlog_error_count = 0
 	var/ftlog_warn_count = 0
@@ -164,7 +170,8 @@ SUBSYSTEM_DEF(familytree)
 	H.familytree_setspouse_retries = 0
 	H.familytree_setspouse_timeout_offered = FALSE
 	H.familytree_setspouse_wait_started = 0
-	ftlog("target preference changed for [H.real_name]: '[old_target]' -> '[new_target]'")
+	familytree_reset_search_retry_state(H)
+	ftlog("target preference changed for [familytree_search_actor_summary(H)]: '[old_target]' -> '[new_target]'")
 	if(H.family_datum || H.familytree_opted_out || H.familytree_confirmation_pending)
 		return
 	if(!familytree_get_round_prefs(H, TRUE))
@@ -175,7 +182,7 @@ SUBSYSTEM_DEF(familytree)
 	if(H.familytree_assignment_scheduled)
 		return
 	H.familytree_assignment_scheduled = TRUE
-	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), 1 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), 1 SECONDS)
 
 /datum/controller/subsystem/familytree/proc/is_familytree_player_busy(mob/living/carbon/human/H)
 	if(!H || QDELETED(H))
@@ -268,7 +275,7 @@ SUBSYSTEM_DEF(familytree)
 	if(!H.familytree_module_signal_bound)
 		ftlog("stop_tracking SKIP: [H.real_name] not bound")
 		return
-	ftlog("stop_tracking: [H.real_name] ([H.ckey]) reason=[reason]")
+	ftlog("SEARCH_STOP: [familytree_search_actor_summary(H)] reason=[reason] spouse_count=[familytree_spouse_count(H)] incoming_spouse=[familytree_incoming_spouse_status(H)]", FTLOG_INFO)
 	H.familytree_module_signal_bound = FALSE
 	UnregisterSignal(H, list(COMSIG_MOB_LOGIN, COMSIG_MOB_LOGOUT, COMSIG_MOB_DEATH, COMSIG_LIVING_REVIVE, COMSIG_JOB_RECEIVED))
 
@@ -399,7 +406,7 @@ SUBSYSTEM_DEF(familytree)
 		var/timer = (target_name && length(target_name)) ? 3 : (rand(1, 30) + 10)
 		ftlog("try_queue LOCAL: [H.real_name] pref=[H.familytree_pref] timer=[timer]s")
 		H.familytree_assignment_scheduled = TRUE
-		addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), timer SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), timer SECONDS)
 		return
 
 	if(H.client && (H.mind?.assigned_role || H.job))
@@ -412,17 +419,21 @@ SUBSYSTEM_DEF(familytree)
 		failures = clamp(H.familytree_consecutive_match_failures, 0, 6)
 	return (10 + failures * 10) SECONDS
 
-/datum/controller/subsystem/familytree/proc/run_local_assignment(mob/living/carbon/human/H, status, busy_attempt = 0)
-	ftlog("run_local_assignment: [H?.real_name] ([H?.ckey]) status=[status] busy_attempt=[busy_attempt]")
+/datum/controller/subsystem/familytree/proc/run_local_assignment(mob/living/carbon/human/H, status, busy_attempt = 0, search_id_hint = 0, search_name_hint = null, search_ckey_hint = null)
+	var/search_id = H ? familytree_search_id(H) : search_id_hint
+	var/search_name = H?.real_name || search_name_hint || "null"
+	var/search_ckey = H?.ckey || search_ckey_hint || "null"
+	ftlog("run_local_assignment: search_id=[search_id] name='[search_name]' ckey='[search_ckey]' status=[status] busy_attempt=[busy_attempt]")
 	if(!H || QDELETED(H))
-		ftlog("run_local ABORT: null/qdel", FTLOG_ERROR)
+		var/abort_reason = H ? "qdel" : "null"
+		ftlog("run_local ABORT: search_id=[search_id] name='[search_name]' ckey='[search_ckey]' reason=[abort_reason]", FTLOG_ERROR)
 		return
 	var/effective_status = status
 	var/datum/preferences/P = H.client?.prefs
 	if(P && load_familytree_runtime_preferences(H, P))
 		effective_status = H.familytree_pref
 	if(H.familytree_opted_out || !familytree_pref_enabled(effective_status))
-		ftlog("run_local STOP: [H.real_name] familytree disabled before local assignment")
+		ftlog("SEARCH_CANCELLED: [familytree_search_actor_summary(H)] reason=familytree_disabled_or_optout", FTLOG_INFO)
 		H.familytree_assignment_scheduled = FALSE
 		stop_tracking_human(H, "familytree disabled for this character")
 		return

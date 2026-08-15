@@ -190,6 +190,9 @@
 
 	//	I.update_slot_icon()
 
+	if(!ismob(user))
+		user = null
+
 	if(!user && ismob(I.loc)) // TA EDIT START
 		user = I.loc
 
@@ -261,7 +264,7 @@
 
 // TA EDIT START
 
-/datum/component/holster/proc/signal_update_icon(atom/source, mob/living/user)
-	update_icon(user)
+/datum/component/holster/proc/signal_update_icon(atom/source)
+	update_icon(null)
 
 // TA EDIT END

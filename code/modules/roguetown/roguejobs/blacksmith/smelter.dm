@@ -126,8 +126,7 @@
 
 	if(attacking_item.firefuel)
 		. = ..()
-		if(!.) //False/null if using the item as fuel. If true, we want to try smelt it so go onto next segment.
-			return
+		return
 
 	if(attacking_item.smeltresult)
 		add_item(attacking_item, user) // Adds the item to the smelter's contained_items list, if it can be smelted.
