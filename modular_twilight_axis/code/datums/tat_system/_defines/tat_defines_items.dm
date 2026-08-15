@@ -69,7 +69,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/quiver/bolt/pyro = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Pyro Bolts", 2, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_IRON, "munition", "tat_ranged_supplier"), \
 	/obj/item/quiver/bolt/water = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Water Bolts", 1, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_IRON, "munition", "tat_ranged_supplier"), \
 	/obj/item/quiver/bolt/light = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Light Bolts", 2, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_IRON, "munition", "tat_ranged_supplier"), \
-	/obj/item/quiver/silver = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Silver Arrows", 3, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_SILVER, "munition", "tat_ranged_supplier"), \
 	/obj/item/quiver/bolt/silver = TAT_ITEM_ENTRY_REQUIRES_TRAIT("Silver Bolts", 3, "weapon", TAT_UNLOCK_TYPE_WEAPON_SUPPLY, TAT_SUPPLY_SILVER, "munition", "tat_ranged_supplier"), \
 	/obj/item/rogueweapon/eaglebeak = TAT_ITEM_ENTRY("Eagle's Beak", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/eaglebeak/lucerne = TAT_ITEM_ENTRY("Lucerne", 3, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "polearm"), \
