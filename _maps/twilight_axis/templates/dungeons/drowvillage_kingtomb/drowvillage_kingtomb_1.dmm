@@ -160,8 +160,7 @@
 "cq" = (
 /obj/structure/bars/passage/steel{
 	redstone_id = "deadking_bossarena_passage1";
-	max_integrity = 99999;
-	rotation_direction = nullss
+	max_integrity = 99999
 	},
 /turf/open/floor/rogue/carpet/lord/right,
 /area/rogue/under/kingtomb/bossarena)
@@ -305,8 +304,7 @@
 "dS" = (
 /obj/structure/bars/passage/steel{
 	redstone_id = "deadking_bossarena_passage2";
-	max_integrity = 99999;
-	rotation_direction = nullss
+	max_integrity = 99999
 	},
 /turf/open/floor/rogue/carpet/lord/right,
 /area/rogue/under/kingtomb/bossarena)
@@ -1225,8 +1223,7 @@
 "qg" = (
 /obj/structure/bars/passage/steel{
 	redstone_id = "deadking_bossarena_passage1";
-	max_integrity = 99999;
-	rotation_direction = nullss
+	max_integrity = 99999
 	},
 /turf/open/floor/rogue/carpet/lord/center,
 /area/rogue/under/kingtomb/bossarena)
@@ -3084,8 +3081,7 @@
 "Ue" = (
 /obj/structure/bars/passage/steel{
 	redstone_id = "deadking_bossarena_passage2";
-	max_integrity = 99999;
-	rotation_direction = nullss
+	max_integrity = 99999
 	},
 /turf/open/floor/rogue/carpet/lord/left,
 /area/rogue/under/kingtomb/bossarena)
@@ -3257,8 +3253,7 @@
 "VZ" = (
 /obj/structure/bars/passage/steel{
 	redstone_id = "deadking_bossarena_passage2";
-	max_integrity = 99999;
-	rotation_direction = nullss
+	max_integrity = 99999
 	},
 /turf/open/floor/rogue/carpet/lord/center,
 /area/rogue/under/kingtomb/bossarena)
