@@ -364,8 +364,7 @@
 "eB" = (
 /obj/structure/bars/passage/steel{
 	redstone_id = "deadking_bossarena_passage1";
-	max_integrity = 99999;
-	rotation_direction = nullss
+	max_integrity = 99999
 	},
 /turf/open/floor/rogue/carpet/lord/left,
 /area/rogue/under/kingtomb/bossarena)
