@@ -68,7 +68,7 @@
 
 /datum/charflaw/addiction/on_mob_creation(mob/user)
 	. = ..()
-	time = rand(time - 5 MINUTES, time + 5 MINUTES)
+	time = rand(max(round(time / 2) - 5 MINUTES, 1), max(round(time / 2) + 5 MINUTES, 1)) // TA EDIT
 	next_sate = world.time + time
 
 /datum/charflaw/addiction/flaw_on_life(mob/user)
@@ -82,6 +82,10 @@
 	var/oldsated = sated
 	if(oldsated)
 		if(next_sate && world.time >= next_sate)
+			for(var/datum/charflaw/addiction/vice in H.charflaws) // TA EDIT START
+				if(vice != src && !vice.sated)
+					next_sate = world.time + (5 MINUTES)
+					return // TA EDIT END
 			sated = FALSE
 	if(sated != oldsated)
 		unsate_time = world.time
@@ -261,6 +265,7 @@
 	icon_state = "masochist"
 
 /datum/charflaw/addiction/masochist/on_mob_creation(mob/living/living)
+	. = ..() // TA EDIT
 	living.pain_threshold += 10
 
 /// LOVEFIEND

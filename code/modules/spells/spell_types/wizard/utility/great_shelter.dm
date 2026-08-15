@@ -89,8 +89,9 @@
 			if("hearth")
 				new /obj/machinery/light/rogue/hearth/conjured(T)
 				new /obj/machinery/light/rogue/oven/conjured(T)
-			if("empty")
-				continue
+
+		if(tile_type == "bed" || tile_type == "hearth" || (tile_type == "empty" && offset[2] >= 0))
+			new /obj/effect/shelter_roof(T)
 
 	return TRUE
 
@@ -125,6 +126,29 @@
 /obj/structure/forcefield_weak/shelter_wall/CanPass(atom/movable/mover, turf/target)
 	if(mover == caster)
 		return TRUE
+	return ..()
+
+/obj/effect/shelter_roof
+	name = "arcyne roof"
+	anchored = TRUE
+	density = FALSE
+	mouse_opacity = 0
+	invisibility = 101
+	var/turf/covered_turf
+	var/previous_weatherproof = FALSE
+
+/obj/effect/shelter_roof/Initialize(mapload)
+	. = ..()
+	covered_turf = get_turf(src)
+	if(covered_turf?.outdoor_effect)
+		previous_weatherproof = covered_turf.outdoor_effect.weatherproof
+		covered_turf.outdoor_effect.weatherproof = TRUE
+	QDEL_IN(src, SHELTER_DURATION)
+
+/obj/effect/shelter_roof/Destroy(force)
+	if(covered_turf?.outdoor_effect)
+		covered_turf.outdoor_effect.weatherproof = previous_weatherproof
+	covered_turf = null
 	return ..()
 
 /obj/structure/bed/rogue/conjured

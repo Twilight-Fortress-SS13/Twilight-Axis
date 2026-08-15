@@ -113,6 +113,10 @@
 
 /obj/machinery/light/LateInitialize()
 	. = ..()
+
+	if(QDELETED(src))
+		return
+
 	addtimer(CALLBACK(src, PROC_REF(update), 0), 1)
 
 /obj/machinery/light/Destroy()

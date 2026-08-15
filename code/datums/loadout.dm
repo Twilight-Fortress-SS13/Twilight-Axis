@@ -4503,14 +4503,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donat_tier = 2
 
 /datum/loadout_item/donator/chivalre_aasimar
-	name = "Donator Kit - Aasimari Equipment - Required: Steel Cuirass or Fluted Steel Cuirass, Visored Sallet, Steel Boots, Plate Chausses, Steel Bracers, Plate Gauntlets, Bevor, Partizan, Boar Spear, Longsword or Steel Mace"
+	name = "Donator Kit - Aasimari Equipment(Only Female, No Small Races) - Required: Steel Cuirass or Fluted Steel Cuirass, Visored Sallet, Steel Boots, Plate Chausses, Steel Bracers, Plate Gauntlets, Bevor, Partizan, Boar Spear, Longsword or Steel Mace"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/chivalre_aasimar
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/donator/chivalre_aasimar_sack
-	name = "Donator Kit - Aasimari Equipment, Sackful"
+	name = "Donator Kit - Aasimari Equipment(Only Female, No Small Races), Sackful"
 	category = list("Разное", "Донат")
 	path = /obj/item/storage/roguebag/donator_chivalre_elixirs
 	donatitem = TRUE

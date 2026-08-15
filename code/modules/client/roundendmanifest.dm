@@ -35,6 +35,8 @@
 		normalized_actors_list[department] = list()
 
 	for(var/department in GLOB.actors_list)
+		if(department == "Migrants") // TA EDIT START
+			continue // TA EDIT END
 		var/normalized_department = department
 		if(normalized_department == "City Watch" || normalized_department == "Vanguard" || normalized_department == "Retinue")
 			normalized_department = "Garrison"

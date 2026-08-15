@@ -35,7 +35,7 @@
 	var/delay = max(10 SECONDS, familytree_relative_join_delay_remaining() + jitter)
 	ftlog("WAIT_JOIN_PHASE: [H.real_name] reason=[reason], scheduling re-assignment in [delay / 10]s")
 	H.familytree_assignment_scheduled = TRUE
-	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), delay)
+	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), delay)
 
 /datum/controller/subsystem/familytree/proc/wait_for_join_create_phase(mob/living/carbon/human/H, reason)
 	if(!H || QDELETED(H) || H.family_datum || H.familytree_opted_out)
@@ -47,7 +47,7 @@
 	var/delay = max(10 SECONDS, familytree_join_create_delay_remaining() + jitter)
 	ftlog("WAIT_JOIN_CREATE_PHASE: [H.real_name] reason=[reason], scheduling re-assignment in [delay / 10]s")
 	H.familytree_assignment_scheduled = TRUE
-	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), delay)
+	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), delay)
 
 /datum/controller/subsystem/familytree/proc/familytree_online_player_count()
 	var/count = 0
@@ -164,7 +164,7 @@
 				return
 			ftlog("AddLocal: [H.real_name] favorite not found, waiting 60s")
 			H.familytree_assignment_scheduled = TRUE
-			addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, status), 60 SECONDS)
+			addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, status, 0, familytree_search_id(H), H.real_name, H.ckey), 60 SECONDS)
 			return
 
 	var/can_try_relative_join = relative_join_phase_open && (family_mode & FAMILYTREE_MODE_JOIN)
@@ -1718,7 +1718,7 @@
 		viable_spouses += H
 	ftlog("WAIT_NEW_FAMILY: [H.real_name] reason=[reason], scheduling re-assignment in 20s")
 	H.familytree_assignment_scheduled = TRUE
-	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), 20 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), 20 SECONDS)
 
 /datum/controller/subsystem/familytree/proc/FindNewlyWedMatch(mob/living/carbon/human/H)
 	if(!H)
@@ -1732,6 +1732,8 @@
 		viable_spouses += H
 
 	var/reject_mask = 0
+	var/list/reject_counts = list()
+	var/list/closest_state = list("stage" = -1)
 	var/list/potential_matches = list()
 	for(var/mob/living/carbon/human/candidate as anything in viable_spouses.Copy())
 		if(!candidate || QDELETED(candidate))
@@ -1742,48 +1744,79 @@
 		if(candidate.family_datum)
 			viable_spouses -= candidate
 			reject_mask |= FTREJ_N_BLOCK
+			familytree_reject_count_add(reject_counts, "family")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 1, "already_in_family")
 			continue
 		if(candidate.familytree_opted_out)
 			viable_spouses -= candidate
 			reject_mask |= FTREJ_N_OPTOUT
+			familytree_reject_count_add(reject_counts, "optout")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 2, "optout")
 			continue
 		if(!familytree_is_new_family_candidate(candidate))
 			viable_spouses -= candidate
 			reject_mask |= FTREJ_N_BLOCK
+			familytree_reject_count_add(reject_counts, "block")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 3, "not_new_family_candidate")
 			continue
 		if(!familytree_new_family_pair_eligible(H, candidate))
 			reject_mask |= FTREJ_N_BLOCK
+			familytree_reject_count_add(reject_counts, "block")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 4, "pair_ineligible")
 			continue
 		var/relation = familytree_new_family_pair_relation(H, candidate)
 		if(!relation)
 			reject_mask |= FTREJ_N_BLOCK
+			familytree_reject_count_add(reject_counts, "relation")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 5, "no_relation")
 			continue
 		if(candidate.familytree_confirmation_pending)
 			reject_mask |= FTREJ_N_BLOCK
+			familytree_reject_count_add(reject_counts, "confirmation")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 6, "confirmation_pending")
 			continue
 		var/cand_block = get_familytree_runtime_block_reason(candidate, TRUE)
 		if(cand_block)
 			viable_spouses -= candidate
 			reject_mask |= FTREJ_N_BLOCK
+			familytree_reject_count_add(reject_counts, "runtime")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 7, cand_block)
 			continue
 		if(familytree_pair_blocked(H, candidate))
 			reject_mask |= FTREJ_N_BLOCK
+			familytree_reject_count_add(reject_counts, "blocked")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 8, "blocked_pair")
 			continue
 		if(relation == "spouse" && !familytree_polygamy_compatible(H, candidate))
 			reject_mask |= FTREJ_N_POLY
+			familytree_reject_count_add(reject_counts, "poly")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 9, "poly")
 			continue
 		if(!familytree_new_family_relation_valid(H, candidate, relation))
 			reject_mask |= FTREJ_N_BLOCK
+			familytree_reject_count_add(reject_counts, "relation")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 10, "relation_invalid")
 			continue
 		var/pref_reject_mask = familytree_new_family_pair_pref_reject_mask(H, candidate)
 		if(pref_reject_mask)
 			reject_mask |= pref_reject_mask
+			if(pref_reject_mask & FTREJ_N_PRONOUNS)
+				familytree_reject_count_add(reject_counts, "pronouns")
+			if(pref_reject_mask & FTREJ_N_SPECIES)
+				familytree_reject_count_add(reject_counts, "species")
+			if(pref_reject_mask & FTREJ_N_TIER)
+				familytree_reject_count_add(reject_counts, "tier")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 11, ftreject_decode_newlywed(pref_reject_mask))
 			continue
 		if(!familytree_estates_compatible(H, candidate))
 			reject_mask |= FTREJ_N_ESTATE
+			familytree_reject_count_add(reject_counts, "estate")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 12, "estate")
 			continue
 		if(!familytree_name_lock_allows_pair(H, candidate))
 			reject_mask |= FTREJ_N_SETSPOUSE
+			familytree_reject_count_add(reject_counts, "setspouse")
+			familytree_consider_closest_candidate(closest_state, candidate, null, 13, "setspouse")
 			continue
 		var/priority = 0
 		if(familytree_mutual_setspouse(H, candidate))
@@ -1795,7 +1828,7 @@
 				priority += 10
 		potential_matches += list(list(candidate, priority))
 
-	ftlog("FindNewlyWedMatch REJECTS [H.real_name] (pool=[viable_spouses.len]): mask=[reject_mask] ([ftreject_decode_newlywed(reject_mask)]) -> matches=[potential_matches.len]", FTLOG_DEBUG)
+	familytree_log_match_retry(H, "FindNewlyWedMatch", "pool", viable_spouses.len, reject_mask, ftreject_decode_newlywed(reject_mask), potential_matches.len, reject_counts, closest_state)
 
 	if(!potential_matches.len)
 		return null
@@ -1812,21 +1845,27 @@
 
 	if(!best_matches.len)
 		return null
-	return pick(best_matches)
+	var/mob/living/carbon/human/chosen = pick(best_matches)
+	ftlog("FindNewlyWedMatch MATCH: seeker={[familytree_search_actor_summary(H)]} candidate={[familytree_search_actor_summary(chosen)]} matches=[potential_matches.len] priority=[best_priority]", FTLOG_INFO)
+	return chosen
 
 /datum/controller/subsystem/familytree/proc/FindFamilyMatch(mob/living/carbon/human/H)
 	if(!H)
 		return null
 	var/houses_scanned = 0
 	var/reject_mask = 0
+	var/list/reject_counts = list()
+	var/list/closest_state = list("stage" = -1)
 	var/list/potential_matches = list()
 
 	for(var/datum/heritage/house as anything in families)
 		if(house.closed)
 			reject_mask |= FTREJ_F_CLOSED
+			familytree_reject_count_add(reject_counts, "closed")
 			continue
 		if(!house_relative_compatible(house, H))
 			reject_mask |= FTREJ_F_RACE
+			familytree_reject_count_add(reject_counts, "race")
 			continue
 		houses_scanned++
 		for(var/datum/family_member/member as anything in house.members)
@@ -1834,41 +1873,63 @@
 				continue
 			if(member.person.familytree_confirmation_pending)
 				reject_mask |= FTREJ_F_OFFLINE
+				familytree_reject_count_add(reject_counts, "offline")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 1, "confirmation_pending")
 				continue
 			if(!familytree_polygamy_compatible(H, member.person))
 				reject_mask |= FTREJ_F_POLY
+				familytree_reject_count_add(reject_counts, "poly")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 2, "poly")
 				continue
 			if(!member.person.client)
 				reject_mask |= FTREJ_F_OFFLINE
+				familytree_reject_count_add(reject_counts, "offline")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 3, "offline")
 				continue
 			if(!familytree_name_lock_allows_pair(H, member.person))
 				reject_mask |= FTREJ_F_SETSPOUSE
+				familytree_reject_count_add(reject_counts, "setspouse")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 4, "setspouse")
 				continue
 			var/soft_reject_mask = familytree_pair_soft_pref_reject_mask(H, member.person)
 			if(soft_reject_mask & FTREJ_N_PRONOUNS)
 				reject_mask |= FTREJ_F_PRONOUNS
+				familytree_reject_count_add(reject_counts, "pronouns")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 5, "pronouns")
 				continue
 			if(soft_reject_mask & FTREJ_N_SPECIES)
 				reject_mask |= FTREJ_F_SPECIES
+				familytree_reject_count_add(reject_counts, "species")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 6, "species")
 				continue
 			if(!familytree_estates_compatible(H, member.person))
 				reject_mask |= FTREJ_F_ESTATE
+				familytree_reject_count_add(reject_counts, "estate")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 7, "estate")
 				continue
 			if(!familytree_role_tiers_compatible(H, member.person))
 				reject_mask |= FTREJ_F_TIER
+				familytree_reject_count_add(reject_counts, "tier")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 8, "tier")
 				continue
 			if(familytree_pref_is_join_only(member.person.familytree_pref))
 				reject_mask |= FTREJ_F_PARTIAL
+				familytree_reject_count_add(reject_counts, "partial")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 9, "partial")
 				continue
 			if(member.person.familytree_opted_out)
 				reject_mask |= FTREJ_F_OPTOUT
+				familytree_reject_count_add(reject_counts, "optout")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 10, "optout")
 				continue
 			if(familytree_pair_blocked(H, member.person))
 				reject_mask |= FTREJ_F_OPTOUT
+				familytree_reject_count_add(reject_counts, "blocked")
+				familytree_consider_closest_candidate(closest_state, member.person, house, 11, "blocked_pair")
 				continue
 			potential_matches += list(list(house, member, house.member_nodes.len))
 
-	ftlog("FindFamilyMatch REJECTS [H.real_name] (houses=[families.len]): mask=[reject_mask] ([ftreject_decode_family(reject_mask)]) -> matches=[potential_matches.len]", potential_matches.len ? FTLOG_DEBUG : FTLOG_WARN)
+	familytree_log_match_retry(H, "FindFamilyMatch", "houses", families.len, reject_mask, ftreject_decode_family(reject_mask), potential_matches.len, reject_counts, closest_state)
 	if(!potential_matches.len)
 		return null
 
@@ -1892,7 +1953,7 @@
 	var/list/chosen = pick(best_matches)
 	var/datum/heritage/chosen_house = chosen[1]
 	var/datum/family_member/chosen_member = chosen[2]
-	ftlog("FindFamilyMatch [H.real_name] -> [chosen_member.person.real_name] in '[chosen_house.housename]' (scanned=[houses_scanned]h matches=[potential_matches.len] chosen_size=[chosen[3]] preferred_min=[FAMILYTREE_PREFERRED_MIN_HOUSE_SIZE])", FTLOG_DEBUG)
+	ftlog("FindFamilyMatch MATCH: seeker={[familytree_search_actor_summary(H)]} candidate={[familytree_search_actor_summary(chosen_member.person)]} house='[chosen_house.housename]' scanned=[houses_scanned] matches=[potential_matches.len] chosen_size=[chosen[3]] preferred_min=[FAMILYTREE_PREFERRED_MIN_HOUSE_SIZE]", FTLOG_INFO)
 	return list(chosen_house, chosen_member)
 
 /datum/controller/subsystem/familytree/proc/AssignNewlyWed(mob/living/carbon/human/H)
@@ -2102,7 +2163,7 @@
 		return
 	ftlog("WAIT_RELATIVE: [H.real_name] reason=[reason], scheduling re-assignment in 20s")
 	H.familytree_assignment_scheduled = TRUE
-	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), 20 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), 20 SECONDS)
 
 /datum/controller/subsystem/familytree/proc/wake_waiting_relative_seekers(datum/heritage/house)
 	if(!house || house.closed)
@@ -2136,7 +2197,7 @@
 	ftlog("RETRY: [H.real_name] reason=[reason], scheduling re-assignment in 10s")
 	to_chat(H, span_warning("Не удалось найти подходящую семью. Система попробует снова."))
 	H.familytree_assignment_scheduled = TRUE
-	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), 10 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), 10 SECONDS)
 
 /datum/controller/subsystem/familytree/proc/schedule_house_member_resync(datum/heritage/house, delay = 1 SECONDS, attempt = 1)
 	if(!house || QDELETED(house))

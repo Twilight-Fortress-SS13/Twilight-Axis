@@ -124,6 +124,9 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 	if(!isliving(user) && !ismovableatom(parent))
 		CRASH("Special intent called with non-living parent AND non-movable atom source.")
 
+	if(user && (user.stat || !(user.mobility_flags & MOBILITY_STAND) || !(user.mobility_flags & MOBILITY_MOVE)))
+		return FALSE
+
 	howner = user
 	iparent = parent
 
