@@ -120,6 +120,8 @@
 					minion.faction += "neutral"
 					minion.pet_passive = TRUE
 					msg = "only retaliate when attacked."
+		minion.ai_controller.nudge_target_scan() // TA EDIT
+		minion.ai_controller.wake_for_combat() // TA EDIT
 
 	if(count > 0)
 		to_chat(owner, "Ordered [count] minions to [msg]")

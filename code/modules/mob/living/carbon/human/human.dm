@@ -532,41 +532,42 @@
 			hud_used.bloods.cut_overlays()
 			if(usedloss <= 0)
 				hud_used.bloods.icon_state = "dam0"
-				if(toxloss > 0)
-					var/toxoverlay
-					switch(toxloss)
-						if(1 to 20)
-							toxoverlay = "toxloss20"
-						if(21 to 49)
-							toxoverlay = "toxloss40"
-						if(50 to 79)
-							toxoverlay = "toxloss60"
-						if(80 to 99)
-							toxoverlay = "toxloss80"
-						if(100 to 999)
-							toxoverlay = "toxloss100"
-					hud_used.bloods.add_overlay(toxoverlay)
-
-				if(oxyloss > 0)
-					var/oxyoverlay
-					switch(oxyloss)
-						if(1 to 20)
-							oxyoverlay = "oxyloss20"
-						if(21 to 49)
-							oxyoverlay = "oxyloss40"
-						if(50 to 79)
-							oxyoverlay = "oxyloss60"
-						if(80 to 99)
-							oxyoverlay = "oxyloss80"
-						if(100 to 999)
-							oxyoverlay = "oxyloss100"
-					hud_used.bloods.add_overlay(oxyoverlay)
-			else
+			else // TA EDIT START
 				var/used = round(usedloss, 10)
 				if(used <= 80)
 					hud_used.bloods.icon_state = "dam[used]"
 				else
 					hud_used.bloods.icon_state = "damelse"
+
+			if(toxloss > 0)
+				var/toxoverlay
+				switch(toxloss)
+					if(1 to 20)
+						toxoverlay = "toxloss20"
+					if(21 to 49)
+						toxoverlay = "toxloss40"
+					if(50 to 79)
+						toxoverlay = "toxloss60"
+					if(80 to 99)
+						toxoverlay = "toxloss80"
+					if(100 to 999)
+						toxoverlay = "toxloss100"
+				hud_used.bloods.add_overlay(toxoverlay)
+
+			if(oxyloss > 0)
+				var/oxyoverlay
+				switch(oxyloss)
+					if(1 to 20)
+						oxyoverlay = "oxyloss20"
+					if(21 to 49)
+						oxyoverlay = "oxyloss40"
+					if(50 to 79)
+						oxyoverlay = "oxyloss60"
+					if(80 to 99)
+						oxyoverlay = "oxyloss80"
+					if(100 to 999)
+						oxyoverlay = "oxyloss100"
+				hud_used.bloods.add_overlay(oxyoverlay) // TA EDIT END
 			if(painpercent > 0)
 				var/painoverlay
 				switch(painpercent)

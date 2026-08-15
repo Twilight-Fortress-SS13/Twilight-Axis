@@ -205,6 +205,7 @@
 	var/oldicon_state
 	var/olddesc
 	var/oldname
+	var/olddropshrink
 	var/ready = TRUE
 	var/timing_id
 
@@ -219,22 +220,32 @@
 	icon_state = oldicon_state
 	name = oldname
 	desc = olddesc
+	dropshrink = olddropshrink
 	ready = TRUE
 	if(timing_id)
 		deltimer(timing_id)
 		timing_id = null
 
 /obj/item/mimictrinket/attack_obj(obj/target, mob/living/user)
+	if(istype(target, /obj/structure)) // TA EDIT START
+		to_chat(user, span_warning("[src] cannot mimic structures."))
+		return // TA EDIT END
 	if(ready)
 		to_chat(user,span_notice("[src] takes the form of [target]!"))
 		oldicon = icon
 		oldicon_state = icon_state
 		olddesc = desc
 		oldname = name
+		olddropshrink = dropshrink
 		icon = target.icon
 		icon_state = target.icon_state
 		name = target.name
 		desc = target.desc
+		if(istype(target, /obj/item))
+			var/obj/item/target_item = target
+			dropshrink = target_item.dropshrink
+		else
+			dropshrink = 1
 		ready = FALSE
 		timing_id = addtimer(CALLBACK(src, PROC_REF(revert), user), duration,TIMER_STOPPABLE) // Minus two so we play the sound and decap faster
 

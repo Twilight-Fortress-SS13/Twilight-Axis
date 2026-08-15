@@ -1263,6 +1263,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
 
+/datum/loadout_item/psicross/gronnspider
+	name = "Spider Talisman"
+	category = list("Аксессуары")
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+
 /datum/loadout_item/psicross/gronnbaotha
 	name = "Leopard Talisman"
 	category = list("Аксессуары")
@@ -4503,18 +4508,18 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donat_tier = 2
 
 /datum/loadout_item/donator/chivalre_aasimar
-	name = "Donator Kit - Aasimari Equipment - Required: Steel Cuirass or Fluted Steel Cuirass, Visored Sallet, Steel Boots, Plate Chausses, Steel Bracers, Plate Gauntlets, Bevor, Partizan, Boar Spear, Longsword or Steel Mace"
+	name = "Donator Kit - Aasimari Equipment(Only Female, No Small Races) - Required: Steel Cuirass or Fluted Steel Cuirass, Visored Sallet, Steel Boots, Plate Chausses, Steel Bracers, Plate Gauntlets, Bevor, Partizan, Boar Spear, Longsword or Steel Mace"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/chivalre_aasimar
 	donatitem = TRUE
-	donat_tier = 2
+	donat_tier = 1
 
 /datum/loadout_item/donator/chivalre_aasimar_sack
-	name = "Donator Kit - Aasimari Equipment, Sackful"
+	name = "Donator Kit - Aasimari Equipment(Only Female, No Small Races), Sackful"
 	category = list("Разное", "Донат")
 	path = /obj/item/storage/roguebag/donator_chivalre_elixirs
 	donatitem = TRUE
-	donat_tier = 1
+	donat_tier = 2
 
 /datum/loadout_item/donator/truill_flowerblade
 	name = "Donator Kit - Beflowered Longsword - Required: Enduring Longsword, Psydonic Longsword or Anointed Longsword"

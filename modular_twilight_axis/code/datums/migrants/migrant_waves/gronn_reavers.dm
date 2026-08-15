@@ -7,7 +7,12 @@
 /datum/migrant_wave/gronn_reavers
 	name = "Gronnian Reavers"
 	track = MIGRANT_TRACK_SPECIAL
-	weight = 20
+	weight = 6
+	min_round_time = 40 MINUTES
+	min_pop = 40
+	max_spawns = 1
+	triumph_threshold = 100
+	triumph_weight_multiplier = 4
 	required_roles = list(
 		/datum/migrant_role/gronn/jarl = 1,
 	)
@@ -17,7 +22,6 @@
 		/datum/migrant_role/gronn/tideweaver = 1,
 		/datum/migrant_role/gronn/thrall = 2,
 	)
-	min_optional_fills = 1
 	greet_text = "You are a warband of Gronnian reavers, raiders from the cold north who have come ashore seeking plunder, glory, or a new place to call your own. Stick close to your jarl and remember: the weak serve the strong."
 
 /datum/migrant_role/gronn/jarl
@@ -59,7 +63,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	category_tags = list(CTAG_DISABLED)
-	min_pq = -100
+	min_pq = 0
 	traits_applied = list(TRAIT_STEELHEARTED)
 	subclass_languages = list(/datum/language/gronnic)
 	origin_limits = list(/datum/virtue/origin/gronn)
@@ -72,6 +76,7 @@
 	cmode_music = 'sound/music/combat_knight.ogg'
 	category_tags = list(CTAG_GRONN_JARL)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_NOBLE, TRAIT_HEAVYARMOR)
+	min_pq = 40
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 3,
@@ -136,6 +141,7 @@
 	category_tags = list(CTAG_GRONN_TIDEWEAVER)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT, TRAIT_ARCYNE)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 0, "ward" = TRUE)
+	min_pq = 30
 	subclass_stats = list(
 		STATKEY_CON = 2,
 		STATKEY_WIL = 2,
@@ -204,6 +210,7 @@
 	cmode_music = 'sound/music/combat_hornofthebeast.ogg'
 	category_tags = list(CTAG_GRONN_VOLFSKIN)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_ORGAN_EATER, TRAIT_DUALWIELDER, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
+	min_pq = 30
 	subclass_stats = list(
 		STATKEY_CON = 3,
 		STATKEY_WIL = 3,
@@ -261,6 +268,7 @@
 	cmode_music = 'sound/music/combat_vagarian.ogg'
 	category_tags = list(CTAG_GRONN_HUSCARL)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
+	min_pq = 20
 	subclass_stats = list(
 		STATKEY_WIL = 3,
 		STATKEY_CON = 3,
@@ -322,6 +330,7 @@
 	cmode_music = 'sound/music/combat_vagarian.ogg'
 	category_tags = list(CTAG_GRONN_THRALL)
 	traits_applied = list(TRAIT_STEELHEARTED)
+	min_pq = 0
 	subclass_stats = list(
 		STATKEY_CON = -2,
 		STATKEY_WIL = 1,

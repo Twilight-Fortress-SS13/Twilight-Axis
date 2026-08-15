@@ -177,16 +177,7 @@
 			slot_job.spawn_positions = 0
 			return
 
-		var/min_players = SSgamemode.story_antag_min_players(antag_path)
-		var/slot_scaling = SSgamemode.story_antag_scaling_step(antag_path)
-		slots = SSgamemode.storyteller_scale_slots(
-			max_slots,
-			player_count,
-			FALSE,
-			slot_scaling,
-			min_players,
-			SSgamemode.hard_antag_mult(),
-		)
+		slots = max_slots // TA EDIT
 
 	slots = SSgamemode.story_antag_slots(slots, antag_path, player_count)
 

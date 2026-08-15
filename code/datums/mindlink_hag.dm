@@ -17,22 +17,25 @@
 	if(!message || !active) return
 
 	// Break logic
-	if(findtext(message, ",mst", 1, 5))
-		to_chat(members, span_notice("The coven web is severed by [speaker]."))
+	if(findtext(message, ",mst", 1, 5) == 1) // TA EDIT START
 		speech_args[SPEECH_MESSAGE] = null
+		to_chat(members, span_notice("The coven web is severed by [speaker]."))
 		qdel(src)
-		return
+		return // TA EDIT END
 
 	// Speech logic
-	if(findtext(message, ",m", 1, 3))
+	if(findtext(message, ",m", 1, 3) == 1) // TA EDIT START
+		speech_args[SPEECH_MESSAGE] = null
 		message = trim(copytext(message, 3))
-		message = span_centcomradio("[message]")
-		var/formatted = "The voice of [speaker] echoes, \"<i>[capitalize(message)]</i>\"."
+		if(!length(message))
+			return
+		var/formatted = span_centcomradio("The voice of [speaker] echoes, \"<i>[capitalize(message)]</i>\".")
 
 		for(var/mob/living/M in members)
+			if(QDELETED(M))
+				continue
 			// Slightly more secretive!
 			M.playsound_local(M, 'sound/magic/mindlink.ogg', 75, TRUE)
-			M.audible_message(formatted, hearing_distance = 0, runechat_message = message, custom_spans = list("mindlink", "italic"))
+			to_chat(M, formatted)
 
-		speaker.log_talk(message, LOG_SAY, tag="Coven Link")
-		speech_args[SPEECH_MESSAGE] = null
+		speaker.log_talk(message, LOG_SAY, tag="Coven Link") // TA EDIT END

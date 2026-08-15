@@ -173,16 +173,22 @@
 		mode.forced_next_events -= track
 		are_forced = TRUE
 	else
-		mode.update_crew_infos()
+		var/current_players // TA EDIT START
+		if(mode.roundstart_prejob_roll)
+			mode.calculate_ready_players()
+			current_players = mode.ready_players
+		else
+			mode.update_crew_infos()
+			current_players = mode.active_players // TA EDIT END
 		var/pop_required = mode.min_pop_thresholds[track]
-		if(mode.active_players < pop_required)
-			message_admins("Storyteller failed to pick an event for track of [track] due to insufficient population. (required: [pop_required] active pop for [track]. Current: [mode.active_players])")
+		if(current_players < pop_required) // TA EDIT
+			message_admins("Storyteller failed to pick an event for track of [track] due to insufficient population. (required: [pop_required] active pop for [track]. Current: [current_players])") // TA EDIT
 			mode.event_track_points[track] *= TRACK_FAIL_POINT_PENALTY_MULTIPLIER
 			return
 		calculate_weights(track)
 		var/list/valid_events = list()
 		var/list/invalid_reasons = list()
-		var/roundstart_players_amt = get_active_player_count(alive_check = TRUE, afk_check = TRUE, human_check = TRUE)
+		var/roundstart_players_amt = mode.roundstart_prejob_roll ? mode.ready_players : get_active_player_count(alive_check = TRUE, afk_check = TRUE, human_check = TRUE) // TA EDIT
 		// Determine which events are valid to pick
 		for(var/datum/round_event_control/event as anything in mode.event_pools[track])
 			var/players_amt = roundstart_players_amt

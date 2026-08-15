@@ -611,10 +611,12 @@
 	return FALSE
 
 /// Embeds an object in this bodypart
-/obj/item/bodypart/proc/add_embedded_object(obj/item/embedder, silent = FALSE, crit_message = FALSE, ranged = FALSE)
+/obj/item/bodypart/proc/add_embedded_object(obj/item/embedder, silent = FALSE, crit_message = FALSE, ranged = FALSE, surgery_embed = FALSE)
 	if(!embedder || !can_embed(embedder))
 		return FALSE
-	if(owner && ((owner.status_flags & GODMODE) || HAS_TRAIT(owner, TRAIT_PIERCEIMMUNE)))
+	if(owner && (owner.status_flags & GODMODE))
+		return FALSE
+	if(owner && HAS_TRAIT(owner, TRAIT_PIERCEIMMUNE) && !surgery_embed)
 		return FALSE
 	if(istype(embedder, /obj/item/natural/worms/leech))
 		record_round_statistic(STATS_LEECHES_EMBEDDED)

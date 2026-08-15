@@ -338,9 +338,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		user.visible_message(span_notice("[user] removes the bard from [src]."), span_notice("I remove the bard from [src]."))
 		var/obj/item/clothing/barding/B = bbarding
 		bbarding = null
-		// Reset any movement slowdown from barding when it is removed
 		barding_speed_mult = 1
 		updatehealth()
+		update_mount_move_delay()
 		B.forceMove(get_turf(src))
 		user.put_in_hands(B)
 		update_icon()
@@ -1069,10 +1069,29 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	mounted_overlay.appearance_flags = RESET_ALPHA|RESET_COLOR
 	add_overlay(mounted_overlay)
 
+/mob/living/simple_animal/proc/get_riding_datum()
+	var/datum/component/riding/riding_datum = GetComponent(/datum/component/riding/no_ocean)
+	if(!riding_datum)
+		riding_datum = GetComponent(/datum/component/riding)
+	return riding_datum
+
+/mob/living/simple_animal/proc/update_mount_move_delay()
+	var/datum/component/riding/riding_datum = get_riding_datum()
+	if(!riding_datum)
+		return
+	var/mob/living/driver = null
+	if(buckled_mobs && buckled_mobs.len)
+		driver = buckled_mobs[1]
+	riding_datum.vehicle_move_delay = adjust_speed(driver)
+
 /mob/living/simple_animal/proc/adjust_speed(mob/living/driver)
-	var/delay = vars["move_to_delay"]
+	var/delay = initial(move_to_delay)
 	if(!isnum(delay))
 		delay = 3
+	if(!HAS_TRAIT(src, TRAIT_RIGIDMOVEMENT) && !HAS_TRAIT(src, TRAIT_IGNOREDAMAGESLOWDOWN))
+		var/health_deficiency = getBruteLoss() + getFireLoss()
+		if(health_deficiency >= (maxHealth - (maxHealth * 0.50)))
+			delay += 2
 	if(driver?.m_intent == MOVE_INTENT_RUN)
 		delay -= 1
 	if(driver?.mind)
@@ -1081,6 +1100,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			delay -= 5 + amt/6
 		else
 			delay -= 3
+	if(bbarding)
+		barding_speed_mult = max(bbarding.slowdown_factor, 1)
+	else
+		barding_speed_mult = 1
+	delay = max(delay, 1) * barding_speed_mult
 	return max(delay, 1)
 
 /mob/living/simple_animal/user_unbuckle_mob(mob/living/M, mob/user)
@@ -1277,8 +1301,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
             // Player
             set_glide_size(DELAY_TO_GLIDE_SIZE(world.tick_lag))
         else
-            // AI
-            set_glide_size(DELAY_TO_GLIDE_SIZE(move_to_delay))
+            var/datum/component/riding/riding_datum = get_riding_datum()
+            if(riding_datum && has_buckled_mobs())
+                set_glide_size(DELAY_TO_GLIDE_SIZE(riding_datum.vehicle_move_delay))
+            else
+                set_glide_size(DELAY_TO_GLIDE_SIZE(move_to_delay))
     return .
 
 /mob/living/simple_animal/proc/eat_plants()

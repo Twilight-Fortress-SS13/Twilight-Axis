@@ -75,7 +75,7 @@
 	name = "cloth military skirt"
 	desc = "A fine leather strap notched with holes for a buckle to secure itself, notched above a flared military skirt."
 	icon_state = "battleskirt"
-	sewrepair = FALSE
+	sewrepair = TRUE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/update_icon()
@@ -100,7 +100,6 @@
 	name = "belt with faulds"
 	desc = "A fine leather strap notched with holes for a buckle to secure itself, notched above a halved military skirt."
 	icon_state = "faulds"
-	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/faulds/red
@@ -111,7 +110,6 @@
 	desc = "A fine leather strap notched with holes for a buckle to secure itself, and nestled above a halved tabard's coverings."
 	icon_state = "breechcloth"
 	flags_inv = HIDECROTCH
-	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/blackbelt
@@ -119,7 +117,6 @@
 	desc = "A fine black-leather strap notched with holes for a buckle to secure itself, and nestled above a halved tabard's coverings."
 	icon_state = "breechclothalt"
 	flags_inv = HIDECROTCH
-	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/red
@@ -170,6 +167,7 @@
 	name = "cloth sash"
 	desc = "A strip of cloth tied together at the ends into a makeshift belt. It's better than nothing."
 	icon_state = "cloth"
+	sewrepair = TRUE
 	component_type = /datum/component/storage/concrete/roguetown/belt/cloth
 
 /obj/item/storage/belt/rogue/leather/cloth/upgraded
@@ -712,4 +710,5 @@
 	name = "cloth belt"
 	desc = "This belt has been sewn out of cloth, as opposed to tied. Which makes it superior. Obviously."
 	icon_state = "clothsash"
+	sewrepair = TRUE
 	salvage_result = /obj/item/natural/cloth

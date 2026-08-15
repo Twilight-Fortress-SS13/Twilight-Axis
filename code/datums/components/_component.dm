@@ -227,7 +227,7 @@
 /datum/proc/UnregisterSignal(datum/target, sig_type_or_types)
 	if (!target || !istype(target) || !target:comp_lookup) //Delinefortune:  If the target is null or not a valid type, we can't unregister
 		return
-	var/list/lookup = target.comp_lookup  
+	var/list/lookup = target.comp_lookup
 	if(!signal_procs || !signal_procs[target] || !lookup)
 		return
 	if(!islist(sig_type_or_types))
@@ -237,6 +237,9 @@
 			if(!istext(sig))
 				stack_trace("We're unregistering with something that isn't a valid signal \[[sig]\], you fucked up")
 			continue
+		if(islist(lookup[sig]))
+			var/list/sig_lookup = lookup[sig]
+			sig_lookup -= null
 		switch(length(lookup[sig]))
 			if(2)
 				lookup[sig] = (lookup[sig]-src)[1]
@@ -326,19 +329,38 @@
 	var/target = comp_lookup[sigtype]
 	if(!target)
 		return NONE
-	if(!length(target))
-		var/datum/listening_datum = target
-		return NONE | call(listening_datum, listening_datum.signal_procs[src][sigtype])(arglist(arguments))
+
 	. = NONE
+
+	if(!islist(target))
+		var/datum/listening_datum = target
+		if(!listening_datum?.signal_procs || !listening_datum.signal_procs[src] || !listening_datum.signal_procs[src][sigtype])
+			comp_lookup -= sigtype
+			return NONE
+		return NONE | call(listening_datum, listening_datum.signal_procs[src][sigtype])(arglist(arguments))
+
+	var/list/sig_lookup = target
+	if(!length(sig_lookup))
+		comp_lookup -= sigtype
+		return NONE
+
 	// This exists so that even if one of the signal receivers unregisters the signal,
 	// all the objects that are receiving the signal get the signal this final time.
 	// AKA: No you can't cancel the signal reception of another object by doing an unregister in the same signal.
 	var/list/queued_calls = list()
-	for(var/datum/listening_datum as anything in target)
-		if(!listening_datum)
-			stack_trace("null entry in comp_lookup\[[sigtype]\] on [type] during _SendSignal - upstream RegisterSignal/UnregisterSignal corruption")
+	var/list/stale_datums
+
+	for(var/datum/listening_datum as anything in sig_lookup)
+		if(!listening_datum?.signal_procs || !listening_datum.signal_procs[src] || !listening_datum.signal_procs[src][sigtype])
+			LAZYADD(stale_datums, listening_datum)
 			continue
 		queued_calls[listening_datum] = listening_datum.signal_procs[src][sigtype]
+
+	if(stale_datums)
+		sig_lookup -= stale_datums
+
+	if(!length(sig_lookup))
+		comp_lookup -= sigtype
 	for(var/datum/listening_datum as anything in queued_calls)
 		. |= call(listening_datum, queued_calls[listening_datum])(arglist(arguments))
 

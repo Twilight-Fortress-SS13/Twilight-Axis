@@ -791,7 +791,6 @@
 
 		used_damage = avg_burn_factor * hardcrit_divisor
 
-
 	if(used_damage < total_tox)
 		used_damage = total_tox
 	if(used_damage < total_oxy)

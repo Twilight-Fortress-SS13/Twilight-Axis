@@ -55,7 +55,16 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+			if(H.mind) //TA EDIT START
+				var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
+				var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
+				switch(talismanschoice)
+					if("The Wolf, Plotting")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+					if("The Spider, Rising")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+			else
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn //TA EDIT END
 		if(/datum/patron/inhumen/graggar)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 		if(/datum/patron/inhumen/matthios)
@@ -131,7 +140,16 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+			if(H.mind) //TA EDIT START
+				var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
+				var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
+				switch(talismanschoice)
+					if("The Wolf, Plotting")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+					if("The Spider, Rising")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+			else
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn //TA EDIT END
 		if(/datum/patron/inhumen/graggar)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 		if(/datum/patron/inhumen/matthios)
@@ -274,7 +292,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
 	name = "carved talisman" //plotting talisman
-	desc = "'The hunt, the studying of your prey, the learning of its routes, the knowledge our ancestors passed down, the empowerment of your people and yourself. Learn of the world, or fade away.'  </br>  </br>The Plotting Wolf embodies the virtues of progress and knowledge, so that no obstacle nor threat to the homeland remains insurmountable. To understand the truths of beast-and-bronze is to lighten the future's hardships. Do not humor magicka, however, for playing with fire shall always end in someone being burned."
+	desc = "'The hunt, the studying of your prey, the learning of its routes, the knowledge our ancestors passed down, the empowerment of your people and yourself. Learn of the world, or fade away.'  </br>  </br>The Plotting Wolf embodies the virtues of progress and knowledge, so that no obstacle nor threat to the homeland remains insurmountable. She demands that her people learn from their ancestors. They must listen closely to the ancient sagas, seeking out the warnings and lessons that their ancestors embedded in words and imagery. They must explore the world, adapt, and endure the cold and all the trials that nature throws their way. But know this: your rest is not eternal. Sooner or later, the shamans will bring you back from the burial mound so that you may pass on your wisdom or stand alongside the living in their hour of need. Such is her final gift and her final demand." //TA EDIT
 	icon_state = "gronnzizo"
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/get_examine_highlight_status()
@@ -290,7 +308,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn
 	name = "carved talisman" //starving talisman
-	desc = "'“The hunger, the destruction, the impending frost, the enemy of my enemy. Feed the Bear, or be consumed.'  </br>  </br>The Starving Bear embodies not a virtue, but the necessity to thrive above all else. Avarice is not a sin, but a virtue; to ensure that the homeland never suffers from poverty nor starvation again. Pillage, plunder, and perforate the wealth that others would keep from you, but do not forget that every choice begets consequences."
+	desc = "'“The hunger, the destruction, the impending frost, the enemy of my enemy. Feed the Bear, or be consumed.'  </br>  </br>The Starving Bear embodies not a virtue, but the necessity to thrive above all else. Hunger is eternal: no matter how much you feed the Bear, he will always demand more. Gold, food, flesh — it makes no difference to him. But the feast is not a goal in itself — the Bear takes from unworthy to ensure the clan's survival. Only those who are able to hold on to what is theirs and defend it are free. Those who cannot stand up for themselves become prey. There is no injustice in this, only the law of nature." //TA EDIT
 	icon_state = "gronnmatthios"
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn/get_examine_highlight_status()

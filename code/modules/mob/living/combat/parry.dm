@@ -1,6 +1,8 @@
 // Unarmed base weapon defense equivalents — fed into the same (skill * 20) + (wdef * 10) formula as weapons
 
 /mob/living/proc/attempt_parry(datum/intent/intenty, mob/living/user)
+	if(!user)
+		return FALSE
 	var/prob2defend = user.defprob
 	var/mob/living/H = src
 	var/mob/living/U = user
@@ -57,7 +59,7 @@
 
 	// TA Edit start - new Ronin Class
 	var/need_override = TRUE
-	if(mainhand?.can_parry || offhand?.can_parry)
+	if((istype(mainhand) && mainhand.can_parry) || (istype(offhand) && offhand.can_parry))
 		need_override = FALSE
 
 	if(need_override)
