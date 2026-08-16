@@ -3689,6 +3689,8 @@
 #include "modular_twilight_axis\code\datums\sexcon\sexcon.dm"
 #include "modular_twilight_axis\code\datums\sexcon\sexcon_helpers.dm"
 #include "modular_twilight_axis\code\datums\sexcon\sexcon_reagents.dm"
+#include "modular_twilight_axis\code\datums\sleep_adv\deam_event.dm"
+#include "modular_twilight_axis\code\datums\sleep_adv\sleep_adv.dm"
 #include "modular_twilight_axis\code\datums\status_effects\gas.dm"
 #include "modular_twilight_axis\code\datums\status_effects\neutral.dm"
 #include "modular_twilight_axis\code\datums\status_effects\rogue\debuff.dm"

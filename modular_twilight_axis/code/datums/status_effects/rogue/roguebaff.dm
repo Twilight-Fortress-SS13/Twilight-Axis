@@ -41,6 +41,7 @@
 /mob/living/carbon/human
 	var/priest_timer_check = 0
 	var/matthios_banner_timer_check = 0
+	var/days_without_sleep = 0
 
 /area/rogue/Entered(mob/living/carbon/human/guy)
 
@@ -293,4 +294,20 @@
 
 /datum/status_effect/buff/starsugar/nextmove_modifier()
 	return 0.7
+
+/datum/stressevent/sleep_deprivation_2
+	timer = 40 MINUTES
+	stressadd = 10
+	desc = span_red("Я ужасно хочу спать.")
+
+/datum/stressevent/sleep_deprivation_3
+	timer = 40 MINUTES
+	stressadd = 15
+	desc = span_red("У меня галлюцинации от дикого недосыпа.")
+
+/datum/stressevent/sleep_deprivation_4
+	timer = 40 MINUTES
+	stressadd = 20
+	desc = span_red("Мой мозг буквально плавится от отсутствия сна!")
+
 //***************************************************//

@@ -44,13 +44,29 @@
 			A.on_life(src)
 
 	handle_vamp_dreams()
+	if(stat == CONSCIOUS && days_without_sleep >= 4 && !IsSleeping()) //TA EDIT START
+		if(prob(5))
+			to_chat(src, span_suicide("Мои глаза закрываются сами по себе... Я больше не могу сопротивляться сну..."))
+			Sleeping(200)
+	
 	if(IsSleeping())
 		if(health > 0)
+			var/slept = FALSE
+
 			if(has_status_effect(/datum/status_effect/debuff/sleepytime))
 				remove_status_effect(/datum/status_effect/debuff/sleepytime)
-				remove_stress(/datum/stressevent/sleepytime)
-				if(mind)
-					mind.sleep_adv.advance_cycle()
+				slept = TRUE
+			
+			if(has_stress_event(/datum/stressevent/sleepytime) || \
+			   has_stress_event(/datum/stressevent/sleep_deprivation_2) || \
+			   has_stress_event(/datum/stressevent/sleep_deprivation_3) || \
+			   has_stress_event(/datum/stressevent/sleep_deprivation_4))
+				
+				reset_sleep_deprivation()
+				slept = TRUE
+				
+			if(slept && mind && mind.sleep_adv)
+				mind.sleep_adv.advance_cycle() //TA EDIT END
 	if(leprosy == 1)
 		adjustToxLoss(2)
 	else if(leprosy == 2)

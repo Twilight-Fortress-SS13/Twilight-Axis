@@ -278,6 +278,7 @@
 			return
 		playsound(src, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
 		target.equipOutfit(/datum/outfit/job/roguetown/baothanrite_TA)
+		ADD_TRAIT(target, TRAIT_NOSLEEP, TRAIT_RITUAL)
 		tag_kit_items(target, list(
 			"armor" = target.get_item_by_slot(SLOT_ARMOR),
 			"shirt" = target.get_item_by_slot(SLOT_SHIRT),

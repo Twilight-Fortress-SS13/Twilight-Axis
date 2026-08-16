@@ -612,6 +612,7 @@
 	spawn(20)
 		playsound(loc, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
 		target.equipOutfit(/datum/outfit/job/roguetown/dreamwalker_armorrite)
+		ADD_TRAIT(target, TRAIT_NOSLEEP, TRAIT_RITUAL) //TA EDIT
 		spawn(40)
 			to_chat(target, span_purple("Reality is but a fragile dream. You are the dreamer, and your will is law."))
 
@@ -1578,6 +1579,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 		var/datum/outfit/job/roguetown/darksteelrite/ritual_outfit = new outfit_path()
 		ritual_outfit.selected_helm_path = helm_path
 		target.equipOutfit(ritual_outfit)
+		ADD_TRAIT(target, TRAIT_NOSLEEP, TRAIT_RITUAL) //TA EDIT
 		tag_kit_items(target, list(
 			"armor" = target.get_item_by_slot(SLOT_ARMOR),
 			"shirt" = target.get_item_by_slot(SLOT_SHIRT),
@@ -1722,6 +1724,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	spawn(20)
 		playsound(loc, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
 		target.equipOutfit(/datum/outfit/job/roguetown/gildedrite)
+		ADD_TRAIT(target, TRAIT_NOSLEEP, TRAIT_RITUAL) //TA EDIT
 		tag_kit_items(target, list(
 			"armor" = target.get_item_by_slot(SLOT_ARMOR),
 			"shirt" = target.get_item_by_slot(SLOT_SHIRT),
@@ -1920,6 +1923,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 			outfit_path = /datum/outfit/job/roguetown/viciousrite
 		if("Vicious Full-Plate")
 			outfit_path = /datum/outfit/job/roguetown/viciousrite/heavy
+			ADD_TRAIT(target, TRAIT_NOSLEEP, TRAIT_RITUAL) //TA EDIT
 	if(!helm_path)
 		helm_path = /obj/item/clothing/head/roguetown/helmet/heavy/graggar
 	if(!outfit_path)
@@ -2122,6 +2126,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	spawn(20)
 		playsound(loc, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
 		target.equipOutfit(/datum/outfit/job/roguetown/baothanrite)
+		ADD_TRAIT(target, TRAIT_NOSLEEP, TRAIT_RITUAL) //TA EDIT
 		tag_kit_items(target, list(
 			"armor" = target.get_item_by_slot(SLOT_ARMOR),
 			"shirt" = target.get_item_by_slot(SLOT_SHIRT),
