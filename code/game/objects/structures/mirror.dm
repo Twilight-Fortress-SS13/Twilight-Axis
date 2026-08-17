@@ -29,7 +29,7 @@
 		return
 
 	var/mob/living/carbon/human/H = user
-	
+
 	if(obj_broken || !Adjacent(user))
 		return
 
@@ -47,7 +47,7 @@
 			H.add_stress(/datum/stressevent/unseemly)
 		return
 	else
-		perform_mirror_transform(H)
+		perform_mirror_transform_ui(H, src)
 
 /obj/structure/mirror/examine_status(mob/user)
 	if(obj_broken)
@@ -225,7 +225,7 @@
 			for(var/accessory_type in accessory_choice.sprite_accessories)
 				var/datum/sprite_accessory/accessory/acc = new accessory_type()
 				valid_accessories[acc.name] = accessory_type
-			
+
 			var/new_style = input(user, "Choose your accessory", "Accessory Styling") as null|anything in valid_accessories
 			if(new_style)
 				var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
@@ -234,7 +234,7 @@
 					for(var/datum/bodypart_feature/accessory/old_acc in head.bodypart_features)
 						head.remove_bodypart_feature(old_acc)
 						break
-					
+
 					// Add new accessory if not "none"
 					if(new_style != "none")
 						var/datum/bodypart_feature/accessory/accessory_feature = new()
@@ -248,7 +248,7 @@
 			for(var/detail_type in face_choice.sprite_accessories)
 				var/datum/sprite_accessory/face_detail/detail = new detail_type()
 				valid_details[detail.name] = detail_type
-			
+
 			var/new_detail = input(user, "Choose your face detail", "Face Detail") as null|anything in valid_details
 			if(new_detail)
 				var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
@@ -257,7 +257,7 @@
 					for(var/datum/bodypart_feature/face_detail/old_detail in head.bodypart_features)
 						head.remove_bodypart_feature(old_detail)
 						break
-					
+
 					// Add new face detail if not "none"
 					if(new_detail != "none")
 						var/datum/bodypart_feature/face_detail/detail_feature = new()
@@ -289,7 +289,7 @@
 	if(HAS_TRAIT(H, TRAIT_MIRROR_MAGIC) || HAS_TRAIT(H, TRAIT_EDIT_DESCRIPTORS))
 		to_chat(H, span_info("You tilt your jaw from side to side, concentrating on the glamoring magicks limning your form..."))
 		if(do_after(H, 3 SECONDS))
-			perform_mirror_transform(H)
+			perform_mirror_transform_ui(H, src)
 		return
 
 	if(HAS_TRAIT(user, TRAIT_BEAUTIFUL))
@@ -299,7 +299,7 @@
 		if(prob(50) && !H.has_stress_event(/datum/stressevent/uncanny) && !H.has_stress_event(/datum/stressevent/beautiful))
 			H.add_stress(/datum/stressevent/beautiful)
 			H.visible_message(span_notice("[H] admires [H.p_their()] reflection in [src]."), span_smallgreen("I look great.. From this angle."))
-		else 
+		else
 			if(!H.has_stress_event(/datum/stressevent/beautiful) && !H.has_stress_event(/datum/stressevent/uncanny))
 				H.add_stress(/datum/stressevent/uncanny)
 				H.visible_message(span_notice("[H] admires [H.p_their()] reflection in [src]."), span_warning("I look like a monster from this angle..."))
