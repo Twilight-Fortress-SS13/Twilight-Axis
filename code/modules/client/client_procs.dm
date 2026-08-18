@@ -386,6 +386,11 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 	GLOB.clients += src
 	GLOB.directory[ckey] = src
 
+	//TA EDIT BEGIN
+	for(var/snd in SSta_antilag.preload_sounds)
+		src << load_resource(snd, -1)
+	//TA EDIT END
+
 	stat_panel = new(src, "statbrowser")
 	stat_panel.subscribe(src, PROC_REF(on_stat_panel_message))
 

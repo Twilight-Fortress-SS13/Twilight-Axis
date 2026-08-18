@@ -4163,6 +4163,7 @@
 #include "modular_twilight_axis\firearms\code\weapons\runelock.dm"
 #include "modular_twilight_axis\firearms\code\weapons\virtues.dm"
 #include "modular_twilight_axis\firearms\code\weapons\wounds_logic.dm"
+#include "modular_twilight_axis\kostyl_smooth_move\smoothmove_controller.dm"
 #include "modular_twilight_axis\lore\code\datums\cultural_valoria.dm"
 #include "modular_twilight_axis\lore\code\datums\cultural_zybantu.dm"
 #include "modular_twilight_axis\lore\code\datums\cultural_hammerhold_ta.dm"
