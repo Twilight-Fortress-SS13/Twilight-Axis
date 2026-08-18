@@ -8,42 +8,71 @@
 		if("Knight")
 			name_index = "knight's"
 			allowed_cloaks = list(
-			"Jupon" = 			/obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
-			"Surcoat" = 	/obj/item/clothing/cloak/tabard/stabard/guard,
-			"Hood" = 		/obj/item/clothing/cloak/tabard/stabard/guardhood,
-			"Tabard" = 	/obj/item/clothing/cloak/tabard/retinue,
-			"Cape" = 			/obj/item/clothing/cloak/cape/guard,
+			"Jupon" =			/obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
+			"Surcoat" =	/obj/item/clothing/cloak/tabard/stabard/guard,
+			"Hood" =		/obj/item/clothing/cloak/tabard/stabard/guardhood,
+			"Tabard" =	/obj/item/clothing/cloak/tabard/retinue,
+			"Cape" =			/obj/item/clothing/cloak/cape/guard,
+			"Halfcloak" = 	/obj/item/clothing/cloak/half/guard, //TA EDIT
+			"Fur Cloak" =	/obj/item/clothing/cloak/raincloak/furcloak/guard // TA EDIT
 			)
 		if("Squire")
 			name_index = "squire's"
 			allowed_cloaks = list(
-			"Jupon" = 			/obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
-			"Surcoat" = 	/obj/item/clothing/cloak/tabard/stabard/guard,
-			"Hood" = 		/obj/item/clothing/cloak/tabard/stabard/guardhood,
+			"Jupon" =			/obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
+			"Surcoat" =	/obj/item/clothing/cloak/tabard/stabard/guard,
+			"Hood" =		/obj/item/clothing/cloak/tabard/stabard/guardhood,
 			"Tabard" =		/obj/item/clothing/cloak/tabard/retinue,
-			"Cape" = 			/obj/item/clothing/cloak/cape/guard,
+			"Cape" =			/obj/item/clothing/cloak/cape/guard,
 			)
 		if("Man at Arms")
 			name_index = "man-at-arms"
 			allowed_cloaks = list(
+			"Jupon" =			/obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
+			"Surcoat" =			/obj/item/clothing/cloak/tabard/stabard/guard,
+			"Hood" =		/obj/item/clothing/cloak/tabard/stabard/guardhood,
+			)
+		if("Sergeant")
+			name_index = "sergeant"
+			allowed_cloaks = list(
+			"Jupon" =			/obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
+			"Surcoat" =			/obj/item/clothing/cloak/tabard/stabard/guard,
+			"Hood" =		/obj/item/clothing/cloak/tabard/stabard/guardhood,
+			"Cape" =			/obj/item/clothing/cloak/cape/guard,
+			)
+
+		if("Royal Guard") //TA EDIT START
+			name_index = "royal guard"
+			allowed_cloaks = list(
 			"Jupon" = 			/obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
 			"Surcoat" = 			/obj/item/clothing/cloak/tabard/stabard/guard,
 			"Hood" = 		/obj/item/clothing/cloak/tabard/stabard/guardhood,
 			)
-		if("Sergeant")
-			name_index = "sergeant"
+		if("Royal Guard Sergeant")
+			name_index = "royal guard sergeant"
 			allowed_cloaks = list(
 			"Jupon" = 			/obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
 			"Surcoat" = 			/obj/item/clothing/cloak/tabard/stabard/guard,
 			"Hood" = 		/obj/item/clothing/cloak/tabard/stabard/guardhood,
 			"Cape" = 			/obj/item/clothing/cloak/cape/guard,
 			)
+		if("Royal Knight")
+			name_index = "royal knight"
+			allowed_cloaks = list(
+			"Jupon" = 			/obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
+			"Surcoat" = 			/obj/item/clothing/cloak/tabard/stabard/guard,
+			"Hood" = 		/obj/item/clothing/cloak/tabard/stabard/guardhood,
+			"Tabard" = 	/obj/item/clothing/cloak/tabard/retinue,
+			"Cape" = 			/obj/item/clothing/cloak/cape/guard,
+			"Halfcloak" = 	/obj/item/clothing/cloak/half/guard,
+			"Fur Cloak" =	/obj/item/clothing/cloak/raincloak/furcloak/guard
+			) //TA EDIT END
 
 	var/choive_key = input(src, "Choose your cloak.", "IDENTIFY YOURSELF") as anything in allowed_cloaks
 	var/typepath = allowed_cloaks[choive_key]
 	var/obj/item/clothing/cloak/cloak_choice = new typepath(src)
 	var/list/namesplit = splittext(src.real_name, " ")
-	if(src.mind.assigned_role == "Knight")
+	if(src.mind.assigned_role == "Knight" || "Royal Knight") //TA EDIT
 		cloak_choice.name = "[name_index] [cloak_choice.name] ([namesplit[2]])"
 	else
 		cloak_choice.name = "[name_index] [cloak_choice.name] ([namesplit[1]])"

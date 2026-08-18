@@ -8,6 +8,7 @@
 	var/list/sleep_exp = list()
 	var/datum/mind/mind = null
 	var/woke_up = TRUE
+	var/last_supply_cycle = 0 // TA EDIT
 	COOLDOWN_DECLARE(xp_show)
 	COOLDOWN_DECLARE(level_up)
 
@@ -148,8 +149,8 @@
 		show_xp = FALSE
 	if(!can_advance_pre && can_advance_post && !silent)
 		to_chat(mind.current, span_nicegreen(pick(list(
-			"I'm getting a better grasp at [lowertext(skillref.name)]...",
-			"With some rest, I feel like I can get better at [lowertext(skillref.name)]...",
+			"I'm getting a better grasp at [LOWER_TEXT(skillref.name)]...",
+			"With some rest, I feel like I can get better at [LOWER_TEXT(skillref.name)]...",
 			"[skillref.name] starts making more sense to me...",
 		))))
 		if(!COOLDOWN_FINISHED(src, level_up))
@@ -160,7 +161,7 @@
 		show_xp = FALSE
 	if(!capped_pre && capped_post && !silent)
 		to_chat(mind.current, span_nicegreen(pick(list(
-			"My [lowertext(skillref.name)] can no longer improve without some rest and meditation...",
+			"My [LOWER_TEXT(skillref.name)] can no longer improve without some rest and meditation...",
 		))))
 		if(!COOLDOWN_FINISHED(src, level_up))
 			if((L.client?.prefs.combat_toggles & XP_TEXT))
@@ -268,6 +269,14 @@
 	woke_up = TRUE
 	if(mind.aspect_resets_used > 0)
 		mind.aspect_resets_used = 0
+	if(sleep_adv_cycle > last_supply_cycle) // TA EDIT START
+		last_supply_cycle = sleep_adv_cycle
+		if(HAS_TRAIT(mind.current, TRAIT_EXPLOSIVE_SUPPLY) && !mind.has_bomb)
+			mind.has_bomb = TRUE
+			to_chat(mind.current, span_smallnotice("I need to check on HERMES. I think a new package has arrived."))
+		if(HAS_TRAIT(mind.current, TRAIT_DRUG_SUPPLY) && !mind.has_drug_delivery)
+			mind.has_drug_delivery = TRUE
+			to_chat(mind.current, span_smallnotice("The Guild left something for me. I should check HERMES for my delivery.")) // TA EDIT END
 
 /datum/sleep_adv/proc/is_considered_sleeping()
 	if(!mind.current)
@@ -358,7 +367,7 @@
 			skill_string += " and "
 		else if(i != 1)
 			skill_string += ", "
-		skill_string += lowertext(skill_name)
+		skill_string += LOWER_TEXT(skill_name)
 	to_chat(mind.current, span_notice("I feel inspired about [skill_string]..."))
 
 
@@ -366,7 +375,7 @@
 	if(!can_buy_special())
 		return
 	// Apply special here
-	 //TODO SLEEP ADV SPECIALS
+		//TODO SLEEP ADV SPECIALS
 	sleep_adv_points -= get_special_cost()
 
 /datum/sleep_adv/proc/finish()
@@ -377,12 +386,6 @@
 	if(HAS_TRAIT(mind.current, TRAIT_STUDENT))
 		REMOVE_TRAIT(mind.current, TRAIT_STUDENT, TRAIT_GENERIC)
 		to_chat(mind.current, span_smallnotice("I feel that I can be educated in a skill once more."))
-	if(HAS_TRAIT(mind.current, TRAIT_EXPLOSIVE_SUPPLY))
-		mind.has_bomb = TRUE
-		to_chat(mind.current, span_smallnotice("I need to check on HERMES. I think a new package has arrived."))
-	if(HAS_TRAIT(mind.current, TRAIT_DRUG_SUPPLY))
-		mind.has_drug_delivery = TRUE
-		to_chat(mind.current, span_smallnotice("The Guild left something for me. I should check HERMES for my delivery."))
 	close_ui()
 
 /datum/sleep_adv/Topic(href, list/href_list)

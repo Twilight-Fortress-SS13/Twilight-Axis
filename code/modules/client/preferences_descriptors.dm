@@ -2,7 +2,7 @@
 	if(!istext(text))
 		return null
 
-	text = STRIP_HTML_SIMPLE(lowertext(text), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
+	text = STRIP_HTML_SIMPLE(LOWER_TEXT(text), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
 	if(!is_english_custom_descriptor_text(text))
 		return null
 
@@ -90,7 +90,7 @@
 			for(var/desc_type in choice.descriptors)
 				var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(desc_type)
 				picklist[descriptor.name] = desc_type
-			var/picked_descriptor_name = input(user, "Describe my [lowertext(choice.name)]", "Describe myself") as null|anything in picklist
+			var/picked_descriptor_name = input(user, "Describe my [LOWER_TEXT(choice.name)]", "Describe myself") as null|anything in picklist
 
 			if(!picked_descriptor_name)
 				return

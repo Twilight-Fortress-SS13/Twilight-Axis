@@ -160,7 +160,7 @@
 		if(!selections.len)
 			to_chat(src, span_boldwarning("No characters found."))
 			return
-		selection = input("Which Character?") as null|anything in sortList(selections)
+		selection = input(usr, "Which Character?") as null|anything in sortList(selections)
 		if(!selection)
 			return
 		theykey = selections[selection]
@@ -168,12 +168,12 @@
 		for(var/client/C in GLOB.clients)
 			var/usedkey = C.ckey
 			selections[usedkey] = C.ckey
-		selection = input("Which Player?") as null|anything in sortList(selections)
+		selection = input(usr, "Which Player?") as null|anything in sortList(selections)
 		if(!selection)
 			return
 		theykey = selections[selection]
 	if(selection == "Player Name")
-		selection = input("Which Player?", "CKEY", "") as text|null
+		selection = input(usr, "Which Player?", "CKEY", "") as text|null
 		if(!selection)
 			return
 		theykey = selection
@@ -182,7 +182,7 @@
 /proc/check_pq_menu(ckey)
 	if(!usr || !usr.client || !can_view_playerquality_of(usr.client, ckey, TRUE))
 		return
-	var/canonical_ckey = replacetext(replacetext(replacetext(replacetext(lowertext(ckey), " ", ""), "_", ""), ".", ""), "-", "")
+	var/canonical_ckey = replacetext(replacetext(replacetext(replacetext(LOWER_TEXT(ckey), " ", ""), "_", ""), ".", ""), "-", "")
 	var/folder_prefix = copytext(canonical_ckey, 1, 2)
 	var/full_path = "data/player_saves/[folder_prefix]/[canonical_ckey]/preferences.sav"
 
@@ -224,7 +224,7 @@
 		if(!selections.len)
 			to_chat(src, span_boldwarning("No characters found."))
 			return
-		selection = input("Which Character?") as null|anything in sortList(selections)
+		selection = input(usr, "Which Character?") as null|anything in sortList(selections)
 		if(!selection)
 			return
 		theykey = selections[selection]
@@ -235,25 +235,25 @@
 //				if(C.ckey in GLOB.anonymize)
 //					usedkey = get_fake_key(C.ckey)
 			selections[usedkey] = C.ckey
-		selection = input("Which Player?") as null|anything in sortList(selections)
+		selection = input(usr, "Which Player?") as null|anything in sortList(selections)
 		if(!selection)
 			return
 		theykey = selections[selection]
 	if(selection == "Player Name")
-		selection = input("Which Player?", "CKEY", "") as text|null
+		selection = input(usr, "Which Player?", "CKEY", "") as text|null
 		if(!selection)
 			return
 		theykey = selection
-	var/canonical_ckey = replacetext(replacetext(replacetext(replacetext(lowertext(theykey), " ", ""), "_", ""), ".", ""), "-", "")
+	var/canonical_ckey = replacetext(replacetext(replacetext(replacetext(LOWER_TEXT(theykey), " ", ""), "_", ""), ".", ""), "-", "")
 	var/folder_prefix = copytext(canonical_ckey, 1, 2)
 	var/full_path = "data/player_saves/[folder_prefix]/[canonical_ckey]/preferences.sav"
 	if(!fexists(full_path))
 		to_chat(src, span_boldwarning("User does not exist."))
 		return
-	var/amt2change = input("How much to modify the PQ by? (20 to -20, or 0 to just add a note)") as null|num
+	var/amt2change = input(usr, "How much to modify the PQ by? (20 to -20, or 0 to just add a note)") as null|num
 	if(!check_rights(R_ADMIN,0))
 		amt2change = CLAMP(amt2change, -20, 20)
-	var/raisin = stripped_input("State a short reason for this change", "Game Master", "", null)
+	var/raisin = stripped_input(usr, "State a short reason for this change", "Game Master", "", null)
 	if((!isnull(amt2change) && amt2change != 0) && !raisin)
 		return
 	if(canonical_ckey == src.ckey)	
@@ -261,7 +261,7 @@
 		return
 	adjust_playerquality(amt2change, canonical_ckey, src.ckey, raisin)
 	for(var/client/C in GLOB.clients) // I hate this, but I'm not refactoring the cancer above this point.
-		if(lowertext(C.key) == canonical_ckey)
+		if(LOWER_TEXT(C.key) == canonical_ckey)
 			to_chat(C, "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">Your PQ has been adjusted by [amt2change] by [key] for reason: [raisin]</span></span>")
 			return
 

@@ -90,6 +90,7 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 	var/sfx_post_delay
 
 	var/_icon = 'icons/effects/effects.dmi'
+	var/pre_icon = 'icons/effects/effects.dmi'
 	var/pre_icon_state = "blip"
 	var/post_icon_state = "strike"
 
@@ -268,7 +269,7 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 /datum/special_intent/proc/_draw(list/turfs, newdelay)
 	for(var/turf/T in turfs)
 		var/obj/effect/temp_visual/special_intent/fx = new (T, newdelay ? newdelay : delay)
-		fx.icon = _icon
+		fx.icon = pre_icon
 		fx.icon_state = pre_icon_state
 
 ///Called after the affected_turfs list is populated, but before the grid is drawn.
@@ -523,7 +524,8 @@ SPECIALS START HERE
 	desc = "Swings at your primary flank in a distracting fashion. Anyone caught in it will be exposed for a short while. Aims for the targeted zone."
 	tile_coordinates = list(list(0,0), list(1,0), list(1,-1))	//L shape that hugs our -right- flank.
 	post_icon_state = "sweep_fx"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	sfx_post_delay = 'sound/combat/sidesweep_hit.ogg'
 	delay = 0.6 SECONDS
 	cooldown = 17 SECONDS
@@ -560,7 +562,8 @@ SPECIALS START HERE
 	desc = "A hasty attack at the legs, extending ourselves. Slows down the opponent if hit. Always targets the legs."
 	tile_coordinates = list(list(0,0), list(1,0), list(-1,0))
 	post_icon_state = "sweep_fx"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	sfx_post_delay = 'sound/combat/shin_swipe.ogg'
 	delay = 0.5 SECONDS
 	cooldown = 20 SECONDS
@@ -589,7 +592,8 @@ SPECIALS START HERE
 	desc = "A planned thrust forward, extending ourselves. Pierces our enemy's armor and knocks the wind from them. Aims for the targeted zone."
 	tile_coordinates = list(list(0,0), list(0,1))
 	post_icon_state = "stab"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	sfx_post_delay = 'sound/combat/parry/bladed/bladedsmall (3).ogg'
 	delay = 0.5 SECONDS
 	cooldown = 25 SECONDS
@@ -618,7 +622,8 @@ SPECIALS START HERE
 	desc = "Swings downward, leaving a traveling quake for a few tiles. Anyone struck by it will be slowed and offbalanced, or knocked down if they're already off-balanced. Always targets the chest."
 	tile_coordinates = list(list(0,0), list(0,1, 0.1 SECONDS), list(0,2, 0.2 SECONDS))
 	post_icon_state = "kick_fx"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	respect_adjacency = TRUE
 //	requires_wielding = TRUE
 	delay = 0.7 SECONDS
@@ -670,7 +675,8 @@ SPECIALS START HERE
 	desc = "Swings in a perfect circle all around you, pushing people aside. The more are struck, the more powerful the effect. Always targets the chest."
 	tile_coordinates = SPECIAL_AOE_AROUND_ORIGIN
 	post_icon_state = "sweep_fx"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	sfx_pre_delay = 'sound/combat/flail_sweep.ogg'
 	respect_adjacency = FALSE
 	delay = 0.7 SECONDS
@@ -749,7 +755,8 @@ SPECIALS START HERE
 	desc = "Sweep a five-tile frontal arc, knocking foes back and leaving them vulnerable. Aims for the targeted zone."
 	tile_coordinates = list(list(-1,-1), list(1,-1), list(-1,0), list(0,0), list(1,0))
 	post_icon_state = "sweep_fx"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	sfx_pre_delay = 'sound/combat/wooshes/blunt/wooshmed (1).ogg'
 	sfx_post_delay = 'sound/combat/hits/blunt/woodblunt (1).ogg'
 	delay = 0.6 SECONDS
@@ -780,7 +787,7 @@ SPECIALS START HERE
 		L.apply_status_effect(/datum/status_effect/debuff/vulnerable, vulnerable_dur)
 	..()
 
-#define AXE_SWING_GRID_DEFAULT 	list(list(-1,0), list(0,0, 0.2 SECONDS), list(1,0, 0.4 SECONDS))
+#define AXE_SWING_GRID_DEFAULT	list(list(-1,0), list(0,0, 0.2 SECONDS), list(1,0, 0.4 SECONDS))
 #define AXE_SWING_GRID_MIRROR	list(list(-1,0, 0.4 SECONDS), list(0,0, 0.2 SECONDS), list(1,0))
 
 /datum/special_intent/axe_swing
@@ -788,7 +795,8 @@ SPECIALS START HERE
 	desc = "Swings from left to right. Anyone caught in the swing get immobilized and exposed. Always targets the legs."
 	tile_coordinates = AXE_SWING_GRID_DEFAULT
 	post_icon_state = "sweep_fx"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	requires_wielding = TRUE
 	respect_adjacency = FALSE
 	delay = 0.5 SECONDS
@@ -847,7 +855,8 @@ SPECIALS START HERE
 	desc = "A long-range lash that coils around the ankles of the target, immobilizing them. Always targets the chest."
 	tile_coordinates = list(list(0,0))	//Just one tile exactly where our cursor is.
 	post_icon_state = "strike"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	sfx_pre_delay = 'sound/combat/sp_whip_start.ogg'
 	respect_adjacency = FALSE
 	use_clickloc = TRUE
@@ -965,7 +974,8 @@ SPECIALS START HERE
 	cooldown = 20 SECONDS
 	requires_wielding = TRUE
 	stamcost = 30
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	post_icon_state = "sweep_fx"
 	sfx_pre_delay = 'sound/combat/wooshes/bladed/wooshlarge (2).ogg'
 	sfx_post_delay = 'sound/combat/sp_axe_swing1.ogg'
@@ -1184,7 +1194,7 @@ SPECIALS START HERE
 	playsound(T, sfx_post_delay, 100, TRUE)
 	..()
 
-/* 				EXAMPLES
+/*				EXAMPLES
 
 /datum/special_intent/another_example_cast
 	name = "Expanding Rectangle Pattern"
@@ -1228,7 +1238,8 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 	respect_dir = TRUE
 	delay = 1.2 SECONDS
 	fade_delay = 1 SECONDS
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	post_icon_state = "strike"
 	sfx_pre_delay = 'sound/combat/ground_smash_start.ogg'
 	sfx_post_delay = 'sound/combat/ground_smash1.ogg'
@@ -1244,7 +1255,7 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 
 /datum/special_intent/martyr_volcano_slam/process_attack()
 	var/obj/item/rogueweapon/W = iparent
-	dam = W.force_dynamic * max((howner.STASTR / 10 + howner.STAPER / 10), 1)  / 1.5
+	dam = W.force_dynamic * max((howner.STASTR / 10 + howner.STAPER / 10), 1)	/ 1.5
 	. = ..()
 
 /datum/special_intent/martyr_volcano_slam/on_create()
@@ -1286,7 +1297,8 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 	respect_dir = TRUE
 	delay = 0.7 SECONDS
 	fade_delay = 0.5 SECONDS
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	post_icon_state = "sweep_fx"
 	sfx_pre_delay = 'sound/combat/wooshes/bladed/wooshlarge (1).ogg'
 	sfx_post_delay = 'sound/combat/sp_axe_swing1.ogg'
@@ -1344,7 +1356,8 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 	respect_dir = TRUE
 	delay = 0.7 SECONDS
 	fade_delay = 0.5 SECONDS
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	post_icon_state = "sweep_fx"
 	sfx_pre_delay = 'sound/combat/wooshes/bladed/wooshlarge (1).ogg'
 	sfx_post_delay = 'sound/combat/sidesweep_hit.ogg'
@@ -1395,7 +1408,8 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 	respect_dir = TRUE
 	delay = 0.7 SECONDS
 	fade_delay = 0.5 SECONDS
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	post_icon_state = "sweep_fx"
 	sfx_pre_delay = 'sound/combat/wooshes/bladed/wooshlarge (1).ogg'
 	sfx_post_delay = 'sound/combat/sidesweep_hit.ogg'
@@ -1441,7 +1455,8 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 	desc = "Charge up a devastating strike infront of you. If the target is Exposed they will fall over and be flung back with tremendous damage, if not exposed they will be pushed slightly back. Aims for the targeted zone, finisher always hits the head."
 	tile_coordinates = list(list(0,0))
 	post_icon_state = "kick_fx"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	respect_adjacency = TRUE
 	delay = 1.2 SECONDS
 	cooldown = 30 SECONDS
@@ -1509,7 +1524,8 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 	desc = "Rise with arcyne force, then crash down on the target. If the target is Exposed or Vulnerable, they will fall over and be flung back with tremendous damage; otherwise they are pushed slightly back."
 	tile_coordinates = list(list(0,0))
 	post_icon_state = "kick_fx"
-	pre_icon_state = "trap"
+	pre_icon = 'icons/effects/telegraph.dmi'
+	pre_icon_state = "warning"
 	respect_adjacency = TRUE
 	delay = 1.2 SECONDS
 	cooldown = 30 SECONDS

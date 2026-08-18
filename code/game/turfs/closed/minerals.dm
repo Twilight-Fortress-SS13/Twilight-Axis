@@ -32,7 +32,7 @@
 	neighborlay = "dirtedge"
 	explosion_block = 2
 
-/turf/closed/mineral/Initialize()
+/turf/closed/mineral/Initialize(mapload)
 	if (!canSmoothWith)
 		canSmoothWith = list(/turf/closed/mineral, /turf/closed/indestructible)
 //	var/matrix/M = new
@@ -100,7 +100,7 @@
 		return
 	lastminer = user
 	..()
-	if(istype(I, /obj/item/rogueweapon/pick)||istype(I, /obj/item/rogueweapon/contraption/pick/drill)||istype(I, /obj/item/rogueweapon/mace/maul/grand/psy))
+	if(istype(I, /obj/item/rogueweapon/pick)||istype(I, /obj/item/rogueweapon/contraption/pick/drill))
 		if(!isliving(user))
 			return
 
@@ -264,7 +264,7 @@
 	var/mineralChance = 13
 	var/display_icon_state = "rock"
 
-/turf/closed/mineral/random/Initialize()
+/turf/closed/mineral/random/Initialize(mapload)
 
 	mineralSpawnChanceList = typelist("mineralSpawnChanceList", mineralSpawnChanceList)
 

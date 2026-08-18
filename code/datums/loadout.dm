@@ -625,11 +625,26 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Плащи"
 	path = /obj/item/clothing/cloak/sleevedtabard
 
+/datum/loadout_item/toga
+	name = "Toga, Robed"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/toga
+
+/datum/loadout_item/toga_dress
+	name = "Toga, Dress"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/toga/dress
+
 //SHOES
 /datum/loadout_item/leatherboots
 	name = "Leather Boots"
 	category = "Обувь"
 	path = /obj/item/clothing/shoes/roguetown/boots/leather
+
+/datum/loadout_item/classicsandals
+	name = "Classical Sandals"
+	category = "Обувь"
+	path = /obj/item/clothing/shoes/roguetown/sandals/toga
 
 /datum/loadout_item/darkboots
 	name = "Dark Boots"
@@ -904,6 +919,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Black Foreign Shirt"
 	category = "Одежда"
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt1
+
+/datum/loadout_item/formalskirt
+	name = "Knee-High Skirt"
+	category = "Одежда"
+	path = /obj/item/clothing/under/roguetown/skirt/formal
 
 /datum/loadout_item/eastshirt2
 	name = "White Foreign Shirt"
@@ -1985,7 +2005,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donator_zydrashauberk
-	name = "Donator Kit - Iron Gardbrace & Fauld - Required: Iron Mailled Hauberk"
+	name = "Donator Kit - Mailled Cuirass - Required: iron plate-and-maille"
 	path = /obj/item/enchantingkit/zydrashauberk
 	category = list("Броня", "Донат")
 	donatitem = TRUE
@@ -3505,6 +3525,45 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	ckeywhitelist = list("wrvxth", "murken4ik")
 
 // Nightmare Kit End
+
+// COMMANDANT SET START
+
+/datum/loadout_item/donator_commandant_helmet
+	name = "Donator Kit - Commandant's Helmet - Required: Heavy Helmet"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/commandant_helmet
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/donator_commandant_cloak
+	name = "Donator Kit - Commandant's Cloak"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/commandant
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/donator_commandant_coat
+	name = "Donator Kit - Commandant's Coat - Required: Hardened Leather Coat/Lightweight Brigandine"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/commandant_coat
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/donator_commandant_belt
+	name = "Donator Kit - Officer's Belt"
+	category = list("Одежда", "Донат")
+	path = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/commandant
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/donator_commandant_pistol
+	name = "Donator Kit - Elegant Pistol - Required: Arquebus Pistol"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/commandant_pistol
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+// COMMANDANT SET END
 
 // Etruscan vol.3 Kit Start
 

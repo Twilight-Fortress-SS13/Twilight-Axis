@@ -167,7 +167,7 @@
 		"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
 		"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 		)
-	var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+	var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
 	r_hand = onhelm[onhelmchoice]
 	if(H.mind)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mindlink)
@@ -212,7 +212,7 @@
 	zizotrain.explanation_text = "Train your squire [recruit.real_name] in the field. Show them the ropes. Ensure they survive."
 	zk_antag.objectives += zizotrain
 	zizoserve.target = recruiter.mind
-	zizoserve.explanation_text =  "Serve faithfully to your knight [recruiter.real_name], heed their commands and help them."
+	zizoserve.explanation_text =	"Serve faithfully to your knight [recruiter.real_name], heed their commands and help them."
 	zs_antag.objectives += zizoserve
 	recruit.mind.announce_objectives()
 	recruiter.mind.announce_objectives()

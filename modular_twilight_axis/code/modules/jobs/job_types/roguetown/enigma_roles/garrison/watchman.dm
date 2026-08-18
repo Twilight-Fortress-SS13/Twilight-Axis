@@ -39,7 +39,7 @@
 				index = copytext(H.real_name, 1,index)
 			if(!index)
 				index = H.real_name
-			S.name = "watchman ([index]) armor"
+			S.name = "watchman's armor ([index])"
 
 /datum/advclass/town_watch
 	name = "Town Watch"
@@ -102,11 +102,11 @@
 	H.verbs |= /mob/proc/haltyell
 
 /obj/item/storage/backpack/rogue/satchel/citywatch
-	name = "city watch satchel"
+	name = "watchman's satchel"
 	color = "#586ed3e1"
 
 /obj/item/storage/belt/rogue/leather/citywatch
-	name = "city watch belt"
+	name = "watchman's belt"
 	color = "#60a0dbbb"
 
 /datum/advclass/town_watch/dungeoneer

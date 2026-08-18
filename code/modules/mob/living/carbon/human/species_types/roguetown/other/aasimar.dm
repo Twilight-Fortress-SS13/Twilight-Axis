@@ -116,7 +116,7 @@
 		"Cultor" = SKIN_COLOR_CULTOR,
 		"Spiritus" = SKIN_COLOR_SPIRITUS,
 		"Planetar" = SKIN_COLOR_PLANETAR,
-		"Deva"	   = SKIN_COLOR_DEVA,
+		"Deva"		= SKIN_COLOR_DEVA,
 		"Solar" = SKIN_COLOR_SOLAR,
 		"Empyrea" = SKIN_COLOR_EMPYREA,
 		"Gaeia" = SKIN_COLOR_GAEIA,

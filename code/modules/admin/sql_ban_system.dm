@@ -695,7 +695,7 @@
 			search_page = 0
 			mode = "unban"
 		return TRUE
-	var/severity = lowertext(limited_text(params["severity"], 16) || "")
+	var/severity = LOWER_TEXT(limited_text(params["severity"], 16) || "")
 	if(!(severity in list("none", "minor", "medium", "high")))
 		errors += "A severity must be selected."
 	var/ban_type = params["ban_type"]
@@ -968,7 +968,7 @@
 	duration = text2num(duration)
 	if (!(interval in list("SECOND", "MINUTE", "HOUR", "DAY", "WEEK", "MONTH", "YEAR")))
 		interval = "MINUTE"
-	var/time_message = "[duration] [lowertext(interval)]" //no DisplayTimeText because our duration is of variable interval type
+	var/time_message = "[duration] [LOWER_TEXT(interval)]" //no DisplayTimeText because our duration is of variable interval type
 	if(duration > 1) //pluralize the interval if necessary
 		time_message += "s"
 	var/note_reason = "Banned from [roles_to_ban[1] == "Server" ? "the server" : " Roles: [roles_to_ban.Join(", ")]"] [isnull(duration) ? "permanently" : "for [time_message]"] - [reason]"
