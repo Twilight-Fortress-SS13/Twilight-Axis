@@ -1310,7 +1310,7 @@
 	if(GLOB.lordsecondary)
 		colors_to_pick["Secondary Keep Color"] = GLOB.lordsecondary
 	colors_to_pick += COLOR_MAP
-	colors_to_pick += pridelist
+	colors_to_pick += GLOB.pridelist
 	var/picked = input(user, "Choose your dye:", "Dyes", null) as null|anything in colors_to_pick
 	if(!picked)
 		return null
