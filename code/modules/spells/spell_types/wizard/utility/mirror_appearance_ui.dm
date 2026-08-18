@@ -482,15 +482,20 @@
 			gradients += "[gradient_type]"
 		data["hair_gradients"] = gradients
 
+		// Descriptors are locked behind TRAIT_EDIT_DESCRIPTORS specifically -
+		// TRAIT_MIRROR_MAGIC (granted just from casting the spell) isn't
+		// enough on its own. Empty list here means the frontend won't even
+		// show the tab (see has_edit_descriptors below for that decision).
 		var/list/descriptor_categories = list()
-		for(var/path in H.dna.species.descriptor_choices)
-			var/datum/descriptor_choice/choice = DESCRIPTOR_CHOICE(path)
-			var/list/options = list()
-			for(var/desc_type in choice.descriptors)
-				var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(desc_type)
-				if(descriptor)
-					options += list(list("name" = descriptor.name, "path" = "[desc_type]"))
-			descriptor_categories += list(list("name" = choice.name, "path" = "[path]", "options" = options))
+		if(HAS_TRAIT(H, TRAIT_EDIT_DESCRIPTORS))
+			for(var/path in H.dna.species.descriptor_choices)
+				var/datum/descriptor_choice/choice = DESCRIPTOR_CHOICE(path)
+				var/list/options = list()
+				for(var/desc_type in choice.descriptors)
+					var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(desc_type)
+					if(descriptor)
+						options += list(list("name" = descriptor.name, "path" = "[desc_type]"))
+				descriptor_categories += list(list("name" = choice.name, "path" = "[path]", "options" = options))
 		data["descriptor_categories"] = descriptor_categories
 
 		// Zone list + Russian labels, mirroring the exact same
@@ -536,6 +541,7 @@
 		return data
 
 	data["closing"] = FALSE
+	data["has_edit_descriptors"] = !!HAS_TRAIT(H, TRAIT_EDIT_DESCRIPTORS)
 	data["skin"] = list(
 		"uses_tones" = !!H.dna.species.use_skintones,
 		"color1" = mirror_ensure_hash(H.dna.species.use_skintones ? H.skin_tone : H.dna.features["mcolor"]),
@@ -998,6 +1004,8 @@
 
 		// ---- descriptors ----
 		if("set_descriptor")
+			if(!HAS_TRAIT(H, TRAIT_EDIT_DESCRIPTORS))
+				return
 			var/category_path = mirror_resolve_path(params["category"], /datum/descriptor_choice)
 			var/desc_path = mirror_resolve_path(params["value"], /datum/mob_descriptor)
 			if(category_path && desc_path)

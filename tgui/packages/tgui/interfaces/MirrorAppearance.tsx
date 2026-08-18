@@ -122,6 +122,7 @@ type MirrorData = {
   vagina_styles: StyleOption[];
   hair_gradients: string[];
   descriptor_categories: DescriptorCategory[];
+  has_edit_descriptors: boolean;
   markings: Record<string, MarkingInstance[]>;
   marking_candidates: Record<string, StyleOption[]>;
   marking_zone_list: MarkingZone[];
@@ -1058,7 +1059,7 @@ const TabDescriptors = ({ act, data }: TabProps) => {
 // ROOT
 // ---------------------------------------------------------------------
 
-const TABS: { id: string; label: string; component: (props: TabProps) => ReactNode }[] = [
+const ALL_TABS: { id: string; label: string; component: (props: TabProps) => ReactNode }[] = [
   { id: 'body', label: 'Тело', component: TabBody },
   { id: 'hair', label: 'Волосы', component: TabHair },
   { id: 'creature', label: 'Черты', component: TabCreature },
@@ -1091,7 +1092,8 @@ export const MirrorAppearance = () => {
   }
 
   const fullData = data as MirrorData;
-  const ActiveTab = TABS.find((t) => t.id === tabId)?.component ?? TabBody;
+  const visibleTabs = ALL_TABS.filter((t) => t.id !== 'descriptors' || fullData.has_edit_descriptors);
+  const ActiveTab = visibleTabs.find((t) => t.id === tabId)?.component ?? TabBody;
 
   return (
     <Window width={680} height={640}>
@@ -1178,7 +1180,7 @@ export const MirrorAppearance = () => {
             marginBottom: '8px',
             flexWrap: 'wrap',
           }}>
-          {TABS.map((tab) => (
+          {visibleTabs.map((tab) => (
             <button
               key={tab.id}
               type="button"
