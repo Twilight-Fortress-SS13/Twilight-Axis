@@ -459,7 +459,7 @@ SUBSYSTEM_DEF(vote)
 			text += "<b>Vote Result: Inconclusive - No Votes!</b>"
 	log_vote(text)
 	remove_action_buttons()
-	to_chat(world, "\n<font color='purple'>[text]</font>")
+	to_world("\n<font color='purple'>[text]</font>")
 	return .
 /datum/controller/subsystem/vote/proc/result()
 	. = announce_result()
@@ -486,9 +486,9 @@ SUBSYSTEM_DEF(vote)
 					GLOB.round_timer = world.time + ROUND_EXTENSION_TIME
 					world.TgsAnnounceRoundExtended()
 				else
-					log_game("LOG VOTE: ELSE  [REALTIMEOFDAY]")
+					log_game("LOG VOTE: ELSE	[REALTIMEOFDAY]")
 					log_game("LOG VOTE: ROUNDVOTEEND [REALTIMEOFDAY]")
-					to_chat(world, "\n<font color='purple'>[ROUND_END_TIME_VERBAL]</font>")
+					to_world("\n<font color='purple'>[ROUND_END_TIME_VERBAL]</font>")
 					SSgamemode.roundvoteend = TRUE
 					SSgamemode.round_ends_at = world.time + ROUND_END_TIME
 					world.TgsAnnounceVoteEndRound()
@@ -511,7 +511,7 @@ SUBSYSTEM_DEF(vote)
 		if(!active_admins)
 			SSticker.Reboot("Restart vote successful.", "restart vote")
 		else
-			to_chat(world, "<span style='boldannounce'>Notice:Restart vote will not restart the server automatically because there are active gamemasters on.</span>")
+			to_world("<span style='boldannounce'>Notice:Restart vote will not restart the server automatically because there are active gamemasters on.</span>")
 			message_admins("A restart vote has passed, but there are active admins on with +server, so it has been canceled. If you wish, you may restart the server.")
 
 	return .

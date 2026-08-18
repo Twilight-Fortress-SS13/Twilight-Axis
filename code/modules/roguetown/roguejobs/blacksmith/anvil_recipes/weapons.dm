@@ -1,6 +1,6 @@
 /datum/anvil_recipe/weapons
 	abstract_type = /datum/anvil_recipe/weapons
-	appro_skill = /datum/skill/craft/weaponsmithing  // inheritance yay !!
+	appro_skill = /datum/skill/craft/weaponsmithing	// inheritance yay !!
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/aalloy
@@ -466,7 +466,7 @@
 	name = "Javelin, Bronze (+1 Small Log) (x2)"
 	req_bar = /obj/item/ingot/bronze
 	additional_items = list(/obj/item/grown/log/tree/small)
-	created_item =  /obj/item/ammo_casing/caseless/rogue/javelin/bronze
+	created_item =	/obj/item/ammo_casing/caseless/rogue/javelin/bronze
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	createditem_num = 2
 
@@ -1297,7 +1297,7 @@
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/silver/flangedmace
-	name = "Flanged Mace, Silver  (+1 Silver, +1 Small Log)"
+	name = "Flanged Mace, Silver	(+1 Silver, +1 Small Log)"
 	req_bar = /obj/item/ingot/silver
 	additional_items = list(/obj/item/ingot/silver, /obj/item/grown/log/tree/small)
 	created_item = /obj/item/rogueweapon/mace/cudgel/flanged/silver
@@ -1960,14 +1960,6 @@
 	i_type = "Weapons"
 	display_category = ITEM_CAT_WEAPONS_AXES
 
-/datum/anvil_recipe/weapons/psy/maul
-	name = "Psydonic Maul (+2 Blessed Silver, +1 Small Log)"
-	req_bar = /obj/item/ingot/silverblessed
-	created_item = /obj/item/rogueweapon/mace/maul/grand/psy
-	display_category = ITEM_CAT_WEAPONS_MACES
-	additional_items = list(/obj/item/ingot/silverblessed, /obj/item/ingot/silverblessed, /obj/item/grown/log/tree/small)
-	i_type = "Weapons"
-
 /datum/anvil_recipe/weapons/psy/rapier
 	name = "Psydonic Rapier (+1 Blessed Silver)"
 	req_bar = /obj/item/ingot/silverblessed
@@ -2050,14 +2042,6 @@
 	req_bar = /obj/item/ingot/silverblessed/bullion
 	created_item = /obj/item/rogueweapon/halberd/psyhalberd
 	display_category = ITEM_CAT_WEAPONS_POLEARMS
-	additional_items = list(/obj/item/ingot/silverblessed/bullion, /obj/item/ingot/silverblessed/bullion, /obj/item/grown/log/tree/small)
-	i_type = "Weapons"
-
-/datum/anvil_recipe/weapons/psy/maul/inq
-	name = "Psydonic Maul (+2 Blessed Silver, +1 Small Log)"
-	req_bar = /obj/item/ingot/silverblessed/bullion
-	created_item = /obj/item/rogueweapon/mace/maul/grand/psy
-	display_category = ITEM_CAT_WEAPONS_MACES
 	additional_items = list(/obj/item/ingot/silverblessed/bullion, /obj/item/ingot/silverblessed/bullion, /obj/item/grown/log/tree/small)
 	i_type = "Weapons"
 

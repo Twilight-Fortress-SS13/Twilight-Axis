@@ -39,7 +39,7 @@
 				index = copytext(H.real_name, 1,index)
 			if(!index)
 				index = H.real_name
-			S.name = "sheriff ([index]) armor"
+			S.name = "sheriff's armor ([index])"
 
 /datum/advclass/sheriff
 	name = "Town Sheriff"

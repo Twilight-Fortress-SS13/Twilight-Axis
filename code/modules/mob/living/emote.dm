@@ -78,7 +78,7 @@ var/list/zone_translations = list(
 	var/mob/living/carbon/follower = user
 	var/datum/patron/patron = follower.patron
 
-	var/prayer = input("Whisper your prayer:", "Prayer") as text|null
+	var/prayer = input(user, "Whisper your prayer:", "Prayer") as text|null
 	if(!prayer)
 		return
 
@@ -273,7 +273,7 @@ var/list/zone_translations = list(
 	key = ""
 	key_third_person = ""
 	message = "gasps out their last breath."
-	message_simple =  "falls limp."
+	message_simple =	"falls limp."
 	stat_allowed = UNCONSCIOUS
 
 /datum/emote/living/deathgasp/run_emote(mob/user, params, type_override, intentional)
@@ -1436,16 +1436,16 @@ var/list/zone_translations = list(
 		to_chat(user, span_boldwarning("I cannot send IC messages (muted)."))
 		return FALSE
 	else if(!params)
-		var/custom_emote = copytext(sanitize(input("What does your character do?") as text|null), 1, MAX_MESSAGE_LEN)
+		var/custom_emote = copytext(sanitize(input(user, "What does your character do?") as text|null), 1, MAX_MESSAGE_LEN)
 		if(custom_emote && !check_invalid(user, custom_emote))
-/*			var/type = input("Is this a visible or hearable emote?") as null|anything in list("Visible", "Hearable")
+/*			var/type = input(user, "Is this a visible or hearable emote?") as null|anything in list("Visible", "Hearable")
 			switch(type)
 				if("Visible")
 					emote_type = EMOTE_VISIBLE
 				if("Hearable")
 					emote_type = EMOTE_AUDIBLE
 				else
-					alert("Unable to use this emote, must be either hearable or visible.")
+					alert(user, "Unable to use this emote, must be either hearable or visible.")
 					return*/
 			message = custom_emote
 			emote_type = EMOTE_VISIBLE
@@ -1636,7 +1636,7 @@ var/list/zone_translations = list(
 	set name = "Знак веры"
 	set category = "Emotes"
 
-	emote("fsalute", intentional =  TRUE)
+	emote("fsalute", intentional =	TRUE)
 
 /datum/emote/living/ffsalute
 	key = "ffsalute"
@@ -1653,7 +1653,7 @@ var/list/zone_translations = list(
 	set name = "Ложный знак веры"
 	set category = "Emotes"
 
-	emote("ffsalute", intentional =  TRUE)
+	emote("ffsalute", intentional =	TRUE)
 
 /datum/emote/living/stat_roll
 	var/delay = 2.5 SECONDS
@@ -1662,10 +1662,10 @@ var/list/zone_translations = list(
 	var/list/failure_message_list
 
 	/**
-	 * An assoc list of character traits which will affect the outcome of rolls by the defined values if the rolling player has them. If empty, this process will be ignored.
-	 * This basically determines the difficulty class in rolls (see: `/mob/living/proc/stat_roll()`)
-	 * -1 value means decreased difficulty class, 5% higher chance to succeed, otherwise vice versa.
-	 */
+		* An assoc list of character traits which will affect the outcome of rolls by the defined values if the rolling player has them. If empty, this process will be ignored.
+		* This basically determines the difficulty class in rolls (see: `/mob/living/proc/stat_roll()`)
+		* -1 value means decreased difficulty class, 5% higher chance to succeed, otherwise vice versa.
+		*/
 	var/list/modifiers_list = list()
 
 /datum/emote/living/stat_roll/run_emote(mob/user, params, type_override, intentional = FALSE)

@@ -475,17 +475,17 @@ SUBSYSTEM_DEF(gamemode)
 /*
 	Roundstart storyteller flow:
 	1. During pre_setup(), we count lobby-ready players and seed the initial roundstart track budgets.
-	   This is still used for the broad roundstart event economy before bodies exist in-world.
+		This is still used for the broad roundstart event economy before bodies exist in-world.
 	2. We intentionally do not buy the roundstart antagonist event during pre_setup().
-	   At that stage the only reliable population metric is the ready count, which can differ from
-	   the players that actually spawn into the round.
+		At that stage the only reliable population metric is the ready count, which can differ from
+		the players that actually spawn into the round.
 	3. After occupation division, character creation, equipment, and transfer, ticker setup marks
-	   roundstart_live and calls roll_roundstart_antag() immediately before GAME_STATE_PLAYING.
+		roundstart_live and calls roll_roundstart_antag() immediately before GAME_STATE_PLAYING.
 	4. roll_roundstart_antag() refreshes active_players from real spawned-in humans, recalculates the
-	   CHARACTER_INJECTION budget from that post-spawn population, and only then lets the storyteller
-	   pick and run the roundstart antagonist event.
+		CHARACTER_INJECTION budget from that post-spawn population, and only then lets the storyteller
+		pick and run the roundstart antagonist event.
 	5. This keeps the roundstart antag budget, eligibility checks, slot scaling, admin diagnostics,
-	   and final roll all keyed off the same in-round population snapshot.
+		and final roll all keyed off the same in-round population snapshot.
 */
 
 /datum/controller/subsystem/gamemode/proc/roundstart_points(track, player_count)
@@ -770,7 +770,7 @@ SUBSYSTEM_DEF(gamemode)
 	update_bandits_slots() // TA EDIT
 	return TRUE
 
-///Everyone should now be on the station and have their normal gear.  This is the place to give the special roles extra things
+///Everyone should now be on the station and have their normal gear.	This is the place to give the special roles extra things
 /datum/controller/subsystem/gamemode/proc/post_setup(report) //Gamemodes can override the intercept report. Passing TRUE as the argument will force a report.
 	if(!report)
 		report = !CONFIG_GET(flag/no_intercept_report)
@@ -1099,8 +1099,8 @@ SUBSYSTEM_DEF(gamemode)
 	if(!preset)
 		return
 	log_storyteller("Gamemode set by admin (no player vote): [preset.name].")
-	to_chat(world, span_notice("<b>Gamemode is [preset.name]!</b>"))
-	to_chat(world, span_notice("[preset.vote_desc]"))
+	to_world(span_notice("<b>Gamemode is [preset.name]!</b>"))
+	to_world(span_notice("[preset.vote_desc]"))
 
 /datum/controller/subsystem/gamemode/proc/get_last_storyteller_vote()
 	var/json_file = file(LAST_ROUND_STATS_FILE)
@@ -1624,7 +1624,7 @@ SUBSYSTEM_DEF(gamemode)
 		dat += "</td></tr>"
 	dat += "</table>"
 
-	dat += "<HR>Active Players: [active_players]   (Royalty: [royalty], Garrison: [garrison], Town Workers: [constructor], Holy Warriors: [holy_warrior], Acolytes: [half_combatant])"
+	dat += "<HR>Active Players: [active_players]	(Royalty: [royalty], Garrison: [garrison], Town Workers: [constructor], Holy Warriors: [holy_warrior], Acolytes: [half_combatant])"
 	dat += "<BR>Effective Population: [effective_pop] (Total: [active_players] + Garrison Bonus: [garrison * 2] + Holy Warrior Bonus: [holy_warrior * 2] + Acolyte Bonus: [half_combatant * 1])"
 	dat += "<BR>Antagonist Count vs Maximum: [get_antag_count()] / [get_antag_cap()]"
 	var/list/guaranteed_roundstart_pool = get_roundstart_guaranteed_pool(roundstart_pool_pop)
@@ -2067,20 +2067,20 @@ SUBSYSTEM_DEF(gamemode)
 
 	var/list/statistics_to_clear = list(
 		STATS_TOTAL_POPULATION,
-        STATS_PSYCROSS_USERS,
-        STATS_ALIVE_NOBLES,
-        STATS_ALIVE_GARRISON,
-        STATS_ALIVE_CLERGY,
-        STATS_ALIVE_TRADESMEN,
-        STATS_WEREVOLVES,
-        STATS_BANDITS,
-        STATS_VAMPIRES,
-        STATS_DEADITES_ALIVE,
-        STATS_CLINGY_PEOPLE,
+		STATS_PSYCROSS_USERS,
+		STATS_ALIVE_NOBLES,
+		STATS_ALIVE_GARRISON,
+		STATS_ALIVE_CLERGY,
+		STATS_ALIVE_TRADESMEN,
+		STATS_WEREVOLVES,
+		STATS_BANDITS,
+		STATS_VAMPIRES,
+		STATS_DEADITES_ALIVE,
+		STATS_CLINGY_PEOPLE,
 		STATS_BEAUTIFUL_PEOPLE,
 		STATS_MARRIAGES_MADE,
-        STATS_ALCOHOLICS,
-        STATS_JUNKIES,
+		STATS_ALCOHOLICS,
+		STATS_JUNKIES,
 		STATS_VOYEURS,
 		STATS_NYMPHOMANIACS,
 		STATS_INDEBTED,

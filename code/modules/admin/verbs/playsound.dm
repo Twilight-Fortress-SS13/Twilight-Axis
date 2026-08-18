@@ -23,7 +23,7 @@
 	var/res = alert(usr, "Show the title of this song to the players?",, "Yes","No", "Cancel")
 	switch(res)
 		if("Yes")
-			to_chat(world, span_boldannounce("An admin played: [S]"))
+			to_world(span_boldannounce("An admin played: [S]"))
 		if("Cancel")
 			return
 

@@ -38,6 +38,8 @@
 //			src.emote("attackgrunt")
 		if(used_intent.releasedrain)
 			stamina_add(ceil(used_intent.releasedrain * rmb_stam_penalty))
+		if(HAS_TRAIT(src, TRAIT_DUALWIELDER))
+			process_dualwield(L, null, null)
 		if(L.has_status_effect(/datum/status_effect/buff/clash) && L.get_active_held_item() && ishuman(L))
 			var/mob/living/carbon/human/H = L
 			var/obj/item/IM = L.get_active_held_item()
@@ -101,7 +103,7 @@
 				log_combat(src, I, "attacked with fists", zone=zone_selected, intent=used_intent.name)
 				visible_message(span_danger("[src] [verbu] [I]!"))
 				var/tempsound = used_intent.hitsound
-				playsound(loc,  tempsound, 100, FALSE, -1)
+				playsound(loc,	tempsound, 100, FALSE, -1)
 		else
 			A.attack_hand(src, params)
 		if(pulling)

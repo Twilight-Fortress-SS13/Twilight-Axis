@@ -156,7 +156,7 @@
 		return
 	. = A.forceMove(dest)
 
-/obj/structure/fluff/railing/Initialize()
+/obj/structure/fluff/railing/Initialize(mapload)
 	. = ..()
 	init_connect_loc_element()
 	var/lay = getwlayer(dir)
@@ -309,7 +309,7 @@
 	pass_crawl = FALSE
 	climb_offset = 6
 
-/obj/structure/fluff/railing/fence/Initialize()
+/obj/structure/fluff/railing/fence/Initialize(mapload)
 	. = ..()
 	smooth_fences()
 
@@ -477,7 +477,7 @@
 		user.visible_message("<span class='info'>[user] Carves a name into the passage.</span>")
 		if(do_after(user, 10))
 			var/passagename
-			passagename = sanitize(input("What name would you like to carve into the passage?"))
+			passagename = sanitize(input(user, "What name would you like to carve into the passage?"))
 			if (passagename)
 				name = passagename + "(passage)"
 				desc = "a passage with a name carved into it"
@@ -503,7 +503,7 @@
 	var/togg = FALSE
 	redstone_structure = TRUE
 
-/obj/structure/bars/grille/Initialize()
+/obj/structure/bars/grille/Initialize(mapload)
 	AddComponent(/datum/component/squeak, list('sound/foley/footsteps/FTMET_A1.ogg','sound/foley/footsteps/FTMET_A2.ogg','sound/foley/footsteps/FTMET_A3.ogg','sound/foley/footsteps/FTMET_A4.ogg'), 40)
 	dir = pick(GLOB.cardinals)
 	return ..()
@@ -544,7 +544,7 @@
 		user.visible_message("<span class='info'>[user] Carves a name into the grille.</span>")
 		if(do_after(user, 10))
 			var/grillename
-			grillename = sanitize(input("What name would you like to carve into the grille?"))
+			grillename = sanitize(input(user, "What name would you like to carve into the grille?"))
 			if (grillename)
 				name = grillename + "(grille)"
 				desc = "a grille with a name carved into it"
@@ -596,7 +596,7 @@
 	var/datum/looping_sound/clockloop/soundloop
 	drag_slowdown = 3
 
-/obj/structure/fluff/clock/Initialize()
+/obj/structure/fluff/clock/Initialize(mapload)
 	soundloop = new(src, FALSE)
 	soundloop.start()
 	. = ..()
@@ -632,7 +632,7 @@
 	. = ..()
 	if(obj_broken)
 		return
-	var/day = lowertext(get_current_day_of_week_name())
+	var/day = LOWER_TEXT(get_current_day_of_week_name())
 	. += "Oh no, it's [station_time_timestamp("hh:mm")] on a [day]"
 //		if(SSshuttle.emergency.mode == SHUTTLE_DOCKED)
 //			if(SSshuttle.emergency.timeLeft() < 30 MINUTES)
@@ -693,10 +693,10 @@
 	. = ..()
 	if(obj_broken)
 		return
-	var/day = lowertext(get_current_day_of_week_name())
+	var/day = LOWER_TEXT(get_current_day_of_week_name())
 	. += "Oh no, it's [station_time_timestamp("hh:mm")] on a [day]"
 
-/obj/structure/fluff/wallclock/Initialize()
+/obj/structure/fluff/wallclock/Initialize(mapload)
 	soundloop = new(src, FALSE)
 	soundloop.start()
 	. = ..()
@@ -875,7 +875,7 @@
 	. = ..()
 	. += span_info("Right-click to access your personal stash. This not only contains the loadout you might've asseembled in the character creation menu, but virtue- and role-specific items as well.")
 
-/obj/structure/fluff/statue/Initialize()
+/obj/structure/fluff/statue/Initialize(mapload)
 	. = ..()
 	var/static/list/loc_connections = list(COMSIG_ATOM_EXIT = PROC_REF(on_exit))
 	AddElement(/datum/element/connect_loc, loc_connections)
@@ -1067,7 +1067,7 @@
 		return
 	practice(user, attacking_weapon.associated_skill, user.used_intent.animname)
 
-/obj/structure/fluff/statue/tdummy/proc/practice(var/mob/living/living_mob, var/associated_skill, var/attack_animation)
+/obj/structure/fluff/statue/tdummy/proc/practice(mob/living/living_mob, associated_skill, attack_animation)
 	living_mob.changeNext_move(CLICK_CD_MELEE)
 	living_mob.stamina_add(rand(4, 6))
 
@@ -1133,7 +1133,7 @@
 		/obj/item/candle/candlestick/gold,
 		/obj/item/kitchen/fork/silver,
 		/obj/item/kitchen/fork/gold,
-        /obj/item/kitchen/spoon/silver,
+		/obj/item/kitchen/spoon/silver,
 		/obj/item/kitchen/spoon/gold,
 		/obj/item/roguestatue,
 		/obj/item/riddleofsteel,
@@ -1146,7 +1146,7 @@
 		/obj/item/scomstone,
 		/obj/item/rogueweapon/greatsword/psygsword,
 		/obj/item/clothing/head/roguetown/circlet,
-		/obj/item/carvedgem,  //Some of these aren't particularly worth much, but it'd be REALLY unintuitive for "valuables" to not actually be offerings
+		/obj/item/carvedgem,	//Some of these aren't particularly worth much, but it'd be REALLY unintuitive for "valuables" to not actually be offerings
 		/obj/item/rogueweapon/huntingknife/combat/jadekukri,
 		/obj/item/rogueweapon/huntingknife/combat/opalknife,
 		/obj/item/rogueweapon/spear/turq,
@@ -1235,7 +1235,7 @@
 		. += span_info("As an Eoran, you can marry two people by having them both bite an apple, then offering it to the cross.")
 		. += span_info("The second person to bite the apple will take the last name of whoever bit it first.")
 
-/obj/structure/fluff/psycross/Initialize()
+/obj/structure/fluff/psycross/Initialize(mapload)
 	. = ..()
 	become_hearing_sensitive()
 	var/static/list/loc_connections = list(COMSIG_ATOM_EXIT = PROC_REF(on_exit))
@@ -1494,6 +1494,56 @@
 		var/diff = power - M.confused
 		M.confused += min(power, diff)
 
+/obj/structure/fluff/psycross/proc/summon_martyr_weapon_tgui(mob/user)
+	if(!user.mind)
+		return
+
+	var/list/weapon_choices = list(
+		"Sword" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/sword/long/martyr),
+		"Axe" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/greataxe/steel/doublehead/martyr),
+		"Mace" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/mace/goden/martyr),
+		"Trident" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/spear/partizan/martyr)
+	)
+
+	var/result = tgui_input_list(user, "Choose a martyr weapon to summon:", "Martyr Weapon", weapon_choices)
+
+	if(result && weapon_choices[result])
+		var/datum/callback/selected_callback = weapon_choices[result]
+		selected_callback.Invoke()
+	else
+		to_chat(user, span_warning("No weapon was chosen."))
+
+/obj/structure/fluff/psycross/proc/summon_and_equip(mob/user, obj/item/rogueweapon/weapontype)
+	var/obj/item/rogueweapon/old_weapon = SSroguemachine.martyrweapon
+	var/integrity
+
+	if(old_weapon)
+		integrity = old_weapon.obj_integrity
+		old_weapon.visible_message(span_danger("[old_weapon] dissolves into mere dust, and flitters away - unbound."))
+		SSroguemachine.martyrweapon = null
+		qdel(old_weapon)
+
+	var/obj/item/rogueweapon/new_weapon = new weapontype(src.loc)
+	new_weapon.obj_integrity = integrity
+	SSroguemachine.martyrweapon = new_weapon
+
+	if(user.put_in_hands(new_weapon))
+		to_chat(user, span_notice("[new_weapon] appears in your hand."))
+	else
+		to_chat(user, span_warning("Your hands are full! [new_weapon] falls to your feet."))
+
+	return new_weapon
+
+/obj/structure/fluff/psycross/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
+	if(user.job != "Martyr")
+		return
+	if((HAS_TRAIT(user, TRAIT_NOPAIN) && HAS_TRAIT(user, TRAIT_STRENGTH_UNCAPPED) && HAS_TRAIT(user, TRAIT_BLOODLOSS_IMMUNE))) // So that the martyr could not change weapons during his special ability... I do not know how to make it smarter.
+		return
+	summon_martyr_weapon_tgui(user)
+
 /obj/structure/fluff/beach_umbrella/security
 	icon_state = "hos_brella"
 
@@ -1564,7 +1614,7 @@
 	update_icon()
 	stake = locate(/obj/item/grown/log/tree/stake) in parts_list
 
-///obj/structure/fluff/headstake/Initialize()
+///obj/structure/fluff/headstake/Initialize(mapload)
 //	. = ..()
 
 /obj/structure/fluff/headstake/OnCrafted(dirin, user)

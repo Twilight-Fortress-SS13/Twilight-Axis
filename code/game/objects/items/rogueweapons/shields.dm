@@ -157,7 +157,6 @@
 	icon_state = "deprived"
 	coverage = 40
 	max_integrity = 200
-	bullet_damage_mult = 0.7 //TA EDIT
 
 /// Returns list of heraldry names native to this shield type (stripped of prefix)
 /obj/item/rogueweapon/shield/proc/get_heraldry_options()
@@ -395,7 +394,6 @@
 	flags_1 = CONDUCT_1
 	wdefense = 11
 	coverage = 50
-	bullet_damage_mult = 0 //TA EDIT
 	attacked_sound = list('sound/combat/parry/shield/metalshield (1).ogg','sound/combat/parry/shield/metalshield (2).ogg','sound/combat/parry/shield/metalshield (3).ogg')
 	parrysound = list('sound/combat/parry/shield/metalshield (1).ogg','sound/combat/parry/shield/metalshield (2).ogg','sound/combat/parry/shield/metalshield (3).ogg')
 	max_integrity = 330
@@ -437,7 +435,6 @@
 	flags_1 = CONDUCT_1
 	wdefense = 12
 	coverage = 55
-	bullet_damage_mult = 0 //TA EDIT
 	heraldry_x_offset = 1
 	attacked_sound = list('sound/combat/parry/shield/metalshield (1).ogg','sound/combat/parry/shield/metalshield (2).ogg','sound/combat/parry/shield/metalshield (3).ogg')
 	parrysound = list('sound/combat/parry/shield/metalshield (1).ogg','sound/combat/parry/shield/metalshield (2).ogg','sound/combat/parry/shield/metalshield (3).ogg')
@@ -460,12 +457,11 @@
 	or skin; uncomforting to the unexpecting touch, but more-than-excellent for catching blows."
 	icon_state = "zizoshield"
 	smeltresult = /obj/item/ingot/component/zizo
-	bullet_damage_mult = 0 //TA EDIT
 
 /obj/item/rogueweapon/shield/tower/metal/zizo/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
-/obj/item/rogueweapon/shield/tower/metal/zizo/Initialize()
+/obj/item/rogueweapon/shield/tower/metal/zizo/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SHIELD")
 
@@ -480,7 +476,6 @@
 	coverage = 75
 	icon_state = "zizoshield"
 	smeltresult = /obj/item/ingot/avantyne
-	bullet_damage_mult = 0 //TA EDIT
 
 /obj/item/rogueweapon/shield/tower/metal/gold
 	name = "golden shield"
@@ -497,7 +492,6 @@
 	flags_1 = CONDUCT_1
 	wdefense = 14
 	coverage = 50
-	bullet_damage_mult = 0 //TA EDIT
 	attacked_sound = list('sound/combat/parry/shield/metalshield (1).ogg','sound/combat/parry/shield/metalshield (2).ogg','sound/combat/parry/shield/metalshield (3).ogg')
 	parrysound = list('sound/combat/parry/shield/metalshield (1).ogg','sound/combat/parry/shield/metalshield (2).ogg','sound/combat/parry/shield/metalshield (3).ogg')
 	max_integrity = 50
@@ -519,7 +513,6 @@
 	flags_1 = CONDUCT_1
 	wdefense = 14
 	coverage = 50
-	bullet_damage_mult = 0 //TA EDIT
 	attacked_sound = list('sound/combat/parry/shield/metalshield (1).ogg','sound/combat/parry/shield/metalshield (2).ogg','sound/combat/parry/shield/metalshield (3).ogg')
 	parrysound = list('sound/combat/parry/shield/metalshield (1).ogg','sound/combat/parry/shield/metalshield (2).ogg','sound/combat/parry/shield/metalshield (3).ogg')
 	max_integrity = 350
@@ -548,7 +541,6 @@
 	color = "#bb9696"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
-	bullet_damage_mult = 0 //TA EDIT
 
 /obj/item/rogueweapon/shield/tower/metal/palloy
 	name = "ancient shield"
@@ -556,7 +548,6 @@
 	unphasing prejudice. It is a reminder - one of many - that Her progress cannot be stopped."
 	icon_state = "ancientsh"
 	smeltresult = /obj/item/ingot/aaslag
-	bullet_damage_mult = 0 //TA EDIT
 
 /obj/item/rogueweapon/shield/tower/raneshen
 	name = "rider shield"
@@ -568,7 +559,6 @@
 	wdefense = 11
 	max_integrity = 220 //not fully metal but not fully wood either
 	anvilrepair = /datum/skill/craft/carpentry
-	bullet_damage_mult = 0 //TA EDIT
 
 /obj/item/rogueweapon/shield/tower/raneshen/getonmobprop(tag)
 	. = ..()
@@ -586,7 +576,6 @@
 	coverage = 55
 	smeltresult = /obj/item/ingot/drow
 	smelt_bar_num = 1
-	bullet_damage_mult = 0 //TA EDIT
 
 /obj/item/rogueweapon/shield/buckler
 	name = "buckler shield"
@@ -651,7 +640,6 @@
 	icon_state = "ancient_buckler"
 	max_integrity = 85
 	smeltresult = /obj/item/ingot/aaslag
-	bullet_damage_mult = 0.6 //TA EDIT
 
 // unique, better buckler for champion
 /obj/item/rogueweapon/shield/buckler/banneret
@@ -663,7 +651,6 @@
 	slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
 	sellprice = 100 // lets not make it too profitable
 	smeltresult = /obj/item/ingot/blacksteel
-	bullet_damage_mult = 0.6 //TA EDIT
 
 /obj/item/rogueweapon/shield/heater
 	name = "heater shield"
@@ -720,7 +707,6 @@
 	desc = "If they couldn't protect their previous owners, how confident are you in these bones protecting you?"
 	icon_state = "boneshield"
 	smeltresult = null
-	bullet_damage_mult = 0.5 //TA EDIT
 
 /obj/item/rogueweapon/shield/iron/graggar
 	name = "vicious targe"
@@ -729,9 +715,8 @@
 	rescinded their claim to Godhood, grief could not describe what He had felt."
 	icon_state = "graggarshield"
 	max_integrity = 300
-	bullet_damage_mult = 0.5 //TA EDIT
 
-/obj/item/rogueweapon/shield/iron/graggar/Initialize()
+/obj/item/rogueweapon/shield/iron/graggar/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "SHIELD", "RENDERED ASUNDER")
 
@@ -779,7 +764,6 @@
 	coverage = 75
 	wdefense = 10
 	minstr = 12 //Requires a natural +STR modifier or statpack to double as a melee weapon, for its given class. Note that it has a heavier charge time and active stamina drain, too, as.. well, it's quite heavy.
-	bullet_damage_mult = 0.55 //TA EDIT
 
 /obj/item/rogueweapon/shield/bronze/great/get_mechanics_examine(mob/user)
 	. = ..()
@@ -790,7 +774,6 @@
 	desc = "A banded iron shield decorated with traditional Aavnic colours, often seen in the hands of the Steppesmen."
 	icon_state = "ironsh_steppeman"
 	max_integrity = 250 //+30
-	bullet_damage_mult = 0.5 //TA EDIT
 
 /*/obj/item/rogueweapon/shield/buckler/freelancer
 	name = "fencer's wrap"
@@ -881,7 +864,6 @@
 	max_integrity = 360 //20% more integrity. It's unique and race-locked.
 	sellprice = 60
 	smeltresult = /obj/item/ingot/steel
-	bullet_damage_mult = 0 //TA EDIT
 
 /obj/item/rogueweapon/shield/tower/metal/blacksteel
 	name = "blacksteel shield"
@@ -895,4 +877,3 @@
 	possible_item_intents = list(/datum/intent/shield/bash/metal, /datum/intent/shield/block, /datum/intent/mace/smash/shield/metal, /datum/intent/effect/daze)
 	minstr = 11
 	wdefense = 13
-	bullet_damage_mult = 0 //TA EDIT

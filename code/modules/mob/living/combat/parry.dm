@@ -8,7 +8,7 @@
 	var/mob/living/U = user
 	if(H && U)
 		prob2defend = 0
-	
+
 	if(!can_see_cone(user))
 		if(!H.get_tempo_bonus(TEMPO_TAG_NOLOS_PARRY))
 			return FALSE
@@ -47,7 +47,7 @@
 		var/parrytime = setparrytime
 		parrytime -= get_tempo_bonus(TEMPO_TAG_PARRYCD_BONUS)
 		changeNext_def(parrytime)
-	
+
 	var/drained = BASE_PARRY_STAMINA_DRAIN
 	var/weapon_parry = FALSE
 	var/offhand_defense = 0
@@ -76,7 +76,7 @@
 	if(istype(offhand, /obj/item/rogueweapon/shield/buckler))
 		skiller.bucklerskill(H)
 	if(istype(mainhand, /obj/item/rogueweapon/shield/buckler))
-		skillerbuck.bucklerskill(H)  //buckler code end
+		skillerbuck.bucklerskill(H)	//buckler code end
 
 	if(mainhand)
 		if(mainhand.can_parry)
@@ -148,7 +148,7 @@
 
 	var/att_swift_capable = U.check_dodge_skill(check_trait = FALSE)
 	var/def_swift_capable = H.check_dodge_skill(check_trait = FALSE)
-	
+
 	if(used_weapon)
 		if(used_weapon.wbalance == WBALANCE_SWIFT)
 			if(mainhand && !offhand && def_swift_capable) // We're one-handing a swift-balanced weapon (rapiers, sabers, etc). Small parry boost (1 wdef equiv.)
@@ -212,7 +212,7 @@
 					return TRUE	//Tentative, might be better if it only increased parry chance on the initial binding rather than a full block.
 
 	// --- Weapon Binding End! ---
-	
+
 	if(HAS_TRAIT(user, TRAIT_CURSE_RAVOX))
 		prob2defend -= 40
 
@@ -302,7 +302,7 @@
 		if(do_parry(used_weapon, drained, user, untrained_armor)) //show message
 			//only gain experience if attacker and defender aren't using non-combat skills for their weapons
 			if(ispath(attacker_skill_type, /datum/skill/combat) && ispath(used_weapon.associated_skill, /datum/skill/combat))
-				if ((mobility_flags & MOBILITY_STAND))
+				if ((mobility_flags & MOBILITY_STAND) && !isanimal(U))
 					var/skill_target = attacker_skill
 					if(!HAS_TRAIT(U, TRAIT_GOODTRAINER))
 						skill_target -= SKILL_LEVEL_NOVICE
@@ -312,7 +312,7 @@
 						mind.add_sleep_experience(used_weapon.associated_skill, max(round(STAINT*exp_multi), 0), FALSE)
 
 				//attacker skill gain
-				if(U.mind)
+				if(U.mind && !isanimal(U))
 					if ((mobility_flags & MOBILITY_STAND))
 						var/skill_target = defender_skill
 						if(!HAS_TRAIT(src, TRAIT_GOODTRAINER))
@@ -383,7 +383,7 @@
 		if(do_unarmed_parry(drained, user, untrained_armor))
 			//only gain experience if attacker isn't using a non-combat skill for their weapon
 			if(ispath(attacker_skill_type, /datum/skill/combat))
-				if((mobility_flags & MOBILITY_STAND))
+				if((mobility_flags & MOBILITY_STAND) && !isanimal(U))
 					var/skill_target = attacker_skill
 					if(!HAS_TRAIT(U, TRAIT_GOODTRAINER))
 						skill_target -= SKILL_LEVEL_NOVICE
@@ -439,12 +439,6 @@
 				if(prob(7 + (L.STALUC - 10)))
 					L.sate_addiction(/datum/charflaw/addiction/clamorous)
 
-			if(!iscarbon(user))	//Non-carbon mobs never make it to the proper parry proc where the other calculations are done.
-				if(W.max_blade_int)
-					W.remove_bintegrity(SHARPNESS_ONHIT_DECAY, user)
-					W.take_damage(INTEG_PARRY_DECAY, BRUTE, "slash")
-				else
-					W.take_damage(INTEG_PARRY_DECAY_NOSHARP, BRUTE, "slash")
 			return TRUE
 		else
 			to_chat(src, span_warning("I'm too tired to parry!"))

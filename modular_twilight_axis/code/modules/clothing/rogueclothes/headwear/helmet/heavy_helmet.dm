@@ -164,7 +164,7 @@
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
 
 /obj/item/clothing/head/roguetown/helmet/heavy/citywatch
-	name = "citywatch's helmet"
+	name = "watchman's helmet"
 	desc = "Тяжелый шлем, невероятно устойчивый ко всем видам урона. Используется городским Дозором Рокхилла."
 	icon_state = "citywatch_helmet"
 	item_state = "citywatch_helmet"

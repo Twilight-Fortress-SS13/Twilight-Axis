@@ -134,7 +134,6 @@
 	health = 180
 	melee_damage_lower = 40
 	melee_damage_upper = 50
-	speed = 0
 	move_to_delay = 2
 	AIStatus = AI_OFF
 	can_have_ai = FALSE

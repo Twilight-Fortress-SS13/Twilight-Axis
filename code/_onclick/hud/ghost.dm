@@ -37,7 +37,7 @@
 		if(G.client)
 			if(isscryeye(G) || G.trapped)
 				return
-			if(alert("Travel with the boatman?", "", "Yes", "No") == "Yes")
+			if(alert(usr, "Travel with the boatman?", "", "Yes", "No") == "Yes")
 				if(G.mind)
 					var/datum/job/target_job = SSjob.GetJob(G.mind.assigned_role)
 					if(target_job)
@@ -162,7 +162,7 @@
 	..()
 	var/atom/movable/screen/using
 
-	using =  new /atom/movable/screen/backhudl/ghost()
+	using =	new /atom/movable/screen/backhudl/ghost()
 	using.hud = src
 	static_inventory += using
 
@@ -198,7 +198,7 @@
 	..()
 	var/atom/movable/screen/using
 
-	using =  new /atom/movable/screen/backhudl/obs()
+	using =	new /atom/movable/screen/backhudl/obs()
 	using.hud = src
 	static_inventory += using
 

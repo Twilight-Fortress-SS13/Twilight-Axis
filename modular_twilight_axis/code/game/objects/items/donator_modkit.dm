@@ -260,3 +260,31 @@
 	icon_state = "aisuwand"
 	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons.dmi'
 
+// COMMANDANT SET START
+
+/obj/item/enchantingkit/commandant_helmet
+	name = "commandant's helmet morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Heavy Helmet."
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy)
+	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/commandant
+	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/commandant
+
+/obj/item/enchantingkit/commandant_coat
+	name = "commandant's coat morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Hardened Leather Coat or Lightweight Brigandine."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/commandant,
+		/obj/item/clothing/suit/roguetown/armor/brigandine/light = /obj/item/clothing/suit/roguetown/armor/brigandine/light/commandant,
+		/obj/item/clothing/suit/roguetown/armor/brigandine/light/retinue = /obj/item/clothing/suit/roguetown/armor/brigandine/light/commandant)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/commandant
+
+/obj/item/enchantingkit/commandant_pistol
+	name = "elegant pistol morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Arquebus Pistol."
+	target_items = list(
+		/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/commandant
+	)
+	exact_type = TRUE
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/commandant
+
+// COMMANDANT SET END

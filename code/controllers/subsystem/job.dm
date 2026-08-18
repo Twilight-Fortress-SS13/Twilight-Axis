@@ -64,7 +64,7 @@ SUBSYSTEM_DEF(job)
 	occupations = list()
 	var/list/all_jobs = subtypesof(/datum/job/roguetown)
 	if(!all_jobs.len)
-		to_chat(world, span_boldannounce("Error setting up jobs, no job datums found"))
+		to_world(span_boldannounce("Error setting up jobs, no job datums found"))
 		return 0
 
 	for(var/J in all_jobs)
@@ -426,8 +426,8 @@ SUBSYSTEM_DEF(job)
 	return newlist
 
 /** Proc DivideOccupations
- *  fills var "assigned_role" for all ready players.
- *  This proc must not have any side effect besides of modifying "assigned_role".
+ *	fills var "assigned_role" for all ready players.
+ *	This proc must not have any side effect besides of modifying "assigned_role".
  **/
 /datum/controller/subsystem/job/proc/DivideOccupations(list/required_jobs)
 	//Setup new player list and get the jobs list
@@ -942,7 +942,7 @@ SUBSYSTEM_DEF(job)
 			. |= player.mind
 
 ////////////////////////////////////////
-//Keeps track of all  security members//
+//Keeps track of all	security members//
 ////////////////////////////////////////
 /datum/controller/subsystem/job/proc/get_all_sec()
 	. = list()

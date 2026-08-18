@@ -33,10 +33,10 @@
 #define TOOT_COOLDOWN 1.5 SECONDS //TA EDIT END
 
 /**
-  * # Chat Message Overlay
-  *
-  * Datum for generating a message overlay on the map
-  */
+	* # Chat Message Overlay
+	*
+	* Datum for generating a message overlay on the map
+	*/
 /datum/chatmessage
 	/// The visual element of the chat messsage
 	var/image/message
@@ -63,15 +63,15 @@
 	var/last_toot_time //TA EDIT END
 
 /**
-  * Constructs a chat message overlay
-  *
-  * Arguments:
-  * * text - The text content of the overlay
-  * * target - The target atom to display the overlay at
-  * * owner - The mob that owns this overlay, only this mob will be able to view it
-  * * extra_classes - Extra classes to apply to the span that holds the text
-  * * lifespan - The lifespan of the message in deciseconds
-  */
+	* Constructs a chat message overlay
+	*
+	* Arguments:
+	* * text - The text content of the overlay
+	* * target - The target atom to display the overlay at
+	* * owner - The mob that owns this overlay, only this mob will be able to view it
+	* * extra_classes - Extra classes to apply to the span that holds the text
+	* * lifespan - The lifespan of the message in deciseconds
+	*/
 /datum/chatmessage/New(text, atom/target, mob/owner, list/extra_classes = list(), lifespan = CHAT_MESSAGE_LIFESPAN)
 	. = ..()
 	if (!istype(target))
@@ -139,21 +139,21 @@
 */
 
 /**
-  * Calls qdel on the chatmessage when its parent is deleted, used to register qdel signal
-  */
+	* Calls qdel on the chatmessage when its parent is deleted, used to register qdel signal
+	*/
 /datum/chatmessage/proc/on_parent_qdel()
 	qdel(src)
 
 /**
-  * Generates a chat message image representation
-  *
-  * Arguments:
-  * * text - The text content of the overlay
-  * * target - The target atom to display the overlay at
-  * * owner - The mob that owns this overlay, only this mob will be able to view it
-  * * extra_classes - Extra classes to apply to the span that holds the text
-  * * lifespan - The lifespan of the message in deciseconds
-  */
+	* Generates a chat message image representation
+	*
+	* Arguments:
+	* * text - The text content of the overlay
+	* * target - The target atom to display the overlay at
+	* * owner - The mob that owns this overlay, only this mob will be able to view it
+	* * extra_classes - Extra classes to apply to the span that holds the text
+	* * lifespan - The lifespan of the message in deciseconds
+	*/
 /datum/chatmessage/proc/generate_image(text, atom/target, mob/owner, list/extra_classes, lifespan)
 	// TA EDIT START
 	if(QDELETED(src) || QDELETED(target) || QDELETED(owner) || !owner.client)
@@ -164,7 +164,7 @@
 
 	// Register client who owns this message
 	owned_by = owner.client
-	RegisterSignal(owned_by, COMSIG_PARENT_QDELETING, .proc/on_parent_qdel)
+	RegisterSignal(owned_by, COMSIG_PARENT_QDELETING, PROC_REF(on_parent_qdel))
 	//RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, .proc/on_parent_take_damage) //TA EDIT
 
 	// Clip message
@@ -204,7 +204,7 @@
 	// Append radio icon if from a virtual speaker
 	if (extra_classes.Find("virtual-speaker"))
 		var/image/r_icon = image('icons/UI_Icons/chat/chat_icons.dmi', icon_state = "radio")
-		text =  "\icon[r_icon]&nbsp;" + text
+		text =	"\icon[r_icon]&nbsp;" + text
 
 	if(extra_classes.Find("mindlink"))
 		target.chat_color = "#2681a5"
@@ -486,8 +486,8 @@
 // TA EDIT END
 
 /**
-  * Applies final animations to overlay CHAT_MESSAGE_EOL_FADE deciseconds prior to message deletion
-  */
+	* Applies final animations to overlay CHAT_MESSAGE_EOL_FADE deciseconds prior to message deletion
+	*/
 /datum/chatmessage/proc/end_of_life(fadetime = CHAT_MESSAGE_EOL_FADE)
 	if(QDELETED(src))
 		return
@@ -503,15 +503,15 @@
 	// TA EDIT END
 
 /**
-  * Creates a message overlay at a defined location for a given speaker
-  *
-  * Arguments:
-  * * speaker - The atom who is saying this message
-  * * message_language - The language that the message is said in
-  * * raw_message - The text content of the message
-  * * spans - Additional classes to be added to the message
-  * * message_mode - Bitflags relating to the mode of the message
-  */
+	* Creates a message overlay at a defined location for a given speaker
+	*
+	* Arguments:
+	* * speaker - The atom who is saying this message
+	* * message_language - The language that the message is said in
+	* * raw_message - The text content of the message
+	* * spans - Additional classes to be added to the message
+	* * message_mode - Bitflags relating to the mode of the message
+	*/
 /mob/proc/create_chat_message(atom/movable/speaker, datum/language/message_language, raw_message, list/spans = list(), message_mode)
 	// Ensure the list we are using, if present, is a copy so we don't modify the list provided to us
 	spans = spans ? spans.Copy() : list()
@@ -544,15 +544,15 @@
 #define CM_COLOR_LUM_MAX	0.75
 
 /**
-  * Gets a color for a name, will return the same color for a given string consistently within a round.atom
-  *
-  * Note that this proc aims to produce pastel-ish colors using the HSL colorspace. These seem to be favorable for displaying on the map.
-  *
-  * Arguments:
-  * * name - The name to generate a color for
-  * * sat_shift - A value between 0 and 1 that will be multiplied against the saturation
-  * * lum_shift - A value between 0 and 1 that will be multiplied against the luminescence
-  */
+	* Gets a color for a name, will return the same color for a given string consistently within a round.atom
+	*
+	* Note that this proc aims to produce pastel-ish colors using the HSL colorspace. These seem to be favorable for displaying on the map.
+	*
+	* Arguments:
+	* * name - The name to generate a color for
+	* * sat_shift - A value between 0 and 1 that will be multiplied against the saturation
+	* * lum_shift - A value between 0 and 1 that will be multiplied against the luminescence
+	*/
 /datum/chatmessage/proc/colorize_string(name, sat_shift = 1, lum_shift = 1)
 	// seed to help randomness
 	var/static/rseed = rand(1,26)
