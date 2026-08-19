@@ -167,47 +167,14 @@ GLOBAL_LIST_EMPTY(species_list)
 	if(user.doing)
 		return 0
 	user.doing = 1
+	var/doing_generation = ++user.doing_generation // TA EDIT
 
-	var/holding = user.get_active_held_item()
-	var/datum/progressbar/progbar
-	var/datum/progressbar/progbartarget
-	if (progress)
-		progbar = new(user, time, target)
-	if (double_progress)
-		progbartarget = new(target, time, user)
-
-	var/endtime = world.time+time
-	var/starttime = world.time
-	. = 1
-	while (world.time < endtime)
-		stoplag(1)
-		if (progress)
-			progbar.update(world.time - starttime)
-		if(double_progress)
-			progbartarget.update(world.time - starttime)
-		if(QDELETED(user) || QDELETED(target))
-			. = 0
-			break
-
-		if(!user.doing)
-			. = 0
-			break
-
-		if(uninterruptible)
-			continue
-
-		if(!can_move && (!user.Adjacent(target)))
-			. = 0
-			break
-
-		if(user.get_active_held_item() != holding || user.incapacitated() || (extra_checks && !extra_checks.Invoke()))
-			. = 0
-			break
-	user.doing = 0
-	if (progress)
-		qdel(progbar)
-	if (double_progress)
-		qdel(progbartarget)
+	var/datum/component/do_mob_component/do_mob_component = user.AddComponent(/datum/component/do_mob_component, target, time, uninterruptible, progress, extra_checks, double_progress, can_move, doing_generation) // TA EDIT START
+	if(QDELETED(do_mob_component))
+		if(user.doing_generation == doing_generation)
+			user.doing = FALSE
+		return FALSE
+	. = do_mob_component.sync() // TA EDIT END
 
 
 //some additional checks as a callback for for do_afters that want to break on losing health or on the mob taking action
@@ -262,73 +229,28 @@ GLOBAL_LIST_EMPTY(species_list)
 		return FALSE
 
 	user.doing = TRUE
+	var/doing_generation = ++user.doing_generation // TA EDIT
 	SEND_SIGNAL(user, COMSIG_DO_AFTER_BEGAN)
 
-	var/atom/Tloc = null
-	if(target && !isturf(target))
-		Tloc = target.loc
-
-	var/atom/Uloc = user.loc
-	var/original_dir = user.dir
-
-	var/drifting = FALSE
-
-	var/holding = user.get_active_held_item()
-
-	var/holdingnull = TRUE //User's hand started out empty, check for an empty hand
-	if(holding)
-		holdingnull = FALSE //Users hand started holding something, check to see if it's still holding that
-
 	delay *= user.do_after_coefficent()
-
-	var/datum/progressbar/progbar
-	if (progress)
-		progbar = new(user, delay, user)
-
-	var/endtime = world.time + delay
-	var/starttime = world.time
-	. = TRUE
-	while (world.time < endtime)
-		stoplag(1)
-		if (progress)
-			progbar.update(world.time - starttime)
-
-		if(QDELETED(user) || user.stat || (!drifting && !allow_movement && user.loc != Uloc) || (extra_checks && !extra_checks.Invoke()) || (same_direction && user.dir != original_dir))
-			. = FALSE
-			break
-
-		if(!user.doing)
-			. = FALSE
-			break
-
-		if(isliving(user))
-			var/mob/living/L = user
-			if(L.IsStun() || L.IsParalyzed())
-				. = FALSE
-				break
-
-		if(!QDELETED(Tloc) && (QDELETED(target) || Tloc != target.loc))
-			if((Uloc != Tloc || Tloc != user) && !drifting)
-				. = FALSE
-				break
-
-		if(needhand)
-			//This might seem like an odd check, but you can still need a hand even when it's empty
-			//i.e the hand is used to pull some item/tool out of the construction
-			if(!holdingnull)
-				if(!holding)
-					. = FALSE
-					break
-			if(user.get_active_held_item() != holding)
-				. = FALSE
-				break
-	user.doing = FALSE
-	SEND_SIGNAL(user, COMSIG_DO_AFTER_ENDED)
-	if (progress)
-		qdel(progbar)
+	var/datum/component/do_after_component/do_after_component = user.AddComponent(/datum/component/do_after_component, delay, needhand, target, progress, extra_checks, same_direction, allow_movement, doing_generation) // TA EDIT START
+	if(QDELETED(do_after_component))
+		if(user.doing_generation == doing_generation)
+			user.doing = FALSE
+		SEND_SIGNAL(user, COMSIG_DO_AFTER_ENDED)
+		return FALSE
+	. = do_after_component.sync() // TA EDIT END
 
 /mob/proc/stop_all_doing()
-	doing = FALSE
+	for(var/datum/component/do_after_component/do_after_component as anything in GetComponents(/datum/component/do_after_component)) // TA EDIT START
+		do_after_component.cancel()
+	for(var/datum/component/do_mob_component/do_mob_component as anything in GetComponents(/datum/component/do_mob_component))
+		do_mob_component.cancel()
+	for(var/datum/component/move_after_component/move_after_component as anything in GetComponents(/datum/component/move_after_component))
+		move_after_component.cancel()
+	for(var/datum/component/do_after_mob_component/do_after_mob_component as anything in GetComponents(/datum/component/do_after_mob_component))
+		do_after_mob_component.cancel()
+	doing = FALSE // TA EDIT END
 	for(var/interaction_key in do_afters)
 		LAZYREMOVE(do_afters, interaction_key)
 
@@ -340,73 +262,17 @@ GLOBAL_LIST_EMPTY(species_list)
 	if(user.doing)
 		return 0
 	user.doing = 1
+	var/doing_generation = ++user.doing_generation // TA EDIT
 	SEND_SIGNAL(user, COMSIG_DO_AFTER_BEGAN)
 
-	var/atom/Tloc = null
-	if(target && !isturf(target))
-		Tloc = target.loc
-
-	var/atom/Uloc = user.loc
-	var/original_dir = user.dir
-
-	var/drifting = 0
-
-	var/holding = user.get_active_held_item()
-
-	var/holdingnull = 1 //User's hand started out empty, check for an empty hand
-	if(holding)
-		holdingnull = 0 //Users hand started holding something, check to see if it's still holding that
-
 	delay *= user.do_after_coefficent()
-
-	var/datum/progressbar/progbar
-	if (progress)
-		progbar = new(user, delay, user)
-
-	var/endtime = world.time + delay
-	var/starttime = world.time
-	. = 1
-	while (world.time < endtime)
-		stoplag(1)
-		if (progress)
-			progbar.update(world.time - starttime)
-
-		Uloc = user?.loc
-		Tloc = target?.loc
-
-		if(QDELETED(user) || user.stat || !Tloc?.Adjacent(Uloc) || (extra_checks && !extra_checks.Invoke()) || (same_direction && user.dir != original_dir))
-			. = 0
-			break
-
-		if(!user.doing)
-			. = 0
-			break
-
-		if(isliving(user))
-			var/mob/living/L = user
-			if(L.IsStun() || L.IsParalyzed())
-				. = 0
-				break
-
-		if(!QDELETED(Tloc) && (QDELETED(target) || Tloc != target.loc))
-			if((Uloc != Tloc || Tloc != user) && !drifting)
-				. = 0
-				break
-
-		if(needhand)
-			//This might seem like an odd check, but you can still need a hand even when it's empty
-			//i.e the hand is used to pull some item/tool out of the construction
-			if(!holdingnull)
-				if(!holding)
-					. = 0
-					break
-			if(user.get_active_held_item() != holding)
-				. = 0
-				break
-	user.doing = 0
-	SEND_SIGNAL(user, COMSIG_DO_AFTER_ENDED)
-	if (progress)
-		qdel(progbar)
+	var/datum/component/move_after_component/move_after_component = user.AddComponent(/datum/component/move_after_component, delay, needhand, target, progress, extra_checks, same_direction, doing_generation) // TA EDIT START
+	if(QDELETED(move_after_component))
+		if(user.doing_generation == doing_generation)
+			user.doing = FALSE
+		SEND_SIGNAL(user, COMSIG_DO_AFTER_ENDED)
+		return FALSE
+	. = move_after_component.sync() // TA EDIT END
 
 /mob/proc/do_after_coefficent() // This gets added to the delay on a do_after, default 1
 	. = 1
@@ -419,54 +285,17 @@ GLOBAL_LIST_EMPTY(species_list)
 	if(user.doing)
 		return 0
 	user.doing = 1
+	var/doing_generation = ++user.doing_generation // TA EDIT
 
 	if(!islist(targets))
 		targets = list(targets)
-	var/user_loc = user.loc
 
-	var/drifting = 0
-
-	var/list/originalloc = list()
-	for(var/atom/target in targets)
-		originalloc[target] = target.loc
-
-	var/holding = user.get_active_held_item()
-	var/datum/progressbar/progbar
-	if(progress)
-		progbar = new(user, time, targets[1])
-
-	var/endtime = world.time + time
-	var/starttime = world.time
-	var/mob/living/L
-	if(isliving(user))
-		L = user
-	. = 1
-	mainloop:
-		while(world.time < endtime)
-			stoplag(1)
-			if(progress)
-				progbar.update(world.time - starttime)
-			if(QDELETED(user) || !targets)
-				. = 0
-				break
-			if(!user.doing)
-				. = 0
-				break
-
-			if(uninterruptible)
-				continue
-
-			if(L && !CHECK_MULTIPLE_BITFIELDS(L.mobility_flags, required_mobility_flags))
-				. = 0
-				break
-
-			for(var/atom/target in targets)
-				if((!drifting && user_loc != user.loc) || QDELETED(target) || originalloc[target] != target.loc || user.get_active_held_item() != holding || user.incapacitated() || (extra_checks && !extra_checks.Invoke()))
-					. = 0
-					break mainloop
-	user.doing = 0
-	if(progbar)
-		qdel(progbar)
+	var/datum/component/do_after_mob_component/do_after_mob_component = user.AddComponent(/datum/component/do_after_mob_component, targets, time, uninterruptible, progress, extra_checks, required_mobility_flags, doing_generation) // TA EDIT START
+	if(QDELETED(do_after_mob_component))
+		if(user.doing_generation == doing_generation)
+			user.doing = FALSE
+		return FALSE
+	. = do_after_mob_component.sync() // TA EDIT END
 
 /proc/is_species(A, species_datum)
 	. = FALSE

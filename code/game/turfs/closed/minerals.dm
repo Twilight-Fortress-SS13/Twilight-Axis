@@ -105,7 +105,7 @@
 			return
 
 		var/mob/living/L = user
-		user.doing = FALSE
+		user.stop_all_doing() // TA EDIT
 		if(istype(I, /obj/item/rogueweapon/contraption/pick/drill)&& L.used_intent.type == /datum/intent/drill)
 			var/obj/item/rogueweapon/contraption/pick/drill/drillitem = I
 			// we're holding a drill and on drill intent
