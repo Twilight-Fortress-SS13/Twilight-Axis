@@ -47,7 +47,7 @@
 
 	if(progress)
 		progbar = new(user, src.delay, progress_target ? progress_target : user)
-		var/progress_interval = max(1, round(src.delay / 20))
+		var/progress_interval = max(2, CEILING(src.delay / 20, 1))
 		progress_timer_id = addtimer(CALLBACK(src, TYPE_PROC_REF(/datum/component/timed_action, update_progress)), progress_interval, TIMER_LOOP | TIMER_STOPPABLE)
 
 	if(extra_checks && poll_extra_checks)
@@ -317,7 +317,7 @@
 	if(double_progress)
 		progbartarget = new(target, src.delay, user)
 		if(!progress)
-			var/progress_interval = max(1, round(src.delay / 20))
+			var/progress_interval = max(2, CEILING(src.delay / 20, 1))
 			progress_timer_id = addtimer(CALLBACK(src, TYPE_PROC_REF(/datum/component/timed_action, update_progress)), progress_interval, TIMER_LOOP | TIMER_STOPPABLE)
 	register_action_signals()
 
