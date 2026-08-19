@@ -534,8 +534,7 @@
 		person.playsound_local(get_turf(person), 'sound/misc/bell_small.ogg', 50, FALSE, pressure_affected = FALSE)
 
 	var/body = familytree_confirmation_prompt_body(found_text, person, partner)
-	if(!person.familytree_show_confirm_button(found_text, CALLBACK(src, PROC_REF(do_mutual_prompt), session, person, is_person_a, body)))
-		do_mutual_prompt(session, person, is_person_a, body)
+	do_mutual_prompt(session, person, is_person_a, body)
 
 /datum/controller/subsystem/familytree/proc/do_mutual_prompt(datum/family_confirm_session/session, mob/living/carbon/human/person, is_person_a, body)
 	if(!person || QDELETED(person))
@@ -553,10 +552,15 @@
 		to_chat(person, span_warning("Это предложение уже неактуально."))
 		return
 
-	var/accepted = (result == "Да")
+	var/confirm_result = CONFIRM_TIMEOUT
+	if(result == "Да")
+		confirm_result = CONFIRM_ACCEPTED
+	else if(result == "Нет")
+		confirm_result = CONFIRM_REJECTED
+
 	if(is_person_a)
-		session.result_a = accepted ? CONFIRM_ACCEPTED : CONFIRM_REJECTED
+		session.result_a = confirm_result
 	else
-		session.result_b = accepted ? CONFIRM_ACCEPTED : CONFIRM_REJECTED
+		session.result_b = confirm_result
 
 	session.check_resolution()
