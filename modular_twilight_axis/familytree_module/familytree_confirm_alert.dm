@@ -25,7 +25,7 @@
 	on_open = null
 	user.clear_alert(FAMILYTREE_CONFIRM_ALERT_CATEGORY)
 	if(cb)
-		cb.Invoke()
+		INVOKE_ASYNC(cb, TYPE_PROC_REF(/datum/callback, Invoke))
 
 /mob/living/carbon/human/proc/familytree_show_confirm_button(button_desc, datum/callback/on_open)
 	if(!client || !hud_used)

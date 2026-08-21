@@ -25,7 +25,7 @@
 	var/misfire_chance = 0
 	/// Reload time, in SECONDS
 	var/reload_time = 8
-	var/reload_stamina_cost = 20
+	var/reload_stamina_cost = 30
 	damfactor = 1
 	var/critfactor = 0.7
 	var/npcdamfactor = 4
