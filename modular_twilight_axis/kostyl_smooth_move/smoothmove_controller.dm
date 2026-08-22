@@ -29,13 +29,37 @@ SUBSYSTEM_DEF(ta_antilag)
 
 
 	for(var/client/C as anything in GLOB.clients)
+		ask_preload_sounds(C)
+
+	. = ..()
+
+/datum/controller/subsystem/ta_antilag/proc/ask_preload_sounds(client/C)
+	var/preload_length = length(preload_sounds)
+
+	var/preload_force_option = "Загрузить всё и сейчас(Возможен краш на старых ПК)"
+	var/preload_overtime_option = "Загрузить более мягко, не блокируя вам настройку персонажа."
+	var/cancel_option = "НЕ ЗАГРУЖАТЬ."
+
+	var/selected_option = tgui_alert(C, "Для того чтобы избежать фризов и статтеров при переходе из зоны в зону и при смене Z-уровня, можно предзагрузить звуки требуемые в них.", "Предзагрузка звуков", list(preload_force_option, preload_overtime_option, cancel_option))
+
+	if(selected_option == preload_force_option)
+		for(var/snd in preload_sounds)
+			C << load_resource(snd, -1)
+		to_chat(C, "<h2>Предзагрузка завершена</h2>")
+
+	if(selected_option == preload_overtime_option)
 		var/iterator
 		for(var/snd in preload_sounds)
 			iterator++
-			spawn(iterator)
+			spawn(iterator * 2)
 				C << load_resource(snd, -1)
+				if(preload_length == iterator)
+					to_chat(C, "<h2>Предзагрузка завершена</h2>")
 
-	. = ..()
+		to_chat(C, "<h2>Предзагрузка запущена</h2>")
+
+	if(selected_option == cancel_option)
+		to_chat(C, "<h2>Предзагрузка отменена</h2>")
 
 /datum/controller/subsystem/ta_antilag/fire()
 
@@ -43,8 +67,11 @@ SUBSYSTEM_DEF(ta_antilag)
 	var/current_byondtime = world.time
 
 	if (!first_run)
-		var/target = (current_byondtime - last_tick_byond_time) / (current_realtime - last_tick_realtime)
-		GLOB.glide_size_multiplier = LERP(GLOB.glide_size_multiplier, target, 0.1)
+		var/byond_tick_delta = current_byondtime - last_tick_byond_time
+		var/realtime_tick_delta = current_realtime - last_tick_realtime
+		if(realtime_tick_delta && byond_tick_delta)
+			var/target = byond_tick_delta / realtime_tick_delta
+			GLOB.glide_size_multiplier = LERP(GLOB.glide_size_multiplier, target, 0.1)
 	else
 		first_run = FALSE
 

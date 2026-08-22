@@ -387,8 +387,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 	GLOB.directory[ckey] = src
 
 	//TA EDIT BEGIN
-	for(var/snd in SSta_antilag.preload_sounds)
-		src << load_resource(snd, -1)
+	SSta_antilag.ask_preload_sounds(src)
 	//TA EDIT END
 
 	stat_panel = new(src, "statbrowser")
