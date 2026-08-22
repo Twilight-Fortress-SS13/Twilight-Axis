@@ -612,6 +612,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<tr>"
 			dat += "<td style='width:33%;text-align:left'>"
 			dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;'>Change Character</a>"
+			dat += " | <a style='white-space:nowrap;' href='?_src_=prefs;preference=resetslot;'>Reset Character</a>"
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:center'>"
@@ -3418,6 +3419,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 				if("changeslot")
 					var/list/choices = list()
+					var/list/empty_slots = list()
 					if(path)
 						var/savefile/S = new /savefile(path)
 						if(S)
@@ -3427,17 +3429,31 @@ GLOBAL_LIST_EMPTY(chosen_names)
 								S.cd = "/character[i]"
 								S["real_name"] >> name
 								S["topjob"] >> suffix
+								var/is_empty = !name
 								if(!name)
 									name = "Slot[i]"
 								if(suffix)
 									name += " — [suffix]"
 								choices[name] = i
-					var/choice = tgui_input_list(user, "CHOOSE A HERO","ROGUETOWN", choices)
-					if(choice)
-						choice = choices[choice]
-						if(!load_character(choice))
-							random_character(null, FALSE, FALSE)
+								if(is_empty)
+									empty_slots[name] = TRUE
+					var/choice_name = tgui_input_list(user, "CHOOSE A HERO","ROGUETOWN", choices)
+					if(choice_name)
+						var/choice = choices[choice_name]
+						// An empty slot must start fresh so it never inherits data from a previously loaded slot.
+						// This only ever writes to the chosen (new) slot and never touches existing ones.
+						if(!load_character(choice) || empty_slots[choice_name])
+							// Start the new slot completely fresh so it never inherits anything
+							// (race, flavortext, ooc notes, etc.) from a previously loaded slot.
+							// Existing slots on disk are never touched.
+							set_new_race(new /datum/species/human/northern())
+							random_character(null, FALSE, TRUE)
 							save_character()
+
+				if("resetslot")
+					if(alert(user, "This will wipe ALL data on the currently selected character slot, leaving it as a fresh, empty character. This cannot be undone. Continue?", "Reset Character Slot", "Yes", "No") == "Yes")
+						reset_current_character()
+						to_chat(user, span_notice("Character slot wiped. It is now a fresh, empty character."))
 
 				if("tab")
 					if (href_list["tab"])
