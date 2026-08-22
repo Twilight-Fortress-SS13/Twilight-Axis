@@ -34,7 +34,9 @@
 
 	init_subtypes(/datum/alch_cauldron_recipe, GLOB.alch_cauldron_recipes)
 
-	init_subtypes(/datum/stew_recipe, GLOB.stew_recipes) 
+	init_subtypes(/datum/stew_recipe, GLOB.stew_recipes)
+
+	init_subtypes(/datum/alch_grid_recipe, GLOB.alch_grid_recipes) // TA EDIT
 
 	// Faiths
 	for(var/path in subtypesof(/datum/faith))
@@ -84,7 +86,7 @@
 						GLOB.loadout_items_by_category[cat] = list()
 					GLOB.loadout_items_by_category[cat] += item
 					GLOB.loadout_items_by_category["Всё"] += item
-			else 
+			else
 				if(!GLOB.loadout_items_by_category[item.category])
 					GLOB.loadout_items_by_category[item.category] = list()
 				GLOB.loadout_items_by_category[item.category] += item
