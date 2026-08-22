@@ -30,8 +30,6 @@ SUBSYSTEM_DEF(ta_antilag)
 	. = ..()
 
 /datum/controller/subsystem/ta_antilag/proc/ask_preload_sounds(client/C)
-	var/preload_length = length(preload_sounds)
-
 	var/preload_overtime_option = "Загрузить звуки"
 	var/cancel_option = "НЕ ЗАГРУЖАТЬ."
 
