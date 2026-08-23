@@ -596,7 +596,7 @@
 
 		C.take_damage(wear, BRUTE, "blunt")
 
-/datum/component/combo_core/soundbreaker/proc/prepare_proxy_dualwield(atom/target)
+/datum/component/combo_core/soundbreaker/proc/prepare_proxy_dualwield(mob/living/target)
 	if(!owner || !HAS_TRAIT(owner, TRAIT_DUALWIELDER) || owner.dualwield_processing)
 		return FALSE
 
@@ -615,8 +615,8 @@
 			owner.balloon_alert_to_viewers("<font color='#bb2b2b'>Dual Hit!!</font>")
 			to_chat(owner, "<font color='#ffc400'>I strike twice!</font>")
 			to_chat(target, "<font color='#ffc400'>I am hit twice!</font>")
-			playsound_local(target, 'sound/combat/polearm_woosh.ogg', 75, FALSE, 0, 3)
-			playsound_local(target, 'sound/combat/rend_hit.ogg', 75, FALSE, 0, 3)
+			target.playsound_local(target, 'sound/combat/polearm_woosh.ogg', 75, FALSE, 0, 3)
+			target.playsound_local(target, 'sound/combat/rend_hit.ogg', 75, FALSE, 0, 3)
 			return TRUE
 		owner.dualwield_processing = FALSE
 		owner.swap_hand()
