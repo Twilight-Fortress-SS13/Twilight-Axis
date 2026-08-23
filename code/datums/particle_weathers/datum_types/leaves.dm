@@ -1,31 +1,14 @@
-/particles/weather/leaves
-	icon_state	= list("leaf1"=7, "leaf2"=1, "leaf3"=1)
-	spin		= 6
-	position	= generator("box", list(-500,-256,0), list(400,500,0))
-	gravity	= list(0, -1, 0.1)
-	friction	= 0.3
-	transform	= null
-	//Weather effects, max values
-	maxSpawning			= 25
-	minSpawning			= 3
-	wind					= 2
-
-
-/particles/weather/leaves/sakura
-	icon_state	= "petals1"
-	position	= generator("box", list(-500,-256,0), list(400,500,0))
-	gravity	= list(0, -1, 0.1)
-	friction	= 0.5
-	transform	= null
-	//Weather effects, max values
-	maxSpawning			= 30
-	minSpawning			= 5
-	wind					= 1
-
 /datum/particle_weather/leaves_gentle
 	name = "Rain"
 	desc = "Gentle Rain, la la description."
-	particleEffectType = /particles/weather/leaves
+	weather_icon_state = "leaves"
+	weather_visual_color = null
+	weather_scroll_x = -512
+	weather_scroll_y = -512
+	weather_scroll_time = 80
+	weather_alpha_min = 100
+	weather_alpha_max = 220
+	weather_tile_count = 4
 
 	scale_vol_with_severity = TRUE
 
@@ -40,7 +23,14 @@
 /datum/particle_weather/leaves_storm
 	name = "Rain"
 	desc = "Gentle Rain, la la description."
-	particleEffectType = /particles/weather/leaves
+	weather_icon_state = "leaves_storm"
+	weather_visual_color = null
+	weather_scroll_x = -512
+	weather_scroll_y = -512
+	weather_scroll_time = 36
+	weather_alpha_min = 125
+	weather_alpha_max = 245
+	weather_tile_count = 4
 
 	scale_vol_with_severity = TRUE
 
@@ -55,7 +45,14 @@
 /datum/particle_weather/sakura_gentle
 	name = "Rain"
 	desc = "Gentle Rain, la la description."
-	particleEffectType = /particles/weather/leaves/sakura
+	weather_icon_state = "sakura"
+	weather_visual_color = null
+	weather_scroll_x = -512
+	weather_scroll_y = -512
+	weather_scroll_time = 80
+	weather_alpha_min = 100
+	weather_alpha_max = 220
+	weather_tile_count = 4
 
 	scale_vol_with_severity = TRUE
 
@@ -70,7 +67,14 @@
 /datum/particle_weather/sakura_storm
 	name = "Rain"
 	desc = "Gentle Rain, la la description."
-	particleEffectType = /particles/weather/leaves/sakura
+	weather_icon_state = "sakura_storm"
+	weather_visual_color = null
+	weather_scroll_x = -512
+	weather_scroll_y = -512
+	weather_scroll_time = 36
+	weather_alpha_min = 125
+	weather_alpha_max = 245
+	weather_tile_count = 4
 
 	scale_vol_with_severity = TRUE
 

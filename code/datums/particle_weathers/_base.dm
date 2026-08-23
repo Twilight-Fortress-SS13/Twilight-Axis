@@ -1,41 +1,3 @@
-/particles/weather
-	spawning = 0
-	var/wind = 0 //Left/Right maximum movement increase per tick
-	var/maxSpawning = 0 //Max spawner - Recommend you use this over Spawning, so severity can ease it in
-	var/minSpawning = 0 //Weather should start with 0, but when easing, it will never go below this
-	icon = 'icons/effects/particles/particle.dmi'
-
-
-	spawning = 0
-	width					= 800	// I think this is supposed to be in pixels, but it doesn't match bounds, so idk - 800x800 seems to prevent particle-less edges
-	height					= 800
-	count					= 1200 // max live particles rendered per client
-	//Set bounds to rough screensize + some extra on the side and top movement for "wind"
-	bound1					= list(-500,-256,-10)
-	bound2					= list(500,500,10)
-	lifespan				= 285	// live for 30s max (fadein + lifespan + fade)
-	fade					= 10	// 1s fade out
-	fadein					= 5		// 0.5s fade in
-
-	//Obnoxiously 3D -- INCREASE Z level to make them further away
-	transform				= list( 1, 0, 0,	0	,
-									0, 1, 0,	0	,
-									0, 0, 1, 1/4, //Get twice as Small every 4 Z
-									0, 0, 0,	1	)
-
-//Animate particle effect to a severity
-/particles/weather/proc/animateSeverity(severityMod)
-
-	//If we have no severity, just stop spawning
-	if(!severityMod)
-		spawning = 0
-		return
-
-	var newSpawning = max(minSpawning, maxSpawning * severityMod)
-
-	//The higher the severity, the faster the change - elastic easing for flappy wind
-	spawning = newSpawning
-
 /**
  * Shitty particle weather by Gomble
  * Causes weather to occur on a z level in certain area types
@@ -66,8 +28,26 @@
 	//Scale volume with severity - good for if you only have 1 sound
 	var/scale_vol_with_severity = FALSE
 
-	//Our particle effect to display - min/max severity effects its wind and count
-	var/particles/weather/particleEffectType = /particles/weather/rain
+	var/weather_icon = 'icons/effects/weather_screen.dmi'
+	var/weather_icon_state = "rain"
+	var/weather_visual_color = "#ccffff"
+	var/weather_scroll_x = 0
+	var/weather_scroll_y = -256
+	var/weather_scroll_time = 10
+	var/weather_alpha_min = 90
+	var/weather_alpha_max = 230
+	var/weather_tile_size = 512
+	var/weather_tile_count = 3
+	var/weather_scroll_pingpong = FALSE
+	/// Smooth severity changes without interfering with the scrolling transform animation.
+	var/weather_severity_transition_time = 5
+	/// Time in deciseconds to visually fade weather out before end() clears its visuals.
+	var/weather_fade_time = 10
+	var/parallax_weather = FALSE
+	var/weather_parallax_speed = 32
+	var/weather_offset_x = 0
+	var/weather_offset_y = 0
+
 
 
 	/// See above - this is the lowest possible duration
@@ -127,7 +107,10 @@
 	var/filter_type
 	var/secondary_filter_type
 
+
 /datum/particle_weather/proc/severityMod()
+	if(severity <= 0)
+		return 0
 	return max(0.3, severity / maxSeverity)
 /*
 * arbitrary effects to run every time the particle_weather SS ticks
@@ -158,8 +141,9 @@
 	running = TRUE
 	addtimer(CALLBACK(src, PROC_REF(wind_down)), weather_duration)
 
-	if(particleEffectType)
-		SSParticleWeather.SetparticleEffect(new particleEffectType, blend_type, filter_type, color, secondary_filter_type)
+	var/effect_color = color ? color : weather_visual_color
+	if(weather_icon_state)
+		SSParticleWeather.SetweatherEffect(weather_icon, weather_icon_state, effect_color, blend_type, filter_type, secondary_filter_type, weather_scroll_x, weather_scroll_y, weather_scroll_time, weather_tile_size, weather_tile_count, weather_scroll_pingpong)
 
 	//Always step severity to start
 	ChangeSeverity()
@@ -178,8 +162,7 @@
 		severity = newSeverity
 
 
-	if(SSParticleWeather.particleEffect)
-		SSParticleWeather.particleEffect.animateSeverity(severityMod())
+	SSParticleWeather.setWeatherSeverity(severityMod(), weather_severity_transition_time)
 
 	//Send new severity message if the message has changed
 	if(last_message != scale_range_pick(minSeverity, maxSeverity, severity, weather_messages))
@@ -199,11 +182,9 @@
  */
 /datum/particle_weather/proc/wind_down()
 	severity = 0
-	if(SSParticleWeather.particleEffect)
-		SSParticleWeather.particleEffect.animateSeverity(severityMod())
-
-		//Wait for the last particle to fade, then qdel yourself
-		addtimer(CALLBACK(src, PROC_REF(end)), SSParticleWeather.particleEffect.lifespan + SSParticleWeather.particleEffect.fade)
+	var/fade_time = max(1, weather_fade_time)
+	SSParticleWeather.setWeatherSeverity(0, fade_time)
+	addtimer(CALLBACK(src, PROC_REF(end)), fade_time)
 
 
 
