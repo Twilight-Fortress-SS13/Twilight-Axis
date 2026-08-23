@@ -42,7 +42,7 @@
 	var/next_hit_time = 0 //For barometers to know when the next storm will hit
 	var/weather_alpha = 255
 
-	var/list/particles = list()
+	var/list/weather_visuals = list()
 
 /datum/weather/New(z_levels)
 	..()
