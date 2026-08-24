@@ -61,6 +61,7 @@
 	var/list/blip_tone = BLIP_TONE_DEFAULT
 	var/source_shake = FALSE
 	var/last_toot_time //TA EDIT END
+	var/datum/callback/finish_callback
 
 /**
 	* Constructs a chat message overlay
@@ -110,6 +111,10 @@
 // TA EDIT START
 /datum/chatmessage/Destroy()
 	premature_end = TRUE
+
+	if(finish_callback)
+		SSrunechat.message_queue -= finish_callback
+		finish_callback = null
 
 	if(owned_by)
 		UnregisterSignal(owned_by, COMSIG_PARENT_QDELETING)
@@ -234,13 +239,14 @@
 	WXH_TO_HEIGHT(owned_by.MeasureText(complete_text, null, CHAT_MESSAGE_WIDTH), mheight)
 	if(!VERB_SHOULD_YIELD)
 		return finish_image_generation(mheight, target, owner, complete_text, lifespan)
-	var/datum/callback/our_callback = CALLBACK(src, PROC_REF(finish_image_generation), mheight, target, owner, complete_text, lifespan)
-	SSrunechat.message_queue += our_callback
+	finish_callback = CALLBACK(src, PROC_REF(finish_image_generation), mheight, target, owner, complete_text, lifespan)
+	SSrunechat.message_queue += finish_callback
 	return
 
 
 
 /datum/chatmessage/proc/finish_image_generation(mheight, atom/target, mob/owner, complete_text, lifespan)
+	finish_callback = null
 	// TA EDIT START
 	if(QDELETED(src))
 		return
@@ -296,7 +302,7 @@
 		message.maptext = complete_text
 		schedule_end_of_life(lifespan - CHAT_MESSAGE_EOL_FADE) // TA EDIT
 	else
-		INVOKE_ASYNC(src, PROC_REF(spelling_loop))
+		INVOKE_ASYNC(src, PROC_REF(spelling_loop), lifespan)
 
 /datum/chatmessage/proc/turn_to_styled(string)
 	return {"<span style='font-size:[font_size]pt;font-family:\"Mookmania\";color:[tgt_color];text-shadow:0 0 5px #000,0 0 5px #000,0 0 5px #000,0 0 5px #000;' class='center maptext [_extra_classes != null ? _extra_classes.Join(" ") : ""]' style='color: [tgt_color]'>[string]</span>"} //AAAAAAAAAAAAAAA
@@ -318,7 +324,7 @@
 
 	return CHAT_SPELLING_PUNCTUATION[character] ? CHAT_SPELLING_PUNCTUATION[character] : 0
 
-/datum/chatmessage/proc/spelling_loop()
+/datum/chatmessage/proc/spelling_loop(lifespan = CHAT_MESSAGE_LIFESPAN)
 	// TA EDIT START
 	if(QDELETED(src) || premature_end || !message || QDELETED(message) || !remaining_strings)
 		return
@@ -335,6 +341,11 @@
 				mobs_around++
 		if(mobs_around > 4)
 			skip_spelling = TRUE
+	if(skip_spelling)
+		current_string = text
+		message.maptext = MAPTEXT(turn_to_styled(current_string))
+		schedule_end_of_life(lifespan - CHAT_MESSAGE_EOL_FADE)
+		return
 	for(var/letter as anything in remaining_strings)
 		// TA EDIT START
 		if(QDELETED(src) || premature_end || !message || QDELETED(message))
@@ -342,11 +353,8 @@
 		// TA EDIT END
 
 		var/extra_delay = spelling_extra_delays(letter)
-		if(skip_spelling || isnull(extra_delay))
+		if(isnull(extra_delay))
 			current_string += letter
-			if(skip_spelling) // this is dogshit code quality btw
-				extra_delay += 0.15 SECONDS
-				delay += CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + extra_delay
 			continue
 
 		// TA EDIT START
@@ -364,9 +372,6 @@
 		delay += CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + extra_delay
 
 	// TA EDIT START
-	if(skip_spelling && !add_string())
-		return
-
 	if(QDELETED(src) || premature_end || !message || QDELETED(message))
 		return
 	// TA EDIT END
@@ -473,7 +478,7 @@
 		flags = ANIMATION_PARALLEL
 		)
 
-	addtimer(CALLBACK(src, PROC_REF(end_of_life)), delay + 0.1 SECONDS) 
+	addtimer(CALLBACK(src, PROC_REF(end_of_life)), delay + 0.1 SECONDS)
 */ //TA EDIT END
 // TA EDIT START
 /datum/chatmessage/proc/schedule_end_of_life(delay)
