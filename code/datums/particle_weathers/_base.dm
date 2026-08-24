@@ -40,7 +40,6 @@
 	var/weather_tile_count = 3
 	var/weather_scroll_pingpong = FALSE
 	var/weather_severity_transition_time = 5
-	var/weather_severity_transition_time = 5
 	var/weather_fade_time = 10
 	var/parallax_weather = FALSE
 	var/weather_parallax_speed = 32
