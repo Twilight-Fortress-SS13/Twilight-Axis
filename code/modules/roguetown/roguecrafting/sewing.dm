@@ -630,7 +630,7 @@
 				/obj/item/natural/fibers = 1)
 	craftdiff = 3
 
-/datum/crafting_recipe/roguetown/sewing/psydon
+/datum/crafting_recipe/roguetown/sewing/psydontabard
 	name = "tabard, psydonic"
 	category = "Tabards"
 	result = list(/obj/item/clothing/cloak/tabard/psydontabard/black)
