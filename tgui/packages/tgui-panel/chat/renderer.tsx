@@ -20,6 +20,7 @@ import {
   IMAGE_RETRY_MESSAGE_AGE,
   MAX_PERSISTED_MESSAGES,
   MAX_VISIBLE_MESSAGES,
+  MESSAGE_PRUNE_BUFFER,
   MESSAGE_PRUNE_INTERVAL,
   MESSAGE_TYPE_INTERNAL,
   MESSAGE_TYPE_UNKNOWN,
@@ -147,6 +148,7 @@ class ChatRenderer {
   lastScrollHeight: number;
   highlightParsers: Array<any> | null;
   handleScroll: (type: any) => void;
+  pruneScheduled: boolean;
 
   constructor() {
     this.loaded = false;
@@ -161,6 +163,7 @@ class ChatRenderer {
     this.scrollNode = null;
     this.scrollTracking = true;
     this.lastScrollHeight = 0;
+    this.pruneScheduled = false;
     this.handleScroll = (evt) => {
       const node = this.scrollNode;
       if (!node) {
@@ -560,53 +563,117 @@ class ChatRenderer {
         setTimeout(() => this.scrollToBottom());
       }
     }
+    if (
+      this.visibleMessages.length >
+        MAX_VISIBLE_MESSAGES + MESSAGE_PRUNE_BUFFER ||
+      this.messages.length >
+        MAX_PERSISTED_MESSAGES + MESSAGE_PRUNE_BUFFER
+    ) {
+      this.schedulePrune();
+    }
+
     // Notify listeners that we have processed the batch
     if (notifyListeners) {
       this.events.emit('batchProcessed', countByType);
     }
   }
 
+  schedulePrune() {
+    if (this.pruneScheduled) {
+      return;
+    }
+
+    this.pruneScheduled = true;
+
+    setTimeout(() => {
+      this.pruneScheduled = false;
+      this.pruneMessages();
+    });
+  }
+
   pruneMessages() {
     if (!this.isReady()) {
       return;
     }
-    // Delay pruning because user is currently interacting
-    // with chat history
-    if (!this.scrollTracking) {
-      logger.debug('pruning delayed');
+
+    const messagesToPrune = new Set<any>();
+
+    const visibleOverflow = Math.max(
+      0,
+      this.visibleMessages.length - MAX_VISIBLE_MESSAGES,
+    );
+
+    for (let i = 0; i < visibleOverflow; i++) {
+      messagesToPrune.add(this.visibleMessages[i]);
+    }
+
+    // Bound stored chat history as well.
+    const storedOverflow = Math.max(
+      0,
+      this.messages.length - MAX_PERSISTED_MESSAGES,
+    );
+
+    for (let i = 0; i < storedOverflow; i++) {
+      messagesToPrune.add(this.messages[i]);
+    }
+
+    if (messagesToPrune.size === 0) {
       return;
     }
-    // Visible messages
-    {
-      const messages = this.visibleMessages;
-      const fromIndex = Math.max(0, messages.length - MAX_VISIBLE_MESSAGES);
-      if (fromIndex > 0) {
-        this.visibleMessages = messages.slice(fromIndex);
-        for (let i = 0; i < fromIndex; i++) {
-          const message = messages[i];
-          this.rootNode!.removeChild(message.node);
-          // Mark this message as pruned
-          message.node = 'pruned';
-        }
-        // Remove pruned messages from the message array
 
-        this.messages = this.messages.filter(
-          (message) => message.node !== 'pruned',
+    const scrollNode = this.scrollNode;
+    const wasScrollTracking = this.scrollTracking;
+    const oldScrollTop = scrollNode?.scrollTop ?? 0;
+    const oldScrollHeight = scrollNode?.scrollHeight ?? 0;
+
+    let removedDomNodes = 0;
+
+    for (const message of messagesToPrune) {
+      const node = message.node;
+
+      if (
+        node &&
+        node !== 'pruned' &&
+        node.parentNode === this.rootNode
+      ) {
+        this.rootNode!.removeChild(node);
+        removedDomNodes++;
+      }
+
+      message.node = 'pruned';
+    }
+
+    this.messages = this.messages.filter(
+      (message) => !messagesToPrune.has(message),
+    );
+
+    this.visibleMessages = this.visibleMessages.filter(
+      (message) => !messagesToPrune.has(message),
+    );
+
+    if (scrollNode && removedDomNodes > 0) {
+      if (wasScrollTracking) {
+        this.scrollToBottom();
+      } else {
+        const newScrollHeight = scrollNode.scrollHeight;
+        const removedHeight = Math.max(
+          0,
+          oldScrollHeight - newScrollHeight,
         );
-        logger.log(`pruned ${fromIndex} visible messages`);
+
+        scrollNode.scrollTop = Math.max(
+          0,
+          oldScrollTop - removedHeight,
+        );
+
+        this.lastScrollHeight = newScrollHeight;
       }
     }
-    // All messages
-    {
-      const fromIndex = Math.max(
-        0,
-        this.messages.length - MAX_PERSISTED_MESSAGES,
-      );
-      if (fromIndex > 0) {
-        this.messages = this.messages.slice(fromIndex);
-        logger.log(`pruned ${fromIndex} stored messages`);
-      }
-    }
+
+    logger.log(
+      `pruned ${messagesToPrune.size} messages, ` +
+        `${removedDomNodes} mounted nodes`,
+    );
   }
 
   rebuildChat() {
