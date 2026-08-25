@@ -45,6 +45,7 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/bunker_bypass,
 	//TWILIGHT AXIS MODULAR START
 	/client/proc/client_render_stats,
+	/client/proc/client_images_breakdown,
 	)
 GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
 GLOBAL_PROTECT(admin_verbs_admin)
