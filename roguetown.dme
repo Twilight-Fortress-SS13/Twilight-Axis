@@ -4149,6 +4149,7 @@
 #include "modular_twilight_axis\code\modules\surgery\surgeries_hearth\extract_lux.dm"
 #include "modular_twilight_axis\code\modules\vampire_neu\TA_Vampires_include.dm"
 #include "modular_twilight_axis\code\onclick\click.dm"
+#include "modular_twilight_axis\ataman_module\ataman_module_config.dm"
 #include "modular_twilight_axis\familytree_module\familytree_module_config.dm"
 #include "modular_twilight_axis\firearms\code\clothes\feet.dm"
 #include "modular_twilight_axis\firearms\code\clothes\hats.dm"
