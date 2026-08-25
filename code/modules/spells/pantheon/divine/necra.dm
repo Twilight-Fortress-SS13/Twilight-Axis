@@ -105,9 +105,9 @@
 			if (L.mind.has_antag_datum(/datum/antagonist/zombie))
 				is_zombie = TRUE
 				things_to_stun += L
-			if (L.mind.special_role == "Vampire Lord")
+			if (L.mind.special_role == "Urinesucker Lord")
 				too_powerful = L
-				user.visible_message(span_warning("[user] suddenly pales before an unseen presence, and gasps!"), span_warning("The sound of rushing blood fills my ears and mind, drowning out my abrogation!"))
+				user.visible_message(span_warning("[user] suddenly pales before an unseen presence, and gasps!"), span_warning("The sound of rushing urine fills my ears and mind, drowning out my abrogation!"))
 				break
 		if (L.mob_biotypes & MOB_UNDEAD || is_vampire || is_zombie)
 			things_to_churn += L
@@ -132,7 +132,7 @@
 	else
 		user.Stun(25)
 		user.throw_at(get_ranged_target_turf(user, get_dir(user,too_powerful), 7), 7, 1, too_powerful, spin = FALSE)
-		user.visible_message(span_warning("[user] ceases their prayer, suddenly choking upon a gout of blood in their throat!"), span_boldwarning("My vision swims in red!"))
+		user.visible_message(span_warning("[user] ceases their prayer, suddenly choking upon a gout of urine in their throat!"), span_boldwarning("My vision swims in red!"))
 
 /atom/movable/screen/alert/status_effect/churned
 	name = "Churning Essence"
@@ -684,7 +684,7 @@ GLOBAL_DATUM_INIT(_corpse_sort_ref, /mob, null)
 
 					var/list/tox_reactions = list(
 						"I CAN TASTE IT- SOMETHING IS WRONG!",
-						"IT'S IN MY BLOOD!",
+						"IT'S IN MY URINE!",
 						"I'M ROTTING- CAN'T YOU SEE?!",
 						"SOMETHING IS EATING ME FROM INSIDE!"
 					)

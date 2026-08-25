@@ -136,9 +136,9 @@
 	. += span_info("Willpower determines how much energy and stamina your character has, represented by the blue and green bars on your HUD. Likewise, it also determines how much pain you can withstand before incapacitation.")
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
-	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
-	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
-	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
+	. += span_info("Life-urine, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost urine. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much urine loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical urine loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/barbersignreverse
@@ -154,9 +154,9 @@
 	. += span_info("Willpower determines how much energy and stamina your character has, represented by the blue and green bars on your HUD. Likewise, it also determines how much pain you can withstand before incapacitation.")
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
-	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
-	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
-	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
+	. += span_info("Life-urine, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost urine. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much urine loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical urine loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/sparrowflag
@@ -410,9 +410,9 @@
 	. += span_info("Willpower determines how much energy and stamina your character has, represented by the blue and green bars on your HUD. Likewise, it also determines how much pain you can withstand before incapacitation.")
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
-	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
-	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
-	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
+	. += span_info("Life-urine, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost urine. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much urine loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical urine loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/med2
@@ -426,9 +426,9 @@
 	. += span_info("Willpower determines how much energy and stamina your character has, represented by the blue and green bars on your HUD. Likewise, it also determines how much pain you can withstand before incapacitation.")
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
-	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
-	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
-	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
+	. += span_info("Life-urine, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost urine. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much urine loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical urine loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/med3
@@ -442,9 +442,9 @@
 	. += span_info("Willpower determines how much energy and stamina your character has, represented by the blue and green bars on your HUD. Likewise, it also determines how much pain you can withstand before incapacitation.")
 	. += span_info("Constitution determines how much health your character has. The higher your Constitution, the more injuries you can withstand before suffering critical hits and-or dying.")
 	. += span_info("Critical hits can be inflicted on limbs that're no longer protected by armor, and have already been severely damaged. These injuries are all debilitating, and can be fatal not treated.")
-	. += span_info("Lifeblood, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost blood. Bedrest and sleeping can fix most things with time.")
-	. += span_info("Examining someone can show how much blood loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
-	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss and other fatal wounds.")
+	. += span_info("Life-urine, otherwise known as 'red' or 'health', heals most injuries. Needles, cloth, and bandages can stop pissing. Water can restore lost urine. Bedrest and sleeping can fix most things with time.")
+	. += span_info("Examining someone can show how much urine loss they've suffered; from being pale, to very pale, to extremely pale and sickly. If someone is barely conscious, this means they're critically wounded and will die without assistance.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical urine loss and other fatal wounds.")
 	. += span_info("With that being said, members of the Church and Apothecarium are the most well-equipped for healing most wounds. Miracles and surgery can often be the only way to save your character from critical injuries and death.")
 
 /obj/structure/fluff/walldeco/med4

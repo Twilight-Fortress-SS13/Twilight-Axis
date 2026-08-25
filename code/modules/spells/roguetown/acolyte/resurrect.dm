@@ -354,7 +354,7 @@
 
 /obj/effect/proc_holder/spell/invoked/resurrect/pestra
 	name = "Putrid Revival"
-	desc = "Revive the target by consuming heartblood. Self cast for more information."
+	desc = "Revive the target by consuming heart urine. Self cast for more information."
 	sound = 'sound/magic/slimesquish.ogg'
 	required_items = list(
 		/obj/item/heart_blood_canister/filled = 1,

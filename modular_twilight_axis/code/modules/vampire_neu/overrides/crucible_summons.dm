@@ -30,7 +30,7 @@
 
 	feedback_atom.visible_message("The crucible stirs, summoning a servant from the realms beyond...")
 	if(!poll_prompt)
-		poll_prompt = "Do you want to play as a Vampire Lord's [type]?"
+		poll_prompt = "Do you want to play as a Urinesucker Lord's [type]?"
 
 	var/list/candidates = pollGhostCandidates(poll_prompt, ROLE_VAMPIRE_SUMMON, null, null, 30 SECONDS, POLL_IGNORE_VL_SERVANT)
 	if(ta_summon_was_cancelled(feedback_atom))
@@ -57,18 +57,18 @@
 	target.visible_message(span_warning("[target] manifests from the crimson crucible in a kneel, before rising upwards."))
 	addtimer(CALLBACK(target, TYPE_PROC_REF(/mob/living/carbon/human, load_char_or_namechoice)), 3 SECONDS)
 	switch(type)
-		if("Vampire Servant")
-			SSjob.EquipRank(target, "Vampire Servant", TRUE)
+		if("Urinesucker Servant")
+			SSjob.EquipRank(target, "Urinesucker Servant", TRUE)
 			var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(incoming_clan = initiator_clan, forced_clan = TRUE, generation = GENERATION_NEONATE)
 			target.mind.add_antag_datum(new_antag)
 			ADD_TRAIT(target, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC)
-		if("Vampire Guard")
-			SSjob.EquipRank(target, "Vampire Guard", TRUE)
+		if("Urinesucker Guard")
+			SSjob.EquipRank(target, "Urinesucker Guard", TRUE)
 			var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(incoming_clan = initiator_clan, forced_clan = TRUE, generation = GENERATION_NEONATE)
 			target.mind.add_antag_datum(new_antag)
 			ADD_TRAIT(target, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC)
-		if("Vampire Spawn")
-			SSjob.EquipRank(target, "Vampire Spawn", TRUE)
+		if("Urinesucker Spawn")
+			SSjob.EquipRank(target, "Urinesucker Spawn", TRUE)
 			var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(incoming_clan = initiator_clan, forced_clan = TRUE, generation = GENERATION_ANCILLAE)
 			target.mind.add_antag_datum(new_antag)
 	ADD_TRAIT(target, TRAIT_QUICKSILVERRESISTANT, TRAIT_GENERIC)

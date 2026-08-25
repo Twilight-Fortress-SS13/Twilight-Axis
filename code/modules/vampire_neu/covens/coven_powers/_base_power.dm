@@ -207,7 +207,7 @@
 	//the user cannot afford the power's vitae expenditure
 	if (!can_afford())
 		if (alert)
-			to_chat(owner, span_warning("You do not have enough blood to cast [src]!"))
+			to_chat(owner, span_warning("You do not have enough urine to cast [src]!"))
 		return FALSE
 
 	//the power's cooldown has not elapsed
@@ -337,7 +337,7 @@
 
 		if ((target_type & TARGET_VAMPIRE) && !living_target.clan)
 			if (alert)
-				to_chat(owner, span_warning("You can only cast [src] on Vampires!"))
+				to_chat(owner, span_warning("You can only cast [src] on Urinesuckers!"))
 			return FALSE
 
 		if (ishuman(target))
@@ -824,13 +824,13 @@
 
 	if (spend_resources())
 		if((vitae_cost > 0) && (duration_length > 10 SECONDS)) // No spam please
-			to_chat(owner, span_warning("[src] consumes your blood to stay active."))
+			to_chat(owner, span_warning("[src] consumes your urine to stay active."))
 		grant_usage_xp(target, TRUE)
 		if (!duration_override)
 			do_duration(target)
 		on_refresh(target)
 	else
-		to_chat(owner, span_warning("You don't have enough blood to keep [src] active!"))
+		to_chat(owner, span_warning("You don't have enough urine to keep [src] active!"))
 		try_deactivate(target)
 
 /**

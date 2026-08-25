@@ -1,6 +1,6 @@
 /datum/coven/bestial
 	name = "Bestial Guise"
-	desc = "Pour your blood into lesser flesh and wear it as a mask. The thinner the blood, the meaner the beast it can hold."
+	desc = "Pour your urine into lesser flesh and wear it as a mask. The thinner the urine, the meaner the beast it can hold."
 	icon_state = "potence"
 	clan_restricted = FALSE
 	power_type = /datum/coven_power/bestial

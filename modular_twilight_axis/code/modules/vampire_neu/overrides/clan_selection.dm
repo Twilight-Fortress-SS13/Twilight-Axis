@@ -91,7 +91,7 @@
 
 /mob/living/carbon/human/proc/vampire_choose_clan_verb()
 	set name = "Choose Clan"
-	set category = "RoleUnique.Vampire"
+	set category = "RoleUnique.Urinesucker"
 
 	var/datum/antagonist/vampire/vamp_antag = mind?.has_antag_datum(/datum/antagonist/vampire)
 	if(!vamp_antag)

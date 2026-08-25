@@ -73,7 +73,7 @@
 	new /obj/item/ingot/silverblessed/bullion(src)
 
 /datum/inqports/supplies/quicksilver
-	name = "The Archbishop's Poultice - Cure For Cursed Blood"
+	name = "The Archbishop's Poultice - Cure For Cursed Urine"
 	item_type = /obj/item/quicksilver
 	maximum = 1
 	marquescost = 12
@@ -160,7 +160,7 @@
 	new /obj/item/reagent_containers/glass/bottle/alchemical/restoration(src)
 
 /datum/inqports/supplies/lifeblood
-	name = "3 Bottles of Lifeblood"
+	name = "3 Bottles of Lifeurine"
 	item_type = /obj/structure/closet/crate/chest/inqcrate/supplies/lifeblood
 	marquescost = 10
 

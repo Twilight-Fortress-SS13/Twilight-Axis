@@ -67,8 +67,8 @@ const FALLBACK_LANG = 'en';
 const TRANSLATIONS: Record<string, Record<string, string>> = {
   en: {
     title: 'Clan Selection',
-    subtitle: 'Choose your vampire clan',
-    flavorLine1: 'The Blood remembers.',
+    subtitle: 'Choose your urinesucker clan',
+    flavorLine1: 'The Urine remembers.',
     flavorLine2: 'Choose your lineage.',
     expand: 'Expand',
     restore: 'Restore',
@@ -76,11 +76,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     restoreTip: 'Restore window',
     availableClans: 'Available Clans',
     clanName: 'Clan Name',
-    customNamePlaceholder: 'Name your Caitiff bloodline...',
+    customNamePlaceholder: 'Name your Caitiff urineline...',
     customNameHint: 'Leave blank to be known simply as the "Custom Clan".',
     description: 'Description',
     curseDownside: 'Curse / Downside',
-    bloodPreference: 'Blood Preference',
+    bloodPreference: 'Urine Preference',
     lordOfClan: 'Lord of the Clan',
     lordHailedAs: 'Hailed as the',
     lordFallback: 'Lord',
@@ -312,7 +312,7 @@ const RU_COVENS_BY_NAME: Record<string, { name: string; desc: string }> = {
     name: 'Прорицание',
     desc: 'Позволяет видеть сквозь стены существ, их ауры и состояние здоровья.',
   },
-  Bloodheal: {
+  Urineheal: {
     name: 'Кровавое исцеление',
     desc: 'Используй силу витэ, чтобы постепенно восстанавливать плоть.',
   },
@@ -372,24 +372,24 @@ const RU_POWERS_BY_NAME: Record<string, { name: string; desc: string }> = {
     name: 'Психическая проекция',
     desc: 'Оставь тело и воспари над землями.',
   },
-  // Bloodheal
-  'Minor Bloodheal': {
+  // Urineheal
+  'Minor Urineheal': {
     name: 'Малое кровавое исцеление',
     desc: 'Медленно затягивай лёгкие раны, расходуя витэ.',
   },
-  Bloodheal: {
+  Urineheal: {
     name: 'Кровавое исцеление',
     desc: 'Ровно и без спешки залечивай раны.',
   },
-  'Quick Bloodheal': {
+  'Quick Urineheal': {
     name: 'Стремительное кровавое исцеление',
     desc: 'Залечивай раны с заметной глазу быстротой — это нарушает Маскарад!',
   },
-  'Major Bloodheal': {
+  'Major Urineheal': {
     name: 'Большое кровавое исцеление',
     desc: 'Стремительно залечивай даже серьёзные ранения. Нарушает Маскарад!',
   },
-  'Greater Bloodheal': {
+  'Greater Urineheal': {
     name: 'Великое кровавое исцеление',
     desc: 'Залечивай раны и восстанавливай повреждённые органы. Нарушает Маскарад!',
   },

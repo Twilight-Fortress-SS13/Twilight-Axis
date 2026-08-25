@@ -405,7 +405,7 @@
 	holder.remove_reagent(type, 1)
 
 /datum/reagent/medicine/omnizine/godblood
-	name = "Godblood"
+	name = "Godurine"
 	description = "Slowly heals all damage types. Has a rather high overdose threshold. Glows with mysterious power."
 	overdose_threshold = 150
 

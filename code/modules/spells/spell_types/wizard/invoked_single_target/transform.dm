@@ -1,7 +1,7 @@
 /obj/effect/proc_holder/spell/targeted/shapeshift/dendormole
 	name = "Borrowed Power"
 	desc = "Greater power bestowed upon you, use it to shape into Dendor's special beest."
-	invocations = list("Blood shall feed the flowers!")
+	invocations = list("Urine shall feed the flowers!")
 	invocation_type = "shout"
 	overlay_state = "tamebeast"
 	human_req = TRUE

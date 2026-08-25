@@ -578,7 +578,7 @@ const OffCenterPanel = ({
               }}
             >
               {machinePowered
-                ? 'MALUM AWAITS YOUR BLOOD, SWEAT AND DEVOTION'
+                ? 'MALUM AWAITS YOUR URINE, SWEAT AND DEVOTION'
                 : "MALUM'S FORCE OF LYFE DOES NOT FLOW"}
             </Box>
             <Box

@@ -8,8 +8,8 @@
 //then you MUST update the database!
 #define ROLE_MANIAC				"Maniac"
 #define ROLE_WEREWOLF			"Werewolf"
-#define ROLE_VAMPIRE			"Vampire"
-#define ROLE_NBEAST				"Vampire Lord"
+#define ROLE_VAMPIRE			"Urinesucker"
+#define ROLE_NBEAST				"Urinesucker Lord"
 #define ROLE_BANDIT				"Bandit"
 #define ROLE_ASSASSIN			"Assassin"
 #define ROLE_DELF				"Dark Elf"
@@ -59,7 +59,7 @@
 #define ROLE_SIEGE_SKELETON		"Siege Skeleton"
 #define ROLE_LICH_SKELETON		"Lich Skeleton"
 #define ROLE_CHOSEN				"Chosen"
-#define ROLE_VAMPIRE_SUMMON		"Vampire Summon"
+#define ROLE_VAMPIRE_SUMMON		"Urinesucker Summon"
 
 GLOBAL_LIST_INIT(special_roles_rogue, list(
 	ROLE_MANIAC = /datum/antagonist/maniac,

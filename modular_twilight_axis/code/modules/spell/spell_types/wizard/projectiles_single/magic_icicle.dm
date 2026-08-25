@@ -128,7 +128,7 @@
 			next_freeze_time = world.time + 10 SECONDS
 			
 			if(prob(50))
-				to_chat(victim, span_userdanger("I feel [src] freezing my blood from the inside!"))
+				to_chat(victim, span_userdanger("I feel [src] freezing my urine from the inside!"))
 	else
 		
 		STOP_PROCESSING(SSfastprocess, src)

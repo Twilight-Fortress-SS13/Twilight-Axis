@@ -50,7 +50,7 @@ GLOBAL_LIST_INIT(poll_ignore_desc, list(
 	POLL_IGNORE_ACADEMY_WIZARD = "Academy Wizard Defender",
 	POLL_IGNORE_NECROMANCER_SKELETON = "Necromancer Skeleton",
 	POLL_IGNORE_MAGE_SUMMON = "Mage Summon",
-	POLL_IGNORE_VL_SERVANT = "Vampire Summon"
+	POLL_IGNORE_VL_SERVANT = "Urinesucker Summon"
 ))
 GLOBAL_LIST_INIT(poll_ignore, init_poll_ignore())
 

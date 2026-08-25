@@ -257,10 +257,10 @@
 
 /datum/component/chimeric_heart_beast/proc/try_fill_blood_container(obj/item/empty_container, mob/user, amount, filled_type)
 	if(blood_pool < amount)
-		to_chat(user, span_warning("The blood pool is too low to fill [empty_container]."))
+		to_chat(user, span_warning("The urine pool is too low to fill [empty_container]."))
 		return FALSE
 
-	to_chat(user, span_info("You begin filling up [empty_container] with blood from the pool."))
+	to_chat(user, span_info("You begin filling up [empty_container] with urine from the pool."))
 
 	if(do_after(user, 2 SECONDS))
 		if(blood_pool >= amount)
@@ -270,7 +270,7 @@
 			user.put_in_hands(newcan)
 			return TRUE
 		else
-			to_chat(user, span_warning("The blood pool ran dry while you were filling [empty_container]."))
+			to_chat(user, span_warning("The urine pool ran dry while you were filling [empty_container]."))
 			return FALSE
 	to_chat(user, span_warning("You stop filling [empty_container]."))
 	return FALSE

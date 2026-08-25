@@ -30,7 +30,7 @@ the %ADJECTIVE% brig
 Nanotrasen
 the Syndicate
 the Wizard Federation
-%ADJECTIVE% blood
+%ADJECTIVE% urine
 %ADJECTIVE% plasma
 %ADJECTIVE% wind
 %ADJECTIVE% darkness

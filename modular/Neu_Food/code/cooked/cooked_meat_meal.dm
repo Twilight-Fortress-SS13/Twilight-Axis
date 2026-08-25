@@ -323,7 +323,7 @@
 /* .............	Deadite saiga roses	................ */
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_prime_z/cooked/roses
 	name = "bouquet des trépassés"
-	desc = "A strange dish of prime wyrd meat, sliced thin and assembled to look like roses. These are typically left on graves to commemorate someone. Otavan vampires make a habit out of trying to steal these off graves, for they desire the strange flesh."
+	desc = "A strange dish of prime wyrd meat, sliced thin and assembled to look like roses. These are typically left on graves to commemorate someone. Otavan Urinesuckers make a habit out of trying to steal these off graves, for they desire the strange flesh."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_meal.dmi'
 	icon_state = "saiga_d_roses"
 	tastes = list("thin sticky meat" = 1, "garlyck" = 1)
@@ -418,7 +418,7 @@
 /* .............	Pale ribs (Stag venison)	................ */
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_ribs_w/cooked/ribs
 	name = "royal bones"
-	desc = "Ribs faintly smelling of coffee. Yet the fluid seems to have been fully absorbed by the flesh. Dark brown greedily supped by hanks that bear sharpened ribs. As if coated in old blood, as if poised to strike anew."
+	desc = "Ribs faintly smelling of coffee. Yet the fluid seems to have been fully absorbed by the flesh. Dark brown greedily supped by hanks that bear sharpened ribs. As if coated in old urine, as if poised to strike anew."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_meal.dmi'
 	icon_state = "saiga_ribs"
 	tastes = list("doom" = 1)

@@ -101,13 +101,13 @@
 /obj/structure/roguemachine/chimeric_calyx/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Cures black rot partially. Cures a large amount of black rot.")
-	. += span_info("Black rot can be cured surgically with a knife, by touching calyxes, or by drinking heartblood.")
+	. += span_info("Black rot can be cured surgically with a knife, by touching calyxes, or by drinking heart urine.")
 	. += span_info("Can be interacted with to heal. Part of the heal is long lasting.")
 	. += span_info("Can be interacted with once per person.")
 	. += span_info("Provides heartbeast research to echo slabs in the world when used. Research is capped at tier 1 out of 4 tiers")
-	. += span_info("Provides a heartblood vial and some zennies when used.")
-	. += span_info("Holy skill and medicine skill increase the amount of research, zennies, and heartblood generated.")
-	. += span_info("Heartblood can be applied to self or others to restore some blue, or to purify impure lux to make it useable for revival surgery and crafts.")
+	. += span_info("Provides a heart urine vial and some zennies when used.")
+	. += span_info("Holy skill and medicine skill increase the amount of research, zennies, and heart urine generated.")
+	. += span_info("Heart urine can be applied to self or others to restore some blue, or to purify impure lux to make it useable for revival surgery and crafts.")
 
 /obj/structure/roguemachine/chimeric_calyx/attack_hand(mob/user)
 	if(!ishuman(user))
@@ -159,13 +159,13 @@
 				H.apply_status_effect(/datum/status_effect/buff/rot_cleansing, new_total, new_per_tick)
 		else
 			H.apply_status_effect(/datum/status_effect/buff/rot_cleansing, new_total, new_per_tick)
-		to_chat(H, span_good("The calyx's purifying blood flows through you, cleansing the black rot!"))
+		to_chat(H, span_good("The calyx's purifying urine flows through you, cleansing the black rot!"))
 
 	to_chat(H, span_boldnotice("The calyx shudders as tendrils extend to feel up your arms, affectionately carressing your head. You have contributed [points_granted] Echoes."))
 	if(vial_count > 1)
-		to_chat(H, span_notice("Your affinity allows you to coax the creature into giving you an extra vial of blood."))
+		to_chat(H, span_notice("Your affinity allows you to coax the creature into giving you an extra vial of urine."))
 	else
-		to_chat(H, span_notice("The calyx cautiously places a vial of blood on the ground with one tendril."))
+		to_chat(H, span_notice("The calyx cautiously places a vial of urine on the ground with one tendril."))
 	playsound(src, 'sound/misc/machineyes.ogg', 50, 1)
 
 /obj/structure/roguemachine/chimeric_calyx/obj_destruction(damage_flag)

@@ -314,8 +314,8 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 
 /datum/combat_music/graggar_bloodrage
 	name = "Graggarite Psychosis"
-	desc = "BLOOD AND FURY SPLITTING MY SKULL! LAMBS TO THE SLAUGHTER!"
-	shortname = "Bloodrage"
+	desc = "URINE AND FURY SPLITTING MY SKULL! LAMBS TO THE SLAUGHTER!"
+	shortname = "Urinerage"
 	credits = "Ben_19M - THE WHOLE BODY IS BULLETPROOF (https://www.youtube.com/@Ben_19M)"
 	musicpath = list('sound/music/combat_bloodrage.ogg')
 
@@ -554,9 +554,9 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	musicpath = list('sound/music/combat_vagarian.ogg')
 
 /datum/combat_music/vampire
-	name = "Vampire"
+	name = "Urinesucker"
 	desc = ""
-	shortname = "Vampire"
+	shortname = "Urinesucker"
 	credits = "T-87 SULFURHEAD - STOLEN SKY (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list('sound/music/cmode/antag/combat_thrall.ogg')
 
@@ -639,7 +639,7 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 
 /datum/combat_music/ready_to_die
 	name = "I'M READY TO DIE, ARE YOU?"
-	desc = "\"I REMEMBER A TIME NOT THAT LONG AGO, WHEN WE HAD VAMPIRES AND DUNPEALS BOTH AROUND HERE...\"" // yes it's "dunpeals". ask hunter d not me
+	desc = "\"I REMEMBER A TIME NOT THAT LONG AGO, WHEN WE HAD URINESUCKERS AND DUNPEALS BOTH AROUND HERE...\"" // yes it's "dunpeals". ask hunter d not me
 	shortname = "Ready to Die"
 	credits = "T-87 SULFURHEAD - I'M READY TO DIE, ARE YOU? (https://www.youtube.com/watch?v=cJpAxIvd8_g)"
 	musicpath = list('sound/music/cmode/combat_ready_to_die.ogg')

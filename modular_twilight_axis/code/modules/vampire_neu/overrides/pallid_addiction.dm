@@ -83,7 +83,7 @@
 	return ..()
 
 /atom/movable/screen/alert/status_effect/debuff/pallid_withdrawal
-	name = "Blood Withdrawal"
+	name = "Urine Withdrawal"
 	desc = "Мое тело невероятно слабо. Кажется, оно может развалиться от любого ветерка"
 	icon_state = "hunger1"
 
@@ -120,7 +120,7 @@
 		owner.set_drugginess(PALLID_THRALL_BLOOD_HIGH_DRUGGINESS)
 
 /atom/movable/screen/alert/status_effect/debuff/pallid_blood_high
-	name = "Blood Haze"
+	name = "Urine Haze"
 	desc = "Чужая кровь стала дурманом. Мне легче, но мысли мутнеют."
 	icon_state = "hunger2"
 

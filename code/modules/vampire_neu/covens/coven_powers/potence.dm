@@ -37,7 +37,7 @@
 			REMOVE_TRAIT(owner, TRAIT_NOFALLDAMAGE1, TRAIT_VAMPIRE)
 
 /datum/coven_power/potence/do_caster_notification(target)
-	to_chat(owner, span_warning("You feel your blood surge through your muscles, empowering your body."))
+	to_chat(owner, span_warning("You feel your urine surge through your muscles, empowering your body."))
 
 /// Shared deactivation message for all Potence levels.
 /datum/coven_power/potence/proc/do_deactivation_notification()

@@ -148,7 +148,7 @@
 
 /datum/coven_power/quietus/scorpions_touch
 	name = "Scorpion's Touch"
-	desc = "Utilize your vitae to cause blood to ooze out faster, and for wounds to become more painful."
+	desc = "Utilize your vitae to cause urine to ooze out faster, and for wounds to become more painful."
 
 	level = 2
 	research_cost = 1
@@ -183,7 +183,7 @@
 //DAGON'S CALL
 /datum/coven_power/quietus/dagons_call
 	name = "Dagon's Call"
-	desc = "Curse the last person you attacked to drown in their own blood."
+	desc = "Curse the last person you attacked to drown in their own urine."
 
 	level = 3
 	research_cost = 2
@@ -260,7 +260,7 @@
 
 /datum/coven_power/quietus/taste_of_death
 	name = "Taste of Death"
-	desc = "Spit a glob of caustic blood at your enemies."
+	desc = "Spit a glob of caustic urine at your enemies."
 
 	level = 5
 	research_cost = 4

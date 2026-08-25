@@ -42,15 +42,15 @@
 	return TRUE
 
 /datum/surgery_step/cutvein/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
-	display_results(user, target, span_notice("Blood dips out of the cut vein in [target]'s [parse_zone(target_zone)]."),
-		span_notice("Blood drips out of the cut vein in [target]'s [parse_zone(target_zone)]."))
+	display_results(user, target, span_notice("Urine dips out of the cut vein in [target]'s [parse_zone(target_zone)]."),
+		span_notice("Urine drips out of the cut vein in [target]'s [parse_zone(target_zone)]."))
 	var/obj/item/bodypart/gotten_part = target.get_bodypart(check_zone(target_zone))
 	if(gotten_part)
 		gotten_part.add_wound(/datum/wound/slash/vein)
 	return TRUE
 
 /datum/surgery_step/bloodlet
-	name = "Force out bad blood"
+	name = "Force out bad urine"
 	implements = list(
 		TOOL_HAND = 80,
 	)
@@ -70,15 +70,15 @@
 	success_sound = 'sound/surgery/organ2.ogg'
 
 /datum/surgery_step/bloodlet/preop(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
-	display_results(user, target, span_notice("I begin to force the blood out of [target]'s vein in [parse_zone(target_zone)]..."),
-		span_notice("[user] begins to force the blood out of [target]'s vein in [parse_zone(target_zone)]!"),
-		span_notice("[user] begins to force the blood out of [target]'s vein in [parse_zone(target_zone)]!"))
+	display_results(user, target, span_notice("I begin to force the urine out of [target]'s vein in [parse_zone(target_zone)]..."),
+		span_notice("[user] begins to force the urine out of [target]'s vein in [parse_zone(target_zone)]!"),
+		span_notice("[user] begins to force the urine out of [target]'s vein in [parse_zone(target_zone)]!"))
 	return TRUE
 
 /datum/surgery_step/bloodlet/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
-	display_results(user, target, span_notice("I force blood out [target]'s vein in [parse_zone(target_zone)]."),
-		span_notice("[user] forces blood out [target]'s vein in [parse_zone(target_zone)]!"),
-		span_notice("[user] forces blood out [target]'s vein in [parse_zone(target_zone)]!"))
+	display_results(user, target, span_notice("I force urine out [target]'s vein in [parse_zone(target_zone)]."),
+		span_notice("[user] forces urine out [target]'s vein in [parse_zone(target_zone)]!"),
+		span_notice("[user] forces urine out [target]'s vein in [parse_zone(target_zone)]!"))
 	target.adjustToxLoss (-25, 0)
 	target.urine_volume -=50
 	return TRUE

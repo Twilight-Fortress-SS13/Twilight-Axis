@@ -1,7 +1,7 @@
 // Lich / Vampire shared list only
 /obj/effect/proc_holder/spell/invoked/projectile/bloodsteal
-	name = "Blood Steal"
-	desc = "Steal anothers blood for your own collection."
+	name = "Urine Steal"
+	desc = "Steal anothers urine for your own collection."
 	clothes_req = FALSE
 	overlay_state = "bloodsteal"
 	sound = 'sound/magic/vlightning.ogg'
@@ -27,7 +27,7 @@
 	human_req = TRUE
 
 /obj/projectile/magic/bloodsteal
-	name = "blood steal"
+	name = "urine steal"
 	expose_caster_on_deflect = TRUE
 	tracer_type = /obj/effect/projectile/tracer/bloodsteal
 	muzzle_type = null
@@ -58,8 +58,8 @@
 			var/mob/living/carbon/human/H = target
 			H.urine_volume = max(H.urine_volume-45, 0)
 			H.handle_blood()
-			H.visible_message(span_danger("[target] has their blood ripped from their body!!"), \
-					span_userdanger("My blood erupts from my body!"), \
+			H.visible_message(span_danger("[target] has their urine ripped from their body!!"), \
+					span_userdanger("My urine erupts from my body!"), \
 					span_hear("..."), COMBAT_MESSAGE_RANGE, target)
 			new /obj/effect/decal/cleanable/blood/puddle(H.loc)
 			sender.adjust_bloodpool(400)

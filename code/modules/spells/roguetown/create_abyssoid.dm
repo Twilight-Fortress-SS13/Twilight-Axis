@@ -1,6 +1,6 @@
 /obj/effect/proc_holder/spell/self/create_abyssoid
 	name = "Create Abyssoid"
-	desc = "Turn a leech into a Abyssoid using your own blood."
+	desc = "Turn a leech into a Abyssoid using your own urine."
 	overlay_state = "bloodsteal"
 	chargedrain = 0
 	chargetime = 0
@@ -27,11 +27,11 @@
 		return FALSE
 
 	if(user.urine_volume < URINE_VOLUME_BAD)
-		to_chat(user, span_warning("You don't have enough blood to sacrifice!"))
+		to_chat(user, span_warning("You don't have enough urine to sacrifice!"))
 		return FALSE
 
 	user.visible_message(span_warning("[user] begins stragely murmuring over [target]..."), \
-						span_notice("You begin the transformation ritual, offering your blood to Abyssor."))
+						span_notice("You begin the transformation ritual, offering your urine to Abyssor."))
 
 	if(!do_after(user, 10 SECONDS, target = user))
 		to_chat(user, span_warning("The ritual was interrupted!"))
@@ -42,7 +42,7 @@
 		return FALSE
 
 	if(user.urine_volume < URINE_VOLUME_BAD)
-		to_chat(user, span_warning("You don't have enough blood to complete the ritual!"))
+		to_chat(user, span_warning("You don't have enough urine to complete the ritual!"))
 		return FALSE
 
 	user.urine_volume = max(user.urine_volume - 70, 0)

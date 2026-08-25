@@ -31,7 +31,7 @@
 	pixel_y = rand(-9, 0)
 
 /obj/effect/temp_visual/heal_blood
-	name = "bloodheal glow"
+	name = "urineheal glow"
 	icon = 'icons/effects/miracle-healing.dmi'
 	icon_state = "heal_blood"
 	duration = 15

@@ -22,7 +22,7 @@
 		"%N the Cutthroat",
 		"%N the Quick",
 		"%N the Wolf",
-		"%N Bloodhand",
+		"%N Urinehand",
 	)
 	boss_name_file = "strings/rt/names/human/humnorm.txt"
 	crime_weights = list(

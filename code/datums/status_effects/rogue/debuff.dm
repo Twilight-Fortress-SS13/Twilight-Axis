@@ -114,8 +114,8 @@
 	status_type = STATUS_EFFECT_REFRESH
 
 /atom/movable/screen/alert/status_effect/debuff/vthirstt1
-	name = "Blood Starved"
-	desc = "Food and drink brings no comfort. The thought of consuming blood lingers in my mind."
+	name = "Urine Starved"
+	desc = "Food and drink brings no comfort. The thought of consuming urine lingers in my mind."
 	icon_state = "vblood1"
 
 /datum/status_effect/debuff/vthirstt2
@@ -127,7 +127,7 @@
 	status_type = STATUS_EFFECT_REFRESH
 
 /atom/movable/screen/alert/status_effect/debuff/vthirstt2
-	name = "Blood Starved"
+	name = "Urine Starved"
 	desc = "My fangs ache and I am twitchy. Every heartbeat nearby draws my attention."
 	icon_state = "vblood2"
 
@@ -140,8 +140,8 @@
 	status_type = STATUS_EFFECT_REFRESH
 
 /atom/movable/screen/alert/status_effect/debuff/vthirstt3
-	name = "Blood Starved"
-	desc = "<font color='#ff0000'><b>I CAN'T TAKE IT ANYMORE!! BLOOD!! WHERE IS BLOOD?! I NEED BLOOD!! I WANT BLOOD!!</b></font>"
+	name = "Urine Starved"
+	desc = "<font color='#ff0000'><b>I CAN'T TAKE IT ANYMORE!! URINE!! WHERE IS URINE?! I NEED URINE!! I WANT URINE!!</b></font>"
 	icon_state = "vblood3"
 
 /////////
@@ -217,7 +217,7 @@
 
 /atom/movable/screen/alert/status_effect/debuff/pissingt1
 	name = "Dizzy"
-	desc = "I've lost a bit of blood, and my humors feel imbalanced.."
+	desc = "I've lost a bit of urine, and my humors feel imbalanced.."
 	icon_state = "piss1"
 
 /datum/status_effect/debuff/pissingworse
@@ -241,7 +241,7 @@
 
 /atom/movable/screen/alert/status_effect/debuff/pissingt2
 	name = "Faint"
-	desc = "I've lost some blood, and it's hard to keep myself steady.."
+	desc = "I've lost some urine, and it's hard to keep myself steady.."
 	icon_state = "piss2"
 
 /datum/status_effect/debuff/pissingworst
@@ -265,7 +265,7 @@
 
 /atom/movable/screen/alert/status_effect/debuff/pissingt3
 	name = "Drained"
-	desc = "I've lost a lot of blood, and I can barely keep myself conscious.."
+	desc = "I've lost a lot of urine, and I can barely keep myself conscious.."
 	icon_state = "piss3"
 
 /datum/status_effect/debuff/sleepytime
@@ -511,7 +511,7 @@
 		if(/datum/patron/inhumen/baotha) // Slightly better placeholder, feel free to rewrite
 			to_chat(owner, span_gamedeadsay("I woke upon a bed of silk and roses, my body weightless as a lyfetime of pain and heartbreak melted away into a bissful haze. I want to go back.. "))
 		if(/datum/patron/inhumen/zizo)
-			to_chat(owner, span_gamedeadsay(" I rise, the twice dammed carcass world shrinks below me. My mind expands, filling with forbidden truth as my body is drawn towards a twisting bloody vortex. I sink into the endless storm, it screams its hate in a million voices.."))
+			to_chat(owner, span_gamedeadsay(" I rise, the twice dammed carcass world shrinks below me. My mind expands, filling with forbidden truth as my body is drawn towards a twisting urine-soaked vortex. I sink into the endless storm, it screams its hate in a million voices.."))
 		if(/datum/patron/godless) //Pseudoplaceholder. Feel free to rewrite, if desired.
 			to_chat(owner, span_gamedeadsay("I saw my entire lyfe flash before my eyes, and then-.. nothing. No light, no darkness; complete, utter nothingness - save for a single thought, sinking into the inky-blackness.. and into whatever awaited on the other side. Suddenly, I feel myself yanked in a non-existing direction!"))
 		else
@@ -615,7 +615,7 @@
 	duration = 20 SECONDS
 
 /atom/movable/screen/alert/status_effect/debuff/blackvitae
-	name = "Bloodrot"
+	name = "Urinerot"
 	desc = span_bloody("BLACKENED ROT SEEPS INTO MY WOUNDS! IT HURTS, IT HURTS, IT HURTS, IT HURTS!!")
 	icon_state = "ritesexpended"
 
@@ -1196,7 +1196,7 @@
 		phy.piss_mod = 1.15 + (con_mod * 0.1) // at 15 con you'll piss from a wound by .825
 	else
 		phy.piss_mod = 1.15 // if you already have low con, we're not going to turbofuck you. ok?
-	H.visible_message(span_warning("[owner]'s blood runs thin and begins GUSHING out of their wounds!"), span_danger("A FOUL SPELL IS CAUSING ME TO PISS EN MASSE!"))
+	H.visible_message(span_warning("[owner]'s urine runs thin and begins GUSHING out of their wounds!"), span_danger("A FOUL SPELL IS CAUSING ME TO PISS EN MASSE!"))
 
 /datum/status_effect/debuff/bloody_mess/on_remove()
 	. = ..()
@@ -1209,7 +1209,7 @@
 
 
 /atom/movable/screen/alert/status_effect/debuff/bloody_mess
-	name = "Bloody Mess"
+	name = "Urine-Soaked Mess"
 	desc = "My pissing is quickened! I must grip my wounds, or I will lose myself steadfast!"
 
 /datum/status_effect/debuff/sensitive_nerves

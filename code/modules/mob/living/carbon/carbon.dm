@@ -679,7 +679,7 @@
 		if(NOBLOOD in dna?.species?.species_traits)
 			return TRUE
 		if(message)
-			visible_message("<span class='danger'>[vomit_source] coughs up blood!</span>", "<span class='danger'>I cough up blood!</span>")
+			visible_message("<span class='danger'>[vomit_source] coughs up urine!</span>", "<span class='danger'>I cough up urine!</span>")
 
 	if(stun)
 		Immobilize(59)
@@ -1133,8 +1133,8 @@
 				var/poisoned = health <= HEALTH_THRESHOLD_FULLCRIT && getToxLoss() >= getFireLoss() && getToxLoss() >= getBruteLoss()
 				if(bled_out)
 					visible_message(span_danger("<b>[src] collapses, [src.p_their()] skin pale as parchment!</b>"), \
-						span_userdanger("My blood... there is nothing left. I cannot feel my limbs."))
-					balloon_alert_to_viewers("<font color='#bb2b2b'>bled out!</font>")
+						span_userdanger("My urine... there is nothing left. I cannot feel my limbs."))
+					balloon_alert_to_viewers("<font color='#bb2b2b'>pissed out!</font>")
 				else if(suffocating)
 					visible_message(span_danger("<b>[src] collapses, [src.p_their()] lips turning blue!</b>"), \
 						span_userdanger("I cannot breathe... the world grows dark."))
@@ -1144,7 +1144,7 @@
 						span_userdanger("The poison is too much... I cannot go on."))
 					balloon_alert_to_viewers("<font color='#2b8a3e'>poisoned!</font>")
 				else if(health <= HEALTH_THRESHOLD_FULLCRIT)
-					visible_message(span_danger("<b>[src] collapses, broken and bloodied!</b>"), \
+					visible_message(span_danger("<b>[src] collapses, broken and urine-soaked!</b>"), \
 						span_userdanger("My bones are shattered... I cannot go on."))
 					balloon_alert_to_viewers("<font color='#bb2b2b'>beaten down!</font>")
 			set_stat(UNCONSCIOUS)

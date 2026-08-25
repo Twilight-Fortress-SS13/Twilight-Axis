@@ -1,7 +1,7 @@
 // Diagnose
 /obj/effect/proc_holder/spell/invoked/diagnose
 	name = "Diagnose"
-	desc = "Call upon Pestra's medical wisdom to read the body's humors and hidden ailments at a distance. Reveals a target's condition with perfect clarity. To perceive one's blood content, all you'll need is but an incision."
+	desc = "Call upon Pestra's medical wisdom to read the body's humors and hidden ailments at a distance. Reveals a target's condition with perfect clarity. To perceive one's urine content, all you'll need is but an incision."
 	overlay_icon = 'icons/mob/actions/pestraspells.dmi'
 	action_icon = 'icons/mob/actions/pestraspells.dmi'
 	overlay_state = "diagnose"
@@ -113,7 +113,7 @@
 		var/blood_percent = round((human_target.urine_volume / URINE_VOLUME_NORMAL) * 100)
 
 		to_chat(user, span_necrosis("<i>Toxicity: [human_target.toxloss]%</i>"))
-		to_chat(user, span_bloody("<i>Blood volume: [human_target.urine_volume]u ([blood_percent]%)</i>"))
+		to_chat(user, span_bloody("<i>Urine volume: [human_target.urine_volume]u ([blood_percent]%)</i>"))
 
 		if(piss_rate)
 			to_chat(user, span_bloody("<i>Pissing rate: [piss_rate]u/sec ([piss_percent]%/sec)</i>"))
@@ -137,7 +137,7 @@
 				if(4)
 					to_chat(user, span_necrosis("I can see the Black Rot in its terminal stage, 'Necrosis'."))
 
-			to_chat(user, span_infection("<i>Drinking Heartblood should delay the inevitable, but excising it is the cure.<i>"))
+			to_chat(user, span_infection("<i>Drinking Heart Urine should delay the inevitable, but excising it is the cure.<i>"))
 
 	var/has_cheele = FALSE
 	var/has_incision = FALSE
@@ -176,36 +176,36 @@
 	// the way for babies to check if something's wrong with them on the run, just throw a leech and diagnose! cant be simpler than that
 	if(has_cheele)
 		if(names.len)
-			to_chat(user, span_red("The blood-sucking creecher stirs uncomfortably... a foreign substance may be in their blood."))
+			to_chat(user, span_red("The urine-sucking creecher stirs uncomfortably... a foreign substance may be in their urine."))
 		else if(more_than_one)
-			to_chat(user, span_red("The blood-sucking creecher stirs very uncomfortably... more than one foreign substances may be in their blood."))
+			to_chat(user, span_red("The urine-sucking creecher stirs very uncomfortably... more than one foreign substances may be in their urine."))
 		else
-			to_chat(user, span_blue("The blood-sucking creecher seems unbothered and content; hinting a clean blood."))
+			to_chat(user, span_blue("The urine-sucking creecher seems unbothered and content; hinting a clean urine."))
 	// and this is mostly for when you have surgical tools, pestrans with miracles can cheat better (of course why the hell not rolls eyes), it takes an incision only rather than a forceps inside
 	if(names.len)
 		if(miracle && has_incision)
-			to_chat(user, span_necrosis("<b><i>With Pestra's wisdom, I perceive their blood in full detail, revealing [english_list(names_with_amounts)] within.</b></i>"))
+			to_chat(user, span_necrosis("<b><i>With Pestra's wisdom, I perceive their urine in full detail, revealing [english_list(names_with_amounts)] within.</b></i>"))
 
 		else if(is_high_tier && has_hemostat && !miracle)
-			to_chat(user, span_boldwarning("<i>Studying the blood drawn upon the instrument, I easily discern [english_list(names)] within.</i>"))
+			to_chat(user, span_boldwarning("<i>Studying the urine drawn upon the instrument, I easily discern [english_list(names)] within.</i>"))
 
 		else if(is_mid_tier && has_hemostat && top_reagent && !miracle)
-			to_chat(user, span_boldwarning("<i>Studying the blood drawn upon the instrument, I can only see heavy traces of [top_reagent.name] within.</i>"))
+			to_chat(user, span_boldwarning("<i>Studying the urine drawn upon the instrument, I can only see heavy traces of [top_reagent.name] within.</i>"))
 
 		else if(is_mid_tier && has_hemostat && more_than_one && !miracle)
-			to_chat(user, span_boldwarning("<i>Studying the blood drawn upon the instrument, I can only see heavy traces of [top_reagent.name], though other substances may be present.</i>"))
+			to_chat(user, span_boldwarning("<i>Studying the urine drawn upon the instrument, I can only see heavy traces of [top_reagent.name], though other substances may be present.</i>"))
 	else
 		if(miracle && has_incision)
-			to_chat(user, span_boldgreen("<i>Even with divine insight, I perceive no foreign substances within their blood.</i>"))
+			to_chat(user, span_boldgreen("<i>Even with divine insight, I perceive no foreign substances within their urine.</i>"))
 		else if((is_mid_tier || is_high_tier) && has_hemostat && !miracle)
-			to_chat(user, span_boldgreen("<i>From the blood drawn upon the instrument, I find no clear trace of any substances in their blood.</i>"))
+			to_chat(user, span_boldgreen("<i>From the urine drawn upon the instrument, I find no clear trace of any substances in their urine.</i>"))
 // and that's that, I moved the cooldown refund to earlier to make it to save server load, too, and that's that, what else does this need? let me know
 	return TRUE
 
 /obj/effect/proc_holder/spell/invoked/diagnose/secular
 	name = "Secular Diagnosis"
 	overlay_state = "diagnose"
-	desc = "A practiced reading of the body's humors and hidden ailments. Reveals a target's condition, with greater skill granting deeper detail. By embedding a Forceps on your patient, you may even identify substances within the blood; but even the most unskilled physicker can tell from a Cheele or Leech's reactions."
+	desc = "A practiced reading of the body's humors and hidden ailments. Reveals a target's condition, with greater skill granting deeper detail. By embedding a Forceps on your patient, you may even identify substances within the urine; but even the most unskilled physicker can tell from a Cheele or Leech's reactions."
 	range = 4 // 2 range doesn't let you see over a meeting table, 4 range is just enough for that, it also falls in line with normal miracle
 	associated_skill = /datum/skill/misc/medicine
 	miracle = FALSE
@@ -528,7 +528,7 @@
 		target.adjustBruteLoss(2)
 	var/prompt = pick(1,2,3)
 	var/message = pick(
-		"Ticks on my skin start to engorge with blood!",
+		"Ticks on my skin start to engorge with urine!",
 		"Flies are laying eggs in my open wounds!",
 		"Something crawled in my ear!",
 		"There are too many bugs to count!",
@@ -542,7 +542,7 @@
 		"Beetles crawl over my mouth!",
 		"Fleas bite my ankles!",
 		"Gnats buzz around my face!",
-		"Lice suck my blood!",
+		"Lice suck my urine!",
 		"Crickets chirp in my ears!",
 		"Earwigs crawl into my ears!")
 	if(prompt == 1 && iscarbon(C))
@@ -652,7 +652,7 @@
 
 /obj/effect/proc_holder/spell/invoked/pestra_leech
 	name = "Leeching Purge"
-	desc = "Manifest leeches inside of target, causing them to puke them out while restoring some blood and curing minor poisoning."
+	desc = "Manifest leeches inside of target, causing them to puke them out while restoring some urine and curing minor poisoning."
 	overlay_icon = 'icons/mob/actions/pestraspells.dmi'
 	action_icon = 'icons/mob/actions/pestraspells.dmi'
 	overlay_state = "leech"

@@ -14,14 +14,14 @@
 	answer_keywords = list("hurt", "pain", "suffering", "agony", "ache", "torment", "anguish")
 
 /datum/flesh_concept/blood
-	name = "blood"
+	name = "urine"
 	tier_questions = alist(
-		1 = list("Red wet?", "Life juice?", "Piss?"),
-		2 = list("What is blood?", "Why blood red?", "Blood life?"),
-		3 = list("Does blood carry memory?", "Is blood sacred?", "What flows in veins?"),
-		4 = list("What ancestral knowledge flows in blood?", "Is blood the river of lineage?", "Does blood remember what the mind forgets?")
+		1 = list("Yellow wet?", "Life juice?", "Piss?"),
+		2 = list("What is urine?", "Why urine yellow?", "Urine life?"),
+		3 = list("Does urine carry memory?", "Is urine sacred?", "What flows in veins?"),
+		4 = list("What ancestral knowledge flows in urine?", "Is urine the river of lineage?", "Does urine remember what the mind forgets?")
 	)
-	answer_keywords = list("blood", "piss", "veins", "life", "red", "flow", "sacrifice")
+	answer_keywords = list("urine", "piss", "veins", "life", "yellow", "flow", "sacrifice")
 
 /datum/flesh_concept/fear
 	name = "fear"

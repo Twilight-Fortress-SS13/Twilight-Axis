@@ -104,7 +104,7 @@
 				var/extra_text = ""
 				if(bandage.return_urine_DNA())
 					usedclass = "bloody"
-					extra_text = " (bloodied)"
+					extra_text = " (urine-soaked)"
 				else if(istype(bandage, /obj/item/natural/cloth))
 					var/obj/item/natural/cloth/cloth = bandage
 					if(cloth.medicine_amount)
@@ -217,7 +217,7 @@
 		var/extra_text = ""
 		if(HAS_BLOOD_DNA(bandage))
 			usedclass = "bloody"
-			extra_text = " (bloodied)"
+			extra_text = " (urine-soaked)"
 		else if(istype(bandage, /obj/item/natural/cloth))
 			var/obj/item/natural/cloth/cloth = bandage
 			if(cloth.medicine_amount)

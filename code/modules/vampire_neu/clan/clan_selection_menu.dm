@@ -57,11 +57,11 @@ GLOBAL_LIST_INIT(vampire_clan_selection_i18n, build_vampire_clan_selection_i18n(
 	clans += list(list(
 		"id" = "custom",
 		"name" = "Customised Caitiff Clan",
-		"desc" = "Forge your own cursed bloodline outside the ancient houses. The elders will not claim you, but neither will their chains bind you.",
+		"desc" = "Forge your own cursed urine-line outside the ancient houses. The elders will not claim you, but neither will their chains bind you.",
 		"curse" = "Unstable legacy.",
 		"downside" = "Have no ancient house to shelter your name.",
 		"bloodPreference" = "Your hunger is your own.",
-		"tagline" = "Forge your own cursed bloodline",
+		"tagline" = "Forge your own cursed urine-line",
 		"icon" = null,
 		"isCustom" = TRUE,
 		"covens" = list(),
@@ -216,7 +216,7 @@ GLOBAL_LIST_INIT(vampire_clan_selection_i18n, build_vampire_clan_selection_i18n(
 			return "Demonic piety and holy weakness"
 		if("Crimson Fang")
 			return "Assassins, warriors, and diablerists"
-	return "An ancient curse carried through blood"
+	return "An ancient curse carried through urine"
 
 /datum/vampire_clan_selection_menu/proc/lord_preview_type_for(datum/clan/C)
 	switch(C.name)

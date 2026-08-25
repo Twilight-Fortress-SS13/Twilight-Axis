@@ -470,7 +470,7 @@
 
 /datum/action/cooldown/spell/command_word/quicken
 	name = "Quicken"
-	desc = "Powerful abilities to quicken your summons. Empower let their next strike bypass Guard, and reset a Primordial's ability cooldown. Surge removes stun and Blood Rush floods it with vigor and blood. Toggle with Shift+G."
+	desc = "Powerful abilities to quicken your summons. Empower let their next strike bypass Guard, and reset a Primordial's ability cooldown. Surge removes stun and Urine Rush floods it with vigor and urine. Toggle with Shift+G."
 	button_icon_state = "conjure_aegis"
 	invocation_type = INVOCATION_SHOUT
 	invocations = list("Vera Manus!")
@@ -480,7 +480,7 @@
 	modes = list(
 		list("name" = "Empower", "tag" = "EMP", "key" = "empower", "color" = GLOW_COLOR_BUFF, "invocation" = "Vera Manus!", "cooldown" = 30 SECONDS, "desc" = ""),
 		list("name" = "Surge", "tag" = "SRG", "key" = "surge", "color" = GLOW_COLOR_BUFF, "invocation" = "Resurge!", "cooldown" = 30 SECONDS, "desc" = ""),
-		list("name" = "Blood Rush", "tag" = "RSH", "key" = "bloodrush", "color" = "#d13b2e", "invocation" = "Concita!", "cooldown" = 30 SECONDS, "desc" = ""),
+		list("name" = "Urine Rush", "tag" = "RSH", "key" = "bloodrush", "color" = "#d13b2e", "invocation" = "Concita!", "cooldown" = 30 SECONDS, "desc" = ""),
 	)
 
 /datum/action/cooldown/spell/command_word/beckon

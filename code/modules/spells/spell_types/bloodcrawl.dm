@@ -1,5 +1,5 @@
 /obj/effect/proc_holder/spell/bloodcrawl
-	name = "Blood Crawl"
+	name = "Urine Crawl"
 	desc = ""
 	recharge_time = 0
 	clothes_req = FALSE
@@ -32,4 +32,4 @@
 		start_recharge()
 		return
 	revert_cast()
-	to_chat(user, span_warning("I are unable to blood crawl!"))
+	to_chat(user, span_warning("I are unable to urine crawl!"))

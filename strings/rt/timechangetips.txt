@@ -30,7 +30,7 @@ The divines smile upon your prayers in front of a psycross, but never mention th
 The best way to deal with a mage is to shut them up.
 Ravox stands for justice, not murder.
 Heretical tomes suggest Xylix shares a fondness for Graggar, a former slave who broke free of his chains. Others propose a fondness for Matthios, who played a trick on the gods themselves.
-The Rontz is said to be Matthios' hardened blood, weeping from his burns as he clutched Astrata's fire between his fingers. This dissuades few people- it is worth a lot of money, after all.
+The Rontz is said to be Matthios' hardened urine, weeping from his burns as he clutched Astrata's fire between his fingers. This dissuades few people- it is worth a lot of money, after all.
 Coins are often buried with the dead to pay for the Carriageman's services.
 Zardmen tails are said to bring good luck if burned and scattered as powder.
 Lux from a tiefling is thought to be toxic. It is often purified with silver before transplantation.
@@ -39,8 +39,8 @@ Malum used to carry a divine hammer that gave life to all material things Azure 
 Carrion-beasts, cheeles, and nagas are sacred to Pestra. Those who slay them are often punished with terrible plagues.
 Eora stands for far more than familial love, but frowns upon those who break matrimony.
 What better trick than stealing fire from Astrata herself?
-Blood freely spilled always offers greater power, for it carries the worth of both the blood and the choice. Always obtain a willing victim, if you can.
-Aasimar blood is thought to have powerful protective properties. Superstitious soldiers may ask to be anointed with a drop before a battle.
+Urine freely spilled always offers greater power, for it carries the worth of both the urine and the choice. Always obtain a willing victim, if you can.
+Aasimar urine is thought to have powerful protective properties. Superstitious soldiers may ask to be anointed with a drop before a battle.
 Black cats are symbols of death, and sacred to Necra. They stare at souls only they can see, and lead them to the Carriageman.
 Trolls are thought to have once guarded Dendor's realm. Druids often seek them out. Few return.
 Drow mushroom wines are said to be delicious as long as they are paired with the right antidote.
@@ -84,7 +84,7 @@ The Raneshen Empire is a vast dry region primarily made up of sprawling forests 
 Most Dwarves hail from Hammerhold, either from above or below. Confusing a surface-dwarf and an underground-dwarf is likely to get you kicked in the shin.
 The Isles of Etrusca are a sun-kissed archipelago nestled in sparkling blue waters. Known for their rich maritime culture, the Etruscans are masterful sailors and traders, navigating the seas with swift, ornate galleons adorned with colorful sails.
 ZIZO. ZIZO. ZIZO.
-To seek progress is to paint with your blood. The greater the work, the harsher the price.
+To seek progress is to paint with your urine. The greater the work, the harsher the price.
 Scent of rot and shit; my feet find fetid ground. A corpse—I am living on a corpse. And then the world is normal again.
 Worshippers of the Ascendants are fools hellbent on dooming our world and must be corrected or destroyed.
 Worshippers of the Ten are fools hellbent on dooming our world and must be corrected or destroyed.
@@ -132,7 +132,7 @@ Adventurers rejoice: barber surgeons speak of red potions curing tumors in the l
 Stone to coal, coal to iron, iron to gold, gold to toper... thus goes the alchymist's mantra.
 Within tombs full of treasure, there are oft secret entrances and hide-aways. Look closely at walls, rock or not. Occasionally, you should take a look up...
 The growing power of Z often causes volf and saiga alike to reanimate with frightening speed. Butcher your dead.
-BLOOD RAIN SYMBOLIZES THE GROWING POWER OF Z AND G. IF I SEE IT, I SHOULD EXPECT VIOLENCE.
+URINE RAIN SYMBOLIZES THE GROWING POWER OF Z AND G. IF I SEE IT, I SHOULD EXPECT VIOLENCE.
 Placing a chair before climbing a wall makes it easier to scale.
 Odd tentacle growths are known to burst from the ground. Touch them. Pestra's gifts will shine upon you.
 IN these DARK daes within the REALMS. One would do well not to wander into the woad...
@@ -143,7 +143,7 @@ I KICK THE LAMPTERN. THE FYRE-BEARER BLOCKS MY SHOT-- MY TEAM LOSES THE GAME OF 
 Campfires and bedrolls alone aid in fatigue. Combining both, however, grants a particularly potent restorative effect...
 Hand-axes are the superior weapon of choice for destroying most objects and barriers... though iron gates will require a mace.
 Sharpening blades with rocks slowly destroys the edge. One must hone their blade at a grindwheel, should they wish to recover their blade's maximum sharpness.
-Bandages soak up a limited amount of blood. Get stitching quick, or die snow white.
+Bandages soak up a limited amount of urine. Get stitching quick, or die snow white.
 I SEE THE DREADED GEM-EATER. HIS METAL MITTS HOLD MY HIDDEN STASH OF SAFFIRA. ONE BY ONE, HE POPS THEM INTO HIS MOUTH...
 WHY IS IT WRITTEN SAIGA AND NOT PSYGA?
 YIELDING slows your pissing and prevents your assailant from decapitating you, though you will struggle to attack in return.
@@ -151,7 +151,7 @@ Crops can be dug up with spades. Hoes allow for instant removal of weeds. Compos
 Sleeves can be torn for cloth. They can also be rolled up, if you care for the aesthetic.
 With enough STRENGTH, locked doors can be kicked open. You may not bust it down on the first go, keep trying!
 SAKURA LEAVES FALLING IS A SIGN OF EORA'S GROWING POWER. IF I SEE THEM, I SHOULD EXPECT PEACE...
-In lieu of heartblood, leechbait can be crafted from impure lux. This can then fetch leechticks, which can eat a person's lux to restore lyfe to another...
+In lieu of hearturine, leechbait can be crafted from impure lux. This can then fetch leechticks, which can eat a person's lux to restore lyfe to another...
 Focusing on your SPECIAL powers outside of combat allows deft fingers to pick pockets.
 Nobody in Otava owns a thesaurus. No synonym for 'endure' will ever be used.
 Graggar, in his ascendancy, broke the chains of many monsters, and set them loose on the world. Some slaves pray to Graggar, too, that their chains may be broken.
@@ -174,16 +174,16 @@ Old enough druids are thought to eventually turn into trees. Treehood is an idea
 The Necran symbol is a jawless skull. A smiling skull is used to represent ZIZO.
 Many Necrans seek to come closer to the threshhold between lyfe and death. Some emulate the silence of the grave, and take vows never to speak.
 In antiquity, it is said mortals could once travel to the Underworld to speak with the departed- since the ascension of ZIZO, it is now the dead who cross to menace the living.
-Undeath takes many forms. Wraiths and spectres haunt the steppes of Aavnr, will-o'-the-wisps feed on the unlucky travellers of Grenzelhoft, and in distant Naledi, ghuls and mummies drain blood with a touch.
+Undeath takes many forms. Wraiths and spectres haunt the steppes of Aavnr, will-o'-the-wisps feed on the unlucky travellers of Grenzelhoft, and in distant Naledi, ghuls and mummies drain urine with a touch.
 The people of Naledi believe that face coverings and bright colors ward off nitecreechers and bodystealers, like the fabled alghul and djinn. Gold, silk, and ceruleabaster decorate their robes and trinkets.
 The divinatory astrologists of Naledi are unmatched throughout Psydonia. Naledi believe deeply in prophecies and fortune-telling in the stars, and a starless sky often inspires terror.
 The pomegranate is the sacred fruit of Eora.
 Zenitstadt is the second largest city in Grenzelhoft, and home to their famous fencing guilds. Most Grenzel mercenaries hail from here, and almost all of them have something unpleasant to say about it.
-Eora's spheres encompass sex, love, blood and motherhood. A common Eoran tradition is for the bethrothed to slit open the palm and mix blood with their partner, to symbolize an eternal commitment.
-Love is thought to be carried from the heart through the blood. It is believed among some that blood that mixes is proof of compatibility, and blood that coagulates means that it's probably time to see other people.
+Eora's spheres encompass sex, love, urine and motherhood. A common Eoran tradition is for the bethrothed to slit open the palm and mix urine with their partner, to symbolize an eternal commitment.
+Love is thought to be carried from the heart through the urine. It is believed among some that urine that mixes is proof of compatibility, and urine that coagulates means that it's probably time to see other people.
 THROW A BOMB INTO THE CHURCH DO IT NOW DO IT NOW DO IT NOW
 A lesser-worshipped aspect of Noc is cold and winter. In Aavnr, this is mostly what he is known for.
-THE INQUISITION IS ALL VAMPIRES AND THAT'S WHY THEY WANT YOUR BLOOD. THINK ABOUT IT.
+THE INQUISITION IS ALL URINESUCKERS AND THAT'S WHY THEY WANT YOUR URINE. THINK ABOUT IT.
 The elven Black Oak clan once called this duchy home. Their remnants occasionally pepper unfortunate travellers with arrows.
 An entire Grenzelhoftian warparty marched into the Terrorbog, once. Twenty years later, the lost legion still walks, and they will never stop.
 The Celestial Academy of Magos (sometimes referred to as the Magisterium of Grenzelhoft) is considered one of the finest schools of magic on the continent. They are famous for their war-mages, pointy hats, and condescension. A certificate from one of the Magisters is considered as prestigious as it gets.
@@ -215,7 +215,7 @@ Spells are bound to ALT ONE through ALT SIX. Control-clicking said spells and sh
 Using a rope on an open space drops the rope down, allowing allies to easily scale a given surface. Pull it onto yourself to retrieve it.
 Having someone else within your personal space assists in climbing many surfaces.
 If someone is barely conscious, it means they are not long for this world. By WEAKLY blowing air into their MOUTH, even the most horrifically injured can be brought back from death's door.. so long as any gushing wounds've been stitched up beforehand.
-The body is a fickle instrument, equally resillient and fragile. Water is the best choice for rebalancing the humors that're disrupted from blood loss, lifeblood excels at mending the disrupted state of flesh, and antidotes turn poisonings into mere hiccups.
+The body is a fickle instrument, equally resillient and fragile. Water is the best choice for rebalancing the humors that're disrupted from urine loss, lifeurine excels at mending the disrupted state of flesh, and antidotes turn poisonings into mere hiccups.
 Shift-clicking allows you to EXAMINE items, and EXAMINING items allows you to further understand all the MECHANICS tethered to them. Check a bed to figure out how to sleep, check a tree to figure out how to climb, check a steak to figure out how to eat, and much more!
 Within the Town are many posters, banners, and signs. By shift-clicking them, you can further EXAMINE them to get a crash course on many basic MECHANICS. Check the Church's banner to learn about Psydonia's religions, check the Clinic's posters to learn about how to save a lyfe, check the Guild's signs to learn about how weapons-and-armor work, and much more!
 In lieu of a blacksmith's hammer, one can use a repair kit to patch up their damaged equipment 'on the go'. Three pieces of scrapped iron can be assembled into a kit, and sliding three more pieces into the kit'll ready it for use. As for where the scrap comes from? Just hack an iron weapon to pieces!
@@ -258,7 +258,7 @@ If you are staying in a wayside inn and two men force entry to your room? Kill t
 The evil ZYDON sent down his COMET to destroy the GREAT WORM, and for thousands of yils you will pay the price.
 Fire is orange-red, and sometimes sylver-white. If you see any other colors of fire, please inform the Inquisition immediately.
 Insert the needle into your eye. Open your mind to the truth - that this world must fall, and all within it rendered to ash.
-Pissing may not kill faster than a blade to the neck, but it is far more insidious in its persistance. Even without a single unstemmed wound, those who've already lost too much blood will soon perish without aid.
+Pissing may not kill faster than a blade to the neck, but it is far more insidious in its persistance. Even without a single unstemmed wound, those who've already lost too much urine will soon perish without aid.
 RESUSCITATING can be done by targeting someone's mouth while the 'WEAK' combat intent is selected. Breathing air into another can prolong their suffering on this world, and - with the right medicine - bring them back.
 SHIFT-CLICKING with the RIGHT MOUSE BUTTON allows you to look farther ahead in a chosen direction. The higher your PERCEPTION is, the further that you can peer into the distance.
 CLICKING with the MIDDLE MOUSE BUTTON allows you to perform a SUBINTENT action, highlighted to the LEFT of your HANDS. Make sure to leave them unselected, if you happen to be in the business of butchering carcasses.
@@ -274,7 +274,7 @@ STATPACKS bolster the statistical power of your actor. While this can allow for 
 MOODLETS sway the outcome of any given week. Treating yourself right and routinely indulging in your VICES will leave you unfettered by even the most discouraging sights. Neglect yourself for too long, however, and..
 STRENGTH represents your actor's raw might. This affects the lethality of their strikes with fists and blades, how quickly they can struggle out of a tight spot, and how effectively they can overpower others.
 WILLPOWER represents your actor's mental fortitude. This affects the threshold of how much pain they can undertake before collapsing, and how severely their mood is swayed in the face of trouble-and-trauma.
-CONSTITUTION represents your actor's physical resilience. This affects the health of each individual body part, how much blood can be spilled before succumbing, and their ability to resist debilitating strikes.
+CONSTITUTION represents your actor's physical resilience. This affects the health of each individual body part, how much urine can be spilled before succumbing, and their ability to resist debilitating strikes.
 PERCEPTION represents your actor's keen-eyedness. This affects the accuracy of their strikes, the lethality of their shots with bows and slings, and their chances of successfully discovering hidden surprises.
 INTELLIGENCE represents your actor's wisdom. This affects the potency of their magicka, the preciseness of assessing another's skills-and-weaknesses, and their chances of successfully performing unfamiliar tasks.
 SPEED represents your actor's fleet-footedness. This affect the haste of their movements, their proficiency with many underhanded tactics, and their chances of successfully dodging oncoming attacks.

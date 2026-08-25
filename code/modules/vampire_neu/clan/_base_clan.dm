@@ -65,7 +65,7 @@ And it also helps for the character set panel
 	var/current_accessory
 
 	var/mob/living/clan_leader
-	var/leader_title = "Vampire Lord"
+	var/leader_title = "Urinesucker Lord"
 	var/datum/clan_leader/leader = /datum/clan_leader/wretch
 	/// Set to FALSE for clans that shouldn't be selectable
 	var/selectable_by_vampires = TRUE
@@ -77,7 +77,7 @@ And it also helps for the character set panel
 	return "burn in sunlight"
 
 /datum/clan/proc/get_blood_preference_string()
-	return "any blood"
+	return "any urine"
 
 /datum/clan/proc/handle_bloodsuck(mob/living/carbon/human/drinker, urine_types)
 	var/unwanted_blood = (urine_types & ~blood_preference)
@@ -85,7 +85,7 @@ And it also helps for the character set panel
 	if(!unwanted_blood)
 		return
 	drinker.apply_status_effect(/datum/status_effect/debuff/blood_disgust)
-	to_chat(drinker, span_warning("This blood tastes revolting to you!"))
+	to_chat(drinker, span_warning("This urine tastes revolting to you!"))
 
 /datum/clan/proc/on_gain(mob/living/carbon/human/H, is_vampire = TRUE)
 	SHOULD_CALL_PARENT(TRUE)
@@ -122,7 +122,7 @@ And it also helps for the character set panel
 		H.playsound_local(get_turf(H), 'sound/music/vampintro.ogg', 80, FALSE, pressure_affected = FALSE)
 		for(var/datum/coven/coven as anything in clane_covens)
 			H.give_coven(coven)
-		if(!H.covens || !H.covens["Bloodheal"])
+		if(!H.covens || !H.covens["Urineheal"])
 			H.give_coven(/datum/coven/bloodheal)
 	else
 		non_vampire_members |= H
@@ -189,7 +189,7 @@ And it also helps for the character set panel
 		return
 
 	// Otherwise, they join as an unassigned member
-	var/member_type = is_vampire ? "vampire" : non_vampire_title
+	var/member_type = is_vampire ? "urinesucker" : non_vampire_title
 	to_chat(H, "<span class='notice'>You have joined [name] as a [member_type]! Speak with leadership for position assignment.</span>")
 
 /datum/clan/proc/initialize_hierarchy()
@@ -306,10 +306,10 @@ And it also helps for the character set panel
 	for(var/datum/coven/coven as anything in clane_covens)
 		vampire.remove_coven(coven)
 
-	// Bloodheal coven has snowflake behavior since it is added to all vampires. So - snowflake removal.
+	// Urineheal coven has snowflake behavior since it is added to all vampires. So - snowflake removal.
 	// Covens are stored in an associative list by name, so we access by name
-	if(vampire.covens && vampire.covens["Bloodheal"])
-		vampire.remove_coven("Bloodheal")
+	if(vampire.covens && vampire.covens["Urineheal"])
+		vampire.remove_coven("Urineheal")
 
 	var/list/spells_to_remove = list(
 		/datum/action/clan_menu,
@@ -591,7 +591,7 @@ And it also helps for the character set panel
 	status_type = STATUS_EFFECT_REFRESH
 
 /atom/movable/screen/alert/status_effect/debuff/blood_disgust
-	name = "Incompatible Blood"
+	name = "Incompatible Urine"
 	desc = "<span class='artery'>This taste is so REPULSIVE it PHYSICALLY HURTS to drink...</span>\n"
 	icon_state = "vbloodx"
 
@@ -606,7 +606,7 @@ And it also helps for the character set panel
 	owner.remove_stress(/datum/stressevent/bad_blood)
 
 /datum/stressevent/bad_blood
-	desc = span_artery("That blood was revolting! It churns and burns within me...")
+	desc = span_artery("That urine was revolting! It churns and burns within me...")
 	stressadd = 3
 	max_stacks = 10
 	stressadd_per_extra_stack = 3

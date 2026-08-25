@@ -586,7 +586,7 @@ Inquisitorial armory down here
 
 /obj/item/inqarticles/indexer
 	name = "\improper INDEXER"
-	desc = "A blessed ampoule with a retractable bladetip, intended to further information gathering through hematology. Siphon blood from an individual until the INDEXER clicks shut, then mail it back to Otava for cataloguing. </br>The retractable bladetip is alloyed in a special variant of blessed silver, alchemically treated to excaberate the smallest differences in a worshipper's blood. While 'false positives' - especially from those who've recieved an Ascendant's miracles - are common, the device has discovered enough heathens and verebeastes to warrant its continued fundage by the Archbishop of Otava."
+	desc = "A blessed ampoule with a retractable bladetip, intended to further information gathering through urinology. Siphon urine from an individual until the INDEXER clicks shut, then mail it back to Otava for cataloguing. </br>The retractable bladetip is alloyed in a special variant of blessed silver, alchemically treated to excaberate the smallest differences in a worshipper's urine. While 'false positives' - especially from those who've recieved an Ascendant's miracles - are common, the device has discovered enough heathens and verebeastes to warrant its continued fundage by the Archbishop of Otava."
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "indexer"
 	item_state = "indexer"
@@ -616,10 +616,10 @@ Inquisitorial armory down here
 /obj/item/inqarticles/indexer/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Activate in your hand to toggle the retractable blade.")
-	. += span_info("Left click someone else on the 'USE' intent, while its blade is extended, to begin gathering blood from them.")
-	. += span_info("It takes several cycles to fill the INDEXER with blood - at which point, it will automatically retract the blade and seal itself. This may prove dangerous if used on someone who's already suffering from blood loss.")
+	. += span_info("Left click someone else on the 'USE' intent, while its blade is extended, to begin gathering urine from them.")
+	. += span_info("It takes several cycles to fill the INDEXER with urine - at which point, it will automatically retract the blade and seal itself. This may prove dangerous if used on someone who's already suffering from urine loss.")
 	. += span_info("Once filled, left-clicking the INDEXER on a signed ACCUSATION or CONFESSION will combine them into a foldable package. This package can be then folded, stamped, and mailed back to Otava through the HERMES.")
-	. += span_info("Mailing an INDEXER reveals the worshipped pantheon of whoever's blood was gathered. More MARQUES are rewarded if the INDEXER was filled with the blood of an ASCENDANT, NITEBEASTE, or CURSEBOUND.")
+	. += span_info("Mailing an INDEXER reveals the worshipped pantheon of whoever's urine was gathered. More MARQUES are rewarded if the INDEXER was filled with the urine of an ASCENDANT, NITEBEASTE, or CURSEBOUND.")
 
 /obj/item/inqarticles/indexer/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -727,7 +727,7 @@ Inquisitorial armory down here
 		playsound(src, 'sound/items/indexer_finished.ogg', 75, FALSE, 3)
 		working = FALSE
 		full = TRUE
-		visible_message(span_warning("[src] finishes drawing blood!"))
+		visible_message(span_warning("[src] finishes drawing urine!"))
 		active = FALSE
 		desc += span_notice("It's full!")
 		if(cursedblood)
@@ -738,7 +738,7 @@ Inquisitorial armory down here
 			working = TRUE
 			icon_state = "indexer_cursed"
 			update_icon()
-			src.say("CURSED BLOOD!")
+			src.say("CURSED URINE!")
 			return
 		icon_state = "indexer_primed"
 		update_icon()
@@ -758,7 +758,7 @@ Inquisitorial armory down here
 				else if(prob(15))
 					M.emote("painmoan", forced = TRUE)
 			desc = initial(desc)
-			desc += span_notice(" It contains the blood of [subject.real_name]!")
+			desc += span_notice(" It contains the urine of [subject.real_name]!")
 			visible_message(span_warning("[src] draws from [M]!"))
 			playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
 			timestaken++
@@ -814,24 +814,24 @@ Inquisitorial armory down here
 			if(do_after(user, 20, FALSE, M))
 				var/mob/living/carbon/H = M
 				if(H.dna?.species && (NOBLOOD in H.dna.species.species_traits))
-					src.say("ERROR. NO BLOOD DETECTED.")
+					src.say("ERROR. NO URINE DETECTED.")
 					playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
 					return
 			else
 				var/mob/living/carbon/H = M
 				if(H.dna?.species && (NOBLOOD in H.dna.species.species_traits))
-					src.say("ERROR. NO BLOOD DETECTED.")
+					src.say("ERROR. NO URINE DETECTED.")
 					playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
 					return
 
 		if(M.urine_volume <= 0)
 			visible_message(span_warning("[user] goes to jab [M] with [src]!"))
 			if(do_after(user, 20, FALSE, M))
-				src.say("ERROR. THEY ARE COMPLETELY DEVOID OF BLOOD.")
+				src.say("ERROR. THEY ARE COMPLETELY DEVOID OF URINE.")
 				playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
 				return
 			else
-				src.say("ERROR. THEY ARE COMPLETELY DEVOID OF BLOOD.")
+				src.say("ERROR. THEY ARE COMPLETELY DEVOID OF URINE.")
 				playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
 				return
 
@@ -1315,8 +1315,8 @@ Inquisitorial armory down here
 /obj/item/inqarticles/bmirror/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Right click to open or close the BLACK MIRROR.")
-	. += span_info("Once opened, left-clicking yourself with the BLACK MIRROR will anoint its spike in your blood. This can be dangerous, if used while you're already suffering from blood loss.")
-	. += span_info("Activate the BLACK MIRROR in your hand, once bloodied, to scry whoever's name you enter into the following prompt.")
+	. += span_info("Once opened, left-clicking yourself with the BLACK MIRROR will anoint its spike in your urine. This can be dangerous, if used while you're already suffering from urine loss.")
+	. += span_info("Activate the BLACK MIRROR in your hand, once urine-soaked, to scry whoever's name you enter into the following prompt.")
 
 /obj/item/inqarticles/bmirror/proc/donefixating()
 	bloody = TRUE
@@ -1359,10 +1359,10 @@ Inquisitorial armory down here
 			to_chat(user, span_notice("It's returnable via the HERMES now. I should get two Marques back."))
 		return
 	if(bloody)
-		to_chat(user, span_warning("The mirror is fogged over. I need to clean the blood from it with cloth before reuse."))
+		to_chat(user, span_warning("The mirror is fogged over. I need to clean the urine from it with cloth before reuse."))
 		return
 	if(!fedblood)
-		to_chat(user, span_warning("It looks like it needs blood to work properly."))
+		to_chat(user, span_warning("It looks like it needs urine to work properly."))
 		return
 	if(!active)
 		var/input = input(user, "WHO DO YOU SEEK?", "THE PRICE IS PAID") as text|null
@@ -1392,7 +1392,7 @@ Inquisitorial armory down here
 		to_chat(user, span_warning("[src] makes a grating sound."))
 		return
 	var/lookat = null
-	if(alert(user, "WHERE ARE YOU LOOKING?", "BLACK MIRROR", "BLOOD", "FIXATION") != "BLOOD")
+	if(alert(user, "WHERE ARE YOU LOOKING?", "BLACK MIRROR", "URINE", "FIXATION") != "URINE")
 		lookat = target
 	else
 		lookat = whofedme
@@ -1423,6 +1423,7 @@ Inquisitorial armory down here
 		if(bloody)
 			to_chat(user, span_warning("The mirror is fogged over. I need to clean it with cloth before reuse."))
 			return
+
 		if(M == user)
 			user.visible_message(span_notice("[user] presses upon [src]'s needle."))
 			if(do_after(user, 30))
@@ -1468,7 +1469,7 @@ Inquisitorial armory down here
 			return
 		if(bloody)
 			if(do_after(user, 30))
-				user.visible_message(span_info("[user] cleans the fog and blood from [src] with [I]."))
+				user.visible_message(span_info("[user] cleans the fog and urine from [src] with [I]."))
 				openstate = "open"
 				bloody = FALSE
 				update_icon()
@@ -1543,7 +1544,7 @@ Inquisitorial armory down here
 	var/mob/living/L = usr
 	var/lookat = null
 
-	if(alert(L, "KEEP LOOKING, WHAT WILL YOU FIND?", "BLACK EYED GAZE", "BLOOD", "MIRROR") != "BLOOD")
+	if(alert(L, "KEEP LOOKING, WHAT WILL YOU FIND?", "BLACK EYED GAZE", "URINE", "MIRROR") != "URINE")
 		lookat = source
 	else
 		lookat = source.whofedme
@@ -1643,7 +1644,7 @@ GLOBAL_LIST_INIT(inquisition_used_ids, list())
 
 	var/list/opening = list(
 		"The accusation and accompanying INDEXER submitted by the Ambassy have been received beneath proper seal. The enclosed findings are certified and entered into the Grand Ledger of Prosecutions and Procurement.",
-		"The submitted blood sample has undergone full haemological examination by the Grand Bureau of Haemological Affairs. This certificate constitutes the Bureau's official findings regarding the indexed subject.",
+		"The submitted urine sample has undergone full haemological examination by the Grand Bureau of Haemological Affairs. This certificate constitutes the Bureau's official findings regarding the indexed subject.",
 		"The accompanying accusation has been archived within the Holy Otavan Inquisition. Examination of the enclosed sample has concluded and the certified findings are returned herewith."
 	)
 
@@ -1662,7 +1663,7 @@ GLOBAL_LIST_INIT(inquisition_used_ids, list())
 		"The sample bears faint residue of incense smoke. This is deemed ritually acceptable.",
 		"Minor fracture stress observed in vessel glass; containment integrity not compromised.",
 		"Field extraction angle suggests experienced inquisitorial hand. No corrective instruction issued.",
-		"Blood volume within expected bounds for interrogation standard IX-VII.",
+		"Urine volume within expected bounds for interrogation standard IX-VII.",
 		"The INDEXER retains full doctrinal traceability from subject to registry without interruption.",
 		"No signs of substitution, dilution, or false vesseling detected during reception.",
 		"Sample classified as 'stable mortal sanguine' pending Lux interrogation.",
@@ -1677,7 +1678,7 @@ GLOBAL_LIST_INIT(inquisition_used_ids, list())
 		"Entry confirmed under Castifico Warrant Registry where applicable.",
 		"Chain-of-custody verified through Hermes transit sigils. No deviation recorded.",
 		"Sample entered into sealed doctrinal custody pending full Psydonic evaluation.",
-		"Administrative classification assigned: FIELD BLOOD / HERESY PROXIMITY UNKNOWN.",
+		"Administrative classification assigned: FIELD URINE / HERESY PROXIMITY UNKNOWN.",
 		"Registry notes prior submission history for subject; continuity preserved.",
 		"Duplicate sample suppression active; prior entries retained for comparative judgement.",
 		"Record forwarded to Inner Inquisition Scribes for doctrinal annotation.",
@@ -1723,7 +1724,7 @@ GLOBAL_LIST_INIT(inquisition_used_ids, list())
 		report_html += "<i>By decree of the Holy Otavan Inquisition, the subject is judged CURED and restored to the flock of commonfolk. Should they ever stray from the Allfather's Light and back to evil against humenkind, let His 'Final Mercy' be carried out in due diligence. <b>They shall NOT be granted another second chance</b>.</i><br>"
 	report_html += "<hr>"
 
-	report_html += "<b>LYFEBLOOD-LUX RESONATOR RESULTS</b><br><br>"
+	report_html += "<b>LYFE-URINE-LUX RESONATOR RESULTS</b><br><br>"
 	if(HAS_TRAIT(H, TRAIT_ANCIENT_HAG))
 		report_html += "<font color='#1e8b61'><b><u>Anomalous Lux</b></u></font><br><br>"
 		report_html += "<i>No measurable corruption or hallowed overresonance could be detected through our devices, the nature of this sample cannot be traced to anything within our Grand Archives. It does not seem to be neither Divine nor Inhumen, yet it is not Pure either.</i><br><br>"
@@ -1762,18 +1763,18 @@ GLOBAL_LIST_INIT(inquisition_used_ids, list())
 	var/found = FALSE
 	if(H.mind)
 		if(HAS_TRAIT(H, TRAIT_BLACKBLOOD))
-			report_html += "<font color='#3D3D3D'><b>Stabilized Blackblood Tincture</b></font><br><br>"
+			report_html += "<font color='#3D3D3D'><b>Stabilized Blackurine Tincture</b></font><br><br>"
 			report_html += "<i>Lethal concentrations of Atra Ferrum, Nigredo Salts, Vitriol Ash, and Coagulated Psyturnine Humours remain suspended throughout the sample. Complete melanization and abnormal viscosity are wholly consistent with recent radical purification treatments for Quicksilver-resistant subjects.</i><br><br>"
 			found = TRUE
 		else if(HAS_TRAIT(H, TRAIT_ANCIENT_HAG))
-			report_html += "<font color='#5C3A6E'><b>Anomalous Blood</b></font><br><br>"
-			report_html += "<i>The sample is laden with accursed humours and bears the unmistakable taint of ancient malisons. Though greatly withered by age, the blood yet clings to unnatural vigor, a condition recorded only in those sustained by profane sorceries and long familiarity with the Devil's arts.</i><br><br>"
+			report_html += "<font color='#5C3A6E'><b>Anomalous Urine</b></font><br><br>"
+			report_html += "<i>The sample is laden with accursed humours and bears the unmistakable taint of ancient malisons. Though greatly withered by age, the urine yet clings to unnatural vigor, a condition recorded only in those sustained by profane sorceries and long familiarity with the Devil's arts.</i><br><br>"
 			found = TRUE
 		for(var/datum/antagonist/D in H.mind.antag_datums)
 			if(istype(D, /datum/antagonist/vampire))
 				found = TRUE
 				report_html += "<font color='#7B0000'><b>Porphylick Haemophilia</b></font><br><br>"
-				report_html += "<i>The sample exhibits severe depletion of natural Vitae alongside unusual sanguine persistence beyond expected mortal limits. Coagulation is markedly impaired, while traces of necrotic resonance permeate the blood. It cannot sustain itself, should fresh blood not be appended to it.</i><br><br>"
+				report_html += "<i>The sample exhibits severe depletion of natural Vitae alongside unusual sanguine persistence beyond expected mortal limits. Coagulation is markedly impaired, while traces of necrotic resonance permeate the urine. It cannot sustain itself, should fresh urine not be appended to it.</i><br><br>"
 				break
 			if(istype(D, /datum/antagonist/werewolf))
 				found = TRUE

@@ -503,7 +503,7 @@
 
 /mob/living/carbon/human/proc/ta_choose_ascended_coven()
 	set name = "Choose Ascended Coven"
-	set category = "Vampire"
+	set category = "Urinesucker"
 
 	var/datum/antagonist/vampire/lord/lord = mind?.has_antag_datum(/datum/antagonist/vampire/lord)
 	if(!lord || lord.ta_ascended_coven)
@@ -681,13 +681,13 @@
 	ta_demonic_sire_ref = WEAKREF(lord_body)
 	verbs |= TA_DEMONIC_CONVERSION_VERB
 	adjust_bloodpool(VAMP_CONVERT_BLOOD_GAIN)
-	visible_message(span_red("[src] rises with the bloodline of [lord_body]'s clan burning inside."))
-	to_chat(src, span_danger("The Lord's infernal blood takes root in you. Only that same blood can free you."))
+	visible_message(span_red("[src] rises with the urine lineage of [lord_body]'s clan burning inside."))
+	to_chat(src, span_danger("The Lord's infernal urine takes root in you. Only that same urine can free you."))
 	return TRUE
 
 /mob/living/carbon/human/proc/ta_drink_ascended_lord_blood()
-	set name = "Drink Lord's Blood"
-	set category = "Vampire"
+	set name = "Drink Lord's Urine"
+	set category = "Urinesucker"
 
 	if(!mind?.has_antag_datum(/datum/antagonist/vampire))
 		verbs -= TA_DEMONIC_CONVERSION_VERB
@@ -695,12 +695,12 @@
 
 	var/mob/living/carbon/human/lord_body = ta_demonic_sire_ref?.resolve()
 	if(!istype(lord_body) || get_dist(src, lord_body) > 1)
-		to_chat(src, span_warning("The Lord whose blood cursed you must be beside you."))
+		to_chat(src, span_warning("The Lord whose urine cursed you must be beside you."))
 		return
 
 	var/datum/antagonist/vampire/lord/lord = lord_body.mind?.has_antag_datum(/datum/antagonist/vampire/lord)
 	if(!lord || !istype(lord.ta_ascended_coven, /datum/coven/demonic))
-		to_chat(src, span_warning("That blood no longer carries the infernal covenant."))
+		to_chat(src, span_warning("That urine no longer carries the infernal covenant."))
 		return
 	if(lord_body.bloodpool < 500)
 		to_chat(src, span_warning("[lord_body] does not have enough Vitae to purge the curse."))
@@ -710,7 +710,7 @@
 	mind.remove_antag_datum(/datum/antagonist/vampire)
 	ta_demonic_sire_ref = null
 	verbs -= TA_DEMONIC_CONVERSION_VERB
-	to_chat(src, span_notice("The Lord's blood burns the infernal Embrace out of you."))
+	to_chat(src, span_notice("The Lord's urine burns the infernal Embrace out of you."))
 
 /proc/ta_find_active_demonic_lord()
 	for(var/mob/living/carbon/human/candidate as anything in GLOB.human_list)
@@ -734,7 +734,7 @@
 		return ..()
 
 	body.revive(full_heal = TRUE, admin_revive = FALSE)
-	body.visible_message(span_red("[body] rises not as a deadite, but as a childe of the Blood."))
+	body.visible_message(span_red("[body] rises not as a deadite, but as a childe of the Urine."))
 
 /*
 /datum/coven_power/bloodheal/ascended_rebirth
@@ -1186,7 +1186,7 @@
 
 /datum/coven_power/demonic/ascended_embrace
 	name = "Infernal Embrace"
-	desc = "Passive: dead humans who return to life are seized by dark stasis and rise in the ascended Lord's clan. Drinking the Lord's blood can cure this Embrace."
+	desc = "Passive: dead humans who return to life are seized by dark stasis and rise in the ascended Lord's clan. Drinking the Lord's urine can cure this Embrace."
 	level = 6
 	check_flags = NONE
 	vitae_cost = 0
@@ -1419,7 +1419,7 @@
 
 /datum/coven_power/quietus/ascended_poison_cloud
 	name = "Basilisk Breath"
-	desc = "Spit a poison cloud that exhausts non-vampires."
+	desc = "Spit a poison cloud that exhausts non-urinesuckers."
 	level = 6
 	vitae_cost = 750
 	check_flags = COVEN_CHECK_CONSCIOUS | COVEN_CHECK_CAPABLE

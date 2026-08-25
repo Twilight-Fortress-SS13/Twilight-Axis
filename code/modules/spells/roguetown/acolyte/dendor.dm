@@ -115,7 +115,7 @@
 
 /obj/effect/proc_holder/spell/targeted/beasttame/cast(list/targets,mob/user = usr)
 	. = ..()
-	visible_message(span_green("[usr] soothes the beastblood with Dendor's whisper."))
+	visible_message(span_green("[usr] soothes the beasturine with Dendor's whisper."))
 	var/tamed = FALSE
 	for(var/mob/living/simple_animal/hostile/retaliate/animal in get_hearers_in_view(2, usr))
 		if((animal.mob_biotypes & MOB_UNDEAD))

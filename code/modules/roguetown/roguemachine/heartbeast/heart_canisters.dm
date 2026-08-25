@@ -276,44 +276,44 @@
 	update_icon()
 
 /obj/item/heart_blood_canister
-	name = "Heartblood canister"
-	desc = "An empty canister yearning to be filled with chimeric heartbeast blood."
+	name = "Heart urine canister"
+	desc = "An empty canister yearning to be filled with chimeric heartbeast urine."
 	icon = 'icons/obj/structures/heart_items.dmi'
 	icon_state = "blood_canister_empty"
 	w_class = WEIGHT_CLASS_TINY
 	max_integrity = 50
 
 /obj/item/heart_blood_canister/filled
-	name = "Full heartblood canister"
-	desc = "A canister full of viscous blood, despite being closed it somehow still exudes a putrid smell. Highly valued, due to their ability to purify lux."
+	name = "Full heart urine canister"
+	desc = "A canister full of viscous urine, despite being closed it somehow still exudes a putrid smell. Highly valued, due to their ability to purify lux."
 	icon_state = "blood_canister_filled"
 
 /obj/item/heart_blood_canister/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Cures black rot partially. Cures more rot than a vial.")
-	. += span_info("Black rot can be cured surgically with a knife, by touching calyxes, or by drinking heartblood.")
+	. += span_info("Black rot can be cured surgically with a knife, by touching calyxes, or by drinking heart urine.")
 	. += span_info("Can be applied to self or others to restore some energy.")
 	. += span_info("More effective when low on energy.")
 	. += span_info("Restores the same energy as a vial, but twice as fast.")
 	. += span_info("Takes longer to apply than vials, but is more potent.")
 
 /obj/item/heart_blood_vial
-	name = "Heartblood vial"
-	desc = "An empty vial yearning to be filled with chimeric heartbeast blood."
+	name = "Heart urine vial"
+	desc = "An empty vial yearning to be filled with chimeric heartbeast urine."
 	icon = 'icons/obj/structures/heart_items.dmi'
 	icon_state = "blood_vial_empty"
 	w_class = WEIGHT_CLASS_TINY
 	max_integrity = 10
 
 /obj/item/heart_blood_vial/filled
-	name = "Full heartblood vial"
-	desc = "A vial full of viscous blood, despite being closed it somehow still exudes a putrid smell. Highly valued, due to their ability to purify lux."
+	name = "Full heart urine vial"
+	desc = "A vial full of viscous urine, despite being closed it somehow still exudes a putrid smell. Highly valued, due to their ability to purify lux."
 	icon_state = "blood_vial_filled"
 
 /obj/item/heart_blood_vial/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Cures black rot partially. Cures less rot than a canister.")
-	. += span_info("Black rot can be cured surgically with a knife, by touching calyxes, or by drinking heartblood.")
+	. += span_info("Black rot can be cured surgically with a knife, by touching calyxes, or by drinking heart urine.")
 	. += span_info("Can be applied to self or others to restore some energy.")
 	. += span_info("More effective when low on energy.")
 	. += span_info("Restores the same energy as a canister, but half as fast.")
@@ -421,13 +421,13 @@
 	return TRUE
 
 /obj/effect/decal/cleanable/heart_blood
-	name = "heart blood"
+	name = "heart urine"
 	desc = ""
 	icon = 'icons/obj/structures/heart_items.dmi'
 	icon_state = "blood"
 
 /obj/effect/decal/cleanable/heart_blood/small
-	name = "heart blood"
+	name = "heart urine"
 	icon_state = "blood_small"
 
 /obj/effect/decal/cleanable/heart_shards
@@ -458,9 +458,9 @@
 		if(!do_mob(user, target, 0.8 SECONDS, FALSE))
 			return
 		if(target == user)
-			target.visible_message(span_notice("[user] drinks some heartblood."), span_notice("I drink the heartblood, feeling it fight the rot within."))
+			target.visible_message(span_notice("[user] drinks some heart urine."), span_notice("I drink the heart urine, feeling it fight the rot within."))
 		else
-			target.visible_message(span_notice("[user] feeds [target] some heartblood."), span_notice("[user] feeds you some heartblood."))
+			target.visible_message(span_notice("[user] feeds [target] some heart urine."), span_notice("[user] feeds you some heart urine."))
 		if(rot)
 			target.apply_status_effect(/datum/status_effect/buff/rot_cleansing, 67, 1)
 		target.apply_status_effect(/datum/status_effect/buff/invigoration, 10 SECONDS, 25, 15)
@@ -474,9 +474,9 @@
 		if(!do_mob(user, target, 0.4 SECONDS, FALSE))
 			return
 		if(target == user)
-			target.visible_message(span_notice("[user] drinks some heartblood."), span_notice("I drink the heartblood, feeling it fight the rot within."))
+			target.visible_message(span_notice("[user] drinks some heart urine."), span_notice("I drink the heart urine, feeling it fight the rot within."))
 		else
-			target.visible_message(span_notice("[user] feeds [target] some heartblood."), span_notice("[user] feeds you some heartblood."))
+			target.visible_message(span_notice("[user] feeds [target] some heart urine."), span_notice("[user] feeds you some heart urine."))
 		if(rot)
 			target.apply_status_effect(/datum/status_effect/buff/rot_cleansing, 34, 1)
 		target.apply_status_effect(/datum/status_effect/buff/invigoration, 20 SECONDS, 25, 15)

@@ -10,8 +10,8 @@
 /// Banu Haqim from Temu, kinda.
 /datum/clan/crimson_fang
 	name = "Crimson Fang"
-	desc = "Crimson Fangs, often seen by other kindred as dangerous assassins and diablerists, but in truth they are guardians, warriors, and scholars who seek to distance themselves from politics of both vampyre and mundane worlds."
-	curse = "Addiction to blood of kindred and nobility."
+	desc = "Crimson Fangs, often seen by other kindred as dangerous assassins and diablerists, but in truth they are guardians, warriors, and scholars who seek to distance themselves from politics of both urinesucker and mundane worlds."
+	curse = "Addiction to urine of kindred and nobility."
 	clanicon = "presence"
 	blood_preference = BLOOD_PREFERENCE_FANCY | BLOOD_PREFERENCE_KIN //Diablerists and assassins, mingling and betraying nobility, clergy, inquisition and kindred alike.
 	clane_covens = list(
@@ -41,4 +41,4 @@
 	covens_to_select = 0
 
 /datum/clan/crimson_fang/get_blood_preference_string()
-	return "the blood of nobles, clergy, inquisition or kindred"
+	return "the urine of nobles, clergy, inquisition or kindred"

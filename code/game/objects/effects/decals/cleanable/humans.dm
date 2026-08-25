@@ -21,7 +21,7 @@
 		transform = M
 
 /obj/effect/decal/cleanable/blood
-	name = "blood"
+	name = "urine"
 	desc = ""
 	icon = 'icons/effects/blood.dmi'
 	icon_state = "floor1"
@@ -84,7 +84,7 @@
 	qdel(src)
 
 /obj/effect/decal/cleanable/blood/old
-	name = "dried blood"
+	name = "dried urine"
 	desc = ""
 	bloodiness = 0
 	icon_state = "floor1-old"
@@ -121,7 +121,7 @@
 	beauty = -50
 
 /obj/effect/decal/cleanable/trail_holder //not a child of blood on purpose
-	name = "blood"
+	name = "urine"
 	icon = 'icons/effects/blood.dmi'
 	desc = ""
 	beauty = -50
@@ -250,7 +250,7 @@
 	add_urine_DNA(list("Non-human DNA" = random_urine_type()))
 
 /obj/effect/decal/cleanable/blood/drip
-	name = "drips of blood"
+	name = "drips of urine"
 	desc = ""
 	icon_state = "drip1"
 	bloodiness = 0
@@ -295,7 +295,7 @@
 		return TRUE
 
 /obj/effect/decal/cleanable/blood/puddle
-	name = "puddle of blood"
+	name = "puddle of urine"
 	desc = ""
 	icon_state = "pool1"
 	bloodiness = 0

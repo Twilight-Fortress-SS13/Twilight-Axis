@@ -218,7 +218,7 @@
 
 /obj/item/reagent_containers/glass/bucket/pot/kettle/tankard/blacksteel
 	name = "blacksteel tankard"
-	desc = "A mythical, blacksteel-bottomed mug with a mastercrafted handle. Fit for the bloodied knuckles of a dungeon-delving \
+	desc = "A mythical, blacksteel-bottomed mug with a mastercrafted handle. Fit for the urine-soaked knuckles of a dungeon-delving \
 	hero, or the nitestand of a drunkhearted king. It can be set upon a hearth to brew traditional drinks, or smelted within a \
 	furnace to birth an ingot of blacksteel."
 	icon = 'modular/Neu_Food/icons/cookware/unused.dmi'

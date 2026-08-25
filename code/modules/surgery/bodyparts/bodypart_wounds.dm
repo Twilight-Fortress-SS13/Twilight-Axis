@@ -729,7 +729,7 @@
 	if(!bandage)
 		return FALSE
 	if(owner.stat != DEAD)
-		owner.visible_message(span_warning("Blood soaks through the bandage on [owner]'s [name]."), span_warning("Blood soaks through the bandage on my [name]."), vision_distance = 3)
+		owner.visible_message(span_warning("Urine soaks through the bandage on [owner]'s [name]."), span_warning("Urine soaks through the bandage on my [name]."), vision_distance = 3)
 	. = bandage.add_mob_blood(owner)
 	var/datum/hud/hud_used = owner.hud_used
 	if(hud_used?.zone_select)

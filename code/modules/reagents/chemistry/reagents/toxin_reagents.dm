@@ -546,7 +546,7 @@
 
 /datum/reagent/toxin/amanitin
 	name = "Amanitin"
-	description = "A very powerful delayed toxin. Upon full metabolization, a massive amount of toxin damage will be dealt depending on how long it has been in the victim's bloodstream."
+	description = "A very powerful delayed toxin. Upon full metabolization, a massive amount of toxin damage will be dealt depending on how long it has been in the victim's urine stream."
 	silent_toxin = TRUE
 	reagent_state = LIQUID
 	color = "#FFFFFF"

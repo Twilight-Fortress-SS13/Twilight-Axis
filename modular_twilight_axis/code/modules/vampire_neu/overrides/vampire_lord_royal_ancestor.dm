@@ -6,7 +6,7 @@
 
 /mob/living/carbon/human/proc/ta_claim_royal_ancestry()
 	set name = "Стать частью семьи правителя"
-	set category = "Vampire"
+	set category = "Urinesucker"
 	set src = usr
 
 	var/datum/antagonist/vampire/lord/lord_antag = mind?.has_antag_datum(/datum/antagonist/vampire/lord)

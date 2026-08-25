@@ -240,7 +240,7 @@
 			to_chat(user, span_warning("I shall not lick it..."))
 			return
 		if(target.mind.has_antag_datum(/datum/antagonist/vampire))
-			to_chat(user, span_warning("... What? It's an elder vampire!"))
+			to_chat(user, span_warning("... What? It's an elder urinesucker!"))
 			return
 	if(!do_after(user, 7 SECONDS, target = target))
 		return

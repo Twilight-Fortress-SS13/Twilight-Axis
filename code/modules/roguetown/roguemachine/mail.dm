@@ -586,7 +586,7 @@
 					if(no)
 						to_chat(user, span_notice("They've already confessed."))
 					else if(stopfarming)
-						to_chat(user, span_notice("We already have a sample of their accursed blood."))
+						to_chat(user, span_notice("We already have a sample of their accursed urine."))
 					if(selfreport)
 						to_chat(user, span_notice("Why was that confession signed by an inquisition member? What?"))
 					if(indexed)
@@ -726,7 +726,7 @@
 							else if(selfreport)
 								to_chat(user, span_notice("Why are we accusing our own? What have we come to?"))
 							else if(stopfarming)
-								to_chat(user, span_notice("We've already collected a sample of their accursed blood."))
+								to_chat(user, span_notice("We've already collected a sample of their accursed urine."))
 							else
 								to_chat(user, span_notice("They've already been accused."))
 						return
@@ -758,9 +758,9 @@
 
 			else
 				if(I.paired && !I.paired.full)
-					to_chat(user, span_warning("[I.paired] needs to be full of the accused's blood."))
+					to_chat(user, span_warning("[I.paired] needs to be full of the accused's urine."))
 				else
-					to_chat(user, span_warning("[I] requires either a signature, or an INDEXER with their blood."))
+					to_chat(user, span_warning("[I] requires either a signature, or an INDEXER with their urine."))
 				return
 
 	if(istype(P, /obj/item/paper) || istype(P, /obj/item/smallDelivery))

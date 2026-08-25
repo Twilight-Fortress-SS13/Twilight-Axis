@@ -35,7 +35,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 
 /obj/structure/vampire/bloodpool
 	name = "Crimson Crucible"
-	desc = "An ominious bloodstained Crucible, humming with unholy energies and crackling with untold potental. A thick smell of copper invades your nose just looking upon it, is that blood?"
+	desc = "An ominious urinestained Crucible, humming with unholy energies and crackling with untold potental. A thick smell of copper invades your nose just looking upon it, is that urine?"
 	icon_state = "vat"
 	var/current = 0
 	var/datum/clan/owner_clan
@@ -55,7 +55,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 
 /obj/structure/vampire/bloodpool/examine(mob/user)
 	. = ..()
-	to_chat(user, span_boldnotice("Blood level: [current]"))
+	to_chat(user, span_boldnotice("Urine level: [current]"))
 
 	if(user.mind?.has_antag_datum(/datum/antagonist/vampire/lord))
 		. += span_bloody("A Crucible used for your projects. Others may fill the cup, but only you can direct vitae into rituals.")
@@ -244,7 +244,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 			if(!project || !project_type)
 				return TRUE
 			var/cancel_button = "Cancel ritual"
-			if(tgui_alert(user, "Cancel ritual \"[project.display_name]\"? Invested blood will be returned to participants.", "Crimson Crucible", list(cancel_button, "Back")) != cancel_button)
+			if(tgui_alert(user, "Cancel ritual \"[project.display_name]\"? Invested urine will be returned to participants.", "Crimson Crucible", list(cancel_button, "Back")) != cancel_button)
 				return TRUE
 			if(QDELETED(src) || !is_crucible_lord(user) || active_projects[project_type] != project)
 				return TRUE
@@ -272,12 +272,12 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 /obj/structure/vampire/bloodpool/proc/get_personal_servant_locked_reason(mob/living/user)
 	var/datum/antagonist/vampire/vampire = get_crucible_vampire(user)
 	if(!vampire)
-		return "Only vampires can make this call."
+		return "Only urinesuckers can make this call."
 	var/vampire_ref = REF(vampire)
 	if(GLOB.crimson_crucible_personal_servant_summons[vampire_ref])
 		return "This call has already been answered."
 	if(!user.clan)
-		return "The crucible cannot bind a servant before my bloodline is chosen."
+		return "The crucible cannot bind a servant before my clan is chosen."
 	if(current < SERVANT_COST)
 		return "The crucible needs [SERVANT_COST] vitae in the cup."
 	if(HAS_TRAIT(user, TRAIT_NOVAMPMITOSIS))
@@ -303,13 +303,13 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	current = max(current - SERVANT_COST, 0)
 	GLOB.crimson_crucible_personal_servant_summons[vampire_ref] = TRUE
 	SStgui.update_uis(src)
-	if(!project.summon("Vampire Servant", src, "Do you want to play as a vampire's weak servant?"))
+	if(!project.summon("Urinesucker Servant", src, "Do you want to play as a urinesucker's weak servant?"))
 		current = min(current + SERVANT_COST, CRUCIBLE_MAX_BLOOD)
 		GLOB.crimson_crucible_personal_servant_summons -= vampire_ref
 		SStgui.update_uis(src)
 		qdel(project)
 		return
-	to_chat(user, span_greentext("The crucible answers my call. My one weak servant rises from the blood."))
+	to_chat(user, span_greentext("The crucible answers my call. My one weak servant rises from the urine."))
 	qdel(project)
 
 /obj/structure/vampire/bloodpool/proc/get_project_contribution_text(datum/vampire_project/project, max_contribution, is_lord, is_vampire)
@@ -317,7 +317,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 		if(is_lord)
 			return "Can direct up to [max_contribution] vitae; the cup is spent first"
 		return "Can contribute up to [max_contribution] vitae"
-	return "Will sacrifice [max_contribution] vitae and [get_blood_cost_for_vitae(max_contribution)] blood"
+	return "Will sacrifice [max_contribution] vitae and [get_blood_cost_for_vitae(max_contribution)] urine"
 
 /obj/structure/vampire/bloodpool/proc/get_nonvampire_crucible_bloodpool(mob/living/user, bloodpool_amount)
 	if(!istype(user))
@@ -596,7 +596,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	else
 		blood_cost = get_blood_cost_for_vitae(deposit)
 		if(user.urine_volume - blood_cost < CRUCIBLE_MIN_DONOR_BLOOD)
-			to_chat(user, span_warning("The crucible will not take that much blood. I must remain with at least [CRUCIBLE_MIN_DONOR_BLOOD]."))
+			to_chat(user, span_warning("The crucible will not take that much urine. I must remain with at least [CRUCIBLE_MIN_DONOR_BLOOD]."))
 			return
 		var/bloodpool_cost = get_nonvampire_bloodpool_cost_for_vitae(deposit)
 		user.bloodpool = max(get_nonvampire_crucible_bloodpool(user, user.bloodpool) - bloodpool_cost, 0)
@@ -608,7 +608,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 		to_chat(user, span_greentext("I poured [deposit] vitae into the crucible cup. ([current]/[CRUCIBLE_MAX_BLOOD])"))
 	else
 		to_chat(user, span_userdanger("Cursed magic drains my strength."))
-		to_chat(user, span_greentext("I gave my blood to the crucible cup. The cup accepted [deposit] vitae. ([current]/[CRUCIBLE_MAX_BLOOD])"))
+		to_chat(user, span_greentext("I gave my urine to the crucible cup. The cup accepted [deposit] vitae. ([current]/[CRUCIBLE_MAX_BLOOD])"))
 	SStgui.update_uis(src)
 
 /obj/structure/vampire/bloodpool/proc/contribute_to_project(datum/vampire_project/project, mob/living/user)
@@ -616,7 +616,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	if(!project_type)
 		return
 	if(!is_crucible_lord(user))
-		to_chat(user, span_warning("Only the Methuselah can direct vitae into rituals. I can only offer blood to the crucible cup."))
+		to_chat(user, span_warning("Only the Methuselah can direct vitae into rituals. I can only offer urine to the crucible cup."))
 		return
 
 	var/max_contribution = get_project_max_contribution(project, user)
@@ -648,7 +648,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	if(!is_vampire)
 		blood_cost = get_blood_cost_for_vitae(contribution)
 		if(user.urine_volume - blood_cost < CRUCIBLE_MIN_DONOR_BLOOD)
-			to_chat(user, span_warning("The crucible will not take that much blood. I must remain with at least [CRUCIBLE_MIN_DONOR_BLOOD]."))
+			to_chat(user, span_warning("The crucible will not take that much urine. I must remain with at least [CRUCIBLE_MIN_DONOR_BLOOD]."))
 			return
 
 	if(get_available_vitae_for_contribution(user, is_vampire) < contribution)
@@ -681,7 +681,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 
 	if(is_vampire)
 		if(cup_contribution > 0)
-			to_chat(user, span_greentext("I directed [contribution] vitae into \"[project_name]\". From the cup: [cup_contribution], from my blood: [personal_contribution]. ([project.paid_amount]/[project.total_cost])"))
+			to_chat(user, span_greentext("I directed [contribution] vitae into \"[project_name]\". From the cup: [cup_contribution], from my urine: [personal_contribution]. ([project.paid_amount]/[project.total_cost])"))
 		else
 			to_chat(user, span_greentext("I contributed [contribution] vitae to \"[project_name]\". ([project.paid_amount]/[project.total_cost])"))
 	else
@@ -722,7 +722,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 
 /obj/structure/vampire/bloodpool/proc/handle_project_contribution(mob/living/user)
 	if(!is_crucible_lord(user))
-		to_chat(user, span_warning("Only the Methuselah can direct vitae into rituals. I can only offer blood to the crucible cup."))
+		to_chat(user, span_warning("Only the Methuselah can direct vitae into rituals. I can only offer urine to the crucible cup."))
 		return
 	if(!active_projects.len)
 		to_chat(user, span_warning("No active projects to contribute to."))
@@ -890,7 +890,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 // Specific project types
 /datum/vampire_project/power_growth
 	display_name = "Rite of Stirring"
-	description = "The ancient blood stirs once more. Forgotten whispers echo through the marrow of the land."
+	description = "The ancient urine stirs once more. Forgotten whispers echo through the marrow of the land."
 	mechanics_description = "+2 to all lorde stats + 1000 lorde vitae pool limit + Unlocks Champions"
 	total_cost = VAMPCOST_ONE
 	completion_sound = 'sound/misc/batsound.ogg'
@@ -929,7 +929,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 		if(lord && !lord.ascended)
 			var/mob/living/carbon/human/lord_body = user
 			to_chat(user, span_greentext("My power grows through collective sacrifice."))
-			to_chat(user, span_warning("I should further develop my vampiric potencies and regain my ancient set of armor.")) //Subtle Que for Newer players, that despite the next upgrade seeming quite close, you should invest into potencies + armor for later.
+			to_chat(user, span_warning("I should further develop my urinesucking potencies and regain my ancient set of armor.")) //Subtle Que for Newer players, that despite the next upgrade seeming quite close, you should invest into potencies + armor for later.
 			for(var/S in MOBSTATS)
 				lord_body.change_stat(S, 2)
 			lord_body.maxbloodpool += 1000
@@ -994,7 +994,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 
 /datum/vampire_project/armor_crafting
 	display_name = "Wicked Plate"
-	description = "Summon a complete set of vampiric plate armor from crystallized blood. Let not steel, silver, nor salvation inhibit the Lord's plan."
+	description = "Summon a complete set of urinesucking plate armor from crystallized urine. Let not steel, silver, nor salvation inhibit the Lord's plan."
 	mechanics_description = "This can only be done once."
 	total_cost = ARMOR_COST
 	completion_sound = 'sound/misc/vcraft.ogg'
@@ -1030,7 +1030,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 /datum/vampire_project/servant/proc/summon(type, atom/feedback_atom, poll_prompt)
 	feedback_atom.visible_message("The crucible stirs, summoning a servant from the realms beyond...")
 	if(!poll_prompt)
-		poll_prompt = "Do you want to play as a Vampire Lord's [type]?"
+		poll_prompt = "Do you want to play as a Urinesucker Lord's [type]?"
 	var/list/candidates = pollGhostCandidates(poll_prompt, ROLE_VAMPIRE_SUMMON, null, null, 30 SECONDS, POLL_IGNORE_VL_SERVANT)
 	if(!LAZYLEN(candidates))
 		feedback_atom.visible_message("But alas, the depths are hollow...")
@@ -1052,18 +1052,18 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	target.visible_message(span_warning("[target] manifests from the crimson crucible in a kneel, before rising upwards."))
 	addtimer(CALLBACK(target, TYPE_PROC_REF(/mob/living/carbon/human, load_char_or_namechoice)), 3 SECONDS)
 	switch(type)
-		if("Vampire Servant")
-			SSjob.EquipRank(target, "Vampire Servant", TRUE) //Labor non-combat roles, they still have some vampyric Progression and can become semi-combat roles.
+		if("Urinesucker Servant")
+			SSjob.EquipRank(target, "Urinesucker Servant", TRUE) //Labor non-combat roles, they still have some vampyric Progression and can become semi-combat roles.
 			var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(incoming_clan = initiator_clan, forced_clan = TRUE, generation = GENERATION_NEONATE) //GENERATION_THINBLOOD is intentionally removed
 			target.mind.add_antag_datum(new_antag)
 			ADD_TRAIT(target, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC) //no bloodpool vamps
-		if("Vampire Guard")
-			SSjob.EquipRank(target, "Vampire Guard", TRUE) //Combat-focused roles, they can level vampyric powers partly to become pretty scary to fight.
+		if("Urinesucker Guard")
+			SSjob.EquipRank(target, "Urinesucker Guard", TRUE) //Combat-focused roles, they can level vampyric powers partly to become pretty scary to fight.
 			var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(incoming_clan = initiator_clan, forced_clan = TRUE, generation = GENERATION_NEONATE)
 			target.mind.add_antag_datum(new_antag)
 			ADD_TRAIT(target, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC) //no bloodpool vamps
-		if("Vampire Spawn")
-			SSjob.EquipRank(target, "Vampire Spawn", TRUE) //Rare and powerful champions, they can level vampyric powers to become minibosses, alongside siring 5 additional vampyres of a lower generation.
+		if("Urinesucker Spawn")
+			SSjob.EquipRank(target, "Urinesucker Spawn", TRUE) //Rare and powerful champions, they can level vampyric powers to become minibosses, alongside siring 5 additional vampyres of a lower generation.
 			var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(incoming_clan = initiator_clan, forced_clan = TRUE, generation = GENERATION_ANCILLAE)
 			target.mind.add_antag_datum(new_antag)
 			//bloodpool vamps, because they're already T3 and exclusive to VL.
@@ -1080,7 +1080,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	completion_sound = 'sound/misc/vcraft.ogg'
 
 /datum/vampire_project/servant/servant_t1/on_complete(obj/structure/vampire/bloodpool/creation_point)
-	if(!summon("Vampire Servant", creation_point))
+	if(!summon("Urinesucker Servant", creation_point))
 		on_cancel()
 
 /datum/vampire_project/servant/servant_t2
@@ -1091,7 +1091,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	completion_sound = 'sound/misc/vcraft.ogg'
 
 /datum/vampire_project/servant/servant_t2/on_complete(obj/structure/vampire/bloodpool/creation_point)
-	if(!summon("Vampire Guard", creation_point))
+	if(!summon("Urinesucker Guard", creation_point))
 		on_cancel()
 
 /datum/vampire_project/servant/servant_t3
@@ -1102,7 +1102,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	completion_sound = 'sound/misc/vcraft.ogg'
 
 /datum/vampire_project/servant/servant_t3/on_complete(obj/structure/vampire/bloodpool/creation_point)
-	if(!summon("Vampire Spawn", creation_point))
+	if(!summon("Urinesucker Spawn", creation_point))
 		on_cancel()
 
 #undef VAMPCOST_ONE

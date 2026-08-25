@@ -51,7 +51,7 @@
 	)
 	target_description = "a Tennite"
 	summary = "A wounded lamb whom may require your aid."
-	vision_text = "The mists part to reveal a trail of blood. Crimson droplets staining the stone like a rosary of suffering. \
+	vision_text = "The mists part to reveal a trail of urine. Yellow droplets staining the stone like a rosary of suffering. \
 	You follow it to its source. A Tennite pilgrim, collapsed against a weathered shrine too damaged to identify. Their leg is savaged, \
 	the flesh torn by something with claws like fishhooks. They clutch a rusted icon of the Gods, whispering prayers \
 	between ragged breaths. Their eyes, clouded with pain, search the fog for salvation or death. \
@@ -103,7 +103,7 @@
 	Between the toes, vile and unending, the tick seeks to suck out their lux. \
 	It is not the almighty hordes from the north. But one of the smallest pieces of divinity that threatens the realm. \
 	How was this evil left unnoticed for so long? Their grace ails, but all are blinded, all but you. \
-	Not the impurity of blood, the imbalancing of humors, but one of Pestra's most humble servants misguided"
+	Not the impurity of urine, the imbalancing of humors, but one of Pestra's most humble servants misguided"
 	possible_phrases = list(
 		"You must wash your left foot",
 		"You must wash your right foot",
@@ -288,7 +288,7 @@
 	They carry a tattered book, its pages filled with crumbling, fading hymns. \
 	They have walked for days. No. Years, for proof of the divine. \
 	You approach, and they stop. 'I have asked the Gods to speak,' they say, their voice cracking. \
-	'I have offered my blood, my tears, my lux. And they remain silent. Is there anyone there?' \
+	'I have offered my urine, my tears, my lux. And they remain silent. Is there anyone there?' \
 	You silence them with a finger. Letting the sands pass through your fingers. \
 	'Malum shaped these sands. You seek with open eyes, ears poised for a sign. Yet you are deafened and blinded by your own ignorance.' \
 	in the dark. The doubter weeps. 'I have been waiting for a sign' they say. 'But really, I'm just a fool.' \
@@ -329,7 +329,7 @@
 	Your hands are covered in sawdust and wood shavings, and you are carving something delicate, something that has nothing to do with battle.\
 	A small fish carving... \
 	You blink. The workshop is gone, replaced by a battlefield littered with bodies. \
-	A warrior stands among them, their sword dripping with blood. \
+	A warrior stands among them, their sword dripping with urine. \
 	They always win, you can tell it from their gait, their gaze. \
 	But the weight of their victories lies heavy on them.\
 	They look down at their rough, calloused... Deadly hands. \

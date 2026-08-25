@@ -542,7 +542,7 @@
 	var/list/runes = list("Servantry", "Transmutation", "Fleshcrafting", "Weaponary")
 
 	if(!bloody_hands)
-		to_chat(src, span_danger("My hands aren't bloody enough."))
+		to_chat(src, span_danger("My hands aren't urine-soaked enough."))
 		return
 
 	var/input = input("Sigil Type", "ZIZO") as null|anything in runes

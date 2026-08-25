@@ -172,7 +172,7 @@
 			var/mob/living/carbon/human/H = owner
 			if(H.dna && !(NOBLOOD in H.dna.species.species_traits))
 				H.urine_volume = max(H.urine_volume - blood_loss, 0)
-				to_chat(H, span_danger("I have to keep pumping my blood!"))
+				to_chat(H, span_danger("I have to keep pumping my urine!"))
 				if(add_colour)
 					H.add_client_colour(/datum/client_colour/cursed_heart_blood) //bloody screen so real
 					add_colour = FALSE
@@ -189,7 +189,7 @@
 	M.remove_client_colour(/datum/client_colour/cursed_heart_blood)
 
 /datum/action/item_action/organ_action/cursed_heart
-	name = "Pump my blood"
+	name = "Pump my urine"
 
 //You are now brea- pumping blood manually
 /datum/action/item_action/organ_action/cursed_heart/Trigger()

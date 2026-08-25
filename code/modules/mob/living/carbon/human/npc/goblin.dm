@@ -582,7 +582,7 @@ GLOBAL_LIST_INIT(goblin_pyromancer_aggro, list(
 /obj/structure/gob_portal/examine(mob/user) //Ghosts only can examine this.
 	. = ..()
 	if(!isliving(user))
-		. += span_bloody("Graggar demands blood! You can click this portal to join as a goblin if there are open slots. There are [playergobs] out of [maxplayergobs] goblins taken.")
+		. += span_bloody("Graggar demands urine! You can click this portal to join as a goblin if there are open slots. There are [playergobs] out of [maxplayergobs] goblins taken.")
 
 /obj/structure/gob_portal/proc/spawn_gob()
 	if(QDELETED(src))

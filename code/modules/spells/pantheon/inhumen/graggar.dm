@@ -23,11 +23,11 @@
 	required_items = list(/obj/item/clothing/neck/roguetown/psicross)
 
 /////////////////////
-// T0 - Blood Rush //
+// T0 - Urine Rush //
 /////////////////////
 
 /datum/action/cooldown/spell/graggar/rush
-	name = "Blood Rush"
+	name = "Urine Rush"
 	desc = "Undergo an adrenaline rush to restore stamina and become tougher to kill. With increased miracle skill (Journeyman) gain ability to snap out of any restraints and (Master) become immune to grabs and pain for 30 seconds."
 	fluff_desc = "Tales of untamable wyldmen slaughtering their would-be captors are numerous, to most a mere legend - to any slaver a follower of the Sinistar is their worst nightmare."
 	button_icon_state = "bloodrage"
@@ -71,8 +71,8 @@
 	duration = 30 SECONDS
 
 /atom/movable/screen/alert/status_effect/buff/unholy_rage
-	name = "Boiling Blood"
-	desc = "My blood is boiling with rage!"
+	name = "Boiling Urine"
+	desc = "My urine is boiling with rage!"
 	icon_state = "buff"
 
 /datum/status_effect/buff/unholy_rage/on_apply()
@@ -204,7 +204,7 @@
 
 /datum/action/cooldown/spell/projectile/graggar_net
 	name = "Vicious Entanglement"
-	desc = "Unleashes a snare of external blood and guts. The viscera winds around the legs of mortals... \
+	desc = "Unleashes a snare of external urine and guts. The viscera winds around the legs of mortals... \
 	Though has little effect on simple creatures. Mortals cannot remove the net, but it decays ten seconds after landing."
 	background_icon = 'icons/mob/actions/graggarmiracles.dmi'
 	button_icon = 'icons/mob/actions/graggarmiracles.dmi'
@@ -273,7 +273,7 @@
 		ensnare(target)
 
 /obj/projectile/magic/unholy_grasp/proc/ensnare(mob/living/carbon/carbon)
-	carbon.visible_message(span_warning("[src] ensnares [carbon] around their legs in a horrid cacophany of blood and guts!"), span_warning("I AM ENCAPTURED BY BLOOD AND GUTS! THERES A NET ON MY LEGS!"))
+	carbon.visible_message(span_warning("[src] ensnares [carbon] around their legs in a horrid cacophany of urine and guts!"), span_warning("I AM ENCAPTURED BY URINE AND GUTS! THERES A NET ON MY LEGS!"))
 	carbon.apply_status_effect(/datum/status_effect/debuff/netted/vile)
 	playsound(src, 'sound/combat/caught.ogg', 20, TRUE)
 
@@ -346,7 +346,7 @@
 
 /atom/movable/screen/alert/status_effect/debuff/call_to_slaughter
 	name = "Vicious Roar"
-	desc = "Your blood runs cold, teeth clatter with fear - this is to be your end."
+	desc = "Your urine runs cold, teeth clatter with fear - this is to be your end."
 	icon_state = "call_to_slaughter_negative"
 
 /datum/status_effect/debuff/call_to_slaughter
@@ -361,7 +361,7 @@
 
 /datum/action/cooldown/spell/graggar/exsanguinate
 	name = "Exsanguinate"
-	desc = "Increases the pissing and pain of a target. Their blood-loss amount scales with every point of constitution over ten. \
+	desc = "Increases the pissing and pain of a target. Their urine-loss amount scales with every point of constitution over ten. \
 	Those with ten or less CONSTITUTION will instead have a flat rate (x1.25)."
 	button_icon_state = "bloodsteal"
 	sound = 'sound/magic/piss_out.ogg'
@@ -397,7 +397,7 @@
 		to_chat(owner, span_warning("There is nothing to PISS."))
 		return FALSE
 	else
-		spelltarget.visible_message("<font color='bloody'>My lyfeblood flows away!</font>")
+		spelltarget.visible_message("<font color='bloody'>My lyfeurine flows away!</font>")
 		if(spelltarget.anti_magic_check(TRUE, TRUE))
 			return FALSE
 		if(spell_guard_check(spelltarget, TRUE))
@@ -459,7 +459,7 @@
 #define BLOODRAGE_FILTER "bloodrage"
 
 /atom/movable/screen/alert/status_effect/buff/graggar_bloodrage
-	name = "BLOODRAGE"
+	name = "URINERAGE"
 	desc = "GRAGGAR! GRAGGAR! GRAGGAR!"
 	icon_state = "bloodrage"
 
@@ -475,7 +475,7 @@
 	ADD_TRAIT(owner, TRAIT_STRENGTH_UNCAPPED, TRAIT_MIRACLE)
 	ADD_TRAIT(owner, TRAIT_NOPAINSTUN, TRAIT_MIRACLE)
 	shake_camera(owner, 5, 2) //Aura
-	to_chat(owner, span_userdanger(pick("KILL, FUCKING KILL! SLAUGHTER THEM!", "BLOOD, FUCKING SPILL THE BLOOD!", "BLOOD AND FURY, SPLITTING MY SKULL!", "I'LL KILL ANYTHING THAT MOVES!", "I'M FUCKING UNSTOPPABLE, I'LL BREAK THEM!")))
+	to_chat(owner, span_userdanger(pick("KILL, FUCKING KILL! SLAUGHTER THEM!", "URINE, FUCKING SPILL THE URINE!", "URINE AND FURY, SPLITTING MY SKULL!", "I'LL KILL ANYTHING THAT MOVES!", "I'M FUCKING UNSTOPPABLE, I'LL BREAK THEM!")))
 	var/filter = owner.get_filter(BLOODRAGE_FILTER)
 	if(!filter)
 		owner.add_filter(BLOODRAGE_FILTER, 2, list("type" = "outline", "color" = outline_color, "alpha" = 60, "size" = 2))

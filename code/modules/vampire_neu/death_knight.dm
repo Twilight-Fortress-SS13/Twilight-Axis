@@ -1,15 +1,15 @@
 /datum/antagonist/skeleton/knight
 	name = "Death Knight"
 	increase_votepwr = FALSE
-	roundend_category = "Vampires"
-	antagpanel_category = "Vampire"
+	roundend_category = "Urinesuckers"
+	antagpanel_category = "Urinesucker"
 
 /datum/antagonist/skeleton/knight/on_gain()
 	. = ..()
 	owner.unknow_all_people()
 	for(var/datum/mind/MF in get_minds())
 		owner.become_unknown_to(MF)
-	for(var/datum/mind/MF in get_minds("Vampire Spawn"))
+	for(var/datum/mind/MF in get_minds("Urinesucker Spawn"))
 		owner.i_know_person(MF)
 		owner.person_knows_me(MF)
 	for(var/datum/mind/MF in get_minds("Death Knight"))

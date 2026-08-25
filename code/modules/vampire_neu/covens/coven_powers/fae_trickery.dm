@@ -1,6 +1,6 @@
 /datum/coven/fae_trickery
 	name = "Fae Trickery"
-	desc = "This coven typically develops in vampires born near the swamps of Daftmarsh surrounded by the Fae."
+	desc = "This coven typically develops in urinesuckers born near the swamps of Daftmarsh surrounded by the Fae."
 	icon_state = "mytherceria"
 	power_type = /datum/coven_power/fae_trickery
 

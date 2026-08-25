@@ -70,7 +70,7 @@
 /datum/reagent/smartium/overdose_start(mob/living/carbon/M)
 	M.apply_status_effect(/datum/status_effect/debuff/smartium)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))
 
 /obj/item/reagent_containers/powder/corps_dust
 	name = "corps dust"
@@ -120,7 +120,7 @@
 
 /datum/reagent/corps_dust/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))
 
 /obj/item/reagent_containers/powder/grave_powder
 	name = "grave powder"
@@ -172,7 +172,7 @@
 
 /datum/reagent/grave_powder/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))
 
 /obj/item/reagent_containers/powder/inferrum
 	name = "inferrum"
@@ -224,7 +224,7 @@
 
 /datum/reagent/inferrum/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))
 
 /mob/living/carbon/proc/handle_hallucinations_custome(var/hallucination_type)
 	if(!hallucination || !client || stat)

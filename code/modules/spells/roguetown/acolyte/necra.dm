@@ -35,7 +35,7 @@
 				isvampire = TRUE
 			if(L.mind.has_antag_datum(/datum/antagonist/zombie))
 				iszombie = TRUE
-			if(L.mind.special_role == "Vampire Lord" || L.mind.special_role == "Lich")	//Won't detonate Lich's or VLs but will fling them away.
+			if(L.mind.special_role == "Urinesucker Lord" || L.mind.special_role == "Lich")	//Won't detonate Lich's or VLs but will fling them away.
 				user.visible_message(span_warning("[L] overpowers being churned!"), span_userdanger("[L] is too strong, I am churned!"))
 				user.Stun(50)
 				user.throw_at(get_ranged_target_turf(user, get_dir(user,L), 7), 7, 1, L, spin = FALSE)

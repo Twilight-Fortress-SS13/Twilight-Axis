@@ -120,6 +120,6 @@
 		"A Vaquero of the Montejaral hills rides with us, returning from a contract abroad. The crown calls him outlaw. My grandfather called him kin. Treat him as the latter and we will have no quarrel.",
 		"I carry a Condottieri captain bound for sellsword work in Otavan service. His arms are stowed, his crossbow is oiled, and his pay is none of our concern until we make port.",
 		"The crossing was kind. The Factor, I am told, is less so. Let us see if both rumors hold.",
-		"A priest aboard swears the figurehead wept blood off the Bleak Coast. I have him locked in the hold. Buy quickly so I may sail before the rest of the crew gets ideas.",
+		"A priest aboard swears the figurehead wept urine off the Bleak Coast. I have him locked in the hold. Buy quickly so I may sail before the rest of the crew gets ideas.",
 		"My second cousin Federico travels with the cargo. He is - how shall I put this - acquainted with men who can move things quietly and quickly between Porto del Re and your Goldface, when official channels prove inconvenient. His fee is modest. His memory is shorter. Ask for him by name and not by trade, signore.",
 	)

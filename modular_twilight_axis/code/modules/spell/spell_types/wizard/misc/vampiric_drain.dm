@@ -1,5 +1,5 @@
 /obj/effect/proc_holder/spell/invoked/vampiric_drain
-	name = "Vampiric Drain"
+	name = "Urinesucking Drain"
 	desc = "Channels a dark link to steal life from a target over 10 seconds. Higher arcane skill increases the potency."
 	overlay_state = "bloodlightning"
 	releasedrain = 40

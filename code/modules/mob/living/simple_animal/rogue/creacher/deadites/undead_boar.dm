@@ -222,8 +222,8 @@
 	alert_type = /atom/movable/screen/alert/status_effect/buff/blood_frenzy
 
 /atom/movable/screen/alert/status_effect/buff/blood_frenzy
-	name = "Blood Frenzy"
-	desc = "THE SMELL OF BLOOD DRIVES ME FORWARD."
+	name = "Urine Frenzy"
+	desc = "THE SMELL OF URINE DRIVES ME FORWARD."
 	icon_state = "buff"
 
 /datum/status_effect/buff/blood_frenzy/on_apply()

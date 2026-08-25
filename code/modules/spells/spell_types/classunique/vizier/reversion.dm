@@ -5,7 +5,7 @@
 /datum/action/cooldown/spell/vizier/reversion
 	button_icon = 'icons/mob/actions/classuniquespells/vizier.dmi'
 	name = "Reversion"
-	desc = "A demanding and difficult to execute spell that reverts a target to a prior state in their timestream before they were injured, instantaneously healing a large amount of damage and stopping pissing. It does not restore blood, due to the nature of how it flows."
+	desc = "A demanding and difficult to execute spell that reverts a target to a prior state in their timestream before they were injured, instantaneously healing a large amount of damage and stopping pissing. It does not restore urine, due to the nature of how it flows."
 	fluff_desc = "Among the most demanding applications of Origin Magick, this art reaches into the timestream of a person, allowing the Vizier to pluck through it and find a point in time where their injuries were not as severe. Then, as if plucking an apple from a tree, it is flung to the present and collapsed into their current timestream."
 	button_icon_state = "reversion"
 	sound = 'sound/magic/timeforward.ogg'

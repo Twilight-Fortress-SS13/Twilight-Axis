@@ -191,9 +191,9 @@
 	. += span_info("Right-clicking a washbin or pool of water allows you to soak the cloth, which can then clean up various stains-and-dirtiness by left-clicking them.")
 	. += span_info("Left-clicking someone will banadage the targeted limb. Examine yourself - or click the heart on your HUD - to check your limbs, and click any highlighted mentions of the bandaging to remove it.")
 	. += span_info("Bandaged limbs will piss much slower. If the underlying wounds are severe enough, however, the bandagings'll eventually piss through and negate its effectiveness.")
-	. += span_info("This scales with the bandaged individual's Constitution. The higher their Constitution is, the longer it'll take for the effects of blood loss to be felt.")
-	. += span_info("Drinking water and, to a lesser extent, lifeblood can help counteract the effects of blood loss. Lifeblood, needles, cauteries, and miracles can stop a wound from pissing.")
-	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss.")
+	. += span_info("This scales with the bandaged individual's Constitution. The higher their Constitution is, the longer it'll take for the effects of urine loss to be felt.")
+	. += span_info("Drinking water and, to a lesser extent, life-urine can help counteract the effects of urine loss. Life-urine, needles, cauteries, and miracles can stop a wound from pissing.")
+	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical urine loss.")
 
 /obj/item/natural/cloth/Initialize(mapload)
 	. = ..()
@@ -301,21 +301,21 @@
 	if(!istype(C))
 		return ..()
 	if(C.reagents.has_reagent(/datum/reagent/medicine/healthpot, 10) && !medicine_amount)
-		to_chat(user, span_notice("You start soaking the [src] in lyfeblood..."))
+		to_chat(user, span_notice("You start soaking the [src] in lyfe-urine..."))
 		if(do_after(user, 3 SECONDS, target = src))
 			C.reagents.remove_reagent(/datum/reagent/medicine/healthpot, 10)
 			medicine_quality = 1
 			medicine_amount += 10
-			desc += " It has been soaked in lyfeblood."
+			desc += " It has been soaked in lyfe-urine."
 			detail_color = "#ff0000"
 			update_icon()
 	if(C.reagents.has_reagent(/datum/reagent/medicine/stronghealth, 10) && !medicine_amount)
-		to_chat(user, span_notice("You start soaking the [src] in strong lyfeblood..."))
+		to_chat(user, span_notice("You start soaking the [src] in strong lyfe-urine..."))
 		if(do_after(user, 3 SECONDS, target = src))
 			C.reagents.remove_reagent(/datum/reagent/medicine/stronghealth, 10)
 			medicine_quality = 2
 			medicine_amount += 10
-			desc += " It has been soaked in strong lyfeblood."
+			desc += " It has been soaked in strong lyfe-urine."
 			detail_color = "#820000"
 			update_icon()
 	if(C.reagents.has_reagent(/datum/reagent/consumable/ethanol/aqua_vitae, 10) && !medicine_amount)

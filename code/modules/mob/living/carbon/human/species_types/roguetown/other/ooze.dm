@@ -107,7 +107,7 @@
 	
 	mechanics_explanations = list("Have no bones to break. However, upon suffering a severe blunt wound, or when a limb would experience a bone fracture, the limb melts. Lost limbs similarly melt off.",
 		"Can regenerate lost limbs by sleeping, at a great cost to their bodily nutrition.",
-		"Have uniquely colored blood that matches the color of their bodies.")
+		"Have uniquely colored urine that matches the color of their bodies.")
 
 ////// ORGAN SPRITES, provided by VelSlime
 /obj/item/organ/brain/ooze

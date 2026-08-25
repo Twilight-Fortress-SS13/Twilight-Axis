@@ -1,5 +1,5 @@
 /obj/effect/proc_holder/spell/invoked/assassin_track
-	name = "Blood Veil"
+	name = "Urine Veil"
 	desc = "I pierce the veil of mortality and sense those marked by Graggar for death. Cast on self to attune to a new target, cast again to feel their direction."
 	recharge_time = 0.5 SECONDS
 	chargetime = 0.1 SECONDS
@@ -48,7 +48,7 @@
 		to_chat(user, span_warning("The veil is silent... no souls marked for Graggar remain."))
 		return
 
-	var/selection = tgui_input_list(user, "Whose soul bears the mark of Graggar?", "Blood Veil", sort_list(possible_targets))
+	var/selection = tgui_input_list(user, "Whose soul bears the mark of Graggar?", "Urine Veil", sort_list(possible_targets))
 	if(!selection)
 		return
 
@@ -77,7 +77,7 @@
 		var/dir_text = dir2text(get_dir(user, tracked_target))
 
 		if(dist <= 1)
-			to_chat(user, span_boldnotice("The prey stands before me. The creed demands blood!"))
+			to_chat(user, span_boldnotice("The prey stands before me. The creed demands urine!"))
 		else if(dist < 8)
 			to_chat(user, span_notice("The mark burns strongly to the [dir_text]. They are near."))
 		else

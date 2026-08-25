@@ -1,5 +1,5 @@
 /datum/round_event_control/antagonist/solo/vampires
-	name = "Vampires"
+	name = "Urinesuckers"
 	tags = list(
 		TAG_COMBAT,
 		TAG_HAUNTED,
@@ -9,7 +9,7 @@
 	antag_flag = ROLE_NBEAST
 	shared_occurence_type = SHARED_HIGH_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
-	storyteller_pill_label = "Vampire Lord"
+	storyteller_pill_label = "Urinesucker Lord"
 	storyteller_rumour_name = "lycker lords"
 
 	weight = 9

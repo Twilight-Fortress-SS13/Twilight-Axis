@@ -345,7 +345,7 @@
 //Ethereal
 
 /atom/movable/screen/alert/etherealcharge
-	name = "Low Blood Charge"
+	name = "Low Urine Charge"
 	desc = ""
 	icon_state = "etherealcharge"
 

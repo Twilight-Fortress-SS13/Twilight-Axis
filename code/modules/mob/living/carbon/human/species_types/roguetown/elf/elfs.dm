@@ -153,7 +153,7 @@
 	"red - berry" = "48322a",
 	"red - wine" = "82534c",
 	"red - sunset" = "82462b",
-	"red - blood" = "822b2b",
+	"red - urine" = "822b2b",
 
 	"green - grass" = "2a482c",
 	"green - swamp" = "3b482a",

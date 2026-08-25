@@ -42,12 +42,12 @@
 	<li><b>Malum:</b> Up to +100% scaling with nearby fire sources (torches, campfires, hearths, candles, forges).</li>\
 	<li><b>Necra:</b> +100% when the target is below 25% health. +50% if the caster has Necran Mists active. Up to +150% total.</li>\
 	<li><b>Noc:</b> +40% healing during nighttime.</li>\
-	<li><b>Pestra:</b> +40% when the target is laying down (not buckled). Also restores blood and heals toxin damage.</li>\
-	<li><b>Ravox:</b> +40% if the target is using a strong attack intent. +20% if holding a weapon. +80% with blood restoration if cast on self while at low blood (30s cooldown). Up to +140% total.</li>\
+	<li><b>Pestra:</b> +40% when the target is laying down (not buckled). Also restores urine and heals toxin damage.</li>\
+	<li><b>Ravox:</b> +40% if the target is using a strong attack intent. +20% if holding a weapon. +80% with urine restoration if cast on self while at low urine (30s cooldown). Up to +140% total.</li>\
 	<li><b>Xylix:</b> 50% chance of a random +40% to +100% bonus.</li>\
 	<li><b>Undivided:</b> Always +80% with no conditions.</li>\
 	<li><b>Baotha:</b> +20% if the target is drunk or on drugs. +20% if experiencing withdrawal. Up to +80% additional from wound pain and pissing. Up to +120% total.</li>\
-	<li><b>Graggar:</b> Up to +100% scaling with nearby blood decals.</li>\
+	<li><b>Graggar:</b> Up to +100% scaling with nearby urine decals.</li>\
 	<li><b>Matthios:</b> +100% if the target has the Freeman trait.</li>\
 	<li><b>Zizo:</b> Up to +200% scaling with nearby bones and bone bundles.</li>\
 	</ul>"
@@ -327,14 +327,14 @@
 	return FALSE
 
 //////////////////////////////////
-// MIRACLE - LYFEBLOOD TRANSFER //
+// MIRACLE - LYFEURINE TRANSFER //
 //////////////////////////////////
 
 /datum/action/cooldown/spell/miracle/bloodmiracle
-	name = "Lyfeblood Transfer"
-	desc = "Transfers blood from the caster to the chosen target at a steady rate, staving off the lethal effects of blood loss. The amount of \
-	blood transfered with each heartbeat scales with the caster's Holy skill. </br>Most healing Miracles cannot affect devoted Psydonians."
-	fluff_desc = "Manipulation of lyfeblood is often seen as heretical and taboo thanks to its association with Lyckers & Liches. Due to its usefulness however this technique is one of the few sanctioned to be taught across Psydonia."
+	name = "Lyfeurine Transfer"
+	desc = "Transfers urine from the caster to the chosen target at a steady rate, staving off the lethal effects of urine loss. The amount of \
+	urine transfered with each heartbeat scales with the caster's Holy skill. </br>Most healing Miracles cannot affect devoted Psydonians."
+	fluff_desc = "Manipulation of lyfeurine is often seen as heretical and taboo thanks to its association with Lyckers & Liches. Due to its usefulness however this technique is one of the few sanctioned to be taught across Psydonia."
 	button_icon_state = "bloodheal"
 	sound = 'sound/magic/bloodheal.ogg'
 
@@ -369,11 +369,11 @@
 
 	if(ishuman(spelltarget))
 		if(NOBLOOD in UH.dna?.species?.species_traits)
-			to_chat(UH, span_warning("I have no blood to provide."))
+			to_chat(UH, span_warning("I have no urine to provide."))
 			return FALSE
 
 		if(target.urine_volume >= URINE_VOLUME_NORMAL)
-			to_chat(UH, span_warning("Their lyfeblood is at capacity. There is no need."))
+			to_chat(UH, span_warning("Their lyfeurine is at capacity. There is no need."))
 			return FALSE
 
 		if(HAS_TRAIT(target, TRAIT_PSYDONITE))
@@ -382,7 +382,7 @@
 			playsound(target, 'sound/magic/PSY.ogg', 100, FALSE, -1)
 			return FALSE
 
-		UH.visible_message(span_warning("Tiny strands of red link between [UH] and [target], blood being transferred!"))
+		UH.visible_message(span_warning("Tiny strands of red link between [UH] and [target], urine being transferred!"))
 		playsound(UH, 'sound/magic/bloodheal_start.ogg', 100, TRUE)
 		var/user_skill = UH.get_skill_level(associated_skill)
 		var/user_informed = FALSE
@@ -407,14 +407,14 @@
 					target.urine_volume = min((target.urine_volume + blood_vol_restore), URINE_VOLUME_NORMAL)
 					UH.urine_volume = max((UH.urine_volume - blood_price), 0)
 					if(target.urine_volume >= URINE_VOLUME_NORMAL && !user_informed)
-						to_chat(UH, span_info("They're at a healthy blood level, but I can keep going."))
+						to_chat(UH, span_info("They're at a healthy urine level, but I can keep going."))
 						user_informed = TRUE
 				else
-					UH.visible_message(span_warning("Severs the bloodlink from [target]!"))
+					UH.visible_message(span_warning("Severs the urinelink from [target]!"))
 					bloodbeam.End()
 					return TRUE
 			else
-				UH.visible_message(span_warning("Severs the bloodlink from [target]!"))
+				UH.visible_message(span_warning("Severs the urinelink from [target]!"))
 				bloodbeam.End()
 				return TRUE
 		bloodbeam.End()

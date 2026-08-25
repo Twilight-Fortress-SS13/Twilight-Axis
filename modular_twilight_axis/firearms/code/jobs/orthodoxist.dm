@@ -366,7 +366,7 @@
 
 /datum/advclass/otavan_volf
 	name = "Otavan Volf"
-	tutorial = "No matter who you were before. Now you are a bloodhound of Inquisition enchanted with rune magyck. No doors can stop you and no heretic can escape your silent bullet."
+	tutorial = "No matter who you were before. Now you are a urinehound of Inquisition enchanted with rune magyck. No doors can stop you and no heretic can escape your silent bullet."
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/otavan_volf
 	subclass_languages = list(/datum/language/otavan)

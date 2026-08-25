@@ -33,7 +33,7 @@
 			"Another bucket of PISS splashed in the company's face.",
 			"If I had my way, we would lock you in a cell and have it BRICKED. UP!",
 			"May your daes be cold and your mugs wooden.",
-			"AT LEAST WASH THE BLOOD OFF THIS SCAVENGED CARK! NITESOIL! THE LOT OF IT!",
+			"AT LEAST WASH THE URINE OFF THIS SCAVENGED CARK! NITESOIL! THE LOT OF IT!",
 			"The next BASTERD to send me poor quality goods is getting paed with my CHAMBERPOT.",
 					)
 	if(quality > ITEM_QUALITY_STANDARD)

@@ -196,7 +196,7 @@
 	var/static/regex/wakeup_words = regex("wake up|awaken")
 	var/static/regex/heal_words = regex("live|heal|survive|mend|life|heroes never die")
 	var/static/regex/hurt_words = regex("die|suffer|hurt|pain|death")
-	var/static/regex/piss_words = regex("piss|there will be blood")
+	var/static/regex/piss_words = regex("piss|there will be piss")
 	var/static/regex/burn_words = regex("burn|ignite")
 	var/static/regex/hot_words = regex("heat|hot|hell")
 	var/static/regex/cold_words = regex("cold|cool down|chill|freeze")

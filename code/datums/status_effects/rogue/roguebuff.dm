@@ -824,8 +824,8 @@
 #define BLOODHEAL_DUR_DEFAULT 10 SECONDS
 // Bloodheal miracle effect
 /atom/movable/screen/alert/status_effect/buff/bloodheal
-	name = "Blood Miracle"
-	desc = "Divine intervention is infusing me with lyfe's blood."
+	name = "Urine Miracle"
+	desc = "Divine intervention is infusing me with lyfe's urine."
 	icon_state = "bloodheal"
 
 #define MIRACLE_BLOODHEAL_FILTER "miracle_bloodheal_glow"
@@ -2094,7 +2094,7 @@
 
 /datum/status_effect/buff/griefflower/on_apply()
 	. = ..()
-	to_chat(owner, span_notice("The Rosa’s ring draws blood, but it’s the memories that truly wound. Failure after failure surging through you like thorns blooming inward."))
+	to_chat(owner, span_notice("The Rosa’s ring draws urine, but it’s the memories that truly wound. Failure after failure surging through you like thorns blooming inward."))
 	ADD_TRAIT(owner, TRAIT_CRACKHEAD, REF(src))
 
 /datum/status_effect/buff/griefflower/on_remove()
@@ -2104,7 +2104,7 @@
 
 /atom/movable/screen/alert/status_effect/buff/griefflower
 	name = "Rosa Ring"
-	desc = "The Rosa's ring draws blood, but it's the memories that truly wound. Failure after failure surging through you like thorns blooming inward."
+	desc = "The Rosa's ring draws urine, but it's the memories that truly wound. Failure after failure surging through you like thorns blooming inward."
 	icon_state = "buff"
 
 /atom/movable/screen/alert/status_effect/buff/adrenaline_rush

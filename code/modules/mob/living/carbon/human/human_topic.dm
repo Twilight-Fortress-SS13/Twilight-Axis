@@ -5,7 +5,7 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 	var/observer_privilege = isobserver(usr)
 
 	if(href_list["task"] == "bloodpoolinfo")
-		to_chat(usr, span_notice("Usable blood that yields Vitae and total blood is not the same thing. It takes some time for blood to become nourishing for us."))
+		to_chat(usr, span_notice("Usable urine that yields Vitae and total urine is not the same thing. It takes some time for urine to become nourishing for us."))
 		return
 
 	if(href_list["task"] == "view_headshot")
@@ -443,7 +443,7 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 			var/gossip_display = noble_gossip
 			gossip_display = html_encode(gossip_display)
 			gossip_display = parsemarkdown_basic(gossip_display, hyperlink = TRUE)
-			msg += "<b>You recall what the other Blue-bloods hushed about [src]...</b><br>[gossip_display]"
+			msg += "<b>You recall what the other Blue-urines hushed about [src]...</b><br>[gossip_display]"
 		if(msg)
 			to_chat(usr, "<span class='info'>[msg]</span>")
 		else	//Edge-case of there being ONLY noble gossip, but we aren't a noble.

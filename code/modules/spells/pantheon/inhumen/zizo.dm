@@ -667,7 +667,7 @@
 //Reskin + Flavor of diagnose spell w/ some different flavor. Used for Necromancers/Lich.
 /obj/effect/proc_holder/spell/invoked/diagnose/secular/zizo
 	name = "Arcane Diagnosis"
-	desc = "A highly-practiced reading of the body's humors and hidden ailments performed afar with left-handed magicks. Reveals a target's condition, with greater skill in medicine granting deeper detail. By embedding a Forceps on your patient, you may even identify substances within the blood; but even the most unskilled physicker can tell from a Cheele or Leech's reactions."
+	desc = "A highly-practiced reading of the body's humors and hidden ailments performed afar with left-handed magicks. Reveals a target's condition, with greater skill in medicine granting deeper detail. By embedding a Forceps on your patient, you may even identify substances within the urine; but even the most unskilled physicker can tell from a Cheele or Leech's reactions."
 	overlay_icon = 'icons/mob/actions/zizomiracles.dmi'
 	action_icon = 'icons/mob/actions/zizomiracles.dmi'
 	range = SPELL_RANGE_GROUND //Longer than regular diagnosis range. Progress Baby!
@@ -676,7 +676,7 @@
 // Diagnosis (T?) - Progress Path: Reflavored version of Pestra's diagnosis, it basically does what you'd expect. Has a highly inefficent cost for some unique perks like extra range.
 /obj/effect/proc_holder/spell/invoked/diagnose/zizo
 	name = "Profane Diagnosis"
-	desc = "Call upon Enochian magicka and Zizo's stolen medical knowledge to read the body's humors and hidden ailments at a sizable distance. Reveals a target's condition with perfect clarity. To perceive one's blood content, all you'll need is but an incision."
+	desc = "Call upon Enochian magicka and Zizo's stolen medical knowledge to read the body's humors and hidden ailments at a sizable distance. Reveals a target's condition with perfect clarity. To perceive one's urine content, all you'll need is but an incision."
 	overlay_icon = 'icons/mob/actions/zizomiracles.dmi'
 	action_icon = 'icons/mob/actions/zizomiracles.dmi'
 	range = SPELL_RANGE_GROUND //Longer than regular diagnosis range. Progress Baby!

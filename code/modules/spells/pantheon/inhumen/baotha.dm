@@ -164,7 +164,7 @@
 			to_chat(user, span_warning("[thing] is full."))
 			return
 
-		user.visible_message(span_info("[user] extends a hand over [thing]. Sweet-smelling ichor drips from [user.p_their()] fingertips, like blood."), span_notice("I call forth [user.patron.name], to fill [thing] with Her blessings..."))
+		user.visible_message(span_info("[user] extends a hand over [thing]. Sweet-smelling ichor drips from [user.p_their()] fingertips, like urine."), span_notice("I call forth [user.patron.name], to fill [thing] with Her blessings..."))
 
 		var/holy_skill = user.get_skill_level(attached_spell.associated_skill)
 		var/drip_speed = 56 - (holy_skill * 8)

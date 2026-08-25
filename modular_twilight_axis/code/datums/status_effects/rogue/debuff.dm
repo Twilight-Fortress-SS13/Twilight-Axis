@@ -271,5 +271,5 @@
 	duration = 15 SECONDS
 
 /atom/movable/screen/alert/status_effect/debuff/blood_call
-	name = "Blood Call"
+	name = "Urine Call"
 	desc = "Hard to concentrate!"

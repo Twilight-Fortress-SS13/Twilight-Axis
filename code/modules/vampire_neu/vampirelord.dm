@@ -1,7 +1,7 @@
 /datum/antagonist/vampire/lord
 	name = "Methuselah"
-	roundend_category = "Vampires"
-	antagpanel_category = "Vampire"
+	roundend_category = "Urinesuckers"
+	antagpanel_category = "Urinesucker"
 	job_rank = ROLE_VAMPIRE
 	generation = GENERATION_METHUSELAH
 	show_in_antagpanel = TRUE
@@ -30,7 +30,7 @@
 	owner.unknow_all_people()
 	for(var/datum/mind/MF in get_minds())
 		owner.become_unknown_to(MF)
-	for(var/datum/mind/MF in get_minds("Vampire Spawn"))
+	for(var/datum/mind/MF in get_minds("Urinesucker Spawn"))
 		owner.i_know_person(MF)
 		owner.person_knows_me(MF)
 
@@ -61,7 +61,7 @@
 
 /datum/antagonist/vampire/lord/greet()
 	to_chat(owner.current, span_userdanger("I am ancient. I am the Land. And I am now awoken to trespassers upon my domain."))
-	to_chat(owner.current, span_boldwarning("I should check my immedate surroundings, from the bloodstained stone I can recall my Ichor fang at will should I lose it again and from the Crimson Crucible I can begin my various projects of collective sacrifice of vitae between myself and my servants to reclaim my long-lost power and kingdom."))
+	to_chat(owner.current, span_boldwarning("I should check my immedate surroundings, from the urine-stained stone I can recall my Ichor fang at will should I lose it again and from the Crimson Crucible I can begin my various projects of collective sacrifice of vitae between myself and my servants to reclaim my long-lost power and kingdom."))
 	owner.current.playsound_local(get_turf(owner.current), 'sound/villain/dreamer_warning.ogg', 80, FALSE, pressure_affected = FALSE) //Extra bit of AURA
 	. = ..()
 
@@ -177,7 +177,7 @@
 /obj/item/clothing/suit/roguetown/shirt/vampire
 	slot_flags = ITEM_SLOT_SHIRT
 	name = "regal silks"
-	desc = "An ornate robe, meticulously weaved from crimson silk and studded with enchanted gilbranze buttons. A Lord's presentation is everything; and unlike the dull-blooded, you've had plenty of tyme to cultivate your flamboyance."
+	desc = "An ornate robe, meticulously weaved from crimson silk and studded with enchanted gilbranze buttons. A Lord's presentation is everything; and unlike the dull-urined, you've had plenty of tyme to cultivate your flamboyance."
 	body_parts_covered = COVERAGE_ALL_BUT_ARMFEET
 	icon_state = "vrobe"
 	item_state = "vrobe"
@@ -185,7 +185,7 @@
 
 /obj/item/clothing/head/roguetown/vampire
 	name = "crown of darkness"
-	desc = "An obsidian crown, bejeweled with a beautifully-cut rontz. It is an eternal reminder that this world is yours to conquer - let no one, dull-blooded or otherwise, stop your fallen kingdom from rising once more."
+	desc = "An obsidian crown, bejeweled with a beautifully-cut rontz. It is an eternal reminder that this world is yours to conquer - let no one, dull-urined or otherwise, stop your fallen kingdom from rising once more."
 	icon_state = "vcrown"
 	body_parts_covered = null
 	slot_flags = ITEM_SLOT_HEAD
@@ -229,7 +229,7 @@
 /obj/item/clothing/suit/roguetown/armor/plate/vampire
 	slot_flags = ITEM_SLOT_ARMOR
 	name = "ancient ceremonial plate"
-	desc = "Enchanted gilbranze armor, bearing the heraldry of a fallen kingdom. Upon the cuirass remains a singular puncture, unable to be fully mended by even the finest blood magicks: that which invoked your torpor, oh-so-long ago."
+	desc = "Enchanted gilbranze armor, bearing the heraldry of a fallen kingdom. Upon the cuirass remains a singular puncture, unable to be fully mended by even the finest urine magicks: that which invoked your torpor, oh-so-long ago."
 	body_parts_covered = COVERAGE_FULL
 	body_parts_inherent = FULL_BODY
 	icon_state = "vplate"
@@ -318,7 +318,7 @@
 
 /obj/item/clothing/gloves/roguetown/chain/vampire
 	name = "ancient ceremonial gauntlets"
-	icon_state = "Enchanted gilbranze fingerettes, meticulously forged to leave no motion unimpeded. In your pursuit of immortality, the viziers had discovered a forbidden alternative to apotheosis: one that promised eternal lyfe, yet not without a cost. Never before could you've imagined just how sweet the taste of blood might be."
+	icon_state = "Enchanted gilbranze fingerettes, meticulously forged to leave no motion unimpeded. In your pursuit of immortality, the viziers had discovered a forbidden alternative to apotheosis: one that promised eternal lyfe, yet not without a cost. Never before could you've imagined just how sweet the taste of urine might be."
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	icon_state = "vgloves"
 	item_state = "vgloves"

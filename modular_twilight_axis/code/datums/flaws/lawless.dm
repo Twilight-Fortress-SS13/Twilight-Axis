@@ -40,7 +40,7 @@
 		"Atrocious" = rand(150, 200),
 		)
 	
-	var/bounty_key = tgui_input_list(user, "How grave are your crimes?", "Blooded Gold", bounty_cats)
+	var/bounty_key = tgui_input_list(user, "How grave are your crimes?", "Urined Gold", bounty_cats)
 	var/bounty_amount = bounty_key ? bounty_cats[bounty_key] : rand(51, 200)
 
 	var/race = user.dna.species

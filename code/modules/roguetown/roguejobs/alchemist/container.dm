@@ -339,7 +339,7 @@
 	name = "bottle of Shejiu Rice Wine"
 	icon_state = "rice_wine"
 	list_reagents = list(/datum/reagent/consumable/ethanol/shejiu = 50)
-	desc = "A bottle with a red seal. A strong rice wine with a dead snake inside. In the land of Lingyue, it is believed that drinking this will improve one's virility and blood circulation."
+	desc = "A bottle with a red seal. A strong rice wine with a dead snake inside. In the land of Lingyue, it is believed that drinking this will improve one's virility and urine circulation."
 
 /obj/item/reagent_containers/glass/bottle/rogue/beer/murkwine
 	name = "bottle of Possumtail Swampweed Wine"

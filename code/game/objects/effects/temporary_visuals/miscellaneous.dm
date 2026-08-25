@@ -109,7 +109,7 @@
 	icon_state = "phaseout"
 
 /obj/effect/temp_visual/dir_setting/wraith
-	name = "blood"
+	name = "urine"
 	icon = 'icons/mob/mob.dmi'
 	icon_state = "phase_shift2"
 	duration = 12

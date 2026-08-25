@@ -82,7 +82,7 @@
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_prime_z
 	cuisine = CUISINE_SOUTH_IMPERIAL
 	name = "deadite venison prime cut"
-	desc = "Not even death could stop the creature from yielding its most prime cut. Lyckers might even consider flesh over blood at the sight."
+	desc = "Not even death could stop the creature from yielding its most prime cut. Lyckers might even consider flesh over urine at the sight."
 	icon = 'modular/Neu_Food/icons/raw/raw_meat_saiga.dmi'
 	icon_state = "ossobuco_z"
 	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_prime_z/cooked

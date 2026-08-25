@@ -1,5 +1,5 @@
 /datum/action/cooldown/spell/projectile/blood_bolt
-	name = "Blood Bolt"
+	name = "Urine Bolt"
 	desc = "Emit a bolt of lightning that burns a target harshly, preventing them from attacking and slowing them down for 8 seconds. Applies lightning adaptation - the non-burn effects cannot be reapplied within 15 seconds."
 	background_icon = 'icons/mob/actions/zizomiracles.dmi' //left-handed magicks
 	button_icon_state = "bloodlightning"
@@ -34,7 +34,7 @@
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN
 
 /obj/projectile/magic/bloodlightning
-	name = "blood bolt"
+	name = "urine bolt"
 	expose_caster_on_deflect = TRUE
 	tracer_type = /obj/effect/projectile/tracer/blood
 	muzzle_type = null

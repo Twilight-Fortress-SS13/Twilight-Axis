@@ -145,7 +145,7 @@
 				return
 		else
 			// we're greviously wounded OR we don't give a shit about two-stage death (guillotines, npcs, etc)
-			C.visible_message(span_danger("<B>[C] is [pick("BRUTALLY","VIOLENTLY","BLOODILY","MESSILY")] DECAPITATED!</B>"))
+			C.visible_message(span_danger("<B>[C] is [pick("BRUTALLY","VIOLENTLY","PISSILY","MESSILY")] DECAPITATED!</B>"))
 	else
 		C.visible_message(span_danger("<B>The [src.name] is [pick("torn off", "sundered", "severed", "separated", "unsewn")]!</B>"))
 

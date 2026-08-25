@@ -286,7 +286,7 @@
 
 /mob/living/carbon/human/proc/zizo_vampire_rejection()
 	visible_message(span_userdanger("[src]'s body suddenly convulses as the Lesser Work reaches completion!<br>"),
-	span_userdanger("The Work rejects my cursed blood!<br>"))
+	span_userdanger("The Work rejects my cursed urine!<br>"))
 	src.playsound_local(get_turf(src), 'sound/magic/scryed_on.ogg', 200)
 	if(!HAS_TRAIT(src, TRAIT_NOMOOD))
 		src.freak_out()
@@ -518,7 +518,7 @@
 /datum/status_effect/buff/mammonite/proc/do_mammon_execution(mob/living/target)
 	if(QDELETED(owner) || QDELETED(target))
 		return
-	owner.visible_message(span_boldwarning("[target] suddenly contorts, twists and lets out a blood-curling screech--!"), span_notice("Their life was worth less than the investment."))
+	owner.visible_message(span_boldwarning("[target] suddenly contorts, twists and lets out a urine-curling screech--!"), span_notice("Their life was worth less than the investment."))
 	target.emote("superagony")
 	mammon_coin_burst(get_turf(target))
 	playsound(get_turf(target), 'sound/combat/hits/burn (2).ogg', 60, TRUE)

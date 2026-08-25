@@ -77,18 +77,18 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     restoreTip: 'Restore default window size',
     close: 'Close',
     closeTip: 'Close window',
-    bloodInCup: 'Blood in cup: {current} / {max}',
+    bloodInCup: 'Urine in cup: {current} / {max}',
     committed: 'Committed: {n} vitae',
-    pourBlood: 'Pour blood',
-    giveBlood: 'Give blood',
+    pourBlood: 'Pour urine',
+    giveBlood: 'Give urine',
     availableToPour: 'Available to pour: {n} vitae',
     activeRituals: 'Active Rituals',
     newRituals: 'New Rituals',
     emptyActive: 'The crucible is silent. No ritual has begun.',
     mortalNote:
-      'The crucible accepts blood into the cup. Only the Methuselah can direct it into rituals.',
+      'The crucible accepts urine into the cup. Only the Methuselah can direct it into rituals.',
     nonLordNote:
-      'Only the Methuselah can begin or direct rituals. Other vampires may fill the cup and answer one weak servant call.',
+      'Only the Methuselah can begin or direct rituals. Other urinesuckers may fill the cup and answer one weak servant call.',
     noRituals: 'No rituals are available.',
     direct: 'Direct',
     contribute: 'Contribute',
@@ -104,7 +104,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     noContributors: 'No one yet',
     contributionDirect: 'Can direct up to {n} vitae; the cup is spent first',
     contributionVitae: 'Can contribute up to {n} vitae',
-    contributionBlood: 'Will sacrifice {vitae} vitae and {blood} blood',
+    contributionBlood: 'Will sacrifice {vitae} vitae and {blood} urine',
   },
 };
 

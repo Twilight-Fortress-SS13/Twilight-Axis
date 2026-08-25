@@ -52,11 +52,11 @@
 	icon_state = "stun"
 
 /obj/effect/projectile/tracer/blood
-	name = "blood bolt"
+	name = "urine bolt"
 	icon_state = "cult"
 
 /obj/effect/projectile/tracer/bloodsteal
-	name = "blood steal"
+	name = "urine steal"
 	icon_state = "hcult"
 
 /obj/effect/projectile/tracer/heavy_laser

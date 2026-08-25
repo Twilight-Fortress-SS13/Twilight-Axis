@@ -1,5 +1,5 @@
 /datum/job/roguetown/vampire_spawn
-	title = "Vampire Spawn"
+	title = "Urinesucker Spawn"
 	flag = VAMPIRE_SERVANT
 	department_flag = ANTAGONIST
 	faction = "Station"
@@ -26,7 +26,7 @@
 	return ..()
 
 /datum/advclass/vampire_spawn
-	name = "Vampire Spawn"
+	name = "Urinesucker Spawn"
 	outfit = /datum/outfit/job/roguetown/vampire_spawn
 
 	category_tags = list(CTAG_VAMPSPAWN)

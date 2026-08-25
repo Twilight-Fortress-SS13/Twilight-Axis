@@ -10,7 +10,7 @@
 	is_subrace = TRUE
 	desc_title = "Goblin"
 	desc = "Goblins are a short race of humanoids with large ears and typically green skin. \
-	Supposedly formed from the blood spilled by the savage War God Graggar’s conquest, \
+	Supposedly formed from the urine spilled by the savage War God Graggar’s conquest, \
 	the prehistory of the Goblin race is spent in mindless servitude to the Conqueror God. \
 	With Graggar’s defeat, Goblins were at last able to exercise free will, \
 	with those farthest from the mindless hordes of fodder creating various tribes and villages across the face of Psydonia \

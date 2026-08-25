@@ -4,7 +4,7 @@
 	description = "Gradually regenerates all types of damage."
 	reagent_state = LIQUID
 	color = "#ff0000"
-	taste_description = "lifeblood"
+	taste_description = "lifeurine"
 	scent_description = "metal"
 	overdose_threshold = 0
 	metabolization_rate = REAGENTS_METABOLISM
@@ -81,7 +81,7 @@
 	name = "Strong Health Potion"
 	description = "Quickly regenerates all types of damage."
 	color = "#820000"
-	taste_description = "rich lifeblood"
+	taste_description = "rich lifeurine"
 	scent_description = "metal"
 	metabolization_rate = REAGENTS_METABOLISM * 3
 	conflicting_reagent_types = list(/datum/reagent/medicine/healthpot, /datum/reagent/medicine/restoration)
@@ -139,7 +139,7 @@
 
 /datum/reagent/medicine/restoration
 	name = "Restoration Potion"
-	description = "Simultaneously regenerates health and energy. Inherits a higher potency than common lifeblood and manna, but remains inferior to stronger brews."
+	description = "Simultaneously regenerates health and energy. Inherits a higher potency than common lifeurine and manna, but remains inferior to stronger brews."
 	color = "#ff8da1"
 	taste_description = "reinvigorative creaminess"
 	scent_description = "strawberries in liqour"
@@ -208,7 +208,7 @@
 **/
 /datum/reagent/medicine/antidote
 	name = "Antidote"
-	description = "Gradually purges any imbalanced humors and poisons within the bloodstream."
+	description = "Gradually purges any imbalanced humors and poisons within the urine stream."
 	reagent_state = LIQUID
 	color = "#00ff00"
 	taste_description = "sickly sweet"
@@ -232,7 +232,7 @@
 // About 3 time as potent as antidote
 /datum/reagent/medicine/strong_antidote
 	name = "Strong Antidote"
-	description = "Rapidly purges any imbalanced humors and poisons within the bloodstream."
+	description = "Rapidly purges any imbalanced humors and poisons within the urine stream."
 	reagent_state = LIQUID
 	color = "#004200"
 	taste_description = "dirt"
@@ -630,4 +630,4 @@ If you want to expand on poisons theres tons of fun effects TG chemistry has tha
 
 /datum/reagent/fermented_crab/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/magic/heartbeat.ogg', 100, FALSE)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))

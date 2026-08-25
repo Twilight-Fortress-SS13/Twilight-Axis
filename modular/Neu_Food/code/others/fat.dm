@@ -89,14 +89,14 @@
 	. = ..()
 	. += span_info("Mixing tallow with a filled glass of red wine can make 'redtallow', a crimson-tinged wax that's popular for sealing folded letters of ducal- and religious importance.")
 	. += span_info("Mixing tallow with ground tea leaves can make 'greentallow', a sickly green wax that's popular for sealing folded letters of mercantile- and bureaucratic importance.")
-	. += span_info("For more grizzly alternatives, one can substitute the wine with blood, or - in the hands of a trained Inquisitorial agent - a filled INDEXER.")
+	. += span_info("For more grizzly alternatives, one can substitute the wine with urine, or - in the hands of a trained Inquisitorial agent - a filled INDEXER.")
 
 /obj/item/reagent_containers/food/snacks/tallow/red
 	name = "redtallow"
 	desc = "Fatty tissue is harvested from slain creachurs and rendered of its membraneous sinew to produce a hard shelf-stable \
-	grease. It has then been soaked in blood or something blood adjacent to make for an easily sourced and rather grim wax substitute. As they say in Otava, Bon Appetit."
+	grease. It has then been soaked in urine or something urine adjacent to make for an easily sourced and rather grim wax substitute. As they say in Otava, Bon Appetit."
 	icon_state = "redtallow"
-	tastes = list("grease" = 1, "oil" = 1, "regret" = 1, "blood" = 1)
+	tastes = list("grease" = 1, "oil" = 1, "regret" = 1, "urine" = 1)
 	wax_pigment = "red"
 
 /obj/item/reagent_containers/food/snacks/tallow/black
@@ -165,7 +165,7 @@
 			to_chat(user, span_warning("[IND] is empty."))
 			return TRUE
 
-		if(tgui_alert(user, "Soak the tallow with the INDEXER's contents?", "It's just blood", list("Yes", "No")) != "Yes")
+		if(tgui_alert(user, "Soak the tallow with the INDEXER's contents?", "It's just urine", list("Yes", "No")) != "Yes")
 			return TRUE
 
 		IND.fullreset(user)

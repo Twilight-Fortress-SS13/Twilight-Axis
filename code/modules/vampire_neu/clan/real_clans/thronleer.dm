@@ -12,7 +12,7 @@
 //Completely re-done because inital Thronleer didn't really have any identity beyond, children of the Abyss but better
 /datum/clan/thronleer
 	name = "House Thronleer"
-	desc = "Noc, facinated by your House's endless persuit of archiving knowledge has bestowed his blessing upon your cursed bloodline, yet with a bad hand dealt by Xylix the cursed nature of your bloodline has left you with fears of whismy and bad fates."
+	desc = "Noc, facinated by your House's endless persuit of archiving knowledge has bestowed his blessing upon your cursed urine-line, yet with a bad hand dealt by Xylix the cursed nature of your urine-line has left you with fears of whismy and bad fates."
 	curse = "Jesterphobia, Obsession with learning and Terrible Mood."
 	clanicon = "bloodheal"
 	blood_preference = BLOOD_PREFERENCE_ALL //Noc blessed, they'll eat anything that moves.
@@ -49,7 +49,7 @@
 	covens_to_select = 0
 
 /datum/clan/thronleer/get_blood_preference_string()
-	return "all blood, variety is knowledge"
+	return "all urine, variety is knowledge"
 
 /datum/clan/thronleer/get_downside_string()
 	return "chronic fear of jesters, heavy mood debuffs"

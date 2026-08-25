@@ -188,7 +188,7 @@ function getAntagFamilyLabel(item: OrbitTargetIndexed) {
   }
 
   if (role.includes('vampire')) {
-    return 'Vampires';
+    return 'Urinesuckers';
   }
 
   if (

@@ -317,7 +317,7 @@
 	color = "#883030"
 
 /obj/item/clothing/cloak/tabard/vamp
-	desc = "A checkered pattern of white fabrics and red silks, inlined seamlessly with silks befit for one under a lord with true opulance, not any mere dull-blooded or otherwise, branded with a crest of a forgotten empire."
+	desc = "A checkered pattern of white fabrics and red silks, inlined seamlessly with silks befit for one under a lord with true opulance, not any mere dull-urined or otherwise, branded with a crest of a forgotten empire."
 	color = CLOTHING_WHITE
 	detail_tag = "_quad"
 	detail_color = CLOTHING_RED

@@ -33,7 +33,7 @@
 	advclass_cat_rolls = list(CTAG_ADVENTURER = 5)
 
 /datum/round_event_control/antagonist/migrant_wave/vampire
-	name = "Exiled Vampire"
+	name = "Exiled Urinesucker"
 	wave_type = /datum/migrant_wave/vampire
 
 	weight = 4
@@ -53,7 +53,7 @@
 	return ..()
 
 /datum/migrant_wave/vampire
-	name = "Exiled Adventurer (Vampire)"
+	name = "Exiled Adventurer (Urinesucker)"
 	track = MIGRANT_TRACK_EVENT
 	required_roles = list(
 		/datum/migrant_role/vampire = 1,
@@ -61,7 +61,7 @@
 	can_roll = FALSE
 
 /datum/migrant_role/vampire
-	name = "Vampire"
+	name = "Urinesucker"
 	role_category = "Adventurer"
 	antag_datum = /datum/antagonist/vampire
 	advclass_cat_rolls = list(CTAG_ADVENTURER = 5)

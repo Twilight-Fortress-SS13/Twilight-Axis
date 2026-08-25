@@ -44,7 +44,7 @@
 
 	if(bodypart.original_owner != target)
 		if(target.has_status_effect(/datum/status_effect/buff/necras_vow) || HAS_TRAIT(target, TRAIT_NECRAS_VOW))	//Status effects are cleared upon death, just in case you want to... attach a permakilled corpse's limbs.
-			to_chat(user, span_warning("This one has pledged a vow to Necra. The sinews reject the false flesh. It requires their own flesh and blood."))
+			to_chat(user, span_warning("This one has pledged a vow to Necra. The sinews reject the false flesh. It requires their own flesh and urine."))
 			return FALSE
 
 	display_results(user, target, span_notice("I begin to replace [target]'s [parse_zone(target_zone)] with [bodypart]..."),
@@ -97,7 +97,7 @@
 
 	if(bodypart.original_owner != target)
 		if(target.has_status_effect(/datum/status_effect/buff/necras_vow) || HAS_TRAIT(target, TRAIT_NECRAS_VOW))	//Status effects are cleared upon death, just in case you want to... attach a permakilled corpse's limbs.
-			to_chat(user, span_warning("This one has pledged a vow to Necra. The sinews reject the false flesh. It requires their own flesh and blood."))
+			to_chat(user, span_warning("This one has pledged a vow to Necra. The sinews reject the false flesh. It requires their own flesh and urine."))
 			return FALSE
 
 	// Dullahan-specific refusal should only apply when attaching a head

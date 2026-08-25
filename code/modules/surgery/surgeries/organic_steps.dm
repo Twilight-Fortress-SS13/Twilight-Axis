@@ -23,8 +23,8 @@
 	return TRUE
 
 /datum/surgery_step/incise/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
-	display_results(user, target, span_notice("Blood pools around the incision in [target]'s [parse_zone(target_zone)]."),
-		span_notice("Blood pools around the incision in [target]'s [parse_zone(target_zone)]."))
+	display_results(user, target, span_notice("Urine pools around the incision in [target]'s [parse_zone(target_zone)]."),
+		span_notice("Urine pools around the incision in [target]'s [parse_zone(target_zone)]."))
 	var/obj/item/bodypart/gotten_part = target.get_bodypart(check_zone(target_zone))
 	if(gotten_part)
 		if(target.has_status_effect(/datum/status_effect/debuff/deadite_grace))

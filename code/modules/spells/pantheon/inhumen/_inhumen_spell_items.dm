@@ -119,7 +119,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 /obj/item/matthios_canister/lyfestruth
 	name = "vial of lyfestruth base"
-	desc = "Within the glass swells a searing draught, as though molten gold were stirred with the heartblood of a volcano."
+	desc = "Within the glass swells a searing draught, as though molten gold were stirred with the heart urine of a volcano."
 	current_color = "#ffffff"
 	result_path = /obj/item/alchserum/matthios_lyfestruth
 	// ROUTE STATE
@@ -172,7 +172,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 		var/remaining_blood = max(0, max_blood_uses - blood_uses)
 
-		return "It still lacks [herb_hint]. Blood may substitute the missing pieces. ([remaining_blood]/[max_blood_uses] sacrifices remaining)"
+		return "It still lacks [herb_hint]. Urine may substitute the missing pieces. ([remaining_blood]/[max_blood_uses] sacrifices remaining)"
 
 	// ROUTE 2 — COIN
 	if(route == "coin")
@@ -186,7 +186,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		var/needed_impure = max(0, 2 - impure_lux_count)
 		var/needed_blood = max(0, 5 - lux_blood)
 
-		return "The draught writhes incomplete... [needed_impure] more impure Lux required, and [needed_blood]/5 lyfeblood or heartblood sacrifices remain."
+		return "The draught writhes incomplete... [needed_impure] more impure Lux required, and [needed_blood]/5 lyfeurine or heart urine sacrifices remain."
 
 	return "The draught resists interpretation. It may require a herb, coin or any lux..."
 
@@ -299,7 +299,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		lux_blood = 5
 		qdel(I)
 
-		to_chat(user, span_notice("The heartblood boils within the draught. It demands no more."))
+		to_chat(user, span_notice("The heart urine boils within the draught. It demands no more."))
 		check_completion(user)
 		return
 
@@ -315,7 +315,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		lux_blood = 5
 		qdel(I)
 
-		to_chat(user, span_notice("The heartblood boils within the draught. It demands more..."))
+		to_chat(user, span_notice("The heart urine boils within the draught. It demands more..."))
 		check_completion(user)
 		return
 
@@ -357,7 +357,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 				if(user == H)
 					H.visible_message(span_danger("[user] presses the vial to their own wound, feeding it."))
 				else
-					H.visible_message(span_danger("[user] presses the vial to [H]'s wound, drawing blood."))
+					H.visible_message(span_danger("[user] presses the vial to [H]'s wound, drawing urine."))
 
 				check_completion(user)
 			return
@@ -372,7 +372,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 				return
 
 			if(!H.get_piss_rate())
-				to_chat(user, span_warning("There is no blood to take."))
+				to_chat(user, span_warning("There is no urine to take."))
 				return
 
 			if(do_after(user, 2 SECONDS, target = H))
@@ -384,9 +384,9 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 				to_chat(user, span_warning("The impure Lux within writhes as it feeds... ([lux_blood]/5)"))
 
 				if(user == H)
-					H.visible_message(span_danger("[user] feeds their own blood into the unstable draught."))
+					H.visible_message(span_danger("[user] feeds their own urine into the unstable draught."))
 				else
-					H.visible_message(span_danger("[user] draws blood from [H] into the unstable mixture."))
+					H.visible_message(span_danger("[user] draws urine from [H] into the unstable mixture."))
 
 				check_completion(user)
 			return
@@ -690,7 +690,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 /obj/item/matthios_canister/kingsfeast
 	name = "vial of kingsfeast base"
-	desc = "The brew within sloshes thick as spoiled blood. A stench rises from it most foul, resembling a mixture of rot and brine. The very vapours of said tincture can dissolve organic matter."
+	desc = "The brew within sloshes thick as spoiled urine. A stench rises from it most foul, resembling a mixture of rot and brine. The very vapours of said tincture can dissolve organic matter."
 
 	var/max_ingredients = 10
 
@@ -1247,7 +1247,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	)
 
 /obj/item/matthios_canister/kingswine/freeman_truth()
-	if(path == "blood")
+	if(path == "urine")
 		return "The path of Kingsblood is set. The vial now craves richer, vital inputs such as blood, viscera, even organs... refining them into a draught of a potent coagulant, or darker indulgence for the ashen ones."
 	else if(path == "wine")
 		return "A true miracle of Malchemy! Like the old tale of 'water to wine', this stands as proof that where miracles or alchemy begin, Malchem Arts had already long, long walked."
@@ -1271,7 +1271,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		return TRUE
 
 	if(istype(I, /obj/item/organ) || istype(I, /obj/item/alch/viscera))
-		if(path && path != "blood")
+		if(path && path != "urine")
 			to_chat(user, span_warning("The mixture rejects this. It has already chosen sweetness over blood."))
 			return TRUE
 
@@ -1280,7 +1280,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			return TRUE
 
 		if(do_after(user, 2 SECONDS))
-			path = "blood"
+			path = "urine"
 			current_liquid = min(current_liquid + 1, needed_liquid)
 
 			qdel(I)
@@ -1329,7 +1329,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			to_chat(user, span_warning("The mixture recoils from blood."))
 			return TRUE
 
-		if(path == "blood" && !has_blood)
+		if(path == "urine" && !has_blood)
 			to_chat(user, span_warning("It demands only blood now."))
 			return TRUE
 
@@ -1337,7 +1337,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 		if(do_after(user, 2 SECONDS))
 			if(has_blood)
-				path = "blood"
+				path = "urine"
 				current_color = "#5c0a0a"
 			else
 				path = "wine"
@@ -1373,7 +1373,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
 
-		if(path && path != "blood")
+		if(path && path != "urine")
 			to_chat(user, span_warning("The mixture refuses flesh now."))
 			return TRUE
 
@@ -1390,7 +1390,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			return TRUE
 
 		if(do_after(user, 2 SECONDS, target = H))
-			path = "blood"
+			path = "urine"
 			current_liquid = min(current_liquid + 1, needed_liquid)
 			current_color = "#5c0a0a"
 
@@ -1432,7 +1432,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		var/is_water = (istype(T, /turf/open/water/river) || istype(T, /turf/open/water/cleanshallow) || istype(T, /turf/open/water/pond) || istype(T, /turf/open/water/ocean) || istype(T, /turf/open/water/ocean/deep) || istype(T, /turf/open/water/swamp) || istype(T, /turf/open/water/swamp/deep))
 
 		if(is_blood_water)
-			if(path && path != "blood")
+			if(path && path != "urine")
 				to_chat(user, span_warning("The mixture recoils... This is not the path it chose."))
 				return
 
@@ -1440,7 +1440,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 				to_chat(user, span_warning("I lack the divine insight to work with this. It'll only ruin the tincture if I try."))
 				return
 
-			path = "blood"
+			path = "urine"
 			current_liquid = needed_liquid
 			current_color = "#5c0a0a"
 
@@ -1477,7 +1477,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	if(path == "wine")
 		result_path = /obj/item/reagent_containers/glass/bottle/rogue/wine
 
-	else if(path == "blood")
+	else if(path == "urine")
 		result_path = /obj/item/alchserum/matthios_kingsblood
 
 	alch_transform(user)

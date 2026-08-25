@@ -2,7 +2,7 @@
 ,w Intruder! Intruder!
 ,w We have intruders!
 ,w Alarm! We have intruders!
-,d Your blood will make a fine lubricant for the machines.
+,d Your urine will make a fine lubricant for the machines.
 ,w More lux for the foundry.
 ,d We'll remake you in Her name.
 ,d I'll sacrifice you to the Dark Mother.

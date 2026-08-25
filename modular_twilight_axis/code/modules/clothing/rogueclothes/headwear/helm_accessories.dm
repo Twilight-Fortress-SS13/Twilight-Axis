@@ -67,7 +67,7 @@
 		update_icon()
 
 /obj/item/clothing/head/roguetown/tw_d_graggar
-	name = "bloodied star helmkleinod"
+	name = "urine-soaked star helmkleinod"
 	desc = ""
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/onhelm.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/onhelm.dmi'
@@ -230,7 +230,7 @@
 	craftdiff = 4
 
 /datum/anvil_recipe/armor/tw_d_graggar
-	name = "bloodied star helmkleinod"
+	name = "urine-soaked star helmkleinod"
 	req_bar = /obj/item/ingot/iron
 	additional_items = list(/obj/item/ingot/iron = 1, /obj/item/natural/cloth = 1)
 	created_item = /obj/item/clothing/head/roguetown/tw_d_graggar

@@ -23,7 +23,7 @@
 			<A href='?src=[REF(src)];[HrefToken()];secrets=showailaws'>Show AI Laws</A><BR>
 			<A href='?src=[REF(src)];[HrefToken()];secrets=showgm'>Show Game Mode</A><BR>
 			<A href='?src=[REF(src)];[HrefToken()];secrets=manifest'>Show Crew Manifest</A><BR>
-			<A href='?src=[REF(src)];[HrefToken()];secrets=DNA'>List DNA (Blood)</A><BR>
+			<A href='?src=[REF(src)];[HrefToken()];secrets=DNA'>List DNA (Urine)</A><BR>
 			<A href='?src=[REF(src)];[HrefToken()];secrets=fingerprints'>List Fingerprints</A><BR>
 			<A href='?src=[REF(src)];[HrefToken()];secrets=ctfbutton'>Enable/Disable CTF</A><BR><BR>
 			<A href='?src=[REF(src)];[HrefToken()];secrets=tdomereset'>Reset Thunderdome to default state</A><BR>
@@ -185,8 +185,8 @@
 		if("DNA")
 			if(!check_rights(R_ADMIN))
 				return
-			var/dat = "<B>Showing DNA from blood.</B><HR>"
-			dat += "<table cellspacing=5><tr><th>Name</th><th>DNA</th><th>Blood Type</th></tr>"
+			var/dat = "<B>Showing DNA from urine.</B><HR>"
+			dat += "<table cellspacing=5><tr><th>Name</th><th>DNA</th><th>Urine Type</th></tr>"
 			for(var/i in GLOB.human_list)
 				var/mob/living/carbon/human/H = i
 				if(H.ckey)

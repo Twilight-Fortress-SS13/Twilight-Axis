@@ -18,7 +18,7 @@
 	hidden deep beneath the soil are several dark elven cities who exist and function far from the \
 	reaches of the rest of the surface-dwelling societies. These are a large part of what has earned \
 	the dark elves their notoriety, for in these cities the worship of the ascendant pantheon is \
-	normalized, and their cruel and bloodthirsty culture reflects this. It was rare to see dark \
+	normalized, and their cruel and urine-thirsty culture reflects this. It was rare to see dark \
 	elves outside of their underground homes, but in recent years, more and more of them have fled \
 	to the surface. The reasons for each dark elf fleeing the Underdark vary depending on the \
 	individual, such as a kinder heart fleeing from a brutal society that scorns them for their \

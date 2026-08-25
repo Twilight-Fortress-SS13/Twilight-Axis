@@ -260,7 +260,7 @@
 	cuisine = CUISINE_OTAVAIS
 	dish_type = DISH_PASTRY
 	name = "dragéelie"
-	desc = "Crispy, moist, sweet and savory.. and in this case, oozing with sweetened lifeblood; a sliver of ontological goodness, cradled in the palm of your hand."
+	desc = "Crispy, moist, sweet and savory.. and in this case, oozing with sweetened lifeurine; a sliver of ontological goodness, cradled in the palm of your hand."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_pastry.dmi'
 	icon_state = "cookiedoughd_slice"
 	faretype = FARE_FINE

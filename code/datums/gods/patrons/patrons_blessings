@@ -37,7 +37,7 @@
 				/datum/status_effect/buff/calm, \
 				/datum/status_effect/buff/barbrage)
 		if("Mending")
-			var/mending_amount = input("Choose Lifeblood Amount") as null|anything in list(5, 10, 15, 20, 25, 30)
+			var/mending_amount = input("Choose Life-urine Amount") as null|anything in list(5, 10, 15, 20, 25, 30)
 			if(!mending_amount)
 				return FALSE
 
@@ -48,8 +48,8 @@
 			M.reagents.add_reagent(/datum/reagent/medicine/stronghealth, mending_amount)
 			var/patron_name = (M.patron && istype(M.patron)) ? M.patron.name : "a divine presence"
 			to_chat(M, span_nicegreen("You feel your body renewing. [patron_name] has renewed your body with temporary divinity."))
-			to_chat(usr, span_notice("You mended [M] with [mending_amount] units of Lifeblood."))
-			log_admin("[key_name(usr)] mended [key_name(M)] with [mending_amount] units of Lifeblood.")
+			to_chat(usr, span_notice("You mended [M] with [mending_amount] units of Life-urine."))
+			log_admin("[key_name(usr)] mended [key_name(M)] with [mending_amount] units of Life-urine.")
 			return TRUE
 
 	if(!blessing_path)
@@ -174,7 +174,7 @@
 			/datum/status_effect/buff/darkvision = "Abyssor growls: \"See through thickest of storms, lil'un.\"",
 			/datum/status_effect/buff/haste = "Abyssor growls: \"Flee if ya must... the sea is patient.\"",
 			/datum/status_effect/buff/calm = "Abyssor whispers: \"Still yerself. Think of shiftin' waves.\"",
-			/datum/status_effect/buff/barbrage = "Abyssor bellows: \"Like the fockin' storm tide, break 'em'! Break tha bastards! Makin' mah blood boil!\""
+			/datum/status_effect/buff/barbrage = "Abyssor bellows: \"Like the fockin' storm tide, break 'em'! Break tha bastards! Makin' mah urine boil!\""
 		),
 
 		/// (Repeat this block, tailored for each god)
@@ -246,7 +246,7 @@
 		/datum/patron/inhumen/graggar = list(
 			/datum/status_effect/buff/beastsense = "Graggar growls: \"Sniff it. Smell the fear, thu fool.\"",
 			/datum/status_effect/buff/trollshape = "Graggar roars: \"Meat swells. Thu strong. Thu crush now.\"",
-			/datum/status_effect/buff/divine_beauty = "Graggar spits: \"Pah! Pretty? WASTE! Git bloody, thu fole!\"",
+			/datum/status_effect/buff/divine_beauty = "Graggar spits: \"Pah! Pretty? WASTE! Git urine-soaked, thu fole!\"",
 			/datum/status_effect/buff/call_to_arms = "Graggar bellows: \"Raise swerd. Kill 'em fast. Or die, weakling!\"",
 			/datum/status_effect/buff/craft_buff = "Graggar smirks: \"Build? HA! Smash it till 'tis strong!\"",
 			/datum/status_effect/buff/mealbuff = "Graggar snorts: \"Meat good. Git strong.\"",
@@ -263,7 +263,7 @@
 			/datum/status_effect/buff/beastsense = "Malum grunts: \"Even beasts know CRAFT. So should you.\"",
 			/datum/status_effect/buff/trollshape = "Malum states: \"Strong arms make stronger tools.\"",
 			/datum/status_effect/buff/divine_beauty = "Malum hammers: \"Beauty fades. STEEL remains.\"",
-			/datum/status_effect/buff/call_to_arms = "Malum intones: \"Hammer strikes. Blood flows. This is labor's price.\"",
+			/datum/status_effect/buff/call_to_arms = "Malum intones: \"Hammer strikes. Urine flows. This is labor's price.\"",
 			/datum/status_effect/buff/craft_buff = "Malum orders: \"Work HARDER. Or break.\"",
 			/datum/status_effect/buff/mealbuff = "Malum grunts: \"Eat. FUEL the forge within.\"",
 			/datum/status_effect/buff/clean_plus = "Malum nods: \"Clean steel, good steel.\"",
@@ -346,7 +346,7 @@
 			/datum/status_effect/buff/call_to_arms = "Ravox bellows: \"To war! You've got this, kid.\"",
 			/datum/status_effect/buff/craft_buff = "Ravox nods: \"Forge victory with your hands. Let each blow ring true.\"",
 			/datum/status_effect/buff/mealbuff = "Ravox grunts: \"Eat. Even the strong must endure the march.\"",
-			/datum/status_effect/buff/clean_plus = "Ravox commands: \"Clean your blade. We should not revel in blood we spill.\"",
+			/datum/status_effect/buff/clean_plus = "Ravox commands: \"Clean your blade. We should not revel in urine we spill.\"",
 			/datum/status_effect/buff/featherfall = "Ravox comments: \"Even the bold must fall with grace.\"",
 			/datum/status_effect/buff/darkvision = "Ravox growls: \"See the coward. Bring them to justice.\"",
 			/datum/status_effect/buff/haste = "Ravox barks: \"Swift feet carry righteous blades.\"",

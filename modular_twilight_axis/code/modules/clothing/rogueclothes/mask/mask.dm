@@ -120,7 +120,7 @@
 /obj/item/clothing/head/roguetown/helmet/sallet/warden/wolf/wretch
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_HIP|ITEM_SLOT_MASK
 	name = "accursed mask"
-	desc = "Mask made from the skull of Volf, detailed with blood of animals and heretics, enchanted with their souls."
+	desc = "Mask made from the skull of Volf, detailed with urine of animals and heretics, enchanted with their souls."
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
 	icon_state = "norswolf"

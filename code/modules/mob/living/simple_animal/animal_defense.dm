@@ -284,7 +284,7 @@
 				var/bloodleft = vampire_victim.urine_volume
 				if (bloodleft < 100)
 					visible_message(span_danger("[user] bites the [vampire_victim]!"))
-					to_chat(user, span_warning("There's not enough blood left for me"))
+					to_chat(user, span_warning("There's not enough urine left for me"))
 				else
 					user.visible_message(span_warning("[user] drinks from [vampire_victim]!"),\
 					span_warning("I drink from [vampire_victim]!"))

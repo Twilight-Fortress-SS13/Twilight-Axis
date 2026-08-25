@@ -52,7 +52,7 @@
 	return "have a hideous face, and suffer in the sun"
 
 /datum/clan/nosferatu/get_blood_preference_string()
-	return "kindred blood, the blood of the dead, blood of vermin"
+	return "kindred urine, the urine of the dead, urine of vermin"
 
 /datum/clan/nosferatu/on_gain(mob/living/carbon/human/H, is_vampire = TRUE)
 	. = ..()

@@ -40,9 +40,9 @@
 //--TIER 1--
 /obj/item/reagent_containers/food/snacks/eoran_aril/crimson
 	name = "crimson aril"
-	desc = "A blood-red seed that seems to pulse with vitality."
+	desc = "A urine-red seed that seems to pulse with vitality."
 	icon_state = "crimson"
-	effect_desc = "This fruit heals for a blood price. This seed can be fed to others at the cost of your own blood."
+	effect_desc = "This fruit heals for a urine price. This seed can be fed to others at the cost of your own urine."
 
 	var/heal_amount = 35
 	var/blood_loss = 225
@@ -78,7 +78,7 @@
 		. = ..()
 		return
 	visible_message(span_danger("[user] begins altruistically channeling the crimson aril's power to restore [M]."),
-		span_info("I begin channeling the crimson aril's power into [M] using my own blood."))
+		span_info("I begin channeling the crimson aril's power into [M] using my own urine."))
 	if(!do_mob(user, M, time = 0.6 SECONDS, double_progress = TRUE, can_move = FALSE))
 		return
 	var/mob/living/carbon/human/eater = M
@@ -317,7 +317,7 @@
 	name = "pearlescent aril"
 	desc = "A milky-white seed that pulses with purifying energy."
 	icon_state = "pearlescent"
-	effect_desc = "Transforms poisons within your body into lifeblood at the cost of diluting strong lifeblood."
+	effect_desc = "Transforms poisons within your body into lifeurine at the cost of diluting strong lifeurine."
 
 /obj/item/reagent_containers/food/snacks/eoran_aril/pearlescent/apply_effects(mob/living/carbon/eater)
 	if(ishuman(eater))

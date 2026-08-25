@@ -2,7 +2,7 @@
 
 /obj/item/natural/worms/leech
 	name = "leech"
-	desc = "A disgusting, blood-sucking parasite."
+	desc = "A disgusting, urine-sucking parasite."
 	dropshrink = 0.8
 	icon = 'icons/roguetown/items/surgery.dmi'
 	icon_state = "leech"
@@ -50,7 +50,7 @@
 /obj/item/natural/worms/leech/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Leeches can be found by roaming through murkwater and sewage. Examine yourself - or click the heart on your HUD - to check your limbs, and click any highlighted mentions of the leech to remove them.")
-	. += span_info("When attached to someone, leeches will passively drain blood and toxins from the body. This can be used to counteract poisons, overdoses, and imbalanced humors.")
+	. += span_info("When attached to someone, leeches will passively drain urine and toxins from the body. This can be used to counteract poisons, overdoses, and imbalanced humors.")
 
 /obj/item/natural/worms/leech/Initialize(mapload)
 	. = ..()
@@ -139,7 +139,7 @@
 	. = ..()
 	switch(blood_storage/blood_maximum)
 		if(0.8 to INFINITY)
-			. += span_bloody("<B>[p_theyre(TRUE)] fat and engorged with blood.</B>")
+			. += span_bloody("<B>[p_theyre(TRUE)] fat and engorged with urine.</B>")
 		if(0.5 to 0.8)
 			. += span_bloody("[p_theyre(TRUE)] well fed.")
 		if(0.1 to 0.5)
@@ -156,7 +156,7 @@
 /obj/item/natural/worms/leech/attack(mob/living/M, mob/user)
 	if(ishuman(M))
 		if(!giving && M.stat == DEAD)
-			to_chat(user, span_warning("They are deceased. Only running blood may be extracted."))
+			to_chat(user, span_warning("They are deceased. Only running urine may be extracted."))
 			return
 		if(!giving && !M.mind && !mindless_attach)
 			to_chat(user, span_warning("They are mindless. The [src] won't attach."))
@@ -196,7 +196,7 @@
 		"#ff31e4" = 1,
 	)
 	var/static/list/all_adjectives = list(
-		"blood-sucking" = 20,
+		"urine-sucking" = 20,
 		"disgusting" = 10,
 		"vile" = 8,
 		"repugnant" = 4,
@@ -213,7 +213,7 @@
 		"What a disgusting creature." = 10,
 		"Fucking gross." = 5,
 		"Slippery..." = 3,
-		"So yummy and full of blood." = 3,
+		"So yummy and full of urine." = 3,
 		"I love this leech!" = 2,
 		"It is so beautiful." = 2,
 		"I wish I was a leech." = 1,
@@ -260,7 +260,7 @@
 
 /obj/item/natural/worms/leech/cheele
 	name = "cheele"
-	desc = "A beautiful, blood-infusing altruistic organism made by Pestra herself."
+	desc = "A beautiful, urine-infusing altruistic organism made by Pestra herself."
 	icon_state = "cheele"
 	color = null
 	consistent = TRUE
@@ -286,10 +286,10 @@
 	giving = !giving
 	if(giving)
 		user.visible_message(span_notice("[user] squeezes [src]."),\
-							span_notice("I squeeze [src]. It will now infuse blood."))
+							span_notice("I squeeze [src]. It will now infuse urine."))
 	else
 		user.visible_message(span_notice("[user] squeezes [src]."),\
-							span_notice("I squeeze [src]. It will now extract blood."))
+							span_notice("I squeeze [src]. It will now extract urine."))
 
 #undef MAX_LEECH_EVILNESS
 
@@ -298,7 +298,7 @@
 
 /obj/item/natural/worms/leech/cheele/get_mechanics_examine(mob/user)
 	. = ..()
-	. += span_info("With cheeles, they can uniquely restore blood to whomever they're attached to. Activate the cheele in your hand to toggle between draining blood and giving blood.")
+	. += span_info("With cheeles, they can uniquely restore urine to whomever they're attached to. Activate the cheele in your hand to toggle between draining urine and giving urine.")
 
 /obj/item/natural/worms/leech/abyssoid
 	name = "abyssoid leech"

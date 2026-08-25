@@ -24,7 +24,7 @@
 			//TODO make it toggleable to either forcedrop the items, or deny
 			//entry when holding them
 			// literally only an option for carbons though
-			to_chat(C, span_warning("I may not hold items while blood crawling!"))
+			to_chat(C, span_warning("I may not hold items while urine crawling!"))
 			return FALSE
 		var/obj/item/bloodcrawl/B1 = new(C)
 		var/obj/item/bloodcrawl/B2 = new(C)
@@ -42,7 +42,7 @@
 /mob/living/proc/bloodpool_sink(obj/effect/decal/cleanable/B)
 	var/turf/mobloc = get_turf(loc)
 
-	visible_message(span_warning("[src] sinks into the pool of blood!"))
+	visible_message(span_warning("[src] sinks into the pool of urine!"))
 	playsound(get_turf(src), 'sound/blank.ogg', 50, TRUE, -1)
 	// Extinguish, unbuckle, stop being pulled, set our location into the
 	// dummy object
@@ -70,11 +70,11 @@
 	var/kidnapped = FALSE
 
 	if(victim.stat == CONSCIOUS)
-		visible_message(span_warning("[victim] kicks free of the blood pool just before entering it!"), null, span_notice("I hear splashing and struggling."))
+		visible_message(span_warning("[victim] kicks free of the urine pool just before entering it!"), null, span_notice("I hear splashing and struggling."))
 	else
 		victim.forceMove(src)
 		victim.emote("scream")
-		visible_message(span_warning("<b>[src] drags [victim] into the pool of blood!</b>"), null, span_notice("I hear a splash."))
+		visible_message(span_warning("<b>[src] drags [victim] into the pool of urine!</b>"), null, span_notice("I hear a splash."))
 		kidnapped = TRUE
 
 	if(kidnapped)
@@ -111,7 +111,7 @@
 		if(!found_bloodpool)
 			// Fuck it, just eject them, thanks to some split second cleaning
 			victim.forceMove(get_turf(victim))
-			victim.visible_message(span_warning("[victim] appears from nowhere, covered in blood!"))
+			victim.visible_message(span_warning("[victim] appears from nowhere, covered in urine!"))
 			victim.exit_blood_effect()
 		return TRUE
 
@@ -128,7 +128,7 @@
 	qdel(victim)
 
 /obj/item/bloodcrawl
-	name = "blood crawl"
+	name = "urine crawl"
 	desc = ""
 	icon = 'icons/effects/blood.dmi'
 	item_flags = ABSTRACT | DROPDEL
@@ -158,7 +158,7 @@
 		return
 	forceMove(B.loc)
 	client.eye = src
-	visible_message(span_boldwarning("[src] rises out of the pool of blood!"))
+	visible_message(span_boldwarning("[src] rises out of the pool of urine!"))
 	exit_blood_effect(B)
 	if(iscarbon(src))
 		var/mob/living/carbon/C = src

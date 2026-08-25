@@ -7,17 +7,17 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 //	Masquerade		|	2	|	80	|	2	| always 2 (the coven)
 //	Vamp+Werewolf	|	2	|	80	|	4	| 1-79 pop -> 2, 80-159 -> 3, 160+ -> 4
 /datum/antagonist/vampire
-	name = "Vampire"
-	roundend_category = "Vampires"
-	antagpanel_category = "Vampire"
+	name = "Urinesucker"
+	roundend_category = "Urinesuckers"
+	antagpanel_category = "Urinesucker"
 	job_rank = ROLE_VAMPIRE
 	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
 	storyteller_slot_scaling = 2
 	antag_hud_type = ANTAG_HUD_VAMPIRE
 	antag_hud_name = "vamp_spawn_hud"
 	confess_lines = list(
-		"I WANT YOUR BLOOD!",
-		"DRINK THE BLOOD!",
+		"I WANT YOUR URINE!",
+		"DRINK THE URINE!",
 		"DEATH DID LITTLE THE FIRST TIME!",
 	)
 	rogue_enabled = TRUE
@@ -237,7 +237,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 
 // LANDMARKS
 /obj/effect/landmark/start/vampirelord
-	name = "Vampire Lord"
+	name = "Urinesucker Lord"
 	icon_state = "arrow"
 	delete_after_roundstart = FALSE
 
@@ -246,7 +246,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	GLOB.vlord_starts += loc
 
 /obj/effect/landmark/start/vampirespawn
-	name = "Vampire Spawn"
+	name = "Urinesucker Spawn"
 	icon_state = "arrow"
 	delete_after_roundstart = FALSE
 

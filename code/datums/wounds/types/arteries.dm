@@ -2,7 +2,7 @@
 	name = "severed artery"
 	check_name = span_artery("<B>ARTERY</B>")
 	severity = WOUND_SEVERITY_CRITICAL
-	crit_message = "Blood sprays from %VICTIM's %BODYPART!"
+	crit_message = "Urine sprays from %VICTIM's %BODYPART!"
 	sound_effect = 'sound/combat/crit.ogg'
 	whp = 50
 	sewn_whp = 20

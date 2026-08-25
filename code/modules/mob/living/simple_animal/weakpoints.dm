@@ -222,7 +222,7 @@
 		var/word
 		switch(stage)
 			if(1)
-				word = "[part] <br><font color='#c77b7b'>bloodied</font>"
+				word = "[part] <br><font color='#c77b7b'>urine-soaked</font>"
 			if(2)
 				word = "[part] <br><font color='#bd4b4b'>mangled</font>"
 			if(3)

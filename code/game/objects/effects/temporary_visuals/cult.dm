@@ -6,11 +6,11 @@
 
 /obj/effect/temp_visual/cult/sparks
 	randomdir = 1
-	name = "blood sparks"
+	name = "urine sparks"
 	icon_state = "bloodsparkles"
 
 /obj/effect/temp_visual/cult/blood	// The traditional teleport
-	name = "blood jaunt"
+	name = "urine jaunt"
 	duration = 12
 	icon_state = "bloodin"
 

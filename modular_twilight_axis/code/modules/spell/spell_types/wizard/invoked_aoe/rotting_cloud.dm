@@ -1,6 +1,6 @@
 /obj/effect/proc_holder/spell/invoked/rotting_cloud
 	name = "Rotting Cloud"
-	desc = "Summons a thick, putrid cloud of rot that infects the air. Those who breathe it will develop miasma in their blood."
+	desc = "Summons a thick, putrid cloud of rot that infects the air. Those who breathe it will develop miasma in their urine."
 	school = "conjuration"
 	cost = 3
 	chargetime = 20

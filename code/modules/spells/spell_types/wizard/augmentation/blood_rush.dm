@@ -1,5 +1,5 @@
 /datum/action/cooldown/spell/augment_buff/blood_rush
-	name = "Blood Rush"
+	name = "Urine Rush"
 	desc = "Flood the target's veins with a surge of vigor, quickening their body for a short burst."
 	button_icon_state = "blood_rush"
 

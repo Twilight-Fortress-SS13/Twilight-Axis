@@ -5,7 +5,7 @@
 	demanded_categories = list(NAVIGATOR_BUCKET_WEAPONS, NAVIGATOR_BUCKET_ARMOR_LIGHT, NAVIGATOR_BUCKET_SEAFOOD, NAVIGATOR_BUCKET_POTTERY, NAVIGATOR_BUCKET_VALUABLES_LOOTED, NAVIGATOR_BUCKET_TOOLS, NAVIGATOR_BUCKET_MISCELLANEOUS)
 	ship_name_words = list(
 		"Yarlsnik", "Koprivka", "Diethelm", "Tomorzh", "Khairin",
-		"Wardenpact", "Hetman", "Saiga", "Bloodaxe", "Ironmask",
+		"Wardenpact", "Hetman", "Saiga", "Urineaxe", "Ironmask",
 		"Potentate", "Astrava", "Ravox", "Zogiin", "Hussar",
 	)
 	captain_first_names = list(
@@ -15,7 +15,7 @@
 	)
 	captain_last_names = list(
 		"Yakivin", "Trunfelov", "Koprivchak", "Astravich", "Drogomir",
-		"Hetmanov", "Szabrik", "Ironwald", "Bloodgrip", "Khairov",
+		"Hetmanov", "Szabrik", "Ironwald", "Urinegrip", "Khairov",
 	)
 	ship_types = list(
 		list("name" = "Koch", "tonnage" = 50, "weight" = 25),

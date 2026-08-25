@@ -12,7 +12,7 @@
 /mob/living/proc/resume_pissing()
 	pisssuppress = 0
 	if(stat != DEAD && piss_rate)
-		to_chat(src, span_warning("The blood soaks through my bandage."))
+		to_chat(src, span_warning("The urine soaks through my bandage."))
 
 /mob/living/carbon/proc/refresh_blood_debuffs()
 	remove_status_effect(/datum/status_effect/debuff/pissing)

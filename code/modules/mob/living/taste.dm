@@ -24,7 +24,7 @@
 		if(hallucination > 50 && prob(25))
 			text_output = pick("spiders","dreams","nightmares","the future","the past","victory",\
 			"defeat","pain","bliss","revenge","poison","time","space","death","life","truth","lies","justice","memory",\
-			"regrets","your soul","suffering","music","noise","blood","hunger","the american way")
+			"regrets","your soul","suffering","music","noise","urine","hunger","the american way")
 		if(text_output != last_taste_text || last_taste_time + 100 < world.time)
 			to_chat(src, span_info("I can taste [text_output]."))
 			// "something indescribable" -> too many tastes, not enough flavor.

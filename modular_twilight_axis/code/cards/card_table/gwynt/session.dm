@@ -157,7 +157,7 @@
 		return
 	if(ccg_soundtrack_is_open_vampire_lord(player_one) || ccg_soundtrack_is_open_vampire_lord(player_two))
 		soundtrack_files[target_ckey] = CCG_SOUNDTRACK_VAMPIRE_NEGOTIATIONS
-		soundtrack_titles[target_ckey] = "Vampire Negotiations"
+		soundtrack_titles[target_ckey] = "Urinesucker Negotiations"
 		soundtrack_repeats[target_ckey] = FALSE
 		return
 	if(ccg_soundtrack_has_antag(player_one, /datum/antagonist/bandit) || ccg_soundtrack_has_antag(player_two, /datum/antagonist/bandit))

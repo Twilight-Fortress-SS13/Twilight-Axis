@@ -124,7 +124,7 @@
 					if(shit)
 						. += shit
 		if(user.mind?.has_antag_datum(/datum/antagonist/vampire) || user.mind?.has_antag_datum(/datum/antagonist/vampire))
-			. += span_userdanger("<a href='?src=[REF(src)];task=bloodpoolinfo;'>Vitae: [(mind && !clan) ? (bloodpool * CLIENT_VITAE_MULTIPLIER) : bloodpool]; Blood: [urine_volume]</a>")
+			. += span_userdanger("<a href='?src=[REF(src)];task=bloodpoolinfo;'>Vitae: [(mind && !clan) ? (bloodpool * CLIENT_VITAE_MULTIPLIER) : bloodpool]; Urine: [urine_volume]</a>")
 
 	/*if(SSmapping.config.map_name == "Desert Town")
 		var/species_origin = src.dna?.species?.origin
@@ -308,7 +308,7 @@
 			if(is_stupid)
 				. += "[m3] got weird hands! They don't look right!"
 			else
-				. += "[m3][hand_number > 1 ? "" : " a"] <span class='bloody'>blood-stained</span> hand[hand_number > 1 ? "s" : ""]!"
+				. += "[m3][hand_number > 1 ? "" : " a"] <span class='bloody'>urine-stained</span> hand[hand_number > 1 ? "s" : ""]!"
 
 	//belt
 	if(belt && !(SLOT_BELT in obscured))
@@ -422,7 +422,7 @@
 		. += "<A href='?src=[REF(src)];item=[effect.device]'><span class='warning'>[m3] \a [effect.device] implanted.</span></A>"
 
 	if(HAS_TRAIT(src, TRAIT_SILVER_BLESSED) && user.mind?.has_antag_datum(/datum/antagonist/vampire))
-		. += span_redtext("SILVER-BLOODED...")
+		. += span_redtext("SILVER-URINED...")
 
 
 	var/showassess = FALSE
@@ -502,7 +502,7 @@
 	var/temp = getBruteLoss() + getFireLoss() //no need to calculate each of these twice
 
 	if (get_bodypart(BODY_ZONE_HEAD)?.grievously_wounded)
-		msg += span_bloody("<b>[p_their(TRUE)] neck is a ghastly ruin of blood and bone, barely hanging on!</b>")
+		msg += span_bloody("<b>[p_their(TRUE)] neck is a ghastly ruin of urine and bone, barely hanging on!</b>")
 
 	if(!(user == src && src.hal_screwyhud == SCREWYHUD_HEALTHY)) //fake healthy
 		// Damage
@@ -569,7 +569,7 @@
 			if(isliving(user))
 				var/mob/living/M = user
 				if(M.patron.type == /datum/patron/inhumen/graggar)
-					msg += span_bloody("[m1] shedding lyfe's blood, exposing weakness!")
+					msg += span_bloody("[m1] shedding lyfe's urine, exposing weakness!")
 				else
 					msg += span_bloody("[m1] letting out the red stuff!")
 
@@ -851,7 +851,7 @@
 				if(HAS_TRAIT(src, TRAIT_COMBAT_AWARE))
 					. += span_warning("<i>[m1] battle-aware.</i>")
 				if(HAS_TRAIT(src, TRAIT_DEATHLESS) && !mind?.has_antag_datum(/datum/antagonist/vampire))
-					. += span_warning("<i>[m1] absent of lyfe. [t_He] will linger even without blood.</i>")
+					. += span_warning("<i>[m1] absent of lyfe. [t_He] will linger even without urine.</i>")
 				if(HAS_TRAIT(user, TRAIT_COMBAT_AWARE))
 					var/userheld = user.get_active_held_item()
 					var/srcheld = get_active_held_item()

@@ -1188,11 +1188,11 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		"wretch",
 		"dreamwalker",
 		"gnoll",
-		"vampire",
-		"lesser vampire",
-		"thinblood vampire",
-		"ancillae vampire",
-		"vampire spawn",
+		"urinesucker",
+		"lesser urinesucker",
+		"thinblood urinesucker",
+		"ancillae urinesucker",
+		"urinesucker spawn",
 	))
 		return ""
 
@@ -1295,20 +1295,20 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return null
 
 	if(istype(A, /datum/antagonist/vampire/lord))
-		return list("priority" = 10, "group" = "major", "label" = "Vampire Lord")
+		return list("priority" = 10, "group" = "major", "label" = "Urinesucker Lord")
 	if(istype(A, /datum/antagonist/vampire/ancillae))
-		return list("priority" = 11, "group" = "major", "label" = "Ancillae Vampire")
+		return list("priority" = 11, "group" = "major", "label" = "Ancillae Urinesucker")
 	if(istype(A, /datum/antagonist/vampire/licker))
-		return list("priority" = 12, "group" = "major", "label" = "Lesser Vampire")
+		return list("priority" = 12, "group" = "major", "label" = "Lesser Urinesucker")
 	if(istype(A, /datum/antagonist/vampire/thinblood))
-		return list("priority" = 13, "group" = "major", "label" = "Thinblood Vampire")
+		return list("priority" = 13, "group" = "major", "label" = "Thinblood Urinesucker")
 	if(istype(A, /datum/antagonist/vampire))
 		var/datum/antagonist/vampire/V = A
 		if(V.generation >= GENERATION_METHUSELAH)
-			return list("priority" = 14, "group" = "major", "label" = "Vampire Lord")
-		if(special_role == "Vampire Spawn")
-			return list("priority" = 15, "group" = "major", "label" = "Vampire Spawn")
-		return list("priority" = 16, "group" = "major", "label" = "Lesser Vampire")
+			return list("priority" = 14, "group" = "major", "label" = "Urinesucker Lord")
+		if(special_role == "Urinesucker Spawn")
+			return list("priority" = 15, "group" = "major", "label" = "Urinesucker Spawn")
+		return list("priority" = 16, "group" = "major", "label" = "Lesser Urinesucker")
 
 	if(istype(A, /datum/antagonist/werewolf))
 		if(A.name == "Lesser Verevolf")

@@ -747,7 +747,7 @@
 
 // --------- HEARTBEAST TOOLS -----------
 /datum/anvil_recipe/tools/heartbeast_vials
-	name = "Blood Vials"
+	name = "Urine Vials"
 	req_bar = /obj/item/ingot/copper
 	created_item = /obj/item/heart_blood_vial
 	display_category = ITEM_CAT_TOOLS_SUNDRIES
@@ -755,7 +755,7 @@
 	createditem_num = 5
 
 /datum/anvil_recipe/tools/heartbeast_canisters
-	name = "Blood Canisters"
+	name = "Urine Canisters"
 	req_bar = /obj/item/ingot/copper
 	created_item = /obj/item/heart_blood_canister
 	display_category = ITEM_CAT_TOOLS_SUNDRIES

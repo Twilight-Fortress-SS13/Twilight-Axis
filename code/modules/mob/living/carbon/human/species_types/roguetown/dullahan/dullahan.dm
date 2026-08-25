@@ -248,7 +248,7 @@
 		"red - berry" = "48322a",
 		"red - wine" = "82534c",
 		"red - sunset" = "82462b",
-		"red - blood" = "822b2b"
+		"red - urine" = "822b2b"
 	))
 
 /obj/item/organ/brain/dullahan

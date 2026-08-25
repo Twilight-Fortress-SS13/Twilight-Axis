@@ -43,7 +43,7 @@
 
 /datum/clan_menu_interface/proc/generate_welcome_screen_html()
 	var/clan_downside = "burn in sunlight"
-	var/blood_preference = "any blood"
+	var/blood_preference = "any urine"
 
 	if(user_clan)
 		clan_downside = user_clan.get_downside_string()
@@ -55,19 +55,19 @@
 
 		<div class="intro-section">
 			<p>Select a coven from the sidebar to view its research tree and manage your powers.
-			Each coven represents a different aspect of your vampiric abilities.</p>
+			Each coven represents a different aspect of your urinesucking abilities.</p>
 		</div>
 
 		<div class="vampire-mechanics">
-			<h3>Vampiric Nature</h3>
+			<h3>Urinesucking Nature</h3>
 			<div class="mechanic-item">
-				<strong>Blood Hunger:</strong> You must drink blood to survive. You prefer <span class="blood-type">[blood_preference]</span>.
+				<strong>Urine Hunger:</strong> You must drink urine to survive. You prefer <span class="blood-type">[blood_preference]</span>.
 			</div>
 			<div class="mechanic-item">
 				<strong>Clan Weakness:</strong> Your clan's curse means you <span class="weakness">[clan_downside]</span>.
 			</div>
 			<div class="mechanic-item">
-				<strong>Silver Vulnerability:</strong> Silver weaponry may trigger a blood frenzy, causing you to lose control and attack indiscriminately.
+				<strong>Silver Vulnerability:</strong> Silver weaponry may trigger a urine frenzy, causing you to lose control and attack indiscriminately.
 			</div>
 		</div>
 
@@ -77,7 +77,7 @@
 				<strong>Coven Abilities:</strong> Right-click on any coven ability to switch between different powers from that coven.
 			</div>
 			<div class="tip-item">
-				<strong>Creating Progeny:</strong> Drain someone's blood to critical levels to gain the option to embrace them as a new vampire.
+				<strong>Creating Progeny:</strong> Drain someone's urine to critical levels to gain the option to embrace them as a new urinesucker.
 			</div>
 		</div>
 	</div>
@@ -85,7 +85,7 @@
 
 /datum/clan_menu_interface/proc/generate_setup_html()
 	var/clan_downside = "burn in sunlight"
-	var/blood_preference = "any blood"
+	var/blood_preference = "any urine"
 
 	if(user_clan)
 		clan_downside = user_clan.get_downside_string()
@@ -143,21 +143,21 @@
 
 		<div class="intro-section">
 			<p>Select up to three covens (two if you are a wretch)
-			Each coven represents a different aspect of your vampiric abilities.
+			Each coven represents a different aspect of your urinesucking abilities.
 			Select a coven from the sidebar to view its research tree and manage your powers.
 			</p>
 		</div>
 		[generate_coven_selection()]
 		<div class="vampire-mechanics">
-			<h3>Vampiric Nature</h3>
+			<h3>Urinesucking Nature</h3>
 			<div class="mechanic-item">
-				<strong>Blood Hunger:</strong> You must drink blood to survive. You prefer <span class="blood-type">[blood_preference]</span>.
+				<strong>Urine Hunger:</strong> You must drink urine to survive. You prefer <span class="blood-type">[blood_preference]</span>.
 			</div>
 			<div class="mechanic-item">
 				<strong>Clan Weakness:</strong> Your clan's curse means you <span class="weakness">[clan_downside]</span>.
 			</div>
 			<div class="mechanic-item">
-				<strong>Silver Vulnerability:</strong> Silver weaponry may trigger a blood frenzy, causing you to lose control and attack indiscriminately.
+				<strong>Silver Vulnerability:</strong> Silver weaponry may trigger a urine frenzy, causing you to lose control and attack indiscriminately.
 			</div>
 		</div>
 
@@ -167,7 +167,7 @@
 				<strong>Coven Abilities:</strong> Right-click on any coven ability to switch between different powers from that coven.
 			</div>
 			<div class="tip-item">
-				<strong>Creating Progeny:</strong> Drain someone's blood to critical levels to gain the option to embrace them as a new vampire.
+				<strong>Creating Progeny:</strong> Drain someone's urine to critical levels to gain the option to embrace them as a new urinesucker.
 			</div>
 		</div>
 	</div>

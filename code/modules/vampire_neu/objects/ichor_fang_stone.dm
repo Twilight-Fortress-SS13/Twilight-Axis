@@ -1,6 +1,6 @@
 /obj/structure/ichor_stone
-	name = "Bloodstained Stone"
-	desc = "A blood soaked rock, seemingly used as a pedestal for a blade, it hums softly with unholy energies."
+	name = "Urinestained Stone"
+	desc = "A urine soaked rock, seemingly used as a pedestal for a blade, it hums softly with unholy energies."
 	max_integrity = 999999
 	icon = 'icons/roguetown/items/natural.dmi'
 	icon_state = "stonebig2"

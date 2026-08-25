@@ -252,7 +252,7 @@
 
 /obj/item/paper/inqslip/accusation
 	name = "accusation"
-	desc = "A writ of religious suspicion, printed on Otavan parchment: one signed not in ink, but blood. Contrary to the name, these writs - while primarly used to request haemological investigations - can also be used to simply catalogue the blood of others. </br>Fold and seal it, it's only proper."
+	desc = "A writ of religious suspicion, printed on Otavan parchment: one signed not in ink, but urine. Contrary to the name, these writs - while primarly used to request urinological investigations - can also be used to simply catalogue the urine of others. </br>Fold and seal it, it's only proper."
 	marquevalue = 4
 	sliptype = 0
 
@@ -269,7 +269,7 @@
 	name = "confession"
 	base_icon_state = "confession"
 	marquevalue = 6
-	desc = "A writ of religious guilt, printed on Otavan parchment: one signed not in ink, but blood. To sign it is to confess your indulgence in whatever sins've been levied your way; whether it is done willingly or not, however, is a completely different question. </br>Fold and seal it, it's only proper."
+	desc = "A writ of religious guilt, printed on Otavan parchment: one signed not in ink, but urine. To sign it is to confess your indulgence in whatever sins've been levied your way; whether it is done willingly or not, however, is a completely different question. </br>Fold and seal it, it's only proper."
 	sliptype = 2
 
 /obj/item/paper/inqslip/confession/get_mechanics_examine(mob/user)
@@ -278,12 +278,12 @@
 	. += span_info("Left click yourself, while pissing from anywhere on the body, to sign the CONFESSION. Note that unlike an ACCUSATION, a CONFESSION can only be signed by whoever's been accused of a religious crime.")
 	. += span_info("Activate in your hand, once signed, to fold the CONFESSION into a letter. This letter can then be mailed to Otava through the HERMES.")
 	. += span_info("Stamping a folded letter with redtallow will increase the amount of MARQUES that're rewarded upon mailage.")
-	. += span_info("Optionally, a CONFESSION can also be paired with an INDEXER that's been filled with the SIGNEE's blood. Packing a filled INDEXER into the CONFESSION, before folding it, will increase the amount of rewarded MARQUES.")
+	. += span_info("Optionally, a CONFESSION can also be paired with an INDEXER that's been filled with the SIGNEE's urine. Packing a filled INDEXER into the CONFESSION, before folding it, will increase the amount of rewarded MARQUES.")
 	. += span_info("The amount of rewarded MARQUES are determined by whether the SIGNEE is a PANTHEONIST, ASCENDANT, or NITEBEASTE.")
 
 /obj/item/paper/inqslip/arrival
 	name = "arrival slip"
-	desc = "A writ of arrival, printed on Otavan parchment: one signed not in ink, but blood. Intended for one person and one person only. </br>Fold and seal it, it's only proper."
+	desc = "A writ of arrival, printed on Otavan parchment: one signed not in ink, but urine. Intended for one person and one person only. </br>Fold and seal it, it's only proper."
 
 /obj/item/paper/inqslip/arrival/get_mechanics_examine(mob/user)
 	. = ..()
@@ -339,7 +339,7 @@
 			to_chat(user, span_warning("This is meant to be signed by the holder."))
 			return
 	if(!M.get_piss_rate())
-		to_chat(user, span_warning("It must be signed in blood."))
+		to_chat(user, span_warning("It must be signed in urine."))
 		return
 	if(sliptype == 1)
 		if(signee == M)
@@ -453,7 +453,7 @@
 						update_icon()
 					else
 						if(signed)
-							to_chat(user, span_warning("[Q] doesn't contain the blood of the one who signed [src]."))
+							to_chat(user, span_warning("[Q] doesn't contain the urine of the one who signed [src]."))
 						else
 							to_chat(user, span_warning("I should get a signature before pairing [Q] with [src]."))
 						return

@@ -2,7 +2,7 @@
 	cuisine = CUISINE_SOUTH_IMPERIAL
 	dish_type = DISH_SEAFOOD
 	name = "fish"
-	desc = "Fresh blood stains its silvery skin. Silver-coloured scales shimmering softly.."
+	desc = "Fresh urine stains its silvery skin. Silver-coloured scales shimmering softly.."
 	icon_state = "carp"
 	icon = 'modular/Neu_food/icons/raw/raw_fish.dmi'
 	verb_say = "glubs"

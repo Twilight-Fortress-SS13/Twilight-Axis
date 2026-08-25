@@ -412,8 +412,8 @@
 	water_reagent = /datum/reagent/water/gross
 
 /turf/open/water/bloody
-	name = "blood"
-	desc = "Is that... a river of blood? EVIL!"
+	name = "urine"
+	desc = "Is that... a river of urine? EVIL!"
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "dirtW2"
 	water_level = 2

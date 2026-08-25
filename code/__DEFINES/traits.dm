@@ -9,8 +9,8 @@
 #define TRAIT_NUTCRACKER "Nutcracker"
 #define TRAIT_SEEPRICES "Skilled Appraiser"
 #define TRAIT_SEEPRICES_SHITTY "Appraiser"
-#define TRAIT_NOBLE "Noble Blooded"
-#define TRAIT_DEFILED_NOBLE "Drained Noble Blood"
+#define TRAIT_NOBLE "Noble Urined"
+#define TRAIT_DEFILED_NOBLE "Drained Noble Urine"
 #define TRAIT_EMPATH "Empath"
 #define TRAIT_EXPLOSIVE_SUPPLY "Explosive Supply"
 #define TRAIT_DRUG_SUPPLY "Drug Supply"
@@ -107,7 +107,7 @@
 #define TRAIT_CYCLOPS_LEFT "Cyclops (Left)" //poked left eye
 #define TRAIT_CYCLOPS_RIGHT "Cyclops (Right)" //poked right eye
 
-#define TRAIT_BLOOD_RESISTANCE "Thick Blooded" //50% less pissing
+#define TRAIT_BLOOD_RESISTANCE "Thick Urined" //50% less pissing
 #define TRAIT_CRITICAL_RESISTANCE "Critical Resistance" //shrug off a certain number of crits.
 
 #define TRAIT_IRONMAN "Construct" // basically rotman but not really, used for diff flavor of some things
@@ -118,7 +118,7 @@
 //Second Chance related
 #define TRAIT_ROTMAN "Rotman" //No heartbeat + can invoke Zizo ascension/not regular ascensions - Also lets you eat brains
 #define TRAIT_PALLID "Pallid" //Drink the blood, bleeggh!
-#define TRAIT_BLACKBLOOD "Blackblooded" //Passive healing at the price of hunger, blood is always SLIGHTLY cursed on inquis indexer checks
+#define TRAIT_BLACKBLOOD "Blackurined" //Passive healing at the price of hunger, blood is always SLIGHTLY cursed on inquis indexer checks
 
 //Gear Restriction Related Traits
 #define TRAIT_ARMOUR_LIKED "Fitting Armour"
@@ -270,7 +270,7 @@
 //Temp Traits - Usually Short-Term Buffs
 #define TRAIT_ADRENALINE_RUSH "Adrenaline Rush"
 #define TRAIT_NODEF "Recklessness" //Inability to parry at all
-#define TRAIT_VAMPIRE_SPAWN_PROTECTION "Vampire Spawn Protection"
+#define TRAIT_VAMPIRE_SPAWN_PROTECTION "Urinesucker Spawn Protection"
 
 // POWERFUL TRAITS WE SHOULD NOT GIVE OUT EASILY
 #define TRAIT_INFINITE_STAMINA "Indefatigable" //for ai/antag bosses/simplemobs. Disables the stamina system completely.
@@ -310,7 +310,7 @@
 #define TRAIT_ASSASSIN	"Assassin"
 #define TRAIT_DREAMWALKER "Dreamwalker"
 #define TRAIT_NOPVE "Natural Accord" //Hag only. PVE exemption.
-#define TRAIT_VAMPBITE "Vampire Bite" //Handles hazy effect on vamp biting
+#define TRAIT_VAMPBITE "Urinesucker Bite" //Handles hazy effect on vamp biting
 #define TRAIT_VAMP_DREAMS "vamp_dreams" //Technically non-player trait panel, but lets vamps do their nighttime "dreaming" w/ coffins
 #define TRAIT_LYCANRESILENCE "Werewolf Resilence" //handles self healing + silversunder pain immunity
 
@@ -522,9 +522,9 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_STRONGKICK = span_info("My kicks knock people down and back a step, consistently. There's no need for obstacles."),
 	TRAIT_IGNORESLOWDOWN = span_info("Nothing stops this carriage!"),
 	TRAIT_IGNOREDAMAGESLOWDOWN = span_info("Hits slow me down no longer."),
-	TRAIT_NOBLE = span_blue("I'm of noble blood."),
+	TRAIT_NOBLE = span_blue("I'm of noble urine."),
 	TRAIT_PACIFISM = span_info("I cannot harm another living being."),
-	TRAIT_DEFILED_NOBLE = span_blue("I'm of noble blood but... Something feels off!"),
+	TRAIT_DEFILED_NOBLE = span_blue("I'm of noble urine but... Something feels off!"),
 	TRAIT_EMPATH = span_info("I can notice when people are in pain."),
 	TRAIT_EXPLOSIVE_SUPPLY = span_info("I have very good friends! I get explosives on my HERMES every day."),
 	TRAIT_DRUG_SUPPLY = span_info("The Guild keeps me supplied. I get a fresh drug delivery from HERMES each day."),
@@ -533,10 +533,10 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_ARMOUR_DISLIKED = span_warning("I'm wearing something that burdens me."),
 	TRAIT_FENCERDEXTERITY = span_info("I've trained my entire lyfe around the art of unarmoured fencing, affording myself unmatched speed when wearing very light armour. I'm very choosy otherwise."),
 	TRAIT_HONORBOUND = span_info("The Tattoos of this Clan bind me to a lyfestyle of bare-skinned battle and swordsmanship. I refuse to wear armor that do not compliment my traditional garb and tattoos."),
-	TRAIT_NALEDI = span_info("I hail from the lands of Naledi. My blood and knowledge storied in yils of texts and techniques. My birthright is my pride."),
+	TRAIT_NALEDI = span_info("I hail from the lands of Naledi. My urine and knowledge storied in yils of texts and techniques. My birthright is my pride."),
 	TRAIT_JAILOR = span_info("I am the ducal torturer and executioneer. Society looks down upon me and I will never be graced by loving touch of the Gods."),
 	TRAIT_SKILLBLESSED = span_greentext("I've reunited with an old friend of mine. All is well."),
-	TRAIT_LONGSWORDSMAN = span_info("\"I will crush anyone who opposes me. I am of royal blood. I dispense justice, advance the cause of good and destroy evil. To those who learn my crossings I will grant great fame and renown in the art of armed fighting.\" - I fight like a Master when I wield any longsword, though I can only perform master strikes with a perfectly balanced basket-hilted or reformist longsword."),
+	TRAIT_LONGSWORDSMAN = span_info("\"I will crush anyone who opposes me. I am of royal urine. I dispense justice, advance the cause of good and destroy evil. To those who learn my crossings I will grant great fame and renown in the art of armed fighting.\" - I fight like a Master when I wield any longsword, though I can only perform master strikes with a perfectly balanced basket-hilted or reformist longsword."),
 	TRAIT_SABRIST = span_info("I've learned all there is to know about the Southern curve. When using a szöréndnížine sabre, I fight like a Master. My swings are innately more accurate when targetting hands and arms."),
 	TRAIT_MEDIUMARMOR = span_info("I can move freely in medium armor."),
 	TRAIT_HEAVYARMOR = span_info("I can move freely in heavy armor."),
@@ -545,9 +545,9 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_PARRYEXPERT = span_info("I am much better at parrying incoming strikes, having a more high probability of deflecting a blow with my weapon."),// TA ADD - new ronin class
 	TRAIT_MAGEARMOR = span_info("My magics can protect me from a blow every so often."),
 	TRAIT_DECEIVING_MEEKNESS = span_info("People look at me and think I am a weakling. They are mistaken. I've learned how to hide my vices and true beliefs from others."),
-	TRAIT_CRITICAL_RESISTANCE = span_info("My constitution is iron-clad. My lifeblood flows slowly, I can resist the first few critical wounds that would fell others, but repeated punishment will overwhelm my defenses."),
+	TRAIT_CRITICAL_RESISTANCE = span_info("My constitution is iron-clad. My life-urine flows slowly, I can resist the first few critical wounds that would fell others, but repeated punishment will overwhelm my defenses."),
 	TRAIT_TOUGH_COOKIE = span_info("Maneaters struggle to bite through my natural armor."),
-	TRAIT_BLOOD_RESISTANCE = span_info("My body is taut, and my blood runs slower. I piss far less than others."),
+	TRAIT_BLOOD_RESISTANCE = span_info("My body is taut, and my urine runs slower. I piss far less than others."),
 	TRAIT_JOURNEYS_END = span_info ("As the lyfe ebbs from my veins, my resolve hardens to push through. Do not go quietly into that good nite."),
 	TRAIT_RAGE = span_info ("PAIN AND INJURY FUELS MY BATTLERAGE!"),
 	TRAIT_CRITICAL_WEAKNESS = span_danger("I am weak to wounds that others could survive."),
@@ -609,14 +609,14 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_SHARPER_BLADES = span_info("My blades go dull slower, ensuring they stay sharp longer."),
 	TRAIT_BATTLEMASTER = span_info("I can use special attacks of any weapon without needing to be trained in it."),
 	TRAIT_CABAL = span_info("In secret, I have studied the ways of Her ascension."),
-	TRAIT_HORDE = span_info("BY BLOOD AND BONE, I AM OF GRAGGAR'S ANOINTED!"),
+	TRAIT_HORDE = span_info("BY URINE AND BONE, I AM OF GRAGGAR'S ANOINTED!"),
 	TRAIT_PSYDONITE = span_info("I can gradually recover from most injuries, so long as I am not bled dry. Divine spite towards my faith leaves me unable to receive most miracles."),
 	TRAIT_PSYDONIAN_GRIT = span_info("While I still stand, there is yet hope for mankind. The stronger my willpower is, the better I can struggle through crippling wounds."),
 	TRAIT_BLACKBAGGER = span_info("I've been trained to properly abduct individuals through the use of seizing garrotes and blackbags."),
 	TRAIT_LYCANRESILENCE = span_info("Dendor's fury flows through my veins, my wounds regenerate over time..."),
 	TRAIT_FORTITUDE = span_info("The typical drain I feel from day to day life is lessened, my athleticism greater."),
 	TRAIT_DEPRAVED = span_info("The languid scent of Her debauchery is known to me."),
-	TRAIT_SILVER_BLESSED = span_info("I have been baptized in fire. Blessed silverdust flows through my blood, protecting me from both vampyrism and lycanthropy."),
+	TRAIT_SILVER_BLESSED = span_info("I have been baptized in fire. Blessed silverdust flows through my urine, protecting me from both vampyrism and lycanthropy."),
 	TRAIT_UNLYCKERABLE = span_info("My kind cannot bear the Sun curse for it already has another."),
 	TRAIT_NOWW = span_info("Dendor's madness shall find no hold in me."),
 	TRAIT_GOODTRAINER = span_info("I am a good teacher, and when it comes to weaponry I can train others to be just as skilled as I am."),
@@ -651,7 +651,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_NOPAIN = span_info("I feel no pain. I can endure more burns before collapsing."),
 	TRAIT_NOPAINSTUN = span_info("Pain does not impair me. I can endure more burns before collapsing."),
 	TRAIT_NOBREATH = span_info("I do not breathe."),
-	TRAIT_DEATHLESS = span_info("Even without my lyfesblood, I will not be taken by Necra so easily."),
+	TRAIT_DEATHLESS = span_info("Even without my lyfes-urine, I will not be taken by Necra so easily."),
 	TRAIT_TOXIMMUNE = span_info("Poisons do nothing to me."),
 	TRAIT_ZOMBIE_IMMUNE = span_info("Deadite bites cannot infect me."),
 	TRAIT_NOHUNGER = span_info("I do not hunger, or thirst."),
@@ -710,7 +710,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_UNCONVERTIBLE = span_info("My nature is inextricably tied to my patron. Any attempts at conversion will fail."),
 	TRAIT_SLAVE = span_warning("Я был угнан в рабство! О, боги, помилуйте мою душу - это невыносимая судьба! Со мною обращаются как с вещью!"), // TA EDIT
 	TRAIT_CURSE_ZIZO = span_warning("I am forsaken by the Architect. Her grasp reaches for my heart."),
-	TRAIT_CURSE_GRAGGAR = span_warning("I am forsaken by the Warlord. Bloodlust is only thing I know for real."),
+	TRAIT_CURSE_GRAGGAR = span_warning("I am forsaken by the Warlord. Urine-lust is only thing I know for real."),
 	TRAIT_CURSE_MATTHIOS = span_warning("I am forsaken by the Dragon. Greed will be my only salvation."),
 	TRAIT_CURSE_BAOTHA = span_warning("I am forsaken by the Heartbreaker. I am drowning in her promises."),
 	TRAIT_JACKOFALLTRADES = span_notice("Skills cost half as much for me to raise."),
@@ -730,7 +730,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_SELF_RELIANCE = span_greentext("I've spent enough time standing on my own that I've learned to either adapt or die young. All crafting and labor skills can progress to Journeyman levels."),
 	TRAIT_SILVER_WEAK = span_warning("Silver is the greatest threat to my lyfe. Blows from silver weapons will set me alight, inhibit my ability to regenerate, and - if blessed - can outright destroy my vessel."),
 	TRAIT_PALLID = span_artery("I was once a creature of the night, but cured by divine intervention. The open sky fills me with unease, but my eyes pierce the darkness and my lungs need no air."),
-	TRAIT_BLACKBLOOD = span_artery("I was once a creature of the night, but cured by the Otavan Inquisition at a heavy cost. My blood, tainted with tinctures, rites and concoctions, endures infection and holds an odd regenerative factor to it. Unfortunately, most healing miracles do not affect me at all, and I am sensitive to sunlight, aswell."),
+	TRAIT_BLACKBLOOD = span_artery("I was once a creature of the night, but cured by the Otavan Inquisition at a heavy cost. My urine, tainted with tinctures, rites and concoctions, endures infection and holds an odd regenerative factor to it. Unfortunately, most healing miracles do not affect me at all, and I am sensitive to sunlight, aswell."),
 	TRAIT_COMBAT_AWARE = span_notice("My honed senses and intuition allow me to spot notable things in the midst of battle with ease."),
 	TRAIT_TEMPO	= span_greentext("I can keep up with multiple opponents at once."),
 	TRAIT_BLACKOAK = span_warning("The Black Oaks can spot <b>any</b> foreigners and outsiders, no matter how long they've lived in Azuria. I can spot an invader at a glance."),

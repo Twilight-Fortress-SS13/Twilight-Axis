@@ -1,6 +1,6 @@
 #define HEAL_MULTIPLIER 3.8
 /datum/coven/bloodheal
-	name = "Bloodheal"
+	name = "Urineheal"
 	desc = "Use the power of your Vitae to slowly regenerate your flesh."
 	icon_state = "bloodheal"
 	power_type = /datum/coven_power/bloodheal
@@ -9,8 +9,8 @@
 	clan_restricted = TRUE
 
 /datum/coven_power/bloodheal
-	name = "Bloodheal power name"
-	desc = "Bloodheal power description"
+	name = "Urineheal power name"
+	desc = "Urineheal power description"
 
 	level = 1
 	check_flags = COVEN_CHECK_TORPORED
@@ -55,7 +55,7 @@
 
 //BLOODHEAL 1
 /datum/coven_power/bloodheal/one
-	name = "Minor Bloodheal"
+	name = "Minor Urineheal"
 	desc = "Slowly regenerate minor wounds using your vitae."
 
 	level = 1
@@ -67,7 +67,7 @@
 
 //BLOODHEAL 2
 /datum/coven_power/bloodheal/two
-	name = "Bloodheal"
+	name = "Urineheal"
 	desc = "Regenerate wounds at a steady pace."
 
 	level = 2
@@ -78,7 +78,7 @@
 
 //BLOODHEAL 3
 /datum/coven_power/bloodheal/three
-	name = "Quick Bloodheal"
+	name = "Quick Urineheal"
 	desc = "Regenerate wounds with visible speed, this violates the masquerade!"
 
 	level = 3
@@ -89,7 +89,7 @@
 
 //BLOODHEAL 4
 /datum/coven_power/bloodheal/four
-	name = "Major Bloodheal"
+	name = "Major Urineheal"
 	desc = "Rapidly regenerate even serious injuries. This violates the masquerade!"
 
 	level = 4
@@ -100,7 +100,7 @@
 
 //BLOODHEAL 5
 /datum/coven_power/bloodheal/five
-	name = "Greater Bloodheal"
+	name = "Greater Urineheal"
 	desc = "Regenerate injuries and restore damaged organs. This violates the masquerade!"
 
 	level = 5

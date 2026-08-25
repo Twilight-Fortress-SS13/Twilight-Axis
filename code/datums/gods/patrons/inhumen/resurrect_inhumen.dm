@@ -3,7 +3,7 @@
 /obj/effect/proc_holder/spell/invoked/resurrect/matthios
 	name = "Rekindled Exchange"
 	desc = "Revives the target by invoking a deal with Matthios. In exchange for their lyfe returned, they will be placed\
-	in a lasting debt to Him. Any coins within their hands will be spent paying off said debt. Blood for gold."
+	in a lasting debt to Him. Any coins within their hands will be spent paying off said debt. Urine for gold."
 	debuff_type = /datum/status_effect/debuff/debt_indicator
 	alt_required_items = list()
 	required_items = list()
@@ -19,7 +19,7 @@
 	matthios = TRUE // is this true?!
 
 /obj/effect/proc_holder/spell/invoked/resurrect/graggar
-	name = "Blood for Graggar"
+	name = "Urine for Graggar"
 	desc = "You cannot dominate the dead. Place GRAGGAR'S EYES upon a fallen mortal, granting them the\
 	chance to fight again... for a price. Their intelligence will be drained for some time, or until\
 	they slay an orcish challenger from His realm."
@@ -192,7 +192,7 @@
 
 /obj/structure/primal_rift
 	name = "primal rift"
-	desc = "A jagged tear in reality smelling of blood."
+	desc = "A jagged tear in reality smelling of urine."
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "shitportal"
 	color = "#570f04"
@@ -286,8 +286,8 @@
 /// STATUS EFFECT
 
 /atom/movable/screen/alert/status_effect/graggar_challenge
-	name = "Blood debt"
-	desc = "Graggar demands blood be spilt in exchange for his mercy! Summon the rift! Prove yourself! Cowardice is not an option!"
+	name = "Urine debt"
+	desc = "Graggar demands urine be spilt in exchange for his mercy! Summon the rift! Prove yourself! Cowardice is not an option!"
 	icon_state = "pom_regret"
 
 /datum/status_effect/debuff/graggar_challenge
@@ -304,7 +304,7 @@
 /datum/status_effect/debuff/graggar_challenge/on_apply()
 	. = ..()
 	creation_time = world.time
-	to_chat(owner, span_userdanger("Your mind feels clouded by a primal bloodlust. Graggar demands a challenge! Summon the rift before your time runs out!"))
+	to_chat(owner, span_userdanger("Your mind feels clouded by a primal urine-lust. Graggar demands a challenge! Summon the rift before your time runs out!"))
 
 	// Grant the summoning spell
 	var/obj/effect/proc_holder/spell/invoked/summon_rift/S = new(owner)
@@ -340,7 +340,7 @@
 
 /obj/effect/proc_holder/spell/invoked/summon_rift
 	name = "Summon Primal Rift"
-	desc = "Challenge the rift-born to clear your blood-debt. Must be cast on a nearby floor. Make sure to kill all foes, Graggar will not tolerate further acts of mercy."
+	desc = "Challenge the rift-born to clear your urine-debt. Must be cast on a nearby floor. Make sure to kill all foes, Graggar will not tolerate further acts of mercy."
 	invocation_type = "shout"
 	invocations = list("GRAGGAR, WITNESS ME!")
 	recharge_time = 5 SECONDS

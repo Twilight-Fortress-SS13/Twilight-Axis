@@ -64,7 +64,7 @@
 	show_when_dead = FALSE
 
 /datum/reagent/druqks/overdose_start(mob/living/M)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))
 
 /datum/reagent/druqks/on_mob_metabolize(mob/living/M)
 	M.overlay_fullscreen("druqk", /atom/movable/screen/fullscreen/druqks)
@@ -255,7 +255,7 @@
 
 /datum/reagent/ozium/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))
 
 /datum/reagent/allspice
 	name = "allspice"
@@ -311,7 +311,7 @@
 
 /datum/reagent/moondust/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))
 
 /obj/item/reagent_containers/powder/moondust_purest
 	name = "moondust"
@@ -369,7 +369,7 @@
 
 /datum/reagent/moondust_purest/overdose_start(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))
 
 
 /obj/item/reagent_containers/powder/starsugar
@@ -437,7 +437,7 @@
 
 /datum/reagent/starsugar/overdose_process(mob/living/M)
 	M.playsound_local(M, 'sound/misc/heroin_rush.ogg', 100, FALSE)
-	M.visible_message(span_warning("Blood runs from [M]'s nose."))
+	M.visible_message(span_warning("Urine runs from [M]'s nose."))
 	if((M.mobility_flags & MOBILITY_MOVE) && !ismovableatom(M.loc))
 		for(var/i in 1 to 4)
 			step(M, pick(GLOB.cardinals))

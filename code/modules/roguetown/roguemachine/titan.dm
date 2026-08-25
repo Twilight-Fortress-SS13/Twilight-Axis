@@ -288,7 +288,7 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
 					return
 				if(!(HAS_TRAIT(H, TRAIT_NOBLE)))
-					say("You have not the noble blood to be regent.")
+					say("You have not the noble urine to be regent.")
 					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
 					return
 				if(!(H.job in GLOB.regency_positions))

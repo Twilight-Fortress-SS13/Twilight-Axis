@@ -32,13 +32,13 @@
 			if(!HAS_TRAIT(H, TRAIT_FREEMAN))
 				var/def_zone = "[(H.active_hand_index == 2) ? "r" : "l" ]_arm"
 				playsound(src, 'sound/items/beartrap.ogg', 100, TRUE)
-				to_chat(user, "<font color='red'>The meister craves my Noble blood!</font>")
+				to_chat(user, "<font color='red'>The meister craves my Noble urine!</font>")
 				loc.visible_message(span_warning("The meister snaps onto [H]'s arm!"))
 				H.Stun(80)
 				H.apply_damage(50, BRUTE, def_zone)
 				H.emote("superagony")
 				spawn(5)
-				say("Blueblood for the Freefolk!")
+				say("Blue urine for the Freefolk!")
 				playsound(src, 'sound/vo/mobs/ghost/laugh (5).ogg', 100, TRUE)
 				return
 		to_chat(H, span_warning("The MEISTER's mouth gapes wide and chewed - it cannot serve while drilled."))
@@ -227,7 +227,7 @@
 		to_chat(user, span_info("Try a target that is not fogged or of higher intelligence."))
 		return
 	if(H.stat)	//They're dead
-		to_chat(user,span_info("Their blood is still. You need someone living for this."))
+		to_chat(user,span_info("Their urine is still. You need someone living for this."))
 		return
 	if(!H.restrained())
 		to_chat(user,span_info("They need to be restrained."))
@@ -318,7 +318,7 @@
 			return
 
 	else
-		to_chat(user,span_info("Their blood is unsoiled by the [SSticker.realm_type_short]'s Nervemaster. There is nothing to take."))
+		to_chat(user,span_info("Their urine is unsoiled by the [SSticker.realm_type_short]'s Nervemaster. There is nothing to take."))
 		return
 
 /obj/item/coveter/proc/drain_effect_fast(mob/living/carbon/human/H)

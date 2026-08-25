@@ -120,9 +120,9 @@ GLOBAL_LIST_INIT(hedgeknight_aggro, world.file2list("strings/rt/hedgeknightaggro
 			say("We lyve in a Zociety...", forced = TRUE, npc_speech = TRUE)
 	else if(preset == "graggar")
 		if(prob(95))
-			say("No more... Blood!", forced = TRUE, npc_speech = TRUE)
+			say("No more... Urine!", forced = TRUE, npc_speech = TRUE)
 		else
-			say("WHERE'S THE BLOOD?!!", forced = TRUE, npc_speech = TRUE)
+			say("WHERE'S THE URINE?!!", forced = TRUE, npc_speech = TRUE)
 	emote("painscream")
 	. = ..()
 	if(!gibbed)

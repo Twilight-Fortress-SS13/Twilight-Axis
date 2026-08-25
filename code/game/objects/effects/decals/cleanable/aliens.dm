@@ -1,7 +1,7 @@
 // Note: BYOND is object oriented. There is no reason for this to be copy/pasted blood code.
 
 /obj/effect/decal/cleanable/xenoblood
-	name = "xeno blood"
+	name = "xeno urine"
 	desc = ""
 	icon = 'icons/effects/blood.dmi'
 	icon_state = "xfloor1"

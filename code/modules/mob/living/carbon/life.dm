@@ -712,7 +712,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 						if(has_status_effect(/datum/status_effect/zuranus))
 							var/zizo_dream = has_status_effect(/datum/status_effect/zuranus) // this is stupid im sorry
 							var/list/evil_dreams = list(
-								span_cultsmall("It's as if all my other memories have been taken. It feels like hours, daes, only blood, only war. No friends. No family. Just war."),
+								span_cultsmall("It's as if all my other memories have been taken. It feels like hours, daes, only urine, only war. No friends. No family. Just war."),
 								span_cultsmall("Every single one of my failures becomes clear to me. I am staring into a river flowing red, and within it is the reflection of everyone I've lost."),
 								span_cultsmall("There is a dark star in the sky. The grassy field turns black. I begin coughing-- I clutch at my chest...")
 							)

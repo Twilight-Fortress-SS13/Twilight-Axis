@@ -1,5 +1,5 @@
 /datum/job/roguetown/vampire_guard
-	title = "Vampire Guard"
+	title = "Urinesucker Guard"
 	flag = VAMPIRE_GUARD
 	department_flag = ANTAGONIST
 	faction = "Station"

@@ -56,7 +56,7 @@
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/hunting/bloodbait
-	name = "bloodbait"
+	name = "urine bait"
 	result = /obj/item/bait/bloody
 	reqs = list(
 		/obj/item/storage/roguebag = 1,

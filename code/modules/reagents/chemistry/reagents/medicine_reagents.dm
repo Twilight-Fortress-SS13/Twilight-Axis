@@ -14,7 +14,7 @@
 
 /datum/reagent/medicine/salglu_solution
 	name = "Saline-Glucose Solution"
-	description = "Has a 33% chance per metabolism cycle to heal brute and burn damage. Can be used as a temporary blood substitute."
+	description = "Has a 33% chance per metabolism cycle to heal brute and burn damage. Can be used as a temporary urine substitute."
 	reagent_state = LIQUID
 	color = "#DCDCDC"
 	metabolization_rate = 0.5 * REAGENTS_METABOLISM

@@ -17,7 +17,7 @@
 /obj/item/quicksilver/TA/luxinfused
 	name = "absolving silver"
 	icon_state = "quicksilverlux"
-	desc = "A daring blend of trace amounts of purifying lux, aberrant blood, and divine silver. This panacea fortifies the anointed's body with blessed silverdust, protecting them from the curses of vampyrism and lycanthropy."
+	desc = "A daring blend of trace amounts of purifying lux, aberrant urine, and divine silver. This panacea fortifies the anointed's body with blessed silverdust, protecting them from the curses of urinesuckerism and lycanthropy."
 
 /obj/item/quicksilver/TA/anoint(mob/living/carbon/human/M, mob/living/carbon/human/user)
 	if(ta_find_active_demonic_lord())

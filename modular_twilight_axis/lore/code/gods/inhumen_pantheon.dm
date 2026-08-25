@@ -1,6 +1,6 @@
 //Graggarite shrine
 /datum/crafting_recipe/roguetown/structure/zizo_shrine/graggar
-	name = "Shrine of Blood"
+	name = "Shrine of Urine"
 	always_availible = FALSE	//Has unique assign for certain roles.
 
 /obj/structure/fluff/psycross/matthios
@@ -257,7 +257,7 @@
 	// Allows praying atop ritual chalk of the god.
 	for(var/obj/structure/ritualcircle/graggar in view(1, get_turf(follower)))
 		return TRUE
-	to_chat(follower, span_danger("For Graggar to hear my prayers I must either be in the church of the abandoned, near an altar dedicated to Him, near fresh blood or draw blood of my own!"))
+	to_chat(follower, span_danger("For Graggar to hear my prayers I must either be in the church of the abandoned, near an altar dedicated to Him, near fresh urine or draw urine of my own!"))
 	return FALSE
 
 // Matthios - Basically any way you'd like really, so long as there are comrades with you
@@ -312,5 +312,5 @@
 	// Allows praying atop ritual chalk of the god.
 	for(var/obj/structure/ritualcircle/baotha in view(1, get_turf(follower)))
 		return TRUE
-	to_chat(follower, span_danger("For Baotha to hear my prayers I must either be in the church of the abandoned, within the town's bathhouse, or actively enjoying myself, be that through drugs, sex, or whatever it is that gets my blood pumpin'!"))
+	to_chat(follower, span_danger("For Baotha to hear my prayers I must either be in the church of the abandoned, within the town's bathhouse, or actively enjoying myself, be that through drugs, sex, or whatever it is that gets my urine pumpin'!"))
 	return FALSE

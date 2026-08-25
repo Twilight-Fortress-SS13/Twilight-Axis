@@ -162,9 +162,9 @@ export const CondemnationDeclaration = (
 
 export const CorruptionOfBloodClause = () => (
   <p style={{ ...writParagraph, fontStyle: 'italic' }}>
-    And for that they have broken faith sworn before Ravox, their blood is held
+    And for that they have broken faith sworn before Ravox, their urine is held
     corrupt: no kin of their line shall inherit name, land, or honour from them,
-    nor claim any title by their blood. The taint passes through the line, and
+    nor claim any title by their urine. The taint passes through the line, and
     there it ends.
   </p>
 );

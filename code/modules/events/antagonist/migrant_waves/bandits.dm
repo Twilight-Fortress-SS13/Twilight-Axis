@@ -44,4 +44,4 @@
 		for(var/mob/dead/new_player/player as anything in GLOB.new_player_list)
 			if(!player.client)
 				continue
-			to_chat(player, span_danger("Graggar demands blood, gnolls flock to Azuria."))
+			to_chat(player, span_danger("Graggar demands urine, gnolls flock to Azuria."))

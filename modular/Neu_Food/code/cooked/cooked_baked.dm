@@ -939,7 +939,7 @@
 	dish_type = DISH_NOODLES
 	cuisine = CUISINE_SOUTH_IMPERIAL
 	name = "pesto lasagna"
-	desc = "Pasta sheets elegantly stacked with pesto neatly spread between. It's taste can only be described as 'zig-like', the rocknut in the pesto seeming to boil from the heat. This version is even more loved by Azurian nobles, though visiting Montecarinan signoria-bloods are known occasionally to be offended at the taste."
+	desc = "Pasta sheets elegantly stacked with pesto neatly spread between. It's taste can only be described as 'zig-like', the rocknut in the pesto seeming to boil from the heat. This version is even more loved by Azurian nobles, though visiting Montecarinan signoria-urines are known occasionally to be offended at the taste."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_pasta.dmi'
 	icon_state = "lasagna_pesto"
 	faretype = FARE_LAVISH

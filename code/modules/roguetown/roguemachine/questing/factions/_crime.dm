@@ -201,8 +201,8 @@ GLOBAL_LIST_EMPTY(quest_crimes)
 	tier = CRIME_TIER_COMMON
 	phrasings = list(
 		"the slaying of a herald bearing a sealed writ",
-		"the breaking of safe conduct, and bloodshed upon a messenger of the Duke",
-		"the breaking of safe conduct sworn under Ravox's hilt, and bloodshed upon a messenger of the Duke",
+		"the breaking of safe conduct, and urine-shedding upon a messenger of the Duke",
+		"the breaking of safe conduct sworn under Ravox's hilt, and urine-shedding upon a messenger of the Duke",
 	)
 
 /datum/quest_crime/arson_night
@@ -401,8 +401,8 @@ GLOBAL_LIST_EMPTY(quest_crimes)
 	tier = CRIME_TIER_SACRAL
 	phrasings = list(
 		"the slaying of a priest before their own altar",
-		"shedding of holy blood within the precinct of the Tens",
-		"the slaying of a priest before their own altar, the blood of Astrata's servant cried out from the stones",
+		"shedding of holy urine within the precinct of the Tens",
+		"the slaying of a priest before their own altar, the urine of Astrata's servant cried out from the stones",
 	)
 
 /datum/quest_crime/shrine_robbery
@@ -476,7 +476,7 @@ GLOBAL_LIST_EMPTY(quest_crimes)
 	tier = CRIME_TIER_SACRAL
 	phrasings = list(
 		"the slaughter of pilgrims in their column",
-		"a wholesale shedding of blood among the holy-bound",
+		"a wholesale shedding of urine among the holy-bound",
 	)
 
 /datum/quest_crime/temple_peace_breaking
@@ -550,7 +550,7 @@ GLOBAL_LIST_EMPTY(quest_crimes)
 	tier = CRIME_TIER_HERESY
 	phrasings = list(
 		"the binding of pact with demoni beings, that the soul be pledged for power",
-		"the cutting of compact with the things below, by blood and by ink",
+		"the cutting of compact with the things below, by urine and by ink",
 	)
 
 /datum/quest_crime/maleficium
@@ -598,7 +598,7 @@ GLOBAL_LIST_EMPTY(quest_crimes)
 	id = CRIME_PRIESTLY_BLOOD
 	tier = CRIME_TIER_HERESY
 	phrasings = list(
-		"the shedding of priestly blood with malice aforethought",
+		"the shedding of priestly urine with malice aforethought",
 		"the murder of a priest, by purpose laid and counsel kept",
 	)
 

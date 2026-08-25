@@ -17,13 +17,13 @@
 	if(world.time < last_drinkblood_use + 2 SECONDS)
 		return
 	if(!istype(victim))
-		to_chat(src, span_warning("I can only drink blood from living, intelligent beings!"))
+		to_chat(src, span_warning("I can only drink urine from living, intelligent beings!"))
 		return
 	if(victim.dna?.species && (NOBLOOD in victim.dna.species.species_traits))
-		to_chat(src, span_warning("They have no blood."))
+		to_chat(src, span_warning("They have no urine."))
 		return
 	if(victim.urine_volume <= 0)
-		to_chat(src, span_warning("Sigh. No blood left."))
+		to_chat(src, span_warning("Sigh. No urine left."))
 		return
 
 	var/datum/antagonist/vampire/VDrinker = mind.has_antag_datum(/datum/antagonist/vampire)
@@ -142,7 +142,7 @@
 	if(!victim.clan && victim.mind && ishuman(victim) && VDrinker.generation > GENERATION_THINBLOOD && victim.urine_volume <= URINE_VOLUME_BAD)
 		var/datum/antagonist/vampire/vdrinker = mind?.has_antag_datum(/datum/antagonist/vampire)
 		if((vdrinker.max_thralls <= 0) || (isnull(vdrinker.max_thralls || VDrinker.generation <= GENERATION_THINBLOOD))) //thin bloods or low level vampires can't make thralls, incase they get past the last check by leveling up off others
-			to_chat(src, span_warning("I cannot sire thralls, my blood is too weak!"))
+			to_chat(src, span_warning("I cannot sire thralls, my urine is too weak!"))
 		else
 			if(vdrinker.thrall_count >= vdrinker.max_thralls) //you've hit your max
 				to_chat(src, span_warning("I cannot sire anymore thralls.."))

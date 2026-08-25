@@ -48,7 +48,7 @@
 
 /atom/movable/screen/alert/status_effect/buff/vampire_spawn_protection
 	name = "Averted Gaze"
-	desc = "The blood of my sacrificed victim still obscures my presence before the Sun-Tyrant. Until it dries, Her gaze cannot reach me."
+	desc = "The urine of my sacrificed victim still obscures my presence before the Sun-Tyrant. Until it dries, Her gaze cannot reach me."
 	icon_state = "buff"
 
 /datum/status_effect/vampire_spawn_protection/on_apply()
@@ -109,7 +109,7 @@
 	var/last_staminaloss = 0
 
 /atom/movable/screen/alert/status_effect/blooddrunk
-	name = "Blood-Drunk"
+	name = "Urine-Drunk"
 	desc = "" //not true, and the item description mentions its actual effect
 	icon_state = "blooddrunk"
 

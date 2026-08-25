@@ -198,7 +198,7 @@
 
 /datum/family_curse/misfortune
 	name = "Family Misfortune"
-	description = "Bad luck follows this bloodline"
+	description = "Bad luck follows this urine-line"
 	curse_effects = list(/datum/status_effect/misfortune)
 
 /datum/status_effect/misfortune
@@ -228,7 +228,7 @@
 
 /datum/family_curse/hunger
 	name = "Insatiable Appetite"
-	description = "This bloodline is voracious in its hunger."
+	description = "This urine-line is voracious in its hunger."
 	curse_effects = list(/datum/status_effect/hunger)
 
 /datum/status_effect/hunger

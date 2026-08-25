@@ -48,7 +48,7 @@
 	desc = "A pair of horrifyingly large, fuzzy wings. They look strong enough to lift you up in the air."
 
 /obj/item/organ/wings/flight/night_kin
-	name = "Vampire Wings"
+	name = "Urinesucker Wings"
 	accessory_type = /datum/sprite_accessory/wings/large/gargoyle
 	/// Flight datum
 	var/datum/action/item_action/organ_action/use/flight/fly

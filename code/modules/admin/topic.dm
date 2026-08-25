@@ -77,8 +77,8 @@
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
 			H.urine_volume = min(H.urine_volume + 100, URINE_VOLUME_MAXIMUM)
-			message_admins("[key_name_admin(usr)] added 100 blood to [key_name_admin(M)].")
-			log_admin("[key_name(usr)] added 100 blood to [key_name(M)].")
+			message_admins("[key_name_admin(usr)] added 100 urine to [key_name_admin(M)].")
+			log_admin("[key_name(usr)] added 100 urine to [key_name(M)].")
 			show_heal_panel(M)
 		return
 
@@ -87,8 +87,8 @@
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
 			H.urine_volume = min(H.urine_volume + 50, URINE_VOLUME_MAXIMUM)
-			message_admins("[key_name_admin(usr)] added 50 blood to [key_name_admin(M)].")
-			log_admin("[key_name(usr)] added 50 blood to [key_name(M)].")
+			message_admins("[key_name_admin(usr)] added 50 urine to [key_name_admin(M)].")
+			log_admin("[key_name(usr)] added 50 urine to [key_name(M)].")
 			show_heal_panel(M)
 		return
 
@@ -97,8 +97,8 @@
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
 			H.urine_volume = max(H.urine_volume - 50, 0)
-			message_admins("[key_name_admin(usr)] removed 50 blood from [key_name_admin(M)].")
-			log_admin("[key_name(usr)] removed 50 blood from [key_name(M)].")
+			message_admins("[key_name_admin(usr)] removed 50 urine from [key_name_admin(M)].")
+			log_admin("[key_name(usr)] removed 50 urine from [key_name(M)].")
 			show_heal_panel(M)
 		return
 
@@ -107,8 +107,8 @@
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
 			H.urine_volume = max(H.urine_volume - 100, 0)
-			message_admins("[key_name_admin(usr)] removed 100 blood from [key_name_admin(M)].")
-			log_admin("[key_name(usr)] removed 100 blood from [key_name(M)].")
+			message_admins("[key_name_admin(usr)] removed 100 urine from [key_name_admin(M)].")
+			log_admin("[key_name(usr)] removed 100 urine from [key_name(M)].")
 			show_heal_panel(M)
 		return
 
@@ -116,11 +116,11 @@
 		var/mob/living/M = locate(href_list["heal_blood_set"])
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
-			var/new_amount = input(usr, "Set blood volume to:", "Blood Volume", H.urine_volume) as num|null
+			var/new_amount = input(usr, "Set urine volume to:", "Urine Volume", H.urine_volume) as num|null
 			if(new_amount != null)
 				H.urine_volume = clamp(new_amount, 0, URINE_VOLUME_MAXIMUM)
-				message_admins("[key_name_admin(usr)] set [key_name_admin(M)]'s blood volume to [new_amount].")
-				log_admin("[key_name(usr)] set [key_name(M)]'s blood volume to [new_amount].")
+				message_admins("[key_name_admin(usr)] set [key_name_admin(M)]'s urine volume to [new_amount].")
+				log_admin("[key_name(usr)] set [key_name(M)]'s urine volume to [new_amount].")
 				show_heal_panel(M)
 		return
 

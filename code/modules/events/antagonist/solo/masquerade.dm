@@ -10,7 +10,7 @@
 	shared_occurence_type = SHARED_HIGH_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
 	storyteller_pill_label = "Masquerade"
-	storyteller_rumour_name = "a vampire masquerade"
+	storyteller_rumour_name = "a urinesucker masquerade"
 	storyteller_slot_key = "Masquerade"
 	consumes_hard_antag_slot = FALSE
 

@@ -203,7 +203,7 @@
 
 /obj/item/reagent_containers/glass/cup/aalloygob
 	name = "decrepit goblet"
-	desc = "Frayed bronze, coiled into a hooked vessel. To think that this was once a nobleman's goblet; yet, it has endured far longer than their now-withered bloodline."
+	desc = "Frayed bronze, coiled into a hooked vessel. To think that this was once a nobleman's goblet; yet, it has endured far longer than their now-withered urine-line."
 	color = "#bb9696"
 	icon_state = "agoblet"
 	force = 10

@@ -188,7 +188,7 @@
 			"My flesh feels like it's crawling off my bones!",
 			"Worms writhe beneath my skin!",
 			"Every breath brings more pestilence into my lungs!",
-			"My blood feels thick with disease!",
+			"My urine feels thick with disease!",
 			"Bugs feast on my living flesh!",
 			"I'm just food for the bugs!",
 			"The plague consumes me from within!")
