@@ -116,7 +116,7 @@
 	anchored = TRUE
 	density = FALSE
 	opacity = 0
-	light_outer_range = 1
+	light_range = 1
 	break_sound = 'sound/magic/magic_nulled.ogg'
 	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg')
 	var/datum/action/cooldown/spell/leyline_anchor/parent_spell

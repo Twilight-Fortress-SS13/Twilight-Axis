@@ -20,7 +20,7 @@
 	icon_state = "projectile"
 	layer = BELOW_MOB_LAYER
 	plane = GAME_PLANE
-	light_outer_range = 2
+	light_range = 2
 	duration = 9
 	var/exp_heavy = 0
 	var/exp_light = 2

@@ -174,7 +174,7 @@
 /obj/effect/temp_visual/telegraph/ice
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "frost"
-	light_outer_range = 2
+	light_range = 2
 	light_color = "#4cadee"
 	duration = 11
 	layer = MASSIVE_OBJ_LAYER

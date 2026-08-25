@@ -10,7 +10,7 @@
 	w_class = WEIGHT_CLASS_SMALL
 	flags_1 = null
 	light_system = MOVABLE_LIGHT
-	light_outer_range = 4
+	light_range = 4
 	light_power = 1
 	slot_flags = ITEM_SLOT_BELT
 	var/weather_resistant = FALSE
@@ -65,7 +65,7 @@
 	name = "flare"
 	desc = ""
 	w_class = WEIGHT_CLASS_SMALL
-	light_outer_range = 7 // Pretty bright.
+	light_range = 7 // Pretty bright.
 	icon_state = "flare"
 	item_state = "flare"
 	actions_types = list()
@@ -137,7 +137,7 @@
 	desc = "A stick with enough fiber wrapped around the end to burn for a decent amount of time. Mind it \
 	should you choose to ford across water."
 	w_class = WEIGHT_CLASS_NORMAL
-	light_outer_range = 7
+	light_range = 7
 	force = 5
 	icon = 'icons/roguetown/items/lighting.dmi'
 	icon_state = "torch"
@@ -289,7 +289,7 @@
 	name = "fieftorch"
 	desc = "A candleholder of wrought iron, oft-found mounted to the sconces in a castle's hallway."
 	icon_state = "mtorch"
-	light_outer_range = 6
+	light_range = 6
 	force = 10 //Doubled from the regular torch, to reflect its sturdier construction. Classified as an improvised weapon, as it shouldn't scale off any weapon skill.
 	on_damage = 15
 	wdefense = 1 //Metal rod. Offers a pittance-of-a-chance to parry an incoming strike.
@@ -309,7 +309,7 @@
 	name = "iron lamptern"
 	icon_state = "lamp"
 	desc = "A light to guide the way."
-	light_outer_range = 5
+	light_range = 5
 	on = FALSE
 	flags_1 = CONDUCT_1
 	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_BACK
@@ -364,7 +364,7 @@
 	icon_state = "bronzelamp"
 	item_state = "bronzelamp"
 	desc = "A marvel of engineering that emits a strange green glow."
-	light_outer_range = 6
+	light_range = 6
 	light_color ="#4ac77e"
 	on = FALSE
 
@@ -373,7 +373,7 @@
 	icon_state = "bronzelamp"
 	item_state = "bronzelamp"
 	desc = "A marvel of enginseering that emits a strange teal glow. This one bears an emblem related to Malum and has an inscription. It reads, 'Wield me against your foe and the power of creation shall shield you from harm.'"
-	light_outer_range = 8
+	light_range = 8
 	light_color = "#2bd0d6"
 	color = "#2bd0d6"
 	on = TRUE

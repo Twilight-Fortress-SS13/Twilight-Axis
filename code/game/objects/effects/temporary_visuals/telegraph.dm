@@ -4,7 +4,7 @@
 	layer = HUD_LAYER
 	plane = ABOVE_LIGHTING_PLANE
 	randomdir = FALSE
-	light_outer_range = 2
+	light_range = 2
 	duration = 3 SECONDS
 	var/fade_in = FALSE
 

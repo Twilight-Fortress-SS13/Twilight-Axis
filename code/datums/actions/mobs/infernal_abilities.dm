@@ -1,6 +1,6 @@
 /obj/effect/temp_visual/telegraph/hellfire
 	light_color = GLOW_COLOR_FIRE
-	light_outer_range = 2
+	light_range = 2
 	duration = 2 SECONDS
 
 /*

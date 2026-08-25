@@ -304,7 +304,7 @@
 	else
 		icon_state = "streetvendor1"
 	if(held_items.len)
-		set_light(1, 1, 1, l_color = "#1b7bf1")
+		set_light(1, 1, l_color = "#1b7bf1")
 		add_overlay(mutable_appearance(icon, "vendor-gen"))
 
 /obj/structure/roguemachine/vendor/Destroy()
@@ -635,7 +635,7 @@
 	else
 		icon_state = "svendorcart1"
 	if(held_items.len)
-		set_light(1, 1, 1, l_color = "#1b7bf1")
+		set_light(1, 1, l_color = "#1b7bf1")
 		add_overlay(mutable_appearance(icon, "vendor-gen"))
 
 /obj/structure/roguemachine/vendor/mobile/get_mechanics_examine(mob/user)

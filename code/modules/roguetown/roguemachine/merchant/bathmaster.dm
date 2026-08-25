@@ -65,7 +65,7 @@
 	if(obj_broken)
 		set_light(0)
 		return
-	set_light(1, 1, 1, l_color = "#1b7bf1")
+	set_light(1, 1, l_color = "#1b7bf1")
 	add_overlay(mutable_appearance(icon, "vendor-merch"))
 
 /// Single source of truth for displayed and billed prices. Display-time and buy-time
@@ -347,7 +347,7 @@
 	name = "PURITY"
 	desc = "A pillar of the bathhouse's solace, in Eora's name."
 	icon_state = "purity"
-	light_outer_range = 6
+	light_range = 6
 	light_color = "#ff13d8ff"
 	is_public = TRUE
 	locked = FALSE
@@ -368,7 +368,7 @@
 	if(obj_broken)
 		set_light(0)
 		return
-	set_light(1, 1, 1, l_color = "#1b7bf1")
+	set_light(1, 1, l_color = "#1b7bf1")
 	add_overlay(mutable_appearance(icon, "vendor-drug"))
 
 /obj/structure/roguemachine/bathvend/public/Initialize(mapload)

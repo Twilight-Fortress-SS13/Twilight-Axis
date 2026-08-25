@@ -40,7 +40,7 @@
 	expose_caster_on_deflect = TRUE
 	icon_state = "fireball"
 	light_color = "#f8af07"
-	light_outer_range = 2
+	light_range = 2
 	speed = MAGE_PROJ_VERY_SLOW
 	damage = SPITFIRE_DAMAGE
 	damage_type = BURN

@@ -132,7 +132,7 @@
 	anchored = TRUE
 	density = FALSE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	light_outer_range = 1
+	light_range = 1
 	light_color = GLOW_COLOR_ICE
 
 /obj/effect/verglas/Initialize(mapload, lifespan = 0)

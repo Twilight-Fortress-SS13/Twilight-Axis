@@ -56,7 +56,7 @@
 		activate_sanctuary()
 		to_chat(user, span_notice("You light the lantern. The cross begins to hum with a protective aura."))
 		icon_state = "cross_fog1"
-		set_light(5, 2, "#fff2aa")
+		set_light(5, l_color = "#fff2aa")
 	else
 		deactivate_sanctuary()
 		to_chat(user, span_warning("You extinguish the lantern. The aura fades."))

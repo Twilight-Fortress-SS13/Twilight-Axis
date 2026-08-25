@@ -352,7 +352,7 @@ Inquisitorial armory down here
 	desc = "A masterfully-crafted thurible that, when opened, emits a ghastly perfume that reinvigorates the flesh-and-steel of Psydonites. It is said to contain a volatile fragment of the Comet Syon, which - if mishandled - can lead to unforeseen consequences."
 	icon_state = "psycenser"
 	item_state = "psycenser"
-	light_outer_range = 8
+	light_range = 8
 	light_color ="#70d1e2"
 	possible_item_intents = list(/datum/intent/flail/smash/golgotha)
 	fuel = 999 MINUTES

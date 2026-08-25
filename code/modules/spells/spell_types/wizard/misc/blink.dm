@@ -43,7 +43,7 @@
 	randomdir = FALSE
 	duration = 4 SECONDS
 	layer = MASSIVE_OBJ_LAYER
-	light_outer_range = 2
+	light_range = 2
 	light_color = COLOR_PALE_PURPLE_GRAY
 
 /obj/effect/temp_visual/blink/Initialize(mapload, new_caster)

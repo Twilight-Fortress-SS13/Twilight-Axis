@@ -71,7 +71,7 @@
 	desc = ""
 	icon_state = "nothing"
 	light_color = "#FFFFFF"
-	light_outer_range =	MINIMUM_USEFUL_LIGHT_RANGE
+	light_range =	MINIMUM_USEFUL_LIGHT_RANGE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	light_system = MOVABLE_LIGHT
 
@@ -79,7 +79,7 @@
 	. = ..()
 	set_light_on(TRUE)
 	if(_range)
-		set_light_range(null, _range)
+		set_light_range(_range)
 	if(_power)
 		set_light_power(_power)
 	if(_color)

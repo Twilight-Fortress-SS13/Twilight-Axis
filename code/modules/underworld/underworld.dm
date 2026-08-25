@@ -5,7 +5,7 @@
 	item_state = "shrunkenlamp"
 	lefthand_file = 'icons/roguetown/underworld/enigma_husks.dmi'
 	righthand_file = 'icons/roguetown/underworld/enigma_husks.dmi'
-	light_outer_range = 4
+	light_range = 4
 	light_power = 20
 	light_color = LIGHT_COLOR_BLOOD_MAGIC
 
@@ -37,7 +37,7 @@
 
 /obj/structure/underworld/carriageman/Initialize(mapload)
 	. = ..()
-	set_light(5, 4, 30, l_color = LIGHT_COLOR_BLUE)
+	set_light(5, 30, l_color = LIGHT_COLOR_BLUE)
 
 /obj/structure/underworld/carriageman/attack_hand(mob/living/user)
 	if(!istype(user, /mob/living/carbon/spirit))
@@ -121,7 +121,7 @@
 
 /obj/structure/underworld/carriage/Initialize(mapload)
 	. = ..()
-	set_light(5, 3, 30, l_color = LIGHT_COLOR_BLUE)
+	set_light(5, 30, l_color = LIGHT_COLOR_BLUE)
 
 /obj/structure/underworld/carriage/attack_hand(mob/living/carbon/spirit/user)
 	if(user.paid)

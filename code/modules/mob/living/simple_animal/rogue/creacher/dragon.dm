@@ -160,7 +160,7 @@
 	damage_type = BRUTE
 	nodamage = FALSE
 	light_color = "#f8af07"
-	light_outer_range = 2
+	light_range = 2
 	damage = 40
 	flag = "fire"
 	hitsound = 'sound/blank.ogg'

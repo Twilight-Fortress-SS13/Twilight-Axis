@@ -195,7 +195,7 @@
 	possible_item_intents = list(/datum/intent/smoke, INTENT_GENERIC)
 	slot_flags = ITEM_SLOT_HIP
 	light_system = MOVABLE_LIGHT
-	light_outer_range = 1
+	light_range = 1
 	light_color = "#f5a885"
 	light_on = FALSE
 	var/lit = FALSE

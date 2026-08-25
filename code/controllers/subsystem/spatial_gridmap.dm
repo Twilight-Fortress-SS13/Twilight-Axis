@@ -26,6 +26,8 @@
 	var/list/hearing_contents
 	///every client possessed mob inside this cell
 	var/list/client_contents
+	///every dynamic (overlay) light source affecting this cell. assoc list of source -> lum_power, since sources have their own radius rather than a static polling range
+	var/list/dynamic_light_sources
 
 /datum/spatial_grid_cell/New(cell_x, cell_y, cell_z)
 	. = ..()
@@ -40,6 +42,7 @@
 		stack_trace("SSspatial_grid.dummy_list had something inserted into it at some point! this is a problem as it is supposed to stay empty")
 	hearing_contents = dummy_list
 	client_contents = dummy_list
+	dynamic_light_sources = dummy_list
 
 /datum/spatial_grid_cell/Destroy(force)
 	if(!force)//the response to someone trying to qdel this is a right proper fuck you

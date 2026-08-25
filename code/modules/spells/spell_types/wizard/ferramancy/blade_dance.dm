@@ -70,7 +70,7 @@
 	anchored = TRUE
 	density = FALSE
 	layer = ABOVE_MOB_LAYER
-	light_outer_range = 2
+	light_range = 2
 	light_color = GLOW_COLOR_METAL
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	var/mob/living/carbon/human/caster

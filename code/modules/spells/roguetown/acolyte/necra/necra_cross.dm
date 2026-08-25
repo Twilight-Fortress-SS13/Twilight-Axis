@@ -128,7 +128,7 @@
 	// Activate the cross
 	cross_active = TRUE
 	last_activation_time = world.time
-	set_light(3, 2, LIGHT_COLOR_HOLY_MAGIC)
+	set_light(3, l_color = LIGHT_COLOR_HOLY_MAGIC)
 	icon_state = "cross_necra_cloth_active"
 	visible_message(span_notice("The Necran cross begins to glow with a pale, holy light!"))
 	playsound(src, 'sound/magic/ahh1.ogg', 50, TRUE)

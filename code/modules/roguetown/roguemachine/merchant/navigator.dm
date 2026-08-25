@@ -300,7 +300,7 @@
 		set_light(0)
 		return
 	w_class = WEIGHT_CLASS_GIGANTIC
-	set_light(2, 2, 2, l_color = "#1b7bf1")
+	set_light(2, 2, l_color = "#1b7bf1")
 
 /obj/item/roguemachine/navigator/Initialize(mapload)
 	. = ..()

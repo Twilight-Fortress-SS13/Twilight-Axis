@@ -1263,7 +1263,7 @@
 	if(!mob_light_obj || QDELETED(mob_light_obj))
 		mob_light_obj = owner.mob_light("#fdfbd3", 7, 7)
 	else
-		mob_light_obj.set_light(7, null, 7, l_color = "#fdfbd3")
+		mob_light_obj.set_light(7, 7, l_color = "#fdfbd3")
 
 	return TRUE
 

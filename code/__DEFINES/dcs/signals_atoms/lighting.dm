@@ -30,3 +30,29 @@
 #define COMSIG_ATOM_SET_LIGHT_CURVE "atom_set_light_curve"
 ///Called right after the atom changes the value of light_falloff_curve to a different one, from base of [/atom/proc/set_light_curve]: (old_curve)
 #define COMSIG_ATOM_UPDATE_LIGHT_CURVE "atom_update_light_curve"
+///Called right before the atom changes the value of light_angle to a different one, from base [atom/proc/set_light_angle]: (new_value)
+#define COMSIG_ATOM_SET_LIGHT_ANGLE "atom_set_light_angle"
+///Called right after the atom changes the value of light_angle to a different one, from base of [/atom/proc/set_light_angle]: (old_value)
+#define COMSIG_ATOM_UPDATE_LIGHT_ANGLE "atom_update_light_angle"
+///Called right before the atom changes the value of light_dir to a different one, from base [atom/proc/set_light_dir]: (new_value)
+#define COMSIG_ATOM_SET_LIGHT_DIR "atom_set_light_dir"
+///Called right after the atom changes the value of light_dir to a different one, from base of [/atom/proc/set_light_dir]: (old_value)
+#define COMSIG_ATOM_UPDATE_LIGHT_DIR "atom_update_light_dir"
+///Called right before the atom changes the value of light_height to a different one, from base [atom/proc/set_light_height]: (new_value)
+#define COMSIG_ATOM_SET_LIGHT_HEIGHT "atom_set_light_height"
+///Called right after the atom changes the value of light_height to a different one, from base of [/atom/proc/set_light_height]: (old_value)
+#define COMSIG_ATOM_UPDATE_LIGHT_HEIGHT "atom_update_light_height"
+///Called right before the atom changes the value of light_render_source to a different one, from base [atom/proc/set_light_render_source]: (new_value)
+#define COMSIG_ATOM_SET_LIGHT_RENDER_SOURCE "atom_set_light_render_source"
+///Called right after the atom changes the value of light_render_source to a different one, from base of [/atom/proc/set_light_render_source]: (old_value)
+#define COMSIG_ATOM_UPDATE_LIGHT_RENDER_SOURCE "atom_update_light_render_source"
+///from base [/datum/component/overlay_lighting]: light applied to a new holder: (image/visible_mask, image/cone, atom/movable/light_holder)
+#define COMSIG_ATOM_OVERLAY_LIGHT_APPLIED "atom_overlay_light_applied"
+///from base [/datum/component/overlay_lighting]: light removed from its holder: (atom/movable/light_holder)
+#define COMSIG_ATOM_OVERLAY_LIGHT_REMOVED "atom_overlay_light_removed"
+///sent to a light holder atom when an overlay light attached to it is applied: (mutable_appearance/mask_clone, mutable_appearance/cone_clone, atom/movable/parent)
+#define COMSIG_ATOM_HOLDER_OVERLAY_LIGHT_APPLIED "atom_holder_overlay_light_applied"
+///sent to a light holder atom when an overlay light attached to it is removed: (atom/movable/parent)
+#define COMSIG_ATOM_HOLDER_OVERLAY_LIGHT_REMOVED "atom_holder_overlay_light_removed"
+///sent by a light_middleman when it refreshes its intercept appearances, so hooks can reapply their modifications
+#define COMSIG_LIGHT_MIDDLEMAN_UPDATED "light_middleman_updated"

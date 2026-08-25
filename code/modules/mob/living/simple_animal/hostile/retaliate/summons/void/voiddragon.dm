@@ -468,7 +468,7 @@ It will also call down lightning strikes from the sky, and fling people with it'
 /obj/effect/temp_visual/lava_warning
 	icon_state = "lavastaff_warn"
 	layer = BELOW_MOB_LAYER
-	light_outer_range = 2
+	light_range = 2
 	duration = 13
 
 /obj/effect/temp_visual/lava_warning/ex_act()

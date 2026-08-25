@@ -68,7 +68,7 @@
 	max_integrity = 0
 	fueluse = 0
 	light_on = 1
-	light_outer_range = 4
+	light_range = 4
 	light_power = 2
 
 /obj/machinery/light/oldlight/proc/lights_out()

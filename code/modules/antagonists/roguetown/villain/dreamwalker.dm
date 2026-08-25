@@ -134,7 +134,7 @@
 	visible_message(span_warning("[src] shimmers into existence!"))
 	playsound(src, 'sound/magic/charging_lightning.ogg', 50, TRUE)
 
-	set_light(3, 2, 20, l_color = "#7b60f3")
+	set_light(3, 20, l_color = "#7b60f3")
 
 /obj/structure/portal_jaunt/attack_hand(mob/user)
 	if(!do_after(user, 1 SECONDS, target = src))

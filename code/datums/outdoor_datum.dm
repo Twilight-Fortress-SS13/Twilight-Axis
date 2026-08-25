@@ -68,7 +68,7 @@ Sunlight System
 	for(var/datum/lighting_corner/C in affecting_corners)
 		LAZYREMOVE(C.globAffect, src)
 		C.get_sunlight_falloff()
-		T |= C.masters
+		T |= C.get_masters()
 	T |= source_turf /* get our calculated indoor lighting */
 	GLOB.SUNLIGHT_QUEUE_CORNER += T
 
@@ -104,7 +104,7 @@ Sunlight System
 			continue
 		if (!T.lighting_corners_initialised)
 			T.generate_missing_corners()
-		corners |= T.corners
+		corners |= T.get_corners_raw()
 		turfs += T
 
 	//restore lum
@@ -119,7 +119,7 @@ Sunlight System
 		LAZYSET(C.globAffect, src, SUN_FALLOFF(C,source_turf))
 		if(C.globAffect[src] > C.sunFalloff) /* if are closer than current dist, update the corner */
 			C.sunFalloff = C.globAffect[src]
-			tempMasterList |= C.masters
+			tempMasterList |= C.get_masters()
 
 
 	L = affecting_corners - corners // Now-gone corners, remove us from the affecting.
@@ -127,7 +127,7 @@ Sunlight System
 	for (C in L)
 		LAZYREMOVE(C.globAffect, src)
 		C.get_sunlight_falloff()
-		tempMasterList |= C.masters
+		tempMasterList |= C.get_masters()
 
 
 	GLOB.SUNLIGHT_QUEUE_CORNER += tempMasterList /* update the boys */
@@ -170,8 +170,8 @@ Sunlight System
 	//Add ourselves (we might not have corners initialized, and this handles it)
 	SunlightUpdates += src
 
-	for(var/datum/lighting_corner/corner in corners)
-		SunlightUpdates |= corner.masters
+	for(var/datum/lighting_corner/corner as anything in get_corners_raw())
+		SunlightUpdates |= corner.get_masters()
 
 	GLOB.SUNLIGHT_QUEUE_WORK += SunlightUpdates
 

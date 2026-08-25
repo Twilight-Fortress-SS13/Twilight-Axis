@@ -130,12 +130,10 @@
 
 /datum/magic_item/mundane/magnifiedlight/on_apply(obj/item/i)
 	. = ..()
-	var/new_range = max(i.light_outer_range * 2, i.light_outer_range + 3)
-	var/new_inner = new_range / 4
+	var/new_range = max(i.light_range * 2, i.light_range + 3)
 	if(i.light_system == MOVABLE_LIGHT)
-		i.light_inner_range = new_inner
-		i.light_outer_range = new_range
-		SEND_SIGNAL(i, COMSIG_ATOM_SET_LIGHT_RANGE, new_inner, new_range)
+		i.light_range = new_range
+		SEND_SIGNAL(i, COMSIG_ATOM_SET_LIGHT_RANGE, new_range)
 	else
 		i.set_light(new_range)
 	i.update_icon()

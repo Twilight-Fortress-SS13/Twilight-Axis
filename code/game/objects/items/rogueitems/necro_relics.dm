@@ -23,7 +23,7 @@
 
 /obj/item/necro_relics/necro_crystal/Initialize(mapload)
 	..()
-	set_light(2, 2, 1, l_color = "#551c1c")
+	set_light(2, 1, l_color = "#551c1c")
 
 /obj/item/necro_relics/necro_crystal/proc/recharge(obj/item/reagent_containers/lux/L, mob/user)
 	if(current_charges >= max_charges)

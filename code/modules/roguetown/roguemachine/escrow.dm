@@ -1076,7 +1076,7 @@ GLOBAL_LIST_EMPTY(escrow_machines)
 		return
 	icon_state = "streetvendor1"
 	if(length(orders))
-		set_light(1, 1, 1, l_color = "#f1c94b")
+		set_light(1, 1, l_color = "#f1c94b")
 	else
 		set_light(0)
 

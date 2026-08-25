@@ -95,7 +95,7 @@
 	expose_caster_on_deflect = TRUE
 	speed = 0.3
 	flag = "fire"
-	light_outer_range = 5
+	light_range = 5
 	var/arcs = TRUE
 
 /obj/projectile/magic/arc_bolt/single

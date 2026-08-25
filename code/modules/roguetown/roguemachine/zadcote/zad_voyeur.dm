@@ -38,7 +38,7 @@
 		source_desc = "[broadcaster]"
 	broadcaster.visible_message(span_notice("A strange blue glow emits from [source_desc]."))
 	add_filter("zad_voyeur_glow", 2, list("type" = "outline", "size" = 1, "color" = "#4488ff"))
-	set_light(2, 2, 2, l_color = "#1b7bf1")
+	set_light(2, 2, l_color = "#1b7bf1")
 	var/mob/dead/observer/eye/screye/zadcote_voyeur/S = operator.scry_ghost(/mob/dead/observer/eye/screye/zadcote_voyeur)
 	if(!S)
 		end_voyeur_visuals()

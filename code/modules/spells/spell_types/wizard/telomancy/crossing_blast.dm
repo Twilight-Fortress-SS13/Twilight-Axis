@@ -126,5 +126,5 @@
 	randomdir = FALSE
 	duration = 1 SECONDS
 	layer = MASSIVE_OBJ_LAYER
-	light_outer_range = 2
+	light_range = 2
 	light_color = GLOW_COLOR_ARCANE

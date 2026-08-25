@@ -23,7 +23,7 @@
 
 /obj/structure/roguemachine/ship_fulfillment/Initialize(mapload)
 	. = ..()
-	set_light(1, 1, 1, l_color = "#c8a060")
+	set_light(1, 1, l_color = "#c8a060")
 	add_overlay(mutable_appearance(icon, "vendor-merch"))
 
 /obj/structure/roguemachine/ship_fulfillment/get_mechanics_examine(mob/user)

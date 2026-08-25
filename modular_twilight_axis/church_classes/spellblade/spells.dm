@@ -112,7 +112,7 @@
 		else 
 			to_chat(usr, span_warning("Я сотворил оружие и Нок одарила меня знаниями к нему."))
 			user.adjust_skillrank(weapon_select.selected_weapon.associated_skill, SKILL_LEVEL_EXPERT, TRUE)
-		spawned_weapon.set_light(4, 2, 1.5, l_color ="#78a3c9")
+		spawned_weapon.set_light(4, 1.5, l_color ="#78a3c9")
 		QDEL_IN_CLIENT_TIME(spawned_weapon, 3 MINUTES)
 	else 
 		to_chat(usr, span_warningbig("Что-то мешает мне применить это."))

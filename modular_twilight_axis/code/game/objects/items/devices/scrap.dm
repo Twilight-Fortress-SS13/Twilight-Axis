@@ -5,7 +5,7 @@
 	icon_state = "lamp"
 	icon = 'modular_twilight_axis/icons/roguetown/items/lighting.dmi'
 	desc = "A light to guide the way."
-	light_outer_range = 5
+	light_range = 5
 	on = FALSE
 	flags_1 = CONDUCT_1
 	slot_flags = ITEM_SLOT_HIP

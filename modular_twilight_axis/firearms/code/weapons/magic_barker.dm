@@ -8,7 +8,7 @@
 /obj/item/gun/ballistic/twilight_firearm/barker/barker_staff
 	var/cast_time_reduction = null
 	light_system = MOVABLE_LIGHT
-	light_outer_range = 2
+	light_range = 2
 	light_power = 1
 	light_color = "#f5a885"
 	possible_item_intents = list(/datum/intent/mace/strike/wood)
@@ -139,7 +139,7 @@
 	icon_state = "dendor2"
 	item_state = "dendor2"
 	light_color = "#57c179"
-	light_outer_range = 5
+	light_range = 5
 	wdefense = 6
 	max_integrity = 230
 

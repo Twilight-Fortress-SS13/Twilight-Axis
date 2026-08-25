@@ -1020,7 +1020,7 @@
 	icon_state = "barker_light"
 	item_state = "barker_light"
 	light_system = MOVABLE_LIGHT
-	light_outer_range = 7
+	light_range = 7
 	light_power = 1
 	light_color = "#f5a885"
 

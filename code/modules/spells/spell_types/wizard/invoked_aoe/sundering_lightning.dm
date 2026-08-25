@@ -76,5 +76,5 @@
 
 /obj/effect/temp_visual/telegraph/targetlightning
 	light_color = GLOW_COLOR_LIGHTNING
-	light_outer_range = 2
+	light_range = 2
 	duration = 15
