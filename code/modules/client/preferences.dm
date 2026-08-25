@@ -612,6 +612,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<tr>"
 			dat += "<td style='width:33%;text-align:left'>"
 			dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;'>Change Character</a>"
+			// TA EDIT
 			dat += " | <a style='white-space:nowrap;' href='?_src_=prefs;preference=resetslot;'>Reset Character</a>"
 			dat += "</td>"
 
@@ -3419,6 +3420,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 				if("changeslot")
 					var/list/choices = list()
+					// TA EDIT
 					var/list/empty_slots = list()
 					if(path)
 						var/savefile/S = new /savefile(path)
@@ -3429,6 +3431,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 								S.cd = "/character[i]"
 								S["real_name"] >> name
 								S["topjob"] >> suffix
+								// TA EDIT START
 								var/is_empty = !name
 								if(!name)
 									name = "Slot[i]"
@@ -3454,6 +3457,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					if(alert(user, "This will wipe ALL data on the currently selected character slot, leaving it as a fresh, empty character. This cannot be undone. Continue?", "Reset Character Slot", "Yes", "No") == "Yes")
 						reset_current_character()
 						to_chat(user, span_notice("Character slot wiped. It is now a fresh, empty character."))
+						// TA EDIT END
 
 				if("tab")
 					if (href_list["tab"])
