@@ -2161,8 +2161,8 @@
 			AT.get_remote_view_fullscreens(src)
 		else
 			clear_fullscreen("remote_view", 0)
-		// Keep parallax fog attached to perspective changes immediately, including non-movable turf eyes.
 		client?.update_particle_weather_parallax()
+		client?.update_particle_weather_world_effect()
 
 GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
@@ -2607,6 +2607,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 		to_chat(src, message)
 	animate(client, pixel_x = world.icon_size*_x, pixel_y = world.icon_size*_y, ttime)
 	client.set_particle_weather_parallax_camera_offset(world.icon_size*_x, world.icon_size*_y, ttime)
+	client.set_particle_weather_world_camera_offset(world.icon_size*_x, world.icon_size*_y, ttime)
 //	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(stop_looking))
 	update_cone_show()
 
@@ -2656,6 +2657,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 		return
 	animate(client, pixel_x = 0, pixel_y = 0, 2, easing = SINE_EASING)
 	client.set_particle_weather_parallax_camera_offset(0, 0, 2, SINE_EASING)
+	client.set_particle_weather_world_camera_offset(0, 0, 2, SINE_EASING)
 	if(client)
 		client.pixel_x = 0
 		client.pixel_y = 0

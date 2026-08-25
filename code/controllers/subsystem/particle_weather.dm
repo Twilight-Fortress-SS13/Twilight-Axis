@@ -30,6 +30,9 @@ SUBSYSTEM_DEF(ParticleWeather)
 		if(runningWeather.parallax_weather)
 			for(var/client/C as anything in GLOB.clients)
 				C.ensure_particle_weather_parallax()
+		else
+			for(var/client/C as anything in GLOB.clients)
+				C.ensure_particle_weather_world_effect()
 		currentrun_mobs = GLOB.player_list.Copy()
 		// Every registered obj's weather_act_on() gates on PARTICLEWEATHER_RAIN, and target_trait is
 		// what we pass it - so only rain-trait weather (incl. fog) can affect objs. Skip the whole
@@ -144,6 +147,7 @@ SUBSYSTEM_DEF(ParticleWeather)
 			effect.alpha = 0
 	for(var/client/C as anything in GLOB.clients)
 		C.update_particle_weather_parallax(TRUE)
+		C.update_particle_weather_world_effect(TRUE)
 
 /datum/controller/subsystem/ParticleWeather/proc/setWeatherSeverity(severity_mod, transition_time = 0)
 	if(!runningWeather)
@@ -166,6 +170,7 @@ SUBSYSTEM_DEF(ParticleWeather)
 /datum/controller/subsystem/ParticleWeather/proc/stopWeather()
 	for(var/client/C as anything in GLOB.clients)
 		C.clear_particle_weather_parallax()
+		C.clear_particle_weather_world_effect()
 	for(var/obj/act_on as anything in GLOB.weather_act_upon_list)
 		act_on.weather = FALSE
 	for(var/obj/weather_effect/effect as anything in weatherEffects)

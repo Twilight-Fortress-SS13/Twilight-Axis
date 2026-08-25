@@ -7,6 +7,10 @@
 	vis_flags = VIS_INHERIT_PLANE
 	alpha = 0
 	var/weather_tile_size = 512
+	var/world_lock_offset_x = 0
+	var/world_lock_offset_y = 0
+	var/world_lock_camera_offset_x = 0
+	var/world_lock_camera_offset_y = 0
 
 /obj/weather_effect/proc/configure(new_icon, new_icon_state, scroll_x = 0, scroll_y = -256, scroll_time = 10, tile_size = 512, tile_count = 3, scroll_pingpong = FALSE, offset_x = 0, offset_y = 0)
 	animate(src)
@@ -17,6 +21,12 @@
 	icon = new_icon
 	icon_state = new_icon_state
 	weather_tile_size = tile_size
+	world_lock_offset_x = 0
+	world_lock_offset_y = 0
+	world_lock_camera_offset_x = 0
+	world_lock_camera_offset_y = 0
+	pixel_w = 0
+	pixel_z = 0
 	var/offset = -round((tile_size * tile_count) / 2)
 	pixel_x = offset + offset_x
 	pixel_y = offset + offset_y
@@ -44,6 +54,70 @@
 	else
 		animate(transform = null, time = 0)
 
+/obj/weather_effect/proc/apply_world_lock_position(transition_time = 0, easing_mode = 0)
+	var/target_x = round(world_lock_offset_x - world_lock_camera_offset_x, 1)
+	var/target_y = round(world_lock_offset_y - world_lock_camera_offset_y, 1)
+	if(transition_time > 0)
+		animate(src, pixel_w = target_x, pixel_z = target_y, time = transition_time, easing = easing_mode, tag = "weather_world_position")
+	else
+		animate(src, tag = "weather_world_position")
+		pixel_w = target_x
+		pixel_z = target_y
+
+/obj/weather_effect/proc/set_absolute_world_position(turf/T)
+	if(!T)
+		return
+	var/tile_size = max(world.icon_size, weather_tile_size)
+	var/world_pixel_x = (T.x - 1) * world.icon_size
+	var/world_pixel_y = (T.y - 1) * world.icon_size
+	world_lock_offset_x = -(world_pixel_x % tile_size)
+	world_lock_offset_y = -(world_pixel_y % tile_size)
+	var/half_tile = tile_size * 0.5
+	if(world_lock_offset_x > half_tile)
+		world_lock_offset_x -= tile_size
+	else if(world_lock_offset_x < -half_tile)
+		world_lock_offset_x += tile_size
+	if(world_lock_offset_y > half_tile)
+		world_lock_offset_y -= tile_size
+	else if(world_lock_offset_y < -half_tile)
+		world_lock_offset_y += tile_size
+	apply_world_lock_position()
+
+/obj/weather_effect/proc/set_world_lock_camera_offset(new_offset_x, new_offset_y, transition_time = 0, easing_mode = 0)
+	world_lock_camera_offset_x = new_offset_x
+	world_lock_camera_offset_y = new_offset_y
+	apply_world_lock_position(transition_time, easing_mode)
+
+/obj/weather_effect/proc/update_world_position(offset_tiles_x, offset_tiles_y, glide_rate, animate_position)
+	var/tile_size = max(world.icon_size, weather_tile_size)
+	var/change_x = offset_tiles_x * world.icon_size
+	var/change_y = offset_tiles_y * world.icon_size
+	var/old_x = world_lock_offset_x
+	var/old_y = world_lock_offset_y
+	var/half_tile = tile_size * 0.5
+	while(old_x - change_x > half_tile)
+		world_lock_offset_x -= tile_size
+		old_x -= tile_size
+		pixel_w = round(world_lock_offset_x - world_lock_camera_offset_x, 1)
+	while(old_x - change_x < -half_tile)
+		world_lock_offset_x += tile_size
+		old_x += tile_size
+		pixel_w = round(world_lock_offset_x - world_lock_camera_offset_x, 1)
+	while(old_y - change_y > half_tile)
+		world_lock_offset_y -= tile_size
+		old_y -= tile_size
+		pixel_z = round(world_lock_offset_y - world_lock_camera_offset_y, 1)
+	while(old_y - change_y < -half_tile)
+		world_lock_offset_y += tile_size
+		old_y += tile_size
+		pixel_z = round(world_lock_offset_y - world_lock_camera_offset_y, 1)
+	world_lock_offset_x -= change_x
+	world_lock_offset_y -= change_y
+	if(animate_position && max(abs(offset_tiles_x), abs(offset_tiles_y)) * world.icon_size > 1)
+		apply_world_lock_position(max(1, glide_rate))
+	else
+		apply_world_lock_position()
+
 /obj/weather_effect/proc/clear_visual()
 	animate(src)
 	transform = null
@@ -51,6 +125,12 @@
 	filters = list()
 	icon_state = null
 	alpha = 0
+	world_lock_offset_x = 0
+	world_lock_offset_y = 0
+	world_lock_camera_offset_x = 0
+	world_lock_camera_offset_y = 0
+	pixel_w = 0
+	pixel_z = 0
 	color = null
 	blend_mode = BLEND_DEFAULT
 

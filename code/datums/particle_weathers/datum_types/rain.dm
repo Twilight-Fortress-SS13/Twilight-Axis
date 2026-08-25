@@ -8,6 +8,8 @@
 	weather_alpha_min = 75
 	weather_alpha_max = 165
 	weather_tile_count = 4
+	weather_duration_lower = 5 MINUTES
+	weather_duration_upper = 10 MINUTES
 
 	scale_vol_with_severity = TRUE
 	weather_sounds = list(/datum/looping_sound/rain)
@@ -46,6 +48,8 @@
 	weather_alpha_min = 95
 	weather_alpha_max = 190
 	weather_tile_count = 4
+	weather_duration_lower = 5 MINUTES
+	weather_duration_upper = 10 MINUTES
 
 	scale_vol_with_severity = TRUE
 	weather_sounds = list(/datum/looping_sound/storm)
