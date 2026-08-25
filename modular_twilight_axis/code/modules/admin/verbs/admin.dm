@@ -47,3 +47,20 @@
 	log_admin("[key_name(usr)] cleared job respawn delay for [target_ckey][remaining_text].")
 	message_admins("[key_name_admin(usr)] cleared job respawn delay for [target_ckey][remaining_text].")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Clear Job Respawn Delay")
+
+/client/proc/client_render_stats()
+	set name = "Client Render Stats"
+	set category = "Debug"
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	var/images_count = images ? images.len : 0
+	var/screen_count = screen ? screen.len : 0
+	var/runechat_queue = SSrunechat?.message_queue ? SSrunechat.message_queue.len : 0
+	var/overlays_count = mob?.overlays ? mob.overlays.len : 0
+	var/underlays_count = mob?.underlays ? mob.underlays.len : 0
+	var/vis_contents_count = mob?.vis_contents ? mob.vis_contents.len : 0
+	var/z_level = mob ? mob.z : 0
+
+	to_chat(mob, span_notice("RenderStats: images=[images_count] screen=[screen_count] overlays=[overlays_count] underlays=[underlays_count] vis_contents=[vis_contents_count] runechat_queue=[runechat_queue] z=[z_level]"))

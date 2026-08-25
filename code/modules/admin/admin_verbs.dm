@@ -43,6 +43,8 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/remove_bounty,
 	// RATWOOD MODULAR START
 	/client/proc/bunker_bypass,
+	//TWILIGHT AXIS MODULAR START
+	/client/proc/client_render_stats,
 	)
 GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
 GLOBAL_PROTECT(admin_verbs_admin)
