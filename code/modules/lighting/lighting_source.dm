@@ -275,7 +275,9 @@ GLOBAL_LIST_EMPTY(lighting_sheets)
 	// You may notice we use squares here even though there are three components
 	// Because z diffs are so functionally small, cubes and cube roots are too aggressive
 	// The larger the distance is, the less bright our light will be
-	var/multiplier = 1 - CLAMP01(sqrt(x ** 2 + y ** 2 + z ** 2 + height) / range_divisor)
+	// Raised to LIGHTING_DEFAULT_FALLOFF_CURVE so brightness actually tapers off within the range instead of
+	// staying near-full right up to the edge (tg's plain linear falloff reads as blown-out/"hyperbright" for our art).
+	var/multiplier = CLAMP01(1 - CLAMP01(sqrt(x ** 2 + y ** 2 + z ** 2 + height) / range_divisor)) ** LIGHTING_DEFAULT_FALLOFF_CURVE
 	if(angle >= 360 || angle <= 0)
 		return multiplier
 
