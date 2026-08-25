@@ -334,7 +334,7 @@
 	for(var/zone in limbs)
 		var/obj/item/bodypart/BP = H.get_bodypart(zone)
 		if(BP)
-			BP.add_wound(/datum/wound/fracture/no_bleed)
+			BP.add_wound(/datum/wound/fracture/no_piss)
 
 /// Helper spell
 

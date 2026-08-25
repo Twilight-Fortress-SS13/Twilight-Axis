@@ -293,7 +293,7 @@
 					wash_atom(item2wash, CLEAN_STRONG)
 					L.update_inv_hands()
 				if(istype(src,/turf/open/water/bloody))
-					item2wash.add_blood_DNA(list("Blood" = random_blood_type()))
+					item2wash.add_urine_DNA(list("Blood" = random_urine_type()))
 				if(iscarbon(L))
 					var/mob/living/carbon/C = user
 					C.update_inv_hands()
@@ -420,7 +420,7 @@
 	water_color = "#941010"
 	slowdown = 3
 	wash_in = FALSE
-	water_reagent = /datum/reagent/blood/shitty
+	water_reagent = /datum/reagent/urine/shitty
 
 /turf/open/water/swamp/Initialize(mapload)
 	icon_state = "dirt"
@@ -457,7 +457,7 @@
 				chance = 1
 			if(!prob(chance))
 				return
-			if(C.blood_volume <= 0)
+			if(C.urine_volume <= 0)
 				return
 
 			if(HAS_TRAIT(C, TRAIT_LEECHRESIST))
@@ -514,7 +514,7 @@
 			if(!prob(chance))
 				return .
 
-			if(C.blood_volume <= 0)
+			if(C.urine_volume <= 0)
 				return .
 
 			if(HAS_TRAIT(C, TRAIT_LEECHRESIST))

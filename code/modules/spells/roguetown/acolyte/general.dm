@@ -46,7 +46,7 @@
 	<li><b>Ravox:</b> +40% if the target is using a strong attack intent. +20% if holding a weapon. +80% with blood restoration if cast on self while at low blood (30s cooldown). Up to +140% total.</li>\
 	<li><b>Xylix:</b> 50% chance of a random +40% to +100% bonus.</li>\
 	<li><b>Undivided:</b> Always +80% with no conditions.</li>\
-	<li><b>Baotha:</b> +20% if the target is drunk or on drugs. +20% if experiencing withdrawal. Up to +80% additional from wound pain and bleeding. Up to +120% total.</li>\
+	<li><b>Baotha:</b> +20% if the target is drunk or on drugs. +20% if experiencing withdrawal. Up to +80% additional from wound pain and pissing. Up to +120% total.</li>\
 	<li><b>Graggar:</b> Up to +100% scaling with nearby blood decals.</li>\
 	<li><b>Matthios:</b> +100% if the target has the Freeman trait.</li>\
 	<li><b>Zizo:</b> Up to +200% scaling with nearby bones and bone bundles.</li>\
@@ -372,7 +372,7 @@
 			to_chat(UH, span_warning("I have no blood to provide."))
 			return FALSE
 
-		if(target.blood_volume >= BLOOD_VOLUME_NORMAL)
+		if(target.urine_volume >= URINE_VOLUME_NORMAL)
 			to_chat(UH, span_warning("Their lyfeblood is at capacity. There is no need."))
 			return FALSE
 
@@ -386,7 +386,7 @@
 		playsound(UH, 'sound/magic/bloodheal_start.ogg', 100, TRUE)
 		var/user_skill = UH.get_skill_level(associated_skill)
 		var/user_informed = FALSE
-		switch(user_skill)	//Bleeding happens every life(), which is every 2 seconds. Multiply these numbers by 4 to get the "bleedrate" equivalent values.
+		switch(user_skill)	//Pissing happens every life(), which is every 2 seconds. Multiply these numbers by 4 to get the "pissrate" equivalent values.
 			if(SKILL_LEVEL_APPRENTICE)
 				blood_price = 3.75
 			if(SKILL_LEVEL_JOURNEYMAN)
@@ -399,14 +399,14 @@
 				blood_price = 1.25
 		if(user_skill > SKILL_LEVEL_NOVICE)
 			blood_vol_restore += vol_per_skill * user_skill
-		var/max_loops = round(UH.blood_volume / blood_price, 1) * 2	// x2 just in case the user is trying to fill themselves up while using it.
+		var/max_loops = round(UH.urine_volume / blood_price, 1) * 2	// x2 just in case the user is trying to fill themselves up while using it.
 		var/datum/beam/bloodbeam = owner.Beam(target,icon_state="blood",time=(max_loops * 5))
 		for(var/i in 1 to max_loops)
-			if(UH.blood_volume > (BLOOD_VOLUME_SURVIVE / 2))
+			if(UH.urine_volume > (URINE_VOLUME_SURVIVE / 2))
 				if(do_after(UH, delay))
-					target.blood_volume = min((target.blood_volume + blood_vol_restore), BLOOD_VOLUME_NORMAL)
-					UH.blood_volume = max((UH.blood_volume - blood_price), 0)
-					if(target.blood_volume >= BLOOD_VOLUME_NORMAL && !user_informed)
+					target.urine_volume = min((target.urine_volume + blood_vol_restore), URINE_VOLUME_NORMAL)
+					UH.urine_volume = max((UH.urine_volume - blood_price), 0)
+					if(target.urine_volume >= URINE_VOLUME_NORMAL && !user_informed)
 						to_chat(UH, span_info("They're at a healthy blood level, but I can keep going."))
 						user_informed = TRUE
 				else

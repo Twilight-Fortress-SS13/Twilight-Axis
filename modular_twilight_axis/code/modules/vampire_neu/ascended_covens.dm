@@ -1045,7 +1045,7 @@
 		pushed.Knockdown(2 SECONDS)
 
 /datum/coven_power/potence/ascended_omnipotence/proc/ta_leave_omnipotence_blood(mob/living/target, turf/blood_turf)
-	if(!target || QDELETED(target) || !blood_turf || !target.get_blood_id() || !target.get_bleed_rate())
+	if(!target || QDELETED(target) || !blood_turf || !target.get_blood_id() || !target.get_piss_rate())
 		return
 	if(istype(blood_turf, /turf/open/water))
 		target.add_drip_floor(blood_turf, TA_OMNIPOTENCE_BLOOD_TRAIL_AMOUNT)
@@ -1055,7 +1055,7 @@
 		puddle.blood_vol += TA_OMNIPOTENCE_BLOOD_TRAIL_AMOUNT
 	else
 		puddle = new(blood_turf)
-	puddle.add_blood_DNA(target.return_blood_DNA())
+	puddle.add_urine_DNA(target.return_urine_DNA())
 	puddle.update_icon()
 
 /datum/coven_power/potence/ascended_omnipotence/proc/ta_apply_omnipotence_flight_overlay(mob/living/target)

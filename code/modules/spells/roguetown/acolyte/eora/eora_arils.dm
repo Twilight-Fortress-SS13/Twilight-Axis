@@ -49,7 +49,7 @@
 
 /obj/item/reagent_containers/food/snacks/eoran_aril/crimson/Initialize(mapload)
 	. = ..()
-	blood_loss = BLOOD_VOLUME_NORMAL * 0.03
+	blood_loss = URINE_VOLUME_NORMAL * 0.03
 
 /obj/item/reagent_containers/food/snacks/eoran_aril/crimson/apply_effects(mob/living/carbon/eater)
 	//Instant heal, but you can only eat a couple before the next will make you pass out.
@@ -57,13 +57,13 @@
 	//No undead because they kinda don't have blood to give for this.
 	if(!HAS_TRAIT(eater, TRAIT_IRONMAN) && !(eater.mob_biotypes & MOB_UNDEAD))
 		var/current_brute_loss = eater.getBruteLoss()
-		blood_loss += (eater.blood_volume * 0.06)
+		blood_loss += (eater.urine_volume * 0.06)
 		if(wCount.len > 0)
 			eater.heal_wounds(heal_amount + (current_brute_loss * 0.12))
 			eater.update_damage_overlays()
 		// blood loss is equal to 3% max blood volume + 6% of current blood volume
 		// Regular healing is equal to 35 damage + 12% of current damage
-		eater.blood_volume = max(0, eater.blood_volume - blood_loss)
+		eater.urine_volume = max(0, eater.urine_volume - blood_loss)
 		eater.adjustBruteLoss(-(heal_amount + (current_brute_loss * 0.12)), 0)
 		eater.adjustFireLoss(-(heal_amount + (eater.getFireLoss() * 0.12)), 0)
 		eater.adjustToxLoss(-(heal_amount + (eater.getToxLoss() * 0.12)), 0)
@@ -87,13 +87,13 @@
 	//No undead because they kinda don't have blood to give for this.
 	if(!HAS_TRAIT(user, TRAIT_IRONMAN) && !(user.mob_biotypes & MOB_UNDEAD))
 		var/current_brute_loss = eater.getBruteLoss()
-		blood_loss += (user.blood_volume * 0.08)
+		blood_loss += (user.urine_volume * 0.08)
 		if(wCount.len > 0)
 			eater.heal_wounds(heal_amount + (current_brute_loss * 0.12))
 			eater.update_damage_overlays()
 		// blood loss is equal to 3% max blood volume + 8% of current blood volume
 		// Regular healing is equal to 35 damage + 12% of current damage
-		user.blood_volume = max(0, user.blood_volume - blood_loss)
+		user.urine_volume = max(0, user.urine_volume - blood_loss)
 		eater.adjustBruteLoss(-(heal_amount + (current_brute_loss * 0.12)), 0)
 		eater.adjustFireLoss(-(heal_amount + (eater.getFireLoss() * 0.12)), 0)
 		eater.adjustToxLoss(-(heal_amount + (eater.getToxLoss() * 0.12)), 0)

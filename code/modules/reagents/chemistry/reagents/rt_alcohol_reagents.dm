@@ -481,8 +481,8 @@
 
 /datum/reagent/consumable/ethanol/cider/ambrosia/on_mob_life(mob/living/carbon/M)
 	if(ishuman(M))
-		if(M.blood_volume < BLOOD_VOLUME_NORMAL)
-			M.blood_volume = min(M.blood_volume+20, BLOOD_VOLUME_NORMAL)
+		if(M.urine_volume < URINE_VOLUME_NORMAL)
+			M.urine_volume = min(M.urine_volume+20, URINE_VOLUME_NORMAL)
 	var/list/wCount = M.get_wounds()
 	if(wCount.len > 0)
 		M.heal_wounds(4)

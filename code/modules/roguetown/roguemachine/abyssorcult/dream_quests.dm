@@ -64,7 +64,7 @@
 	You blink, and you are back in the mist. The pilgrim stirs, their wounds weeping. They will not survive the night \
 	without intervention. Will you be the hand that pulls them from the tide, or will you watch them drown?"
 	possible_phrases = list(
-		"The faithful do not bleed upon corrupt soil",
+		"The faithful do not piss upon corrupt soil",
 		"Bury whom wounds or suffer their grief"
 	)
 

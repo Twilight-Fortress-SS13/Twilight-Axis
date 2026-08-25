@@ -31,7 +31,7 @@
 	ADD_TRAIT(src, TRAIT_NOPAIN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_KNEESTINGER_IMMUNITY, INNATE_TRAIT)
 	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
-	// We do not bleed.
+	// We do not piss.
 	REMOVE_TRAIT(src, TRAIT_SIMPLE_WOUNDS, TRAIT_GENERIC)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/revenant/proc/appear_animated()

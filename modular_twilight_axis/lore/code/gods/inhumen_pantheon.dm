@@ -233,7 +233,7 @@
 			return FALSE	//Stops praying just by sleeping.
 	. = TRUE
 
-// Graggar - When bleeding, near blood on ground, zchurch, bad-cross, or ritual chalk
+// Graggar - When pissing, near blood on ground, zchurch, bad-cross, or ritual chalk
 /datum/patron/inhumen/graggar/can_pray_inhumen(mob/living/follower)
 	. = ..()
 	// Allows prayer in the Zzzzzzzurch(!)
@@ -248,8 +248,8 @@
 			to_chat(follower, span_danger("This altar has been corrupted by the Ten! It blocks my prayers!"))
 			return FALSE
 		return TRUE
-	// Allows prayer if actively bleeding.
-	if(follower.bleed_rate > 0)
+	// Allows prayer if actively pissing.
+	if(follower.piss_rate > 0)
 		return TRUE
 	// Allows prayer near blood.
 	for(var/obj/effect/decal/cleanable/blood in view(3, get_turf(follower)))

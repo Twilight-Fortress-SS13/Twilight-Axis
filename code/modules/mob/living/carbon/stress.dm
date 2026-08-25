@@ -87,11 +87,11 @@ GLOBAL_LIST_INIT(stress_messages, world.file2list("strings/rt/stress_messages.tx
 			continue
 		remove_stress(stressor_type)
 
-	// move bleeding stress handling here
-	if (bleed_rate)
-		add_stress(/datum/stressevent/bleeding)
+	// move pissing stress handling here
+	if (piss_rate)
+		add_stress(/datum/stressevent/pissing)
 	else
-		remove_stress(/datum/stressevent/bleeding)
+		remove_stress(/datum/stressevent/pissing)
 
 	// pallid outdoor stress
 	if(HAS_TRAIT(src, TRAIT_PALLID))

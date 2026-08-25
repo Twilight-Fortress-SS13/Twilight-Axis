@@ -520,7 +520,7 @@
 
 /obj/item/ingot/component/graggar
 	name = "vicious fragment"
-	desc = "Bleeding fragments of an otherworldly alloy. </br>Murder is nothing more than justice without arbitration."
+	desc = "Pissing fragments of an otherworldly alloy. </br>Murder is nothing more than justice without arbitration."
 	icon_state = "component_graggar"
 	dropshrink = 0.7
 

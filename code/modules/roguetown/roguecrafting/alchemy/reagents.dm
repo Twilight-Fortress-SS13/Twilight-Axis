@@ -16,8 +16,8 @@
 		return ..()
 	if(volume >= 60)
 		M.reagents.remove_reagent(/datum/reagent/medicine/healthpot, 2) //No overhealing.
-	if(M.blood_volume < BLOOD_VOLUME_NORMAL)
-		M.blood_volume = min(M.blood_volume+15, BLOOD_VOLUME_NORMAL)
+	if(M.urine_volume < URINE_VOLUME_NORMAL)
+		M.urine_volume = min(M.urine_volume+15, URINE_VOLUME_NORMAL)
 	var/list/wCount = M.get_wounds()
 	if(wCount.len > 0)
 		M.heal_wounds(3) //at a metabolism of .5 U a tick this translates to 120WHP healing with 20 U Most wounds are unsewn 15-100. This is powerful on single wounds but rapidly weakens at multi wounds.
@@ -63,8 +63,8 @@
 		var/mob/living/carbon/human/H = M
 		if(!HAS_TRAIT(H, TRAIT_NOHUNGER))
 			H.adjust_hydration(hydration)
-		if(M.blood_volume < BLOOD_VOLUME_NORMAL)
-			M.blood_volume = min(M.blood_volume+10, BLOOD_VOLUME_NORMAL)
+		if(M.urine_volume < URINE_VOLUME_NORMAL)
+			M.urine_volume = min(M.urine_volume+10, URINE_VOLUME_NORMAL)
 	var/list/wCount = M.get_wounds()
 	if(wCount.len > 0)
 		M.heal_wounds(4) //Better than traditional lifeblood at sealing open wounds. Slightly weaker healing potency, in turn.
@@ -91,8 +91,8 @@
 		return ..()
 	if(volume >= 60)
 		M.reagents.remove_reagent(/datum/reagent/medicine/healthpot, 2) //No overhealing.
-	if(M.blood_volume < BLOOD_VOLUME_NORMAL)
-		M.blood_volume = min(M.blood_volume+20, BLOOD_VOLUME_NORMAL)
+	if(M.urine_volume < URINE_VOLUME_NORMAL)
+		M.urine_volume = min(M.urine_volume+20, URINE_VOLUME_NORMAL)
 	var/list/wCount = M.get_wounds()
 	if(wCount.len > 0)
 		M.heal_wounds(5) // i've decided that middle would be the best choice here

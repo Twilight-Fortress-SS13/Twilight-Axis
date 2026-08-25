@@ -3,99 +3,99 @@
 ****************************************************/
 
 /mob/living/proc/suppress_bloodloss(amount)
-	if(bleedsuppress)
+	if(pisssuppress)
 		return
 	else
-		bleedsuppress = TRUE
-		addtimer(CALLBACK(src, PROC_REF(resume_bleeding)), amount)
+		pisssuppress = TRUE
+		addtimer(CALLBACK(src, PROC_REF(resume_pissing)), amount)
 
-/mob/living/proc/resume_bleeding()
-	bleedsuppress = 0
-	if(stat != DEAD && bleed_rate)
+/mob/living/proc/resume_pissing()
+	pisssuppress = 0
+	if(stat != DEAD && piss_rate)
 		to_chat(src, span_warning("The blood soaks through my bandage."))
 
 /mob/living/carbon/proc/refresh_blood_debuffs()
-	remove_status_effect(/datum/status_effect/debuff/bleeding)
-	remove_status_effect(/datum/status_effect/debuff/bleedingworse)
-	remove_status_effect(/datum/status_effect/debuff/bleedingworst)
+	remove_status_effect(/datum/status_effect/debuff/pissing)
+	remove_status_effect(/datum/status_effect/debuff/pissingworse)
+	remove_status_effect(/datum/status_effect/debuff/pissingworst)
 
-	switch(blood_volume)
-		if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
+	switch(urine_volume)
+		if(URINE_VOLUME_OKAY to URINE_VOLUME_SAFE)
 			if(prob(3))
 				to_chat(src, span_warning("I feel dizzy."))
-			remove_status_effect(/datum/status_effect/debuff/bleedingworse)
-			remove_status_effect(/datum/status_effect/debuff/bleedingworst)
-			apply_status_effect(/datum/status_effect/debuff/bleeding)
+			remove_status_effect(/datum/status_effect/debuff/pissingworse)
+			remove_status_effect(/datum/status_effect/debuff/pissingworst)
+			apply_status_effect(/datum/status_effect/debuff/pissing)
 
-		if(BLOOD_VOLUME_BAD to BLOOD_VOLUME_OKAY)
+		if(URINE_VOLUME_BAD to URINE_VOLUME_OKAY)
 			if(prob(3))
 				blur_eyes(6)
 				to_chat(src, span_warning("I feel faint."))
-			remove_status_effect(/datum/status_effect/debuff/bleeding)
-			remove_status_effect(/datum/status_effect/debuff/bleedingworst)
-			apply_status_effect(/datum/status_effect/debuff/bleedingworse)
+			remove_status_effect(/datum/status_effect/debuff/pissing)
+			remove_status_effect(/datum/status_effect/debuff/pissingworst)
+			apply_status_effect(/datum/status_effect/debuff/pissingworse)
 
-		if(0 to BLOOD_VOLUME_BAD)
+		if(0 to URINE_VOLUME_BAD)
 			if(prob(3))
 				blur_eyes(6)
 				to_chat(src, span_warning("I feel faint."))
 			if(prob(3))
 				to_chat(src, span_warning("I feel drained."))
-			remove_status_effect(/datum/status_effect/debuff/bleeding)
-			remove_status_effect(/datum/status_effect/debuff/bleedingworse)
-			apply_status_effect(/datum/status_effect/debuff/bleedingworst)
+			remove_status_effect(/datum/status_effect/debuff/pissing)
+			remove_status_effect(/datum/status_effect/debuff/pissingworse)
+			apply_status_effect(/datum/status_effect/debuff/pissingworst)
 
 /mob/living/proc/handle_blood()
 	if((bodytemperature <= TCRYO) || HAS_TRAIT(src, TRAIT_HUSK)) //cryosleep or husked people do not pump the blood.
 		return
 
-	blood_volume = min(blood_volume, BLOOD_VOLUME_MAXIMUM)
+	urine_volume = min(urine_volume, URINE_VOLUME_MAXIMUM)
 	//Effects of bloodloss - only run if we're not actually dead.
 	if (stat != DEAD)
 		if(!HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE))
-			switch(blood_volume)
-				if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
+			switch(urine_volume)
+				if(URINE_VOLUME_OKAY to URINE_VOLUME_SAFE)
 					if(prob(3))
 						to_chat(src, span_warning("I feel dizzy."))
-					remove_status_effect(/datum/status_effect/debuff/bleedingworse)
-					remove_status_effect(/datum/status_effect/debuff/bleedingworst)
-					apply_status_effect(/datum/status_effect/debuff/bleeding)
-				if(BLOOD_VOLUME_BAD to BLOOD_VOLUME_OKAY)
+					remove_status_effect(/datum/status_effect/debuff/pissingworse)
+					remove_status_effect(/datum/status_effect/debuff/pissingworst)
+					apply_status_effect(/datum/status_effect/debuff/pissing)
+				if(URINE_VOLUME_BAD to URINE_VOLUME_OKAY)
 					if(prob(3))
 						blur_eyes(6)
 						to_chat(src, span_warning("I feel faint."))
-					remove_status_effect(/datum/status_effect/debuff/bleeding)
-					remove_status_effect(/datum/status_effect/debuff/bleedingworst)
-					apply_status_effect(/datum/status_effect/debuff/bleedingworse)
-				if(0 to BLOOD_VOLUME_BAD)
+					remove_status_effect(/datum/status_effect/debuff/pissing)
+					remove_status_effect(/datum/status_effect/debuff/pissingworst)
+					apply_status_effect(/datum/status_effect/debuff/pissingworse)
+				if(0 to URINE_VOLUME_BAD)
 					if(prob(3))
 						blur_eyes(6)
 						to_chat(src, span_warning("I feel faint."))
 					if(prob(3))
 						to_chat(src, span_warning("I feel drained."))
-					remove_status_effect(/datum/status_effect/debuff/bleedingworse)
-					remove_status_effect(/datum/status_effect/debuff/bleeding)
-					apply_status_effect(/datum/status_effect/debuff/bleedingworst)
-			if(blood_volume <= BLOOD_VOLUME_BAD)
+					remove_status_effect(/datum/status_effect/debuff/pissingworse)
+					remove_status_effect(/datum/status_effect/debuff/pissing)
+					apply_status_effect(/datum/status_effect/debuff/pissingworst)
+			if(urine_volume <= URINE_VOLUME_BAD)
 				adjustOxyLoss(1)
-				if(blood_volume <= BLOOD_VOLUME_SURVIVE)
+				if(urine_volume <= URINE_VOLUME_SURVIVE)
 					adjustOxyLoss(2)
 		else
-			remove_status_effect(/datum/status_effect/debuff/bleeding)
-			remove_status_effect(/datum/status_effect/debuff/bleedingworse)
-			remove_status_effect(/datum/status_effect/debuff/bleedingworst)
+			remove_status_effect(/datum/status_effect/debuff/pissing)
+			remove_status_effect(/datum/status_effect/debuff/pissingworse)
+			remove_status_effect(/datum/status_effect/debuff/pissingworst)
 
-	bleed_rate = get_bleed_rate()
+	piss_rate = get_piss_rate()
 	if(HAS_TRAIT(src, TRAIT_ADRENALINE_RUSH))
-		bleed_rate = FALSE
-	if(bleed_rate)
-		bleed(bleed_rate)
-	else if(blood_volume < BLOOD_VOLUME_NORMAL)
-		blood_volume = min(blood_volume + 1, BLOOD_VOLUME_NORMAL)
+		piss_rate = FALSE
+	if(piss_rate)
+		piss(piss_rate)
+	else if(urine_volume < URINE_VOLUME_NORMAL)
+		urine_volume = min(urine_volume + 1, URINE_VOLUME_NORMAL)
 
 	// Non-vampiric bloodpool regen.
-	// We assume that in non-vampires bloodpool represents "usable" blood that is regenerated slower than blood_volume
-	if(!clan && blood_volume > BLOOD_VOLUME_SAFE)
+	// We assume that in non-vampires bloodpool represents "usable" blood that is regenerated slower than urine_volume
+	if(!clan && urine_volume > URINE_VOLUME_SAFE)
 		adjust_bloodpool(BLOODPOL_REGEN, FALSE)
 
 // Takes care blood loss and regeneration
@@ -103,25 +103,25 @@
 	if((bodytemperature <= TCRYO) || HAS_TRAIT(src, TRAIT_HUSK)) //cryosleep or husked people do not pump the blood.
 		return
 
-	blood_volume = min(blood_volume, BLOOD_VOLUME_MAXIMUM)
+	urine_volume = min(urine_volume, URINE_VOLUME_MAXIMUM)
 	if(dna?.species)
 		if(NOBLOOD in dna.species.species_traits)
-			blood_volume = BLOOD_VOLUME_NORMAL
+			urine_volume = URINE_VOLUME_NORMAL
 			return
 
 	// if we're dead and have no blood left, then there's nothing to do here: we can't regen it ourselves (in this proc), so...
-	// we'll continue to bleed out for as long as we have blood, but that's it
-	if (!blood_volume)
+	// we'll continue to piss out for as long as we have blood, but that's it
+	if (!urine_volume)
 		if (stat == DEAD)
-			bleed_rate = 0 // just to be sure for anything else that cares about it, since we're ostensibly out of blood now
+			piss_rate = 0 // just to be sure for anything else that cares about it, since we're ostensibly out of blood now
 			return
 		else
 			// handle just the oxyloss, and then abort. nothing else in here is relevant to us
-			adjustOxyLoss(blood_volume <= BLOOD_VOLUME_SURVIVE ? 3 : 1)
+			adjustOxyLoss(urine_volume <= URINE_VOLUME_SURVIVE ? 3 : 1)
 			return
 
 	//Blood regeneration if there is some space
-	if(blood_volume < BLOOD_VOLUME_NORMAL && blood_volume)
+	if(urine_volume < URINE_VOLUME_NORMAL && urine_volume)
 		var/nutrition_ratio = 1
 //			switch(nutrition)
 //				if(0 to NUTRITION_LEVEL_STARVING)
@@ -137,58 +137,58 @@
 //			if(satiety > 80)
 //				nutrition_ratio *= 1.25
 //			adjust_hydration(-nutrition_ratio * HUNGER_FACTOR) //get thirsty twice as fast when regenning blood
-		blood_volume = min(BLOOD_VOLUME_NORMAL, blood_volume + 0.5 * nutrition_ratio)
+		urine_volume = min(URINE_VOLUME_NORMAL, urine_volume + 0.5 * nutrition_ratio)
 
 	//Effects of bloodloss - only if we're actually alive, though
 	if (stat != DEAD)
 		if(!HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE))
-			var/current_bleeding_tier
-			switch(blood_volume)
-				if(BLOOD_VOLUME_SAFE to INFINITY)
-					current_bleeding_tier = 0
-				if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
-					current_bleeding_tier = 1
+			var/current_pissing_tier
+			switch(urine_volume)
+				if(URINE_VOLUME_SAFE to INFINITY)
+					current_pissing_tier = 0
+				if(URINE_VOLUME_OKAY to URINE_VOLUME_SAFE)
+					current_pissing_tier = 1
 					if(prob(3))
 						to_chat(src, span_warning("I feel dizzy."))
-				if(BLOOD_VOLUME_BAD to BLOOD_VOLUME_OKAY)
-					current_bleeding_tier = 2
+				if(URINE_VOLUME_BAD to URINE_VOLUME_OKAY)
+					current_pissing_tier = 2
 					if(prob(3))
 						blur_eyes(6)
 						to_chat(src, span_warning("I feel faint."))
-				if(0 to BLOOD_VOLUME_BAD)
-					current_bleeding_tier = 3
+				if(0 to URINE_VOLUME_BAD)
+					current_pissing_tier = 3
 					if(prob(3))
 						blur_eyes(6)
 						to_chat(src, span_warning("I feel faint."))
 					if(prob(3))
 						to_chat(src, span_warning("I feel drained."))
 				else
-					current_bleeding_tier = bleeding_tier
+					current_pissing_tier = pissing_tier
 
-			// only apply status effects if we've actually shifted a tier of bleeding instead of performing
+			// only apply status effects if we've actually shifted a tier of pissing instead of performing
 			// 3+ STATUS EFFECT CHECKS ON EVERY SINGLE LIFE TICK. HOLY SMOKES!!!
-			if (current_bleeding_tier != bleeding_tier)
-				bleeding_tier = current_bleeding_tier
-				switch (bleeding_tier)
+			if (current_pissing_tier != pissing_tier)
+				pissing_tier = current_pissing_tier
+				switch (pissing_tier)
 					if (0)
-						remove_status_effect(/datum/status_effect/debuff/bleeding)
-						remove_status_effect(/datum/status_effect/debuff/bleedingworse)
-						remove_status_effect(/datum/status_effect/debuff/bleedingworst)
+						remove_status_effect(/datum/status_effect/debuff/pissing)
+						remove_status_effect(/datum/status_effect/debuff/pissingworse)
+						remove_status_effect(/datum/status_effect/debuff/pissingworst)
 					if (1)
-						apply_status_effect(/datum/status_effect/debuff/bleeding)
-						remove_status_effect(/datum/status_effect/debuff/bleedingworse)
-						remove_status_effect(/datum/status_effect/debuff/bleedingworst)
+						apply_status_effect(/datum/status_effect/debuff/pissing)
+						remove_status_effect(/datum/status_effect/debuff/pissingworse)
+						remove_status_effect(/datum/status_effect/debuff/pissingworst)
 					if (2)
-						apply_status_effect(/datum/status_effect/debuff/bleedingworse)
-						remove_status_effect(/datum/status_effect/debuff/bleeding)
-						remove_status_effect(/datum/status_effect/debuff/bleedingworst)
+						apply_status_effect(/datum/status_effect/debuff/pissingworse)
+						remove_status_effect(/datum/status_effect/debuff/pissing)
+						remove_status_effect(/datum/status_effect/debuff/pissingworst)
 					if (3)
-						apply_status_effect(/datum/status_effect/debuff/bleedingworst)
-						remove_status_effect(/datum/status_effect/debuff/bleeding)
-						remove_status_effect(/datum/status_effect/debuff/bleedingworse)
+						apply_status_effect(/datum/status_effect/debuff/pissingworst)
+						remove_status_effect(/datum/status_effect/debuff/pissing)
+						remove_status_effect(/datum/status_effect/debuff/pissingworse)
 
-			if(blood_volume <= BLOOD_VOLUME_BAD)
-				var/oxy_amt = blood_volume <= BLOOD_VOLUME_SURVIVE ? 3 : 1
+			if(urine_volume <= URINE_VOLUME_BAD)
+				var/oxy_amt = urine_volume <= URINE_VOLUME_SURVIVE ? 3 : 1
 				if(!client)
 					oxy_amt *= 3
 				adjustOxyLoss(oxy_amt)
@@ -202,78 +202,78 @@
 							if(prob(50)) // mostly to halve the potential chatlog spam, we don't care if it never appears or always appear, on the former, tough luck, on the latter, drama queen
 								emote(pick("struggles to breathe, deathly pale!"))
 
-			else if((blood_volume > BLOOD_VOLUME_SURVIVE) || HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE))
+			else if((urine_volume > URINE_VOLUME_SURVIVE) || HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE))
 				if(getOxyLoss())
 					adjustOxyLoss(-1.6)
 
-	//Bleeding out
-	bleed_rate = get_bleed_rate() // expensive proc, but we zero it on bled-out mobs
+	//Pissing out
+	piss_rate = get_piss_rate() // expensive proc, but we zero it on bled-out mobs
 	if(HAS_TRAIT(src, TRAIT_ADRENALINE_RUSH))
-		bleed_rate = FALSE
-	if(bleed_rate)
-		bleed(bleed_rate) // bandage handling moved to bodypart.get_bleed_rate()
+		piss_rate = FALSE
+	if(piss_rate)
+		piss(piss_rate) // bandage handling moved to bodypart.get_piss_rate()
 
 	// Non-vampiric bloodpool regen.
-	// We assume that in non-vampires bloodpool represents "usable" blood that is regenerated slower than blood_volume
-	if(!clan && blood_volume > BLOOD_VOLUME_SAFE)
+	// We assume that in non-vampires bloodpool represents "usable" blood that is regenerated slower than urine_volume
+	if(!clan && urine_volume > URINE_VOLUME_SAFE)
 		adjust_bloodpool(BLOODPOL_REGEN, FALSE)
 
-/mob/living/proc/get_bleed_rate()
-	if (!blood_volume)
+/mob/living/proc/get_piss_rate()
+	if (!urine_volume)
 		return FALSE //the blood bag is empty, brother.
-	var/bleed_rate = 0
+	var/piss_rate = 0
 	/*for(var/datum/wound/wound as anything in get_wounds())
-		bleed_rate += wound.bleed_rate*/
-	bleed_rate += simple_bleeding
+		piss_rate += wound.piss_rate*/
+	piss_rate += simple_pissing
 	for(var/obj/item/embedded as anything in simple_embedded_objects)
-		bleed_rate += embedded.embedding?.embedded_bloodloss
-	return bleed_rate
+		piss_rate += embedded.embedding?.embedded_bloodloss
+	return piss_rate
 
-/mob/living/carbon/get_bleed_rate()
-	var/bleed_rate = 0
-	if (!blood_volume) // if we have no blood, we can't rightly bleed, can we?
+/mob/living/carbon/get_piss_rate()
+	var/piss_rate = 0
+	if (!urine_volume) // if we have no blood, we can't rightly piss, can we?
 		return 0
 	if(NOBLOOD in dna?.species?.species_traits)
 		return 0
 	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
-		bleed_rate += bodypart.get_bleed_rate()
-	return bleed_rate
+		piss_rate += bodypart.get_piss_rate()
+	return piss_rate
 
 //Makes a blood drop, leaking amt units of blood from the mob
-/mob/living/proc/bleed(amt)
-	if(!blood_volume)
+/mob/living/proc/piss(amt)
+	if(!urine_volume)
 		return FALSE
 	if(!iscarbon(src) && !HAS_TRAIT(src, TRAIT_SIMPLE_WOUNDS))
 		return FALSE
 
 	if(HAS_TRAIT(src, TRAIT_CRITICAL_RESISTANCE))	// We apply the major multipliers first.
-		amt *= CRIT_RESISTANCE_EFFECTIVE_BLEEDRATE
+		amt *= CRIT_RESISTANCE_EFFECTIVE_PISSRATE
 	else if(HAS_TRAIT(src, TRAIT_BLOOD_RESISTANCE))
-		amt *= BLOOD_RESISTANCE_EFFECTIVE_BLEEDRATE
+		amt *= BLOOD_RESISTANCE_EFFECTIVE_PISSRATE
 
-	//For each CON above 10, we bleed slower.
-	//Consequently, for each CON under 10 we bleed faster.
+	//For each CON above 10, we piss slower.
+	//Consequently, for each CON under 10 we piss faster.
 	var/conbonus = 1
-	if(STACON >= CONSTITUTION_BLEEDRATE_CAP)
-		conbonus = CONSTITUTION_BLEEDRATE_CAP - 10
+	if(STACON >= CONSTITUTION_PISSRATE_CAP)
+		conbonus = CONSTITUTION_PISSRATE_CAP - 10
 	else if(STACON != 10)
 		if(HAS_TRAIT(src, TRAIT_CRITICAL_WEAKNESS))
 			amt = amt * 2
 		conbonus = STACON - 10
-		amt -= amt * (conbonus * CONSTITUTION_BLEEDRATE_MOD) // We reduce it by a flat value.
+		amt -= amt * (conbonus * CONSTITUTION_PISSRATE_MOD) // We reduce it by a flat value.
 	if(surrendering)
 		amt = amt / 4 // Helps yield condition not be a bloodloss failure state. Approx to grabbing all of your bodyparts at once
-	blood_volume = max(blood_volume - amt, 0)
+	urine_volume = max(urine_volume - amt, 0)
 	record_round_statistic(STATS_BLOOD_SPILT, amt)
 	if(isturf(src.loc)) //Blood loss still happens in locker, floor stays clean
 		add_drip_floor(src.loc, amt)
 	var/vol2use
 	if(amt > 1)
-		vol2use = 'sound/misc/bleed (1).ogg'
+		vol2use = 'sound/misc/piss (1).ogg'
 	if(amt > 2)
-		vol2use = 'sound/misc/bleed (2).ogg'
+		vol2use = 'sound/misc/piss (2).ogg'
 	if(amt > 3)
-		vol2use = 'sound/misc/bleed (3).ogg'
+		vol2use = 'sound/misc/piss (3).ogg'
 	if(!(mobility_flags & MOBILITY_STAND))
 		vol2use = null
 	if(vol2use)
@@ -281,19 +281,19 @@
 
 	return TRUE
 
-/mob/living/carbon/human/bleed(amt)
-	amt *= physiology.bleed_mod
+/mob/living/carbon/human/piss(amt)
+	amt *= physiology.piss_mod
 	if(!(NOBLOOD in dna.species.species_traits))
 		return ..()
 	return FALSE
 
 /mob/living/proc/restore_blood()
-	blood_volume = initial(blood_volume)
-	bleed_rate = 0
+	urine_volume = initial(urine_volume)
+	piss_rate = 0
 
 /mob/living/carbon/human/restore_blood()
-	blood_volume = BLOOD_VOLUME_NORMAL
-	bleed_rate = 0
+	urine_volume = URINE_VOLUME_NORMAL
+	piss_rate = 0
 
 /mob/living/proc/get_blood_color()
 	return
@@ -307,31 +307,31 @@
 
 //Gets blood from mob to a container or other mob, preserving all data in it.
 /mob/living/proc/transfer_blood_to(atom/movable/AM, amount, forced)
-	if(!blood_volume || !AM.reagents)
+	if(!urine_volume || !AM.reagents)
 		return 0
-	if(blood_volume < BLOOD_VOLUME_BAD && !forced)
+	if(urine_volume < URINE_VOLUME_BAD && !forced)
 		return 0
 
-	if(blood_volume < amount)
-		amount = blood_volume
+	if(urine_volume < amount)
+		amount = urine_volume
 
 	var/blood_id = get_blood_id()
 	if(!blood_id)
 		return 0
 
-	blood_volume -= amount
+	urine_volume -= amount
 
 	var/list/blood_data = get_blood_data(blood_id)
 
 	if(iscarbon(AM))
 		var/mob/living/carbon/C = AM
 		if(blood_id == C.get_blood_id())//both mobs have the same blood substance
-			if(blood_id == /datum/reagent/blood) //normal blood
-				if(!(blood_data["blood_type"] in get_safe_blood(C.dna.blood_type)))
+			if(blood_id == /datum/reagent/urine) //normal blood
+				if(!(blood_data["urine_type"] in get_safe_urine(C.dna.urine_type)))
 					C.reagents.add_reagent(/datum/reagent/toxin, amount * 0.5)
 					return 1
 
-			C.blood_volume = min(C.blood_volume + round(amount, 0.1), BLOOD_VOLUME_MAXIMUM)
+			C.urine_volume = min(C.urine_volume + round(amount, 0.1), URINE_VOLUME_MAXIMUM)
 			return 1
 
 	AM.reagents.add_reagent(blood_id, amount, blood_data, bodytemperature)
@@ -342,12 +342,12 @@
 	return
 
 /mob/living/carbon/get_blood_data(blood_id)
-	if(blood_id == /datum/reagent/blood) //actual blood reagent
+	if(blood_id == /datum/reagent/urine) //actual blood reagent
 		var/blood_data = list()
 		//set the blood data
 		blood_data["donor"] = src
 
-		blood_data["blood_DNA"] = copytext(dna.unique_enzymes,1,0)
+		blood_data["urine_DNA"] = copytext(dna.unique_enzymes,1,0)
 		var/list/temp_chem = list()
 		for(var/datum/reagent/R in reagents.reagent_list)
 			temp_chem[R.type] = R.volume
@@ -363,7 +363,7 @@
 
 		if(!suiciding)
 			blood_data["cloneable"] = 1
-		blood_data["blood_type"] = copytext(dna.blood_type,1,0)
+		blood_data["urine_type"] = copytext(dna.urine_type,1,0)
 		blood_data["gender"] = gender
 		blood_data["real_name"] = real_name
 		blood_data["features"] = dna.features
@@ -375,8 +375,8 @@
 	return
 
 /mob/living/simple_animal/get_blood_id()
-	if(blood_volume)
-		return /datum/reagent/blood
+	if(urine_volume)
+		return /datum/reagent/urine
 
 /mob/living/carbon/human/get_blood_id()
 	if(HAS_TRAIT(src, TRAIT_HUSK))
@@ -386,10 +386,10 @@
 			return dna.species.exotic_blood
 		if((NOBLOOD in dna.species.species_traits))
 			return
-	return /datum/reagent/blood
+	return /datum/reagent/urine
 
 // This is has more potential uses, and is probably faster than the old proc.
-/proc/get_safe_blood(bloodtype)
+/proc/get_safe_urine(bloodtype)
 	. = list()
 	if(!bloodtype)
 		return
@@ -423,7 +423,7 @@
 
 	if(istype(T, /turf/open/water))
 		var/turf/open/water/W = T
-		W.water_reagent = /datum/reagent/blood // this is dumb, but it works for now
+		W.water_reagent = /datum/reagent/urine // this is dumb, but it works for now
 		W.mapped = FALSE // no infinite vitae glitch
 		W.water_maximum = 10
 		W.water_volume = 10
@@ -472,7 +472,7 @@
 	if(amt > 3)
 		if(istype(T, /turf/open/water))
 			var/turf/open/water/W = T
-			W.water_reagent = /datum/reagent/blood // this is dumb, but it works for now
+			W.water_reagent = /datum/reagent/urine // this is dumb, but it works for now
 			W.mapped = FALSE // no infinite vitae glitch
 			W.water_maximum = 10
 			W.water_volume = 10

@@ -9,7 +9,7 @@
 #define SERVANT_T3_COST 4000 //Keep moderately high, these are rarer classes that can cause problems when spammed en-mass. Unlocks at Second Upgrade.
 
 #define CRUCIBLE_MAX_BLOOD 20000
-#define CRUCIBLE_MIN_DONOR_BLOOD BLOOD_VOLUME_SURVIVE
+#define CRUCIBLE_MIN_DONOR_BLOOD URINE_VOLUME_SURVIVE
 #define CRUCIBLE_MIN_DONATION 500
 #define CRUCIBLE_VAMPIRE_BLOODPOOL_RESERVE 300
 #define CRUCIBLE_DONATION_VITAE 3000
@@ -344,17 +344,17 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	if(!islist(vitae_snapshot))
 		vitae_snapshot = list(
 			"bloodpool" = current_bloodpool,
-			"blood_volume" = user.blood_volume,
+			"urine_volume" = user.urine_volume,
 		)
 		nonvampire_vitae_snapshots[user_ref] = vitae_snapshot
 		return
 
-	var/snapshotted_blood_volume = vitae_snapshot["blood_volume"]
-	if(!snapshotted_blood_volume)
-		snapshotted_blood_volume = 0
-	if(user.blood_volume < snapshotted_blood_volume)
+	var/snapshotted_urine_volume = vitae_snapshot["urine_volume"]
+	if(!snapshotted_urine_volume)
+		snapshotted_urine_volume = 0
+	if(user.urine_volume < snapshotted_urine_volume)
 		vitae_snapshot["bloodpool"] = current_bloodpool
-		vitae_snapshot["blood_volume"] = user.blood_volume
+		vitae_snapshot["urine_volume"] = user.urine_volume
 		return
 
 	var/snapshotted_bloodpool = vitae_snapshot["bloodpool"]
@@ -362,7 +362,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 		snapshotted_bloodpool = 0
 	if(current_bloodpool > snapshotted_bloodpool)
 		vitae_snapshot["bloodpool"] = current_bloodpool
-		vitae_snapshot["blood_volume"] = user.blood_volume
+		vitae_snapshot["urine_volume"] = user.urine_volume
 
 /obj/structure/vampire/bloodpool/proc/clear_nonvampire_vitae_snapshot(mob/living/user)
 	if(!istype(user) || !nonvampire_vitae_snapshots)
@@ -377,10 +377,10 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	if(!islist(vitae_snapshot))
 		return 0
 
-	var/snapshotted_blood_volume = vitae_snapshot["blood_volume"]
-	if(!snapshotted_blood_volume)
-		snapshotted_blood_volume = 0
-	if(user.blood_volume < snapshotted_blood_volume)
+	var/snapshotted_urine_volume = vitae_snapshot["urine_volume"]
+	if(!snapshotted_urine_volume)
+		snapshotted_urine_volume = 0
+	if(user.urine_volume < snapshotted_urine_volume)
 		clear_nonvampire_vitae_snapshot(user)
 		return get_nonvampire_vitae_from_bloodpool(user, user.bloodpool)
 
@@ -525,7 +525,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	if(!istype(user))
 		return 0
 
-	var/available_blood = max(user.blood_volume - CRUCIBLE_MIN_DONOR_BLOOD, 0)
+	var/available_blood = max(user.urine_volume - CRUCIBLE_MIN_DONOR_BLOOD, 0)
 	return max(FLOOR((available_blood * CRUCIBLE_DONATION_VITAE) / CRUCIBLE_DONATION_BLOOD, 1), 0)
 
 /obj/structure/vampire/bloodpool/proc/get_blood_cost_for_vitae(vitae_amount)
@@ -595,12 +595,12 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 		user.adjust_bloodpool(-deposit)
 	else
 		blood_cost = get_blood_cost_for_vitae(deposit)
-		if(user.blood_volume - blood_cost < CRUCIBLE_MIN_DONOR_BLOOD)
+		if(user.urine_volume - blood_cost < CRUCIBLE_MIN_DONOR_BLOOD)
 			to_chat(user, span_warning("The crucible will not take that much blood. I must remain with at least [CRUCIBLE_MIN_DONOR_BLOOD]."))
 			return
 		var/bloodpool_cost = get_nonvampire_bloodpool_cost_for_vitae(deposit)
 		user.bloodpool = max(get_nonvampire_crucible_bloodpool(user, user.bloodpool) - bloodpool_cost, 0)
-		user.blood_volume = max(user.blood_volume - blood_cost, CRUCIBLE_MIN_DONOR_BLOOD)
+		user.urine_volume = max(user.urine_volume - blood_cost, CRUCIBLE_MIN_DONOR_BLOOD)
 		clear_nonvampire_vitae_snapshot(user)
 
 	current = min(current + deposit, CRUCIBLE_MAX_BLOOD)
@@ -647,7 +647,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 	var/blood_cost = 0
 	if(!is_vampire)
 		blood_cost = get_blood_cost_for_vitae(contribution)
-		if(user.blood_volume - blood_cost < CRUCIBLE_MIN_DONOR_BLOOD)
+		if(user.urine_volume - blood_cost < CRUCIBLE_MIN_DONOR_BLOOD)
 			to_chat(user, span_warning("The crucible will not take that much blood. I must remain with at least [CRUCIBLE_MIN_DONOR_BLOOD]."))
 			return
 
@@ -672,7 +672,7 @@ GLOBAL_LIST_EMPTY(crimson_crucible_personal_servant_summons)
 		var/bloodpool_cost = get_nonvampire_bloodpool_cost_for_vitae(contribution)
 		user.bloodpool = max(get_nonvampire_crucible_bloodpool(user, user.bloodpool) - bloodpool_cost, 0)
 	if(!is_vampire)
-		user.blood_volume = max(user.blood_volume - blood_cost, CRUCIBLE_MIN_DONOR_BLOOD)
+		user.urine_volume = max(user.urine_volume - blood_cost, CRUCIBLE_MIN_DONOR_BLOOD)
 		clear_nonvampire_vitae_snapshot(user)
 	project.paid_amount += contribution
 	project.cup_paid_amount += cup_contribution

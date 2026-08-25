@@ -203,7 +203,7 @@
 	desc = "Enter a long guard and thrust forward with your entire upper body while advancing, maximizing the effectiveness of the thrust."
 	attack_verb =	list("skillfully perforates", "artfully punctures", "deftly sticks")
 	damfactor = 1.2
-	max_intent_damage = 36 //they do the same damage. one is for bleeding, the other is for critfishing. feels weird but they get a lot of toys
+	max_intent_damage = 36 //they do the same damage. one is for pissing, the other is for critfishing. feels weird but they get a lot of toys
 
 /datum/intent/effect/daze/longsword/clinch
 	name = "clinch & swipe"

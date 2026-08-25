@@ -98,7 +98,7 @@
 		if(close_tool?.tool_behaviour == required_tool_type || iscyborg(user))
 			if (ishuman(M))
 				var/mob/living/carbon/human/H = M
-				H.bleed_rate = max( (H.bleed_rate - 3), 0)
+				H.piss_rate = max( (H.piss_rate - 3), 0)
 			M.surgeries -= S
 			user.visible_message(span_notice("[user] closes [M]'s [parse_zone(selected_zone)] with [close_tool] and removes [I]."), \
 				span_notice("I close [M]'s [parse_zone(selected_zone)] with [close_tool] and remove [I]."))

@@ -39,7 +39,7 @@
 	/// Amount of blood we have stored
 	var/blood_storage = 0
 	/// Maximum amount of blood we can store
-	var/blood_maximum = BLOOD_VOLUME_SURVIVE
+	var/blood_maximum = URINE_VOLUME_SURVIVE
 	// Who are we latching onto?
 	var/mob/living/host
 	/// Multiplier for extracted blood. Mainly used by Cheeles or equivalent.
@@ -73,11 +73,11 @@
 	if(!target)
 		return TRUE
 
-	var/blood_given = min(max(BLOOD_VOLUME_NORMAL - target.blood_volume, 0), blood_storage, blood_sucking)
-	target.blood_volume = min(target.blood_volume + blood_given, BLOOD_VOLUME_NORMAL)
+	var/blood_given = min(max(URINE_VOLUME_NORMAL - target.urine_volume, 0), blood_storage, blood_sucking)
+	target.urine_volume = min(target.urine_volume + blood_given, URINE_VOLUME_NORMAL)
 	blood_storage = max(blood_storage - blood_given, 0)
 
-	if((blood_storage <= 0) || (target.blood_volume >= BLOOD_VOLUME_NORMAL))
+	if((blood_storage <= 0) || (target.urine_volume >= URINE_VOLUME_NORMAL))
 		remove_from_host(target, bodypart)
 		return TRUE
 
@@ -100,10 +100,10 @@
 		if(give_stored_blood(host, bp))
 			return TRUE
 	else
-		var/blood_extracted = min(blood_maximum - blood_storage, host.blood_volume, blood_sucking)
-		host.blood_volume = max(host.blood_volume - blood_extracted, 0)
+		var/blood_extracted = min(blood_maximum - blood_storage, host.urine_volume, blood_sucking)
+		host.urine_volume = max(host.urine_volume - blood_extracted, 0)
 		blood_storage += blood_extracted
-		if((blood_storage >= blood_maximum) || (host.blood_volume <= 0))
+		if((blood_storage >= blood_maximum) || (host.urine_volume <= 0))
 			if(bp)
 				bp.remove_embedded_object(src)
 			else
@@ -119,10 +119,10 @@
 		if(give_stored_blood(user, bodypart))
 			return TRUE
 	else
-		var/blood_extracted = min(blood_maximum - blood_storage, user.blood_volume, blood_sucking)
-		user.blood_volume = max(user.blood_volume - blood_extracted, 0)
+		var/blood_extracted = min(blood_maximum - blood_storage, user.urine_volume, blood_sucking)
+		user.urine_volume = max(user.urine_volume - blood_extracted, 0)
 		blood_storage += blood_extracted * blood_multiplier
-		if((blood_storage >= blood_maximum) || (user.blood_volume <= 0))
+		if((blood_storage >= blood_maximum) || (user.urine_volume <= 0))
 			if(bodypart)
 				bodypart.remove_embedded_object(src)
 			else
@@ -268,8 +268,8 @@
 	blood_sucking = 5
 	toxin_healing = -2
 	blood_multiplier = 3
-	blood_storage = BLOOD_VOLUME_OKAY
-	blood_maximum = BLOOD_VOLUME_MAXIMUM
+	blood_storage = URINE_VOLUME_OKAY
+	blood_maximum = URINE_VOLUME_MAXIMUM
 	mindless_attach = FALSE
 	embedding = list(
 		"embed_chance" = 100,

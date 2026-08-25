@@ -70,7 +70,7 @@
 
 	UnregisterSignal(living, COMSIG_LIVING_DRINKED_LIMB_BLOOD)
 
-// When bleeding, near blood on ground, zchurch, bad-cross, or ritual chalk
+// When pissing, near blood on ground, zchurch, bad-cross, or ritual chalk
 /datum/patron/inhumen/graggar/can_pray(mob/living/follower)
 	. = ..()
 	// Allows prayer in the Zzzzzzzurch(!)
@@ -82,8 +82,8 @@
 			to_chat(follower, span_danger("That accursed cross interupts my prayers!"))
 			return FALSE
 		return TRUE
-	// Allows prayer if actively bleeding.
-	if(follower.bleed_rate > 0)
+	// Allows prayer if actively pissing.
+	if(follower.piss_rate > 0)
 		return TRUE
 	// Allows prayer near blood.
 	for(var/obj/effect/decal/cleanable/blood in view(3, get_turf(follower)))

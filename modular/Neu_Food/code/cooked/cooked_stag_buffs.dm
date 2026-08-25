@@ -65,8 +65,8 @@
 	if(length(wCount))
 		H.heal_wounds(healing_per_tick)
 		H.update_damage_overlays()
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume + healing_per_tick, BLOOD_VOLUME_NORMAL)
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume + healing_per_tick, URINE_VOLUME_NORMAL)
 	var/obj/effect/temp_visual/heal/E = new /obj/effect/temp_visual/heal_rogue(get_turf(owner))
 	E.color = "#ffffff"
 

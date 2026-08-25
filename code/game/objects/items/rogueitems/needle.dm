@@ -50,7 +50,7 @@
 /obj/item/needle/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Left-click someone - while targeting the desired limb - to begin stitching a wound. Stitching automatically stops once you've completely sealed the specific wound.")
-	. += span_info("While stitching a wound, it will bleed far slower than usual. This effect can be further stacked by applying cloth, bandages, or pressure to the wounded limb.")
+	. += span_info("While stitching a wound, it will piss far slower than usual. This effect can be further stacked by applying cloth, bandages, or pressure to the wounded limb.")
 	. += span_info("If multiple stitchable wounds are present on the targeted limb, you'll be given the option to choose which specific wound is treated first.")
 	. += span_info("Needles require fibers to stitch, which can be found by cutting grass or foraging through bushes.")
 	. += span_info("To rethread an emptied needle, left-click it with a strand of fiber. A fiber bundle works too, and will keep feeding strands in one at a time until the needle is full.")
@@ -258,18 +258,18 @@
 			break
 		playsound(loc, 'sound/foley/sewflesh.ogg', 100, TRUE, -2)
 		target_wound.sew_progress = min(target_wound.sew_progress + moveup, target_wound.sew_threshold)
-		var/bleedreduction = max((0.5 * medskill), 0.5)
+		var/pissreduction = max((0.5 * medskill), 0.5)
 		if(medskill > SKILL_LEVEL_EXPERT)
 			if(medskill == SKILL_LEVEL_MASTER)
-				bleedreduction = 3
+				pissreduction = 3
 			else if(medskill == SKILL_LEVEL_LEGENDARY)
-				bleedreduction = 4
-		target_wound.set_bleed_rate(max( (target_wound.bleed_rate - bleedreduction), 0))
-		if(target_wound.bleed_rate == 0 && !informed)
+				pissreduction = 4
+		target_wound.set_piss_rate(max( (target_wound.piss_rate - pissreduction), 0))
+		if(target_wound.piss_rate == 0 && !informed)
 			if(is_simple_animal)
-				patient.visible_message(span_smallgreen("One last drop of blood trickles from the [(target_wound?.name)] on [patient] before it closes."), span_smallgreen("The throbbing warmth coming out of the [target_wound] soothes and stops. It no longer bleeds."))
+				patient.visible_message(span_smallgreen("One last drop of blood trickles from the [(target_wound?.name)] on [patient] before it closes."), span_smallgreen("The throbbing warmth coming out of the [target_wound] soothes and stops. It no longer pisss."))
 			else
-				patient.visible_message(span_smallgreen("One last drop of blood trickles from the [(target_wound?.name)] on [patient]'s [affecting.name] before it closes."), span_smallgreen("The throbbing warmth coming out of the [target_wound] soothes and stops. It no longer bleeds."))
+				patient.visible_message(span_smallgreen("One last drop of blood trickles from the [(target_wound?.name)] on [patient]'s [affecting.name] before it closes."), span_smallgreen("The throbbing warmth coming out of the [target_wound] soothes and stops. It no longer pisss."))
 			informed = TRUE
 		if(istype(target_wound, /datum/wound/dynamic))
 			var/datum/wound/dynamic/dynwound = target_wound

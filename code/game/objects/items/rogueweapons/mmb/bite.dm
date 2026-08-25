@@ -254,7 +254,7 @@
 	icon_state = "bite"
 	d_type = "stab"
 	slot_flags = ITEM_SLOT_MOUTH
-	bleed_suppressing = 1
+	piss_suppressing = 1
 	var/last_drink
 
 /obj/item/grabbing/bite/valid_check()
@@ -434,11 +434,11 @@
 		var/mob/living/carbon/C = grabbed
 		if(QDELETED(src) || !user || !grabbed || !sippy)
 			break
-		if(C.blood_volume <= 0)
+		if(C.urine_volume <= 0)
 			to_chat(user, span_warning("--But there's no blood left to drink."))
 			break
-		if(!limb_grabbed.get_bleed_rate())
-			to_chat(user, span_warning("--But they're not bleeding, I should chew."))
+		if(!limb_grabbed.get_piss_rate())
+			to_chat(user, span_warning("--But they're not pissing, I should chew."))
 			break
 		if(!user.Adjacent(grabbed))
 			qdel(src)

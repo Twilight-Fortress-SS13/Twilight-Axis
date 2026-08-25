@@ -1,5 +1,5 @@
 /mob/living/carbon
-	blood_volume = BLOOD_VOLUME_NORMAL
+	urine_volume = URINE_VOLUME_NORMAL
 	gender = MALE
 	base_intents = list(INTENT_HELP, INTENT_HARM)
 	hud_possible = list(ANTAG_HUD)
@@ -95,6 +95,6 @@
 
 	var/lightning_flashing = FALSE
 	var/nausea = 0
-	var/bleeding_tier = 0
+	var/pissing_tier = 0
 
 	var/tempo_faction_flag = null

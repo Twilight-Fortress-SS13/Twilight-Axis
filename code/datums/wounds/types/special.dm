@@ -295,8 +295,8 @@
 	bypass_bloody_wound_check = TRUE
 	whp = 100
 	sewn_whp = 35
-	bleed_rate = 50
-	sewn_bleed_rate = 0.8
+	piss_rate = 50
+	sewn_piss_rate = 0.8
 	woundpain = 100
 	sewn_woundpain = 50
 
@@ -326,8 +326,8 @@
 	bypass_bloody_wound_check = TRUE
 	whp = 100
 	sewn_whp = 35
-	bleed_rate = 50
-	sewn_bleed_rate = 0.8
+	piss_rate = 50
+	sewn_piss_rate = 0.8
 	woundpain = 100
 	sewn_woundpain = 50
 
@@ -354,8 +354,8 @@
 	whp = 150
 	woundpain = 100
 	sewn_whp = 25
-	bleed_rate = 25 // equivalent to carotid artery tear
-	sewn_bleed_rate = 0.5
+	piss_rate = 25 // equivalent to carotid artery tear
+	sewn_piss_rate = 0.5
 	can_sew = TRUE
 	can_cauterize = FALSE
 	var/immunity_time = 12 SECONDS // how long the wound actively prevents further dismemberment attempts for
@@ -468,7 +468,7 @@
 /datum/wound/dynamic/ooze
 	name = "membrasion"
 	whp = 5
-	bleed_rate = null
+	piss_rate = null
 	clotting_threshold = null
 	sewn_clotting_threshold = null
 	woundpain = 5

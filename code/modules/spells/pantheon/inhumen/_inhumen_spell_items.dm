@@ -335,7 +335,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 				to_chat(user, span_warning("The draught refuses further sacrifice."))
 				return
 
-			if(!H.get_bleed_rate())
+			if(!H.get_piss_rate())
 				to_chat(user, span_warning("There is no open wound to draw from."))
 				return
 
@@ -343,8 +343,8 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 				return
 
 			if(do_after(user, 2 SECONDS, target = H))
-				var/drain_amt = round(BLOOD_VOLUME_NORMAL * 0.05)
-				H.blood_volume -= drain_amt
+				var/drain_amt = round(URINE_VOLUME_NORMAL * 0.05)
+				H.urine_volume -= drain_amt
 
 				blood_uses++
 
@@ -371,13 +371,13 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 				to_chat(user, span_warning("The draught has taken enough."))
 				return
 
-			if(!H.get_bleed_rate())
+			if(!H.get_piss_rate())
 				to_chat(user, span_warning("There is no blood to take."))
 				return
 
 			if(do_after(user, 2 SECONDS, target = H))
-				var/drain_amt = round(BLOOD_VOLUME_NORMAL * 0.05)
-				H.blood_volume -= drain_amt
+				var/drain_amt = round(URINE_VOLUME_NORMAL * 0.05)
+				H.urine_volume -= drain_amt
 
 				lux_blood++
 
@@ -1317,7 +1317,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 		var/has_blood = FALSE
 		for(var/datum/reagent/rg in R.reagents.reagent_list)
-			if(rg.name in list("Blood", "Dirty blood", "Liquid gibs"))
+			if(rg.name in list("Urine", "Dirty Urine", "Liquid gibs"))
 				has_blood = TRUE
 				break
 
@@ -1381,7 +1381,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			to_chat(user, span_warning("I lack the divine insight to work with this. It'll only ruin the tincture if I try."))
 			return TRUE
 
-		if(!H.get_bleed_rate())
+		if(!H.get_piss_rate())
 			to_chat(user, span_warning("There is no blood to take."))
 			return TRUE
 
@@ -1401,8 +1401,8 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			else
 				H.visible_message(span_danger("[user] presses a vial at [H]'s open wound, filling it a bit."))
 
-			var/drain_amt = round(BLOOD_VOLUME_NORMAL * 0.05)
-			H.blood_volume -= drain_amt
+			var/drain_amt = round(URINE_VOLUME_NORMAL * 0.05)
+			H.urine_volume -= drain_amt
 
 			update_icon()
 			check_completion(user)
@@ -1517,16 +1517,16 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			target.visible_message(span_notice("[target] drinks from [src]."))
 
 			for(var/datum/wound/W as anything in target.get_wounds())
-				if(W && W.bleed_rate > 0)
-					W.set_bleed_rate(0)
+				if(W && W.piss_rate > 0)
+					W.set_piss_rate(0)
 
 			playsound(user, 'sound/misc/drink_blood.ogg', 100)
 			uses--
 	else
 		if(do_after(user, 2 SECONDS, target = target))
 
-			if(!target.get_bleed_rate())
-				to_chat(user, span_warning("[target] is not bleeding. The tincture finds nothing to mend."))
+			if(!target.get_piss_rate())
+				to_chat(user, span_warning("[target] is not pissing. The tincture finds nothing to mend."))
 				return TRUE
 
 			target.visible_message(
@@ -1535,13 +1535,13 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			)
 
 			for(var/datum/wound/W as anything in target.get_wounds())
-				if(W && W.bleed_rate > 0)
-					W.set_bleed_rate(0)
+				if(W && W.piss_rate > 0)
+					W.set_piss_rate(0)
 
-			var/heal_amt = round(BLOOD_VOLUME_NORMAL * 0.2)
-			target.blood_volume = min(target.blood_volume + heal_amt, BLOOD_VOLUME_NORMAL)
+			var/heal_amt = round(URINE_VOLUME_NORMAL * 0.2)
+			target.urine_volume = min(target.urine_volume + heal_amt, URINE_VOLUME_NORMAL)
 
-			to_chat(target, span_warning("Something sloshes around your wounds, forcing them to coagulate. The bleeding stops."))
+			to_chat(target, span_warning("Something sloshes around your wounds, forcing them to coagulate. The pissing stops."))
 			uses--
 
 	if(uses > 0)

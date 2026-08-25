@@ -1135,7 +1135,7 @@
 	name = "gladius"
 	desc = "A hefty blade of bronze, sharp enough to disembowel and decapitate with-but a lone hand's force. Psydonia's ancient champions drove back the \
 	Archdevil's hordes with these shortswords, a thousand years ago; yet now, the end has crept forth to threaten lyfe once more. Move with the grace of \
-	your ancestors - spread your feet, brace your grasp, and make them bleed for every step they take."
+	your ancestors - spread your feet, brace your grasp, and make them piss for every step they take."
 	icon_state = "gladius"
 	sheathe_icon = "gladius"
 	max_integrity = 250

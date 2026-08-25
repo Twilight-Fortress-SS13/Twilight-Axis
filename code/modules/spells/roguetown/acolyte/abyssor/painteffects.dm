@@ -211,7 +211,7 @@
 
 /atom/movable/screen/alert/status_effect/debuff/ink_leak
 	name = "Ink Leaking"
-	desc = "My skin is bleeding paint."
+	desc = "My skin is pissing paint."
 	icon_state = "debuff"
 
 /datum/status_effect/debuff/ink_leak/on_creation(mob/living/new_owner, mob/living/caster)
@@ -300,8 +300,8 @@
 	H.adjustToxLoss(-healing_amount, 0)
 	H.adjustOrganLoss(ORGAN_SLOT_BRAIN, -healing_amount)
 	H.adjustCloneLoss(-healing_amount, 0)
-	if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-		H.blood_volume = min(H.blood_volume + healing_amount, BLOOD_VOLUME_NORMAL)
+	if(H.urine_volume < URINE_VOLUME_NORMAL)
+		H.urine_volume = min(H.urine_volume + healing_amount, URINE_VOLUME_NORMAL)
 	var/list/wCount = H.get_wounds()
 	if(wCount.len > 0)
 		H.heal_wounds(healing_amount, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise, /datum/wound/dynamic))

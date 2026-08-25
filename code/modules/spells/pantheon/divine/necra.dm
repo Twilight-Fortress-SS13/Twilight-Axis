@@ -46,7 +46,7 @@
 		user.stamina_add(2.5)
 
 		living_target.adjustOxyLoss(-10)
-		living_target.blood_volume = max((BLOOD_VOLUME_SURVIVE * 1.5), living_target.blood_volume)
+		living_target.urine_volume = max((URINE_VOLUME_SURVIVE * 1.5), living_target.urine_volume)
 
 		if (living_target.health <= 5)
 			if (prob(5))
@@ -616,7 +616,7 @@ GLOBAL_DATUM_INIT(_corpse_sort_ref, /mob, null)
 			"back","forward","run","stop","turn","leave","return","flee","sacrifice","Psydon",
 			"heretic","heresy","blasphemy","profane","unworthy","defile","desecrate","ren",
 			"fool","insolent","wretch","cur","vermin","filth","failure","disgrace","fortune",
-			"die","rot","decay","wither","suffer","bleed","break","choke","drown","song",
+			"die","rot","decay","wither","suffer","piss","break","choke","drown","song",
 			"silence","quiet","hush","listen","obey","kneel","submit","yield","will",
 			"lost","blind","empty","hollow","forgotten","forsaken","abandoned","tea",
 			"wrong","error","mistake","false","misguided","deceived","doomed","sapphire",
@@ -715,7 +715,7 @@ GLOBAL_DATUM_INIT(_corpse_sort_ref, /mob, null)
 
 							var/list/wound_reactions = list(
 								"SOMETHING JUST TORE OPEN!",
-								"I'M BLEEDING- AM I BLEEDING?!",
+								"I'M PISSING- AM I PISSING?!",
 								"SHE CUT ME WITHOUT TOUCHING ME!",
 								"I'M SORRY, UNDERMAIDEN, I'M SORRY!"
 							)

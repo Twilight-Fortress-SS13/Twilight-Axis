@@ -8,7 +8,7 @@
 	subclass_languages = list(/datum/language/kazengunese)
 	class_select_category = CLASS_CAT_WARRIOR
 	category_tags = list(CTAG_WRETCH)
-	traits_applied = list(TRAIT_NOPAINSTUN, TRAIT_BLOOD_RESISTANCE, TRAIT_JOURNEYS_END) //no armour, literally made to bleed
+	traits_applied = list(TRAIT_NOPAINSTUN, TRAIT_BLOOD_RESISTANCE, TRAIT_JOURNEYS_END) //no armour, literally made to piss
 	maximum_possible_slots = 2 //you probably don't want many of these - edit: let them bring a friend/rival
 
 	cmode_music = 'sound/music/combat_Kazengun_Firestorm.ogg'
@@ -29,7 +29,7 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE, //my dynasty is highly learned and we wear all shadow and leave no souls to recount our legend
-		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN, //you'll get real familiar with bleeding
+		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN, //you'll get real familiar with pissing
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE, //social outcast but can still read protective charms
 		/datum/skill/labor/butchering = SKILL_LEVEL_JOURNEYMAN, //flavour and useful for making armour
 	)

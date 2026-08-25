@@ -62,5 +62,5 @@
 	owner.adjustToxLoss(-healing_on_tick, 0)
 	owner.adjustOxyLoss(-healing_on_tick, 0)
 
-	if(owner.blood_volume < BLOOD_VOLUME_OKAY)
-		owner.blood_volume = min(owner.blood_volume + (healing_on_tick * 2), BLOOD_VOLUME_OKAY)
+	if(owner.urine_volume < URINE_VOLUME_OKAY)
+		owner.urine_volume = min(owner.urine_volume + (healing_on_tick * 2), URINE_VOLUME_OKAY)

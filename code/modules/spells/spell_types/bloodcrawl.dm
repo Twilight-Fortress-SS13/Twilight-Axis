@@ -19,7 +19,7 @@
 			perform(target)
 			return
 	revert_cast()
-	to_chat(user, span_warning("There must be a nearby source of blood!"))
+	to_chat(user, span_warning("There must be a nearby source of urine!"))
 
 /obj/effect/proc_holder/spell/bloodcrawl/perform(obj/effect/decal/cleanable/target, recharge = 1, mob/living/user = usr)
 	if(istype(user))

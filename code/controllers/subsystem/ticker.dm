@@ -841,7 +841,7 @@ SUBSYSTEM_DEF(ticker)
 /datum/controller/subsystem/ticker/proc/on_sunsteal()
 	GLOB.todoverride = "night"
 	settod()
-	priority_announce("The Sun is torn from the sky, the world is bleeding!", "Terrible Omen", 'sound/music/wolfintro.ogg') //THE WORLD IS DYING, YOU SHOULD BE SCARED
+	priority_announce("The Sun is torn from the sky, the world is pissing!", "Terrible Omen", 'sound/music/wolfintro.ogg') //THE WORLD IS DYING, YOU SHOULD BE SCARED
 	addomen(OMEN_SUNSTEAL)
 	SSParticleWeather.run_weather(/datum/particle_weather/fog/blood, TRUE)
 	for(var/mob/living/carbon/human/astrater as anything in GLOB.human_list)
@@ -852,7 +852,7 @@ SUBSYSTEM_DEF(ticker)
 		astrater.emote("painscream", intentional = FALSE)
 
 	for(var/turf/open/water/W in world)
-		W.water_reagent = /datum/reagent/blood
+		W.water_reagent = /datum/reagent/urine
 		W.water_color = BLOOD_COLOR_RED
 		W.mapped = FALSE
 		W.update_icon()

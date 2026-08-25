@@ -32,7 +32,7 @@
 		if(!affecting) //if somehow no legs
 			affecting =	H.get_bodypart(check_zone(BODY_ZONE_CHEST))
 
-		//Wounds bleed pretty slow alone so this is more to be annoying than dangerous.
+		//Wounds piss pretty slow alone so this is more to be annoying than dangerous.
 		var/damage = 30
 		affecting.receive_damage(damage)
 		var/datum/wound/choice = /datum/wound/puncture

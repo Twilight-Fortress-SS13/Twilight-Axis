@@ -64,7 +64,7 @@
 
 /mob/living/simple_animal/hostile/boss/baroness/Initialize(mapload)
 	. = ..()
-	//REMOVE_TRAIT(src, TRAIT_SIMPLE_WOUNDS, TRAIT_GENERIC) //Increased damage malus from silver. Minor over-time damage increase from bleeding wounds. Un-// if it's too easy.
+	//REMOVE_TRAIT(src, TRAIT_SIMPLE_WOUNDS, TRAIT_GENERIC) //Increased damage malus from silver. Minor over-time damage increase from pissing wounds. Un-// if it's too easy.
 	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOZIZORECRUIT, TRAIT_GENERIC) //Not undead but if we ever change this.

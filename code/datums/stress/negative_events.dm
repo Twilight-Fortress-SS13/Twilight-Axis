@@ -67,12 +67,12 @@
 	stressadd = 2
 	desc = span_red("I saw something ghastly.")
 
-/datum/stressevent/bleeding
+/datum/stressevent/pissing
 	timer = 2 MINUTES
 	stressadd = 2
-	desc = list(span_red("I think I'm bleeding."),span_red("I'm bleeding."))
+	desc = list(span_red("I think I'm pissing."),span_red("I'm pissing."))
 
-/datum/stressevent/bleeding/can_apply(mob/living/user)
+/datum/stressevent/pissing/can_apply(mob/living/user)
 	if(user.has_flaw(/datum/charflaw/addiction/masochist))
 		return FALSE
 	return TRUE

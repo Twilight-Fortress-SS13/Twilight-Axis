@@ -22,7 +22,7 @@
 	if(victim.dna?.species && (NOBLOOD in victim.dna.species.species_traits))
 		to_chat(src, span_warning("They have no blood."))
 		return
-	if(victim.blood_volume <= 0)
+	if(victim.urine_volume <= 0)
 		to_chat(src, span_warning("Sigh. No blood left."))
 		return
 
@@ -36,7 +36,7 @@
 	last_drinkblood_use = world.time
 	changeNext_move(CLICK_CD_MELEE)
 
-	victim.blood_volume = max(victim.blood_volume - 5, 0)
+	victim.urine_volume = max(victim.urine_volume - 5, 0)
 	victim.handle_blood()
 
 	playsound(loc, 'sound/misc/drink_blood.ogg', vol = 50, vary = FALSE, extrarange = -4, ignore_walls = FALSE, quiet = TRUE)
@@ -75,14 +75,14 @@
 		return
 
 	// some code witchcraft for blood ingest transfer, fuck sake
-	var/blood_amount = max(1, round(BLOOD_VOLUME_MAXIMUM * 0.01))
-	blood_amount = min(blood_amount, victim.blood_volume)
-	victim.blood_volume = max(victim.blood_volume - blood_amount, 0)
+	var/blood_amount = max(1, round(URINE_VOLUME_MAXIMUM * 0.01))
+	blood_amount = min(blood_amount, victim.urine_volume)
+	victim.urine_volume = max(victim.urine_volume - blood_amount, 0)
 	victim.handle_blood()
 	var/datum/reagents/temp = new(blood_amount)
 	temp.my_atom = src
-	temp.add_reagent(/datum/reagent/blood, blood_amount)
-	var/datum/reagent/blood/B = temp.has_reagent(/datum/reagent/blood)
+	temp.add_reagent(/datum/reagent/urine, blood_amount)
+	var/datum/reagent/urine/B = temp.has_reagent(/datum/reagent/urine)
 	if(B)
 		B.data = victim.get_blood_data()
 	temp.trans_to(src, blood_amount, TRUE, TRUE, FALSE, src, FALSE, INGEST)
@@ -110,7 +110,7 @@
 
 	if(victim.bloodpool > 0)
 		var/used_vitae = 150
-		victim.blood_volume = max(victim.blood_volume - 45, 0) // good fucking lord vampires are hungy, 50 blood per cycle?
+		victim.urine_volume = max(victim.urine_volume - 45, 0) // good fucking lord vampires are hungy, 50 blood per cycle?
 		if(victim.bloodpool < used_vitae)	// We assume they're left with 250 vitae or less, so we take it all
 			used_vitae = victim.bloodpool
 			to_chat(src, span_warning("...But alas, only leftovers..."))
@@ -133,13 +133,13 @@
 			victim.adjustBruteLoss(-50, TRUE)
 			victim.adjustFireLoss(-50, TRUE)
 			return
-		else if(victim.blood_volume < BLOOD_VOLUME_SURVIVE && victim.stat != DEAD)
+		else if(victim.urine_volume < URINE_VOLUME_SURVIVE && victim.stat != DEAD)
 			to_chat(src, span_warning("This sad sacrifice for your own pleasure affects something deep in your mind."))
 			AdjustMasquerade(-1)
 			victim.death()
 			return
 
-	if(!victim.clan && victim.mind && ishuman(victim) && VDrinker.generation > GENERATION_THINBLOOD && victim.blood_volume <= BLOOD_VOLUME_BAD)
+	if(!victim.clan && victim.mind && ishuman(victim) && VDrinker.generation > GENERATION_THINBLOOD && victim.urine_volume <= URINE_VOLUME_BAD)
 		var/datum/antagonist/vampire/vdrinker = mind?.has_antag_datum(/datum/antagonist/vampire)
 		if((vdrinker.max_thralls <= 0) || (isnull(vdrinker.max_thralls || VDrinker.generation <= GENERATION_THINBLOOD))) //thin bloods or low level vampires can't make thralls, incase they get past the last check by leveling up off others
 			to_chat(src, span_warning("I cannot sire thralls, my blood is too weak!"))

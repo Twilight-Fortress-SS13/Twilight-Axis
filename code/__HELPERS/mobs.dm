@@ -1,4 +1,4 @@
-/proc/random_blood_type()
+/proc/random_urine_type()
 	return pick(4;"O-", 36;"O+", 3;"A-", 28;"A+", 1;"B-", 20;"B+", 1;"AB-", 5;"AB+")
 
 /proc/random_eye_color()

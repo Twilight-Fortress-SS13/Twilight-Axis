@@ -58,7 +58,7 @@ drinksomeblood()
 
 #define TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS 3
 #define TA_VAMP_BLOODDRINK_FULL_DRAIN_BITES 6
-#define TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD BLOOD_VOLUME_BAD
+#define TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD URINE_VOLUME_BAD
 #define TA_VAMP_BLOODDRINK_LOCK_TIMEOUT (45 SECONDS)
 // Temporarily disabled. Uncomment to restore Vampire Lord forced conversion.
 //#define TA_VAMP_LORD_FORCE_CONVERT
@@ -177,7 +177,7 @@ drinksomeblood()
 	last_drinkblood_use = world.time
 	changeNext_move(CLICK_CD_MELEE)
 
-	victim.blood_volume = max(victim.blood_volume - TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS, 0)
+	victim.urine_volume = max(victim.urine_volume - TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS, 0)
 	victim.handle_blood()
 
 	playsound(loc, 'sound/misc/drink_blood.ogg', 100, FALSE, -4)
@@ -244,7 +244,7 @@ drinksomeblood()
 /mob/living/carbon/human/proc/consume_vitae(mob/living/carbon/victim)
 	var/used_vitae = get_vitae_drain_per_bite(victim)
 
-	victim.blood_volume = max(victim.blood_volume - get_vitae_blood_loss(victim), 0)
+	victim.urine_volume = max(victim.urine_volume - get_vitae_blood_loss(victim), 0)
 
 	if(victim.bloodpool < used_vitae)
 		used_vitae = victim.bloodpool
@@ -263,7 +263,7 @@ drinksomeblood()
 	return max(CEILING(victim.maxbloodpool / TA_VAMP_BLOODDRINK_FULL_DRAIN_BITES, 1), 1)
 
 /mob/living/carbon/human/proc/get_vitae_blood_loss(mob/living/carbon/victim)
-	return max(((BLOOD_VOLUME_NORMAL - TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD) / TA_VAMP_BLOODDRINK_FULL_DRAIN_BITES) - TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS, 0)
+	return max(((URINE_VOLUME_NORMAL - TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD) / TA_VAMP_BLOODDRINK_FULL_DRAIN_BITES) - TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS, 0)
 
 /// DIABLERIE
 /mob/living/carbon/human/proc/handle_diablerie(mob/living/carbon/victim, datum/antagonist/vampire/VDrinker, datum/antagonist/vampire/VVictim)
@@ -309,7 +309,7 @@ drinksomeblood()
 
 		return TRUE
 
-	if(victim.blood_volume < BLOOD_VOLUME_SURVIVE && victim.stat != DEAD)
+	if(victim.urine_volume < URINE_VOLUME_SURVIVE && victim.stat != DEAD)
 
 		to_chat(src, span_warning("Эта жалкая жертва ради собственного удовольствия затрагивает что-то глубоко в моём разуме."))
 
@@ -583,7 +583,7 @@ drinksomeblood()
 		return "[victim] уже иссушен и не может стать порождением."
 	if(!victim.mind)
 		return "У этой цели нет души, которую можно забрать."
-	if(victim.blood_volume > BLOOD_VOLUME_BAD && !allow_stabilized_drain)
+	if(victim.urine_volume > URINE_VOLUME_BAD && !allow_stabilized_drain)
 		return "В этой цели ещё слишком много крови."
 	if(victim.stat == DEAD && !allow_stabilized_drain)
 		return "Труп нельзя безопасно поднять как порождение."
@@ -800,7 +800,7 @@ drinksomeblood()
 		to_chat(src, span_userdanger("Чужая вампирская амбиция опутывает мою судьбу. Я не могу отвергнуть предложенное обращение."))
 		to_chat(sire, span_notice("[src] не может отвергнуть обращение, предначертанное моей амбицией."))
 	else
-		var/use_byond_alert = stat != CONSCIOUS || blood_volume <= BLOOD_VOLUME_SURVIVE || InCritical()
+		var/use_byond_alert = stat != CONSCIOUS || urine_volume <= URINE_VOLUME_SURVIVE || InCritical()
 		vampire_choice = ta_tgui_tooltip_alert(
 			src,
 			prompt_text,
@@ -857,7 +857,7 @@ drinksomeblood()
 	if(VVictim)
 		return victim.bloodpool <= 0
 
-	return victim.bloodpool <= 0 && victim.blood_volume - TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS < BLOOD_VOLUME_SURVIVE
+	return victim.bloodpool <= 0 && victim.urine_volume - TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS < URINE_VOLUME_SURVIVE
 
 /// RESOLUTION
 /mob/living/carbon/human/proc/resolve_blooddrink_consequences(mob/living/carbon/victim)
@@ -950,7 +950,7 @@ drinksomeblood()
 
 	var/datum/antagonist/vampire/VDrinker = get_vampire_drinker()
 	var/datum/antagonist/vampire/VVictim = get_vampire_victim(victim)
-	if(victim.blood_volume <= 0 && !(VDrinker && VVictim))
+	if(victim.urine_volume <= 0 && !(VDrinker && VVictim))
 		to_chat(src, span_warning("Увы. Нет крови."))
 		return
 
@@ -960,7 +960,7 @@ drinksomeblood()
 	var/conversion_priority = ta_conversion_takes_priority(victim)
 	var/lethal_finish = !conversion_priority && requires_finishing_blooddrink_delay(victim)
 
-	if(!conversion_priority && !lethal_finish && victim.client && victim.blood_volume <= BLOOD_VOLUME_BAD)
+	if(!conversion_priority && !lethal_finish && victim.client && victim.urine_volume <= URINE_VOLUME_BAD)
 		to_chat(src, span_warning("[victim] почти обескровлен - каждый глоток теперь душит его. Я перестаю тянуть кровь сам."))
 		ta_stop_blood_sipping()
 

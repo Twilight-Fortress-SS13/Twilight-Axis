@@ -68,9 +68,9 @@
 	if(istype(target.get_active_held_item(), /obj/item/rogueweapon))
 		bonus += 0.5
 
-	if(target == user && target.blood_volume <= BLOOD_VOLUME_OKAY && COOLDOWN_FINISHED(src, lesser_heal_buff_cooldown))
+	if(target == user && target.urine_volume <= URINE_VOLUME_OKAY && COOLDOWN_FINISHED(src, lesser_heal_buff_cooldown))
 		user.emote("warcry")
-		user.blood_volume += BLOOD_VOLUME_SURVIVE / 3
+		user.urine_volume += URINE_VOLUME_SURVIVE / 3
 		bonus += 2
 		COOLDOWN_START(src, lesser_heal_buff_cooldown, 30 SECONDS)
 

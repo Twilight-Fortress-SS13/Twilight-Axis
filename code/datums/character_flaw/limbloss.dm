@@ -14,7 +14,7 @@
 
 /datum/charflaw/limbloss/arm_r
 	name = "Wood Arm (R)"
-	desc = "I lost my right arm long ago, but the wooden arm doesn't bleed as much... but it is flammable.<br><i>(Incompatible with Bronze Arm (R) virtue)</i>"
+	desc = "I lost my right arm long ago, but the wooden arm doesn't piss as much... but it is flammable.<br><i>(Incompatible with Bronze Arm (R) virtue)</i>"
 	lost_zone = BODY_ZONE_R_ARM
 	restricted_species = list(/datum/species/ooze)
 
@@ -28,7 +28,7 @@
 
 /datum/charflaw/limbloss/arm_l
 	name = "Wood Arm (L)"
-	desc = "I lost my left arm long ago, but the wooden arm doesn't bleed as much... but it is flammable.<br><i>(Incompatible with Bronze Arm (L) virtue)</i>"
+	desc = "I lost my left arm long ago, but the wooden arm doesn't piss as much... but it is flammable.<br><i>(Incompatible with Bronze Arm (L) virtue)</i>"
 	lost_zone = BODY_ZONE_L_ARM
 	restricted_species = list(/datum/species/ooze)
 

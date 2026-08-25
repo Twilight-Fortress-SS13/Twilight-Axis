@@ -203,11 +203,11 @@
 
 	if(ishuman(user))
 		var/mob/living/carbon/human/userashuman = user
-		userashuman.blood_volume = max(0, userashuman.blood_volume - blood_loss)
+		userashuman.urine_volume = max(0, userashuman.urine_volume - blood_loss)
 	for(var/mob/living/carbon/human/H in range(7, origin_turf))
 		if(H.dna?.species?.id == "gnoll" && !user)
 			gnoll_hitchhikers++
-			H.blood_volume = max(0, H.blood_volume - blood_loss)
+			H.urine_volume = max(0, H.urine_volume - blood_loss)
 			do_teleport(H, destination_turf)
 			to_chat(H, span_notice("You are swept along in the wake of the blood abduction!"))
 
@@ -463,8 +463,8 @@
 	if(!H)
 		return
 
-	if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-		H.blood_volume = min(H.blood_volume + heal_amt, BLOOD_VOLUME_NORMAL)
+	if(H.urine_volume < URINE_VOLUME_NORMAL)
+		H.urine_volume = min(H.urine_volume + heal_amt, URINE_VOLUME_NORMAL)
 	var/list/wCount = H.get_wounds()
 	if(length(wCount))
 		H.heal_wounds(heal_amt)

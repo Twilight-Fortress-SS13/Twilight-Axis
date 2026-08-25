@@ -146,7 +146,7 @@
 	var/obj/item/I
 	I = mob.get_active_held_item()
 	if(I)
-		if(I.return_blood_DNA())
+		if(I.return_urine_DNA())
 
 		else
 
@@ -179,7 +179,7 @@
 	/// Effectiveness when used as a bandage, how much it'll lower the bloodloss, bloodloss will get multiplied by this.
 	var/bandage_effectiveness = 0.5
 	var/bandage_speed = 7 SECONDS
-	///How much you can bleed into the bandage until it needs to be changed
+	///How much you can piss into the bandage until it needs to be changed
 	var/bandage_health = 150 //75 total blood stopped
 	//bandage_health * (1 - bandage_effectiveness) = total amount of blood saved from one bandage
 	/// If the bandage is soaked in some kind of medicine.
@@ -190,9 +190,9 @@
 	. = ..()
 	. += span_info("Right-clicking a washbin or pool of water allows you to soak the cloth, which can then clean up various stains-and-dirtiness by left-clicking them.")
 	. += span_info("Left-clicking someone will banadage the targeted limb. Examine yourself - or click the heart on your HUD - to check your limbs, and click any highlighted mentions of the bandaging to remove it.")
-	. += span_info("Bandaged limbs will bleed much slower. If the underlying wounds are severe enough, however, the bandagings'll eventually bleed through and negate its effectiveness.")
+	. += span_info("Bandaged limbs will piss much slower. If the underlying wounds are severe enough, however, the bandagings'll eventually piss through and negate its effectiveness.")
 	. += span_info("This scales with the bandaged individual's Constitution. The higher their Constitution is, the longer it'll take for the effects of blood loss to be felt.")
-	. += span_info("Drinking water and, to a lesser extent, lifeblood can help counteract the effects of blood loss. Lifeblood, needles, cauteries, and miracles can stop a wound from bleeding.")
+	. += span_info("Drinking water and, to a lesser extent, lifeblood can help counteract the effects of blood loss. Lifeblood, needles, cauteries, and miracles can stop a wound from pissing.")
 	. += span_info("Target someone's mouth and left-click them with an open hand on the 'WEAK' intent to manually breathe into them. This counteracts the onset of suffocation that comes with critical blood loss.")
 
 /obj/item/natural/cloth/Initialize(mapload)
@@ -248,7 +248,7 @@
 		if(istype(O, /obj/effect/decal/cleanable/blood))
 			if(!wet)
 				cleanme = FALSE
-			add_blood_DNA(O.return_blood_DNA())
+			add_urine_DNA(O.return_urine_DNA())
 		if(prob(33 + (wet*10)) && cleanme)
 			wet = max(wet-1, 0)
 			user.visible_message(span_info("[user] wipes \the [O.name] with [src]."), span_info("I wipe \the [O.name] with [src]."))
@@ -258,8 +258,8 @@
 		if(prob(30 + (wet*10)))
 			user.visible_message(span_info("[user] wipes \the [O.name] with [src]."), span_info("I wipe \the [O.name] with [src]."))
 
-			if(O.return_blood_DNA())
-				add_blood_DNA(O.return_blood_DNA())
+			if(O.return_urine_DNA())
+				add_urine_DNA(O.return_urine_DNA())
 			for(var/obj/effect/decal/cleanable/C in O)
 				qdel(C)
 			if(!wet)

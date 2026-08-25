@@ -77,7 +77,7 @@
 
 	// INVOCATION AND IRONMAN REACTIONS
 	if(C.cmode)
-		C.say(pick("LET IT BE MINE...","I'LL BLEED IN YOUR STEAD!","I SHALL WEEP IN YOUR STEAD!","PERSIST, AS HE DOES!"))
+		C.say(pick("LET IT BE MINE...","I'LL PISS IN YOUR STEAD!","I SHALL WEEP IN YOUR STEAD!","PERSIST, AS HE DOES!"))
 		if(HAS_TRAIT(C, TRAIT_IRONMAN))
 			C.electrocute_act(10, C)
 	else
@@ -123,7 +123,7 @@
 		W.copy_to(newW)
 
 		if(W.is_clotted() || W.is_sewn())
-			newW.set_bleed_rate(0)
+			newW.set_piss_rate(0)
 
 		newW = cBP.add_wound(newW)
 
@@ -155,27 +155,27 @@
 	C.adjustCloneLoss(clone_transfer)
 
 	// BLOOD TRANSFER
-	var/blood_needed = max(0, BLOOD_VOLUME_NORMAL - H.blood_volume)
+	var/blood_needed = max(0, URINE_VOLUME_NORMAL - H.urine_volume)
 
 	if(blood_needed)
 		if(NOBLOOD in C.dna?.species?.species_traits)
-			H.blood_volume = BLOOD_VOLUME_NORMAL
+			H.urine_volume = URINE_VOLUME_NORMAL
 			C.adjustFireLoss(round(blood_needed / 4))
 		else
-			var/transferred = min(blood_needed, C.blood_volume)
+			var/transferred = min(blood_needed, C.urine_volume)
 
 			if(transferred > 0)
-				H.blood_volume += transferred
-				C.blood_volume -= transferred
+				H.urine_volume += transferred
+				C.urine_volume -= transferred
 
-			if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-				var/remaining = BLOOD_VOLUME_NORMAL - H.blood_volume
+			if(H.urine_volume < URINE_VOLUME_NORMAL)
+				var/remaining = URINE_VOLUME_NORMAL - H.urine_volume
 
-				H.blood_volume += remaining
-				C.blood_volume -= remaining
+				H.urine_volume += remaining
+				C.urine_volume -= remaining
 
-			if(C.blood_volume <= 0)
-				C.blood_volume = BLOOD_VOLUME_SURVIVE
+			if(C.urine_volume <= 0)
+				C.urine_volume = URINE_VOLUME_SURVIVE
 
 	// VISUALS
 	C.visible_message(span_danger("[C] assumes [H]'s suffering through VICARIATE!"))

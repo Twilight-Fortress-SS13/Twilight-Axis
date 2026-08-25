@@ -12,6 +12,6 @@
 		if(!HAS_TRAIT(H, TRAIT_NOHUNGER))
 			H.adjust_hydration(1)
 			H.adjust_nutrition(0.5) //Semen is not very nutritious. The player can go about 3 rounds of cumming before needing to wait a long time code-wise to cum more.
-		if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-			H.blood_volume = min(H.blood_volume+10, BLOOD_VOLUME_NORMAL)
+		if(H.urine_volume < URINE_VOLUME_NORMAL)
+			H.urine_volume = min(H.urine_volume+10, URINE_VOLUME_NORMAL)
 	..()

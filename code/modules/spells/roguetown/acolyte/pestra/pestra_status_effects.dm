@@ -57,8 +57,8 @@
 	H.color = outline_colour
 	do_sprite_shake(owner, 3, 3, 15, 1)
 
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume + healing_strength, BLOOD_VOLUME_NORMAL)
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume + healing_strength, URINE_VOLUME_NORMAL)
 	var/list/wounds = owner.get_wounds()
 	if(length(wounds) > 0)
 		owner.heal_wounds(healing_strength)
@@ -132,8 +132,8 @@
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_rogue(get_turf(owner))
 	H.color = effect_colour
 
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume + healing_strength, BLOOD_VOLUME_NORMAL)
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume + healing_strength, URINE_VOLUME_NORMAL)
 	var/list/wounds = owner.get_wounds()
 	if(length(wounds) > 0)
 		owner.heal_wounds(healing_strength)

@@ -16,12 +16,12 @@
 /datum/flesh_concept/blood
 	name = "blood"
 	tier_questions = alist(
-		1 = list("Red wet?", "Life juice?", "Bleed?"),
+		1 = list("Red wet?", "Life juice?", "Piss?"),
 		2 = list("What is blood?", "Why blood red?", "Blood life?"),
 		3 = list("Does blood carry memory?", "Is blood sacred?", "What flows in veins?"),
 		4 = list("What ancestral knowledge flows in blood?", "Is blood the river of lineage?", "Does blood remember what the mind forgets?")
 	)
-	answer_keywords = list("blood", "bleed", "veins", "life", "red", "flow", "sacrifice")
+	answer_keywords = list("blood", "piss", "veins", "life", "red", "flow", "sacrifice")
 
 /datum/flesh_concept/fear
 	name = "fear"

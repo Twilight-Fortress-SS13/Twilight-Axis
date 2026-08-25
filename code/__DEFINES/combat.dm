@@ -441,9 +441,9 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 /*
 Medical defines
 */
-#define ARTERY_LIMB_BLEEDRATE 20	//This is used as a reference point for dynamic wounds, so it's better off as a define.
-#define CONSTITUTION_BLEEDRATE_MOD 0.05	//How much slower we'll be bleeding for every CON point. 0.1 = 10% slower.
-#define CONSTITUTION_BLEEDRATE_CAP 20	//The CON value up to which we get a bleedrate reduction.
+#define ARTERY_LIMB_PISSRATE 20	//This is used as a reference point for dynamic wounds, so it's better off as a define.
+#define CONSTITUTION_PISSRATE_MOD 0.05	//How much slower we'll be pissing for every CON point. 0.1 = 10% slower.
+#define CONSTITUTION_PISSRATE_CAP 20	//The CON value up to which we get a pissrate reduction.
 
 #define WILLPOWER_STARTING_STAMINA 135	//Starting stamina (green bar) value. Before major changes this would represent Expert Athletics + ~11.5 WIL
 #define WILLPOWER_MODIFIER	5	//How much stamina (flat value) we gain (or lose) for every WIL above / below 10.
@@ -465,10 +465,10 @@ Medical defines
 #define CRIT_RESISTANCE_STACKS_PLAYER 4
 #define CRIT_RESISTANCE_STACKS_NPC 1
 #define CRIT_RESISTANCE_STACKS_OP 1 // Noblood / Revenant etc.
-#define CRIT_RESISTANCE_EFFECTIVE_BLEEDRATE 0.5 // How much CR reduce bleedrate by
+#define CRIT_RESISTANCE_EFFECTIVE_PISSRATE 0.5 // How much CR reduce pissrate by
 #define CRIT_RESISTANCE_TIMER_CD 30 SECONDS // Cooldown between guaranteed CR procs. DOES NOT APPLY TO DISMEMBERMENT.
 
-#define BLOOD_RESISTANCE_EFFECTIVE_BLEEDRATE 0.5
+#define BLOOD_RESISTANCE_EFFECTIVE_PISSRATE 0.5
 
 /*
 	Dullfactor Defines. These should be removed at some point.

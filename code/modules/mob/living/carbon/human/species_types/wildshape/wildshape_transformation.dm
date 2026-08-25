@@ -98,11 +98,11 @@
 			if (target_zone == BODY_ZONE_TAUR)
 				target_zone = pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 			
-			var/bleedrate = wound.bleed_rate
+			var/pissrate = wound.piss_rate
 			var/obj/item/bodypart/w_bp = W.get_bodypart(target_zone)
 			
 			wound.apply_to_bodypart(w_bp, silent = TRUE, crit_message = FALSE)
-			wound.set_bleed_rate(bleedrate) // restore bleed rate, since apply_to_bodypart resets it.
+			wound.set_piss_rate(pissrate) // restore piss rate, since apply_to_bodypart resets it.
 
 
 	W.adjustBruteLoss(getBruteLoss())
@@ -113,7 +113,7 @@
 	src.adjustFireLoss(-src.getFireLoss())
 	src.adjustOxyLoss(-src.getOxyLoss())
 
-	W.blood_volume = blood_volume
+	W.urine_volume = urine_volume
 	W.set_nutrition(nutrition)
 	W.set_hydration(hydration)
 
@@ -205,11 +205,11 @@
 		for(var/datum/wound/wound in woundlist)
 			var/target_zone = wound.bodypart_owner.body_zone
 			
-			var/bleedrate = wound.bleed_rate
+			var/pissrate = wound.piss_rate
 			var/obj/item/bodypart/w_bp = W.get_bodypart(target_zone)
 			
 			wound.apply_to_bodypart(w_bp, silent = TRUE, crit_message = FALSE)
-			wound.set_bleed_rate(bleedrate)
+			wound.set_piss_rate(pissrate)
 
 	W.adjustBruteLoss(getBruteLoss())
 	W.adjustFireLoss(getFireLoss())
@@ -218,7 +218,7 @@
 	src.adjustBruteLoss(-src.getBruteLoss())
 	src.adjustFireLoss(-src.getFireLoss())
 	src.adjustOxyLoss(-src.getOxyLoss())
-	W.blood_volume = blood_volume
+	W.urine_volume = urine_volume
 
 	W.set_nutrition(nutrition)
 	W.set_hydration(hydration)

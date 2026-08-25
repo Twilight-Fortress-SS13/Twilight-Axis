@@ -2,8 +2,8 @@
 	name = "burn"
 	whp = 1 // 1 to 1 to puncture, as it is an AP type
 	sewn_whp = 0
-	bleed_rate = 0.2
-	sewn_bleed_rate = 0.04
+	piss_rate = 0.2
+	sewn_piss_rate = 0.04
 	clotting_rate = 0.01
 	sewn_clotting_rate = 0.01
 	clotting_threshold = 0.15
@@ -26,27 +26,27 @@
 #define BURN_UPG_WHPRATE 1.2
 #define BURN_UPG_PAINRATE 0.25
 #define BURN_CHAR_THRESHOLD 120
-// flat floor + a capped damage term, so a fireball (90) bleeds more than a spitfire (40) without the old runaway clamp
-#define BURN_UPG_BLEED_FLAT 0.8
-#define BURN_UPG_BLEED_SCALE 0.02
-#define BURN_UPG_BLEED_SCALE_CAP 1.6
-#define BURN_ARMORED_BLEED_CLAMP (ARTERY_LIMB_BLEEDRATE * 0.33)
-#define BURN_MAX_BLEED (ARTERY_LIMB_BLEEDRATE * 0.75)
+// flat floor + a capped damage term, so a fireball (90) pisss more than a spitfire (40) without the old runaway clamp
+#define BURN_UPG_PISS_FLAT 0.8
+#define BURN_UPG_PISS_SCALE 0.02
+#define BURN_UPG_PISS_SCALE_CAP 1.6
+#define BURN_ARMORED_PISS_CLAMP (ARTERY_LIMB_PISSRATE * 0.33)
+#define BURN_MAX_PISS (ARTERY_LIMB_PISSRATE * 0.75)
 
 /datum/wound/dynamic/burn/on_bodypart_gain(obj/item/bodypart/affected)
 	if(!affected.can_bloody_wound())
-		set_bleed_rate(0)
+		set_piss_rate(0)
 	return ..()
 
 /datum/wound/dynamic/burn/upgrade(dam, armor, exposed)
 	whp += (dam * BURN_UPG_WHPRATE)
 	woundpain += (dam * BURN_UPG_PAINRATE)
 	if(bodypart_owner?.can_bloody_wound())
-		set_bleed_rate(bleed_rate + BURN_UPG_BLEED_FLAT + clamp(dam * BURN_UPG_BLEED_SCALE, 0, BURN_UPG_BLEED_SCALE_CAP))
-		if(bleed_rate > BURN_MAX_BLEED)
-			set_bleed_rate(BURN_MAX_BLEED)
+		set_piss_rate(piss_rate + BURN_UPG_PISS_FLAT + clamp(dam * BURN_UPG_PISS_SCALE, 0, BURN_UPG_PISS_SCALE_CAP))
+		if(piss_rate > BURN_MAX_PISS)
+			set_piss_rate(BURN_MAX_PISS)
 		if(armor && !exposed)
-			armor_check(armor, BURN_ARMORED_BLEED_CLAMP)
+			armor_check(armor, BURN_ARMORED_PISS_CLAMP)
 	if(whp >= BURN_CHAR_THRESHOLD && !disabling)
 		disabling = TRUE
 		passive_healing = 0
@@ -59,11 +59,11 @@
 #undef BURN_UPG_WHPRATE
 #undef BURN_UPG_PAINRATE
 #undef BURN_CHAR_THRESHOLD
-#undef BURN_UPG_BLEED_FLAT
-#undef BURN_UPG_BLEED_SCALE
-#undef BURN_UPG_BLEED_SCALE_CAP
-#undef BURN_ARMORED_BLEED_CLAMP
-#undef BURN_MAX_BLEED
+#undef BURN_UPG_PISS_FLAT
+#undef BURN_UPG_PISS_SCALE
+#undef BURN_UPG_PISS_SCALE_CAP
+#undef BURN_ARMORED_PISS_CLAMP
+#undef BURN_MAX_PISS
 
 /datum/wound/charring
 	name = "severe burn"
@@ -80,8 +80,8 @@
 	sewn_whp = 25
 	woundpain = 80
 	sewn_woundpain = 30
-	bleed_rate = 10 // Let's make it actually do something ok
-	sewn_bleed_rate = 0.5
+	piss_rate = 10 // Let's make it actually do something ok
+	sewn_piss_rate = 0.5
 	sew_threshold = 120
 	mob_overlay = ""
 	can_sew = TRUE

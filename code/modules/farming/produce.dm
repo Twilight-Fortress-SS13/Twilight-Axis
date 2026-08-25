@@ -587,7 +587,7 @@
 		return ..() //Eat it
 	if(user.zone_selected == BODY_ZONE_PRECISE_MOUTH)
 		return ..() //Make THEM eat it.
-	if(!M.get_bleed_rate())
+	if(!M.get_piss_rate())
 		to_chat(user, span_warning("There is no blood to wick into the flower bud."))
 		return
 	var/success = FALSE

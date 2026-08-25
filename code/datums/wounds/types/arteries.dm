@@ -6,8 +6,8 @@
 	sound_effect = 'sound/combat/crit.ogg'
 	whp = 50
 	sewn_whp = 20
-	bleed_rate = ARTERY_LIMB_BLEEDRATE
-	sewn_bleed_rate = 0.2
+	piss_rate = ARTERY_LIMB_PISSRATE
+	sewn_piss_rate = 0.2
 	clotting_threshold = null
 	sewn_clotting_threshold = null
 	woundpain = 50
@@ -44,8 +44,8 @@
 	crit_message = "Blood sprays from %VICTIM's throat!"
 	whp = 100
 	sewn_whp = 25
-	bleed_rate = 50
-	sewn_bleed_rate = 0.5
+	piss_rate = 50
+	sewn_piss_rate = 0.5
 	woundpain = 60
 	sewn_woundpain = 30
 	mob_overlay = "s1_throat"
@@ -65,8 +65,8 @@
 	severity = WOUND_SEVERITY_FATAL
 	whp = 100
 	sewn_whp = 35
-	bleed_rate = 50
-	sewn_bleed_rate = 0.8
+	piss_rate = 50
+	sewn_piss_rate = 0.8
 	woundpain = 100
 	sewn_woundpain = 50
 	mortal = TRUE
@@ -81,7 +81,7 @@
 		"MY HEART! IT HURTS!",
 		"I AM DYING!",
 		"MY HEART IS TORN!",
-		"MY HEART IS BLEEDING!",
+		"MY HEART IS PISSING!",
 	)
 	to_chat(affected, span_userdanger("[pick(heartaches)]"))
 
@@ -99,8 +99,8 @@
 	severity = WOUND_SEVERITY_FATAL
 	whp = 100
 	sewn_whp = 25
-	bleed_rate = 50
-	sewn_bleed_rate = 0.5
+	piss_rate = 50
+	sewn_piss_rate = 0.5
 	woundpain = 60
 	sewn_woundpain = 30
 	disabling = TRUE

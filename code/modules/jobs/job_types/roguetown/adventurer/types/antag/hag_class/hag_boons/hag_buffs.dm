@@ -197,8 +197,8 @@
 	H.adjustBruteLoss(-healing_on_tick)
 	if(length(wounds))
 		H.heal_wounds(healing_on_tick)
-	if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-		H.blood_volume = min(owner.blood_volume + healing_on_tick, BLOOD_VOLUME_NORMAL)
+	if(H.urine_volume < URINE_VOLUME_NORMAL)
+		H.urine_volume = min(owner.urine_volume + healing_on_tick, URINE_VOLUME_NORMAL)
 
 	total_healed += actual_brute_healed
 

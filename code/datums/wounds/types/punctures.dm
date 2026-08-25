@@ -2,8 +2,8 @@
 	name = "puncture"
 	whp = 40
 	sewn_whp = 20
-	bleed_rate = 0.4
-	sewn_bleed_rate = 0.04
+	piss_rate = 0.4
+	sewn_piss_rate = 0.04
 	clotting_rate = 0.01
 	sewn_clotting_rate = 0.01
 	clotting_threshold = 0.2
@@ -17,8 +17,8 @@
 	name = "small puncture"
 	whp = 20
 	sewn_whp = 10
-	bleed_rate = 0.2
-	sewn_bleed_rate = 0.02
+	piss_rate = 0.2
+	sewn_piss_rate = 0.02
 	clotting_rate = 0.01
 	sewn_clotting_rate = 0.01
 	clotting_threshold = 0.1
@@ -29,8 +29,8 @@
 	name = "gaping puncture"
 	whp = 40
 	sewn_whp = 20
-	bleed_rate = 1
-	sewn_bleed_rate = 0.1
+	piss_rate = 1
+	sewn_piss_rate = 0.1
 	clotting_rate = 0.01
 	sewn_clotting_rate = 0.01
 	clotting_threshold = 0.5
@@ -41,8 +41,8 @@
 	name = "puncture"
 	whp = 1
 	sewn_whp = 0
-	bleed_rate = 1
-	sewn_bleed_rate = 0.04
+	piss_rate = 1
+	sewn_piss_rate = 0.04
 	clotting_rate = 0.01
 	sewn_clotting_rate = 0.01
 	clotting_threshold = 0.15
@@ -60,31 +60,31 @@
 	)
 
 //Puncture (Stab -- not Pick) Omniwounds
-//Vaguely: Not nearly as painful, higher bleed cap, easier to sew / heal.
+//Vaguely: Not nearly as painful, higher piss cap, easier to sew / heal.
 
 #define PUNC_UPG_WHPRATE 0.5
 #define PUNC_UPG_SEWRATE 0.65
 #define PUNC_UPG_PAINRATE 0.1
 #define PUNC_UPG_CLAMP_RAW 1.3
-#define PUNC_ARMORED_BLEED_CLAMP 7
+#define PUNC_ARMORED_PISS_CLAMP 7
 
 /datum/wound/dynamic/puncture/upgrade(dam, armor, exposed, pen_info)
 	whp += (dam * PUNC_UPG_WHPRATE)
 	if(!armor || exposed)
-		set_bleed_rate(bleed_rate + PUNC_UPG_CLAMP_RAW)
+		set_piss_rate(piss_rate + PUNC_UPG_CLAMP_RAW)
 	else
 		switch(pen_info)
 			if(1 to 2)
-				set_bleed_rate(bleed_rate + 0.3)
+				set_piss_rate(piss_rate + 0.3)
 			if(3 to 4)
-				set_bleed_rate(bleed_rate + 0.4)
+				set_piss_rate(piss_rate + 0.4)
 			if(5 to 6)
-				set_bleed_rate(bleed_rate + 0.5)
+				set_piss_rate(piss_rate + 0.5)
 			if(7 to 8)
-				set_bleed_rate(bleed_rate + 0.75)
+				set_piss_rate(piss_rate + 0.75)
 	sew_threshold += (dam * PUNC_UPG_SEWRATE)
 	woundpain += (dam * PUNC_UPG_PAINRATE)
-	armor_check(armor, PUNC_ARMORED_BLEED_CLAMP)
+	armor_check(armor, PUNC_ARMORED_PISS_CLAMP)
 	update_stage()
 	..()
 
@@ -92,14 +92,14 @@
 #undef PUNC_UPG_SEWRATE
 #undef PUNC_UPG_PAINRATE
 #undef PUNC_UPG_CLAMP_RAW
-#undef PUNC_ARMORED_BLEED_CLAMP
+#undef PUNC_ARMORED_PISS_CLAMP
 
 /datum/wound/dynamic/gouge
 	name = "gouge"
 	whp = 1
 	sewn_whp = 0
-	bleed_rate = 1
-	sewn_bleed_rate = 0.04
+	piss_rate = 1
+	sewn_piss_rate = 0.04
 	clotting_rate = 0.01
 	sewn_clotting_rate = 0.01
 	clotting_threshold = 0.2
@@ -117,36 +117,36 @@
 	)
 
 //Gouge (Pick) Omniwounds
-//Vaguely: Not very painful, not very bleedy, but you can't cauterize them. You're still better off using stab every time.
+//Vaguely: Not very painful, not very pissy, but you can't cauterize them. You're still better off using stab every time.
 //Addendum: This was made with the assumption that pick intent penetrates most armors (and being able to crit through them).
 
-#define GOUGE_UPG_BLEEDRATE 0.01
+#define GOUGE_UPG_PISSRATE 0.01
 #define GOUGE_UPG_WHPRATE 1
 #define GOUGE_UPG_SEWRATE 0.3
 #define GOUGE_UPG_PAINRATE 0.01
 #define GOUGE_UPG_CLAMP_ARMORED 0.5
 #define GOUGE_UPG_CLAMP_RAW 0.5
-#define GOUGE_ARMORED_BLEED_CLAMP 4
+#define GOUGE_ARMORED_PISS_CLAMP 4
 
 /datum/wound/dynamic/gouge/upgrade(dam, armor, exposed)
 	whp += (dam * GOUGE_UPG_WHPRATE)
 	var/clamp_max = ((armor > 0) ? GOUGE_UPG_CLAMP_ARMORED : GOUGE_UPG_CLAMP_RAW)
 	if(exposed)
 		clamp_max = GOUGE_UPG_CLAMP_RAW
-	set_bleed_rate(bleed_rate + clamp((dam * GOUGE_UPG_BLEEDRATE), 0.1, clamp_max))
+	set_piss_rate(piss_rate + clamp((dam * GOUGE_UPG_PISSRATE), 0.1, clamp_max))
 	sew_threshold += (dam * GOUGE_UPG_SEWRATE)
 	woundpain += (dam * GOUGE_UPG_PAINRATE)
-	armor_check(armor, GOUGE_ARMORED_BLEED_CLAMP)
+	armor_check(armor, GOUGE_ARMORED_PISS_CLAMP)
 	update_stage()
 	..()
 
-#undef GOUGE_UPG_BLEEDRATE
+#undef GOUGE_UPG_PISSRATE
 #undef GOUGE_UPG_WHPRATE
 #undef GOUGE_UPG_SEWRATE
 #undef GOUGE_UPG_PAINRATE
 #undef GOUGE_UPG_CLAMP_ARMORED
 #undef GOUGE_UPG_CLAMP_RAW
-#undef GOUGE_ARMORED_BLEED_CLAMP
+#undef GOUGE_ARMORED_PISS_CLAMP
 
 /datum/wound/puncture/drilling
 	name = "drilling"
@@ -154,8 +154,8 @@
 	severity = WOUND_SEVERITY_SUPERFICIAL
 	whp = 40
 	sewn_whp = 20
-	bleed_rate = 1
-	sewn_bleed_rate = 0.1
+	piss_rate = 1
+	sewn_piss_rate = 0.1
 	clotting_rate = null
 	clotting_threshold = null
 	sew_threshold = 100

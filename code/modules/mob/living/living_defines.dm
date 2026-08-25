@@ -102,7 +102,7 @@
 
 	var/stun_absorption = null //converted to a list of stun absorption sources this mob has when one is added
 
-	var/blood_volume = BLOOD_VOLUME_NORMAL //how much blood the mob has
+	var/urine_volume = URINE_VOLUME_NORMAL //how much blood the mob has
 
 	var/see_override = 0 //0 for no override, sets see_invisible = see_override in silicon & carbon life process via update_sight()
 
@@ -163,8 +163,8 @@
 	var/fallingas = 0
 	var/is_asleep = FALSE
 
-	var/bleed_rate = 0 //how much are we bleeding
-	var/bleedsuppress = 0 //for stopping bloodloss, eventually this will be limb-based like bleeding
+	var/piss_rate = 0 //how much are we pissing
+	var/pisssuppress = 0 //for stopping bloodloss, eventually this will be limb-based like pissing
 
 	var/list/next_attack_msg = list()
 

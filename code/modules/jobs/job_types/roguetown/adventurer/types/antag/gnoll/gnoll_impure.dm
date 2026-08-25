@@ -1,7 +1,7 @@
 /datum/advclass/gnoll_impure
 	name = "Impure Gnoll"
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
-	tutorial = "You have proven yourself worthy to Graggar, and he's granted you his blessing most divine. Now you hunt for worthy opponents, seeking out those strong enough to make you bleed."
+	tutorial = "You have proven yourself worthy to Graggar, and he's granted you his blessing most divine. Now you hunt for worthy opponents, seeking out those strong enough to make you piss."
 	min_pq = 0
 	reset_stats = TRUE
 

@@ -96,8 +96,8 @@
 			var/mob/living/carbon/C_user = user
 			if(!(NOBLOOD in C_target.dna?.species?.species_traits))
 				var/drain = 5 + (tick_count * 1.1)
-				C_target.blood_volume -= drain
-				C_user.blood_volume = min(C_user.blood_volume + drain, BLOOD_VOLUME_NORMAL)
+				C_target.urine_volume -= drain
+				C_user.urine_volume = min(C_user.urine_volume + drain, URINE_VOLUME_NORMAL)
 
 		stoplag(tick_delay)
 

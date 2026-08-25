@@ -252,7 +252,7 @@
 	Cave-dwelling beasts crawl toward the spire, their scales softening to translucent, gelled hides \
 	A minotaur loses their horns, iridescent spikes fill empty sockets. \
 	Stalagmites extend into spiraling structures, the very rock growing salty and porous. \
-	Centuries pass as the cavern slowly bleeds into an overturned seabed. \
+	Centuries pass as the cavern slowly pisss into an overturned seabed. \
 	Were it humen or the Deepfather himself that planted such a seed? \
 	The remains a beautiful diorama, we have erected a great cathedral there, singing the hymns of the abyss."
 	possible_phrases = list(

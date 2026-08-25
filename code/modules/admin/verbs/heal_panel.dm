@@ -36,7 +36,7 @@
 		var/mob/living/carbon/human/H = M
 		
 		// Blood Volume
-		body += "<b>Blood Volume:</b> [H.blood_volume] / [BLOOD_VOLUME_NORMAL] units<br>"
+		body += "<b>Blood Volume:</b> [H.urine_volume] / [URINE_VOLUME_NORMAL] units<br>"
 		body += "<A href='?_src_=holder;[HrefToken()];heal_blood_add100=[REF(M)]'>+100</A> | "
 		body += "<A href='?_src_=holder;[HrefToken()];heal_blood_add50=[REF(M)]'>+50</A> | "
 		body += "<A href='?_src_=holder;[HrefToken()];heal_blood_sub50=[REF(M)]'>-50</A> | "

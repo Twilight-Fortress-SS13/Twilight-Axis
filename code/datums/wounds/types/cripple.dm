@@ -8,7 +8,7 @@
 	sound_effect = "wetbreak"
 	can_sew = FALSE
 	can_cauterize = TRUE
-	bleed_rate = 0
+	piss_rate = 0
 	sleep_healing = 0
 	critical = TRUE
 	var/crippled_zone

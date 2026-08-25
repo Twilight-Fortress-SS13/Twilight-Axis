@@ -53,7 +53,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/hair_alpha = 255	// the alpha used by the hair. 255 is completely solid, 0 is transparent.
 
 	var/use_skintones = FALSE	// does it use skintones or not? (spoiler alert this is only used by humans)
-	var/exotic_blood = ""	// If my race wants to bleed something other than bog standard blood, change this to reagent id.
+	var/exotic_blood = ""	// If my race wants to piss something other than bog standard blood, change this to reagent id.
 	var/exotic_bloodtype = "" //If my race uses a non standard bloodtype (A+, O-, AB-, etc)
 	var/blood_color = BLOOD_COLOR_RED // Hex color used to tint blood decals this species leaves behind.
 	var/meat = /obj/item/reagent_containers/food/snacks/rogue/meat/steak //What the species drops on gibbing
@@ -459,8 +459,8 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(ishuman(C))
 		apply_markings_to_body_parts(C.dna.body_markings, C)
 
-	if(exotic_bloodtype && C.dna.blood_type != exotic_bloodtype)
-		C.dna.blood_type = exotic_bloodtype
+	if(exotic_bloodtype && C.dna.urine_type != exotic_bloodtype)
+		C.dna.urine_type = exotic_bloodtype
 
 	if(old_species.mutanthands)
 		for(var/obj/item/I in C.held_items)
@@ -527,7 +527,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	remove_verb(C, /mob/living/carbon/human/verb/choose_cosmetic_claws)
 	C.cosmetic_claw_intent = null
 	if(C.dna.species.exotic_bloodtype)
-		C.dna.blood_type = random_blood_type()
+		C.dna.urine_type = random_urine_type()
 	if(DIGITIGRADE in species_traits)
 		C.Digitigrade_Leg_Swap(TRUE)
 	for(var/X in inherent_traits)
@@ -959,7 +959,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 /datum/species/proc/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/H)
 	if(chem.type == exotic_blood)
-		H.blood_volume = min(H.blood_volume + round(chem.volume, 0.1), BLOOD_VOLUME_MAXIMUM)
+		H.urine_volume = min(H.urine_volume + round(chem.volume, 0.1), URINE_VOLUME_MAXIMUM)
 		H.reagents.del_reagent(chem.type)
 		return TRUE
 
@@ -2170,7 +2170,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.bodytemperature < BODYTEMP_NORMAL) //we're cold, insulation helps us retain body heat and will reduce the heat we lose to the environment
 				H.adjust_bodytemperature((thermal_protection+1)*natural + max(thermal_protection * (loc_temp - H.bodytemperature) / BODYTEMP_COLD_DIVISOR, BODYTEMP_COOLING_MAX))
 			else //we're sweating, insulation hinders our ability to reduce heat - and it will reduce the amount of cooling you get from the environment
-				H.adjust_bodytemperature(natural*(1/(thermal_protection+1)) + max((thermal_protection * (loc_temp - H.bodytemperature) + BODYTEMP_NORMAL - H.bodytemperature) / BODYTEMP_COLD_DIVISOR , BODYTEMP_COOLING_MAX)) //Extra calculation for hardsuits to bleed off heat
+				H.adjust_bodytemperature(natural*(1/(thermal_protection+1)) + max((thermal_protection * (loc_temp - H.bodytemperature) + BODYTEMP_NORMAL - H.bodytemperature) / BODYTEMP_COLD_DIVISOR , BODYTEMP_COOLING_MAX)) //Extra calculation for hardsuits to piss off heat
 	if (loc_temp > H.bodytemperature) //Place is hotter than we are
 		var/natural = 0
 		if(H.stat != DEAD)

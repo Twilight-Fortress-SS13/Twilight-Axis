@@ -384,7 +384,7 @@
 		L.update_damage_overlays()
 		//Potentially bite ourselves :(
 		if(prob(wound_chance))
-			L.visible_message(span_danger("[L]'s wounds bleed profusely!"))
+			L.visible_message(span_danger("[L]'s wounds piss profusely!"))
 			BP.add_wound(/datum/wound/bite/small)
 
 /datum/component/eora_bond/proc/on_heal(datum/source, healing_on_tick, healing_datum)
@@ -618,7 +618,7 @@
 			if(!do_after(sacrifice, 15 SECONDS))
 				return
 			// same blood loss as using it to heal someone
-			sacrifice.blood_volume = max(0, sacrifice.blood_volume - ((BLOOD_VOLUME_NORMAL * 0.03) + (sacrifice.blood_volume * 0.06)))
+			sacrifice.urine_volume = max(0, sacrifice.urine_volume - ((URINE_VOLUME_NORMAL * 0.03) + (sacrifice.urine_volume * 0.06)))
 			// 50 healing; slightly more than healing a player, but you'll lose a lot of blood trying to fully heal a tree still
 			obj_integrity = min(max_integrity, obj_integrity + max_integrity / 4)
 			qdel(I)

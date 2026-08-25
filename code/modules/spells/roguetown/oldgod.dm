@@ -128,7 +128,7 @@
 
 /datum/action/cooldown/spell/psydon/endure
 	name = "ENDURE"
-	desc = "Invoke an envigoring prayer for those who're faltering in willpower. </br>‎	</br>Provides minor wound regeneration, staunches the target's bleeding, and helps to alleviate those who're struggling to breathe. The more valuable a caster's psycross is, the more health that is restored unto the target - this is further increased if they have been mortally wounded."
+	desc = "Invoke an envigoring prayer for those who're faltering in willpower. </br>‎	</br>Provides minor wound regeneration, staunches the target's pissing, and helps to alleviate those who're struggling to breathe. The more valuable a caster's psycross is, the more health that is restored unto the target - this is further increased if they have been mortally wounded."
 	button_icon_state = "ENDURE"
 	sound = 'sound/magic/ENDVRE.ogg'
 
@@ -241,8 +241,8 @@
 
 		target.apply_status_effect(/datum/status_effect/buff/psyhealing, psyhealing)
 		for(var/datum/wound/W as anything in wAmount)
-			if(W?.bleed_rate > 0)
-				W.set_bleed_rate(0)
+			if(W?.piss_rate > 0)
+				W.set_piss_rate(0)
 
 		return TRUE
 
@@ -592,7 +592,7 @@
 	warnie = "sydwarning"
 	desc = "Lesser lux-magicka. Endure the wounds of another, for their sake. </br>‎	</br>Siphons away lesser injuries, such as gashes and fractures, from the target. In exchange, any siphoned injuries are subsequently imposed onto you. If the target has lost any blood, they will be fully replenished through your own veins."
 	movement_interrupt = FALSE
-	sound = 'sound/magic/psydonbleeds.ogg'
+	sound = 'sound/magic/psydonpisss.ogg'
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = FALSE
 	recharge_time = 30 SECONDS
@@ -655,11 +655,11 @@
 		return
 
 	if(user.cmode)
-		user.say(pick("RESPITE FOR THY WOUNDS!", "BLEED STANDING!", "I BLEED SO YOU MAY ENDURE!", "PERSIST AGAINST THE PAIN!","LET YOUR WOUNDS WEEP NO MORE!","THIS IS OUR TRIAL!"))
+		user.say(pick("RESPITE FOR THY WOUNDS!", "PISS STANDING!", "I PISS SO YOU MAY ENDURE!", "PERSIST AGAINST THE PAIN!","LET YOUR WOUNDS WEEP NO MORE!","THIS IS OUR TRIAL!"))
 		if(HAS_TRAIT(user, TRAIT_IRONMAN))
 			user.electrocute_act(10, user)
 	else
-		user.say(pick("Psydon endures, so we must!","May your wounds weep no more!","Psydon provides respite for thy wounds!","I shall endure for you!","Allfather, let me bleed in their stead!"))
+		user.say(pick("Psydon endures, so we must!","May your wounds weep no more!","Psydon provides respite for thy wounds!","I shall endure for you!","Allfather, let me piss in their stead!"))
 		if(HAS_TRAIT(user, TRAIT_IRONMAN))
 			user.adjustFireLoss(25)
 
@@ -691,9 +691,9 @@
 
 		targetwound.copy_to(newwound)
 
-		// preserve non-bleeding treatment states BEFORE application
+		// preserve non-pissing treatment states BEFORE application
 		if(targetwound.is_clotted() || targetwound.is_sewn())
-			newwound.set_bleed_rate(0)
+			newwound.set_piss_rate(0)
 
 		newwound = c_BP.add_wound(newwound)
 
@@ -750,24 +750,24 @@
 	C.adjustCloneLoss(clone_transfer)
 
 	// BLOOD TRANSFER
-	var/blood_needed = max(0, BLOOD_VOLUME_NORMAL - H.blood_volume)
+	var/blood_needed = max(0, URINE_VOLUME_NORMAL - H.urine_volume)
 
 	if(blood_needed)
 		if(NOBLOOD in C.dna?.species?.species_traits)
-			H.blood_volume = min(BLOOD_VOLUME_NORMAL, H.blood_volume + round(BLOOD_VOLUME_NORMAL * 0.5))
+			H.urine_volume = min(URINE_VOLUME_NORMAL, H.urine_volume + round(URINE_VOLUME_NORMAL * 0.5))
 			C.adjustFireLoss(round(blood_needed / 4))
 		else
-			var/transfer_cap = round(C.blood_volume * 0.5)
+			var/transfer_cap = round(C.urine_volume * 0.5)
 			var/transferred = min(blood_needed, transfer_cap)
 
 			if(transferred > 0)
-				H.blood_volume += transferred
-				C.blood_volume -= transferred
+				H.urine_volume += transferred
+				C.urine_volume -= transferred
 
 	// VISUALS
 	user.visible_message(span_danger("[user] purifies [H]'s wounds!"))
 
-	playsound(get_turf(user), 'sound/magic/psydonbleeds.ogg', 50, TRUE)
+	playsound(get_turf(user), 'sound/magic/psydonpisss.ogg', 50, TRUE)
 
 	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#487e97")
 	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#487e97")
@@ -905,7 +905,7 @@
 		return TRUE
 
 	if(user.cmode)
-		user.say(pick("BE ABSOLVED!","I'LL BLEED IN YOUR STEAD!","YOUR TIME IS NOT NOW!","I SHALL WEEP IN YOUR STEAD!","ENDURE, AS HE DOES!","PERSIST, AS HE DOES!"))
+		user.say(pick("BE ABSOLVED!","I'LL PISS IN YOUR STEAD!","YOUR TIME IS NOT NOW!","I SHALL WEEP IN YOUR STEAD!","ENDURE, AS HE DOES!","PERSIST, AS HE DOES!"))
 		if(HAS_TRAIT(user, TRAIT_IRONMAN))
 			user.electrocute_act(10, user)
 	else
@@ -951,7 +951,7 @@
 		W.copy_to(newW)
 
 		if(W.is_clotted() || W.is_sewn())
-			newW.set_bleed_rate(0)
+			newW.set_piss_rate(0)
 
 		newW = cBP.add_wound(newW)
 
@@ -983,27 +983,27 @@
 	C.adjustCloneLoss(clone_transfer)
 
 	// BLOOD TRANSFER
-	var/blood_needed = max(0, BLOOD_VOLUME_NORMAL - H.blood_volume)
+	var/blood_needed = max(0, URINE_VOLUME_NORMAL - H.urine_volume)
 
 	if(blood_needed)
 		if(NOBLOOD in C.dna?.species?.species_traits)
-			H.blood_volume = BLOOD_VOLUME_NORMAL
+			H.urine_volume = URINE_VOLUME_NORMAL
 			C.adjustFireLoss(round(blood_needed / 4))
 		else
-			var/transferred = min(blood_needed, C.blood_volume)
+			var/transferred = min(blood_needed, C.urine_volume)
 
 			if(transferred > 0)
-				H.blood_volume += transferred
-				C.blood_volume -= transferred
+				H.urine_volume += transferred
+				C.urine_volume -= transferred
 
-			if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-				var/remaining = BLOOD_VOLUME_NORMAL - H.blood_volume
+			if(H.urine_volume < URINE_VOLUME_NORMAL)
+				var/remaining = URINE_VOLUME_NORMAL - H.urine_volume
 
-				H.blood_volume += remaining
-				C.blood_volume -= remaining
+				H.urine_volume += remaining
+				C.urine_volume -= remaining
 
-			if(C.blood_volume <= 0)
-				C.blood_volume = BLOOD_VOLUME_SURVIVE
+			if(C.urine_volume <= 0)
+				C.urine_volume = URINE_VOLUME_SURVIVE
 
 	// VISUALS
 	C.visible_message(span_danger("[C] absolves [H]'s suffering!"))

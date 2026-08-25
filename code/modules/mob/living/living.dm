@@ -724,7 +724,7 @@
 		return
 	if(!reaper)
 		return
-	if (InCritical() || health <= 0 || (blood_volume < BLOOD_VOLUME_SURVIVE))
+	if (InCritical() || health <= 0 || (urine_volume < URINE_VOLUME_SURVIVE))
 		log_message("Has [whispered ? "whispered his final words" : "succumbed to death"] while in [InFullCritical() ? "hard":"soft"] critical with [round(health, 0.1)] points of health!", LOG_ATTACK)
 
 		if(istype(src.loc, /turf/open/water) && !HAS_TRAIT(src, TRAIT_NOBREATH) && lying && client)
@@ -883,7 +883,7 @@
 	health = min(health, maxHealth)
 	if(HAS_TRAIT(src, TRAIT_SIMPLE_WOUNDS) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE))
 		// You dont have any blood and your not bloodloss immune? Dead.
-		if(blood_volume <= 0)
+		if(urine_volume <= 0)
 			health = 0
 	staminaloss = getStaminaLoss()
 	update_stat()
@@ -1131,8 +1131,8 @@
 		var/trail_type = getTrail()
 		if(trail_type)
 			var/brute_ratio = round(getBruteLoss() / maxHealth, 0.1)
-			if(blood_volume && blood_volume > max(BLOOD_VOLUME_NORMAL*(1 - brute_ratio * 0.25), 0))//don't leave trail if blood volume below a threshold
-				blood_volume = max(blood_volume - max(1, brute_ratio * 2), 0)					//that depends on our brute damage.
+			if(urine_volume && urine_volume > max(URINE_VOLUME_NORMAL*(1 - brute_ratio * 0.25), 0))//don't leave trail if blood volume below a threshold
+				urine_volume = max(urine_volume - max(1, brute_ratio * 2), 0)					//that depends on our brute damage.
 				var/newdir = get_dir(target_turf, start)
 				if(newdir != direction)
 					newdir = newdir | direction
@@ -1155,7 +1155,7 @@
 						TH.color = source_color
 
 /mob/living/carbon/human/makeTrail(turf/T)
-	if((NOBLOOD in dna.species.species_traits) || !bleed_rate || bleedsuppress)
+	if((NOBLOOD in dna.species.species_traits) || !piss_rate || pisssuppress)
 		return
 	..()
 

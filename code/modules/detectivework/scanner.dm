@@ -86,7 +86,7 @@
 
 		//Make our lists
 		var/list/fingerprints = list()
-		var/list/blood = A.return_blood_DNA()
+		var/list/blood = A.return_urine_DNA()
 		var/list/fibers = A.return_fibers()
 		var/list/reagents = list()
 
@@ -111,13 +111,13 @@
 					reagents[R.name] = R.volume
 
 					// Get blood data from the blood reagent.
-					if(istype(R, /datum/reagent/blood))
+					if(istype(R, /datum/reagent/urine))
 
-						if(R.data["blood_DNA"] && R.data["blood_type"])
-							var/blood_DNA = R.data["blood_DNA"]
-							var/blood_type = R.data["blood_type"]
+						if(R.data["urine_DNA"] && R.data["urine_type"])
+							var/urine_DNA = R.data["urine_DNA"]
+							var/urine_type = R.data["urine_type"]
 							LAZYINITLIST(blood)
-							blood[blood_DNA] = blood_type
+							blood[urine_DNA] = urine_type
 
 		// We gathered everything. Create a fork and slowly display the results to the holder of the scanner.
 

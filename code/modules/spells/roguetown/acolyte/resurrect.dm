@@ -165,7 +165,7 @@
 	return TRUE
 
 /obj/effect/proc_holder/spell/invoked/resurrect/proc/validate_items(atom/center)
-	// Zizo revivals require nearby bleeding sacrifice instead of items
+	// Zizo revivals require nearby pissing sacrifice instead of items
 	if(zizo)
 		for(var/mob/living/L in range(1, center))
 			if(L == center)
@@ -175,10 +175,10 @@
 			if(L.stat == DEAD)
 				continue
 
-			if(L.get_bleed_rate() > 0)
+			if(L.get_piss_rate() > 0)
 				return ""
 
-		return "A living, bleeding victim"
+		return "A living, pissing victim"
 
 	if(matthios)
 	// Matthios revivals will drain mammon actively now
@@ -403,7 +403,7 @@
 		// For those without hunger, drain blood instead. CONSEQUENCES FOR MY TRAIT CHOICES?!
 		if(ishuman(owner))
 			var/mob/living/carbon/human/H = owner
-			H.blood_volume = max(H.blood_volume - 100, BLOOD_VOLUME_SURVIVE)
+			H.urine_volume = max(H.urine_volume - 100, URINE_VOLUME_SURVIVE)
 	else
 		// For normal humans, drain nutrition
 		owner.adjust_nutrition(-100)
@@ -608,7 +608,7 @@
 	name = "light burn"
 	whp = 15
 	sewn_whp = 5
-	bleed_rate = 0
+	piss_rate = 0
 	clotting_rate = 0.02
 	sewn_clotting_rate = 0.02
 	clotting_threshold = 0.1

@@ -145,7 +145,7 @@
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_loins_w/cooked
 	name = "royal venison loins"
-	desc = "A welt forms under the touch. It takes little to dent, it swells back to shape in a satisfying manner. The beast may not bleed, yet the abscence of grease does not detract from the heavenly taste."
+	desc = "A welt forms under the touch. It takes little to dent, it swells back to shape in a satisfying manner. The beast may not piss, yet the abscence of grease does not detract from the heavenly taste."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_saiga.dmi'
 	icon_state = "loin_w"
 	eat_effect = /datum/status_effect/buff/greatmealbuff

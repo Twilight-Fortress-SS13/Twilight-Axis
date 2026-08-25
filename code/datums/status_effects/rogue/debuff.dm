@@ -196,77 +196,77 @@
 		C.add_nausea(200)
 	return ..()
 
-/datum/status_effect/debuff/bleeding
-	id = "bleedingt1"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/bleedingt1
+/datum/status_effect/debuff/pissing
+	id = "pissingt1"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/pissingt1
 	effectedstats = list(STATKEY_SPD = -1)
 	duration = -1
 	needs_processing = FALSE
 
-/datum/status_effect/debuff/bleeding/on_apply() //mistwalker shitcode, scaling buff as they bleed out
+/datum/status_effect/debuff/pissing/on_apply() //mistwalker shitcode, scaling buff as they piss out
 	if (!HAS_TRAIT(owner, TRAIT_JOURNEYS_END))
 		return ..()
 	owner.apply_status_effect(/datum/status_effect/buff/journey_ending)
 	return ..()
 
-/datum/status_effect/debuff/bleeding/on_remove()
+/datum/status_effect/debuff/pissing/on_remove()
 	if (!HAS_TRAIT(owner, TRAIT_JOURNEYS_END))
 		return ..()
 	owner.remove_status_effect(/datum/status_effect/buff/journey_ending)
 	return ..()
 
-/atom/movable/screen/alert/status_effect/debuff/bleedingt1
+/atom/movable/screen/alert/status_effect/debuff/pissingt1
 	name = "Dizzy"
 	desc = "I've lost a bit of blood, and my humors feel imbalanced.."
-	icon_state = "bleed1"
+	icon_state = "piss1"
 
-/datum/status_effect/debuff/bleedingworse
-	id = "bleedingt2"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/bleedingt2
+/datum/status_effect/debuff/pissingworse
+	id = "pissingt2"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/pissingt2
 	effectedstats = list(STATKEY_STR = -1, STATKEY_SPD = -2)
 	duration = -1
 	needs_processing = FALSE
 
-/datum/status_effect/debuff/bleedingworse/on_apply()
+/datum/status_effect/debuff/pissingworse/on_apply()
 	if (!HAS_TRAIT(owner, TRAIT_JOURNEYS_END))
 		return ..()
 	owner.apply_status_effect(/datum/status_effect/buff/journey_end)
 	return ..()
 
-/datum/status_effect/debuff/bleedingworse/on_remove()
+/datum/status_effect/debuff/pissingworse/on_remove()
 	if (!HAS_TRAIT(owner, TRAIT_JOURNEYS_END))
 		return ..()
 	owner.remove_status_effect(/datum/status_effect/buff/journey_end)
 	return ..()
 
-/atom/movable/screen/alert/status_effect/debuff/bleedingt2
+/atom/movable/screen/alert/status_effect/debuff/pissingt2
 	name = "Faint"
 	desc = "I've lost some blood, and it's hard to keep myself steady.."
-	icon_state = "bleed2"
+	icon_state = "piss2"
 
-/datum/status_effect/debuff/bleedingworst
-	id = "bleedingt3"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/bleedingt3
+/datum/status_effect/debuff/pissingworst
+	id = "pissingt3"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/pissingt3
 	effectedstats = list(STATKEY_STR = -3, STATKEY_SPD = -4)
 	duration = -1
 	needs_processing = FALSE
 
-/datum/status_effect/debuff/bleedingworst/on_apply()
+/datum/status_effect/debuff/pissingworst/on_apply()
 	if (!HAS_TRAIT(owner, TRAIT_JOURNEYS_END))
 		return ..()
 	owner.apply_status_effect(/datum/status_effect/buff/journey_end_final)
 	return ..()
 
-/datum/status_effect/debuff/bleedingworst/on_remove()
+/datum/status_effect/debuff/pissingworst/on_remove()
 	if (!HAS_TRAIT(owner, TRAIT_JOURNEYS_END))
 		return ..()
 	owner.remove_status_effect(/datum/status_effect/buff/journey_end_final)
 	return ..()
 
-/atom/movable/screen/alert/status_effect/debuff/bleedingt3
+/atom/movable/screen/alert/status_effect/debuff/pissingt3
 	name = "Drained"
 	desc = "I've lost a lot of blood, and I can barely keep myself conscious.."
-	icon_state = "bleed3"
+	icon_state = "piss3"
 
 /datum/status_effect/debuff/sleepytime
 	id = "sleepytime"
@@ -625,7 +625,7 @@
 		var/mob/living/carbon/human/target = owner
 		var/newcolor = rgb(67, 67, 67)
 		var/datum/physiology/phy = target.physiology
-		phy.bleed_mod *= 1.5
+		phy.piss_mod *= 1.5
 		phy.pain_mod *= 1.5
 		target.add_atom_colour(newcolor, TEMPORARY_COLOUR_PRIORITY)
 		addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, remove_atom_colour), TEMPORARY_COLOUR_PRIORITY, newcolor), 20 SECONDS)
@@ -635,7 +635,7 @@
 	if(iscarbon(owner))
 		var/mob/living/carbon/human/target = owner
 		var/datum/physiology/phy = target.physiology
-		phy.bleed_mod /= 1.5
+		phy.piss_mod /= 1.5
 		phy.pain_mod /= 1.5
 
 /datum/status_effect/debuff/cold/greater
@@ -1189,14 +1189,14 @@
 	var/con_mod = H.STACON - 10
 	// con mod needs to be greater than 1 for scaling
 	if(con_mod > 0)
-		// ensure their gotten con mod does not go below 1 or exceed the bleedrate cap.
-		con_mod = clamp(con_mod, 1, CONSTITUTION_BLEEDRATE_CAP - 10)
-		// this ""equalizes"" high con ppl into bleeding more, but they SHOULD generally still
-		// bleed less than if they had just 10 con. remember: this numbers gets sent THRU their con score after.
-		phy.bleed_mod = 1.15 + (con_mod * 0.1) // at 15 con you'll bleed from a wound by .825
+		// ensure their gotten con mod does not go below 1 or exceed the pissrate cap.
+		con_mod = clamp(con_mod, 1, CONSTITUTION_PISSRATE_CAP - 10)
+		// this ""equalizes"" high con ppl into pissing more, but they SHOULD generally still
+		// piss less than if they had just 10 con. remember: this numbers gets sent THRU their con score after.
+		phy.piss_mod = 1.15 + (con_mod * 0.1) // at 15 con you'll piss from a wound by .825
 	else
-		phy.bleed_mod = 1.15 // if you already have low con, we're not going to turbofuck you. ok?
-	H.visible_message(span_warning("[owner]'s blood runs thin and begins GUSHING out of their wounds!"), span_danger("A FOUL SPELL IS CAUSING ME TO BLEED EN MASSE!"))
+		phy.piss_mod = 1.15 // if you already have low con, we're not going to turbofuck you. ok?
+	H.visible_message(span_warning("[owner]'s blood runs thin and begins GUSHING out of their wounds!"), span_danger("A FOUL SPELL IS CAUSING ME TO PISS EN MASSE!"))
 
 /datum/status_effect/debuff/bloody_mess/on_remove()
 	. = ..()
@@ -1204,13 +1204,13 @@
 		return FALSE
 	var/mob/living/carbon/human/H = owner
 	var/datum/physiology/phy = H.physiology
-	phy.bleed_mod = initial(phy.bleed_mod) // con can lower from the bleeding so we want it to just directly be set back to the initial
-	H.visible_message(span_warning("[owner] has their wounds calm..."), span_warning("My wounds stop bleeding so heavily!"))
+	phy.piss_mod = initial(phy.piss_mod) // con can lower from the pissing so we want it to just directly be set back to the initial
+	H.visible_message(span_warning("[owner] has their wounds calm..."), span_warning("My wounds stop pissing so heavily!"))
 
 
 /atom/movable/screen/alert/status_effect/debuff/bloody_mess
 	name = "Bloody Mess"
-	desc = "My bleeding is quickened! I must grip my wounds, or I will lose myself steadfast!"
+	desc = "My pissing is quickened! I must grip my wounds, or I will lose myself steadfast!"
 
 /datum/status_effect/debuff/sensitive_nerves
 	id = "sensitivenerves"

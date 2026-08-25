@@ -575,19 +575,19 @@
 /atom/proc/handle_slip(mob/living/carbon/C, knockdown_amount, obj/O, lube, paralyze, force_drop)
 	return
 
-///returns the mob's dna info as a list, to be inserted in an object's blood_DNA list
+///returns the mob's dna info as a list, to be inserted in an object's urine_DNA list
 /mob/living/proc/get_blood_dna_list()
-	if(get_blood_id() != /datum/reagent/blood)
+	if(get_blood_id() != /datum/reagent/urine)
 		return
 	return list("ANIMAL DNA" = "Y-")
 
 ///Get the mobs dna list
 /mob/living/carbon/get_blood_dna_list()
-	if(get_blood_id() != /datum/reagent/blood)
+	if(get_blood_id() != /datum/reagent/urine)
 		return
 	var/list/blood_dna = list()
 	if(dna)
-		blood_dna[dna.unique_enzymes] = dna.blood_type
+		blood_dna[dna.unique_enzymes] = dna.urine_type
 	else
 		blood_dna["UNKNOWN DNA"] = "X*"
 	return blood_dna
@@ -598,9 +598,9 @@
 	var/new_blood_dna = L.get_blood_dna_list()
 	if(!new_blood_dna)
 		return FALSE
-	var/old_length = blood_DNA_length()
-	add_blood_DNA(new_blood_dna)
-	if(blood_DNA_length() == old_length)
+	var/old_length = urine_DNA_length()
+	add_urine_DNA(new_blood_dna)
+	if(urine_DNA_length() == old_length)
 		return FALSE
 	return TRUE
 
@@ -609,7 +609,7 @@
 	var/list/blood_dna = M.get_blood_dna_list()
 	var/source_color = M.get_blood_color() || BLOOD_COLOR_RED
 	if(length(blood_dna))
-		. = add_blood_DNA(blood_dna)
+		. = add_urine_DNA(blood_dna)
 	if(ismob(src))
 		var/mob/recipient = src
 		recipient.bloody_hands_color = source_color

@@ -2,8 +2,8 @@
 	name = "slash"
 	whp = 30
 	sewn_whp = 10
-	bleed_rate = 0.4
-	sewn_bleed_rate = 0.02
+	piss_rate = 0.4
+	sewn_piss_rate = 0.02
 	clotting_rate = 0.02
 	sewn_clotting_rate = 0.02
 	clotting_threshold = 0.2
@@ -17,8 +17,8 @@
 	name = "small slash"
 	whp = 15
 	sewn_whp = 5
-	bleed_rate = 0.2
-	sewn_bleed_rate = 0.01
+	piss_rate = 0.2
+	sewn_piss_rate = 0.01
 	clotting_rate = 0.02
 	sewn_clotting_rate = 0.02
 	clotting_threshold = 0.1
@@ -29,8 +29,8 @@
 	name = "gruesome slash"
 	whp = 40
 	sewn_whp = 12
-	bleed_rate = 1
-	sewn_bleed_rate = 0.05
+	piss_rate = 1
+	sewn_piss_rate = 0.05
 	clotting_rate = 0.02
 	sewn_clotting_rate = 0.02
 	clotting_threshold = 0.4
@@ -41,7 +41,7 @@
 	name = "slash"
 	whp = 15
 	sewn_whp = 5
-	bleed_rate = 1
+	piss_rate = 1
 	sew_threshold = 25
 	woundpain = 5
 	clotting_rate = 0.1
@@ -49,7 +49,7 @@
 
 	sewn_clotting_threshold = null
 	sewn_clotting_rate = null
-	sewn_bleed_rate = null
+	sewn_piss_rate = null
 
 	can_sew = TRUE
 	can_cauterize = TRUE
@@ -64,41 +64,41 @@
 //Slash Omniwounds
 //Vaguely: Painful, hard to sew, hard to heal, but scales poorly through armor.
 
-#define SLASH_UPG_BLEEDRATE 0.12
+#define SLASH_UPG_PISSRATE 0.12
 #define SLASH_UPG_WHPRATE 1
 #define SLASH_UPG_SEWRATE 2.5
 #define SLASH_UPG_PAINRATE 0.3
 #define SLASH_UPG_CLAMP_ARMORED 1.1
 #define SLASH_UPG_CLAMP_RAW 2.2
-#define SLASH_ARMORED_BLEED_CLAMP 9
+#define SLASH_ARMORED_PISS_CLAMP 9
 
 /datum/wound/dynamic/slash/upgrade(dam, armor, exposed, pen_info)
 	whp += (dam * SLASH_UPG_WHPRATE)
 	if((!armor || exposed))
-		set_bleed_rate(bleed_rate + SLASH_UPG_CLAMP_RAW)
+		set_piss_rate(piss_rate + SLASH_UPG_CLAMP_RAW)
 	else
 		switch(pen_info)
 			if(1 to 2)
-				set_bleed_rate(bleed_rate + 0.5)
+				set_piss_rate(piss_rate + 0.5)
 			if(3 to 4)
-				set_bleed_rate(bleed_rate + 0.6)
+				set_piss_rate(piss_rate + 0.6)
 			if(5 to 6)
-				set_bleed_rate(bleed_rate + 0.7)
+				set_piss_rate(piss_rate + 0.7)
 			if(7 to 8)
-				set_bleed_rate(bleed_rate + SLASH_UPG_CLAMP_ARMORED)
+				set_piss_rate(piss_rate + SLASH_UPG_CLAMP_ARMORED)
 	sew_threshold += (dam * SLASH_UPG_SEWRATE)
 	woundpain += (dam * SLASH_UPG_PAINRATE)
-	armor_check(armor, SLASH_ARMORED_BLEED_CLAMP)
+	armor_check(armor, SLASH_ARMORED_PISS_CLAMP)
 	update_stage()
 	..()
 
-#undef SLASH_UPG_BLEEDRATE
+#undef SLASH_UPG_PISSRATE
 #undef SLASH_UPG_WHPRATE
 #undef SLASH_UPG_SEWRATE
 #undef SLASH_UPG_PAINRATE
 #undef SLASH_UPG_CLAMP_ARMORED
 #undef SLASH_UPG_CLAMP_RAW
-#undef SLASH_ARMORED_BLEED_CLAMP
+#undef SLASH_ARMORED_PISS_CLAMP
 
 /datum/wound/slash/disembowel
 	name = "disembowelment"
@@ -111,8 +111,8 @@
 	sound_effect = 'sound/combat/crit2.ogg'
 	whp = 100
 	sewn_whp = 35
-	bleed_rate = 20
-	sewn_bleed_rate = 0.8
+	piss_rate = 20
+	sewn_piss_rate = 0.8
 	clotting_rate = 0.02
 	sewn_clotting_rate = 0.02
 	clotting_threshold = 10
@@ -165,8 +165,8 @@
 	severity = WOUND_SEVERITY_SUPERFICIAL
 	whp = 40
 	sewn_whp = 12
-	bleed_rate = 1
-	sewn_bleed_rate = 0.05
+	piss_rate = 1
+	sewn_piss_rate = 0.05
 	clotting_rate = null
 	clotting_threshold = null
 	sew_threshold = 75
@@ -193,8 +193,8 @@
 	severity = WOUND_SEVERITY_LIGHT
 	whp = 40
 	sewn_whp = 12
-	bleed_rate = 5
-	sewn_bleed_rate = 0.15
+	piss_rate = 5
+	sewn_piss_rate = 0.15
 	clotting_rate = null
 	clotting_threshold = null
 	sew_threshold = 75
@@ -206,7 +206,7 @@
 	name = "lashing"
 	whp = 30
 	sewn_whp = 12
-	bleed_rate = 0
+	piss_rate = 0
 	clotting_rate = 0.02
 	clotting_threshold = 0.2
 	woundpain = 10
@@ -222,41 +222,41 @@
 	)
 
 //Lashing (Whip) Omniwounds
-//Vaguely: Painful, huge bleeds, but nearly nothing at all through any armor.
+//Vaguely: Painful, huge pisss, but nearly nothing at all through any armor.
 
-#define LASHING_UPG_BLEEDRATE 0.1
+#define LASHING_UPG_PISSRATE 0.1
 #define LASHING_UPG_WHPRATE 1
 #define LASHING_UPG_SEWRATE 1.8
 #define LASHING_UPG_PAINRATE 0.5
 #define LASHING_UPG_CLAMP_ARMORED 0.2
 #define LASHING_UPG_CLAMP_RAW 3.5
-#define LASHING_ARMORED_BLEED_CLAMP 2
+#define LASHING_ARMORED_PISS_CLAMP 2
 
 /datum/wound/dynamic/lashing/upgrade(dam, armor, exposed)
 	whp += (dam * LASHING_UPG_WHPRATE)
 	var/clamp_max = ((armor > 0) ? LASHING_UPG_CLAMP_ARMORED : LASHING_UPG_CLAMP_RAW)
 	if(exposed)
 		clamp_max = LASHING_UPG_CLAMP_RAW
-	set_bleed_rate(bleed_rate + clamp((dam * LASHING_UPG_BLEEDRATE), 0.1, clamp_max))
+	set_piss_rate(piss_rate + clamp((dam * LASHING_UPG_PISSRATE), 0.1, clamp_max))
 	sew_threshold += (dam * LASHING_UPG_SEWRATE)
 	woundpain += (dam * LASHING_UPG_PAINRATE)
-	armor_check(armor, LASHING_ARMORED_BLEED_CLAMP)
+	armor_check(armor, LASHING_ARMORED_PISS_CLAMP)
 	update_stage()
 	..()
 
-#undef LASHING_UPG_BLEEDRATE
+#undef LASHING_UPG_PISSRATE
 #undef LASHING_UPG_WHPRATE
 #undef LASHING_UPG_SEWRATE
 #undef LASHING_UPG_PAINRATE
 #undef LASHING_UPG_CLAMP_ARMORED
 #undef LASHING_UPG_CLAMP_RAW
-#undef LASHING_ARMORED_BLEED_CLAMP
+#undef LASHING_ARMORED_PISS_CLAMP
 
 /datum/wound/dynamic/punish
 	name = "flogging"
 	whp = 30
 	sewn_whp = 12
-	bleed_rate = 0
+	piss_rate = 0
 	clotting_rate = 0.02
 	clotting_threshold = 0.2
 	woundpain = 10
@@ -272,42 +272,42 @@
 	)
 
 //Special Punish omniwounds for whip (or anything else if desired) intent.
-//Vaguely: Really very giga painful. Not very bleedy. Can still be sewn!
+//Vaguely: Really very giga painful. Not very pissy. Can still be sewn!
 
-#define PUNISH_UPG_BLEEDRATE 0.01
+#define PUNISH_UPG_PISSRATE 0.01
 #define PUNISH_UPG_WHPRATE 2
 #define PUNISH_UPG_SEWRATE 2
 #define PUNISH_UPG_PAINRATE 2
 #define PUNISH_UPG_CLAMP_ARMORED 0.1
 #define PUNISH_UPG_CLAMP_RAW 0.5
 #define PUNISH_UPG_SELFHEAL 0.25
-#define PUNISH_ARMORED_BLEED_CLAMP 0.1
+#define PUNISH_ARMORED_PISS_CLAMP 0.1
 
 /datum/wound/dynamic/punish/upgrade(dam, armor)
 	whp += (dam * PUNISH_UPG_WHPRATE)
-	set_bleed_rate(bleed_rate + clamp((dam * PUNISH_UPG_BLEEDRATE), 0.1, ((armor > 0) ? PUNISH_UPG_CLAMP_ARMORED : PUNISH_UPG_CLAMP_RAW)))
+	set_piss_rate(piss_rate + clamp((dam * PUNISH_UPG_PISSRATE), 0.1, ((armor > 0) ? PUNISH_UPG_CLAMP_ARMORED : PUNISH_UPG_CLAMP_RAW)))
 	sew_threshold += (dam * PUNISH_UPG_SEWRATE)
 	woundpain += (dam * PUNISH_UPG_PAINRATE)
 	passive_healing += PUNISH_UPG_SELFHEAL
-	armor_check(armor, PUNISH_ARMORED_BLEED_CLAMP)
+	armor_check(armor, PUNISH_ARMORED_PISS_CLAMP)
 	update_stage()
 	..()
 
-#undef PUNISH_UPG_BLEEDRATE
+#undef PUNISH_UPG_PISSRATE
 #undef PUNISH_UPG_WHPRATE
 #undef PUNISH_UPG_SEWRATE
 #undef PUNISH_UPG_PAINRATE
 #undef PUNISH_UPG_CLAMP_ARMORED
 #undef PUNISH_UPG_CLAMP_RAW
 #undef PUNISH_UPG_SELFHEAL
-#undef PUNISH_ARMORED_BLEED_CLAMP
+#undef PUNISH_ARMORED_PISS_CLAMP
 
 /datum/wound/lashing
 	name = "lashing"
 	whp = 30
 	sewn_whp = 12
-	bleed_rate = 0.6
-	sewn_bleed_rate = 0.02
+	piss_rate = 0.6
+	sewn_piss_rate = 0.02
 	clotting_rate = 0.02
 	sewn_clotting_rate = 0.02
 	clotting_threshold = 0.2
@@ -323,8 +323,8 @@
 	name = "superficial lashing"
 	whp = 15
 	sewn_whp = 5
-	bleed_rate = 0.2
-	sewn_bleed_rate = 0.01
+	piss_rate = 0.2
+	sewn_piss_rate = 0.01
 	clotting_rate = 0.02
 	sewn_clotting_rate = 0.02
 	clotting_threshold = 0.1
@@ -337,8 +337,8 @@
 	name = "excruciating lashing"
 	whp = 45
 	sewn_whp = 15
-	bleed_rate = 1.2 //Intended for combat, might kill if used for punishment. Force can be controlled by not charging the whip lash fully.
-	sewn_bleed_rate = 0.05
+	piss_rate = 1.2 //Intended for combat, might kill if used for punishment. Force can be controlled by not charging the whip lash fully.
+	sewn_piss_rate = 0.05
 	clotting_rate = 0.02
 	sewn_clotting_rate = 0.02
 	clotting_threshold = 0.4
@@ -357,8 +357,8 @@
 	sound_effect = 'sound/combat/crit2.ogg'
 	whp = 100
 	sewn_whp = 35
-	bleed_rate = 10
-	sewn_bleed_rate = 0.8
+	piss_rate = 10
+	sewn_piss_rate = 0.8
 	clotting_rate = 0.02
 	sewn_clotting_rate = 0.02
 	clotting_threshold = 10

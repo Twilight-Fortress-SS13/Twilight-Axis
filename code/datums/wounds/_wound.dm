@@ -35,17 +35,17 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	var/whp = 60
 	/// How many "health points" this wound gets after being sewn
 	var/sewn_whp = 30
-	/// How much this wound bleeds
-	var/bleed_rate
-	/// Bleed rate when sewn
-	var/sewn_bleed_rate = 0.01
-	/// Some wounds clot over time, reducing bleeding - This is the rate at which they do so
+	/// How much this wound pisss
+	var/piss_rate
+	/// Piss rate when sewn
+	var/sewn_piss_rate = 0.01
+	/// Some wounds clot over time, reducing pissing - This is the rate at which they do so
 	var/clotting_rate = 0.01
 	/// Clotting rate when sewn
 	var/sewn_clotting_rate = 0.02
-	/// Clotting will not go below this amount of bleed_rate
+	/// Clotting will not go below this amount of piss_rate
 	var/clotting_threshold
-	/// Clotting will not go below this amount of bleed_rate when sewn
+	/// Clotting will not go below this amount of piss_rate when sewn
 	var/sewn_clotting_threshold = 0
 	/// How much pain this wound causes while on a mob
 	var/woundpain = 0
@@ -80,8 +80,8 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	var/qdel_on_droplimb = FALSE
 	/// Severity names, assoc list with severity stages. Make sure this list has at least !!5!! entries.
 	var/list/severity_stages = list()
-	/// What do we use for our severity type? Default is bleed rate (usually up to 20 -- artery equi.)
-	var/severity_type = SEVERITY_TYPE_BLEED
+	/// What do we use for our severity type? Default is piss rate (usually up to 20 -- artery equi.)
+	var/severity_type = SEVERITY_TYPE_PISS
 	/// Whether miracles heal it.
 	var/healable_by_miracles = TRUE
 
@@ -126,7 +126,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		return FALSE
 	newwound.whp = whp
 	newwound.severity = severity
-	newwound.bleed_rate = bleed_rate
+	newwound.piss_rate = piss_rate
 	newwound.sew_threshold = sew_threshold
 	newwound.name = name
 	newwound.woundpain = woundpain
@@ -163,7 +163,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 /datum/wound/proc/can_apply_to_bodypart(obj/item/bodypart/affected)
 	if(bodypart_owner || owner || QDELETED(affected) || QDELETED(affected.owner))
 		return FALSE
-	if(!isnull(bleed_rate) && !affected.can_bloody_wound() && !bypass_bloody_wound_check)
+	if(!isnull(piss_rate) && !affected.can_bloody_wound() && !bypass_bloody_wound_check)
 		return FALSE
 	for(var/datum/wound/other_wound as anything in affected.wounds)
 		if(!can_stack_with(other_wound))
@@ -186,10 +186,10 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	sortTim(affected.wounds, GLOBAL_PROC_REF(cmp_wound_severity_dsc))
 	bodypart_owner = affected
 	owner = bodypart_owner.owner
-	var/initial_bleed = bleed_rate
-	bleed_rate = 0
-	if(initial_bleed)
-		set_bleed_rate(initial_bleed)
+	var/initial_piss = piss_rate
+	piss_rate = 0
+	if(initial_piss)
+		set_piss_rate(initial_piss)
 	on_bodypart_gain(affected)
 	INVOKE_ASYNC(src, PROC_REF(on_mob_gain), affected.owner) //this is literally a fucking lint error like new species cannot possible spawn with wounds until after its ass
 	if(crit_message)
@@ -205,8 +205,8 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 
 /// Effects when a wound is gained on a bodypart
 /datum/wound/proc/on_bodypart_gain(obj/item/bodypart/affected)
-	if(bleed_rate && affected.bandage)
-		affected.bandage_expire() //new bleeding wounds always expire bandages, fuck you
+	if(piss_rate && affected.bandage)
+		affected.bandage_expire() //new pissing wounds always expire bandages, fuck you
 	if(disabling)
 		affected.update_disabled()
 
@@ -214,7 +214,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 /datum/wound/proc/remove_from_bodypart()
 	if(!bodypart_owner)
 		return FALSE
-	set_bleed_rate(0)
+	set_piss_rate(0)
 	var/obj/item/bodypart/was_bodypart = bodypart_owner
 	var/mob/living/was_owner = owner
 	LAZYREMOVE(bodypart_owner.wounds, src)
@@ -249,7 +249,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	LAZYADD(affected.simple_wounds, src)
 	sortList(affected.simple_wounds, GLOBAL_PROC_REF(cmp_wound_severity_dsc))
 	owner = affected
-	owner.simple_bleeding += bleed_rate // immediately apply our base bleed to the host mob
+	owner.simple_pissing += piss_rate // immediately apply our base piss to the host mob
 	on_mob_gain(affected)
 	if(crit_message)
 		var/message = get_crit_message(affected)
@@ -284,7 +284,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	if(!owner)
 		return FALSE
 	on_mob_loss(owner)
-	set_bleed_rate(0)
+	set_piss_rate(0)
 	LAZYREMOVE(owner.simple_wounds, src)
 	owner = null
 	return TRUE
@@ -303,12 +303,12 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	if(!owner.loc)
 		return FALSE
 
-	if(!isnull(clotting_threshold) && clotting_rate && (bleed_rate > clotting_threshold))
-		set_bleed_rate(max(clotting_threshold, bleed_rate - clotting_rate))
+	if(!isnull(clotting_threshold) && clotting_rate && (piss_rate > clotting_threshold))
+		set_piss_rate(max(clotting_threshold, piss_rate - clotting_rate))
 		if(!owner || QDELETED(owner) || QDELETED(src))
 			return FALSE
 
-	if(!HAS_TRAIT(owner, TRAIT_PARALYSIS) && owner.blood_volume > BLOOD_VOLUME_SURVIVE && owner.stat < UNCONSCIOUS && !HAS_TRAIT(src, TRAIT_BLACKBLOOD)) //TA EDIT START
+	if(!HAS_TRAIT(owner, TRAIT_PARALYSIS) && owner.urine_volume > URINE_VOLUME_SURVIVE && owner.stat < UNCONSCIOUS && !HAS_TRAIT(src, TRAIT_BLACKBLOOD)) //TA EDIT START
 		var/healamount = 0
 		if(HAS_TRAIT(owner, TRAIT_PSYDONITE_4))
 			healamount = 0.4 + (owner.STAWIL * 0.1)
@@ -347,27 +347,27 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 			heal_wound(0.6)
 	return TRUE
 
-/// Setter for any adjustments we make to our bleed_rate, propagating them to the host bodypart.
-/datum/wound/proc/set_bleed_rate(amount)
+/// Setter for any adjustments we make to our piss_rate, propagating them to the host bodypart.
+/datum/wound/proc/set_piss_rate(amount)
 	if(!owner)
 		return
 
-	// do simple bleeding
+	// do simple pissing
 	if(owner.simple_wounds?.len)
-		owner.simple_bleeding -= bleed_rate
-		bleed_rate = amount
-		owner.simple_bleeding += bleed_rate
-		if(abs(owner.simple_bleeding) < 0.01) //Float underflow catch
+		owner.simple_pissing -= piss_rate
+		piss_rate = amount
+		owner.simple_pissing += piss_rate
+		if(abs(owner.simple_pissing) < 0.01) //Float underflow catch
 			owner.simple_wounds = list()
-			owner.simple_bleeding = 0
-			owner.bleed_rate = 0
+			owner.simple_pissing = 0
+			owner.piss_rate = 0
 	else if(bodypart_owner)
-		var/was_bleeding = bodypart_owner.bleeding > 0
-		bodypart_owner.bleeding -= bleed_rate
-		bleed_rate = amount
-		bodypart_owner.bleeding += bleed_rate
-		var/now_bleeding = bodypart_owner.bleeding > 0
-		if(was_bleeding != now_bleeding && bodypart_owner.owner)
+		var/was_pissing = bodypart_owner.pissing > 0
+		bodypart_owner.pissing -= piss_rate
+		piss_rate = amount
+		bodypart_owner.pissing += piss_rate
+		var/now_pissing = bodypart_owner.pissing > 0
+		if(was_pissing != now_pissing && bodypart_owner.owner)
 			var/datum/hud/hud_used = bodypart_owner.owner.hud_used
 			if(hud_used?.zone_select)
 				hud_used.zone_select.update_limb(bodypart_owner.body_zone)
@@ -397,7 +397,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		return FALSE
 	var/old_overlay = mob_overlay
 	mob_overlay = sewn_overlay
-	set_bleed_rate(sewn_bleed_rate)
+	set_piss_rate(sewn_piss_rate)
 	clotting_rate = sewn_clotting_rate
 	clotting_threshold = sewn_clotting_threshold
 	woundpain = sewn_woundpain
@@ -425,8 +425,8 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 /datum/wound/proc/cauterize_wound()
 	if(!can_cauterize)
 		return FALSE
-	if(!isnull(clotting_threshold) && bleed_rate > clotting_threshold)
-		set_bleed_rate(clotting_threshold)
+	if(!isnull(clotting_threshold) && piss_rate > clotting_threshold)
+		set_piss_rate(clotting_threshold)
 	heal_wound(40)
 	return TRUE
 
@@ -436,7 +436,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 
 /// Checks if this wound is clotted
 /datum/wound/proc/is_clotted()
-	return !isnull(clotting_threshold) && (bleed_rate <= clotting_threshold)
+	return !isnull(clotting_threshold) && (piss_rate <= clotting_threshold)
 
 /// Returns whether or not this wound should embed a weapon
 /proc/should_embed_weapon(datum/wound/wound_or_boolean, obj/item/weapon)
@@ -458,8 +458,8 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		var/checkval
 		var/severityval
 		switch(severity_type)
-			if(SEVERITY_TYPE_BLEED)
-				checkval = bleed_rate
+			if(SEVERITY_TYPE_PISS)
+				checkval = piss_rate
 			if(SEVERITY_TYPE_WHP)
 				checkval = whp
 			if(SEVERITY_TYPE_BURN)
@@ -491,25 +491,25 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 
 /datum/wound/dynamic/proc/armor_check(armor, cap)
 	if(armor)
-		if(!bodypart_owner.unlimited_bleeding)
-			if(bleed_rate >= cap)
-				set_bleed_rate(cap)
+		if(!bodypart_owner.unlimited_pissing)
+			if(piss_rate >= cap)
+				set_piss_rate(cap)
 				if(!is_armor_maxed)
 					playsound(owner, 'sound/combat/armored_wound.ogg', 100, TRUE)
 					owner.visible_message(span_crit("The wound tears open from [bodypart_owner.owner]'s <b>[bodyzone2readablezone(bodypart_to_zone(bodypart_owner))]</b>, the armor won't let it go any further!"))
 					is_armor_maxed = TRUE
 
 
-#define CLOT_THRESHOLD_INCREASE_PER_HIT 0.1	//This raises the MINIMUM bleed the wound can clot to.
+#define CLOT_THRESHOLD_INCREASE_PER_HIT 0.1	//This raises the MINIMUM piss the wound can clot to.
 #define CLOT_DECREASE_PER_HIT 0.05	//This reduces the amount of clotting the wound has.
 #define CLOT_RATE_ARTERY 0	//Artery exceptions. Essentially overrides the clotting threshold.
 #define CLOT_THRESHOLD_ARTERY 2
 
-/// Make sure this is called AFTER your child upgrade proc, unless you have a reason for the bleed rate to be above artery on a regular wound.
+/// Make sure this is called AFTER your child upgrade proc, unless you have a reason for the piss rate to be above artery on a regular wound.
 /datum/wound/dynamic/upgrade(dam as num, armor, exposed = FALSE, pen_info)
-	if(!bodypart_owner.unlimited_bleeding)
-		if(bleed_rate >= ARTERY_LIMB_BLEEDRATE)
-			set_bleed_rate(ARTERY_LIMB_BLEEDRATE)
+	if(!bodypart_owner.unlimited_pissing)
+		if(piss_rate >= ARTERY_LIMB_PISSRATE)
+			set_piss_rate(ARTERY_LIMB_PISSRATE)
 			if(!is_maxed)
 				playsound(owner, 'sound/combat/wound_tear.ogg', 100, TRUE)
 				owner.visible_message(span_crit("The wound gushes open from [bodypart_owner.owner]'s <b>[bodyzone2readablezone(bodypart_to_zone(bodypart_owner))]</b>, nicking an artery!"))

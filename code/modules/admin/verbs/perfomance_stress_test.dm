@@ -222,7 +222,7 @@ GLOBAL_LIST_EMPTY(stress_test_mobs)
 
 
 		if(prob(20))
-			BP.bleeding = rand(1, 5)
+			BP.pissing = rand(1, 5)
 
 
 		if(prob(5) && BP.body_zone != BODY_ZONE_HEAD)

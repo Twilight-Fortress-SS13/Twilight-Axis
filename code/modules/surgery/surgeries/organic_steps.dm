@@ -35,7 +35,7 @@
 
 /// Clamping
 /datum/surgery_step/clamp
-	name = "Clamp bleeders"
+	name = "Clamp pissers"
 	implements = list(
 		TOOL_HEMOSTAT = 75,
 		TOOL_WIRECUTTER = 60,
@@ -48,18 +48,18 @@
 	preop_sound = 'sound/surgery/hemostat1.ogg'
 
 /datum/surgery_step/clamp/preop(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
-	display_results(user, target, span_notice("I begin to clamp bleeders in [target]'s [parse_zone(target_zone)]..."),
-		span_notice("[user] begins to clamp bleeders in [target]'s [parse_zone(target_zone)]."),
-		span_notice("[user] begins to clamp bleeders in [target]'s [parse_zone(target_zone)]."))
+	display_results(user, target, span_notice("I begin to clamp pissers in [target]'s [parse_zone(target_zone)]..."),
+		span_notice("[user] begins to clamp pissers in [target]'s [parse_zone(target_zone)]."),
+		span_notice("[user] begins to clamp pissers in [target]'s [parse_zone(target_zone)]."))
 	return TRUE
 
 /datum/surgery_step/clamp/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
 	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
 	if(!bodypart?.add_embedded_object(tool, crit_message = FALSE, surgery_embed = TRUE))
 		return FALSE
-	display_results(user, target, span_notice("I clamp the bleeders in [target]'s [parse_zone(target_zone)]."),
-		span_notice("[user] clamps the bleeders in [target]'s [parse_zone(target_zone)]."),
-		span_notice("[user] clamps the bleeders in [target]'s [parse_zone(target_zone)]."))
+	display_results(user, target, span_notice("I clamp the pissers in [target]'s [parse_zone(target_zone)]."),
+		span_notice("[user] clamps the pissers in [target]'s [parse_zone(target_zone)]."),
+		span_notice("[user] clamps the pissers in [target]'s [parse_zone(target_zone)]."))
 	notify_embed(user, tool, target, target_zone)
 	return TRUE
 
@@ -133,8 +133,8 @@
 		span_notice("[user] cauterizes the wounds on [target]'s [parse_zone(target_zone)]."))
 	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
 	if(bodypart)
-		for(var/datum/wound/bleeder in bodypart.wounds)
-			bleeder.cauterize_wound()
+		for(var/datum/wound/pisser in bodypart.wounds)
+			pisser.cauterize_wound()
 		bodypart.receive_damage(burn = 25) //painful, but the wounds go away eh?
 	if (target.has_status_effect(/datum/status_effect/buff/ozium))
 		target.emote ("groan")

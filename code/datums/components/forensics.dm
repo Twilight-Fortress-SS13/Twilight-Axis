@@ -3,23 +3,23 @@
 	can_transfer = TRUE
 	var/list/fingerprints		//assoc print = print
 	var/list/hiddenprints		//assoc ckey = realname/gloves/ckey
-	var/list/blood_DNA			//assoc dna = bloodtype
+	var/list/urine_DNA			//assoc dna = bloodtype
 	var/list/fibers				//assoc print = print
 
 /datum/component/forensics/InheritComponent(datum/component/forensics/F, original)		//Use of | and |= being different here is INTENTIONAL.
 	fingerprints = fingerprints | F.fingerprints
 	hiddenprints = hiddenprints | F.hiddenprints
-	blood_DNA = blood_DNA | F.blood_DNA
+	urine_DNA = urine_DNA | F.urine_DNA
 	fibers = fibers | F.fibers
 	check_blood()
 	return ..()
 
-/datum/component/forensics/Initialize(new_fingerprints, new_hiddenprints, new_blood_DNA, new_fibers)
+/datum/component/forensics/Initialize(new_fingerprints, new_hiddenprints, new_urine_DNA, new_fibers)
 	if(!isatom(parent))
 		return COMPONENT_INCOMPATIBLE
 	fingerprints = new_fingerprints
 	hiddenprints = new_hiddenprints
-	blood_DNA = new_blood_DNA
+	urine_DNA = new_urine_DNA
 	fibers = new_fibers
 	check_blood()
 
@@ -41,8 +41,8 @@
 /datum/component/forensics/proc/wipe_hiddenprints()
 	return	//no.
 
-/datum/component/forensics/proc/wipe_blood_DNA()
-	blood_DNA = null
+/datum/component/forensics/proc/wipe_urine_DNA()
+	urine_DNA = null
 	if(isitem(parent))
 		qdel(parent.GetComponent(/datum/component/decal/blood))
 	return TRUE
@@ -55,7 +55,7 @@
 	if(strength >= CLEAN_STRENGTH_FINGERPRINTS)
 		wipe_fingerprints()
 	if(strength >= CLEAN_STRENGTH_BLOOD)
-		wipe_blood_DNA()
+		wipe_urine_DNA()
 	if(strength >= CLEAN_STRENGTH_FIBERS)
 		wipe_fibers()
 
@@ -159,18 +159,18 @@
 	A.fingerprintslast = M.ckey
 	return TRUE
 
-/datum/component/forensics/proc/add_blood_DNA(list/dna)		//list(dna_enzymes = type)
+/datum/component/forensics/proc/add_urine_DNA(list/dna)		//list(dna_enzymes = type)
 	if(!length(dna))
 		return
-	LAZYINITLIST(blood_DNA)
+	LAZYINITLIST(urine_DNA)
 	for(var/i in dna)
-		blood_DNA[i] = dna[i]
+		urine_DNA[i] = dna[i]
 	check_blood()
 	return TRUE
 
 /datum/component/forensics/proc/check_blood()
 	if(!isitem(parent))
 		return
-	if(!length(blood_DNA))
+	if(!length(urine_DNA))
 		return
 	parent.LoadComponent(/datum/component/decal/blood)

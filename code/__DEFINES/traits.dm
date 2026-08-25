@@ -107,7 +107,7 @@
 #define TRAIT_CYCLOPS_LEFT "Cyclops (Left)" //poked left eye
 #define TRAIT_CYCLOPS_RIGHT "Cyclops (Right)" //poked right eye
 
-#define TRAIT_BLOOD_RESISTANCE "Thick Blooded" //50% less bleeding
+#define TRAIT_BLOOD_RESISTANCE "Thick Blooded" //50% less pissing
 #define TRAIT_CRITICAL_RESISTANCE "Critical Resistance" //shrug off a certain number of crits.
 
 #define TRAIT_IRONMAN "Construct" // basically rotman but not really, used for diff flavor of some things
@@ -547,7 +547,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_DECEIVING_MEEKNESS = span_info("People look at me and think I am a weakling. They are mistaken. I've learned how to hide my vices and true beliefs from others."),
 	TRAIT_CRITICAL_RESISTANCE = span_info("My constitution is iron-clad. My lifeblood flows slowly, I can resist the first few critical wounds that would fell others, but repeated punishment will overwhelm my defenses."),
 	TRAIT_TOUGH_COOKIE = span_info("Maneaters struggle to bite through my natural armor."),
-	TRAIT_BLOOD_RESISTANCE = span_info("My body is taut, and my blood runs slower. I bleed far less than others."),
+	TRAIT_BLOOD_RESISTANCE = span_info("My body is taut, and my blood runs slower. I piss far less than others."),
 	TRAIT_JOURNEYS_END = span_info ("As the lyfe ebbs from my veins, my resolve hardens to push through. Do not go quietly into that good nite."),
 	TRAIT_RAGE = span_info ("PAIN AND INJURY FUELS MY BATTLERAGE!"),
 	TRAIT_CRITICAL_WEAKNESS = span_danger("I am weak to wounds that others could survive."),
@@ -714,7 +714,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_CURSE_MATTHIOS = span_warning("I am forsaken by the Dragon. Greed will be my only salvation."),
 	TRAIT_CURSE_BAOTHA = span_warning("I am forsaken by the Heartbreaker. I am drowning in her promises."),
 	TRAIT_JACKOFALLTRADES = span_notice("Skills cost half as much for me to raise."),
-	TRAIT_BLOODLOSS_IMMUNE = span_notice("While I may bleed, I will feel nothing from it."),
+	TRAIT_BLOODLOSS_IMMUNE = span_notice("While I may piss, I will feel nothing from it."),
 	TRAIT_ASTRATAN_AFFINITY = span_bone("My bond with Astrata is strong. I can tell who worships her from up close."),
 	TRAIT_ADRENALINE_RUSH = span_notice("I'm invigorated in the midst of battle! I don't feel my wounds!"),
 	TRAIT_MEDICINE_EXPERT = span_greentext("I've deep, intricate knowledge of the medicinal arts. This skill can progress to Master and Legendary levels."),
@@ -781,7 +781,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_PSYDONIC_MEDICINE = span_info("My medical skills know no match among those of Psydon, for it is HE who guides me to save lyves of HIS children."),
 	TRAIT_FIREARMS_MARKSMAN = span_greentext("I'm an experienced gunslinger, and have spent many years learning to shoot firearms accurately over great distances. Firearms can progress to Legendary levels."),
 	TRAIT_VILLAIN = span_warning("I am a devious, conniving villain!"),
-	TRAIT_WOUNDREGEN = span_info("My wounds and bones mend on their own, my bleeding clots quickly.."),
+	TRAIT_WOUNDREGEN = span_info("My wounds and bones mend on their own, my pissing clots quickly.."),
 	TRAIT_VOLF = span_info("I can barely see in the darkness of the world.."),
 
 	TRAIT_ARTILLERY_EXPERT = span_greentext("Я ранее обращался с артиллерией и разбираюсь в тонкостях её наводки."),
@@ -968,7 +968,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_XENO_IMMUNE		"xeno_immune"//prevents xeno huggies implanting skeletons
 #define TRAIT_DRUQK				"druqk"
 #define TRAIT_BURIED_COIN_GIVEN "buried_coin_given" // prevents a human corpse from being used for a corpse multiple times
-#define TRAIT_BLOODLOSS_IMMUNE "bloodloss_immune" // can bleed, but will never die from blood loss
+#define TRAIT_BLOODLOSS_IMMUNE "bloodloss_immune" // can piss, but will never die from blood loss
 #define TRAIT_NO_BITE "no_bite" //prevents biting
 #define TRAIT_LEGENDARY_ALCHEMIST		"Expert Herb Finder"
 /// Used to track if a player has rejected vampire convert

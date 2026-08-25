@@ -1080,8 +1080,8 @@
 	var/obj/effect/overlay/flash_layer
 	var/list/limb_vis = list()
 	var/list/wound_vis = list()
-	var/list/bleed_vis = list()
-	var/list/limb_cache = list()	// zone -> "color|wound_alpha|bleed"
+	var/list/piss_vis = list()
+	var/list/limb_cache = list()	// zone -> "color|wound_alpha|piss"
 	var/list/flash_vis = list()	// zone -> reusable flash overlay
 	var/obj/effect/overlay/vis/selection_vis
 
@@ -1090,13 +1090,13 @@
 		qdel(limb_vis[zone])
 	for(var/zone in wound_vis)
 		qdel(wound_vis[zone])
-	for(var/zone in bleed_vis)
-		qdel(bleed_vis[zone])
+	for(var/zone in piss_vis)
+		qdel(piss_vis[zone])
 	for(var/zone in flash_vis)
 		qdel(flash_vis[zone])
 	limb_vis = null
 	wound_vis = null
-	bleed_vis = null
+	piss_vis = null
 	limb_cache = null
 	flash_vis = null
 	QDEL_NULL(selection_vis)
@@ -1409,22 +1409,22 @@
 	rebuild_limbs()
 	update_selection()
 
-/atom/movable/screen/zone_sel/proc/_has_visible_bleed(obj/item/bodypart/BP)
+/atom/movable/screen/zone_sel/proc/_has_visible_piss(obj/item/bodypart/BP)
 	if(!BP)
 		return FALSE
-	var/bleed_rate = BP.bleeding
+	var/piss_rate = BP.pissing
 	if(BP.bandage && !HAS_BLOOD_DNA(BP.bandage))
 		var/obj/item/natural/cloth/cloth = BP.bandage
 		if(istype(cloth))
-			bleed_rate *= cloth.bandage_effectiveness
-		return bleed_rate > 1
+			piss_rate *= cloth.bandage_effectiveness
+		return piss_rate > 1
 	for(var/obj/item/embedded as anything in BP.embedded_objects)
 		if(!embedded.embedding?.embedded_bloodloss)
 			continue
-		bleed_rate += embedded.embedding.embedded_bloodloss
+		piss_rate += embedded.embedding.embedded_bloodloss
 	for(var/obj/item/grabbing/grab as anything in SANITIZE_LIST(BP.grabbedby))
-		bleed_rate *= grab.bleed_suppressing
-	return max(round(bleed_rate, 0.1), 0) > 0
+		piss_rate *= grab.piss_suppressing
+	return max(round(piss_rate, 0.1), 0) > 0
 
 /atom/movable/screen/zone_sel/proc/rebuild_limbs()
 	if(hud.mymob.stat == DEAD || !ishuman(hud.mymob))
@@ -1432,7 +1432,7 @@
 			_cleanup_limb_vis(zone)
 		limb_vis.Cut()
 		wound_vis.Cut()
-		bleed_vis.Cut()
+		piss_vis.Cut()
 		limb_cache.Cut()
 		return
 
@@ -1461,13 +1461,13 @@
 			continue
 		var/damage = min(BP.burn_dam + BP.brute_dam, BP.max_damage)
 		var/wound_alpha = clamp(round((damage / BP.max_damage) * 510), 0, 255)
-		var/has_bleed = _has_visible_bleed(BP)
+		var/has_piss = _has_visible_piss(BP)
 		if(nopain)
-			_apply_limb_state(zone, (damage || has_bleed) ? "#78a8ba" : null, 0, has_bleed)
+			_apply_limb_state(zone, (damage || has_piss) ? "#78a8ba" : null, 0, has_piss)
 			continue
-		_apply_limb_state(zone, null, wound_alpha, has_bleed)
+		_apply_limb_state(zone, null, wound_alpha, has_piss)
 
-/// Creates limb/wound/bleed vis objects for a zone if they don't exist
+/// Creates limb/wound/piss vis objects for a zone if they don't exist
 /atom/movable/screen/zone_sel/proc/_ensure_limb_vis(zone, gender_prefix)
 	var/obj/effect/overlay/vis/limb = limb_vis[zone]
 	if(!limb)
@@ -1492,13 +1492,13 @@
 		vis_contents += wnd
 	wnd.icon_state = "[gender_prefix]w-[zone]"
 
-	if(!bleed_vis[zone])
+	if(!piss_vis[zone])
 		var/obj/effect/overlay/vis/bld = new
 		bld.icon = null
 		bld.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 		bld.plane = plane
 		bld.layer = layer + 0.12
-		bleed_vis[zone] = bld
+		piss_vis[zone] = bld
 		vis_contents += bld
 
 /// Removes all vis objects for a zone
@@ -1511,16 +1511,16 @@
 		vis_contents -= wound_vis[zone]
 		qdel(wound_vis[zone])
 		wound_vis -= zone
-	if(bleed_vis[zone])
-		vis_contents -= bleed_vis[zone]
-		qdel(bleed_vis[zone])
-		bleed_vis -= zone
+	if(piss_vis[zone])
+		vis_contents -= piss_vis[zone]
+		qdel(piss_vis[zone])
+		piss_vis -= zone
 	limb_cache -= zone
 
 /// Applies visual state to a zone with cache check — skips no-op updates
-/atom/movable/screen/zone_sel/proc/_apply_limb_state(zone, limb_color, wound_alpha, has_bleed)
+/atom/movable/screen/zone_sel/proc/_apply_limb_state(zone, limb_color, wound_alpha, has_piss)
 	var/gender_prefix = hud.mymob.gender == "male" ? "m" : "f"
-	var/cache_key = "[gender_prefix]|[limb_color]|[wound_alpha]|[has_bleed]"
+	var/cache_key = "[gender_prefix]|[limb_color]|[wound_alpha]|[has_piss]"
 	if(limb_cache[zone] == cache_key)
 		return
 	limb_cache[zone] = cache_key
@@ -1531,10 +1531,10 @@
 	var/obj/effect/overlay/vis/wnd = wound_vis[zone]
 	wnd.alpha = wound_alpha
 
-	var/obj/effect/overlay/vis/bld = bleed_vis[zone]
-	if(has_bleed)
+	var/obj/effect/overlay/vis/bld = piss_vis[zone]
+	if(has_piss)
 		bld.icon = 'icons/mob/roguehud64.dmi'
-		bld.icon_state = "[gender_prefix]-[zone]-bleed"
+		bld.icon_state = "[gender_prefix]-[zone]-piss"
 	else
 		if(bld.icon)
 			bld.icon = null
@@ -1549,13 +1549,13 @@
 	var/gender_prefix = H.gender == "male" ? "m" : "f"
 	if(BP)
 		_ensure_limb_vis(zone, gender_prefix)
-		var/has_bleed = _has_visible_bleed(BP)
+		var/has_piss = _has_visible_piss(BP)
 		var/damage = min(BP.burn_dam + BP.brute_dam, BP.max_damage)
 		if(HAS_TRAIT(H, TRAIT_NOPAIN) && !H.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) && !H.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed))
-			_apply_limb_state(zone, (damage || has_bleed) ? "#78a8ba" : null, 0, has_bleed)
+			_apply_limb_state(zone, (damage || has_piss) ? "#78a8ba" : null, 0, has_piss)
 			return
 		var/wound_alpha = clamp(round((damage / BP.max_damage) * 510), 0, 255)
-		_apply_limb_state(zone, null, wound_alpha, has_bleed)
+		_apply_limb_state(zone, null, wound_alpha, has_piss)
 		return
 
 	// Cold path: no bodypart — missing limb or cleanup

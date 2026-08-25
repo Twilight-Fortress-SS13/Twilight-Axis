@@ -243,7 +243,7 @@
 
 /datum/action/cooldown/spell/undivided/perseverance
 	name = "Perseverance"
-	desc = "Slows down bleed rate of living beings as well calming them down."
+	desc = "Slows down piss rate of living beings as well calming them down."
 	fluff_desc = "Born of an union between compassion of Eora and persistance of Ravox, the couple heeds pleas of dying warriors as well the innocents lost to ravages of war offering them but a mote of respite and chance at lyfe."
 	button_icon_state = "perseverance"
 	sound = 'sound/magic/undivided_perserverance.ogg'
@@ -290,23 +290,23 @@
 			if(spelltarget.mind)
 				spelltarget.add_stress(/datum/stressevent/perseverance)
 			if(affecting)
-				for(var/datum/wound/bleeder in affecting.wounds)
-					bleeder.woundpain = max(bleeder.sewn_woundpain, bleeder.woundpain * woundpain_modifier)
-					if(!isnull(bleeder.clotting_threshold) && bleeder.bleed_rate > bleeder.clotting_threshold)
-						var/difference = bleeder.bleed_rate - bleeder.clotting_threshold
-						bleeder.set_bleed_rate(max(bleeder.clotting_threshold, bleeder.bleed_rate - difference))
+				for(var/datum/wound/pisser in affecting.wounds)
+					pisser.woundpain = max(pisser.sewn_woundpain, pisser.woundpain * woundpain_modifier)
+					if(!isnull(pisser.clotting_threshold) && pisser.piss_rate > pisser.clotting_threshold)
+						var/difference = pisser.piss_rate - pisser.clotting_threshold
+						pisser.set_piss_rate(max(pisser.clotting_threshold, pisser.piss_rate - difference))
 				return TRUE
 		else if(HAS_TRAIT(spelltarget, TRAIT_SIMPLE_WOUNDS))
-			for(var/datum/wound/bleeder in spelltarget.simple_wounds)
-				bleeder.woundpain = max(bleeder.sewn_woundpain, bleeder.woundpain * woundpain_modifier)
-				if(!isnull(bleeder.clotting_threshold) && bleeder.bleed_rate > bleeder.clotting_threshold)
-					var/difference = bleeder.bleed_rate - bleeder.clotting_threshold
-					bleeder.set_bleed_rate(max(bleeder.clotting_threshold, bleeder.bleed_rate - difference))
+			for(var/datum/wound/pisser in spelltarget.simple_wounds)
+				pisser.woundpain = max(pisser.sewn_woundpain, pisser.woundpain * woundpain_modifier)
+				if(!isnull(pisser.clotting_threshold) && pisser.piss_rate > pisser.clotting_threshold)
+					var/difference = pisser.piss_rate - pisser.clotting_threshold
+					pisser.set_piss_rate(max(pisser.clotting_threshold, pisser.piss_rate - difference))
 				return TRUE
 
 /datum/stressevent/perseverance
 	timer = 2 MINUTES
-	stressadd = -4 //Should be enough to offset the bleed
+	stressadd = -4 //Should be enough to offset the piss
 	desc = span_undivided("A mere respite from the horrors.")
 
 ////////////////////////////////////////////////////////////

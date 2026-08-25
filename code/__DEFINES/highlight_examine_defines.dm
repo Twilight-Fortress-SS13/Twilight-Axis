@@ -39,7 +39,7 @@
 // Misc items / Donor
 #define HERESYDESC_GRONN "A symbol of the North's archaic beliefs"
 #define HERESYDESC_GILBRANZE_ARTIFICE "A blade of polished gilbranze in extraordinary quality. Someone's Artifice..?" // ATICIUS DONOR
-#define HERESYDESC_WEEPING_CROSS "It is ensnared in a perpetual state of half-coagulation, the alloy cracked and bleeding"
+#define HERESYDESC_WEEPING_CROSS "It is ensnared in a perpetual state of half-coagulation, the alloy cracked and pissing"
 
 // Vampire Lord Items - General theme is mysterious but a bad omen
 #define HERESYDESC_VAMPIRE "An unnatural enchanted armor piece of solid gilbranze that crackles with strange energies"

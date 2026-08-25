@@ -64,7 +64,7 @@
 	to_chat(follower, span_danger("For Baotha to hear my prayers I must either be in the church of the abandoned, near an inverted psycross, within the town's bathhouse, or actively partaking in a substance."))
 	return FALSE
 
-#define BAOTHA_SUFFERING_DIVIDER 3.535 // max bonus at 50 pain/bleedrate and pain_mod = 1
+#define BAOTHA_SUFFERING_DIVIDER 3.535 // max bonus at 50 pain/pissrate and pain_mod = 1
 
 /datum/patron/inhumen/baotha/on_lesser_heal(
 	mob/living/user,
@@ -97,7 +97,7 @@
 		var/raw_suffering = 0
 
 		for(var/datum/wound/wound in human_target.get_wounds())
-			raw_suffering += wound.woundpain + wound.bleed_rate
+			raw_suffering += wound.woundpain + wound.piss_rate
 
 		var/suffering = sqrt(raw_suffering) / BAOTHA_SUFFERING_DIVIDER
 		var/to_add = HAS_TRAIT(target, TRAIT_DEPRAVED) ? suffering : suffering * human_target.physiology.pain_mod

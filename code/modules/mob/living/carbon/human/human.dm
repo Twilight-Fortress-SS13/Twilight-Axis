@@ -517,7 +517,7 @@
 		return
 	else
 		if(hud_used.bloods)
-			var/bloodloss = ((BLOOD_VOLUME_NORMAL - blood_volume) / BLOOD_VOLUME_NORMAL) * 100
+			var/bloodloss = ((URINE_VOLUME_NORMAL - urine_volume) / URINE_VOLUME_NORMAL) * 100
 
 			var/toxloss = getToxLoss()
 			var/oxyloss = getOxyLoss()

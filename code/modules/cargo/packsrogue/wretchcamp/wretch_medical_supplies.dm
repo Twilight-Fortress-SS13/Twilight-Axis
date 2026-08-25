@@ -1,7 +1,7 @@
 // Wretch Potions. Wretch potions are meant to be relatively cost semi-effective, normal potion brewers will always exceed when you can grab from the shop here.
 // This also includes medical supplies, the general idea is more "to kit you out to last" instead of to kit you out to frag, which bandits fill that niché.
 // So for the love of all that is unholy, please do not give them strong potions ever, period. They do not need that shit and I can 100% assure you that.
-// This is enough to survive as soon as you walk outside of camp or to top up your way of not immedately bleeding the fuck out dead, maybe a way to escape being near no-blue bar stamcrit once or twice.
+// This is enough to survive as soon as you walk outside of camp or to top up your way of not immedately pissing the fuck out dead, maybe a way to escape being near no-blue bar stamcrit once or twice.
 
 // None of this should clutch you in a hyperwar sized fight, solo. It should let you escape and maybe survive your wounds, or keep others alive. It should help your recovery but literally end at that.
 // Keep all of this public, its accessed via a goldface sire.

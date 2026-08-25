@@ -10,15 +10,15 @@
 	if(D)
 		. = D.hiddenprints
 
-/atom/proc/return_blood_DNA()
+/atom/proc/return_urine_DNA()
 	var/datum/component/forensics/D = GetComponent(/datum/component/forensics)
 	if(D)
-		. = D.blood_DNA
+		. = D.urine_DNA
 
-/atom/proc/blood_DNA_length()
+/atom/proc/urine_DNA_length()
 	var/datum/component/forensics/D = GetComponent(/datum/component/forensics)
 	if(D)
-		. = length(D.blood_DNA)
+		. = length(D.urine_DNA)
 
 /atom/proc/return_fibers()
 	var/datum/component/forensics/D = GetComponent(/datum/component/forensics)
@@ -48,13 +48,13 @@
 	var/old = 0
 	if(M.gloves && istype(M.gloves, /obj/item/clothing))
 		var/obj/item/clothing/gloves/G = M.gloves
-		old = length(G.return_blood_DNA())
+		old = length(G.return_urine_DNA())
 		if(G.transfer_blood > 1) //bloodied gloves transfer blood to touched objects
-			if(add_blood_DNA(G.return_blood_DNA()) && length(G.return_blood_DNA()) > old) //only reduces the bloodiness of our gloves if the item wasn't already bloody
+			if(add_urine_DNA(G.return_urine_DNA()) && length(G.return_urine_DNA()) > old) //only reduces the bloodiness of our gloves if the item wasn't already bloody
 				G.transfer_blood--
 	else if(M.bloody_hands > 1)
-		old = length(M.return_blood_DNA())
-		if(add_blood_DNA(M.return_blood_DNA()) && length(M.return_blood_DNA()) > old)
+		old = length(M.return_urine_DNA())
+		if(add_urine_DNA(M.return_urine_DNA()) && length(M.return_urine_DNA()) > old)
 			M.bloody_hands--
 	var/datum/component/forensics/D = AddComponent(/datum/component/forensics)
 	. = D.add_fibers(M)
@@ -69,88 +69,88 @@
 	var/datum/component/forensics/D = AddComponent(/datum/component/forensics)
 	. = D.add_hiddenprint(M)
 
-/atom/proc/add_blood_DNA(list/dna, from_splatter = FALSE, extreme = FALSE)						//ASSOC LIST DNA = BLOODTYPE
+/atom/proc/add_urine_DNA(list/dna, from_splatter = FALSE, extreme = FALSE)						//ASSOC LIST DNA = BLOODTYPE
 	return FALSE
 
-/obj/add_blood_DNA(list/dna, from_splatter = FALSE, extreme = FALSE)
+/obj/add_urine_DNA(list/dna, from_splatter = FALSE, extreme = FALSE)
 	. = ..()
 	if(QDELETED(src))
 		return
 	if(length(dna))
 		. = AddComponent(/datum/component/forensics, null, null, dna)
 
-/obj/item/clothing/gloves/add_blood_DNA(list/blood_dna, from_splatter = FALSE, extreme = FALSE)
+/obj/item/clothing/gloves/add_urine_DNA(list/blood_dna, from_splatter = FALSE, extreme = FALSE)
 	. = ..()
 	transfer_blood = rand(2, 4)
 
-/turf/add_blood_DNA(list/blood_dna, from_splatter = FALSE, extreme = FALSE)
+/turf/add_urine_DNA(list/blood_dna, from_splatter = FALSE, extreme = FALSE)
 	var/obj/effect/decal/cleanable/blood/splatter/B = locate() in src
 	if(!B)
 		B = new /obj/effect/decal/cleanable/blood/splatter(src)
-	B.add_blood_DNA(blood_dna) //give blood info to the blood decal.
+	B.add_urine_DNA(blood_dna) //give blood info to the blood decal.
 	return TRUE //we bloodied the floor
 
-/mob/living/carbon/human/add_blood_DNA(list/blood_dna, from_splatter = FALSE, extreme = FALSE)
+/mob/living/carbon/human/add_urine_DNA(list/blood_dna, from_splatter = FALSE, extreme = FALSE)
 	if(extreme)
 		if(head)
-			head.add_blood_DNA(blood_dna)
+			head.add_urine_DNA(blood_dna)
 			update_inv_head()
 		if(wear_mask)
-			wear_mask.add_blood_DNA(blood_dna)
+			wear_mask.add_urine_DNA(blood_dna)
 			update_inv_wear_mask()
 		if(cloak)
-			cloak.add_blood_DNA(blood_dna)
+			cloak.add_urine_DNA(blood_dna)
 			update_inv_cloak()
 		if(backr)
-			backr.add_blood_DNA(blood_dna)
+			backr.add_urine_DNA(blood_dna)
 			update_inv_back()
 		if(backl)
-			backl.add_blood_DNA(blood_dna)
+			backl.add_urine_DNA(blood_dna)
 			update_inv_back()
 		if(wear_armor)
-			wear_armor.add_blood_DNA(blood_dna)
+			wear_armor.add_urine_DNA(blood_dna)
 			update_inv_armor()
 		if(wear_shirt)
-			wear_shirt.add_blood_DNA(blood_dna)
+			wear_shirt.add_urine_DNA(blood_dna)
 			update_inv_shirt()
 		if(wear_wrists)
-			wear_wrists.add_blood_DNA(blood_dna)
+			wear_wrists.add_urine_DNA(blood_dna)
 			update_inv_wrists()
 		if(wear_pants)
-			wear_pants.add_blood_DNA(blood_dna)
+			wear_pants.add_urine_DNA(blood_dna)
 			update_inv_pants()
 		if(belt)
-			belt.add_blood_DNA(blood_dna)
+			belt.add_urine_DNA(blood_dna)
 			update_inv_belt()
 		if(beltr)
-			beltr.add_blood_DNA(blood_dna)
+			beltr.add_urine_DNA(blood_dna)
 			update_inv_belt()
 		if(beltl)
-			beltl.add_blood_DNA(blood_dna)
+			beltl.add_urine_DNA(blood_dna)
 			update_inv_belt()
 		if(gloves)
-			gloves.add_blood_DNA(blood_dna)
+			gloves.add_urine_DNA(blood_dna)
 			update_inv_gloves()
 		if(shoes)
-			shoes.add_blood_DNA(blood_dna)
+			shoes.add_urine_DNA(blood_dna)
 			update_inv_shoes()
 	else
 		if(cloak)
-			cloak.add_blood_DNA(blood_dna)
+			cloak.add_urine_DNA(blood_dna)
 			update_inv_cloak()
 		else if(wear_armor)
-			wear_armor.add_blood_DNA(blood_dna)
+			wear_armor.add_urine_DNA(blood_dna)
 			update_inv_armor()
 		else if(wear_shirt)
-			wear_shirt.add_blood_DNA(blood_dna)
+			wear_shirt.add_urine_DNA(blood_dna)
 			update_inv_shirt()
 		else if(wear_pants)
-			wear_pants.add_blood_DNA(blood_dna)
+			wear_pants.add_urine_DNA(blood_dna)
 			update_inv_pants()
 	if(!from_splatter)
 		if(gloves)
 			var/obj/item/clothing/gloves/G = gloves
-			G.add_blood_DNA(blood_dna)
+			G.add_urine_DNA(blood_dna)
 			update_inv_gloves()
 		else if(length(blood_dna))
 			AddComponent(/datum/component/forensics, null, null, blood_dna)

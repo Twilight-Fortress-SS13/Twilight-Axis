@@ -20,7 +20,7 @@
 		"I feel a horrible headache, the world spins around me briefly",
 		"A brief urge to bite into something floods my mind, before I collect myself again.",
 		"I can feel my pulse slowing. I've never felt this calm.",
-		"There's a strange numbness spreading through my limbs, I'm bleeding but I can't tell where.",
+		"There's a strange numbness spreading through my limbs, I'm pissing but I can't tell where.",
 		"I can smell my own flesh, it smells foul."
 	)
 

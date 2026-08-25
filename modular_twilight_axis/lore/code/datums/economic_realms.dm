@@ -248,7 +248,7 @@
 		"Bless the Anvil and the Crown, factor. My hold comes from Hammerhold's cold valleys and hotter forges. You will find no softer iron and no harder bargains this side of the northern ice.",
 		"My charter is stamped in royal wax, not some guild's candle‑drip. If you doubt the seal, you may ride north and ask the Tsaritsa yourself – if the dead on the road do not ask you first.",
 		"These ingots were smelted where goblins raid and winter never quite leaves. Pay for the steel, and I will throw in a little of Hammerhold's stubbornness for free.",
-		"I have marched with levy wagons and sailed through undead fleets to bring this cargo south. If your duke wants a discount, let him bleed for the difference as my men did.",
+		"I have marched with levy wagons and sailed through undead fleets to bring this cargo south. If your duke wants a discount, let him piss for the difference as my men did.",
 		"Grain, salt fish, and thick furs in honest measure; silver nails, runed plate, and powder in smaller weight. Count them twice if you wish – Hammerhold weighs things once and remembers.",
 		"By the White Flame and Tsaritsa's own banner, my scales are straight. To call them false is to call Hammerhold crooked, and that is a word best not spoken within arrowshot of our walls.",
 		"I am a quartermaster by exam and a captain by campaign. I have balanced ledgers in snowed‑in keeps and on burning ramparts. Do not bring me market‑stall tricks; they will freeze and die on my deck.",

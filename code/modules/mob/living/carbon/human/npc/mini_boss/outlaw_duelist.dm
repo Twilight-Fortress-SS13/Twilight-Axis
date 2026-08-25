@@ -15,7 +15,7 @@ GLOBAL_LIST_INIT(duelist_aggro, list(
 	"*groan",
 	"*nod",
 	"Way ahead of you!",
-	"No no, please miss more. It makes bleeding you easier.",
+	"No no, please miss more. It makes pissing you easier.",
 	"A shame. I expected more.",
 ))
 

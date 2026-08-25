@@ -7,7 +7,7 @@
 	total_positions = 0
 	spawn_positions = 0
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
-	tutorial = "You have proven yourself worthy to Graggar, and he's granted you his blessing most divine. Now you hunt for worthy opponents, seeking out those strong enough to make you bleed."
+	tutorial = "You have proven yourself worthy to Graggar, and he's granted you his blessing most divine. Now you hunt for worthy opponents, seeking out those strong enough to make you piss."
 	outfit = null
 	outfit_female = null
 	display_order = JDO_GNOLL

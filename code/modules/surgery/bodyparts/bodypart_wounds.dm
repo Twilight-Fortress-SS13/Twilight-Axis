@@ -96,7 +96,7 @@
 	if(.)
 		qdel(wound)
 
-/// Check to see if we can apply a bleeding wound on this bodypart
+/// Check to see if we can apply a pissing wound on this bodypart
 /obj/item/bodypart/proc/can_bloody_wound()
 	if(skeletonized)
 		return FALSE
@@ -106,35 +106,35 @@
 		return FALSE
 	return TRUE
 
-/// Returns the total bleed rate on this bodypart
-/obj/item/bodypart/proc/get_bleed_rate()
-	var/bleed_rate = bleeding
+/// Returns the total piss rate on this bodypart
+/obj/item/bodypart/proc/get_piss_rate()
+	var/piss_rate = pissing
 	if(bandage && !HAS_BLOOD_DNA(bandage))
-		process_bandage(bleed_rate)
+		process_bandage(piss_rate)
 		var/obj/item/natural/cloth/cloth = bandage
-		bleed_rate *= cloth.bandage_effectiveness
-		if(bleed_rate <= 1) //if the bleeding is below this after being bandaged, bleeding stops completely, but the bandage still takes damage
+		piss_rate *= cloth.bandage_effectiveness
+		if(piss_rate <= 1) //if the pissing is below this after being bandaged, pissing stops completely, but the bandage still takes damage
 			return 0
-		return bleed_rate
+		return piss_rate
 	/*
 	for(var/datum/wound/wound in wounds)
 		if(istype(wound, /datum/wound))
-			bleed_rate += wound.bleed_rate*/
+			piss_rate += wound.piss_rate*/
 	for(var/obj/item/embedded as anything in embedded_objects)
 		if(!embedded.embedding.embedded_bloodloss)
 			continue
-		bleed_rate += embedded.embedding.embedded_bloodloss
+		piss_rate += embedded.embedding.embedded_bloodloss
 
 	grabbedby = SANITIZE_LIST(grabbedby)
 	for(var/obj/item/grabbing/grab in grabbedby)
-		bleed_rate *= grab.bleed_suppressing
-	bleed_rate = max(round(bleed_rate, 0.1), 0)
+		piss_rate *= grab.piss_suppressing
+	piss_rate = max(round(piss_rate, 0.1), 0)
 
 	// temporarily disabling below because it is niche use and a LOT of performance drain
 	/*var/surgery_flags = get_surgery_flags()
 	if(surgery_flags & SURGERY_CLAMPED)
-		return min(bleed_rate, 0.5)*/
-	return bleed_rate
+		return min(piss_rate, 0.5)*/
+	return piss_rate
 
 /// Called after a bodypart is attacked so that wounds and critical effects can be applied
 /obj/item/bodypart/proc/bodypart_attacked_by(bclass = BCLASS_BLUNT, dam, mob/living/user, zone_precise = src.body_zone, silent = FALSE, crit_message = FALSE, armor, obj/item/weapon, pen_info, no_crit = FALSE, no_debuff = FALSE)
@@ -640,7 +640,7 @@
 			if(ranged)
 				playsound(owner, 'sound/combat/brutal_impalement.ogg', 100, vary = TRUE)
 		update_disabled()
-		update_bleed_hud()
+		update_piss_hud()
 		if((embedder.is_silver || (embedder.is_even_lesser_silver && is_npc(owner))) && HAS_TRAIT(owner, TRAIT_SILVER_WEAK) && !owner.has_status_effect(STATUS_EFFECT_ANTIMAGIC))
 			var/datum/component/silverbless/psyblessed = embedder.GetComponent(/datum/component/silverbless)
 			owner.adjust_fire_stacks(1, psyblessed?.is_blessed ? /datum/status_effect/fire_handler/fire_stacks/sunder/blessed : /datum/status_effect/fire_handler/fire_stacks/sunder)
@@ -664,7 +664,7 @@
 			if(!owner.has_embedded_objects())
 				owner.clear_alert("embeddedobject")
 			update_disabled()
-			update_bleed_hud()
+			update_piss_hud()
 		return TRUE
 
 	var/atom/drop_loc = owner?.drop_location() || drop_location()
@@ -680,10 +680,10 @@
 		if(!owner.has_embedded_objects())
 			owner.clear_alert("embeddedobject")
 		update_disabled()
-		update_bleed_hud()
+		update_piss_hud()
 	return TRUE
 
-/obj/item/bodypart/proc/update_bleed_hud()
+/obj/item/bodypart/proc/update_piss_hud()
 	var/datum/hud/hud_used = owner?.hud_used
 	if(hud_used?.zone_select)
 		hud_used.zone_select.update_limb(body_zone)
@@ -698,7 +698,7 @@
 		hud_used.zone_select.update_limb(body_zone)
 	return TRUE
 
-/obj/item/bodypart/proc/process_bandage(bleed_rate)
+/obj/item/bodypart/proc/process_bandage(piss_rate)
 	if(!bandage)
 		return FALSE
 	var/obj/item/natural/cloth/cloth = bandage
@@ -713,11 +713,11 @@
 			cloth.detail_color = null
 			cloth.desc = initial(cloth.desc)
 			cloth.update_icon()
-	if(!bleed_rate)
+	if(!piss_rate)
 		return FALSE
 	var/bandage_health = 1
 	if(istype(cloth))
-		cloth.bandage_health -= bleed_rate
+		cloth.bandage_health -= piss_rate
 		bandage_health = cloth.bandage_health
 	if(bandage_health <= 0)
 		return bandage_expire()
@@ -773,7 +773,7 @@
 
 /// Returns surgery flags applicable to this bodypart
 /obj/item/bodypart/proc/get_surgery_flags()
-	// oh sweet mother of christ what the FUCK is this. this is called EVERY TIME BLEED RATE IS CHECKED.
+	// oh sweet mother of christ what the FUCK is this. this is called EVERY TIME PISS RATE IS CHECKED.
 	var/returned_flags = NONE
 	if(can_bloody_wound())
 		returned_flags |= SURGERY_BLOODY

@@ -26,13 +26,13 @@
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_rogue(get_turf(owner))
 	H.color = "#660759"
 	var/list/wCount = owner.get_wounds()
-	var/bleeding = owner.bleed_rate > 1 ? TRUE : FALSE
-	if(owner.blood_volume < BLOOD_VOLUME_OKAY && !bleeding)
-		owner.blood_volume = min(owner.blood_volume + (healing_on_tick + 1), BLOOD_VOLUME_OKAY)
+	var/pissing = owner.piss_rate > 1 ? TRUE : FALSE
+	if(owner.urine_volume < URINE_VOLUME_OKAY && !pissing)
+		owner.urine_volume = min(owner.urine_volume + (healing_on_tick + 1), URINE_VOLUME_OKAY)
 	if(wCount.len > 0)
 		owner.heal_wounds(healing_on_tick, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise))
 		owner.update_damage_overlays()
-	if(!bleeding)
+	if(!pissing)
 		owner.adjustOxyLoss(-healing_on_tick, 0)
 	owner.adjustBruteLoss(-healing_on_tick, 0)
 	owner.adjustFireLoss(-healing_on_tick, 0)

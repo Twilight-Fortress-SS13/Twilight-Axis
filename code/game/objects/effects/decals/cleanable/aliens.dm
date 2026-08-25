@@ -12,7 +12,7 @@
 
 /obj/effect/decal/cleanable/xenoblood/Initialize(mapload)
 	. = ..()
-	add_blood_DNA(list("UNKNOWN DNA" = "X*"))
+	add_urine_DNA(list("UNKNOWN DNA" = "X*"))
 
 /obj/effect/decal/cleanable/xenoblood/xsplatter
 	random_icon_states = list("xgibbl1", "xgibbl2", "xgibbl3", "xgibbl4", "xgibbl5")
@@ -77,4 +77,4 @@
 
 /obj/effect/decal/cleanable/blood/xtracks/Initialize(mapload)
 	. = ..()
-	add_blood_DNA(list("Unknown DNA" = "X*"))
+	add_urine_DNA(list("Unknown DNA" = "X*"))

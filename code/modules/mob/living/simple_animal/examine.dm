@@ -36,32 +36,32 @@
 	var/has_simple_wounds = HAS_TRAIT(src, TRAIT_SIMPLE_WOUNDS)
 	if(has_simple_wounds)
 		// Blood volume
-		switch(blood_volume)
-			if(-INFINITY to BLOOD_VOLUME_SURVIVE)
+		switch(urine_volume)
+			if(-INFINITY to URINE_VOLUME_SURVIVE)
 				msg += span_artery("<B>[m1] extremely pale and sickly.</B>")
-			if(BLOOD_VOLUME_SURVIVE to BLOOD_VOLUME_BAD)
+			if(URINE_VOLUME_SURVIVE to URINE_VOLUME_BAD)
 				msg += span_artery("<B>[m1] very pale.</B>")
-			if(BLOOD_VOLUME_BAD to BLOOD_VOLUME_OKAY)
+			if(URINE_VOLUME_BAD to URINE_VOLUME_OKAY)
 				msg += span_artery("[m1] pale.")
-			if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
+			if(URINE_VOLUME_OKAY to URINE_VOLUME_SAFE)
 				msg += span_artery("[m1] a little pale.")
 
-		// Bleeding
-		if(bleed_rate)
-			var/bleed_wording = "bleeding"
-			switch(bleed_rate)
+		// Pissing
+		if(piss_rate)
+			var/piss_wording = "pissing"
+			switch(piss_rate)
 				if(0 to 1)
-					bleed_wording = "bleeding slightly"
+					piss_wording = "pissing slightly"
 				if(1 to 5)
-					bleed_wording = "bleeding"
+					piss_wording = "pissing"
 				if(5 to 10)
-					bleed_wording = "bleeding a lot"
+					piss_wording = "pissing a lot"
 				if(10 to INFINITY)
-					bleed_wording = "bleeding profusely"
-			if(bleed_rate >= 5)
-				msg += span_bloody("<B>[m1] [bleed_wording]</B>!")
+					piss_wording = "pissing profusely"
+			if(piss_rate >= 5)
+				msg += span_bloody("<B>[m1] [piss_wording]</B>!")
 			else
-				msg += span_bloody("[m1] [bleed_wording]!")
+				msg += span_bloody("[m1] [piss_wording]!")
 
 	//Fire/water stacks
 	if(has_status_effect(/datum/status_effect/fire_handler))

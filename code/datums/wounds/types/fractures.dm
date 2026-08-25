@@ -24,8 +24,8 @@
 	/// Emote we use when applied
 	var/gain_emote = "paincrit"
 
-	// Limbs bleed worse, but bleed for far shorter periods than slashes etc.
-	bleed_rate = 15				// Artery is 20, but doesn't stop.
+	// Limbs piss worse, but piss for far shorter periods than slashes etc.
+	piss_rate = 15				// Artery is 20, but doesn't stop.
 	clotting_threshold = 0.25	// Grusome slash is 0.4
 	clotting_rate = 0.60		// Normally it's only 0.02, this is huge compared to that.
 	bypass_bloody_wound_check = TRUE	//We bypass this proc-checkfor fractures.
@@ -163,7 +163,7 @@
 		"The cranium is torn!",
 	)
 	embed_chance = 100	// Didn't we remove embeding..?
-	bleed_rate = 10		// Aooouuugh.. my brain..
+	piss_rate = 10		// Aooouuugh.. my brain..
 	knockout = 4 SECONDS //We did hit the brain after all
 	paralysis = FALSE
 
@@ -213,7 +213,7 @@
 	embed_chance = 100
 	paralysis = FALSE
 	knockout = 25
-	clotting_threshold = 0.3	//Ears gonna bleed worse than just a fracture
+	clotting_threshold = 0.3	//Ears gonna piss worse than just a fracture
 
 /datum/wound/fracture/head/ears/on_mob_gain(mob/living/affected)
 	. = ..()
@@ -237,7 +237,7 @@
 	)
 	paralysis = FALSE	//Fucks your nose, but won't paralyze you anymore.
 	knockout = 20		//Longer knockout than a normal head-fracture
-	clotting_threshold = 0.3	//Nose bleeds as bad as ears gonna bleed worse than just a fracture
+	clotting_threshold = 0.3	//Nose pisss as bad as ears gonna piss worse than just a fracture
 
 /datum/wound/fracture/head/nose/on_mob_gain(mob/living/affected)
 	. = ..()
@@ -262,9 +262,9 @@
 	)
 	mortal = FALSE
 	whp = 50
-	bleed_rate = 5				//Lower than others, still bad though.
+	piss_rate = 5				//Lower than others, still bad though.
 	clotting_threshold = 0.3	//Slightly higher still
-	clotting_rate = 0.1			//Slower clotting, not bad though for bleeder wound.
+	clotting_rate = 0.1			//Slower clotting, not bad though for pisser wound.
 
 /datum/wound/fracture/mouth/on_mob_gain(mob/living/affected)
 	. = ..()
@@ -324,8 +324,8 @@
 		"The ribcage caves in!",
 	)
 	whp = 50
-	bleed_rate = 25				//Higher than artery
-	clotting_threshold = 1		//Will always bleed bad
+	piss_rate = 25				//Higher than artery
+	clotting_threshold = 1		//Will always piss bad
 	clotting_rate = 1			//Good clotting rate; within 24 ticks (~3 seconds) will lower heavily.
 
 /datum/wound/fracture/chest/on_mob_gain(mob/living/affected)
@@ -375,7 +375,7 @@
 	whp = 50
 	gain_emote = "groin"	//MY PIINTLE!!!!
 	mortal = FALSE
-	bleed_rate = 5
+	piss_rate = 5
 	clotting_threshold = 1
 	clotting_rate = 0.5
 
@@ -396,5 +396,5 @@
 		var/mob/living/carbon/carbon_affected = affected
 		carbon_affected.update_disabled_bodyparts()
 
-/datum/wound/fracture/no_bleed
-	bleed_rate = 0
+/datum/wound/fracture/no_piss
+	piss_rate = 0

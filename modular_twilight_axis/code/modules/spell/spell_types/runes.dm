@@ -37,7 +37,7 @@
 	oxy = target.getOxyLoss()
 	toxin = target.getToxLoss()
 	origin = get_turf(target)
-	blood = target.blood_volume
+	blood = target.urine_volume
 	var/datum/status_effect/fire_handler/fire_stacks/fire_status = target.has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
 	firestacks = fire_status?.stacks
 	var/datum/status_effect/fire_handler/fire_stacks/sunder/sunder_status = target.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder)
@@ -67,8 +67,8 @@
 		target.adjustOxyLoss(oxynew*-1 + oxy)
 	if(toxinnew>toxin)
 		target.adjustToxLoss(target.getToxLoss()*-1 + toxin)
-	if(target.blood_volume<blood)
-		target.blood_volume = blood
+	if(target.urine_volume<blood)
+		target.urine_volume = blood
 	playsound(target.loc, 'sound/magic/timereverse.ogg', 100, FALSE)
 
 /obj/effect/proc_holder/spell/invoked/stasis/proc/play_indicator(mob/living/carbon/target, icon_path, overlay_name, clear_time, overlay_layer)

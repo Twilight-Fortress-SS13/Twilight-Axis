@@ -762,7 +762,7 @@ Inquisitorial armory down here
 			visible_message(span_warning("[src] draws from [M]!"))
 			playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
 			timestaken++
-			M.blood_volume = max(M.blood_volume-30, 0)
+			M.urine_volume = max(M.urine_volume-30, 0)
 			M.handle_blood()
 			icon_state = "indexer_used"
 			if(M.mind)
@@ -824,7 +824,7 @@ Inquisitorial armory down here
 					playsound(M, 'sound/combat/hits/bladed/genstab (1).ogg', 30, FALSE, -1)
 					return
 
-		if(M.blood_volume <= 0)
+		if(M.urine_volume <= 0)
 			visible_message(span_warning("[user] goes to jab [M] with [src]!"))
 			if(do_after(user, 20, FALSE, M))
 				src.say("ERROR. THEY ARE COMPLETELY DEVOID OF BLOOD.")
@@ -1430,7 +1430,7 @@ Inquisitorial armory down here
 				if(M.show_redflash())
 					user.flash_fullscreen("redflash3")
 				user.adjustBruteLoss(40)
-				user.blood_volume = max(user.blood_volume-240, 0)
+				user.urine_volume = max(user.urine_volume-240, 0)
 				user.handle_blood()
 				whofedme = user
 				openstate = "bloody"
@@ -1443,7 +1443,7 @@ Inquisitorial armory down here
 				playsound(M, 'sound/items/blackmirror_needle.ogg', 95, FALSE, 3)
 				if(M.show_redflash())
 					M.flash_fullscreen("redflash3")
-				M.blood_volume = max(user.blood_volume-240, 0)
+				M.urine_volume = max(user.urine_volume-240, 0)
 				M.adjustBruteLoss(40)
 				M.handle_blood()
 				whofedme = M

@@ -1,7 +1,7 @@
 /datum/wound/bruise
 	name = "hematoma"
 	whp = 30
-	bleed_rate = 0
+	piss_rate = 0
 	clotting_threshold = null
 	sewn_clotting_threshold = null
 	woundpain = 10
@@ -16,14 +16,14 @@
 /datum/wound/bruise/small
 	name = "bruise"
 	whp = 15
-	bleed_rate = 0
+	piss_rate = 0
 	woundpain = 5
 	sew_threshold = 25
 
 /datum/wound/bruise/large
 	name = "massive hematoma"
 	whp = 40
-	bleed_rate = 0.9
+	piss_rate = 0.9
 	clotting_rate = 0.02
 	clotting_threshold = 0.3
 	woundpain = 25
@@ -31,7 +31,7 @@
 /datum/wound/bruise/woundheal
 	name = "healed hematoma"
 	whp = 240	//2 mins passively, quicker w/ a miracle
-	bleed_rate = 0
+	piss_rate = 0
 	clotting_rate = 0
 	clotting_threshold = 0
 	passive_healing = 1
@@ -41,7 +41,7 @@
 /datum/wound/dynamic/bruise
 	name = "hematoma"
 	whp = 5
-	bleed_rate = 0
+	piss_rate = 0
 	clotting_threshold = null
 	sewn_clotting_threshold = null
 	woundpain = 5
@@ -59,7 +59,7 @@
 	)
 
 //Bruise Omniwounds
-//Vaguely: Hella painful. No bleeding. No armor interactions. Every hit also increases its self heal by a little bit.
+//Vaguely: Hella painful. No pissing. No armor interactions. Every hit also increases its self heal by a little bit.
 
 #define BRUISE_UPG_WHPRATE 1
 #define BRUISE_UPG_PAINRATE 1

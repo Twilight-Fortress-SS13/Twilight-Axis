@@ -17,7 +17,7 @@
 	var/mob/living/carbon/grabbee
 	var/list/dependents = list()
 	var/handaction
-	var/bleed_suppressing = 0.5 //multiplier for how much we suppress bleeding, can accumulate so two grabs multiply together. An aggressive grip tightens this further.
+	var/piss_suppressing = 0.5 //multiplier for how much we suppress pissing, can accumulate so two grabs multiply together. An aggressive grip tightens this further.
 	var/chokehold = FALSE
 	var/sippy = FALSE
 	experimental_inhand = FALSE
@@ -210,7 +210,7 @@
 			user.stamina_add(rand(7,15))
 			M.grippedby(user)			//Aggro grip
 			if(grab_state >= GRAB_AGGRESSIVE)
-				bleed_suppressing = 0.25	//Better bleed suppression
+				piss_suppressing = 0.25	//Better piss suppression
 		if(/datum/intent/grab/choke)
 			if(user.buckled)
 				to_chat(user, span_warning("I can't do this while buckled!"))
@@ -693,7 +693,7 @@
 	icon_state = "bite"
 	d_type = "stab"
 	slot_flags = ITEM_SLOT_MOUTH
-	bleed_suppressing = 1
+	piss_suppressing = 1
 
 /obj/item/grabbing/bite/Click(location, control, params)
 	var/list/modifiers = params2list(params)

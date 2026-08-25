@@ -194,10 +194,10 @@
 	if(try_soak_tallow_with_reagent(
 		I,
 		user,
-		list(/datum/reagent/blood),
-		"Soak the tallow in blood?",
+		list(/datum/reagent/urine),
+		"Soak the tallow in urine?",
 		"Prepare Redtallow",
-		"You soak the tallow in blood, turning it into redtallow.",
+		"You soak the tallow in urine, turning it into redtallow.",
 	))
 		return TRUE
 

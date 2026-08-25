@@ -18,7 +18,7 @@
 	var/siemens_coeff = 1	// resistance to shocks
 
 	var/stun_mod = 1			// % stun modifier
-	var/bleed_mod = 1			// % bleeding modifier
+	var/piss_mod = 1			// % pissing modifier
 	var/pain_mod = 1		// % pain modifier
 	var/datum/armor/armor	// internal armor datum
 

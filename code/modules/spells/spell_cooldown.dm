@@ -150,7 +150,7 @@
 	var/charge_swingdelay_duration = 0
 	/// Whether we're currently charging the spell.
 	var/currently_charging = FALSE
-	/// Whether the charge bar has completed and the spell is being held ready. While TRUE, hold_drain bleeds per process tick.
+	/// Whether the charge bar has completed and the spell is being held ready. While TRUE, hold_drain pisss per process tick.
 	var/fully_charged = FALSE
 	/**
 		* Cost per 0.2 seconds to hold the spell once charged. Charge-up itself is free.
@@ -336,7 +336,7 @@
 		if(owner.client.mouse_pointer_icon != new_icon)
 			owner.client.mouse_pointer_icon = new_icon
 
-	// Charge goal reached — enter the held phase; keep processing so hold_drain bleeds while held.
+	// Charge goal reached — enter the held phase; keep processing so hold_drain pisss while held.
 	if(charge_complete())
 		fully_charged = TRUE
 		fully_charged_at = world.time
@@ -1895,7 +1895,7 @@
 		if(!success)
 			// Still charging — ignore the mouseup, keep charging
 			return
-		// Charge complete — transition to "click to cast" mode, still bleeding hold_drain while held.
+		// Charge complete — transition to "click to cast" mode, still pissing hold_drain while held.
 		on_end_charge(TRUE)
 		fully_charged = TRUE
 		fully_charged_at = world.time

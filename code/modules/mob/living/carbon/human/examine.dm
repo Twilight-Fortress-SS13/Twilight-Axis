@@ -124,7 +124,7 @@
 					if(shit)
 						. += shit
 		if(user.mind?.has_antag_datum(/datum/antagonist/vampire) || user.mind?.has_antag_datum(/datum/antagonist/vampire))
-			. += span_userdanger("<a href='?src=[REF(src)];task=bloodpoolinfo;'>Vitae: [(mind && !clan) ? (bloodpool * CLIENT_VITAE_MULTIPLIER) : bloodpool]; Blood: [blood_volume]</a>")
+			. += span_userdanger("<a href='?src=[REF(src)];task=bloodpoolinfo;'>Vitae: [(mind && !clan) ? (bloodpool * CLIENT_VITAE_MULTIPLIER) : bloodpool]; Blood: [urine_volume]</a>")
 
 	/*if(SSmapping.config.map_name == "Desert Town")
 		var/species_origin = src.dna?.species?.origin
@@ -302,7 +302,7 @@
 		if(is_stupid)
 			str = "[m3] a pair of gloves of some kind!"
 		. += str
-	else if(FR && length(FR.blood_DNA))
+	else if(FR && length(FR.urine_DNA))
 		var/hand_number = get_num_arms(FALSE)
 		if(hand_number)
 			if(is_stupid)
@@ -517,32 +517,32 @@
 				msg += span_danger("[m1] gravely wounded.")
 
 	// Blood volume
-	switch(blood_volume)
-		if(-INFINITY to BLOOD_VOLUME_SURVIVE)
+	switch(urine_volume)
+		if(-INFINITY to URINE_VOLUME_SURVIVE)
 			msg += span_artery("<B>[m1] extremely pale and sickly.</B>")
-		if(BLOOD_VOLUME_SURVIVE to BLOOD_VOLUME_BAD)
+		if(URINE_VOLUME_SURVIVE to URINE_VOLUME_BAD)
 			msg += span_artery("<B>[m1] very pale.</B>")
-		if(BLOOD_VOLUME_BAD to BLOOD_VOLUME_OKAY)
+		if(URINE_VOLUME_BAD to URINE_VOLUME_OKAY)
 			msg += span_artery("[m1] pale.")
-		if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
+		if(URINE_VOLUME_OKAY to URINE_VOLUME_SAFE)
 			msg += span_artery("[m1] a little pale.")
 
-	// Bleeding
-	var/bleed_rate = get_bleed_rate()
-	if(bleed_rate)
+	// Pissing
+	var/piss_rate = get_piss_rate()
+	if(piss_rate)
 		if(!is_stupid)
-			var/bleed_wording = "bleeding"
-			switch(bleed_rate)
+			var/piss_wording = "pissing"
+			switch(piss_rate)
 				if(0 to 1)
-					bleed_wording = "bleeding slightly"
+					piss_wording = "pissing slightly"
 				if(1 to 5)
-					bleed_wording = "bleeding"
+					piss_wording = "pissing"
 				if(5 to 10)
-					bleed_wording = "bleeding a lot"
+					piss_wording = "pissing a lot"
 				if(10 to INFINITY)
-					bleed_wording = "bleeding profusely"
-			var/list/bleeding_limbs = list()
-			var/static/list/bleed_zones = list(
+					piss_wording = "pissing profusely"
+			var/list/pissing_limbs = list()
+			var/static/list/piss_zones = list(
 				BODY_ZONE_HEAD,
 				BODY_ZONE_CHEST,
 				BODY_ZONE_R_ARM,
@@ -550,21 +550,21 @@
 				BODY_ZONE_R_LEG,
 				BODY_ZONE_L_LEG,
 			)
-			for(var/bleed_zone in bleed_zones)
-				var/obj/item/bodypart/bleeder = get_bodypart(bleed_zone)
-				if(!bleeder?.get_bleed_rate() || (!observer_privilege && !get_location_accessible(src, bleeder.body_zone)))
+			for(var/piss_zone in piss_zones)
+				var/obj/item/bodypart/pisser = get_bodypart(piss_zone)
+				if(!pisser?.get_piss_rate() || (!observer_privilege && !get_location_accessible(src, pisser.body_zone)))
 					continue
-				bleeding_limbs += parse_zone(bleeder.body_zone)
-			if(length(bleeding_limbs))
-				if(bleed_rate >= 5)
-					msg += span_bloody("<B>[capitalize(m2)] [english_list(bleeding_limbs)] [bleeding_limbs.len > 1 ? "are" : "is"] [bleed_wording]!</B>")
+				pissing_limbs += parse_zone(pisser.body_zone)
+			if(length(pissing_limbs))
+				if(piss_rate >= 5)
+					msg += span_bloody("<B>[capitalize(m2)] [english_list(pissing_limbs)] [pissing_limbs.len > 1 ? "are" : "is"] [piss_wording]!</B>")
 				else
-					msg += span_bloody("[capitalize(m2)] [english_list(bleeding_limbs)] [bleeding_limbs.len > 1 ? "are" : "is"] [bleed_wording]!")
+					msg += span_bloody("[capitalize(m2)] [english_list(pissing_limbs)] [pissing_limbs.len > 1 ? "are" : "is"] [piss_wording]!")
 			else
-				if(bleed_rate >= 5)
-					msg += span_bloody("<B>[m1] [bleed_wording]</B>!")
+				if(piss_rate >= 5)
+					msg += span_bloody("<B>[m1] [piss_wording]</B>!")
 				else
-					msg += span_bloody("[m1] [bleed_wording]!")
+					msg += span_bloody("[m1] [piss_wording]!")
 		else
 			if(isliving(user))
 				var/mob/living/M = user

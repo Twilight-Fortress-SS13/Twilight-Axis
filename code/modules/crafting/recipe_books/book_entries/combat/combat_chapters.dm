@@ -38,7 +38,7 @@
 		<h3>Surrender / Yielding</h3>
 		<p>By default, mechanical Surrender / Yielding is bound to <b>Shift + X</b>, though many players opt to unbind the key to avoid accidental yield in combat.</p>
 
-		<p>Mechanical surrender / yielding puts a surrender flag animation over your character and forces you to lay down. It gives you resistance against critical wounds and greatly slows down your bleeding. It also renders you unable to do any actions.</p>
+		<p>Mechanical surrender / yielding puts a surrender flag animation over your character and forces you to lay down. It gives you resistance against critical wounds and greatly slows down your pissing. It also renders you unable to do any actions.</p>
 
 		<p>This can be useful for signalling to players during / after fight that you are mechanically surrendering and to spare you. Based on their own IC reasonings, they can choose to capture, kill, heal, or ignore you. All of the options are fine and in general, considered within the rules.</p>
 
@@ -64,12 +64,12 @@
 /datum/book_entry/combat/survival/inner_book_html(mob/user)
 	return {"
 		<div>
-		<h3>Bleeding and the Sewing Needle</h3>
-		<p>Bleeding is one of the primary causes of death whether you are adventuring or PVPing.</p>
+		<h3>Pissing and the Sewing Needle</h3>
+		<p>Pissing is one of the primary causes of death whether you are adventuring or PVPing.</p>
 
 		<p>You can craft a sewing needle by clicking "Craft" on the top left, while you have 1 fiber and 1 thorn. Fiber can be found by cutting grass with a sharp weapon or searching a bush (left click), whereas thorn can also be found in the same way.</p>
 
-		<p>To sew a bleeding wound, aim for the bleeding zone on yourself or another and then left click. Higher Medicine skill drastically improves effectiveness. No Medicine Skill makes it very slow.</p>
+		<p>To sew a pissing wound, aim for the pissing zone on yourself or another and then left click. Higher Medicine skill drastically improves effectiveness. No Medicine Skill makes it very slow.</p>
 
 		<h3>Hunger and Thirst</h3>
 		<p>Keep yourself topped up on nutrition. You can search bushes for jacksberries that can make for basic food for non-nobles. Take only one bite at a time, and if you taste they are bitter, refrain from biting any further and remember that color is poisonous for the week. Sometimes, the poisonous and normal jacksberries can have the same color. You can also buy and barter for food from other roles in town. Spending energy and just existing both use up your Energy, which draws from your nutrition. You can eat up ahead of time a little to keep yourself topped up.</p>
@@ -243,7 +243,7 @@
 	return {"
 		<div>
 		<h3>Health and Critical Wounds</h3>
-		<p>Once armor is broken, weapons and attacks will start attacking your limbs directly. This can cause bleeding, pain, and decrease the effective HP of your limbs.</p>
+		<p>Once armor is broken, weapons and attacks will start attacking your limbs directly. This can cause pissing, pain, and decrease the effective HP of your limbs.</p>
 
 		<p>Certain armor piercing weapons can cause critical wounds if the limb behind it is sufficiently damaged.</p>
 
@@ -259,12 +259,12 @@
 
 		<p>The torso the toughest body part to aim at, and remaining limbs and heads are of the same toughness. Their health scales with your Constitution, and high Constitution characters will survive markably longer after their armor is broken.</p>
 
-		<h3>Bleeding</h3>
-		<p>Most creatures and players bleed and can die from bleeding out and then the oxygen loss that results, though you should not refer to it as oxygen loss in an in character manner. As you lose blood, your stats are impaired until you are finally knocked out and must be helped by someone else to have a chance of survival.</p>
+		<h3>Pissing</h3>
+		<p>Most creatures and players piss and can die from pissing out and then the oxygen loss that results, though you should not refer to it as oxygen loss in an in character manner. As you lose blood, your stats are impaired until you are finally knocked out and must be helped by someone else to have a chance of survival.</p>
 
-		<p>To deal with bleeding, you can use a needle to sew up the wound, bandage prepared by cloth to bandage the wound and slow it down, health potion (Known commonly as Red, and Lyfeblood IC) to heal the wounds. Clean Water can replenish your blood rapidly and allow you to survive otherwise fatal bleeding and is generally used for stabilization.</p>
+		<p>To deal with pissing, you can use a needle to sew up the wound, bandage prepared by cloth to bandage the wound and slow it down, health potion (Known commonly as Red, and Lyfeblood IC) to heal the wounds. Clean Water can replenish your blood rapidly and allow you to survive otherwise fatal pissing and is generally used for stabilization.</p>
 
-		<p>Grabbing the spot that is bleeding with a free hand will reduce the rate you bleed quickly, and upgrading that into an aggressive grab reduces it further. Grabbing it with your other hand as well cuts it down more again - the two hands multiply together.</p>
+		<p>Grabbing the spot that is pissing with a free hand will reduce the rate you piss quickly, and upgrading that into an aggressive grab reduces it further. Grabbing it with your other hand as well cuts it down more again - the two hands multiply together.</p>
 
 		<h3>Pain</h3>
 		<p>Being hit with certain wounds causes your character to be in pain, represented by your screen flashing red at various intensity.</p>
@@ -301,14 +301,14 @@
 		<p>This category contains two damage types, each with its own unique rules. If the zone has any armor on it at all, none of the damage reaches your HP. The armor's rating decides how much integrity the armor loses instead - the better the rating, the smaller the actual damage that the armor takes. No rating will completely prevent damage.</p>
 		<ul>
 			<li><b>Blunt</b>: Blunt Attacks tend to cause a lot of pain when they get through armor, and cause fractures that can disable the limbs. It is often aimed for on the head or chest for maximum effectiveness. As a rule of thumb, Blunt Attacks NEVER penetrate armor. They come with a devastating integrity modifier by default that makes them exceptionally effective vs metal armor. Blunt Attack is a damage reduction type of damage, and light armor in particular are very good at reducing the effective damage of blunt attack. Blunt attacks, uniquely, will also carry through a significant portion of their damage to underlaying armor layers (but not flesh) when attacking.</li>
-			<li><b>Burn</b>: Burn attacks tend to be exclusively used by magical spells and certain divine miracles. Its damage too, is effectively reduced by the armor's rating. It does not penetrate just like Blunt. However, it does not carry through its damage to underlaying layers like Blunt - it lands on a single layer instead. Worn metal armor absorbs fire even when it shows no fire rating at all. Burn wounds tend to cause decent amount of pain and bleeding and can be sewn shut.</li>
+			<li><b>Burn</b>: Burn attacks tend to be exclusively used by magical spells and certain divine miracles. Its damage too, is effectively reduced by the armor's rating. It does not penetrate just like Blunt. However, it does not carry through its damage to underlaying layers like Blunt - it lands on a single layer instead. Worn metal armor absorbs fire even when it shows no fire rating at all. Burn wounds tend to cause decent amount of pain and pissing and can be sewn shut.</li>
 		</ul>
 
 		<h3>Blocking Types</h3>
 		<p>Blocking types of damage do not suffer from damage reduction versus any kind of armor, and instead its damage is applied 1 to 1 to the armor itself. Its secondary property is Penetration, which determines if the attack goes through the armor and attacks the limbs behind it directly. Penetration below the armor's blocking tier is stopped dead. Penetration that meets or beats it get some damage through. The greater the armor is outmatched and the stronger your Strength / Speed are, the more go through. So long as armor exists, the full damage will never go through.</p>
 		<ul>
-			<li><b>Slashing</b>: Slashing attacks tend to cause a lot of bleeding and cause artery critical wounds, which makes an opponent bleed out rapidly. They often come with weapons that can strike swiftly like swords, or hard like axe. Slashing attacks tend to not have the abilities to penetrate armor, but have a lot of raw damage.</li>
-			<li><b>Stabbing</b>: Stabbing attacks tend to be less deadly than attacks caused by slashing, but can cause bone fractures that disable the limbs. They often come with weapons that can stab through light or heavy armor like Daggers, Stabbing Swords and Polearms. Stabbing attacks tend to be effective versus light armor by causing punctures and bleed through it, in exchange for lower effectiveness versus cutting attacks.</li>
+			<li><b>Slashing</b>: Slashing attacks tend to cause a lot of pissing and cause artery critical wounds, which makes an opponent piss out rapidly. They often come with weapons that can strike swiftly like swords, or hard like axe. Slashing attacks tend to not have the abilities to penetrate armor, but have a lot of raw damage.</li>
+			<li><b>Stabbing</b>: Stabbing attacks tend to be less deadly than attacks caused by slashing, but can cause bone fractures that disable the limbs. They often come with weapons that can stab through light or heavy armor like Daggers, Stabbing Swords and Polearms. Stabbing attacks tend to be effective versus light armor by causing punctures and piss through it, in exchange for lower effectiveness versus cutting attacks.</li>
 			<li><b>Piercing</b>: Piercing is a variant of stabbing with its own armor value, used by arrows and certain spells. It causes puncture wounds that are like Stabbing, but live in a different armor track. Light Armor tends to be great against Piercing attacks.</li>
 		</ul>
 
@@ -547,7 +547,7 @@
 			<li><b>Longbow</b>, scaling slightly with STR, each arrow dealing a significantly higher amount of damage in exchange for a lower ROF.</li>
 		</ul>
 
-		<p>The most common arrows are Broadhead Arrows, which deal a large amount of integrity and normal damage but cannot pierce most armor. Bodkin Arrows pierce through armor and can bleed an opponent out or inflict critical wounds through armor, but have a much lower base damage.</p>
+		<p>The most common arrows are Broadhead Arrows, which deal a large amount of integrity and normal damage but cannot pierce most armor. Bodkin Arrows pierce through armor and can piss an opponent out or inflict critical wounds through armor, but have a much lower base damage.</p>
 
 		<p>There are also special arrows available by crafting and using a Runic Flask.</p>
 

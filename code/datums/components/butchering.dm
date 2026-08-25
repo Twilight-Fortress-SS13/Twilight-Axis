@@ -37,15 +37,15 @@
 	playsound(H.loc, butcher_sound, 50, TRUE, -1)
 	if(do_mob(user, H, CLAMP(500 / source.force, 30, 100)) && H.Adjacent(source))
 		if(H.has_status_effect(/datum/status_effect/neck_slice))
-			user.show_message(span_warning("[H]'s neck has already been already cut, you can't make the bleeding any worse!"), MSG_VISUAL, \
-							span_warning("Their neck has already been already cut, you can't make the bleeding any worse!"))
+			user.show_message(span_warning("[H]'s neck has already been already cut, you can't make the pissing any worse!"), MSG_VISUAL, \
+							span_warning("Their neck has already been already cut, you can't make the pissing any worse!"))
 			return
 
 		H.visible_message(span_danger("[user] slits [H]'s throat!"), \
 					span_danger("[user] slits my throat..."))
 		log_combat(user, H, "finishes slicing the throat of")
 		H.apply_damage(source.force, BRUTE, BODY_ZONE_HEAD)
-		H.bleed_rate = CLAMP(H.bleed_rate + 20, 0, 30)
+		H.piss_rate = CLAMP(H.piss_rate + 20, 0, 30)
 		H.apply_status_effect(/datum/status_effect/neck_slice)
 
 /datum/component/butchering/proc/Butcher(mob/living/butcher, mob/living/meat)

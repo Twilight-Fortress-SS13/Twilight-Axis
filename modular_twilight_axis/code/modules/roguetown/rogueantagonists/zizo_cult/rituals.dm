@@ -557,7 +557,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(!istype(user.patron, /datum/patron/inhumen/zizo))
 		return
 	if(istype(target.patron, /datum/patron/inhumen/zizo))
-		target.blood_volume = BLOOD_VOLUME_MAXIMUM
+		target.urine_volume = URINE_VOLUME_MAXIMUM
 		to_chat(target, span_notice("My elixir of life is stagnant once again."))
 		qdel(src)
 		return

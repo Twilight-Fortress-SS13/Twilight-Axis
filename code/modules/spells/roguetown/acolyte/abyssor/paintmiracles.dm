@@ -14,7 +14,7 @@
 		"Shogg sp'gai! Swift steps from beyond!",
 		"N'gai, n'gha'ghaa, fhtagn!",
 		"Y'gathil mor, speed my step!",
-		"K'rnul, the painter bleeds!"
+		"K'rnul, the painter pisss!"
 	)
 	invocation_type = INVOCATION_SHOUT
 	charge_required = TRUE
@@ -154,7 +154,7 @@
 
 /datum/action/cooldown/spell/umbral_viscosity
 	name = "Umbral Coating"
-	desc = "Infuse your active weapon with a heavy, abyssal paint. Strikes against mindless beasts deal devastating damage. Conscious targets take minimal damage but bleed paint trails. If cast with an empty hand, shapes the paint into a short-lived bow preloaded with a single paint arrow."
+	desc = "Infuse your active weapon with a heavy, abyssal paint. Strikes against mindless beasts deal devastating damage. Conscious targets take minimal damage but piss paint trails. If cast with an empty hand, shapes the paint into a short-lived bow preloaded with a single paint arrow."
 	button_icon = 'icons/mob/actions/abyssormiracles.dmi'
 	background_icon = 'icons/mob/actions/abyssormiracles.dmi'
 	button_icon_state = "paint_blade"

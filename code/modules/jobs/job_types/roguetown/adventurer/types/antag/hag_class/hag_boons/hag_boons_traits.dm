@@ -82,10 +82,10 @@
 	desc = "Enhances the bearer's abiliy to dodge, so long as they are not wearing medium or heavy armor."
 	points = 30
 
-/datum/hag_boon/trait/bleed_resistance
-	name = "Trait - Bleeding Resistance"
+/datum/hag_boon/trait/piss_resistance
+	name = "Trait - Pissing Resistance"
 	trait_to_apply = TRAIT_BLOOD_RESISTANCE
-	desc = "Slows the rate at which one bleeds."
+	desc = "Slows the rate at which one pisss."
 	points = 50
 
 /datum/hag_boon/trait/grab_immunity

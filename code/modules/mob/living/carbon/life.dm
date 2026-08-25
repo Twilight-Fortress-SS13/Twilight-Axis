@@ -489,7 +489,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			if(limb.get_damage() >= limb.max_damage)
 				limb.cremation_progress += rand(2,5)
 				if(dna && dna.species && !(NOBLOOD in dna.species.species_traits))
-					blood_volume = max(blood_volume - 10, 0)
+					urine_volume = max(urine_volume - 10, 0)
 				if(limb.cremation_progress >= 50)
 					if(limb.status == BODYPART_ORGANIC) //Non-organic limbs don't burn
 						limb.skeletonize()
@@ -534,7 +534,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 				should_update_body = TRUE
 				if(dna && dna.species)
 					if(dna && dna.species && !(NOBLOOD in dna.species.species_traits))
-						blood_volume = 0
+						urine_volume = 0
 					dna.species.species_traits |= NOBLOOD
 
 	if(should_update_body)
@@ -635,11 +635,11 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 		if(nutrition > 0 || doesnt_hunger)
 			energy_add(sleepy_mod * 15)
 		if(hydration > 0 || doesnt_hunger)
-			if(!bleed_rate)
-				blood_volume = min(blood_volume + (4 * sleepy_mod), BLOOD_VOLUME_NORMAL)
+			if(!piss_rate)
+				urine_volume = min(urine_volume + (4 * sleepy_mod), URINE_VOLUME_NORMAL)
 			for(var/obj/item/bodypart/affecting as anything in bodyparts)
 				//for context, it takes 5 small cuts (0.2 x 5) or 3 normal cuts (0.4 x 3) for a bodypart to not be able to heal itself
-				if(affecting.get_bleed_rate() >= 1 && !HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE)) // however, if you're undead - and therefore won't deadite - we let you get back up after a VERY long time, bcs otherwise any artery can be an RR
+				if(affecting.get_piss_rate() >= 1 && !HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE)) // however, if you're undead - and therefore won't deadite - we let you get back up after a VERY long time, bcs otherwise any artery can be an RR
 					continue
 				if(affecting.heal_damage(sleepy_mod, sleepy_mod, required_status = BODYPART_ORGANIC))
 					src.update_damage_overlays()

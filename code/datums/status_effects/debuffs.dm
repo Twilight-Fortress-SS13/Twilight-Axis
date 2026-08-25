@@ -245,25 +245,25 @@
 /datum/status_effect/pacify/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_PACIFISM, "status_effect")
 
-/datum/status_effect/stacking/saw_bleed
-	id = "saw_bleed"
+/datum/status_effect/stacking/saw_piss
+	id = "saw_piss"
 	tick_interval = 6
 	delay_before_decay = 5
 	stack_threshold = 10
 	max_stacks = 10
-	overlay_file = 'icons/effects/bleed.dmi'
-	underlay_file = 'icons/effects/bleed.dmi'
-	overlay_state = "bleed"
-	underlay_state = "bleed"
-	var/bleed_damage = 200
+	overlay_file = 'icons/effects/piss.dmi'
+	underlay_file = 'icons/effects/piss.dmi'
+	overlay_state = "piss"
+	underlay_state = "piss"
+	var/piss_damage = 200
 
-/datum/status_effect/stacking/saw_bleed/fadeout_effect()
-	new /obj/effect/temp_visual/bleed(get_turf(owner))
+/datum/status_effect/stacking/saw_piss/fadeout_effect()
+	new /obj/effect/temp_visual/piss(get_turf(owner))
 
-/datum/status_effect/stacking/saw_bleed/threshold_cross_effect()
-	owner.adjustBruteLoss(bleed_damage)
+/datum/status_effect/stacking/saw_piss/threshold_cross_effect()
+	owner.adjustBruteLoss(piss_damage)
 	var/turf/T = get_turf(owner)
-	new /obj/effect/temp_visual/bleed/explode(T)
+	new /obj/effect/temp_visual/piss/explode(T)
 	for(var/d in GLOB.alldirs)
 		var/obj/effect/temp_visual/dir_setting/bloodsplatter/splatter = new(T, d)
 		var/mob/living/L = owner
@@ -278,7 +278,7 @@
 
 /datum/status_effect/neck_slice/tick()
 	var/mob/living/carbon/human/H = owner
-	if(H.stat == DEAD || H.bleed_rate <= 8)
+	if(H.stat == DEAD || H.piss_rate <= 8)
 		H.remove_status_effect(/datum/status_effect/neck_slice)
 	if(prob(10))
 		H.emote(pick("gasp", "gag", "choke"))

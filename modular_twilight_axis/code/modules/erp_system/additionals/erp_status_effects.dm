@@ -257,7 +257,7 @@
 		return
 	var/turf/turf = get_turf(owner)
 	new /obj/effect/decal/cleanable/coom(turf)
-	playsound(owner, pick('sound/misc/bleed (1).ogg', 'sound/misc/bleed (2).ogg', 'sound/misc/bleed (3).ogg'), 50, TRUE, -2, ignore_walls = FALSE)
+	playsound(owner, pick('sound/misc/piss (1).ogg', 'sound/misc/piss (2).ogg', 'sound/misc/piss (3).ogg'), 50, TRUE, -2, ignore_walls = FALSE)
 	last_loc = cur_loc
 
 /atom/movable/screen/alert/status_effect/knot_gaped

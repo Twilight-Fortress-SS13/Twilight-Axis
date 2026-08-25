@@ -102,7 +102,7 @@
 			if(bandage)
 				var/usedclass = "notice"
 				var/extra_text = ""
-				if(bandage.return_blood_DNA())
+				if(bandage.return_urine_DNA())
 					usedclass = "bloody"
 					extra_text = " (bloodied)"
 				else if(istype(bandage, /obj/item/natural/cloth))
@@ -178,12 +178,12 @@
 				else
 					status += span_warning("[light_burn_msg]")
 
-	var/bleed_rate = get_bleed_rate()
-	if(bleed_rate)
-		if(bleed_rate > 1) //Totally arbitrary value
-			status += span_bloody("<B>BLEEDING</B>")
+	var/piss_rate = get_piss_rate()
+	if(piss_rate)
+		if(piss_rate > 1) //Totally arbitrary value
+			status += span_bloody("<B>PISSING</B>")
 		else
-			status += span_bloody("BLEEDING")
+			status += span_bloody("PISSING")
 
 	var/crazy_infection = FALSE
 	var/list/wound_strings = list()
@@ -227,8 +227,8 @@
 	if(disabled)
 		status += span_deadsay("CRIPPLED")
 
-	// Is this bodypart being stemmed, and if so, by how many grabs? Only show this if we're bleeding on that limb.
-	if(bleed_rate)
+	// Is this bodypart being stemmed, and if so, by how many grabs? Only show this if we're pissing on that limb.
+	if(piss_rate)
 		var/stemmed_number = length(grabbedby)
 		if(stemmed_number) // If the wound is being stemmed by a grab, add that to status.
 			status += span_boldgreen("STEMMED*[stemmed_number]")
@@ -292,8 +292,8 @@
 	for(var/t in missing)
 		to_chat(src, span_boldannounce("My [parse_zone(t)] is missing!"))
 
-	if(bleed_rate)
-		to_chat(src, span_danger("I am bleeding!"))
+	if(piss_rate)
+		to_chat(src, span_danger("I am pissing!"))
 	if(getStaminaLoss())
 		if(getStaminaLoss() > 30)
 			to_chat(src, span_info("You're completely exhausted."))

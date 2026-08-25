@@ -524,7 +524,7 @@
 /obj/structure/flora/grass/jungle/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Grass, bushes, and most kinds of foliage can be sliced away by hitting them with the 'CUT', 'CHOP', or 'REND' intents on bladed weapons. Using a torch or lamptern on foliage can burn it away, as well.")
-	. += span_info("Left-clicking a bush allows you to forage through it. Most common bushes are rife with thorns, fibers, and jackberries; others can hold unique herbs and flowers, perfect for alchemists and bleeding hearts alike.")
+	. += span_info("Left-clicking a bush allows you to forage through it. Most common bushes are rife with thorns, fibers, and jackberries; others can hold unique herbs and flowers, perfect for alchemists and pissing hearts alike.")
 	. += span_info("Moving through foliage has a chance to attract an ambush. The farther you're away from civilization, the more dangerous that these ambushes can become. Most ambushes can be avoided by toggling the 'SNEAK' button on your HUD, before moving through the foliage.")
 	. += span_info("Some structures can be used as hiding places. Toggle the 'SNEAK' button on your HUD, then click the structure to hide in it. You can stop hiding by clicking the structure again, or by moving out of it.")
 
@@ -554,7 +554,7 @@
 /obj/structure/flora/junglebush/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Grass, bushes, and most kinds of foliage can be sliced away by hitting them with the 'CUT', 'CHOP', or 'REND' intents on bladed weapons. Using a torch or lamptern on foliage can burn it away, as well.")
-	. += span_info("Left-clicking a bush allows you to forage through it. Most common bushes are rife with thorns, fibers, and jackberries; others can hold unique herbs and flowers, perfect for alchemists and bleeding hearts alike.")
+	. += span_info("Left-clicking a bush allows you to forage through it. Most common bushes are rife with thorns, fibers, and jackberries; others can hold unique herbs and flowers, perfect for alchemists and pissing hearts alike.")
 	. += span_info("Moving through foliage has a chance to attract an ambush. The farther you're away from civilization, the more dangerous that these ambushes can become. Most ambushes can be avoided by toggling the 'SNEAK' button on your HUD, before moving through the foliage.")
 	. += span_info("Some structures can be used as hiding places. Toggle the 'SNEAK' button on your HUD, then click the structure to hide in it. You can stop hiding by clicking the structure again, or by moving out of it.")
 

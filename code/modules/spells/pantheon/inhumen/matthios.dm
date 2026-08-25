@@ -367,7 +367,7 @@
 	var/list/invocations = list(
 		"Gold to glory, Matthios guide my hand!",
 		"Wealth be spent, and power be gained!",
-		"My hoard bleeds for strength, in His name!",
+		"My hoard pisss for strength, in His name!",
 		"Matthios! A king's ransom for a single blow!",
 		"Grant the weight of mine greed, Matthios!",
 	)

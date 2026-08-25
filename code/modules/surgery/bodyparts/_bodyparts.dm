@@ -95,11 +95,11 @@
 	/// Visual features of the bodypart, such as hair and accessories
 	var/list/bodypart_features
 
-	/// Whether the bodypart has unlimited bleeding.
-	var/unlimited_bleeding = FALSE
+	/// Whether the bodypart has unlimited pissing.
+	var/unlimited_pissing = FALSE
 
-	/// Cached variable that reflects how much bleeding our wounds are applying to the limb. Handled inside each individual wound.
-	var/bleeding = 0
+	/// Cached variable that reflects how much pissing our wounds are applying to the limb. Handled inside each individual wound.
+	var/pissing = 0
 
 	/// Is the limb flagged for two-stage death handling? (aka, decaps will instantly kill first, THEN remove the head on second apply)
 	var/two_stage_death = FALSE
@@ -285,7 +285,7 @@
 		qdel(I)
 	skeletonized = TRUE
 	for(var/datum/wound/bloody_wound as anything in wounds)
-		if(isnull(bloody_wound.bleed_rate))
+		if(isnull(bloody_wound.piss_rate))
 			continue
 		qdel(bloody_wound)
 

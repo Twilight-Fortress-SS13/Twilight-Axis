@@ -31,7 +31,7 @@ Custom faction: <input type="text" name="faction_custom" value="" style="width:2
 	H.name = H.real_name
 	H.skin_tone = random_skin_tone()
 	H.eye_color = random_eye_color()
-	H.dna.blood_type = random_blood_type()
+	H.dna.urine_type = random_urine_type()
 
 	H.update_body()
 	H.update_hair()

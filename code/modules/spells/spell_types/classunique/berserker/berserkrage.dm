@@ -31,7 +31,7 @@
 		return FALSE
 	user.apply_status_effect(/datum/status_effect/buff/rage)
 	if(get_buff_value(user) >= 1)
-		user.apply_status_effect(/datum/status_effect/buff/adrenaline_rush) //15 seconds of no bleed, stamina restore, minor buff
+		user.apply_status_effect(/datum/status_effect/buff/adrenaline_rush) //15 seconds of no piss, stamina restore, minor buff
 	if(get_buff_value(user) >= 2)
 		user.apply_status_effect(/datum/status_effect/buff/rage_stamina)
 	if(get_buff_value(user) >= 3)

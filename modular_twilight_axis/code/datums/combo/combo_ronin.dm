@@ -604,7 +604,7 @@
 
 	target.adjustFireLoss(burn)
 
-/datum/component/combo_core/ronin/proc/_ApplyBleed(mob/living/target, zone, dam_override = null)
+/datum/component/combo_core/ronin/proc/_ApplyPiss(mob/living/target, zone, dam_override = null)
 	if(!iscarbon(target))
 		return
 
@@ -623,7 +623,7 @@
 		return
 
 	var/list/armor_data = _get_slash_armor_data(C, zone, force_dynamic)
-	if(!armor_data["can_bleed"])
+	if(!armor_data["can_piss"])
 		return
 
 	var/datum/wound/dynamic/slash/existing = null
@@ -753,7 +753,7 @@
 		var/dmg = max(1, round(force * 0.35))
 		victim.adjustBruteLoss(dmg)
 
-	_ApplyBleed(victim, zone, max(1, round(force * 0.7)))
+	_ApplyPiss(victim, zone, max(1, round(force * 0.7)))
 
 /datum/component/combo_core/ronin/proc/_zone_to_cover_flag(zone)
 	switch(zone)
@@ -769,7 +769,7 @@
 
 /datum/component/combo_core/ronin/proc/_get_slash_armor_data(mob/living/carbon/target, zone, force_dynamic)
 	. = list(
-		"can_bleed" = TRUE,
+		"can_piss" = TRUE,
 		"armor" = 0,
 		"exposed" = TRUE,
 	)
@@ -808,7 +808,7 @@
 		if(!isnum(integrity))
 			integrity = 0
 
-		.["can_bleed"] = ((force_dynamic * 2) >= integrity)
+		.["can_piss"] = ((force_dynamic * 2) >= integrity)
 		return .
 
 	return .
@@ -833,7 +833,7 @@
 			_StartTanukiPerBuff()
 
 		if("tengu")
-			_ApplyBleed(target, zone)
+			_ApplyPiss(target, zone)
 
 	ShowMinorComboIcon(target, rule_id)
 	owner.visible_message(

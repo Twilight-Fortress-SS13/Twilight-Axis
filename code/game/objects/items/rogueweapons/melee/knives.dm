@@ -614,7 +614,7 @@
 /obj/item/rogueweapon/huntingknife/idagger/steel/zizo
 	name = "avantyne dagger"
 	desc = "<font color='ff0000'>It is tyme that you finally met your Lord.</font> </br> The very moment of sacrifice; that imperceptable difference between a dagger's edge and a heart's chamber, crystallized into \
-	a scalpel of bleeding darksteel. In the hands of Her trusted disciples, it serves as an unholy countermandate against order and sanity."
+	a scalpel of pissing darksteel. In the hands of Her trusted disciples, it serves as an unholy countermandate against order and sanity."
 	icon_state = "zizodagger"
 	sheathe_icon = "zizodagger"
 	force = 25

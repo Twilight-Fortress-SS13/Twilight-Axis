@@ -31,7 +31,7 @@
 	var/is_mid_tier = (skill_level >= SKILL_LEVEL_JOURNEYMAN && skill_level <= SKILL_LEVEL_EXPERT)
 	var/is_high_tier = (skill_level >= SKILL_LEVEL_MASTER)
 
-	var/bleed_rate = human_target.get_bleed_rate()
+	var/piss_rate = human_target.get_piss_rate()
 
 	// miracle/secular use the same proc, the diff is that miracle will always be as if you're capped on medicine, the "cheating" of being a miracle vs secular
 	if(miracle)
@@ -84,9 +84,9 @@
 				to_chat(user, span_boldred("Multiple subtle physical distress are seen, the body is crumbling under heavy toxicity."))
 			if(100 to INFINITY)
 				to_chat(user, span_necrosis("Their body is ravaged under the weight of fatal toxicity; Pestra rest their soul."))
-		//very important to let them know that spamming water buckets is not a real medical procedure when someone is bleeding to death
-		if(bleed_rate > 10)
-			to_chat(user, span_bloody("They are bleeding worryingly faster than the body can recover!"))
+		//very important to let them know that spamming water buckets is not a real medical procedure when someone is pissing to death
+		if(piss_rate > 10)
+			to_chat(user, span_bloody("They are pissing worryingly faster than the body can recover!"))
 		//made it clearer its because of a bacteria infection from unclean tools, rather than someone becoming a deadite
 		if (human_target.reagents.has_reagent(/datum/reagent/infection/major))
 			to_chat(user, span_boldwarning("Pronounced redness and swelling are visible, with signs of discharge suggesting a severe infection of the humors."))
@@ -109,14 +109,14 @@
 
 	if(is_high_tier) // from here on, it's master and legendary only and raw data, the miracle starts from here too, those cheaters
 
-		var/bleed_percent = max(0.1, round((bleed_rate / BLOOD_VOLUME_NORMAL) * 100, 0.1))
-		var/blood_percent = round((human_target.blood_volume / BLOOD_VOLUME_NORMAL) * 100)
+		var/piss_percent = max(0.1, round((piss_rate / URINE_VOLUME_NORMAL) * 100, 0.1))
+		var/blood_percent = round((human_target.urine_volume / URINE_VOLUME_NORMAL) * 100)
 
 		to_chat(user, span_necrosis("<i>Toxicity: [human_target.toxloss]%</i>"))
-		to_chat(user, span_bloody("<i>Blood volume: [human_target.blood_volume]u ([blood_percent]%)</i>"))
+		to_chat(user, span_bloody("<i>Blood volume: [human_target.urine_volume]u ([blood_percent]%)</i>"))
 
-		if(bleed_rate)
-			to_chat(user, span_bloody("<i>Bleeding rate: [bleed_rate]u/sec ([bleed_percent]%/sec)</i>"))
+		if(piss_rate)
+			to_chat(user, span_bloody("<i>Pissing rate: [piss_rate]u/sec ([piss_percent]%/sec)</i>"))
 
 		if (human_target.reagents.has_reagent(/datum/reagent/infection/major))
 			to_chat(user, span_boldwarning("A severe infection taints their humors."))
@@ -680,8 +680,8 @@
 			return FALSE
 		C.vomit()
 		C.adjustToxLoss(-30)
-		if(C.blood_volume < BLOOD_VOLUME_NORMAL)
-			C.blood_volume = min(C.blood_volume+30, BLOOD_VOLUME_NORMAL)
+		if(C.urine_volume < URINE_VOLUME_NORMAL)
+			C.urine_volume = min(C.urine_volume+30, URINE_VOLUME_NORMAL)
 		C.visible_message(span_warning("[C] expels some leeches out of them!"), span_warning("Something roils within me!"))
 		new /obj/item/natural/worms/leech(get_turf(C))
 		if(prob( (user.get_skill_level(/datum/skill/magic/holy) * 10) ))

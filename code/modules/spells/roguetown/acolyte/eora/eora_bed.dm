@@ -92,7 +92,7 @@
 		return
 
 	spawn_visual()
-	var/bleeding = owner.bleed_rate > 1
+	var/pissing = owner.piss_rate > 1
 
 	owner.heal_wounds(healing_on_tick)
 	owner.adjustBruteLoss(-healing_on_tick, 0)
@@ -100,9 +100,9 @@
 	owner.adjustToxLoss(-healing_on_tick, 0)
 	owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.5)
 
-	if(owner.blood_volume < BLOOD_VOLUME_OKAY && !bleeding)
-		owner.blood_volume = min(owner.blood_volume + healing_on_tick, BLOOD_VOLUME_OKAY)
-	if(!bleeding)
+	if(owner.urine_volume < URINE_VOLUME_OKAY && !pissing)
+		owner.urine_volume = min(owner.urine_volume + healing_on_tick, URINE_VOLUME_OKAY)
+	if(!pissing)
 		owner.adjustOxyLoss(-healing_on_tick, 0)
 
 /datum/status_effect/buff/healing/bed_rest/proc/spawn_visual()

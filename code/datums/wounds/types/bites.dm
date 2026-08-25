@@ -1,7 +1,7 @@
 /datum/wound/bite
 	name = "bite"
-	bleed_rate = 0.5
-	sewn_bleed_rate = 0
+	piss_rate = 0.5
+	sewn_piss_rate = 0
 	clotting_threshold = null
 	sewn_clotting_threshold = null
 	whp = 30
@@ -20,8 +20,8 @@
 	name = "gnarly bite"
 	whp = 40
 	sewn_whp = 15
-	bleed_rate = 1
-	sewn_bleed_rate = 0.2
+	piss_rate = 1
+	sewn_piss_rate = 0.2
 	clotting_rate = 0.01
 	sewn_clotting_rate = 0.01
 	clotting_threshold = 0.5
@@ -34,8 +34,8 @@
 
 /datum/wound/dynamic/bite
 	name = "bite"
-	bleed_rate = 0.5
-	sewn_bleed_rate = 0
+	piss_rate = 0.5
+	sewn_piss_rate = 0
 	clotting_threshold = null
 	sewn_clotting_threshold = null
 	whp = 30
@@ -54,32 +54,32 @@
 	)
 
 //Bite Omniwounds
-//Vaguely: Hella painful. Hella bleedy. Armor is very effective. Similar to lashing in this way.
+//Vaguely: Hella painful. Hella pissy. Armor is very effective. Similar to lashing in this way.
 
-#define BITE_UPG_BLEEDRATE 0.2
+#define BITE_UPG_PISSRATE 0.2
 #define BITE_UPG_WHPRATE 0.1
 #define BITE_UPG_SEWRATE 1
 #define BITE_UPG_PAINRATE 1
 #define BITE_UPG_CLAMP_ARMORED 1
 #define BITE_UPG_CLAMP_RAW 3
-#define BITE_ARMORED_BLEED_CLAMP 5
+#define BITE_ARMORED_PISS_CLAMP 5
 
 /datum/wound/dynamic/bite/upgrade(dam, armor, exposed)
 	whp += (dam * BITE_UPG_WHPRATE)
 	var/clamp_max = ((armor > 0) ? BITE_UPG_CLAMP_ARMORED : BITE_UPG_CLAMP_RAW)
 	if(exposed)
 		clamp_max = BITE_UPG_CLAMP_RAW
-	set_bleed_rate(bleed_rate + clamp((dam * BITE_UPG_BLEEDRATE), 0.1, clamp_max))
+	set_piss_rate(piss_rate + clamp((dam * BITE_UPG_PISSRATE), 0.1, clamp_max))
 	sew_threshold += (dam * BITE_UPG_SEWRATE)
 	woundpain += (dam * BITE_UPG_PAINRATE)
-	armor_check(armor, BITE_ARMORED_BLEED_CLAMP)
+	armor_check(armor, BITE_ARMORED_PISS_CLAMP)
 	update_stage()
 	..()
 
-#undef BITE_UPG_BLEEDRATE
+#undef BITE_UPG_PISSRATE
 #undef BITE_UPG_WHPRATE
 #undef BITE_UPG_SEWRATE
 #undef BITE_UPG_PAINRATE
 #undef BITE_UPG_CLAMP_ARMORED
 #undef BITE_UPG_CLAMP_RAW
-#undef BITE_ARMORED_BLEED_CLAMP
+#undef BITE_ARMORED_PISS_CLAMP

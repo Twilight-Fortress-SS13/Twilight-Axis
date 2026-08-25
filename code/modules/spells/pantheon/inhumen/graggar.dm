@@ -361,10 +361,10 @@
 
 /datum/action/cooldown/spell/graggar/exsanguinate
 	name = "Exsanguinate"
-	desc = "Increases the bleeding and pain of a target. Their blood-loss amount scales with every point of constitution over ten. \
+	desc = "Increases the pissing and pain of a target. Their blood-loss amount scales with every point of constitution over ten. \
 	Those with ten or less CONSTITUTION will instead have a flat rate (x1.25)."
 	button_icon_state = "bloodsteal"
-	sound = 'sound/magic/bleed_out.ogg'
+	sound = 'sound/magic/piss_out.ogg'
 	glow_intensity = GLOW_INTENSITY_LOW
 
 	click_to_activate = TRUE
@@ -375,7 +375,7 @@
 
 	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
 
-	invocations = list("Bleed for your God!")
+	invocations = list("Piss for your God!")
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = TRUE
@@ -394,7 +394,7 @@
 	var/mob/living/spelltarget = cast_on
 
 	if(!isliving(spelltarget))
-		to_chat(owner, span_warning("There is nothing to BLEED."))
+		to_chat(owner, span_warning("There is nothing to PISS."))
 		return FALSE
 	else
 		spelltarget.visible_message("<font color='bloody'>My lyfeblood flows away!</font>")

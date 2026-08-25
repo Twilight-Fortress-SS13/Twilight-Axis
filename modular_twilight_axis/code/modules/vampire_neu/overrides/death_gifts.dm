@@ -121,24 +121,24 @@
 	suppress_bloodloss(TA_VAMP_DRAIN_STUN_TIME)
 
 	for(var/datum/wound/wound as anything in simple_wounds)
-		wound.set_bleed_rate(0)
+		wound.set_piss_rate(0)
 
 	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
 		for(var/datum/wound/wound as anything in bodypart.wounds)
-			wound.set_bleed_rate(0)
-		bodypart.bleeding = 0
+			wound.set_piss_rate(0)
+		bodypart.pissing = 0
 
-	bleed_rate = 0
-	simple_bleeding = 0
+	piss_rate = 0
+	simple_pissing = 0
 
-	if(blood_volume < TA_VAMP_DRAIN_MIN_BLOOD_VOLUME)
-		blood_volume = TA_VAMP_DRAIN_MIN_BLOOD_VOLUME
+	if(urine_volume < TA_VAMP_DRAIN_MIN_BLOOD_VOLUME)
+		urine_volume = TA_VAMP_DRAIN_MIN_BLOOD_VOLUME
 		handle_blood()
 
 	adjustOxyLoss(-getOxyLoss())
-	remove_status_effect(/datum/status_effect/debuff/bleeding)
-	remove_status_effect(/datum/status_effect/debuff/bleedingworse)
-	remove_status_effect(/datum/status_effect/debuff/bleedingworst)
+	remove_status_effect(/datum/status_effect/debuff/pissing)
+	remove_status_effect(/datum/status_effect/debuff/pissingworse)
+	remove_status_effect(/datum/status_effect/debuff/pissingworst)
 	updatehealth()
 	return TRUE
 
@@ -387,7 +387,7 @@
 		return FALSE
 	if(!owner.get_bodypart(BODY_ZONE_HEAD))
 		return FALSE
-	return owner.InCritical() || owner.health <= owner.crit_threshold || ((owner.blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(owner, TRAIT_BLOODLOSS_IMMUNE))
+	return owner.InCritical() || owner.health <= owner.crit_threshold || ((owner.urine_volume in -INFINITY to URINE_VOLUME_SURVIVE) && !HAS_TRAIT(owner, TRAIT_BLOODLOSS_IMMUNE))
 
 /datum/component/ta_death_gift_berserk/proc/start_berserk(mob/living/carbon/human/owner)
 	starting = FALSE

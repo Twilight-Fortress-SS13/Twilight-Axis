@@ -304,7 +304,7 @@ GLOBAL_LIST_EMPTY(fake_ckeys)
 		var/datum/data/record/M = new()
 		M.fields["id"]			= id
 		M.fields["name"]		= H.real_name
-		M.fields["blood_type"]	= H.dna.blood_type
+		M.fields["urine_type"]	= H.dna.urine_type
 		M.fields["b_dna"]		= H.dna.unique_enzymes
 		M.fields["mi_dis"]		= "None"
 		M.fields["mi_dis_d"]	= "No minor disabilities have been declared."
@@ -340,7 +340,7 @@ GLOBAL_LIST_EMPTY(fake_ckeys)
 			G.fields["gender"]	= "Female"
 		else
 			G.fields["gender"]	= "Other"
-		L.fields["blood_type"]	= H.dna.blood_type
+		L.fields["urine_type"]	= H.dna.urine_type
 		L.fields["b_dna"]		= H.dna.unique_enzymes
 		L.fields["identity"]	= H.dna.uni_identity
 		L.fields["species"]		= H.dna.species.type

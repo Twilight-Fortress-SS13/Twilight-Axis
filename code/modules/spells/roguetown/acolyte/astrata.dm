@@ -336,8 +336,8 @@
 		return
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_rogue/campfire(get_turf(owner))
 	H.color = GLOW_COLOR_ASTRATA
-	if(owner.blood_volume < BLOOD_VOLUME_OKAY)
-		owner.blood_volume = min(owner.blood_volume+healing_on_tick_pyre, BLOOD_VOLUME_OKAY)
+	if(owner.urine_volume < URINE_VOLUME_OKAY)
+		owner.urine_volume = min(owner.urine_volume+healing_on_tick_pyre, URINE_VOLUME_OKAY)
 	var/list/wCount = owner.get_wounds()
 	if(length(wCount))
 		owner.heal_wounds(healing_on_tick_pyre, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise, /datum/wound/dynamic, /datum/wound/dislocation))

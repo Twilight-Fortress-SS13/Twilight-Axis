@@ -79,8 +79,8 @@ And it also helps for the character set panel
 /datum/clan/proc/get_blood_preference_string()
 	return "any blood"
 
-/datum/clan/proc/handle_bloodsuck(mob/living/carbon/human/drinker, blood_types)
-	var/unwanted_blood = (blood_types & ~blood_preference)
+/datum/clan/proc/handle_bloodsuck(mob/living/carbon/human/drinker, urine_types)
+	var/unwanted_blood = (urine_types & ~blood_preference)
 
 	if(!unwanted_blood)
 		return

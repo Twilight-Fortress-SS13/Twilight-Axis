@@ -606,8 +606,8 @@
 		healing_on_tick /= 2
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_rogue(get_turf(owner))
 	H.color = "#FF0000"
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume+healing_on_tick, BLOOD_VOLUME_NORMAL)
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume+healing_on_tick, URINE_VOLUME_NORMAL)
 	var/list/wCount = owner.get_wounds()
 	if(length(wCount))
 		owner.heal_wounds(healing_on_tick)
@@ -649,8 +649,8 @@
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/psyheal_rogue(get_turf(owner))
 	H.color = "#ffda95"
 
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume + (BLOOD_VOLUME_NORMAL * 0.02), BLOOD_VOLUME_NORMAL)
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume + (URINE_VOLUME_NORMAL * 0.02), URINE_VOLUME_NORMAL)
 
 	// Rewind the most damaged limb.
 	if(ishuman(owner))
@@ -799,17 +799,17 @@
 		healing_on_tick /= 2
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_rogue/campfire(get_turf(owner))
 	H.color = "#c7aa5c"
-	var/bleeding = owner.bleed_rate > 1 ? TRUE : FALSE
-	var/wound_heal = bleeding ? 1 : healing_on_tick
-	if(owner.blood_volume < BLOOD_VOLUME_OKAY && !bleeding)
-		owner.blood_volume = min(owner.blood_volume+healing_on_tick, BLOOD_VOLUME_OKAY)
+	var/pissing = owner.piss_rate > 1 ? TRUE : FALSE
+	var/wound_heal = pissing ? 1 : healing_on_tick
+	if(owner.urine_volume < URINE_VOLUME_OKAY && !pissing)
+		owner.urine_volume = min(owner.urine_volume+healing_on_tick, URINE_VOLUME_OKAY)
 	var/list/wCount = owner.get_wounds()
 	if(length(wCount))
 		owner.heal_wounds(wound_heal, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise, /datum/wound/dynamic, /datum/wound/dislocation))
 		owner.update_damage_overlays()
 	owner.adjustBruteLoss(-healing_on_tick, 0)
 	owner.adjustFireLoss(-healing_on_tick, 0)
-	if(!bleeding)
+	if(!pissing)
 		owner.adjustOxyLoss(-healing_on_tick, 0)
 	owner.adjustToxLoss(-healing_on_tick, 0)
 	owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, -healing_on_tick)
@@ -863,10 +863,10 @@
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_blood(get_turf(owner))
 	H.color = "#FF0000"
 	if(skill_level >= SKILL_LEVEL_JOURNEYMAN)
-		if(owner.blood_volume < BLOOD_VOLUME_SURVIVE)
-			owner.blood_volume = BLOOD_VOLUME_SURVIVE
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume + healing_on_tick, BLOOD_VOLUME_NORMAL)
+		if(owner.urine_volume < URINE_VOLUME_SURVIVE)
+			owner.urine_volume = URINE_VOLUME_SURVIVE
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume + healing_on_tick, URINE_VOLUME_NORMAL)
 
 #undef BLOODHEAL_DUR_SCALE_PER_LEVEL
 #undef BLOODHEAL_RESTORE_DEFAULT
@@ -894,8 +894,8 @@
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_rogue(get_turf(owner))
 	H.color = "#a5a5a5"
 	var/list/wCount = owner.get_wounds()
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume + (healing_on_tick + 10), BLOOD_VOLUME_NORMAL)
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume + (healing_on_tick + 10), URINE_VOLUME_NORMAL)
 	if(wCount.len > 0)
 		owner.heal_wounds(healing_on_tick, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise, /datum/wound/dynamic))
 		owner.update_damage_overlays()
@@ -1384,8 +1384,8 @@
 	owner.emote("agony")
 	new /obj/effect/temp_visual/flies(get_turf(owner))
 	var/list/wCount = owner.get_wounds()
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume+100, BLOOD_VOLUME_NORMAL)
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume+100, URINE_VOLUME_NORMAL)
 	if(wCount.len > 0)
 		owner.heal_wounds(healing_on_tick)
 		owner.update_damage_overlays()
@@ -1468,10 +1468,10 @@
 
 /datum/status_effect/buff/undermaidenbargainheal/tick()
 	var/list/wCount = owner.get_wounds()
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume+60, BLOOD_VOLUME_NORMAL)
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume+60, URINE_VOLUME_NORMAL)
 	if(wCount.len > 0)
-		owner.heal_wounds(100) // we're gonna try really hard to heal someone's arterials and also stabilize their blood, so they don't instantly bleed out again. Ideally they should be 'just' alive.
+		owner.heal_wounds(100) // we're gonna try really hard to heal someone's arterials and also stabilize their blood, so they don't instantly piss out again. Ideally they should be 'just' alive.
 		owner.update_damage_overlays()
 	owner.adjustBruteLoss(-healing_on_tick, 0)
 	owner.adjustFireLoss(-healing_on_tick, 0)
@@ -2127,7 +2127,7 @@
 	var/mob/living/carbon/human/human = owner
 	if(istype(human))
 		human.playsound_local(get_turf(human), 'sound/misc/adrenaline_rush.ogg', 100, TRUE)
-		human.blood_volume = min((human.blood_volume + blood_restore), BLOOD_VOLUME_NORMAL)
+		human.urine_volume = min((human.urine_volume + blood_restore), URINE_VOLUME_NORMAL)
 		human.stamina -= max((human.stamina - (human.max_stamina / 2)), 0)
 		human.pain_threshold += 50
 
@@ -2568,7 +2568,7 @@
 	if(!istype(M.get_active_held_item(), held_dagger))
 		M.remove_status_effect(/datum/status_effect/buff/dagger_boost)
 
-// escalating buffs applied on bleed out tied to TRAIT_JOURNEYS_END, currently only used by mistwalker
+// escalating buffs applied on piss out tied to TRAIT_JOURNEYS_END, currently only used by mistwalker
 /atom/movable/screen/alert/status_effect/buff/journey_ending
 	name = "An end in sight..."
 	desc = "Is this to be my story?"

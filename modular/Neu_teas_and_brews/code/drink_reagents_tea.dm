@@ -17,8 +17,8 @@
 	alpha = 153
 
 /datum/reagent/consumable/tea/on_mob_life(mob/living/carbon/M)
-	if(M.blood_volume < BLOOD_VOLUME_NORMAL)
-		M.blood_volume = min(M.blood_volume+2, BLOOD_VOLUME_NORMAL)
+	if(M.urine_volume < URINE_VOLUME_NORMAL)
+		M.urine_volume = min(M.urine_volume+2, URINE_VOLUME_NORMAL)
 	..()
 
 /datum/reagent/consumable/tea/taraxamint

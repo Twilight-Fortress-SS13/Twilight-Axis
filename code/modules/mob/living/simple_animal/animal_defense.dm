@@ -281,7 +281,7 @@
 			var/datum/antagonist/vampire/vamp_biter = user.mind.has_antag_datum(/datum/antagonist/vampire)
 			if(vamp_biter)
 				var/mob/living/vampire_victim = src
-				var/bloodleft = vampire_victim.blood_volume
+				var/bloodleft = vampire_victim.urine_volume
 				if (bloodleft < 100)
 					visible_message(span_danger("[user] bites the [vampire_victim]!"))
 					to_chat(user, span_warning("There's not enough blood left for me"))
@@ -289,9 +289,9 @@
 					user.visible_message(span_warning("[user] drinks from [vampire_victim]!"),\
 					span_warning("I drink from [vampire_victim]!"))
 					playsound(user.loc, 'sound/misc/drink_blood.ogg', vol = 50, vary = FALSE, extrarange = -4, ignore_walls = FALSE, quiet = TRUE)
-					vampire_victim.blood_volume -= 100
+					vampire_victim.urine_volume -= 100
 					if(bloodleft < 100)
-						vampire_victim.blood_volume = 0
+						vampire_victim.urine_volume = 0
 					user.adjust_bloodpool(100)
 					user.add_stress(/datum/stressevent/drankrat)
 				return

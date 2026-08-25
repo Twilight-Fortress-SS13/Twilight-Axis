@@ -86,7 +86,7 @@
 		/datum/hag_boon/trait/armor_medium,
 		/datum/hag_boon/trait/armor_heavy,
 		/datum/hag_boon/trait/dodge_expert,
-		/datum/hag_boon/trait/bleed_resistance,
+		/datum/hag_boon/trait/piss_resistance,
 		/datum/hag_boon/trait/grab_immunity,
 		/datum/hag_boon/trait/crackhead,
 		/datum/hag_boon/trait/civil_barbarian,

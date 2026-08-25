@@ -13,7 +13,7 @@
 	skin_tone_wording = "Material"
 	use_skin_tone_wording_for_examine = FALSE
 	default_color = "FFFFFF"
-	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,STUBBLE,OLDGREY,NOBLOOD) // this already overwrites all blood-related things, I made it better at stopping bleeding completely
+	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,STUBBLE,OLDGREY,NOBLOOD) // this already overwrites all blood-related things, I made it better at stopping pissing completely
 	default_features = MANDATORY_FEATURE_LIST
 	use_skintones = TRUE
 	possible_ages = ALL_AGES_LIST

@@ -1,6 +1,6 @@
 /obj/item/natural/cloth/bandage
 	name = "bandage"
-	desc = "A fabric treated and specially made to help with bleeding wounds. Better and faster at stopping bleeding than your regular piece of cloth."
+	desc = "A fabric treated and specially made to help with pissing wounds. Better and faster at stopping pissing than your regular piece of cloth."
 	icon = 'icons/roguetown/items/surgery.dmi'
 	icon_state = "bandageroll"
 	bundletype = /obj/item/natural/bundle/cloth/bandage
@@ -13,7 +13,7 @@
 
 /obj/item/natural/bundle/cloth/bandage
 	name = "roll of bandages"
-	desc = "A roll of joined bandages for easier carrying. A bleeding man's best friend."
+	desc = "A roll of joined bandages for easier carrying. A pissing man's best friend."
 	icon = 'icons/roguetown/items/surgery.dmi'
 	icon_state = "bandageroll1"
 	maxamount = 4 //balanced...? You'd die of bloodloss before all of them were dirty.

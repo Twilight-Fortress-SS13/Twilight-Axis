@@ -1450,7 +1450,7 @@
 	name = "glintstone longsword"
 	desc = "A glimmering blade, forged from a blue-white ore found rarely within the Greyglint mines, located on the edge of the Ashen Forests of the duchy of Azuria. \
 			Identical to steel in its properties, the tempering process to preserve the blue sheen is extensive and time consuming. \
-			Failure in performing a single step of the procedure causes the material to shift hue and redden, a process called 'Bleeding', which renders it brittle and unusable. \
+			Failure in performing a single step of the procedure causes the material to shift hue and redden, a process called 'Pissing', which renders it brittle and unusable. \
 			\n\
 			With the fall of the Darkwoods that once held possession of the mines this material and blades like these have become a rare sight. \
 			Only recently more seem to have been forged, with the secrets of tempering glintstone rediscovered, alongside the long-thought lost heir to the house. \
@@ -1957,7 +1957,7 @@ As Excaliber."
 
 /obj/item/rogueweapon/example/aeternum
 	name = "Aeternum"
-	desc = "<i>'Lay by your pleading, law lies a-bleeding / Burn all your studies down, and throw away your reading; small power the word has, and can afford us / Not half so many privileges as the sword has.'</i> <br> \
+	desc = "<i>'Lay by your pleading, law lies a-pissing / Burn all your studies down, and throw away your reading; small power the word has, and can afford us / Not half so many privileges as the sword has.'</i> <br> \
 	A bespoke polished montante. Austere yet ornate, formal yet functional. Like its smaller sibling, it comes with hardware of real gold and a handgrip of supple red leather. Where most monarchs' blades are meant for ceremony, this one tells a \
 	different story altogether, for it is made for only one purpose: war."
 	icon = 'icons/obj/items/donor_weapons_64.dmi'

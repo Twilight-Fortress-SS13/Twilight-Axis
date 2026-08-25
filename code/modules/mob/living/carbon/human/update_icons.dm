@@ -183,7 +183,7 @@ There are several things that need to be remembered:
 		var/list/armdam_overlays = list()
 		if(BP.body_zone == BODY_ZONE_HEAD)
 			update_hair()
-		var/bleed_checker = FALSE
+		var/piss_checker = FALSE
 		var/list/wound_overlays
 		if(!BP.skeletonized)
 			if(BP.brutestate)
@@ -203,8 +203,8 @@ There are several things that need to be remembered:
 				legdam_overlays += legdam_overlay
 				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_0[BP.burnstate]", -ARM_DAMAGE_LAYER)
 				armdam_overlays += armdam_overlay
-			if(BP.get_bleed_rate())
-				bleed_checker = TRUE
+			if(BP.get_piss_rate())
+				piss_checker = TRUE
 				if(BP.bandage)
 					var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_b", -DAMAGE_LAYER)
 					damage_overlay.color = BP.bandage.color
@@ -227,7 +227,7 @@ There are several things that need to be remembered:
 				legdam_overlays += legdam_overlay
 				var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.body_zone]_[wound_overlay]", -ARM_DAMAGE_LAYER)
 				armdam_overlays += armdam_overlay
-		if(!bleed_checker && BP.bandage)
+		if(!piss_checker && BP.bandage)
 			var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.body_zone]_b", -DAMAGE_LAYER)
 			damage_overlay.color = BP.bandage.color
 			damage_overlays += damage_overlay
@@ -253,7 +253,7 @@ There are several things that need to be remembered:
 					legdam_overlays += legdam_overlay
 					var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_0[BP.burnstate]", -ARM_DAMAGE_LAYER)
 					armdam_overlays += armdam_overlay
-				if(bleed_checker)
+				if(piss_checker)
 					if(BP.bandage)
 						var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_b", -DAMAGE_LAYER)
 						damage_overlay.color = BP.bandage.color
@@ -272,7 +272,7 @@ There are several things that need to be remembered:
 					legdam_overlays += legdam_overlay
 					var/mutable_appearance/armdam_overlay = mutable_appearance(limb_icon, "armdam_[BP.aux_zone]_[wound_overlay]", -ARM_DAMAGE_LAYER)
 					armdam_overlays += armdam_overlay
-			if(!bleed_checker && BP.bandage)
+			if(!piss_checker && BP.bandage)
 				var/mutable_appearance/damage_overlay = mutable_appearance(limb_icon, "[BP.aux_zone]_b", -DAMAGE_LAYER)
 				damage_overlay.color = BP.bandage.color
 				damage_overlays += damage_overlay

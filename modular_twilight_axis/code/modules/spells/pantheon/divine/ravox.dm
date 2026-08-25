@@ -160,7 +160,7 @@
 		target.apply_status_effect(/datum/status_effect/buff/call_to_arms)
 	return TRUE
 
-//Persistence - Harms the shit out of an undead mob/player while causing bleeding/pain wounds to clot at higher rate for living ones. Basically a 'shittier' yet still good greater heal effect.
+//Persistence - Harms the shit out of an undead mob/player while causing pissing/pain wounds to clot at higher rate for living ones. Basically a 'shittier' yet still good greater heal effect.
 /obj/effect/proc_holder/spell/invoked/TApersistence
 	name = "Persistence"
 	desc = "Harms Undead and encourages the livings wounds to close faster."
@@ -189,10 +189,10 @@
 			if(spell_guard_check(target, TRUE))
 				target.visible_message(span_warning("[target] resists Ravox's judgment!"))
 				return TRUE
-			if(ishuman(target)) //BLEED AND PAIN
+			if(ishuman(target)) //PISS AND PAIN
 				var/mob/living/carbon/human/human_target = target
 				var/datum/physiology/phy = human_target.physiology
-				phy.bleed_mod *= 1.5
+				phy.piss_mod *= 1.5
 				phy.pain_mod *= 1.5
 				addtimer(CALLBACK(src, PROC_REF(restore_modifiers), phy), 19 SECONDS)
 				human_target.visible_message(span_danger("[target]'s wounds become inflamed as their vitality is sapped away!"), span_userdanger("Ravox inflames my wounds and weakens my body!"))
@@ -210,17 +210,17 @@
 			var/mob/living/carbon/C = target
 			var/obj/item/bodypart/affecting = C.get_bodypart(check_zone(user.zone_selected))
 			if(affecting)
-				for(var/datum/wound/bleeder in affecting.wounds)
-					bleeder.woundpain = max(bleeder.sewn_woundpain, bleeder.woundpain * 0.25)
-					if(!isnull(bleeder.clotting_threshold) && bleeder.bleed_rate > bleeder.clotting_threshold)
-						var/difference = bleeder.bleed_rate - bleeder.clotting_threshold
-						bleeder.set_bleed_rate(max(bleeder.clotting_threshold, bleeder.bleed_rate - difference * situational_bonus))
+				for(var/datum/wound/pisser in affecting.wounds)
+					pisser.woundpain = max(pisser.sewn_woundpain, pisser.woundpain * 0.25)
+					if(!isnull(pisser.clotting_threshold) && pisser.piss_rate > pisser.clotting_threshold)
+						var/difference = pisser.piss_rate - pisser.clotting_threshold
+						pisser.set_piss_rate(max(pisser.clotting_threshold, pisser.piss_rate - difference * situational_bonus))
 		else if(HAS_TRAIT(target, TRAIT_SIMPLE_WOUNDS))
-			for(var/datum/wound/bleeder in target.simple_wounds)
-				bleeder.woundpain = max(bleeder.sewn_woundpain, bleeder.woundpain * 0.25)
-				if(!isnull(bleeder.clotting_threshold) && bleeder.bleed_rate > bleeder.clotting_threshold)
-					var/difference = bleeder.bleed_rate - bleeder.clotting_threshold
-					bleeder.set_bleed_rate(max(bleeder.clotting_threshold, bleeder.bleed_rate - difference * situational_bonus))
+			for(var/datum/wound/pisser in target.simple_wounds)
+				pisser.woundpain = max(pisser.sewn_woundpain, pisser.woundpain * 0.25)
+				if(!isnull(pisser.clotting_threshold) && pisser.piss_rate > pisser.clotting_threshold)
+					var/difference = pisser.piss_rate - pisser.clotting_threshold
+					pisser.set_piss_rate(max(pisser.clotting_threshold, pisser.piss_rate - difference * situational_bonus))
 		return TRUE
 	return FALSE
 
@@ -228,7 +228,7 @@
 	if(!physiology)
 		return
 
-	physiology.bleed_mod /= 1.5
+	physiology.piss_mod /= 1.5
 	physiology.pain_mod /= 1.5
 
 /obj/effect/proc_holder/spell/invoked/TAtug_of_war

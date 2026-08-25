@@ -76,8 +76,8 @@
 /datum/status_effect/buff/fortifyingvapors/tick()
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/fortifyingvapors(get_turf(owner))
 	H.color = "#9ebb5b"
-	if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-		owner.blood_volume = min(owner.blood_volume+healing_on_tick, BLOOD_VOLUME_NORMAL)
+	if(owner.urine_volume < URINE_VOLUME_NORMAL)
+		owner.urine_volume = min(owner.urine_volume+healing_on_tick, URINE_VOLUME_NORMAL)
 	var/list/wCount = owner.get_wounds()
 	if(length(wCount))
 		owner.heal_wounds(healing_on_tick)

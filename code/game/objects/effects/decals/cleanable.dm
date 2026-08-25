@@ -2,7 +2,7 @@
 	gender = PLURAL
 	layer = ABOVE_NORMAL_TURF_LAYER
 	var/list/random_icon_states = null
-	var/blood_state = "" //I'm sorry but cleanable/blood code is ass, and so is blood_DNA
+	var/blood_state = "" //I'm sorry but cleanable/blood code is ass, and so is urine_DNA
 	var/bloodiness = 0 //0-100, amount of blood in this decal, used for making footprints and affecting the alpha of bloody footprints
 	var/mergeable_decal = TRUE //when two of these are on a same tile or do we need to merge them into just one?
 	var/beauty = 0
@@ -91,7 +91,7 @@
 				add_blood = bloodiness
 			bloodiness -= add_blood
 			S.bloody_shoes[blood_state] = min(MAX_SHOE_BLOODINESS,S.bloody_shoes[blood_state]+add_blood)
-			S.add_blood_DNA(return_blood_DNA())
+			S.add_urine_DNA(return_urine_DNA())
 			S.blood_state = blood_state
 			if(istype(src, /obj/effect/decal/cleanable/blood))
 				var/obj/effect/decal/cleanable/blood/source_blood = src

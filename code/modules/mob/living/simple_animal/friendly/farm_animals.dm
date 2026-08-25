@@ -32,7 +32,7 @@
 	melee_damage_upper = 2
 	environment_smash = ENVIRONMENT_SMASH_NONE
 	stop_automated_movement_when_pulled = 1
-	blood_volume = BLOOD_VOLUME_NORMAL
+	urine_volume = URINE_VOLUME_NORMAL
 	food_type = list(/obj/item/reagent_containers/food/snacks/grown)
 	var/obj/item/udder/udder = null
 
@@ -110,7 +110,7 @@
 	maxHealth = 100
 	var/obj/item/udder/udder = null
 	gold_core_spawnable = FRIENDLY_SPAWN
-	blood_volume = BLOOD_VOLUME_NORMAL
+	urine_volume = URINE_VOLUME_NORMAL
 	food_type = list(/obj/item/reagent_containers/food/snacks/grown/wheat, /obj/item/reagent_containers/food/snacks/grown/oat)
 	tame_chance = 25
 	bonus_tame_chance = 15
@@ -387,7 +387,7 @@
 	health = 100
 	maxHealth = 100
 	gold_core_spawnable = FRIENDLY_SPAWN
-	blood_volume = BLOOD_VOLUME_NORMAL
+	urine_volume = URINE_VOLUME_NORMAL
 	food_type = list(/obj/item/rogueore/gold, /obj/item/rogueore/silver)
 	tame_chance = 25
 	bonus_tame_chance = 15

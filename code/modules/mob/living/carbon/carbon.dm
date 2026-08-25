@@ -703,17 +703,17 @@
 	for(var/i=0 to distance)
 		if(blood)
 			if(T)
-				if(vomitrelay && blood_volume > 0)
+				if(vomitrelay && urine_volume > 0)
 					var/mob/living/carbon/human/parent = vomitrelay.loc
-					var/amt = 5 * parent.physiology.bleed_mod
-					blood_volume = max(blood_volume - amt, 0)
+					var/amt = 5 * parent.physiology.piss_mod
+					urine_volume = max(urine_volume - amt, 0)
 					GLOB.azure_round_stats[STATS_BLOOD_SPILT] += amt
 					if(isturf(vomit_source.loc))
 						add_drip_floor(vomit_source.loc, amt)
 					var/vol2use
 					if(amt > 1)
 						var/index = min(amt - 1, 3)
-						vol2use = "sound/misc/bleed ([index]).ogg"
+						vol2use = "sound/misc/piss ([index]).ogg"
 					if(!(mobility_flags & MOBILITY_STAND))
 						vol2use = null
 					if(vol2use)
@@ -721,7 +721,7 @@
 
 					updatehealth()
 				else
-					bleed(5)
+					piss(5)
 		else
 			if(T)
 				T.add_vomit_floor(src, VOMIT_TOXIC)//toxic barf looks different
@@ -956,7 +956,7 @@
 	else
 		clear_fullscreen("CMODE")
 
-	if(health <= crit_threshold || ((blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE)))
+	if(health <= crit_threshold || ((urine_volume in -INFINITY to URINE_VOLUME_SURVIVE) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE)))
 		var/severity = 0
 		switch(health)
 			if(-20 to -10)
@@ -1009,7 +1009,7 @@
 		clear_fullscreen("critvision")
 		clear_fullscreen("DD")
 		clear_fullscreen("DDZ")
-//	if(blood_volume <= 0)
+//	if(urine_volume <= 0)
 //		overlay_fullscreen("DD", /atom/movable/screen/fullscreen/crit/death)
 //	else
 //		clear_fullscreen("DD")
@@ -1126,9 +1126,9 @@
 			death()
 			cure_blind(UNCONSCIOUS_BLIND)
 			return
-		if(((blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE)) || IsUnconscious() || IsSleeping() || getOxyLoss() > 75 || (HAS_TRAIT(src, TRAIT_DEATHCOMA)) || (health <= HEALTH_THRESHOLD_FULLCRIT && !HAS_TRAIT(src, TRAIT_NOHARDCRIT)))
+		if(((urine_volume in -INFINITY to URINE_VOLUME_SURVIVE) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE)) || IsUnconscious() || IsSleeping() || getOxyLoss() > 75 || (HAS_TRAIT(src, TRAIT_DEATHCOMA)) || (health <= HEALTH_THRESHOLD_FULLCRIT && !HAS_TRAIT(src, TRAIT_NOHARDCRIT)))
 			if(stat != UNCONSCIOUS) // Transition into hardcrit — announce once
-				var/bled_out = (blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE)
+				var/bled_out = (urine_volume in -INFINITY to URINE_VOLUME_SURVIVE) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE)
 				var/suffocating = getOxyLoss() > 75
 				var/poisoned = health <= HEALTH_THRESHOLD_FULLCRIT && getToxLoss() >= getFireLoss() && getToxLoss() >= getBruteLoss()
 				if(bled_out)

@@ -310,7 +310,7 @@
 	if(H.mind)
 		H.mind.RemoveSpell(/datum/action/cooldown/spell/psydon/respite)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/persist)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonlux_tamper) // absolver's bleed transfer
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonlux_tamper) // absolver's piss transfer
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonvicariate) // nerfed no-rez version of absolver's absolve
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
 

@@ -25,7 +25,7 @@
 	harm_intent_damage = 5
 	attack_same = 0
 	environment_smash = ENVIRONMENT_SMASH_NONE
-	blood_volume = BLOOD_VOLUME_NORMAL
+	urine_volume = URINE_VOLUME_NORMAL
 	food_type = list(
 		/obj/item/reagent_containers/food/snacks/grown
 		)

@@ -156,7 +156,7 @@
 	..()
 	var/obj/item/bodypart/target = pick(valid_limbs)
 	if(target)
-		target.add_wound(/datum/wound/fracture/no_bleed)
+		target.add_wound(/datum/wound/fracture/no_piss)
 	to_chat(L, span_userdanger("My [target.name] twists in an unnatural way as tumors bulge beneath my skin!"))
 	L.Jitter(10)
 	target.receive_damage(brute = 200, updating_health = TRUE, blocked = FALSE)

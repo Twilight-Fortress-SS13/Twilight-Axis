@@ -2,12 +2,12 @@
 /datum/dna
 	var/unique_enzymes
 	var/uni_identity
-	var/blood_type
+	var/urine_type
 	var/datum/species/species = new /datum/species/human //The type of mutant race the player is if applicable (i.e. potato-man)
 	var/list/features = MANDATORY_FEATURE_LIST
 	var/real_name //Stores the real name of the person who originally got this dna datum. Used primarely for changelings,
 	var/list/temporary_mutations = list() //Temporary changes to the UE
-	var/list/previous = list() //For temporary name/ui/ue/blood_type modifications
+	var/list/previous = list() //For temporary name/ui/ue/urine_type modifications
 	var/mob/living/holder
 	var/delete_species = TRUE //Set to FALSE when a body is scanned by a cloner to fix #38875
 	var/stability = 100
@@ -42,7 +42,7 @@
 		return
 	destination.dna.unique_enzymes = unique_enzymes
 	destination.dna.uni_identity = uni_identity
-	destination.dna.blood_type = blood_type
+	destination.dna.urine_type = urine_type
 	destination.set_species(species.type, icon_update=0)
 	destination.dna.body_markings = deepCopyList(body_markings)
 	destination.dna.features = features.Copy()
@@ -60,7 +60,7 @@
 /datum/dna/proc/copy_dna(datum/dna/new_dna)
 	new_dna.unique_enzymes = unique_enzymes
 	new_dna.uni_identity = uni_identity
-	new_dna.blood_type = blood_type
+	new_dna.urine_type = urine_type
 	new_dna.body_markings = deepCopyList(body_markings)
 	new_dna.features = features.Copy()
 	new_dna.species = new species.type
@@ -125,7 +125,7 @@
 
 /datum/dna/proc/is_same_as(datum/dna/D)
 	if(uni_identity == D.uni_identity && real_name == D.real_name)
-		if(species.type == D.species.type && features == D.features && blood_type == D.blood_type)
+		if(species.type == D.species.type && features == D.features && urine_type == D.urine_type)
 			return 1
 	return 0
 
@@ -134,9 +134,9 @@
 	uni_identity = generate_uni_identity()
 	unique_enzymes = generate_unique_enzymes()
 
-/datum/dna/proc/initialize_dna(newblood_type, skip_index = FALSE)
-	if(newblood_type)
-		blood_type = newblood_type
+/datum/dna/proc/initialize_dna(newurine_type, skip_index = FALSE)
+	if(newurine_type)
+		urine_type = newurine_type
 	unique_enzymes = generate_unique_enzymes()
 	uni_identity = generate_uni_identity()
 	if(!skip_index) //I hate this
@@ -217,7 +217,7 @@
 	return dna
 
 
-/mob/living/carbon/human/proc/hardset_dna(ui, list/mutation_index, newreal_name, newblood_type, datum/species/mrace, newfeatures, list/mutations, force_transfer_mutations)
+/mob/living/carbon/human/proc/hardset_dna(ui, list/mutation_index, newreal_name, newurine_type, datum/species/mrace, newfeatures, list/mutations, force_transfer_mutations)
 //Do not use force_transfer_mutations for stuff like cloners without some precautions, otherwise some conditional mutations could break (timers, drill hat etc)
 	if(newfeatures)
 		dna.features = newfeatures
@@ -231,8 +231,8 @@
 		real_name = newreal_name
 		dna.generate_unique_enzymes()
 
-	if(newblood_type)
-		dna.blood_type = newblood_type
+	if(newurine_type)
+		dna.urine_type = newurine_type
 
 	if(ui)
 		dna.uni_identity = ui

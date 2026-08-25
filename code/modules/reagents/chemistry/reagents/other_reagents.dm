@@ -1,47 +1,47 @@
-/datum/reagent/blood
-	data = list("donor"=null,"blood_DNA"=null,"blood_type"=null,"resistances"=null,"trace_chem"=null,"mind"=null,"ckey"=null,"gender"=null,"real_name"=null,"cloneable"=null,"factions"=null,"quirks"=null)
-	name = "Blood"
+/datum/reagent/urine
+	data = list("donor"=null,"urine_DNA"=null,"urine_type"=null,"resistances"=null,"trace_chem"=null,"mind"=null,"ckey"=null,"gender"=null,"real_name"=null,"cloneable"=null,"factions"=null,"quirks"=null)
+	name = "Urine"
 	color = BLOOD_COLOR_RED
 	metabolization_rate = 5 //fast rate so it disappears fast.
-	taste_description = "iron"
+	taste_description = "apple"
 	taste_mult = 1.3
 	glass_icon_state = "glass_red"
-	glass_name = "glass of tomato juice"
+	glass_name = "glass of apple juice"
 	glass_desc = ""
 	shot_glass_icon_state = "shotglassred"
 
-/datum/reagent/blood/shitty
-	name = "Dirty blood"
-	color = "#941010" // rgb: 148, 16, 16
-	taste_description = "rancid iron"
+/datum/reagent/urine/shitty
+	name = "Dirty Urine"
+	color = "#948208" // rgb: 148, 130, 8
+	taste_description = "rancid apple"
 	taste_mult = 1.5
-	glass_name = "glass of dirty tomato juice"
+	glass_name = "glass of dirty apple juice"
 /*
-/datum/reagent/blood/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
+/datum/reagent/urine/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
 	if(iscarbon(L))
 		var/mob/living/carbon/C = L
-		if(C.get_blood_id() == /datum/reagent/blood && (method == INJECT || (method == INGEST && C.dna && C.dna.species && (DRINKSBLOOD in C.dna.species.species_traits))))
-			if(!data || !(data["blood_type"] in get_safe_blood(C.dna.blood_type)) || !HAS_TRAIT(C,TRAIT_NASTY_EATER))
+		if(C.get_blood_id() == /datum/reagent/urine && (method == INJECT || (method == INGEST && C.dna && C.dna.species && (DRINKSBLOOD in C.dna.species.species_traits))))
+			if(!data || !(data["urine_type"] in get_safe_urine(C.dna.urine_type)) || !HAS_TRAIT(C,TRAIT_NASTY_EATER))
 				C.reagents.add_reagent(/datum/reagent/toxin, reac_volume * 0.5)
 			else
-				C.blood_volume = min(C.blood_volume + round(reac_volume, 0.1), BLOOD_VOLUME_MAXIMUM)
+				C.urine_volume = min(C.urine_volume + round(reac_volume, 0.1), URINE_VOLUME_MAXIMUM)
 //Dirty blood shouldn't go in your veins!
-/datum/reagent/blood/shitty/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
+/datum/reagent/urine/shitty/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
 	if(iscarbon(L))
 		var/mob/living/carbon/C = L
-		if(C.get_blood_id() == /datum/reagent/blood && (method == INJECT || (method == INGEST && C.dna && C.dna.species && (DRINKSBLOOD in C.dna.species.species_traits))))
-			if(!data || !(data["blood_type"] in get_safe_blood(C.dna.blood_type)) || !(HAS_TRAIT(C, TRAIT_NASTY_EATER) && HAS_TRAIT(C, TRAIT_WILD_EATER)))
+		if(C.get_blood_id() == /datum/reagent/urine && (method == INJECT || (method == INGEST && C.dna && C.dna.species && (DRINKSBLOOD in C.dna.species.species_traits))))
+			if(!data || !(data["urine_type"] in get_safe_urine(C.dna.urine_type)) || !(HAS_TRAIT(C, TRAIT_NASTY_EATER) && HAS_TRAIT(C, TRAIT_WILD_EATER)))
 				C.reagents.add_reagent(/datum/reagent/toxin, reac_volume * 0.8)
 			else
-				C.blood_volume = min(C.blood_volume + round(reac_volume, 0.1), BLOOD_VOLUME_MAXIMUM)
+				C.urine_volume = min(C.urine_volume + round(reac_volume, 0.1), URINE_VOLUME_MAXIMUM)
 
-/datum/reagent/blood/on_merge(list/mix_data)
+/datum/reagent/urine/on_merge(list/mix_data)
 	if(data && mix_data)
-		if(data["blood_DNA"] != mix_data["blood_DNA"])
+		if(data["urine_DNA"] != mix_data["urine_DNA"])
 			data["cloneable"] = 0 //On mix, consider the genetic sampling unviable for pod cloning if the DNA sample doesn't match.
 	return 1
 */
-/datum/reagent/blood/reaction_turf(turf/T, reac_volume)//splash the blood all over the place
+/datum/reagent/urine/reaction_turf(turf/T, reac_volume)//splash the blood all over the place
 	if(!istype(T))
 		return
 	if(reac_volume < 3)
@@ -50,14 +50,14 @@
 	var/obj/effect/decal/cleanable/blood/B = locate() in T //find some blood here
 	if(!B)
 		B = new(T)
-	if(data["blood_DNA"])
-		B.add_blood_DNA(list(data["blood_DNA"] = data["blood_type"]))
+	if(data["urine_DNA"])
+		B.add_urine_DNA(list(data["urine_DNA"] = data["urine_type"]))
 
-/datum/reagent/blood/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
+/datum/reagent/urine/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
 	if(method == INGEST) // Make sure you DRANK the blood before giving damage
 		..()
 
-/datum/reagent/blood/on_mob_life(mob/living/carbon/H)
+/datum/reagent/urine/on_mob_life(mob/living/carbon/H)
 	..()
 	if(HAS_TRAIT(H, TRAIT_NASTY_EATER) || HAS_TRAIT(H, TRAIT_WILD_EATER) || HAS_TRAIT(H, TRAIT_NOHUNGER) || HAS_TRAIT(H, TRAIT_IRONMAN))
 		if(ishuman(H))
@@ -69,10 +69,10 @@
 	H.add_nausea(12)
 	H.adjustToxLoss(2)
 
-/datum/reagent/blood/shitty/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
+/datum/reagent/urine/shitty/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
 	if (method == INGEST)
 		..()
-/datum/reagent/blood/shitty/on_mob_life(mob/living/carbon/H)
+/datum/reagent/urine/shitty/on_mob_life(mob/living/carbon/H)
 	..()
 	if(HAS_TRAIT(H, TRAIT_NASTY_EATER) || HAS_TRAIT(H, TRAIT_WILD_EATER) || HAS_TRAIT(H, TRAIT_NOHUNGER) || HAS_TRAIT(H, TRAIT_IRONMAN))
 		if(ishuman(H))
@@ -82,7 +82,7 @@
 	H.add_nausea(18) //Do not drink dirty blood!
 	H.adjustToxLoss(4)
 
-/datum/reagent/blood/green
+/datum/reagent/urine/green
 	color = "#05af01"
 
 /datum/reagent/liquidgibs // Editor's note: what the fuck
@@ -118,8 +118,8 @@
 		var/mob/living/carbon/human/H = M
 		if(!HAS_TRAIT(H, TRAIT_NOHUNGER))
 			H.adjust_hydration(hydration)
-		if(M.blood_volume < BLOOD_VOLUME_NORMAL)
-			M.blood_volume = min(M.blood_volume+WATER_BLOOD_RESTORE, BLOOD_VOLUME_NORMAL)
+		if(M.urine_volume < URINE_VOLUME_NORMAL)
+			M.urine_volume = min(M.urine_volume+WATER_BLOOD_RESTORE, URINE_VOLUME_NORMAL)
 	..()
 #undef WATER_BLOOD_RESTORE
 
@@ -744,8 +744,8 @@
 	color = "#606060" //pure iron? let's make it violet of course
 
 /datum/reagent/iron/on_mob_life(mob/living/carbon/C)
-	if(C.blood_volume < BLOOD_VOLUME_NORMAL)
-		C.blood_volume += 0.5
+	if(C.urine_volume < URINE_VOLUME_NORMAL)
+		C.urine_volume += 0.5
 	..()
 
 /datum/reagent/gold
@@ -997,7 +997,7 @@
 	M.drowsyness += 2
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
-		H.blood_volume = max(H.blood_volume - 10, 0)
+		H.urine_volume = max(H.urine_volume - 10, 0)
 	if(prob(20))
 		M.losebreath += 2
 		M.confused = min(M.confused + 2, 5)
