@@ -1,3 +1,5 @@
+#define ARMOR_DRAGONSKIN list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_MEDIUM, "bullet" = DR_LIGHT) // iconoclast dragon skin profile
+
 /obj/item/clothing/suit/roguetown/armor/regenerating/skin/iconoclast
 	name = "dragon's skin"
 	desc = "We passed upon the stair, we spoke of was and when.</br> \
