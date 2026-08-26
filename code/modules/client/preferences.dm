@@ -3443,12 +3443,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					var/choice_name = tgui_input_list(user, "CHOOSE A HERO","ROGUETOWN", choices)
 					if(choice_name)
 						var/choice = choices[choice_name]
-						// An empty slot must start fresh so it never inherits data from a previously loaded slot.
-						// This only ever writes to the chosen (new) slot and never touches existing ones.
 						if(!load_character(choice) || empty_slots[choice_name])
-							// Start the new slot completely fresh so it never inherits anything
-							// (race, flavortext, ooc notes, etc.) from a previously loaded slot.
-							// Existing slots on disk are never touched.
 							set_new_race(new /datum/species/human/northern())
 							random_character(null, FALSE, TRUE)
 							save_character()
