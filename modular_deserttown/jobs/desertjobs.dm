@@ -12,7 +12,7 @@
 #define CTAG_SHEIKH		"CAT_SHEIKH"
 #define CTAG_FREEMAN		"CAT_FREEMAN"
 #define CTAG_LOSTGRENZEL	"CAT_LOSTGRENZEL"
-#define CTAG_HAREM			"CAT_HAREM"	
+#define CTAG_HAREM			"CAT_HAREM"
 
 
 
@@ -138,7 +138,7 @@
 	if(SSmapping.config.map_name == "Desert Town")
 		cmode_music = 'sound/music/combat_desert2.ogg'
 	..()
-	
+
 /datum/job/roguetown/councillor/after_spawn(mob/living/L, mob/M, latejoin = TRUE)//
 	if(SSmapping.config.map_name == "Desert Town")
 		cmode_music = 'sound/music/combat_desert2.ogg'
@@ -201,14 +201,14 @@
 			return FALSE
 
 		recruiter.say(replacetext(recruitment_message, "%RECRUIT", "[recruit]"), forced = "[name]")
-		
+
 		if(accept_message)
 			recruit.say(accept_message, forced = "[name]")
-			
+
 		if(new_role)
 			recruit.job = new_role
 			SEND_SIGNAL(SSdcs, COMSIG_GLOB_ROLE_CONVERTED, recruiter, recruit, new_role)
-			
+
 		ADD_TRAIT(recruit, TRAIT_SLAVE, TRAIT_GENERIC)
 		return TRUE
 
@@ -217,7 +217,7 @@
 	if(.)
 		ADD_TRAIT(recruit, TRAIT_SLAVE, TRAIT_GENERIC)
 
-// СПЕЛЛ КОНВЕРТА В АЗЕБЫ 
+// СПЕЛЛ КОНВЕРТА В АЗЕБЫ
 /obj/effect/proc_holder/spell/self/convertrole/azeb
 	name = "Recruit Azeb"
 	new_role = "Azeb"
@@ -253,7 +253,7 @@
 		if(do_after(user, 300, target = target))
 			if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
 				continue
-			
+
 			REMOVE_TRAIT(target, TRAIT_SLAVE, TRAIT_GENERIC)
 			REMOVE_TRAIT(target, TRAIT_SLAVE, JOB_TRAIT)
 			to_chat(user, span_notice("Вы успешно освободили [target]!"))
@@ -452,7 +452,7 @@
 	. = ..()
 	if(SSmapping && SSmapping.config && SSmapping.config.map_name == "Desert Town")
 		GLOB.bounty_posters["AZURIA"] = "The Sultanate of Al-Ashur"
-		GLOB.bounty_posters["GRENZELHOFT"] = "The Exalted Church of Zybantia"
+		GLOB.bounty_posters["VALORIA"] = "The Exalted Church of Zybantia"
 		if(!(/mob/living/simple_animal/hostile/retaliate/rogue/camel/tame/saddled in GLOB.virtue_mount_choices))
 			GLOB.virtue_mount_choices += /mob/living/simple_animal/hostile/retaliate/rogue/camel/tame/saddled
 

@@ -32,13 +32,13 @@ GLOBAL_VAR(PatreonsLoading)
 		return FALSE
 
 	var/datum/tgs_chat_channel/channel = sender.channel
-	var/allowed_channel_lower = lowertext(allowed_channel)
+	var/allowed_channel_lower = LOWER_TEXT(allowed_channel)
 
-	if(channel.id && lowertext("[channel.id]") == allowed_channel_lower)
+	if(channel.id && LOWER_TEXT("[channel.id]") == allowed_channel_lower)
 		return TRUE
-	if(channel.custom_tag && lowertext("[channel.custom_tag]") == allowed_channel_lower)
+	if(channel.custom_tag && LOWER_TEXT("[channel.custom_tag]") == allowed_channel_lower)
 		return TRUE
-	if(channel.friendly_name && lowertext("[channel.friendly_name]") == allowed_channel_lower)
+	if(channel.friendly_name && LOWER_TEXT("[channel.friendly_name]") == allowed_channel_lower)
 		return TRUE
 
 	return FALSE
@@ -570,10 +570,10 @@ GLOBAL_LIST_EMPTY(temporary_donators)
 	if(client)
 		if(client.patreonlevel())
 			return
-	var/name = input("Enter your patreon DISPLAY NAME exactly as it appears on Patreon.","ROGUETOWN") as text|null
+	var/name = input(usr, "Enter your patreon DISPLAY NAME exactly as it appears on Patreon.","ROGUETOWN") as text|null
 	if(!name)
 		return
-	var/email = input("Enter your patreon EMAIL ADDRESS exactly as it appears on Patreon.","ROGUETOWN") as text|null
+	var/email = input(usr, "Enter your patreon EMAIL ADDRESS exactly as it appears on Patreon.","ROGUETOWN") as text|null
 	if(!email)
 		return
 	if(!patreon_lookup(name) || !patreon_lookup(email) || !findtext(email, "@"))
@@ -660,7 +660,7 @@ GLOBAL_LIST_EMPTY(temporary_donators)
 		response += help_text
 		return donator_tgs_reply(response)
 
-	switch(lowertext(all_params[1]))
+	switch(LOWER_TEXT(all_params[1]))
 		if("set")
 			if(length(all_params) < 3)
 				response += "Usage: donator set <ckey> <1-5>"
@@ -777,7 +777,7 @@ GLOBAL_LIST_EMPTY(temporary_donators)
 
 		if("import_configs")
 			var/force = FALSE
-			if(length(all_params) >= 2 && lowertext(all_params[2]) == "force")
+			if(length(all_params) >= 2 && LOWER_TEXT(all_params[2]) == "force")
 				force = TRUE
 			var/imported = db_import_config_donators(force)
 			if(imported < 0)

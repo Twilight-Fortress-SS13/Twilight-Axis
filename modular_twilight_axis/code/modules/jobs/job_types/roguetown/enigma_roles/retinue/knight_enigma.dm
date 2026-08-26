@@ -36,15 +36,9 @@
 /datum/job/roguetown/knight_enigma/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(ishuman(L))
+		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, cloak_and_title_setup)), 50)
+
 		var/mob/living/carbon/human/H = L
-	/*	if(istype(H.cloak, /obj/item/clothing/cloak)) //TA EDIT
-			var/obj/item/clothing/S = H.cloak
-			var/index = findtext(H.real_name, " ")
-			if(index)
-				index = copytext(H.real_name, 1,index)
-			if(!index)
-				index = H.real_name
-			S.name = "[S.name] ([index])" */
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
 		var/honorary = "Ser"
@@ -61,16 +55,6 @@
 					MF.known_people -= prev_real_name
 					H.mind.person_knows_me(MF)
 
-/datum/outfit/job/roguetown/knight_enigma/post_equip(mob/living/carbon/human/H)  //TA EDIT
-	..()
-	if(istype(H.cloak, /obj/item/clothing/cloak))
-		var/obj/item/clothing/S = H.cloak
-		var/index = findtext(H.name_archive, " ")
-		if(index)
-			index = copytext(H.name_archive, 1,index)
-		if(!index)
-			index = H.name
-		S.name = "[S.name] ([index])" //TA EDIT
 
 /datum/outfit/job/roguetown/knight_enigma
 	//cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/guard
@@ -188,14 +172,6 @@
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
 		if(helmchoice != "None")
 			head = helmets[helmchoice]
-
-		var/heraldy = list(
-				"Surcoat" 	= /obj/item/clothing/cloak/tabard/stabard/guard,
-				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
-				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
-				)
-		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
-		cloak = heraldy[heraldychoice]
 
 		var/onhelm = list(
 			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,

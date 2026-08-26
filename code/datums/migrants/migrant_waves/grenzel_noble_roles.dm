@@ -7,7 +7,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	greet_text = "You are a Grenzelhoftian envoy, traveling with bodyguards and a priest to represent your homeland.\
-	 What exactly you have been sent here to speak about- only you know."
+		What exactly you have been sent here to speak about- only you know."
 	advclass_cat_rolls = list(CTAG_GRENZEL_ENVOY = 20)
 
 /datum/advclass/grenzel_envoy
@@ -169,7 +169,7 @@
 		STATKEY_WIL = 3,
 		STATKEY_SPD = -1,
 	)
-	subclass_stats = list(
+	subclass_skills = list( // TA EDIT
 		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
@@ -185,8 +185,8 @@
 	)
 
 /datum/outfit/job/roguetown/grenzel/priest/pre_equip(mob/living/carbon/human/H)
+	H.set_patron(/datum/patron/divine/undivided) // TA EDIT
 	..()
-	H.set_patron(/datum/patron/divine/undivided)
 	neck = /obj/item/clothing/neck/roguetown/psicross/astrata
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/priest
 	pants = /obj/item/clothing/under/roguetown/tights/black

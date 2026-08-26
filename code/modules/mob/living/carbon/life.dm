@@ -94,7 +94,7 @@
 						addtimer(CALLBACK(src, PROC_REF(Stun), 110), 10)
 						addtimer(CALLBACK(src, PROC_REF(Knockdown), 110), 10)
 						mob_timers["painstun"] = world.time + 160
-					if(prob(probby) && HAS_TRAIT(src, TRAIT_NOPAINSTUN) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)  && (has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)))
+					if(prob(probby) && HAS_TRAIT(src, TRAIT_NOPAINSTUN) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)	&& (has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)))
 						Immobilize(10)
 						emote("superagony")
 						to_chat(src, span_userdanger("THE SACRED FLAMES, I FEEL PAIN AGAIN!"))
@@ -137,24 +137,41 @@
 				next_smell = world.time + 30 SECONDS
 				T.pollution.smell_act(src)
 
-/mob/living/proc/handle_inwater()
-	extinguish_mob()
+/mob/living/proc/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
+	if(extinguish)
+		extinguish_mob()
+	return FALSE
 
 /mob/living/carbon/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
-	..()
+	. = ..(onturf, extinguish, force_drown)
+
+	if(QDELETED(src) || stat == DEAD)
+		return FALSE
 
 	if(!(mobility_flags & MOBILITY_STAND) || force_drown)
 		if(HAS_TRAIT(src, TRAIT_NOBREATH) || HAS_TRAIT(src, TRAIT_WATERBREATHING) || HAS_TRAIT(src, TRAIT_HOLDBREATH))
 			return TRUE
-		if(stat == DEAD && client)
-			record_round_statistic(STATS_PEOPLE_DROWNED)
+
+		var/was_alive = stat != DEAD
 		var/drown_damage = has_world_trait(/datum/world_trait/abyssor_rage) ? 10 : 5
+
 		adjustOxyLoss(drown_damage)
-		emote("drown")
-	return TRUE
+
+		if(was_alive && stat == DEAD && client)
+			record_round_statistic(STATS_PEOPLE_DROWNED)
+
+		if(!QDELETED(src) && stat != DEAD)
+			emote("drown")
+
+		return TRUE
+
+	return FALSE
 
 /mob/living/carbon/human/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
-	. = ..()
+	. = ..(onturf, extinguish, force_drown)
+
+	if(QDELETED(src) || stat == DEAD)
+		return FALSE
 
 	if(istype(onturf, /turf/open/water/sewer) && !HAS_TRAIT(src, TRAIT_NOSTINK))
 		if(!HAS_TRAIT(src, TRAIT_HOLDBREATH))
@@ -162,6 +179,8 @@
 
 	if(istype(onturf, /turf/open/water/bath) && !wear_armor && !wear_shirt && !wear_pants)
 		add_stress(/datum/stressevent/bathwater)
+
+	return TRUE
 
 #define BURN_PAIN_WEIGHT 0.6
 
@@ -440,7 +459,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	if(HAS_TRAIT(src, TRAIT_STABLELIVER) || HAS_TRAIT(src, TRAIT_NOMETABOLISM))
 		return
 
-	adjustToxLoss(4, TRUE,  TRUE)
+	adjustToxLoss(4, TRUE,	TRUE)
 
 /////////////
 //CREMATION//
@@ -620,7 +639,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 				blood_volume = min(blood_volume + (4 * sleepy_mod), BLOOD_VOLUME_NORMAL)
 			for(var/obj/item/bodypart/affecting as anything in bodyparts)
 				//for context, it takes 5 small cuts (0.2 x 5) or 3 normal cuts (0.4 x 3) for a bodypart to not be able to heal itself
-				if(affecting.get_bleed_rate() >= 1)
+				if(affecting.get_bleed_rate() >= 1 && !HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE)) // however, if you're undead - and therefore won't deadite - we let you get back up after a VERY long time, bcs otherwise any artery can be an RR
 					continue
 				if(affecting.heal_damage(sleepy_mod, sleepy_mod, required_status = BODYPART_ORGANIC))
 					src.update_damage_overlays()

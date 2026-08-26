@@ -5,7 +5,7 @@ Attach clasps a hook onto the chosen atom (obj / mob, has to be unanchored and n
 Reel teleports the attached atom to the grabbed turf.
 */
 #define GRAPPLER_ZUP 1
-#define GRAPPLER_ZDOWN 2 
+#define GRAPPLER_ZDOWN 2
 #define GRAPPLER_NOZ 3
 
 /obj/item/grapplinghook
@@ -94,7 +94,7 @@ Reel teleports the attached atom to the grabbed turf.
 	reset_tile()
 	reset_target()
 	..()
-	
+
 
 /obj/item/grapplinghook/attack_self(mob/living/user)
 	if(!is_loaded && !in_use && user.used_intent != /datum/intent/reel)
@@ -176,6 +176,12 @@ Reel teleports the attached atom to the grabbed turf.
 	var/success = FALSE
 
 	if(state == GRAPPLER_ZDOWN || state == GRAPPLER_ZUP)
+		for(var/obj/O in last_step.contents)
+			if(O == ignore_atom)
+				continue
+			if(O.density || O.opacity)
+				return FALSE
+
 		if(last_step == Tt)
 			return TRUE
 
@@ -224,7 +230,7 @@ Reel teleports the attached atom to the grabbed turf.
 			for(var/obj/O in T.contents)
 				if(O == ignore_atom)
 					continue
-				if(O.density || O.opacity)	//ANY dense or opaque objects. It's strict, but it's also a teleport, so. 
+				if(O.density || O.opacity)	//ANY dense or opaque objects. It's strict, but it's also a teleport, so.
 					success = FALSE
 					return success
 
@@ -358,7 +364,7 @@ Reel teleports the attached atom to the grabbed turf.
 			if(grabby)
 				do_teleport(grabby, grappled_turf)
 				grabber.start_pulling(grabby, supress_message = TRUE)
-				if(grapple_buckled) 
+				if(grapple_buckled)
 					if(grabby.mobility_flags & MOBILITY_STAND)	// piggyback carry
 						grabber.buckle_mob(grabby, TRUE, TRUE, FALSE, 0, 0)
 					else				// fireman carry

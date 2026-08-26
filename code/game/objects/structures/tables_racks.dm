@@ -120,7 +120,7 @@
 	if(user.in_combat_until > world.time)
 		return
 	var/sneak_level = user.get_skill_level(/datum/skill/misc/sneaking) || 0
-	var/sneaktime = max(10, 45 - (sneak_level * 5))	// 1.5 seconds at Legendary. 
+	var/sneaktime = max(10, 45 - (sneak_level * 5))	// 1.5 seconds at Legendary.
 	if(user.loc == src)
 		unhide(user)
 		return
@@ -128,6 +128,8 @@
 		to_chat(user, span_warning("Someone is already hiding under [src]!"))
 		return
 	if(!do_after(user, sneaktime, src))
+		return
+	if(!QDELETED(src) && !isturf(loc))//prevents folding tables from nullspacing people
 		return
 	user.forceMove(src)
 	occupied = TRUE
@@ -141,6 +143,22 @@
 	occupied = FALSE
 	hiddenguy = null
 	to_chat(user, span_warning("I come out from under [src]!"))
+
+/obj/structure/table/proc/eject_hiders()
+	var/turf/T = get_turf(src)
+	if(!T)
+		return
+
+	for(var/mob/living/hidden_mob in contents)
+		hidden_mob.forceMove(T)
+		to_chat(hidden_mob, span_warning("I come out from under [src]!"))
+
+	occupied = FALSE
+	hiddenguy = null
+
+/obj/structure/table/Destroy(force)
+	eject_hiders()
+	return ..()
 
 /obj/structure/table/relaymove(mob/user)
 	if(user.loc == src)
@@ -316,7 +334,7 @@
 	climb_offset = 10
 	buildstack = /obj/item/grown/log/tree/small
 
-/obj/structure/table/wood/crafted/Initialize()
+/obj/structure/table/wood/crafted/Initialize(mapload)
 	. = ..()
 	icon_state = "tablewood1"
 
@@ -513,7 +531,7 @@
 		/obj/structure/table/wood/fancy/royalblue)
 	var/smooth_icon = 'icons/obj/smooth_structures/fancy_table.dmi' // see Initialize()
 
-/obj/structure/table/wood/fancy/Initialize()
+/obj/structure/table/wood/fancy/Initialize(mapload)
 	. = ..()
 	// Needs to be set dynamically because table smooth sprites are 32x34,
 	// which the editor treats as a two-tile-tall object. The sprites are that
@@ -576,6 +594,7 @@
 /obj/structure/table/wood/folding/attack_right(mob/user)
 	if(..())
 		return TRUE
+	eject_hiders()
 	user.visible_message(span_notice("[user] folds [src]."), span_notice("You fold [src]."))
 	new /obj/item/folding_table_stored(drop_location())
 	qdel(src)
@@ -708,7 +727,7 @@
 	buckle_requires_restraints = 1
 	var/mob/living/carbon/human/patient = null
 
-/obj/structure/table/optable/Initialize()
+/obj/structure/table/optable/Initialize(mapload)
 	. = ..()
 
 /obj/structure/table/optable/tablepush(mob/living/user, mob/living/pushed_mob)

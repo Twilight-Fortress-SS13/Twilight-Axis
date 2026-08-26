@@ -44,6 +44,7 @@
 	var/tmp/familytree_setspouse_wait_started = 0
 	var/tmp/familytree_consecutive_match_failures = 0
 	var/tmp/familytree_confirm_timerid
+	var/tmp/datum/family_confirm_prompt/familytree_confirm_prompt
 	var/allow_relatives_in_family = TRUE
 	var/know_your_fate = FALSE
 	var/familytree_father_name = ""

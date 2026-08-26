@@ -40,12 +40,17 @@
 	if(duke_forced_hetero_mode(P))
 		return "consort"
 
+	if(P.desired_relative_role == RELATIVE_SPOUSE)
+		return "consort"
+
 	if(familytree_pref_is_join(P.family) || familytree_pref_is_legacy_spouse(P.family))
 		return "suitor"
+
 	if(familytree_pref_is_create(P.family) || !familytree_pref_enabled(P.family))
 		return "consort"
 
 	return "consort"
+
 
 /datum/controller/subsystem/familytree/proc/duke_forced_hetero_mode(datum/preferences/P)
 	if(!P)
@@ -366,6 +371,10 @@
 	return TRUE
 
 /datum/controller/subsystem/familytree/proc/run_royal_hand_assignment_offer(mob/living/carbon/human/H)
+	if(round_disabled)
+		if(H && !QDELETED(H))
+			H.familytree_assignment_scheduled = FALSE
+		return
 	ftlog("run_royal_hand_assignment_offer: [H?.real_name] ([H?.ckey])")
 	if(!H || QDELETED(H))
 		return
@@ -390,6 +399,10 @@
 	INVOKE_ASYNC(src, PROC_REF(do_royal_hand_assignment_offer), H)
 
 /datum/controller/subsystem/familytree/proc/do_royal_hand_assignment_offer(mob/living/carbon/human/H)
+	if(round_disabled)
+		if(H && !QDELETED(H))
+			H.familytree_assignment_scheduled = FALSE
+		return
 	if(!H?.client || H.family_datum)
 		return
 	var/datum/family_member/monarch = GetCurrentMonarch()
@@ -421,6 +434,10 @@
 	stop_tracking_human(H, reason)
 
 /datum/controller/subsystem/familytree/proc/AddRoyal(mob/living/carbon/human/H, status)
+	if(round_disabled)
+		if(H && !QDELETED(H))
+			H.familytree_assignment_scheduled = FALSE
+		return
 	if(!H)
 		return
 	var/block_reason = get_familytree_runtime_block_reason(H, TRUE)

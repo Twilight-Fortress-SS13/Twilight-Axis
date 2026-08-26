@@ -48,6 +48,7 @@
 	var/triumph_total = 0
 	/// Threshold at which this wave is guaranteed to be next
 	var/triumph_threshold = 25
+	var/triumph_weight_multiplier = 6 // TA EDIT
 	/// Whether triumph contributions reset after wave spawns
 	var/reset_contributions_on_spawn = TRUE
 

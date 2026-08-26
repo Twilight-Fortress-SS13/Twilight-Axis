@@ -5,7 +5,7 @@
 //a value in hud_list with one of these will change that behavior
 #define HUD_LIST_LIST 1
 //rogue
-#define ANTAG_HUD_TRAITOR 	1
+#define ANTAG_HUD_TRAITOR	1
 #define ANTAG_HUD_REV		2
 #define ANTAG_HUD_VAMPIRE	3
 #define ANTAG_HUD_ZOMBIE	4
@@ -19,3 +19,4 @@
 
 // TA
 #define ANTAG_HUD_ZIZOID "antag_hud_zizoid"
+#define ANTAG_HUD_WEREWOLF "antag_hud_werewolf" // TA EDIT

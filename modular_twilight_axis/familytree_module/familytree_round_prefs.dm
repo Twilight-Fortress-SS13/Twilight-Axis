@@ -119,7 +119,10 @@
 		if(!stored.capture(P, H.ckey))
 			return null
 		familytree_round_prefs_by_ckey[H.ckey] = stored
-		ftlog("ROUND_PREFS: locked for [H.real_name] ([H.ckey]) pref=[stored.family_pref] role=[stored.desired_relative_role] target='[stored.setspouse]'", FTLOG_INFO)
+		var/list/species_names = islist(stored.preferred_species_types) ? stored.preferred_species_types : list()
+		var/species_text = species_names.len ? species_names.Join(", ") : "none"
+		var/species_mode = stored.species_preference_mode || "ANY"
+		ftlog("ROUND_PREFS: SEARCH_START search_id=[familytree_search_id(H)] name='[H.real_name]' ckey='[H.ckey]' sex=[familytree_sex_label(H)] self_pronouns=[familytree_pronouns_label(H)] self_anatomy=[familytree_anatomy_label(H)] seeks_sex=[familytree_seeks_sex_label(H, stored.gender_choice_pref)] seeks_pronouns=[familytree_seeks_pronouns_label(H, stored.gender_choice_pref)] seeks_anatomy=[familytree_anatomy_pref_label(stored.preferred_species_anatomy)] pronouns_pref=[familytree_gender_pref_label(stored.gender_choice_pref)] pref=[stored.family_pref] role=[familytree_relative_pref_label(stored.desired_relative_role)]([stored.desired_relative_role]) target='[stored.setspouse]' polygamy=[familytree_polygamy_pref_label(stored.polygamy_mode)] species_mode=[species_mode] species='[species_text]' anatomy_pref=[stored.preferred_species_anatomy] low_status=[stored.allow_low_status_marriage] relatives=[stored.allow_relatives_in_family]", FTLOG_INFO)
 	if(stored)
 		H.familytree_round_prefs = stored
 	return stored

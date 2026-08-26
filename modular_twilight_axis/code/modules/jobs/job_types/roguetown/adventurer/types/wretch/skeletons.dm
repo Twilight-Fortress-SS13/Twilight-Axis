@@ -10,7 +10,6 @@
 	tutorial = "You're a shkeleton! You already forgot how you got all these bones, but people fears you, they want to dig you down. Do it first."
 	outfit = /datum/outfit/job/roguetown/wretch/hero
 	allowed_sexes = list(MALE, FEMALE)
-	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_ACCURSED
 	cmode_music = "modular_twilight_axis/sound/music/combat_skeleton.ogg"
@@ -18,11 +17,11 @@
 	maximum_possible_slots = 2
 	extra_context = "You're a SKELETON, be ready to shackle your bones. Minimum PQ Required: 30"
 	traits_applied = list(
-		TRAIT_NOHUNGER, 
-		TRAIT_NOBREATH, 
-		TRAIT_NOPAIN, 
-		TRAIT_TOXIMMUNE, 
-		TRAIT_SHOCKIMMUNE, 
+		TRAIT_NOHUNGER,
+		TRAIT_NOBREATH,
+		TRAIT_NOPAIN,
+		TRAIT_TOXIMMUNE,
+		TRAIT_SHOCKIMMUNE,
 		TRAIT_SILVER_WEAK,
 		TRAIT_BREADY,
 	)
@@ -37,6 +36,17 @@
 	)
 
 /datum/outfit/job/roguetown/wretch/hero/proc/skelet(mob/living/carbon/human/H)
+	var/had_godmode = (H.status_flags & GODMODE)
+	H.status_flags |= GODMODE
+	if(isdullahan(H))
+		var/obj/item/bodypart/head/old_head = H.get_bodypart(BODY_ZONE_HEAD)
+		if(old_head)
+			var/obj/item/bodypart/head/new_head = new /obj/item/bodypart/head()
+			new_head.replace_limb(H, TRUE)
+			qdel(old_head)
+	H.set_species(/datum/species/human/northern)
+	if(!had_godmode)
+		H.status_flags &= ~GODMODE
 	H.hairstyle = "Bald"
 	H.facial_hairstyle = "Shaved"
 	ADD_TRAIT(H, TRAIT_LIMBATTACHMENT, TRAIT_GENERIC)
@@ -140,7 +150,7 @@
 				/obj/item/twilight_powderflask = 1,
 				/obj/item/clothing/gloves/roguetown/knuckles/ancient = 1
 			)
-	
+
 	H.select_skeleton_features()
 
 /datum/outfit/job/roguetown/wretch/hero/post_equip(mob/living/carbon/human/H)

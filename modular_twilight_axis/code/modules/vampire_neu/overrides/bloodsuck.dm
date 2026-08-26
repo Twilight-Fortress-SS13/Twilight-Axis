@@ -801,7 +801,7 @@ drinksomeblood()
 		to_chat(sire, span_notice("[src] не может отвергнуть обращение, предначертанное моей амбицией."))
 	else
 		var/use_byond_alert = stat != CONSCIOUS || blood_volume <= BLOOD_VOLUME_SURVIVE || InCritical()
-		vampire_choice = tgui_alert(
+		vampire_choice = ta_tgui_tooltip_alert(
 			src,
 			prompt_text,
 			"ПРОКЛЯТИЕ КАИНА",

@@ -51,7 +51,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
 	id = /obj/item/mattcoin
 	var/classes = list("Jäger Deserter", "Veteran")
-	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
+	var/classchoice = input(H, "Choose your archetypes", "Available archetypes") as anything in classes
 	switch(classchoice)
 		if("Jäger Deserter")
 			mask = /obj/item/clothing/mask/rogue/facemask/steel

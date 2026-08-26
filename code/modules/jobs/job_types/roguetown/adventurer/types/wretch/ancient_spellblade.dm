@@ -2,7 +2,7 @@
 	name = "Unbound Ancient Azurcaephan"
 	tutorial = "You were once an Azurcaephan - a Spellblade from aeons past, perhaps from even the day of Tarichea. You remember your chant, your oath, every move of your blade and the flow of the arcyne. Intellect and will, unlike most other skeletons. Yet, you are without a purpose, without a master. Why do you fight? You do not know. But fight you shall. The world sees you as an abomination. Seek your own path."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/wretch/ancient_spellblade
 	class_select_category = CLASS_CAT_ACCURSED
 	category_tags = list(CTAG_WRETCH)
@@ -17,7 +17,7 @@
 		STATKEY_PER = 1,
 		STATKEY_SPD = -1,
 		STATKEY_STR = -1,
-	 ) // Weighted 3 - Loses str because Int makes sense for a caster. 0 CON for limb reattachment tradeoff.
+		) // Weighted 3 - Loses str because Int makes sense for a caster. 0 CON for limb reattachment tradeoff.
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 4)
 	subclass_skills = list(
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
@@ -43,6 +43,18 @@
 
 /datum/outfit/job/roguetown/wretch/ancient_spellblade/pre_equip(mob/living/carbon/human/H)
 	..()
+
+	var/had_godmode = (H.status_flags & GODMODE) // TA EDIT START
+	H.status_flags |= GODMODE
+	if(isdullahan(H))
+		var/obj/item/bodypart/head/old_head = H.get_bodypart(BODY_ZONE_HEAD)
+		if(old_head)
+			var/obj/item/bodypart/head/new_head = new /obj/item/bodypart/head()
+			new_head.replace_limb(H, TRUE)
+			qdel(old_head)
+	H.set_species(/datum/species/human/northern)
+	if(!had_godmode)
+		H.status_flags &= ~GODMODE // TA EDIT END
 
 	H.become_skeleton()
 

@@ -1,8 +1,6 @@
 	////////////
 	//SECURITY//
 	////////////
-#define UPLOAD_LIMIT		1048576	//Restricts client uploads to the server to 1MB //Could probably do with being lower.
-
 GLOBAL_LIST_INIT(blacklisted_builds, list(
 	"1407" = "bug preventing client display overrides from working leads to clients being able to see things/mobs they shouldn't be able to see",
 	"1408" = "bug preventing client display overrides from working leads to clients being able to see things/mobs they shouldn't be able to see",
@@ -21,7 +19,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 #define ADMINSWARNED_AT	5
 	/*
 	When somebody clicks a link in game, this Topic is called first.
-	It does the stuff in this proc and  then is redirected to the Topic() proc for the src=[0xWhatever]
+	It does the stuff in this proc and	then is redirected to the Topic() proc for the src=[0xWhatever]
 	(if specified in the link). ie locate(hsrc).Topic()
 
 	Such links can be spoofed.
@@ -32,7 +30,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		- If so, does it have checks to see if the person who called it (usr.client) is an admin?
 		- Are the processes being called by Topic() particularly laggy?
 		- If so, is there any protection against somebody spam-clicking a link?
-	If you have any  questions about this stuff feel free to ask. ~Carn
+	If you have any	questions about this stuff feel free to ask. ~Carn
 	*/
 
 /client
@@ -172,7 +170,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		var/mob/voice = locate(href_list["voice"])
 		if(QDELETED(schizo) || !voice.client)
 			return
-		var/msg = input("Ask again:", "To the voice of a [schizo.voice_names[voice.client.ckey]]") as text|null
+		var/msg = input(src, "Ask again:", "To the voice of a [schizo.voice_names[voice.client.ckey]]") as text|null
 		if(msg)
 			mob.schizohelp(msg, TRUE, voice, schizo)
 			schizo.asked_again = TRUE
@@ -296,6 +294,18 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	log_admin("[key_name(src)] opened the Chronicle preview.")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "View Chronicle")
 
+/client/proc/cmd_admin_view_economics()
+	set category = "Debug"
+	set name = "View Economics"
+	set desc = "Open the Realm Economics panel without waiting for round end."
+
+	if(!check_rights(R_ADMIN|R_DEBUG))
+		return
+	var/datum/economic_chronicle/chronicle = get_economic_chronicle()
+	chronicle.ui_interact(mob)
+	log_admin("[key_name(src)] opened the Realm Economics preview.")
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "View Economics")
+
 /client/proc/is_content_unlocked()
 	if(!prefs.unlock_content)
 		to_chat(src, "Become a BYOND member to access member-perks and features, as well as support the engine that makes this game possible. Only 10 bucks for 3 months! <a href=\"https://secure.byond.com/membership\">Click Here to find out more</a>.")
@@ -351,14 +361,20 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		last_message = message
 		src.last_message_count = 0
 		return 0
-/*
-//This stops files larger than UPLOAD_LIMIT being sent from client to server via input(), client.Import() etc.
+
 /client/AllowUpload(filename, filelength)
-	if(filelength > UPLOAD_LIMIT)
-		to_chat(src, "<font color='red'>Error: AllowUpload(): File Upload too large. Upload Limit: [UPLOAD_LIMIT/1024]KiB.</font>")
-		return 0
-	return 1
-*/
+	if(isnull(upload_limit))
+		return TRUE
+	if(filelength > upload_limit)
+		to_chat(src, "<font color='red'>Error: AllowUpload(): File Upload too large. Upload Limit: [round(upload_limit / 1024)]KiB.</font>")
+		return FALSE
+	if(length(upload_exts))
+		var/dot = findlasttext(filename, ".")
+		var/extension = dot ? LOWER_TEXT(copytext(filename, dot)) : ""
+		if(!(extension in upload_exts))
+			to_chat(src, "<font color='red'>Error: AllowUpload(): Wrong file type. Expected: [jointext(upload_exts, ", ")].</font>")
+			return FALSE
+	return TRUE
 
 #if (PRELOAD_RSC == 0)
 GLOBAL_LIST_EMPTY(external_rsc_urls)
@@ -400,7 +416,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 					autorank = R
 					break
 			if(!autorank)
-				to_chat(world, "Autoadmin rank not found")
+				to_world("Autoadmin rank not found")
 			else
 				new /datum/admins(autorank, ckey)
 	if(CONFIG_GET(flag/enable_localhost_rank) && !connecting_admin)
@@ -574,7 +590,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 		to_chat(src, get_message_output("memo"))
 		adminGreet()
 	if(!BC_IsKeyAllowedToConnect(ckey))
-		src << "Sorry, but the server is currently only accepting whitelisted players.  Please see the discord to be whitelisted."
+		src << "Sorry, but the server is currently only accepting whitelisted players.	Please see the discord to be whitelisted."
 		message_admins("[ckey] was denied a connection due to not being whitelisted.")
 		log_admin("[ckey] was denied a connection due to not being whitelisted.")
 		qdel(src)
@@ -1003,7 +1019,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 
 			sleep(15 SECONDS) //Longer sleep here since this would trigger if a client tries to reconnect manually because the inital reconnect failed
 
-			 //we sleep after telling the client to reconnect, so if we still exist something is up
+				//we sleep after telling the client to reconnect, so if we still exist something is up
 			log_access("Forced disconnect: [key] [computer_id] [address] - CID randomizer check")
 
 			qdel(src)
@@ -1215,8 +1231,6 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 		add_verb(src, /client/proc/self_playtime)
 
 
-#undef UPLOAD_LIMIT
-
 //checks if a client is afk
 //3000 frames = 5 minutes
 /client/proc/is_afk(duration = CONFIG_GET(number/inactivity_period))
@@ -1413,7 +1427,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 		return FALSE
 	return TRUE
 
-/client/proc/commendsomeone(var/forced = FALSE)
+/client/proc/commendsomeone(forced = FALSE)
 	if(!can_commend(forced))
 		return
 	if(alert(src,"Was there a character during this round that you would like to anonymously commend?", "Commendation", "YES", "NO") != "YES")

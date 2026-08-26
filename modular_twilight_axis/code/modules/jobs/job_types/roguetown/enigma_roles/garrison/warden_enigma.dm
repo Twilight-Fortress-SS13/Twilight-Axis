@@ -98,11 +98,11 @@
 	if(H.mind)
 		backpack_contents = list(/obj/item/storage/keyring/warden_enigma = 1, /obj/item/rogueweapon/scabbard/sheath = 1, /obj/item/rogueweapon/huntingknife/idagger/steel = 1)
 		SStreasury.give_money_account(ECONOMIC_UPPER_MIDDLE_CLASS, H, "Savings.")
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/movemovemove)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/takeaim)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/hold)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/onfeet)
-	H.verbs |= list(/mob/proc/haltyell, /mob/living/carbon/human/mind/proc/setorders)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/movemovemove)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/takeaim)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/onfeet)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/hold)
+	add_verb(H, list(/mob/proc/haltyell, /mob/living/carbon/human/mind/proc/setorders))
 
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/overseer
 	name = "overseer's brigandine"

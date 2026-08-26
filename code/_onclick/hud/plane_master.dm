@@ -66,7 +66,8 @@
 
 /atom/movable/screen/plane_master/game_world/backdrop(mob/mymob)
 	clear_filters()
-	filters += AMBIENT_OCCLUSION
+	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
+		filters += AMBIENT_OCCLUSION
 	if(istype(mymob) && mymob.eye_blurry)
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
@@ -84,7 +85,7 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	render_target = "lighting"
 
-/atom/movable/screen/plane_master/lighting/Initialize()
+/atom/movable/screen/plane_master/lighting/Initialize(mapload)
 	. = ..()
 	filters += filter(type="alpha", render_source = EMISSIVE_RENDER_TARGET, flags = MASK_INVERSE)
 	filters += filter(type="alpha", render_source = EMISSIVE_UNBLOCKABLE_RENDER_TARGET, flags = MASK_INVERSE)
@@ -93,7 +94,7 @@
 /atom/movable/screen/plane_master/lighting/backdrop(mob/mymob)
 	mymob.overlay_fullscreen("lighting_backdrop_lit", /atom/movable/screen/fullscreen/lighting_backdrop/lit)
 	mymob.overlay_fullscreen("lighting_backdrop_unlit", /atom/movable/screen/fullscreen/lighting_backdrop/unlit)
-	mymob.overlay_fullscreen("sunlight_backdrop",  /atom/movable/screen/fullscreen/lighting_backdrop/sunlight)
+	mymob.overlay_fullscreen("sunlight_backdrop",	/atom/movable/screen/fullscreen/lighting_backdrop/sunlight)
 
 /atom/movable/screen/plane_master/camera_static
 	name = "camera static plane master"
@@ -120,7 +121,8 @@
 
 /atom/movable/screen/plane_master/game_world_fov_hidden/backdrop(mob/mymob)
 	clear_filters()
-	filters += AMBIENT_OCCLUSION
+	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
+		filters += AMBIENT_OCCLUSION
 	if(istype(mymob) && mymob.eye_blurry)
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
@@ -138,7 +140,8 @@
 
 /atom/movable/screen/plane_master/game_world_above/backdrop(mob/mymob)
 	clear_filters()
-	filters += AMBIENT_OCCLUSION
+	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
+		filters += AMBIENT_OCCLUSION
 	if(istype(mymob) && mymob.eye_blurry)
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
@@ -155,7 +158,8 @@
 
 /atom/movable/screen/plane_master/game_world_below/backdrop(mob/mymob)
 	clear_filters()
-	filters += AMBIENT_OCCLUSION
+	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
+		filters += AMBIENT_OCCLUSION
 	if(istype(mymob) && mymob.eye_blurry)
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
@@ -176,7 +180,8 @@
 
 /atom/movable/screen/plane_master/game_world_walls/backdrop(mob/mymob)
 	clear_filters()
-	filters += AMBIENT_OCCLUSION_WALLS
+	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
+		filters += AMBIENT_OCCLUSION_WALLS
 	if(istype(mymob) && mymob.eye_blurry)
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
@@ -211,53 +216,6 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	blend_mode = BLEND_MULTIPLY
 
-/atom/movable/screen/plane_master/game_world_below
-	name = "lowest game world plane master"
-	plane = GAME_PLANE_LOWER
-	appearance_flags = PLANE_MASTER
-	blend_mode = BLEND_OVERLAY
-
-/atom/movable/screen/plane_master/game_world_below/backdrop(mob/mymob)
-	clear_filters()
-	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
-		filters = list()
-		filters += AMBIENT_OCCLUSION
-		if(istype(mymob) && mymob.eye_blurry)
-			filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
-		if(istype(mymob))
-			if(isliving(mymob))
-				var/mob/living/L = mymob
-				if(L.has_status_effect(/datum/status_effect/buff/druqks))
-					filters += filter(type="ripple",x=80,size=50,radius=0,falloff = 1)
-					var/F1 = filters[filters.len]
-					filters += filter(type="color", color = list(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0))
-					F1 = filters[filters.len-1]
-					animate(F1, size=50, radius=480, time=10, loop=-1, flags=ANIMATION_PARALLEL)
-
-
-/atom/movable/screen/plane_master/game_world_walls
-	name = "game world walls"
-	plane = WALL_PLANE
-	appearance_flags = PLANE_MASTER
-	blend_mode = BLEND_OVERLAY
-
-/atom/movable/screen/plane_master/game_world_walls/backdrop(mob/mymob)
-	clear_filters()
-	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
-		filters = list()
-		filters += AMBIENT_OCCLUSION_WALLS
-		if(istype(mymob) && mymob.eye_blurry)
-			filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
-		if(istype(mymob))
-			if(isliving(mymob))
-				var/mob/living/L = mymob
-				if(L.has_status_effect(/datum/status_effect/buff/druqks))
-					filters += filter(type="ripple",x=80,size=50,radius=0,falloff = 1)
-					var/F1 = filters[filters.len]
-					filters += filter(type="color", color = list(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0))
-					F1 = filters[filters.len-1]
-					animate(F1, size=50, radius=480, time=10, loop=-1, flags=ANIMATION_PARALLEL)
-
 //Contains all weather overlays
 /atom/movable/screen/plane_master/weather_overlay
 	name = "weather overlay master"
@@ -276,7 +234,7 @@
 	screen_loc = "CENTER-2:-16, CENTER"
 	//render_relay_plane = RENDER_PLANE_GAME
 
-/atom/movable/screen/plane_master/weather_effect/Initialize()
+/atom/movable/screen/plane_master/weather_effect/Initialize(mapload)
 	. = ..()
 	//filters += filter(type="alpha", render_source=WEATHER_RENDER_TARGET)
 	SSoutdoor_effects.weather_planes_need_vis |= src
@@ -284,18 +242,18 @@
 /atom/movable/screen/plane_master/weather_effect/Destroy()
 	. = ..()
 	SSoutdoor_effects.weather_planes_need_vis -= src
-/* Our sunlight planemaster mashes all of our sunlight overlays together into one             */
-/* The fullscreen then grabs the plane_master with a layer filter, and colours it             */
+/* Our sunlight planemaster mashes all of our sunlight overlays together into one				*/
+/* The fullscreen then grabs the plane_master with a layer filter, and colours it				*/
 /* We do this so the sunlight fullscreen acts as a big lighting object, in our lighting plane */
 /atom/movable/screen/fullscreen/lighting_backdrop/sunlight
-	icon_state  = ""
+	icon_state	= ""
 	screen_loc = "CENTER-2:-16, CENTER"
 	transform = null
 	plane = LIGHTING_PLANE
 	blend_mode = BLEND_ADD
 	show_when_dead = TRUE
 
-/atom/movable/screen/fullscreen/lighting_backdrop/sunlight/Initialize()
+/atom/movable/screen/fullscreen/lighting_backdrop/sunlight/Initialize(mapload)
 	. = ..()
 	filters += filter(type="layer", render_source=SUNLIGHTING_RENDER_TARGET)
 	SSoutdoor_effects.sunlighting_planes |= src

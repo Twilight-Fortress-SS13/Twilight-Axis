@@ -27,6 +27,7 @@
 @include meta.load-css('./themes/trey_liam.scss');
 @include meta.load-css('./themes/grimoire.scss');
 @include meta.load-css('./themes/blackstone.scss');
+@include meta.load-css('./themes/ducal_court.scss');
 @include meta.load-css('./themes/parchment.scss');
 @include meta.load-css('./themes/parchment_vellum.scss');
 @include meta.load-css('./themes/parchment_leatherbound.scss');
@@ -37,6 +38,7 @@
 @include meta.load-css('./interfaces/Changelog.scss');
 @include meta.load-css('./interfaces/ContractLedger.scss');
 @include meta.load-css('./interfaces/CrewManifest.scss');
+@include meta.load-css('./interfaces/DucalCourt.scss');
 @include meta.load-css('./interfaces/Emojipedia.scss');
 @include meta.load-css('./interfaces/ExperimentConfigure.scss');
 @include meta.load-css('./interfaces/FamilySettingsPanel.scss');

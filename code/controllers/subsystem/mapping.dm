@@ -31,7 +31,7 @@ SUBSYSTEM_DEF(mapping)
 	var/clearing_reserved_turfs = FALSE
 
 	// Z-manager stuff
-	var/station_start  // should only be used for maploading-related tasks
+	var/station_start	// should only be used for maploading-related tasks
 	var/space_levels_so_far = 0
 	///list of all z level datums in the order of their z (z level 1 is at index 1, etc.)
 	var/list/datum/space_level/z_list
@@ -63,21 +63,21 @@ SUBSYSTEM_DEF(mapping)
 	// After assigning a config datum to var/config, we check which map ajudstment fits the current config
 	for(var/datum/map_adjustment/each_adjust as anything in subtypesof(/datum/map_adjustment))
 		var/adj_name = initial(each_adjust.map_file_name) //TA EDIT
-		
+
 		if(!config.map_file)
 			continue
 
-		
+
 		if(islist(config.map_file))
-			
+
 			if(!(adj_name in config.map_file))
 				continue
 		else
-			
+
 			if(adj_name != config.map_file)
 				continue
 
-		map_adjustment = new each_adjust() 
+		map_adjustment = new each_adjust()
 		log_world("Loaded '[adj_name]' map adjustment.") //TA EDIT END
 		break
 	return ..()
@@ -90,7 +90,7 @@ SUBSYSTEM_DEF(mapping)
 		var/old_config = config
 		config = global.config.defaultmap
 		if(!config || config.defaulted)
-			to_chat(world, "<span class='boldannounce'>Unable to load next or default map config, defaulting to Vanderlin</span>")
+			to_world("<span class='boldannounce'>Unable to load next or default map config, defaulting to Vanderlin</span>")
 			config = old_config
 	if(map_adjustment)
 		map_adjustment.on_mapping_init()
@@ -108,10 +108,7 @@ SUBSYSTEM_DEF(mapping)
 		var/list/posters = GLOB.bounty_posters
 		if("AZURIA" in posters)
 			posters -= "AZURIA"
-			posters["ENIGMA"] = "The Justiciary of Enigma"
-		if("GRENZELHOFT" in posters)
-			posters -= "GRENZELHOFT"
-			posters["VALORIA"] = "The Valorian Holy See" // TA EDIT END
+			posters["ENIGMA"] = "The Justiciary of Enigma" // TA EDIT END
 	return ..()
 
 /datum/controller/subsystem/mapping/proc/generate_z_level_linkages()
@@ -151,12 +148,12 @@ SUBSYSTEM_DEF(mapping)
 
 	z_list = SSmapping.z_list
 
-#define INIT_ANNOUNCE(X) to_chat(world, "<span class='boldannounce'>[X]</span>"); log_world(X)
+#define INIT_ANNOUNCE(X) to_world("<span class='boldannounce'>[X]</span>"); log_world(X)
 /datum/controller/subsystem/mapping/proc/LoadGroup(list/errorList, name, path, files, list/traits, list/default_traits, silent = FALSE)
 	. = list()
 	var/start_time = REALTIMEOFDAY
 
-	if (!islist(files))
+	if (!islist(files))	// handle single-level maps
 		files = list(files)
 
 	var/total_z = 0
@@ -168,17 +165,17 @@ SUBSYSTEM_DEF(mapping)
 		if (!bounds)
 			errorList |= full_path
 			continue
-		parsed_maps[pm] = total_z
+		parsed_maps[pm] = total_z	// save the start Z of this file
 		total_z += bounds[MAP_MAXZ] - bounds[MAP_MINZ] + 1
 
-	if (!length(traits))
+	if (!length(traits))	// null or empty - default
 		for (var/i in 1 to total_z)
 			traits += list(default_traits)
-	else if (total_z != traits.len)
+	else if (total_z != traits.len)	// mismatch
 		INIT_ANNOUNCE("WARNING: [traits.len] trait sets specified for [total_z] z-levels in [path]!")
-		if (total_z < traits.len)
+		if (total_z < traits.len)	// ignore extra traits
 			traits.Cut(total_z + 1)
-		while (total_z > traits.len)
+		while (total_z > traits.len)	// fall back to defaults on extra levels
 			traits += list(default_traits)
 
 	var/start_z = world.maxz + 1
@@ -305,18 +302,12 @@ SUBSYSTEM_DEF(mapping)
 		if (!VM)
 			mapvotes.Remove(map)
 			continue
-		if (VM.voteweight <= 0)
-			mapvotes.Remove(map)
-			continue
 		if (VM.config_min_users > 0 && players < VM.config_min_users)
 			mapvotes.Remove(map)
 			continue
 		if (VM.config_max_users > 0 && players > VM.config_max_users)
 			mapvotes.Remove(map)
 			continue
-
-		if(pmv)
-			mapvotes[map] = mapvotes[map]*VM.voteweight
 
 	var/pickedmap = pickweight(mapvotes)
 	if (!pickedmap)
@@ -325,7 +316,7 @@ SUBSYSTEM_DEF(mapping)
 	message_admins("Randomly rotating map to [VM.map_name]")
 	. = changemap(VM)
 	if (. && VM.map_name != config.map_name)
-		to_chat(world, "<span class='boldannounce'>Map rotation has chosen [VM.map_name] for next round!</span>")
+		to_world("<span class='boldannounce'>Map rotation has chosen [VM.map_name] for next round!</span>")
 
 /datum/controller/subsystem/mapping/proc/changemap(datum/map_config/VM)
 	if(!VM.MakeNextMap())
@@ -452,7 +443,7 @@ SUBSYSTEM_DEF(mapping)
 		var/datum/map_template/template = SSmapping.map_templates[pick(mark.templates)] //Find our actual existing template, it should be pre-loaded
 		//Pick() should just randomly pick out of the templates list, or just grab the one there if there is only one
 		if(istype(template)) //If our template pick failed, it should just abort and not do anything
-			if(template.load(get_turf(mark))) //Fire it up. Should use bottom left corner.  This will take the majority of loading time
+			if(template.load(get_turf(mark))) //Fire it up. Should use bottom left corner.	This will take the majority of loading time
 				LAZYREMOVE(SSmapping.map_load_marks,mark) //Get rid of the mark from our global list of marks
 				qdel(mark) //Delete the mark now that the map is loaded
 			else

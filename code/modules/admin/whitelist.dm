@@ -24,6 +24,82 @@
 	return allow
 
 
+/datum/config_entry/keyed_list/whitelist_remove_limit_exempt
+	key_mode = KEY_MODE_TEXT
+	value_mode = VALUE_MODE_FLAG
+	protection = CONFIG_ENTRY_LOCKED
+
+#define WHITELIST_REMOVE_LIMIT 5
+#define WHITELIST_REMOVE_WINDOW (6 HOURS)
+#define WHITELIST_REMOVE_LIMIT_FILE "data/whitelist_remove_limits.sav"
+
+GLOBAL_LIST_EMPTY(whitelist_remove_limits)
+GLOBAL_VAR_INIT(whitelist_remove_limits_loaded, FALSE)
+
+/proc/load_whitelist_remove_limits()
+	if(GLOB.whitelist_remove_limits_loaded)
+		return
+
+	GLOB.whitelist_remove_limits_loaded = TRUE
+	if(!fexists(WHITELIST_REMOVE_LIMIT_FILE))
+		return
+
+	var/savefile/limit_file = new(WHITELIST_REMOVE_LIMIT_FILE)
+	var/list/loaded_limits
+	limit_file["limits"] >> loaded_limits
+	if(islist(loaded_limits))
+		GLOB.whitelist_remove_limits = loaded_limits
+
+/proc/save_whitelist_remove_limits()
+	var/savefile/limit_file = new(WHITELIST_REMOVE_LIMIT_FILE)
+	limit_file["limits"] << GLOB.whitelist_remove_limits
+
+/proc/get_whitelist_remove_limit_state(sender_id)
+	load_whitelist_remove_limits()
+
+	var/sender_key = "[sender_id]"
+	var/list/remove_state = GLOB.whitelist_remove_limits[sender_key]
+	if(!islist(remove_state))
+		return null
+
+	var/window_started = remove_state["window_started"]
+	var/remove_count = remove_state["remove_count"]
+	if(!isnum(window_started) || !isnum(remove_count) || world.realtime - window_started >= WHITELIST_REMOVE_WINDOW)
+		GLOB.whitelist_remove_limits -= sender_key
+		save_whitelist_remove_limits()
+		return null
+
+	return remove_state
+
+/proc/register_whitelist_remove(sender_id)
+	load_whitelist_remove_limits()
+
+	var/sender_key = "[sender_id]"
+	var/list/remove_state = get_whitelist_remove_limit_state(sender_id)
+	if(!remove_state)
+		remove_state = list(
+			"window_started" = world.realtime,
+			"remove_count" = 0
+		)
+		GLOB.whitelist_remove_limits[sender_key] = remove_state
+
+	remove_state["remove_count"] += 1
+	save_whitelist_remove_limits()
+	return remove_state["remove_count"]
+
+/proc/whitelist_remove_limit_reached(sender_id)
+	var/list/remove_state = get_whitelist_remove_limit_state(sender_id)
+	return remove_state && remove_state["remove_count"] >= WHITELIST_REMOVE_LIMIT
+
+/proc/whitelist_remove_limit_exempt(datum/tgs_chat_user/sender)
+	var/list/exempt_ids = CONFIG_GET(keyed_list/whitelist_remove_limit_exempt)
+	if("[sender.id]" in exempt_ids)
+		return TRUE
+	for(var/exempt_id in exempt_ids)
+		if(sender.mention == "<@[exempt_id]>" || sender.mention == "<@![exempt_id]>")
+			return TRUE
+	return FALSE
+
 /proc/set_discord_ckey_assoc(raw_key, key, discord_id)
 	var/datum/DBQuery/query_get_discord = SSdbcore.NewQuery({"
 		SELECT ckey FROM [format_table_name("discord_ckey_assoc")]
@@ -180,7 +256,33 @@
 				. += "Invalid argument"
 				return
 
+			var/remove_limit_exempt = whitelist_remove_limit_exempt(sender)
+			if(!remove_limit_exempt && whitelist_remove_limit_reached(sender.id))
+				. += "Whitelist remove limit reached: [WHITELIST_REMOVE_LIMIT] removals per 6 hours."
+				return
+
 			var/key = ckey(all_params[2])
+			if(!key)
+				. += "Invalid ckey"
+				return
+
+			var/datum/DBQuery/query_get_whitelist = SSdbcore.NewQuery({"
+				SELECT id FROM [format_table_name("whitelist")]
+				WHERE ckey = :ckey
+			"}, list("ckey" = key))
+
+			if(!query_get_whitelist.Execute())
+				. += "Failed to check ckey `[key]`\n"
+				. += query_get_whitelist.ErrorMsg()
+				qdel(query_get_whitelist)
+				return
+
+			if(!query_get_whitelist.NextRow())
+				qdel(query_get_whitelist)
+				. += "`[key]` is not in the whitelist!"
+				return
+
+			qdel(query_get_whitelist)
 
 			var/datum/DBQuery/query_remove_whitelist = SSdbcore.NewQuery({"
 				DELETE FROM [format_table_name("whitelist")]
@@ -196,6 +298,10 @@
 			qdel(query_remove_whitelist)
 
 			. += "`[key]` has been removed from the whitelist!\n"
+			if(!remove_limit_exempt)
+				var/remove_count = register_whitelist_remove(sender.id)
+				if(remove_count >= WHITELIST_REMOVE_LIMIT)
+					. += "Whitelist remove limit reached: [WHITELIST_REMOVE_LIMIT] removals per 6 hours."
 			return
 
 		if("list")
@@ -246,3 +352,7 @@
 
 	. += "Discord ID for ckey `[key]` has been set to `[discord_id]`."
 	return
+
+#undef WHITELIST_REMOVE_LIMIT
+#undef WHITELIST_REMOVE_WINDOW
+#undef WHITELIST_REMOVE_LIMIT_FILE

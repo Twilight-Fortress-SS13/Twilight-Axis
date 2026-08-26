@@ -101,6 +101,8 @@
 
 	post_equip(H)
 
+	H.flag_gear_as_worn()
+
 	H.advjob = name
 
 	var/turf/TU = get_turf(H)
@@ -144,6 +146,8 @@
 
 	if(length(subclass_virtues))
 		for(var/virtue in subclass_virtues)
+			if(!virtue)
+				continue
 			apply_virtue(H, new virtue)
 
 	if(age_mod)

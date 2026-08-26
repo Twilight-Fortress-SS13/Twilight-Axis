@@ -47,6 +47,7 @@
 		/datum/advclass/wretch/vigilante,
 		/datum/advclass/wretch/munitioneer,
 		/datum/advclass/wretch/pariah,
+		/datum/advclass/wretch/profane_champion,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
 	//	/datum/advclass/wretch/ancient_deathknight,
@@ -275,6 +276,13 @@
 
 	result["tier2_extra"] = tier2_max
 	result["final_slots"] = max(0, min(slots, cap))
+
+	// TA EDIT BEGIN НЕРФ ЛОУПОП ВРЕТЧИКОВ)))
+	//как же ща сгорит у каких нибудь любителей заходить раз в 3 месяца, вретчей занерфили блин((9
+	if(SSticker.IsRoundInProgress() && player_count < 40)
+		result["combat_positions_alive"] = SSgamemode.combat_positions_alive
+		result["final_slots"] = max(0, min(result["final_slots"], SSgamemode.combat_positions_alive, cap))
+	// TA EDIT END
 
 	return result
 

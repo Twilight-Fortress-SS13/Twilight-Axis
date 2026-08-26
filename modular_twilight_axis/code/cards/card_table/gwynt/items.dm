@@ -3,6 +3,8 @@
 	desc = "A prepared deck for a round-based game of Arlette."
 	icon = 'modular_twilight_axis/icons/obj/gwynt_objs.dmi'
 	icon_state = "gwint_deck"
+	grid_width = 32
+	grid_height = 32
 	w_class = WEIGHT_CLASS_SMALL
 	var/list/card_ids = list()
 	var/faction_id = CCG_FACTION_AZURIA

@@ -64,11 +64,21 @@
 /datum/supply_pack/rogue/Sellsword/steelcuirass
 	name = "Steel Cuirass"
 	cost = 50
-	contains =  list(/obj/item/clothing/suit/roguetown/armor/plate/cuirass)
+	contains =	list(/obj/item/clothing/suit/roguetown/armor/plate/cuirass)
+
+/datum/supply_pack/rogue/Sellsword/brigandine
+	name = "Brigandine"
+	cost = 80
+	contains = list(/obj/item/clothing/suit/roguetown/armor/brigandine)
 
 ///////////////////
 // WRISTS/GLOVES //
 ///////////////////
+
+/datum/supply_pack/rogue/Sellsword/brigandine_bracers
+	name = "Brigandine Rerebraces"
+	cost = 30
+	contains = list(/obj/item/clothing/wrists/roguetown/bracers/brigandine)
 
 /datum/supply_pack/rogue/Sellsword/bracers
 	name = "Steel Bracers"
@@ -83,6 +93,11 @@
 ///////////////
 // LEGS/FEET //
 ///////////////
+
+/datum/supply_pack/rogue/Sellsword/brigandine_chausses
+	name = "Brigandine Chausses"
+	cost = 30
+	contains = list(/obj/item/clothing/under/roguetown/brigandinelegs)
 
 /datum/supply_pack/rogue/Sellsword/chainlegs
 	name = "Chain Chausses"
@@ -108,10 +123,35 @@
 	cost = 30
 	contains = list(/obj/item/rogueweapon/sword/long/kriegmesser)
 
+/datum/supply_pack/rogue/Sellsword/sabre
+	name = "Sabre"
+	cost = 40
+	contains = list(/obj/item/rogueweapon/sword/sabre)
+
+/datum/supply_pack/rogue/Sellsword/shamshir
+	name = "Shamshir"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/sword/sabre/shamshir)
+
+/datum/supply_pack/rogue/Sellsword/rapier
+	name = "Rapier"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/sword/rapier)
+
 /datum/supply_pack/rogue/Sellsword/SZweihandersword
 	name = "Steel Zweihander"
 	cost = 100
 	contains = list(/obj/item/rogueweapon/greatsword/grenz)
+
+/datum/supply_pack/rogue/Sellsword/steelmace
+	name = "Steel Mace"
+	cost = 40
+	contains = list(/obj/item/rogueweapon/mace/steel)
+
+/datum/supply_pack/rogue/Sellsword/steelwarhammer
+	name = "Steel Warhammer"
+	cost = 60
+	contains = list(/obj/item/rogueweapon/mace/warhammer/steel)
 
 /datum/supply_pack/rogue/Sellsword/halberd
 	name = "Halberd"
@@ -174,7 +214,7 @@
 	cost = 260
 	contains = list(/obj/structure/closet/crate/chest/bandit/grenzel)
 
-/obj/structure/closet/crate/chest/bandit/grenzel/Initialize()
+/obj/structure/closet/crate/chest/bandit/grenzel/Initialize(mapload)
 	. = ..()
 	new /obj/item/clothing/head/roguetown/grenzelhofthat(src)
 	new /obj/item/clothing/suit/roguetown/armor/plate/cuirass/blacksteel(src)
@@ -189,7 +229,7 @@
 	cost = 260
 	contains = list(/obj/structure/closet/crate/chest/bandit/otavan)
 
-/obj/structure/closet/crate/chest/bandit/otavan/Initialize()
+/obj/structure/closet/crate/chest/bandit/otavan/Initialize(mapload)
 	. = ..()
 	new /obj/item/clothing/head/roguetown/helmet/otavan(src)
 	new /obj/item/clothing/suit/roguetown/armor/plate/otavan(src)
@@ -204,7 +244,7 @@
 	cost = 260
 	contains = list(/obj/structure/closet/crate/chest/bandit/etruscan)
 
-/obj/structure/closet/crate/chest/bandit/etruscan/Initialize()
+/obj/structure/closet/crate/chest/bandit/etruscan/Initialize(mapload)
 	. = ..()
 	new /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan(src)
 	new /obj/item/clothing/suit/roguetown/armor/brigandine(src)
@@ -219,7 +259,7 @@
 	cost = 260
 	contains = list(/obj/structure/closet/crate/chest/bandit/forlorn)
 
-/obj/structure/closet/crate/chest/bandit/forlorn/Initialize()
+/obj/structure/closet/crate/chest/bandit/forlorn/Initialize(mapload)
 	. = ..()
 	new /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/light(src)
 	new /obj/item/clothing/neck/roguetown/gorget/forlorncollar(src)
@@ -233,7 +273,7 @@
 	cost = 350
 	contains = list(/obj/structure/closet/crate/chest/bandit/longsword)
 
-/obj/structure/closet/crate/chest/bandit/longsword/Initialize()
+/obj/structure/closet/crate/chest/bandit/longsword/Initialize(mapload)
 	. = ..()
 	new /obj/item/clothing/head/roguetown/helmet/sallet/visored(src)
 	new /obj/item/clothing/neck/roguetown/bevor(src)

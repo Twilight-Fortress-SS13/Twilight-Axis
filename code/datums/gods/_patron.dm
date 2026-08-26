@@ -115,7 +115,7 @@ GLOBAL_LIST_EMPTY(prayers)
 		follower.mob_timers[MT_PSYPRAY] = world.time
 
 	. = TRUE
-	GLOB.prayers |= prayer 
+	GLOB.prayers |= prayer
 	record_round_statistic(STATS_PRAYERS_MADE)
 	for(var/patron_namerus in rusgodnames)
 		var/regex/p_name = regex("([patron_namerus])", "im")

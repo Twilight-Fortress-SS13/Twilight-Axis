@@ -19,6 +19,19 @@ LICH SKELETONS
 	ADD_TRAIT(H, TRAIT_LICHLAIR, TRAIT_GENERIC) //Ability to leave/enter the lich's lair without being softlocked inside.
 	H.taints_loot = TRUE
 
+// TA EDIT START
+/datum/advclass/greater_skeleton/lich/equipme(mob/living/carbon/human/H)
+	. = ..()
+	if(maximum_possible_slots != -1)
+		RegisterSignal(H, COMSIG_LIVING_DEATH, PROC_REF(on_limited_lich_skeleton_death))
+
+/datum/advclass/greater_skeleton/lich/proc/on_limited_lich_skeleton_death(mob/living/carbon/human/H)
+	SIGNAL_HANDLER
+	UnregisterSignal(H, COMSIG_LIVING_DEATH)
+	if(total_slots_occupied > 0)
+		SSrole_class_handler.adjust_class_amount(src, -1)
+// TA EDIT END
+
 // Melee goon w/ sidearm picks like javs/sling/knife/single use net. All-rounder.
 /datum/advclass/greater_skeleton/lich/legionnaire
 	name = "Ancient Legionnaire"
@@ -545,7 +558,7 @@ LICH SKELETONS
 
 	ADD_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_STRENGTH_UNCAPPED, TRAIT_GENERIC) //Unique perk, you can splash out a TON of damage.
-	ADD_TRAIT(H, TRAIT_NORUN, TRAIT_GENERIC) //You can't sprint at all, lock in. Mages/Archers will wipe you.
+	//ADD_TRAIT(H, TRAIT_NORUN, TRAIT_GENERIC) //You can't sprint at all, lock in. Mages/Archers will wipe you.
 
 	H.adjust_skillrank(/datum/skill/combat/swords, 3, TRUE)
 	H.adjust_skillrank(/datum/skill/combat/shields, 3, TRUE)
@@ -895,7 +908,7 @@ LICH SKELETONS
 	H.energy = H.max_energy
 
 /////////////////////////////
-// UNIQUE ITEMS!           //
+// UNIQUE ITEMS!			//
 /////////////////////////////
 /obj/item/clothing/suit/roguetown/armor/vestments_padded/lich //Zizo acolyte esc-robes, armor is meant to be the same as padded vestaments
 	name = "decrepit unholy undervestaments"
@@ -993,24 +1006,26 @@ LICH SKELETONS
 	name = "decrepit toga"
 	desc = "Roughspun fabrics from beyond your lyfetime, donned by those who fight a war without reason."
 	color = CLOTHING_BLACK
+	detail_color = "#bb9696"
+	open_wear = FALSE
 
 /obj/item/clothing/cloak/tabard/toga/lich/alt
-	name = "opened decrepit toga"
+	name = "decrepit bared toga"
 	desc = "Roughspun fabrics from beyond your lyfetime, donned by those who fight a war without reason, parted to reveal what remains beneath its cloth."
 	body_parts_covered = GROIN
-	icon_state = "whitepsydontabardalt"
-	item_state = "whitepsydontabardalt"
+	icon_state = "togaalt"
+	item_state = "togaalt"
 	flags_inv = HIDECROTCH
 	open_wear = TRUE
 
 /obj/item/clothing/cloak/tabard/toga/lich/attack_right(mob/user)
 	switch(open_wear)
 		if(FALSE)
-			name = "opened decrepit toga"
+			name = "decrepit bared toga"
 			desc = "Roughspun fabrics from beyond your lyfetime, donned by those who fight a war without reason, parted to reveal what remains beneath its cloth."
 			body_parts_covered = GROIN
-			icon_state = "whitepsydontabardalt"
-			item_state = "whitepsydontabardalt"
+			icon_state = "togaalt"
+			item_state = "togaalt"
 			open_wear = TRUE
 			flags_inv = HIDECROTCH // BARE YOUR CHEST, NOT YOUR WEEN! Not urm, you have one, you're a fucking skeleton sire.
 			to_chat(usr, span_warning("You pull back the roughspun fabric, baring what remains to Psydonia's eyes."))
@@ -1018,8 +1033,8 @@ LICH SKELETONS
 			name = "decrepit toga"
 			desc = "Roughspun fabrics from beyond your lyfetime, donned by those who fight a war without reason.."
 			body_parts_covered = CHEST|GROIN
-			icon_state = "whitepsydontabard"
-			item_state = "whitekpsydontabard"
+			icon_state = "toga"
+			item_state = "toga"
 			flags_inv = HIDECROTCH|HIDEBOOB
 			open_wear = FALSE
 			to_chat(usr, span_warning("You cloak yourself in the roughspun fabric, veiling what remains from Psydonia's eyes."))

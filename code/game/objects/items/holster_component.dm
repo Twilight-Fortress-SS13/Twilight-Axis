@@ -63,6 +63,12 @@
 	if(sheathed)
 		to_chat(user, span_warning("The sheath is occupied!"))
 		return FALSE
+	if(!istype(A, /obj/item/rogueweapon))
+		return FALSE
+	var/obj/item/rogueweapon/RW = A
+	if(!RW.sheathe_icon)
+		to_chat(user, span_warning("[A] won't fit in there."))
+		return FALSE
 	if(valid_blade && !istype(A, valid_blade))
 		to_chat(user, span_warning("[A] won't fit in there."))
 		return FALSE
@@ -74,15 +80,7 @@
 		if(A.type in invalid_blades)
 			to_chat(user, span_warning("[A] won't fit in there."))
 			return FALSE
-	if(istype(A, /obj/item/rogueweapon))
-		var/obj/item/rogueweapon/RW = A
-		if(!RW.sheathe_icon)
-			to_chat(user, span_warning("[A] won't fit in there."))
-			return FALSE
-	else
-		return FALSE
 	return TRUE
-
 
 /datum/component/holster/proc/eat_sword(mob/living/user, obj/A)
 	if(!weapon_check(user, A))
@@ -137,9 +135,10 @@
 	if(!move_after(user, sheathe_time, target = user))
 		return FALSE
 
-	sheathed.forceMove(user.loc)
-	sheathed.pickup(user)
-	user.put_in_hands(sheathed)
+	// store the reference somewhere in case sheathed gets nulled.
+	var/obj/item/rogueweapon/drawn = sheathed
+	drawn.pickup(user)
+	user.put_in_hands(drawn)
 	sheathed = null
 	update_icon(user)
 
@@ -188,6 +187,9 @@
 			I.icon_state = "[initial(I.icon_state)]"
 
 	//	I.update_slot_icon()
+
+	if(!ismob(user))
+		user = null
 
 	if(!user && ismob(I.loc)) // TA EDIT START
 		user = I.loc
@@ -260,7 +262,7 @@
 
 // TA EDIT START
 
-/datum/component/holster/proc/signal_update_icon(atom/source, mob/living/user)
-	update_icon(user)
+/datum/component/holster/proc/signal_update_icon(atom/source)
+	update_icon(null)
 
 // TA EDIT END

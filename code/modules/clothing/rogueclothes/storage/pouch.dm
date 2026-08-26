@@ -5,7 +5,7 @@
 	mob_overlay_icon = null
 	icon_state = "pouch"
 	item_state = "pouch"
-	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_NECK
+	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_NECK|ITEM_SLOT_CLOAK
 	w_class = WEIGHT_CLASS_NORMAL
 	attack_verb = list("whips", "lashes")
 	max_integrity = 300
@@ -37,7 +37,11 @@
 	if(!storage_comp)
 		return
 
-	var/original_target_quantity = target_coin.quantity 	// Store original quantity for verification
+	// TA EDIT
+	if(target_coin in storage_comp.contents())
+		return
+
+	var/original_target_quantity = target_coin.quantity	// Store original quantity for verification
 	var/coins_to_collect = original_target_quantity
 
 	// First, try to find existing coin stacks of the same type that aren't full
@@ -104,7 +108,7 @@
 	grid_width = 32
 	component_type = /datum/component/storage/concrete/roguetown/coin_pouch/merchant
 
-/obj/item/storage/belt/rogue/pouch/merchant/coins/Initialize() //TA EDIT - Rockhill currency support
+/obj/item/storage/belt/rogue/pouch/merchant/coins/Initialize(mapload) //TA EDIT - Rockhill currency support
 	. = ..()
 	if(SSmapping.config.map_name == "Rockhill")
 		var/obj/item/roguecoin/goldkrona/mid_pile/H = new(loc)
@@ -149,12 +153,12 @@
 				SSwardrobe.recycle_object(new_item)
 
 /obj/item/storage/belt/rogue/pouch/coins/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/copper/pile
 	return to_preload
 
 /obj/item/storage/belt/rogue/pouch/coins/mid/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/silver/pile
 	return to_preload
 
@@ -170,7 +174,7 @@
 			SSwardrobe.recycle_object(C)
 
 /obj/item/storage/belt/rogue/pouch/coins/poor/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/copper/pile
 	return to_preload
 
@@ -189,7 +193,7 @@
 				SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/rich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/silver/pile
 	return to_preload
 
@@ -210,7 +214,7 @@
 				SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/veryrich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/gold/pile
 	return to_preload
 
@@ -231,7 +235,7 @@
 				SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/aspirantpouch/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/gold/aspirantpile
 	return to_preload
 
@@ -243,7 +247,7 @@
 			SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/bigandfat/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/gold/aspirantpile
 	return to_preload
 
@@ -257,7 +261,7 @@
 				break
 
 /obj/item/storage/belt/rogue/pouch/coins/virtuepouch/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/gold/virtuepile
 	return to_preload
 
@@ -269,7 +273,7 @@
 			SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/readyuppouch/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/silver/pile/readyuppile
 	return to_preload
 
@@ -283,7 +287,7 @@
 /obj/item/storage/belt/rogue/pouch/coins/aalloy
 
 /obj/item/storage/belt/rogue/pouch/coins/aalloy/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/aalloy/pile
 	return to_preload
 
@@ -297,7 +301,7 @@
 /obj/item/storage/belt/rogue/pouch/coins/aalloy/mid
 
 /obj/item/storage/belt/rogue/pouch/coins/aalloy/mid/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/aalloy/pile
 	return to_preload
 
@@ -312,7 +316,7 @@
 /obj/item/storage/belt/rogue/pouch/coins/aalloy/rich
 
 /obj/item/storage/belt/rogue/pouch/coins/aalloy/rich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/aalloy/pile
 	return to_preload
 
@@ -357,14 +361,6 @@
 	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
 	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
 	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-
-/obj/item/storage/belt/rogue/pouch/zigarrete/trippy/PopulateContents()
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
 
 /obj/item/storage/belt/rogue/pouch/zigarrete/cannabis/PopulateContents()
 	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)

@@ -152,7 +152,7 @@
 				if(!phrase)
 					continue
 
-				var/matching_phrase = accent_list["multi"][lowertext(phrase)]
+				var/matching_phrase = accent_list["multi"][LOWER_TEXT(phrase)]
 				if(islist(matching_phrase)) //delete this and all corresponding list entries from json if perf is an issue
 					matching_phrase = pick(matching_phrase)
 
@@ -166,7 +166,7 @@
 		if(modified_token == original_word)
 			var/mainpart = split_token["mainpart"]
 			if(mainpart)
-				var/matching_token = accent_list["full"][lowertext(mainpart)] //full word match using dict, lowercase here but ignore case in regex
+				var/matching_token = accent_list["full"][LOWER_TEXT(mainpart)] //full word match using dict, lowercase here but ignore case in regex
 
 				if(islist(matching_token)) //delete this and all corresponding list entries from json if perf is an issue
 					matching_token = pick(matching_token)
@@ -183,7 +183,7 @@
 	var/final_text = jointext(modded_tokens, " ")
 	return html_encode(final_text)
 
-/proc/apply_accent_modifications(var/text, list/accent_list)
+/proc/apply_accent_modifications(text, list/accent_list)
 	//These are barely okay because they aren't yet 1000 words like fullword. Use these sparingly or preferably not at all until we can offload regex to rustg
 	//it is inarguably incorrect behaviour to break the prefix/suffix loops on the first match but for the sake of performance we break and
 	//trust the accent json is structured intelligently
@@ -229,11 +229,11 @@
 
 // TA EDIT END
 
-/proc/match_case(var/original, var/replacement)
+/proc/match_case(original, replacement)
 	if(original == uppertext(original))
 		return uppertext(replacement)
-	if(original == lowertext(original))
-		return lowertext(replacement)
+	if(original == LOWER_TEXT(original))
+		return LOWER_TEXT(replacement)
 	if(original == capitalize(original))
 		return capitalize(replacement)
 	return replacement
