@@ -596,8 +596,8 @@
 /datum/tat_items/proc/sync_donor_loadout_from_preferences()
 	var/list/wanted = list()
 	var/datum/preferences/P = owner_build?.owner_preferences
-	if(P && islist(P.selected_loadout_items))
-		for(var/key in P.selected_loadout_items)
+	if(P && islist(P.gear_list))
+		for(var/key in P.gear_list)
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
 			if(!item?.path)
 				continue
@@ -2328,22 +2328,15 @@
 	if(tat_build_handles_preference_loadout(character, player))
 		return TRUE
 
-	var/triumph_discount_remaining = get_donator_triumph_discount(player.ckey) // TA EDIT - donor triumph discount scales by Patreon tier
-	if(player.prefs.selected_loadout_items)
-		for(var/key in player.prefs.selected_loadout_items)
+	character.mind.triumph_discount_remaining = get_donator_triumph_discount(player.ckey) // TA EDIT - donor triumph discount scales by Patreon tier
+	if(player.prefs.gear_list)
+		for(var/key in player.prefs.gear_list)
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
 			if(!item)
 				continue
 
 			if(item.triumph_cost)
-				var/discounted_cost = max(0, item.triumph_cost - triumph_discount_remaining)
-				if(discounted_cost > 0 && character.get_triumphs() < discounted_cost)
-					to_chat(character, span_warning("Недостаточно триумфов для [item.name]."))
-					continue
-
-				triumph_discount_remaining = max(0, triumph_discount_remaining - item.triumph_cost)
-				if(discounted_cost > 0)
-					character.adjust_triumphs(-discounted_cost)
-
-			character.mind.special_items[item.name] = item.path
+				character.mind.special_items["[item.name][TRIUMPH_STASH_SUFFIX]"] = item.path
+			else
+				character.mind.special_items[item.name] = item.path
 	return TRUE

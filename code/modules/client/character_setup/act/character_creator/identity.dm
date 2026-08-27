@@ -263,6 +263,10 @@
 			user.client?.familytree_module_open_preferences(user)
 			return CHARACTER_ACT_DATA_UPDATE
 
+		if("open_tat_build")
+			tat_build.ui_interact(user)
+			return CHARACTER_ACT_DATA_UPDATE
+
 
 /datum/preferences/proc/process_virtue_text(datum/virtue/V)
 	var/dat

@@ -170,10 +170,10 @@
 	return parts.Join("|")
 
 /datum/tat_build/proc/get_preference_loadout_cache_key(datum/preferences/P)
-	if(!P || !islist(P.selected_loadout_items))
+	if(!P || !islist(P.gear_list))
 		return ""
 	var/list/parts = list()
-	for(var/key in P.selected_loadout_items)
+	for(var/key in P.gear_list)
 		parts += "[key]"
 	return parts.Join("|")
 

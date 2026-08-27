@@ -172,7 +172,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/sword/rapier = TAT_ITEM_ENTRY("Rapier", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/rapier/vaquero = TAT_ITEM_ENTRY("Etruscan Rapier", 5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/rapier/silver = TAT_ITEM_ENTRY("Silver Rapier", 4, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "sword"), \
-	/obj/item/rogueweapon/sword/saber/iron = TAT_ITEM_ENTRY("Iron Saber", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
 	/obj/item/rogueweapon/sword/long/shotel = TAT_ITEM_ENTRY("Shotel", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \
 	/obj/item/rogueweapon/sword/long/shotel/iron = TAT_ITEM_ENTRY("Iron Shotel", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "sword"), \
 	/obj/item/rogueweapon/sword/sabre = TAT_ITEM_ENTRY("Sabre", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "sword"), \

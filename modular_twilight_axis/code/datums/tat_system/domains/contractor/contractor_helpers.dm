@@ -352,16 +352,8 @@
 
 /proc/contractor_charflaw_catalog()
 	var/list/out = list()
-	var/list/flaws = GLOB.character_flaws
-	if(length(flaws))
-		for(var/flaw_name in flaws)
-			var/flaw_type = flaws[flaw_name]
-			if(!ispath(flaw_type))
-				continue
-			out += list(list("id" = "[flaw_type]", "name" = "[flaw_name]"))
-	else
-		for(var/flaw_type in contractor_charflaw_fallback_paths())
-			out += list(list("id" = "[flaw_type]", "name" = contractor_pretty_charflaw(flaw_type)))
+	for(var/flaw_type in contractor_charflaw_fallback_paths())
+		out += list(list("id" = "[flaw_type]", "name" = contractor_pretty_charflaw(flaw_type)))
 	return out
 
 /proc/contractor_charflaw_fallback_paths()
@@ -391,12 +383,15 @@
 		/datum/charflaw/noeyer,
 		/datum/charflaw/noeyel,
 		/datum/charflaw/noeyeall,
+		/datum/charflaw/armor_break,
 		/datum/charflaw/limbloss/arm_r,
 		/datum/charflaw/limbloss/arm_l,
 		/datum/charflaw/sleepless,
 		/datum/charflaw/mute,
 		/datum/charflaw/critweakness,
+		/datum/charflaw/silverweakness,
 		/datum/charflaw/hunted,
+		/datum/charflaw/targeted,
 		/datum/charflaw/mind_broken,
 		/datum/charflaw/noflaw,
 		/datum/charflaw/leprosy,
@@ -411,9 +406,9 @@
 	var/path = text2path("[id]")
 	if(ispath(path, /datum/charflaw))
 		return path
-	var/list/flaws = GLOB.character_flaws
-	if(length(flaws) && flaws[id] && ispath(flaws[id], /datum/charflaw))
-		return flaws[id]
+	for(var/flaw_type in contractor_charflaw_fallback_paths())
+		if(contractor_pretty_charflaw(flaw_type) == "[id]")
+			return flaw_type
 	return null
 
 /proc/contractor_pretty_charflaw(datum/charflaw/flaw_type)
