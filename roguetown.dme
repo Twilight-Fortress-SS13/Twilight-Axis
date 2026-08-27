@@ -3670,6 +3670,7 @@
 #include "modular_twilight_axis\awful_artillery\code\craft.dm"
 #include "modular_twilight_axis\awful_artillery\code\merchant.dm"
 #include "modular_twilight_axis\awful_artillery\code\mortar.dm"
+#include "modular_twilight_axis\bonds_module\bonds_module_config.dm"
 #include "modular_twilight_axis\church_classes\martyr\specials_intents.dm"
 #include "modular_twilight_axis\church_classes\martyr\spells.dm"
 #include "modular_twilight_axis\church_classes\martyr\weapons.dm"

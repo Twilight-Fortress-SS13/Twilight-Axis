@@ -18,8 +18,12 @@
 // familytree_subsystem_helpers.dm   - species/anatomy/gender compat, job helpers, age checks, DetermineAppropriateRole
 // familytree_subsystem_matching.dm  - AddLocal, AssignToHouse/Family, NewlyWed/Family matching, favorite, wedding ring
 // familytree_subsystem_royal.dm     - royal partner jobs, AddRoyal, lineage generation, royal hand offer
-// familytree_graph_support.dm       - /datum/family_node, /datum/family_edge, /datum/family_graph_cache, validation
-// familytree_graph_api.dm           - SSfamilytree graph facade + hooks + relation/display cache (source of truth for parent/spouse)
+// familytree_graph_support.dm       - /datum/family_node (house membership only), /datum/family_graph_cache, validation
+// familytree_graph_api.dm           - node/house facade + kin hooks + relation/display cache
+//
+// KINSHIP LIVES IN THE BONDS MODULE. Parent/child/spouse/former-spouse/sworn-sibling links are
+// /datum/social_bond/kin owned by SSbonds (see modular_twilight_axis/bonds_module). The graph_on_*
+// hooks here write them and family_member's accessors read them; family_node no longer holds edges.
 // familytree_debug.dm               - admin/debug scenarios (stress/royal/favorite/roles/isolated/edge/lifecycle)
 // familytree_debug_populate.dm      - admin "populate my house" panel (ftpop_*). Admin/debug only
 // familytree_unit_tests.dm          - CI unit tests for the subsystem chains; runs under UNIT_TESTS (CIBUILDING). Update when a chain changes
@@ -75,6 +79,15 @@
 // matching iterations of each side, then becomes available again.
 #define FAMILYTREE_TIMEOUT_BLOCK_ITERATIONS 3
 #define FAMILYTREE_PAIR_OFFER_LIMIT 3
+
+#define MUTUAL_GATE_OK 0
+#define MUTUAL_GATE_INVALID 1
+#define MUTUAL_GATE_OPTED_OUT 2
+#define MUTUAL_GATE_PENDING 3
+#define MUTUAL_GATE_BUSY 4
+#define MUTUAL_GATE_NO_CLIENT 5
+#define MUTUAL_GATE_DISABLED 6
+#define MUTUAL_GATE_OFFER_LIMIT 7
 
 #define ANY_GENDER 1
 #define SAME_GENDER 2
@@ -156,4 +169,7 @@
 #include "familytree_graph_api.dm"
 #include "familytree_debug.dm"
 #include "familytree_debug_populate.dm"
+#include "familytree_probe.dm"
+#include "familytree_probe_deep.dm"
+#include "familytree_probe_mutual.dm"
 #include "familytree_unit_tests.dm"

@@ -1,49 +1,6 @@
-/datum/family_edge
-	var/datum/family_node/a
-	var/datum/family_node/b
-	var/relation_type
-	var/relation_flags = 0
-	var/datum/heritage/house
-	var/created_at = 0
-	var/source = "system"
-	var/preserved_relation_a_to_b
-	var/preserved_relation_b_to_a
-
-/datum/family_edge/New(datum/family_node/from_node, datum/family_node/to_node, rel_type, datum/heritage/edge_house, flags = 0, edge_source = "system")
-	a = from_node
-	b = to_node
-	relation_type = rel_type
-	relation_flags = flags
-	house = edge_house
-	source = edge_source
-	created_at = world.time
-
-/datum/family_edge/Destroy(force)
-	if(a)
-		a.edges -= src
-	if(b && b != a)
-		b.edges -= src
-	a = null
-	b = null
-	house = null
-	return ..()
-
-/datum/family_edge/proc/connects(datum/family_node/node_a, datum/family_node/node_b, directed = FALSE)
-	if(directed)
-		return (a == node_a && b == node_b)
-	return ((a == node_a && b == node_b) || (a == node_b && b == node_a))
-
-/datum/family_edge/proc/other_end(datum/family_node/node)
-	if(a == node)
-		return b
-	if(b == node)
-		return a
-	return null
-
 /datum/family_node
 	var/tmp/mob/living/carbon/human/person
 	var/datum/heritage/primary_house
-	var/list/edges = list()
 	var/revision = 0
 
 /datum/family_node/New(mob/living/carbon/human/new_person, datum/heritage/house)
@@ -52,74 +9,12 @@
 	revision = 0
 
 /datum/family_node/Destroy(force)
-	for(var/datum/family_edge/edge as anything in edges.Copy())
-		qdel(edge)
-	edges = null
 	person = null
 	primary_house = null
 	return ..()
 
 /datum/family_node/proc/bump_revision()
 	revision++
-
-/datum/family_node/proc/get_edges_of_type(relation_type)
-	var/list/matches = list()
-	for(var/datum/family_edge/edge as anything in edges)
-		if(edge.relation_type == relation_type)
-			matches += edge
-	return matches
-
-/datum/family_node/proc/has_edge_to(datum/family_node/other, relation_type, directed = FALSE)
-	if(!other)
-		return FALSE
-	for(var/datum/family_edge/edge as anything in edges)
-		if(relation_type && edge.relation_type != relation_type)
-			continue
-		if(edge.connects(src, other, directed))
-			return TRUE
-	return FALSE
-
-/datum/family_node/proc/find_edge_to(datum/family_node/other, relation_type, directed = FALSE)
-	if(!other)
-		return null
-	for(var/datum/family_edge/edge as anything in edges)
-		if(relation_type && edge.relation_type != relation_type)
-			continue
-		if(edge.connects(src, other, directed))
-			return edge
-	return null
-
-/datum/family_node/proc/neighbors_by_type(relation_type)
-	var/list/out = list()
-	for(var/datum/family_edge/edge as anything in edges)
-		if(relation_type && edge.relation_type != relation_type)
-			continue
-		var/datum/family_node/other = edge.other_end(src)
-		if(other && !(other in out))
-			out += other
-	return out
-
-/datum/family_node/proc/get_parent_nodes()
-	var/list/out = list()
-	for(var/datum/family_edge/edge as anything in edges)
-		if(edge.relation_type != "parent_child" && edge.relation_type != "adoptive_parent_child")
-			continue
-		if(edge.b != src)
-			continue
-		if(edge.a && !(edge.a in out))
-			out += edge.a
-	return out
-
-/datum/family_node/proc/get_child_nodes()
-	var/list/out = list()
-	for(var/datum/family_edge/edge as anything in edges)
-		if(edge.relation_type != "parent_child" && edge.relation_type != "adoptive_parent_child")
-			continue
-		if(edge.a != src)
-			continue
-		if(edge.b && !(edge.b in out))
-			out += edge.b
-	return out
 
 /datum/family_graph_cache
 	var/datum/heritage/owner_house
@@ -166,26 +61,26 @@
 	var/issues = 0
 	var/label = node.person?.real_name || "unowned_node"
 
-	for(var/datum/family_edge/edge as anything in node.edges)
-		if(!edge)
-			out_issues += "[label]: null edge in node.edges"
+	var/datum/bond_actor/subject = SSbonds.resolve_actor(node.person)
+	if(!subject)
+		return 0
+
+	for(var/datum/social_bond/kin/link as anything in SSbonds.kin_links_of_kind(subject, null))
+		if(!link.other)
+			out_issues += "[label]: kin link [link.kind] has no other end"
 			issues++
 			continue
-		if(edge.a == edge.b)
-			out_issues += "[label]: self-edge [edge.relation_type]"
+		if(link.other == subject)
+			out_issues += "[label]: self kin link [link.kind]"
 			issues++
 			continue
-		if(edge.a != node && edge.b != node)
-			out_issues += "[label]: edge [edge.relation_type] does not reference this node"
+		var/datum/social_bond/kin/mirror = SSbonds.find_kin(link.other, subject, bonds_kin_reciprocal(link.kind))
+		if(!mirror)
+			out_issues += "[label]: kin link [link.kind] to [link.other.name_of()] has no reciprocal"
 			issues++
 			continue
-		var/datum/family_node/other = edge.other_end(node)
-		if(!other)
-			out_issues += "[label]: edge [edge.relation_type] has null other end"
-			issues++
-			continue
-		if(!(edge in other.edges))
-			out_issues += "[label]: edge [edge.relation_type] missing on other end [other.person?.real_name || "unowned"]"
+		if(mirror.adopted != link.adopted)
+			out_issues += "[label]: kin link [link.kind] to [link.other.name_of()] disagrees on adoption"
 			issues++
 
 	issues += graph_validate_no_parent_cycle(node, out_issues)
@@ -194,32 +89,13 @@
 /datum/controller/subsystem/familytree/proc/graph_validate_no_parent_cycle(datum/family_node/node, list/out_issues)
 	if(!node || !out_issues)
 		return 0
-	var/list/visited = list(node)
-	var/list/queue = list()
-	for(var/datum/family_edge/edge as anything in node.edges)
-		if(edge.relation_type != "parent_child" && edge.relation_type != "adoptive_parent_child")
-			continue
-		if(edge.b != node)
-			continue
-		queue += edge.a
-
-	while(queue.len)
-		var/datum/family_node/current = queue[1]
-		queue.Cut(1, 2)
-		if(!current)
-			continue
-		if(current == node)
-			out_issues += "[node.person?.real_name || "node"]: parent_child cycle detected"
+	var/datum/bond_actor/subject = SSbonds.resolve_actor(node.person)
+	if(!subject)
+		return 0
+	for(var/datum/bond_actor/parent as anything in SSbonds.kin_of_kind(subject, BOND_KIN_PARENT))
+		if(SSbonds.kin_would_cycle(subject, parent))
+			out_issues += "[node.person?.real_name || "node"]: parent cycle through [parent.name_of()]"
 			return 1
-		if(current in visited)
-			continue
-		visited += current
-		for(var/datum/family_edge/up_edge as anything in current.edges)
-			if(up_edge.relation_type != "parent_child" && up_edge.relation_type != "adoptive_parent_child")
-				continue
-			if(up_edge.b != current)
-				continue
-			queue += up_edge.a
 	return 0
 
 /datum/controller/subsystem/familytree/proc/graph_validate_after_mutation(datum/family_node/node_a, datum/family_node/node_b)
@@ -275,7 +151,7 @@
 	return total
 
 /datum/controller/subsystem/familytree/proc/graph_state_summary()
-	return "nodes=[family_nodes.len] edges=[family_edges.len] node_lookup=[family_nodes_by_person.len] caches=[family_graph_caches.len]"
+	return "nodes=[family_nodes.len] node_lookup=[family_nodes_by_person.len] caches=[family_graph_caches.len]"
 
 /client/proc/familytree_graph_compare()
 	set name = "FamilyTree Graph Compare"

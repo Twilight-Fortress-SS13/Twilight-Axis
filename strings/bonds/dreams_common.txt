@@ -1,0 +1,213 @@
+# Общие сны. Доступны в любом раунде на любой карте.
+#
+# dream <id> - начало памяти. id совпадает с хвостом тип-пути после
+#              /datum/bond_event/dream/, поэтому объявление в DM и блок здесь
+#              всегда указывают друг на друга.
+#
+# valence  positive | negative     - в какое ведро попадает память
+# scopes   own | foreign | any     - своя фракция, чужая или обе
+# dreamer  маски архетипа спящего  - warrior lawman devout noble scholar healer
+# other    маски архетипа второго    crafter merchant outlaw servile wanderer undead
+# warmth   -100..100               - сдвиг по теплу, спящему целиком
+# weight   0..100                  - сдвиг по весу
+# rarity   вес в жеребьёвке        - по умолчанию 10
+# vampire  none | other | dreamer  - требовать вампира с той или иной стороны
+# label    подпись в истории связи
+# story    что видит спящий; {name} подставляет имя второго
+# echo     что вспоминает второй, ему прилетает половина сдвига
+#
+# Бог и карта задаются НЕ здесь, а тип-путём на группе в DM: память под
+# astrata/ гаснет без Астраты, под ranesh/ - вне песков.
+
+dream shield_wall:
+	valence: positive
+	scopes:  own
+	dreamer: warrior
+	other:   warrior
+	warmth:  18
+	weight:  24
+	label:   Сон о строе
+	story:   Мне снится строй: щиты сомкнуты, и слева стоит {name}. Во сне я знаю, что этот край не подастся.
+	echo:    Мы с {name} держали один строй, и этот край не подался.
+
+dream bound_my_wound:
+	valence: positive
+	other:   healer
+	warmth:  18
+	weight:  22
+	label:   Сон о лекаре
+	story:   Мне снятся руки в чужой крови - моей. {name} затягивает повязку и говорит, что я ещё поживу, а я во сне верю.
+	echo:    Я вытаскивал {name} с того света, и, похоже, вытащил.
+
+dream night_vigil:
+	valence: positive
+	scopes:  own
+	dreamer: devout
+	other:   devout
+	warmth:  16
+	weight:  22
+	label:   Сон о бдении
+	story:   Мне снится ночное бдение: свечи догорели, слова кончились, и мы с {name} просто досидели до света вдвоём.
+	echo:    То бдение мы с {name} досидели до света, так и не найдя слов.
+
+dream kept_confession:
+	valence: positive
+	other:   devout
+	warmth:  20
+	weight:  24
+	label:   Сон об исповеди
+	story:   Мне снится, что я говорю {name} то, за что меня повесили бы. Во сне он молчит об этом и наяву молчал.
+	echo:    {name} доверил мне однажды то, за что его бы повесили. Я смолчал.
+
+dream shared_bread:
+	valence: positive
+	other:   crafter servile
+	warmth:  14
+	weight:  18
+	label:   Сон о хлебе
+	story:   Мне снится голодная зима и {name}, который разломил последнюю краюху надвое, хотя мог не делить.
+	echo:    Я разделил с {name} последнюю краюху в ту зиму, хотя мог не делить.
+
+dream forgave_debt:
+	valence: positive
+	other:   merchant noble
+	warmth:  16
+	weight:  20
+	label:   Сон о долге
+	story:   Мне снится долговая запись и рука {name}, которая перечёркивает строку с моим именем. Просто так.
+	echo:    Я перечеркнул строку с именем {name} и до сих пор не жалею.
+
+dream stood_at_my_oath:
+	valence: positive
+	scopes:  own
+	dreamer: warrior servile
+	other:   noble
+	warmth:  15
+	weight:  22
+	label:   Сон о клятве
+	story:   Мне снится, как я стою на одном колене, а {name} принимает мою клятву и не отводит глаз. Во сне это ещё что-то значит.
+	echo:    {name} клялся мне, стоя на одном колене, и глаз не отвёл.
+
+dream copied_by_candle:
+	valence: positive
+	dreamer: scholar
+	other:   scholar
+	warmth:  14
+	weight:  18
+	label:   Сон о списке
+	story:   Мне снится свеча, догоревшая до пальцев, и {name} напротив: мы переписывали одну книгу с двух концов и сошлись в середине.
+	echo:    Мы с {name} переписывали одну книгу с двух концов и сошлись в середине.
+
+dream carried_me_home:
+	valence: positive
+	other:   warrior lawman crafter
+	warmth:  13
+	weight:  16
+	label:   Сон о дороге домой
+	story:   Мне снится грязь под щекой и то, как {name} тащит меня волоком и ругается. Донёс ведь.
+	echo:    Я дотащил {name} волоком и до сих пор помню, какой он был тяжёлый.
+
+dream shared_the_road:
+	valence: positive
+	scopes:  foreign
+	other:   wanderer
+	warmth:  15
+	weight:  18
+	label:   Сон о тракте
+	story:   Мне снится тракт и чужой костёр, к которому меня пустил {name}, не спросив ни имени, ни веры.
+	echo:    Я пустил {name} к своему костру, не спросив ни имени, ни веры.
+
+dream left_me_in_the_line:
+	valence: negative
+	dreamer: warrior
+	other:   warrior
+	warmth:  -20
+	weight:  26
+	label:   Сон о бегстве
+	story:   Мне снится, как строй редеет, и место {name} справа от меня пусто. Во сне я оборачиваюсь и вижу его спину.
+	echo:    Я ушёл из строя, где остался {name}. Он выжил, и легче от этого не стало.
+
+dream named_me_from_the_pulpit:
+	valence: negative
+	other:   devout lawman
+	warmth:  -18
+	weight:  24
+	label:   Сон о доносе
+	story:   Мне снится площадь и голос {name}, называющий моё имя вслух. Толпа поворачивается медленно, как во сне и положено.
+	echo:    Я назвал имя {name} вслух, и толпа повернулась.
+
+dream cut_my_purse:
+	valence: negative
+	other:   outlaw
+	warmth:  -16
+	weight:  20
+	label:   Сон о срезанном кошеле
+	story:   Мне снится тяжесть, которой нет на поясе, и {name}, уходящий в толпу не оглядываясь.
+	echo:    Кошель {name} был лёгкой добычей. Он, кажется, догадался чей.
+
+dream swore_falsely:
+	valence: negative
+	warmth:  -17
+	weight:  22
+	label:   Сон о лжесвидетельстве
+	story:   Мне снится суд, на котором {name} говорит обо мне то, чего не было, и его слушают внимательнее, чем меня.
+	echo:    Я сказал о {name} на суде то, чего не было, и меня слушали.
+
+dream withheld_my_wage:
+	valence: negative
+	scopes:  own
+	dreamer: servile crafter
+	other:   noble merchant
+	warmth:  -15
+	weight:  20
+	label:   Сон о недоплате
+	story:   Мне снится ладонь, в которую {name} так и не досыпал обещанного, и как я всё равно поблагодарил.
+	echo:    Я недосыпал {name} обещанного, а он ещё и поблагодарил.
+
+dream bled_me_wrong:
+	valence: negative
+	other:   healer
+	warmth:  -16
+	weight:  22
+	label:   Сон о лечении
+	story:   Мне снится, как {name} уверенно режет не там, где болит, и просит потерпеть. Во сне я терплю.
+	echo:    Я резал {name} не там, где болело, и просил потерпеть.
+
+dream botched_the_rite:
+	valence: negative
+	other:   devout
+	warmth:  -14
+	weight:  20
+	label:   Сон об обряде
+	story:   Мне снятся похороны, на которых {name} путает слова, и я всю ночь думаю, дошёл ли покойник куда следует.
+	echo:    Я спутал слова над покойником, и {name} это слышал.
+
+dream flogged_me:
+	valence: negative
+	scopes:  own
+	dreamer: outlaw servile crafter
+	other:   lawman
+	warmth:  -19
+	weight:  24
+	label:   Сон о столбе
+	story:   Мне снится столб, к которому меня привязали, и то, как {name} считал удары вслух, ровным голосом.
+	echo:    Я считал удары для {name} вслух и ни разу не сбился.
+
+dream usury:
+	valence: negative
+	other:   merchant
+	warmth:  -15
+	weight:  20
+	label:   Сон о росте
+	story:   Мне снится, как долг перед {name} растёт сам собой, быстрее, чем я успеваю работать.
+	echo:    Долг {name} растёт быстрее, чем он успевает работать. Это моя работа.
+
+dream blood_price_unpaid:
+	valence: negative
+	scopes:  foreign
+	other:   warrior noble
+	warmth:  -22
+	weight:  26
+	label:   Сон о вире
+	story:   Мне снится мой мертвец и цена за него, которую {name} не заплатил ни монетой, ни словом.
+	echo:    За мертвеца {name} я не заплатил ни монетой, ни словом.

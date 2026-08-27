@@ -3,11 +3,8 @@
 
 /datum/job/roguetown/suitor/special_check_latejoin(client/C)
 	return SSfamilytree.royal_partner_candidate_allowed(C, src)
-// DLC: Enigma roles integration for familytree tier system.
-// Appends enigma job types to existing tier lists at runtime.
 
 /datum/controller/subsystem/familytree/proc/load_enigma_roles()
-	// Garrison (military)
 	high_tier_military_types |= list(
 		/datum/job/roguetown/sheriff,
 		/datum/job/roguetown/royal_sergeant,
@@ -17,12 +14,10 @@
 		/datum/job/roguetown/overseer,
 	)
 
-	// Retinue (military)
 	high_tier_military_types |= list(
 		/datum/job/roguetown/knight_enigma,
 	)
 
-	// Town administration
 	high_tier_town_types |= list(
 		/datum/job/roguetown/mayor,
 		/datum/job/roguetown/bailiff,
@@ -49,15 +44,12 @@
 		/datum/job/roguetown/headslave,
 		/datum/job/roguetown/slave,
 		/datum/job/roguetown/freeman,
-	//	/datum/job/roguetown/lost_grenzel, // Lost Grenzel comment
 	)
 
 	low_tier_job_titles |= list(
 		"Head Slave",
 		"Palace Slave",
-		"Slave",
 		"Freeman",
-	//	"Lost Grenzel", // Lost Grenzel comment
 	)
 
 /datum/controller/subsystem/familytree/proc/ask_monarch_noble_permission(mob/living/carbon/human/monarch)
@@ -206,6 +198,8 @@
 		addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, status), 60 SECONDS)
 
 #define MUTUAL_CONFIRM_TIMEOUT 2 MINUTES
+#define MUTUAL_CONFIRM_ANSWER_WINDOW (60 SECONDS)
+#define MUTUAL_CONFIRM_PROMPT_GRACE (MUTUAL_CONFIRM_ANSWER_WINDOW + 15 SECONDS)
 #define CONFIRM_PENDING 0
 #define CONFIRM_ACCEPTED 1
 #define CONFIRM_REJECTED 2
@@ -311,6 +305,8 @@
 		return
 	if(!person.familytree_confirmation_pending)
 		return
+	if(session && !QDELETED(session))
+		session.extend_for_prompt(is_person_a)
 	ui_interact(person)
 
 /datum/family_confirm_prompt/proc/submit_choice(choice_result)
@@ -382,6 +378,9 @@
 	var/result_b = CONFIRM_PENDING
 	var/resolved = FALSE
 	var/timerid
+	var/deadline = 0
+	var/opened_a = 0
+	var/opened_b = 0
 	var/datum/family_confirm_prompt/prompt_a
 	var/datum/family_confirm_prompt/prompt_b
 
@@ -487,6 +486,22 @@
 	else
 		to_chat(idler, span_warning("Вы не ответили на предложение, и оно истекло. Система продолжит поиск."))
 	SSfamilytree.try_queue_assignment(idler)
+
+/datum/family_confirm_session/proc/extend_for_prompt(is_person_a)
+	if(resolved)
+		return FALSE
+	if(is_person_a)
+		opened_a = world.time
+	else
+		opened_b = world.time
+	if(timerid)
+		deltimer(timerid)
+	deadline = world.time + MUTUAL_CONFIRM_PROMPT_GRACE
+	timerid = addtimer(CALLBACK(src, PROC_REF(force_timeout)), MUTUAL_CONFIRM_PROMPT_GRACE, TIMER_STOPPABLE)
+	return TRUE
+
+/datum/family_confirm_session/proc/seconds_left()
+	return max(0, (deadline - world.time) / 10)
 
 /datum/family_confirm_session/proc/force_timeout()
 	if(resolved)
@@ -631,77 +646,107 @@
 	if(!H.familytree_opted_out && !H.family_datum && !H.spouse_mob && familytree_pref_enabled(H.familytree_pref))
 		try_queue_assignment(H)
 
-/datum/controller/subsystem/familytree/proc/request_mutual_confirmation(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/callback/on_both_accept, confirm_type = "family", relation_text_a = null, relation_text_b = null, busy_attempt = 0, busy_deferred = FALSE)
+/datum/controller/subsystem/familytree/proc/mutual_gate(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, busy_deferred = FALSE, has_client_a = FALSE, has_client_b = FALSE, busy_a = null, busy_b = null)
 	if(round_disabled)
-		return FALSE
-	if(!person_a || QDELETED(person_a) || !person_b || QDELETED(person_b))
-		if(busy_deferred)
-			if(person_a && !QDELETED(person_a))
-				person_a.familytree_confirmation_pending = FALSE
-			if(person_b && !QDELETED(person_b))
-				person_b.familytree_confirmation_pending = FALSE
-		ftlog("MUTUAL SKIP: invalid participant a=[person_a?.real_name] b=[person_b?.real_name]")
-		return
-	if(person_a?.familytree_opted_out || person_b?.familytree_opted_out)
-		if(busy_deferred)
-			person_a.familytree_confirmation_pending = FALSE
-			person_b.familytree_confirmation_pending = FALSE
-		ftlog("MUTUAL SKIP: opted out a=[person_a?.real_name] b=[person_b?.real_name]")
-		return
-	if((person_a?.familytree_confirmation_pending || person_b?.familytree_confirmation_pending) && !busy_deferred)
-		ftlog("MUTUAL SKIP: pending confirmation a=[person_a?.real_name] b=[person_b?.real_name]")
-		return
-
-	var/busy_reason_a = person_a?.client ? is_familytree_player_busy(person_a) : null
-	var/busy_reason_b = person_b?.client ? is_familytree_player_busy(person_b) : null
-	if(busy_reason_a || busy_reason_b)
-		if(person_a.client)
-			person_a.familytree_confirmation_pending = TRUE
-		if(person_b.client)
-			person_b.familytree_confirmation_pending = TRUE
-		if(busy_attempt >= familytree_busy_retry_limit)
-			ftlog("MUTUAL SKIP: busy after [familytree_busy_retry_limit] retries type=[confirm_type] a=[person_a.real_name] busy=[busy_reason_a || "no"] b=[person_b.real_name] busy=[busy_reason_b || "no"]", "WARN")
-			person_a.familytree_confirmation_pending = FALSE
-			person_b.familytree_confirmation_pending = FALSE
-			try_queue_assignment(person_a)
-			try_queue_assignment(person_b)
-			return
-		ftlog("MUTUAL DEFER: type=[confirm_type] retry=[busy_attempt + 1]/[familytree_busy_retry_limit] a=[person_a.real_name] busy=[busy_reason_a || "no"] b=[person_b.real_name] busy=[busy_reason_b || "no"]")
-		addtimer(CALLBACK(src, PROC_REF(request_mutual_confirmation), person_a, person_b, on_both_accept, confirm_type, relation_text_a, relation_text_b, busy_attempt + 1, TRUE), familytree_busy_retry_delay)
-		return
-
-	if(!person_a.client || !person_b.client)
-		person_a.familytree_confirmation_pending = FALSE
-		person_b.familytree_confirmation_pending = FALSE
-		ftlog("MUTUAL CANCEL: participant without client type=[confirm_type] a=[person_a.real_name] b=[person_b.real_name]")
-		if(person_a.client)
-			try_queue_assignment(person_a)
-		else
-			pause_familytree_human(person_a, "no client at mutual confirmation")
-		if(person_b.client)
-			try_queue_assignment(person_b)
-		else
-			pause_familytree_human(person_b, "no client at mutual confirmation")
-		return
-
+		return MUTUAL_GATE_DISABLED
+	if(!person_a || QDELETED(person_a) || !person_b || QDELETED(person_b) || person_a == person_b)
+		return MUTUAL_GATE_INVALID
+	if(person_a.familytree_opted_out || person_b.familytree_opted_out)
+		return MUTUAL_GATE_OPTED_OUT
+	if((person_a.familytree_confirmation_pending || person_b.familytree_confirmation_pending) && !busy_deferred)
+		return MUTUAL_GATE_PENDING
+	if(busy_a || busy_b)
+		return MUTUAL_GATE_BUSY
+	if(!has_client_a || !has_client_b)
+		return MUTUAL_GATE_NO_CLIENT
 	if(familytree_pair_offer_limit_reached(person_a, person_b))
-		person_a.familytree_confirmation_pending = FALSE
-		person_b.familytree_confirmation_pending = FALSE
-		ftlog("MUTUAL SKIP: pair offer limit reached a=[person_a.real_name] b=[person_b.real_name] limit=[FAMILYTREE_PAIR_OFFER_LIMIT]")
-		try_queue_assignment(person_a)
-		try_queue_assignment(person_b)
-		return
+		return MUTUAL_GATE_OFFER_LIMIT
+	return MUTUAL_GATE_OK
 
-	var/offer_count = min(FAMILYTREE_PAIR_OFFER_LIMIT, familytree_pair_offer_count(person_a, person_b) + 1)
+/datum/controller/subsystem/familytree/proc/open_mutual_session(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/callback/on_both_accept, confirm_type, relation_text_a, relation_text_b, ask = TRUE)
+	RETURN_TYPE(/datum/family_confirm_session)
 	person_a.familytree_confirmation_pending = TRUE
 	person_b.familytree_confirmation_pending = TRUE
 	var/datum/family_confirm_session/session = new(person_a, person_b, on_both_accept, confirm_type, relation_text_a, relation_text_b)
+	session.deadline = world.time + MUTUAL_CONFIRM_TIMEOUT
 	session.timerid = addtimer(CALLBACK(session, TYPE_PROC_REF(/datum/family_confirm_session, force_timeout)), MUTUAL_CONFIRM_TIMEOUT, TIMER_STOPPABLE)
-
+	var/offer_count = min(FAMILYTREE_PAIR_OFFER_LIMIT, familytree_pair_offer_count(person_a, person_b) + 1)
 	ftlog("MUTUAL CONFIRM: started type=[confirm_type] a=[person_a.real_name] b=[person_b.real_name] offer=[offer_count]/[FAMILYTREE_PAIR_OFFER_LIMIT] persistent_ui=yes")
+	if(ask)
+		INVOKE_ASYNC(src, PROC_REF(do_mutual_ask), session, person_a, TRUE)
+		INVOKE_ASYNC(src, PROC_REF(do_mutual_ask), session, person_b, FALSE)
+	return session
 
-	INVOKE_ASYNC(src, PROC_REF(do_mutual_ask), session, person_a, TRUE)
-	INVOKE_ASYNC(src, PROC_REF(do_mutual_ask), session, person_b, FALSE)
+/datum/controller/subsystem/familytree/proc/request_mutual_confirmation(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/callback/on_both_accept, confirm_type = "family", relation_text_a = null, relation_text_b = null, busy_attempt = 0, busy_deferred = FALSE)
+	var/live = person_a && !QDELETED(person_a) && person_b && !QDELETED(person_b) && person_a != person_b
+	var/has_client_a = (live && person_a.client) ? TRUE : FALSE
+	var/has_client_b = (live && person_b.client) ? TRUE : FALSE
+	var/busy_reason_a = has_client_a ? is_familytree_player_busy(person_a) : null
+	var/busy_reason_b = has_client_b ? is_familytree_player_busy(person_b) : null
+
+	switch(mutual_gate(person_a, person_b, busy_deferred, has_client_a, has_client_b, busy_reason_a, busy_reason_b))
+		if(MUTUAL_GATE_INVALID)
+			if(busy_deferred)
+				if(person_a && !QDELETED(person_a))
+					person_a.familytree_confirmation_pending = FALSE
+				if(person_b && !QDELETED(person_b))
+					person_b.familytree_confirmation_pending = FALSE
+			ftlog("MUTUAL SKIP: invalid participant a=[person_a?.real_name] b=[person_b?.real_name]")
+			return
+
+		if(MUTUAL_GATE_OPTED_OUT)
+			if(busy_deferred)
+				person_a.familytree_confirmation_pending = FALSE
+				person_b.familytree_confirmation_pending = FALSE
+			ftlog("MUTUAL SKIP: opted out a=[person_a?.real_name] b=[person_b?.real_name]")
+			return
+
+		if(MUTUAL_GATE_PENDING)
+			ftlog("MUTUAL SKIP: pending confirmation a=[person_a?.real_name] b=[person_b?.real_name]")
+			return
+
+		if(MUTUAL_GATE_BUSY)
+			if(has_client_a)
+				person_a.familytree_confirmation_pending = TRUE
+			if(has_client_b)
+				person_b.familytree_confirmation_pending = TRUE
+			if(busy_attempt >= familytree_busy_retry_limit)
+				ftlog("MUTUAL SKIP: busy after [familytree_busy_retry_limit] retries type=[confirm_type] a=[person_a.real_name] busy=[busy_reason_a || "no"] b=[person_b.real_name] busy=[busy_reason_b || "no"]", "WARN")
+				person_a.familytree_confirmation_pending = FALSE
+				person_b.familytree_confirmation_pending = FALSE
+				try_queue_assignment(person_a)
+				try_queue_assignment(person_b)
+				return
+			ftlog("MUTUAL DEFER: type=[confirm_type] retry=[busy_attempt + 1]/[familytree_busy_retry_limit] a=[person_a.real_name] busy=[busy_reason_a || "no"] b=[person_b.real_name] busy=[busy_reason_b || "no"]")
+			addtimer(CALLBACK(src, PROC_REF(request_mutual_confirmation), person_a, person_b, on_both_accept, confirm_type, relation_text_a, relation_text_b, busy_attempt + 1, TRUE), familytree_busy_retry_delay)
+			return
+
+		if(MUTUAL_GATE_DISABLED)
+			return
+
+		if(MUTUAL_GATE_OFFER_LIMIT)
+			person_a.familytree_confirmation_pending = FALSE
+			person_b.familytree_confirmation_pending = FALSE
+			ftlog("MUTUAL SKIP: pair offer limit reached a=[person_a.real_name] b=[person_b.real_name] limit=[FAMILYTREE_PAIR_OFFER_LIMIT]")
+			try_queue_assignment(person_a)
+			try_queue_assignment(person_b)
+			return
+
+		if(MUTUAL_GATE_NO_CLIENT)
+			person_a.familytree_confirmation_pending = FALSE
+			person_b.familytree_confirmation_pending = FALSE
+			ftlog("MUTUAL CANCEL: participant without client type=[confirm_type] a=[person_a.real_name] b=[person_b.real_name]")
+			if(has_client_a)
+				try_queue_assignment(person_a)
+			else
+				pause_familytree_human(person_a, "no client at mutual confirmation")
+			if(has_client_b)
+				try_queue_assignment(person_b)
+			else
+				pause_familytree_human(person_b, "no client at mutual confirmation")
+			return
+
+	open_mutual_session(person_a, person_b, on_both_accept, confirm_type, relation_text_a, relation_text_b)
 
 /datum/controller/subsystem/familytree/proc/do_mutual_ask(datum/family_confirm_session/session, mob/living/carbon/human/person, is_person_a)
 	if(round_disabled)

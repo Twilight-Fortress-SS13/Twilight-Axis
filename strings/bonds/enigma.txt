@@ -1,0 +1,135 @@
+# Королевство Энигма. Карта rockhill, временная Королевская ставка.
+#
+# realm    - имя державы. Должно совпадать с realm_name из map_adjustment карты,
+#            иначе шаблон не будет выбран ни на одной карте.
+# default  - ставка для любой пары, которую не покрыл ни блок, ни исключение.
+# bloc     - держава или орден. Фракция может принадлежать только одному блоку.
+# matrix X - плотный треугольник отношений ВНУТРИ блока X. Порядок строк и столбцов
+#            берётся из объявления блока, поэтому отдельная ось не нужна.
+# matrix blocs - отношения блока к блоку. Одно число на пару блоков, порядок из
+#            объявлений bloc выше.
+# override - точечное исключение, которое бьёт и блок, и межблоковую ставку.
+#
+# Ячейка везде одна и та же: warmth/weight. warmth от -100 до 100, weight от 0 до 100.
+# Порядок применения: default -> matrix блока -> matrix blocs -> override.
+
+realm: Enigma
+default: -5/20
+
+bloc enigma:noble court retinue garrison citywatch vanguard peasant
+bloc valoria:church
+bloc otava:inquisition
+bloc town:burgher atc
+bloc free:sidefolk wanderer
+bloc outlaw:outlaw
+
+name enigma:  Королевство Энигма
+name valoria: Валорийская церковь
+name otava:   Отава
+name town:    Город
+name free:    Вольные
+name outlaw:  Вне закона
+
+matrix enigma:
+#               court   retinue  garrison  citywatc  vanguard   peasant
+noble:          30/55     35/50     30/55     15/40     20/45    -15/35
+court:                    28/48     20/45     15/40     10/32    -10/35
+retinue:                            30/45     12/38     12/34      5/28
+garrison:                                    -15/50     12/40     10/35
+citywatch:                                              15/42     12/38
+vanguard:                                                         25/45
+peasant:
+
+matrix town:
+#               atc
+burgher:     -15/45
+atc:
+
+matrix free:
+#           wanderer
+sidefolk:      20/38
+wanderer:
+
+matrix blocs:
+#           valoria     otava      town      free    outlaw
+enigma:      -15/50     10/45      8/35     -8/30    -60/65
+valoria:               -35/70     10/35      5/28    -45/50
+otava:                           -30/50    -20/35    -60/60
+town:                                       10/32    -45/50
+free:                                                -10/35
+outlaw:
+
+override:
+noble church:         -25/65
+church inquisition:   -45/75
+burgher inquisition:  -35/55
+peasant inquisition:  -30/45
+
+# ---------------------------------------------------------------------------
+# СНЫ ЭТОЙ КАРТЫ
+#
+# dream <id> - id совпадает с хвостом тип-пути после /datum/bond_event/dream/.
+# valence  positive | negative      warmth  -100..100    label  подпись в истории
+# scopes   own | foreign | any      weight  0..100       story  что видит спящий
+# dreamer / other - маски архетипа: warrior lawman devout noble scholar healer
+#                   crafter merchant outlaw servile wanderer undead
+# rarity   вес в жеребьёвке, по умолчанию 10
+# vampire  none | other | dreamer
+# {name} подставляет имя второго. echo - что вспоминает он, ему летит половина.
+#
+# Привязка к карте задана НЕ здесь, а тип-путём группы в bonds_dreams_maps.dm.
+# ---------------------------------------------------------------------------
+
+dream rockhill/held_the_bridge:
+	valence: positive
+	dreamer: warrior
+	other:   warrior
+	warmth:  19
+	weight:  26
+	label:   Сон о мосте
+	story:   Мне снится мост через пролив и {name} рядом. Скала и Камень, Дисциплина и Смерть - в ту ночь это были не просто слова.
+	echo:    Тот мост мы держали с {name}, и слова о Скале и Камне в ту ночь чего-то стоили.
+
+dream rockhill/astratas_garden:
+	valence: positive
+	scopes:  own
+	warmth:  16
+	weight:  22
+	label:   Сон об Астратовом Саде
+	story:   Мне снится Астратов Сад на рассвете и {name}, который остался у околицы, когда из города за нами так никто и не пришёл.
+	echo:    Я остался у околицы Астратова Сада вместе с {name}. Из города за нами так и не пришли.
+
+dream rockhill/saved_from_the_fangs:
+	valence: positive
+	warmth:  21
+	weight:  28
+	rarity:  7
+	label:   Сон о клыках
+	story:   Мне снится холод у горла и {name}, который оторвал от меня то, что уже пило, и не бросил меня после.
+	echo:    Я оторвал от горла {name} то, что уже пило, и не бросил его после.
+
+dream rockhill/shared_blood:
+	valence: positive
+	warmth:  24
+	weight:  32
+	rarity:  2
+	vampire: dreamer
+	label:   Сон о разделённой крови
+	story:   Мне снится голод, от которого темнеет в глазах, и {name}, который молча закатал рукав и подставил запястье сам. Такого не забывают и не прощают себе.
+	echo:    Я закатал рукав и подставил запястье {name} сам. Я до сих пор не знаю, зачем.
+
+dream rockhill/named_to_the_otavans:
+	valence: negative
+	warmth:  -22
+	weight:  28
+	label:   Сон об отаванцах
+	story:   Мне снится сходня отаванского судна и {name}, который поднимается по ней сам, чтобы назвать им моё имя.
+	echo:    На отаванское судно я поднялся сам и назвал им имя {name}.
+
+dream rockhill/swamp_gold:
+	valence: negative
+	warmth:  -19
+	weight:  25
+	label:   Сон о болотной казне
+	story:   Мне снятся болота за мостом, куда мы пошли втроём за казной старого короля, и {name}, который вернулся вдвоём меньше и с полным мешком.
+	echo:    С болот за мостом я вернулся один и с полным мешком. {name} считал ушедших.

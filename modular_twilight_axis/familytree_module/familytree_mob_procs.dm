@@ -187,7 +187,7 @@
 
 /mob/living/carbon/human/verb/known_families()
 	set name = "Known Families"
-	set category = "IC"
+	set category = "Bonds"
 
 	if(!mind)
 		to_chat(src, span_warning("Я не знаю ни одной семьи."))
@@ -214,7 +214,6 @@
 	. += family_text
 
 /mob/living/carbon/human/proc/MixDNA(mob/living/carbon/human/parent1, mob/living/carbon/human/parent2, override = FALSE)
-	// Legacy compatibility hook. Family assignment must not mutate a live character's body or appearance.
 	return TRUE
 
 /mob/living/carbon/human/proc/familytree_build_bond_display_entry(mob/living/carbon/human/bonded_person, relation_text = "spouse")
@@ -330,19 +329,19 @@
 
 /mob/living/carbon/human/verb/my_family()
 	set name = "My Family"
-	set category = "IC.Family"
+	set category = "Bonds"
 
-	familytree_open_family_panel("My Family")
+	bonds_open_panel()
 
 /mob/living/carbon/human/verb/ReturnFamilyList()
-	set name = "List Family"
-	set category = "IC.Family"
+	set name = "Family Tree"
+	set category = "Bonds"
 
-	familytree_open_family_panel("List Family")
+	familytree_open_family_panel("Family Tree")
 
 /mob/living/carbon/human/verb/ToggleFamilyUI()
 	set name = "Family UI"
-	set category = "IC.Family"
+	set category = "Bonds"
 	ShowFamilyUI(FALSE)
 
 /mob/living/carbon/human/proc/ShowFamilyUI(silent)

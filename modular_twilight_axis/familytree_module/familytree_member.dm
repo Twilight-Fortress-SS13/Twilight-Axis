@@ -1,8 +1,6 @@
 /datum/family_member
 	var/tmp/mob/living/carbon/human/person
 	var/datum/heritage/family
-	var/list/phantom_parent_members = list()
-	var/list/phantom_child_members = list()
 	var/adoption_status = FALSE
 	var/generation = 0
 	var/phantom = FALSE
@@ -22,79 +20,28 @@
 	person?.dir = old_dir
 	person?.invisibility = old_invisibility
 
-/datum/family_member/proc/get_parent_members() as /list
+/datum/family_member/proc/kin_members(kind) as /list
 	var/list/out = list()
-	for(var/datum/family_member/p as anything in phantom_parent_members)
-		if(p)
-			out += p
-	if(!person)
-		return out
-	var/datum/family_node/node = SSfamilytree.get_family_node(person)
-	if(!node)
-		return out
-	for(var/datum/family_node/parent_node as anything in node.get_parent_nodes())
-		var/datum/family_member/pm = parent_node.person?.family_member_datum
-		if(pm && !(pm in out))
-			out += pm
+	for(var/datum/bond_actor/relative as anything in SSbonds.kin_of_kind(src, kind))
+		var/datum/family_member/member = relative.family_member_of()
+		if(member && member != src && !(member in out))
+			out += member
 	return out
+
+/datum/family_member/proc/get_parent_members() as /list
+	return kin_members(BOND_KIN_PARENT)
 
 /datum/family_member/proc/get_child_members() as /list
-	var/list/out = list()
-	for(var/datum/family_member/c as anything in phantom_child_members)
-		if(c)
-			out += c
-	if(!person)
-		return out
-	var/datum/family_node/node = SSfamilytree.get_family_node(person)
-	if(!node)
-		return out
-	for(var/datum/family_node/child_node as anything in node.get_child_nodes())
-		var/datum/family_member/cm = child_node.person?.family_member_datum
-		if(cm && !(cm in out))
-			out += cm
-	return out
+	return kin_members(BOND_KIN_CHILD)
 
 /datum/family_member/proc/get_spouse_members() as /list
-	var/list/out = list()
-	if(!person)
-		return out
-	var/datum/family_node/node = SSfamilytree.get_family_node(person)
-	if(!node)
-		return out
-	for(var/datum/family_edge/edge as anything in node.get_edges_of_type("spouse"))
-		var/datum/family_node/other = edge.other_end(node)
-		var/datum/family_member/sm = other?.person?.family_member_datum
-		if(sm && !(sm in out))
-			out += sm
-	return out
+	return kin_members(BOND_KIN_SPOUSE)
 
 /datum/family_member/proc/get_sworn_sibling_members() as /list
-	var/list/out = list()
-	if(!person)
-		return out
-	var/datum/family_node/node = SSfamilytree.get_family_node(person)
-	if(!node)
-		return out
-	for(var/datum/family_edge/edge as anything in node.get_edges_of_type("sworn_sibling"))
-		var/datum/family_node/other = edge.other_end(node)
-		var/datum/family_member/sm = other?.person?.family_member_datum
-		if(sm && !(sm in out))
-			out += sm
-	return out
+	return kin_members(BOND_KIN_SWORN_SIBLING)
 
 /datum/family_member/proc/get_former_spouse_members() as /list
-	var/list/out = list()
-	if(!person)
-		return out
-	var/datum/family_node/node = SSfamilytree.get_family_node(person)
-	if(!node)
-		return out
-	for(var/datum/family_edge/edge as anything in node.get_edges_of_type("former_spouse"))
-		var/datum/family_node/other = edge.other_end(node)
-		var/datum/family_member/sm = other?.person?.family_member_datum
-		if(sm && !(sm in out))
-			out += sm
-	return out
+	return kin_members(BOND_KIN_FORMER_SPOUSE)
 
 /datum/family_member/proc/AddParent(datum/family_member/parent, skip_reciprocal = FALSE)
 	if(!parent || parent == src)
@@ -113,13 +60,9 @@
 			if(existing_parent?.person && !existing_parent.cosmetic && !SSfamilytree.familytree_biological_parent_pair_allowed(parent.person, existing_parent.person, person, family))
 				return FALSE
 
-	if(parent.phantom || parent.cosmetic || cosmetic || !parent.person)
-		phantom_parent_members += parent
-		if(!(src in parent.phantom_child_members))
-			parent.phantom_child_members += src
-	else if(person)
+	if(person?.mind && parent.person?.mind && !parent.phantom && !parent.cosmetic && !cosmetic)
 		SSfamilytree.graph_on_parent_added(parent.person, person, family, adoption_status)
-	else
+	else if(!SSbonds.add_kin(src, parent, BOND_KIN_PARENT, adoption_status, family))
 		return FALSE
 
 	RecalculateGeneration()
@@ -129,13 +72,10 @@
 	if(!parent)
 		return FALSE
 	var/removed = FALSE
-	if(parent in phantom_parent_members)
-		phantom_parent_members -= parent
-		parent.phantom_child_members -= src
-		removed = TRUE
-	if(person && parent.person)
-		SSfamilytree.graph_on_parent_removed(parent.person, person)
-		removed = TRUE
+	if(person?.mind && parent.person?.mind)
+		removed = SSfamilytree.graph_on_parent_removed(parent.person, person)
+	if(!removed)
+		removed = SSbonds.remove_kin(src, parent, BOND_KIN_PARENT)
 	if(!removed)
 		return FALSE
 	RecalculateGeneration()
@@ -157,10 +97,6 @@
 	if(spouse in get_spouse_members())
 		return FALSE
 
-	person.spouse_mob = spouse.person
-	if(!spouse.person.spouse_mob)
-		spouse.person.spouse_mob = person
-
 	SSfamilytree.graph_on_spouse_added(person, spouse.person, family)
 	HandleBiologicalChildren(spouse)
 	return TRUE
@@ -181,52 +117,13 @@
 		return FALSE
 
 	SSfamilytree.graph_on_spouse_removed(person, spouse.person, divorce)
-
-	if(person.spouse_mob == spouse.person)
-		person.spouse_mob = null
-	if(spouse.person.spouse_mob == person)
-		spouse.person.spouse_mob = null
 	return TRUE
 
 /datum/family_member/proc/IsAncestorOf(datum/family_member/other)
-	if(!other || other == src)
-		return FALSE
-
-	var/list/checked = list(src)
-	var/list/to_check = get_child_members()
-
-	while(to_check.len)
-		var/datum/family_member/current = to_check[1]
-		to_check -= current
-
-		if(current == other)
-			return TRUE
-
-		if(!(current in checked))
-			checked += current
-			to_check += current.get_child_members()
-
-	return FALSE
+	return SSbonds.kin_reaches(src, other, BOND_KIN_CHILD)
 
 /datum/family_member/proc/IsDescendantOf(datum/family_member/other)
-	if(!other || other == src)
-		return FALSE
-
-	var/list/checked = list(src)
-	var/list/to_check = get_parent_members()
-
-	while(to_check.len)
-		var/datum/family_member/current = to_check[1]
-		to_check -= current
-
-		if(current == other)
-			return TRUE
-
-		if(!(current in checked))
-			checked += current
-			to_check += current.get_parent_members()
-
-	return FALSE
+	return SSbonds.kin_reaches(src, other, BOND_KIN_PARENT)
 
 /datum/family_member/proc/HandleBiologicalChildren(datum/family_member/spouse)
 	if(!spouse || !person || !spouse.person)
@@ -469,13 +366,10 @@
 /datum/family_member/proc/HasAdoptiveParent(datum/family_member/parent)
 	if(!parent)
 		return FALSE
-	if(!person || !parent.person)
+	var/datum/social_bond/kin/link = SSbonds.find_kin(src, parent, BOND_KIN_PARENT)
+	if(!link)
 		return adoption_status && (parent in get_parent_members())
-	var/datum/family_node/parent_node = SSfamilytree.get_family_node(parent.person)
-	var/datum/family_node/child_node = SSfamilytree.get_family_node(person)
-	if(!parent_node || !child_node)
-		return adoption_status && (parent in get_parent_members())
-	return parent_node.find_edge_to(child_node, "adoptive_parent_child", TRUE) ? TRUE : FALSE
+	return link.adopted
 
 /datum/family_member/proc/get_blood_parent_members() as /list
 	var/list/out = list()
@@ -590,7 +484,7 @@
 /datum/family_member/proc/GetPreservedRelationshipTo(datum/family_member/other)
 	if(!person || !other?.person)
 		return null
-	return SSfamilytree.get_preserved_relationship(person, other)
+	return SSfamilytree.get_preserved_relationship(person, other.person)
 
 /datum/family_member/proc/AreFullSiblings(datum/family_member/other)
 	if(!other || other == src)

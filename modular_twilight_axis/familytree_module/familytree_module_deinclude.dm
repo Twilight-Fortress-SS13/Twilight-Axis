@@ -1,6 +1,3 @@
-// Undef point for familytree module macros.
-// Intended include target after the module's compile section:
-// #include "modular_twilight_axis\familytree_module\familytree_module_deinclude.dm"
 
 #ifdef FAMILYTREE_MODULE_DEFINED_FAMILY_NONE
 #undef FAMILY_NONE
@@ -31,6 +28,14 @@
 #undef FAMILYTREE_MAX_RANDOM_RELATIVES
 #undef FAMILYTREE_DONATOR_RELATIVES_TIER
 #undef FAMILYTREE_TIMEOUT_BLOCK_ITERATIONS
+#undef MUTUAL_GATE_OK
+#undef MUTUAL_GATE_INVALID
+#undef MUTUAL_GATE_OPTED_OUT
+#undef MUTUAL_GATE_PENDING
+#undef MUTUAL_GATE_BUSY
+#undef MUTUAL_GATE_NO_CLIENT
+#undef MUTUAL_GATE_DISABLED
+#undef MUTUAL_GATE_OFFER_LIMIT
 
 #undef ANY_GENDER
 #undef SAME_GENDER

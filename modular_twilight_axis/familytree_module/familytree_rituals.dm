@@ -55,7 +55,7 @@
 	for(var/datum/family_member/spouse_member as anything in parent_member.get_spouse_members())
 		if(!spouse_member?.person || spouse_member.family != parent_member.family)
 			continue
-		if(!SSfamilytree.CanBeParentOf(spouse_member.person, child))
+		if(!SSfamilytree.CanBeParentOf(spouse_member.person, child, TRUE))
 			continue
 		return spouse_member
 	return null
@@ -160,25 +160,31 @@
 		for(var/datum/family_member/member as anything in house.members)
 			if(!member.person || !member.person.client)
 				continue
-			if(!CanBeParentOf(H, member.person))
+			if(!CanBeParentOf(H, member.person, TRUE))
 				continue
-			if(!familytree_biological_parent_allowed(H, member.person, house))
-				continue
+			var/as_adoptive = parenthood_must_be_adoptive(H, member.person)
+			if(!as_adoptive && !familytree_biological_parent_allowed(H, member.person, house))
+				as_adoptive = TRUE
 			if(member.get_parent_members().len >= 2)
 				continue
-			var/parent_pair_allowed = TRUE
-			for(var/datum/family_member/existing_parent as anything in member.get_parent_members())
-				if(existing_parent?.person && !familytree_biological_parent_pair_allowed(H, existing_parent.person, member.person, house))
-					parent_pair_allowed = FALSE
-					break
-			if(!parent_pair_allowed)
-				continue
+			if(!as_adoptive)
+				var/parent_pair_allowed = TRUE
+				for(var/datum/family_member/existing_parent as anything in member.get_parent_members())
+					if(existing_parent?.person && !familytree_biological_parent_pair_allowed(H, existing_parent.person, member.person, house))
+						parent_pair_allowed = FALSE
+						break
+				if(!parent_pair_allowed)
+					continue
 			if(GetSpeciesCompatibilityFailureReason(H, member.person))
 				continue
 
 			var/datum/family_member/new_member = house.CreateFamilyMember(H)
 			if(new_member)
+				if(as_adoptive)
+					member.adoption_status = TRUE
 				member.AddParent(new_member)
+				if(as_adoptive && member.person?.mind && H.mind)
+					SSbonds.set_kin_adopted(member, new_member, BOND_KIN_PARENT, TRUE)
 				return
 
 	ftlog("AssignAsParent: [H.real_name] → NO suitable child found")

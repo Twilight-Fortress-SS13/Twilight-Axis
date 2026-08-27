@@ -50,8 +50,13 @@ $fsp-accent-primary: #3b82f6;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     font-size: 22px;
     color: $fsp-accent-member;
+
+    &--bonds {
+      color: $fsp-accent-couple;
+    }
   }
 
   &__header-titles {
@@ -72,6 +77,31 @@ $fsp-accent-primary: #3b82f6;
     font-size: 13px;
     color: $fsp-text-dim;
     margin: 0;
+  }
+
+  &__nav-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 20px 8px 10px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: $fsp-text;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+      background: $fsp-panel-raised;
+      border-color: $fsp-border-subtle;
+    }
+
+    &--active {
+      background: $fsp-panel-raised;
+      border-color: $fsp-border;
+    }
   }
 
   &__close {
@@ -785,6 +815,31 @@ $fsp-accent-primary: #3b82f6;
   }
 
   // ----- Hints -----
+
+  &__tab-body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  &__cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  &__card--compact {
+    min-height: 0;
+    padding: 10px 18px;
+    justify-content: center;
+    flex: 0 0 auto;
+
+    .FamilySettingsPanel__card-title {
+      font-size: 14px;
+    }
+  }
 
   &__hint {
     grid-column: 1 / -1;

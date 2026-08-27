@@ -220,8 +220,9 @@
 			person.family_member_datum = null
 		person.spouse_mob = null
 
-	member.phantom_parent_members.Cut()
-	member.phantom_child_members.Cut()
+	var/datum/bond_actor/departing = SSbonds.resolve_actor(member)
+	if(departing?.phantom_member)
+		SSbonds.drop_actor(departing)
 	if(person)
 		SSfamilytree.graph_on_member_removed(person, src)
 	member.person = null
@@ -925,7 +926,7 @@
 			surname2use = person?.dna?.species?.random_surname()
 		else
 			surname2use = copytext(person?.real_name, index + 1)
-	return surname2use
+	return trim(surname2use)
 
 /datum/heritage/proc/ApplyUI(mob/living/carbon/human/iconer, toggle_true = FALSE)
 	if(!iconer.client)

@@ -1,0 +1,9 @@
+axis: clan_abyss clan_crimson clan_eoran clan_nosferatu clan_thronleer clan_caitiff
+
+#                    crimson       eoran   nosferatu   thronleer     caitiff
+clan_abyss:             0/10        0/10        0/10        0/10        0/10
+clan_crimson:                       0/10        0/10        0/10        0/10
+clan_eoran:                                     0/10        0/10        0/10
+clan_nosferatu:                                             0/10        0/10
+clan_thronleer:                                                         0/10
+clan_caitiff:

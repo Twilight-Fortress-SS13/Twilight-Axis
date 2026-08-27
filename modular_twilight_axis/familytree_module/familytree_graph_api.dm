@@ -1,6 +1,5 @@
 /datum/controller/subsystem/familytree/var/list/family_nodes = list()
 /datum/controller/subsystem/familytree/var/list/family_nodes_by_person = list()
-/datum/controller/subsystem/familytree/var/list/family_edges = list()
 /datum/controller/subsystem/familytree/var/list/family_graph_caches = list()
 
 /datum/controller/subsystem/familytree/proc/get_family_node(mob/living/carbon/human/person)
@@ -31,63 +30,8 @@
 	if(node.person)
 		family_nodes_by_person -= node.person
 	family_nodes -= node
-	for(var/datum/family_edge/edge as anything in node.edges.Copy())
-		remove_family_edge(edge, "node_removed")
 	qdel(node)
 	return TRUE
-
-/datum/controller/subsystem/familytree/proc/add_family_edge(datum/family_node/node_a, datum/family_node/node_b, relation_type, datum/heritage/house, flags = 0, source = "system", directed = FALSE)
-	if(!node_a || !node_b || node_a == node_b || !relation_type)
-		return null
-	if(node_a.has_edge_to(node_b, relation_type, directed))
-		return node_a.find_edge_to(node_b, relation_type, directed)
-	var/datum/family_edge/edge = new /datum/family_edge(node_a, node_b, relation_type, house, flags, source)
-	node_a.edges += edge
-	if(node_b != node_a)
-		node_b.edges += edge
-	family_edges += edge
-	node_a.bump_revision()
-	node_b.bump_revision()
-	mark_family_dirty(node_a, node_b, house)
-#ifdef FAMILYTREE_DEBUG_LOGGING
-	ftlog("GRAPH +edge [relation_type] [node_a.person?.real_name || "phantom"] -> [node_b.person?.real_name || "phantom"] house='[house?.housename || "none"]' source=[source] directed=[directed]", FTLOG_DEBUG)
-	graph_validate_after_mutation(node_a, node_b)
-#endif
-	return edge
-
-/datum/controller/subsystem/familytree/proc/remove_family_edge(datum/family_edge/edge, source = "system")
-	if(!edge)
-		return FALSE
-	var/datum/family_node/node_a = edge.a
-	var/datum/family_node/node_b = edge.b
-	var/datum/heritage/edge_house = edge.house
-	family_edges -= edge
-	if(node_a)
-		node_a.edges -= edge
-		node_a.bump_revision()
-	if(node_b && node_b != node_a)
-		node_b.edges -= edge
-		node_b.bump_revision()
-	mark_family_dirty(node_a, node_b, edge_house)
-#ifdef FAMILYTREE_DEBUG_LOGGING
-	ftlog("GRAPH -edge [edge.relation_type] [node_a?.person?.real_name || "phantom"] -> [node_b?.person?.real_name || "phantom"] source=[source]", FTLOG_DEBUG)
-	graph_validate_after_mutation(node_a, node_b)
-#endif
-	qdel(edge)
-	return TRUE
-
-/datum/controller/subsystem/familytree/proc/find_family_edge(datum/family_node/node_a, datum/family_node/node_b, relation_type, directed = FALSE)
-	if(!node_a)
-		return null
-	return node_a.find_edge_to(node_b, relation_type, directed)
-
-/datum/controller/subsystem/familytree/proc/get_edges_for_person(mob/living/carbon/human/person, relation_type)
-	var/datum/family_node/node = get_family_node(person)
-	if(!node)
-		return list()
-	if(!relation_type)
-		return node.edges.Copy()
-	return node.get_edges_of_type(relation_type)
 
 /datum/controller/subsystem/familytree/proc/is_preservable_relationship_label(relation)
 	return istext(relation) && length(relation) && relation != "distant relative"
@@ -97,42 +41,26 @@
 		return FALSE
 	if(!is_preservable_relationship_label(relation_a_to_b) && !is_preservable_relationship_label(relation_b_to_a))
 		return FALSE
-	var/datum/family_node/node_a = get_or_create_family_node(member_a.person, house)
-	var/datum/family_node/node_b = get_or_create_family_node(member_b.person, house)
-	if(!node_a || !node_b)
+	var/datum/mind/mind_a = kin_mind_of(member_a.person)
+	var/datum/mind/mind_b = kin_mind_of(member_b.person)
+	if(!mind_a || !mind_b)
 		return FALSE
-	var/datum/family_edge/edge = find_family_edge(node_a, node_b, "preserved_relation", FALSE)
-	if(!edge)
-		edge = add_family_edge(node_a, node_b, "preserved_relation", house, 0, "player_bridge_removed", FALSE)
-	if(!edge)
-		return FALSE
-	if(edge.a == node_a)
-		if(is_preservable_relationship_label(relation_a_to_b))
-			edge.preserved_relation_a_to_b = relation_a_to_b
-		if(is_preservable_relationship_label(relation_b_to_a))
-			edge.preserved_relation_b_to_a = relation_b_to_a
-	else
-		if(is_preservable_relationship_label(relation_a_to_b))
-			edge.preserved_relation_b_to_a = relation_a_to_b
-		if(is_preservable_relationship_label(relation_b_to_a))
-			edge.preserved_relation_a_to_b = relation_b_to_a
-	mark_family_dirty(node_a, node_b, house)
+	get_or_create_family_node(member_a.person, house)
+	get_or_create_family_node(member_b.person, house)
+	if(is_preservable_relationship_label(relation_a_to_b))
+		var/datum/social_bond/kin/forward = SSbonds.add_kin_link(mind_a, mind_b, BOND_KIN_PRESERVED, FALSE, house)
+		forward?.preserved_label = relation_a_to_b
+	if(is_preservable_relationship_label(relation_b_to_a))
+		var/datum/social_bond/kin/backward = SSbonds.add_kin_link(mind_b, mind_a, BOND_KIN_PRESERVED, FALSE, house)
+		backward?.preserved_label = relation_b_to_a
+	kin_mark_dirty(member_a.person, member_b.person, house)
 	return TRUE
 
 /datum/controller/subsystem/familytree/proc/get_preserved_relationship(mob/living/carbon/human/from_person, mob/living/carbon/human/to_person)
-	if(!from_person || !to_person || from_person == to_person)
+	if(!from_person?.mind || !to_person?.mind || from_person == to_person)
 		return null
-	var/datum/family_node/from_node = get_family_node(from_person)
-	var/datum/family_node/to_node = get_family_node(to_person)
-	if(!from_node || !to_node)
-		return null
-	for(var/datum/family_edge/edge as anything in from_node.get_edges_of_type("preserved_relation"))
-		if(edge.other_end(from_node) != to_node)
-			continue
-		if(edge.a == from_node)
-			return edge.preserved_relation_a_to_b
-		return edge.preserved_relation_b_to_a
-	return null
+	var/datum/social_bond/kin/link = SSbonds.find_kin(from_person.mind, to_person.mind, BOND_KIN_PRESERVED)
+	return link?.preserved_label
 
 /datum/controller/subsystem/familytree/proc/get_family_graph_cache(datum/heritage/house, create_if_missing = TRUE)
 	if(!house)
@@ -244,9 +172,8 @@
 	if(!node)
 		return FALSE
 	if(house)
-		for(var/datum/family_edge/edge as anything in node.edges.Copy())
-			if(edge.house == house)
-				remove_family_edge(edge, "member_removed")
+		if(person.mind)
+			SSbonds.drop_kin_for_house(person.mind, house)
 		house.member_nodes -= node
 	if(node.primary_house == house)
 		node.primary_house = null
@@ -255,79 +182,96 @@
 			mark_family_dirty(node, null, house)
 	return TRUE
 
+/datum/controller/subsystem/familytree/proc/kin_mind_of(mob/living/carbon/human/person)
+	if(!person)
+		return null
+	if(!person.mind)
+		ftlog("kin hook received [person.real_name || person] without a mind; kinship link skipped", FTLOG_WARN)
+		return null
+	return person.mind
+
+/datum/controller/subsystem/familytree/proc/kin_mark_dirty(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/heritage/house)
+	var/datum/family_node/node_a = person_a ? get_family_node(person_a) : null
+	var/datum/family_node/node_b = person_b ? get_family_node(person_b) : null
+	var/datum/heritage/target_house = house || node_a?.primary_house || node_b?.primary_house
+	mark_family_dirty(node_a, node_b, target_house)
+
 /datum/controller/subsystem/familytree/proc/graph_sync_adoption_status(mob/living/carbon/human/child_person, adopted)
-	if(!child_person)
-		return FALSE
-	var/datum/family_node/child_node = get_family_node(child_person)
-	if(!child_node)
+	var/datum/mind/child_mind = kin_mind_of(child_person)
+	if(!child_mind)
 		return FALSE
 	var/changed = FALSE
-	var/from_type = adopted ? "parent_child" : "adoptive_parent_child"
-	var/to_type = adopted ? "adoptive_parent_child" : "parent_child"
-	for(var/datum/family_edge/edge as anything in child_node.edges.Copy())
-		if(edge.relation_type != from_type)
+	for(var/datum/social_bond/kin/link as anything in SSbonds.kin_links_of_kind(child_mind, BOND_KIN_PARENT))
+		if(link.adopted == adopted)
 			continue
-		if(edge.b != child_node)
-			continue
-		var/datum/family_node/parent_node = edge.a
-		var/datum/heritage/edge_house = edge.house
-		var/edge_source = edge.source
-		var/edge_flags = edge.relation_flags
-		remove_family_edge(edge, "adoption_retype")
-		add_family_edge(parent_node, child_node, to_type, edge_house, edge_flags, edge_source, TRUE)
-		changed = TRUE
+		if(SSbonds.set_kin_adopted(child_mind, link.other, BOND_KIN_PARENT, adopted))
+			changed = TRUE
+	if(changed)
+		kin_mark_dirty(child_person, null, null)
 	return changed
 
 /datum/controller/subsystem/familytree/proc/graph_on_parent_added(mob/living/carbon/human/parent_person, mob/living/carbon/human/child_person, datum/heritage/house, adopted = FALSE)
 	if(!parent_person || !child_person || parent_person == child_person)
 		return null
-	var/datum/family_node/parent_node = get_or_create_family_node(parent_person, house)
-	var/datum/family_node/child_node = get_or_create_family_node(child_person, house)
-	var/edge_type = adopted ? "adoptive_parent_child" : "parent_child"
-	return add_family_edge(parent_node, child_node, edge_type, house, 0, "legacy_hook", TRUE)
+	var/datum/mind/parent_mind = kin_mind_of(parent_person)
+	var/datum/mind/child_mind = kin_mind_of(child_person)
+	if(!parent_mind || !child_mind)
+		return null
+	get_or_create_family_node(parent_person, house)
+	get_or_create_family_node(child_person, house)
+	var/datum/social_bond/kin/link = SSbonds.add_kin(child_mind, parent_mind, BOND_KIN_PARENT, adopted, house)
+	kin_mark_dirty(parent_person, child_person, house)
+	return link
 
 /datum/controller/subsystem/familytree/proc/graph_on_parent_removed(mob/living/carbon/human/parent_person, mob/living/carbon/human/child_person)
-	if(!parent_person || !child_person)
+	var/datum/mind/parent_mind = kin_mind_of(parent_person)
+	var/datum/mind/child_mind = kin_mind_of(child_person)
+	if(!parent_mind || !child_mind)
 		return FALSE
-	var/datum/family_node/parent_node = get_family_node(parent_person)
-	var/datum/family_node/child_node = get_family_node(child_person)
-	if(!parent_node || !child_node)
+	if(!SSbonds.remove_kin(child_mind, parent_mind, BOND_KIN_PARENT))
 		return FALSE
-	var/datum/family_edge/edge = find_family_edge(parent_node, child_node, "parent_child", TRUE)
-	if(!edge)
-		edge = find_family_edge(parent_node, child_node, "adoptive_parent_child", TRUE)
-	if(!edge)
-		return FALSE
-	return remove_family_edge(edge, "legacy_hook")
+	kin_mark_dirty(parent_person, child_person, null)
+	return TRUE
 
 /datum/controller/subsystem/familytree/proc/graph_on_spouse_added(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/heritage/house)
 	if(!person_a || !person_b || person_a == person_b)
 		return null
-	var/datum/family_node/node_a = get_or_create_family_node(person_a, house)
-	var/datum/family_node/node_b = get_or_create_family_node(person_b, house)
-	return add_family_edge(node_a, node_b, "spouse", house, 0, "legacy_hook", FALSE)
+	var/datum/mind/mind_a = kin_mind_of(person_a)
+	var/datum/mind/mind_b = kin_mind_of(person_b)
+	if(!mind_a || !mind_b)
+		return null
+	get_or_create_family_node(person_a, house)
+	get_or_create_family_node(person_b, house)
+	var/datum/social_bond/kin/link = SSbonds.add_kin(mind_a, mind_b, BOND_KIN_SPOUSE, FALSE, house)
+	person_a.bonds_refresh_spouse_cache()
+	person_b.bonds_refresh_spouse_cache()
+	kin_mark_dirty(person_a, person_b, house)
+	return link
 
 /datum/controller/subsystem/familytree/proc/graph_on_sworn_sibling_added(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, datum/heritage/house)
 	if(!person_a || !person_b || person_a == person_b)
 		return null
-	var/datum/family_node/node_a = get_or_create_family_node(person_a, house)
-	var/datum/family_node/node_b = get_or_create_family_node(person_b, house)
-	return add_family_edge(node_a, node_b, "sworn_sibling", house, 0, "legacy_hook", FALSE)
+	var/datum/mind/mind_a = kin_mind_of(person_a)
+	var/datum/mind/mind_b = kin_mind_of(person_b)
+	if(!mind_a || !mind_b)
+		return null
+	get_or_create_family_node(person_a, house)
+	get_or_create_family_node(person_b, house)
+	var/datum/social_bond/kin/link = SSbonds.add_kin(mind_a, mind_b, BOND_KIN_SWORN_SIBLING, FALSE, house)
+	kin_mark_dirty(person_a, person_b, house)
+	return link
 
 /datum/controller/subsystem/familytree/proc/graph_on_spouse_removed(mob/living/carbon/human/person_a, mob/living/carbon/human/person_b, divorce = FALSE)
-	if(!person_a || !person_b)
+	var/datum/mind/mind_a = kin_mind_of(person_a)
+	var/datum/mind/mind_b = kin_mind_of(person_b)
+	if(!mind_a || !mind_b)
 		return FALSE
-	var/datum/family_node/node_a = get_family_node(person_a)
-	var/datum/family_node/node_b = get_family_node(person_b)
-	if(!node_a || !node_b)
-		return FALSE
-	var/datum/family_edge/edge = find_family_edge(node_a, node_b, "spouse", FALSE)
-	if(edge)
-		var/datum/heritage/edge_house = edge.house
-		remove_family_edge(edge, "legacy_hook")
-		if(divorce)
-			add_family_edge(node_a, node_b, "former_spouse", edge_house, 0, "legacy_hook", FALSE)
-		return TRUE
+	var/datum/social_bond/kin/existing = SSbonds.find_kin(mind_a, mind_b, BOND_KIN_SPOUSE)
+	var/datum/heritage/kept_house = existing?.house
+	var/removed = SSbonds.remove_kin(mind_a, mind_b, BOND_KIN_SPOUSE)
 	if(divorce)
-		add_family_edge(node_a, node_b, "former_spouse", null, 0, "legacy_hook", FALSE)
-	return FALSE
+		SSbonds.add_kin(mind_a, mind_b, BOND_KIN_FORMER_SPOUSE, FALSE, kept_house)
+	person_a.bonds_refresh_spouse_cache()
+	person_b.bonds_refresh_spouse_cache()
+	kin_mark_dirty(person_a, person_b, kept_house)
+	return removed

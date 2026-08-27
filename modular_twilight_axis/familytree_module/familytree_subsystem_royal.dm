@@ -453,7 +453,7 @@
 		fallback_royal_hand_to_local(H, "royal hand assignment blocked: no monarch")
 		return
 	if(!ruling_family.housename)
-		ruling_family.housename = " Royal"
+		ruling_family.housename = "Royal"
 	var/datum/family_member/member = ruling_family.CreateFamilyMember(H)
 	if(!member)
 		stop_tracking_human(H, "royal assignment failed; member creation returned null")

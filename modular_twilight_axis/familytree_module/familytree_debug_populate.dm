@@ -504,7 +504,7 @@
 		out += "USER_MEMBER: parents=[user_member.get_parent_members().len] children=[user_member.get_child_members().len] spouses=[user_member.get_spouse_members().len] former_spouses=[user_member.get_former_spouse_members().len]"
 	for(var/datum/family_node/node as anything in house.member_nodes)
 		if(!node.person)
-			out += "  NODE(phantom) edges=[node.edges.len]"
+			out += "  NODE(phantom)"
 			continue
 		var/mob/living/carbon/human/H = node.person
 		var/datum/family_member/mem = H.family_member_datum

@@ -1,0 +1,677 @@
+# Сны богов. Каждая группа гаснет, если её божество не правит городом.
+#
+# dream <id> - начало памяти. id совпадает с хвостом тип-пути после
+#              /datum/bond_event/dream/, поэтому объявление в DM и блок здесь
+#              всегда указывают друг на друга.
+#
+# valence  positive | negative     - в какое ведро попадает память
+# scopes   own | foreign | any     - своя фракция, чужая или обе
+# dreamer  маски архетипа спящего  - warrior lawman devout noble scholar healer
+# other    маски архетипа второго    crafter merchant outlaw servile wanderer undead
+# warmth   -100..100               - сдвиг по теплу, спящему целиком
+# weight   0..100                  - сдвиг по весу
+# rarity   вес в жеребьёвке        - по умолчанию 10
+# vampire  none | other | dreamer  - требовать вампира с той или иной стороны
+# label    подпись в истории связи
+# story    что видит спящий; {name} подставляет имя второго
+# echo     что вспоминает второй, ему прилетает половина сдвига
+#
+# Бог и карта задаются НЕ здесь, а тип-путём на группе в DM: память под
+# astrata/ гаснет без Астраты, под ranesh/ - вне песков.
+
+dream astrata/dawn_watch:
+	valence: positive
+	warmth:  16
+	weight:  20
+	label:   Сон о рассвете
+	story:   Мне снится стена перед рассветом и {name} рядом. Он говорит, что солнце всегда возвращается, и во сне я ему верю.
+	echo:    Мы с {name} достояли ту стражу до рассвета, и солнце всё-таки взошло.
+
+dream astrata/just_verdict:
+	valence: positive
+	other:   lawman noble
+	warmth:  17
+	weight:  22
+	label:   Сон о правом суде
+	story:   Мне снится суд, где {name} рассудил по закону, а не по знакомству, и это оказалось не в его выгоду.
+	echo:    Я рассудил дело {name} по закону, хотя выгоднее было иначе.
+
+dream astrata/shared_prayer:
+	valence: positive
+	scopes:  own
+	dreamer: devout
+	other:   devout
+	warmth:  15
+	weight:  20
+	label:   Сон о молитве
+	story:   Мне снится утренняя молитва в пустом храме и голос {name}, подхвативший её, когда мой сорвался.
+	echo:    Я дочитал утреннюю молитву за {name}, когда его голос сорвался.
+
+dream astrata/bent_the_law:
+	valence: negative
+	other:   lawman noble
+	warmth:  -17
+	weight:  22
+	label:   Сон о кривом суде
+	story:   Мне снится, как {name} читает закон и на середине сворачивает туда, где ждёт нужный человек. Не я.
+	echo:    Я свернул закон в нужную сторону, и {name} это заметил.
+
+dream astrata/broke_formation:
+	valence: negative
+	dreamer: warrior
+	other:   warrior
+	warmth:  -18
+	weight:  24
+	label:   Сон о сорванном строе
+	story:   Мне снится замысел, расписанный до последнего шага, и {name}, который решил, что знает лучше.
+	echo:    Я сделал по-своему, и замысел рассыпался. {name} не забыл.
+
+dream noc/shared_dream:
+	valence: positive
+	warmth:  18
+	weight:  24
+	rarity:  6
+	label:   Общий сон
+	story:   Мне снится сон, который уже снился {name}: та же комната, та же луна в окне. Проснувшись, я знаю это наверняка.
+	echo:    Мой сон этой ночью видел кто-то ещё. {name}, если верить ощущению.
+
+dream noc/taught_letters:
+	valence: positive
+	other:   scholar
+	warmth:  16
+	weight:  22
+	label:   Сон о буквах
+	story:   Мне снится, как {name} ведёт моим пальцем по строке и не смеётся над тем, как медленно я читаю.
+	echo:    Я учил {name} читать и ни разу не посмеялся над тем, как медленно у него выходило.
+
+dream noc/lent_a_book:
+	valence: positive
+	dreamer: scholar
+	other:   scholar
+	warmth:  14
+	weight:  18
+	label:   Сон о книге
+	story:   Мне снится книга, которую {name} дал мне на одну ночь, зная, что за такие книги жгут.
+	echo:    Я дал {name} книгу на одну ночь, хотя за такие книги жгут.
+
+dream noc/pried_into_me:
+	valence: negative
+	other:   scholar
+	warmth:  -18
+	weight:  24
+	rarity:  8
+	label:   Сон о чужом взгляде
+	story:   Мне снится, что {name} стоит у меня за глазами и смотрит оттуда наружу. Во сне я не могу его выгнать.
+	echo:    Я заглянул туда, куда {name} меня не звал.
+
+dream noc/burned_my_notes:
+	valence: negative
+	dreamer: scholar
+	warmth:  -16
+	weight:  22
+	label:   Сон о золе
+	story:   Мне снится зола вместо трёх лет работы и лицо {name}, на котором нет ничего.
+	echo:    Три года работы {name} сгорели, и я знаю, чья это была свеча.
+
+dream necra/closed_my_eyes:
+	valence: positive
+	other:   devout
+	warmth:  18
+	weight:  24
+	label:   Сон о последнем обряде
+	story:   Мне снится, что я лежу, а {name} закрывает мне глаза и говорит нужные слова до конца, не торопясь.
+	echo:    Я закрыл глаза {name} и прочёл всё до конца, не торопясь.
+
+dream necra/carried_the_bier:
+	valence: positive
+	warmth:  15
+	weight:  20
+	label:   Сон о носилках
+	story:   Мне снятся носилки, которые мы несли с {name}: он спереди, я сзади, и мы ни разу не сбились с шага.
+	echo:    Мы несли те носилки с {name} и ни разу не сбились с шага.
+
+dream necra/grave_vigil:
+	valence: positive
+	scopes:  own
+	warmth:  14
+	weight:  18
+	label:   Сон о поминках
+	story:   Мне снятся поминки, на которых остались только мы с {name}, когда все прочие разошлись.
+	echo:    На тех поминках мы с {name} остались последними.
+
+dream necra/named_my_death:
+	valence: negative
+	other:   devout scholar
+	warmth:  -19
+	weight:  26
+	rarity:  8
+	label:   Сон о предсказании
+	story:   Мне снится, как {name} смотрит на меня и называет год. Во сне я не переспрашиваю.
+	echo:    Я назвал {name} год, и он не переспросил.
+
+dream necra/left_unburied:
+	valence: negative
+	warmth:  -20
+	weight:  26
+	label:   Сон о непогребённом
+	story:   Мне снится мой мертвец под открытым небом и {name}, который прошёл мимо и не остановился.
+	echo:    Я прошёл мимо мертвеца {name} и не остановился.
+
+dream abyssor/same_storm:
+	valence: positive
+	warmth:  17
+	weight:  24
+	label:   Сон о шторме
+	story:   Мне снится шторм, который мы с {name} пересидели под одним куском парусины, вцепившись в одну снасть.
+	echo:    Тот шторм мы с {name} пересидели под одной парусиной.
+
+dream abyssor/bailed_water:
+	valence: positive
+	warmth:  14
+	weight:  18
+	label:   Сон о вычерпанной воде
+	story:   Мне снится трюм по колено и {name}, который вычерпывал воду всю ночь и не стал меня будить.
+	echo:    Я вычерпывал воду всю ночь и не стал будить {name}.
+
+dream abyssor/cut_the_rope:
+	valence: negative
+	warmth:  -21
+	weight:  26
+	label:   Сон о перерезанном канате
+	story:   Мне снится канат, который {name} перерезал, чтобы шлюпка не перевернулась. Я был на другом конце.
+	echo:    Я перерезал тот канат, чтобы не перевернулись все. {name} был на другом конце.
+
+dream abyssor/sold_the_cargo:
+	valence: negative
+	scopes:  foreign
+	other:   merchant
+	warmth:  -16
+	weight:  22
+	label:   Сон о проданном грузе
+	story:   Мне снится пристань, где {name} продаёт то, что мы везли вместе, и цену называет свою.
+	echo:    Я продал общий груз по своей цене. {name} узнал об этом на пристани.
+
+dream abyssor/same_nightmare:
+	valence: negative
+	warmth:  -15
+	weight:  20
+	rarity:  6
+	label:   Общий кошмар
+	story:   Мне снится кошмар, в котором есть {name}, и наутро я понимаю, что он снился нам обоим.
+	echo:    Этот кошмар видел не только я. {name} тоже, судя по его лицу.
+
+dream dendor/shared_the_kill:
+	valence: positive
+	warmth:  15
+	weight:  20
+	label:   Сон об охоте
+	story:   Мне снится добыча, которую мы с {name} делили у костра, и он взял себе худшую часть.
+	echo:    Ту добычу мы делили с {name}, и худшую часть я взял себе.
+
+dream dendor/beast_at_my_back:
+	valence: positive
+	other:   warrior wanderer
+	warmth:  19
+	weight:  24
+	label:   Сон о звере
+	story:   Мне снится дыхание за спиной и {name}, который встал между мной и этим дыханием.
+	echo:    Я встал между {name} и тем, что дышало ему в спину.
+
+dream dendor/left_to_the_pack:
+	valence: negative
+	warmth:  -21
+	weight:  26
+	label:   Сон о стае
+	story:   Мне снится вой со всех сторон и спина {name}, уходящая быстрее, чем я могу бежать.
+	echo:    Я бежал быстрее, чем {name}. Стая досталась не нам поровну.
+
+dream dendor/took_the_pelt:
+	valence: negative
+	warmth:  -14
+	weight:  18
+	label:   Сон о шкуре
+	story:   Мне снится шкура моего зверя на плечах {name} и то, как он рассказывает, что взял его сам.
+	echo:    Шкуру я забрал себе, а рассказывал так, будто зверь был мой. {name} слышал.
+
+dream dendor/went_strange:
+	valence: negative
+	warmth:  -17
+	weight:  22
+	rarity:  8
+	label:   Сон о том, кто изменился
+	story:   Мне снится {name}, который смотрит на меня не своими глазами и молчит слишком долго.
+	echo:    {name} посмотрел на меня так, будто узнал обо мне то, чего я сам не знаю.
+
+dream malum/one_anvil:
+	valence: positive
+	dreamer: crafter
+	other:   crafter
+	warmth:  16
+	weight:  22
+	label:   Сон об одной наковальне
+	story:   Мне снится наковальня, у которой мы с {name} стояли посменно, и молот не остывал двое суток.
+	echo:    Мы с {name} держали одну наковальню двое суток, и молот не остывал.
+
+dream malum/reforged_my_blade:
+	valence: positive
+	other:   crafter
+	warmth:  17
+	weight:  22
+	label:   Сон о перекованном
+	story:   Мне снится клинок, который {name} перековал мне заново и не взял ни монеты.
+	echo:    Я перековал клинок {name} заново и не взял с него ничего.
+
+dream malum/stood_the_shift:
+	valence: positive
+	other:   crafter servile
+	warmth:  13
+	weight:  16
+	label:   Сон о чужой смене
+	story:   Мне снится, как {name} отстоял мою смену у печей, потому что я не держался на ногах.
+	echo:    Я отстоял смену за {name}, потому что он не держался на ногах.
+
+dream malum/let_the_fire_die:
+	valence: negative
+	scopes:  own
+	dreamer: crafter
+	other:   crafter
+	warmth:  -15
+	weight:  20
+	label:   Сон о погасшей печи
+	story:   Мне снится остывшая печь и {name}, который должен был следить и не следил.
+	echo:    Печь остыла на моей вахте, и разгребал это {name}.
+
+dream malum/stole_my_pattern:
+	valence: negative
+	dreamer: crafter
+	other:   crafter merchant
+	warmth:  -18
+	weight:  24
+	label:   Сон о краденом узоре
+	story:   Мне снится моя работа с чужим клеймом и {name}, который ставит это клеймо не первый год.
+	echo:    Работа была {name}, а клеймо моё. Не первый год.
+
+dream xylix/made_them_laugh:
+	valence: positive
+	warmth:  14
+	weight:  18
+	label:   Сон о смехе
+	story:   Мне снится зал, который {name} заставил хохотать в тот вечер, когда всем было не до смеха.
+	echo:    В тот вечер я заставил хохотать целый зал. {name} смеялся громче всех.
+
+dream xylix/talked_us_out:
+	valence: positive
+	warmth:  19
+	weight:  24
+	label:   Сон о вывернутом слове
+	story:   Мне снится верёвка и {name}, который говорил так долго и складно, что верёвку убрали.
+	echo:    Я говорил, пока верёвку не убрали. {name} стоял рядом и молчал, и правильно делал.
+
+dream xylix/lucky_throw:
+	valence: positive
+	warmth:  12
+	weight:  16
+	label:   Сон об удачном броске
+	story:   Мне снятся кости, которые легли невозможно, и лицо {name}, поставившего на меня всё.
+	echo:    Я поставил на {name} всё, и кости легли невозможно.
+
+dream xylix/made_me_the_joke:
+	valence: negative
+	warmth:  -16
+	weight:  20
+	label:   Сон о чужой шутке
+	story:   Мне снится смех, обращённый на меня, и {name}, который его начал и не остановил.
+	echo:    Смеялись над {name}, а начал я. Останавливать не стал.
+
+dream xylix/swapped_the_dice:
+	valence: negative
+	warmth:  -17
+	weight:  22
+	label:   Сон о подменённых костях
+	story:   Мне снятся кости, которые ложатся слишком ровно, и пальцы {name}, слишком быстрые для честной игры.
+	echo:    Кости я подменил. {name}, кажется, всё-таки заметил.
+
+dream ravox/took_my_place:
+	valence: positive
+	other:   warrior
+	warmth:  20
+	weight:  26
+	label:   Сон о подмене
+	story:   Мне снится место в первом ряду, которое должно было быть моим, и {name}, вставший туда вместо меня.
+	echo:    Я встал в первый ряд вместо {name}. Так было правильнее.
+
+dream ravox/honest_duel:
+	valence: positive
+	dreamer: warrior
+	other:   warrior
+	warmth:  15
+	weight:  22
+	label:   Сон о честном поединке
+	story:   Мне снится поединок с {name}, после которого мы подали друг другу руки и никто не счёл себя обиженным.
+	echo:    После того поединка мы с {name} подали друг другу руки.
+
+dream ravox/yielded_and_lived:
+	valence: positive
+	other:   warrior
+	warmth:  14
+	weight:  18
+	label:   Сон о пощаде
+	story:   Мне снится, как я сдался, и {name} опустил оружие, хотя мог не опускать.
+	echo:    {name} сдался, и я опустил оружие, хотя мог не опускать.
+
+dream ravox/struck_from_behind:
+	valence: negative
+	warmth:  -22
+	weight:  28
+	label:   Сон об ударе в спину
+	story:   Мне снится удар, которого не видно, и {name}, который единственный стоял за моей спиной.
+	echo:    Я ударил {name} со спины. Иначе бы не вышло.
+
+dream ravox/boasted_my_deed:
+	valence: negative
+	dreamer: warrior
+	warmth:  -16
+	weight:  22
+	label:   Сон о присвоенной славе
+	story:   Мне снится, как {name} рассказывает о моём деле от первого лица, и его слушают охотнее.
+	echo:    Я рассказывал о деле {name} от первого лица, и меня слушали охотнее.
+
+dream pestra/sat_with_the_sick:
+	valence: positive
+	other:   healer devout
+	warmth:  19
+	weight:  24
+	label:   Сон о сиделке
+	story:   Мне снится жар и {name}, просидевший у моей постели всю ночь, зная, чем это может кончиться для него.
+	echo:    Я просидел у постели {name} всю ночь, понимая, чем это может кончиться.
+
+dream pestra/took_the_fever:
+	valence: positive
+	warmth:  17
+	weight:  22
+	label:   Сон о лихорадке
+	story:   Мне снится, как {name} меняет мне тряпки на лбу и врёт, что я выгляжу лучше.
+	echo:    Я врал {name}, что он выглядит лучше, и менял тряпки до утра.
+
+dream pestra/gave_the_mercy:
+	valence: positive
+	other:   healer warrior
+	warmth:  16
+	weight:  24
+	rarity:  8
+	label:   Сон о милосердии
+	story:   Мне снится тот, кого уже нельзя было спасти, и {name}, у которого хватило руки сделать это быстро.
+	echo:    Спасти было нельзя, и я сделал это быстро. {name} видел.
+
+dream pestra/barred_the_door:
+	valence: negative
+	warmth:  -20
+	weight:  26
+	label:   Сон о запертой двери
+	story:   Мне снится дверь, которую {name} запер изнутри, когда снаружи остались больные. Я был снаружи.
+	echo:    Я запер дверь. Снаружи остались больные, и {name} среди них.
+
+dream pestra/sold_the_cure:
+	valence: negative
+	other:   merchant healer
+	warmth:  -18
+	weight:  24
+	label:   Сон о проданном лекарстве
+	story:   Мне снится склянка в руках {name} и цена, которую он назвал, глядя на умирающего.
+	echo:    Я назвал цену, глядя на умирающего. {name} запомнил её лучше меня.
+
+dream eora/stopped_the_fight:
+	valence: positive
+	warmth:  17
+	weight:  22
+	label:   Сон о разнятых руках
+	story:   Мне снится драка, которую {name} разнял голыми руками, встав между двумя клинками.
+	echo:    Ту драку я разнял голыми руками. {name} был одним из двоих.
+
+dream eora/stood_at_the_wedding:
+	valence: positive
+	warmth:  15
+	weight:  20
+	label:   Сон о свадьбе
+	story:   Мне снится свадьба, на которой {name} стоял рядом со мной, когда родня стоять отказалась.
+	echo:    Я стоял рядом с {name} на той свадьбе, когда его родня отказалась.
+
+dream eora/took_in_my_kin:
+	valence: positive
+	warmth:  20
+	weight:  26
+	label:   Сон о приюте
+	story:   Мне снится порог дома {name} и мои родные, которых он впустил, не спросив, надолго ли.
+	echo:    Я впустил родных {name} и не стал спрашивать, надолго ли.
+
+dream eora/turned_away_kin:
+	valence: negative
+	warmth:  -19
+	weight:  24
+	label:   Сон о закрытом пороге
+	story:   Мне снится порог, на котором стояли мои, и {name}, который не открыл, хотя был дома.
+	echo:    Я не открыл, хотя был дома. На пороге стояли родные {name}.
+
+dream eora/broke_the_peace:
+	valence: negative
+	warmth:  -17
+	weight:  22
+	label:   Сон о нарушенном мире
+	story:   Мне снится замирение, на которое мы оба дали слово, и {name}, нарушивший его первым.
+	echo:    Слово о замирении мы дали оба. Нарушил первым я, и {name} это знает.
+
+dream psydon/wept_together:
+	valence: positive
+	dreamer: devout
+	other:   devout
+	warmth:  17
+	weight:  22
+	label:   Сон о плаче Всеотца
+	story:   Мне снится, что мы с {name} стоим на коленях и помним, из-за кого плакал Всеотец. Он не отводит взгляда.
+	echo:    Мы с {name} стояли на коленях и помнили, из-за кого плакал Всеотец.
+
+dream psydon/kept_the_old_rite:
+	valence: positive
+	scopes:  own
+	other:   devout
+	warmth:  16
+	weight:  22
+	label:   Сон о старом обряде
+	story:   Мне снится обряд по старому чину, который {name} провёл, зная, что за это спросят.
+	echo:    Я провёл обряд по старому чину и знал, что спросят. {name} был там.
+
+dream psydon/shared_the_ashes:
+	valence: positive
+	warmth:  14
+	weight:  18
+	label:   Сон о пепле
+	story:   Мне снится пепел на лбу и рука {name}, которая его наносит, потому что моя дрожала.
+	echo:    Пепел я наносил {name} сам, потому что его рука дрожала.
+
+dream psydon/named_me_heretic:
+	valence: negative
+	other:   devout lawman
+	warmth:  -21
+	weight:  26
+	label:   Сон об отступничестве
+	story:   Мне снится слово еретик, сказанное обо мне голосом {name}, и то, как быстро его подхватили.
+	echo:    Я назвал {name} еретиком, и это подхватили быстрее, чем я думал.
+
+dream psydon/denied_the_father:
+	valence: negative
+	dreamer: devout
+	warmth:  -18
+	weight:  24
+	label:   Сон об отречении
+	story:   Мне снится, как {name} отрекается от Всеотца при свидетелях, и одним из свидетелей был я.
+	echo:    Я отрёкся при свидетелях. Одним из них был {name}.
+
+dream zizo/hid_me_from_the_pyre:
+	valence: positive
+	warmth:  20
+	weight:  26
+	rarity:  8
+	label:   Сон о костре
+	story:   Мне снится костёр, сложенный для меня, и {name}, который спрятал меня так, что не нашли.
+	echo:    Я спрятал {name} так, что не нашли. Костёр сложили зря.
+
+dream zizo/shared_the_secret:
+	valence: positive
+	warmth:  16
+	weight:  24
+	rarity:  5
+	label:   Сон о тайне
+	story:   Мне снится то, что {name} сказал мне шёпотом и за что нас обоих сожгли бы вместе.
+	echo:    То, что я сказал {name} шёпотом, стоит нам обоим костра.
+
+dream zizo/promised_salvation:
+	valence: negative
+	warmth:  -16
+	weight:  22
+	rarity:  8
+	label:   Сон об обещанном спасении
+	story:   Мне снится голос {name}, обещающий спасение так уверенно, что во сне я почти соглашаюсь.
+	echo:    Я обещал {name} спасение, и он почти согласился.
+
+dream zizo/marked_me:
+	valence: negative
+	warmth:  -19
+	weight:  24
+	rarity:  6
+	label:   Сон о метке
+	story:   Мне снится знак, оставленный на мне без спроса, и пальцы {name}, которые его выводили.
+	echo:    Знак на {name} вывел я и спрашивать не стал.
+
+dream zizo/gave_me_up:
+	valence: negative
+	warmth:  -21
+	weight:  26
+	rarity:  8
+	label:   Сон о выданном
+	story:   Мне снится дознание, на котором {name} назвал моё имя первым и не запнулся.
+	echo:    На дознании я назвал имя {name} первым и не запнулся.
+
+dream baotha/shared_the_cup:
+	valence: positive
+	warmth:  14
+	weight:  18
+	label:   Сон об общей чаше
+	story:   Мне снится чаша, которую мы с {name} передавали друг другу, пока не рассвело.
+	echo:    Ту чашу мы с {name} передавали друг другу до рассвета.
+
+dream baotha/covered_for_me:
+	valence: positive
+	warmth:  16
+	weight:  20
+	label:   Сон о прикрытии
+	story:   Мне снится, как {name} соврал за меня, не моргнув, и никто не переспросил.
+	echo:    Я соврал за {name} не моргнув, и переспрашивать не стали.
+
+dream baotha/one_night:
+	valence: positive
+	warmth:  15
+	weight:  22
+	rarity:  8
+	label:   Сон об одной ночи
+	story:   Мне снится ночь с {name}, после которой мы оба сделали вид, что ничего не было.
+	echo:    После той ночи мы с {name} оба сделали вид, что ничего не было.
+
+dream baotha/left_before_dawn:
+	valence: negative
+	warmth:  -15
+	weight:  20
+	label:   Сон об ушедшем
+	story:   Мне снится пустое место рядом и {name}, ушедший до рассвета, не сказав ни слова.
+	echo:    Я ушёл до рассвета и ничего не сказал. {name} проснулся один.
+
+dream baotha/spent_my_coin:
+	valence: negative
+	warmth:  -16
+	weight:  20
+	label:   Сон о прогулянном
+	story:   Мне снится, как {name} спускает мои деньги с чужими людьми и заказывает ещё.
+	echo:    Деньги {name} я спустил с чужими людьми и заказал ещё.
+
+dream graggar/shared_the_spoils:
+	valence: positive
+	warmth:  14
+	weight:  20
+	label:   Сон о добыче
+	story:   Мне снится добыча, которую {name} разделил поровну, хотя сильнее был он.
+	echo:    Добычу я разделил с {name} поровну, хотя сильнее был я.
+
+dream graggar/took_the_blame:
+	valence: positive
+	warmth:  18
+	weight:  24
+	rarity:  6
+	label:   Сон о чужой вине
+	story:   Мне снится наказание, которое должно было достаться мне, и {name}, назвавший виновным себя.
+	echo:    Виновным я назвал себя, хотя это был {name}.
+
+dream graggar/made_me_kneel:
+	valence: negative
+	other:   noble warrior lawman
+	warmth:  -20
+	weight:  26
+	label:   Сон о колене
+	story:   Мне снится, как {name} ставит меня на колени при всех и держит там дольше, чем нужно.
+	echo:    Я поставил {name} на колени при всех и держал дольше, чем было нужно.
+
+dream graggar/broke_my_hand:
+	valence: negative
+	warmth:  -22
+	weight:  28
+	rarity:  8
+	label:   Сон о сломанной руке
+	story:   Мне снится хруст и лицо {name}, на котором нет ничего, кроме скуки.
+	echo:    Руку {name} я сломал, и мне было скучно.
+
+dream graggar/named_me_weak:
+	valence: negative
+	warmth:  -17
+	weight:  22
+	label:   Сон о слабости
+	story:   Мне снится слово слабый, сказанное обо мне голосом {name} так, чтобы услышали все.
+	echo:    Я назвал {name} слабым так, чтобы услышали все.
+
+dream matthios/stood_the_rising:
+	valence: positive
+	warmth:  18
+	weight:  24
+	label:   Сон о восстании
+	story:   Мне снится площадь, где мы с {name} стояли плечом к плечу против тех, кто был выше нас обоих.
+	echo:    На той площади мы с {name} стояли плечом к плечу против тех, кто был выше.
+
+dream matthios/shared_the_word:
+	valence: positive
+	warmth:  15
+	weight:  20
+	label:   Сон о слове
+	story:   Мне снится, как {name} читает вслух то, что читать запрещено, и не понижает голоса.
+	echo:    Я читал вслух запрещённое и не понижал голоса. {name} слушал.
+
+dream matthios/took_the_lash:
+	valence: positive
+	warmth:  19
+	weight:  24
+	rarity:  8
+	label:   Сон о плетях
+	story:   Мне снятся плети, которые достались {name} вместо меня, потому что он назвался первым.
+	echo:    Плети достались мне вместо {name}, потому что я назвался первым.
+
+dream matthios/named_the_names:
+	valence: negative
+	warmth:  -21
+	weight:  26
+	label:   Сон о названных именах
+	story:   Мне снится, как {name} перечисляет наш круг по именам, и моё идёт третьим.
+	echo:    Я перечислил круг по именам. Имя {name} шло третьим.
+
+dream matthios/claimed_the_lead:
+	valence: negative
+	warmth:  -16
+	weight:  22
+	label:   Сон о первом среди равных
+	story:   Мне снится, как {name} объясняет, почему среди равных он всё-таки первый.
+	echo:    Я объяснил, почему среди равных первый всё-таки я. {name} не согласился.

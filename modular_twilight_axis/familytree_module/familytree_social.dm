@@ -58,14 +58,20 @@
 
 	if(estate_a == ESTATE_NONE || estate_b == ESTATE_NONE)
 		return TRUE
+	if(estate_a == estate_b)
+		return TRUE
 
-	return estate_a == estate_b
+	if(estate_a == ESTATE_NOBLE && estate_b == ESTATE_COMMONER)
+		return A.allow_low_status_marriage
+	if(estate_b == ESTATE_NOBLE && estate_a == ESTATE_COMMONER)
+		return B.allow_low_status_marriage
+
+	return TRUE
 #define ROLE_TIER_NONE 0
 #define ROLE_TIER_HIGH 1
 #define ROLE_TIER_LOW 2
 
 /datum/controller/subsystem/familytree
-	// Nobility and ducal family
 	var/list/high_tier_nobility_types = list(
 		/datum/job/roguetown/lord,
 		/datum/job/roguetown/lady,
@@ -75,7 +81,6 @@
 		/datum/job/roguetown/suitor,
 	)
 
-	// Church and inquisition
 	var/list/high_tier_church_types = list(
 		/datum/job/roguetown/priest,
 		/datum/job/roguetown/templar,
@@ -89,7 +94,6 @@
 		/datum/job/roguetown/absolver,
 	)
 
-	// Town military and garrison
 	var/list/high_tier_military_types = list(
 		/datum/job/roguetown/knight,
 		/datum/job/roguetown/marshal,
@@ -99,7 +103,6 @@
 		/datum/job/roguetown/manorguard,
 	)
 
-	// Key town professions (courtiers and administration)
 	var/list/high_tier_town_types = list(
 		/datum/job/roguetown/seneschal,
 		/datum/job/roguetown/councillor,
@@ -108,7 +111,6 @@
 		/datum/job/roguetown/adventurer/courtagent,
 	)
 
-	// Criminal and outlaw roles
 	var/list/low_tier_job_types = list(
 		/datum/job/roguetown/wretch,
 		/datum/job/roguetown/bandit,
@@ -118,13 +120,7 @@
 		/datum/job/roguetown/bathworker,
 	)
 
-	// Fallback title list for advclass-based roles without own job datums
-	var/list/low_tier_job_titles = list(
-		"Beggar",
-		"Excommunicado",
-		"Thug",
-		"Doomsayer",
-	)
+	var/list/low_tier_job_titles = list()
 
 /proc/familytree_get_role_tier(mob/living/carbon/human/H)
 	if(!H)

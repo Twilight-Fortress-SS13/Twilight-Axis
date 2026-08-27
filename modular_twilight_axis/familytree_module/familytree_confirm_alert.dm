@@ -5,8 +5,6 @@
 	desc = "Система нашла для вас семейную связь. Нажмите, чтобы открыть меню принятия или отказа."
 	icon_state = "buff"
 	alert_group = ALERT_BUFF
-	// Render above the rest of the HUD and get a fixed prominent spot (see the
-	// reorganize_alerts override below) so it isn't buried among other alerts.
 	plane = ABOVE_HUD_PLANE
 	layer = ABOVE_HUD_LAYER
 	var/datum/callback/on_open

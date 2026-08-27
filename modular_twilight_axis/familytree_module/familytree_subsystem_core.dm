@@ -7,12 +7,10 @@ SUBSYSTEM_DEF(familytree)
 	var/allow_nobles_in_ruling_family = FALSE
 	var/list/families = list()
 	var/list/viable_spouses = list()
-	// Species that can only match within their isolated group (gnolls + antag goblins)
 	var/list/isolated_group_types = list(
 		/datum/species/gnoll,
 		/datum/species/goblin,
 		)
-	// Species that cannot reproduce biologically but can have families
 	var/list/sterile_species_types = list(
 		/datum/species/construct,
 		)
@@ -133,6 +131,7 @@ SUBSYSTEM_DEF(familytree)
 		register_human(H)
 		registered_count++
 	ftlog("registered [registered_count] humans from GLOB.mob_list")
+	register_debug_verbs()
 	addtimer(CALLBACK(src, PROC_REF(scan_and_grant_holy_spells)), 30 SECONDS)
 	ftlog("Initialize() DONE, holy spell scan scheduled in 30s")
 	ftlog_state("POST_INIT")

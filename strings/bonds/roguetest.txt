@@ -1,0 +1,72 @@
+# Roguetest - карта CI. Держава условная, но роспись полная: на этой карте
+# гоняются юнит-тесты, и пустой шаблон означал бы, что фракционный слой в CI
+# не проверяется вовсе.
+#
+# realm    - имя державы, должно совпадать с realm_name из map_adjustment.
+# default  - ставка для любой пары, которую не покрыл ни блок, ни исключение.
+# bloc     - держава или орден. Фракция принадлежит только одному блоку.
+# matrix X - плотный треугольник ВНУТРИ блока X, порядок из объявления блока.
+# matrix blocs - блок к блоку, порядок из объявлений bloc выше.
+# override - точечное исключение, бьёт и блок, и межблоковую ставку.
+#
+# Ячейка: warmth/weight. warmth -100..100, weight 0..100.
+# Порядок применения: default -> matrix блока -> matrix blocs -> override.
+
+realm: Roguetest
+default: -5/20
+
+bloc crown:   noble court retinue garrison citywatch vanguard
+bloc temple:  church inquisition
+bloc town:    burgher atc
+bloc commons: peasant slave
+bloc free:    sidefolk wanderer
+bloc outlaw:  outlaw
+
+name crown:   Корона
+name temple:  Храм
+name town:    Город
+name commons: Простой люд
+name free:    Вольные
+name outlaw:  Вне закона
+
+matrix crown:
+#                 court     retinue    garrison   citywatch    vanguard
+noble:            45/60       40/55       25/50       12/40       10/35
+court:                        30/50       20/45       15/40        8/30
+retinue:                                  30/45       12/38       10/32
+garrison:                                            -15/50       12/40
+citywatch:                                                        15/42
+vanguard:
+
+matrix temple:
+#              inquisitio
+church:            -30/70
+inquisition:
+
+matrix town:
+#                 atc
+burgher:       -20/55
+atc:
+
+matrix commons:
+#               slave
+peasant:        10/35
+slave:
+
+matrix free:
+#             wanderer
+sidefolk:        20/38
+wanderer:
+
+matrix blocs:
+#              temple        town     commons        free      outlaw
+crown:          -8/50       12/42      -15/35       -8/30      -58/62
+temple:                     10/35       22/45        5/28      -45/50
+town:                                   12/38       10/32      -45/50
+commons:                                             8/30      -20/40
+free:                                                          -10/35
+outlaw:
+
+override:
+noble slave:    -40/70
+church outlaw:  -50/55

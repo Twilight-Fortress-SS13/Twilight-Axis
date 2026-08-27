@@ -471,6 +471,22 @@
 		"maxRandomRelatives" = FAMILYTREE_MAX_RANDOM_RELATIVES,
 	)
 
+	P.bonds_module_load_character()
+	var/list/bond_flavors = list()
+	var/list/flavor_labels = SSbonds.seed_flavor_labels()
+	for(var/flavor_key in flavor_labels)
+		bond_flavors += list(list(
+			"key" = flavor_key,
+			"label" = flavor_labels[flavor_key],
+			"enabled" = (flavor_key in P.bonds_seed_flavors),
+		))
+	data["bondSettings"] = list(
+		"seedCount" = P.bonds_seed_count,
+		"maxSeeds" = BOND_MAX_SEEDS,
+		"flavors" = bond_flavors,
+		"locked" = !isnull(SSbonds.get_round_prefs(user?.ckey)),
+	)
+
 	var/list/species_names = list()
 	for(var/species_name in familytree_module_get_selectable_species())
 		species_names += species_name
@@ -495,6 +511,19 @@
 			if(ishuman(user))
 				H = user
 				old_setspouse = SSfamilytree.familytree_get_target_name(H)
+
+			var/seed_count = params["seedCount"]
+			if(isnum(seed_count))
+				P.bonds_seed_count = clamp(round(seed_count), 0, BOND_MAX_SEEDS)
+			var/list/seed_flavors = params["seedFlavors"]
+			if(islist(seed_flavors))
+				var/list/valid = SSbonds.valid_seed_flavors()
+				var/list/accepted = list()
+				for(var/flavor_key in seed_flavors)
+					if(istext(flavor_key) && (flavor_key in valid))
+						accepted += flavor_key
+				P.bonds_seed_flavors = accepted
+			P.bonds_module_sanitize_character()
 
 			var/new_family = _ui_to_family(params["familyType"])
 

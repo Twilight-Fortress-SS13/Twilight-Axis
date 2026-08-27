@@ -172,9 +172,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 		result += " SIGBOUND"
 	return result
 
-// =============================================
-//  SCENARIO: RANDOM (basic assignment paths)
-// =============================================
 /datum/controller/subsystem/familytree/proc/ftdebug_scenario_random(turf/spawn_loc, count = 10)
 	ftlog("DBGSIM [FTDBG_SCENARIO_RANDOM]: spawning [count] random entities", FTLOG_INFO)
 	var/list/results = list()
@@ -201,9 +198,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 	return results
 
-// =============================================
-//  SCENARIO: LIFECYCLE (signal flow)
-// =============================================
 /datum/controller/subsystem/familytree/proc/ftdebug_scenario_lifecycle(turf/spawn_loc)
 	ftlog("DBGSIM [FTDBG_SCENARIO_LIFECYCLE]: testing signal lifecycle", FTLOG_INFO)
 	var/list/results = list()
@@ -250,9 +244,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 	return results
 
-// =============================================
-//  SCENARIO: ROYAL (royal family flow)
-// =============================================
 /datum/controller/subsystem/familytree/proc/ftdebug_scenario_royal(turf/spawn_loc)
 	ftlog("DBGSIM [FTDBG_SCENARIO_ROYAL]: testing royal assignment paths", FTLOG_INFO)
 	var/list/results = list()
@@ -312,9 +303,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 	return results
 
-// =============================================
-//  SCENARIO: FAVORITE (setspouse matching)
-// =============================================
 /datum/controller/subsystem/familytree/proc/ftdebug_scenario_favorite(turf/spawn_loc)
 	ftlog("DBGSIM [FTDBG_SCENARIO_FAVORITE]: testing setspouse/favorite flows", FTLOG_INFO)
 	var/list/results = list()
@@ -384,9 +372,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 	return results
 
-// =============================================
-//  SCENARIO: DESIRED ROLES (all role paths)
-// =============================================
 /datum/controller/subsystem/familytree/proc/ftdebug_scenario_desired_roles(turf/spawn_loc)
 	ftlog("DBGSIM [FTDBG_SCENARIO_ROLES]: testing desired relative role paths", FTLOG_INFO)
 	var/list/results = list()
@@ -450,9 +435,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 	return results
 
-// =============================================
-//  SCENARIO: ISOLATED SPECIES (gnoll/goblin)
-// =============================================
 /datum/controller/subsystem/familytree/proc/ftdebug_scenario_isolated(turf/spawn_loc)
 	ftlog("DBGSIM [FTDBG_SCENARIO_ISOLATED]: testing isolated + sterile + banned", FTLOG_INFO)
 	var/list/results = list()
@@ -512,9 +494,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 	return results
 
-// =============================================
-//  SCENARIO: EDGE CASES
-// =============================================
 /datum/controller/subsystem/familytree/proc/ftdebug_scenario_edge(turf/spawn_loc)
 	ftlog("DBGSIM [FTDBG_SCENARIO_EDGE]: testing edge cases", FTLOG_INFO)
 	var/list/results = list()
@@ -646,9 +625,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 	return results
 
-// =============================================
-//  SCENARIO: STRESS (high volume)
-// =============================================
 /datum/controller/subsystem/familytree/proc/ftdebug_scenario_stress(turf/spawn_loc, count = 50)
 	ftlog("DBGSIM [FTDBG_SCENARIO_STRESS]: stress test with [count] entities", FTLOG_INFO)
 	var/list/results = list()
@@ -726,9 +702,6 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 
 	return results
 
-// =============================================
-//  MASTER SCENARIO RUNNER + ADMIN VERB
-// =============================================
 /datum/controller/subsystem/familytree/proc/ftdebug_run_scenario(mob/user, scenario = FTDBG_SCENARIO_RANDOM, count = 10)
 	debug_session_id++
 	ftlog("========== DBGSIM SESSION #[debug_session_id] scenario=[scenario] ==========", FTLOG_INFO)
@@ -821,6 +794,12 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	return out.Join("")
 
 #endif
+
+/datum/controller/subsystem/familytree/proc/register_debug_verbs()
+	GLOB.admin_verbs_debug |= list(
+		/client/proc/familytree_debug_panel,
+		/client/proc/familytree_toggle_verbose_logging,
+	)
 
 /client/proc/familytree_debug_panel()
 	set name = "FamilyTree Debug"
@@ -1068,3 +1047,45 @@ GLOBAL_LIST_INIT(ftdebug_age_pool, list(
 	return results
 
 #endif
+
+/client/proc/familytree_confirmation_storm()
+	set name = "FamilyTree: Confirmation Storm"
+	set category = "Debug"
+
+	if(!check_rights(R_DEBUG))
+		return
+	var/turf/spot = get_turf(mob)
+	if(!spot)
+		to_chat(src, span_warning("Нужна точка отсчёта: встаньте на турф."))
+		return
+
+	var/cast_size = input(src, "Сколько синтетических людей?", "Confirmation Storm", 20) as num|null
+	if(isnull(cast_size))
+		return
+	var/rounds = input(src, "Сколько кругов предложений?", "Confirmation Storm", 20) as num|null
+	if(isnull(rounds))
+		return
+	var/max_hold = input(src, "Максимум секунд удержания кнопки до нажатия?", "Confirmation Storm", 115) as num|null
+	if(isnull(max_hold))
+		return
+
+	cast_size = clamp(round(cast_size), 2, 200)
+	rounds = clamp(round(rounds), 1, 200)
+	max_hold = clamp(round(max_hold), 0, 600)
+
+	var/datum/familytree_probe/probe = new()
+	var/list/cast = probe.spawn_cast(cast_size, spot)
+	if(length(cast) < 2)
+		qdel(probe)
+		to_chat(src, span_warning("Не удалось поставить каст."))
+		return
+
+	probe.run_confirm_storm(cast, rounds, max_hold)
+	probe.run_deep_sweep(cast, 3)
+	var/text = "[probe.report()]\n[probe.deep_report()]"
+	var/faults = length(probe.violations)
+	qdel(probe)
+
+	to_chat(src, span_notice("<b>=== FAMILYTREE CONFIRMATION STORM ===</b><br><pre>[text]</pre>"))
+	SSfamilytree.ftlog("confirmation storm by [key_name(mob)]: cast=[cast_size] rounds=[rounds] faults=[faults]", faults ? FTLOG_ERROR : FTLOG_INFO)
+	log_admin("[key_name(mob)] ran the familytree confirmation storm: [faults] faults")
