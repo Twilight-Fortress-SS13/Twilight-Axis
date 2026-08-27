@@ -37,7 +37,7 @@
 		if(G.client)
 			if(isscryeye(G) || G.trapped)
 				return
-			if(alert("Travel with the boatman?", "", "Yes", "No") == "Yes")
+			if(alert(usr, "Travel with the boatman?", "", "Yes", "No") == "Yes")
 				if(G.mind)
 					var/datum/job/target_job = SSjob.GetJob(G.mind.assigned_role)
 					if(target_job)
@@ -153,16 +153,13 @@
 	if(!.)
 		return
 	var/mob/screenmob = viewmob || mymob
-	if(!screenmob.client.prefs.ghost_hud)
-		screenmob.client.screen -= static_inventory
-	else
-		screenmob.client.screen += static_inventory
+	screenmob.client.screen += static_inventory
 
 /datum/hud/eye/New(mob/owner)
 	..()
 	var/atom/movable/screen/using
 
-	using =  new /atom/movable/screen/backhudl/ghost()
+	using =	new /atom/movable/screen/backhudl/ghost()
 	using.hud = src
 	static_inventory += using
 
@@ -189,16 +186,13 @@
 	if(!.)
 		return
 	var/mob/screenmob = viewmob || mymob
-	if(!screenmob.client.prefs.ghost_hud)
-		screenmob.client.screen -= static_inventory
-	else
-		screenmob.client.screen += static_inventory
+	screenmob.client.screen += static_inventory
 
 /datum/hud/obs/New(mob/owner)
 	..()
 	var/atom/movable/screen/using
 
-	using =  new /atom/movable/screen/backhudl/obs()
+	using =	new /atom/movable/screen/backhudl/obs()
 	using.hud = src
 	static_inventory += using
 

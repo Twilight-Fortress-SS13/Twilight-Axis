@@ -362,7 +362,7 @@
 /obj/item/rogueweapon/spear/trident/afterattack(obj/target, mob/user, proximity)
 	var/sl = user.get_skill_level(/datum/skill/labor/fishing)
 	var/ft = 150
-	var/fpp =  90 - (sl * 15)
+	var/fpp =	90 - (sl * 15)
 	if(istype(target, /turf/open/water))
 		if(user.used_intent.type == SPEAR_CAST && !user.doing)
 			if(target in range(user,3))
@@ -668,7 +668,7 @@
 /obj/item/rogueweapon/fishspear/afterattack(obj/target, mob/user, proximity)
 	var/sl = user.get_skill_level(/datum/skill/labor/fishing) // User's skill level
 	var/ft = 160 //Time to get a catch, in ticks
-	var/fpp =  90 - (sl * 15) // Fishing power penalty based on fishing skill level
+	var/fpp =	90 - (sl * 15) // Fishing power penalty based on fishing skill level
 	if(istype(target, /turf/open/water))
 		if(user.used_intent.type == SPEAR_CAST && !user.doing)
 			if(target in range(user,3))
@@ -1240,6 +1240,12 @@
 	max_blade_int = 200
 	smeltresult = /obj/item/ingot/steel
 
+/obj/item/rogueweapon/spear/boar/noc
+	name = "moonlight spear"
+	desc = "A spear with a wide head and a pair of wings below the head. The wings are designed to prevent a boar from charging past the spearhead. \
+	It is also useful for parrying and stopping a charging opponent. This one in particular is made of blued steel."
+	icon_state = "nocspear"
+
 /obj/item/rogueweapon/spear/blacksteel
 	name = "blacksteel spear"
 	desc = "A magnificent winged spear of blacksteel; 'nuff said."
@@ -1369,7 +1375,7 @@
 	inv_storage_delay = 1 SECONDS
 	icon_angle_wielded = null
 
-/obj/item/rogueweapon/spear/partizan/baotha/Initialize()
+/obj/item/rogueweapon/spear/partizan/baotha/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "SWORDSPEAR")
 

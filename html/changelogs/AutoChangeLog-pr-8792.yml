@@ -1,0 +1,4 @@
+author: "BurpleBineapple"
+delete-after: True
+changes:
+  - bugfix: "low cut gambesons no longer are written out in Title Case"

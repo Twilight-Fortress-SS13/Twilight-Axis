@@ -38,8 +38,8 @@
 		/datum/virtue/utility/riding
 	)
 	subclass_stashed_items = list(
-        "Armor Plates" =  /obj/item/repair_kit/metal,
-    )
+		"Armor Plates" =	/obj/item/repair_kit/metal,
+	)
 
 /datum/outfit/job/roguetown/wretch/deserter/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -47,10 +47,10 @@
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior]
 	add_verb(H, list(/mob/living/carbon/human/mind/proc/setorders))
 	if(H.mind)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/movemovemove)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/takeaim)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/hold)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/onfeet)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/movemovemove)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/takeaim)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/hold)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/onfeet)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/brotherhood)
 
 		var/weapons = list(
@@ -109,7 +109,7 @@
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
 
 		var/helmets = list(
-			"Pigface Bascinet" 	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
+			"Pigface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
@@ -121,8 +121,8 @@
 			"Snouted Visored Sallet"			= /obj/item/clothing/head/roguetown/helmet/sallet/visored/snouted,
 			"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,
 			"Snouted Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/snouted,
-			"Hounskull Bascinet" 		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
-			"Etruscan Bascinet" 		= /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
+			"Hounskull Bascinet"		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
+			"Etruscan Bascinet"		= /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 			"Slitted Kettle"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
 			"Kulah Khud"	= /obj/item/clothing/head/roguetown/helmet/sallet/raneshen,
 			"Kabuto"	= /obj/item/clothing/head/roguetown/helmet/heavy/kabuto, //No mask, fuck you
@@ -233,15 +233,15 @@
 				backl = /obj/item/quiver/bolt/standard
 	add_verb(H, list(/mob/living/carbon/human/mind/proc/setorders))
 	if(H.mind)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/movemovemove)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/takeaim)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/hold)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/onfeet)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/movemovemove)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/takeaim)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/hold)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/onfeet)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/brotherhood)
 		var/helmets = list(
-			"Pigface Bascinet" 		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
+			"Pigface Bascinet"		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
 			"Hounskull Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
-			"Klappvisier Bascinet" 	= /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
+			"Klappvisier Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 			"Visored Sallet"		= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
 			"Snouted Visored Sallet"		= /obj/item/clothing/head/roguetown/helmet/sallet/visored/snouted,
 			"Sugarloaf Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket/crusader,

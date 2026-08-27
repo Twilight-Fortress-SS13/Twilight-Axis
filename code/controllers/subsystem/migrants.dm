@@ -21,7 +21,7 @@ SUBSYSTEM_DEF(migrants)
 	var/list/spawned_waves = list()
 	var/list/global_triumph_contributions = list()
 
-/datum/controller/subsystem/migrants/Initialize()
+/datum/controller/subsystem/migrants/Initialize(mapload)
 	track_next_roll[MIGRANT_TRACK_REGULAR] = world.time + 2 MINUTES
 	track_next_roll[MIGRANT_TRACK_SPECIAL] = world.time + special_roll_interval
 	return ..()
@@ -369,6 +369,10 @@ SUBSYSTEM_DEF(migrants)
 
 	role.after_spawn(character)
 
+	if(ishuman(character))
+		var/mob/living/carbon/human/human_character = character
+		human_character.flag_gear_as_worn()
+
 	if(role.advclass_cat_rolls)
 		SSrole_class_handler.setup_class_handler(character, role.advclass_cat_rolls)
 	else
@@ -505,7 +509,7 @@ SUBSYSTEM_DEF(migrants)
 	var/base_weight = wave.weight
 	var/triumph_bonus = wave.triumph_total
 
-	var/triumph_multiplier = 6
+	var/triumph_multiplier = wave.triumph_weight_multiplier // TA EDIT
 	var/final_weight = base_weight + (triumph_bonus * triumph_multiplier)
 
 	return max(final_weight, 1)
@@ -695,7 +699,7 @@ SUBSYSTEM_DEF(migrants)
 	. = TRUE
 	var/mob/user = usr
 	message_admins("Admin [key_name_admin(user)] is forcing the next migrant wave.")
-	var/picked_wave_type = input(user, "Choose migrant wave to force:", "Migrants")  as null|anything in GLOB.migrant_waves
+	var/picked_wave_type = input(user, "Choose migrant wave to force:", "Migrants")	as null|anything in GLOB.migrant_waves
 	if(!picked_wave_type)
 		return
 	message_admins("Admin [key_name_admin(user)] forced next migrant wave: [picked_wave_type]")

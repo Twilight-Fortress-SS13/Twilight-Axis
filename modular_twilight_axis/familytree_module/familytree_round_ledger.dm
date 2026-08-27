@@ -6,7 +6,7 @@
 		return null
 	var/list/entry = familytree_round_ledger[ckey]
 	if(!entry)
-		entry = list("opted_out" = FALSE, "blocked" = list())
+		entry = list("opted_out" = FALSE, "blocked" = list(), "offers" = list())
 		familytree_round_ledger[ckey] = entry
 	return entry
 

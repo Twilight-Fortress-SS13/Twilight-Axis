@@ -1,0 +1,5 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - bugfix: "Инквизитору выдаётся хлыст при выборе рунлока."
+  - bugfix: "Табарды."

@@ -55,6 +55,8 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		return
 	var/list/roleprefs = get_roleprefs(C)
 	var/HTML = {"
+		[subprefs_subclass_html(C)]
+		<hr>
 		<i>You can choose your ducal colors here; this will only take effect if both are set.</i><br/>
 		<b>Primary color:</b> <a href="?src=[REF(src)];primcolor=1">[roleprefs["primcolor"] || "Choose"]</a><br/>
 		<b>Secondary color:</b> <a href="?src=[REF(src)];seccolor=1">[roleprefs["seccolor"] || "Choose"]</a><br/>
@@ -95,7 +97,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 			GLOB.lordsurname = "of [L.real_name]"
 		SSticker.set_ruler_mob(L)
 		var/realm = SSticker.realm_name || "Azure Peak"
-		to_chat(world, "<b><span class='notice'><span class='big'>[L.real_name] is [SSticker.rulertype] of [realm].</span></span></b>")
+		to_world("<b><span class='notice'><span class='big'>[L.real_name] is [SSticker.rulertype] of [realm].</span></span></b>")
 		if(istype(SSticker.regentmob, /mob/living/carbon/human))
 			var/mob/living/carbon/human/regentbuddy = SSticker.regentmob
 			to_chat(L, span_notice("Word reached me on the approach that [regentbuddy.real_name], the [regentbuddy.job], served as regent in my absence."))

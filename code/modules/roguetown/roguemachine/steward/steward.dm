@@ -35,7 +35,7 @@
 	var/list/ledger_view = list()
 	COOLDOWN_DECLARE(fulfill_retry_cooldown)
 
-/obj/structure/roguemachine/steward/Initialize()
+/obj/structure/roguemachine/steward/Initialize(mapload)
 	. = ..()
 	if(SStreasury.steward_machine == null) //The "only one" mapped in Nerve Master at map start
 		SStreasury.steward_machine = src
@@ -146,8 +146,8 @@
 		return
 	if(istype(P, /obj/item/roguecoin/aalloy))
 		return
-	if(istype(P, /obj/item/roguecoin/inqcoin))	
-		return	
+	if(istype(P, /obj/item/roguecoin/inqcoin))
+		return
 	if(istype(P, /obj/item/roguecoin))
 		record_round_statistic(STATS_MAMMONS_DEPOSITED, P.get_real_price())
 		SStreasury.mint(SStreasury.discretionary_fund, P.get_real_price(), "NERVE MASTER deposit")
@@ -747,7 +747,7 @@
 			// ── Active Loans ──────────────────────────────────────────────────
 			if(length(SStreasury.loans))
 				var/crown_loans = 0
-				var/crown_loan_content = "" 
+				var/crown_loan_content = ""
 				for(var/datum/loan/L in SStreasury.loans)
 					crown_loans++
 					if(L.source_fund == SStreasury.discretionary_fund)

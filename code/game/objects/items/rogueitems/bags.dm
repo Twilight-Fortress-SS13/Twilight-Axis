@@ -20,12 +20,12 @@
 	. += span_info("Activate the sack in your hand to dump its contents out in whatever direction you're facing.")
 	. += span_info("Sacks can be crafted into bags of bait for alluring huntable creechers, or roped into rucksacks for a larger-but-heftier backpack.")
 
-/datum/component/storage/concrete/roguetown/sack/can_be_inserted(obj/item/I, stop_messages = FALSE, mob/M)
-	if(I.GetComponent(/datum/component/cursed_item)) // TA EDIT START
-		if(!stop_messages && M)
-			to_chat(M, span_warning("[I] cannot be hidden away in [parent]."))
-		return FALSE // TA EDIT END
-	return ..()
+/obj/item/storage/roguebag/StorageBlock(obj/item/I, mob/user) // TA EDIT START
+	if(I?.GetComponent(/datum/component/cursed_item))
+		if(user)
+			to_chat(user, span_warning("[I] cannot be hidden away in [src]."))
+		return TRUE
+	return ..() // TA EDIT END
 
 /obj/item/storage/roguebag/examine(mob/user)
 	. = ..()

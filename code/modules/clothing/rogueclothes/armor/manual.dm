@@ -42,12 +42,12 @@
 	qdel(src)
 
 /obj/item/clothing/suit/roguetown/armor/manual/proc/armour_regen(repair_amount = repair_percent)
-    if(obj_integrity >= max_integrity)
-        to_chat(loc, span_notice(repairmsg_end))
-    to_chat(loc, span_notice(repairmsg_continue))
-    obj_integrity = min(obj_integrity + repair_amount, max_integrity)
-    if(obj_broken)
-        obj_fix(full_repair = FALSE)
+	if(obj_integrity >= max_integrity)
+		to_chat(loc, span_notice(repairmsg_end))
+	to_chat(loc, span_notice(repairmsg_continue))
+	obj_integrity = min(obj_integrity + repair_amount, max_integrity)
+	if(obj_broken)
+		obj_fix(full_repair = FALSE)
 
 /// TRUE while this skin is actually worn on its owner's body (armour or shirt slot), not merely held.
 /obj/item/clothing/suit/roguetown/armor/manual/proc/worn_on_body(mob/living/carbon/human/user)
@@ -61,12 +61,12 @@
  */
 
 /obj/item/clothing/suit/roguetown/armor/manual/pushups
-    name = "muscular skin"
-    desc = "The reward for all your hard work. </br>THE INFLUENCE OF THE HAM SANDWYCH RACE IS WANING. I MUST DO PUSH-UPS, TO REMIND MY MUSCLES OF THEIR OWN STRENGTH."
-    repair_fraction = 0.50 //50% per 10-pushup set, stronger per chunk due to stamina management and the fact that secondary skin layers are going to rely on resting instead, extending total repair time.
+	name = "muscular skin"
+	desc = "The reward for all your hard work. </br>THE INFLUENCE OF THE HAM SANDWYCH RACE IS WANING. I MUST DO PUSH-UPS, TO REMIND MY MUSCLES OF THEIR OWN STRENGTH."
+	repair_fraction = 0.50 //50% per 10-pushup set, stronger per chunk due to stamina management and the fact that secondary skin layers are going to rely on resting instead, extending total repair time.
 
-    repairmsg_end = "My muscles sheen with vitality!"
-    repairmsg_continue = "My muscles are reminded of their own strength."
+	repairmsg_end = "My muscles sheen with vitality!"
+	repairmsg_continue = "My muscles are reminded of their own strength."
 
 /obj/item/clothing/suit/roguetown/armor/manual/pushups/get_mechanics_examine(mob/user)
 	. = ..()
@@ -137,10 +137,20 @@
 	repairmsg_continue = "The tattoos mend some of their abuse..."
 
 /obj/item/clothing/suit/roguetown/armor/manual/meditation/body/easttats/ruma
-	name = "bouhoi bujeog tattoos"
+	name = "bouhoi bujeog tattoos (harmonious)"
 	desc = "A mystic style of tattoos adopted by the Ruma Clan, emulating a practice performed by warrior monks of the Xinyi Dynasty. They are your way of identifying fellow clan members, a sign of companionship and secretive brotherhood. These are styled into the shape of clouds, created by a mystical ink which shifts and moves in ripples like a pond to harden where your skin is struck. Its movement causes you to shudder, and meditation restores its strength."
 	armor = ARMOR_PLATE //Will stop most things, but will also pop fast.
-	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER //Feels much too low, but shall see how it goes.
+	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE - ARMOR_INT_CHEST_PLATE_BRIGANDINE_WEIGHT_MODIFIER
+
+/obj/item/clothing/suit/roguetown/armor/manual/meditation/body/easttats/ruma/blacksteel
+	name = "bouhoi bujeog tattoos (defiant)"
+	armor = ARMOR_PLATE_BSTEEL //Will stop nigh-everything, but pop even faster.
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM
+
+/obj/item/clothing/suit/roguetown/armor/manual/meditation/body/easttats/ruma/padded
+	name = "bouhoi bujeog tattoos (enduring)"
+	armor = ARMOR_PADDED //Should last well, but you will get stabbed right through it.
+	max_integrity = ARMOR_INT_CHEST_LIGHT_ELITE
 
 /obj/item/clothing/suit/roguetown/armor/manual/meditation/body/easttats/mistwalker
 	name = "seon-mul tattoos"

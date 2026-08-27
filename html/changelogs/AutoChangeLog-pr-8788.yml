@@ -1,0 +1,5 @@
+author: "Lagomorphica"
+delete-after: True
+changes:
+  - balance: "iron sabre is now actually a sabre instead of an arming sword"
+  - code_imp: "all mentions of 'saber' in code are now 'sabre' aside from in changelogs"

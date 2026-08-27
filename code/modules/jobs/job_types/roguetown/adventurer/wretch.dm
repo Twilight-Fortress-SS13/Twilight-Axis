@@ -47,6 +47,7 @@
 		/datum/advclass/wretch/vigilante,
 		/datum/advclass/wretch/munitioneer,
 		/datum/advclass/wretch/pariah,
+		/datum/advclass/wretch/profane_champion,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
 	//	/datum/advclass/wretch/ancient_deathknight,
@@ -86,6 +87,7 @@
 		return
 	var/list/roleprefs = get_roleprefs(C)
 	var/HTML = {"
+		[subprefs_subclass_html(C)]
 		<i>Set your [title]-specific bounty here. If a global bounty is set, this will override it.</i><br><i>Any fields set here will not prompt you at roundstart.</i><br/><br/>
 		<b>Bounty Poster:</b> <a href="?src=[REF(src)];poster=1">[roleprefs["bounty_poster_key"]?GLOB.bounty_posters[roleprefs["bounty_poster_key"]]:"Unset"]</a><br/>
 		<b>Bounty Severity:</b> <a href="?src=[REF(src)];severity=1">[roleprefs["bounty_severity_key"]?GLOB.wretch_severities[roleprefs["bounty_severity_key"]]:"Unset"]</a><br/>
@@ -275,6 +277,13 @@
 
 	result["tier2_extra"] = tier2_max
 	result["final_slots"] = max(0, min(slots, cap))
+
+	// TA EDIT BEGIN НЕРФ ЛОУПОП ВРЕТЧИКОВ)))
+	//как же ща сгорит у каких нибудь любителей заходить раз в 3 месяца, вретчей занерфили блин((9
+	if(SSticker.IsRoundInProgress() && player_count < 40)
+		result["combat_positions_alive"] = SSgamemode.combat_positions_alive
+		result["final_slots"] = max(0, min(result["final_slots"], SSgamemode.combat_positions_alive, cap))
+	// TA EDIT END
 
 	return result
 

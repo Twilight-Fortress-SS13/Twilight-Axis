@@ -35,16 +35,16 @@
 	origin_limits = list(/datum/virtue/origin/azuria)
 
 /datum/advclass/mercenary/desert_rider_almah
-	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
+	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian, /datum/virtue/origin/racial/crimson_lands)
 
 /datum/advclass/mercenary/desert_rider
-	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
+	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian, /datum/virtue/origin/racial/crimson_lands)
 
 /datum/advclass/mercenary/desert_rider_sahir
-	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
+	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian, /datum/virtue/origin/racial/crimson_lands)
 
 /datum/advclass/mercenary/desert_rider_zeybek
-	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
+	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian, /datum/virtue/origin/racial/crimson_lands)
 
 /datum/advclass/mercenary/etrusca_condottiero
 	origin_limits = list(/datum/virtue/origin/etrusca)
@@ -53,7 +53,7 @@
 	origin_limits = list(/datum/virtue/origin/etrusca)
 
 /datum/advclass/mercenary/forlorn
-	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
+	origin_limits = list(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian, /datum/virtue/origin/racial/crimson_lands)
 
 /datum/advclass/mercenary/freelancer
 	origin_limits = list(/datum/virtue/origin/avar)

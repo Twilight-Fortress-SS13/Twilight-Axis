@@ -852,8 +852,8 @@
 	var/mob/living/carbon/human/climber
 
 /datum/status_effect/debuff/climbing_lfwb/on_creation(mob/living/new_owner, new_stamcost)
-    stamcost = new_stamcost
-    return ..()
+	stamcost = new_stamcost
+	return ..()
 
 /datum/status_effect/debuff/climbing_lfwb/on_apply()
 	. = ..()
@@ -1017,7 +1017,7 @@
 	owner.overlay_fullscreen("joybringer_weeds", /atom/movable/screen/fullscreen/weedsm)
 	owner.overlay_fullscreen("joybringer_druqks", /atom/movable/screen/fullscreen/druqks)
 
-	ADD_TRAIT(owner, TRAIT_DRUQK, src)
+	ADD_TRAIT(owner, TRAIT_DRUQK, REF(src))
 
 	if(owner.client)
 		SSdroning.play_area_sound(get_area(owner), owner.client)
@@ -1027,7 +1027,7 @@
 	owner.clear_fullscreen("joybringer_druqks")
 	owner.clear_fullscreen("joybringer_weeds")
 
-	REMOVE_TRAIT(owner, TRAIT_DRUQK, src)
+	REMOVE_TRAIT(owner, TRAIT_DRUQK, REF(src))
 
 	if(owner.hallucination > 0)
 		owner.hallucination = max(0, owner.hallucination - 15)

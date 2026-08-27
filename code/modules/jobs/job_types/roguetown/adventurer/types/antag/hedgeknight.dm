@@ -89,5 +89,5 @@
 		"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
 		"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 		)
-	var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+	var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
 	l_hand = onhelm[onhelmchoice]

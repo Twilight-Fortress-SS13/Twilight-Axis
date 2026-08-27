@@ -159,7 +159,7 @@
 		return TRUE
 	return FALSE
 
-/obj/item/twstrap/Initialize()
+/obj/item/twstrap/Initialize(mapload)
 	. = ..()
 
 /obj/item/twstrap/bombstrap
@@ -223,7 +223,7 @@
 			return draw_item(user, I)
 	return TRUE
 
-/obj/item/twstrap/bombstrap/bomb_and_fire/Initialize()
+/obj/item/twstrap/bombstrap/bomb_and_fire/Initialize(mapload)
 	..()
 	fill_list = list(/obj/item/bomb,
 		/obj/item/bomb,
@@ -244,7 +244,7 @@
 		tweps += I
 		update_icon()
 
-/obj/item/twstrap/bombstrap/firebomb/Initialize()
+/obj/item/twstrap/bombstrap/firebomb/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/bomb/I = new(src)

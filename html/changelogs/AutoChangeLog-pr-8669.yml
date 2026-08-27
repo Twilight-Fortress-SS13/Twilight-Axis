@@ -1,0 +1,7 @@
+author: "ShadowLarkens"
+delete-after: True
+changes:
+  - rscadd: "Preferences Menu is now written in TGUI and is 99% prettier and at least 1% more functional!"
+  - rscadd: "Fancy character preview in the preferences menu; if/when it breaks, switch main tabs to force it to relayout."
+  - rscadd: "Lobby Menu is now separate from the Preferences Menu and is also TGUI. If/when it breaks, use Preferences -> Reopen Lobby Menu and/or OOC -> Refresh TGUI."
+  - rscdel: "Deleted all unused and old preferences."

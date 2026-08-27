@@ -77,7 +77,7 @@
 #define SPAN_AAVNIC "aavnic"
 #define SPAN_UNDERCOMMON "undercommon"
 #define SPAN_UNDEAD "undead"
-#define SPAN_CAT "cat"		 //nyi but file found
+#define SPAN_CAT "cat"			//nyi but file found
 #define SPAN_PULSEDEATH "pulsedeath"
 
 #define SPAN_GYEDZENESE "gyedzenese" //TA EDIT
@@ -104,7 +104,6 @@
 #define LINGHIVE_LINK 3
 
 //Don't set this very much higher then 1024 unless you like inviting people in to dos your server with message spam
-#define MAX_NOTE_SIZE			8192
 #define MAX_MESSAGE_BIGME		8192
 #define MAX_MESSAGE_LEN			4096
 #define MAX_NAME_LEN			42

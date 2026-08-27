@@ -7,7 +7,12 @@
 /datum/migrant_wave/gronn_reavers
 	name = "Gronnian Reavers"
 	track = MIGRANT_TRACK_SPECIAL
-	weight = 20
+	weight = 6
+	min_round_time = 40 MINUTES
+	min_pop = 40
+	max_spawns = 1
+	triumph_threshold = 100
+	triumph_weight_multiplier = 4
 	required_roles = list(
 		/datum/migrant_role/gronn/jarl = 1,
 	)
@@ -17,7 +22,6 @@
 		/datum/migrant_role/gronn/tideweaver = 1,
 		/datum/migrant_role/gronn/thrall = 2,
 	)
-	min_optional_fills = 1
 	greet_text = "You are a warband of Gronnian reavers, raiders from the cold north who have come ashore seeking plunder, glory, or a new place to call your own. Stick close to your jarl and remember: the weak serve the strong."
 
 /datum/migrant_role/gronn/jarl
@@ -59,7 +63,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	category_tags = list(CTAG_DISABLED)
-	min_pq = -100
+	min_pq = 0
 	traits_applied = list(TRAIT_STEELHEARTED)
 	subclass_languages = list(/datum/language/gronnic)
 	origin_limits = list(/datum/virtue/origin/gronn)
@@ -72,6 +76,7 @@
 	cmode_music = 'sound/music/combat_knight.ogg'
 	category_tags = list(CTAG_GRONN_JARL)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_NOBLE, TRAIT_HEAVYARMOR)
+	min_pq = 40
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 3,
@@ -86,7 +91,7 @@
 		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/swimming = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/swimming = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
@@ -94,9 +99,6 @@
 		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 	)
-
-/datum/outfit/job/roguetown/gronn/jarl
-	job_bitflag = BITFLAG_GARRISON
 
 /datum/outfit/job/roguetown/gronn/jarl/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -136,6 +138,7 @@
 	category_tags = list(CTAG_GRONN_TIDEWEAVER)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT, TRAIT_ARCYNE)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 0, "ward" = TRUE)
+	min_pq = 30
 	subclass_stats = list(
 		STATKEY_CON = 2,
 		STATKEY_WIL = 2,
@@ -148,21 +151,18 @@
 		/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/swimming = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/labor/fishing = SKILL_LEVEL_EXPERT,
+		/datum/skill/labor/fishing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/sewing = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/crafting = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/carpentry = SKILL_LEVEL_NOVICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/arcane = SKILL_LEVEL_NOVICE,
 	)
-
-/datum/outfit/job/roguetown/gronn/tideweaver
-	job_bitflag = BITFLAG_HOLY_WARRIOR
 
 /datum/outfit/job/roguetown/gronn/tideweaver/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -204,6 +204,7 @@
 	cmode_music = 'sound/music/combat_hornofthebeast.ogg'
 	category_tags = list(CTAG_GRONN_VOLFSKIN)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_ORGAN_EATER, TRAIT_DUALWIELDER, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
+	min_pq = 30
 	subclass_stats = list(
 		STATKEY_CON = 3,
 		STATKEY_WIL = 3,
@@ -214,17 +215,14 @@
 		/datum/skill/combat/axes = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
-		/datum/skill/misc/swimming = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/athletics = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/tanning = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/labor/butchering = SKILL_LEVEL_JOURNEYMAN,
 	)
-
-/datum/outfit/job/roguetown/gronn/volfskin
-	job_bitflag = BITFLAG_GARRISON
 
 /datum/outfit/job/roguetown/gronn/volfskin/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -261,6 +259,7 @@
 	cmode_music = 'sound/music/combat_vagarian.ogg'
 	category_tags = list(CTAG_GRONN_HUSCARL)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
+	min_pq = 20
 	subclass_stats = list(
 		STATKEY_WIL = 3,
 		STATKEY_CON = 3,
@@ -276,15 +275,12 @@
 		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/swimming = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 	)
-
-/datum/outfit/job/roguetown/gronn/huscarl
-	job_bitflag = BITFLAG_GARRISON
 
 /datum/outfit/job/roguetown/gronn/huscarl/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -322,6 +318,7 @@
 	cmode_music = 'sound/music/combat_vagarian.ogg'
 	category_tags = list(CTAG_GRONN_THRALL)
 	traits_applied = list(TRAIT_STEELHEARTED)
+	min_pq = 0
 	subclass_stats = list(
 		STATKEY_CON = -2,
 		STATKEY_WIL = 1,
@@ -338,9 +335,6 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 	)
-
-/datum/outfit/job/roguetown/gronn/thrall
-	job_bitflag = NONE
 
 /datum/outfit/job/roguetown/gronn/thrall/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -393,10 +387,10 @@
 				)
 				H.adjust_skillrank_up_to(/datum/skill/craft/crafting, SKILL_LEVEL_APPRENTICE, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/craft/smelting, SKILL_LEVEL_APPRENTICE, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/craft/blacksmithing, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/craft/armorsmithing, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/craft/weaponsmithing, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/craft/engineering, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/craft/blacksmithing, SKILL_LEVEL_APPRENTICE, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/craft/armorsmithing, SKILL_LEVEL_APPRENTICE, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/craft/weaponsmithing, SKILL_LEVEL_APPRENTICE, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/craft/engineering, SKILL_LEVEL_APPRENTICE, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/craft/ceramics, SKILL_LEVEL_APPRENTICE, TRUE)
 			if("Captured Noble")
 				id = /obj/item/clothing/ring/silver

@@ -193,7 +193,7 @@
 			hitsound = list('sound/combat/hits/blunt/metalblunt (1).ogg', 'sound/combat/hits/blunt/metalblunt (2).ogg', 'sound/combat/hits/blunt/metalblunt (3).ogg')
 	. = ..()
 
-/obj/item/rogueweapon/mace/stunmace/Initialize()
+/obj/item/rogueweapon/mace/stunmace/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSobj, src)
 
@@ -467,7 +467,7 @@
 	sharpness_mod = 2
 	smeltresult = /obj/item/ingot/component/graggar
 
-/obj/item/rogueweapon/handclaw/steel/graggaredged/Initialize()
+/obj/item/rogueweapon/handclaw/steel/graggaredged/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "GAUNTLET", "RENDERED ASUNDER")
 
@@ -488,7 +488,7 @@
 	max_integrity = 333
 	smeltresult = /obj/item/ingot/component/graggar
 
-/obj/item/rogueweapon/handclaw/steel/graggarblunt/Initialize()
+/obj/item/rogueweapon/handclaw/steel/graggarblunt/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "GAUNTLET", "RENDERED ASUNDER")
 
@@ -766,7 +766,7 @@
 					ignited = TRUE
 			if(isliving(target))
 				var/mob/living/M = target
-				apply_scorch_stack(M, 4, BODY_ZONE_CHEST)
+				apply_scorch_stack(M, 3, BODY_ZONE_CHEST)
 				ignited = TRUE
 			if(ignited && single_use)
 				is_active = FALSE
@@ -1416,7 +1416,7 @@
 	<small>Runes glow near the head of the pike. A sure sign of the arcyne.</small>"
 	force = 15
 	force_wielded = 30
-	throwforce = 40 // It'll be funny. Trust.
+	throwforce = 10 //No
 	possible_item_intents = list(SPEAR_BASH)
 	gripped_intents = list(/datum/intent/spear/thrust, /datum/intent/spear/bash/ranged, /datum/intent/mace/smash/eaglebeak) // GET THEM OFF OF ME!!! OOOUGH!!!
 	icon = 'icons/roguetown/weapons/polearms64.dmi'
@@ -1432,25 +1432,11 @@
 	if(active_item)
 		return
 	active_item = TRUE
-	if((user.job == "Man at Arms") || (user.job == "Royal Guard") || (user.job == "Janissary"))
+	if(HAS_TRAIT(user, TRAIT_STANDARD_BEARER))
 		to_chat(user, span_suppradio("The standard's runes pulse, accepting me as its <b>master</b>."))
-		user.change_stat(STATKEY_LCK, 3)
-		user.change_stat(STATKEY_PER, 2)
 		user.add_stress(/datum/stressevent/keep_standard)
-		ADD_TRAIT(user, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_GENERIC)
-		if(HAS_TRAIT(user, TRAIT_STANDARD_BEARER))
-			to_chat(user, span_suppradio("<small>It remains ready for your word. You need only ask.</small>"))
-			add_verb(user, /mob/proc/standard_position)
-			add_verb(user, /mob/proc/standard_rally)
-	else if(user.job == "Vanguard")
-		to_chat(user, span_suppradio("The standard's runes pulse, accepting me as its <b>master</b>."))
-		user.change_stat(STATKEY_LCK, 3)
-		user.change_stat(STATKEY_PER, 2)
-		user.add_stress(/datum/stressevent/keep_standard)
-		ADD_TRAIT(user, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_GENERIC)
-		if(HAS_TRAIT(user, TRAIT_STANDARD_BEARER))
-			to_chat(user, span_suppradio("<small>It remains ready for your word. You need only ask.</small>"))
-			add_verb(user, /mob/proc/standard_position_vanguard)
+		add_verb(user, /mob/proc/standard_position)
+		add_verb(user, /mob/proc/standard_rally)
 	else
 		to_chat(user, span_suicide("The standard's runes pulse, rejecting me as its <b>master</b>."))
 
@@ -1459,25 +1445,11 @@
 	if(!active_item)
 		return
 	active_item = FALSE
-	if((user.job == "Man at Arms") || (user.job == "Royal Guard") || (user.job == "Janissary"))
+	if(HAS_TRAIT(user, TRAIT_STANDARD_BEARER))
 		to_chat(user, span_monkeyhive("The standard's runes pulse, rhythmically, as if sad to see you release your control."))
-		user.change_stat(STATKEY_LCK, -3)
-		user.change_stat(STATKEY_PER, -2)
 		user.remove_stress(/datum/stressevent/keep_standard)
-		REMOVE_TRAIT(user, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_GENERIC)
-		if(HAS_TRAIT(user, TRAIT_STANDARD_BEARER))
-			to_chat(user, span_monkeyhive("<small>You feel ill. Was that a mistake?</small>"))
-			remove_verb(user, /mob/proc/standard_position)
-			remove_verb(user, /mob/proc/standard_rally)
-	else if(user.job == "Vanguard")
-		to_chat(user, span_monkeyhive("The standard's runes pulse, rhythmically, as if sad to see you release your control."))
-		user.change_stat(STATKEY_LCK, -3)
-		user.change_stat(STATKEY_PER, -2)
-		user.remove_stress(/datum/stressevent/keep_standard)
-		REMOVE_TRAIT(user, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_GENERIC)
-		if(HAS_TRAIT(user, TRAIT_STANDARD_BEARER))
-			to_chat(user, span_monkeyhive("<small>You feel ill. Was that a mistake?</small>"))
-			remove_verb(user, /mob/proc/standard_position_vanguard)
+		remove_verb(user, /mob/proc/standard_position)
+		remove_verb(user, /mob/proc/standard_rally)
 	else
 		to_chat(user, span_suicide("The standard's runes pulse, as if sighing in relief once I let go."))
 

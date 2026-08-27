@@ -1,0 +1,10 @@
+author: "WeNeedMorePhoron"
+delete-after: True
+changes:
+  - rscadd: "Ported Container Cooking system from Vanderlin. Pan, Pot and Oven are now real containers and can contain multiple items that can be cooked at once!"
+  - rscadd: "Left click a hearth with a pan on to remove an empty pan and middle click let you always remove any container. Left click with a loaded pan to remove items one by one. Use it on itself (Press Q in left hand / E in right hand) will now FLIP the content into the tile, or a tray in front of you, if you have Journeyman cooking or above"
+  - rscadd: "Tray now can pick up food and utensils en masse and slide them in and out of oven."
+  - rscadd: "Baker's Peel is now a one-handable, two hands needed to use tray that have a capacity of 6"
+  - rscadd: "Pot must be hot before you can boil a stew in it."
+  - rscadd: "Migrated hearth fanning to work with the new system and add a flat number of cooking progress to item on the stove."
+  - rscadd: "Boiling and Deep Fried recipes eject output, while stew stays in stew."

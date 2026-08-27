@@ -154,7 +154,7 @@
 	contains = list(/obj/item/rogueweapon/sword/rapier)
 
 /////////////
-//  BOMBS  //
+//	BOMBS	//
 /////////////
 
 /datum/supply_pack/rogue/Things/twstrap

@@ -468,7 +468,7 @@
 
 	var/datum/component/arousal/arousal_comp = owner?.GetComponent(/datum/component/arousal)
 	if(arousal_comp)
-		arousal_comp.set_charge(SEX_MAX_CHARGE)  // Fully restore charge
+		arousal_comp.set_charge(SEX_MAX_CHARGE)	// Fully restore charge
 
 /datum/status_effect/buff/fermented_crab/on_remove()
 	. = ..()
@@ -1937,8 +1937,8 @@
 	target.stamina_add((target.max_stamina / 3))
 	target.energy_add((-target.max_energy / 5))
 
-#define LGUARD_SHARPNESS_LOSS     150
-#define LGUARD_INTEG_LOSS		  100
+#define LGUARD_SHARPNESS_LOSS		150
+#define LGUARD_INTEG_LOSS			100
 
 /datum/status_effect/buff/clash/limbguard/proc/perform_disarm(mob/living/carbon/human/target)
 	var/obj/item/I = target.get_active_held_item()
@@ -1970,6 +1970,16 @@
 		owner.remove_status_effect(/datum/status_effect/buff/clash/limbguard)
 	else
 		qdel(src)
+
+// When a spell is blocked and a weapon isn't logically involved. It will deflect, blocks the spell, but will not remotely disarm them, since that make no sense. I.e. Dragons Breath.
+/datum/status_effect/buff/clash/limbguard/proc/block_spell(mob/living/target, mob/living/attacker, spell_name = "the spell")
+	if(!is_active || target != owner)
+		return FALSE
+	do_sparks(2, TRUE, get_turf(owner))
+	playsound(owner, 'sound/combat/limbguard_struck.ogg', 100, TRUE)
+	owner.visible_message(span_warning("[owner] wards [owner.p_their()] [parse_zone(protected_zone)] against [spell_name]!"), \
+		span_notice("My guard wards off [spell_name]!"))
+	return TRUE
 
 //Projectile struck our protected limb. Unlike regular Riposte, this will block the projectile at no cost.
 /datum/status_effect/buff/clash/limbguard/guard_struck_by_projectile(mob/living/target, obj/P, hit_zone)
@@ -2055,11 +2065,11 @@
 /datum/status_effect/buff/psydonic_endurance/on_apply()
 	. = ..()
 	if(HAS_TRAIT(owner, TRAIT_MEDIUMARMOR) && !HAS_TRAIT(owner, TRAIT_HEAVYARMOR))
-		ADD_TRAIT(owner, TRAIT_HEAVYARMOR, src)
+		ADD_TRAIT(owner, TRAIT_HEAVYARMOR, REF(src))
 
 /datum/status_effect/buff/psydonic_endurance/on_remove()
 	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_HEAVYARMOR, src)
+	REMOVE_TRAIT(owner, TRAIT_HEAVYARMOR, REF(src))
 
 /atom/movable/screen/alert/status_effect/buff/psydonic_endurance
 	name = "Psydonic Vitality"
@@ -2085,12 +2095,12 @@
 /datum/status_effect/buff/griefflower/on_apply()
 	. = ..()
 	to_chat(owner, span_notice("The Rosa’s ring draws blood, but it’s the memories that truly wound. Failure after failure surging through you like thorns blooming inward."))
-	ADD_TRAIT(owner, TRAIT_CRACKHEAD, src)
+	ADD_TRAIT(owner, TRAIT_CRACKHEAD, REF(src))
 
 /datum/status_effect/buff/griefflower/on_remove()
 	. = ..()
 	to_chat(owner, span_notice("You part from the Rosa’s touch. The ache retreats..."))
-	REMOVE_TRAIT(owner, TRAIT_CRACKHEAD, src)
+	REMOVE_TRAIT(owner, TRAIT_CRACKHEAD, REF(src))
 
 /atom/movable/screen/alert/status_effect/buff/griefflower
 	name = "Rosa Ring"
@@ -2888,7 +2898,7 @@
 	SIGNAL_HANDLER
 
 	for(var/mob/living/mob in get_hearers_in_view(2, owner))
-		if(HAS_TRAIT(mob,  TRAIT_PSYDONITE) || HAS_TRAIT(mob,  TRAIT_UNFORGIVABLE))
+		if(HAS_TRAIT(mob,	TRAIT_PSYDONITE) || HAS_TRAIT(mob,	TRAIT_UNFORGIVABLE))
 			continue
 
 		mob.apply_status_effect(/datum/status_effect/eora_blessing)
@@ -2910,16 +2920,25 @@
 	var/energy_per_tick = 0
 	var/total_to_restore = 0
 	var/currently_restored = 0
+	/// Missing energy percentage to restore
+	var/restore_percent_missing = 34
+	/// Minimum safety floor percentage to restore
+	var/min_restore_percent = 20
 
-/datum/status_effect/buff/invigoration/on_creation(mob/living/new_owner, set_duration = 10 SECONDS, restore_percent_missing = 34, min_restore_percent = 20)
+/datum/status_effect/buff/invigoration/on_creation(mob/living/new_owner, set_duration, set_restore_missing, set_min_restore)
+	// Respect custom overrides passed in, otherwise fall back to path variables
 	if(set_duration)
 		duration = set_duration
+	if(set_restore_missing)
+		restore_percent_missing = set_restore_missing
+	if(set_min_restore)
+		min_restore_percent = set_min_restore
 
 	var/missing_energy = new_owner.max_energy - new_owner.energy
 	var/percent_missing = (missing_energy / new_owner.max_energy) * 100
 	var/percent_missing_percent = percent_missing * (restore_percent_missing / 100)
 
-	// either the provided restore missing % or the minimum safety floor
+	// Either the calculated missing % or the minimum safety floor
 	var/restore_target_percent = max(percent_missing_percent, min_restore_percent)
 
 	// Total amount we want to restore over the whole duration
@@ -2927,8 +2946,9 @@
 
 	// Divide that total by the number of ticks
 	var/tick_interval = 1 SECONDS
-	var/num_ticks = max(round(set_duration / tick_interval), 1)
+	var/num_ticks = max(round(duration / tick_interval), 1)
 	energy_per_tick = total_to_restore / num_ticks
+
 	return ..()
 
 /datum/status_effect/buff/invigoration/on_apply()

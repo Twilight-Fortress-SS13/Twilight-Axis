@@ -51,7 +51,7 @@
 	legwears_feature = null
 	return ..()
 
-/obj/item/legwears/random/Initialize()
+/obj/item/legwears/random/Initialize(mapload)
 	. = ..()
 	color = pick("#e6e5e5", CLOTHING_BLACK, CLOTHING_BLUE, "#6F0000", "#664357")
 
@@ -78,7 +78,7 @@
 	icon_state = "silk"
 	sprite_acc = /datum/sprite_accessory/legwear/stockings/silk
 
-/obj/item/legwears/silk/random/Initialize()
+/obj/item/legwears/silk/random/Initialize(mapload)
 	. = ..()
 	color = pick("#e6e5e5", CLOTHING_BLACK, CLOTHING_BLUE, "#6F0000", "#664357")
 
@@ -105,7 +105,7 @@
 	icon_state = "fishnet"
 	sprite_acc = /datum/sprite_accessory/legwear/stockings/fishnet
 
-/obj/item/legwears/fishnet/random/Initialize()
+/obj/item/legwears/fishnet/random/Initialize(mapload)
 	. = ..()
 	color = pick("#e6e5e5", CLOTHING_BLACK, CLOTHING_BLUE, "#6F0000", "#664357")
 
@@ -132,7 +132,7 @@
 	icon_state = "thigh"
 	sprite_acc = /datum/sprite_accessory/legwear/stockings/thigh_high
 
-/obj/item/legwears/thigh_high/random/Initialize()
+/obj/item/legwears/thigh_high/random/Initialize(mapload)
 	. = ..()
 	color = pick("#e6e5e5", CLOTHING_BLACK, CLOTHING_BLUE, "#6F0000", "#664357")
 
@@ -158,7 +158,7 @@
 	icon_state = "knee"
 	sprite_acc = /datum/sprite_accessory/legwear/stockings/knee_high
 
-/obj/item/legwears/knee_high/random/Initialize()
+/obj/item/legwears/knee_high/random/Initialize(mapload)
 	. = ..()
 	color = pick("#e6e5e5", CLOTHING_BLACK, CLOTHING_BLUE, "#6F0000", "#664357")
 

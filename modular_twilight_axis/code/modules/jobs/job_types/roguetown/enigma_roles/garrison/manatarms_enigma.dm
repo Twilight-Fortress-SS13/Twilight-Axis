@@ -29,9 +29,7 @@
 	job_subclasses = list(
 		/datum/advclass/royal_guard/footsman,
 		/datum/advclass/royal_guard/skirmisher,
-
 		/datum/advclass/royal_guard/standard_bearer,
-
 	)
 
 /datum/outfit/job/roguetown/royal_guard
@@ -40,18 +38,9 @@
 /datum/job/roguetown/royal_guard/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
 	if(ishuman(L))
-		var/mob/living/carbon/human/H = L
-		if(istype(H.cloak, /obj/item/clothing/cloak/tabard/stabard/guard))
-			var/obj/item/clothing/S = H.cloak
-			var/index = findtext(H.real_name, " ")
-			if(index)
-				index = copytext(H.real_name, 1,index)
-			if(!index)
-				index = H.real_name
-			S.name = "royal guard surcoat ([index])"
+		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, cloak_and_title_setup)), 50)
 
 /datum/outfit/job/roguetown/royal_guard
-	cloak = /obj/item/clothing/cloak/tabard/stabard/guard
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
 	beltl = /obj/item/rogueweapon/mace/cudgel
@@ -137,13 +126,13 @@
 				r_hand = /obj/item/rogueweapon/greataxe/steel
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
 				beltr = /obj/item/rogueweapon/scabbard/sword
-		var/riding = list("I love saiga (your pet with you)", "I walk on my legs (+1 for athletics)")
-		var/ridingchoice = input(H, "Choose your faith", "FAITH") as anything in riding
+		var/riding = list("Saddleborn (Tameable Animal Mount)", "I walk on my legs (+I to Athletics)")
+		var/ridingchoice = input(H, "Choose your TRAVELBOON.", "ROAM ABROAD AND ROAM FAR.") as anything in riding
 		switch(ridingchoice)
-			if("I love saiga (your pet with you)")
+			if("Saddleborn (Tameable Animal Mount)")
 				apply_virtue(H, new /datum/virtue/utility/riding)
-			if("I walk on my legs (+1 for athletics)")
-				H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_EXPERT, TRUE)		
+			if("I walk on my legs (+I to Athletics)")
+				H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_EXPERT, TRUE)
 	H.verbs |= /mob/proc/haltyell
 
 	if(H.mind)
@@ -212,9 +201,9 @@
 
 	H.adjust_blindness(-3)
 	if(H.mind)
-		var/weapons = list("Crossbow","Bow","Sling", "Arquebus Pistol", "Arquebus Rifle")
+		var/weapons = list("Crossbow", "Bow", "Sling", "Arquebus Pistol", "Arquebus Rifle")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
-		var/armor_options = list("Maille Set(Medium Armor)", "Brigandine Armor(Expert Dodger)")
+		var/armor_options = list("Maille Set (Medium Armor)", "Brigandine Armor (Expert Dodger)")
 		var/armor_choice = input(H, "Choose your armor.", "TAKE UP ARMS") as anything in armor_options
 		H.set_blindness(0)
 		switch(weapon_choice)
@@ -238,13 +227,13 @@
 				l_hand = /obj/item/twilight_powderflask
 				ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 		switch(armor_choice)
-			if("Maille Set(Medium Armor)")
+			if("Maille Set (Medium Armor)")
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/scale
 				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/iron
 				wrists = /obj/item/clothing/wrists/roguetown/bracers
 				pants = /obj/item/clothing/under/roguetown/chainlegs
 				ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
-			if("Brigandine Armor(Expert Dodger)")
+			if("Brigandine Armor (Expert Dodger)")
 				head = /obj/item/clothing/head/roguetown/helmet/kettle
 				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light/retinue
 				wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine

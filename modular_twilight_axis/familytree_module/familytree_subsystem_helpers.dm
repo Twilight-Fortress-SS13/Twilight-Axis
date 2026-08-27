@@ -385,6 +385,15 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 			return "neuter"
 	return "unknown"
 
+/datum/controller/subsystem/familytree/proc/familytree_pronouns_label(mob/living/carbon/human/H)
+	if(!H || isnull(H.pronouns))
+		return "unknown"
+	if(H.pronouns == HE_HIM)
+		return "he/him"
+	if(H.pronouns == SHE_HER)
+		return "she/her"
+	return "[H.pronouns]"
+
 /datum/controller/subsystem/familytree/proc/familytree_anatomy_label(mob/living/carbon/human/H)
 	if(!H)
 		return "unknown"
@@ -430,12 +439,30 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 			return "different"
 	return "unknown"
 
+/datum/controller/subsystem/familytree/proc/familytree_seeks_pronouns_label(mob/living/carbon/human/H, gender_pref = null)
+	if(!H)
+		return "unknown"
+	if(isnull(gender_pref) || !gender_pref)
+		gender_pref = ANY_GENDER
+	switch(gender_pref)
+		if(ANY_GENDER)
+			return "any"
+		if(SAME_GENDER)
+			return familytree_pronouns_label(H)
+		if(DIFFERENT_GENDER)
+			if(H.pronouns == HE_HIM)
+				return "she/her"
+			if(H.pronouns == SHE_HER)
+				return "he/him"
+			return "different"
+	return "unknown"
+
 /datum/controller/subsystem/familytree/proc/familytree_search_actor_summary(mob/living/carbon/human/H)
 	if(!H)
-		return "search_id=0 name='null' ckey='null' sex=unknown self_anatomy=unknown seeks_sex=unknown seeks_anatomy=unknown pronouns_pref=unknown role=unknown target=''"
+		return "search_id=0 name='null' ckey='null' sex=unknown self_pronouns=unknown self_anatomy=unknown seeks_sex=unknown seeks_pronouns=unknown seeks_anatomy=unknown pronouns_pref=unknown role=unknown target=''"
 	var/gender_pref = H.gender_choice_pref || ANY_GENDER
 	var/target_name = istext(H.setspouse) ? H.setspouse : ""
-	return "search_id=[familytree_search_id(H)] name='[H.real_name]' ckey='[H.ckey]' sex=[familytree_sex_label(H)] self_anatomy=[familytree_anatomy_label(H)] seeks_sex=[familytree_seeks_sex_label(H, gender_pref)] seeks_anatomy=[familytree_anatomy_pref_label(H.preferred_species_anatomy)] pronouns_pref=[familytree_gender_pref_label(gender_pref)] role=[familytree_relative_pref_label(H.desired_relative_role)]([H.desired_relative_role]) target='[target_name]'"
+	return "search_id=[familytree_search_id(H)] name='[H.real_name]' ckey='[H.ckey]' sex=[familytree_sex_label(H)] self_pronouns=[familytree_pronouns_label(H)] self_anatomy=[familytree_anatomy_label(H)] seeks_sex=[familytree_seeks_sex_label(H, gender_pref)] seeks_pronouns=[familytree_seeks_pronouns_label(H, gender_pref)] seeks_anatomy=[familytree_anatomy_pref_label(H.preferred_species_anatomy)] pronouns_pref=[familytree_gender_pref_label(gender_pref)] role=[familytree_relative_pref_label(H.desired_relative_role)]([H.desired_relative_role]) target='[target_name]'"
 
 /datum/controller/subsystem/familytree/proc/familytree_reject_count_add(list/reject_counts, reason, amount = 1)
 	if(!reject_counts || !reason || amount <= 0)
@@ -554,8 +581,10 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 	parts += "pref=[familytree_pref_label(H.familytree_pref)]"
 	parts += "desired_role=[familytree_relative_pref_label(H.desired_relative_role)]"
 	parts += "sex=[familytree_sex_label(H)]"
+	parts += "self_pronouns=[familytree_pronouns_label(H)]"
 	parts += "self_anatomy=[familytree_anatomy_label(H)]"
 	parts += "seeks_sex=[familytree_seeks_sex_label(H, H.gender_choice_pref)]"
+	parts += "seeks_pronouns=[familytree_seeks_pronouns_label(H, H.gender_choice_pref)]"
 	parts += "gender=[familytree_gender_pref_label(H.gender_choice_pref)]"
 	parts += "polygamy=[familytree_polygamy_pref_label(H.polygamy_mode)]"
 	parts += familytree_species_pref_summary(H)
@@ -758,12 +787,53 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 		return FALSE
 	return context.SpeciesCalculation(child, parent1, parent2)
 
+/datum/controller/subsystem/familytree/proc/familytree_pair_offer_count(mob/living/carbon/human/a, mob/living/carbon/human/b)
+	if(!a?.ckey || !b?.ckey)
+		return 0
+	var/count_a = 0
+	var/count_b = 0
+	var/list/entry_a = familytree_round_ledger[a.ckey]
+	if(islist(entry_a))
+		var/list/offers_a = entry_a["offers"]
+		if(islist(offers_a) && isnum(offers_a[b.ckey]))
+			count_a = offers_a[b.ckey]
+	var/list/entry_b = familytree_round_ledger[b.ckey]
+	if(islist(entry_b))
+		var/list/offers_b = entry_b["offers"]
+		if(islist(offers_b) && isnum(offers_b[a.ckey]))
+			count_b = offers_b[a.ckey]
+	return max(count_a, count_b)
+
+/datum/controller/subsystem/familytree/proc/familytree_pair_offer_limit_reached(mob/living/carbon/human/a, mob/living/carbon/human/b)
+	return familytree_pair_offer_count(a, b) >= FAMILYTREE_PAIR_OFFER_LIMIT
+
+/datum/controller/subsystem/familytree/proc/familytree_record_pair_offer(mob/living/carbon/human/a, mob/living/carbon/human/b)
+	if(!a?.ckey || !b?.ckey)
+		return 0
+	var/new_count = min(FAMILYTREE_PAIR_OFFER_LIMIT, familytree_pair_offer_count(a, b) + 1)
+	var/list/entry_a = familytree_round_ledger_entry(a.ckey)
+	var/list/entry_b = familytree_round_ledger_entry(b.ckey)
+	var/list/offers_a = entry_a["offers"]
+	if(!islist(offers_a))
+		offers_a = list()
+		entry_a["offers"] = offers_a
+	var/list/offers_b = entry_b["offers"]
+	if(!islist(offers_b))
+		offers_b = list()
+		entry_b["offers"] = offers_b
+	offers_a[b.ckey] = new_count
+	offers_b[a.ckey] = new_count
+	ftlog("PAIR_OFFER: [a.real_name] <-> [b.real_name] count=[new_count]/[FAMILYTREE_PAIR_OFFER_LIMIT]")
+	return new_count
+
 /datum/controller/subsystem/familytree/proc/familytree_pair_blocked(mob/living/carbon/human/seeker, mob/living/carbon/human/partner)
 	if(!seeker || !partner)
 		return FALSE
 	if(seeker.familytree_blocked_ckeys && (partner.ckey in seeker.familytree_blocked_ckeys))
 		return TRUE
 	if(partner.familytree_blocked_ckeys && (seeker.ckey in partner.familytree_blocked_ckeys))
+		return TRUE
+	if(familytree_pair_offer_limit_reached(seeker, partner))
 		return TRUE
 	if(familytree_timeout_block_active(seeker, partner) || familytree_timeout_block_active(partner, seeker))
 		return TRUE
