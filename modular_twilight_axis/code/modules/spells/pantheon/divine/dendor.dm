@@ -14,11 +14,11 @@
 /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid/setup_ward(mob/living/carbon/human/user)
 	. = ..()
 	user.apply_status_effect(/datum/status_effect/buff/vinearmour)
-	
+
 /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid/cleanup_ward()
 	if(ward_owner)
 		ward_owner.remove_status_effect(/datum/status_effect/buff/vinearmour)
-	
+
 	return ..()
 
 /datum/status_effect/buff/vinearmour
@@ -259,7 +259,6 @@
 	var/telegraph_delay = TELEGRAPH_SKILLSHOT
 	var/direct_damage = 40
 	var/aoe_damage = 15
-	var/npc_simple_damage_mult = 2
 	var/push_dist = 1
 
 	var/static/list/turf_whitelist = list(
@@ -334,8 +333,7 @@
 			continue
 		var/target_zone = caster.zone_selected || BODY_ZONE_CHEST
 		arcyne_strike(caster, victim, null, direct_damage, target_zone, BCLASS_BLUNT, \
-			spell_name = "Emergence", damage_type = BRUTE, \
-			npc_simple_damage_mult = npc_simple_damage_mult, skip_animation = TRUE)
+			spell_name = "Emergence", damage_type = BRUTE, skip_animation = TRUE)
 		to_chat(victim, span_userdanger("Stone erupts beneath me!"))
 		new /obj/effect/temp_visual/spell_impact(get_turf(victim), spell_color, spell_impact_intensity)
 		var/push_dir = get_dir(T, victim) || get_dir(caster, victim) || pick(GLOB.cardinals)
@@ -355,8 +353,7 @@
 				continue
 			var/target_zone = caster.zone_selected || BODY_ZONE_CHEST
 			arcyne_strike(caster, victim, null, aoe_damage, target_zone, BCLASS_BLUNT, \
-				spell_name = "Emergence", damage_type = BRUTE, \
-				npc_simple_damage_mult = npc_simple_damage_mult, skip_animation = TRUE)
+				spell_name = "Emergence", damage_type = BRUTE, skip_animation = TRUE)
 			var/push_dir = get_dir(T, victim)
 			if(!push_dir)
 				push_dir = get_dir(caster, victim) || pick(GLOB.cardinals)
@@ -372,7 +369,7 @@
 	var/list/structure = list(/obj/structure/flora/roguetree/burnt,
 							  /obj/structure/flora/roguetree,
 							  /obj/structure/flora/roguetree/evil)
-	
+
 	var/tree_type = pick(structure)
 
 	new tree_type (T)

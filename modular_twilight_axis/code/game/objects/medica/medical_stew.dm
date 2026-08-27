@@ -1,33 +1,42 @@
 #define MEDICA_COOKING_TIME 60 SECONDS
 
-/datum/stew_recipe/viscera
-	inputs = list(/obj/item/alch/viscera)
-	output = /datum/reagent/medicine/viscera
-	cooktime = MEDICA_COOKING_TIME
+/datum/container_craft/cooking/medica
+	abstract_type = /datum/container_craft/cooking/medica
+	crafting_time = MEDICA_COOKING_TIME
 
-/datum/stew_recipe/base_health_brute
-	inputs = list(/obj/item/alch/calendula)
-	output = /datum/reagent/medicine/boil/calendula
-	cooktime = MEDICA_COOKING_TIME
+/datum/container_craft/cooking/medica/viscera
+	name = "viscera decoction"
+	requirements = list(/obj/item/alch/viscera = 1)
+	created_reagent = /datum/reagent/medicine/viscera
 
-/datum/stew_recipe/base_health_burn
-	inputs = list(/obj/item/alch/taraxacum)
-	output = /datum/reagent/medicine/boil/taraxacum
-	cooktime = MEDICA_COOKING_TIME
+/datum/container_craft/cooking/medica/base_health_brute
+	name = "calendula decoction"
+	requirements = list(/obj/item/alch/calendula = 1)
+	created_reagent = /datum/reagent/medicine/boil/calendula
 
-/datum/stew_recipe/base_health_wound
-	inputs = list(/obj/item/natural/worms/leech)
-	output = /datum/reagent/medicine/boil/leech
-	cooktime = MEDICA_COOKING_TIME
+/datum/container_craft/cooking/medica/base_health_burn
+	name = "taraxacum decoction"
+	requirements = list(/obj/item/alch/taraxacum = 1)
+	created_reagent = /datum/reagent/medicine/boil/taraxacum
 
-/datum/stew_recipe/base_health_blood
-	inputs = list(/obj/item/alch/bonemeal)
-	output = /datum/reagent/medicine/boil/bonedust
-	cooktime = MEDICA_COOKING_TIME
+/datum/container_craft/cooking/medica/base_health_wound
+	name = "leech decoction"
+	requirements = list(/obj/item/natural/worms/leech = 1)
+	created_reagent = /datum/reagent/medicine/boil/leech
 
-/datum/stew_recipe/base_health_tox
-	inputs = list(/obj/item/alch/tobaccodust, /obj/item/alch/swampdust)
-	output = /datum/reagent/medicine/boil/leaf
-	cooktime = MEDICA_COOKING_TIME
+/datum/container_craft/cooking/medica/base_health_blood
+	name = "bone meal decoction"
+	requirements = list(/obj/item/alch/bonemeal = 1)
+	created_reagent = /datum/reagent/medicine/boil/bonedust
+
+/datum/container_craft/cooking/medica/base_health_tox_tobacco
+	name = "tobacco decoction"
+	requirements = list(/obj/item/alch/tobaccodust = 1)
+	created_reagent = /datum/reagent/medicine/boil/leaf
+
+/datum/container_craft/cooking/medica/base_health_tox_swamp
+	name = "swampweed decoction"
+	requirements = list(/obj/item/alch/swampdust = 1)
+	created_reagent = /datum/reagent/medicine/boil/leaf
 
 #undef MEDICA_COOKING_TIME
