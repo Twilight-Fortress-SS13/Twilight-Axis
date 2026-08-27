@@ -1,8 +1,8 @@
 /datum/patron/inhumen/zizo
 	name = "Zizo"
-	domain = "Progress, Undeath, Hubris, Left Hand Magicks"
-	desc = "A once-mortal snow elf turned god. Her hubris in thinking she could harvest lux from the planet itself led to the elimination of her entire race. Her works are still used to this dae in some cases."
-	worshippers = "Necromancers, Researchers, Warlocks, and the Undead"
+	domain = "Progress, Undeath, Hubris, Artifice, Left Hand Magicks"
+	desc = "A once-mortal snow elf turned goddess. Her hubris in thinking she could harvest lux from the planet itself led to the elimination of her entire race. Her works are still used to this dae in some cases."
+	worshippers = "Necromancers, Researchers, Wizards, Warlocks and the Undead"
 	traits_tier = list(TRAIT_ZIZOSIGHT = CLERIC_T1)
 	mob_traits = list(TRAIT_CABAL, TRAIT_GRAVEROBBER)
 	miracles = list(/datum/action/cooldown/spell/touch/orison							= CLERIC_ORI,
@@ -10,17 +10,17 @@
 					/datum/action/cooldown/spell/miracle/heal							= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle					= CLERIC_T1,
 					/datum/action/cooldown/spell/projectile/zizo/profane				= CLERIC_T1,
-					/datum/action/cooldown/spell/raise_undead_formation/zizo	 		= CLERIC_T2,
+					/datum/action/cooldown/spell/conjure_summon/zizo/skeleton_swarm		= CLERIC_T2,
 					/datum/action/cooldown/spell/zizo/bone_cataclysm					= CLERIC_T2,
 					/datum/action/cooldown/spell/tame_undead/zizo						= CLERIC_T3,
-					/datum/action/cooldown/spell/zizo/rituos 							= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/resurrect/zizo				= CLERIC_T3,
+					/datum/action/cooldown/spell/zizo/rituos							= CLERIC_T3,
 					/datum/action/cooldown/spell/lacrima/zizo							= CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/resurrect/zizo				= CLERIC_T4
 	)
 	confess_lines = list(
 		"PRAISE ZIZO!",
-		"LONG LIVE ZIZO!",
-		"ZIZO IS QUEEN!",
+		"ZIZO GRANTS ME TRUTH!",
+		"ZIZO BRINGS PROGRESS!",
 	)
 	storyteller = /datum/storyteller/zizo
 	added_verbs = list(
@@ -33,8 +33,16 @@
 		"Lady of Progress",
 		"Lady of Secrets",
 		"Dame of Secrets",
+		"Lady of Bones",
+		"Dame of Bones",
 		"Arch Lych",
-		"Zimiko"
+		"Archlych", // sometimes this is one word instead of two
+		"Archlich",
+		"Arch Lich",
+		"Pale Lady",
+		"Architect",
+		"Zimiko",
+		"Wolf", // fjall
 	)
 
 /datum/patron/inhumen/zizo/post_equip(mob/living/pious)
@@ -75,12 +83,12 @@
 	return FALSE
 
 /datum/patron/inhumen/zizo/on_lesser_heal(
-    mob/living/user,
-    mob/living/target,
-    message_out,
-    message_self,
-    conditional_buff,
-    situational_bonus,
+	mob/living/user,
+	mob/living/target,
+	message_out,
+	message_self,
+	conditional_buff,
+	situational_bonus,
 	is_inhumen
 )
 	*is_inhumen = TRUE

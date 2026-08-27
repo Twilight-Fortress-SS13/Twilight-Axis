@@ -32,10 +32,10 @@
 	var/explosion_block = 0
 
 	/**
-	 * used to store the different colors on an atom
-	 *
-	 * its inherent color, the colored paint applied on it, special color effect etc...
-	 */
+		* used to store the different colors on an atom
+		*
+		* its inherent color, the colored paint applied on it, special color effect etc...
+		*/
 	var/list/atom_colours
 
 
@@ -191,7 +191,7 @@
  * Late Intialization, for code that should run after all atoms have run Intialization
  *
  * To have your LateIntialize proc be called, your atoms [Initalization](atom.html#proc/Initialize)
- *  proc must return the hint
+ *	proc must return the hint
  * [INITIALIZE_HINT_LATELOAD](code/__DEFINES/subsystems.html#define/INITIALIZE_HINT_LATELOAD)
  * otherwise you will never be called.
  *
@@ -230,7 +230,10 @@
 	LAZYCLEARLIST(overlays)
 
 	QDEL_NULL(light)
-	QDEL_NULL(ai_controller)
+	if(ispath(ai_controller))
+		ai_controller = null
+	else
+		QDEL_NULL(ai_controller)
 
 	return ..()
 
@@ -282,7 +285,7 @@
  * Goes throught he list of passed in parts, if they're reagents, adds them to our reagent holder
  * creating the reagent holder if it exists.
  *
- * If the part is a moveable atom and the  previous location of the item was a mob/living,
+ * If the part is a moveable atom and the	previous location of the item was a mob/living,
  * it calls the inventory handler transferItemToLoc for that mob/living and transfers the part
  * to this atom
  *
@@ -455,7 +458,7 @@
 						if (R.volume > 0)
 							if (full_reagents)
 								full_reagents += ", "
-							full_reagents += "[lowertext(R.name)]"
+							full_reagents += "[LOWER_TEXT(R.name)]"
 					. += span_notice("My expert nose lets me distinguish this liquid as [full_reagents].")
 
 	SEND_SIGNAL(src, COMSIG_PARENT_EXAMINE, user, .)
@@ -980,7 +983,7 @@
  *
  * You can override it to catch all tool interactions, for use in complex deconstruction procs.
  *
- * Must return  parent proc ..() in the end if overridden
+ * Must return	parent proc ..() in the end if overridden
  */
 /atom/proc/tool_act(mob/living/user, obj/item/I, tool_type)
 	switch(tool_type)
@@ -1120,7 +1123,7 @@
  * 4 is a tool with which the action was made (usually an item)
  * 5 is any additional text, which will be appended to the rest of the log line
  */
-/proc/log_combat(atom/user, atom/target, what_done, atom/object=null, addition=null, log_seen = TRUE)
+/proc/log_combat(atom/user, atom/target, what_done, atom/object=null, addition=null, log_seen = TRUE, zone=null, intent=null, damtype=null)
 	var/ssource = key_name(user)
 	var/starget = key_name(target)
 
@@ -1133,8 +1136,11 @@
 	var/saddition = ""
 	if(addition)
 		saddition = " [addition]"
+	var/sintent = intent ? " (INTENT: [uppertext(intent)])" : ""
+	var/sdamtype = damtype ? " (DAMTYPE: [uppertext(damtype)])" : ""
+	var/szone = zone ? " (ZONE: [uppertext(zone)])" : ""
 
-	var/postfix = "[sobject][saddition][hp]"
+	var/postfix = "[sobject][saddition][sintent][sdamtype][szone][hp]"
 
 	var/message = "has [what_done] [starget][postfix]"
 	user.log_message(message, LOG_ATTACK, color="red")
@@ -1217,7 +1223,7 @@
 	atom_cast.filters = null
 
 /atom/movable/proc/update_filters() //Determine which filter comes first
-	filters = null                  //note, the cmp_filter is a little flimsy.
+	filters = null					//note, the cmp_filter is a little flimsy.
 	sortTim(filter_data, /proc/cmp_filter_priority_desc, associative = TRUE)
 	for(var/f in filter_data)
 		var/list/data = filter_data[f]

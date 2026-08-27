@@ -307,7 +307,7 @@
 		"ATC" = ta_roleban_panel_list(GLOB.atc_positions, null),
 		"Sidefolk" = ta_roleban_panel_list(GLOB.sidefolk_positions, null),
 		"Ghost and Other Roles" = list(ROLE_NECRO_SKELETON, ROLE_LICH_SKELETON, ROLE_UNBOUND_DEATHKNIGHT, ROLE_DARK_ITINERANT),
-		"Antagonist Positions" = ta_roleban_panel_list(list(ROLE_ASCENDANT, ROLE_ASPIRANT, ROLE_BANDIT, "Freeman", "Lost Grenzel", ROLE_NBEAST, ROLE_WEREWOLF, ROLE_LICH, ROLE_PREBEL, ROLE_CULT), null),
+		"Antagonist Positions" = ta_roleban_panel_list(list(ROLE_ASCENDANT, ROLE_ASPIRANT, ROLE_BANDIT, "Freeman", "Lost Grenzel", ROLE_NBEAST, ROLE_WEREWOLF, ROLE_LICH, ROLE_PREBEL, ROLE_REBEL_LEADER, ROLE_CULT), null),
 		"Lesser Antagonst Positions" = list(ROLE_WRETCH, ROLE_DREAMWALKER, ROLE_GNOLL, ROLE_VAMPIRE),
 	)
 	for(var/group_name in group_sources)
@@ -695,7 +695,7 @@
 			search_page = 0
 			mode = "unban"
 		return TRUE
-	var/severity = lowertext(limited_text(params["severity"], 16) || "")
+	var/severity = LOWER_TEXT(limited_text(params["severity"], 16) || "")
 	if(!(severity in list("none", "minor", "medium", "high")))
 		errors += "A severity must be selected."
 	var/ban_type = params["ban_type"]
@@ -713,6 +713,7 @@
 		if(!length(roles_to_ban))
 			errors += "Role ban was selected but no roles were selected."
 	else
+
 		errors += "A ban type must be selected."
 	if(length(errors))
 		to_chat(usr, span_danger("Ban not created because the following errors were present:\n[errors.Join("\n")]"))
@@ -785,6 +786,7 @@
 		return
 	var/datum/admin_ban_panel/panel = new(src, "ban", player_key, player_ip, player_cid, role, duration, applies_to_admins, reason, edit_id, page, admin_key)
 	panel.ui_interact(usr)
+
 
 /datum/admins/proc/ban_parse_href(list/href_list)
 	if(!check_rights(R_BAN))
@@ -966,7 +968,7 @@
 	duration = text2num(duration)
 	if (!(interval in list("SECOND", "MINUTE", "HOUR", "DAY", "WEEK", "MONTH", "YEAR")))
 		interval = "MINUTE"
-	var/time_message = "[duration] [lowertext(interval)]" //no DisplayTimeText because our duration is of variable interval type
+	var/time_message = "[duration] [LOWER_TEXT(interval)]" //no DisplayTimeText because our duration is of variable interval type
 	if(duration > 1) //pluralize the interval if necessary
 		time_message += "s"
 	var/note_reason = "Banned from [roles_to_ban[1] == "Server" ? "the server" : " Roles: [roles_to_ban.Join(", ")]"] [isnull(duration) ? "permanently" : "for [time_message]"] - [reason]"

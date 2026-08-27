@@ -1,33 +1,34 @@
 /datum/virtue/utility/noble
 	name = "Nobility"
 	desc = "By birth, blade or brain, I am noble known to the royalty of these lands, and have all the benefits associated with it. I've cleverly stashed away a healthy amount of coinage, alongside a familial heirloom."
+	ui_fa_icon = "crown"
 	restricted = TRUE
 	max_choices = 1
-	races = list(/datum/species/construct, /datum/species/dullahan)
+	races = list(/datum/species/construct, /datum/species/dullahan, /datum/species/ooze) //TA EDIT
 	added_traits = list(TRAIT_NOBLE, TRAIT_EXPERT_HUNTER)
 	added_skills = list(list(/datum/skill/misc/reading, 1, 6))
 	added_stashed_items = list("Hefty Coinpurse" = /obj/item/storage/belt/rogue/pouch/coins/virtuepouch)
 	choice_costs = list(0)
 	extra_choices = list(
-		"Gold Ring" = /obj/item/clothing/ring/gold/triumph,                                        //Golden Ring, Ornate
-		"Golden Circlet" = /obj/item/clothing/head/roguetown/circlet/triumph,                      //Golden Circlet, Ornate
-		"Heirloom Amulet" = /obj/item/clothing/neck/roguetown/ornateamulet/noble,                  //Golden Amulet
-		"Silver Scabbard" = /obj/item/rogueweapon/scabbard/sword/noble,                            //Decorated Scabbard, Silver
-		"Silver Sheath" = /obj/item/rogueweapon/scabbard/sheath/noble,                             //Decorated Sheath, Silver
-		"Golden Psycross" = /obj/item/clothing/neck/roguetown/psicross/g/triumph,                  //Golden Psycross, Ornate
+		"Gold Ring" = /obj/item/clothing/ring/gold/triumph,										//Golden Ring, Ornate
+		"Golden Circlet" = /obj/item/clothing/head/roguetown/circlet/triumph,						//Golden Circlet, Ornate
+		"Heirloom Amulet" = /obj/item/clothing/neck/roguetown/ornateamulet/noble,					//Golden Amulet
+		"Silver Scabbard" = /obj/item/rogueweapon/scabbard/sword/noble,							//Decorated Scabbard, Silver
+		"Silver Sheath" = /obj/item/rogueweapon/scabbard/sheath/noble,								//Decorated Sheath, Silver
+		"Golden Psycross" = /obj/item/clothing/neck/roguetown/psicross/g/triumph,					//Golden Psycross, Ornate
 		"Golden Astratan Psycross" = /obj/item/clothing/neck/roguetown/psicross/astrata/g/triumph, //Golden Astratan Amulet, Ornate
-		"Golden Signet Ring" = /obj/item/clothing/ring/signet/triumph,                             //Golden Signet Ring, Ornate
-		"Gilded Dress Shirt" = /obj/item/clothing/suit/roguetown/shirt/dress/royal/prince,         //Gilded Dress Shirt
-		"Pristine Dress" = /obj/item/clothing/suit/roguetown/shirt/dress/royal/princess,           //Pristine Dress
-		"Royal Sleeves" = /obj/item/clothing/wrists/roguetown/royalsleeves,                        //Royal Sleeves
-		"Golden Halfmask" = /obj/item/clothing/mask/rogue/lordmask/triumph,                        //Golden Halfmask, Ornate
-		"Golden Mask" = /obj/item/clothing/mask/rogue/facemask/goldmask/triumph,                   //Golden Mask, Ornate
-		"Crestless Golden Mask" = /obj/item/clothing/mask/rogue/facemask/goldmaskc/triumph,        //Crestless Golden Mask, Ornate
-		"Lordly Cloak" = /obj/item/clothing/cloak/lordcloak,                                       //Lordly Cloak
-		"Ladylike Cloak" = /obj/item/clothing/cloak/lordcloak/ladycloak,                           //Ladylike Cloak
-		"Golden Scabbard" = /obj/item/rogueweapon/scabbard/sword/royal,                            //Decorated Scabbard, Golden
-		"Golden Sheath" = /obj/item/rogueweapon/scabbard/sheath/royal,                             //Decorated Sheath, Golden
-		"Golden Dorpel Ring" = /obj/item/clothing/ring/diamond/triumph                             //Golden Dorpel Ring, Ornate
+		"Golden Signet Ring" = /obj/item/clothing/ring/signet/triumph,								//Golden Signet Ring, Ornate
+		"Gilded Dress Shirt" = /obj/item/clothing/suit/roguetown/shirt/dress/royal/prince,			//Gilded Dress Shirt
+		"Pristine Dress" = /obj/item/clothing/suit/roguetown/shirt/dress/royal/princess,			//Pristine Dress
+		"Royal Sleeves" = /obj/item/clothing/wrists/roguetown/royalsleeves,						//Royal Sleeves
+		"Golden Halfmask" = /obj/item/clothing/mask/rogue/lordmask/triumph,						//Golden Halfmask, Ornate
+		"Golden Mask" = /obj/item/clothing/mask/rogue/facemask/goldmask/triumph,					//Golden Mask, Ornate
+		"Crestless Golden Mask" = /obj/item/clothing/mask/rogue/facemask/goldmaskc/triumph,		//Crestless Golden Mask, Ornate
+		"Lordly Cloak" = /obj/item/clothing/cloak/lordcloak,										//Lordly Cloak
+		"Ladylike Cloak" = /obj/item/clothing/cloak/lordcloak/ladycloak,							//Ladylike Cloak
+		"Golden Scabbard" = /obj/item/rogueweapon/scabbard/sword/royal,							//Decorated Scabbard, Golden
+		"Golden Sheath" = /obj/item/rogueweapon/scabbard/sheath/royal,								//Decorated Sheath, Golden
+		"Golden Dorpel Ring" = /obj/item/clothing/ring/diamond/triumph								//Golden Dorpel Ring, Ornate
 	)
 
 
@@ -49,6 +50,7 @@
 /datum/virtue/utility/notable
 	name = "Well Off"
 	desc = "Fate or effort had blessed my lyfe with spoils, natural or earned."
+	ui_fa_icon = "coins"
 	max_choices = 2	//Tentative. 2 is more interesting than getting all 4 easily.
 	choice_costs = list(0, 0)
 	stackable = TRUE
@@ -84,42 +86,43 @@
 				recipient.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/appraise/secular)
 			if(NOTABLE_RESIDENCY)
 				ADD_TRAIT(recipient, TRAIT_RESIDENT, TRAIT_VIRTUE)
-				var/mapswitch = 0
-				if(SSmapping.config.map_name == "Dun World")
-					mapswitch = 1
+				if(recipient.mind)
+					for(var/X in (GLOB.peasant_positions + GLOB.burgher_positions + GLOB.retinue_positions + GLOB.garrison_positions + GLOB.noble_positions + GLOB.inquisition_positions))
+						for(var/datum/mind/MF in get_minds(X))
+							recipient.mind.person_knows_me(MF)
+							recipient.mind.i_know_person(MF)
 
-				if(mapswitch == 0)
-					return
-				if(recipient.mind?.assigned_role == "Adventurer" || recipient.mind?.assigned_role == "Mercenary" || recipient.mind?.assigned_role == "Court Agent")
-					// Find tavern area for spawning
-					var/area/spawn_area
-					for(var/area/A in world)
-						if(istype(A, /area/rogue/indoors/town/tavern))
-							spawn_area = A
-							break
+				if (!recipient.islatejoin)
+					var/target_z = 0
+					var/mapname = SSmapping.config.map_name
+					if(mapname == "Dun World")
+						target_z = 3
+					else if(mapname == "Pilgrim")
+						target_z = 4
 
-					if(spawn_area)
-						var/target_z = 3 //ground floor of tavern for dun manor / world
-						var/target_y = 234 //dun world huge
+					if(target_z && (recipient.mind?.assigned_role == "Adventurer"))
 						var/list/possible_chairs = list()
+						var/list/possible_spawns = list()
 
-						for(var/obj/structure/chair/C in spawn_area)
-							//z-level 3, wooden chair, and Y > north of tavern backrooms
-							var/turf/T = get_turf(C)
-							if(T && T.z == target_z && T.y > target_y && istype(C, /obj/structure/chair/wood/rogue) && !T.density && !T.is_blocked_turf(FALSE))
-								possible_chairs += C
+						for(var/area/A in world)
+							if(!istype(A, /area/rogue/indoors/town/tavern))
+								continue
+							for(var/obj/structure/chair/C in A)
+								var/turf/T = get_turf(C)
+								if(T && T.z == target_z && C.type == /obj/structure/chair/wood/rogue && !T.density && !T.is_blocked_turf(FALSE))
+									possible_chairs += C
 
 						if(length(possible_chairs))
 							var/obj/structure/chair/chosen_chair = pick(possible_chairs)
 							recipient.forceMove(get_turf(chosen_chair))
-							chosen_chair.buckle_mob(recipient)
 							to_chat(recipient, span_notice("As a resident of Azure Peak, you find yourself seated at a chair in the local tavern."))
 						else
-							var/list/possible_spawns = list()
-							for(var/turf/T in spawn_area)
-								if(T.z == target_z && T.y > (target_y + 4) && !T.density && !T.is_blocked_turf(FALSE))
-									possible_spawns += T
-
+							for(var/area/A in world)
+								if(!istype(A, /area/rogue/indoors/town/tavern))
+									continue
+								for(var/turf/T in A)
+									if(T.z == target_z && !T.density && !T.is_blocked_turf(FALSE))
+										possible_spawns += T
 							if(length(possible_spawns))
 								var/turf/spawn_loc = pick(possible_spawns)
 								recipient.forceMove(spawn_loc)
@@ -133,6 +136,7 @@
 /datum/virtue/utility/failed_squire
 	name = "Failed Squire"
 	desc = "I was once a squire in training, but failed to achieve knighthood. Though my dreams of glory were dashed, I retained my knowledge of equipment maintenance and repair, including how to polish arms and armor."
+	ui_fa_icon = "toolbox"
 	added_traits = list(TRAIT_SQUIRE_REPAIR)
 	added_stashed_items = list(
 		"Hammer" = /obj/item/rogueweapon/hammer/iron,
@@ -149,6 +153,7 @@
 /datum/virtue/utility/intellectual
 	name = "Intellectual"
 	desc = "I've spent my life surrounded by various books or sophisticated foreigners, be it through travel or other fortunes beset on my life. I've picked up several tongues and wits, and keep a journal closeby. I can tell people's exact prowess."
+	ui_fa_icon = "book"
 	custom_text = "Maximizes Assess benefits with a bonus of the target's Stats. Allows the choice of up to 6 languages to learn."
 	added_traits = list(TRAIT_INTELLECTUAL)
 	added_skills = list(list(/datum/skill/misc/reading, 3, 6))
@@ -169,6 +174,7 @@
 		"Draconic" = /datum/language/draconic,
 		"Valorian" = /datum/language/valorian, //TA EDIT
 		"Sama'glos" = /datum/language/raneshi, //TA EDIT
+		"Gyedzenese" = /datum/language/gyedzenese, //TA EDIT
 		"Grenzelhoftian" = /datum/language/grenzelhoftian,
 		"Kazengunese" = /datum/language/kazengunese,
 		"Lingyuese" = /datum/language/lingyuese,
@@ -180,7 +186,7 @@
 	)
 
 /datum/virtue/utility/intellectual/apply_to_human(mob/living/carbon/human/recipient)
-	addtimer(CALLBACK(src, .proc/linguist_apply, recipient), 50)
+	addtimer(CALLBACK(src, PROC_REF(linguist_apply), recipient), 50)
 
 /datum/virtue/utility/intellectual/proc/linguist_apply(mob/living/carbon/human/recipient)
 	if(check_triumphs(recipient))
@@ -190,21 +196,25 @@
 /datum/virtue/utility/hollow
 	name = "Hollow"
 	desc = "Some fell magick has rendered me inwardly unliving - I do not hunger, and I do not breathe."
+	ui_fa_icon = "lungs"
 	added_traits = list(TRAIT_NOHUNGER, TRAIT_NOBREATH)
 
 /datum/virtue/utility/deadened
 	name = "Deadened"
 	desc = "Some terrible incident colours my past, and now, I feel nothing."
+	ui_fa_icon = "face-meh-o"
 	added_traits = list(TRAIT_NOMOOD, TRAIT_DETACHED)
 
 /datum/virtue/utility/feral_appetite
 	name = "Feral Appetite"
 	desc = "Raw, toxic or spoiled food doesn't bother my superior digestive system."
+	ui_fa_icon = "drumstick-bite"
 	added_traits = list(TRAIT_NASTY_EATER)
 
 /datum/virtue/utility/prowler
 	name = "Prowler"
 	desc = "I've learned to stalk the shadows, in step and in sight. My hands had also been honed to be deft."
+	ui_fa_icon = "moon"
 	max_choices = 3	//Tentative, feels more fun to limit yourself to a set out of these rather than all of them. (Used to be 6)
 	choice_costs = list(0, 0, 0)
 	stackable = TRUE	//It's OK to take Virtuous and get everything here.
@@ -248,6 +258,7 @@
 /datum/virtue/utility/performer
 	name = "Performer"
 	desc = "Music, artistry and the act of showmanship carried me through life. I've hidden a favorite instrument of mine, know how to please anyone I touch, and how to crack the eggs of hecklers."
+	ui_fa_icon = "guitar"
 	custom_text = "Comes with a stashed instrument of your choice. You choose the instrument after spawning in."
 	added_traits = list(TRAIT_NUTCRACKER, TRAIT_GOODLOVER)
 	added_skills = list(list(/datum/skill/misc/music, 4, 4))
@@ -277,6 +288,7 @@
 	name = "Cunning Provisioner"
 	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
 	desc = "You've worked in or around the docks enough to steal away a sack of supplies that no one would surely miss, just in case. You've picked up on some cooking and fishing tips in your spare time, as well."
+	ui_fa_icon = "fish-fins"
 	added_stashed_items = list("Bag of Food" = /obj/item/storage/roguebag/food)
 	added_skills = list(list(/datum/skill/craft/cooking, 3, 6),
 						list(/datum/skill/labor/fishing, 2, 6))
@@ -285,6 +297,7 @@
 	name = "Pilgrim (-3 TRI)"
 	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
 	desc= "As they say, 'hearth is where the heart is'. You are intimately familiar with the labors of lyfe, and have stowed away everything necessary to start anew: a hunting dagger, your trusty hoe, and a sack of assorted supplies."
+	ui_fa_icon = "house-fire"
 	triumph_cost = 3
 	added_stashed_items = list(
 		"Hoe" = /obj/item/rogueweapon/hoe,
@@ -302,6 +315,7 @@
 /datum/virtue/utility/ugly
 	name = "Ugly"
 	desc = "Be it your family's habits in and out of womb, your own choices or Xylix's cruel roll of fate, you have been left unbearable to look at. Stuck to the unseen pits and crevices of the town, you've grown used to the foul odours of lyfe that often follow you. Corpses do not stink for you, and that is all the company you might find."
+	ui_fa_icon = "eye-slash"
 	custom_text = "Incompatible with Beautiful virtue."
 	added_traits = list(TRAIT_UNSEEMLY, TRAIT_NOSTINK)
 
@@ -315,12 +329,14 @@
 /datum/virtue/utility/keenears
 	name = "Keen Ears"
 	desc = "Cowering from authorities, loved ones or by a generous gift of the gods, you've adapted a keen sense of hearing, and can identify the speakers even when they are out of sight, their whispers ringing louder."
+	ui_fa_icon = "ear-listen"
 	added_traits = list(TRAIT_KEENEARS)
 	custom_text = "You can identify known people who speak even when they are out of sight. You can hear people speaking normally above and below you, regardless of obstacles in the way. You can hear whispers from one tile further."
 
 /datum/virtue/utility/tracker
 	name = "Sleuth"
 	desc = "You realised long ago that the ability to find a man is as helpful to aid the law as it is to evade it."
+	ui_fa_icon = "route"
 	added_skills = list(list(/datum/skill/misc/tracking, 3, 6))
 	added_traits = list(TRAIT_SLEUTH)
 	custom_text = "- Upon right clicking a track, you will Mark the person who made them <i>(Expert skill required, not exclusive to this Virtue)</i>.\n- Further tracks found will be automatically highlighted as theirs, along with the person themselves, if they are not sneaking or invisible at the time.\n- Reduces the cooldown for tracking, allows track examining right away, and movement no longer cancels tracking."
@@ -328,6 +344,7 @@
 /datum/virtue/utility/bronzelimbs
 	name = "Bronze Limbs"
 	desc = "Through connections or wealth, my limb had been replaced by one of bronze and gears, that can grip and hold onto things. I've learned just a bit of Engineering as a result."
+	ui_fa_icon = "robot"
 	custom_text = "Replaces your chosen limbs with a prosthetic Bronze ones."
 	added_skills = list(list(/datum/skill/craft/engineering, 1, 6))
 	max_choices = 4
@@ -373,11 +390,13 @@
 /datum/virtue/utility/woodwalker
 	name = "Woodwalker"
 	desc = "After years of training in the wilds, I've learned to traverse the woods confidently, without breaking any twigs. I can even step lightly on leaves without falling."
+	ui_fa_icon = "tree"
 	added_traits = list(TRAIT_WOODWALKER, TRAIT_OUTDOORSMAN)
 
 /datum/virtue/heretic/zchurch_keyholder
 	name = "Defiled Keyholder"
 	desc = "The 'Holy' See has their blood-stained grounds, and so do we. Underneath their noses, we pray to the true gods - I know the location of the local heretic conclave. Secrecy is paramount. If found out, I will surely be killed."
+	ui_fa_icon = "mask"
 	added_traits = list(TRAIT_ZURCH)
 
 // AUTHOR NOTE - Probably remove this from court, leader and inquisition roles later since the barrier to roleplaying this correctly as those roles is extremely high.
@@ -386,6 +405,7 @@
 /datum/virtue/utility/feytouched
 	name = "Feytouched"
 	desc = "A vessel or creation of the Mossmother, or perhaps a puppet of the past. You are sympathetic to the hag's cause. Your connection to the fey allows you to offer lux or bloated leechticks and traverse the roots, or pure lux to gain the bog's blessing, though your mortal form is frail (-1 INT, -2 STR). The hag is aware of you; your lux is corrupted. You may know of old events, but as the decades lengthen, so does your recollection of them fade. Hag-boons cannot take hold."
+	ui_fa_icon = "ghost"
 	added_stats = list(STATKEY_INT = -1, STATKEY_STR = -2)
 	added_traits = list(TRAIT_FEYTOUCHED)
 	added_skills = list(list(/datum/skill/misc/medicine, 1, 4),

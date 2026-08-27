@@ -7,7 +7,7 @@
 	var/list/valid_items = list()
 	var/has_invalid_items = FALSE
 
-	for(var/item_name in selected_loadout_items)
+	for(var/item_name in gear_list)
 		var/datum/loadout_item/item = GLOB.loadout_items_by_name[item_name]
 		if(!item)
 			has_invalid_items = TRUE
@@ -17,17 +17,17 @@
 			has_invalid_items = TRUE
 			continue
 
-		valid_items.Add(item_name)
+		valid_items[item_name] = gear_list[item_name]
 
 	if(has_invalid_items)
-		selected_loadout_items = valid_items
+		gear_list = valid_items
 		to_chat(user, "Твой лодаут был очищен из-за изменений в предметах.")
 
 /// Обрабатывает размер лодаута и сбрасывает его, если превышает лимит
 /datum/preferences/proc/handle_loadout_size(mob/user)
-	if(selected_loadout_items.len <= get_loadout_size(user))
+	if(gear_list.len <= get_loadout_size(user))
 		return
-	selected_loadout_items = list()
+	gear_list = list()
 	to_chat(user, "Размер твоего лодаута был изменён и его пришлось сбросить!")
 
 /// Возвращает размер лодаута для указанного ника игрока
@@ -52,11 +52,12 @@
 
 /// Добавляет предмет лодаута
 /datum/preferences/proc/add_loadout_item(item_name)
-	selected_loadout_items.Add(item_name)
+	if(!(item_name in gear_list))
+		gear_list[item_name] = list()
 
 /// Убирает предмет лодаута
 /datum/preferences/proc/remove_loadout_item(item_name)
-	selected_loadout_items.RemoveAll(item_name)
+	gear_list -= item_name
 
 /client/verb/boosty()
 	set name = "boosty"
@@ -146,7 +147,9 @@
 /datum/loadout_panel/ui_data(mob/user)
 	var/list/data = list()
 	var/datum/preferences/user_prefs = user.client.prefs
-	var/list/selected_loadout_items = user_prefs.selected_loadout_items
+	var/list/selected_loadout_items = list()
+	for(var/item_name in user_prefs.gear_list)
+		selected_loadout_items += item_name
 
 	var/total_triumph_cost = 0
 	for(var/item_name in selected_loadout_items)
@@ -177,7 +180,7 @@
 			if(!item)
 				return TRUE
 
-			if(user_prefs.selected_loadout_items.len >= user_prefs.get_loadout_size(user))
+			if(user_prefs.gear_list.len >= user_prefs.get_loadout_size(user))
 				to_chat(user, "Лимит исчерпан!")
 				return TRUE
 
@@ -194,7 +197,7 @@
 			return TRUE
 
 		if("clear")
-			user_prefs.selected_loadout_items = list()
+			user_prefs.gear_list = list()
 			to_chat(user, "Лодаут очищен!")
 			return TRUE
 

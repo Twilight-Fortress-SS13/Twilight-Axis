@@ -7,7 +7,7 @@
 	spawn_positions = 0
 	antag_job = TRUE
 
-	tutorial = "Long ago you did a crime worthy of your bounty being hung on the wall outside of the local inn. You now live with your fellow freemen in the bog, and generally get up to no good."
+	tutorial = "Desertation, desperation, rebelious desires, unmeetable quotas, outcast from society or driven to greed, it matters not. In the teachings of Matthios you found solace; liberate yourself from your misfortunes of your past by taking from others."
 
 	outfit = null
 	outfit_female = null
@@ -28,7 +28,7 @@
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE //no endless stream of bandits, unless the migration waves deem it so
 	job_traits = list(TRAIT_SELF_SUSTENANCE, TRAIT_STEELHEARTED)//Bandits and knaves truly though
-	vice_restrictions = list(/datum/charflaw/noeyer, /datum/charflaw/noeyel, /datum/charflaw/mute, /datum/charflaw/limbloss/arm_r, /datum/charflaw/limbloss/arm_l, /datum/charflaw/wanted)
+	vice_restrictions = list(/datum/charflaw/wanted)
 	same_job_respawn_delay = 30 MINUTES
 	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
 	job_subclasses = list(
@@ -62,7 +62,7 @@
 		H.grant_language(/datum/language/thievescant)
 		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, choose_name_popup), "BANDIT"), 5 SECONDS)
 		var/wanted = list("I am a notorious criminal", "I am a nobody")
-		var/wanted_choice = input("Are you a known criminal?") as anything in wanted
+		var/wanted_choice = input(H, "Are you a known criminal?") as anything in wanted
 		switch(wanted_choice)
 			if("I am a notorious criminal") //Extra challenge for those who want it
 				bandit_select_bounty(H)
@@ -122,7 +122,7 @@
 	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, FALSE, my_crime, bounty_poster)
 
 
-/proc/update_bandits_slots()
+/proc/update_bandits_slots(override_player_count = null) // TA EDIT
 	//update_lost_grenzel_slots() // Lost Grenzel comment
 
 	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
@@ -157,7 +157,7 @@
 		slot_job.spawn_positions = 0
 		return
 
-	var/player_count = SSgamemode.get_correct_popcount()
+	var/player_count = isnull(override_player_count) ? SSgamemode.get_correct_popcount() : override_player_count // TA EDIT
 
 	slot_job.always_show_on_latechoices = TRUE
 	if(!SSgamemode.story_antag_open_slots(antag_path, player_count))
@@ -177,16 +177,15 @@
 			slot_job.spawn_positions = 0
 			return
 
-		var/min_players = SSgamemode.story_antag_min_players(antag_path)
-		var/slot_scaling = SSgamemode.story_antag_scaling_step(antag_path)
-		slots = SSgamemode.storyteller_scale_slots(
-			max_slots,
-			player_count,
-			FALSE,
-			slot_scaling,
-			min_players,
-			SSgamemode.hard_antag_mult(),
-		)
+		slots = 4 // TA EDIT START
+		if(player_count > 40)
+			if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag)
+				slots += floor((player_count - 40) / 10)
+			else
+				slots += floor((player_count - 40) / 20)
+		slots = min(slots, max_slots)
+		if(SSticker.IsRoundInProgress())
+			slots = min(slots, SSgamemode.combat_positions_alive) // TA EDIT END
 
 	slots = SSgamemode.story_antag_slots(slots, antag_path, player_count)
 

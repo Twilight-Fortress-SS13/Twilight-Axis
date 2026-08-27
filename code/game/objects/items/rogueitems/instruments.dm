@@ -45,7 +45,7 @@
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
-/obj/item/rogue/instrument/Initialize()
+/obj/item/rogue/instrument/Initialize(mapload)
 	soundloop = new(src, FALSE)
 	//TA edit - Bard chages
 	ensure_timed_tracks()
@@ -60,18 +60,6 @@
 	//TA edit - Bard chages
 	stop_music(user)
 
-/obj/item/rogue/instrument/proc/check_file(infile, filename, user)
-	var/file_ext = lowertext(copytext(filename, -4))
-	var/file_size = length(infile)
-
-	if(file_ext != ".ogg")
-		return "SONG MUST BE AN OGG."
-	if(file_size > 4 * 1024 * 1024)
-		return "TOO BIG. 4 MEGS OR LESS."
-
-	message_admins("[ADMIN_LOOKUPFLW(user)] uploaded a song [filename] of size [file_size / 1000000] (~MB).")
-	return null
-
 /obj/item/rogue/instrument/attack_self(mob/living/user)
 	. = ..()
 	if(.)
@@ -80,6 +68,32 @@
 	//TA edit - Bard chages start
 	if(playing)
 		return
+	if(user.mind)
+		switch(user.get_skill_level(/datum/skill/misc/music))
+			if(1)
+				note_color = "#ffffff"
+				soundloop.stress2give = /datum/stressevent/music/novice
+			if(2)
+				note_color = "#ffffff"
+				soundloop.stress2give = /datum/stressevent/music/apprentice
+			if(3)
+				note_color = "#1eff00"
+				soundloop.stress2give = /datum/stressevent/music/journeyman
+			if(4)
+				note_color = "#0070dd"
+				soundloop.stress2give = /datum/stressevent/music/expert
+			if(5)
+				note_color = "#a335ee"
+				soundloop.stress2give = /datum/stressevent/music/master
+			if(6)
+				note_color = "#ff8000"
+				soundloop.stress2give = /datum/stressevent/music/legendary
+			else
+				note_color = initial(note_color)
+				soundloop.stress2give = /datum/stressevent/music
+	else
+		note_color = initial(note_color)
+		soundloop.stress2give = /datum/stressevent/music
 	ui_interact(user)
 	//TA edit - Bard chages end
 
@@ -107,7 +121,7 @@
 	"We Toil Together" = 'sound/music/instruments/accord (3).ogg',
 	"Just One More, Tavern Wench" = 'sound/music/instruments/accord (4).ogg',
 	"Moonlight Carnival" = 'sound/music/instruments/accord (5).ogg',
-	"'Ye Best Be Goin'" = 'sound/music/instruments/accord (6).ogg',
+	"\"Ye Best Be Goin\"" = 'sound/music/instruments/accord (6).ogg',
 	"Beloved Blue" = 'sound/music/instruments/accord (7).ogg')
 
 /obj/item/rogue/instrument/guitar
@@ -117,7 +131,7 @@
 	song_list = list("Fire-Cast Shadows" = 'sound/music/instruments/guitar (1).ogg',
 	"The Forced Hand" = 'sound/music/instruments/guitar (2).ogg',
 	"Regrets Unpaid" = 'sound/music/instruments/guitar (3).ogg',
-	"'Took the Mammon and Ran'" = 'sound/music/instruments/guitar (4).ogg',
+	"\"Took the Mammon and Ran\"" = 'sound/music/instruments/guitar (4).ogg',
 	"Poor Man's Tithe" = 'sound/music/instruments/guitar (5).ogg',
 	"In His Arms Ye'll Find Me" = 'sound/music/instruments/guitar (6).ogg',
 	"El Odio" = 'sound/music/instruments/guitar (7).ogg',

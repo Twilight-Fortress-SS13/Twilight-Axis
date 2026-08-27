@@ -89,7 +89,7 @@
 /datum/storyteller/gamemode/guaranteed_antag
 	name = "High Intensity"
 	vote_desc = "Гарантированный крупный антагонист. Часть малых антагонистов остаётся."
-	desc = "Гарантированный раундстартовый крупный антагонист. До 9 изгоев (Wretches). До 2 гноллов. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
+	desc = "Гарантированный раундстартовый крупный антагонист. До 9 изгоев (Wretches). До 2 гноллов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
 	welcome_text = "Леденящий ужас плавно опускается на город..."
 	color_theme = "#a43c3c"
 	preset_pool = GAMEMODE_POOL_GUARANTEED
@@ -98,7 +98,7 @@
 	roundstart_prob = 100
 	block_hard = FALSE
 	block_soft = FALSE
-	allow_dreamwalker = FALSE
+	allow_dreamwalker = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 9
 
@@ -119,7 +119,7 @@
 /datum/storyteller/gamemode/no_antag	// DEFAULT (inconclusive-vote fallback)
 	name = "Medium Intensity"
 	vote_desc = "Без крупных антагонистов. Малые антагонисты масштабируются умеренно."
-	desc = "Без крупных антагонистов. Изгои (Wretches) масштабируются обычно: от 5 до 12. До 3 гноллов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
+	desc = "Без крупных антагонистов. Изгои (Wretches) масштабируются обычно: от 5 до 12. До 3 гноллов. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
 	welcome_text = "Тёплый дневной свет пробуждает вас ото сна..."
 	color_theme = "#2b8c87"
 	preset_pool = GAMEMODE_POOL_NOANTAG

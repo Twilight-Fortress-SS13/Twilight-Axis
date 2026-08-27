@@ -19,9 +19,9 @@
 	equip_delay_self = 2.5 SECONDS
 	unequip_delay_self = 2.5 SECONDS
 
-/obj/item/clothing/head/roguetown/armingcap/padded/ComponentInitialize()
+/obj/item/clothing/head/roguetown/armingcap/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
-	AddComponent(/datum/component/armour_filtering/positive, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 
 /obj/item/clothing/head/roguetown/armingcap/padded
 	name = "padded arming cap"
@@ -30,6 +30,10 @@
 	item_state = "paddedarmingcap"
 	armor = ARMOR_PADDED
 	max_integrity = ARMOR_INT_HELMET_CLOTH + 60
+
+/obj/item/clothing/head/roguetown/armingcap/padded/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 
 /obj/item/clothing/head/roguetown/helmet/leather
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_HIP
@@ -176,7 +180,7 @@
 			var/mob/living/carbon/H = user
 			H.update_inv_head()
 
-/obj/item/clothing/head/roguetown/grenzelhofthat/Initialize()
+/obj/item/clothing/head/roguetown/grenzelhofthat/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -199,7 +203,7 @@
 /obj/item/clothing/head/roguetown/grenzelhofthat/loadout
 	name = "aesthetic grenzelhoft plume hat"
 
-/obj/item/clothing/head/roguetown/grenzelhofthat/loadout/Initialize()
+/obj/item/clothing/head/roguetown/grenzelhofthat/loadout/Initialize(mapload)
 	. = ..()
 	loadoutize()
 
@@ -242,6 +246,6 @@
 /obj/item/clothing/head/roguetown/mentorhat/loadout
 	name = "aesthetic worn bamboo hat"
 
-/obj/item/clothing/head/roguetown/mentorhat/loadout/Initialize()
+/obj/item/clothing/head/roguetown/mentorhat/loadout/Initialize(mapload)
 	. = ..()
 	loadoutize()

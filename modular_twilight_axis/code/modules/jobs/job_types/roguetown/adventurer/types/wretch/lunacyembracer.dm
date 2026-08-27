@@ -53,13 +53,14 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T3, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)
 	neck = /obj/item/clothing/neck/roguetown/psicross/dendor
-	armor = /obj/item/clothing/suit/roguetown/armor/manual/resting/maille/berzerkerchest
+	armor = /obj/item/clothing/suit/roguetown/armor/manual/resting/chest/berzerker
+	shirt = /obj/item/clothing/suit/roguetown/armor/manual/resting/body/berzerker
 	head = /obj/item/flowercrown/briar
 
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dropkick)
+/*	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dropkick)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/chokeslam)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/headbutt)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stunner)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stunner)*/
 
 	H.cmode_music = 'modular_twilight_axis/sound/music/combat_berserker.ogg'
 	to_chat(H, span_danger("You have abandoned your humanity to run wild under the moon. The call of nature fills your soul!"))

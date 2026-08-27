@@ -8,7 +8,7 @@
 	outfit = /datum/outfit/job/roguetown/manorguard/twilight_grenadier
 	maximum_possible_slots = 2
 	category_tags = list(CTAG_MENATARMS)
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_FIREARMS_MARKSMAN, TRAIT_ARTILLERY_EXPERT)
+	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_ARTILLERY_EXPERT)
 	subclass_stats = list(
 		STATKEY_WIL = 2,// seems kinda lame but remember guardsman bonus!!
 		STATKEY_PER = 2,
@@ -32,7 +32,7 @@
 
 /datum/outfit/job/roguetown/manorguard/twilight_grenadier/pre_equip(mob/living/carbon/human/H)
 	..()
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/lord		
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/lord
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
 	gloves = /obj/item/clothing/gloves/roguetown/chain/iron
 
@@ -49,13 +49,13 @@
 
 	if(H.mind)
 		var/weapons = list("Аркебуза со штыком","Кулеврина и картечь")
-		var/weapon_choice = input("Выберите свое оружие.", "К ОРУЖИЮ") as anything in weapons
+		var/weapon_choice = input(H, "Выберите свое оружие.", "К ОРУЖИЮ") as anything in weapons
 		H.set_blindness(0)
 		switch(weapon_choice)
 			if("Аркебуза со штыком")
 				beltr = /obj/item/quiver/twilight_bullet/lead
 				backl = /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet
-			if("Кулеврина и картечь") 
+			if("Кулеврина и картечь")
 				beltr = /obj/item/quiver/twilight_bullet/cannonball/grapeshot
 				backl = /obj/item/gun/ballistic/twilight_firearm/handgonne
 				backpack_contents += list(/obj/item/natural/bundle/fibers/full = 1)
@@ -70,12 +70,14 @@
 				shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
 				wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine
 				pants = /obj/item/clothing/under/roguetown/brigandinelegs
+				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 
 			if("Maille Set")
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/scale
 				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/iron
 				wrists = /obj/item/clothing/wrists/roguetown/bracers
 				pants = /obj/item/clothing/under/roguetown/chainlegs
+				ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 
 		var/helmets = list(
 		"Simple Helmet" 	= /obj/item/clothing/head/roguetown/helmet,

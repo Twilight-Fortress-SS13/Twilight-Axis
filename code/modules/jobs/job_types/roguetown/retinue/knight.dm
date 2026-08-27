@@ -38,7 +38,7 @@
 /datum/job/roguetown/knight/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(ishuman(L))
-	//	addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, cloak_and_title_setup)), 50)
+		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, cloak_and_title_setup)), 50)
 
 		var/mob/living/carbon/human/H = L
 		var/prev_real_name = H.real_name
@@ -57,20 +57,7 @@
 					MF.known_people -= prev_real_name
 					H.mind.person_knows_me(MF)
 
-
-/datum/outfit/job/roguetown/knight/post_equip(mob/living/carbon/human/H)  //TA EDIT
-	..()
-	if(istype(H.cloak, /obj/item/clothing/cloak))
-		var/obj/item/clothing/S = H.cloak
-		var/index = findtext(H.name_archive, " ")
-		if(index)
-			index = copytext(H.name_archive, 1,index)
-		if(!index)
-			index = H.name
-		S.name = "[S.name] ([index])" //TA EDIT
-
 /datum/outfit/job/roguetown/knight
-	//cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/guard
 	neck = /obj/item/clothing/neck/roguetown/bevor
 	gloves = /obj/item/clothing/gloves/roguetown/plate
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
@@ -101,7 +88,7 @@
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/axes = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/maces = SKILL_LEVEL_EXPERT,
-		/datum/skill/misc/riding = SKILL_LEVEL_NOVICE,	//Too heavy for horses.
+		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
@@ -155,7 +142,7 @@
 
 	if(H.mind)
 		var/helmets = list(
-			"Pigface Bascinet" 	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
+			"Pigface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
@@ -173,12 +160,14 @@
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
+			"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
+			"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
 			"None"
 		)
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
 		if(helmchoice != "None")
 			head = helmets[helmchoice]
-    
+
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
 			"Coat of Plates"	= /obj/item/clothing/suit/roguetown/armor/brigandine/heavy,
@@ -188,15 +177,7 @@
 		var/armorchoice = input(H, "Choose your armor.", "TAKE UP ARMOR") as anything in armors
 		armor = armors[armorchoice]
 
-		var/heraldy = list(
-				"Surcoat" 	= /obj/item/clothing/cloak/tabard/stabard/guard,
-				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
-				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
-				)
-		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
-		cloak = heraldy[heraldychoice]
-
-		var/onhelm = list(
+		var/onhelm = list( //TA EDIT START
 			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
 			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
 			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
@@ -212,8 +193,8 @@
 			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 			)
 		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		l_hand = onhelm[onhelmchoice]
- 
+		l_hand = onhelm[onhelmchoice] //TA EDIT END
+
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rope/chain = 1,
@@ -281,7 +262,7 @@
 	backl = /obj/item/rogueweapon/shield/tower/metal
 	if(H.mind)
 		var/helmets = list(
-			"Pigface Bascinet" 	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
+			"Pigface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
@@ -299,6 +280,8 @@
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
+			"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
+			"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
 			"None"
 		)
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
@@ -313,16 +296,8 @@
 		)
 		var/armorchoice = input(H, "Choose your armor.", "TAKE UP ARMOR") as anything in armors
 		armor = armors[armorchoice]
-    
-		var/heraldy = list(
-				"Surcoat" 	= /obj/item/clothing/cloak/tabard/stabard/guard,
-				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
-				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
-				)
-		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
-		cloak = heraldy[heraldychoice]
 
-		var/onhelm = list(
+		var/onhelm = list( //TA EDIT START
 			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
 			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
 			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
@@ -337,8 +312,8 @@
 			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
 			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 			)
-		var/onhelmchoice = input(H,"Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		r_hand = onhelm[onhelmchoice]
+		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		l_hand = onhelm[onhelmchoice] //TA EDIT END
 
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
@@ -371,7 +346,7 @@
 		/datum/skill/combat/polearms = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/maces = SKILL_LEVEL_EXPERT,
-		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN, //Gets expert due to saddleborn.
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/bows = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
@@ -441,7 +416,7 @@
 
 	if(H.mind)
 		var/helmets = list(
-			"Pigface Bascinet" 	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
+			"Pigface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
@@ -461,6 +436,8 @@
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
+			"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
+			"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
 			"None"
 		)
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
@@ -475,16 +452,8 @@
 		)
 		var/armorchoice = input(H, "Choose your armor.", "TAKE UP ARMOR") as anything in armors
 		armor = armors[armorchoice]
-    
-		var/heraldy = list(
-				"Surcoat" 	= /obj/item/clothing/cloak/tabard/stabard/guard,
-				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
-				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
-				)
-		var/heraldychoice = input(H,"Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
-		cloak = heraldy[heraldychoice]
 
-		var/onhelm = list(
+		var/onhelm = list( //TA EDIT START
 			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
 			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
 			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
@@ -497,10 +466,10 @@
 			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
 			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
 			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull,
+			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 			)
-		var/onhelmchoice = input(H,"Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		l_hand = onhelm[onhelmchoice]
+		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+		l_hand = onhelm[onhelmchoice] //TA EDIT END
 
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
@@ -602,7 +571,7 @@
 				beltr = /obj/item/quiver/sling/iron
 				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
 
-			if("Shamshir + Pistol")
+			if("Shamshir + Pistol") //TA EDIT START
 				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir
 				backl = /obj/item/rogueweapon/scabbard/sword
 				beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
@@ -624,7 +593,7 @@
 					/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 					/obj/item/rope/chain = 1,
 					/obj/item/rogueweapon/scabbard/sheath/noble = 1,
-					/obj/item/twilight_powderflask = 1)
+					/obj/item/twilight_powderflask = 1) //TA EDIT END
 
 		switch(armor_choice)
 			if("Light Armor")
@@ -641,7 +610,7 @@
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted
 
 		var/helmets = list(
-			"Pigface Bascinet" 	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
+			"Pigface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
@@ -659,24 +628,16 @@
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
+			"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
+			"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
 			"None"
 		)
 
 		var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
 		if(helmchoice != "None")
 			head = helmets[helmchoice]
-    
-		var/heraldy = list( //Champions get lord's heraldy with a bit more variety, due to their unusual equipment
-				"Surcoat" 	= /obj/item/clothing/cloak/tabard/stabard/guard,
-				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
-				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
-				"Halfcloak" = /obj/item/clothing/cloak/half/knight,
-				"Fur Cloak" = /obj/item/clothing/cloak/raincloak/furcloak/knight,
-				)
-		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
-		cloak = heraldy[heraldychoice]
 
-		var/onhelm = list(
+		var/onhelm = list( //TA EDIT START
 			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
 			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
 			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
@@ -692,7 +653,7 @@
 			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 			)
 		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		l_hand = onhelm[onhelmchoice]
+		l_hand = onhelm[onhelmchoice] //TA EDIT END
 
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
@@ -702,9 +663,9 @@
 /datum/advclass/knight/knightchampion
 	name = "Knight Banneret"
 	tutorial = "Wrought through warfare, or nepotism. The crowned apex of chivalry and ability, \
-    you are the prime bodyguard of the ducal family. \
-    You are charged with protecting both the ruler and their heirs. If battle comes to the city, your arms and armor will decide \
-    whether Azure Peak continues a benevolent reign or falls to the dark powers beyond these comforting walls..."
+	you are the prime bodyguard of the ducal family. \
+	You are charged with protecting both the ruler and their heirs. If battle comes to the city, your arms and armor will decide \
+	whether Azure Peak continues a benevolent reign or falls to the dark powers beyond these comforting walls..."
 	maximum_possible_slots = 1
 
 	category_tags = list(CTAG_ROYALGUARD)
@@ -766,10 +727,6 @@
 	if(!H.mind)
 		return
 
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/movemovemove)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/takeaim)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/hold)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/onfeet)
 	H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight]
 
@@ -892,7 +849,7 @@
 		return
 
 	var/helmets = list(
-		"Pigface Bascinet" 	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
+		"Pigface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
 		"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 		"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 		"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
@@ -913,13 +870,15 @@
 		"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 		"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
 		"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
+		"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
+		"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
 		"None"
 	)
 	var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
 	if(helmchoice != "None")
 		head = helmets[helmchoice]
 
-	var/onhelm = list(
+	var/onhelm = list( //TA EDIT START
 		"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
 		"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
 		"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
@@ -935,7 +894,7 @@
 		"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
 		)
 	var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-	l_hand = onhelm[onhelmchoice]
+	l_hand = onhelm[onhelmchoice] //TA EDIT END
 
 	if(HAS_TRAIT(H, TRAIT_GOODTRAINER))
 		REMOVE_TRAIT(H, TRAIT_GOODTRAINER, JOB_TRAIT)

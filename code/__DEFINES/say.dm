@@ -77,7 +77,7 @@
 #define SPAN_AAVNIC "aavnic"
 #define SPAN_UNDERCOMMON "undercommon"
 #define SPAN_UNDEAD "undead"
-#define SPAN_CAT "cat"		 //nyi but file found
+#define SPAN_CAT "cat"			//nyi but file found
 #define SPAN_PULSEDEATH "pulsedeath"
 
 #define SPAN_GYEDZENESE "gyedzenese" //TA EDIT

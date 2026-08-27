@@ -220,6 +220,8 @@ SUBSYSTEM_DEF(gamemode)
 	/// Calculated effective pop after weighing garrison & holy warriors at 3x, acolytes at 2x
 	var/effective_pop = 0
 
+	var/combat_positions_alive = 0 // TA EDIT
+
 	/// Is storyteller secret or not
 	var/secret_storyteller = FALSE
 
@@ -244,6 +246,7 @@ SUBSYSTEM_DEF(gamemode)
 		"VL" = null,
 		"Masquerade" = null,
 		"Werewolf" = null,
+		"Rebel" = null,
 	)
 
 	/// List of new player minds we currently want to give our roundstart antag to
@@ -256,13 +259,14 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/last_round_events = list()
 	/// Has a roundstart event been run
 	var/ran_roundstart = FALSE
+	var/roundstart_prejob_roll = FALSE // TA EDIT
+	var/roundstart_prejob_attempted = FALSE // TA EDIT
 	/// Are we able to run roundstart events
 	var/can_run_roundstart = TRUE
 	var/list/triggered_round_events = list()
 
 	var/round_ends_at = 0
 	var/roundvoteend = FALSE
-	var/reb_end_time = 0
 
 /datum/controller/subsystem/gamemode/Initialize(time, zlevel)
 #if defined(UNIT_TESTS) || defined(AUTOWIKI) // lazy way of doing this but idc
@@ -473,17 +477,17 @@ SUBSYSTEM_DEF(gamemode)
 /*
 	Roundstart storyteller flow:
 	1. During pre_setup(), we count lobby-ready players and seed the initial roundstart track budgets.
-	   This is still used for the broad roundstart event economy before bodies exist in-world.
+		This is still used for the broad roundstart event economy before bodies exist in-world.
 	2. We intentionally do not buy the roundstart antagonist event during pre_setup().
-	   At that stage the only reliable population metric is the ready count, which can differ from
-	   the players that actually spawn into the round.
+		At that stage the only reliable population metric is the ready count, which can differ from
+		the players that actually spawn into the round.
 	3. After occupation division, character creation, equipment, and transfer, ticker setup marks
-	   roundstart_live and calls roll_roundstart_antag() immediately before GAME_STATE_PLAYING.
+		roundstart_live and calls roll_roundstart_antag() immediately before GAME_STATE_PLAYING.
 	4. roll_roundstart_antag() refreshes active_players from real spawned-in humans, recalculates the
-	   CHARACTER_INJECTION budget from that post-spawn population, and only then lets the storyteller
-	   pick and run the roundstart antagonist event.
+		CHARACTER_INJECTION budget from that post-spawn population, and only then lets the storyteller
+		pick and run the roundstart antagonist event.
 	5. This keeps the roundstart antag budget, eligibility checks, slot scaling, admin diagnostics,
-	   and final roll all keyed off the same in-round population snapshot.
+		and final roll all keyed off the same in-round population snapshot.
 */
 
 /datum/controller/subsystem/gamemode/proc/roundstart_points(track, player_count)
@@ -571,7 +575,7 @@ SUBSYSTEM_DEF(gamemode)
 			event.try_start()
 		INVOKE_ASYNC(event, TYPE_PROC_REF(/datum/round_event, try_start))
 
-/datum/controller/subsystem/gamemode/proc/roll_roundstart_antag()
+/datum/controller/subsystem/gamemode/proc/roll_roundstart_antag(use_ready_population = FALSE) // TA EDIT
 	false_rumours.Cut()
 	if(current_storyteller?.disable_distribution || halted_storyteller)
 		return FALSE
@@ -581,15 +585,26 @@ SUBSYSTEM_DEF(gamemode)
 		return FALSE
 	if(!current_storyteller)
 		return FALSE
-	roundstart_live = TRUE
+	if(!use_ready_population && roundstart_prejob_attempted) // TA EDIT START
+		return FALSE
+	if(use_ready_population)
+		roundstart_prejob_attempted = TRUE
+	if(!use_ready_population)
+		roundstart_live = TRUE // TA EDIT END
 	if(!ispath(roundstart_storyteller, /datum/storyteller))
 		roundstart_storyteller = selected_storyteller
 	if(ispath(roundstart_storyteller, /datum/storyteller))
 		last_storyteller_vote = roundstart_storyteller
 		SSvote.save_storyteller_vote_log(roundstart_storyteller, "completed")
-	update_crew_infos()
+	var/roundstart_population // TA EDIT START
 	var/old_points = event_track_points[EVENT_TRACK_CHARACTER_INJECTION]
-	event_track_points[EVENT_TRACK_CHARACTER_INJECTION] = roundstart_points(EVENT_TRACK_CHARACTER_INJECTION, active_players)
+	if(use_ready_population)
+		calculate_ready_players()
+		roundstart_population = ready_players
+	else
+		update_crew_infos()
+		roundstart_population = active_players
+		event_track_points[EVENT_TRACK_CHARACTER_INJECTION] = roundstart_points(EVENT_TRACK_CHARACTER_INJECTION, active_players) // TA EDIT END
 	if(current_storyteller.guarantees_roundstart_roleset && event_track_points[EVENT_TRACK_CHARACTER_INJECTION] < point_thresholds[EVENT_TRACK_CHARACTER_INJECTION])
 		event_track_points[EVENT_TRACK_CHARACTER_INJECTION] = point_thresholds[EVENT_TRACK_CHARACTER_INJECTION]
 	if(forced_next_events[EVENT_TRACK_CHARACTER_INJECTION] && event_track_points[EVENT_TRACK_CHARACTER_INJECTION] < point_thresholds[EVENT_TRACK_CHARACTER_INJECTION])
@@ -598,19 +613,22 @@ SUBSYSTEM_DEF(gamemode)
 	var/admin_hard_opened = length(opened_hard_antags())
 	if(admin_hard_opened && event_track_points[EVENT_TRACK_CHARACTER_INJECTION] < point_thresholds[EVENT_TRACK_CHARACTER_INJECTION])
 		event_track_points[EVENT_TRACK_CHARACTER_INJECTION] = point_thresholds[EVENT_TRACK_CHARACTER_INJECTION]
-	log_storyteller("Recalculated roundstart antag points post-spawn from [old_points] to [event_track_points[EVENT_TRACK_CHARACTER_INJECTION]] using active pop [active_players].")
+	log_storyteller("Roundstart antag points [use_ready_population ? "kept" : "recalculated"] from [old_points] to [event_track_points[EVENT_TRACK_CHARACTER_INJECTION]] using [use_ready_population ? "ready" : "active"] pop [roundstart_population].") // TA EDIT
 	var/points_required = point_thresholds[EVENT_TRACK_CHARACTER_INJECTION]
 	var/has_forced_event = !!forced_next_events[EVENT_TRACK_CHARACTER_INJECTION]
 	if(!current_storyteller.guarantees_roundstart_roleset && !admin_hard_opened && !current_storyteller.roundstart_checks)
 		current_storyteller.roundstart_checks = prob(current_storyteller.roundstart_prob)
 	if(!current_storyteller.guarantees_roundstart_roleset && !admin_hard_opened && !current_storyteller.roundstart_checks)
-		log_storyteller("Skipping post-spawn roundstart antag roll: storyteller chance check failed at active pop [active_players].")
+		log_storyteller("Skipping [use_ready_population ? "pre-job" : "post-spawn"] roundstart antag roll: storyteller chance check failed at [use_ready_population ? "ready" : "active"] pop [roundstart_population].") // TA EDIT
 		return FALSE
 	if(!has_forced_event && event_track_points[EVENT_TRACK_CHARACTER_INJECTION] < points_required)
-		log_storyteller("Skipping post-spawn roundstart antag roll: insufficient character injection points ([event_track_points[EVENT_TRACK_CHARACTER_INJECTION]]/[points_required]) at active pop [active_players].")
+		log_storyteller("Skipping [use_ready_population ? "pre-job" : "post-spawn"] roundstart antag roll: insufficient character injection points ([event_track_points[EVENT_TRACK_CHARACTER_INJECTION]]/[points_required]) at [use_ready_population ? "ready" : "active"] pop [roundstart_population].") // TA EDIT
 		return FALSE
-	log_storyteller("Running post-spawn roundstart antag roll at active pop [active_players].")
-	return current_storyteller.find_and_buy_event_from_track(EVENT_TRACK_CHARACTER_INJECTION)
+	log_storyteller("Running [use_ready_population ? "pre-job" : "post-spawn"] roundstart antag roll at [use_ready_population ? "ready" : "active"] pop [roundstart_population].") // TA EDIT
+	roundstart_prejob_roll = use_ready_population // TA EDIT START
+	var/roundstart_roll_result = current_storyteller.find_and_buy_event_from_track(EVENT_TRACK_CHARACTER_INJECTION)
+	roundstart_prejob_roll = FALSE
+	return roundstart_roll_result // TA EDIT END
 
 /// Spawns admin-opened SOFT roundstart injection antags (the Assassin) alongside - not instead of - the single
 /// hard antag roll, so soft and hard antags can coexist under admin fine-tuning. Runs right after the main
@@ -668,6 +686,7 @@ SUBSYSTEM_DEF(gamemode)
 	holy_warrior = 0
 	garrison = 0
 	half_combatant = 0
+	combat_positions_alive = 0
 	for(var/mob/player_mob as anything in GLOB.player_list)
 		if(!player_mob.client)
 			continue
@@ -689,6 +708,17 @@ SUBSYSTEM_DEF(gamemode)
 				half_combatant++
 			if(player_mob.mind.job_bitflag & BITFLAG_GARRISON)
 				garrison++
+//TA EDIT BEGIN
+		var/list/combat_positions = list()
+		combat_positions += GLOB.retinue_positions + GLOB.garrison_positions + GLOB.citywatch_positions + GLOB.vanguard_positions
+		if(player_mob.mind.assigned_role in combat_positions)
+			combat_positions_alive++
+
+	if(SSticker.IsRoundInProgress())
+		update_wretch_slots()
+		update_bandits_slots(active_players) // TA EDIT
+//TA EDIT END
+
 	update_pop_scaling()
 
 /datum/controller/subsystem/gamemode/proc/update_pop_scaling()
@@ -734,9 +764,9 @@ SUBSYSTEM_DEF(gamemode)
 	for(var/storyteller_name in storytellers)
 		var/datum/storyteller/initialized_storyteller = storytellers[storyteller_name]
 		if(initialized_storyteller?.ascendant)
-			to_chat(world, "<br>")
-			to_chat(world, span_reallybig("[initialized_storyteller.get_display_name()] is ascendant!"))
-			to_chat(world, "<br>")
+			to_world("<br>")
+			to_world(span_reallybig("[initialized_storyteller.get_display_name()] is ascendant!"))
+			to_world("<br>")
 
 	// Safety net: the lobby ticker normally closes the gamemode vote at the end buffer, but if the round was
 	// force-started with it still open, resolve it now so selected_storyteller reflects the votes (or default).
@@ -750,9 +780,11 @@ SUBSYSTEM_DEF(gamemode)
 	log_storyteller("Roundstart gamemode locked in: [current_storyteller?.name] ([allow_vote ? "player vote" : "admin-set"]).")
 	calculate_ready_players()
 	roll_pre_setup_points()
+	roll_roundstart_antag(TRUE) // TA EDIT
+	update_bandits_slots() // TA EDIT
 	return TRUE
 
-///Everyone should now be on the station and have their normal gear.  This is the place to give the special roles extra things
+///Everyone should now be on the station and have their normal gear.	This is the place to give the special roles extra things
 /datum/controller/subsystem/gamemode/proc/post_setup(report) //Gamemodes can override the intercept report. Passing TRUE as the argument will force a report.
 	if(!report)
 		report = !CONFIG_GET(flag/no_intercept_report)
@@ -800,17 +832,6 @@ SUBSYSTEM_DEF(gamemode)
 				SSvote.initiate_vote("endround", pick("Zlod", "Sun King", "Gaia", "Moon Queen", "Aeon", "Gemini", "Aries"))
 	else if(roundvoteend && world.time >= round_ends_at)
 		return TRUE
-	if(SSmapping.retainer.head_rebel_decree)
-		if(reb_end_time == 0)
-			to_chat(world, span_boldannounce("The peasant rebels took control of the throne, hail the new community!"))
-			if(ttime >= INITIAL_ROUND_TIMER)
-				reb_end_time = ttime + 15 MINUTES
-				to_chat(world, span_boldwarning("The round will end in 15 minutes."))
-			else
-				reb_end_time = INITIAL_ROUND_TIMER
-				to_chat(world, span_boldwarning("The round will end at the 2:30 hour mark."))
-		if(ttime >= reb_end_time)
-			return TRUE
 
 /datum/controller/subsystem/gamemode/proc/generate_town_goals()
 	return
@@ -1092,8 +1113,8 @@ SUBSYSTEM_DEF(gamemode)
 	if(!preset)
 		return
 	log_storyteller("Gamemode set by admin (no player vote): [preset.name].")
-	to_chat(world, span_notice("<b>Gamemode is [preset.name]!</b>"))
-	to_chat(world, span_notice("[preset.vote_desc]"))
+	to_world(span_notice("<b>Gamemode is [preset.name]!</b>"))
+	to_world(span_notice("[preset.vote_desc]"))
 
 /datum/controller/subsystem/gamemode/proc/get_last_storyteller_vote()
 	var/json_file = file(LAST_ROUND_STATS_FILE)
@@ -1279,7 +1300,7 @@ SUBSYSTEM_DEF(gamemode)
 		return 0
 	storyteller_type = story_policy_type(roundstart, storyteller_type)
 	var/storyteller_antag_flags = initial(antag_datum:storyteller_antag_flags)
-	if(storyteller_blocks_antag(storyteller_antag_flags, roundstart, storyteller_type))
+	if(storyteller_blocks_antag(storyteller_antag_flags, roundstart, storyteller_type) && !(ispath(antag_datum, /datum/antagonist/bandit) && storyteller_type == /datum/storyteller/gamemode/no_antag)) // TA EDIT
 		return 0
 	var/default_cap = max(0, initial(antag_datum:storyteller_slot_default_cap))
 	var/list/maxcaps = get_antag_maxcaps(antag_datum)
@@ -1291,13 +1312,26 @@ SUBSYSTEM_DEF(gamemode)
 		return 0
 	if(isnull(player_count))
 		player_count = get_correct_popcount()
-	if(initial(antag_datum:storyteller_antag_flags) & STORYTELLER_ANTAG_VILLAIN && story_villain_conflicts(antag_datum))
-		return 0
+	if(ispath(antag_datum, /datum/antagonist/bandit)) // TA EDIT START
+		if(story_bandit_conflicts())
+			return 0
+	else if(initial(antag_datum:storyteller_antag_flags) & STORYTELLER_ANTAG_VILLAIN && story_villain_conflicts(antag_datum))
+		return 0 // TA EDIT END
 	var/min_players = story_antag_min_players(antag_datum)
 	if(min_players > 0 && player_count < min_players)
 		return 0
 	return slot_count
 
+
+/datum/controller/subsystem/gamemode/proc/story_bandit_conflicts() // TA EDIT START
+	var/datum/round_event_control/antagonist/solo/roundstart_event = current_roundstart_event
+	if(!roundstart_event)
+		return FALSE
+	if(istype(roundstart_event, /datum/round_event_control/antagonist/solo/lich))
+		return TRUE
+	if(istype(roundstart_event, /datum/round_event_control/antagonist/solo/vampires))
+		return TRUE
+	return FALSE // TA EDIT END
 
 /datum/controller/subsystem/gamemode/proc/story_villain_conflicts(antag_datum)
 	if(!ispath(antag_datum, /datum/antagonist))
@@ -1413,6 +1447,8 @@ SUBSYSTEM_DEF(gamemode)
 		return "Gnoll"
 	if(ispath(antag_datum, /datum/antagonist/wretch))
 		return "Wretch"
+	if(ispath(antag_datum, /datum/antagonist/prebel))
+		return "Rebel"
 	return null
 
 /// Switches the round to the permissive Admin sandbox preset when an admin fine-tunes via a toggle or slot
@@ -1441,15 +1477,17 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/opened = list()
 	if(allow_vote)
 		return opened
-	for(var/key in list("Bandit", "Lich", "VL", "Werewolf"))
+	for(var/key in list("Bandit", "Lich", "VL", "Werewolf", "Rebel"))
 		if((admin_slots[key] || 0) > 0)
 			opened += key
 	return opened
 
-/// Narrows the roundstart pick when one is forced. Admin-opened hard antags take priority: the pick is
+/// Narrows the roundstart pick. Admin-opened hard antags take priority: the pick is
 /// restricted to exactly those antags (so multiple opened antags get a random pick among themselves).
-/// Otherwise, when the active preset guarantees a hard antag, the pick is narrowed to villain events only so
-/// a permitted Dreamwalker (or any non-villain injection) cannot consume the guaranteed hard-antag slot.
+/// Otherwise the pick is narrowed to villain events whenever any can roll, so a soft injection
+/// (the Dreamwalker) never consumes the round's hard-antag slot while a villain could have taken
+/// it - soft injections only win the roll when no villain can roll at all (the no-antag preset,
+/// or pops below the hard-antag minimum).
 /datum/controller/subsystem/gamemode/proc/storyteller_guaranteed_events(list/valid_events)
 	var/list/guaranteed_events = list()
 	var/list/admin_hard = opened_hard_antags()
@@ -1464,10 +1502,10 @@ SUBSYSTEM_DEF(gamemode)
 	var/datum/storyteller/preset = active_preset()
 	if(!preset?.guaranteed_hard)
 		return guaranteed_events
-	for(var/datum/round_event_control/antagonist/solo/event as anything in valid_events)
+	for(var/datum/round_event_control/event as anything in valid_events)
 		if(event.occurrences)
 			continue
-		if((event.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN) && event.consumes_hard_antag_slot)
+		if(event.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN)
 			guaranteed_events[event] = valid_events[event]
 	return guaranteed_events
 
@@ -1600,7 +1638,7 @@ SUBSYSTEM_DEF(gamemode)
 		dat += "</td></tr>"
 	dat += "</table>"
 
-	dat += "<HR>Active Players: [active_players]   (Royalty: [royalty], Garrison: [garrison], Town Workers: [constructor], Holy Warriors: [holy_warrior], Acolytes: [half_combatant])"
+	dat += "<HR>Active Players: [active_players]	(Royalty: [royalty], Garrison: [garrison], Town Workers: [constructor], Holy Warriors: [holy_warrior], Acolytes: [half_combatant])"
 	dat += "<BR>Effective Population: [effective_pop] (Total: [active_players] + Garrison Bonus: [garrison * 2] + Holy Warrior Bonus: [holy_warrior * 2] + Acolyte Bonus: [half_combatant * 1])"
 	dat += "<BR>Antagonist Count vs Maximum: [get_antag_count()] / [get_antag_cap()]"
 	var/list/guaranteed_roundstart_pool = get_roundstart_guaranteed_pool(roundstart_pool_pop)
@@ -2043,55 +2081,55 @@ SUBSYSTEM_DEF(gamemode)
 
 	var/list/statistics_to_clear = list(
 		STATS_TOTAL_POPULATION,
-        STATS_PSYCROSS_USERS,
-        STATS_ALIVE_NOBLES,
-        STATS_ALIVE_GARRISON,
-        STATS_ALIVE_CLERGY,
-        STATS_ALIVE_TRADESMEN,
-        STATS_WEREVOLVES,
-        STATS_BANDITS,
-        STATS_VAMPIRES,
-        STATS_DEADITES_ALIVE,
-        STATS_CLINGY_PEOPLE,
+		STATS_PSYCROSS_USERS,
+		STATS_ALIVE_NOBLES,
+		STATS_ALIVE_GARRISON,
+		STATS_ALIVE_CLERGY,
+		STATS_ALIVE_TRADESMEN,
+		STATS_WEREVOLVES,
+		STATS_BANDITS,
+		STATS_VAMPIRES,
+		STATS_DEADITES_ALIVE,
+		STATS_CLINGY_PEOPLE,
 		STATS_BEAUTIFUL_PEOPLE,
 		STATS_MARRIAGES_MADE,
-        STATS_ALCOHOLICS,
-        STATS_JUNKIES,
+		STATS_ALCOHOLICS,
+		STATS_JUNKIES,
 		STATS_VOYEURS,
 		STATS_NYMPHOMANIACS,
 		STATS_INDEBTED,
 		STATS_THRILLSEEKERS,
-        STATS_GREEDY_PEOPLE,
-        //STATS_PLEASURES, TA addition - New ERP SYSTEM
-        STATS_MALE_POPULATION,
-        STATS_FEMALE_POPULATION,
-        STATS_OTHER_GENDER,
-        STATS_ADULT_POPULATION,
-        STATS_MIDDLEAGED_POPULATION,
-        STATS_ELDERLY_POPULATION,
-        STATS_ALIVE_NORTHERN_HUMANS,
-        STATS_ALIVE_DWARVES,
-        STATS_ALIVE_DARK_ELVES,
-        STATS_ALIVE_WOOD_ELVES,
-        STATS_ALIVE_HALF_ELVES,
+		STATS_GREEDY_PEOPLE,
+		//STATS_PLEASURES, TA addition - New ERP SYSTEM
+		STATS_MALE_POPULATION,
+		STATS_FEMALE_POPULATION,
+		STATS_OTHER_GENDER,
+		STATS_ADULT_POPULATION,
+		STATS_MIDDLEAGED_POPULATION,
+		STATS_ELDERLY_POPULATION,
+		STATS_ALIVE_NORTHERN_HUMANS,
+		STATS_ALIVE_DWARVES,
+		STATS_ALIVE_DARK_ELVES,
+		STATS_ALIVE_WOOD_ELVES,
+		STATS_ALIVE_HALF_ELVES,
 		STATS_ALIVE_SUN_ELVES,
-        STATS_ALIVE_HALF_ORCS,
-        STATS_ALIVE_GOBLINS,
-        STATS_ALIVE_KOBOLDS,
-        STATS_ALIVE_LIZARDS,
-        STATS_ALIVE_AASIMAR,
-        STATS_ALIVE_TIEFLINGS,
-        STATS_ALIVE_HALFKIN,
-        STATS_ALIVE_WILDKIN,
-        STATS_ALIVE_CONSTRUCTS,
-        STATS_ALIVE_VERMINFOLK,
-        STATS_ALIVE_DRACON,
-        STATS_ALIVE_AXIAN,
-        STATS_ALIVE_TABAXI,
-        STATS_ALIVE_VULPS,
-        STATS_ALIVE_LUPIANS,
-        STATS_ALIVE_MOTHS,
-        STATS_ALIVE_AURA
+		STATS_ALIVE_HALF_ORCS,
+		STATS_ALIVE_GOBLINS,
+		STATS_ALIVE_KOBOLDS,
+		STATS_ALIVE_LIZARDS,
+		STATS_ALIVE_AASIMAR,
+		STATS_ALIVE_TIEFLINGS,
+		STATS_ALIVE_HALFKIN,
+		STATS_ALIVE_WILDKIN,
+		STATS_ALIVE_CONSTRUCTS,
+		STATS_ALIVE_VERMINFOLK,
+		STATS_ALIVE_DRACON,
+		STATS_ALIVE_AXIAN,
+		STATS_ALIVE_TABAXI,
+		STATS_ALIVE_VULPS,
+		STATS_ALIVE_LUPIANS,
+		STATS_ALIVE_MOTHS,
+		STATS_ALIVE_AURA
 	)
 
 	for(var/stat_name in statistics_to_clear)

@@ -22,11 +22,11 @@
 	if(wCount.len > 0)
 		M.heal_wounds(3) //at a metabolism of .5 U a tick this translates to 120WHP healing with 20 U Most wounds are unsewn 15-100. This is powerful on single wounds but rapidly weakens at multi wounds.
 	if(volume > 0.99)
-		M.adjustBruteLoss(-1.75  * REAGENTS_EFFECT_MULTIPLIER, 0)
-		M.adjustFireLoss(-1.75  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-1.75	* REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-1.75	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-1.25, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -5  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-1.75  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -5	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-1.75	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOrganLoss(ORGAN_SLOT_EYES, -1 * REAGENTS_EFFECT_MULTIPLIER)
 	..()
 
@@ -69,11 +69,11 @@
 	if(wCount.len > 0)
 		M.heal_wounds(4) //Better than traditional lifeblood at sealing open wounds. Slightly weaker healing potency, in turn.
 	if(volume > 0.99)
-		M.adjustBruteLoss(-1.5  * REAGENTS_EFFECT_MULTIPLIER, 0) //Minor reduction of ~15%-ish potency.
-		M.adjustFireLoss(-1.5  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-1.5	* REAGENTS_EFFECT_MULTIPLIER, 0) //Minor reduction of ~15%-ish potency.
+		M.adjustFireLoss(-1.5	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-1.25, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -3  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-1.5  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -3	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-1.5	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOrganLoss(ORGAN_SLOT_EYES, -1 * REAGENTS_EFFECT_MULTIPLIER)
 	..()
 
@@ -156,11 +156,11 @@
 	if(wCount.len > 0)
 		M.heal_wounds(3)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-3  * REAGENTS_EFFECT_MULTIPLIER, 0)
-		M.adjustFireLoss(-3  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-3	* REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-3	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-3, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -5  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-3  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -5	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-3	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOrganLoss(ORGAN_SLOT_EYES, -1.75 * REAGENTS_EFFECT_MULTIPLIER)
 	if(!HAS_TRAIT(M,TRAIT_INFINITE_STAMINA))
 		M.energy_add(60)
@@ -201,10 +201,10 @@
 	return TRUE
 
 /** Design Note: Antidotes are meant to last as long as the poison, and purge them much quicker
- Having a 1 to 1 antidote to poison where you have to tailor defense to an increasing amount of attack
- is a bad idea, since that just means no one will use antidotes and the weapon win the race vs defense.
- This means pre ingesting antidote when expecting poison is a viable strategy.
- Previously, antidote did not have a dylovene-like effect and just purged toxin damage while poison will outlast them.
+	Having a 1 to 1 antidote to poison where you have to tailor defense to an increasing amount of attack
+	is a bad idea, since that just means no one will use antidotes and the weapon win the race vs defense.
+	This means pre ingesting antidote when expecting poison is a viable strategy.
+	Previously, antidote did not have a dylovene-like effect and just purged toxin damage while poison will outlast them.
 **/
 /datum/reagent/medicine/antidote
 	name = "Antidote"
@@ -217,6 +217,9 @@
 	conflicting_reagent_types = list(/datum/reagent/medicine/strong_antidote)
 
 /datum/reagent/medicine/antidote/on_mob_life(mob/living/carbon/M)
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		H.cure_deadite_rot()
 	if(volume > 0.99)
 		M.adjustToxLoss(-4, 0)
 	for(var/datum/reagent/R in M.reagents.reagent_list)
@@ -238,6 +241,9 @@
 	conflicting_reagent_types = list(/datum/reagent/medicine/antidote)
 
 /datum/reagent/medicine/strong_antidote/on_mob_life(mob/living/carbon/M)
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		H.cure_deadite_rot()
 	if(volume > 0.99)
 		M.adjustToxLoss(-12, 0)
 	for(var/datum/reagent/R in M.reagents.reagent_list)
@@ -332,7 +338,7 @@
 	scent_description = "rancid alchemical waste"
 	metabolization_rate = REAGENTS_METABOLISM
 	overdose_threshold = 0
-	can_synth = FALSE 
+	can_synth = FALSE
 
 /datum/reagent/ruined_potion/on_mob_life(mob/living/carbon/M)
 	if(HAS_TRAIT(M, TRAIT_NASTY_EATER))
@@ -383,7 +389,7 @@ If you want to expand on poisons theres tons of fun effects TG chemistry has tha
 	if(volume > 0.09)
 		if(isdwarf(M))
 			M.add_nausea(1)
-			M.adjustToxLoss(2.3)  // will put you just above dying crit treshold
+			M.adjustToxLoss(2.3)	// will put you just above dying crit treshold
 		else
 			M.add_nausea(6) //So a poison bolt (2u) will eventually cause puking at least once
 			M.adjustToxLoss(4.5) // just enough so 5u will kill you dead with no help

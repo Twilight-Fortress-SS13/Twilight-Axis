@@ -36,6 +36,8 @@
 	var/greet_text
 	/// Whether this wave can roll at all. If not, it can still be forced to be ran.
 	var/can_roll = TRUE
+	/// If TRUE, this wave never rolls naturally on its track and is triumph only
+	var/triumph_only = FALSE
 	/// If defined, this will be the wave type to increment for purposes of checking `max_spawns`
 	var/shared_wave_type = null
 	/// Whether we want to spawn people on the rolled location, this may not be desired for bandits or other things that set the location
@@ -46,6 +48,7 @@
 	var/triumph_total = 0
 	/// Threshold at which this wave is guaranteed to be next
 	var/triumph_threshold = 25
+	var/triumph_weight_multiplier = 6 // TA EDIT
 	/// Whether triumph contributions reset after wave spawns
 	var/reset_contributions_on_spawn = TRUE
 
