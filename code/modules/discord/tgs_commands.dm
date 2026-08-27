@@ -1,5 +1,5 @@
 // Notify
-/datum/tgs_chat_command/notify
+/* /datum/tgs_chat_command/notify // TA EDIT START
 	name = "notify"
 	help_text = "Pings the invoker when the round ends"
 
@@ -11,7 +11,7 @@
 
 	// If we got here, they arent in the list. Chuck 'em in!
 	SSdiscord.notify_members += "[SSdiscord.id_clean(sender.mention)]" // The list uses strings because BYOND cannot handle a 17 digit integer
-	return "You will now be notified when the server restarts"
+	return "You will now be notified when the server restarts" */ // TA EDIT END
 
 // Verify
 /datum/tgs_chat_command/verify

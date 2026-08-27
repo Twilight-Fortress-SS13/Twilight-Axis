@@ -312,6 +312,8 @@
 		return FALSE
 
 	for(var/mob/living/carbon/target in view(cast_range, get_turf(owner)))
+		if(!H.cleric_aoe_target_allowed(target))
+			continue
 		if(istype(target.patron, /datum/patron/inhumen))
 			target.apply_status_effect(/datum/status_effect/buff/call_to_slaughter)	//Buffs inhumens
 			continue

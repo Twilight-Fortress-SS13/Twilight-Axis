@@ -1,6 +1,9 @@
 /datum/species
 	var/amtfail = 0
 
+/mob/living/carbon/human
+	var/char_accent = "No accent"
+
 /datum/species/proc/get_accent_list(mob/living/carbon/human/H, type)
 	var/list/accents = list(
 		"Dwarven accent" = "dwarf_replacement.json",

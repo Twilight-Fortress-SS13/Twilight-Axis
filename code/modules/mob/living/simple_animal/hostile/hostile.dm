@@ -775,7 +775,7 @@
 			if (isturf(M.loc))
 				. += M
 
-/mob/living/simple_animal/hostile/checkdefense(datum/intent/intenty, mob/living/user)
+/mob/living/simple_animal/hostile/checkdefense(datum/intent/attack_intent, mob/living/user)
 	if(user in friends)
 		return FALSE
 	return ..()

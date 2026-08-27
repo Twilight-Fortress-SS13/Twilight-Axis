@@ -1,4 +1,4 @@
-/mob/living/proc/checkdefense(datum/intent/intenty, mob/living/user)
+/mob/living/proc/checkdefense(datum/intent/attack_intent, mob/living/user)
 
 	// We check for a disruptable swingdelay first.
 	var/datum/status_effect/swingdelay/disrupt/SW = has_status_effect(/datum/status_effect/swingdelay/disrupt)
@@ -57,11 +57,11 @@
 
 	switch(d_intent)
 		if(INTENT_PARRY)
-			success = attempt_parry(intenty, user)
+			success = attempt_parry(attack_intent, user)
 			if(success)
 				ronin_on_parry_success(src, user)
 		if(INTENT_DODGE)
-			success = attempt_dodge(intenty, user)
+			success = attempt_dodge(attack_intent, user)
 
 	if(success)
 		soundbreaker_riff_defense_success(src)

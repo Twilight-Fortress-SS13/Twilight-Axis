@@ -44,8 +44,9 @@
 		category = r.category
 	else if(ispath(path, /datum/food_recipe))
 		category = initial(path:book_category)
-	else if(ispath(path, /datum/stew_recipe))
-		category = FOOD_CAT_STEW
+	else if(ispath(path, /datum/container_craft))
+		var/datum/container_craft/r = GLOB.container_craft_to_singleton[path]
+		category = r?.category
 	else if(ispath(path, /datum/runeritual))
 		temp_recipe = new path()
 		var/datum/runeritual/r = temp_recipe
@@ -110,7 +111,13 @@
 		var/datum/food_recipe/recipe = path
 		if(initial(recipe.hidden))
 			return TRUE
-
+	if(ispath(path, /datum/container_craft))
+		var/datum/container_craft/recipe = path
+		if(initial(recipe.hides_from_books))
+			return TRUE
+		var/datum/container_craft/singleton = GLOB.container_craft_to_singleton[path]
+		if(singleton && !singleton.is_book_canonical())
+			return TRUE
 	return FALSE
 
 /proc/gather_recipe_categories(list/types)
@@ -203,11 +210,11 @@
 		var/datum/food_recipe/r = temp_recipe
 		recipe_name = initial(r.name)
 		recipe_html = r.generate_html(user)
-	else if(ispath(path, /datum/stew_recipe))
-		temp_recipe = new path()
-		var/datum/stew_recipe/r = temp_recipe
-		recipe_name = r.name
-		recipe_html = r.generate_html(user)
+	else if(ispath(path, /datum/container_craft))
+		var/datum/container_craft/r = GLOB.container_craft_to_singleton[path]
+		if(r)
+			recipe_name = r.name
+			recipe_html = r.generate_html(user)
 	else if(ispath(path, /datum/runeritual))
 		temp_recipe = new path()
 		var/datum/runeritual/r = temp_recipe
@@ -336,10 +343,6 @@
 		var/atom/d = dfried
 		parts += "deep fries into [initial(d.name)]"
 
-	var/dboiled = initial(proto.boiled_type)
-	if(dboiled && dboiled != path)
-		var/atom/b = dboiled
-		parts += "boils into [initial(b.name)]"
 
 	if(!length(parts))
 		return ""
