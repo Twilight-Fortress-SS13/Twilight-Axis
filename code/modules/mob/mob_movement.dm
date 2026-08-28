@@ -604,11 +604,13 @@
 	if(!reset && world.time < mob_timers[MT_INVISIBILITY]) // Check if the mob is affected by the invisibility spell
 		rogue_sneaking = TRUE
 		return
+	if(!reset && !rogue_sneaking && m_intent != MOVE_INTENT_SNEAK && alpha == initial(alpha)) // TA EDIT
+		return // TA EDIT
 
 	if (stat == DEAD) // we're dead, so be visible if sneaking, and end it there. needed because DeadLife calls this constantly on every dead mob that exists
 		if (rogue_sneaking)
 			animate(src, alpha = initial(alpha), time = 25)
-			spawn(25) regenerate_icons()
+			addtimer(CALLBACK(src, PROC_REF(regenerate_icons)), 25, TIMER_UNIQUE | TIMER_OVERRIDE) // TA EDIT
 			rogue_sneaking = FALSE
 		return
 
@@ -621,13 +623,14 @@
 	var/used_time = 50
 	var/light_threshold = rogue_sneaking_light_threshhold
 	if(mind)
-		used_time = max(used_time - (get_skill_level(/datum/skill/misc/sneaking) * 8), 0)
-		light_threshold += (get_skill_level(/datum/skill/misc/sneaking) / 200)
+		var/sneak_skill = get_skill_level(/datum/skill/misc/sneaking) // TA EDIT
+		used_time = max(used_time - (sneak_skill * 8), 0) // TA EDIT
+		light_threshold += (sneak_skill / 200) // TA EDIT
 
 	if(!reset && m_intent != MOVE_INTENT_SNEAK && alpha != initial(alpha)) // prevents funny bugs with getting stuck transparent
 		if(!wallpressed)
 			animate(src, alpha = initial(alpha), time = 10)
-			spawn(10) regenerate_icons()
+			addtimer(CALLBACK(src, PROC_REF(regenerate_icons)), 10, TIMER_UNIQUE | TIMER_OVERRIDE) // TA EDIT
 		else
 			animate(src, alpha = 255, time = 10)
 
@@ -650,7 +653,7 @@
 			used_time = round(clamp((50 - (used_time*1.75)), 5, 50),1)
 			if(!wallpressed) // so we can stay partially invisible if wallpressed
 				animate(src, alpha = initial(alpha), time =	used_time) //sneak skill makes you reveal slower but not as drastic as disappearing speed
-				spawn(used_time) regenerate_icons()
+				addtimer(CALLBACK(src, PROC_REF(regenerate_icons)), used_time, TIMER_UNIQUE | TIMER_OVERRIDE) // TA EDIT
 			else
 				if(src.alpha != 255)
 					animate(src, alpha = 255, time = used_time)
@@ -668,13 +671,13 @@
 			if(target_alpha != alpha)
 				if(!wallpressed)
 					animate(src, alpha = target_alpha, time = used_time)
-					spawn(used_time + 5) regenerate_icons()
+					addtimer(CALLBACK(src, PROC_REF(regenerate_icons)), used_time + 5, TIMER_UNIQUE | TIMER_OVERRIDE) // TA EDIT
 			if(world.time < mob_timers[MT_FOUNDSNEAK] + 10 SECONDS) // recently discovered or broke stealth, can't re-sneak yet
 				return
 			light_amount = T.get_lumcount()	// as above, this is moderately expensive, so only check it if we need to.
 			if(light_amount < light_threshold)
 				animate(src, alpha = 0, time = used_time)
-				spawn(used_time + 5) regenerate_icons()
+				addtimer(CALLBACK(src, PROC_REF(regenerate_icons)), used_time + 5, TIMER_UNIQUE | TIMER_OVERRIDE) // TA EDIT
 				rogue_sneaking = TRUE
 	return
 
