@@ -24,3 +24,20 @@
 			return TRUE
 
 	return FALSE
+
+/mob/living/carbon/human/proc/update_keep_together()
+	var/needs_keep_together = length(filter_data) || length(filters) || length(vis_contents) || alpha != initial(alpha)
+	if(needs_keep_together)
+		appearance_flags |= KEEP_TOGETHER
+	else
+		appearance_flags &= ~KEEP_TOGETHER
+
+/mob/living/carbon/human/update_filters()
+	if(length(filter_data))
+		appearance_flags |= KEEP_TOGETHER
+	. = ..()
+	update_keep_together()
+
+/mob/living/carbon/human/clear_filters()
+	. = ..()
+	update_keep_together()
