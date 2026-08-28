@@ -36,8 +36,6 @@ GLOBAL_LIST_EMPTY(ladders)
 GLOBAL_LIST_EMPTY(trophy_cases)
 GLOBAL_LIST_EMPTY(alch_grid_recipes)
 
-GLOBAL_LIST_EMPTY(stew_recipes) // list of all stew recipes
-
 GLOBAL_LIST_EMPTY(wire_color_directory)
 GLOBAL_LIST_EMPTY(wire_name_directory)
 

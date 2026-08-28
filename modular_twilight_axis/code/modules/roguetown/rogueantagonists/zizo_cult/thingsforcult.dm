@@ -598,6 +598,8 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	armor_class = ARMOR_CLASS_LIGHT
 	unenchantable = TRUE
 	anvilrepair = null
+	equip_delay_self = 5 SECONDS
+	unequip_delay_self = 5 SECONDS
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ICON)

@@ -53,3 +53,37 @@
 	req_bar = /obj/item/ingot/steel
 	additional_items = list(/obj/item/ingot/steel, /obj/item/ingot/bronze)
 	created_item = /obj/item/clothing/suit/roguetown/armor/plate/raneshen_scale
+
+/datum/anvil_recipe/armor/blacksteel/legate/platechest
+	name = "Legate's Full-Plate, Blacksteel (+3 Blacksteel, +1 Gold)"
+	req_bar = /obj/item/ingot/blacksteel
+	additional_items = list(/obj/item/ingot/blacksteel, /obj/item/ingot/blacksteel, /obj/item/ingot/blacksteel, /obj/item/ingot/gold)
+	created_item = /obj/item/clothing/suit/roguetown/armor/plate/full/blacksteel/legate
+	display_category = ITEM_CAT_ARMOR_CHESTPIECES
+	craftdiff = 5
+
+/datum/anvil_recipe/armor/blacksteel/legate/plategloves
+	name = "Legate's Plate Gauntlets, Blacksteel (+1 Gold)"
+	req_bar = /obj/item/ingot/blacksteel
+	additional_items = list(/obj/item/ingot/gold)
+	created_item = /obj/item/clothing/gloves/roguetown/plate/blacksteel/legate
+	display_category = ITEM_CAT_ARMOR_GLOVES
+
+/datum/anvil_recipe/armor/blacksteel/legate/platelegs
+	name = "Legate's Plate Chausses, Blacksteel (+1 Blacksteel, +1 Gold)"
+	req_bar = /obj/item/ingot/blacksteel
+	additional_items = list(/obj/item/ingot/blacksteel, /obj/item/ingot/gold)
+	created_item = /obj/item/clothing/under/roguetown/platelegs/blacksteel/legate
+	display_category = ITEM_CAT_ARMOR_LEGS
+
+/datum/anvil_recipe/armor/blacksteel/legate/helmet
+	name = "Legate's Helmet, Blacksteel (+1 Blacksteel, +1 Gold)"
+	req_bar = /obj/item/ingot/blacksteel
+	additional_items = list(/obj/item/ingot/blacksteel, /obj/item/ingot/gold)
+	created_item = /obj/item/clothing/head/roguetown/helmet/blacksteel/legate
+	display_category = ITEM_CAT_ARMOR_HELMETS
+
+/datum/anvil_recipe/armor/blacksteel/legate/plateboots
+	name = "Legate's Plate Boots, Blacksteel"
+	req_bar = /obj/item/ingot/blacksteel
+	created_item = /obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/legate

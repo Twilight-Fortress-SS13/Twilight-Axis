@@ -29,6 +29,14 @@
 		"valorian.ttf" = 'interface/fonts/languages/valorian.ttf', // Валория
 		"Ganesha Type.ttf" = 'interface/fonts/languages/Ganesha Type.ttf', // Казенгунский Не работает
 		"lingyuese.ttf" = 'interface/fonts/languages/lingyuese.ttf',
+		"otavan.ttf" = 'interface/fonts/languages/otavan.ttf',
+		"oldazure.ttf" = 'interface/fonts/languages/oldazure.ttf',
+		"undercommon.ttf" = 'interface/fonts/languages/undercommon.ttf',
+		"etruscan.ttf" = 'interface/fonts/languages/etruscan.ttf',
+		"gronnic.ttf" = 'interface/fonts/languages/gronnic.ttf',
+		"aavnic.ttf" = 'interface/fonts/languages/aavnic.ttf',
+		"parisienne.ttf" = 'interface/fonts/tegaki/parisienne.ttf',
+		"parisienne_data.json" = 'interface/fonts/tegaki/parisienne_data.json',
 		"Deutsch Gothic.ttf" = 'interface/fonts/languages/Deutsch Gothic.ttf', // Отава
 		"TolkienCyr.ttf" = 'interface/fonts/languages/TolkienCyr.ttf', // Этруский 
 		"RUSNeverwinter.ttf" = 'interface/fonts/languages/RUSNeverwinter.ttf', // Гронновский

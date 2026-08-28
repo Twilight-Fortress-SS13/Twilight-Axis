@@ -632,23 +632,17 @@ SUBSYSTEM_DEF(bard_music)
 				to_chat(user, span_warning("NOT YET!"))
 				return TRUE
 			playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
-			var/infile = input(user, "CHOOSE A NEW SONG", src) as null|file
-			if(!infile || !user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
-				return TRUE
-			var/filename = "[infile]"
-			var/file_error = check_file(infile, filename, user)
-			if(file_error)
-				to_chat(user, span_warning(file_error))
+			var/song_file = music_upload(user, src)
+			if(!song_file || !user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 				return TRUE
 			lastfilechange = world.time
-			fcopy(infile, "data/jukeboxuploads/[user.ckey]/[filename]")
-			var/song_file = file("data/jukeboxuploads/[user.ckey]/[filename]")
-			var/songname = input(user, "Name your song:", "Song Name") as text|null
-			if(!songname || !user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+			var/path = "[song_file]"
+			var/entry = input(user, "Name your song:", "Song Name") as text|null
+			if(QDELETED(src) || !user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 				return TRUE
-			songname = trimtext(songname)
+			var/songname = strip_html(entry, MAX_NAME_LEN)
 			if(!songname)
-				return TRUE
+				songname = copytext(path, findlasttext(path, "/") + 1)
 			song_list[songname] = song_file
 			var/datum/bard_timed_track/new_track = new
 			new_track.set_song(songname, song_file, TRUE)

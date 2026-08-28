@@ -48,7 +48,6 @@
 		/datum/advclass/mercenary/rumaclan_sasu,
 		/datum/advclass/mercenary/hangyaku,
 		/datum/advclass/mercenary/chonin,
-		/datum/advclass/mercenary/seonjang,
 		/datum/advclass/mercenary/steppesman,
 		/datum/advclass/mercenary/warscholar,
 		/datum/advclass/mercenary/warscholar_pontifex,
@@ -81,6 +80,7 @@
 		return
 	var/list/roleprefs = get_roleprefs(C)
 	var/HTML = {"
+		[subprefs_subclass_html(C)]
 		<i>Set your advertisement here to automatically enroll with the mercenary statue on spawn. You'll be set to 'Available' status immediately if this is set.</i><br/>
 		<b>Mercenary advertisement:</b> <a href="?src=[REF(src)];merc_ad=1">Edit</a>
 		[roleprefs["merc_ad"] ? "<hr/>[roleprefs["merc_ad"]]<hr/>":""]
