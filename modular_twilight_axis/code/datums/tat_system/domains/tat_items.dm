@@ -489,8 +489,6 @@
 	if(owner_build.has_trait(TAT_TRAIT_MAGE_INITIATE))
 		add_grant_amount(result, /obj/item/rogueweapon/spellbook)
 		add_grant_amount(result, /obj/item/chalk)
-	if(owner_build.has_trait(TAT_TRAIT_DIVINE_BOON_1) && owner_build?.owner_preferences?.selected_patron?.type == /datum/patron/divine/abyssor)
-		add_grant_amount(result, /obj/item/rogueweapon/woodstaff/quarterstaff/steel/paint)
 	return result
 
 /datum/tat_items/proc/sync_trait_granted_items()
