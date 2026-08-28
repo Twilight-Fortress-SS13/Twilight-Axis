@@ -25,12 +25,8 @@ GLOBAL_DATUM_INIT(shared_typing_indicator, /obj/effect/overlay/typing_indicator,
 		return
 	vis_contents -= typing_indicator_current
 	if(typing_indicator_added_keep_together)
+		appearance_flags &= ~KEEP_TOGETHER
 		typing_indicator_added_keep_together = FALSE
-		if(ishuman(src)) // TA EDIT START
-			var/mob/living/carbon/human/human = src
-			human.update_keep_together()
-		else
-			appearance_flags &= ~KEEP_TOGETHER // TA EDIT END
 	typing_indicator_current = null
 	if(typing_indicator_timerid)
 		deltimer(typing_indicator_timerid)
